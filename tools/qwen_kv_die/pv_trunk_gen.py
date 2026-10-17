@@ -45,7 +45,7 @@ B, TILE = 561.6, 172.8
 PV_BANK = {0: (0.0, 0.0, 'R0'), 1: (194.4, 0.0, 'R0'), 2: (0.0, 194.4, 'MX'), 3: (0.0, 388.8, 'MX'),
            4: (194.4, 388.8, 'MX'), 5: (388.8, 388.8, 'MX'), 6: (388.8, 0.0, 'R0'), 7: (388.8, 194.4, 'R0')}
 PV_JOIN = (194.4, 194.4, 'R0')
-STD = {36: (12.96, 12.96), 296: (21.6, 47.52)}
+STD = {1: (12.96, 12.96), 36: (12.96, 12.96), 296: (21.6, 47.52)}
 LEAF_LEF = dict(
     ot_qwen_tp8_pv_slice_t=RT / 'qkd_pv_slice_rstpin_r5/views/ot_qwen_tp8_pv_slice_t/ot_qwen_tp8_pv_slice_t.lef',
     ot_qwen_tp8_pv_join_t=RT / 'qkd_pv_join_rstpin_r5/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef',
@@ -132,7 +132,12 @@ class Gen:
         self.a = a
         self.CH, self.CT, self.SW, self.STRIP = a.ch, a.ct, a.sw, a.strip
         self.FW = 2 * self.SW + 2 * B + self.CT
-        self.FH = 16 * (B + self.CH) + self.CH + self.STRIP
+        # channel heights: the double-group channels h_2g (two faces of two groups) get CH_EVEN (two 296 rows), the
+        # group-middle channels h_2g+1 CH (one 296 row + the 36 rows); both on the 43.2-um lattice (Q-KV 10-16 decision:
+        # pay the area, >= 20-um macro clearances, no stations inside the blocks' 21.6-um gaps)
+        self.CHs = [a.ch_even if h % 2 == 0 else a.ch for h in range(17)]
+        self.ylo = [sum(self.CHs[:h]) + h * B for h in range(17)]
+        self.FH = self.ylo[16] + self.CHs[16] + self.STRIP
         self.views = {m: lef_pins(p) for m, p in LEAF_LEF.items()}
         self.cells = {}
         self.free = Free(self.FW, self.FH)
@@ -147,14 +152,14 @@ class Gen:
         return self.SW + c * (B + self.CT)
 
     def by(self, r):
-        return self.CH + r * (B + self.CH)
+        return self.ylo[r] + self.CHs[r]
 
     def hy(self, r):
-        return r * (B + self.CH) + self.CH / 2
+        return self.ylo[r] + self.CHs[r] / 2
 
     def chan(self, r):
-        y0 = r * (B + self.CH)
-        return (0.0, y0, self.FW, y0 + self.CH)
+        y0 = self.ylo[r]
+        return (0.0, y0, self.FW, y0 + self.CHs[r])
 
     def ct_x(self):
         return self.SW + B + self.CT / 2
@@ -191,6 +196,8 @@ class Gen:
     # ---- stations --------------------------------------------------------------------------------------------------
     @staticmethod
     def replicas(n):
+        if n == 1:
+            return [1]
         out = []
         while n > 296:
             out.append(296)
@@ -235,7 +242,9 @@ class Gen:
                 w, h = STD[s]
                 region = d['region']
                 tx_, ty_ = tx, ty
-                if d['lanes'] is not None:
+                if d.get('rep_targets'):
+                    tx_, ty_ = d['rep_targets'][j]
+                elif d['lanes'] is not None:
                     lx = self.lane_x(d['lanes'][j % len(d['lanes'])])
                     region = (lx - 4.32, region[1], lx + w + 4.32, region[3])
                     tx_ = lx + w / 2
@@ -248,11 +257,21 @@ class Gen:
                         ty_ = ay_ + STD[al[j][0]][1] / 2
                 elif d.get('xstep'):
                     tx_ = tx + j * d['xstep']
-                if region is not None and abs(region[3] - region[1] - self.CH) < 1e-6:
-                    # a station channel: 296s on its lower row, 36s on its upper row
-                    lo = region[1] + self.a.halo_tile - 4.32
-                    ty_ = lo + 4.32 + h / 2 if s == 296 else region[3] - (self.a.halo_tile - 4.32) - 4.32 - h / 2
-                got = self.free.nearest(tx_, ty_, w, h, 4.32, region)
+                if region is not None and d['lanes'] is None and d.get('row') and region[3] - region[1] < 300:
+                    # a station channel: 296s on the row facing the tiles they feed ('lo' = next to the block below,
+                    # 'hi' = next to the block above), 36s on the middle row
+                    lo = region[1] + self.a.halo_tile
+                    hi = region[3] - self.a.halo_tile
+                    if s == 296 or d.get('same_row'):
+                        ty_ = lo + h / 2 if d['row'] == 'lo' else hi - h / 2
+                        if s != 296 and placed:
+                            tx_ = placed[-1][1][0] + (25.92 if d.get('dir', 1) > 0 else -17.28)
+                    else:
+                        ty_ = (lo + hi) / 2
+                if d.get('rep_targets'):
+                    got = self.free.nearest(tx_, ty_, w, h, 4.32, region, rad=60.0) or self.free.nearest(tx_, ty_, w, h, 4.32, region)
+                else:
+                    got = self.free.nearest(tx_, ty_, w, h, 4.32, region)
                 if got is None:
                     raise ValueError(f'{name}: no spot for replica {j} ({s}) near ({tx_:.0f}, {ty_:.0f}) in {region}')
                 self.free.block(got[0], got[1], got[0] + w, got[1] + h)
@@ -274,13 +293,15 @@ class Gen:
                 off += s
 
     def lane_x(self, l_):
-        """origin x of CT lane l (0 .. NL-1: 296 lanes; 'f0' / 'f1': the 36 flag lanes at the CT edges)"""
-        x0 = self.SW + B + self.a.halo_tile
-        if l_ == 'f0':
-            return x0
-        if l_ == 'f1':
-            return self.SW + B + self.CT - self.a.halo_tile - 12.96
-        return x0 + 12.96 + 4.32 + 4.32 + l_ * 25.92
+        """origin x of a CT lane: V lanes 0-3 (block column 0) at the CT's column-0 side, then the flag lane f0, control
+        lanes 4-5, flag lane f1, V lanes 6-9 (column 1) at its column-1 side"""
+        x = self.SW + B + self.a.halo_tile
+        order = ['k0', 0, 1, 2, 3, 'f0', 'f1', 6, 7, 8, 9, 'k1']
+        for o in order:
+            if o == l_:
+                return x
+            x += (12.96 if o in ('f0', 'f1') else 21.6) + 4.32
+        raise KeyError(l_)
 
     def expr(self, key, parent):
         if parent is None:
@@ -334,51 +355,77 @@ class Gen:
         self.place_tiles()
         CTR, ctx = self.ct(), self.ct_x()
         rowclk = lambda r: f'col_clk[{col_of(0, max(0, min(r, 15)))}]'   # noqa: E731
-        ctl_keys = [('R',)] + [('C', b) for b in range(32)] + [('E', k, H, b) for k in range(8) for H in range(4) for b in range(16)]
-        # 1. CT control trunk X_16, M_15, X_15, ..., X_0 (545 b everywhere), CT lanes 0-1
-        prev, X = None, {}
-        for r in range(16, -1, -1):
-            if r < 16:
-                prev = self.station(f'M{r}', ctl_keys, prev, (ctx, self.by(r) + B / 2), rowclk(r), CTR, lanes=[0, 1], prio=0)
-            X[r] = prev = self.station(f'X{r}', ctl_keys, prev, (ctx, self.hy(r)), rowclk(r), CTR, lanes=[0, 1], prio=0)
-        dX = {r: self.st[X[r]]['depth'] for r in X}
-        # group g's control word leaves its 3 channel crossings at depth dX[2g]: X_2g directly, X_2g+1 + 2, X_2g+2 + 4 pads
+        NS = self.a.ns                  # registered stages per block-row pitch along CT (pitch / NS <= reach)
+        midy = lambda r, i: self.hy(r + 1) + (self.hy(r) - self.hy(r + 1)) * i / NS   # noqa: E731  i-th node between h_r+1, h_r
+        VL = {(0, 'W'): [0, 1], (0, 'E'): [2, 3], (1, 'W'): [6, 7], (1, 'E'): [8, 9]}
+        # 1. CT control trunks, one per block column (its lane next to the column): {rst_n, cmd[31:0]} + the e words of the
+        #    column's heads H = c, c + 2 (289 b); X_r at the crossings, NS - 1 mid nodes per row pitch
+        ckc = {c: [('R',)] + [('C', b) for b in range(32)] + [('E', k, H, b) for k in range(8) for H in (c, c + 2) for b in range(16)]
+               for c in range(2)}
+        X = {}
+        for c in range(2):
+            prev = None
+            for r in range(16, -1, -1):
+                if r < 16:
+                    for i in range(1, NS):
+                        prev = self.station(f'M{r}_{i}c{c}', ckc[c], prev, (ctx, midy(r, i)), rowclk(r), CTR, lanes=[f'k{c}'], prio=0)
+                X[(r, c)] = prev = self.station(f'X{r}c{c}', ckc[c], prev, (ctx, self.hy(r)), rowclk(r), CTR, lanes=[f'k{c}'], prio=0)
+        dX = {r: self.st[X[(r, 0)]]['depth'] for r in range(17)}
+        # group g's control word leaves its 3 channel crossings at depth dX[2g]: X_2g directly, X_2g+1 + NS, X_2g+2 + 2 NS
+        # pads (a U around the crossing in the column's control lane, ending next to it)
+        offs = {0: [], NS: [1, 2, -1][:NS] if NS == 3 else list(range(1, NS + 1)),
+                2 * NS: [1, 2, 3, -3, -2, -1] if NS == 3 else list(range(1, 2 * NS + 1))}
         cross = {}
-        for g in range(8):
-            for h, npad in ((2 * g, 0), (2 * g + 1, 2), (2 * g + 2, 4)):
-                p = X[h]
-                for i in range(npad):
-                    p = self.station(f'CP{h}g{g}_{i}', ctl_keys, p, (ctx, self.hy(h)), rowclk(h), CTR, lanes=[0, 1], prio=0)
-                cross[(h, g)] = p
-                assert self.st[p]['depth'] == dX[2 * g], (h, g)
-        # 2. V side entry: e0 at the face end of channel h_2g+1, t1 (block middle of the near column), t2 (at CT), then
-        #    up / down / pad in CT lanes (W ports 2-3, E ports 4-5): the group's 3 crossings at V depth 5
+        for c in range(2):
+            for g in range(8):
+                for h, npad in ((2 * g, 0), (2 * g + 1, NS), (2 * g + 2, 2 * NS)):
+                    p = X[(h, c)]
+                    for i in range(npad):
+                        o_ = offs[npad][i]
+                        if h == 16:     # the top crossing: the strip is above it -> its pads sit in channel h_16
+                            p = self.station(f'CP{h}g{g}c{c}_{i}', ckc[c], p, (self.lane_x(f'k{c}'), self.hy(h)), rowclk(h),
+                                             self.chan(h), prio=0)
+                        else:
+                            p = self.station(f'CP{h}g{g}c{c}_{i}', ckc[c], p, (ctx, self.hy(h) + o_ * 56.16), rowclk(h), CTR,
+                                             lanes=[f'k{c}'], prio=0)
+                    cross[(h, g, c)] = p
+                    assert self.st[p]['depth'] == dX[2 * g], (h, g)
+        ctl_keys = ckc[0] + [k for k in ckc[1] if k not in set(ckc[0])]
+        # 2. V side entry: e0 at the face end of channel h_2g+1, two hops across the near column, then one copy per block
+        #    column into its CT lanes (t2), and NS stages up / down / pad to the group's 3 crossings
         vt = {}
+        self.v_entry_stages = 4 + NS
         for g in range(8):
             hm = 2 * g + 1
             for side, ports in (('W', range(4)), ('E', range(4, 8))):
                 keys = [('V', g, k, b) for k in ports for b in range(128)]
                 ck = f'col_clk[{col_of(0 if side == "W" else 1, hm)}]'
                 fx = 0.0 if side == 'W' else self.FW
-                lanes = [2, 3] if side == 'W' else [4, 5]
+                sg = 1.0 if side == 'W' else -1.0
                 for i in ports:
                     self.rootpin.update({('V', g, i, b): (fx, self.hy(hm)) for b in range(128)})
-                e0 = self.station(f'V{side}{g}e', keys, None, (fx + (20.0 if side == 'W' else -60.0), self.hy(hm)), ck,
-                                  self.chan(hm), prio=3)
+                e0 = self.station(f'V{side}{g}e', keys, None, (fx + (40.0 if side == 'W' else -100.0), self.hy(hm)), ck, self.chan(hm), prio=3)
                 self.st[e0]['xstep'] = 25.92
-                t1 = self.station(f'V{side}{g}t1', keys, e0, (self.s1_x(0 if side == 'W' else 1) - 26.0, self.hy(hm)), ck,
-                                  self.chan(hm), prio=3)
-                self.st[t1]['xstep'] = 25.92
-                t2 = self.station(f'V{side}{g}t2', keys, t1, (self.lane_x(lanes[0]), self.hy(hm)), ck, CTR, lanes=lanes, prio=0)
-                u1 = self.station(f'V{side}{g}u1', keys, t2, (ctx, self.by(hm) + B / 2), ck, CTR, lanes=lanes, prio=0)
-                vt[(hm + 1, g, side)] = self.station(f'V{side}{g}u2', keys, u1, (ctx, self.hy(hm + 1)), ck, CTR, lanes=lanes, prio=0)
-                d1 = self.station(f'V{side}{g}d1', keys, t2, (ctx, self.by(hm - 1) + B / 2), ck, CTR, lanes=lanes, prio=0)
-                vt[(hm - 1, g, side)] = self.station(f'V{side}{g}d2', keys, d1, (ctx, self.hy(hm - 1)), ck, CTR, lanes=lanes, prio=0)
-                p1 = self.station(f'V{side}{g}p1', keys, t2, (ctx, self.hy(hm) - 60.0), ck, CTR, lanes=lanes, prio=0)
-                vt[(hm, g, side)] = self.station(f'V{side}{g}p2', keys, p1, (ctx, self.hy(hm) + 60.0), ck, CTR, lanes=lanes, prio=0)
+                a1 = self.station(f'V{side}{g}a', keys, e0, (fx + sg * 270.0 - (50 if side == 'E' else 0), self.hy(hm)), ck, self.chan(hm), prio=3)
+                self.st[a1]['xstep'] = 25.92
+                b1 = self.station(f'V{side}{g}b', keys, a1, (fx + sg * 530.0 - (50 if side == 'E' else 0), self.hy(hm)), ck, self.chan(hm), prio=3)
+                self.st[b1]['xstep'] = 25.92
+                for c in range(2):
+                    lanes = VL[(c, side)]
+                    t2 = self.station(f'V{side}{g}c{c}t', keys, b1, (ctx, self.hy(hm) + 56.16), ck, CTR, lanes=lanes, prio=0)
+                    p, q, w = t2, t2, t2
+                    for i in range(1, NS + 1):
+                        # chain ends sit at their crossing (u below it, d above it: the even crossing holds both groups')
+                        p = self.station(f'V{side}{g}c{c}u{i}', keys, p, (ctx, midy(hm, NS - i) if i < NS else self.hy(hm + 1) - 28.08), ck, CTR, lanes=lanes, prio=0)
+                        q = self.station(f'V{side}{g}c{c}d{i}', keys, q, (ctx, midy(hm - 1, i) if i < NS else self.hy(hm - 1) + 28.08), ck, CTR, lanes=lanes, prio=0)
+                        po = {1: 2, 2: -1}.get(i, 0) if i < NS else 0.0
+                        w = self.station(f'V{side}{g}c{c}p{i}', keys, w, (ctx, self.hy(hm) + po * 56.16), ck, CTR, lanes=lanes, prio=0)
+                    vt[(hm + 1, g, side, c)], vt[(hm - 1, g, side, c)], vt[(hm, g, side, c)] = p, q, w
         # 3. per channel h, block column c, group g: W1 (V) and Ka (control) at the block's CT side, then one station per
         #    tile under / over its input face (bank 4's also carries the join's join_go / rst_n)
         self.S1, self.s1_of = {}, {}
+        self.pending_rst, self.rst_of, self.kac_of = [], {}, {}
+        self.row_of = {col_of(c, r): r for c in range(2) for r in range(16)}
         for h in range(17):
             for c in range(2):
                 for g, tiles in sorted(self.face_tiles(h, c).items()):
@@ -388,23 +435,100 @@ class Gen:
                     ckeys = [k for k in keys if k[0] in ('C', 'R', 'E')]
                     vkeys = [k for k in keys if k[0] == 'V']
                     vkeys = [k for k in vkeys if k[2] < 4] + [k for k in vkeys if k[2] >= 4]
-                    wx = self.bx(c) + 300.0 if c == 0 else self.bx(c) + B - 300.0 - 4 * 25.92
-                    w1 = self.station(f'W{h}c{c}g{g}', vkeys, {k: vt[(h, g, 'W' if k[2] < 4 else 'E')] for k in vkeys},
-                                      (wx, self.hy(h)), ck, self.chan(h), prio=2)
-                    self.st[w1]['xstep'] = 25.92
-                    ka = self.station(f'K{h}c{c}g{g}', ckeys, cross[(h, g)], (wx + (4 * 25.92 if c == 0 else -25.92), self.hy(h)),
-                                      ck, self.chan(h), prio=2)
+                    # A: the face word (V from this column's CT lanes + the control word) at the block's CT side
+                    ax = self.bx(c) + B - 230.0 if c == 0 else self.bx(c) + 230.0 - 5 * 25.92
+                    # keys ordered by the x of the tiles that use them (far tiles' keys on the far replicas)
+                    kx = {}
+                    for s_, t_ in tiles:
+                        tx0 = PV_BANK[t_][0] if t_ != 'j' else PV_JOIN[0]
+                        for k in self.tile_keys(s_, t_):
+                            kx[k] = min(kx.get(k, 1e9), tx0) if c == 0 else max(kx.get(k, -1e9), tx0)
+                    # far tiles' keys first (column 0: far = small x; column 1: far = large x); replica 0 at the far edge
+                    # of the window that keeps every replica within reach of this column's CT lanes
+                    both = any(t in TOP_BANKS for _, t in tiles) and any(t in BOT_BANKS for _, t in tiles)
+                    # the face row; a channel serving both rows of one group puts A on the row of its far tiles
+                    # (column 0: left tiles 2 / 3 on the lower row; column 1: right tiles 6 / 7 on the upper row)
+                    arow = ('lo' if c == 0 else 'hi') if both else ('lo' if any(t in TOP_BANKS for _, t in tiles) else 'hi')
+                    lo_, hi_ = self.chan(h)[1] + self.a.halo_tile, self.chan(h)[3] - self.a.halo_tile
+                    ay = lo_ + 23.76 if arow == 'lo' else hi_ - 23.76
+                    # A_v: the face's V, one station per port side (W ports from this column's W lanes, E from its E lanes),
+                    # each as far from CT as its lanes' reach allows (the far tiles' stations need it there)
+                    aw = {}
+                    for side, lanes in (('W', VL[(c, 'W')]), ('E', VL[(c, 'E')])):
+                        sk = sorted([k for k in vkeys if (k[2] < 4) == (side == 'W')], key=lambda k: ((kx[k] if c == 0 else -kx[k]), str(k)))
+                        if c == 0:
+                            x0_ = max(self.lane_x(l_) for l_ in lanes) + 21.6 - (self.a.hop - 90.0)
+                        else:
+                            x0_ = min(self.lane_x(l_) for l_ in lanes) + (self.a.hop - 90.0) - 21.6
+                        st_ = self.station(f'W{h}c{c}g{g}{side}', sk, vt[(h, g, side, c)], (x0_, ay), ck, self.chan(h), prio=1)
+                        nr = len(self.replicas(len(sk)))
+                        self.st[st_]['rep_targets'] = [((x0_ + 10.8 + j_ * 25.92) if c == 0 else (x0_ + 10.8 - j_ * 25.92), ay) for j_ in range(nr)]
+                        aw[side] = st_
+                    w1 = aw['W']
+                    # A_c: the face's control word, from the column's control lane at the CT edge: closer to the far tiles
+                    kl = self.lane_x(f'k{c}')
+                    acx = kl + 21.6 - self.a.hop + 90.0 if c == 0 else kl + self.a.hop - 90.0 - 21.6
+                    kac = self.station(f'K{h}c{c}g{g}', ckeys, cross[(h, g, c)], (acx + 10.8, ay), ck, self.chan(h), prio=1)
+                    self.st[kac]['rep_targets'] = [(acx + 10.8, ay)]
+                    for s_, t_ in tiles:
+                        self.kac_of[(s_, t_)] = kac
+                    # one station per tile, on the channel row facing it, as far toward CT as its pins allow (bank 4's also
+                    # carries the join's join_go / rst_n)
                     for s, t in tiles:
                         if t == 'j':
                             continue
                         tk = list(dict.fromkeys(self.tile_keys(s, t) + ([('C', 31), ('R',)] if (s, 'j') in tiles and t == 4 else [])))
-                        tx_ = self.tpin(f'u_s{s}_b{t}', 'pv2[64]')[0]
-                        src = {k: (w1 if k[0] == 'V' else ka) for k in tk}
-                        name = self.station(f'S{s}b{t}', tk, src, (tx_ - 10.8, self.hy(h)), ck, self.chan(h), depth_check=False, prio=1)
+                        row = 'lo' if t in TOP_BANKS else 'hi'
+                        sy = lo_ + 23.76 if row == 'lo' else hi_ - 23.76
+                        pins = [self.tpin(f'u_s{s}_b{t}', f'{pn}[{i_}]') for pn, n_ in (('pv2', 256), ('pe2', 32), ('bc', 23)) for i_ in (0, n_ - 1)]
+                        if (s, 'j') in tiles and t == 4:
+                            pins += [self.tpin(f'u_s{s}_j', 'join_go'), self.tpin(f'u_s{s}_j', 'rst_n')]
+                        # feasible origins x: every pin within hop of the station's b pins (x + 21.6) and every A replica's
+                        # b pin within hop of the station's a pins (x); the 36 part sits on the middle row (worst dy)
+                        H_ = self.a.hop
+                        my = (lo_ + hi_) / 2
+                        lo_b, hi_b = -1e9, 1e9
+                        for px, py in pins:
+                            dy_ = max(abs(py - sy), abs(py - my))
+                            lo_b = max(lo_b, px - (H_ - dy_) - 21.6)
+                            hi_b = min(hi_b, px + (H_ - dy_) - 21.6)
+                        for ax_, ay_ in self.st[aw['W']]['rep_targets'] + self.st[aw['E']]['rep_targets'] + self.st[kac]['rep_targets']:
+                            abx = ax_ - 10.8 + 21.6
+                            dy_ = max(abs(ay_ - sy), abs(ay_ - my))
+                            lo_b = max(lo_b, abx - (H_ - dy_))
+                            hi_b = min(hi_b, abx + (H_ - dy_))
+                        x_lo, x_hi = self.bx(c) + 4.32, self.bx(c) + B - 21.6 - 4.32
+                        sx = min(max((lo_b + hi_b) / 2, x_lo), x_hi) if lo_b <= hi_b else min(max(hi_b, x_lo), x_hi)
+                        name = self.station(f'S{s}b{t}', tk, {k: ((aw['W'] if k[2] < 4 else aw['E']) if k[0] == 'V' else kac) for k in tk}, (sx + 10.8, sy), ck,
+                                            self.chan(h), prio=2, depth_check=False)
+                        self.st[name]['row'] = row
+                        self.st[name]['same_row'] = True
+                        self.st[name]['dir'] = 1 if c == 0 else -1
                         self.s1_of[(s, t)] = name
+                        # the slice's reset pin is on its W face, mid height: its own 1-b station in the nearer channel
+                        rp = self.tpin(f'u_s{s}_b{t}', 'rst_n')
+                        up = rp[1] > self.by(h if t in BOT_BANKS else h - 1) + B / 2      # pin in the block's upper half?
+                        rh = (h + 1 if t in BOT_BANKS else h) if up else (h if t in BOT_BANKS else h - 1)
+                        rsrc = kac if rh == h else None
+                        self.pending_rst.append((s, t, rh, rp, ck))
                         if t == 4 and (s, 'j') in tiles:
                             self.s1_of[(s, 'j')] = name
                     self.S1[(h, c, g)] = w1
+        # 3b. the slices' reset stations (1 b each), fed by the control station of the same row's face in that channel
+        for s, t, rh, rp, ck in self.pending_rst:
+            below = rh == self.row_of[s]            # channel h_r under the tile's row r
+            kac = self.kac_of[(s, 0 if below else 3)]
+            lo_, hi_ = self.chan(rh)[1] + self.a.halo_tile, self.chan(rh)[3] - self.a.halo_tile
+            ry = hi_ - 6.48 if below else lo_ + 6.48     # the face row next to the tile's block
+            # x: between the reset pin and its control station, both within the hop
+            kx_ = self.st[kac]['rep_targets'][0][0] - 10.8 + 21.6
+            dyp = abs(rp[1] - ry)
+            lo_b = max(rp[0] - (self.a.hop - dyp) - 12.96, kx_ - (self.a.hop - abs(self.st[kac]['rep_targets'][0][1] - ry)))
+            hi_b = min(rp[0] + (self.a.hop - dyp) - 12.96, kx_ + (self.a.hop - abs(self.st[kac]['rep_targets'][0][1] - ry)))
+            rx = (lo_b + hi_b) / 2 if lo_b <= hi_b else (rp[0] + kx_) / 2
+            nm = self.station(f'R{s}b{t}', [('R',)], kac, (rx + 6.48, ry), ck, self.chan(rh), prio=3)
+            self.st[nm]['rep_targets'] = [(rx + 6.48, ry)]
+            self.rst_of[(s, t)] = nm
         # 4. flags: F1 over the join, 2 pads for even rows, F2 at CT, U-shaped return trunk in the CT flag lanes
         fl = {}
         for r in range(16):
@@ -419,7 +543,7 @@ class Gen:
                 kk = [('FV', s), ('FF', s)]
                 p = self.station(f'F{s}a', kk, None, (jx, self.hy(r + 1)), ck, self.chan(r + 1), prio=4)
                 if r % 2 == 0:
-                    for i in range(2):
+                    for i in range(NS):
                         p = self.station(f'F{s}p{i}', kk, p, ((jx + ctx) / 2 + 30 * i, self.hy(r + 1)), ck, self.chan(r + 1), prio=4)
                 fl[s] = self.station(f'F{s}b', kk, p, (self.lane_x('f0') - (40 if c == 0 else -260), self.hy(r + 1)), ck,
                                      self.chan(r + 1), prio=4)
@@ -434,12 +558,14 @@ class Gen:
             prev = self.station(f'FD{r}', keys, src, (ctx, self.hy(r)), rowclk(r), CTR, depth_check=False, lanes=['f0'], prio=0)
             self.flag_chain.append(prev)
             if r > 0:
-                prev = self.station(f'FDm{r - 1}', keys, prev, (ctx, self.by(r - 1) + B / 2), rowclk(r - 1), CTR, lanes=['f0'], prio=0)
-                self.flag_chain.append(prev)
+                for i in range(1, NS):
+                    prev = self.station(f'FDm{r - 1}_{i}', keys, prev, (ctx, midy(r - 1, i)), rowclk(r - 1), CTR, lanes=['f0'], prio=0)
+                    self.flag_chain.append(prev)
         for r in range(0, 17):
             if r > 0:
-                prev = self.station(f'FUm{r - 1}', keys, prev, (ctx, self.by(r - 1) + B / 2), rowclk(r - 1), CTR, lanes=['f1'], prio=0)
-                self.flag_chain.append(prev)
+                for i in range(NS - 1, 0, -1):
+                    prev = self.station(f'FUm{r - 1}_{i}', keys, prev, (ctx, midy(r - 1, i)), rowclk(r - 1), CTR, lanes=['f1'], prio=0)
+                    self.flag_chain.append(prev)
             prev = self.station(f'FU{r}', keys, prev, (ctx, self.hy(r)), rowclk(r), CTR, lanes=['f1'], prio=0)
             self.flag_chain.append(prev)
         self.flag_top = prev
@@ -458,6 +584,11 @@ class Gen:
             self.rootpin[k] = self.tpin('u_ctl', f'cmd[{k[1]}]') if k[0] == 'C' else (ctx, self.FH)
         self.place_all()
         self.emit_insts()
+
+    def rst_src(self, s, t):
+        """the station driving tile (s, t)'s rst_n: the middle-row slices' W-face reset pins sit deep in the block, so bank 2
+        takes it from bank 0's station (channel below) and bank 7 from bank 5's (channel above) -- same row, same depth"""
+        return self.rst_of[(s, t)]
 
     # ---- timing ---------------------------------------------------------------------------------------------------------
     def timing(self):
@@ -513,7 +644,7 @@ class Gen:
             for pn, grp in (('pv2', pv2), ('pe2', pe2), ('bc', bc)):
                 for i, k in enumerate(grp):
                     hops.append((_d(bout[(S1, k)], self.tpin(f'u_s{s}_b{t}', f'{pn}[{i}]')), f'{S1}->s{s}b{t}', pn))
-            hops.append((_d(bout[(S1, ('R',))], self.tpin(f'u_s{s}_b{t}', 'rst_n')), f'{S1}->s{s}b{t}', 'rst_n'))
+            hops.append((_d(bout[(self.rst_src(s, t), ('R',))], self.tpin(f'u_s{s}_b{t}', 'rst_n')), f'{self.rst_src(s, t)}->s{s}b{t}', 'rst_n'))
         for s in range(32):
             hops.append((_d(bout[(self.sf6[s], ('SF', s))], self.tpin(f'u_s{s}_j', 'sf[6]')), f'Q{s}b->j', 'sf6'))
             for l_ in range(8):
@@ -532,7 +663,7 @@ class Gen:
     def emit(self, out_sv, Dcol, trunk_d, flag_d, delta):
         L = ['`timescale 1ns/1ps',
              '// GENERATED by tools/qwen_kv_die/pv_trunk_gen.py (KVPLAN 1815) -- do not edit; re-run the generator.',
-             f'// Frame {self.FW:.3f} x {self.FH:.3f} um (lanes {self.SW}, CT {self.CT}, channels {self.CH}); '
+             f'// Frame {self.FW:.3f} x {self.FH:.3f} um (lanes {self.SW}, CT {self.CT}, channels {self.a.ch} / {self.a.ch_even}); '
              f'{sum(len(d["reps"]) for d in self.st.values())} relay-standard replicas, {sum(len(d["keys"]) for d in self.st.values())} station flops.',
              '// Column s: command AND data COL_D[s] extra edges after the old pair -> its y / y_valid at out_age + COL_D[s] - COL_D[0].',
              '// V chunk vc<k>_<g> must arrive DELTA[g] edges after the header vh<k> (the die relay chains are padded to it).',
@@ -578,7 +709,7 @@ class Gen:
                 pv2, pe2, bc = self.tile_srcs(H, GS, l_)
                 cat = lambda ks: '{' + ', '.join(ox(S1, k) for k in reversed(ks)) + '}'   # noqa: E731
                 L.append(f' ot_qwen_tp8_pv_slice_t #(.RESET_PIN(LEAF_RESET_PIN)) u_s{s}_b{l_}(.clk(col_clk[{s}]),'
-                         f'.rst_n({ox(S1, ("R",))}),.pv2({cat(pv2)}),.pe2({cat(pe2)}),.bc({cat(bc)}),'
+                         f'.rst_n({ox(self.rst_src(s, l_), ("R",))}),.pv2({cat(pv2)}),.pe2({cat(pe2)}),.bc({cat(bc)}),'
                          f'.ts(ts_{s}[{512 * l_ + 511}:{512 * l_}]),.fault(sf_{s}[{l_}]));')
             Sj = self.s1_of[(s, 'j')]
             sfj = '{' + ', '.join([f'sf_{s}[7]', ox(self.sf6[s], ('SF', s))] + [f'sf_{s}[{i}]' for i in range(5, -1, -1)]) + '}'
@@ -599,11 +730,14 @@ class Gen:
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument('--ch', type=float, default=69.12)
-    ap.add_argument('--ct', type=float, default=216.0)
+    ap.add_argument('--ch', type=float, default=172.8)
+    ap.add_argument('--ch-even', type=float, default=172.8)
+    ap.add_argument('--ns', type=int, default=3)
+    ap.add_argument('--hop', type=float, default=390.0, help='per-bit hop target used to place stations')
+    ap.add_argument('--ct', type=float, default=345.6)
     ap.add_argument('--sw', type=float, default=0.0)
     ap.add_argument('--strip', type=float, default=86.4)
-    ap.add_argument('--halo-tile', type=float, default=10.8)
+    ap.add_argument('--halo-tile', type=float, default=21.6)
     ap.add_argument('--mut-station', default='K1c0g0', help='the station TRUNK_MUT=1 replaces by a wire (bench negative control)')
     ap.add_argument('--no-place', action='store_true', help='structure only: emit the RTL, skip placement / hop checks')
     ap.add_argument('--out-sv', required=True)
@@ -620,7 +754,7 @@ def main(argv=None):
     for gg in range(8):
         ds = {Dcol[col_of(c, r)] for c in range(2) for r in (2 * gg, 2 * gg + 1)}
         assert len(ds) == 1
-        delta[gg] = ds.pop() - 7   # face -> e0 -> t1 -> t2 -> CT (2) -> W1 -> tile station
+        delta[gg] = ds.pop() - (g.v_entry_stages + 2)   # face -> e0, a, b, t2 -> CT (NS) -> W1 -> tile station
         if delta[gg] < 0:
             raise ValueError(f'group {gg}: DELTA {delta[gg]} < 0 (the chunk would have to arrive before the header)')
     trunk_d, flag_d = Dcol[0], tot[0] - Dcol[0]
@@ -634,7 +768,7 @@ def main(argv=None):
     spread = max(Dcol.values()) - min(Dcol.values())
     deskew = sum(512 * (max(Dcol.values()) - Dcol[s]) for s in range(32))
     plan = dict(schema='opentallas.qwen_kv_pv_trunk.v2', generator='tools/qwen_kv_die/pv_trunk_gen.py',
-                frame_um=[round(g.FW, 3), round(g.FH, 3)], ch_um=a.ch, ct_um=a.ct, lane_um=a.sw, strip_um=a.strip,
+                frame_um=[round(g.FW, 3), round(g.FH, 3)], ch_um=a.ch, ch_even_um=a.ch_even, ct_um=a.ct, lane_um=a.sw, strip_um=a.strip,
                 cells={n: [m, round(x, 3), round(y, 3), w, h, o] for n, (m, x, y, w, h, o) in sorted(g.cells.items())},
                 col_extra_edges=Dcol, col_flag_return=Rcol, trunk_d=trunk_d, flag_d=flag_d, chunk_delta_vs_header=delta,
                 col_age_delta_vs_col0={s: Dcol[s] - Dcol[0] for s in range(32)}, age_spread_edges=spread,
