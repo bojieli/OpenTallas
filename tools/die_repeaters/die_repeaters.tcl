@@ -212,7 +212,7 @@ proc ot_die_rep_restore_use {flagged} { foreach lc $flagged { unset_dont_use $lc
 # buffers {BUFx4_ASAP7_75t_R ...}, skip_nets {} (globs), repeat_nets {} (globs: forwarded-clock nets repeated WITH their
 # data bits -- DIE-CLOCK accepts fclk repeaters matched to the data to +-1 stage; they override the clock skips), skip_sigtypes {CLOCK POWER GROUND}, skip_clock_pins 1,
 # reach_um 0, over_reach report|fail, long_wire_scan 5000, rc_layer M4 ("" = keep caller's), repair_args "",
-# legalize spread|snap(=spread)|dpl|none, spread_util 0.30, bin_um 8.64, repair_passes 3, slew_margin 10 (%), post_grt_rounds 2,
+# legalize spread|snap(=spread)|dpl|none, spread_util 0.30, bin_um 8.64, repair_passes 3, slew_margin 0 (%; post-GRT re-buffer covers detours), post_grt_rounds 2,
 # bounds_tcl /work/cluster_bounds.tcl, libs {} (liberty files to read first), std_corner ""
 # (TT|FF|SS: read the ASAP7 RVT std libs of that corner), design ""
 proc ot_die_repeaters {cfg} {
@@ -221,7 +221,7 @@ proc ot_die_repeaters {cfg} {
            buffers {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_75t_R BUFx5_ASAP7_75t_R BUFx6f_ASAP7_75t_R BUFx8_ASAP7_75t_R} \
            skip_nets {} repeat_nets {} skip_sigtypes {CLOCK POWER GROUND} skip_clock_pins 1 reach_um 0 over_reach report \
            long_wire_scan 5000 post_drv report rc_layer M4 repair_args "" legalize spread bounds_tcl /work/cluster_bounds.tcl \
-           libs {} std_corner "" design "" spread_util 0.30 bin_um 8.64 repair_passes 3 slew_margin 10 post_grt_rounds 2]
+           libs {} std_corner "" design "" spread_util 0.30 bin_um 8.64 repair_passes 3 slew_margin 0 post_grt_rounds 2]
   set d [dict merge $d $cfg]
   dict with d {}
   if {![info exists report]} { error "ot_die_repeaters: cfg has no report path" }
