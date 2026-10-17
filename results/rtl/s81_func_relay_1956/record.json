@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.s81.func-relay-1956.v1",
+  "native_qualified": false,
+  "source_sha256": {
+    "tools/s81/mtp_ledger_1016.py": "60f19f356dc2a1bb47be14d3b9630e0b4dd54800c1b6036bb9433f1154ef0c75",
+    "tools/s81/vm_relay_stages.py": "5f8379e8ac1580ac1f3a8741332bd89842afcef43bf0392fb317c5f2d44a84d7",
+    "tools/s81/test_vm_relay_stages.py": "d383011b25422b83d35e9d9360b56a6a31084dd31a5bc9af5c85d4812f556982",
+    "tools/die_relay_stages.py": "d7612911cc3a937ad1b9f7e3a3fe36bbb4b2f56764354f82249fa3eb43c5c170"
+  },
+  "tests": {
+    "vm_relay_mechanism": 6,
+    "shared_schema": "see shared_schema_tests.log; one optional actual-table replay skipped"
+  },
+  "selected_c27_vm_table": null,
+  "selected_vm_bus_manifest": null,
+  "missing_native_coverage": [
+    "c27 current full VM relay/port mapping not emitted or adopted",
+    "current full rank/token/MTP native programme and source-port/elaboration join absent",
+    "historical canonical join explicitly lacked 324 rank programmes / 10616 required rank operations; not a current c27 inventory",
+    "HCX8b actual terminal pre-forward fixture has HSTORE zero of 640 rows; ideal VM and mixed reference-supplied operators remain native completeness failures",
+    "serial_0p9 VM relay bus conversion to stream cycles needs measured clock/phase contract; no guessed conversion"
+  ],
+  "hc8b_terminal": "hcx8b_terminal.json",
+  "hstore_replay": {
+    "driver": "/home/ubuntu/claude-takeover-20261007/drivers/s81_hcx_hstore_replay_1016.sh",
+    "source": "8b2bb9b81c66d1036ce38cd8d936d0c44032ce17",
+    "programme_generator": "ab6525c9c",
+    "admission_mem_gb": 16,
+    "threads": 2,
+    "session": 4306,
+    "scope": "mixed ideal-VM diagnostic, not native full-layer",
+    "question": "Does actual HSTORE issue write requests for all640 distinct rows before FFN HCX? Ideal bench acceptance trace cannot prove mapped SRAM commit age."
+  },
+  "unchanged_stage_reports": [
+    "retcol a5sp pin redistribution0cycles",
+    "CFIFO r5d consumer-root movement0cycles"
+  ],
+  "qualification": "source mechanism proof only; exact native timeline and throughput remain open"
+}
