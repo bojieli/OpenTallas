@@ -17457,6 +17457,22 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "rtl/physical/bb/ot_qwen_slab_pg_lanes_bb.v",
+    "kind": "file",
+    "sha256": "58e87fa531773164472efd98b06fc0db948b0c4bd8f392a6be0048633f12bcac",
+    "git_blob": "b489edcfcbe91a6d769a42b3768788dec02e0e0f",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v",
+    "kind": "file",
+    "sha256": "47724ebd7713413577a36faddfcd4abf81a0061553cc1ad83d3adf55315309ff",
+    "git_blob": "0f752dab6eca00d89115f066b06a637974872657",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "rtl/physical/bb/ot_qwen_tile_node_bb.v",
     "kind": "file",
     "sha256": "54a8b720484d6b6e6d1cbe4da52fc56bad54fca7caec4ca5002d7bfb1e2a38a3",
@@ -18305,6 +18321,14 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "rtl/physical/ot_qwen_kv_seq_tp8.sv",
+    "kind": "file",
+    "sha256": "b48d10cdd6df355b51decaf5b0d7a53e205a76b0f5b834cc1782ca83067dd346",
+    "git_blob": "27045fa82051442cde358d9184d4eff449ef7ae1",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "rtl/physical/ot_qwen_kv_slot_wrappers.sv",
     "kind": "file",
     "sha256": "c66f2dc68b53b055648508edf589b6220948e21377cda90458be8d8c6ee8cb6c",
@@ -18725,6 +18749,174 @@
     "kind": "file",
     "sha256": "d3766611254a08f65eaafce5098afe5e009782df8bf9b19a93ed52e036f61068",
     "git_blob": "f657213d2e220cad3baa1975c4fa0068208e6fd2",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_20261014/README_NATIVE_STATIC.md",
+    "kind": "file",
+    "sha256": "85a6416392cc5b5659eb748aeac07ca9772c32692ecf02f63680a4c2c3a14dcb",
+    "git_blob": "a740f67ce118532011944a41118dc79f7ce8c5fa",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export.sv",
+    "kind": "file",
+    "sha256": "a4c815dd0296df1d6876e487ca2f41aaa0ee6c5486b9860b08c156ddb1ac51a4",
+    "git_blob": "51c5ca2843a2925b74283788a2e8a7985da25f54",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv",
+    "kind": "file",
+    "sha256": "f7c95a54cc6581171e43eb73ad06739f0254fbf7c05e95efa70e642ee8e75c92",
+    "git_blob": "9e3771a52ff75b46bf9012c36a379e9ed0b5201e",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv",
+    "kind": "file",
+    "sha256": "14eb670fc2b3791439b13837765e91b3a37f5be5773f207058fa5fc0250a1b29",
+    "git_blob": "ef12fff71a82957412981e0821fd23311de4eabb",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_pw_loader.sv",
+    "kind": "file",
+    "sha256": "1f056e93a1cc714020ac0e1d0a7074228a319c652038115dc1f81b4a8c7d4d80",
+    "git_blob": "de39e9c5f6409ff1dc4b7a1622a6fe5901aca052",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv",
+    "kind": "file",
+    "sha256": "d225835c9ab77af587de321762bf4ee373a52f5d85bf7f2332fedbc3abde3899",
+    "git_blob": "4f1a6897946b29032d3df7df7a510c337638c298",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+    "kind": "file",
+    "sha256": "ee03b60c52e7b0d51be7484becee15c4aeaddbd2391058fb3967bd3b1e031803",
+    "git_blob": "45b1d674b2e1e85d21eade1c66ce6d6fce89d893",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv",
+    "kind": "file",
+    "sha256": "a17b86ea6228820b3bce17868271fb6de37d38f99e49f92a5c57007d2fe3fea7",
+    "git_blob": "873511fcd1fbd5094c1e4672f530cf3ec158c04c",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_20261014/ot_qwen_me_array_dvm_w12.sv",
+    "kind": "file",
+    "sha256": "16a32a4051d9cafb31d02c6c2809842f947213fc825268a7aedcd911fefc9ad8",
+    "git_blob": "7cc6043079062a4399c424413521ed30fb9196e0",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_20261014/qfd_xcst_m5.sv",
+    "kind": "file",
+    "sha256": "a0158e8343f89fa9d8d7111a630963920bb01ae8e2bc1bdbcd2260462e6898f9",
+    "git_blob": "3f64400cfd2a35947b6b3f866582f0753185c26d",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_20261014/run_dvm.sh",
+    "kind": "file",
+    "sha256": "3069e53b86521bfd02e489de9a1b4b898862173b11abe79186e428bcb2d93584",
+    "git_blob": "396cbb94247b95f8cbbe8d2214e2d47b6fe4fa98",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_20261014/tb_qfd_vm_q_export.sv",
+    "kind": "file",
+    "sha256": "875531b90f531b7dbbc5489daf7549266e0626e1f42395669210ced8241b05a7",
+    "git_blob": "4d301296227dfbebdb02f9982f56f30eb644d2c6",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_20261014/tb_qfd_xdvm_prod.sv",
+    "kind": "file",
+    "sha256": "b400bdce32c08d0a5d6ac0ec9862a6353e799ec8ec52771f8606af264eeb312d",
+    "git_blob": "3820d664081fbb9765ab55329d0977c7a9e34bfa",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_20261014/tb_qfd_xpf_pw_loader.sv",
+    "kind": "file",
+    "sha256": "a1669b383eb9e400a97a99bf74ce1ae2338a1912890cb1337749b83e711dd413",
+    "git_blob": "267d52665dc371eaeb2ef09f7c29c60341011836",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_20261014/tb_qfd_xpf_static_schedule.sv",
+    "kind": "file",
+    "sha256": "457dca27f6d4ef42559f01fb884932217fcb13198856af259d50af4e72388f11",
+    "git_blob": "618f09128ebf872d2b1195a9d64d97b1ee52fc21",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_20261014/tb_qfd_xs_leaf_banked.sv",
+    "kind": "file",
+    "sha256": "3b6317b39b4e3cd672552478bbb200fdbf073362562902ac28ab4b387ae5e477",
+    "git_blob": "1ff42d9cbb8fafe57b266564276a8ed53da44498",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_20261014/tb_qfd_xs_leaf_read_pin.sv",
+    "kind": "file",
+    "sha256": "84f0a80025649c080e3363079db9b95f617ffd477caee4218d3a6b9d7c963c63",
+    "git_blob": "9acf6cc85304836ac840926bcfd3ee2024a7f491",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_20261014/tb_qwen_me_dvm_w12.sv",
+    "kind": "file",
+    "sha256": "b58d4323ccfa711f64191da17bb55959508e855d2bc756c3435c45b78798d1f7",
+    "git_blob": "f0318f2fda3c79eacf1c6d2a5706dbbb2a36b1d7",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_extcap_20261015/qfd_xcol_extcap.sv",
+    "kind": "file",
+    "sha256": "9a3293c86d70a74528186cac44b474e93d637223e4f819562f0c12e80a85e33e",
+    "git_blob": "5f20b52be0b9f5544620258c390b25feda494d13",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_extcap_20261015/qfd_xs_leaf_capture.sv",
+    "kind": "file",
+    "sha256": "9b10754e8e51885099044b88f01e0f05d23800fe548ebd3a7ebca3ed85de0914",
+    "git_blob": "7db227c0d6c3709bd59e6029bf9f5b8fdcc9a528",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/dvm_extcap_20261015/tb_qfd_xs_leaf_capture.sv",
+    "kind": "file",
+    "sha256": "ee0811a12031690d83991a063db834c6b69af5d865b7795b5193e58d72c76a90",
+    "git_blob": "41417f03f026f2558f6f4f5eb8e1c36a47fc3214",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
