@@ -24,7 +24,7 @@
   "physical/hbm_rly_fc/fcf_pre_cts.tcl"
  ],
  "outline": {
-  "w": 21.6,
+  "w": 25.92,
   "h": 218.16,
   "exact": true
  },
@@ -64,12 +64,12 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "F1 forwarded-clock FORK variant (DIE-CLOCK rule: fork = relay tile with 2 branches, each with its own kept clk_out<k> buffer off the CTS tree + matched o<k> buffers on its face); same ot_hbm_rly stage; faces E: ['i'], W: [0, 1]; outline 21.6 x 218.16 um",
+ "structural_change": "F1 forwarded-clock FORK variant (DIE-CLOCK rule: fork = relay tile with 2 branches, each with its own kept clk_out<k> buffer off the CTS tree + matched o<k> buffers on its face); same ot_hbm_rly stage; faces E: ['i'], W: [0, 1]; outline 25.92 x 218.16 um",
  "job": {
   "owner": "Claude:H-NETLIST/F1",
   "branch": "claude/hnl-f1rly-1815",
-  "tag": "ff1",
-  "purpose": "HBM die F1 forwarded-clock fork relay hbfd_rly_624_EW_fc_f2: register on clk_in, 2 branches (clk_out<k> = one kept BUFx12f from the clk_in root, o<k> through the same cell beside it); 21.6 x 218.16 um, M5 cap",
+  "tag": "ff2",
+  "purpose": "HBM die F1 forwarded-clock fork relay hbfd_rly_624_EW_fc_f2: register on clk_in, 2 branches (clk_out<k> = one kept BUFx12f from the clk_in root, o<k> through the same cell beside it); 25.92 x 218.16 um, M5 cap",
   "extra_paths": [
    "physical/hbm_rly_fc",
    "rtl/hbm_accel/die_glue/test/bench_rly_fcf.sh",

@@ -1,5 +1,15 @@
 `timescale 1ns/1ps
 `default_nettype none
+// OT_SFU_SYNC_RST (H-SU k8, 2026-10-16 owner standard: regional SYNC reset trees, no async-clear fanout): when defined,
+// every reset in this file is synchronous to its own clock (the regional rst_n comes registered from ot_rst_relay /
+// the die's regional relays); undefined = the previous asynchronous form, bit-identical behaviour after release.
+`ifndef OT_SFU_ARST
+`ifdef OT_SFU_SYNC_RST
+`define OT_SFU_ARST(r)
+`else
+`define OT_SFU_ARST(r) or negedge r
+`endif
+`endif
 // Compiler-issued SFU arithmetic. The 1742-bit control word is the explicit
 // lane-grid ABI (see ot_hgi_sfu_arithmetic_grid), not an instruction FIFO.
 // Every edge is consumed; there is no ready, credit, lease, or issue retry.
@@ -23,11 +33,11 @@ module ot_hgi_sfu_static_quarter #(
  output wire [511:0] vm_wdata,kv_wdata,ro_x
 );
  reg [1741:0] control;
- always @(posedge clk_control or negedge rst_control_n)
+ always @(posedge clk_control `OT_SFU_ARST(rst_control_n))
   if(!rst_control_n)control<=0;else control<=compiler_control;
 `ifdef OT_SFU_STATIC_PHASE_MUTANT
  reg [1741:0] late;
- always @(posedge clk_control or negedge rst_control_n)
+ always @(posedge clk_control `OT_SFU_ARST(rst_control_n))
   if(!rst_control_n)late<=0;else late<=control;
  wire [1741:0] grid_control=late;
 `else
