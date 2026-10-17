@@ -128,7 +128,9 @@ END m
 def test_pins_tcl_and_flow_fragments():
     r = CB.assign_pins(OL, [dict(name='a', direction='input', inside=[[300, 300]], outside=[[300, 900]])], [], 'NESW')
     t = CB.pins_tcl(r['pins'])
-    assert 'place_pin -pin_name {a} -layer M5' in t and '-force_to_die_boundary' in t and 'place_pins' not in t
+    assert all(f'-pin_size {{{CB.WIDTH[q["layer"]]} 0.192}}' in CB.pins_tcl([q]) for q in
+               [dict(name='z', edge='N', layer=l, x=1.0, y=2.0) for l in ('M5', 'M7')])
+    assert '-layer M' in t and '-force_to_die_boundary' in t and 'place_pins' not in t
     fp = CB.floorplan_tcl(500, 300)
     assert '-core_area {1.080 1.080 498.920 298.920}' in fp
     assert 'exit 3' in CB.bounds_check_tcl() and 'detailed_placement' in CB.legalize_tcl()

@@ -36,6 +36,8 @@ SNAP_DEFAULTS = dict(policy='cut', grid_um=0.216, halo_um=0.0, search_um=60.0, f
 TRACKS = {'M4': (0.012, 0.048), 'M5': (0.012, 0.048), 'M6': (0.016, 0.064), 'M7': (0.016, 0.064),
           'M8': (0.116, 0.080), 'M9': (0.116, 0.080)}
 VERTICAL = {'M1', 'M3', 'M5', 'M7', 'M9'}
+# ASAP7 tech LEF WIDTH per layer (PPL-0034 rejects a pin narrower than the layer's min width)
+WIDTH = {'M4': 0.024, 'M5': 0.024, 'M6': 0.032, 'M7': 0.032, 'M8': 0.040, 'M9': 0.040}
 EPS = 1e-6
 
 
@@ -422,11 +424,12 @@ def assign_pins(outline, ports, inside_bodies=(), allowed_edges='NESW', **cfg):
     return dict(pins=out, report=rep, errors=errors)
 
 
-def pins_tcl(pins, pin_len=PIN_DEFAULTS['pin_len_um'], pin_w=PIN_DEFAULTS['pin_w_um']):
-    """place_pin per port, FIXED (OpenROAD's place_pin default), long side into the die."""
+def pins_tcl(pins, pin_len=PIN_DEFAULTS['pin_len_um'], pin_w=None):
+    """place_pin per port, FIXED (OpenROAD's place_pin default), long side into the die, layer min width."""
     L = ['# cluster boundary pins (tools/die_cluster/boundary.py): on the outline, on track, FIXED']
     for p in pins:
-        sz = f'{pin_w} {pin_len}' if p['edge'] in 'NS' else f'{pin_len} {pin_w}'
+        pin_w_ = pin_w or WIDTH.get(p['layer'], PIN_DEFAULTS['pin_w_um'])
+        sz = f'{pin_w_} {pin_len}' if p['edge'] in 'NS' else f'{pin_len} {pin_w_}'
         L.append(f"place_pin -pin_name {{{p['name']}}} -layer {p['layer']} -location {{{p['x']:.6f} {p['y']:.6f}}} "
                  f"-pin_size {{{sz}}} -force_to_die_boundary")
     return '\n'.join(L) + '\n'
