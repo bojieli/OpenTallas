@@ -30,11 +30,6 @@
  },
  "pins": {
   "W": [
-   "clk",
-   "clk_pw",
-   "rst_n",
-   "clk_lg",
-   "rst_lg_n",
    "clk_lane",
    "clk_map",
    "rst_lane_n",
@@ -53,7 +48,6 @@
    "kv_waddr_w"
   ],
   "E": [
-   "clk_pe",
    "io_word",
    "compiler_control",
    "fault",
@@ -65,6 +59,14 @@
    "ro_x_e",
    "kv_wdata_e",
    "kv_waddr_e"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "clk_pw",
+   "clk_pe",
+   "clk_lg",
+   "rst_lg_n"
   ]
  },
  "clock_port": "clk",
