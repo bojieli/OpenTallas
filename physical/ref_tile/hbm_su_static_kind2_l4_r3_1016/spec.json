@@ -1,0 +1,353 @@
+{
+ "name": "hbm_su_static_kind2_l4_r3_1016",
+ "top": "ot_hbm_su_static_kind2_lat4_leaf1_r3_physical",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_arithmetic.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_sync_rst_relay.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_kind2_lat4_leaf1_r3_physical.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv"
+ ],
+ "clock_port": "clk_pin",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "clk_pin",
+   "clk",
+   "clk_sfu",
+   "clk_ins",
+   "clk_side"
+  ],
+  "W": [
+   "ld_c",
+   "rd_q",
+   "vi_q"
+  ],
+  "E": [
+   "coll",
+   "fault",
+   "kv_waddr",
+   "kv_wdata",
+   "kv_we",
+   "rd_addr",
+   "rd_re",
+   "rd_src",
+   "ro_v",
+   "ro_x",
+   "vi_addr",
+   "vi_re",
+   "vm_waddr",
+   "vm_wdata",
+   "vm_we"
+  ],
+  "S": [
+   "rst_n",
+   "lane_id",
+   "ld",
+   "ld_bank",
+   "emit",
+   "bank",
+   "o_v",
+   "i_v",
+   "no",
+   "ni",
+   "ls",
+   "lvw",
+   "vb",
+   "krow",
+   "obase",
+   "aibase",
+   "aind",
+   "gsh",
+   "cpair",
+   "dst",
+   "srcs",
+   "cx_srcs",
+   "cx_arnd",
+   "cx_arelu",
+   "cx_amin",
+   "cx_cclip",
+   "cx_imm3",
+   "cp_m1",
+   "cp_imm1",
+   "cm_m1",
+   "cm_m2",
+   "cm_qm",
+   "cm_imm1",
+   "ca_ad",
+   "ca_imm2",
+   "ci_sfu",
+   "cs_sfu",
+   "cs_e1",
+   "cs_imm2",
+   "ce_e2",
+   "ce_imm1",
+   "co_rnd",
+   "co_dst"
+  ]
+ },
+ "layer_cap": "M5",
+ "signal_max_layer": "M5",
+ "pg_layer": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 32,
+  "period_ps": 1111.111111,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "signoff_period_ps": 1111.111111,
+  "macro_halo_um": 5.4,
+  "pin_min_tracks": 4,
+  "io_hold_margin_ns": 0.0,
+  "hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Claude:H-SU/PGSLICE",
+  "branch": "claude/hsu-pgslice-d4c",
+  "tag": "r3",
+  "purpose": "Regional roots per lane leaf, meeting only at registered seams (r1 gate: one lane root of 32,978 sinks failed the measured >15k insertion/spread rule; s2 EARLY_FAIL_HOLD from per-stage roots): clk_pin pin registers, clk stages 0-3+5-7 (~13.1k), clk_sfu stage-4 SFU (~10.8k), clk_ins insertion line (~9.4k), clk_side SIDE pipe; seams = stage-3 registers -> SFU/insertion inputs and their outputs -> stage-5 merge. OT_QMUL4_INCUT, recipe 4 (hold_budget die), sync regional reset (relays sample on the pin root). KIND2 carries the SIDE pipe inside (no side pins), outline 248.4 x 432.",
+  "extra_paths": [],
+  "benches": [
+   {
+    "name": "lane_exact",
+    "cmd": "SU_LANE_SYNC_RST=1 SU_LANE_QMUL4_INCUT=1 SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane ot_hbm_su_static_kind2_lat4_leaf1_r3_physical 4 3 1 0",
+    "expect": "pass",
+    "pass_regex": "SU_LANE PASS",
+    "min_count_regex": "outputs=(\\d+)",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_mutant_addr",
+    "cmd": "SU_LANE_SYNC_RST=1 SU_LANE_QMUL4_INCUT=1 SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane_mut ot_hbm_su_static_kind2_lat4_leaf1_r3_physical 4 3 1 0 ADDR",
+    "expect": "fail",
+    "fail_regex": "SU_LANE FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_mutant_data",
+    "cmd": "SU_LANE_SYNC_RST=1 SU_LANE_QMUL4_INCUT=1 SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane_mut_data ot_hbm_su_static_kind2_lat4_leaf1_r3_physical 4 3 1 0 DATA",
+    "expect": "fail",
+    "fail_regex": "SU_LANE FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_mutant_phase",
+    "cmd": "SU_LANE_SYNC_RST=1 SU_LANE_QMUL4_INCUT=1 SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane_mut_phase ot_hbm_su_static_kind2_lat4_leaf1_r3_physical 4 3 1 0 PHASE",
+    "expect": "fail",
+    "fail_regex": "SU_LANE FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_mutant_reset",
+    "cmd": "SU_LANE_SYNC_RST=1 SU_LANE_QMUL4_INCUT=1 SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/reset_mut ot_hbm_su_static_kind2_lat4_leaf1_r3_physical 4 3 1 0 RESET",
+    "expect": "fail",
+    "fail_regex": "SU_LANE FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "recipe": 4,
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL (ot_hbm_su_static_lane_pinreg, PIN_RST=1) already registers every data input, rst_n and every output at the pin; a kit-level flop stage would add a second, unscheduled boundary edge"
+ },
+ "structural_change": "Regional roots per lane leaf, meeting only at registered seams (r1 gate: one lane root of 32,978 sinks failed the measured >15k insertion/spread rule; s2 EARLY_FAIL_HOLD from per-stage roots): clk_pin pin registers, clk stages 0-3+5-7 (~13.1k), clk_sfu stage-4 SFU (~10.8k), clk_ins insertion line (~9.4k), clk_side SIDE pipe; seams = stage-3 registers -> SFU/insertion inputs and their outputs -> stage-5 merge. OT_QMUL4_INCUT, recipe 4 (hold_budget die), sync regional reset (relays sample on the pin root). KIND2 carries the SIDE pipe inside (no side pins), outline 248.4 x 432.",
+ "outline": {
+  "w": 248.4,
+  "h": 432.0
+ },
+ "defines": [
+  "OT_QMUL4_INCUT",
+  "OT_SU_SYNC_RST"
+ ],
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "clk_pin",
+  "clk",
+  "clk_sfu",
+  "clk_ins",
+  "clk_side"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ports": [
+    "clk_pin"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [
+    "rst_n",
+    "lane_id",
+    "ld",
+    "ld_bank",
+    "ld_c",
+    "emit",
+    "bank",
+    "o_v",
+    "i_v",
+    "no",
+    "ni",
+    "ls",
+    "lvw",
+    "vb",
+    "krow",
+    "obase",
+    "aibase",
+    "aind",
+    "gsh",
+    "cpair",
+    "dst",
+    "srcs",
+    "vi_q",
+    "rd_q",
+    "cx_srcs",
+    "cx_arnd",
+    "cx_arelu",
+    "cx_amin",
+    "cx_cclip",
+    "cx_imm3",
+    "ci_sfu",
+    "cs_sfu",
+    "cp_m1",
+    "cp_imm1",
+    "cm_m1",
+    "cm_m2",
+    "cm_qm",
+    "cm_imm1",
+    "ca_ad",
+    "ca_imm2",
+    "cs_e1",
+    "cs_imm2",
+    "ce_e2",
+    "ce_imm1",
+    "co_rnd",
+    "co_dst"
+   ],
+   "outputs": [
+    "vi_re",
+    "vi_addr",
+    "rd_addr",
+    "rd_re",
+    "rd_src",
+    "vm_we",
+    "vm_waddr",
+    "vm_wdata",
+    "kv_we",
+    "kv_waddr",
+    "kv_wdata",
+    "ro_v",
+    "ro_x",
+    "fault",
+    "coll"
+   ]
+  },
+  "lane": {
+   "ports": [
+    "clk"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "sfu": {
+   "ports": [
+    "clk_sfu"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "ins": {
+   "ports": [
+    "clk_ins"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "side": {
+   "ports": [
+    "clk_side"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false
+}
