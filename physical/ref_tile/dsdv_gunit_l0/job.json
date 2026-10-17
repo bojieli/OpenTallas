@@ -1,5 +1,5 @@
 {
- "name": "dsdv_gunit_l0-g1-COMMIT",
+ "name": "dsdv_gunit_l0-g1-4d695cd26",
  "block": "dsdv_gunit_l0",
  "ref_tile": true,
  "owner": "Claude:S81U-GUNIT2",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/s81u1-1017",
-  "commit": "COMMIT",
+  "commit": "4d695cd26",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/unit",
    "rtl/hdc",
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsdv_gunit_l0/dsdv_gunit_l0-g1-COMMIT"
+   "to": "results/rtl/ref_tile/dsdv_gunit_l0/dsdv_gunit_l0-g1-4d695cd26"
   }
  ],
  "cycles_added": 0,
