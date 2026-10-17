@@ -72,19 +72,15 @@
   "tag": "s81sl_hcpl",
   "purpose": "S81-SLICE deliverable 3: beat-leaf sub-leaf to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
-   "rtl/dsrom_sys/s81_dv/slice",
-   "tools/s81_slice",
-   "tools/s81_suhc/hc_gate.py",
-   "tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl",
-   "physical/hbm_norm_split_20261008",
-   "rtl/hdc/v41x",
-   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
-   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
-   "results/rtl/hbm_norm_engine_view_20261006",
-   "tools/hdc_golden.py",
-   "tools/hdc_golden_v41.py",
-   "tools/rtl_hdc_v41_blockdot_campaign.py",
-   "tools/dsrom_su_hcpost.py"
+   "tools/s81_slice/hcpl_bench.sh",
+   "rtl/test/tb_hcpost_lane_pr.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv"
   ],
   "benches": [
    {

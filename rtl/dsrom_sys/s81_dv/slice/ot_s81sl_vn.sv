@@ -4,9 +4,10 @@
 // slice is a cluster of 5 beat leaves; beat leaf k owns elements [64k, 64k+64) of the slice's 320, i.e. global element
 // e = 320 g + 64 k + 8 j + l, sub-beat j = 0..7, lane l = 0..7).  One hardened master, x5 per slice, own clock root.
 //
-//   h store   4 HC copies x 64 elements BF16, flops: row j = {copy 3 .. copy 0} x {lane 7 .. lane 0} x 16 b (512 b).
-//             written in half rows (4 lanes x 4 copies, 256 b) by vp (hc_post results / stage h load), read in half rows
-//             by vp (hc_post residual operands) and in full rows by the norm.
+//   h store   4 HC copies x 64 elements BF16 in two ot_sram_1r1w_128x256 macros, one per half row (half hf = lanes
+//             4 hf .. 4 hf + 3 of all 4 copies, 256 b; address = sub-beat j): written in half rows by vp (hc_post results /
+//             stage h load), read in half rows by vp (hc_post residual operands) and both halves together by the norm.
+//             The read port is shared (the norm's issue and vp's reads never overlap: compiler slots; overlap = fault).
 //   norm      ONE ot_hbm_norm_grp G = 8 (the HBM norm group, unchanged arithmetic) run over the beat's 8 golden chunks as
 //             8 sub-beats (D = 64, N = 8, NV = 8): per sub-beat the hc_pre mix of the 4 copies, the square and the
 //             golden chunk-of-8 chain -> the chunk sum s_j; x waits in the group's x SRAM; the gains are loaded per norm
@@ -69,39 +70,41 @@ module ot_s81sl_vn #(
         wl_i_c <= wl_i; wl_d_c <= wl_d; rb_d_c <= rb_d;
     end
 
-    // ---------------------------------------------------------------- h store (no reset: written before use)
-    reg [511:0] hs [0:7];
+    // ---------------------------------------------------------------- norm issue state (drives the h read port)
+    reg       run; reg [2:0] nj; reg g_go, g_inv, g_inv0; reg [1023:0] g_x;
     integer i, k;
-    always @(posedge clk)
-        if (hw_v_c)
-            for (k = 0; k < 4; k = k + 1)
-                for (i = 0; i < 4; i = i + 1)
-                    hs[hw_j_c][(8 * k + 4 * hw_hf_c + i) * 16 +: 16] <= hw_d_c[(4 * k + i) * 16 +: 16];
-    // half-row read (vp)
-    reg [255:0] hq_n;
-    always @(*) begin
-        for (k = 0; k < 4; k = k + 1)
-            for (i = 0; i < 4; i = i + 1)
-                hq_n[(4 * k + i) * 16 +: 16] = hs[hr_j_c][(8 * k + 4 * hr_hf_c + i) * 16 +: 16];
-    end
-    always @(posedge clk or negedge rs_o) if (!rs_o) hq_v <= 1'b0; else hq_v <= hr_v_c;
-    always @(posedge clk) hq_d <= hq_n;
-
-    // ---------------------------------------------------------------- norm issue: go, then the 8 sub-beats
-    reg       run; reg [2:0] nj; reg g_go, g_inv; reg [1023:0] g_x;
+    // ---------------------------------------------------------------- h store: half 0 / half 1 macros, address j
+    wire [255:0] hm0, hm1;
+    wire         hre = hr_v_c || run;
+    wire [6:0]   hra = run ? {4'd0, nj} : {4'd0, hr_j_c};
+    ot_sram_1r1w_128x256_m1_r2c2 u_h0 (.clk(clk), .r_ce_in(hre && (run || !hr_hf_c)), .r_addr_in(hra), .rd_out(hm0),
+        .w_ce_in(hw_v_c && !hw_hf_c), .w_addr_in({4'd0, hw_j_c}), .wd_in(hw_d_c), .w_mask_in({256{1'b1}}),
+        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+    ot_sram_1r1w_128x256_m1_r2c2 u_h1 (.clk(clk), .r_ce_in(hre && (run || hr_hf_c)), .r_addr_in(hra), .rd_out(hm1),
+        .w_ce_in(hw_v_c && hw_hf_c), .w_addr_in({4'd0, hw_j_c}), .wd_in(hw_d_c), .w_mask_in({256{1'b1}}),
+        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+    // half-row read (vp): the macro output register is the output flop (pin flop, macro edge, output flop: 2 edges)
+    reg hrv1, hrhf1;
+    always @(posedge clk or negedge rs_o) if (!rs_o) begin hrv1 <= 1'b0; hq_v <= 1'b0; end
+        else begin hrv1 <= hr_v_c && !run; hq_v <= hrv1; end
+    always @(posedge clk) begin hrhf1 <= hr_hf_c; hq_d <= hrhf1 ? hm1 : hm0; end
     always @(posedge clk or negedge rs_c)
-        if (!rs_c) begin run <= 1'b0; nj <= 3'd0; g_go <= 1'b0; g_inv <= 1'b0; end
+        if (!rs_c) begin run <= 1'b0; nj <= 3'd0; g_go <= 1'b0; g_inv0 <= 1'b0; g_inv <= 1'b0; end
         else begin
             g_go <= go_c;
-            g_inv <= run;
+            g_inv0 <= run;
+            g_inv <= g_inv0;
             if (go_c) begin run <= 1'b1; nj <= 3'd0; end
             else if (run) begin nj <= nj + 3'd1; if (nj == 3'd7) run <= 1'b0; end
         end
-    // in_x: copy k of lane l at [(8k + l)*32]: the BF16 h as its FP32 bit pattern
+    // in_x: copy k of lane l at [(8k + l)*32]: the BF16 h as its FP32 bit pattern (half row hf = lanes 4 hf + i at
+    // (4k + i) * 16), registered from the macro outputs one edge after the read (g_inv follows run by 2 edges)
     always @(posedge clk)
         for (k = 0; k < 4; k = k + 1)
-            for (i = 0; i < 8; i = i + 1)
-                g_x[(8 * k + i) * 32 +: 32] <= {hs[nj][(8 * k + i) * 16 +: 16], 16'd0};
+            for (i = 0; i < 4; i = i + 1) begin
+                g_x[(8 * k + i) * 32 +: 32]     <= {hm0[(4 * k + i) * 16 +: 16], 16'd0};
+                g_x[(8 * k + 4 + i) * 32 +: 32] <= {hm1[(4 * k + i) * 16 +: 16], 16'd0};
+            end
     wire s_v, gy_v, gf; wire [7:0] s_i, gy_i; wire [31:0] s; wire [255:0] gy;
     ot_hbm_norm_grp #(.G(8), .D(64), .N(8), .LM(LM), .LA(LA)) u_g (.clk(clk), .rst_n(rs_g), .go(g_go), .in_v(g_inv),
         .in_x(g_x), .pre(pre_c), .wl_v(wl_v_c), .wl_i({5'd0, wl_i_c}), .wl_d(wl_d_c), .rb_v(rb_v_c), .rb_d(rb_d_c),
@@ -177,6 +180,7 @@ module ot_s81sl_vn #(
             p_v <= avl[LA] && a_no == 3'd6;
             y_v <= gy_v;
             if (go_c) fault <= run;                         // a go while the previous norm still issues
+            else if (hr_v_c && run) fault <= 1'b1;          // a vp h read while the norm issues
             else if (gf || (avl[LA] && a_f) || (s_v && s_i > 8'd7)) fault <= 1'b1;
         end
     always @(posedge clk) begin p_d <= a_y; y_i <= gy_i[2:0]; y <= gy; end

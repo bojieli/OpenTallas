@@ -195,8 +195,8 @@ module ot_s81sl_vp #(
         if (dv && dop == OP_POST && dsi < 8'd5)
             for (i = 0; i < 4; i = i + 1) cf[4 * dsi + i] <= q1r[32 * i +: 32];
     // POST step s >= 5 (cycle T): the y row read and the h half-row request (hr) leave together; the y row is at q in
-    // T + 2 (macro + output register) and at yrow_d[1] in T + 4, the h half row at hqd_c in T + 4 (hr out flop, vn pin
-    // flop, vn read flop, this leaf's pin flop): the lanes issue in T + 4 (lane_v, lr, ly registered at its end).
+    // T + 2 (macro + output register) and at yrow_d[2] in T + 5, the h half row at hqd_c in T + 5 (hr out flop, vn pin
+    // flop, vn h macro edge, vn output flop, this leaf's pin flop): the lanes issue in T + 5.
     reg [255:0] yrow_d [0:3]; reg [3:0] ydv;
     always @(posedge clk or negedge rs_p) if (!rs_p) ydv <= 4'd0;
         else ydv <= {ydv[2:0], dv && dop == OP_POST && dsi >= 8'd5};
@@ -209,13 +209,18 @@ module ot_s81sl_vp #(
     genvar gl;
     generate for (gl = 0; gl < 16; gl = gl + 1) begin : g_ln
         localparam integer KK = gl / 4, II = gl % 4;
+`ifndef OT_S81SL_VP_HARD
         ot_dsrom_su_hcpost_lane_pr #(.ML(ML), .AL(AL)) u_l (.clk(clk), .rst_n(rs_p), .v(lane_v),
+`else
+        // hardened cluster: the closed s81sl_hcpl view (its kit fixes ML 7 / AL 6; no #() on a hard child)
+        ot_dsrom_su_hcpost_lane_pr u_l (.clk(clk), .rst_n(rs_p), .v(lane_v),
+`endif
             .r0(lr[gl][0]), .r1(lr[gl][1]), .r2(lr[gl][2]), .r3(lr[gl][3]), .y(ly[gl]),
             .c0(cf[KK]), .c1(cf[4 + KK]), .c2(cf[8 + KK]), .c3(cf[12 + KK]), .p(cf[16 + KK]),
             .vo(lv[gl]), .o(lo[gl]), .fault(lf[gl]));
     end endgenerate
-    // the h half row of POST step s (vn read requested at the y-read step +2: hq_v arrives aligned with ydv[3])
-    always @(posedge clk or negedge rs_p) if (!rs_p) lane_v <= 1'b0; else lane_v <= ydv[1];
+    // the h half row of POST step s (requested with the y read: hq arrives aligned with ydv[2])
+    always @(posedge clk or negedge rs_p) if (!rs_p) lane_v <= 1'b0; else lane_v <= ydv[2];
     always @(posedge clk) begin
         for (k = 0; k < 4; k = k + 1)
             for (i = 0; i < 4; i = i + 1) begin
@@ -223,14 +228,14 @@ module ot_s81sl_vp #(
                 lr[4 * k + i][1] <= {hqd_c[(4 * 1 + i) * 16 +: 16], 16'd0};
                 lr[4 * k + i][2] <= {hqd_c[(4 * 2 + i) * 16 +: 16], 16'd0};
                 lr[4 * k + i][3] <= {hqd_c[(4 * 3 + i) * 16 +: 16], 16'd0};
-                ly[4 * k + i] <= yrow_d[1][32 * i +: 32];
+                ly[4 * k + i] <= yrow_d[2][32 * i +: 32];
             end
     end
     // write-back tag: the half-row index rides a delay line of the lane latency
-    reg [3:0] pidx_q [0:3]; reg [3:0] pidx;
+    reg [3:0] pidx_q [0:4]; reg [3:0] pidx;
     always @(posedge clk) begin
         pidx_q[0] <= si[3:0] - 4'd5; pidx_q[1] <= pidx_q[0]; pidx_q[2] <= pidx_q[1]; pidx_q[3] <= pidx_q[2];
-        pidx <= pidx_q[3];
+        pidx_q[4] <= pidx_q[3]; pidx <= pidx_q[4];
     end
     wire [3:0] widx; wire wvl;
     ot_hdc_delay #(.W(4), .D(HPL)) u_wi (.clk(clk), .rst_n(rs_p), .d(pidx), .q(widx));
@@ -243,18 +248,18 @@ module ot_s81sl_vp #(
         if (srun && sop == OP_POST && si >= 8'd5) begin hrq_v = 1'b1; hrq_i = si[3:0] - 4'd5; end
         if (srun && sop == OP_HSTORE) begin hrq_v = 1'b1; hrq_i = si[3:0]; end
     end
-    // HSTORE: the half row returns from vn two edges after hr, plus this leaf's input flop
-    reg [3:0] hsi_q [0:3];
-    reg [3:0] hsv_q;
-    always @(posedge clk or negedge rs_o) if (!rs_o) hsv_q <= 4'd0;
-        else hsv_q <= {hsv_q[2:0], srun && sop == OP_HSTORE};
+    // HSTORE: the half row returns from vn three edges after hr, plus this leaf's input flop
+    reg [3:0] hsi_q [0:4];
+    reg [4:0] hsv_q;
+    always @(posedge clk or negedge rs_o) if (!rs_o) hsv_q <= 5'd0;
+        else hsv_q <= {hsv_q[3:0], srun && sop == OP_HSTORE};
     always @(posedge clk) begin
-        hsi_q[0] <= si[3:0]; hsi_q[1] <= hsi_q[0]; hsi_q[2] <= hsi_q[1]; hsi_q[3] <= hsi_q[2];
+        hsi_q[0] <= si[3:0]; hsi_q[1] <= hsi_q[0]; hsi_q[2] <= hsi_q[1]; hsi_q[3] <= hsi_q[2]; hsi_q[4] <= hsi_q[3];
     end
     reg [9:0] hs_base;
     always @(posedge clk) if (cv_c && op == OP_HSTORE) hs_base <= a0;
-    always @(posedge clk or negedge rs_o) if (!rs_o) hs_v <= 1'b0; else hs_v <= hsv_q[3] && hqv_c;
-    always @(posedge clk) begin hs_a <= hs_base + {hsi_q[3], 1'b0}; hs_d <= hqd_c; end
+    always @(posedge clk or negedge rs_o) if (!rs_o) hs_v <= 1'b0; else hs_v <= hsv_q[4] && hqv_c;
+    always @(posedge clk) begin hs_a <= hs_base + {hsi_q[4], 1'b0}; hs_d <= hqd_c; end
 
     always @(posedge clk or negedge rs_o)
         if (!rs_o) begin hw_v <= 1'b0; hr_v <= 1'b0; n_go <= 1'b0; m_v <= 1'b0; wl_v <= 1'b0; lo_v <= 1'b0; s_v <= 1'b0; x_qv <= 1'b0; end
@@ -291,6 +296,6 @@ module ot_s81sl_vp #(
         else begin
             lvbad <= (lv[0] != wvl) || (|lv != &lv);
             fault <= fault | wcol | busy_hit | xrcol | (|lf) | lvbad | (wvl && dv && dop == OP_HLOAD) |
-                     (hsv_q[3] && !hqv_c) | (ydv[1] && !hqv_c);
+                     (hsv_q[4] && !hqv_c) | (ydv[2] && !hqv_c);
         end
 endmodule
