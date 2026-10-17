@@ -1,6 +1,8 @@
 #!/bin/bash
 # QXPQ-RST bench runner: tb_qxpq_rstp (RSTP=1 vs closed RSTP=0 q element, routed params) -- pass + 2 mutants.
-#   qxpq_rstp_bench.sh SRC_ROOT WORK      (SRC_ROOT = source tree with rtl/ and tools/; ROMs = the tb fixtures)
+#   qxpq_rstp_bench.sh SRC_ROOT WORK [MODE]   (SRC_ROOT = source tree with rtl/ and tools/; ROMs = the tb fixtures)
+#   MODE all (default): pass x3 seeds + both mutants; pass: positive run only (BENCH_RC 0 on PASS);
+#   mut_bypass | mut_late: one mutant, prints MUTANT_DETECTED and exits 1 when the bench FAILs it (closure-loop expect=fail)
 set -u
 S=$(cd "$1" && pwd); W=$2; mkdir -p "$W"; W=$(cd "$W" && pwd)
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
@@ -27,6 +29,17 @@ run() { # name expect seed
   echo "$1 seed $3 expect $2 -> ${v:-NO_VERDICT} $([ $ok = 1 ] && echo OK || echo BAD) | $(grep '^QXPQ_RSTP cycles' "$W/$1_s$3.log")"
   [ $ok = 1 ]
 }
+MODE=${3:-all}
+case "$MODE" in
+  pass) build pass || exit 2; rc=0; for s in 1 2 3; do run pass pass $s || rc=1; done; echo "BENCH_RC $rc"; exit $rc ;;
+  mut_bypass|mut_late)
+    [ $MODE = mut_bypass ] && D=+define+OT_QXPQ_RSTP_MUT_BYPASS || D=+define+TB_MUT_LATE
+    build $MODE $D || exit 2
+    if run $MODE fail 1; then echo "MUTANT_DETECTED $MODE"; exit 1; fi
+    echo "MUTANT_ESCAPED $MODE"; exit 0 ;;
+  all) ;;
+  *) echo "unknown MODE $MODE"; exit 2 ;;
+esac
 rc=0
 build pass && build mut_bypass +define+OT_QXPQ_RSTP_MUT_BYPASS && build mut_late +define+TB_MUT_LATE || exit 2
 for s in 1 2 3; do run pass pass $s || rc=1; done

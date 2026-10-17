@@ -3,12 +3,6 @@
  "block": "ot_v41_rom_elem_q_qxpq_w10",
  "owner": "Claude:QXPQ-RST",
  "purpose": "S81-DV q element successor (coordinator-approved 10-17): RSTP=1 synchronous reset relay flop at the rst_n pin (closed view native FAIL only on rst_n: capture 239.2 > 190, 1 pin); 0 data cycles, +1 reset edge; same outline 510.84x221.4, pins, recipe and macros as the CLOSED dsrom-qelem-qs5f-efs-7fb23b7ff-tc-hm10-cl; rst_n takes the H1 data-input reference (native_q_h1r_*).",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc3",
-  "ot-epyc4",
-  "ot-pve1"
- ],
  "threads": 16,
  "peak_ram_gb": 40,
  "route_hold_margin_ns": 0.01,
@@ -22,11 +16,29 @@
  "stages": {
   "bench": [
    {
-    "cmd": "bash tools/dsrom_qelem_cl/qxpq_rstp_bench.sh . {RUN}/bench_rstp",
+    "name": "tb_qxpq_rstp_pass",
+    "cmd": "bash tools/dsrom_qelem_cl/qxpq_rstp_bench.sh . {RUN}/bench_rstp_pass pass",
     "threads": 16,
     "peak_ram_gb": 4,
-    "name": "qxpq_rstp_lockstep_pass_and_mutants",
-    "expect": "pass"
+    "expect": "pass",
+    "pass_regex": "^BENCH_RC 0$",
+    "min_count_regex": "^QXPQ_RSTP cycles=.*\\bwindows=(\\d+)"
+   },
+   {
+    "name": "tb_qxpq_rstp_mut_bypass",
+    "cmd": "bash tools/dsrom_qelem_cl/qxpq_rstp_bench.sh . {RUN}/bench_rstp_mut_bypass mut_bypass",
+    "threads": 16,
+    "peak_ram_gb": 4,
+    "expect": "fail",
+    "fail_regex": "^MUTANT_DETECTED mut_bypass$"
+   },
+   {
+    "name": "tb_qxpq_rstp_mut_late",
+    "cmd": "bash tools/dsrom_qelem_cl/qxpq_rstp_bench.sh . {RUN}/bench_rstp_mut_late mut_late",
+    "threads": 16,
+    "peak_ram_gb": 4,
+    "expect": "fail",
+    "fail_regex": "^MUTANT_DETECTED mut_late$"
    }
   ],
   "calibrate": {
@@ -86,13 +98,7 @@
  },
  "route_hold_corners": "mm",
  "route_corner": "TC",
- "host_require": [
-  "ot-epyc1tb",
-  "ot-epyc3",
-  "ot-epyc4",
-  "ot-pve1"
- ],
- "notes": "QXPQ-RST 10-17: NOT SUBMITTED -- coordinator reviews the pre-route gate PNG first (29 earlier non-CLOSED routes).",
+ "notes": "QXPQ-RST 10-17: coordinator APPROVED (HANDOFF 0co REVIEW 10-17 ~14:25). SUB2: retired hosts removed (admission picks), bench split into pass + 2 expect=fail mutants.",
  "reroute_reason": {
   "kind": "pin_register",
   "source": "results/rtl/dsrom_qelem_pq_20261006/qxpq_rst_1017/native_audit_closed.json",
