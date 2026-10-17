@@ -3,7 +3,7 @@
 # d4c reset geometry is deliberately not reused; rebuild against the d4f placement.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
-LAYER=none IDSTRAPS=1 PCH8=1 PCH9B=1 DROPSM=SE,NE \
+LAYER=none IDSTRAPS=1 PCH8=1 PCH9B=1 SOFT_IDX=${SOFT_IDX-results/arch/hbm_idx_soft_parent_1016/netmap_nq2_tp192.json} DROPSM=SE,NE \
 DROPI=ep_S2,lk_S2,ep_S4,lk_S4,ep_N1,lk_N1,ep_N3,lk_N3 \
 EXTRA_LAYERS="tools/hbm_die_v15/v16_layers/xql_d4f_bfqg.json tools/hbm_die_v15/v16_layers/sfu_split2_d4f.json tools/hbm_die_v15/v16_layers/vm_q2merge_d4f.json tools/hbm_die_v15/v16_layers/vm_hoist_d4f.json tools/hbm_die_v15/v16_layers/coll_hardv7_d4f.json tools/hbm_die_v15/v16_layers/su_rflocal_d4f.json tools/hbm_die_v15/v16_layers/vm_kshare_krl1_d4f.json" \
 bash tools/hbm_die_v15/run_v16_d4b.sh "${1:-results/arch/hbm_die_v16_d4f}"
