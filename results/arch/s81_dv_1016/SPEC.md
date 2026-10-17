@@ -5,7 +5,7 @@ Stream S81-DV (owner decision 0cj, 2026-10-16 ~22:00). Plan level: nothing in th
 **Status: COMPOSED_NOT_NATIVE.** Every rate below is composed from the token-path DAG and plan geometry. It becomes a
 measured rate only once the slice benches and the die trial report their latencies.
 
-**Current die-trial base: p4b**: p4 plus the slice-master port variants (section 0a). p4 itself is the coordinator decision of 10-17, option B. The earlier base was p1b (10-17). It is p1's geometry plus two changes:
+**Current die-trial base: p4c**: p4 plus the per-column tier exchange (sections 0a and 0b). p4 itself is the coordinator decision of 10-17, option B. The earlier base was p1b (10-17). It is p1's geometry plus two changes:
 - the row-0 frames are placed MX, so their cfifo x tap faces the slice;
 - each shared unit sits against the slice it talks to.
 
@@ -218,6 +218,39 @@ What makes exactly one V or B use per slice possible:
 - the ctl tree rides the ring and street lanes on every slice.
 
 Metrics: cut 0.427, 0 over-reach, relays 1,768, 0.39 M bit·mm. MTP 4,154.0 (+25.4% vs today's 3,311.6 on main's current ledger). Explorer record `s81_dv_p4b`.
+
+### 0b (cont.). Long links (> 2 mm) and the tier crossing (owner question, 10-17)
+
+p4b links longer than 2 mm (`dv_plan.py` record, 405-µm hops):
+
+| Link | Width | Length | Relay stages | Per-layer critical path? |
+|---|---|---|---|---|
+| Street ring segments (slice ↔ slice, E–W) | 1,104 b | 2.9–3.6 mm (cluster pitch) | 7–8 | **Yes**: x all-gather and scalar exchange |
+| End-column N↔S ring (p4b: through the collective engines, 3 segments over a ~7.2-mm void) | 1,104 b | 7.2 mm total | ~18 + 2 stops | **Yes**: the tier crossing of the all-gather |
+| q / P·V (S slices of cols 1/6 ↔ PHY-side attention) | 1,104 b | 4.8 mm | 12 | **Yes**: q → attention priced (+16 vs hub); P·V is the wo_a operand |
+| G-unit ctl bundle (16 × 96 b, column 3 then the streets) | 96 b | 3.6–19.4 mm | 8–48 | Mostly **no**. Issuer words and HC coefficients are sent ahead. The expert ids (top-6 → experts) are on the FFN path, but arrive within the all-gather time already charged (48 < 112 stages) |
+| x-chain / return lanes to row-0/3 frames (R0) | 1,104 / 68 b | 2.7–3.2 mm | 8 | **Yes**: inside the phase path (118 stages) |
+
+The structural alternative evaluated is a **per-column tier exchange**. Every column links its S and N slice through its own void units, which become ring stops; this replaces the two fat end-column links. In every case the lane runs at the column centre, between unit faces.
+
+| | p4b (2 end links) | Tier exchange 1/8 width (138 b) | **Tier exchange 1/4 width (276 b) = p4c** |
+|---|---|---|---|
+| Max tier-link width | 1,104 b | 138 b | **276 b** |
+| Worst cut / windows > 0.55 | 0.427 / 0 | 0.427 / 0 | **0.427 / 0** |
+| Over-reach | 0 | 0 | **0** |
+| Relays | 1,768 | 1,872 | **1,872** |
+| bit·mm | 0.388 M | 0.378 M | **0.386 M** |
+| Phase path / scalar exchange | 118 / 95 | 118 / 95 | **118 / 95** |
+| Crossing serialization (N tier needs 40 S beats) | 2 links × 20 cycles | 40 cycles per column | **20 cycles per column** |
+| Unit ring stops on the crossing | — | +4 | **+4** |
+| MTP tok/s (DV base) | 4,154.0 | 4,084.6 (−1.7%) | **4,141.2 (−0.3%)** |
+| Worst stacked MTP | 3,705.1 | 3,640.7 | **3,693.2** |
+
+**Adopted: 276 b (p4c).**
+- It is better for routing: the widest vertical link drops from 1,104 to 276 b, the two 7.2-mm fat end links disappear, and the N/S traffic spreads over 8 short column chains.
+- It is structurally simpler: every slice uses its void-side V port the same way, the slice master drops to **two** centre-leaf variants (C1 = ring + V for 14 slices, C3 = ring + V + B for the attention slices s_1S / s_6S), and units become uniform ring stops.
+- The critical-path cost is the +4 cycles of unit stops: −0.3%, inside the model's noise.
+- 1/8 width is rejected: serialization makes it −1.7%.
 
 ## 1. Why
 
