@@ -202,6 +202,10 @@ module tb_s81_su_sms;
             $display("SMS latency (cycles at the share's pins): SE first e row = last score row + %0d, e rows back to back; SO o row k = P.V row k + %0d",
                      l_se, l_so);
             for (i = 0; i < 8; i = i + 1) if (l_dn[i] >= 0) $display("SMS latency: o_den = last e row + %0d at lt = clog2(nv) = %0d", l_dn[i], i);
+            // the static schedule's published constants (lanes/S81U-2.md; the svc slice schedules its write window from them)
+            if (l_se != 106) fail("SE latency != 106", l_se);
+            if (l_so != 54) fail("SO latency != 54", l_so);
+            for (i = 0; i < 8; i = i + 1) if (l_dn[i] >= 0 && l_dn[i] != 46 + 5 * i) fail("den latency != 46 + 5 lt", i);
             if (err == 0) $display("SMS PASS MUT=%0d checks=%0d", MUT, nchk);
             else $display("SMS FAIL MUT=%0d errors=%0d checks=%0d", MUT, err, nchk);
             $finish;

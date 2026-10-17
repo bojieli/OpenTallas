@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "s81su_smhr",
- "verdict": "FAIL",
- "generated": "2026-10-17T15:13:08-0700",
+ "verdict": "WARN",
+ "generated": "2026-10-17T15:20:26-0700",
  "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "b442e98f3fc0b6a5ea676fc6cbbdec1d37b925e1",
+  "start_commit": "8d489f5b1ccb71240f1907c1ebf55cce7ac3544f",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "2ab91875f4c321ed642d816cd6f70f7087af15327d99ca1624d89fec181e2aa3",
-  "manifest_sha256": "40d675de8dd60b4c8b4b01c1d3bcc5ae9e9276782cc31b679674e97696d2d5a2",
+  "archive_sha256": "c17346022acd6d8794ad621b2292667cd9907c095417bb0e7cc926c0c00d0072",
+  "manifest_sha256": "fa8d5ce1d387745b4cd4d13ad05f8e0054f56214f5c1203223fd2fbf7a241a59",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -18043,8 +18043,8 @@
    {
     "path": "physical/ref_tile/s81su_smhr/floorplan.json",
     "kind": "file",
-    "sha256": "0d40519ec217480de63cda17e5a28a6dd3548d5d874ef009f8cf2cc532098132",
-    "git_blob": "5e7edf9f3d5819a779914966fa93c72c4f2e7ef8",
+    "sha256": "39f89f905e9363d5c8330d45bab3bc852e951a837dfe5b4997c8eee997a19773",
+    "git_blob": "bbcdcb8768ccb796e9bdffdab965b0778b24ac90",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18059,8 +18059,8 @@
    {
     "path": "physical/ref_tile/s81su_smhr/kit.env",
     "kind": "file",
-    "sha256": "919fcbd0e816984e5928a0a37b4f415f7650014ed93a578f44cb8868dc8c367f",
-    "git_blob": "9fdf0ea5d12cb04980bba2dec17232de2e9a38cf",
+    "sha256": "0b0bd47b4be3e8c56bcd1bdf05e3c229e5efd68292ea9b7cfa0b0e3ad7e678e2",
+    "git_blob": "f20e80ef367474873cc00f20b833302e467b2b7e",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18075,8 +18075,8 @@
    {
     "path": "physical/ref_tile/s81su_smhr/place.tcl",
     "kind": "file",
-    "sha256": "3c99f16a74f775c4f3de8d2057f1024d68bd1f963ddce46b34c93f50d318d0cc",
-    "git_blob": "024c064de30608aefa85b8e73b9ac385901a3e0b",
+    "sha256": "9431c368700f18502a17b4ad57d57cf9375a4a3d944b9b1e4b8ee40e90cfdabb",
+    "git_blob": "b668d0f6ab4e8c6f960340dba267df62db74e56b",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18171,8 +18171,8 @@
    {
     "path": "physical/ref_tile/s81su_smhr/spec.json",
     "kind": "file",
-    "sha256": "4c930511a9019b236f686621c8efe505f4e7b65eaaca47fff28b203733fd9012",
-    "git_blob": "251652146a07f229e803935803ec81e782239304",
+    "sha256": "c10adcdf364b48d50a4f7dfdb832d9a49a5df708e3a3aa06ebbc9de07e739511",
+    "git_blob": "7fb98a94c8bc4e73ac2f9e2e06371d19620a6b11",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -134851,8 +134851,8 @@
    {
     "path": "tools/ref_tile/specs_s81u2/s81su_smhr.json",
     "kind": "file",
-    "sha256": "a3d46ecad74c3d10e90a625605be968de09ab539169dc9b84362399d3135efeb",
-    "git_blob": "a29ecb09d16f1da0db82fd1032380d807d3cd05c",
+    "sha256": "fd224572ed87c21f14cdbb1e62f458979c7fa008680436d6906ea3c3186f3d59",
+    "git_blob": "0f69669b2f5903cd8870eb6e6c2aefe3f61ebb43",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -162523,14 +162523,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 146059007,
+   "archive_bytes": 146059029,
    "unpacked_bytes": 913559552,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "3023587d532f0f23c96c8efbb859d08059c201b6",
+   "origin_main": "4068544c303409d1c0e8d4cca52d938d744b4dae",
    "content_sha256": "46212c4a006d162487f2749d8e6001edbd7428d03a257e125b6e20e6b3202016",
    "files": [
     {
@@ -163058,10 +163058,10 @@
     "physical/ref_tile/s81su_smc_ref/views/dsfd_su_t_smc/export_tt.tcl": "a96ee5242f546f2ae0dab17f86aa4ff19ba4e1ae3ceb0700cb13573783809963",
     "physical/ref_tile/s81su_smc_ref/views/dsfd_su_t_smc/insertion.json": "bad42dc5a6c5d8e43a125b8ac47b78b36a8663fe0eb9629be00119b3edf64a35",
     "physical/ref_tile/s81su_smhr/clock.sdc": "05296082aad5e48662473576fd8eb96158127c4f616acfa9d6cf14b948451c44",
-    "physical/ref_tile/s81su_smhr/floorplan.json": "0d40519ec217480de63cda17e5a28a6dd3548d5d874ef009f8cf2cc532098132",
-    "physical/ref_tile/s81su_smhr/kit.env": "919fcbd0e816984e5928a0a37b4f415f7650014ed93a578f44cb8868dc8c367f",
+    "physical/ref_tile/s81su_smhr/floorplan.json": "39f89f905e9363d5c8330d45bab3bc852e951a837dfe5b4997c8eee997a19773",
+    "physical/ref_tile/s81su_smhr/kit.env": "0b0bd47b4be3e8c56bcd1bdf05e3c229e5efd68292ea9b7cfa0b0e3ad7e678e2",
     "physical/ref_tile/s81su_smhr/pdn.tcl": "5cba1e94bd26b1e7eec33d8dd1e7fa93edcbcc3cf9e1be984cc0cd0ac37b607c",
-    "physical/ref_tile/s81su_smhr/place.tcl": "3c99f16a74f775c4f3de8d2057f1024d68bd1f963ddce46b34c93f50d318d0cc",
+    "physical/ref_tile/s81su_smhr/place.tcl": "9431c368700f18502a17b4ad57d57cf9375a4a3d944b9b1e4b8ee40e90cfdabb",
     "physical/ref_tile/s81su_smhr/post_cts.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
     "physical/ref_tile/s81su_smhr/post_drt.tcl": "29c5f064e6199f12cc166bbfc41ffd0f95d9f9c8e604d8788b707bddc06e1a49",
     "physical/ref_tile/s81su_smhr/post_fill.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
@@ -163073,7 +163073,7 @@
     "physical/ref_tile/s81su_smhr/pre_gpl.tcl": "868665071710eb4ce5d4af172b346032f605b49500c67093b5f6f3229928b739",
     "physical/ref_tile/s81su_smhr/pre_grt.tcl": "7a4a8cb6aef83160c9b8e910ab2c5b5d2d00ccdbd315290c0b54bc0723fdd169",
     "physical/ref_tile/s81su_smhr/signoff.sdc": "67a1d16c7882aa8ad0b446827604ff6d53c297803b70bc8690b21c4dc9df43df",
-    "physical/ref_tile/s81su_smhr/spec.json": "4c930511a9019b236f686621c8efe505f4e7b65eaaca47fff28b203733fd9012",
+    "physical/ref_tile/s81su_smhr/spec.json": "c10adcdf364b48d50a4f7dfdb832d9a49a5df708e3a3aa06ebbc9de07e739511",
     "physical/ref_tile/s81su_smhr/spine_ins.tcl": "15482b23ae2cf457c373da6b39f18d7d66693346b5e83255c136bd5c73a5c555",
     "physical/ref_tile/s81su_smr_ref/views/dsfd_su_t_smr/abstract.json": "b7e89b6d60f7cfbad991966ec3b2b267bc21995f133ac70a866d5b47fd68a552",
     "physical/ref_tile/s81su_smr_ref/views/dsfd_su_t_smr/child_lint.json": "9c0d60435d695795cc36844dcf1631b0a1defaeef5c01e8c81541b97a4aa839a",
@@ -163121,16 +163121,16 @@
    },
    "digest": "d83f46b92c79f68b25cd2e115d284cf17ba8fe403adcdba670910037b7279fad"
   },
-  "captured": "2026-10-17T15:08:52-0700",
+  "captured": "2026-10-17T15:15:22-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/s81su_smhr/signoff.sdc"
   },
-  "remote_script_sha256": "d753dd50d152f10ec7f9f62934ff14299588c4c9ea81cb6f16852ac936ae8c90",
+  "remote_script_sha256": "77e5e701d0853826d1abb20cecd52b72a07dcebe4c383648523d539653177df3",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81su_smhr-20261017-150716",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81su_smhr-20261017-151400",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -163141,8 +163141,8 @@
   "max_root_sinks": 1175,
   "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": 594.4,
-  "tt_spread_ps": 227.9,
+  "tt_insertion_ps": 722.3,
+  "tt_spread_ps": 228.3,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -163156,38 +163156,38 @@
     "tt": {
      "boundary": {
       "n": 1101,
-      "mean": 575.5,
-      "min": 565.3,
-      "max": 594.4
+      "mean": 709.5,
+      "min": 697.5,
+      "max": 722.3
      },
      "all": {
       "n": 1176,
-      "mean": 575.4,
-      "min": 366.5,
-      "max": 594.4
+      "mean": 708.9,
+      "min": 494.0,
+      "max": 722.3
      },
      "errors": [],
      "macros": {
       "n": 2,
       "nets": 2,
       "max_per_net": 1,
-      "reg_mean": 575.4,
-      "max_slew": 17.4,
-      "max_late": -171.3,
+      "reg_mean": 708.9,
+      "max_slew": 17.1,
+      "max_late": -157.0,
       "pins": [
        {
         "pin": "u_smc/ck",
-        "arr": 366.5,
-        "slew": 17.4,
-        "late": -208.9,
-        "net": "clkbuf_sp_L45_net"
+        "arr": 494.0,
+        "slew": 17.1,
+        "late": -214.9,
+        "net": "clkbuf_sp_L16_net"
        },
        {
         "pin": "u_smr/ck",
-        "arr": 404.1,
-        "slew": 12.9,
-        "late": -171.3,
-        "net": "clkbuf_sp_L44_net"
+        "arr": 551.9,
+        "slew": 14.7,
+        "late": -157.0,
+        "net": "clkbuf_sp_L15_net"
        }
       ]
      },
@@ -163197,7 +163197,7 @@
   ],
   "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "1,175 sinks on the largest root <= 15,000; measured TT insertion 594.4 ps, leaf spread 227.9 ps"
+  "text": "1,175 sinks on the largest root <= 15,000; measured TT insertion 722.3 ps, leaf spread 228.3 ps"
  },
  "items": [
   {
@@ -163231,10 +163231,10 @@
    "fix": "export the child's clock insertion (ref_tile export)"
   },
   {
-   "severity": "FAIL",
+   "severity": "WARN",
    "check": "fill",
-   "message": "fill 31% = (hard macros 26113.4 + synthesized std cells 395.4) / outline 86593.5 um2; pin demand per face: S 1119 pins over 267.9/345.6 um (78%), N 0 pins over 0.0/345.6 um (0%), W 23 pins over 0.0/250.6 um (0%), E 23 pins over 0.0/250.6 um (0%) (< 35%)",
-   "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+   "message": "fill 36% = (hard macros 26113.4 + synthesized std cells 395.4) / outline 74649.6 um2; pin demand per face: S 613 pins over 267.9/345.6 um (78%), N 512 pins over 60.6/345.6 um (18%), W 20 pins over 0.0/216.0 um (0%), E 20 pins over 0.0/216.0 um (0%) (< 50%)",
+   "fix": ""
   }
  ]
 }
