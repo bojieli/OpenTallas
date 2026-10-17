@@ -122,11 +122,21 @@
     "n2 recipe-2 (capture 224.0)"
    ]
   },
-  "vmb_all_hold": {
-   "status": "ALL vmb_* bank views HELD (H-NETLIST 10-17)",
-   "why": "contract binds hfd_vms_bank_native_q0 body; q0C faces view has literal +1 input pin flops (master differs); q1 nat2/q1_core_r4 have flow-inserted pin flops (not RTL-equal)",
-   "next": "H-SM VM system bench with +1-input wrappers (q0_faces, q1_core_pr); on PASS H-NETLIST switches masters + reruns hoist equivalence",
-   "die": "GEN uses the bank views for geometry only, labelled diagnostic"
+  "vmb_banks": {
+   "status": "RE-CLEARED (contract 99b4f06e7: bank master == view)",
+   "SW_NW": "hfd_vms_bank_native_q0_faces = q0C view (literal input pin flops; 8 stream clock pins)",
+   "SE_NE": "hfd_vms_bank_native_q1_core_pr = vm_native_q1core_pr4 view (H-SM routing; bind on native PASS)",
+   "rejected": [
+    "nat2",
+    "q1core r4",
+    "q1core c"
+   ],
+   "hub": "BANK_PIN_IN=1 (COMMIT_DELAY 6); NW merge DONE_LAT 5",
+   "equivalence": "results/arch/hbm_vms_hoist_2240/receipt_pin_in.txt 4/4 PASS"
+  },
+  "idx_scorer_cluster": {
+   "decision": "leaf flat ~530 um (retime ~221k FF), 4x4 + systolic W->E chain (+4 latency), 16 roots/leaf ~13.8k sinks (approved)",
+   "slot": "3050 sq max until the cluster kit outline (~2500)"
   }
  }
 }
