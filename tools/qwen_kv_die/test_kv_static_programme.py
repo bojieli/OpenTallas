@@ -1,0 +1,110 @@
+"""Golden checks of the KV static programme compiler against the existing bench-fed programmes and calendars."""
+import json
+import re
+import sys
+import unittest
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import kv_static_programme as C
+
+ROOT = C.ROOT
+
+
+class Programme(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.comp = C.compile_all(C.profile('component'))
+        cls.die = C.compile_all(C.profile('die', json.loads((ROOT / C.AGES).read_text())))
+
+    def test_component_layer_image_is_the_committed_image(self):
+        svh = (ROOT / 'rtl/qwen_sys/static_kv_20261014/layer_programme_image.svh').read_text()
+        roots = int(re.search(r"LP_ROOTS = \d+'h([0-9a-f]+);", svh).group(1), 16)
+        words = self.comp['layer']['words']
+        self.assertEqual(roots, sum(w << (32 * i) for i, w in enumerate(words[:324])))
+        self.assertEqual(int(re.search(r"LP_DIGEST = 64'h([0-9a-f]+);", svh).group(1), 16), words[324])
+        self.assertEqual(int(re.search(r"LP_EPOCH = 16'd(\d+);", svh).group(1)), words[325])
+
+    def test_attention_calendar_matches_the_native_endpoint_compiler(self):
+        pr = C.profile('component')
+        for T in (1, 2, 77, 128, 129, 1000, 2048, 4097, 6144, 8191, 8192):
+            c = C.attention_calendar(T, pr)
+            self.assertEqual(c, C.AC.calendar(T, pv='w16', head_g3s2=True))
+            ep = C.CNE.compile_programme(1, 2, T - 1, 0, 2)
+            self.assertEqual(C.AC.hexcal(c), ep['calendar_hex'])
+
+    def test_attention_words_follow_the_link_slot(self):
+        for r in (self.comp, self.die):
+            a = r['attention']
+            self.assertEqual(a['compiled_end'], a['compiled_tx_first'] + 34)
+            self.assertGreater(a['compiled_tx_first'], a['compiled_rx_cmd'] + 34)
+            for T, s in a['samples'].items():
+                self.assertEqual(C.AC.service_cycles(s['fields']), a['service_end'], T)
+            # the minimal endpoint service of the longest context fits inside the link's RESULT slot
+            ep = C.CNE.compile_programme(1, 2, 8191, 0, a['compiled_rx_cmd'])
+            if r is self.comp:
+                self.assertLessEqual(ep['compiled_tx_first'], a['compiled_tx_first'])
+
+    def test_calendar_pacing_is_the_kv_calendar_prefix(self):
+        from tools.qwen_static_kv import landing_cal_golden as G
+        from tools.qwen_static_schedule import kv_calendar as K
+        ks, vs = K.k_streams(8192, G.P), K.pv16_v_streams(8192)
+        for name, g in self.comp['groups'].items():
+            pc = g['pcs'][0]
+            kp = K.pc_schedule(ks[pc], G.P, 0)['put']
+            vp = K.pc_schedule_paced(vs[pc], G.P, K._layer_pc_paced(vs[pc], G.P)[0])['put']
+            self.assertEqual((g['K']['P0'], g['K']['GAP']), G.pacing([x - kp[0] for x in kp]))
+            self.assertEqual((g['V']['P0'], g['V']['GAP']), G.pacing([x - vp[0] for x in vp]))
+        self.assertEqual({(g['V']['P0'], g['V']['GAP']) for g in self.comp['groups'].values()}, {(160, 5)})
+        # die: the JEDEC-bench RD bursts (K 8 / 2, V 8 / 3) set the put law; law_check proved it at every checked T
+        self.assertEqual({(g['K']['P0'], g['K']['GAP'], g['V']['P0'], g['V']['GAP']) for g in self.die['groups'].values()},
+                         {(8, 2, 8, 3)})
+        self.assertFalse(C.law_check(C.profile('die', json.loads((ROOT / C.AGES).read_text())), C.pc_plans(self.die['profile'])[0],
+                                     Ts=[1, 77, 1000, 4097, 8192])[2])
+
+    def test_boot_bundle_matches_the_dispatcher(self):
+        rtl = (ROOT / 'rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv').read_text()
+        body = re.search(r'case\(t\)(.*?)endcase', rtl, re.S).group(1)
+        want = {}
+        for keys, n in re.findall(r'([\d,]+):word_count=(\d+);', body):
+            for k in keys.split(','):
+                want[int(k)] = int(n)
+        for r in (self.comp, self.die):
+            b = r['bundle']
+            self.assertEqual(b['target_order'], list(range(1, 10)) + [0])
+            for im in b['images'][:-1]:
+                self.assertEqual(im['program_words'], want[im['target']])
+            self.assertEqual(int(b['images'][-1]['digest'], 16), r['layer']['digest'])
+
+    def test_writer_and_ownership_follow_their_boot_checks(self):
+        for r in (self.comp, self.die):
+            w = r['writer']['words']
+            self.assertEqual(len(w), 181)
+            self.assertEqual(w[-1], C.FOOTER_WRITER)
+            for s in range(36):
+                t0, t1, t2, t3, stop = w[5 * s:5 * s + 5]
+                self.assertTrue(t0 >= 4 and t0 < t1 < t2 < t3 and stop > t3 and stop - t3 >= 3)
+            o = r['ownership']['words']
+            self.assertTrue(3 <= o[0] < o[1] < o[2] and o[3] == C.OWN_SEAL)
+
+    def test_controller_images_hold_the_kv_calendar_reads(self):
+        for r in (self.comp, self.die):
+            for pc, c in r['controller'].items():
+                self.assertLessEqual(c['runs'], 16)
+                self.assertEqual(len(c['words']), 32)
+            self.assertEqual({len(v) for v in r['controller_targets'].values()}, {1024})
+
+    def test_die_roots_carry_the_die_ages(self):
+        a, b = self.comp['layer']['rows'][1]['roots'], self.die['layer']['rows'][1]['roots']
+        self.assertEqual(b['attention_run'], a['attention_run'] - 3 - 3)      # programme start relays 3 + lprg -> attention 3
+        self.assertLess(b['kgo'], a['kgo'])
+        self.assertEqual(b['ctrl_go'], b['kgo'])
+
+    def test_operations_bind_actual_ports(self):
+        ops = C.operations(self.die)
+        self.assertEqual(C.check_ports(ops), len(ops))
+        self.assertEqual(len({o['id'] for o in ops}), len(ops))
+
+
+if __name__ == '__main__':
+    unittest.main()
