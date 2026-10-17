@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_clock.root_sites.v1",
- "die": "hbm d4f r3 (H-DIE, IDX in E column)",
+ "die": "hbm d4f r3b (scorer 3050)",
  "plan": "results/arch/hbm_die_v15/d4f_a2p_fullcore/compact.P.json",
  "rule": "60x60 um station-free keepout per site (wires may cross); one regional root buffer per clock family present in the region; positions already legalised outside every plan block",
  "sites": [
@@ -329,17 +329,17 @@
   },
   {
    "region": "ecol_SW",
-   "x": 17899.8,
+   "x": 17849.8,
    "y": 10554.7,
-   "moved_um": 560.0,
+   "moved_um": 610.0,
    "planned": [
     18459.8,
     10554.7
    ],
    "keepout": [
-    17869.8,
+    17819.8,
     10524.7,
-    17929.8,
+    17879.8,
     10584.7
    ],
    "note": "E column row root (hc_eng / ep / lk / hub side of this band)"
@@ -533,17 +533,17 @@
   },
   {
    "region": "ecol_NW",
-   "x": 17899.8,
+   "x": 17849.8,
    "y": 21584.7,
-   "moved_um": 560.0,
+   "moved_um": 610.0,
    "planned": [
     18459.8,
     21584.7
    ],
    "keepout": [
-    17869.8,
+    17819.8,
     21554.7,
-    17929.8,
+    17879.8,
     21614.7
    ],
    "note": "E column row root (hc_eng / ep / lk / hub side of this band)"

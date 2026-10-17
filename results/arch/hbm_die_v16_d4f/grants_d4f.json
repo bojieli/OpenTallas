@@ -3,7 +3,7 @@
  "die": "hbm_v15",
  "version": 9,
  "owner": "H-DIE",
- "updated": "2026-10-17T01:20:28-07:00",
+ "updated": "2026-10-17T01:35:12-07:00",
  "clock_period_ps": 833.333,
  "floorplan": {
   "file": "results/arch/hbm_die_v15/d4f_a2p_fullcore/compact.P.json",
@@ -1966,7 +1966,7 @@
    },
    "fit_r2": {
     "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
-    "moved_um": 200.0
+    "moved_um": 0.0
    }
   },
   {
@@ -33127,12 +33127,12 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 2950.0,
-    "h": 2950.0
+    "w": 3050.0,
+    "h": 3050.0
    },
    "origin": {
-    "x": 17934.84,
-    "y": 9587.262,
+    "x": 17884.84,
+    "y": 9487.262,
     "orient": "R0"
    },
    "io_budget": {
@@ -33214,11 +33214,11 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 2950.0,
-    "h": 2950.0
+    "w": 3050.0,
+    "h": 3050.0
    },
    "origin": {
-    "x": 17934.84,
+    "x": 17884.84,
     "y": 19392.178,
     "orient": "R0"
    },
@@ -82695,7 +82695,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {
     "QID": 3,
     "G": 0,
@@ -83192,7 +83192,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {
     "QID": 3,
     "G": 1,
@@ -83689,7 +83689,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {
     "QID": 3,
     "G": 2,
@@ -84186,7 +84186,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {
     "QID": 3,
     "G": 3,
@@ -84703,7 +84703,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {
     "QID": 2,
     "G": 0,
@@ -85200,7 +85200,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {
     "QID": 2,
     "G": 1,
@@ -85697,7 +85697,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {
     "QID": 2,
     "G": 2,
@@ -86194,7 +86194,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {
     "QID": 2,
     "G": 3,
@@ -86711,7 +86711,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {
     "QID": 1,
     "G": 0,
@@ -87208,7 +87208,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {
     "QID": 1,
     "G": 1,
@@ -87705,7 +87705,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {
     "QID": 1,
     "G": 2,
@@ -88202,7 +88202,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {
     "QID": 1,
     "G": 3,
@@ -88719,7 +88719,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {
     "QID": 0,
     "G": 0,
@@ -89216,7 +89216,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {
     "QID": 0,
     "G": 1,
@@ -89713,7 +89713,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {
     "QID": 0,
     "G": 2,
@@ -90210,7 +90210,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {
     "QID": 0,
     "G": 3,
@@ -90676,7 +90676,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -90977,7 +90977,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -91278,7 +91278,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -91579,7 +91579,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "553e200d4",
+   "source_prerequisite": "1b58c2825",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -104712,6 +104712,50 @@
      "w": 950.4,
      "h": 3132.0
     }
+   },
+   {
+    "slot": "sfus_SW",
+    "old": {
+     "w": 1020.0,
+     "h": 1412.0
+    },
+    "new": {
+     "w": 447.12,
+     "h": 1023.84
+    }
+   },
+   {
+    "slot": "sfus_SE",
+    "old": {
+     "w": 1020.0,
+     "h": 1412.0
+    },
+    "new": {
+     "w": 447.12,
+     "h": 1023.84
+    }
+   },
+   {
+    "slot": "sfus_NW",
+    "old": {
+     "w": 1020.0,
+     "h": 1412.0
+    },
+    "new": {
+     "w": 447.12,
+     "h": 1023.84
+    }
+   },
+   {
+    "slot": "sfus_NE",
+    "old": {
+     "w": 1020.0,
+     "h": 1412.0
+    },
+    "new": {
+     "w": 447.12,
+     "h": 1023.84
+    }
    }
   ],
   "new": [],
@@ -104899,7 +104943,7 @@
     "h": 32169.44
    },
    "mapped": 129,
-   "resized": 26,
+   "resized": 30,
    "new": [],
    "translated": 9,
    "regranted": 36,
