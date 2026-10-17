@@ -1,0 +1,23 @@
+{
+  "time": "2026-10-16T20:00:11.019283-07:00",
+  "qualification": false,
+  "kind": "interrupted Q-DIEPLAN3-HT model/source artifact intake, not routed station views",
+  "selected_die_top": "head chain baseline; station-chain alternative remains diagnostic",
+  "source": "/home/ubuntu/artifacts/qdieplan3-1016/q3h",
+  "sha256": {
+    "array_grid.json": "6bd2c995f68974736c1952ad98065e3237d6292763b80442e07545c4ff7b458e",
+    "die_top_comb.json": "8e138ea598c59c8ac233cd3cb42ac04da37501d6c87fadb6713a8cceaea85fc4",
+    "die_top_htree.json": "9c45918c47f40d91943b994b5b4e4652a800dbc5e2f444a3c975f117f687e30b",
+    "metrics_q3h.txt": "49e46229bcb6321762300e823d18888d2b72ab25e5415f6a1027614ec133cb29",
+    "mk_q3h.py": "deb4783020eed0f1c087bd064e0c83fee64f260d86eb7942acf7e0dc38bf6b7a",
+    "paths_q3h.py": "4ffc2079c79aab2338a08613c8d67ecc68b77ead7223d135fa1bbe674d5c527d",
+    "pricing_q3h.json": "4975ee769724bc319bb5cb4fd3831fde74f7ae2b2a47d4a7c61ad38f1818c909",
+    "run_metrics.py": "1956f311e7fa039e397eb23f0990a5d5529fbc30ff4f6b77088c3cc2809f0ed3",
+    "shared_station_kit.json": "cbd2289287f3478219ddeeaef173b8e11f9d7211245c427a27e8e2ad489e5fed"
+  },
+  "blockers": [
+    "Shared-station kit is a model manifest; no actual ref_tile hardened station view produced",
+    "Cluster region clocks/reset all-incident cuts and actual native proof remain open",
+    "CB contract grants and A0 parent native timing unresolved"
+  ]
+}

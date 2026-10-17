@@ -1,0 +1,338 @@
+{
+ "schema": "opentallas.element_kit.v1",
+ "element": "qfd_q3h_bcast_station",
+ "stream": "q3h die-top broadcast, v5 stations variant on the FINAL grid (Q-DIEPLAN3-HT, 2026-10-16)",
+ "status": "SPEC (model only; no RTL)",
+ "model": {
+  "die_top_htree": "die_top_htree.json",
+  "model": "q3h_sk.json",
+  "paths": "q3h_paths.json"
+ },
+ "module": "qfd_q3h_bcast_station",
+ "function": "registers the 1,567-b head-row word {go, ib 379, desc 73, fill 1114} once; drives (1) its own xcol head (e_d / w_d) and (2) the next station outward.  One station per head, in the ~393-um gap on the head's centre side; the chain alternates lane L / lane U under / over the head between two stations (instances alternate MX), so each lane carries one 1,567-b trunk.  Down path only: the reduction (D3) runs on relay lanes in the band gaps / die-edge channels.",
+ "parameters": {
+  "DW": {
+   "value": 1567
+  },
+  "NOUT": {
+   "value": 2
+  },
+  "PAD": {
+   "value": 0,
+   "note": "retired: equal-age pads moved to the head outputs"
+  },
+  "MUT": {
+   "value": 0,
+   "note": "bench-only mutants"
+  }
+ },
+ "frame": {
+  "w_um": 330.0,
+  "h_um": 920.136,
+  "note": "as tall as the w130 head (920.16); 330 wide in the 393-um gap between heads (31.6 um each side)"
+ },
+ "ports": [
+  {
+   "name": "d_in",
+   "dir": "input",
+   "bits": 1567,
+   "face": "N",
+   "layers": [
+    "M5",
+    "M7"
+   ],
+   "note": "from the inner station via lane U (MX / R180 instances: S face, lane L)"
+  },
+  {
+   "name": "d_out0",
+   "dir": "output",
+   "bits": 1567,
+   "face": "S",
+   "layers": [
+    "M5",
+    "M7"
+   ],
+   "note": "to the outer station via lane L (MX / R180 instances: N face, lane U)"
+  },
+  {
+   "name": "d_out1",
+   "dir": "output",
+   "bits": 1567,
+   "face": "W",
+   "layers": [
+    "M4",
+    "M6"
+   ],
+   "note": "this station's head e_d (W) / w_d (E), across ~32 um"
+  },
+  {
+   "name": "ck_i",
+   "dir": "input",
+   "bits": 1,
+   "face": "N",
+   "layers": [
+    "M7"
+   ],
+   "note": "forwarded clock with d_in"
+  },
+  {
+   "name": "ck_o0",
+   "dir": "output",
+   "bits": 1,
+   "face": "S",
+   "layers": [
+    "M7"
+   ],
+   "note": "forwarded clock with d_out0"
+  },
+  {
+   "name": "ck_o1",
+   "dir": "output",
+   "bits": 1,
+   "face": "W",
+   "layers": [
+    "M6"
+   ],
+   "note": "forwarded clock to the head"
+  },
+  {
+   "name": "rst_ni",
+   "dir": "input",
+   "bits": 1,
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "note": "reset, re-timed once"
+  },
+  {
+   "name": "rst_no",
+   "dir": "output",
+   "bits": 1,
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "note": "re-timed reset onward"
+  }
+ ],
+ "faces": {
+  "N": {
+   "length_um": 330.0,
+   "pins": 1568,
+   "pins_per_um": 4.75,
+   "min_pitch_um": 0.21,
+   "ok": true
+  },
+  "S": {
+   "length_um": 330.0,
+   "pins": 1568,
+   "pins_per_um": 4.75,
+   "min_pitch_um": 0.21,
+   "ok": true
+  },
+  "W": {
+   "length_um": 920.14,
+   "pins": 1568,
+   "pins_per_um": 1.7,
+   "min_pitch_um": 0.587,
+   "ok": true
+  },
+  "E": {
+   "length_um": 920.14,
+   "pins": 2,
+   "pins_per_um": 0.0,
+   "min_pitch_um": 460.068,
+   "ok": true
+  }
+ },
+ "pin_rule": "<= 6 pins/um per face over all layers (pitch >= 0.167 um)",
+ "placement": {
+  "instances": 48,
+  "per_side": 24,
+  "orientation": "W: alternating MX (even k) / R0; E: R180 / MY",
+  "roots": [
+   "st_W00 (gap E of h_23)",
+   "st_E00 (E port column at the head gap; the 151-um E inner channel carries rs relays)"
+  ],
+  "names": [
+   "st_W00",
+   "st_W01",
+   "st_W02",
+   "st_W03",
+   "st_W04",
+   "st_W05",
+   "st_W06",
+   "st_W07",
+   "st_W08",
+   "st_W09",
+   "st_W10",
+   "st_W11",
+   "st_W12",
+   "st_W13",
+   "st_W14",
+   "st_W15",
+   "st_W16",
+   "st_W17",
+   "st_W18",
+   "st_W19",
+   "st_W20",
+   "st_W21",
+   "st_W22",
+   "st_W23",
+   "st_E00",
+   "st_E01",
+   "st_E02",
+   "st_E03",
+   "st_E04",
+   "st_E05",
+   "st_E06",
+   "st_E07",
+   "st_E08",
+   "st_E09",
+   "st_E10",
+   "st_E11",
+   "st_E12",
+   "st_E13",
+   "st_E14",
+   "st_E15",
+   "st_E16",
+   "st_E17",
+   "st_E18",
+   "st_E19",
+   "st_E20",
+   "st_E21",
+   "st_E22",
+   "st_E23"
+  ]
+ },
+ "clocking": {
+  "scheme": "forwarded clock per hop, neighbour-relative; each hop a plain synchronous neighbour hop",
+  "hop_um": 373,
+  "reach_basis": "(833.3 - 60 - 80 - 378.7) / 0.76 = 414 um x 0.9 (xcst m5d launch 192.6 / capture 186.1 ps)"
+ },
+ "registers": {
+  "down": {
+   "bits": 1567,
+   "stages": 1,
+   "copies": 2
+  },
+  "flops": 3137,
+  "adder": null,
+  "up": null
+ },
+ "latency": {
+  "cycles": 1,
+  "plus": "PAD on d_out1",
+  "data_dependent": false,
+  "per_column_pitch": "2 registers (station + one 80-um lane relay): the 522.72-um pitch is longer than the 373-um hop"
+ },
+ "equal_age": {
+  "pad_stages_per_head": [
+   0,
+   2,
+   4,
+   6,
+   0,
+   2,
+   4,
+   6,
+   0,
+   2,
+   4,
+   6,
+   0,
+   2,
+   4,
+   6,
+   0,
+   2,
+   4,
+   6,
+   0,
+   2,
+   4,
+   6,
+   6,
+   4,
+   2,
+   0,
+   6,
+   4,
+   2,
+   0,
+   6,
+   4,
+   2,
+   0,
+   6,
+   4,
+   2,
+   0,
+   6,
+   4,
+   2,
+   0,
+   6,
+   4,
+   2,
+   0
+  ],
+  "pad_stages_total": 144,
+  "flops": 148608,
+  "note": "pads now sit on each head's n_d / s_d outputs (516 b x 2), not on station outputs: in a chain a head input cannot be delayed without delaying the heads behind it.  Same pads in the comb variant."
+ },
+ "static_schedule_contract": {
+  "fixed_latency": true,
+  "ready_valid": false,
+  "backpressure": false,
+  "credits": false,
+  "rule": "owner 2026-10-14 static-cycle schedule: a word presented at edge E leaves d_out0 at E+1 and d_out1 at E+1+PAD; no stall input; faults on the hook's cluster / head fault chain"
+ },
+ "open_outputs": [
+  {
+   "station": "st_W23",
+   "ports": [
+    "d_out0"
+   ]
+  },
+  {
+   "station": "st_E23",
+   "ports": [
+    "d_out0"
+   ]
+  }
+ ],
+ "open_outputs_note": "the outermost station of each side has no onward child (open OUTPUT, no tied input); NOUT=1 variant if the port bind refuses it",
+ "benches": [
+  {
+   "name": "tb_bcast_exact",
+   "what": "10^5 random 1,567-b words incl. back-to-back / idle (go=0) / all-ones / all-zeros: d_out0 == d_in at +1 edge, d_out1 == d_in at +1+PAD edges, bit for bit"
+  },
+  {
+   "name": "tb_chain_golden",
+   "what": "xs_tap golden head-word stream -> 24 stations + lane relays + pads per die_top_htree.json -> 24 head input models per side: every head sees the golden word on its table edge, all 4 heads of a group on the SAME edge"
+  },
+  {
+   "name": "tb_head_cluster",
+   "what": "unchanged qfd_xhead_*_w130 RTL fed by the station: n_d / s_d into C_B16 bc<lc> bit-identical to today's corridor words for the same tile ids (tids per cluster_contract die_head_tids)"
+  },
+  {
+   "name": "tb_static",
+   "what": "no ready / valid / credit port; latency invariant to data and to reset release; reset clears go"
+  },
+  {
+   "name": "tb_mutants",
+   "what": "MUT=1 drops PAD (age skew); MUT=2 flips one fill bit; MUT=3 swaps d_out0 / d_out1: each must FAIL tb_bcast_exact / tb_chain_golden"
+  },
+  {
+   "name": "tb_throughput",
+   "what": "production shape: one head word per edge for 10^5 edges; measured = price (1 + PAD)"
+  },
+  {
+   "name": "sta",
+   "what": "SS setup / FF hold at 1.2 GHz in the 330 x 920.16 frame, 373-um neighbour hops on every face"
+  }
+ ],
+ "verdict": "stations variant vs the relayed head chain (comb) on the final grid: broadcast -1 stage (94 vs 95 to the far-band tile), same reduction (49); cut 0.769 / 23 lines > 0.55 vs 0.536 / 0: the station chain shares the head-gap lanes with the near-band rs words.  Does NOT meet the q3h3 launch rule (fewer stages at an equal or better cut)."
+}

@@ -1,0 +1,176 @@
+{
+"13":
+{
+ "design": "qwen_rom",
+ "unit": "Q3H.BCAST_RSUM",
+ "group": "Q3H.BCAST_RSUM",
+ "measured": 0.0,
+ "price": 0.0,
+ "unit_of_measure": "cycles",
+ "unit_ratio": null,
+ "e2e_loss_pct": 0.745,
+ "binding_workload": "ar",
+ "per_workload": {
+  "ar": {
+   "model": "token-path longest path",
+   "base_cycles": 249431.0,
+   "cycles": 251303.0,
+   "added_cycles": 1872.0,
+   "runs_per_token": 144,
+   "critical_runs": 144,
+   "overlapped_runs": 0,
+   "other_price_nodes_skipped": 0,
+   "naive_added_cycles": 1872.0,
+   "wave_positions": 0,
+   "wave_added_cycles_per_position": 0.0,
+   "e2e_loss_pct": 0.745
+  }
+ },
+ "within_unit_limit": true,
+ "evidence": "",
+ "evidence_grade": "committed_bench",
+ "date": "2026-10-16",
+ "status": "proposed",
+ "note": ""
+}
+,
+"12":
+{
+ "design": "qwen_rom",
+ "unit": "Q3H.BCAST_RSUM",
+ "group": "Q3H.BCAST_RSUM",
+ "measured": 0.0,
+ "price": 0.0,
+ "unit_of_measure": "cycles",
+ "unit_ratio": null,
+ "e2e_loss_pct": 0.688,
+ "binding_workload": "ar",
+ "per_workload": {
+  "ar": {
+   "model": "token-path longest path",
+   "base_cycles": 249431.0,
+   "cycles": 251159.0,
+   "added_cycles": 1728.0,
+   "runs_per_token": 144,
+   "critical_runs": 144,
+   "overlapped_runs": 0,
+   "other_price_nodes_skipped": 0,
+   "naive_added_cycles": 1728.0,
+   "wave_positions": 0,
+   "wave_added_cycles_per_position": 0.0,
+   "e2e_loss_pct": 0.688
+  }
+ },
+ "within_unit_limit": true,
+ "evidence": "",
+ "evidence_grade": "committed_bench",
+ "date": "2026-10-16",
+ "status": "proposed",
+ "note": ""
+}
+,
+"10":
+{
+ "design": "qwen_rom",
+ "unit": "Q3H.BCAST_RSUM",
+ "group": "Q3H.BCAST_RSUM",
+ "measured": 0.0,
+ "price": 0.0,
+ "unit_of_measure": "cycles",
+ "unit_ratio": null,
+ "e2e_loss_pct": 0.574,
+ "binding_workload": "ar",
+ "per_workload": {
+  "ar": {
+   "model": "token-path longest path",
+   "base_cycles": 249431.0,
+   "cycles": 250871.0,
+   "added_cycles": 1440.0,
+   "runs_per_token": 144,
+   "critical_runs": 144,
+   "overlapped_runs": 0,
+   "other_price_nodes_skipped": 0,
+   "naive_added_cycles": 1440.0,
+   "wave_positions": 0,
+   "wave_added_cycles_per_position": 0.0,
+   "e2e_loss_pct": 0.574
+  }
+ },
+ "within_unit_limit": true,
+ "evidence": "",
+ "evidence_grade": "committed_bench",
+ "date": "2026-10-16",
+ "status": "proposed",
+ "note": ""
+}
+,
+"3":
+{
+ "design": "qwen_rom",
+ "unit": "Q3H.BCAST_RSUM",
+ "group": "Q3H.BCAST_RSUM",
+ "measured": 0.0,
+ "price": 0.0,
+ "unit_of_measure": "cycles",
+ "unit_ratio": null,
+ "e2e_loss_pct": 0.173,
+ "binding_workload": "ar",
+ "per_workload": {
+  "ar": {
+   "model": "token-path longest path",
+   "base_cycles": 249431.0,
+   "cycles": 249863.0,
+   "added_cycles": 432.0,
+   "runs_per_token": 144,
+   "critical_runs": 144,
+   "overlapped_runs": 0,
+   "other_price_nodes_skipped": 0,
+   "naive_added_cycles": 432.0,
+   "wave_positions": 0,
+   "wave_added_cycles_per_position": 0.0,
+   "e2e_loss_pct": 0.173
+  }
+ },
+ "within_unit_limit": true,
+ "evidence": "",
+ "evidence_grade": "committed_bench",
+ "date": "2026-10-16",
+ "status": "proposed",
+ "note": ""
+}
+,
+"2":
+{
+ "design": "qwen_rom",
+ "unit": "Q3H.BCAST_RSUM",
+ "group": "Q3H.BCAST_RSUM",
+ "measured": 0.0,
+ "price": 0.0,
+ "unit_of_measure": "cycles",
+ "unit_ratio": null,
+ "e2e_loss_pct": 0.115,
+ "binding_workload": "ar",
+ "per_workload": {
+  "ar": {
+   "model": "token-path longest path",
+   "base_cycles": 249431.0,
+   "cycles": 249719.0,
+   "added_cycles": 288.0,
+   "runs_per_token": 144,
+   "critical_runs": 144,
+   "overlapped_runs": 0,
+   "other_price_nodes_skipped": 0,
+   "naive_added_cycles": 288.0,
+   "wave_positions": 0,
+   "wave_added_cycles_per_position": 0.0,
+   "e2e_loss_pct": 0.115
+  }
+ },
+ "within_unit_limit": true,
+ "evidence": "",
+ "evidence_grade": "committed_bench",
+ "date": "2026-10-16",
+ "status": "proposed",
+ "note": ""
+}
+}
