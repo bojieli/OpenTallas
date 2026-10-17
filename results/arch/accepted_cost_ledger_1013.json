@@ -2170,6 +2170,42 @@
    "date": "2026-10-13",
    "status": "proposed",
    "note": "structural design first (next fetch overlapped under the drain: period 1.0143x <= 1.10; dispatch two edges after the final release on the measured write-before-read lead 6-9 edges); what remains is +29/30 edges start-to-dispatch a record (worst record 169 / 139 = 1.2158x), of which 16 = the closed root composition's measured accept -> release latency (results/rtl/vm8_service_root_1013/root_latency_closed_1013.json: WR +4 / RD +12, hash MATCH) and 13/14 the tracker tail; charged as 30 fixed cycles on every SM.MATVEC record of the S2 schedule (DS 1,095 records, Qwen 5); without the root 0.87 % / 0.16 %, a full 27-edge drain would be 3.79 %"
+  },
+  {
+   "design": "r25gq",
+   "unit": "IDX.SCORE_CHAIN (scorer cluster: 16 chunk leaves 4x4, registered W->E key/query seam chain + 4-slot sum bus, +4 scorer edges a frame)",
+   "group": "IDX.SCORE_CHAIN",
+   "measured": 4.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles (added edges per IDX.INDEX frame)",
+   "unit_ratio": null,
+   "e2e_loss_pct": 0.0055,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "S2 schedule, fixed cycles added to every record of the op (IDX.INDEX records 8, as the IDX.INDEX row)",
+     "base_cycles": 576702.4,
+     "cycles": 576734.4,
+     "added_cycles": 32.0,
+     "program_records": 8,
+     "added_cycles_per_record": 4.0,
+     "e2e_loss_pct": 0.0055
+    },
+    "qwen_ar": {
+     "model": "no IDX op in the Qwen programme",
+     "base_cycles": 1269120.1,
+     "cycles": 1269120.1,
+     "added_cycles": 0.0,
+     "program_records": 0,
+     "e2e_loss_pct": 0.0
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "H-ELEM/IDX-SCORE partition 2026-10-17 (chain approved by H-ELEM; cut 0.23 on M4 vs 2.6 for channel broadcast)",
+   "evidence_grade": "model",
+   "date": "2026-10-17",
+   "status": "accepted",
+   "note": "seam chain: leaf j sees keys/query j edges late, its sum slot rides 3-j hops -> equal age at the E tail; scorer latency +4 edges (compiler constant). Bench proof pending the chained-leaf RTL (scheduled N_Q2/TP192 bench + seam/leaf-swap mutants)."
   }
  ],
  "totals": {
