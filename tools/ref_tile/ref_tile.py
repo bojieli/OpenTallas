@@ -172,12 +172,10 @@ def check_hold_budget(s: dict) -> None:
             raise SpecError('spec: recipe 4 leaf tile with hold_budget "tile" needs "hold_budget_reason" (e.g. CDC leaf)')
         return
     pr = s.get("pin_regs") or {}
-    # Q-CLUSTER 2026-10-17: a cluster qualifies too when its own RTL registers every boundary pin (pin_regs off with
-    # that reason) and its clocks are regional CTS roots (hybrid_entries, all ports roots): same rule, same native audit
-    cluster_ok = (s.get("kind") == "cluster" and s.get("clock") == "hybrid_entries"
-                  and set(s.get("clock_cts_roots") or []) == set(s.get("clock_ports") or [None]))
-    if s.get("kind") != "tile" and not cluster_ok:
-        raise SpecError('spec: hold_budget "die" applies to leaf tiles (kind "tile") and to all-CTS-root clusters only')
+    # Q-CLUSTER 2026-10-17 (coordinator): a two-level cluster (cluster_level 2) whose own RTL registers every boundary pin
+    # (pin_regs off with that reason) qualifies under the same rule and the same native audit
+    if s.get("kind") != "tile" and not (s.get("kind") == "cluster" and s.get("cluster_level") == 2):
+        raise SpecError('spec: hold_budget "die" applies to leaf tiles (kind "tile") and two-level clusters only')
     if not isinstance(pr, dict) or pr.get("exclude") or not (pr.get("enable") or str(pr.get("reason") or "").strip()):
         raise SpecError('spec: hold_budget "die" needs every data pin registered (pin_regs enabled without exclude, '
                         'or disabled with the reason the RTL registers them)')
@@ -437,10 +435,7 @@ def load_spec(path: str) -> dict:
             clock_entry_constraints.domains(s)
         elif s.get("clock") == "hybrid_entries":
             roots = s.get("clock_cts_roots")
-            # Q-CLUSTER 2026-10-17: a cluster may make EVERY clock port a CTS root (regional quadrant roots driving soft
-            # registers and all hard-child entries); a leaf keeps the proper-subset rule (its other ports are raw macro entries)
-            full_ok = s["kind"] == "cluster" and set(roots) == set(cps)
-            if not isinstance(roots, list) or not roots or not all(isinstance(p, str) for p in roots) or len(set(roots)) != len(roots) or not (set(roots) < set(cps) or full_ok):
+            if not isinstance(roots, list) or not roots or not all(isinstance(p, str) for p in roots) or len(set(roots)) != len(roots) or not set(roots) < set(cps):
                 raise SpecError("hybrid_entries needs distinct clock_cts_roots, a nonempty proper subset of clock_ports")
             if s["kind"] == "tile":
                 if any(s.get(k) for k in ("sdc_extra", "boundary_tcl", "pre_cts_extra", "forwarded_clock")):
@@ -716,6 +711,20 @@ probe may measure routing before the phase audit exists, but cannot auto-merge.
     return cap, {"source": g["source"], "sha256": g["sha256"], "obligations": rec}
 
 
+def cluster_level(s: dict) -> int:
+    """spec "cluster_level": 1 (default, children PG <= M6, cluster PG M7) | 2 (children are clusters: PG <= M7,
+    cluster PG M8 aligned to the die grid, signals M2-M7; coordinator decision 2026-10-17, Q-CLUSTER)"""
+    v = s.get("cluster_level", 1)
+    if v not in (1, 2) or isinstance(v, bool):
+        raise SpecError(f"spec: cluster_level must be 1 or 2, got {v!r}")
+    if v == 2 and s.get("kind") != "cluster":
+        raise SpecError("spec: cluster_level 2 needs kind cluster")
+    return v
+
+
+M8_PG = dict(width=0.48, pitch=8.64, offset=4.32)   # two-level cluster M8 PG stripes (die M8 grid pitch 8.64)
+
+
 def layer_contract(s: dict, slot: dict | None) -> dict:
     """leaf tile: signals AND PG <= layer_cap (M5 default, M6 granted), PG = full-length stripes on the cap layer as pins,
     parent strap = cap + 1; legacy kits: signals M2-M6, PG M6 or M7.
@@ -757,6 +766,22 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
             if metal(sig) is None or not 2 <= metal(sig) <= limit:
                 raise SpecError(f"tile signal_max_layer {sig!r} must be M2..M{limit}; it cannot loosen the layer contract")
             out.update(rlayers=("M2", sig), signal_max_layer=sig)
+        return out
+    if cluster_level(s) == 2:
+        # TWO-LEVEL cluster (Q-CLUSTER, coordinator decision 2026-10-17): the children are clusters themselves (PG top M7),
+        # the cluster's PG = M8 stripes (pins) aligned to the die PG grid, signals M2-M7 in the corridors (children
+        # obstruct M1-M7), the die keeps M9 and uses M8 over the cluster for PG only.  Opt-in: spec "cluster_level": 2.
+        for ch in s["children"]:
+            m = read_view_lef(ch["view"])
+            top = child_lint.check_pg(m)["top_layer"]
+            if metal(top) is None or metal(top) > 7:
+                raise SpecError(f"layer contract (two-level): child {view_name(ch['view'])} PG top layer {top} must be <= M7")
+            out["children"][view_name(ch["view"])] = top
+        if (pg or "M8") != "M8":
+            raise SpecError("layer contract (two-level): the cluster PG layer is M8")
+        if s.get("signal_max_layer") not in (None, "M7"):
+            raise SpecError("layer contract (two-level): signals are M2-M7 (M8 PG, M9 die)")
+        out.update(pg_layer="M8", rlayers=("M2", "M7"), strap_layer="M9", cluster_level=2)
         return out
     for ch in s["children"]:
         m = read_view_lef(ch["view"])
@@ -876,6 +901,17 @@ def gen_pdn(s: dict, lc: dict) -> str:
                 "add_pdn_stripe -grid {top} -layer {M7} -width {0.288} -spacing {5.112} -pitch {10.8} -offset {1.0}\n"
                 "add_pdn_connect -grid {top} -layers {M1 M2}\nadd_pdn_connect -grid {top} -layers {M2 M5}\n"
                 "add_pdn_connect -grid {top} -layers {M5 M6}\nadd_pdn_connect -grid {top} -layers {M6 M7}\n")
+    elif lc.get("cluster_level") == 2:
+        m8 = dict(M8_PG, **{k[7:]: v for k, v in s.get("route", {}).items() if k.startswith("m8_pg_")})
+        note = (f"two-level cluster: M5/M6/M7 stripes (std-cell corridors; trimmed over the cluster children) + M8 stripes "
+                f"(pins) width {m8['width']} pitch {m8['pitch']} offset {m8['offset']} aligned to the die M8 PG grid; each "
+                "hard child (PG M7) strapped from M8; die M9 only.")
+        body = ("add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {5.4} -offset {0.513}\n"
+                "add_pdn_stripe -grid {top} -layer {M7} -width {0.288} -spacing {5.112} -pitch {10.8} -offset {1.0}\n"
+                f"add_pdn_stripe -grid {{top}} -layer {{M8}} -width {{{m8['width']}}} -pitch {{{m8['pitch']}}} -offset {{{m8['offset']}}}\n"
+                "add_pdn_connect -grid {top} -layers {M1 M2}\nadd_pdn_connect -grid {top} -layers {M2 M5}\n"
+                "add_pdn_connect -grid {top} -layers {M5 M6}\nadd_pdn_connect -grid {top} -layers {M6 M7}\n"
+                "add_pdn_connect -grid {top} -layers {M7 M8}\n")
     else:
         note = ("cluster: M5/M6 stripes + M7 stripes (pins); each hard child strapped from the layer above its own PG pins "
                 "(recipe physical/hgi_idx_hier/pdn_hier.tcl @8d848821f).")

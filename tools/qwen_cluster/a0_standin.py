@@ -52,7 +52,24 @@ def lef(name, pl):
             r = (x - 0.012, y0, x + 0.012, y1)
         L += [f"  PIN {p}", f"    DIRECTION {d} ;", f"    USE {use} ;", "    PORT", f"      LAYER {lay} ;",
               "        RECT %.3f %.3f %.3f %.3f ;" % r, "    END", f"  END {p}"]
-    L += ["  OBS"] + [f"    LAYER M{k} ;\n      RECT 0.000 0.000 {W:.3f} {H:.3f} ;" for k in range(1, 8)] + ["  END", f"END {name}", "END LIBRARY"]
+    for net, use, off in (("VDD", "POWER", 1.0), ("VSS", "GROUND", 6.4)):   # A0 PG: M7 stripes pitch 10.8 (cluster PG M7)
+        L += [f"  PIN {net}", "    DIRECTION INOUT ;", f"    USE {use} ;", "    PORT", "      LAYER M7 ;"]
+        x = off
+        while x + 0.288 < W:
+            L.append("        RECT %.3f 0.000 %.3f %.3f ;" % (x, x + 0.288, H))
+            x += 10.8
+        L += ["    END", f"  END {net}"]
+    # OBS like a ref_tile export: inset 0.5 um from every face (face-pin access, child_lint (f)); M7 only between the PG
+    # stripes (no bloat over the PG layer, child_lint (a))
+    E = 0.5
+    L += ["  OBS"] + [f"    LAYER M{k} ;\n      RECT {E:.3f} {E:.3f} {W - E:.3f} {H - E:.3f} ;" for k in range(1, 7)]
+    L += ["    LAYER M7 ;"]
+    x = 1.0 + 0.288 + 0.2
+    while x < W - E:
+        nxt = x + 5.4 - 0.288 - 0.4
+        L.append("      RECT %.3f %.3f %.3f %.3f ;" % (x, E, min(nxt, W - E), H - E))
+        x = nxt + 0.288 + 0.4
+    L += ["  END", f"END {name}", "END LIBRARY"]
     return "\n".join(L) + "\n"
 
 
@@ -72,7 +89,11 @@ def lib(name, pl, corner, nl):
 
     def body(p, base):
         if base.startswith("ck"):
-            return [f'    pin("{p}") {{', "      direction : input;", "      clock : true;", "      capacitance : 2.0;", "    }"]
+            arcs = []
+            for tt, v in (("min_clock_tree_path", r - 15), ("max_clock_tree_path", r + 15)):
+                arcs += [f"      timing() {{ timing_type : {tt}; timing_sense : positive_unate;",
+                         f'        cell_rise(scalar) {{ values("{v:.1f}"); }} cell_fall(scalar) {{ values("{v:.1f}"); }} }}']
+            return [f'    pin("{p}") {{', "      direction : input;", "      clock : true;", "      capacitance : 2.0;"] + arcs + ["    }"]
         if base in ("tie_hi", "tie_lo"):
             return [f'    pin("{p}") {{', "      direction : output;", "    }"]
         ck = rel[base]

@@ -6,39 +6,175 @@
  "base": "tools/qwen_cluster/cb_base.py (claude/q3h-cb-1016 e7e22d5b6)",
  "spec": "results/arch/qwen_cluster_1017/SPEC.md",
  "outline_um": {
-  "w": 2285.28,
-  "h": 5184.0
+  "w": 2358.72,
+  "h": 5227.2
  },
  "corridors": {
   "L": [
    0.0,
-   32.4
+   43.2
   ],
   "A": [
-   490.32,
-   619.92
+   501.12,
+   648.0
   ],
   "T": [
-   1077.84,
-   1207.44
+   1105.92,
+   1252.8
   ],
   "B": [
-   1665.36,
-   1794.96
+   1710.72,
+   1857.6
   ],
   "R": [
-   2252.88,
-   2285.28
+   2315.52,
+   2358.72
   ]
  },
  "quadrant_seams": {
-  "x": 1142.6399999999999,
-  "y": 2592.0
+  "x": 1179.3600000000001,
+  "y": 2613.6000000000004
  },
+ "register_centroid_x": {
+  "sw": 694.0,
+  "se": 1754.8,
+  "nw": 692.1,
+  "ne": 1757.5
+ },
+ "tiles": [
+  {
+   "inst": "u_t_0_0",
+   "at": [
+    43.2,
+    86.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_0_1",
+   "at": [
+    43.2,
+    1382.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_0_2",
+   "at": [
+    43.2,
+    2678.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_0_3",
+   "at": [
+    43.2,
+    3974.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_1_0",
+   "at": [
+    648.0,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_1_1",
+   "at": [
+    648.0,
+    1382.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_1_2",
+   "at": [
+    648.0,
+    2678.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_1_3",
+   "at": [
+    648.0,
+    3974.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_2_0",
+   "at": [
+    1252.8,
+    86.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_2_1",
+   "at": [
+    1252.8,
+    1382.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_2_2",
+   "at": [
+    1252.8,
+    2678.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_2_3",
+   "at": [
+    1252.8,
+    3974.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_3_0",
+   "at": [
+    1857.6,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_3_1",
+   "at": [
+    1857.6,
+    1382.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_3_2",
+   "at": [
+    1857.6,
+    2678.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_3_3",
+   "at": [
+    1857.6,
+    3974.4
+   ],
+   "orient": "R0"
+  }
+ ],
  "clocks": {
   "sw": {
    "pin": "ck_sw",
-   "fabric_flops": 23712,
+   "fabric_flops": 24774,
    "tiles": [
     "0_0",
     "0_1",
@@ -49,7 +185,7 @@
   },
   "se": {
    "pin": "ck_se",
-   "fabric_flops": 17577,
+   "fabric_flops": 18571,
    "tiles": [
     "2_0",
     "2_1",
@@ -60,7 +196,7 @@
   },
   "nw": {
    "pin": "ck_nw",
-   "fabric_flops": 20602,
+   "fabric_flops": 20104,
    "tiles": [
     "0_2",
     "0_3",
@@ -71,7 +207,7 @@
   },
   "ne": {
    "pin": "ck_ne",
-   "fabric_flops": 14450,
+   "fabric_flops": 13406,
    "tiles": [
     "2_2",
     "2_3",
@@ -81,7 +217,7 @@
    "tile_entry_pins": 156
   }
  },
- "fabric_flops": 76341,
+ "fabric_flops": 76855,
  "latency_edges": {
   "tap": {
    "0": 3,
@@ -97,7 +233,7 @@
  "hop_um": {
   "limit": 405.0,
   "plan": 390.0,
-  "max": 396.6
+  "max": 402.0
  },
  "tree": {
   "hosts": {
@@ -178,7 +314,157 @@
     176.32
    ],
    "pins_per_um": 3.0,
-   "note": "column word of local column 0 (corridor L)"
+   "lane_x": 21.6,
+   "note": "column word (corridor run)"
+  },
+  {
+   "port": "rs",
+   "bits": 514,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    488.893,
+    660.227
+   ],
+   "pins_per_um": 3.0,
+   "lane_x": 574.6,
+   "note": "block word {fault, valid, 512}"
+  },
+  {
+   "port": "bc1",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    920.693,
+    1092.693
+   ],
+   "pins_per_um": 3.0,
+   "lane_x": 1130.4,
+   "note": "column word (corridor run)"
+  },
+  {
+   "port": "rs_o",
+   "bits": 514,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1093.693,
+    1265.027
+   ],
+   "pins_per_um": 3.0,
+   "lane_x": 1179.4,
+   "note": "DV: far-band rs word out (14 edges)"
+  },
+  {
+   "port": "bc2",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1266.027,
+    1438.027
+   ],
+   "pins_per_um": 3.0,
+   "lane_x": 1228.3,
+   "note": "column word (corridor run)"
+  },
+  {
+   "port": "bc3",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    2182.4,
+    2354.4
+   ],
+   "pins_per_um": 3.0,
+   "lane_x": 2337.1,
+   "note": "column word (corridor run)"
+  },
+  {
+   "port": "ck_sw",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    687.966,
+    688.266
+   ],
+   "pins_per_um": null,
+   "note": "quadrant sw entry island (register centroid x 694)"
+  },
+  {
+   "port": "rst_n",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    688.966,
+    689.266
+   ],
+   "pins_per_um": null,
+   "note": "quadrant sw entry island (register centroid x 694)"
+  },
+  {
+   "port": "far",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    689.966,
+    690.266
+   ],
+   "pins_per_um": null,
+   "note": "quadrant sw entry island (register centroid x 694)"
+  },
+  {
+   "port": "cid",
+   "bits": 12,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    690.966,
+    696.966
+   ],
+   "pins_per_um": null,
+   "note": "quadrant sw entry island (register centroid x 694)"
+  },
+  {
+   "port": "tie_hi",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    697.666,
+    697.966
+   ],
+   "pins_per_um": null,
+   "note": "quadrant sw entry island (register centroid x 694)"
+  },
+  {
+   "port": "tie_lo",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    698.666,
+    698.966
+   ],
+   "pins_per_um": null,
+   "note": "quadrant sw entry island (register centroid x 694)"
+  },
+  {
+   "port": "ck_se",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1754.301,
+    1754.601
+   ],
+   "pins_per_um": null,
+   "note": "quadrant se entry island (register centroid x 1755)"
   },
   {
    "port": "bco0",
@@ -190,19 +476,8 @@
     176.32
    ],
    "pins_per_um": 3.0,
-   "note": "registered feed-through of column 0 to the far cluster"
-  },
-  {
-   "port": "bc1",
-   "bits": 516,
-   "face": "S",
-   "layer": "M5",
-   "range_um": [
-    917.44,
-    1089.44
-   ],
-   "pins_per_um": 3.0,
-   "note": "column word of local column 1 (corridor T)"
+   "lane_x": 21.6,
+   "note": "registered feed-through to the far cluster"
   },
   {
    "port": "bco1",
@@ -210,71 +485,12 @@
    "face": "N",
    "layer": "M5",
    "range_um": [
-    917.44,
-    1089.44
+    920.693,
+    1092.693
    ],
    "pins_per_um": 3.0,
-   "note": "registered feed-through of column 1 to the far cluster"
-  },
-  {
-   "port": "bc2",
-   "bits": 516,
-   "face": "S",
-   "layer": "M5",
-   "range_um": [
-    1195.84,
-    1367.84
-   ],
-   "pins_per_um": 3.0,
-   "note": "column word of local column 2 (corridor T)"
-  },
-  {
-   "port": "bco2",
-   "bits": 516,
-   "face": "N",
-   "layer": "M5",
-   "range_um": [
-    1195.84,
-    1367.84
-   ],
-   "pins_per_um": 3.0,
-   "note": "registered feed-through of column 2 to the far cluster"
-  },
-  {
-   "port": "bc3",
-   "bits": 516,
-   "face": "S",
-   "layer": "M5",
-   "range_um": [
-    2108.96,
-    2280.96
-   ],
-   "pins_per_um": 3.0,
-   "note": "column word of local column 3 (corridor R)"
-  },
-  {
-   "port": "bco3",
-   "bits": 516,
-   "face": "N",
-   "layer": "M5",
-   "range_um": [
-    2108.96,
-    2280.96
-   ],
-   "pins_per_um": 3.0,
-   "note": "registered feed-through of column 3 to the far cluster"
-  },
-  {
-   "port": "rs",
-   "bits": 514,
-   "face": "S",
-   "layer": "M5",
-   "range_um": [
-    469.453,
-    640.787
-   ],
-   "pins_per_um": 3.0,
-   "note": "block word {fault, valid, 512}"
+   "lane_x": 1130.4,
+   "note": "registered feed-through to the far cluster"
   },
   {
    "port": "rs_i",
@@ -282,35 +498,38 @@
    "face": "N",
    "layer": "M5",
    "range_um": [
-    1093.392,
-    1191.888
+    1093.693,
+    1265.027
    ],
-   "pins_per_um": 5.218,
-   "note": "DV: far-band rs word in (T centre lane)"
+   "pins_per_um": 3.0,
+   "lane_x": 1179.4,
+   "note": "DV: far-band rs word in"
   },
   {
-   "port": "rs_o",
-   "bits": 514,
-   "face": "S",
+   "port": "bco2",
+   "bits": 516,
+   "face": "N",
    "layer": "M5",
    "range_um": [
-    1093.392,
-    1191.888
+    1266.027,
+    1438.027
    ],
-   "pins_per_um": 5.218,
-   "note": "DV: far-band rs word out, 14 edges after rs_i"
+   "pins_per_um": 3.0,
+   "lane_x": 1228.3,
+   "note": "registered feed-through to the far cluster"
   },
   {
-   "port": "ck_sw",
-   "bits": 1,
-   "face": "S",
+   "port": "bco3",
+   "bits": 516,
+   "face": "N",
    "layer": "M5",
    "range_um": [
-    778.964,
-    779.264
+    2182.4,
+    2354.4
    ],
-   "pins_per_um": 3.333,
-   "note": "quadrant root SW"
+   "pins_per_um": 3.0,
+   "lane_x": 2337.1,
+   "note": "registered feed-through to the far cluster"
   },
   {
    "port": "ck_nw",
@@ -318,23 +537,11 @@
    "face": "N",
    "layer": "M5",
    "range_um": [
-    778.964,
-    779.264
+    691.628,
+    691.928
    ],
-   "pins_per_um": 3.333,
-   "note": "quadrant root NW"
-  },
-  {
-   "port": "ck_se",
-   "bits": 1,
-   "face": "S",
-   "layer": "M5",
-   "range_um": [
-    1506.017,
-    1506.317
-   ],
-   "pins_per_um": 3.333,
-   "note": "quadrant root SE"
+   "pins_per_um": null,
+   "note": "quadrant nw entry island (register centroid x 692)"
   },
   {
    "port": "ck_ne",
@@ -342,71 +549,11 @@
    "face": "N",
    "layer": "M5",
    "range_um": [
-    1506.017,
-    1506.317
+    1757.04,
+    1757.34
    ],
-   "pins_per_um": 3.333,
-   "note": "quadrant root NE"
-  },
-  {
-   "port": "rst_n",
-   "bits": 1,
-   "face": "S",
-   "layer": "M5",
-   "range_um": [
-    783.114,
-    783.413
-   ],
-   "pins_per_um": 3.333,
-   "note": ""
-  },
-  {
-   "port": "far",
-   "bits": 1,
-   "face": "S",
-   "layer": "M5",
-   "range_um": [
-    784.114,
-    784.413
-   ],
-   "pins_per_um": 3.333,
-   "note": "strap: 1 = far band"
-  },
-  {
-   "port": "cid",
-   "bits": 12,
-   "face": "S",
-   "layer": "M5",
-   "range_um": [
-    785.114,
-    791.114
-   ],
-   "pins_per_um": 2.0,
-   "note": "strap: block index"
-  },
-  {
-   "port": "tie_hi",
-   "bits": 1,
-   "face": "S",
-   "layer": "M5",
-   "range_um": [
-    792.114,
-    792.413
-   ],
-   "pins_per_um": 3.333,
-   "note": ""
-  },
-  {
-   "port": "tie_lo",
-   "bits": 1,
-   "face": "S",
-   "layer": "M5",
-   "range_um": [
-    793.114,
-    793.413
-   ],
-   "pins_per_um": 3.333,
-   "note": ""
+   "pins_per_um": null,
+   "note": "quadrant ne entry island (register centroid x 1758)"
   }
  ],
  "a0": {

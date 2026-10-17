@@ -13,7 +13,8 @@
   "rtl/hdc/ot_hdc_delay.sv"
  ],
  "params": {},
- "clock": "hybrid_entries",
+ "clock": "spine",
+ "child_clock_ref": "boundary",
  "clock_port": "ck_sw",
  "clock_ports": [
   "ck_sw",
@@ -21,97 +22,30 @@
   "ck_nw",
   "ck_ne"
  ],
- "clock_cts_roots": [
-  "ck_sw",
-  "ck_se",
-  "ck_nw",
-  "ck_ne"
- ],
- "clock_entry_domains": {
-  "core": {
-   "ratio": [
-    1,
-    1
-   ],
-   "ports": [
-    "ck_sw"
-   ],
-   "inputs": [
-    "bc0",
-    "bc1",
-    "rst_n",
-    "far",
-    "cid"
-   ],
-   "outputs": [
-    "rs",
-    "rs_o",
-    "tie_hi",
-    "tie_lo"
-   ]
-  },
-  "q_se": {
-   "ratio": [
-    1,
-    1
-   ],
-   "ports": [
-    "ck_se"
-   ],
-   "inputs": [
-    "bc2",
-    "bc3"
-   ],
-   "outputs": []
-  },
-  "q_nw": {
-   "ratio": [
-    1,
-    1
-   ],
-   "ports": [
-    "ck_nw"
-   ],
-   "inputs": [
-    "rs_i"
-   ],
-   "outputs": [
-    "bco0",
-    "bco1"
-   ]
-  },
-  "q_ne": {
-   "ratio": [
-    1,
-    1
-   ],
-   "ports": [
-    "ck_ne"
-   ],
-   "inputs": [],
-   "outputs": [
-    "bco2",
-    "bco3"
-   ]
-  }
+ "orfs_vars": {
+  "OT_SPINE_PORTS": "ck_sw,ck_se,ck_nw,ck_ne",
+  "OT_SPINE_MACRO_LEAF": "1"
  },
+ "sdc_extra": [
+  "physical/qcluster/qfd_c_b16_dv_quadrants.sdc"
+ ],
  "reset_ports": [
   "rst_n"
  ],
  "outline": {
-  "w": 2285.28,
-  "h": 5184.0,
+  "w": 2358.72,
+  "h": 5227.2,
   "exact": true
  },
- "child_lattice_um": 0.108,
+ "child_lattice_um": 43.2,
  "children": [
   {
    "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
    "count": 1,
    "inst": "u_t_0_0",
    "at": [
-    32.4,
-    64.8
+    43.2,
+    86.4
    ],
    "orient": "MY",
    "at_exact": true
@@ -121,8 +55,8 @@
    "count": 1,
    "inst": "u_t_0_1",
    "at": [
-    32.4,
-    1360.8
+    43.2,
+    1382.4
    ],
    "orient": "MY",
    "at_exact": true
@@ -132,8 +66,8 @@
    "count": 1,
    "inst": "u_t_0_2",
    "at": [
-    32.4,
-    2656.8
+    43.2,
+    2678.4
    ],
    "orient": "MY",
    "at_exact": true
@@ -143,8 +77,8 @@
    "count": 1,
    "inst": "u_t_0_3",
    "at": [
-    32.4,
-    3952.8
+    43.2,
+    3974.4
    ],
    "orient": "MY",
    "at_exact": true
@@ -154,8 +88,8 @@
    "count": 1,
    "inst": "u_t_1_0",
    "at": [
-    619.92,
-    64.8
+    648.0,
+    86.4
    ],
    "orient": "R0",
    "at_exact": true
@@ -165,8 +99,8 @@
    "count": 1,
    "inst": "u_t_1_1",
    "at": [
-    619.92,
-    1360.8
+    648.0,
+    1382.4
    ],
    "orient": "R0",
    "at_exact": true
@@ -176,8 +110,8 @@
    "count": 1,
    "inst": "u_t_1_2",
    "at": [
-    619.92,
-    2656.8
+    648.0,
+    2678.4
    ],
    "orient": "R0",
    "at_exact": true
@@ -187,8 +121,8 @@
    "count": 1,
    "inst": "u_t_1_3",
    "at": [
-    619.92,
-    3952.8
+    648.0,
+    3974.4
    ],
    "orient": "R0",
    "at_exact": true
@@ -198,8 +132,8 @@
    "count": 1,
    "inst": "u_t_2_0",
    "at": [
-    1207.44,
-    64.8
+    1252.8,
+    86.4
    ],
    "orient": "MY",
    "at_exact": true
@@ -209,8 +143,8 @@
    "count": 1,
    "inst": "u_t_2_1",
    "at": [
-    1207.44,
-    1360.8
+    1252.8,
+    1382.4
    ],
    "orient": "MY",
    "at_exact": true
@@ -220,8 +154,8 @@
    "count": 1,
    "inst": "u_t_2_2",
    "at": [
-    1207.44,
-    2656.8
+    1252.8,
+    2678.4
    ],
    "orient": "MY",
    "at_exact": true
@@ -231,8 +165,8 @@
    "count": 1,
    "inst": "u_t_2_3",
    "at": [
-    1207.44,
-    3952.8
+    1252.8,
+    3974.4
    ],
    "orient": "MY",
    "at_exact": true
@@ -242,8 +176,8 @@
    "count": 1,
    "inst": "u_t_3_0",
    "at": [
-    1794.96,
-    64.8
+    1857.6,
+    86.4
    ],
    "orient": "R0",
    "at_exact": true
@@ -253,8 +187,8 @@
    "count": 1,
    "inst": "u_t_3_1",
    "at": [
-    1794.96,
-    1360.8
+    1857.6,
+    1382.4
    ],
    "orient": "R0",
    "at_exact": true
@@ -264,8 +198,8 @@
    "count": 1,
    "inst": "u_t_3_2",
    "at": [
-    1794.96,
-    2656.8
+    1857.6,
+    2678.4
    ],
    "orient": "R0",
    "at_exact": true
@@ -275,8 +209,8 @@
    "count": 1,
    "inst": "u_t_3_3",
    "at": [
-    1794.96,
-    3952.8
+    1857.6,
+    3974.4
    ],
    "orient": "R0",
    "at_exact": true
@@ -287,26 +221,26 @@
   "N": [
    "bco0",
    "bco1",
+   "rs_i",
    "bco2",
    "bco3",
-   "rs_i",
    "ck_nw",
    "ck_ne"
   ],
   "S": [
    "bc0",
+   "rs",
    "bc1",
+   "rs_o",
    "bc2",
    "bc3",
-   "rs",
-   "rs_o",
    "ck_sw",
-   "ck_se",
    "rst_n",
    "far",
    "cid",
    "tie_hi",
-   "tie_lo"
+   "tie_lo",
+   "ck_se"
   ],
   "E": [],
   "W": []
@@ -316,104 +250,104 @@
    4.32,
    176.32
   ],
+  "rs": [
+   488.893,
+   660.227
+  ],
+  "bc1": [
+   920.693,
+   1092.693
+  ],
+  "rs_o": [
+   1093.693,
+   1265.027
+  ],
+  "bc2": [
+   1266.027,
+   1438.027
+  ],
+  "bc3": [
+   2182.4,
+   2354.4
+  ],
+  "ck_sw": [
+   687.966,
+   688.266
+  ],
+  "rst_n": [
+   688.966,
+   689.266
+  ],
+  "far": [
+   689.966,
+   690.266
+  ],
+  "cid": [
+   690.966,
+   696.966
+  ],
+  "tie_hi": [
+   697.666,
+   697.966
+  ],
+  "tie_lo": [
+   698.666,
+   698.966
+  ],
+  "ck_se": [
+   1754.301,
+   1754.601
+  ],
   "bco0": [
    4.32,
    176.32
   ],
-  "bc1": [
-   917.44,
-   1089.44
-  ],
   "bco1": [
-   917.44,
-   1089.44
-  ],
-  "bc2": [
-   1195.84,
-   1367.84
-  ],
-  "bco2": [
-   1195.84,
-   1367.84
-  ],
-  "bc3": [
-   2108.96,
-   2280.96
-  ],
-  "bco3": [
-   2108.96,
-   2280.96
-  ],
-  "rs": [
-   469.453,
-   640.787
+   920.693,
+   1092.693
   ],
   "rs_i": [
-   1093.392,
-   1191.888
+   1093.693,
+   1265.027
   ],
-  "rs_o": [
-   1093.392,
-   1191.888
+  "bco2": [
+   1266.027,
+   1438.027
   ],
-  "ck_sw": [
-   778.964,
-   779.264
+  "bco3": [
+   2182.4,
+   2354.4
   ],
   "ck_nw": [
-   778.964,
-   779.264
-  ],
-  "ck_se": [
-   1506.017,
-   1506.317
+   691.628,
+   691.928
   ],
   "ck_ne": [
-   1506.017,
-   1506.317
-  ],
-  "rst_n": [
-   783.114,
-   783.413
-  ],
-  "far": [
-   784.114,
-   784.413
-  ],
-  "cid": [
-   785.114,
-   791.114
-  ],
-  "tie_hi": [
-   792.114,
-   792.413
-  ],
-  "tie_lo": [
-   793.114,
-   793.413
+   1757.04,
+   1757.34
   ]
  },
  "pin_layers": {
   "bc0": "M5",
-  "bco0": "M5",
-  "bc1": "M5",
-  "bco1": "M5",
-  "bc2": "M5",
-  "bco2": "M5",
-  "bc3": "M5",
-  "bco3": "M5",
   "rs": "M5",
-  "rs_i": "M5",
+  "bc1": "M5",
   "rs_o": "M5",
+  "bc2": "M5",
+  "bc3": "M5",
   "ck_sw": "M5",
-  "ck_nw": "M5",
-  "ck_se": "M5",
-  "ck_ne": "M5",
   "rst_n": "M5",
   "far": "M5",
   "cid": "M5",
   "tie_hi": "M5",
-  "tie_lo": "M5"
+  "tie_lo": "M5",
+  "ck_se": "M5",
+  "bco0": "M5",
+  "bco1": "M5",
+  "rs_i": "M5",
+  "bco2": "M5",
+  "bco3": "M5",
+  "ck_nw": "M5",
+  "ck_ne": "M5"
  },
  "route": {
   "pd": 0.5,
@@ -423,6 +357,7 @@
   "pin_h": "M4 M6",
   "macro_halo_um": 5.4
  },
+ "cluster_level": 2,
  "recipe": 4,
  "hold_budget": "die",
  "inhold": false,

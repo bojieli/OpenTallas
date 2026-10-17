@@ -1,0 +1,396 @@
+{
+ "name": "qfd_c_b16_dv_diag",
+ "top": "qfd_c_b16_dv",
+ "kind": "cluster",
+ "diagnostic": true,
+ "sources": [
+  "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/a0_rr_bb.v",
+  "rtl/physical/qcluster/qfd_q3h_stn.sv",
+  "rtl/physical/qcluster/qfd_c_b16_dv_fabric.sv",
+  "rtl/physical/qcluster/qfd_c_b16_dv.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {},
+ "clock": "spine",
+ "child_clock_ref": "boundary",
+ "clock_port": "ck_sw",
+ "clock_ports": [
+  "ck_sw",
+  "ck_se",
+  "ck_nw",
+  "ck_ne"
+ ],
+ "orfs_vars": {
+  "OT_SPINE_PORTS": "ck_sw,ck_se,ck_nw,ck_ne",
+  "OT_SPINE_MACRO_LEAF": "1"
+ },
+ "sdc_extra": [
+  "physical/qcluster/qfd_c_b16_dv_quadrants.sdc"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 2358.72,
+  "h": 5227.2,
+  "exact": true
+ },
+ "child_lattice_um": 43.2,
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_0_0",
+   "at": [
+    43.2,
+    86.4
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_0_1",
+   "at": [
+    43.2,
+    1382.4
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_0_2",
+   "at": [
+    43.2,
+    2678.4
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_0_3",
+   "at": [
+    43.2,
+    3974.4
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_1_0",
+   "at": [
+    648.0,
+    86.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_1_1",
+   "at": [
+    648.0,
+    1382.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_1_2",
+   "at": [
+    648.0,
+    2678.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_1_3",
+   "at": [
+    648.0,
+    3974.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_2_0",
+   "at": [
+    1252.8,
+    86.4
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_2_1",
+   "at": [
+    1252.8,
+    1382.4
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_2_2",
+   "at": [
+    1252.8,
+    2678.4
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_2_3",
+   "at": [
+    1252.8,
+    3974.4
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nl_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_3_0",
+   "at": [
+    1857.6,
+    86.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_3_1",
+   "at": [
+    1857.6,
+    1382.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_3_2",
+   "at": [
+    1857.6,
+    2678.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_3_3",
+   "at": [
+    1857.6,
+    3974.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "macros": [],
+ "pins": {
+  "N": [
+   "bco0",
+   "bco1",
+   "rs_i",
+   "bco2",
+   "bco3",
+   "ck_nw",
+   "ck_ne"
+  ],
+  "S": [
+   "bc0",
+   "rs",
+   "bc1",
+   "rs_o",
+   "bc2",
+   "bc3",
+   "ck_sw",
+   "rst_n",
+   "far",
+   "cid",
+   "tie_hi",
+   "tie_lo",
+   "ck_se"
+  ],
+  "E": [],
+  "W": []
+ },
+ "pin_ranges": {
+  "bc0": [
+   4.32,
+   176.32
+  ],
+  "rs": [
+   488.893,
+   660.227
+  ],
+  "bc1": [
+   920.693,
+   1092.693
+  ],
+  "rs_o": [
+   1093.693,
+   1265.027
+  ],
+  "bc2": [
+   1266.027,
+   1438.027
+  ],
+  "bc3": [
+   2182.4,
+   2354.4
+  ],
+  "ck_sw": [
+   687.966,
+   688.266
+  ],
+  "rst_n": [
+   688.966,
+   689.266
+  ],
+  "far": [
+   689.966,
+   690.266
+  ],
+  "cid": [
+   690.966,
+   696.966
+  ],
+  "tie_hi": [
+   697.666,
+   697.966
+  ],
+  "tie_lo": [
+   698.666,
+   698.966
+  ],
+  "ck_se": [
+   1754.301,
+   1754.601
+  ],
+  "bco0": [
+   4.32,
+   176.32
+  ],
+  "bco1": [
+   920.693,
+   1092.693
+  ],
+  "rs_i": [
+   1093.693,
+   1265.027
+  ],
+  "bco2": [
+   1266.027,
+   1438.027
+  ],
+  "bco3": [
+   2182.4,
+   2354.4
+  ],
+  "ck_nw": [
+   691.628,
+   691.928
+  ],
+  "ck_ne": [
+   1757.04,
+   1757.34
+  ]
+ },
+ "pin_layers": {
+  "bc0": "M5",
+  "rs": "M5",
+  "bc1": "M5",
+  "rs_o": "M5",
+  "bc2": "M5",
+  "bc3": "M5",
+  "ck_sw": "M5",
+  "rst_n": "M5",
+  "far": "M5",
+  "cid": "M5",
+  "tie_hi": "M5",
+  "tie_lo": "M5",
+  "ck_se": "M5",
+  "bco0": "M5",
+  "bco1": "M5",
+  "rs_i": "M5",
+  "bco2": "M5",
+  "bco3": "M5",
+  "ck_nw": "M5",
+  "ck_ne": "M5"
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 192,
+  "pin_v": "M5",
+  "pin_h": "M4 M6",
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0,
+  "hold_margin_ns": 0.03
+ },
+ "cluster_level": 2,
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "qc_gen.py RTL registers every data pin in the S / N strip (bc / rs_i entry flops, bco / rs / rs_o exit flops, rst_n pin register); cid / far are static straps from the instance's own tie cells"
+ },
+ "relay_sites": "results/arch/qwen_cluster_1017/relay_sites_dv.json",
+ "structural_change": "Q-CLUSTER qfd_c_b16_dv (SPEC.md): CB cluster with A/T/B corridors 129.6 um (cut 1.79 -> 0.90 worst, trunks <= 0.54), four quadrant clock roots, registered pins hold_budget die, DV rs_i -> rs_o feedthrough (14 edges) in T.",
+ "job": {
+  "owner": "Claude:Q-CLUSTER",
+  "branch": "claude/qcluster-1017",
+  "tag": "diag0",
+  "purpose": "qfd_c_b16_dv cluster (dv2r8f, 48 instances)",
+  "submit": false,
+  "benches": [
+   {
+    "name": "qcluster_fabric",
+    "cmd": "bash tools/qwen_cluster/bench.sh bench_out",
+    "expect": "pass",
+    "pass_regex": "BENCH_EXIT 0",
+    "threads": 8,
+    "peak_ram_gb": 12
+   }
+  ]
+ },
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

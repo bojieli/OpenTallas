@@ -44,196 +44,352 @@ library (qfd_tile_nk_rp2_romleaf_rr_ff) {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_lsl1") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_lsl2") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_lsl3") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_lsl4") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_lsl5") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_lsl6") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_lsl7") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_node") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_fa0") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_fa1") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_fa2") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_fa3") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_fa4") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_rp0") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_rp5") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_rp1") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_rp6") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_rp2") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_rp7") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_rp3") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_rp8") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_rp4") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_rp9") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_tx0") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_tx1") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_tx2") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_tx3") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_tx6") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_tx7") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_rsw") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_rnw") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_dw") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_de") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_rs") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_rn") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_tx5") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     pin("ck_tx4") {
       direction : input;
       clock : true;
       capacitance : 2.0;
+      timing() { timing_type : min_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("155.0"); } cell_fall(scalar) { values("155.0"); } }
+      timing() { timing_type : max_clock_tree_path; timing_sense : positive_unate;
+        cell_rise(scalar) { values("185.0"); } cell_fall(scalar) { values("185.0"); } }
     }
     bus("n_a") {
       bus_type : n_a;

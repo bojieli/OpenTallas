@@ -42,22 +42,10 @@ def main():
         nk, nl, name, bb = a.nk, a.nl, "qfd_c_b16_dv", []
     tiles = []
     spare = tuple(C["tree"]["nl_slot"])
-    col_x = {}
-    x = 0.0
-    order = ["L", 0, "A", 1, "T", 2, "B", 3, "R"]
-    for n in order:
-        if isinstance(n, str):
-            lo, hi = C["corridors"][n]
-            x = hi
-        else:
-            col_x[n] = round(x, 3)
-            x += 457.92
-    rowy = {r: round(64.8 + r * (1166.4 + 129.6), 3) for r in range(4)}
-    orient = {0: "MY", 1: "R0", 2: "MY", 3: "R0"}
-    for c in range(4):
-        for r in range(4):
-            tiles.append(dict(view=nl if (c, r) == spare else nk, count=1, inst=f"u_t_{c}_{r}",
-                              at=[col_x[c], rowy[r]], orient=orient[c], at_exact=True))
+    for t in C["tiles"]:
+        c, r = (int(v) for v in t["inst"][4:].split("_"))
+        tiles.append(dict(view=nl if (c, r) == spare else nk, count=1, inst=t["inst"], at=t["at"], orient=t["orient"],
+                          at_exact=True))
     ports = C["ports"]
     faces = {"N": [], "S": [], "E": [], "W": []}
     for p in ports:
@@ -76,18 +64,18 @@ def main():
         name=name, top="qfd_c_b16_dv", kind="cluster",
         diagnostic=a.mode == "diag",
         sources=bb + FABRIC_SRC,
-        params={}, clock="hybrid_entries",
+        params={}, clock="spine", child_clock_ref="boundary",
         clock_port="ck_sw", clock_ports=["ck_sw", "ck_se", "ck_nw", "ck_ne"],
-        clock_cts_roots=["ck_sw", "ck_se", "ck_nw", "ck_ne"],
-        clock_entry_domains=domains,
+        orfs_vars={"OT_SPINE_PORTS": "ck_sw,ck_se,ck_nw,ck_ne", "OT_SPINE_MACRO_LEAF": "1"},
+        sdc_extra=["physical/qcluster/qfd_c_b16_dv_quadrants.sdc"],
         reset_ports=["rst_n"],
-        outline=dict(w=W, h=H, exact=True), child_lattice_um=0.108,
+        outline=dict(w=W, h=H, exact=True), child_lattice_um=43.2,
         children=tiles, macros=[],
         pins=faces,
         pin_ranges={p["port"]: p["range_um"] for p in ports},
         pin_layers={p["port"]: p["layer"] for p in ports},
         route=dict(pd=0.5, threads=16, peak_ram_gb=192, pin_v="M5", pin_h="M4 M6", macro_halo_um=5.4),
-        recipe=4, hold_budget="die", inhold=False, outhold=False,
+        cluster_level=2, recipe=4, hold_budget="die", inhold=False, outhold=False,
         pin_regs=dict(enable=False, reason="qc_gen.py RTL registers every data pin in the S / N strip (bc / rs_i entry "
                                            "flops, bco / rs / rs_o exit flops, rst_n pin register); cid / far are static "
                                            "straps from the instance's own tie cells"),

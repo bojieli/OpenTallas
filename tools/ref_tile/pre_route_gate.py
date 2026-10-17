@@ -671,8 +671,11 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
             g.add("FAIL", "layer", f"pin layers {over} above the tile cap {rl.group(1)}: the parent strap layer would "
                   "carry pins", "pins on M4/M5 (route.pin_h / pin_v / pin_balance)")
     elif rl is not None and spec["kind"] == "cluster":
-        cap, grant = RT.cluster_signal_cap(spec, RT.contract_slot(spec))
-        if rl.group(1) != cap or lc.get("pg_layer") != "M7":
+        if RT.cluster_level(spec) == 2:      # two-level cluster (Q-CLUSTER 2026-10-17): signals M7, PG M8
+            cap, grant, want_pg = "M7", None, "M8"
+        else:
+            (cap, grant), want_pg = RT.cluster_signal_cap(spec, RT.contract_slot(spec)), "M7"
+        if rl.group(1) != cap or lc.get("pg_layer") != want_pg:
             g.add("FAIL", "layer", "cluster kit signals/PG differ from its audited layer contract", "re-run ref_tile.py gen")
         if grant:
             g.add("INFO", "layer_grant", f"digest-bound {cap} grant {grant['source']}; no die signals through rectangle; phase-aligned die PG required")
