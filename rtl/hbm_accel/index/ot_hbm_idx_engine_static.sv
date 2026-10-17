@@ -36,8 +36,21 @@ module ot_hbm_idx_engine_static #(parameter integer MUT=0)(
     genvar c, g;
     generate
         for (c = 0; c < NCH; c = c + 1) begin : g_ch
+`ifdef OT_IDX_CHUNK_RT
+            // IDX-SCORE retimed leaf core (16 head-pair regions; region r on clk_hslice[32c+2r])
+`ifndef OT_IDX_QLATE
+`define OT_IDX_QLATE 0
+`endif
+            wire [15:0] clk_pair;
+            for (g = 0; g < 16; g = g + 1) begin : g_cp
+                assign clk_pair[g] = clk_hslice[32*c + 2*g];
+            end
+            ot_hbm_idx_chunk_rt #(.QLATE(`OT_IDX_QLATE)) u_c (
+                .clk(clk_chunk[c]), .clk_pair(clk_pair),
+`else
             ot_hbm_idx_chunk_owned_native u_c (
-                .clk(clk_chunk[c]), .clk_hslice(clk_hslice[32*c+:32]), .rst_n(rst_n), .hb(8'(8 * ((MUT == 1) ? (c ^ 1) : ((MUT == 2 && c == 0) ? 1 : c)))), .ql_v(ql_v), .ql_head(ql_head), .ql_codes(ql_codes), .ql_sc(ql_sc),
+                .clk(clk_chunk[c]), .clk_hslice(clk_hslice[32*c+:32]),
+`endif .rst_n(rst_n), .hb(8'(8 * ((MUT == 1) ? (c ^ 1) : ((MUT == 2 && c == 0) ? 1 : c)))), .ql_v(ql_v), .ql_head(ql_head), .ql_codes(ql_codes), .ql_sc(ql_sc),
                 .ql_w(ql_w), .k_v(take), .k_kv(k_kv), .k_key(k_key),
                 .online(chunks_online[c]), .c_v(cv[c]), .c_kv(ckv[c]), .c_sum(csum[c]), .c_fault(cfl[c]));
         end
