@@ -1,0 +1,12 @@
+SU_LANE SYNC_RESET release_edges=3 first_accept_edge=4 steady_schedule_added_edges=0
+SU_LANE ERROR op=0 cycle=41 output edge 41 want 40
+SU_LANE ERROR op=0 cycle=42 output edge 42 want 41
+SU_LANE ERROR op=0 cycle=43 output edge 43 want 42
+SU_LANE ERROR op=0 cycle=44 output edge 44 want 43
+SU_LANE ERROR op=0 cycle=45 output edge 45 want 44
+SU_LANE ERROR op=0 cycle=46 output edge 46 want 45
+SU_LANE ERROR op=0 cycle=47 output edge 47 want 46
+SU_LANE ERROR op=0 cycle=48 output edge 48 want 47
+[80260000] %Fatal: tb_su_static_lane_leaf.sv:108: Assertion failed in tb_su_static_lane_leaf: SU_LANE FAIL checks=3968 errors=1984 outputs=1984
+%Error: rtl/hbm_accel/generic/adapters/static_su/arithmetic/tb_su_static_lane_leaf.sv:108: Verilog $stop
+Aborting...

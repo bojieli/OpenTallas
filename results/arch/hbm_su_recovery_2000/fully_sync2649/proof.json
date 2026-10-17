@@ -1,0 +1,154 @@
+{
+  "source": "2649d9fa0",
+  "immutable_remote": "/srv/opentallas-scratch/claude/hsu-leaf-fullysync2649",
+  "host": "ot-agidock128",
+  "sources": [
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+      "sha256": "9dfb55d0c94c7dc05ba0febbd3c45eff5bc338d6677b0d0e8d055e1ce4829240",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv",
+      "sha256": "6a81debfd0cbd03cb5da37c3ae1fd19b9b4fec8c5761de3d2a93a5079ed094a2",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+      "sha256": "66b10a5bc31dbe9657713ecd371c33952cded2012aed382bca4ad9a4b1f866bb",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_arithmetic.sv",
+      "sha256": "7cad7dbe703a4173c3520bb921de7bebde17771c107491883addccecb44cd2b1",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+      "sha256": "fc1a858ae48bff68c71cef05015e16e88421a031b1bf5b271387bf7cd521fa5f",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "b3c7a21073a35c1e16c98b479d0e1e8c307cf9b61b2ce3d693022d2292205108",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fpu.sv",
+      "sha256": "020d7bc234fb2223e0e50b5f924b0d66f4bea9c50cef286c3d34d79eb935436b",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "sha256": "3a128a9d9684efa15943e35e8b136779f885fc019a014a62ca92f4fbbb419fd0",
+      "match": true
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "5791bc265deb80551b5e5729c6522becdfcbd0937759bee883521c4aac9eaaf7",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_sfu.sv",
+      "sha256": "541cf2733d2ffcb743a2a83a294cc3cc5da734a00da919c6a4afcf0cc46d5e65",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "5e3e2fa5ea0876e75bac27e0b5f833be781dd3257876ca74db92c7c37a8ff582",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "sha256": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "sha256": "a89f91b6e0533ad1b03b79448003b45c61f74740676736f902277cee5a47fefa",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "sha256": "c5e7de3967810f1c690e03b2c360e75245337063ff6bc7b9a62d573fddab4075",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+      "sha256": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_fdiv.sv",
+      "sha256": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_softplus.sv",
+      "sha256": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_kind1_lat4_leaf1_physical.sv",
+      "sha256": "dc2fe96b709f8ba8d0f63125d08a7b6125c1b7c87a61462bc4a120170b855887",
+      "match": true
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay.sv",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "match": true
+    },
+    {
+      "path": "rtl/lib/ot_sync_rst_relay.sv",
+      "sha256": "b7541a56742a139466cf1fc4ff03882ceed753f52667cab344f825e662f92c21",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/tb_su_static_lane_leaf.sv",
+      "sha256": "44f077301490926f5fca5e5c649549188524cd3587aa75e372f16d05e6900355",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_lane_leaf_run.sh",
+      "sha256": "b6321a7f3fe1a1e77aa11cc93c0ce2ac8433ab73d49e9cc519c702992d409329",
+      "match": true
+    }
+  ],
+  "source_all_match": true,
+  "scope": "one physical lane with real six-reader SRAM bank and full31class/N512 fixture; KIND1 lane133, KIND2 lane0. Logic/reset proof only; no routed or fullSU physical qualification.",
+  "reset": {
+    "delivery_edges": 3,
+    "first_accept_edge": 4,
+    "normal_added_edges": 0,
+    "all_consumers_synchronous": true
+  },
+  "positive": {
+    "KIND1": {
+      "outputs": 1984,
+      "checks": 3968
+    },
+    "KIND2": {
+      "outputs": 1984,
+      "checks": 3968
+    }
+  },
+  "mutants": {
+    "KIND1": {
+      "ADDR_errors": 3628,
+      "DATA_errors": 3382,
+      "PHASE_errors": 1984,
+      "RESET_reject_edge": 1
+    },
+    "KIND2": {
+      "ADDR_errors": 3948,
+      "DATA_errors": 3546,
+      "PHASE_errors": 1984,
+      "RESET_reject_edge": 1
+    }
+  }
+}

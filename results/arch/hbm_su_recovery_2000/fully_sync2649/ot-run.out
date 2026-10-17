@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       admits    -3 GB (avail 314, growth 269, headroom 48, waiters 32/2001 GB) load 67/128 running 43 disk 355 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    21 GB (avail 62, growth 50, headroom 24, waiters 0/0 GB) load 30/64 running 10 disk 180 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-593249-1792206797 after 0 s
+SU_LANE SYNC_RESET release_edges=3 first_accept_edge=4 steady_schedule_added_edges=0
+SU_LANE PASS lane=133 quarter=1 outputs=1984 checks=3968 first_output=40 issue_to_output=28 MLAT=4 ALAT=3 LEAF=1
+[80260000] %Fatal: tb_su_static_lane_leaf.sv:108: Assertion failed in tb_su_static_lane_leaf: SU_LANE FAIL checks=3968 errors=3628 outputs=1984
+[80260000] %Fatal: tb_su_static_lane_leaf.sv:108: Assertion failed in tb_su_static_lane_leaf: SU_LANE FAIL checks=3968 errors=3382 outputs=1984
+[80260000] %Fatal: tb_su_static_lane_leaf.sv:108: Assertion failed in tb_su_static_lane_leaf: SU_LANE FAIL checks=3968 errors=1984 outputs=1984
+[46000] %Fatal: tb_su_static_lane_leaf.sv:80: Assertion failed in tb_su_static_lane_leaf.unnamedblk1: SU_LANE FAIL reset release edge=1 (expected exactly 3)
+SU_LANE SYNC_RESET release_edges=3 first_accept_edge=4 steady_schedule_added_edges=0
+SU_LANE PASS lane=0 quarter=0 outputs=1984 checks=3968 first_output=40 issue_to_output=28 MLAT=4 ALAT=3 LEAF=1
+[80260000] %Fatal: tb_su_static_lane_leaf.sv:108: Assertion failed in tb_su_static_lane_leaf: SU_LANE FAIL checks=3968 errors=3948 outputs=1984
+[80260000] %Fatal: tb_su_static_lane_leaf.sv:108: Assertion failed in tb_su_static_lane_leaf: SU_LANE FAIL checks=3968 errors=3546 outputs=1984
+[80260000] %Fatal: tb_su_static_lane_leaf.sv:108: Assertion failed in tb_su_static_lane_leaf: SU_LANE FAIL checks=3968 errors=1984 outputs=1984
+[46000] %Fatal: tb_su_static_lane_leaf.sv:80: Assertion failed in tb_su_static_lane_leaf.unnamedblk1: SU_LANE FAIL reset release edge=1 (expected exactly 3)
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-593249-1792206797): exit 0
