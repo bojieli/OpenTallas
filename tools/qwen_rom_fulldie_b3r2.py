@@ -1125,7 +1125,10 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
                     if getattr(v, '_write_netlist_pre_b2', None) is not None:
                         v.write_netlist = v._write_netlist_pre_b2   # the b2 trial writer needs the retired b2 buses
             _late_pin_grant(v)
-            _relays(v, m, relay_pitch)
+            if m.get('dv_gap_route'):
+                _relays_fanout(v, m, relay_pitch)
+            else:
+                _relays(v, m, relay_pitch)
         finally:
             v.CORR = _corr0
         if getattr(v, 'RELAY_REACH_GATE', False):   # tp8b (die timing by construction)
@@ -1949,6 +1952,53 @@ def _relay_terminal_possible(centers, endpoint, reach_um, is_free, hop_ok=None):
                          np.abs(centers[:, 1] - endpoint[1]) <= reach_um)
     return any(is_free(int(i)) and (hop_ok is None or hop_ok(
         (float(centers[i][0]), float(centers[i][1])), endpoint)) for i in ids)
+
+
+def _relays_fanout(v, m, pitch=RELAY_PITCH_UM):
+    """Q-DIEPLAN3 dv (2026-10-17; dv2f6 GEN: 8 multi-sink data nets over reach, e.g. dvr_ng_io_cmd_free_0 collective ->
+    dvs_W5 + sys_face, 11.2 mm): the planner relays 2-point buses only.  A multi-sink bus whose farthest sink is out of
+    reach is split into one 2-point leg per sink (leg 0 keeps the bus name, leg k is <bus>__fo<k>), every leg is planned
+    and relayed on its own, and the legs' first hops are merged back into ONE net on the driver port (driver -> the
+    first relay / sink of every leg).  Each sink keeps a fixed, compiler-known stage count (static schedule)."""
+    if _os_r.environ.get('OT_RELAY_SKIP') == '1':
+        return _relays(v, m, pitch)
+    reach = float(_os_r.environ.get('OT_RELAY_REACH_OK', RELAY_REACH_UM))
+    pos = _pin_pos(v, m)
+    legs, out = {}, []
+    for bid, cl, bits, eps in m['buses']:
+        if len(eps) > 2 and cl not in ('clock_trunk', 'reset') and not bid.endswith('_rdy'):
+            try:
+                P0 = pos(*eps[0])
+                far = max(abs(P0[0] - pos(*e)[0]) + abs(P0[1] - pos(*e)[1]) for e in eps[1:])
+            except Exception:
+                far = 0.0
+            if far > reach:
+                names = []
+                for k, e in enumerate(eps[1:]):
+                    ln = bid if k == 0 else f'{bid}__fo{k}'
+                    out.append((ln, cl, bits, [eps[0], e]))
+                    names.append(ln)
+                legs[bid] = (cl, bits, eps[0], names)
+                continue
+        out.append((bid, cl, bits, eps))
+    m['buses'] = out
+    _relays(v, m, pitch)
+    if not legs:
+        return
+    first = {ln: o for o, (_, _, _, ns) in legs.items() for ln in ns}
+    merged, B = {}, []
+    for bid, cl, bits, eps in m['buses']:
+        if bid in first:
+            merged.setdefault(first[bid], []).append(eps[1:])
+            continue
+        B.append((bid, cl, bits, eps))
+    for o, (cl, bits, src, ns) in legs.items():
+        loads = [e for es in merged.get(o, []) for e in es]
+        if len(merged.get(o, [])) != len(ns):
+            raise ValueError(f'relays fanout: {o}: {len(merged.get(o, []))} of {len(ns)} legs found after planning')
+        B.append((o, cl, bits, [src] + loads))
+    m['buses'] = B
+    m['r21_relays']['fanout_legs'] = {o: ns for o, (_, _, _, ns) in legs.items()}
 
 
 def _relays(v, m, pitch=RELAY_PITCH_UM):
