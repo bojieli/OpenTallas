@@ -2013,6 +2013,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         return True
     for it in m['insts']:
         add_rect((it.x, it.y, it.x + it.w, it.y + it.h))
+    # Q-DIEPLAN3 q3h5: reserved keep-outs (DIE-CLOCK regional root sites, dedicated lanes): no relay may take them
+    for r_ in m.get('relay_keepouts', ()):
+        add_rect(tuple(r_['rect']))
     die_top = g['y_io']
     # Re-packed tile rows expose real horizontal channels. Derive them from
     # actual placed tile bodies, not the historical TILE_SLOT height. free()
@@ -3771,6 +3774,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     grid.clear()
     for it in m['insts']:
         add_rect((it.x, it.y, it.x + it.w, it.y + it.h))
+    # Q-DIEPLAN3 q3h5: reserved keep-outs (DIE-CLOCK regional root sites, dedicated lanes): no relay may take them
+    for r_ in m.get('relay_keepouts', ()):
+        add_rect(tuple(r_['rect']))
     for idx, pl in sorted(plans.items()):
         for fk, f in enumerate(pl['frames']):
             rr = (f[0], f[1], f[0] + f[2] + v.SHAVE, f[1] + f[3] + v.SHAVE)
