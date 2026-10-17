@@ -495,29 +495,36 @@ module qkd_ctrl_pc_sched #(
     parameter integer DRAIN_PIPE = 0, // 1: conservative two-edge drain summary; no traffic latency change
     parameter integer TQD = (ELASTIC != 0) ? 64 : 32,
     parameter integer CONTEXT_DESC = 0,
-    parameter integer STATIC_REFRESH = 0
+    parameter integer STATIC_REFRESH = 0,
+    // KVCTRL sched_s8 (KV-SCHED8 2026-10-17; s7b native audit FAIL: launch 308.9 on 309 po/ko pins, capture 306.2 on 175
+    // pins): 1 = flop-first pins.  Every input feeding logic or a cross-tile wire lands in a pin flop, and every output
+    // whose s7b register sat at the far face is re-registered at its own pin.  Exact contract: the outputs po, p_w_v,
+    // p_w_d, physical_context, physical_col_sr, expected_sr, idle_hbm, fo and ko are the s7b outputs ONE hclk later
+    // (bit-identical, every cycle, any input sequence); every other output is the s7b output on the same cycle.
+    // 0 = s7b (byte-identical logic).
+    parameter integer PINREG = 0
 ) (
     input  wire         pll_hbm,
     input  wire         hrst,
     input  wire [4:0]   pc,
     input  wire [62:0]  ci_c,       // {ci[318:309], ci[52:0]}: the KV write data ci[308:53] lands in the port child
     output wire [11:0]  co_c,       // co[293:282] = {at, av, wcon, hand}; co[281:0] is the ECC child
-    output reg [327:0] po,
+    output wire [327:0] po,
     input  wire         pi_v,       // pi[0]; pi[288:1] lands in the port child
     input  wire [32:0]  ki,
     output wire [32:0]  ko,
     input  wire         fi,
-    output reg          fo,
+    output wire         fo,
     input wire static_cmd_owner,input wire [42:0] static_cmd,input wire reserved_rd,input wire reserved_static_col,input wire reserved_write_col,
     input wire [15:0] static_epoch,input wire expected_raw_valid,
     output wire [15:0] corrected_epoch,
     // Registered observations only. A parent drain barrier must join BOTH
     // domains plus actual upstream quiet, front idle and return-ring idle.
-    output reg idle_hbm,output reg drain_fault_hbm,
+    output wire idle_hbm,output reg drain_fault_hbm,
     // ---- hardened-child seams (wires-parent qkd_ctrl_pc_host_static); every seam output is flop-driven ----
     output wire         p_col_v, p_col_we, p_col_sr,     // dv[LW-2] flops: one edge before the port's pin capture
-    output reg          p_w_v,                         // static write data, registered (+1 hclk, hidden by >= 4-edge column)
-    output reg  [255:0] p_w_d,
+    output wire         p_w_v,                         // static write data, registered (+1 hclk, hidden by >= 4-edge column)
+    output wire [255:0] p_w_d,
     input  wire [287:0] p_wd,
     input  wire         p_kv_v, p_em_v,                // p_em_v: activity veto only (the beat itself lands in the cdc child)
     input  wire         p_fault,
@@ -531,8 +538,8 @@ module qkd_ctrl_pc_sched #(
     input  wire [286:0] c_d,
     input  wire [61:0]  c_context,
     input  wire         f_ecdc,                        // cdc fault_hbm register
-    output reg  [346:0] physical_context,              // -> obs input pin registers
-    output reg          physical_col_sr,
+    output wire [346:0] physical_context,              // -> obs input pin registers
+    output wire         physical_col_sr,
     output wire         expected_sr,
     input  wire         obs_commit_valid,              // obs commit / native commit registers (+1 hclk vs core_s6)
     input  wire         native_commit_valid,
@@ -565,8 +572,9 @@ module qkd_ctrl_pc_sched #(
     // ---- kc chain station --------------------------------------------------------------------------------------------
     wire        tc_v;
     wire [31:0] tc_d;
+    wire [32:0] ko_r;                              // s7b ko (u_tap o_v / o_d)
     ot_qkvd_kcmd_tap #(.ROW0(ROW0)) u_tap (.clk(hclk), .rst_n(h_rn), .i_v(ki[0]), .i_d(ki[32:1]),
-        .o_v(ko[0]), .o_d(ko[32:1]), .c_v(tc_v), .c_d(tc_d));
+        .o_v(ko_r[0]), .o_d(ko_r[32:1]), .c_v(tc_v), .c_d(tc_d));
 
     // ---- W-face pin flops (CDC ho) -----------------------------------------------------------------------------------
     (* keep *) reg         wv_q, cv_q, hf_q;
@@ -699,8 +707,10 @@ module qkd_ctrl_pc_sched #(
     wire [287:0] wd = p_wd;
     wire         kv_v = p_kv_v, em_v = p_em_v, port_fault = p_fault;
     assign p_col_v = dv[LW-2], p_col_we = dwe[LW-2], p_col_sr = dsr[LW-2];   // CVL >= 1
-    always @(posedge hclk or negedge h_rn) if (!h_rn) p_w_v <= 1'b0; else p_w_v <= c_v && c_d[286];
-    always @(posedge hclk) p_w_d <= c_d[255:0];
+    reg          p_w_v_r;
+    reg  [255:0] p_w_d_r;
+    always @(posedge hclk or negedge h_rn) if (!h_rn) p_w_v_r <= 1'b0; else p_w_v_r <= c_v && c_d[286];
+    always @(posedge hclk) p_w_d_r <= c_d[255:0];
 
     // ---- read tags: {open row, j} per KV RD, in order ----------------------------------------------------------------
     reg  [7:0]  brow [0:31];
@@ -756,22 +766,26 @@ module qkd_ctrl_pc_sched #(
     // together, preserving JEDEC spacings and CWL alignment. Physical static
     // completion and KV write retirement move with the actual launched column.
     reg [3:0] expected_sr_pipe;
-    assign expected_sr=expected_sr_pipe[3];
+    reg [327:0] po_r;
+    reg [346:0] physical_context_r;
+    reg         physical_col_sr_r;
     always @(posedge hclk or negedge h_rn)if(!h_rn)expected_sr_pipe<=0;else expected_sr_pipe<={expected_sr_pipe[2:0],reserved_static_col};
-    always @(posedge hclk)physical_context<=col_context;
+    always @(posedge hclk)physical_context_r<=col_context;
     always @(posedge hclk or negedge h_rn)
-      if(!h_rn)begin po<=0;physical_col_sr<=0;end
-      else begin po<={wd,col_col,col_bank,col_we,col_v,row_row,row_bank,row_op,row_v};physical_col_sr<=col_sr;end
+      if(!h_rn)begin po_r<=0;physical_col_sr_r<=0;end
+      else begin po_r<={wd,col_col,col_bank,col_we,col_v,row_row,row_bank,row_op,row_v};physical_col_sr_r<=col_sr;end
 
     // ---- sticky fault chain, S -> N ----------------------------------------------------------------------------------
     // KVCTRL core_s7: the observer fault arrives from the obs child's fault register (its own logic one edge later).
+    reg fo_r;
     always @(posedge hclk or negedge h_rn)
-        if (!h_rn) fo <= 1'b0;
-        else fo <= fo | fi | ctl_fault | port_fault | ecc_fault | hf_q | f_ecdc | f_late | f_cmd | f_early | f_wmis | f_tag | raw_bad | native_observer_fault;
+        if (!h_rn) fo_r <= 1'b0;
+        else fo_r <= fo_r | fi | ctl_fault | port_fault | ecc_fault | hf_q | f_ecdc | f_late | f_cmd | f_early | f_wmis | f_tag | raw_bad | native_observer_fault;
 
     // KV corrected returns include tag, PHY raw, pcport and landing ECC
     // pipelines. Static reads are covered above through their actual e_v.
     reg [15:0] drain_kv;
+    reg idle_hbm_r;
     // KVCTRL core_s6 (2026-10-16): the raw e_l_v pin left the activity veto (structural fix of core_s5 EARLY_FAIL_HOLD:
     // e_l_v -> l_v_q/D FF hold -17.17 ps was the ONE endpoint the CTS hold repair could not fix -- the port also fed this
     // combinational OR, so the flow gave it no input hold pad, and the repair could not buffer it). A legal landing always
@@ -780,7 +794,7 @@ module qkd_ctrl_pc_sched #(
     // all legal traffic; an unsolicited zero-debt landing still raises drain_fault_hbm and drops idle_hbm one edge later.
     // e_l_v now loads only its pin flop.
     wire hbm_drain_activity=obs_commit_valid||rd_kv||tc_v||cmd_v||static_v_q||c_v||s_cr||wv_q||cv_q||hand_q||
-      wcon_q||row_v||col_v||po[0]||po[28]||rv_q||rawslot_q||kv_v||em_v||l_v||native_commit_valid;
+      wcon_q||row_v||col_v||po_r[0]||po_r[28]||rv_q||rawslot_q||kv_v||em_v||l_v||native_commit_valid;
     reg hbm_debt_zero_q;reg [1:0] hbm_quiet_q;
     always @(posedge hclk or negedge h_rn)
       if(!h_rn)begin hbm_debt_zero_q<=0;hbm_quiet_q<=0;end
@@ -789,7 +803,7 @@ module qkd_ctrl_pc_sched #(
         hbm_quiet_q<={hbm_quiet_q[0],!hbm_drain_activity};
       end
     always @(posedge hclk or negedge h_rn)
-      if(!h_rn)begin drain_kv<=0;drain_fault_hbm<=0;idle_hbm<=0;end
+      if(!h_rn)begin drain_kv<=0;drain_fault_hbm<=0;idle_hbm_r<=0;end
       else begin
         case({rd_kv,l_v})
           2'b10:drain_kv<=drain_kv+16'd1;
@@ -798,14 +812,97 @@ module qkd_ctrl_pc_sched #(
         endcase
         if((l_v&&!rd_kv&&drain_kv==0)||
            (rd_kv&&!l_v&&drain_kv==16'hffff))drain_fault_hbm<=1;
-        if(DRAIN_PIPE!=0)idle_hbm<=hgo&&ctl_phase_idle&&t_empty&&hbm_debt_zero_q&&
-          (&hbm_quiet_q)&&!hbm_drain_activity&&!drain_fault_hbm&&!fo&&!f_ecdc;
-        else idle_hbm<=hgo&&ctl_phase_idle&&t_empty&&raw_out==0&&drain_kv==0&&
+        if(DRAIN_PIPE!=0)idle_hbm_r<=hgo&&ctl_phase_idle&&t_empty&&hbm_debt_zero_q&&
+          (&hbm_quiet_q)&&!hbm_drain_activity&&!drain_fault_hbm&&!fo_r&&!f_ecdc;
+        else idle_hbm_r<=hgo&&ctl_phase_idle&&t_empty&&raw_out==0&&drain_kv==0&&
           !tc_v&&!cmd_v&&!static_v_q&&!c_v&&!s_cr&&!wv_q&&!cv_q&&!hand_q&&
-          hold==0&&!wcon_q&&dv==0&&av_s==0&&!row_v&&!col_v&&!po[0]&&!po[28]&&
+          hold==0&&!wcon_q&&dv==0&&av_s==0&&!row_v&&!col_v&&!po_r[0]&&!po_r[28]&&
           !rv_q&&!rawslot_q&&!kv_v&&!em_v&&!l_v&&!e_l_v&&!native_commit_valid&&!obs_commit_valid&&
-          !drain_fault_hbm&&!fo&&!f_ecdc;
+          !drain_fault_hbm&&!fo_r&&!f_ecdc;
       end
+
+    // ---- KVCTRL sched_s8 (PINREG): flop-first pins -------------------------------------------------------------------
+    // s7b classification (routed s7b view, TT): every po / ko output was flop-driven, but the flop sat at the FAR face
+    // (po = p_wd E -> S and ko = ki N -> S feed-throughs through one register; S-face pin-flop columns over capacity),
+    // behind the 3-cell outhold chain (~75 ps); c_d[255:0] reached its single register (p_w_d at E) over ~100 um of N -> E
+    // wire behind an inhold pad; the single-pin captures (c_v, p_kv_v, p_em_v, obs_commit_valid, native_commit_valid,
+    // f_ecdc, p_fault, e_fault, fi, native_observer_fault) fed the idle_hbm veto / fo OR trees (3-5 gates) before a flop.
+    // Successor: (1) feed-throughs get a register at each face -- the s7b register stays as the input pin flop and a new
+    // output pin register re-times it (po, p_w_d, ko, and physical_context / physical_col_sr / expected_sr with po so
+    // every observer sees the launched column on the same edge as before); (2) fo / idle_hbm / p_w_v are computed one
+    // edge later from pin flops of their raw inputs and plain registers of their internal terms (D-form: exactly the
+    // s7b register delayed one edge).  p_kv_v keeps its 0-cycle select of the e_sec / e_row lookahead (the ECC child
+    // captures the port beat and e_sec on the same edge) but leaves the idle veto.
+    generate if (PINREG != 0) begin : g_pin
+        // pin flops of raw inputs (plain registers: D(x))
+        (* keep *) reg c_v_q, cw_q, kv_v_q, em_v_q, obs_q, nat_q, fi_q, pf_q, ef_q, fe_q, nof_q;
+        always @(posedge hclk) begin
+            c_v_q <= c_v; cw_q <= c_d[286]; kv_v_q <= kv_v; em_v_q <= em_v; obs_q <= obs_commit_valid;
+            nat_q <= native_commit_valid; fi_q <= fi; pf_q <= port_fault; ef_q <= ecc_fault; fe_q <= f_ecdc;
+            nof_q <= native_observer_fault;
+        end
+        // plain registers of internal terms (all registers or logic of registers in s7b)
+        reg h_rn_d, hgo_d, fint_d, cmd_a_d, cmd_b_d, early_d, act_int_d, gate_d, hdz_d, dfh_d;
+        wire cmd_a = (cmd_v && cr == 4'd0) || ((static_owner_q && (tc_v || w_pend)) || (!static_owner_q && static_v_q)) ||
+                     (static_owner_q != static_owner_d && (!ctl_phase_idle || tw != tr || cv_q || wv_q));
+        wire act_int = rd_kv || tc_v || cmd_v || static_v_q || s_cr || wv_q || cv_q || hand_q || wcon_q || row_v || col_v ||
+                       po_r[0] || po_r[28] || rv_q || rawslot_q || l_v;
+        always @(posedge hclk) begin
+            h_rn_d <= h_rn; hgo_d <= hgo;
+            fint_d <= ctl_fault | hf_q | f_late | f_wmis | f_tag | raw_bad;
+            cmd_a_d <= cmd_a; cmd_b_d <= static_owner_q != static_owner_d;
+            early_d <= !hgo && (tc_v || static_v_q);
+            act_int_d <= act_int;
+            gate_d <= hgo && ctl_phase_idle && t_empty;
+            hdz_d <= hbm_debt_zero_q; dfh_d <= drain_fault_hbm;
+        end
+        // D(f_cmd), D(f_early): the s7b sticky checks one edge later (their raw c_v term from its pin flop)
+        reg f_cmd_d, f_early_d;
+        always @(posedge hclk or negedge hgo_d)
+            if (!hgo_d) f_cmd_d <= 1'b0; else if (cmd_a_d || (cmd_b_d && c_v_q)) f_cmd_d <= 1'b1;
+        always @(posedge hclk or negedge h_rn_d)
+            if (!h_rn_d) f_early_d <= 1'b0; else if (early_d || (!hgo_d && c_v_q)) f_early_d <= 1'b1;
+        // D(fo): fault chain output register at the N pin
+        reg fo_p;
+        always @(posedge hclk or negedge h_rn_d)
+            if (!h_rn_d) fo_p <= 1'b0;
+            else fo_p <= fo_p | fi_q | pf_q | ef_q | fe_q | nof_q | fint_d | f_cmd_d | f_early_d;
+        // D(idle_hbm) (DRAIN_PIPE form): veto from the pin flops + the registered internal activity
+        reg [1:0] hq_p;
+        reg idle_p;
+        wire act_d = act_int_d || c_v_q || kv_v_q || em_v_q || obs_q || nat_q;
+        always @(posedge hclk or negedge h_rn_d)
+            if (!h_rn_d) begin hq_p <= 2'd0; idle_p <= 1'b0; end
+            else begin
+                hq_p <= {hq_p[0], !act_d};
+`ifdef OT_SCHED_PINREG_MUT
+                idle_p <= gate_d && hdz_d && (&hq_p) && !(act_int_d || c_v_q || kv_v_q || obs_q || nat_q) && !dfh_d && !fo_p && !fe_q;
+`else
+                idle_p <= gate_d && hdz_d && (&hq_p) && !act_d && !dfh_d && !fo_p && !fe_q;
+`endif
+            end
+        // D(p_w_v) from pin flops; output pin registers of the feed-throughs and the launched-column observations
+        reg p_w_v_p;
+        always @(posedge hclk or negedge h_rn_d) if (!h_rn_d) p_w_v_p <= 1'b0; else p_w_v_p <= c_v_q && cw_q;
+        reg [327:0] po_p;
+        reg [255:0] p_w_d_p;
+        reg [346:0] pctx_p;
+        reg         pcsr_p, esr_p;
+        reg [32:0]  ko_p;
+        always @(posedge hclk) begin
+            po_p <= po_r; p_w_d_p <= p_w_d_r; pctx_p <= physical_context_r; pcsr_p <= physical_col_sr_r;
+            esr_p <= expected_sr_pipe[3]; ko_p <= ko_r;
+        end
+        assign po = po_p; assign p_w_v = p_w_v_p; assign p_w_d = p_w_d_p; assign physical_context = pctx_p;
+        assign physical_col_sr = pcsr_p; assign expected_sr = esr_p; assign ko = ko_p;
+        reg idle_hbm_d;   // DRAIN_PIPE 0: plain D(idle_hbm) (not flop-first; the production kit uses DRAIN_PIPE 1)
+        always @(posedge hclk) idle_hbm_d <= idle_hbm_r;
+        assign fo = fo_p; assign idle_hbm = DRAIN_PIPE != 0 ? idle_p : idle_hbm_d;
+    end else begin : g_s7b
+        assign po = po_r; assign p_w_v = p_w_v_r; assign p_w_d = p_w_d_r; assign physical_context = physical_context_r;
+        assign physical_col_sr = physical_col_sr_r; assign expected_sr = expected_sr_pipe[3]; assign ko = ko_r;
+        assign fo = fo_r; assign idle_hbm = idle_hbm_r;
+    end endgenerate
 endmodule
 // KVCTRL core_s7 (lead Q-KV 2026-10-17): CDC child -- the embedding static crossing u_ecdc (both clocks), the core-clock
 // intake pin flops / native intake check, the core-domain drain counters / idle_core, the er response registers and the
