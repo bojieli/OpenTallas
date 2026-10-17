@@ -102,13 +102,14 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "c26l fill (S-ELEM 2026-10-16 18:xx): new master dsfd_rly_536_EN cloned from closed s81_rly_536_sw (same outline 56.16x56.16, same route recipe, RSREG=1); only data/clock faces differ. 0 cycles (one relay register stage as every relay). | od8 (opt-in, NOT for submission until S-DIE/H-REACH ask): every out pin driven by one FIRM dont_touch BUFx8 at the pin (physical/common_flow/out_pin_driver.tcl) -- electrical reach: closed views drive the pin with BUFx2 (rise 170 ps @225 um / 335 @450 um driver-end vs BUFx8 50 / 94); 0 cycles.",
+ "structural_change": "c26l fill (S-ELEM 2026-10-16 18:xx): new master dsfd_rly_536_EN cloned from closed s81_rly_536_sw (same outline 56.16x56.16, same route recipe, RSREG=1); only data/clock faces differ. 0 cycles (one relay register stage as every relay). | od8 (opt-in, NOT for submission until S-DIE/H-REACH ask): every out pin driven by one FIRM dont_touch BUFx8 at the pin (physical/common_flow/out_pin_driver.tcl) -- electrical reach: closed views drive the pin with BUFx2 (rise 170 ps @225 um / 335 @450 um driver-end vs BUFx8 50 / 94); 0 cycles. | od8 r2: FIRM-at-pin BUFx8 routed TT +261.23 / FF +30.56 / DRC 0 but native launch 256.3 (111 pins > 220): INVx1 drove the internal flop->pin wire; r2 OT_OUT_DRV_FREE=1 lets GPL place the dont_touch BUFx8 between flop and pin.",
  "io_tcl": "physical/s81_die_pins/rly536_s56/dsfd_rly_536_EN.tcl",
  "pin_hook_before_flops": [
   "physical/common_flow/out_pin_driver.tcl"
  ],
  "orfs_vars": {
-  "OT_OUT_DRV": "BUFx8_ASAP7_75t_R"
+  "OT_OUT_DRV": "BUFx8_ASAP7_75t_R",
+  "OT_OUT_DRV_FREE": "1"
  },
  "children": [],
  "inter": []

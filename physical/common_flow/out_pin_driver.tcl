@@ -12,6 +12,11 @@
 # leaf_inhold_release.tcl returns it to PLACED for DPL like the hold stages.  Sourced by the recipe-2 pin hook after the
 # hold stages and BEFORE io_flop_at_pins.tcl, which then traces each launch flop THROUGH it (OT_OFLOP_HOPS) to the pin.
 # Function and cycles unchanged (one non-inverting buffer).  Default off: without OT_OUT_DRV this file does nothing.
+# OT_OUT_DRV_FREE=1: the driver is SEEDED at the pin but left PLACED (not FIRM, not released), dont_touch kept, so
+# timing-driven GPL puts it between the launch flop and the pin.  Why: FIRM at the pin, s81_rly_536_en_od8 (E->N relay,
+# pin flops at the E input face) left an INVx1 driving the whole internal flop -> N-pin wire: native launch 256.3 ps (111
+# pins > 220); unbuffered 200.1.
+set ot_od_free [expr {[info exists ::env(OT_OUT_DRV_FREE)] && $::env(OT_OUT_DRV_FREE) eq "1"}]
 if {![info exists ::env(OT_OUT_DRV)] || $::env(OT_OUT_DRV) eq ""} {
   puts "OUT_PIN_DRIVER: OT_OUT_DRV unset, nothing inserted"
 } else {
@@ -49,8 +54,7 @@ if {![info exists ::env(OT_OUT_DRV)] || $::env(OT_OUT_DRV) eq ""} {
     [$i findITerm Y] connect $pn
     $i setOrient R0
     $i setLocation $x $y
-    $i setPlacementStatus FIRM
-    lappend ot_od_firm $nm
+    if {$ot_od_free} { $i setPlacementStatus PLACED } else { $i setPlacementStatus FIRM; lappend ot_od_firm $nm }
     $pn setDoNotTouch 1
     incr ot_od_n
   }
@@ -58,5 +62,5 @@ if {![info exists ::env(OT_OUT_DRV)] || $::env(OT_OUT_DRV) eq ""} {
   if {[info exists ::env(RESULTS_DIR)]} {
     set fh [open $::env(RESULTS_DIR)/ot_inhold_firm.txt a]; if {[llength $ot_od_firm]} { puts $fh [join $ot_od_firm "\n"] }; close $fh
   }
-  puts "OUT_PIN_DRIVER: $ot_od_n output ports driven by [$ot_od_m getName] FIRM at the pin (dont_touch), $ot_od_skip outputs skipped (not flop-driven)"
+  puts "OUT_PIN_DRIVER: $ot_od_n output ports driven by [$ot_od_m getName] [expr {$ot_od_free ? {PLACED (free, seeded at the pin)} : {FIRM at the pin}}] (dont_touch), $ot_od_skip outputs skipped (not flop-driven)"
 }
