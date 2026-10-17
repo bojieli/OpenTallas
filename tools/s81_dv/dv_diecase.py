@@ -274,7 +274,7 @@ def main():
         libs = [f'{PLAT}/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', f'{PLAT}/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib']
         t = subprocess.run([sys.executable, str(tmp / 'tools/die_repeaters/step.py'), 'tcl', '--design', 's81', '--report',
                             '/work/die_repeaters.json', '--legalize', 'snap',
-                            '--repeat-nets', 'n*_fck\\[*\\]', '--fclk-globs', 'n*_fck\\[*\\]', '--fclk-policy', 'fail', '--skip', 'n*_lck\\[*\\]', '--libs', *libs], capture_output=True, text=True, check=True).stdout
+                            '--repeat-nets', 'n*_fck*', '--fclk-globs', 'n*_fck*', '--fclk-policy', 'fail', '--skip', 'n*_lck\\[*\\]', '--libs', *libs], capture_output=True, text=True, check=True).stdout
         (out / 'die_repeaters_step.tcl').write_text(t)
         repair = f'# DIE-FLOW repeater step ({a.dieflow_ref})\nsource /work/die_repeaters_step.tcl\n'
     post = ('estimate_parasitics -global_routing\n'
@@ -309,6 +309,8 @@ set_wire_rc -signal -layer M6
 create_clock -name clk -period 833.333 [get_ports clk]
 set ck [[ord::get_db_block] findNet clk]
 if {{$ck ne "NULL"}} {{ $ck setSpecial }}
+# relay rs: regional reset tree (die reset plan) not modelled here -- special, DIAGNOSTIC (listed in case.json)
+foreach rn {{rst n_rst_dv}} {{ set r [[ord::get_db_block] findNet $rn]; if {{$r ne "NULL"}} {{ $r setSpecial }} }}
 {repair}set_routing_layers -signal M2-M7 -clock M5-M9
 set_global_routing_layer_adjustment M2-M3 0.50
 set_global_routing_layer_adjustment M4-M5 0.30
@@ -332,7 +334,8 @@ rc=$?; echo $rc > $D/out/run.exit; exit $rc
     area = W * H / 1e6
     info = dict(schema='opentallas.s81_dv.die_case.v1', plan=str(a.plan), region=a.region, die_um=[W, H], area_mm2=round(area, 2),
                 blocks=dict(kinds), census={k: CENSUS.get(k, 'stand-in') for k in kinds},
-                real_views=dict(relay_276_stations=nreal, relay_ref=a.relay_ref),
+                real_views=dict(relay_276_stations=nreal, relay_ref=a.relay_ref,
+                                diagnostic='relay rs pins on one special net (regional reset tree not modelled in this case)'),
                 links=len(nets), bits=nbits, bits_by_class=dict(used), relay_flops=nf,
                 die_nets_est=nbits + nf, die_repair=a.die_repair,
                 memory_note=('H-REACH measured ~3.5 GB/mm2 for full-die GRT (flat, with block internals); this case is die-top '
