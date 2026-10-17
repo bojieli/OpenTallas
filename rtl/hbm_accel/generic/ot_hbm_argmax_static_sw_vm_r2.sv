@@ -79,7 +79,7 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
     reg [11:0] dp [0:8+VMX];              // {v, bank3, first, last, off3, lastw3}
     wire [11:0] di = dp[(MUT == 2) ? 6+VMX : 7+VMX];
     reg cap_v, cap_first, cap_last; reg [2:0] cap_off, cap_lastw; reg [255:0] cap_d;
-    always @(posedge clk or negedge rst_n)
+    always @(posedge clk or negedge rst_rd)
         if (!rst_rd) begin rq_v <= 8'd0; cap_v <= 1'b0; for (integer d = 0; d < 9+VMX; d = d + 1) dp[d] <= 12'd0; end
         else begin
             rq_v <= 8'd0; dp[0] <= 12'd0;
