@@ -18,7 +18,7 @@
 //   2 POST  a0: coefficient rows (comb[j][k] at word 4j + k, post[k] at word 16 + k), a1: y rows (element order)
 //   3 HLOAD a0: 32 rows (half row i = sub-beat i>>1, half i&1: rows a0 + 2i, a0 + 2i + 1 = vn's 256-b half-row layout)
 //   4 HSTORE a0: the inverse of HLOAD (h -> leaf store)
-//   5 NORM  imm[127:0] = the hc_pre coefficients -> vn n_go
+//   5 NORM  imm[127:0] = the hc_pre coefficients -> vn n_go; n[0] / n[1] = gather the q / BF16 family -> vq mode
 //   6 RDOUT a0, n: n row pairs (a0 + 2i, a0 + 2i + 1) -> lo (to the centre: ring / collective sends)
 // Every input lands in a flop; every output leaves a flop.
 // ---------------------------------------------------------------------------------------------------------------------
@@ -31,11 +31,11 @@ module ot_s81sl_vp #(
     input  wire          rst_n,
     input  wire          c_v,
     input  wire [159:0]  c_d,
-    // row writes from the centre
+    // row-pair writes from the centre: rows sw_a (sw_d[127:0], word mask sw_m[3:0]) and sw_a + 1 ([255:128], sw_m[7:4])
     input  wire          sw_v,
     input  wire [9:0]    sw_a,
-    input  wire [3:0]    sw_m,
-    input  wire [127:0]  sw_d,
+    input  wire [7:0]    sw_m,
+    input  wire [255:0]  sw_d,
     // capture word writes (2 ports): word address [11:0] = {row 10, word 2}
     input  wire [1:0]    cw_v,
     input  wire [23:0]   cw_a,
@@ -48,6 +48,7 @@ module ot_s81sl_vp #(
     output reg           hr_v, output reg [2:0] hr_j, output reg hr_hf,
     input  wire          hq_v, input wire [255:0] hq_d,
     output reg           n_go, output reg [127:0] n_pre,
+    output reg           m_v, output reg m_q, output reg m_b,
     output reg           wl_v, output reg [2:0] wl_i, output reg [255:0] wl_d,
     output reg           fault
 );
@@ -59,7 +60,7 @@ module ot_s81sl_vp #(
 
     // ---------------------------------------------------------------- input pin flops
     reg cv_c, swv_c, hqv_c; reg [1:0] cwv_c;
-    reg [159:0] cd_c; reg [9:0] swa_c; reg [3:0] swm_c; reg [127:0] swd_c; reg [23:0] cwa_c; reg [63:0] cwd_c;
+    reg [159:0] cd_c; reg [9:0] swa_c; reg [7:0] swm_c; reg [255:0] swd_c; reg [23:0] cwa_c; reg [63:0] cwd_c;
     reg [255:0] hqd_c;
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin cv_c <= 1'b0; swv_c <= 1'b0; cwv_c <= 2'b00; hqv_c <= 1'b0; end
@@ -116,8 +117,13 @@ module ot_s81sl_vp #(
         wv = 2'b00; wcol = 1'b0;
         for (k = 0; k < 2; k = k + 1) begin wa[k] = 9'd0; wd[k] = 128'd0; wm[k] = 128'd0; nw[k] = 3'd0; end
         if (swv_c) begin
-            k = swa_c[0]; wv[k] = 1'b1; wa[k] = swa_c[9:1]; wd[k] = swd_c; nw[k] = nw[k] + 3'd1;
-            for (i = 0; i < 4; i = i + 1) wm[k][32 * i +: 32] = {32{swm_c[i]}};
+            // row a -> bank a[0] at a >> 1; row a + 1 -> the other bank at (a + 1) >> 1 (a word mask of 0 skips a row)
+            k = swa_c[0];
+            if (|swm_c[3:0]) begin wv[k] = 1'b1; wa[k] = swa_c[9:1]; wd[k] = swd_c[127:0]; nw[k] = nw[k] + 3'd1;
+                for (i = 0; i < 4; i = i + 1) wm[k][32 * i +: 32] = {32{swm_c[i]}}; end
+            if (|swm_c[7:4]) begin wv[1 - k] = 1'b1; wa[1 - k] = swa_c[9:1] + {8'd0, swa_c[0]}; wd[1 - k] = swd_c[255:128];
+                nw[1 - k] = nw[1 - k] + 3'd1;
+                for (i = 0; i < 4; i = i + 1) wm[1 - k][32 * i +: 32] = {32{swm_c[4 + i]}}; end
         end
         for (i = 0; i < 2; i = i + 1)
             if (cwv_c[i]) begin
@@ -222,11 +228,12 @@ module ot_s81sl_vp #(
     always @(posedge clk) begin hs_a <= hs_base + {hsi_q[3], 1'b0}; hs_d <= hqd_c; end
 
     always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin hw_v <= 1'b0; hr_v <= 1'b0; n_go <= 1'b0; wl_v <= 1'b0; lo_v <= 1'b0; end
+        if (!rs_o) begin hw_v <= 1'b0; hr_v <= 1'b0; n_go <= 1'b0; m_v <= 1'b0; wl_v <= 1'b0; lo_v <= 1'b0; end
         else begin
             hw_v <= wvl || (dv && dop == OP_HLOAD);
             hr_v <= hrq_v;
             n_go <= cv_c && op == OP_NORM;
+            m_v <= cv_c && op == OP_NORM;
             wl_v <= dv && dop == OP_GAIN;
             lo_v <= dv && dop == OP_RDOUT;
         end
@@ -239,7 +246,7 @@ module ot_s81sl_vp #(
             hw_j <= dsi[3:1]; hw_hf <= dsi[0]; hw_d <= {qo, qe};
         end
         hr_j <= hrq_i[3:1]; hr_hf <= hrq_i[0];
-        if (cv_c && op == OP_NORM) n_pre <= cd_c[159:32];
+        if (cv_c && op == OP_NORM) begin n_pre <= cd_c[159:32]; m_q <= cn[0]; m_b <= cn[1]; end
         wl_i <= dsi[2:0]; wl_d <= {qo, qe};
         lo_d <= {qo, qe};
     end

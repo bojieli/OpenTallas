@@ -8,7 +8,7 @@ python3 tools/s81_slice/leaf_gold.py $CASES $B $O/run $L > $O/gold.log 2>&1 || {
 DEF=""; [ "$M" = muttree ] && DEF="+define+OT_S81SL_MUT_TREE"; [ "$M" = mutcoef ] && DEF="+define+OT_S81SL_TB_MUT_COEF"
 MACV="physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v"
 srcs="$(sort -u physical/hbm_norm_split_20261008/sources.f | tr '\n' ' ') rtl/hdc/v41x/ot_dsrom_su_add6.sv $MACV rtl/lib/ot_rst_relay.sv rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_beat.sv"
-/usr/bin/time -v -o $O/time.log $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD $DEF --top-module tb_s81sl_beat -Mdir $O/obj $srcs \
+/usr/bin/time -v -o $O/time.log $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD $DEF -GBEAT=$B --top-module tb_s81sl_beat -Mdir $O/obj $srcs \
   --build-jobs ${J:-4} -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build.log 2>&1 || { echo "BUILD_FAILED"; tail -n 8 $O/build.log; exit 3; }
 (cd $O/run && ../obj/Vtb_s81sl_beat > ../run.log 2>&1)
 grep -E "^SLBEAT|MISMATCH" $O/run.log | head -14

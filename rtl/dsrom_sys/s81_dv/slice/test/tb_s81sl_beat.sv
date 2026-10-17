@@ -8,7 +8,7 @@
 // (presented RB_GAP edges after the partial: the xfin's exchange is benched by S81-DV).  Prints SLBEAT + latencies.
 // Negative controls: +define+OT_S81SL_MUT_TREE (vn tree association), +define+OT_S81SL_TB_MUT_COEF (bench swaps two
 // comb words in the leaf store: hc_post must then mismatch -- proves the h check sees the coefficient path).
-module tb_s81sl_beat #(parameter integer RB_GAP = 4);
+module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37);
     reg clk = 1'b0;
     always #0.5 clk = ~clk;
     reg [15:0] h0 [0:255];
@@ -40,20 +40,32 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4);
     // leaf-store map (rows)
     localparam integer R_GA = 0, R_GF = 16, R_CA = 32, R_CF = 40, R_YA = 48, R_YF = 64, R_H0 = 96, R_HS = 128;
     reg rst_n = 1'b0, c_v = 1'b0, sw_v = 1'b0, rb_v = 1'b0;
-    reg [159:0] c_d = 0; reg [9:0] sw_a = 0; reg [127:0] sw_d = 0; reg [31:0] rb_d = 0;
-    wire lo_v, hw_v, hr_v, hq_v, n_go, wl_v, fp, fn, fq, p_v, y_v, xq_v, xb_v, hw_hf, hr_hf;
+    reg [159:0] c_d = 0; reg [9:0] sw_a = 0; reg [255:0] sw_d = 0; reg [7:0] sw_m = 0; reg [31:0] rb_d = 0;
+    wire lo_v, hw_v, hr_v, hq_v, n_go, wl_v, fp, fn, fq, p_v, y_v, hw_hf, hr_hf, m_v, m_q, m_b;
     wire [255:0] lo_d, hw_d, hq_d, wl_d, y; wire [2:0] hw_j, hr_j, wl_i, y_i; wire [127:0] n_pre; wire [31:0] p_d;
-    wire [531:0] xq_d; wire [1023:0] xb_d;
-    ot_s81sl_vp u_p (.clk(clk), .rst_n(rst_n), .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(4'hf), .sw_d(sw_d),
+    // the leaf's x beats arrive as 4 x 276-b fragments: re-assemble them (as the ring stop does)
+    wire xf_v, xf_s; wire [275:0] xf; reg [1103:0] xo = 0; reg [1:0] frn = 0; reg xo_v = 0;
+    always @(posedge clk) begin
+        xo_v <= 1'b0;
+        if (xf_v) begin
+            if (xf_s) begin xo[275:0] <= xf; frn <= 2'd1; end
+            else begin xo[276 * frn +: 276] <= xf; frn <= frn + 2'd1; if (frn == 2'd3) xo_v <= 1'b1; end
+        end
+    end
+    wire xq_v = xo_v && xo[3:1] == 3'd1, xb_v = xo_v && xo[3:1] == 3'd2;
+    wire [531:0] xq_d = xo[21 +: 532]; wire [1023:0] xb_d = xo[21 +: 1024];
+    ot_s81sl_vp u_p (.clk(clk), .rst_n(rst_n), .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
         .cw_v(2'b00), .cw_a(24'd0), .cw_d(64'd0), .lo_v(lo_v), .lo_d(lo_d),
         .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d), .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf),
-        .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre), .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .fault(fp));
+        .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre), .m_v(m_v), .m_q(m_q), .m_b(m_b),
+        .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .fault(fp));
     ot_s81sl_vn u_n (.clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),
         .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf), .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre),
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .rb_v(rb_v), .rb_d(rb_d), .p_v(p_v), .p_d(p_d),
         .y_v(y_v), .y_i(y_i), .y(y), .fault(fn));
-    ot_s81sl_vq u_q (.clk(clk), .rst_n(rst_n), .y_v(y_v), .y_i(y_i), .y(y), .xq_v(xq_v), .xq_d(xq_d),
-        .xb_v(xb_v), .xb_d(xb_d), .fault(fq));
+    localparam [3:0] SID = BEAT / 5; localparam [2:0] KL = BEAT % 5;
+    ot_s81sl_vq u_q (.clk(clk), .rst_n(rst_n), .y_v(y_v), .y_i(y_i), .y(y), .sid(SID), .k(KL), .m_v(m_v), .m_q(m_q),
+        .m_b(m_b), .xf_v(xf_v), .xf_s(xf_s), .xf(xf), .fault(fq));
 
     // row image to write: {row, data}
     reg [127:0] img [0:159]; reg [159:0] wr_ok;
@@ -84,9 +96,9 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4);
     end
 
     // checks
-    integer cyc = 0, err = 0, ph = 0, blk = 0, np_ = 0, ny = 0, nq = 0, nlo = 0;
+    integer cyc = 0, err = 0, ph = 0, blk = 0, np_ = 0, ny = 0, nq = 0, nb = 0, nlo = 0;
     integer t_go = -1, t_p = -1, t_rb = -1, t_y0 = -1, t_ylast = -1, t_q = -1, t_post = -1, t_hw_last = -1, t_hload = -1;
-    integer lat_p [0:1], lat_y [0:1], lat_q [0:1], lat_post [0:1];
+    integer lat_p [0:1], lat_y [0:1], lat_q [0:1], lat_b [0:1], lat_post [0:1];
     task cmd(input [3:0] op, input [9:0] a0, input [9:0] a1, input [7:0] n, input [127:0] imm);
         begin c_v <= 1'b1; c_d <= {imm, n, a1, a0, op}; end
     endtask
@@ -94,12 +106,15 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4);
         cyc <= cyc + 1;
         c_v <= 1'b0; sw_v <= 1'b0; rb_v <= 1'b0;
         if (cyc == 3) rst_n <= 1'b1;
-        if (cyc >= 10 && cyc < 170 && wr_ok[cyc - 10]) begin sw_v <= 1'b1; sw_a <= cyc - 10; sw_d <= img[cyc - 10]; end
+        if (cyc >= 10 && cyc < 90 && (wr_ok[2 * (cyc - 10)] || wr_ok[2 * (cyc - 10) + 1])) begin
+            sw_v <= 1'b1; sw_a <= 2 * (cyc - 10); sw_d <= {img[2 * (cyc - 10) + 1], img[2 * (cyc - 10)]};
+            sw_m <= {{4{wr_ok[2 * (cyc - 10) + 1]}}, {4{wr_ok[2 * (cyc - 10)]}}};
+        end
         if (cyc == 180) begin cmd(4'd3, R_H0, 0, 0, 0); t_hload = cyc; end                       // HLOAD
         // per block: GAIN, NORM, rstd, POST, HSTORE, RDOUT
         if (cyc == 220 + 400 * blk && blk < 2) cmd(4'd1, blk ? R_GF : R_GA, 0, 0, 0);            // GAIN
         if (cyc == 240 + 400 * blk && blk < 2) begin
-            cmd(4'd5, 0, 0, 0, {pre[4 * blk + 3], pre[4 * blk + 2], pre[4 * blk + 1], pre[4 * blk + 0]}); t_go = cyc;   // NORM
+            cmd(4'd5, 0, 0, 8'd3, {pre[4 * blk + 3], pre[4 * blk + 2], pre[4 * blk + 1], pre[4 * blk + 0]}); t_go = cyc;   // NORM
         end
         if (p_v) begin
             np_ = np_ + 1; t_p = cyc; lat_p[blk] = cyc - t_go;
@@ -119,10 +134,14 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4);
             if (xq_d[255:0] !== eq[2 * blk + 0] || xq_d[265:256] !== ee[2 * blk + 0] || xq_d[521:266] !== eq[2 * blk + 1] || xq_d[531:522] !== ee[2 * blk + 1]) begin
                 err = err + 1; $display("Q MISMATCH blk %0d e0 %h/%h e1 %h/%h", blk, xq_d[265:256], ee[2 * blk + 0], xq_d[531:522], ee[2 * blk + 1]);
             end
+            if (xo[20:13] !== BEAT) begin err = err + 1; $display("IDX MISMATCH %0d", xo[20:13]); end
+        end
+        if (xb_v) begin
+            nb = nb + 1; lat_b[blk] = cyc - t_rb;
             for (i = 0; i < 64; i = i + 1)
                 if (xb_d[16 * i +: 16] !== ey[64 * blk + i][31:16]) begin err = err + 1; if (err < 12) $display("B MISMATCH blk %0d lane %0d", blk, i); end
         end
-        if (t_q >= 0 && cyc == t_q + 10) begin cmd(4'd2, blk ? R_CF : R_CA, blk ? R_YF : R_YA, 0, 0); t_post = cyc; end   // POST
+        if (t_q >= 0 && cyc == t_q + 12) begin cmd(4'd2, blk ? R_CF : R_CA, blk ? R_YF : R_YA, 0, 0); t_post = cyc; end   // POST
         if (hw_v && t_post >= 0) begin t_hw_last = cyc; lat_post[blk] = cyc - t_post; end
         if (t_post >= 0 && cyc == t_post + 80) cmd(4'd4, R_HS, 0, 0, 0);                         // HSTORE
         if (t_post >= 0 && cyc == t_post + 110) cmd(4'd6, R_HS, 0, 16, 0);                       // RDOUT 16 row pairs
@@ -138,9 +157,9 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4);
             if (nlo == 16) begin nlo = 0; blk = blk + 1; t_p = -1; t_q = -1; t_post = -1; end
         end
         if (cyc == 1200) begin
-            $display("SLBEAT partials=%0d ybeats=%0d qbeats=%0d blocks_done=%0d err=%0d fault=vp%b/vn%b/vq%b go_to_partial=%0d/%0d rstd_to_y0=%0d/%0d rstd_to_xq=%0d/%0d post_cmd_to_last_hw=%0d/%0d",
-                     np_, ny, nq, blk, err, fp, fn, fq, lat_p[0], lat_p[1], lat_y[0], lat_y[1], lat_q[0], lat_q[1], lat_post[0], lat_post[1]);
-            if (err == 0 && np_ == 2 && ny == 16 && nq == 2 && blk == 2 && !fp && !fn && !fq) $display("PASS"); else $display("FAIL");
+            $display("SLBEAT beat=%0d partials=%0d ybeats=%0d qbeats=%0d bbeats=%0d blocks_done=%0d err=%0d fault=vp%b/vn%b/vq%b go_to_partial=%0d/%0d rstd_to_y0=%0d/%0d rstd_to_xq=%0d/%0d rstd_to_xb=%0d/%0d post_cmd_to_last_hw=%0d/%0d",
+                     BEAT, np_, ny, nq, nb, blk, err, fp, fn, fq, lat_p[0], lat_p[1], lat_y[0], lat_y[1], lat_q[0], lat_q[1], lat_b[0], lat_b[1], lat_post[0], lat_post[1]);
+            if (err == 0 && np_ == 2 && ny == 16 && nq == 2 && nb == 2 && blk == 2 && !fp && !fn && !fq) $display("PASS"); else $display("FAIL");
             $finish;
         end
     end
