@@ -22,17 +22,17 @@
    "token_rate_loss": "UNMEASURED_NOT_ACCEPTED",
    "overlap_count": 192,
    "outside": [
-    "f_cx17_x2_1",
-    "f_cx1_x2_1",
-    "f_cx8_x2_1",
-    "f_cx6_x2_1",
+    "f_cx10_x2_1",
     "f_cx5_x2_1",
-    "f_cx18_x2_1",
-    "f_cx15_x2_1",
-    "f_cx20_x2_1",
-    "f_cx2_x2_1",
+    "f_cx17_x2_1",
+    "f_cx6_x2_1",
     "f_cx11_x2_1",
-    "f_cx10_x2_1"
+    "f_cx2_x2_1",
+    "f_cx8_x2_1",
+    "f_cx20_x2_1",
+    "f_cx1_x2_1",
+    "f_cx18_x2_1",
+    "f_cx15_x2_1"
    ],
    "incident_buses": 3080,
    "incident_edges": 101051,
@@ -41,6 +41,10 @@
    "actual_pin_reach_qualified_edges": 0,
    "actual_cut_qualified_edges": 0,
    "actual_clock_qualified_edges": 0,
+   "station_reach_limit_um": 430.56,
+   "data_lower_bounds_over430_56": 238,
+   "proposed_new_master_ABI": false,
+   "joint_source_pair_unplaced": [],
    "reach_by_kind": {
     "col_clock": {
      "edges": 56295,
@@ -109,6 +113,10 @@
    "actual_pin_reach_qualified_edges": 0,
    "actual_cut_qualified_edges": 0,
    "actual_clock_qualified_edges": 0,
+   "station_reach_limit_um": 430.56,
+   "data_lower_bounds_over430_56": 226,
+   "proposed_new_master_ABI": false,
+   "joint_source_pair_unplaced": [],
    "reach_by_kind": {
     "col_clock": {
      "edges": 56295,
@@ -134,6 +142,78 @@
      "edges": 900,
      "rectangle_lower_bound_over500": 16,
      "rectangle_upper_bound_under500": 288
+    },
+    "stat": {
+     "edges": 128,
+     "rectangle_lower_bound_over500": 0,
+     "rectangle_upper_bound_under500": 0
+    },
+    "x_ctl": {
+     "edges": 128,
+     "rectangle_lower_bound_over500": 0,
+     "rectangle_upper_bound_under500": 0
+    },
+    "x_lane": {
+     "edges": 384,
+     "rectangle_lower_bound_over500": 0,
+     "rectangle_upper_bound_under500": 0
+    }
+   }
+  },
+  {
+   "name": "C_east_horiz_final_preserve_upstream",
+   "scope": "UNQUALIFIED_FULL_FIRST_PASS_CONNECTED_GROUP_SCREEN",
+   "parent_count": 128,
+   "moved_instances": 642,
+   "missing_instances": [],
+   "outline_um": [
+    384.48,
+    159.84
+   ],
+   "parent_area_delta_mm2": 2.612563402752001,
+   "source_cycles_added": 0,
+   "return_cycles_added": 1,
+   "return_added_latency_ps": 833.333,
+   "return_added_flops_per_parent": 70,
+   "token_rate_loss": "UNMEASURED_NOT_ACCEPTED",
+   "overlap_count": 0,
+   "outside": [],
+   "incident_buses": 2824,
+   "incident_edges": 100795,
+   "rectangle_lower_bound_over500": 83257,
+   "rectangle_upper_bound_under500": 2638,
+   "actual_pin_reach_qualified_edges": 0,
+   "actual_cut_qualified_edges": 0,
+   "actual_clock_qualified_edges": 0,
+   "station_reach_limit_um": 430.56,
+   "data_lower_bounds_over430_56": 4,
+   "proposed_new_master_ABI": true,
+   "joint_source_pair_unplaced": [],
+   "reach_by_kind": {
+    "col_clock": {
+     "edges": 56295,
+     "rectangle_lower_bound_over500": 47415,
+     "rectangle_upper_bound_under500": 794
+    },
+    "col_reset": {
+     "edges": 41932,
+     "rectangle_lower_bound_over500": 35842,
+     "rectangle_upper_bound_under500": 794
+    },
+    "col_ret": {
+     "edges": 128,
+     "rectangle_lower_bound_over500": 0,
+     "rectangle_upper_bound_under500": 26
+    },
+    "fclk": {
+     "edges": 900,
+     "rectangle_lower_bound_over500": 0,
+     "rectangle_upper_bound_under500": 512
+    },
+    "lane": {
+     "edges": 900,
+     "rectangle_lower_bound_over500": 0,
+     "rectangle_upper_bound_under500": 512
     },
     "stat": {
      "edges": 128,
