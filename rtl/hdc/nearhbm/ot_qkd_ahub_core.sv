@@ -500,8 +500,6 @@ module ot_qkd_ahub_die #(
     ot_qkd_drly #(.W(34), .N(RY_RLY)) u_ryo (.clk(ck_ryr), .d({rf_t, ryo_t}), .q({rf, ryo}));
     assign rc_y = ryo[31:0];  assign rc_vo = ryo[32];  assign rc_fault = rf;
     // beat stores and lane groups
-`ifdef QKD_AHUB_RLY_CLK
-
     wire [2047:0] sr_t, sr;
     generate for (g = 0; g < 4; g = g + 1) begin : g_s
         wire [5:0] ra;  wire [519:0] pin;
