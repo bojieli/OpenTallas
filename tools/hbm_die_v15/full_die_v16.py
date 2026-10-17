@@ -445,7 +445,7 @@ def a2p_remaster(insts, problems):
             peers = {'SW': ('S0', 'S1', 'S2'), 'SE': ('S3', 'S4'),
                      'NW': ('N0', 'N1'), 'NE': ('N2', 'N3')}[q]
             kept = tuple(k for k, peer in enumerate(peers) if 'ep_' + peer not in DROP_INST)
-            i['params'] = dict(i['params'], NLINK=len(kept))
+            i['params'] = dict(i['params'], NLINK=len(kept), TP=192 if DROP_SM_Q else 96)
             i['note'] = i.get('note', '') + f' | A2P: NLINK={len(kept)} physical links, ordered lanes {kept}'
             rules[n] = {p: (w, kept, len(peers)) for p, w in
                         dict(phy_up=1, tx_pin_v=1, tx_pin_flit=612, rx_pin_v=1,
