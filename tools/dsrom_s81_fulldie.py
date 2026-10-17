@@ -3264,6 +3264,7 @@ BF_X2_PAIR = False              # --bf-x2-pair (S-BIND r6): the packed static x 
 # beside go (same class / relay cohort: the producer's DELTA 0 assumes equal go / f_prog ages, bench-measured).
 BF_STATIC_PROG = False
 BF_FRONT_ROOT_ABI = False       # opt-in S81H03 source candidate; no view/timing inheritance
+X2_NATIVE_SITE = False          # --x2-native-site (H-C27 c27b): reserved native rly_536 x2 relay site per slot
 CFIFO_CRSPLIT = False           # --cfifo-crsplit (H-C27 c27b): column FIFO = closed dsfd_cfifo_crs r5f (s81/cfifo_crsplit.py)
 CLUSTER_MODE = None             # --cluster-mode (H-C27 c27): dict(y_snap_um, column_dy_um, reach_um) or None (s81/cluster_mode.py)
 LEAF, NODEB, STB = 63, 66, 2
@@ -4710,6 +4711,16 @@ def build_r8(variant=None):
                 XSITES[(r, s)] = [(sx_, ylo_), (sx_, yhi_)]
                 for xs_, ys_ in XSITES[(r, s)]:
                     RSV_RECTS.append((xs_, ys_, xs_ + rw_, ys_ + rh_, 'xs'))
+                if X2_NATIVE_SITE:
+                    # --x2-native-site (H-C27 c27b, S-DIE 10-16): the slot's x2 lane relay site at the native rly_536
+                    # envelope, E of the xa / xb sites inside the --xb-rgap gap (cost: the R lane's ROM row moves E by
+                    # the gap growth; the column outline is unchanged)
+                    w2_, h2_ = relay_dims(X2B, True)
+                    sx2_ = up(sx_ + rw_ + 0.432, GX)
+                    assert sx2_ + w2_ + 0.432 <= x0 + LANE_W + R_CFGX + XB_RGAP + 1e-6, \
+                        ('--x2-native-site: gap too narrow (grow --xb-rgap)', r, s, round(sx2_ + w2_ - (x0 + LANE_W + R_CFGX + XB_RGAP), 3))
+                    assert yy + h2_ <= sy + CFG_DY + rc['h'] + 1e-6, ('--x2-native-site: band too short', r, s)
+                    RSV_RECTS.append((sx2_, yy, sx2_ + w2_, yy + h2_, 'x2s'))
         if REV == 'r9':
             for p, kind, s, ln in elems:
                 if kind == 'q':
@@ -6797,6 +6808,8 @@ def _q_pin_pt(it, port):
 
 
 def _rsv_tag(bid):
+    if X2_NATIVE_SITE and re.match(r'x2_\d+_\d+$', bid):
+        return 'x2s'
     return 'rt' if bid.startswith('rt_') else ('x' if re.match(r'(xa|xb|cc)_\d+_\d+$', bid) else None)
 
 
@@ -11949,6 +11962,8 @@ def die_options(ap):
                     'clusters (frame + cfifo, one master per height x pairs class) on one y lattice phase; STREET-ONLY die-top '
                     'transport (street bands below the clusters, band above each column, S14, die-W edge); the die top '
                     'instantiates cluster masters (s81/cluster_mode.py). Needs --canonical-layout.')
+    ap.add_argument('--x2-native-site', action='store_true', help='H-C27 c27b: per slot, reserve the x2 lane relay site at the '
+                    'native rly_536 envelope (needs --native-slot-envelopes --x-site-pair and a --xb-rgap wide enough)')
     ap.add_argument('--cfifo-crsplit', action='store_true', help='H-C27 c27b (S-DIE/DIE-CLOCK 10-16): column FIFO = the closed '
                     'dsfd_cfifo_crs r5f (280.8 x 69.12): cr / cr_s / xf / xf2 are column-tree sinks, the column clock is driven by '
                     'the x lane forwarded station (F1), the return chain first station takes that net; needs --cfifo-colck '
@@ -12711,8 +12726,9 @@ def apply_options(a):
     CFIFO_COLCK = bool(getattr(a, 'cfifo_colck', False))
     assert not CFIFO_COLCK or CFIFO_V2, '--cfifo-colck needs --cfifo-v2'
     CF_WH = CF_WH_V2 if CFIFO_V2 else (850.176, 47.52)
-    global CFIFO_CRSPLIT
+    global CFIFO_CRSPLIT, X2_NATIVE_SITE
     CFIFO_CRSPLIT = bool(getattr(a, 'cfifo_crsplit', False))
+    X2_NATIVE_SITE = bool(getattr(a, 'x2_native_site', False))
     if CFIFO_CRSPLIT:
         from s81.cfifo_crsplit import OUTLINE as _CRS
         assert CFIFO_COLCK, '--cfifo-crsplit needs --cfifo-colck'
