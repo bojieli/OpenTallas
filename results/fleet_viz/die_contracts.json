@@ -619,13 +619,6 @@
     },
     {
      "elements": [
-      "dsfd_bf_front"
-     ],
-     "by": "dsfd_bf_front_static",
-     "evidence": "S-DIE-NETLIST 2026-10-16 (results/arch/s81_netlist_0030/absent_master_resolution.json): layer1.f --bf-static-prog block: static BF front (compiled programme f_prog, no grants) replaces the BF front; c21h netlist instantiates dsfd_bf_front_static (519 x2 pairs), never dsfd_bf_front"
-    },
-    {
-     "elements": [
       "ot_s81_cfg7_seq_bf"
      ],
      "by": "ot_s81_cfg7_seq_bfp",
@@ -748,6 +741,16 @@
       "ot_mtp_p2_prefix_path"
      ],
      "evidence": "S-DIE-NETLIST 2026-10-16 (results/arch/s81_netlist_0030/absent_master_resolution.json): MTP residual-row banks (rep/hrow, ot_dsrom_mtp_hrow_die: MTP primary die, generator --hrow-src / MTP-DIE) and the MD-2 P2 draft-die A prefix path (generator --draft A); not built by the layer1 recipe; owners S-ELEM-B (MTP)"
+    }
+   ],
+   "unretired_reg_clean_1017": [
+    {
+     "elements": [
+      "dsfd_bf_front"
+     ],
+     "by": "dsfd_bf_front_static",
+     "evidence": "S-DIE-NETLIST 2026-10-16 (results/arch/s81_netlist_0030/absent_master_resolution.json): layer1.f --bf-static-prog block: static BF front (compiled programme f_prog, no grants) replaces the BF front; c21h netlist instantiates dsfd_bf_front_static (519 x2 pairs), never dsfd_bf_front",
+     "unretired": "REG-CLEAN 10-17: dsfd_bf_front is a class-A frame master of the current S81-DV p4f/p4e die (bind5 frame family, results/fleet_viz/die_element_table_20261017.json); its successor dsfd_bf_front_static is itself superseded, so this retirement hid a current-die element"
     }
    ]
   },
