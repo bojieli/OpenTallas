@@ -63,6 +63,11 @@
 // replay, 1 program record port, 2 T calendar, 3 L + E calendars, 4 D2D sequencer + token loop, 5 event outputs /
 // embedding RX / STATUS.  Release is 3 edges after the port, the same edge in every region (initialisation only; the
 // boot replay and every production event are anchored to boot_done / the epoch strobe, never to the reset edge).
+// rs1 (Q-SYSFACE 2026-10-17, rr1 gate textbook lint: rst_rec drove 1,153 flops, rst_out 303, rst_boot 278 > 256): 14
+// regions, every relay flop <= 256 loads.  Boot splits into control (FSM / issue / fault) and the PW / DW payload
+// registers; the record port resets per sub-block (qfd_sys_face_record_port: auth + obs delay, 2 receipts, join,
+// context RX, witness TX); outputs split into calendar events, embedding RX and STATUS / RESULT.  Same release edge in
+// every region, logic unchanged: bit-identical.
 // ROM output register (2026-10-16): boot replay and program replay decode one edge later (+1 edge each, initialisation
 // only; the admission replay stays inside the compiled ADM_REPLAY window); no token-path edge.
 // MUT (bench only): 1 = T events one edge late, 2 = embedding word index off by one, 3 = PW replay skips row 7.
@@ -166,14 +171,16 @@ module qfd_sys_face #(
     output wire          fault
 );
     // ================================================================ regional reset relay (ot_rst_relay, in line)
-    localparam integer RST_REGIONS = 6;
+    localparam integer RST_REGIONS = 14;
     (* async_reg = "true" *) reg [1:0] rr_s;
     (* keep = "true", dont_touch = "true" *) reg [RST_REGIONS-1:0] rr_q;   // one kept relay flop per region
     always @(posedge ck or negedge rst_n) begin
         if (!rst_n) begin rr_s <= 2'b00; rr_q <= {RST_REGIONS{1'b0}}; end
         else begin rr_s <= {rr_s[0], 1'b1}; rr_q <= {RST_REGIONS{rr_s[1]}}; end
     end
-    wire rst_boot = rr_q[0], rst_rec = rr_q[1], rst_calt = rr_q[2], rst_calle = rr_q[3], rst_loop = rr_q[4], rst_out = rr_q[5];
+    wire rst_boot = rr_q[0], rst_calt = rr_q[2], rst_calle = rr_q[3], rst_loop = rr_q[4], rst_out = rr_q[5];
+    wire rst_bpay = rr_q[6], rst_emb = rr_q[7], rst_st = rr_q[8];
+    wire [5:0] rst_rec = {rr_q[13:9], rr_q[1]};
 
     // ================================================================ config ROM
     localparam [11:0] BOOT_BASE = 12'd2048;
@@ -227,13 +234,11 @@ module qfd_sys_face #(
             iss_idx <= 11'd0; rd_idx <= 11'd0; pidx <= 11'd0; boot_done <= 1'b0; boot_fault <= 1'b0; prog_fault <= 1'b0;
             first_ofs <= 32'd0;
             t_we <= 1'b0; l_we <= 1'b0; e_we <= 1'b0; c_addr <= 8'd0; c_data <= 32'd0;
-            tt_pw <= 75'd0; dh_prog <= 143'd0;
         end else begin
             rd_boot <= iss_boot; rd_prog <= iss_prog; rd_idx <= iss_idx;
             dq_boot <= rd_boot; dq_prog <= rd_prog; dq_idx <= rd_idx;
             iss_boot <= 1'b0; iss_prog <= 1'b0; rom_ce <= 1'b0;
             t_we <= 1'b0; l_we <= 1'b0; e_we <= 1'b0;
-            tt_pw[74] <= 1'b0; dh_prog[142] <= 1'b0; dh_prog[74] <= 1'b0;
             case (st)
                 S_RST:  begin st <= S_BOOT; pidx <= 11'd0; boot_iss_last <= 1'b0; end
                 S_BOOT: begin
@@ -283,9 +288,17 @@ module qfd_sys_face #(
                 end
             endcase
             if (begin_v && (st == S_BOOT || st == S_RST)) prog_fault <= 1'b1;
-            // program row decode: PW i -> TT pw + dh pw (both program copies), DW j -> dh dw
+            if (dq_prog && rom_qr[71:64] != 8'd0) prog_fault <= 1'b1;
+        end
+    end
+    // program row decode payload (rs1: own reset region rst_bpay, 218 flops; same logic as before the split):
+    // PW i -> TT pw + dh pw (both program copies), DW j -> dh dw
+    always @(posedge ck or negedge rst_bpay) begin
+        if (!rst_bpay) begin
+            tt_pw <= 75'd0; dh_prog <= 143'd0;
+        end else begin
+            tt_pw[74] <= 1'b0; dh_prog[142] <= 1'b0; dh_prog[74] <= 1'b0;
             if (dq_prog) begin
-                if (rom_qr[71:64] != 8'd0) prog_fault <= 1'b1;
                 if (dq_idx < PW_ROWS[10:0]) begin
                     tt_pw <= {1'b1, dq_idx[9:0], rom_qr[63:0]};
                     dh_prog[74] <= 1'b1; dh_prog[73:64] <= dq_idx[9:0]; dh_prog[63:0] <= rom_qr[63:0];
@@ -304,8 +317,8 @@ module qfd_sys_face #(
     wire [10:0] rp_expected_pw; wire [3:0] rp_expected_dw; wire [63:0] rp_auth_digest, rp_program_digest;
     wire        rp_tx_v;
     reg         t_running_q;
-    qfd_program_record_port u_record (
-        .ck(ck), .rst_n(rst_rec), .auth_slot(prog_auth_slot), .context_slot(prog_context_slot), .witness_slot(prog_witness_slot),
+    qfd_sys_face_record_port u_record (
+        .ck(ck), .rst_rn(rst_rec), .auth_slot(prog_auth_slot), .context_slot(prog_context_slot), .witness_slot(prog_witness_slot),
         .rx_v(prog_rx_v), .rx_record(rx_payload), .execution_active(l_run),
         .program_obs2({seq_program_obs, tt_program_obs}), .descriptor_obs(seq_descriptor_obs),
         .cfg_image_ready({seq_cfg_image_ready, tt_control_stores_ready}),
@@ -451,8 +464,8 @@ module qfd_sys_face #(
     // the D2D end presents the compiled kind of the RX slot with the record; port 2 carries only EMB rows and the
     // compute die's own STATUS is TX-only, so the header is told apart from code words by the compiled E slot
     wire        is_hdr = ev_embw && ea[6];
-    always @(posedge ck or negedge rst_out) begin
-        if (!rst_out) begin
+    always @(posedge ck or negedge rst_emb) begin
+        if (!rst_emb) begin
             emb_word_v <= 1'b0; emb_word_scale <= 1'b0; emb_word_index <= 6'd0; emb_word_token <= 18'd0; emb_word_epoch <= 16'd0;
             row_v <= 1'b0; row_tok <= 18'd0; row_ep <= 16'd0; emb_fault <= 1'b0;
         end else begin
@@ -480,8 +493,8 @@ module qfd_sys_face #(
     // the sequencer's per-epoch ADMISSION start (layer 63, D2D_ADM_OFS after fwd_epoch) is not a T-calendar event;
     // every token / layer start must still coincide with the T image
     wire cal_adm = cal_start && cs_layer == 6'h3f, cal_tok = cal_start && cs_layer != 6'h3f;
-    always @(posedge ck or negedge rst_out) begin
-        if (!rst_out) begin
+    always @(posedge ck or negedge rst_st) begin
+        if (!rst_st) begin
             status_epoch16 <= 16'd0; vm_drained <= 1'b0; collective_drained <= 1'b0; collective_busy <= 1'b0; crom_fault <= 1'b0;
             execution_active <= 1'b0; admit_ready <= 1'b0; result_v <= 1'b0; result_done <= 1'b0; result_fault <= 1'b0;
             result_cause <= 4'd0; result_tag <= 59'd0; result_gen <= 2'd0; result_token <= 18'd0; result_value <= 32'd0;
