@@ -1,0 +1,14 @@
+{
+ "reviewer": "coordinator (msg 2026-10-17 08:45, conditional approval met: launch 159.4 <= 205)",
+ "time": "2026-10-17T07:23:42-07:00",
+ "gate_commit": "2026-10-17T07:21:12-0700",
+ "verdict": "APPROVED",
+ "checklist": {
+  "lattice": "no macros; std-cell fill 33% of granted slot (as mc3c)",
+  "std_cell_band": "single central blob, no red bins (density.png)",
+  "pin_spread": "W controller_co/epoch, E expected_*/actual_*/fault_*/idle_* + ck mid-E, S pll_hbm/hrst/rsi/pll_hbm_data; pins 0.072 um inside edge",
+  "clock_entry": "ck mid E face (y 107.964) beside output pin-flop column per 10-17 review CHANGES (2)",
+  "shape": "194.4 x 216 exact granted outline"
+ },
+ "basis": "10-17 review CHANGES (1) hold_budget die no pads, (2) ck beside outputs; re-gate probe launch 159.4 <= 205 -> submit"
+}
