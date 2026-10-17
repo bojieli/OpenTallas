@@ -1,4 +1,4 @@
-# Q-ROMPARENT c1 nl: TX pins + regional roots rsw/rnw/dw (W), rs/rn/de (E, beside their gutter regions), ck_tx4/5 on S face in the col1-col2 channel.
+# Q-ROMPARENT c1 nl: TX pins + regional roots rsw/rnw/dw (W), rs/rn/de (E, beside their gutter regions), ck_tx4/5 on the E face M4 (c1r6: mirror-legal under MY; S-face M5 is off-track when mirrored at 457.92).
 place_pin -pin_name {t_out[0]} -layer M4 -location {0.096 262.764}
 place_pin -pin_name {t_out[1]} -layer M4 -location {0.096 262.956}
 place_pin -pin_name {t_out[2]} -layer M4 -location {0.096 263.148}
@@ -1073,5 +1073,5 @@ place_pin -pin_name {ck_dw} -layer M4 -location {0.096 547.980}
 place_pin -pin_name {ck_de} -layer M4 -location {457.824 547.980}
 place_pin -pin_name {ck_rs} -layer M4 -location {457.824 679.980}
 place_pin -pin_name {ck_rn} -layer M4 -location {457.824 870.012}
-place_pin -pin_name {ck_tx5} -layer M5 -location {314.412 0.096}
-place_pin -pin_name {ck_tx4} -layer M5 -location {315.372 0.096}
+place_pin -pin_name {ck_tx5} -layer M4 -location {457.824 176.988}
+place_pin -pin_name {ck_tx4} -layer M4 -location {457.824 339.996}
