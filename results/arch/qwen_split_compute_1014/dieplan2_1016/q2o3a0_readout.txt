@@ -1,0 +1,23 @@
+# q2o3a0: A0 ROM-leaf parent footprint 457.92x1166.4, die 700 mm2 (relay-skip): top 20 flows (bits x Manhattan mm), total 1,729,361 bit-mm
+ 1 ng_vm_sq_2048                      spine_local    4096 b x   3.50 mm =     14351  sp_vector_memory -> 1 sink(s)
+ 2 head_24                            head_chain     1567 b x   6.53 mm =     10225  xs_tap -> 1 sink(s)
+ 3 bword_1                            tree_spine      514 b x  16.88 mm =      8677  t_3_6 -> 1 sink(s)
+ 4 bword_45                           tree_spine      514 b x  16.54 mm =      8499  t_44_6 -> 1 sink(s)
+ 5 ng_su_va_0                         spine_local    2367 b x   3.50 mm =      8293  sp_su64_sfu -> 1 sink(s)
+ 6 ng_vm_sq_0                         spine_local    2048 b x   3.71 mm =      7598  sp_vector_memory -> 2 sink(s)
+ 7 ng_su_kv_wdata_0                   spine_local    2048 b x   3.59 mm =      7343  sp_su64_sfu -> 1 sink(s)
+ 8 bword_2                            tree_spine      514 b x  14.28 mm =      7341  t_3_11 -> 1 sink(s)
+ 9 bword_46                           tree_spine      514 b x  13.94 mm =      7163  t_44_11 -> 1 sink(s)
+10 ng_seq_su_va_q_0                   spine_local    2048 b x   3.46 mm =      7078  seq_su -> 1 sink(s)
+11 bword_5                            tree_spine      514 b x  13.49 mm =      6936  t_7_7 -> 1 sink(s)
+12 bword_41                           tree_spine      514 b x  13.15 mm =      6758  t_40_7 -> 1 sink(s)
+13 b2_rb_4                            tree_spine      551 b x  12.21 mm =      6729  sp_halfres_4 -> 1 sink(s)
+14 b2_rb_5                            tree_spine      551 b x  11.88 mm =      6546  sp_halfres_5 -> 1 sink(s)
+15 bword_9                            tree_spine      514 b x  12.70 mm =      6528  t_11_6 -> 1 sink(s)
+16 bword_0                            tree_spine      514 b x  12.65 mm =      6501  t_3_2 -> 1 sink(s)
+17 bword_37                           tree_spine      514 b x  12.35 mm =      6350  t_36_6 -> 1 sink(s)
+18 bword_44                           tree_spine      514 b x  12.30 mm =      6323  t_44_2 -> 1 sink(s)
+19 bword_6                            tree_spine      514 b x  12.19 mm =      6266  t_7_11 -> 1 sink(s)
+20 lnk_native_tx_payload              spine_local     548 b x  11.40 mm =      6248  native59 -> 1 sink(s)
+
+# hot spots (GRT usage >= 85.0%): NO heat map given

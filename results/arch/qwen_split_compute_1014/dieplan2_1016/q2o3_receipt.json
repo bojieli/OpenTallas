@@ -1,0 +1,14 @@
+{
+ "schema": "opentallas.qwen.dieplan-receipt.v1",
+ "stream": "Q-COMPUTE-DIE / Q-DIEPLAN3",
+ "date": "2026-10-16",
+ "q2o2_failure": "GEN rc=1 17:35 PDT: qwen_rom_fulldie_b3r2._relays 'tree pads: no free spot for b2_status_f1 pad 17'. Cause: b2_word_status is a centre sink of the 12-bus b2_status equal-age group; the contract-v2 corridor rule (tile-field tree pins) snapped its pads to the nearest array corridor ~4 mm away. Fix 7007d8329: corridor rule only for sinks inside a tile field; centre sinks take the nearest free centre site on the sink -> last-relay segment.",
+ "fix_smoke": "E4 q2o3 relay-only b2_status (OT_RELAY_ONLY): rc=0, all 12 status legs equalised to 24 frames, 6 result legs to 30; 55 centre-sink buses padded (bword over-reach in that smoke is an artifact of unrelayed buses)",
+ "source": "claude/q-dieplan3-1016 7007d8329 (q2o3) / 473e83191 (q2o3a0) = 83debd5a6 + origin/main 672e7f4d0; E4 src = q2o2 src hard-linked + 2,548-file overlay, every blob hash verified",
+ "candidates": {
+  "q2o3": {"homes": "q2o2d-homes.json", "tile_grant": "proxy_t950_held_grant.json", "relay_skip": {"worst_cut": 0.564, "lines_over_060": 0, "pin_align_fail": 0, "strict_port_bind": "PASS 39 masters / 1666 inst", "bit_mm": 1552399, "stages": 10046, "max_chain": 33, "mm2": 585.9, "relay_clock_probe": "11/11 serial buses resolved"}, "explorer": "qwen_q2o3_owner2_b2 (candidate of qwen_r2h5, token_designs qwen_rom)", "full_gen": "E4 /srv/opentallas-scratch/claude/qwen-split-compute/q2o3/gen_then_chain.sh, ot-heavy unit oth-ubuntu-3347936-1792200296"},
+  "q2o3a0": {"homes": "q2o3a0-homes.json (mk_dieplan_a0.py of q2o2d)", "tile_grant": "proxy_t1166_a0_held_grant.json (a2 pins y-kept; NOT the A0 27-entry clock set)", "relay_skip": {"worst_cut": 0.563, "lines_over_060": 0, "pin_align_fail": 0, "strict_port_bind": "PASS 39 masters / 1666 inst", "bit_mm": 1740421, "stages": 10728, "max_chain": 35, "mm2": 699.9}, "explorer": "qwen_q2o3a0_romleaf_t1166 (candidate of qwen_r2h5)", "full_gen": "E4 /srv/opentallas-scratch/claude/qwen-split-compute/q2o3a0/gen_then_chain.sh, ot-heavy unit oth-ubuntu-3412316-1792200505", "status": "DIAGNOSTIC_ONLY"}
+ },
+ "png_viewed": ["q2o3_readout.png", "q2o3a0_readout.png"],
+ "chain": "strict bind (fail closed) -> PDN r8 -> GRT 12 -> TT/FF/SS -> die clock check (OT_DCC_CORNERS tt) + readout"
+}
