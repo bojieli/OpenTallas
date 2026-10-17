@@ -194,9 +194,7 @@
   "clk_stage_6",
   "clk_stage_7",
   "clk_insert_0",
-  "clk_insert_1",
-  "clk_insert_2",
-  "clk_insert_3"
+  "clk_insert_1"
  ],
  "clock_data_paths": "related_same_frequency",
  "clock_relationship": {
@@ -263,7 +261,9 @@
     "ce_e2",
     "ce_imm1",
     "co_rnd",
-    "co_dst"
+    "co_dst",
+    "clk_insert_2",
+    "clk_insert_3"
    ],
    "outputs": [
     "vi_re",
@@ -377,28 +377,6 @@
   "insert1": {
    "ports": [
     "clk_insert_1"
-   ],
-   "ratio": [
-    1,
-    1
-   ],
-   "inputs": [],
-   "outputs": []
-  },
-  "insert2": {
-   "ports": [
-    "clk_insert_2"
-   ],
-   "ratio": [
-    1,
-    1
-   ],
-   "inputs": [],
-   "outputs": []
-  },
-  "insert3": {
-   "ports": [
-    "clk_insert_3"
    ],
    "ratio": [
     1,

@@ -262,7 +262,6 @@
     "cx_imm3",
     "ci_sfu",
     "cs_sfu",
-    "side_y",
     "cp_m1",
     "cp_imm1",
     "cm_m1",
@@ -329,7 +328,9 @@
     1,
     1
    ],
-   "inputs": [],
+   "inputs": [
+    "side_y"
+   ],
    "outputs": []
   },
   "stage6": {

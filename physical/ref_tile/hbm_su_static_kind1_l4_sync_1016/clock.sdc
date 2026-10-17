@@ -13,8 +13,6 @@ create_clock -name ot_io_stage7 -period 1111.111111000
 create_clock -name ot_io_stage4 -period 1111.111111000
 create_clock -name ot_io_insert0 -period 1111.111111000
 create_clock -name ot_io_insert1 -period 1111.111111000
-create_clock -name ot_io_insert2 -period 1111.111111000
-create_clock -name ot_io_insert3 -period 1111.111111000
 create_clock -name ot_entry_0 -period 1111.111111000 [get_ports {clk_stage_0}]
 create_clock -name ot_entry_1 -period 1111.111111000 [get_ports {clk_stage_1}]
 create_clock -name ot_entry_2 -period 1111.111111000 [get_ports {clk_stage_2}]
@@ -25,8 +23,6 @@ create_clock -name ot_entry_6 -period 1111.111111000 [get_ports {clk_stage_6}]
 create_clock -name ot_entry_7 -period 1111.111111000 [get_ports {clk_stage_7}]
 create_clock -name ot_entry_8 -period 1111.111111000 [get_ports {clk_insert_0}]
 create_clock -name ot_entry_9 -period 1111.111111000 [get_ports {clk_insert_1}]
-create_clock -name ot_entry_10 -period 1111.111111000 [get_ports {clk_insert_2}]
-create_clock -name ot_entry_11 -period 1111.111111000 [get_ports {clk_insert_3}]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set_input_delay 222.222 -clock core_clk [all_inputs -no_clocks]
@@ -41,11 +37,11 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 222.222 inputs {{rst_n} {lane_id} {ld} {ld_bank} {ld_c} {emit} {bank} {o_v} {i_v} {no} {ni} {ls} {lvw} {vb} {krow} {obase} {aibase} {aind} {gsh} {cpair} {dst} {srcs} {vi_q} {rd_q} {cx_srcs} {cx_arnd} {cx_arelu} {cx_amin} {cx_cclip} {cx_imm3} {ci_sfu} {cs_sfu} {side_y} {cp_m1} {cp_imm1} {cm_m1} {cm_m2} {cm_qm} {cm_imm1} {ca_ad} {ca_imm2} {cs_e1} {cs_imm2} {ce_e2} {ce_imm1} {co_rnd} {co_dst}} outputs {{vi_re} {vi_addr} {rd_addr} {rd_re} {rd_src} {side_v} {side_x}}} {stage1} {clock ot_io_stage1 io_budget_ps 222.222 inputs {} outputs {}} {stage2} {clock ot_io_stage2 io_budget_ps 222.222 inputs {} outputs {}} {stage3} {clock ot_io_stage3 io_budget_ps 222.222 inputs {} outputs {}} {stage5} {clock ot_io_stage5 io_budget_ps 222.222 inputs {} outputs {}} {stage6} {clock ot_io_stage6 io_budget_ps 222.222 inputs {} outputs {}} {stage7} {clock ot_io_stage7 io_budget_ps 222.222 inputs {} outputs {{vm_we} {vm_waddr} {vm_wdata} {kv_we} {kv_waddr} {kv_wdata} {ro_v} {ro_x} {fault} {coll}}} {stage4} {clock ot_io_stage4 io_budget_ps 222.222 inputs {} outputs {}} {insert0} {clock ot_io_insert0 io_budget_ps 222.222 inputs {} outputs {}} {insert1} {clock ot_io_insert1 io_budget_ps 222.222 inputs {} outputs {}} {insert2} {clock ot_io_insert2 io_budget_ps 222.222 inputs {} outputs {}} {insert3} {clock ot_io_insert3 io_budget_ps 222.222 inputs {} outputs {}}]
-set ::ot_ce_source_domains [dict create {clk_stage_0} {core} {clk_stage_1} {stage1} {clk_stage_2} {stage2} {clk_stage_3} {stage3} {clk_stage_5} {stage5} {clk_stage_6} {stage6} {clk_stage_7} {stage7} {clk_stage_4} {stage4} {clk_insert_0} {insert0} {clk_insert_1} {insert1} {clk_insert_2} {insert2} {clk_insert_3} {insert3}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 222.222 inputs {{rst_n} {lane_id} {ld} {ld_bank} {ld_c} {emit} {bank} {o_v} {i_v} {no} {ni} {ls} {lvw} {vb} {krow} {obase} {aibase} {aind} {gsh} {cpair} {dst} {srcs} {vi_q} {rd_q} {cx_srcs} {cx_arnd} {cx_arelu} {cx_amin} {cx_cclip} {cx_imm3} {ci_sfu} {cs_sfu} {side_y} {cp_m1} {cp_imm1} {cm_m1} {cm_m2} {cm_qm} {cm_imm1} {ca_ad} {ca_imm2} {cs_e1} {cs_imm2} {ce_e2} {ce_imm1} {co_rnd} {co_dst} {clk_insert_2} {clk_insert_3}} outputs {{vi_re} {vi_addr} {rd_addr} {rd_re} {rd_src} {side_v} {side_x}}} {stage1} {clock ot_io_stage1 io_budget_ps 222.222 inputs {} outputs {}} {stage2} {clock ot_io_stage2 io_budget_ps 222.222 inputs {} outputs {}} {stage3} {clock ot_io_stage3 io_budget_ps 222.222 inputs {} outputs {}} {stage5} {clock ot_io_stage5 io_budget_ps 222.222 inputs {} outputs {}} {stage6} {clock ot_io_stage6 io_budget_ps 222.222 inputs {} outputs {}} {stage7} {clock ot_io_stage7 io_budget_ps 222.222 inputs {} outputs {{vm_we} {vm_waddr} {vm_wdata} {kv_we} {kv_waddr} {kv_wdata} {ro_v} {ro_x} {fault} {coll}}} {stage4} {clock ot_io_stage4 io_budget_ps 222.222 inputs {} outputs {}} {insert0} {clock ot_io_insert0 io_budget_ps 222.222 inputs {} outputs {}} {insert1} {clock ot_io_insert1 io_budget_ps 222.222 inputs {} outputs {}}]
+set ::ot_ce_source_domains [dict create {clk_stage_0} {core} {clk_stage_1} {stage1} {clk_stage_2} {stage2} {clk_stage_3} {stage3} {clk_stage_5} {stage5} {clk_stage_6} {stage6} {clk_stage_7} {stage7} {clk_stage_4} {stage4} {clk_insert_0} {insert0} {clk_insert_1} {insert1}]
 set ::ot_ce_explicit_domains 1
-set ::ot_ce_cts_roots {{clk_stage_0} {clk_stage_1} {clk_stage_2} {clk_stage_3} {clk_stage_4} {clk_stage_5} {clk_stage_6} {clk_stage_7} {clk_insert_0} {clk_insert_1} {clk_insert_2} {clk_insert_3}}
-set ::ot_ce_ports {{clk_stage_0} {clk_stage_1} {clk_stage_2} {clk_stage_3} {clk_stage_4} {clk_stage_5} {clk_stage_6} {clk_stage_7} {clk_insert_0} {clk_insert_1} {clk_insert_2} {clk_insert_3}}
+set ::ot_ce_cts_roots {{clk_stage_0} {clk_stage_1} {clk_stage_2} {clk_stage_3} {clk_stage_4} {clk_stage_5} {clk_stage_6} {clk_stage_7} {clk_insert_0} {clk_insert_1}}
+set ::ot_ce_ports {{clk_stage_0} {clk_stage_1} {clk_stage_2} {clk_stage_3} {clk_stage_4} {clk_stage_5} {clk_stage_6} {clk_stage_7} {clk_insert_0} {clk_insert_1}}
 
 # Constants are proved from actual OpenDB connectivity and the loaded Liberty
 # output functions. Cell/port names, case analysis and timing-graph constant
