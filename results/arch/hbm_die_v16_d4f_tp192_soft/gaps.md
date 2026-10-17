@@ -1,6 +1,6 @@
-# HBM die v16 full netlist: gaps (16c4bbc9c)
+# HBM die v16 full netlist: gaps (4f749d8dc)
 
-1386 instances / 68 masters / 8201 edges (942,992 bits). Exposed inputs 1,070 ports / 177,247 bits (v15.1, 83 instances) -> 0 ports / 0 bits (v16 full die).
+1430 instances / 72 masters / 8790 edges (990,672 bits). Exposed inputs 1,070 ports / 177,247 bits (v15.1, 83 instances) -> 0 ports / 0 bits (v16 full die).
 
 | gap | owner | missing RTL | undriven ports | undriven bits |
 |---|---|---|---:|---:|
@@ -39,10 +39,3 @@
 
 | owner | ports | bits |
 |---|---:|---:|
-
-## Generator problems
-
-- gap G-SFU-OPERAND-JOIN-SW: unknown sfucore_SW.vi_q
-- gap G-SFU-OPERAND-JOIN-SE: unknown sfucore_SE.vi_q
-- gap G-SFU-OPERAND-JOIN-NW: unknown sfucore_NW.vi_q
-- gap G-SFU-OPERAND-JOIN-NE: unknown sfucore_NE.vi_q
