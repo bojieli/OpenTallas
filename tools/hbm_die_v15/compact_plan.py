@@ -46,7 +46,7 @@ EDGE = 120.0
 SC_GAP = 100.0                         # relay row between the two scorers of a die half (cross-column relay homes)
 
 
-def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=None, smw=None, smh=None, carry=False, layout='v5', core_at=4, sfu_at_hub=False, mirror_east=False, sfu_at_group=None, core_w=None, core_h=None, core_column_w=None, sfu_store_side=False, hc_eng_mm2=None, hc_links_v16=False, hc_x_beats=1, hc_client_inner=False, sm_columns=None, band_low=False):
+def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=None, smw=None, smh=None, carry=False, layout='v5', core_at=4, sfu_at_hub=False, mirror_east=False, sfu_at_group=None, core_w=None, core_h=None, core_column_w=None, sfu_store_side=False, hc_eng_mm2=None, hc_links_v16=False, hc_x_beats=1, hc_client_inner=False, sm_columns=None, band_low=False, sm_portrait=False, qw_extra=0.0):
     """v6 (H-DIE-V6PLAN 10-16, OWNER 02:15 die may grow): su_w/su_h = SU slice outline (default 1250 x 1780), smw/smh = SM
     slot (default 6609.6 x 1712.08), carry = also place the v5 grants that are not graph nodes (sfucore_<q> 763.56 x
     1936.44 after the SU core; DMA back at its granted 511.92 width, shifted 79.92 um west as hb_dbk_<q>).  Defaults
@@ -58,7 +58,7 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
     G = copy.deepcopy(G0)
     N = G['nodes']
     P = {}
-    qw = 2 * SMW + GAP
+    qw = ((4 * SMW + 3 * GAP) if sm_portrait else (2 * SMW + GAP)) + qw_extra
     W = EDGE + qw + channel + COLUMN_W + channel + qw + EDGE
     H = area_mm2 * 1e6 / W
     # one quadrant's vertical stack (SW frame)
@@ -69,6 +69,12 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
     y_c = y_band + BAND + GAP
     y_d = y_c + SMH + GAP
     top = y_d + SMH
+    if sm_portrait:
+        # H-DIE d4c (coordinator 10-16 21:40, owner (b)): portrait 2-row SM tile (~2782 x 3698), each SM group ONE row of
+        # 4 per quadrant: lower row on the PC strip, VM band, upper row; every SM has a face on the band (no enclosed row)
+        y_band = y_a + SMH + GAP
+        y_c = y_band + BAND + GAP
+        top = y_c + SMH
     if sm_columns is not None:
         # H-DIE-V790 10-16 (OWNER 07:30 SM<->HBM hops): the 8 SMs of a quadrant as COLUMNS directly over the PC row
         # (same slot area: 8 x (CW + GAP) = the two-SM row width, CH = SMW*SMH/CW), a sm_columns-um chain channel between
@@ -158,6 +164,9 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
                 continue
             if smw or smh:
                 setn(s, SMW, SMH, f'SM slot v6 {SMW} x {SMH} (H-SM real single-row body + front)')
+            if sm_portrait:
+                put(s, EDGE + (k % 4) * (SMW + GAP), (y_a if k < 4 else y_c), q)
+                continue
             put(s, EDGE + (k % 2) * (SMW + GAP), rows[k // 2], q)
         # VM band
         x = EDGE
@@ -399,6 +408,8 @@ def main():
     ap.add_argument('--hc-client-inner', action='store_true', help='col layout: quadrant HC client hc_<q> at the band inner end + v16 group links')
     ap.add_argument('--sm-columns', type=float, help='SM column layout with this PC-row chain channel (um); see build()')
     ap.add_argument('--band-low', action='store_true', help='with --sm-columns: VM band under the SM columns (next to the PC row)')
+    ap.add_argument('--qw-extra', type=float, default=0.0, help='d4c: quadrant width beyond the SM row (band row needs it)')
+    ap.add_argument('--sm-portrait', action='store_true', help='d4c: 4 SMs per row, one row per group (portrait 2-row tile)')
     ap.add_argument('--carry', action='store_true', help='place the non-graph v5 grants (sfucore, granted DMA back width)')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
@@ -408,7 +419,7 @@ def main():
     if a.column is not None:
         COLUMN_W = a.column
     SFU_DIM.update(core_h=a.sfucore_h, store_w=a.sfus_wh[0], store_h=a.sfus_wh[1], store_yoff=a.sfus_yoff)
-    kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout, core_at=a.core_at, sfu_at_hub=a.sfu_at_hub, mirror_east=a.mirror_east,sfu_at_group=a.sfu_at_group,core_w=a.core_w,core_h=a.core_h,core_column_w=a.core_column_w,sfu_store_side=a.sfu_store_side,hc_eng_mm2=a.hc_eng_mm2,hc_links_v16=a.hc_links_v16,hc_x_beats=a.hc_x_beats,hc_client_inner=a.hc_client_inner,sm_columns=a.sm_columns,band_low=a.band_low)
+    kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout, core_at=a.core_at, sfu_at_hub=a.sfu_at_hub, mirror_east=a.mirror_east,sfu_at_group=a.sfu_at_group,core_w=a.core_w,core_h=a.core_h,core_column_w=a.core_column_w,sfu_store_side=a.sfu_store_side,hc_eng_mm2=a.hc_eng_mm2,hc_links_v16=a.hc_links_v16,hc_x_beats=a.hc_x_beats,hc_client_inner=a.hc_client_inner,sm_columns=a.sm_columns,band_low=a.band_low,sm_portrait=a.sm_portrait,qw_extra=a.qw_extra)
     G0 = json.loads((ROOT / a.graph).read_text())
     if a.fit:
         area = a.area
