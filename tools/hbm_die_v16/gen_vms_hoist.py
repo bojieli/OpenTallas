@@ -31,7 +31,11 @@ D = ROOT / 'rtl/hbm_accel/generic/vm/static'
 OUT = D / 'hfd_hgi_vms_static_glue.sv'
 LAYER = ROOT / 'tools/hbm_die_v15/v16_layers/vm_hoist_d4f.json'
 SRC = 'rtl/hbm_accel/generic/vm/static/'
-Q = dict(SW=dict(sid=0, RG=5, WG=2, merge=False), NW=dict(sid=2, RG=5, WG=3, merge=True))
+Q = dict(SW=dict(sid=0, RG=5, WG=2, merge=False), NW=dict(sid=2, RG=5, WG=3, merge=True),
+         # core-only hubs (hfd_hgi_vms_static_{SE,NE}_core, H-NETLIST 1940): hub rq/rr groups = old slice groups (0, 3),
+         # wq group 0 only, no dq; banks = hfd_vms_bank_native_q1_core (q1 with the SM-side client ports absent)
+         SE=dict(sid=1, RG=4, WG=2, merge=False, core=dict(rg=(0, 3), wg=(0,))),
+         NE=dict(sid=3, RG=4, WG=2, merge=False, core=dict(rg=(0, 3), wg=(0,))))
 REMOVED = ('clk_bank', 'rslot_v', 'wslot_v', 'rslot', 'wslot', 'rq', 'rr', 'wq', 'wq_done', 'dq', 'kq', 'dq_done', 'kq_done')
 
 
@@ -82,7 +86,7 @@ def wrapper_glue(t, q, cfg):
             '    input wire [143:0] bank_status,\n    output wire [2207:0] bk_xq,bk_xq2,\n    input wire [7:0] bk_xq_done,bk_xq2_done,\n'
             '    input wire [2207:0] bk_eg,\n    output wire [2279:0] bk_pq,\n    input wire [2127:0] bk_pr,\n'
             + ('    input wire [7:0] bk_flt,                 // wq2-merge leaves vmm_NWb sticky flt -> bank status bit 17\n' if cfg['merge'] else ''))
-    s = re.sub(r'ot_vms_slice_static #\(.*?\) u_slice \(', f'ot_vms_slice_static_glue #(.NC({0 if q == "NW" else 2}),.RG({cfg["RG"]}),.WG({cfg["WG"]}),.NATIVE_SHAPE(1)) u_slice (', s)
+    s = re.sub(r'ot_vms_slice_static #\(.*?\) u_slice \(', f'ot_vms_slice_static_glue #(.NC({2 if q == "SW" else 0}),.RG({cfg["RG"]}),.WG({cfg["WG"]}),.NATIVE_SHAPE(1)) u_slice (', s)
     st = 'bank_status'
     if cfg['merge']:
         s = sub(s, '    ot_vms_slice_static_glue #', '    wire [143:0] bank_status_m;\n    genvar fb;\n'
@@ -106,8 +110,13 @@ def layer():
         ps = {}
         for b in range(8):
             vb = f'vmb_{q}{b}'
-            inst.append(dict(name=vb, master='hfd_vms_bank_native_q0', source=SRC + 'physical/hfd_vms_bank_native_q0.sv', params={},
-                             slot=vb, owner='H-SM/H-DIE', note=f'{hub} bank {b} hoisted (native q0 master; view q0C faces)'))
+            if cfg.get('core'):
+                inst.append(dict(name=vb, master='hfd_vms_bank_native_q1_core', source=SRC + 'physical/hfd_vms_bank_native_q1_core.sv',
+                                 rtl_deps=[SRC + 'physical/hfd_vms_bank_native_q1.sv'], params={}, slot=vb, owner='H-SM/H-DIE',
+                                 note=f'{hub} bank {b} hoisted (q1 core-only variant: SM-side client ports absent)'))
+            else:
+                inst.append(dict(name=vb, master='hfd_vms_bank_native_q0', source=SRC + 'physical/hfd_vms_bank_native_q0.sv', params={},
+                                 slot=vb, owner='H-SM/H-DIE', note=f'{hub} bank {b} hoisted (native q0 master; view q0C faces)'))
             clocks += [dict(inst=vb, port='clk', domain='stream', kind='clock'), dict(inst=vb, port='rst_n', domain='stream', kind='reset')]
             straps += [dict(inst=vb, port='bid', value=b, reason=f'identity: bank id {b} of {hub} (slice .bid(3\'(b)))'),
                        dict(inst=vb, port='sid', value=cfg['sid'], reason=f'identity: slice id of {hub}')]
@@ -131,17 +140,20 @@ def layer():
         ps['wslot_v'] = [[f'vmb_{q}{b}', 'wslot_v', b, b + 1] for b in range(8)]
         ps['rslot'] = [[f'vmb_{q}{b}', 'rslot', b * RB, b * RB + RB] for b in range(8)]
         ps['wslot'] = [[f'vmb_{q}{b}', 'wslot', b * WB, b * WB + WB] for b in range(8)]
-        ps['rq'] = [[f'vmb_{q}{b}', f'rq{g}', (g * 8 + b) * 17, (g * 8 + b) * 17 + 17] for g in range(RG) for b in range(8)]
-        ps['rr'] = [[f'vmb_{q}{b}', f'rr{g}', (g * 8 + b) * 257, (g * 8 + b) * 257 + 257] for g in range(RG) for b in range(8)]
+        rgs = cfg['core']['rg'] if cfg.get('core') else tuple(range(RG))   # kept slice groups (the edges still carry the
+        # full-wrapper bit positions: the remaster runs before any A2P slot remap)
+        ps['rq'] = [[f'vmb_{q}{b}', f'rq{g}', (g * 8 + b) * 17, (g * 8 + b) * 17 + 17] for k, g in enumerate(rgs) for b in range(8)]
+        ps['rr'] = [[f'vmb_{q}{b}', f'rr{g}', (g * 8 + b) * 257, (g * 8 + b) * 257 + 257] for k, g in enumerate(rgs) for b in range(8)]
         wqt = (lambda g, b: (f'vmb_{q}{b}', f'wq{g}')) if not cfg['merge'] else \
               (lambda g, b: (f'vmb_{q}{b}', 'wq0') if g == 0 else (f'vmm_{q}{b}', f'wq{g}'))
         wdt = (lambda g, b: (f'vmb_{q}{b}', f'wq_done{g}')) if not cfg['merge'] else \
               (lambda g, b: (f'vmb_{q}{b}', 'wq_done0') if g == 0 else (f'vmm_{q}{b}', f'wq_done{g}'))
-        ps['wq'] = [[*wqt(g, b), (g * 8 + b) * 281, (g * 8 + b) * 281 + 281] for g in range(WG) for b in range(8)]
-        ps['wq_done'] = [[*wdt(g, b), g * 8 + b, g * 8 + b + 1] for g in range(WG) for b in range(8)]
-        for p, n in (('dq', 'dq'), ('kq', 'kq')):
-            ps[p] = [[f'vmb_{q}{b}', n, b * 281, b * 281 + 281] for b in range(8)]
-        for p in ('dq_done', 'kq_done'):
+        wgs = cfg['core']['wg'] if cfg.get('core') else tuple(range(WG))
+        ps['wq'] = [[*wqt(g, b), (g * 8 + b) * 281, (g * 8 + b) * 281 + 281] for k, g in enumerate(wgs) for b in range(8)]
+        ps['wq_done'] = [[*wdt(g, b), g * 8 + b, g * 8 + b + 1] for k, g in enumerate(wgs) for b in range(8)]
+        for p in (('kq',) if cfg.get('core') else ('dq', 'kq')):
+            ps[p] = [[f'vmb_{q}{b}', p, b * 281, b * 281 + 281] for b in range(8)]
+        for p in (('kq_done',) if cfg.get('core') else ('dq_done', 'kq_done')):
             ps[p] = [[f'vmb_{q}{b}', p, b, b + 1] for b in range(8)]
         rem[hub] = dict(master=f'hfd_hgi_vms_static_{q}_glue', source=SRC + 'hfd_hgi_vms_static_glue.sv', params={},
                         rtl_deps=[SRC + x for x in ('ot_vms_hub_static.sv', 'ot_vms_rstop_static.sv', 'ot_vms_rcl_static.sv', 'ot_vms_status_static.sv')],

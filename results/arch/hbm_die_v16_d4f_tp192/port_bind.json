@@ -5,8 +5,8 @@
  "verdict": "PASS",
  "failing": [],
  "summary": {
-  "masters": 66,
-  "instances": 1408,
+  "masters": 67,
+  "instances": 1424,
   "unbound_masters": 0,
   "stub_masters": 0,
   "ambiguous_masters": 0,
@@ -20,7 +20,7 @@
   "multi_driven_net_bits": 0,
   "top_assigns": 0,
   "params_not_in_rtl": 0,
-  "strap_ports": 26,
+  "strap_ports": 28,
   "pad_bits": 2288
  },
  "masters": {
@@ -311,18 +311,18 @@
    "unparsed_conn": [],
    "duplicate_port": []
   },
-  "hfd_hgi_vms_static_NE_core": {
+  "hfd_hgi_vms_static_NE_glue": {
    "verdict": "PASS",
    "fails": [],
    "instances": 1,
-   "rtl": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_core.sv",
+   "rtl": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
     "hb_vms_NE"
    ],
    "param_sets": {
-    "{\"STRAP_BANKS\": \"1\"}": 1
+    "{}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -357,18 +357,18 @@
    "unparsed_conn": [],
    "duplicate_port": []
   },
-  "hfd_hgi_vms_static_SE_core": {
+  "hfd_hgi_vms_static_SE_glue": {
    "verdict": "PASS",
    "fails": [],
    "instances": 1,
-   "rtl": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_core.sv",
+   "rtl": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
     "hb_vms_SE"
    ],
    "param_sets": {
-    "{\"STRAP_BANKS\": \"1\"}": 1
+    "{}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -437,6 +437,34 @@
     "vmb_SW0",
     "vmb_SW1",
     "vmb_SW2"
+   ],
+   "param_sets": {
+    "{}": 16
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "bid",
+    "sid"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "hfd_vms_bank_native_q1_core": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 16,
+   "rtl": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "vmb_SE0",
+    "vmb_SE1",
+    "vmb_SE2"
    ],
    "param_sets": {
     "{}": 16
@@ -1712,11 +1740,13 @@
   "hbfd_rly_624_SN:i",
   "hbfd_rly_624_WE:i"
  ],
- "die_sha256": "af06c8c60a84cb92df9d4f7d979539a41db61f36587b0934c714788f4cf380cb",
+ "die_sha256": "d7ef66f24c9826520e5a28335637a0a9abe986ec92a2ba971f4df7e826525915",
  "straps_declared": [
   "hfd_hgi_vm_calendar_f20:tgt",
   "hfd_vms_bank_native_q0:bid",
   "hfd_vms_bank_native_q0:sid",
+  "hfd_vms_bank_native_q1_core:bid",
+  "hfd_vms_bank_native_q1_core:sid",
   "ot_hbm_hc_eng_static:tgt",
   "ot_hbm_hc_q_static:tgt",
   "ot_hbm_sm_vm_wr_q_t:quad",

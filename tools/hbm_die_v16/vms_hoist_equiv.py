@@ -32,7 +32,10 @@ def main():
     hub = f'hb_vms_{q}'; rem = L['remaster'][hub]
     w = (ROOT / 'rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv').read_text()
     g = (ROOT / 'rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv').read_text()
-    P = ports_of(w, f'hfd_hgi_vms_static_{q}')
+    REF = f'hfd_hgi_vms_static_{q}' + ('_core' if q in ('SE', 'NE') else '')
+    if q in ('SE', 'NE'):
+        w = (ROOT / 'rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_core.sv').read_text()
+    P = ports_of(w, REF)
     GP = {n: (d, b) for d, b, n in ports_of(g, f'hfd_hgi_vms_static_{q}_glue')}
     insts = [i for i in L['instances'] if i['name'].endswith(tuple(f'_{q}{b}' for b in range(8))) and i['name'][:4] in ('vmb_', 'vmm_')]
     conn = {i['name']: {} for i in insts}; conn[hub] = {}
@@ -57,8 +60,18 @@ def main():
         conn[d[0]][d[1]][lo] = sl
     # external (old hub port) bits -> bank / merge ports
     outs_asm = {}
+    CORE = {'SE': ((0, 3), (0,)), 'NE': ((0, 3), (0,))}.get(q)
+    UNIT = dict(rq=17, rr=257, wq=281, wq_done=1)
+    def compact(p, lo, hi):   # core hubs: layer ranges are full-wrapper positions; the _core reference is compacted
+        if not CORE or p not in UNIT:
+            return lo, hi
+        w = UNIT[p]; kept = CORE[0] if p in ('rq', 'rr') else CORE[1]
+        g, b = lo // (8 * w), (lo // w) % 8
+        nlo = (kept.index(g) * 8 + b) * w + lo % w
+        return nlo, nlo + hi - lo
     for p, segs in rem['port_split'].items():
         for ni, np_, lo, hi in segs:
+            lo, hi = compact(p, lo, hi)
             if np_ == 'clk':
                 conn[ni]['clk'] = f'{p}[{lo}]'; continue
             d = dict(P_ := {n: dd for dd, b, n in P})[p]
@@ -107,7 +120,7 @@ def main():
     T = ['`timescale 1ns/1ps', 'module tb_vms_hoist;', '  reg clk = 0; always #1 clk = ~clk;']
     T += [f'  reg [{b - 1}:0] {n};' for n, b in ins]
     T += [f'  wire [{b - 1}:0] a_{n}, b_{n};' for n, b in outs]
-    T.append(f'  hfd_hgi_vms_static_{q} {prm} u_ref (' + ', '.join([f'.{n}({n})' for n, _ in ins] + [f'.{n}(a_{n})' for n, _ in outs]) + ');')
+    T.append(f'  {REF} {prm} u_ref (' + ', '.join([f'.{n}({n})' for n, _ in ins] + [f'.{n}(a_{n})' for n, _ in outs]) + ');')
     T.append(f'  vms_hoist_comp_{q} u_dut (' + ', '.join([f'.{n}({n})' for n, _ in ins] + [f'.{n}(b_{n})' for n, _ in outs]) + ');')
     clk_in = [n for n, _ in ins if n.startswith('clk')]
     T.append('  integer cyc, errs = 0, chk = 0;')
