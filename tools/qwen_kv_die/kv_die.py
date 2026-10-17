@@ -3852,7 +3852,10 @@ def main(argv=None):
         if not a.split:
             ap.error('OT_KV_STATIC requires --split')
         if a.mode == 'case':
-            ap.error('static physical case held: actual homes/pins/clocks/native benches and TT/FF/DRC qualification remain required')
+            # KVJ-G 10-17: lifted only when the strict port bind is clean (0 unconnected, 0 undriven, 0 functional ties);
+            # the owned gap list is tools/qwen_kv_die/kvjg_gap_list.py (lanes/KVJ-G.md)
+            ap.error('static physical case held: strict port bind not clean (kvjg_gap_list.py); actual homes/pins/clocks/native '
+                     'benches and TT/FF/DRC qualification remain required')
         if not a.static_graph:
             a.out.mkdir(parents=True, exist_ok=True)
             (a.out / 'static_requirements.json').write_text(json.dumps(kv_static.requirements(), indent=2) + '\n')
