@@ -31,7 +31,8 @@ class StaleLog(unittest.TestCase):
         self.assertFalse(ss.stale_current_log(b, j))
         with patch.object(ss, "hold_verdict", return_value="hold repair not converging"), \
              patch.object(ss, "hold_stop_plan", return_value=None), patch.object(ss, "gate_metrics", return_value=None):
-            self.assertEqual([v for v, _ in ss.hopeless(b, j, now)], ["EARLY_FAIL_HOLD"])
+            self.assertEqual([v for v, _ in ss.hopeless(b, j, now)], ["HOLD_FRESH"])
+            self.assertEqual([v for v, _ in ss.hopeless(b, dict(j, hold_fresh_log=[{}]), now)], ["EARLY_FAIL_HOLD"])
 
     def test_no_launch_time_keeps_old_behaviour(self):
         self.assertFalse(ss.stale_current_log(base(time.time()), {}))

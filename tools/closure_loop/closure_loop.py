@@ -2924,7 +2924,7 @@ for e in ${PATH//:/ }; do
       mkdir -p "$OT_FP_LINT_DIR"; shift
       # PREROUTE-GATE: the pre-route timing gate (ORFS POST DETAIL_PLACE) sees OT_PREROUTE_GATE, writes PREROUTE_FAIL there
       exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
-        -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM -e OT_CTS_MACRO_CLUSTER -e OT_CTS_MACRO_SIZE -e OT_CTS_MACRO_DIAM -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
+        -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_HOLD_FRESH -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM -e OT_CTS_MACRO_CLUSTER -e OT_CTS_MACRO_SIZE -e OT_CTS_MACRO_DIAM -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
     fi
     # MACRO-CLK (macro-clk-1010): OT_CTS_MACRO_CLUSTER / _SIZE / _DIAM reach physical/common_flow/macro_cts_cluster.tcl
     # ABC-NODCH (drive-2155): a recipe exporting OT_ABC_NO_DCH=1 gets &synch2 for &dch (tools/orfs_hold_mm.py)
@@ -2932,7 +2932,7 @@ for e in ${PATH//:/ }; do
     # OOM-IN-CONTAINER (drive-1010 2026-10-10): the container's own processes (openroad / yosys) get the loop stage's +500
     # too; at 0 the kernel killed ~20 tiny +500 wrappers first (AGIdock 05:17-05:21) before reaching the 17 GB openroad.
     # The host probe still lowers die containers to -900 after start.
-    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM -e OT_CTS_MACRO_CLUSTER -e OT_CTS_MACRO_SIZE -e OT_CTS_MACRO_DIAM "$@"; fi
+    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_HOLD_FRESH -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM -e OT_CTS_MACRO_CLUSTER -e OT_CTS_MACRO_SIZE -e OT_CTS_MACRO_DIAM "$@"; fi
     exec "$e/docker" "$@"
   fi
 done
@@ -3418,6 +3418,8 @@ def launch_stage(j, st, cmd):
         env += "export OT_CL_RESUME=1\n"
     if st["kind"] == "route" and j.get("hold_stop"):    # HOLD-STOP (drive-resume): see hold_stop_resume
         env += f"export OT_HOLD_STOP={shlex.quote(' '.join(f'{k}:{int(v)}' for k, v in sorted(j['hold_stop'].items())))}\n"    # patched run_abi3_physical in the moved snapshot: resume from the checkpoint
+    if st["kind"] == "route" and j.get("hold_fresh"):   # HOLD-FRESH: see hold_fresh_resume
+        env += f"export OT_HOLD_FRESH={shlex.quote(' '.join(sorted(j['hold_fresh'])))}\n"
     if j.get("budget"):          # budget SDCs (tools/budgets/make_block_sdc.py from the published sheet)
         env += "".join(f"export {k}={j['run']}/cl/{v}\n" for k, v in (
             ("BUDGET_SDC", "budget_route.sdc"), ("BUDGET_SDC_SIGNOFF", "budget_signoff.sdc"), ("BUDGET_SDC_FF", "budget_ff.sdc"),
@@ -5042,6 +5044,13 @@ def early_fail_gate(j, st):
         except Exception as ex:  # noqa: BLE001  (already stopped once / no checkpoint: early-fail as before)
             event(j, f"HOLD-STOP not possible ({ex}); early-fail instead")
             verdict = "EARLY_FAIL_HOLD"
+    if verdict == "HOLD_FRESH":
+        try:
+            hold_fresh_resume(j, why)
+            return
+        except Exception as ex:  # noqa: BLE001  (already used once / no checkpoint: early-fail as before)
+            event(j, f"HOLD-FRESH not possible ({ex}); early-fail instead")
+            verdict = "EARLY_FAIL_HOLD"
     detail = dict(name=j["name"], verdict=verdict, why=[w for _, w in hp], orfs=b["root"], corner=b.get("corner"),
                   step=(b.get("current") or "")[:-8], setup=stuckscan.gate_metrics(b), hold=b.get("hold"),
                   congestion=b.get("congestion"), drt=(b.get("drt") or [])[-12:], paths=stuckscan.path_classes(b),
@@ -5583,6 +5592,8 @@ def step(j, fleet):
         else:
             if st["kind"] in ("route", "calibrate"):
                 hm_auto_events(j)
+            if st["kind"] == "route" and j.get("hold_fresh"):
+                hold_fresh_events(j)
             if rc != 0 and ok_extra and st["kind"] == "signoff" and st.get("ok"):
                 # a sign-off script that exits non-zero for "not closed" but wrote its evidence (the job's ok check
                 # passes) is a verdict, not a crash: w2-rb-safe-no2/no3 exited 1 on SS -18.9 and the retry then refused
@@ -5740,6 +5751,32 @@ def hm_auto_events(j):
     j["hm_auto_seen"] = seen[-20:]
 
 
+def hold_fresh_events(j):
+    """HOLD-FRESH receipt (RESULTS_DIR/4_1_cts.hold_fresh.json, orfs_hold_mm.tcl ot_hold_fresh_run) -> one job event,
+    j["hold_fresh_result"] and a ledger line per attempt; the verdict copies it into metrics["hold_fresh"]"""
+    try:
+        r = ssh(j["host"], f"f=$(find {j['run']}/routes -name '4_1_cts.hold_fresh.json' -not -path '*.attempt*' "
+                           f"2>/dev/null | head -1); [ -n \"$f\" ] && cat \"$f\"", timeout=60)
+        res = json.loads(r.stdout) if r.stdout.strip() else None
+    except Exception as ex:  # informative only: never fail a stage on it
+        log(f"[{j['name']}] hold_fresh_events: {ex}")
+        return
+    if not res:
+        if not j.get("hold_fresh_result"):
+            event(j, "HOLD-FRESH: route stage finished but no 4_1_cts.hold_fresh.json receipt was found")
+        return
+    res = dict(res, attempt=j.get("attempt"))
+    if (j.get("hold_fresh_result") or {}).get("attempt") == res["attempt"]:
+        return
+    j["hold_fresh_result"] = res
+    txt = (f"HOLD-FRESH result: fresh-session CTS hold WNS {res.get('hold_ws_before_ps')} -> {res.get('hold_ws_after_ps')} "
+           f"ps, TNS {res.get('hold_tns_before_ps')} -> {res.get('hold_tns_after_ps')}, viol {res.get('viol_before')} -> "
+           f"{res.get('viol_after')}, +{res.get('instances_added')} instances, {res.get('seconds')} s"
+           + (" (STALLED again)" if res.get("stalled") else ""))
+    event(j, txt)
+    ledger(j, txt)
+
+
 RECORD_DIR = "{RUN}/record"
 
 
@@ -5782,6 +5819,8 @@ def do_verdict(j, fleet, stl):
         if j["verdict_ssh_fail"] < 20:
             event(j, f"verdict: ssh to {j['host']} failed, retrying next tick")
             return
+    if j.get("hold_fresh_result"):
+        m["hold_fresh"] = j["hold_fresh_result"]
     j["metrics"] = m
     checks, failed = {}, []
     pre = precollect_cmd(j["spec"])
@@ -8479,7 +8518,8 @@ def host_down_requeue(j, kind, now=None):
     if j.get("eco"):
         j.setdefault("eco_history", []).append(dict(j["eco"], abandoned=f"host {host} down"))
         j["eco"] = {}
-    for k in ("stage_tag", "stage_key", "resume", "hold_stop", "checkpoint_affinity", "bench_location", "ctrack", "metrics"):
+    for k in ("stage_tag", "stage_key", "resume", "hold_stop", "hold_fresh", "checkpoint_affinity", "bench_location", "ctrack",
+              "metrics"):
         j.pop(k, None)
     j["btrack"] = {k: v for k, v in (j.get("btrack") or {}).items() if v.get("state") == "done"}
     j.update(status="QUEUED", host=None, run=None, stage_idx=0, attempt=j["attempt"] + 1, retries_used=0, errors=[],
@@ -8923,7 +8963,7 @@ def cmd_retry(a):
     # retry: qfd_emb_far92_rxp_b's PINFLOP-REF requeue would have resumed the 10-09 3_place checkpoint under the old IO
     # reference.  --keep-resume keeps both.
     if not getattr(a, "keep_resume", False):
-        for k in ("resume", "hold_stop"):
+        for k in ("resume", "hold_stop", "hold_fresh"):
             if j.get(k):
                 event(j, f"human retry: dropped the previous attempt's {k} ({str(j[k])[:160]})")
                 j.pop(k, None)
@@ -9156,15 +9196,9 @@ def cmd_early_fail(a):
 HOLD_STOP_ALLOW = {"cts": "4_1_cts", "grt": "5_1_grt"}
 
 
-def hold_stop_resume(j, stage, buffers, why):
-    """stop the job's route stage (if running) and re-queue it as a same-host checkpoint resume with OT_HOLD_STOP"""
-    if stage not in HOLD_STOP_ALLOW:
-        raise ValueError(f"hold-stop stage must be one of {sorted(HOLD_STOP_ALLOW)}")
-    if any(x.get("stage") == stage for x in j.get("hold_stop_log") or []):
-        raise ValueError(f"{j['name']}: its {stage} hold repair was already stopped once")
-    stl = stage_list(j["spec"])
-    if stl[j["stage_idx"]]["kind"] != "route":
-        raise ValueError(f"{j['name']}: stage {stl[j['stage_idx']]['key']} is not a route stage")
+def stage_checkpoint_resume(j, allow, what):
+    """stop the job's route stage (if running), ship the helpers, patch the snapshot for a checkpoint resume and check
+    that the ORFS checkpoint resumes at stage `allow`; returns the check's ssh result (RuntimeError otherwise)"""
     host, run = j["host"], j["run"]
     if j["status"] == "RUNNING":
         kill_own_stage(j)
@@ -9181,11 +9215,24 @@ def hold_stop_resume(j, stage, buffers, why):
     dm = subst(j["spec"].get("verdict", {}).get("drc_metrics", ""), j)
     orfs = dm.split("/logs/")[0] if "/logs/" in dm else None
     if not orfs:
-        raise RuntimeError("hold-stop resume: no ORFS checkpoint path (verdict.drc_metrics)")
-    chk = ssh(host, f"O=$(ls -d {orfs} | tail -1); bash {run}/cl/resume_check.sh $O {run}/src {HOLD_STOP_ALLOW[stage]}",
-              timeout=600)
+        raise RuntimeError(f"{what} resume: no ORFS checkpoint path (verdict.drc_metrics)")
+    chk = ssh(host, f"O=$(ls -d {orfs} | tail -1); bash {run}/cl/resume_check.sh $O {run}/src {allow}", timeout=600)
     if chk.returncode or not re.search(r"^RESUME_OK=1$", chk.stdout, re.M):
-        raise RuntimeError(f"hold-stop resume check failed rc={chk.returncode}: {(chk.stdout + chk.stderr)[-400:]}")
+        raise RuntimeError(f"{what} resume check failed rc={chk.returncode}: {(chk.stdout + chk.stderr)[-400:]}")
+    return chk
+
+
+def hold_stop_resume(j, stage, buffers, why):
+    """stop the job's route stage (if running) and re-queue it as a same-host checkpoint resume with OT_HOLD_STOP"""
+    if stage not in HOLD_STOP_ALLOW:
+        raise ValueError(f"hold-stop stage must be one of {sorted(HOLD_STOP_ALLOW)}")
+    if any(x.get("stage") == stage for x in j.get("hold_stop_log") or []):
+        raise ValueError(f"{j['name']}: its {stage} hold repair was already stopped once")
+    stl = stage_list(j["spec"])
+    if stl[j["stage_idx"]]["kind"] != "route":
+        raise ValueError(f"{j['name']}: stage {stl[j['stage_idx']]['key']} is not a route stage")
+    host, run = j["host"], j["run"]
+    chk = stage_checkpoint_resume(j, HOLD_STOP_ALLOW[stage], "hold-stop")
     hs = dict(j.get("hold_stop") or {})
     hs[stage] = int(buffers)
     if stage == "cts":
@@ -9203,6 +9250,52 @@ def hold_stop_resume(j, stage, buffers, why):
              f"OT_HOLD_STOP='{stage_txt}' ({why[:300]})")
     ledger(j, f"HOLD-STOP {stage} ({stage_txt}): {why}")
     experiment(j, f"running: route resumed from checkpoint, hold repair stopped at {stage}")
+
+
+# HOLD-FRESH (ROOT 2026-10-17; Q-IO W head w5 finding): a 4_1_cts hold repair whose WNS froze (stuckscan
+# hold_fresh_plan: "not converging" / deep / buffer cap on a frozen WNS; not a near-miss, which HOLD-STOP handles) is NOT
+# early-failed the first time.  The loop stops the stage and resumes the route from its ORFS checkpoint (OT_CL_RESUME=1,
+# same host / run dir, 4_1_cts re-runs from 3_place.odb: the replay reproduces the identical CTS state) with
+# OT_HOLD_FRESH=cts: the CTS session runs CTS + setup repair and saves its hold-repair arguments; the 5_1_grt process -- a
+# fresh OpenROAD session on 4_cts.odb -- runs the SAME hold repair (same args / corners / margins / guards) before global
+# route (tools/orfs_hold_mm.tcl ot_hold_fresh_run, receipt 4_1_cts.hold_fresh.json -> event + metrics["hold_fresh"]).
+# Once per job (hold_fresh_log): a stall in the fresh session, or a later 4_1_cts stall, is EARLY_FAIL_HOLD as before.
+HOLD_FRESH_STAGE = "4_1_cts"
+
+
+def hold_fresh_resume(j, why):
+    """stop the job's route stage (if running) and re-queue it as a same-host checkpoint resume with OT_HOLD_FRESH=cts"""
+    if j.get("hold_fresh_log"):
+        raise ValueError(f"{j['name']}: HOLD-FRESH was already used once ({j['hold_fresh_log'][-1].get('at')})")
+    stl = stage_list(j["spec"])
+    if stl[j["stage_idx"]]["kind"] != "route":
+        raise ValueError(f"{j['name']}: stage {stl[j['stage_idx']]['key']} is not a route stage")
+    host, run = j["host"], j["run"]
+    chk = stage_checkpoint_resume(j, HOLD_FRESH_STAGE, "hold-fresh")
+    j["hold_fresh"] = ["cts"]
+    j.setdefault("hold_fresh_log", []).append(dict(stage="cts", why=why[:600], at=now_iso(), attempt=j["attempt"] + 1,
+                                                   prev_status=j["status"]))
+    j["resume"] = dict(from_host=host, to_host=host, run=run, at=now_iso(), kind="hold_fresh",
+                       check=chk.stdout.strip()[-400:])
+    j["checkpoint_affinity"] = dict(host=host, run=run)
+    j.pop("early_fail", None)
+    j.update(status="READY", attempt=j["attempt"] + 1, wait=None, errors=[], reason=None)
+    event(j, f"HOLD-FRESH cts: frozen CTS hold repair, not early-failed; route resumes from its checkpoint with "
+             f"OT_HOLD_FRESH=cts (same hold repair in a fresh OpenROAD process) ({why[:300]})")
+    ledger(j, f"HOLD-FRESH cts: {why}")
+    experiment(j, "running: route resumed from checkpoint, CTS hold repair re-run in a fresh process")
+
+
+@locked_job_command
+def cmd_hold_fresh(a):
+    """stuckscan / human: re-run a frozen 4_1_cts hold repair in a fresh process (hold_fresh_resume).  Accepts a RUNNING
+    route or an EARLY_FAIL_HOLD job whose run dir still holds its checkpoint (3_place.odb)."""
+    j = load_job(a.name)
+    if j["status"] not in ("RUNNING", "EARLY_FAIL_HOLD"):
+        sys.exit(f"{a.name} is {j['status']}: hold-fresh needs RUNNING or EARLY_FAIL_HOLD")
+    hold_fresh_resume(j, a.why)
+    save_job(j)
+    print(f"HOLD-FRESH {a.name} -> READY (attempt {j['attempt']})")
 
 
 @locked_job_command
@@ -9367,6 +9460,7 @@ def main():
     ef.add_argument("--why", required=True); ef.add_argument("--detail")
     hs = sub.add_parser("hold-stop"); hs.add_argument("name"); hs.add_argument("--stage", required=True, choices=("cts", "grt"))
     hs.add_argument("--buffers", type=int, required=True); hs.add_argument("--why", required=True)
+    hf = sub.add_parser("hold-fresh"); hf.add_argument("name"); hf.add_argument("--why", required=True)
     ks = sub.add_parser("kill-stage"); ks.add_argument("name"); ks.add_argument("--why", required=True)
     ks.add_argument("--orfs")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
@@ -9406,6 +9500,8 @@ def main():
         cmd_kill_stage(a)
     elif a.cmd == "hold-stop":
         cmd_hold_stop(a)
+    elif a.cmd == "hold-fresh":
+        cmd_hold_fresh(a)
     elif a.cmd == "recover-eco-overlays":
         cmd_recover_eco_overlays(a)
     elif a.cmd == "recover-export-lint":

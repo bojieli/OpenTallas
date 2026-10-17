@@ -12,6 +12,10 @@ its host (one ssh per host) and diagnoses:
                                       real WNS < -150 ps after 1 h with < 5 ps gained over 2000 it
                EARLY_FAIL_CONGESTION  GRT past extra iteration 20 with the congestion markers not decreasing
                EARLY_FAIL_DRC         DRT past iteration 20 with the violation count not decreasing over K iterations
+  hold_fresh a 4_1_cts hold repair whose WNS froze (stall / deep / buffer cap on a frozen WNS) and not near-miss: NOT an
+             early fail the first time; `closure_loop.py hold-fresh` resumes the route from its checkpoint with
+             OT_HOLD_FRESH=cts (the same hold repair re-runs in a fresh OpenROAD process, orfs_hold_mm.tcl).  A stall in
+             that fresh session (or a second stall) is EARLY_FAIL_HOLD as before
   hold_stop  a non-converging hold repair already within hold_nearmiss_ps (-15 ps) with the setup gate clear: NOT an
              early fail; `closure_loop.py hold-stop` resumes the route from its checkpoint with the hold repair cut
   stalled    old-flow (no OT_HOLD_GUARD) hold repair with hold already >= 0 and WNS frozen for > 3 h (margin chase)
@@ -216,7 +220,9 @@ def probe_base(b, live):
         hold = dict(found=[int(x) for x in re.findall(r"Found (\d+) endpoints with hold violations", t)][-3:],
                     guard=("OT_HOLD_GUARD start" in t), hm_auto=re.findall(r"OT_HM_AUTO.*", t)[-1:],
                     sync=re.findall(r"OT_HOLD_MM sync: SS setup ws ([-\d.]+) / FF hold ws ([-\d.]+)", t)[-1:],
-                    stall=("OT_HOLD_STALL" in t))
+                    stall=("OT_HOLD_STALL" in t),
+                    # HOLD-FRESH: the fresh-process CTS hold repair inside 5_1_grt (orfs_hold_mm.tcl ot_hold_fresh_run)
+                    fresh=("done" if "OT_HOLD_FRESH done" in t else "start" if "OT_HOLD_FRESH start" in t else None))
         if rows:
             hold["rows"] = len(rows)
             hold["first"] = [rows[0][0], int(rows[0][2]), float(rows[0][5]), float(rows[0][6])]
@@ -522,12 +528,23 @@ def hopeless(b, j, now):
         if hv:
             plan = hold_stop_plan(b)
             done = {x.get("stage") for x in (j or {}).get("hold_stop_log") or []}
-            if plan and plan["stage"] not in done and not any(v == "EARLY_FAIL_SETUP" for v, _ in out):
+            fresh = hold_fresh_plan(b, j, hv)
+            setup_bad = any(v == "EARLY_FAIL_SETUP" for v, _ in out)
+            if cur.startswith("5_1_grt") and hd.get("fresh") == "start":
+                out.append(("EARLY_FAIL_HOLD", f"{cur[:-8]} HOLD-FRESH: the fresh-process CTS hold repair is not "
+                                               f"converging either (one fresh session per job); {hv}"))
+            elif plan and plan["stage"] not in done and not setup_bad:
                 out.append(("HOLD_STOP", f"{cur[:-8]} near-miss hold stall (WNS {plan['ws']:+.1f} >= "
                                          f"{GATES['hold_nearmiss_ps']:g} ps, setup gate clear): stop the {plan['stage']} "
                                          f"hold repair at {plan['buffers']} buffers and continue to route; {hv}"))
+            elif fresh and not setup_bad:
+                out.append(("HOLD_FRESH", f"{cur[:-8]} hold repair frozen (WNS {fresh['ws']:+.1f} ps): re-run the same "
+                                          f"hold repair once in a fresh OpenROAD process from the CTS checkpoint "
+                                          f"(HOLD-FRESH); {hv}"))
             else:
-                out.append(("EARLY_FAIL_HOLD", f"{cur[:-8]} {hv}"))
+                out.append(("EARLY_FAIL_HOLD", f"{cur[:-8]} {hv}"
+                            + (" (HOLD-FRESH already used once)" if (j or {}).get("hold_fresh_log") and
+                               cur.startswith("4_1_cts") else "")))
     cg = [c for c in b.get("congestion") or [] if c[1] is not None]
     gi = b.get("grt_iter")
     if cur.startswith("5_1_grt") and gi and gi[0] >= GATES["grt_min_iter"] and len(cg) >= 3:
@@ -708,6 +725,34 @@ def hold_stop_plan(b):
     return dict(stage=stage, buffers=n, ws=ws)
 
 
+def hold_frozen(hd):
+    """True when the step's hold WNS gained < hold_stall_dwns over the last hold_stall_it cumulative iterations"""
+    g = hold_gain(hd.get("series") or [], GATES["hold_stall_it"])
+    return g is not None and g < GATES["hold_stall_dwns"]
+
+
+def hold_fresh_plan(b, j, hv):
+    """HOLD-FRESH plan {stage, ws} of a live base whose 4_1_cts hold repair is judged non-converging, else None.
+    Q-IO W head w5 (2026-10-16): the -27.249 freeze over 8,700 iterations was a repair-SESSION artifact; the same repair
+    on the identical CTS state converged in a fresh process (-50.4 -> +31.4).  Eligible: the stall verdicts ("not
+    converging", deep "no progress") and a buffer-cap verdict whose WNS is ALSO frozen; a cap hit while WNS still improves
+    is a genuine buffer explosion (design problem) and early-fails as before.  Once per job; spec "hold_fresh": false
+    opts out."""
+    cur = (b.get("current") or "")
+    if not cur.startswith("4_1_cts") or not hv:
+        return None
+    j = j or {}
+    if j.get("hold_fresh_log") or (j.get("spec") or {}).get("hold_fresh", True) is False:
+        return None
+    hd = b.get("hold") or {}
+    if hv.startswith("hold repair past the buffer cap") and not hold_frozen(hd):
+        return None
+    ser = hd.get("series") or []
+    last = hd.get("cur_last")
+    ws = ser[-1][2] if ser else (last[2] if last else None)
+    return dict(stage="cts", ws=ws) if ws is not None else None
+
+
 def hold_buf_cap(inst, gain):
     """the hold-buffer cap of a step: min(hold_buf_cap, max(floor, frac x placed instances)); frac / floor are raised
     while real WNS improves by >= hold_buf_improve_dwns over the last hold_stall_it iterations."""
@@ -864,6 +909,10 @@ def diagnose(j, o, hist, jobs, closed, now):
             d.update(action="hold_stop", kind="hold_nearmiss", hold_stop=hold_stop_plan(b))
             d["why"] += [w for _, w in hp]
             return d
+        if hp and hp[0][0] == "HOLD_FRESH":
+            d.update(action="hold_fresh", kind="hold_fresh")
+            d["why"] += [w for _, w in hp]
+            return d
         if hp:
             d.update(action="early_fail", kind="hopeless", verdict=hp[0][0])
             d["why"] += [w for _, w in hp]
@@ -971,6 +1020,8 @@ def apply(diags, log):
             cmd = ["early-fail", d["name"], "--verdict", d["verdict"], "--why", why, "--detail", str(det)]
         elif a == "kill_stage":
             cmd = ["kill-stage", d["name"], "--why", why]
+        elif a == "hold_fresh":
+            cmd = ["hold-fresh", d["name"], "--why", why]
         elif a == "hold_stop":
             cmd = ["hold-stop", d["name"], "--stage", d["hold_stop"]["stage"], "--buffers",
                    str(d["hold_stop"]["buffers"]), "--why", why]
@@ -1008,7 +1059,7 @@ def main():
             print(f"history refresh failed: {ex}", file=sys.stderr)
     diags = scan(a.only, cpu=not a.no_cpu)
     rep = dict(at=cl.now_iso(), gates=GATES, jobs=diags,
-               counts={k: sum(1 for d in diags if d["action"] == k) for k in ("cancel", "early_fail", "hold_stop", "kill_stage", "let_run")})
+               counts={k: sum(1 for d in diags if d["action"] == k) for k in ("cancel", "early_fail", "hold_stop", "hold_fresh", "kill_stage", "let_run")})
     if a.apply:
         log = []
         rep["applied"] = apply(diags, log)

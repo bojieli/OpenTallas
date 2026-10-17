@@ -206,7 +206,8 @@ proc ot_hold_stats {} {
 }
 proc ot_pin_class {name} { expr {[string first "/" $name] < 0 ? "port" : "reg"} }
 proc ot_hold_window_report {why hist} {
-  set stage [expr {[info exists ::env(RESULTS_DIR)] && [file exists $::env(RESULTS_DIR)/4_1_cts.odb] ? "grt" : "cts"}]
+  set stage [ot_hold_stage]
+  set ::ot_hold_stalled 1
   set f [expr {[info exists ::env(REPORTS_DIR)] ? "$::env(REPORTS_DIR)/ot_hold_stall_${stage}.rpt" : "ot_hold_stall_${stage}.rpt"}]
   array set cls {}; array set cw {}; array set grp {}; array set gw {}; array set ex {}
   foreach p [ot_hold_paths 200000] {
@@ -295,7 +296,7 @@ proc ot_hm_guard {rt_args} {
     return $rt_args
   }
   puts "OT_HM_AUTO $line"
-  set stage [expr {[info exists ::env(RESULTS_DIR)] && [file exists $::env(RESULTS_DIR)/4_1_cts.odb] ? "grt" : "cts"}]
+  set stage [ot_hold_stage]
   catch {
     set f [expr {[info exists ::env(REPORTS_DIR)] ? "$::env(REPORTS_DIR)/ot_hm_auto_${stage}.rpt" : "ot_hm_auto_${stage}.rpt"}]
     set fh [open $f w]; puts $fh "OT_HM_AUTO stage=$stage $line"; close $fh
@@ -311,6 +312,8 @@ proc ot_hm_guard {rt_args} {
 # hold repair.  Setup repair is unchanged.  The cap ends the call with RSZ-0060; the stage continues on the repaired
 # design ("OT_HOLD_MM after repair" lets tolerate_flow_errors zero that one error).
 proc ot_hold_stage {} {
+  # HOLD-FRESH: the fresh-process CTS hold repair runs inside the 5_1_grt process but is the CTS stage's repair
+  if {[info exists ::ot_hold_stage_override]} { return $::ot_hold_stage_override }
   expr {[info exists ::env(RESULTS_DIR)] && [file exists $::env(RESULTS_DIR)/4_1_cts.odb] ? "grt" : "cts"}
 }
 proc ot_hold_stop_cap {stage} {
@@ -352,15 +355,21 @@ proc ot_repair_timing {rt_args} {
     if {[lsearch -exact $rt_args -setup] < 0} { set rt_args [ot_hm_guard $rt_args] }
     return [log_cmd repair_timing {*}$rt_args]
   }
+  log_cmd repair_timing {*}$rt_args -setup
+  if {[ot_hold_fresh_defer $rt_args]} { return }
+  ot_hold_repair $rt_args
+}
+# the guarded hold part of ot_repair_timing (HM guard, HOLD-STOP cap, MET-FIRST, chunked stall guard); the HOLD-FRESH
+# fresh session calls it directly with the CTS stage's own arguments (no HOLD-STOP cap there: that is its own recipe)
+proc ot_hold_repair {rt_args} {
   set hm 0.0
   set i [lsearch -exact $rt_args -hold_margin]; if {$i >= 0} { set hm [lindex $rt_args [expr {$i + 1}]] }
   set chunk [expr {int([ot_env_num OT_HOLD_CHUNK 1000])}]
   set mingain [ot_env_num OT_HOLD_MIN_GAIN_PCT 2.0]
   set maxs [expr {[ot_env_num OT_HOLD_MAX_HOURS 3.0] * 3600}]
-  log_cmd repair_timing {*}$rt_args -setup
   set hm_asked $hm
   set rt_args [ot_hm_guard $rt_args]
-  if {[ot_hold_stop $rt_args]} { return }
+  if {![info exists ::ot_hold_fresh_session] && [ot_hold_stop $rt_args]} { return }
   set i [lsearch -exact $rt_args -hold_margin]; if {$i >= 0} { set hm [lindex $rt_args [expr {$i + 1}]] }
   if {[catch {set prev [ot_hold_stats]} msg]} {
     puts "OT_HOLD_GUARD: hold stats unavailable ($msg); unguarded hold repair"
@@ -400,6 +409,76 @@ proc ot_repair_timing {rt_args} {
     if {[clock seconds] - $t0 > $maxs} { ot_hold_window_report "hold repair over [expr {$maxs / 3600.0}] h" $hist; break }
     set prev $cur
   }
+}
+
+# HOLD-FRESH (ROOT 2026-10-17).  A 4_1_cts hold repair can freeze in its own OpenROAD session although the identical
+# design converges in a NEW process: Q-KV/Q-IO qfd_xhead_w_w130-w5-934383f34 EARLY_FAIL_HOLD at -27.249 ps on one
+# endpoint for 8,700 iterations; the exact replay to CTS reproduced SS -29.45 / FF -50.44 and the same multi-mode
+# repair_timing -hold (-hold_margin 30) on that 4_1_cts state in a fresh session went -50.4 -> +31.4 (all real hold met).
+# When the closure loop sees such a stall (stuckscan "hold repair not converging" at 4_1_cts) it resumes the route ONCE
+# from its checkpoint with OT_HOLD_FRESH=cts:
+#   * 4_1_cts: CTS + setup repair exactly as before; the hold part is NOT run in that session.  Its exact repair_timing
+#     arguments are saved to RESULTS_DIR/ot_hold_fresh_cts.args (ot_hold_fresh_defer), the stage writes 4_1_cts.odb.
+#   * 5_1_grt (a new OpenROAD process that loads 4_cts.odb), ORFS PRE GLOBAL_ROUTE (after the block's own hook, before
+#     pin_access / global_route): ot_hold_fresh_run replays the CTS stage's hold repair with the SAVED arguments under the
+#     CTS-stage setup (placement parasitics, propagated clocks, the WC/BC multi-mode scenes + FF sign-off SDCs synced as
+#     at CTS, DONT_USE_CELLS, the same HM guard / MET-FIRST / chunked stall guard), then legalises (CTS padding,
+#     detailed_placement, check_placement) and writes the receipt RESULTS_DIR/4_1_cts.hold_fresh.json.  Global route and
+#     its own repair then run unchanged.  A stall in the fresh session ends like any CTS stall (stall report, loop
+#     verdict): no second fresh attempt.  Without OT_HOLD_FRESH nothing changes.
+proc ot_hold_fresh_on {stage} {
+  expr {[info exists ::env(OT_HOLD_FRESH)] && $stage in [split $::env(OT_HOLD_FRESH) " ,;:"]}
+}
+proc ot_hold_fresh_args_file {} { return $::env(RESULTS_DIR)/ot_hold_fresh_cts.args }
+proc ot_hold_fresh_defer {rt_args} {
+  # 1 when this (CTS-stage) session defers its hold repair to the fresh GRT-process session
+  if {[info exists ::ot_hold_fresh_session] || ![ot_hold_fresh_on cts] || [ot_hold_stage] ne "cts"} { return 0 }
+  if {![info exists ::env(RESULTS_DIR)]} { return 0 }
+  set fh [open [ot_hold_fresh_args_file] w]; puts $fh [list {*}$rt_args]; close $fh
+  catch { lassign [ot_hold_stats] w t v; puts [format "OT_HOLD_FRESH stage=cts deferred: hold ws %.2f tns %.1f viol %d after setup repair" $w $t $v] }
+  puts "OT_HOLD_FRESH stage=cts: hold repair deferred to a fresh OpenROAD process (5_1_grt PRE GLOBAL_ROUTE), args: $rt_args"
+  return 1
+}
+proc ot_json_num {x} { expr {[string is double -strict $x] && $x < 1e5 && $x > -1e9 ? [format %.3f $x] : "null"} }
+proc ot_hold_fresh_run {} {
+  if {![ot_hold_fresh_on cts] || ![info exists ::env(RESULTS_DIR)]} { return }
+  set af [ot_hold_fresh_args_file]
+  if {![file exists $af]} { puts "OT_HOLD_FRESH: $af missing (the CTS stage did not defer its hold repair): nothing to do"; return }
+  set fh [open $af]; set rt_args [string trim [read $fh]]; close $fh
+  set t0 [clock seconds]
+  set blk [ord::get_db_block]; set n0 [llength [$blk getInsts]]
+  if {[info exists ::env(DONT_USE_CELLS)] && $::env(DONT_USE_CELLS) ne ""} { set_dont_use $::env(DONT_USE_CELLS) }
+  set_propagated_clock [all_clocks]
+  set ::ot_hold_stage_override cts; set ::ot_hold_fresh_session 1; catch {unset ::ot_hold_stalled}
+  set mm [info exists ::ot_mm_active]
+  if {$mm} { set saved_stage $::ot_mm_stage; set ::ot_mm_stage 3_place.sdc }
+  log_cmd estimate_parasitics -placement
+  if {$mm} { ot_mm_sync }
+  set before [ot_hold_stats]
+  puts [format "OT_HOLD_FRESH start: hold ws %.2f tns %.1f viol %d (fresh process on 4_cts.odb; CTS-stage args: %s)" {*}$before $rt_args]
+  set rc [catch {
+    if {[ot_hold_guard_on]} { ot_hold_repair $rt_args } else { log_cmd repair_timing {*}$rt_args -hold }
+  } msg opts]
+  if {$rc && [regexp {RSZ-0060|Max buffer count} $msg]} {
+    puts "OT_HOLD_MM after repair: fresh-session hold repair hit the buffer cap (RSZ-0060); continuing on the repaired design"
+    set rc 0
+  }
+  set after [expr {$rc ? $before : [ot_hold_stats]}]
+  if {$mm} { ot_mm_unsync; set ::ot_mm_stage $saved_stage }
+  unset ::ot_hold_stage_override ::ot_hold_fresh_session
+  if {$rc} { return -options $opts $msg }
+  set_placement_padding -global -left $::env(CELL_PAD_IN_SITES_DETAIL_PLACEMENT) -right $::env(CELL_PAD_IN_SITES_DETAIL_PLACEMENT)
+  log_cmd detailed_placement
+  check_placement -verbose
+  log_cmd estimate_parasitics -placement
+  set n1 [llength [$blk getInsts]]
+  set stalled [info exists ::ot_hold_stalled]
+  lassign $before w0 t0n v0; lassign $after w1 t1n v1
+  set fh [open $::env(RESULTS_DIR)/4_1_cts.hold_fresh.json w]
+  puts $fh "{\"schema\": \"opentallas.hold_fresh.v1\", \"stage\": \"cts\", \"hold_ws_before_ps\": [ot_json_num $w0], \"hold_tns_before_ps\": [ot_json_num $t0n], \"viol_before\": $v0, \"hold_ws_after_ps\": [ot_json_num $w1], \"hold_tns_after_ps\": [ot_json_num $t1n], \"viol_after\": $v1, \"instances_added\": [expr {$n1 - $n0}], \"seconds\": [expr {[clock seconds] - $t0}], \"stalled\": [expr {$stalled ? "true" : "false"}], \"args\": \"[string map {\" '} $rt_args]\"}"
+  close $fh
+  puts [format "OT_HOLD_FRESH done: hold ws %.2f -> %.2f, tns %.1f -> %.1f, viol %d -> %d, +%d instances, %d s%s" \
+    $w0 $w1 $t0n $t1n $v0 $v1 [expr {$n1 - $n0}] [expr {[clock seconds] - $t0}] [expr {$stalled ? " (STALLED in the fresh session too)" : ""}]]
 }
 
 # MACRO-CLK (2026-10-10): this helper is sourced in every ORFS stage of every run_abi3_physical / hbm_accel_smh route, so

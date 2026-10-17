@@ -149,10 +149,12 @@ class ProbeAndGates(unittest.TestCase):
 
     HOLD_AGES = {"1_2_yosys.log": 9000, "3_5_place_dp.log": 8000}
 
-    def hold_diag(self, txt, ages=None):
+    def hold_diag(self, txt, ages=None, fresh_used=True):
+        # HOLD-FRESH (2026-10-17): the FIRST frozen 4_1_cts hold repair of a job resumes in a fresh process
+        # (test_hold_fresh.py); these gate tests judge a job that already used it (fresh_used), i.e. the early-fail rules
         with tempfile.TemporaryDirectory() as t:
-            return self.diag(make_run(t, cts_ws=0, count=0, tns=0, tmp="4_1_cts.tmp.log", tmp_text=txt,
-                                      ages=ages or self.HOLD_AGES))
+            run = make_run(t, cts_ws=0, count=0, tns=0, tmp="4_1_cts.tmp.log", tmp_text=txt, ages=ages or self.HOLD_AGES)
+            return self.diag(run, j=job(run=str(run), hold_fresh_log=[dict(stage="cts")]) if fresh_used else None)
 
     def test_hold_flood_alone_is_not_a_verdict(self):
         # drive-2140: qfd_tile_rp1p was killed at iteration 10 (37,041 endpoints in margin at HM 10, WNS -32.6 -> -29.6)

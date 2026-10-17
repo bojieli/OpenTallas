@@ -180,6 +180,26 @@ def patch_preroute_gate(scripts: Path) -> str:
     return "patched"
 
 
+# HOLD-FRESH (ROOT 2026-10-17; tools/orfs_hold_mm.tcl ot_hold_fresh_run): with OT_HOLD_FRESH=cts in the container env the
+# CTS stage defers its hold repair and the 5_1_grt process -- a fresh OpenROAD session on 4_cts.odb -- runs it at ORFS PRE
+# GLOBAL_ROUTE (after the block's own hook, before pin_access / global_route).  Inert without OT_HOLD_FRESH.
+HFR_CODE = ('  if {$hook_type eq "PRE" && $step_name eq "GLOBAL_ROUTE" && [info exists ::env(OT_HOLD_FRESH)] && '
+            '[llength [info commands ot_hold_fresh_run]]} {\n'
+            '    ot_hold_fresh_run\n'
+            '  }\n')
+
+
+def patch_hold_fresh(scripts: Path) -> str:
+    util = scripts / "util.tcl"
+    ut = util.read_text()
+    if "ot_hold_fresh_run" in ut:
+        return "already patched"
+    if ut.count(FPL_ANCHOR) != 1:
+        return "anchor not found: hold-fresh unavailable in this image"
+    util.write_text(ut.replace(FPL_ANCHOR, FPL_ANCHOR + HFR_CODE, 1))
+    return "patched"
+
+
 def patch_abc_no_dch(scripts: Path, env=None) -> str:
     """ABC-NODCH (drive-2155 2026-10-08): yosys-abc's &dch asserts on some netlists (aigDup.c:602 Aig_ManDupDfs,
     'ABC failed with status 86'; dsfd_wfc_vmx: 253k ANDs, &get -n; &st; &dch alone reproduces it, abc_area too).  With
@@ -220,3 +240,7 @@ if __name__ == "__main__":
         print("orfs_hold_mm: pre-route gate hook", patch_preroute_gate(Path(sys.argv[1])))
     except Exception as ex:  # noqa: BLE001 - the gate hook must never break a flow
         print(f"orfs_hold_mm: pre-route gate hook not installed ({ex})")
+    try:
+        print("orfs_hold_mm: hold-fresh hook", patch_hold_fresh(Path(sys.argv[1])))
+    except Exception as ex:  # noqa: BLE001 - the hook must never break a flow
+        print(f"orfs_hold_mm: hold-fresh hook not installed ({ex})")

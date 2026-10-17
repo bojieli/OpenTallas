@@ -54,7 +54,10 @@ class Gate(ProbeAndGates):
             o = self.probe(run)
             b = o["bases"][0]
             hp = ss.hopeless(b, job(run=str(run), hold_stop_log=[dict(stage="cts")]), 1e12)
-        self.assertEqual(hp[0][0], "EARLY_FAIL_HOLD")
+            self.assertEqual(hp[0][0], "HOLD_FRESH")       # a second stall gets the one fresh-process attempt ...
+            hp = ss.hopeless(b, job(run=str(run), hold_stop_log=[dict(stage="cts")], hold_fresh_log=[dict(stage="cts")]),
+                             1e12)
+        self.assertEqual(hp[0][0], "EARLY_FAIL_HOLD")      # ... and early-fails after it
 
 
 class LoopSide(unittest.TestCase):
