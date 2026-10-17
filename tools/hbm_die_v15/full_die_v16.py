@@ -438,7 +438,8 @@ def a2p_remaster(insts, problems):
             i.update(master=r['master'], source=r['source'], rtl_deps=list(r['deps']),
                      note=i.get('note', '') + ' | A2P: SM-side client slots absent (no SM side in this quadrant)')
             rules[n] = {p: (w, k, {'rq': 4, 'rr': 4, 'wq': 2, 'wq_done': 2}[p]) for p, (w, k) in r['slots'].items()}
-        if i['master'] in ('ot_hfd_coll_q3_static_host_v4', 'ot_hfd_coll_q2_static_host_v4') and DROP_INST:
+        if i['master'] in ('ot_hfd_coll_q3_static_host_v4', 'ot_hfd_coll_q2_static_host_v4',
+                           'ot_hfd_coll_q3_hard_v5', 'ot_hfd_coll_q2_hard_v5') and DROP_INST:   # hard_v7 (coll_hardv7_d4f)
             # Explicitly dropped SerDes peers remove whole physical links.  Keep every core quadrant;
             # the surviving endpoints retain their ordered lanes and all on-die operations.
             q = n.rsplit('_', 1)[-1]
