@@ -1,0 +1,17 @@
+{
+ "contract": "results/arch/hbm_die_v16_d4f_tp192/contract.json.gz",
+ "rev": "373576f7b",
+ "masters": 67,
+ "modules_walked": 391,
+ "static_assert_modules": [
+  "ot_hbm_su_reduce_static_requires_AW10",
+  "ot_hdc_fp32_add_lat_CUTS_must_match_LAT",
+  "ot_hdc_fp32_mul_lat_CUTS_must_match_LAT",
+  "ot_hdc_v41x_vec_lane_ALAT_must_be_3_or_4_and_at_most_MLAT",
+  "ot_hgi_static_ring_requires_NT8_LAT4_to_8",
+  "ot_sfu_store_requires_actual_supported_SRAM_geometry",
+  "ot_su_response_offset_must_be_0_to_4"
+ ],
+ "missing": {},
+ "source_files_not_tracked": []
+}

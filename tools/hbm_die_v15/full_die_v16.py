@@ -438,7 +438,8 @@ def a2p_remaster(insts, problems):
             i.update(master=r['master'], source=r['source'], rtl_deps=list(r['deps']),
                      note=i.get('note', '') + ' | A2P: SM-side client slots absent (no SM side in this quadrant)')
             rules[n] = {p: (w, k, {'rq': 4, 'rr': 4, 'wq': 2, 'wq_done': 2}[p]) for p, (w, k) in r['slots'].items()}
-        if i['master'] in ('ot_hfd_coll_q3_static_host_v4', 'ot_hfd_coll_q2_static_host_v4') and DROP_INST:
+        if i['master'] in ('ot_hfd_coll_q3_static_host_v4', 'ot_hfd_coll_q2_static_host_v4',
+                           'ot_hfd_coll_q3_hard_v5', 'ot_hfd_coll_q2_hard_v5') and DROP_INST:   # hard_v7 (coll_hardv7_d4f)
             # Explicitly dropped SerDes peers remove whole physical links.  Keep every core quadrant;
             # the surviving endpoints retain their ordered lanes and all on-die operations.
             q = n.rsplit('_', 1)[-1]
@@ -478,6 +479,10 @@ def remaster_layers(insts, specs, problems):
                 i['rtl_deps'] = list(r['rtl_deps'])
             if r.get('port_split'):
                 PORT_SPLIT[n] = {p: [tuple(x) for x in v] for p, v in r['port_split'].items()}
+        dc = {tuple(x) for x in s_.get('drop_clocks', [])}
+        if dc:   # clock / reset bindings of ports a remaster removed (e.g. hoisted banks' clk_bank)
+            for t_ in specs:
+                t_['clocks'] = [c_ for c_ in t_.get('clocks', []) if (c_['inst'], c_['port']) not in dc]
 
 
 def port_split_edges(edges, problems):
@@ -490,15 +495,16 @@ def port_split_edges(edges, problems):
                 end = x[side]; segs = PORT_SPLIT.get(end[0], {}).get(end[1])
                 if not segs:
                     nxt.append(x); continue
-                full = max(h for _, _, h in segs)
+                full = max(sg[-1] for sg in segs)
                 lo, hi = (end[2], end[3]) if len(end) >= 4 else (0, full)
                 o = list(x[oth]) if len(x[oth]) >= 4 else list(x[oth][:2]) + [0, hi - lo]
-                for np_, slo, shi in segs:
+                for sg in segs:   # (new port, lo, hi) on the same instance or (instance, port, lo, hi): a hoist
+                    ni, np_, slo, shi = sg if len(sg) == 4 else (end[0],) + tuple(sg)
                     a, b = max(lo, slo), min(hi, shi)
                     if a >= b:
                         continue
-                    y = dict(x, name=f"{x.get('name', 'e')}__{np_}")
-                    y[side] = [end[0], np_, a - slo, b - slo]
+                    y = dict(x, name=f"{x.get('name', 'e')}__{ni}_{np_}")
+                    y[side] = [ni, np_, a - slo, b - slo]
                     y[oth] = o[:2] + [o[2] + a - lo, o[2] + b - lo]; y['bits'] = b - a
                     nxt.append(y)
             parts = nxt
@@ -819,8 +825,9 @@ def build(specs_dir, out, extra=(), soft_idx=None):
             try:
                 sa, sb = rng(e['source'], ports), rng(e['sink'], ports)
             except KeyError:
-                problems.append(f"v15 edge {e['name']} dropped: port gone after re-mastering")
-                continue
+                if not any(end[1] in PORT_SPLIT.get(end[0], {}) for end in (e['source'], e['sink'])):
+                    problems.append(f"v15 edge {e['name']} dropped: port gone after re-mastering")
+                    continue   # (a hoisted port is re-cut onto its new instance by port_split_edges)
         edges.append(dict(name=e['name'], src=e['source'], dst=e['sink'], clock=e.get('clock'),
                           ready_or_credit=e.get('ready_or_credit', False), basis='v15.1 source contract', region='v15'))
     for s in specs:
@@ -963,6 +970,8 @@ def build(specs_dir, out, extra=(), soft_idx=None):
         if (KEEP_Q or DROP_SM_Q or DROP_INST) and i not in insts:
             continue
         if i not in ports or p not in ports[i]:
+            if p in PORT_SPLIT.get(i, {}):
+                continue   # hoisted port: the layer binds the new instances' clocks
             problems.append(f'clock {i}.{p}: unknown'); continue
         if i == CK:
             continue
@@ -1043,6 +1052,8 @@ def build(specs_dir, out, extra=(), soft_idx=None):
                     continue        # A2P: the gap's instance belongs to a dropped quadrant
                 if i in rm:
                     continue        # A2P: accounting gaps for explicitly removed SM-side / link instances
+                if p in PORT_SPLIT.get(i, {}):
+                    continue        # port split / hoisted by a remaster layer: the gap names the old port
                 if i not in ports or p not in ports[i]:
                     problems.append(f"gap {g['id']}: unknown {i}.{p}"); continue
                 ii, pp_, lo, hi = rng(a, ports)
