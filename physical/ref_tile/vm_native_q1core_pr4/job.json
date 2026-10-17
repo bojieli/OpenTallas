@@ -42,7 +42,8 @@
     "threads": 1,
     "peak_ram_gb": 4,
     "min_count_regex": "Q1CORE_PR EQUIV PASS checks=(\\d+) errors=0",
-    "pass_witness": "results/arch/hbm_vm_q1core_pr_1017/q1core_pr_m0.log"
+    "pass_witness": "results/arch/hbm_vm_q1core_pr_1017/q1core_pr_m0.log",
+    "pass_regex": "Q1CORE_PR EQUIV PASS checks=[0-9]+ errors=0"
    },
    {
     "name": "pr_wrapper_mutant_no_pin_flop",
