@@ -1112,6 +1112,12 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
             if os.environ.get('OT_SPLIT_B2', '0') == '1':
                 from qwen_split.b2_graph import apply as apply_b2_graph
                 apply_b2_graph(v, m)
+            if os.environ.get('OT_SPLIT_Q3H', '0') == '1':
+                # Q-DIEPLAN3 2026-10-16: q3h hierarchical die -- 48 x C_B16 clusters replace tiles/stations/heads,
+                # die-top broadcast H-tree replaces the comb (tools/qwen_split/q3h_cluster.py)
+                from qwen_split.q3h_cluster import apply as apply_q3h
+                apply_q3h(v, m)
+            _late_pin_grant(v)
             _relays(v, m, relay_pitch)
         finally:
             v.CORR = _corr0
@@ -1191,6 +1197,96 @@ def _face_pack_final(v, m):
 SU_VM_A_BITS = 3 * (64 + 64 * 24) + (64 + 64 * 24 + 64 * 32)      # 8,448 SU -> VM
 SU_VM_Q_BITS = 3 * 64 * 32                                        # 6,144 VM -> SU
 SU_VM_ABUT_TOL_UM = 0.05                                          # the generator's SHAVE gap (0.024 um) + rounding
+# Q-DIEPLAN3 q3h (2026-10-16): OT_SU_VM_CHANNEL_UM = an open routing channel between the VM N face and the SU (q2o3:
+# ~1,300 VM N-face clock pins + rst_n were sealed under the abutted SU). The SU-VM words still run straight face to face
+# across it (one 43-um wire, far inside the measured reach); the gap must equal the channel exactly (+ the SHAVE).
+import os as _os_suvm
+if _os_suvm.environ.get('OT_SU_VM_CHANNEL_UM'):
+    SU_VM_ABUT_TOL_UM = float(_os_suvm.environ['OT_SU_VM_CHANNEL_UM']) + 0.05
+
+
+def _late_pin_grant(v):
+    """'late_masters' of OT_SPLIT_PIN_GRANT (Q-DIEPLAN2r q2o2): exact per-bit pins (face, positions, layers) for UNCLOSED
+    masters that later passes draw (b2's VM qfd_sp_vector_memory_b2_*: its seq_su-facing svr / svw drop straight
+    under seq_su). Installed as the outermost master pass before the relays; fails closed."""
+    gp = os.environ.get('OT_SPLIT_PIN_GRANT', '').strip()
+    late = json.loads(Path(gp).read_text()).get('late_masters', {}) if gp else {}
+    if not late:
+        return
+    base = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        out = base(model, k, port_bits)
+        for mname, ports in late.items():
+            M_ = out.get(mname)
+            if M_ is None:
+                raise ValueError(f'OT_SPLIT_PIN_GRANT late_masters: master {mname} not on this die')
+            vpl = getattr(M_, 'view_pin_layers', None) or {}
+            for pn, g in ports.items():
+                sp = M_.ports.get(pn)
+                if sp is None or sp[0] not in ('face', 'pins') or len(g['positions']) != sp[1]:
+                    raise ValueError(f'OT_SPLIT_PIN_GRANT late_masters: {mname}.{pn} is not a {len(g["positions"])}-bit face group')
+                f = g['face']
+                pos = [round(float(z), 4) for z in g['positions']]
+                lays = list(g['layers'])
+                if min(pos) < 0.1 or max(pos) > (M_.h if f in 'WE' else M_.w) - 0.1:
+                    raise ValueError(f'OT_SPLIT_PIN_GRANT late_masters: {mname}.{pn} outside its {f} face')
+                M_.ports[pn] = ('pins', sp[1], f, max(set(lays), key=lays.count), pos, 1)
+                if len(set(lays)) > 1:
+                    vpl[pn] = lays
+                else:
+                    vpl.pop(pn, None)
+            M_.view_pin_layers = vpl
+        return out
+    v.masters = masters
+
+
+def _su_vm_kit_seam(v, model, out, s, q, off, vm_face):
+    """SU va / vq from the kit plan, VM sa / sq mirrored onto the VM face; port_join fragments with exact rects."""
+    plan = s.kit_plan
+    su_face = 'S' if vm_face == 'N' else 'N'
+    for M_, pairs, dx, f in ((s, (('va', 'va'), ('vq', 'vq')), 0.0, su_face),
+                             (q, (('sa', 'va'), ('sq', 'vq')), off, vm_face)):
+        vpl = getattr(M_, 'view_pin_layers', None) or {}
+        for pn, kn in pairs:
+            r = plan[kn]
+            if r['face'] != su_face:
+                raise ValueError(f'su_vm kit seam: kit {kn} on face {r["face"]}, not {su_face}')
+            xs = [round(float(x) + dx, 4) for x, _, _ in r['positions_xy_um']]
+            lays = [L for _, _, L in r['positions_xy_um']]
+            if max(xs) > M_.w - 0.1 or min(xs) < 0.1:
+                raise ValueError(f'su_vm kit seam: {M_.name}.{pn} kit pins outside its {f} face')
+            M_.ports.pop(pn, None)
+            if pn in M_.order:
+                M_.order.remove(pn)
+            M_.ports[pn] = ('pins', len(xs), f, max(set(lays), key=lays.count), xs, 1)
+            M_.order.append(pn)
+            vpl[pn] = lays
+        M_.view_pin_layers = vpl
+        aliases = {a_: rb_ for a_, rb_ in model.get('port_join', {}).get(M_.name, {}).items()
+                   if rb_[0] in M_.ports and rb_[0] in dict(pairs)}
+        if aliases:
+            for a_ in aliases:
+                M_.ports.pop(a_, None)
+                if a_ in M_.order:
+                    M_.order.remove(a_)
+            rects = v.pin_rects(M_, 1, {p_: sp_[1] for p_, sp_ in M_.ports.items()})
+            pts = {}
+            for nm, L, r in rects:
+                base_, _, bit = nm.partition('[')
+                pts[(base_, int(bit[:-1]) if bit else 0)] = (L, tuple(r))
+            for real in {rb_[0] for rb_ in aliases.values()}:
+                M_.ports.pop(real)
+                M_.order.remove(real)
+            if not hasattr(M_, 'assigned_fragment_rects'):
+                M_.assigned_fragment_rects = {}
+            for a_, (real, idx) in aliases.items():
+                ex = [pts[(real, i)] for i in idx]
+                lays_ = [L for L, _ in ex]
+                M_.ports[a_] = ('xy', len(ex), max(set(lays_), key=lays_.count),
+                                [((r[0] + r[2]) / 2, (r[1] + r[3]) / 2) for _, r in ex], 1)
+                M_.assigned_fragment_rects[a_] = ex
+                M_.order.append(a_)
 
 
 def _su_vm_bus(v, m, a_bits=None, q_bits=None):
@@ -1230,7 +1326,15 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
 
     def masters(model, k=1, port_bits=None):
         out = base(model, k, port_bits)
-        s, q = out['qfd_sp_su64_sfu'], (out.get('qfd_sp_vector_memory_par') or out['qfd_sp_vector_memory'])
+        s = out['qfd_sp_su64_sfu']
+        if getattr(s, 'kit_plan', None) is not None:
+            # Q-DIEPLAN2r 2026-10-16 (q2o2): the SU is drawn on its hardened kit's exact pins (OT_SPLIT_PIN_GRANT
+            # assigned_pins); the abutted VM takes the mirror of the kit's va / vq pins (same x + off, same layer per
+            # bit) on whatever VM master the instance carries now (b2: qfd_sp_vector_memory_b2_*): every bit faces its
+            # peer, jog 0.  Fragments (port_join) of either side take exact per-bit rectangles.
+            _su_vm_kit_seam(v, model, out, s, out[vm.master], off, 'N' if north else 'S')
+            return out
+        q = out.get('qfd_sp_vector_memory_par') or out['qfd_sp_vector_memory']
         if model.get('native_control_contract'):
             # Native controller retired the legacy VM request/ready service.
             # These are unbound abstract pins, not a reusable physical view.
@@ -1800,6 +1904,13 @@ RELAY_PITCH_UM = 300.0  # ... at a conservative ~300 um pitch
 # RELAY_REACH_UM; clock / reset trees are built by CTS / the reset tree and are not data hops.
 RELAY_REACH_UM = 500.0
 RELAY_REACH_OK = 490.0
+# Q-DIEPLAN3 2026-10-16: hop <= measured reach is mandatory; 0.9 x reach is planning guidance. OT_RELAY_REACH_UM is the hard limit
+# (q3h: 373 = 0.9 x 414, xcst m5d native launch 192.6 + capture 186.1 ps, neighbour skew 80, setup unc 60, 0.76 ps/um),
+# OT_RELAY_REACH_OK the planning target (a few um under it for pin offsets).
+import os as _os_reach
+if _os_reach.environ.get('OT_RELAY_REACH_UM'):
+    RELAY_REACH_UM = float(_os_reach.environ['OT_RELAY_REACH_UM'])
+    RELAY_REACH_OK = float(_os_reach.environ.get('OT_RELAY_REACH_OK', RELAY_REACH_UM - 10.0))
 # split-compute C4 (2026-10-14, compute-die lead r2): under the reach gate a relay chain is judged PIN TO PIN only (the
 # owner rule, TT sign-off).  The centre-to-centre RMAX + 25 proxy came from the SS-measured 430.56-um corridor pitch (SS is
 # a sensitivity, owner option B) and made every corridor -> corridor hop of a 472.6 / 522.3-um column pitch illegal (pin
@@ -1837,6 +1948,25 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     words (<= 350 um) and the DFI (417 um, HBM PHY interface timing, priced by the controller)."""
     if _os_r.environ.get('OT_RELAY_SKIP') == '1':     # smoke runs only (masters / pins / die.v without the relay plan)
         m['r21_relays'] = dict(skipped=True)
+        if _os_r.environ.get('OT_RELAY_CLOCK_PROBE') == '1' and (TP8 or {}).get('split') == 'compute':
+            # Q-DIEPLAN2r: every bus a relay could take the serial_0p9 domain on (first non-cdc endpoint), resolved
+            # the way the FULL relay plan resolves it, so a missing relay clock is found in seconds, not after a GEN
+            from qwen_split.relay_clock import assigned_clock, collective_core_clock
+            by_ = {i.name: i for i in m['insts']}
+            ok_, bad_ = {}, {}
+            for bid, cl, bits, eps in m['buses']:
+                if cl in ('clock_trunk', 'reset', 'link_spine', 'link_channel') or len(eps) < 2:
+                    continue
+                dom = next((by_[x].domain for x, _ in eps if x in by_ and by_[x].domain != 'cdc'), 'stream_1p2')
+                if dom != 'serial_0p9' or assigned_clock(m, bid, cl) is not None:
+                    continue
+                try:
+                    ok_[bid] = collective_core_clock(m, bid, cl, eps)
+                except ValueError as e:
+                    bad_[bid] = str(e)
+            m['r21_relays']['clock_probe'] = dict(serial_buses=len(ok_) + len(bad_), resolved=ok_, unresolved=bad_)
+            print(f'OT_RELAY_CLOCK_PROBE serial buses {len(ok_) + len(bad_)} resolved {len(ok_)} unresolved {len(bad_)} '
+                  f'{sorted(bad_)[:8]}', flush=True)
         return
     import bisect
     RMAX = max(RELAY_MAX_UM, pitch)   # a wire is relayed only when longer than the relay pitch
@@ -1886,7 +2016,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     # below still checks every macro and every previously reserved relay.
     from qwen_split.relay_row_gaps import row_gaps, contains_frame
     legal_row_gaps = row_gaps((it.y, it.y + it.h) for it in m['insts']
-                             if re.fullmatch(r't_\d+_\d+', it.name))
+                             if re.fullmatch(r't_\d+_\d+|c16_\w+', it.name))
 
     def corr_of(x):
         j = min(range(COLS), key=lambda c: abs(cx_list[c] - x))
@@ -3642,6 +3772,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 raise ValueError(f"relay occupancy: {pl['bid']} frame {fk} overlaps a surviving frame before inline pads")
             add_rect(rr)
     pad_done = {}
+    pad_hop_centre = {}
     if tpads:
         bidx = {bid: idx for idx, (bid, cl, bits, eps) in buses}
         for bid, npad in sorted(tpads.items()):
@@ -3665,13 +3796,22 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             Q = (fq[0] + fq[2] / 2, fq[1] + fq[3] / 2) if fq else pl['P0']
             px, py = x1 - v.CORR / 2, y1
             leg_c = None
+            # Q-DIEPLAN3 2026-10-16 (q2o2 GEN 'tree pads: no free spot for b2_status_f1 pad 17'): the corridor rule
+            # below is for sinks INSIDE a tile field (qfd_tile_nk area tree pins). A sink in the centre (b2 word
+            # status, 12-bus equal-age group, W of tt_ctlm) was snapped to the nearest ARRAY corridor ~4 mm away and
+            # its pads walked into the full array edge. A centre sink's pads take the nearest free centre site to the
+            # walk point (never over a tile body), so each pad hop stays a fraction of the sink -> last-relay segment.
+            sink_in_field = in_field(x1, y1)
+            cur_tight[0] = cur_gapok[0] = False
             for j in range(npad):
                 # a walk from the sink toward Q: each pad nearest the point 1 / (pads left + 1) of the way from the
                 # previous pad to Q (consecutive pads stay together; the walk ends next to Q)
                 fr = 1.0 / (npad - j + 1)
                 qx, qy = px + (Q[0] - px) * fr, py + (Q[1] - py) * fr
                 sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, cc, 150.0) if cc is not None else None
-                if sp is None and cc is None:
+                if sp is None and cc is None and not sink_in_field:
+                    sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, None)
+                if sp is None and cc is None and sink_in_field:
                     # contract v2: qfd_tile_nk's tree pins are area pins inside the body (x 10-223 um), so the sink
                     # is in no corridor: take the nearer of the two corridors flanking the walk point (y search
                     # +-400 um), never the row gap ~650 um away (it1: 1,226 hops over reach)
@@ -3691,6 +3831,20 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 if sp is None:
                     sp = pad_spot(qx, qy, w + v.SHAVE, h + v.SHAVE)
                 if sp is None:
+                    if _os.environ.get('OT_RELAY_SITE_FAILURE'):
+                        # immutable local failure receipt (what occupies the walk point's neighbourhood), never a relaxed gate
+                        near = set()
+                        for gx_ in range(int((qx - 1000) // BK), int((qx + 1000) // BK) + 1):
+                            for gy_ in range(int((qy - 1000) // BK), int((qy + 1000) // BK) + 1):
+                                near.update(grid.get((gx_, gy_), ()))
+                        named = {(it.x, it.y, it.x + it.w, it.y + it.h): it.name for it in m['insts']}
+                        for pn_, pl_ in plans.items():
+                            for fk_, f_ in enumerate(pl_['frames']):
+                                named[(f_[0], f_[1], f_[0] + f_[2] + v.SHAVE, f_[1] + f_[3] + v.SHAVE)] = f"{pl_.get('bid', pn_)}:{fk_}"
+                        json.dump(dict(kind='tree_pad', bid=bid, npad=npad, pad=j, sink=[x1, y1], sink_in_field=sink_in_field,
+                                       corridor=cc, leg_corridor=leg_c, walk=[qx, qy], Q=list(Q), frame=[w, h], got=got,
+                                       nearby=[dict(rect=r_, owner=named.get(r_, 'pad')) for r_ in sorted(near)]),
+                                  open(_os.environ['OT_RELAY_SITE_FAILURE'], 'w'), indent=1)
                     raise ValueError(f'tree pads: no free spot for {bid} pad {j}')
                 add_rect((sp[0], sp[1], sp[0] + w + v.SHAVE, sp[1] + h + v.SHAVE))
                 got.append((sp[0], sp[1], w, h))
@@ -3698,8 +3852,15 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             got.reverse()          # chain order: the last pad placed (farthest along the walk) first, the sink's last
             pl['frames'] = list(pl['frames']) + got
             pad_done[bid] = npad
+            if not sink_in_field:
+                # pad hop audit (centre sinks): centre to centre along last relay -> pads -> sink
+                pts_ = [Q] + [(f_[0] + f_[2] / 2, f_[1] + f_[3] / 2) for f_ in got] + [(x1, y1)]
+                hop_ = max(abs(a_[0] - b_[0]) + abs(a_[1] - b_[1]) for a_, b_ in zip(pts_, pts_[1:]))
+                pad_hop_centre[bid] = round(hop_, 1)
     m['tp8_tree_pads'] = dict(buses=len(pad_done) + len(pre_pads), relays=sum(pad_done.values()) + sum(
-        len(f) for f in pre_pads.values()), reserved_columns=len(pre_pads), walked=len(pad_done))
+        len(f) for f in pre_pads.values()), reserved_columns=len(pre_pads), walked=len(pad_done),
+        centre_sink_buses=len(pad_hop_centre), centre_max_hop_um=max(pad_hop_centre.values(), default=None),
+        centre_hops_over_reach=sorted(b_ for b_, h_ in pad_hop_centre.items() if h_ > RELAY_REACH_OK))
     # ---- emit relays and hops
     from qwen_split.relay_clock import assigned_clock, collective_core_clock
     for idx, pl in sorted(plans.items()):
@@ -6122,6 +6283,9 @@ def relay_token_cost(v, m, ar_job='results/rtl/qwen_dspark_system_20261004/ctx8k
     token RTL carries (k_AR0 wire_stages): bd = x / instruction broadcast VM -> head chain -> corridor -> tap,
     tree = the in-block split tree (leaf t_out -> block root, all levels), tws = block word -> slab (-> primary) ->
     tree top, ord = tree-top result -> VM; link = hub <-> stack (two traversals a layer pass)."""
+    if m.get('q3h'):
+        raise ValueError('q3h hierarchical relay pricing requires its actual cluster stage contract and selected '
+                         'die relay table; retired flat cor/tap/tree bus defaults cannot price this graph')
     st = m.get('r21_stage_of', {})
     S = lambda bid: st.get(bid, 1)
     B = {b[0]: b for b in m['buses']}

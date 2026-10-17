@@ -260,6 +260,8 @@ def apply_dvm_clocks(M):
             continue
         for k,y in enumerate(ys):
             p = f'ck{k}'
+            # Q-DIEPLAN3 q3h: a re-framed (shorter) column keeps the leaf clock entries at the same relative height
+            y = y * q.h / 1434.216 if abs(q.h - 1434.216) > 1.0 else y
             q.ports[p] = ('xy',1,'M5',[on_track('M5', (.042,y), q.w, q.h)],1)
             if p not in q.order:
                 q.order.append(p)
