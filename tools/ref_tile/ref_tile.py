@@ -2103,7 +2103,7 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     res = finalize(o, top, ROOT / "tools/hier_contract/abstract_pin_stub.py", child_lint,
                    lint_kwargs=dict(cap="M5" if grant else None, pin_grant=grant, routed_def=routed_def,
                        tech_lef=str(o / "pin_only_tech.lef") if grant and (o / "pin_only_tech.lef").exists() else None),
-                   transform=not bool(grant))
+                   transform='m6_grant_obs' if grant and routed_def else not bool(grant))
     # SCALAR-PIN LINT (ROOT 10-16, coordinator): a scalar RTL port must export as pin x, never x[0] (recipe-3 wrapper
     # declared [0:0] before e3919f90e; such a view mis-binds every die netlist that connects .x(...))
     try:
