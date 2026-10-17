@@ -2,7 +2,7 @@ set ::ot_ce_require_wire 1
 # OT_CLOCK_ENTRY_DOMAIN_API_VERSION 1
 # AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.
 set ::ot_ce_leaf_roots 1
-set ::ot_ce_related_data 0
+set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
 set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n} {cfg} {x_i}} outputs {{t0_row} {t1_row} {rs_o}}} {kiss} {clock ot_io_kiss io_budget_ps 166.667 inputs {{kgo} {epoch} {layer} {rsp_valid} {rsp_data} {rsp_t} {rsp_v} {rsp_epoch} {rsp_layer}} outputs {{req_valid} {req_t} {req_v} {req_epoch} {req_layer} {fault}}}]
