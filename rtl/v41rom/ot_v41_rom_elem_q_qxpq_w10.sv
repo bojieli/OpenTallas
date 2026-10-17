@@ -12,6 +12,14 @@
 // ot_v41_rom_elem_q_qt_w10: ot_v41_rom_elem_q_w10 on ot_v41_rom_elem_qt_w10 with the opt-in QTIMING_FIX (default 0).
 // ot_v41_rom_elem_q_w10: the FP8/FP4 element (or W1 macro pair, NB = 2) as hardened: ot_v41_rom_elem_w10 with BF16 = 0
 // and without the BF16 x port, which an FP8/FP4 macro never receives (W10, tools/v41_w10_elem_pnr.py).
+// RSTP (QXPQ-RST, coordinator-approved structural successor 2026-10-17, default 0 = the closed element unchanged): a
+// synchronous reset relay at the rst_n pin.  The pin drives ONE flop (D only, no asynchronous clear), and that flop's
+// output is the element's rst_n_pin, which then distributes locally (the element's own local reset flop rst_q and the
+// boundary-register clears).  Closed view (dsrom-qelem-qs5f-efs-7fb23b7ff-tc-hm10-cl) native audit: capture 239.2 ps
+// > 190 on rst_n only (the pin fanned straight into the asynchronous clears of the boundary registers across the
+// 510.84-wide frame); every data pin passed.  Cost: 0 data cycles; reset assertion and release reach the element one
+// clk edge later (die reset timing: the die releases this element's rst_n one cycle earlier, or the first
+// configuration / go after release moves one cycle later).  Bench: tb_qxpq_rstp (lock-step vs RSTP = 0).
 module ot_v41_rom_elem_q_qxpq_w10 #(
     parameter integer NB = 1,
     parameter integer MTP = 0,
@@ -34,6 +42,7 @@ module ot_v41_rom_elem_q_qxpq_w10 #(
     parameter integer QW = 0,
     parameter integer QM = 0,
     parameter integer QS = 0,          // SAFE knobs (owner fail-fast 2026-10-06): 1 = bterm5 S1b decode stage (+1 lane cycle)
+    parameter integer RSTP = 0,        // 1 = synchronous reset relay flop at the rst_n pin (+1 reset edge, 0 data cycles)
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -65,8 +74,20 @@ module ot_v41_rom_elem_q_qxpq_w10 #(
     output wire         busy,
     output wire         fault
 );
+    wire rst_n_e;                      // the element's reset: the pin (RSTP = 0) or the pin relay flop (RSTP = 1)
+    if (RSTP != 0) begin : g_rstp
+        (* keep, dont_touch = "true" *) reg rst_pf;
+        always @(posedge clk) rst_pf <= rst_n;
+`ifdef OT_QXPQ_RSTP_MUT_BYPASS
+        assign rst_n_e = rst_n;        // MUTANT: relay bypassed (the bench must catch the release edge)
+`else
+        assign rst_n_e = rst_pf;
+`endif
+    end else begin : g_nrstp
+        assign rst_n_e = rst_n;
+    end
     ot_v41_rom_elem_qx_pq_w10 #(.PQ(PQ), .QW(QW), .QM(QM), .QS(QS), .QX(QX), .QY(QY), .QZ(QZ), .QZ_NS(QZ_NS), .QZ_NE(QZ_NE), .QTIMING_FIX(QTIMING_FIX), .QPIPE(QPIPE), .QP_XS(QP_XS), .QP_CAP(QP_CAP), .QP_P1(QP_P1), .QP_CSAM(QP_CSAM), .BF16(0), .NB(NB), .MTP(MTP), .EARLY(EARLY), .FAST(FAST), .PP(PP), .FRONT_PAR(FRONT_PAR), .INSTANCE(INSTANCE)) u_e (
-        .clk(clk), .rst_n_pin(rst_n), .cfg_v_pin(cfg_v), .cfg_a_pin(cfg_a), .cfg_d_pin(cfg_d), .go_pin(go), .go_bf_pin(1'b0), .go_tag_pin(go_tag), .walking(walking), .bank_free(bank_free), .sh_free(sh_free),
+        .clk(clk), .rst_n_pin(rst_n_e), .cfg_v_pin(cfg_v), .cfg_a_pin(cfg_a), .cfg_d_pin(cfg_d), .go_pin(go), .go_bf_pin(1'b0), .go_tag_pin(go_tag), .walking(walking), .bank_free(bank_free), .sh_free(sh_free),
         .xs_v_pin(xs_v), .xs_p_pin(xs_p), .xs_b_pin(xs_b), .xs_sv_pin(xs_sv), .xs_q0_pin(xs_q0), .xs_e0_pin(xs_e0), .xs_q1_pin(xs_q1),
         .xs_e1_pin(xs_e1), .xs_pos_pin(xs_pos), .xb_pos_pin(3'd0), .ppos(ppos), .xb_v_pin(1'b0), .xb_b_pin(3'd0), .xb_sv_pin(4'd0),
         .xb_u_pin(32'd0), .xb_d_pin(1024'd0),

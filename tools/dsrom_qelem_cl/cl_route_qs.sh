@@ -25,7 +25,10 @@ if [ "$STOP" = finish ] && [ $rc = 0 ]; then
   [ -f $SO ] || bash tools/dsrom_qelem_cl/cl_signoff_sdc.sh
   H1_ARGS=()
   if [ "${OT_NATIVE_Q_H1_INPUT:-0}" = 1 ]; then
-    H1_ARGS=(--post-sdc .ot_mm/io_ref_routed.sdc --post-sdc tools/dsrom_qelem_cl/native_q_h1_input.sdc)
+    H1_SDC=tools/dsrom_qelem_cl/native_q_h1_input.sdc
+    # OT_NATIVE_Q_H1_RST=1 (QXPQ-RST, RSTP=1 element): rst_n is a data pin (the relay flop's D), referenced as H1 too
+    [ "${OT_NATIVE_Q_H1_RST:-0}" = 1 ] && H1_SDC=tools/dsrom_qelem_cl/native_q_h1r_input.sdc
+    H1_ARGS=(--post-sdc .ot_mm/io_ref_routed.sdc --post-sdc $H1_SDC)
   fi
   python3 tools/w18/corner_sta.py --orfs-dir $J/work/orfs --post-sdc $SO "${H1_ARGS[@]}" \
     --macro physical/asap7_memory_macros/ot_rom_4096x274_m8 --output $J/corner_sta.json > $J/corner.log 2>&1
