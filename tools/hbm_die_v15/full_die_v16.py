@@ -533,6 +533,28 @@ def build(specs_dir, out, extra=()):
             if c_['inst'] in flat:
                 s_['clocks'].remove(c_)
                 s_['clocks'].extend(dict(c_, inst=f"{c_['inst']}_b{k}", port=c_['port']) for k in range(flat[c_['inst']]['n']))
+    # H-NETLIST 1815 (d4c revision layers): 'remove_instances' (with every spec edge / clock / strap touching them),
+    # 'drop_edges' ([src_inst, src_port] or [src_inst, src_port, dst_inst]) and 'param_override' {inst: {param: value}}.
+    rm = {n for s_ in specs for n in s_.get('remove_instances', [])}
+    drop_e = [d for s_ in specs for d in s_.get('drop_edges', [])]
+    for n in sorted(rm):
+        if insts.pop(n, None) is None:
+            problems.append(f'remove_instances: {n} is not an instance')
+    if rm or drop_e:
+        def _dropped(e):
+            return e['src'][0] in rm or e['dst'][0] in rm or any(
+                e['src'][0] == d[0] and e['src'][1] == d[1] and (len(d) < 3 or e['dst'][0] == d[2]) for d in drop_e)
+        for s_ in specs:
+            s_['edges'] = [e for e in s_.get('edges', []) if not _dropped(e)]
+            s_['clocks'] = [c_ for c_ in s_.get('clocks', []) if c_['inst'] not in rm]
+            s_['straps'] = [x for x in s_.get('straps', []) if x['inst'] not in rm]
+    for s_ in specs:
+        for n, ov in s_.get('param_override', {}).items():
+            if n not in insts:
+                problems.append(f'param_override: {n} is not an instance')
+                continue
+            insts[n]['params'].update(ov)
+            insts[n]['note'] = insts[n].get('note', '') + f" | {s_['region']}: params {ov}"
     ports = {}
     for n, i in insts.items():
         ports[n] = rtl.ports(i['master'], i['source'], i['params'])
