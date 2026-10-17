@@ -110,7 +110,7 @@ def main():
     routed = {}
     if a.route_grid > 0:
         import relay_router as RR
-        _ROUTER = RR.Router(man['placement'], man['die_um'], R, G=a.route_grid)
+        _ROUTER = RR.Router(man['placement'], man['die_um'], R, G=a.route_grid, carved=man.get('carved_feedthrough'))
         jobs = []
         for (di, sk), b in buses.items():
             if pl[di]['master'] == 'ot_hbm_su_programme' or any(re.match(r'(por_|rst|reset)', p_) for p_ in b['ports']):

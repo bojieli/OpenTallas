@@ -53,7 +53,7 @@ def main():
     if GRID > 0:                                       # d4b-r: obstacle-aware routed stations (relay_router.py)
         import relay_router as RR
         man_ = json.loads((Path(a.case) / 'manifest.json').read_text())
-        router = RR.Router(man_['placement'], man_['die_um'], R, G=GRID)
+        router = RR.Router(man_['placement'], man_['die_um'], R, G=GRID, carved=man_.get('carved_feedthrough'))
     buses = collections.defaultdict(lambda: dict(bits=0, dpts=[], spts=collections.defaultdict(list), nets=[], ports=set()))
     for n, ends in nets.items():
         if n in top_inputs or len(ends) < 2:

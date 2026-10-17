@@ -25,20 +25,36 @@ from scipy.sparse.csgraph import dijkstra
 
 
 class Router:
-    def __init__(self, placement, die_um, R, G=50.0, macro_cost=4.0):
+    def __init__(self, placement, die_um, R, G=50.0, macro_cost=4.0, carved=None):
         self.R, self.G = float(R), float(G)
         W, H = die_um
         self.nx, self.ny = int(math.ceil(W / G)), int(math.ceil(H / G))
         occ = np.zeros((self.nx, self.ny), bool)
+        carve = []
         for n, v in placement.items():
-            if n.startswith('rly'):
-                continue
+            if v.get('m', v.get('master', '')).startswith('hbfd_rly') or n.startswith('rly'):
+                continue                               # relay tiles are not obstacles (they are what we place)
+            for c in (carved or {}).get(v.get('m', v.get('master')), []):
+                # die-owned feedthrough relay channel inside the master (die_case carved_feedthrough), local -> die
+                (lx0, lx1), (ly0, ly1) = c['x_um'], c['y_um']
+                o = v.get('o', v.get('orient', 'R0'))
+                if o in ('MY', 'R180'):
+                    lx0, lx1 = v['w'] - lx1, v['w'] - lx0
+                if o in ('MX', 'R180'):
+                    ly0, ly1 = v['h'] - ly1, v['h'] - ly0
+                carve.append((v['x'] + lx0, v['y'] + ly0, v['x'] + lx1, v['y'] + ly1))
             w, h = v['w'], v['h']
             if v.get('o', v.get('orient', 'R0')) in ('R90', 'R270', 'MXR90', 'MYR90'):
                 w, h = h, w
             x0, y0 = int(v['x'] // G), int(v['y'] // G)
             x1, y1 = int(math.ceil((v['x'] + w) / G)), int(math.ceil((v['y'] + h) / G))
             occ[max(0, x0):min(self.nx, x1), max(0, y0):min(self.ny, y1)] = True
+        for x0, y0, x1, y1 in carve:                   # inner cells only: a station tile must fit in the channel
+            cx0, cy0 = int(math.ceil(x0 / G)), int(math.ceil(y0 / G))
+            cx1, cy1 = int(x1 // G), int(y1 // G)
+            if cx1 > cx0 and cy1 > cy0:
+                occ[cx0:cx1, cy0:cy1] = False
+        self.carved_cells = len(carve)
         self.free = ~occ
         depth = ndimage.distance_transform_cdt(occ, metric='taxicab') * G
         self.passable = self.free | (depth <= R / 2 - G)
@@ -82,12 +98,15 @@ class Router:
         x, y = self._free_cells[int(np.argmin(d))]
         return ((x + 0.5) * self.G, (y + 0.5) * self.G)
 
+    def _xy(self, k):
+        return divmod(-1 - k, self.ny) if k < 0 else tuple(self.cell[k])
+
     def centre(self, k):
-        x, y = self.cell[k]
+        x, y = self._xy(k)
         return ((x + 0.5) * self.G, (y + 0.5) * self.G)
 
     def is_free(self, k):
-        x, y = self.cell[k]
+        x, y = self._xy(k)
         return bool(self.free[x, y])
 
     def route(self, a, b):
@@ -100,11 +119,39 @@ class Router:
         if not np.isfinite(dist[t]):
             dist, pred = dijkstra(self.graph, indices=s, return_predecessors=True)
             if not np.isfinite(dist[t]):
-                raise ValueError(f'no route {a} -> {b}')
+                return self.route_full(a, b)
         path = [t]
         while path[-1] != s:
             path.append(int(pred[path[-1]]))
         return path[::-1]
+
+
+    def route_full(self, a, b):
+        """Fallback when a and b are not connected through free/passable cells (a sealed region): route on the
+        full grid, blocked macro cells at 20x cost.  Returns nodes of the passable graph where possible; the hops
+        that cross blocked cells come out as violations (a floorplan defect to fix, never hidden)."""
+        if not hasattr(self, '_full'):
+            n = self.nx * self.ny
+            ids = np.arange(n).reshape(self.nx, self.ny)
+            cost = np.where(self.free, self.G, np.where(self.passable, self.G * 4, self.G * 20)).ravel()
+            rows, cols, data = [], [], []
+            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                a_ = ids[max(0, -dx):self.nx - max(0, dx), max(0, -dy):self.ny - max(0, dy)].ravel()
+                b_ = ids[max(0, dx):self.nx + min(0, dx), max(0, dy):self.ny + min(0, dy)].ravel()
+                rows.append(a_); cols.append(b_); data.append(cost[b_])
+            self._full = csr_matrix((np.concatenate(data), (np.concatenate(rows), np.concatenate(cols))), shape=(n, n))
+        cx = lambda p: min(self.nx - 1, max(0, int(p[0] // self.G))) * self.ny + min(self.ny - 1, max(0, int(p[1] // self.G)))
+        s, t = cx(a), cx(b)
+        _, pred = dijkstra(self._full, indices=s, return_predecessors=True)
+        path = [t]
+        while path[-1] != s:
+            path.append(int(pred[path[-1]]))
+        path = path[::-1]
+        out = []
+        for k in path:                                 # encode non-passable cells as negative ids (-1 - flat index)
+            x, y = divmod(k, self.ny)
+            out.append(int(self.idx[x, y]) if self.idx[x, y] >= 0 else -1 - k)
+        return out
 
 
 def flow(a, b):
