@@ -36,6 +36,9 @@ frame_<r>), as tools/s81/cluster_extract.py extracted it from the c26l GEN (resu
       (OR-idempotent: status bit-identical, zero constants); relays fed constant pad bits whose padded outputs nobody reads become exact-width
       relay masters (dsfd_rly_<W>_<faces>, ot_s81_rly, same RSREG) in rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv
     * instance names frame-local (pair p -> e<p - p0>, root r dropped); ROM / element INSTANCE = {INSTANCE, "_<name>"}
+    * return r1 skew (S81U-3F2, D2): one dsfd_rly_63_NS / _WE stage at every q leaf node's b (second-row) input, so an
+      element's two rows reach its leaf on consecutive edges (ot_s81_retn_static F1); the row / slot placement that
+      keeps every node fault-free is the compiler's frame return plan (tools/s81_dv/frame_return_plan.py)
 
     python3 tools/s81_dv/frame_wrap.py emit [--out-rtl rtl/dsrom_sys/s81_dv/frame] [--record results/arch/s81_dv_1016/frame]
 """
@@ -171,7 +174,7 @@ def local_names(children, insts):
 
 
 # ------------------------------------------------------------------------------------------------ transform
-def build(master, idx, params_q, rstp, bf_front='roots'):
+def build(master, idx, params_q, rstp, bf_front='roots', r1_skew=True):
     fn, mod, slots, nq, nbf = CLASSES[master]
     text = gzip.decompress((SRC / fn).read_bytes()).decode()
     ports, insts = parse_column(text, mod)
@@ -314,6 +317,9 @@ def build(master, idx, params_q, rstp, bf_front='roots'):
         names[f'xo{k}'] = f'u_xo{k}'
     rec['changes'].append(dict(kind='x_forward', note=f'{NL} x {XO_MASTER} (one flop-first stage, own lane forwarded '
                                                       'clock in / ck_o out); +1 edge per frame on the x chain'))
+    # ---- return-tree r1 skew (lane S81U-3F2, decision D2): one register stage on every q element's second-row leaf path
+    if r1_skew:
+        rec['changes'].append(add_r1_skew(insts, names, idx))
     # ---- parameters
     pmap = {}
     for it in insts:
@@ -341,7 +347,64 @@ def build(master, idx, params_q, rstp, bf_front='roots'):
     return insts, names, pmap, exact, rec
 
 
-MUTANTS = ('xlane', 'marker', 'tree', 'cfgbank')
+SKEW_MASTER = {'S': 'dsfd_rly_63_NS', 'E': 'dsfd_rly_63_WE'}     # by the output face of the stage it follows
+
+
+def add_r1_skew(insts, names, idx):
+    """D2 (static return tree, ot_s81_retn_static F1): an NB=2 element emits its two rows r0 / r1 (rows 2R, 2R+1, never
+    golden siblings) on the SAME edge into ONE leaf node (a = r0, b = r1), so both would leave the sibling window on one
+    edge.  One 63-b relay stage (closed dsfd_rly_63_NS / _WE, continuing the last stage's output face) at every leaf
+    node's b input delays r1 by exactly one edge: the leaf then forwards r0 at t + 13 and r1 at t + 14, and every node
+    above sees an element's two rows on consecutive edges (r0 merges with r0, r1 with r1).  Cost: +1 edge on odd rows
+    only (the compiler's return calendar, tools/s81_dv/frame_return_plan.py, carries it as link_b + 1)."""
+    drv = {}
+    for it in insts:
+        for p, v in it['conns'].items():
+            m_ = it['master']
+            d = ('output' if p in ('o', 'ck_o') else 'input') if m_ not in idx else port_dir(idx, m_, p)
+            if d == 'output':
+                for k, b in enumerate(v):
+                    drv[b] = (it, p, k)
+
+    def origin(net):
+        last = None
+        while net in drv:
+            it, p, k = drv[net]
+            m_ = it['master']
+            if m_.startswith('dsfd_rly') or m_ == 'dsfd_rstg':
+                last = last or it
+                net = it['conns']['i'][k]
+            elif m_.startswith('dsfd_qbank'):
+                net = it['conns']['e_' + p[2:]][k]
+            else:
+                return it, p, k, last
+        return None, None, None, last
+    n_ = collections.Counter()
+    for it in list(insts):
+        if not it['master'].startswith('dsfd_node_LL'):
+            continue
+        src, p, k, last = origin(it['conns']['b'][-1])
+        if src is None or src['master'] != 'ot_v41_rom_elem_q_qxpq_w10':
+            continue
+        assert p == 'pv' and k == 0 and last is not None, (names[it['name']], p, k)   # pv MSB first: k 0 = pv[1] (r1)
+        face = last['master'].rsplit('_', 1)[1][1]
+        mst = SKEW_MASTER[face]
+        leaf = names[it['name']][2:]
+        old = it['conns']['b']
+        new = [f'sk_{leaf}_{j}' for j in range(len(old))]
+        nm = f'sk_{leaf}'
+        insts.append(dict(master=mst, name=nm, conns=collections.OrderedDict(
+            i=list(old), o=new, ck=list(last['conns']['ck']), rs=list(last['conns']['rs']))))
+        names[nm] = f'u_y_rt_{leaf[1:]}b_sk'
+        it['conns']['b'] = new
+        n_[mst] += 1
+    assert sum(n_.values()) == sum(1 for i in insts if i['master'] == 'ot_v41_rom_elem_q_qxpq_w10'), n_
+    return dict(kind='return_r1_skew', counts=dict(n_), note='one relay stage at every q leaf node b (r1) input: r1 '
+                'reaches the leaf one edge after r0 (D2, ot_s81_retn_static F1); compiler calendar '
+                'tools/s81_dv/frame_return_plan.py')
+
+
+MUTANTS = ('xlane', 'marker', 'tree', 'cfgbank', 'noskew')
 
 
 def apply_mutant(kind, insts, names):
@@ -443,8 +506,11 @@ def cmd_emit(a):
     recd.mkdir(parents=True, exist_ok=True)
     exact_all, recs = {}, {}
     for master in CLASSES:
-        insts, names, pmap, exact, rec = build(master, idx, params_q, a.rstp, a.bf_front)
-        if a.mutant:
+        insts, names, pmap, exact, rec = build(master, idx, params_q, a.rstp, a.bf_front, r1_skew=a.mutant != 'noskew')
+        if a.mutant == 'noskew':
+            rec['mutant'] = 'no r1 skew stage (the c26l leaf pairing: r0 / r1 on one edge)'
+            print(f'{master}: MUTANT noskew')
+        elif a.mutant:
             rec['mutant'] = apply_mutant(a.mutant, insts, names)
             print(f'{master}: MUTANT {a.mutant}: {rec["mutant"]}')
         for k, v in exact.items():
