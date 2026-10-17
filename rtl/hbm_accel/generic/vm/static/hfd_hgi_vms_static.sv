@@ -2,7 +2,7 @@
 `default_nettype none
 // H-NETLIST 0600 2026-10-16: NC 3->2. Former client1 (DMA record "1") had no static producer; retired.
 // Local clients: 0 = ARGMAX (hb_argmax), 1 = IDX (hb_idx, was 2); code 2 = replay (was 3).
-module hfd_hgi_vms_static_SW #(parameter integer STRAP_BANKS=0, STRAP_MUT=0) (
+module hfd_hgi_vms_static_SW #(parameter integer STRAP_BANKS=0, STRAP_MUT=0, BANK_PIN_IN=0) (
     input wire [7:0] clk_bank,
     input wire clk_hub,
     input wire [1:0] clk_ring,
@@ -43,7 +43,7 @@ module hfd_hgi_vms_static_SW #(parameter integer STRAP_BANKS=0, STRAP_MUT=0) (
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    ot_vms_slice_static #(.NC(2),.RG(5),.WG(2),.STRAP_QUADRANT(STRAP_BANKS?0:-1),.BMUT(STRAP_MUT),.NATIVE_SHAPE(1)) u_slice (
+    ot_vms_slice_static #(.NC(2),.RG(5),.WG(2),.STRAP_QUADRANT(STRAP_BANKS?0:-1),.BMUT(STRAP_MUT),.NATIVE_SHAPE(1),.BANK_PIN_IN(BANK_PIN_IN)) u_slice (
         .clk_bank(clk_bank),
         .clk_hub(clk_hub),
         .clk_ring(clk_ring),
@@ -86,7 +86,7 @@ module hfd_hgi_vms_static_SW #(parameter integer STRAP_BANKS=0, STRAP_MUT=0) (
         .ring_fault(ring_fault)
     );
 endmodule
-module hfd_hgi_vms_static_SE #(parameter integer STRAP_BANKS=0, STRAP_MUT=0) (
+module hfd_hgi_vms_static_SE #(parameter integer STRAP_BANKS=0, STRAP_MUT=0, BANK_PIN_IN=0) (
     input wire [7:0] clk_bank,
     input wire clk_hub,
     input wire [1:0] clk_ring,
@@ -126,7 +126,7 @@ module hfd_hgi_vms_static_SE #(parameter integer STRAP_BANKS=0, STRAP_MUT=0) (
     output wire [2:0] ring_fault
 );
     wire [273:0] vacant_cr; // NC=0: no local clients exist.
-    ot_vms_slice_static #(.NC(0),.RG(4),.WG(2),.STRAP_QUADRANT(STRAP_BANKS?1:-1),.BMUT(STRAP_MUT),.NATIVE_SHAPE(1)) u_slice (
+    ot_vms_slice_static #(.NC(0),.RG(4),.WG(2),.STRAP_QUADRANT(STRAP_BANKS?1:-1),.BMUT(STRAP_MUT),.NATIVE_SHAPE(1),.BANK_PIN_IN(BANK_PIN_IN)) u_slice (
         .clk_bank(clk_bank),
         .clk_hub(clk_hub),
         .clk_ring(clk_ring),
@@ -171,7 +171,7 @@ module hfd_hgi_vms_static_SE #(parameter integer STRAP_BANKS=0, STRAP_MUT=0) (
 endmodule
 // H-NETLIST 0600 2026-10-16: NC 3->0. Former local clients (CP/FMV/FUSED records of the retired CP) had no static
 // producer on the v16 die; the quadrant's clients use read/write groups. Code 0 = replay.
-module hfd_hgi_vms_static_NW #(parameter integer STRAP_BANKS=0, STRAP_MUT=0, Q2_MERGE=0) (
+module hfd_hgi_vms_static_NW #(parameter integer STRAP_BANKS=0, STRAP_MUT=0, Q2_MERGE=0, BANK_PIN_IN=0) (
     input wire [7:0] clk_bank,
     input wire clk_hub,
     input wire [1:0] clk_ring,
@@ -211,7 +211,7 @@ module hfd_hgi_vms_static_NW #(parameter integer STRAP_BANKS=0, STRAP_MUT=0, Q2_
     output wire [2:0] ring_fault
 );
     wire [273:0] vacant_cr; // NC=0: no local clients exist.
-    ot_vms_slice_static #(.NC(0),.RG(5),.WG(3),.STRAP_QUADRANT(STRAP_BANKS?2:-1),.BMUT(STRAP_MUT),.NATIVE_SHAPE(1),.Q2_MERGE(Q2_MERGE)) u_slice (
+    ot_vms_slice_static #(.NC(0),.RG(5),.WG(3),.STRAP_QUADRANT(STRAP_BANKS?2:-1),.BMUT(STRAP_MUT),.NATIVE_SHAPE(1),.Q2_MERGE(Q2_MERGE),.BANK_PIN_IN(BANK_PIN_IN)) u_slice (
         .clk_bank(clk_bank),
         .clk_hub(clk_hub),
         .clk_ring(clk_ring),
@@ -257,7 +257,7 @@ endmodule
 // H-NETLIST 0600 2026-10-16: RG 5->4, WG 3->2. Former read group3 / write group2 were the legacy HC sockets;
 // the static HC client hc_NE reaches VM through its LG pair slots (hc_NE<k>), so they had no producer. Groups:
 // read 0 LG, 1 DMA-back, 2 x-load, 3 COLL (was 4); write 0 LG, 1 SM writer. Bank shape = SE (native q1 master).
-module hfd_hgi_vms_static_NE #(parameter integer STRAP_BANKS=0, STRAP_MUT=0) (
+module hfd_hgi_vms_static_NE #(parameter integer STRAP_BANKS=0, STRAP_MUT=0, BANK_PIN_IN=0) (
     input wire [7:0] clk_bank,
     input wire clk_hub,
     input wire [1:0] clk_ring,
@@ -297,7 +297,7 @@ module hfd_hgi_vms_static_NE #(parameter integer STRAP_BANKS=0, STRAP_MUT=0) (
     output wire [2:0] ring_fault
 );
     wire [273:0] vacant_cr; // NC=0: no local clients exist.
-    ot_vms_slice_static #(.NC(0),.RG(4),.WG(2),.STRAP_QUADRANT(STRAP_BANKS?3:-1),.BMUT(STRAP_MUT),.NATIVE_SHAPE(1)) u_slice (
+    ot_vms_slice_static #(.NC(0),.RG(4),.WG(2),.STRAP_QUADRANT(STRAP_BANKS?3:-1),.BMUT(STRAP_MUT),.NATIVE_SHAPE(1),.BANK_PIN_IN(BANK_PIN_IN)) u_slice (
         .clk_bank(clk_bank),
         .clk_hub(clk_hub),
         .clk_ring(clk_ring),
