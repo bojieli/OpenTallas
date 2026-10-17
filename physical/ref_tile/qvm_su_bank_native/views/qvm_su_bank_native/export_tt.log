@@ -37,31 +37,31 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-0450] virtual clock ot_lb_v_ot_entry_7 can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_ot_entry_8 can not be propagated.
 OT_DIRECT_MACRO ACCESSOR source_sha256=61aaf3f8c874867d13acbca9ef2f8d861a8217793d5b3605318886f8fd9f5777 executable_sha256=21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846 module_sha256=b3221367ae6d71774163a505c69426a7ccd4b817b5c989460e5860b145a6dfe9 compiler=g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
-OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_mem_lo -> u_lo/clk wire=3.0263669295784665 library=ot_sram_1r1w_1024x256_m2_r2c2_tt/ot_sram_1r1w_1024x256_m2_r2c2 (internal arcs retained)
-OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_mem_hi -> u_hi/clk wire=6.283263431204986 library=ot_sram_1r1w_1024x256_m2_r2c2_tt/ot_sram_1r1w_1024x256_m2_r2c2 (internal arcs retained)
-OT_HYBRID CTS_MEASURE tt ck_ctrl sinks=39 reference_scope=boundary boundary_sinks=39 min=83.57030378911314 mean=85.60339508515253 max=86.84279718957448 all_mean=85.60339508515251
-OT_HYBRID CTS_MEASURE tt ck_out_lo sinks=256 reference_scope=boundary boundary_sinks=256 min=97.68558917497852 mean=99.45121279939697 max=101.28922741053923 all_mean=99.45121279939693
-OT_HYBRID CTS_MEASURE tt ck_out_hi sinks=256 reference_scope=boundary boundary_sinks=256 min=127.96946886670081 mean=130.75077292773187 max=133.78377625883462 all_mean=130.75077292773187
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_mem_lo -> u_lo/clk wire=3.0376974928475184 library=ot_sram_1r1w_1024x256_m2_r2c2_tt/ot_sram_1r1w_1024x256_m2_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_mem_hi -> u_hi/clk wire=6.403052592912874 library=ot_sram_1r1w_1024x256_m2_r2c2_tt/ot_sram_1r1w_1024x256_m2_r2c2 (internal arcs retained)
+OT_HYBRID CTS_MEASURE tt ck_ctrl sinks=39 reference_scope=boundary boundary_sinks=39 min=56.7438320822363 mean=58.93794423724692 max=61.71594510120594 all_mean=58.93794423724692
+OT_HYBRID CTS_MEASURE tt ck_out_lo sinks=256 reference_scope=boundary boundary_sinks=256 min=97.95190392407463 mean=100.08018455723129 max=104.9033433759367 all_mean=100.08018455723136
+OT_HYBRID CTS_MEASURE tt ck_out_hi sinks=256 reference_scope=boundary boundary_sinks=256 min=128.44174386547567 mean=130.28383030631312 max=132.67630103177015 all_mean=130.28383030631318
 OT_ENTRIES LEVEL ck_cap_hi deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_cap_hi -> u_cap_hi/clk wire=10.764169112988178 R=69.3 latency=50.68660381474369 phi=130.75077292773187
+OT_ENTRIES COMP tt ck_cap_hi -> u_cap_hi/clk wire=10.764169112988178 R=69.3 latency=50.21966119332494 phi=130.28383030631312
 OT_ENTRIES LEVEL ck_cap_lo deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_cap_lo -> u_cap_lo/clk wire=37.42771385562677 R=69.3 latency=24.023059072105113 phi=130.75077292773187
+OT_ENTRIES COMP tt ck_cap_lo -> u_cap_lo/clk wire=36.32391624234607 R=69.3 latency=24.65991406396705 phi=130.28383030631312
 OT_ENTRIES LEVEL ck_in_hi deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_in_hi -> u_in_hi/clk wire=1.1767416515348184 R=69.3 latency=60.27403127619705 phi=130.75077292773187
+OT_ENTRIES COMP tt ck_in_hi -> u_in_hi/clk wire=1.1836669929392418 R=69.3 latency=59.800163313373886 phi=130.28383030631312
 OT_ENTRIES LEVEL ck_in_lo deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_in_lo -> u_in_lo/clk wire=1.188641204106264 R=69.3 latency=60.262131723625615 phi=130.75077292773187
+OT_ENTRIES COMP tt ck_in_lo -> u_in_lo/clk wire=1.1672990095162594 R=69.3 latency=59.81653129679687 phi=130.28383030631312
 OT_ENTRIES LEVEL ck_mem_lo deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_mem_lo -> u_lo/clk wire=3.0263669295784665 R=0 latency=127.7244059981534 phi=130.75077292773187
+OT_ENTRIES COMP tt ck_mem_lo -> u_lo/clk wire=3.0376974928475184 R=0 latency=127.24613281346561 phi=130.28383030631312
 OT_ENTRIES LEVEL ck_mem_hi deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_mem_hi -> u_hi/clk wire=6.283263431204986 R=0 latency=124.46750949652689 phi=130.75077292773187
+OT_ENTRIES COMP tt ck_mem_hi -> u_hi/clk wire=6.403052592912874 R=0 latency=123.88077771340025 phi=130.28383030631312
 OT_ENTRIES LEVEL ck_ctrl deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_ctrl -> pra[0]$_DFF_P_/CLK wire=0 R=85.60339508515253 latency=45.147377842579345 phi=130.75077292773187
+OT_ENTRIES COMP tt ck_ctrl -> pra[0]$_DFF_P_/CLK wire=0 R=58.93794423724692 latency=71.34588606906621 phi=130.28383030631312
 OT_ENTRIES LEVEL ck_out_lo deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_out_lo -> q[0]$_DFF_P_/CLK wire=0 R=99.45121279939697 latency=31.299560128334903 phi=130.75077292773187
+OT_ENTRIES COMP tt ck_out_lo -> q[0]$_DFF_P_/CLK wire=0 R=100.08018455723129 latency=30.20364574908183 phi=130.28383030631312
 OT_ENTRIES LEVEL ck_out_hi deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_out_hi -> q[256]$_DFF_P_/CLK wire=0 R=130.75077292773187 latency=0.0 phi=130.75077292773187
-OT_ENTRIES DOMAIN core 833.333008ps IO551/512 boundary=127.96946886670082..133.78377625883462
-OT_ENTRIES COMP DONE tt 9 entries phi=130.75077292773187 boundary=127.96946886670082..133.78377625883462
+OT_ENTRIES COMP tt ck_out_hi -> q[256]$_DFF_P_/CLK wire=0 R=130.28383030631312 latency=0.0 phi=130.28383030631312
+OT_ENTRIES DOMAIN core 833.333008ps IO551/512 boundary=128.08971815130252..135.10698912501852
+OT_ENTRIES COMP DONE tt 9 entries phi=130.28383030631312 boundary=128.08971815130252..135.10698912501852
 [WARNING STA-0450] virtual clock core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_ot_entry_0 can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_ot_entry_1 can not be propagated.
@@ -91,14 +91,14 @@ OT_IOREF_EDGE ot_entry_6 boundary 0 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ot_entry_7 boundary 256 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ot_entry_8 boundary 256 negedge 0 noarc 0 inverted 0
 OT_IOREF keep core_clk (not an insertion-reference clock)
-OT_IOREF ot_lb_v_ot_entry_0 ot_entry_0 mean 130.8 min 128.7 max 132.0 n 39 boundary
-OT_IOREF ot_lb_v_ot_entry_1 ot_entry_1 mean 61.5 min 61.5 max 61.5 n 1 boundary
-OT_IOREF ot_lb_v_ot_entry_2 ot_entry_2 mean 61.5 min 61.5 max 61.5 n 1 boundary
-OT_IOREF ot_lb_v_ot_entry_3 ot_entry_3 mean 130.8 min 130.8 max 130.8 n 1 all
-OT_IOREF ot_lb_v_ot_entry_4 ot_entry_4 mean 130.8 min 130.8 max 130.8 n 1 all
-OT_IOREF ot_lb_v_ot_entry_5 ot_entry_5 mean 61.5 min 61.5 max 61.5 n 1 all
-OT_IOREF ot_lb_v_ot_entry_6 ot_entry_6 mean 61.5 min 61.5 max 61.5 n 1 all
-OT_IOREF ot_lb_v_ot_entry_7 ot_entry_7 mean 130.8 min 129.0 max 132.6 n 256 boundary
-OT_IOREF ot_lb_v_ot_entry_8 ot_entry_8 mean 130.8 min 128.0 max 133.8 n 256 boundary
-OT_WS max 8.587019983963273e-12 min 4.941778930511731e-11
+OT_IOREF ot_lb_v_ot_entry_0 ot_entry_0 mean 130.3 min 128.1 max 133.1 n 39 boundary
+OT_IOREF ot_lb_v_ot_entry_1 ot_entry_1 mean 61.0 min 61.0 max 61.0 n 1 boundary
+OT_IOREF ot_lb_v_ot_entry_2 ot_entry_2 mean 61.0 min 61.0 max 61.0 n 1 boundary
+OT_IOREF ot_lb_v_ot_entry_3 ot_entry_3 mean 130.3 min 130.3 max 130.3 n 1 all
+OT_IOREF ot_lb_v_ot_entry_4 ot_entry_4 mean 130.3 min 130.3 max 130.3 n 1 all
+OT_IOREF ot_lb_v_ot_entry_5 ot_entry_5 mean 61.0 min 61.0 max 61.0 n 1 all
+OT_IOREF ot_lb_v_ot_entry_6 ot_entry_6 mean 61.0 min 61.0 max 61.0 n 1 all
+OT_IOREF ot_lb_v_ot_entry_7 ot_entry_7 mean 130.3 min 128.2 max 135.1 n 256 boundary
+OT_IOREF ot_lb_v_ot_entry_8 ot_entry_8 mean 130.3 min 128.4 max 132.7 n 256 boundary
+OT_WS max 8.218037361729102e-12 min 4.886169246987038e-11
 OT_EXPORT_DONE

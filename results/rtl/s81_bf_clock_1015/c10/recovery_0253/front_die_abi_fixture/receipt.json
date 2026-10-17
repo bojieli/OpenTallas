@@ -1,0 +1,29 @@
+{
+  "scope": "SOURCE_ONLY_BOUNDARY_FIXTURE_NOT_DIE_QUALIFICATION",
+  "literal_operand_joins": 1068,
+  "physical_request_pins": 3272,
+  "total_clock_roots": 5,
+  "negative_missing_and_duplicate": {
+    "missing": "FAIL_EXPECTED",
+    "duplicate": "FAIL_EXPECTED"
+  },
+  "source": {
+    "source_sha256": {
+      "rtl/s81/ot_s81_bf_front_roots.sv": "b24bcdfeb9b1cb48db05df9894b1ebfe6ad293b5e4c3222e591defc5f44f04a3",
+      "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv": "4b2fd9fc0a323bef02e84691517cdc3886ec60921aa7228c6ddd0a5a5bc6a8df",
+      "rtl/v41rom/ot_v41_bf_front_core_roots.sv": "53cd0a80ecc0a52f6306eaa21b8981aba1cd4a831ff6870a9e8f0963997e38dd",
+      "rtl/s81/ot_s81_bf_seam_roots.sv": "44fddea07f7e616799c56814f76ed1bc5ef57e2917ffdc4cb95cda52849ac71e"
+    },
+    "payload_cycles_added": 0,
+    "boot_reset_release_edges_added": 1,
+    "total_front_clock_roots": 5,
+    "physical_qualification": false,
+    "parent_native_qualification": false,
+    "required_before_adoption": [
+      "own TT/FF/DRC/native closure",
+      "own per-root R/phi-R die delivery",
+      "all actual pin/PG/neighbor incidents",
+      "static initialization release+1 ledger"
+    ]
+  }
+}

@@ -11,7 +11,8 @@ module ot_vms_slice_static #(
     parameter integer WB=$clog2(WG+5),
     parameter integer BMUT=0,RMUT=0,
     parameter integer NATIVE_SHAPE=0,
-    parameter integer STRAP_QUADRANT=-1 // opt-in physical masters; -1 retains historical bank
+    parameter integer STRAP_QUADRANT=-1, // opt-in physical masters; -1 retains historical bank
+    parameter integer Q2_MERGE=0 // NW (q2) bank = q0 master + hfd_vms_wq2_merge (ot_vms_bank_native_physical)
 )(
     input wire [7:0] clk_bank,
     input wire clk_hub,
@@ -90,7 +91,7 @@ module ot_vms_slice_static #(
         end
         if(STRAP_QUADRANT>=0)begin:g_physical_strap
         if(NATIVE_SHAPE)begin:g_native
-        ot_vms_bank_native_physical #(.RG(RG),.WG(WG),.QUADRANT(STRAP_QUADRANT),.MUT(BMUT)) u_bank(
+        ot_vms_bank_native_physical #(.RG(RG),.WG(WG),.QUADRANT(STRAP_QUADRANT),.MUT(BMUT),.Q2_MERGE(Q2_MERGE)) u_bank(
             .clk(clk_bank[b]),.rst_n(rst_n),.sid(sid),.bid(3'(b)),
             .rslot_v(rslot_v[b]),.rslot(rslot[b*RB+:RB]),
             .wslot_v(wslot_v[b]),.wslot(wslot[b*WB+:WB]),

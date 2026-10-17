@@ -1,0 +1,58 @@
+{
+ "schema": "opentallas.die_reach.v1",
+ "date": "2026-10-16",
+ "rule": "COORDINATOR STANDARD 1 (owner 10-16 ~19:45, safe margins): measured reach per die = planning constant (relay tile launch + capture + neighbour skew, TT); every die net longer than 0.9 x reach is a registered relay chain from the plan; die generators set repair_design -max_wire_length = reach (never above) so a long unrelayed wire is a hard error, never buffered.",
+ "consumer": "tools/die_reach.py (reach_um / add_args / from_args / repair_tcl); a design missing here fails closed",
+ "formula": "reach = (T 833.333 - U 60 - SKEW 90 - o_launch - s_capture) / 0.76 ps/um TT buffered die wire, o = O - R_tt, s = S + R_tt from the real relay view ETMs + insertion.json (tools/hier_contract/pair_check.py TREE model)",
+ "designs": {
+  "hbm": {
+   "reach_um": 450.0,
+   "measured_range_um": [385.0, 488.0],
+   "method": "H-DIE 10-16 14:50: formula on the real hbfd_rly views: rly_624 456-488, rly_48 413-421, rly_136/304/1136 385-470 um; coordinator-declared planning reach 450 um (station plan d4b_relay_stations_450, relay contract '<=450 um' check)",
+   "evidence": [
+    "results/arch/hbm_die_v16/relay_pass_d4a_1016.json",
+    "results/arch/hbm_die_v16/d4b_relay_stations_450.json.gz",
+    "HANDOFF.md '0cf H-DIE update 16:45 PT 10-16' (Reach measured 450 um)",
+    "el1011-hbmdie.log 2026-10-16T14:50 'REACH measured, not 1 mm'"
+   ],
+   "generators": ["tools/hbm_die_v15/die_case.py", "tools/hbm_die_v15/die_case_v16.py"],
+   "previous_literal_um": 400.0
+  },
+  "s81": {
+   "reach_um": 455.0,
+   "measured_range_um": [455.0, 541.1],
+   "method": "formula, self pair (relay -> same relay master) over the 26 S81 dsfd_rly_* relay masters with real ETMs in view_timing.json; minimum = dsfd_rly_266_SN 455.0 um (rly_283 461.8-470.7, rly_63/66/68/54 474-485, rly_15 500-502, rly_2 535-541). stn* stations reach 693-704 (not the limit).",
+   "evidence": [
+    "results/arch/pinreg_audit_1013/pairs/view_timing.json",
+    "results/arch/pinreg_audit_1013/pairs/s81_v15_pair_gate.json (judged real pairs max 488.1-489.2 um)",
+    "tools/hier_contract/pair_check.py"
+   ],
+   "generators": [],
+   "note": "tools/dsrom_s81_fulldie.py / tools/s81/die_sta.py run no die-level repair_design (relay-only die top); the value is the planning constant for any future die repair step",
+   "previous_literal_um": null
+  },
+  "qwen_compute": {
+   "reach_um": 425.0,
+   "measured_range_um": [425.8, 437.7],
+   "method": "formula, self pair over the Qwen compute corridor relay stations with real ETMs in view_timing.json: qfd_cst_n 425.8, qfd_cst_s 437.7 um; floored to 425 um. (The old 430 literal was the SS-measured 430.56 um corridor pitch; SS is a sensitivity under option B.)",
+   "evidence": [
+    "results/arch/pinreg_audit_1013/pairs/view_timing.json",
+    "tools/qwen_rom_fulldie_b3r2.py RELAY_REACH_OK 490 is the planner GATE, not a measured reach"
+   ],
+   "generators": ["tools/qwen_die_drt_pilot.py"],
+   "previous_literal_um": 430.0
+  },
+  "qwen_kv": {
+   "reach_um": 446.0,
+   "measured_range_um": [446.0, 460.0],
+   "method": "Q-KVSYS relay standards (4/4 CLOSED + native PASS, generator b153ec695): self-reach rlys_296 = 446 um, rlys_528 = 460 um; minimum taken",
+   "evidence": [
+    "el1014-qwen-split-kvsys.log 'RELAY STANDARDS ... self-reach 296 = 446 um, 528 = 460 um'",
+    "HANDOFF.md '0bm Q-KVSYS-DIE' (std hop reach 446/460 um for 296/528)"
+   ],
+   "generators": [],
+   "note": "tools/qwen_kv_die chain runs no die-level repair_design (relay-only die top)",
+   "previous_literal_um": null
+  }
+ }
+}

@@ -3,7 +3,7 @@
   "pd": 0.5,
   "threads": 8,
   "peak_ram_gb": 16,
-  "hold_margin_ns": 0.03,
+  "hold_margin_ns": 0.01,
   "macro_halo_um": 5.4
  },
  "recipe": 2,
@@ -62,21 +62,21 @@
   ]
  },
  "outline": {
-  "w": 302.4,
-  "h": 302.4
+  "w": 369.36,
+  "h": 369.36
  },
  "pin_regs": {
   "enable": false,
   "reason": "every input lands in a pin register in RTL (rw, e6, e5r replicas, bc_*, bq_c, bqvr) and every output is a register (owner rule 19:50)"
  },
- "floorplan_note": "XQL pair-egress leaf (H-SM 10-16): W face 2,048 bq_d from the pair bdring (6.8/um as the bdring E face), S face 1,024 rwq from the 2x2 bfq stack, N face 2,063 xw pins toward the pair SM windows, E face controls from the equal-age tree.",
- "slot_change_request": "NEW leaf of the XQL pair cluster (H-DIE pair-store slot re-home): 302.4 x 302.4",
+ "floorplan_note": "XQL pair-egress leaf x3 (H-SM 10-16, SM_X option (b) confirmed by H-DIE 18:43: 4 pair stores/quadrant in one band-gap column at the pair boundary, enclosed-row egress at the column E corner, xw windows >= 360 um, cut <= 0.55, <= 6 pins/um per face (target 5.73), 100 um pair channel, die ~855.3 mm2): 369.36 x 369.36; every face spread evenly by spread_face_pins.py (margin 4.32): N 2,063 xw pins over 360.72 um = 5.72/um (alternating M3/M5), W 2,048 bq_d over 360.72 = 5.68/um (M4), S 1,024 rwq = 2.84/um, E 42 controls, clk centred on E. Pin-limited leaf (3,923 um2 std, 5,135 pins): util stays low by construction. x2 345.6 x 302.4 had N 6.1/um and W 7.0/um (> owner 6 pins/um rule); x1 auto pin bands 9.8/um -> GRT-0116.",
+ "slot_change_request": "XQL pair-store column leaf, SM_X option (b) (H-DIE 18:43): 369.36 x 369.36 (x2 345.6 x 302.4, x1 302.4 x 302.4)",
  "job": {
-  "owner": "Claude H-SM 1315",
-  "branch": "codex/hbm-sm-1552",
-  "tag": "x1",
+  "owner": "Claude H-SM 1830",
+  "branch": "claude/hsm-xqb5-1830",
+  "tag": "x5",
   "purpose": "XQL pair-egress leaf: the ctl egress (rw capture, replicated beat select, BD beat capture, xw pins) per SM pair, beside the pair store",
-  "structural_change": "new leaf (XQL, coordinator decision 10-16; d4b SM_X 63 stages -> pair-local egress)",
+  "structural_change": "x5 (owner die standard: regional SYNC resets), parallel to x4: rn is captured by 4 kept relay flops on their D pins (no async RESETN anywhere in the leaf); each relay copy synchronously clears a quarter of the valid/control flops (e6 en, 32 e5 valids, 32 bq valids, bc_v/last, xw_en/last, x_done); field/data flops (e6 fields, e5 beat index, bc_addr/b, bq_c, rw, xbeat, xw_*) carry no reset. x3 d67bfd40c native FAIL capture rn 332.3 (async clear of 308 flops), ed5 196.4 (32-replica fanout incl. async-reset flops + hold pads). HEP w5f hold recipe kept (HM 10 ps, ECO goal 5 ps). Outline/pins as x3.",
   "extra_paths": [
    "physical/asap7_memory_macros",
    "physical/hbm_xp_aq_tree13_1014",
@@ -145,6 +145,18 @@
    }
   ],
   "views_to": "physical/ref_tile/hgi_sm_xq_pegress/views",
-  "record_to": "results/rtl/ref_tile/hgi_sm_xq_pegress"
- }
+  "record_to": "results/rtl/ref_tile/hgi_sm_xq_pegress",
+  "hold_eco": {
+   "hold_margin_ps": 5.0,
+   "reason": "native capture (HEP w5f recipe, 00f041029 -> native PASS C183.3): x3 d67bfd40c CLOSED TT+42.24/FF+7.97 but native capture FAIL: rn 332.3 (fixed in RTL: local reset relay), ed5[6]/[7]/[2] 196.4/194.8/191.8 and ~188 on rwq/bq_v (input hold pads). Route hold margin 30 -> 10 ps, post-route hold ECO goal 5 ps; FF >= 0 sign-off unchanged."
+  },
+  "reroute_reason": {
+   "kind": "native_capture",
+   "source": "results/hbm_sm_attention_1015/hsm_1830/pegress_x3_d67bfd40c_native.json",
+   "cell": "ot_hgi_sm_xload_xq_pegress",
+   "capture_ps": 332.3,
+   "fix": "x3 d67bfd40c (record 70a897e57) native FAIL launch 193.5 / capture 332.3 / spread 59.2 (R 378.8): rn 332.3 = async clear of 308 control flops; ed5[6]/[7]/[2] 196.4/194.8/191.8. x5 RTL: regional synchronous reset (rn -> 4 relay flops D pins only; sync clear of valid/control flops; no reset on data), HEP w5f hold recipe (route HM 10 ps, hold ECO goal 5 ps). Outline/pins unchanged."
+  }
+ },
+ "io_tcl": "physical/ref_tile/hgi_sm_xq_pegress/spread_pins.tcl"
 }

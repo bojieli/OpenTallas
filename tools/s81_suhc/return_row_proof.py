@@ -12,7 +12,9 @@ Runs on ot-run only.
 """
 import argparse, hashlib, json, subprocess, shutil
 from pathlib import Path
-ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);a=ap.parse_args()
+ap=argparse.ArgumentParser();ap.add_argument('--out',required=True)
+# --only V (closure-loop bench, 10-16): build + run just variant V, print its log, exit with its simulation rc (no receipt)
+ap.add_argument('--only',default=None);a=ap.parse_args()
 r=Path(__file__).resolve().parents[2];out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=True)
 cth=(r/'rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv').read_text()
 def module(src,name):
@@ -139,6 +141,8 @@ MUT={'positive':[],
 res=[]
 verilator=shutil.which('verilator') or str(Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator')
 variants=list(MUT)
+if a.only:
+    assert a.only in MUT,(a.only,list(MUT)); variants=[a.only]
 for v in variants:
     x=dut_src; b=bench
     for o,n in MUT.get(v,[]):
@@ -151,6 +155,8 @@ for v in variants:
         run=subprocess.run([str(build/'Vcheck')],stdout=f,stderr=subprocess.STDOUT)
     ok=(run.returncode==0)==(v=='positive'); res.append(dict(variant=v,returncode=run.returncode,expected=ok,log=log.name))
     shutil.rmtree(build,ignore_errors=True)
+    if a.only:
+        print(log.read_text()); raise SystemExit(run.returncode)
     if not ok: raise SystemExit('UNEXPECTED VERDICT '+str(log))
 rec={'status':'PASS','scope':'two-row return chain (ret_column leaves a4: YB_STAGE 2, HQ_LAG 1, FV_PIN 1, PAYLOAD_STAGE 0 + ctrn slices) vs cth_nt monolithic ctra/ctrb/ctrn at Y_LAG/CS_LAG 2, HQ_LAG 1 (reference fed y / cs two cycles late, hrq one cycle late, fv_local = registered early fv); component chain only, the system calendar is checked by the exact HC gate',
      'cycles':3000,'calendar':'a4: y returns +2 vs cth_nt (Y_LAG 2), cs captured +2 (CS_LAG 2), h-return merge +1 per row (HQ_LAG 1: rd relay +1 = chain +1 per row); requests unchanged; fv 0 (early fv + pin register); hov flag sampling +1 (HOV_REG); row flags per-face registers 0',

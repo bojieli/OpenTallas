@@ -1,0 +1,26 @@
+{
+ "cell": "qkd_static_kv_landing_seg",
+ "view": "physical/ref_tile/qkd_static_kv_landing_seg/views/qkd_static_kv_landing_seg",
+ "lib_cell": "qkd_static_kv_landing_seg",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 633.0,
+ "spread_ps": 106.8,
+ "outputs": 1063,
+ "inputs": 1282,
+ "launch_ps": 242.5,
+ "launch_pin": "rsp_data[367]",
+ "capture_ps": 241.9,
+ "capture_pin": "actual_data[714]",
+ "launch_over": 295,
+ "capture_over": 733,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_launch_min_ps": 132.0,
+ "ff_hold_need_ps": -60.2,
+ "pass": false,
+ "fail_why": "launch 242.53876 > 220 (295 pins); capture 241.92981 > 190 (733 pins)",
+ "job": "qkd_static_kv_landing_seg-ls5-3dd6ee9f5"
+}

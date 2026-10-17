@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_static_kv_landing_row",
+ "enable": false,
+ "reason": "Every pin is a flop in RTL (landing PC input registers / out_* registers; hop registers; rowctl request and response registers); a synthesis pin stage would add an edge."
+}

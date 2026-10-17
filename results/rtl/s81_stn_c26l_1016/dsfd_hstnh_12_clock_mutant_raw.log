@@ -1,0 +1,5 @@
+tools/s81_station_native/run_station_gate.sh: line 70: 4113699 Aborted                    (core dumped) "$out/obj/Vtb" > "$out/sim.log" 2>&1
+STATION FAIL payload n=0
+[16000] %Fatal: tb.sv:16: Assertion failed in tb
+%Error: /srv/opentallas-scratch/claude/stn-c26l-bench-1b37d3e6f/out/dsfd_hstnh_12_clock_mutant_raw/tb.sv:16: Verilog $stop
+Aborting...

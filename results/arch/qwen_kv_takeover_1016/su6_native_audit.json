@@ -1,0 +1,49 @@
+{
+  "cell": "qvm_su_bank_native",
+  "view": "physical/ref_tile/qvm_su_bank_native/views/qvm_su_bank_native",
+  "lib_cell": "qvm_su_bank_native",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean",
+    "lib midrange"
+  ],
+  "R_ps": 100.1,
+  "spread_ps": 6.9,
+  "outputs": 512,
+  "inputs": 551,
+  "launch_ps": 181.8,
+  "launch_pin": "q[195]",
+  "capture_ps": 118.7,
+  "capture_pin": "wm[2]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "source_commit": "9808a6e0138568459b4fa71612217b0d6a1df50c",
+  "job": "qvm_su_bank_native-su6-2efd107e5",
+  "route": {
+    "tt_setup_ps": 8.22,
+    "ff_hold_ps": 12.48,
+    "drc": 0
+  },
+  "composed_wd_check": {
+    "method": "Same child-R composition as su6 spec structural_change: native_pin_audit wd metric plus hard qvm_data256_native TT boundary mean. Conservative max across all 512 wd pins.",
+    "raw_worst_pin": "wd[348]",
+    "raw_worst_ps": 111.84019,
+    "child_R_ps": 69.3,
+    "composed_capture_ps": 181.14019000000002,
+    "budget_ps": 190,
+    "pass": true,
+    "pins_checked": 512,
+    "child_insertion_git_path": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/insertion.json",
+    "child_insertion_sha256": "68cb9ecdc628af51bbc9f1040bef621bbde268779236185a2d71af51ada4e84d",
+    "scope": "Only wd hard-child correction; no full-die qualification."
+  },
+  "hashes": {
+    "qvm_su_bank_native_tt.lib": "617e75cad3d83f97869834271d2efaabef403d7086fccdfde3106345f5f3cf40",
+    "insertion.json": "d04a15907962edabe65c2ba5c9740f3beb6290a500b0b8cd7a5738ba668bcb2c",
+    "abstract.json": "9dd66c338093a434f9b2cf71591269ca735ee828e4d41cfc26da1dd99e8aea86"
+  }
+}

@@ -1,0 +1,18 @@
+ot-run: ot-agidock128  admits    25 GB (avail 74, growth 56, headroom 24, waiters 5/224 GB) load 29/64 running 9 disk 179 GB 
+ot-run: -> ot-agidock128 (will queue: admits -199 GB < 32 GB)
+ot-heavy: waiting for memory on vm-xry57mhfyn: need 32 GB, admissible 21 GB: available 74 GB, growth charged 64 GB, young 28 GB, headroom 24 GB, real floor 25 GB
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-448944-1792205511 after 241 s
+NL1 MUT0 FAIL Fatal: tb_hgi_coll_q_static_host_v4_reduce_nl.sv:91: Assertion failed in tb_hgi_coll_q_static_host_v4_reduce_nl.unnamedblk7: native host V4 parent fault at compiled cycle35
+NL1 MUT1 FAIL Fatal: tb_hgi_coll_q_static_host_v4_reduce_nl.sv:91: Assertion failed in tb_hgi_coll_q_static_host_v4_reduce_nl.unnamedblk7: native host V4 parent fault at compiled cycle35
+NL1 MUT2 FAIL Fatal: tb_hgi_coll_q_static_host_v4_reduce_nl.sv:91: Assertion failed in tb_hgi_coll_q_static_host_v4_reduce_nl.unnamedblk7: native host V4 parent fault at compiled cycle24
+NL1 MUT3 FAIL Fatal: tb_hgi_coll_q_static_host_v4_reduce_nl.sv:91: Assertion failed in tb_hgi_coll_q_static_host_v4_reduce_nl.unnamedblk7: native host V4 parent fault at compiled cycle35
+NL1 MUT4 FAIL Fatal: tb_hgi_coll_q_static_host_v4_reduce_nl.sv:91: Assertion failed in tb_hgi_coll_q_static_host_v4_reduce_nl.unnamedblk7: native host V4 parent fault at compiled cycle27
+NL1 MUT5 FAIL Fatal: tb_hgi_coll_q_static_host_v4_reduce_nl.sv:91: Assertion failed in tb_hgi_coll_q_static_host_v4_reduce_nl.unnamedblk7: native host V4 parent fault at compiled cycle20
+HCOLL_REDUCE_NL_GATE FAIL NL1
+NL2 MUT0 PASS 
+NL2 MUT1 FAIL Fatal: tb_hgi_coll_q_static_host_v4_reduce_nl.sv:94: Assertion failed in tb_hgi_coll_q_static_host_v4_reduce_nl.unnamedblk7: native reduce metadata
+NL2 MUT2 FAIL Fatal: tb_hgi_coll_q_static_host_v4_reduce_nl.sv:91: Assertion failed in tb_hgi_coll_q_static_host_v4_reduce_nl.unnamedblk7: native host V4 parent fault at compiled cycle24
+NL2 MUT3 FAIL Fatal: tb_hgi_coll_q_static_host_v4_reduce_nl.sv:95: Assertion failed in tb_hgi_coll_q_static_host_v4_reduce_nl.unnamedblk7.unnamedblk8: native FP32 sum lane0
+NL2 MUT4 FAIL Fatal: tb_hgi_coll_q_static_host_v4_reduce_nl.sv:91: Assertion failed in tb_hgi_coll_q_static_host_v4_reduce_nl.unnamedblk7: native host V4 parent fault at compiled cycle27
+HCOLL_REDUCE_NL_GATE PASS NL2
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-448944-1792205511): exit 0

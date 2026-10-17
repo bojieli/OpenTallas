@@ -39,11 +39,15 @@ over several mm. What must be controlled is the skew between sinks, and the non-
      fi/fo/fn.
    - Regions whose clocks have a fixed-ratio seam share one target through `balance_group`. Examples are S81
      stream 833.3 / serial 1111.1 on the 3.333 ns epoch, with the VM x34/x43 and capture x8x t/s seams, and HBM
-     serial:stream 3:4. The group offset is applied as pads on the tree's common path, at the input of its top
-     buffer, and never at the leaves.
+     serial:stream 3:4. The group offset is applied as pads on the tree's common path (hierarchical trim, step 4),
+     never at the leaves.
 2. **Leaves.** Sinks are clustered by master pin, within a 60 um cell, with at most 12 pins per cluster. Each cluster
    gets one BUFx24 at the nearest free site. All pins of a leaf share one target R.
 3. **Topology.** Leaves are paired by recursive median bisection and merged bottom-up with zero skew (DME-like).
+   - Each leaf enters the merge with its model delay **plus R** (the leaf master pin's TT in-arc insertion), so the
+     merge balances flop arrival (pin + R): every pin arrives at phi - R by construction. Balancing pin arrival
+     instead left the whole R spread (300-730 ps on S81) to the trim, which then put pads on nearly every one of 62k
+     leaves (1.58 M pads in one iteration, s81_full_t2b, 10-16 13:40).
    - The merge point lies on the actual obstacle-aware route (`die_clock_tree.Grid.route`) between the two child
      roots, where their model delays meet. Balance therefore comes from where wire is placed, not from pads.
    - A repeater is placed every 200 um, and a run over a block is at most 400 um.
@@ -52,9 +56,17 @@ over several mm. What must be controlled is the skew between sinks, and the non-
      arrival at every sink.
    - Target per sink: `arrival + R = phi`, where R is the tile view's in-arc clock insertion (the die kit's
      `insertion_per_clock_pin_ps`). Each pin therefore arrives at phi - R, which is the owner's 10-13 delivery rule.
-   - Each leaf gets `round((phi - mean(arrival + R)) / pad_ps)` real BUFx12f pads at its input. `pad_ps` is measured
-     in context, from the previous iteration's padded leaves.
-   - Iterate until every tree and every group is within `--tol` (20 ps), or 4 iterations.
+     phi is the maximum flop arrival of the tree's **balance group** (one target for trees with a fixed-ratio seam).
+   - **Hierarchical trim.** Each leaf needs `round((phi - flop arrival) / pad_ps)` real BUFx12f pads between the root
+     and itself. The part that every leaf below a tree node needs is inserted **once, at that node's input** (the
+     minimum over its leaves minus what its parent already carries). A group offset therefore lands on the tree's
+     common path next to the root, a subtree offset at its branch point, and only the residual at the leaves. Trimming
+     every leaf to the group maximum instead (the first HBM t1/t2 builds) needs 2.4-4.6 M pads for a 5-9 ns
+     tree-to-tree insertion difference; the within-tree spread there is only 55-312 ps.
+   - `pad_ps` is measured directly on the chains inserted in the previous iteration (arrival at the last pad's
+     output minus the arrival at its driver's output). Calibrating it from the change in leaf arrival is wrong once
+     the common path also moves (it read 441.6 ps/pad on HBM t3; a pad is about 15 ps).
+   - Iterate until every tree and every group is within `--tol` (20 ps), or `--iters`.
 5. **Legal physical cells.** Every cell is a real ASAP7 buffer on a 1.62 x 0.27 um site lattice, outside every hard
    block and every existing standard cell. Its nets are typed CLOCK. Nothing is ideal: the output ODB is the
    input to GRT.
@@ -98,9 +110,38 @@ Targets per region:
    - Each column clock gets its source latency from the measured trunk arrival at its cfifo `ck` plus the ck -> co
      pass.
 4. GRT on the clocked ODB, then die STA with `kit_phys`. Later, propagated STA on `die_grt.v` + SPEF replaces step 3.
-5. Fixed-ratio seams must be timed as related clocks, with multicycles taken from the compiled schedule. For S81 the
-   windows are >= 1.389 ns setup and >= 1.111 ns hold, on the 3.333 ns epoch. Do not use `set_clock_groups
-   -asynchronous` for them. Both capture resets must release on the common epoch edge.
+5. Fixed-ratio seams must be timed as related clocks, with the window taken from the compiled schedule. For S81 the
+   windows are >= 1.389 ns setup and >= 1.111 ns hold (the bank's next write), on the 3.333 ns epoch
+   (`rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_x8_x43.sv` bank table). `tools/s81/die_sta.py` (`seam_constraints`) does
+   this whenever seam leaves are in the die (masters `*x34_[ts]*`, `*x43_[ts]*`, `*x8x_[ts]*`; `_t` = stream root,
+   `_s` = serial root):
+   - serial and stream are in one clock group (only hbm stays asynchronous);
+   - `set_max_delay 1388.889` / `set_min_delay -1111.111` from the other root's clock into every pin of a seam leaf,
+     with clock latencies included, so the physical tree skew counts;
+   - every other serial <-> stream path keeps the tightest-edge default (277.8 ps) and fails visibly: only a
+     scheduled seam may cross;
+   - the seam leaves' reset nets are timed (both capture resets release on the common epoch edge); the other
+     endpoints of those nets stay false-pathed.
+   The same pattern applies to the HBM serial:stream 3:4 seams and to any Qwen ratio seam: relate the clocks, give
+   each seam its compiled window, and never use `set_clock_groups -asynchronous` for a scheduled seam.
+
+## 4b. Method for the HBM and Qwen die leads (H-DIE, Q-COMPUTE-DIE, Q-KVSYS-DIE)
+
+1. Dump the die's clock nets: `tools/die_clock_geom_dump.py` (or the die's `die_clock_dump.tsv`). Find every clock
+   root (PLL / clock-generator outputs, region roots such as forwarded or FIFO roots).
+2. Draw the regions: one tree per synchronous region (a quadrant, a lane group, a hub, one column). Put trees that
+   exchange data synchronously, or across a fixed-ratio seam, into one `balance_group`. Regions joined only by
+   mesochronous / Gray FIFOs or forwarded clocks need no common target.
+3. Write the spec (section 5) and run `build.py --odb <PLACE odb> --spec --targets <kit with R per master pin>
+   --iters 5 --write-odb` through ot-run (EPYC4, about 5-45 GB). Then run `--measure` at ff (and ss for sensitivity).
+4. Look at `plot.py` images of the whole die and of each region, and read the report of
+   `die_clock_check.py report` (`to_dump.py` first). Gate: flop-arrival spread within each group <= 80 ps at TT and
+   FF, zero slew / cap violators.
+5. Hand the clocked ODB to GRT and the measured arrivals to the die STA (S81 uses `kit_latency.py`; HBM / Qwen use
+   the same arrivals as `set_clock_latency` per tile clock pin, with no balance_latency).
+6. Large die insertion (8-13 ns on an 830 mm2 die) is expected. It is not a violation by itself: what is checked is
+   the skew within a group at TT and FF, and the non-common path of communicating pairs, which `die_clock_check.py`
+   reports per region.
 
 ## 5. Spec format
 

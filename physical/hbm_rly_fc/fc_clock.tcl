@@ -1,0 +1,57 @@
+# H-NETLIST F1 2026-10-16: forwarded-clock relay boundary (ref_tile boundary_tcl + sdc_extra; re-applied after every
+# io_ref switch and at sign-off).  Agreed with DIE-CLOCK (form F1): the stage register is clocked by clk_in; clk_out is
+# clk_in through ONE kept buffer; o leaves through the SAME buffer cell beside clk_out.  The next station captures o on
+# the rising edge of ITS clk_in = our clk_out one period later; the previous station launched our i on the edge that
+# arrives here as our clk_in, after its own register insertion + clk2q.
+#   (1) clk_out is a CLOCK output (generated clock clk_out_fwd = clk_in, divide 1), never a data pin: no output budget.
+#   (2) o[*]: setup budget 0.2 T (OT_FC_OUT_MAX_PS, default 166.667) against clk_out_fwd; hold: o must trail clk_out by
+#       >= OT_FC_OUT_MIN_PS (default 55 ps; 85 ps for the > 256 b class) = the receiving station's insertion margin (its own R is >= 40 ps in this
+#       family), i.e. set_output_delay -min = -OT_FC_OUT_MIN_PS.  (register insertion + clk2q vs one buffer: met by
+#       construction, no output padding.)
+#   (3) i[*]: arrive relative to the clk_in port edge: max 0.2 T (OT_FC_IN_MAX_PS), min OT_FC_IN_MIN_PS (default 50 ps:
+#       the sender's own register insertion + clk2q, conservatively below the family's R_ff + clk2q_ff).
+# The forwarded hop over the die wire (clock vs data wire skew, neighbour skew <= 80 ps) is the die STA's check.
+if {[llength [get_ports -quiet clk_out]] && [llength [get_ports -quiet clk_in]]} {
+  set ot_fc_ib [expr {[info exists ::env(OT_FC_IN_MAX_PS)] ? $::env(OT_FC_IN_MAX_PS) : 166.667}]
+  # min input / output separation per class: the sender is a tile of the same class (forwarded hop), its data trails
+  # its clk_out by R + clk2q - one buffer: >= ~92 ps FF for the > 256 b class (R_ff 84-96 + clk2q 18 - buffer 12), ~64 for the narrow (R_ff 58): 85 / 55 ps
+  set ot_fc_wide [expr {[llength [get_ports -quiet {i[*]}]] > 256}]
+  set ot_fc_im [expr {[info exists ::env(OT_FC_IN_MIN_PS)] ? $::env(OT_FC_IN_MIN_PS) : ($ot_fc_wide ? 85 : 55)}]
+  set ot_fc_ob [expr {[info exists ::env(OT_FC_OUT_MAX_PS)] ? $::env(OT_FC_OUT_MAX_PS) : 166.667}]
+  set ot_fc_om [expr {[info exists ::env(OT_FC_OUT_MIN_PS)] ? $::env(OT_FC_OUT_MIN_PS) : ($ot_fc_wide ? 85 : 55)}]
+  unset_output_delay [get_ports clk_out]
+  if {![llength [get_clocks -quiet clk_out_fwd]]} {
+    create_generated_clock -name clk_out_fwd -source [get_ports clk_in] -divide_by 1 [get_ports clk_out]
+  }
+  # the stage clock = the clock created on clk_in (ref_tile clock.sdc / signoff.sdc: core_clk)
+  set ot_fc_ck [expr {[llength [get_clocks -quiet core_clk]] ? "core_clk" : [get_object_name [lindex [all_clocks] 0]]}]
+  set ot_fc_do [get_ports -quiet {o[*]}]
+  set ot_fc_di [get_ports -quiet {i[*]}]
+  if {[llength $ot_fc_do]} {
+    unset_output_delay $ot_fc_do
+    set_output_delay $ot_fc_ob -max -clock clk_out_fwd $ot_fc_do
+    set_output_delay [expr {0 - $ot_fc_om}] -min -clock clk_out_fwd $ot_fc_do
+  }
+  if {[llength $ot_fc_di]} {
+    unset_input_delay $ot_fc_di
+    set_input_delay $ot_fc_ib -max -clock $ot_fc_ck $ot_fc_di
+    set_input_delay $ot_fc_im -min -clock $ot_fc_ck $ot_fc_di
+  }
+  puts "OT_FC_CLOCK: clk_out = clk_out_fwd (clk_in, divide 1); [llength $ot_fc_do] o vs clk_out_fwd (max $ot_fc_ob / min -$ot_fc_om), [llength $ot_fc_di] i vs clk_in (max $ot_fc_ib / min $ot_fc_im)"
+}
+# (4) after CTS (this file is sourced right after clock_tree_synthesis by the kit's CTS wrapper and in every later step):
+#     the clk_out buffer input, taken off the clk_in net for CTS by fc_pre_cts.tcl, is reconnected to the clk_in PORT
+#     net (the tree root), so clk_in -> clk_out is that one buffer.  No-op outside an OpenROAD design session / before CTS.
+if {![catch {ord::get_db_block} ot_fc_blk] && $ot_fc_blk ne "NULL" && ![catch {$ot_fc_blk getInsts} ot_fc_all]} {
+  set ot_fc_bt [$ot_fc_blk findBTerm clk_in]
+  foreach inst $ot_fc_all {
+    if {![string match *u_fcb_ck* [$inst getName]]} { continue }
+    set ot_fc_it [$inst findITerm A]
+    if {[$ot_fc_it getNet] eq "NULL" && $ot_fc_bt ne "NULL" && [$ot_fc_bt getNet] ne "NULL"} {
+      $inst setDoNotTouch 0
+      $ot_fc_it connect [$ot_fc_bt getNet]
+      $inst setDoNotTouch 1
+      puts "OT_FC: clk_out buffer input reconnected to the clk_in root net [[$ot_fc_bt getNet] getName]"
+    }
+  }
+}

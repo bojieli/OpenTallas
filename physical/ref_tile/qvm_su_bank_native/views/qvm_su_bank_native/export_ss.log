@@ -37,31 +37,31 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-0450] virtual clock ot_lb_v_ot_entry_7 can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_ot_entry_8 can not be propagated.
 OT_DIRECT_MACRO ACCESSOR source_sha256=61aaf3f8c874867d13acbca9ef2f8d861a8217793d5b3605318886f8fd9f5777 executable_sha256=21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846 module_sha256=b3221367ae6d71774163a505c69426a7ccd4b817b5c989460e5860b145a6dfe9 compiler=g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
-OT_DIRECT_MACRO RAW_LIBERTY_PIN ss ck_mem_lo -> u_lo/clk wire=2.8426798788989536 library=ot_sram_1r1w_1024x256_m2_r2c2_ss/ot_sram_1r1w_1024x256_m2_r2c2 (internal arcs retained)
-OT_DIRECT_MACRO RAW_LIBERTY_PIN ss ck_mem_hi -> u_hi/clk wire=5.93323352890895 library=ot_sram_1r1w_1024x256_m2_r2c2_ss/ot_sram_1r1w_1024x256_m2_r2c2 (internal arcs retained)
-OT_HYBRID CTS_MEASURE ss ck_ctrl sinks=39 reference_scope=boundary boundary_sinks=39 min=110.90689522226795 mean=113.11336029872028 max=114.44270576964693 all_mean=113.11336029872025
-OT_HYBRID CTS_MEASURE ss ck_out_lo sinks=256 reference_scope=boundary boundary_sinks=256 min=126.90842871782684 mean=128.7777531362715 max=130.67033618507418 all_mean=128.7777531362716
-OT_HYBRID CTS_MEASURE ss ck_out_hi sinks=256 reference_scope=boundary boundary_sinks=256 min=170.02754827627032 mean=172.62546257485883 max=175.894646773436 all_mean=172.6254625748588
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ss ck_mem_lo -> u_lo/clk wire=2.8533512472445 library=ot_sram_1r1w_1024x256_m2_r2c2_ss/ot_sram_1r1w_1024x256_m2_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ss ck_mem_hi -> u_hi/clk wire=6.053022690616837 library=ot_sram_1r1w_1024x256_m2_r2c2_ss/ot_sram_1r1w_1024x256_m2_r2c2 (internal arcs retained)
+OT_HYBRID CTS_MEASURE ss ck_ctrl sinks=39 reference_scope=boundary boundary_sinks=39 min=74.77358345732992 mean=77.07927293780105 max=80.42099657262008 all_mean=77.07927293780105
+OT_HYBRID CTS_MEASURE ss ck_out_lo sinks=256 reference_scope=boundary boundary_sinks=256 min=127.63418151192427 mean=129.47085426024236 max=134.59143575690106 all_mean=129.4708542602424
+OT_HYBRID CTS_MEASURE ss ck_out_hi sinks=256 reference_scope=boundary boundary_sinks=256 min=170.13737708942023 mean=171.9550514172039 max=174.32909352458083 all_mean=171.95505141720406
 OT_ENTRIES LEVEL ck_cap_hi deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss ck_cap_hi -> u_cap_hi/clk wire=10.608093439145684 R=95.2 latency=66.81736913571315 phi=172.62546257485883
+OT_ENTRIES COMP ss ck_cap_hi -> u_cap_hi/clk wire=10.608093439145684 R=95.2 latency=66.14695797805821 phi=171.9550514172039
 OT_ENTRIES LEVEL ck_cap_lo deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss ck_cap_lo -> u_cap_lo/clk wire=37.143534924103676 R=95.2 latency=40.28192765075515 phi=172.62546257485883
+OT_ENTRIES COMP ss ck_cap_lo -> u_cap_lo/clk wire=36.039737310822986 R=95.2 latency=40.71531410638089 phi=171.9550514172039
 OT_ENTRIES LEVEL ck_in_hi deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss ck_in_hi -> u_in_hi/clk wire=1.1353578712861196 R=95.2 latency=76.29010470357271 phi=172.62546257485883
+OT_ENTRIES COMP ss ck_in_hi -> u_in_hi/clk wire=1.1422832126905431 R=95.2 latency=75.61276820451336 phi=171.9550514172039
 OT_ENTRIES LEVEL ck_in_lo deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss ck_in_lo -> u_in_lo/clk wire=1.1473970690979394 R=95.2 latency=76.27806550576089 phi=172.62546257485883
+OT_ENTRIES COMP ss ck_in_lo -> u_in_lo/clk wire=1.1260547660877172 R=95.2 latency=75.62899665111617 phi=171.9550514172039
 OT_ENTRIES LEVEL ck_mem_lo deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss ck_mem_lo -> u_lo/clk wire=2.8426798788989536 R=0 latency=169.78278269595987 phi=172.62546257485883
+OT_ENTRIES COMP ss ck_mem_lo -> u_lo/clk wire=2.8533512472445 R=0 latency=169.1017001699594 phi=171.9550514172039
 OT_ENTRIES LEVEL ck_mem_hi deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss ck_mem_hi -> u_hi/clk wire=5.93323352890895 R=0 latency=166.6922290459499 phi=172.62546257485883
+OT_ENTRIES COMP ss ck_mem_hi -> u_hi/clk wire=6.053022690616837 R=0 latency=165.90202872658705 phi=171.9550514172039
 OT_ENTRIES LEVEL ck_ctrl deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss ck_ctrl -> pra[0]$_DFF_P_/CLK wire=0 R=113.11336029872028 latency=59.51210227613855 phi=172.62546257485883
+OT_ENTRIES COMP ss ck_ctrl -> pra[0]$_DFF_P_/CLK wire=0 R=77.07927293780105 latency=94.87577847940284 phi=171.9550514172039
 OT_ENTRIES LEVEL ck_out_lo deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss ck_out_lo -> q[0]$_DFF_P_/CLK wire=0 R=128.7777531362715 latency=43.847709438587316 phi=172.62546257485883
+OT_ENTRIES COMP ss ck_out_lo -> q[0]$_DFF_P_/CLK wire=0 R=129.47085426024236 latency=42.48419715696153 phi=171.9550514172039
 OT_ENTRIES LEVEL ck_out_hi deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss ck_out_hi -> q[256]$_DFF_P_/CLK wire=0 R=172.62546257485883 latency=0.0 phi=172.62546257485883
-OT_ENTRIES DOMAIN core 833.333008ps IO551/512 boundary=170.0275482762703..175.89464677343597
-OT_ENTRIES COMP DONE ss 9 entries phi=172.62546257485883 boundary=170.0275482762703..175.89464677343597
+OT_ENTRIES COMP ss ck_out_hi -> q[256]$_DFF_P_/CLK wire=0 R=171.9550514172039 latency=0.0 phi=171.9550514172039
+OT_ENTRIES DOMAIN core 833.333008ps IO551/512 boundary=169.64936193673276..177.07563291386262
+OT_ENTRIES COMP DONE ss 9 entries phi=171.9550514172039 boundary=169.64936193673276..177.07563291386262
 [WARNING STA-0450] virtual clock core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_ot_entry_0 can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_ot_entry_1 can not be propagated.
@@ -91,14 +91,14 @@ OT_IOREF_EDGE ot_entry_6 boundary 0 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ot_entry_7 boundary 256 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ot_entry_8 boundary 256 negedge 0 noarc 0 inverted 0
 OT_IOREF keep core_clk (not an insertion-reference clock)
-OT_IOREF ot_lb_v_ot_entry_0 ot_entry_0 mean 172.6 min 170.4 max 174.0 n 39 boundary
-OT_IOREF ot_lb_v_ot_entry_1 ot_entry_1 mean 77.4 min 77.4 max 77.4 n 1 boundary
-OT_IOREF ot_lb_v_ot_entry_2 ot_entry_2 mean 77.4 min 77.4 max 77.4 n 1 boundary
-OT_IOREF ot_lb_v_ot_entry_3 ot_entry_3 mean 172.6 min 172.6 max 172.6 n 1 all
-OT_IOREF ot_lb_v_ot_entry_4 ot_entry_4 mean 172.6 min 172.6 max 172.6 n 1 all
-OT_IOREF ot_lb_v_ot_entry_5 ot_entry_5 mean 77.4 min 77.4 max 77.4 n 1 all
-OT_IOREF ot_lb_v_ot_entry_6 ot_entry_6 mean 77.4 min 77.4 max 77.4 n 1 all
-OT_IOREF ot_lb_v_ot_entry_7 ot_entry_7 mean 172.6 min 170.8 max 174.5 n 256 boundary
-OT_IOREF ot_lb_v_ot_entry_8 ot_entry_8 mean 172.6 min 170.0 max 175.9 n 256 boundary
-OT_WS max -2.4395246933650583e-10 min 7.599260110069395e-11
+OT_IOREF ot_lb_v_ot_entry_0 ot_entry_0 mean 172.0 min 169.6 max 175.3 n 39 boundary
+OT_IOREF ot_lb_v_ot_entry_1 ot_entry_1 mean 76.8 min 76.8 max 76.8 n 1 boundary
+OT_IOREF ot_lb_v_ot_entry_2 ot_entry_2 mean 76.8 min 76.8 max 76.8 n 1 boundary
+OT_IOREF ot_lb_v_ot_entry_3 ot_entry_3 mean 172.0 min 172.0 max 172.0 n 1 all
+OT_IOREF ot_lb_v_ot_entry_4 ot_entry_4 mean 172.0 min 172.0 max 172.0 n 1 all
+OT_IOREF ot_lb_v_ot_entry_5 ot_entry_5 mean 76.8 min 76.8 max 76.8 n 1 all
+OT_IOREF ot_lb_v_ot_entry_6 ot_entry_6 mean 76.8 min 76.8 max 76.8 n 1 all
+OT_IOREF ot_lb_v_ot_entry_7 ot_entry_7 mean 172.0 min 170.1 max 177.1 n 256 boundary
+OT_IOREF ot_lb_v_ot_entry_8 ot_entry_8 mean 172.0 min 170.1 max 174.3 n 256 boundary
+OT_WS max -2.4437851742220573e-10 min 7.504061261265349e-11
 OT_EXPORT_DONE

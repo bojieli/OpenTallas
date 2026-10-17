@@ -8,6 +8,8 @@ F="rtl/v41die/ot_s81_cfg7_seq.sv rtl/v41die/ot_s81_cfg7_seq_bfp.sv rtl/dsrom_sys
 case $M in
   base) A="" ;;
   pr) A="+define+TB_BFP_PINREG" ;;
+  pr_empty) A="+define+TB_BFP_PINREG +define+TB_BFP_EMPTY" ;;
+  pr_empty_mut_fault) A="+define+TB_BFP_PINREG +define+TB_BFP_EMPTY +define+OT_S81_BF_PROG_MUT_EMPTY_FAULT" ;;
   mut_row) A="+define+OT_S81_CFG7_BFP_MUT_ROW" ;;
   pr_mut_row) A="+define+TB_BFP_PINREG +define+OT_S81_CFG7_BFP_MUT_ROW" ;;
   pr_mut_spdl) A="+define+TB_BFP_PINREG +define+OT_S81_CFG7_BFP_MUT_SPDL" ;;

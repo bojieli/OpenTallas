@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_vmasm_slice16",
+ "enable": false,
+ "reason": "Slice keeps V6 vmasm edges: sel->sp[0..8], rd_il->raw, as_il flop Q; no extra pin stage."
+}
