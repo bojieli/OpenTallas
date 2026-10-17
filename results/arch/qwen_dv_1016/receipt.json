@@ -1,0 +1,303 @@
+{
+ "schema": "opentallas.qwen.dv_plan_receipt.v1",
+ "stream": "Q-DV",
+ "date": "2026-10-16",
+ "evaluation_only": true,
+ "deliverable": 1,
+ "source_graph": "results/arch/qwen_split_compute_1014/dieplan2_1016/q3h_final_smoke_graph.json.gz",
+ "model": "dv1.json",
+ "model_sha256": "6fa64bf2a10b37403ba8f04283001526f660faea8183dac582ab454742981a9d",
+ "metrics": {
+  "q3h": {
+   "bitmm": 1077241,
+   "stages": 9565,
+   "max_chain": 37,
+   "die": [
+    33017.74,
+    22472.64
+   ],
+   "mm2": 742.0,
+   "insts": 178,
+   "longest_hop": [
+    18856,
+    "bword_1"
+   ],
+   "stages405": 11948,
+   "max_chain405": [
+    46,
+    "bword_1"
+   ],
+   "worst_cut": 1.435,
+   "worst_at": "x=16850 win=[9620, 9880] bits=8516 cap=5935",
+   "lines_over_055": 2,
+   "lines_over_060": 2,
+   "top": [
+    [
+     1.435,
+     "x",
+     16850,
+     [
+      9620,
+      9880
+     ],
+     8516
+    ],
+    [
+     1.109,
+     "y",
+     9800,
+     [
+      16640,
+      16900
+     ],
+     9085
+    ],
+    [
+     0.537,
+     "x",
+     15000,
+     [
+      9620,
+      9880
+     ],
+     3184
+    ],
+    [
+     0.5,
+     "y",
+     13200,
+     [
+      13260,
+      13520
+     ],
+     4097
+    ],
+    [
+     0.5,
+     "y",
+     5550,
+     [
+      19760,
+      20020
+     ],
+     4097
+    ],
+    [
+     0.5,
+     "y",
+     20300,
+     [
+      19760,
+      20020
+     ],
+     4096
+    ],
+    [
+     0.5,
+     "y",
+     20300,
+     [
+      13260,
+      13520
+     ],
+     4096
+    ],
+    [
+     0.5,
+     "y",
+     13200,
+     [
+      19760,
+      20020
+     ],
+     4096
+    ]
+   ]
+  },
+  "dv1": {
+   "bitmm": 893214,
+   "stages": 4062,
+   "max_chain": 30,
+   "die": [
+    33017.74,
+    22472.64
+   ],
+   "mm2": 742.0,
+   "insts": 166,
+   "longest_hop": [
+    15432,
+    "sf_io_shared_fault"
+   ],
+   "stages405": 5175,
+   "max_chain405": [
+    38,
+    "ng_io_cmd_free_0"
+   ],
+   "worst_cut": 0.488,
+   "worst_at": "x=23750 win=[11180, 11440] bits=2677 cap=5484",
+   "lines_over_055": 0,
+   "lines_over_060": 0,
+   "top": [
+    [
+     0.488,
+     "x",
+     23750,
+     [
+      11180,
+      11440
+     ],
+     2677
+    ],
+    [
+     0.488,
+     "x",
+     21650,
+     [
+      11180,
+      11440
+     ],
+     2677
+    ],
+    [
+     0.416,
+     "y",
+     9200,
+     [
+      16380,
+      16640
+     ],
+     3405
+    ],
+    [
+     0.415,
+     "y",
+     13300,
+     [
+      16380,
+      16640
+     ],
+     3402
+    ],
+    [
+     0.415,
+     "y",
+     13300,
+     [
+      14300,
+      14560
+     ],
+     3401
+    ],
+    [
+     0.415,
+     "y",
+     9150,
+     [
+      14300,
+      14560
+     ],
+     3401
+    ],
+    [
+     0.389,
+     "x",
+     22700,
+     [
+      11180,
+      11440
+     ],
+     3191
+    ],
+    [
+     0.389,
+     "x",
+     22050,
+     [
+      11180,
+      11440
+     ],
+     3191
+    ]
+   ]
+  }
+ },
+ "ledger": {
+  "hop_um": 405.0,
+  "feedthrough_stages": 12,
+  "slice_crossing_stages": 4,
+  "base": {
+   "R": 52,
+   "P": 0,
+   "X": 8,
+   "O": 39,
+   "N": 0,
+   "A": 34,
+   "K": 28
+  },
+  "dv": {
+   "R": 57,
+   "P": 4,
+   "X": 18,
+   "O": 34,
+   "N": 20,
+   "A": 54,
+   "K": 23
+  },
+  "mult": {
+   "R": 4,
+   "P": 1,
+   "X": 3,
+   "O": 1,
+   "N": 2,
+   "A": 2,
+   "K": 1
+  },
+  "delta": {
+   "R": 20,
+   "P": 4,
+   "X": 30,
+   "O": -5,
+   "N": 40,
+   "A": 40,
+   "K": -5
+  },
+  "extra": {
+   "lane_serialise": 8,
+   "qknorm_8lane": 6
+  },
+  "per_layer": 138,
+  "per_token_36": 4968
+ },
+ "price": {
+  "tool": "tools/throughput/accepted_cost.py compute qwen_rom --match 'L\\d+\\.residual$' --node-delta 138",
+  "added_cycles_per_layer": 138,
+  "added_cycles_per_token": 4968,
+  "e2e_loss_pct": 1.953,
+  "iso_area_mm2": 742.0,
+  "gains_not_claimed": [
+   "SU 64->96 lanes",
+   "VM/SU seam removed",
+   "band-lane/half-train serial hops"
+  ]
+ },
+ "area_mm2": {
+  "removed": 50.5,
+  "added": 49.1,
+  "slice": {
+   "slot": "1944x1944",
+   "estimate": 3.53
+  },
+  "station": {
+   "slot": "345.6x864",
+   "estimate": 0.3
+  }
+ },
+ "png": "dv1.png",
+ "png_viewed": true,
+ "open": [
+  "qfd_c_b16_dv rs_i->rs_o feedthrough corridor fit",
+  "slice synthesis area",
+  "sys_face relocation (ng_io_cmd_free_0 38 stages)",
+  "relay-stage plan at 405 + GRT"
+ ]
+}
