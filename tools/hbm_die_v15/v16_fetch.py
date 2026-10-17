@@ -9,7 +9,7 @@ _bb.v), host, remote}.  Finds each cell on whichever fleet host built it.
 import argparse, hashlib, json, re, shlex, subprocess
 from pathlib import Path
 
-HOSTS = ['ot-epyc4', 'ot-agidock128']   # ot-epyc1tb retired 10-16 (its reusable views were copied to ot-epyc4)
+HOSTS = ['ot-epyc4', 'ot-agidock128', 'ot-pve1']   # ot-epyc1tb retired 10-16 (its reusable views were copied to ot-epyc4)
 REMOTE_PY = r'''
 import hashlib, json, re, sys, os, shlex, subprocess
 root, src, cell, wrap = sys.argv[1:5]

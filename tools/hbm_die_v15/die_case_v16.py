@@ -250,6 +250,9 @@ def main():
     ap.add_argument('--d4b-homes', action='store_true',
                     help='d4b (H-DIE 10-16): LG banks beside their user (pgslice / lg_pair / hc_q), not inside VM plan '
                          'blocks; xload ctlw at the Manhattan minimax point of its SM peers')
+    ap.add_argument('--pc-band-fit', action='store_true',
+                    help='d4c (H-DIE-B 10-16): ctl_*/svg_* cfg/id variants take the d2 PC band shapes; the service group is a '
+                         'box-wide flat abstract of the band height left above the controller leaves (no --pc-strip growth)')
     die_reach.add_args(ap, 'hbm')
     a = ap.parse_args()
     mw = die_reach.from_args(a, 'hbm')
@@ -353,10 +356,19 @@ def main():
         bits = sum(ports[c].values())
         e = V[c]
         sl = [slots[eslot(n)]['outline'] for n in e['instances'] if eslot(n) in slots and len(slot_users[eslot(n)]) == 1]
-        if e['master'] == CTL_M:
+        if e['master'] == CTL_M or (a.pc_band_fit and e['master'].startswith(CTL_M + '_')):
             w, h = kit['die'][2], kit['die'][3]; why = 'pc_ctrl kit outline (physical/ref_tile/hdie_pc_ctrl)'
-        elif e['master'] == SVG_M:
+        elif e['master'] == SVG_M and not a.pc_band_fit:
             w, h = 1036.8, 228.96; why = 'service group box (d2 feed_wh)'
+        elif a.pc_band_fit and (e['master'] == SVG_M or e['master'].startswith(SVG_M + '_')):
+            # H-DIE-B d4c 10-16: the PC band box (plan pc_<q><k>) holds the 4 controller leaves (over their PHY channel)
+            # AND the service group: flat box-wide abstract of the remaining height, never below its area estimate
+            bx = next(b for k_, b in P.items() if re.fullmatch(r'pc_S[WE]\d', k_))
+            w = bx['w']; h = math.floor((bx['h'] - 10.8 - kit['die'][3] - 4.32 - 4.32) / 1.08) * 1.08
+            meta = json.loads((a.views / 'synth' / c / 'meta.json').read_text())
+            A = meta['std_area_um2'] / 0.60 + 1.3 * sum(n_ * mw * mh for n_, mw, mh in meta['macros'].values())
+            assert w * h >= A and h >= max([min(mw, mh) for n_, mw, mh in meta['macros'].values()] or [0]) + 2 * HALO, (c, w, h, A)
+            why = f'pc-band-fit: band box width x remaining height ({w * h:.0f} um2 >= area estimate {A:.0f})'
         elif sl and len(sl) == len(e['instances']) and len({(o['w'], o['h']) for o in sl}) == 1:
             w, h = sl[0]['w'], sl[0]['h']; why = 'grant slot outline'
         else:
@@ -471,7 +483,10 @@ def main():
             continue
         if s in slots:
             sl = slots[s]; x0, y0 = sl['origin']['x'], sl['origin']['y']
-            reg = (x0, y0, x0 + sl['outline']['w'], y0 + sl['outline']['h'])
+            sw_, sh_ = sl['outline']['w'], sl['outline']['h']
+            if sl['origin'].get('orient', 'R0') in ('R90', 'R270', 'MXR90', 'MYR90'):   # rotated slot footprint
+                sw_, sh_ = sh_, sw_
+            reg = (x0, y0, x0 + sw_, y0 + sh_)
         elif s in P and isinstance(P[s], dict):
             b = P[s]; reg = (b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h'])
         else:
@@ -895,7 +910,8 @@ def main():
               'Tile-pair summaries select their worst combination; literal entry pairs preserve actual domain geometry. '
               'Actual STA and native phase/port ownership qualification remain required.'), indent=1))
     clock_sites.allocate(trees, W, H, obs)
-    render(out, manifest, P, W, H, trees)
+    if not a.no_plot:   # H-DIE-B: --no-plot also defers the clock-case render (hosts without matplotlib)
+        render(out, manifest, P, W, H, trees)
     # ---------------- die.v ----------------
     netname = {}
     for i_, (d, ends) in enumerate(sorted(nets.items())):
