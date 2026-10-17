@@ -1,6 +1,6 @@
 #!/bin/bash
 # run_landing_seg_h.sh pos|neg OUT (KVCTRL 1815, 2026-10-16): run_landing_seg.sh with the HIERARCHICAL segment
-# qkd_static_kv_landing_seg_h (4 lanes + row; every lane clock entry fed by the TB clock) as the DUT; the TB is the
+# qkd_static_kv_landing_seg_h (4 lanes + row + 2 relays; every clock entry fed by the TB clock) as the DUT; the TB is the
 # unchanged tb_static_landing, copied and re-pointed at the _h module (only the instance line changes).
 # Original header: the hardened static landing segment qkd_static_kv_landing_seg
 # in tb_static_landing at production shape (32 groups = 32 segment instances on their cfg straps, 128 PCs with the real
@@ -14,9 +14,9 @@ M=$1; O=$2; mkdir -p "$O"
 V5=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator; VL=${VERILATOR:-$( [ -x $V5 ] && echo $V5 || command -v verilator)}
 S=rtl/qwen_sys/static_kv_20261014
 TB=$O/tb_static_landing_h.sv
-sed -e 's/qkd_static_kv_landing_seg #(/qkd_static_kv_landing_seg_h #(/' -e 's/\.ck(ck),\.rst_n(rst),\.cfg_stack/.ck(ck),.ck_p0(ck),.ck_p1(ck),.ck_p2(ck),.ck_p3(ck),.rst_n(rst),.cfg_stack/' \
+sed -e 's/qkd_static_kv_landing_seg #(/qkd_static_kv_landing_seg_h #(/' -e 's/\.ck(ck),\.rst_n(rst),\.cfg_stack/.ck(ck),.ck_p0(ck),.ck_p1(ck),.ck_p2(ck),.ck_p3(ck),.ck_r0(ck),.ck_r3(ck),.rst_n(rst),.cfg_stack/' \
   rtl/test/qwen_static_kv/tb_static_landing.sv > $TB
-[ $(grep -c 'qkd_static_kv_landing_seg_h #(' $TB) = 1 ] && [ $(grep -c 'ck_p3(ck)' $TB) = 1 ] || { echo "TB re-point FAILED"; exit 4; }
+[ $(grep -c 'qkd_static_kv_landing_seg_h #(' $TB) = 1 ] && [ $(grep -c 'ck_r3(ck)' $TB) = 1 ] || { echo "TB re-point FAILED"; exit 4; }
 build(){ # ctx dut_mut hop_mut
   $VL --binary --timing -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTH -Wno-MULTIDRIVEN --build-jobs 8 \
     --top-module tb_static_landing -GVMAP=1 -GDUT_VMAP=1 -GVREQ=1 -GPHYS=1 -GCTX=$1 -GDUT_MUT=$2 -GSEG_HOP_MUT=$3 --Mdir "$O/obj_$1_$2_$3" \
