@@ -52,13 +52,15 @@ FAIL = REDESIGN | {'NEEDS_HUMAN', 'INVALID', 'REFUSED'}
 CATS = ['closed (TT era)', 'closed (TT re-verified)', 'closed (earlier)', 'first trial in flight', 'failed, re-running',
         'revoked, re-running', 'revoked (no live job)', 'needs redesign (no live job)', 'flow failure (no live job)',
         'cancelled only', 'superseded', 'implementation recorded (no physical job)', 'not started (open)',
-        'closed, margin-thin']
-# DIE-BINDABLE (coordinator, owner safe margins, 2026-10-16): a CLOSED view binds into a die only with native PASS
-# (launch <= 220 / capture <= 190 / boundary spread <= 80 ps, no combinational pin arc) AND TT >= +25 ps AND FF >= +10 ps.
-# Below that the row stays closed (closure is NOT revoked) but is listed 'closed, margin-thin' (appended last so the
-# numeric CATS[i] indices above keep their meaning).  Native verdicts come from the committed per-view audit
-# results/arch/margin_thin_1016.json (tools/fleet_viz/margin_thin.py); TT/FF from the row's best closed job.
-MARGIN_THIN = 'closed, margin-thin'
+        'closed, thin margin (watch)', 'closed, not die-bindable (native)']
+# DIE-BINDABLE (coordinator, owner safe margins, 2026-10-16; standard REVISED by the owner the same evening): a CLOSED view
+# binds into a die with native PASS (launch <= 220 / capture <= 190 / boundary spread <= 80 ps, no combinational pin arc,
+# insertion.json present).  TT >= +25 / FF >= +10 ps is a WATCH LIST only, never a binding blocker.  Closure is never
+# revoked: rows stay closed, relabelled 'closed, not die-bindable (native)' (native FAIL / unaudited) or 'closed, thin
+# margin (watch)' (native PASS but TT/FF under the watch line).  Both are appended last so the numeric CATS[i] indices
+# above keep their meaning.  Native verdicts: results/arch/margin_thin_1016.json (tools/fleet_viz/margin_thin.py).
+WATCH_THIN = 'closed, thin margin (watch)'
+NOT_BINDABLE = 'closed, not die-bindable (native)'
 MARGIN_FILE = 'results/arch/margin_thin_1016.json'
 BIND_TT_PS, BIND_FF_PS = 25.0, 10.0
 NOT_STARTED = 'not started (open)'   # registry-sync 10-15: a current die-contract element with no physical job yet
@@ -622,15 +624,17 @@ class Elements:
             tt, ff = b.get('tt'), b.get('ff')
             v = audit.get(b.get('job')) or next((audit[k] for k in [r['element']] + r.get('variants', []) if k in audit), None)
             native = (v or {}).get('native')            # PASS / FAIL / None (no audited view)
-            why = []
+            nwhy = '' if native == 'PASS' else ('native %s' % ((v or {}).get('native_why') or 'FAIL') if native == 'FAIL'
+                                                  else 'native unaudited (no view on main)')
+            watch = []
+            if tt is None or tt < BIND_TT_PS: watch.append('TT %s < +%g' % (tt, BIND_TT_PS))
+            if ff is None or ff < BIND_FF_PS: watch.append('FF %s < +%g' % (ff, BIND_FF_PS))
+            r['die_bindable'] = dict(ok=native == 'PASS', native=native, tt=tt, ff=ff, why=nwhy, watch='; '.join(watch),
+                                     view=(v or {}).get('view'), rule='bind: native PASS; watch: TT<+%g or FF<+%g ps' % (BIND_TT_PS, BIND_FF_PS))
             if native != 'PASS':
-                why.append('native %s' % ((v or {}).get('native_why') or 'FAIL') if native == 'FAIL' else 'native unaudited (no view on main)')
-            if tt is None or tt < BIND_TT_PS: why.append('TT %s < +%g' % (tt, BIND_TT_PS))
-            if ff is None or ff < BIND_FF_PS: why.append('FF %s < +%g' % (ff, BIND_FF_PS))
-            r['die_bindable'] = dict(ok=not why, native=native, tt=tt, ff=ff, why='; '.join(why),
-                                     view=(v or {}).get('view'), rule='native PASS & TT>=+%g & FF>=+%g ps' % (BIND_TT_PS, BIND_FF_PS))
-            if why:
-                r['closed_category'] = r['category']; r['category'] = MARGIN_THIN
+                r['closed_category'] = r['category']; r['category'] = NOT_BINDABLE
+            elif watch:
+                r['closed_category'] = r['category']; r['category'] = WATCH_THIN
 
     def apply_contracts(self, rows):
         """Annotate rows with their die / role / owner stream / native check, add every contract element that has no
