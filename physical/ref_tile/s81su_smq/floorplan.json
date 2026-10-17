@@ -1,0 +1,114 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "s81su_smq",
+ "top": "ot_s81_su_smq",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  151.2,
+  151.2
+ ],
+ "core": [
+  2.16,
+  2.16,
+  149.04,
+  149.04
+ ],
+ "why": "spec outline",
+ "std_area_um2": 6000,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "rst_in",
+   "cfg_g",
+   "j_st",
+   "j_kind",
+   "j_jid",
+   "r_v",
+   "r_p",
+   "r_j",
+   "r_d"
+  ],
+  "N": [
+   "w_v",
+   "w_a",
+   "w_m",
+   "w_d",
+   "o_fu",
+   "o_fo",
+   "o_alive",
+   "o_den",
+   "o_rjid"
+  ],
+  "E": [
+   "s_v",
+   "p_v",
+   "c_v",
+   "c_nv",
+   "c_lt",
+   "c_scale",
+   "c_sink",
+   "cs_v",
+   "cs_i",
+   "cs_d",
+   "d_o"
+  ],
+  "S": [
+   "clk",
+   "e_v",
+   "e_d",
+   "o_vi",
+   "o_di",
+   "den_v",
+   "f_i"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 28% outside 45%-60% (std 6000 + macro 0 in core 21574 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
+ "referenced": [
+  "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smq.sv",
+  "physical/ref_tile/s81su_smq/kit.env",
+  "physical/ref_tile/s81su_smq/clock.sdc",
+  "physical/ref_tile/s81su_smq/signoff.sdc",
+  "physical/ref_tile/s81su_smq/signoff_ffrepair.sdc",
+  "physical/ref_tile/s81su_smq/pdn.tcl",
+  "physical/ref_tile/s81su_smq/pre_cts.tcl",
+  "physical/ref_tile/s81su_smq/post_cts.tcl",
+  "physical/ref_tile/s81su_smq/post_grt.tcl",
+  "physical/ref_tile/s81su_smq/pre_drt.tcl",
+  "physical/ref_tile/s81su_smq/pre_fill.tcl",
+  "physical/ref_tile/s81su_smq/post_fill.tcl",
+  "physical/ref_tile/s81su_smq/pre_grt.tcl",
+  "physical/ref_tile/s81su_smq/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl"
+ ]
+}
