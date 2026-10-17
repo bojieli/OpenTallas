@@ -21,11 +21,15 @@ ap.add_argument('--head-gap', type=float, default=1179.36)
 ap.add_argument('--band-gap', type=float, default=129.6)
 ap.add_argument('--edge', type=float, default=129.6)
 ap.add_argument('--head-wh', default='129.6,920.16')
+ap.add_argument('--cw', type=float, default=None, help='override the contract outline width (reticle: 2090.88 = A0 group pitch)')
 a = ap.parse_args()
 B = json.load(open(a.base)); H = {k: dict(v) for k, v in B['homes'].items()}
 C = json.load(open(a.contract))
 CW, CH = C['outline_um']['w'], C['outline_um']['h']
 cols_x = [C['geometry']['columns'][str(k)]['x'][0] for k in range(4)]
+if a.cw:
+    CW = a.cw
+    cols_x = [k * (457.92 + 64.8) for k in range(4)]     # retired-tile homes only: station E of each tile stays inside
 rows_y = [C['geometry']['rows'][str(k)]['y'][0] for k in range(4)]
 TW, TH = 457.92, 1166.4
 HW, HH = [float(z) for z in a.head_wh.split(',')]
@@ -52,12 +56,14 @@ band_y.append(q(band_y[2] + CH + a.band_gap))
 top = band_y[3] + CH
 die_h = q(top + a.edge + x0)
 hg = (band_y[1] + CH, band_y[2])
-w_left = x0
+# reticle (SPEC F2 33,000 um): the cluster strips replace the die-edge margin (arrays start at x 0 / end at the die
+# edge); the centre column stays where it is unless the W array outgrows its channel
+w_left = 0.0
 w_right = w_left + 6 * CW
-dW = q(w_right - old_xw_right, 0.432)
-e_left = q(old_xe_left + dW, 0.432)
-e_right = e_left + 6 * CW
-die_w = q(e_right + (old_w - old_xe_right), 0.432)
+dW = max(0.0, q(w_right - old_xw_right - 43.2, 0.432))
+die_w = old_w + 2 * dW
+e_right = die_w
+e_left = e_right - 6 * CW
 dCore = q((hg[0] + hg[1]) / 2 - (old_hg[0] + old_hg[1]) / 2, 2.16)
 
 
@@ -92,14 +98,18 @@ for n, h in list(H.items()):
         lc = c_ % 4 if side == 'W' else 3 - c_ % 4
         band, lr = r // 4, r % 4
         cc = cl[(side, g, band)]
-        h['x'], h['y'] = local_to_die(cc, cols_x[lc], rows_y[lr], TW, TH)
-        h['h'] = TH - S if abs(h['h'] - (TH - S)) < 0.1 else h['h']
+        # a uniform R0 grid (column pitch = cluster width / 4, rows at the contract's row pitch) inside the cluster
+        # outlines: relay_geometry.rebuild needs equal corridors and R0 tiles; the hook retires the tiles anyway
+        dc = c_ % 4 if side == 'W' else c_ % 4
+        h['x'] = round(cc['x'] + cols_x[0] + dc * (CW / 4), 3)
+        h['y'] = round(cc['y'] + rows_y[0] + lr * (rows_y[1] - rows_y[0]), 3)
+        h['o'] = 'R0'
 for n, h in list(H.items()):
     m_ = re.fullmatch(r's_(\d+)_(\d+)', n)
     if m_:
         t = H[f't_{m_.group(1)}_{m_.group(2)}']
-        h['x'] = q(t['x'] + TW + 6.048, 0.432)          # the corridor E of the tile (>= 64.8 wide in the contract)
-        h['y'] = q(t['y'] + 400.0, 2.16)
+        h['x'] = round(t['x'] + TW, 3)                   # exactly at the tile's right edge (relay_geometry rule)
+        h['y'] = round(t['y'] + 400.0, 3)
     m_ = re.fullmatch(r'h_(\d+)', n)
     if m_:
         c_ = int(m_.group(1))
