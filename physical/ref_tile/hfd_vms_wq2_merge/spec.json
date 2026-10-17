@@ -1,0 +1,106 @@
+{
+ "name": "hfd_vms_wq2_merge",
+ "top": "hfd_vms_wq2_merge",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv"
+ ],
+ "params": {
+  "DONE_LAT": 5
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 59.4,
+  "h": 59.4,
+  "exact": true
+ },
+ "macros": [],
+ "pins": {
+  "W": [
+   "wq_m",
+   "done_m"
+  ],
+  "E": [
+   "wq1",
+   "wq_done1"
+  ],
+  "N": [
+   "wq2",
+   "wq_done2"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "flt"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Leaf is pin-registered by construction: every input is captured by exactly one flop (wq payload through one valid-mask AO level, done_m through one AND), every output is a flop."
+ },
+ "clock": "cts",
+ "structural_change": "NEW leaf (coordinator verdict 10-16 after q2 B/D/E/F failed): wq2 moves out of the NW VM bank so the bank is the exact q0C master; this leaf merges wq1 (SM writer) + wq2 (quantiser) onto the bank's wq1 port by valid-masked OR (+1 edge, compiler issues one edge early, owner codes 2->1, k>=3->k-1), fixed shift-register done steering, sticky flt on a both-valid schedule error; regional sync reset.",
+ "job": {
+  "owner": "Claude H-SM/VM 1815",
+  "branch": "claude/hsm-faces-mclk-1016",
+  "tag": "m1",
+  "purpose": "q2 (NW) VM write-merge leaf beside each bank; banks reuse the q0C master exactly.",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm/static/wq_merge",
+   "rtl/hbm_accel/generic/vm/static/faces_q2",
+   "rtl/hbm_accel/generic/vm/static/faces_q0",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v"
+  ],
+  "benches": [
+   {
+    "name": "q2_ref_vs_merge_q0",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/wq_merge/run.sh {RUN}/bench/pos 0 5",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "pass_regex": "WQ2_MERGE BENCH PASS"
+   },
+   {
+    "name": "mutant_done_late",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/wq_merge/run.sh {RUN}/bench/mut1 1 5",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "fail_regex": "WQ2_MERGE BENCH FAIL"
+   },
+   {
+    "name": "mutant_wq2_bit_drop",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/wq_merge/run.sh {RUN}/bench/mut2 2 5",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "fail_regex": "WQ2_MERGE BENCH FAIL"
+   }
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB1xp67_ASAP7_75t_R"
+ }
+}
