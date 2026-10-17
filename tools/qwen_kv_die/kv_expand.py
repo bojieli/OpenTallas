@@ -65,7 +65,7 @@ VIEWS = dict(
     # kvs13d: OT_KV_PV_CTL_KIT names the closed ctl kit whose FIRST_INPUT_AGE equals the die's (r5 = 20)
     ot_qwen_tp8_pv_wide_ctl=f"{RT}/{__import__('os').environ.get('OT_KV_PV_CTL_KIT', 'qkd_pv_ctl_rstpin_r5')}/views/ot_qwen_tp8_pv_wide_ctl",
     # KVPLAN 1815 (OT_KV_PV_T): the trunked pair's control tile and its relay-standard stations
-    ot_qwen_tp8_pv_wide_ctl_t=f"{RT}/{__import__('os').environ.get('OT_KV_PV_T_CTL_KIT', 'qkd_pv_ctl_t_d51f58')}/views/ot_qwen_tp8_pv_wide_ctl_t",
+    ot_qwen_tp8_pv_wide_ctl_t=f"{RT}/{__import__('os').environ.get('OT_KV_PV_T_CTL_KIT', 'qkd_pv_ctl_t_d54f58')}/views/ot_qwen_tp8_pv_wide_ctl_t",
     **{f'qkd_rlys_{w_}': f'{RT}/qkd_rlys_{w_}/views/qkd_rlys_{w_}' for w_ in (1, 36, 296)},
 )
 SR = 'rtl/qwen_sys/split_20261014'
@@ -354,7 +354,7 @@ def main(argv=None):
                 (dst / f_.name.replace('ot_qwen_tp8_pv_wide_ctl', 'ot_qwen_tp8_pv_wide_ctl_t')).write_text(t_)
         VIEWS['ot_qwen_tp8_pv_wide_ctl_t'] = str(dst)
         standin = dict(module='ot_qwen_tp8_pv_wide_ctl_t', view=str(dst), from_view=str(src.relative_to(ROOT)),
-                       status='DIAGNOSTIC_STANDIN: ctl_t kit qkd_pv_ctl_t_d51f58 not closed yet')
+                       status='DIAGNOSTIC_STANDIN: ctl_t kit qkd_pv_ctl_t_d54f58 not closed yet')
     leaf = {}
     for mod, vd in VIEWS.items():
         lef = ROOT / vd / f'{mod}.lef'

@@ -8,7 +8,7 @@ import pv_trunk_gen as P  # noqa: E402
 
 
 def _gen(ns=3):
-    a = argparse.Namespace(ch=172.8, ch_even=172.8, ct=345.6, sw=0.0, strip=86.4, halo_tile=21.6, hop=390.0, ns=ns,
+    a = argparse.Namespace(ch=172.8, ch_even=172.8, ct=345.6, sw=0.0, strip=86.4, halo_tile=21.6, hop=390.0, ns=ns, cmd_lead=3,
                            mut_station='K1c0g0', no_place=True)
     g = P.Gen(a)
     g.build()

@@ -1,5 +1,5 @@
 {
- "name": "qkd_pv_ctl_t_d51f58",
+ "name": "qkd_pv_ctl_t_d54f58",
  "top": "ot_qwen_tp8_pv_wide_ctl_t",
  "kind": "tile",
  "sources": [
@@ -9,7 +9,7 @@
  "params": {
   "FIRST_INPUT_AGE": 72,
   "RESET_PIN": 1,
-  "TRUNK_D": 51,
+  "TRUNK_D": 54,
   "FLAG_D": 58
  },
  "clock_port": "clk",
@@ -58,12 +58,12 @@
   "macro_halo_um": 5.4
  },
  "recipe": 3,
- "purpose": "KVPLAN 1815 (Q-KV 10-16): the PV16 pair control tile for the trunked pair successor qkd_pvw_die_t (tools/qwen_kv_die/pv_trunk_gen.py): identical to ot_qwen_tp8_pv_wide_ctl (a72) except TRUNK_D=51 / FLAG_D=58 (the column-flag check slot moves by 109 edges, out_age by 51; wage 6 -> 8 b). Same outline / pins / layer cap as a72.",
+ "purpose": "KVPLAN 1815 (Q-KV 10-16): the PV16 pair control tile for the trunked pair successor qkd_pvw_die_t (tools/qwen_kv_die/pv_trunk_gen.py): identical to ot_qwen_tp8_pv_wide_ctl (a72) except TRUNK_D=54 / FLAG_D=58 (the column-flag check slot moves by 112 edges, out_age by 54; wage 6 -> 8 b). Same outline / pins / layer cap as a72.",
  "job": {
   "owner": "Claude:KVPLAN-1815",
   "branch": "claude/kvplan-1815",
-  "tag": "d51f58",
-  "purpose": "KVPLAN 1815: ctl_t for the trunked PV pair (TRUNK_D 51, FLAG_D 58)",
+  "tag": "d54f58",
+  "purpose": "KVPLAN 1815: ctl_t for the trunked PV pair (TRUNK_D 54, FLAG_D 58)",
   "benches": [
    {
     "name": "pvt_pos",
@@ -108,8 +108,8 @@
    "tools/qwen_kv_die/pv_trunk_bench.sh",
    "tools/qwen_nearhbm_attn_ref.py"
   ],
-  "views_to": "physical/ref_tile/qkd_pv_ctl_t_d51f58/views",
-  "record_to": "results/rtl/ref_tile/qkd_pv_ctl_t_d51f58"
+  "views_to": "physical/ref_tile/qkd_pv_ctl_t_d54f58/views",
+  "record_to": "results/rtl/ref_tile/qkd_pv_ctl_t_d54f58"
  },
  "pin_regs": {
   "enable": false,

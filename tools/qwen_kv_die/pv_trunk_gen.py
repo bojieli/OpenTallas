@@ -365,6 +365,11 @@ class Gen:
         X = {}
         for c in range(2):
             prev = None
+            # command lead: K registered stages ahead of the trunk (control lane, just under the strip) so the deepest
+            # die chunk relay chain (group 7, whose DELTA would be 0) fits: every DELTA_g grows by K, so does TRUNK_D
+            for i in range(self.a.cmd_lead):
+                prev = self.station(f'CL{c}_{i}', ckc[c], prev, (ctx, self.hy(16) - 56.16 * (i + 1)),
+                                    rowclk(16), CTR, lanes=[f'k{c}'], prio=0)
             for r in range(16, -1, -1):
                 if r < 16:
                     for i in range(1, NS):
@@ -734,6 +739,7 @@ def main(argv=None):
     ap.add_argument('--ch-even', type=float, default=172.8)
     ap.add_argument('--ns', type=int, default=3)
     ap.add_argument('--hop', type=float, default=390.0, help='per-bit hop target used to place stations')
+    ap.add_argument('--cmd-lead', type=int, default=3, help='registered command stages ahead of the CT trunk (DELTA_g += K)')
     ap.add_argument('--ct', type=float, default=345.6)
     ap.add_argument('--sw', type=float, default=0.0)
     ap.add_argument('--strip', type=float, default=86.4)
