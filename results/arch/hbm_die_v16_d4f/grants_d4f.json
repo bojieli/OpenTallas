@@ -3,7 +3,7 @@
  "die": "hbm_v15",
  "version": 9,
  "owner": "H-DIE",
- "updated": "2026-10-16T23:13:19-07:00",
+ "updated": "2026-10-16T23:48:14-07:00",
  "clock_period_ps": 833.333,
  "floorplan": {
   "file": "results/arch/hbm_die_v15/d4f_a2p_fullcore/compact.P.json",
@@ -568,8 +568,8 @@
     "h": 360.72
    },
    "origin": {
-    "x": 14217.2,
-    "y": 9777.76,
+    "x": 14877.0,
+    "y": 8877.0,
     "orient": "MY"
    },
    "io_budget": {
@@ -1261,7 +1261,8 @@
    "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN.",
    "identity_straps": {
     "stk": 0
-   }
+   },
+   "home_rule": "d4f: E of coll_SW (tkm_SW takes the N face)"
   },
   {
    "name": "hb_dbk_NW",
@@ -82332,7 +82333,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {
     "QID": 3,
     "G": 0,
@@ -82829,7 +82830,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {
     "QID": 3,
     "G": 1,
@@ -83326,7 +83327,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {
     "QID": 3,
     "G": 2,
@@ -83823,7 +83824,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {
     "QID": 3,
     "G": 3,
@@ -84340,7 +84341,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {
     "QID": 2,
     "G": 0,
@@ -84837,7 +84838,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {
     "QID": 2,
     "G": 1,
@@ -85334,7 +85335,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {
     "QID": 2,
     "G": 2,
@@ -85831,7 +85832,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {
     "QID": 2,
     "G": 3,
@@ -86348,7 +86349,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {
     "QID": 1,
     "G": 0,
@@ -86845,7 +86846,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {
     "QID": 1,
     "G": 1,
@@ -87342,7 +87343,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {
     "QID": 1,
     "G": 2,
@@ -87839,7 +87840,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {
     "QID": 1,
     "G": 3,
@@ -88356,7 +88357,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {
     "QID": 0,
     "G": 0,
@@ -88853,7 +88854,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {
     "QID": 0,
     "G": 1,
@@ -89350,7 +89351,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {
     "QID": 0,
     "G": 2,
@@ -89847,7 +89848,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {
     "QID": 0,
     "G": 3,
@@ -90313,7 +90314,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -90614,7 +90615,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -90915,7 +90916,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -91216,7 +91217,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "d07c241f9",
+   "source_prerequisite": "e592c4825",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -96575,8 +96576,8 @@
     "h": 1740.0
    },
    "origin": {
-    "x": 14045.0,
-    "y": 10174.0,
+    "x": 14045.76,
+    "y": 9854.72,
     "orient": "R0"
    },
    "pins": [],
