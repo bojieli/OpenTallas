@@ -8,10 +8,10 @@ set qrl_groups [list \
   [dict create name tx5 type EXCLUSIVE regex {g_sl\[5\]\.g_hd\.(g_tx\.g_r\[[01]\]\.u_tx/|g_lrr\.rq)} boxes {{305.316 25.92 324.216 166.32}} min 781 max 781] \
   [dict create name tx6 type EXCLUSIVE regex {g_sl\[6\]\.g_hd\.(g_tx\.g_r\[[01]\]\.u_tx/|g_lrr\.rq)} boxes {{435.24 188.352 455.76 328.752}} min 781 max 781] \
   [dict create name tx7 type EXCLUSIVE regex {g_sl\[7\]\.g_hd\.(g_tx\.g_r\[[01]\]\.u_tx/|g_lrr\.rq)} boxes {{435.24 25.92 455.76 166.32}} min 781 max 781] \
-  [dict create name rsw type EXCLUSIVE regex {g_rqr\.gs_q\[([0-9]|[1-9][0-9]|[1-4][0-9][0-9]|50[0-9]|51[01])\]} boxes {{2.16 600.0 50.76 760.0}} min 512 max 512] \
-  [dict create name rnw type EXCLUSIVE regex {g_rqr\.gn_q\[([0-9]|[1-9][0-9]|[1-4][0-9][0-9]|50[0-9]|51[01])\]} boxes {{2.16 780.0 50.76 960.0}} min 512 max 512] \
-  [dict create name rse type EXCLUSIVE regex {g_rqr\.gs_q\[} boxes {{407.16 600.0 455.76 760.0}} min 512 max 512] \
-  [dict create name rne type EXCLUSIVE regex {g_rqr\.gn_q\[} boxes {{407.16 780.0 455.76 960.0}} min 512 max 512] \
+  [dict create name rsw type EXCLUSIVE regex {(g_rqr\.gs_q\[([0-9]|[1-9][0-9]|[1-4][0-9][0-9]|50[0-9]|51[01])\]|g_rph\.g_rb\[[0-2]\]\.g_single\.g_col\[0\]\.g_lrr\.rq)} boxes {{2.16 600.0 50.76 760.0}} min 515 max 515] \
+  [dict create name rnw type EXCLUSIVE regex {(g_rqr\.gn_q\[([0-9]|[1-9][0-9]|[1-4][0-9][0-9]|50[0-9]|51[01])\]|g_rph\.g_rb\[[34]\]\.g_single\.g_col\[0\]\.g_lrr\.rq)} boxes {{2.16 780.0 50.76 960.0}} min 514 max 514] \
+  [dict create name rse type EXCLUSIVE regex {(g_rqr\.gs_q\[|g_rph\.g_rb\[[0-2]\]\.g_single\.g_col\[1\]\.g_lrr\.rq)} boxes {{407.16 600.0 455.76 760.0}} min 515 max 515] \
+  [dict create name rne type EXCLUSIVE regex {(g_rqr\.gn_q\[|g_rph\.g_rb\[[34]\]\.g_single\.g_col\[1\]\.g_lrr\.rq)} boxes {{407.16 780.0 455.76 960.0}} min 514 max 514] \
   [dict create name dw type EXCLUSIVE regex {(u_me\.mq_wrom\[([0-9]|[1-9][0-9]|[1-4][0-9][0-9]|50[0-9]|51[01])\]|g_hd\.g_tx\.tc\[(12[89]|1[3-9][0-9]|2[0-4][0-9]|25[0-5])\])} boxes {{2.16 505.0 50.76 590.0}} min 1024 max 1024] \
   [dict create name de type EXCLUSIVE regex {(u_me\.mq_wrom\[|g_hd\.g_tx\.tc\[(25[6-9]|2[6-9][0-9]|3[0-7][0-9]|38[0-3])\])} boxes {{407.16 505.0 455.76 590.0}} min 1024 max 1024] \
   [dict create name hub type EXCLUSIVE regex {^u_g\.u_tile\.} boxes {{354.0 390.0 414.0 450.0}} min 2861 max 2861] \
@@ -27,3 +27,5 @@ source /src/tools/qwen_romleaf/parent_regions.tcl
 # c1r5 NL: gutter regions flush with the ROM-leaf halo (x 50.76 / 407.16) and the core edge (2.16 / 455.76).
 # c1r4 left a 0.76 um sliver between the EXCLUSIVE dw box (x1 50.0) and the halo: two repeaters were trapped there
 # (wire44167/wire41693 at x 51-53, y 539) -> DPL-0033 overlap.
+# c1r8 (REGROOT 2): the ten ROM-leaf reset relays (g_rb[b].g_single.g_col[c].g_lrr.rq) join the gutter region of
+# their clock root: W-south rsw (b0-2 c0), W-north rnw (b3-4 c0), E-south rse/ck_rs (b0-2 c1), E-north rne/ck_rn (b3-4 c1).
