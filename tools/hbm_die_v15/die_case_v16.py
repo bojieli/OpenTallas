@@ -45,6 +45,7 @@ import clock_sites
 import die_clock_tree as dct  # noqa: E402
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import die_reach  # noqa: E402
+from die_repeaters import step as die_repeaters_step  # noqa: E402
 
 CONTRACT = ROOT / 'results/arch/hbm_die_v16/contract.json'
 GRANTS = ROOT / 'results/arch/hier_contract_1015/hbm_v15.json'
@@ -211,7 +212,11 @@ def main():
     ap.add_argument('--views', required=True, type=Path)
     ap.add_argument('--out', required=True, type=Path)
     ap.add_argument('--contract', type=Path, default=CONTRACT, help='source contract (default: main); freeze it to the synthesis snapshot')
-    ap.add_argument('--die-repeaters', action='store_true')
+    ap.add_argument('--die-repeaters', action='store_true',
+                    help='shared die-net repeater step (tools/die_repeaters, DIE-FLOW 10-17, owner 0cl)')
+    ap.add_argument('--repeater-max-wire-um', type=float, default=None, help='repeater spacing (default 160 um)')
+    ap.add_argument('--legacy-die-repeaters', action='store_true',
+                    help='old repair_design -max_wire_length = reach (no native-aware spacing, no checks)')
     ap.add_argument('--paths', type=int, default=200000)
     ap.add_argument('--plan', type=Path, default=PLAN, help='die plan (compact660_v5 default; v6 for d4)')
     ap.add_argument('--grants', type=Path, default=GRANTS)
@@ -788,7 +793,12 @@ def main():
     manifest['consumed_view_sha256'] = {p.name: digest(p) for p in sorted(vd.iterdir())
                                         if p.suffix in ('.lef', '.lib')}
     manifest['native_complete'] = False
-    manifest['max_wire'] = dict(mw, applied=bool(a.die_repeaters))
+    manifest['max_wire'] = dict(mw, applied=bool(a.die_repeaters),
+                                role='repair max wire' if a.legacy_die_repeaters else 'over-reach threshold (shared step)')
+    manifest['die_repeaters'] = (None if not a.die_repeaters else
+                                 'legacy' if a.legacy_die_repeaters else
+                                 die_repeaters_step.config('hbm', '/work/out/die_repeaters.json', reach_um=mw['value_um'],
+                                                           max_wire_um=a.repeater_max_wire_um))
     manifest['pc_strip'] = strip
     manifest['d4b_homes'] = bool(a.d4b_homes)
     manifest['layout_image_status'] = 'DEFERRED' if a.no_plot else 'GENERATED'
@@ -1035,12 +1045,21 @@ report_clock_skew -setup > /work/out/clock_skew.rpt
 report_clock_skew -hold >> /work/out/clock_skew.rpt
 puts OT_DONE
 '''
+    # DIE-FLOW 10-17 (owner 0cl): --die-repeaters runs the shared native-aware die-net repeater step
+    # (tools/die_repeaters: max wire 160 um / 260 ps native first-cell slew, BUFx4-8 only, registers + relays checked
+    # unchanged, clock nets untouched, snap-legalised off the macros); the measured die reach (mw) is the over-reach
+    # threshold (missing relay register), no longer the repeater spacing.  --legacy-die-repeaters = the old line.
+    if a.die_repeaters and not a.legacy_die_repeaters:
+        die_repeaters_step.copy(out)
+    rep_call = (die_reach.repair_tcl(mw, '-buffer_gain 4.0') if a.legacy_die_repeaters else
+                die_repeaters_step.tcl_call('hbm', '/work/out/die_repeaters.json', reach_um=mw['value_um'],
+                                            repair_args='-buffer_gain 4.0', max_wire_um=a.repeater_max_wire_um).rstrip())
     rep_ = '' if not a.die_repeaters else f'''{clocks}
 {groups}
 estimate_parasitics -placement
 set_dont_touch [get_nets -quiet {{dk?_* n_dk?_* ckg_*}}]
 set r0 [clock seconds]
-{die_reach.repair_tcl(mw, '-buffer_gain 4.0')}
+{rep_call}
 puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"'''
     (out / 'run.tcl').write_text(tcl.replace('{REPEAT}', rep_))
     shutil.copy(ROOT / 'tools/die_clock_check.tcl', out / 'die_clock_check.tcl')

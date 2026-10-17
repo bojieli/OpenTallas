@@ -31,6 +31,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 from die_cluster import boundary as CB  # noqa: E402
+from die_repeaters import step as REP  # noqa: E402
 PERIOD = dict(stream=833.333, hbm=1024.0, serial=1111.111)
 
 
@@ -41,7 +42,13 @@ def main():
     ap.add_argument('--rect', required=True, type=float, nargs=4)
     ap.add_argument('--name', required=True)
     ap.add_argument('--out', required=True, type=Path)
-    ap.add_argument('--reach', type=float, default=450.0)
+    ap.add_argument('--reach', type=float, default=450.0,
+                    help='die reach (um): nets longer are a planning defect (missing relay register), measured + reported '
+                         'by the shared repeater step; with --legacy-repair it is the old repair max wire')
+    ap.add_argument('--repeater-max-wire-um', type=float, default=None,
+                    help='shared die-net repeater step max wire (default 160 um, tools/die_repeaters/step.py)')
+    ap.add_argument('--legacy-repair', action='store_true',
+                    help='old repair_design -max_wire_length REACH (no native-aware repeaters; reproduces pre-10-17 pilots)')
     ap.add_argument('--congestion-iterations', type=int, default=10)
     ap.add_argument('--body-policy', choices=('cut', 'snap', 'grow', 'fail'), default='cut')
     ap.add_argument('--cts', choices=('none', 'tritoncts'), default='none',
@@ -221,6 +228,13 @@ def main():
                   f'if {{[llength $pi]}} {{ set_input_delay {t:.1f} -clock {dom} [get_ports $pi] }}\n'
                   f'set fo [open /work/io_{dom}_out.txt]; set po [read $fo]; close $fo\n'
                   f'if {{[llength $po]}} {{ set_output_delay {t:.1f} -clock {dom} [get_ports $po] }}')
+    # DIE-FLOW 10-17 (owner 0cl): the shared native-aware die-net repeater step (buffers only, registers / relays
+    # unchanged and checked, clock/reset ports untouched); the cluster legalises the buffers itself (legalize_tcl)
+    rep_tcl = (f'repair_design -max_wire_length {a.reach:.0f}\n' if a.legacy_repair else
+               REP.tcl_call('cluster', '/work/out/die_repeaters.json', legalize='none', reach_um=a.reach,
+                            max_wire_um=a.repeater_max_wire_um))
+    if not a.legacy_repair:
+        REP.copy(out)
     tcl = f'''# cluster {a.name} GRT + CTS + TT/FF STA (tools/hbm_die_v15/cluster_case.py) -- NOT_A_DIE_RESULT
 read_lef {plat}/lef/asap7_tech_1x_201209.lef
 read_lef {plat}/lef/asap7sc7p5t_28_R_1x_220121a.lef
@@ -249,8 +263,7 @@ set_wire_rc -signal -layer M6
 {clocks}
 estimate_parasitics -placement
 set r0 [clock seconds]
-repair_design -max_wire_length {a.reach:.0f}
-puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"
+{rep_tcl}puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"
 {CB.legalize_tcl('repair', max_dpl_gsites=a.max_dpl_gsites)}
 {cts}{CB.bounds_check_tcl('/work/out/cluster_bounds.json', 'pre_grt')}set_routing_layers -signal M4-M9 -clock M5-M9
 set_global_routing_layer_adjustment M4-M5 0.30
