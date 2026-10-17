@@ -1,0 +1,51 @@
+{
+ "schema": "opentallas.s81.bfcol_fit.v1",
+ "frame_w_um": 1285.2,
+ "pitch_um": 1293.8400000000001,
+ "hub_blocks_x_um": [
+  10200,
+  21646.32
+ ],
+ "options": {
+  "a_8W_9E": {
+   "w_columns": 8,
+   "e_columns": 9,
+   "frames_per_die": 128,
+   "frames_delta": 0,
+   "w_field_end_um": 10790.1,
+   "e_field_start_um": 21020.3,
+   "s14_each_um": 400.0,
+   "hub_room_um": 9430.2,
+   "hub_span_now_um": 11446.3,
+   "hub_deficit_um": 2016.1,
+   "hub_slack_um": 0.0
+  },
+  "b1_8W_8E": {
+   "w_columns": 8,
+   "e_columns": 8,
+   "frames_per_die": 120,
+   "frames_delta": -8,
+   "w_field_end_um": 10790.1,
+   "e_field_start_um": 22314.1,
+   "s14_each_um": 400.0,
+   "hub_room_um": 10724.0,
+   "hub_span_now_um": 11446.3,
+   "hub_deficit_um": 722.3,
+   "hub_slack_um": 0.0
+  },
+  "b2_7W_8E": {
+   "w_columns": 7,
+   "e_columns": 8,
+   "frames_per_die": 114,
+   "frames_delta": -14,
+   "w_field_end_um": 9496.2,
+   "e_field_start_um": 22314.1,
+   "s14_each_um": 400.0,
+   "hub_room_um": 12017.9,
+   "hub_span_now_um": 11446.3,
+   "hub_deficit_um": 0.0,
+   "hub_slack_um": 571.6
+  }
+ },
+ "flag": "b1/b2 change frames per die: stage map (128 regions) and ROM/layer mapping must be re-partitioned by the compiler / model owner"
+}
