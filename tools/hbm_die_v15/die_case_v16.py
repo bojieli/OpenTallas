@@ -246,6 +246,7 @@ def main():
                          'blocks; xload ctlw at the Manhattan minimax point of its SM peers')
     a = ap.parse_args()
     C = json.loads(a.contract.read_text()); G = json.loads(a.grants.read_text()); P = json.loads(a.plan.read_text())
+    import reticle; RETICLE = reticle.require_contract(G, "die_case_v16 GEN")   # OWNER 10-16: >= 0.5 mm margin in W AND H
     V = json.loads((a.views / 'views.json').read_text())
     param_aliases = validate_view_coverage(C['instances'], V, a.diagnostic_param_alias)
     lanes = json.loads(a.lanes.read_text())
@@ -782,7 +783,7 @@ def main():
                     label=f"NOT_A_DIE_RESULT (source contract has {exposed.get('ports', 'unknown')} exposed "
                           f"input ports / {exposed.get('bits', 'unknown')} b; SYNTH views are estimates; "
                           'full native/physical qualification remains OPEN)', die_um=[W, H], contract=str(a.contract),
-                    plan=str(a.plan), grants=str(a.grants), lanes=str(a.lanes), views=kinds, flags=flags,
+                    plan=str(a.plan), grants=str(a.grants), lanes=str(a.lanes), views=kinds, flags=flags, reticle=RETICLE,
                     excluded_cells=excluded, excluded_instances=out_inst,
                     excluded_instance_details=exclusion_details,
                     instances={c: sum(1 for n in inst if cell_of[n] == c) for c in kinds},

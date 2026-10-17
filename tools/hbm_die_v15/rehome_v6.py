@@ -93,6 +93,7 @@ def main():
     slots = C['slots']
     die = slots[0]; assert die['kind'] == 'die'
     die['outline'] = dict(w=round(W, 3), h=round(H, 3))
+    import reticle; reticle.require_die(W, H, 'rehome_v6.py')   # OWNER 10-16: >= 0.5 mm in W AND H
     die['notes'] = 'v6b die (H-DIE 0300 10-16, OWNER 02:15: grow where area fixes a measured fit/congestion problem)'
     log = dict(mapped=[], resized=[], translated=[], new=[])
     S = {s['name']: s for s in slots}
