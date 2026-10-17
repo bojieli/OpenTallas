@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkd_static_kv_return_slots_mc_r3-mc3b-d4c0e5fee/record/views/qkd_static_kv_return_slots_mc/provenance/qkd_static_kv_return_slots_mc.candidate.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkd_static_kv_return_slots_mc_r5-mc5b-ae9c68079/record/views/qkd_static_kv_return_slots_mc/provenance/qkd_static_kv_return_slots_mc.candidate.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [],
- "summary": "qkd_static_kv_return_slots_mc 194.4 x 216.0: PG M5 VDD 36 stripes (97% spread, 100% cov) / VSS 36 stripes (97% spread, 100% cov); strap M6; face pins 645 blocked-above 0 blocked-same 0; clock ck insertion 256 ps; clock pll_hbm insertion 274 ps; clock pll_hbm_data[3] insertion 259 ps; clock pll_hbm_data[2] insertion 245 ps; clock pll_hbm_data[1] insertion 225 ps; clock pll_hbm_data[0] insertion 194 ps; pockets M5 0 (closed)",
+ "summary": "qkd_static_kv_return_slots_mc 194.4 x 216.0: PG M5 VDD 36 stripes (97% spread, 100% cov) / VSS 36 stripes (97% spread, 100% cov); strap M6; face pins 645 blocked-above 0 blocked-same 0; clock ck insertion 246 ps; clock pll_hbm insertion 338 ps; clock pll_hbm_data[3] insertion 329 ps; clock pll_hbm_data[2] insertion 290 ps; clock pll_hbm_data[1] insertion 236 ps; clock pll_hbm_data[0] insertion 205 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "qkd_static_kv_return_slots_mc",
   "W": 194.4,
@@ -47,28 +47,28 @@
   },
   "clock_insertion": {
    "ck": {
-    "max_ps": 255.52,
-    "min_ps": 195.16
+    "max_ps": 245.83,
+    "min_ps": 192.52
    },
    "pll_hbm": {
-    "max_ps": 273.92,
-    "min_ps": 221.71
+    "max_ps": 337.84,
+    "min_ps": 259.04
    },
    "pll_hbm_data[3]": {
-    "max_ps": 258.97,
-    "min_ps": 192.41
+    "max_ps": 329.16,
+    "min_ps": 260.67
    },
    "pll_hbm_data[2]": {
-    "max_ps": 244.53,
-    "min_ps": 183.46
+    "max_ps": 290.1,
+    "min_ps": 233.6
    },
    "pll_hbm_data[1]": {
-    "max_ps": 224.57,
-    "min_ps": 178.81
+    "max_ps": 235.99,
+    "min_ps": 180.94
    },
    "pll_hbm_data[0]": {
-    "max_ps": 193.56,
-    "min_ps": 121.79
+    "max_ps": 204.61,
+    "min_ps": 159.39
    }
   },
   "pockets": {
@@ -77,7 +77,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 5329
+    "added": 5420
    },
    "count": 0,
    "area_um2": 0,
