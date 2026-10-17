@@ -56,6 +56,25 @@ class BootJoin(unittest.TestCase):
         with self.assertRaises(ValueError):
             B.boot_cdc_join(g)
 
+    def test_host_admission_join(self):
+        g, _ = K.template()
+        B.boot_join(g)
+        B.boot_cdc_join(g)
+        bound, joins = B.host_admission_join(g)
+        ins = {i['name']: i for i in g['instances']}
+        self.assertEqual(ins['boot']['inputs']['execution_active'], [dict(instance='d2d', port='execution_active', lo=0, width=1)])
+        self.assertEqual([x['instance'] for x in ins['boot']['inputs']['local_configured']], ['ownership', 'wprg', 'layer_programme'])
+        self.assertEqual({j['consumer'] for j in joins if j['consumer'].startswith('boot.')},
+                         {f'boot.{p}' for p, v in ins['boot']['inputs'].items() if v is None and p not in ('ck', 'rst_n')})
+        self.assertIn(dict(consumer='host.static_setup_ready', producer='boot.setup_ready', width=1,
+                           host_master=B.HOST[0] + ':' + B.HOST[1]), joins)
+
+    def test_pt_host_root_refused(self):                               # mutant: the pre-swap HOST root has no boot ports
+        g, _ = K.template()
+        B.boot_join(g)
+        with self.assertRaises(ValueError):
+            B.host_admission_join(g, host=('rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv', 'qkd_host_root_pt'))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -573,7 +573,17 @@ SLICE_W, SLICE_H = 129.6, 345.6
 # one 21.6-um routing cell W of the slice column: the write-queue controller (172.8 in the 216-um landing channel) otherwise
 # closes the channel at mid-stack and the N stacks' slot-0 slices have no die route to the root (first v1.4 plan)
 SLICE_GAP = 21.6
-HOST_RT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv'
+# KVJ-A 10-17 (0cx COORD decision, kv_static_join_plan item 3): the die's HOST root master is qkd_host_root_admission, the
+# successor of qkd_host_root_pt (same generated partition: qkd_host_ingest_chain_pt + the 128 die slices; adds the HOST
+# image replay outputs boot_pr / boot_image_* that drive qkd_static_kv_boot_dispatch, static_setup_ready, the native
+# ownership admission native_reserved / ownership_valid -> host_admission_open / host_launch_quiet / host_deferred, and the
+# exported upstream debt host_upstream_quiet).  Its host_interface_idle is the pt root's host_drained_local (renamed; the
+# die port keeps the name host_drained_local, bundle hhdl unchanged).  The new admission ports are joined to the static
+# subsystem (kv_static_boot_join.HOST_DIE_JOINS) when kv_die --split instantiates it (item 10); until then they are open.
+HOST_RT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv'
+HOST_RT_MODULE = 'qkd_host_root_admission'
+HOST_RT_PT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv'     # qkd_host_ingest_chain_pt (child of the admission root)
+HOST_RT_RENAMED = dict(host_drained_local='host_interface_idle')          # die port -> admission RTL port
 SLICE_DIE_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv'
 # root clock -> PLL family (FIXTURE = tools/qwen_native_host/host_owner.hpp clocks(); INFERRED = no fixture drives it:
 # the HOST owner must confirm, recorded in the v1.4 contract)
@@ -595,7 +605,7 @@ HOST_GROUPS = dict(chain_f='chf', chain_c='chc', chain_a='cha', chain_fault_i='c
 def host_rt_binding():
     import re as _re
     txt = _re.sub(r'//[^\n]*', '', (ROOT / HOST_RT_FILE).read_text())
-    hdr = txt[txt.index('module qkd_host_root_pt'):]
+    hdr = txt[txt.index('module ' + HOST_RT_MODULE + ' '):]
     hdr = hdr[hdr.index(')(') + 2:hdr.index(');')]
     names = [_re.findall(r'[A-Za-z_][A-Za-z_0-9]*', part.strip())[-1] for part in hdr.split(',') if part.strip()]
     ports, sliced = {}, {}
@@ -612,9 +622,11 @@ def host_rt_binding():
             continue
         else:
             ports[n] = [n]
+    for die_port, rtl_port in HOST_RT_RENAMED.items():
+        ports[die_port] = ports.pop(rtl_port)
     ports.update(fdi=['phy_up', 'phy_tx_v', 'phy_tx_flit', 'phy_rx_v', 'phy_rx_flit'], hb=['hb', 'hb_cr'],
                  tk=['local_tk'], kst=['local_kst'])
-    return dict(module='qkd_host_root_pt', file=HOST_RT_FILE, ports=ports, sliced=sliced,
+    return dict(module=HOST_RT_MODULE, file=HOST_RT_FILE, ports=ports, sliced=sliced,
                 parameters=dict(ENABLE_SERVICE=1, ENABLE_NATIVE=1, ENABLE_TOKEN=1, NL=2),   # NL: 2 real link ends (static D2D + host SerDes)
                 classed={'die_id': 'by_design: package strap (tie cells), role = 2 PKG + DIE, set at package assembly',
                          'por_n': 'by_design: package POR pad (off-chip signal)'})

@@ -37,6 +37,16 @@ import kv_static as K
 BOOT = ('rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv', 'qkd_static_kv_boot_dispatch')
 CDC = ('rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv', 'qkd_static_kv_boot_cdc')
 OBS = ('rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv', 'qkd_static_kv_boot_observe')
+# KVJ-A 10-17 item 3: the die's HOST root is qkd_host_root_admission (kv_die.HOST_RT_FILE); it is a kv_die master, not a
+# static-graph instance, so its edges to the static subsystem are recorded as die joins (wired by kv_die --split, item 10)
+HOST = ('rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv', 'qkd_host_root_admission')
+HOST_DIE_JOINS = [   # (consumer instance, port, producer instance, port); 'host' = the die HOST root master
+    ('boot', 'boot_pr', 'host', 'boot_pr'), ('boot', 'boot_image_target', 'host', 'boot_image_target'),
+    ('boot', 'boot_image_ready', 'host', 'boot_image_ready'), ('boot', 'boot_image_fault', 'host', 'boot_image_fault'),
+    ('boot', 'boot_image_epoch', 'host', 'boot_image_epoch'), ('boot', 'boot_image_digest', 'host', 'boot_image_digest'),
+    ('host', 'static_setup_ready', 'boot', 'setup_ready'),
+    ('host', 'native_reserved', 'ownership', 'native_reserved'), ('host', 'ownership_valid', 'ownership', 'ownership_valid'),
+]
 STACKS = ('WS', 'WN', 'ES', 'EN')
 CORE_CFG = {   # sink instance -> (we source, we bit or None, addr source, data source)
     'layer_programme': ('layer_we', None, 'layer_addr', 'layer_data'),
@@ -172,6 +182,72 @@ def boot_cdc_join(graph, root=K.ROOT, boot='boot'):
     return bound
 
 
+def host_admission_join(graph, root=K.ROOT, boot='boot', host=HOST):
+    """KVJ-A 10-17 item 3: dispatcher inputs from inside the static graph (execution_active <- the static D2D end's svc
+    execution_active, local_configured <- {ownership, writer programme, layer programme}.configured) and the width-checked
+    die joins to the HOST root admission master (boot_pr / boot_image_*, static_setup_ready, native_reserved /
+    ownership_valid).  Refuses a HOST root without the admission ports (e.g. qkd_host_root_pt)."""
+    ins = {i['name']: i for i in graph['instances']}
+    if boot not in ins:
+        raise ValueError('boot_join first')
+    hp = K.ports(K.source(*host, root), {k: v for k, v in _host_params(host, root).items()})
+
+    def pw(n, p):
+        if n == 'host':
+            if p not in hp:
+                raise ValueError(f'HOST root {host[1]} has no port {p}: admission variant required')
+            return hp[p]
+        i = ins[n]
+        ss = K.source(i['source'], i['module'], root)
+        return K.ports(ss, {k: v for k, v in i['parameters'].items() if k in ss['parameters']})[p]
+    links = [i['name'] for i in graph['instances'] if i['role'] == 'link']
+    if len(links) != 1:
+        raise ValueError('one static D2D end required')
+    bound = []
+    b = ins[boot]
+    for port, items in (('execution_active', [(links[0], 'execution_active')]),
+                        ('local_configured', [('ownership', 'configured'), ('wprg', 'configured'), ('layer_programme', 'configured')])):
+        its = []
+        for n, sp in items:
+            if pw(n, sp)['direction'] != 'output':
+                raise ValueError(f'{n}.{sp} is not an output')
+            its.append(dict(instance=n, port=sp, lo=0, width=pw(n, sp)['width']))
+        if b['inputs'].get(port) is not None or sum(x['width'] for x in its) != pw(boot, port)['width']:
+            raise ValueError(f'{boot}.{port}: already bound or width mismatch')
+        b['inputs'][port] = its
+        bound.append(f'{boot}.{port}')
+    joins = []
+    for cn, cp, pn, pp in HOST_DIE_JOINS:
+        c, p = pw(cn, cp), pw(pn, pp)
+        if c['direction'] != 'input' or p['direction'] != 'output' or c['width'] != p['width']:
+            raise ValueError(f'die join {pn}.{pp} -> {cn}.{cp}: direction/width mismatch')
+        joins.append(dict(consumer=f'{cn}.{cp}', producer=f'{pn}.{pp}', width=c['width'],
+                          host_master=f'{host[0]}:{host[1]}' if 'host' in (cn, pn) else None))
+    if any(j['consumer'].startswith(boot + '.') and b['inputs'].get(j['consumer'].split('.')[1]) is not None for j in joins):
+        raise ValueError('die-joined dispatcher input already bound in the static graph')
+    graph.setdefault('die_joins', []).extend(joins)
+    graph.setdefault('joins_added', []).append(dict(producer='static D2D svc + core configured flags; HOST admission die joins',
+        bound_inputs=len(bound), die_joins=len(joins),
+        owner_note='KVJ-A 10-17: dispatcher HOST inputs come from the admission root master (kv_die --split wires die_joins, item 10)'))
+    return bound, joins
+
+
+def _host_params(host, root):
+    spec = K.source(*host, root)
+    out = {}
+    for k in spec['parameters']:
+        out[k] = dict(ENABLE_SERVICE=1, ENABLE_NATIVE=1, ENABLE_TOKEN=1, NL=2).get(k)
+    # header defaults for every other parameter (die binding sets only the four above)
+    import re
+    txt = re.sub(r'//[^\n]*', '', (root / host[0]).read_text())
+    hdr = txt[txt.index('module ' + host[1]):]
+    for k in out:
+        if out[k] is None:
+            m = re.search(r'\b' + k + r'\s*=\s*([^,)]+)', hdr)
+            out[k] = int(eval(m.group(1), {})) if m else 0
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--out', type=Path, required=True)
@@ -179,6 +255,7 @@ def main():
     graph, _ = K.template()
     bound = boot_join(graph)
     bound += boot_cdc_join(graph)
+    bound += host_admission_join(graph)[0]
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / 'static_join.template.json').write_text(json.dumps(graph, indent=2) + '\n')
     open_ = {i['name']: [p for p, v in i['inputs'].items() if v is None] for i in graph['instances']}
