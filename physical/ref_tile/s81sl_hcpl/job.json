@@ -1,5 +1,5 @@
 {
- "name": "s81sl_hcpl-s81sl_hcpl-COMMIT",
+ "name": "s81sl_hcpl-s81sl_hcpl-d183dc879",
  "block": "ot_dsrom_su_hcpost_lane_pr",
  "ref_tile": true,
  "owner": "Claude:S81-SLICE",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/s81slice-1017",
-  "commit": "COMMIT",
+  "commit": "d183dc879",
   "extra_paths": [
    "results/rtl/s81_slice_1017/hcpl/mut.log",
    "rtl/hdc/ot_hdc_delay.sv",
@@ -100,7 +100,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81sl_hcpl/s81sl_hcpl-s81sl_hcpl-COMMIT"
+   "to": "results/rtl/ref_tile/s81sl_hcpl/s81sl_hcpl-s81sl_hcpl-d183dc879"
   }
  ],
  "cycles_added": 0,
