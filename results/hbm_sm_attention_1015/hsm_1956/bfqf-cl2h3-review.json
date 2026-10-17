@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.hbm.bfqf.review.v1",
+  "source": "531642618",
+  "qualification": "PRE_ROUTE_ONLY_NOT_SUBMITTED",
+  "gate": "WARN_0FAIL",
+  "setup_wns_ps": -132.5407561481029,
+  "hold_wns_ps": 47.35481451412227,
+  "core_boundary_min_ps": 301.6,
+  "core_boundary_max_ps": 449.1,
+  "core_boundary_spread_ps": 147.5,
+  "core_all_sink_spread_ps": 191.2,
+  "native_qualified": false,
+  "images_personally_viewed": [
+    "physical/ref_tile/hgi_sm_xl2_bfqf/gate_layout/floorplan.png",
+    "physical/ref_tile/hgi_sm_xl2_bfqf/gate_layout/density.png"
+  ],
+  "visual_observation": "Eight SRAMs in two inward-facing columns; logic in central channels, full-width N/S pin rows, no red density bins.",
+  "decision": "Do not submit unchanged: native boundary spread exceeds80ps and measured setup misses. Preserve exact gate result; diagnose data path and core CTS structure before successor. Closed bdring and xcal_t stand per owner18:54."
+}
