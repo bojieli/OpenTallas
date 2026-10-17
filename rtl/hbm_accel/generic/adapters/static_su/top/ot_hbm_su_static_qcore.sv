@@ -30,7 +30,11 @@
 // RF_LOCAL (H-SU 2026-10-16, default 0 = unchanged): the slices register rf_bword/rf_bcmd/rf_dsec once more beside their
 //   bank group (ot_hbm_su_static_pgslice RF_LOCAL); the compiler issues classes 0..3 and 5 one edge earlier, so the
 //   class-5 command must precede the RF drain by exactly TWO edges (checked below). Nothing else here changes.
-module ot_hbm_su_static_qcore #(parameter integer MUT=0,COLLPORT=0,RF_LOCAL=0)(
+// N_Q (H-NETLIST A2P 2026-10-16, default 4 = unchanged): number of SU quarters on the die = RF replicas = RF writers.
+//   The replica takes one relayed write port per source quarter (slot w = the w-th quarter present on the die: A2P keeps
+//   SW, NW -> slots 0, 1); every replica still commits every word on the same edge.  MUT 256 (bench): the last writer
+//   slot ignored (a source quarter's writes never reach this replica).
+module ot_hbm_su_static_qcore #(parameter integer MUT=0,COLLPORT=0,RF_LOCAL=0,N_Q=4)(
  input wire [63:0] clk_rf,
  input wire clk_ctl,clk_red,rst_n,
  input wire [6*9-1:0] rf_rd_cmd,
@@ -38,7 +42,7 @@ module ot_hbm_su_static_qcore #(parameter integer MUT=0,COLLPORT=0,RF_LOCAL=0)(
  input wire [1:0] rf_drain_cmd,               // slice 0 port 0 vmw_cmd[38:37] = {v, src1}: a valid RF (src 1) drain at
                                               // this edge when both are set (decoded here: no AND in the composition)
  input wire [4*32-1:0] slice_x,
- input wire [3:0] rf_wv, input wire [4*8-1:0] rf_wa, input wire [4*32-1:0] rf_wd,
+ input wire [N_Q-1:0] rf_wv, input wire [N_Q*8-1:0] rf_wa, input wire [N_Q*32-1:0] rf_wd,
  output reg [4*32-1:0] rf_bword,
  output reg [4*9-1:0] rf_bcmd,
  output reg [255:0] rf_dsec,
@@ -64,7 +68,7 @@ module ot_hbm_su_static_qcore #(parameter integer MUT=0,COLLPORT=0,RF_LOCAL=0)(
   reg wv; reg [1:0] wa; reg [31:0] wd; reg [2:0] nw; integer w;
   always @*begin
    wv=0;wa=0;wd=0;nw=0;
-   for(w=0;w<4;w=w+1)if(rf_wv[w]&&rf_wa[w*8+:6]==6'(bb))begin wv=1;wa=rf_wa[w*8+6+:2];wd=rf_wd[w*32+:32];nw=nw+3'd1;end
+   for(w=0;w<((MUT==256)?N_Q-1:N_Q);w=w+1)if(rf_wv[w]&&rf_wa[w*8+:6]==6'(bb))begin wv=1;wa=rf_wa[w*8+6+:2];wd=rf_wd[w*32+:32];nw=nw+3'd1;end
   end
   wire rrb=(COLLPORT!=0)&&rr_wv&&rr_wa[2:0]==3'(bb/8);
   wire [31:0] rrd=rr_wd[32*((MUT==128)?7-(bb%8):(bb%8))+:32];

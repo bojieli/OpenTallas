@@ -16,36 +16,41 @@
 // reducer 1 to quarter 3's replica is missing (replica incoherence).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_su_static_top #(
- parameter integer READ_RETURN=10,WRITE_RETURN=7,RF_RELAY=36,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0,PIN_REG=0,RF_LOCAL=0
+ parameter integer READ_RETURN=10,WRITE_RETURN=7,RF_RELAY=36,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0,PIN_REG=0,RF_LOCAL=0,
+ // N_Q / QIDS (H-NETLIST A2P 2026-10-16; default 4 quarters, QIDs 0..3 = unchanged): the SU quarters present on the die.
+ // Quarter q (port slices q*...) is quadrant QIDS[2q+:2] (A2P half die: N_Q=2, QIDS=4'b10_00 = SW, NW).  The RF relay
+ // network is N_Q x N_Q (every reducer to every replica, same depth): the two-source real form, not a 4-source net with
+ // two silent sources.  MUT 8: the route from reducer 1 to the LAST quarter's replica is missing.
+ parameter integer N_Q=4, parameter [2*N_Q-1:0] QIDS=8'b11_10_01_00
 )(
- input wire [15:0] pg_clk,                       // 4 port-group roots per quarter
- input wire [4095:0] clk_lane, input wire [2047:0] clk_insert, input wire [511:0] rst_lane_n,
- input wire [63:0] clk_bcast, rst_bcast_n,
- input wire [511:0] clk_bank,
- input wire [3071:0] clk_bank_macro, // six separately delivered SRAM clocks per store bank
- input wire [255:0] clk_rf,
- input wire [15:0] clk_ctl,                      // one root per port-group slice
- input wire [3:0] clk_core,clk_red,
+ input wire [4*N_Q-1:0] pg_clk,                       // 4 port-group roots per quarter
+ input wire [N_Q*1024-1:0] clk_lane, input wire [N_Q*512-1:0] clk_insert, input wire [N_Q*128-1:0] rst_lane_n,
+ input wire [N_Q*16-1:0] clk_bcast, rst_bcast_n,
+ input wire [N_Q*128-1:0] clk_bank,
+ input wire [N_Q*768-1:0] clk_bank_macro, // six separately delivered SRAM clocks per store bank
+ input wire [N_Q*64-1:0] clk_rf,
+ input wire [N_Q*4-1:0] clk_ctl,                      // one root per port-group slice
+ input wire [N_Q-1:0] clk_core,clk_red,
  input wire [5:0] clk_side,
- input wire [3:0] clk_relay,                     // one root per source quarter's relay routes
+ input wire [N_Q-1:0] clk_relay,                     // one root per source quarter's relay routes
  input wire rst_n,
  input wire bridge_rst_n, // phase-zero reset for MULTIRATE boundary only
- input wire [4*1742-1:0] control,
- input wire [4*8*30-1:0] vmr_cmd,
- input wire [4*8*39-1:0] vmw_cmd,
- input wire [4*6*9-1:0] rf_rd_cmd,
- input wire [4*74-1:0] red_cmd,
- output wire [4*8*17-1:0] lg_rq, output wire [4*8*281-1:0] lg_wq,
- input wire [4*8*257-1:0] lg_rr, input wire [31:0] lg_w_done,
- output wire [19:0] fault                        // per quarter {core, slice 3..0}
+ input wire [N_Q*1742-1:0] control,
+ input wire [N_Q*8*30-1:0] vmr_cmd,
+ input wire [N_Q*8*39-1:0] vmw_cmd,
+ input wire [N_Q*6*9-1:0] rf_rd_cmd,
+ input wire [N_Q*74-1:0] red_cmd,
+ output wire [N_Q*8*17-1:0] lg_rq, output wire [N_Q*8*281-1:0] lg_wq,
+ input wire [N_Q*8*257-1:0] lg_rr, input wire [N_Q*8-1:0] lg_w_done,
+ output wire [N_Q*5-1:0] fault                        // per quarter {core, slice 3..0}
 );
  localparam integer QMUT=(MUT==8)?0:MUT;
- wire [3:0] red_sv,red_rf_v; wire [4*32-1:0] red_tag,red_x;
+ wire [N_Q-1:0] red_sv,red_rf_v; wire [N_Q*32-1:0] red_tag,red_x;
  // relay[w][d]: reducer w -> replica d, RF_RELAY stages of {v, addr8, data32}
- wire [40:0] rly_out [0:3][0:3];
- for(genvar w=0;w<4;w=w+1)begin:g_src
+ wire [40:0] rly_out [0:N_Q-1][0:N_Q-1];
+ for(genvar w=0;w<N_Q;w=w+1)begin:g_src
   wire [40:0] head={red_rf_v[w],red_tag[w*32+:8],red_x[w*32+:32]};   // red_rf_v = red_sv && tag[8], decoded in the core
-  for(genvar d=0;d<4;d=d+1)begin:g_dst
+  for(genvar d=0;d<N_Q;d=d+1)begin:g_dst
    if(RF_RELAY==0)begin:g_wire
     assign rly_out[w][d]=head;
    end else begin:g_stages
@@ -55,16 +60,16 @@ module ot_hbm_su_static_top #(
      if(!rst_n)for(k=0;k<RF_RELAY;k=k+1)st_v[k]<=1'b0;
      else begin st_v[0]<=head[40];for(k=1;k<RF_RELAY;k=k+1)st_v[k]<=st_v[k-1]; end
     always @(posedge clk_relay[w])begin st_d[0]<=head[39:0];for(k=1;k<RF_RELAY;k=k+1)st_d[k]<=st_d[k-1]; end
-    assign rly_out[w][d]={st_v[RF_RELAY-1]&&!(MUT==8&&w==1&&d==3),st_d[RF_RELAY-1]};
+    assign rly_out[w][d]={st_v[RF_RELAY-1]&&!(MUT==8&&w==1&&d==N_Q-1),st_d[RF_RELAY-1]};
    end
   end
  end
- for(genvar q=0;q<4;q=q+1)begin:g_q
-  wire [3:0] wv; wire [31:0] wa; wire [127:0] wd;
-  for(genvar w=0;w<4;w=w+1)begin:g_w
+ for(genvar q=0;q<N_Q;q=q+1)begin:g_q
+  wire [N_Q-1:0] wv; wire [N_Q*8-1:0] wa; wire [N_Q*32-1:0] wd;
+  for(genvar w=0;w<N_Q;w=w+1)begin:g_w
    assign wv[w]=rly_out[w][q][40]; assign wa[w*8+:8]=rly_out[w][q][39:32]; assign wd[w*32+:32]=rly_out[w][q][31:0];
   end
-  ot_hbm_su_static_quarter #(.QID(q),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),
+  ot_hbm_su_static_quarter #(.QID(QIDS[2*q+:2]),.N_Q(N_Q),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),
    .FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(QMUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG),.RF_LOCAL(RF_LOCAL)) u_quarter(
    .pg_clk(pg_clk[q*4+:4]),.clk_lane(clk_lane[q*1024+:1024]),.clk_insert(clk_insert[q*512+:512]),
    .rst_lane_n(rst_lane_n[q*128+:128]),.clk_bcast(clk_bcast[q*16+:16]),.rst_bcast_n(rst_bcast_n[q*16+:16]),
