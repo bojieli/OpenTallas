@@ -2423,6 +2423,11 @@ def _relays(m):
             st_['min_k'] = stages[hb_] + int(pvt_plan()['chunk_delta_vs_header'][str(g_)])
             st_['exact_k'] = st_['min_k']
             st_['wide'] = True
+            # spread the stages evenly along the route (hop = route / stages) so the DELTA padding does not bunch at the
+            # pair face (kvs13l-pvt: 'no spot for pvc_WS_2_4 stage 16' next to the face pin)
+            L_ = (len(path) + 1) * G
+            if st_['min_k'] > 0:
+                st_['hop_override'] = max(2 * G, L_ / st_['min_k'])
         offs_wide = [(0, 0)] + [(i * G, j * G) for r_ in range(1, 11) for i in range(-r_, r_ + 1) for j in range(-r_, r_ + 1)
                                 if max(abs(i), abs(j)) == r_]
         if bid in tree_meta:      # v1.4.2: a 1-bit tree hop may sit up to 24 grid cells off its path
@@ -2456,6 +2461,8 @@ def _relays(m):
         def reach_():
             # the PV pair words keep the plain reach (their in-array distribution is the PV pair successor's; the width
             # class moved pvin's planned end off the r6 W-equalised face pins: kvt13k-a 3 unrepaired 1.2-4.2 mm hops)
+            if st_.get('hop_override'):
+                return min(reach0_(), st_['hop_override'])
             return min(reach0_(), width_reach(bits)) if bid not in tree_meta and not bid.startswith('pv') else reach0_()
 
         def reach0_():
