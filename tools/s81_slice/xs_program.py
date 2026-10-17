@@ -38,6 +38,7 @@ VM_LAT = 4            # VM response data at iteration T_START + 4 + t (the contr
 HE_LAT = 9            # stream request t -> stream head (he) loaded at edge T_START + 9 + t
 XS_LAG = 3            # xs: is_d pin edge i -> controller GO edge i + OFF + 3 (pin, delay line, output register)
 ND = 8                # xs delay-line depth
+XS_OUT = 1            # xs output relay stage (frame-word pin flops)
 
 
 def phase_word(P, ph):
@@ -319,7 +320,7 @@ def main():
                 phases=[dict(ph=pl["p"]["ph"], tag=pl["tag"], np=pl["np"], fam=pl["fam"], K=pl["p"]["K"],
                              nb=pl["p"]["nb"], rows=pl["p"]["rows"], accept=pl["accept"], s0=pl["s0"], s1=pl["s1"])
                         for pl in plan],
-                gathers=info, expected_xs_minus_ref=off + XS_LAG - 8)
+                gathers=info, expected_xs_minus_ref=off + XS_LAG - 8 + XS_OUT)
     (out / "meta.json").write_text(json.dumps(meta, indent=1) + "\n")
     print(f"XS_PROGRAM stage={a.stage_dir.name} phases={[pl['p']['ph'] for pl in plan]} cal_rows={cal_len} "
           f"arrivals={len(arrivals)} off={off} off_load={off_load} order={a.order} slice={a.slice} end={end_it} "

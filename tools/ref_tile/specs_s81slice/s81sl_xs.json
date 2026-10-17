@@ -1,0 +1,488 @@
+{
+ "name": "s81sl_xs",
+ "top": "ot_s81sl_xs",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/v41rom/ot_v41_kreg.sv",
+  "rtl/common/ot_prefix.sv",
+  "rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_stream_rom4_sel.sv",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs_ctl.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v"
+ ],
+ "defines": [
+  "DSFD_PQ_STATIC_X2"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 583.2,
+  "h": 483.84
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    172.8,
+    129.6
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[0].g_mac[0].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    172.8,
+    170.688
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[0].g_mac[1].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    172.8,
+    211.776
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[0].g_mac[2].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    172.8,
+    252.864
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[0].g_mac[3].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    172.8,
+    293.952
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[0].g_mac[4].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    172.8,
+    335.04
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[0].g_mac[5].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    172.8,
+    376.128
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[0].g_mac[6].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    172.8,
+    417.216
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[0].g_mac[7].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    302.4,
+    129.6
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[1].g_mac[0].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    302.4,
+    170.688
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[1].g_mac[1].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    302.4,
+    211.776
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[1].g_mac[2].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    302.4,
+    252.864
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[1].g_mac[3].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    302.4,
+    293.952
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[1].g_mac[4].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    302.4,
+    335.04
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[1].g_mac[5].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    302.4,
+    376.128
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[1].g_mac[6].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    302.4,
+    417.216
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[1].g_mac[7].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    432.0,
+    129.6
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[2].g_mac[0].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    432.0,
+    170.688
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[2].g_mac[1].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    432.0,
+    211.776
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[2].g_mac[2].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    432.0,
+    252.864
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[2].g_mac[3].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    432.0,
+    293.952
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[2].g_mac[4].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    432.0,
+    335.04
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[2].g_mac[5].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    432.0,
+    376.128
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[2].g_mac[6].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    432.0,
+    417.216
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "g_bank[2].g_mac[7].u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    43.2,
+    129.6
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "u_phase0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    43.2,
+    216.0
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "u_cal_action"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    43.2,
+    302.4
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "u_cal_time"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    43.2,
+    388.8
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "u_stream0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    108.0,
+    129.6
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "u_stream1"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    108.0,
+    216.0
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "u_stream2"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    108.0,
+    302.4
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "u_stream3"
+  }
+ ],
+ "pins": {
+  "S": [
+   "g_d"
+  ],
+  "W": [
+   "g_v",
+   "g_fam",
+   "g_idx",
+   "is_v",
+   "is_d"
+  ],
+  "E": [
+   "clk",
+   "rst_n",
+   "xw_v",
+   "fault",
+   "xw_d"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: every data input lands in a pin flop (gv_q/gf_q/gi_q/gd_q, isv_q/isd_q) and every output leaves a flop (xw_d = dsfd_pq_lx xw register, xw_v = its bit 0, fault register); recipe-3 pin_regs would add a second unpriced stage on the ring-to-buffer and frame-word paths (the slice contract: inputs land in a flop, outputs leave a flop)."
+ },
+ "clock": "cts",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "pin_balance": {
+   "group_max": 32
+  }
+ },
+ "structural_change": "S81-SLICE (stream 0cm, 10-17): new leaf, the slice x streamer. 24 x ot_sram_1r1w_128x256 x buffer (one write port per ring source, skewed BF16 columns), 7 x ot_rom_4096x72_m8 (phase 0, stream 0..3, calendar action/time; images identical in all slices), production static PQ stream path (ot_s81_pq_ctl_static_native pruned of VM/AQ/return counting), fixed per-slice ring-arrival delay, dsfd_pq_lx verbatim + output relay. Floorplan v2 (583 x 480 um): one 8-macro abutted column per ring source directly above that source's third of the S-face g_d pins; ROMs in two W columns; std-cell band L-shaped along S (beat pin flops, write rotator, read muxes, controller) and E (frame-word pin flops); clock entry at the SE corner of the band; kept select copies (ot_v41_kreg) for every wide mux select; 8 reset regions.",
+ "job": {
+  "owner": "Claude:S81-SLICE-XS",
+  "branch": "claude/s81sl-xs-1017",
+  "tag": "x1",
+  "purpose": "S81-SLICE xs sub-leaf: pre-route gate (recipe 4, die hold budget)",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/lib",
+   "rtl/v41rom",
+   "rtl/common",
+   "tools/s81_slice",
+   "tools/s81_static_control",
+   "tools/s81/pq_static_calendar_abi.json",
+   "physical/s81_pq_hier/pinned",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "results/rtl/dsrom_recovery_20261004/immutable_fullcatalog/stage0",
+   "results/rtl/dsrom_recovery_20261004/immutable_fullcatalog/stage3"
+  ],
+  "benches": [
+   {
+    "name": "xs_lockstep",
+    "cmd": "bash tools/s81_slice/xs_bench.sh {RUN}/xs_bench",
+    "expect": "pass",
+    "pass_regex": "^XS_BENCH PASS$",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/s81sl_xs/views",
+  "record_to": "results/rtl/ref_tile/s81sl_xs"
+ },
+ "pin_ranges": {
+  "g_d": [
+   10.8,
+   572.4
+  ],
+  "clk": [
+   10.8,
+   12.96
+  ],
+  "rst_n": [
+   15.12,
+   17.28
+  ],
+  "xw_v": [
+   19.44,
+   21.6
+  ],
+  "fault": [
+   23.76,
+   25.92
+  ],
+  "xw_d": [
+   30.24,
+   468.72
+  ],
+  "g_v": [
+   10.8,
+   30.24
+  ],
+  "g_fam": [
+   32.4,
+   51.84
+  ],
+  "g_idx": [
+   54.0,
+   108.0
+  ],
+  "is_v": [
+   110.16,
+   116.64
+  ],
+  "is_d": [
+   118.8,
+   468.72
+  ]
+ }
+}

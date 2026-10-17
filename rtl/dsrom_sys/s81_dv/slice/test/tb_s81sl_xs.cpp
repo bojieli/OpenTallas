@@ -2,7 +2,7 @@
 // and the slice x streamer (Vxs = ot_s81sl_xs) run the same production ROM images and calendar; the reference loads x
 // over its VM rows, the xs receives it as ring all-gather beats (q family quantised by the production act-quant RTL
 // Vaq = ot_dsrom_aq12t; BF16 family rounded RNE exactly as the production IX loader).  Every cycle's 1,101-b frame
-// word of the xs must equal the reference's, at reference time + (OFF + 3 - 8).
+// word of the xs must equal the reference's, at reference time + (OFF + 3 - 8 + 1): issuer pin/delay/out edges 3, no QB align / bc relays (-8), output relay (+1).
 //   tb +work=DIR      (prog.txt, meta.json, x<gid>.hex, ROM via maps in DIR; +OT_ROM_DIR=DIR is passed by the script)
 #include <cstdio>
 #include <cstdint>
@@ -165,7 +165,7 @@ int main(int argc, char** argv) {
     // latency: the tight gather (gid 0, q, buffer parity 0, read by phase 0 only) -- arrival pin edge -> first xs frame
     // word whose q0 / q1 reads that beat
     int lat_min = 1 << 30, lat_beat = -1; std::map<int, int> firstuse;
-    int w0 = TS + 16 + OFF + jint(meta, "s0"), w1 = TS + 16 + OFF + jint(meta, "s1");
+    int w0 = TS + 17 + OFF + jint(meta, "s0"), w1 = TS + 17 + OFF + jint(meta, "s1");
     for (int i = w0; i < w1 && i <= END; i++) {
         auto& w = XW[i];
         if (!(w[0] & 1) || !getbits(w, 283, 1)) continue;
