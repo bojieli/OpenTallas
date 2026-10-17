@@ -54,11 +54,16 @@ def load(path):
             f = ln.rstrip("\n").split("\t")
             k = f[0]
             if k == "R":
+                if f[1] in nodes and nodes[f[1]]["kind"] == "tile":
+                    continue      # a clock defined ON a tile entry pin: keep the entry (it is its own root)
                 nodes[f[1]] = dict(kind="root", cell=None, x=float(f[2]), y=float(f[3]), parent=None,
                                    sta_max=num(f[4]), sta_min=num(f[5]))
             elif k in ("B", "T", "F"):
+                # a clock DEFINED on the entry pin itself (Qwen KV ideal sink clocks: T cdc_EN_0/hclk[0] with parent
+                # cdc_EN_0/hclk[0]) is its own root: a self-parent made ancestors() loop forever (kvs13k OOM, empty report)
                 nodes[f[1]] = dict(kind={"B": "cell", "T": "tile", "F": "flop"}[k], cell=f[2], x=float(f[3]),
-                                   y=float(f[4]), parent=f[5], sta_max=num(f[6]), sta_min=num(f[7]))
+                                   y=float(f[4]), parent=(None if f[5] in ("-", f[1]) else f[5]),
+                                   sta_max=num(f[6]), sta_min=num(f[7]))
             elif k == "P":
                 pairs.append((f[1], f[2], (f[3] if len(f) > 3 else "") + ("|directed" if len(f) > 4 and f[4] == "d" else "")))
             elif k == "S":
@@ -72,7 +77,7 @@ def model_arrivals(nodes):
         stack = []
         while n not in arr:
             p = nodes[n]["parent"]
-            if p is None or p not in nodes:
+            if p is None or p not in nodes or p in stack or p == n:
                 arr[n] = 0.0
                 break
             stack.append(n)
@@ -89,8 +94,9 @@ def model_arrivals(nodes):
 
 
 def ancestors(nodes, n):
-    out = []
-    while n is not None and n in nodes:
+    out, seen = [], set()
+    while n is not None and n in nodes and n not in seen:   # cycle-safe
+        seen.add(n)
         out.append(n)
         n = nodes[n]["parent"]
     return out
@@ -300,10 +306,8 @@ def neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes):
             for r_ in roots:
                 fam[r_] = f
     def root_of(e):
-        n = e
-        while nodes[n]["parent"] in nodes:
-            n = nodes[n]["parent"]
-        return n
+        a = ancestors(nodes, e)
+        return a[-1] if a else e
     def Rf(e, ci):
         if not R:
             return 0.0
@@ -366,6 +370,10 @@ def table(r, top=20):
              f"{c['die_flops']} die flops, roots {', '.join(c['roots'])}")
     def s(x):
         return "n/a" if not x else f"min {x['min']} / med {x['median']} / p90 {x['p90']} / max {x['max']} (spread {x['spread']})"
+    if c["clock_cells"] == 0 and (ins["sta_max_ps"] or {}).get("max", 0) == 0:
+        L.append("VERDICT: NO PHYSICAL DIE CLOCK -- every entry has 0 ps STA insertion and the die has no clock cells "
+                 "(ideal / per-pin defined clocks); delivery and neighbour skew are NOT measured. Build the die clock "
+                 "with tools/die_clock/build.py and check its arrivals (METHOD results/arch/die_clock_method_1016).")
     L.append(f"insertion model ps : {s(ins['model_ps'])}")
     L.append(f"insertion STA ps   : {s(ins['sta_max_ps'])}  [late]; {s(ins['sta_min_ps'])} [early]")
     L.append(f"tree levels        : {s(ins['levels'])}")
