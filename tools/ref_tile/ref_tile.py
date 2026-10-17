@@ -87,13 +87,23 @@ FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
 #      table is $RESULTS_DIR/ot_pin_regs.tsv of the route).  io_flop_at_pins anchors them at the pin face.  Opt-out only
 #      with a recorded reason: "pin_regs": {"enable": false, "reason": "..."}; per-port: "pin_regs": {"exclude":
 #      "<regexp>", "reason": "..."}; a multi-clock tile names the data clock: "pin_regs": {"clock": "<port>"}.
-RECIPE_LATEST = 3
+#   4  (coordinator 2026-10-16, owner-approved die boundary hold budget, FLOW-HOLD) recipe 3 + "hold_budget": "die" for
+#      leaf tiles: flop-first pins (no inhold / outhold pads), boundary min delays credit the guaranteed launch C, the
+#      link's skew / uncertainty / shortfall are the die's (results/arch/boundary_hold_budget_1016/RULE.md).  A tile that
+#      does not qualify (CDC / async leaf, unregistered pin) opts out with "hold_budget": "tile" + "hold_budget_reason".
+RECIPE_LATEST = 4
 PIN_REGS_RULE = "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin"
 RECIPE_HOLD_PAD = "HB2xp67_ASAP7_75t_R"
 HOLD_PAD_STRONG = "HB4xp67_ASAP7_75t_R"
 PIN_REG_SPLIT_TCL = "physical/common_flow/pin_reg_split.tcl"
 RECIPE_HOLD_MARGIN_NS = 0.030
 RECIPE_HALO_UM = 5.4
+# DIE BOUNDARY HOLD BUDGET (FLOW-HOLD, owner 2026-10-16 ~22:00; results/arch/boundary_hold_budget_1016/RULE.md).  Spec
+# "hold_budget": "die" (default "tile" = unchanged): a registered-pin tile carries NO boundary hold padding; the sender
+# guarantees launch >= L_min + C at FF, the receiver credits it, and the link's skew / uncertainty / shortfall belong to
+# the die (relay stations, die FF STA >= 0 on the tiles' ETMs).  Setup constraints are unchanged.
+HOLD_BUDGET_C_PS = 25      # guaranteed FF launch of a pin register (clk->Q, no pad) relative to the tile reference L_min
+HOLD_BUDGET_U_PS = 25      # the tile hold uncertainty, cancelled on boundary paths only (die STA applies it once per link)
 # a spec that already owns the boundary placement keeps it (no default pin hooks on top of it)
 RECIPE_OWN_HOOK_VARS = ("POST_TAPCELL_TCL", "PRE_GLOBAL_PLACE_TCL", "PRE_DETAIL_PLACE_TCL")
 
@@ -144,12 +154,56 @@ def kit_recipe(s: dict, out_root: Path | None = None, spec_path: str | None = No
     return v
 
 
+def hold_budget_die(s: dict) -> bool:
+    """spec "hold_budget": "tile" (default) | "die" (FLOW-HOLD 2026-10-16).  SpecError on an unknown value."""
+    v = s.get("hold_budget", "tile")
+    if v not in ("tile", "die"):
+        raise SpecError(f'spec: hold_budget must be "tile" or "die", got {v!r}')
+    return v == "die"
+
+
+def check_hold_budget(s: dict) -> None:
+    """Qualification of hold_budget "die" (RULE.md section 4): a leaf tile whose every data pin is registered -- recipe 3
+    pin_regs on with no per-port exclusion, or pin_regs off with a recorded reason (the RTL already registers every pin,
+    e.g. hcoll_v5_ctl2) -- and no pin hold pads.  The export is then checked structurally by the native audit (no
+    combinational pin arc; launch / capture budgets), which a non-registered pin fails."""
+    if not hold_budget_die(s):
+        if s.get("recipe", 1) >= 4 and s.get("kind") == "tile" and not str(s.get("hold_budget_reason") or "").strip():
+            raise SpecError('spec: recipe 4 leaf tile with hold_budget "tile" needs "hold_budget_reason" (e.g. CDC leaf)')
+        return
+    pr = s.get("pin_regs") or {}
+    if s.get("kind") != "tile":
+        raise SpecError('spec: hold_budget "die" applies to leaf tiles only (kind "tile")')
+    if not isinstance(pr, dict) or pr.get("exclude") or not (pr.get("enable") or str(pr.get("reason") or "").strip()):
+        raise SpecError('spec: hold_budget "die" needs every data pin registered (pin_regs enabled without exclude, '
+                        'or disabled with the reason the RTL registers them)')
+    if s.get("inhold") or s.get("outhold"):
+        raise SpecError('spec: hold_budget "die" forbids pin hold pads (inhold / outhold): boundary hold is the die\'s')
+
+
+def hold_budget_vars(s: dict) -> list:
+    """route-time env of the die hold budget (pre-CTS..fill hooks read io_ref_skew.sdc through ORFS vars)"""
+    if not hold_budget_die(s):
+        return []
+    return ["--orfs-var OT_IO_HOLD_BUDGET=die", f"--orfs-var OT_BH_LAUNCH_MIN_PS={HOLD_BUDGET_C_PS}",
+            f"--orfs-var OT_BH_TILE_HOLD_UNC_PS={HOLD_BUDGET_U_PS}", f"--orfs-var OT_BH_ROUTE_RELIEF_PS={io_hold_relief_ps(s)}"]
+
+
 def apply_recipe(s: dict, recipe: int) -> dict:
     """write the recipe's defaults into the spec (in place; idempotent).  Recipe 1 leaves the spec untouched."""
     if recipe < 2:
+        if hold_budget_die(s):
+            raise SpecError('spec: hold_budget "die" needs recipe >= 3 (pin registers)')
         return s
     s["recipe"] = recipe
     r = s["route"]
+    if recipe >= 4 and s.get("kind") == "tile":
+        s.setdefault("hold_budget", "die")
+    if hold_budget_die(s):
+        # no pin hold pads (inhold / outhold), boundary repaired at margin 0 against the credited launch
+        s.setdefault("inhold", False)
+        s.setdefault("outhold", False)
+        r.setdefault("io_hold_margin_ns", 0.0)
     r.setdefault("hold_margin_ns", RECIPE_HOLD_MARGIN_NS)
     r.setdefault("macro_halo_um", RECIPE_HALO_UM)
     own = [k for k in RECIPE_OWN_HOOK_VARS if k in s.get("orfs_vars", {})]
@@ -1289,6 +1343,7 @@ def sdc_extra(s: dict) -> str:
 def gen_signoff(s: dict, refglob: str, inter: str) -> str:
     signoff = clock_entry_constraints.signoff_period(s)
     io = "" if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else (ROOT / QDM / "io_ref_skew.sdc").read_text()
+    io = clock_entry_constraints.strip_hold_budget(io, hold_budget_die(s))
     return (f"# {s['name']}: sign-off at {signoff} ps (generated by tools/ref_tile/ref_tile.py; same form as\n"
             f"# {QDM}/jobs/signoff_sdc.py): clock re-created at the real period, propagated, 60 / 25 ps uncertainty,\n"
             f"# die-context boundary io_ref_skew.sdc with this block's REFGLOB / INTER bound.\n"
@@ -1296,6 +1351,9 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
             + "set_propagated_clock [all_clocks]\nset_clock_uncertainty -setup 60 [all_clocks]\n"
             "set_clock_uncertainty -hold 25 [all_clocks]\nset ::env(OT_IO_SKEW) 90\nset ::env(OT_IO_HOLD_SKEW) 50\n"
             + "".join(f"set ::env({k}) {v}\n" for k, v in io_budget_env(s).items())
+            + (f"set ::env(OT_IO_HOLD_BUDGET) die\nset ::env(OT_BH_LAUNCH_MIN_PS) {HOLD_BUDGET_C_PS}\n"
+               f"set ::env(OT_BH_TILE_HOLD_UNC_PS) {HOLD_BUDGET_U_PS}\nset ::env(OT_BH_ROUTE_RELIEF_PS) 0\n"
+               if hold_budget_die(s) else "")
             + f"set ::env(OT_REF_GLOB) {{{refglob}}}\nset ::env(OT_IO_INTER) {{{inter}}}\nset ::env(OT_IO_SKEW_INTER) 150\n"
             + io + sdc_extra(s)
             + ("set ::ot_ce_require_wire 1\n" if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else "")
@@ -1328,6 +1386,12 @@ def gen_signoff_ffrepair(s: dict, refglob: str, inter: str) -> str | None:
     if not d:
         return None
     base = gen_signoff(s, refglob, inter)
+    if hold_budget_die(s):
+        old = "set ::env(OT_BH_ROUTE_RELIEF_PS) 0\n"
+        assert base.count(old) == 1
+        return (f"# {s['name']}: ROUTE-TIME FF hold-repair SDC (NOT sign-off; generated by tools/ref_tile/ref_tile.py): signoff.sdc\n"
+                f"# with the die-budget boundary repaired {d} ps below the core margin (hold_margin - io_hold_margin).\n"
+                + base.replace(old, f"set ::env(OT_BH_ROUTE_RELIEF_PS) {d}\n") + "set ::env(OT_BH_ROUTE_RELIEF_PS) 0\n")
     old = "set ::env(OT_IO_HOLD_SKEW) 50\n"
     assert base.count(old) == 1
     return (f"# {s['name']}: ROUTE-TIME FF hold-repair SDC (NOT sign-off; generated by tools/ref_tile/ref_tile.py): signoff.sdc\n"
@@ -1643,6 +1707,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             if not wrap:
                 extra.append("--step-tcl PRE_DETAIL_PLACE=physical/dsrom_window_source/leaf_inhold_release.tcl")
     extra += hold_pad_vars(s)
+    extra += hold_budget_vars(s)
     extra += pin_regs_vars(s)
     if s.get("keep_pin_regs"):
         extra.append("--orfs-var OT_KEEP_PIN_REGS=1")
@@ -1927,6 +1992,7 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
         write: bool = True) -> dict:
     s = load_spec(spec_path)
     apply_recipe(s, kit_recipe(s, out_root, spec_path))
+    check_hold_budget(s)
     slot = contract_slot(s)
     lc = layer_contract(s, slot)
     if lc.get("m6_pin_grant"):
