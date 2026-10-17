@@ -110,7 +110,7 @@ def region_of(nodes, anc):
     import re
     for a in anc:
         if nodes[a]["kind"] == "cell":
-            m = re.match(r"^dc_(.+)_[LBRTP]\d+(?:_(?:tp|gp)\d+)?$", a)
+            m = re.match(r"^dc_(.+?)_[LBRTP]\d+(?:_(?:tp|gp|hp)\d+)*$", a)
             if m:
                 return m.group(1)
     return anc[-1]
