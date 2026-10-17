@@ -1,0 +1,81 @@
+{
+ "name": "qkd_hr_core_rx",
+ "top": "qkd_host_rx_class_admission",
+ "sources": [
+  "rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv"
+ ],
+ "params": {
+  "MUT": 0,
+  "STRAPPED": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 129.6,
+  "h": 129.6
+ },
+ "macros": [],
+ "pins": {
+  "S": [
+   "rx_v",
+   "rx_d",
+   "rx_cr",
+   "die_id"
+  ],
+  "N": [
+   "ing_v",
+   "ing_cls",
+   "ing_d",
+   "ing_crn"
+  ],
+  "E": [
+   "host_v",
+   "host_d",
+   "host_cr",
+   "ctrl_v",
+   "ctrl_d",
+   "ctrl_cr"
+  ],
+  "W": [
+   "ck",
+   "rst_n",
+   "native_reserved",
+   "ownership_valid",
+   "credit_return",
+   "peer_credit",
+   "fault",
+   "admission_open",
+   "launch_quiet",
+   "deferred"
+  ]
+ },
+ "structural_change": "KVJ-A3 HOST cluster child qkd_hr_core_rx (core family): rx packet class admission (STRAPPED=1 as bound in qkd_host_packet_bundle_admission); W546 rx word from the phy|core CDC leaf on S. Partition plan results/arch/qwen_split_1014/host_root_cluster/partition_plan.md",
+ "kind": "tile",
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": true
+ },
+ "job": {
+  "owner": "Claude:KV-TILES-B/HOSTCL",
+  "branch": "claude/kvj-a3-1017",
+  "tag": "c1",
+  "purpose": "HOST root cluster child qkd_hr_core_rx (pre-route gate only; qkd_host_root CRITICAL: no REVIEW / no submit)",
+  "no_bench_reason": "gate-only kit; the cluster composition lock-step bench (A1-A6) gates adoption"
+ }
+}
