@@ -143,11 +143,15 @@ module ot_hgi_sfu_program_stripe_r9 #(
 endmodule
 
 // The two hardened variants (distinct masters for the cluster binder).
+// r9c (HBM-SFU9 10-17): the configuration data port is split by PHYSICAL destination side, so each bit has one pin
+// face in the column leaf (all-R0 SRAM stack: A edge carries wd_in[0:135], B edge wd_in[136:255]). Bit-identical:
+// u_leaf.in_data = {in_data_hi,in_data_lo}.
 module ot_hgi_sfu_store_leaf3_r9 #(parameter integer PAGE_AW=1, AW=10+PAGE_AW)(
  input wire clk,rst_a,
  input wire [2:0] in_we,
  input wire [AW-1:0] in_addr,
- input wire [255:0] in_data,
+ input wire [135:0] in_data_lo,   // r9c: data bits 0..135 = SRAM wd_in on the macro A edge (leaf W face)
+ input wire [119:0] in_data_hi,   // r9c: data bits 136..255 = SRAM wd_in on the macro B edge (leaf E face)
  input wire in_start_v,
  input wire [AW-1:0] in_start_base,
  input wire in_legal,
@@ -160,7 +164,7 @@ module ot_hgi_sfu_store_leaf3_r9 #(parameter integer PAGE_AW=1, AW=10+PAGE_AW)(
  output wire [2:1] out_mm
 );
  ot_hgi_sfu_store_leaf_r9 #(.NS(3),.PAGE_AW(PAGE_AW)) u_leaf(.clk(clk),.rst_a(rst_a),.in_we(in_we),.in_addr(in_addr),
-  .in_data(in_data),.in_start_v(in_start_v),.in_start_base(in_start_base),.in_legal(in_legal),.in_span(in_span),
+  .in_data({in_data_hi,in_data_lo}),.in_start_v(in_start_v),.in_start_base(in_start_base),.in_legal(in_legal),.in_span(in_span),
   .in_loops(in_loops),.in_loops_one(in_loops_one),.out_cal({out_cal2,out_cal1,out_cal0}),.out_v(out_v),.out_active(out_active),
   .out_done(out_done),.out_fault(out_fault),.out_ord(out_ord),.out_mm(out_mm));
 endmodule
@@ -169,7 +173,8 @@ module ot_hgi_sfu_store_leaf2_r9 #(parameter integer PAGE_AW=1, AW=10+PAGE_AW)(
  input wire clk,rst_a,
  input wire [1:0] in_we,
  input wire [AW-1:0] in_addr,
- input wire [255:0] in_data,
+ input wire [135:0] in_data_lo,   // r9c: data bits 0..135 = SRAM wd_in on the macro A edge (leaf W face)
+ input wire [119:0] in_data_hi,   // r9c: data bits 136..255 = SRAM wd_in on the macro B edge (leaf E face)
  input wire in_start_v,
  input wire [AW-1:0] in_start_base,
  input wire in_legal,
@@ -182,7 +187,7 @@ module ot_hgi_sfu_store_leaf2_r9 #(parameter integer PAGE_AW=1, AW=10+PAGE_AW)(
  output wire out_mm            // scalar: stripe 1 ordinal != stripe 0 ordinal
 );
  ot_hgi_sfu_store_leaf_r9 #(.NS(2),.PAGE_AW(PAGE_AW)) u_leaf(.clk(clk),.rst_a(rst_a),.in_we(in_we),.in_addr(in_addr),
-  .in_data(in_data),.in_start_v(in_start_v),.in_start_base(in_start_base),.in_legal(in_legal),.in_span(in_span),
+  .in_data({in_data_hi,in_data_lo}),.in_start_v(in_start_v),.in_start_base(in_start_base),.in_legal(in_legal),.in_span(in_span),
   .in_loops(in_loops),.in_loops_one(in_loops_one),.out_cal({out_cal1,out_cal0}),.out_v(out_v),.out_active(out_active),
   .out_done(out_done),.out_fault(out_fault),.out_ord(out_ord),.out_mm(out_mm));
 endmodule
