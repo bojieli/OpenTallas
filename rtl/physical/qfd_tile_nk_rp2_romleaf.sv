@@ -2,6 +2,8 @@
 // Local ROM-pair clock roots: each raw ROM shares a root with its capture and
 // complete expansion/return pipeline. RQR north/south each has a compact root.
 // Pure clock rewiring around the unchanged rp2_45 body: zero added edges.
+// Q-ROMPARENT 10-16 18:40: the eight TX roots ck_tx0..7 are separate compensated entries again (gate3 measured the
+// shared ck root at TT 556..1230 ps over 10,644 sinks); each TX root owns only its LSL's two rungs + reset relay.
 module qfd_tile_nk_rp2_romleaf #(
     parameter integer G4_ROOTS = 1
 `ifndef SYNTHESIS
@@ -19,6 +21,14 @@ module qfd_tile_nk_rp2_romleaf #(
     input  wire          ck_rp7,
     input  wire          ck_rp8,
     input  wire          ck_rp9,
+    input  wire          ck_tx0,
+    input  wire          ck_tx1,
+    input  wire          ck_tx2,
+    input  wire          ck_tx3,
+    input  wire          ck_tx4,
+    input  wire          ck_tx5,
+    input  wire          ck_tx6,
+    input  wire          ck_tx7,
     input  wire          ck_rs,
     input  wire          ck_rn,
     input  wire          ck_fa0,
@@ -71,14 +81,14 @@ module qfd_tile_nk_rp2_romleaf #(
         .ck_rom7(ck_rp7),
         .ck_rom8(ck_rp8),
         .ck_rom9(ck_rp9),
-        .ck_tx0(ck),
-        .ck_tx1(ck),
-        .ck_tx2(ck),
-        .ck_tx3(ck),
-        .ck_tx4(ck),
-        .ck_tx5(ck),
-        .ck_tx6(ck),
-        .ck_tx7(ck),
+        .ck_tx0(ck_tx0),
+        .ck_tx1(ck_tx1),
+        .ck_tx2(ck_tx2),
+        .ck_tx3(ck_tx3),
+        .ck_tx4(ck_tx4),
+        .ck_tx5(ck_tx5),
+        .ck_tx6(ck_tx6),
+        .ck_tx7(ck_tx7),
         .ck_rqr0(ck_rs),
         .ck_rqr1(ck_rn),
         .ck_fa0(ck_fa0),
