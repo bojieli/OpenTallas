@@ -30,6 +30,7 @@
  },
  "pins": {
   "W": [
+   "fclk",
    "ze_d",
    "v0",
    "tag",
@@ -51,9 +52,6 @@
    "q_tag",
    "fault0",
    "fault1"
-  ],
-  "N": [
-   "fclk"
   ]
  },
  "clock_port": "fclk",

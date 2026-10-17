@@ -98,21 +98,17 @@ module ot_v41_bf16_lanes3_cl #(
     wire [31:0] cs [0:15];
     wire [TRW:0] ct [0:15];
     genvar l;
-    generate for (genvar g=0;g<4;g++) begin : g_group
-        wire [3:0] cv_g,cf_g,fault_g;
-        wire [127:0] cs_g;
-        wire [4*(TRW+1)-1:0] ct_g;
-        ot_v41_bf_lane4_cl #(.NCHB(NCHB),.TRW(TRW),.CUT(CUT),
-            .GRADUAL_RNE(GRADUAL_RNE),.RC(RC),.GROUP(g),.BOUNDARY_STAGE(PARENT_XST>0)) u_lane4
-            (.fclk(leaf_clk[g]),.rst_pin(rst_pin),.ze_d(ze_d),.v_s(v_s),
-             .w_s(w_s[64*g +: 64]),.x_s(x_s[64*g +: 64]),.t_p(t_p),
-             .cv(cv_g),.cf(cf_g),.cfault(fault_g),.cs_p(cs_g),.ct_p(ct_g));
-        for (genvar j=0;j<4;j++) begin : g_out
-            assign cv[4*g+j]=cv_g[j];assign cf[4*g+j]=cf_g[j];
-            assign cfault[4*g+j]=fault_g[j];assign cs[4*g+j]=cs_g[32*j +: 32];
-            assign ct[4*g+j]=ct_g[(TRW+1)*j +: TRW+1];
-        end
-    end endgenerate
+    wire [15:0] cv16,cf16,fault16;
+    wire [511:0] cs16;
+    wire [16*(TRW+1)-1:0] ct16;
+    ot_v41_bf_lane16_cl #(.NCHB(NCHB),.TRW(TRW),.CUT(CUT),.GRADUAL_RNE(GRADUAL_RNE),.RC(RC),
+        .BOUNDARY_STAGE(PARENT_XST>0)) u_lanes
+        (.leaf_clk(leaf_clk[3:0]),.rst_pin(rst_pin),.ze_d(ze_d),.v_s(v_s),.w_s(w_s),.x_s(x_s),.t_p(t_p),
+         .cv(cv16),.cf(cf16),.cfault(fault16),.cs_p(cs16),.ct_p(ct16));
+    for (genvar j=0;j<16;j++) begin : g_out
+        assign cv[j]=cv16[j];assign cf[j]=cf16[j];assign cfault[j]=fault16[j];
+        assign cs[j]=cs16[32*j +: 32];assign ct[j]=ct16[(TRW+1)*j +: TRW+1];
+    end
     wire [511:0] lane_values;
     for(genvar n=0;n<16;n++) begin:g_lane_pack
         assign lane_values[32*n +:32]=cs[n];

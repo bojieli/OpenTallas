@@ -82,6 +82,7 @@
  },
  "pins": {
   "W": [
+   "fclk",
    "ze_d",
    "v0",
    "tag",
@@ -103,15 +104,12 @@
    "q_tag",
    "fault0",
    "fault1"
-  ],
-  "N": [
-   "fclk"
   ]
  },
  "macros": [],
  "children": [],
  "inter": [],
- "structural_change": "S-ELEM BF column hardened cluster (hybrid12 ten-root CTS failed: 710 ps insertion, 100-390 ps spread, FF -314). FP4 chunk pair (fp0 pair leaf + fp1 chain) as one hardened single-root child; input register = last FXST relay stage moved from the parent (+0 cycles). r2: gate 7127751e2 native FAIL (R 257.2 on the 64.8x198.72 strip, launch 308.5 q_val mux, rst capture 204.3; std 7911 um2): compact 108x129.6 outline (util ~0.57) and a pin-side output register on a local gated clock (+1 FP4; column FP4 +2). r3: 120.96x108 (util ~0.60) so fp stacks over seg with a 20 um channel inside the 198.72 parent height; RTL unchanged (gate at 108x129.6 native PASS L196.4/C175.8). r3b: 126.36 wide (gate 6fb20f457 util 65% at 120.96; hold allowance). r3c (coordinator tile review): explicit full-face pin plan tools/s81/bf_cl_child_pins.py (neighbour-facing, <=6 pins/um), recipe 4 flop-first pins (hold_budget die; RTL registers every data pin).",
+ "structural_change": "S-ELEM BF column hardened cluster (hybrid12 ten-root CTS failed: 710 ps insertion, 100-390 ps spread, FF -314). FP4 chunk pair (fp0 pair leaf + fp1 chain) as one hardened single-root child; input register = last FXST relay stage moved from the parent (+0 cycles). r2: gate 7127751e2 native FAIL (R 257.2 on the 64.8x198.72 strip, launch 308.5 q_val mux, rst capture 204.3; std 7911 um2): compact 108x129.6 outline (util ~0.57) and a pin-side output register on a local gated clock (+1 FP4; column FP4 +2). r3: 120.96x108 (util ~0.60) so fp stacks over seg with a 20 um channel inside the 198.72 parent height; RTL unchanged (gate at 108x129.6 native PASS L196.4/C175.8). r3b: 126.36 wide (gate 6fb20f457 util 65% at 120.96; hold allowance). r3c (coordinator tile review): explicit full-face pin plan tools/s81/bf_cl_child_pins.py (neighbour-facing, <=6 pins/um), recipe 4 flop-first pins (hold_budget die; RTL registers every data pin). r3d (parent 604.8): fclk moved N -> W (N face sits at the parent core edge); RTL unchanged.",
  "pin_regs": {
   "enable": false,
   "reason": "RTL registers every child input at the pin (gen_bf_column_cluster.py); outputs come from arithmetic pipeline registers."
