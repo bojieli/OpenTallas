@@ -581,6 +581,39 @@
   },
   {
    "design": "s81",
+   "unit": "ENGRAM.LKP_WRITE_POSEDGE (dsfd_engram_lkp_static14 st8: table-write path all posedge, per-bank wx copy on the core posedge, full-cycle crossing to the row leaf; +1 on every row beat and status; element 157 -> 158, engine 155 -> 156)",
+   "group": "ENGRAM.LKP_WRITE_POSEDGE",
+   "measured": 2.0,
+   "price": 1.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 2.0,
+   "e2e_loss_pct": 0.0,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 828866.4,
+     "added_cycles": 0.0,
+     "runs_per_token": 2,
+     "critical_runs": 0,
+     "overlapped_runs": 2,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 2.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.0
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/s81_engram_static14_st8",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-17",
+   "status": "proposed",
+   "note": "S-ELEM ENGRAM-LKP 10-17, claude/s81-static14-0600 0b8eab454 (benches committed on that branch). Coordinator-preferred all-posedge write: removes the half-cycle core->rows class (st7 gate binding: -53.4 TT placement / -91.1 related). Engram lookup is lookahead (E# nodes off the token critical path, 2 runs overlapped): 0 cycles AR; no E nodes in the MTP path."
+  },
+  {
+   "design": "s81",
    "unit": "FIELD.CFG7_SEQ_PINREG (ot_s81_cfg7_seq_bfp / ot_s81_cfg7_seq pr3 at LAYOUT 1 PINREG 1: lc->a/ce +2, lc->cfg/go_e +4, st +5 edges vs PINREG 0; il7 cfg image)",
    "group": "FIELD.CFG7_SEQ_PINREG",
    "measured": 5.0,
@@ -2190,7 +2223,7 @@
    "accepted_plus_proposed_pct": 25.465,
    "limit_pct": 15.0,
    "accepted_rows": 11,
-   "proposed_rows": 11,
+   "proposed_rows": 12,
    "headroom_pct": -8.391,
    "owner_exception_rows": 2,
    "over_limit_by_owner_exception": true
