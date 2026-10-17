@@ -64,9 +64,8 @@
   },
   "macro_halo_um": 5.4,
   "cts_sink": {
-   "size": 16,
-   "diameter_um": 30,
-   "extra": "-distance_between_buffers 20 -balance_levels"
+   "sink_clustering": false,
+   "extra": "-distance_between_buffers 20"
   }
  },
  "job": {
