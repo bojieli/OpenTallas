@@ -1,0 +1,423 @@
+{
+ "schema": "opentallas.hbm.sm_portrait_column.v1",
+ "qualification": "PLAN_WITNESS_NOT_BUILT",
+ "tile": "rp4 (rp4e 66381a0f4 geometry; rp4f/g one-root ot_hbm_smh_rp4_one 8359eb9d4 same outline)",
+ "tile_um": [
+  457.92,
+  1529.28
+ ],
+ "h_die_planned_um": [
+  1807.2,
+  7755.84
+ ],
+ "variants": {
+  "F108": {
+   "front_w": 108.0,
+   "outline_um": [
+    1939.68,
+    6678.72
+   ],
+   "area_mm2": 12.9546,
+   "be_band_h": [
+    259.20000000000005,
+    237.6
+   ],
+   "tiles": [
+    {
+     "name": "g_c[3].g_p[1].u_t",
+     "x": 1373.76,
+     "y": 4890.24,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "MX+MY"
+    },
+    {
+     "name": "g_c[2].g_p[1].u_t",
+     "x": 915.84,
+     "y": 4890.24,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "MX+MY"
+    },
+    {
+     "name": "g_c[1].g_p[1].u_t",
+     "x": 457.92,
+     "y": 4890.24,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "MX+MY"
+    },
+    {
+     "name": "g_c[0].g_p[1].u_t",
+     "x": 0.0,
+     "y": 4890.24,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "MX+MY"
+    },
+    {
+     "name": "g_c[3].g_p[0].u_t",
+     "x": 1373.76,
+     "y": 3339.36,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "MX+MY"
+    },
+    {
+     "name": "g_c[2].g_p[0].u_t",
+     "x": 915.84,
+     "y": 3339.36,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "MX+MY"
+    },
+    {
+     "name": "g_c[1].g_p[0].u_t",
+     "x": 457.92,
+     "y": 3339.36,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "MX+MY"
+    },
+    {
+     "name": "g_c[0].g_p[0].u_t",
+     "x": 0.0,
+     "y": 3339.36,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "MX+MY"
+    },
+    {
+     "name": "g_c[4].g_p[0].u_t",
+     "x": 1373.76,
+     "y": 1788.48,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "R0+MY"
+    },
+    {
+     "name": "g_c[5].g_p[0].u_t",
+     "x": 915.84,
+     "y": 1788.48,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "R0+MY"
+    },
+    {
+     "name": "g_c[6].g_p[0].u_t",
+     "x": 457.92,
+     "y": 1788.48,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "R0+MY"
+    },
+    {
+     "name": "g_c[7].g_p[0].u_t",
+     "x": 0.0,
+     "y": 1788.48,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "R0+MY"
+    },
+    {
+     "name": "g_c[4].g_p[1].u_t",
+     "x": 1373.76,
+     "y": 237.6,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "R0+MY"
+    },
+    {
+     "name": "g_c[5].g_p[1].u_t",
+     "x": 915.84,
+     "y": 237.6,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "R0+MY"
+    },
+    {
+     "name": "g_c[6].g_p[1].u_t",
+     "x": 457.92,
+     "y": 237.6,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "R0+MY"
+    },
+    {
+     "name": "g_c[7].g_p[1].u_t",
+     "x": 0.0,
+     "y": 237.6,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "R0+MY"
+    }
+   ],
+   "bands": [
+    {
+     "name": "BE_W (c0..c3 u_be)",
+     "x": 0,
+     "y": 6419.52,
+     "w": 1831.68,
+     "h": 259.20000000000005
+    },
+    {
+     "name": "BE_E (c4..c7 u_be)",
+     "x": 0,
+     "y": 0.0,
+     "w": 1831.68,
+     "h": 237.6
+    }
+   ],
+   "front": {
+    "x": 1831.68,
+    "y": 0,
+    "w": 108.0,
+    "h": 6678.72
+   },
+   "pins": {
+    "xw": {
+     "face": "N",
+     "lo": 1578.96,
+     "hi": 1939.68,
+     "length": 360.72,
+     "bits": 2063,
+     "pins_per_um": 5.719,
+     "cut": 0.549,
+     "over_be_bits": 1445
+    },
+    "sm_hbm": {
+     "face": "S",
+     "lo": 1637.28,
+     "hi": 1881.36,
+     "length": 244.08,
+     "bits": 1398,
+     "pins_per_um": 5.728,
+     "cut": 0.5499
+    },
+    "result": {
+     "face": "S",
+     "lo": 1892.16,
+     "hi": 1939.68,
+     "length": 47.52,
+     "bits": 271,
+     "pins_per_um": 5.703,
+     "cut": 0.5475
+    },
+    "clk_rst": {
+     "face": "E",
+     "note": "clk + rst_n on the front E long face at mid-height (one regional root, root site in the front)"
+    },
+    "s_over_be_bits": 1073
+   },
+   "be_cmd": "two equal-age copies at the front (one beside each BE band); reach to the farthest BE 1602.7 um",
+   "quadrant_width_8_cols_100gap_um": 16217.44
+  },
+  "F363": {
+   "front_w": 362.88,
+   "outline_um": [
+    2194.56,
+    6657.12
+   ],
+   "area_mm2": 14.6094,
+   "be_band_h": [
+    237.6,
+    237.6
+   ],
+   "tiles": [
+    {
+     "name": "g_c[3].g_p[1].u_t",
+     "x": 1373.76,
+     "y": 4890.24,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "MX+MY"
+    },
+    {
+     "name": "g_c[2].g_p[1].u_t",
+     "x": 915.84,
+     "y": 4890.24,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "MX+MY"
+    },
+    {
+     "name": "g_c[1].g_p[1].u_t",
+     "x": 457.92,
+     "y": 4890.24,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "MX+MY"
+    },
+    {
+     "name": "g_c[0].g_p[1].u_t",
+     "x": 0.0,
+     "y": 4890.24,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "MX+MY"
+    },
+    {
+     "name": "g_c[3].g_p[0].u_t",
+     "x": 1373.76,
+     "y": 3339.36,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "MX+MY"
+    },
+    {
+     "name": "g_c[2].g_p[0].u_t",
+     "x": 915.84,
+     "y": 3339.36,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "MX+MY"
+    },
+    {
+     "name": "g_c[1].g_p[0].u_t",
+     "x": 457.92,
+     "y": 3339.36,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "MX+MY"
+    },
+    {
+     "name": "g_c[0].g_p[0].u_t",
+     "x": 0.0,
+     "y": 3339.36,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "MX+MY"
+    },
+    {
+     "name": "g_c[4].g_p[0].u_t",
+     "x": 1373.76,
+     "y": 1788.48,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "R0+MY"
+    },
+    {
+     "name": "g_c[5].g_p[0].u_t",
+     "x": 915.84,
+     "y": 1788.48,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "R0+MY"
+    },
+    {
+     "name": "g_c[6].g_p[0].u_t",
+     "x": 457.92,
+     "y": 1788.48,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "R0+MY"
+    },
+    {
+     "name": "g_c[7].g_p[0].u_t",
+     "x": 0.0,
+     "y": 1788.48,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "R0+MY"
+    },
+    {
+     "name": "g_c[4].g_p[1].u_t",
+     "x": 1373.76,
+     "y": 237.6,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "R0+MY"
+    },
+    {
+     "name": "g_c[5].g_p[1].u_t",
+     "x": 915.84,
+     "y": 237.6,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "R0+MY"
+    },
+    {
+     "name": "g_c[6].g_p[1].u_t",
+     "x": 457.92,
+     "y": 237.6,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "R0+MY"
+    },
+    {
+     "name": "g_c[7].g_p[1].u_t",
+     "x": 0.0,
+     "y": 237.6,
+     "w": 457.92,
+     "h": 1529.28,
+     "orient": "R0+MY"
+    }
+   ],
+   "bands": [
+    {
+     "name": "BE_W (c0..c3 u_be)",
+     "x": 0,
+     "y": 6419.52,
+     "w": 1831.68,
+     "h": 237.6
+    },
+    {
+     "name": "BE_E (c4..c7 u_be)",
+     "x": 0,
+     "y": 0.0,
+     "w": 1831.68,
+     "h": 237.6
+    }
+   ],
+   "front": {
+    "x": 1831.68,
+    "y": 0,
+    "w": 362.88,
+    "h": 6657.12
+   },
+   "pins": {
+    "xw": {
+     "face": "N",
+     "lo": 1833.84,
+     "hi": 2194.56,
+     "length": 360.72,
+     "bits": 2063,
+     "pins_per_um": 5.719,
+     "cut": 0.549,
+     "over_be_bits": 0
+    },
+    "sm_hbm": {
+     "face": "S",
+     "lo": 1892.16,
+     "hi": 2136.24,
+     "length": 244.08,
+     "bits": 1398,
+     "pins_per_um": 5.728,
+     "cut": 0.5499
+    },
+    "result": {
+     "face": "S",
+     "lo": 2147.04,
+     "hi": 2194.56,
+     "length": 47.52,
+     "bits": 271,
+     "pins_per_um": 5.703,
+     "cut": 0.5475
+    },
+    "clk_rst": {
+     "face": "E",
+     "note": "clk + rst_n on the front E long face at mid-height (one regional root, root site in the front)"
+    },
+    "s_over_be_bits": 0
+   },
+   "be_cmd": "two equal-age copies at the front (one beside each BE band); reach to the farthest BE 1602.7 um",
+   "quadrant_width_8_cols_100gap_um": 18256.48
+  }
+ },
+ "leaf_pin_changes_needed": [
+  "clk: W face -> N face (beside rst_n). Row tiles abut W/E, so a W-face clk is buried in the seam for 3 of 4 tiles per row.",
+  "rin/bin W, rout/bout E, gin N, gout S, xs/xss N/S: unchanged (rows stay horizontal; gather stacks p0 over p1 at equal x)."
+ ],
+ "channels": "21.6 um between the four tile rows: p1 xs/rst_n/clk access and the p0->p1 gather hop (100 b at equal x)",
+ "strips": "row bundles stay on the abutted W/E faces: 3,705 b over y 249.6-1,281.6 = 3.59 pins/um, cut 0.345"
+}
