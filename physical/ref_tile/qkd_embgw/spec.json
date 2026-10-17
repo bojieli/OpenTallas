@@ -64,14 +64,15 @@
   "io_hold_margin_ns": 0.0
  },
  "slot_change_request": "el1013-qwen-small-masters r2 10-13: slot embgw shrinks to 172.8 x 216 (the die lead places it inside the old 388.776^2 slot; W-aligned keeps the t_eq / r_ea hops). Ranges in um from the bottom / left end, pins at >= 2 tracks: W (M4) emf_WS 4-33 (+cr 34), t_eq[512:0] 38-90, t_ecr 91, r_ea 93-96, emf_WN 100-129 (+cr 130), emr_WN 134-187 (+cr 188); E (M4) emf_ES 4-33 (+cr 34), emf_EN 40-69 (+cr 70), emr_EN 76-129 (+cr 130); S (M5) emr_WS 8-61 (+cr 62), rst_n 66, emr_ES 108-161 (+cr 162); N (M5) hb[282:0] 50-79 (+cr 80), est[12:0] 84-86, ck 100. NOTE the v4 slot lists t_eq / r_ea / t_ecr on M5 of the W face: a W-face pin is M4 here. | earlier request: el1013-qwen-embgw-host / small-masters 10-13: FIRST exact module for die master qkd_embgw (was FRAME_ONLY). Outline, faces, layers, clock entry as the v4b slot embgw (388.776^2). Packing (LSB first; rtl/physical/ot_qwen_kv_gwhost_slots.sv header): r_ea[25:0] = {ea_v, ea_kind, ea_addr 24}; t_ecr; t_eq built as t_eq[512:0] = {eq_v, eq_d 512} (contract t_eq[1023:0]: the body answers 512 b a word); emr_<q>[519:0] = {v, data 512, seq 4, poison, kind 2} + emr_<q>_cr (credit WITH the flow of emr); emf_<q>[287:0] = {v, data 281, seq 4, kind 2} + emf_<q>_cr (contract emr / emf [529:0]: the unbound land bits are constants, see the header). NEW bundles toward qkd_host on N: hb[282:0] = {v, end, E 25, data 256} in + hb_cr out, est[12:0] = {emb_ready, fault, cause 11} out. Contract bundles gq / gr [529:0] have NO body port (the SU face ends here directly): drop from the slot?",
- "structural_change": "native pin audit 1014 (TT launch 312.0 > 220 on 1,072 outputs): recipe 2 pin defaults (one dedicated launch flop per output pin, HB2 pad, synthesis keep of pin registers); RTL unchanged",
+ "structural_change": "Q-KVFIX 0130 (successor of FLOW-HOLD bh1 qkd_embgw-bh1-9c5e10555 NEEDS_RTL TT -45.87 / FF -4.12, 511 reg->reg D pins; textbook: u_gw.rr[1] -> u_gw.w[6] ~688 ps, 18 levels): the gateway request FIFO head is a register (ot_qfd_emb_gw HEADQ=1, show-ahead head loaded from 2 precomputed candidates rq'[rr] / rq'[rr+1] by a 2:1 mux on the pop decision), so the 32:1 x 25-b read mux leaves the serve decision -> eq_d / sv / rr / w path. Cycle-identical (0 added cycles: same answers, same fetch cycles); kit = bh1 (recipe 4 hold_budget die, flop-first pins).",
  "job": {
-  "owner": "Claude FLOW-HOLD 1016 (for Claude:el1014-qwen-kvsys-elements)",
-  "branch": "claude/flowhold-1016",
-  "tag": "bh1",
-  "purpose": "FLOW-HOLD re-route of closed qkd_embgw-sl2-4ca7b8091 under hold_budget die (native B_pinflop_wire)",
+  "owner": "Claude:Q-KVFIX-0130 (for Q-KV lead el1014-qwen-split-kvsys; successor of FLOW-HOLD bh1)",
+  "branch": "claude/qkvfix-embgw-0130",
+  "tag": "hq1",
+  "purpose": "qkd_embgw successor of bh1 (setup -45.87): registered gateway request head (HEADQ=1, 0 cycles) under the bh1 recipe-4 hold_budget kit; target CLOSED + native PASS",
   "extra_paths": [
    "physical/qwen_kv_gwhost",
+   "results/rtl/ref_tile/qkd_embgw/bench_witness_0130",
    "rtl/test"
   ],
   "benches": [
@@ -85,7 +86,9 @@
     "needs": [
      "iverilog"
     ],
-    "note": "through the cell's own ports against 4 ot_qfd_emb_strip link ends + ideal PC model: boot load 2,580 sectors, 20 tokens / 40 fetches, 2,600 response words bit-exact"
+    "note": "through the cell's own ports against 4 ot_qfd_emb_strip link ends + ideal PC model: boot load 2,580 sectors, 20 tokens / 40 fetches, 2,600 response words bit-exact",
+    "pass_witness": "results/rtl/ref_tile/qkd_embgw/bench_witness_0130/pos.log",
+    "min_count_regex": "^PASS kv_gwhost embgw tokens=(\\d+)"
    },
    {
     "name": "slot_mutant",
@@ -97,7 +100,21 @@
     "needs": [
      "iverilog"
     ],
-    "note": "OT_QKD_SLOT_MUT: t_eq data bits 100 / 101 swapped inside the cell: 1,281 wrong words"
+    "note": "OT_QKD_SLOT_MUT: t_eq data bits 100 / 101 swapped inside the cell: 1,281 wrong words",
+    "fail_witness": "results/rtl/ref_tile/qkd_embgw/bench_witness_0130/mut.log"
+   },
+   {
+    "name": "slot_headq_mutant",
+    "cmd": "bash physical/qwen_kv_gwhost/bench.sh {RUN}/bench/hq embgw headq",
+    "expect": "fail",
+    "fail_regex": "^FAIL kv_gwhost embgw mutant detected",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "OT_QKD_HEADQ_MUT (gateway MUT 6): the registered head misses the pop (stale head) -> sequence fault cause 002 after 1 of 65 words (TB fault watchdog)",
+    "fail_witness": "results/rtl/ref_tile/qkd_embgw/bench_witness_0130/hq.log"
    }
   ]
  },
@@ -206,12 +223,10 @@
   ]
  },
  "reroute_reason": {
-  "kind": "pin_register",
-  "source": "results/arch/boundary_hold_budget_1016/impact.json",
+  "kind": "rtl_change",
   "cell": "qkd_embgw",
-  "launch_ps": 312.0,
-  "capture_ps": 178.8,
-  "fix": "FLOW-HOLD die boundary hold budget (coordinator-approved 2026-10-16, RULE.md): recipe 4 hold_budget die -- flop-first pins (io_flop_at_pins, no inhold/outhold pads), boundary min delays credit C=25 ps, die STA owns link hold. Impact class B_pinflop_wire: est. capture 178.8->178.8, launch 312.0->226.6."
+  "closed": "qkd_embgw-sl2-4ca7b8091",
+  "why": "RTL changed (HEADQ registered request head, setup fix for bh1 -45.87 ps); also carries the FLOW-HOLD bh1 native fix (sl2 native FAIL launch 312.0 > 220 on 1,072 outputs, results/arch/boundary_hold_budget_1016/impact.json)"
  },
  "children": [],
  "inter": [],

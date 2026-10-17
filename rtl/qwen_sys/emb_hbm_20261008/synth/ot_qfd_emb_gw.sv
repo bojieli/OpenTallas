@@ -18,9 +18,17 @@
 // Fail closed: a request out of sequence or out of range, a link word of the wrong kind / sequence, a POISONED word
 // (uncorrectable ECC in HBM) or a failed boot check latches fault and nothing more is answered.
 // MUT = 4 (bench mutant, must FAIL): the boot gate is ignored (a fetch before the load is complete).
+// HEADQ = 1 (Q-KVFIX 0130, qkd_embgw bh1 setup -45.87 ps on rr -> rq[rr] 32:1 mux -> hd_ok -> serve -> eq_d / w / rr):
+//   the request FIFO head is a REGISTER (show-ahead head) instead of the RQD:1 read mux on the serve decision.  Each
+//   cycle it loads rq'[rr'] (rq' = this cycle's write applied, rr' = next read pointer), picked by a 2:1 mux between
+//   the two precomputed candidates rq'[rr] (no pop) and rq'[rr + 1] (pop), so the decision drives one 2:1 mux and the
+//   RQD:1 read mux runs from registered pointers only.  It equals rq[rr] on every cycle: the same requests, answers,
+//   faults and cycles (0 added cycles).  Default 0 = the unchanged gateway.
+//   MUT = 6 (bench mutant, HEADQ only, must FAIL): the head register misses the pop (stale head -> sequence fault).
 module ot_qfd_emb_gw #(
     parameter integer RQD = 32,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer HEADQ = 0
 ) (
     input  wire              ck,
     input  wire              rn,
@@ -155,7 +163,20 @@ module ot_qfd_emb_gw #(
     reg [RA:0] rw, rr;
     wire r_ne = rw != rr;
     wire r_full = (rw[RA-1:0] == rr[RA-1:0]) && (rw[RA] != rr[RA]);
-    wire [24:0] rh = rq[rr[RA-1:0]];
+    wire [24:0] rh;
+    wire        rpop;                                   // the read pointer advances this cycle
+    generate if (HEADQ != 0) begin : g_headq
+        wire [RA:0] rr1 = rr + 1'b1;
+        wire        wr0 = ea_v && (rw[RA-1:0] == rr[RA-1:0]);
+        wire        wr1 = ea_v && (rw[RA-1:0] == rr1[RA-1:0]);
+        wire [24:0] c0 = wr0 ? {ea_kind, ea_addr} : rq[rr[RA-1:0]];
+        wire [24:0] c1 = wr1 ? {ea_kind, ea_addr} : rq[rr1[RA-1:0]];
+        (* keep = "true" *) reg [24:0] rh_q;
+        always @(posedge ck) rh_q <= (rpop && MUT != 6) ? c1 : c0;
+        assign rh = rh_q;
+    end else begin : g_headm
+        assign rh = rq[rr[RA-1:0]];
+    end endgenerate
     wire hk = rh[24];
     wire [23:0] ha = rh[23:0];
     always @(posedge ck) if (ea_v) rq[rw[RA-1:0]] <= {ea_kind, ea_addr};
@@ -179,6 +200,9 @@ module ot_qfd_emb_gw #(
     always @(*) for (i = 0; i < 4; i = i + 1) stv[i] = sv[i] && sd[i][522] && sd[i][521:520] == K_STATUS;
     wire [1:0] sp = stv[0] ? 2'd0 : stv[1] ? 2'd1 : stv[2] ? 2'd2 : 2'd3;
     reg f_q;
+    // rr advances exactly when the S_ROW branch below answers a word (f_q only redirects st, the answer still retires);
+    // never in reset (st is S_IDLE there, rr held at 0: rh_q reloads rq'[0])
+    assign rpop = st == S_ROW && r_ne && hd_ok && sv[lk] && !(sd[lk][521:520] == K_STATUS) && !sl[519] && sl_ok;
     assign fault = f_q;
     always @(posedge ck) for (i = 0; i < 4; i = i + 1) if (e_take[i]) sd[i] <= e_d[i*523 +: 523];
     always @(posedge ck or negedge rn)

@@ -73,7 +73,13 @@ module qkd_embgw (
     wire         eq_v;
     wire [511:0] eq_d;
     wire [12:0]  st;
-    ot_qkvd_embgw_m #(.RQD(32), .OD(4), .TXC(4), .BD(4), .MUT(0)) u_body (
+    // HEADQ 1 (Q-KVFIX 0130): registered request-FIFO head in the gateway (setup fix, 0 added cycles, same answers)
+`ifdef OT_QKD_HEADQ_MUT
+    localparam integer BODY_MUT = 6;            // bench mutant only: stale head register
+`else
+    localparam integer BODY_MUT = 0;
+`endif
+    ot_qkvd_embgw_m #(.RQD(32), .OD(4), .TXC(4), .BD(4), .MUT(BODY_MUT), .HEADQ(1)) u_body (
         .ck(ck), .rst_n(rst_n),
         .ea_v(r_ea[0]), .ea_kind(r_ea[1]), .ea_addr(r_ea[25:2]), .ea_cr(t_ecr), .eq_v(eq_v), .eq_d(eq_d),
         .lr_v(lr_v), .lr_k(lr_k), .lr_p(lr_p), .lr_s(lr_s), .lr_d(lr_d),
