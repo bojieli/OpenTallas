@@ -250,27 +250,26 @@
       "peer": "dvs_W3"
      }
     ]
-   },
-   "lateral_faces": "W and E faces symmetric: in + out per kind (st 1,136, ch 1,094, l9 514, hr 453, cmd 116); N/S pins mirror the cluster bc<lc> / rs / rs_o ranges; E-row slices MY"
+   }
   },
   "qfd_c_b16_dv": {
    "n": 48,
-   "base": "qfd_c_b16_dv per Q-CLUSTER claude/qcluster-1017 0fd5cb773 cluster_contract_dv.json (2,358.72 x 5,227.2)",
+   "base": "qfd_c_b16 (Q-CLUSTER claude/qcluster-1017 0131f6672: 2,285.28 x 5,184, corridors A/T/B 129.6)",
    "add_ports": [
     {
      "port": "rs_i",
      "dir": "input",
      "bits": 514,
-     "face": "master N face straight above rs (x 488.9-660.2, Q-DIEPLAN3 5e5ad02d9): far rs -> near rs_i jog 0 across the 129.8 band gap"
+     "face": "master N (band-gap side, beside bc_o)"
     },
     {
      "port": "rs_o",
      "dir": "output",
      "bits": 514,
-     "face": "master S face beside rs"
+     "face": "master S (beside rs)"
     }
    ],
-   "feedthrough": "rs_i (N, 488.893-660.227, above rs) -> N strip -> corridor T -> rs_o (S, 1,093.7-1,265.0): 16 edges (5,746 um)",
+   "feedthrough": "registered rs_i -> rs_o in corridor T, 14 edges (Q-CLUSTER measured)",
    "positions": "near bands (1, 2) carry the far cluster rs; far bands (0, 3) have no far neighbour: near/far master split or one master with a band strap is Q-CLUSTER's choice (OPEN)",
    "ports_from_plan": {
     "c16_W2_1": [
@@ -382,33 +381,7 @@
       "peer": "c16_W2_1"
      }
     ]
-   },
-   "far_position": "ONE master: bands 0/3 rs_i = declared-idle terminus tied to the instance tie_lo (valid 0), rs_o unconnected (Q-CLUSTER far_position)",
-   "placement": "origins on the 43.2-um A0 lattice -> pitch 2,376.0 (17.28-um gap) unless the outline grows to 2,376.0"
-  },
-  "ot_qfd_serdes_112g_x12_phy_s597_ew": {
-   "n": 3,
-   "outline_um": [
-    1563.57,
-    2320.056
-   ],
-   "kind": "MODELED tall PHY abstract variant (Q-DIEPLAN3 views physical/qwen_missing_phy/nface_tall_1017 on claude/q3h3-1016): bump/beach face on the W die edge; FDI on the SHORT edge facing the collective (PHYs below the collective R0 with FDI on N, PHYs above MX with FDI on S) -> straight FDI wires",
-   "owner": "PHY/package (coordinator)",
-   "orientations": {
-    "io_serdes_1": "R0",
-    "io_serdes_2": "R0",
-    "io_ucie": "MX",
-    "io_serdes": "MX"
    }
-  },
-  "qfd_collective_static_io_production_ns": {
-   "n": 1,
-   "outline_um": [
-    1563.816,
-    4157.976
-   ],
-   "kind": "re-kit of qfd_collective_static_io_production (our RTL, not closed) to 1,563.816 x 4,157.976: FDI windows on its S and N faces at each PHY x; core / AR pins on the E face toward dvs_W5",
-   "owner": "Q-COLL"
   }
  },
  "moved": {
@@ -428,12 +401,11 @@
  },
  "die_rules": [
   "all masters native orientation (R0/MX/MY/R180); no 90-degree rotation",
+  "cluster origins on the 8.64 lattice",
   ">= 86.4 um die margin above band 3",
   "no die link crosses a qfd_c_b16_dv outline (checked: 0)",
   "slices ABUT the band-1 / band-2 cluster faces: slice N/S pins mirror the cluster rs/rs_o/bc pin ranges exactly (aligned face-to-face, no die wire)",
-  "die 30.1 x 23.99 mm: >= 2.9 mm under the 33-mm reticle width, >= 2.0 mm under 26",
-  "cluster origins on the 43.2-um A0 lattice (pitch 2,376.0)",
-  "slices one pitch wide (2,376.0) and abut laterally"
+  "die 30.1 x 23.99 mm: >= 2.9 mm under the 33-mm reticle width, >= 2.0 mm under 26"
  ],
  "open_w_column": "Q-DIEPLAN3 WCOL2 (side-by-side PHY pairs, 3.2-mm column, collective 3235 x ~2010) puts 2 PHYs off the die edge -> needs coordinator/package acceptance; edge-keeping alternative: single-file 1.56 column, io_ucie to the N edge beside ucie_kv, one far SerDes FDI relayed in a ~432-um channel"
 }
