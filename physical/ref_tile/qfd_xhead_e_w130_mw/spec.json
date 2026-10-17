@@ -7618,7 +7618,8 @@
     "peak_ram_gb": 32,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "^FAIL (cyc=[0-9]+ (x_fault|tile)|errors=[1-9][0-9]* checks=)"
    },
    {
     "name": "head_mut7",
@@ -7629,7 +7630,8 @@
     "peak_ram_gb": 32,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "^FAIL (cyc=[0-9]+ (x_fault|tile)|errors=[1-9][0-9]* checks=)"
    },
    {
     "name": "head_mut3",
@@ -7640,7 +7642,8 @@
     "peak_ram_gb": 32,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "^FAIL (cyc=[0-9]+ (x_fault|tile)|errors=[1-9][0-9]* checks=)"
    }
   ],
   "extra_paths": [
@@ -7674,8 +7677,8 @@
   "master": "qfd_xhead_e",
   "granted_by": "refreshed by Q-IO-1815 2026-10-16 for w5 (n_d M4 W-face move only; M6 ports/contacts identical). | refreshed by Q-LINK-D2D 2026-10-16 for w2 (ONWARD_REG 2 RTL; ports/contacts identical). | refreshed by Q-LINK-D2D 2026-10-16 for the w130 head outline 129.6x345.6 agreed by Q-COMPUTE-DIE (E/W contacts, spans and ports identical; N/S M3/M5 pins re-spread at leaf w130 x) and the m6u RTL. | Q-COMPUTE-DIE Codex coordinator 2026-10-16; refreshed by Q-DVM+LINK 2026-10-16 for the m6r/m6s/m6t source changes (LOCAL_RST/ONWARD_REG/LEAF_FILL_PIPE params, ot_rst_pipe source; port list, faces, spans and contacts identical); Q-COMPUTE-DIE Codex1956 approved additive E mirrored M4 variant; exact M6 contacts unchanged (2026-10-16).",
   "reason": "Source-bound local M6 PORT-only contacts split actual1170-bit seam pressure across faces; M5 signal/PG interior cap stands. Candidate leaf local64.8x138.24; heads64.8x345.6 R0 only. No parent M7/M9 reservation or whole-die geometry/timing qualification; actual routed DEF/vias/LEF/native220/190/80 gates required.",
-  "source_commit": "b00ef052ccf6f054615947b7c6809be06051034f",
-  "source_spec_sha256": "1ba006a34d0a82ad3be38ce9c57c8f6b45f72210ac47b968a66b5f2bec4bebb2",
+  "source_commit": "aee758c3fb1f9b6b96ca07eb35b5b2b033dc1f50",
+  "source_spec_sha256": "ded12edee0b2a80ec593f4438fab75317171ecdcbc9e787bb2374389dee73df5",
   "ports": [
    {
     "name": "cs_wv",
