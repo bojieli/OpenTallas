@@ -138,10 +138,11 @@
  "merge_target": null,
  "structural_change": "x5 (owner die standard: regional SYNC resets), parallel to x4: rn is captured by 4 kept relay flops on their D pins (no async RESETN anywhere in the leaf); each relay copy synchronously clears a quarter of the valid/control flops (e6 en, 32 e5 valids, 32 bq valids, bc_v/last, xw_en/last, x_done); field/data flops (e6 fields, e5 beat index, bc_addr/b, bq_c, rw, xbeat, xw_*) carry no reset. x3 d67bfd40c native FAIL capture rn 332.3 (async clear of 308 flops), ed5 196.4 (32-replica fanout incl. async-reset flops + hold pads). HEP w5f hold recipe kept (HM 10 ps, ECO goal 5 ps). Outline/pins as x3.",
  "reroute_reason": {
-  "kind": "native_capture",
+  "kind": "rtl_change",
   "source": "results/hbm_sm_attention_1015/hsm_1830/pegress_x3_d67bfd40c_native.json",
   "cell": "ot_hgi_sm_xload_xq_pegress",
   "capture_ps": 332.3,
-  "fix": "x3 d67bfd40c (record 70a897e57) native FAIL launch 193.5 / capture 332.3 / spread 59.2 (R 378.8): rn 332.3 = async clear of 308 control flops; ed5[6]/[7]/[2] 196.4/194.8/191.8. x5 RTL: regional synchronous reset (rn -> 4 relay flops D pins only; sync clear of valid/control flops; no reset on data), HEP w5f hold recipe (route HM 10 ps, hold ECO goal 5 ps). Outline/pins unchanged."
+  "fix": "x3 d67bfd40c (record 70a897e57) native FAIL launch 193.5 / capture 332.3 / spread 59.2 (R 378.8): rn 332.3 = async clear of 308 control flops; ed5[6]/[7]/[2] 196.4/194.8/191.8. x5 RTL: regional synchronous reset (rn -> 4 relay flops D pins only; sync clear of valid/control flops; no reset on data), HEP w5f hold recipe (route HM 10 ps, hold ECO goal 5 ps). Outline/pins unchanged.",
+  "why": "x3 d67bfd40c CLOSED but native capture FAIL (receipt results/hbm_sm_attention_1015/hsm_1830/pegress_x3_d67bfd40c_native.json): the reset structure must change in RTL (rn async clear of 308 flops)"
  }
 }
