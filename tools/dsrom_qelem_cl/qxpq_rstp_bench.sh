@@ -26,7 +26,8 @@ run() { # name expect seed
   "$W/$1/Vtb_qxpq_rstp" +seed=$3 > "$W/$1_s$3.log" 2>&1
   local v=$(grep -o "QXPQ_RSTP \(PASS\|FAIL\)" "$W/$1_s$3.log" | tail -1)
   local ok=0; [ "$v" = "QXPQ_RSTP PASS" ] && [ "$2" = pass ] && ok=1; [ "$v" = "QXPQ_RSTP FAIL" ] && [ "$2" = fail ] && ok=1
-  echo "$1 seed $3 expect $2 -> ${v:-NO_VERDICT} $([ $ok = 1 ] && echo OK || echo BAD) | $(grep '^QXPQ_RSTP cycles' "$W/$1_s$3.log")"
+  echo "$1 seed $3 expect $2 -> ${v:-NO_VERDICT} $([ $ok = 1 ] && echo OK || echo BAD)"
+  grep '^QXPQ_RSTP cycles' "$W/$1_s$3.log"   # own line: the closure loop's min_count_regex counts it (windows=N)
   [ $ok = 1 ]
 }
 MODE=${3:-all}
