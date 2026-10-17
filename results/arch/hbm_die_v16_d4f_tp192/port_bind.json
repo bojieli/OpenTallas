@@ -426,11 +426,11 @@
    "unparsed_conn": [],
    "duplicate_port": []
   },
-  "hfd_vms_bank_native_q0": {
+  "hfd_vms_bank_native_q0_faces": {
    "verdict": "PASS",
    "fails": [],
    "instances": 16,
-   "rtl": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv",
+   "rtl": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -454,11 +454,11 @@
    "unparsed_conn": [],
    "duplicate_port": []
   },
-  "hfd_vms_bank_native_q1_core": {
+  "hfd_vms_bank_native_q1_core_pr": {
    "verdict": "PASS",
    "fails": [],
    "instances": 16,
-   "rtl": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+   "rtl": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -1886,13 +1886,13 @@
   "hbfd_rly_624_SN:i",
   "hbfd_rly_624_WE:i"
  ],
- "die_sha256": "800f05446d446d7523b0075c572ee22cf959a8ac75de522a9669f5c40ac9a590",
+ "die_sha256": "61fd4ecaedce7d98767224f8fddb4d33c6fb720e6435e7eae1265ef4a2b86553",
  "straps_declared": [
   "hfd_hgi_vm_calendar_f20:tgt",
-  "hfd_vms_bank_native_q0:bid",
-  "hfd_vms_bank_native_q0:sid",
-  "hfd_vms_bank_native_q1_core:bid",
-  "hfd_vms_bank_native_q1_core:sid",
+  "hfd_vms_bank_native_q0_faces:bid",
+  "hfd_vms_bank_native_q0_faces:sid",
+  "hfd_vms_bank_native_q1_core_pr:bid",
+  "hfd_vms_bank_native_q1_core_pr:sid",
   "ot_hbm_hc_eng_static:tgt",
   "ot_hbm_hc_q_static:tgt",
   "ot_hbm_idx_score_static:first_ord",
