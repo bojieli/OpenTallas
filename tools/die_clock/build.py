@@ -272,7 +272,15 @@ def build(a):
             builders[t['name']] = b_
             log('tree', t['name'], 'sinks', len(sinks), json.dumps(model))
         unclaimed = [x for x in loads if f'{x.getInst().getName()}/{x.getMTerm().getName()}' not in claimed]
-        if unclaimed:
+        if unclaimed and spec.get('unclaimed') == 'disconnect_diagnostic':
+            # DIAGNOSTIC partial clock (e.g. macro trees before relay stations are legal): the unclaimed loads are
+            # disconnected from the root net and listed in the manifest; the result is never a complete die clock.
+            for x in unclaimed:
+                rec.setdefault('unclaimed_disconnected', []).append(
+                    f'{x.getInst().getName()}/{x.getMTerm().getName()}')
+                x.disconnect()
+            log('DIAGNOSTIC', root, len(unclaimed), 'unclaimed loads disconnected (spec unclaimed=disconnect_diagnostic)')
+        elif unclaimed:
             raise ValueError(f'{root}: {len(unclaimed)} loads not claimed by any tree spec')
     # instantiate
     masters, cell_xy = {}, {}

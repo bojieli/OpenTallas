@@ -3,12 +3,14 @@
 # list (needs the frozen case dir), build contract + die.v with the layer, strict port-bind.
 #   run_v16_d4b.sh [OUT] [CASE_DIR CASE_CONTRACT]   (case args only to regenerate the layer)
 #   IDSTRAPS=1: full_die_v16.py --identity-straps (H-NETLIST 1815 alias reduction: identity parameters -> strap pins)
+#   STATIONS=<list> LAYER=<layer.json.gz>: another station list / layer (d4b-r: d4br_relay_stations_r20.json.gz -> relays_d4br.json.gz)
 set -uo pipefail
 cd "$(dirname "$0")/../.."
 OUT=${1:-results/arch/hbm_die_v16_d4b}; mkdir -p $OUT
-LAYER=tools/hbm_die_v15/v16_relays/relays_d4b.json.gz
+LAYER=${LAYER:-tools/hbm_die_v15/v16_relays/relays_d4b.json.gz}
+STATIONS=${STATIONS:-results/arch/hbm_die_v16/d4b_relay_stations_450.json.gz}
 if [ $# -ge 3 ]; then
-  python3 tools/hbm_die_v15/relay_contract_d4b.py --stations results/arch/hbm_die_v16/d4b_relay_stations_450.json.gz \
+  python3 tools/hbm_die_v15/relay_contract_d4b.py --stations $STATIONS \
     --case "$2" --case-contract "$3" --out /tmp/relays_d4b.$$.json --report $OUT/relays_d4b_report.json || exit 2
   gzip -c /tmp/relays_d4b.$$.json > $LAYER && rm -f /tmp/relays_d4b.$$.json
 fi
