@@ -149,14 +149,19 @@ def main():
     ap.add_argument('--commit', default='8c3c2a340')
     ap.add_argument('--build-commit', help='actual source snapshot used by a preserved build; all RTL/macro bytes must also match --commit')
     ap.add_argument('--allow-direct-master', action='store_true', help='strictly prove params{} real-master ETMs without changing their Liberty names')
+    ap.add_argument('--contract', default='results/arch/hbm_die_v16/contract.json',
+                    help='contract path at --commit (.json or .json.gz), e.g. results/arch/hbm_die_v16_d4b_soft/contract.json.gz')
     ap.add_argument('cells', nargs='*', help='only these cells (a same-named older build with other ports/params/source must not be fetched)')
     a = ap.parse_args()
     V = json.loads((Path(a.views) / 'views.json').read_text())
     build_commit = a.build_commit or a.commit
     src = f'{a.remote_root}/src_{build_commit}'
     expected_src = f'{a.remote_root}/src_{a.commit}'
-    contract = json.loads(subprocess.check_output(['git', '-C', str(Path(__file__).resolve().parents[2]),
-                                                  'show', f'{a.commit}:results/arch/hbm_die_v16/contract.json']))
+    raw = subprocess.check_output(['git', '-C', str(Path(__file__).resolve().parents[2]), 'show', f'{a.commit}:{a.contract}'])
+    if a.contract.endswith('.gz'):
+        import gzip
+        raw = gzip.decompress(raw)
+    contract = json.loads(raw)
     found = {}
     for h in HOSTS:
         out = subprocess.run(['ssh', h, f'cd {a.remote_root}/syn 2>/dev/null && ls -d */ | tr -d /'], capture_output=True,

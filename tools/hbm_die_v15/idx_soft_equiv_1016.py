@@ -51,6 +51,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('out', type=Path)
     ap.add_argument('--mutant', type=int, default=0)
+    ap.add_argument('--method', choices=('sat', 'equiv'), default='sat',
+                    help='sat: miter + sat -tempinduct; equiv: equiv_make/equiv_simple/equiv_induct/equiv_status -assert '
+                         '(same everted designs; matches gold/gate signals by name, proves every equiv cell by induction)')
     a = ap.parse_args()
     out = a.out.resolve(); out.mkdir(parents=True, exist_ok=True)
     src = ROOT
@@ -78,15 +81,16 @@ def main():
         ren = '; '.join(f'cd {top}; rename {c} {n}; cd' for c, n in names[tag].items())
         steps.append(f"design -reset; {rd(files)}; hierarchy -top {top}; proc; flatten; {ren}; "
                      f"expose -evert {top}/c:u_*; opt_clean; async2sync; rename {top} {tag}; design -stash {tag}")
-    script = '; '.join(steps) + ("; design -reset; design -copy-from gold -as gold gold; design -copy-from gate -as gate gate; "
-                                  "miter -equiv -flatten -make_assert -ignore_gold_x gold gate miter; hierarchy -top miter; "
-                                  "sat -verify -prove-asserts -tempinduct -set-init-zero -seq 1 -maxsteps 8 -show-ports miter")
+    tail = ("miter -equiv -flatten -make_assert -ignore_gold_x gold gate miter; hierarchy -top miter; "
+            "sat -verify -prove-asserts -tempinduct -set-init-zero -seq 1 -maxsteps 8 miter") if a.method == 'sat' else (
+            "equiv_make gold gate eq; hierarchy -top eq; equiv_simple -seq 2; equiv_induct -seq 2; equiv_status -assert")
+    script = '; '.join(steps) + ("; design -reset; design -copy-from gold -as gold gold; design -copy-from gate -as gate gate; " + tail)
     (out / 'equiv.ys').write_text(script.replace('; ', '\n') + '\n')
     rc, o = yosys(script, out / 'equiv.log')
     log = (out / 'equiv.log').read_text()
-    ok = rc == 0 and 'SUCCESS!' in log
+    ok = rc == 0 and ('SUCCESS!' in log if a.method == 'sat' else 'Equivalence successfully proven!' in log)
     verdict = 'EQUIVALENT' if ok else 'NOT_EQUIVALENT'
-    print(f"IDX_SOFT_EQUIV mutant={a.mutant} {verdict} rc={rc} leaves={len(names['gold'])}")
+    print(f"IDX_SOFT_EQUIV method={a.method} mutant={a.mutant} {verdict} rc={rc} leaves={len(names['gold'])}")
     if not ok:
         print(o[-2000:])
     sys.exit(0 if ok else 1)
