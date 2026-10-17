@@ -92,16 +92,16 @@
   "cts_sink": {
    "size": 16,
    "diameter_um": 30,
-   "extra": "-balance_levels"
+   "extra": "-balance_levels -distance_between_buffers 40"
   }
  },
  "recipe": 3,
  "purpose": "H-SM 2026-10-16: hardened SM result -> VM writer smw_<q>, ONE master for the 4 instances (option A wrapper: folded ot_static_cmd_target MODE 1 command calendar CW 26 + 128x256 table, tgt strap; quad strap replaces parameter QUAD). Pin-bound: W rv/rrow/rdata 2,152, E wq 2,248 at ~6 pins/um -> 388.8 um faces; width 142.56 for the 94.8 um table macro with >= 20 um channels; N F20 bus + straps + status. ~11.3k writer flops + collar. The RTL registers every input at its pin and every output is a flop; pin_reg_split gives each replicated wq data pin its own launch flop: 0 added edges (calendar fire edge unchanged; rv(t) -> wq slot0 at t+3). rst_n lands on one local reset-release flop.",
  "job": {
-  "owner": "Codex H-SM physical",
-  "branch": "codex/hbm-element-1246",
-  "tag": "faces4",
-  "purpose": "Candidate within original142.56x388.8 envelope: two actual local capture roots and two actual launch roots by half-face, core + raw calendar. Zero normal data edges added; fresh typed grant/route/native proof required.",
+  "owner": "Claude H-SM 1815",
+  "branch": "claude/hsm-wrq-nat-1815",
+  "tag": "f4db40",
+  "purpose": "faces4 native-capture successor: core clk CTS inserts repeaters every 40 um (c8e94d78d NE N-face leaf clkbuf_leaf_528 98 ps on a ~110 um hop -> boundary TT 308..374, 164 late cfg/desc input flops got 6 BUFx2 hold pads, native capture 213.2).",
   "benches": [
    {
     "name": "wrq_t_bench",
@@ -147,7 +147,7 @@
   "cell": "HB2xp67_ASAP7_75t_R",
   "out_cell": "HB1xp67_ASAP7_75t_R"
  },
- "structural_change": "The compactr3 failed the authoritative0.096um/0.60 pin-capacity audit before adoption. r4 returns to original388.8um face, and partitions each face clock into two actual half-face roots. Input control fields split at4SMs to preserve unique source-clock ownership. Body/core and one raw calendar clock are separate. Literal windows reserve all six clock entries; every data window cut<=0.60. Zero ordinary data/calendar stages added. Physical/native/typed grant still pending.",
+ "structural_change": "The compactr3 failed the authoritative0.096um/0.60 pin-capacity audit before adoption. r4 returns to original388.8um face, and partitions each face clock into two actual half-face roots. Input control fields split at4SMs to preserve unique source-clock ownership. Body/core and one raw calendar clock are separate. Literal windows reserve all six clock entries; every data window cut<=0.60. Zero ordinary data/calendar stages added. Physical/native/typed grant still pending. f4db40 (Claude H-SM 1815): core clk CTS -distance_between_buffers 40 so no clock net strings an unbuffered ~110 um hop to the N-face cfg/desc capture row (c8e94d78d: 98 ps leaf vs 32 ps elsewhere -> 66 ps late flops -> 6 hold BUFx2 per input -> native capture 213.2 > 190).",
  "clock": "hybrid_entries",
  "clock_ports": [
   "clk",
