@@ -1,5 +1,5 @@
 {
- "name": "dsrom-qelem-qs5f-rstp-35152e3e1-tc-hm10-cl",
+ "name": "dsrom-qelem-qs5f-rstp-b8336d6b2-tc-hm10-cl",
  "block": "ot_v41_rom_elem_q_qxpq_w10",
  "owner": "Claude:QXPQ-RST",
  "purpose": "S81-DV q element successor (coordinator-approved 10-17): RSTP=1 synchronous reset relay flop at the rst_n pin (closed view native FAIL only on rst_n: capture 239.2 > 190, 1 pin); 0 data cycles, +1 reset edge; same outline 510.84x221.4, pins, recipe and macros as the CLOSED dsrom-qelem-qs5f-efs-7fb23b7ff-tc-hm10-cl; rst_n takes the H1 data-input reference (native_q_h1r_*).",
@@ -8,7 +8,7 @@
  "route_hold_margin_ns": 0.01,
  "source": {
   "branch": "claude/qxpq-rst-1017",
-  "commit": "35152e3e12644a4659d6645b45d4faff6869f5e7",
+  "commit": "b8336d6b291ce6be36013c625b4e94c170339296",
   "extra_paths": [
    "results/rtl/dsrom_qelem_pq_20261006/qx10qs5_recovery_gate.json"
   ]
