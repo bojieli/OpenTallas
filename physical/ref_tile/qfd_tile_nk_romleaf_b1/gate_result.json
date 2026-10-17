@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qfd_tile_nk_romleaf_b1",
  "verdict": "FAIL",
- "generated": "2026-10-16T18:36:25-0700",
- "host": "ot-agidock128",
+ "generated": "2026-10-16T19:58:15-0700",
+ "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "02e209ed3299fef55b47f09c147e476e1bfef8b4",
+  "start_commit": "16bde8ddd9556fda36d8264901fa0eeb35483f5c",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "d90e580f1c350a03d7a38720d39f86aaa8b2ed62d8041be1816215be42825acf",
-  "manifest_sha256": "e839cc03481107d62429f13a96b2181fab1e2b9ae62615f04df3337272a2a5f4",
+  "archive_sha256": "a111d39c959df44848e44b3d42bceb94ce8cfcb0199af67b215f340289a47c9b",
+  "manifest_sha256": "9f299c08f6aca8256598a0f7f0075b331c1f13fded152e6bb6bb6b15d7bc965a",
   "files": [
    {
     "path": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
@@ -7187,8 +7187,8 @@
    {
     "path": "rtl/physical/qfd_tile_nl_rp2_romleaf.sv",
     "kind": "file",
-    "sha256": "c182965f1960bcb201629c39b909843e80e63015355731d1055cc6eb20877195",
-    "git_blob": "f1dfbdd3d48b5b2b2eb5cf9f3de558f81e77f5dd",
+    "sha256": "063e7e8df20e8d9a2e66a7dd5b96b227c39fa6a6f854b4a98ce02c8b00609836",
+    "git_blob": "a6e167b4c37eea41e4f6daa4f1e8e96ea55dc4a5",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -22467,8 +22467,8 @@
    {
     "path": "rtl/test/tb_qwen_romleaf_parent_native.sv",
     "kind": "file",
-    "sha256": "d07b2db326a336972668268c00ae56f080bd56c031306d3acad7d41f892b3acc",
-    "git_blob": "6425b054b9887404b08983b323b58546a860e819",
+    "sha256": "93f87fbe15a35f1b1bc029b9f6b2231eb47b3ebc1a09aab07321b5d3172f0198",
+    "git_blob": "f4cc900c915ec9f5dbebd8fc0a5b15d6fb23d1b0",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -49747,8 +49747,8 @@
    {
     "path": "tools/qwen_romleaf/parent_nk_tx_pins.tcl",
     "kind": "file",
-    "sha256": "6fde245350b5847ecd704940b0f8a835b15456274362ee507afab3cdf0e713a2",
-    "git_blob": "0b81910bf00cf19b8eede5dbccf88dc68744e8e3",
+    "sha256": "bc8726bdcd7476722a26db7e7d93ad7d98621ad8ec7908b4a05a031d8a524472",
+    "git_blob": "0236ae288b817973b2e84d6f8af0e5107f358605",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -49757,6 +49757,14 @@
     "kind": "file",
     "sha256": "079adfbf1959687bae80dd21350c02023b51d66ff44c3b01553d287201e50311",
     "git_blob": "9c999a0ea6c6491f173b179be9fbed0f9288e1bb",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/qwen_romleaf/parent_nl_tx_pins.tcl",
+    "kind": "file",
+    "sha256": "e802ecc6c70520df8f335cf810effbcc5a0c583192b4bd1d87d64a468f4c11b5",
+    "git_blob": "1a5c1d8da220e86c8f7b63333658b1a15264091a",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -49797,6 +49805,22 @@
     "kind": "file",
     "sha256": "1b9e42bed7202a77f5ab46db8de69a2afa32fa8f1167ed36d70707d49de185e3",
     "git_blob": "8aa1485d080324b8419d4135c4f97bd98af3e650",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/qwen_romleaf/parent_regions_nl_b1.tcl",
+    "kind": "file",
+    "sha256": "6bf2fde34cea7e02cf144e00e486e8ad8f8efe51556288a7eb3245f32aed1b5e",
+    "git_blob": "2404b100fb07853d8e989ccd091e413cff173198",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/qwen_romleaf/parent_regions_nl_b2.tcl",
+    "kind": "file",
+    "sha256": "e2e22a02542236bd0b341dbb63fc5449a321c463142e8ef38a09cd5254521882",
+    "git_blob": "5c68387b290858f8c8e44cac75b30a394bd56691",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -55101,6 +55125,22 @@
     "kind": "file",
     "sha256": "4e9601275b357df6b44f364ca1a61e20d5c0a570789587fe79b4aead445c1a7f",
     "git_blob": "02d4b4d508d3ff7a4a1c71a15a3f11385ef166e8",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/ref_tile/specs_q_romleaf/qfd_tile_nl_romleaf_b1.json",
+    "kind": "file",
+    "sha256": "cf1de3a9a7adca780191fa1c81bd130461e4e4cc94dc5871140b4817a4a178b2",
+    "git_blob": "2de50fa2273b0c346fa2a75a9233e5fd0197f673",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/ref_tile/specs_q_romleaf/qfd_tile_nl_romleaf_b2.json",
+    "kind": "file",
+    "sha256": "e6c15244752fc72f818abd75b346110fb103a063c5430fa6ad499768e55fb97c",
+    "git_blob": "6b0989319b3e6d1f097245b65d3a1eb302f30063",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -72027,14 +72067,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 24894903,
-   "unpacked_bytes": 166162432,
+   "archive_bytes": 24902494,
+   "unpacked_bytes": 166301696,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "e5627bdd9376190bad72a9314c55b80e184cd96f",
+   "origin_main": "d9ae75efa02680a9856ec31a9435f777daa608bc",
    "content_sha256": "00593ad7dc8c08b376e47b34a727ef07be5d8818f8ae042f4265f48690b7b1c5",
    "files": [
     {
@@ -72426,7 +72466,7 @@
   "consumed": {
    "schema": "opentallas.ref_tile.gate_consumed.v1",
    "basis": "staged archive closure at gate time",
-   "count": 147,
+   "count": 150,
    "paths": [
     "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
     "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
@@ -72562,11 +72602,14 @@
     "tools/qwen_romleaf/parent_nk_bench.sh",
     "tools/qwen_romleaf/parent_nk_tx_pins.tcl",
     "tools/qwen_romleaf/parent_nl_assigned_pins.tcl",
+    "tools/qwen_romleaf/parent_nl_tx_pins.tcl",
     "tools/qwen_romleaf/parent_plan.py",
     "tools/qwen_romleaf/parent_regions.tcl",
     "tools/qwen_romleaf/parent_regions_b1.tcl",
     "tools/qwen_romleaf/parent_regions_b2.tcl",
     "tools/qwen_romleaf/parent_regions_b3.tcl",
+    "tools/qwen_romleaf/parent_regions_nl_b1.tcl",
+    "tools/qwen_romleaf/parent_regions_nl_b2.tcl",
     "tools/ref_tile/layout_dump.tcl",
     "tools/ref_tile/layout_png.py",
     "tools/ref_tile/path_classes.tcl",
@@ -72692,10 +72735,10 @@
     "rtl/physical/qfd_tile_nk_rp2_45.sv": "9352a540a96a69092d1d910fa852191fdf3d0519ff4c44298b348e921a35e064",
     "rtl/physical/qfd_tile_nk_rp2_romleaf.sv": "adb170a1447741f3879c8747b141833b01f656ff5070c878077d909393c7eb36",
     "rtl/physical/qfd_tile_nl_rp2_45.sv": "6781b379b8947ce33be2f02cd30252aa87c7108349d7b74fbceffb2168814982",
-    "rtl/physical/qfd_tile_nl_rp2_romleaf.sv": "c182965f1960bcb201629c39b909843e80e63015355731d1055cc6eb20877195",
+    "rtl/physical/qfd_tile_nl_rp2_romleaf.sv": "063e7e8df20e8d9a2e66a7dd5b96b227c39fa6a6f854b4a98ce02c8b00609836",
     "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
     "rtl/test/tb_qwen_romleaf_1552.sv": "5a18a8e737b4ac19a9f52cd7886d97aeb48fc259433052715d8962a9f5bd7422",
-    "rtl/test/tb_qwen_romleaf_parent_native.sv": "d07b2db326a336972668268c00ae56f080bd56c031306d3acad7d41f892b3acc",
+    "rtl/test/tb_qwen_romleaf_parent_native.sv": "93f87fbe15a35f1b1bc029b9f6b2231eb47b3ebc1a09aab07321b5d3172f0198",
     "rtl/test/tb_qwen_romleaf_parent_nk_native.sv": "2b1e05ad479df76dfe3e76ca47d42e5dd4ec3fafa675afc271b6d5fc76e67bd4",
     "tools/closure_loop/ck_insertion.py": "aa781a57409f054dfcbd54bca32e887dfbf6b199e16d48083450670b66d20e6a",
     "tools/fp_margin_lint.py": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8",
@@ -72709,13 +72752,16 @@
     "tools/qwen_romleaf/parent_consumer_boxes.tcl": "f457eb24959eb5731eb0333a7cf5ef602c17955da75ade2acd5a2a54ea0e83ac",
     "tools/qwen_romleaf/parent_nk_assigned_pins.tcl": "d4c90292755b2a5fadc7beb4804941f972d83a3b71f8df471e9b7ef23c74b27a",
     "tools/qwen_romleaf/parent_nk_bench.sh": "69363dc0bdec836af614c6e55fa7e8a0e8cc6c4bc06b9bafce14e0d5b3ff5b9e",
-    "tools/qwen_romleaf/parent_nk_tx_pins.tcl": "6fde245350b5847ecd704940b0f8a835b15456274362ee507afab3cdf0e713a2",
+    "tools/qwen_romleaf/parent_nk_tx_pins.tcl": "bc8726bdcd7476722a26db7e7d93ad7d98621ad8ec7908b4a05a031d8a524472",
     "tools/qwen_romleaf/parent_nl_assigned_pins.tcl": "079adfbf1959687bae80dd21350c02023b51d66ff44c3b01553d287201e50311",
+    "tools/qwen_romleaf/parent_nl_tx_pins.tcl": "e802ecc6c70520df8f335cf810effbcc5a0c583192b4bd1d87d64a468f4c11b5",
     "tools/qwen_romleaf/parent_plan.py": "ccc15ed8123cc436752c47ded64f853b391c598fce26894dfc9ff36ed37ac7d3",
     "tools/qwen_romleaf/parent_regions.tcl": "abc1834246b6e6ace96ad134fac04508289d2818841025228735ce50b106ff5c",
     "tools/qwen_romleaf/parent_regions_b1.tcl": "3f448a4125e804da181ada6c361c76f859c392c122c51cdccccf47c5b65c76ab",
     "tools/qwen_romleaf/parent_regions_b2.tcl": "0bd1118099b301bf2db25f22723329ac17d76d8a8c803ca281605c70b2024efe",
     "tools/qwen_romleaf/parent_regions_b3.tcl": "1b9e42bed7202a77f5ab46db8de69a2afa32fa8f1167ed36d70707d49de185e3",
+    "tools/qwen_romleaf/parent_regions_nl_b1.tcl": "6bf2fde34cea7e02cf144e00e486e8ad8f8efe51556288a7eb3245f32aed1b5e",
+    "tools/qwen_romleaf/parent_regions_nl_b2.tcl": "e2e22a02542236bd0b341dbb63fc5449a321c463142e8ef38a09cd5254521882",
     "tools/ref_tile/layout_dump.tcl": "0fbcf52283a929344d570838c7f22680a5787cbd58b6f5b2bf0267911cdc9093",
     "tools/ref_tile/layout_png.py": "327fcdf5ec8d07f047085a49ccbd6f0823bb65bbcb020084a9192a4a8c33ecf1",
     "tools/ref_tile/path_classes.tcl": "47d06c968afc42e5773c9490bab1c13d02d042fc7221f32bf9c76ce4efc54f73",
@@ -72725,18 +72771,18 @@
     "tools/textbook_lint.py": "cfe6ea4687e4c4afe180909445d7ff10b18b8202b1bd4e2af259a9a42d2e76af",
     "tools/w18/corner_sta_ref.py": "bd70080bbbd23db830914e4b52682c086b4de5cc9adc6873a026c260099419fa"
    },
-   "digest": "507a9af1695e70076f05b17d52a3d882f07bdfb4082bab5ab128c8c1fcfa9d5f"
+   "digest": "4798aaa35e1308eb79164acb0f738c857268362ac9bd0305c0e57d3050cb73e6"
   },
-  "captured": "2026-10-16T18:33:40-0700",
+  "captured": "2026-10-16T18:55:43-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qfd_tile_nk_romleaf_b1/signoff.sdc"
   },
-  "remote_script_sha256": "a5698e270b7b74a7bacee6195c62a6d2ca0c06092afa20acecac3ff0481abc52",
+  "remote_script_sha256": "7d2de8383dc307e6e1f457891c563372668eacfc583a2eb871829e236449e74f",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_romleaf_b1-20261016-183327",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_romleaf_b1-20261016-185529",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -72744,8 +72790,8 @@
   ]
  },
  "clock": {
-  "max_root_sinks": null,
-  "root": null,
+  "max_root_sinks": 5742,
+  "root": "port:ck",
   "cts": true,
   "tt_insertion_ps": null,
   "tt_spread_ps": null,
@@ -72755,8 +72801,8 @@
    "insertion_ps": 300.0,
    "spread_ps": 80.0
   },
-  "verdict": "UNKNOWN",
-  "text": "clock sinks unknown; no measured clock tree (no --cts gate evidence)"
+  "verdict": "PASS",
+  "text": "5,742 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
  },
  "items": [
   {
@@ -72935,27 +72981,27 @@
   },
   {
    "severity": "FAIL",
-   "check": "floorplan.pin_track",
-   "message": "8 signal/clock pins have no full min-width landing on any actual preferred routing track (ck_tx0: M4 [0.054, 461.892, 0.138, 461.916]; ck_tx1: M4 [0.054, 260.868, 0.138, 260.892]; ck_tx2: M4 [0.054, 61.524, 0.138, 61.548]): correct the die-assigned pin coordinates against the DEF track grid; do not silently snap a grant",
-   "fix": "fix actual pin shapes/coordinates against the die and DEF tracks; retain the assigned native pin plan"
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
   },
   {
    "severity": "WARN",
    "check": "cts_calibration",
-   "message": "CTS rc=None ck_insertion rc=None",
+   "message": "CTS rc=2 ck_insertion rc=1",
    "fix": ""
   },
   {
-   "severity": "WARN",
-   "check": "clock_rule",
-   "message": "the synthesized netlist's clock sinks were not reported: clock sinks unknown; no measured clock tree (no --cts gate evidence)",
-   "fix": "read the remote log (textbook lint line 'clock_roots')"
+   "severity": "FAIL",
+   "check": "remote_script",
+   "message": "remote script completed with exit 1",
+   "fix": "read the original terminal log and fix the reported failure"
   },
   {
-   "severity": "WARN",
-   "check": "layout_images",
-   "message": "the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log",
-   "fix": ""
+   "severity": "FAIL",
+   "check": "trial_route",
+   "message": "trial global route produced no congestion table (GATE_GRT_RC=2)",
+   "fix": "read the remote grt.log"
   }
  ]
 }
