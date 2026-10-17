@@ -49,7 +49,12 @@ module ot_s81_engram_lookup_static #(
 `endif
     parameter integer SLW   = (NSLOT > 1) ? $clog2(NSLOT) : 1
 ) (
-    input  wire                     clk,
+    input  wire                     clk,        // front root: window ids / win_n, hash capture res_c, straps
+    // st10 (S81-TILES2 10-17): three more phase-0 1:1 regional roots of the same source as clk (each only re-roots
+    // registers; no logic, cycle or edge changes; in simulation all four carry the same clock):
+    input  wire                     clk_ctl,    // control: FSM / issue / address / age-seen / write path / emit control / qn
+    input  wire                     clk_rd,     // read select: c* bank captures (negedge), r_* and E1
+    input  wire                     clk_em,     // emit tail: E2, CRC, E3, transport / od, status
     input  wire                     clk_seed,
     input  wire [5:0]               clk_hash,
     input  wire [CPR-1:0]           clk_rows,
@@ -125,7 +130,7 @@ module ot_s81_engram_lookup_static #(
     wire response_ok = hr_valid && active && age < RETURN_AGE &&
         hr_slot == slot && hr_tag < CPR && hr_idx < 9 && !seen[hr_tag][hr_idx];
     integer sr;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk_ctl or negedge rst_n) begin
         if (!rst_n) begin
             active<=0; age<=0; protocol_bad<=0;
             for(sr=0;sr<CPR;sr=sr+1) seen[sr]<=0;
@@ -159,7 +164,7 @@ module ot_s81_engram_lookup_static #(
     wire [QW*ENG_LAYERS*ENG_COLS-1:0] hres;
     ot_s81_engram_hash_static u_hash (.clk(clk_seed), .clk_columns(clk_hash), .in_w(win_n), .out_res(hres));
     reg [12:1] lastl;                        // marks the 4th feed through the hash latency
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk_ctl or negedge rst_n) begin
         if (!rst_n) lastl <= 12'd0;
         else lastl <= {lastl[11:1], hfeed && fcnt == 2'd3};
     end
@@ -203,10 +208,10 @@ module ot_s81_engram_lookup_static #(
                     cb_m  = cb_m  | ({ABW{csel[m]}} & cbs_c[ABW*m +: ABW]);
                 end
             end
-            always @(posedge clk) begin
+            always @(posedge clk_ctl) begin
                 cb_q <= BASE + cb_m;
             end
-            always @(posedge clk) begin
+            always @(posedge clk_ctl) begin
                 if (hdone) res[gj] <= res_m;
                 if (st == S_ADDR && acnt == 2'd0) begin
                     r256[gj] <= {{(ABW-QW-8){1'b0}}, res[gj], 8'd0};
@@ -226,18 +231,18 @@ module ot_s81_engram_lookup_static #(
     // accepted atom -> core-root registers (one-hot bank x atom enables + data); the row-root leaf writes them
     // one cycle later, so the core->row root crossing is flop to flop (enable fanout lives in the row root)
     reg [255:0] wdata_q;
-    always @(posedge clk) wdata_q <= hr_data;
+    always @(posedge clk_ctl) wdata_q <= hr_data;
     generate for (bank=0; bank<CPR; bank=bank+1) begin : g_clocked_row
         wire [256*ATOMS-1:0] stored;
         reg  [ATOMS-1:0] wen_q;
-        always @(posedge clk or negedge rst_n)
+        always @(posedge clk_ctl or negedge rst_n)
             if (!rst_n) wen_q <= {ATOMS{1'b0}};
             else        wen_q <= (response_ok && hr_tag == bank) ? ({{(ATOMS-1){1'b0}}, 1'b1} << hr_idx) : {ATOMS{1'b0}};
         // core -> row hop (st8): this bank's ck-POSEDGE copy (full core cycle from the shared wdata_q, so its tile-wide
         // fanout wire has a whole cycle), captured by the leaf on the row posedge one cycle later (full-cycle crossing)
         reg  [ATOMS-1:0] wx_en;
         reg  [255:0]     wx_d;
-        always @(posedge clk) begin wx_en <= wen_q; wx_d <= wdata_q; end
+        always @(posedge clk_ctl) begin wx_en <= wen_q; wx_d <= wdata_q; end
         ot_s81_engram_rowbank_static_leaf #(.ATOMS(ATOMS)) storage (
             .ck(clk_rows[bank]), .write_en(wx_en), .write_data(wx_d), .rows(stored));
         for (atom=0; atom<ATOMS; atom=atom+1) begin : g_read
@@ -247,7 +252,7 @@ module ot_s81_engram_lookup_static #(
 
     // ---- issue ------------------------------------------------------------------------
     reg [2:0] icnt;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk_ctl or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; fcnt <= 2'd0; acnt <= 2'd0; icnt <= 3'd0; hq_valid <= 1'b0;
             slot <= {SLW{1'b0}};
@@ -289,7 +294,7 @@ module ot_s81_engram_lookup_static #(
             endcase
         end
     end
-    always @(posedge clk) if (st == S_ADDR && acnt == 2'd1)
+    always @(posedge clk_ctl) if (st == S_ADDR && acnt == 2'd1)
         for (j = 0; j < CPR; j = j + 1) roff[j] <= r8[j][4:3];   // byte address mod 32 / 8 (r256 is 0 mod 256)
 
     // ---- emit -------------------------------------------------------------------------
@@ -309,7 +314,7 @@ module ot_s81_engram_lookup_static #(
     reg [1:0]   e1_off;
     reg [2:0]   e1_j, e1_k;
     reg [SLW-1:0] e1_s, e2_s, e3_s;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk_ctl or negedge rst_n) begin
         if (!rst_n) begin
             ej <= 3'd0; ek <= 4'd0; emit_done_r <= 1'b0; e1_v <= 1'b0; e0q_v <= 1'b0; e0r_v <= 1'b0;
         end else begin
@@ -329,7 +334,7 @@ module ot_s81_engram_lookup_static #(
     end
     generate
         if (PIPE == 0) begin : g_sel0
-            always @(posedge clk) if (e0_go) begin
+            always @(posedge clk_rd) if (e0_go) begin
                 e1_lo <= rb[ej][ek];
                 e1_hi <= rb[ej][ek + 1'b1];
                 e1_a8 <= rb[ej][8];
@@ -350,8 +355,10 @@ module ot_s81_engram_lookup_static #(
             reg [2:0]  q_j, q_k, r_j, r_k;
             reg [SLW-1:0] q_s, r_s;
             integer jj;
-            always @(posedge clk) begin
+            always @(posedge clk_ctl) begin
                 if (e0_go) begin q_off <= roff[ej]; q_j <= ej; q_k <= ek[2:0]; q_s <= slot; end
+            end
+            always @(posedge clk_rd) begin
                 r_off <= q_off; r_j <= q_j; r_k <= q_k; r_s <= q_s;
             end
             reg [255:0] clo [0:CPR-1], chi [0:CPR-1], ca8 [0:CPR-1];
@@ -359,7 +366,7 @@ module ot_s81_engram_lookup_static #(
             for (gb = 0; gb < CPR; gb = gb + 1) begin : g_rdhop
                 reg       qn_h;
                 reg [3:0] qn_k;
-                always @(negedge clk) begin qn_h <= e0_go && (ej == gb); qn_k <= ek; end
+                always @(negedge clk_ctl) begin qn_h <= e0_go && (ej == gb); qn_k <= ek; end
                 reg       h_b;
                 reg [3:0] k_b;
                 always @(posedge clk_rows[gb]) begin h_b <= qn_h; k_b <= qn_k; end
@@ -379,7 +386,7 @@ module ot_s81_engram_lookup_static #(
                 end
                 reg [255:0] blo, bhi, ba8;
                 always @(posedge clk_rows[gb]) begin blo <= lo_b; bhi <= hi_b; ba8 <= {256{h_b}} & rb[gb][ATOMS-1]; end
-                always @(negedge clk) begin clo[gb] <= blo; chi[gb] <= bhi; ca8[gb] <= ba8; end
+                always @(negedge clk_rd) begin clo[gb] <= blo; chi[gb] <= bhi; ca8[gb] <= ba8; end
             end
             reg [255:0] vlo, vhi, va8;
             always @(*) begin
@@ -388,7 +395,7 @@ module ot_s81_engram_lookup_static #(
                     vlo = vlo | clo[jj]; vhi = vhi | chi[jj]; va8 = va8 | ca8[jj];
                 end
             end
-            always @(posedge clk) if (e1_vn) begin
+            always @(posedge clk_rd) if (e1_vn) begin
                 e1_lo <= vlo; e1_hi <= vhi; e1_a8 <= va8;
                 e1_off <= r_off; e1_j <= r_j; e1_k <= r_k; e1_s <= r_s;
             end
@@ -402,11 +409,11 @@ module ot_s81_engram_lookup_static #(
     reg [2:0]   e2_j, e2_k;
     wire [511:0] e1_cat = {e1_hi, e1_lo};
     wire [255:0] e1_a8s = e1_a8 >> {e1_off, 6'd0};
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk_em or negedge rst_n) begin
         if (!rst_n) e2_v <= 1'b0;
         else e2_v <= e1_v;
     end
-    always @(posedge clk) if (e1_v) begin
+    always @(posedge clk_em) if (e1_v) begin
         e2_d <= e1_cat[{e1_off, 6'd0} +: 256];
 `ifdef OT_ENGRAM_MUT_ONESCALE
         e2_scale <= e1_a8s[7:0];            // NEGATIVE CONTROL ONLY: the pre-F13 one-exponent decode (block 0's on every beat)
@@ -424,11 +431,11 @@ module ot_s81_engram_lookup_static #(
     reg transport_v, ov;
     reg [FW-1:0] transport_d, od;
     wire [4:0] e2_col = crank * CPR + e2_j;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk_em or negedge rst_n) begin
         if(!rst_n) begin transport_v<=0;ov<=0;end
         else begin transport_v<=e2_v;ov<=transport_v;end
     end
-    always @(posedge clk) begin
+    always @(posedge clk_em) begin
         transport_d<={e2_col,e2_k,e2_s,e2_scale,e2_d};
         od<=transport_d;
     end
@@ -517,7 +524,7 @@ module ot_s81_engram_lookup_static #(
     reg [31:0] e3_exp;
     generate
         if (PIPE == 0) begin : g_crc0
-            always @(posedge clk or negedge rst_n) begin
+            always @(posedge clk_em or negedge rst_n) begin
                 if (!rst_n) begin
                     crc <= 32'hFFFFFFFF; e3_last <= 1'b0;
                 end else begin
@@ -526,7 +533,7 @@ module ot_s81_engram_lookup_static #(
                                                    : crc_beat((e2_k == 3'd0) ? 32'hFFFFFFFF : crc, e2_d);
                 end
             end
-            always @(posedge clk) if (e2_v && e2_k == 3'd7) begin e3_sc8 <= e2_sc8; e3_exp <= e2_crc; e3_s <= e2_s; end
+            always @(posedge clk_em) if (e2_v && e2_k == 3'd7) begin e3_sc8 <= e2_sc8; e3_exp <= e2_crc; e3_s <= e2_s; end
         end else begin : g_crc1
             // stage a: data term; stage b: state term ^ data term
             reg [31:0] ga;
@@ -534,7 +541,7 @@ module ot_s81_engram_lookup_static #(
             reg [63:0] a_sc8;
             reg [31:0] a_exp;
             reg [SLW-1:0] a_s;
-            always @(posedge clk or negedge rst_n) begin
+            always @(posedge clk_em or negedge rst_n) begin
                 if (!rst_n) begin a_v <= 1'b0; a_last <= 1'b0; crc <= 32'hFFFFFFFF; e3_last <= 1'b0; end
                 else begin
                     a_v <= e2_v;
@@ -544,16 +551,16 @@ module ot_s81_engram_lookup_static #(
                                                    : crc_beat(a_first ? 32'hFFFFFFFF : crc, 256'd0)) ^ ga;
                 end
             end
-            always @(posedge clk) if (e2_v) begin
+            always @(posedge clk_em) if (e2_v) begin
                 ga <= beat_d;
                 a_first <= (e2_k == 3'd0);
                 a_sc8 <= e2_sc8; a_exp <= e2_crc; a_s <= e2_s;
             end
-            always @(posedge clk) if (a_last) begin e3_sc8 <= a_sc8; e3_exp <= a_exp; e3_s <= a_s; end
+            always @(posedge clk_em) if (a_last) begin e3_sc8 <= a_sc8; e3_exp <= a_exp; e3_s <= a_s; end
         end
     endgenerate
     // final: fold the 8 exponent bytes and compare
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk_em or negedge rst_n) begin
         if (!rst_n) begin
             st_valid <= 1'b0; st_slot <= {SLW{1'b0}}; st_bad <= 1'b0; fault <= 1'b0;
         end else begin

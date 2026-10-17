@@ -2,7 +2,13 @@
 // ---------------------------------------------------------------------------------------------------------------------
 // dsfd_engram_lkp_static14 (S-ENGRAM+NORM 2210): the hardened S81 Engram lookup element, STATIC form.
 // ot_s81_engram_lookup_static (14 phase-related 1:1 clock roots: ck core, ck_seed hash primary, ck_hash[5:0] hash
-// columns, ck_rows[5:0] row buffers; st9 adds ck_n / ck_s face roots for the N / S pin flops, 16 roots) behind pin registers (owner rule 10-15 19:50):
+// columns, ck_rows[5:0] row buffers; st9 adds ck_n / ck_s face roots for the N / S pin flops, 16 roots; st10 splits
+// the 7,984-sink core root (st9 gate TT 388.5 / 87.4 ps, entry mid-W, mass at x 110-321) into regional roots, 17 roots:
+//   ck    (W)          front: window ids / win_n, hash capture res_c, straps, cfg / fault pin flops
+//   ck_s  (S x 180)    S pin flops + engine control (FSM / issue / address / age-seen / write path / emit control / qn)
+//   ck_rd (S x 250)    read select: the six banks' c* captures, r_*, E1 (the mass above the S face, x 128-321)
+//   ck_n  (N x 185)    N pin flops + emit tail (E2, CRC, E3, transport / od, status) under the o_d pin bus
+// all phase-0 1:1 roots of one PLL; every register keeps its edge and cycle: 0 cycles) behind pin registers (owner rule 10-15 19:50):
 //   * every input pin is captured by one flop with no logic in front of it (+1 cycle on every input);
 //   * every output pin is driven by one flop (+1 cycle on every output);
 //   * NO ready, credit or release signal crosses the boundary (owner 10-14 static schedule): the window issues in
@@ -27,7 +33,8 @@ module dsfd_engram_lkp_static14 #(
     input  wire [5:0]            ck_hash,
     input  wire [5:0]            ck_rows,
     input  wire                  ck_n,      // st9: N-face pin flops (window in, row beats/status out)
-    input  wire                  ck_s,      // st9: S-face pin flops (HBM request out, HBM response in)
+    input  wire                  ck_s,      // st9: S-face pin flops (HBM request out, HBM response in); st10: + engine control
+    input  wire                  ck_rd,     // st10: read-select region (c* bank captures, E1)
     input  wire                  rst_n,
     input  wire                  cfg_layer,
     input  wire [1:0]            cfg_rank,
@@ -86,7 +93,7 @@ module dsfd_engram_lkp_static14 #(
     wire [263:0] e_od;
     ot_s81_engram_lookup_static #(.RETURN_AGE(RETURN_AGE), .ROWSTRIPE(ROWSTRIPE), .NR(4), .CPR(6), .NSLOT(NSLOT), .ABW(36),
                                   .PIPE(1)) u_e (
-        .clk(ck), .clk_seed(ck_seed), .clk_hash(ck_hash), .clk_rows(ck_rows), .rst_n(rst_n), .cfg_layer(cl_q), .cfg_rank(cr_q),
+        .clk(ck), .clk_ctl(ck_s), .clk_rd(ck_rd), .clk_em(ck_n), .clk_seed(ck_seed), .clk_hash(ck_hash), .clk_rows(ck_rows), .rst_n(rst_n), .cfg_layer(cl_q), .cfg_rank(cr_q),
         .win_valid(wv_q), .win_slot(ws_q), .win_ids(wid_q),
         .hq_valid(e_hqv), .hq_atom(e_hqa), .hq_len(), .hq_tag(e_hqt),
         .hr_valid(hrv_q), .hr_slot(hrs_q), .hr_tag(hrt_q), .hr_idx(hri_q), .hr_data(hrd_q),

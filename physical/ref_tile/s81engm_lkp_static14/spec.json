@@ -24,7 +24,8 @@
   "ck_rows[5]",
   "ck_seed",
   "ck_n",
-  "ck_s"
+  "ck_s",
+  "ck_rd"
  ],
  "clock_data_paths": "related_same_frequency",
  "clock_relationship": {
@@ -240,6 +241,17 @@
     "hq_atom",
     "hq_tag"
    ]
+  },
+  "rd": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rd"
+   ],
+   "inputs": [],
+   "outputs": []
   }
  },
  "reset_ports": [
@@ -286,7 +298,8 @@
    "hr_tag",
    "hr_idx",
    "hr_d",
-   "ck_s"
+   "ck_s",
+   "ck_rd"
   ],
   "W": [
    "ck",
@@ -315,14 +328,14 @@
  "pin_reg_split": true,
  "slot_change_request": {
   "contract": "S81 Engram static14 exact pin plan",
-  "version": "20261017-st9",
-  "why": "Coordinator grant (HANDOFF 0co REVIEW 10-17 ~09:35): +2 clock pins over the 674-pin / 14-root grant: ck_n (N M5 x 185.004) and ck_s (S M5 x 180.012) carry the N / S face pin flops; 674 rectangles unchanged; 676 pins / 16 roots. Record results/physical/die_iter_1012/s81/grants/coord_1017_engram_static14_st9_clk2.json."
+  "version": "20261017-st10",
+  "why": "st10 (S81-TILES2, coordinator decision 10-17: split the core clock into regional roots): +1 clock pin over the 676-pin / 16-root st9 grant: ck_rd (S M5 x 249.996, 21 um clear of hr_d[255] 228.9) for the read-select mass (c* bank captures + E1, x 128-321 above the S face); ck_s also carries engine control, ck_n the emit tail; 676 rectangles unchanged; 677 pins / 17 roots. PIN GRANT REQUIRED from the coordinator / S81-DV before bind (not yet granted)."
  },
  "job": {
   "owner": "Claude:S-ENGRAM+NORM",
   "branch": "claude/s81-static14-st9",
-  "tag": "st9-faceck",
-  "purpose": "S81 Engram lookup element, STATIC 16-root form (st9: ck_n/ck_s face roots) dsfd_engram_lkp_static14 (no ready/credit/release; fixed RETURN_AGE return, poison on missing/late atoms)",
+  "tag": "st10-ckrd",
+  "purpose": "S81 Engram lookup element, STATIC 17-root form (st10: core clock split into ck front / ck_s control / ck_rd read-select / ck_n emit-tail regional roots) dsfd_engram_lkp_static14 (no ready/credit/release; fixed RETURN_AGE return, poison on missing/late atoms)",
   "structural_change": "Static successor of the credit wrapper dsfd_engram_lkp_14roots: ot_s81_engram_lookup_static (Codex 05:03 draft, preserved 257284f61) behind one input and one output pin register; win_cred/rel/hq_cred/o_cred removed, win_slot/hr_slot added. Element proof: STATIC PASS 16 windows/96 requests/768 beats/96 statuses vs ot_dsrom_engram_lookup reference, 7 mutants rejected.",
   "extra_paths": [
    "physical/s81_die_pins/v28_engram_static14_candidate",
@@ -436,6 +449,17 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "static14_element_mut10",
+    "cmd": "mkdir -p {RUN}/es14m10 && bash tools/s81_ph/run_engram_lkp_static14.sh $PWD {RUN}/es14m10 10",
+    "expect": "fail",
+    "fail_regex": "STATIC .*mismatch|STATIC coverage missing",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
    }
   ],
   "slot_change_request": {
@@ -443,7 +467,7 @@
    "version": "20261016-0409",
    "why": "Source-pinned S-DIE grant results/physical/die_iter_1012/s81/grants/sdie_0030_engram_mix4.json accepts exact674 mapped pins including14 clock roots (ck, ck_seed, six hash, six rows). Same324x216 outline and all674 Tcl rectangles/layers unchanged. Native timing, child_lint and current parent GEN binding remain required."
   },
-  "hold_merge": "Component candidate only. Exact676pin/16root die grant (coordinator 10-17 ~09:35, +2 clock pins over sdie_0030 674/14); current-source native launch/capture/spread, FFhold, child_lint, current parent GEN binding and external HBM RETURN_AGE bound remain unqualified.",
+  "hold_merge": "Component candidate only. Exact677pin/17root die grant (st10 +1 ck_rd REQUESTED over the coordinator 10-17 ~09:35 676/16 grant); current-source native launch/capture/spread, FFhold, child_lint, current parent GEN binding and external HBM RETURN_AGE bound remain unqualified.",
   "cycles_added": 1
  },
  "orfs_vars": {

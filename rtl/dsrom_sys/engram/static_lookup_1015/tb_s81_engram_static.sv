@@ -19,7 +19,7 @@ module tb_s81_engram_static;
  .hr_valid(hv),.hr_ready(),.hr_tag(ht),.hr_idx(hi),.hr_data(hd),
  .o_valid(av),.o_ready(1'b1),.o_col(ac),.o_beat(ak),.o_slot(asl),.o_data(ad),.st_valid(asv),.st_slot(),.st_bad(ab),.fault(af));
  ot_s81_engram_lookup_static #(.PIPE(1),.NSLOT(8),.RETURN_AGE(128)) candidate(
- .clk(clk),.clk_seed(clk && mut!=7),.clk_hash(ch),.clk_rows(cr),.rst_n(rst_n),.cfg_layer(layer),.cfg_rank(rank),.win_valid(wv),.win_slot(slot),.win_ids(ids),
+ .clk(clk),.clk_ctl(clk),.clk_rd(clk),.clk_em(clk),.clk_seed(clk && mut!=7),.clk_hash(ch),.clk_rows(cr),.rst_n(rst_n),.cfg_layer(layer),.cfg_rank(rank),.win_valid(wv),.win_slot(slot),.win_ids(ids),
  .hq_valid(bh),.hq_atom(ba),.hq_len(),.hq_tag(bt),
  .hr_valid(hv),.hr_slot(hs),.hr_tag(ht),.hr_idx(hi),.hr_data(hd),
  .o_valid(bv),.o_col(bc),.o_beat(bk),.o_slot(bsl),.o_data(bd),.st_valid(bsv),.st_slot(),.st_bad(bb),.fault(bf));

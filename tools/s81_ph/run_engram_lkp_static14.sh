@@ -19,7 +19,7 @@ if [ -n "${3:-}" ]; then
 fi
 "$out/obj/sim" > "$out/positive.log" 2>&1
 cat "$out/positive.log"
-for mut in 1 2 3 4 5 6 7 8 9; do
+for mut in 1 2 3 4 5 6 7 8 9 10; do
  set +e
  "$out/obj/sim" +MUT="$mut" > "$out/mutant_$mut.log" 2>&1
  rc=$?

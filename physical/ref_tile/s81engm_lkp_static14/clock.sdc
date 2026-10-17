@@ -19,6 +19,7 @@ create_clock -name ot_io_rows5 -period 770.000000000
 create_clock -name ot_io_seed -period 770.000000000
 create_clock -name ot_io_face_n -period 770.000000000
 create_clock -name ot_io_face_s -period 770.000000000
+create_clock -name ot_io_rd -period 770.000000000
 create_clock -name ot_entry_0 -period 770.000000000 [get_ports {ck}]
 create_clock -name ot_entry_1 -period 770.000000000 [get_ports {ck_hash[0]}]
 create_clock -name ot_entry_2 -period 770.000000000 [get_ports {ck_hash[1]}]
@@ -35,6 +36,7 @@ create_clock -name ot_entry_12 -period 770.000000000 [get_ports {ck_rows[5]}]
 create_clock -name ot_entry_13 -period 770.000000000 [get_ports {ck_seed}]
 create_clock -name ot_entry_14 -period 770.000000000 [get_ports {ck_n}]
 create_clock -name ot_entry_15 -period 770.000000000 [get_ports {ck_s}]
+create_clock -name ot_entry_16 -period 770.000000000 [get_ports {ck_rd}]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set_input_delay 166.667 -clock core_clk [all_inputs -no_clocks]
@@ -49,11 +51,11 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n} {cfg_layer} {cfg_rank}} outputs {{fault}}} {hash0} {clock ot_io_hash0 io_budget_ps 166.667 inputs {} outputs {}} {hash1} {clock ot_io_hash1 io_budget_ps 166.667 inputs {} outputs {}} {hash2} {clock ot_io_hash2 io_budget_ps 166.667 inputs {} outputs {}} {hash3} {clock ot_io_hash3 io_budget_ps 166.667 inputs {} outputs {}} {hash4} {clock ot_io_hash4 io_budget_ps 166.667 inputs {} outputs {}} {hash5} {clock ot_io_hash5 io_budget_ps 166.667 inputs {} outputs {}} {rows0} {clock ot_io_rows0 io_budget_ps 166.667 inputs {} outputs {}} {rows1} {clock ot_io_rows1 io_budget_ps 166.667 inputs {} outputs {}} {rows2} {clock ot_io_rows2 io_budget_ps 166.667 inputs {} outputs {}} {rows3} {clock ot_io_rows3 io_budget_ps 166.667 inputs {} outputs {}} {rows4} {clock ot_io_rows4 io_budget_ps 166.667 inputs {} outputs {}} {rows5} {clock ot_io_rows5 io_budget_ps 166.667 inputs {} outputs {}} {seed} {clock ot_io_seed io_budget_ps 166.667 inputs {} outputs {}} {face_n} {clock ot_io_face_n io_budget_ps 166.667 inputs {{win_v} {win_slot} {win_ids}} outputs {{o_v} {o_col} {o_beat} {o_slot} {o_d} {st_v} {st_slot} {st_bad}}} {face_s} {clock ot_io_face_s io_budget_ps 166.667 inputs {{hr_v} {hr_slot} {hr_tag} {hr_idx} {hr_d}} outputs {{hq_v} {hq_atom} {hq_tag}}}]
-set ::ot_ce_source_domains [dict create {ck} {core} {ck_hash[0]} {hash0} {ck_hash[1]} {hash1} {ck_hash[2]} {hash2} {ck_hash[3]} {hash3} {ck_hash[4]} {hash4} {ck_hash[5]} {hash5} {ck_rows[0]} {rows0} {ck_rows[1]} {rows1} {ck_rows[2]} {rows2} {ck_rows[3]} {rows3} {ck_rows[4]} {rows4} {ck_rows[5]} {rows5} {ck_seed} {seed} {ck_n} {face_n} {ck_s} {face_s}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n} {cfg_layer} {cfg_rank}} outputs {{fault}}} {hash0} {clock ot_io_hash0 io_budget_ps 166.667 inputs {} outputs {}} {hash1} {clock ot_io_hash1 io_budget_ps 166.667 inputs {} outputs {}} {hash2} {clock ot_io_hash2 io_budget_ps 166.667 inputs {} outputs {}} {hash3} {clock ot_io_hash3 io_budget_ps 166.667 inputs {} outputs {}} {hash4} {clock ot_io_hash4 io_budget_ps 166.667 inputs {} outputs {}} {hash5} {clock ot_io_hash5 io_budget_ps 166.667 inputs {} outputs {}} {rows0} {clock ot_io_rows0 io_budget_ps 166.667 inputs {} outputs {}} {rows1} {clock ot_io_rows1 io_budget_ps 166.667 inputs {} outputs {}} {rows2} {clock ot_io_rows2 io_budget_ps 166.667 inputs {} outputs {}} {rows3} {clock ot_io_rows3 io_budget_ps 166.667 inputs {} outputs {}} {rows4} {clock ot_io_rows4 io_budget_ps 166.667 inputs {} outputs {}} {rows5} {clock ot_io_rows5 io_budget_ps 166.667 inputs {} outputs {}} {seed} {clock ot_io_seed io_budget_ps 166.667 inputs {} outputs {}} {face_n} {clock ot_io_face_n io_budget_ps 166.667 inputs {{win_v} {win_slot} {win_ids}} outputs {{o_v} {o_col} {o_beat} {o_slot} {o_d} {st_v} {st_slot} {st_bad}}} {face_s} {clock ot_io_face_s io_budget_ps 166.667 inputs {{hr_v} {hr_slot} {hr_tag} {hr_idx} {hr_d}} outputs {{hq_v} {hq_atom} {hq_tag}}} {rd} {clock ot_io_rd io_budget_ps 166.667 inputs {} outputs {}}]
+set ::ot_ce_source_domains [dict create {ck} {core} {ck_hash[0]} {hash0} {ck_hash[1]} {hash1} {ck_hash[2]} {hash2} {ck_hash[3]} {hash3} {ck_hash[4]} {hash4} {ck_hash[5]} {hash5} {ck_rows[0]} {rows0} {ck_rows[1]} {rows1} {ck_rows[2]} {rows2} {ck_rows[3]} {rows3} {ck_rows[4]} {rows4} {ck_rows[5]} {rows5} {ck_seed} {seed} {ck_n} {face_n} {ck_s} {face_s} {ck_rd} {rd}]
 set ::ot_ce_explicit_domains 1
-set ::ot_ce_cts_roots {{ck} {ck_hash[0]} {ck_hash[1]} {ck_hash[2]} {ck_hash[3]} {ck_hash[4]} {ck_hash[5]} {ck_rows[0]} {ck_rows[1]} {ck_rows[2]} {ck_rows[3]} {ck_rows[4]} {ck_rows[5]} {ck_seed} {ck_n} {ck_s}}
-set ::ot_ce_ports {{ck} {ck_hash[0]} {ck_hash[1]} {ck_hash[2]} {ck_hash[3]} {ck_hash[4]} {ck_hash[5]} {ck_rows[0]} {ck_rows[1]} {ck_rows[2]} {ck_rows[3]} {ck_rows[4]} {ck_rows[5]} {ck_seed} {ck_n} {ck_s}}
+set ::ot_ce_cts_roots {{ck} {ck_hash[0]} {ck_hash[1]} {ck_hash[2]} {ck_hash[3]} {ck_hash[4]} {ck_hash[5]} {ck_rows[0]} {ck_rows[1]} {ck_rows[2]} {ck_rows[3]} {ck_rows[4]} {ck_rows[5]} {ck_seed} {ck_n} {ck_s} {ck_rd}}
+set ::ot_ce_ports {{ck} {ck_hash[0]} {ck_hash[1]} {ck_hash[2]} {ck_hash[3]} {ck_hash[4]} {ck_hash[5]} {ck_rows[0]} {ck_rows[1]} {ck_rows[2]} {ck_rows[3]} {ck_rows[4]} {ck_rows[5]} {ck_seed} {ck_n} {ck_s} {ck_rd}}
 
 # Constants are proved from actual OpenDB connectivity and the loaded Liberty
 # output functions. Cell/port names, case analysis and timing-graph constant
