@@ -164,5 +164,11 @@
  "structural_change": "SE/NE bank = hfd_vms_bank_native_q1_core_pr (literal input pin flops in RTL; view == RTL) on recipe 4 (hold_budget die, no pads). TILE_CHECKLIST: 270 x 280.8 (aspect 1.04), SRAM stack origin on the 43.2 um lattice (x 43.2, y 43.2) with the three SRAMs abutted N-S (pitch = height + 0.024 um on the M4 lattice, .024 slivers blocked; SRAM pins only on W/E faces) so the std cells form ONE C-shaped band (W 43.2 / E 52.1 / S 43.2 / N 26.1 strips), pins spread over full faces (<= 3.5/um), clock entry on the W face beside the SRAM read-pin column / W register mass; spine clock; hub BANK_PIN_IN=1.",
  "hold_budget": "die",
  "inhold": false,
- "outhold": false
+ "outhold": false,
+ "pin_ranges": {
+  "clk": [
+   138.0,
+   142.8
+  ]
+ }
 }
