@@ -397,11 +397,14 @@ ECTL_CLK = ['ck_a', 'ck_b', 'ck_c']
 # entry (die port -> RTL ck_core / ck_zh[i] / ck_recip / ck_pbst[i] / ck_pvlg[i]); am[143:0] = 4 registered per-stack copies
 AHUB_CLK = ['ck_c'] + [f'ck_z{i}' for i in range(4)] + ['ck_r'] + [f'ck_p{i}' for i in range(4)] + [f'ck_v{i}' for i in range(4)]
 SPLIT_FRAMES = dict(qkd_seq=(604.8, 475.2), qkd_lnk=(777.6, 129.6), qkd_embgw=(172.8, 216.0), qkd_ahub=(1175.04, 760.32))
-BINDINGS['qkd_lnk'] = dict(module='ot_qkvd_split_kvlink', file='rtl/qwen_sys/split_20261014/ot_qkvd_split_kvlink.sv',
+# KVJ-C2 2026-10-17 (D2): the bridge successor ot_qkvd_split_kvlink_se has NO embedding gateway SU face (the boot-only
+# gateway qkd_embgw_boot removed r_ea / t_ecr / t_eq): ea_* / eq_* ports, the EMBQ FIFO and the EMBD slot count are gone,
+# so the gq / gr die bundles no longer exist (an EMBQ word on the KV end's r[3] class is a sticky fault)
+BINDINGS['qkd_lnk'] = dict(module='ot_qkvd_split_kvlink_se', file='rtl/qwen_sys/split_20261014/ot_qkvd_split_kvlink_se.sv',
     ports=dict(rf=['r_v', 'r_d', 'r_cr'], tf=['t_v', 't_d', 't_cr'],
                # bit order = the sequencer cluster's: r_x3_d = {v, tag, d} (d at bit 0), t_ar_d = {v, d 519}
                lx=['x3_d', 'x3_tag', 'x3_v', 'sd', 'kvd', 'ar_cr'], lr=['ar_d', 'ar_v', 'ds', 'pw', 'x3_cr'],
-               gq=['ea_v', 'ea_kind', 'ea_addr', 'ea_cr'], gr=['eq_v', 'eq_d'], d2df=['d2d_fault', 'd2d_cause'], flt=['fault'],
+               d2df=['d2d_fault', 'd2d_cause'], flt=['fault'],
                ck=['clk'], rst_n=['rst_n']),
     classed={})
 _BASE = dict(HEAD=HEAD, ECTL=ECTL, ENG_H=ENG_H, RENG=RENG, TILE_Y=dict(TILE_Y), FRAMES=dict(FRAMES))
@@ -549,9 +552,13 @@ SPLIT_BINDINGS.update(qkd_land=KS.land_binding(), qkd_land_n=KS.land_binding(), 
 # match; emf / emr do NOT (gateway {kind 2, seq 4, data 281, v} 288 + cr / 520 + cr vs the landing engine's 530-b
 # {cr, pad 5, tag 11, data 512, v}): an RTL interface defect between two closed views (elements: land_emb 'ifw' re-route
 # to the gateway's words, 12:40) -> port bind MISMATCH until one side changes
+# KVJ-C2 2026-10-17 (coordinator D2, kv_static_join_plan.md): the gateway is BOOT-ONLY, qkd_embgw_boot (KVJ-C 413776b17,
+# lock-step equal to qkd_embgw_splitboot with r_ea idle): r_ea / t_ecr / t_eq are removed, so the gq / gr bundles are
+# dropped (not tied); the token's embedding row is read through the 128 PCs (static join, kv_static.py ROLES embgw /
+# emb_return_* / emb_join / row_tx) and leaves on the d2d end's port 2
 SPLIT_BINDINGS['qkd_embgw'] = dict(
-    module='qkd_embgw', file='rtl/physical/ot_qwen_kv_gwhost_slots.sv',
-    ports=dict(gq=['r_ea', 't_ecr'], gr=['t_eq'], hb=['hb', 'hb_cr'], est=['est'], ck=['ck'], rst_n=['rst_n'],
+    module='qkd_embgw_boot', file='rtl/qwen_sys/static_embedding_20261014/qkd_embgw_boot.sv', parameters=dict(MUT=0),
+    ports=dict(hb=['hb', 'hb_cr'], est=['est'], ck=['ck'], rst_n=['rst_n'],
                # Q-KVSYS-NETLIST 2026-10-16 (strict bit-level bind, opentallas.die_port_bind.v2): each die bundle carries its
                # word one way and the credit for THAT word back (the landing strip's emf / emf_cr out and emr / emr_cr in,
                # the relay direction model's reverse bit).  The gateway's credit FOR emf is emr_<q>_cr ('strip q consumed one
@@ -1759,9 +1766,7 @@ def _buses(m, T, r):
     for st in STACKS:
         add((f'af_{st}', 'spine_local', 1, [(f'astk_{st}', 'af'), ('seq', f'af_{st}')]))
         add((f'mf_{st}', 'spine_local', 1, [(f'land_{st}', 'mf'), ('seq', f'mf_{st}')]))
-    if split:   # EMBQ / EMBD: the SU's embedding face crosses the link and ends on the gateway (LINK.md classes 3 / 5)
-        add(('gq', 'kvn', 1 + 1 + 24 + 1, [('lnk', 'gq'), ('embgw', 'gq')]))
-        add(('gr', 'kv_oneway', 1 + 512, [('embgw', 'gr'), ('lnk', 'gr')]))
+    if split:   # KVJ-C2: no EMBQ / EMBD bundles (boot-only gateway, bridge successor without the SU face)
         add(('lflt', 'spine_local', 1, [('lnk', 'flt'), ('host', 'lflt')]))          # link + bridge fault -> host status (LINK.md open item 1)
     else:
         add(('gq', 'kvn', W + 2, [('seq', 'gq'), ('embgw', 'gq')]))
