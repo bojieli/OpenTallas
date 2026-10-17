@@ -22,3 +22,8 @@ def test_setup_reach_stops_at_first_failing_short_point():
     rows = [(100, 100, 4, 'B/i[0]', 'o->i'), (200, 200, -1, 'B/i[0]', 'o->i'),
             (300, 300, 1, 'B/i[0]', 'o->i')]
     assert class_reach(rows, 'unused')['reach_um'] == 100
+
+
+def test_hold_does_not_claim_untested_short_wire_is_safe():
+    rows = [(100, 100.1, 4, 'B/i[0]', 'o->i'), (200, 200, 5, 'B/i[0]', 'o->i')]
+    assert hold_min(rows)['hold_min_um'] == 100.1

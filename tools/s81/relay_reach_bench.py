@@ -339,7 +339,7 @@ def write_batch(bd, its, stage, lay, adj, a):
     vdir = '/stage/views'
     lefs = '\n'.join(f'read_lef {vdir}/{m}/{m}_lef.lef' for m in sorted(masters))
     libs = lambda c: '\n'.join(f'read_liberty {vdir}/{m}/{m}_{c}.lib' for m in sorted(masters))  # noqa: E731
-    clk_regex = '|'.join('^' + re.escape(c) + '$' for c in clock_paths)
+    clk_queries = ' '.join('[get_pins -regexp {' + re.escape(c) + '}]' for c in clock_paths)
     tcl = f"""# relay_reach_bench batch {bd.name}: {len(placed)} pairs, {len(sinks)} sink bits, die {W:.1f} x {H:.1f} um
 proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
   regexp {{VmHWM:\\s+(\\d+)}} $s -> h; puts "OTMEM $tag hwm_mb=[expr {{$h/1024}}] t=[clock seconds]"; flush stdout }}
@@ -373,8 +373,8 @@ puts OT_REACH_GRT_DONE
 {libs(corner)}
 read_verilog /work/reach_grt.v
 link_design reach_top
-read_spef /work/reach.spef
-set cp [get_pins -regexp {{{clk_regex}}}]
+read_spef /work/reach_sta.spef
+set cp [concat {clk_queries}]
 if {{[llength $cp] != {len(clock_paths)}}} {{ error "clock pin coverage mismatch" }}
 create_clock -name clk -period {per} $cp
 set_clock_uncertainty -setup {SKEW + SETUP_UNCERTAINTY} [all_clocks]
@@ -402,6 +402,9 @@ docker run --rm --name reach_$(basename $(dirname $B))_$(basename $B) --cpus=$T 
   bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads $T -no_init -exit /work/grt.tcl > /work/grt.log 2>&1; rc=\\$?; chmod -R a+rwX /work; exit \\$rc"
 echo $? > grt.exit
 grep -q OT_REACH_GRT_DONE grt.log || {{ echo GRT_FAIL; exit 1; }}
+# This bench has no top ports. OpenROAD emits an empty *PORTS section;
+# OpenSTA rejects it. Remove only that empty header; all extracted RC stays byte-identical.
+sed '/^[*]PORTS$/d' reach.spef > reach_sta.spef
 for c in tt833 tt1111 ff_hold ss833; do
   docker run --rm --name reach_$(basename $(dirname $B))_$(basename $B)_$c --cpus=2 -v $B:/work -v $S:/stage:ro -w /work {IMAGE} \\
     bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; sta -no_init -exit /work/sta_$c.tcl > /work/sta_$c.log 2>&1; chmod -R a+rwX /work" &
@@ -480,7 +483,7 @@ def hold_min(rows):
     ds = sorted(by_d)
     ok = [all(s is not None and s >= 0 for s, _ in by_d[d]) for d in ds]
     if all(ok):
-        return dict(hold_ok_all=True, hold_min_um=0.0, worst_hold_ps=round(min(s for d in ds for s, _ in by_d[d]), 2))
+        return dict(hold_ok_all=True, tested_min_d_um=ds[0], hold_min_um=round(max(L for _, L in by_d[ds[0]]), 1), worst_hold_ps=round(min(s for d in ds for s, _ in by_d[d]), 2))
     lo = None
     for i in range(len(ds) - 1, -1, -1):
         if not ok[i]:
@@ -502,6 +505,8 @@ def cmd_collect(a):
         plan = json.loads((rd / 'plan.json').read_text())
         runs[plan['layers']] = dict(dir=str(rd), signal_layers=plan['signal_layers'], adjustments=plan['adjustments'],
                                     sweep_um=plan['sweep_um'], batches=[])
+        if plan.get('base_setup_uncertainty_ps') != SETUP_UNCERTAINTY or plan.get('base_hold_uncertainty_ps') != HOLD_UNCERTAINTY or plan.get('skew_ps') != SKEW:
+            raise ValueError('plan uncertainty metadata missing or inconsistent; cannot mix timing scenarios')
         for b in plan['batches']:
             bd = rd / b['dir']
             corners = ('tt833', 'tt1111', 'ff_hold', 'ss833')
@@ -555,8 +560,8 @@ def cmd_collect(a):
                         'ETM setup / hold are scalar (input slew independent): a slow edge at the receiver is not '
                         'penalised by the view; sink slew is reported (max_sink_slew_tt_ps_within_reach) for the DRV '
                         'reader',
-                        'same-class pair: clock insertion of the view cancels; a mixed-class hop is judged by the gate '
-                        'with min(reach of the two classes), not measured here',
+                        'same-class pair: common clock insertion reference cancels; mixed-class hops need direct timing '
+                        'and are not proven by min(self-pair reach of endpoints)',
                         'forwarded-clock stations (stn*: fi0 -> fo0) are timed with the coordinator neighbour-skew '
                         'model, not by propagating the forwarded clock (the ETM fo0 arc is self-related and cannot '
                         'carry fi0 -> fo0)'],
