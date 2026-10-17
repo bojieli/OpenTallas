@@ -82,6 +82,15 @@ RST_REGION_BOX = float(__import__('os').environ.get('OT_KV_RST_REGION_BOX', '480
 PHY_REG = __import__('os').environ.get('OT_KV_PHY_REG', '0') == '1'
 PHY_REACH = float(__import__('os').environ.get('OT_KV_PHY_REACH', '150'))
 PHY_MASTERS = ('qkd_hbm3e_phy_pc', 'ot_qfd_serdes_112g_x12_phy', 'ot_qkvd_ucie_x64_phy')
+# KVPLAN2 2215 (OT_KV_REACH_FIX=1, kvs13k radius@401: non-PV families over the measured KV reach 446):
+#   head kp_k / kp_t / gf_t 457-468 -> head plans re-assigned at 400 (results/arch/qwen_kv_die/head_reach400: lane t in
+#     slot perm[t] matching the closed ktree's E->W kp_in groups, ktree x 540 / score x 388.8; same leaves / cycles);
+#   cdco 476 -> the landing's c<k>i word level with the CLOSED CDC view's co pins (was the CDC frame centre + 40);
+#   wcf 552 -> c_fault (1 b, sticky fault, observation delay only) rides planned relays (class kv_oneway, stages
+#     recorded in relay_stages like kf / lkf); the closed CDC's cf pin is mid S face, 460 um from the landing face.
+#   tg / tge / th 511-524 are the v1.4.3d three-row stage band (OT_KV_V143D=1), not this flag.
+REACH_FIX = __import__('os').environ.get('OT_KV_REACH_FIX', '0') == '1'
+CDC_VIEW_LEF = 'physical/ref_tile/qkd_cdc_wleaf_ref/views/qkd_cdc_wleaf/qkd_cdc_wleaf.lef'
 # KVPLAN 1815 (Q-KV 10-16, kvs13c2 TT: every top class a 528-b replica hop at the 445 plan limit): planned hop limit per
 # relay WIDTH class -- a wide word's bits spread over the replica row (<= 82 um) and the far frame face, so its plan hop
 # is shorter.  OT_KV_REACH_W = 'maxbits:um,...' (ascending); unset = no width class (legacy plans unchanged)
@@ -220,6 +229,8 @@ HEAD_CLK_R2 = (['ck_f', 'ck_k', 'ck_s'] + [f'ck_i{i}' for i in range(16)] + [f'c
 # reference PASS 3,515, mutants FAIL).  Die port -> RTL: ck_f<q> -> ck_front[q], ck_k -> ck_kt, ck_s -> ck_score,
 # ck_i<l> -> ck_stin[l], ck_t<l> -> ck_stk[l], ck_a<l> -> ck_nb1[l], ck_b<l> -> ck_nb2[l], ck_l<l> -> ck_lane[l]
 HEAD_R4_PLAN = 'results/arch/qwen_split_1014/head_native_r4_codex_1014/plan.json'
+if REACH_FIX:
+    HEAD_R4_PLAN = 'results/arch/qwen_kv_die/head_reach400/head_r4_plan.json'
 # v1.4.3 G3S2 (KV die lead 2026-10-15, results/arch/qwen_split_1014/kvsys_v1_4_3_design/design.json): every head's ingress
 # ECTL t/e -> G -> T1 -> T2 -> fronts on the CLOSED qkh_head_gather_stage (die master qkd_hgs, 324 x 21.6, S->N), score
 # head -> S1 -> S2 -> ECTL on the CLOSED qkh_head_sstage (qkd_hss, 21.6 x 21.6, W->E): +3 / +2 edges (ECTL HXK 5).  The
@@ -229,6 +240,8 @@ HEAD_R4_PLAN = 'results/arch/qwen_split_1014/head_native_r4_codex_1014/plan.json
 # S stacks into the middle): die outline unchanged.
 V143 = dict(on=False)
 HEAD_FT_PLAN = 'results/arch/qwen_split_1014/kvsys_v1_4_3_design/head_ft_plan.json'
+if REACH_FIX:
+    HEAD_FT_PLAN = 'results/arch/qwen_kv_die/head_reach400/head_ft_plan.json'
 SPLIT_HEAD_FT = (1080.0, 508.68)
 # v1.4.3b (owner rule 20:45, visual inspection of v1.4.3: 6.48-um slivers between stacked stage rows, one 324-um column
 # carrying every word): rows at 43.2 pitch (21.6-um gaps >= the 20-um sliver rule), T1n moved off the G column
@@ -1138,7 +1151,8 @@ def _write_buses(m):
             st, pc = bid[5:].rsplit('_', 1)
             buses.extend([(f'ww_{st}_{pc}', 'cdc_core', 290, [(f'wleaf_{st}_{pc}', 'w'), (f'cdc_{st}_{pc}', 'wi')]),
                           (f'wr_{st}_{pc}', 'cdc_core', 11, [(f'cdc_{st}_{pc}', 'wr'), (f'wleaf_{st}_{pc}', 'wr')]),
-                          (f'wcf_{st}_{pc}', 'cdc_core', 1, [(f'cdc_{st}_{pc}', 'cf'), (f'land_{st}', f'cf{pc}')])])
+                          (f'wcf_{st}_{pc}', 'kv_oneway' if REACH_FIX else 'cdc_core', 1,
+                           [(f'cdc_{st}_{pc}', 'cf'), (f'land_{st}', f'cf{pc}')])])
                           # v1.2: the landing strip abuts the CDC column again (kvs2 T1b's 620-um cf hop is gone)
         elif bid.startswith('kvn_'):
             st = bid[4:]
@@ -1254,6 +1268,28 @@ HOP = __import__('os').environ.get('OT_KV_HOP', '0') == '1'
 HOP_REACH = 445.0 if KV_REACH <= 0 else min(445.0, KV_REACH)
 HOP_FIRST = dict(krq=340.0, krs=340.0)
 _LEAF_PIN_CACHE = {}
+
+
+def _cdc_co_y(cdc):
+    """KVPLAN2 (OT_KV_REACH_FIX): die y of the centre of the CLOSED qkd_cdc_wleaf view's co pins (l_* W face, local y
+    23.5..103.0 of 183.6) for CDC instance cdc, its orientation applied."""
+    if 'co' not in _LEAF_PIN_CACHE:
+        ys, h, cur = [], None, None
+        co_ = set(BINDINGS['qkd_cdc_wleaf']['ports']['co'])      # the die 'co' word = these view (RTL) ports
+        for ln in (Path(__file__).resolve().parents[2] / CDC_VIEW_LEF).read_text().split('\n'):
+            t = ln.split()
+            if t[:1] == ['SIZE'] and h is None:
+                h = float(t[3])
+            elif t[:1] == ['PIN']:
+                cur = t[1].split('[')[0]
+            elif t[:1] == ['RECT'] and cur in co_:
+                ys.append((float(t[2]) + float(t[4])) / 2)
+            elif t[:1] == ['END'] and len(t) > 1 and t[1].split('[')[0] == cur:
+                cur = None
+        _LEAF_PIN_CACHE['co'] = ((min(ys) + max(ys)) / 2, h)
+    cy, h = _LEAF_PIN_CACHE['co']
+    cy = cy * cdc.h / h
+    return cdc.y + (cdc.h - cy if cdc.orient in ('MX', 'R180') else cy)
 
 
 def _leaf_pin(it, port):
@@ -3029,6 +3065,8 @@ def masters(m, k=1, port_bits=None):
                     if mt and sp[0] == 'face':
                         cdc = by[f'cdc_{land.name[5:]}_{mt.group(1)}']   # this landing's own CDC column
                         sp[4] = cdc.y + cdc.h / 2 - land.y + (40.0 if mt.group(2) == 'i' else -40.0)
+                        if REACH_FIX and mt.group(2) == 'i':
+                            sp[4] = _cdc_co_y(cdc) - land.y     # KVPLAN2: level with the closed view's co pins
                     if sp[0] == 'face' and sp[1] * 0.096 + 4.0 < (mm.w if sp[2] in 'NS' else mm.h):
                         sp[5] = 2          # 2-track pitch where the face has room (emf[221] DRT-0073 at 1 track)
                     mm.ports[p] = tuple(sp)

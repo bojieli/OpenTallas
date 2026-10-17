@@ -100,7 +100,7 @@ ORIENT = {v: k for k, v in FLIP.items()}
 
 # ---- per-frame placement plans: yosys cell name -> (x, y, orient) in the frame's canonical (R0) coordinates -------------
 def _head_plan(ft=False):
-    pl = json.loads((ROOT / (K.HEAD_FT_PLAN if ft else 'results/arch/qwen_split_1014/head_native_r4_codex_1014/plan.json')).read_text())['children']
+    pl = json.loads((ROOT / (K.HEAD_FT_PLAN if ft else K.HEAD_R4_PLAN)).read_text())['children']
     if ft:      # v1.4.3: the far neighbour's T1 / S2 in the feed-through channel
         pl = dict(pl, ftg=[*K.V143_FT['ftg'], *K.HGS], fts=[*K.V143_FT['fts'], *K.HSS])
 
