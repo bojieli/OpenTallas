@@ -80,6 +80,12 @@ def main():
     ap.add_argument('--contract', default='results/arch/hier_contract_1015/hbm_v15.json')
     ap.add_argument('--adopted', default='H-DIE 0300 10-16, owner 02:15 growth (v6b: SU 77 mm2 at 60 % util, SM 7,050 x 1,780)')
     ap.add_argument('--sm-carve', type=float, help='SM frame edge feedthrough carve width (W column + N row, OWNER/H-SM rp4c 40.32)')
+    ap.add_argument('--quadrants', default='SW,SE,NW,NE', help='OWNER 10-16 A2P half die: keep only these quadrants (e.g. SW,NW); '
+                    'slots, PC homes and RF routes of the other quadrants are DROPPED (the half-die netlist has no such instances)')
+    ap.add_argument('--drop-ghosts', action='store_true', help='drop the v15 IDX scorer/glue slots (idx_*; not in the v16 contract)')
+    ap.add_argument('--sm-column', action='store_true', help='A2P: SM slots take the plan column outline with FACES_ONLY pins '
+                    '(H-SM portrait column kit pending; exact pins re-granted from that kit)')
+    ap.add_argument('--homes', help='JSON {slot: {x, y, orient}}: explicit homes for translated (non-plan) slots, applied before the audit')
     ap.add_argument('--dry-run', action='store_true')
     ap.add_argument('--out', help='write an explicitly unqualified proposal here, preserving the active contract')
     a = ap.parse_args()
@@ -95,6 +101,24 @@ def main():
     die['outline'] = dict(w=round(W, 3), h=round(H, 3))
     import reticle; reticle.require_die(W, H, 'rehome_v6.py')   # OWNER 10-16: >= 0.5 mm in W AND H
     die['notes'] = 'v6b die (H-DIE 0300 10-16, OWNER 02:15: grow where area fixes a measured fit/congestion problem)'
+    import re as _re
+    KQ = a.quadrants.split(',')
+    DQ = [q for q in ('SW', 'SE', 'NW', 'NE') if q not in KQ]
+    dropped = []
+    if DQ or a.drop_ghosts:
+        rxq = _re.compile(r'(^|_)(' + '|'.join(DQ) + r')(\d|_|$)') if DQ else None
+        def gone(n):
+            return bool((rxq and rxq.search(n)) or (a.drop_ghosts and n.startswith('idx_')))
+        keep = [slots[0]]
+        for s_ in slots[1:]:
+            if gone(s_['name']) or (s_.get('parent') not in (None, 'die') and gone(s_.get('parent', ''))):
+                dropped.append(s_['name'])
+            else:
+                keep.append(s_)
+        slots[:] = keep
+        C['pc_homes']['homes'] = {k: v for k, v in C['pc_homes']['homes'].items() if not gone(k) and not gone(v.get('band', ''))}
+        C['su_rf_relays_v7']['routes'] = [r for r in C['su_rf_relays_v7']['routes'] if r['src'] in KQ and r['dst'] in KQ]
+        die['notes'] = f'A2P half die (OWNER 10-16: 16 SMs + 2 HBM stacks; quadrants {a.quadrants})'
     log = dict(mapped=[], resized=[], translated=[], new=[])
     S = {s['name']: s for s in slots}
     # 1. plan-block slots
@@ -185,7 +209,7 @@ def main():
         rf_fp = [(c['name'], c['rect']) for c in rfa['cells']]
     # 7. calendar homes against the hub's band-side face
     MIRROR = dict(SW='R0', SE='MY', NW='MX', NE='R180')
-    for q in ('SW', 'SE', 'NW', 'NE'):
+    for q in KQ:
         s = S.get(f'calendar_{q}')
         if not s or f'vmh_{q}' not in P6:
             continue
@@ -236,6 +260,24 @@ def main():
     else:
         for r in C['su_rf_relays_v7']['routes']:
             r['homes'] = [list(tr(x, y)[:2]) for x, y in r['homes']]
+            if DQ and r['src'] != r['dst']:
+                # A2P half die: the cross-quadrant RF route is a short straight run between the two quarter cores (the
+                # bands abut at the die centre); the contract's stage count is kept (equal-age pad, compiler-fixed) and its
+                # homes spread evenly along the src-core -> dst-core centre line (Manhattan: vertical, then horizontal)
+                a_, b_ = P6[f"sucore_{r['src']}"], P6[f"sucore_{r['dst']}"]
+                up = b_['y'] > a_['y']
+                p0 = (a_['x'] + a_['w'] / 2, a_['y'] + (a_['h'] if up else 0.0))
+                p1 = (b_['x'] + b_['w'] / 2, b_['y'] + (0.0 if up else b_['h']))
+                L = abs(p1[1] - p0[1]) + abs(p1[0] - p0[0]); n_ = len(r['homes'])
+                hs = []
+                for i in range(n_):
+                    t = (i + 1) * L / (n_ + 1); dy = abs(p1[1] - p0[1])
+                    hs.append([round(p0[0], 3), round(p0[1] + (t if up else -t), 3)] if t <= dy else
+                              [round(p0[0] + (t - dy) * (1 if p1[0] > p0[0] else -1), 3), round(p1[1], 3)])
+                r.update(homes=hs, length_um=round(L, 3), max_hop_um=round(L / (n_ + 1), 3), footprints=[],
+                         path=[list(p0), [p0[0], p1[1]], list(p1)],
+                         note=f'A2P half die: {n_} equal-age stages kept on a {L:.0f} um core-to-core run (H-NETLIST may '
+                              'reduce the count; the compiler table must follow)')
     for r in C.get('request_slots', []):
         for key in ('groups', 'port_groups'):
             for g in r.get(key, []) or []:
@@ -266,7 +308,7 @@ def main():
             if blk in P5 and blk in P6:
                 rr[e]['xy'] = [rr[e]['xy'][0] - P5[blk]['x'] + P6[blk]['x'], rr[e]['xy'][1] - P5[blk]['y'] + P6[blk]['y']]
     regrant = []
-    for q in R.QID:
+    for q in [q_ for q_ in R.QID if q_ in KQ]:
         for g in range(4):
             sl, co = P6[f'su_{q}{g}'], P6[f'sucore_{q}']
             corex = 'E' if co['x'] > sl['x'] else 'W'        # v6b: the quarter core may sit between slices
@@ -280,6 +322,13 @@ def main():
             R.ft_forbid_sm, R.ft_record_sm = R.ft_forbid, R.ft_record
         try:
             for i in range(8):
+                if a.sm_column:
+                    sm_ = S[f'sm_{q}{i}']
+                    sm_.update(pins=[], pin_status='FACES_ONLY', reserved_channels=[],
+                               notes=f'A2P SM column {sm_["outline"]["w"]} x {sm_["outline"]["h"]}: SM_HBM window on the PC-row '
+                                     'short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending '
+                                     '(coordinator 10-16 19:30); exact pins from that kit')
+                    regrant.append(f'sm_{q}{i}:FACES_ONLY'); continue
                 R.grant_sm(S[f'sm_{q}{i}'], R.ports('sm', {}), ref, sha['sm']); regrant.append(f'sm_{q}{i}')
                 S[f'sm_{q}{i}']['notes'] = S[f'sm_{q}{i}']['notes'].replace('die feedthrough column+row reserved',
                                                                               'no in-slot feedthrough (H-SM 10-16; relays in die channels)'
@@ -287,6 +336,12 @@ def main():
                                                                               f'OWNER feedthrough carve: W-edge column + N-edge row {a.sm_carve} um (H-SM rp4c)')
         finally:
             R.ft_forbid, R.ft_record = ff, fr
+    if a.homes:
+        for k, h in json.loads(Path(a.homes).read_text()).items():
+            if k in S:
+                S[k]['origin'] = dict(x=h['x'], y=h['y'], orient=h.get('orient', S[k]['origin'].get('orient', 'R0')))
+                S[k]['home_rule'] = h.get('rule', 'explicit home (--homes)')
+                log.setdefault('explicit_homes', []).append(k)
     # 4. audit
     tops = []
     for s in slots[1:]:
@@ -338,11 +393,11 @@ def main():
     C['version'] = int(C.get('version', 1)) + 1
     C['floorplan'] = dict(file=str(a.plan) + '/compact.P.json', candidate=Path(a.plan).name, adopted=a.adopted,
                           die_um=[round(W, 3), round(H, 3)], metrics=M6.get('metrics'), previous=C.get('floorplan'))
-    C['rehome_v6'] = dict(plan=a.plan, old=a.old, mapped=len(log['mapped']), resized=log['resized'], new=log['new'],
+    C['rehome_v6'] = dict(plan=a.plan, old=a.old, quadrants=a.quadrants, dropped_slots=dropped, explicit_homes=log.get('explicit_homes', []), mapped=len(log['mapped']), resized=log['resized'], new=log['new'],
                           translated=log['translated'], regranted_pins=regrant, outside=outside, overlaps=ov,
                           points_in_hard_blocks=bad_pts)
     C['updated'] = subprocess.run(['date', '-Iseconds'], capture_output=True, text=True).stdout.strip()
-    summary = dict(die=die['outline'], mapped=len(log['mapped']), resized=len(log['resized']), new=log['new'],
+    summary = dict(dropped=len(dropped), die=die['outline'], mapped=len(log['mapped']), resized=len(log['resized']), new=log['new'],
                    translated=len(log['translated']), regranted=len(regrant), outside=outside, n_overlaps=len(ov),
                    overlaps=ov[:12], points_in_hard_blocks=bad_pts[:12], n_bad_points=len(bad_pts))
     print(json.dumps(summary))

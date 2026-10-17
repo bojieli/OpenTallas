@@ -1,0 +1,50 @@
+{
+ "host_N": {
+  "x": 15754.08,
+  "y": 24576.056,
+  "orient": "MX",
+  "rule": "A2P: N die edge in the E column (UCIe shoreline), west of lk_N"
+ },
+ "host_cp": {
+  "x": 16114.08,
+  "y": 25796.48,
+  "orient": "R0",
+  "rule": "A2P: beside host_N at the N edge"
+ },
+ "hb_ckgen": {
+  "x": 15754.08,
+  "y": 15371.698,
+  "orient": "R0",
+  "rule": "A2P: E column centre above hc_eng/ep_N row (die clock root, centre of the 2 regional trees)"
+ },
+ "vm_status4": {
+  "x": 15754.08,
+  "y": 10976.782,
+  "orient": "R0",
+  "rule": "A2P: E column next to both hubs below hc_eng"
+ },
+ "hc_eng_tgt": {
+  "x": 15754.08,
+  "y": 14756.498,
+  "orient": "R0",
+  "rule": "A2P: programme collar against hc_eng N face"
+ },
+ "hc_tbl_tgt": {
+  "x": 15940.08,
+  "y": 14756.498,
+  "orient": "R0",
+  "rule": "A2P: programme collar against hc_eng N face"
+ },
+ "svc_SW_s8": {
+  "x": 5420.0,
+  "y": 1218.8,
+  "orient": "R0",
+  "rule": "A2P: 9th service band in the PC row west of pc_SW0"
+ },
+ "svc_NW_s8": {
+  "x": 5420.0,
+  "y": 24630.08,
+  "orient": "MX",
+  "rule": "A2P: 9th service band in the PC row west of pc_NW0"
+ }
+}
