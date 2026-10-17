@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_clock.root_sites.v1",
- "die": "hbm d4f r5",
+ "die": "hbm d4f r5b (tkm 2000x2120)",
  "plan": "results/arch/hbm_die_v15/d4f_a2p_fullcore/compact.P.json",
  "rule": "60x60 um station-free keepout per site (wires may cross); one regional root buffer per clock family present in the region; positions already legalised outside every plan block",
  "sites": [
