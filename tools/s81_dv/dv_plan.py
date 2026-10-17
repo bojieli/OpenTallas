@@ -543,6 +543,7 @@ def main():
     ap.add_argument('--row0-mx', action='store_true', help='p1b: row-0 frames MX (tap toward the slice)')
     ap.add_argument('--tier-w', type=int, default=0, help='p4c: per-column tier exchange width (bits per direction)')
     ap.add_argument('--lanes', type=int, default=1, help='p4c-lanes: split every 1,104-b link into N cycle-aligned lanes')
+    ap.add_argument('--frame-w', type=float, default=None, help='p4: frame width override (S-ELEM bf_col 604.8 -> 1,436.832)')
     a = ap.parse_args()
     HOP_UM = a.hop_um
     global ROW0_MX, TIER_W, LANES
@@ -553,7 +554,7 @@ def main():
     if a.layout == 'p4':
         # coordinator decision 10-17: bf_col 583.2 um widens the frames to 1,393.632 um; 1.00-mm slice columns; the
         # slice is a CLUSTER of 5 near-square hardened leaves (0.95 x 0.92 mm, one 64-lane beat each, own regional root)
-        LAYOUT, FRAME_W, SCOL_W, SLICE_W, SLICE_H = 'p4', 1393.632, 1000.0, 950.0, 4600.0
+        LAYOUT, FRAME_W, SCOL_W, SLICE_W, SLICE_H = 'p4', a.frame_w or 1393.632, 1000.0, 950.0, 4600.0
         FRAME_PITCH = FRAME_W + 8.7
         UNIT_W, UNIT_WE = 820.0, 545.0
         PITCH = 2 * FRAME_PITCH + SCOL_W

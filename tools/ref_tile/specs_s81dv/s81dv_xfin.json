@@ -20,7 +20,6 @@
     "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv"
   ],
   "params": {
-    "SID": 0,
     "NS": 16,
     "NVL": 5
   },
@@ -61,6 +60,7 @@
       "clk",
       "rst_n",
       "go",
+      "sid",
       "eps",
       "fault"
     ]
@@ -77,7 +77,7 @@
   "job": {
     "owner": "Claude:S81-DV",
     "branch": "claude/s81dv-1016",
-    "tag": "x3",
+    "tag": "x4",
     "purpose": "S81-DV deliverable 3: first new slice leaf to closure (TT setup / FF hold / DRC 0 + native audit).",
     "extra_paths": [
       "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",

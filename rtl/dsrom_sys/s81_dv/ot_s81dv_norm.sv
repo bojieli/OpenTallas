@@ -274,7 +274,6 @@ endmodule
 // padding at the pins: hold belongs to the die-level budget at the relay stations).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81dv_xfin #(
-    parameter integer SID = 0,
     parameter integer NS  = 16,
     parameter integer NVL = 5,
     parameter integer LM  = 5,
@@ -283,6 +282,7 @@ module ot_s81dv_xfin #(
     input  wire               clk,
     input  wire               rst_n,
     input  wire               go,
+    input  wire [3:0]         sid,          // slice id STRAP (captured; one hardened master serves all 16 slices)
     input  wire [31:0]        eps,
     input  wire               s_v,          // group beat partials
     input  wire [7:0]         s_i,
@@ -305,14 +305,19 @@ module ot_s81dv_xfin #(
     reg [NVL*32-1:0] col; reg inj_v;
     always @(posedge clk or negedge rstn) if (!rstn) inj_v <= 1'b0; else inj_v <= sv_c && si_c == NVL - 1;
     always @(posedge clk) if (sv_c) col[si_c * 32 +: 32] <= s_c;
+    // slice id strap: captured once per cycle like every pin (static value); base = sid * NVL
+    reg [3:0] sid_c;
+    always @(posedge clk) sid_c <= sid;
 `ifdef OT_S81DV_MUT_BASE
     // NEGATIVE CONTROL: slice 3 tags its flit as slice 4's (exchange delivers partials to the wrong tree leaves)
-    localparam integer SBASE = (SID == 3) ? 4 * NVL : SID * NVL;
+    wire [3:0] sid_e = (sid_c == 4'd3) ? 4'd4 : sid_c;
 `else
-    localparam integer SBASE = SID * NVL;
+    wire [3:0] sid_e = sid_c;
 `endif
+    reg [7:0] sbase;
+    always @(posedge clk) sbase <= sid_e * NVL;
     wire [2:0] dl_v; wire [3*8-1:0] dl_b; wire [3*NVL*32-1:0] dl_d; wire xf, rf;
-    ot_s81dv_xstop #(.K(NVL), .HE(HE), .HW(HW)) u_x (.clk(clk), .rst_n(rstn), .inj_v(inj_v), .inj_base(SBASE[7:0]),
+    ot_s81dv_xstop #(.K(NVL), .HE(HE), .HW(HW)) u_x (.clk(clk), .rst_n(rstn), .inj_v(inj_v), .inj_base(sbase),
         .inj_d(col), .wi_v(wi_v), .wi_h(wi_h), .wi_b(wi_b), .wi_d(wi_d), .ei_v(ei_v), .ei_h(ei_h), .ei_b(ei_b), .ei_d(ei_d),
         .eo_v(eo_v), .eo_h(eo_h), .eo_b(eo_b), .eo_d(eo_d), .wo_v(wo_v), .wo_h(wo_h), .wo_b(wo_b), .wo_d(wo_d),
         .dl_v(dl_v), .dl_b(dl_b), .dl_d(dl_d), .fault(xf));
@@ -365,7 +370,7 @@ module ot_s81dv_norm_slice #(
     ot_hbm_norm_grp #(.G(64), .D(64 * NVL), .N(64), .LM(LM), .LA(LA)) u_g (.clk(clk), .rst_n(rstn), .go(go), .in_v(in_v),
         .in_x(in_x), .pre(pre), .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .rb_v(rb_v), .rb_d(rb_d),
         .s_v(s_v), .s_i(s_i), .s(s), .y_v(y_v), .y_i(y_i), .y(y), .gf(gf));
-    ot_s81dv_xfin #(.SID(SID), .NS(NS), .NVL(NVL), .LM(LM), .LA(LA)) u_xf (.clk(clk), .rst_n(rstn), .go(go), .eps(eps),
+    ot_s81dv_xfin #(.NS(NS), .NVL(NVL), .LM(LM), .LA(LA)) u_xf (.clk(clk), .rst_n(rstn), .go(go), .sid(SID[3:0]), .eps(eps),
         .s_v(s_v), .s_i(s_i), .s(s), .wi_v(wi_v), .wi_h(wi_h), .wi_b(wi_b), .wi_d(wi_d), .ei_v(ei_v), .ei_h(ei_h),
         .ei_b(ei_b), .ei_d(ei_d), .eo_v(eo_v), .eo_h(eo_h), .eo_b(eo_b), .eo_d(eo_d), .wo_v(wo_v), .wo_h(wo_h),
         .wo_b(wo_b), .wo_d(wo_d), .rb_v(rb_v), .rb_d(rb_d), .fault(xff));
