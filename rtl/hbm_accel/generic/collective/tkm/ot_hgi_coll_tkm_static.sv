@@ -199,6 +199,6 @@ endmodule
 module ot_hgi_coll_tkm_tile_e86(
  input wire clk,input wire [5:0] tid,input wire clr,conv,input wire [5:0] tau_t,input wire [6:0] tau_l,
  input wire ins_v,input wire [343:0] ins_b,output wire ovf_v,output wire [343:0] ovf_b,
- input wire [343:0] up_in,output wire [343:0] up_out,output wire [83:0] tau_o,output wire busy);
+ input wire [343:0] up_in,output wire [343:0] up_out,output wire [84:0] tau_o,output wire busy);
  ot_hgi_coll_tkm_tile #(.EW(86),.PT(64)) u(.*);
 endmodule
