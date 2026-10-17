@@ -586,7 +586,11 @@ module dsfd_sp_su_h #(
             genvar hu;
             for (hu = 0; hu < 2; hu = hu + 1) begin : g_hu
                 wire hev, hov, hdv; wire [511:0] hed; wire [255:0] hod; wire [7:0] hff;
+`ifdef SU_SMU_T
+                dsfd_su_t_smh #(.SRL(SRL)) u_smh (
+`else
                 ot_s81_su_smh #(.SM_NVMAX(SM_NVMAX), .LM(LM), .LA(LA), .SRL(SRL), .MUT(MUT)) u_smh (
+`endif
                     .clk(sk), .rst_in(rst[t]), .s_v(s_v), .p_v(p_v), .c_v(c_v), .c_nv(c_nv), .c_lt(c_lt), .c_scale(c_scale),
                     .c_sink(c_sink[32 * hu +: 32]), .cs_v(cs_v), .cs_i(cs_i), .cs_d(cs_d),
                     .d(dd[t][1024 * TI + 512 * hu +: 512]),

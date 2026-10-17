@@ -1,0 +1,315 @@
+{
+ "name": "s81su_smh",
+ "top": "dsfd_su_t_smh",
+ "kind": "cluster",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/su_sm/dsfd_su_t_smh.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_in"
+ ],
+ "outline": {
+  "w": 1073.52,
+  "h": 721.44
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/s81su_sml_u65_ref/views/dsfd_su_t_sml",
+   "count": 1,
+   "inst": "*g_l?0?.u_sml",
+   "at": [
+    86.4,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_sml_u65_ref/views/dsfd_su_t_sml",
+   "count": 1,
+   "inst": "*g_l?1?.u_sml",
+   "at": [
+    259.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_sml_u65_ref/views/dsfd_su_t_sml",
+   "count": 1,
+   "inst": "*g_l?2?.u_sml",
+   "at": [
+    432.0,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_sml_u65_ref/views/dsfd_su_t_sml",
+   "count": 1,
+   "inst": "*g_l?3?.u_sml",
+   "at": [
+    604.8,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_sml_u65_ref/views/dsfd_su_t_sml",
+   "count": 1,
+   "inst": "*g_l?4?.u_sml",
+   "at": [
+    86.4,
+    216.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_sml_u65_ref/views/dsfd_su_t_sml",
+   "count": 1,
+   "inst": "*g_l?5?.u_sml",
+   "at": [
+    259.2,
+    216.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_sml_u65_ref/views/dsfd_su_t_sml",
+   "count": 1,
+   "inst": "*g_l?6?.u_sml",
+   "at": [
+    432.0,
+    216.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_sml_u65_ref/views/dsfd_su_t_sml",
+   "count": 1,
+   "inst": "*g_l?7?.u_sml",
+   "at": [
+    604.8,
+    216.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_sml_u65_ref/views/dsfd_su_t_sml",
+   "count": 1,
+   "inst": "*g_l?8?.u_sml",
+   "at": [
+    86.4,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_sml_u65_ref/views/dsfd_su_t_sml",
+   "count": 1,
+   "inst": "*g_l?9?.u_sml",
+   "at": [
+    259.2,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_sml_u65_ref/views/dsfd_su_t_sml",
+   "count": 1,
+   "inst": "*g_l?10?.u_sml",
+   "at": [
+    432.0,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_sml_u65_ref/views/dsfd_su_t_sml",
+   "count": 1,
+   "inst": "*g_l?11?.u_sml",
+   "at": [
+    604.8,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_sml_u65_ref/views/dsfd_su_t_sml",
+   "count": 1,
+   "inst": "*g_l?12?.u_sml",
+   "at": [
+    86.4,
+    561.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_sml_u65_ref/views/dsfd_su_t_sml",
+   "count": 1,
+   "inst": "*g_l?13?.u_sml",
+   "at": [
+    259.2,
+    561.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_sml_u65_ref/views/dsfd_su_t_sml",
+   "count": 1,
+   "inst": "*g_l?14?.u_sml",
+   "at": [
+    432.0,
+    561.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_sml_u65_ref/views/dsfd_su_t_sml",
+   "count": 1,
+   "inst": "*g_l?15?.u_sml",
+   "at": [
+    604.8,
+    561.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_smd_u65_ref/views/dsfd_su_t_smd",
+   "count": 1,
+   "inst": "*g_p?0?.u_smd",
+   "at": [
+    777.6,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_smd_u65_ref/views/dsfd_su_t_smd",
+   "count": 1,
+   "inst": "*g_p?1?.u_smd",
+   "at": [
+    907.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_smd_u65_ref/views/dsfd_su_t_smd",
+   "count": 1,
+   "inst": "*g_p?2?.u_smd",
+   "at": [
+    777.6,
+    172.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_smd_u65_ref/views/dsfd_su_t_smd",
+   "count": 1,
+   "inst": "*g_p?3?.u_smd",
+   "at": [
+    907.2,
+    172.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_smd_u65_ref/views/dsfd_su_t_smd",
+   "count": 1,
+   "inst": "*g_p?4?.u_smd",
+   "at": [
+    777.6,
+    302.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_smd_u65_ref/views/dsfd_su_t_smd",
+   "count": 1,
+   "inst": "*g_p?5?.u_smd",
+   "at": [
+    907.2,
+    302.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_smd_u65_ref/views/dsfd_su_t_smd",
+   "count": 1,
+   "inst": "*g_p?6?.u_smd",
+   "at": [
+    777.6,
+    432.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_smd_u65_ref/views/dsfd_su_t_smd",
+   "count": 1,
+   "inst": "*g_p?7?.u_smd",
+   "at": [
+    907.2,
+    432.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_smc_ref/views/dsfd_su_t_smc",
+   "count": 1,
+   "inst": "*u_smc",
+   "at": [
+    777.6,
+    561.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_smr_ref/views/dsfd_su_t_smr",
+   "count": 1,
+   "inst": "*u_smr",
+   "at": [
+    950.4,
+    561.6
+   ]
+  }
+ ],
+ "pins": {
+  "W": [
+   "clk",
+   "rst_in",
+   "s_v",
+   "p_v",
+   "c_v",
+   "c_nv",
+   "c_lt",
+   "c_scale",
+   "c_sink",
+   "cs_v",
+   "cs_i",
+   "cs_d",
+   "d",
+   "e_v",
+   "e_d",
+   "o_v",
+   "o_d",
+   "den_v",
+   "f"
+  ]
+ },
+ "route": {
+  "pd": 0.4,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S81U-2 (S81-DV p4h): the per-head SM cluster (one per regional service slice, x16, hardened once): 16 lanes + sum + root + 8 divide engines as their closed native-PASS views (sml_u65, smd_u65, smc, smr), SRL relay glue between them; replaces the 2-head SM stop of the old SU slab (ot_s81_su_sm 1231x1058 band unit).",
+ "why_floorplan": "4x4 lane grid (43.2-lattice pitch 172.8, 36.7-um channels) beside a 2x4 divide block (pitch 129.6) with sum/root above it; all 1.4k cluster pins on the W face toward the head's tap ot_s81_su_smq (2.0 pins/um); W glue band 84 um for the relay stations; 1.49:1, 0.774 mm2.",
+ "job": {
+  "owner": "Claude:S81U-2",
+  "branch": "claude/s81u2-1017",
+  "tag": "s81su_smh",
+  "purpose": "S81U-2: per-head SM cluster of the S81-DV regional service slice (gate; bit-exact gate su_gate.py run --hier --smu with -DSU_SMU_T).",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/su_sm",
+   "physical/ref_tile/s81su_sml_u65_ref/views",
+   "physical/ref_tile/s81su_smd_u65_ref/views",
+   "physical/ref_tile/s81su_smc_ref/views",
+   "physical/ref_tile/s81su_smr_ref/views"
+  ],
+  "views_to": "physical/ref_tile/s81su_smh/views",
+  "record_to": "results/rtl/ref_tile/s81su_smh"
+ },
+ "macros": [],
+ "inter": [],
+ "recipe": 4,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
