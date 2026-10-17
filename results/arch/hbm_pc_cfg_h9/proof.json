@@ -51,25 +51,43 @@
     "tools/hbm_die_v16/bench_pc_cfg_all_h9.sh": "8389309dffc834bdc301895131bbd2ef77334f1f7eb775c1e78161a68dc648fe",
     "tools/hbm_die_v16/bench_pc_cfg_h9.sh": "a482d8c7718c7bf5cd73bc5657f245d82fe470327a31dc577928f30454097f0c",
     "tools/hbm_die_v16/bench_pc_cfg_h9_full.sh": "7a0a6700f42e1d7104cadd3827b5de9c2bb46e1099a96aa801f2fc293c1d3985",
-    "tools/hbm_die_v16/bench_pc_h9_skid.sh": "84b2566fe6b10673a71deb95d81ff6b6a6c01a424c18300ec93802e4236a7370"
+    "tools/hbm_die_v16/bench_pc_h9_skid.sh": "84b2566fe6b10673a71deb95d81ff6b6a6c01a424c18300ec93802e4236a7370",
+    "out_reset/candidate0.sv": "2f699d7b82d8b47b75536f49f5f606d42c679a5ded7b86f3c93cef1f97f42d68",
+    "out_reset/candidate1.sv": "0a49c94d8f5ceda09dfa6913f43411fb7485d0b339c7630abebf4cbac9985d5d",
+    "out_reset/m0.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "out_reset/m0.log": "0eb4d686d29fde95a55afa38d0b94ccbda63ff8ad7937c083bbec74355f78b83",
+    "out_reset/m0.vvp": "cacd055fc716358a3bf87722994c0364417e5bb2870bd228cbade799cc9f0d82",
+    "out_reset/m1.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "out_reset/m1.log": "457b7e0a7913a7afe91c5d96cb5d46e18bfad46b7ea43732969c6dfe44ceb909",
+    "out_reset/m1.vvp": "6a0d8099d4304d4e2476294c9ec02569738304527c339bea7c27aa72f5a84200",
+    "out_reset/tb.sv": "47cba5b3ab93c5e908cc3553d1f105595e62dc86172e421d000d30c770cea3f0",
+    "out_reset_release/candidate1.sv": "b09829d4d5364701731eab236942004c05c806bdc547222b5b0c047e7369889c",
+    "out_reset_release/m1.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "out_reset_release/m1.log": "58615df93381757fd22ffdbdd73168448634600ba39cc481d0b3956a5838bf8a",
+    "out_reset_release/m1.vvp": "d351344ddb5f6ad81abbabe71fb33b9b3ff8f8bd0b4e6692e00729c93176b4b6",
+    "out_reset_release/tb.sv": "47cba5b3ab93c5e908cc3553d1f105595e62dc86172e421d000d30c770cea3f0",
+    "tools/hbm_die_v16/bench_pc_h9_reset.sh": "f376d28f8ca4cc345f8e10b9291f411f5eeaeab014ed79801a0257d0966d2f8a"
   },
   "benches": {
     "all32": "PASS15968 checks32writes106refreshes512fixededges,+0edges",
     "safety": "PASS49600edges2075RD327WR5126returns326write_done5484columns6688rows",
     "full32": "PASS200checks32pending32requests, fixed64edge request calendar",
-    "skid": "PASS32640checks3343full7211stall, widths341/277"
+    "skid": "PASS32640checks3343full7211stall, widths341/277",
+    "reset_midtraffic": "PASS13600edges1413RD203WR2281returns2483columns2968rows;38resetswhilecount_nonzero;13888alignmentchecks;3edge_release;staticstraps_checked"
   },
   "real_mutants": {
     "wrong_pc": "failscycle42 all32",
     "wrong_refresh_reload": "failscycle122 PC0",
     "wrong_pending_slot": "failsedge49",
     "omitted_full_guard": "failsprotectededge1",
-    "wrong_skid_bit": "failsfirstvalidword,bothwidths"
+    "wrong_skid_bit": "failsfirstvalidword,bothwidths",
+    "one_region_delayed_release": "failsrelease_edge3,region7heldlow"
   },
   "scope": "Random external DRAM/backpressure safety fixture is not production scheduling. No production bandwidth claim. Same fixed-calendar edge result verified in all32/full32 fixtures.",
   "physical": {
     "cts": "queued originalPID3291514 --mem12 through ot-run, exactsourcehashesmatch",
     "native": "MANDATORY_PENDING; no route submitted",
     "area": "PENDING"
-  }
+  },
+  "reset_scope": "Synchronous consumers compared after clock edges; reset discards in-flight work at the declared external DRAM boundary. pc_id9/refresh151 static through every reset/release; all32 static strap identities covered independently."
 }
