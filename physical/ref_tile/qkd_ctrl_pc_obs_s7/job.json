@@ -1,5 +1,5 @@
 {
- "name": "qkd_ctrl_pc_obs_s7-s7-COMMIT",
+ "name": "qkd_ctrl_pc_obs_s7-s7-09ec19149",
  "block": "qkd_ctrl_pc_obs_child",
  "ref_tile": true,
  "owner": "Claude:Q-KVSYS-DIE KVCTRL",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/qkvctrl-split-1016",
-  "commit": "COMMIT",
+  "commit": "09ec19149",
   "extra_paths": [
    "rtl/lib",
    "rtl/qwen_sys/emb_hbm_20261008",
@@ -104,7 +104,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_ctrl_pc_obs_s7/qkd_ctrl_pc_obs_s7-s7-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_ctrl_pc_obs_s7/qkd_ctrl_pc_obs_s7-s7-09ec19149"
   }
  ],
  "cycles_added": 0,
