@@ -62,6 +62,7 @@ CHANNEL_UM = 20.0       # macro-macro and macro-core-edge channel
 PIN_EDGE_UM = 20.0      # no macro within this distance of a face that carries pins
 HALO_UM = 2.16          # placement halo around every macro (hard blockage)
 UTIL_LO, UTIL_HI = 0.45, 0.60
+FILL_MAX = 0.90         # sanity bound on total (cells + macros) / core of a kit with macros
 UTIL_TARGET = 0.52
 FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
 # Kit recipe = the generator DEFAULTS (owner 10-13 finishing recipe, el1013-finishing-recipe part B).
@@ -981,6 +982,32 @@ def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) ->
     return snap_up(w, og), snap_up(h, og), f"util {util} of std {area:.0f} + macros {mac:.0f} um2"
 
 
+def util_metrics(std_area, blocks, core, halo=HALO_UM):
+    """Utilisation of a kit.  Without macros: (std / core), exactly the old (std + 0) / core.  With macros the
+    gated number is the standard-cell DENSITY over the placeable area, std / (core - macro footprints - halos), because
+    macros never take standard cells; total fill (std + macros) / core is reported and bounded by FILL_MAX."""
+    mac = sum(b["w"] * b["h"] for b in blocks)
+    total = (std_area + mac) / core
+    if not blocks:
+        return {"util": total, "density": total, "total_fill": total, "macro_um2": 0.0, "placeable_um2": core}
+    keep = min(core, sum((b["w"] + 2 * halo) * (b["h"] + 2 * halo) for b in blocks))
+    placeable = max(core - keep, 1e-9)
+    dens = std_area / placeable
+    return {"util": dens, "density": dens, "total_fill": total, "macro_um2": mac, "placeable_um2": placeable}
+
+
+def util_severity(m):
+    """-> (severity, in_band).  Density gate: old band UTIL_LO..UTIL_HI+0.05, FAIL above 0.70 (kits without macros
+    unchanged); with macros only the upper side applies (a macro-dominated tile is placed sparsely by construction) plus
+    the total-fill sanity bound."""
+    u = m["density"]
+    if m["macro_um2"] > 0:
+        if m["total_fill"] > FILL_MAX:
+            return "FAIL", False
+        return ("INFO", True) if u <= UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN", False)
+    return ("INFO", True) if UTIL_LO <= u <= UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN", False)
+
+
 PG_MIN_STRIPES, PG_MIN_SPREAD = 2, 0.50     # child_lint (b): MIN_STRIPES per net, first..last stripe >= MIN_SPREAD of the span
 # PG-MARGIN (ROOT 2026-10-16, qkd_rlys_1 10.8 um at m5_pg_pitch 2.7): the model predicted exactly 0.500 and the routed
 # view measured just under it (stripe snapping / width), so the export failed after a clean route.  gen and the gate
@@ -1258,13 +1285,17 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
                     f"{ab_n['macro_edge']} tile-edge distances >= {edge_min:g} um admitted by abut_plan ({ab['why'][:160]})",
                     "the route measures the channel; a block that merges obeys the 20-um rule"))
     core = (x1c - x0c) * (y1c - y0c)
-    mac = sum(b["w"] * b["h"] for b in blocks)
     if std_area:
-        u = (std_area + mac) / core
-        if not (UTIL_LO <= u <= UTIL_HI + 0.05):
-            out.append(("FAIL" if u > 0.70 else "WARN", "util",
-                        f"utilisation {u:.0%} outside {UTIL_LO:.0%}-{UTIL_HI:.0%} (std {std_area:.0f} + macro {mac:.0f} "
-                        f"in core {core:.0f} um2)", "resize the outline to util 0.50-0.55 (drop 'outline', set util)"))
+        halo = float(s["route"].get("macro_halo_um", HALO_UM)) if s.get("recipe", 1) >= 2 else HALO_UM
+        um = util_metrics(std_area, blocks, core, halo)
+        sev, ok = util_severity(um)
+        if not ok:
+            msg = (f"utilisation: std-cell density {um['density']:.0%} of placeable {um['placeable_um2']:.0f} um2, total fill "
+                   f"{um['total_fill']:.0%} (limits {UTIL_HI + 0.05:.0%} density, {FILL_MAX:.0%} fill; std {std_area:.0f} + "
+                   f"macro {um['macro_um2']:.0f} in core {core:.0f} um2)") if um["macro_um2"] else \
+                (f"utilisation {um['util']:.0%} outside {UTIL_LO:.0%}-{UTIL_HI:.0%} (std {std_area:.0f} + macro 0 "
+                 f"in core {core:.0f} um2)")
+            out.append((sev, "util", msg, "resize the outline to util 0.50-0.55 (drop 'outline', set util)"))
     long_side = max(W, H)
     if long_side > 600 and s["kind"] == "tile":
         out.append(("WARN", "clock_span", f"{W} x {H} um: one clock root over > 600 um",
