@@ -346,6 +346,192 @@ def cmd_analyze(a):
         print('ISO', {k: (len(v['roots']), len(v['non_isomorphic'])) for k, v in rep['isomorphism'].items()})
 
 
+def transport_audit(plan):
+    """Check top-level transport homes against actual column-cluster outlines.
+
+    This is an overlap census, not a routed-wire or pin registration proof.  In
+    particular an RSC lane inside a cluster's bounding box is NOT a top street.
+    """
+    fm = frame_members(plan)
+    boxes = {}
+    members = {i[0] for rows in fm.values() for i in rows}
+    for r, rows in fm.items():
+        ox, oy = cluster_origin(plan['frames'][str(r)], rows)
+        boxes[r] = (ox, oy, max(i[2] + i[4] for i in rows), max(i[3] + i[5] for i in rows))
+    collisions = []
+    for i in plan['insts']:
+        if i[0] in members:
+            continue
+        for r, (x0, y0, x1, y1) in boxes.items():
+            dx = min(x1, i[2] + i[4]) - max(x0, i[2])
+            dy = min(y1, i[3] + i[5]) - max(y0, i[3])
+            if dx > 1e-6 and dy > 1e-6:
+                collisions.append(dict(instance=i[0], master=i[1], frame=r,
+                                       overlap_um2=round(dx * dy, 6)))
+    return dict(schema=SCHEMA, status='FAIL' if collisions else 'HOMES_CLEAR_ONLY',
+                claim='Top instance homes versus cluster boxes; wires, clocks, reset and native views unqualified',
+                cluster_boxes={str(r): list(b) for r, b in boxes.items()},
+                collisions=collisions, collision_count=len(collisions))
+
+
+def lef_directions(paths):
+    directions = {}
+    for path in paths:
+        op = gzip.open if str(path).endswith('.gz') else open
+        macro = pin = None
+        with op(path, 'rt') as fh:
+            for line in fh:
+                words = line.split()
+                if not words:
+                    continue
+                if words[0] == 'MACRO':
+                    macro = words[1]
+                elif words[0] == 'PIN':
+                    pin = words[1]
+                elif words[0] == 'DIRECTION' and macro and pin:
+                    key = (macro, pin)
+                    direction = words[1].lower()
+                    assert directions.get(key, direction) == direction, ('LEF direction conflict', key)
+                    directions[key] = direction
+                elif words[0] == 'END' and len(words) > 1:
+                    if words[1] == pin:
+                        pin = None
+                    elif words[1] == macro:
+                        macro = None
+    return directions
+
+
+def terminal_direction(dv, directions, user):
+    name, pin, bit = user
+    master, pins = dv['insts'][name]
+    width = len(expr_bits(pins[pin], dv['widths']))
+    key = (master, pin if width == 1 else f'{pin}[{bit}]')
+    if width == 1 and key not in directions:
+        key = (master, f'{pin}[0]')
+    assert key in directions, ('missing LEF pin direction', key)
+    direction = directions[key]
+    assert direction in ('input', 'output'), ('unsupported LEF direction', key, direction)
+    return direction
+
+
+def _scalar_ref(bit, widths):
+    net, k = bit
+    return net if widths.get(net, 1) == 1 else f'{net}[{k}]'
+
+
+def extract_columns(plan, dv, directions):
+    """Exact structural grouping; retains each physical geometry variant.
+
+    No retiming, clock/reset inference, new flops, or implicit source ABI change.
+    A class with different constants or terminal partitions fails closed.
+    """
+    users = all_bit_users(dv)
+    report, sigs, fm = analyze(plan, dv, users)
+    assert all(not x['non_isomorphic'] for x in report['isomorphism'].values()), 'non-isomorphic column class'
+    wrappers, replacements, records = [], {}, []
+    for ci, ((key, geo), roots) in enumerate(sigs.items()):
+        rep = roots[0]
+        rows = fm[rep]
+        names = sorted(i[0] for i in rows)
+        assert set(names) <= set(dv['insts']), ('missing column source instances', rep)
+        internal, boundary = boundary_and_internal(dv, names, users)
+        # Names are chosen by terminal identity, never by source-global net name.
+        bkeys = sorted(boundary, key=lambda b: sorted(boundary[b]))
+        ikeys = sorted(internal, key=lambda b: sorted(internal[b]))
+        local = {b: f'b{k}' for k, b in enumerate(bkeys)}
+        local.update({b: f'n{k}' for k, b in enumerate(ikeys)})
+        module = f'dsfd_column_{re.sub(r"[^A-Za-z0-9_]", "_", key[0])}_v{ci}'
+        decls = []
+        for k, b in enumerate(bkeys):
+            nd = sum(terminal_direction(dv, directions, u) == 'output' for u in boundary[b])
+            assert nd <= 1, ('multiple drivers inside frame', rep, b)
+            decls.append(f'  {"output" if nd else "input"} b{k};')
+        text = [f'module {module} ({", ".join(f"b{k}" for k in range(len(bkeys)))});', *decls]
+        text += [f'  wire n{k};' for k in range(len(ikeys))]
+        ref_constants = {}
+        for j, name in enumerate(names):
+            master, pins = dv['insts'][name]
+            ports = []
+            for pin, expr in pins.items():
+                bits = expr_bits(expr, dv['widths'])
+                ref_constants[(name, pin)] = [(k, b[1]) for k, b in enumerate(bits) if b[0] == 'const']
+                vals = [f"1'b{b[1]}" if b[0] == 'const' else local[b] for b in bits]
+                value = '' if not vals else vals[0] if len(vals) == 1 else '{' + ', '.join(vals) + '}'
+                ports.append(f'.{pin}({value})')
+            text.append(f'  {master} u{j} ({", ".join(ports)});')
+        text.append('endmodule')
+        wrappers.append('\n'.join(text))
+        port_patterns = {frozenset(v): k for k, b in enumerate(bkeys) for v in [boundary[b]]}
+        ox, oy = cluster_origin(plan['frames'][str(rep)], rows)
+        record = dict(master=module, representative=rep, roots=roots,
+                      boundary_bits=len(bkeys), internal_bits=len(ikeys),
+                      children=[dict(instance=f'u{j}', original=n, master=dv['insts'][n][0],
+                                     box_um=[next(i[2] for i in rows if i[0] == n) - ox,
+                                             next(i[3] for i in rows if i[0] == n) - oy,
+                                             next(i[4] for i in rows if i[0] == n),
+                                             next(i[5] for i in rows if i[0] == n)],
+                                     orient=next(i[6] for i in rows if i[0] == n)) for j, n in enumerate(names)],
+                      instances=[])
+        for r in roots:
+            mp = inst_map(plan, rows, fm[r], rep, r)
+            _, br = boundary_and_internal(dv, [i[0] for i in fm[r]], users)
+            binding = {}
+            for b, use in br.items():
+                pat = frozenset((mp[n], p, k) for n, p, k in use)
+                assert pat in port_patterns, ('boundary terminal mismatch', r, pat)
+                binding[port_patterns[pat]] = b
+            assert set(binding) == set(range(len(bkeys))), ('boundary mapping incomplete', r)
+            for n, nr in mp.items():
+                master, pins = dv['insts'][n]
+                assert master == dv['insts'][nr][0], ('master mismatch', r, n)
+                assert set(pins) == set(dv['insts'][nr][1]), ('pin ABI mismatch', r, n)
+                for pin, expr in pins.items():
+                    assert len(expr_bits(expr, dv['widths'])) == len(expr_bits(dv['insts'][nr][1][pin], dv['widths'])), ('pin width mismatch', r, n, pin)
+                    consts = [(k, b[1]) for k, b in enumerate(expr_bits(expr, dv['widths'])) if b[0] == 'const']
+                    assert consts == ref_constants[(nr, pin)], ('constant mismatch', r, n, pin)
+            conn = ', '.join(f'.b{k}({_scalar_ref(binding[k], dv["widths"])})' for k in sorted(binding))
+            replacements[f'col_{r}'] = f'  {module} col_{r} ({conn});\n'
+            record['instances'].append(dict(root=r, instance=f'col_{r}',
+                origin_um=list(cluster_origin(plan['frames'][str(r)], fm[r])),
+                ports={f'b{k}': _scalar_ref(binding[k], dv['widths']) for k in sorted(binding)}))
+        records.append(record)
+    return wrappers, replacements, records, fm
+
+
+def cmd_extract(a):
+    plan = load_plan(a.plan)
+    dv = parse_die_v(a.die_v)
+    wrappers, replacements, records, fm = extract_columns(plan, dv, lef_directions(a.lef))
+    by_member = {i[0]: r for r, rows in fm.items() for i in rows}
+    seen = set()
+    lines = []
+    op = gzip.open if str(a.die_v).endswith('.gz') else open
+    with op(a.die_v, 'rt') as fh:
+        for line in fh:
+            assert not line.strip().startswith('assign '), 'assign aliases require explicit boundary analysis'
+            inst = _INST.match(line)
+            if inst and inst.group(2) in by_member:
+                r = by_member[inst.group(2)]
+                if r not in seen:
+                    lines.append(replacements[f'col_{r}'])
+                    seen.add(r)
+            else:
+                lines.append(line)
+    assert seen == set(fm), ('source frame census mismatch', seen, set(fm))
+    # Validate everything before publishing any output file.
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    (out / 'die_hier.v').write_text(''.join(lines) + '\n' + '\n\n'.join(wrappers) + '\n')
+    rec = dict(schema=SCHEMA, status='STRUCTURAL_EXTRACTION_ONLY',
+               source_sha256={str(p): hashlib.sha256(Path(p).read_bytes()).hexdigest()
+                              for p in [a.plan, a.die_v, *a.lef]},
+               qualification='No native, clock/reset, reach, compiled latency, throughput or routed timing claim',
+               clusters=records, transport=transport_audit(plan))
+    (out / 'clusters.json').write_text(json.dumps(rec, indent=1) + '\n')
+    print('EXTRACT', len(fm), 'frames', len(records), 'masters',
+          'transport collisions', rec['transport']['collision_count'])
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest='cmd', required=True)
@@ -356,8 +542,13 @@ def main(argv=None):
     s.add_argument('--plan', required=True)
     s.add_argument('--die-v')
     s.add_argument('--out', required=True)
+    s = sub.add_parser('extract')
+    s.add_argument('--plan', required=True)
+    s.add_argument('--die-v', required=True)
+    s.add_argument('--lef', required=True, action='append')
+    s.add_argument('--out', required=True)
     a = ap.parse_args(argv)
-    {'stagemap': cmd_stagemap, 'analyze': cmd_analyze}[a.cmd](a)
+    {'stagemap': cmd_stagemap, 'analyze': cmd_analyze, 'extract': cmd_extract}[a.cmd](a)
 
 
 if __name__ == '__main__':
