@@ -81,6 +81,12 @@ if [ "${OT_KV_EXPAND:-all}" != none ]; then
   python3 tools/qwen_kv_die/kv_expand.py --run $O $( [ "${OT_KV_EXPAND:-all}" = all ] || echo --only ${OT_KV_EXPAND} ) > $O/expand.log
   EXP="--expanded $O/expand.json"
 fi
+# KVPLAN 1815 (OT_KV_RST_REGIONAL=1, also read by kv_die.py): every reset / boot fan-out of the flattened die -> a local
+# registered tree of closed qkd_rlys_1 stations through free space (kv_rst_regional.py; RUN/rst_regional.json)
+if [ "${OT_KV_RST_REGIONAL:-0}" = 1 ]; then
+  python3 tools/qwen_kv_die/kv_rst_regional.py --run $O > $O/rst_regional.log 2>&1 || { tail -5 $O/rst_regional.log; exit 6; }
+  EXP="--expanded $O/expand.json"
+fi
 # Q-KVSYS-RLY 2026-10-16 (OT_KV_RLY_STD=1, also read by kv_die.py / kv_pin_repair.py for the frame size): every
 # qkd_rly_<W> relay stage -> replicas of the closed relay standards qkd_rlys_1/36/296/528 (declared pads die.v.pads.json)
 if [ "${OT_KV_RLY_STD:-0}" = 1 ]; then
