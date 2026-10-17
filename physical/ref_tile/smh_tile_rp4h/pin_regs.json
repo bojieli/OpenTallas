@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_smh_rp4_one",
+ "enable": false,
+ "reason": "Actual RTL pin capture and launch registers retained from rp3, ONE regional clock root (RP4f) driving the 18 hard children and all own soft sinks; no data edge change. rin/bin land in own pin flops, rout/bout launch from existing hard row/beat cells, gin/gout from existing input/output registers, xs_* through retained five-stage strap registers, rst_n through regional reset relay. External gating companion is separately instantiated actual RTL, never replaced by free-running production clocks."
+}
