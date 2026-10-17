@@ -1,0 +1,236 @@
+{
+ "name": "s81sl_vq",
+ "top": "ot_s81sl_vq",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/v41x/ot_hbm_norm_split.sv",
+  "rtl/hdc/v41x/ot_hbm_norm_split_p.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "W": [
+   "y_v",
+   "y_i",
+   "y",
+   "u_v",
+   "u_i",
+   "u"
+  ],
+  "E": [
+   "xf_v",
+   "xf_s",
+   "xf"
+  ],
+  "N": [
+   "sid",
+   "k",
+   "m_v",
+   "m_q",
+   "m_b",
+   "m_i",
+   "um_v",
+   "um_q",
+   "um_b",
+   "um_i"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "fault"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new beat sub-leaf of the distributed-vector slice; flop-first pins, die hold budget.",
+ "job": {
+  "owner": "Claude:S81-SLICE",
+  "branch": "claude/s81slice-1017",
+  "tag": "s81sl_vq",
+  "purpose": "S81-SLICE deliverable 3: beat-leaf sub-leaf to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/hbm_norm_split_20261008",
+   "results/rtl/hbm_norm_engine_view_20261006",
+   "results/rtl/s81_slice_1017/beat",
+   "rtl/dsrom_sys/s81_dv/slice",
+   "rtl/hdc/v41x",
+   "tools/dsrom_su_hcpost.py",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "tools/rtl_hdc_v41_blockdot_campaign.py",
+   "tools/s81_slice",
+   "tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl",
+   "tools/s81_suhc/hc_gate.py"
+  ],
+  "benches": [
+   {
+    "name": "slbeat_exact",
+    "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_exact base 37 L0",
+    "expect": "pass",
+    "pass_regex": "^PASS beat base B=37 L0$",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slbeat_muttree",
+    "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_muttree muttree 37 L0 raw",
+    "expect": "fail",
+    "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
+    "fail_witness": "results/rtl/s81_slice_1017/beat/g_mt/run.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slbeat_mutcoef",
+    "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_mutcoef mutcoef 37 L0 raw",
+    "expect": "fail",
+    "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
+    "fail_witness": "results/rtl/s81_slice_1017/beat/g_mc/run.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   }
+  ],
+  "views_to": "physical/ref_tile/s81sl_vq/views",
+  "record_to": "results/rtl/ref_tile/s81sl_vq"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (S81-SLICE): every data input lands in a flop at the pin (the *_c capture flops) and every output is a flop; recipe-3 pin_regs would add a second unpriced stage on every slice seam."
+ },
+ "util": 0.52,
+ "std_area_um2": 9000,
+ "pin_ranges": {
+  "y_v": [
+   6.48,
+   8.852
+  ],
+  "y_i": [
+   8.852,
+   11.647
+  ],
+  "y": [
+   11.647,
+   68.04
+  ],
+  "u_v": [
+   68.04,
+   70.412
+  ],
+  "u_i": [
+   70.412,
+   73.207
+  ],
+  "u": [
+   73.207,
+   129.6
+  ],
+  "xf_v": [
+   6.48,
+   9.06
+  ],
+  "xf_s": [
+   9.06,
+   11.639
+  ],
+  "xf": [
+   11.639,
+   129.6
+  ],
+  "sid": [
+   6.48,
+   22.643
+  ],
+  "k": [
+   22.643,
+   35.305
+  ],
+  "m_v": [
+   35.305,
+   40.966
+  ],
+  "m_q": [
+   40.966,
+   46.626
+  ],
+  "m_b": [
+   46.626,
+   52.287
+  ],
+  "m_i": [
+   52.287,
+   82.452
+  ],
+  "um_v": [
+   82.452,
+   88.113
+  ],
+  "um_q": [
+   88.113,
+   93.774
+  ],
+  "um_b": [
+   93.774,
+   99.434
+  ],
+  "um_i": [
+   99.434,
+   129.6
+  ],
+  "fault": [
+   6.48,
+   129.6
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}
