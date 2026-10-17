@@ -12,8 +12,11 @@ set qrl_groups [list \
   [dict create name rnw type INCLUSIVE regex {g_rqr\.gn_q\[([0-9]|[1-9][0-9]|[1-4][0-9][0-9]|50[0-9]|51[01])\]} boxes {{3.0 780.0 50.0 960.0}} min 512 max 512] \
   [dict create name rse type INCLUSIVE regex {g_rqr\.gs_q\[} boxes {{407.5 600.0 452.5 760.0}} min 512 max 512] \
   [dict create name rne type INCLUSIVE regex {g_rqr\.gn_q\[} boxes {{407.5 780.0 452.5 960.0}} min 512 max 512] \
-  [dict create name dw type INCLUSIVE regex {u_me\.(mq_wrom\[([0-9]|[1-9][0-9]|[1-4][0-9][0-9]|50[0-9]|51[01])\]|s2_w\[([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|10[01][0-9]|102[0-3])\])} boxes {{3.0 505.0 50.0 590.0}} min 1024 max 1024] \
-  [dict create name de type INCLUSIVE regex {u_me\.(mq_wrom|s2_w)\[} boxes {{407.5 505.0 452.5 590.0}} min 1024 max 1024] \
-  [dict create name hub type INCLUSIVE regex {^u_g\.u_tile\.} boxes {{325.0 335.0 443.0 505.0}} min 2348 max 2348] \
+  [dict create name dw type INCLUSIVE regex {(u_me\.mq_wrom\[([0-9]|[1-9][0-9]|[1-4][0-9][0-9]|50[0-9]|51[01])\]|g_hd\.g_tx\.tc\[(12[89]|1[3-9][0-9]|2[0-4][0-9]|25[0-5])\])} boxes {{3.0 505.0 50.0 590.0}} min 1024 max 1024] \
+  [dict create name de type INCLUSIVE regex {(u_me\.mq_wrom\[|g_hd\.g_tx\.tc\[(25[6-9]|2[6-9][0-9]|3[0-7][0-9]|38[0-3])\])} boxes {{407.5 505.0 452.5 590.0}} min 1024 max 1024] \
+  [dict create name hub type INCLUSIVE regex {^u_g\.u_tile\.} boxes {{325.0 335.0 443.0 505.0}} min 3694 max 3694] \
 ]
+# s2_w: Yosys names the REGROOT weight-operand flops after the TX wire they drive (g_sl[g].g_hd.g_tx.tc[b]):
+# b in [128,256) = lanes of groups 0,1 = west ROM column, [256,384) = east (tx_d = {v,first,split,w_in,x}).
 source /src/tools/qwen_romleaf/parent_regions.tcl
+# hub = every remaining u_g.u_tile flop on root ck (ME control + kv_addr_prep + u_xm x-line 1024): measured from the c1 synth netlist, matches the gate clock_rule count of port:ck
