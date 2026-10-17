@@ -29,6 +29,7 @@ def main():
     ap.add_argument('--frame-w', type=float, default=1285.2)
     ap.add_argument('--old-frame-w', type=float, default=1139.616)
     ap.add_argument('--s14', type=float, default=400.0)
+    ap.add_argument('--options', default='8+9,8+8,7+8', help='W+E column counts, comma separated')
     a = ap.parse_args()
     d = json.loads(Path(a.canonical).read_text())
     hub = json.loads(Path(a.hub_layout).read_text())
@@ -51,10 +52,16 @@ def main():
     w_left = xs[0]
     e_right = xs[-1] + a.old_frame_w
     out = {}
-    fig, axs = plt.subplots(1, 3, figsize=(30, 9))
-    for ax, (tag, wcols, ecols) in zip(axs, (('a_8W_9E', list(range(nw)), list(range(nw, len(cols)))),
-                                             ('b1_8W_8E', list(range(nw)), list(range(nw + 1, len(cols)))),
-                                             ('b2_7W_8E', list(range(nw - 1)), list(range(nw + 1, len(cols)))))):
+    def keep(nW, nE):
+        # drop the W columns with the fewest frames (hub-side first on ties), and the hub-side E columns
+        wl = list(range(nw))
+        order = sorted(wl, key=lambda ci: (len(frames[round(xs[ci], 3)]), -ci))
+        wk = sorted(set(wl) - set(order[:nw - nW]))
+        ek = list(range(len(cols) - nE, len(cols)))
+        return wk, ek
+    combos = [tuple(map(int, c.split('+'))) for c in a.options.split(',')]
+    fig, axs = plt.subplots(1, len(combos), figsize=(10 * len(combos), 9))
+    for ax, (tag, wcols, ecols) in zip(axs, [(f'{w_}W_{e_}E', *keep(w_, e_)) for w_, e_ in combos]):
         place = {}
         x = w_left
         for k, ci in enumerate(wcols):
@@ -91,7 +98,7 @@ def main():
         r = out[tag]
         ax.set_title(f"{tag}: {r['frames_per_die']} frames; hub room {r['hub_room_um']:.0f} vs span {r['hub_span_now_um']:.0f} "
                      f"-> deficit {r['hub_deficit_um']:.0f} / slack {r['hub_slack_um']:.0f} um", fontsize=9)
-    fig.suptitle(f'S81 bf_col 529.2 fit: frame {a.frame_w} um (was {a.old_frame_w}), street-only clusters, S14 {a.s14} um each; red = hub block outside room', fontsize=11)
+    fig.suptitle(f'S81 bf_col fit: frame {a.frame_w} um (was {a.old_frame_w}), street-only clusters, S14 {a.s14} um each; red = hub block outside room at its CURRENT x (a whole-hub shift may still fit when slack >= 0)', fontsize=11)
     o = Path(a.out); o.mkdir(parents=True, exist_ok=True)
     fig.savefig(o / 'bfcol_fit.png', dpi=60)
     (o / 'bfcol_fit.json').write_text(json.dumps(dict(schema='opentallas.s81.bfcol_fit.v1', frame_w_um=a.frame_w,
