@@ -6,6 +6,9 @@
 // Boot: the tool's boot words on the shared boot bus.  Per token: one start pulse; checks every join word (index,
 // scale, token, epoch, exact data from the independent map below) at the tool's exact edge, 65 words, and no fault
 // anywhere (root, stations, es merges, trains, join).  MUT: 3 / 4 station, 6 join4_cal; a mutant must FAIL.
+// KVJ-SMALL b2 10-17: with OT_KVJC3_DISP defined the shared boot bus comes from the actual boot dispatcher
+// (qkd_static_kv_boot_dispatch ESCFG=1, MUT = OT_KVJC3_DMUT) fed targets 1..9, 12, 13, 0 (OT_KVJC3_DISP_DIR/target12.hex,
+// target13.hex = kv_static_programme.es_cfg_words); its stream must equal boot.memh and setup_ready must rise.
 `ifndef OT_KVJC3_MUT
 `define OT_KVJC3_MUT 0
 `endif
@@ -20,7 +23,26 @@ module tb_kvjc3_emb_player;
     integer cyc = 0;
     always @(posedge ck) cyc <= cyc + 1;
     reg start = 0; reg [17:0] tok = 0; reg [15:0] epo = 0;
+`ifdef OT_KVJC3_DISP
+`ifndef OT_KVJC3_DMUT
+`define OT_KVJC3_DMUT 0
+`endif
+    wire cfg_we; wire [7:0] cfg_addr; wire [63:0] cfg_data;
+    reg [142:0] pr = 0; reg [3:0] target = 1; reg ready = 0; reg [63:0] digest = 0; reg [159:0] applied = 0; reg [2:0] configured = 0;
+    wire setup, dfault; wire [7:0] code;
+    qkd_static_kv_boot_dispatch #(.MUT(`OT_KVJC3_DMUT), .DIECFG(0), .LINKCFG(0), .ESCFG(1)) u_disp (.ck(ck), .rst_n(rst_n),
+        .boot_pr(pr), .boot_image_target(target), .boot_image_ready(ready), .boot_image_fault(1'b0), .boot_image_epoch(16'd77),
+        .boot_image_digest(digest), .execution_active(1'b0), .sink_applied(applied), .local_configured(configured),
+        .sink_fault(1'b0), .diecfg_sealed(1'b0), .diecfg_fault(1'b0),
+        .layer_we(), .layer_addr(), .layer_data(), .writer_we(), .writer_addr(), .writer_data(), .ownership_we(),
+        .ownership_addr(), .ownership_data(), .landing_we(), .front_we(), .group_addr(), .group_data(),
+        .controller_we(), .controller_addr(), .controller_data(), .controller_last(), .front_last(),
+        .diecfg_we(), .diecfg_addr(), .diecfg_data(), .link_cfg_tx_we(), .link_cfg_rx_we(), .link_cfg_addr(), .link_cfg_data(),
+        .es_cfg_we(cfg_we), .es_cfg_addr(cfg_addr), .es_cfg_data(cfg_data),
+        .setup_ready(setup), .fault(dfault), .fault_code(code), .installed_epoch(), .installed_isa_digest());
+`else
     reg cfg_we = 0; reg [7:0] cfg_addr = 0; reg [63:0] cfg_data = 0;
+`endif
     wire [778:0] head [0:3];
     wire root_fault;
     qkd_kv_es_fan_root u_root (.ck(ck), .rst_n(rst_n), .es(1152'd0), .dest_pc(20'd0), .dest_stack(2'd0), .identity(59'd0),
@@ -105,6 +127,17 @@ module tb_kvjc3_emb_player;
         end
         nw = nw + 1;
     end
+`ifdef OT_KVJC3_DISP
+    reg [63:0] t12 [0:1023]; reg [63:0] t13 [0:7]; integer nbus = 0, dt, da, dn;
+    always @(posedge ck) if (cfg_we) begin
+        if (nbus < 1026 && {cfg_addr, cfg_data} !== boot[nbus]) begin
+            errors = errors + 1; if (errors < 10) $display("FAIL dispatcher bus word %0d %h (boot.memh %h)", nbus, {cfg_addr, cfg_data}, boot[nbus]); end
+        nbus = nbus + 1;
+    end
+    task dword(input [3:0] tg, input integer a, input [63:0] d);
+        begin target = tg; pr = 0; pr[74] = 1; pr[73:64] = 10'(a); pr[63:0] = d; @(negedge ck); pr = 0; end endtask
+    task dimage(input [3:0] tg); begin pr = 0; @(negedge ck); ready = 1; target = tg; @(negedge ck); @(negedge ck); ready = 0; @(negedge ck); end endtask
+`endif
     initial begin
         $readmemh({`OT_KVJC3_DIR, "/boot.memh"}, boot);
         $readmemh({`OT_KVJC3_DIR, "/words.memh"}, wexp);
@@ -113,10 +146,25 @@ module tb_kvjc3_emb_player;
         toks[0] = 18'd2037; toks[1] = 18'd102407; toks[2] = 18'd151935; toks[3] = 18'(1024 * 3 + (1 << 9) + (5 << 4) + 9);
         toks[4] = 18'd77777;
         repeat (4) @(negedge ck); rst_n = 1; repeat (4) @(negedge ck);
+`ifdef OT_KVJC3_DISP
+        $readmemh({`OT_KVJC3_DISP_DIR, "/target12.hex"}, t12); $readmemh({`OT_KVJC3_DISP_DIR, "/target13.hex"}, t13);
+        for (dt = 1; dt <= 9; dt = dt + 1) begin
+            case (dt) 1: dn = 327; 2: dn = 181; 3: dn = 4; 4, 5: dn = 192; default: dn = 1024; endcase
+            for (da = 0; da < dn; da = da + 1) dword(4'(dt), da, (dt == 3) ? 64'(da) : 64'(dt * 4096 + da));
+            dimage(4'(dt));
+        end
+        for (da = 0; da < 1024; da = da + 1) dword(12, da, t12[da]); dimage(12);
+        for (da = 0; da < 8; da = da + 1) dword(13, da, t13[da]); dimage(13);
+        target = 0; @(negedge ck); ready = 1; digest = 64'h0fedcba987654321; configured = 7; applied = {160{1'b1}};
+        repeat (3) @(negedge ck);
+        if (!setup || dfault || nbus != 1032) begin
+            errors = errors + 1; $display("FAIL dispatcher setup %0d fault %0d code %h bus words %0d (1032)", setup, dfault, code, nbus); end
+`else
         for (i = 0; i < nboot; i = i + 1) begin
             cfg_we = 1; cfg_addr = boot[i][71:64]; cfg_data = boot[i][63:0]; @(negedge ck);
         end
         cfg_we = 0; cfg_addr = 0; cfg_data = 0;
+`endif
         repeat (40) @(negedge ck);
         for (t = 0; t < 5; t = t + 1) begin
             tok = toks[t]; epo = 16'(16'h1234 + t * 77); nw = 0;
@@ -130,7 +178,11 @@ module tb_kvjc3_emb_player;
             $display("FAIL faults root %0d station %h merge %h train %h join %0d", root_fault, sf, mf, hf, jfault);
         end
         if (errors) $display("FAIL MUT %0d errors %0d", MUT, errors);
+`ifdef OT_KVJC3_DISP
+        else $display("PASS KVJC3_EMB_PLAYER 5 tokens x 65 words exact edges/data, LAT %0d, no fault; boot bus from the dispatcher ESCFG targets 12/13 (%0d words == boot.memh + 6 empty segments), setup_ready", LAT, nbus);
+`else
         else $display("PASS KVJC3_EMB_PLAYER 5 tokens x 65 words exact edges/data, LAT %0d, no fault", LAT);
+`endif
         $finish;
     end
 endmodule

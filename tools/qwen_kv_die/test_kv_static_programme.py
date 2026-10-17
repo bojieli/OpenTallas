@@ -88,6 +88,20 @@ class Programme(unittest.TestCase):
             self.assertEqual(r['link_cfg']['target'], 11)
             self.assertEqual(r['link_cfg']['program'], want)
 
+    def test_es_cfg_targets_are_the_kvjc3_boot_words(self):
+        # KVJ-SMALL b2 10-17: targets 12 / 13 (dispatcher ESCFG=1) replay kvjc3_pc_chain.boot_words on the shared bus
+        import kvjc3_pc_chain as C3
+        bw = C3.boot_words(C3.emb_calendar(C.ES_CFG_CTRL_LAT, [0, 0, 0, 0]))
+        for r in (self.comp, self.die):
+            e = r['es_cfg']
+            self.assertEqual(e['targets'], [12, 13])
+            self.assertEqual((len(e['pc']), len(e['beat'])), (1024, 8))
+            got = [(a & 0xff, d) for a, d in enumerate(e['pc'])] + [(a, d) for a, d in enumerate(e['beat'])]
+            want = sorted(w for w in bw if w[1] >> 62 == 0) == sorted(got[:1024])
+            self.assertTrue(want)
+            self.assertEqual(got[1024:1024 + 2], [w for w in bw if w[1] >> 62 == 1])
+            self.assertTrue(all(d == 1 << 62 for d in e['beat'][2:]))     # unused segments: len 0 = never a slot
+
     def test_writer_and_ownership_follow_their_boot_checks(self):
         for r in (self.comp, self.die):
             w = r['writer']['words']

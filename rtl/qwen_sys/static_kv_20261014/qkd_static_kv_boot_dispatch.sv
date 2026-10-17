@@ -29,7 +29,17 @@
 // end's (pin-registered) cfg port; the end itself refuses a cfg write while its calendar runs.  setup_ready also needs
 // target 11 installed.  LINKCFG=0 = unchanged (target 11 refused, code 3; link_cfg_* constant 0).  MUT 5: TX/RX swapped,
 // MUT 6: the segment-1 bases written into entry 0 (bench mutants).
-module qkd_static_kv_boot_dispatch #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0)(
+// KVJ-SMALL b2 10-17 (KVJ-C3 open: the shared boot bus of qkd_kv_es_fan_root + qkd_embedding_static_join4_cal, 6 ports
+// cfg_we/cfg_addr/cfg_data x2, had no producer): ESCFG=1 adds targets 12 and 13, installed after target 9 (and 11) and
+// before the ISA target 0 (order 1..9, [11,] 12, 13, 0), on ONE registered bus es_cfg_we / es_cfg_addr[7:0] /
+// es_cfg_data[63:0] that the die fans to both C3 cfg ports (each pin-registers it; each takes only its own cfg_data[63:62]).
+// Target 12 = the PC players' constants, 1024 words, word a = {stack[1:0], pc[4:0], reg[2:0]} -> es_cfg_addr = a[7:0],
+// data passed verbatim; data[63:62] != 0, data[61:18] != 0 or data[17:16] != a[9:8] -> fault code 5.  Target 13 = the
+// join4 beat calendar, 8 words (segment a; unused segments len 0), es_cfg_addr = a; data[63:62] != 1 or data[61:24] != 0
+// -> fault code 5.  Image = tools/qwen_kv_die/kvjc3_pc_chain.boot_words (kv_static_programme.es_cfg_words).  setup_ready
+// also needs targets 12 and 13 installed.  ESCFG=0 = unchanged (12/13 refused, code 3; es_cfg_* constant 0).
+// MUT 7: target-12 address with pc and reg swapped; MUT 8: target-13 segment 1 dropped (bench mutants).
+module qkd_static_kv_boot_dispatch #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0)(
  input wire ck,rst_n,input wire[142:0]boot_pr,input wire[3:0]boot_image_target,
  input wire boot_image_ready,boot_image_fault,input wire[15:0]boot_image_epoch,
  input wire[63:0]boot_image_digest,input wire execution_active,
@@ -43,26 +53,30 @@ module qkd_static_kv_boot_dispatch #(parameter integer MUT=0,parameter integer D
  output reg[127:0]controller_last,output reg[31:0]front_last,
  output reg diecfg_we,output reg[7:0]diecfg_addr,output reg[63:0]diecfg_data,
  output reg link_cfg_tx_we,link_cfg_rx_we,output reg[5:0]link_cfg_addr,output reg[31:0]link_cfg_data,
+ output reg es_cfg_we,output reg[7:0]es_cfg_addr,output reg[63:0]es_cfg_data,
  output wire setup_ready,output reg fault,output reg[7:0]fault_code,
  output reg[15:0]installed_epoch,output reg[63:0]installed_isa_digest
 );
  reg[3:0]expected_target;reg[10:0]next_word;reg ready_q;reg isa_seen;
- reg[8:0]installed;reg have_epoch;reg diecfg_done;reg linkcfg_done;
+ reg[8:0]installed;reg have_epoch;reg diecfg_done;reg linkcfg_done;reg es12_done,es13_done;
  wire[9:0]addr=boot_pr[73:64];wire[63:0]data=boot_pr[63:0];
  function automatic[10:0]word_count(input[3:0]t);
  case(t)1:word_count=327;2:word_count=181;3:word_count=4;4,5:word_count=192;
- 6,7,8,9:word_count=1024;10:word_count=(DIECFG!=0)?11'(32+NRST+1):11'd0;11:word_count=(LINKCFG!=0)?11'd66:11'd0;default:word_count=0;endcase
+ 6,7,8,9:word_count=1024;10:word_count=(DIECFG!=0)?11'(32+NRST+1):11'd0;11:word_count=(LINKCFG!=0)?11'd66:11'd0;12:word_count=(ESCFG!=0)?11'd1024:11'd0;13:word_count=(ESCFG!=0)?11'd8:11'd0;default:word_count=0;endcase
  endfunction
  // Registered HOST output is consumed one edge later by the real cfg inputs.
  // Final ISA readiness remains tied to the actual loader, so a new BEGIN drops
  // setup_ready immediately even after the first successful setup.
- assign setup_ready=(&installed)&&((MUT==3)||(&sink_applied))&&(&local_configured)&&isa_seen&&boot_image_ready&&boot_image_target==0&&!boot_image_fault&&!sink_fault&&!fault&&((DIECFG==0)||diecfg_sealed)&&((LINKCFG==0)||linkcfg_done);
+ assign setup_ready=(&installed)&&((MUT==3)||(&sink_applied))&&(&local_configured)&&isa_seen&&boot_image_ready&&boot_image_target==0&&!boot_image_fault&&!sink_fault&&!fault&&((DIECFG==0)||diecfg_sealed)&&((LINKCFG==0)||linkcfg_done)&&((ESCFG==0)||(es12_done&&es13_done));
  integer group_index,pc_index;
  // target 10 (DIECFG): the pre-boot die configuration image, only before anything else is installed
  wire t10=(DIECFG!=0)&&boot_image_target==10;
  wire t10_ok=(installed==0)&&(expected_target==1)&&!diecfg_done;
  wire t11=(LINKCFG!=0)&&boot_image_target==11;
- wire t_ok=t10?t10_ok:((MUT==1||boot_image_target==expected_target)&&(boot_image_target<=9||t11));
+ wire t12=(ESCFG!=0)&&boot_image_target==12;
+ wire t13=(ESCFG!=0)&&boot_image_target==13;
+ wire[3:0]after9=(LINKCFG!=0)?4'd11:(ESCFG!=0)?4'd12:4'd0;
+ wire t_ok=t10?t10_ok:((MUT==1||boot_image_target==expected_target)&&(boot_image_target<=9||t11||t12||t13));
  always @(posedge ck or negedge rst_n)begin
  if(!rst_n)begin
   expected_target<=1;next_word<=0;ready_q<=0;isa_seen<=0;installed<=0;have_epoch<=0;
@@ -71,10 +85,11 @@ module qkd_static_kv_boot_dispatch #(parameter integer MUT=0,parameter integer D
   layer_addr<=0;layer_data<=0;writer_addr<=0;writer_data<=0;ownership_addr<=0;ownership_data<=0;
   diecfg_we<=0;diecfg_addr<=0;diecfg_data<=0;diecfg_done<=0;
   link_cfg_tx_we<=0;link_cfg_rx_we<=0;link_cfg_addr<=0;link_cfg_data<=0;linkcfg_done<=0;
+  es_cfg_we<=0;es_cfg_addr<=0;es_cfg_data<=0;es12_done<=0;es13_done<=0;
   group_addr<=0;group_data<=0;controller_addr<=0;controller_data<=0;
  end else begin
   ready_q<=boot_image_ready;
-  layer_we<=0;writer_we<=0;ownership_we<=0;landing_we<=0;front_we<=0;controller_we<=0;controller_last<=0;front_last<=0;diecfg_we<=0;link_cfg_tx_we<=0;link_cfg_rx_we<=0;
+  layer_we<=0;writer_we<=0;ownership_we<=0;landing_we<=0;front_we<=0;controller_we<=0;controller_last<=0;front_last<=0;diecfg_we<=0;link_cfg_tx_we<=0;link_cfg_rx_we<=0;es_cfg_we<=0;
   if(boot_image_fault||sink_fault||(DIECFG!=0&&diecfg_fault))begin fault<=1;fault_code[0]<=1;end
   if((boot_pr[74]||boot_pr[142])&&execution_active)begin fault<=1;fault_code[1]<=1;end
   if(boot_pr[142]&&boot_image_target!=0)begin fault<=1;fault_code[2]<=1;end
@@ -121,6 +136,14 @@ module qkd_static_kv_boot_dispatch #(parameter integer MUT=0,parameter integer D
        end
       end
     end
+    12:begin
+      if(data[63:62]!=0||data[61:18]!=0||data[17:16]!=addr[9:8])begin fault<=1;fault_code[5]<=1;end
+      else begin es_cfg_we<=1;es_cfg_addr<=(MUT==7)?{addr[2:0],addr[7:3]}:addr[7:0];es_cfg_data<=data;end
+    end
+    13:begin
+      if(data[63:62]!=2'd1||data[61:24]!=0)begin fault<=1;fault_code[5]<=1;end
+      else begin es_cfg_we<=!(MUT==8&&addr[2:0]==1);es_cfg_addr<={5'd0,addr[2:0]};es_cfg_data<=data;end
+    end
     default:begin fault<=1;fault_code[3]<=1;end
     endcase
    end
@@ -133,8 +156,10 @@ module qkd_static_kv_boot_dispatch #(parameter integer MUT=0,parameter integer D
     if(!t10_ok||next_word!=word_count(10))begin fault<=1;fault_code[7]<=1;end
     else begin diecfg_done<=1;next_word<=0;end
    end else if(boot_image_target!=expected_target||next_word!=word_count(boot_image_target))begin fault<=1;fault_code[7]<=1;end
-   else if(t11)begin linkcfg_done<=1;expected_target<=0;next_word<=0;end
-   else begin installed[boot_image_target-1'b1]<=1;expected_target<=(boot_image_target==9)?((LINKCFG!=0)?4'd11:4'd0):expected_target+1'b1;next_word<=0;end
+   else if(t11)begin linkcfg_done<=1;expected_target<=(ESCFG!=0)?4'd12:4'd0;next_word<=0;end
+   else if(t12)begin es12_done<=1;expected_target<=4'd13;next_word<=0;end
+   else if(t13)begin es13_done<=1;expected_target<=4'd0;next_word<=0;end
+   else begin installed[boot_image_target-1'b1]<=1;expected_target<=(boot_image_target==9)?after9:expected_target+1'b1;next_word<=0;end
   end
  end
  end
