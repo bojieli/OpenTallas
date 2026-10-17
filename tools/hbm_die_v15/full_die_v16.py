@@ -1034,6 +1034,8 @@ def build(specs_dir, out, extra=()):
                     continue        # A2P: the gap's instance belongs to a dropped quadrant
                 if i in rm:
                     continue        # A2P: accounting gaps for explicitly removed SM-side / link instances
+                if p in PORT_SPLIT.get(i, {}):
+                    continue        # port split / hoisted by a remaster layer: the gap names the old port
                 if i not in ports or p not in ports[i]:
                     problems.append(f"gap {g['id']}: unknown {i}.{p}"); continue
                 ii, pp_, lo, hi = rng(a, ports)
