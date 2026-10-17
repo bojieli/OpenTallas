@@ -82,7 +82,7 @@
   "pd": 0.5,
   "threads": 8,
   "peak_ram_gb": 24,
-  "hold_margin_ns": 0.03,
+  "hold_margin_ns": 0.01,
   "macro_halo_um": 5.4,
   "pin_balance": {
    "group_max": 1,
@@ -98,10 +98,10 @@
  "recipe": 3,
  "purpose": "H-SM 2026-10-16: hardened SM result -> VM writer smw_<q>, ONE master for the 4 instances (option A wrapper: folded ot_static_cmd_target MODE 1 command calendar CW 26 + 128x256 table, tgt strap; quad strap replaces parameter QUAD). Pin-bound: W rv/rrow/rdata 2,152, E wq 2,248 at ~6 pins/um -> 388.8 um faces; width 142.56 for the 94.8 um table macro with >= 20 um channels; N F20 bus + straps + status. ~11.3k writer flops + collar. The RTL registers every input at its pin and every output is a flop; pin_reg_split gives each replicated wq data pin its own launch flop: 0 added edges (calendar fire edge unchanged; rv(t) -> wq slot0 at t+3). rst_n lands on one local reset-release flop.",
  "job": {
-  "owner": "Codex H-SM physical",
-  "branch": "codex/hbm-element-1246",
-  "tag": "faces4",
-  "purpose": "Candidate within original142.56x388.8 envelope: two actual local capture roots and two actual launch roots by half-face, core + raw calendar. Zero normal data edges added; fresh typed grant/route/native proof required.",
+  "owner": "Claude H-SM 1815",
+  "branch": "claude/hsm-wrq-eco5-1815",
+  "tag": "f4e5",
+  "purpose": "faces4 native-capture successor, HEP w5f recipe: same kit/RTL/pins as c8e94d78d; route hold margin 10 ps + post-route hold ECO goal 5 ps (c8e94d78d over-padded 164 N-face inputs to FF hold 46-52 ps -> native capture 213.2).",
   "benches": [
    {
     "name": "wrq_t_bench",
@@ -127,7 +127,11 @@
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
   ],
   "views_to": "physical/ref_tile/hsm_smvm_wrq_t_r4/views",
-  "record_to": "results/rtl/ref_tile/hsm_smvm_wrq_t_r4"
+  "record_to": "results/rtl/ref_tile/hsm_smvm_wrq_t_r4",
+  "hold_eco": {
+   "hold_margin_ps": 5.0,
+   "reason": "native capture (HEP w5f recipe, 00f041029 -> native PASS C183.3): c8e94d78d CLOSED TT+12.00/FF+1.16 but native capture 213.2 on 164 N-face cfg/desc inputs, each carrying HB2+BUFx4f + 6 route/ECO hold BUFx2 (FF input hold slack still 46-52 ps, wire <3 um). Route hold margin 30 -> 10 ps and post-route hold ECO goal 18 -> 5 ps; FF >= 0 sign-off unchanged."
+  }
  },
  "pin_regs": {
   "enable": false,
@@ -147,7 +151,7 @@
   "cell": "HB2xp67_ASAP7_75t_R",
   "out_cell": "HB1xp67_ASAP7_75t_R"
  },
- "structural_change": "The compactr3 failed the authoritative0.096um/0.60 pin-capacity audit before adoption. r4 returns to original388.8um face, and partitions each face clock into two actual half-face roots. Input control fields split at4SMs to preserve unique source-clock ownership. Body/core and one raw calendar clock are separate. Literal windows reserve all six clock entries; every data window cut<=0.60. Zero ordinary data/calendar stages added. Physical/native/typed grant still pending.",
+ "structural_change": "The compactr3 failed the authoritative0.096um/0.60 pin-capacity audit before adoption. r4 returns to original388.8um face, and partitions each face clock into two actual half-face roots. Input control fields split at4SMs to preserve unique source-clock ownership. Body/core and one raw calendar clock are separate. Literal windows reserve all six clock entries; every data window cut<=0.60. Zero ordinary data/calendar stages added. Physical/native/typed grant still pending. f4e5 (Claude H-SM 1815): HEP w5f hold recipe only (route hold margin 0.01, hold ECO goal 5 ps); kit/RTL/pins unchanged.",
  "clock": "hybrid_entries",
  "clock_ports": [
   "clk",
