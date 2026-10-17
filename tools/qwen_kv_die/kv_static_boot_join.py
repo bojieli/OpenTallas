@@ -14,12 +14,17 @@ This module binds only the CORE-domain sinks whose widths match the dispatcher e
 The group index 8*stack+g uses the template's cfg_stack straps (WS 0, WN 1, ES 2, EN 3); the controller order of
 target 6..9 (32*(target-6)+pc) already matches the pc_path {cfg_stack, pc} straps.
 
-Left OPEN on purpose (no width-exact producer; see /home/ubuntu/claude-takeover-20261007/kv_static_join_plan.md):
-  * the HBM-domain sinks fcal cal cfg (hck) and pc_path cal_cfg_* / cal_seal (cal_hck) must pass a real
-    qkd_static_kv_boot_cdc; the dispatcher has no front_last and drives a 5-bit controller_addr into the CDC's 8-bit
-    cfg_addr, so a dispatcher successor (front_last[31:0], 8-bit controller_addr) is required first;
-  * the dispatcher's own inputs (boot_pr / boot_image_* from qkd_host_root_admission, which the die's
-    qkd_host_root_pt lacks; sink_applied from qkd_static_kv_boot_observe; local_configured; execution_active).
+HBM-domain sinks (KVJ-A 10-17, boot_cdc_join; dispatcher successor with front_last[31:0] and 8-bit controller_addr):
+  bcdc_f_<st>_<g>  qkd_static_kv_boot_cdc HAS_SEAL=0  <- front_we[8*s+g] / group_addr / group_data / front_last[8*s+g]
+                   -> fcal_<st>_<g> cfg_we / cfg_addr[7:0] / cfg_data
+  bcdc_c_<st>_<pc> qkd_static_kv_boot_cdc HAS_SEAL=1  <- controller_we[i] / controller_addr / controller_data /
+                   controller_last[i], i = 32*cfg_stack + pc (the pc_path straps; target 6+cfg_stack, word 32*pc+a)
+                   -> pc_<st>_<pc> cal_cfg_we / cal_cfg_addr (sink_addr[4:0]) / cal_cfg_data / cal_seal
+  boot_obs         qkd_static_kv_boot_observe  <- the 160 applied_hbm / fault_hbm / fault_core, index [31:0] = front
+                   group 8*s+g, [159:32] = 32 + i; -> boot.sink_applied / boot.sink_fault
+Bench: rtl/test/qwen_static_kv/tb_static_boot_dispatch_cdc.sv composes exactly this graph (setup_ready rises).
+Left OPEN on purpose: every clock/reset entry (ck/rst_n/hck/hrst_n; die clock tree, item 10), and the dispatcher's
+HOST-side inputs (boot_pr / boot_image_* from qkd_host_root_admission, item 3; local_configured; execution_active).
 Never a die netlist; status stays INCOMPLETE_TEMPLATE_NOT_EMITTABLE.
 """
 import argparse
@@ -30,6 +35,8 @@ from pathlib import Path
 import kv_static as K
 
 BOOT = ('rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv', 'qkd_static_kv_boot_dispatch')
+CDC = ('rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv', 'qkd_static_kv_boot_cdc')
+OBS = ('rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv', 'qkd_static_kv_boot_observe')
 STACKS = ('WS', 'WN', 'ES', 'EN')
 CORE_CFG = {   # sink instance -> (we source, we bit or None, addr source, data source)
     'layer_programme': ('layer_we', None, 'layer_addr', 'layer_data'),
@@ -75,12 +82,103 @@ def boot_join(graph, root=K.ROOT, name='boot'):
     return bound
 
 
+def _add(graph, ins, name, path_module, params, root):
+    if name in ins:
+        raise ValueError(f'instance {name} already present')
+    spec = K.source(*path_module, root)
+    pp = K.ports(spec, params)
+    i = dict(name=name, role='producer', source=path_module[0], module=path_module[1], sha256=spec['sha256'],
+             parameters=dict(params), inputs={p: None for p, v in pp.items() if v['direction'] == 'input'})
+    graph['instances'].append(i)
+    ins[name] = i
+    if not any(d['path'] == path_module[0] for d in graph['source_files']):
+        graph['source_files'].append(dict(path=path_module[0], sha256=hashlib.sha256((root / path_module[0]).read_bytes()).hexdigest()))
+        graph['source_files'].sort(key=lambda d: d['path'])
+    return i, pp
+
+
+def _bind(i, port, items, width_of):
+    if i['inputs'].get(port, 0) is not None:
+        raise ValueError(f'{i["name"]}.{port} already bound or absent')
+    if sum(it['width'] for it in items) != width_of(i, port):
+        raise ValueError(f'{i["name"]}.{port}: width mismatch')
+    i['inputs'][port] = items
+
+
+def boot_cdc_join(graph, root=K.ROOT, boot='boot'):
+    """KVJ-A 10-17: 32 front + 128 controller boot CDCs and the boot observer between the dispatcher and the
+    HBM-domain cfg sinks (fcal cfg, pc_path cal_cfg/cal_seal).  Requires boot_join first.  Returns bound inputs."""
+    ins = {i['name']: i for i in graph['instances']}
+    if boot not in ins:
+        raise ValueError('boot_join first')
+    bp = K.ports(K.source(*BOOT, root), ins[boot]['parameters'])
+    for p, w in (('front_last', 32), ('controller_addr', 8), ('controller_last', 128)):
+        if bp.get(p, {}).get('width') != w:
+            raise ValueError(f'dispatcher successor required: {p} width {bp.get(p)}')
+    cache = {}
+
+    def width_of(i, port):
+        key = (i['source'], i['module'], tuple(sorted(i['parameters'].items())))
+        if key not in cache:
+            ss = K.source(i['source'], i['module'], root)
+            cache[key] = K.ports(ss, {k: v for k, v in i['parameters'].items() if k in ss['parameters']})
+        return cache[key][port]['width']
+
+    def ep(n, p, lo=0, w=None):
+        return dict(instance=n, port=p, lo=lo, width=width_of(ins[n], p) if w is None else w)
+    bound = []
+    order = [None] * 160          # observer index -> cdc name
+    for s, st in enumerate(STACKS):
+        for g in range(8):
+            k = 8 * s + g
+            n = f'bcdc_f_{st}_{g}'
+            c, _ = _add(graph, ins, n, CDC, dict(HAS_SEAL=0, MUT=0), root)
+            for p, it in (('cfg_we', ep(boot, 'front_we', k, 1)), ('cfg_addr', ep(boot, 'group_addr')),
+                          ('cfg_data', ep(boot, 'group_data')), ('cfg_last', ep(boot, 'front_last', k, 1))):
+                _bind(c, p, [it], width_of); bound.append(f'{n}.{p}')
+            f = ins[f'fcal_{st}_{g}']
+            for p, sp in (('cfg_we', 'sink_we'), ('cfg_addr', 'sink_addr'), ('cfg_data', 'sink_data')):
+                _bind(f, p, [ep(n, sp, 0, width_of(f, p))], width_of); bound.append(f'{f["name"]}.{p}')
+            order[k] = n
+    pcs = [i for i in graph['instances'] if i['role'] == 'pc_path']
+    if len(pcs) != 128:
+        raise ValueError('128 pc_path required')
+    for pc in pcs:
+        st_strap, pc_strap = pc['inputs']['cfg_stack'], pc['inputs']['pc']
+        if not (len(st_strap) == 1 and 'strap' in st_strap[0] and len(pc_strap) == 1 and 'strap' in pc_strap[0]):
+            raise ValueError(f'{pc["name"]}: identity straps required')
+        idx = 32 * st_strap[0]['strap'] + pc_strap[0]['strap']
+        n = 'bcdc_c_' + pc['name'][3:]
+        c, _ = _add(graph, ins, n, CDC, dict(HAS_SEAL=1, MUT=0), root)
+        for p, it in (('cfg_we', ep(boot, 'controller_we', idx, 1)), ('cfg_addr', ep(boot, 'controller_addr')),
+                      ('cfg_data', ep(boot, 'controller_data')), ('cfg_last', ep(boot, 'controller_last', idx, 1))):
+            _bind(c, p, [it], width_of); bound.append(f'{n}.{p}')
+        for p, sp, w in (('cal_cfg_we', 'sink_we', None), ('cal_cfg_addr', 'sink_addr', 5),
+                         ('cal_cfg_data', 'sink_data', None), ('cal_seal', 'sink_seal', None)):
+            _bind(pc, p, [ep(n, sp, 0, width_of(pc, p) if w is None else w)], width_of); bound.append(f'{pc["name"]}.{p}')
+        if order[32 + idx] is not None:
+            raise ValueError(f'duplicate controller index {idx}')
+        order[32 + idx] = n
+    if None in order:
+        raise ValueError('incomplete boot observer order')
+    o, _ = _add(graph, ins, 'boot_obs', OBS, {}, root)
+    for p, sp in (('applied_hbm', 'applied_hbm'), ('fault_hbm', 'fault_hbm'), ('fault_leaf_core', 'fault_core')):
+        _bind(o, p, [ep(n, sp, 0, 1) for n in reversed(order)], width_of); bound.append(f'boot_obs.{p}')   # MSB first
+    _bind(ins[boot], 'sink_applied', [ep('boot_obs', 'applied_core')], width_of)
+    _bind(ins[boot], 'sink_fault', [ep('boot_obs', 'fault_core')], width_of)
+    bound += [f'{boot}.sink_applied', f'{boot}.sink_fault']
+    graph.setdefault('joins_added', []).append(dict(producer='boot_cdc x160 + boot_obs', bound_inputs=len(bound),
+        owner_note='KVJ-A 10-17: HBM-domain cfg through actual boot CDCs; clocks/resets and HOST-side dispatcher inputs open'))
+    return bound
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args()
     graph, _ = K.template()
     bound = boot_join(graph)
+    bound += boot_cdc_join(graph)
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / 'static_join.template.json').write_text(json.dumps(graph, indent=2) + '\n')
     open_ = {i['name']: [p for p, v in i['inputs'].items() if v is None] for i in graph['instances']}
