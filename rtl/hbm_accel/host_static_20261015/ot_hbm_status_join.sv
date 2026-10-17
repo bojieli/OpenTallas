@@ -14,10 +14,12 @@
 // Every input is a pin flop and every output a flop Q: block_ready/active/fault reach the ingress 2 edges
 // after the target status; the ingress pin adds its own edge. Configuration/launch latency only.
 module ot_hbm_status_join #(
-    parameter integer NT=8,                 // targets (ready/active pairs)
-    parameter integer NF=8,                 // target fault inputs
-    parameter integer NH=4,                 // host/link fault inputs
-    parameter [NT*8-1:0] TGTS={NT{8'd0}},   // F20 target id per input (0 = always participating)
+    // Defaults = the HBM die d4f host_status instance (NT67/NF105/NH6 and its target list; HBMA-HOST 2026-10-17), so the
+    // hardened master needs no 536-bit parameter override; benches and other compositions set every parameter explicitly.
+    parameter integer NT=67,                // targets (ready/active pairs)
+    parameter integer NF=105,               // target fault inputs
+    parameter integer NH=6,                 // host/link fault inputs
+    parameter [NT*8-1:0] TGTS=536'hd7d6d5d4d3d2d1d0c7c6c5c4c3c2c1c0a5a4a2a0878685846f6e6d6c6a68666463626160575655545352515047464544434241403b3a39387877767574703736353430,   // F20 target id per input (0 = always participating)
     parameter integer GUARD=8,
     parameter integer MUT=0                 // bench: 1 ignores participation, 2 no guard
 )(
