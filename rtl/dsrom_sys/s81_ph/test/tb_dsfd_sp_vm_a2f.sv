@@ -18,7 +18,11 @@
 // Fault witnesses: 1 invalid STREAM dest, 2 gather phase mismatch, 3 scan status,
 // 4 unsupported LARM7, 5 aux lane collision, 6 WFC range, 7 WFC pair lane,
 // 8 capture alignment. Each requires its named sticky fault AND top-level c_st[0].
+`ifndef A2F_NATIVE_SUCCESSOR
+`define A2F_NATIVE_SUCCESSOR 0
+`endif
 module tb_dsfd_sp_vm_a2f;
+    localparam integer NATIVE_SUCCESSOR=`A2F_NATIVE_SUCCESSOR;
 `ifndef A2F_HOP1
 `define A2F_HOP1 1
 `endif
@@ -62,7 +66,7 @@ module tb_dsfd_sp_vm_a2f;
     reg [2203:0] fcol = 0; reg [14:0] crq = 0; wire [512:0] crs;
     reg [514:0] sel = 0, col = 0; reg [1026:0] asw = 0;
     wire [511:0] tgat; reg [10:0] xgo = 0; wire [512:0] qsw; reg [2:0] qsws = 3'b011;
-    dsfd_sp_vm_a2f #(.CAP_PIPE(CAP_PIPE), .READ_PIPE(READ_PIPE), .HOP1(HOP1)) dut (
+    dsfd_sp_vm_a2f #(.CAP_PIPE(CAP_PIPE), .READ_PIPE(READ_PIPE), .HOP1(HOP1), .XSW_FAULT_SPLIT(NATIVE_SUCCESSOR), .WFC_RETURN256(NATIVE_SUCCESSOR)) dut (
         .ck_read_data_t({64{t_ck}}), .ck_read_valid_t({8{t_ck}}), .rss_read_data_t({64{rss}}), .rss_read_valid_t({8{rss}}),
         .ck_core_t(t_ck), .ck_rsched_t(t_ck), .ck_seq_t(t_ck), .ck_landing_t({5{t_ck}}),
         .ck_write_summary_t(t_ck), .rss_write_summary_t(rss), .ck_mem_native_diag_t({4{t_ck}}), .rss_mem_native_diag_t({4{rss}}), .ck_mem_fsr_t({16{t_ck}}), .ck_mem_return_t({16{t_ck}}), .ck_mem_bank_t({128{t_ck}}),
@@ -80,7 +84,7 @@ module tb_dsfd_sp_vm_a2f;
         .ck_cap_fault_s(s_ck), .rst_cap_fault_s(rst), .ck_cap_fault_t(t_ck), .rss_cap_fault_t(rss), .ck_cap_control_s(s_ck), .rst_cap_control_s(rst), .ck_cap_lane_s({16{s_ck}}),
         .ck_cap_x34_s({16{s_ck}}), .ck_cap_x34_t({16{t_ck}}), .rst_cap_x34_s({16{rst}}), .rss_cap_x34_t({16{rss}}),
         .ck_wfc_fault_s(s_ck), .ck_wfc_fault_t(t_ck), .rst_wfc_fault_s(rst), .rss_wfc_fault_t(rss),
-        .ck_wfc_return_t(t_ck), .rss_wfc_return_t(rss),
+        .ck_wfc_return_t({(NATIVE_SUCCESSOR?3:1){t_ck}}), .rss_wfc_return_t({(NATIVE_SUCCESSOR?3:1){rss}}),
         .ck_wfc_fault_x34_s(s_ck), .ck_wfc_fault_x34_t(t_ck), .ck_wfc_fault_x43_t(t_ck), .ck_wfc_fault_x43_s(s_ck),
         .rst_wfc_fault_x34_s(rst), .rss_wfc_fault_x34_t(rss), .rss_wfc_fault_x43_t(rss), .rst_wfc_fault_x43_s(rst),
         .ck_wfc_control_s(s_ck), .ck_wfc_control_t(t_ck), .ck_wfc_x34_s(s_ck), .ck_wfc_x34_t(t_ck), .ck_wfc_x43_s(s_ck), .ck_wfc_x43_t(t_ck),

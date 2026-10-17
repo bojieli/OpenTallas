@@ -1,0 +1,38 @@
+{
+ "schema": "opentallas.s81.vm-native-import-plan.v1",
+ "status": "BLOCKED_IMPORT_PLAN_ONLY",
+ "source_commit": "6136ed7044ef093908fe76f52a49c65827822f14",
+ "source_files_verified": 75,
+ "actual_leaves": 540,
+ "exact_pin_models": 70,
+ "source_parameters": {
+  "NATIVE_SUCCESSOR": 1,
+  "READ_PIPE": 4,
+  "CAP_PIPE": 2,
+  "HOP1": 1
+ },
+ "input_sha256": {
+  "inventory.json": "dea77b378874b78beb92a84b9f65c373e62354aa11fd00e6371c0b4107704415",
+  "homes.json": "1bd3284f97eb0a423b1a518cdef9d028265e8dc057905aeeb20e8a7df7387810",
+  "parent.xml": "65b0852e3509a31c0bb0f642d0506048189157849632ea48f9ac62ba51ac86aa",
+  "old_leaves.json": "d98d4464c56cb9bbf77de7d07ef2f142891839e7b2e4a4027c9b68f03ddd08fa",
+  "hf4_floorplan.json": "ae88631d4c8b5a4df5b3c1c2458c2c4971088a35acc114849027f236945f216c",
+  "graph_summary.json": "8f79a84be3296c62e7050b7c29be497d5ae115139f10a9975751bddf702719c5",
+  "source_manifest.json": "258d3ec8ecff04b1645bbb5d99968c42aa75576eca876d73c1ad4741a7cac768"
+ },
+ "missing_homes": [
+  "dut.u_wfc.split_return.u_ret.lo",
+  "dut.u_wfc.split_return.u_ret.hi",
+  "dut.u_wfc.split_return.u_ret.diag"
+ ],
+ "changed_outline_homes": [],
+ "blockers": [
+  "HF4 param4 route/native verdict pending; param3 cannot substitute",
+  "All published LEFs still require their source-exact native/clock receipts",
+  "540 actual child homes and incident joins need die allocation and reach/cut proof",
+  "External ABI, fixed compiler profile and epoch-reset contract remain unbound",
+  "Die clock phi-R delivery and literal pair timing remain unproved"
+ ],
+ "literal_clock_contacts": 556
+}
+VM_IMPORT_COUNTEREXAMPLES PASS: wrong calendar parameter, stale seq parameter, dropped actual terminal all rejected

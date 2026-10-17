@@ -1,0 +1,28 @@
+{
+ "status": "CTS_DIAGNOSTIC_NOT_ROUTED",
+ "launch": [
+  "d2[58]",
+  175.27739999999997
+ ],
+ "capture": [
+  "d1[93]",
+  120.29553000000001
+ ],
+ "outputs": 192,
+ "inputs": 96,
+ "comb": [],
+ "clock_refs": {
+  "clk": {
+   "rise": 84.9,
+   "fall": 89.80047,
+   "min": 78.18514,
+   "max": 86.06892,
+   "src": "insertion.json boundary mean",
+   "bmin": 83.4,
+   "bmax": 86.1,
+   "n": 288
+  }
+ },
+ "pass": true,
+ "lib_sha256": "ce42ffbdc0e06fa5e39c1cdf10871387c8548862fbc7bd42070e88acbfab2735"
+}

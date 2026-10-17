@@ -1,0 +1,47 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Actual column already captures allci input bits at boundary and has registered actual segment/return outputs. No extra payload stage added; native220/190/80+comb gates remain required.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "pins",
+   "message": "1-bit vector ports ['qy', 'ck', 'rs']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0])",
+   "fix": "declare them scalar in RTL"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc4 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_s81bf_col_ten_roots_e_h03_20261016-082932.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_s81bf_col_ten_roots_e_h03_20261016-082932.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/s81bf_col_ten_roots_e_h03-20261016-082932",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "floorplan_run",
+   "message": "synthesis + floorplan + PDN failed: FAILED: FlowError: ORFS place-and-route through floorplan failed with exit 2:; Error: 1_2_yosys.sdc, 606 OT_ENTRIES: source clock coverage differs from spec; Error: 1_2_yosys.sdc, 606 OT_ENTRIES: source clock coverage differs from spec",
+   "fix": "read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL"
+  }
+ ]
+}

@@ -1,0 +1,148 @@
+{
+ "name": "hgi_sm_xq_pegress-x5-COMMIT",
+ "block": "ot_hgi_sm_xload_xq_pegress",
+ "ref_tile": true,
+ "owner": "Claude H-SM 1830",
+ "purpose": "XQL pair-egress leaf: the ctl egress (rw capture, replicated beat select, BD beat capture, xw pins) per SM pair, beside the pair store",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/hsm-xqb5-1830",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros",
+   "physical/hbm_xp_aq_tree13_1014",
+   "rtl/hbm_accel/generic/adapters/tb",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "rtl/hbm_accel/generic/vm",
+   "rtl/hbm_accel/host_static_20261015",
+   "rtl/hdc",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/link/ot_fifo_sram_fwft.sv",
+   "tools/hbm_sm_xload_static_timing.py",
+   "results/hbm_sm_attention_1015/hsm_1552/xql"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_sm_xload_xq_pegress u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xql_lock_exact",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_lock_exact",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "^XLOAD_STATIC_LOCK PASS$",
+    "pass_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/pos2.log",
+    "min_count_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, ([0-9]+) pair beats, 0 differ$",
+    "min_count": 13440
+   },
+   {
+    "name": "xql_pair_write_drop_mutant",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 XQL_MUT=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_m1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, [0-9]+ pair beats, [1-9][0-9]* differ$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/m1.log"
+   },
+   {
+    "name": "xql_pair_skew_mutant",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 XQL_MUT=2 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_m2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, [0-9]+ pair beats, [1-9][0-9]* differ$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/m2.log"
+   },
+   {
+    "name": "xql_pair_map_mutant",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 XQL_MUT=3 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_m3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, [0-9]+ pair beats, [1-9][0-9]* differ$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/m3.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.01 OT_MM_FF_SDC='physical/ref_tile/hgi_sm_xq_pegress/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hgi_sm_xq_pegress/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hgi_sm_xq_pegress --out {RUN}/record/views/ot_hgi_sm_xload_xq_pegress  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hgi_sm_xq_pegress/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "native capture (HEP w5f recipe, 00f041029 -> native PASS C183.3): x3 d67bfd40c CLOSED TT+42.24/FF+7.97 but native capture FAIL: rn 332.3 (fixed in RTL: local reset relay), ed5[6]/[7]/[2] 196.4/194.8/191.8 and ~188 on rwq/bq_v (input hold pads). Route hold margin 30 -> 10 ps, post-route hold ECO goal 5 ps; FF >= 0 sign-off unchanged.",
+  "hold_margin_ps": 5.0
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hgi_sm_xq_pegress/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hgi_sm_xq_pegress/hgi_sm_xq_pegress-x5-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "x5 (owner die standard: regional SYNC resets), parallel to x4: rn is captured by 4 kept relay flops on their D pins (no async RESETN anywhere in the leaf); each relay copy synchronously clears a quarter of the valid/control flops (e6 en, 32 e5 valids, 32 bq valids, bc_v/last, xw_en/last, x_done); field/data flops (e6 fields, e5 beat index, bc_addr/b, bq_c, rw, xbeat, xw_*) carry no reset. x3 d67bfd40c native FAIL capture rn 332.3 (async clear of 308 flops), ed5 196.4 (32-replica fanout incl. async-reset flops + hold pads). HEP w5f hold recipe kept (HM 10 ps, ECO goal 5 ps). Outline/pins as x3.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "results/hbm_sm_attention_1015/hsm_1830/pegress_x3_d67bfd40c_native.json",
+  "cell": "ot_hgi_sm_xload_xq_pegress",
+  "capture_ps": 332.3,
+  "fix": "x3 d67bfd40c (record 70a897e57) native FAIL launch 193.5 / capture 332.3 / spread 59.2 (R 378.8): rn 332.3 = async clear of 308 control flops; ed5[6]/[7]/[2] 196.4/194.8/191.8. x5 RTL: regional synchronous reset (rn -> 4 relay flops D pins only; sync clear of valid/control flops; no reset on data), HEP w5f hold recipe (route HM 10 ps, hold ECO goal 5 ps). Outline/pins unchanged.",
+  "why": "x3 d67bfd40c CLOSED but native capture FAIL (receipt results/hbm_sm_attention_1015/hsm_1830/pegress_x3_d67bfd40c_native.json): the reset structure must change in RTL (rn async clear of 308 flops)"
+ }
+}

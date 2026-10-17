@@ -30,10 +30,10 @@
  },
  "pins": {
   "W": [
-   "uop_d2",
-   "busy_d2",
-   "done_d2",
-   "start_d2",
+   "uop_d1",
+   "busy_d3",
+   "done_d3",
+   "start_d3",
    "tap_iteration",
    "tap_steps"
   ],
@@ -48,6 +48,10 @@
    "fault",
    "uop_v",
    "uop_pc"
+  ],
+  "S": [
+   "busy_d2",
+   "start_d2"
   ]
  },
  "clock_port": "clk_control",
@@ -96,6 +100,7 @@
  "referenced": [
   "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v6.sv",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
   "physical/ref_tile/hcoll_v5_issuer/kit.env",
   "physical/ref_tile/hcoll_v5_issuer/clock.sdc",

@@ -49,14 +49,22 @@ def main(argv=None):
               allocated_path_ledger_sha256=ev['allocated_path_ledger']['sha256'])
     for key in ('all_six_exact_rq_and_am', 'all_six_exact_rb_cycles_and_payload', 'real_e3_readbacks',
                 'native_head_scalar_exact', 'actual_prefetch_mutant_rejected', 'actual_train_phase_mutant_rejected',
-                'selector_and_upper_returns_exact'):
+                'selector_and_upper_returns_exact', 'selector_window_max_pass', 'selector_window_max_plus1_rejected'):
         if tg.get(key) is not True:
             open_fields.append(f'temporal gate {key} not observed')
+    for name in ('tc', 'am', 'hl'):
+        mutant = tg.get('exact_phase_mutants', {}).get(name, {})
+        if mutant.get('delta') != 1 or type(mutant.get('exit_code')) is not int or mutant['exit_code'] <= 0:
+            open_fields.append(f'one-edge {name} phase mutant not rejected')
+    # selector = measured window (Q-B2r 10-16), carried from the gate record: {min, max, edge_pass_log, edge_fail_log}
+    sw = gate.get('selector_window')
+    if not sw:
+        open_fields.append('selector window not recorded')
     m = dict(protocol='qwen-b2-native-phase-v1',
              status='CALIBRATED_SOURCE_AND_ROUTE_TEMPORAL_PASS' if not open_fields else 'OPEN',
              open_fields=open_fields, graph_format='qwen-b2-allinst-buses-bindings-v1',
              route_bench_include_dirs=['rtl/hdc', '.'], evidence=ev,
-             calibrated_sources=cal['calibrated_sources'], constants=k, halves=halves, temporal_gate=tg,
+             calibrated_sources=cal['calibrated_sources'], constants=k, halves=halves, temporal_gate=tg, selector_window=sw,
              physical_qualified=False, native_full_layer_qualified=False)
     out = ROOT / a.out
     out.write_text(json.dumps(m, indent=1) + '\n')

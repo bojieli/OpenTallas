@@ -5,7 +5,7 @@
 // cycle (not endpoint feedback); publish_slot must be exactly flush+6.
 // No ready, credit, variable flush or arrival-driven completion exists.
 module ot_hgi_coll_argmax_static #(
- parameter integer MUT_TIE=0, MUT_SLOT_CHECK=0
+ parameter integer MUT_TIE=0, MUT_SLOT_CHECK=0, MAX_GROUP=96
 )(
  input wire clk,rst_n,start,
  input wire [7:0] cfg_g,cfg_gbase,cfg_rank,
@@ -19,7 +19,7 @@ module ot_hgi_coll_argmax_static #(
  reg active,flushed;
  reg [7:0] group_q,gbase_q,rank_q;
  reg [7:0] observed;
- reg [95:0] seen;
+ reg [MAX_GROUP-1:0] seen;
  wire [3:0] raw_v;
  wire [2179:0] raw_flit;
  ot_hgi_coll_amerge #(.MUT_TIE(MUT_TIE)) u_fold(
@@ -30,7 +30,7 @@ module ot_hgi_coll_argmax_static #(
  always @(posedge clk) out_flit<=raw_flit[0+:545];
  always @(posedge clk or negedge rst_n)begin:control
   integer count,src;
-  reg [95:0] next_seen;
+  reg [MAX_GROUP-1:0] next_seen;
   if(!rst_n)begin
    active<=0;flushed<=0;group_q<=0;gbase_q<=0;rank_q<=0;
    observed<=0;seen<=0;out_v<=0;fault<=0;
@@ -39,7 +39,7 @@ module ot_hgi_coll_argmax_static #(
    if((MUT_SLOT_CHECK==0 && in_v!=in_slot) || raw_v!={3'b0,publish_slot})fault<=1;
    if(start)begin
     if(active || |in_v || flush_slot || publish_slot)fault<=1;
-    if(!(cfg_g==1 || cfg_g==2 || cfg_g==4 || cfg_g==8 || cfg_g==96) ||
+    if(!(cfg_g==1 || cfg_g==2 || cfg_g==4 || cfg_g==8 || cfg_g==96 || (MAX_GROUP>=192 && cfg_g==192)) ||
        {1'b0,cfg_gbase}+{1'b0,cfg_g}>9'd256)fault<=1;
     group_q<=cfg_g;gbase_q<=cfg_gbase;rank_q<=cfg_rank;
     observed<=0;seen<=0;active<=1;flushed<=0;
@@ -47,7 +47,7 @@ module ot_hgi_coll_argmax_static #(
     count=0;next_seen=seen;
     for(integer l=0;l<4;l=l+1)if(in_v[l])begin
      count=count+1;src=int'(in_flit[l*545+528+:8])-int'(gbase_q);
-     if(!active || flushed || !in_flit[l*545+544] || in_flit[l*545+512+:16]!=0 || src<0 || src>=int'(group_q) || src>=96)fault<=1;
+     if(!active || flushed || !in_flit[l*545+544] || in_flit[l*545+512+:16]!=0 || src<0 || src>=int'(group_q) || src>=MAX_GROUP)fault<=1;
      else begin
       if(next_seen[src])fault<=1;
       next_seen[src]=1'b1;

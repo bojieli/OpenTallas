@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-10-16T16:26:02.643239-07:00",
+  "CFIFO": {
+    "job": "s81coll_cfifo_crs-hr6-915d5b74e",
+    "source": "915d5b74e",
+    "state": "SUBMITTED through submit_exact PASS",
+    "gate": "hr6 WARN0fail; actual FFhold repair+30ps; TT diagnosticsetup33.72/hold42.27",
+    "native_CTS": "PASS L194.5 C158.2 spread37 comb0",
+    "next": "actual route verdict, then routed native audit; no die default adoption"
+  },
+  "HC": {
+    "source": "ccaa66ba9 plus current main preserved CSEQ",
+    "source_binding": "60/60 full composition SHA256 files match HEAD; row3/3match",
+    "proof": "NG2563cases positive0/1940 each; actualmut1 1770/1940 each;4835cycles",
+    "new_native_job": {
+      "scope": "read-only own_e a6 CTS ETM export, not route or CTS rerun",
+      "session": 66260,
+      "local_pid": 522988,
+      "mem_gb": 8,
+      "threads": 1,
+      "dir": "/srv/opentallas-scratch/codex/s81-elements-collect-1624/own_e_a6",
+      "host": "ot-pve1",
+      "state": "waiting documented load1<=1.5cores admission",
+      "next": "collect native_tt.lib, use actual source gate insertion117.3ps/TT106.4..132.2; actual gatedesign source must be matched before any route"
+    }
+  },
+  "CCR": {
+    "job": "s81hc_ccrh2_ref-pr6spr-b056d6776",
+    "state": "RUNNING route EPYC4; NG64positive and m3negative both verified by daemon",
+    "next": "route verdict+actualroutednative"
+  },
+  "static14": {
+    "source": "5fb84abb0",
+    "pid": 2767800,
+    "dir": "ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/s81engm_lkp_static14-20261016-133456",
+    "state": "original CTS complete, clock insertion analysis progressing, preserved",
+    "next": "finalgate verdict+nativeexport, no duplicate"
+  },
+  "held_candidate": "r5c ICGbank proposal preserved b748de12c; not adopted, no evidence rebind"
+}

@@ -41,7 +41,8 @@ module ot_qkvd_embgw_m #(
     parameter integer OD  = 4,
     parameter integer TXC = 4,
     parameter integer BD  = 4,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer HEADQ = 0       // ot_qfd_emb_gw HEADQ (registered request-FIFO head; 0 = unchanged); MUT 6 = its mutant
 ) (
     input  wire              ck,
     input  wire              rst_n,
@@ -125,7 +126,7 @@ module ot_qkvd_embgw_m #(
     wire          emb_ready, g_fault;
     wire [7:0]    g_fc;
     wire [31:0]   g_fetches;
-    ot_qfd_emb_gw #(.RQD(RQD), .MUT((MUT == 4) ? 4 : 0)) u_gw (.ck(ck), .rn(rs),
+    ot_qfd_emb_gw #(.RQD(RQD), .MUT((MUT == 4 || MUT == 6) ? MUT : 0), .HEADQ(HEADQ)) u_gw (.ck(ck), .rn(rs),
         .ea_v(eav_p), .ea_kind(eak_p), .ea_addr(eaa_p), .ea_cr(ea_cr), .eq_v(eq_v), .eq_d(eq_d),
         .e_v(rne), .e_d(e_d), .e_take(e_take),
         .g_v(g_v), .g_tag(g_tag), .g_d(g_d), .g_rdy(gsend), .bend_v(bend_v), .bend_d(bend_d),

@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.hbm.coll_inj_copy.v1",
+ "issued": "2026-10-16T19:30-07:00",
+ "by": "Claude H-NETLIST/COLL 1815",
+ "request": "H-DIE/H-ELEM d4c locality (2 mm rule): hb_coll_<Q>.hgi_inj_addr+inj_rd 162 b worst relay hop 1,880-2,060 um out of the centre-island pocket; sets stream equal-age max depth 86-96",
+ "master": "ot_hgi_coll_inj_copy",
+ "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_copy.sv",
+ "source_commit": "f1e74c9d3",
+ "instances": ["cic_SW", "cic_SE", "cic_NW", "cic_NE"],
+ "ports": {"clk": "in 1 (stream clock of hb_coll inject)", "rst_n": "in 1 (same reset as hb_coll)", "inj_addr_i": "in 160 <- hb_coll_<Q>.hgi_inj_addr", "inj_rd_i": "in 2 <- hb_coll_<Q>.inj_rd", "inj_addr_o": "out 160 -> every former hgi_inj_addr sink (cij, su_<Q>0..3, sucx)", "inj_rd_o": "out 2 -> every former inj_rd sink"},
+ "latency": {"edges": 1, "equal_age": true, "per_sink": "identical: all sinks fed from the copy's Q; downstream relays keep equal-age padding", "compiler": "INJ_COPY_EDGES=1 added to the inject request -> SU source edge of every sink (stage constant, no ready/credit)"},
+ "placement": "one copy per quadrant at the pocket exit on the sink side (SW/NW: W face of hb_coll toward su_<Q>3; SE/NE: E face toward su_<Q>3), hop hb_coll pin -> copy <= 450 um",
+ "pin_face_request": {"hb_coll_SW": "hgi_inj_addr+inj_rd -> W face", "hb_coll_NW": "W face", "hb_coll_SE": "E face", "hb_coll_NE": "E face", "basis": "d4b frozen placement: su_<Q>3 adjacent W of hb_coll_SW (x 12236 vs 12322.8), E of hb_coll_SE (20753 vs 20371); H-DIE to confirm against the d4c pocket geometry"},
+ "proof": {"positive": "pos_run.log INJCOPY PASS checks8000 bits162 age1 (hold before edge + capture after edge, rd 00/01/10/11 covered)", "mutant": "skew_run.log OT_COLL_INJCOPY_MUT_SKEW (rd bypasses the copy) INJCOPY FAIL mismatches3013", "run": "E4 unit oth-ubuntu-3933972-1792203860"},
+ "physical": "1-edge 162-FF leaf; harden as a ref_tile or use as SYNTH view (tiny); not yet routed"
+}

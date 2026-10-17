@@ -1,0 +1,71 @@
+{
+ "schema": "s81_hc_pad_rp2_receipt.v1",
+ "by": "S-ELEM HC-COL 1815",
+ "source_commit": "fadd15091",
+ "change": "OT_S81_HC_PAD_RP2 (opt-in define): centre return RP 13 -> 15 for RET_EXTRA 2 (CNL_PIN 1 + RETCOL_HQ 1). Hard return pad = ot_s81_hc_pad_r6 x2 (6+6, was pad_r5 x2 5+5); CCR meta = ot_s81_hc_pad_meta2 x2 in series (EXTRA 4, was 1x meta2). CCR core unchanged (RET_EXTRA 0 inside ccr_align). Hierarchy names kept (u_r6/u_r5/g_meta.u_m, + g_meta.u_m2). Hard $fatal tuples per mode.",
+ "masters": {
+  "ot_s81_hc_pad_r6": "s81hc_pad_r6_ref-v2-cx-lattice-21e8aac25 CLOSED TT +353.38 / FF +2.50 / DRC 0",
+  "ot_s81_hc_pad_meta2": "s81hc_pad_meta2_ref-v1-cx-relay-21e8aac25 CLOSED"
+ },
+ "native": [
+  {
+   "cell": "ot_s81_hc_pad_meta2",
+   "view": "physical/ref_tile/s81hc_pad_meta2_ref/views/ot_s81_hc_pad_meta2",
+   "lib_cell": "ot_s81_hc_pad_meta2",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 114.9,
+   "spread_ps": 18.9,
+   "outputs": 528,
+   "inputs": 529,
+   "launch_ps": 149.2,
+   "launch_pin": "e_o[323]",
+   "capture_ps": 80.1,
+   "capture_pin": "v_i[5]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "s81hc_pad_meta2_ref-v1-cx-relay-21e8aac25",
+   "commit": "aae6948caa8ba8ca9db6d0da68630f3e34d4b1ef"
+  },
+  {
+   "cell": "ot_s81_hc_pad_r6",
+   "view": "physical/ref_tile/s81hc_pad_r6_ref/views/ot_s81_hc_pad_r6",
+   "lib_cell": "ot_s81_hc_pad_r6",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 188.2,
+   "spread_ps": 15.2,
+   "outputs": 2156,
+   "inputs": 2156,
+   "launch_ps": 161.6,
+   "launch_pin": "d_o[801]",
+   "capture_ps": 84.2,
+   "capture_pin": "d_i[1767]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "s81hc_pad_r6_ref-v2-cx-lattice-21e8aac25",
+   "commit": "7eb353c8deb88d8768bb2aaadc8b29451dc24e0c"
+  }
+ ],
+ "exact_hc_gate": {
+  "config": "hc_gate NG256 --hier 3 --cnl-pin 1 --chain-step 6 --lane-specialize 1 --pipe 1 --ntree 1 --nt-k 67 --retcol 1 --pad-hard 1 (+define OT_S81_HC_PAD_RP2), verilator 5.050, EPYC4",
+  "m0": "PASS 0/1940 x3 (golden_L0_L2, stress_0, stress_1) cyc 4835",
+  "m1": "FAIL 1770/1940 x3 (required)",
+  "tile_mut_pad_r6": "FAIL 1880/1940 cyc 4820 (hard r6 master exercised)",
+  "tile_mut_pad_meta2": "FAIL 1776/1940 fault 1 (hard meta2 exercised)"
+ },
+ "logs": "/home/ubuntu/artifacts/s81-hccol-1016/rp2_{m0,m1,tmr6,tmmeta}.log",
+ "physical": "S-DIE: pad slot u_r6/u_r5 become r6 masters (was r5 138.24x99.36; r6 114.48 tall per HC-COMB-3 note) and the CCR meta gains a second pad_meta2 instance in series; no new routes."
+}

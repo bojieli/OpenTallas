@@ -22,11 +22,18 @@ module tb_qfd_xdvm_prod;
     parameter integer NLAYER = 2, NRAND = 6, SEED = 1, GAP = 4;
     parameter integer NATIVE_AFFINE=0,STATIC_SCHEDULE=0,NW=18;
     parameter integer TAP_MUT = 0, LEAF_MUT = 0, HEAD_MUT = 0;
+    parameter integer HEAD_LOCAL_RST = 0, HEAD_ONWARD_REG = 0;
+    // HEAD_CHAIN 1: the die's chained head row (two roots, NCOL/2 heads a side through their onward copies, equalised
+    // to the farthest head).  The schedule's head-row depth: the reference (chead row) pays 1 edge a hop, the dvm row
+    // SCHED_ONWARD's edges a hop (1, or 2 with ONWARD_REG 2).  Mutant: SCHED_ONWARD 1 with HEAD_ONWARD_REG 2 must FAIL.
+    parameter integer HEAD_CHAIN = 0, SCHED_ONWARD = HEAD_ONWARD_REG;
     localparam integer W = 16, IL = 8, AW = 24, XCW = 12;
     localparam integer NT = GT / TG, NXC = 1 << SMAX, NXL = NXC / TG;
-    localparam integer BDR = HB + NH + 3 + XVMR;
+    localparam integer HCHR = HEAD_CHAIN ? (NCOL / 2 - 1) : 0;                              // reference head row hops
+    localparam integer HCHD = HEAD_CHAIN ? (NCOL / 2 - 1) * ((SCHED_ONWARD >= 2) ? 2 : 1) : 0; // dvm head row edges
+    localparam integer BDR = HB + HCHR + NH + 3 + XVMR;
     localparam integer IBW = 3 * NW + 13 * AW + 13;
-    localparam integer DOFF = 3 + DX - XVMR;      // dvm minus ref (r3: + the tap's 3 stages on the go path)
+    localparam integer DOFF = 3 + DX - XVMR + HCHD - HCHR;   // dvm minus ref (r3: + the tap's 3 stages on the go path)
 
     reg clk = 0, rst_n = 0;
     always #1 clk = ~clk;
@@ -113,7 +120,7 @@ module tb_qfd_xdvm_prod;
     wire [NT*TG*32-1:0] d_xl;
     wire             d_x_fault;
     ot_qfd_xdvm_fabric #(.AW(AW), .NW(NW), .XCW(XCW), .IL(IL), .NCOL(NCOL), .NH(NH), .TG(TG), .SMIN(SMIN), .SMAX(SMAX),
-        .HB(HB), .LEAF_FILL_PIPE(LEAF_FILL_PIPE), .LEAF_READ_PIN_PIPE(LEAF_READ_PIN_PIPE), .LEAF_BANK_PIPE(LEAF_BANK_PIPE), .REQ_PIPE(REQ_PIPE), .DX(DX), .FILL_LEAD(FILL_LEAD), .TIDM(TIDM), .XOFF(XOFF), .NATIVE_AFFINE(NATIVE_AFFINE),.STATIC_SCHEDULE(STATIC_SCHEDULE),.TAP_MUT(TAP_MUT), .LEAF_MUT(LEAF_MUT),
+        .HB(HB), .LEAF_FILL_PIPE(LEAF_FILL_PIPE), .HEAD_LOCAL_RST(HEAD_LOCAL_RST), .HEAD_ONWARD_REG(HEAD_ONWARD_REG), .HEAD_CHAIN(HEAD_CHAIN), .LEAF_READ_PIN_PIPE(LEAF_READ_PIN_PIPE), .LEAF_BANK_PIPE(LEAF_BANK_PIPE), .REQ_PIPE(REQ_PIPE), .DX(DX), .FILL_LEAD(FILL_LEAD), .TIDM(TIDM), .XOFF(XOFF), .NATIVE_AFFINE(NATIVE_AFFINE),.STATIC_SCHEDULE(STATIC_SCHEDULE),.TAP_MUT(TAP_MUT), .LEAF_MUT(LEAF_MUT),
         .HEAD_MUT(HEAD_MUT)) u_fab (
         .clk(clk), .rst_n(rst_n), .go_acc(go && r_ready), .ib(ib),
         .xpf_v(xpf_v), .xpf_xbase(xpf_xbase), .xpf_xcs(xpf_xcs), .xpf_xks(xpf_xks), .xpf_split(xpf_split),
@@ -162,7 +169,7 @@ module tb_qfd_xdvm_prod;
                          input integer nout, input integer use_ar, input integer rnd);
         begin
             sp = split; lo = xbase; hi = xbase + ((1 << split) - 1) * k + (k - 1) + 1;
-            repeat (HB + 8) @(posedge clk); #0.1;
+            repeat (HB + HCHD + 8) @(posedge clk); #0.1;
             xpf_v = 1; xpf_xbase = xbase; xpf_xcs = k; xpf_xks = 1; xpf_split = split; xpf_k = k; xpf_round = rnd;
             @(posedge clk); #0.1; xpf_v = 0;
             repeat (2) @(posedge clk); #0.1;      // sequencer rule: first write >= 3 edges after the XPF

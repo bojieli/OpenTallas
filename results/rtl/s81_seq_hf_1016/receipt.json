@@ -1,0 +1,24 @@
+{
+  "scope": "Component source-level exactness for opt-in XSW_FAULT_SPLIT1. Frozen prechange param3 seq body oracle against both modified default3 and param4 seq, all118outputs everyedge incl reset. Four source faultbits at8offsets each; native command/completion stimuli on declared boundaries. No normal/diagnostic stages added; +1FF/+1inputpin, roots/outline unchanged. No parent/native/compiler/die qualification inferred.",
+  "gold": {
+    "seeds": 3,
+    "checks_each": 2080,
+    "directed_fault_cases_each": 32,
+    "pass_": true
+  },
+  "mutants": [
+    "DROP_HI",
+    "DROP_LO",
+    "EARLY"
+  ],
+  "production_defaults": {
+    "XSW_FAULT_SPLIT": 0,
+    "X_AL_WIDTH": 3
+  },
+  "candidate": {
+    "XSW_FAULT_SPLIT": 1,
+    "X_AL_WIDTH": 4
+  },
+  "closed_param3_stands": true,
+  "compiler_profile_status": "Full source-bound parent/profile remeasurement required before adoption. Normal calendar unchanged in component proof, not a substitute for source-bound measured profile."
+}

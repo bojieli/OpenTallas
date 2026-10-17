@@ -1,0 +1,274 @@
+{
+ "name": "s81bf_front_five_roots_h03",
+ "top": "dsfd_bf_front_roots",
+ "kind": "tile",
+ "sources": [
+  "rtl/s81/ot_s81_bf_native.sv",
+  "rtl/common/ot_prefix.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_bmul2.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2_w10.sv",
+  "rtl/v41rom/ot_v41_chain.sv",
+  "rtl/v41rom/ot_v41_chain2.sv",
+  "rtl/v41rom/ot_v41_fadd.sv",
+  "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+  "rtl/v41rom/ot_v41_segtree.sv",
+  "rtl/v41rom/ot_v41_segtree2.sv",
+  "rtl/v41rom/ot_v41_bmul2_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv",
+  "rtl/v41rom/ot_v41_chain2u2.sv",
+  "rtl/v41rom/ot_v41_kreg.sv",
+  "rtl/v41rom/ot_v41_chain3.sv",
+  "rtl/v41rom/ot_v41_chain4.sv",
+  "rtl/v41rom/ot_v41_fadd2.sv",
+  "rtl/v41rom/ot_v41_bterm3_w10.sv",
+  "rtl/v41rom/ot_v41_bterm4_w10.sv",
+  "rtl/v41rom/ot_v41_bterm5_w10.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes3.sv",
+  "rtl/v41rom/ot_v41_tile_clk.sv",
+  "rtl/v41rom/ot_bf_hdly.sv",
+  "rtl/v41rom/ot_v41_bf_col.sv",
+  "rtl/v41rom/ot_v41_segtree3.sv",
+  "rtl/v41rom/ot_v41_segtree4.sv",
+  "rtl/v41rom/ot_v41_segtree5.sv",
+  "rtl/v41rom/ot_v41_segtree6.sv",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+  "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v",
+  "rtl/s81/ot_s81_bf_front_roots.sv",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv",
+  "rtl/v41rom/ot_v41_bf_front_core_roots.sv",
+  "rtl/s81/ot_s81_bf_seam_roots.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 116.64,
+  "h": 198.72,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "c0",
+   "io_w"
+  ],
+  "E": [
+   "c1",
+   "io_e"
+  ],
+  "N": [
+   "xb_data",
+   "io_n"
+  ],
+  "S": [
+   "qy0",
+   "qy1",
+   "x0",
+   "x1",
+   "go",
+   "cfg",
+   "st",
+   "ck",
+   "rs",
+   "f_prog",
+   "io_clk",
+   "xb_meta"
+  ]
+ },
+ "io_tcl": "physical/ref_tile_specs/s81_bf_native_1015/front_five_roots/pins.tcl",
+ "layer_cap": "M5",
+ "recipe": 3,
+ "route": {
+  "pd": 0.6,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "Native c10 TT/FF/DRC closure failed capture: reset324ps,118 data pins190-219ps. Split real boundary primary north data, south metadata/programme, west/east seam outputs into own same-PLL phase-zero clock roots. Four real asynchronous-assert synchronous-release reset registers add one initialization edge, zero payload cycles. Existing core/IO lockups and all ordinary related-root checks retained. Exact S81H03 source ae042eb26 grant; every3269 existing pin shape preserved,1068 renamed xb pins map explicitly,3 noncolliding clocks added.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "Closed c10 native capture fail (reset324/data219ps); old single IO clock spans allfour faces.",
+  "fix": "Native c10 TT/FF/DRC closure failed capture: reset324ps,118 data pins190-219ps. Split real boundary primary north data, south metadata/programme, west/east seam outputs into own same-PLL phase-zero clock roots. Four real asynchronous-assert synchronous-release reset registers add one initialization edge, zero payload cycles. Existing core/IO lockups and all ordinary related-root checks retained. Exact S81H03 source ae042eb26 grant; every3269 existing pin shape preserved,1068 renamed xb pins map explicitly,3 noncolliding clocks added."
+ },
+ "job": {
+  "owner": "Codex:S81-BF-views-0925",
+  "purpose": "Native c10 TT/FF/DRC closure failed capture: reset324ps,118 data pins190-219ps. Split real boundary primary north data, south metadata/programme, west/east seam outputs into own same-PLL phase-zero clock roots. Four real asynchronous-assert synchronous-release reset registers add one initialization edge, zero payload cycles. Existing core/IO lockups and all ordinary related-root checks retained. Exact S81H03 source ae042eb26 grant; every3269 existing pin shape preserved,1068 renamed xb pins map explicitly,3 noncolliding clocks added.",
+  "benches": [
+   {
+    "name": "actual_front_full_shape",
+    "cmd": "python3 tools/s81/bf_front_roots_physical_bench.py --work {RUN}/front_positive",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "pass_regex": "PASS BF front five roots: 456 rows, 912 values, 448 configs"
+   },
+   {
+    "name": "mutant_north_clock_stop",
+    "cmd": "python3 tools/s81/bf_front_roots_physical_bench.py --work {RUN}/front_mutant --mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "fail_regex": "MUTANT BF north clock_stop FAIL: DIFF TXN"
+   }
+  ],
+  "extra_paths": [
+   "tools/s81",
+   "rtl/s81",
+   "rtl/v41rom",
+   "rtl/common",
+   "rtl/hdc",
+   "rtl/proto",
+   "results/rtl/s81_bf_compact_20261010/bench_prep_1013",
+   "rtl/dsrom_sys/s81_die_bind",
+   "physical/ref_tile_specs/s81_bf_native_1015/static_pins_c10s",
+   "tests/s81",
+   "physical/ref_tile_specs/s81_bf_native_1015/front_five_roots",
+   "results/rtl/s81_bf_programme_1015"
+  ],
+  "views_to": "physical/s81_die_views/bf_roots_1016/front_five_roots_h03",
+  "record_to": "results/physical/s81_bf_roots_1016/front_five_roots_h03"
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck",
+  "io_clk",
+  "io_n",
+  "io_w",
+  "io_e"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck"
+   ],
+   "inputs": [
+    "qy0",
+    "qy1"
+   ],
+   "outputs": []
+  },
+  "south": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "io_clk"
+   ],
+   "inputs": [
+    "x0",
+    "x1",
+    "go",
+    "cfg",
+    "rs",
+    "xb_meta",
+    "f_prog"
+   ],
+   "outputs": [
+    "st"
+   ]
+  },
+  "north": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "io_n"
+   ],
+   "inputs": [
+    "xb_data"
+   ],
+   "outputs": []
+  },
+  "west": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "io_w"
+   ],
+   "inputs": [],
+   "outputs": [
+    "c0"
+   ]
+  },
+  "east": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "io_e"
+   ],
+   "inputs": [],
+   "outputs": [
+    "c1"
+   ]
+  }
+ },
+ "slot_change_request": {
+  "name": "S81H-03 exact ae042eb26 five-total-root front",
+  "status": "GRANTED_CONDITIONAL_INDEPENDENT_LEAF",
+  "request_file": "physical/ref_tile_specs/s81_bf_native_1015/front_five_roots/pin_request.json",
+  "outline_um": [
+   116.64,
+   198.72
+  ],
+  "grant": {
+   "owner": "S-DIE",
+   "record": "el1011-s81die.log 2026-10-16 09:10 PDT; root/s81_pq_control direct confirmation",
+   "candidate_commit": "ae042eb26",
+   "conditions": [
+    "exact3269 old pin shapes; 1068 literal xb_data/meta rename;3 noncolliding added root pins",
+    "die generator/glue/strict die_port_bind clean before parent binding",
+    "source-bound per-root insertion R and die phi-R required",
+    "reset boot release+1 in static calendar",
+    "no inherited native parent qualification"
+   ]
+  }
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL already registers every data port at the pin (inputs: PINREG pin flops on io_clk -> lockup latch -> core; f_prog programme_pin_q; qy0/qy1 dedicated face capture; outputs: CPIN seam flops on io_clk for c0/c1, st from registered busy/fault through source-ck lockups). A synthesis pin register would add a second edge on every port and break the fixed 1-edge seam contract (producer DELTA -1, c0/c1 column lockstep, 3-edge status pulse). Native audit of the routed view checks comb 0 pins."
+ }
+}

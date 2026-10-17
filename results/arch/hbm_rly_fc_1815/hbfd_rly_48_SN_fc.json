@@ -1,0 +1,85 @@
+{
+ "schema": "opentallas.hbm.rly_fc_forwarded_clock.v1",
+ "base": "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_48_sn_fc-fc1-11fa2b143/routes/hbfd_rly_48_sn_fc_fc1_11fa2b143/work/orfs/results/asap7/opentallas_hbfd_rly_48_SN_fc_asap7_ref_hbfd_rly_48_sn_fc_fc1_11fa2b143/base",
+ "ss": {
+  "bufy": {
+   "arrival_max_rise": 86.27,
+   "arrival_min_rise": 83.82,
+   "arrival_max_fall": 487.58,
+   "arrival_min_fall": 485.41,
+   "slew_max_rise": 8.97,
+   "slew_max_fall": 9.09
+  },
+  "R": {
+   "n": 48,
+   "min": 112.0,
+   "max": 113.4,
+   "mean": 112.7
+  },
+  "period_ps": 770.0,
+  "clk_in_to_clk_out_ps": {
+   "rise_max": 86.27,
+   "rise_min": 83.82,
+   "fall_max": 102.58,
+   "fall_min": 100.41,
+   "slew_rise": 8.97,
+   "slew_fall": 9.09,
+   "measured_at": "clk_out buffer Y pin (drives the clk_out port)"
+  },
+  "report_tail": "7_75t_SL\n  AND5x1_ASAP7_75t_SL\n  AND5x2_ASAP7_75t_SL\n  FAx1_ASAP7_75t_SL\n  HAxp5_ASAP7_75t_SL\n  MAJIxp5_ASAP7_75t_SL\n  MAJx2_ASAP7_75t_SL\n  MAJx3_ASAP7_75t_SL\n  NAND2x1_ASAP7_75t_SL\n  NAND2x1p5_ASAP7_75t_SL\n  NAND2x2_ASAP7_75t_SL\n  NAND2xp33_ASAP7_75t_SL\n  NAND2xp5_ASAP7_75t_SL\n  NAND2xp67_ASAP7_75t_SL\n  NAND3x1_ASAP7_75t_SL\n  NAND3x2_ASAP7_75t_SL\n  NAND3xp33_ASAP7_75t_SL\n  NAND4xp25_ASAP7_75t_SL\n  NAND4xp75_ASAP7_75t_SL\n  NAND5xp2_ASAP7_75t_SL\n  NOR2x1_ASAP7_75t_SL\n  NOR2x1p5_ASAP7_75t_SL\n  NOR2x2_ASAP7_75t_SL\n  NOR2xp33_ASAP7_75t_SL\n  NOR2xp67_ASAP7_75t_SL\n  NOR3x1_ASAP7_75t_SL\n  NOR3x2_ASAP7_75t_SL\n  NOR3xp33_ASAP7_75t_SL\n  NOR4xp25_ASAP7_75t_SL\n  NOR4xp75_ASAP7_75t_SL\n  NOR5xp2_ASAP7_75t_SL\n  OR2x2_ASAP7_75t_SL\n  OR2x4_ASAP7_75t_SL\n  OR2x6_ASAP7_75t_SL\n  OR3x1_ASAP7_75t_SL\n  OR3x2_ASAP7_75t_SL\n  OR3x4_ASAP7_75t_SL\n  OR4x1_ASAP7_75t_SL\n  OR4x2_ASAP7_75t_SL\n  OR5x1_ASAP7_75t_SL\n  OR5x2_ASAP7_75t_SL\n  TIEHIx1_ASAP7_75t_SL\n  TIELOx1_ASAP7_75t_SL\n  XNOR2x1_ASAP7_75t_SL\n  XNOR2x2_ASAP7_75t_SL\n  XNOR2xp5_ASAP7_75t_SL\n  XOR2x1_ASAP7_75t_SL\n  XOR2x2_ASAP7_75t_SL\n  XOR2xp5_ASAP7_75t_SL\n  A2O1A1Ixp33_ASAP7_75t_SL\n  A2O1A1O1Ixp25_ASAP7_75t_SL\n  AO211x2_ASAP7_75t_SL\n  AO21x1_ASAP7_75t_SL\n  AO21x2_ASAP7_75t_SL\n  AO221x1_ASAP7_75t_SL\n  AO221x2_ASAP7_75t_SL\n  AO222x2_ASAP7_75t_SL\n  AO22x1_ASAP7_75t_SL\n  AO22x2_ASAP7_75t_SL\n  AO31x2_ASAP7_75t_SL\n  AO322x2_ASAP7_75t_SL\n  AO32x1_ASAP7_75t_SL\n  AO32x2_ASAP7_75t_SL\n  AO331x1_ASAP7_75t_SL\n  AO331x2_ASAP7_75t_SL\n  AO332x1_ASAP7_75t_SL\n  AO332x2_ASAP7_75t_SL\n  AO333x1_ASAP7_75t_SL\n  AO333x2_ASAP7_75t_SL\n  AO33x2_ASAP7_75t_SL\n  AOI211x1_ASAP7_75t_SL\n  AOI211xp5_ASAP7_75t_SL\n  AOI21x1_ASAP7_75t_SL\n  AOI21xp33_ASAP7_75t_SL\n  AOI21xp5_ASAP7_75t_SL\n  AOI221x1_ASAP7_75t_SL\n  AOI221xp5_ASAP7_75t_SL\n  AOI222xp33_ASAP7_75t_SL\n  AOI22x1_ASAP7_75t_SL\n  AOI22xp33_ASAP7_75t_SL\n  AOI22xp5_ASAP7_75t_SL\n  AOI311xp33_ASAP7_75t_SL\n  AOI31xp33_ASAP7_75t_SL\n  AOI31xp67_ASAP7_75t_SL\n  AOI321xp33_ASAP7_75t_SL\n  AOI322xp5_ASAP7_75t_SL\n  AOI32xp33_ASAP7_75t_SL\n  AOI331xp33_ASAP7_75t_SL\n  AOI332xp33_ASAP7_75t_SL\n  AOI333xp33_ASAP7_75t_SL\n  AOI33xp33_ASAP7_75t_SL\n[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.\nOT_FWD bufy arrival_max_rise 86.273659\nOT_FWD bufy arrival_min_rise 83.819344\nOT_FWD bufy arrival_max_fall 487.584076\nOT_FWD bufy arrival_min_fall 485.405823\nOT_FWD bufy slew_max_rise 8.970614\nOT_FWD bufy slew_max_fall 9.089414\nOT_FWD period 770.000000\nOT_FWD R 48 112.047752 113.432594 112.65497245833332\nNo paths found.\n"
+ },
+ "tt": {
+  "bufy": {
+   "arrival_max_rise": 60.39,
+   "arrival_min_rise": 58.86,
+   "arrival_max_fall": 451.79,
+   "arrival_min_fall": 450.34,
+   "slew_max_rise": 6.13,
+   "slew_max_fall": 5.95
+  },
+  "R": {
+   "n": 48,
+   "min": 77.9,
+   "max": 79.0,
+   "mean": 78.4
+  },
+  "period_ps": 770.0,
+  "clk_in_to_clk_out_ps": {
+   "rise_max": 60.39,
+   "rise_min": 58.86,
+   "fall_max": 66.79,
+   "fall_min": 65.34,
+   "slew_rise": 6.13,
+   "slew_fall": 5.95,
+   "measured_at": "clk_out buffer Y pin (drives the clk_out port)"
+  },
+  "report_tail": "NVxp67_ASAP7_75t_SL\n  O2A1O1Ixp33_ASAP7_75t_SL\n  O2A1O1Ixp5_ASAP7_75t_SL\n  OA211x2_ASAP7_75t_SL\n  OA21x2_ASAP7_75t_SL\n  OA221x2_ASAP7_75t_SL\n  OA222x2_ASAP7_75t_SL\n  OA22x2_ASAP7_75t_SL\n  OA31x2_ASAP7_75t_SL\n  OA331x1_ASAP7_75t_SL\n  OA331x2_ASAP7_75t_SL\n  OA332x1_ASAP7_75t_SL\n  OA332x2_ASAP7_75t_SL\n  OA333x1_ASAP7_75t_SL\n  OA333x2_ASAP7_75t_SL\n  OA33x2_ASAP7_75t_SL\n  OAI211xp5_ASAP7_75t_SL\n  OAI21x1_ASAP7_75t_SL\n  OAI21xp33_ASAP7_75t_SL\n  OAI21xp5_ASAP7_75t_SL\n  OAI221xp5_ASAP7_75t_SL\n  OAI222xp33_ASAP7_75t_SL\n  OAI22x1_ASAP7_75t_SL\n  OAI22xp33_ASAP7_75t_SL\n  OAI22xp5_ASAP7_75t_SL\n  OAI311xp33_ASAP7_75t_SL\n  OAI31xp33_ASAP7_75t_SL\n  OAI31xp67_ASAP7_75t_SL\n  OAI321xp33_ASAP7_75t_SL\n  OAI322xp33_ASAP7_75t_SL\n  OAI32xp33_ASAP7_75t_SL\n  OAI331xp33_ASAP7_75t_SL\n  OAI332xp33_ASAP7_75t_SL\n  OAI333xp33_ASAP7_75t_SL\n  OAI33xp33_ASAP7_75t_SL\n  AND2x2_ASAP7_75t_SL\n  AND2x4_ASAP7_75t_SL\n  AND2x6_ASAP7_75t_SL\n  AND3x1_ASAP7_75t_SL\n  AND3x2_ASAP7_75t_SL\n  AND3x4_ASAP7_75t_SL\n  AND4x1_ASAP7_75t_SL\n  AND4x2_ASAP7_75t_SL\n  AND5x1_ASAP7_75t_SL\n  AND5x2_ASAP7_75t_SL\n  FAx1_ASAP7_75t_SL\n  HAxp5_ASAP7_75t_SL\n  MAJIxp5_ASAP7_75t_SL\n  MAJx2_ASAP7_75t_SL\n  MAJx3_ASAP7_75t_SL\n  NAND2x1_ASAP7_75t_SL\n  NAND2x1p5_ASAP7_75t_SL\n  NAND2x2_ASAP7_75t_SL\n  NAND2xp33_ASAP7_75t_SL\n  NAND2xp5_ASAP7_75t_SL\n  NAND2xp67_ASAP7_75t_SL\n  NAND3x1_ASAP7_75t_SL\n  NAND3x2_ASAP7_75t_SL\n  NAND3xp33_ASAP7_75t_SL\n  NAND4xp25_ASAP7_75t_SL\n  NAND4xp75_ASAP7_75t_SL\n  NAND5xp2_ASAP7_75t_SL\n  NOR2x1_ASAP7_75t_SL\n  NOR2x1p5_ASAP7_75t_SL\n  NOR2x2_ASAP7_75t_SL\n  NOR2xp33_ASAP7_75t_SL\n  NOR2xp67_ASAP7_75t_SL\n  NOR3x1_ASAP7_75t_SL\n  NOR3x2_ASAP7_75t_SL\n  NOR3xp33_ASAP7_75t_SL\n  NOR4xp25_ASAP7_75t_SL\n  NOR4xp75_ASAP7_75t_SL\n  NOR5xp2_ASAP7_75t_SL\n  OR2x2_ASAP7_75t_SL\n  OR2x4_ASAP7_75t_SL\n  OR2x6_ASAP7_75t_SL\n  OR3x1_ASAP7_75t_SL\n  OR3x2_ASAP7_75t_SL\n  OR3x4_ASAP7_75t_SL\n  OR4x1_ASAP7_75t_SL\n  OR4x2_ASAP7_75t_SL\n  OR5x1_ASAP7_75t_SL\n  OR5x2_ASAP7_75t_SL\n  TIEHIx1_ASAP7_75t_SL\n  TIELOx1_ASAP7_75t_SL\n  XNOR2x1_ASAP7_75t_SL\n  XNOR2x2_ASAP7_75t_SL\n  XNOR2xp5_ASAP7_75t_SL\n  XOR2x1_ASAP7_75t_SL\n  XOR2x2_ASAP7_75t_SL\n  XOR2xp5_ASAP7_75t_SL\n[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.\nOT_FWD bufy arrival_max_rise 60.386223\nOT_FWD bufy arrival_min_rise 58.856586\nOT_FWD bufy arrival_max_fall 451.794403\nOT_FWD bufy arrival_min_fall 450.344147\nOT_FWD bufy slew_max_rise 6.129307\nOT_FWD bufy slew_max_fall 5.945433\nOT_FWD period 770.000000\nOT_FWD R 48 77.893425 78.957779 78.39362579166664\nNo paths found.\n"
+ },
+ "ff": {
+  "bufy": {
+   "arrival_max_rise": 45.17,
+   "arrival_min_rise": 44.13,
+   "arrival_max_fall": 432.78,
+   "arrival_min_fall": 431.74,
+   "slew_max_rise": 4.64,
+   "slew_max_fall": 4.41
+  },
+  "R": {
+   "n": 48,
+   "min": 57.9,
+   "max": 58.8,
+   "mean": 58.3
+  },
+  "period_ps": 770.0,
+  "clk_in_to_clk_out_ps": {
+   "rise_max": 45.17,
+   "rise_min": 44.13,
+   "fall_max": 47.78,
+   "fall_min": 46.74,
+   "slew_rise": 4.64,
+   "slew_fall": 4.41,
+   "measured_at": "clk_out buffer Y pin (drives the clk_out port)"
+  },
+  "report_tail": "SAP7_75t_SL\n  NOR5xp2_ASAP7_75t_SL\n  OR2x2_ASAP7_75t_SL\n  OR2x4_ASAP7_75t_SL\n  OR2x6_ASAP7_75t_SL\n  OR3x1_ASAP7_75t_SL\n  OR3x2_ASAP7_75t_SL\n  OR3x4_ASAP7_75t_SL\n  OR4x1_ASAP7_75t_SL\n  OR4x2_ASAP7_75t_SL\n  OR5x1_ASAP7_75t_SL\n  OR5x2_ASAP7_75t_SL\n  TIEHIx1_ASAP7_75t_SL\n  TIELOx1_ASAP7_75t_SL\n  XNOR2x1_ASAP7_75t_SL\n  XNOR2x2_ASAP7_75t_SL\n  XNOR2xp5_ASAP7_75t_SL\n  XOR2x1_ASAP7_75t_SL\n  XOR2x2_ASAP7_75t_SL\n  XOR2xp5_ASAP7_75t_SL\n  O2A1O1Ixp33_ASAP7_75t_SL\n  O2A1O1Ixp5_ASAP7_75t_SL\n  OA211x2_ASAP7_75t_SL\n  OA21x2_ASAP7_75t_SL\n  OA221x2_ASAP7_75t_SL\n  OA222x2_ASAP7_75t_SL\n  OA22x2_ASAP7_75t_SL\n  OA31x2_ASAP7_75t_SL\n  OA331x1_ASAP7_75t_SL\n  OA331x2_ASAP7_75t_SL\n  OA332x1_ASAP7_75t_SL\n  OA332x2_ASAP7_75t_SL\n  OA333x1_ASAP7_75t_SL\n  OA333x2_ASAP7_75t_SL\n  OA33x2_ASAP7_75t_SL\n  OAI211xp5_ASAP7_75t_SL\n  OAI21x1_ASAP7_75t_SL\n  OAI21xp33_ASAP7_75t_SL\n  OAI21xp5_ASAP7_75t_SL\n  OAI221xp5_ASAP7_75t_SL\n  OAI222xp33_ASAP7_75t_SL\n  OAI22x1_ASAP7_75t_SL\n  OAI22xp33_ASAP7_75t_SL\n  OAI22xp5_ASAP7_75t_SL\n  OAI311xp33_ASAP7_75t_SL\n  OAI31xp33_ASAP7_75t_SL\n  OAI31xp67_ASAP7_75t_SL\n  OAI321xp33_ASAP7_75t_SL\n  OAI322xp33_ASAP7_75t_SL\n  OAI32xp33_ASAP7_75t_SL\n  OAI331xp33_ASAP7_75t_SL\n  OAI332xp33_ASAP7_75t_SL\n  OAI333xp33_ASAP7_75t_SL\n  OAI33xp33_ASAP7_75t_SL\n  BUFx10_ASAP7_75t_SL\n  BUFx12_ASAP7_75t_SL\n  BUFx12f_ASAP7_75t_SL\n  BUFx16f_ASAP7_75t_SL\n  BUFx24_ASAP7_75t_SL\n  BUFx2_ASAP7_75t_SL\n  BUFx3_ASAP7_75t_SL\n  BUFx4_ASAP7_75t_SL\n  BUFx4f_ASAP7_75t_SL\n  BUFx5_ASAP7_75t_SL\n  BUFx6f_ASAP7_75t_SL\n  BUFx8_ASAP7_75t_SL\n  CKINVDCx10_ASAP7_75t_SL\n  CKINVDCx11_ASAP7_75t_SL\n  CKINVDCx12_ASAP7_75t_SL\n  CKINVDCx14_ASAP7_75t_SL\n  CKINVDCx16_ASAP7_75t_SL\n  CKINVDCx20_ASAP7_75t_SL\n  CKINVDCx5p33_ASAP7_75t_SL\n  CKINVDCx6p67_ASAP7_75t_SL\n  CKINVDCx8_ASAP7_75t_SL\n  CKINVDCx9p33_ASAP7_75t_SL\n  HB1xp67_ASAP7_75t_SL\n  HB2xp67_ASAP7_75t_SL\n  HB3xp67_ASAP7_75t_SL\n  HB4xp67_ASAP7_75t_SL\n  INVx11_ASAP7_75t_SL\n  INVx13_ASAP7_75t_SL\n  INVx1_ASAP7_75t_SL\n  INVx2_ASAP7_75t_SL\n  INVx3_ASAP7_75t_SL\n  INVx4_ASAP7_75t_SL\n  INVx5_ASAP7_75t_SL\n  INVx6_ASAP7_75t_SL\n  INVx8_ASAP7_75t_SL\n  INVxp33_ASAP7_75t_SL\n  INVxp67_ASAP7_75t_SL\n[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.\nOT_FWD bufy arrival_max_rise 45.173882\nOT_FWD bufy arrival_min_rise 44.133587\nOT_FWD bufy arrival_max_fall 432.781281\nOT_FWD bufy arrival_min_fall 431.739807\nOT_FWD bufy slew_max_rise 4.640526\nOT_FWD bufy slew_max_fall 4.413578\nOT_FWD period 770.000000\nOT_FWD R 48 57.883305 58.808258 58.344255604166655\nNo paths found.\n"
+ }
+}

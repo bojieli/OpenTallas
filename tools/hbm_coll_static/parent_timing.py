@@ -9,9 +9,9 @@ hierarchy parent ot_hfd_coll_q{2,3}_hard_v5 (H-NETLIST/COLL 1045, V5 issue timin
                 write 1 edge later, so its configured / init_busy / program_fault outputs are +1 (SHP).  Frame-to-frame
                 gaps (55-edge row drain, 66-edge descriptor scan before launch) are RELATIVE to the target's own
                 capture and are unchanged.
-  issue path    launch capture +1, uop stream delayed +2 for the pipelined iteration products (ot_hgi_coll_iter_mul):
-                every issue-path output (first uop effect, busy, done, injects, VM requests, rails, deliveries) is +3
-                (SH).  Host launch -> first uop effect: 5 -> 8 edges.
+  issue path    launch capture +1, uop stream delayed +3 for the pipelined iteration products (ot_hgi_coll_iter_mul, V6):
+                every issue-path output (first uop effect, busy, done, injects, VM requests, rails, deliveries) is +4
+                (SH).  Host launch -> first uop effect: 5 -> 9 edges.
   child faults  registered once more at the fj pins: host-visible fault = (V4 edge) + SH + 1 for a fault raised on the
                 issue path; a programme-frame fault is + SHP.
 
@@ -64,7 +64,7 @@ def _hard_v5(sh: int, shp: int) -> dict:
                 program_fault_shift_edges=shp)
 
 
-HARD_V5 = _hard_v5(3, 1)          # tb_hgi_coll_q_hard_v5.sv at 5bb671b57: SH=3, SHP=1, child fault +SH+1
+HARD_V5 = _hard_v5(4, 1)          # tb_hgi_coll_q_hard_v5.sv V6: SH=4, SHP=1, child fault +SH+1 (V5 5bb671b57 was SH=3)
 PARENTS = {"host_v4": HOST_V4, "hard_v5": HARD_V5}
 
 

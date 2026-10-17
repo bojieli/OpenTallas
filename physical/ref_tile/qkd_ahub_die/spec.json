@@ -1,0 +1,308 @@
+{
+ "name": "qkd_ahub_die",
+ "top": "ot_qkd_ahub_die",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hdc/nearhbm/ot_qkd_ahub_core.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/lib/ot_rst_pipe.sv",
+  "rtl/hdc/nearhbm/ot_nhb_tiles_bb.v",
+  "rtl/hdc/nearhbm/ot_qkh_recip_leaf_bb.v"
+ ],
+ "params": {},
+ "clock": "hybrid_entries",
+ "clock_port": "ck_core",
+ "clock_ports": [
+  "ck_core",
+  "ck_zh[0]",
+  "ck_zh[1]",
+  "ck_zh[2]",
+  "ck_zh[3]",
+  "ck_recip",
+  "ck_pbst[0]",
+  "ck_pbst[1]",
+  "ck_pbst[2]",
+  "ck_pbst[3]",
+  "ck_pvlg[0]",
+  "ck_pvlg[1]",
+  "ck_pvlg[2]",
+  "ck_pvlg[3]",
+  "ck_sr[0]",
+  "ck_sr[1]",
+  "ck_sr[2]",
+  "ck_sr[3]",
+  "ck_rx",
+  "ck_ry"
+ ],
+ "clock_cts_roots": [
+  "ck_sr[0]",
+  "ck_sr[1]",
+  "ck_sr[2]",
+  "ck_sr[3]",
+  "ck_rx",
+  "ck_ry"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "S": [
+   "start",
+   "si_valid",
+   "si_type",
+   "si_g",
+   "si_hh",
+   "si_k",
+   "si_any",
+   "si_data",
+   "pi_valid",
+   "pi_g",
+   "pi_beat",
+   "pi_data"
+  ],
+  "N": [
+   "am",
+   "out_valid",
+   "out_g",
+   "out_beat",
+   "out_data",
+   "fault",
+   "ev",
+   "ck_core",
+   "ck_zh",
+   "ck_recip"
+  ],
+  "W": [
+   "rst_n",
+   "ck_pbst"
+  ],
+  "E": [
+   "ck_pvlg",
+   "ck_sr",
+   "ck_rx",
+   "ck_ry"
+  ]
+ },
+ "outline": {
+  "w": 1175.04,
+  "h": 760.32,
+  "exact": true
+ },
+ "pg_layer": "M7",
+ "signal_max_layer": "M6",
+ "children": [
+  {
+   "view": "physical/ref_tile/nhb_pbst_ref/views/ot_nhb_pbst",
+   "count": 1,
+   "inst": "*g_s?0?*u_pbst",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/nhb_pbst_ref/views/ot_nhb_pbst",
+   "count": 1,
+   "inst": "*g_s?1?*u_pbst",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/nhb_pbst_ref/views/ot_nhb_pbst",
+   "count": 1,
+   "inst": "*g_s?2?*u_pbst",
+   "at": [
+    756.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/nhb_pbst_ref/views/ot_nhb_pbst",
+   "count": 1,
+   "inst": "*g_s?3?*u_pbst",
+   "at": [
+    972.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/nhb_pvlg_ref/views/ot_nhb_pvlg",
+   "count": 1,
+   "inst": "*g_pv?0?*u_pv",
+   "at": [
+    43.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/nhb_pvlg_ref/views/ot_nhb_pvlg",
+   "count": 1,
+   "inst": "*g_pv?1?*u_pv",
+   "at": [
+    259.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/nhb_pvlg_ref/views/ot_nhb_pvlg",
+   "count": 1,
+   "inst": "*g_pv?2?*u_pv",
+   "at": [
+    756.0,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/nhb_pvlg_ref/views/ot_nhb_pvlg",
+   "count": 1,
+   "inst": "*g_pv?3?*u_pv",
+   "at": [
+    972.0,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+   "count": 1,
+   "inst": "*g_zh?0?*u_zh",
+   "at": [
+    43.2,
+    561.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+   "count": 1,
+   "inst": "*g_zh?1?*u_zh",
+   "at": [
+    259.2,
+    561.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+   "count": 1,
+   "inst": "*g_zh?2?*u_zh",
+   "at": [
+    756.0,
+    561.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+   "count": 1,
+   "inst": "*g_zh?3?*u_zh",
+   "at": [
+    972.0,
+    561.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf",
+   "count": 1,
+   "inst": "u_recip",
+   "at": [
+    475.2,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ahub_core/views/qkd_ahub_core",
+   "count": 1,
+   "inst": "u_core",
+   "at": [
+    518.4,
+    561.6
+   ],
+   "orient": "R0"
+  }
+ ],
+ "macros": [],
+ "inter": [],
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_qkd_ahub_die is the die composition: every hub port lands on a CLOSED leaf pin flop (core native pin form, tiles' own pin flops); parent flops are only the composition's relay stations (u_sr SR_RLY 1, u_rxi RX_RLY 1, u_ryo RY_RLY 1) on their CTS roots"
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "floorplan_note": "Q-KVSYS-STRIP 2026-10-16 (VIS-ROM QKV-07): the hub parent over its 14 CLOSED leaves on its own clock entries (no cluster clock over hard tiles: the q8/q13 failure). Rows: pbst S (y 43.2, next to the S stack inputs pi_data), pvlg middle (302.4), zh N (561.6); columns 43.2 / 259.2 | centre 475.2-691.2 | 756 / 972 (64.8-um channels). Centre column: the reciprocal leaf (216^2, y 259.2) under the core (151.2^2, x 518.4, y 561.6) which sits IN the Z row between zh1 and zh2: core hd3 faces W (zw_*) -> zh0/zh1, E (ze_*, rc_*) -> zh2/zh3 + recip, N -> hub outputs, S -> stack inputs + pvlg/pbst.",
+ "job": {
+  "owner": "Claude:Q-KVSYS-STRIP",
+  "branch": "claude/qkvsys-seg",
+  "tag": "hp1",
+  "purpose": "KV/system die attention hub PARENT ot_qkd_ahub_die (VIS-ROM QKV-07): core hd3 + 4 ot_nhb_zh + 4 ot_nhb_pbst + 4 ot_nhb_pvlg + ot_qkh_recip_leaf (all CLOSED), 14 clock entries (6 CTS roots carry the composition's relay flops), slot 1,175.04 x 760.32 unchanged",
+  "benches": [
+   {
+    "name": "qkd_ahub_d_eq_exact",
+    "cmd": "bash rtl/test/nearhbm/run_qkd_ahub_d_eq.sh pos {RUN}/bench/eq_pos",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qkd_ahub_d eq all"
+   },
+   {
+    "name": "qkd_ahub_d_eq_mutant",
+    "cmd": "bash rtl/test/nearhbm/run_qkd_ahub_d_eq.sh neg {RUN}/bench/eq_neg",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qkd_ahub_d mutant detected"
+   }
+  ],
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/test/nearhbm",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/ref_tile/nhb_pbst_ref",
+   "physical/ref_tile/nhb_pvlg_ref",
+   "physical/ref_tile/ot_nhb_zh_m5",
+   "physical/ref_tile/qkh_recip_ref",
+   "physical/ref_tile/qkd_ahub_core"
+  ]
+ },
+ "structural_change": "new parent kit (the hub parent was never hardened: q8 EARLY_FAIL_HOLD with one cluster clock over 12 hard tiles); per-child clock entries, core in the Z row centre",
+ "defines": [
+  "QKD_AHUB_RLY_CLK"
+ ],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "hard_define": "QKD_AHUB_RLY_CLK"
+}

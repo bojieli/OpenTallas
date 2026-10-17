@@ -125,6 +125,7 @@ for {set r 1} {$r <= $rounds} {incr r} {
 set tt1 [ws max ss]; set ff1 [ws min ff]
 puts [format "OT_VTSWAP post tt %.2f ff %.2f vt %s lvt_pct %.3f swapped %d frozen %d capped %d" $tt1 $ff1 [vt_counts] [lvt_pct] [dict size $swapped] [dict size $frozen] $capped]
 set f [open $::env(OT_OUT)/vtswap_cells.txt w]; dict for {i b} $swapped { puts $f "$i ${b}_ASAP7_75t_L" }; close $f
+write_def $::env(OT_OUT)/6_final.def
 write_db $::env(OT_OUT)/6_final.odb
 write_verilog $::env(OT_OUT)/6_final.v
 puts "OT_ECO done"

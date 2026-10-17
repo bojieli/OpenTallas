@@ -1,0 +1,25 @@
+{
+  "source_receipt": "76bbba84c:results/arch/qwen_romleaf_1552/native/parent_child_audit.json",
+  "closed_job": "ot_qwen_tile_node-r5-78b36aae5",
+  "cell": "ot_qwen_tile_node",
+  "view": "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node",
+  "lib_cell": "ot_qwen_tile_node",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 246.6,
+  "spread_ps": 27.2,
+  "outputs": 1027,
+  "inputs": 1539,
+  "launch_ps": 233.3,
+  "launch_pin": "t_out[229]",
+  "capture_ps": 170.7,
+  "capture_pin": "t_d[185]",
+  "launch_over": 90,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 233.27726 > 220 (90 pins)"
+}

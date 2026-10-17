@@ -27,7 +27,10 @@
 //   sfu_x (cxport register at E, the stream SFU core's ro_x crossed on a compiler slot): reducer operand when
 //   red_cmd osel=1 && lane[6]=1 (osel=1 && lane[6]=0 keeps the RF class-4 word).
 //   MUT 64 (bench): sfu_x select ignored; MUT 128: rr sector bank order reversed.
-module ot_hbm_su_static_qcore #(parameter integer MUT=0,COLLPORT=0)(
+// RF_LOCAL (H-SU 2026-10-16, default 0 = unchanged): the slices register rf_bword/rf_bcmd/rf_dsec once more beside their
+//   bank group (ot_hbm_su_static_pgslice RF_LOCAL); the compiler issues classes 0..3 and 5 one edge earlier, so the
+//   class-5 command must precede the RF drain by exactly TWO edges (checked below). Nothing else here changes.
+module ot_hbm_su_static_qcore #(parameter integer MUT=0,COLLPORT=0,RF_LOCAL=0)(
  input wire [63:0] clk_rf,
  input wire clk_ctl,clk_red,rst_n,
  input wire [6*9-1:0] rf_rd_cmd,
@@ -85,10 +88,12 @@ module ot_hbm_su_static_qcore #(parameter integer MUT=0,COLLPORT=0)(
   rf_bcmd<=rf_rd_cmd[0+:36];
   rf_dsec<=dsec;
  end
- // class-5 command must precede the RF drain by exactly one edge
- reg c5_d1;
- always @(posedge clk_ctl or negedge rst_n)if(!rst_n)c5_d1<=1'b0; else c5_d1<=rf_rd_cmd[5*9+8];
- wire dbad=(rf_drain_now&&!c5_d1)||(rf_rd_cmd[5*9+8]&&rf_rd_cmd[5*9+:3]!=3'd0);
+ // class-5 command must precede the RF drain by exactly one edge (RF_LOCAL: two)
+ reg c5_d1,c5_d2;
+ always @(posedge clk_ctl or negedge rst_n)if(!rst_n)begin c5_d1<=1'b0;c5_d2<=1'b0;end
+  else begin c5_d1<=rf_rd_cmd[5*9+8];c5_d2<=c5_d1;end
+ wire c5_lead=RF_LOCAL?c5_d2:c5_d1;          // class 5 one edge (RF_LOCAL: two edges) before the drain
+ wire dbad=(rf_drain_now&&!c5_lead)||(rf_rd_cmd[5*9+8]&&rf_rd_cmd[5*9+:3]!=3'd0);
  // reducer: operand + command registered once (E+1), reducer issue E+2
  reg rc_v; reg [2:0] rc_op; reg [9:0] rc_a,rc_b,rc_d; reg [31:0] rc_tag,rc_x;
  reg [1:0] e_sl; reg e_os,e_sfu; reg [72:8] e_f;

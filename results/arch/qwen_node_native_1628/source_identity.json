@@ -1,0 +1,10 @@
+{
+  "byte_identical_files": {
+    "rtl/physical/ot_qwen_tile_node.sv": "781c8b087fb5a56465c79b64aec9f3595b8cd594",
+    "rtl/lib/ot_rst_relay.sv": "0259a926697bf544c4456016d1d475a2ae542e34",
+    "rtl/hdc/ot_hdc_delay.sv": "4a169c31c0ab65b6d992c87e27971b656cdc4fee",
+    "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv": "80ad895b49d267588acbfb40e1369b7840d40e36"
+  },
+  "tadd_module_sha256": "d4da5104e15e9e5b4ce0625a4f2f62c625331dc11a4d0a2fc207fbc3f7b2dfbe",
+  "note": "Three source containers evolved outside the elaborated node hierarchy. Live node/reset/delay/tadd/NR-adder definitions byte identical; full current-source exact bench/mutants repeat in closure job."
+}

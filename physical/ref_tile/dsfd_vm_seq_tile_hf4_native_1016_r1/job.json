@@ -1,0 +1,153 @@
+{
+ "name": "dsfd_vm_seq_tile_hf4_native_1016_r1-hf4-COMMIT",
+ "block": "dsfd_vm_seq_tile",
+ "ref_tile": true,
+ "owner": "codex:S-VM",
+ "purpose": "Source-exact hf OR absorption in native seq hardleaf; frozen param3 oracle plus default3 equivalence, all118 outputbits/all32directfaultphasecases and actualcommand/completion ports, with observed independent half-drop and early-edge mutants.",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/s81-vm-merge-0600",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/s81_vm",
+   "rtl/dsrom_sys/s81_ph/vm",
+   "rtl/dsrom_sys/s81_ph/test",
+   "physical/s81_vm_ctl_native_1015",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "tools/s81_seq_hf"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_vm_seq_tile #(.X_AL_WIDTH(4)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_static.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_tile.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hf4_exact",
+    "cmd": "bash tools/s81_seq_hf/gate.sh {RUN}/hf4_gold",
+    "expect": "pass",
+    "pass_regex": "SEQ_HF PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "hf4_drop_hi",
+    "cmd": "SEEDS=1 bash tools/s81_seq_hf/gate.sh {RUN}/hf4_drop_hi S81_SEQ_HF_MUT_DROP_HI",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "hf4_drop_lo",
+    "cmd": "SEEDS=1 bash tools/s81_seq_hf/gate.sh {RUN}/hf4_drop_lo S81_SEQ_HF_MUT_DROP_LO",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "hf4_early",
+    "cmd": "SEEDS=1 bash tools/s81_seq_hf/gate.sh {RUN}/hf4_early S81_SEQ_HF_MUT_EARLY",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "seq_static_programme",
+    "cmd": "bash tools/s81_vm/vm_seq_static_gate.sh {RUN}/seq_static",
+    "expect": "pass",
+    "pass_regex": "VMSS_GATE PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dsfd_vm_seq_tile_hf4_native_1016_r1/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dsfd_vm_seq_tile_hf4_native_1016_r1/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsfd_vm_seq_tile_hf4_native_1016_r1 --out {RUN}/record/views/dsfd_vm_seq_tile  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dsfd_vm_seq_tile_hf4_native_1016_r1/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dsfd_vm_seq_tile_hf4_native_1016_r1/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/dsfd_vm_seq_tile_hf4_native_1016_r1/dsfd_vm_seq_tile_hf4_native_1016_r1-hf4-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "X_AL_WIDTH4 opt-in: replace parent hf0|hf1 OR with two independent registered seq input pins, reduce inside existing seq fault cone after capture. +1FF/+1inputpin, same outline and one clock root, zero normal or diagnostic cycle delta. Default3 CLOSED view stands. Full source/current compiler remeasurement and actual parent adoption pending.",
+ "reroute_reason": {
+  "kind": "param_change",
+  "params": {
+   "X_AL_WIDTH": 4
+  }
+ }
+}

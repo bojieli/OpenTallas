@@ -1,0 +1,17 @@
+test_supplied_targets_refuse_missing_or_invalid_native_r (test_targets.Targets.test_supplied_targets_refuse_missing_or_invalid_native_r) ... ok
+test_bus_list_pairs_and_cli (test_die_clock_check.DieClockCheck.test_bus_list_pairs_and_cli) ... ok
+test_insertion_and_noncommon (test_die_clock_check.DieClockCheck.test_insertion_and_noncommon) ... ok
+test_literal_entries_preserve_intra_tile_and_specific_branches (test_die_clock_check.DieClockCheck.test_literal_entries_preserve_intra_tile_and_specific_branches) ... ok
+test_strict_refuses_nearest_entry_inference (test_die_clock_check.DieClockCheck.test_strict_refuses_nearest_entry_inference) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.038s
+
+OK
+test_repeated_leaf_pads PASS
+test_interleaved_origins_and_obstacles PASS
+test_external_occupancy_and_corner_exhaustion PASS
+test_negative_control_obstacle_and_occupancy_matter PASS
+test_negative_control_lost_successful_frontier_is_detected PASS
+test_balanced_tree_covers_every_sink_once PASS
+test_cluster_respects_key_and_size PASS

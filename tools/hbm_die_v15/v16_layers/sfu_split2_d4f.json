@@ -1,0 +1,503 @@
+{
+ "region": "sfu_split2_d4f",
+ "author": "Claude H-NETLIST 2100",
+ "basis_commit": "H-SU k7/k8 006229fd4 + 12f687119 (claude/hsu-corekit-0700 2191c672a)",
+ "instances": [],
+ "edges": [],
+ "clocks": [
+  {
+   "inst": "sfucore_SW",
+   "port": "clk_pw",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "sfucore_SW",
+   "port": "clk_pe",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "sfucore_SE",
+   "port": "clk_pw",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "sfucore_SE",
+   "port": "clk_pe",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "sfucore_NW",
+   "port": "clk_pw",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "sfucore_NW",
+   "port": "clk_pe",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "sfucore_NE",
+   "port": "clk_pw",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "sfucore_NE",
+   "port": "clk_pe",
+   "domain": "stream",
+   "kind": "clock"
+  }
+ ],
+ "straps": [],
+ "gaps": [],
+ "remaster": {
+  "sfucore_SW": {
+   "master": "ot_hgi_sfu_core_split2",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split2.sv",
+   "params": {
+    "LWB": 15,
+    "LG_PATH": 24
+   },
+   "port_split": {
+    "vi_re": [
+     [
+      "vi_re_w",
+      0,
+      8
+     ],
+     [
+      "vi_re_e",
+      8,
+      16
+     ]
+    ],
+    "vi_addr": [
+     [
+      "vi_addr_w",
+      0,
+      192
+     ],
+     [
+      "vi_addr_e",
+      192,
+      384
+     ]
+    ],
+    "vi_q": [
+     [
+      "vi_q_w",
+      0,
+      256
+     ],
+     [
+      "vi_q_e",
+      256,
+      512
+     ]
+    ],
+    "ro_v": [
+     [
+      "ro_v_w",
+      0,
+      8
+     ],
+     [
+      "ro_v_e",
+      8,
+      16
+     ]
+    ],
+    "kv_we": [
+     [
+      "kv_we_w",
+      0,
+      8
+     ],
+     [
+      "kv_we_e",
+      8,
+      16
+     ]
+    ],
+    "ro_x": [
+     [
+      "ro_x_w",
+      0,
+      256
+     ],
+     [
+      "ro_x_e",
+      256,
+      512
+     ]
+    ],
+    "kv_wdata": [
+     [
+      "kv_wdata_w",
+      0,
+      256
+     ],
+     [
+      "kv_wdata_e",
+      256,
+      512
+     ]
+    ],
+    "kv_waddr": [
+     [
+      "kv_waddr_w",
+      0,
+      192
+     ],
+     [
+      "kv_waddr_e",
+      192,
+      384
+     ]
+    ]
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv"
+   ]
+  },
+  "sfucore_SE": {
+   "master": "ot_hgi_sfu_core_split2",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split2.sv",
+   "params": {
+    "LWB": 15,
+    "LG_PATH": 24
+   },
+   "port_split": {
+    "vi_re": [
+     [
+      "vi_re_w",
+      0,
+      8
+     ],
+     [
+      "vi_re_e",
+      8,
+      16
+     ]
+    ],
+    "vi_addr": [
+     [
+      "vi_addr_w",
+      0,
+      192
+     ],
+     [
+      "vi_addr_e",
+      192,
+      384
+     ]
+    ],
+    "vi_q": [
+     [
+      "vi_q_w",
+      0,
+      256
+     ],
+     [
+      "vi_q_e",
+      256,
+      512
+     ]
+    ],
+    "ro_v": [
+     [
+      "ro_v_w",
+      0,
+      8
+     ],
+     [
+      "ro_v_e",
+      8,
+      16
+     ]
+    ],
+    "kv_we": [
+     [
+      "kv_we_w",
+      0,
+      8
+     ],
+     [
+      "kv_we_e",
+      8,
+      16
+     ]
+    ],
+    "ro_x": [
+     [
+      "ro_x_w",
+      0,
+      256
+     ],
+     [
+      "ro_x_e",
+      256,
+      512
+     ]
+    ],
+    "kv_wdata": [
+     [
+      "kv_wdata_w",
+      0,
+      256
+     ],
+     [
+      "kv_wdata_e",
+      256,
+      512
+     ]
+    ],
+    "kv_waddr": [
+     [
+      "kv_waddr_w",
+      0,
+      192
+     ],
+     [
+      "kv_waddr_e",
+      192,
+      384
+     ]
+    ]
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv"
+   ]
+  },
+  "sfucore_NW": {
+   "master": "ot_hgi_sfu_core_split2",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split2.sv",
+   "params": {
+    "LWB": 15,
+    "LG_PATH": 24
+   },
+   "port_split": {
+    "vi_re": [
+     [
+      "vi_re_w",
+      0,
+      8
+     ],
+     [
+      "vi_re_e",
+      8,
+      16
+     ]
+    ],
+    "vi_addr": [
+     [
+      "vi_addr_w",
+      0,
+      192
+     ],
+     [
+      "vi_addr_e",
+      192,
+      384
+     ]
+    ],
+    "vi_q": [
+     [
+      "vi_q_w",
+      0,
+      256
+     ],
+     [
+      "vi_q_e",
+      256,
+      512
+     ]
+    ],
+    "ro_v": [
+     [
+      "ro_v_w",
+      0,
+      8
+     ],
+     [
+      "ro_v_e",
+      8,
+      16
+     ]
+    ],
+    "kv_we": [
+     [
+      "kv_we_w",
+      0,
+      8
+     ],
+     [
+      "kv_we_e",
+      8,
+      16
+     ]
+    ],
+    "ro_x": [
+     [
+      "ro_x_w",
+      0,
+      256
+     ],
+     [
+      "ro_x_e",
+      256,
+      512
+     ]
+    ],
+    "kv_wdata": [
+     [
+      "kv_wdata_w",
+      0,
+      256
+     ],
+     [
+      "kv_wdata_e",
+      256,
+      512
+     ]
+    ],
+    "kv_waddr": [
+     [
+      "kv_waddr_w",
+      0,
+      192
+     ],
+     [
+      "kv_waddr_e",
+      192,
+      384
+     ]
+    ]
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv"
+   ]
+  },
+  "sfucore_NE": {
+   "master": "ot_hgi_sfu_core_split2",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split2.sv",
+   "params": {
+    "LWB": 15,
+    "LG_PATH": 24
+   },
+   "port_split": {
+    "vi_re": [
+     [
+      "vi_re_w",
+      0,
+      8
+     ],
+     [
+      "vi_re_e",
+      8,
+      16
+     ]
+    ],
+    "vi_addr": [
+     [
+      "vi_addr_w",
+      0,
+      192
+     ],
+     [
+      "vi_addr_e",
+      192,
+      384
+     ]
+    ],
+    "vi_q": [
+     [
+      "vi_q_w",
+      0,
+      256
+     ],
+     [
+      "vi_q_e",
+      256,
+      512
+     ]
+    ],
+    "ro_v": [
+     [
+      "ro_v_w",
+      0,
+      8
+     ],
+     [
+      "ro_v_e",
+      8,
+      16
+     ]
+    ],
+    "kv_we": [
+     [
+      "kv_we_w",
+      0,
+      8
+     ],
+     [
+      "kv_we_e",
+      8,
+      16
+     ]
+    ],
+    "ro_x": [
+     [
+      "ro_x_w",
+      0,
+      256
+     ],
+     [
+      "ro_x_e",
+      256,
+      512
+     ]
+    ],
+    "kv_wdata": [
+     [
+      "kv_wdata_w",
+      0,
+      256
+     ],
+     [
+      "kv_wdata_e",
+      256,
+      512
+     ]
+    ],
+    "kv_waddr": [
+     [
+      "kv_waddr_w",
+      0,
+      192
+     ],
+     [
+      "kv_waddr_e",
+      192,
+      384
+     ]
+    ]
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv"
+   ]
+  }
+ },
+ "defines": {
+  "ot_hgi_sfu_core_split2": [
+   "OT_SFU_SYNC_RST"
+  ]
+ },
+ "notes": "sfucore_<q>: ot_hgi_sfu_core_split -> ot_hgi_sfu_core_split2 (lanes 0-7 W / 8-15 E bus split, clk_pw/clk_pe = balanced branches of the core stream root). Views/SYNTH of this master MUST define OT_SFU_SYNC_RST (synchronous regional resets)."
+}

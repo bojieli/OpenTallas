@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.hbm.die_grant.v1",
+  "issued": "2026-10-16T16:00:23.585612-07:00",
+  "request_commit": "5fcfc2ba8",
+  "request_sha256": "48f5ece3fcb8f73e64c2e1d99ccb7f3db78153b527acf8b45175168a51684469",
+  "source_commit": "a08f80c6e",
+  "audit": {
+    "upipe": {
+      "pins": 289,
+      "off_declared_grid": []
+    },
+    "vmasm": {
+      "pins": 281,
+      "off_declared_grid": []
+    }
+  },
+  "upipe": {
+    "verdict": "GRANTED geometry; source/native/PG/calendar qualification OPEN",
+    "leaf_outline_um": [
+      34.56,
+      34.56
+    ],
+    "replicas": 16,
+    "clock_entries": 16,
+    "placement": "4x4 in existing216x216 upipe region, pitch56.16, local firstorigin6.48,6.48; span203.04x203.04;21.6um between leaf outlines",
+    "literal_pin_plan": "Exact per-bit rectangles in pinned request. Every N clk centre17.292; no scalar expansion. Actual ODB BPin/grid/PG projection readback mandatory.",
+    "clock_rule": "same logical edge, actual phi-R per literal entry; <=80ps coherent pair spread TT+FF"
+  },
+  "vmasm": {
+    "verdict": "PINS ACCEPTED PROVISIONALLY; parent geometry reservation OPEN",
+    "leaf_outline_um": [
+      34.56,
+      34.56
+    ],
+    "replicas": 16,
+    "clock_entries": 16,
+    "why": "16leafarea0.0191103mm2 exceeds old0.01045mm2; actual packing and parent pin/clock source changes required before adoption",
+    "literal_pin_plan": "Exact source request rectangles including Eclkcentre17.292; actual ODB/PG readback mandatory"
+  }
+}

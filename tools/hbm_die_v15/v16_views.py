@@ -3,8 +3,8 @@
 contract (results/arch/hbm_die_v16/contract.json) pick the view a die GRT/STA binds:
   ROUTED_UNBOUND = routed library candidate on main (source/native qualification unverified) (physical/**/views/<m>/<m>.lef + <m>_{tt,ff}.lib) whose pins equal the contract ports
   SYNTH = current-source mapped netlist ETM (synth_master.sh HIER=1 + synth_etm.sh): an estimate, never a sign-off view.
-One representative instance per (master, port signature); per-instance parameter differences that do not change ports
-(pgslice G, cmd target TARGET, PC P ...) share that representative's ETM (recorded in views.json).
+One representative instance per exact (master, port signature, parameter set). Equal ports with different parameters
+never alias the representative ETM.
 Writes OUT/views.json, OUT/jobs.tsv and OUT/wrap/<cell>.sv (parameter wrappers: the wrapper module binds every SV
 parameter value literally, arrays and wide hex included; ports identical to the master's).
 
@@ -67,12 +67,13 @@ def main():
     (a.out / 'wrap').mkdir(parents=True, exist_ok=True)
     groups = defaultdict(list)
     for n, i in C['instances'].items():
-        groups[(i['master'], json.dumps(i['ports'], sort_keys=True))].append(n)
+        groups[(i['master'], json.dumps(i['ports'], sort_keys=True),
+                json.dumps(i.get('params', {}), sort_keys=True))].append(n)
     nvar = defaultdict(int)
-    for (m, _) in groups:
+    for (m, _, _) in groups:
         nvar[m] += 1
     views, jobs, k_of = {}, [], defaultdict(int)
-    for (m, sig), insts in sorted(groups.items()):
+    for (m, sig, _params), insts in sorted(groups.items()):
         rep = C['instances'][insts[0]]
         k = k_of[m]; k_of[m] += 1
         cell = m if nvar[m] == 1 else f'{m}__pv{k}'

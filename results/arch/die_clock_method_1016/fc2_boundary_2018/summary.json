@@ -1,0 +1,177 @@
+{
+  "schema": "opentallas.f1_boundary_review_2018.v1",
+  "corrects": "cdaf10fcb driver-Y scalar receipt; native combinational ETM already included output-net RC",
+  "source_revision_of_original_routes": "16f2308650a29c689080c6f11eb9accceb508119",
+  "receipts": [
+    {
+      "cell": "hbfd_rly_48_WE_fc",
+      "boundary_D_ps": {
+        "tt": {
+          "arrival_max_rise": 12.662741,
+          "arrival_min_rise": 12.418676,
+          "arrival_max_fall": 13.863368482290866,
+          "arrival_min_fall": 13.603480482290877,
+          "slew_max_rise": 5.55614,
+          "slew_max_fall": 5.499942
+        },
+        "ff": {
+          "arrival_max_rise": 10.113965,
+          "arrival_min_rise": 9.896112,
+          "arrival_max_fall": 10.64013248229088,
+          "arrival_min_fall": 10.402308482290891,
+          "slew_max_rise": 4.233025,
+          "slew_max_fall": 4.065506
+        }
+      },
+      "output_net_delta_ps": {
+        "tt": {
+          "arrival_max_rise": 0.21260499999999993,
+          "arrival_min_rise": 0.2126039999999989,
+          "arrival_max_fall": 0.2125859999999875,
+          "arrival_min_fall": 0.21261600000002545,
+          "slew_max_rise": 0.006953000000000209,
+          "slew_max_fall": 0.0068950000000000955
+        },
+        "ff": {
+          "arrival_max_rise": 0.21258100000000013,
+          "arrival_min_rise": 0.21258000000000088,
+          "arrival_max_fall": 0.2125859999999875,
+          "arrival_min_fall": 0.21258500000004688,
+          "slew_max_rise": 0.010265999999999664,
+          "slew_max_fall": 0.010850999999999722
+        }
+      },
+      "checked": true,
+      "ok": true
+    },
+    {
+      "cell": "hbfd_rly_624_NS_fc",
+      "boundary_D_ps": {
+        "tt": {
+          "arrival_max_rise": 12.997182,
+          "arrival_min_rise": 12.703051,
+          "arrival_max_fall": 14.193659482290855,
+          "arrival_min_fall": 13.880488482290843,
+          "slew_max_rise": 5.741713,
+          "slew_max_fall": 5.653284
+        },
+        "ff": {
+          "arrival_max_rise": 10.431412,
+          "arrival_min_rise": 10.163973,
+          "arrival_max_fall": 10.957179482290883,
+          "arrival_min_fall": 10.672541482290853,
+          "slew_max_rise": 4.378249,
+          "slew_max_fall": 4.194912
+        }
+      },
+      "output_net_delta_ps": {
+        "tt": {
+          "arrival_max_rise": 0.29689800000000055,
+          "arrival_min_rise": 0.29689800000000055,
+          "arrival_max_fall": 0.2969359999999597,
+          "arrival_min_fall": 0.2969359999999597,
+          "slew_max_rise": 0.015234999999999665,
+          "slew_max_fall": 0.015398000000000245
+        },
+        "ff": {
+          "arrival_max_rise": 0.29674699999999987,
+          "arrival_min_rise": 0.2967460000000006,
+          "arrival_max_fall": 0.2966920000000073,
+          "arrival_min_fall": 0.2966920000000073,
+          "slew_max_rise": 0.02227500000000049,
+          "slew_max_fall": 0.023758000000000834
+        }
+      },
+      "checked": true,
+      "ok": true
+    },
+    {
+      "cell": "hbfd_rly_624_SN_fc",
+      "boundary_D_ps": {
+        "tt": {
+          "arrival_max_rise": 13.322693,
+          "arrival_min_rise": 12.967223,
+          "arrival_max_fall": 14.521083482290862,
+          "arrival_min_fall": 14.142726482290868,
+          "slew_max_rise": 5.842051,
+          "slew_max_fall": 5.737745
+        },
+        "ff": {
+          "arrival_max_rise": 10.752466,
+          "arrival_min_rise": 10.427631,
+          "arrival_max_fall": 11.281489482290851,
+          "arrival_min_fall": 10.93801448229084,
+          "slew_max_rise": 4.46196,
+          "slew_max_fall": 4.275014
+        }
+      },
+      "output_net_delta_ps": {
+        "tt": {
+          "arrival_max_rise": 0.3645229999999984,
+          "arrival_min_rise": 0.3645220000000009,
+          "arrival_max_fall": 0.36456299999997555,
+          "arrival_min_fall": 0.36459400000001096,
+          "slew_max_rise": 0.02569599999999994,
+          "slew_max_fall": 0.02508200000000027
+        },
+        "ff": {
+          "arrival_max_rise": 0.3641070000000006,
+          "arrival_min_rise": 0.36410500000000035,
+          "arrival_max_fall": 0.3640139999999974,
+          "arrival_min_fall": 0.3640139999999974,
+          "slew_max_rise": 0.03725300000000065,
+          "slew_max_fall": 0.04300699999999935
+        }
+      },
+      "checked": true,
+      "ok": true
+    },
+    {
+      "cell": "hbfd_rly_624_WE_fc",
+      "boundary_D_ps": {
+        "tt": {
+          "arrival_max_rise": 13.39067,
+          "arrival_min_rise": 12.926069,
+          "arrival_max_fall": 14.655207482290848,
+          "arrival_min_fall": 14.160670482290868,
+          "slew_max_rise": 4.91012,
+          "slew_max_fall": 4.976637
+        },
+        "ff": {
+          "arrival_max_rise": 10.943038,
+          "arrival_min_rise": 10.522857,
+          "arrival_max_fall": 11.515315482290873,
+          "arrival_min_fall": 11.065058482290851,
+          "slew_max_rise": 3.763909,
+          "slew_max_fall": 3.656857
+        }
+      },
+      "output_net_delta_ps": {
+        "tt": {
+          "arrival_max_rise": 0.01483999999999952,
+          "arrival_min_rise": 0.01483999999999952,
+          "arrival_max_fall": 0.014830999999958294,
+          "arrival_min_fall": 0.014861999999993714,
+          "slew_max_rise": 0.0,
+          "slew_max_fall": 0.0
+        },
+        "ff": {
+          "arrival_max_rise": 0.014839000000000269,
+          "arrival_min_rise": 0.014839000000000269,
+          "arrival_max_fall": 0.014861999999993714,
+          "arrival_min_fall": 0.014830999999958294,
+          "slew_max_rise": 1.000000000139778e-06,
+          "slew_max_fall": 1.000000000139778e-06
+        }
+      },
+      "checked": true,
+      "ok": true
+    }
+  ],
+  "native_terminal_vs_reloaded_model_tt_ps": {
+    "physical_port": 12.662741,
+    "reloaded_etm": 12.662763,
+    "abs_error": 2.2e-05
+  },
+  "remaining": "Root-held unmerged/unpublished; must integrate both cdaf10fcb and boundary follow-up, deploy before recovered source submission; re-export/rebind current routes, no route retry required."
+}

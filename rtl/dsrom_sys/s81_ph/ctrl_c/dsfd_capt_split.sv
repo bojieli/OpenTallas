@@ -80,9 +80,10 @@ module dsfd_capt_x8_data_e (
     // claude S-VM-CAPT-X8 2026-10-16 (DECISION B): wrapper of the two single-clock hard leaves of the static fixed-bank
     // 3:4 transfer (dsfd_capt_x8_x43.sv header: every stream sample index accepted, no hold queue, fixed latency,
     // t_ho = sticky epoch-slip fault).  Parent-visible ports unchanged; the leaves abut on the bank seam.
+    // split1016z: the serial leaf takes the one ckv root on two literal entries (ckv: stage A, ckvb: stage B).
     wire [1663:0] b; wire [7:0] s_mark, s_par;
     dsfd_capt_x8x_t_e u_t (.ck(ck), .rst(rst), .f_w(f_w), .b(b), .s_mark(s_mark), .s_par(s_par), .t_ho(t_ho));
-    dsfd_capt_x8x_s_e u_s (.ckv(ckv), .rsv(rsv), .b(b), .s_mark(s_mark), .s_par(s_par), .t_vm(t_vm));
+    dsfd_capt_x8x_s_e u_s (.ckv(ckv), .ckvb(ckv), .rsv(rsv), .b(b), .s_mark(s_mark), .s_par(s_par), .t_vm(t_vm));
 endmodule
 
 module dsfd_capt_x8_data_w (
@@ -94,9 +95,10 @@ module dsfd_capt_x8_data_w (
     // claude S-VM-CAPT-X8 2026-10-16 (DECISION B): wrapper of the two single-clock hard leaves of the static fixed-bank
     // 3:4 transfer (dsfd_capt_x8_x43.sv header: every stream sample index accepted, no hold queue, fixed latency,
     // t_ho = sticky epoch-slip fault).  Parent-visible ports unchanged; the leaves abut on the bank seam.
+    // split1016z: the serial leaf takes the one ckv root on two literal entries (ckv: stage A, ckvb: stage B).
     wire [1663:0] b; wire [7:0] s_mark, s_par;
     dsfd_capt_x8x_t_w u_t (.ck(ck), .rst(rst), .f_w(f_w), .b(b), .s_mark(s_mark), .s_par(s_par), .t_ho(t_ho));
-    dsfd_capt_x8x_s_w u_s (.ckv(ckv), .rsv(rsv), .b(b), .s_mark(s_mark), .s_par(s_par), .t_vm(t_vm));
+    dsfd_capt_x8x_s_w u_s (.ckv(ckv), .ckvb(ckv), .rsv(rsv), .b(b), .s_mark(s_mark), .s_par(s_par), .t_vm(t_vm));
 endmodule
 
 module dsfd_capt_g2_dualho #(

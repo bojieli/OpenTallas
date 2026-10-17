@@ -1,0 +1,128 @@
+{
+ "name": "qkd_layer_prog_img_r1-r1-COMMIT",
+ "block": "qkd_static_kv_layer_programme_img",
+ "ref_tile": true,
+ "owner": "Claude:Q-KVSYS-PVJOIN",
+ "purpose": "Q-KVSYS PVJOIN 10-16 (lead-approved qkd_seq retirement, static KV path): all36 layer-programme roots as a compile-time image placed on the KV link compiler calendar (tools/qwen_static_kv/layer_roots_from_link.py: frames = link layer starts; attention run/issue from the CMD record edge; kgo/vgo from the KV calendar prefetch lead at T 8192 + PV_START; writer from the first KVN edge). Bench: cycle equivalence vs the boot-loaded module over 2 tokens (504 events) + every layer run of the real link calendar sequencer lands on its stage start at one fixed offset; mutants 1-4 FAIL. COMPONENT_TEST image: die path ages not measured.",
+ "threads": 4,
+ "peak_ram_gb": 8,
+ "source": {
+  "branch": "claude/pvjoin-cal-1016",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl",
+   "tools",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "results/arch/token_path_20261009/qwen_rom.json",
+   "results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json",
+   "results/arch/qwen_split_1014/kvsys_v1_4_3_design/hbm_refresh_calendar.json"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_static_kv_layer_programme_img #(.MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -Irtl/qwen_sys/static_kv_20261014 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme_rom.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "layer_rom_pass",
+    "cmd": "bash tools/qwen_static_kv/layer_rom_bench.sh {RUN}/bench/m0 0 2",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^LAYER_ROM PASS tokens=2 stages=72 runs=70 events=504 run_ofs=2 errors=0",
+    "min_count_regex": "events=(\\d+)"
+   },
+   {
+    "name": "layer_rom_mut_writer",
+    "cmd": "bash tools/qwen_static_kv/layer_rom_bench.sh {RUN}/bench/m1 1 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^LAYER_ROM PASS",
+    "fail_regex": "^LAYER_ROM FAIL tokens=2 stages=72 runs=70 events=504 run_ofs=2 errors=144 mut=1"
+   },
+   {
+    "name": "layer_rom_mut_nextrow",
+    "cmd": "bash tools/qwen_static_kv/layer_rom_bench.sh {RUN}/bench/m4 4 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^LAYER_ROM PASS",
+    "fail_regex": "^LAYER_ROM FAIL .* mut=4"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_layer_prog_img_r1/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_layer_prog_img_r1/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 4,
+   "peak_ram_gb": 8
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_layer_prog_img_r1 --out {RUN}/record/views/qkd_static_kv_layer_programme_img  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_layer_prog_img_r1/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_layer_prog_img_r1/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_layer_prog_img_r1/qkd_layer_prog_img_r1-r1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "new die master (no prior view): compiler-constant image variant of qkd_static_kv_layer_programme (DCAL pattern): the 324 root words are a compile-time image from the link compiler (layer_programme_image.svh), so no die boot loader and none of the 10,368 table flops; cycle-equivalent to the boot-loaded module."
+}

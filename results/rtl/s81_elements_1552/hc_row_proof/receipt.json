@@ -1,0 +1,97 @@
+{
+ "status": "PASS",
+ "scope": "two-row return chain (ret_column leaves a4: YB_STAGE 2, HQ_LAG 1, FV_PIN 1, PAYLOAD_STAGE 0 + ctrn slices) vs cth_nt monolithic ctra/ctrb/ctrn at Y_LAG/CS_LAG 2, HQ_LAG 1 (reference fed y / cs two cycles late, hrq one cycle late, fv_local = registered early fv); component chain only, the system calendar is checked by the exact HC gate",
+ "cycles": 3000,
+ "calendar": "a4: y returns +2 vs cth_nt (Y_LAG 2), cs captured +2 (CS_LAG 2), h-return merge +1 per row (HQ_LAG 1: rd relay +1 = chain +1 per row); requests unchanged; fv 0 (early fv + pin register); hov flag sampling +1 (HOV_REG); row flags per-face registers 0",
+ "sources_sha256": {
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_return_columns.sv": "a8632e561b2e6099f6aadefd5f86c8e52de18cf011f9462c4b4f8cd9ccb1abdf",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth_ntc.sv": "ee70103f4eff1dc85da36a1a2a4a8f65e3f3d980ebacea84358c235afa52e00c",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv": "295ca2e09d326e597cd35fb6a001757fb41a06c017bd2c12ad50f7ec353d9855"
+ },
+ "results": [
+  {
+   "variant": "positive",
+   "returncode": 0,
+   "expected": true,
+   "log": "positive.log"
+  },
+  {
+   "variant": "partner_c1",
+   "returncode": 1,
+   "expected": true,
+   "log": "partner_c1.log"
+  },
+  {
+   "variant": "header_from_peer",
+   "returncode": 1,
+   "expected": true,
+   "log": "header_from_peer.log"
+  },
+  {
+   "variant": "no_par_ctrb",
+   "returncode": 1,
+   "expected": true,
+   "log": "no_par_ctrb.log"
+  },
+  {
+   "variant": "cs_relay_skipped",
+   "returncode": 1,
+   "expected": true,
+   "log": "cs_relay_skipped.log"
+  },
+  {
+   "variant": "unrelayed_own_y",
+   "returncode": 1,
+   "expected": true,
+   "log": "unrelayed_own_y.log"
+  },
+  {
+   "variant": "hq_pin_reg_bypassed",
+   "returncode": 1,
+   "expected": true,
+   "log": "hq_pin_reg_bypassed.log"
+  },
+  {
+   "variant": "fv_pin_reg_bypassed",
+   "returncode": 1,
+   "expected": true,
+   "log": "fv_pin_reg_bypassed.log"
+  },
+  {
+   "variant": "yb_peer_reg_bypassed",
+   "returncode": 1,
+   "expected": true,
+   "log": "yb_peer_reg_bypassed.log"
+  },
+  {
+   "variant": "yb_own_reg_bypassed",
+   "returncode": 1,
+   "expected": true,
+   "log": "yb_own_reg_bypassed.log"
+  },
+  {
+   "variant": "hov_reg_bypassed",
+   "returncode": 1,
+   "expected": true,
+   "log": "hov_reg_bypassed.log"
+  },
+  {
+   "variant": "flag_split_s_dropped",
+   "returncode": 1,
+   "expected": true,
+   "log": "flag_split_s_dropped.log"
+  },
+  {
+   "variant": "cs_reg_bypassed",
+   "returncode": 1,
+   "expected": true,
+   "log": "cs_reg_bypassed.log"
+  },
+  {
+   "variant": "slice_flag_merge_dropped",
+   "returncode": 1,
+   "expected": true,
+   "log": "slice_flag_merge_dropped.log"
+  }
+ ]
+}

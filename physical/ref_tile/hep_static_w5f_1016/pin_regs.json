@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hfd_ep_static",
+ "enable": false,
+ "reason": "hfd_ep_static registers every input and every output at its pin in RTL (hfd_ep_static.sv: p_* input pin registers for tx_v/tx_frame/rx_* controls/sd_rx/sd_st; sd_tx = the TX beat register; rx_pin_v/rx_pin_flit = the pingpong merge registers; rx_block_ready/phy_up/fault/fault_cause output registers); a recipe-3 wrapper would add a second +1-cycle stage on 2,450 pins"
+}

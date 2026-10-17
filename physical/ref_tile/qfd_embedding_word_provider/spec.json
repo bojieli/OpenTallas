@@ -23,7 +23,6 @@
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
    "count": 1,
-   "inst": "store.codes",
    "at": [
     43.2,
     114.48
@@ -71,6 +70,14 @@
   "pd": 0.5,
   "threads": 8,
   "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "cts_sink": {
+   "sink_clustering": false
+  },
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
@@ -133,6 +140,112 @@
      "iverilog"
     ]
    }
+  ]
+ },
+ "pin_ranges": {
+  "ck": [
+   129.06,
+   130.14
+  ],
+  "rst_n": [
+   138.24,
+   139.32
+  ],
+  "word_v": [
+   4.652,
+   5.732
+  ],
+  "word_data": [
+   6.927,
+   155.7
+  ],
+  "word_token": [
+   156.564,
+   161.794
+  ],
+  "word_index": [
+   162.658,
+   164.402
+  ],
+  "word_scale": [
+   165.597,
+   166.677
+  ],
+  "word_epoch": [
+   167.873,
+   172.522
+  ],
+  "expected_word_slot": [
+   173.718,
+   174.798
+  ],
+  "expected_token": [
+   175.994,
+   181.224
+  ],
+  "expected_word": [
+   182.088,
+   183.831
+  ],
+  "expected_scale": [
+   185.027,
+   186.107
+  ],
+  "expected_epoch": [
+   187.303,
+   191.952
+  ],
+  "fill_begin": [
+   193.148,
+   194.228
+  ],
+  "fill_token": [
+   195.423,
+   200.654
+  ],
+  "fill_epoch": [
+   201.518,
+   206.167
+  ],
+  "core_epoch": [
+   207.031,
+   211.68
+  ],
+  "core_start": [
+   4.974,
+   6.054
+  ],
+  "core_token": [
+   7.573,
+   14.739
+  ],
+  "embed_code_re": [
+   16.257,
+   17.337
+  ],
+  "embed_code_addr": [
+   18.856,
+   28.41
+  ],
+  "embed_code_q": [
+   29.274,
+   233.111
+  ],
+  "embed_scale_re": [
+   234.629,
+   235.709
+  ],
+  "embed_scale_addr": [
+   237.227,
+   244.393
+  ],
+  "embed_scale_q": [
+   245.257,
+   251.627
+  ],
+  "fault": [
+   253.146,
+   254.226
   ]
  },
  "children": [],

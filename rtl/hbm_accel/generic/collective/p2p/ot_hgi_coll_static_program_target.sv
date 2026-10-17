@@ -15,7 +15,12 @@
 // descriptor last row must contain nativehalt. No runtime ready handshake.
 module ot_hgi_coll_static_program_target #(
     parameter [7:0] TARGET=8'd52,
-    parameter integer MUT_DATA=0
+    parameter integer MUT_DATA=0,
+    // LOOKAHEAD=1 (COLL fj margin successor, fj_n1s0 d4f TT +1.28: check_row -> flow[64:1 mux] -> row_bad -> fault,
+    // 15 levels): the scanned row's flow word and loaded bit are registered one edge ahead (row 0 at descriptor
+    // accept, row+1 while scanning). Exact: flow/loaded never change while checking (frames fault while checking,
+    // drains cannot start), so every check reads the same values on the same edges. Default 0 = the closed form.
+    parameter integer LOOKAHEAD=0
 )(
     input wire clk,rst_n,
     input wire cfg_v,
@@ -59,8 +64,10 @@ module ot_hgi_coll_static_program_target #(
     reg [5:0] base;
     reg [6:0] limit;
     wire in_range={1'b0,check_row}>=base && {1'b0,check_row}<limit;
-    wire [13:0] f=flow[check_row];
-    wire row_bad=in_range && (!loaded[check_row] ||
+    reg [13:0] f_la;reg ld_la;
+    wire [13:0] f=(LOOKAHEAD!=0)?f_la:flow[check_row];
+    wire ld=(LOOKAHEAD!=0)?ld_la:loaded[check_row];
+    wire row_bad=in_range && (!ld ||
         (!f[13] && (f[5:0]<base || {1'b0,f[5:0]}>=limit ||
           (f[12] && (f[11:6]<base || {1'b0,f[11:6]}>=limit)))) ||
         ({1'b0,check_row}==limit-1'b1 && !f[13]));
@@ -70,7 +77,7 @@ module ot_hgi_coll_static_program_target #(
             cv<=0;dv<=0;lv<=0;issuer_cfg<=0;issuer_start<=0;
             issuer_start_pc<=0;configured<=0;init_busy<=0;fault<=0;
             seen<=0;loaded<=0;row<=0;draining<=0;step<=0;
-            base<=0;limit<=0;checking<=0;check_bad<=0;check_row<=0;
+            base<=0;limit<=0;checking<=0;check_bad<=0;check_row<=0;f_la<=0;ld_la<=0;
         end else begin
             cv<=cfg_v;dv<=desc_v;lv<=launch_v;
             issuer_cfg<=0;issuer_start<=0;
@@ -81,7 +88,12 @@ module ot_hgi_coll_static_program_target #(
                     checking<=0;init_busy<=0;
                     if(check_bad || row_bad)fault<=1;
                     else if(!fault)configured<=1;
-                end else check_row<=check_row+1'b1;
+                end else begin
+                    check_row<=check_row+1'b1;
+`ifndef OT_PT_MUT_LA_STALE
+                    f_la<=flow[6'(check_row+1'b1)];ld_la<=loaded[6'(check_row+1'b1)];   // mutant: lookahead never advances
+`endif
+                end
             end
             if(issuer_uop_v && (!configured || issuer_uop_pc<base || {1'b0,issuer_uop_pc}>=limit))fault<=1;
             if(draining)begin
@@ -116,6 +128,7 @@ module ot_hgi_coll_static_program_target #(
                 else begin
                     base<=base_q[5:0];limit<=limit_q[6:0];configured<=0;
                     checking<=1;check_row<=0;check_bad<=0;init_busy<=1;
+                    f_la<=flow[0];ld_la<=loaded[0];
                 end
             end
             if(lv && configured)begin

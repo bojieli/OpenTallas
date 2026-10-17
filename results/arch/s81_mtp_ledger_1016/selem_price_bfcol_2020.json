@@ -1,0 +1,43 @@
+{
+ "schema": "opentallas.s81.selem-price.v1",
+ "date": "2026-10-16",
+ "by": "S-ELEM CFIFO/BF helper (1815), for S-ELEM",
+ "method": "tools/throughput/accepted_cost.py compute/propose s81 (token-path longest path, results/arch/token_path_20261009 ds_rom + ds_rom_mtp, --node-delta on matched nodes, MTP wave positions charged); tok/s on the s81_mtp_ledger_1016 basis hop_only AR 1433.8 / MTP 4209.6 x (1 - sum loss) -- same method as selem_price_1315.json (cb8f97dd6)",
+ "rows_proposed": [
+  {
+   "group": "BF.COL_PINREG",
+   "source": "claude/selem-bfcol-2020 27457f565",
+   "cycles": "BF16 +3 (lane4 out reg, BFRED in reg, BFSEG in reg), FP4 +2 (BFFP out reg, BFSEG in reg); charged conservatively +3 on EVERY ROM field pass",
+   "nodes": "cls=field: attn.a_proj/wq_b/wo_a/wo_b/idx.q/cmp.wk, ffn.router/experts_gu/down/shared_gu (+.r0), eng.dot/wkv, accept.seed",
+   "ar": {
+    "runs": 334,
+    "added_cycles": 870,
+    "loss_pct": 0.105
+   },
+   "mtp": {
+    "runs": 312,
+    "added_cycles": 1056,
+    "wave_positions": 5,
+    "loss_pct": 0.09
+   },
+   "grade": "interim_log (RTL built, benches running; children not routed)",
+   "revision": "r2 2026-10-16 21:45: +2 -> +3 after child native gates (lane4 and fp need output stages)"
+  }
+ ],
+ "totals_s81_after": {
+  "ar": {
+   "accepted_loss_pct": 23.232,
+   "proposed_loss_pct": 2.074,
+   "tok_s_accepted": 1100.7,
+   "tok_s_acc_prop": 1071.0
+  },
+  "mtp": {
+   "accepted_loss_pct": 19.551,
+   "proposed_loss_pct": 1.781,
+   "tok_s_accepted": 3386.6,
+   "tok_s_acc_prop": 3311.6,
+   "above_3000": true
+  }
+ },
+ "grade": "COMPOSED_NOT_NATIVE"
+}

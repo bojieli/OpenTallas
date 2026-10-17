@@ -8,7 +8,31 @@ accepted as a substitute for these named source/path obligations.
 """
 import hashlib,json,sys,re
 from pathlib import Path
+# selector_to_upper is checked as a window (selector_window), all other groups as exact ages.
 PATH_GROUPS=('tc_to_port','am_to_controller','rq_to_train','tag_copy_to_issuer','issuer_to_train','lc_to_halfband','selector_to_upper','upper_to_halfband','rb_to_vm')
+
+EXACT_PHASE_MUTANTS = ('tc', 'am', 'hl')
+
+def validate_temporal_controls(a, checked_file):
+ """Check observed selector edges and one-edge exact-phase negative controls."""
+ w = a.get('selector_window')
+ if not isinstance(w, dict) or type(w.get('min')) is not int or type(w.get('max')) is not int or (w['min'], w['max']) != (0, 7):
+  raise ValueError('selector window must be the measured [0,7] edges')
+ passed = checked_file(w['edge_pass_log']).read_text()
+ failed = checked_file(w['edge_fail_log']).read_text()
+ if not re.search(r'PASS b2 lane route equivalence .*\bSEL7\b', passed):
+  raise ValueError('selector age7 pass log lacks the measured edge witness')
+ if not re.search(r'FAIL b2 lane route equivalence errors[1-9][0-9]*', failed):
+  raise ValueError('selector age8 fail log lacks an actual equivalence failure')
+ g = a['temporal_gate']
+ for name in EXACT_PHASE_MUTANTS:
+  m = g.get('exact_phase_mutants', {}).get(name, {})
+  if type(m.get('delta')) is not int or m['delta'] != 1 or type(m.get('exit_code')) is not int or m['exit_code'] <= 0:
+   raise ValueError('missing one-edge rejected '+name+' phase mutant')
+  log = checked_file(m['log']).read_text()
+  if not re.search(r'FAIL b2 lane route equivalence errors[1-9][0-9]*', log):
+   raise ValueError(name+' phase mutant lacks an actual equivalence failure')
+ return w
 
 def validate_calibration(manifest,root,*,phase="post_allocator",current_graph=None,current_stage_of=None):
  root=Path(root).resolve();a=json.loads(Path(manifest).read_text())
@@ -72,10 +96,19 @@ def validate_calibration(manifest,root,*,phase="post_allocator",current_graph=No
   if te!=r['train_edges']or te<2:raise ValueError('issuer phase mismatch half'+h)
   tes.append(te)
  if len(set(tes))!=1:raise ValueError('six issuer paths require explicit equal-age padding')
+ # Selector (Q-B2r 10-16, accepted by Q-COMPUTE-DIE): a quasi-static per-op select, a WINDOW not an exact phase.
+ # Lane bench v2 sweep: total selector age 0..7 edges PASS, 8+ REJECTED.  The record carries the measured window, the
+ # chosen ages keep >= 1 edge margin on both sides (or a written justification), and the bench keeps both edges
+ # (max PASS, max+1 FAIL as a mutant) bound by log hash.
+ w=validate_temporal_controls(a,checked_file)
+ for h in '012345':
+  e=halves[h]['selector_to_upper']['edges']
+  if not w['min']<=e<=w['max']:raise ValueError('selector age %d of half %s outside the measured window [%d,%d]'%(e,h,w['min'],w['max']))
+  if (e-w['min']<1 or w['max']-e<1)and not w.get('margin_justification'):raise ValueError('selector age %d of half %s has no margin inside [%d,%d]'%(e,h,w['min'],w['max']))
  if len({(halves[h]['controller_lnk'],halves[h]['controller_clnk'])for h in '012345'})!=1:raise ValueError('shared controller needs equalized LNK/CLNK across six halves')
  # These must come from a source-pinned real DUT run, and cover every consumer.
  g=a['temporal_gate']
- for key in ('all_six_exact_rq_and_am','all_six_exact_rb_cycles_and_payload','real_e3_readbacks','native_head_scalar_exact','actual_prefetch_mutant_rejected','actual_train_phase_mutant_rejected','selector_and_upper_returns_exact'):
+ for key in ('all_six_exact_rq_and_am','all_six_exact_rb_cycles_and_payload','real_e3_readbacks','native_head_scalar_exact','actual_prefetch_mutant_rejected','actual_train_phase_mutant_rejected','selector_and_upper_returns_exact','selector_window_max_pass','selector_window_max_plus1_rejected'):
   if g.get(key)is not True:raise ValueError('missing actual route temporal gate '+key)
  if g.get('source_manifest_sha256')!=a['evidence']['route_bench_source_manifest']['sha256']:raise ValueError('bench source snapshot not bound')
  # Run artifacts must bind to this exact allocation, not an older local smoke.

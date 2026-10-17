@@ -1,0 +1,24 @@
+# Return columns hand-back, 2026-10-15 05:03 PT
+
+STOPPED because authoritative COORDINATOR.lock changed to Claude at 05:02:05 PT. No new jobs or merges after discovering transfer. No live jobs killed.
+
+Source commit: 1a561dddb on codex/s81-return-columns-1015. Worktree /home/ubuntu/wt/codex-s81-return-columns-1015. Commit is local and not pushed/merged. Uncommitted files are only this results directory (receipts, logs, this COLLECT). Source and proof runner committed.
+
+Implemented actual ot_s81_hc_ctra_column/ctrb_column leaves and four-column parent candidates. Each local payload output has local registered capture, all five A roots require aligned phase; B has four active column roots (its merge-clock input is currently unused and should be removed before ABI adoption). Return data/valid has exactly +1 fixed cycle. Bank read requests retain original epoch. No ready/credits, no timing/clock waiver. No canonical caller or compiler adoption yet.
+
+Each physical leaf has 256b N +256b S HRQ ingress, full256b yb ingress, 108b header plus512b packed own/prior payload ingress, and256b local registered payload output. Normal BF16 y data requires all four y lane columns in every output column: 4x256b sink broadcast versus256b originally per half, +768 input sink bits per half, +1536 across A/B. This replication is real, not free local wiring. Packed return payload explicitly carries both own and 128b-shift predecessor chunks; no logical bit permutation hidden. A also has real flags and request/header/control outputs; all declared extra outputs must be priced in physical masters, not silently removed.
+
+Final source SHA4f7d7a60aa9462eeb5eb5706d00a4195116689da091e87f54219157a534fe974. Source-bound component proof passed A/B each2500 cycles including reset reassertion and actual ybuf/psb sequencing. Same bench observes failing lane-rebinding mutants in both halves and fault-drop mutant in A. This is delayed equivalence, not full production calendar or full-token qualification.
+
+Generic technology-mapped source-bound census: A15663FF (roots4408/3974/3636/3636 plus9), B12616FF (3250/3250/3058/3058). Original A6858/B6066. True replication area cost substantial. Raw generic maps retained remotely, compact receipts locally; generic counts are not ASAP7 physical area.
+
+Actual ASAP7 mapping completed four B variants using existing run_abi3_physical.py. All4 A variants terminal FAILED in Yosys0.68 read/derive AST duplicate-module assertion (not RTL functional failure). Deferred read successfully resolved this for generic census. Prepared source-bound deferred-elaboration successor script /tmp/s81_return_columns_v4_1015/model_columns_defer.py on all four hosts, but DID NOT SUBMIT because lock changed. It proc/flattens exact source+params with read_verilog -defer, records hashes, then feeds unchanged actual ABI synthesis. Check elapsed-time source binding and original leaf phase before adopting.
+
+b0: 3237 FF, 14070 mapped cells, Liberty area 1916.09 (must independently check 1xLEF before slot assignment).
+b1: 3237 FF, 14007 mapped cells, Liberty area 1917.608 (must independently check 1xLEF before slot assignment).
+b2: 3045 FF, 13637 mapped cells, Liberty area 1875.322 (must independently check 1xLEF before slot assignment).
+b3: 3045 FF, 13608 mapped cells, Liberty area 1829.947 (must independently check 1xLEF before slot assignment).
+
+No live owned jobs remain. Final proof/census terminal0 on EPYC4 unit oth-ubuntu-2280400-1792065644, session60457. Actual B mapped units on EPYC1: b0 oth-ubuntu-1610329-1792065729/session44984; b1 oth-ubuntu-1610317-1792065728/session27069; b2 oth-ubuntu-1610331-1792065729/session85346; b3 oth-ubuntu-1610480-1792065729/session82398. A failed terminal units a0 oth-ubuntu-1606211-1792065722/session75200; a1 oth-ubuntu-1610320-1792065729/session41244; a2 oth-ubuntu-1610326-1792065729/session31497; a3 oth-ubuntu-1610477-1792065729/session3346. Source/model/proofs remote /tmp/s81_return_columns_v4_1015/ on all4, actual B mapped outputs onlyEPYC1, final proof/census onlyEPYC4. Earlier versions remain diagnostic source snapshots.
+
+Next: Claude-authorized coordinator may publish source/proofs, run actual A deferred mapping, validate actual1xLEF cell area, derive native per-column ports/cuts and homes from /home/ubuntu/artifacts/s81-hard-physical-1015/current_gen_contract.json (canonical2417 frozencontract SHA516a9fa1...), obtain actual new slot/grant. Existing142.56um column widths are old geometry only; no new four-column height or pin assignment granted. MIX4 wholeHC parents are sp_hc_s [17312.4,13618.8,1816.536,8525.496] and sp_hc_t [17312.4,3216.24,1816.536,8890.536]. Actual producer/consumer hops and overlaps must be rebuilt jointly with CAP margin candidate; top-level parent pin maps are not leaf assignments. Then native CTS and route TT/FF/DRC0; canonical compiler/VM consumer must explicitly price and verify +1 return epoch. Full native target remains OPEN.

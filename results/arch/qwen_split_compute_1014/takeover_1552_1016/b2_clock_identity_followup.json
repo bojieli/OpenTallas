@@ -1,0 +1,42 @@
+{
+  "collected_at": "2026-10-16T16:07:29-07:00",
+  "reviewed_parent": "1a6446bec",
+  "issue": "Dictionary equality of nominal period/phase accepted distinct named native copy clocks.",
+  "fix": "Require exact declared clock name across instruction, CP56 issue resource, copy occupancy resource, and all copy port events. No clock alias exception implemented.",
+  "counterexample": {
+    "clocks": {
+      "core": {
+        "period_fs": 1000,
+        "phase_fs": 0
+      },
+      "su_alias": {
+        "period_fs": 1000,
+        "phase_fs": 0
+      }
+    },
+    "variants": [
+      "copy_engine resource clock su_alias",
+      "CP56 issue resource clock su_alias",
+      "instruction clock su_alias",
+      "copy read-port resource clock su_alias"
+    ],
+    "before": {
+      "command": "python3 -m unittest qwen_static_schedule.test_b2_timing.CompilerFold.test_distinct_clock_names_with_identical_timing_refused qwen_static_schedule.test_b2_timing.CompilerFold.test_shared_issue_and_occupancy_resource_refused",
+      "tests": 2,
+      "failed_subtests": 4,
+      "reason": "ScheduleError not raised for all four distinct-name identical-timing cases; existing resource oversubscription rejection passes"
+    },
+    "after": {
+      "all_four_clock_variants": "REFUSED with ScheduleError",
+      "shared_issue_occupancy_resource": "REFUSED: instruction inherently oversubscribes resource",
+      "same_named_clock_positive": "PASS"
+    }
+  },
+  "regression": {
+    "tests": 16,
+    "result": "PASS",
+    "command": "PYTHONPATH=tools python3 -m unittest qwen_static_schedule.test_b2_timing qwen_static_schedule.test_attention qwen_static_schedule.test_su_pinreg qwen_static_schedule.test_dvm_head_onward qwen_b2_join.test_phase_controls"
+  },
+  "heavy_jobs": "Untouched; no jobs launched or queried for this source-only followup",
+  "native_or_layer_qualification": false
+}

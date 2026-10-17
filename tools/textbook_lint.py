@@ -79,7 +79,9 @@ THRESHOLDS = {
     "reach_min_count": 1,
     # util / channels: WARN only (closed blocks at 6-58% util and 0.07 / 17 um channels)
     "util_min": 0.45,
-    "util_max": 0.65,
+    "util_max": 0.65,              # std-cell density over the placeable area (core - macros - halos) when macros exist
+    "fill_max": 0.90,              # total (std + macro) / core sanity bound, macros only
+    "macro_halo_um": 2.16,
     "channel_um": 20.0,
 }
 # MEASURED CLOCK RULE (owner decision 2026-10-13, stream el1013-rule-enforcement; supersedes the WARN-only 15k line and
@@ -124,8 +126,13 @@ HARD_CHECKS = ("clock_sinks",)     # refused in every mode, never waivable by sp
 #                 PIN_LAUNCH_MAX_PS at phi - R) only because its kit predates the recipe-2 output stage (main 36de4b87f):
 #                 the same RTL and outline / pin faces re-kitted with that stage ("source" audit JSON, "cell",
 #                 "launch_ps"); written by tools/ref_tile/rekit_native_launch.py
+#   native_capture (coordinator 2026-10-16, S81 ctrnown_e; widened 22:30) a CLOSED view FAILS its native audit (TT capture at
+#                 the pin + R > PIN_CAPTURE_MAX_PS, launch at phi - R > PIN_LAUNCH_MAX_PS, or boundary clock spread >
+#                 CLK_SPREAD_MAX_PS) with unchanged RTL / outline / pin faces (pin positions may move along the same
+#                 faces): "source" (a COMMITTED native audit receipt that the gate reads: a record of "cell"), "cell",
+#                 and "fix" (what the new kit changes: input pin flops / clock entry / insertion / boundary registers)
 CLOSED_STANDS_KINDS = ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap", "pin_register",
-                       "native_launch")
+                       "native_launch", "native_capture")
 DIE_WINDOW_CUT_MIN = 0.6
 PIN_LAUNCH_MAX_PS = 220.0             # tile defect: first-load launch beyond phi - R (header 10-13 die clock rule)
 PIN_CAPTURE_MAX_PS = 190.0            # tile defect: setup at the pin plus R
@@ -1068,7 +1075,26 @@ def util_findings(dump, T, F, M):
     util = (std + mac) / core_area if core_area else 0.0
     M["util"] = round(util, 4)
     bad = []
-    if util < T["util_min"] or util > T["util_max"]:
+    if mac > 0:
+        # macro-dominated tile: gate the std-cell density over the placeable area, bound the total fill
+        halo = float(dump.get("macro_halo_um", T["macro_halo_um"]))
+        keep = 0.0
+        for m in dump.get("macros", []):
+            b = m["bbox"]
+            ox = max(0.0, min(b[2] + halo, core[2]) - max(b[0] - halo, core[0]))
+            oy = max(0.0, min(b[3] + halo, core[3]) - max(b[1] - halo, core[1]))
+            keep += ox * oy
+        placeable = max(core_area - min(keep, core_area), 1e-9)
+        dens = std / placeable
+        M["std_density"] = round(dens, 4)
+        M["total_fill"] = round(util, 4)
+        if dens > T["util_max"]:
+            bad.append(f"std-cell density {dens:.1%} > {T['util_max']:.0%} (std {std:.0f} um2 in placeable {placeable:.0f} um2 = "
+                       f"core {core_area:.0f} - macros/halos; total fill {util:.1%}): grow the outline")
+        if util > T["fill_max"]:
+            bad.append(f"total fill {util:.1%} > {T['fill_max']:.0%} (std {std:.0f} + macro {mac:.0f} um2 in {core_area:.0f} um2): "
+                       "grow the outline")
+    elif util < T["util_min"] or util > T["util_max"]:
         bad.append(f"utilisation {util:.1%} outside {T['util_min']:.0%}-{T['util_max']:.0%} (std {std:.0f} + macro "
                    f"{mac:.0f} um2 in {core_area:.0f} um2): " + ("shrink the outline (long wires / sparse placement)"
                                                                 if util < T["util_min"] else "grow the outline"))

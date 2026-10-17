@@ -1,0 +1,30 @@
+HC_ENG_DONE mode=0 npos=2 mixes=48 mixbad=0 outs=8 outbad=0 TB=1944 last_mix_t=2663 first_out_t=2913 last_out_t=3162 HC_MIX_CYCLES=1218
+HC_ENG PASS
+- rtl/test/tb_hbm_hc_eng_static.sv:139: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 99.072 s; speed 68.062 ns/s
+- Verilator: cpu 99.061 s on 387 threads; allocated 449 MB
+	Command being timed: "/tmp/ot-hc-eng-0600b/objv_h5/Vtb_hbm_hc_eng_static +NWORDS=68 +NSCHED=12 +NGM=0 +NPOS=2 +NEMIT=8 +TB=1944 +MODE=0"
+	User time (seconds): 99.17
+	System time (seconds): 0.09
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:39.27
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 454824
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 81643
+	Voluntary context switches: 6
+	Involuntary context switches: 149
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+RUN_RC=0

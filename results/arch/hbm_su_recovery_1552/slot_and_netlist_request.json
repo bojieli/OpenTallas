@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.hbm.slot_change_request.v1",
+  "from": "Claude H-ELEM/H-SU 2026-10-16",
+  "to": ["H-DIE (d4c)", "H-NETLIST (d4c)"],
+  "block": "sfucore_<q> master ot_hgi_sfu_core_split -> ot_hgi_sfu_core_split2 (k7, kit physical/ref_tile/hbm_sfucore_split2, branch claude/hsu-corekit-0700)",
+  "why": "k6 hbm_sfucore_split-k6-dea957e63 FLOORPLAN_MARGIN bank_distance: 16 ot_su12_sfu lanes are wired directly (116 pins each) to vi_*/kv_*/ro_* block pins; with every such pin on the E face only one lane column can sit within 100 um. Plus textbook REFUSE: 18,143 sinks on clk, 13,745 loads on rst_n.",
+  "outline": "unchanged 763.56 x 3580",
+  "port_mapping_old_to_new": {
+    "vi_re[15:0]":      "{vi_re_e[7:0],    vi_re_w[7:0]}",
+    "vi_addr[383:0]":   "{vi_addr_e[191:0], vi_addr_w[191:0]}",
+    "vi_q[511:0]":      "{vi_q_e[255:0],    vi_q_w[255:0]}",
+    "ro_v[15:0]":       "{ro_v_e[7:0],     ro_v_w[7:0]}",
+    "ro_x[511:0]":      "{ro_x_e[255:0],    ro_x_w[255:0]}",
+    "kv_we[15:0]":      "{kv_we_e[7:0],    kv_we_w[7:0]}",
+    "kv_waddr[383:0]":  "{kv_waddr_e[191:0], kv_waddr_w[191:0]}",
+    "kv_wdata[511:0]":  "{kv_wdata_e[255:0], kv_wdata_w[255:0]}",
+    "note": "lane j occupies [j*W +: W] of each bus; _w = lanes 0..7 (low half), _e = lanes 8..15 (high half). Pure renaming: same bits, same cycles."
+  },
+  "new_clock_ports": {
+    "clk_pw": "W face, y 3200-3210: root of the W pin registers (local_rq/local_wq/local_rr/local_w_done, ~4.4k flops); drive from the SAME die SFU clock as clk with a balanced branch (like clk_lane/clk_map)",
+    "clk_pe": "E face, y 3200-3210: root of the E pin registers (io_word/compiler_control/ro_v/ro_x/fault, ~2.7k flops); same source as clk",
+    "clk": "unchanged (bridge + engine, ~10.9k flops)"
+  },
+  "reset": "rst_n unchanged at the port; inside it drives only ot_rst_relay (4 regions), release +3 clk edges (programme starts long after reset)",
+  "pin_faces": {
+    "W": "lanes 0-7 *_w buses over y 23.76-2818.8 (beside the W lane column); local_* moved to y 2838.8-3560 (was 1784-3200); clk 1780-1800, rst_n 1800-1810, clk_lg/rst_lg_n unchanged; clk_lane/clk_map/rst_lane_n/rst_map_n 23.76-2818.8",
+    "E": "lanes 8-15 *_e buses over y 23.76-2818.8; io_word/compiler_control/fault moved to y 2838.8-3560 (was 2136-3558)"
+  },
+  "die_wiring_impact": "lane 0-7 vi/kv/ro traffic (8 x 116 = 928 bits, register-to-register lane <-> sfustore pin registers, parent feedthrough) now leaves the W face: route it around the tile N or S to the sfustore (E side) -> +~0.8-1.5 mm per bit; needs relay homes if beyond 450-500 um reach (static, fixed n+3 gather latency of the closed lane must absorb or the compiler re-prices LG/gather by the relay count). local_* (to the VM bank pair) range moved north on the same W face.",
+  "status": "RTL + bench CORE2=1 committed (claude/hsu-corekit-0700 006229fd4), kit 8dd9e7a09, --cts gate running. Not for d4b; target d4c."
+}

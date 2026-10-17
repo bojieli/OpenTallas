@@ -106,9 +106,9 @@
  "job": {
   "owner": "Claude H-SM",
   "branch": "claude/hsm-xl2-0230",
-  "tag": "f20a",
+  "tag": "f20g",
   "purpose": "x-load ctl die master with the folded x-load issuer (H-NETLIST/H-DIE option A, 10-16; replaces cp_xl_* ot_static_cmd_target instances + xl_*_ctl). x-load cl2 leaf (H-SM 2026-10-15): the flat clock-leaf cl failed its --cts gate (multiple_cts_roots source on 32 SRAMs; bs_a 8,642 / md 5,635 / bq_v 4,125-load nets; bw->rq 21 levels). cl2 = cluster of hardened leaves (ctl, 4 x BF quarter of one master, 2 x the CLOSED tree13 quantiser tile, BD ring), one clock root each < 15k sinks, every leaf pin registered (owner 19:50), running issue-word registers (no multiply), replicated selects; +2 fixed edges on every xw beat (lock bench vs cl shifted 2).",
-  "structural_change": "ctlw (H-NETLIST/H-DIE option A, 10-16): x-load issuer ot_static_cmd_target (MODE 1, CW 108, TGT_PIN 1, LEAD 8, one 128x256 calendar SRAM on its own hard clock entry clk_cal) folded into the ctl die master as pin-registered soft logic; face takes the raw F20 broadcast + tgt strap, x_v/x fields/x_busy/x_fault internal. Includes cl2e (need(eb2)/last-beat registered one edge ahead, cl2d TT -92.5). F20 lock bench: commands only through the real host ingress, fire = launch + 2 + LEAD + at; MUT6 (late fire) FAILs.",
+  "structural_change": "cl2g (26c34a312): ctlw r2 route hgi_sm_xl2_ctlw-f20a-ba27075db TT -58.79: every TT violator is rr_c/s0r/md -> rotation mux -> ~300 um -> l_d_o pin register (399 paths; next class +26.97). + L1 landing stage between the mux and l_d_o / C (LAND 3->4): +1 edge on every xw beat and x_done (XW_ADD_CL2 2->3), rq/RD_LAT unchanged.",
   "extra_paths": [
    "physical/asap7_memory_macros",
    "physical/hbm_xp_aq_tree13_1014",
@@ -316,7 +316,7 @@
   "enable": false,
   "reason": "OWNER RULE 19:50 met in RTL (rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv, x-load cl2 rewritten for this rule; +2 edges accepted by the coordinator): inputs land in pin flops c_base..c_xb / cmd_v (x_*), rr_c (rr), rw (rwq), bq_c (bq_d), qo_*_c/qf_*_c (quantiser flags); every output is a register (q_v/q_s, x_busy/x_fault/x_done, xw_*, c_d/c_wce/c_mhi/c_mlo/c_wa, r_ce/r_a, l_d, qv_*, r_wsel/zlo/zhi, ea/eb2, lane_en, rn); a recipe-3 register would add a second stage on every port.; ctlw: the F20 bus / tgt land in ot_static_cmd_target pin flops (cv/dv/lv/target_q/addr_q/data_q/base_q/limit_q/loops_q/tgt_q), configured/fault/active are its status flops"
  },
- "structural_change": "ctlw (H-NETLIST/H-DIE option A, 10-16): x-load issuer ot_static_cmd_target (MODE 1, CW 108, TGT_PIN 1, LEAD 8, one 128x256 calendar SRAM on its own hard clock entry clk_cal) folded into the ctl die master as pin-registered soft logic; face takes the raw F20 broadcast + tgt strap, x_v/x fields/x_busy/x_fault internal. Includes cl2e (need(eb2)/last-beat registered one edge ahead, cl2d TT -92.5). F20 lock bench: commands only through the real host ingress, fire = launch + 2 + LEAD + at; MUT6 (late fire) FAILs.",
+ "structural_change": "ctlw (H-NETLIST/H-DIE option A, 10-16): x-load issuer ot_static_cmd_target (MODE 1, CW 108, TGT_PIN 1, LEAD 8, one 128x256 calendar SRAM on its own hard clock entry clk_cal) folded into the ctl die master as pin-registered soft logic; face takes the raw F20 broadcast + tgt strap, x_v/x fields/x_busy/x_fault internal. Includes cl2e (need(eb2)/last-beat registered one edge ahead, cl2d TT -92.5). F20 lock bench: commands only through the real host ingress, fire = launch + 2 + LEAD + at; MUT6 (late fire) FAILs. | cl2g (26c34a312): ctlw r2 route hgi_sm_xl2_ctlw-f20a-ba27075db TT -58.79: every TT violator is rr_c/s0r/md -> rotation mux -> ~300 um -> l_d_o pin register (399 paths; next class +26.97). + L1 landing stage between the mux and l_d_o / C (LAND 3->4): +1 edge on every xw beat and x_done (XW_ADD_CL2 2->3), rq/RD_LAT unchanged.",
  "clock_cts_roots": [
   "clk",
   "clk_eg"

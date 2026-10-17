@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_seq_core_static",
+ "enable": false,
+ "reason": "All functional inputs are captured at their existing pin flops. Q store pushes use the compiled CMD timeline, and registered Q events are checked against its expected slots. Every external data/production edge is unchanged."
+}

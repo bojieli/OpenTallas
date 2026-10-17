@@ -12,13 +12,16 @@
 //   the hbm sticky bits enter the stream domain through two synchroniser flops (sticky levels: no handshake needed).
 // Outputs (stream_clk, registers): fault (any), status[6:0] = {cal, del, share, svg, owner, pc, ca}.  The ca check sees
 // row_v one edge after the controller (pin register), same pair rule as the parent.  MUT=1 checks pairs (2c, 2c+2).
-module ot_hbm_svc_stack_fault #(parameter integer MUT=0) (
+// OWN_W (H-NETLIST 1815, PC H8 adoption): owner fault bits per controller (H8 ot_hbm_svc_pc_ctrl_leaf_cfg_h8 exports six
+// registered sticky classes owner_fault_split[5:0]); the sticky owner bit is the OR of all of them.  OWN_W=1 is the
+// original module exactly.
+module ot_hbm_svc_stack_fault #(parameter integer MUT=0, parameter integer OWN_W=1) (
  input wire hbm_clk,hbm_rst_n,stream_clk,stream_rst_n,
- input wire[31:0]row_v,pc_fault,owner_fault,
+ input wire[31:0]row_v,pc_fault,input wire[32*OWN_W-1:0]owner_fault,
  input wire[7:0]svg_fault,share_fault,del_fault,input wire cal_fault,
  output reg fault,output reg[6:0]status
 );
- reg[31:0]rv_q,pf_q,of_q;reg ca,pc,ow;
+ reg[31:0]rv_q,pf_q;reg[32*OWN_W-1:0]of_q;reg ca,pc,ow;
  always @(posedge hbm_clk or negedge hbm_rst_n)begin
   if(!hbm_rst_n)begin rv_q<=0;pf_q<=0;of_q<=0;ca<=0;pc<=0;ow<=0;end
   else begin

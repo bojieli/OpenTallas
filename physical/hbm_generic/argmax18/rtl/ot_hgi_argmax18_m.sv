@@ -2,26 +2,27 @@
 // HGI-1 LOCAL endpoint. Configuration is captured on the first accepted row beat.
 // Generic mode is opt-in. DS-default keeps the qualified IW17 arithmetic verbatim.
 module ot_hgi_argmax18_m #(
- parameter integer LP=8, FLAT=7, FAST=1, GENERIC18=0
+ parameter integer LP=8, FLAT=7, FAST=1, GENERIC18=0, RANK_W=7
 )(
  input wire clk, rst_n, in_v, in_last, in_bias_en,
  input wire [LP-1:0] in_mask,
  input wire [LP*32-1:0] in_vals, in_bias,
- input wire [6:0] cfg_rank,
+ input wire [RANK_W-1:0] cfg_rank,
  input wire [17:0] cfg_imm_a,
  output wire out_v,
  output wire [17:0] out_idx,
  output wire out_nan, fault, out_range_fault,
  output wire [31:0] out_value
 );
+ localparam integer OFFSET_W=18+RANK_W;
  localparam integer IW=GENERIC18 ? 18 : 17;
  localparam integer LL=(LP>1)?$clog2(LP):1;
  localparam integer LAT=FLAT+FAST+LL+2;
  wire [IW-1:0] local_idx;
- wire [24:0] end_offset;
+ wire [OFFSET_W-1:0] end_offset;
  wire core_range_fault;
  generate if(GENERIC18) begin:g_value_leaf
- ot_hgi_argmax18_value_m #(.LP(LP),.IW(IW),.FLAT(FLAT),.FAST(FAST)) u_native(
+ ot_hgi_argmax18_value_m #(.LP(LP),.IW(IW),.FLAT(FLAT),.FAST(FAST),.OFFSET_W(OFFSET_W)) u_native(
  .clk(clk),.rst_n(rst_n),.in_v(in_v),.in_last(in_last),.in_bias_en(in_bias_en),
  .in_mask(in_mask),.in_vals(in_vals),.in_bias(in_bias),
  .out_v(out_v),.out_idx(local_idx),.out_nan(out_nan),.fault(fault),.out_value(out_value),.global_offset(end_offset),.out_range_fault(core_range_fault));
@@ -35,10 +36,10 @@ module ot_hgi_argmax18_m #(
  end endgenerate
  generate if(GENERIC18) begin:g_generic
    reg fresh;
-   reg [6:0] rank_q;
+   reg [RANK_W-1:0] rank_q;
    reg [17:0] imm_q;
-   reg [24:0] offset_pipe[0:LAT-2];
-   wire [24:0] registered_offset={18'b0,rank_q} * {7'b0,imm_q};
+   reg [OFFSET_W-1:0] offset_pipe[0:LAT-2];
+   wire [OFFSET_W-1:0] registered_offset=OFFSET_W'(rank_q) * OFFSET_W'(imm_q);
    integer j;
    always @(posedge clk or negedge rst_n) begin
      if(!rst_n) begin

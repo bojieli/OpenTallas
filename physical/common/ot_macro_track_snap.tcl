@@ -153,8 +153,25 @@ proc ot_mts::pin_track_shapes {shapes} {
         if {$along >= $across} { lappend pref $s }
     }
     if {![llength $pref]} { return $shapes }
-    incr wrongway_skipped [expr {[llength $shapes] - [llength $pref]}]
-    return $pref
+    # Q-DIEPLAN2r 2026-10-16 (r2h5 case PLACE 'qfd_d2d_static MX x has no legal origin'): a routed view can also
+    # attach, in the same pin, a WIDENED preferred-direction patch of the net (fdi_tx_flit[428]: M3 0.054 x 0.492
+    # beside its 0.018-wide on-track access shapes; centre 9 nm off any track although two tracks cross it).  On
+    # each layer the pin's access shapes are its narrowest preferred shapes; wider ones are exempt only when a
+    # narrower shape on that layer remains (fail closed: a pin with only wide shapes constrains as before).
+    set narrow [dict create]
+    foreach s $pref {
+        lassign $s lname axis x1 y1 x2 y2
+        set across [expr {$axis eq "y" ? $y2 - $y1 : $x2 - $x1}]
+        if {![dict exists $narrow $lname] || $across < [dict get $narrow $lname]} { dict set narrow $lname $across }
+    }
+    set keep {}
+    foreach s $pref {
+        lassign $s lname axis x1 y1 x2 y2
+        set across [expr {$axis eq "y" ? $y2 - $y1 : $x2 - $x1}]
+        if {$across == [dict get $narrow $lname]} { lappend keep $s }
+    }
+    incr wrongway_skipped [expr {[llength $shapes] - [llength $keep]}]
+    return $keep
 }
 
 # Legal origin residues for one master in one orientation: {x {P S} y {P S}} in DBU.

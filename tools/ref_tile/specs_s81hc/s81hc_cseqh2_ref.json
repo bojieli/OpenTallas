@@ -99,7 +99,7 @@
   "pd": 0.5,
   "threads": 8,
   "peak_ram_gb": 48,
-  "hold_margin_ns": 0.01,
+  "hold_margin_ns": 0.03,
   "macro_halo_um": 2.16
  },
  "sdc_extra": [
@@ -110,7 +110,7 @@
   "benches_from": "tools/s81_suhc/hc_gate_benches.json",
   "owner": "Claude:S-ENGRAM+NORM",
   "branch": "claude/s81hc-comb3-bank256b",
-  "tag": "pr4pk",
+  "tag": "pr5srs",
   "purpose": "S-ELEM-PQ/HC3 native pin re-kit of CLOSED s81hc_cseqh2_ref-v1-70eafa55c (ot_s81_hc_cseq: launch 305.29711 > 220 (88 pins) at phi - R, results/rtl/s81_hc_native_0030/native_audit.json); same outline and pin faces, kit recipe 3 (OWNER RULE 19:50)",
   "no_bench_reason": "bit-exactness is gated on the wires-only wrapper ot_s81_hc_comb in the slab bench (tools/s81_suhc/hc_gate.py NG64 HIER=2 (and 1) m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS; el1011-s81-suhc-hier-1011.log [hc-split]); the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_cseqh2_ref/views",
@@ -159,5 +159,12 @@
  "io_tcl": "physical/ref_tile/s81hc_cseqh2_ref/io_spread.tcl",
  "pin_access": {
   "frac": 1.0
+ },
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/rtl/s81_hc_native_1016/cseq_pr4pk_native.json",
+  "cell": "ot_s81_hc_cseq",
+  "capture_ps": 192.8,
+  "fix": "srs pin loads only the tile-local relay flop rsr[0]: the adapter's engine reset (e_rst_n) takes the relayed rs_n instead of the raw srs pin (the raw pin fed the adapter's async-reset AND to both ot_reset_sync and reset-ack flops spread across the 190 um tile). Reset-only change, 0 datapath cycles. Route hold margin 0.01 -> 0.03 ns (pr4pk FF hold +0.13 ps was too thin for die timing)."
  }
 }

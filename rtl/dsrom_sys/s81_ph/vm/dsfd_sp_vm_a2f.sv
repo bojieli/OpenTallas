@@ -22,7 +22,7 @@ module dsfd_sp_vm
 `else
 module dsfd_sp_vm_a2f
 `endif
-    #(parameter integer CAP_PIPE=2, parameter integer READ_PIPE=4, parameter integer HOP1=1) (
+    #(parameter integer CAP_PIPE=2, parameter integer READ_PIPE=4, parameter integer HOP1=1, parameter integer XSW_FAULT_SPLIT=0, parameter integer WFC_RETURN256=0) (
     input  wire          ck_core_t, ck_rsched_t, ck_seq_t,
     input  wire [4:0]    ck_landing_t,
     input  wire [3:0]    ck_mem_native_diag_t, rss_mem_native_diag_t,
@@ -54,10 +54,11 @@ module dsfd_sp_vm_a2f
     input wire ck_cap_fault_s, rst_cap_fault_s, ck_cap_fault_t, rss_cap_fault_t, rst_cap_control_s,
     input  wire [15:0]   ck_cap_lane_s, ck_cap_x34_s, ck_cap_x34_t,
     input  wire [15:0]   rst_cap_x34_s, rss_cap_x34_t,
-    input  wire          ck_wfc_control_s, ck_wfc_control_t, ck_wfc_fault_s, ck_wfc_fault_t, ck_wfc_return_t,
+    input  wire          ck_wfc_control_s, ck_wfc_control_t, ck_wfc_fault_s, ck_wfc_fault_t,
                          ck_wfc_fault_x34_s,ck_wfc_fault_x34_t,ck_wfc_fault_x43_t,ck_wfc_fault_x43_s, ck_wfc_x34_s, ck_wfc_x34_t, ck_wfc_x43_s, ck_wfc_x43_t,
-    input  wire          rst_wfc_control_s, rss_wfc_control_t, rst_wfc_fault_s, rss_wfc_fault_t, rss_wfc_return_t,
+    input  wire          rst_wfc_control_s, rss_wfc_control_t, rst_wfc_fault_s, rss_wfc_fault_t,
                          rst_wfc_fault_x34_s,rss_wfc_fault_x34_t,rss_wfc_fault_x43_t,rst_wfc_fault_x43_s, rst_wfc_x34_s, rss_wfc_x34_t, rst_wfc_x43_s, rss_wfc_x43_t,
+    input wire [(WFC_RETURN256?3:1)-1:0] ck_wfc_return_t, rss_wfc_return_t,
     input  wire          ck_xio_control_s, ck_xio_control_t, rst_xio_control_s, rss_xio_control_t,
     input  wire          ck_xio_return_t, rss_xio_return_t, ck_xio_fault_t, ck_xio_fault_s,
                          rss_xio_fault_t, rst_xio_fault_s, ck_xio_fault_join_t, rss_xio_fault_join_t,
@@ -90,7 +91,8 @@ module dsfd_sp_vm_a2f
     // effective read pipe seen by the edge services: the core's aux read latency is 12 + READ_PIPE - 2*HOP1
     localparam integer RPE = READ_PIPE - 2*HOP1;
     // ---------------------------------------------------------------- serial -> stream landing transfers
-    wire xs_v, xc_v, xw_v; wire [513:0] xs_d, xc_d; wire [1025:0] xw_d; wire [2:0] x_al;
+    wire xs_v, xc_v, xw_v; wire [513:0] xs_d, xc_d; wire [1025:0] xw_d; wire [(XSW_FAULT_SPLIT?4:3)-1:0] x_al;
+    wire [1:0] xsw_fault_parts; wire xsw_legacy_fault;
     ot_s81_vm_x34 #(.W(514)) u_xsel (.s_ck(ck_landing_x34_s[0]), .s_rst_n(rst_landing_x34_s[0]), .s_v(sel[0]), .s_d(sel[514:1]),
         .t_ck(ck_landing_x34_t[0]), .t_rst_n(rss_landing_x34_t[0]), .o_v(xs_v), .o_d(xs_d), .fault(x_al[0]));
     ot_s81_vm_x34 #(.W(514)) u_xcol (.s_ck(ck_landing_x34_s[1]), .s_rst_n(rst_landing_x34_s[1]), .s_v(col[0]), .s_d(col[514:1]),
@@ -98,7 +100,12 @@ module dsfd_sp_vm_a2f
     // u_xsw (S-VM-X34 2026-10-16): two ot_s81_vm_x34 W514 halves (ot_s81_vm_x34_sw2.sv) on the same roots, bit-identical
     // to the former W1026 instance (whose serial master failed the native launch audit); fault = OR of the halves.
     ot_s81_vm_x34_sw2 u_xsw (.s_ck(ck_landing_x34_s[2]), .s_rst_n(rst_landing_x34_s[2]), .s_v(aSW[0]), .s_d(aSW[1026:1]),
-        .t_ck(ck_landing_x34_t[2]), .t_rst_n(rss_landing_x34_t[2]), .o_v(xw_v), .o_d(xw_d), .fault(x_al[2]));
+        .t_ck(ck_landing_x34_t[2]), .t_rst_n(rss_landing_x34_t[2]), .o_v(xw_v), .o_d(xw_d), .fault(xsw_legacy_fault), .fault_parts(xsw_fault_parts));
+    generate if(XSW_FAULT_SPLIT)begin:split_xsw_fault
+        assign x_al[3:2]=xsw_fault_parts;
+    end else begin:legacy_xsw_fault
+        assign x_al[2]=xsw_legacy_fault;
+    end endgenerate
     // landing header checks and the edge-fault levels are registered in the engine-12 tile (dsfd_vm_seq_tile, ck_seq_t)
     // ---------------------------------------------------------------- edge services
     wire [15:0] cp_v; wire [223:0] cp_row; wire [255:0] cp_m; wire [8191:0] cp_d; wire cap_f, cap_xf;
@@ -111,7 +118,7 @@ module dsfd_sp_vm_a2f
     wire [7:0] x_rv; wire [4095:0] x_rd; wire [3:0] xa_v; wire [55:0] xa_row; wire xio_f; wire vm_fault;
     wire n_v; wire [83:0] n_d;
     wire [3:0] cl_v; wire [55:0] cl_row; wire [2047:0] cl_d; wire [63:0] cl_m; wire [31:0] cl_t;
-    dsfd_vm_static_wfc #(.RLAT(13+RPE), .RESPONSE_PAD((4-RPE%4)%4)) u_wfc (
+    dsfd_vm_static_wfc_select256 #(.RLAT(13+RPE), .RESPONSE_PAD((4-RPE%4)%4), .RETURN256(WFC_RETURN256)) u_wfc (
         .ck_control_s(ck_wfc_control_s), .ck_control_t(ck_wfc_control_t),
         .ck_fault_s(ck_wfc_fault_s), .ck_fault_t(ck_wfc_fault_t),
         .ck_return_t(ck_wfc_return_t),.rss_return_t(rss_wfc_return_t),
@@ -135,7 +142,7 @@ module dsfd_sp_vm_a2f
         .w_v(cl_v), .w_row(cl_row), .w_d(cl_d), .w_m(cl_m), .w_t(cl_t),
         .t_gather(t_gather), .f_xgo(f_xgo), .qSW(qSW), .qSWs(qSWs), .fault(xio_f));
     // edge faults -> engine 12 legacy-fault input (c_st[0]); serial levels registered once in the stream domain (seq tile)
-    dsfd_vm_a2f_core #(.READ_PIPE(READ_PIPE), .HOP1(HOP1)) u_core (.cks(ck_core_t), .rss(rss_core_t),
+    dsfd_vm_a2f_core #(.READ_PIPE(READ_PIPE), .HOP1(HOP1), .X_AL_WIDTH(XSW_FAULT_SPLIT?4:3)) u_core (.cks(ck_core_t), .rss(rss_core_t),
         .rst_rsched_n(rss_rsched_t), .rst_seq_n(rss_seq_t), .rst_landing_n(rss_landing_t),
         .rst_mem_fsr_n(rss_mem_fsr_t), .rst_mem_return_n(rss_mem_return_t), .rst_mem_bank_n(rss_mem_bank_t),
         .rst_mem_wscatter_n(rss_mem_wscatter_t), .rst_mem_relay_n(rss_mem_relay_t),

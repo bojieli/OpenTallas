@@ -1,0 +1,8 @@
+GATE INFO pin_regs: pin registers opted out: the RTL (ot_hbm_su_static_lane_pinreg, PIN_RST=1) already registers every data input, rst_n and every output at the pin; a kit-level flop stage would add a second, unscheduled boundary edge
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc4 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hbm_su_static_kind2_l4_leaf1_1016_20261016-194444.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hbm_su_static_kind2_l4_leaf1_1016_20261016-194444.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/hbm_su_static_kind2_l4_leaf1_1016-20261016-194444
+GATE FAIL floorplan_run: synthesis + floorplan + PDN failed: FAILED: FlowError: ORFS place-and-route through floorplan failed with exit 2:; Error: 1_2_yosys.sdc, 600 OT_MULTI_ROOT: unowned register u_native.u_lane.g_sfu.g_full.u_l4.g_line.g_s[100].nx[0]$_DFF_P_; Error: 1_2_yosys.sdc, 600 OT_MULTI_ROOT: unowned register u_native.u_lane.g_sfu.g_full.u_l4.g_line.g_s[100].nx[0]$_DFF_P_  -> FIX: read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL
+GATE WARN layout_images: the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log
+PRE_ROUTE_GATE: FAIL (1 fail, 1 warn)

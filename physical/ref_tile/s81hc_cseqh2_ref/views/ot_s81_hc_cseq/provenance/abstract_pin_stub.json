@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/ot_s81_hc_cseq.lef",
-    "sha256": "11dc864f31693db790378981f4e17aa79a508c5091a35d3e96f7d9a0e00eea8c"
+    "sha256": "416b718f5c005a14125b1124bf1baeaae018728b4ac5d9b7ef92a86f113162aa"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr4pk-f35994950/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr5srs-d2142092a/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr4pk-f35994950/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr4pk-f35994950/record/views/ot_s81_hc_cseq/provenance/raw/ot_s81_hc_cseq.lef",
-    "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr4pk-f35994950/record/views/ot_s81_hc_cseq/provenance/ot_s81_hc_cseq.candidate.lef"
+    "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr5srs-d2142092a/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr5srs-d2142092a/record/views/ot_s81_hc_cseq/provenance/raw/ot_s81_hc_cseq.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr5srs-d2142092a/record/views/ot_s81_hc_cseq/provenance/ot_s81_hc_cseq.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 1025 OBS rects added on M6 (gaps < 2.048 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 2 OBS rects moved into 2 pins: n_rs_d[475], n_rs_d[995]; pockets: 1144 OBS rects added on M6 (gaps < 2.048 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr4pk-f35994950/record/views/ot_s81_hc_cseq/provenance/ot_s81_hc_cseq.candidate.lef",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr5srs-d2142092a/record/views/ot_s81_hc_cseq/provenance/ot_s81_hc_cseq.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "ot_s81_hc_cseq 190.08 x 190.08: PG M6 VDD 17 stripes (91% spread, 100% cov) / VSS 18 stripes (97% spread, 100% cov); strap M7; face pins 4633 blocked-above 0 blocked-same 0; clock cck insertion 119 ps; clock sk insertion 269 ps; pockets M6 0 (closed)",
+    "summary": "ot_s81_hc_cseq 190.08 x 190.08: PG M6 VDD 17 stripes (91% spread, 100% cov) / VSS 18 stripes (97% spread, 100% cov); strap M7; face pins 4633 blocked-above 0 blocked-same 0; clock cck insertion 122 ps; clock sk insertion 281 ps; pockets M6 0 (closed)",
     "info": {
       "cell": "ot_s81_hc_cseq",
       "W": 190.08,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 4633,
         "blocked_above": 0,
-        "covered_below": 20,
+        "covered_below": 17,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,12 +77,12 @@
       },
       "clock_insertion": {
         "cck": {
-          "max_ps": 119.07,
-          "min_ps": 94.43
+          "max_ps": 122.09,
+          "min_ps": 97.2
         },
         "sk": {
-          "max_ps": 269.38,
-          "min_ps": 196.95
+          "max_ps": 281.08,
+          "min_ps": 199.08
         }
       },
       "pockets": {
@@ -91,7 +91,7 @@
         "marker": {
           "layer": "M6",
           "d_um": 2.048,
-          "added": 1025
+          "added": 1144
         },
         "count": 0,
         "area_um2": 0,
@@ -101,6 +101,6 @@
   },
   "output": {
     "path": "ot_s81_hc_cseq.lef",
-    "sha256": "e3b760d1d1e48b815b67a6a4419c81a0d1d08f83be1875f220c434bd2dd6f5ce"
+    "sha256": "8adcf8642e7a77b2b78cc99fa540d6c5c239158f8ee6ae4606f563d595c1b29f"
   }
 }

@@ -106,6 +106,25 @@ class GrantTests(unittest.TestCase):
     def test_negative_m6_nonpin_wire_even_if_abstract_strips_it(self):
         self.assertEqual(self.lint(routed=DEF.replace('ROUTED M5', 'ROUTED M6'))['verdict'], 'FAIL')
 
+    def test_m6_wire_rectangle_must_fit_own_terminal(self):
+        tech = "LAYER M6\n TYPE ROUTING ;\n WIDTH 0.032 ;\nEND M6\n"
+        legal = DEF.replace('ROUTED M5 ( 20000 293136 ) ( 21600 * ) contact',
+                            'ROUTED M6 ( 21546 293136 0 ) ( 21584 * 0 )')
+        self.assertEqual(self.lint(routed=legal, tech=tech)['verdict'], 'PASS')
+        for bad in (legal.replace('21546', '21529'),
+                    legal.replace('293136 0', '293137 0'),
+                    legal.replace('( 21584 * 0 )', '( 21601 * 0 )'),
+                    legal.replace('M6 ( 21546', 'M7 ( 21546')):
+            self.assertEqual(self.lint(routed=bad, tech=tech)['verdict'], 'FAIL')
+        self.assertEqual(self.lint(routed=legal)['verdict'], 'FAIL')
+        ndr = legal.replace('PINS 1 ;', 'NONDEFAULTRULES 1 ;\n- wide + LAYER M6 WIDTH 64 ;\nEND NONDEFAULTRULES\nPINS 1 ;')
+        ndr = ndr.replace('+ ROUTED M6', '+ NONDEFAULTRULE wide + ROUTED M6')
+        self.assertEqual(self.lint(routed=ndr, tech=tech)['verdict'], 'FAIL')
+
+        # Default endpoint caps count as wire geometry too.
+        self.assertEqual(self.lint(routed=legal.replace('( 21546 293136 0 )', '( 21546 293136 )')
+                                  .replace('( 21584 * 0 )', '( 21584 * )'), tech=tech)['verdict'], 'PASS')
+
     def test_negative_m7_and_unknown_grant_port(self):
         for lef in [LEF.replace('LAYER M6', 'LAYER M7')]:
             self.assertEqual(self.lint(lef=lef)['verdict'], 'FAIL')

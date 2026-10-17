@@ -73,6 +73,45 @@ module tb_xload_static_lock;
         .configured(cfgd_b), .fault(f_b), .active(act_b), .x_done(done_b),
         .xw_en(en_b), .xw_last(last_b), .xw_addr(ad_b), .xw_grp(gr_b), .xw_data(d_b), .rq(rq), .rr(rr));
     assign busy_b = act_b;
+`ifdef XLOAD_XQL
+    // XQL (H-SM 10-16): the quadrant-local x read beside the cl2f DUT, same ingress / rr.  Every pair's xw / x_done
+    // stream must equal the DUT's stream exactly XQL_T edges later, every edge, both formats; rq identical every edge.
+`ifndef XQL_T
+`define XQL_T 2
+`endif
+`ifndef XQL_MUT
+`define XQL_MUT 0
+`endif
+    localparam integer XT = `XQL_T, XNP = 4;
+    wire [XNP-1:0] q_done, q_en, q_last; wire [XNP*7-1:0] q_ad, q_gr; wire [XNP*2048-1:0] q_d; wire [8*17-1:0] q_rq;
+    wire q_cfgd, q_f, q_act;
+    ot_hgi_sm_xload_static_xql #(.RD_LAT(RD_LAT), .MUT(0), .NP(XNP), .T(XT), .XQL_MUT(`XQL_MUT)) uq (.clk(clk), .clk_cal(clk),
+        .clk_qlo(clk), .clk_qhi(clk), .clk_bf({XNP*4{clk}}), .clk_bd({XNP{clk}}), .clk_eg({XNP{clk}}), .rst_n(rst_n), .tgt(8'd100),
+        .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
+        .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .configured(q_cfgd), .fault(q_f), .active(q_act),
+        .x_done(q_done), .xw_en(q_en), .xw_last(q_last), .xw_addr(q_ad), .xw_grp(q_gr), .xw_data(q_d), .rq(q_rq), .rr(rr));
+    reg x_done_d [0:XT]; reg x_en_d [0:XT]; reg x_last_d [0:XT]; reg [6:0] x_ad_d [0:XT]; reg [6:0] x_gr_d [0:XT]; reg [2047:0] x_dd_d [0:XT];
+    always @* begin x_done_d[0] = done_b; x_en_d[0] = en_b; x_last_d[0] = last_b; x_ad_d[0] = ad_b; x_gr_d[0] = gr_b; x_dd_d[0] = d_b; end
+    always @(posedge clk) for (integer i = 1; i <= XT; i = i + 1) begin
+        x_done_d[i] <= x_done_d[i-1]; x_en_d[i] <= x_en_d[i-1]; x_last_d[i] <= x_last_d[i-1];
+        x_ad_d[i] <= x_ad_d[i-1]; x_gr_d[i] <= x_gr_d[i-1]; x_dd_d[i] <= x_dd_d[i-1];
+    end
+    integer xql_diff = 0, xql_cmp = 0, xql_beats = 0;
+    always @(posedge clk) if (rst_n && cyc > 20) begin : xqlcmp
+        reg bad; bad = 1'b0;
+        if (q_rq !== rq || q_f !== f_b) bad = 1'b1;
+        for (integer p = 0; p < XNP; p = p + 1) begin
+            if (q_done[p] !== x_done_d[XT] || q_en[p] !== x_en_d[XT] || q_last[p] !== x_last_d[XT]) bad = 1'b1;
+            if (q_en[p] && (q_ad[p*7 +: 7] !== x_ad_d[XT] || q_gr[p*7 +: 7] !== x_gr_d[XT] || q_d[p*2048 +: 2048] !== x_dd_d[XT])) bad = 1'b1;
+            if (q_en[p]) xql_beats = xql_beats + 1;
+        end
+        xql_cmp = xql_cmp + 1;
+        if (bad) begin
+            if (xql_diff < 5) $display("ERR XQL pair stream differs from cl2f (+%0d) at cycle %0d (en %b / %b)", XT, cyc, q_en, x_en_d[XT]);
+            xql_diff = xql_diff + 1;
+        end
+    end
+`endif
     integer t0_f = 0; always @(posedge clk) if (xv_ref) t0_f = cyc;
     task automatic axw(input [11:0] a, input [31:0] d);
         reg ad, dd;
@@ -133,7 +172,8 @@ module tb_xload_static_lock;
         .xw_grp(gr_r), .xw_data(d_r), .rq(rq_r), .rr(rr));
     // owner rule 19:50 (every leaf pin registered): cl2 adds exactly XW_ADD = 2 edges to every xw beat and x_done
     // (raw rr pin capture + egress pin capture); rq is unchanged.
-    localparam integer XW_ADD = 2;
+    // cl2g (H-SM 10-16, ctlw f20a TT -58.79): + 1 landing stage L1 between the rotation mux and l_d_o / C -> 3
+    localparam integer XW_ADD = 3;
     reg done_d [0:XW_ADD-1]; reg en_d [0:XW_ADD-1]; reg last_d [0:XW_ADD-1];
     reg [6:0] ad_d [0:XW_ADD-1]; reg [6:0] gr_d [0:XW_ADD-1]; reg [2047:0] dd_d [0:XW_ADD-1];
     always @(posedge clk) begin
@@ -184,7 +224,7 @@ module tb_xload_static_lock;
     // block-dot streaming emission model (= tools/hbm_sm_xload_static_timing.py): pair (k, b) decided at
     // E = max(k WB + n(b), E_prev + 2) after the tpair origin; beat (k, b, a) on the xw pins at command + CBD + E + a
 `ifdef XLOAD_CL2
-    localparam integer CBD = 27 + 2 + (RD_LAT - 6);   // cl2: + 2 fixed edges (pin-registered landing and egress); + VM read latency over 6
+    localparam integer CBD = 27 + 3 + (RD_LAT - 6);   // cl2: + 2 fixed edges (pin-registered landing and egress) + 1 (cl2g L1 landing stage); + VM read latency over 6
 `else
     localparam integer CBD = 27 + (RD_LAT - 6);
 `endif
@@ -271,6 +311,10 @@ module tb_xload_static_lock;
 `ifdef XLOAD_CL2
         $display("cl2 vs cl (+%0d edges): %0d cycles compared, %0d differ; fault %b/%b", XW_ADD, cl2_cmp, cl2_diff, f_b, f_r);
         if (cl2_diff || f_r) errors = errors + 1;
+`endif
+`ifdef XLOAD_XQL
+        $display("XQL vs cl2f (+%0d edges, 4 pairs): %0d cycles compared, %0d pair beats, %0d differ", XT, xql_cmp, xql_beats, xql_diff);
+        if (xql_diff || xql_beats == 0) errors = errors + 1;
 `endif
 `ifdef XLOAD_F20
         $display("F20 issuer: configured %b fault %b active %b ingress fault %b (fire = launch + 2 + LEAD %0d + at)", cfgd_b, f_b, act_b, ing_fault, LEAD);

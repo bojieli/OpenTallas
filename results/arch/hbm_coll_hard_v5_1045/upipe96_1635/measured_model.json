@@ -1,0 +1,43 @@
+{
+ "source": "a08f80c6e",
+ "leaf_flops": 192,
+ "replicas": 16,
+ "total_flops": 3072,
+ "cycles_added": 0,
+ "bits_per_cycle": {
+  "W_d1": 96,
+  "S_d2": 96,
+  "E_d3": 96
+ },
+ "total_delay_width": 1536,
+ "outline_um": [
+  34.56,
+  34.56
+ ],
+ "channels_um": 21.6,
+ "pitch_um": 56.16,
+ "placement_4x4_span_um": 203.04,
+ "slot_um": [
+  216,
+  216
+ ],
+ "per_face_signal_pin_span_um": 18.264,
+ "per_face_data_pin_pitch_um": 0.192,
+ "pin_width_um": 0.024,
+ "pin_layer_tracks_per_data_bit": 4,
+ "qualification": "Measured CTS/native, PG clearance, actual rows and routed TT/FF/DRC pending; no parent adoption",
+ "measured_synthesis": {
+  "flops": 192,
+  "std_area_um2": 69.984,
+  "gate_source": "a0e116867",
+  "gate_suffix": "20261016-163642",
+  "actual_signal_clock_pins": 289,
+  "off_track": 0,
+  "missing_geometry": 0
+ },
+ "measured_cts": {
+  "std_area_um2": 237,
+  "utilization_percent": 26,
+  "native_analysis": "pending"
+ }
+}

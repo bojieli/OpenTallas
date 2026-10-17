@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hfd_vms_wq2_merge",
+ "enable": false,
+ "reason": "Leaf is pin-registered by construction: every input is captured by exactly one flop (wq payload through one valid-mask AO level, done_m through one AND), every output is a flop."
+}

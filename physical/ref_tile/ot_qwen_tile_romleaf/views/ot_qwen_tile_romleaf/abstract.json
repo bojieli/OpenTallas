@@ -1,0 +1,202 @@
+{
+  "name": "ot_qwen_tile_romleaf",
+  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/routes/ot_qwen_tile_romleaf_a0_4fe0c00bd/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -1.7947643371485356e-11 min 6.285971743125174e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/routes/ot_qwen_tile_romleaf_a0_4fe0c00bd/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/record/views/ot_qwen_tile_romleaf:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/src/physical/ref_tile/ot_qwen_tile_romleaf/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/routes/ot_qwen_tile_romleaf_a0_4fe0c00bd/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/src/physical/asap7_memory_macros/ot_rom_4096x266_m8:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.761072481760607e-10 min 7.356809605951753e-12",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/routes/ot_qwen_tile_romleaf_a0_4fe0c00bd/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/record/views/ot_qwen_tile_romleaf:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/src/physical/ref_tile/ot_qwen_tile_romleaf/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/routes/ot_qwen_tile_romleaf_a0_4fe0c00bd/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/src/physical/asap7_memory_macros/ot_rom_4096x266_m8:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.6448503670218884e-10 min 2.8756913517113958e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/routes/ot_qwen_tile_romleaf_a0_4fe0c00bd/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/record/views/ot_qwen_tile_romleaf:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/src/physical/ref_tile/ot_qwen_tile_romleaf/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/routes/ot_qwen_tile_romleaf_a0_4fe0c00bd/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/src/physical/asap7_memory_macros/ot_rom_4096x266_m8:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/src/physical/ref_tile/ot_qwen_tile_romleaf/signoff.sdc",
+    "sha256": "ceb35cf1728cf4d8f83917d218d7e30c70bfa15818ebe0fe3d917af3237cd586",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/cl/routed_ioref.a1.json",
+    "sha256": "f6ebd33a1c175a53cc7c12ac726f05c43fa658a8d666383b003847cb059e4267",
+    "expect_ps": {
+      "tt": 164.49,
+      "ff": 7.36
+    },
+    "tol_ps": 0.05,
+    "work": "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/routes/ot_qwen_tile_romleaf_a0_4fe0c00bd/work/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/work/results/asap7/opentallas_ot_qwen_tile_romleaf_asap7_ref_ot_qwen_tile_romleaf_a0_4fe0c00bd/base/6_final.odb": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/routes/ot_qwen_tile_romleaf_a0_4fe0c00bd/work/orfs/results/asap7/opentallas_ot_qwen_tile_romleaf_asap7_ref_ot_qwen_tile_romleaf_a0_4fe0c00bd/base/6_final.odb",
+        "sha256": "3c5fa2cae4d51b19ac17bee260b7ecd75c21a1d1312457ab9b67beb0dc3602f4"
+      },
+      "/work/results/asap7/opentallas_ot_qwen_tile_romleaf_asap7_ref_ot_qwen_tile_romleaf_a0_4fe0c00bd/base/6_final.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/routes/ot_qwen_tile_romleaf_a0_4fe0c00bd/work/orfs/results/asap7/opentallas_ot_qwen_tile_romleaf_asap7_ref_ot_qwen_tile_romleaf_a0_4fe0c00bd/base/6_final.sdc",
+        "sha256": "03aaccd38a3e2fdfe6b57eeb385ffc645b726ce7c451c15f8998cecb97fd6897"
+      },
+      "/work/results/asap7/opentallas_ot_qwen_tile_romleaf_asap7_ref_ot_qwen_tile_romleaf_a0_4fe0c00bd/base/6_final.spef": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/routes/ot_qwen_tile_romleaf_a0_4fe0c00bd/work/orfs/results/asap7/opentallas_ot_qwen_tile_romleaf_asap7_ref_ot_qwen_tile_romleaf_a0_4fe0c00bd/base/6_final.spef",
+        "sha256": "0dd96e8398110d282dd899cb12d02e78cd61a89b71d8da3f97b31cad00425c53"
+      },
+      "/work/w18_extra.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/routes/ot_qwen_tile_romleaf_a0_4fe0c00bd/work/orfs/w18_extra.sdc",
+        "sha256": "ceb35cf1728cf4d8f83917d218d7e30c70bfa15818ebe0fe3d917af3237cd586"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 7.356809605951753,
+        "verdict_ps": 7.36,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 164.48503670218884,
+        "verdict_ps": 164.49,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_ot_qwen_tile_romleaf_asap7_ref_ot_qwen_tile_romleaf_a0_4fe0c00bd/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_ot_qwen_tile_romleaf_asap7_ref_ot_qwen_tile_romleaf_a0_4fe0c00bd/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_qwen_tile_romleaf_asap7_ref_ot_qwen_tile_romleaf_a0_4fe0c00bd/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_ot_qwen_tile_romleaf_asap7_ref_ot_qwen_tile_romleaf_a0_4fe0c00bd/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_ot_qwen_tile_romleaf_asap7_ref_ot_qwen_tile_romleaf_a0_4fe0c00bd/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_qwen_tile_romleaf_asap7_ref_ot_qwen_tile_romleaf_a0_4fe0c00bd/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_ot_qwen_tile_romleaf_asap7_ref_ot_qwen_tile_romleaf_a0_4fe0c00bd/base/6_final.odb",
+        "set ::ot_ce_corner tt",
+        "read_sdc /work/results/asap7/opentallas_ot_qwen_tile_romleaf_asap7_ref_ot_qwen_tile_romleaf_a0_4fe0c00bd/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_qwen_tile_romleaf_asap7_ref_ot_qwen_tile_romleaf_a0_4fe0c00bd/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [
+    "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/src/physical/asap7_memory_macros/ot_rom_4096x266_m8"
+  ],
+  "files": {
+    "ot_qwen_tile_romleaf.lef": "f6da1ea46433d2f1f7ae52cf76a1098ecc366070d5f93c3a5a886d5750fe4e37",
+    "ot_qwen_tile_romleaf_ff.lib": "4d10f24c07dfadb02c7a3080e579fcc6bd5b28a847993c2136e85d071e3ebc5e",
+    "ot_qwen_tile_romleaf_ss.lib": "0af57ac05455d37df98e56ab2bbfa2a3de9cfc69c300c447854a04f1ab47e5cc",
+    "ot_qwen_tile_romleaf_tt.lib": "ab92943155147429fc620c7c722c730c79d435ee772a7fbeb76380d657eb272b"
+  },
+  "ok": true,
+  "checked": true,
+  "export_provenance": {
+    "schema": 1,
+    "raw_manifest": "provenance/view_export.abstract.json",
+    "raw_manifest_sha256": "04f7631bcf762e15e4083bc0ebc9d0c74319b5877a887d14be3180a801f75fc5",
+    "transformation": "provenance/abstract_pin_stub.json",
+    "transformation_sha256": "e7a61d7aa9cbde8ea5c9c4511b31a660685694ee75e101d2c088288acfd54ad4"
+  }
+}

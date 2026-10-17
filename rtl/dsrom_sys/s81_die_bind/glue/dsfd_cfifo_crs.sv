@@ -1,7 +1,7 @@
 // Additive, opt-in S81 static x2-pair CFIFO. No default die instance binds this master.
 // cr and cr_s are continuously running phase-0 roots of the same PLL, with real
 // compensated entry delivery. xd/xd2 capture on xf/xf2; ri/st capture on cr.
-// North cr owns xa/xb/cc/x2/rs; south cr_s owns ingress core stages and rd.
+// North cr owns xa/xb/cc/x2/rs and the delivered column word; south cr_s owns ingress read control and rd.
 // Relative to legacy dsfd_cfifo: ri->rd adds one fixed edge and 66 capture bits;
 // the separate south reset adds two FF. The reset frontier adds two initialization
 // edges versus r3, zero further state or streaming edges. Forwarded markers must
@@ -48,8 +48,13 @@ module dsfd_cfifo_crs (
     reg [1:0] sti; always @(posedge cr) sti <= st;
     wire [1100:0] xw_; wire xflt;
     wire [564:0] oa_; wire [536:0] ob_; wire fa_, fb_;
-    ot_s81_static_column_ingress #(.W(565)) u_x (.f_ck(xf), .i(xd), .ck(cr_s), .rst_n(rsync_s), .o(oa_), .fault(fa_));
-    ot_s81_static_column_ingress #(.W(537)) u_x2 (.f_ck(xf2), .i(xd2), .ck(cr_s), .rst_n(rsync_s), .o(ob_), .fault(fb_));
+    // r5 HALF-CYCLE READ (S-ELEM CFIFO-HOLD 2026-10-16, closure-first): the column read register moves off cr_s.
+    // bank(xf) -> h(negedge cr_s) -> o(posedge cr): both cross-root hops are half-cycle, so the 100 ps die-skew
+    // hold reserve no longer lands on zero-logic full-cycle hops (route 4_1_cts EARLY_FAIL_HOLD: 21.7k buffers;
+    // gate repair 38.6k, 32k of them bank->o / o->xa,xb,x2,cc). o (now on cr) equals the r4 o edge for edge:
+    // zero added stream/status edges; +1102 FF (h) + 16 one-hot select FF per instance.
+    ot_s81_static_column_ingress_hr #(.W(565)) u_x (.f_ck(xf), .i(xd), .ck(cr_s), .rst_n(rsync_s), .o_ck(cr), .o(oa_), .fault(fa_));
+    ot_s81_static_column_ingress_hr #(.W(537)) u_x2 (.f_ck(xf2), .i(xd2), .ck(cr_s), .rst_n(rsync_s), .o_ck(cr), .o(ob_), .fault(fb_));
     assign xw_ = {ob_[536:1], oa_}; assign xflt = fa_ | fb_ | (oa_[0] ^ ob_[0]);
     wire xv = xw_[0];
     reg [282:0] xa_r; reg [265:0] xb_r; reg [14:0] cc_r; reg [535:0] x2_r;

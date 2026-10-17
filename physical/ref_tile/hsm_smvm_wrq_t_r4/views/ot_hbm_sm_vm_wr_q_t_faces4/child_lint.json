@@ -1,0 +1,87 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/hsm_smvm_wrq_t_r4-faces4-c8e94d78d/record/views/ot_hbm_sm_vm_wr_q_t_faces4/provenance/ot_hbm_sm_vm_wr_q_t_faces4.candidate.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "ot_hbm_sm_vm_wr_q_t_faces4 142.56 x 388.8: PG M5 VDD 26 stripes (95% spread, 100% cov) / VSS 26 stripes (95% spread, 100% cov); strap M6; face pins 4756 blocked-above 0 blocked-same 0; clock clk insertion 403 ps; clock clk_cal insertion 6 ps; clock clk_in_hi insertion 141 ps; clock clk_in_lo insertion 138 ps; clock clk_out_hi insertion 144 ps; clock clk_out_lo insertion 143 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "ot_hbm_sm_vm_wr_q_t_faces4",
+  "W": 142.56,
+  "H": 388.8,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 26,
+     "dir": "V",
+     "spread": 0.947,
+     "coverage": 1.0,
+     "shapes_on_top": 26
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 26,
+     "dir": "V",
+     "spread": 0.947,
+     "coverage": 1.0,
+     "shapes_on_top": 26
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 4756,
+   "blocked_above": 0,
+   "covered_below": 131,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 403.21,
+    "min_ps": 258.77
+   },
+   "clk_cal": {
+    "max_ps": 6.24,
+    "min_ps": 6.24
+   },
+   "clk_in_hi": {
+    "max_ps": 140.56,
+    "min_ps": 111.97
+   },
+   "clk_in_lo": {
+    "max_ps": 138.31,
+    "min_ps": 109.42
+   },
+   "clk_out_hi": {
+    "max_ps": 143.75,
+    "min_ps": 109.77
+   },
+   "clk_out_lo": {
+    "max_ps": 142.91,
+    "min_ps": 110.93
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 2641
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

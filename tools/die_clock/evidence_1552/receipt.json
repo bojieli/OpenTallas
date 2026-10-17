@@ -1,0 +1,91 @@
+{
+  "schema": "opentallas.die_clock.takeover_receipt.v1",
+  "time": "2026-10-16T16:00:53.916849-07:00",
+  "scope": "structural shared-tool correction and native microbenchmark; no die clock qualification",
+  "source_adopted": {
+    "build.py": {
+      "path": "/home/ubuntu/wt/die-clock-1016/tools/die_clock/build.py",
+      "sha256": "21e0c97c8fc0162860e567b99814a130602e6d14d38573b76c46081bf8205bdb"
+    },
+    "regtree.py": {
+      "sha256": "ab258823d0459b7e70a59a226afcb7e16fe1a10ddfd2c3ad3074b240cbb502bd"
+    }
+  },
+  "vehicles": [
+    {
+      "name": "HBM d4a t4",
+      "TT_core_spread_ps": 74.8,
+      "FF_core_spread_ps": 685,
+      "qualified": false,
+      "reason": "one-corner trim failed FF; unresolved ideal R0 views"
+    },
+    {
+      "name": "S81 c26b t3b",
+      "TT_core_spread_ps": 36.2,
+      "FF_core_spread_ps": 416,
+      "TT_col_spread_ps": 21,
+      "FF_col_spread_ps": 166,
+      "qualified": false,
+      "reason": "one-corner trim failed FF"
+    },
+    {
+      "name": "HBM d4a t8",
+      "unit": "oth-ubuntu-2794458-1792188911",
+      "exit": 0,
+      "cells": 78372,
+      "peak_RSS_KB": 7106948,
+      "elapsed_s": 2103.16,
+      "TT_core_spread_ps": 115.5,
+      "FF_core_spread_ps": 97.3,
+      "TT_hbm_spread_ps": 214.6,
+      "FF_hbm_spread_ps": 180.5,
+      "qualified": false,
+      "reason": "spread exceeds80ps;11975of13079 entries unresolved SYNTH_IDEAL_R0,41families"
+    },
+    {
+      "name": "S81 t6b",
+      "unit": "oth-ubuntu-2551040-1792187036",
+      "exit": 137,
+      "qualified": false
+    }
+  ],
+  "native_microbenchmark": {
+    "unit": "oth-ubuntu-3008429-1792191565",
+    "exit": 0,
+    "old_W_count1_perunit_TT_FF_ps": [
+      23.809951,
+      17.704498
+    ],
+    "old_W_count2_perunit_TT_FF_ps": [
+      120.154579,
+      101.929701
+    ],
+    "fixed_W_count1_perunit_TT_FF_ps": [
+      254.262317,
+      215.438569
+    ],
+    "fixed_W_count4_perunit_TT_FF_ps": [
+      248.377526,
+      210.527657
+    ],
+    "old_count_dependence_TT_ps": 96.344628,
+    "fixed_count_dependence_TT_ps": 5.884791,
+    "cost": "each W unit now two actual BUFx24 cells; record contains trim_element_cells and full actual cells",
+    "final_unit": "oth-ubuntu-3016308-1792191638",
+    "final_exit": 0
+  },
+  "pair_policy": "strict-entry-pairs refuses missing or ambiguous timed entry pairs; nearest-entry legacy report is diagnostic",
+  "physical_R_policy": "physical_insertion_per_clock_pin_ps boundary means outrank legacy ETM-derived target metadata; explicit R0 diagnostic retained; missing or invalid supplied insertion refused",
+  "inspection": {
+    "HBM_t4": "/tmp/dclk/hbm_t4/hbm_t4_tt.png",
+    "finding": "actual regional trees follow central trunk and macro channels; drawing is t4 diagnostic, not new t8 or d4b signoff"
+  },
+  "remaining": [
+    "source-qualified per-pin native R for HBM and new die topology",
+    "actual clock build on current placed candidates",
+    "TT setup, FF hold, SS sensitivity and DRC0 after GRT",
+    "complete literal timed pair/NCP checks",
+    "new actual floorplan/density/congestion images"
+  ],
+  "current_hbm_source": "d4b old generator omitted34847stations from staleviews; corrected exact36379membership generator E4oth-ubuntu-3012420-1792191607 at /srv/opentallas-scratch/codex/hdie-d4b-gen1552/case. Await actual station homes; no native claim."
+}
