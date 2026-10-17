@@ -50,7 +50,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "BANK_MISMATCH cycle=[0-9]+"
    },
    {
     "name": "su_m2",
@@ -61,7 +62,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "BANK_MISMATCH cycle=[0-9]+"
    },
    {
     "name": "su_m3",
@@ -72,7 +74,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "BANK_MISMATCH cycle=[0-9]+"
    },
    {
     "name": "su_m4",
@@ -83,7 +86,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "BANK_MISMATCH cycle=[0-9]+"
    },
    {
     "name": "su_m5",
@@ -94,7 +98,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "BANK_MISMATCH cycle=[0-9]+"
    }
   ],
   "calibrate": {
