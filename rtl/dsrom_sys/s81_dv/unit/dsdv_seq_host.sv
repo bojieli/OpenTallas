@@ -10,13 +10,16 @@
 //   L1 dsdv_sh_sq  sequencer     ot_s81_fixed_issue (unchanged: the compiled calendar {done, issue, engine, arg}, two
 //                                job contexts, KIT / END rows, boot seal scan) + the svc completion tag queue.
 //   L2 dsdv_sh_vc  middle leaf   ot_dsdv_vstop (the shared V-rung stop, unchanged) + the CTL packer: the calendar's V
-//                                commands become CTL beats (template table, 128 x 186 b, boot-loaded) injected N / S.
+//                                commands become CTL beats (template table, 128 x 186 b, boot-loaded) injected N / S;
+//                                the gunit cw port (config rows from the host, router / HC jobs from the calendar).
 //   L3, L4 dsdv_sh_ft            registered rung hops (one flop a direction a leaf, ~634 um a hop with repeaters).
 //
-// Engines of the calendar (ENG_PRESENT 5'b10011; any other engine fails the boot seal scan, fixed_issue code 3):
+// Engines of the calendar (ENG_PRESENT 5'b10111; any other engine fails the boot seal scan, fixed_issue code 3):
 //   0  V north : one CTL beat injected on vo_n (-> s_4N, which applies it if its mask bit is set and re-injects it on
 //               the N tier line both ways: one beat reaches the 8 N slices)
 //   1  V south : one CTL beat injected on vo_s (-> bk_sel (its vstop may tap CTL) -> s_4S -> the 8 S slices)
+//   2  gunit job: cw = {v, a = {2'b10, 7'b0, arg[7]}, d = {214'b0, template[arg[6:0]][41:0]}} on the unit's cw port
+//               (dsdv_gunit cw contract, S81U-1 058b17e6e: arg[7] 0 router job, 1 HC job); arg[23:8] = 0 (else fault).
 //   4  svc job : s_j = {v, arg 24, tag 8 = {slot, op 7}} to the svc chain (dsfd_svc_c j contract, broadcast to the 16
 //               dsdv_svc_rs); the chain's folded completion s_jd {fault, done} completes the oldest posted job.
 //   A V command's arg: [6:0] template, [8:7] context (0 none, 1 body[159:108] = {user 10, pos 21, tok 21},
@@ -26,7 +29,8 @@
 //   [20:13] 0, [21 +: 186] payload {body 160, leaf mask 5, target 5, slice mask 16}, upper bits 0.
 // Host stream CSR words intercepted in L0 (class 0, never reach the ingest; dsfd_host_c's 0x10 / 0x11 plus 0x13):
 //   0x10 calendar word {a = d[102:96], d28 = d[59:32]}   0x11 calendar length d[39:32]   0x13 CTL template
-//   {index = d[14:8], payload = d[16 +: 186]}.  A calendar or template write while a job is held is a sticky fault.
+//   {index = d[14:8], payload = d[16 +: 186]}   0x14 gunit table row (boot config: per-layer router bias, HC bases /
+//   scales, route scale, eps; set = a[8]) -> cw {1, a = d[17:8] (a[9] must be 0), d = d[32 +: 256]}.  A calendar or template write while a job is held is a sticky fault.
 // No credit / ready / arbitration on die: every event is on the compiled timeline; collisions, late / missing
 // completions, bad args are sticky faults (assertions, never a reschedule).  The host lane is the only elastic face
 // (off-die boundary: the host PHY lane block holds the link-level flow control; the compiler's host slots never exceed
@@ -34,8 +38,9 @@
 // Every leaf input lands in a flop, every leaf output leaves a flop.  Single clock ck (stream); per-leaf ot_rst_relay.
 // Fixed latencies in edges, counted from the edge that captures an input pin (asserted by tb_dsdv_seq_host): rung
 // vi -> vo 6 each way (L0 1, L1 1, vstop 2, L3 1, L4 1); f_ks captured at t -> issuer samples job_v at t + 3 -> the
-// command of calendar age a leaves the issuer register at t + 4 + a; V command register -> vo pin + 7; svc command
-// register -> s_j pin + 2; issuer KIT -> t_kd pin + 3.  Calendar done rows: V command = issue + 5 (beat posted);
+// command of calendar age a leaves the issuer register at t + 4 + a; V command register -> vo pin + 7; gunit job -> cw
+// pin + 3, host 0x14 word captured at e -> cw pin e + 6; svc command
+// register -> s_j pin + 2; issuer KIT -> t_kd pin + 3.  Calendar done rows: V / gunit command = issue + 5 (posted);
 // svc command = issue + 5 + LS, LS = s_j pin edge -> s_jd capture edge of the svc chain (compiler-priced, p4i).
 // MUT (bench negative controls): 1 context splice dropped, 2 svc tag {slot, op} -> {slot, op + 1}, 3 L4 rung hop
 // missing (latency 5), 4 V completion one edge late.
@@ -71,6 +76,7 @@ module dsdv_sh_lk #(parameter integer V = 276) (
     output reg  [35:0]   pw_o,            // {v, a 7, d 28}
     output reg  [8:0]    pl_o,            // {v, len 8}
     output reg  [193:0]  tw_o,            // {v, idx 7, payload 186}
+    output reg  [266:0]  cf_o,            // {v, a 10, d 256} gunit config row
     output reg  [52:0]   ks_o,
     input  wire [53:0]   kd_i,
     input  wire [32:0]   j_i,
@@ -96,11 +102,13 @@ module dsdv_sh_lk #(parameter integer V = 276) (
     wire csr_p = hv && hcl == 2'd0 && hd[7:0] == 8'h10;
     wire csr_l = hv && hcl == 2'd0 && hd[7:0] == 8'h11;
     wire csr_t = hv && hcl == 2'd0 && hd[7:0] == 8'h13;
-    wire to_ing = hv && !csr_p && !csr_l && !csr_t;
+    wire csr_g = hv && hcl == 2'd0 && hd[7:0] == 8'h14;
+    wire to_ing = hv && !csr_p && !csr_l && !csr_t && !csr_g;
     always @(posedge ck) begin
         pw_o <= (rn && csr_p) ? {1'b1, hd[102:96], hd[59:32]} : 36'd0;
         pl_o <= (rn && csr_l) ? {1'b1, hd[39:32]} : 9'd0;
         tw_o <= (rn && csr_t) ? {1'b1, hd[14:8], hd[16 +: 186]} : 194'd0;
+        cf_o <= (rn && csr_g) ? {1'b1, hd[17:8], hd[32 +: 256]} : 267'd0;
     end
     // ---- host ingest (clk_h = clk_i = ck, as dsfd_host_c on a layer die) and per-stack decode (NS 1, STATIC)
     wire t_v, ov, owe, ocr, hf, sf; wire [63:0] t_d; wire [31:0] oa; wire [255:0] od; wire [7:0] ack; wire [4:0] crn;
@@ -135,6 +143,7 @@ module dsdv_sh_sq #(parameter integer V = 276, parameter integer STAGE = 0, para
     input  wire [35:0]   pw_i,
     input  wire [8:0]    pl_i,
     input  wire [193:0]  tw_i,
+    input  wire [266:0]  cf_i,
     input  wire [52:0]   ks_i,
     output reg  [53:0]   kd_o,
     output wire [32:0]   j_o,
@@ -144,18 +153,20 @@ module dsdv_sh_sq #(parameter integer V = 276, parameter integer STAGE = 0, para
     // N face (L2)
     output reg  [V-1:0]  rn_o, input wire [V-1:0] rs_i,
     output reg  [193:0]  tw_o,
+    output reg  [266:0]  cf_o,
     output wire [84:0]   cn_o,            // V north command {v, cmd 84}
     output wire [84:0]   cs_o,            // V south command
-    input  wire [17:0]   dn_i,            // {sv, stag 8, nv, ntag 8}
+    output wire [84:0]   cg_o,            // gunit job command
+    input  wire [26:0]   dn_i,            // {gv, gtag 8, sv, stag 8, nv, ntag 8}
     input  wire          vf_i
 );
     wire [0:0] rr; ot_rst_relay #(.REGIONS(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
     always @(posedge ck) begin rn_o <= rn_i; rs_o <= rs_i; end
     // ---- pin flops
-    reg [35:0] pw_q; reg [8:0] pl_q; reg [193:0] tw_q; reg [52:0] ks_q; reg [1:0] jd_q; reg [17:0] dn_q; reg vf_q;
+    reg [35:0] pw_q; reg [8:0] pl_q; reg [193:0] tw_q; reg [52:0] ks_q; reg [1:0] jd_q; reg [26:0] dn_q; reg vf_q; reg [266:0] cf_q;
     always @(posedge ck) begin
         pw_q <= rn ? pw_i : 36'd0; pl_q <= rn ? pl_i : 9'd0; tw_q <= rn ? tw_i : 194'd0; ks_q <= rn ? ks_i : 53'd0;
-        jd_q <= rn ? jd_i : 2'd0; dn_q <= rn ? dn_i : 18'd0; vf_q <= vf_i;
+        jd_q <= rn ? jd_i : 2'd0; dn_q <= rn ? dn_i : 27'd0; vf_q <= vf_i; cf_q <= rn ? cf_i : 267'd0;
     end
     reg [7:0] plen;
     always @(posedge ck or negedge rn) if (!rn) plen <= 8'd0; else if (pl_q[8]) plen <= pl_q[7:0];
@@ -163,7 +174,7 @@ module dsdv_sh_sq #(parameter integer V = 276, parameter integer STAGE = 0, para
     localparam integer NE = 5;
     wire [NE-1:0] cv; wire [NE*84-1:0] cd; wire done, kdone, dslot, busy, fault; wire [3:0] code; wire [20:0] ktok;
     reg [NE-1:0] dv; reg [NE*8-1:0] dt;
-    ot_s81_fixed_issue #(.NOPS(128), .NENG(NE), .STAGE(STAGE), .ENG_PRESENT(5'b10011)) u_iss (.clk(ck), .rst_n(rn),
+    ot_s81_fixed_issue #(.NOPS(128), .NENG(NE), .STAGE(STAGE), .ENG_PRESENT(5'b10111)) u_iss (.clk(ck), .rst_n(rn),
         .pw_v(pw_q[35]), .pw_a(pw_q[34:28]), .pw_d(pw_q[27:0]), .prog_len(plen),
         .job_v(ks_q[52]), .job_user(ks_q[51:42]), .job_pos(ks_q[20:0]), .job_tok(ks_q[41:21]), .job_rdy(), .busy(busy),
         .job_done(done), .job_kdone(kdone), .done_slot(dslot), .kit_tok(ktok),
@@ -172,6 +183,7 @@ module dsdv_sh_sq #(parameter integer V = 276, parameter integer STAGE = 0, para
     // command faces: straight from the issuer's command registers (flop-last)
     assign cn_o = {cv[0], cd[0 +: 84]};
     assign cs_o = {cv[1], cd[84 +: 84]};
+    assign cg_o = {cv[2], cd[168 +: 84]};
     wire [6:0] jop = (MUT == 2 && cv[4]) ? cd[4*84 +: 7] + 7'd1 : cd[4*84 +: 7];
     assign j_o = {cv[4], cd[4*84 + 7 +: 24], cd[4*84 + 83], jop};
     // ---- svc completion tags: posted jobs complete in order (the chain's folded done)
@@ -188,15 +200,17 @@ module dsdv_sh_sq #(parameter integer V = 276, parameter integer STAGE = 0, para
         dv = {NE{1'b0}}; dt = {NE*8{1'b0}};
         dv[0] = dn_q[8];  dt[0 +: 8] = dn_q[7:0];
         dv[1] = dn_q[17]; dt[8 +: 8] = dn_q[16:9];
+        dv[2] = dn_q[26]; dt[16 +: 8] = dn_q[25:18];
         dv[4] = jd_q[0];  dt[32 +: 8] = tq[tr_p];
     end
     // ---- unit faults: tag queue over / underflow, template / calendar write while a job is held
     always @(posedge ck or negedge rn)
         if (!rn) l1f <= 1'b0;
-        else if ((jd_q[0] && tn == 4'd0) || (cv[4] && tn == 4'd8) || (tw_q[193] && busy) || (pl_q[8] && busy)) l1f <= 1'b1;
+        else if ((jd_q[0] && tn == 4'd0) || (cv[4] && tn == 4'd8) || (tw_q[193] && busy) || (pl_q[8] && busy) ||
+                 (cf_q[266] && (busy || cf_q[265]))) l1f <= 1'b1;
     // ---- outputs
     always @(posedge ck) begin
-        tw_o <= tw_q;
+        tw_o <= tw_q; cf_o <= cf_q;
         kd_o <= rn && kdone ? {1'b1, ktok, 32'd0} : 54'd0;
         sq_o <= {fault | l1f, (code != 4'd0) ? code : (l1f ? 4'd12 : 4'd0), busy};
         vf_o <= vf_q;
@@ -215,29 +229,40 @@ module dsdv_sh_vc #(parameter integer V = 276, parameter integer MUT = 0) (
     input  wire [193:0]  tw_i,
     input  wire [84:0]   cn_i,
     input  wire [84:0]   cs_i,
-    output reg  [17:0]   dn_o,
-    output reg           vf_o
+    input  wire [266:0]  cf_i,
+    input  wire [84:0]   cg_i,
+    output reg  [26:0]   dn_o,
+    output reg           vf_o,
+    // gunit configuration / job port (p4i link col 4 -> col 3 gunit)
+    output reg           cw_v,
+    output reg  [9:0]    cw_a,
+    output reg  [255:0]  cw_d
 );
     wire [0:0] rr; ot_rst_relay #(.REGIONS(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
     // ---- pin flops
     reg [193:0] tw_q; reg [84:0] cn_q, cs_q;
-    always @(posedge ck) begin tw_q <= rn ? tw_i : 194'd0; cn_q <= rn ? cn_i : 85'd0; cs_q <= rn ? cs_i : 85'd0; end
+    reg [266:0] cf_q; reg [84:0] cg_q;
+    always @(posedge ck) begin tw_q <= rn ? tw_i : 194'd0; cn_q <= rn ? cn_i : 85'd0; cs_q <= rn ? cs_i : 85'd0;
+        cf_q <= rn ? cf_i : 267'd0; cg_q <= rn ? cg_i : 85'd0; end
     // ---- template table (boot written; registered read)
     reg [185:0] tt [0:127];
     always @(posedge ck) if (tw_q[193]) tt[tw_q[192:186]] <= tw_q[185:0];
     // ---- per direction: read stage, beat register
     // cmd 84 = {slot, user 10, pos 21, tok 21, arg 24, op 7}
+    reg [41:0] rg_t; reg kg, vlg, bag; reg [7:0] tgg; reg [266:0] cf_d;
     reg [185:0] rn_t, rs_t; reg [51:0] cxn, cxs; reg [1:0] mdn, mds; reg vln, vls, ban, bas; reg [7:0] tgn, tgs;
     always @(posedge ck) begin
-        rn_t <= tt[cn_q[13:7]]; rs_t <= tt[cs_q[13:7]];
+        rn_t <= tt[cn_q[13:7]]; rs_t <= tt[cs_q[13:7]]; rg_t <= tt[cg_q[13:7]][41:0]; kg <= cg_q[14]; tgg <= {cg_q[83], cg_q[6:0]};
+        cf_d <= cf_q;
         cxn <= cn_q[82:31]; cxs <= cs_q[82:31];
         mdn <= cn_q[15:14]; mds <= cs_q[15:14];
         tgn <= {cn_q[83], cn_q[6:0]}; tgs <= {cs_q[83], cs_q[6:0]};
     end
     always @(posedge ck or negedge rn)
-        if (!rn) begin vln <= 1'b0; vls <= 1'b0; ban <= 1'b0; bas <= 1'b0; end
+        if (!rn) begin vln <= 1'b0; vls <= 1'b0; ban <= 1'b0; bas <= 1'b0; vlg <= 1'b0; bag <= 1'b0; end
         else begin
-            vln <= cn_q[84]; vls <= cs_q[84];
+            vln <= cn_q[84]; vls <= cs_q[84]; vlg <= cg_q[84];
+            bag <= cg_q[84] && cg_q[30:15] != 16'd0;
             ban <= cn_q[84] && (cn_q[30:16] != 15'd0 || cn_q[15:14] == 2'd3);
             bas <= cs_q[84] && (cs_q[30:16] != 15'd0 || cs_q[15:14] == 2'd3);
         end
@@ -252,15 +277,21 @@ module dsdv_sh_vc #(parameter integer V = 276, parameter integer MUT = 0) (
             beat = {V{1'b0}}; beat[0] = 1'b1; beat[3:1] = 3'd0; beat[8:4] = 5'd0; beat[12:9] = 4'd4; beat[21 +: 186] = p;
         end
     endfunction
-    reg [V-1:0] bn, bs; reg bnv, bsv; reg [17:0] dn_d;
-    always @(posedge ck) begin bn <= beat(rn_t, cxn, mdn); bs <= beat(rs_t, cxs, mds); end
+    reg [V-1:0] bn, bs; reg bnv, bsv; reg [26:0] dn_d; reg cwc;
+    always @(posedge ck) begin bn <= beat(rn_t, cxn, mdn); bs <= beat(rs_t, cxs, mds);
+        cw_a <= vlg ? {2'b10, 7'd0, kg} : cf_d[265:256];
+        cw_d <= vlg ? {214'd0, rg_t} : cf_d[255:0];
+    end
     always @(posedge ck or negedge rn)
-        if (!rn) begin bnv <= 1'b0; bsv <= 1'b0; dn_o <= 18'd0; dn_d <= 18'd0; end
+        if (!rn) begin bnv <= 1'b0; bsv <= 1'b0; dn_o <= 27'd0; dn_d <= 27'd0; cw_v <= 1'b0; cwc <= 1'b0; end
         else begin
             bnv <= vln; bsv <= vls;
+            // cw: a calendar gunit job or a host config row (boot only; both in one edge = fault)
+            cw_v <= vlg | cf_d[266];
+            cwc <= vlg && cf_d[266];
             // completion = the beat posted to the stop (MUT 4: one edge late)
-            dn_d <= {vls, tgs, vln, tgn};
-            dn_o <= (MUT == 4) ? dn_d : {vls, tgs, vln, tgn};
+            dn_d <= {vlg, tgg, vls, tgs, vln, tgn};
+            dn_o <= (MUT == 4) ? dn_d : {vlg, tgg, vls, tgs, vln, tgn};
         end
     // ---- the shared V-rung stop (unchanged)
     wire vsf;
@@ -268,7 +299,7 @@ module dsdv_sh_vc #(parameter integer V = 276, parameter integer MUT = 0) (
         .vi_n(vi_n), .vo_s(vo_s), .dl_nv(), .dl_n(), .dl_sv(), .dl_s(), .in_nv(bnv), .in_n(bn), .in_sv(bsv), .in_s(bs),
         .fault(vsf));
     reg arg_f;
-    always @(posedge ck or negedge rn) if (!rn) arg_f <= 1'b0; else if (ban || bas) arg_f <= 1'b1;
+    always @(posedge ck or negedge rn) if (!rn) arg_f <= 1'b0; else if (ban || bas || bag || cwc) arg_f <= 1'b1;
     always @(posedge ck) vf_o <= vsf | arg_f;
 endmodule
 
@@ -283,20 +314,22 @@ module dsdv_seq_host #(parameter integer V = 276, parameter integer STAGE = 0, p
     input  wire [52:0]   f_ks,   output wire [53:0] t_kd,
     output wire [32:0]   s_j,    input  wire [1:0]  s_jd,
     output wire [291:0]  s_hw,   input  wire [8:0]  s_hc,
-    input  wire [1:0]    st_rg
+    input  wire [1:0]    st_rg,
+    output wire          cw_v, output wire [9:0] cw_a, output wire [255:0] cw_d   // gunit cw port
 );
     wire [V-1:0] n01, s10, n12, s21, n23, s32, n34, s43;
     wire [35:0] pw01; wire [8:0] pl01; wire [193:0] tw01, tw12; wire [52:0] ks01; wire [53:0] kd10; wire [32:0] j10;
-    wire [1:0] jd01; wire [5:0] sq10; wire vf10, vf21; wire [84:0] cn12, cs12; wire [17:0] dn21;
+    wire [1:0] jd01; wire [5:0] sq10; wire vf10, vf21; wire [84:0] cn12, cs12, cg12; wire [26:0] dn21; wire [266:0] cf01, cf12;
     dsdv_sh_lk #(.V(V)) u_l0 (.ck(ck), .rst_n(rst_n), .f_host(f_host), .t_host(t_host), .f_lf(f_lf), .f_ks(f_ks), .t_kd(t_kd),
         .s_j(s_j), .s_jd(s_jd), .s_hw(s_hw), .s_hc(s_hc), .st_rg(st_rg), .vi_s(vi_s), .vo_s(vo_s),
-        .rn_o(n01), .rs_i(s10), .pw_o(pw01), .pl_o(pl01), .tw_o(tw01), .ks_o(ks01), .kd_i(kd10), .j_i(j10), .jd_o(jd01),
+        .rn_o(n01), .rs_i(s10), .pw_o(pw01), .pl_o(pl01), .tw_o(tw01), .cf_o(cf01), .ks_o(ks01), .kd_i(kd10), .j_i(j10), .jd_o(jd01),
         .sq_i(sq10), .vf_i(vf10));
     dsdv_sh_sq #(.V(V), .STAGE(STAGE), .MUT(MUT)) u_l1 (.ck(ck), .rst_n(rst_n), .rn_i(n01), .rs_o(s10), .pw_i(pw01),
-        .pl_i(pl01), .tw_i(tw01), .ks_i(ks01), .kd_o(kd10), .j_o(j10), .jd_i(jd01), .sq_o(sq10), .vf_o(vf10),
-        .rn_o(n12), .rs_i(s21), .tw_o(tw12), .cn_o(cn12), .cs_o(cs12), .dn_i(dn21), .vf_i(vf21));
+        .pl_i(pl01), .tw_i(tw01), .cf_i(cf01), .ks_i(ks01), .kd_o(kd10), .j_o(j10), .jd_i(jd01), .sq_o(sq10), .vf_o(vf10),
+        .rn_o(n12), .rs_i(s21), .tw_o(tw12), .cf_o(cf12), .cn_o(cn12), .cs_o(cs12), .cg_o(cg12), .dn_i(dn21), .vf_i(vf21));
     dsdv_sh_vc #(.V(V), .MUT(MUT)) u_l2 (.ck(ck), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k), .vi_s(n12), .vo_n(n23),
-        .vi_n(s32), .vo_s(s21), .tw_i(tw12), .cn_i(cn12), .cs_i(cs12), .dn_o(dn21), .vf_o(vf21));
+        .vi_n(s32), .vo_s(s21), .tw_i(tw12), .cn_i(cn12), .cs_i(cs12), .cf_i(cf12), .cg_i(cg12), .dn_o(dn21), .vf_o(vf21),
+        .cw_v(cw_v), .cw_a(cw_a), .cw_d(cw_d));
     dsdv_sh_ft #(.V(V)) u_l3 (.ck(ck), .ni(n23), .no(n34), .si(s43), .so(s32));
     generate if (MUT == 3) begin : g_mut3
         assign vo_n = n34; assign s43 = vi_n;                   // negative control: L4 hop missing

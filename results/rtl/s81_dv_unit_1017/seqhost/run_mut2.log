@@ -1,5 +1,5 @@
-MISMATCH s_j edge 1548 got 15ffb4b03 exp 15ffb4b02
-MISMATCH s_j edge 1556 got 187339706 exp 187339705
-MISMATCH s_j edge 1564 got 1b4411a09 exp 1b4411a08
-SEQHOST seed=1 MUT=2 collide=0 jobs=6 rows=50 cmds N/S/J=96/96/96 kit=6 hw=20 host_cpl=5 arrivals=1532 frag N/S=158/169 mism n/s/j/k/hw/tc=0/0/96/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+MISMATCH s_j edge 1668 got 1b58ff404 exp 1b58ff403
+MISMATCH s_j edge 1676 got 1de6d6b08 exp 1de6d6b07
+MISMATCH s_j edge 1684 got 1e003780c exp 1e003780b
+SEQHOST seed=1 MUT=2 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1633 frag N/S=161/185 mism n/s/j/k/hw/tc/cw=0/0/72/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
 SEQHOST FAIL

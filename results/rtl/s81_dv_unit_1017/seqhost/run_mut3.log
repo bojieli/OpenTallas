@@ -1,8 +1,8 @@
-MISMATCH vo_n edge 5 res=0 got 088666aadd3
-MISMATCH vo_n edge 6 res=0 got 01d7440491b
-MISMATCH vo_n edge 7 res=0 got 0e30e613cef
-MISMATCH vo_s edge 10 res=0 got 0c54521b0b7
-MISMATCH vo_s edge 11 res=0 got 00000000000
-MISMATCH vo_s edge 13 res=0 got 0311ba3d8c1
-SEQHOST seed=1 MUT=3 collide=0 jobs=6 rows=50 cmds N/S/J=96/96/96 kit=6 hw=20 host_cpl=5 arrivals=1532 frag N/S=158/169 mism n/s/j/k/hw/tc=1786/1667/0/0/0/0 unit_st=10001000000 g_fault=0/0 busy=0/0
+MISMATCH vo_n edge 5 res=0 got 119576f19e7
+MISMATCH vo_n edge 6 res=0 got 00000000000
+MISMATCH vo_s edge 8 res=0 got 05ccebfef19
+MISMATCH vo_s edge 9 res=0 got 077a76976d5
+MISMATCH vo_n edge 10 res=0 got 0cc5e1faa41
+MISMATCH vo_s edge 10 res=0 got 1d64af8e30a
+SEQHOST seed=1 MUT=3 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1633 frag N/S=161/185 mism n/s/j/k/hw/tc/cw=1835/1786/0/0/0/0/0 unit_st=10001000000 g_fault=0/0 busy=0/0
 SEQHOST FAIL

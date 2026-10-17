@@ -1,2 +1,2 @@
-SEQHOST seed=7 MUT=0 collide=1 jobs=6 rows=50 cmds N/S/J=96/96/96 kit=6 hw=20 host_cpl=5 arrivals=1533 frag N/S=154/162 mism n/s/j/k/hw/tc=0/0/0/0/0/0 unit_st=10001000000 g_fault=0/0 busy=0/0
-SEQHOST COLLIDE at 2082 -> PASS (fault raised)
+SEQHOST seed=7 MUT=0 collide=1 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1581 frag N/S=181/177 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=10001000000 g_fault=0/0 busy=0/0
+SEQHOST COLLIDE at 2206 -> PASS (fault raised)

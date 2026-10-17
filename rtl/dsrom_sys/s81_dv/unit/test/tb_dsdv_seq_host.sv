@@ -6,15 +6,15 @@
 //                (its own paced path), reset with the unit's sequencer reset, launched D = 20 edges AHEAD of the unit
 //                (same clock phase), its completions modelled from its own commands.  Every golden command maps to an
 //                expected unit output: engine 0 / 1 -> CTL beat on vo_n / vo_s (template + context splice, independent
-//                model) at +D+LVO, engine 4 -> s_j {1, arg, slot, op} at +D+LJ; KIT -> t_kd at +D+LKD.
+//                model) at +D+LVO, engine 2 -> cw (gunit job) at +D+LCW, engine 2 -> cw (gunit job) at +D+LCW, engine 4 -> s_j {1, arg, slot, op} at +D+LJ; host 0x14 rows -> cw at +LCF; host 0x14 rows -> cw at +LCF; KIT -> t_kd at +D+LKD.
 //   rung         random traffic both ways (single beats, XQ / XB 4-fragment beats) only in slots the compiled program
 //                leaves free; expected vo = arrival 6 edges later or the injected beat.
 //   svc chain    a fixed-latency model: s_jd done LS edges after each s_j, s_hc {ack 1, cr 1} 3 edges after each s_hw.
-// Program: R rows over engines 0 / 1 / 4 (issue ages in disjoint residues mod 8, contexts launched 4 mod 8 apart, two
+// Program: R rows over engines 0 / 1 / 2 / 4 (issue ages in disjoint residues mod 8, contexts launched 4 mod 8 apart, two
 // contexts live), one KIT, one END; 6 jobs.  +collide=1: one rung arrival is placed on an injection slot of the last
 // job and the unit's status fault must rise (wf[0]).  PASS line "SEQHOST PASS".
 module tb_dsdv_seq_host;
-    localparam integer V = 276, D = 20, LVO = 7, LJ = 2, LKD = 3, LR = 6, LS = 9;
+    localparam integer V = 276, D = 20, LVO = 7, LJ = 2, LKD = 3, LR = 6, LS = 9, LCW = 3, LCF = 6;
     localparam integer DV_V = 5, DV_S = LS + 5;     // calendar done row = issue + DV (V beat posted / svc chain done)
 `ifndef MUT
     localparam integer MUT = 0;
@@ -27,10 +27,11 @@ module tb_dsdv_seq_host;
     // ------------------------------------------------------------------ DUT
     reg [V-1:0] vi_s = 0, vi_n = 0; wire [V-1:0] vo_s, vo_n;
     reg [514:0] f_host = 0; wire [76:0] t_host; reg [52:0] f_ks = 0; wire [53:0] t_kd;
+    wire cw_v; wire [9:0] cw_a; wire [255:0] cw_d;
     wire [32:0] s_j; reg [1:0] s_jd = 0; wire [291:0] s_hw; reg [8:0] s_hc = 0; reg [1:0] st_rg = 2'b01;
     dsdv_seq_host #(.V(V), .MUT(MUT)) dut (.ck(ck), .rst_n(rst_n), .tap_k(8'h00), .sink_k(8'h00), .vi_s(vi_s), .vo_s(vo_s),
         .vi_n(vi_n), .vo_n(vo_n), .f_host(f_host), .t_host(t_host), .f_lf(4'b0101), .f_ks(f_ks), .t_kd(t_kd),
-        .s_j(s_j), .s_jd(s_jd), .s_hw(s_hw), .s_hc(s_hc), .st_rg(st_rg));
+        .s_j(s_j), .s_jd(s_jd), .s_hw(s_hw), .s_hc(s_hc), .st_rg(st_rg), .cw_v(cw_v), .cw_a(cw_a), .cw_d(cw_d));
     // ------------------------------------------------------------------ golden host
     reg [514:0] g_host = 0; wire [76:0] g_tc; wire [35:0] g_pw; wire [7:0] g_plen; wire [291:0] g_hw; reg [8:0] g_hc = 0;
     dsfd_host_c #(.NS(1), .KVS(1), .ENG(-1)) gh (.ck(ck), .rst(rst_n), .ckv(ck), .rsv(rst_n), .f_collective(g_host),
@@ -39,13 +40,13 @@ module tb_dsdv_seq_host;
     // ------------------------------------------------------------------ golden sequencer
     reg g_jv = 0; reg [9:0] g_ju = 0; reg [20:0] g_jp = 0, g_jt = 0; reg [4:0] g_dv = 0; reg [39:0] g_dt = 0;
     wire [4:0] g_cv; wire [419:0] g_cd; wire g_done, g_kdone, g_dslot, g_busy, g_fault; wire [3:0] g_code; wire [20:0] g_ktok;
-    ot_s81_fixed_issue #(.NOPS(128), .NENG(5), .STAGE(0), .ENG_PRESENT(5'b10011)) gi (.clk(ck), .rst_n(dut.u_l1.rn),
+    ot_s81_fixed_issue #(.NOPS(128), .NENG(5), .STAGE(0), .ENG_PRESENT(5'b10111)) gi (.clk(ck), .rst_n(dut.u_l1.rn),
         .pw_v(g_pw[35]), .pw_a(g_pw[34:28]), .pw_d(g_pw[27:0]), .prog_len(g_plen), .job_v(g_jv), .job_user(g_ju),
         .job_pos(g_jp), .job_tok(g_jt), .job_rdy(), .busy(g_busy), .job_done(g_done), .job_kdone(g_kdone),
         .done_slot(g_dslot), .kit_tok(g_ktok), .cmd_v(g_cv), .cmd_d(g_cd), .engine_available(5'h1f), .dn_v(g_dv),
         .dn_tag(g_dt), .fault(g_fault), .fault_code(g_code), .st_jobs(), .st_cmds(), .phase());
     // ------------------------------------------------------------------ program, templates, host stream
-    localparam integer NT = 128, NR = 48, NJOB = 6, SPAC = 108, NHS = 600, NMAX = 6000;
+    localparam integer NT = 128, NCFG = 24, NR = 48, NJOB = 6, SPAC = 108, NHS = 600, NMAX = 6000;
     reg [185:0] T [0:NT-1];
     integer r_eng [0:NR+1], r_arg [0:NR+1], r_iss [0:NR+1], r_done [0:NR+1], nrow, endage;
     reg [514:0] HS [0:NHS-1]; integer nhs;
@@ -76,11 +77,12 @@ module tb_dsdv_seq_host;
         for (i = 0; i < 1024; i = i + 1) used[i] = 0;
         nrow = 0;
         for (i = 0; i < NR; i = i + 1) begin
-            e = (i % 3 == 2) ? 4 : (i % 3);
-            k = (i / 3) * 8 + ((e == 4) ? 2 : e);
+            e = (i % 4 == 3) ? 4 : (i % 4);
+            k = (i / 4) * 8 + ((e == 4) ? 2 : (e == 2) ? 3 : e);
             r_eng[nrow] = e; r_iss[nrow] = k;
             r_done[nrow] = k + ((e == 4) ? DV_S : DV_V);
             if (e == 4) r_arg[nrow] = $random(seed) & 24'hffffff;
+            else if (e == 2) r_arg[nrow] = ($random(seed) & 127) | (($random(seed) & 1) << 7);
             else r_arg[nrow] = ($random(seed) & 127) | (($unsigned($random(seed)) % 3) << 7);
             nrow = nrow + 1;
         end
@@ -103,18 +105,21 @@ module tb_dsdv_seq_host;
             end
             push_pw(7'd0, (28'd3 << 26) | (28'd1 << 25) | hdr);
             for (i = 0; i < NT; i = i + 1) begin x = 512'd0; x[7:0] = 8'h13; x[14:8] = i; x[16 +: 186] = T[i]; push({2'd0, x, 1'b1}); end
+            for (i = 0; i < NCFG; i = i + 1) begin                     // gunit config rows (0x14), a[9] = 0
+                x = 512'd0; x[7:0] = 8'h14; x[17:8] = {1'b0, 1'(i & 1), 2'b00, 6'(i)}; x[32 +: 256] = {rnd186(0), rnd186(0)}; push({2'd0, x, 1'b1});
+            end
             push_raw(8'h77, 32'h0000_3000);
         end
     end
     // ------------------------------------------------------------------ expected-event tables (DUT edge index)
     reg [V-1:0] EN [0:NMAX+16], ES [0:NMAX+16]; reg RN [0:NMAX+16], RS [0:NMAX+16];   // reserved injection slots
-    reg [32:0] EJ [0:NMAX+16]; reg [53:0] EK [0:NMAX+16];
+    reg [32:0] EJ [0:NMAX+16]; reg [266:0] ECW [0:NMAX+16]; reg [53:0] EK [0:NMAX+16];
     reg [V-1:0] AN [0:NMAX+16], AS [0:NMAX+16];                                       // arrivals (edge they are driven for)
     reg [4:0] GDV [0:NMAX+16]; reg [39:0] GDT [0:NMAX+16];                            // golden completions
     integer SJD [0:NMAX+16]; reg [8:0] SHC [0:NMAX+16], GHC [0:NMAX+16];
     initial begin
         for (i = 0; i <= NMAX + 16; i = i + 1) begin
-            RN[i] = 0; RS[i] = 0; EN[i] = 0; ES[i] = 0; EJ[i] = 0; EK[i] = 0; AN[i] = 0; AS[i] = 0; GDV[i] = 0; GDT[i] = 0;
+            RN[i] = 0; RS[i] = 0; ECW[i] = 0; EN[i] = 0; ES[i] = 0; EJ[i] = 0; EK[i] = 0; AN[i] = 0; AS[i] = 0; GDV[i] = 0; GDT[i] = 0;
             SJD[i] = 0; SHC[i] = 0; GHC[i] = 0;
         end
     end
@@ -128,11 +133,11 @@ module tb_dsdv_seq_host;
     endfunction
     // ------------------------------------------------------------------ the run
     integer hsp, jobs, gjobs, launch0, ncmd_n, ncmd_s, ncmd_j, nkit, nhw, ncomp, narr, nfrag_s, nfrag_n, coll_at;
-    integer fr_n, fr_s, mism_n, mism_s, mism_j, mism_k, mism_hw, mism_tc, seen_jobs;
+    integer ncmd_g, ncw, mism_cw, fr_n, fr_s, mism_n, mism_s, mism_j, mism_k, mism_hw, mism_tc, seen_jobs;
     reg [V-1:0] a; reg [83:0] c;
     initial begin
         cyc = 0; hsp = 0; jobs = 0; gjobs = 0; launch0 = -1; ncmd_n = 0; ncmd_s = 0; ncmd_j = 0; nkit = 0; nhw = 0; ncomp = 0;
-        narr = 0; fr_n = 0; fr_s = 0; mism_n = 0; mism_s = 0; mism_j = 0; mism_k = 0; mism_hw = 0; mism_tc = 0;
+        narr = 0; ncmd_g = 0; ncw = 0; mism_cw = 0; fr_n = 0; fr_s = 0; mism_n = 0; mism_s = 0; mism_j = 0; mism_k = 0; mism_hw = 0; mism_tc = 0;
         nfrag_s = 0; nfrag_n = 0; coll_at = -1; seen_jobs = 0;
         repeat (10) @(posedge ck); #0.2 rst_n = 1;
     end
@@ -146,6 +151,8 @@ module tb_dsdv_seq_host;
                 GDV[cyc + DV_V][0] = 1; GDT[cyc + DV_V][0 +: 8] = {c[83], c[6:0]}; end
             if (e == 1) begin ES[cyc + D + LVO] = beat(T[c[13:7]], c); RS[cyc + D + LVO] = 1; ncmd_s = ncmd_s + 1;
                 GDV[cyc + DV_V][1] = 1; GDT[cyc + DV_V][8 +: 8] = {c[83], c[6:0]}; end
+            if (e == 2) begin ECW[cyc + D + LCW] = {1'b1, 2'b10, 7'd0, c[14], 214'd0, T[c[13:7]][41:0]}; ncmd_g = ncmd_g + 1;
+                GDV[cyc + DV_V][2] = 1; GDT[cyc + DV_V][16 +: 8] = {c[83], c[6:0]}; end
             if (e == 4) begin EJ[cyc + D + LJ] = {1'b1, c[30:7], c[83], c[6:0]}; ncmd_j = ncmd_j + 1;
                 GDV[cyc + DV_S][4] = 1; GDT[cyc + DV_S][32 +: 8] = {c[83], c[6:0]}; end
         end
@@ -155,6 +162,9 @@ module tb_dsdv_seq_host;
             if (mism_n < 4) $display("MISMATCH vo_n edge %0d res=%0d got %h", cyc, RN[cyc], vo_n[40:0]); end
         if (vo_s !== (RS[cyc] ? ES[cyc] : AS[cyc])) begin mism_s = mism_s + 1;
             if (mism_s < 4) $display("MISMATCH vo_s edge %0d res=%0d got %h", cyc, RS[cyc], vo_s[40:0]); end
+        if ((cw_v || ECW[cyc][266]) && {cw_v, cw_a, cw_d} !== ECW[cyc]) begin mism_cw = mism_cw + 1;
+            if (mism_cw < 4) $display("MISMATCH cw edge %0d got %0d/%h exp %0d/%h", cyc, cw_v, cw_a, ECW[cyc][266], ECW[cyc][265:256]); end
+        if (cw_v) ncw = ncw + 1;
         if (s_j !== EJ[cyc]) begin mism_j = mism_j + 1; if (mism_j < 4) $display("MISMATCH s_j edge %0d got %h exp %h", cyc, s_j, EJ[cyc]); end
         if (t_kd !== EK[cyc]) begin mism_k = mism_k + 1; if (mism_k < 4) $display("MISMATCH t_kd edge %0d got %h exp %h", cyc, t_kd, EK[cyc]); end
         if (s_hw !== g_hw) begin mism_hw = mism_hw + 1; if (mism_hw < 4) $display("MISMATCH s_hw edge %0d", cyc); end
@@ -172,7 +182,8 @@ module tb_dsdv_seq_host;
         f_host <= 515'd0; g_host <= 515'd0;
         if (cyc > 30 && cyc % 5 == 0 && hsp < nhs) begin
             f_host <= HS[hsp];
-            g_host <= (HS[hsp][2:1] == 2'd0 && HS[hsp][8:1] == 8'h13) ? 515'd0 : HS[hsp];
+            g_host <= (HS[hsp][2:1] == 2'd0 && (HS[hsp][8:1] == 8'h13 || HS[hsp][8:1] == 8'h14)) ? 515'd0 : HS[hsp];
+            if (HS[hsp][2:1] == 2'd0 && HS[hsp][8:1] == 8'h14) ECW[t + LCF] = {1'b1, HS[hsp][18:9], HS[hsp][33 +: 256]};
             hsp = hsp + 1;
         end
         s_hc <= SHC[t]; g_hc <= GHC[t]; s_jd <= {1'b0, SJD[t] != 0};
@@ -227,16 +238,17 @@ module tb_dsdv_seq_host;
         // ---- end of run
         if (launch0 >= 0 && cyc == launch0 + (NJOB - 1) * SPAC + endage + 80) begin : fin
             integer bad;
-            bad = (mism_n + mism_s + mism_j + mism_k + mism_hw + mism_tc) != 0;
-            $display("SEQHOST seed=%0d MUT=%0d collide=%0d jobs=%0d rows=%0d cmds N/S/J=%0d/%0d/%0d kit=%0d hw=%0d host_cpl=%0d arrivals=%0d frag N/S=%0d/%0d mism n/s/j/k/hw/tc=%0d/%0d/%0d/%0d/%0d/%0d unit_st=%b g_fault=%0d/%0d busy=%0d/%0d",
-                seed0, MUT, collide, jobs, nrow, ncmd_n, ncmd_s, ncmd_j, nkit, nhw, ncomp, narr, nfrag_n, nfrag_s,
-                mism_n, mism_s, mism_j, mism_k, mism_hw, mism_tc, t_host[75:65], g_fault, g_code, dut.u_l1.busy, g_busy);
+            bad = (mism_n + mism_s + mism_j + mism_k + mism_hw + mism_tc + mism_cw) != 0;
+            $display("SEQHOST seed=%0d MUT=%0d collide=%0d jobs=%0d rows=%0d cmds N/S/G/J=%0d/%0d/%0d/%0d cw=%0d kit=%0d hw=%0d host_cpl=%0d arrivals=%0d frag N/S=%0d/%0d mism n/s/j/k/hw/tc/cw=%0d/%0d/%0d/%0d/%0d/%0d/%0d unit_st=%b g_fault=%0d/%0d busy=%0d/%0d",
+                seed0, MUT, collide, jobs, nrow, ncmd_n, ncmd_s, ncmd_g, ncmd_j, ncw, nkit, nhw, ncomp, narr, nfrag_n, nfrag_s,
+                mism_n, mism_s, mism_j, mism_k, mism_hw, mism_tc, mism_cw, t_host[75:65], g_fault, g_code, dut.u_l1.busy, g_busy);
             if (collide) begin
                 // the collision must fault the unit (wf[0] = V stop fault), and only that
                 if (!t_host[75] || !t_host[71] || coll_at < 0) bad = 1;
                 $display("SEQHOST COLLIDE at %0d -> %s", coll_at, bad ? "FAIL" : "PASS (fault raised)");
             end else begin
-                if (t_host[75] || g_fault || ncmd_n != NJOB * (NR / 3) || ncmd_s != NJOB * (NR / 3) || ncmd_j != NJOB * (NR / 3) ||
+                if (t_host[75] || g_fault || ncmd_n != NJOB * (NR / 4) || ncmd_s != NJOB * (NR / 4) || ncmd_j != NJOB * (NR / 4) ||
+                    ncmd_g != NJOB * (NR / 4) || ncw != NJOB * (NR / 4) + NCFG ||
                     nkit != NJOB || nhw == 0 || ncomp == 0 || dut.u_l1.busy || g_busy || gh.hf || gh.sf) bad = 1;
                 $display("SEQHOST %s", bad ? "FAIL" : "PASS");
             end
