@@ -1459,6 +1459,21 @@ def child_insertions(s: dict) -> dict:
     out = {}
     for ch in s["children"]:
         v = ch["view"]
+        if s.get("child_clock_ref") == "pin":
+            # Q-CLUSTER 2026-10-17 (cluster of clusters): every clock entry pin of a multi-entry child is its own spine
+            # target: insertion.json clock_measurements[pin].tt.boundary.mean, else that pin's TT-lib clock-tree max
+            name = view_name(v)
+            ij = ROOT / v / "insertion.json"
+            cm = (json.loads(ij.read_text()).get("clock_measurements") or {}) if ij.exists() else {}
+            p = ROOT / v / f"{name}_tt.lib"
+            ins = child_lint.clock_insertion(p.read_text(errors="replace")) if p.exists() else {}
+            for pin in sorted(set(cm) | set(ins)):
+                b = (cm.get(pin) or {}).get("tt", {}).get("boundary", {})
+                if b.get("n") and b.get("mean") is not None:
+                    out[f"{name}/{pin}"] = round(float(b["mean"]), 1)
+                elif ins.get(pin):
+                    out[f"{name}/{pin}"] = round(float(ins[pin]["max_ps"]), 1)
+            continue
         # spec "child_clock_ref": "boundary" (s81 parents 2026-10-13, die clock delivery rule): the target is the child's
         # ROUTED boundary-register insertion R (views/<child>/insertion.json tt.boundary.mean, the sign-off reference of
         # every hop), not the lib's max_clock_tree_path (latest sink of the whole tree: dsfd_coll_cesc0 415 vs R 322 ps,
@@ -1493,7 +1508,7 @@ proc ot_sp_leaf_arrivals {{}} {{
       set c [get_cells -quiet -of_objects $pin]
       if {{[llength $c]}} {{
         set m [get_property $c ref_name]
-        if {{[dict exists $::ot_ref_child_ins $m]}} {{ set x [expr {{$x + [dict get $::ot_ref_child_ins $m]}}] }}
+{pinlookup}        if {{[dict exists $::ot_ref_child_ins $m]}} {{ set x [expr {{$x + [dict get $::ot_ref_child_ins $m]}}] }}
       }}
       if {{$x > $v}} {{ set v $x }}
     }}
@@ -1504,6 +1519,11 @@ proc ot_sp_leaf_arrivals {{}} {{
 puts "REF_TILE spine: child insertion targets $::ot_ref_child_ins"
 """
 
+
+# child_clock_ref "pin" (Q-CLUSTER 2026-10-17): per-entry-pin targets "master/pin" before the master's
+SPINE_PIN_LOOKUP = """        regexp {[^/]+$} [get_full_name $pin] pn
+        if {[dict exists $::ot_ref_child_ins "$m/$pn"]} { set m "$m/$pn" }
+"""
 
 HDLY_TCL = "physical/qwen_die_masters/hdly_dont_touch.tcl"
 
@@ -1530,7 +1550,11 @@ def gen_hooks(s: dict, kd: str) -> dict:
     if spine:
         pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
         ins = child_insertions(s)
-        files["spine_ins.tcl"] = SPINE_INS.format(ins=" ".join(f"{k} {v}" for k, v in sorted(ins.items())))
+        # ROOT review 10-17: a per-pin key with Tcl-special characters (bus-bit entry 'ckv[0]') is braced, else
+        # [dict create ...] would command-substitute '[0]'; plain keys stay unbraced (existing kits byte-identical)
+        tk = lambda k: "{" + k + "}" if re.search(r"[\[\]$\\{}\s;\"]", k) else k  # noqa: E731
+        files["spine_ins.tcl"] = SPINE_INS.format(ins=" ".join(f"{tk(k)} {v}" for k, v in sorted(ins.items())),
+                                                  pinlookup=SPINE_PIN_LOOKUP if s.get("child_clock_ref") == "pin" else "")
     # Explicit clock adapters must wrap the established spine before the IO boundary wrapper.
     # These are routed source dependencies, not post-generation hand edits.
     pre_cts += [f"source /src/{f}" for f in s.get("pre_cts_extra", [])]
