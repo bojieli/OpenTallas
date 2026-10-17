@@ -14,7 +14,7 @@ sed -e 's/ot_hgi_coll_inj_idx_join #(/ot_hgi_coll_inj_idx_join_rg_flat #(/' -e '
     -e 's/module tb_hgi_coll_inj_idx_join;/module tb_hgi_coll_inj_idx_join_rgx;/' "$D/tb_hgi_coll_inj_idx_join.sv" > "$O/tb_rgx.sv"
 for m in $BM; do
   iverilog -g2012 -P tb_hgi_coll_inj_idx_join_rgx.MUT=$m -o "$O/tb$m" "$O/tb_rgx.sv" "$D/ot_hgi_coll_inj_idx_join_rg.sv" || exit 2
-  r=$(vvp -n "$O/tb$m" | tail -2 | tr '\n' ' ')
+  r=$(vvp -n "$O/tb$m" 2>&1 | grep -Ev '\$finish|^VCD' | tail -2 | tr '\n' ' ')
   echo "BENCH MUT=$m $r"
   if [ $m -eq 0 ]; then case "$r" in *PASS*) ;; *) rc=1;; esac; else case "$r" in *FAIL*) ;; *) rc=1;; esac; fi
 done
