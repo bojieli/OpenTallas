@@ -1,0 +1,19 @@
+%Warning-MULTIDRIVEN: rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv:49:25: Signal has multiple driving blocks with different clocking: 'ot_hbm_su_static_kind2_lat4_leaf1_physical.u_native.u_lane.g_sfu.g_full.u_l4.g_line.rv'
+                      rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv:75:63: ... Location of first driving block
+   75 |                         if (!local_rst_n) rv[p] <= 1'b0; else rv[p] <= nxv;
+      |                                                               ^~
+                      rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv:75:63: ... Location of other driving block
+   75 |                         if (!local_rst_n) rv[p] <= 1'b0; else rv[p] <= nxv;
+      |                                                               ^~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv:48:25: Signal has multiple driving blocks with different clocking: 'ot_hbm_su_static_kind2_lat4_leaf1_physical.u_native.u_lane.g_sfu.g_full.u_l4.g_line.r'
+                      rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv:80:57: ... Location of first driving block
+   80 |                         always @(posedge clk[(p-1)/48]) r[p] <= nx;
+      |                                                         ^
+                      rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv:80:57: ... Location of other driving block
+   80 |                         always @(posedge clk[(p-1)/48]) r[p] <= nx;
+      |                                                         ^
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 2.744 MB sources in 62 modules, into 14.905 MB in 15 C++ files needing 0.000 MB
+- Verilator: Walltime 2.870 s (elab=0.116, cvt=2.570, bld=0.000); cpu 2.870 s on 1 threads; allocated 431.766 MB

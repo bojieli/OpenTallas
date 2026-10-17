@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.hbm-su.sync-intake.v1",
+  "base_commit": "96e9bf963f4516e2c623011693ec1a78a8352dac",
+  "final_benched_source_commit": "2649d9fa0",
+  "final_bench_scope": "KIND1 lane133 and KIND2 lane0; every31classes/1984outputs, ADDR/DATA/PHASE/RESET mutants reject; all24 inputs match immutable source.",
+  "full512_source": "ec365ca76",
+  "full512_scope": "Earlier RF_LOCAL+pgslice-sync exact7111edges plus RF/schedule/start mutants; arithmetic fully synchronous extension is newer and is NOT covered by that earlier full512 proof.",
+  "generator": [
+    {
+      "path": "ot_hbm_su_static_lane.sv",
+      "sha256": "66b10a5bc31dbe9657713ecd371c33952cded2012aed382bca4ad9a4b1f866bb",
+      "regenerated_identical": true
+    },
+    {
+      "path": "ot_hbm_su_static_ins.sv",
+      "sha256": "9dfb55d0c94c7dc05ba0febbd3c45eff5bc338d6677b0d0e8d055e1ce4829240",
+      "regenerated_identical": true
+    }
+  ],
+  "physical_scope": "Candidate only. Final KIND1sreset kit CTS gate is in flight. FULL individual hardleaf native qualification is withheld because scalar SIDE loop deliberately crosses combinational leaf pins. Whole-SU fit/native timing/actual die-clock production completion remain open.",
+  "excluded": [
+    "superseded async-assert518 variant kits",
+    "obsolete d4c whole-SU geometry",
+    "store r6/r8 candidate histories",
+    "SFU core c30 source already owned on main"
+  ]
+}

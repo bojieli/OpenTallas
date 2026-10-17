@@ -1,3 +1,11 @@
+// OT_SU_SYNC_RST: local reset relays drive synchronous arithmetic consumers.
+`ifndef OT_SU_ARST
+`ifdef OT_SU_SYNC_RST
+`define OT_SU_ARST(r)
+`else
+`define OT_SU_ARST(r) or negedge r
+`endif
+`endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
 // Special-function pipelines of the hardwired decode core: exp, reciprocal and
@@ -18,7 +26,7 @@ module ot_hdc_vline #(parameter integer D = 1) (
     output wire [D:0] vd
 );
     reg [D:1] line;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_SU_ARST(rst_n)) begin
         if (!rst_n) line <= {D{1'b0}};
         else line <= {line[D-1:1], v};
     end

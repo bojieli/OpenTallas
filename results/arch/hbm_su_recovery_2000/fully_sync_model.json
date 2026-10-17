@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.hbm-su.arithmetic-reset-model.v1",
+  "source_commit": "2649d9fa0",
+  "kind1": {
+    "production_replicas": 127,
+    "clock_roots": 10,
+    "stage_roots": 8,
+    "insertion_roots": 2,
+    "baseline_FF": 33207,
+    "reset_FF_before": 1,
+    "reset_FF_after_if_common_sync_merges": 14,
+    "reset_FF_after_upper_bound": 36,
+    "outline_um": [
+      166.32,
+      330.48
+    ],
+    "outline_area_um2": 54965.433600000004
+  },
+  "kind2": {
+    "production_replicas": 1,
+    "hard_leaf_native_complete": false,
+    "reason": "Legacy FULL SIDE loop is unregistered across leaf boundary; composition must contain it or price/implement extra stages"
+  },
+  "reset_contract": {
+    "fully_synchronous": true,
+    "raw_port_sample_root": "clk_stage_0",
+    "reset_delivery_edges": 3,
+    "first_command_accept_edge": 4,
+    "minimum_reset_assertion_edges": 4,
+    "steady_schedule_added_edges": 0
+  },
+  "qualification": "candidate only; exact fully synchronous benchmark and routed-native evidence pending"
+}

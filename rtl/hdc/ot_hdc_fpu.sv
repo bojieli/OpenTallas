@@ -1,3 +1,11 @@
+// OT_SU_SYNC_RST: local reset relays drive synchronous arithmetic consumers.
+`ifndef OT_SU_ARST
+`ifdef OT_SU_SYNC_RST
+`define OT_SU_ARST(r)
+`else
+`define OT_SU_ARST(r) or negedge r
+`endif
+`endif
 `timescale 1ns/1ps
 // Thin wrappers over the binary32 pipes: one result per cycle, LATENCY = 5,
 // IEEE RNE with gradual underflow and canonical +0 zeros.  The adder is the
@@ -76,7 +84,7 @@ module ot_hdc_bmul (
     reg        s1_v, s1_s, s1_z, s1_nf;
     reg [7:0]  s1_a, s1_b;
     reg signed [10:0] s1_e;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_SU_ARST(rst_n)) begin
         if (!rst_n) s1_v <= 1'b0;
         else s1_v <= v;
     end
@@ -91,7 +99,7 @@ module ot_hdc_bmul (
     reg        s2_v, s2_s, s2_z, s2_nf;
     reg [15:0] s2_p;
     reg signed [10:0] s2_e;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_SU_ARST(rst_n)) begin
         if (!rst_n) s2_v <= 1'b0;
         else s2_v <= s1_v;
     end
@@ -103,7 +111,7 @@ module ot_hdc_bmul (
     reg        s3_v, s3_s, s3_z, s3_nf;
     reg [22:0] s3_f;
     reg signed [10:0] s3_be;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_SU_ARST(rst_n)) begin
         if (!rst_n) s3_v <= 1'b0;
         else s3_v <= s2_v;
     end
@@ -118,7 +126,7 @@ module ot_hdc_bmul (
     wire [23:0] sig24 = {1'b1, s3_f};
     wire [3:0]  sub_sh = 4'd1 - s3_be[3:0];
     wire [23:0] sub_v = sig24 >> sub_sh;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_SU_ARST(rst_n)) begin
         if (!rst_n) s4_v <= 1'b0;
         else s4_v <= s3_v;
     end
@@ -130,7 +138,7 @@ module ot_hdc_bmul (
         else s4_y <= {s3_s, 8'd0, sub_v[22:0]};
     end
     // stage 5: output register
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_SU_ARST(rst_n)) begin
         if (!rst_n) begin y <= 32'd0; fault <= 1'b0; end
         else begin y <= s4_y; fault <= s4_v && s4_bad; end
     end

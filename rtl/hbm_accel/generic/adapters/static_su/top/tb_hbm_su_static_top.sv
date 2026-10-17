@@ -12,7 +12,8 @@
 // RTL mutants (separate builds, -GMUT=): 1 fill phase, 2 drain group, 4 RF broadcast phase, 8 missing relay route.
 // ---------------------------------------------------------------------------------------------------------------------
 module tb_hbm_su_static_top;
- parameter integer NE=7111,NW=135184,NS=9,RF_RELAY=8,MUT=0,MLAT=3,ALAT=3,LEAF=0;
+ parameter integer NE=7111,NW=135184,NS=9,RF_RELAY=8,MUT=0,MLAT=3,ALAT=3,LEAF=0,RF_LOCAL=0,
+  SYNC_RST=0; // 1 (OT_SU_SYNC_RST builds): the slice reset relays release 3 edges after rst_n; the host starts 4 edges later
  localparam integer QW=2422;
  reg clk=0; always #5 clk=~clk;
  reg rst_n=0;
@@ -28,7 +29,7 @@ module tb_hbm_su_static_top;
  end
  wire [4*8*17-1:0] lg_rq; wire [4*8*281-1:0] lg_wq; reg [4*8*257-1:0] lg_rr=0; reg [31:0] lg_w_done=0;
  wire [19:0] fault;
- ot_hbm_su_static_top #(.RF_RELAY(RF_RELAY),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT)) dut(
+ ot_hbm_su_static_top #(.RF_RELAY(RF_RELAY),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.RF_LOCAL(RF_LOCAL)) dut(
   .pg_clk({16{clk}}),.clk_lane({4096{clk}}),.clk_insert({2048{clk}}),.rst_lane_n({512{rst_n}}),
   .clk_bcast({64{clk}}),.rst_bcast_n({64{rst_n}}),.clk_bank({512{clk}}),.clk_bank_macro({3072{clk}}),.clk_rf({256{clk}}),.clk_ctl({16{clk}}),
   .clk_core({4{clk}}),.clk_red({4{clk}}),.clk_side({6{clk}}),.clk_relay({4{clk}}),.rst_n(rst_n),
@@ -103,7 +104,7 @@ module tb_hbm_su_static_top;
   for(i=0;i<32;i=i+1)for(q=0;q<4;q=q+1)for(p=0;p<8;p=p+1)begin pend_v[i][q][p]=0;pend_w[i][q][p]=0;pend_s[i][q][p]=0;end
   $readmemh({dir,"/prog.mem"},prog);$readmemh({dir,"/expw.mem"},expw);$readmemh({dir,"/exps.mem"},exps);
   $readmemh({dir,"/explw.mem"},explw);$readmemh({dir,"/arith/seed.mem"},seed);
-  repeat(4)@(negedge clk); rst_n=1; repeat(2)@(negedge clk);
+  repeat(4)@(negedge clk); rst_n=1; repeat(2+4*SYNC_RST)@(negedge clk);
   for(i=0;i<stop;i=i+1)begin
    line=prog[i];
    // quarter-1 A affine term bit 0 (control field ld_c, stream A term 0) corrupted at an op's load edge
@@ -124,8 +125,8 @@ module tb_hbm_su_static_top;
   if(ew!=NW)fail($sformatf("VM writes %0d of %0d expected",ew,NW));
   if(es!=NS)fail($sformatf("scalars %0d of %0d expected",es,NS));
   if(errors)$fatal(1,"SU_TOP FAIL errors=%0d reads=%0d writes=%0d scalars=%0d",errors,reads,writes,scalars);
-  $display("SU_TOP PASS lanes=512 slices=16 store_banks=512 SRAMs=3072+8 reducers=4 rf_replicas=4 edges=%0d fill_reads=%0d vm_writes=%0d scalars=%0d RF_RELAY=%0d MLAT=%0d",
-           NE,reads,writes,scalars,RF_RELAY,MLAT);
+  $display("SU_TOP PASS lanes=512 slices=16 store_banks=512 SRAMs=3072+8 reducers=4 rf_replicas=4 edges=%0d fill_reads=%0d vm_writes=%0d scalars=%0d RF_RELAY=%0d MLAT=%0d RF_LOCAL=%0d SYNC_RST=%0d",
+           NE,reads,writes,scalars,RF_RELAY,MLAT,RF_LOCAL,SYNC_RST);
   $finish;
  end
 endmodule

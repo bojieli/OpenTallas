@@ -1,3 +1,11 @@
+// OT_SU_SYNC_RST: local reset relays drive synchronous arithmetic consumers.
+`ifndef OT_SU_ARST
+`ifdef OT_SU_SYNC_RST
+`define OT_SU_ARST(r)
+`else
+`define OT_SU_ARST(r) or negedge r
+`endif
+`endif
 `timescale 1ns/1ps
 `default_nettype none
 // Pin-registered static SU lane (OWNER 2026-10-15 19:50: every new tile registers every input and output at its pin;
@@ -86,15 +94,25 @@ module ot_hbm_su_static_lane_pinreg #(
     reg [3:0] s_q;                                   // ld, ld_bank, emit, bank
     always @(posedge c0) d_q <= d_in;
     wire rst_i;                                      // reset seen by the lane and the output registers
+    wire rst_out_n;
+`ifdef OT_SU_SYNC_RST
+    wire rst_command_n;
+    ot_sync_rst_relay u_reset_command (.clk_sync(c0), .clk(c0), .rst_n_in(rst_n), .rst_n(rst_command_n));
+    ot_sync_rst_relay u_reset_output (.clk_sync(c0), .clk(c7), .rst_n_in(rst_n), .rst_n(rst_out_n));
+    always @(posedge c0) s_q <= rst_command_n ? {ld, ld_bank, emit, bank} : 4'd0;
+    assign rst_i = rst_n; // lane has one local synchronous reset relay per clock root
+`else
+    assign rst_out_n = rst_i;
     if (PIN_RST != 0) begin : g_pin_rst
         reg rst_q;
         always @(posedge c0) rst_q <= rst_n;
         always @(posedge c0) s_q <= rst_n ? {ld, ld_bank, emit, bank} : 4'd0;
         assign rst_i = rst_q;
     end else begin : g_async_rst
-        always @(posedge c0 or negedge rst_n) if (!rst_n) s_q <= 4'd0; else s_q <= {ld, ld_bank, emit, bank};
+        always @(posedge c0 `OT_SU_ARST(rst_n)) if (!rst_n) s_q <= 4'd0; else s_q <= {ld, ld_bank, emit, bank};
         assign rst_i = rst_n;
     end
+`endif
     wire [10:0] q_lane_id; wire [5*LN*AW-1:0] q_ld_c; wire [CW-1:0] q_o_v, q_i_v, q_no, q_ni; wire [3:0] q_ls, q_lvw;
     wire [5*AW-1:0] q_vb; wire [AW-1:0] q_krow, q_obase, q_aibase; wire [1:0] q_aind, q_dst; wire [4:0] q_gsh;
     wire q_cpair; wire [7:0] q_srcs, q_cx_srcs; wire [31:0] q_vi_q; wire [127:0] q_rd_q;
@@ -123,13 +141,18 @@ module ot_hbm_su_static_lane_pinreg #(
         .co_dst(q_co_dst), .side_v(l_side_v), .side_x(l_side_x), .side_y((KIND == 2) ? side_y : q_side_y),
         .vm_we(l_vm_we), .vm_waddr(l_vm_waddr), .vm_wdata(l_vm_wdata), .kv_we(l_kv_we), .kv_waddr(l_kv_waddr),
         .kv_wdata(l_kv_wdata), .ro_v(l_ro_v), .ro_x(l_ro_x), .fault(l_fault), .coll(l_coll));
+`ifdef OT_SU_SYNC_RST
+    wire rst_fetch_n = rst_command_n;
+`else
+    wire rst_fetch_n = rst_i;
+`endif
     // ---- output pin registers
     reg r_vi_re; reg [3:0] r_rd_re; reg [AW-1:0] r_vi_addr; reg [4*AW-1:0] r_rd_addr; reg [7:0] r_rd_src;
-    always @(posedge c0 or negedge rst_i) if (!rst_i) begin r_vi_re <= 1'b0; r_rd_re <= 4'd0; end
+    always @(posedge c0 `OT_SU_ARST(rst_fetch_n)) if (!rst_fetch_n) begin r_vi_re <= 1'b0; r_rd_re <= 4'd0; end
                                           else begin r_vi_re <= l_vi_re; r_rd_re <= l_rd_re; end
     always @(posedge c0) begin r_vi_addr <= l_vi_addr; r_rd_addr <= l_rd_addr; r_rd_src <= l_rd_src; end
     reg r_vm_we, r_kv_we, r_ro_v, r_fault, r_coll; reg [AW-1:0] r_vm_waddr, r_kv_waddr; reg [31:0] r_vm_wdata, r_kv_wdata, r_ro_x;
-    always @(posedge c7 or negedge rst_i) if (!rst_i) {r_vm_we, r_kv_we, r_ro_v, r_fault, r_coll} <= 5'd0;
+    always @(posedge c7 `OT_SU_ARST(rst_out_n)) if (!rst_out_n) {r_vm_we, r_kv_we, r_ro_v, r_fault, r_coll} <= 5'd0;
                                           else {r_vm_we, r_kv_we, r_ro_v, r_fault, r_coll} <= {l_vm_we, l_kv_we, l_ro_v, l_fault, l_coll};
     always @(posedge c7) begin r_vm_waddr <= l_vm_waddr; r_kv_waddr <= l_kv_waddr; r_vm_wdata <= l_vm_wdata;
                                r_kv_wdata <= l_kv_wdata; r_ro_x <= l_ro_x; end
@@ -140,7 +163,7 @@ module ot_hbm_su_static_lane_pinreg #(
         assign side_v = l_side_v; assign side_x = l_side_x;
     end else begin : g_side_reg
         reg r_side_v; reg [31:0] r_side_x;
-        always @(posedge c0 or negedge rst_i) if (!rst_i) r_side_v <= 1'b0; else r_side_v <= l_side_v;
+        always @(posedge c0 `OT_SU_ARST(rst_fetch_n)) if (!rst_fetch_n) r_side_v <= 1'b0; else r_side_v <= l_side_v;
         always @(posedge c0) r_side_x <= l_side_x;
         assign side_v = r_side_v; assign side_x = r_side_x;
     end
