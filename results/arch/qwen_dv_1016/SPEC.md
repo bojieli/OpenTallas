@@ -542,3 +542,40 @@ That way no FDI crosses another block. A first stack, with the D2D group between
 - Trial inputs: `dv2r8f3.json`, `relay_plan_dv2r8f3.json`, `contract_deltas_dv2r8f3.json`.
 - `dv2r8f3.png` viewed.
 - Explorer record `qwen_qdv_dv2r8f3`.
+
+## dv2r8f5: native orientations + slices abutting the clusters (Q-DIEPLAN3 blocker, coordinator decision 10-17) -- CURRENT
+
+**Blocker (Q-DIEPLAN3).** dv2r8f/f2/f3 placed io_collective and the 3 SerDes PHYs rotated 90 degrees in the W column. The generator / ot_mts allow only R0 / MX / MY / R180, and the licensed PHY abstracts have fixed pin faces. That was my error.
+
+**Coordinator decision:**
+- Create modeled E/W-edge PHY abstract variants: `ot_qfd_serdes_112g_x12_phy_s597_ew`, 1,563.57 x 2,320.056, bump face on the W die edge, FDI on the E face.
+- Re-kit our not-closed `qfd_collective_static_io_production` to the narrow outline as `..._ns`, 1,563.816 x 4,157.976 (Q-COLL).
+- The 1.56-mm column therefore stands with native masters.
+- Fallback, if the collective were closed: `dv2r8f4.json` (`build_dv2f4.py`).
+  - Native 4,158-wide collective beside W5.
+  - PHYs MY in a 4.38-mm column.
+  - Die 32.7 x 24.25 = 793 mm², only 0.3 mm under 33. That fails the >= 0.5-mm margin, so it is NOT a valid fallback without moving the collective.
+
+**Cut fix.** Q-DIEPLAN3's smoke measured 0.564 at the dvs_W5 / c16_W5_1 face. Per slice, the 2,064-b corridor words plus the 1,028-b rs crossed my 129.6-um lanes in the narrow real corridor pin ranges.
+- dv2r8f5 removes the lanes. The slices ABUT the band-1 / band-2 cluster faces.
+- The slice N/S pins mirror the cluster rs / rs_o / bc pin ranges exactly, so these bits cross face to face with no die wire, as the q3h seam rule requires.
+- The upper half moves down 259.2 um (30 lattice steps), and the slice grows 2.56 um to abut both faces.
+- The W-column IO is re-stacked: the collective is centred on W5, io_ucie and io_serdes sit above it, and serdes_1 and serdes_2 below.
+
+**Result:**
+
+| | dv2r8f3 | **dv2r8f5** |
+|---|---:|---:|
+| worst cut | 0.378 (0.564 in the smoke) | **0.330** (x 1,650 in the W-column channel; slice/cluster faces abutted) |
+| stages @405 / @200 | 3,308 / 6,984 | 3,309 / 6,867 |
+| bit-mm | 0.811 M | **0.799 M** |
+| die | 730.1 mm² | **722.3 mm² (30.1 x 23.99)**; margins 2.9 mm (W) / 2.0 mm (H) to the 33 x 26 reticle |
+| cycles / layer vs q3h, pipelined norm root | -58 | **-66** |
+| cycles / layer vs q3h, measured 70-cycle root | +34 | **+26** |
+
+**Checks:** 0 overlaps, 0 cluster crossings, lattice OK, all masters in native orientation.
+
+**Outputs:**
+- Trial inputs: `dv2r8f5.json`, `relay_plan_dv2r8f5.json`, `contract_deltas_dv2r8f5.json` (with die_rules).
+- `dv2r8f5.png` viewed.
+- Explorer record `qwen_qdv_dv2r8f5`.
