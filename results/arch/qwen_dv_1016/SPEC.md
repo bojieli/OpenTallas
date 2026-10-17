@@ -413,3 +413,15 @@ The arrays fix any edge column at 24 mm tall, which is 37.6 mm² at the 1.56-mm 
 **Outputs:**
 - `dv2r8f.png` and `compare_all.png` (6 panels, now with white % and the largest empty rectangle) were viewed.
 - Explorer record `qwen_qdv_dv2r8f`: `token_designs ['qwen_rom']`, candidate of `qwen_r2h5`.
+
+**Owner clarification (2026-10-17).** The goal is easier routing (regular, aligned, short fat links), not white-space compaction. Against that goal, dv2r8f stands as built:
+- **Gaps that lengthened links are closed.**
+  - The centre W|E seam is 0.
+  - The collective sits level with the slice row, with only the 216-um column channel between it and dvs_W5: AR = 4 stages.
+- **No block was reshaped and no fill was added.**
+- **The remaining white is left as is, because no link crosses it.**
+  - The W column below the PHYs is a column end.
+  - Between io_serdes and tt_ctlm only the in-channel D2D lane and 1-b controls pass. The lane runs in the column channel either way. Pulling the control group down would move ucie_kv off the N edge.
+  - The band gaps and lanes are routing channels.
+- **White % is information only.**
+- **Judged on cut 0.378, stages 3,304, bit-mm 0.792 M and longest link 10.1 mm (1-b control):** dv2r8f is best of all plans on all four.
