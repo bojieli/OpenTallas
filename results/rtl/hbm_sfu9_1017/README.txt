@@ -7,3 +7,4 @@ r9 leaf2 gate (hbm_sfu_store_leaf2_r9_1017/gate_result.json, 6f294ab02, agidock1
 r9c bench (this commit's RTL: leaf in_data split into in_data_lo[135:0] / in_data_hi[119:0], bit-identical; new mutant split):
   bench_r9c_pos.log PASS edges=6683; bench_r9c_split.log / _flip.log / _cfgdrop.log REJECTED (expected). ot-epyc4,
   /srv/opentallas-scratch/claude/hbm-sfu9-1017/bench_r9c.
+r9 leaf3 gate (6f294ab02): WARN, CTS TT insertion 590.8 / spread 240.9, 2,359 sinks, W face 1,078 pins over 276.5/280.8 um: same defect as leaf2, superseded by r9c. Preserved.
