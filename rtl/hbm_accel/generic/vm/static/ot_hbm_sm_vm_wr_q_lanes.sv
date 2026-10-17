@@ -83,11 +83,12 @@ module ot_hbm_sm_vm_wr_q_lanes #(
             end
         // serial server.  Same cnt / ps / acc / flt / emission rule as ot_hbm_sm_vm_wr_q_faces4; the row FIFO is a
         // SHIFT-REGISTER FIFO with a FIXED HEAD (entry 0) whose 256-bit word rotates right by one 32-bit slot on every
-        // emission that is not the row's last: the slot word is always fe[31:0] (no read pointer, no 4:1 x 268 read mux,
+        // emission that is not the row's last: the slot word is always ent[0][31:0] (no read pointer, no 4:1 x 268 read mux,
         // no 8:1 slot mux before the BF16 round).  Rotation (not shift) keeps the old col = hd[32*ps[2:0]] wrap for
         // P > 8 (descriptor fault case).  On pop the entries move down one; an accepted row lands at index cnt - pop.
         // f4hc / r5-gate: rp -> fq[rp] -> slot mux -> rb -> o_w was the only intra-root class near 0 (-3.4 ps pre-route).
-        reg [268*DEPTH-1:0] fe;                     // entry i = fe[268*i +: 268] = {rrow12, rdata256}
+        wire [267:0] ent [0:DEPTH];                 // entry i = {rrow12, rdata256}, one register per generate scope (g_e)
+        assign ent[DEPTH] = 268'd0;
         reg [AW:0] cnt;
         reg [3:0] ps; reg [10:0] acc;
         reg flt;
@@ -96,7 +97,7 @@ module ot_hbm_sm_vm_wr_q_lanes #(
         reg o_v; reg [15:0] o_sec; reg [7:0] o_m;
         (* keep *) reg [255:0] o_wr;
         reg l_v; reg [15:0] l_sec; reg [255:0] l_wr; reg [7:0] l_m;   // MUT 2 late copy
-        wire [267:0] hd = fe[267:0];
+        wire [267:0] hd = ent[0];
         wire [11:0] hr = hd[267:256];
         wire [10:0] row = (ps == 4'd0 || MUT == 1) ? ({1'b0, d_base} + {2'b0, hr[11:3]}) : acc;
         wire push = rv_r;
@@ -122,13 +123,13 @@ module ot_hbm_sm_vm_wr_q_lanes #(
             if (!rl) begin o_v <= 1'b0; l_v <= 1'b0; end
             else begin o_v <= emit && !row[10]; l_v <= o_v; end
         for (genvar i = 0; i < DEPTH; i = i + 1) begin : g_e
-            always @(posedge lclk) begin
-                if (acc_row && widx == (AW+1)'(i)) fe[268*i +: 268] <= {rrow_r, rdata_r};
+            reg [267:0] q;
+            assign ent[i] = q;
+            always @(posedge lclk)
+                if (acc_row && widx == (AW+1)'(i)) q <= {rrow_r, rdata_r};
                 else if (pop) begin
-                    if (i < DEPTH - 1) fe[268*i +: 268] <= fe[268*((i < DEPTH - 1) ? i + 1 : i) +: 268];
-                end else if (i == 0 && emit)
-                    fe[255:0] <= {fe[31:0], fe[255:32]};
-            end
+                    if (i < DEPTH - 1) q <= ent[i + 1];
+                end else if (i == 0 && emit) q[255:0] <= {q[31:0], q[255:32]};
         end
         always @(posedge lclk) begin
             o_sec <= {d_mir, d_mir ? 2'b00 : ((MUT == 3) ? 2'b00 : quad_q), row[9:0], 3'(k)};
