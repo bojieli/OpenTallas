@@ -2592,8 +2592,8 @@ def _relays(m):
                     SP['on'] = False
         n = st_['k']
         if st_.get('exact_k') is not None and n != st_['exact_k']:
-            raise ValueError(f'kv die {bid}: {n} relay stages, the PV successor needs exactly {st_["exact_k"]} '
-                             f'(header + DELTA_g): the chunk path is longer than the pair absorbs')
+            m.setdefault('pvt_chunk_mismatch', []).append(dict(bus=bid, stages=n, need=st_['exact_k'], route_um=lengths.get(bid),
+                                                               a=f'{a}.{pa}', b=f'{b}.{pb}'))
         stages[bid] = n
         if bid in tree_meta:
             tm = tree_meta[bid]
@@ -2707,6 +2707,10 @@ def _relays(m):
     m['buses'] = nb
     m['relay_stages'] = stages
     m['route_um'] = lengths
+    if m.get('pvt_chunk_mismatch'):
+        bad_ = sorted(m['pvt_chunk_mismatch'], key=lambda r_: -(r_['stages'] - r_['need']))
+        raise ValueError(f'kv die PV_T: {len(bad_)} chunk chains miss header + DELTA_g (the pair absorbs a fixed skew): '
+                         f'{bad_[:6]}')
 
 
 _LANES = {}
