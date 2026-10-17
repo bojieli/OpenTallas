@@ -121,17 +121,24 @@ def load_targets(path):
     if not path:
         return None
     km = json.load(open(path))["masters"]
-    def R(master, pin):
+    def lookup(master, pin):
+        # same resolution as tools/die_clock/build.py load_targets: physical field first, literal pin then the
+        # 1-bit bus spelling (clk <-> clk[0]); the old code stripped [0] only, so every 'clk[0]'-keyed R read 0
+        # (Qwen KV kv_rt3: 276 false intra-stack and 299 false c<->stack misses)
         port = pin.rsplit("/", 1)[1]
-        port = port[:-3] if port.endswith("[0]") else port
+        cands = (port, port[:-3] if port.endswith("[0]") else port + "[0]")
         r = km.get(master, {})
-        v = r.get("insertion_per_clock_pin_ps", {}).get(port) or r.get("insertion_in_arcs_ps")
+        for field in ("physical_insertion_per_clock_pin_ps", "insertion_per_clock_pin_ps"):
+            pp = r.get(field, {})
+            for c in cands:
+                if c in pp and pp[c] is not None:
+                    return pp[c]
+        return r.get("insertion_in_arcs_ps")
+    def R(master, pin):
+        v = lookup(master, pin)
         return v[2] if v else 0.0
     def R_ff(master, pin):
-        port = pin.rsplit("/", 1)[1]
-        port = port[:-3] if port.endswith("[0]") else port
-        r = km.get(master, {})
-        v = r.get("insertion_per_clock_pin_ps", {}).get(port) or r.get("insertion_in_arcs_ps")
+        v = lookup(master, pin)
         return v[1] if v else 0.0
     R.ff = R_ff
     return R
