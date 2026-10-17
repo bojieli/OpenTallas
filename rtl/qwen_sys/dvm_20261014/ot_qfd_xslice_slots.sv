@@ -101,7 +101,7 @@ endmodule
 // r{n,s}_* / q{n,s}* = the four read buses of that chain's leaves (W / E faces with the corridors and the head row).
 module ot_qfd_xhead_m #(parameter integer NW = 18, parameter integer AW = 24, parameter integer XCW = 12,
     parameter integer MUT = 0, parameter integer LEAF_READ_PIN_PIPE = 0, parameter integer REQ_PIPE = 0,
-    parameter integer LEAF_FILL_PIPE = 0, parameter integer LOCAL_RST = 0, parameter integer ONWARD_REG = 0) (   // REQ_PIPE: read-request relay stages (ot_qfd_xhead)   // bench-only head mutant (ot_qfd_xhead MUT); the die instantiates the default
+    parameter integer LEAF_FILL_PIPE = 0, parameter integer LOCAL_RST = 0, parameter integer ONWARD_REG = 0, parameter integer FOFF_REP = 0) (   // REQ_PIPE: read-request relay stages (ot_qfd_xhead)   // bench-only head mutant (ot_qfd_xhead MUT); the die instantiates the default
     input  wire          ck,
     input  wire          rst_n,
     input  wire [255:0]  tids,
@@ -137,7 +137,7 @@ module ot_qfd_xhead_m #(parameter integer NW = 18, parameter integer AW = 24, pa
     wire [143:0] lw_ctl;
     ot_qfd_xhead #(.AW(AW), .NW(NW), .XCW(XCW), .NH(8),.NATIVE_AFFINE(1),.LEAF_READ_PIN_PIPE(LEAF_READ_PIN_PIPE), .REQ_PIPE(REQ_PIPE),
         .FILL_LEAD(2 + 3 * LEAF_FILL_PIPE), .DX(10 + LEAF_READ_PIN_PIPE + REQ_PIPE + 3 * LEAF_FILL_PIPE),
-        .LOCAL_RST(LOCAL_RST), .ONWARD_REG(ONWARD_REG), .MUT(MUT)) u_head (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i),
+        .LOCAL_RST(LOCAL_RST), .ONWARD_REG(ONWARD_REG), .FOFF_REP(FOFF_REP), .MUT(MUT)) u_head (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i),
         .a_d(h_in), .a_r(), .b_d(h_out), .b_r(1'b1), .n_d(n_d), .n_r(1'b1), .s_d(s_d), .s_r(1'b1),
         .lw_v(lw_v), .lw_ep(lw_ep), .lw_off(lw_off), .lw_m(lw_m), .lw_d(lw_d), .lw_ctl(lw_ctl),
         .lc_v(lc_v), .lc_ep(lc_ep),
@@ -150,7 +150,7 @@ module ot_qfd_xhead_m #(parameter integer NW = 18, parameter integer AW = 24, pa
 endmodule
 
 module qfd_xhead_e #(parameter integer MUT = 0, parameter integer LEAF_READ_PIN_PIPE = 0, parameter integer REQ_PIPE = 0,
-    parameter integer LEAF_FILL_PIPE = 0, parameter integer LOCAL_RST = 0, parameter integer ONWARD_REG = 0) (   // bench-only head mutant; the die / cluster use the default
+    parameter integer LEAF_FILL_PIPE = 0, parameter integer LOCAL_RST = 0, parameter integer ONWARD_REG = 0, parameter integer FOFF_REP = 0) (   // bench-only head mutant; the die / cluster use the default
     input  wire          ck,
     input  wire          rst_n,
     input  wire [255:0]  tids,
@@ -180,7 +180,7 @@ module qfd_xhead_e #(parameter integer MUT = 0, parameter integer LEAF_READ_PIN_
     input  wire [3:0]    qs_v, qs_bad
 );
     ot_qfd_xhead_m #(.MUT(MUT), .LEAF_READ_PIN_PIPE(LEAF_READ_PIN_PIPE), .REQ_PIPE(REQ_PIPE), .LEAF_FILL_PIPE(LEAF_FILL_PIPE),
-        .LOCAL_RST(LOCAL_RST), .ONWARD_REG(ONWARD_REG)) u_h (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
+        .LOCAL_RST(LOCAL_RST), .ONWARD_REG(ONWARD_REG), .FOFF_REP(FOFF_REP)) u_h (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
         .h_in(w_d), .h_out(e_d), .n_d(n_d), .s_d(s_d),
         .cn_wv(cn_wv), .cn_wep(cn_wep), .cn_cv(cn_cv), .cn_cep(cn_cep), .cn_woff(cn_woff), .cn_wm(cn_wm), .cn_wd(cn_wd),
         .cn_wctl(cn_wctl), .cs_wv(cs_wv), .cs_wep(cs_wep), .cs_cv(cs_cv), .cs_cep(cs_cep), .cs_woff(cs_woff),
@@ -190,7 +190,7 @@ module qfd_xhead_e #(parameter integer MUT = 0, parameter integer LEAF_READ_PIN_
 endmodule
 
 module qfd_xhead_w #(parameter integer MUT = 0, parameter integer LEAF_READ_PIN_PIPE = 0, parameter integer REQ_PIPE = 0,
-    parameter integer LEAF_FILL_PIPE = 0, parameter integer LOCAL_RST = 0, parameter integer ONWARD_REG = 0) (   // bench-only head mutant; the die / cluster use the default
+    parameter integer LEAF_FILL_PIPE = 0, parameter integer LOCAL_RST = 0, parameter integer ONWARD_REG = 0, parameter integer FOFF_REP = 0) (   // bench-only head mutant; the die / cluster use the default
     input  wire          ck,
     input  wire          rst_n,
     input  wire [255:0]  tids,
@@ -220,7 +220,7 @@ module qfd_xhead_w #(parameter integer MUT = 0, parameter integer LEAF_READ_PIN_
     input  wire [3:0]    qs_v, qs_bad
 );
     ot_qfd_xhead_m #(.MUT(MUT), .LEAF_READ_PIN_PIPE(LEAF_READ_PIN_PIPE), .REQ_PIPE(REQ_PIPE), .LEAF_FILL_PIPE(LEAF_FILL_PIPE),
-        .LOCAL_RST(LOCAL_RST), .ONWARD_REG(ONWARD_REG)) u_h (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
+        .LOCAL_RST(LOCAL_RST), .ONWARD_REG(ONWARD_REG), .FOFF_REP(FOFF_REP)) u_h (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
         .h_in(e_d), .h_out(w_d), .n_d(n_d), .s_d(s_d),
         .cn_wv(cn_wv), .cn_wep(cn_wep), .cn_cv(cn_cv), .cn_cep(cn_cep), .cn_woff(cn_woff), .cn_wm(cn_wm), .cn_wd(cn_wd),
         .cn_wctl(cn_wctl), .cs_wv(cs_wv), .cs_wep(cs_wep), .cs_cv(cs_cv), .cs_cep(cs_cep), .cs_woff(cs_woff),

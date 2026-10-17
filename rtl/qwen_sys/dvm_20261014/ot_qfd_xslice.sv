@@ -676,6 +676,10 @@ module ot_qfd_xhead #(
     parameter integer ONWARD_REG = 0,    // opt-in: b_d leaves from its own pin registers (duplicate of f_q / ib_pin /
                                          // g_pin on the same edge: 0 cycles), the internal copies feed only logic;
                                          // 2: input + output onward registers (+1 edge per head-row hop)
+    parameter integer FOFF_REP = 0,      // opt-in (Q-IO-1815 2026-10-17, 0 cycles, exact): with ONWARD_REG, each face register's
+                                         // lane rotation gets its own select copies (per face, per 64-bit group, captured
+                                         // from a_d on the f_q edge): mw2 route TT -106.7 was f_q.foff fanning out to 2,176
+                                         // 2:1 muxes (4 buffer levels) before the 6-level rotation and the face wire
     parameter integer MUT  = 0           // 3: the TDM sends each line to the wrong station (wrong line);
                                          // 4: reads the other epoch (stale buffer); 6: pooled line without its B half
 ) (
@@ -917,6 +921,36 @@ module ot_qfd_xhead #(
     end endgenerate
     wire [1023:0] fd_r = rd_s[6];
     wire [63:0]   fm_r = rm_s[6];
+    // FOFF_REP: per-face rotation with group-local select registers (same value as foff on the same edge: exact)
+    wire [2*1024-1:0] fd_rc;
+    wire [2*64-1:0]   fm_rc;
+    generate if (FOFF_REP != 0 && ONWARD_REG != 0) begin : g_frep
+        genvar fc, fg, fs, fbit;
+        for (fc = 0; fc < 2; fc = fc + 1) begin : g_c
+            (* keep = "true" *) reg [5:0] sel [0:16];   // 16 groups of 64 data bits + 1 for the mask
+            for (fg = 0; fg < 17; fg = fg + 1) begin : g_s
+                always @(posedge ck) sel[fg] <= a_d[1 + IBW + DESC + 2 + BW +: 6];
+            end
+            wire [1023:0] rd [0:6];
+            wire [63:0]   rm [0:6];
+            assign rd[0] = fd;
+            assign rm[0] = fm;
+            for (fs = 0; fs < 6; fs = fs + 1) begin : g_st
+                localparam integer K = 1 << fs;
+                for (fbit = 0; fbit < 1024; fbit = fbit + 1) begin : g_d
+                    assign rd[fs+1][fbit] = sel[fbit / 64][fs] ? rd[fs][(fbit + 1024 - 16*K) % 1024] : rd[fs][fbit];
+                end
+                for (fbit = 0; fbit < 64; fbit = fbit + 1) begin : g_m
+                    assign rm[fs+1][fbit] = sel[16][fs] ? rm[fs][(fbit + 64 - K) % 64] : rm[fs][fbit];
+                end
+            end
+            assign fd_rc[1024*fc +: 1024] = rd[6];
+            assign fm_rc[64*fc +: 64]     = rm[6];
+        end
+    end else begin : g_nfrep
+        assign fd_rc = {2{fd_r}};
+        assign fm_rc = {2{fm_r}};
+    end endgenerate
 
     // ---- data beat -> leaf write control (one edge), to the leaf pins: per tile {en, d, wo} ----
     // d = fb - W in {0, +1, -1} as equality compares against the precomputed W, W + 1, W - 1 (no carry chain between
@@ -944,7 +978,7 @@ module ot_qfd_xhead #(
         genvar cw;
         for (cw = 0; cw < 2; cw = cw + 1) begin : g_c
             ot_qfd_face_reg #(.W(2+1+1+6+64+1024+NE*18), .RB(2)) u_w (.ck(ck), .rst_n(rst_i),
-                .d({ctl[18*NE*cw +: 18*NE], fd_r, fm_r, foff, d_ep, fep, d_v, lwv_d}),
+                .d({ctl[18*NE*cw +: 18*NE], fd_rc[1024*cw +: 1024], fm_rc[64*cw +: 64], foff, d_ep, fep, d_v, lwv_d}),
                 .q({lw_ctl[18*NE*cw +: 18*NE], lw_d[1024*cw +: 1024], lw_m[64*cw +: 64], lw_off[6*cw +: 6], lc_ep[cw],
                     lw_ep[cw], lc_v[cw], lw_v[cw]}));
         end
