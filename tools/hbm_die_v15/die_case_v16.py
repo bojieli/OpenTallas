@@ -6,17 +6,18 @@
 Same pattern as die_case.py (d2: service engine + SM), extended to EVERY v16 source-contract instance
 (results/arch/hbm_die_v16/contract.json): views from tools/hbm_die_v15/v16_views.py (+ v16_synth_drive.py / v16_fetch.py),
 nets bit-exact from the contract edges, die clock trees per contract clock domain (die_clock_tree.py), die repeaters
-(repair_design -max_wire_length 400), global route, TT setup / FF hold STA.  Open inputs stay open (manifest, with
+(repair_design -max_wire_length = --max-wire-um, default the measured HBM die reach in
+results/arch/die_reach_1016.json via tools/die_reach.py; above it only with --allow-over-reach REASON), global route, TT setup / FF hold STA.  Open inputs stay open (manifest, with
 owner); straps are constants of the design and stay open in this timing case (listed); nothing is tied or stubbed.
-The source contract's current strict port-bind result is reported in the manifest. Open inputs or unqualified views
-keep the case diagnostic; this tool does not qualify a die by matching view ports alone.
+The v16 strict port bind FAILs (51 exposed input ports) -> every result of this case is labelled NOT_A_DIE_RESULT.
 
 Views: REAL = closed routed view (LEF + TT/FF ETM); SYNTH = current-source mapped-netlist ETM (ideal clocks, no wires,
 clock pin re-capped to one 2 fF entry) with a generated abstract: outline = the instance's grant slot when it is the
 only instance of that slot, else std area / 0.60 + 1.3 x macro area, square, grown until every port bit fits one
 0.048 um track per face over 90 % of the face (pin-bound outlines are flagged); every port on the face that points to
 the bit-weighted centroid of its peers (spill to the next face when full), ordered along the face by peer position.
-hfd_ckgen is placed at hb_ckgen. Domain clocks originate at its pll_<domain> output pins; the analog PLL is modeled.
+hfd_ckgen (PLL = the allowed analog model, no Liberty) is out of the case: the domain clocks and resets enter as die
+ports at its grant slot, as in d2.
 
 Placement order (every generated home is reported in manifest.json 'homes'):
   1. PHY at its grant slot; PC controller leaves over their PHY channel and service groups in their PC band box (d2
@@ -42,6 +43,8 @@ from die_case import synth_lef, entry_cap, ports_of_lib, rect_of, _minus  # noqa
 from view_case import lef_pins, lef_xy  # noqa: E402
 import clock_sites
 import die_clock_tree as dct  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import die_reach  # noqa: E402
 
 CONTRACT = ROOT / 'results/arch/hbm_die_v16/contract.json'
 GRANTS = ROOT / 'results/arch/hier_contract_1015/hbm_v15.json'
@@ -64,6 +67,9 @@ OWNER = [(r'hb_vms_(SW|SE|NW|NE)', lambda m: rf'(vmh|vmb)_{m.group(1)}\d*'),
          (r'hc_(SW|SE|NW|NE)', lambda m: rf'hc_{m.group(1)}\d'),
          (r'hb_quant_(NW)', lambda m: rf'quant_{m.group(1)}\d'),
          (r'hb_(idx|argmax)', lambda m: r'idx_\w+')]
+
+
+PIN_STEP = 0.096   # granted die pin pitch (10.417 pins/um, hbm_v15 grants)
 
 
 def snap(v, g):
@@ -133,6 +139,73 @@ def pin(port, bits, k):
     return f'{port}[{k}]' if bits > 1 else port
 
 
+def validate_view_coverage(instances, views):
+    """A missing receipt may be diagnostic; stale instance membership is an error."""
+    owners = {}
+    for cell, entry in views.items():
+        for name in entry['instances']:
+            if name in owners:
+                raise ValueError(f'duplicate view membership: {name}')
+            owners[name] = cell
+    missing = sorted(set(instances) - set(owners))
+    if missing:
+        raise ValueError(f'stale views.json: {len(missing)} contract instances have no view membership; '
+                         f'regenerate the view plan against the exact contract; examples {missing[:5]}')
+    for name, instance in instances.items():
+        entry = views[owners[name]]
+        representative = instances.get(entry.get('representative'))
+        if representative is None:
+            raise ValueError(f'view representative absent from contract: {owners[name]}')
+        if instance['master'] != entry['master'] or instance['ports'] != representative['ports']:
+            raise ValueError(f'view ABI mismatch: {name} -> {owners[name]}')
+        # Equal ports do not imply equal implementations: QID, pipeline ages,
+        # memory depth and static features can alter the mapped body and timing.
+        if instance.get('params', {}) != entry.get('params', {}):
+            raise ValueError(f'view parameter mismatch: {name} -> {owners[name]}')
+
+
+def communicating_pairs(nets, dom_of, clique_limit=8):
+    """Every source-to-sink branch participates, including wide multicast control."""
+    pairs = defaultdict(set)
+    for driver, ends in nets.items():
+        source = driver[0]
+        tiles = sorted({end[0] for end in ends})
+        edges = {(source, sink) for sink in tiles if sink != source}
+        if 2 <= len(tiles) <= clique_limit:
+            edges.update((x, y) for i, x in enumerate(tiles) for y in tiles[i + 1:])
+        for x, y in edges:
+            for domain in dom_of[x] & dom_of[y]:
+                pairs[domain].add(tuple(sorted((x, y))))
+    return {domain: sorted(edges) for domain, edges in pairs.items()}
+
+
+def clock_entries(insts, placement, cell_of, pin_xy, tile_pairs):
+    """Plan each literal clock pin; tile names alone hide long intra-tile stubs.
+
+    Source port-to-clock ownership is not yet proven, so communicating tiles use
+    all entry combinations conservatively, including pairs within each tile.
+    """
+    entries, aliases, by_tile = [], {}, defaultdict(list)
+    for tile, pins in sorted(insts.items()):
+        v = placement[tile]
+        for i, port in enumerate(sorted(pins)):
+            alias = tile if i == 0 else f'{tile}__ckp{i:03}'
+            if alias in aliases or (i and alias in insts):
+                raise ValueError(f'clock entry alias collision: {alias}')
+            # A missing physical clock pin is an input error, not a centre sink.
+            px, py = pin_xy[cell_of[tile]][port]
+            x, y = rect_of(v['x'], v['y'], v['w'], v['h'], v['o'], px, py)
+            entries.append((alias, port, x, y))
+            aliases[alias] = (tile, port)
+            by_tile[tile].append(alias)
+    pairs = set()
+    for names in by_tile.values():
+        pairs.update((x, y) for i, x in enumerate(names) for y in names[i + 1:])
+    for left, right in tile_pairs:
+        pairs.update(tuple(sorted((x, y))) for x in by_tile[left] for y in by_tile[right])
+    return entries, aliases, sorted(pairs)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--views', required=True, type=Path)
@@ -146,16 +219,57 @@ def main():
     ap.add_argument('--clock-mode', default='hbm=auto,stream=graph,serial=auto',
                     help="per domain htree|quad|lane|graph|auto (auto = graph when the domain has communicating tile pairs, "
                          "else htree; OWNER 07:30 10-16 low-skew die clock)")
-    ap.add_argument('--pair-max-tiles', type=int, default=8, help='a data net joining 2..N tiles makes clock pairs')
+    ap.add_argument('--pair-max-tiles', type=int, default=8,
+                    help='clique expansion limit; every source-to-sink branch is always a clock pair')
     ap.add_argument('--clock-bin-um', type=float, default=1600.0)
+    ap.add_argument('--no-plot', action='store_true', help='defer PNG rendering; manifest retains exact geometry for later rendering')
     ap.add_argument('--no-clock', action='store_true', help='placement/images only (skip die clock trees and run files)')
+    ap.add_argument('--pc-strip', type=float, default=0.0,
+                    help='d4b (H-DIE 10-16): grow every PC band box by this height (um) toward its SM row -- the S boxes '
+                         'upward, the N boxes downward -- shifting every plan block, grant slot, h-lane and relay home '
+                         'beyond the strip; the die grows by 2x. Room for the per-PC kshare + xcal_t row (d4a overflow).')
+    ap.add_argument('--compact-pins', action='store_true',
+                    help='d4b (H-DIE 10-16): SYNTH abstracts pack each bus at 0.096 um centred toward its peers '
+                         '(direction averaged over all instances of the master) instead of spreading over 90 percent of the face')
+    ap.add_argument('--d4b-homes', action='store_true',
+                    help='d4b (H-DIE 10-16): LG banks beside their user (pgslice / lg_pair / hc_q), not inside VM plan '
+                         'blocks; xload ctlw at the Manhattan minimax point of its SM peers')
+    die_reach.add_args(ap, 'hbm')
     a = ap.parse_args()
+    mw = die_reach.from_args(a, 'hbm')
     C = json.loads(a.contract.read_text()); G = json.loads(a.grants.read_text()); P = json.loads(a.plan.read_text())
     V = json.loads((a.views / 'views.json').read_text())
+    validate_view_coverage(C['instances'], V)
     lanes = json.loads(a.lanes.read_text())
     slots = {s['name']: s for s in G['slots']}
     W, H = G['floorplan']['die_um']
     I = C['instances']
+    strip = None
+    if a.pc_strip:
+        dh = a.pc_strip
+        ys = max(b['y'] + b['h'] for k_, b in P.items() if re.fullmatch(r'pc_S[WE]\d', k_))
+        yn = min(b['y'] for k_, b in P.items() if re.fullmatch(r'pc_N[WE]\d', k_))
+        fy = lambda y: y + (dh if y >= ys - 0.01 else 0.0) + (dh if y >= yn - 0.01 else 0.0)
+        for k_, b in P.items():
+            if isinstance(b, dict) and 'y' in b:
+                b['y'] = round(fy(b['y']), 3)
+                if re.fullmatch(r'pc_S[WE]\d', k_):
+                    b['h'] = round(b['h'] + dh, 3)
+                elif re.fullmatch(r'pc_N[WE]\d', k_):
+                    b['y'] = round(b['y'] - dh, 3); b['h'] = round(b['h'] + dh, 3)
+        for sl in G['slots']:
+            if 'origin' in sl and sl['origin']['y'] >= 100:
+                sl['origin']['y'] = round(fy(sl['origin']['y']), 3)
+        for k_, ln in lanes.items():
+            if 'h' in ln:
+                ln['h'] = round(fy(ln['h']), 3)
+        for n_, v_ in I.items():
+            m_ = re.search(r'home \(([\d.]+), ([\d.]+)\) um', v_.get('note', ''))
+            if m_ and not re.match(r'rly\d+_', n_):  # station homes already include the d4b PC strips
+                v_['note'] = v_['note'].replace(m_.group(0), f'home ({m_.group(1)}, {fy(float(m_.group(2))):.3f}) um')
+        H = round(H + 2 * dh, 3)
+        strip = dict(dh_um=dh, s_strip_at_y=ys, n_strip_at_y=yn, die_um=[W, H], die_mm2=round(W * H / 1e6, 2))
+        print('PC strip', strip)
     out = a.out; vd = out / 'views'; vd.mkdir(parents=True, exist_ok=True); (out / 'out').mkdir(exist_ok=True)
 
     # ---------------- views ----------------
@@ -170,12 +284,18 @@ def main():
             size[c] = lef_size(vd / f'{c}.lef')
         else:
             sd = a.views / 'synth' / c
-            libs = {k: sd / f"{e['wrapper']}_synth_{k}.lib" for k in ('tt', 'ff')}
+            synth_top = e.get('synth_top', e['wrapper'])
+            if synth_top != e['wrapper']:
+                receipt = json.loads((sd / 'meta.json').read_text())
+                assert (e['params'] == {} and synth_top == e['master'] == c
+                        and receipt['actual_top'] == synth_top
+                        and receipt['parameter_binding'] == 'EXACT_DIRECT_MASTER_PARAMS_EMPTY_NO_RENAME'), c
+            libs = {k: sd / f"{synth_top}_synth_{k}.lib" for k in ('tt', 'ff')}
             if not all(p.exists() for p in libs.values()):
                 excluded[c] = 'SYNTH view not built (see VIEWS/drive/<cell>.json)'
                 continue
             for k, p in libs.items():
-                t = p.read_text().replace(e['wrapper'], c)
+                t = p.read_text().replace(synth_top, c)
                 (vd / f'{c}_{k}.lib').write_text(t)
             ecap[c] = [entry_cap(vd / f'{c}_{k}.lib') for k in ('tt', 'ff')]
             kinds[c] = 'SYNTH'
@@ -183,6 +303,10 @@ def main():
             cell_of[n] = c
     inst = [n for n in I if n in cell_of]
     out_inst = sorted(set(I) - set(inst))
+    view_owner = {n: c for c, e in V.items() for n in e['instances']}
+    exclusion_details = {n: dict(master=I[n]['master'], source=I[n]['source'],
+                                  view_cell=view_owner[n], reason=excluded[view_owner[n]],
+                                  qualification='EXCLUDED_DIAGNOSTIC_NOT_NATIVE') for n in out_inst}
     ports = {c: {p: v['bits'] for p, v in I[V[c]['representative']]['ports'].items()} for c in kinds}
     dirs = {c: {p: v['direction'] for p, v in I[V[c]['representative']]['ports'].items()} for c in kinds}
     for c in kinds:     # view ports must equal the contract ports (REAL checked in v16_views; SYNTH = wrapper ports)
@@ -389,6 +513,29 @@ def main():
             else:
                 cx, cy = W / 2, H / 2; rule = 'no placed peer: die centre'
         w_, h_ = size[cell_of[n]]
+        if a.d4b_homes and re.fullmatch(r'lg_(SW|SE|NW|NE)_\d+(_b\d+)?', n):
+            users = [(p, b) for p, b in adj[n].items() if p in pl and not re.match(r'(lg_|hb_vms_|calendar_)', p)]
+            if users:
+                u = max(users, key=lambda t: t[1])[0]; cx, cy = centre(u); rule = f'd4b: beside its user {u}'
+                r = occ.find(cx, cy, w_, h_, 0.0)
+                put(n, r[0], r[1], 'R0', rule, 0.0); occ_res.mark(r[0], r[1], w_, h_); occ_big.mark(r[0], r[1], w_, h_)
+                homes[n] = dict(rule=rule, target=[round(cx, 1), round(cy, 1)], at=list(r))
+                continue
+        if a.d4b_homes and re.fullmatch(r'hb_vms_(SW|SE|NW|NE)', n):
+            # H-DIE 10-16 (coordinator SM_X decision, H-ELEM): the quadrant VM switch serves its own LG banks and the
+            # quadrant xload -> home it in its quadrant band at the nearest free fit to the quadrant SM centroid
+            q_ = n[-2:]; sms = [f'sm_{q_}{i}' for i in range(8) if f'sm_{q_}{i}' in pl]
+            cx = sum(centre(p)[0] for p in sms) / len(sms); cy = sum(centre(p)[1] for p in sms) / len(sms)
+            r = occ.find(cx, cy, w_, h_, HALO); rule = f'd4b: quadrant band, nearest free fit to the {q_} SM centroid'
+            put(n, r[0], r[1], 'R0', rule, HALO); occ_res.mark(r[0], r[1], w_, h_, HALO); occ_big.mark(r[0], r[1], w_, h_, HALO)
+            homes[n] = dict(rule=rule, target=[round(cx, 1), round(cy, 1)], at=list(r))
+            continue
+        if a.d4b_homes and I[n]['master'] == 'ot_hgi_sm_xload_cl2_ctlw':
+            sms = [p for p in adj[n] if p in pl and I[p]['master'] == 'ot_hbm_accel_smh_attn']
+            if sms:
+                xs = [centre(p)[0] for p in sms]; ys_ = [centre(p)[1] for p in sms]
+                cx, cy = (min(xs) + max(xs)) / 2, (min(ys_) + max(ys_)) / 2
+                rule = f'd4b: Manhattan minimax of its {len(sms)} SM peers'
         own = [k_ for pat, f_ in OWNER for k_ in [None] if re.fullmatch(pat, n)
                for k_ in P if isinstance(P[k_], dict) and 'x' in P[k_] and re.fullmatch(f_(re.fullmatch(pat, n)), k_)]
         if own:   # the plan blocks reserved for this instance's function: nearest free fit inside one of them
@@ -538,16 +685,26 @@ def main():
         cap = {f: 0.9 * (w if f in 'NS' else h) / 0.048 for f in 'NSEW'}
         want = {}
         clockish = set(p for d_ in clk.values() for p in [re.sub(r'\[\d+\]$', '', x) for x in d_.get(rep, [])])
+        insts_c = [n for n in V[c]['instances'] if n in pl] if a.compact_pins else [rep]
         for p, b in ports[c].items():
             pts = peer_xy.get((rep, p))
             if not pts:
                 want[p] = (['S', 'W', 'N', 'E'] if p in clockish else ['W', 'E', 'N', 'S'], 0.0, b)
                 continue
-            px = sum(x for x, _ in pts) / len(pts) - cx; py = sum(y for _, y in pts) / len(pts) - cy
-            if v['o'] in ('MY', 'R180'):
-                px = -px
-            if v['o'] in ('MX', 'R180'):
-                py = -py
+            # tile-frame direction to the peers, averaged over every instance of the master (one abstract serves all)
+            pxs, pys = [], []
+            for n_ in insts_c:
+                q_ = peer_xy.get((n_, p))
+                if not q_:
+                    continue
+                cx_, cy_ = centre(n_); o_ = pl[n_]['o']
+                px_ = sum(x for x, _ in q_) / len(q_) - cx_; py_ = sum(y for _, y in q_) / len(q_) - cy_
+                if o_ in ('MY', 'R180'):
+                    px_ = -px_
+                if o_ in ('MX', 'R180'):
+                    py_ = -py_
+                pxs.append(px_); pys.append(py_)
+            px = sum(pxs) / len(pxs); py = sum(pys) / len(pys)
             sc = {'E': px / w, 'W': -px / w, 'N': py / h, 'S': -py / h}
             order = sorted(sc, key=lambda f: -sc[f])
             along = (px if order[0] in 'NS' else py)
@@ -573,6 +730,26 @@ def main():
                 continue
             Lf = w if f in 'NS' else h
             tot = sum(k for _, _, _, k in L)
+            if a.compact_pins and tot * PIN_STEP <= 0.9 * Lf:
+                # d4b (H-DIE 10-16): each bus packed at the granted 0.096 um pitch, centred where it faces its peers
+                # (not spread over the whole face: the 5.7 mm SM xw_data spread was this abstract's artifact)
+                lo_, hi_ = 0.05 * Lf, 0.95 * Lf; runs = []
+                for along, p, base, k in sorted(L):
+                    ln_ = k * PIN_STEP; st_ = min(max(Lf / 2 + along - ln_ / 2, lo_), hi_ - ln_)
+                    if runs and st_ < runs[-1][1]:
+                        st_ = runs[-1][1]
+                    runs.append([st_, st_ + ln_, p, base, k])
+                over = runs[-1][1] - hi_ if runs else 0.0
+                if over > 0:                     # pushed past the face end: shift the tail back, keeping order
+                    for r_ in reversed(runs):
+                        r_[0] -= over; r_[1] -= over
+                        prev = runs[runs.index(r_) - 1] if runs.index(r_) else None
+                        if prev is None or prev[1] <= r_[0]:
+                            break
+                        over = prev[1] - r_[0]
+                for st_, en_, p, base, k in runs:
+                    pinlist.append((p, dirs[c][p], f, st_, en_, k, base, ports[c][p] > 1))
+                continue
             step = max(0.048, (0.9 * Lf) / max(tot, 1))
             x = 0.05 * Lf
             for _, p, base, k in sorted(L):
@@ -593,6 +770,7 @@ def main():
                           'full native/physical qualification remains OPEN)', die_um=[W, H], contract=str(a.contract),
                     plan=str(a.plan), grants=str(a.grants), lanes=str(a.lanes), views=kinds, flags=flags,
                     excluded_cells=excluded, excluded_instances=out_inst,
+                    excluded_instance_details=exclusion_details,
                     instances={c: sum(1 for n in inst if cell_of[n] == c) for c in kinds},
                     homes=homes, placeholder_slots_ignored=placeholder, placement_problems=bad, face_bits=face_report,
                     dropped_edge_bits={f'{k[0]}:{k[1]}': v for k, v in dropped.items()},
@@ -610,7 +788,12 @@ def main():
     manifest['consumed_view_sha256'] = {p.name: digest(p) for p in sorted(vd.iterdir())
                                         if p.suffix in ('.lef', '.lib')}
     manifest['native_complete'] = False
-    render(out, manifest, P, W, H)
+    manifest['max_wire'] = dict(mw, applied=bool(a.die_repeaters))
+    manifest['pc_strip'] = strip
+    manifest['d4b_homes'] = bool(a.d4b_homes)
+    manifest['layout_image_status'] = 'DEFERRED' if a.no_plot else 'GENERATED'
+    if not a.no_plot:
+        render(out, manifest, P, W, H)
     if a.no_clock:
         (out / 'manifest.json').write_text(json.dumps(manifest, indent=1))
         print(json.dumps(dict(insts=len(inst), nets=len(nets), excluded=len(excluded), homes=len(homes), problems=len(bad))))
@@ -621,42 +804,30 @@ def main():
     # every hard outline (relays too), minus the carved die-owned feedthrough channels (clock repeaters may sit there)
     obs = [r for n, v in pl.items() for r in solid(n, v['x'], v['y'], v['w'], v['h'], v['o'])]
     quad = {n: ('N' if centre(n)[1] > H / 2 else 'S') + ('E' if centre(n)[0] > W / 2 else 'W') for n in inst}
-    # communicating tile pairs per clock domain (OWNER 07:30): two instances that share a signal net (<= N tiles) and both
-    # take a clock of the domain; the 'graph' die tree is a spanning tree of these pairs
+    # Every communicating source-to-sink branch participates, regardless of fanout.
+    # Small nets additionally form cliques; large fanouts avoid quadratic expansion.
     dom_of = defaultdict(set)
     for d_, ii in clk.items():
         for n_ in ii:
             dom_of[n_].add(d_)
-    pairs = defaultdict(set)
-    for d, ends in nets.items():
-        tiles = sorted({e_[0] for e_ in ends})
-        if not 2 <= len(tiles) <= a.pair_max_tiles:
-            continue
-        for i_, x_ in enumerate(tiles):
-            for y_ in tiles[i_ + 1:]:
-                for d_ in dom_of[x_] & dom_of[y_]:
-                    pairs[d_].add((x_, y_))
-    pairs = {d_: sorted(v) for d_, v in pairs.items()}
-    trees, checks = {}, {}
+    pairs = communicating_pairs(nets, dom_of, a.pair_max_tiles)
+    trees, checks, entry_maps, literal_pairs = {}, {}, {}, []
     for di, (dom, insts) in enumerate(sorted(clk.items())):
         # the domain tree starts at the placed REAL hfd_ckgen's pll_<dom> output pin (routed LEF), cross-checked with the grant
         vk = pl[CKGEN]; cp = vxy[cell_of[CKGEN]][f'pll_{dom}']
         rx, ry = rect_of(vk['x'], vk['y'], vk['w'], vk['h'], vk['o'], cp[0], cp[1])
         gx, gy = dct.ckgen_pin_xy(ck, f'pll_{dom}')
         assert abs(rx - gx) + abs(ry - gy) < 5.0, (dom, (rx, ry), (gx, gy))
-        sinks = []
-        for n, pl_ in insts.items():
-            v = pl[n]; p0 = sorted(pl_)[0]
-            px, py = vxy[cell_of[n]].get(p0, (v['w'] / 2, v['h'] / 2))
-            x, y = rect_of(v['x'], v['y'], v['w'], v['h'], v['o'], px, py)
-            sinks.append((n, p0, x, y))
+        sinks, entry_map, entry_pairs = clock_entries(insts, pl, cell_of, vxy, pairs.get(dom, []))
+        entry_maps[dom] = entry_map
+        literal_pairs.extend(['/'.join(entry_map[x]), '/'.join(entry_map[y]), dom] for x, y in entry_pairs)
         mode = dict(kv.split('=') for kv in a.clock_mode.split(',')).get(dom, 'htree')
         if mode == 'auto':
             mode = 'graph' if pairs.get(dom) else 'htree'
-        t = dct.build(W, H, obs, (rx, ry), sinks, lambda n: quad[n], mode=mode, bin_um=a.clock_bin_um,
-                      pairs=pairs.get(dom, []))
-        checks[dom] = dict(mode=mode, model=t['model'], pairs=len(pairs.get(dom, [])),
-                           **dct.clock_check(t, pairs.get(dom, [])))
+        t = dct.build(W, H, obs, (rx, ry), sinks, lambda n: quad[entry_map[n][0]], mode=mode, bin_um=a.clock_bin_um,
+                      pairs=entry_pairs)
+        checks[dom] = dict(mode=mode, model=t['model'], pairs=len(entry_pairs),
+                           **dct.clock_check(t, entry_pairs))
         print('clock_check', dom, mode, json.dumps(checks[dom]['summary']), flush=True)
         inside = [b for b in t['buffers'] if any(o[0] < b[2] < o[2] and o[1] < b[3] < o[3] for o in obs)]
         assert not inside, (dom, len(inside), inside[:3])   # H-DIE 02:20: no die clock buffer inside any hard outline
@@ -670,13 +841,23 @@ def main():
             l2 = []
             for ld in loads:
                 if ld[0] == 'pin':
-                    l2 += [('pin', ld[1], p) for p in insts[ld[1]]]
+                    tile, actual_pin = entry_map[ld[1]]
+                    assert actual_pin == ld[2], (ld, actual_pin)
+                    l2.append(('pin', tile, actual_pin))
                 else:
                     l2.append((ld[0], ren(ld[1])))
             tnets.append((ren(nn), d2, l2))
         trees[dom] = dict(buffers=bufs, nets=tnets, model=t['model'], port=port)
         print('clock', dom, 'sinks', len(sinks), 'buffers', len(bufs), flush=True)
 
+    manifest['clock_entry_map'] = entry_maps
+    manifest['clock_entry_scope'] = 'Each literal clock pin planned separately; conservative all-entry communicating pairs. Native phase/ownership qualification remains OPEN.'
+    (out / 'die_clock_check_pairs.json').write_text(json.dumps(dict(
+        pairs=[[x, y, dom] for dom, edges in sorted(pairs.items()) for x, y in edges],
+        entry_pairs=literal_pairs,
+        scope='Every source-to-sink branch plus conservative same-domain literal entry combinations and intra-tile entries. '
+              'Tile-pair summaries select their worst combination; literal entry pairs preserve actual domain geometry. '
+              'Actual STA and native phase/port ownership qualification remain required.'), indent=1))
     clock_sites.allocate(trees, W, H, obs)
     render(out, manifest, P, W, H, trees)
     # ---------------- die.v ----------------
@@ -783,6 +964,7 @@ make_tracks M1 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036
 {chr(10).join(plc)}
 {cks}
 place_pins -hor_layers M4 -ver_layers M5 -min_distance 2
+write_db /work/out/place.odb
 source {plat}/setRC.tcl
 set blk [ord::get_db_block]
 foreach n [$blk getNets] {{ if {{[string match dk?_* [$n getName]] || [string match n_dk?_* [$n getName]] || [string match ckg_pll_* [$n getName]]}} {{ $n setSigType CLOCK }} }}
@@ -858,7 +1040,7 @@ puts OT_DONE
 estimate_parasitics -placement
 set_dont_touch [get_nets -quiet {{dk?_* n_dk?_* ckg_*}}]
 set r0 [clock seconds]
-repair_design -max_wire_length 400 -buffer_gain 4.0
+{die_reach.repair_tcl(mw, '-buffer_gain 4.0')}
 puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"'''
     (out / 'run.tcl').write_text(tcl.replace('{REPEAT}', rep_))
     shutil.copy(ROOT / 'tools/die_clock_check.tcl', out / 'die_clock_check.tcl')

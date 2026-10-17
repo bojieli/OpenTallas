@@ -56,6 +56,8 @@
 // Added cycles: boot / program replay are initialisation; a calendar event of compiled cycle c reaches its consumer pin
 // c edges after the edge that samples the calendar start (dt edges + the face output register; sys_face_image.py
 // CAL_OUT_EDGES = 1).  EMB words: +1 edge (decode register) on the D2D emb_rx_v edge.
+// ROM output register (2026-10-16): boot replay and program replay decode one edge later (+1 edge each, initialisation
+// only; the admission replay stays inside the compiled ADM_REPLAY window); no token-path edge.
 // MUT (bench only): 1 = T events one edge late, 2 = embedding word index off by one, 3 = PW replay skips row 7.
 // =====================================================================================================================
 module qfd_sys_face #(
@@ -162,21 +164,36 @@ module qfd_sys_face #(
     reg  [11:0] rom_a;
     reg         rom_ce;
     wire [71:0] rom_q;
+    // The hard macro's netlist cell carries no parameters (the image is its via map, layout content-independent;
+    // OpenROAD's netlist reader rejects instance parameters): synthesis binds the blackbox view, simulation the model.
+`ifdef SYNTHESIS
+    ot_rom_4096x72_m8 u_rom (.clk(ck), .ce_in(rom_ce), .addr_in(rom_a), .rd_out(rom_q));
+`else
     ot_rom_4096x72_m8 #(.VIAMAP(ROM_VIAMAP), .INSTANCE(ROM_INSTANCE)) u_rom (.clk(ck), .ce_in(rom_ce), .addr_in(rom_a), .rd_out(rom_q));
+`endif
 
     // ================================================================ boot / program replay
-    // Read pipeline: issue registers (rom_ce / rom_a + iss_*) at edge k, the macro samples at k+1, rom_q is decoded at
-    // k+2 (rd_*).  One row per edge.
+    // Read pipeline: issue registers (rom_ce / rom_a + iss_*) at edge k, the macro samples at k+1, rom_q is CAPTURED
+    // unchanged into rom_qr at k+2 (rd_*), and decoded from rom_qr at k+3 (dq_*).  One row per edge.
+    // ROM OUTPUT REGISTER (Q-SYSFACE 2026-10-16, structural fix of qfd_sys_face-ec1-0b09167d6 NEEDS_RTL TT -57.85 ps):
+    // the macro's clk->q (~520 ps of the 833 ps cycle) used to feed the boot decode / fault trees (|rom_q[59:32], the
+    // target / address compares, boot_fault / prog_fault enables, the next-row issue) in the same cycle.  rom_q now
+    // reaches only the D pins of 72 plain capture flops; every decode starts from a register.  Cost: +1 edge on the
+    // power-on boot replay and +1 edge on the admission program replay (initialisation only; inside the compiled
+    // ADM_REPLAY 1,056-edge window of tools/qwen_split/d2d_link_calendar.py); 0 edges on the token path.
     localparam [2:0] S_RST = 3'd0, S_BOOT = 3'd1, S_IDLE = 3'd2, S_PROG = 3'd3, S_ARM = 3'd4;
     reg  [2:0]  st;
     reg         boot_done;
-    reg         iss_boot, iss_prog, rd_boot, rd_prog;
-    reg  [10:0] iss_idx, rd_idx, pidx;
+    reg         iss_boot, iss_prog, rd_boot, rd_prog, dq_boot, dq_prog;
+    reg  [10:0] iss_idx, rd_idx, dq_idx, pidx;
+    reg         boot_iss_last;                 // boot row 0x7ff (ROM row 4095) has been issued: nothing left to stream
+    reg  [71:0] rom_qr;                        // ROM output register (no reset / enable: the macro output is its only D)
+    always @(posedge ck) rom_qr <= rom_q;
     reg         boot_fault, prog_fault;
     wire        begin_v, rp_auth_v;
-    wire [3:0]  b_tgt  = rom_q[71:68];
-    wire [7:0]  b_addr = rom_q[67:60];
-    wire        b_res  = |rom_q[59:32];
+    wire [3:0]  b_tgt  = rom_qr[71:68];
+    wire [7:0]  b_addr = rom_qr[67:60];
+    wire        b_res  = |rom_qr[59:32];
     reg         t_we, l_we, e_we;
     reg  [7:0]  c_addr;
     reg  [31:0] c_data;
@@ -185,37 +202,41 @@ module qfd_sys_face #(
     reg  [43:0]  dh_run;                       // {kv_write_drained, h_start, stage6, tp_token18, tp_pos18}
     always @* seq_dh = {dh_prog, dh_run};
     wire        any_running;
-    wire        boot_row = rd_boot && st == S_BOOT;
+    wire        boot_row = dq_boot && st == S_BOOT;
     always @(posedge ck or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_RST; rom_ce <= 1'b0; rom_a <= 12'd0; iss_boot <= 1'b0; iss_prog <= 1'b0; rd_boot <= 1'b0; rd_prog <= 1'b0;
+            dq_boot <= 1'b0; dq_prog <= 1'b0; dq_idx <= 11'd0; boot_iss_last <= 1'b0;
             iss_idx <= 11'd0; rd_idx <= 11'd0; pidx <= 11'd0; boot_done <= 1'b0; boot_fault <= 1'b0; prog_fault <= 1'b0;
             first_ofs <= 32'd0;
             t_we <= 1'b0; l_we <= 1'b0; e_we <= 1'b0; c_addr <= 8'd0; c_data <= 32'd0;
             tt_pw <= 75'd0; dh_prog <= 143'd0;
         end else begin
             rd_boot <= iss_boot; rd_prog <= iss_prog; rd_idx <= iss_idx;
+            dq_boot <= rd_boot; dq_prog <= rd_prog; dq_idx <= rd_idx;
             iss_boot <= 1'b0; iss_prog <= 1'b0; rom_ce <= 1'b0;
             t_we <= 1'b0; l_we <= 1'b0; e_we <= 1'b0;
             tt_pw[74] <= 1'b0; dh_prog[142] <= 1'b0; dh_prog[74] <= 1'b0;
             case (st)
-                S_RST:  begin st <= S_BOOT; pidx <= 11'd0; end
+                S_RST:  begin st <= S_BOOT; pidx <= 11'd0; boot_iss_last <= 1'b0; end
                 S_BOOT: begin
-                    // stream the boot rows from BOOT_BASE until the END row is decoded
-                    if (!boot_row || b_tgt != 4'd15) begin
-                        rom_ce <= 1'b1; rom_a <= BOOT_BASE + {1'b0, pidx}; iss_boot <= 1'b1; pidx <= pidx + 11'd1;
-                        if (pidx == 11'h7ff) boot_fault <= 1'b1;            // the table runs off the ROM without END
+                    // stream the boot rows from BOOT_BASE until the END row is decoded (the rows already in flight
+                    // behind END are dropped: they decode in S_IDLE)
+                    if ((!boot_row || b_tgt != 4'd15) && !boot_iss_last) begin
+                        rom_ce <= 1'b1; rom_a <= BOOT_BASE + {1'b0, pidx}; iss_boot <= 1'b1; iss_idx <= pidx; pidx <= pidx + 11'd1;
+                        if (pidx == 11'h7ff) boot_iss_last <= 1'b1;
                     end
                     if (boot_row) begin
+                        if (b_tgt != 4'd15 && dq_idx == 11'h7ff) boot_fault <= 1'b1;   // the table runs off the ROM without END
                         if (b_tgt == 4'd15) begin
                             st <= S_IDLE; boot_done <= 1'b1; pidx <= 11'd0;
-                            if (b_res || b_addr != 8'd0 || rom_q[31:0] != 32'd0) boot_fault <= 1'b1;
+                            if (b_res || b_addr != 8'd0 || rom_qr[31:0] != 32'd0) boot_fault <= 1'b1;
                         end else begin
                             if (b_res) boot_fault <= 1'b1;
-                            c_addr <= b_addr; c_data <= rom_q[31:0];
+                            c_addr <= b_addr; c_data <= rom_qr[31:0];
                             case (b_tgt)
                                 // D2D calendars: written by qfd_d2d_cal_seq (single producer), not by this ROM
-                                4'd6: begin first_ofs <= rom_q[31:0]; if (b_addr != 8'd0 || rom_q[31:0] == 32'd0) boot_fault <= 1'b1; end
+                                4'd6: begin first_ofs <= rom_qr[31:0]; if (b_addr != 8'd0 || rom_qr[31:0] == 32'd0) boot_fault <= 1'b1; end
                                 4'd3: begin t_we <= 1'b1; if (b_addr[6]) boot_fault <= 1'b1; end
                                 4'd4: begin l_we <= 1'b1; if (b_addr[6:5] != 2'd0) boot_fault <= 1'b1; end
                                 4'd5: begin e_we <= 1'b1; if (b_addr[6:4] != 3'd0) boot_fault <= 1'b1; end
@@ -241,23 +262,23 @@ module qfd_sys_face #(
                         rom_ce <= 1'b1; iss_prog <= 1'b1; iss_idx <= pidx;
                         rom_a <= {1'b0, (MUT == 3 && pidx == 11'd7) ? pidx + 11'd1 : pidx};
                         pidx <= pidx + 11'd1;
-                    end else if (!iss_prog && !rd_prog) st <= S_IDLE;
+                    end else if (!iss_prog && !rd_prog && !dq_prog) st <= S_IDLE;
                 end
             endcase
             if (begin_v && (st == S_BOOT || st == S_RST)) prog_fault <= 1'b1;
             // program row decode: PW i -> TT pw + dh pw (both program copies), DW j -> dh dw
-            if (rd_prog) begin
-                if (rom_q[71:64] != 8'd0) prog_fault <= 1'b1;
-                if (rd_idx < PW_ROWS[10:0]) begin
-                    tt_pw <= {1'b1, rd_idx[9:0], rom_q[63:0]};
-                    dh_prog[74] <= 1'b1; dh_prog[73:64] <= rd_idx[9:0]; dh_prog[63:0] <= rom_q[63:0];
+            if (dq_prog) begin
+                if (rom_qr[71:64] != 8'd0) prog_fault <= 1'b1;
+                if (dq_idx < PW_ROWS[10:0]) begin
+                    tt_pw <= {1'b1, dq_idx[9:0], rom_qr[63:0]};
+                    dh_prog[74] <= 1'b1; dh_prog[73:64] <= dq_idx[9:0]; dh_prog[63:0] <= rom_qr[63:0];
                 end else begin
-                    dh_prog[142] <= 1'b1; dh_prog[141:139] <= rd_idx[2:0]; dh_prog[138:75] <= rom_q[63:0];
+                    dh_prog[142] <= 1'b1; dh_prog[141:139] <= dq_idx[2:0]; dh_prog[138:75] <= rom_qr[63:0];
                 end
             end
         end
     end
-    wire prog_busy = (st == S_PROG) || (st == S_ARM) || iss_prog || rd_prog;
+    wire prog_busy = (st == S_PROG) || (st == S_ARM) || iss_prog || rd_prog || dq_prog;
 
     // ================================================================ program record port (existing RTL)
     wire        rp_program_ready, rp_fault;

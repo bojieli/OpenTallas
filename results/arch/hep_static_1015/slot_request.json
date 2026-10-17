@@ -32,11 +32,29 @@
  "clock": "one root clk (link clock = ot_pdie_serdes ck), ~10k sinks (< 15k), entry S face M5 as contracted",
  "kit_outline_um": [
   434.72,
-  293.76
+  315.36
  ],
  "route2": "2026-10-15 22:50 PT: route-1 EARLY_FAIL_HOLD fixed structurally (replicated wide selects, bypass-free SRAM leaf, macro columns facing one 47.3 um centre channel, logic band at the COLL S / SerDes W faces). Kit 434.72 x 293.76 um sits inside the 434.72 x 515.2 window from y = 0 (COLL face); the rest of the window is free for the die.",
  "pins_route2": {
   "COLL face S (x um from the W end)": "tx_v/tx_frame 4.3-150.1, controls 155.5-192.2, clk 216.0-218.2, rx_pin_v/rx_pin_flit 232.2-430.2",
   "SerDes face W (y um)": "sd_tx 2.2-70.2, sd_rx 71.3-139.3, sd_st 140.4-142.6"
+ },
+ "route4_update_20261016": {
+  "outline_um": [
+   434.72,
+   315.36
+  ],
+  "clk_pin_S_um": [
+   151.2,
+   153.36
+  ],
+  "pin_ranges": "physical/ref_tile/hep_static_ref_1015/spec.json pin_ranges (unchanged except clk)",
+  "latency": "SerDes rx pin -> pingpong phy input 3 edges (was 2): +1 RX cycle at the off-die boundary for the compiler / link latency budget; TX unchanged (2 edges)",
+  "why": "route 3 native audit: capture 212.7 ps on sd_rx[1] (9 loads) and launch 223.2 ps on 3 sd_tx pins"
+ },
+ "pins_route5": {
+  "note": "2026-10-16 H-LKEP route 5 (route-4 native FAIL in the SW corner): 19.44 um corner keep-out on both faces",
+  "COLL face S (x um from the W end)": "tx_v 23.76-24.84, tx_frame 25.92-169.56, clk 170.64-172.8, controls 174.96-211.68, rx_pin_v/rx_pin_flit 232.2-430.2",
+  "SerDes face W (y um)": "sd_tx 21.6-99.36, sd_rx 101.52-169.56, sd_st 170.64-172.8"
  }
 }

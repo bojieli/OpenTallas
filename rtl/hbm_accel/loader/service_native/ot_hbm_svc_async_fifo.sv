@@ -49,4 +49,38 @@ module ot_hbm_svc_async_fifo #(parameter integer WIDTH=32,DEPTH=8)(
   end
  end
 endmodule
+
+// Error-only sticky status transfer. A single FIFO token replaces a separate
+// ad hoc status synchronizer, so all asynchronous data follows the audited
+// Gray FIFO. This does not participate in normal compiled issue or pacing.
+// The source remembers a transient fault even before the FIFO is online.
+// Resetting either interface flushes the token and permits resending a still
+// asserted source fault. Detection takes the FIFO online/synchronizer latency
+// plus one source edge and one destination capture edge, rather than two flops.
+module ot_hbm_svc_fault_cdc #(parameter integer MUT=0)(
+ input wire wr_clk,wr_rst_n,rd_clk,rd_rst_n,input wire src_fault,
+ output wire dst_fault,output wire wr_overflow,rd_underflow
+);
+ wire both_reset=wr_rst_n&&rd_rst_n;
+ wire src_reset=(MUT==3)?wr_rst_n:both_reset;
+ reg pending,sent;
+ wire ready,valid;wire[0:0]data;
+ wire offer=(MUT==1)?1'b0:((MUT==4)?pending:((MUT==5)?(src_fault&&!sent&&ready):(pending&&!sent&&ready)));
+ always @(posedge wr_clk or negedge src_reset)begin
+  if(!src_reset)begin pending<=0;sent<=0;end
+  else begin
+   if(src_fault)pending<=1;
+   if(pending&&!sent&&ready)sent<=1;
+  end
+ end
+ ot_hbm_svc_async_fifo #(.WIDTH(1),.DEPTH(4)) u_status(
+  .wr_clk(wr_clk),.wr_rst_n(wr_rst_n),.wr_valid(offer),.wr_ready(ready),.wr_data(1'b1),.wr_overflow(wr_overflow),
+  .rd_clk(rd_clk),.rd_rst_n(rd_rst_n),.rd_valid(valid),.rd_ready(valid),.rd_data(data),.rd_underflow(rd_underflow));
+ reg sticky;
+ always @(posedge rd_clk or negedge both_reset)begin
+  if(!both_reset)sticky<=0;
+  else if(valid&&data[0])sticky<=1;
+ end
+ assign dst_fault=(MUT==2)?valid:sticky;
+endmodule
 `default_nettype wire

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_capt_status_x43_s",
+ "enable": false,
+ "reason": "Every input (b0/b2/b3/bpar, t_mark) is registered in RTL at every serial edge (sh0/sh2/sh3/bq/mk, zero added latency, see dsfd_capt_status_x43.sv) and t_st is the stq flop. A generic recipe-3 output register would add one serial cycle to the status lane (unpriced)."
+}

@@ -52,8 +52,14 @@ def command(word):
     if arg>>17 or not 1 <= (arg&0xffff) <= 1024: raise ValueError('invalid engine3 coll_message count/reserved bits')
     return ((word>>83)<<7)|(word&127),arg&65535,(arg>>16)&1
 
-def compile_image(request,root):
-    if request['abi']!=ABI or request['latencies']!=LATENCIES: raise ValueError('unbound physical latency profile')
+def compile_image(request,root,*,latency_profile=None):
+    bound_latencies=LATENCIES if latency_profile is None else latency_profile
+    if set(bound_latencies)!=set(LATENCIES): raise ValueError('incomplete physical latency profile')
+    if any(bound_latencies[k]!=v for k,v in LATENCIES.items() if k!='vm_request_to_issue_edges'):
+        raise ValueError('unsupported non-VM latency change')
+    read_lead=bound_latencies['vm_request_to_issue_edges']
+    if type(read_lead)is not int or read_lead<1: raise ValueError('invalid VM read lead')
+    if request['abi']!=ABI or request['latencies']!=bound_latencies: raise ValueError('unbound physical latency profile')
     if request['command_abi']!='opentallas.s81.cmd84.v1': raise ValueError('command ABI')
     evidence=request['evidence']
     if not evidence: raise ValueError('missing source evidence')
@@ -93,12 +99,12 @@ def compile_image(request,root):
     for edge,c in enumerate(cycles):
         actual=[kind for kind,field in consumer_fields.items() if c['controls'][field]]
         if actual:
-            if len(actual)!=1 or edge<14 or edge-14 not in reservations:
-                raise ValueError('VM return must have exactly one owner14edges after request')
-            if actual[0]!=reservations[edge-14]['consumer']:
+            if len(actual)!=1 or edge<read_lead or edge-read_lead not in reservations:
+                raise ValueError(f'VM return must have exactly one owner{read_lead}edges after request')
+            if actual[0]!=reservations[edge-read_lead]['consumer']:
                 raise ValueError('VM return owner differs from read reservation')
         if edge in reservations:
-            target=edge+14
+            target=edge+read_lead
             if target>=len(cycles) or not cycles[target]['controls'][consumer_fields[reservations[edge]['consumer']]]:
                 raise ValueError('unconsumed VM source read')
     pending={};words=[];source_queue=[];issues={};commits={};hc_inputs={};hc_writes={}
@@ -253,11 +259,12 @@ def pack_macro_banks(words,path):
     return files
 
 
-def emit(request,root,path):
-    words=compile_image(request,root)
+def emit(request,root,path,*,latency_profile=None):
+    bound_latencies=LATENCIES if latency_profile is None else latency_profile
+    words=compile_image(request,root,latency_profile=bound_latencies)
     path.write_text(''.join(f'{w:0{(ROM_BITS+3)//4}x}\n' for w in words))
     banks=pack_macro_banks(words,path)
     return dict(abi=ABI,control_bits=CONTROL_BITS,rom_bits=ROM_BITS,cycles=len(words),
-                sha256=hashlib.sha256(path.read_bytes()).hexdigest(),latencies=LATENCIES,
+                sha256=hashlib.sha256(path.read_bytes()).hexdigest(),latencies=bound_latencies,
                 macro='ot_rom_4096x266_m8',macro_count=3,macro_depth=4096,macro_bank_files=banks,
                 integration_ready=False,qualification='actual ROM-backed controller component; native production source/phase/price acceptance is separate')

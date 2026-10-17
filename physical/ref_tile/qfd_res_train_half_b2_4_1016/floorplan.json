@@ -1,0 +1,123 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qfd_res_train_half_b2_4_1016",
+ "top": "qfd_res_train_half_b2_4",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  777.6,
+  518.4
+ ],
+ "core": [
+  2.16,
+  2.16,
+  775.44,
+  516.24
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "S": [
+   "rq"
+  ],
+  "N": [
+   "ck",
+   "ck_bank",
+   "rst_n"
+  ],
+  "E": [
+   "train_start",
+   "train_count",
+   "capture_stride",
+   "payload_write",
+   "slot_count",
+   "rb",
+   "fault"
+  ]
+ },
+ "clock_port": "ck",
+ "clock_ports": [
+  "ck",
+  "ck_bank[0]",
+  "ck_bank[1]",
+  "ck_bank[2]",
+  "ck_bank[3]",
+  "ck_bank[4]",
+  "ck_bank[5]",
+  "ck_bank[6]",
+  "ck_bank[7]",
+  "ck_bank[8]",
+  "ck_bank[9]",
+  "ck_bank[10]",
+  "ck_bank[11]",
+  "ck_bank[12]",
+  "ck_bank[13]",
+  "ck_bank[14]",
+  "ck_bank[15]",
+  "ck_bank[16]",
+  "ck_bank[17]",
+  "ck_bank[18]",
+  "ck_bank[19]",
+  "ck_bank[20]",
+  "ck_bank[21]",
+  "ck_bank[22]",
+  "ck_bank[23]"
+ ],
+ "blocks": [],
+ "findings": [
+  [
+   "WARN",
+   "clock_span",
+   "777.6 x 518.4 um: one clock root over > 600 um",
+   "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  ]
+ ],
+ "referenced": [
+  "rtl/qwen_split/qfd_res_train_half_b2.sv",
+  "rtl/qwen_split/qfd_res_train_half_b2_wrappers.sv",
+  "physical/ref_tile/qfd_res_train_half_b2_4_1016/kit.env",
+  "physical/ref_tile/qfd_res_train_half_b2_4_1016/clock.sdc",
+  "physical/ref_tile/qfd_res_train_half_b2_4_1016/signoff.sdc",
+  "physical/ref_tile/qfd_res_train_half_b2_4_1016/pdn.tcl",
+  "physical/ref_tile/qfd_res_train_half_b2_4_1016/pre_cts.tcl",
+  "physical/ref_tile/qfd_res_train_half_b2_4_1016/post_cts.tcl",
+  "physical/ref_tile/qfd_res_train_half_b2_4_1016/post_grt.tcl",
+  "physical/ref_tile/qfd_res_train_half_b2_4_1016/pre_drt.tcl",
+  "physical/ref_tile/qfd_res_train_half_b2_4_1016/pre_fill.tcl",
+  "physical/ref_tile/qfd_res_train_half_b2_4_1016/post_fill.tcl",
+  "physical/ref_tile/qfd_res_train_half_b2_4_1016/pre_grt.tcl",
+  "physical/ref_tile/qfd_res_train_half_b2_4_1016/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/qfd_res_train_half_b2_4_1016/pre_gpl.tcl",
+  "physical/ref_tile/qfd_res_train_half_b2_4_1016/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/qfd_res_train_half_b2_4_1016/clock_entry.sdc"
+ ]
+}

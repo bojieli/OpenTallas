@@ -32,6 +32,8 @@ module ot_qwen_me_array_dvm_w12 #(
     parameter integer HB = 2,
     parameter integer LEAF_READ_PIN_PIPE = 0,
     parameter integer LEAF_FILL_PIPE = 0,
+    parameter integer HEAD_LOCAL_RST = 0,
+    parameter integer HEAD_ONWARD_REG = 0,
     parameter integer LEAF_BANK_PIPE = 0,
     parameter integer REQ_PIPE = 0,
     parameter integer DX = 10 + LEAF_READ_PIN_PIPE + LEAF_BANK_PIPE + REQ_PIPE + (NH/2-1)*LEAF_FILL_PIPE,
@@ -171,7 +173,7 @@ module ot_qwen_me_array_dvm_w12 #(
     wire [NT-1:0]   go_t;
     wire [NT*IBW-1:0] ib_t;
     ot_qfd_xdvm_fabric #(.AW(AW), .NW(NW), .XCW(XCW), .IL(IL), .NCOL(NCOL), .NH(NH), .TG(TG), .SMIN(SMIN), .SMAX(SMAX),
-        .HB(HB), .LEAF_FILL_PIPE(LEAF_FILL_PIPE), .LEAF_READ_PIN_PIPE(LEAF_READ_PIN_PIPE), .LEAF_BANK_PIPE(LEAF_BANK_PIPE), .REQ_PIPE(REQ_PIPE), .DX(DX), .FILL_LEAD(FILL_LEAD), .TIDM(TIDM), .XOFF(XOFF), .NATIVE_AFFINE(NATIVE_AFFINE),.STATIC_SCHEDULE(STATIC_SCHEDULE),.TAP_MUT(TAP_MUT), .LEAF_MUT(LEAF_MUT),
+        .HB(HB), .LEAF_FILL_PIPE(LEAF_FILL_PIPE), .HEAD_LOCAL_RST(HEAD_LOCAL_RST), .HEAD_ONWARD_REG(HEAD_ONWARD_REG), .LEAF_READ_PIN_PIPE(LEAF_READ_PIN_PIPE), .LEAF_BANK_PIPE(LEAF_BANK_PIPE), .REQ_PIPE(REQ_PIPE), .DX(DX), .FILL_LEAD(FILL_LEAD), .TIDM(TIDM), .XOFF(XOFF), .NATIVE_AFFINE(NATIVE_AFFINE),.STATIC_SCHEDULE(STATIC_SCHEDULE),.TAP_MUT(TAP_MUT), .LEAF_MUT(LEAF_MUT),
         .HEAD_MUT(HEAD_MUT)) u_fab (
         .clk(clk), .rst_n(rst_n), .go_acc(go && ready), .ib(ib),
         .xpf_v(xpf_v), .xpf_xbase(xpf_xbase), .xpf_xcs(xpf_xcs), .xpf_xks(xpf_xks), .xpf_split(xpf_split),
@@ -245,6 +247,8 @@ module ot_qfd_xdvm_fabric #(
     parameter integer HB = 2,
     parameter integer LEAF_READ_PIN_PIPE = 0,
     parameter integer LEAF_FILL_PIPE = 0,
+    parameter integer HEAD_LOCAL_RST = 0,
+    parameter integer HEAD_ONWARD_REG = 0,
     parameter integer LEAF_BANK_PIPE = 0,
     parameter integer REQ_PIPE = 0,
     parameter integer DX = 10 + LEAF_READ_PIN_PIPE + LEAF_BANK_PIPE + REQ_PIPE + (NH/2-1)*LEAF_FILL_PIPE,
@@ -253,6 +257,11 @@ module ot_qfd_xdvm_fabric #(
     parameter integer XOFF = 3,
     parameter integer NATIVE_AFFINE=0,
     parameter integer STATIC_SCHEDULE=0,
+    // HEAD_CHAIN 1 (Q-LINK-D2D 2026-10-16): the head row as the die builds it -- two roots (hw W, he E), each side's
+    // NCOL/2 heads chained through their onward copies b_d (OS = 1 edge per hop, 2 with HEAD_ONWARD_REG 2), every
+    // column's corridor outputs equalised to the farthest head (lockstep tiles): + HCH = (NCOL/2 - 1) * OS edges on the
+    // head row.  0: the legacy broadcast of hw to every column (b_d unused).
+    parameter integer HEAD_CHAIN = 0,
     parameter integer TAP_MUT = 0,
     parameter integer LEAF_MUT = 0,
     parameter integer HEAD_MUT = 0
@@ -303,6 +312,16 @@ module ot_qfd_xdvm_fabric #(
     ot_hdc_delay #(.W(HW), .D(HB), .RESET(1)) u_hv (.clk(clk), .rst_n(rst_n), .d(hw0 & VM), .q(hv));
     ot_hdc_delay #(.W(HW), .D(HB)) u_hp (.clk(clk), .rst_n(rst_n), .d(hw0), .q(hp));
     wire [HW-1:0]  hw = (hp & ~VM) | hv;
+    wire [HW-1:0]  hev, hep;
+    ot_hdc_delay #(.W(HW), .D(HB), .RESET(1)) u_hev (.clk(clk), .rst_n(rst_n), .d(he0 & VM), .q(hev));
+    ot_hdc_delay #(.W(HW), .D(HB)) u_hep (.clk(clk), .rst_n(rst_n), .d(he0), .q(hep));
+    wire [HW-1:0]  he = (hep & ~VM) | hev;
+    localparam integer HOS = (HEAD_ONWARD_REG >= 2) ? 2 : 1;      // edges per head-row hop (onward copy)
+    localparam integer HSD = NCOL / 2;                             // heads per side
+    generate if (HEAD_CHAIN != 0 && (NCOL % 2) != 0) begin : g_bad_chain
+        initial $error("HEAD_CHAIN needs an even NCOL (two roots)");
+    end endgenerate
+    wire [NCOL*HW-1:0] hb_all;                  // each column head's onward copy b_d
     assign fch[NCOL] = 1'b0;
     // tile id of (column, head row): rows 0 .. NH-1 = N stations outward (die row NH + s), NH .. 2NH-1 = S stations
     // outward (die row NH - 1 - s); TIDM 1: 16 x block + morton(c mod 4, die row mod 4) (compute_spine.ref_tile_id,
@@ -329,6 +348,17 @@ module ot_qfd_xdvm_fabric #(
     // -- columns ---------------------------------------------------------------------------------------------------
     genvar c, j, s, h;
     generate for (c = 0; c < NCOL; c = c + 1) begin : g_col
+        // side W: columns HSD-1 (next to the root) .. 0; side E: HSD .. NCOL-1; K = hops from the root
+        localparam integer K   = (c < HSD) ? (HSD - 1 - c) : (c - HSD);
+        localparam integer EQC = (HEAD_CHAIN != 0) ? (HSD - 1 - K) * HOS : 0;
+        wire [HW-1:0] a_in;
+        if (HEAD_CHAIN == 0) begin : g_bc
+            assign a_in = hw;
+        end else if (K == 0) begin : g_root
+            assign a_in = (c < HSD) ? hw : he;
+        end else begin : g_hop
+            assign a_in = hb_all[((c < HSD) ? c + 1 : c - 1) * HW +: HW];
+        end
         wire [CW-1:0] cn, cs;
         wire [1:0]    lw_v, lc_v, lw_ep, lc_ep;
         wire [11:0]   lw_off;
@@ -344,8 +374,8 @@ module ot_qfd_xdvm_fabric #(
             assign tids[16*j +: 16] = TJ;
         end
         ot_qfd_xhead #(.AW(AW), .NW(NW), .XCW(XCW), .TG(TG), .IL(IL), .NH(NH), .SMIN(SMIN), .SMAX(SMAX), .LEAF_READ_PIN_PIPE(LEAF_READ_PIN_PIPE), .LEAF_BANK_PIPE(LEAF_BANK_PIPE), .REQ_PIPE(REQ_PIPE), .DX(DX),
-            .FILL_LEAD(FILL_LEAD),.NATIVE_AFFINE(NATIVE_AFFINE), .MUT(HEAD_MUT)) u_head (.ck(clk), .rst_n(rst_n), .tids(tids), .fault_i(fch[c+1]),
-            .a_d(hw), .a_r(), .b_d(), .b_r(1'b1),
+            .FILL_LEAD(FILL_LEAD),.NATIVE_AFFINE(NATIVE_AFFINE), .LOCAL_RST(HEAD_LOCAL_RST), .ONWARD_REG(HEAD_ONWARD_REG), .MUT(HEAD_MUT)) u_head (.ck(clk), .rst_n(rst_n), .tids(tids), .fault_i(fch[c+1]),
+            .a_d(a_in), .a_r(), .b_d(hb_all[c*HW +: HW]), .b_r(1'b1),
             .n_d(cn), .n_r(1'b1), .s_d(cs), .s_r(1'b1),
             .lw_v(lw_v), .lw_ep(lw_ep), .lw_off(lw_off), .lw_m(lw_m), .lw_d(lw_d), .lw_ctl(lw_ctl),
             .lc_v(lc_v), .lc_ep(lc_ep), .lr_v(lr_v), .lr_t(lr_t), .lr_ep(lr_ep), .lr_p(lr_p),
@@ -395,8 +425,8 @@ module ot_qfd_xdvm_fabric #(
                 // equalise to the corridor's depth (the die's tiles run in lockstep)
                 wire [IBW+128:0] tq;
                 wire             tgq;
-                ot_hdc_delay #(.W(IBW + 128), .D(NH - 1 - s)) u_eq (.clk(clk), .rst_n(rst_n), .d(tap[IBW+128:1]), .q(tq[IBW+128:1]));
-                ot_hdc_delay #(.W(1), .D(NH - 1 - s), .RESET(1)) u_eqg (.clk(clk), .rst_n(rst_n), .d(tap[0]), .q(tgq));
+                ot_hdc_delay #(.W(IBW + 128), .D(NH - 1 - s + EQC)) u_eq (.clk(clk), .rst_n(rst_n), .d(tap[IBW+128:1]), .q(tq[IBW+128:1]));
+                ot_hdc_delay #(.W(1), .D(NH - 1 - s + EQC), .RESET(1)) u_eqg (.clk(clk), .rst_n(rst_n), .d(tap[0]), .q(tgq));
                 assign go_t[T] = tgq;
                 assign ib_t[T*IBW +: IBW] = tq[IBW:1];
                 assign xl_t[T*TG*32 +: TG*32] = tq[IBW+128 -: 128];

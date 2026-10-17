@@ -156,9 +156,9 @@ module tb_kv_hbm_elastic_boundary;
     @(posedge ck);
     // Wrapper has two RD reservation pin stages ahead of its actual core.
     if(phase==0&&t>=2)begin
-     slots[t-2]=controllers[0].dut.u_ctl.core.on.legal_rd;
-     srslots[t-2]=controllers[0].dut.u_ctl.core.on.legal_static;
-     wrslots[t-2]=controllers[0].dut.u_ctl.core.on.legal_write;
+     slots[t-2]=controllers[0].dut.u_core.u_ctl.core.on.legal_rd;
+     srslots[t-2]=controllers[0].dut.u_core.u_ctl.core.on.legal_static;
+     wrslots[t-2]=controllers[0].dut.u_core.u_ctl.core.on.legal_write;
     end
     if(po[phase][0]&&po[phase][3:1]==3'd1)openrow[po[phase][8:4]]=po[phase][27:9];
     if(po[phase][28])begin

@@ -1,0 +1,202 @@
+[
+  {
+    "leaf": "t_e",
+    "gate_sha256": "4858e89eda8ee886d97cc68eeabd43628be3450d8f56ed42deb8359dbd4c5d84",
+    "verdict": "WARN",
+    "start_commit": "6e1a4ef881ed3ba43b66538b386031f1574e0205",
+    "binding_commit": null,
+    "host": "ot-agidock128",
+    "clock": {
+      "max_root_sinks": 1741,
+      "root": "port:ck[0]",
+      "cts": true,
+      "tt_insertion_ps": 169.1,
+      "tt_spread_ps": 20.9,
+      "declared_clock": "cts",
+      "limits": {
+        "sinks": 15000,
+        "insertion_ps": 300.0,
+        "spread_ps": 80.0
+      },
+      "clock_measurements": [
+        {
+          "source": "ck[0]",
+          "clock": "core_clk",
+          "tt": {
+            "boundary": {
+              "n": 3355,
+              "mean": 157.2,
+              "min": 148.2,
+              "max": 169.1
+            },
+            "all": {
+              "n": 3405,
+              "mean": 157.2,
+              "min": 148.2,
+              "max": 169.1
+            },
+            "errors": [],
+            "macros": null,
+            "macro_libs": 0
+          }
+        }
+      ],
+      "measured_clock": "core_clk",
+      "verdict": "PASS",
+      "text": "1,741 sinks on the largest root <= 15,000; measured TT insertion 169.1 ps, leaf spread 20.9 ps"
+    },
+    "remote_archive_verified": true,
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_capt_x8x_t_e_split1016x-20261016-125134",
+    "floorplan_and_density_png_personally_viewed": true
+  },
+  {
+    "leaf": "s_e",
+    "gate_sha256": "c92ca00be206a446c680b596c9c6074385b92affdc7eb206f3885cc62f95dbe7",
+    "verdict": "WARN",
+    "start_commit": "6e1a4ef881ed3ba43b66538b386031f1574e0205",
+    "binding_commit": null,
+    "host": "ot-agidock128",
+    "clock": {
+      "max_root_sinks": 1706,
+      "root": "port:ckv[0]",
+      "cts": true,
+      "tt_insertion_ps": 187.6,
+      "tt_spread_ps": 43.9,
+      "declared_clock": "cts",
+      "limits": {
+        "sinks": 15000,
+        "insertion_ps": 300.0,
+        "spread_ps": 80.0
+      },
+      "clock_measurements": [
+        {
+          "source": "ckv[0]",
+          "clock": "core_clk",
+          "tt": {
+            "boundary": {
+              "n": 1682,
+              "mean": 170.6,
+              "min": 143.7,
+              "max": 187.6
+            },
+            "all": {
+              "n": 1714,
+              "mean": 170.5,
+              "min": 143.7,
+              "max": 187.6
+            },
+            "errors": [],
+            "macros": null,
+            "macro_libs": 0
+          }
+        }
+      ],
+      "measured_clock": "core_clk",
+      "verdict": "PASS",
+      "text": "1,706 sinks on the largest root <= 15,000; measured TT insertion 187.6 ps, leaf spread 43.9 ps"
+    },
+    "remote_archive_verified": true,
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_capt_x8x_s_e_split1016x-20261016-125134",
+    "floorplan_and_density_png_personally_viewed": true
+  },
+  {
+    "leaf": "t_w",
+    "gate_sha256": "b2d7d24079ac24f76ea285d469392e84887f01a7411ca3fb3314113793323356",
+    "verdict": "WARN",
+    "start_commit": "6e1a4ef881ed3ba43b66538b386031f1574e0205",
+    "binding_commit": null,
+    "host": "ot-agidock128",
+    "clock": {
+      "max_root_sinks": 1741,
+      "root": "port:ck[0]",
+      "cts": true,
+      "tt_insertion_ps": 166.8,
+      "tt_spread_ps": 14.7,
+      "declared_clock": "cts",
+      "limits": {
+        "sinks": 15000,
+        "insertion_ps": 300.0,
+        "spread_ps": 80.0
+      },
+      "clock_measurements": [
+        {
+          "source": "ck[0]",
+          "clock": "core_clk",
+          "tt": {
+            "boundary": {
+              "n": 3355,
+              "mean": 159.5,
+              "min": 152.1,
+              "max": 166.8
+            },
+            "all": {
+              "n": 3405,
+              "mean": 159.5,
+              "min": 152.1,
+              "max": 166.8
+            },
+            "errors": [],
+            "macros": null,
+            "macro_libs": 0
+          }
+        }
+      ],
+      "measured_clock": "core_clk",
+      "verdict": "PASS",
+      "text": "1,741 sinks on the largest root <= 15,000; measured TT insertion 166.8 ps, leaf spread 14.7 ps"
+    },
+    "remote_archive_verified": true,
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_capt_x8x_t_w_split1016x-20261016-125134",
+    "floorplan_and_density_png_personally_viewed": true
+  },
+  {
+    "leaf": "s_w",
+    "gate_sha256": "84dbfff83bcb227911da9fdaef3dcb8c80a95d0e2455503e50ebb997a9fcce6c",
+    "verdict": "WARN",
+    "start_commit": "6e1a4ef881ed3ba43b66538b386031f1574e0205",
+    "binding_commit": null,
+    "host": "ot-agidock128",
+    "clock": {
+      "max_root_sinks": 1706,
+      "root": "port:ckv[0]",
+      "cts": true,
+      "tt_insertion_ps": 187.7,
+      "tt_spread_ps": 38.1,
+      "declared_clock": "cts",
+      "limits": {
+        "sinks": 15000,
+        "insertion_ps": 300.0,
+        "spread_ps": 80.0
+      },
+      "clock_measurements": [
+        {
+          "source": "ckv[0]",
+          "clock": "core_clk",
+          "tt": {
+            "boundary": {
+              "n": 1682,
+              "mean": 172.8,
+              "min": 149.6,
+              "max": 187.7
+            },
+            "all": {
+              "n": 1714,
+              "mean": 172.7,
+              "min": 149.6,
+              "max": 187.7
+            },
+            "errors": [],
+            "macros": null,
+            "macro_libs": 0
+          }
+        }
+      ],
+      "measured_clock": "core_clk",
+      "verdict": "PASS",
+      "text": "1,706 sinks on the largest root <= 15,000; measured TT insertion 187.7 ps, leaf spread 38.1 ps"
+    },
+    "remote_archive_verified": true,
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_capt_x8x_s_w_split1016x-20261016-125134",
+    "floorplan_and_density_png_personally_viewed": true
+  }
+]

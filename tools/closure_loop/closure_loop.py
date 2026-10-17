@@ -62,6 +62,7 @@ from source_archive import build_archive, repo_path
 import git_mirror
 from postroute_recovery import remote_command as postroute_probe_command
 import submit_lint
+import bench_count
 import macro_clk
 import helper_overlay as HO
 import status_report
@@ -91,7 +92,12 @@ TERMINAL = {"SMOKE_OK", "CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "R
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
                          r"admission (?:timed out|refused)|[Bb]us error|SIGBUS|Segmentation fault|internal compiler error|"
-                         r"g\+\+: fatal error|cc1plus: .*(?:killed|error)", re.M)
+                         r"g\+\+: fatal error|cc1plus: .*(?:killed|error)|"
+                         # EARLYOOM-SIGTERM 2026-10-16: earlyoom (-m 3 --prefer python3) SIGTERMs the stage wrapper
+                         # (oom_score_adj 500), not the hog; bash prints 'Terminated <cmd>', status flow_rc=143.
+                         # hgi_sm_xl2_bfqg-local1 / s81engm_lkp_static14-st6 / s81hc_retcol_c2 went NEEDS_HUMAN
+                         # 'resource=False' after a same-host retry into the same pressure (an 80-91 GB die GRT).
+                         r"^\s*Terminated\s|flow_rc=143|exit code 143", re.M)
 # DETERMINISTIC-NO-RETRY 2026-10-15: route first errors that never passed on a same-input retry (see crash())
 DETERMINISTIC_ROUTE_ERR_RE = re.compile(r"\b(?:DPL-0033|GPL-0305|PPL-0093|PPL-0111|ANT-0008|PDN-0233|MPL-0020|STA-0340)\b")
 # a bench whose TOOLS crashed (compiler bus error, segfault, OOM) is not a verdict on the RTL (hbm_su_red_slice_6f2d14e36:
@@ -309,14 +315,10 @@ def validate(spec: dict) -> list[str]:
     for b in st.get("bench", []) if isinstance(st, dict) else []:
         if b.get("expect") not in ("pass", "fail") or not b.get("cmd") or not b.get("name"):
             e.append(f"bench entry needs name, cmd and expect pass|fail: {b}")
-        mcr = b.get("min_count_regex") if isinstance(b, dict) else None
-        if mcr:
-            try:
-                ng = re.compile(mcr).groups
-            except re.error as x:
-                ng = -1; e.append(f"bench {b.get('name')}: min_count_regex does not compile: {x}")
-            if ng == 0:   # bench_work counts the captured group: without one every pass reads as vacuous (suctlw r2 10-11)
-                e.append(f"bench {b.get('name')}: min_count_regex needs one capture group around the count: {mcr!r}")
+        # bench_work counts the ONE captured group: none or several read every pass as vacuous (suctlw r2 10-11, b2/xcal 10-16)
+        e.extend(bench_count.count_regex_errors([b]))
+        # BENCH-LINT (ROOT 2026-10-16): git in the command itself / regexes that do not compile (scripts: at intake)
+        e.extend(bench_count.bench_lint([b])[0])
     benches = st.get("bench", []) if isinstance(st, dict) else []
     if spec.get("benched_by") is not None:
         bspec, berr = expand_benched_by(spec)
@@ -828,6 +830,33 @@ def bench_paths_at_submit(j):
         src = j["spec"]["source"]
         src["extra_paths"] = list(src.get("extra_paths", [])) + need
         event(j, f"bench needs repo paths outside the source sync: added {need} to source.extra_paths")
+
+
+def bench_lint_at_submit(j):
+    """BENCH-LINT (ROOT 2026-10-16, bench_count.bench_lint): scan the bench commands and the scripts they call at the
+    source commit.  git with no fallback (benches run in a non-git export) / an unmatched declared witness REFUSE the
+    job before any compute (STATE/bench_lint.json {"mode": "warn"} demotes to an event); warnings are one event."""
+    spec = j["spec"]
+    commit = str((spec.get("source") or {}).get("commit", ""))
+    try:
+        git_ = submit_lint.Git(REPO)
+        errs, warns = bench_count.bench_lint((spec.get("stages") or {}).get("bench") or [],
+                                             (lambda p: git_.show(commit, p)) if commit else None)
+    except Exception as ex:  # noqa: BLE001  (never block intake on the scan itself)
+        event(j, f"bench lint skipped: {type(ex).__name__}: {str(ex)[:200]}")
+        return
+    j.setdefault("submit_checks", {})["bench_lint"] = {"errors": errs, "warnings": warns[:20]}
+    if warns:
+        event(j, f"bench lint WARN ({len(warns)}): " + " | ".join(warns[:4])[:900])
+    if not errs:
+        return
+    if _state_mode("bench_lint.json", "refuse") != "refuse":
+        event(j, "bench lint ERROR (mode warn): " + " | ".join(errs)[:1200])
+        return
+    j["status"] = "REFUSED"
+    j["reason"] = ("SUBMIT_LINT BENCH_LINT: " + " | ".join(errs))[:1500]
+    event(j, j["reason"])
+    ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
 
 
 def lint_at_submit(j):
@@ -1453,6 +1482,8 @@ def ingest():
                     closed_stands_at_submit(j, hist)  # history + a few blob ids: a CLOSED tile stands
                 if j["status"] == "QUEUED":
                     bench_gate_at_submit(j)          # seconds, before the commit-reading lints
+                if j["status"] == "QUEUED":
+                    bench_lint_at_submit(j)          # bench commands + called scripts at the commit (seconds)
                 if j["status"] == "QUEUED":
                     j.setdefault("submit_checks", {}).setdefault("bench_gate", {"verdict": "PASS"})
                     lint_at_submit(j)
@@ -2771,13 +2802,61 @@ def ship_helpers(host, run, job=None):
                         origin_main=frozen.get("origin_main"), verified_at=now_iso()))
             except (ValueError, OSError, subprocess.SubprocessError) as ex:
                 raise ValueError(f"FROZEN_HELPER_OVERLAY: {ex}; preserve original execution") from ex
+        if payloads is None and frozen is not None and job.get("replay_frozen_helpers"):
+            # FROZEN-REPLAY (ROOT 2026-10-16, coordinator: recover drift-blocked jobs from their ORIGINAL state): a human
+            # `retry --replay-frozen-helpers` runs the job with exactly the helper bytes its gate froze (committed origin
+            # tree / content store, every byte verified against the plan) instead of today's helpers.  Never automatic.
+            try:
+                payloads, src_ = HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
+            except ValueError as ex:
+                raise ValueError(f"FROZEN_HELPER_OVERLAY: replay requested but the frozen bytes are not recoverable "
+                                 f"({ex})") from ex
+            modes = {f["path"]: f["mode"] for f in HO.frozen_rows(frozen)}
+            event(job, f"FROZEN-REPLAY: shipping the gate-frozen helper set {str(frozen.get('content_sha256'))[:12]} "
+                       f"(origin {str(frozen.get('origin_main'))[:9]}, {src_}) by human request")
         if payloads is None:
             current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
             modes = {f["path"]: f["mode"] for f in current["files"]}
             frozen = job.setdefault("route_overlay_plan", current)
             ok, why, sanctioned = HO.compare_plans_sanctioned(frozen, current, REPO, head=current.get("origin_main"))
+            if not ok and not why.startswith(("missing", "frozen helper plan digest", "malformed")):
+                # AUTO FROZEN-REPLAY (ROOT 2026-10-16, coordinator: fix helper drift generally): the gate validated the job
+                # with ONE consistent frozen helper set; main moved on (tools/textbook_lint.py 2c5779073, then
+                # tools/tt_views/view_export.py cdaf10fcb/a0de5e9ba under 8 queued jobs).  Run the job with exactly
+                # that frozen set (every byte verified against the plan) instead of stopping NEEDS_HUMAN; only an
+                # unrecoverable set still refuses.  A fresh gate is the way to adopt newer helpers.
+                try:
+                    payloads, src_ = HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
+                except ValueError as ex:
+                    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; frozen bytes not recoverable ({ex}); preserve "
+                                     f"original job and submit a fresh source-bound gate") from ex
+                modes = {f["path"]: f["mode"] for f in HO.frozen_rows(frozen)}
+                job.setdefault("helper_overlay_replays", []).append(dict(at=now_iso(), host=host, run=run, drift=why[:300],
+                                                                         content_sha256=frozen.get("content_sha256")))
+                event(job, f"FROZEN-REPLAY (auto): {why[:160]} -> shipping the gate-frozen helper set "
+                           f"{str(frozen.get('content_sha256'))[:12]} ({src_})")
+                HO.store_payloads(HELPER_STORE, frozen, payloads)
+                ok, sanctioned = True, []
+                current = frozen
             if not ok:
                 raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+            lint = [r for r in sanctioned if r.get("kind") == "lint_frozen"]
+            if lint:
+                # LINT-ONLY SANCTION (ROOT 2026-10-16): ship the FROZEN bytes of lint-only helpers (exact, from the plan's
+                # committed origin tree / store) so the route executes its original helper set; the plan rows stay frozen.
+                fpay, _src = HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
+                frows = {f["path"]: f for f in frozen["files"]}
+                for r in lint:
+                    payloads[r["path"]] = fpay[r["path"]]
+                    modes[r["path"]] = frows[r["path"]]["mode"]
+                    event(job, f"LINT-ONLY SANCTION: {r['path']} frozen {r['frozen_git_blob'][:9]} kept (main now "
+                               f"{r['current_git_blob'][:9]}); lint constants only, route runs its frozen bytes")
+                job.setdefault("helper_overlay_sanctioned", []).extend(dict(r, at=now_iso(), host=host, run=run) for r in lint)
+                cur_files = [frows[f["path"]] if f["path"] in {r["path"] for r in lint} else f for f in current["files"]]
+                current = dict(current, files=cur_files, content_sha256=HO.digest(cur_files))
+                sanctioned = [r for r in sanctioned if r.get("kind") != "lint_frozen"]
+                if not sanctioned:
+                    current = frozen if HO.digest(frozen["files"]) == current["content_sha256"] else current
             if sanctioned:
                 # FLEET-RUN SANCTION (ROOT 2026-10-16): only fleet-run helpers (tt_overlay.py: the route executes the
                 # fleet copy kept at main, fleet-first since 00cbddaea) drifted, to exactly origin/main's blob.  Keep the
@@ -6223,8 +6302,15 @@ def eco_install_cmd(j):
     if j.get("eco_overlay_recovery"):
         lines.append(f"python3 {{CL}}/eco_recovery.py verify {shlex.quote(j['eco_overlay_recovery']['guard'])}")
     lines.append(f"EB=$(ls -d {out}/orfs/results/asap7/*/base)")
+    # ECO-DEF (ROOT 2026-10-16, qkd_static_kv_landing_seg ls5 / qkd_ctrl_pc_core s4): f181bfa99 made install copy
+    # 6_final.def, but a job whose FROZEN hold_eco.tcl predates it writes no DEF -> 'cp: cannot stat 6_final.def', rc=1
+    # after a PASSING ECO.  Write the DEF from the ECO's own 6_final.odb (same database, so the same geometry) first.
+    lines.append(f'[ -f $EB/6_final.def ] || docker run --rm -v $EB:/eb ${{ORFS_IMAGE:-openroad/orfs:asap7lock}} bash -lc '
+                 f'"printf \'read_db /eb/6_final.odb\\nwrite_def /eb/6_final.def\\n\' > /tmp/ot_wdef.tcl && '
+                 f'/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /tmp/ot_wdef.tcl" '
+                 f'> $EB/install_write_def.log 2>&1')
     for b in sorted({rb, ob}):
-        for f in ("6_final.odb", "6_final.spef", "6_final.v"):
+        for f in ("6_final.odb", "6_final.spef", "6_final.v", "6_final.def"):
             lines.append(f"[ -f {b}/{f} ] && [ ! -f {b}/{f}.pre_eco ] && mv {b}/{f} {b}/{f}.pre_eco; cp $EB/{f} {b}/{f}")
     lines.append(f"for c in {cs}; do [ -f $c.pre_eco ] || cp $c $c.pre_eco; cp {out}/corner_sta.json $c; done")
     if e.get("kind") in ("combo", "combo_hold") or e.get("combo_vtswap"):
@@ -6372,7 +6458,8 @@ def do_commit(j):
     if adoption_held(j):
         return
     m = j["metrics"]
-    if not j.get("spec", {}).get("smoke") and (j.get("child_lint") or {}).get("fails") != []:
+    if not j.get("spec", {}).get("smoke") and (j.get("spec", {}).get("m6_pin_grant") is not None
+            or (j.get("child_lint") or {}).get("fails") != []):
         g = child_lint_gate(j)
         if g:
             finish(j, "NEEDS_HUMAN", f"CHILD-LINT: exported view fails {g}"[:300],
@@ -7573,6 +7660,104 @@ def release_src(jobs, now=None, limit=SRC_RELEASE_PER_TICK):
     return n
 
 
+# POST-COLLECT TRIM of OFFLOAD locations (ROOT 2026-10-16, coordinator; AGIdock 101 GB free, EPYC4 held 72 '<job>-bench'
+# dirs = 1.16 TB): SRC-RELEASE / deep release only ever touch the job's own (host, run).  A bench chain offloaded to
+# another host (bench_location / btrack[*].run, '<job>-bench') and a run left behind on a previous host keep their src/
+# and bench_src_a*/ git snapshots for ever.  Once the job is terminal (and SRC_RELEASE_AGE_H idle), every such OTHER
+# location loses exactly those snapshot subtrees (git archive re-creates them; a retry re-syncs); logs, receipts, cl/,
+# routes/ and views stay.  Skipped while any non-terminal job uses the location, under a reaper hold, or .keep.
+OFFLOAD_TRIM_PER_TICK = 60
+OFFLOAD_TRIM_PY = r"""
+import json, os, shutil, sys
+a = json.loads(os.environ["OT_OT"]); run = a["run"].rstrip("/")
+if not run.startswith(tuple(a["roots"])) or "/closure-loop/" not in run or os.path.exists(run + "/.keep"):
+    print("OFFLOAD_SKIP"); sys.exit(0)
+freed = 0
+if os.path.isdir(run):
+    for n in sorted(os.listdir(run)):
+        if n == "src" or n.startswith("bench_src"):
+            p = os.path.join(run, n)
+            if os.path.islink(p) or not os.path.isdir(p):
+                continue
+            for dp, dn, fn in os.walk(p):
+                for f in fn:
+                    try: freed += os.lstat(os.path.join(dp, f)).st_size
+                    except OSError: pass
+            shutil.rmtree(p, ignore_errors=True)
+print("OFFLOAD_FREED %d" % (freed // 2**20))
+"""
+
+
+def offload_locations(j):
+    own = (j.get("host"), (j.get("run") or "").rstrip("/"))
+    locs = set()
+    bl = j.get("bench_location") or {}
+    if bl.get("host") and bl.get("run"):
+        locs.add((bl["host"], bl["run"].rstrip("/")))
+    for e in (j.get("btrack") or {}).values():
+        if isinstance(e, dict) and e.get("host") and e.get("run"):
+            locs.add((e["host"], e["run"].rstrip("/")))
+    for r in j.get("bench_helper_relocations") or []:
+        d = (r or {}).get("destination") or {}
+        if d.get("host") and d.get("run"):
+            locs.add((d["host"], d["run"].rstrip("/")))
+    locs.discard(own)
+    done = {(x["host"], x["run"]) for x in j.get("offload_trimmed") or []}
+    return sorted(l for l in locs if l not in done)
+
+
+def release_offload(jobs, now=None, limit=OFFLOAD_TRIM_PER_TICK):
+    hosts = {h["name"] for h in hosts_table()}
+    holds = STATE / "reaper_holds"
+    busy = set()
+    for x in jobs:
+        if x["status"] not in TERMINAL:
+            busy.add((x.get("host"), (x.get("run") or "").rstrip("/")))
+            busy.update(offload_locations(x))
+    roots = sorted({str(Path(x["run"]).parent) + "/" for x in jobs if x.get("run")})
+    n = freed = 0
+    for x in sorted(jobs, key=lambda y: y.get("updated") or "", reverse=True):
+        if n >= limit:
+            break
+        if x["status"] not in TERMINAL or (holds / x["name"]).exists() or _terminal_age_h(x, now) < SRC_RELEASE_AGE_H:
+            continue
+        locs = [l for l in offload_locations(x) if l[0] in hosts and l not in busy]
+        if not locs:
+            continue
+        with job_lock(x["name"]):
+            j = load_job(x["name"])
+            if j["status"] not in TERMINAL:
+                continue
+            for host, run in locs:
+                if n >= limit:
+                    break
+                arg = dict(run=run, roots=roots)
+                try:
+                    r = ssh(host, f"OT_OT={shlex.quote(json.dumps(arg))} python3 - <<'OTPY'\n{OFFLOAD_TRIM_PY}\nOTPY\n",
+                            timeout=1800)
+                except Exception as ex:  # noqa: BLE001 -- a host hiccup retries next tick
+                    log(f"OFFLOAD-TRIM {j['name']} {host}:{run}: {ex}")
+                    continue
+                n += 1
+                m = re.search(r"OFFLOAD_FREED (\d+)", r.stdout or "")
+                if r.returncode != 0 or not (m or "OFFLOAD_SKIP" in (r.stdout or "")):
+                    continue
+                mb = int(m.group(1)) if m else 0
+                j.setdefault("offload_trimmed", []).append(dict(host=host, run=run, at=now_iso(), freed_mb=mb))
+                event(j, f"offload trim ({mb} MB): {host}:{run} src/ + bench_src*/ snapshots removed (job terminal; "
+                         f"logs/receipts kept)")
+                freed += mb
+            save_job(j)
+    if n:
+        log(f"OFFLOAD-TRIM: {n} locations, {freed / 1024:.1f} GB freed")
+    return n, freed
+
+
+def cmd_offload_trim(a):
+    n, freed = release_offload(all_jobs(), limit=a.limit)
+    print(f"OFFLOAD-TRIM: {n} locations, {freed / 1024:.1f} GB freed")
+
+
 def snapshot_trim(jobs, limit=200, now=None):
     """SNAPSHOT-TRIM (disk-1015): AGIdock fell to 18 GB free with ~590 GB of src/ + bench_src_a*/ git snapshots left in
     deep-released run dirs -- DEEP_RELEASE_PY kept a whole 4-5 GB snapshot whenever one main receipt named a single
@@ -8416,7 +8601,8 @@ def _slow_phase(name, t0):
 
 def housekeeping():
     """disk give-back passes (ssh up to 30 min each, git): one background thread, so a READY job never waits for them"""
-    for name, fn in (("release_src", release_src), ("release_bulk", release_bulk), ("release_deep", release_deep),
+    for name, fn in (("release_src", release_src), ("release_offload", release_offload), ("release_bulk", release_bulk),
+                     ("release_deep", release_deep),
                      ("stale24 sweep", stale24_sweep)):
         try:
             fn(all_jobs())
@@ -8543,6 +8729,13 @@ def cmd_validate(a):
             errs.append(f"SUBMIT_LINT FLOORPLAN_MARGIN: the loop would REFUSE this job: {res['message']}")
         elif res["verdict"] == "FIX":
             print(f"  the loop will add {res['fix']} {res['fix_env']} to the route_master stage commands at intake")
+        commit = str((spec.get("source") or {}).get("commit", ""))
+        g_ = submit_lint.Git(REPO)
+        berrs, bwarns = bench_count.bench_lint((spec.get("stages") or {}).get("bench") or [],
+                                               lambda p: g_.show(commit, p))
+        for w in bwarns:
+            print(f"BENCH_LINT WARN: {w}")
+        errs.extend(f"SUBMIT_LINT BENCH_LINT: the loop would REFUSE this job: {x}" for x in berrs)
         need = bench_missing_paths(spec)
         if need:
             print(f"bench needs repo paths outside the source sync: the loop will add {need} to source.extra_paths "
@@ -8705,6 +8898,11 @@ def cmd_retry(a):
         j["budget"]["override"] = "human retry after NEEDS_BUDGET"
         j["spec"].setdefault("budget", {})["on_deviation"] = "continue"
         j["stage_idx"] += 1           # the calibration is kept: continue after it, on the sheet SDC
+    if getattr(a, "replay_frozen_helpers", False):
+        if not j.get("route_overlay_plan"):
+            sys.exit(f"{a.name}: --replay-frozen-helpers needs a frozen route_overlay_plan")
+        j["replay_frozen_helpers"] = dict(at=now_iso(), by="human retry")
+        event(j, "human retry: replay the gate-frozen helper bytes (FROZEN-REPLAY)")
     if getattr(a, "at", None):        # resume at a named stage (e.g. verdict: the evidence of the failed stage is valid)
         stl = stage_list(j["spec"])
         idx = [i for i, s in enumerate(stl) if s["key"] == a.at]
@@ -9153,6 +9351,8 @@ def main():
     sr = sub.add_parser("submit-recheck"); sr.add_argument("--since", required=True)
     sr.add_argument("--requeue", action="store_true"); sr.add_argument("--log")
     r = sub.add_parser("retry"); r.add_argument("name"); r.add_argument("--at", help="resume at this stage key")
+    r.add_argument("--replay-frozen-helpers", action="store_true",
+                   help="run with the exact helper bytes the gate froze (recovery of a helper-drift NEEDS_HUMAN)")
     r.add_argument("--keep-resume", action="store_true", help="keep a pending checkpoint resume / HOLD-STOP caps")
     r.add_argument("--force", action="store_true", help="FLOORPLAN_MARGIN job whose lint dump is gone: requeue anyway")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
@@ -9175,6 +9375,7 @@ def main():
     mg = sub.add_parser("migrate"); mg.add_argument("name"); mg.add_argument("host")
     st = sub.add_parser("snapshot-trim", help="hourly guard: cut src/bench_src snapshots of deep-released jobs to receipt paths")
     st.add_argument("--limit", type=int, default=200)
+    ot_ = sub.add_parser("offload-trim", help="remove src/ + bench_src*/ of terminal jobs at offload (bench) / previous-host locations"); ot_.add_argument("--limit", type=int, default=400)
     a = ap.parse_args()
     if a.cmd == "daemon":
         cmd_daemon(a)
@@ -9213,6 +9414,8 @@ def main():
         cmd_restore_cancelled(a)
     elif a.cmd == "snapshot-trim":
         cmd_snapshot_trim(a)
+    elif a.cmd == "offload-trim":
+        cmd_offload_trim(a)
     elif a.cmd == "migrate":     # executed by the daemon at its next tick (no race with the job's poller)
         (STATE / "migrate_requests").mkdir(parents=True, exist_ok=True)
         (STATE / "migrate_requests" / f"{a.name}.json").write_text(json.dumps(dict(name=a.name, host=a.host)))

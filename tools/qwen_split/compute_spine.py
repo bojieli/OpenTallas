@@ -68,7 +68,7 @@ assert TIE_SELF <= set(TIE_STRAP_MASTERS), f'OT_SPLIT_TIE_SELF: unknown masters 
 
 # ---- C4 (2026-10-14, compute-die lead r2): owner-adopted distributed x slices (HANDOFF 0aa, el1014-qwen-dvm-build.log)
 DVM = os.environ.get('OT_SPLIT_DVM', '1') != '0'
-XCOL_WH = (64.8, 1434.24)       # qfd_xcol_e/w: xhead + 8 x qfd_xs_leaf (two write chains N / S), in the column corridor,
+XCOL_WH = tuple(float(z) for z in os.environ.get('OT_SPLIT_XCOL_WH', '64.8,1434.24').split(','))  # Q-DIEPLAN3 q3h: 129.6,920.16 (w130 column) -- qfd_xcol_e/w: xhead + 8 x qfd_xs_leaf (two write chains N / S), in the column corridor,
                                 # centred on the head row; 604.8 N + 103.68 head + 604.8 S (contract v1 slice slots)
 TAP_SLOT_WH = (345.6, 345.6)    # reserved control-stack envelope remains fixed
 TAP_WH = (216.0, 216.0)         # qfd_xs_tap at the VM N face, E of the constant group (SU write tap + attention write tap)
@@ -691,6 +691,17 @@ def place(v, m, G):
     if 'sys_face_bind' in m and not os.environ.get('OT_SPLIT_HOMES'):
         from qwen_split.sys_face_bind import place as sys_face_place
         rec['sys_face_place'] = sys_face_place(m)
+    # A homes override moves these instances after put() captured their origins.
+    # Export the final placement rather than mixing pre-homes slots with the
+    # actual case outline (r2h5 had SU y=20856.96 here vs actual y=8320.32).
+    rec['die'] = [m['die']['w'], m['die']['h']]
+    by_final = {i.name: i for i in m['insts']}
+    rec['slots'] = {n: [by_final[n].x, by_final[n].y, round(by_final[n].w, 3), round(by_final[n].h, 3)]
+                    for n in rec['slots'] if n in by_final}
+    if 'x3_mux' in rec['slots']:
+        rec['x3_mux'] = list(rec['slots']['x3_mux'])
+    if 'dvm' in rec and 'xs_tap' in rec['slots']:
+        rec['dvm']['tap'] = list(rec['slots']['xs_tap'])
     if os.environ.get('OT_SPLIT_DUMP'):
         ins = [dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for i in m['insts']]
         bus = [dict(b=b_, c=c_, n=n_, e=[list(x) for x in e_]) for b_, c_, n_, e_ in m.get('buses', [])]

@@ -17,9 +17,13 @@ validate_case() {
   local log=$1 stage=$2
   python3 "$H/case_status.py" --log "$C/$log" --stage "$stage" --process-exit "$(cat "$C/$log.exit" 2>/dev/null || echo 1)"
 }
+# Q-KV 2026-10-16: the prep's OT_KV_* flags (kvsys_prep.sh kv_flags.env) for the strict bind re-imports of kv_die
+[ "$DIE" = kv ] && [ -f "$R/kv_flags.env" ] && . "$R/kv_flags.env"
 say() { echo "$(date '+%F %T %Z') $*" >> $R/STATUS.log; }
 case $DIE in kv) P1=20; P2=80; P3=60; P4=40;; r22k) P1=40; P2=130; P3=160; P4=110;; *) echo bad die; exit 2;; esac
 say "chain start die=$DIE src=$(cat $C/SOURCE_COMMIT 2>/dev/null) from=${OT_FROM:-case}"
+# ROOT RELAY-SCHEMA 10-16: die relay stages vs the compiled schedule (OT_RELAY_SCHEDULE; SKIPPED when unset)
+RCL=$(bash "$SRC/tools/die_relay_chain_step.sh" "$C/relay_stages.json" "${OT_RELAY_SCHEDULE:-}" "$R/relay_check.json") && RCR=0 || RCR=$?; say "$RCL"; [ "$RCR" = 0 ] || exit 1
 # Owner no-stubs rule: audit the actual die.v against this run's real RTL at
 # every launch, including preserved-case resumes. HARD_PHY still needs real ports.
 if [ "$DIE" = kv ]; then
@@ -122,4 +126,17 @@ for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
   elif [ "$DCC" = 1 ]; then say "DIE CLOCK CHECK $c: no dump ($(grep -m1 OT_DCC_FAIL $D/grt_$c.log))"; fi
 done
 [ "$sta_failed" = 0 ] || { say "chain FAIL: one or more STA corners did not complete"; exit 1; }
+# Every completed KV die trial carries its endpoint cause table and actual GRT
+# congestion/pin/channel readout. The enclosing ot-run scope admits this work;
+# standalone callers retain the normal stage admission rather than running a
+# memory-heavy endpoint/guide walk outside the resource book.
+if [ "$DIE" = kv ]; then
+  if $ADMIT 8 -- python3 "$SRC/tools/qwen_kv_die/kvsys_classify.py" --run "$R" --out "$R/classify.json" > "$R/classify.log" 2>&1 &&
+     $ADMIT 8 -- python3 "$SRC/tools/qwen_kv_die/kv_readout.py" --run "$R" --classify "$R/classify.json" --out "$R/readout" > "$R/readout.log" 2>&1; then
+    say "KV READOUT: $R/classify.json $R/readout/readout.md"
+  else
+    say "KV READOUT FAIL: see $R/classify.log and $R/readout.log (physical/STA logs preserved)"
+    exit 1
+  fi
+fi
 say "chain done"

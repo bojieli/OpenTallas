@@ -1,0 +1,9 @@
+{
+ "run": "Codex 1246 lane coverage baseline, E4 unit oth-ubuntu-1786101-1792180637, /srv/opentallas-scratch/codex/qwen-lane-coverage-1246 (159-file snapshot fcf3b416...)",
+ "verdict": "FAIL (bench coverage defect, not RTL)",
+ "observed": "all 19 ops REF==DUT errors0 (rq/am streams equal), eight uppers valid640/nonzero640/used640; 'FAIL vacuous mx output stream' -> errors1 -> $fatal",
+ "cause": "the controller mx write (ot_qwen_me_spine_h_w12: mx_we only when tv&&t_rmax&&t_opend) is produced only by rmax ops; the generator's op task tied cmd[mbase,rmax] to 0 and its comment 'amax suppresses mx' was wrong. Prior evidence: vmwb spctl_port_age e3_ami*_rmax1 writes=1 per op.",
+ "fix": "tools/qwen_b2_join/make_lane_route_bench.py: op() gains rmax_en/mbase; four rmax ops (pc211-214, shapes of pc1/2/3/12, mbase 12288..12480). tb diff vs the Codex tb is exactly those lines.",
+ "rerun": "/srv/opentallas-scratch/claude/q-b2-integ-1016/lane_cov2 (same snapshot hardlinked, new tb sha 932a4ff6...), baseline +SEL=3 then negatives sel4/tc1/am1/hl1 on the same binary",
+ "no_force_pass": true
+}

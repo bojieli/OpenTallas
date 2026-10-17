@@ -86,7 +86,8 @@ _LAST = None
 
 # S-DIE 0600 10-16: re-exports of closed views from the closed archive (no re-route, e.g. dsfd_stnh_566x1 main 57fe5b94b)
 # live under physical/s81_die_views/views; the same gates apply (job state, export, lint, bench, current)
-VIEW_ABSTRACT_GLOBS = ("physical/ref_tile/*/views/*/abstract.json", "physical/s81_die_views/views/*/abstract.json")
+VIEW_ABSTRACT_GLOBS = ("physical/ref_tile/*/views/*/abstract.json", "physical/s81_die_views/views/*/abstract.json",
+                       "physical/ref_tile/*/views_scalar/*/abstract.json")   # derived scalar-pin views (view_lineage.json)
 
 
 def last_commits(paths):
@@ -267,7 +268,8 @@ def main():
             cands.setdefault(master, []).append(entry)
     bound, superseded = {}, {}
     for master, es in cands.items():
-        es.sort(key=lambda e: str(e.get("finished_at") or ""), reverse=True)
+        # newest export first; of one export, its derived scalar-pin view (pins named as the RTL) before the parent
+        es.sort(key=lambda e: (str(e.get("finished_at") or ""), e.get("lineage") == "SCALAR_PIN_RENAME"), reverse=True)
         best = es[0]
         bound[master] = dict(verdict="DIAGNOSTIC_CLOSED", export_dir=best["export_dir"], job=best["job"], files=best["files"],
                              closure=best["closure"], lineage=best.get("lineage", "EXACT_EXPORT"), gate="closed+export+lint+bench+current (view_binding_closed.py)",

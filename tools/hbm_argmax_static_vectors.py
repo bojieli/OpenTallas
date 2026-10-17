@@ -30,11 +30,14 @@ def golden(v):
 
 def main():
     out = Path(sys.argv[1]); out.mkdir(parents=True, exist_ok=True)
+    global RANK
+    RANK = int(sys.argv[3]) if len(sys.argv)>3 else 3
     seed = int(sys.argv[2]) if len(sys.argv) > 2 else 0
     rng = np.random.default_rng(20261016 + seed)
     recs = []
     # production-like MTP rows: VM logits slice (REPL), and the SU STREAM with / without the Markov bias
     recs.append(dict(mode=0, n=2048, am=1, a=4096, imm=2048, o=60000, ois=1, kind=2, prod=True))
+    if RANK>=128:recs[0].update(n=674,imm=674)  # TP192 vocabulary slice, real VM path
     # DS G25 rank-0 programme shape (ds_rank0_program.json ARGMAX.LOCAL: A STREAM n 1347, O VM n 2): the ledger row
     recs.append(dict(mode=1, n=1347, am=0, a=0, imm=1347, o=60048, ois=1, kind=2, bias=0, gap=0, prod=True))
     recs.append(dict(mode=1, n=1024, am=0, a=0, imm=1024, o=60016, ois=1, kind=2, bias=0, gap=0, prod=True))

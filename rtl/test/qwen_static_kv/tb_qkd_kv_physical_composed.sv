@@ -98,7 +98,7 @@ module tb_qkd_kv_physical_composed;
     5:opened=0;
     default:;
    endcase
-   if(pc_controller.u_static_commit.pv[16])begin
+   if(pc_controller.u_core.u_static_commit.pv[16])begin
     physical_hbm_retirements=physical_hbm_retirements+1;
     if(hc!=retire_due[hretptr])physical_errors=physical_errors+1;
     hretptr=hretptr+1;

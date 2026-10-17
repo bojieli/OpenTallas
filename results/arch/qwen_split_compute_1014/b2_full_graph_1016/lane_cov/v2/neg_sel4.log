@@ -1,0 +1,36 @@
+OP pc1 split9 tiles1 rq_ref8 rq_dut8 am432 mx0 errors0
+OP pc2 split10 tiles1 rq_ref16 rq_dut16 am1962 mx0 errors0
+OP pc12 split8 tiles3 rq_ref40 rq_dut40 am2493 mx0 errors0
+OP pc3 split11 tiles1 rq_ref48 rq_dut48 am3537 mx0 errors0
+OP pc16 split7 tiles1 rq_ref56 rq_dut56 am5364 mx0 errors0
+OP pc20 split8 tiles3 rq_ref80 rq_dut80 am7622 mx0 errors0
+OP pc4 split10 tiles2 rq_ref96 rq_dut96 am8658 mx0 errors0
+OP pc103 split9 tiles8 rq_ref160 rq_dut160 am11778 mx0 errors0
+OP pc1 split9 tiles1 rq_ref168 rq_dut168 am13668 mx0 errors0
+OP pc2 split10 tiles1 rq_ref176 rq_dut176 am15198 mx0 errors0
+OP pc12 split8 tiles3 rq_ref200 rq_dut200 am15729 mx0 errors0
+OP pc3 split11 tiles1 rq_ref208 rq_dut208 am16773 mx0 errors0
+OP pc16 split7 tiles1 rq_ref216 rq_dut216 am18600 mx0 errors0
+OP pc20 split8 tiles3 rq_ref240 rq_dut240 am20858 mx0 errors0
+OP pc4 split10 tiles2 rq_ref256 rq_dut256 am21894 mx0 errors0
+OP pc103 split9 tiles8 rq_ref320 rq_dut320 am25014 mx0 errors0
+OP pc201 split9 tiles1 rq_ref328 rq_dut328 am26904 mx0 errors0
+OP pc202 split10 tiles1 rq_ref336 rq_dut336 am28434 mx0 errors0
+OP pc203 split11 tiles1 rq_ref344 rq_dut344 am28749 mx0 errors0
+OP pc211 split9 tiles1 rq_ref352 rq_dut352 am29424 mx1 errors0
+OP pc212 split10 tiles1 rq_ref360 rq_dut360 am30954 mx2 errors0
+OP pc213 split11 tiles1 rq_ref368 rq_dut368 am31269 mx3 errors0
+OP pc214 split8 tiles3 rq_ref392 rq_dut392 am31800 mx4 errors0
+COVER upper0 ref_valid768 dut_valid768 nonzero768 used768
+COVER upper1 ref_valid768 dut_valid768 nonzero768 used768
+COVER upper2 ref_valid768 dut_valid768 nonzero768 used768
+COVER upper3 ref_valid768 dut_valid768 nonzero768 used768
+COVER upper4 ref_valid768 dut_valid768 nonzero768 used768
+COVER upper5 ref_valid768 dut_valid768 nonzero768 used768
+COVER upper6 ref_valid768 dut_valid768 nonzero768 used768
+COVER upper7 ref_valid768 dut_valid768 nonzero768 used768
+PASS b2 lane route equivalence REF==DUT rq_beats2352 am33396 mx4 distinct2351 (TC0 AM0 LC0 F0 R0 SEL4 TY0 HL0)
+- /srv/opentallas-scratch/claude/q-b2-integ-1016/lane_cov2/tb.sv:240: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 18us; walltime 154.629 s; speed 119.163 ns/s
+- Verilator: cpu 154.613 s on 1 threads; allocated 332 MB

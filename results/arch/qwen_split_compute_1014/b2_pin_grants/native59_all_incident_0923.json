@@ -1,0 +1,1832 @@
+{
+ "status": "NEW_GEOMETRY_CANDIDATE_NOT_TIMING_QUALIFIED",
+ "source_geometry": "/home/ubuntu/artifacts/qdieplan-0700/geom_dpC.json",
+ "source_geometry_sha256": "038f21ef92c741c961a40d7b12e44fcd0081a00f0b3726962fbcbaec3cec3aa2",
+ "baseline": {
+  "scope": "all incident actual numeric source-pin branches, geometry only",
+  "homes": {
+   "native59": {
+    "x": 18277.92,
+    "y": 3661.84,
+    "o": "R0"
+   },
+   "clk_rx": {
+    "x": 18540.576,
+    "y": 7469.28,
+    "o": "R0"
+   }
+  },
+  "complete_numeric_pins": true,
+  "missing_pins": [],
+  "overlaps": [],
+  "links": [
+   {
+    "bus": "clk_r2",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 1276,
+    "max_pin_L1_um": 28621.812,
+    "sum_bit_branch_L1_um": 31761325.00799998
+   },
+   {
+    "bus": "clk_r52",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 812,
+    "max_pin_L1_um": 26261.420000000002,
+    "sum_bit_branch_L1_um": 18698617.33199998
+   },
+   {
+    "bus": "clk_r6",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 732,
+    "max_pin_L1_um": 24975.572,
+    "sum_bit_branch_L1_um": 16131860.86400001
+   },
+   {
+    "bus": "clk_r1",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 1494,
+    "max_pin_L1_um": 24298.612,
+    "sum_bit_branch_L1_um": 29907583.623999972
+   },
+   {
+    "bus": "clk_r46",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 368,
+    "max_pin_L1_um": 24032.739999999998,
+    "sum_bit_branch_L1_um": 7964699.047999995
+   },
+   {
+    "bus": "clk_r0",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 572,
+    "max_pin_L1_um": 23590.86,
+    "sum_bit_branch_L1_um": 12169903.416000014
+   },
+   {
+    "bus": "clk_r42",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 732,
+    "max_pin_L1_um": 23000.100000000006,
+    "sum_bit_branch_L1_um": 14707481.792000031
+   },
+   {
+    "bus": "clk_r10",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 732,
+    "max_pin_L1_um": 22897.492,
+    "sum_bit_branch_L1_um": 14610706.303999996
+   },
+   {
+    "bus": "clk_r4",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 22592.780000000002,
+    "sum_bit_branch_L1_um": 12702707.66400001
+   },
+   {
+    "bus": "clk_r58",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 43,
+    "max_pin_L1_um": 21705.188,
+    "sum_bit_branch_L1_um": 906537.5559999996
+   },
+   {
+    "bus": "clk_r44",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 300,
+    "max_pin_L1_um": 21172.868,
+    "sum_bit_branch_L1_um": 5698956.951999998
+   },
+   {
+    "bus": "clk_r38",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 732,
+    "max_pin_L1_um": 20922.020000000004,
+    "sum_bit_branch_L1_um": 13186327.232000008
+   },
+   {
+    "bus": "clk_r53",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 431,
+    "max_pin_L1_um": 20864.62,
+    "sum_bit_branch_L1_um": 8152411.947999998
+   },
+   {
+    "bus": "clk_r14",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 732,
+    "max_pin_L1_um": 20819.412000000004,
+    "sum_bit_branch_L1_um": 13089551.743999995
+   },
+   {
+    "bus": "clk_r40",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 20662.948,
+    "sum_bit_branch_L1_um": 11380217.023999993
+   },
+   {
+    "bus": "clk_r5",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 952,
+    "max_pin_L1_um": 20652.372,
+    "sum_bit_branch_L1_um": 16186880.800000006
+   },
+   {
+    "bus": "clk_r8",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 20514.7,
+    "sum_bit_branch_L1_um": 11372736.464000009
+   },
+   {
+    "bus": "clk_r105",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 573,
+    "max_pin_L1_um": 20398.86,
+    "sum_bit_branch_L1_um": 10289405.028000006
+   },
+   {
+    "bus": "clk_r45",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 488,
+    "max_pin_L1_um": 19715.939999999995,
+    "sum_bit_branch_L1_um": 8097827.754000002
+   },
+   {
+    "bus": "clk_r34",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 732,
+    "max_pin_L1_um": 18843.940000000002,
+    "sum_bit_branch_L1_um": 11665172.671999985
+   },
+   {
+    "bus": "clk_r18",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 732,
+    "max_pin_L1_um": 18686.932,
+    "sum_bit_branch_L1_um": 11528576.383999985
+   },
+   {
+    "bus": "clk_r41",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 952,
+    "max_pin_L1_um": 18683.300000000003,
+    "sum_bit_branch_L1_um": 14330978.37600001
+   },
+   {
+    "bus": "clk_r36",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 18584.868,
+    "sum_bit_branch_L1_um": 10050245.823999997
+   },
+   {
+    "bus": "clk_r9",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 952,
+    "max_pin_L1_um": 18574.292,
+    "sum_bit_branch_L1_um": 14208548.64000001
+   },
+   {
+    "bus": "clk_r104",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 18538.156000000003,
+    "sum_bit_branch_L1_um": 10262071.287999999
+   },
+   {
+    "bus": "clk_r93",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 300,
+    "max_pin_L1_um": 18461.987999999998,
+    "sum_bit_branch_L1_um": 4684757.063999998
+   },
+   {
+    "bus": "clk_r12",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 642,
+    "max_pin_L1_um": 18436.620000000003,
+    "sum_bit_branch_L1_um": 10070932.552
+   },
+   {
+    "bus": "clk_r94",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 17413.347999999998,
+    "sum_bit_branch_L1_um": 9100978.52799999
+   },
+   {
+    "bus": "clk_r30",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 732,
+    "max_pin_L1_um": 16717.859999999997,
+    "sum_bit_branch_L1_um": 10108882.111999992
+   },
+   {
+    "bus": "clk_r22",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 254,
+    "max_pin_L1_um": 16608.852,
+    "sum_bit_branch_L1_um": 3572860.792000001
+   },
+   {
+    "bus": "clk_r37",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 952,
+    "max_pin_L1_um": 16605.22,
+    "sum_bit_branch_L1_um": 12339686.21600002
+   },
+   {
+    "bus": "clk_r32",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 16506.788,
+    "sum_bit_branch_L1_um": 8720274.623999996
+   },
+   {
+    "bus": "clk_r13",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 948,
+    "max_pin_L1_um": 16496.212000000003,
+    "sum_bit_branch_L1_um": 12187980.064000012
+   },
+   {
+    "bus": "clk_r103",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 16444.076,
+    "sum_bit_branch_L1_um": 8921860.088000013
+   },
+   {
+    "bus": "clk_r16",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 642,
+    "max_pin_L1_um": 16310.539999999999,
+    "sum_bit_branch_L1_um": 8705989.191999992
+   },
+   {
+    "bus": "clk_r95",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 15319.268000000002,
+    "sum_bit_branch_L1_um": 7760767.3280000035
+   },
+   {
+    "bus": "clk_r26",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 732,
+    "max_pin_L1_um": 14639.780000000002,
+    "sum_bit_branch_L1_um": 8587727.552000012
+   },
+   {
+    "bus": "clk_r33",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 952,
+    "max_pin_L1_um": 14527.140000000001,
+    "sum_bit_branch_L1_um": 10361354.056000013
+   },
+   {
+    "bus": "clk_r28",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 642,
+    "max_pin_L1_um": 14374.307999999997,
+    "sum_bit_branch_L1_um": 7374484.456000001
+   },
+   {
+    "bus": "clk_r17",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 948,
+    "max_pin_L1_um": 14363.732,
+    "sum_bit_branch_L1_um": 10166389.024000017
+   },
+   {
+    "bus": "clk_r20",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 213,
+    "max_pin_L1_um": 14232.460000000003,
+    "sum_bit_branch_L1_um": 2564049.78
+   },
+   {
+    "bus": "clk_r102",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 642,
+    "max_pin_L1_um": 14151.18,
+    "sum_bit_branch_L1_um": 7607215.0079999985
+   },
+   {
+    "bus": "clk_r96",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 13279.588,
+    "sum_bit_branch_L1_um": 6455372.127999997
+   },
+   {
+    "bus": "lnk_x3",
+    "kind": "spine_local",
+    "bits": 524,
+    "sinks": 1,
+    "max_pin_L1_um": 13021.807999999994,
+    "sum_bit_branch_L1_um": 6784187.487999997
+   },
+   {
+    "bus": "lnk_kv_x3_slot",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 12985.327999999994,
+    "sum_bit_branch_L1_um": 12985.327999999994
+   },
+   {
+    "bus": "lnk_x3_identity",
+    "kind": "spine_local",
+    "bits": 59,
+    "sinks": 1,
+    "max_pin_L1_um": 12873.295999999995,
+    "sum_bit_branch_L1_um": 759033.7119999995
+   },
+   {
+    "bus": "lnk_x3_generation",
+    "kind": "spine_local",
+    "bits": 2,
+    "sinks": 1,
+    "max_pin_L1_um": 12851.839999999993,
+    "sum_bit_branch_L1_um": 25703.39199999999
+   },
+   {
+    "bus": "lnk_native_tx_slot_kind",
+    "kind": "spine_local",
+    "bits": 4,
+    "sinks": 1,
+    "max_pin_L1_um": 12740.039,
+    "sum_bit_branch_L1_um": 50958.818
+   },
+   {
+    "bus": "lnk_native_tx_slot",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 12738.682999999997,
+    "sum_bit_branch_L1_um": 12738.682999999997
+   },
+   {
+    "bus": "lnk_native_tx_slot_beat",
+    "kind": "spine_local",
+    "bits": 5,
+    "sinks": 1,
+    "max_pin_L1_um": 12737.134999999995,
+    "sum_bit_branch_L1_um": 63683.44899999998
+   },
+   {
+    "bus": "lnk_native_tx_v",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 12729.586999999996,
+    "sum_bit_branch_L1_um": 12729.586999999996
+   },
+   {
+    "bus": "lnk_native_tx_payload",
+    "kind": "spine_local",
+    "bits": 548,
+    "sinks": 1,
+    "max_pin_L1_um": 12701.411,
+    "sum_bit_branch_L1_um": 6927340.2579999985
+   },
+   {
+    "bus": "clk_r50",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 413,
+    "max_pin_L1_um": 12568.100000000002,
+    "sum_bit_branch_L1_um": 4192591.2599999956
+   },
+   {
+    "bus": "lnk_native_rx_slot_kind",
+    "kind": "spine_local",
+    "bits": 4,
+    "sinks": 1,
+    "max_pin_L1_um": 12434.938999999998,
+    "sum_bit_branch_L1_um": 49738.441999999995
+   },
+   {
+    "bus": "lnk_native_rx_slot",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 12433.498999999996,
+    "sum_bit_branch_L1_um": 12433.498999999996
+   },
+   {
+    "bus": "lnk_native_rx_slot_beat",
+    "kind": "spine_local",
+    "bits": 5,
+    "sinks": 1,
+    "max_pin_L1_um": 12431.998999999996,
+    "sum_bit_branch_L1_um": 62157.85299999999
+   },
+   {
+    "bus": "lnk_rx_payload",
+    "kind": "spine_local",
+    "bits": 548,
+    "sinks": 2,
+    "max_pin_L1_um": 12413.050999999996,
+    "sum_bit_branch_L1_um": 9760682.271999992
+   },
+   {
+    "bus": "lnk_native_rx_v",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 12405.022999999997,
+    "sum_bit_branch_L1_um": 12405.022999999997
+   },
+   {
+    "bus": "clk_r29",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 948,
+    "max_pin_L1_um": 12401.059999999998,
+    "sum_bit_branch_L1_um": 8315312.103999995
+   },
+   {
+    "bus": "clk_r24",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 642,
+    "max_pin_L1_um": 12296.228,
+    "sum_bit_branch_L1_um": 6040357.096000003
+   },
+   {
+    "bus": "clk_r99",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 185,
+    "max_pin_L1_um": 12263.252000000004,
+    "sum_bit_branch_L1_um": 2062146.0359999996
+   },
+   {
+    "bus": "clk_r101",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 642,
+    "max_pin_L1_um": 12057.1,
+    "sum_bit_branch_L1_um": 6262815.648000001
+   },
+   {
+    "bus": "clk_r100",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 214,
+    "max_pin_L1_um": 11218.412000000002,
+    "sum_bit_branch_L1_um": 1847054.7279999997
+   },
+   {
+    "bus": "clk_r97",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 642,
+    "max_pin_L1_um": 11185.507999999998,
+    "sum_bit_branch_L1_um": 5129828.280000002
+   },
+   {
+    "bus": "clk_ucie",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 6,
+    "max_pin_L1_um": 11155.422000000002,
+    "sum_bit_branch_L1_um": 46589.326
+   },
+   {
+    "bus": "clk_r21",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 184,
+    "max_pin_L1_um": 10795.612000000001,
+    "sum_bit_branch_L1_um": 1527383.0080000006
+   },
+   {
+    "bus": "clk_r25",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 948,
+    "max_pin_L1_um": 10322.98,
+    "sum_bit_branch_L1_um": 6345292.264000002
+   },
+   {
+    "bus": "clk_r48",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 295,
+    "max_pin_L1_um": 10237.348000000002,
+    "sum_bit_branch_L1_um": 2345721.4600000014
+   },
+   {
+    "bus": "pll_fwd",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 9919.044,
+    "sum_bit_branch_L1_um": 9919.044
+   },
+   {
+    "bus": "clk_d2d",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 4,
+    "max_pin_L1_um": 9892.204,
+    "sum_bit_branch_L1_um": 33521.166999999994
+   },
+   {
+    "bus": "rst_seq",
+    "kind": "reset",
+    "bits": 1,
+    "sinks": 3,
+    "max_pin_L1_um": 9162.911999999998,
+    "sum_bit_branch_L1_um": 18677.999999999993
+   },
+   {
+    "bus": "clk_r98",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 642,
+    "max_pin_L1_um": 9091.428,
+    "sum_bit_branch_L1_um": 3785428.9200000004
+   },
+   {
+    "bus": "clk_r88",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 440,
+    "max_pin_L1_um": 8222.5,
+    "sum_bit_branch_L1_um": 2336010.414000001
+   },
+   {
+    "bus": "ng_native_native_ret_0",
+    "kind": "spine_local",
+    "bits": 95,
+    "sinks": 1,
+    "max_pin_L1_um": 8169.175999999996,
+    "sum_bit_branch_L1_um": 775428.7599999995
+   },
+   {
+    "bus": "ng_tt_native_cmd_0",
+    "kind": "spine_local",
+    "bits": 380,
+    "sinks": 1,
+    "max_pin_L1_um": 8146.519999999997,
+    "sum_bit_branch_L1_um": 3085308.1599999988
+   },
+   {
+    "bus": "ng_tt_native_tok_0",
+    "kind": "spine_local",
+    "bits": 18,
+    "sinks": 2,
+    "max_pin_L1_um": 8144.695999999996,
+    "sum_bit_branch_L1_um": 235838.01599999986
+   },
+   {
+    "bus": "ng_tt_native_pos_0",
+    "kind": "spine_local",
+    "bits": 18,
+    "sinks": 2,
+    "max_pin_L1_um": 8113.783999999996,
+    "sum_bit_branch_L1_um": 235164.0959999998
+   },
+   {
+    "bus": "ng_tt_layer_context_v_0",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 2,
+    "max_pin_L1_um": 8080.999999999998,
+    "sum_bit_branch_L1_um": 13038.007999999996
+   },
+   {
+    "bus": "ng_tt_command_stage_0",
+    "kind": "spine_local",
+    "bits": 6,
+    "sinks": 2,
+    "max_pin_L1_um": 7948.999999999998,
+    "sum_bit_branch_L1_um": 77066.39999999998
+   },
+   {
+    "bus": "sf_q_slot",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 7723.951999999996,
+    "sum_bit_branch_L1_um": 7723.951999999996
+   },
+   {
+    "bus": "sf_q_slot_beat",
+    "kind": "spine_local",
+    "bits": 5,
+    "sinks": 1,
+    "max_pin_L1_um": 7723.951999999996,
+    "sum_bit_branch_L1_um": 38619.27999999999
+   },
+   {
+    "bus": "sf_visibility_slot",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 7670.095999999996,
+    "sum_bit_branch_L1_um": 7670.095999999996
+   },
+   {
+    "bus": "sf_kv_word_index",
+    "kind": "spine_local",
+    "bits": 2,
+    "sinks": 1,
+    "max_pin_L1_um": 7636.015999999998,
+    "sum_bit_branch_L1_um": 15271.983999999993
+   },
+   {
+    "bus": "sf_kv_word_slot",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 7635.967999999995,
+    "sum_bit_branch_L1_um": 7635.967999999995
+   },
+   {
+    "bus": "sf_complete_slot",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 7470.271999999999,
+    "sum_bit_branch_L1_um": 7470.271999999999
+   },
+   {
+    "bus": "sf_host_epoch",
+    "kind": "spine_local",
+    "bits": 16,
+    "sinks": 1,
+    "max_pin_L1_um": 7461.727999999997,
+    "sum_bit_branch_L1_um": 119381.88799999996
+   },
+   {
+    "bus": "sf_host_epoch_valid",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 7460.959999999997,
+    "sum_bit_branch_L1_um": 7460.959999999997
+   },
+   {
+    "bus": "sf_host_fused_capability",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 7460.959999999994,
+    "sum_bit_branch_L1_um": 7460.959999999994
+   },
+   {
+    "bus": "sf_host_generation",
+    "kind": "spine_local",
+    "bits": 2,
+    "sinks": 1,
+    "max_pin_L1_um": 7460.863999999996,
+    "sum_bit_branch_L1_um": 14921.679999999993
+   },
+   {
+    "bus": "sf_host_tag",
+    "kind": "spine_local",
+    "bits": 59,
+    "sinks": 1,
+    "max_pin_L1_um": 7460.815999999997,
+    "sum_bit_branch_L1_um": 440106.01599999977
+   },
+   {
+    "bus": "sf_native_fault",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 7445.7919999999995,
+    "sum_bit_branch_L1_um": 7445.7919999999995
+   },
+   {
+    "bus": "clk_r92",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 296,
+    "max_pin_L1_um": 6965.348,
+    "sum_bit_branch_L1_um": 1491106.8620000004
+   },
+   {
+    "bus": "clk_coll",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 104,
+    "max_pin_L1_um": 6212.691999999999,
+    "sum_bit_branch_L1_um": 629398.0159999998
+   },
+   {
+    "bus": "clk_r49",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 220,
+    "max_pin_L1_um": 6190.660000000001,
+    "sum_bit_branch_L1_um": 1139288.6560000007
+   },
+   {
+    "bus": "clk_coll_blk",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 2,
+    "max_pin_L1_um": 6005.220000000001,
+    "sum_bit_branch_L1_um": 12010.344000000001
+   },
+   {
+    "bus": "clk_r89",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 220,
+    "max_pin_L1_um": 5946.572,
+    "sum_bit_branch_L1_um": 1040269.4000000006
+   },
+   {
+    "bus": "clk_r91",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 296,
+    "max_pin_L1_um": 4808.548,
+    "sum_bit_branch_L1_um": 1114718.5809999988
+   },
+   {
+    "bus": "clk_r90",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 296,
+    "max_pin_L1_um": 4379.740000000001,
+    "sum_bit_branch_L1_um": 1282510.5249999997
+   },
+   {
+    "bus": "ng_su_kv_waddr_0",
+    "kind": "spine_local",
+    "bits": 1536,
+    "sinks": 1,
+    "max_pin_L1_um": 3445.7599999999957,
+    "sum_bit_branch_L1_um": 5236101.119999996
+   },
+   {
+    "bus": "ng_su_kv_wdata_0",
+    "kind": "spine_local",
+    "bits": 2048,
+    "sinks": 1,
+    "max_pin_L1_um": 3372.0799999999954,
+    "sum_bit_branch_L1_um": 6805405.695999998
+   },
+   {
+    "bus": "ng_su_native_issue_0",
+    "kind": "spine_local",
+    "bits": 63,
+    "sinks": 1,
+    "max_pin_L1_um": 3293.1199999999963,
+    "sum_bit_branch_L1_um": 207372.8159999999
+   },
+   {
+    "bus": "ng_su_kv_we_0",
+    "kind": "spine_local",
+    "bits": 64,
+    "sinks": 1,
+    "max_pin_L1_um": 3273.679999999994,
+    "sum_bit_branch_L1_um": 209418.7519999999
+   },
+   {
+    "bus": "ng_vm_q_0",
+    "kind": "spine_local",
+    "bits": 524,
+    "sinks": 1,
+    "max_pin_L1_um": 254.13600000000497,
+    "sum_bit_branch_L1_um": 133167.26399999982
+   },
+   {
+    "bus": "ng_vm_fault_0",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 226.34400000000005,
+    "sum_bit_branch_L1_um": 226.34400000000005
+   },
+   {
+    "bus": "ng_vm_q_committed_0",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 225.4319999999998,
+    "sum_bit_branch_L1_um": 225.4319999999998
+   },
+   {
+    "bus": "ng_vm_write_commit_line_0",
+    "kind": "spine_local",
+    "bits": 312,
+    "sinks": 1,
+    "max_pin_L1_um": 167.01600000000235,
+    "sum_bit_branch_L1_um": 52108.99200000024
+   },
+   {
+    "bus": "ng_vm_write_commit_v_0",
+    "kind": "spine_local",
+    "bits": 39,
+    "sinks": 1,
+    "max_pin_L1_um": 137.06400000000122,
+    "sum_bit_branch_L1_um": 5345.496000000033
+   },
+   {
+    "bus": "ng_vm_write_commit_mask_0",
+    "kind": "spine_local",
+    "bits": 624,
+    "sinks": 1,
+    "max_pin_L1_um": 87.14400000000296,
+    "sum_bit_branch_L1_um": 54377.85600000058
+   },
+   {
+    "bus": "ng_native_vm_ar_0",
+    "kind": "spine_local",
+    "bits": 520,
+    "sinks": 1,
+    "max_pin_L1_um": 21.768000000002758,
+    "sum_bit_branch_L1_um": 11319.36000000079
+   },
+   {
+    "bus": "ng_native_vm_q_epoch_0",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 21.768000000002758,
+    "sum_bit_branch_L1_um": 21.768000000002758
+   },
+   {
+    "bus": "ng_native_vm_q_start_0",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 21.76799999999912,
+    "sum_bit_branch_L1_um": 21.76799999999912
+   }
+  ],
+  "all_data_bit_branch_L1_um": 42364902.75599996,
+  "clock_phase_and_registered_reach": "OPEN: geometry does not authorize long unregistered nets"
+ },
+ "candidate": {
+  "scope": "all incident actual numeric source-pin branches, geometry only",
+  "homes": {
+   "native59": {
+    "x": 18559.152,
+    "y": 7441.2,
+    "o": "MX"
+   },
+   "clk_rx": {
+    "x": 19358.352,
+    "y": 7441.2,
+    "o": "R0"
+   }
+  },
+  "complete_numeric_pins": true,
+  "missing_pins": [],
+  "overlaps": [],
+  "links": [
+   {
+    "bus": "clk_r2",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 1276,
+    "max_pin_L1_um": 29467.667999999998,
+    "sum_bit_branch_L1_um": 32840637.26399999
+   },
+   {
+    "bus": "clk_r52",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 812,
+    "max_pin_L1_um": 27051.116,
+    "sum_bit_branch_L1_um": 19339850.483999986
+   },
+   {
+    "bus": "clk_r6",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 732,
+    "max_pin_L1_um": 25821.428,
+    "sum_bit_branch_L1_um": 16751027.455999995
+   },
+   {
+    "bus": "clk_r1",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 1494,
+    "max_pin_L1_um": 25144.468,
+    "sum_bit_branch_L1_um": 31171292.48800002
+   },
+   {
+    "bus": "clk_r0",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 572,
+    "max_pin_L1_um": 24380.555999999997,
+    "sum_bit_branch_L1_um": 12621609.528000003
+   },
+   {
+    "bus": "clk_r10",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 732,
+    "max_pin_L1_um": 23743.347999999998,
+    "sum_bit_branch_L1_um": 15229872.896000009
+   },
+   {
+    "bus": "clk_r4",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 23382.476,
+    "sum_bit_branch_L1_um": 13208113.104000002
+   },
+   {
+    "bus": "clk_r46",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 368,
+    "max_pin_L1_um": 23243.043999999998,
+    "sum_bit_branch_L1_um": 7674090.919999994
+   },
+   {
+    "bus": "clk_r42",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 732,
+    "max_pin_L1_um": 22210.404000000006,
+    "sum_bit_branch_L1_um": 14129424.320000013
+   },
+   {
+    "bus": "clk_r14",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 732,
+    "max_pin_L1_um": 21665.268000000004,
+    "sum_bit_branch_L1_um": 13708718.336000025
+   },
+   {
+    "bus": "clk_r53",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 431,
+    "max_pin_L1_um": 21654.316,
+    "sum_bit_branch_L1_um": 8501588.044000005
+   },
+   {
+    "bus": "clk_r5",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 952,
+    "max_pin_L1_um": 21498.227999999996,
+    "sum_bit_branch_L1_um": 16992135.71199999
+   },
+   {
+    "bus": "clk_r8",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 21304.396,
+    "sum_bit_branch_L1_um": 11878141.903999994
+   },
+   {
+    "bus": "clk_r105",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 573,
+    "max_pin_L1_um": 21188.556,
+    "sum_bit_branch_L1_um": 10741900.836000003
+   },
+   {
+    "bus": "clk_r58",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 43,
+    "max_pin_L1_um": 20859.332,
+    "sum_bit_branch_L1_um": 870165.7480000003
+   },
+   {
+    "bus": "clk_r44",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 300,
+    "max_pin_L1_um": 20327.012000000002,
+    "sum_bit_branch_L1_um": 5445200.152000003
+   },
+   {
+    "bus": "clk_r38",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 732,
+    "max_pin_L1_um": 20132.324000000004,
+    "sum_bit_branch_L1_um": 12608269.760000028
+   },
+   {
+    "bus": "clk_r40",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 19817.092000000004,
+    "sum_bit_branch_L1_um": 10838869.184000008
+   },
+   {
+    "bus": "clk_r18",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 732,
+    "max_pin_L1_um": 19532.788,
+    "sum_bit_branch_L1_um": 12147742.975999996
+   },
+   {
+    "bus": "clk_r9",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 952,
+    "max_pin_L1_um": 19420.148,
+    "sum_bit_branch_L1_um": 15013803.551999986
+   },
+   {
+    "bus": "clk_r104",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 19327.852000000003,
+    "sum_bit_branch_L1_um": 10767476.727999995
+   },
+   {
+    "bus": "clk_r12",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 642,
+    "max_pin_L1_um": 19226.316,
+    "sum_bit_branch_L1_um": 10577917.384000013
+   },
+   {
+    "bus": "clk_r45",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 488,
+    "max_pin_L1_um": 18926.244,
+    "sum_bit_branch_L1_um": 7712456.105999997
+   },
+   {
+    "bus": "clk_r34",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 732,
+    "max_pin_L1_um": 18054.244000000002,
+    "sum_bit_branch_L1_um": 11087115.200000038
+   },
+   {
+    "bus": "clk_r41",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 952,
+    "max_pin_L1_um": 17893.604000000003,
+    "sum_bit_branch_L1_um": 13579187.783999976
+   },
+   {
+    "bus": "clk_r36",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 17739.012000000002,
+    "sum_bit_branch_L1_um": 9508897.984000007
+   },
+   {
+    "bus": "clk_r93",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 300,
+    "max_pin_L1_um": 17616.131999999998,
+    "sum_bit_branch_L1_um": 4431000.264000004
+   },
+   {
+    "bus": "clk_r22",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 254,
+    "max_pin_L1_um": 17454.708,
+    "sum_bit_branch_L1_um": 3787708.2159999995
+   },
+   {
+    "bus": "clk_r13",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 948,
+    "max_pin_L1_um": 17342.068,
+    "sum_bit_branch_L1_um": 12989851.551999973
+   },
+   {
+    "bus": "clk_r103",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 17233.772,
+    "sum_bit_branch_L1_um": 9427265.527999988
+   },
+   {
+    "bus": "clk_r16",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 642,
+    "max_pin_L1_um": 17100.235999999997,
+    "sum_bit_branch_L1_um": 9212974.024
+   },
+   {
+    "bus": "clk_r94",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 16567.492000000002,
+    "sum_bit_branch_L1_um": 8559630.687999995
+   },
+   {
+    "bus": "clk_r30",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 732,
+    "max_pin_L1_um": 15928.164,
+    "sum_bit_branch_L1_um": 9530824.640000021
+   },
+   {
+    "bus": "clk_r37",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 952,
+    "max_pin_L1_um": 15815.524000000005,
+    "sum_bit_branch_L1_um": 11587895.62399998
+   },
+   {
+    "bus": "clk_r32",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 15660.932000000003,
+    "sum_bit_branch_L1_um": 8178926.783999996
+   },
+   {
+    "bus": "clk_r17",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 948,
+    "max_pin_L1_um": 15209.588,
+    "sum_bit_branch_L1_um": 10968260.511999993
+   },
+   {
+    "bus": "clk_r20",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 213,
+    "max_pin_L1_um": 15022.156,
+    "sum_bit_branch_L1_um": 2732255.0279999995
+   },
+   {
+    "bus": "clk_r102",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 642,
+    "max_pin_L1_um": 14940.875999999998,
+    "sum_bit_branch_L1_um": 8114199.84
+   },
+   {
+    "bus": "clk_r95",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 14473.412000000004,
+    "sum_bit_branch_L1_um": 7219419.487999998
+   },
+   {
+    "bus": "clk_r26",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 732,
+    "max_pin_L1_um": 13850.084000000006,
+    "sum_bit_branch_L1_um": 8009670.080000006
+   },
+   {
+    "bus": "clk_r33",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 952,
+    "max_pin_L1_um": 13737.444000000003,
+    "sum_bit_branch_L1_um": 9609563.464000005
+   },
+   {
+    "bus": "clk_r28",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 642,
+    "max_pin_L1_um": 13528.452000000001,
+    "sum_bit_branch_L1_um": 6831444.904000004
+   },
+   {
+    "bus": "clk_r99",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 185,
+    "max_pin_L1_um": 13109.108,
+    "sum_bit_branch_L1_um": 2218629.3960000006
+   },
+   {
+    "bus": "clk_r101",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 642,
+    "max_pin_L1_um": 12846.795999999998,
+    "sum_bit_branch_L1_um": 6769800.479999997
+   },
+   {
+    "bus": "clk_r96",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 640,
+    "max_pin_L1_um": 12433.732000000004,
+    "sum_bit_branch_L1_um": 5914024.288000001
+   },
+   {
+    "bus": "clk_r100",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 214,
+    "max_pin_L1_um": 12008.108,
+    "sum_bit_branch_L1_um": 2016161.991999999
+   },
+   {
+    "bus": "clk_ucie",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 6,
+    "max_pin_L1_um": 11945.117999999999,
+    "sum_bit_branch_L1_um": 50466.91799999999
+   },
+   {
+    "bus": "clk_r50",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 413,
+    "max_pin_L1_um": 11778.404000000002,
+    "sum_bit_branch_L1_um": 3866446.811999997
+   },
+   {
+    "bus": "clk_r21",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 184,
+    "max_pin_L1_um": 11641.468,
+    "sum_bit_branch_L1_um": 1683020.511999999
+   },
+   {
+    "bus": "clk_r29",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 948,
+    "max_pin_L1_um": 11611.364000000001,
+    "sum_bit_branch_L1_um": 7566680.296
+   },
+   {
+    "bus": "clk_r24",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 642,
+    "max_pin_L1_um": 11450.372000000003,
+    "sum_bit_branch_L1_um": 5497317.544
+   },
+   {
+    "bus": "pll_fwd",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 10764.899999999998,
+    "sum_bit_branch_L1_um": 10764.899999999998
+   },
+   {
+    "bus": "clk_d2d",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 4,
+    "max_pin_L1_um": 10738.059999999998,
+    "sum_bit_branch_L1_um": 36904.590999999986
+   },
+   {
+    "bus": "clk_r97",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 642,
+    "max_pin_L1_um": 10339.652000000002,
+    "sum_bit_branch_L1_um": 4586788.727999997
+   },
+   {
+    "bus": "lnk_x3",
+    "kind": "spine_local",
+    "bits": 524,
+    "sinks": 1,
+    "max_pin_L1_um": 10041.887999999994,
+    "sum_bit_branch_L1_um": 5222709.407999995
+   },
+   {
+    "bus": "lnk_kv_x3_slot",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 10005.407999999994,
+    "sum_bit_branch_L1_um": 10005.407999999994
+   },
+   {
+    "bus": "lnk_x3_identity",
+    "kind": "spine_local",
+    "bits": 59,
+    "sinks": 1,
+    "max_pin_L1_um": 9893.375999999995,
+    "sum_bit_branch_L1_um": 583218.4319999994
+   },
+   {
+    "bus": "lnk_x3_generation",
+    "kind": "spine_local",
+    "bits": 2,
+    "sinks": 1,
+    "max_pin_L1_um": 9871.919999999993,
+    "sum_bit_branch_L1_um": 19743.55199999999
+   },
+   {
+    "bus": "lnk_native_tx_slot_kind",
+    "kind": "spine_local",
+    "bits": 4,
+    "sinks": 1,
+    "max_pin_L1_um": 9760.119,
+    "sum_bit_branch_L1_um": 39039.13799999999
+   },
+   {
+    "bus": "lnk_native_tx_slot",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 9758.762999999997,
+    "sum_bit_branch_L1_um": 9758.762999999997
+   },
+   {
+    "bus": "lnk_native_tx_slot_beat",
+    "kind": "spine_local",
+    "bits": 5,
+    "sinks": 1,
+    "max_pin_L1_um": 9757.214999999995,
+    "sum_bit_branch_L1_um": 48783.84899999999
+   },
+   {
+    "bus": "lnk_native_tx_v",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 9749.666999999996,
+    "sum_bit_branch_L1_um": 9749.666999999996
+   },
+   {
+    "bus": "lnk_native_tx_payload",
+    "kind": "spine_local",
+    "bits": 548,
+    "sinks": 1,
+    "max_pin_L1_um": 9721.491,
+    "sum_bit_branch_L1_um": 5294344.097999999
+   },
+   {
+    "bus": "clk_r25",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 948,
+    "max_pin_L1_um": 9533.284000000003,
+    "sum_bit_branch_L1_um": 5596660.455999994
+   },
+   {
+    "bus": "lnk_native_rx_slot_kind",
+    "kind": "spine_local",
+    "bits": 4,
+    "sinks": 1,
+    "max_pin_L1_um": 9455.018999999998,
+    "sum_bit_branch_L1_um": 37818.76199999999
+   },
+   {
+    "bus": "lnk_native_rx_slot",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 9453.578999999996,
+    "sum_bit_branch_L1_um": 9453.578999999996
+   },
+   {
+    "bus": "lnk_native_rx_slot_beat",
+    "kind": "spine_local",
+    "bits": 5,
+    "sinks": 1,
+    "max_pin_L1_um": 9452.078999999996,
+    "sum_bit_branch_L1_um": 47258.25299999999
+   },
+   {
+    "bus": "lnk_rx_payload",
+    "kind": "spine_local",
+    "bits": 548,
+    "sinks": 2,
+    "max_pin_L1_um": 9433.130999999996,
+    "sum_bit_branch_L1_um": 8127686.112000002
+   },
+   {
+    "bus": "lnk_native_rx_v",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 9425.102999999997,
+    "sum_bit_branch_L1_um": 9425.102999999997
+   },
+   {
+    "bus": "clk_r48",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 295,
+    "max_pin_L1_um": 9391.492000000002,
+    "sum_bit_branch_L1_um": 2096193.9400000016
+   },
+   {
+    "bus": "rst_seq",
+    "kind": "reset",
+    "bits": 1,
+    "sinks": 3,
+    "max_pin_L1_um": 9162.911999999998,
+    "sum_bit_branch_L1_um": 19290.759999999995
+   },
+   {
+    "bus": "clk_r98",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 642,
+    "max_pin_L1_um": 8245.572000000004,
+    "sum_bit_branch_L1_um": 3242389.3679999993
+   },
+   {
+    "bus": "clk_r88",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 440,
+    "max_pin_L1_um": 7432.804000000002,
+    "sum_bit_branch_L1_um": 1988544.174000003
+   },
+   {
+    "bus": "clk_r49",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 220,
+    "max_pin_L1_um": 7036.515999999999,
+    "sum_bit_branch_L1_um": 1325376.9759999998
+   },
+   {
+    "bus": "clk_coll",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 104,
+    "max_pin_L1_um": 7002.387999999997,
+    "sum_bit_branch_L1_um": 711526.3999999994
+   },
+   {
+    "bus": "clk_coll_blk",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 2,
+    "max_pin_L1_um": 6794.915999999999,
+    "sum_bit_branch_L1_um": 13589.735999999997
+   },
+   {
+    "bus": "clk_r89",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 220,
+    "max_pin_L1_um": 6657.652000000002,
+    "sum_bit_branch_L1_um": 1104596.2640000002
+   },
+   {
+    "bus": "clk_r92",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 296,
+    "max_pin_L1_um": 6119.492000000002,
+    "sum_bit_branch_L1_um": 1361772.206
+   },
+   {
+    "bus": "clk_r91",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 296,
+    "max_pin_L1_um": 5204.049000000001,
+    "sum_bit_branch_L1_um": 1050798.1330000008
+   },
+   {
+    "bus": "ng_native_native_ret_0",
+    "kind": "spine_local",
+    "bits": 95,
+    "sinks": 1,
+    "max_pin_L1_um": 5189.255999999996,
+    "sum_bit_branch_L1_um": 492336.36000000016
+   },
+   {
+    "bus": "clk_r90",
+    "kind": "clock_trunk",
+    "bits": 1,
+    "sinks": 296,
+    "max_pin_L1_um": 5169.435999999999,
+    "sum_bit_branch_L1_um": 1516372.8609999989
+   },
+   {
+    "bus": "ng_tt_native_cmd_0",
+    "kind": "spine_local",
+    "bits": 380,
+    "sinks": 1,
+    "max_pin_L1_um": 5166.599999999997,
+    "sum_bit_branch_L1_um": 1952938.5599999991
+   },
+   {
+    "bus": "ng_tt_native_tok_0",
+    "kind": "spine_local",
+    "bits": 18,
+    "sinks": 2,
+    "max_pin_L1_um": 5164.775999999996,
+    "sum_bit_branch_L1_um": 182199.4559999999
+   },
+   {
+    "bus": "ng_tt_native_pos_0",
+    "kind": "spine_local",
+    "bits": 18,
+    "sinks": 2,
+    "max_pin_L1_um": 5133.863999999996,
+    "sum_bit_branch_L1_um": 181525.5359999999
+   },
+   {
+    "bus": "ng_tt_layer_context_v_0",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 2,
+    "max_pin_L1_um": 5101.079999999998,
+    "sum_bit_branch_L1_um": 10058.087999999996
+   },
+   {
+    "bus": "ng_tt_command_stage_0",
+    "kind": "spine_local",
+    "bits": 6,
+    "sinks": 2,
+    "max_pin_L1_um": 4969.079999999998,
+    "sum_bit_branch_L1_um": 59186.87999999996
+   },
+   {
+    "bus": "sf_q_slot",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 4744.031999999996,
+    "sum_bit_branch_L1_um": 4744.031999999996
+   },
+   {
+    "bus": "sf_q_slot_beat",
+    "kind": "spine_local",
+    "bits": 5,
+    "sinks": 1,
+    "max_pin_L1_um": 4744.031999999996,
+    "sum_bit_branch_L1_um": 23719.679999999986
+   },
+   {
+    "bus": "sf_visibility_slot",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 4690.175999999996,
+    "sum_bit_branch_L1_um": 4690.175999999996
+   },
+   {
+    "bus": "sf_kv_word_index",
+    "kind": "spine_local",
+    "bits": 2,
+    "sinks": 1,
+    "max_pin_L1_um": 4656.095999999998,
+    "sum_bit_branch_L1_um": 9312.143999999993
+   },
+   {
+    "bus": "sf_kv_word_slot",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 4656.047999999995,
+    "sum_bit_branch_L1_um": 4656.047999999995
+   },
+   {
+    "bus": "sf_complete_slot",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 4490.351999999999,
+    "sum_bit_branch_L1_um": 4490.351999999999
+   },
+   {
+    "bus": "sf_host_epoch",
+    "kind": "spine_local",
+    "bits": 16,
+    "sinks": 1,
+    "max_pin_L1_um": 4481.807999999997,
+    "sum_bit_branch_L1_um": 71703.16799999995
+   },
+   {
+    "bus": "sf_host_epoch_valid",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 4481.039999999997,
+    "sum_bit_branch_L1_um": 4481.039999999997
+   },
+   {
+    "bus": "sf_host_fused_capability",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 4481.039999999994,
+    "sum_bit_branch_L1_um": 4481.039999999994
+   },
+   {
+    "bus": "sf_host_generation",
+    "kind": "spine_local",
+    "bits": 2,
+    "sinks": 1,
+    "max_pin_L1_um": 4480.943999999996,
+    "sum_bit_branch_L1_um": 8961.839999999993
+   },
+   {
+    "bus": "sf_host_tag",
+    "kind": "spine_local",
+    "bits": 59,
+    "sinks": 1,
+    "max_pin_L1_um": 4480.895999999997,
+    "sum_bit_branch_L1_um": 264290.7359999998
+   },
+   {
+    "bus": "sf_native_fault",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 4465.871999999999,
+    "sum_bit_branch_L1_um": 4465.871999999999
+   },
+   {
+    "bus": "ng_native_vm_ar_0",
+    "kind": "spine_local",
+    "bits": 520,
+    "sinks": 1,
+    "max_pin_L1_um": 3520.616000000001,
+    "sum_bit_branch_L1_um": 1830720.319999987
+   },
+   {
+    "bus": "ng_native_vm_q_start_0",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 3520.616000000001,
+    "sum_bit_branch_L1_um": 3520.616000000001
+   },
+   {
+    "bus": "ng_native_vm_q_epoch_0",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 3520.6159999999973,
+    "sum_bit_branch_L1_um": 3520.6159999999973
+   },
+   {
+    "bus": "ng_vm_write_commit_mask_0",
+    "kind": "spine_local",
+    "bits": 624,
+    "sinks": 1,
+    "max_pin_L1_um": 3455.2400000000007,
+    "sum_bit_branch_L1_um": 2156069.759999999
+   },
+   {
+    "bus": "ng_vm_write_commit_v_0",
+    "kind": "spine_local",
+    "bits": 39,
+    "sinks": 1,
+    "max_pin_L1_um": 3405.3200000000024,
+    "sum_bit_branch_L1_um": 132807.47999999986
+   },
+   {
+    "bus": "ng_vm_write_commit_line_0",
+    "kind": "spine_local",
+    "bits": 312,
+    "sinks": 1,
+    "max_pin_L1_um": 3375.3680000000013,
+    "sum_bit_branch_L1_um": 1053114.8160000034
+   },
+   {
+    "bus": "ng_vm_q_committed_0",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 3316.952,
+    "sum_bit_branch_L1_um": 3316.952
+   },
+   {
+    "bus": "ng_vm_fault_0",
+    "kind": "spine_local",
+    "bits": 1,
+    "sinks": 1,
+    "max_pin_L1_um": 3316.04,
+    "sum_bit_branch_L1_um": 3316.04
+   },
+   {
+    "bus": "ng_vm_q_0",
+    "kind": "spine_local",
+    "bits": 524,
+    "sinks": 1,
+    "max_pin_L1_um": 3288.2480000000023,
+    "sum_bit_branch_L1_um": 1723041.9519999851
+   },
+   {
+    "bus": "ng_su_kv_waddr_0",
+    "kind": "spine_local",
+    "bits": 1536,
+    "sinks": 1,
+    "max_pin_L1_um": 465.8399999999974,
+    "sum_bit_branch_L1_um": 658943.9999999995
+   },
+   {
+    "bus": "ng_su_kv_wdata_0",
+    "kind": "spine_local",
+    "bits": 2048,
+    "sinks": 1,
+    "max_pin_L1_um": 392.1599999999971,
+    "sum_bit_branch_L1_um": 702529.5359999988
+   },
+   {
+    "bus": "ng_su_native_issue_0",
+    "kind": "spine_local",
+    "bits": 63,
+    "sinks": 1,
+    "max_pin_L1_um": 313.199999999998,
+    "sum_bit_branch_L1_um": 19637.85599999989
+   },
+   {
+    "bus": "ng_su_kv_we_0",
+    "kind": "spine_local",
+    "bits": 64,
+    "sinks": 1,
+    "max_pin_L1_um": 293.75999999999567,
+    "sum_bit_branch_L1_um": 18703.871999999883
+   }
+  ],
+  "all_data_bit_branch_L1_um": 31066478.94799997,
+  "clock_phase_and_registered_reach": "OPEN: geometry does not authorize long unregistered nets"
+ },
+ "notes": [
+  "All incident connections include real numeric pin bits and each fanout branch; zero missing endpoints.",
+  "Native service MX beside SU reduces all four SU data bus maxima below490um.",
+  "Native service VM links grow to3.3-3.5mm and require actual relay allocation.",
+  "Clock receiver moves817.776um east and28.08um south, keeping all pins/roots real; phase/actual insertion must be recalculated.",
+  "No source/clock/root/timing or physical view inheritance is authorized."
+ ]
+}

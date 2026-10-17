@@ -3,7 +3,7 @@ module tb_s81_static_hc_faults;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,write_slot=0,word_valid=0,word_error=0,emit_slot=0;
  reg[3:0]word_index=0;reg[511:0]word_data=0;reg[31:0]word_tag=42,emit_tag=42;
- wire row_valid,fault;wire[8191:0]row_data;wire[31:0]row_tag;
+ wire row_valid,fault;wire[8191:0]row_data;wire[31:0]row_tag;reg[4:0]word_row=0;wire[4:0]row_y5;
  s81_static_hc_assemble dut(.*);
  task clear;
  begin @(negedge clk);rst_n=0;write_slot=0;word_valid=0;emit_slot=0;word_error=0;word_tag=42;emit_tag=42;

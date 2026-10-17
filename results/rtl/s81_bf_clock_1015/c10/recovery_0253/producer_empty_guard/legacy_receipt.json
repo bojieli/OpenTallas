@@ -1,0 +1,31 @@
+{
+  "scope": "actual sequencer component; canonical519 production calendar remains unavailable",
+  "source": "rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv",
+  "source_sha256": "4f4290a6bacb37e98b6d48f4c914d8ab4eb9b417d81d1c271ba96b48d4936cc8",
+  "descriptor_sha256": "3b8d243eb64615b3f14f9d9a73047d438e3bf3b2476f4d46b77bf1139bbcf70e",
+  "trace_sha256": "18242537c7ead7e91a18de2e324064f90533e2c4f199ac18bf4131c818bb6dba",
+  "advance": 0,
+  "phases": 13,
+  "issues": 4288,
+  "empty_phases": [
+    11
+  ],
+  "cases": {
+    "positive": {
+      "pass_": true,
+      "returncode": 0,
+      "log": "PASS actual sequencer words and faults"
+    },
+    "empty_fault": {
+      "pass_": true,
+      "returncode": 1,
+      "log": "FATAL: /tmp/bf_seq_fault_legacy/tb.sv:7251: unexpected fault phase 11\n       Time: 587365000 Scope: tb"
+    },
+    "address": {
+      "pass_": true,
+      "returncode": 1,
+      "log": "FATAL: /tmp/bf_seq_fault_legacy/tb.sv:9: word mismatch got 0000000203 expected 0000000201\n       Time: 50000 Scope: tb.check_word"
+    }
+  },
+  "pass_": true
+}

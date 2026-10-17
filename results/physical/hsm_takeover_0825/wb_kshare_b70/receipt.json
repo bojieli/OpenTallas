@@ -1,0 +1,15 @@
+{
+  "source_commit": "b70d413eb",
+  "scope": "Integrated actual WB SRAM CDC writer + kshare + actual configured PC controller; external command/DRAM fixture only; does not qualify physical timing or full token",
+  "positive": "baseline expected_exit0",
+  "mutants": [
+    "overlap KSMUT3",
+    "address KSMUT4",
+    "premature WBMUT1"
+  ],
+  "result": "PASS expected all four cases",
+  "actual_host": "ot-epyc4",
+  "ot_heavy_unit": "oth-ubuntu-3910325-1792164745",
+  "new_fault_fifo_bound": true,
+  "normal_data_cycles_added": 0
+}

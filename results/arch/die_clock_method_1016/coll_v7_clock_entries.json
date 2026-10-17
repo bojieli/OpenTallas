@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.die_clock.entries.v1",
+ "source": "coordinator relay of H-NETLIST/COLL 10-16; receipts claude/hnl-coll-1815 results/rtl/hbm_coll_native_1552/{ctl_v7_native_1815,slices_native_1815}.json",
+ "region_rule": "every COLL entry of quadrant q is a sink of region band_<q>2 (d4f_root_sites.json: x ~13983, the band slice that holds coll/dbk/sucx/cij); vmasm/upipe/ctl pairs are intra-region pairs, inj_copy pairs with the ecol_<q> region are neighbour pairs",
+ "masters": {
+  "hcoll_v5_ctl3 (v7, main 8b01dec5a)": {"bind": true, "native": "PASS L200.3/C166.2/sp42.5", "entries": {"clk_control": {"R_tt_ps": 209.4, "sinks": 5000}}},
+  "hcoll_v5_ctl2 (main 2b66f7fe5)": {"bind": false, "native": "FAIL capture 197.3 dest_v[1] (hold padding); successor ctl2-v7h regating"},
+  "coll vmasm slice": {"entries": {"clk_vmasm[15:0]": {"R_tt_ps": 102, "spread_ps": 6.8}}},
+  "coll upipe slice": {"entries": {"clk_upipe[15:0]": {"R_tt_ps": 85, "spread_ps": 5.9}}},
+  "coll inj_copy": {"entries": {"per_quadrant": 1}}
+ },
+ "die_clock_check": "targets from each view's insertion.json (physical_insertion_per_clock_pin_ps) when the views are bound; R above are the native-audit values for planning, not a substitute for the bound view's insertion.json"
+}

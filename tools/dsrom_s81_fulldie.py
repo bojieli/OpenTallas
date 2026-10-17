@@ -409,6 +409,16 @@ def _init_real():
 VIEW_BINDING_DEFAULT = 'results/arch/s81_native_20261013/view_binding.json'
 VIEW_BINDING = os.environ.get('OT_S81_VIEW_BINDING', VIEW_BINDING_DEFAULT)
 VIEW_BINDING_SCHEMA = 's81-view-binding-v1'
+CAPTURE_SOURCE_PACKET = None  # explicit source-current hardened capture import
+_CAPTURE_PACKET_CACHE = {}
+
+def capture_source_packet():
+    from s81.capture_import import _load
+    key = (str(ROOT), CAPTURE_SOURCE_PACKET)
+    if key not in _CAPTURE_PACKET_CACHE:
+        _CAPTURE_PACKET_CACHE[key] = _load(CAPTURE_SOURCE_PACKET, ROOT)[0]
+    return _CAPTURE_PACKET_CACHE[key]
+
 _BOUND = {}
 
 
@@ -422,7 +432,7 @@ def bound_views(root=None):
     sha256 differs from the table (the view changed after it was qualified), a LEF whose MACRO is not the master, a
     corner liberty without that cell."""
     diagnostic = os.environ.get('OT_S81_DIAGNOSTIC_CLOSED_VIEWS') == '1'
-    key = (VIEW_BINDING, str(root or ROOT), diagnostic)
+    key = (VIEW_BINDING, str(root or ROOT), diagnostic, CAPTURE_SOURCE_PACKET)
     if key in _BOUND:
         return _BOUND[key]
     out = {}
@@ -433,6 +443,16 @@ def bound_views(root=None):
         tab = json.loads(tp.read_text())
         if tab.get('schema') != VIEW_BINDING_SCHEMA:
             raise SystemExit(f'VIEW_BINDING: {tp} schema {tab.get("schema")!r}, expected {VIEW_BINDING_SCHEMA!r}')
+        if CAPTURE_SOURCE_PACKET:
+            if not diagnostic:
+                raise ValueError('--capture-source-packet requires diagnostic views until die qualification')
+            tab = copy.deepcopy(tab)
+            for mst, view in capture_source_packet()['views'].items():
+                folder = Path(view['view'])
+                paths = dict(lef=folder/(mst+'.lef'), tt=folder/(mst+'_tt.lib'),
+                             ff=folder/(mst+'_ff.lib'), ss=folder/(mst+'_ss.lib'))
+                tab.setdefault('bound', {})[mst] = dict(verdict='DIAGNOSTIC_CLOSED', export_dir=str(folder),
+                    files={c:dict(path=str(path),sha256=view['sha256'][str(path)]) for c,path in paths.items()})
         for mst, rec in sorted(tab.get('bound', {}).items()):
             if rec.get('verdict') != 'QUALIFIED' and not (diagnostic and rec.get('verdict') == 'DIAGNOSTIC_CLOSED'):
                 raise SystemExit(f'VIEW_BINDING: {mst} is in the table without a QUALIFIED verdict ({rec.get("verdict")!r})')
@@ -1420,7 +1440,7 @@ def port_widths(m, k):
     return w
 
 
-def pin_rects(mst, k, wmap):
+def pin_rects(mst, k, wmap, legalize=True):
     out = []
     for port, spec in mst.ports.items():
         if spec[0] == 'rects':
@@ -1476,7 +1496,7 @@ def pin_rects(mst, k, wmap):
             ins.append((nm, ly, (x0, y0, x1, y1)))
         rects = ins
     out = out + rects
-    if PIN_LATTICE and k == 1:
+    if PIN_LATTICE and k == 1 and legalize:
         # --pin-lattice (S-DIE 2026-10-15): one legal site-grid origin per axis for every generated master (die PLACE
         # snap.tcl ot_mts::rule); off-lattice assigned/generated pins move the least distance onto it, reported
         from s81.pin_lattice_legalize import legalize as _pl_legalize
@@ -1598,7 +1618,8 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
         sliced = defaultdict(list)
         for c in conns.get(it.name, []):
             if len(c) == 4:                      # a slice of a generated / bundled port
-                assert not (k == 1 and it.name in (m.get('pad') or {}) and c[0] in m['pad'][it.name]['ports']), (it.name, c[0], 'sliced DEDUPE padding unsupported')
+                # S-DIE 1815 10-16 (c26d3 GEN_FAIL f_KW1t_70.do0): a DEDUPE-padded port bound by slices is completed
+                # below to the standard width (spare inputs tied low + declared in pads.json, spare outputs no-load)
                 sliced[c[0]].append((c[3], c[1], c[2]))
                 continue
             if isinstance(c[0], list):
@@ -1624,10 +1645,20 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
                         parts.append(f'.{port}({{{nc_}, {net}}})')
                     continue
                 parts.append(f'.{port}({net})')
+        for port, literal in m.get('neutral_role_inputs', {}).get(it.name, {}).items():
+            if any(c[0] == port for c in conns.get(it.name, [])):
+                raise ValueError('neutral-role strap collides with active bus '+it.name+'.'+port)
+            parts.append(f'.{port}({literal})')
+            pads_decl[it.name][port] = 0
         for base, pcs in sliced.items():
             pcs.sort()
             assert all(pcs[i][0] + pcs[i][2] <= pcs[i + 1][0] for i in range(len(pcs) - 1)), (it.name, base, pcs)
             rw_ = rtl_port_width(it.master, base) if RTL_BIND else None
+            pad_ = (m.get('pad') or {}).get(it.name) if k == 1 else None
+            if pad_ and base in pad_['ports']:
+                L_ = pad_['ports'][base]
+                assert pcs[-1][0] + pcs[-1][2] <= L_, (it.name, base, pcs, L_, 'DEDUPE slice above the logical width')
+                rw_ = L_            # gaps inside the logical width keep the gap-net rule; the pad is appended below
             top_ = pcs[-1][0] + pcs[-1][2]
             if any(pcs[i][0] + pcs[i][2] < pcs[i + 1][0] for i in range(len(pcs) - 1)) or pcs[0][0] != 0 or \
                     (rw_ is not None and rw_ > top_):
@@ -1648,6 +1679,15 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
                     V.append(f'  wire [{rw_ - lo_ - 1}:0] {gn_};')
                     full_.append((lo_, gn_, rw_ - lo_))
                 pcs = full_
+            if pad_ and base in pad_['ports'] and pad_['std'] > pad_['ports'][base]:
+                L_, sp_ = pad_['ports'][base], pad_['std'] - pad_['ports'][base]
+                if m['pdir'][it.master][base][0] == 'input':
+                    pcs = list(pcs) + [(L_, f"{sp_}'b0", sp_)]
+                    pads_decl[it.name][base] = L_
+                else:
+                    nc_ = f'n_pad_{it.name}_{base}'
+                    V.append(f'  wire [{sp_ - 1}:0] {nc_};')
+                    pcs = list(pcs) + [(L_, nc_, sp_)]
             parts.append(f'.{base}({{' + ', '.join(net for _, net, _ in reversed(pcs)) + '})')
         for base, bits_ in bus_bits.items():
             hi = max(bits_)
@@ -1670,7 +1710,8 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
     if k == 1 and pads_decl:
         pad_path.write_text(json.dumps(dict(schema='s81-instance-padding-v1', instances={
             inst: dict(master=by[inst].master,
-                       reason='DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged',
+                       reason=('SSTN role superset: only absent original control ports tied zero' if inst in m.get('neutral_role_inputs', {}) else
+                               'DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged'),
                        ports={p_: dict(logical_width=L) for p_, L in sorted(ps.items())})
             for inst, ps in sorted(pads_decl.items())}), indent=1) + '\n')
     elif pad_path.exists():
@@ -1711,6 +1752,17 @@ def die_master_params(m):
             raise ValueError('--vm-native-candidate needs an actual dsfd_sp_vm instance')
         out['dsfd_sp_vm'] = dict(vm_native_candidate_params(),
                                 _source='explicit --vm-native-candidate; source construction only, not physical qualification')
+    if WFC_RETURN256:
+        if 'dsfd_sp_vm' not in used:
+            raise ValueError('--wfc-return256 needs an actual dsfd_sp_vm instance')
+        r_ = out.setdefault('dsfd_sp_vm', {})
+        r_.update(wfc_return256_params())
+        r_['_source'] = '; '.join(x_ for x_ in (r_.get('_source'), '--wfc-return256: u_wfc.u_ret = return256 lo/hi + '
+                                                'native valid diag (S-VM 6136ed704), 3 return roots') if x_)
+    if CAPTURE_SOURCE_PACKET:
+        for child in capture_source_packet()['children'].values():
+            if child['parameters']:
+                out[child['master']] = dict(child['parameters'], _source=CAPTURE_SOURCE_PACKET)
     for mst, rel in BOUND_VIEW_RECEIPTS.items():
         if mst in used:
             out[mst] = dict(_receipt_params(rel), _source=rel)
@@ -1741,6 +1793,21 @@ def vm_native_candidate_params():
     requested = dict(READ_PIPE=4, CAP_PIPE=2, WSCATTER_PIPE=1)
     if len(wrappers) != 1 or not set(requested).issubset(wrappers[0].params):
         raise ValueError('--vm-native-candidate requires actual READ_PIPE/CAP_PIPE/WSCATTER_PIPE wrapper parameters')
+    return requested
+
+
+def wfc_return256_params():
+    """--wfc-return256: the dsfd_sp_vm elaboration override; fail closed unless the die VM RTL declares WFC_RETURN256
+    and its return roots are 3 bits wide under it (rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv, S-DIE-WFC 10-16)."""
+    import die_port_bind as DPB
+    source = ROOT / 'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv'
+    modules = DPB.parse_modules(DPB.preprocess(source.read_text(), {}), str(source))
+    wrappers = [md for md in modules if md.name == 'dsfd_sp_vm']
+    requested = dict(WFC_RETURN256=1)
+    if len(wrappers) != 1 or 'WFC_RETURN256' not in wrappers[0].params or any(
+            wrappers[0].width(p_, wrappers[0].env(requested)) != 3 for p_ in WFC_RETURN256_PORTS):
+        raise ValueError('--wfc-return256 requires the dsfd_sp_vm WFC_RETURN256 parameter with 3-bit '
+                         'ck_wfc_return_t / rss_wfc_return_t')
     return requested
 
 
@@ -2098,6 +2165,20 @@ def bundle_bound_lefs(texts):
                      for text in texts) + '\nEND LIBRARY\n'
 
 
+def emit_case_glue(m, work):
+    """Keep RTL glue and import provenance from the exact model that emitted die.v."""
+    import gzip
+    (work / 'die_glue.sv').write_text(glue_rtl(m))
+    reset_path = work / 'die_glue.reset_contract.json'
+    if RLY536_RSTREG:
+        reset_path.write_text(json.dumps(rly536_reset_contract(m), indent=1) + '\n')
+    elif reset_path.exists():
+        reset_path.unlink()
+    if m.get('capture_import'):
+        payload = json.dumps(m['capture_import'], separators=(',', ':')).encode()
+        (work / 'capture_import.json.gz').write_bytes(gzip.compress(payload, mtime=0))
+
+
 def case_real(m, work):
     work.mkdir(parents=True, exist_ok=True)
     npins = write_lefs(m, 1, work / 'elements.lef')
@@ -2115,6 +2196,8 @@ def case_real(m, work):
         bv_ = bound_views()
         (work / 'bound_views.lef').write_text(bundle_bound_lefs(bv_[n_]['text'] for n_ in sorted(bnd)))
     write_netlist(m, 1, work / 'die.v')
+    if GEN == 'r8':
+        emit_case_glue(m, work)
     # pin ALIGNMENT of every die bundle (owner 2026-10-13, tools/hier_contract/pin_align.py): jog along the shared
     # direction, bit order, pin-to-pin length, from the LEFs written above.  FAIL = the jog alone takes > 0.60 of the
     # channel tracks between the two faces (OT_PIN_ALIGN_GATE=warn|off to build anyway)
@@ -2237,8 +2320,23 @@ write_db /work/floorplan.odb
                variant=m['variant'])
     if bnd:
         man['bound_views'] = dict(table=VIEW_BINDING, masters=bnd)
+    man['relay_stages'] = _export_relay_stages(m, work)
     (work / 'manifest.json').write_text(json.dumps(man, indent=1))
     return man
+
+
+def _export_relay_stages(m, work):
+    """ROOT RELAY-SCHEMA 10-16: per-bus relay stages of this case -> work/relay_stages.json (opentallas.die_relay_stages.v1,
+    tools/s81/relay_stages_export.py); additive report, never a gate here (tools/die_relay_check.py is the check)"""
+    try:
+        sys.path.insert(0, str(ROOT / 'tools' / 's81'))
+        import relay_stages_export as RSX
+        doc = RSX.export_model(m, f"s81:{Path(work).name}:{m.get('variant')}", sources=['tools/dsrom_s81_fulldie.py'])
+        import die_relay_stages as DRS_
+        DRS_.write(Path(work) / 'relay_stages.json', doc)
+        return dict(file='relay_stages.json', digest=doc['digest'], buses=doc['bus_count'])
+    except Exception as e_:                      # noqa: BLE001 -- the export never changes the case
+        return dict(error=repr(e_)[:500])
 
 
 # ------------------------------------------------------------------------------------------------ case (b): GRT
@@ -3126,6 +3224,7 @@ BF_X2_PAIR = False              # --bf-x2-pair (S-BIND r6): the packed static x 
 # rd_out[71:48] columns of rows 0..3 of the phase's cfg block, so BF cfg ROM reads are 72 b).  f_prog travels seq -> front
 # beside go (same class / relay cohort: the producer's DELTA 0 assumes equal go / f_prog ages, bench-measured).
 BF_STATIC_PROG = False
+BF_FRONT_ROOT_ABI = False       # opt-in S81H03 source candidate; no view/timing inheritance
 LEAF, NODEB, STB = 63, 66, 2
 CRET = NODEB + STB                  # column return payload: root word + {fault, busy}
 STEP8 = 400.0                       # nominal forwarded-stage spacing (<= LINK_STAGE_UM after placement)
@@ -3295,6 +3394,7 @@ ECOL_W = 518.4
 CTRL_SVC_ALIGN = False         # --ctrl-svc-align (s81-die v14): stack client pins at their controller bits' x
 HOP_GATE_UM = None             # --hop-gate UM (s81-die v14): real mode fails when any data bit's pin-to-pin hop > UM
 RLY_REAL_DIMS = False          # reserve native wide relay envelopes before choosing their faces
+NATIVE_SLOT_ENVELOPES = False  # reserve source-pinned qbank / 536 relay view envelopes before placement
 RLY_FACE_REACH = 0.0           # --rly-face-reach UM (s81-die v16): last column relay's out face by its worst load
 HOP_EXTRA = 0                  # --hop-extra N: extra stations a hop may take when its planned count has no clean placement
 HOST_MM2 = 0.10
@@ -3802,6 +3902,12 @@ def relay_dims(bits, horiz):
     the exact real outline without growing a placed tile. Corner masters
     still require their own real view; this does not alias them to a stand.
     """
+    if NATIVE_SLOT_ENVELOPES and bits == 536:
+        matches = [v for name, v in bound_views().items() if name.startswith('dsfd_rly_536_')]
+        if not matches:
+            raise ValueError('native slot envelope requires source-pinned dsfd_rly_536 views')
+        a, b = stn_dims([bits], True), stn_dims([bits], False)
+        return max(a[0], b[0], *(v['w'] for v in matches)), max(a[1], b[1], *(v['h'] for v in matches))
     if RLY_REAL_DIMS and bits in (266, 283):
         return 34.56, 30.24
     # Faces are selected from the actual neighbours AFTER the site is reserved.
@@ -3821,6 +3927,24 @@ def relay_dims(bits, horiz):
     horizontal = stn_dims([bits], True)
     vertical = stn_dims([bits], False)
     return tuple(max(a, b) for a, b in zip(horizontal, vertical))
+
+
+def native_xstg_slot(w, h, requested_orientation):
+    """Reserve the literal crossing view and a proven transform before search.
+
+    The existing closed base R0 is preferred when a requested mirror is not
+    supported.  Its different absolute pin positions must pass subsequent
+    source-current join/reach checks; this does not waive those checks.
+    """
+    master = 'dsfd_xstg_515'
+    view = bound_views().get(master)
+    if view is None:
+        raise ValueError(f'native slot envelope requires source-pinned {master}')
+    orientation = bound_view_orientation_contract(view, master)
+    supported = orientation['supported']
+    if orientation['errors'] or 'R0' not in supported:
+        raise ValueError(f'{master}: invalid native orientation contract: {orientation}')
+    return max(w, view['w']), max(h, view['h']), (requested_orientation if requested_orientation in supported else 'R0')
 
 
 def stn70_across(lanes, horiz):
@@ -3926,6 +4050,8 @@ def _dedupe_pad(m):
     bv = bound_views()
     rec = m.setdefault('pad', {})
     for it in m['insts']:
+        if it.kind == 'capture_leaf':
+            continue  # source-pinned hardened composition; no generic master substitution
         e = mp.get(it.master)
         if not e:
             continue
@@ -3951,7 +4077,7 @@ def _apply_station_footprints(m):
     the data-pin face length unchanged.  Grow toward the output face; if that box is taken, toward the input face; else
     the nearest legal box (<= 120 um).  Counted in m.stn_footprints."""
     W, H = DIE
-    hits = [it for it in m['insts'] if it.master in STN_FOOTPRINTS]
+    hits = [it for it in m['insts'] if it.master in STN_FOOTPRINTS and it.kind != 'capture_leaf']
     if not hits:
         return
     names = {it.name for it in hits}
@@ -4057,6 +4183,29 @@ class Chains:
     def bus(self, bid, cls, bits, eps):
         self.B.append((bid, cls, bits, eps))
 
+    def _fallback_guard(self, name, target, planned, w, h, seen):
+        """Fail fast when the station fallback returns to a stop it already served: the displaced station cannot
+        re-anchor the chain (its hop exceeds the reach), so every later stop falls back again -- never finishes."""
+        key = round(target, 1)
+        seen[key] = seen.get(key, 0) + 1
+        if seen[key] < 2:
+            return
+        cx, cy = planned
+        fb = [f for f in self.m.get('station_fallback', []) if f.get('chain') == name]
+        block = sorted((abs(i_.x + i_.w / 2 - cx) + abs(i_.y + i_.h / 2 - cy), i_.name, getattr(i_, 'kind', '?'))
+                       for i_ in self.m.get('insts', [])
+                       if i_.x < cx + w / 2 + 200 and i_.x + i_.w > cx - w / 2 - 200
+                       and i_.y < cy + h / 2 + 200 and i_.y + i_.h > cy - h / 2 - 200)
+        kinds = {}
+        for _, _, k_ in block:
+            kinds[k_] = kinds.get(k_, 0) + 1
+        msg = (f'OT_STATION_FALLBACK_NO_PROGRESS station {name} s={key} planned ({cx:.1f}, {cy:.1f}) {w:.1f}x{h:.1f}: '
+               f'fallback {seen[key]}x at the same stop (displaced {[f["displaced_um"] for f in fb[-3:]]} um); '
+               f'blocking: {len(block)} instances within 200 um of the planned spot (by kind {kinds}), nearest '
+               f'{[n_ for _, n_, _ in block[:8]]} -- give this chain a free street / spot, the fallback cannot')
+        print(msg, file=sys.stderr, flush=True)
+        raise RuntimeError(msg)
+
     def run(self, name, lanes, path, allowed, src, forced=(), first_prev=None, kind='stn', reach=None, force_horiz=False):
         """Place stations along polyline `path` for a chain of `lanes` (list of data widths).  `forced`: path lengths
         where a station MUST stand (taps / branches).  Returns [(inst, s_along)].  src: (x, y) of the source pin."""
@@ -4083,7 +4232,13 @@ class Chains:
         out, pos, cur = [], 0.0, src
         end = path[-1]
         fi = 0
+        # PROGRESS GUARD (ROOT 2026-10-16; S-DIE v3i3/v3i4 GEN re-placed one station >4,000 times, drifting 10 mm): a
+        # chain needs at most ~L/step stations plus its forced stops; the fallback may place a stop's station once
+        fb_seen, max_stn = {}, int(L / 100.0) + len(stops) + 32
         while True:
+            if len(out) > max_stn:
+                raise RuntimeError(f'OT_CHAIN_NO_PROGRESS chain {name}: {len(out)} stations > bound {max_stn} for '
+                                   f'{L:.0f} um (last at s={pos:.0f}, cur={tuple(round(v, 1) for v in cur)}, end={end})')
             nxt = stops[fi] if fi < len(stops) else None
             R_ = reach or FWD_REACH
             if nxt is None and _mh(cur, end) <= R_ - 30.0 and L - pos <= R_ - 30.0:
@@ -4153,6 +4308,7 @@ class Chains:
                             at=[round(placed[0], 1), round(placed[1], 1)],
                             displaced_um=round(abs(placed[0] - cx) + abs(placed[1] - cy), 1)))
                         print('OT_STATION_FALLBACK', json.dumps(self.m['station_fallback'][-1]), file=sys.stderr, flush=True)
+                        self._fallback_guard(name, target, (cx, cy), w, h, fb_seen)
                         break
             if placed is None:
                 print('OT_CHAIN_NO_SPOT', name, [(round(p_[0], 1), round(p_[1], 1)) for p_ in path], file=sys.stderr, flush=True)
@@ -4964,6 +5120,12 @@ def build_r8(variant=None):
         h = up(HUB_MM2[name] * 1e6 / w, GY)
         x = up((gap_x0 + gap_x1) / 2 - w / 2, GX)
         y = band_ys[side] if side == 'S' else band_ys[side] + SVC_D - h
+        bb_ = (HUB_LAYOUT or {}).get('band_blocks', {}).get(f'bk_{name}')
+        if bb_:
+            # --hub-layout vmk (S-DIE-HUB 10-16): the layout moves the band block (selector and collector stacked beside
+            # the SW IO under the SU); the outline stays the generator's own
+            assert abs(bb_[2] - (w - SHAVE)) < 0.5 and abs(bb_[3] - (h - SHAVE)) < 0.5, ('band block outline', name, bb_, w, h)
+            x, y = up(bb_[0], GX), up(bb_[1], GY)
         it = Inst(f'bk_{name}', f'dsfd_bk_{name}', x, y, w - SHAVE, h - SHAVE, kind='band_blk', region='svc')
         insts.append(it)
         hub[name] = it
@@ -5088,6 +5250,15 @@ def build_r8(variant=None):
                                        collective_master=hub['collective'].master if 'collective' in hub else None)
     m['buses'] = []
     buses_r8(m)
+    if CAPTURE_SOURCE_PACKET:
+        from s81.capture_import import expand
+        expand(m, hub['capture'].name, CAPTURE_SOURCE_PACKET, root=ROOT, inst_ctor=Inst)
+        capture_placer = Placer(m)
+        if HOP_FIX and HOP_PLAN:
+            _hop_fix(m, capture_placer)
+        if RELAY_PROGRESS:
+            _relay_progress_fix(m, capture_placer)
+
     if STN70_SPLIT:
         _split_multi_lane_stations(m)
     if DEDUPE_PAD:
@@ -5425,6 +5596,9 @@ def buses_r8(m):
         bus(f'rs_col_{r}', 'col_reset', 1, col_rs)
     if BF_HIER:
         _bf_hier_nets(m)
+        if BF_FRONT_ROOT_ABI:
+            from s81.bf_root_die_abi import rewrite_front
+            rewrite_front(m)
     if REV == 'r9':
         _bank_nets(m)
         _col_relays(m, P)
@@ -5500,7 +5674,10 @@ def buses_r8(m):
     starts = {}
     for side in 'WE':
         nm, w, h = end_spec('l2r', [LSW], 'vr')
-        it = hub_block(f'hx_{side}', nm, 'hend', w, h, x_sp if side == 'W' else x_vch + 0.0, vmc,
+        fx_ = x_sp if side == 'W' else x_vch + 0.0
+        if wide_hub() and wide_hub().get('variant') == 'vmk':
+            fx_ = xsrc.x if side == 'W' else xsrc.x + xsrc.w     # vmk: the broadcast start blocks stand on the PQ faces
+        it = hub_block(f'hx_{side}', nm, 'hend', w, h, fx_, vmc,
                        side, [cor['s14W'] if side == 'W' else cor['vch']])
         starts[side] = it
         bus(f'xr_{side}', 'local', LSW + 1, [(xsrc.name, f'x{side.lower()}'), (it.name, 'i')])
@@ -5611,8 +5788,10 @@ def buses_r8(m):
                     bus(f'hr_{half}{t}_o', 'local', ncol * (CRET + 1) + 2, [(endb.name, 'o'), (ga.name, f'r{half}{t}')])
     # ---------------- scan services <-> VM, band links, selector / collector -> VM
     _svc_chains(m, CH8, P, cor, end_spec, hub_block)
-    # ---------------- links: collective <-> link macros
-    _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl)
+    # In a shared SU|VM/link street, allocate native hub pin landings first.
+    # Later links retain every occupancy and reach check; no placement is waived.
+    if not HUB_FIRST_STATIONS:
+        _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl)
     # ---------------- hub-internal buses (adjacent slabs, direct)
     hb = hub
     for a_, b_, bits, pa, pb in (('vm', 'su_s', 1024, 't_su_s', 'f_vm'), ('vm', 'su_n', 1024, 't_su_n', 'f_vm'),
@@ -5668,6 +5847,8 @@ def buses_r8(m):
                            reach_um=SER_STAGE_UM if ser_ else None)
         else:
             bus(f'hb_{a_}_{b_}', 'hub', bits, [(hb[a_].name, pa), (hb[b_].name, pb)])
+    if HUB_FIRST_STATIONS:
+        _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl)
     # ---------------- PHY / controller / service
     npins = len(real_ports_r8()[real_lef(PHY_LEF)['name']]['dfi'])
     for st, ph in m['phys'].items():
@@ -5718,9 +5899,9 @@ def buses_r8(m):
             for b_, n_ in enumerate(rn_[2:]):
                 bus(f'pqrc_2{"abcd"[b_]}', 'rom_ce', 1, [(hub['pq'].name, f'rc2[{b_}:{b_}]'), (n_, 'ce')])
                 bus(f'pqrq_2{"abcd"[b_]}', 'rom_q', 48, [(n_, 'rd'), (hub['pq'].name, f'rq2[{48 * b_}:{48 * b_ + 47}]')])
-    if HOP_FIX and HOP_PLAN:
+    if HOP_FIX and HOP_PLAN and not CAPTURE_SOURCE_PACKET:
         _hop_fix(m, P)
-    if RELAY_PROGRESS:
+    if RELAY_PROGRESS and not CAPTURE_SOURCE_PACKET:
         _relay_progress_fix(m, P)
     if COL_RESET_TREE and ALIGN_EXT[0]:
         _col_reset_tree(m, P)            # --col-reset-tree G: registered equal-depth column reset tree
@@ -5865,12 +6046,14 @@ HOP_FIX = False                 # --hop-fix (S81-RERUN v6, default off): station
                                 #   measured pin anchor to pin anchor on a first build (budget sheets 2026-10-06)
 HOP_PLAN = None                 # {(drv inst, drv port, load inst, load port): (L um, (dx, dy), (lx, ly))}
 VM_FACE_MM2 = None              # --vm-face-mm2 (v9e): minimum VM slab area on every die (layer die 2.6599)
+HUB_FIRST_STATIONS = False     # candidate native hub landings before shared-street links
 PIN_RELAY = False               # --pin-relay (OWNER rule 1, 2026-10-07): a relay station abutting every hardened-block pin
 PIN_SEG = 100.0                 #   on die interfaces (last segment <= 100 um)
 PIN_NEED = False                # --pin-need (hbmdie-1011, compact199): a column net's relay count / path end at a q element
                                 # is measured to that port's LEF pin centroid, not the 510 x 221 um element centre (gt: seq ->
                                 # go_tag pins on the element S face ~150 um, centre 238 um > the 214 um rule)
 HSTN_POSEDGE = False            # --hstn-posedge (FILL-S 2026-10-15): common-clock stations as plain posedge flops on ck
+SSTN_SPLIT_MAP = None           # opt-in actual two-leaf SSTN map; both real child views required
 SSTN_REG = False                # --sstn-reg (S-NET 2026-10-15): slot stations / return stages register the reset-qualified
                                 # valid (async-reset flop) instead of an AND gate behind the output flop (logic at the pin)
 NODE_STATIC = False             # --node-static (S-NET 2026-10-15, owner static rule): return nodes = ot_s81_retn_static
@@ -6053,6 +6236,18 @@ STATIC_COLLECTIVE_MASTER = 'dsfd_sp_collective_static_c'
 STATIC_COLLECTIVE_RTL = 'rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv'
 STATIC_COLLECTIVE = False       # --static-collective: swap the hub collective master (RTL must be on the source tree)
 VM_NATIVE_CANDIDATE = False    # explicit4/2/1 source construction; default remains actual RTL0/0/0
+# S-DIE-WFC 2026-10-16 (--wfc-return256, c26j; S-VM 6136ed704 / 75eb05ada): the die VM's u_wfc.u_ret is the return256
+# split (two dsfd_vm_wfc_return256 slices lo / hi + the closed dsfd_vm_native_valid_diag), dsfd_sp_vm WFC_RETURN256 1:
+# ck_wfc_return_t / rss_wfc_return_t widen 1 -> 3 die roots ([0] lo, [1] hi, [2] diag), each its own phi - R delivery.
+# Default off: the master's default elaboration (scalar return root, legacy dsfd_vm_wfc_return leaf) is unchanged.
+WFC_RETURN256 = False
+WFC_RETURN256_PORTS = ('ck_wfc_return_t', 'rss_wfc_return_t')
+# S-DIE-WFC 2026-10-16 (--pqcnt-lef-pins, c26j; S-ELEM-PQ main 46455e19f): the --pq-cnt count leaves bound to their
+# closed views (ot_s81_pq_rwbc15 / rwbc2) take their assigned-port rectangles from the bound LEF verbatim (the export's
+# literal contacts, <= 24 / 20 nm from the v22 assigned centres) instead of the assigned record's coordinates, so every
+# die-side pin model (masters_r8, spread load maps) is the placed macro's.  Default off.
+PQCNT_LEF_PINS = False
+PQCNT_MASTERS = ('ot_s81_pq_rwbc15', 'ot_s81_pq_rwbc2')
 PIN_OVERRIDES = None            # --pin-overrides (S-DIE r11 10-15): adopted GEO-S face re-assignments, see load_pin_overrides
 PIN_OVERRIDES_APPLIED = {}
 
@@ -6230,6 +6425,8 @@ def rtl_clock_reset_entries(master, manifest='physical/s81_die_rtl/layer1.f'):
                     env[k_] = DPB.ev(v_, env)
                 except Exception:
                     pass
+            if master == 'dsfd_sp_vm' and WFC_RETURN256:
+                env.update(wfc_return256_params())       # --wfc-return256: the die elaborates WFC_RETURN256 1
             out = dict(clock=defaultdict(list), reset=defaultdict(list))
             for pn in md.order:
                 d_, rng = md.ports[pn]
@@ -6244,7 +6441,8 @@ def rtl_clock_reset_entries(master, manifest='physical/s81_die_rtl/layer1.f'):
                 w_ = 1
                 for hi_, lo_ in rng:
                     w_ *= abs(DPB.ev(hi_, env) - DPB.ev(lo_, env)) + 1
-                out[cls_][dom_] += [pn] if (w_ == 1 and not rng) else [f'{pn}[{i_}:{i_}]' for i_ in range(w_)]
+                scalar_ = w_ == 1 and (not rng or (master == 'dsfd_sp_vm' and pn in WFC_RETURN256_PORTS))
+                out[cls_][dom_] += [pn] if scalar_ else [f'{pn}[{i_}:{i_}]' for i_ in range(w_)]
             break
         if out is not None:
             break
@@ -6458,6 +6656,7 @@ MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 
 HC_XFACE = False                # --hc-xface (S81-RERUN v7, default off): hc_s <-> hc_n exchange face to face across
                                 #   the corridor inside the HC column (out of the VCH-edge lane)
 SEL_XSTG = False                # --sel-xstg (S81-RERUN v8, default off): d8g1 meso crossing stage (1.5 T arcs + low guard)
+RLY536_RSTREG = False           # --rly536-rstreg: canonical536 relay resetpinregister; +1bootstrapreleaseedge,0productionedges
 HEND_BOUND_FOOTPRINT = False    # --hend-bound-footprint: reserve each hub end's verified view outline before placement
 DEDUPE_PAD = None               # --dedupe-pad FILE: DEDUPE pad map (instances of FROM become the standard TO, spare bits padded)
                                 #   on the 8 end block -> selector / collector buses; +6 cycles
@@ -6570,10 +6769,15 @@ def _q_banks(p, ex, ey, rq, region, mirror=False):
             xc = (min(xs_) + max(xs_)) / 2
         if mirror:
             xc = rq['w'] - xc
-        w = 60.48
+        w, h = 60.48, BANK_H
+        if NATIVE_SLOT_ENVELOPES:
+            native = bound_views().get(f'dsfd_qbank_{face}')
+            if native is None:
+                raise ValueError(f'native slot envelope requires source-pinned dsfd_qbank_{face}')
+            w, h = max(w, native['w']), max(h, native['h'])
         x = dn(ex + xc - w / 2, GX)
-        y = dn(ey - BANK_H - 2.0, GY) if face == 'S' else up(ey + rq['h'] + 1.08, GY)
-        out.append(Inst(f'{tag}{p}', f'dsfd_qbank_{face}', x, y, w - SHAVE, BANK_H - SHAVE, kind='qbank',
+        y = dn(ey - h - 2.0, GY) if face == 'S' else up(ey + rq['h'] + 1.08, GY)
+        out.append(Inst(f'{tag}{p}', f'dsfd_qbank_{face}', x, y, w - SHAVE, h - SHAVE, kind='qbank',
                         region=region, power_w=0.0))
         BANK_PORTS[out[-1].name] = (face, ports)
     return out
@@ -6727,6 +6931,13 @@ def _hop_fix(m, P):
     for i in range(len(B)):
         bid, cls, bits, eps = B[i]
         RSV_ALLOW = _rsv_tag(bid)              # reserved relay sites: return tree ('rt') / slot x lanes ('x')
+        if cls == 'capture_internal':
+            # These joins are part of the exact fixed-bank source calendar.
+            # Keep them in pair/STA analyses; repair timing by a source-proven
+            # rehome or explicit benched calendar change, never generic stages.
+            m.setdefault('capture_internal_retime_protection', []).append(
+                dict(bus=bid, planned_loads=sum((eps[0][0],eps[0][1],ep[0],ep[1]) in plan for ep in eps[1:])))
+            continue
         if cls in HOP_SKIP or len(eps) < 2:
             continue
         keep = [eps[0]]
@@ -7722,6 +7933,7 @@ def _relay_faces_by_pins(m, passes=3):
 # sees the same number of stages: the whole column leaves reset on one cycle (static schedule: a fixed, known release
 # latency, recorded per column in m['col_reset_tree']).  The stage registers are column-clock sinks (ck_col_<c>).
 COL_RESET_TREE = 0              # built on the final build only (ALIGN_EXT[0]): the hop-plan passes never see its registers
+COL_RESET_STRICT = False         # opt-in: refuse unreachable tree stages and uncovered physical branches
 COL_RESET_SPAN_UM = 0.0           # --col-reset-span UM: also split a leaf group wider than UM (0: count only)
 
 
@@ -7736,14 +7948,18 @@ def _col_reset_tree(m, P):
     G = int(COL_RESET_TREE)
     rec, new = {}, []
     for i, (bid, cls, bits, eps) in enumerate(list(m['buses'])):
-        if cls != 'col_reset' or len(eps) - 1 <= G:
+        if cls != 'col_reset' or len(eps) < 2 or (not COL_RESET_STRICT and len(eps) - 1 <= G):
             continue
         r = bid.rsplit('_', 1)[-1]
         ck = ckb.get(f'ck_col_{r}')
         root = eps[0]
         if ck is None or root[0] not in by:
+            if COL_RESET_STRICT:
+                raise ValueError(f'--col-reset-strict: missing clock or driver for {bid}')
             continue
         sinks = [e for e in eps[1:] if e[0] in by]
+        if COL_RESET_STRICT and len(sinks) != len(eps) - 1:
+            raise ValueError(f'--col-reset-strict: unresolved reset sinks for {bid}')
         pos = {e: cen(by[e[0]]) for e in sinks}
 
         def split(grp):
@@ -7801,6 +8017,8 @@ def _col_reset_tree(m, P):
                 if pl is not None:
                     break
             if pl is None:
+                if COL_RESET_STRICT:
+                    raise ValueError(f'--col-reset-strict: unreachable stage {bid} {tag}; no raw branch emitted')
                 pl = P.near(pt[0], pt[1], w_, h_, allowed, prev=None, span=1600.0, rows=160)
                 fails.append(tag)
             assert pl, ('--col-reset-tree: no site', bid, tag)
@@ -7834,6 +8052,21 @@ def _col_reset_tree(m, P):
             else:
                 new.append((f'{bid}_l{it.name}', 'col_reset', 1, [(it.name, 'o')] + list(t['sinks'])))
         build(tree, root, 0)
+        if COL_RESET_STRICT:
+            # A conservative bound for ANY pin inside either placed macro. This
+            # is only a geometry rejection screen; exact pin/pair-budget and RDC
+            # evidence remains mandatory in tools/s81/reset_forest.py.
+            for nbid, _, _, endpoints in new:
+                if not nbid.startswith(bid + '_'):
+                    continue
+                a = by[endpoints[0][0]]
+                for endpoint in endpoints[1:]:
+                    z = by[endpoint[0]]
+                    far = max(abs(a.x - z.x - z.w), abs(a.x + a.w - z.x)) + \
+                          max(abs(a.y - z.y - z.h), abs(a.y + a.h - z.y))
+                    if far > min(500.0, reach) + 1e-6:
+                        raise ValueError(f'--col-reset-strict: branch {nbid} to {endpoint} '
+                                         f'pin-box upper bound {far:.3f}um exceeds reach')
         m['buses'][i] = (bid, cls, bits, [root])       # emptied: the tree nets carry the column reset
         stages = D + sum(extra.get(lv, 0) for lv in range(D))
         rec[bid] = dict(sinks=len(sinks), registers=nreg[0], depth=stages, max_fanout=max(
@@ -8802,12 +9035,17 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
         return P.add(Inst(name, master, pl[0], pl[1], w, h, 'R0', kind='hend', region='svc'))
 
     def beside_blk(name, master, w, h, blk, face, yfrac):
+        orient = 'R0' if face == 'E' else 'MY'
+        if NATIVE_SLOT_ENVELOPES and master == 'dsfd_xstg_515':
+            w, h, orient = native_xstg_slot(w, h, orient)
+            m.setdefault('native_slot_requests', {})[name] = dict(master=master, outline_um=[w,h],
+                orientation=orient, status='SOURCE_CURRENT_GEOMETRY_CANDIDATE_NOT_TIMING')
         y = blk.y + blk.h * yfrac
         x = blk.x - w / 2 - 6.0 if face == 'W' else blk.x + blk.w + w / 2 + 6.0
         gap = cor['gapS'] if blk.y < DIE[1] / 2 else cor['gapN']
         pl = P.near(x, y, w, h, [gap], horiz=False, span=300.0, rows=8)
         assert pl, name
-        return P.add(Inst(name, master, pl[0], pl[1], w, h, 'R0' if face == 'E' else 'MY', kind='hend', region='svc'))
+        return P.add(Inst(name, master, pl[0], pl[1], w, h, orient, kind='hend', region='svc'))
     for i, (st, sv) in enumerate(m['svcs'].items()):
         side = vm_side(st)
         sx = spine_x(side)
@@ -8870,7 +9108,14 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
             # The C5 service floor is not the vmc SU|VM channel.  Derive
             # this relocated band-to-VM connection from its actual end faces
             # rather than retaining C5's intermediate point inside the SU.
-            path = _vmc_route(m, (bx, by_), 'N' if name == 'sel' else 'S',
+            fs_ = 'N' if name == 'sel' else 'S'
+            if HUB_LAYOUT.get('band_blocks'):
+                # vmk: a moved band block leaves from its ASSIGNED vd face / pin span (record), not the C5 face
+                from s81 import hub_router as HR_
+                rec_ = _assigned_record(blk.master)
+                if rec_ and HR_.assigned_face(rec_, 'vd'):
+                    fs_, (bx, by_) = HR_.endpoint(blk, 'vd', rec_, he)
+            path = _vmc_route(m, (bx, by_), fs_,
                               endpoint, 'S', skip=(blk.name, he.name))
         else:
             path = _wide_vm_band_path(m, cor, name, (bx, by_), endpoint, yo)
@@ -9448,6 +9693,11 @@ def port_usage(m):
             if old and old[0] != d:
                 raise ValueError(f'{inst}.{port}: direction {old[0]} and {d}')
             use[inst][port] = (d, max(bits if lo is None else hi + 1, old[1] if old else 0))
+    for inst, ports in m.get('neutral_role_inputs', {}).items():
+        for port, literal in ports.items():
+            if port in use[inst]:
+                raise ValueError('neutral-role strap attempts to mask live input '+inst+'.'+port)
+            use[inst][port] = ('input', int(literal.split("'")[0]))
     return use
 
 
@@ -9455,6 +9705,13 @@ def finalize_r8(m):
     """field glue masters by role (S13: one master per role and width): slot stations by their port set, return
     nodes by child kinds / fault chain; records m['pdir'][master][port] = (dir, bits)."""
     use = port_usage(m)
+    if SSTN_SPLIT_MAP and not m.get('sstn_split'):
+        if not (SSTN_REG and BF_X2_STATIC):
+            raise ValueError('--sstn-split-map requires --sstn-reg and --bf-x2-static')
+        from s81.sstn_split import expand
+        expand(m, use, SSTN_SPLIT_MAP['map'], bound_views())
+        m['sstn_split']['map'] = {k: SSTN_SPLIT_MAP[k] for k in ('path', 'sha256')}
+        use = port_usage(m)
     for in_, pr_ in (m.get('pad') or {}).items():      # --dedupe-pad: the standard's full port width
         for p_, w_ in pr_['ports'].items():
             d_, b_ = use[in_][p_]
@@ -9499,6 +9756,9 @@ def finalize_r8(m):
             if old and (old[0] != d or old[1] != b):
                 raise ValueError(f'{it.master}.{p_}: {old} vs {(d, b)} on {it.name}')
             pdir[it.master][p_] = (d, b)
+    if m.get('capture_import'):
+        from s81.capture_import import validate_native_connectivity
+        validate_native_connectivity(m)
     m['pdir'] = pdir
     for it in m['insts']:
         if it.kind == 'hend':
@@ -10142,6 +10402,16 @@ def _assigned_record(master):
             # S-DIE 2026-10-15: a 'released' record in an earlier overlay directory withdraws the later assigned pins of a
             # master whose outline changed (A2 VM reservation, reshaped su_s): the generator lays its face pins (top-down)
             rec = None
+        if CAPTURE_SOURCE_PACKET and master == 'dsfd_sp_capture_c':
+            if rec is None:
+                raise ValueError('source-current capture import requires an assigned parent slot')
+            rec = copy.deepcopy(rec)
+            clocks = defaultdict(list)
+            for entry in capture_source_packet()['clock_entries']:
+                pin = entry['parent_clock_pin']
+                if pin not in clocks[entry['domain']]:
+                    clocks[entry['domain']].append(pin)
+            rec['clock_entries'] = dict(clocks)
         _ASSIGNED_PIN_CACHE[master] = rec
     return _ASSIGNED_PIN_CACHE[master]
 
@@ -10176,6 +10446,9 @@ def _assigned_physical_pins(Mx, ports):
     rec = _assigned_record(Mx.name)
     if not rec:
         return
+    if PQCNT_LEF_PINS and Mx.name in PQCNT_MASTERS and Mx.name in bound_views():
+        _pqcnt_lef_physical_pins(Mx, ports, rec)
+        return
     if HEND_BOUND_FOOTPRINT and '__' in Mx.name:
         # --hend-bound-footprint: a hub end resized to its bound view's outline keeps the view's measured pins (the
         # bound view replaces this generated master in write_lefs); the assignment made for the estimated outline is moot
@@ -10205,6 +10478,51 @@ def _assigned_physical_pins(Mx, ports):
         Mx.ports[port] = ('rects', rects)
         if port not in Mx.order:
             Mx.order.append(port)
+
+
+def _pqcnt_lef_physical_pins(Mx, ports, rec):
+    """--pqcnt-lef-pins: the assigned ports of a bound count leaf at the bound LEF's literal contacts (layer + first
+    RECT of each bit's PIN, verbatim).  Hard errors: outline differs from the view, a bit without its LEF pin, a LEF
+    contact on another face than the assignment, a LEF signal pin outside the die ports."""
+    v_ = bound_views()[Mx.name]
+    if abs(v_['w'] - Mx.w) > BOUND_TOL or abs(v_['h'] - Mx.h) > BOUND_TOL:
+        raise SystemExit(f'--pqcnt-lef-pins: {Mx.name} view {v_["w"]} x {v_["h"]} != slot {Mx.w:.3f} x {Mx.h:.3f}')
+    lef = {}
+    for pm in re.finditer(r'\n\s*PIN (\S+)\s*\n(.*?)\n\s*END \1', v_['text'], re.S):
+        if re.search(r'USE\s+(POWER|GROUND)', pm.group(2)):
+            continue
+        r_ = re.search(r'LAYER\s+(\S+)\s*;\s*RECT\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)', pm.group(2))
+        lef[pm.group(1)] = (r_.group(1), tuple(float(x_) for x_ in r_.groups()[1:]))
+    extra = sorted(set(lef) - {f'{p_}[{i}]' for p_, (_d, n_) in ports.items() for i in range(n_)} - set(ports))
+    if extra:
+        raise SystemExit(f'--pqcnt-lef-pins: {Mx.name} LEF signal pins without a die port: {extra[:4]}')
+    shift = 0.0
+    for port, spec in rec['ports'].items():
+        assert port in ports and spec['bits'] == ports[port][1], (Mx.name, port, spec['bits'], ports.get(port))
+        cs = spec.get('per_bit') or [[spec['face'], spec['layer'], (spec['at'][0] + i * spec['at'][1]) if spec['uniform']
+                                      else spec['at'][i], spec['depth']] for i in range(spec['bits'])]
+        rects = []
+        for i, (face, _l, c, _d) in enumerate(cs):
+            nm = f'{port}[{i}]' if f'{port}[{i}]' in lef else port
+            if nm not in lef:
+                raise SystemExit(f'--pqcnt-lef-pins: {Mx.name} has no LEF pin {port}[{i}]')
+            layer, (x0, y0, x1, y1) = lef[nm]
+            on = {'N': abs(y1 - Mx.h) < 1e-3, 'S': abs(y0) < 1e-3, 'E': abs(x1 - Mx.w) < 1e-3, 'W': abs(x0) < 1e-3}[face]
+            if not on:
+                raise SystemExit(f'--pqcnt-lef-pins: {Mx.name} {nm} LEF contact {lef[nm]} is not on the assigned {face} face')
+            shift = max(shift, abs(((x0 + x1) if face in 'NS' else (y0 + y1)) / 2 - c))
+            rects.append((f'{port}[{i}]', layer, (x0, y0, x1, y1)))
+        Mx.ports[port] = ('rects', rects)
+        if port not in Mx.order:
+            Mx.order.append(port)
+    print('OT_PQCNT_LEF_PINS %s: %d assigned ports at the bound LEF contacts (max shift %.3f um from the assignment)'
+          % (Mx.name, len(rec['ports']), shift), file=sys.stderr)
+
+
+def _require_physical_source_ports(master, ports):
+    missing = sorted(set(ports) - set(master.ports))
+    if missing:
+        raise ValueError(f'{master.name}: physical master omits live source ports {missing}')
 
 
 def masters_r8(m, k=1):
@@ -10246,6 +10564,7 @@ def masters_r8(m, k=1):
         if k == 1:
             _assigned_physical_pins(Mx, ports)
             _resolve_pin_collisions(Mx)
+        _require_physical_source_ports(Mx, ports)
         if PEER_PIN_POS and it.kind in PEER_PIN_KINDS:
             m['_laid_all'][mst] = Mx
         if CK_RULE:
@@ -10272,7 +10591,10 @@ def _resolve_pin_collisions(Mx):
     fixed groups ('rects') are recorded, not moved (they are the record owner's defect)."""
     def rects_of():
         by = defaultdict(list)
-        for nm, ly, r in pin_rects(Mx, 1, {}):
+        # S-DIE 1815 10-16 (c26k4 GEN_FAIL dsfd_sp_pq_produced calendar_base[0]): collisions are found on the RAW
+        # rectangles; lattice legalization runs at LEF emission, after a colliding generated group has moved
+        # (legalizing first cannot place a generated group laid on top of 2,049 assigned f_vm pins)
+        for nm, ly, r in pin_rects(Mx, 1, {}, legalize=False):
             by[nm.rsplit('[', 1)[0]].append((ly, r))
         return by
     def hit(a, b):
@@ -10407,6 +10729,46 @@ def _spread_ports(Mx, k):
 
 
 def _faces_r8(m, Mx, it, ports):
+    if it.kind == 'capture_leaf':
+        if _LAY_K[0] != 1:
+            raise ValueError('source-current capture leaves require literal unbundled contacts')
+        view = bound_views()[it.master]
+        rects = {}
+        for block in re.finditer(r'\n\s*PIN (\S+)\s*\n(.*?)\n\s*END \1', view['text'], re.S):
+            if re.search(r'USE\s+(POWER|GROUND)', block[2]):
+                continue
+            match = re.search(r'LAYER\s+(\S+)\s*;\s*RECT\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)', block[2])
+            if not match:
+                raise ValueError('capture leaf has no literal rectangle '+it.master+'/'+block[1])
+            rects[block[1]] = (match[1], tuple(map(float, match.groups()[1:])))
+        for port, (_direction, width) in ports.items():
+            values = []
+            for i in range(width):
+                pin = f'{port}[{i}]' if f'{port}[{i}]' in rects else port
+                if pin not in rects:
+                    raise ValueError('capture leaf missing contact '+it.master+'/'+pin)
+                values.append((f'{port}[{i}]', *rects[pin]))
+            Mx.ports[port] = ('rects', values)
+            Mx.order.append(port)
+        return
+
+    if it.kind in ('sstn_split_base', 'sstn_split_payload') and _LAY_K[0] == 1:
+        from s81.sstn_split import populate
+        populate(sys.modules[__name__], Mx, ports)
+        return
+    if BF_FRONT_ROOT_ABI and it.master == 'dsfd_bf_front_roots':
+        if _LAY_K[0] == 1:
+            from s81.bf_root_die_abi import populate_front
+            populate_front(Mx, ports)
+        else:
+            # Bundled figures are projections only. Native geometry is always
+            # the complete literal k1 request and later this leaf's own view.
+            for face, names_ in [('N',['xb_data','io_n']), ('W',['c0','io_w']),
+                                 ('E',['c1','io_e']),
+                                 ('S',['qy0','qy1','x0','x1','go','cfg','st','ck','rs','xb_meta','f_prog','io_clk'])]:
+                _lay(Mx,face,[(p,ports[p][1]) for p in names_ if p in ports],
+                     'M4' if face in 'EW' else 'M5')
+        return
     if _LAY_K[0] == 1 and BF_HIER == 450.144 and BF_ROUTE_H == 198.72 and it.master in ('dsfd_bf_front', 'dsfd_bf_col',
                                                                                          'dsfd_bf_front_static'):
         from s81.bf_direct_pins import populate, groups
@@ -10446,6 +10808,13 @@ def _faces_r8(m, Mx, it, ports):
         else:
             _lay(Mx, 'W' if horiz else 'S', ins, 'M4' if horiz else 'M5', gap=0.0)
             _lay(Mx, 'E' if horiz else 'N', outs, 'M4' if horiz else 'M5', gap=0.0)
+        # fn is a distinct non-inverted clock path (two actual RTL inverters),
+        # whereas fo is the forwarded stage clock. Never alias or drop fn.
+        # This is diagnostic placeholder geometry; a bound native view replaces
+        # it with its literal physical contacts and insertion measurements.
+        copies = P_([f'fn{j}' for j in range(n)])
+        if copies:
+            _lay(Mx, 'E' if horiz else 'N', copies, 'M4' if horiz else 'M5', start=2.16)
     elif kind == 'lkck':     # forwarded-clock relay: in toward its driver, out toward the macro ck pin
         for p_, f_, at in (('fi', mst[-2], 2.16), ('fo', mst[-1], 6.48)):
             Mx.face(p_, 1, f_, 'M5' if f_ in 'NS' else 'M4', at, 1)
@@ -10551,7 +10920,7 @@ def _faces_r8(m, Mx, it, ports):
         c1 = COL_W8 - RSC_W / 2 - CF_X
         if CFIFO_V2:              # 432 um outline: the return pins at its E end (the return column lies beyond it)
             c1 = min(c1, Mx.w - 30.0)
-        _lay(Mx, 'S', P_(['xf', 'xd']), 'M5', start=c0 - 15.0)
+        _lay(Mx, 'S', P_(['xf', 'xd', 'xf2', 'xd2']), 'M5', start=c0 - 15.0)
         _lay(Mx, 'S', P_(['rf', 'rd']), 'M5', start=c1 - 30.0)
         _lay(Mx, 'N', P_(['xa', 'xb', 'x2', 'cc', 'st']), 'M5', start=c0 - 15.0)
         _lay(Mx, 'N', P_(['ri']), 'M5', start=c1 - 2.0)
@@ -10629,6 +10998,9 @@ def _faces_r8(m, Mx, it, ports):
             Mx.face('phy', len(dfi), 'S', 'M5', Mx.w / 2, 4)
         _lay(Mx, 'N', P_(['rd', 'rq', 'rk', 'wd', 'hw', 'hc']), 'M5')   # s81-gen: rq / rk / wd (--ctrl-rq), host hw / hc
         _lay(Mx, 'N', P_(['ckh', 'rst']), 'M5', start=60.0)
+        # Actual controller status {fault, live}; retain its diagnostic contacts too.
+        # Give it a separate free interval so the existing data and clock pins stay put.
+        _lay(Mx, 'N', P_(['st']), 'M5', start=66.48)
         # die-gaps 2026-10-08: the stream-side clock entry sits at the face end under the stream peer's (dsfd_svc) clock
         # entry (svc 'ck' is laid toward the clk_stream root at the same end), so the hbm_read interface ctrl -> svc is
         # one clock region; at the west end (60 um) the two entries were 8.4 mm apart in two regions and the plan's
@@ -11012,6 +11384,18 @@ def _status_lane_glue(kind, fmt, ports):
     return b
 
 
+def rly536_reset_contract(m):
+    """Explicit static bootstrap requirement; physical generation alone does not qualify the compiler."""
+    if not RLY536_RSTREG:
+        return None
+    masters = sorted(k for k in m['pdir'] if re.fullmatch(r'dsfd_rly_536_[NSEW]{2}', k))
+    return dict(schema='s81-rly536-reset-contract-v1', masters=masters,
+                async_assert='immediate', release_edges_before_first_production=1,
+                normal_data_edges=1, added_normal_edges=0,
+                source='rtl/dsrom_sys/s81_glue/ot_s81_rly.sv', params=dict(W=536, RSREG=1),
+                compiler_bootstrap_qualification='OPEN: consumer must reserve and verify release edge before production')
+
+
 def glue_rtl(m):
     """Verilog of every generated glue master (structural over the real primitives ot_fwd_link_stage, ot_meso_fifo,
     ot_ratio_cdc_fifo, ot_v41_retn_w17w10)."""
@@ -11061,8 +11445,14 @@ def glue_rtl(m):
                     body.append(f'    assign {q_} = r_{p_[2:]};')
         elif mst.startswith('dsfd_rly'):
             w = ports['i'][1]
-            body.append(f'    reg [{w - 1}:0] r; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) r <= {w}\'d0; else r <= i;')
-            body.append('    assign o = r;')
+            if RLY536_RSTREG and re.fullmatch(r'dsfd_rly_536_[NSEW]{2}', mst):
+                assert w == 536, (mst, w)
+                # Physical canonical536 leaf: one resetpinregister releases before production starts.
+                # Asyncassert still immediate; firstreleaseedge holdsdatazero, subsequentedgescapturei.
+                body.append('    ot_s81_rly #(.W(536), .RSREG(1)) u (.ck(ck), .rs(rs), .i(i), .o(o));')
+            else:
+                body.append(f'    reg [{w - 1}:0] r; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) r <= {w}\'d0; else r <= i;')
+                body.append('    assign o = r;')
         elif mst.startswith('dsfd_xstg') and HEND_STATIC:
             w = ports['i'][1]
             body += ['    // S-NET --hend-static: end block (cw) -> band block (ck), same frequency, on the fixed calendar of',
@@ -11411,6 +11801,7 @@ def plan_record_r8(m):
                                                'rtl/common/ot_ratio_cdc_fifo.sv', 'rtl/v41die/ot_v41_retn_w17w10.sv')},
         die=dict(w_um=DIE[0], h_um=DIE[1], mm2=round(DIE[0] * DIE[1] / 1e6, 3)), variant=m['variant'],
         ctrl_model=m.get('ctrl_model'), ctrl_binding_shell_sha256=m.get('ctrl_binding_shell_sha256'),
+        **(dict(rly536_reset_contract=rly536_reset_contract(m)) if RLY536_RSTREG else {}),
         slot=dict(elem_frame_h_um=ELEM_FRAME_H, q_elem_frame_h_um=Q_ELEM_FRAME_H, frame_h_um=g['frame_h'], slot_h_um=g['slot_h'], slots_per_column=g['slots'],
                   capacity=capacity_report()),
         instances=dict(kinds), area_mm2_by_kind={k: round(v, 3) for k, v in area.items()},
@@ -11526,6 +11917,8 @@ def die_options(ap):
                     'drives one reset pin register (async assert, release +1 edge) that resets every node flop')
     ap.add_argument('--qbank-s-rstreg', action='store_true', help='S-NET+FILL S81F-05: dsfd_qbank_S rs drives one reset '
                     'pin register (async assert, release +1 initialization edge); normal data remains one edge')
+    ap.add_argument('--native-slot-envelopes', action='store_true', help='Reserve source-pinned native qbank and all '
+                    '536-bit relay outlines before placement; geometry candidate only, no view qualification')
     ap.add_argument('--hend-static', action='store_true', help='S-NET (owner static rule 10-14): hub end/start blocks and '
                     'xstg cross on fixed calendars (ot_s81_static_lane_end, ot_s81_static_ratio_cross); no meso / ratio '
                     'FIFO, credits, ready or trained placement')
@@ -11539,6 +11932,8 @@ def die_options(ap):
                     '(r3 GRT: hop relays 776-906 um from their load, TT -244 on ck_col relay paths)')
     ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
                     'die interfaces (last segment <= 100 um; needs --hop-fix; default off)')
+    ap.add_argument('--rly536-rstreg', action='store_true', help='canonical536-bit relay resetpinregister (536only): asyncassert unchanged, +1bootstrapreleaseedge, 0productionedges; requires statically scheduled reset release')
+    ap.add_argument('--sstn-split-map', help='Exact source-pinned two-leaf SSTN role map; requires both real bound child views')
     ap.add_argument('--dedupe-pad', help='S-NET+FILL: DEDUPE pad map JSON (results/arch/tile_dedupe_1015/s81_pad_map_1016.json): '
                     'instances of FROM become the closed standard TO; spare inputs tied low (die.v.pads.json), spare outputs open')
     ap.add_argument('--hend-bound-footprint', action='store_true', help='S-NET+FILL: reserve the verified binding-table '
@@ -11728,6 +12123,7 @@ def die_options(ap):
                     'better non-closed variants are recorded as kit requests), not from instance centres')
     ap.add_argument('--col-reset-tree', type=int, default=32, metavar='G', help='DEFAULT 32 since S-DIE 10-16 0600 (0 = one net per column, disabled). S-DIE-RELAYFACE 10-16 (VIS-ROM D-S81-02): '
                     'registered equal-depth column reset tree, <= G sinks per stage register (1-bit relay masters)')
+    ap.add_argument('--col-reset-strict', action='store_true', help='Opt-in placement rejection gate: abort on an unreachable reset stage or any branch whose full pin-box bound exceeds 500um. Does not qualify exact pins, pair timing or reset recovery/removal.')
     ap.add_argument('--col-reset-span', type=float, default=0.0, help='--col-reset-tree: also split leaf groups wider than this half-perimeter (um; 0 = count only)')
     ap.add_argument('--stn-pin-pitch2', action=argparse.BooleanOptionalAction, default=True, help='DEFAULT ON since S-DIE 10-16 0600 (--no-stn-pin-pitch2 to disable). VIS-ROM S81F-10 (S-NET+FILL 10-16): one-lane forwarded '
                     'stations (stnh/stnv_86x1) lay fi0 + di0 / fo0 + do0 at a uniform 2-track (0.096 um) pitch centred on '
@@ -11744,6 +12140,10 @@ def die_options(ap):
                     'face-to-face wide group on the die span shared with its peers (both ends of an abutting pair line up)')
     ap.add_argument('--bf-static-prog', action='store_true', help='S-BIND 2026-10-15: BF pairs run their compiled '
                     'programme (dsfd_bf_front_static + ot_s81_cfg7_seq_bfp; descriptor in the cfg ROM spare columns)')
+    ap.add_argument('--bf-front-root-abi', action='store_true', help='S81H03 independent source candidate: five-root '
+                    'dsfd_bf_front_roots, literal N1024 data / S44 metadata ABI and initialization reset release+1. '
+                    'Requires --bf-static-prog --bf-x2-static --bf-hier-compact --bf-hier-height 198.72. '
+                    'Own physical/native view, per-root phi-R delivery and all incident proofs remain required.')
     ap.add_argument('--bf-x2-pair', action='store_true', help='S-BIND r6 (needs --bf-x2-static): the x tree carries the packed word as two equal-station forwarded lanes (566-b legacy + 538-b x2) with one static ingress each at the column')
     ap.add_argument('--hub-abut', action='store_true', help='S-DIE 2026-10-15: W-column centre-stack gaps 21.6 um (RTL_ABUT_GAP) instead of 172.8')
     ap.add_argument('--vm-span-vch', help='S-DIE 2026-10-15 (coordinator 18:40, A2 VM): VM reservation W,H um spanning the W column + VCH (overrides the contract VM outline)')
@@ -11759,6 +12159,14 @@ def die_options(ap):
                     'compiler command edge (manifest define DSFD_SUHC_STATIC_ISSUE); the void VM -> SU / HC t_inp nets leave')
     ap.add_argument('--static-seams', action='store_true', help='S-DIE r11 2026-10-15: static VM<->collective seam (t_vm 2204, t_crq 15, t_crs 513), drop vm.t_collective/tcs credit and hc_s.y_rdy, add collective.t_hc_tag -> hc_s.y_tag')
     ap.add_argument('--static-collective', action='store_true', help='swap the hub collective to dsfd_sp_collective_static_c (needs its RTL in the tree)')
+    ap.add_argument('--pqcnt-lef-pins', action='store_true', help='S-DIE-WFC 2026-10-16 (c26j): bound --pq-cnt count leaves '
+                    '(ot_s81_pq_rwbc15 / rwbc2) take their assigned-port pin rectangles from the bound LEF verbatim')
+    ap.add_argument('--capture-source-packet', help='opt-in source-pinned actual 70-leaf capture import packet; '
+                    'requires literal source/view hashes and diagnostic die qualification')
+    ap.add_argument('--hub-first-stations', action='store_true', help='candidate allocation order: native hub chains '
+                    'before shared-street link stations; unchanged occupancy and reach checks')
+    ap.add_argument('--wfc-return256', action='store_true', help='S-DIE-WFC 2026-10-16 (c26j): dsfd_sp_vm WFC_RETURN256 1 '
+                    '(u_wfc.u_ret = return256 lo/hi + native valid diag, S-VM 6136ed704): ck/rss_wfc_return_t 1 -> 3 roots')
     ap.add_argument('--vm-native-candidate', action='store_true', help='explicit source candidate dsfd_sp_vm READ_PIPE4/CAP_PIPE2/WSCATTER_PIPE1; requires actual wrapper parameters; no physical/native qualification inheritance')
     ap.add_argument('--mix4-slot', help='X,Y,W,H um: Engram MIX4 home reservation (screen)')
     ap.add_argument('--pq-producer', action='store_true', help='S-DIE-NETLIST 2026-10-16: PQ issuer produced on the die: '
@@ -11807,8 +12215,26 @@ def apply_options(a):
     VM_NATIVE_CANDIDATE = bool(getattr(a, 'vm_native_candidate', False))
     if VM_NATIVE_CANDIDATE:
         vm_native_candidate_params()
-    global SUHC_STATIC_ISSUE, BF_X2_STATIC, LSW, BF_STATIC_PROG, BF_X2_PAIR
+    global CAPTURE_SOURCE_PACKET
+    CAPTURE_SOURCE_PACKET = getattr(a, 'capture_source_packet', None)
+    _ASSIGNED_PIN_CACHE.clear()
+    if CAPTURE_SOURCE_PACKET:
+        capture_source_packet()  # verify the exact RTL and native views before allocation
+    global HUB_FIRST_STATIONS
+    HUB_FIRST_STATIONS = bool(getattr(a, 'hub_first_stations', False))
+    global WFC_RETURN256, PQCNT_LEF_PINS
+    PQCNT_LEF_PINS = bool(getattr(a, 'pqcnt_lef_pins', False))
+    WFC_RETURN256 = bool(getattr(a, 'wfc_return256', False))
+    _RTL_CLOCK_CACHE.pop('dsfd_sp_vm', None)
+    if WFC_RETURN256:
+        wfc_return256_params()
+    global SUHC_STATIC_ISSUE, BF_X2_STATIC, LSW, BF_STATIC_PROG, BF_X2_PAIR, BF_FRONT_ROOT_ABI
     BF_STATIC_PROG = bool(getattr(a, 'bf_static_prog', False))
+    BF_FRONT_ROOT_ABI = bool(getattr(a, 'bf_front_root_abi', False))
+    if BF_FRONT_ROOT_ABI:
+        assert BF_STATIC_PROG and getattr(a, 'bf_x2_static', False) and getattr(a, 'bf_hier_compact', False), \
+            '--bf-front-root-abi requires static programme, actual x2 transport and compact hierarchy'
+        assert abs(getattr(a, 'bf_hier_height', 0)-198.72)<1e-6, '--bf-front-root-abi requires exact H03 height'
     SUHC_STATIC_ISSUE = bool(getattr(a, 'suhc_static_issue', False))
     BF_X2_STATIC = bool(getattr(a, 'bf_x2_static', False))
     BF_X2_PAIR = bool(getattr(a, 'bf_x2_pair', False)) and BF_X2_STATIC
@@ -11882,8 +12308,15 @@ def apply_options(a):
     SEL_XSTG = bool(getattr(a, 'sel_xstg', False))
     global HEND_BOUND_FOOTPRINT
     HEND_BOUND_FOOTPRINT = bool(getattr(a, 'hend_bound_footprint', False))
+    global RLY536_RSTREG
+    RLY536_RSTREG = bool(getattr(a, 'rly536_rstreg', False))
     global DEDUPE_PAD
     DEDUPE_PAD = None
+    global SSTN_SPLIT_MAP
+    SSTN_SPLIT_MAP = None
+    if getattr(a, 'sstn_split_map', None):
+        sp_ = Path(a.sstn_split_map); sp_ = sp_ if sp_.is_absolute() else ROOT / sp_
+        SSTN_SPLIT_MAP = dict(path=str(a.sstn_split_map), map=json.loads(sp_.read_text()), sha256=hashlib.sha256(sp_.read_bytes()).hexdigest())
     if getattr(a, 'dedupe_pad', None):
         pp_ = Path(a.dedupe_pad); pp_ = pp_ if pp_.is_absolute() else ROOT / pp_
         DEDUPE_PAD = dict(path=str(a.dedupe_pad), map=json.loads(pp_.read_text())['map'])
@@ -11901,6 +12334,8 @@ def apply_options(a):
     NODE_RSTREG = bool(getattr(a, 'node_rstreg', False))
     global QBANK_S_RSTREG
     QBANK_S_RSTREG = bool(getattr(a, 'qbank_s_rstreg', False))
+    global NATIVE_SLOT_ENVELOPES
+    NATIVE_SLOT_ENVELOPES = bool(getattr(a, 'native_slot_envelopes', False))
     HEND_STATIC = bool(getattr(a, 'hend_static', False))
     SSTN_CCPAD = bool(getattr(a, 'sstn_ccpad', False))
     HSTN_POSEDGE = bool(getattr(a, 'hstn_posedge', False))
@@ -12045,6 +12480,8 @@ def apply_options(a):
         BF_HIER, BF_FRONT_W, BF_ROUTE_H = 450.144, 100.224, a.bf_hier_height
     else:
         BF_FRONT_W, BF_ROUTE_H = 280.152, 190.08
+    if BF_FRONT_ROOT_ABI:
+        BF_FRONT_W = 116.64
     BF_SEAM_UM = 1.188 if getattr(a, 'bf_hier_compact', False) else 0.0
     BF_FRAME_EXTRA = up(max(0.0, 2 * BF_HIER + BF_FRONT_W + 2 * BF_SEAM_UM + 8.64 - 2 * LANE_W), GX) if BF_HIER else 0.0
     LANES_W = 2 * LANE_W + BF_FRAME_EXTRA
@@ -12120,11 +12557,14 @@ def apply_options(a):
     global RLY_FACE_REACH, RLY_REAL_DIMS
     RLY_REAL_DIMS = bool(getattr(a, "rly_real_dims", False))
     RLY_FACE_REACH = float(getattr(a, 'rly_face_reach', 0.0) or 0.0)
-    global RLY_FACE_PINS, COL_RESET_TREE, COL_RESET_SPAN_UM, LEF_PIN_DIR, STN_PIN_PITCH2
+    global RLY_FACE_PINS, COL_RESET_TREE, COL_RESET_SPAN_UM, COL_RESET_STRICT, LEF_PIN_DIR, STN_PIN_PITCH2
     STN_PIN_PITCH2 = bool(getattr(a, 'stn_pin_pitch2', True))
     RLY_FACE_PINS = bool(getattr(a, 'rly_face_pins', True))
     COL_RESET_TREE = int(getattr(a, 'col_reset_tree', 32) or 0)
     COL_RESET_SPAN_UM = float(getattr(a, 'col_reset_span', 0.0) or 0.0)
+    COL_RESET_STRICT = bool(getattr(a, 'col_reset_strict', False))
+    if COL_RESET_STRICT and (COL_RESET_TREE <= 0 or not COL_RESET_SPAN_UM or COL_RESET_SPAN_UM > 500):
+        raise ValueError('--col-reset-strict requires --col-reset-tree > 0 and 0 < --col-reset-span <= 500')
     LEF_PIN_DIR = bool(getattr(a, 'lef_pin_dir', True))
     HOP_GATE_UM = getattr(a, 'hop_gate', None)
     CTRL_SVC_ALIGN = bool(getattr(a, 'ctrl_svc_align', False))
@@ -12380,7 +12820,7 @@ def main(argv=None):
         work.mkdir(parents=True, exist_ok=True)
         write_netlist(m, 1, work / 'die.v')
         if GEN == 'r8':
-            (work / 'die_glue.sv').write_text(glue_rtl(m))    # this case's glue masters (die_port_bind --rtl-file)
+            emit_case_glue(m, work)
         print(json.dumps(dict(die_v=str(work / 'die.v'), insts=len(m['insts']))))
     elif a.mode == 'real':
         print(json.dumps(case_real(m, work)))

@@ -44,8 +44,9 @@ RELAY = os.environ.get('LV_RELAY_HOST', 'ot-epyc4')   # EPYC3 terminated 2026-10
 RELAY_DIR = os.environ.get('LV_RELAY_DIR', '/srv/opentallas-scratch/claude/layout-viewer-store/relay')
 LOCAL_LOCK = WORK / '.local_cut.lock'    # cuts on this host run one at a time
 LOCAL_MAX_DB = float(os.environ.get('LV_LOCAL_MAX_DB', 400e6))   # archive DBs up to this (raw) size are cut on this host
-STREAM_ROOT = {'ot-epyc1tb': '/srv/opentallas-scratch/claude', 'ot-epyc2': '/srv/opentallas-scratch2/claude',
-               'ot-epyc3': '/srv/opentallas-scratch2/claude', 'ot-agidock128': '/srv/opentallas-scratch/claude', 'ot-pve1': '/srv/opentallas-scratch/claude'}
+# active fleet only (EPYC1 terminated 2026-10-16, EPYC2/3 2026-10-12)
+STREAM_ROOT = {'ot-epyc4': '/srv/opentallas-scratch2/claude', 'ot-agidock128': '/srv/opentallas-scratch/claude',
+               'ot-pve1': '/srv/opentallas-scratch/claude'}
 STREAM_HOSTS = sorted(STREAM_ROOT)       # larger archive DBs are streamed (zstd) to one of these and cut there
 EXTRACT_VERSION = 'e2'   # bump when lv_extract.py output changes (forces re-extraction)
 TILE_VERSION = 't4'      # bump when lv_tile.py / lv_lint.py output changes (re-cut from the kept extraction)

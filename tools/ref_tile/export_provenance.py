@@ -45,6 +45,38 @@ def check_invariants(raw, transformed, parse_lef):
     return {'macro_outline': 'PASS', 'pin_names_directions_uses': 'PASS', 'original_pin_rectangles_retained': 'PASS'}
 
 
+def strip_grant_high_obs(text, top_metal=5):
+    """M6 pin-only grant views: drop above-M5 OBS rectangles from the exact abstract.
+
+    Called only after tools/hier_contract/m6_pin_grant.audit_def proved on the raw routed DEF that every above-M5
+    wire/via lies inside its own net's granted BPin, so these OBS are only the pins' own in-PORT stubs (and their
+    pocket-closed union) that write_abstract_lef emits as obstruction.  Pins, outline and lower-layer OBS unchanged.
+    """
+    out, in_obs, layer, removed = [], False, None, 0
+    pending = None
+    for line in text.splitlines(keepends=True):
+        st = line.strip()
+        if re.match(r'^OBS\b', st):
+            in_obs = True
+        elif in_obs and re.match(r'^END\b', st):
+            in_obs, layer, pending = False, None, None
+        elif in_obs:
+            m = re.match(r'^LAYER\s+(\S+)\s*;', st)
+            if m:
+                layer = m.group(1)
+                mm = re.match(r'M(\d+)$', layer)
+                if mm and int(mm.group(1)) > top_metal:
+                    pending = line
+                    continue
+                pending = None
+            elif layer and re.match(r'M(\d+)$', layer) and int(layer[1:]) > top_metal:
+                if st.startswith(('RECT', 'POLYGON', 'PATH')):
+                    removed += 1
+                    continue
+        out.append(line)
+    return ''.join(out), removed
+
+
 def finalize(out, top, helper, lint_module, lint_kwargs=None, transform=True):
     """Preserve raw exporter record, validate candidate, then publish final LEF/hash atomically.
 
@@ -55,7 +87,7 @@ def finalize(out, top, helper, lint_module, lint_kwargs=None, transform=True):
     manifest_path = out / 'abstract.json'
     manifest = json.loads(manifest_path.read_text())
     provenance = out / 'provenance'
-    receipt = {'schema': 1, 'kind': 'abstract_pin_stub' if transform else 'identity', 'status': 'FAIL'}
+    receipt = {'schema': 1, 'kind': 'abstract_pin_stub' if transform is True else (transform or 'identity'), 'status': 'FAIL'}
     try:
         if provenance.exists():
             raise ValueError('existing provenance: use a fresh export directory')
@@ -77,7 +109,7 @@ def finalize(out, top, helper, lint_module, lint_kwargs=None, transform=True):
         candidate = provenance / (top + '.candidate.lef')
         receipt.update(input={'path': str(raw.relative_to(out)), 'sha256': expected},
                        environment={key: os.environ.get(key) for key in ('OT_OBS_CLOSE', 'OT_OBS_CLOSE_UM')})
-        if transform:
+        if transform is True:
             helper_hash = sha(helper)
             receipt['helper'] = {'path': str(helper), 'sha256': helper_hash}
             command = [sys.executable, str(helper), str(raw), str(candidate)]
@@ -87,6 +119,19 @@ def finalize(out, top, helper, lint_module, lint_kwargs=None, transform=True):
                 raise ValueError(f'abstract_pin_stub exit {run.returncode}')
             if sha(helper) != helper_hash or sha(raw) != expected:
                 raise ValueError('helper or raw input changed during transformation')
+        elif transform == 'm6_grant_obs':
+            kw = lint_kwargs or {}
+            sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'hier_contract'))
+            import m6_pin_grant as M6
+            macro = lint_module.parse_lef(raw.read_text())
+            ports = M6.validate(kw['pin_grant'], macro['name'])
+            bad, evidence = M6.audit_def(kw['routed_def'], macro, ports, kw.get('tech_lef'))
+            if bad:
+                raise ValueError('raw routed DEF M6 pin-only audit FAIL: ' + '; '.join(bad[:6]))
+            text, removed = strip_grant_high_obs(raw.read_text())
+            candidate.write_text(text)
+            receipt.update(kind='m6_grant_obs', removed_above_m5_obs_rects=removed,
+                           raw_def_audit={k: evidence.get(k) for k in ('def_sha256', 'tech_lef_sha256')})
         else:
             candidate.write_bytes(raw.read_bytes())
         receipt['invariants'] = check_invariants(raw.read_text(), candidate.read_text(), lint_module.parse_lef)

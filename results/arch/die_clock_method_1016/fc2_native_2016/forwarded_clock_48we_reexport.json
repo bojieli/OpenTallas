@@ -1,0 +1,78 @@
+{
+  "schema": "opentallas.forwarded_clock.routed.v1",
+  "corners": {
+    "ss": {
+      "corner": "ss",
+      "input_pin": "clk_in",
+      "output_pin": "clk_out",
+      "driver_cell": "BUFx12f_ASAP7_75t_R",
+      "driver_instance": "u.u_fcb_ck.u_cell",
+      "direct_root_buffer": true,
+      "units": "ps",
+      "clk_in_to_clk_out_ps": {
+        "arrival_max_rise": 16.914381,
+        "arrival_min_rise": 16.653799,
+        "arrival_max_fall": 20.109950482290856,
+        "arrival_min_fall": 19.84487448229089,
+        "slew_max_rise": 8.130656,
+        "slew_max_fall": 8.501364
+      },
+      "measured_at": "physical output-driver Y; routed SPEF, propagated primary clock",
+      "odb_sha256": "7971666ef2ee05d6895905a4bbccc054f9257ec9d4898b56297fe61f83decda9",
+      "spef_sha256": "3b2ce2fd8ec6c4a0123c92d793b88e823db84dc8e9b0bc67c8ea0efd26cc2efb",
+      "native_combinational_lib_sha256": "d63c0aada9b344798ecb404f31bd0426bf8f58473fab3339e07a46b21858639e",
+      "sequential_etm_before_merge_sha256": "dbcd573efbc137890213f1de5c78166dcee8f05b99d9a2c63adce44b990ace6c",
+      "exported_etm_sha256": "18015e703b4eddecb205f1018f7fd34c366f66ae06e155130497050e0410ad0c",
+      "extraction_tcl_sha256": "7672de2c77c03df7ab005341c54b7b4dba28c70221de58e28a15d3258ed9998e"
+    },
+    "ff": {
+      "corner": "ff",
+      "input_pin": "clk_in",
+      "output_pin": "clk_out",
+      "driver_cell": "BUFx12f_ASAP7_75t_R",
+      "driver_instance": "u.u_fcb_ck.u_cell",
+      "direct_root_buffer": true,
+      "units": "ps",
+      "clk_in_to_clk_out_ps": {
+        "arrival_max_rise": 9.901384,
+        "arrival_min_rise": 9.683532,
+        "arrival_max_fall": 10.427546482290893,
+        "arrival_min_fall": 10.189723482290844,
+        "slew_max_rise": 4.222759,
+        "slew_max_fall": 4.054655
+      },
+      "measured_at": "physical output-driver Y; routed SPEF, propagated primary clock",
+      "odb_sha256": "7971666ef2ee05d6895905a4bbccc054f9257ec9d4898b56297fe61f83decda9",
+      "spef_sha256": "3b2ce2fd8ec6c4a0123c92d793b88e823db84dc8e9b0bc67c8ea0efd26cc2efb",
+      "native_combinational_lib_sha256": "0c491521bd5f2486def463e147988036428db0d6d33a824f19faf0894e3f6931",
+      "sequential_etm_before_merge_sha256": "a654f5d32f6150045fbeb1495a7322fa5682aa7b03177c97e00194b6cc5b55eb",
+      "exported_etm_sha256": "c4b204a2014d0e7bb5c600da87dae2aee1b4de66dd406b6a8c3dcd64a146b5cd",
+      "extraction_tcl_sha256": "a45392ef5b031e157475e00469349b32c0ce1ebc7fc6ef6281d061c3d34090f1"
+    },
+    "tt": {
+      "corner": "tt",
+      "input_pin": "clk_in",
+      "output_pin": "clk_out",
+      "driver_cell": "BUFx12f_ASAP7_75t_R",
+      "driver_instance": "u.u_fcb_ck.u_cell",
+      "direct_root_buffer": true,
+      "units": "ps",
+      "clk_in_to_clk_out_ps": {
+        "arrival_max_rise": 12.450136,
+        "arrival_min_rise": 12.206072,
+        "arrival_max_fall": 13.650782482290879,
+        "arrival_min_fall": 13.390864482290851,
+        "slew_max_rise": 5.549187,
+        "slew_max_fall": 5.493047
+      },
+      "measured_at": "physical output-driver Y; routed SPEF, propagated primary clock",
+      "odb_sha256": "7971666ef2ee05d6895905a4bbccc054f9257ec9d4898b56297fe61f83decda9",
+      "spef_sha256": "3b2ce2fd8ec6c4a0123c92d793b88e823db84dc8e9b0bc67c8ea0efd26cc2efb",
+      "native_combinational_lib_sha256": "1fe44227cb84bd06e2dcfff03490463139344fea78bd46f38b229b51ac992784",
+      "sequential_etm_before_merge_sha256": "724603b5af5277961e7672804077f8d76b7f9d612d46a7c4d072cfa7182778ae",
+      "exported_etm_sha256": "d4c53b281c0bb1df36da4b6461a1937643b92508f564fb920313231b35411427",
+      "extraction_tcl_sha256": "7c7cdcfc3e926dad060776751133d32b084c004acf3af4722a86e93e496e8305"
+    }
+  },
+  "scope": "clock arc only; actual communicating-pair setup/hold remains a die check"
+}

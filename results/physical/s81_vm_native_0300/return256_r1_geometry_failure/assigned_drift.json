@@ -1,0 +1,26 @@
+{
+  "source_pins": 1552,
+  "drifted_pins": 514,
+  "drift_layer": "M2",
+  "max_along_face_drift_um": 11.196,
+  "fp_rejected_pins": 38,
+  "die_um": [
+    64.8,
+    129.6
+  ],
+  "example": {
+    "pin": "e_d[1005]",
+    "assigned_center_um": [
+      64.781,
+      119.529
+    ],
+    "gate_and_route_actual_rect_um": [
+      64.762,
+      129.906,
+      64.8,
+      129.924
+    ]
+  },
+  "verdict": "Original strict CTS timing was diagnostic on malformed pin geometry and does not qualify this leaf.",
+  "fix": "Use existing actual-track assigned_pin_exact OpenDB helper for all1552assigned centres; retain ordinary pin sizes; explicit FP audit/new gate required."
+}

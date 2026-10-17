@@ -141,11 +141,16 @@ def audit_def(path, model, ports, tech_lef=None):
     if blockage and any(_metal(l) > 5 for l in re.findall(r'\bLAYER\s+(M\d+)\b', blockage[1])):
         fails.append('raw DEF has above-M5 blockages/OBS')
     vias = {}
+    widths = {}
     tech_sha = None
     if tech_lef:
         technology = Path(tech_lef).read_text()
         tech_sha = hashlib.sha256(technology.encode()).hexdigest()
-        for name, body in re.findall(r'(?ms)^\s*VIA\s+(\S+)(?:\s+DEFAULT)?\s*$(.*?)^\s*END\s+\1\s*$', technology):
+        for layer, body in re.findall(r'(?ms)^\s*LAYER\s+(M\d+)\s*$(.*?)^\s*END\s+\1\s*$', technology):
+            width = re.search(r'(?m)^\s*WIDTH\s+([0-9.]+)\s*;', body)
+            if width:
+                widths[layer] = float(width[1])
+        for name, body in re.findall(r'(?ms)^\s*VIA\s+(\S+)(?:\s+(?i:DEFAULT))?\s*$(.*?)^\s*END\s+\1\s*$', technology):
             layer, rects = None, []
             for line in body.splitlines():
                 lm = re.search(r'\bLAYER\s+(\S+)\s*;', line)
@@ -167,12 +172,63 @@ def audit_def(path, model, ports, tech_lef=None):
                     vias[name] = None
             else:
                 vias[name] = [(l,*[int(x)/scale for x in (a,b,c,d)]) for l,a,b,c,d in rects]
+    ndr_widths = {}
+    if re.search(r'(?m)^\s*NONDEFAULTRULES\s+\d+', text):
+        for rule, rule_body in _section(text, 'NONDEFAULTRULES'):
+            ndr_widths[rule] = {layer: int(width)/scale for layer,width in
+                re.findall(r'\+\s+LAYER\s+(M\d+)\s+WIDTH\s+(\d+)', rule_body)}
     for section in ('NETS', 'SPECIALNETS'):
         for name, body in _section(text, section):
             name = normalize(name)
-            for layer in re.findall(r'(?:\+\s*(?:ROUTED|FIXED|COVER)|\bNEW|\+\s*RECT)\s+(M\d+)\b', body):
+            def contained(rect):
+                # Exact wire rectangles, without the PORT-matching tolerance.
+                return section == 'NETS' and any(p[0] == rect[0] and round(p[1]*scale) <= round(rect[1]*scale)
+                    and round(p[2]*scale) <= round(rect[2]*scale) and round(p[3]*scale) >= round(rect[3]*scale)
+                    and round(p[4]*scale) >= round(rect[4]*scale) for p in contacts.get(name, []))
+            # Explicit SPECIALNET RECT geometry is never a terminal signal stub.
+            for layer in re.findall(r'\+\s*RECT\s+(M\d+)\b', body):
                 if _metal(layer) > 5:
                     fails.append(f'{section} {name}: nonpin routing geometry on {layer}')
+            # Each NEW starts a new route path. Use the exact tech width and
+            # DEF endpoint extensions, including the default half-width caps.
+            for route_path in re.split(r'(?:\+\s*(?:ROUTED|FIXED|COVER)|\bNEW)\s+', body)[1:]:
+                lm = re.match(r'(M\d+)\b(.*)', route_path, re.S)
+                if not lm or _metal(lm[1]) <= 5:
+                    continue
+                layer, tail = lm.groups()
+                rule = re.search(r'\+\s+NONDEFAULTRULE\s+(\S+)', body)
+                width = ndr_widths.get(rule[1], {}).get(layer) if rule else widths.get(layer)
+                wm = re.match(r'\s+(\d+)\s+(?=\()', tail)
+                if wm:
+                    width = int(wm[1])/scale
+                if layer != 'M6' or section != 'NETS' or width is None or width <= 0:
+                    fails.append(f'{section} {name}: unresolved/nonpin routing geometry on {layer}')
+                    continue
+                coords = []
+                for pm in re.finditer(r'\(\s*(-?\d+|\*)\s+(-?\d+|\*)(?:\s+(-?\d+))?\s*\)', tail):
+                    if not coords and '*' in (pm[1], pm[2]):
+                        fails.append(f'{section} {name}: unresolved high route coordinate')
+                        break
+                    xy = tuple(coords[-1][i] if v == '*' else int(v)/scale for i,v in enumerate((pm[1],pm[2])))
+                    coords.append((*xy, int(pm[3])/scale if pm[3] else width/2))
+                if re.search(r'\b(?:RECT|MASK|STYLE|TAPER|TAPERRULE|SHAPE)\b', tail) or len(coords) < 2:
+                    # A single point introduces a via, audited below; any other
+                    # geometry syntax requires an exact decoder before acceptance.
+                    if len(coords) != 1 or re.search(r'\b(?:RECT|MASK|STYLE|TAPER|TAPERRULE|SHAPE)\b', tail):
+                        fails.append(f'{section} {name}: unparsed high route geometry')
+                    continue
+                for a,b in zip(coords, coords[1:]):
+                    if a[0] == b[0]:
+                        lo,hi = sorted((a,b), key=lambda p:p[1])
+                        rect = (layer, a[0]-width/2, lo[1]-lo[2], a[0]+width/2, hi[1]+hi[2])
+                    elif a[1] == b[1]:
+                        lo,hi = sorted((a,b), key=lambda p:p[0])
+                        rect = (layer, lo[0]-lo[2], a[1]-width/2, hi[0]+hi[2], a[1]+width/2)
+                    else:
+                        fails.append(f'{section} {name}: non-Manhattan high route')
+                        continue
+                    if not contained(rect):
+                        fails.append(f'{section} {name}: {layer} wire outside granted PORT')
             # Via after a route coordinate. Lower wire layer does not prove a via stays below cap.
             route = re.split(r'\+\s*(?:ROUTED|FIXED|COVER)\s+', body)[1:]
             for path in route:
@@ -186,7 +242,7 @@ def audit_def(path, model, ports, tech_lef=None):
                     xy = tuple((last[i] if v == '*' else int(v)/scale) for i,v in enumerate((match[1],match[2])))
                     last = xy
                     via = match[3]
-                    if not via or via in ('NEW','+',';','(') or via.startswith('('):
+                    if not via or via in ('NEW','+',';','(','RECT','MASK','STYLE','TAPER','TAPERRULE') or via.startswith('('):
                         continue
                     if via not in vias or vias[via] is None:
                         fails.append(f'{section} {name}: unresolved via {via}; expand DEF via geometry')
@@ -199,9 +255,7 @@ def audit_def(path, model, ports, tech_lef=None):
                         points = [point(x,y,orient) for x,y in [(a,b),(a,d),(c,b),(c,d)]]
                         r = (layer,min(x for x,y in points)+xy[0],min(y for x,y in points)+xy[1],
                              max(x for x,y in points)+xy[0],max(y for x,y in points)+xy[1])
-                        if section == 'SPECIALNETS' or layer != 'M6' or not any(
-                                p[0] == layer and p[1] <= r[1]+.001 and p[2] <= r[2]+.001
-                                and p[3] >= r[3]-.001 and p[4] >= r[4]-.001 for p in contacts.get(name, [])):
+                        if layer != 'M6' or not contained(r):
                             fails.append(f'{section} {name}: above-M5 via {via} outside granted PORT')
     return fails, {'def_sha256': hashlib.sha256(text.encode()).hexdigest(), 'def': str(path),
                    'm6_def_ports': sorted(high_def), 'tech_lef_sha256': tech_sha}

@@ -1,0 +1,9 @@
+{
+  "scope": "live CTS diagnostic, no closure",
+  "endpoint": "u_view.g_pin.r_lxb_d[275]$_DLATCH_N_/D",
+  "source": "N-primary capture",
+  "sink": "S-root low-phase data lockup",
+  "structural_successor": "Use actual N-source low-phase lockup, same PLL phase0/payload0/pins. Metadata/control stay S-source.",
+  "changed_thresholds": false,
+  "raw_log_sha256": "9bd675bc255b06f91bc3e18baf23ff3d0ed222865164c32ebea78f2cab27f9f3"
+}

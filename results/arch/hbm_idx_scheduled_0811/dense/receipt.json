@@ -1,0 +1,25 @@
+{
+  "schema": "opentallas.idx.dense_link_exact_receipt.v1",
+  "source_commit": "ba36e274e",
+  "benchmark_commit": "936af4f31",
+  "source_sha256": "4e2a16984cf40418c01c0ca78366a083ac83b51c7198b9c5fd0b8fa0f35fb65b",
+  "source_manifest": "sources.sha256",
+  "actual_macro": "ot_sram_1r1w_64x512_m1_r2c2",
+  "real_macro_instances": 16,
+  "candidate_banks": 8,
+  "normal_frames": 5,
+  "normal_frame_reset": false,
+  "records": 2560,
+  "flits": 320,
+  "old_new_miter_edges": 1540,
+  "covered_carry_fill_mask": "ff",
+  "worst_new_plus_carry_records": 71,
+  "positive": "run0.log",
+  "mutants": {
+    "record_half_swap": "run1.log",
+    "sequence_xor": "run2.log"
+  },
+  "wrapper_byte_identical_except_master_and_core_names": true,
+  "normal_cycle_delta": 0,
+  "scope": "Actual full payload independent ID/score oracle and old/new core miter; full scheduled parent, physical native gates, die binding remain separate."
+}

@@ -1,0 +1,47 @@
+{
+  "schema": "opentallas.async_gray_fifo.ascending_index_fix.v1",
+  "prior_parent_still_withheld": "1906f5e2e+e95b011ae until independent retest",
+  "review_artifact": "/home/ubuntu/artifacts/async-parent-review-fixed-0920/probe_ascending.py",
+  "fix": "One HDL-index helper offset+(width-1-position if upto else position) labels public receiver nets and output bits; inverse helper maps literal root clock subscripts back to Yosys vector position.",
+  "tool_sha256": {
+    "tools/ref_tile/async_fifo_hierarchy_audit.py": "122f29f39315f68bd114f3e725b1b5d213b9210bc01b87016508abbcd1e36725",
+    "tools/ref_tile/async_gray_fifo_constraints.py": "6b109f2df6bb94e575eaec250b83bb125fa90077fe130cafac2229ce38fb1b04",
+    "tools/ref_tile/test_async_fifo_parent_constraints.py": "66bbf574423c89c293d90c5b2a14220c7508d712f089801bf8e8f01074f2e1e6"
+  },
+  "actual_mapped_probes": [
+    {
+      "declaration": "[0:1]",
+      "baseline": "PASS",
+      "swapped_payload_bits": "REFUSE"
+    },
+    {
+      "declaration": "[4:5]",
+      "baseline": "PASS",
+      "swapped_payload_bits": "REFUSE"
+    },
+    {
+      "declaration": "[5:4]",
+      "baseline": "PASS",
+      "swapped_payload_bits": "REFUSE"
+    }
+  ],
+  "clock_probe": {
+    "declaration": "input [4:5] clocks",
+    "writer": "clocks[4] HBM",
+    "reader": "clocks[5] stream",
+    "source_graph": "PASS"
+  },
+  "tests": {
+    "async_tests": 12,
+    "existing_clock_entry": 2,
+    "existing_direct_macro": 4,
+    "existing_clock_path": 12,
+    "total": 30,
+    "result": "PASS"
+  },
+  "physical_qualification": false,
+  "remaining": [
+    "Independent reviewer retest before parent adoption.",
+    "Existing build-override, shared-strap and macro/child refusals remain."
+  ]
+}
