@@ -526,6 +526,13 @@ def _pv_ctl_view_age():
                 status='OK' if age == PV_AGE else 'VIEW_PARAM_MISMATCH: diagnostic only until a closed ctl view at the die age')
 
 
+# KVJ-F 2026-10-17 (rtl/test/qwen_static_kv/tb_static_landing_vport.sv, tools/qwen_static_kv/run_landing_vport.sh): the
+# MEASURED RT of the static landing segment (qkd_static_kv_landing_seg / _seg_h) joined to qkd_pv16_vport with no relay is 9
+# = the seg's vreq pin capture (1) + its VREQ latency 8; the r5/r6 contract's 'landing 8 + relays' is one edge short (RT 8
+# faults every slot).  With r relay stages on the V get + rsp words: RT = VPORT_RT_SEG + r.
+VPORT_RT_SEG = 9
+
+
 def pv_vport_timing(m):
     """measured relay edges of every V port's die words (Q-VMWB r5 contract: WP = pair req pin -> vport pr, RT = vport vq
     register -> rsp at its in pins = landing 8 + request + return relays, O = vport out pins -> pair vin pins; the pair sees its
@@ -539,12 +546,12 @@ def pv_vport_timing(m):
             r_ = dict(WP=st_.get(f'pvrq_{st}_{k}'),
                       O=(st_.get(f'pvin_{st}_{k}', 0) + 1 + st_.get(f'pvh_{st}_{k}', 0)) if PV_T else st_.get(f'pvin_{st}_{k}'))
             if f'slg_{st}_{2 * k}' in names:
-                r_['RT'] = 8 + max(st_.get(f'pvvq_{st}_{k}_{g}', 0) + st_.get(f'pvrs_{st}_{k}_{g}', 0) for g in (0, 1))
+                r_['RT'] = VPORT_RT_SEG + max(st_.get(f'pvvq_{st}_{k}_{g}', 0) + st_.get(f'pvrs_{st}_{k}_{g}', 0) for g in (0, 1))
             rows[vp] = r_
     wp_ = [r_['WP'] for r_ in rows.values() if r_['WP'] is not None]
     o_ = [r_['O'] for r_ in rows.values() if r_['O'] is not None]
-    rt_ = [r_['RT'] for r_ in rows.values() if r_.get('RT') is not None] or [8]
-    worst = max((r_['WP'] or 0) + (r_['O'] or 0) + r_.get('RT', 8) for r_ in rows.values())
+    rt_ = [r_['RT'] for r_ in rows.values() if r_.get('RT') is not None] or [VPORT_RT_SEG]
+    worst = max((r_['WP'] or 0) + (r_['O'] or 0) + r_.get('RT', VPORT_RT_SEG) for r_ in rows.values())
     return dict(ports=rows, WP_range=[min(wp_), max(wp_)] if wp_ else None, O_range=[min(o_), max(o_)] if o_ else None,
                 RT_range=[min(rt_), max(rt_)], RT_assumed_landing_only=not any('RT' in r_ for r_ in rows.values()),
                 worst_WP_plus_O_plus_RT=worst, RL_needed_DQ0=4 + worst, kit=dict(RL=19, WP=2, RT=8),
@@ -552,8 +559,8 @@ def pv_vport_timing(m):
                      'the r5 kit DQ formula omits O (vport -> pair relays)',
                 **(dict(r6=dict(W_target=PV_W, W=sorted({(r_['WP'] or 0) + (r_['O'] or 0) for r_ in rows.values()}),
                                 W_equal=len({(r_['WP'] or 0) + (r_['O'] or 0) for r_ in rows.values()}) == 1,
-                                RL=4 + PV_W + 0 + 8, age_needed=4 + PV_W + 0 + 8 + 1, age_bound=PV_AGE,
-                                age_ok=PV_AGE == 4 + PV_W + 0 + 8 + 1, ctl_view=_pv_ctl_view_age())) if V144_R6 else {}))
+                                RL=4 + PV_W + 0 + VPORT_RT_SEG, age_needed=4 + PV_W + 0 + VPORT_RT_SEG + 1, age_bound=PV_AGE,
+                                age_ok=PV_AGE == 4 + PV_W + 0 + VPORT_RT_SEG + 1, ctl_view=_pv_ctl_view_age())) if V144_R6 else {}))
 
 
 HEAD_CLK = ([f'ck_f{q}' for q in range(4)] + ['ck_k', 'ck_s'] +
@@ -567,11 +574,14 @@ ECTL_CLK = ['ck_a', 'ck_b', 'ck_c']
 # entry (die port -> RTL ck_core / ck_zh[i] / ck_recip / ck_pbst[i] / ck_pvlg[i]); am[143:0] = 4 registered per-stack copies
 AHUB_CLK = ['ck_c'] + [f'ck_z{i}' for i in range(4)] + ['ck_r'] + [f'ck_p{i}' for i in range(4)] + [f'ck_v{i}' for i in range(4)]
 SPLIT_FRAMES = dict(qkd_seq=(604.8, 475.2), qkd_lnk=(777.6, 129.6), qkd_embgw=(172.8, 216.0), qkd_ahub=(1175.04, 760.32))
-BINDINGS['qkd_lnk'] = dict(module='ot_qkvd_split_kvlink', file='rtl/qwen_sys/split_20261014/ot_qkvd_split_kvlink.sv',
+# KVJ-C2 2026-10-17 (D2): the bridge successor ot_qkvd_split_kvlink_se has NO embedding gateway SU face (the boot-only
+# gateway qkd_embgw_boot removed r_ea / t_ecr / t_eq): ea_* / eq_* ports, the EMBQ FIFO and the EMBD slot count are gone,
+# so the gq / gr die bundles no longer exist (an EMBQ word on the KV end's r[3] class is a sticky fault)
+BINDINGS['qkd_lnk'] = dict(module='ot_qkvd_split_kvlink_se', file='rtl/qwen_sys/split_20261014/ot_qkvd_split_kvlink_se.sv',
     ports=dict(rf=['r_v', 'r_d', 'r_cr'], tf=['t_v', 't_d', 't_cr'],
                # bit order = the sequencer cluster's: r_x3_d = {v, tag, d} (d at bit 0), t_ar_d = {v, d 519}
                lx=['x3_d', 'x3_tag', 'x3_v', 'sd', 'kvd', 'ar_cr'], lr=['ar_d', 'ar_v', 'ds', 'pw', 'x3_cr'],
-               gq=['ea_v', 'ea_kind', 'ea_addr', 'ea_cr'], gr=['eq_v', 'eq_d'], d2df=['d2d_fault', 'd2d_cause'], flt=['fault'],
+               d2df=['d2d_fault', 'd2d_cause'], flt=['fault'],
                ck=['clk'], rst_n=['rst_n']),
     classed={})
 _BASE = dict(HEAD=HEAD, ECTL=ECTL, ENG_H=ENG_H, RENG=RENG, TILE_Y=dict(TILE_Y), FRAMES=dict(FRAMES))
@@ -736,9 +746,13 @@ SPLIT_BINDINGS.update(qkd_land=KS.land_binding(), qkd_land_n=KS.land_binding(), 
 # match; emf / emr do NOT (gateway {kind 2, seq 4, data 281, v} 288 + cr / 520 + cr vs the landing engine's 530-b
 # {cr, pad 5, tag 11, data 512, v}): an RTL interface defect between two closed views (elements: land_emb 'ifw' re-route
 # to the gateway's words, 12:40) -> port bind MISMATCH until one side changes
+# KVJ-C2 2026-10-17 (coordinator D2, kv_static_join_plan.md): the gateway is BOOT-ONLY, qkd_embgw_boot (KVJ-C 413776b17,
+# lock-step equal to qkd_embgw_splitboot with r_ea idle): r_ea / t_ecr / t_eq are removed, so the gq / gr bundles are
+# dropped (not tied); the token's embedding row is read through the 128 PCs (static join, kv_static.py ROLES embgw /
+# emb_return_* / emb_join / row_tx) and leaves on the d2d end's port 2
 SPLIT_BINDINGS['qkd_embgw'] = dict(
-    module='qkd_embgw', file='rtl/physical/ot_qwen_kv_gwhost_slots.sv',
-    ports=dict(gq=['r_ea', 't_ecr'], gr=['t_eq'], hb=['hb', 'hb_cr'], est=['est'], ck=['ck'], rst_n=['rst_n'],
+    module='qkd_embgw_boot', file='rtl/qwen_sys/static_embedding_20261014/qkd_embgw_boot.sv', parameters=dict(MUT=0),
+    ports=dict(hb=['hb', 'hb_cr'], est=['est'], ck=['ck'], rst_n=['rst_n'],
                # Q-KVSYS-NETLIST 2026-10-16 (strict bit-level bind, opentallas.die_port_bind.v2): each die bundle carries its
                # word one way and the credit for THAT word back (the landing strip's emf / emf_cr out and emr / emr_cr in,
                # the relay direction model's reverse bit).  The gateway's credit FOR emf is emr_<q>_cr ('strip q consumed one
@@ -760,7 +774,17 @@ SLICE_W, SLICE_H = 129.6, 345.6
 # one 21.6-um routing cell W of the slice column: the write-queue controller (172.8 in the 216-um landing channel) otherwise
 # closes the channel at mid-stack and the N stacks' slot-0 slices have no die route to the root (first v1.4 plan)
 SLICE_GAP = 21.6
-HOST_RT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv'
+# KVJ-A 10-17 (0cx COORD decision, kv_static_join_plan item 3): the die's HOST root master is qkd_host_root_admission, the
+# successor of qkd_host_root_pt (same generated partition: qkd_host_ingest_chain_pt + the 128 die slices; adds the HOST
+# image replay outputs boot_pr / boot_image_* that drive qkd_static_kv_boot_dispatch, static_setup_ready, the native
+# ownership admission native_reserved / ownership_valid -> host_admission_open / host_launch_quiet / host_deferred, and the
+# exported upstream debt host_upstream_quiet).  Its host_interface_idle is the pt root's host_drained_local (renamed; the
+# die port keeps the name host_drained_local, bundle hhdl unchanged).  The new admission ports are joined to the static
+# subsystem (kv_static_boot_join.HOST_DIE_JOINS) when kv_die --split instantiates it (item 10); until then they are open.
+HOST_RT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv'
+HOST_RT_MODULE = 'qkd_host_root_admission'
+HOST_RT_PT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv'     # qkd_host_ingest_chain_pt (child of the admission root)
+HOST_RT_RENAMED = dict(host_drained_local='host_interface_idle')          # die port -> admission RTL port
 SLICE_DIE_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv'
 # root clock -> PLL family (FIXTURE = tools/qwen_native_host/host_owner.hpp clocks(); INFERRED = no fixture drives it:
 # the HOST owner must confirm, recorded in the v1.4 contract)
@@ -782,7 +806,7 @@ HOST_GROUPS = dict(chain_f='chf', chain_c='chc', chain_a='cha', chain_fault_i='c
 def host_rt_binding():
     import re as _re
     txt = _re.sub(r'//[^\n]*', '', (ROOT / HOST_RT_FILE).read_text())
-    hdr = txt[txt.index('module qkd_host_root_pt'):]
+    hdr = txt[txt.index('module ' + HOST_RT_MODULE + ' '):]
     hdr = hdr[hdr.index(')(') + 2:hdr.index(');')]
     names = [_re.findall(r'[A-Za-z_][A-Za-z_0-9]*', part.strip())[-1] for part in hdr.split(',') if part.strip()]
     ports, sliced = {}, {}
@@ -799,9 +823,11 @@ def host_rt_binding():
             continue
         else:
             ports[n] = [n]
+    for die_port, rtl_port in HOST_RT_RENAMED.items():
+        ports[die_port] = ports.pop(rtl_port)
     ports.update(fdi=['phy_up', 'phy_tx_v', 'phy_tx_flit', 'phy_rx_v', 'phy_rx_flit'], hb=['hb', 'hb_cr'],
                  tk=['local_tk'], kst=['local_kst'])
-    return dict(module='qkd_host_root_pt', file=HOST_RT_FILE, ports=ports, sliced=sliced,
+    return dict(module=HOST_RT_MODULE, file=HOST_RT_FILE, ports=ports, sliced=sliced,
                 parameters=dict(ENABLE_SERVICE=1, ENABLE_NATIVE=1, ENABLE_TOKEN=1, NL=2),   # NL: 2 real link ends (static D2D + host SerDes)
                 classed={'die_id': 'by_design: package strap (tie cells), role = 2 PKG + DIE, set at package assembly',
                          'por_n': 'by_design: package POR pad (off-chip signal)'})
@@ -2019,9 +2045,7 @@ def _buses(m, T, r):
     for st in STACKS:
         add((f'af_{st}', 'spine_local', 1, [(f'astk_{st}', 'af'), ('seq', f'af_{st}')]))
         add((f'mf_{st}', 'spine_local', 1, [(f'land_{st}', 'mf'), ('seq', f'mf_{st}')]))
-    if split:   # EMBQ / EMBD: the SU's embedding face crosses the link and ends on the gateway (LINK.md classes 3 / 5)
-        add(('gq', 'kvn', 1 + 1 + 24 + 1, [('lnk', 'gq'), ('embgw', 'gq')]))
-        add(('gr', 'kv_oneway', 1 + 512, [('embgw', 'gr'), ('lnk', 'gr')]))
+    if split:   # KVJ-C2: no EMBQ / EMBD bundles (boot-only gateway, bridge successor without the SU face)
         add(('lflt', 'spine_local', 1, [('lnk', 'flt'), ('host', 'lflt')]))          # link + bridge fault -> host status (LINK.md open item 1)
     else:
         add(('gq', 'kvn', W + 2, [('seq', 'gq'), ('embgw', 'gq')]))
@@ -4448,7 +4472,10 @@ def main(argv=None):
         if not a.split:
             ap.error('OT_KV_STATIC requires --split')
         if a.mode == 'case':
-            ap.error('static physical case held: actual homes/pins/clocks/native benches and TT/FF/DRC qualification remain required')
+            # KVJ-G 10-17: lifted only when the strict port bind is clean (0 unconnected, 0 undriven, 0 functional ties);
+            # the owned gap list is tools/qwen_kv_die/kvjg_gap_list.py (lanes/KVJ-G.md)
+            ap.error('static physical case held: strict port bind not clean (kvjg_gap_list.py); actual homes/pins/clocks/native '
+                     'benches and TT/FF/DRC qualification remain required')
         if not a.static_graph:
             a.out.mkdir(parents=True, exist_ok=True)
             (a.out / 'static_requirements.json').write_text(json.dumps(kv_static.requirements(), indent=2) + '\n')

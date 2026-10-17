@@ -6,7 +6,7 @@ register stage per bit, rs through the reset pin register, ck_o = forwarded cloc
 Only the (width, direction) masters the p4i die instantiates are built (owner 10-15: no unused variants):
   68 NS/SN (frame return lanes), 512 EW/WE (collective + svc_rs chain), 562 EW/WE/SN (HBM rd), 682 EW/WE/NS (HBM rq).
 Each spec is the closed s81dv_rly_276_<dir> spec with the width scaled: the data faces carry W pins at the 276 kit's
-pin pitch (21.6 um for 276 pins on N/S, 28.08 um on E/W, 2.16-um margins), snapped up to the 2.16 lattice; the depth is
+pin pitch (N/S: 0.096 um/bit face capacity rule; E/W: 28.08 um for 276 pins, 2.16-um margins), snapped up to the 2.16 lattice; the depth is
 the 276 kit's (17.28 um), so the flop density per core area stays the closed kit's.
 Usage: gen_dvrly_kits.py   (writes tools/ref_tile/specs/s81dv_rly_<W>_<dir>.json + physical/s81_die_pins/dvrlyw/*.tcl)
 """
@@ -20,6 +20,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 USED = {68: ('ns', 'sn'), 512: ('ew', 'we'), 562: ('ew', 'we', 'sn'), 682: ('ew', 'we', 'ns')}
 LAT = 2.16
+# face capacity rule (coordinator 10-17 after s81dv_rly_562_sn-w1 EARLY_FAIL_CONGESTION GRT-0116): >= 0.096 um per bit
+# per face per layer pair on the N/S data faces (the 276 kit's 21.6/276 = 0.078 um/bit is below it); E/W faces are at
+# 28.08/276 = 0.102 um/bit (M4) already.
+FACE_UM_PER_BIT = 0.096
 
 
 def snap(v):
@@ -38,7 +42,7 @@ def main():
             s['sources'] = ['rtl/dsrom_sys/s81_glue/ot_s81_rly.sv', 'rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv',
                             'rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvw.sv']
             if d in ('ns', 'sn'):
-                s['outline'] = {'w': max(snap(W * 21.6 / 276 + 2 * LAT), 12.96), 'h': 17.28}
+                s['outline'] = {'w': max(snap(W * FACE_UM_PER_BIT + 2 * LAT), 12.96), 'h': 17.28}
             else:
                 s['outline'] = {'w': 17.28, 'h': max(snap(W * 28.08 / 276 + 2 * LAT), 8.64)}
             s['io_tcl'] = f'physical/s81_die_pins/dvrlyw/{top}.tcl'
@@ -49,7 +53,7 @@ def main():
                 'ckinv pair); recipe 4 flop-first, hold_budget die; data faces at the 276 kit pin pitch, depth 17.28 um. '
                 '0 cycles vs the plan (one stage per 405-um hop).')
             j = s['job']
-            j.update(owner='Claude:S81-CTRL', branch='claude/s81ctrl-1017', tag='w1',
+            j.update(owner='Claude:S81-CTRL', branch='claude/s81ctrl-1017', tag='w2' if (d in ('ns', 'sn') and W > 68) else 'w1',
                      purpose=f'S81-DV {W}-b straight lane relay station {top} (recipe 4 flop-first, p4i relay views)',
                      views_to=f'physical/ref_tile/{name}/views', record_to=f'results/rtl/ref_tile/{name}')
             for b in j['benches']:

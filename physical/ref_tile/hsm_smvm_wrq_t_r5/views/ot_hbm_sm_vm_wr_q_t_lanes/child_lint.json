@@ -1,0 +1,103 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/hsm_smvm_wrq_t_r5-lanes-dc8367e5b/record/views/ot_hbm_sm_vm_wr_q_t_lanes/provenance/ot_hbm_sm_vm_wr_q_t_lanes.candidate.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "ot_hbm_sm_vm_wr_q_t_lanes 142.56 x 388.8: PG M5 VDD 26 stripes (95% spread, 100% cov) / VSS 26 stripes (95% spread, 100% cov); strap M6; face pins 4760 blocked-above 0 blocked-same 0; clock clk insertion 171 ps; clock clk_cal insertion 19 ps; clock clk_l0 insertion 186 ps; clock clk_l1 insertion 197 ps; clock clk_l2 insertion 185 ps; clock clk_l3 insertion 174 ps; clock clk_l4 insertion 210 ps; clock clk_l5 insertion 176 ps; clock clk_l6 insertion 215 ps; clock clk_l7 insertion 224 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "ot_hbm_sm_vm_wr_q_t_lanes",
+  "W": 142.56,
+  "H": 388.8,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 26,
+     "dir": "V",
+     "spread": 0.947,
+     "coverage": 1.0,
+     "shapes_on_top": 26
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 26,
+     "dir": "V",
+     "spread": 0.947,
+     "coverage": 1.0,
+     "shapes_on_top": 26
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 4760,
+   "blocked_above": 0,
+   "covered_below": 2,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 170.87,
+    "min_ps": 111.49
+   },
+   "clk_cal": {
+    "max_ps": 18.99,
+    "min_ps": 18.99
+   },
+   "clk_l0": {
+    "max_ps": 186.13,
+    "min_ps": 129.62
+   },
+   "clk_l1": {
+    "max_ps": 197.04,
+    "min_ps": 126.57
+   },
+   "clk_l2": {
+    "max_ps": 184.84,
+    "min_ps": 121.1
+   },
+   "clk_l3": {
+    "max_ps": 173.77,
+    "min_ps": 124.55
+   },
+   "clk_l4": {
+    "max_ps": 209.64,
+    "min_ps": 131.5
+   },
+   "clk_l5": {
+    "max_ps": 176.44,
+    "min_ps": 126.46
+   },
+   "clk_l6": {
+    "max_ps": 215.15,
+    "min_ps": 137.33
+   },
+   "clk_l7": {
+    "max_ps": 223.67,
+    "min_ps": 137.38
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 2136
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

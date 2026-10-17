@@ -1,0 +1,585 @@
+{
+ "schema": "opentallas.qwen_kv.kvjg_gap_list.static.v1",
+ "note": "KVJ-C3: static join after the PC chain (kvjg_gap_list.static_gaps, full merged join); was 2809 open functional ports (kvint_gap_list_1017.json)",
+ "instances": 670,
+ "static_functional_open_ports": 1022,
+ "static_clock_reset_entries": 3005,
+ "functional_open": [
+  {
+   "instances": 1,
+   "role": "attention_programme",
+   "port": "request_ready",
+   "cls": "DIE_JOIN",
+   "producer": "attention service (ahub / seq_static successor, D3)",
+   "owner": "KVE-2"
+  },
+  {
+   "instances": 1,
+   "role": "attention_programme",
+   "port": "result_beat",
+   "cls": "DIE_JOIN",
+   "producer": "attention service result face (ahub / seq_static successor)",
+   "owner": "KVE-2"
+  },
+  {
+   "instances": 1,
+   "role": "attention_programme",
+   "port": "result_data",
+   "cls": "DIE_JOIN",
+   "producer": "attention service result face (ahub / seq_static successor)",
+   "owner": "KVE-2"
+  },
+  {
+   "instances": 1,
+   "role": "attention_programme",
+   "port": "result_done",
+   "cls": "DIE_JOIN",
+   "producer": "attention service result face (ahub / seq_static successor)",
+   "owner": "KVE-2"
+  },
+  {
+   "instances": 1,
+   "role": "attention_programme",
+   "port": "result_epoch",
+   "cls": "DIE_JOIN",
+   "producer": "attention service result face (ahub / seq_static successor)",
+   "owner": "KVE-2"
+  },
+  {
+   "instances": 1,
+   "role": "attention_programme",
+   "port": "result_layer",
+   "cls": "DIE_JOIN",
+   "producer": "attention service result face (ahub / seq_static successor)",
+   "owner": "KVE-2"
+  },
+  {
+   "instances": 1,
+   "role": "attention_programme",
+   "port": "result_valid",
+   "cls": "DIE_JOIN",
+   "producer": "attention service result face (ahub / seq_static successor)",
+   "owner": "KVE-2"
+  },
+  {
+   "instances": 1,
+   "role": "attention_programme",
+   "port": "service_fault",
+   "cls": "DIE_JOIN",
+   "producer": "attention service fault",
+   "owner": "KVE-2"
+  },
+  {
+   "instances": 1,
+   "role": "link",
+   "port": "cfg_addr",
+   "cls": "COMPILER",
+   "producer": "boot dispatcher link-calendar target (no dispatcher target for the d2d cfg yet)",
+   "owner": "KVJ-A follow-up + item 9"
+  },
+  {
+   "instances": 1,
+   "role": "link",
+   "port": "cfg_data",
+   "cls": "COMPILER",
+   "producer": "boot dispatcher link-calendar target (no dispatcher target for the d2d cfg yet)",
+   "owner": "KVJ-A follow-up + item 9"
+  },
+  {
+   "instances": 1,
+   "role": "link",
+   "port": "cfg_rx_we",
+   "cls": "COMPILER",
+   "producer": "boot dispatcher link-calendar target (no dispatcher target for the d2d cfg yet)",
+   "owner": "KVJ-A follow-up + item 9"
+  },
+  {
+   "instances": 1,
+   "role": "link",
+   "port": "cfg_tx_we",
+   "cls": "COMPILER",
+   "producer": "boot dispatcher link-calendar target (no dispatcher target for the d2d cfg yet)",
+   "owner": "KVJ-A follow-up + item 9"
+  },
+  {
+   "instances": 1,
+   "role": "emb_join",
+   "port": "cfg_addr",
+   "cls": "COMPILER",
+   "producer": "the same boot bus as es_fan_root (target 1 = join beat calendar)",
+   "owner": "KVJ-A successor + KVJ-E image"
+  },
+  {
+   "instances": 1,
+   "role": "emb_join",
+   "port": "cfg_data",
+   "cls": "COMPILER",
+   "producer": "the same boot bus as es_fan_root (target 1 = join beat calendar)",
+   "owner": "KVJ-A successor + KVJ-E image"
+  },
+  {
+   "instances": 1,
+   "role": "emb_join",
+   "port": "cfg_we",
+   "cls": "COMPILER",
+   "producer": "the same boot bus as es_fan_root (target 1 = join beat calendar)",
+   "owner": "KVJ-A successor + KVJ-E image"
+  },
+  {
+   "instances": 1,
+   "role": "es_fan_root",
+   "port": "cfg_addr",
+   "cls": "COMPILER",
+   "producer": "boot dispatcher embedding-calendar target (kvjc3_pc_chain boot_words, target 0 = PC player constants)",
+   "owner": "KVJ-A successor + KVJ-E image"
+  },
+  {
+   "instances": 1,
+   "role": "es_fan_root",
+   "port": "cfg_data",
+   "cls": "COMPILER",
+   "producer": "boot dispatcher embedding-calendar target (kvjc3_pc_chain boot_words, target 0 = PC player constants)",
+   "owner": "KVJ-A successor + KVJ-E image"
+  },
+  {
+   "instances": 1,
+   "role": "es_fan_root",
+   "port": "cfg_we",
+   "cls": "COMPILER",
+   "producer": "boot dispatcher embedding-calendar target (kvjc3_pc_chain boot_words, target 0 = PC player constants)",
+   "owner": "KVJ-A successor + KVJ-E image"
+  },
+  {
+   "instances": 1,
+   "role": "attention_programme",
+   "port": "compiled_calendar",
+   "cls": "NEW_RTL",
+   "producer": "qkd_attn_cal_gen (N1, KVJ-B 58f9ebdbb, not pushed)",
+   "owner": "KVJ-B"
+  },
+  {
+   "instances": 1,
+   "role": "attention_programme",
+   "port": "compiled_end",
+   "cls": "NEW_RTL",
+   "producer": "qkd_attn_cal_gen (N1, KVJ-B 58f9ebdbb, not pushed)",
+   "owner": "KVJ-B"
+  },
+  {
+   "instances": 1,
+   "role": "attention_programme",
+   "port": "compiled_rx_cmd",
+   "cls": "NEW_RTL",
+   "producer": "qkd_attn_cal_gen (N1, KVJ-B 58f9ebdbb, not pushed)",
+   "owner": "KVJ-B"
+  },
+  {
+   "instances": 1,
+   "role": "attention_programme",
+   "port": "compiled_tx_first",
+   "cls": "NEW_RTL",
+   "producer": "qkd_attn_cal_gen (N1, KVJ-B 58f9ebdbb, not pushed)",
+   "owner": "KVJ-B"
+  },
+  {
+   "instances": 32,
+   "role": "ectla",
+   "port": "x_i",
+   "cls": "DIE_JOIN",
+   "producer": "ECTL B/C ring x face (ectla_kiss tile, KVJ-D merged)",
+   "owner": "KVJ-D"
+  },
+  {
+   "instances": 1,
+   "role": "layer_programme",
+   "port": "authority_epoch",
+   "cls": "DIE_JOIN",
+   "producer": "host root token authority (token_epoch / native_request_*)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "layer_programme",
+   "port": "authority_generation",
+   "cls": "DIE_JOIN",
+   "producer": "host root token authority (token_epoch / native_request_*)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "layer_programme",
+   "port": "authority_position",
+   "cls": "DIE_JOIN",
+   "producer": "host root token authority (token_epoch / native_request_*)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "layer_programme",
+   "port": "authority_token",
+   "cls": "DIE_JOIN",
+   "producer": "host root token authority (token_epoch / native_request_*)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "layer_programme",
+   "port": "authority_valid",
+   "cls": "DIE_JOIN",
+   "producer": "host root token authority (token_epoch / native_request_*)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "layer_programme",
+   "port": "programme_authorized",
+   "cls": "DIE_JOIN",
+   "producer": "host root program_authorized_* / program_epoch / program_digest",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "layer_programme",
+   "port": "programme_digest",
+   "cls": "DIE_JOIN",
+   "producer": "host root program_authorized_* / program_epoch / program_digest",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "layer_programme",
+   "port": "programme_epoch",
+   "cls": "DIE_JOIN",
+   "producer": "host root program_authorized_* / program_epoch / program_digest",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "layer_programme",
+   "port": "start",
+   "cls": "DIE_JOIN",
+   "producer": "d2d engine_result_token RESULT (token-run trigger)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "link",
+   "port": "fdi_rx_flit",
+   "cls": "PHY",
+   "producer": "UCIe x64 PHY FDI (allowed analog model)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "link",
+   "port": "fdi_rx_v",
+   "cls": "PHY",
+   "producer": "UCIe x64 PHY FDI (allowed analog model)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "link",
+   "port": "fdi_tx_up",
+   "cls": "PHY",
+   "producer": "UCIe x64 PHY FDI (allowed analog model)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "link",
+   "port": "host_boot_begin",
+   "cls": "DIE_JOIN",
+   "producer": "host root host_link_reset_req / host_recovery_clear / boot_go / host_interface_idle",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "link",
+   "port": "host_drained_local",
+   "cls": "DIE_JOIN",
+   "producer": "host root host_link_reset_req / host_recovery_clear / boot_go / host_interface_idle",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "link",
+   "port": "host_link_reset_req",
+   "cls": "DIE_JOIN",
+   "producer": "host root host_link_reset_req / host_recovery_clear / boot_go / host_interface_idle",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "link",
+   "port": "host_recovery_clear",
+   "cls": "DIE_JOIN",
+   "producer": "host root host_link_reset_req / host_recovery_clear / boot_go / host_interface_idle",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "link",
+   "port": "record_tx",
+   "cls": "DIE_JOIN",
+   "producer": "host root record_tx_v / record_tx",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "link",
+   "port": "record_tx_observed_v",
+   "cls": "DIE_JOIN",
+   "producer": "host root record_tx_v / record_tx",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "link",
+   "port": "serdes_up",
+   "cls": "PHY",
+   "producer": "SerDes PHY link-up (digital layer in host root)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "link",
+   "port": "status_epoch16",
+   "cls": "DIE_JOIN",
+   "producer": "host root local_service_epoch",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 128,
+   "role": "pc_path",
+   "port": "ci",
+   "cls": "DIE_JOIN",
+   "producer": "pc_path chain neighbours rsi/ci/pi/ki/fi (host PC slice / ctrl chain)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 128,
+   "role": "pc_path",
+   "port": "fi",
+   "cls": "DIE_JOIN",
+   "producer": "pc_path chain neighbours rsi/ci/pi/ki/fi (host PC slice / ctrl chain)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 128,
+   "role": "pc_path",
+   "port": "front_hbm_data",
+   "cls": "PHY",
+   "producer": "HBM3E PHY pi (qkd_hbm3e_phy_pc)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 128,
+   "role": "pc_path",
+   "port": "ki",
+   "cls": "DIE_JOIN",
+   "producer": "pc_path chain neighbours rsi/ci/pi/ki/fi (host PC slice / ctrl chain)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 128,
+   "role": "pc_path",
+   "port": "pi",
+   "cls": "DIE_JOIN",
+   "producer": "pc_path chain neighbours rsi/ci/pi/ki/fi (host PC slice / ctrl chain)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 128,
+   "role": "pc_path",
+   "port": "return_hbm_data",
+   "cls": "PHY",
+   "producer": "HBM3E PHY pi (qkd_hbm3e_phy_pc)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 128,
+   "role": "pc_path",
+   "port": "rsi",
+   "cls": "DIE_JOIN",
+   "producer": "pc_path chain neighbours rsi/ci/pi/ki/fi (host PC slice / ctrl chain)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "producer",
+   "port": "boot_image_digest",
+   "cls": "DIE_JOIN",
+   "producer": "host root boot_pr / boot_image_* (HOST_DIE_JOINS)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "producer",
+   "port": "boot_image_epoch",
+   "cls": "DIE_JOIN",
+   "producer": "host root boot_pr / boot_image_* (HOST_DIE_JOINS)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "producer",
+   "port": "boot_image_fault",
+   "cls": "DIE_JOIN",
+   "producer": "host root boot_pr / boot_image_* (HOST_DIE_JOINS)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "producer",
+   "port": "boot_image_ready",
+   "cls": "DIE_JOIN",
+   "producer": "host root boot_pr / boot_image_* (HOST_DIE_JOINS)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "producer",
+   "port": "boot_image_target",
+   "cls": "DIE_JOIN",
+   "producer": "host root boot_pr / boot_image_* (HOST_DIE_JOINS)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "producer",
+   "port": "boot_pr",
+   "cls": "DIE_JOIN",
+   "producer": "host root boot_pr / boot_image_* (HOST_DIE_JOINS)",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 16,
+   "role": "vport",
+   "port": "pr_t",
+   "cls": "DIE_JOIN",
+   "producer": "pvw pair V request (pvrq) words",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 16,
+   "role": "vport",
+   "port": "pr_valid",
+   "cls": "DIE_JOIN",
+   "producer": "pvw pair V request (pvrq) words",
+   "owner": "KVJ-G2"
+  },
+  {
+   "instances": 1,
+   "role": "embgw",
+   "port": "emr_EN",
+   "cls": "UNCLASSIFIED",
+   "producer": "?",
+   "owner": "UNOWNED"
+  },
+  {
+   "instances": 1,
+   "role": "embgw",
+   "port": "emr_EN_cr",
+   "cls": "UNCLASSIFIED",
+   "producer": "?",
+   "owner": "UNOWNED"
+  },
+  {
+   "instances": 1,
+   "role": "embgw",
+   "port": "emr_ES",
+   "cls": "UNCLASSIFIED",
+   "producer": "?",
+   "owner": "UNOWNED"
+  },
+  {
+   "instances": 1,
+   "role": "embgw",
+   "port": "emr_ES_cr",
+   "cls": "UNCLASSIFIED",
+   "producer": "?",
+   "owner": "UNOWNED"
+  },
+  {
+   "instances": 1,
+   "role": "embgw",
+   "port": "emr_WN",
+   "cls": "UNCLASSIFIED",
+   "producer": "?",
+   "owner": "UNOWNED"
+  },
+  {
+   "instances": 1,
+   "role": "embgw",
+   "port": "emr_WN_cr",
+   "cls": "UNCLASSIFIED",
+   "producer": "?",
+   "owner": "UNOWNED"
+  },
+  {
+   "instances": 1,
+   "role": "embgw",
+   "port": "emr_WS",
+   "cls": "UNCLASSIFIED",
+   "producer": "?",
+   "owner": "UNOWNED"
+  },
+  {
+   "instances": 1,
+   "role": "embgw",
+   "port": "emr_WS_cr",
+   "cls": "UNCLASSIFIED",
+   "producer": "?",
+   "owner": "UNOWNED"
+  },
+  {
+   "instances": 1,
+   "role": "embgw",
+   "port": "hb",
+   "cls": "UNCLASSIFIED",
+   "producer": "?",
+   "owner": "UNOWNED"
+  },
+  {
+   "instances": 1,
+   "role": "producer",
+   "port": "host_launch_quiet",
+   "cls": "UNCLASSIFIED",
+   "producer": "?",
+   "owner": "UNOWNED"
+  },
+  {
+   "instances": 1,
+   "role": "producer",
+   "port": "host_upstream_quiet",
+   "cls": "UNCLASSIFIED",
+   "producer": "?",
+   "owner": "UNOWNED"
+  },
+  {
+   "instances": 1,
+   "role": "attention_programme",
+   "port": "fused_program_capability",
+   "cls": "COMPILER",
+   "producer": "boot image capability bit",
+   "owner": "item 9 compiler"
+  },
+  {
+   "instances": 1,
+   "role": "link",
+   "port": "cal_seg",
+   "cls": "COMPILER",
+   "producer": "d2d_link_calendar start/segment from the layer programme",
+   "owner": "item 9 compiler"
+  },
+  {
+   "instances": 1,
+   "role": "link",
+   "port": "cal_start",
+   "cls": "COMPILER",
+   "producer": "d2d_link_calendar start/segment from the layer programme",
+   "owner": "item 9 compiler"
+  }
+ ]
+}
