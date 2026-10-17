@@ -243,6 +243,14 @@ def install_master(M, model, Master):
         # each PHY's top-edge FDI block (2 empty slots for clk / rst_n, then the phy_order bits at 0.048) lands on the
         # collective S face at the same die x (clamped inside the face): straight M5 tracks across the PHY/collective gap
         phys = {'io_serdes': phy_order(0), 'io_serdes_1': phy_order(1), 'io_serdes_2': phy_order(2), 'io_ucie': EU}
+        if PHY_TALL:
+            # nearest PHY first on each face: it owns the window at its own x; a farther PHY's window is placed clear of
+            # the nearer PHYs' bodies (it runs past them in the open column / channel), else at the face's E end
+            def _dist(pn):
+                ph = by_[pn]
+                return (ph.y - (inst.y + inst.h)) if ph.y >= inst.y + inst.h - 1e-3 else (inst.y - (ph.y + ph.h))
+            phys = dict(sorted(phys.items(), key=lambda t: _dist(t[0])))
+        _wins = {}
         for pn, items in phys.items():
             ph = by_[pn]
             above = PHY_TALL and ph.y >= inst.y + inst.h - 1e-3
@@ -258,10 +266,22 @@ def install_master(M, model, Master):
             x = min(max(x, 4.0), inst.w - 4.0 - nb * .048) + 2 * .048
             fc = 'N' if above else 'S'
             if PHY_TALL:
-                # two PHYs on one face share the face width: each takes its own window (no overlap)
-                used = sorted(z for (_, _), (ff, _, z) in pos.items() if ff == fc)
-                if used:
-                    x = max(x, used[-1] + 4.0)
+                # a farther PHY on the same face: its window clears the nearer PHYs' bodies (+12 um) and their windows
+                # (+4 um); when the nearer bodies span the whole face it goes to the E end (reached via the channel)
+                ww = nb * .048
+                near = [by_[q] for q in phys if q != pn and (by_[q].y >= inst.y + inst.h - 1e-3) == above
+                        and _dist(q) < _dist(pn)]
+                wins = _wins.setdefault(fc, [])
+                lo = max([b_.x + b_.w - inst.x + 12.0 for b_ in near if b_.x - inst.x < x + ww] + [x])
+                for a_, b2_ in sorted(wins):
+                    if lo < b2_ + 4.0 and a_ - 4.0 < lo + ww:
+                        lo = b2_ + 4.0
+                if lo + ww > inst.w - 4.0 or any(b_.x - inst.x < lo + ww and lo < b_.x + b_.w - inst.x for b_ in near):
+                    lo = inst.w - 4.0 - ww
+                    if any(lo < b2_ + 4.0 and a_ - 4.0 < lo + ww for a_, b2_ in wins):
+                        raise ValueError(f'{MASTER}: no {fc}-face FDI window for {pn}')
+                wins.append((lo, lo + ww))
+                x = lo + 2 * .048
             for p, bits in items:
                 for b in bits:
                     pos[(p, b)] = (fc, 'M5', round(.012 + round((x - .012) / .048) * .048, 4))
@@ -274,8 +294,9 @@ def install_master(M, model, Master):
     else:
         end = column('E', phy_order(0), win)             # SerDes0, abutting the E PHY window
         column('E', EU, max(end, win + 60.0) + 8.0)       # UCIe, over SerDes0 (M6+) to the PHY beyond it
-    end = column('W', phy_order(1), win)                 # SerDes1 (MY PHY, window faces E)
-    column('W', phy_order(2), end + 8.0)                 # SerDes2, over SerDes1
+    if not PHY_NFACE:
+        end = column('W', phy_order(1), win)             # SerDes1 (MY PHY, window faces E)
+        column('W', phy_order(2), end + 8.0)             # SerDes2, over SerDes1
     placed = {p for p, _ in pos}
     north = [p for p in ports if p not in placed]
     cf, cl, cL = ('E', 'M4', q.h) if PHY_TALL else ('N', 'M5', q.w)    # core-side pins: E face on the tall kit

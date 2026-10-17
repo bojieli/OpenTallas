@@ -77,6 +77,38 @@ def apply_dv(v, m):
         for d in D['insts']:
             if d['x'] >= xs:
                 d['x'] = round(d['x'] + seam, 3)
+    # W-column channel width (Q-DV option (i), 2026-10-17): every PHY stays on the W die edge, single file; the far
+    # SerDes (io_serdes_2, under io_serdes_1) reaches the collective's S face over a relayed FDI lane in this channel
+    wchan = float(os.environ.get('OT_SPLIT_DV_WCHAN_UM', '0') or 0)
+    if wchan:
+        colr = max(d['x'] + d['w'] for d in D['insts'] if d['n'] == 'io_collective')
+        x0a = min(d['x'] for d in D['insts'] if d['n'].startswith(('c16_', 'dvs_')))
+        dx = round(wchan - (x0a - colr), 3)
+        for d in D['insts']:
+            if d['x'] > colr + 1.0:
+                d['x'] = round(d['x'] + dx, 3)
+    # W-column top cluster (OT_SPLIT_DV_TOPFIX, Q-DIEPLAN3 10-17; dv2f5 GEN: 31 sf_* pass-2 failures with no free relay
+    # site at die-edge faces): d2d_rom R180 (its N-face payload pins face native59 / sys_face below, its FDI faces
+    # ucie_kv above, its W-face x3 / result pins turn to the column interior), ucie_kv R180 above it across 130 um
+    # (FDI down, beachfront on the N die edge), FDI centres x-aligned; native59 MY (q / vm_ar face E toward the
+    # array); the cluster leaves the W die edge by 216 um
+    orient = {}
+    if os.environ.get('OT_SPLIT_DV_TOPFIX') == '1':
+        top = ('tt_ctlm', 'rstseq_rom', 'clk_rx', 'embed_prov', 'native59', 'sys_face', 'd2d_rom', 'ucie_kv',
+               'ckb_rom', 'rs_bump', 'bump_fwd_epoch', 'bump_fwd_lrst')
+        T = {d['n']: d for d in D['insts'] if d['n'] in top}
+        for d in T.values():
+            d['x'] = round(d['x'] + 216.0, 3)
+        dd, uk = T['d2d_rom'], T['ucie_kv']
+        # FDI centres (local, R180): d2d 237.2 (rx 9.3 .. tx 465.0), ucie_kv 388.5 (rx 276.6 .. tx 500.4)
+        uk['x'] = round(round((dd['x'] + 237.2 - 388.5) / 0.216) * 0.216, 3)
+        uk['y'] = round(dd['y'] + dd['h'] + 129.6, 3)
+        bumps = [T[b_] for b_ in ('ckb_rom', 'rs_bump', 'bump_fwd_epoch', 'bump_fwd_lrst')]
+        sh = max(0.0, uk['x'] + uk['w'] + 21.6 - min(d['x'] for d in bumps))       # the bump row clears ucie_kv
+        for d in bumps:
+            d['x'] = round(d['x'] + sh, 3)
+            d['y'] = round(uk['y'] + uk['h'] - d['h'], 3)
+        orient.update(d2d_rom='R180', ucie_kv='R180', native59='MY')
     DI = {i['n']: i for i in D['insts'] if i['m'] != 'outline_marker'}
     by = {i.name: i for i in m['insts']}
     # retained instances take the dv model's places BEFORE the masters are drawn (the collective / PHY frames follow
@@ -86,6 +118,8 @@ def apply_dv(v, m):
     for n, i in by.items():
         if n in DI and not n.startswith('c16_'):
             i.x, i.y = DI[n]['x'], DI[n]['y']
+            if n in orient:
+                i.orient = orient[n]
             if tall and (n == 'io_collective' or n.startswith(('io_serdes', 'io_ucie'))):
                 i.w, i.h = DI[n]['w'], DI[n]['h']
                 if n != 'io_collective' and coll and DI[n]['y'] >= coll['y'] + coll['h'] - 1e-3:
