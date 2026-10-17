@@ -1,0 +1,126 @@
+{
+ "name": "hsm_smvm_wrq_t_r5-sq1-COMMIT",
+ "block": "ot_hbm_sm_vm_wr_q_t_faces4",
+ "ref_tile": true,
+ "owner": "Claude H-SM 1817",
+ "purpose": "writer r5: square 265.68 x 265.68 (was 142.56 x 388.8, 2.7:1 pin-limited), one half-bus group per full face at <= 6 pins/um, face clock entry at each window centre, clk_hcfg host pin-flop entry (f4hc RTL), recipe 4 (no pin hold pads, hold_budget die).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/hsm-wrq-r5-1817",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/hbm_accel/host_static_20261015",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_sm_vm_wr_q_t_faces4 #(.DEPTH(4), .MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_faces4.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_faces4.sv rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv rtl/hbm_accel/generic/vm/static/ot_static_cmd_target_core_pc.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "wrq_t_bench",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/run_sm_vm_wr_q_t_faces4.sh {RUN}/bench/wrqt",
+    "expect": "pass",
+    "pass_regex": "SM_VM_WR_Q_T BENCH PASS",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "pass_witness": "physical/ref_tile/hsm_smvm_wrq_t_r4/witness/39e57ad0e_wrq_t_bench.log",
+    "min_count_regex": "rows checked ([0-9]+)$"
+   },
+   {
+    "name": "mut_face_clock_drop",
+    "cmd": "mkdir -p {RUN}/mut && iverilog -g2012 -DMUT=0 -DFACE_CLOCK_MUT=1 -s tb_hbm_sm_vm_wr_q_t_faces4 -o {RUN}/mut/tbc1 rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_faces4.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_faces4.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv rtl/hbm_accel/generic/vm/static/ot_static_cmd_target_core_pc.sv rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && vvp -n {RUN}/mut/tbc1 > {RUN}/mut/tbc1.log 2>&1 && cat {RUN}/mut/tbc1.log && grep -qx 'TB_HBM_SM_VM_WR_Q_T PASS MUT=0' {RUN}/mut/tbc1.log",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "fail_regex": "^TB_HBM_SM_VM_WR_Q_T FAIL MUT=0 mismatches[+]faults=[1-9][0-9]*$",
+    "fail_witness": "physical/ref_tile/hsm_smvm_wrq_t_r4/witness/39e57ad0e_wrq_t_bench.log"
+   },
+   {
+    "name": "mut_hcfg_clock_drop",
+    "cmd": "mkdir -p {RUN}/mut && iverilog -g2012 -DMUT=0 -DFACE_CLOCK_MUT=3 -s tb_hbm_sm_vm_wr_q_t_faces4 -o {RUN}/mut/tbc3 rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_faces4.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_faces4.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv rtl/hbm_accel/generic/vm/static/ot_static_cmd_target_core_pc.sv rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && vvp -n {RUN}/mut/tbc3 > {RUN}/mut/tbc3.log 2>&1 && cat {RUN}/mut/tbc3.log && grep -qx 'TB_HBM_SM_VM_WR_Q_T PASS MUT=0' {RUN}/mut/tbc3.log",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "fail_regex": "^TB_HBM_SM_VM_WR_Q_T FAIL MUT=0 mismatches[+]faults=[1-9][0-9]*$",
+    "fail_witness": "physical/ref_tile/hsm_smvm_wrq_t_r4/witness/39e57ad0e_wrq_t_bench.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hsm_smvm_wrq_t_r5/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hsm_smvm_wrq_t_r5/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hsm_smvm_wrq_t_r5 --out {RUN}/record/views/ot_hbm_sm_vm_wr_q_t_faces4 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hsm_smvm_wrq_t_r5/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hsm_smvm_wrq_t_r5/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hsm_smvm_wrq_t_r5/hsm_smvm_wrq_t_r5-sq1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "The compactr3 failed the authoritative0.096um/0.60 pin-capacity audit before adoption. r4 returns to original388.8um face, and partitions each face clock into two actual half-face roots. Input control fields split at4SMs to preserve unique source-clock ownership. Body/core and one raw calendar clock are separate. Literal windows reserve all six clock entries; every data window cut<=0.60. Zero ordinary data/calendar stages added. Physical/native/typed grant still pending. f4hc (Claude H-SM 1815): host pin-flop row moved to a 7th clock entry clk_hcfg (own short CTS root like the W/E face roots, R~122/spread~12 there); zero edges added (ot_static_cmd_target_core_pc = core with clk_pin on the pin-flop block only). Die delta: one more writer clock entry pin (N face M5 x 70.62). r5 (Claude H-SM 1817): square 265.68 x 265.68 outline, faces W host+rdata_lo / S rdata_hi / E wq_lo / N wq_hi, <= 6 pins/um, recipe 4 (no pin hold pads, hold_budget die), clk_hcfg host entry kept.",
+ "reroute_reason": {
+  "kind": "slot_change",
+  "source": "results/hbm_sm_attention_1015/hsm_1815/writer_c8e94d78d_native.json",
+  "cell": "ot_hbm_sm_vm_wr_q_t_faces4",
+  "fix": "c8e94d78d native capture 213.2 (late core-root leaf -> 6 hold BUFx2 per host input); f4e5 (hold ECO goal 5) NEEDS_RTL TT -37.85/FF -27.04; f4hc (clk_hcfg entry) NEEDS_RTL TT -46.54/FF -9.57 in the 2.7:1 pin-limited outline. r5 = square 265.68 x 265.68, each half-bus on its own full face (<= 6 pins/um), recipe 4."
+ }
+}

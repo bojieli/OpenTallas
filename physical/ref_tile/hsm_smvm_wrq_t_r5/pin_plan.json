@@ -1,0 +1,93 @@
+{
+ "schema": "opentallas.writer_r5_square_pins.v1",
+ "outline_um": [
+  265.68,
+  265.68
+ ],
+ "windows": [
+  {
+   "window": "W_host",
+   "face": "W",
+   "data_bits": 334,
+   "span_um": [
+    4.332,
+    68.012
+   ],
+   "clock_notches_um": [
+    30.012,
+    42.012
+   ],
+   "usable_um": 59.36,
+   "pins_per_um": 5.627,
+   "cut": 0.5402
+  },
+  {
+   "window": "W_lo",
+   "face": "W",
+   "data_bits": 1084,
+   "span_um": [
+    70.172,
+    261.348
+   ],
+   "clock_notches_um": [
+    165.612,
+    194.412
+   ],
+   "usable_um": 186.856,
+   "pins_per_um": 5.801,
+   "cut": 0.5569
+  },
+  {
+   "window": "S_hi",
+   "face": "S",
+   "data_bits": 1084,
+   "span_um": [
+    4.332,
+    261.348
+   ],
+   "clock_notches_um": [
+    132.012
+   ],
+   "usable_um": 254.856,
+   "pins_per_um": 4.253,
+   "cut": 0.4083
+  },
+  {
+   "window": "E_lo",
+   "face": "E",
+   "data_bits": 1124,
+   "span_um": [
+    4.332,
+    261.348
+   ],
+   "clock_notches_um": [
+    132.012
+   ],
+   "usable_um": 254.856,
+   "pins_per_um": 4.41,
+   "cut": 0.4234
+  },
+  {
+   "window": "N_hi",
+   "face": "N",
+   "data_bits": 1124,
+   "span_um": [
+    4.332,
+    261.348
+   ],
+   "clock_notches_um": [
+    132.012
+   ],
+   "usable_um": 254.856,
+   "pins_per_um": 4.41,
+   "cut": 0.4234
+  }
+ ],
+ "face_bits": {
+  "W": 1422,
+  "S": 1085,
+  "E": 1125,
+  "N": 1125
+ },
+ "pinfile_sha256": "d46fae143b7e71437971db1355875b894e3a06094762cec98a728969105dd99b"
+}
