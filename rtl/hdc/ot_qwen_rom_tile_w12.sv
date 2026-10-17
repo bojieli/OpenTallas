@@ -498,11 +498,24 @@ module ot_qwen_rom_tile_logic_w12 #(
                         initial $fatal(1,"RPH3 differs from fixed single-ROM leaf");
                     end
                     for (genvar col=0;col<2;col=col+1) begin : g_col
+                        //: REGROOT 2 (Q-ROMPARENT-2 10-17, regional reset): one kept relay flop per ROM leaf drives only that
+                        //: leaf's rst_n (asynchronous assert, release one edge later), clocked on the gutter root of the
+                        //: leaf's column half (W: ck_reg[0] rsw / ck_reg[1] rnw; E: ck_rqr[0] rs / ck_rqr[1] rn), so the
+                        //: tile reset net ends at 10 relay clears beside the leaves instead of 10 macro pins across 1.17 mm.
+                        wire rst_leaf;
+                        if (REGROOT >= 2 && LOCAL_ROOTS != 0 && CHILD_CLOCKS != 0) begin : g_lrr
+                            wire ck_lr = (col == 0) ? ((b < SB) ? ck_reg[0] : ck_reg[1]) : ((b < SB) ? ck_rqr[0] : ck_rqr[1]);
+                            (* keep *) reg rq;
+                            always @(posedge ck_lr or negedge rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                            assign rst_leaf = rq;
+                        end else begin : g_lrn
+                            assign rst_leaf = rst_n;
+                        end
                         ot_qwen_tile_romleaf
 `ifndef SYNTHESIS
                             #(.ROM_TILE(ROM_TILE),.ROM_BANK(b),.ROM_COL(col))
 `endif
-                            u_leaf (.clk(CHILD_CLOCKS ? (col==0 ? ck_rpair[b] : ck_pair1[b]) : clk),.rst_n(rst_n),.ce_d(ce_pre[b]),
+                            u_leaf (.clk(CHILD_CLOCKS ? (col==0 ? ck_rpair[b] : ck_pair1[b]) : clk),.rst_n(rst_leaf),.ce_d(ce_pre[b]),
                                 .any_d((b<SB)?any_s:any_n),.ad_d((b<SB)?adm_pre:adm_pre_n),.r_q(r_q[512*col +: 512]));
                     end
                     assign rom_req_m[13*b +: 13]=13'd0;

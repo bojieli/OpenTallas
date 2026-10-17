@@ -10,6 +10,10 @@
 module tb_qwen_romleaf_parent_native_rr;
 integer MUT=0;
 initial begin if ($value$plusargs("MUT=%d", MUT)) begin end end
+// MUT26/27 (Q-ROMPARENT-2 c1r8, REGROOT 2): hold one ROM leaf reset relay low -- W-south leaf (bank 0, col 0) /
+// E-north leaf (bank 4, col 1) never leaves reset; the parent must miss that leaf's words.
+initial begin #0.2; if (MUT==26) force dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].g_lrr.rq = 1'b0;
+ if (MUT==27) force dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].g_lrr.rq = 1'b0; end
 reg ck=0,rs=0; always #0.5 ck=~ck;
 reg [507:0] tap=0;
 reg [513:0] na=0,nb=0;
