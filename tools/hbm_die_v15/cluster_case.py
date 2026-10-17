@@ -304,8 +304,9 @@ set_clock_uncertainty -hold 25 [all_clocks]
 if {{[llength [get_ports -quiet rst_*]]}} {{ set_false_path -from [get_ports rst_*] }}
 foreach {{c k}} {{tt max ff min}} {{
   report_checks -corner $c -path_delay $k -group_path_count 20 -format full_clock_expanded -fields {{slew cap input_pins nets fanout}} > /work/out/worst_${{c}}_${{k}}.rpt
-  report_wns -corner $c > /work/out/wns_${{c}}_${{k}}.rpt
-  report_tns -corner $c >> /work/out/wns_${{c}}_${{k}}.rpt
+  # pinned OpenSTA: report_wns / report_tns take -min / -max, not -corner (STA-0562 ended d4fR1 after GRT)
+  report_wns -$k > /work/out/wns_${{c}}_${{k}}.rpt
+  report_tns -$k >> /work/out/wns_${{c}}_${{k}}.rpt
 }}
 {'report_clock_skew -setup > /work/out/clock_skew.rpt' + chr(10) + 'report_clock_skew -hold >> /work/out/clock_skew.rpt' if a.cts != 'none' else '# --cts none: no clock tree, no skew report (STA-0562 on ideal clocks)'}
 puts OT_DONE
