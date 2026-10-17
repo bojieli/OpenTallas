@@ -18,7 +18,15 @@
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "inst": "u_tts",
    "at": [
-    86.4,
+    108.0,
+    23.76
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "inst": "u_ttg",
+   "at": [
+    108.0,
     86.4
    ]
   },
@@ -26,16 +34,8 @@
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "inst": "u_ttn",
    "at": [
-    86.4,
-    216.0
-   ]
-  },
-  {
-   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_ttg",
-   "at": [
-    172.8,
-    151.2
+    108.0,
+    149.04
    ]
   }
  ],
@@ -53,18 +53,16 @@
   ],
   "N": [
    "vi_n",
-   "vo_n"
+   "vo_n",
+   "ck",
+   "rst_n",
+   "tap_k",
+   "sink_k"
   ],
   "W": [
    "cw_v",
    "cw_a",
    "cw_d"
-  ],
-  "E": [
-   "ck",
-   "rst_n",
-   "tap_k",
-   "sink_k"
   ]
  },
  "recipe": 4,
@@ -147,14 +145,18 @@
   "reason": "Source-registered (dsdv_seq_host header): every leaf input lands in a flop at the pin and every output is a flop; recipe pin_regs would add a second unpriced stage on every leaf seam."
  },
  "outline": {
-  "w": 345.6,
-  "h": 345.6
+  "w": 226.8,
+  "h": 213.84
  },
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true
  },
  "keep_pin_regs": true,
+ "std_area_um2": 1332,
+ "fill_reason": {
+  "pin_bound": "S face 1,296 pin bits (rung 552 + L1 seam tw 194 / cn,cs,cg 255 / cf 267 / dn 27 / vf 1) at <= 6/um needs W >= 216 um; W 226.8 = 5.7/um. H = 3 SRAMs (one per read port) stacked on the E side with 20 um channels (abutment impossible: 41.064 um macro height vs the 2.16 um placement grid) + 20 um pin-face clearances. Std 1,332 um2 (gate 10607befb) + SRAM 11,682 um2."
+ },
  "children": [],
  "inter": []
 }

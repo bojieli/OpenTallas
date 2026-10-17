@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  345.6,
-  345.6
+  226.8,
+  213.84
  ],
  "core": [
   2.16,
   2.16,
-  343.44,
-  343.44
+  224.64000000000001,
+  211.68
  ],
  "why": "spec outline",
- "std_area_um2": null,
+ "std_area_um2": 1332,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -42,18 +42,16 @@
   ],
   "N": [
    "vi_n",
-   "vo_n"
+   "vo_n",
+   "ck",
+   "rst_n",
+   "tap_k",
+   "sink_k"
   ],
   "W": [
    "cw_v",
    "cw_a",
    "cw_d"
-  ],
-  "E": [
-   "ck",
-   "rst_n",
-   "tap_k",
-   "sink_k"
   ]
  },
  "clock_port": "ck",
@@ -64,7 +62,20 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": "u_tts",
    "idx": 0,
-   "x": 86.4,
+   "x": 108.0,
+   "y": 23.76,
+   "w": 94.824,
+   "h": 41.064,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "inst": "u_ttg",
+   "idx": 0,
+   "x": 108.0,
    "y": 86.4,
    "w": 94.824,
    "h": 41.064,
@@ -77,28 +88,22 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": "u_ttn",
    "idx": 0,
-   "x": 86.4,
-   "y": 216.0,
-   "w": 94.824,
-   "h": 41.064,
-   "orient": "R0",
-   "offtrack": 0
-  },
-  {
-   "kind": "macro",
-   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
-   "master": "ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_ttg",
-   "idx": 0,
-   "x": 172.8,
-   "y": 151.2,
+   "x": 108.0,
+   "y": 149.04,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
    "offtrack": 0
   }
  ],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 28% outside 45%-60% (std 1332 + macro 11682 in core 46614 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
  "referenced": [
   "rtl/lib/ot_rst_relay.sv",
   "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv",

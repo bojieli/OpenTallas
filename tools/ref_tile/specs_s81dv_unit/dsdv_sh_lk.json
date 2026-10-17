@@ -136,12 +136,16 @@
     "reason": "Source-registered (dsdv_seq_host header): every leaf input lands in a flop at the pin and every output is a flop; recipe pin_regs would add a second unpriced stage on every leaf seam."
   },
   "outline": {
-    "w": 345.6,
-    "h": 345.6
+    "w": 216.0,
+    "h": 172.8
   },
   "io_flop_at_pins": {
     "cols": 4,
     "allow_none": true
   },
-  "keep_pin_regs": true
+  "keep_pin_regs": true,
+  "std_area_um2": 16781,
+  "fill_reason": {
+    "pin_bound": "N face 1,207 pin bits (rung hop 552 + L1 seam pw 36 / pl 9 / tw 194 / cf 267 / ks 53 / kd 54 / j 33 / jd 2 / sq 6 / vf 1) at <= 6/um needs W >= 201 um; W 216 = 5.6/um (S 552 = 2.6/um, W 596 / H 172.8 = 3.4/um, E 447 = 2.6/um). Std 16,781 um2 (gate 10607befb) -> util 45%."
+  }
 }
