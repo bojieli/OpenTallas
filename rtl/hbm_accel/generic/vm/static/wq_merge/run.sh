@@ -2,7 +2,7 @@
 # usage: run.sh OUTDIR [LEAF_MUT] [DONE_LAT]
 set -euo pipefail
 cd "$(dirname "$0")/../../../../../.."
-O=${1:?out dir}; M=${2:-0}; L=${3:-4}
+O=${1:?out dir}; M=${2:-0}; L=${3:-5}
 mkdir -p "$O"
 S=rtl/hbm_accel/generic/vm/static
 src=($S/wq_merge/hfd_vms_wq2_merge.sv $S/wq_merge/tb_vms_wq2_merge.sv

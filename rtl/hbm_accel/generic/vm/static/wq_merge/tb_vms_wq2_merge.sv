@@ -7,7 +7,7 @@
 // (2 -> 1, k>=3 -> k-1, compiler table), wq_done1/wq_done2 arrive one edge later.  Every other bank output must be
 // identical on every edge: rr0..rr4, eg, pr, dq_done, kq/xq/xq2_done, wq_done0, status.
 module tb_vms_wq2_merge;
-    parameter integer N = 6000, SEED = 1, LEAF_MUT = 0, DONE_LAT = 4;
+    parameter integer N = 6000, SEED = 1, LEAF_MUT = 0, DONE_LAT = 5;
     reg clk = 0; always #5 clk = ~clk;
     reg rst_n = 0;
     localparam integer SID = 2, BID = 5;

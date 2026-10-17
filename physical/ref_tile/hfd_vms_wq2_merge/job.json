@@ -21,7 +21,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; hfd_vms_wq2_merge #(.DONE_LAT(4)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; hfd_vms_wq2_merge #(.DONE_LAT(5)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -31,7 +31,7 @@
    },
    {
     "name": "q2_ref_vs_merge_q0",
-    "cmd": "bash rtl/hbm_accel/generic/vm/static/wq_merge/run.sh {RUN}/bench/pos 0 4",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/wq_merge/run.sh {RUN}/bench/pos 0 5",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -39,7 +39,7 @@
    },
    {
     "name": "mutant_done_late",
-    "cmd": "bash rtl/hbm_accel/generic/vm/static/wq_merge/run.sh {RUN}/bench/mut1 1 4",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/wq_merge/run.sh {RUN}/bench/mut1 1 5",
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -47,7 +47,7 @@
    },
    {
     "name": "mutant_wq2_bit_drop",
-    "cmd": "bash rtl/hbm_accel/generic/vm/static/wq_merge/run.sh {RUN}/bench/mut2 2 4",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/wq_merge/run.sh {RUN}/bench/mut2 2 5",
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 4,
