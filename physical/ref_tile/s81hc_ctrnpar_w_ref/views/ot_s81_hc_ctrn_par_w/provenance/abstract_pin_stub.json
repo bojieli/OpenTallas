@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_s81_hc_ctrn_par_w.lef",
+    "sha256": "e38b66310dc7733459c859c5c8cd5aad14e31c908d4ecd7666698bb7002a4b5f"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctrnpar_w_ref-a5-f068a2c9c/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctrnpar_w_ref-a5-f068a2c9c/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctrnpar_w_ref-a5-f068a2c9c/record/views/ot_s81_hc_ctrn_par_w/provenance/raw/ot_s81_hc_ctrn_par_w.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctrnpar_w_ref-a5-f068a2c9c/record/views/ot_s81_hc_ctrn_par_w/provenance/ot_s81_hc_ctrn_par_w.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 83 OBS rects moved into 83 pins: a_par[11], a_par[13], a_par[15], a_par[17], a_par[19], a_par[1], a_par[21], a_par[23], a_par[25], a_par[27], a_par[29], a_par[31]; pockets: 136 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctrnpar_w_ref-a5-f068a2c9c/record/views/ot_s81_hc_ctrn_par_w/provenance/ot_s81_hc_ctrn_par_w.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_s81_hc_ctrn_par_w 144.18 x 25.92: PG M5 VDD 26 stripes (94% spread, 100% cov) / VSS 26 stripes (94% spread, 100% cov); strap M6; face pins 1025 blocked-above 0 blocked-same 0; clock clk insertion 120 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "ot_s81_hc_ctrn_par_w",
+      "W": 144.18,
+      "H": 25.92,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 26,
+            "dir": "V",
+            "spread": 0.936,
+            "coverage": 1.0,
+            "shapes_on_top": 26
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 26,
+            "dir": "V",
+            "spread": 0.936,
+            "coverage": 1.0,
+            "shapes_on_top": 26
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 1025,
+        "blocked_above": 0,
+        "covered_below": 23,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 120.19,
+          "min_ps": 97.0
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 136
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "ot_s81_hc_ctrn_par_w.lef",
+    "sha256": "e6d0a4333ef525dfdb4f21371de0fbe875e31f5f87710db094ed9c10a776b678"
+  }
+}
