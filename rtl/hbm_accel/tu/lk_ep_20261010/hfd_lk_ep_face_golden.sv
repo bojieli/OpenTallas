@@ -12,7 +12,9 @@
 // ([link] 2026-10-10: 304cd8c93 preroute had f_lk -> t_f_q -1,013 ps (the pin flop fanned out to the 32-deep queue) and
 // r_flit -> f_lk -504 ps).  rst_n reaches a 2-flop synchroniser; the wrapper's registers use a replicated copy.
 // +1 edge each way on the die credit loop (TXQ 32 covers it: tb_lk_rate).
-module hfd_lk_ep_face_golden (
+// SESS_STAGES / STAT_STAGES (HBMA-LKEP 10-17): register edges on session (pin -> core) and {fault, locked}
+// (core -> pin).  Defaults 1 / 1 are the original wrapper; the flop-first face successor is 2 / 2 (+1 edge each).
+module hfd_lk_ep_face_golden #(parameter integer SESS_STAGES=1, STAT_STAGES=1) (
     input  wire [0:0]    clk,                         // die record: 1-bit buses (pins clk[0] / rst_n[0])
     inout  wire [1119:0] f_lk,
     inout  wire [973:0]  phy,
@@ -24,7 +26,9 @@ module hfd_lk_ep_face_golden (
     always @(posedge clk) rw <= {2{rs[1]}};
     wire fault, locked;
     reg [23:0] session;                                   // pin register (changes only under the coordinated reset)
-    always @(posedge clk) session <= f_lk[1117:1094];
+    reg [23:0] session_x;
+    always @(posedge clk) session_x <= f_lk[1117:1094];
+    always @(posedge clk) session <= (SESS_STAGES > 1) ? session_x : f_lk[1117:1094];
     // el1011-hbm-lkep: centre-channel floorplan -> the core sits ~900 um from the east-face pins: pin flop + 2 relay stages
     // each way (every hop < ~350 um).  +1 edge on t_v / r_cr, +2 on r_v / t_cr: the die credit loop grows by 3 edges
     // (TXQ 32 covers it; tb_lk_rate FS models the face stages).
@@ -39,12 +43,14 @@ module hfd_lk_ep_face_golden (
     ot_hbm_lk_ep #(.NS(3), .LW(487), .TXQ(32), .FCR(256)) u (.clk(clk), .rst_n(rst_n), .session(session),
         .t_v(t_v_s), .t_flit(t_f_s), .t_cr(t_cr), .r_v(r_v), .r_flit(r_flit), .r_cr(r_cr_s),
         .x_tx(x_tx), .x_rx(phy[973:487]), .fault(fault), .locked(locked));
-    reg            r_v_o, t_cr_o, fault_q, locked_q, r_v_m1, r_v_m2, t_cr_m1, t_cr_m2;
+    reg            r_v_o, t_cr_o, fault_q, locked_q, fault_x, locked_x, r_v_m1, r_v_m2, t_cr_m1, t_cr_m2;
     reg  [544:0]   r_flit_o, r_flit_m1, r_flit_m2;
-    always @(posedge clk or negedge rw[1]) if (!rw[1]) begin r_v_o <= 1'b0; t_cr_o <= 1'b0; fault_q <= 1'b0; locked_q <= 1'b0;
+    always @(posedge clk or negedge rw[1]) if (!rw[1]) begin r_v_o <= 1'b0; t_cr_o <= 1'b0; fault_q <= 1'b0; locked_q <= 1'b0; fault_x <= 1'b0; locked_x <= 1'b0;
                                                              r_v_m1 <= 1'b0; r_v_m2 <= 1'b0; t_cr_m1 <= 1'b0; t_cr_m2 <= 1'b0; end
                                            else begin r_v_m1 <= r_v; r_v_m2 <= r_v_m1; r_v_o <= r_v_m2; t_cr_m1 <= t_cr; t_cr_m2 <= t_cr_m1;
-                                                      t_cr_o <= t_cr_m2; fault_q <= fault; locked_q <= locked; end
+                                                      t_cr_o <= t_cr_m2; fault_x <= fault; locked_x <= locked;
+                                                      fault_q <= (STAT_STAGES > 1) ? fault_x : fault;
+                                                      locked_q <= (STAT_STAGES > 1) ? locked_x : locked; end
     always @(posedge clk) begin r_flit_m1 <= r_flit; r_flit_m2 <= r_flit_m1; r_flit_o <= r_flit_m2; end
     assign f_lk[547] = r_v_o;
     assign f_lk[1092:548] = r_flit_o;

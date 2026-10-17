@@ -9,8 +9,14 @@ module hfd_lk_ep_face #(parameter integer MUT_FACE=0)(input wire clk, input wire
     (* keep *) reg [1:0] rw;                              // [0] input-side registers, [1] output-side registers
     always @(posedge clk) rw <= {2{rs[1]}};
 
-    reg [23:0] session;                                   // pin register (changes only under the coordinated reset)
-    always @(posedge clk) session <= f_lk_rx[570:547];
+    // HBMA-LKEP 10-17 (native audit FAIL: capture 204.7 ps on session/fault/locked, launch 218.3 on core_session):
+    // session and {fault, locked} crossed the 58 um tile through ONE flop, so the placer put it mid-way and both the
+    // capture and the launch pin carried the crossing wire.  Each now has a capture pin flop at its input face and a
+    // separate launch pin flop at its output face (as t_flit / r_flit already have).  +1 edge on session (E -> core)
+    // and +1 edge on {fault, locked} (core -> E); session changes only under the coordinated reset and the status pair
+    // is a level, so no schedule depends on either edge count (the golden models it with SESS_STAGES/STAT_STAGES = 2).
+    reg [23:0] session_i, session;                        // E capture pin register -> W launch pin register
+    always @(posedge clk) begin session_i <= f_lk_rx[570:547]; session <= session_i; end
     // el1011-hbm-lkep: centre-channel floorplan -> the core sits ~900 um from the east-face pins: pin flop + 2 relay stages
     // each way (every hop < ~350 um).  +1 edge on t_v / r_cr, +2 on r_v / t_cr: the die credit loop grows by 3 edges
     // (TXQ 32 covers it; tb_lk_rate FS models the face stages).
@@ -22,12 +28,13 @@ module hfd_lk_ep_face #(parameter integer MUT_FACE=0)(input wire clk, input wire
 
 
 
-    reg            r_v_o, t_cr_o, fault_q, locked_q, r_v_m1, r_v_m2, t_cr_m1, t_cr_m2;
+    reg            r_v_o, t_cr_o, fault_q, locked_q, fault_i, locked_i, r_v_m1, r_v_m2, t_cr_m1, t_cr_m2;
     reg  [544:0]   r_flit_o, r_flit_m1, r_flit_m2;
     always @(posedge clk or negedge rw[1]) if (!rw[1]) begin r_v_o <= 1'b0; t_cr_o <= 1'b0; fault_q <= 1'b0; locked_q <= 1'b0;
+                                                             fault_i <= 1'b0; locked_i <= 1'b0;
                                                              r_v_m1 <= 1'b0; r_v_m2 <= 1'b0; t_cr_m1 <= 1'b0; t_cr_m2 <= 1'b0; end
                                            else begin r_v_m1 <= r_v; r_v_m2 <= r_v_m1; r_v_o <= r_v_m2; t_cr_m1 <= t_cr; t_cr_m2 <= t_cr_m1;
-                                                      t_cr_o <= t_cr_m2; fault_q <= fault; locked_q <= locked; end
+                                                      t_cr_o <= t_cr_m2; fault_i <= fault; locked_i <= locked; fault_q <= fault_i; locked_q <= locked_i; end
     always @(posedge clk) begin r_flit_m1 <= r_flit; r_flit_m2 <= r_flit_m1; r_flit_o <= r_flit_m2; end
     assign f_lk_tx[0] = r_v_o;
     assign f_lk_tx[545:1] = r_flit_o ^ (MUT_FACE != 0 && r_v_o ? 545'd1 : 545'd0);

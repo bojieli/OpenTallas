@@ -22,7 +22,7 @@ module tb_lkep_face;
  assign n_bus[1117:1094]=session;assign g_bus[1117:1094]=session;
  assign n_phy[973:487]=rx;assign g_phy[973:487]=rx;
  hfd_lk_ep #(.HARD_CLOCKS(1),.MUT_FACE(MUT_FACE)) n(.clk(clk),.clk_face(clk),.clk_sub({12{clk}}),.clk_tx_shared(clk),.clk_rx_shared(clk),.clk_status_shared(clk),.rst_n(rst_n),.f_lk(n_bus),.phy(n_phy));
- hfd_lk_ep_face_golden g(.clk(clk),.rst_n(rst_n),.f_lk(g_bus),.phy(g_phy));
+ hfd_lk_ep_face_golden #(.SESS_STAGES(2),.STAT_STAGES(2)) g(.clk(clk),.rst_n(rst_n),.f_lk(g_bus),.phy(g_phy));
  integer count=0;reg[31:0] prng=32'h34ea0013;
  task automatic step_random;begin
   prng^=prng<<13;prng^=prng>>17;prng^=prng<<5;
