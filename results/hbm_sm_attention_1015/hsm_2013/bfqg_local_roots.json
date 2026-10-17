@@ -586,10 +586,14 @@
     },
     "control": {
       "root": "clk_ctrl",
-      "capture_state_flops": 25,
-      "reset_relay_flops": 3
+      "capture_state_flops": 23,
+      "reset_relay_flops": 3,
+      "total_root_flops": 26
     },
     "other": "clk captures2048 data+512 reduction+8select FF; clk_n captures1024 c_d; clk_s launches256 rwq"
   },
-  "die_grant_ack": "H-DIE confirmed same-slot additive internal clocks and zero cycles; no inherited old11-clock proof or die-level ABI waiver."
+  "die_grant_ack": "H-DIE confirmed same-slot additive internal clocks and zero cycles; no inherited old11-clock proof or die-level ABI waiver.",
+  "expected_total_flops": 3890,
+  "predecessor_measured_flops": 3876,
+  "count_note": "clk_ctrl: wa7 + ra7 + wce1 + r_ce8 =23 control capture FF, plus reset relay3 =26. Earlier25-sink prose incorrectly retained two masks from predecessor; source RTL has23 controls. Exact new total3890 is a source count pending synthesis, not a measured native clock census."
 }
