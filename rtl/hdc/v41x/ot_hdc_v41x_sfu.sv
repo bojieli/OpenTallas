@@ -1,3 +1,11 @@
+// OT_SU_SYNC_RST: local reset relays drive synchronous arithmetic consumers.
+`ifndef OT_SU_ARST
+`ifdef OT_SU_SYNC_RST
+`define OT_SU_ARST(r)
+`else
+`define OT_SU_ARST(r) or negedge r
+`endif
+`endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
 // Special-function pipes of the V4.1 vector stream unit (ot_hdc_v41x_vec), at
@@ -751,20 +759,20 @@ module ot_hdc_v41x_ins #(
                 if (canbe(p)) begin : g_ld
                     wire ld = v && has(p, sel);
                     assign cl[p] = ld && nxv;
-                    always @(posedge clk or negedge rst_n)
+                    always @(posedge clk `OT_SU_ARST(rst_n))
                         if (!rst_n) rv[p] <= 1'b0; else rv[p] <= ld || nxv;
                     if (RESET_DATA != 0) begin : g_rd
-                        always @(posedge clk or negedge rst_n)
+                        always @(posedge clk `OT_SU_ARST(rst_n))
                             if (!rst_n) r[p] <= {W{1'b0}}; else r[p] <= ld ? d : nx;
                     end else begin : g_nd
                         always @(posedge clk) r[p] <= ld ? d : nx;
                     end
                 end else begin : g_sh
                     assign cl[p] = 1'b0;
-                    always @(posedge clk or negedge rst_n)
+                    always @(posedge clk `OT_SU_ARST(rst_n))
                         if (!rst_n) rv[p] <= 1'b0; else rv[p] <= nxv;
                     if (RESET_DATA != 0) begin : g_rd
-                        always @(posedge clk or negedge rst_n)
+                        always @(posedge clk `OT_SU_ARST(rst_n))
                             if (!rst_n) r[p] <= {W{1'b0}}; else r[p] <= nx;
                     end else begin : g_nd
                         always @(posedge clk) r[p] <= nx;

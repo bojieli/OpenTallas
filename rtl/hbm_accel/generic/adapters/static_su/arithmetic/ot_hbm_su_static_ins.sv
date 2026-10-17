@@ -1,3 +1,11 @@
+// OT_SU_SYNC_RST: local reset relays drive synchronous arithmetic consumers.
+`ifndef OT_SU_ARST
+`ifdef OT_SU_SYNC_RST
+`define OT_SU_ARST(r)
+`else
+`define OT_SU_ARST(r) or negedge r
+`endif
+`endif
 `timescale 1ns/1ps
 module ot_hbm_su_static_ins #(
     parameter integer W = 32,
@@ -8,6 +16,9 @@ module ot_hbm_su_static_ins #(
 ) (
     input wire [3:0] clk,
     input  wire         rst_n,
+`ifdef OT_SU_SYNC_RST
+    input wire [3:0] rst_regions_n,
+`endif
     input  wire         v,
     input  wire [K-1:0] sel,                 // one-hot depth choice
     input  wire [W-1:0] d,
@@ -40,26 +51,31 @@ module ot_hbm_su_static_ins #(
             assign cl[DMAX+1] = 1'b0;
             genvar p;
             for (p = 1; p <= DMAX; p = p + 1) begin : g_s
+`ifdef OT_SU_SYNC_RST
+                wire local_rst_n = rst_regions_n[(p-1)/48];
+`else
+                wire local_rst_n = rst_n;
+`endif
                 wire [W-1:0] nx  = (p == DMAX) ? {W{1'b0}} : r[(p == DMAX) ? p : p + 1];
                 wire         nxv = (p == DMAX) ? 1'b0 : rv[(p == DMAX) ? p : p + 1];
                 if (canbe(p)) begin : g_ld
                     wire ld = v && has(p, sel);
                     assign cl[p] = ld && nxv;
-                    always @(posedge clk[(p-1)/48] or negedge rst_n)
-                        if (!rst_n) rv[p] <= 1'b0; else rv[p] <= ld || nxv;
+                    always @(posedge clk[(p-1)/48] `OT_SU_ARST(local_rst_n))
+                        if (!local_rst_n) rv[p] <= 1'b0; else rv[p] <= ld || nxv;
                     if (RESET_DATA != 0) begin : g_rd
-                        always @(posedge clk[(p-1)/48] or negedge rst_n)
-                            if (!rst_n) r[p] <= {W{1'b0}}; else r[p] <= ld ? d : nx;
+                        always @(posedge clk[(p-1)/48] `OT_SU_ARST(local_rst_n))
+                            if (!local_rst_n) r[p] <= {W{1'b0}}; else r[p] <= ld ? d : nx;
                     end else begin : g_nd
                         always @(posedge clk[(p-1)/48]) r[p] <= ld ? d : nx;
                     end
                 end else begin : g_sh
                     assign cl[p] = 1'b0;
-                    always @(posedge clk[(p-1)/48] or negedge rst_n)
-                        if (!rst_n) rv[p] <= 1'b0; else rv[p] <= nxv;
+                    always @(posedge clk[(p-1)/48] `OT_SU_ARST(local_rst_n))
+                        if (!local_rst_n) rv[p] <= 1'b0; else rv[p] <= nxv;
                     if (RESET_DATA != 0) begin : g_rd
-                        always @(posedge clk[(p-1)/48] or negedge rst_n)
-                            if (!rst_n) r[p] <= {W{1'b0}}; else r[p] <= nx;
+                        always @(posedge clk[(p-1)/48] `OT_SU_ARST(local_rst_n))
+                            if (!local_rst_n) r[p] <= {W{1'b0}}; else r[p] <= nx;
                     end else begin : g_nd
                         always @(posedge clk[(p-1)/48]) r[p] <= nx;
                     end

@@ -1,3 +1,11 @@
+// OT_SU_SYNC_RST: local reset relays drive synchronous arithmetic consumers.
+`ifndef OT_SU_ARST
+`ifdef OT_SU_SYNC_RST
+`define OT_SU_ARST(r)
+`else
+`define OT_SU_ARST(r) or negedge r
+`endif
+`endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
 // Rebalanced copy of rtl/proto/ot_fp32_mul_rne_pipe.sv for the decode core.
@@ -70,7 +78,7 @@ module ot_hdc_fp32_mul_pipe (
     reg        s1_sign;
     reg [23:0] s1_a, s1_b;
     reg signed [11:0] s1_power;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_SU_ARST(rst_n)) begin
         if (!rst_n) begin
             s1_v <= 1'b0; s1_byp <= 1'b0; s1_err <= E_NONE; s1_sign <= 1'b0;
             s1_a <= 24'd0; s1_b <= 24'd0; s1_power <= 12'sd0;
@@ -108,7 +116,7 @@ module ot_hdc_fp32_mul_pipe (
     reg [1:0]  s2_err;
     reg [31:0] s2_pp0, s2_pp1, s2_pp2;
     reg [24:0] s2_d47, s2_d46;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_SU_ARST(rst_n)) begin
         if (!rst_n) begin
             s2_v <= 1'b0; s2_byp <= 1'b0; s2_sign <= 1'b0; s2_err <= E_NONE;
             s2_pp0 <= 32'd0; s2_pp1 <= 32'd0; s2_pp2 <= 32'd0; s2_d47 <= 25'd0; s2_d46 <= 25'd0;
@@ -130,7 +138,7 @@ module ot_hdc_fp32_mul_pipe (
     reg [1:0]  s3_err;
     reg [47:0] s3_product;
     reg signed [11:0] s3_floor_q, s3_shift_q;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_SU_ARST(rst_n)) begin
         if (!rst_n) begin
             s3_v <= 1'b0; s3_byp <= 1'b0; s3_sign <= 1'b0; s3_is_sub_q <= 1'b0;
             s3_err <= E_NONE; s3_product <= 48'd0;
@@ -198,7 +206,7 @@ module ot_hdc_fp32_mul_pipe (
     reg [1:0]  s4_err;
     reg [24:0] s4_mant;
     reg signed [11:0] s4_floor;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_SU_ARST(rst_n)) begin
         if (!rst_n) begin
             s4_v <= 1'b0; s4_byp <= 1'b0; s4_sign <= 1'b0; s4_is_sub <= 1'b0;
             s4_err <= E_NONE; s4_mant <= 25'd0; s4_floor <= 12'sd0;
@@ -225,7 +233,7 @@ module ot_hdc_fp32_mul_pipe (
                                   : {s4_sign, 8'h00, s4_mant[22:0]})
                   : {s4_sign, s5_field, s5_man[22:0]};
 
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_SU_ARST(rst_n)) begin
         if (!rst_n) begin
             y <= 32'd0; err <= E_NONE; valid_out <= 1'b0;
         end else begin

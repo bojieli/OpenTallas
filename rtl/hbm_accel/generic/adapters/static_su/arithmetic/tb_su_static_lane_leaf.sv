@@ -69,7 +69,20 @@ module tb_su_static_lane_leaf;
   if(!$value$plusargs("DIR=%s",dir))$fatal(1,"DIR missing");
   mut_addr=$test$plusargs("MUT_ADDR");mut_data=$test$plusargs("MUT_DATA");mut_phase=$test$plusargs("MUT_PHASE");
   $readmemh({dir,"/seed.mem"},seed);$readmemh({dir,"/gold.mem"},gold);$readmemh({dir,"/control.mem"},programme);
-  repeat(4)@(negedge clk);rst_n=1;seed_v=1;
+  repeat(4)@(negedge clk);rst_n=1;
+`ifdef OT_SU_SYNC_RST
+  if($test$plusargs("MUT_RESET")) force dut.u_native.u_lane.rst_stage_n[0]=1'b1;
+  for(integer r=1;r<=3;r=r+1)begin
+   @(posedge clk);#1;
+   if(dut.u_native.u_lane.rst_stage_n !== (r==3?8'hff:8'h00) ||
+      dut.u_native.u_lane.rst_insert_n !== (r==3?4'hf:4'h0) ||
+      dut.u_native.rst_command_n !== (r==3) || dut.u_native.rst_out_n !== (r==3))
+    $fatal(1,"SU_LANE FAIL reset release edge=%0d (expected exactly 3)",r);
+  end
+  @(negedge clk);
+  $display("SU_LANE SYNC_RESET release_edges=3 first_accept_edge=4 steady_schedule_added_edges=0");
+`endif
+  seed_v=1;
   for(integer r=0;r<512;r=r+1)begin seed_row=9'(r);@(negedge clk);end
   seed_v=0;repeat(5)@(negedge clk);
   for(integer j=0;j<NOPS;j=j+1)begin
