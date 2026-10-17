@@ -5215,6 +5215,9 @@ def buses_r8(m):
             bus(f'pqra_{j}', 'rom_a', 12, [(hub['pq'].name, f'ra{j}'), (f'pqrom{j}', 'a')])
             bus(f'pqrc_{j}', 'rom_ce', 1, [(hub['pq'].name, f'rc{j}'), (f'pqrom{j}', 'ce')])
             bus(f'pqrq_{j}', 'rom_q', (64 if j < 2 else 48) if RTL_BIND else 48, [(f'pqrom{j}', 'rd'), (hub['pq'].name, f'rq{j}')])
+    if GATHER_FLATTEN:
+        from s81 import gather_flatten
+        gather_flatten.apply(sys.modules[__name__], m, GATHER_FLATTEN)
     if HOP_FIX and HOP_PLAN:
         _hop_fix(m, P)
     if RELAY_PROGRESS:
@@ -5232,7 +5235,7 @@ def buses_r8(m):
     by = {it.name: it for it in m['insts']}
     dom = defaultdict(list)
     rst = defaultdict(list)
-    for it in m['insts']:
+    for it in m['insts'] + ([m['hub']['gather']] if GATHER_FLATTEN else []):
         if it.kind == 'cfifo':
             dom['stream'].append((it.name, 'ck'))
             rst['stream'].append((it.name, 'rst'))
@@ -5343,6 +5346,8 @@ def buses_r8(m):
             at[k_] = len(merged)
             merged.append(b)
     m['buses'] = merged
+    if GATHER_FLATTEN:
+        gather_flatten.finish(sys.modules[__name__], m)
     return m
 
 
@@ -5532,6 +5537,7 @@ STATIC_COLLECTIVE_MASTER = 'dsfd_sp_collective_static_c'
 STATIC_COLLECTIVE_RTL = 'rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv'
 STATIC_COLLECTIVE = False       # --static-collective: swap the hub collective master (RTL must be on the source tree)
 VM_NATIVE_CANDIDATE = False    # explicit4/2/1 source construction; default remains actual RTL0/0/0
+GATHER_FLATTEN = None          # source-pinned214-child plan, requires qualified real views
 PIN_OVERRIDES = None            # --pin-overrides (S-DIE r11 10-15): adopted GEO-S face re-assignments, see load_pin_overrides
 PIN_OVERRIDES_APPLIED = {}
 
@@ -10103,6 +10109,7 @@ def die_options(ap):
     ap.add_argument('--static-seams', action='store_true', help='S-DIE r11 2026-10-15: static VM<->collective seam (t_vm 2204, t_crq 15, t_crs 513), drop vm.t_collective/tcs credit and hc_s.y_rdy, add collective.t_hc_tag -> hc_s.y_tag')
     ap.add_argument('--static-collective', action='store_true', help='swap the hub collective to dsfd_sp_collective_static_c (needs its RTL in the tree)')
     ap.add_argument('--vm-native-candidate', action='store_true', help='explicit source candidate dsfd_sp_vm READ_PIPE4/CAP_PIPE2/WSCATTER_PIPE1; requires actual wrapper parameters; no physical/native qualification inheritance')
+    ap.add_argument('--gather-flatten', type=Path, help='actual wires-only gather child plan; requires qualified real views for every child and --hop-fix')
     ap.add_argument('--mix4-slot', help='X,Y,W,H um: Engram MIX4 home reservation (screen)')
     ap.add_argument('--lkck-wire', action='store_true', help='link forwarded-clock feedthrough as die-top wire (no dsfd_lkck)')
     ap.add_argument('--stn70-split', action='store_true', help='dsfd_stn*_70xK -> K x dsfd_stn*_70x1')
@@ -10144,6 +10151,8 @@ def apply_options(a):
     VM_NATIVE_CANDIDATE = bool(getattr(a, 'vm_native_candidate', False))
     if VM_NATIVE_CANDIDATE:
         vm_native_candidate_params()
+    global GATHER_FLATTEN
+    GATHER_FLATTEN = getattr(a, 'gather_flatten', None)
     global SUHC_STATIC_ISSUE, BF_X2_STATIC, LSW, BF_STATIC_PROG, BF_X2_PAIR
     BF_STATIC_PROG = bool(getattr(a, 'bf_static_prog', False))
     SUHC_STATIC_ISSUE = bool(getattr(a, 'suhc_static_issue', False))
