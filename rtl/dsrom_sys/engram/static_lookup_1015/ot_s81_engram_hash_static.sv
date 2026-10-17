@@ -98,7 +98,7 @@ module ot_s81_engram_hash_static (
             add64cs = {lo[32] ? h1 : h0, lo[31:0]};
         end
     endfunction
-    genvar p, c, j;
+    genvar p, c, j, k;
     generate
         for (p = 0; p < NP; p = p + 1) begin : g_prod
             localparam integer ND = 1 << ENG_DIG_W;              // entries per product table
@@ -150,9 +150,20 @@ module ot_s81_engram_hash_static (
             localparam [RW-1:0] Q = ENG_PRIME[RW*c +: RW];
             wire [63:0] x = roll_all[64*(L_*ENG_N + S_) +: 64];
             wire [RW-1:0] r [0:15];
+            // st7: the 16-entry residue select is an explicit one-hot AND-OR, NOT TD[RW*x +: RW].  The indexed form is a
+            // $bmux of constants: yosys MEMORY_BMUX2ROM turned it into a ROM read and MEMORY_DFF merged the roll_h
+            // address register into that read port, so MEMORY_MAP re-emitted roll_h AFTER the table (7,833 flops named
+            // r[..]): the seed -> column half-cycle hop (roll_n negedge -> roll_h posedge) then carried the table decode
+            // (st6 route TT -57.9 ps on 2,355 roll_n -> g_col.r endpoints).  Same value for every x (bit-identical).
             for (j = 0; j < 16; j = j + 1) begin : g_dig
                 localparam [RW*16-1:0] TD = RES[RW*16*(c*16 + j) +: RW*16];   // this digit's 16 residues
-                assign r[j] = TD[RW*x[4*j +: 4] +: RW];
+                wire [3:0] nib = x[4*j +: 4];
+                wire [RW-1:0] term [0:15];
+                for (k = 0; k < 16; k = k + 1) begin : g_k
+                    assign term[k] = {RW{nib == k}} & TD[RW*k +: RW];
+                end
+                assign r[j] = term[0] | term[1] | term[2] | term[3] | term[4] | term[5] | term[6] | term[7]
+                            | term[8] | term[9] | term[10] | term[11] | term[12] | term[13] | term[14] | term[15];
             end
             reg [RW:0]   s1 [0:7];
             reg [RW+1:0] s2 [0:3];
