@@ -115,19 +115,19 @@ module ot_hgi_sfu_programme_store_r9 #(
  wire p_sv=rb[2] && io470;                       // r7c: rb(stripe) & io[470]
  ot_hgi_sfu_store_leaf3_r9 #(.PAGE_AW(PAGE_AW)) u_leaf_p0(.clk(clk),.rst_a(ra_leaf[0]),.in_we(p_we[2:0]),.in_addr(h_addr[0]),
   .in_data(h_data[0]),.in_start_v(p_sv),.in_start_base(p_start_base),.in_legal(p_legal),.in_span(p_span),
-  .in_loops(p_start_loops),.in_loops_one(p_lone),.out_cal(cal0),.out_v(v0),.out_active(a0),.out_done(d0),
+  .in_loops(p_start_loops),.in_loops_one(p_lone),.out_cal0(cal0[0+:222]),.out_cal1(cal0[222+:222]),.out_cal2(cal0[444+:222]),.out_v(v0),.out_active(a0),.out_done(d0),
   .out_fault(f0),.out_ord(o0),.out_mm(m0));
  ot_hgi_sfu_store_leaf3_r9 #(.PAGE_AW(PAGE_AW)) u_leaf_p1(.clk(clk),.rst_a(ra_leaf[1]),.in_we(p_we[5:3]),.in_addr(h_addr[1]),
   .in_data(h_data[1]),.in_start_v(p_sv),.in_start_base(p_start_base),.in_legal(p_legal),.in_span(p_span),
-  .in_loops(p_start_loops),.in_loops_one(p_lone),.out_cal(cal1),.out_v(v1),.out_active(a1),.out_done(d1),
+  .in_loops(p_start_loops),.in_loops_one(p_lone),.out_cal0(cal1[0+:222]),.out_cal1(cal1[222+:222]),.out_cal2(cal1[444+:222]),.out_v(v1),.out_active(a1),.out_done(d1),
   .out_fault(f1),.out_ord(o1),.out_mm(m1));
  ot_hgi_sfu_store_leaf2_r9 #(.PAGE_AW(PAGE_AW)) u_leaf_p2(.clk(clk),.rst_a(ra_leaf[2]),.in_we(p_we[7:6]),.in_addr(h_addr[2]),
   .in_data(h_data[2]),.in_start_v(p_sv),.in_start_base(p_start_base),.in_legal(p_legal),.in_span(p_span),
-  .in_loops(p_start_loops),.in_loops_one(p_lone),.out_cal(cal2),.out_v(v2),.out_active(a2),.out_done(d2),
+  .in_loops(p_start_loops),.in_loops_one(p_lone),.out_cal0(cal2[0+:222]),.out_cal1(cal2[222+:222]),.out_v(v2),.out_active(a2),.out_done(d2),
   .out_fault(f2),.out_ord(o2),.out_mm(m2));
  ot_hgi_sfu_store_leaf3_r9 #(.PAGE_AW(PAGE_AW)) u_leaf_io(.clk(clk),.rst_a(ra_leaf[3]),.in_we(io_we),.in_addr(hio_addr),
   .in_data(hio_data),.in_start_v(io_sv),.in_start_base(p_io_start_base),.in_legal(io_legal),.in_span(io_span),
-  .in_loops(p_io_start_loops),.in_loops_one(io_lone),.out_cal(calio),.out_v(vio),.out_active(aio),.out_done(dio),
+  .in_loops(p_io_start_loops),.in_loops_one(io_lone),.out_cal0(calio[0+:222]),.out_cal1(calio[222+:222]),.out_cal2(calio[444+:222]),.out_v(vio),.out_active(aio),.out_done(dio),
   .out_fault(fio),.out_ord(oio),.out_mm(mio));
  // ---- narrow-stripe W check (programme stripe 7: W=188; IO stripe 2: W=27)
  wire nb7_now=|cal2[222+188+:34];

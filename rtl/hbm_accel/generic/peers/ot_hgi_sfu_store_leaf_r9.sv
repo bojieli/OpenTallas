@@ -154,14 +154,14 @@ module ot_hgi_sfu_store_leaf3_r9 #(parameter integer PAGE_AW=1, AW=10+PAGE_AW)(
  input wire [AW:0] in_span,
  input wire [15:0] in_loops,
  input wire in_loops_one,
- output wire [665:0] out_cal,
+ output wire [221:0] out_cal0,out_cal1,out_cal2,      // one port per stripe: one W-face pin range per macro row
  output wire [2:0] out_v,out_active,out_done,out_fault,
  output wire [31:0] out_ord,
  output wire [2:1] out_mm
 );
  ot_hgi_sfu_store_leaf_r9 #(.NS(3),.PAGE_AW(PAGE_AW)) u_leaf(.clk(clk),.rst_a(rst_a),.in_we(in_we),.in_addr(in_addr),
   .in_data(in_data),.in_start_v(in_start_v),.in_start_base(in_start_base),.in_legal(in_legal),.in_span(in_span),
-  .in_loops(in_loops),.in_loops_one(in_loops_one),.out_cal(out_cal),.out_v(out_v),.out_active(out_active),
+  .in_loops(in_loops),.in_loops_one(in_loops_one),.out_cal({out_cal2,out_cal1,out_cal0}),.out_v(out_v),.out_active(out_active),
   .out_done(out_done),.out_fault(out_fault),.out_ord(out_ord),.out_mm(out_mm));
 endmodule
 
@@ -176,14 +176,14 @@ module ot_hgi_sfu_store_leaf2_r9 #(parameter integer PAGE_AW=1, AW=10+PAGE_AW)(
  input wire [AW:0] in_span,
  input wire [15:0] in_loops,
  input wire in_loops_one,
- output wire [443:0] out_cal,
+ output wire [221:0] out_cal0,out_cal1,
  output wire [1:0] out_v,out_active,out_done,out_fault,
  output wire [31:0] out_ord,
  output wire [1:1] out_mm
 );
  ot_hgi_sfu_store_leaf_r9 #(.NS(2),.PAGE_AW(PAGE_AW)) u_leaf(.clk(clk),.rst_a(rst_a),.in_we(in_we),.in_addr(in_addr),
   .in_data(in_data),.in_start_v(in_start_v),.in_start_base(in_start_base),.in_legal(in_legal),.in_span(in_span),
-  .in_loops(in_loops),.in_loops_one(in_loops_one),.out_cal(out_cal),.out_v(out_v),.out_active(out_active),
+  .in_loops(in_loops),.in_loops_one(in_loops_one),.out_cal({out_cal1,out_cal0}),.out_v(out_v),.out_active(out_active),
   .out_done(out_done),.out_fault(out_fault),.out_ord(out_ord),.out_mm(out_mm));
 endmodule
 `default_nettype wire
