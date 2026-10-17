@@ -1,0 +1,4 @@
+[122000] %Fatal: tb_s81_engram_hash_static_equiv.sv:43: Assertion failed in tb_s81_engram_hash_static_equiv: EQUIV residue mismatch cyc121 col5
+%Error: /srv/opentallas-scratch/claude/static14-st8-bench-0b8eab454/rtl/dsrom_sys/engram/static_lookup_1015/tb_s81_engram_hash_static_equiv.sv:43: Verilog $stop
+Aborting...
+tools/s81_ph/run_engram_hash_static_equiv.sh: line 9: 3849866 Aborted                    (core dumped) "$out/obj/sim" +MUT="$3"

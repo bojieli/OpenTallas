@@ -1,0 +1,4 @@
+tools/s81_ph/run_engram_lkp_static14.sh: line 19: 3874232 Aborted                    (core dumped) "$out/obj/sim" +MUT="$3" > "$out/mutant_$3.log" 2>&1
+[161000] %Fatal: tb_s81_engram_lkp_static14.sv:63: Assertion failed in tb_s81_engram_lkp_static14: STATIC beat mismatch cycle160 beat2
+%Error: /srv/opentallas-scratch/claude/static14-st8-bench-0b8eab454/rtl/dsrom_sys/engram/static_lookup_1015/tb_s81_engram_lkp_static14.sv:63: Verilog $stop
+Aborting...

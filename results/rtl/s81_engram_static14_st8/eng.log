@@ -1,0 +1,19 @@
+STATIC PASS windows16 requests96 outputs768 statuses96 all8straps fixed_return_age128
+- /srv/opentallas-scratch/claude/static14-st8-bench-0b8eab454/rtl/dsrom_sys/engram/static_lookup_1015/tb_s81_engram_static.sv:77: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 4us; walltime 0.042 s; speed 96.343 us/s
+- Verilator: cpu 0.043 s on 1 threads; alloced 1020 MB
+tools/s81_ph/run_engram_static_1015.sh: line 13: 3866505 Aborted                    (core dumped) "$out/obj/sim" +MUT="$mut" > "$out/mutant_$mut.log" 2>&1
+STATIC mutant 1 rejected
+tools/s81_ph/run_engram_static_1015.sh: line 13: 3866789 Aborted                    (core dumped) "$out/obj/sim" +MUT="$mut" > "$out/mutant_$mut.log" 2>&1
+STATIC mutant 2 rejected
+tools/s81_ph/run_engram_static_1015.sh: line 13: 3867172 Aborted                    (core dumped) "$out/obj/sim" +MUT="$mut" > "$out/mutant_$mut.log" 2>&1
+STATIC mutant 3 rejected
+tools/s81_ph/run_engram_static_1015.sh: line 13: 3867393 Aborted                    (core dumped) "$out/obj/sim" +MUT="$mut" > "$out/mutant_$mut.log" 2>&1
+STATIC mutant 4 rejected
+tools/s81_ph/run_engram_static_1015.sh: line 13: 3867713 Aborted                    (core dumped) "$out/obj/sim" +MUT="$mut" > "$out/mutant_$mut.log" 2>&1
+STATIC mutant 5 rejected
+tools/s81_ph/run_engram_static_1015.sh: line 13: 3867933 Aborted                    (core dumped) "$out/obj/sim" +MUT="$mut" > "$out/mutant_$mut.log" 2>&1
+STATIC mutant 6 rejected
+tools/s81_ph/run_engram_static_1015.sh: line 13: 3868463 Aborted                    (core dumped) "$out/obj/sim" +MUT="$mut" > "$out/mutant_$mut.log" 2>&1
+STATIC mutant 7 rejected
