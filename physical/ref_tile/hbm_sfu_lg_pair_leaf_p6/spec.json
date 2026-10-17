@@ -1,0 +1,117 @@
+{
+ "name": "hbm_sfu_lg_pair_leaf_p6",
+ "top": "ot_hgi_sfu_lg_pair_leaf",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {
+  "PIN_RST": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n"
+  ],
+  "W": [
+   "c_rq",
+   "c_wq",
+   "c_rr",
+   "c_w_done"
+  ],
+  "E": [
+   "lg_rq",
+   "lg_wq",
+   "lg_rr",
+   "lg_w_done"
+  ]
+ },
+ "outline": {
+  "w": 21.6,
+  "h": 237.6
+ },
+ "layer_cap": "M5",
+ "signal_max_layer": "M5",
+ "pg_layer": "M5",
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 4,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "io_tcl": "physical/hbm_sfu_pair_p6/io.tcl",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual RTL has one boundary register on every data bit in both directions (596 core-to-LG and516 LG-to-core) plus registered reset PIN_RST=1; adding wrapper flops would alter the fixed one-edge calendar."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "std_area_um2": 374,
+ "structural_change": "Existing SFU pair leaf, compact21.6x129.6 within216-square reservation; same1edge bothways and1112data FF. Reset captures once at N pin (coldinit2edges). Exact legal track-centred pins preserve face and bit order; actual PG and native audit required. Width43.2 CTS measured374um2/1113FF and only7.7%fill, LOOKED-at density exposed20um empty central strip; source-identical21.6width removes it, retains exactW/E bitcentres, clkN10.812 and reset11.004. No43.2route submitted. | p6 (H-SU/PIN 1840, 10-16): pin density 10.4 -> 5.2 pins/um (W/E 1112 pins at 0.192 um), outline height 129.6 -> 237.6; same RTL/order/faces.",
+ "job": {
+  "owner": "Claude:H-SU/PIN",
+  "branch": "claude/hsu-pin6-1840",
+  "tag": "p6",
+  "purpose": "SFU registered pair leaf re-pinned to <= 6 pins/um per face (coordinator HBM die audit 10-16 / H-DIE d4c band rule): W/E 1112 pins each at 0.192 um pitch (5.2/um, was 0.096 = 10.4/um), outline 21.6 x 237.6 (was 129.6). Same RTL, bit order, faces, benches.",
+  "record_to": "results/arch/hbm_su_f2_static_1014/sfu_pair_p6",
+  "views_to": "physical/ref_tile/hbm_sfu_lg_pair_leaf_p6/views",
+  "auto_merge": false,
+  "extra_paths": [
+   "physical/hbm_sfu_pair_p6",
+   "physical/common_flow/assigned_pin_exact.tcl",
+   "tools/hbm_static/sfu_pair_leaf_run.sh",
+   "rtl/test/hbm_accel/generic/tb_hgi_sfu_lg_pair_leaf.sv"
+  ],
+  "benches": [
+   {
+    "name": "leaf_exact",
+    "cmd": "bash tools/hbm_static/sfu_pair_leaf_run.sh {RUN}/bench/leaf",
+    "expect": "pass",
+    "pass_regex": "SFU_PAIR PASS",
+    "min_count_regex": "checks=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "leaf_mutant",
+    "cmd": "bash tools/hbm_static/sfu_pair_leaf_run.sh {RUN}/bench/mut +MUT_DATA",
+    "expect": "fail",
+    "fail_regex": "SFU_PAIR FAIL",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "slot_change_request": "coordinator HBM die audit 10-16 (H-ELEM a8f894a1644e6a104): pins <= 6/um per face; H-DIE d4c band rule (a847da73f3ce48781). 21.6x129.6 -> 21.6x237.6, W/E pitch 0.096 -> 0.192 um, same faces/bit order; new outline sent to H-DIE.",
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": "coordinator HBM die audit 10-16 (H-ELEM a8f894a1644e6a104): pins <= 6/um per face; H-DIE d4c band rule (a847da73f3ce48781). 21.6x129.6 -> 21.6x237.6, W/E pitch 0.096 -> 0.192 um, same faces/bit order; new outline sent to H-DIE."
+ }
+}

@@ -1,0 +1,285 @@
+{
+ "name": "hbm_host_static_ingress_p6",
+ "top": "ot_hbm_host_static_ingress",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 216,
+  "h": 216,
+  "exact": true
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "s_awvalid",
+   "s_awready",
+   "s_awaddr",
+   "s_wvalid",
+   "s_wready",
+   "s_wdata",
+   "s_wstrb",
+   "s_bvalid",
+   "s_bready",
+   "s_bresp",
+   "s_arvalid",
+   "s_arready",
+   "s_araddr",
+   "s_rvalid",
+   "s_rready",
+   "s_rdata"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "block_ready",
+   "program_active",
+   "program_fault"
+  ],
+  "S": [
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "inhold": true,
+ "outhold": true,
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "pin_min_tracks": 4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
+ },
+ "slot_change_request": "coordinator HBM die audit 10-16 (H-ELEM a8f894a1644e6a104): pins <= 6/um per face; H-DIE d4c band rule (a847da73f3ce48781). Same 216 square; pin windows x2.05 about each face centre at 0.192 um pitch; new windows sent to H-DIE.",
+ "job": {
+  "owner": "Claude:H-SU/PIN",
+  "branch": "claude/hsu-pin6-1840",
+  "tag": "p6",
+  "purpose": "Host static ingress re-pinned to <= 6 pins/um per face (coordinator HBM die audit 10-16 / H-DIE d4c rule): every face window widened x2.05 about its centre, pin_min_tracks 4 (0.192 um pitch, 5.1/um; was 0.096 = 10.4/um). Same 216 square, RTL, faces, port order, benches.",
+  "structural_change": "Remove deep ARdecode from raw pins with unconditional landing FF; unreset payload pinFF+resetvalid; isolate2FF reset boundary; added1input+1config edge, no runningprogramme cycle change",
+  "extra_paths": [
+   "rtl/hbm_accel/host_static_20261015",
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "results/arch/hbm_die_v15/host_ingress_pins_1319.json"
+  ],
+  "benches": [
+   {
+    "name": "full1024_calendar_exact",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_one.sh {RUN}/full1024_calendar_exact physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v 0 0 1024",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HBM_HOST_STATIC_PASS.*exact_calendar_beats=2048",
+    "min_count_regex": "exact_calendar_beats=(\\d+)"
+   },
+   {
+    "name": "payload_bit_mutant",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_one.sh {RUN}/payload_bit_mutant physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v 1 0 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "HOST_STATIC data/ordinal mismatch"
+   },
+   {
+    "name": "premature_launch_mutant",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_one.sh {RUN}/premature_launch_mutant physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v 2 0 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "HOST_STATIC wrong AXI response 0 a=f30"
+   },
+   {
+    "name": "unloaded_row_mutant",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_one.sh {RUN}/unloaded_row_mutant physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v 0 1 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "HOST_STATIC unloaded range falsely ready"
+   }
+  ],
+  "views_to": "physical/ref_tile/hbm_host_static_ingress_p6/views",
+  "record_to": "results/rtl/ref_tile/hbm_host_static_ingress_p6"
+ },
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_ranges": {
+  "clk": [
+   107.508,
+   107.705
+  ],
+  "rst_n": [
+   107.705,
+   107.902
+  ],
+  "block_ready": [
+   107.902,
+   108.098
+  ],
+  "program_active": [
+   108.098,
+   108.295
+  ],
+  "program_fault": [
+   108.295,
+   108.492
+  ],
+  "s_awvalid": [
+   97.766,
+   97.963
+  ],
+  "s_awready": [
+   97.963,
+   98.16
+  ],
+  "s_awaddr": [
+   98.16,
+   100.522
+  ],
+  "s_wvalid": [
+   100.522,
+   100.718
+  ],
+  "s_wready": [
+   100.718,
+   100.915
+  ],
+  "s_wdata": [
+   100.915,
+   107.213
+  ],
+  "s_wstrb": [
+   107.213,
+   108.0
+  ],
+  "s_bvalid": [
+   108.0,
+   108.197
+  ],
+  "s_bready": [
+   108.197,
+   108.394
+  ],
+  "s_bresp": [
+   108.394,
+   108.787
+  ],
+  "s_arvalid": [
+   108.787,
+   108.984
+  ],
+  "s_arready": [
+   108.984,
+   109.181
+  ],
+  "s_araddr": [
+   109.181,
+   111.542
+  ],
+  "s_rvalid": [
+   111.542,
+   111.739
+  ],
+  "s_rready": [
+   111.739,
+   111.936
+  ],
+  "s_rdata": [
+   111.936,
+   118.234
+  ],
+  "cfg_v": [
+   76.414,
+   76.61
+  ],
+  "cfg_target": [
+   76.61,
+   78.185
+  ],
+  "cfg_addr": [
+   78.185,
+   80.546
+  ],
+  "cfg_data": [
+   80.546,
+   130.927
+  ],
+  "desc_v": [
+   130.927,
+   131.124
+  ],
+  "desc_base": [
+   131.124,
+   133.486
+  ],
+  "desc_limit": [
+   133.486,
+   136.044
+  ],
+  "desc_loops": [
+   136.044,
+   139.193
+  ],
+  "launch_v": [
+   139.193,
+   139.39
+  ],
+  "fault": [
+   139.39,
+   139.586
+  ]
+ },
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": "coordinator HBM die audit 10-16 (H-ELEM a8f894a1644e6a104): pins <= 6/um per face; H-DIE d4c band rule (a847da73f3ce48781). Same 216 square; pin windows x2.05 about each face centre at 0.192 um pitch; new windows sent to H-DIE."
+ },
+ "structural_change": " | p6 (H-SU/PIN 1840, 10-16): pin density 10.4 -> 5.1 pins/um (windows x2.05, pin_min_tracks 4), same outline/RTL."
+}
