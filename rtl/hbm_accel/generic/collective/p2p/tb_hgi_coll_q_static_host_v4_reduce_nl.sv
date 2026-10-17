@@ -67,7 +67,7 @@ module tb_hgi_coll_q_static_host_v4_reduce_nl;
   ar=0;ar[10]=1;pack_ar(MUT==2?18+D:17+D,ar);
   ar=0;ar[11]=1;ar[12+:4]=0;ar[21]=1;ar[23+:8]=8'd7;ar[31+:16]=16'd13;pack_ar(26+D,ar);
   ar=0;ar[22]=1;pack_ar(27+D,ar);
-  code[28+D][8]=1;
+  code[28+D][EL+6]=1; // reduce producer capture slot follows the link count
   code[29+D][10+EL]=1;code[29+D][26+EL*4+:4]=(MUT==1?4'(EL+5):4'(EL+6));
   if(MUT==4)code[20+D][350+NL]=1;   // p_lk_wr_v[NL]: an absent link lane
   repeat(4)@(negedge clk);rst_n=1;

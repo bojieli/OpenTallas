@@ -17,7 +17,8 @@ src=("$p/ot_hfd_coll_q_static_v4.sv" "$p/ot_hfd_coll_q3_static_host_v4.sv" "$p/o
  "$ROOT/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v"
  "$ROOT/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v")
 fail=0
-for tc in "ot_hfd_coll_q3_static_host_v4 3" "ot_hfd_coll_q3_static_host_v4 2" "ot_hfd_coll_q2_static_host_v4 2" "ot_hfd_coll_q2_static_host_v4 1"; do
+CASES=${LINT_CASES:-"ot_hfd_coll_q3_static_host_v4:3 ot_hfd_coll_q3_static_host_v4:2 ot_hfd_coll_q2_static_host_v4:2 ot_hfd_coll_q2_static_host_v4:1"}
+for tc in $CASES; do tc=${tc/:/ }
  set -- $tc; q=0; [ $1 = ot_hfd_coll_q2_static_host_v4 ] && q=2
  if "$V" --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module "$1" -GNLINK=$2 -GQID=$q "${src[@]}" > /tmp/coll_nlink_$1_$2.log 2>&1 \
     && ! grep -q '%Error' /tmp/coll_nlink_$1_$2.log; then echo "COLL_NLINK_LINT $1 NLINK=$2 ok"
