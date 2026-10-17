@@ -107,8 +107,9 @@
  "inter": [],
  "structural_change": "IDX-SCORE leaf (H-NETLIST/IDX-SCORE 2026-10-17): one chunk of ot_hbm_idx_score_static as an identical leaf of the 4x4 scorer cluster. Retimed core ot_hbm_idx_chunk_rt (cycle-exact vs the 32-hslice systolic chunk; 590k -> 215k flops measured, 0.166 mm2 std) + registered W->E forward (W pin reg, E pin reg) + 4-slot sum bus. 17 clock roots: clk (pin/glue regs) + clk_pair[0..15] (head-pair regions, ~13.4k sinks each); roots meet only at register-to-register seams (results/arch/hbm_idx_score_rt_1017/README.md).",
  "job": {
-  "owner": "Claude:H-NETLIST/IDX-SCORE",
-  "purpose": "IDX-SCORE leaf master (16 instances in the scorer cluster x 2 scorers)"
+  "owner": "Claude HBM-C lane 1017 (for H-NETLIST/IDX-SCORE)",
+  "purpose": "IDX-SCORE leaf master (16 instances in the scorer cluster x 2 scorers)",
+  "branch": "claude/hbmc-1017"
  },
  "clock_entry_domains": {
   "core": {
@@ -127,7 +128,8 @@
     "w_key",
     "w_aux",
     "w_bus",
-    "hb"
+    "hb",
+    "rst_n"
    ],
    "outputs": [
     "e_qv",
