@@ -1,5 +1,15 @@
 `timescale 1ns/1ps
 `default_nettype none
+// OT_SU_SYNC_RST (H-SU pgslice, 2026-10-16 owner standard: regional SYNC reset trees, no async-clear fanout): when
+// defined, every reset in this file is synchronous to its own clock (the regional rst_n arrives registered from
+// ot_rst_relay in ot_hbm_su_static_pgslice); undefined = the previous asynchronous form.
+`ifndef OT_SU_ARST
+`ifdef OT_SU_SYNC_RST
+`define OT_SU_ARST(r)
+`else
+`define OT_SU_ARST(r) or negedge r
+`endif
+`endif
 // Static SU VM interface of one quarter: NPG independently placeable port groups, one per VM bank pair.
 // ADOPTED floorplan T_band2__npg4_s5 (GLOBAL-FP-H, main 952c5933c; coordinator 09:35 PT 10-15): the 8-bank slice sits in
 // the 1.8 mm VM band between SM rows 2/3, so EVERY quadrant incl. SW/SE uses 4 bank-pair groups (NPG 4,
@@ -39,7 +49,7 @@ module ot_hbm_su_static_vm_bank_leaf #(parameter integer QID=0,B=0,READ_RETURN=1
  assign su_rr=lg_rr;
  assign su_w_done=lg_w_done;
  integer i;
- always @(posedge clk or negedge rst_n)
+ always @(posedge clk `OT_SU_ARST(rst_n))
   if(!rst_n)begin
    fault<=0;for(i=0;i<=READ_RETURN;i=i+1)rcal[i]<=0;for(i=0;i<=WRITE_RETURN;i=i+1)wcal[i]<=0;
   end else begin

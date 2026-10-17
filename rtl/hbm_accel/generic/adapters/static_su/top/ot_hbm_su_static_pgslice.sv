@@ -1,5 +1,15 @@
 `timescale 1ns/1ps
 `default_nettype none
+// OT_SU_SYNC_RST (H-SU pgslice, 2026-10-16 owner standard: regional SYNC reset trees, no async-clear fanout): when
+// defined, every reset in this file is synchronous to its own clock (the regional rst_n arrives registered from
+// ot_rst_relay in ot_hbm_su_static_pgslice); undefined = the previous asynchronous form.
+`ifndef OT_SU_ARST
+`ifdef OT_SU_SYNC_RST
+`define OT_SU_ARST(r)
+`else
+`define OT_SU_ARST(r) or negedge r
+`endif
+`endif
 // ---------------------------------------------------------------------------------------------------------------------
 // Static SU port-group SLICE (H-ELEM-B 2026-10-15): the physical sub-block of quarter QID that sits at VM bank pair
 // {2G, 2G+1} of slice QID (adopted floorplan T_band2__npg4_s5: blocks su_<q>0..3 in the VM band, NPG 4 everywhere).
@@ -83,6 +93,22 @@ module ot_hbm_su_static_pgslice #(
  input wire [1023:0] dw_d,
  output reg fault
 );
+ // ------------------------------------------------------------------ regional reset (OT_SU_SYNC_RST)
+ // rst_n drives only ot_rst_relay (2 sync + 1 tree stage, registered per region): regions 0..7 = the 8 bank rows
+ // (4 pinned banks each), region 8 = the slice control (fill/drain/RF copy/fault, clk_ctl), region 9 = SIDE + the two
+ // VM bank leaves. Release is 3 edges after the port (the host / compiler starts >= 4 edges after rst_n release).
+ // Lanes keep their die-regional rst_lane_n / rst_bcast_n roots. Undefined: every region = rst_n (previous form).
+ localparam integer SYNC_RST=
+`ifdef OT_SU_SYNC_RST
+  1;
+ wire [9:0] rst_r;
+ ot_rst_relay #(.REGIONS(10),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk_ctl),.rst_n_in(rst_n),.rst_n(rst_r));
+`else
+  0;
+ wire [9:0] rst_r={10{rst_n}};
+`endif
+ wire [7:0] rst_b=rst_r[7:0]; wire rst_c=rst_r[8]; wire rst_s=rst_r[9];
+
  // Serial fill destination delay and stream leaf tap return are different
  // contracts at3:4. n+12 response is sampled into fill at n+13; pinned store
  // macros commit n+15. Stream leaf retains its native10/7 edge contract.
@@ -100,8 +126,14 @@ module ot_hbm_su_static_pgslice #(
  for(genvar b=0;b<4;b=b+1)begin:g_bcast
   reg [1741:0] ctl [0:7];
   for(genvar k=0;k<8;k=k+1)begin:g_replica
+`ifdef OT_SU_SYNC_RST
+   // the 8 control replicas are a pure data stage (no reset on data): the compiler drives NOP control (0) on every
+   // edge before its first op, so the replicas hold 0 from the first edge after the clock starts
+   always @(posedge clk_bcast[b]) ctl[k]<=control;
+`else
    always @(posedge clk_bcast[b] or negedge rst_bcast_n[b])
     if(!rst_bcast_n[b])ctl[k]<=0; else ctl[k]<=control;
+`endif
   end
  end
  for(genvar n=0;n<32;n=n+1)begin:g_lane
@@ -157,7 +189,7 @@ module ot_hbm_su_static_pgslice #(
   end
  end
  if(QID==0&&G==0)begin:g_side_pipe
-  ot_hbm_su_static_side u_side(.clk(clk_side),.rst_n(rst_n),.v(side_v),.fn(side_fn),.x(side_x),.fn_out(side_fn_out),
+  ot_hbm_su_static_side u_side(.clk(clk_side),.rst_n(rst_s),.v(side_v),.fn(side_fn),.x(side_x),.fn_out(side_fn_out),
    .y(side_y),.fault(side_fault));
  end else begin:g_no_side
   // no FULL lane in this slice: the side result input of its SFU/LIGHT lanes is not used by the lane
@@ -183,7 +215,7 @@ module ot_hbm_su_static_pgslice #(
    assign bridge_fault[h]=1'b0;
   end
   ot_hbm_su_static_vm_bank_leaf #(.QID(QID),.B(2*G+h),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN)) u_leaf(
-   .clk(pg_clk),.rst_n(rst_n),.su_rq(leaf_rq[h*17+:17]),.su_wq(leaf_wq[h*281+:281]),.su_rr(leaf_rr[h*257+:257]),
+   .clk(pg_clk),.rst_n(rst_s),.su_rq(leaf_rq[h*17+:17]),.su_wq(leaf_wq[h*281+:281]),.su_rr(leaf_rr[h*257+:257]),
    .su_w_done(leaf_done[h]),.lg_rq(lg_rq[h*17+:17]),.lg_wq(lg_wq[h*281+:281]),.lg_rr(lg_rr[h*257+:257]),
    .lg_w_done(lg_w_done[h]),.fault(leaf_fault[h]));
  end
@@ -198,8 +230,8 @@ module ot_hbm_su_static_pgslice #(
   assign su_rq[h*17+:17]={c[29],c[28:13]};
   assign cmd_far[h]=(c[29]&&c[11:9]!=3'(2*G+h))||(w[38]&&!w[37]&&w[35:33]!=3'(2*G+h));
   integer k;
-  always @(posedge clk_ctl or negedge rst_n)
-   if(!rst_n)begin for(k=0;k<=RR;k=k+1)fd[h][k]<=11'd0; fr_v[h]<=1'b0; end
+  always @(posedge clk_ctl `OT_SU_ARST(rst_c))
+   if(!rst_c)begin for(k=0;k<=RR;k=k+1)fd[h][k]<=11'd0; fr_v[h]<=1'b0; end
    else begin
     fd[h][0]<={c[29],c[12],c[8:0]};for(k=1;k<=RR;k=k+1)fd[h][k]<=fd[h][k-1];
     fr_v[h]<=fd[h][FD][10];
@@ -274,7 +306,9 @@ module ot_hbm_su_static_pgslice #(
    for(p2=0;p2<4;p2=p2+1)if(rv[p2]&&(rd_addr[(n*4+p2)*24+:7]!=7'(L)||rd_addr[(n*4+p2)*24+14+:2]!=2'(QID)))idf=1;
   end
   assign st_id_fault[n]=idf;
-  ot_hbm_su_static_pinned_bank #(.READERS(6),.RB(9)) u_bank(.clk(clk_bank[n]),.clk_rd(clk_bank[n]),.clk_ws(clk_bank[n]),.clk_macro(clk_bank_macro[n*6+:6]),.rst_n(rst_n),.read_v(rv),.read_addr(ra),
+  // OT_SU_SYNC_RST: the bank is the CLOSED physical wrapper's configuration (bank6_clock7 r12: RD_ROOT 1, WS_ROOT 2,
+  // PIN_RST 1 = rst_n a registered W-face data input) fed from its row region's relay copy
+  ot_hbm_su_static_pinned_bank #(.READERS(6),.RB(9),.RD_ROOT(SYNC_RST),.WS_ROOT(2*SYNC_RST),.PIN_RST(SYNC_RST)) u_bank(.clk(clk_bank[n]),.clk_rd(clk_bank[n]),.clk_ws(clk_bank[n]),.clk_macro(clk_bank_macro[n*6+:6]),.rst_n(rst_b[n/4]),.read_v(rv),.read_addr(ra),
    .read_data(q),.read_return(),.write_v(lw|fw|dwn),.write_addr(fw?fr_row[H]:dwn?dwr:{la[17:16],la[13:7]}),
    .write_data(fw?fr_dat[H][K*32+:32]:dwn?dwd:ldat));
  end
@@ -287,8 +321,8 @@ module ot_hbm_su_static_pgslice #(
    rf_bword_l<=rf_bword; rf_dsec_l<=rf_dsec;
    for(vb=0;vb<4;vb=vb+1)rf_badr_l[vb*8+:8]<=rf_bcmd[vb*9+:8];
   end
-  always @(posedge clk_ctl or negedge rst_n)
-   if(!rst_n)rf_bv_l<=4'd0;
+  always @(posedge clk_ctl `OT_SU_ARST(rst_c))
+   if(!rst_c)rf_bv_l<=4'd0;
    else for(vb=0;vb<4;vb=vb+1)rf_bv_l[vb]<=rf_bcmd[vb*9+8];
   wire [4*9-1:0] rf_bcmd_l={rf_bv_l[3],rf_badr_l[24+:8],rf_bv_l[2],rf_badr_l[16+:8],rf_bv_l[1],rf_badr_l[8+:8],rf_bv_l[0],rf_badr_l[0+:8]};
   assign rf_bword_u=rf_bword_l; assign rf_bcmd_u=rf_bcmd_l; assign rf_dsec_u=rf_dsec_l;
@@ -320,8 +354,8 @@ module ot_hbm_su_static_pgslice #(
   wire [38:0] w=vmw_cmd[h*39+:39];
   assign rf_drain_bad[h]=w[38]&&w[37]&&!(G==0&&h==0);
   integer k;
-  always @(posedge clk_ctl or negedge rst_n)
-   if(!rst_n)begin for(k=0;k<3;k=k+1)dd[h][k]<=27'd0; end
+  always @(posedge clk_ctl `OT_SU_ARST(rst_c))
+   if(!rst_c)begin for(k=0;k<3;k=k+1)dd[h][k]<=27'd0; end
    else begin dd[h][0]<={w[38],w[37],w[36],w[23:0]};dd[h][1]<=dd[h][0];dd[h][2]<=dd[h][1]; end
   wire hi=dd[h][2][24]^((MUT==2)?1'b1:1'b0);
   reg [255:0] sel; integer kk;
@@ -330,8 +364,8 @@ module ot_hbm_su_static_pgslice #(
    if(dd[h][2][25])sel=rf_dsec_u;
   end
   reg wq_v; reg [279:0] wq_p;
-  always @(posedge clk_ctl or negedge rst_n)
-   if(!rst_n)wq_v<=1'b0; else wq_v<=dd[h][2][26];
+  always @(posedge clk_ctl `OT_SU_ARST(rst_c))
+   if(!rst_c)wq_v<=1'b0; else wq_v<=dd[h][2][26];
   always @(posedge clk_ctl)wq_p<={dd[h][2][23:8],sel,dd[h][2][7:0]};
   assign su_wq[h*281+:281]={wq_v,wq_p};
  end
@@ -344,8 +378,8 @@ module ot_hbm_su_static_pgslice #(
  wire red_bad=mine&&ext&&!ro_v[rn];
  always @(posedge clk_ctl)slice_x<=ro_x[rn*32+:32];
  // ------------------------------------------------------------------ sticky fault
- always @(posedge clk_ctl or negedge rst_n)
-  if(!rst_n)fault<=1'b0;
+ always @(posedge clk_ctl `OT_SU_ARST(rst_c))
+  if(!rst_c)fault<=1'b0;
   else if((|l_fault)||(|l_coll)||(|leaf_fault)||(|bridge_fault)||(|st_conflict)||(|st_id_fault)||(|cmd_far)||(|rf_src_bad)||
           (|rf_drain_bad)||red_bad||side_fault||(|st_inj_drain)||ij_bad)fault<=1'b1;
 endmodule
