@@ -406,7 +406,7 @@ SM_SIDE = {'ot_hbm3e_phy_rc_e8p5', 'ot_hbm_accel_smh_attn', 'ot_hbm_svc_pc_ctrl_
            'ot_hbm_svc_pc_ctrl_leaf_cfg_h8', 'ot_hbm_svc_sm_group', 'ot_hbm_svc_sm_group_id', 'ot_hbm_svc_sm_xcal_t',
            'ot_hbm_svc_stack_fault', 'ot_hbm_svc_vm_kshare', 'ot_hbm_svc_vmdel_lane', 'ot_hbm_svc_wb_kport',
            'ot_hbm_svc_wbw_copy', 'ot_hbm_sm_vm_wr_q_t', 'ot_hgi_sm_xload_cl2_bdring', 'ot_hgi_sm_xload_cl2_bfq',
-           'ot_hgi_sm_xload_cl2_ctlw', 'ot_hgi_sm_xload_cl2_ctl', 'ot_hgi_sm_xload_xq_pegress', 'ot_hbm_xp_aq_tree13_fmt',
+           'ot_hgi_sm_xload_cl2_ctlw', 'ot_hgi_sm_xload_cl2_ctl', 'ot_hgi_sm_xload_cl2_bfqg', 'ot_hgi_sm_xload_xq_pegress', 'ot_hbm_xp_aq_tree13_fmt',
            'ot_static_cmd_target', 'ot_hgi_dma_back_static_vp4_banks_cp'}
 
 
