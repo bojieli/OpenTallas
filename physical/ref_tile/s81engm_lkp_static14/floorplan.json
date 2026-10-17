@@ -43,7 +43,8 @@
    "st_bad",
    "ck_hash",
    "ck_rows",
-   "ck_seed"
+   "ck_seed",
+   "ck_n"
   ],
   "S": [
    "hq_v",
@@ -53,7 +54,8 @@
    "hr_slot",
    "hr_tag",
    "hr_idx",
-   "hr_d"
+   "hr_d",
+   "ck_s"
   ],
   "W": [
    "ck",
@@ -78,7 +80,9 @@
   "ck_rows[3]",
   "ck_rows[4]",
   "ck_rows[5]",
-  "ck_seed"
+  "ck_seed",
+  "ck_n",
+  "ck_s"
  ],
  "blocks": [],
  "findings": [],

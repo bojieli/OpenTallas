@@ -675,3 +675,5 @@ place_pin -pin_name {ck_rows[3]} -layer M5 -location {161.484 215.958} -force_to
 place_pin -pin_name {ck_rows[4]} -layer M5 -location {161.964 215.958} -force_to_die_boundary
 place_pin -pin_name {ck_rows[5]} -layer M5 -location {162.444 215.958} -force_to_die_boundary
 place_pin -pin_name {ck_seed} -layer M5 -location {148.044 215.958} -force_to_die_boundary
+place_pin -pin_name {ck_n} -layer M5 -location {185.004 215.958} -force_to_die_boundary
+place_pin -pin_name {ck_s} -layer M5 -location {180.012 0.042} -force_to_die_boundary

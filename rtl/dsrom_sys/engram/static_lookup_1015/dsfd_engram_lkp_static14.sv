@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 // dsfd_engram_lkp_static14 (S-ENGRAM+NORM 2210): the hardened S81 Engram lookup element, STATIC form.
 // ot_s81_engram_lookup_static (14 phase-related 1:1 clock roots: ck core, ck_seed hash primary, ck_hash[5:0] hash
-// columns, ck_rows[5:0] row buffers) behind pin registers (owner rule 10-15 19:50):
+// columns, ck_rows[5:0] row buffers; st9 adds ck_n / ck_s face roots for the N / S pin flops, 16 roots) behind pin registers (owner rule 10-15 19:50):
 //   * every input pin is captured by one flop with no logic in front of it (+1 cycle on every input);
 //   * every output pin is driven by one flop (+1 cycle on every output);
 //   * NO ready, credit or release signal crosses the boundary (owner 10-14 static schedule): the window issues in
@@ -26,6 +26,8 @@ module dsfd_engram_lkp_static14 #(
     input  wire                  ck_seed,
     input  wire [5:0]            ck_hash,
     input  wire [5:0]            ck_rows,
+    input  wire                  ck_n,      // st9: N-face pin flops (window in, row beats/status out)
+    input  wire                  ck_s,      // st9: S-face pin flops (HBM request out, HBM response in)
     input  wire                  rst_n,
     input  wire                  cfg_layer,
     input  wire [1:0]            cfg_rank,
@@ -63,13 +65,17 @@ module dsfd_engram_lkp_static14 #(
     reg [2:0]            hrt_q;
     reg [3:0]            hri_q;
     reg [255:0]          hrd_q;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin wv_q <= 1'b0; hrv_q <= 1'b0; end
-        else begin wv_q <= win_v; hrv_q <= hr_v; end
-    always @(posedge ck) begin
-        ws_q <= win_slot; wid_q <= win_ids; hrs_q <= hr_slot; hrt_q <= hr_tag; hri_q <= hr_idx; hrd_q <= hr_d;
-        cl_q <= cfg_layer; cr_q <= cfg_rank;
-    end
+    // st9 (coordinator 10-17 ~09:35): regional face roots for the pin flops.  ck_n / ck_s / ck are phase-0 1:1
+    // roots of one PLL (same edge), so every pin flop still captures on the same cycle: 0 cycles added.
+    always @(posedge ck_n or negedge rst_n)
+        if (!rst_n) wv_q <= 1'b0;
+        else        wv_q <= win_v;
+    always @(posedge ck_s or negedge rst_n)
+        if (!rst_n) hrv_q <= 1'b0;
+        else        hrv_q <= hr_v;
+    always @(posedge ck_n) begin ws_q <= win_slot; wid_q <= win_ids; end
+    always @(posedge ck_s) begin hrs_q <= hr_slot; hrt_q <= hr_tag; hri_q <= hr_idx; hrd_q <= hr_d; end
+    always @(posedge ck) begin cl_q <= cfg_layer; cr_q <= cfg_rank; end
     // ---- engine ---------------------------------------------------------------------
     wire        e_hqv, e_ov, e_stv, e_stb, e_fault;
     wire [30:0] e_hqa;
@@ -87,11 +93,17 @@ module dsfd_engram_lkp_static14 #(
         .o_valid(e_ov), .o_col(e_oc), .o_beat(e_ob), .o_slot(e_os), .o_data(e_od),
         .st_valid(e_stv), .st_slot(e_sts), .st_bad(e_stb), .fault(e_fault));
     // ---- output pin flops -----------------------------------------------------------
+    always @(posedge ck_s or negedge rst_n)
+        if (!rst_n) hq_v <= 1'b0;
+        else        hq_v <= e_hqv;
+    always @(posedge ck_n or negedge rst_n)
+        if (!rst_n) begin o_v <= 1'b0; st_v <= 1'b0; end
+        else begin o_v <= e_ov; st_v <= e_stv; end
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin hq_v <= 1'b0; o_v <= 1'b0; st_v <= 1'b0; fault <= 1'b0; end
-        else begin hq_v <= e_hqv; o_v <= e_ov; st_v <= e_stv; fault <= e_fault; end
-    always @(posedge ck) begin
-        hq_atom <= e_hqa; hq_tag <= e_hqt;
+        if (!rst_n) fault <= 1'b0;
+        else        fault <= e_fault;
+    always @(posedge ck_s) begin hq_atom <= e_hqa; hq_tag <= e_hqt; end
+    always @(posedge ck_n) begin
         o_col <= e_oc; o_beat <= e_ob; o_slot <= e_os; o_d <= e_od;
         st_slot <= e_sts; st_bad <= e_stb;
     end

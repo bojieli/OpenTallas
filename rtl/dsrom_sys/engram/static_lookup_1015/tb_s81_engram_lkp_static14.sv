@@ -20,7 +20,7 @@ module tb_s81_engram_lkp_static14;
  .o_valid(av),.o_ready(1'b1),.o_col(ac),.o_beat(ak),.o_slot(asl),.o_data(ad),.st_valid(asv),.st_slot(),.st_bad(ab),.fault(af));
  // S-ENGRAM+NORM 2210: the hardened element = engine behind one input and one output pin register.
  dsfd_engram_lkp_static14 #(.NSLOT(8),.RETURN_AGE(128)) candidate(
- .ck(clk),.ck_seed(clk && mut!=7),.ck_hash(ch),.ck_rows(cr),.rst_n(rst_n),.cfg_layer(layer),.cfg_rank(rank),.win_v(wv),.win_slot(slot),.win_ids(ids),
+ .ck(clk),.ck_seed(clk && mut!=7),.ck_hash(ch),.ck_rows(cr),.ck_n(clk && mut!=8),.ck_s(clk && mut!=9),.rst_n(rst_n),.cfg_layer(layer),.cfg_rank(rank),.win_v(wv),.win_slot(slot),.win_ids(ids),
  .hq_v(bh),.hq_atom(ba),.hq_tag(bt),
  .hr_v(hv),.hr_slot(hs),.hr_tag(ht),.hr_idx(hi),.hr_d(hd),
  .o_v(bv),.o_col(bc),.o_beat(bk),.o_slot(bsl),.o_d(bd),.st_v(bsv),.st_slot(),.st_bad(bb),.fault(bf));
