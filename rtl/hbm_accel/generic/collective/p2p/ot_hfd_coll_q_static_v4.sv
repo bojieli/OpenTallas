@@ -297,7 +297,7 @@ module ot_hfd_coll_q_static_v4 #(
   .ingress_slot(p_vm_ingress_slot),.slot_valid(p_vm_slot_valid),.slot_owner(p_vm_slot_owner),
   .kq(vm_kq),.launch_done(writer_launch_done),.fault(writer_fault));
  generate if(SOLO!=0)begin:g_tkm
-  ot_hgi_coll_tkm_static u_tkm(.clk(clk_tkm[33]),.tile_clk(clk_tkm[31:0]),.buffer_clk(clk_tkm[32]),
+  ot_hgi_coll_tkm_static #(.TP(TP)) u_tkm(.clk(clk_tkm[33]),.tile_clk(clk_tkm[31:0]),.buffer_clk(clk_tkm[32]),
    .rst_n(rst_n),.start(p_tkm_start),.cfg_n(p_tkm_cfg_n),.cfg_k(p_tkm_cfg_k),
    .cfg_nout(p_tkm_cfg_nout),.cfg_g(p_tkm_cfg_g),.cfg_gbase(p_tkm_cfg_gbase),
    .cfg_pf(p_tkm_cfg_pf),.cfg_obase(p_tkm_cfg_obase),.cfg_rbase(p_tkm_cfg_rbase),.cfg_has_r(p_tkm_cfg_has_r),
