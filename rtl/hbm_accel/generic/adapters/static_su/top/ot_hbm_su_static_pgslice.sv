@@ -161,12 +161,12 @@ module ot_hbm_su_static_pgslice #(
   if(PIN_REG)begin:g_pr
 `ifdef OT_HARD_CHILDREN
   // OT_HARD_CHILDREN (H-SU pgslice cluster, 2026-10-16): the lane is its hardened leaf view (LAT4/LEAF1, pin-registered,
-  // PIN_RST 1): KIND0 LIGHT (closed r2, stage roots) / KIND1 HEAVY + KIND2 FULL two-root r1 leaves (pin root clk_lane[0], lane root clk_lane[1]; KIND2 carries the SIDE pipe). The cluster configuration must equal the leaves'.
+  // PIN_RST 1): KIND0 LIGHT (closed r2, stage roots) / KIND1 HEAVY + KIND2 FULL r4 regional-root leaves (lane clk_lane[0], SFU clk_lane[4], insertion clk_insert[0]/[2], KIND2 SIDE clk_side; KIND2 carries the SIDE pipe). The cluster configuration must equal the leaves'.
   if(!(MLAT==4&&ALAT==3&&LEAF==1&&FETCH_EXTRA_EDGES==2))begin:g_bad_cfg $error("OT_HARD_CHILDREN needs MLAT4/ALAT3/LEAF1/FETCH2 (the hardened lane leaves)"); end
   if(KIND==2)begin:g_k2
-  ot_hbm_su_static_kind2_lat4_leaf1_r1_physical u_lane(
+  ot_hbm_su_static_kind2_lat4_leaf1_r4_physical u_lane(
 
-   .clk_pin(clk_lane[n*8+0]),.clk(clk_lane[n*8+1]),  // two-root leaf: pin-register root / lane root
+   .clk(clk_lane[n*8+0]),.clk_sfu(clk_lane[n*8+4]),.clk_ins(clk_insert[n*4+0]),.clk_ins2(clk_insert[n*4+2]),.clk_side(clk_side),  // r4 regional roots
   .rst_n(rst_lane_n[n]),.lane_id(11'(L)),
    .cx_srcs(c_srcs),.ld(c_ld),.ld_bank(c_ld_bank),.ld_c(terms),.emit(c_emit),.bank(c_bank),.o_v(c_o_v),.i_v(c_i_v),
    .no(c_no),.ni(c_ni),.ls(c_ls),.lvw(c_lvw),.vb(c_vb),.krow(c_krow),.obase(c_obase),.aibase(c_aibase),.aind(c_aind),
@@ -180,9 +180,9 @@ module ot_hbm_su_static_pgslice #(
    .vm_wdata(vm_wdata[n*32+:32]),.kv_wdata(kv_wdata[n*32+:32]),.ro_x(ro_x[n*32+:32]));
   assign sv=1'b0; assign sx=32'd0;   // the FULL leaf carries its SIDE pipe inside
   end else if(KIND==1)begin:g_k1
-  ot_hbm_su_static_kind1_lat4_leaf1_r1_physical u_lane(
+  ot_hbm_su_static_kind1_lat4_leaf1_r4_physical u_lane(
 
-   .clk_pin(clk_lane[n*8+0]),.clk(clk_lane[n*8+1]),  // two-root leaf: pin-register root / lane root
+   .clk(clk_lane[n*8+0]),.clk_sfu(clk_lane[n*8+4]),.clk_ins(clk_insert[n*4+0]),  // r4 regional roots
   .rst_n(rst_lane_n[n]),.lane_id(11'(L)),
    .cx_srcs(c_srcs),.ld(c_ld),.ld_bank(c_ld_bank),.ld_c(terms),.emit(c_emit),.bank(c_bank),.o_v(c_o_v),.i_v(c_i_v),
    .no(c_no),.ni(c_ni),.ls(c_ls),.lvw(c_lvw),.vb(c_vb),.krow(c_krow),.obase(c_obase),.aibase(c_aibase),.aind(c_aind),
