@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_host_static_ingress",
+ "enable": false,
+ "reason": "RTL ot_hbm_host_static_ingress already lands every input in an unconditional pin FF (payload unreset, valids reset; pin2 successor 4e16b003e) and every output is a register (output reg); a kit flop stage would add a redundant edge (same as the CLOSED pin2_ref)."
+}

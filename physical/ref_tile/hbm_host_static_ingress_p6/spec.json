@@ -281,5 +281,9 @@
   "kind": "slot_change",
   "slot_change_request": "coordinator HBM die audit 10-16 (H-ELEM a8f894a1644e6a104): pins <= 6/um per face; H-DIE d4c band rule (a847da73f3ce48781). Same 216 square; pin windows x2.05 about each face centre at 0.192 um pitch; new windows sent to H-DIE."
  },
- "structural_change": " | p6 (H-SU/PIN 1840, 10-16): pin density 10.4 -> 5.1 pins/um (windows x2.05, pin_min_tracks 4), same outline/RTL."
+ "structural_change": " | p6 (H-SU/PIN 1840, 10-16): pin density 10.4 -> 5.1 pins/um (windows x2.05, pin_min_tracks 4), same outline/RTL.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL ot_hbm_host_static_ingress already lands every input in an unconditional pin FF (payload unreset, valids reset; pin2 successor 4e16b003e) and every output is a register (output reg); a kit flop stage would add a redundant edge (same as the CLOSED pin2_ref)."
+ }
 }
