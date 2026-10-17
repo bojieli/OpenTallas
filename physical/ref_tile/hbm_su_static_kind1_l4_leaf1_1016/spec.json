@@ -29,7 +29,6 @@
  ],
  "pins": {
   "N": [
-   "ld_c",
    "clk_stage_0",
    "clk_stage_1",
    "clk_stage_2",
@@ -44,6 +43,7 @@
    "clk_insert_3"
   ],
   "W": [
+   "ld_c",
    "rd_q",
    "side_y",
    "vi_q"
@@ -125,7 +125,8 @@
   "pin_v": "M3 M5",
   "signoff_period_ps": 1111.111111,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_min_tracks": 4
  },
  "job": {
   "owner": "Claude:H-SU/PGSLICE",
@@ -371,7 +372,7 @@
   "enable": false,
   "reason": "the RTL (ot_hbm_su_static_lane_pinreg, PIN_RST=1) already registers every data input, rst_n and every output at the pin; a kit-level flop stage would add a second, unscheduled boundary edge"
  },
- "structural_change": "New leaf (first route): KIND1 HEAVY lane in the CLOSED KIND0 r2 leaf form (pin-registered lane_pinreg, PIN_RST=1, LAT4/LEAF1); outline 166.32 x 330.48 = the d4c pgslice row plan (KIND1 synth 22,528 um2 at the measured kind0 0.416 synth:outline ratio).",
+ "structural_change": "New leaf (first route): KIND1 HEAVY lane in the CLOSED KIND0 r2 leaf form (pin-registered lane_pinreg, PIN_RST=1, LAT4/LEAF1); outline 166.32 x 330.48 = the d4c pgslice row plan (KIND1 synth 22,528 um2 at the measured kind0 0.416 synth:outline ratio). Pins <= 6/um (new-tile guidance): pin_min_tracks 4 (0.192 um, 5.2/um); the 840-bit ld_c moves from N to the 330-um W face (N keeps the 12 clock entries; W 1,032 / S 562 / E 315 bits).",
  "outline": {
   "w": 166.32,
   "h": 330.48
