@@ -2,11 +2,74 @@
 
 Stream S81-DV (owner decision 0cj, 2026-10-16 ~22:00). Plan level: nothing in this spec is RTL or a routed die.
 
+**Status: COMPOSED_NOT_NATIVE.** Every rate below is composed from the token-path DAG and plan geometry. It becomes a
+measured rate only once the slice benches and the die trial report their latencies.
+
+**Current candidate: p1**, revised after the coordinator review of 10-16:
+- reticle margin;
+- slice-column white space.
+
+The p0 numbers are kept for history under `p0/`. p1 is in `p1/` and in the Explorer record `s81_dv_p1`.
+
 Reproduce:
 - `python3 tools/s81_dv/dv_plan.py --out DIR` writes `plan.json`, `dv_links_record.json` and `dv_flow.png`.
 - `python3 tools/s81_dv/dv_price.py --plan DIR/plan.json --out DIR/price.json` writes the price.
-- Committed copies of the outputs sit next to this file.
-- Explorer record: `s81_dv_p0`, a candidate of `s81_c26b_r`.
+- Committed copies of the outputs are in `p1/` (current) and `p0/`.
+- Explorer records: `s81_dv_p1` (current) and `s81_dv_p0`, both candidates of `s81_c26b_r`.
+
+## 0. p1 revision (coordinator review, 10-16)
+
+| | p0 | **p1** |
+|---|---|---|
+| Die | 33.00 × 26.00 mm (full reticle) | **29.37 × 25.00 mm = 734 mm²** |
+| Margin per side under the 33 × 26 reticle | 0 | **1.81 mm / 0.50 mm** |
+| Slice column | 1.75 mm | **1.30 mm** (the slice width + 50 µm) |
+| Slice | 1.70 × 2.60 | **1.25 × 3.50** (2.8:1, 4.375 mm²) |
+| Mesh | 8 × 2 mesh | **16-slice bidirectional ring**: E–W along the two tier streets, N–S only at the end columns. Worst latency is the same as the mesh: Δx + Δy. |
+| Global/edge units | Below the S slices | **In the inter-tier void of the slice columns**, reusing the white space: G-unit, seq/host, bk ×2, mix4 ×2, coll edge ×4 |
+| Frames | 128, 1,220 slots | 128, **1,184 slots (−3%)**: 6 nine-slot + 2 ten-slot per column |
+| Stages | 89 | **92** |
+| Worst cut / windows > 0.55 | 0.415 / 0 | **0.427 / 0** |
+| Over-reach bits | 0 | **0** |
+| Relays | 3,048 | **2,018** |
+| bit·mm | 0.72 M | **0.47 M** |
+| Worst x all-gather + local return | 129 stages | **117 stages** |
+| Scalar exchange | 100 stages | **91 stages** |
+
+Why the column can be narrow:
+- Every vertical die wire in a slice column starts or ends at that column's slice: x chains, returns, ring ends, unit links.
+- So the column needs no through-channel beside the slice.
+- Frame lanes run at the column edges (260-µm windows 0 and 4), and the units own the middle.
+- The x-tap pins of the frames facing the slice cross a 25-µm gap.
+
+**p1 price** (89 → 92 stages charged by `hop_only`):
+
+| Scenario | AR tok/s | MTP tok/s | vs today (MTP) |
+|---|---|---|---|
+| DV base | 1,450.0 | 4,248.3 | +28.1% |
+| Pin register 16 | 1,444.2 | 4,232.6 | +27.7% |
+| SU +10% | 1,431.2 | 4,188.5 | +26.3% |
+| SU +25%, pin register 16 | 1,396.5 | 4,087.2 | +23.3% |
+| Keep SU/HC rows | 1,319.3 | 3,938.2 | +18.8% |
+| Keep SU/HC rows + SU +25% | 1,271.5 | 3,792.8 | +14.4% |
+
+### The three biggest assumptions behind the price
+
+1. **The hub's ledger rows do not carry over to the slices.**
+   - VM.READ + VM.RELAY + VM.A2 are 15.6% AR / 13.4% MTP. They come from the central VM's floorplan: a leaf-chain read hop of 2 and reach relays.
+   - SU.* and HC.* are 8.4% AR / 6.6% MTP. They come from the hierarchical slab's serial chains: NORM 713 cycles hierarchical vs 235 flat, POST 248 vs 22.
+   - The assumption is that a 1/16 slice runs at the flat-RTL prices plus pin registers.
+   - The "keep SU/HC rows" scenarios bound it. Removing the VM rows is the larger and safer part, because a slice VM is one local bank group at fixed L = 12.
+2. **Mesh and ring constants are plan stages, not routed numbers.**
+   - Field phase wire: 117 stages vs the DAG basis of 138 (the c26l geometry is actually 75.6 mm, i.e. worse than that basis).
+   - Norm exchange: 91 stages per full-h norm, ×2 per layer.
+   - Router tree: 50 stages (worst slice → G-unit 20.1 mm); ring h transfer: 2 × 40 stages.
+   - Each assumes one relay per 405 µm and no extra pipeline in the ring stops. Each additional ring-stop register adds ≈ 8 cycles per ring traversal to the norm and router paths: about 0.3% per extra register per hop class.
+3. **Collectives and the cross-die path are unchanged from the DAG**, conservatively.
+   - The cross-die all-gather and all-reduce enter and leave at the end slices instead of a centre collective. The plan distance is similar: slice-to-edge ≤ 16.0 mm vs centre-to-edge ≈ 16 mm.
+   - The reduce-scatter that would keep each slice's rows local across dies is not modelled as a gain.
+   - The +3% stage count from the shorter frame columns is charged.
+
 
 ## 1. Why
 
@@ -119,7 +182,7 @@ Other orders:
 - **All-reduce:** the canonical fold is kept in the owning slice.
 - **Act-quant:** blocks are aligned to the 320-element ownership, and for odd-sized vectors at most one amax is exchanged with a neighbour.
 
-## 5. Cut, bit·mm, reach
+## 5. Cut, bit·mm, reach (p0; the p1 figures are in §0)
 
 Scope is the die-level links. Metrics come from `dataflow_links.py` itself (`import` path; 260 µm windows, 5,484 tracks per window).
 
@@ -134,7 +197,7 @@ Scope is the die-level links. Metrics come from `dataflow_links.py` itself (`imp
 - The street carries the ring (2 × 1,104 b) plus ctl (16 × 96 b at the centre columns).
 - Frames: 128, the same height mix as c26l (60 × 2.70, 40 × 2.99, 28 × 3.00 mm). The die is 33 × 26 mm, frame top 25.68 mm.
 
-## 6. Price
+## 6. Price (method, and p0 figures; the p1 figures are in §0)
 
 The pricing machinery is the ledger's own: the `accepted_cost.solve` DAG, the MTP wave rule, and `mtp_ledger_1016` hop_only(89) with additive losses.
 

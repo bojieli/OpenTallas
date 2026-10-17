@@ -125,7 +125,7 @@ def ledger_split(path=LEDGER, drop=DROP):
 def price(g, stages=89, pinreg=8, su_scale=0.0, frames=128, drop=DROP):
     kept, dropped, rows = ledger_split(drop=drop)
     st_eff = stages * 128 / frames if frames != 128 else stages
-    ho = hop_only(stages)
+    ho = hop_only(89)
     ho_dv = hop_only(math.ceil(st_eff))
     out = dict(stages=stages, dv_stages=math.ceil(st_eff), frames=frames, pinreg=pinreg, su_contingency=su_scale,
                ledger_kept_pct=kept, ledger_dropped_pct=dropped, workloads={})
@@ -158,14 +158,17 @@ def main():
     g = dict(f, hop_um=405.0,
              worst_slice_to_gunit_um=max(man(cen(s), cen(B['gunit'])) for s in sl),
              worst_slice_to_edge_um=max(min(man(cen(s), cen(B[c])) for c in ('coll_WS', 'coll_WN', 'coll_ES', 'coll_EN')) for s in sl))
-    res = dict(schema='opentallas.s81_dv.price.v1', geometry=g,
+    # ROM capacity per die scales the stage count (owner-approved lever: fewer ROMs per die, more dies)
+    st = math.ceil(89 * f.get('rom_slots_c26l', 1220) / f.get('rom_slots', 1220) - 1e-9)
+    g['stages_from_slots'] = st
+    res = dict(schema='opentallas.s81_dv.price.v1', geometry=g, status='COMPOSED_NOT_NATIVE',
                scenarios={
-                   'dv_base': price(g),
-                   'dv_pinreg16': price(g, pinreg=16),
-                   'dv_su_plus10pct': price(g, su_scale=0.10),
-                   'dv_su_plus25pct_pinreg16': price(g, pinreg=16, su_scale=0.25),
-                   'dv_120_frames': price(g, frames=120),
-                   'pessimistic_keep_SU_HC_rows': price(g, pinreg=16, drop=re.compile(r'^VM\.|^CAPT\.CD_PINREG$')),
+                   'dv_base': price(g, stages=st),
+                   'dv_pinreg16': price(g, stages=st, pinreg=16),
+                   'dv_su_plus10pct': price(g, stages=st, su_scale=0.10),
+                   'dv_su_plus25pct_pinreg16': price(g, stages=st, pinreg=16, su_scale=0.25),
+                   'pessimistic_keep_SU_HC_rows': price(g, stages=st, pinreg=16, drop=re.compile(r'^VM\.|^CAPT\.CD_PINREG$')),
+                   'pessimistic_plus_su25': price(g, stages=st, pinreg=16, su_scale=0.25, drop=re.compile(r'^VM\.|^CAPT\.CD_PINREG$')),
                })
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(res, indent=1))

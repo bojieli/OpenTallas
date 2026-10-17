@@ -17,14 +17,20 @@ import json
 import math
 from pathlib import Path
 
-DIE_W, DIE_H = 33000.0, 26000.0
+RETICLE_W, RETICLE_H = 33000.0, 26000.0
+RETICLE_MARGIN = 500.0           # every die edge >= 0.5 mm inside the reticle (HBM die practice)
+SCOL_W = 1300.0                   # slice column: the slice width + 50 um (all vertical die wires end at the slice)
+N9 = 6                            # 9-slot frames per 8-frame column (rest 10-slot): column 22.16 mm
 EDGE = 300.0                      # link PHY strip on the W/E edges
 NCOL = 8                          # cluster columns
+PITCH = 2 * 1148.3 + SCOL_W
+DIE_W = 2 * EDGE + NCOL * PITCH   # 29.38 mm
+DIE_H = 25000.0                   # >= 0.5 mm per side under the reticle height
 FRAME_W, FRAME_PITCH = 1139.6, 1148.3   # c26l column frame width / column pitch
 H9, H10A, H10B = 2695.68, 2985.12, 3000.24   # c26l frame heights (9-slot, 10-slot a/b)
-BAND = 1820.0                     # south band: HBM PHY + ctrl + service strip
-STREET = 400.0                    # horizontal ring street at each tier middle
-SLICE_W, SLICE_H = 1700.0, 2600.0
+BAND = 1700.0                     # south band: HBM PHY + ctrl + service strip (svc 1.58 mm)
+STREET = 380.0                    # horizontal ring street at each tier middle
+SLICE_W, SLICE_H = 1250.0, 3500.0   # 2.8:1, 4.375 mm2
 HOP_UM = 405.0                    # plan hop (0.9 x measured S81 reach 455 um, rounded down to the 405 plan rule)
 XB = 1104                         # x stream beat: 64 FP8 codes + 2 exps (566 b) + second lane (538 b), as c26l cx+x2
 RET = 68                          # frame return lane (dsfd_m2l_vr_68x1x)
@@ -72,45 +78,36 @@ class Plan:
 
 
 def column_heights():
-    """16 frame columns x 8 frames reproducing the c26l height mix exactly (60 x H9, 40 x H10A, 28 x H10B)"""
+    """16 frame columns x 8 frames: N9 x H9 + (8 - N9) x H10 (H10A/H10B alternating) -> column 22.46 mm"""
     cols = []
-    a_left, b_left = 40, 28
     for k in range(16):
-        n9 = 3 if k in (0, 5, 10, 15) else 4      # 4 columns of 3 x H9 and 12 of 4 x H9 = 60
-        rest = []
-        for _ in range(8 - n9):
-            if a_left >= b_left:
-                rest.append(H10A); a_left -= 1
-            else:
-                rest.append(H10B); b_left -= 1
-        hs = [H9] * n9 + rest
-        # interleave tall/short so each tier carries a similar height
-        hs = sorted(hs)
+        rest = [H10A if (k + j) % 2 == 0 else H10B for j in range(8 - N9)]
+        hs = sorted([H9] * N9 + rest)
         cols.append([hs[0], hs[7], hs[2], hs[5], hs[1], hs[6], hs[3], hs[4]])
-    assert sum(h == H9 for c in cols for h in c) == 60
     return cols
+
+
+SLOTS = lambda h: 9 if h == H9 else 10
 
 
 def build():
     P = Plan()
-    pitch = (DIE_W - 2 * EDGE) / NCOL
-    scol_w = pitch - 2 * FRAME_PITCH
+    pitch, scol_w = PITCH, SCOL_W
+    assert DIE_W <= RETICLE_W - 2 * RETICLE_MARGIN and DIE_H <= RETICLE_H - 2 * RETICLE_MARGIN, (DIE_W, DIE_H)
     heights = column_heights()
+    colx = lambda c: EDGE + c * pitch + FRAME_PITCH          # slice column left edge
     facts = dict(cluster_pitch_um=pitch, slice_column_um=scol_w)
-    # ---------------------------------------------------------------- frames, slices
-    tier_mid = {}
-    ymax = 0.0
-    # one street y per tier, die-wide: rows 0,1 of every column end at or below it, rows 2,3 start above it
+    # ---------------------------------------------------------------- frames: one die-wide street per tier
     lo = lambda hs, t: sum(hs[4 * t:4 * t + 2])
-    full = lambda hs, t: sum(hs[4 * t:4 * t + 4])
+    hi = lambda hs, t: sum(hs[4 * t + 2:4 * t + 4])
     st0 = BAND + max(lo(h, 0) for h in heights)
-    t1 = st0 + STREET + max(full(h, 0) - lo(h, 0) for h in heights)
+    t1 = st0 + STREET + max(hi(h, 0) for h in heights)
     st1 = t1 + max(lo(h, 1) for h in heights)
     streets = (st0, st1)
+    ymax = 0.0
     for c in range(NCOL):
         x0 = EDGE + c * pitch
-        fcols = {'L': (x0, 'E'), 'R': (x0 + FRAME_PITCH + scol_w + (FRAME_PITCH - FRAME_W), 'W')}
-        for side, (fx, face) in fcols.items():
+        for side, fx in (('L', x0), ('R', colx(c) + scol_w + (FRAME_PITCH - FRAME_W))):
             hs = heights[2 * c + (side == 'R')]
             for t in range(2):
                 y = streets[t] - lo(hs, t)
@@ -121,19 +118,19 @@ def build():
                     P.block(f'f_{c}{side}{t}{r}', 'col_h9' if h == H9 else 'col_h10', 'frame', f'cl{c}{"SN"[t]}', fx, y, FRAME_W, h)
                     y += h
                 ymax = max(ymax, y)
-            for t in range(2):
-                tier_mid.setdefault((c, t), []).append(streets[t] + STREET / 2)
     facts['frame_top_um'] = ymax
     assert ymax <= DIE_H - 250, ymax
+    facts.update(die_um=[round(DIE_W, 1), DIE_H], die_mm2=round(DIE_W * DIE_H / 1e6, 1),
+                 reticle_margin_um=[round((RETICLE_W - DIE_W) / 2, 1), (RETICLE_H - DIE_H) / 2],
+                 rom_slots=sum(SLOTS(b['h']) for b in P.blocks if b['kind'] == 'frame'), rom_slots_c26l=60 * 9 + 68 * 10)
+    # ---------------------------------------------------------------- slices (centred on their street)
     for c in range(NCOL):
-        x0 = EDGE + c * pitch + FRAME_PITCH
         for t in range(2):
-            ym = sum(tier_mid[(c, t)]) / len(tier_mid[(c, t)])
-            P.block(f's_{c}{"SN"[t]}', 'dsdv_slice', 'slice', f'cl{c}{"SN"[t]}', x0 + (scol_w - SLICE_W) / 2, ym - SLICE_H / 2, SLICE_W, SLICE_H)
-    # ---------------------------------------------------------------- south band, edge links, global units
-    # south band: [SM_W x4][svc_W][PHY + ctrl][svc_E][SM_E x4] -- the HBM service halves abut the PHY, and each
-    # attention softmax group (SU SM tiles, 2 heads x 16 lanes each, 1.23 x 1.06 mm) abuts its service half, so the
-    # 8 kb score/P interface is a face, not a die wire (attention = PHY-adjacent attention slices, irregular unit)
+            ym = streets[t] + STREET / 2
+            P.block(f's_{c}{"SN"[t]}', 'dsdv_slice', 'slice', f'cl{c}{"SN"[t]}', colx(c) + (scol_w - SLICE_W) / 2, ym - SLICE_H / 2, SLICE_W, SLICE_H)
+    # ---------------------------------------------------------------- south band: [SM_W x4][svc_W][PHY+ctrl][svc_E][SM_E x4]
+    # the HBM service halves abut the PHY; each attention softmax group (SU SM tiles) abuts its service half, so the
+    # 8 kb score / P interface is a face, not a die wire (attention = PHY-side unit, irregular operator)
     phy_x = DIE_W / 2 - 4250
     P.block('phy_hbm', 'ot_hbm3e_phy_v41x_aw30_e8p5', 'phy', 'south', phy_x, 20, 8500, 1177)
     P.block('hbm_ctrl', 'dsfd_ctrl', 'ctrl', 'south', phy_x, 1210, 8500, 250)
@@ -142,46 +139,58 @@ def build():
     for k in range(4):
         P.block(f'sm_W{k}', 'ot_s81_su_sm', 'unit', 'south', phy_x - 4270 - (k + 1) * 1235, 20, 1231, 1058)
         P.block(f'sm_E{k}', 'ot_s81_su_sm', 'unit', 'south', phy_x + 12770 + k * 1235, 20, 1231, 1058)
-    sx = lambda c: EDGE + c * pitch + FRAME_PITCH + 90      # side units hug the left of the slice column
-    ys, yn = P.c('s_0S')[1], P.c('s_0N')[1]
-    s_bot = ys - SLICE_H / 2
-    h_free = min(4200.0, s_bot - BAND - 200)
-    # index select/collect (bk, 6.3 mm2) above the PHY centre and Engram mix4 (5.2 mm2) in cols 2/5: every piece
-    # <= 2.1:1 (no long thin blocks)
-    for nm, c, h in (('bk_sel', 3, 2500.0), ('bk_col', 4, 2500.0), ('mix4_w', 2, 2100.0), ('mix4_e', 5, 2100.0)):
-        P.block(nm, 'dsfd_bk_selcol' if nm.startswith('bk') else 'dsfd_engram_mix4_half', 'unit', 'south', sx(c), BAND + 300, 1250, h)
-    gy = (P.blocks[P.idx['s_3S']]['y'] + SLICE_H + P.blocks[P.idx['s_3N']]['y']) / 2
-    P.block('gunit', 'dsdv_gunit', 'unit', 'centre', sx(3), gy - 1100, 1100, 2200)    # norm/router/top6/HC coef+Sinkhorn
-    P.block('seqhost', 'dsdv_seq_host', 'unit', 'centre', sx(4), gy - 900, 1100, 1800)  # stage seq, host, wfc
+    assert P.blocks[P.idx['sm_W3']]['x'] >= 0 and P.blocks[P.idx['sm_E3']]['x'] + 1231 <= DIE_W
+    # ---------------------------------------------------------------- inter-tier void: global / edge units
+    # the S tier's x chains use the void's lower part and the N tier's its upper part; the middle holds the small
+    # global units (white space reused), 1.0 mm wide on the column's left; the right 270 um stay a channel
+    # frame lanes run at the column edges (L: window 0, R: window 4), so units own the middle over the full void
+    def chain_top_S(c):
+        return P.blocks[P.idx[f's_{c}S']]['y'] + SLICE_H + 150
+    def chain_bot_N(c):
+        return P.blocks[P.idx[f's_{c}N']]['y'] - 150
+    units = {0: [('coll_WS', 'dsdv_coll_edge', 1200), ('coll_WN', 'dsdv_coll_edge', 1200)],
+             7: [('coll_ES', 'dsdv_coll_edge', 1200), ('coll_EN', 'dsdv_coll_edge', 1200)],
+             1: [('bk_sel', 'dsfd_bk_selector', 2000)], 6: [('bk_col', 'dsfd_bk_collector', 2900)],
+             2: [('mix4_w', 'dsfd_engram_mix4_half', 2600)], 5: [('mix4_e', 'dsfd_engram_mix4_half', 2600)],
+             3: [('gunit', 'dsdv_gunit', 2800)], 4: [('seqhost', 'dsdv_seq_host', 2200)]}
+    facts['void_free_um'] = {}
+    for c, us in units.items():
+        lo_, hi_ = chain_top_S(c), chain_bot_N(c)
+        facts['void_free_um'][c] = round(hi_ - lo_)
+        need = sum(h for _, _, h in us) + 100 * (len(us) - 1)
+        assert need <= hi_ - lo_, (c, need, hi_ - lo_)
+        y = (lo_ + hi_ - need) / 2
+        for nm, master, h in us:
+            wu = 680 if c in (0, NCOL - 1) else 980          # end columns leave window 3 to the ring end link
+            P.block(nm, master, 'unit', 'void', colx(c) + 160, y, wu, h)
+            y += h + 100
+    ys, yn = streets[0] + STREET / 2, streets[1] + STREET / 2
     for side, xl in (('W', 0.0), ('E', DIE_W - 260)):
         for t, yc in (('S', ys), ('N', yn)):
             P.block(f'lk_{side}{t}0', 'ot_pdie_ucie' if t == 'S' else 'ot_pdie_serdes', 'link', 'edge', xl, yc - 2300, 260, 2250)
             P.block(f'lk_{side}{t}1', 'ot_pdie_serdes', 'link', 'edge', xl, yc + 50, 260, 2250)
-        c = 0 if side == 'W' else NCOL - 1
-        for t in 'SN':
-            s = P.blocks[P.idx[f's_{c}{t}']]
-            cy = s['y'] + SLICE_H + 150 if t == 'S' else s['y'] - 1150
-            P.block(f'coll_{side}{t}', 'dsdv_coll_edge', 'unit', 'edge', sx(c), cy, 1100, 1000)
+
     # ---------------------------------------------------------------- links
     def pin(b, side):
         x, y = P.c(b); B = P.blocks[P.idx[b]]
         return {'W': (B['x'], y), 'E': (B['x'] + B['w'], y), 'N': (x, B['y'] + B['h']), 'S': (x, B['y'])}[side]
-    # x all-gather mesh: E-W per tier street (two directions, offset tracks), N-S per slice column
+    # x all-gather ring: E-W along each tier street (both directions), N-S at the two end columns
     for t in 'SN':
         for c in range(NCOL - 1):
             a, b = f's_{c}{t}', f's_{c + 1}{t}'
             for d, (u, v, off) in (('E', (a, b, -80)), ('W', (b, a, 80))):
                 p0, p1 = pin(u, 'E' if d == 'E' else 'W'), pin(v, 'W' if d == 'E' else 'E')
-                P.link(f'xr{d}_{c}{t}', 'xring', XB, (u, 'xr' + d, p0), (v, 'xr' + d, p1),
-                       [(p0[0], p0[1] + off), (p1[0], p1[1] + off)], 'x all-gather / collective / scalar-tree TDM')
-    for c in range(NCOL):
+                P.link(f'xr{d}_{c}{t}', 'xring', XB, (u, 'xr' + d, (p0[0], p0[1] + off)), (v, 'xr' + d, (p1[0], p1[1] + off)),
+                       [(p0[0], p0[1] + off), (p1[0], p1[1] + off)], 'x all-gather / collective / scalar exchange (TDM)')
+    for c in (0, NCOL - 1):
         a, b = f's_{c}S', f's_{c}N'
-        xr = EDGE + c * pitch + FRAME_PITCH + scol_w - 230   # right side of the slice column
-        for d, (u, v, dx) in (('N', (a, b, -110)), ('S', (b, a, 110))):
+        xr = colx(c) + 900
+        for d, (u, v, dx) in (('N', (a, b, -30)), ('S', (b, a, 30))):
             p0, p1 = pin(u, 'N' if d == 'N' else 'S'), pin(v, 'S' if d == 'N' else 'N')
             P.link(f'xv{d}_{c}', 'xring', XB, (u, 'xv' + d, (xr + dx, p0[1])), (v, 'xv' + d, (xr + dx, p1[1])),
-                   [(xr + dx, p0[1]), (xr + dx, p1[1])], 'mesh column link')
-    # slice <-> its 8 frames (x tap at the frame face cfifo, finished-row return)
+                   [(xr + dx, p0[1]), (xr + dx, p1[1])], 'ring end column link')
+    # slice <-> its 8 frames: taps facing the slice body cross the 25-um gap; the others run in fixed column lanes
+    # (L side x offsets 110-320, R side 560-770); x is daisy-chained per half-column -> 4 x-out ports per slice
     for c in range(NCOL):
         for t in range(2):
             sn = f's_{c}{"SN"[t]}'
@@ -191,93 +200,85 @@ def build():
                     fn = f'f_{c}{side}{t}{r}'
                     F = P.blocks[P.idx[fn]]
                     fx = F['x'] + F['w'] if side == 'L' else F['x']
-                    fy = F['y'] + 400   # cfifo x-tap pin, off the street windows
+                    fy = F['y'] + 400
                     sxp = S['x'] if side == 'L' else S['x'] + S['w']
-                    vx = sxp - 120 - 90 * r if side == 'L' else sxp + 120 + 90 * r
-                    mid = S['y'] + SLICE_H / 2   # rows 2,3 above the street leave the upper half; 0,1 the lower
-                    sy = mid + 400 + 350 * (r - 2) if r >= 2 else mid - 400 - 350 * (1 - r)
-                    # x is daisy-chained per half-column: slice -> nearest frame -> next frame (cfifo tap + forward),
-                    # so a slice has 4 x-out ports, not 8
+                    vx = colx(c) + (20 + 15 * r if side == 'L' else SCOL_W - 125 + 15 * r)
+                    sy = S['y'] if fy < S['y'] else S['y'] + S['h']
                     if r in (1, 2):
-                        P.link(f'x_{fn}', 'x_frame', XB, (sn, 'xf', (sxp, sy)), (fn, 'x', (fx, fy)),
-                               [(sxp, sy), (vx, sy), (vx, fy), (fx, fy)], 'x chain head into the frame cfifo')
+                        if S['y'] + 100 <= fy <= S['y'] + S['h'] - 100:
+                            P.link(f'x_{fn}', 'x_frame', XB, (sn, 'xf', (sxp, fy)), (fn, 'x', (fx, fy)), [(sxp, fy), (fx, fy)], 'x chain head (facing)')
+                            P.link(f'r_{fn}', 'ret', RET, (fn, 'ret', (fx, fy + 60)), (sn, 'ret', (sxp, fy + 60)), [(fx, fy + 60), (sxp, fy + 60)], 'finished rows')
+                            continue
+                        P.link(f'x_{fn}', 'x_frame', XB, (sn, 'xf', (vx, sy)), (fn, 'x', (fx, fy)), [(vx, sy), (vx, fy), (fx, fy)], 'x chain head')
                     else:
                         pn = f'f_{c}{side}{t}{1 if r == 0 else 2}'
                         PF = P.blocks[P.idx[pn]]
-                        pfx, pfy = (PF['x'] + PF['w'] if side == 'L' else PF['x']), PF['y'] + 400
-                        P.link(f'x_{fn}', 'x_frame', XB, (pn, 'xo', (pfx, pfy + 80)), (fn, 'x', (fx, fy)),
-                               [(pfx, pfy + 80), (vx, pfy + 80), (vx, fy), (fx, fy)], 'x chain forward (frame cfifo -> next frame)')
-                    P.link(f'r_{fn}', 'ret', RET, (fn, 'ret', (fx, fy + 40)), (sn, 'ret', (sxp, sy + 40)),
-                           [(fx, fy + 40), (vx + (25 if side == 'L' else -25), fy + 40), (vx + (25 if side == 'L' else -25), sy + 40), (sxp, sy + 40)],
-                           'finished rows, local capture')
-    # control / small global units: commands, expert ids, HC coefficients ride the slice column + tier streets
+                        pfx, pfy = (PF['x'] + PF['w'] if side == 'L' else PF['x']), PF['y'] + 400 + 120
+                        P.link(f'x_{fn}', 'x_frame', XB, (pn, 'xo', (pfx, pfy)), (fn, 'x', (fx, fy)), [(pfx, pfy), (vx, pfy), (vx, fy), (fx, fy)], 'x chain forward (frame -> next frame)')
+                    P.link(f'r_{fn}', 'ret', RET, (fn, 'ret', (fx, fy + 60)), (sn, 'ret', (vx + 30, sy)), [(fx, fy + 60), (vx + 30, fy + 60), (vx + 30, sy)], 'finished rows')
+    # void units <-> their column's slices (vertical in the column's right-hand lanes, offsets 900-1100)
+    vpair = {'coll_WS': ('s_0S', 'S'), 'coll_WN': ('s_0N', 'N'), 'coll_ES': ('s_7S', 'S'), 'coll_EN': ('s_7N', 'N'),
+             'bk_sel': ('s_1S', 'S'), 'bk_col': ('s_6S', 'S'), 'mix4_w': ('s_2N', 'N'), 'mix4_e': ('s_5N', 'N'),
+             'seqhost': ('s_4N', 'N')}
+    for u, (sn, t) in vpair.items():
+        U, S = P.blocks[P.idx[u]], P.blocks[P.idx[sn]]
+        c = int(sn[2]); xa = colx(c) + 640 if c not in (0, NCOL - 1) else colx(c) + 520
+        uy = U['y'] if t == 'S' else U['y'] + U['h']
+        sy = S['y'] + S['h'] if t == 'S' else S['y']
+        bits = 2 * COLL_LANE if u.startswith('coll') else XB
+        P.link(f'u_{u}', 'coll' if u.startswith('coll') else 'unit', bits, (u, 'o', (xa, uy)), (sn, 'i', (xa, sy)), [(xa, uy), (xa, sy)], 'unit -> slice ring stop')
+        P.link(f'v_{u}', 'coll' if u.startswith('coll') else 'unit', bits, (sn, 'o', (xa + 60, sy)), (u, 'i', (xa + 60, uy)), [(xa + 60, sy), (xa + 60, uy)], 'slice ring stop -> unit')
+    # G-unit: commands, expert ids, HC coefficients to s_3S / s_3N, then along the streets through the ring stops
     G = P.blocks[P.idx['gunit']]
     for c in range(NCOL):
         for t in 'SN':
             sn = f's_{c}{t}'
             S = P.blocks[P.idx[sn]]
-            g = (G['x'] + 300 + 60 * c, G['y'] if t == 'S' else G['y'] + G['h'])
-            st_y = S['y'] + SLICE_H / 2 + (150 if t == 'S' else -150) + (12 if c % 2 else -12)
+            gx = colx(3) + 470 + 10 * c
+            g = (gx, G['y'] if t == 'S' else G['y'] + G['h'])
+            st_y = S['y'] + SLICE_H / 2 + (150 if t == 'S' else -150)
             p = (S['x'] + S['w'] / 2, st_y)
-            P.link(f'ctl_{sn}', 'ctl', CTL, ('gunit', 'ctl', g), (sn, 'ctl', p),
-                   [g, (g[0], st_y), p], 'commands/done + expert ids + HC coefs (tree on column + street)')
-    # attention: q gathered on the mesh to s_1S / s_6S, down the slice column to the SM group; P.V rows from the
-    # service half back up into the mesh; abutted faces are drawn as spread lanes
+            P.link(f'ctl_{sn}', 'ctl', CTL, ('gunit', 'ctl', g), (sn, 'ctl', p), [g, (gx, st_y), p], 'ctl tree (column + street, via ring stops)')
+    # attention: q from s_1S / s_6S down the column to the service half; P.V rows back up; abutted faces as lanes
+    src_of, dst_of = {}, {}
     def face(nm, a, b, bits, lanes, cls, note):
         (x1, y1), (x2, y2) = a, b
         for k in range(lanes):
             t = (k + 0.5) / lanes
-            if abs(x1 - x2) < 1:   # vertical shared face at x: spread along y
-                p0 = (x1, y1 + (y2 - y1) * t); p1 = (x1 + 1, y1 + (y2 - y1) * t)
-            else:
-                p0 = (x1 + (x2 - x1) * t, y1); p1 = (x1 + (x2 - x1) * t, y1 + 1)
+            p0 = (x1, y1 + (y2 - y1) * t); p1 = (x1 + 1, y1 + (y2 - y1) * t)
             P.link(f'{nm}_{k}', cls, bits // lanes, (src_of[nm], 'f', p0), (dst_of[nm], 'f', p1), [p0, p1], note)
-    src_of, dst_of = {}, {}
     for side, svc, c in (('W', 'svc_W', 1), ('E', 'svc_E', NCOL - 2)):
-        S = P.blocks[P.idx[svc]]; Ph = P.blocks[P.idx['phy_hbm']]
+        S = P.blocks[P.idx[svc]]
         fx = S['x'] + S['w'] if side == 'W' else S['x']
         src_of[f'hbm{side}'], dst_of[f'hbm{side}'] = svc, 'phy_hbm'
         face(f'hbm{side}', (fx, 40), (fx, 1150), (8192 + 10912) // 2, 24, 'hbm', 'HBM read+request half (abutted face)')
-        sm0 = f'sm_{side}0'; M = P.blocks[P.idx[sm0]]
-        mx = M['x'] + M['w'] if side == 'W' else M['x']
-        src_of[f'sm{side}'], dst_of[f'sm{side}'] = svc, sm0
-        face(f'sm{side}', (S['x'] if side == 'W' else S['x'] + S['w'], 60), (S['x'] if side == 'W' else S['x'] + S['w'], 1000), 8192, 16, 'attn', 'scores / P (abutted face)')
+        src_of[f'sm{side}'], dst_of[f'sm{side}'] = svc, f'sm_{side}0'
+        xs = S['x'] if side == 'W' else S['x'] + S['w']
+        face(f'sm{side}', (xs, 60), (xs, 1000), 8192, 16, 'attn', 'scores / P (abutted face)')
         for k in range(1, 4):
             a_, b_ = f'sm_{side}{k - 1}', f'sm_{side}{k}'
             A = P.blocks[P.idx[a_]]
-            xx = A['x'] if side == 'W' else A['x'] + A['w']
             src_of[f'smc{side}{k}'], dst_of[f'smc{side}{k}'] = a_, b_
-            face(f'smc{side}{k}', (xx, 60), (xx, 1000), 4096, 8, 'attn', 'SM chain (abutted)')
-        sn = f's_{c}S'; sp = pin(sn, 'S'); top = (S['x'] + S['w'] / 2, S['y'] + S['h'])
-        P.link(f'q_{side}', 'attn', XB, (sn, 'q', sp), (svc, 'q', top), [(sp[0] - 200, sp[1]), (sp[0] - 200, top[1] + 120), (top[0] - 200, top[1] + 120), (top[0] - 200, top[1])], 'q heads from the mesh')
-        P.link(f'pv_{side}', 'attn', XB, (svc, 'pv', top), (sn, 'pv', sp), [(top[0] + 200, top[1]), (top[0] + 200, top[1] + 60), (sp[0] + 200, top[1] + 60), (sp[0] + 200, sp[1])], 'P.V rows into the all-gather')
-    for nm, c, src in (('bk_sel', 3, 'hbm_ctrl'), ('bk_col', 4, 'hbm_ctrl'), ('mix4_w', 2, 'svc_W'), ('mix4_e', 5, 'svc_E')):
-        a, s_ = pin(nm, 'N'), pin(f's_{c}S', 'S')
-        P.link(f'in_{nm}', 'attn', XB, (nm, 'o', a), (f's_{c}S', 'i', s_), [a, s_], 'into the mesh')
-        b_ = pin(nm, 'S'); S = P.blocks[P.idx[src]]
-        tgt = (b_[0] if S['x'] <= b_[0] <= S['x'] + S['w'] else S['x'] + S['w'] - 100, S['y'] + S['h'])
-        P.link(f'h_{nm}', 'hbm', XB, (src, 'o', tgt), (nm, 'i', b_), [tgt, (tgt[0], b_[1] - 100), (b_[0], b_[1] - 100), b_], 'HBM rows')
-    # collective edge engines: end slices <-> coll_edge <-> two link lanes each
+            face(f'smc{side}{k}', (A['x'] if side == 'W' else A['x'] + A['w'], 60), (A['x'] if side == 'W' else A['x'] + A['w'], 1000), 4096, 8, 'attn', 'SM chain (abutted)')
+        sn = f's_{c}S'; Sl = P.blocks[P.idx[sn]]
+        top = S['y'] + S['h']
+        qx, px = colx(c) + 620, colx(c) + 690
+        sxq = min(max(qx, S['x'] + 50), S['x'] + S['w'] - 150)
+        P.link(f'q_{side}', 'attn', XB, (sn, 'q', (qx, Sl['y'])), (svc, 'q', (sxq, top)), [(qx, Sl['y']), (qx, top + 100), (sxq, top + 100), (sxq, top)], 'q heads from the ring')
+        P.link(f'pv_{side}', 'attn', XB, (svc, 'pv', (sxq + 70, top)), (sn, 'pv', (px, Sl['y'])), [(sxq + 70, top), (sxq + 70, top + 170), (px, top + 170), (px, Sl['y'])], 'P.V rows into the all-gather')
+    # collective lanes: edge PHYs <-> end-slice outer face along the street (ring-stop feed-through to coll_edge)
     for side in 'WE':
         c = 0 if side == 'W' else NCOL - 1
         for t in 'SN':
-            sn, ce = f's_{c}{t}', f'coll_{side}{t}'
-            a, b = pin(sn, 'N' if t == 'S' else 'S'), pin(ce, 'S' if t == 'S' else 'N')
-            P.link(f'cs_{side}{t}', 'coll', 2 * COLL_LANE, (sn, 'coll', a), (ce, 'coll', b), [a, b], 'slice ring stop <-> collective edge')
-            P.link(f'sc_{side}{t}', 'coll', 2 * COLL_LANE, (ce, 'coll', b), (sn, 'coll', a), [(b[0] + 300, b[1]), (a[0] + 300, a[1])], '')
+            sn = f's_{c}{t}'; S = P.blocks[P.idx[sn]]
+            sxf = S['x'] if side == 'W' else S['x'] + S['w']
             for k in '01':
-                lk = f'lk_{side}{t}{k}'
-                LK = P.blocks[P.idx[lk]]
-                S = P.blocks[P.idx[sn]]
+                lk = f'lk_{side}{t}{k}'; LK = P.blocks[P.idx[lk]]
                 yst = S['y'] + SLICE_H / 2 + (-140 if k == '0' else 140)
                 lx = LK['x'] + LK['w'] if side == 'W' else LK['x']
                 ly = min(max(yst, LK['y'] + 20), LK['y'] + LK['h'] - 20)
-                e = pin(ce, 'S' if t == 'N' else 'N')
-                ex = e[0] - 300 if side == 'W' else e[0] + 300
-                P.link(f'lt_{lk}', 'coll', COLL_LANE, (ce, 'tx' + k, (ex, e[1])), (lk, 'tx', (lx, ly)),
-                       [(ex, e[1]), (ex, yst), (lx, yst), (lx, ly)], 'link lane tx (in the street)')
-                P.link(f'lr_{lk}', 'coll', COLL_LANE, (lk, 'rx', (lx, ly + 10)), (ce, 'rx' + k, (ex + 60, e[1])),
-                       [(lx, ly + 10), (lx, yst + 10), (ex + 60, yst + 10), (ex + 60, e[1])], 'link lane rx (in the street)')
+                P.link(f'lt_{lk}', 'coll', COLL_LANE, (sn, 'tx' + k, (sxf, yst)), (lk, 'tx', (lx, ly)), [(sxf, yst), (lx, yst), (lx, ly)], 'link lane tx (street)')
+                P.link(f'lr_{lk}', 'coll', COLL_LANE, (lk, 'rx', (lx, ly + 10)), (sn, 'rx' + k, (sxf, yst + 10)), [(lx, ly + 10), (lx, yst + 10), (sxf, yst + 10)], 'link lane rx (street)')
     return P, facts
 
 
@@ -332,7 +333,7 @@ def draw(P, facts, out):
         ax.plot([], [], color=v, lw=2, label=k)
     ax.legend(loc='upper right', fontsize=7, ncol=7)
     ax.set_xlim(0, DIE_W / 1000); ax.set_ylim(0, DIE_H / 1000); ax.set_aspect('equal')
-    ax.set_title(f"S81-DV candidate: 16 vector slices x 8 frames, mesh all-gather (hop <= {HOP_UM:.0f} um). "
+    ax.set_title(f"S81-DV p1: 16 slices x 8 frames, slice ring (hop <= {HOP_UM:.0f} um). "
                  f"worst cut {facts.get('worst_cut', '?')}, over-reach {facts.get('over_reach_bits', '?')} b, "
                  f"{facts.get('bit_mm', '?')} bit-mm", fontsize=9)
     ax.set_xlabel('mm'); ax.set_ylabel('mm')
@@ -342,9 +343,9 @@ def draw(P, facts, out):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', required=True)
-    ap.add_argument('--id', default='s81_dv_p0')
-    ap.add_argument('--label', default='S81-DV p0: 16 distributed vector slices, mesh all-gather (plan level)')
-    ap.add_argument('--revision', default='dv-p0')
+    ap.add_argument('--id', default='s81_dv_p1')
+    ap.add_argument('--label', default='S81-DV p1: 16 distributed vector slices, slice ring, narrow columns, 0.5 mm+ reticle margin (plan level)')
+    ap.add_argument('--revision', default='dv-p1')
     a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     P, facts = build()
