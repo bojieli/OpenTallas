@@ -5,7 +5,7 @@ Stream S81-DV (owner decision 0cj, 2026-10-16 ~22:00). Plan level: nothing in th
 **Status: COMPOSED_NOT_NATIVE.** Every rate below is composed from the token-path DAG and plan geometry. It becomes a
 measured rate only once the slice benches and the die trial report their latencies.
 
-**Current die-trial base: p4c-lanes**: p4, plus the per-column tier exchange, plus every 1,104-b link carried as 4 × 276-b lanes (sections 0a and 0b). p4 itself is the coordinator decision of 10-17, option B. The earlier base was p1b (10-17). It is p1's geometry plus two changes:
+**Current die-trial base: p4d** = p4c-lanes on the final bf_col width (sections 0a and 0b). p4 itself is the coordinator decision of 10-17, option B. The earlier base was p1b (10-17). It is p1's geometry plus two changes:
 - the row-0 frames are placed MX, so their cfifo x tap faces the slice;
 - each shared unit sits against the slice it talks to.
 
@@ -269,6 +269,24 @@ The change: every 1,104-b link is carried as **4 parallel 276-b lanes**. That co
 | MTP (DV base) | 4,141.2 | **4,141.2** (unchanged) |
 
 Only the station tiles and the plan change. The widest die-level station is now 276 b, which matches the tier links. The cut falls slightly because the lanes spread over adjacent windows. Explorer record `s81_dv_p4c_lanes`.
+
+### 0b (cont.). p4d: final bf_col width (S-ELEM, 10-17)
+
+S-ELEM fixed `dsfd_bf_col` at **604.8 × 198.72 µm**, with all parent pins on W/E and the height unchanged, so each frame is **1,436.832 µm** wide. That makes p4d, which is p4c-lanes at this frame width. The cap was ~613 µm per bf_col; 626.4 would have made the die 32.42 mm, over the limit.
+
+Two layout refinements apply:
+- Station chains are cut by arc length: no station sits on a corner, the die wire turns between stations, and corner relays are not needed.
+- The die-level stations are S-ELEM's flop-first `dsfd_dvrly_276_{EW,WE,NS,SN}` (recipe 4, with a forwarded `ck_o` for the F1 clock chain).
+
+| p4d | |
+|---|---|
+| Die | **31.73 × 25.00 mm = 793.2 mm²**; margins 0.64 / 0.50 mm per side under the reticle |
+| Worst cut / windows > 0.55 | **0.403 / 0** |
+| Over-reach | **0** |
+| Stations (276 b) | **3,725** (relay bit-stages 0.89 M) |
+| bit·mm | 0.39 M |
+| Phase path / scalar exchange | 119 / 96 stages |
+| MTP (DV base) | **4,137.3 (+24.9%)**; worst stacked 3,689.6 (+11.4%) |
 
 ## 1. Why
 
