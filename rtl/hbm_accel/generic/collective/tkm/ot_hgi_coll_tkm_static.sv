@@ -107,7 +107,8 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0, TP=96, RANK_
  for(genvar t=0;t<NT;t=t+1)begin:g_tiles
   // TP=192 (RANK_W 8, EW 86) PT64 tiles use their own hardened shape name (die view per shape, no parameter alias).
   if(EW==86 && KMAX>=64)begin:e86
-  ot_hgi_coll_tkm_tile_e86 u_tile(.clk(tile_clk[t]),.tid(6'(t)),.clr(clr),.conv(conv1||conv2),
+  ot_hgi_coll_tkm_tile_e86 u_tile(.clk_g0(tile_clk[t]),.clk_g1(tile_clk[t]),.clk_g2(tile_clk[t]),.clk_g3(tile_clk[t]),
+   .clk_g4(tile_clk[t]),.clk_g5(tile_clk[t]),.clk_g6(tile_clk[t]),.clk_g7(tile_clk[t]),.clk_g8(tile_clk[t]),.tid(6'(t)),.clr(clr),.conv(conv1||conv2),
    .tau_t(6'd0),.tau_l(7'd0),.ins_v(dv[t]),.ins_b(down[t]),.ovf_v(dv[t+1]),.ovf_b(down[t+1]),
    .up_in(up[t+1]),.up_out(up[t]),.tau_o(),.busy());
   end else begin:gen
@@ -194,11 +195,17 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0, TP=96, RANK_
  end
 endmodule
 
-// TP=192 TKM tile shape (H-NETLIST/COLL d4f): ot_hgi_coll_tkm_tile at EW 86 (RANK_W 8: 192-rank tie id, Codex
-// 5e1383c3f) and PT 64, hardened under its own name so the die binds one view per shape (no parameter alias).
+// TP=192 TKM tile shape (H-NETLIST/COLL d4f): the TKM tile at EW 86 (RANK_W 8: 192-rank tie id, Codex 5e1383c3f) and
+// PT 64, hardened under its own name so the die binds one view per shape (no parameter alias).
+// TKM-E86 2026-10-17: ot_hgi_coll_tkm_tile_rg = one CTS root per row group (clk_g0 core + groups 1..8, each <= 1,867
+// sinks; was one 12,792-sink root at TT 373.1 ps), per-group kept stage-C control copies, lean comparators.  Same edges.
+// The parent drives every clk_g* from the tile's clock (tile_clk[t]); they are separate physical entries.
 module ot_hgi_coll_tkm_tile_e86(
- input wire clk,input wire [5:0] tid,input wire clr,conv,input wire [5:0] tau_t,input wire [6:0] tau_l,
+ input wire clk_g0,clk_g1,clk_g2,clk_g3,clk_g4,clk_g5,clk_g6,clk_g7,clk_g8,
+ input wire [5:0] tid,input wire clr,conv,input wire [5:0] tau_t,input wire [6:0] tau_l,
  input wire ins_v,input wire [343:0] ins_b,output wire ovf_v,output wire [343:0] ovf_b,
  input wire [343:0] up_in,output wire [343:0] up_out,output wire [84:0] tau_o,output wire busy);
- ot_hgi_coll_tkm_tile #(.EW(86),.PT(64),.CDUP(1)) u(.*);
+ ot_hgi_coll_tkm_tile_rg #(.EW(86),.PT(64)) u(.ckg({clk_g8,clk_g7,clk_g6,clk_g5,clk_g4,clk_g3,clk_g2,clk_g1,clk_g0}),
+  .tid(tid),.clr(clr),.conv(conv),.tau_t(tau_t),.tau_l(tau_l),.ins_v(ins_v),.ins_b(ins_b),.ovf_v(ovf_v),.ovf_b(ovf_b),
+  .up_in(up_in),.up_out(up_out),.tau_o(tau_o),.busy(busy));
 endmodule
