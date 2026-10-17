@@ -408,6 +408,7 @@ def main():
     ap.add_argument('--hc-client-inner', action='store_true', help='col layout: quadrant HC client hc_<q> at the band inner end + v16 group links')
     ap.add_argument('--sm-columns', type=float, help='SM column layout with this PC-row chain channel (um); see build()')
     ap.add_argument('--band-low', action='store_true', help='with --sm-columns: VM band under the SM columns (next to the PC row)')
+    ap.add_argument('--gap', type=float, default=GAP, help='d4c: inter-block channel (um) used everywhere the plan abuts blocks')
     ap.add_argument('--qw-extra', type=float, default=0.0, help='d4c: quadrant width beyond the SM row (band row needs it)')
     ap.add_argument('--sm-portrait', action='store_true', help='d4c: 4 SMs per row, one row per group (portrait 2-row tile)')
     ap.add_argument('--carry', action='store_true', help='place the non-graph v5 grants (sfucore, granted DMA back width)')
@@ -419,6 +420,7 @@ def main():
     if a.column is not None:
         COLUMN_W = a.column
     SFU_DIM.update(core_h=a.sfucore_h, store_w=a.sfus_wh[0], store_h=a.sfus_wh[1], store_yoff=a.sfus_yoff)
+    globals()['GAP'] = a.gap
     kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout, core_at=a.core_at, sfu_at_hub=a.sfu_at_hub, mirror_east=a.mirror_east,sfu_at_group=a.sfu_at_group,core_w=a.core_w,core_h=a.core_h,core_column_w=a.core_column_w,sfu_store_side=a.sfu_store_side,hc_eng_mm2=a.hc_eng_mm2,hc_links_v16=a.hc_links_v16,hc_x_beats=a.hc_x_beats,hc_client_inner=a.hc_client_inner,sm_columns=a.sm_columns,band_low=a.band_low,sm_portrait=a.sm_portrait,qw_extra=a.qw_extra)
     G0 = json.loads((ROOT / a.graph).read_text())
     if a.fit:
