@@ -1,0 +1,438 @@
+{
+ "schema": "opentallas.hcoll.injlat_cost.v1",
+ "method": "e2e cost of raising the COLL SU-inject latency INJLAT (H-NETLIST/coll 2026-10-16).",
+ "mechanism": "e2e cost of raising the COLL SU-inject latency INJLAT (H-NETLIST/coll 2026-10-16).\n\nMechanism (ot_hfd_coll_q_static_v4 INJLAT, request P -> qslots capture P+INJLAT; SU 3:4 phase rule of\nH-NETLIST/suport: no SU-bound stream event at (P+1+Rq) mod 4 == 2):\n  * every COLL op whose sources are SU inject words pays dINJLAT = INJLAT-12 once a record (pipelined requests);\n  * COLL.GROUP_REDUCE_MCAST: measured delta of the production compiler tools/hbm_coll_static/g96_calendar.py\n    (--injlat I --su-rq 0) against INJLAT 12 (passed in with --g96 I:cycles ...);\n  * COLL.ALL_GATHER injects 96 flits a quadrant at 2 a cycle = 48 beats; the phase rule allows 3 of 4 edges, so the\n    inject stream takes 64 edges: +16 a record on top of dINJLAT (the rails take 1 flit/cycle each, so the inject is\n    the pace setter);\n  * COLL.ALL_REDUCE_SUM (qwen): dINJLAT + ceil(beats/3) with beats = its inject beats (charged as 16, conservative);\n  * COLL.TOPK_MERGE (IDX frames through cij_SW, no SU phase rule) and COLL.ARGMAX_MERGE: dINJLAT;\n  * COLL.ROW_GATHER sources VM words (vm_rq, no SU inject): 0.\nMethod = tools/throughput/accepted_cost.py hbm_schedule: S2 schedule of the exact per-die program, fixed cycles\nadded to every record of each op (edges counted 1:1 as schedule cycles, conservative).\n",
+ "g96_cycles": {
+  "12": 4501.0,
+  "14": 4501.0,
+  "16": 4505.0,
+  "20": 4508.0,
+  "24": 4511.0,
+  "30": 4518.0,
+  "36": 4524.0,
+  "48": 4535.0
+ },
+ "workloads": {
+  "ds": {
+   "coll_records": {
+    "COLL.ALL_GATHER": 584,
+    "COLL.GROUP_REDUCE_MCAST": 40,
+    "COLL.TOPK_MERGE": 9,
+    "COLL.ROW_GATHER": 8,
+    "COLL.ARGMAX_MERGE": 1
+   },
+   "rows": [
+    {
+     "injlat": 12,
+     "base_cycles": 576702.4,
+     "cycles": 583444.5,
+     "added_cycles": 6742.1,
+     "e2e_loss_pct": 1.156,
+     "per_op": {
+      "COLL.ALL_GATHER": {
+       "records": 584,
+       "cycles_per_record": 16,
+       "added_cycles": 6742.1,
+       "e2e_loss_pct": 1.156
+      }
+     }
+    },
+    {
+     "injlat": 14,
+     "base_cycles": 576702.4,
+     "cycles": 584308.5,
+     "added_cycles": 7606.1,
+     "e2e_loss_pct": 1.302,
+     "per_op": {
+      "COLL.ALL_GATHER": {
+       "records": 584,
+       "cycles_per_record": 18,
+       "added_cycles": 7586.1,
+       "e2e_loss_pct": 1.298
+      },
+      "COLL.TOPK_MERGE": {
+       "records": 9,
+       "cycles_per_record": 2,
+       "added_cycles": 18.0,
+       "e2e_loss_pct": 0.003
+      },
+      "COLL.ARGMAX_MERGE": {
+       "records": 1,
+       "cycles_per_record": 2,
+       "added_cycles": 2.0,
+       "e2e_loss_pct": 0.0
+      }
+     }
+    },
+    {
+     "injlat": 16,
+     "base_cycles": 576702.4,
+     "cycles": 585332.5,
+     "added_cycles": 8630.1,
+     "e2e_loss_pct": 1.474,
+     "per_op": {
+      "COLL.ALL_GATHER": {
+       "records": 584,
+       "cycles_per_record": 20,
+       "added_cycles": 8430.1,
+       "e2e_loss_pct": 1.441
+      },
+      "COLL.GROUP_REDUCE_MCAST": {
+       "records": 40,
+       "cycles_per_record": 4.0,
+       "added_cycles": 160.0,
+       "e2e_loss_pct": 0.028
+      },
+      "COLL.TOPK_MERGE": {
+       "records": 9,
+       "cycles_per_record": 4,
+       "added_cycles": 36.0,
+       "e2e_loss_pct": 0.006
+      },
+      "COLL.ARGMAX_MERGE": {
+       "records": 1,
+       "cycles_per_record": 4,
+       "added_cycles": 4.0,
+       "e2e_loss_pct": 0.001
+      }
+     }
+    },
+    {
+     "injlat": 20,
+     "base_cycles": 576702.4,
+     "cycles": 587283.5,
+     "added_cycles": 10581.1,
+     "e2e_loss_pct": 1.802,
+     "per_op": {
+      "COLL.ALL_GATHER": {
+       "records": 584,
+       "cycles_per_record": 24,
+       "added_cycles": 10221.1,
+       "e2e_loss_pct": 1.741
+      },
+      "COLL.GROUP_REDUCE_MCAST": {
+       "records": 40,
+       "cycles_per_record": 7.0,
+       "added_cycles": 280.0,
+       "e2e_loss_pct": 0.049
+      },
+      "COLL.TOPK_MERGE": {
+       "records": 9,
+       "cycles_per_record": 8,
+       "added_cycles": 72.0,
+       "e2e_loss_pct": 0.012
+      },
+      "COLL.ARGMAX_MERGE": {
+       "records": 1,
+       "cycles_per_record": 8,
+       "added_cycles": 8.0,
+       "e2e_loss_pct": 0.001
+      }
+     }
+    },
+    {
+     "injlat": 24,
+     "base_cycles": 576702.4,
+     "cycles": 589391.4,
+     "added_cycles": 12689.0,
+     "e2e_loss_pct": 2.153,
+     "per_op": {
+      "COLL.ALL_GATHER": {
+       "records": 584,
+       "cycles_per_record": 28,
+       "added_cycles": 12169.0,
+       "e2e_loss_pct": 2.066
+      },
+      "COLL.GROUP_REDUCE_MCAST": {
+       "records": 40,
+       "cycles_per_record": 10.0,
+       "added_cycles": 400.0,
+       "e2e_loss_pct": 0.069
+      },
+      "COLL.TOPK_MERGE": {
+       "records": 9,
+       "cycles_per_record": 12,
+       "added_cycles": 108.0,
+       "e2e_loss_pct": 0.019
+      },
+      "COLL.ARGMAX_MERGE": {
+       "records": 1,
+       "cycles_per_record": 12,
+       "added_cycles": 12.0,
+       "e2e_loss_pct": 0.002
+      }
+     }
+    },
+    {
+     "injlat": 30,
+     "base_cycles": 576702.4,
+     "cycles": 592653.4,
+     "added_cycles": 15951.0,
+     "e2e_loss_pct": 2.691,
+     "per_op": {
+      "COLL.ALL_GATHER": {
+       "records": 584,
+       "cycles_per_record": 34,
+       "added_cycles": 15091.0,
+       "e2e_loss_pct": 2.55
+      },
+      "COLL.GROUP_REDUCE_MCAST": {
+       "records": 40,
+       "cycles_per_record": 17.0,
+       "added_cycles": 680.0,
+       "e2e_loss_pct": 0.118
+      },
+      "COLL.TOPK_MERGE": {
+       "records": 9,
+       "cycles_per_record": 18,
+       "added_cycles": 162.0,
+       "e2e_loss_pct": 0.028
+      },
+      "COLL.ARGMAX_MERGE": {
+       "records": 1,
+       "cycles_per_record": 18,
+       "added_cycles": 18.0,
+       "e2e_loss_pct": 0.003
+      }
+     }
+    },
+    {
+     "injlat": 36,
+     "base_cycles": 576702.4,
+     "cycles": 595875.4,
+     "added_cycles": 19173.0,
+     "e2e_loss_pct": 3.218,
+     "per_op": {
+      "COLL.ALL_GATHER": {
+       "records": 584,
+       "cycles_per_record": 40,
+       "added_cycles": 18013.0,
+       "e2e_loss_pct": 3.029
+      },
+      "COLL.GROUP_REDUCE_MCAST": {
+       "records": 40,
+       "cycles_per_record": 23.0,
+       "added_cycles": 920.0,
+       "e2e_loss_pct": 0.159
+      },
+      "COLL.TOPK_MERGE": {
+       "records": 9,
+       "cycles_per_record": 24,
+       "added_cycles": 216.0,
+       "e2e_loss_pct": 0.037
+      },
+      "COLL.ARGMAX_MERGE": {
+       "records": 1,
+       "cycles_per_record": 24,
+       "added_cycles": 24.0,
+       "e2e_loss_pct": 0.004
+      }
+     }
+    },
+    {
+     "injlat": 48,
+     "base_cycles": 576702.4,
+     "cycles": 602341.9,
+     "added_cycles": 25639.5,
+     "e2e_loss_pct": 4.257,
+     "per_op": {
+      "COLL.ALL_GATHER": {
+       "records": 584,
+       "cycles_per_record": 52,
+       "added_cycles": 23919.5,
+       "e2e_loss_pct": 3.982
+      },
+      "COLL.GROUP_REDUCE_MCAST": {
+       "records": 40,
+       "cycles_per_record": 34.0,
+       "added_cycles": 1360.0,
+       "e2e_loss_pct": 0.235
+      },
+      "COLL.TOPK_MERGE": {
+       "records": 9,
+       "cycles_per_record": 36,
+       "added_cycles": 324.0,
+       "e2e_loss_pct": 0.056
+      },
+      "COLL.ARGMAX_MERGE": {
+       "records": 1,
+       "cycles_per_record": 36,
+       "added_cycles": 36.0,
+       "e2e_loss_pct": 0.006
+      }
+     }
+    }
+   ]
+  },
+  "qwen": {
+   "coll_records": {
+    "COLL.ALL_REDUCE_SUM": 2,
+    "COLL.ARGMAX_MERGE": 1
+   },
+   "rows": [
+    {
+     "injlat": 12,
+     "base_cycles": 1269120.1,
+     "cycles": 1269576.1,
+     "added_cycles": 456.0,
+     "e2e_loss_pct": 0.036,
+     "per_op": {
+      "COLL.ALL_REDUCE_SUM": {
+       "records": 2,
+       "cycles_per_record": 6.33,
+       "added_cycles": 456.0,
+       "e2e_loss_pct": 0.036
+      }
+     }
+    },
+    {
+     "injlat": 14,
+     "base_cycles": 1269120.1,
+     "cycles": 1269722.1,
+     "added_cycles": 602.0,
+     "e2e_loss_pct": 0.047,
+     "per_op": {
+      "COLL.ALL_REDUCE_SUM": {
+       "records": 2,
+       "cycles_per_record": 8.33,
+       "added_cycles": 600.0,
+       "e2e_loss_pct": 0.047
+      },
+      "COLL.ARGMAX_MERGE": {
+       "records": 1,
+       "cycles_per_record": 2,
+       "added_cycles": 2.0,
+       "e2e_loss_pct": 0.0
+      }
+     }
+    },
+    {
+     "injlat": 16,
+     "base_cycles": 1269120.1,
+     "cycles": 1269868.1,
+     "added_cycles": 748.0,
+     "e2e_loss_pct": 0.059,
+     "per_op": {
+      "COLL.ALL_REDUCE_SUM": {
+       "records": 2,
+       "cycles_per_record": 10.33,
+       "added_cycles": 744.0,
+       "e2e_loss_pct": 0.059
+      },
+      "COLL.ARGMAX_MERGE": {
+       "records": 1,
+       "cycles_per_record": 4,
+       "added_cycles": 4.0,
+       "e2e_loss_pct": 0.0
+      }
+     }
+    },
+    {
+     "injlat": 20,
+     "base_cycles": 1269120.1,
+     "cycles": 1270160.1,
+     "added_cycles": 1040.0,
+     "e2e_loss_pct": 0.082,
+     "per_op": {
+      "COLL.ALL_REDUCE_SUM": {
+       "records": 2,
+       "cycles_per_record": 14.33,
+       "added_cycles": 1032.0,
+       "e2e_loss_pct": 0.081
+      },
+      "COLL.ARGMAX_MERGE": {
+       "records": 1,
+       "cycles_per_record": 8,
+       "added_cycles": 8.0,
+       "e2e_loss_pct": 0.001
+      }
+     }
+    },
+    {
+     "injlat": 24,
+     "base_cycles": 1269120.1,
+     "cycles": 1270452.1,
+     "added_cycles": 1332.0,
+     "e2e_loss_pct": 0.105,
+     "per_op": {
+      "COLL.ALL_REDUCE_SUM": {
+       "records": 2,
+       "cycles_per_record": 18.33,
+       "added_cycles": 1320.0,
+       "e2e_loss_pct": 0.104
+      },
+      "COLL.ARGMAX_MERGE": {
+       "records": 1,
+       "cycles_per_record": 12,
+       "added_cycles": 12.0,
+       "e2e_loss_pct": 0.001
+      }
+     }
+    },
+    {
+     "injlat": 30,
+     "base_cycles": 1269120.1,
+     "cycles": 1270890.1,
+     "added_cycles": 1770.0,
+     "e2e_loss_pct": 0.139,
+     "per_op": {
+      "COLL.ALL_REDUCE_SUM": {
+       "records": 2,
+       "cycles_per_record": 24.33,
+       "added_cycles": 1752.0,
+       "e2e_loss_pct": 0.138
+      },
+      "COLL.ARGMAX_MERGE": {
+       "records": 1,
+       "cycles_per_record": 18,
+       "added_cycles": 18.0,
+       "e2e_loss_pct": 0.001
+      }
+     }
+    },
+    {
+     "injlat": 36,
+     "base_cycles": 1269120.1,
+     "cycles": 1271328.1,
+     "added_cycles": 2208.0,
+     "e2e_loss_pct": 0.174,
+     "per_op": {
+      "COLL.ALL_REDUCE_SUM": {
+       "records": 2,
+       "cycles_per_record": 30.33,
+       "added_cycles": 2184.0,
+       "e2e_loss_pct": 0.172
+      },
+      "COLL.ARGMAX_MERGE": {
+       "records": 1,
+       "cycles_per_record": 24,
+       "added_cycles": 24.0,
+       "e2e_loss_pct": 0.002
+      }
+     }
+    },
+    {
+     "injlat": 48,
+     "base_cycles": 1269120.1,
+     "cycles": 1272204.1,
+     "added_cycles": 3084.0,
+     "e2e_loss_pct": 0.242,
+     "per_op": {
+      "COLL.ALL_REDUCE_SUM": {
+       "records": 2,
+       "cycles_per_record": 42.33,
+       "added_cycles": 3048.0,
+       "e2e_loss_pct": 0.24
+      },
+      "COLL.ARGMAX_MERGE": {
+       "records": 1,
+       "cycles_per_record": 36,
+       "added_cycles": 36.0,
+       "e2e_loss_pct": 0.003
+      }
+     }
+    }
+   ]
+  }
+ }
+}

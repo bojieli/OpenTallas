@@ -122,7 +122,14 @@ def verify_routes(v):
     if not v.get('source_binding'):raise CalendarError('route graph requires authoritative source binding')
     return by
 
-def compile_candidate(routes,tx_edges,bidirectional=False,insert_holes=False):
+def su_request_edge(t,injlat=12,su_rq=None):
+    """Issue edge of SU inject request t. su_rq None: back-to-back (t). su_rq=R (H-NETLIST/suport 3:4 SU epoch):
+    the SU pin samples a stream event at A=P+1+R only when A mod 4 != 2, so request t takes the t-th legal edge."""
+    if su_rq is None:return t
+    legal=[p for p in range(4*t+8) if (p+1+su_rq)%4!=2]
+    return legal[t]
+
+def compile_candidate(routes,tx_edges,bidirectional=False,insert_holes=False,injlat=12,su_rq=None):
     by=verify_routes(routes);r=Resources(defer_replay=insert_holes);gb={};links_by_source=collections.defaultdict(list)
     for (a,b,q),x in by.items():links_by_source[(a,q)].append((b,x))
     def route(src,dst,q):
@@ -182,8 +189,9 @@ def compile_candidate(routes,tx_edges,bidirectional=False,insert_holes=False):
     for d in range(G):
         for q in range(4):
             for t in range(16):
-                r.qroute(f'd{d}q{q}',0,(3 if q==0 else 2)+12,12+t,(d,q,t,'input'))
-                r.tag_load(f'd{d}q{q}',t,15+t,d)
+                req=su_request_edge(t,injlat,su_rq)
+                r.qroute(f'd{d}q{q}',0,(3 if q==0 else 2)+12,req+injlat,(d,q,t,'input'))
+                r.tag_load(f'd{d}q{q}',t,req+injlat+3,d)
     arithmetic=[]
     for level in range(3):
         step=1<<level
@@ -253,7 +261,7 @@ def compile_candidate(routes,tx_edges,bidirectional=False,insert_holes=False):
             'ring':'no wide vector on256bit peer ring; routing stays within perquadrant physical vector rails. Ring/read/tag primitives independently checked, no ring operations silently substituted',
             'native_SU':'not claimed; declared input boundary at fixed12edge only'}
 
-def lower_expanded(full,layout):
+def lower_expanded(full,layout,injlat=12):
     import re
     fields=layout['fields'];arfields=layout['ar_fields'];words=collections.defaultdict(dict)
     def emit(owner,cycle,name,value,shift=0,width=None):
@@ -281,7 +289,7 @@ def lower_expanded(full,layout):
     for x in full['loads']:
         owner,c,t=x['owner'],x['cycle'],x['tag'];q=int(owner.split('q')[1]);rank=x['rank']
         ar(owner,c,{'load_v':1,'load_tag':t})
-        req=c-15;orfield(owner,req,'inj_rd',1)
+        req=c-(injlat+3);orfield(owner,req,'inj_rd',1)
         emit(owner,req,'inj_idx',q*16+t,0,16)
         emit(owner,req,'inj_meta',(1<<32)|(255<<24)|(rank<<16)|(q*16+t),0,33)
     for x in full['arithmetic']:
@@ -365,7 +373,10 @@ def selftest():
     return failures
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('out',type=pathlib.Path);p.add_argument('--routes',type=pathlib.Path);p.add_argument('--candidate-rings',action='store_true');p.add_argument('--layout',type=pathlib.Path);p.add_argument('--bidirectional',action='store_true');p.add_argument('--insert-holes',action='store_true');p.add_argument('--tx-edges',type=int,choices=(3,5),default=5);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('out',type=pathlib.Path);p.add_argument('--routes',type=pathlib.Path);p.add_argument('--candidate-rings',action='store_true');p.add_argument('--layout',type=pathlib.Path);p.add_argument('--bidirectional',action='store_true');p.add_argument('--insert-holes',action='store_true');p.add_argument('--tx-edges',type=int,choices=(3,5),default=5)
+    p.add_argument('--injlat',type=int,default=12,help='COLL SU inject latency (ot_hfd_coll_q_static_v4 INJLAT): request P -> qslots capture P+INJLAT')
+    p.add_argument('--su-rq',type=int,default=None,help='request relay stages to the SU; enables the SU 3:4 phase rule (no SU-bound event at (P+1+R) mod 4 == 2)')
+    a=p.parse_args()
     a.out.mkdir(parents=True,exist_ok=True);checks=selftest()
     m={'schema':'hcoll.g96.native.calendar.v1','operation':operation(),'primitive_mutants_rejected':checks,
        'sources':{'V2_parent':'cc6d946ad (originala84885466)','transport':'359252cc2','reducer':'bd81c1706','golden':'tools/hgi_sim/machine.py:u_coll_group_reduce_mcast; tools/hgi_sim/lib.py:pairwise'},
@@ -376,10 +387,11 @@ def main():
         routes=candidate_rings() if a.candidate_rings else json.loads(a.routes.read_text())
         (a.out/'candidate_routes.json').write_text(json.dumps(routes,indent=2)+'\n')
         by=verify_routes(routes);m['verified_physical_directed_links']=len(by)
-        full=compile_candidate(routes,a.tx_edges,a.bidirectional,a.insert_holes)
+        full=compile_candidate(routes,a.tx_edges,a.bidirectional,a.insert_holes,a.injlat,a.su_rq)
+        full['injlat']=a.injlat;full['su_rq']=a.su_rq
         full['multicast_policy']='two native publications to two disjoint48/47hop branches' if a.bidirectional else 'one native publication to95hop branch'
         if a.layout:
-            words,summary=lower_expanded(full,json.loads(a.layout.read_text()))
+            words,summary=lower_expanded(full,json.loads(a.layout.read_text()),a.injlat)
             with (a.out/'expanded_uops.jsonl').open('w') as f:
                 for owner,code in sorted(words.items()):
                     for c,w in sorted(code.items()):f.write(json.dumps({'owner':owner,'cycle':c,'word':f'{w:0384x}'})+'\n')
