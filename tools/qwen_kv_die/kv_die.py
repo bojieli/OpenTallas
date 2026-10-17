@@ -972,6 +972,23 @@ RTL.update(qkd_host_rt=HOST_RT_FILE, qkd_hslice=SLICE_DIE_FILE)
 BINDINGS.update(qkd_hslice_dn=slice_die_binding())
 RTL.update(qkd_hslice_dn=SLICE_DIE_FILE)
 
+# KVJ-G2 2026-10-17 (OT_KV_STATIC_DIE=1, default off; kv_static_join_plan item 10): the 669-instance static KV subsystem
+# PLACED in this split die (tools/qwen_kv_die/kv_static_die.py): generated wires-only tiles (rtl/qwen_sys/
+# static_kv_die_20261017/qkd_kvs_tiles.sv) bound by identity, the ECTL frame re-bound to the fused A + K issuer
+# composition qkd_ectl3_kiss_s (master qkd_ectlk), the D2D end's static faces as identity die ports, the V port's
+# measured RT 9 (KVJ-F, abutted landing seg); the credit write / landing elements are removed by kv_static_die.inject
+import kv_static_die as KSD  # noqa: E402
+KSD.D2D_LISTS = (D2DS_SVC, SEQST_RX)
+if KSD.ON:
+    SPLIT_BINDINGS.update(KSD.bindings())
+    if V144_R6:
+        SPLIT_BINDINGS['qkd_pv16_vport']['parameters'] = dict(SPLIT_BINDINGS['qkd_pv16_vport']['parameters'], RT=9)
+    for _p in ('att_tx_v', 'att_tx_payload', 'emb_tx_v', 'emb_tx_payload', 'kv_drained_local', 'kv_flush_local',
+               'kv_active_local', 'rx_payload', 'att_tx_slot', 'att_tx_kind', 'att_tx_beat', 'emb_tx_slot',
+               'kvn_word_identity', 'kvn_word_generation'):
+        BINDINGS['qkd_d2ds']['ports'][_p] = [_p]
+    RTL.update({k_: KSD.RTL_FILE for k_ in KSD.KIND_MASTER.values()}, qkd_ectlk=KSD.bindings()['qkd_ectlk']['file'])
+
 
 # not exact-cut yet (frames sized, RTL partition owed): reported, not strict
 FRAME_ONLY = dict(qkd_astk='ot_qwen_nearhbm_attn_stack_d minus its engines (re-cut D: q beat broadcast, node staging, '
@@ -1787,6 +1804,8 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         _write_buses(m)
     if slice_w:
         _host_v14_buses(m)
+    if KSD.ON and split:
+        KSD.inject(m, sys.modules[__name__])     # KVJ-G2: the static subsystem replaces the credit write / landing
     _relays(m)
     m['regions'] = _regions(m)
     m['die']['mm2'] = round(Wk * Hk / 1e6, 3)
@@ -3169,6 +3188,8 @@ def masters(m, k=1, port_bits=None):
     if m['geo'].get('kv_wq_leaves'):
         tmap['qkd_cdc_wleaf'] = 'qfd_cdc'     # ot_hbm3e_phy: the real LEF (k = 1)
     for name, src in tmap.items():
+        if m['geo'].get('static_die') and not any(i_.master == name for i_ in m['insts']):
+            continue          # KVJ-G2: superseded by the static subsystem (no instance left)
         t = T['masters'][src]
         if name in ('qkd_land', 'qkd_land_n'):
             mm = F.Master(name, LAND_W - SHAVE, m['geo']['stack_h'] - SHAVE, 7, 'KV landing (qfd_kvc successor)')
@@ -4046,6 +4067,10 @@ def port_widths(m, k=1):
 
 def write_netlist(m, k, path, top='qkd_die'):
     F.write_netlist(m, k, path, top=top)
+    if m['geo'].get('static_die'):
+        # KVJ-G2: per-instance parameters (ECTL kiss RESPONSE_LAT from this plan's K request / response relays) as a
+        # sidecar the strict bind reads (kv_bound_netlist); die.v stays a parameter-free structural netlist
+        Path(str(path) + '.params.json').write_text(json.dumps(KSD.response_lat(m), indent=1) + '\n')
     if m.get('extra_conns'):
         # v1.4: a port tapping one bit of an existing bundle (the SerDes tx_up of the host FDI word into the D2D end)
         p_ = Path(path)
@@ -4485,6 +4510,11 @@ def main(argv=None):
         return 0
     if a.static_graph:
         ap.error('--static-graph requires explicit OT_KV_STATIC=1')
+    if KSD.ON and a.mode == 'case' and os.environ.get('OT_KV_STATIC_DIE_DIAGNOSTIC', '0') != '1':
+        # KVJ-G2 10-17: the static-die case stays HELD until the strict port bind is clean (0 unconnected functional inputs,
+        # 0 undriven, 0 functional ties); a diagnostic GEN (routing evidence of the static floorplan) must say so
+        ap.error('static die case held: strict port bind not clean (kv_static_die record open_tile_inputs); set '
+                 'OT_KV_STATIC_DIE_DIAGNOSTIC=1 for a DIAGNOSTIC (not a die result) GEN')
     if a.host_v14:
         if not a.split:
             ap.error('--host-v14 needs --split')
@@ -4522,7 +4552,10 @@ def main(argv=None):
     rec['pin_reach'] = pin_reach(m, M)   # qwen-1010/b: pin-to-pin register hops (SS reach 504 um)
     rec['stack_local_reach'] = stack_local_reach(m, M)
     real_rows, real_status = real_pin_bindings(m)
-    if a.kv_wq_leaf_s:
+    if KSD.ON and m['geo'].get('static_die'):
+        rec['static_die'] = KSD.record(m)
+        rec['static_die']['ectl_params'] = KSD.response_lat(m)
+    if a.kv_wq_leaf_s and not m['geo'].get('static_die'):
         rec['actual_pin_views'] = real_status
         rec['cdc_write_pin_reach'] = cdc_write_pin_reach(m, real_rows)
     if a.kv_wq_leaves:

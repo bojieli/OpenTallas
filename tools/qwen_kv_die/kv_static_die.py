@@ -1,0 +1,1074 @@
+#!/usr/bin/env python3
+"""KVJ-G2 2026-10-17 (kv_static_join_plan item 10, lanes/KV-INT.md): the 669-instance static KV subsystem PLACED in the
+kv_die.py --split die.  Opt-in OT_KV_STATIC_DIE=1 (default off: every existing plan is unchanged).
+
+Source of truth: the merged static compiler join (kv_static_kvjf_join.build(): template + boot + 160 boot CDC + HOST
+admission + ownership observer + die cfg) with the priced ages (die_ages.json, kv_static_ages.apply).  Nothing here
+invents a producer: every join edge is kept bit-exact; a join input with no producer stays an OPEN die input (listed
+with its owner in the plan record), never a tie.
+
+Physical homes (beside their consumers, neighbour-only links, every die hop relayed at the plan reach):
+  kvpc_<st>_<k>  x128  qkd_kvs_pc / qkd_kvs_pc_h : pc_path_emb + its embedding return station (hop, head on PC 0), at the
+                       old controller slot of PC k (abuts the HBM PHY's per-PC DFI words, 378-um PC pitch)
+  slg_<st>_<g>   x32   qkd_kvs_grp : landing seg + landing / front calendars + phase launch + drain guard + 5 boot CDCs of
+                       one landing group, level with its four PCs, between the HOST slice column and the V ports
+  ectl_<st>_<g>  x32   qkd_ectlk   : the engine-control frame re-bound to qkd_ectl3_kiss_s (ECTL A + its static K issuer,
+                       ki folded in, kv_static_join_plan (b)); K request / response = one abutting-channel hop to its group
+  vport_<st>_<k> x16   (existing qkd_pv16_vport) : V get / rsp to groups 2k / 2k + 1 (RT = 9, 0 relays)
+  kvs_ctl        x1    qkd_kvs_ctl : layer programme (boot-loaded, replaces the die's lprg image), writer + writer programme,
+                       ownership calendar + observer, boot dispatcher + observer, die cfg; beside the HOST root / D2D end
+  kvs_attn       x1    qkd_kvs_attn: the native attention programme (attention calendar), at the PV pairs' D2D end
+  kvs_emb        x1    qkd_kvs_emb : embedding join4 + row transmitter, beside the D2D end (port 2)
+  kc_<st>        x4    qkd_ctrl_kc : the kc stream-command head of each stack's PC command / fault chain (kept)
+Removed (superseded credit write / landing, 0db): ctrl strips (qkd_ctrl / _n), qkd_cdc_wleaf x128, the write queue
+(qkd_kvwq_leaf_s_w129_m x128 + qkd_kvwq_ctl_bin x4), the landing strips (qkd_land / _n), the KVN context leaf (qkd_kvnc:
+wprg drives the D2D end's kvn_compiled_*), the layer image (qkd_lprg: the join's boot-loaded layer programme).
+
+The tiles are generated WIRES-ONLY parents (rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles.sv, written by
+`kv_static_die.py --rtl`): children = the unchanged ROLES RTL with the join's parameters, internal nets = the join's
+edges, ports = the edges that leave the tile (one port per distinct source slice), identity straps and clock entries as
+ports.  Every replica of a tile kind elaborates the SAME module (checked).
+"""
+import argparse
+import hashlib
+import json
+import os
+import re
+import sys
+from collections import OrderedDict, defaultdict
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[1]
+sys.path.insert(0, str(HERE))
+
+ON = os.environ.get('OT_KV_STATIC_DIE', '0') == '1'
+RTL_FILE = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles.sv'
+AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
+STACKS = ('WS', 'WN', 'ES', 'EN')
+ORDER = (4, 5, 0, 1, 2, 3, 6, 7)          # kv_static.template: group g holds PCs 4 * ORDER.index(g) + q
+PC_PITCH = 378.0
+NPC = 32
+CORE_CK = ('ck', 'return_ck')
+HBM_CK = ('hck', 'pll_hbm', 'pll_hbm_port', 'pll_hbm_ecc', 'pll_hbm_cdc', 'pll_hbm_obs', 'cal_hck', 'front_hck', 'return_hck')
+RESETS = ('rst_n', 'rsi', 'hrst_n', 'hrst', 'cal_rst_n')
+HBM_RST = ('hrst_n', 'hrst', 'cal_rst_n')
+KIND_MASTER = dict(grp='qkd_kvs_grp', pc='qkd_kvs_pc', pc_h='qkd_kvs_pc_h', ctl='qkd_kvs_ctl', attn='qkd_kvs_attn',
+                   emb='qkd_kvs_emb')
+GEN_KINDS = tuple(KIND_MASTER)
+CTL_LOCAL = dict(layer_programme='lprg', wprg='wprg', wrn='wrn', ownership='own', own_obs='oobs', boot='boot',
+                 boot_obs='bobs', diecfg='dcfg')
+GRP_LOCAL = dict(slg='slg', lcal='lcal', fcal='fcal', phase='phase', drain='drain')
+# superseded die instances (0db) by name prefix
+SUPERSEDED = ('ctrl_', 'cdc_', 'land_', 'wctl_', 'wleaf_', 'kvnc', 'lprg')
+# per-tile frames (um, ASSUMED until kits close): see place()
+FRAME = dict(attn=(302.4, 302.4), emb=(388.8, 302.4), ctl=(648.0, 518.4))
+# Special bundles (die-port order = the existing master's binding order, LSB first)
+VREQ = [('vreq_valid', 1), ('vreq_t', 14)]                                         # qkd_pv16_vport vq<p>
+RSP = ['rsp_valid', 'rsp_v', 'rsp_t', 'rsp_epoch', 'rsp_data']                    # qkd_pv16_vport i<p> (R6)
+KREQ = [('req_valid', 1), ('req_t', 14), ('req_v', 1), ('req_epoch', 16), ('req_layer', 6)]   # qkd_ectlk rq
+KRSP = ['rsp_valid', 'rsp_data', 'rsp_t', 'rsp_v', 'rsp_epoch', 'rsp_layer']        # qkd_ectlk rs
+KG = ['kgo', 'epoch', 'layer']                                                     # qkd_ectlk kg (from the layer programme)
+LP = ['attention_run', 'layer', 'ctx_t']                                           # qkd_seq_static lp
+KVI = ['compiled_identity', 'compiled_generation']                                  # qkd_d2d_static kvi
+D2D_LISTS = None                     # (D2DS_SVC, SEQST_RX), set by kv_die before bindings()
+
+_G = {}
+
+
+def graph():
+    """the merged static join with the priced ages (cached per process)"""
+    if 'g' not in _G:
+        import kv_static_kvjf_join as F
+        import kv_static_ages as A
+        g, _ = F.build()
+        ages = json.loads((ROOT / AGES).read_text())
+        left = A.apply(g, ages)
+        _G['g'], _G['unpriced'] = g, left
+        _G['ins'] = {i['name']: i for i in g['instances']}
+        _G['spec'] = {}
+    return _G['g']
+
+
+def ins():
+    graph()
+    return _G['ins']
+
+
+def spec(name):
+    """{port: dict(direction, width)} of one join instance (parameters as joined; unpriced -> RTL default)"""
+    import kv_static as K
+    graph()
+    if name not in _G['spec']:
+        i = _G['ins'][name]
+        s = K.source(i['source'], i['module'])
+        par = {k: v for k, v in i['parameters'].items() if k in s['parameters']}
+        par = {k: (1 if v is None else v) for k, v in par.items()}
+        _G['spec'][name] = K.ports(s, par)
+    return _G['spec'][name]
+
+
+def pc_group():
+    """(st, pc) -> group g"""
+    return {(st, 4 * ORDER.index(g) + q): g for st in STACKS for g in range(8) for q in range(4)}
+
+
+def cluster_of(name):
+    """join instance -> (die instance, kind, local name)"""
+    m = re.fullmatch(r'(pc|embr)_(WS|WN|ES|EN)_(\d+)', name)
+    if m:
+        k = int(m.group(3))
+        return f'kvpc_{m.group(2)}_{k}', ('pc_h' if k == 0 else 'pc'), m.group(1)
+    m = re.fullmatch(r'(slg|lcal|fcal|phase|drain)_(WS|WN|ES|EN)_(\d)', name)
+    if m:
+        return f'slg_{m.group(2)}_{m.group(3)}', 'grp', GRP_LOCAL[m.group(1)]
+    m = re.fullmatch(r'bcdc_f_(WS|WN|ES|EN)_(\d)', name)
+    if m:
+        return f'slg_{m.group(1)}_{m.group(2)}', 'grp', 'bcdcf'
+    m = re.fullmatch(r'bcdc_c_(WS|WN|ES|EN)_(\d+)', name)
+    if m:
+        pc = int(m.group(2))
+        return f'slg_{m.group(1)}_{pc_group()[(m.group(1), pc)]}', 'grp', f'bcdc{pc % 4}'
+    m = re.fullmatch(r'(ectl_a|ki)_(WS|WN|ES|EN)_(\d)', name)
+    if m:
+        return f'ectl_{m.group(2)}_{m.group(3)}', 'ectl', 'a' if m.group(1) == 'ectl_a' else 'k'
+    if name.startswith('vport_'):
+        return name, 'vport', 'vport'
+    if name == 'd2d':
+        return 'd2d_kv', 'd2d', 'd2d'
+    if name == 'embgw':
+        return 'embgw', 'embgw', 'embgw'
+    if name == 'attention_programme':
+        return 'kvs_attn', 'attn', 'attn'
+    if name in ('emb_join', 'emb_tx'):
+        return 'kvs_emb', 'emb', 'join' if name == 'emb_join' else 'rowtx'
+    if name in CTL_LOCAL:
+        return 'kvs_ctl', 'ctl', CTL_LOCAL[name]
+    raise ValueError(f'kv_static_die: no home for join instance {name}')
+
+
+def members():
+    """die instance -> [join instance names] (generated kinds only, fixed local order)"""
+    out = defaultdict(list)
+    for n in ins():
+        d, kind, _ = cluster_of(n)
+        if kind in GEN_KINDS:
+            out[d].append(n)
+    key = lambda n: (cluster_of(n)[2], n)          # noqa: E731
+    return {d: sorted(v, key=key) for d, v in out.items()}
+
+
+def kind_of(die_inst):
+    if die_inst.startswith('kvpc_'):
+        return 'pc_h' if die_inst.endswith('_0') else 'pc'
+    if die_inst.startswith('slg_'):
+        return 'grp'
+    return dict(kvs_ctl='ctl', kvs_attn='attn', kvs_emb='emb').get(die_inst)
+
+
+def _d2d_bundles():
+    """existing qkd_d2d_static die bundles that static consumers read: RTL port -> (bundle, lo, width)"""
+    import kv_static as K
+    if 'd2db' in _G:
+        return _G['d2db']
+    s = K.source('rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv', 'qkd_d2d_static')
+    w = K.ports(s, {k: v for k, v in dict(MUT=0, NL=2, PR=1).items() if k in s['parameters']})
+    if D2D_LISTS is None:                # standalone (--rtl): kv_die defines the bundles (it does not import us back ON)
+        import kv_die as _kd
+        D2DS_SVC, SEQST_RX = _kd.D2DS_SVC, _kd.SEQST_RX
+    else:
+        D2DS_SVC, SEQST_RX = D2D_LISTS
+    out = {}
+    for b, lst in (('svc', D2DS_SVC), ('srx', SEQST_RX)):
+        lo = 0
+        for p in lst:
+            out[p] = (b, lo, w[p]['width'])
+            lo += w[p]['width']
+    out['_widths'] = {p: v['width'] for p, v in w.items()}
+    _G['d2db'] = out
+    return out
+
+
+# ------------------------------------------------------------------------------------------------ tile interfaces
+def tile(die_inst):
+    """interface + body of one generated tile instance.
+    ports: OrderedDict name -> dict(dir, width, cls, ...); cls in clock / reset / pad / strap / open / sig / special / export
+    sig inputs carry key (src die inst, src port on that die inst) for die wiring; exports carry their consumers."""
+    mem = members()[die_inst]
+    kind = kind_of(die_inst)
+    loc = {n: cluster_of(n)[2] for n in mem}
+    I = ins()
+    d2db = _d2d_bundles()
+    ports = OrderedDict()
+    body = []
+    wires = []
+    sig_in = {}            # (src join inst, port, lo, w) or ('d2d', bundle) / ... -> wrapper input port name
+
+    def add_port(name, **kw):
+        if name in ports:
+            if ports[name]['width'] != kw['width'] or ports[name]['dir'] != kw['dir']:
+                raise ValueError(f'{die_inst}: port {name} redefined')
+            return name
+        ports[name] = dict(kw)
+        return name
+
+    def term_of(n, p, k, it, nitems):
+        """Verilog term for one join item of input n.p (index k)"""
+        src = it.get('instance')
+        lo, w = it.get('lo'), it.get('width')
+        if 'strap' in it:
+            pn = add_port(f'{loc[n]}__{p}', dir='input', width=w, cls='strap', value=it['strap'])
+            return pn
+        if src in loc:
+            return f'w_{loc[src]}__{it["port"]}[{lo + w - 1}:{lo}]'
+        sd, skind, sloc = cluster_of(src)
+        if kind in ('pc', 'pc_h') and skind in ('d2d', 'embgw'):
+            # PCs read the D2D RESULT / gateway status through their group (one long run per group, not per PC)
+            nm, _up, _uw, ilo, iw, _expr = pc_pass(src, it['port'], lo, w)
+            return add_port(f'x__{nm}', dir='input', width=iw, cls='pass', src=('PASS', nm))
+        if skind == 'd2d':
+            sp = it['port']
+            if sp in d2db:                       # inside an existing die bundle: take the whole bundle, slice here
+                b, blo, bw = d2db[sp]
+                bwid = sum(v[2] for kk, v in d2db.items() if kk != '_widths' and v[0] == b)
+                pn = add_port(f'd2d__{b}', dir='input', width=bwid, cls='sig', src=('d2d_kv', b))
+                return f'{pn}[{blo + lo + w - 1}:{blo + lo}]'
+            pn = add_port(f'd2d__{sp}', dir='input', width=d2db['_widths'][sp], cls='sig', src=('d2d_kv', sp))
+            return f'{pn}[{lo + w - 1}:{lo}]'
+        if skind == 'embgw':
+            pn = add_port(f'embgw__{it["port"]}', dir='input', width=13, cls='sig', src=('embgw', it['port']))
+            return f'{pn}[{lo + w - 1}:{lo}]'
+        if skind == 'vport':                     # landing vreq_* <- V port vq<parity>_* (qkd_pv16_vport vq bundle)
+            off = dict(vreq_valid=0, vreq_t=1)[p]
+            pn = add_port('vreq', dir='input', width=15, cls='special', src=None)
+            return f'vreq[{off + lo + w - 1}:{off + lo}]'
+        if skind == 'ectl':                      # landing req_* <- the folded K issuer (qkd_ectlk rq bundle)
+            off = 0
+            for nm, wd in KREQ:
+                if nm == it['port']:
+                    break
+                off += wd
+            else:
+                raise ValueError(f'{die_inst}: unknown K request field {it["port"]}')
+            pn = add_port('kreq', dir='input', width=38, cls='special', src=None)
+            return f'kreq[{off + lo + w - 1}:{off + lo}]'
+        # another generated tile: one port per distinct source slice, named by its first consumer (replica-generic)
+        key = (src, it['port'], lo, w)
+        if key not in sig_in:
+            sig_in[key] = add_port(f'{loc[n]}__{p}' + (f'__{k}' if nitems > 1 else ''), dir='input', width=w,
+                                   cls='sig', src=key)
+        return sig_in[key]
+
+    # internal wires: every member output
+    for n in mem:
+        for p, v in spec(n).items():
+            if v['direction'] == 'output':
+                wires.append(f'    wire [{v["width"] - 1}:0] w_{loc[n]}__{p};')
+    overrides = CTL_OVERRIDE if kind == 'ctl' else {}
+    for n in mem:
+        sp = spec(n)
+        cs = []
+        child_ck = [p for p in sp if p in CORE_CK + HBM_CK]
+        hbm_only = child_ck and all(p in HBM_CK for p in child_ck)
+        for p, v in sp.items():
+            if v['direction'] == 'output':
+                cs.append(f'.{p}(w_{loc[n]}__{p})')
+                continue
+            items = I[n]['inputs'].get(p)
+            if (loc[n], p) in overrides:
+                pn, wd, expr = overrides[(loc[n], p)]
+                add_port(pn, dir='input', width=wd, cls='special', src=None)
+                cs.append(f'.{p}({expr})')
+                continue
+            if items is None:
+                if p in CORE_CK or p in HBM_CK:
+                    pn = add_port(f'{loc[n]}__{p}', dir='input', width=1, cls='clock',
+                                  domain='hbm' if p in HBM_CK else 'core')
+                elif p in RESETS:
+                    dom = 'hbm' if (p in HBM_RST or (p == 'rst_n' and hbm_only)) else 'core'
+                    pn = add_port('hrst_n' if dom == 'hbm' else 'rst_n', dir='input', width=1, cls='reset', domain=dom)
+                elif p == 'por_n':
+                    pn = add_port('por_n', dir='input', width=1, cls='pad')
+                else:
+                    pn = add_port(f'{loc[n]}__{p}', dir='input', width=v['width'], cls='open', owner=open_owner(n, p))
+                cs.append(f'.{p}({pn})')
+                continue
+            terms = [term_of(n, p, k, it, len(items)) for k, it in enumerate(items)]
+            cs.append(f'.{p}({terms[0] if len(terms) == 1 else "{" + ", ".join(terms) + "}"})')
+        par = I[n]['parameters']
+        if any(v is None for v in par.values()):
+            # unpriced compiler parameters: the RTL default (recorded in the plan as UNPRICED)
+            import kv_static as K
+            s = K.source(I[n]['source'], I[n]['module'])
+            dflt = _rtl_defaults(I[n]['source'], I[n]['module'])
+            par = {k: (dflt.get(k) if v is None else v) for k, v in par.items()}
+        ps = (' #(' + ', '.join(f'.{k}({v})' for k, v in par.items()) + ')') if par else ''
+        body.append(f'    {I[n]["module"]}{ps} u_{loc[n]} (' + ', '.join(cs) + ');')
+    # outputs: member output slices read by another tile / an existing die master, plus the die-level exports
+    outs = OrderedDict()                   # port -> (expr, width, consumers)
+    for c, ci in I.items():
+        if c in loc:
+            continue
+        cd, ckind, cloc = cluster_of(c)
+        for p, items in ci['inputs'].items():
+            for k, it in enumerate(items or []):
+                src = it.get('instance')
+                if src not in loc:
+                    continue
+                lo, w = it['lo'], it['width']
+                full = lo == 0 and w == spec(src)[it['port']]['width']
+                if ckind == 'vport' and it['port'] in RSP:
+                    outs.setdefault('rsp', (rsp_expr('slg', RSP), 1056, []))[2].append((cd, f'i{p[2]}'))
+                    continue
+                if ckind == 'ectl' and it['port'] in KRSP:
+                    outs.setdefault('krsp', (rsp_expr('slg', KRSP), 1062, []))[2].append((cd, 'rs'))
+                    continue
+                if ckind == 'ectl' and it['port'] in KG and kind == 'ctl':
+                    outs.setdefault('kg', (rsp_expr('lprg', KG), 23, []))[2].append((cd, 'kg'))
+                    continue
+                if ckind == 'ectl' and p == 'cfg':
+                    pn = f'{loc[src]}__{it["port"]}__{lo}_{w}'
+                    outs.setdefault(pn, (f'w_{loc[src]}__{it["port"]}[{lo + w - 1}:{lo}]', w, []))[2].append((cd, 'cfg'))
+                    continue
+                if ckind == 'd2d' and p.startswith('kvn_compiled'):
+                    outs.setdefault('kvi', (rsp_expr('wprg', KVI), 61, []))[2].append((cd, 'kvi'))
+                    continue
+                pn = f'{loc[src]}__{it["port"]}' + ('' if full else f'__{lo}_{w}')
+                outs.setdefault(pn, (f'w_{loc[src]}__{it["port"]}' + ('' if full else f'[{lo + w - 1}:{lo}]'), w, []))
+                tgt = (cd, p) if ckind == 'd2d' else (cd, ('sig', (src, it['port'], lo, w)))
+                if tgt not in outs[pn][2]:
+                    outs[pn][2].append(tgt)
+    for (lp, p), (pn, w) in DIE_EXPORTS.get(kind, {}).items():
+        expr = rsp_expr(lp, p) if isinstance(p, (list, tuple)) else f'w_{lp}__{p}'
+        outs.setdefault(pn, (expr, w, []))
+    if kind == 'emb':                      # the D2D RESULT proxy for the PCs (via their groups)
+        for key in PASSES:
+            nm, up_, uw, ilo, iw, expr = pc_pass(*key)
+            if up_[0] == 'kvs_emb':
+                add_port(f'd2d__{_d2d_bundles()[key[1]][0]}', dir='input', width=sum(
+                    v[2] for kk, v in _d2d_bundles().items() if kk != '_widths' and v[0] == _d2d_bundles()[key[1]][0]),
+                    cls='sig', src=('d2d_kv', _d2d_bundles()[key[1]][0]))
+                outs[up_[1]] = (expr, uw, [])
+    if kind == 'grp':                      # pass words for the group's four PCs (pure wires, no edge)
+        for nm, up_, uw, ilo, iw, expr in PASSES.values():
+            add_port(f'x__{nm.split("__")[0]}', dir='input', width=uw, cls='sig', src=up_)
+            outs[f'y__{nm}'] = (f'x__{nm.split("__")[0]}' + ('' if (ilo == 0 and iw == uw) else f'[{ilo + iw - 1}:{ilo}]'), iw, [])
+    for pn, (expr, w, cons) in outs.items():
+        add_port(pn, dir='output', width=w, cls='export', expr=expr, consumers=cons)
+    return dict(inst=die_inst, kind=kind, ports=ports, wires=wires, body=body, members=mem, loc=loc)
+
+
+def rsp_expr(local, fields):
+    """{last, ..., first} of a member's outputs (LSB first = fields[0])"""
+    return '{' + ', '.join(f'w_{local}__{f}' for f in reversed(fields)) + '}'
+
+
+_DFLT = {}
+
+
+def _rtl_defaults(path, module):
+    if (path, module) not in _DFLT:
+        txt = re.sub(r'//[^\n]*', '', (ROOT / path).read_text())
+        m = re.search(r'\bmodule\s+' + module + r'\s*#\s*\((.*?)\)\s*\(', txt, re.S)
+        d = {}
+        for k, v in re.findall(r'(\w+)\s*=\s*([0-9]+)', m.group(1) if m else ''):
+            d[k] = int(v)
+        _DFLT[(path, module)] = d
+    return _DFLT[(path, module)]
+
+
+# CTL: the layer programme's HOST authority (the die's former lprg image wiring, qkd_static_kv_layer_programme_img):
+# start <- the link calendar sequencer tok_start (dcal tks), auth <- HOST {token_epoch_valid, program_ready,
+# program_epoch, program_digest}, cohort tag / gen <- HOST (TAG59 = {epoch16, stage6, token18, position13, segment6})
+CTL_OVERRIDE = {
+    ('lprg', 'start'): ('st', 1, 'st'),
+    ('lprg', 'authority_valid'): ('auth', 82, 'auth[0]'),
+    ('lprg', 'programme_authorized'): ('auth', 82, 'auth[1]'),
+    ('lprg', 'programme_epoch'): ('auth', 82, 'auth[17:2]'),
+    ('lprg', 'programme_digest'): ('auth', 82, 'auth[81:18]'),
+    ('lprg', 'authority_epoch'): ('cht', 59, 'cht[58:43]'),
+    ('lprg', 'authority_token'): ('cht', 59, 'cht[36:19]'),
+    ('lprg', 'authority_position'): ('cht', 59, "{5'd0, cht[18:6]}"),
+    ('lprg', 'authority_generation'): ('chg', 2, 'chg'),
+}
+# die-level exports beyond the join's tile-to-tile edges: (local, port) -> (tile port, width)
+DIE_EXPORTS = dict(
+    pc={('pc', 'er'): ('pc__er', 261), ('pc', 'ko'): ('pc__ko', 33), ('pc', 'fo'): ('pc__fo', 1),
+        ('pc', 'po'): ('pc__po', 328), ('pc', 'completion_v'): ('pc__completion_v', 1),
+        ('pc', 'completion_we'): ('pc__completion_we', 1)},
+    ctl={('lprg', tuple(LP)): ('lp', 21), ('boot', 'setup_ready'): ('boot__setup_ready', 1),
+         ('own', 'native_reserved'): ('own__native_reserved', 1), ('own', 'ownership_valid'): ('own__ownership_valid', 1)},
+)
+DIE_EXPORTS['pc_h'] = DIE_EXPORTS['pc']
+
+
+def _exports(kind):
+    out = []
+    for (lp, p), (pn, w) in DIE_EXPORTS.get(kind, {}).items():
+        out.append((lp, list(p) if isinstance(p, tuple) else p, pn, w))
+    return out
+
+
+# HOST <-> static die joins (kv_static_boot_join.HOST_DIE_JOINS + kvjf own_obs quiet): consumer (join inst, port)
+def host_joins():
+    out = []
+    for dj in graph().get('die_joins', []):
+        c, p = dj['consumer'].split('.')
+        pr = dj['producer'].split('.')
+        out.append((c, p, pr[0], pr[1], dj.get('width'), dj.get('lo')))
+    return out
+
+
+OPEN_OWNERS = [   # (role / local, port prefix) -> owner: producers still being built or decisions owed
+    ('pc', 'es_', 'KVJ-C3 (writer 4-lane -> 128-PC fan-out, es_expected_* / es_context)'),
+    ('pc', 'emb_issue_v', 'KVJ-C3 (embedding token-run slot player)'),
+    ('pc', 'emb_word_index', 'KVJ-C3 (embedding token-run slot player)'),
+    ('pc', 'emb_half', 'KVJ-C3 (embedding token-run slot player)'),
+    ('pc', 'emb_scale', 'KVJ-C3 (embedding token-run slot player)'),
+    ('pc', 'emb_return_slot', 'KVJ-C3 (embedding token-run slot player)'),
+    ('pc', 'ci', 'Q-KV decision: the legacy controller command/KV-write word (old qkd_cdc_wleaf co); no static producer'),
+    ('embr', 'capture_slot', 'KVJ-C3 (embedding slot player: station capture slots)'),
+    ('embr', 'transfer_slot', 'KVJ-C3 (embedding slot player: station transfer slots)'),
+    ('join', 'beat_slot', 'KVJ-C3 (embedding slot player: join4 beat slot)'),
+    ('attn', 'compiled_', 'KVJ-SMALL / KVJ-B successor (qkd_attn_cal_gen, R stretch)'),
+    ('attn', 'fused_program_capability', 'KVJ-E (boot image capability bit)'),
+    ('attn', 'request_ready', 'KVJ-SMALL (attention service result face, ahub / seq_static D3)'),
+    ('attn', 'result_', 'KVJ-SMALL (attention service result face)'),
+    ('attn', 'service_fault', 'KVJ-SMALL (attention service result face)'),
+]
+
+
+def open_owner(n, p):
+    lp = cluster_of(n)[2]
+    for l_, pre, own in OPEN_OWNERS:
+        if l_ == lp and p.startswith(pre):
+            return own
+    return 'KVJ-G2 die wiring (see plan static_die.die_joins)'
+
+
+# the PCs' words from outside their group, carried once per group: name -> (pass name, upstream (inst, port), upstream
+# width, slice lo, slice width, upstream expression on the producer tile)
+PASSES = OrderedDict([
+    (('embgw', 'est', 0, 1), ('est__0_1', ('embgw', 'est'), 13, 0, 1, None)),
+    (('d2d', 'engine_result_token', 0, 18), ('tok', ('kvs_emb', 'px_tok'), 18, 0, 18, None)),
+    (('d2d', 'engine_result_tag', 43, 16), ('tep', ('kvs_emb', 'px_tep'), 16, 0, 16, None)),
+])
+
+
+def pc_pass(src, port, lo, w):
+    key = (src, port, lo, w)
+    if key not in PASSES:
+        raise ValueError(f'kv_static_die: PC word {key} has no group pass')
+    nm, up_, uw, ilo, iw, _ = PASSES[key]
+    if up_[0] == 'kvs_emb':
+        b, blo, _bw = _d2d_bundles()[port]
+        return nm, up_, uw, ilo, iw, f'd2d__{b}[{blo + lo + w - 1}:{blo + lo}]'
+    return nm, up_, uw, ilo, iw, None
+
+
+def _fill_passes():
+    for key in list(PASSES):
+        nm, up_, uw, ilo, iw, _ = PASSES[key]
+        if up_[0] == 'kvs_emb':
+            PASSES[key] = pc_pass(*key)
+
+
+def module_text(t, name):
+    L = [f'// {name}: GENERATED by tools/qwen_kv_die/kv_static_die.py (wires-only parent of the static join; do not edit)',
+         f'module {name} (']
+    pl = []
+    for pn, v in t['ports'].items():
+        pl.append(f'    {v["dir"]} wire [{v["width"] - 1}:0] {pn}')
+    L.append(',\n'.join(pl))
+    L.append(');')
+    for pn, w, bname, off in t.get('packed', []):
+        L.append(f'    wire [{w - 1}:0] {pn} = {bname}[{off + w - 1}:{off}];')
+    L += t['wires']
+    L += t['body']
+    for pn, v in t['ports'].items():
+        if v['dir'] == 'output':
+            L.append(f'    assign {pn} = {v["expr"]};')
+    L.append('endmodule')
+    txt = '\n'.join(L) + '\n'
+    return txt
+
+
+def rel(T, S):
+    """the peer S as named from tile T (replica-generic port names)"""
+    kt, ks = kind_of(T), kind_of(S)
+    if kt in ('pc', 'pc_h'):
+        if ks == 'grp':
+            return 'grp'
+        if ks in ('pc', 'pc_h'):
+            return 'prev' if int(S.split('_')[2]) == int(T.split('_')[2]) - 1 else 'next'
+        if ks == 'emb':
+            return 'next'              # the return train's root word leaves on the same face as a station's
+    if kt == 'grp' and ks in ('pc', 'pc_h'):
+        return f'pc{int(S.split("_")[2]) % 4}'
+    if ks in ('ctl', 'attn', 'emb'):
+        return ks
+    return S
+
+
+def pack(tiles):
+    """one bundle port per tile pair (inputs i_<peer>, outputs o_<peer>): every edge between two generated tiles rides
+    ONE die bus (one relay chain) per direction; layout = the consumer's per-signal ports sorted by name"""
+    layout = {}
+    for T, t in tiles.items():
+        groups = defaultdict(list)
+        for pn, v in t['ports'].items():
+            if v['dir'] == 'input' and v['cls'] == 'sig' and isinstance(v.get('src'), tuple) and len(v['src']) == 4:
+                groups[cluster_of(v['src'][0])[0]].append((pn, v['width'], v['src']))
+        for S, lst in groups.items():
+            # order by the PRODUCER's replica-generic key (local name, port, slice): identical text for every replica
+            layout[(T, S)] = sorted(lst, key=lambda e: (cluster_of(e[2][0])[2], e[2][1], e[2][2], e[2][3], e[0]))
+    for T, t in tiles.items():
+        new, packed = OrderedDict(), []
+        keyexpr = {}
+        for pn, v in t['ports'].items():
+            if v['dir'] == 'output':
+                for cd, cp in v['consumers']:
+                    if isinstance(cp, tuple) and cp[0] == 'sig':
+                        keyexpr[cp[1]] = v['expr']
+        for pn, v in t['ports'].items():
+            if v['dir'] == 'input' and v['cls'] == 'sig' and isinstance(v.get('src'), tuple) and len(v['src']) == 4:
+                continue
+            if v['dir'] == 'output':
+                rest = [c for c in v['consumers'] if not (isinstance(c[1], tuple) and c[1][0] == 'sig')]
+                if rest or not v['consumers']:
+                    new[pn] = dict(v, consumers=rest)
+                continue
+            new[pn] = v
+        ins_ = sorted(((rel(T, S), S, lst) for (TT, S), lst in layout.items() if TT == T))
+        for r, S, lst in ins_:
+            name, off = f'i_{r}', 0
+            for pn, w, key in lst:
+                packed.append((pn, w, name, off))
+                off += w
+            if name in new:
+                raise ValueError(f'kv_static_die: {T} bundle {name} twice')
+            new[name] = dict(dir='input', width=off, cls='bundle', peer=S)
+        outs_ = sorted(((rel(T, C), C, lst) for (C, S), lst in layout.items() if S == T))
+        for r, C, lst in outs_:
+            name = f'o_{r}'
+            if name in new:
+                raise ValueError(f'kv_static_die: {T} bundle {name} twice')
+            new[name] = dict(dir='output', width=sum(w for _, w, _ in lst), cls='bundle', peer=C,
+                             peer_port=f'i_{rel(C, T)}', consumers=[],
+                             expr='{' + ', '.join(reversed([keyexpr[key] for _, _, key in lst])) + '}')
+        t['ports'], t['packed'] = new, packed
+    return tiles
+
+
+def all_tiles():
+    if 'tiles' not in _G:
+        _G['tiles'] = pack({d: tile(d) for d in members()})
+    return _G['tiles']
+
+
+def rtl_text():
+    """one module per tile kind; every replica must produce the identical text"""
+    mods = OrderedDict()
+    for d, t in all_tiles().items():
+        name = KIND_MASTER[t['kind']]
+        txt = module_text(t, name)
+        if name in mods and mods[name][0] != txt:
+            a, b = mods[name][0].splitlines(), txt.splitlines()
+            diff = next((i for i in range(min(len(a), len(b))) if a[i] != b[i]), min(len(a), len(b)))
+            raise ValueError(f'kv_static_die: tile {d} differs from {mods[name][1]} ({name}) at line {diff}: '
+                             f'{a[diff][:160] if diff < len(a) else ""!r} vs {b[diff][:160] if diff < len(b) else ""!r}')
+        mods.setdefault(name, (txt, d))
+    hdr = ('`timescale 1ns/1ps\n// KVJ-G2 2026-10-17: the static KV subsystem tiles of the Qwen KV die (kv_die.py --split, '
+           'OT_KV_STATIC_DIE=1).\n// GENERATED by tools/qwen_kv_die/kv_static_die.py --rtl from the merged static join '
+           '(kv_static_kvjf_join.build) + die_ages.json.\n// Wires-only parents: no logic, no flop, no constant except '
+           "the layer programme's 5-b zero extension of the TAG59 position (as the image variant).\n\n")
+    return hdr + '\n'.join(v[0] for v in mods.values())
+
+
+def sources():
+    """RTL files the tiles elaborate (children + their dependencies)"""
+    import kv_static as K
+    s = set()
+    for t in all_tiles().values():
+        for n in t['members']:
+            s.add(ins()[n]['source'])
+    s.update(K.pc_emb_sources())
+    s.update(K.EMB_SOURCES)
+    return sorted(s)
+
+
+# ------------------------------------------------------------------------------------------------ die bindings
+def bindings():
+    """kv_die BINDINGS entries for the static die masters (identity ports; por_n off-chip)"""
+    out = {}
+    seen = {}
+    for d, t in all_tiles().items():
+        mst = KIND_MASTER[t['kind']]
+        if mst in seen:
+            continue
+        seen[mst] = d
+        ports = {pn: [pn] for pn, v in t['ports'].items() if v['cls'] != 'pad'}
+        cls = {'por_n': 'by_design: package POR pad (off-chip signal)'} if 'por_n' in t['ports'] else {}
+        out[mst] = dict(module=mst, file=RTL_FILE, ports=ports, sliced={}, classed=cls)
+    # ECTL frame re-bound to the fused A + K issuer composition (qkd_ectl3_kiss_s)
+    out['qkd_ectlk'] = dict(module='qkd_ectl3_kiss_s', file='rtl/qwen_sys/static_kv_20261014/qkd_static_ectla_kiss.sv',
+        parameters=dict(RESPONSE_LAT=14, QK_ISSUE_AGE=62, HXK=13, MUT=0),
+        ports=dict(si=['si'], so=['so'], t0=['t0'], t1=['t1'], e0=['e0'], e1=['e1'], e2=['e2'], e3=['e3'], s0=['s0'],
+                   s1=['s1'], s2=['s2'], s3=['s3'], rq=[f for f, _ in KREQ], rs=list(KRSP), kg=list(KG), cfg=['cfg'],
+                   kf=['fault'], ck_a=['ck'], rst_n=['rst_n']),
+        sliced=dict(ck_b='ck_a', ck_c='ck_a'), classed={})
+    return out
+
+
+# ------------------------------------------------------------------------------------------------ die integration
+def _bundle_widths():
+    return dict(rsp=1056, krsp=1062, kg=23, kvi=61, lp=21)
+
+
+def inject(m, K):
+    """K = the kv_die module.  Remove the superseded credit elements, place the static tiles, wire the join."""
+    import qwen_rom_fulldie as F
+    B = m['buses']
+    by = {i.name: i for i in m['insts']}
+    rec = m.setdefault('static_die', dict(dropped_endpoints=[], dropped_buses=[], opens=[], die_joins=[], notes=[]))
+    for k_ in ('kv_wq_leaves', 'kv_wq_binary', 'kv_wq_leaf_s', 'kv_wq_head', 'kv_wq_wide', 'kv_wq_mirror'):
+        m['geo'][k_] = False             # the write queue is superseded (static writer -> PC es)
+    m.pop('wq_straps', None)
+    # ---- 0. geometry of the removed columns (per stack) before removal
+    geo = {}
+    for st in STACKS:
+        ctrl = by[f'ctrl_{st}']
+        land = by[f'land_{st}']
+        hs = [by[f'hsl_{st}_{k}'] for k in range(NPC)]
+        geo[st] = dict(ctrl=(ctrl.x, ctrl.y, ctrl.w, ctrl.h, ctrl.orient, ctrl.master), land=(land.x, land.y, land.w, land.h),
+                       hsl_x=hs[0].x, hsl_w=hs[0].w)
+    # ---- 1. remove superseded instances; a bus that loses its driver is dropped, its surviving loads recorded open
+    gone = {i.name for i in m['insts'] if i.name.startswith(SUPERSEDED) and not i.name.startswith('cdc_dummy')}
+    m['insts'][:] = [i for i in m['insts'] if i.name not in gone]
+    keep = []
+    repoint = {}
+    for bid, cl, bits, eps in B:
+        if not any(e[0] in gone for e in eps):
+            keep.append((bid, cl, bits, eps))
+            continue
+        if eps[0][0] in gone:
+            surv = [e for e in eps[1:] if e[0] not in gone]
+            if cl in ('clock_trunk', 'reset'):
+                rec['dropped_buses'].append(bid)
+                continue
+            repoint[bid] = (cl, bits, eps)
+            rec['dropped_endpoints'] += [dict(bus=bid, inst=e[0], port=e[1], role='load (driver superseded)') for e in surv]
+            continue
+        surv = [e for e in eps if e[0] not in gone]
+        if len(surv) < 2 and cl not in ('clock_trunk', 'reset'):
+            repoint[bid] = (cl, bits, eps)
+            rec['dropped_endpoints'] += [dict(bus=bid, inst=e[0], port=e[1], role='driver (loads superseded)') for e in surv]
+            continue
+        keep.append((bid, cl, bits, surv))
+    B[:] = keep
+    for k_ in ('forks',):
+        if m.get(k_):
+            m[k_] = {b_: [e for e in v if e[0] not in gone] for b_, v in m[k_].items() if b_ in {x[0] for x in B}}
+            m[k_] = {b_: v for b_, v in m[k_].items() if v}
+    if m.get('extra_conns'):
+        for g_ in list(m['extra_conns']):
+            if g_ in gone:
+                del m['extra_conns'][g_]
+    for g_ in list(m.get('host_ties', {})):
+        if not any(b_[0] == g_ for b_ in B):
+            m['host_ties'].pop(g_, None)
+    add = B.append
+    tiles = all_tiles()
+    # ---- 2. place the tiles
+    place(m, K, geo, F)
+    by = {i.name: i for i in m['insts']}
+    # ---- 3. masters of the existing frames
+    for st in STACKS:
+        for e in range(8):
+            by[f'ectl_{st}_{e}'].master = 'qkd_ectlk'
+    # ---- 4. join wiring between tiles (one bus a source slice; extra loads = relayed fork branches)
+    nets = {}                                   # (driver inst, port) -> [loads]
+    widths = {}
+    for d, t in tiles.items():
+        for pn, v in t['ports'].items():
+            if v['dir'] != 'output':
+                continue
+            if v['cls'] == 'bundle':
+                nets[(d, pn)] = [(v['peer'], v['peer_port'])]
+                widths[(d, pn)] = v['width']
+                continue
+            for cd, cp in v['consumers']:
+                nets.setdefault((d, pn), [])
+                if (cd, cp) not in nets[(d, pn)]:
+                    nets[(d, pn)].append((cd, cp))
+                widths[(d, pn)] = v['width']
+    # existing-master sources (D2D end bundles / identity ports, gateway status) and the PC pass words
+    for d, t in tiles.items():
+        for pn, v in t['ports'].items():
+            if v['dir'] != 'input':
+                continue
+            if v['cls'] == 'pass':                       # PC <- its group's y__ word
+                st, k = d.split('_')[1], int(d.split('_')[2])
+                gd = f'slg_{st}_{pc_group()[(st, k)]}'
+                src = (gd, 'y__' + pn[3:])
+            elif v['cls'] == 'sig' and isinstance(v['src'], tuple) and len(v['src']) == 2:
+                src = v['src']                           # (d2d_kv | embgw | kvs_emb, port)
+            else:
+                continue
+            nets.setdefault(src, [])
+            if (d, pn) not in nets[src]:
+                nets[src].append((d, pn))
+            widths[src] = v['width'] if src[0] not in ('d2d_kv', 'embgw') else v['width']
+    # vport <-> group, ECTL <-> group, ECTL kg / cfg (special bundles)
+    for st in STACKS:
+        for g in range(8):
+            gd = f'slg_{st}_{g}'
+            vp, par = f'vport_{st}_{g // 2}', g % 2
+            add((f'pvvq_{st}_{g // 2}_{par}', 'kv_oneway', 15, [(vp, f'vq{par}'), (gd, 'vreq')]))
+            add((f'kreq_{st}_{g}', 'kv_oneway', 38, [(f'ectl_{st}_{g}', 'rq'), (gd, 'kreq')]))
+    seen_buses = {b_[0] for b_ in B}
+    fk = m.setdefault('forks', {})
+    for (dinst, dport), loads in nets.items():
+        if dport == 'rsp':
+            for (cd, cp) in loads:
+                st, k = cd.split('_')[1], int(cd.split('_')[2])
+                add((f'pvrs_{st}_{k}_{cp[1]}', 'kv_oneway', 1056, [(dinst, 'rsp'), (cd, cp)]))
+            continue
+        if dport == 'krsp':
+            for (cd, cp) in loads:
+                add((f'krsp_{cd[5:]}', 'kv_oneway', 1062, [(dinst, 'krsp'), (cd, 'rs')]))
+            continue
+        bits = widths.get((dinst, dport))
+        if dinst == 'd2d_kv' and dport in ('svc', 'srx'):
+            # existing bundle buses: the static loads are relayed fork branches of hsvc / seqst_rx
+            trunk = 'hsvc' if dport == 'svc' else 'seqst_rx'
+            fk.setdefault(trunk, [])
+            fk[trunk] += [l_ for l_ in loads if l_ not in fk[trunk]]
+            continue
+        if dinst == 'embgw' and dport == 'est':
+            fk.setdefault('est', [])
+            fk['est'] += [l_ for l_ in loads if l_ not in fk['est']]
+            continue
+        if bits is None:
+            raise ValueError(f'kv_static_die: no width for {dinst}.{dport}')
+        bid = _bid(dinst, dport, seen_buses)
+        add((bid, 'kv_oneway', bits, [(dinst, dport), loads[0]]))
+        if len(loads) > 1:
+            fk[bid] = list(loads[1:])
+    # the est bus becomes a relayed data trunk (its PC-group branches fork from the gateway pin)
+    for i_, (bid, cl, bits, eps) in enumerate(B):
+        if bid == 'est' and fk.get('est'):
+            B[i_] = (bid, 'kv_oneway', bits, eps)
+    # ---- 5. existing-master joins: D2D end, HOST root, sequencer, PHY, HOST slices, kc chain
+    _die_joins(m, K, B, add, fk, rec)
+    # ---- 6. clocks / resets / straps
+    _clocks_resets(m, B, add, rec)
+    m['geo']['static_die'] = dict(tiles=len(tiles), join_instances=len(ins()), rtl=RTL_FILE)
+    return m
+
+
+def _export_name(tiles, sd, key):
+    t = tiles[sd]
+    src, p, lo, w = key
+    lp = cluster_of(src)[2]
+    full = lo == 0 and w == spec(src)[p]['width']
+    pn = f'{lp}__{p}' + ('' if full else f'__{lo}_{w}')
+    if pn not in t['ports']:
+        raise ValueError(f'kv_static_die: {sd} exports no {pn}')
+    return pn
+
+
+def _bid(inst, port, seen):
+    b = re.sub(r'[^A-Za-z0-9_]', '_', f'ks_{inst}__{port}')
+    b0, k = b, 1
+    while b in seen:
+        b = f'{b0}_{k}'
+        k += 1
+    seen.add(b)
+    return b
+
+
+def _die_joins(m, K, B, add, fk, rec):
+    by = {i.name: i for i in m['insts']}
+    seen = {b_[0] for b_ in B}
+
+    def bus(bid, cl, bits, eps):
+        if bid in seen:
+            raise ValueError(f'kv_static_die: bus {bid} exists')
+        seen.add(bid)
+        add((bid, cl, bits, eps))
+    # D2D end <- static (identity die ports on qkd_d2ds), kvi from the writer programme (replaces qkd_kvnc)
+    for bid, src, dst, w in (('ks_att_tx_v', ('kvs_attn', 'attn__tx_valid'), 'att_tx_v', 1),
+                             ('ks_att_tx_payload', ('kvs_attn', 'attn__tx_payload'), 'att_tx_payload', 548),
+                             ('ks_emb_tx_v', ('kvs_emb', 'rowtx__emb_tx_v'), 'emb_tx_v', 1),
+                             ('ks_emb_tx_payload', ('kvs_emb', 'rowtx__emb_tx_payload'), 'emb_tx_payload', 548),
+                             ('ks_kv_drained', ('kvs_ctl', 'oobs__kv_drained_local'), 'kv_drained_local', 1),
+                             ('ks_kv_flush', ('kvs_ctl', 'oobs__kv_flush_local'), 'kv_flush_local', 1),
+                             ('ks_kv_active', ('kvs_ctl', 'oobs__kv_active_local'), 'kv_active_local', 1),
+                             ('ks_kvi', ('kvs_ctl', 'kvi'), 'kvi', 61)):
+        pass   # these are created by the tile export loop (consumers recorded there); kept for the record
+    # sequencer lp <- the layer programme (was lprg), layer programme start / authority (was lprg's)
+    for i_, (bid, cl, bits, eps) in enumerate(B):
+        pass
+    bus('ks_lprg_st', 'kv_oneway', 1, [('dcal', 'tks'), ('kvs_ctl', 'st')])
+    bus('ks_lprg_auth', 'kv_oneway', 82, [('host', 'auth_lp'), ('kvs_ctl', 'auth')])
+    bus('ks_lprg_cht', 'kv_oneway', 59, [('host', 'cohort_tag'), ('kvs_ctl', 'cht')])
+    bus('ks_lprg_chg', 'kv_oneway', 2, [('host', 'cohort_gen'), ('kvs_ctl', 'chg')])
+    bus('ks_seq_lp', 'kv_oneway', 21, [('kvs_ctl', 'lp'), ('seq', 'lp')])
+    # HOST <-> boot / ownership / ownership observer (kv_static_boot_join.HOST_DIE_JOINS + kvjf own_obs quiet)
+    hostw = {'boot_pr': 143, 'boot_image_target': 4, 'boot_image_ready': 1, 'boot_image_fault': 1, 'boot_image_epoch': 16,
+             'boot_image_digest': 64, 'host_launch_quiet': 1, 'host_upstream_quiet': 6}
+    t = all_tiles()['kvs_ctl']
+    for c, p, pi, pp, w, lo in host_joins():
+        if c == 'host':
+            loc_, port_ = CTL_LOCAL[pi], pp
+            bus(f'ks_host_{p}', 'kv_oneway', 1, [('kvs_ctl', f'{loc_}__{port_}'), ('host', p)])
+        elif pi == 'host':
+            loc_ = CTL_LOCAL[c]
+            pn = f'{loc_}__{p}'
+            if pn not in t['ports']:
+                raise ValueError(f'kv_static_die: kvs_ctl has no open {pn} for the HOST join')
+            bus(f'ks_host_{p}', 'kv_oneway', t['ports'][pn]['width'], [('host', pp), ('kvs_ctl', pn)])
+            t['ports'][pn]['cls'] = 'die_join'
+        elif c.startswith('rst_region'):
+            rec['die_joins'].append(dict(consumer=c, producer=dj_str(pi, pp, lo, w), status='OPEN: the region roots are '
+                                         'created inside the relay pass (kv_die._relays); the dly straps stay until a '
+                                         'post-relay diecfg wiring pass exists (owner KVJ-G2 follow-up)'))
+    # PHY (per-PC DFI words + the front / return data faces), HOST slices, kc chain
+    pi_ = {}
+    for i_, (bid, cl, bits, eps) in enumerate(B):
+        mt = re.fullmatch(r'dp([io])_(WS|WN|ES|EN)_(\d+)', bid)
+        if mt:
+            pi_[bid] = mt
+    for st in STACKS:
+        rev = st[1] == 'S'
+        for k in range(NPC):
+            pc = f'kvpc_{st}_{k}'
+            s = f'hsl_{st}_{k}'
+            bus(f'dpi_{st}_{k}', 'phy_dfi', 289, [(f'phy_{st}', f'pi{k}'), (pc, 'pc__pi')])
+            bus(f'dpo_{st}_{k}', 'phy_dfi', 328, [(pc, 'pc__po'), (f'phy_{st}', f'po{k}')])
+            bus(f'dfh_{st}_{k}', 'phy_dfi', 4, [(f'phy_{st}', f'fh{k}'), (pc, 'pc__front_hbm_data')])
+            bus(f'drh_{st}_{k}', 'phy_dfi', 4, [(f'phy_{st}', f'rh{k}'), (pc, 'pc__return_hbm_data')])
+            bus(f'hes_{st}_{k}', 'kv_oneway', 288, [(s, 'ctrl_es'), (pc, 'pc__wes')])
+            bus(f'ler_{st}_{k}', 'kv_oneway', 261, [(pc, 'pc__er'), (s, 'ctrl_er')])
+            bus(f'hcv_{st}_{k}', 'kv_oneway', 1, [(pc, 'pc__completion_v'), (s, 'ctrl_completion_v')])
+            bus(f'hcw_{st}_{k}', 'kv_oneway', 1, [(pc, 'pc__completion_we'), (s, 'ctrl_completion_we')])
+        # kc command / fault chain (qkd_ctrl_strip_s / _sr order): S stacks kc -> pc0 .. pc31, fault pc31 .. pc0 -> kc
+        order = list(range(NPC)) if rev else list(range(NPC - 1, -1, -1))
+        kc = f'kc_{st}'
+        prev = (kc, 'ko')
+        for k in order:
+            bus(f'kck_{st}_{k}', 'kv_oneway', 33, [prev, (f'kvpc_{st}_{k}', 'pc__ki')])
+            prev = (f'kvpc_{st}_{k}', 'pc__ko')
+        rec['notes'].append(f'kc_{st}: last PC ko unconsumed (the strip parent left it open too)')
+        forder = list(reversed(order))
+        bus(f'kcf0_{st}', 'constant', 1, [(f'kvpc_{st}_{forder[0]}', 'pc__fi')])
+        m.setdefault('host_ties', {})[f'kcf0_{st}'] = (1, 0)
+        for a, b in zip(forder, forder[1:]):
+            bus(f'kcf_{st}_{b}', 'kv_oneway', 1, [(f'kvpc_{st}_{a}', 'pc__fo'), (f'kvpc_{st}_{b}', 'pc__fi')])
+        bus(f'kcf_{st}_kc', 'kv_oneway', 1, [(f'kvpc_{st}_{forder[-1]}', 'pc__fo'), (kc, 'fi')])
+    # the sequencer's kc words -> the kept kc heads (re-pointed from the removed strips)
+    for st in STACKS:
+        bus(f'kc_{st}', 'kv_oneway', 33, [('seq', f'kc_{st}'), (f'kc_{st}', 'kc')])
+    rec['opens'] += [
+        dict(where='hsl_<st>_<k>.land_es (x128, 288 b)', owner='KVJ-C3 (writer 4-lane -> PC fan-out feeds the HOST slice)'),
+        dict(where='seq.mf_<q> (x4) / seq.kvn_<q>_cr (x4)', owner='Q-KV decision: qkd_seq_static legacy landing faces '
+             '(merge fault, KVN credit) have no static producer; seq successor without them or a static source'),
+        dict(where='embgw.emr_<q> (x4, 521 b)', owner='KVJ-C3 / Q-KV (static emr source for the boot-only gateway)'),
+        dict(where='host.ctrl_completion_fault', owner='KVJ-SMALL (OR of the 128 pc_path completion_fault)'),
+        dict(where='pvw_<p>.st / ie', owner='KVJ-B service root (start / ctx / epoch) + KVE-2 / KVJ-D (ASTK e-read)'),
+    ]
+
+
+def dj_str(i, p, lo, w):
+    return f'{i}.{p}' + (f'[{lo + w - 1}:{lo}]' if lo is not None and w else '')
+
+
+def _clocks_resets(m, B, add, rec):
+    """every tile clock port joins its region's trunk as its own entry; resets join the die / HBM reset trees; identity
+    straps are die-top constants (class identity strap)"""
+    ties = m.setdefault('host_ties', {})
+    extra = defaultdict(list)
+    for d, t in all_tiles().items():
+        reg = d.split('_')[1] if d.startswith(('kvpc_', 'slg_')) else 'c'
+        for pn, v in t['ports'].items():
+            if v['cls'] == 'clock':
+                extra[f'clk_core_{reg}' if v['domain'] == 'core' else f'clk_hbm_{reg}'].append((d, pn))
+            elif v['cls'] == 'reset':
+                extra['rst_die' if v['domain'] == 'core' else 'rst_hbm'].append((d, pn))
+            elif v['cls'] == 'strap':
+                cb = f'kvsid_{d}__{pn}'
+                add((cb, 'constant', v['width'], [(d, pn)]))
+                ties[cb] = (v['width'], v['value'])
+    for st in STACKS:
+        kc = f'kc_{st}'
+        extra[f'clk_core_{st}'].append((kc, 'ck'))
+        extra[f'clk_hbm_{st}'].append((kc, 'pll_hbm'))
+        extra['rst_die'].append((kc, 'rsi'))
+        extra['rst_hbm'].append((kc, 'hrst'))
+    names = {b_[0] for b_ in B}
+    for k_ in extra:
+        if k_ not in names:
+            if k_ == 'clk_hbm_c':
+                raise ValueError('kv_static_die: a centre tile has an HBM clock entry')
+            raise ValueError(f'kv_static_die: no trunk {k_}')
+    for i_, (bid, cl, bits, eps) in enumerate(B):
+        if bid in extra:
+            B[i_] = (bid, cl, bits, list(eps) + [e for e in extra[bid] if e not in eps])
+
+
+# ------------------------------------------------------------------------------------------------ floorplan
+def place(m, K, geo, F):
+    """homes: PCs at the old controller slots (abut the PHY), the HOST slices next, the group tiles level with their four
+    PCs up to the V port channel, kc heads at each strip's outer end, centre tiles beside their consumers."""
+    by = {i.name: i for i in m['insts']}
+    GX, GY = K.GX, K.GY
+    up = K.up
+    SH = K.SHAVE
+    pcw, pch = 432.0, 302.4
+    gap = 21.6
+    for st in STACKS:
+        cx, cy, cw, ch, co, cm = geo[st]['ctrl']
+        lx, ly, lw, lh = geo[st]['land']
+        west = st[0] == 'W'
+        phy = by[f'phy_{st}']
+        # PC column: from the PHY's controller face outward
+        x_pc = up(phy.x + phy.w + 0.0, GX) if west else up(phy.x - pcw, GX) - GX
+        if not west:
+            x_pc = phy.x - pcw
+        for k in range(NPC):
+            yc = cy + PC_PITCH * k + PC_PITCH / 2
+            y = up(yc - pch / 2, GY)
+            kind = 'pc_h' if k == 0 else 'pc'
+            m['insts'].append(F.Inst(f'kvpc_{st}_{k}', KIND_MASTER[kind], round(x_pc, 4), round(y, 4), pcw - SH,
+                                     pch - SH, 'R0' if west else 'MY', kind='static', region='strip', domain='hbm'))
+        # HOST slice column moves next to the PCs (closes the removed CDC / write-leaf column the PC <-> slice words crossed)
+        hs = [by[f'hsl_{st}_{k}'] for k in range(NPC)]
+        x_hs = up(x_pc + pcw + gap, GX) if west else up(x_pc - gap - hs[0].w - GX, GX)
+        for h in hs:
+            h.x = round(x_hs, 4)
+        # group tiles: from the slice column to the V port channel
+        vps = [by[f'vport_{st}_{k}'] for k in range(4)]
+        ects = [by[f'ectl_{st}_{e}'] for e in range(8)]
+        if west:
+            x_g = up(x_hs + hs[0].w + gap, GX)
+            x_e = min(v.x for v in vps) - 86.4
+            gw = round(x_e - x_g, 4)
+        else:
+            x_e = max(v.x + v.w for v in vps) + 86.4
+            x_end = up(x_hs - gap, GX) - GX
+            x_g = up(x_e, GX)
+            gw = round(x_hs - gap - x_g, 4)
+        for g in range(8):
+            idx = ORDER.index(g)
+            y0 = up(cy + PC_PITCH * 4 * idx + gap / 2, GY)
+            gh = PC_PITCH * 4 - gap
+            m['insts'].append(F.Inst(f'slg_{st}_{g}', 'qkd_kvs_grp', round(x_g, 4), round(y0, 4), gw - SH, gh - SH,
+                                     'R0' if west else 'MY', kind='static', region='strip', domain='hbm'))
+        # kc head at the strip's outer end (S stacks: below PC 0; N stacks: above PC 31), on the PC column
+        kw, kh = 64.8, 43.2
+        ky = cy - kh - 10.8 if st[1] == 'S' else cy + PC_PITCH * NPC + 10.8
+        m['insts'].append(F.Inst(f'kc_{st}', 'qkd_ctrl_kc', round(up(x_pc + pcw / 2 - kw / 2, GX), 4), round(up(ky, GY), 4),
+                                 kw - SH, kh - SH, 'R0', kind='static', region='strip', domain='hbm'))
+    # centre tiles: free spots nearest their anchors
+    d2d = by['d2d_kv']
+    host = by['host']
+    pv = by.get('pvw_1')
+    anchors = dict(kvs_ctl=(host.x - 40.0, host.y + host.h / 2), kvs_emb=(d2d.x - 40.0, d2d.y + d2d.h / 2),
+                   kvs_attn=((pv.x + pv.w / 2) if pv else d2d.x, (pv.y + pv.h) if pv else d2d.y - 400.0))
+    for nm, kind in (('kvs_ctl', 'ctl'), ('kvs_emb', 'emb'), ('kvs_attn', 'attn')):
+        w, h = FRAME[kind]
+        x, y = free_spot(m, w, h, anchors[nm], GX, GY)
+        m['insts'].append(F.Inst(nm, KIND_MASTER[kind], round(x, 4), round(y, 4), w - SH, h - SH, 'R0', kind='static',
+                                 region='io', domain='core'))
+
+
+def free_spot(m, w, h, anchor, GX, GY, halo=43.2, rmax=4000.0):
+    """the on-grid w x h spot nearest (Manhattan, centre) to anchor that keeps a halo to every frame / keep-out"""
+    ax, ay = anchor
+    W, H = m['die']['w'], m['die']['h']
+    x0, x1, y0, y1 = ax - rmax - w, ax + rmax + w, ay - rmax - h, ay + rmax + h
+    occ = [(i.x - halo, i.y - halo, i.x + i.w + halo, i.y + i.h + halo) for i in m['insts']]
+    occ += [(x - halo, y - halo, x + ww + halo, y + hh + halo) for _, x, y, ww, hh in m.get('keepouts', [])]
+    occ = [r for r in occ if not (r[2] < x0 or r[0] > x1 or r[3] < y0 or r[1] > y1)]
+    step = 21.6                          # candidate pitch (the routing cell); positions snap to the placement grid
+    n = int(rmax / step)
+    cands = []
+    for i in range(-n, n + 1):
+        for j in range(-n, n + 1):
+            x = round((ax - w / 2 + i * step) / GX) * GX
+            y = round((ay - h / 2 + j * step) / GY) * GY
+            cands.append((abs(x + w / 2 - ax) + abs(y + h / 2 - ay), x, y))
+    cands.sort()
+    for _, x, y in cands:
+        if x < 21.6 or y < 21.6 or x + w > W - 21.6 or y + h > H - 21.6:
+            continue
+        if any(not (x + w <= a or x >= c or y + h <= b or y >= d) for a, b, c, d in occ):
+            continue
+        return x, y
+    raise ValueError(f'kv_static_die: no free {w}x{h} spot within {rmax} um of {anchor}')
+
+
+# ------------------------------------------------------------------------------------------------ record / report
+def record(m):
+    """plan record: tiles, bus count, relay stages of the static buses, open inputs with owners"""
+    t = all_tiles()
+    opens = defaultdict(lambda: dict(instances=0))
+    for d, tt in t.items():
+        for pn, v in tt['ports'].items():
+            if v['cls'] == 'open':
+                r = opens[(KIND_MASTER[tt['kind']], pn)]
+                r.update(master=KIND_MASTER[tt['kind']], port=pn, width=v['width'], owner=v.get('owner'))
+                r['instances'] += 1
+    st = m.get('relay_stages', {})
+    ks = {b: s for b, s in st.items() if b.startswith(('ks_', 'pvvq_', 'pvrs_', 'kreq_', 'krsp_', 'kck_', 'kcf_', 'hes_',
+                                                        'ler_', 'hcv_', 'hcw_')) or '__f' in b and b.split('__f')[0].startswith('ks_')}
+    return dict(schema='opentallas.qwen_kv.static_die.v1', rtl=RTL_FILE,
+                rtl_sha256=hashlib.sha256((ROOT / RTL_FILE).read_bytes()).hexdigest() if (ROOT / RTL_FILE).exists() else None,
+                tiles={k: sum(1 for x in t.values() if x['kind'] == k) for k in GEN_KINDS},
+                join_instances=len(ins()), unpriced=_G.get('unpriced'),
+                static_buses=len(ks), static_relay_stages_max=max(ks.values()) if ks else 0,
+                open_tile_inputs=sorted(opens.values(), key=lambda r: (r['owner'] or '', r['master'], r['port'])),
+                **{k: v for k, v in m.get('static_die', {}).items()})
+
+
+def response_lat(m):
+    """per ECTL kiss frame: RESPONSE_LAT = landing seg 8 + K request + K response relay stages (kv_static_ages)"""
+    st = m.get('relay_stages', {})
+    out = {}
+    for s in STACKS:
+        for g in range(8):
+            out[f'ectl_{s}_{g}'] = dict(RESPONSE_LAT=8 + st.get(f'kreq_{s}_{g}', 0) + st.get(f'krsp_{s}_{g}', 0),
+                                        QK_ISSUE_AGE=ins()[f'ectl_a_{s}_{g}']['parameters']['QK_ISSUE_AGE'])
+    return out
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument('--rtl', action='store_true', help=f'write {RTL_FILE}')
+    ap.add_argument('--check', action='store_true', help='the committed RTL equals the generated text')
+    ap.add_argument('--summary', action='store_true')
+    a = ap.parse_args()
+    txt = rtl_text()
+    p = ROOT / RTL_FILE
+    if a.rtl:
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(txt)
+        print(f'wrote {RTL_FILE} ({len(txt.splitlines())} lines)')
+    if a.check:
+        if not p.exists() or p.read_text() != txt:
+            print('STALE: regenerate with --rtl')
+            return 1
+        print('RTL current')
+    if a.summary:
+        for d in ('slg_WS_0', 'kvpc_WS_0', 'kvpc_WS_1', 'kvs_ctl', 'kvs_attn', 'kvs_emb'):
+            t = all_tiles()[d]
+            c = defaultdict(int)
+            for v in t['ports'].values():
+                c[(v['dir'], v['cls'])] += v['width']
+            print(d, t['kind'], len(t['ports']), dict(c))
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
