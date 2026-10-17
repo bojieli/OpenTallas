@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-10-16T20:04:10.213938-07:00",
+  "source": "ee92917d6",
+  "source_branch": "claude/sdie-reach-1016",
+  "native_binding": "NOT_ASSERTED: c26l rows explicitly DIAGNOSTIC_CLOSED; exact native audit receipt still required",
+  "views_hash_audit": {
+    "classes": 131,
+    "files": 524,
+    "mismatches": 0
+  },
+  "signoff": {
+    "TT_setup_ps": [
+      833.333,
+      1111.111
+    ],
+    "FF_hold_ps": 833.333,
+    "SS_sensitivity_only_ps": 833.333,
+    "base_setup_uncertainty_ps": 60,
+    "base_hold_uncertainty_ps": 25,
+    "neighbour_skew_ps": 80
+  },
+  "dut": "Two exact LEF+Liberty instances per sampled class/distance; data bus nets only; no internal RTL simulated; clock ideal at boundary; same-class insertion reference cancels",
+  "rc": "Unbuffered M4-M9 global route and estimate_parasitics, all four batch overflows [0,0,0], exact extracted RC reused after empty SPEF PORTS parse correction",
+  "tests": "8 focused pytest checks PASS",
+  "remaining": "123 other class measurements missing; no538 station in c26l binding; stnv566 fine sweep LIVE AGI unit525801, local3310552. Native audits, actual regional/forwarded clocks, mixed joins, reset, die GRT/STA still owed"
+}

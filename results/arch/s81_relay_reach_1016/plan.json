@@ -1,0 +1,70 @@
+{
+ "schema": "opentallas.s81.relay_reach_plan.v1",
+ "layers": "die",
+ "signal_layers": "M4-M9",
+ "adjustments": [
+  "set_global_routing_layer_adjustment M4-M5 0.30",
+  "set_global_routing_layer_adjustment M6-M9 0.146"
+ ],
+ "sweep_um": [
+  100.0,
+  300.0,
+  500.0,
+  700.0
+ ],
+ "skew_ps": 80.0,
+ "base_setup_uncertainty_ps": 60.0,
+ "base_hold_uncertainty_ps": 25.0,
+ "periods_ps": {
+  "stream": 833.333,
+  "serial": 1111.111
+ },
+ "image": "openroad/orfs:asap7lock",
+ "stage": "/home/ubuntu/artifacts/sdie-reach-1016/stage",
+ "batches": [
+  {
+   "dir": "b00",
+   "classes": 2,
+   "pairs": 8,
+   "nets": 1212,
+   "die_um": [
+    910.6,
+    915.4
+   ],
+   "skipped_overlap": []
+  },
+  {
+   "dir": "b01",
+   "classes": 1,
+   "pairs": 4,
+   "nets": 2264,
+   "die_um": [
+    867.8,
+    437.4
+   ],
+   "skipped_overlap": []
+  },
+  {
+   "dir": "b02",
+   "classes": 4,
+   "pairs": 16,
+   "nets": 1772,
+   "die_um": [
+    1395.1,
+    1249.1
+   ],
+   "skipped_overlap": []
+  },
+  {
+   "dir": "b03",
+   "classes": 1,
+   "pairs": 4,
+   "nets": 344,
+   "die_um": [
+    482.9,
+    867.8
+   ],
+   "skipped_overlap": []
+  }
+ ]
+}
