@@ -166,6 +166,12 @@ rd = f'if {{[file exists /work/libs/qfd_etm_{c}.lib]}} {{ read_liberty /work/lib
 rd = f'foreach f [lsort [glob -nocomplain /work/libs/qfd_etm_*_{c}.lib]] {{ read_liberty $f }}\n' + rd
 summary = (f'report_checks -path_delay {mm} -group_path_count 3000000 -endpoint_path_count 1 -unique_paths_to_endpoint '
            f'-format summary > /work/grt_{c}_summary.rpt') if (die == 'kv' or os.environ.get('OT_STA_SUMMARY')) else ''
+# DIE-FLOW 2026-10-17 (FLOW-HOLD D1-D3, OT_HOLD_BUDGET=die): per-link FF hold dump for tools/die_hold_budget.py
+# (launch-min from the bound ETMs, delta, H, U per endpoint path; OT_HOLD_DUMP_PATHS endpoints, default 200000)
+hold_dump = ''
+if os.environ.get('OT_HOLD_BUDGET') == 'die' and c == 'ff':
+    hold_dump = (f"\n  report_checks -path_delay min -group_path_count {int(os.environ.get('OT_HOLD_DUMP_PATHS', '200000'))} "
+                 f"-endpoint_path_count 1 -format full_clock_expanded -digits 1 > /work/hold_links_ff.rpt")
 tcl = f"""proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
   regexp {{VmRSS:\\s+(\\d+)}} $s -> r; puts "OTMEM $tag rss_mb=[expr {{$r/1024}}] t=[clock seconds]"; flush stdout }}
 proc step {{name body}} {{ set t0 [clock milliseconds]
@@ -192,7 +198,7 @@ step sta {{
   {summary}
   report_checks -path_delay {mm} -group_path_count 5 -fields {{slew cap input_pins nets}} -digits 1 > /work/grt_{c}_paths.rpt
   report_tns; report_wns; report_worst_slack -{mm}
-  report_check_types -max_slew -max_capacitance -violators > /work/grt_{c}_drv.rpt
+  report_check_types -max_slew -max_capacitance -violators > /work/grt_{c}_drv.rpt{hold_dump}
 }}
 puts OT_STA_DONE
 """

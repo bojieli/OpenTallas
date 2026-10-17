@@ -1,0 +1,5 @@
+{"audited_at":"2026-10-16T21:30-07:00","tool":"tools/hier_contract/native_pin_audit.py audit_one","thresholds_ps":{"launch":220,"capture":190,"spread":80},
+ "views":[
+  {"cell":"ot_hgi_coll_ctl_v5_q3","job":"hcoll_v5_ctl3-v7-5a3e1fdbc","main":"8b01dec5a","route":"CLOSED TT +28.13 / FF +10.58 DRC 0","R_ps":209.4,"spread_ps":42.5,"launch_ps":200.3,"capture_ps":166.2,"comb_pins":0,"pass":true},
+  {"cell":"ot_hgi_coll_ctl_v5_q2","job":"hcoll_v5_ctl2-v7-e11086804","main":"2b66f7fe5","route":"CLOSED TT +9.03 / FF +14.80 DRC 0 (watch: TT < +25)","R_ps":209.8,"spread_ps":56.5,"launch_ps":210.1,"capture_ps":197.3,"capture_pin":"dest_v[1]","capture_over":1,"comb_pins":0,"pass":false,
+   "cause":"dest_v[1] -> ot_inhold_00005 (HB2) -> ot_ihdrv BUFx4f -> 6 hold BUFx2 -> dest_q[1]: input hold padding at R 209.8 (shared-flow hold-padding class), not RTL; was 503.6 on 44 pins (V6)"}]}

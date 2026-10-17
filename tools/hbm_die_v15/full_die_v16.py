@@ -406,7 +406,7 @@ SM_SIDE = {'ot_hbm3e_phy_rc_e8p5', 'ot_hbm_accel_smh_attn', 'ot_hbm_svc_pc_ctrl_
            'ot_hbm_svc_pc_ctrl_leaf_cfg_h8', 'ot_hbm_svc_sm_group', 'ot_hbm_svc_sm_group_id', 'ot_hbm_svc_sm_xcal_t',
            'ot_hbm_svc_stack_fault', 'ot_hbm_svc_vm_kshare', 'ot_hbm_svc_vmdel_lane', 'ot_hbm_svc_wb_kport',
            'ot_hbm_svc_wbw_copy', 'ot_hbm_sm_vm_wr_q_t', 'ot_hgi_sm_xload_cl2_bdring', 'ot_hgi_sm_xload_cl2_bfq',
-           'ot_hgi_sm_xload_cl2_ctlw', 'ot_hgi_sm_xload_cl2_ctl', 'ot_hgi_sm_xload_xq_pegress', 'ot_hbm_xp_aq_tree13_fmt',
+           'ot_hgi_sm_xload_cl2_ctlw', 'ot_hgi_sm_xload_cl2_ctl', 'ot_hgi_sm_xload_cl2_bfqg', 'ot_hgi_sm_xload_xq_pegress', 'ot_hbm_xp_aq_tree13_fmt',
            'ot_static_cmd_target', 'ot_hgi_dma_back_static_vp4_banks_cp'}
 
 
@@ -438,22 +438,78 @@ def a2p_remaster(insts, problems):
             i.update(master=r['master'], source=r['source'], rtl_deps=list(r['deps']),
                      note=i.get('note', '') + ' | A2P: SM-side client slots absent (no SM side in this quadrant)')
             rules[n] = {p: (w, k, {'rq': 4, 'rr': 4, 'wq': 2, 'wq_done': 2}[p]) for p, (w, k) in r['slots'].items()}
-        if i['master'] in ('ot_hfd_coll_q3_static_host_v4', 'ot_hfd_coll_q2_static_host_v4') and DROP_INST:
+        if i['master'] in ('ot_hfd_coll_q3_static_host_v4', 'ot_hfd_coll_q2_static_host_v4',
+                           'ot_hfd_coll_q3_hard_v5', 'ot_hfd_coll_q2_hard_v5') and DROP_INST:   # hard_v7 (coll_hardv7_d4f)
             # Explicitly dropped SerDes peers remove whole physical links.  Keep every core quadrant;
             # the surviving endpoints retain their ordered lanes and all on-die operations.
             q = n.rsplit('_', 1)[-1]
             peers = {'SW': ('S0', 'S1', 'S2'), 'SE': ('S3', 'S4'),
                      'NW': ('N0', 'N1'), 'NE': ('N2', 'N3')}[q]
             kept = tuple(k for k, peer in enumerate(peers) if 'ep_' + peer not in DROP_INST)
-            i['params'] = dict(i['params'], NLINK=len(kept))
+            i['params'] = dict(i['params'], NLINK=len(kept), TP=192 if DROP_SM_Q else 96)
             i['note'] = i.get('note', '') + f' | A2P: NLINK={len(kept)} physical links, ordered lanes {kept}'
             rules[n] = {p: (w, kept, len(peers)) for p, w in
                         dict(phy_up=1, tx_pin_v=1, tx_pin_flit=612, rx_pin_v=1,
                              rx_pin_flit=612, retry_requested=1, clk_link=5).items()}
+        if i['master'] == 'ot_hbm_argmax_static_sw_vm' and DROP_SM_Q:
+            i['params'] = dict(i['params'], TP=192 if len(kept_sid)==2 else 96)
         if i['master'] == 'ot_hbm_idx_client_static_sw' and DROP_SM_Q:
-            i['params'] = dict(i['params'], N_Q=len(kept_sid))
+            i['params'] = dict(i['params'], N_Q=len(kept_sid), TP=192 if len(kept_sid)==2 else 96)
             i['note'] = i.get('note', '') + f' | A2P: N_Q={len(kept_sid)} scorer slots = stacks {kept_sid}'
             rules[n] = {p: (w, tuple(kept_sid), 4) for p, w in IDX_SLOTS.items()}
+
+
+PORT_SPLIT = {}   # instance -> {old port: [(new port, lo, hi)]}  (layer key 'remaster', H-NETLIST 2100)
+
+
+def remaster_layers(insts, specs, problems):
+    """Layer key 'remaster' {instance: {master, source, rtl_deps?, params?, port_split?}}: a master swap whose ports
+    differ only by bus splits (old bus bits [lo:hi) become new port bits [0:hi-lo)); edges are re-cut in
+    port_split_edges().  New clock pins come in the layer's 'clocks'."""
+    for s_ in specs:
+        for n, r in s_.get('remaster', {}).items():
+            if n not in insts:
+                problems.append(f'remaster: {n} is not an instance'); continue
+            i = insts[n]
+            i.update(master=r['master'], source=r['source'],
+                     note=i.get('note', '') + f" | {s_['region']}: remastered {i['master']} -> {r['master']}")
+            if 'params' in r:
+                i['params'] = dict(r['params'])
+            if r.get('rtl_deps'):
+                i['rtl_deps'] = list(r['rtl_deps'])
+            if r.get('port_split'):
+                PORT_SPLIT[n] = {p: [tuple(x) for x in v] for p, v in r['port_split'].items()}
+        dc = {tuple(x) for x in s_.get('drop_clocks', [])}
+        if dc:   # clock / reset bindings of ports a remaster removed (e.g. hoisted banks' clk_bank)
+            for t_ in specs:
+                t_['clocks'] = [c_ for c_ in t_.get('clocks', []) if (c_['inst'], c_['port']) not in dc]
+
+
+def port_split_edges(edges, problems):
+    out = []
+    for e in edges:
+        parts = [e]
+        for side, oth in (('dst', 'src'), ('src', 'dst')):
+            nxt = []
+            for x in parts:
+                end = x[side]; segs = PORT_SPLIT.get(end[0], {}).get(end[1])
+                if not segs:
+                    nxt.append(x); continue
+                full = max(sg[-1] for sg in segs)
+                lo, hi = (end[2], end[3]) if len(end) >= 4 else (0, full)
+                o = list(x[oth]) if len(x[oth]) >= 4 else list(x[oth][:2]) + [0, hi - lo]
+                for sg in segs:   # (new port, lo, hi) on the same instance or (instance, port, lo, hi): a hoist
+                    ni, np_, slo, shi = sg if len(sg) == 4 else (end[0],) + tuple(sg)
+                    a, b = max(lo, slo), min(hi, shi)
+                    if a >= b:
+                        continue
+                    y = dict(x, name=f"{x.get('name', 'e')}__{ni}_{np_}")
+                    y[side] = [ni, np_, a - slo, b - slo]
+                    y[oth] = o[:2] + [o[2] + a - lo, o[2] + b - lo]; y['bits'] = b - a
+                    nxt.append(y)
+            parts = nxt
+        out.extend(parts)
+    return out
 
 
 def a2p_edge_remap(edges, problems):
@@ -461,6 +517,9 @@ def a2p_edge_remap(edges, problems):
     out = []
     if True:
         for e in edges:
+            if DROP_SM_Q and e['dst'][:2] == ['hb_idx', 'rank']:
+                e = dict(e, src=['col_idx', 'prm', 74, 82], bits=8,
+                         basis='A2P TP192: same full 8-bit configured die_id as ARGMAX (cp2 operand row0 bits81:74)')
             parts = [e]
             for side, oth in (('dst', 'src'), ('src', 'dst')):
                 nxt = []
@@ -715,6 +774,7 @@ def build(specs_dir, out, extra=()):
                 s_['clocks'].extend(dict(c_, inst=f"{c_['inst']}_b{k}", port=c_['port']) for k in range(flat[c_['inst']]['n']))
     # H-NETLIST 1815 (d4c revision layers): 'remove_instances' (with every spec edge / clock / strap touching them),
     # 'drop_edges' ([src_inst, src_port] or [src_inst, src_port, dst_inst]) and 'param_override' {inst: {param: value}}.
+    remaster_layers(insts, specs, problems)
     rm = {n for s_ in specs for n in s_.get('remove_instances', [])}
     if KEEP_Q or DROP_SM_Q or DROP_INST:
         rm |= a2p_drop(insts, specs, problems)
@@ -765,8 +825,9 @@ def build(specs_dir, out, extra=()):
             try:
                 sa, sb = rng(e['source'], ports), rng(e['sink'], ports)
             except KeyError:
-                problems.append(f"v15 edge {e['name']} dropped: port gone after re-mastering")
-                continue
+                if not any(end[1] in PORT_SPLIT.get(end[0], {}) for end in (e['source'], e['sink'])):
+                    problems.append(f"v15 edge {e['name']} dropped: port gone after re-mastering")
+                    continue   # (a hoisted port is re-cut onto its new instance by port_split_edges)
         edges.append(dict(name=e['name'], src=e['source'], dst=e['sink'], clock=e.get('clock'),
                           ready_or_credit=e.get('ready_or_credit', False), basis='v15.1 source contract', region='v15'))
     for s in specs:
@@ -852,6 +913,8 @@ def build(specs_dir, out, extra=()):
     if KEEP_Q or DROP_SM_Q or DROP_INST:   # A2P: flattened / folded expansions of removed instances
         edges = [e for e in edges if e['src'][0] in insts and e['dst'][0] in insts]
         edges = a2p_edge_remap(edges, problems)
+    if PORT_SPLIT:
+        edges = port_split_edges(edges, problems)
     edges = apply_relay_splice(specs, edges, ports, problems)
     # ---------------- bit-level driver map
     drv = {}          # (inst, port, bit) -> (inst, port, bit) | ('PIN', name, bit)
@@ -907,6 +970,8 @@ def build(specs_dir, out, extra=()):
         if (KEEP_Q or DROP_SM_Q or DROP_INST) and i not in insts:
             continue
         if i not in ports or p not in ports[i]:
+            if p in PORT_SPLIT.get(i, {}):
+                continue   # hoisted port: the layer binds the new instances' clocks
             problems.append(f'clock {i}.{p}: unknown'); continue
         if i == CK:
             continue
@@ -969,6 +1034,8 @@ def build(specs_dir, out, extra=()):
                     continue        # A2P: the gap's instance belongs to a dropped quadrant
                 if i in rm:
                     continue        # A2P: accounting gaps for explicitly removed SM-side / link instances
+                if p in PORT_SPLIT.get(i, {}):
+                    continue        # port split / hoisted by a remaster layer: the gap names the old port
                 if i not in ports or p not in ports[i]:
                     problems.append(f"gap {g['id']}: unknown {i}.{p}"); continue
                 ii, pp_, lo, hi = rng(a, ports)

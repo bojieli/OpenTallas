@@ -1,0 +1,114 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/qkd_host_pc_slice_die.lef",
+    "sha256": "7d25cd33e2db74a67e5b42acb150772beac2cf2cc92c0ad0ff415eea2e160f00"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/qkd_hslice-ec1-75cbc9b99/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch/claude/closure-loop/qkd_hslice-ec1-75cbc9b99/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/qkd_hslice-ec1-75cbc9b99/record/views/qkd_host_pc_slice_die/provenance/raw/qkd_host_pc_slice_die.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/qkd_hslice-ec1-75cbc9b99/record/views/qkd_host_pc_slice_die/provenance/qkd_host_pc_slice_die.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 14 OBS rects moved into 13 pins: bgi, bgo, ck_boot, ck_boot_test, ck_static, ck_station, ctrl_completion_v, ctrl_completion_we, ctrl_er[259], fault_i, fault_o, hbm_rst_n; pockets: 889 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_hslice-ec1-75cbc9b99/record/views/qkd_host_pc_slice_die/provenance/qkd_host_pc_slice_die.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "qkd_host_pc_slice_die 129.576 x 345.576: PG M5 VDD 24 stripes (96% spread, 100% cov) / VSS 24 stripes (96% spread, 100% cov); strap M6; face pins 2081 blocked-above 0 blocked-same 0; clock ck_boot insertion 241 ps; clock ck_boot_test insertion 75 ps; clock ck_static insertion 271 ps; clock ck_station insertion 244 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "qkd_host_pc_slice_die",
+      "W": 129.576,
+      "H": 345.576,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 24,
+            "dir": "V",
+            "spread": 0.959,
+            "coverage": 1.0,
+            "shapes_on_top": 24
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 24,
+            "dir": "V",
+            "spread": 0.959,
+            "coverage": 1.0,
+            "shapes_on_top": 24
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 2081,
+        "blocked_above": 0,
+        "covered_below": 283,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "ck_boot": {
+          "max_ps": 240.96,
+          "min_ps": 165.46
+        },
+        "ck_boot_test": {
+          "max_ps": 74.56,
+          "min_ps": 63.4
+        },
+        "ck_static": {
+          "max_ps": 271.38,
+          "min_ps": 185.9
+        },
+        "ck_station": {
+          "max_ps": 244.38,
+          "min_ps": 171.66
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 889
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "qkd_host_pc_slice_die.lef",
+    "sha256": "bbc7d07997fcb3be45a076124f2dd6016fceba6ec05fa792aef03c0b074ec486"
+  }
+}

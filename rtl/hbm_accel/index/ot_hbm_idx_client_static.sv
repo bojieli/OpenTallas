@@ -11,7 +11,7 @@
 // N_Q (A2P half die, 2026-10-16): number of KV quadrants whose key lines this client scores (one scorer each, slot
 // i = key_lines[i*8792+:8792], key ordinals compacted: slot i holds ordinals i*2736.. ). 4 = the full die (unchanged);
 // 2 = A2P (SW, NW). Absent scorer slots feed the 4-group selector no valid lane (kv 0).
-module ot_hbm_idx_client_static #(parameter integer N_Q=4)(
+module ot_hbm_idx_client_static #(parameter integer N_Q=4,TP=96,RANK_W=(TP<=1?1:$clog2(TP)))(
  input wire clk_program,clk_program_mem,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
  input wire start,input wire[11:0]length,
@@ -22,7 +22,7 @@ module ot_hbm_idx_client_static #(parameter integer N_Q=4)(
  input wire clk_link,input wire[7:0]clk_link_mem,input wire[3:0]clk_pair,input wire clk_topk,input wire rst_n,
  input wire[1:0]sid,input wire[15:0]weight_sector,query_sector,
  output wire[135:0]vm_rq,input wire[2055:0]vm_rr,
- input wire[6:0]rank,input wire[7:0]gbase,input wire[13:0]nkeys,input wire keep_en,input wire[342*N_Q-1:0]keep_bitmap,
+ input wire[RANK_W-1:0]rank,input wire[7:0]gbase,input wire[13:0]nkeys,input wire keep_en,input wire[342*N_Q-1:0]keep_bitmap,
  output wire key_slot,output wire[7:0]key_index,input wire[8792*N_Q-1:0]key_lines,
  output wire[3:0]tx_v,output wire[2179:0]tx,
  output wire[610*N_Q-1:0]score_observe,output wire done,fault,
@@ -35,7 +35,7 @@ module ot_hbm_idx_client_static #(parameter integer N_Q=4)(
  input wire[135:0]argmax_rq,output wire[2055:0]argmax_rr
 );
  wire[135:0]index_rq,topk_rq;wire[2055:0]index_rr,topk_rr;
- ot_hbm_idx_scheduled_static #(.N_Q(N_Q)) index(.clk_program(clk_program),.clk_program_mem(clk_program_mem),.program_we(program_we),
+ ot_hbm_idx_scheduled_static #(.N_Q(N_Q),.TP(TP)) index(.clk_program(clk_program),.clk_program_mem(clk_program_mem),.program_we(program_we),
   .program_addr(program_addr),.program_data(program_data),.start(start),.length(length),.clk_operand(clk_operand),
   .clk_query(clk_query),.clk_quant(clk_quant),.clk_quant_delay(clk_quant_delay),.clk_query_bank(clk_query_bank),
   .clk_score(clk_score),.clk_engine(clk_engine),.clk_meta(clk_meta),.clk_tail(clk_tail),.clk_chunk(clk_chunk),

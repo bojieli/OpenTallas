@@ -1,0 +1,4 @@
+ACTIVITY boot_done=5939 ctrl_es=5939 head_boot_done=5939
+PASS slice die wrapper: 32 slots physical order, 6000 cycles, per-slot outputs identical, head status = REF delayed k+1
+rtl/test/qwen_split/tb_host_pc_slice_die_pin_capture.sv:84: $finish called at 6000000 (1ps)
+rc=0

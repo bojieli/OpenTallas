@@ -98,7 +98,7 @@ class PreciseGateBinding(unittest.TestCase):
         self.assertTrue(ok, why)                                                            # ship_helpers will accept it
 
     def test_lkep_statuscut3_gate_executed_overlay_change_still_refuses_and_names_file(self):
-        self.sync_daemon(GATE, b'# lint v2: closed_stands pin_register constants\n')
+        self.sync_daemon(GATE, b'PIN_REGISTER_PAIR_MAX_PS = 600.0\n')       # gate-relevant pin_register constant
         ok, why = SB.validate(self.binding, self.root, self.daemon, self.tip)
         self.assertFalse(ok)
         self.assertIn(GATE, why)
@@ -107,14 +107,20 @@ class PreciseGateBinding(unittest.TestCase):
         self.assertTrue(fail and GATE in fail[0]['message'], g.items)
 
     def test_qfd_su_lane_t_io_second_textbook_change_refuses(self):
-        self.sync_daemon(GATE, b'# lint v2\n')
-        self.sync_daemon(GATE, b'# lint v3: native_launch kind\n')
+        self.sync_daemon(GATE, b'PIN_LAUNCH_MAX_PS = 230.0\n')                # a gate-relevant constant changes
+        self.sync_daemon(GATE, b'PIN_LAUNCH_MAX_PS = 240.0\n')
         ok, why = SB.validate(self.binding, self.root, self.daemon, self.tip)
         self.assertFalse(ok)
         self.assertEqual(why, f'gate-executed daemon overlay changed: {GATE}')
 
+    def test_submit_only_lint_change_keeps_the_gate_valid(self):
+        self.sync_daemon(GATE, b'# lint v1\nCLOSED_STANDS_KINDS = ("a", "native_capture")\n')
+        ok, why = SB.validate(self.binding, self.root, self.daemon, self.tip)
+        self.assertTrue(ok, why)
+        self.assertIn('lint-only drift tolerated', why)
+
     def test_hgi_smmv_pinreg1_names_only_the_gate_relevant_file(self):
-        self.sync_daemon(GATE, b'# lint v3\n')
+        self.sync_daemon(GATE, b'PIN_LAUNCH_MAX_PS = 230.0\n')
         self.sync_daemon(ROUTE, b'# ck v2\n')
         ok, why = SB.validate(self.binding, self.root, self.daemon, self.tip)
         self.assertFalse(ok)

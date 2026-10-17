@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hgi_sm_xq_pegress",
  "verdict": "WARN",
- "generated": "2026-10-16T19:01:25-0700",
+ "generated": "2026-10-16T22:05:13-0700",
  "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "3252020587657c7074f235f6c5a18f54a122c43b",
+  "start_commit": "46a3247963c0ba7d6aa03e6be85ae53aae2ed429",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "a065fcf979d608f8ce3bb6b45aada6918fdaead28bf33283b608b2cf2add7a2e",
-  "manifest_sha256": "adb8a6c1de35b45ad61772dcd32c358f442b0d026b5818b04a9ab999f6bd1d65",
+  "archive_sha256": "d0166b9f37c13bc77e2f3cc2edc29ad6e395929e08b3fec11b1cbb8a10d4c553",
+  "manifest_sha256": "4b48eac6d5946993d7bb89cbfa112608f92e74017d7cd5d8b141e3fc23f575bd",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -17251,8 +17251,8 @@
    {
     "path": "physical/ref_tile/hgi_sm_xq_pegress/job.json",
     "kind": "file",
-    "sha256": "6474a2d6d2bda8e21b4b303165685b567a386d92f5b39391ffd7e9462eda9285",
-    "git_blob": "1f0f541e21cb7dc41f9fc8ebd2f5239ad81fc953",
+    "sha256": "0127fd1fa855e28e31357c09f188c2e33ed459c74917e90b84af8cc1eebfc7d1",
+    "git_blob": "947de84ed175c290547516a5a4f878196aaef774",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17371,8 +17371,8 @@
    {
     "path": "physical/ref_tile/hgi_sm_xq_pegress/spec.json",
     "kind": "file",
-    "sha256": "846af0c076fafefdc77f57caca279c8423a2a6821c2a40e44eab6e2be11c8cf5",
-    "git_blob": "785459cb733ed4dc4a95894ea339555a28a96caa",
+    "sha256": "205c162bd0da0bb581da0c8a0399b7b68432a1f97ac4c95fc3d77a6835b37dba",
+    "git_blob": "9b5c60921c2e3813a04245904f7b8cc5550aeed2",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17381,6 +17381,134 @@
     "kind": "file",
     "sha256": "83306697134e8d4ae274eace1403715d3fdb082841bc3b91228ab0e423d74073",
     "git_blob": "122975e38a39c7df615c7f418123cae295ddf445",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/abstract.json",
+    "kind": "file",
+    "sha256": "bdc0dba39c12c87fd2f1b1910a9e38113e50960aa87ab3b2d3a8bb00103979c9",
+    "git_blob": "709743d2443c2a068c6d7b6a2ab76f905f1ea4e3",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/child_lint.json",
+    "kind": "file",
+    "sha256": "98dd5b7e4c86e377fbec63732f2cd53922d18245ddfcda40dc11e39b8234d214",
+    "git_blob": "0883929b685a45847c5325fb2cb94e75e2e11f33",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/export_ff.log",
+    "kind": "file",
+    "sha256": "6e62acdc5c067af26d4cd6f0b930a0edba1fc35c692ad27379a6578d8ab45455",
+    "git_blob": "5ae7f9db3542db760882136e5348ad1b86457c68",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/export_ff.tcl",
+    "kind": "file",
+    "sha256": "ac58ecc2b817b918c6e20d225a6fd9955ed543812adae72ef8fd56c73e478c11",
+    "git_blob": "259ca17949e2595afb995a6032de200f29c51fbd",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/export_ss.log",
+    "kind": "file",
+    "sha256": "68cafb2e2a98960d8f0277abb02917d868bd186fcac56a2358d964f94dff9ed8",
+    "git_blob": "8e8dd15956ce4fa5a2b71794adfcaaa20ddaba15",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/export_ss.tcl",
+    "kind": "file",
+    "sha256": "3cd0150bc08cef0e6f3ee0ab9eab75fb4cf0aef61c23b440169c72ee8483f391",
+    "git_blob": "0c7606f32bb76a923de82eda73a53c2276e45326",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/export_tt.log",
+    "kind": "file",
+    "sha256": "a71b728763d93ef8b5eef73bd77f4e8b0a9850586afdd566b9cb99d49b841df3",
+    "git_blob": "22e0b7a9ee056db0c2dca17e98e72d498b456299",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/export_tt.tcl",
+    "kind": "file",
+    "sha256": "0421a6fd2528996f7b516529a84fc0f617b1bc43429188943b69020f9bf3d3b8",
+    "git_blob": "53fe797c77082a34c6d13d926dc9ac88a74cc453",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/insertion.json",
+    "kind": "file",
+    "sha256": "30682f25a2776e625c2be5ca15bd8d788101ad8ef738a42a277a17504d43cfff",
+    "git_blob": "a7e51b884dd46ec579c7564d135e57e3fcefbe5b",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/ot_hgi_sm_xload_xq_pegress.lef",
+    "kind": "file",
+    "sha256": "f3aa1072202cb7a43fb49ac3ce003f2600e09a5a09bfaf2bfcc2db286e98284d",
+    "git_blob": "e902161b58fb760a6ee1499e94dcb7778abda96a",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/ot_hgi_sm_xload_xq_pegress_ff.lib",
+    "kind": "file",
+    "sha256": "1fa004a2f0d9dc946b3e73081b2abed820de6cd6f0d9647afc879ed34d3fa523",
+    "git_blob": "f16971a7e7778d191c16a42abb3be3db189dedfb",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/ot_hgi_sm_xload_xq_pegress_ss.lib",
+    "kind": "file",
+    "sha256": "1e2225737088dcd4043aae87a09704f98f0473c14b2affe64854b54b2ffba29b",
+    "git_blob": "d806107e17111e4991933f0f1f752470cde5dc08",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/ot_hgi_sm_xload_xq_pegress_tt.lib",
+    "kind": "file",
+    "sha256": "58cb7f00350fb6805d5fde6308f2001169620203f9ec27b1b3d6ff2cef713509",
+    "git_blob": "f9bff8ae3832a4977707f103a22d2af45ebe205b",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/provenance/abstract_pin_stub.json",
+    "kind": "file",
+    "sha256": "9db27092f7b90b69e57a70efc100ad4c73809d582435bb3d26291047ab280b7a",
+    "git_blob": "dd2b849113ac6e530cdf07afb9a6ae55fba7765f",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/provenance/raw/ot_hgi_sm_xload_xq_pegress.lef",
+    "kind": "file",
+    "sha256": "d0e6325feb33737b9462b83999a1990e9935b7de7633a2a59fdf777b70d5a6bc",
+    "git_blob": "098a90a4c4df807c404375ff8b28b00b6b655c54",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/provenance/view_export.abstract.json",
+    "kind": "file",
+    "sha256": "0e374564dd3968c0af542f7fe1825501ccf96ce3f08c0f634dc5b6093af862fc",
+    "git_blob": "27efa738a0e0830220be114e23308ac459ffc0ff",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -36531,8 +36659,8 @@
    {
     "path": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
     "kind": "file",
-    "sha256": "08bd2fd279f0d67301d2df30bd6eed2cf9f4571a188d9b928f2406b60e9de911",
-    "git_blob": "7452ab7028cca95d7648466790b67d9960d796e7",
+    "sha256": "75e86a08c6129b390ed840b177cfbf2907c539300d5649cc8e828979d3144723",
+    "git_blob": "3c47e52892dad8dd756148c24d2b393246fbb744",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -150067,8 +150195,8 @@
    {
     "path": "tools/textbook_lint.py",
     "kind": "file",
-    "sha256": "cfe6ea4687e4c4afe180909445d7ff10b18b8202b1bd4e2af259a9a42d2e76af",
-    "git_blob": "9369dc5cbe74efe049b5b3db1abaa0d833f86269",
+    "sha256": "d9fc7608a35f4cc2803664dc018dc5931ed885c15acf525fa1b5bfad518959d2",
+    "git_blob": "23ff0dbc2eab362f0eb065f184faeaee29f934fc",
     "source": "daemon_overlay",
     "matches_provenance_commit": false
    },
@@ -159075,15 +159203,15 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 136919464,
-   "unpacked_bytes": 833171456,
+   "archive_bytes": 138500942,
+   "unpacked_bytes": 848986112,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "19bcbd6624c768f62ddcf0fd032e289fbcd1ae21",
-   "content_sha256": "00593ad7dc8c08b376e47b34a727ef07be5d8818f8ae042f4265f48690b7b1c5",
+   "origin_main": "999f0dc41b3b6ac0e7d26ab3aa59ddc17411a18b",
+   "content_sha256": "5eeda7d500b263cff51e64c43834aecb5be11390fa33eb13c225d27f865692ed",
    "files": [
     {
      "path": "physical/common_flow/cg_pushdown.tcl",
@@ -159447,18 +159575,18 @@
     },
     {
      "path": "tools/textbook_lint.py",
-     "sha256": "cfe6ea4687e4c4afe180909445d7ff10b18b8202b1bd4e2af259a9a42d2e76af",
-     "git_blob": "9369dc5cbe74efe049b5b3db1abaa0d833f86269",
+     "sha256": "d9fc7608a35f4cc2803664dc018dc5931ed885c15acf525fa1b5bfad518959d2",
+     "git_blob": "23ff0dbc2eab362f0eb065f184faeaee29f934fc",
      "mode": 436,
      "resolution": "same",
-     "literal_git_blob": "9369dc5cbe74efe049b5b3db1abaa0d833f86269"
+     "literal_git_blob": "23ff0dbc2eab362f0eb065f184faeaee29f934fc"
     },
     {
      "path": "tools/tt_views/view_export.py",
-     "sha256": "0afa30db35fd1cd94bfe6a4b27c297e136a6f7cd5973703a75af9cd2dc195e4a",
-     "git_blob": "51c8c503117e8b07024d44d8f0366ace2102bda9",
+     "sha256": "1c33a5b80e99b7c0f98b71fefd011d26661f142e7cfa549a5e74f8324747918e",
+     "git_blob": "29c0513fd88cdb252942f185501e4158838744f6",
      "mode": 509,
-     "resolution": "same",
+     "resolution": "stale",
      "literal_git_blob": "51c8c503117e8b07024d44d8f0366ace2102bda9"
     },
     {
@@ -159474,7 +159602,7 @@
   "consumed": {
    "schema": "opentallas.ref_tile.gate_consumed.v1",
    "basis": "staged archive closure at gate time",
-   "count": 1174,
+   "count": 1190,
    "paths": [
     "physical/common_flow/anchor_row_packing.tcl",
     "physical/common_flow/edge_sliver_block.tcl",
@@ -159514,6 +159642,22 @@
     "physical/ref_tile/hgi_sm_xq_pegress/signoff.sdc",
     "physical/ref_tile/hgi_sm_xq_pegress/spec.json",
     "physical/ref_tile/hgi_sm_xq_pegress/spread_pins.tcl",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/abstract.json",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/child_lint.json",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/export_ff.log",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/export_ff.tcl",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/export_ss.log",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/export_ss.tcl",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/export_tt.log",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/export_tt.tcl",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/insertion.json",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/ot_hgi_sm_xload_xq_pegress.lef",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/ot_hgi_sm_xload_xq_pegress_ff.lib",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/ot_hgi_sm_xload_xq_pegress_ss.lib",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/ot_hgi_sm_xload_xq_pegress_tt.lib",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/provenance/abstract_pin_stub.json",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/provenance/raw/ot_hgi_sm_xload_xq_pegress.lef",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/provenance/view_export.abstract.json",
     "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
     "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv",
     "rtl/gpu/ot_gpu_fadd.sv",
@@ -160688,8 +160832,24 @@
     "physical/ref_tile/hgi_sm_xq_pegress/pre_gpl.tcl": "868665071710eb4ce5d4af172b346032f605b49500c67093b5f6f3229928b739",
     "physical/ref_tile/hgi_sm_xq_pegress/pre_grt.tcl": "7a4a8cb6aef83160c9b8e910ab2c5b5d2d00ccdbd315290c0b54bc0723fdd169",
     "physical/ref_tile/hgi_sm_xq_pegress/signoff.sdc": "74d31e02a1e6bfbad030b1d7ed669ef462804315bcf79b00bee48706a9946411",
-    "physical/ref_tile/hgi_sm_xq_pegress/spec.json": "846af0c076fafefdc77f57caca279c8423a2a6821c2a40e44eab6e2be11c8cf5",
+    "physical/ref_tile/hgi_sm_xq_pegress/spec.json": "205c162bd0da0bb581da0c8a0399b7b68432a1f97ac4c95fc3d77a6835b37dba",
     "physical/ref_tile/hgi_sm_xq_pegress/spread_pins.tcl": "83306697134e8d4ae274eace1403715d3fdb082841bc3b91228ab0e423d74073",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/abstract.json": "bdc0dba39c12c87fd2f1b1910a9e38113e50960aa87ab3b2d3a8bb00103979c9",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/child_lint.json": "98dd5b7e4c86e377fbec63732f2cd53922d18245ddfcda40dc11e39b8234d214",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/export_ff.log": "6e62acdc5c067af26d4cd6f0b930a0edba1fc35c692ad27379a6578d8ab45455",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/export_ff.tcl": "ac58ecc2b817b918c6e20d225a6fd9955ed543812adae72ef8fd56c73e478c11",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/export_ss.log": "68cafb2e2a98960d8f0277abb02917d868bd186fcac56a2358d964f94dff9ed8",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/export_ss.tcl": "3cd0150bc08cef0e6f3ee0ab9eab75fb4cf0aef61c23b440169c72ee8483f391",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/export_tt.log": "a71b728763d93ef8b5eef73bd77f4e8b0a9850586afdd566b9cb99d49b841df3",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/export_tt.tcl": "0421a6fd2528996f7b516529a84fc0f617b1bc43429188943b69020f9bf3d3b8",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/insertion.json": "30682f25a2776e625c2be5ca15bd8d788101ad8ef738a42a277a17504d43cfff",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/ot_hgi_sm_xload_xq_pegress.lef": "f3aa1072202cb7a43fb49ac3ce003f2600e09a5a09bfaf2bfcc2db286e98284d",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/ot_hgi_sm_xload_xq_pegress_ff.lib": "1fa004a2f0d9dc946b3e73081b2abed820de6cd6f0d9647afc879ed34d3fa523",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/ot_hgi_sm_xload_xq_pegress_ss.lib": "1e2225737088dcd4043aae87a09704f98f0473c14b2affe64854b54b2ffba29b",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/ot_hgi_sm_xload_xq_pegress_tt.lib": "58cb7f00350fb6805d5fde6308f2001169620203f9ec27b1b3d6ff2cef713509",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/provenance/abstract_pin_stub.json": "9db27092f7b90b69e57a70efc100ad4c73809d582435bb3d26291047ab280b7a",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/provenance/raw/ot_hgi_sm_xload_xq_pegress.lef": "d0e6325feb33737b9462b83999a1990e9935b7de7633a2a59fdf777b70d5a6bc",
+    "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/provenance/view_export.abstract.json": "0e374564dd3968c0af542f7fe1825501ccf96ce3f08c0f634dc5b6093af862fc",
     "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
     "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv": "1826102edf211742df583b4aa6a229c6ce410b30508a76e4f061fc2efcdadb9c",
     "rtl/gpu/ot_gpu_fadd.sv": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
@@ -160773,7 +160933,7 @@
     "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static.sv": "74c07d308c0c1840b1b5338b028b3a125073d240d452364edea1faa1c9bb8fd8",
     "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl.sv": "9cc001e6cdc863842ef07dfc700ed81106316328190e23245d1de90153cd8422",
     "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv": "cdccc324167037bc83415e3028b63ddadc79fb264d78c0b12e942672a49bf0d9",
-    "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv": "08bd2fd279f0d67301d2df30bd6eed2cf9f4571a188d9b928f2406b60e9de911",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv": "75e86a08c6129b390ed840b177cfbf2907c539300d5649cc8e828979d3144723",
     "rtl/hbm_accel/generic/peers/ot_hgi_su_ctlw_lane2.sv": "86484ebd58945c46a7ec0957eba3dccf4de64b53485aad06a25818f74e2dbb38",
     "rtl/hbm_accel/generic/peers/ot_hgi_su_ctlw_slice_h.sv": "c244f7c6064d38ad76fa3fcc701ac4e4a530cf346a802a7945013eaa6ca241c5",
     "rtl/hbm_accel/generic/peers/ot_hgi_su_ctlw_slice_hp.sv": "5ebab6aeb6ad06acdd542901789e5377784d0fea64a4182faf2412a2e4fe15b5",
@@ -161766,7 +161926,7 @@
     "tools/s81_vm/static_face_model.py": "530c0da15a6b082fad82b03884e6b2c7b554f82396c862fa35dad295a4ccbf8b",
     "tools/s81_vm/static_transport_model.py": "2b86ebff12d5331a996d2e420ce0bf221d3f069ffbe7b26f018d8b60855cda5c",
     "tools/s81_vm/static_vm_engine.py": "c51e7408b47a337d64b67ba3b41b8cae66cbc96a4155023539d172262cf0285b",
-    "tools/textbook_lint.py": "cfe6ea4687e4c4afe180909445d7ff10b18b8202b1bd4e2af259a9a42d2e76af",
+    "tools/textbook_lint.py": "d9fc7608a35f4cc2803664dc018dc5931ed885c15acf525fa1b5bfad518959d2",
     "tools/third_party_tau.py": "7d873798f6b9d98167422f3eeea4e4eb6d8eaec9a93181562c5e5063d5836259",
     "tools/throughput_budget/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "tools/throughput_budget/build.py": "92e179054bf1ad88f1abe83f7a1be0fff09cc2236f9a6cd09980906d1787d67c",
@@ -161827,18 +161987,18 @@
     "tools/w2_phase_seat_model.py": "a42a1ebbd86a1f5d20d39072052401a8789697632c026f7339782aa18bc5faf4",
     "tools/wafer_vs_array_study.py": "173b92baecfe94931785e56da36b831cdc4f1af2eebcece0abaa35eb067c3e41"
    },
-   "digest": "40e17de00365b1f54b28e17ea09a90a816d0a1384e0f4a8eb34a0bc1e7e77116"
+   "digest": "57472af3d48d9c8769c8ea888e4317d292b6e886d9af4a3531d7a62287b2f54c"
   },
-  "captured": "2026-10-16T18:48:48-0700",
+  "captured": "2026-10-16T21:46:21-0700",
   "route_hold_context": {
-   "HM": "0.03",
+   "HM": "0.01",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/hgi_sm_xq_pegress/signoff.sdc"
   },
-  "remote_script_sha256": "19185abd7cb964cdce75704f8797e427bb335cc28a10ea62ec4e2f7d3188d402",
+  "remote_script_sha256": "053fe3dfc702b5eaf979b404df6e4debf0b6ebad953a0eccdd77c15b5b9761a7",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hgi_sm_xq_pegress-20261016-184812",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hgi_sm_xq_pegress-20261016-214541",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -161846,11 +162006,11 @@
   ]
  },
  "clock": {
-  "max_root_sinks": 7504,
+  "max_root_sinks": 7508,
   "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": 452.1,
-  "tt_spread_ps": 61.7,
+  "tt_insertion_ps": 488.1,
+  "tt_spread_ps": 98.5,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -161863,16 +162023,16 @@
     "clock": "core_clk",
     "tt": {
      "boundary": {
-      "n": 5458,
-      "mean": 410.4,
-      "min": 392.1,
-      "max": 452.1
+      "n": 5460,
+      "mean": 408.5,
+      "min": 390.6,
+      "max": 488.1
      },
      "all": {
-      "n": 7506,
-      "mean": 407.4,
-      "min": 390.4,
-      "max": 452.1
+      "n": 7510,
+      "mean": 407.0,
+      "min": 389.6,
+      "max": 488.1
      },
      "errors": [],
      "macros": null,
@@ -161882,25 +162042,19 @@
   ],
   "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "7,504 sinks on the largest root <= 15,000; measured TT insertion 452.1 ps, leaf spread 61.7 ps"
+  "text": "7,508 sinks on the largest root <= 15,000; measured TT insertion 488.1 ps, leaf spread 98.5 ps"
  },
  "items": [
   {
    "severity": "WARN",
    "check": "util",
-   "message": "synthesized std area 3923 um2 + macros 0 in core 133254: util 3%",
-   "fix": "set \"std_area_um2\": 3923 and drop 'outline' (gen sizes to util 0.52)"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.high_fanout",
-   "message": "port rn: 308 loads (308 flops, e.g. bc_last$_DFF_PN0_) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
-   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+   "message": "synthesized std area 3849 um2 + macros 0 in core 133254: util 3%",
+   "fix": "set \"std_area_um2\": 3849 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
    "severity": "WARN",
    "check": "textbook.util_channel",
-   "message": "utilisation 3.0% outside 45%-65% (std 3932 + macro 0 um2 in 133254 um2): shrink the outline (long wires / sparse placement)",
+   "message": "utilisation 2.9% outside 45%-65% (std 3845 + macro 0 um2 in 133254 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ]

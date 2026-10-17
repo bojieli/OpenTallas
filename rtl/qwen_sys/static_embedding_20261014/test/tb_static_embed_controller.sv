@@ -31,7 +31,7 @@ module tb_static_embed_controller;
     genvar g;
     generate for(g=0;g<2;g=g+1) begin:controllers
         qkd_ctrl_pc_host_static #(.PROFILE(g==0?1:0)) dut(
-            .pll_hbm(hclk),.hrst(reset&&(replay?(g==1):(g==0))),.ck(ck),.rsi(reset&&(replay?(g==1):(g==0))),
+            .pll_hbm(hclk), .pll_hbm_port(hclk), .pll_hbm_ecc(hclk),.hrst(reset&&(replay?(g==1):(g==0))),.ck(ck),.rsi(reset&&(replay?(g==1):(g==0))),
             .pc(5'd0),.ci(319'd0),.co(),.es(controller_es),.er(er[g]),.po(po[g]),.pi(pi),.ki(33'd0),.ko(),.fi(1'b0),.fo(cf[g]),
             .static_cmd_owner(1'b0),.static_cmd(43'd0),.reserved_rd(1'b0),.reserved_static_col(sr_reserved),.reserved_write_col(1'b0),
             .static_epoch(16'd43),.expected_raw_valid(raw_reserved),

@@ -6,7 +6,7 @@
 // N_Q (A2P half die, 2026-10-16): number of KV quadrants whose key lines this client scores (one scorer each, slot
 // i = key_lines[i*8792+:8792], key ordinals compacted: slot i holds ordinals i*2736.. ). 4 = the full die (unchanged);
 // 2 = A2P (SW, NW). Absent scorer slots feed the 4-group selector no valid lane (kv 0).
-module ot_hbm_idx_parent_static #(parameter integer N_Q=4)(
+module ot_hbm_idx_parent_static #(parameter integer N_Q=4,TP=96,RANK_W=(TP<=1?1:$clog2(TP)))(
  input wire clk_operand,clk_query,clk_quant,clk_quant_delay,input wire[3:0]clk_query_bank,
  input wire[N_Q-1:0]clk_score,input wire[4*N_Q-1:0]clk_engine,clk_meta,clk_tail,
  input wire[16*N_Q-1:0]clk_chunk,input wire[512*N_Q-1:0]clk_hslice,
@@ -16,7 +16,7 @@ module ot_hbm_idx_parent_static #(parameter integer N_Q=4)(
  input wire weight_slot,query_slot,input wire[6:0]query_index,input wire[15:0]weight_sector,query_sector,
  output wire[135:0]vm_rq,input wire[2055:0]vm_rr,
  input wire query_emit,input wire[4:0]query_emit_head,
- input wire[6:0]rank,input wire[7:0]gbase,input wire[13:0]nkeys,input wire keep_en,input wire[342*N_Q-1:0]keep_bitmap,
+ input wire[RANK_W-1:0]rank,input wire[7:0]gbase,input wire[13:0]nkeys,input wire keep_en,input wire[342*N_Q-1:0]keep_bitmap,
  input wire beat_v,input wire[7:0]beat_index,input wire[8792*N_Q-1:0]key_lines,
  input wire[3:0]sel_op,input wire[1:0]sel_pass,input wire[7:0]sel_addr,
  input wire link_flush,link_emit,input wire[3:0]link_group,
@@ -38,7 +38,7 @@ module ot_hbm_idx_parent_static #(parameter integer N_Q=4)(
  for(genvar q=0;q<N_Q;q=q+1)begin:gscore
   wire[11:0]nq=(nkeys<=q*2736)?12'd0:((nkeys-q*2736>=2736)?12'd2736:12'(nkeys-q*2736));
   wire[609:0]score;
-  ot_hbm_idx_score_static scorer(.clk_ctl(clk_score[q]),.clk_engine(clk_engine[q*4+:4]),.clk_meta(clk_meta[q*4+:4]),
+  ot_hbm_idx_score_static #(.TP(TP)) scorer(.clk_ctl(clk_score[q]),.clk_engine(clk_engine[q*4+:4]),.clk_meta(clk_meta[q*4+:4]),
    .clk_tail(clk_tail[q*4+:4]),.clk_chunk(clk_chunk[q*16+:16]),.clk_hslice(clk_hslice[q*512+:512]),.rst_n(rst_n),
    .rank(rank),.first_ord(11'(q*342)),.nkeys(nq),.keep_en(keep_en),.keep_bitmap(keep_bitmap[q*342+:342]),
    .ql_v(qv),.ql_head(qh),.ql_codes(qc),.ql_sc(qs),.ql_w(qw),.beat_v(beat_v),.beat_index(beat_index),
@@ -58,7 +58,7 @@ module ot_hbm_idx_parent_static #(parameter integer N_Q=4)(
 `else
  ot_hbm_idx_topk_link_static link(.clk(clk_link),
 `endif.clk_mem(clk_link_mem),.rst_n(rst_n),.clear(frame_start),.ingest_v(&selected_v),
- .selected_line(selected_line),.flush(link_flush),.emit_v(link_emit),.emit_group(link_group),.rank({1'b0,rank}),.gbase(gbase),.tx_v(tx_v),.tx(tx),.fault(lf),.selected_count(total));
+ .selected_line(selected_line),.flush(link_flush),.emit_v(link_emit),.emit_group(link_group),.rank(8'(rank)),.gbase(gbase),.tx_v(tx_v),.tx(tx),.fault(lf),.selected_count(total));
  reg calendar_fault;
  always @(posedge clk_sel or negedge rst_n)begin
   if(!rst_n)calendar_fault<=0;

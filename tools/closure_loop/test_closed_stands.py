@@ -18,7 +18,8 @@ import closure_loop as cl  # noqa: E402
 import textbook_lint as TL  # noqa: E402
 
 KIT = ("TOP=ot_t\nSRCS='rtl/t/ot_t.sv rtl/t/ot_t_leaf.sv'\nPARAMS=(--param W={w} --param D=4)\nFW={fw}\nFH=64.8\n"
-       "PINS=(--pin-region '^(d)(\\[|$)=left')\nPIN_H='M4'\nPIN_V='{pv}'\nRLAYERS='{rl}'\n")
+       "PINS={pins}\nPIN_H='M4'\nPIN_V='{pv}'\nRLAYERS='{rl}'\n")
+PINS0 = "(--pin-region '^(d)(\\[|$)=left')"
 
 
 class Repo:
@@ -27,8 +28,8 @@ class Repo:
         self.c = {}
 
     def put(self, commit, kit="physical/ref_tile/t", w=512, fw=17.28, pv="M5", rl="M2 M5", rtl="module ot_t; endmodule",
-            leaf="module ot_t_leaf; endmodule"):
-        self.c[commit] = {f"{kit}/kit.env": KIT.format(w=w, fw=fw, pv=pv, rl=rl), "rtl/t/ot_t.sv": rtl,
+            leaf="module ot_t_leaf; endmodule", pins=PINS0):
+        self.c[commit] = {f"{kit}/kit.env": KIT.format(w=w, fw=fw, pv=pv, rl=rl, pins=pins), "rtl/t/ot_t.sv": rtl,
                           "rtl/t/ot_t_leaf.sv": leaf, "results/arch/cuts.json": "{}"}
         return self
 
@@ -171,8 +172,8 @@ class Gate(unittest.TestCase):
         # Purely physical knobs and disabled wrapper exclusions remain SAME.
         self.r.c['bbbbbbbbb'][path] = self.r.c['a'*36][path] + 'HM=0.05\n'
         self.assertEqual(self.run_(spec(reroute_reason=dict(kind='rtl_change')))['verdict'], 'REFUSE')
-        self.r.c['a'*36][path] = KIT.format(w=512, fw=17.28, pv='M5', rl='M2 M5') + old.replace('REGS=1', 'REGS=0')
-        self.r.c['bbbbbbbbb'][path] = KIT.format(w=512, fw=17.28, pv='M5', rl='M2 M5') + new.replace('REGS=1', 'REGS=0')
+        self.r.c['a'*36][path] = KIT.format(w=512, fw=17.28, pv='M5', rl='M2 M5', pins=PINS0) + old.replace('REGS=1', 'REGS=0')
+        self.r.c['bbbbbbbbb'][path] = KIT.format(w=512, fw=17.28, pv='M5', rl='M2 M5', pins=PINS0) + new.replace('REGS=1', 'REGS=0')
         self.assertEqual(self.run_(spec(reroute_reason=dict(kind='rtl_change')))['verdict'], 'REFUSE')
 
     def test_dynamic_or_unreadable_wrapper_is_not_verified_change(self):
@@ -268,6 +269,35 @@ class Gate(unittest.TestCase):
         r = self.run_(spec(commit="eeeeeeeee", reroute_reason=ok), exists=ex)       # outline moved: slot_change
         self.assertEqual(r["verdict"], "REFUSE")
         self.assertIn("FW", r["message"])
+
+    def test_native_capture_launch_spread_and_pin_positions(self):
+        import json as _j
+        rc = "results/arch/native_rc.json"
+        ex = lambda p: p in (rc, "results/arch/cuts.json")  # noqa: E731
+        ok = {"kind": "native_capture", "source": rc, "cell": "ot_t",
+              "fix": "boundary registers re-balanced on one root, output stage at the pins"}
+        for rec, word in (({"cell": "ot_t", "capture_ps": 150.0, "launch_ps": 244.0}, "launch_ps 244.0"),
+                          ({"cell": "ot_t", "capture_ps": 150.0, "launch_ps": 180.0, "spread_ps": 96.5}, "spread_ps 96.5")):
+            self.r.c["bbbbbbbbb"][rc] = _j.dumps({"v": rec})
+            r = self.run_(spec(reroute_reason=ok), exists=ex)
+            self.assertEqual((r["verdict"], r["kind"]), ("PASS", "native_capture"), r["message"])
+            self.assertIn(word, r["message"])
+        self.r.c["bbbbbbbbb"][rc] = _j.dumps({"cell": "ot_t", "capture_ps": 150.0, "launch_ps": 180.0, "spread_ps": 40})
+        r = self.run_(spec(reroute_reason=ok), exists=ex)                            # all within: the view stands
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("stands", r["message"])
+        # pin positions moved along the SAME face: admitted; a port moved to another face: slot_change
+        fail = _j.dumps({"cell": "ot_t", "launch_ps": 250.0})
+        self.r.put("fffffffff", pins="(--pin-region '^(d)(\\[|$)=left:2.0-9.0')")
+        self.r.c["fffffffff"][rc] = fail
+        r = self.run_(spec(commit="fffffffff", reroute_reason=ok), exists=ex)
+        self.assertEqual(r["verdict"], "PASS", r["message"])
+        self.assertIn("same faces", r["message"])
+        self.r.put("999999999", pins="(--pin-region '^(d)(\\[|$)=top')")
+        self.r.c["999999999"][rc] = fail
+        r = self.run_(spec(commit="999999999", reroute_reason=ok), exists=ex)
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("PINS faces (d)", r["message"])
 
     # ---------------------------------------------------------------- param_change
     def test_param_change(self):

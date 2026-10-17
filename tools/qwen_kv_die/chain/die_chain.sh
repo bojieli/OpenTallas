@@ -83,7 +83,24 @@ else say "PDN FAIL rc=$pdn_rc ($C/run_pdn.log)"; exit 1; fi
 fi
 fi
 mkdir -p $G; cp $H/grt.tcl $G/; ln -f $C/floorplan_pdn.odb $G/floorplan_pdn.odb
-$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0}
+# DIE-FLOW 10-17 (owner 0cl): OT_DIE_REPAIR=1 = shared die-net repeater step before GRT (tools/die_repeaters); the
+# element / ETM / PHY TT libs of this run are what the resizer sees (a master with signal pins and no liberty FAILS it)
+if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
+  mkdir -p $G/libs; : > $G/libs_tt.txt
+  for f in $R/libs/qfd_elements_tt.lib $R/libs/qfd_etm_tt.lib $R/libs/qfd_etm_*_tt.lib $R/libs/ot_hbm3e_phy_tt.lib; do
+    [ -f "$f" ] && cp "$f" $G/libs/ && echo /work/libs/$(basename $f) >> $G/libs_tt.txt; done
+  [ -s $G/libs_tt.txt ] || { say "DIE_REPAIR FAIL: no TT element libs in $R/libs (the resizer would not see the element pins)"; exit 1; }
+  RD=qwen_compute; [ "$DIE" = kv ] && RD=qwen_kv
+  RS=(--skip 'n_rst_*'); [ "${OT_ROUTE_RESET:-0}" = 1 ] && RS=()   # routed registered reset hops are ordinary die nets: repeated
+  python3 $SRC/tools/die_repeaters/step.py copy $G > /dev/null && \
+  python3 $SRC/tools/die_repeaters/step.py tcl --design $RD --report /work/die_repeaters.json --libs-file /work/libs_tt.txt \
+    --std-corner TT --legalize snap "${RS[@]}" > $G/die_rep_call.tcl || { say "DIE_REPAIR FAIL: step generation"; exit 1; }
+fi
+$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0} OT_DIE_REPAIR=${OT_DIE_REPAIR:-0}
+if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
+  say "$(python3 $SRC/tools/die_repeaters/step.py check $G/die_repeaters.json)" || true
+  python3 $SRC/tools/die_repeaters/step.py check $G/die_repeaters.json > /dev/null || { say "DIE_REPAIR FAIL: no GRT result is a die result"; exit 1; }
+fi
 OV=$(awk '/Final congestion report/{f=1} f && /^Total/{print $NF; exit}' $G/grt.log)
 say "full-die GRT exit=$(cat $G/run.exit) overflow=${OV:-none} ($(grep -m1 'Total wirelength' $G/grt.log))"
 [ "${OT_STOP:-}" = grt ] && { say "stop after GRT (OT_STOP=grt)"; exit 0; }
@@ -113,6 +130,11 @@ for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
     cp "$SRC/tools/die_clock_check.tcl" $D/die_clock_check.tcl
     printf '%s\n' 'if {[catch {set ::env(OT_DCC_OUT) /work/die_clock_dump.tsv; source /work/die_clock_check.tcl} err]} { puts "OT_DCC_FAIL $err" } else { puts OT_DCC_DONE }' >> $D/grt_$c.tcl
   fi
+  # DIE-FLOW 10-17: post-GRT slew/cap audit of the repeated die nets (TT session; GRT detours are invisible pre-GRT)
+  if [ "${OT_DIE_REPAIR:-0}" = 1 ] && [ "$c" = tt ] && [ -f $G/die_repeaters.tcl ]; then
+    cp $G/die_repeaters.tcl $G/die_repeaters.skip_nets.txt $D/ 2>/dev/null
+    printf '%s\n' 'if {[catch {source /work/die_repeaters.tcl; ot_die_rep_post_grt_audit /work/die_repeaters.post_grt.json /work/die_repeaters.skip_nets.txt} err]} { puts "OT_DIE_REP_POST_GRT_FAIL $err" }' >> $D/grt_$c.tcl
+  fi
   $ADMIT $P4 -- $H/dietop_run.sh $D grt_$c.tcl 8 $((P4+60)); sta_rc=$?
   [ "$sta_rc" = 0 ] && sta_rc=$(cat "$D/run.exit" 2>/dev/null || echo 1)
   if ! python3 "$H/case_status.py" --log "$D/grt_$c.log" --stage "grt_$c.tcl" --process-exit "$sta_rc"; then
@@ -126,6 +148,18 @@ for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
   elif [ "$DCC" = 1 ]; then say "DIE CLOCK CHECK $c: no dump ($(grep -m1 OT_DCC_FAIL $D/grt_$c.log))"; fi
 done
 [ "$sta_failed" = 0 ] || { say "chain FAIL: one or more STA corners did not complete"; exit 1; }
+# DIE-FLOW 2026-10-17 (FLOW-HOLD D1-D3, OT_HOLD_BUDGET=die: die_sta_libs.py U 25 + sta_tcl.py FF hold dump): per-link
+# classifier -- launch-min from the bound ETMs, delta <= 80, ASSUMED single-flop masters = hold DIAGNOSTIC links
+if [ "${OT_HOLD_BUDGET:-tile}" = die ]; then
+  HD=$R/sta_${DIE}_ff
+  if [ -s $HD/hold_links_ff.rpt ] && [ -f "$SRC/tools/die_hold_budget.py" ]; then
+    QV=; [ -f $R/libs/views.json ] && QV="--qwen-views $R/libs/views.json"
+    say "HOLD BUDGET: $(python3 "$SRC/tools/die_hold_budget.py" classify --report $HD/hold_links_ff.rpt $QV \
+        --paths-cap ${OT_HOLD_DUMP_PATHS:-200000} --design qwen_$DIE --out $R/hold_budget.json 2>&1 | tail -1)"
+  else
+    say "HOLD BUDGET: no FF hold dump or no tools/die_hold_budget.py in $SRC -- not classified"
+  fi
+fi
 # Every completed KV die trial carries its endpoint cause table and actual GRT
 # congestion/pin/channel readout. The enclosing ot-run scope admits this work;
 # standalone callers retain the normal stage admission rather than running a
