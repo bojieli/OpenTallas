@@ -508,3 +508,26 @@ Conditions for the unit leads:
 - **Long paths are registered inside the leaf.** A path that crosses a 600-720 µm leaf is registered inside that leaf, and the leaf's own timing closure covers it.
 - **The tier/ring stop sits in the middle leaf.** For 4-6 leaves that is leaf 2 or 3, counted from the slice end. The tier lanes enter and leave that leaf's E/W edge strips.
 - **Not allowed:** a single long tile, like the old 1 × 9.5 mm hc_eng.
+
+### 0b-p4f: no lane beside a slice (10-17)
+`dv_plan.py --layout p4 --tier-w 276 --lanes 4 --frame-w 1436.832 --p4f` (p4e is reproduced byte-identical without `--p4f`).
+
+The p4e full-die repeater run overflowed where die lanes run over blocks, not in the streets. The x chain forward from row 2 to row 3 ran 1.6 mm up beside the slice inside the slice's x range, so 745 x-frame stations sat on or within 15 um of a block (57k bit-mm over blocks). The q / P.V legs ran along the bottom edge of frame row 0 (y 1.70-1.77 mm). The hotspots at x = 6.6 / 18.3 / 30.0 mm (slice E faces) and at y 1.7 mm match these.
+
+p4f changes:
+- Row-2 frames are MX (both tiers), so their tap sits above the slice top. Every x head leaves the slice's S or N face, and every forward leaves 120 um beyond its tap, away from the slice. No lane runs beside a slice, and no head shares a lane with a forward.
+- Column-end bundles are 4 x lanes 30 um apart (L colx+45..135, R colx+865..955), clear of the 680-um units (colx+160..840). The return lane sits nearest the frame (colx+15 / +985).
+- Street ring lanes are at one 30-um pitch (+-15..105 about the slice centre). Collective tx/rx are at +-135/165, and the tier lanes are 30 um apart.
+- q / P.V leave the svc half's outer face at y 1.25 / 1.45 mm (above the SM tiles), then go straight up the slice column. q and P.V are 120 um apart.
+- End-point lane shift is along the face only, so no pin sits inside its block.
+
+| | p4e | p4f |
+|---|---|---|
+| worst cut | 0.403 | 0.403 |
+| stations (276 b) | 3,326 | 2,624 |
+| relay bit-stages | 0.863 M | 0.669 M |
+| bit-mm | 0.377 M | 0.312 M |
+| longest link | tvN_s_6S 6.85 mm, 16 st | same |
+| stations on / within 15 um of a block | 745 | 0 |
+| worst slice-to-frame x depth | 9 | 9 (sum 560 -> 384) |
+| MTP (dv_price) | 4,129.3 | 4,129.3 |

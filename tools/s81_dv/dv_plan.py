@@ -33,6 +33,7 @@ STREET = 380.0                    # horizontal ring street at each tier middle
 SLICE_W, SLICE_H = 1250.0, 3500.0   # 2.8:1, 4.375 mm2
 LAYOUT = 'p1'                     # p1/p2: 1.30-mm columns; p3 (cancelled 10-17): 0.95-mm columns
 ROW0_MX = False                   # p1b: row-0 frames placed MX so their cfifo x tap faces their slice
+P4F = False                       # p4f (10-17): row-2 frames MX (no x chain over a slice), 30-um street lanes, q/P.V off svc side faces
 SVC_W = 4250.0
 LANES, LANE_DX = 1, 6.0           # p4c-lanes: 1,104-b links as LANES x 276-b lanes
 TIER_W = 0                        # p4c: per-column tier-exchange width (0 = p4b end-column ring)
@@ -111,8 +112,16 @@ class Plan:
             for k in range(LANES):
                 d = (k - (LANES - 1) / 2) * LANE_DX
                 sh = lambda q: (q[0] + d, q[1] + d)
-                self._link(f'{lid}_l{k}', cls, bits // LANES, (src[0], src[1], sh(src[2])), (dst[0], dst[1], sh(dst[2])),
-                           [sh(q) for q in pts], note)
+                q = [sh(v) for v in pts]
+                if P4F and len(pts) >= 2:
+                    # p4f: an end point stays on its block face (shift only along the face; the adjacent leg is
+                    # perpendicular to it) -- the diagonal shift put L-side lane pins up to 45 um inside the frame
+                    for e, n in ((0, 1), (-1, -2)):
+                        if abs(pts[e][1] - pts[n][1]) < 1e-6:     # horizontal end leg -> pin on a W/E face
+                            q[e] = (pts[e][0], q[e][1])
+                        elif abs(pts[e][0] - pts[n][0]) < 1e-6:   # vertical end leg -> pin on a S/N face
+                            q[e] = (q[e][0], pts[e][1])
+                self._link(f'{lid}_l{k}', cls, bits // LANES, (src[0], src[1], q[0]), (dst[0], dst[1], q[-1]), q, note)
             return
         self._link(lid, cls, bits, src, dst, pts, note)
 
@@ -202,7 +211,7 @@ def build():
                     if r == 2:
                         y = streets[t] + STREET
                     h = hs[4 * t + r]
-                    mst = ('col_h9' if h == H9 else 'col_h10') + ('_MX' if (ROW0_MX or LAYOUT == 'p3') and r == 0 else '')
+                    mst = ('col_h9' if h == H9 else 'col_h10') + ('_MX' if ((ROW0_MX or LAYOUT == 'p3') and r == 0) or (P4F and r == 2) else '')
                     P.block(f'f_{c}{side}{t}{r}', mst, 'frame', f'cl{c}{"SN"[t]}', fx, y, FRAME_W, h)
                     y += h
                 ymax = max(ymax, y)
@@ -299,7 +308,7 @@ def build():
     for t in 'SN':
         for c in range(NCOL - 1):
             a, b = f's_{c}{t}', f's_{c + 1}{t}'
-            for d, (u, v, off) in (('E', (a, b, -80)), ('W', (b, a, 80))):
+            for d, (u, v, off) in (('E', (a, b, -60 if P4F else -80)), ('W', (b, a, 60 if P4F else 80))):
                 p0, p1 = pin(u, 'E' if d == 'E' else 'W'), pin(v, 'W' if d == 'E' else 'E')
                 P.link(f'xr{d}_{c}{t}', 'xring', XB, (u, 'xr' + d, (p0[0], p0[1] + off)), (v, 'xr' + d, (p1[0], p1[1] + off)),
                        [(p0[0], p0[1] + off), (p1[0], p1[1] + off)], 'x all-gather / collective / scalar exchange (TDM)')
@@ -323,8 +332,9 @@ def build():
             for u, v in zip(chainv, chainv[1:]):
                 U, V = P.blocks[P.idx[u]], P.blocks[P.idx[v]]
                 y0, y1 = U['y'] + U['h'], V['y']
-                P.link(f'tvN_{u}', 'xtier', TIER_W, (u, 'vN', (x - 12, y0)), (v, 'vS', (x - 12, y1)), [(x - 12, y0), (x - 12, y1)], 'per-column tier exchange (through the column units)')
-                P.link(f'tvS_{v}', 'xtier', TIER_W, (v, 'vS', (x + 12, y1)), (u, 'vN', (x + 12, y0)), [(x + 12, y1), (x + 12, y0)], 'per-column tier exchange (through the column units)')
+                tq = 15 if P4F else 12     # p4f: the two tier lanes 30 um apart (street / column lane pitch)
+                P.link(f'tvN_{u}', 'xtier', TIER_W, (u, 'vN', (x - tq, y0)), (v, 'vS', (x - tq, y1)), [(x - tq, y0), (x - tq, y1)], 'per-column tier exchange (through the column units)')
+                P.link(f'tvS_{v}', 'xtier', TIER_W, (v, 'vS', (x + tq, y1)), (u, 'vN', (x + tq, y0)), [(x + tq, y1), (x + tq, y0)], 'per-column tier exchange (through the column units)')
         facts['tier_w'] = TIER_W
     elif LAYOUT == 'p4':
         # p4b: the end-column vertical ring segment runs THROUGH the collective edge engines (ring stops):
@@ -348,16 +358,24 @@ def build():
                     fn = f'f_{c}{side}{t}{r}'
                     F = P.blocks[P.idx[fn]]
                     fx = F['x'] + F['w'] if side == 'L' else F['x']
-                    fy = F['y'] + F['h'] - 400 if ((LAYOUT == 'p3' or ROW0_MX) and r == 0) else F['y'] + 400   # p3: row 0 MX
+                    mx = ((LAYOUT == 'p3' or ROW0_MX) and r == 0) or (P4F and r == 2)
+                    fy = F['y'] + F['h'] - 400 if mx else F['y'] + 400   # p3: row 0 MX; p4f: row 2 MX
                     sxp = S['x'] if side == 'L' else S['x'] + S['w']
                     vx = colx(c) + {'p3': (8 + 9 * r if side == 'L' else SCOL_W - 78 + 9 * r),
                                     'p4': (40 + 0 * r if side == 'L' else SCOL_W - 130 + 0 * r)}.get(
                                     LAYOUT, 20 + 15 * r if side == 'L' else SCOL_W - 125 + 15 * r)
                     sy = S['y'] if fy < S['y'] else S['y'] + S['h']
+                    rx = vx + 30
+                    if P4F:
+                        # p4f: x lanes (4 x 276 b, 30 um apart) in one bundle per column side, the return lane nearest
+                        # the frame; no lane runs beside a slice (row-2 MX moves its tap above the slice top)
+                        vx = colx(c) + (90 if side == 'L' else SCOL_W - 90)
+                        rx = colx(c) + (15 if side == 'L' else SCOL_W - 15)
+                    rdy = -60 if mx else 60
                     if r in (1, 2):
                         if S['y'] + 100 <= fy <= S['y'] + S['h'] - 100:
                             P.link(f'x_{fn}', 'x_frame', XB, (sn, 'xf', (sxp, fy)), (fn, 'x', (fx, fy)), [(sxp, fy), (fx, fy)], 'x chain head (facing)')
-                            P.link(f'r_{fn}', 'ret', RET, (fn, 'ret', (fx, fy + 60)), (sn, 'ret', (sxp, fy + 60)), [(fx, fy + 60), (sxp, fy + 60)], 'finished rows')
+                            P.link(f'r_{fn}', 'ret', RET, (fn, 'ret', (fx, fy + rdy)), (sn, 'ret', (sxp, fy + rdy)), [(fx, fy + rdy), (sxp, fy + rdy)], 'finished rows')
                             continue
                         P.link(f'x_{fn}', 'x_frame', XB, (sn, 'xf', (vx, sy)), (fn, 'x', (fx, fy)), [(vx, sy), (vx, fy), (fx, fy)], 'x chain head')
                     else:
@@ -366,8 +384,12 @@ def build():
                         pfx, pfy = (PF['x'] + PF['w'] if side == 'L' else PF['x']), PF['y'] + 400 + 120
                         if (LAYOUT == 'p3' or ROW0_MX) and r == 0:
                             pfy = PF['y'] + 400 - 120   # chain forward leaves row 1 toward row 0's MX tap
+                        if P4F:
+                            # p4f: the forward port sits 120 um beyond the tap, away from the slice (R0 row 1: below its
+                            # tap toward row 0; MX row 2: above its tap toward row 3) -> head and forward never share a lane
+                            pfy = PF['y'] + 280 if r == 0 else PF['y'] + PF['h'] - 280
                         P.link(f'x_{fn}', 'x_frame', XB, (pn, 'xo', (pfx, pfy)), (fn, 'x', (fx, fy)), [(pfx, pfy), (vx, pfy), (vx, fy), (fx, fy)], 'x chain forward (frame -> next frame)')
-                    P.link(f'r_{fn}', 'ret', RET, (fn, 'ret', (fx, fy + 60)), (sn, 'ret', (vx + 30, sy)), [(fx, fy + 60), (vx + 30, fy + 60), (vx + 30, sy)], 'finished rows')
+                    P.link(f'r_{fn}', 'ret', RET, (fn, 'ret', (fx, fy + rdy)), (sn, 'ret', (rx, sy)), [(fx, fy + rdy), (rx, fy + rdy), (rx, sy)], 'finished rows')
     # void units <-> their column's slices (vertical in the column's right-hand lanes, offsets 900-1100)
     if LAYOUT == 'p4' and TIER_W:
         facts['_vpair'] = {}
@@ -428,6 +450,15 @@ def build():
         top = S['y'] + S['h']
         qx, px = {'p3': (colx(c) + 400, colx(c) + 470), 'p4': (colx(c) + 460, colx(c) + 530)}.get(LAYOUT, (colx(c) + 620, colx(c) + 690))
         sxq = min(max(qx, S['x'] + 50), S['x'] + S['w'] - 150)
+        if P4F:
+            # p4f: q / P.V leave the service half's outer face above the SM tiles (y 1.25 / 1.45 mm, free band between
+            # the SM tile tops at 1.08 mm and the frames at 1.70 mm), then straight up the slice column; the p4e legs
+            # ran along the frame-row-0 bottom edge (stations on the frames, y ~1.7 mm hotspots)
+            xf = S['x'] if side == 'W' else S['x'] + S['w']
+            px = qx + 120
+            P.link(f'q_{side}', 'attn', XB, (sn, 'q', (qx, Sl['y'])), (svc, 'q', (xf, 1250.0)), [(qx, Sl['y']), (qx, 1250.0), (xf, 1250.0)], 'q heads from the ring')
+            P.link(f'pv_{side}', 'attn', XB, (svc, 'pv', (xf, 1450.0)), (sn, 'pv', (px, Sl['y'])), [(xf, 1450.0), (px, 1450.0), (px, Sl['y'])], 'P.V rows into the all-gather')
+            continue
         P.link(f'q_{side}', 'attn', XB, (sn, 'q', (qx, Sl['y'])), (svc, 'q', (sxq, top)), [(qx, Sl['y']), (qx, top + 100), (sxq, top + 100), (sxq, top)], 'q heads from the ring')
         P.link(f'pv_{side}', 'attn', XB, (svc, 'pv', (sxq + 70, top)), (sn, 'pv', (px, Sl['y'])), [(sxq + 70, top), (sxq + 70, top + 170), (px, top + 170), (px, Sl['y'])], 'P.V rows into the all-gather')
     # collective lanes: edge PHYs <-> end-slice outer face along the street (ring-stop feed-through to coll_edge)
@@ -439,10 +470,13 @@ def build():
             for k in '01':
                 lk = f'lk_{side}{t}{k}'; LK = P.blocks[P.idx[lk]]
                 yst = S['y'] + SLICE_H / 2 + (-140 if k == '0' else 140)
+                ry = 10
+                if P4F:   # p4f: tx / rx 30 um apart, outside the 8 ring lanes (+-15..105)
+                    yst = S['y'] + SLICE_H / 2 + (-135 if k == '0' else 135); ry = -30 if k == '0' else 30
                 lx = LK['x'] + LK['w'] if side == 'W' else LK['x']
                 ly = min(max(yst, LK['y'] + 20), LK['y'] + LK['h'] - 20)
                 P.link(f'lt_{lk}', 'coll', COLL_LANE, (sn, 'tx' + k, (sxf, yst)), (lk, 'tx', (lx, ly)), [(sxf, yst), (lx, yst), (lx, ly)], 'link lane tx (street)')
-                P.link(f'lr_{lk}', 'coll', COLL_LANE, (lk, 'rx', (lx, ly + 10)), (sn, 'rx' + k, (sxf, yst + 10)), [(lx, ly + 10), (lx, yst + 10), (sxf, yst + 10)], 'link lane rx (street)')
+                P.link(f'lr_{lk}', 'coll', COLL_LANE, (lk, 'rx', (lx, ly + ry)), (sn, 'rx' + k, (sxf, yst + ry)), [(lx, ly + ry), (lx, yst + ry), (sxf, yst + ry)], 'link lane rx (street)')
     return P, facts
 
 
@@ -553,11 +587,13 @@ def main():
     ap.add_argument('--row0-mx', action='store_true', help='p1b: row-0 frames MX (tap toward the slice)')
     ap.add_argument('--tier-w', type=int, default=0, help='p4c: per-column tier exchange width (bits per direction)')
     ap.add_argument('--lanes', type=int, default=1, help='p4c-lanes: split every 1,104-b link into N cycle-aligned lanes')
+    ap.add_argument('--p4f', action='store_true', help='p4f: row-2 frames MX, 30-um street lanes, x lanes off the slices, q/P.V off svc faces')
     ap.add_argument('--frame-w', type=float, default=None, help='p4: frame width override (S-ELEM bf_col 604.8 -> 1,436.832)')
     a = ap.parse_args()
     HOP_UM = a.hop_um
-    global ROW0_MX, TIER_W, LANES
+    global ROW0_MX, TIER_W, LANES, P4F
     ROW0_MX = a.row0_mx
+    P4F = a.p4f
     TIER_W = a.tier_w
     LANES = a.lanes
     global LAYOUT, SCOL_W, SLICE_W, SLICE_H, PITCH, DIE_W, SVC_W, FRAME_W, FRAME_PITCH, UNIT_W, UNIT_WE
