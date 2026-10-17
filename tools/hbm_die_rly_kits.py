@@ -214,6 +214,7 @@ def fc_spec(w: int, flow: str, owner: str, branch: str) -> dict:
         "sources": ["rtl/lib/ot_rst_relay.sv", f"{RTL}/ot_hbm_rly.sv", f"{RTL}/ot_hbm_rly_fc.sv", f"{RTL}/hbfd_rly_fc_masters.sv"],
         "params": {}, "clock_port": "clk_in", "reset_ports": ["rs"],
         "boundary_tcl": [f"{FC_DIR}/fc_clock.tcl"], "sdc_extra": [f"{FC_DIR}/fc_clock.tcl"],
+        "pre_cts_extra": [f"{FC_DIR}/fc_pre_cts.tcl"],
         "outline": dict(o, exact=True), "macros": [], "layer_cap": "M5",
         "pins": pins, "io_tcl": f"{FC_DIR}/pins/{mst}.tcl",
         "recipe": 3, "inhold": False, "outhold": False,

@@ -36,3 +36,17 @@ if {[llength [get_ports -quiet clk_out]] && [llength [get_ports -quiet clk_in]]}
   }
   puts "OT_FC_CLOCK: clk_out = clk_out_fwd (clk_in, divide 1); [llength $ot_fc_do] o vs clk_out_fwd (max $ot_fc_ob / min -$ot_fc_om), [llength $ot_fc_di] i vs clk_in (max $ot_fc_ib / min $ot_fc_im)"
 }
+# (4) after CTS (this file is the post-CTS boundary of every later step): the clk_out buffer is dont_touch again
+#     (fc_pre_cts.tcl lifted it so CTS could drive its input).  No-op outside an OpenROAD design session.
+if {![catch {ord::get_db_block} ot_fc_blk] && $ot_fc_blk ne "NULL" && ![catch {$ot_fc_blk getInsts} ot_fc_all]} {
+  set ot_fc_k 0
+  foreach inst $ot_fc_all {
+    if {[string match *u_fcb_ck* [$inst getName]]} {
+      set ot_fc_drv [[$inst findITerm A] getNet]
+      # only once CTS has run: before CTS the buffer input is still the clk_in port net (then leave it to fc_pre_cts)
+      if {$ot_fc_drv ne "NULL" && [llength [$ot_fc_drv getBTerms]] == 0} { $inst setDoNotTouch 1; incr ot_fc_k }
+    }
+  }
+  if {$ot_fc_k} { puts "OT_FC: clk_out buffer dont_touch restored after CTS" }
+}
+
