@@ -42,6 +42,8 @@ if [ "${STORE7:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r7.sv $P/
 if [ "${SFU_LOCAL_KEEP:-0}" = 1 ];then defs+=(-DOT_SFU_LOCAL_KEEP);fi
 # STORE7B=1 (r7b): ot_hgi_sfu_programme_store_r7b (r7 reset tree + SRAM pipelining; D=10, status 8)
 if [ "${STORE7B:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r7b.sv $P/ot_hgi_sfu_program_stripe_pipe.sv $P/ot_hgi_sfu_calendar_paged_pipe.sv $P/ot_hgi_sfu_io_calendar_pipe.sv); defs+=(-DSFU_PSTORE_R7B); fi
+# STORE7C=1 (r7c): ot_hgi_sfu_programme_store_r7c (r7 reset tree + kept per-pair SRAM write copies; D=4, status 2)
+if [ "${STORE7C:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r7c.sv $P/ot_hgi_sfu_program_stripe_rc.sv $P/ot_hgi_sfu_calendar_paged_rc.sv $P/ot_hgi_sfu_io_calendar_rc.sv); defs+=(-DSFU_PSTORE_R7C); fi
 case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; early) defs+=(-DSFU_PSTORE_R7_EARLY);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
 rows=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['rows'])" "$OUT/data/io_manifest.json")
 sedge=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['scalar_prefetch_edge'])" "$OUT/data/io_manifest.json")
