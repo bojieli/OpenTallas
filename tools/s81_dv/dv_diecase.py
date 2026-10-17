@@ -84,7 +84,7 @@ def main():
                     help='pilot: keep blocks whose centre lies inside and links with both ends inside')
     ap.add_argument('--die-repair', action='store_true', help='splice DIE-FLOW step output (die_repeaters_step.tcl)')
     ap.add_argument('--congestion-iterations', type=int, default=30)
-    ap.add_argument('--dieflow-ref', default='origin/claude/dieflow-1017')
+    ap.add_argument('--dieflow-ref', default='origin/main')
     a = ap.parse_args()
     plan = load(a.plan)
     out = Path(a.out); (out / 'views').mkdir(parents=True, exist_ok=True); (out / 'out').mkdir(exist_ok=True)
@@ -234,9 +234,12 @@ def main():
         libs = [f'{PLAT}/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', f'{PLAT}/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib']
         t = subprocess.run([sys.executable, str(tmp / 'tools/die_repeaters/step.py'), 'tcl', '--design', 's81', '--report',
                             '/work/die_repeaters.json', '--legalize', 'snap',
-                            '--repeat-nets', 'n*_fck\\[*\\]', '--fclk-globs', 'n*_fck\\[*\\]', '--skip', 'n*_lck\\[*\\]', '--libs', *libs], capture_output=True, text=True, check=True).stdout
+                            '--repeat-nets', 'n*_fck\\[*\\]', '--fclk-globs', 'n*_fck\\[*\\]', '--fclk-policy', 'fail', '--skip', 'n*_lck\\[*\\]', '--libs', *libs], capture_output=True, text=True, check=True).stdout
         (out / 'die_repeaters_step.tcl').write_text(t)
         repair = f'# DIE-FLOW repeater step ({a.dieflow_ref})\nsource /work/die_repeaters_step.tcl\n'
+    post = ('estimate_parasitics -global_routing\n'
+            'if {[llength [info procs ot_die_rep_post_grt_audit]]} { ot_die_rep_post_grt_audit /work/die_repeaters.post_grt.json }\n'
+            if a.die_repair else 'estimate_parasitics -global_routing\n')
     tcl = f'''# S81-DV die case (tools/s81_dv/dv_diecase.py) -- NOT_A_DIE_RESULT (stand-in census in case.json)
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
 read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
@@ -274,6 +277,7 @@ set t0 [clock seconds]
 global_route -congestion_iterations {a.congestion_iterations} -allow_congestion -verbose -congestion_report_file /work/out/grt_congestion.rpt
 puts "OT_GRT_S [expr {{[clock seconds]-$t0}}]"
 write_db /work/out/grt.odb
+{post}
 puts OT_DONE
 '''
     (out / 'run.tcl').write_text(tcl)
