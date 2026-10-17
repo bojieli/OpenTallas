@@ -4246,6 +4246,10 @@ class Chains:
         fb_seen, max_stn = {}, int(L / 100.0) + len(stops) + 32
         while True:
             if len(out) > max_stn:
+                near_ = sorted((abs(i_.x + i_.w / 2 - end[0]) + abs(i_.y + i_.h / 2 - end[1]), i_.name, i_.master)
+                               for i_ in self.m.get('insts', []) if abs(i_.x + i_.w / 2 - end[0]) + abs(i_.y + i_.h / 2 - end[1]) < 600.0)
+                print('OT_CHAIN_NO_PROGRESS_NEAR', name, json.dumps([(round(d_, 1), n_, m_) for d_, n_, m_ in near_[:40]]),
+                      file=sys.stderr, flush=True)
                 raise RuntimeError(f'OT_CHAIN_NO_PROGRESS chain {name}: {len(out)} stations > bound {max_stn} for '
                                    f'{L:.0f} um (last at s={pos:.0f}, cur={tuple(round(v, 1) for v in cur)}, end={end})')
             nxt = stops[fi] if fi < len(stops) else None
