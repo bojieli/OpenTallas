@@ -56,11 +56,29 @@ def flow(a, b):
     return 'SN' if dy >= 0 else 'NS'
 
 
+_ROUTER = None
+
+
+def bus_points(b):
+    cen = lambda pts: (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts))
+    return cen(b['dpts']), [cen(b['spts'][s]) for s in b['spts']]
+
+
+def _plan_job(job):
+    import relay_router as RR
+    key, (root, spts), W, sinks = job
+    P, par, dist = tree(root, spts)
+    return key, RR.plan_bus(_ROUTER, P, par, _ROUTER.R, W, sinks)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('case'); ap.add_argument('--contract', required=True); ap.add_argument('--reach', type=float, default=450.0)
     ap.add_argument('--out', required=True)
     ap.add_argument('--clock-manifest', help='manifest with clock_entry_map (a --no-clock case has none: use the clocked case of the same netlist)')
+    ap.add_argument('--route-grid', type=float, default=0.0,
+                    help='>0: obstacle-aware routed stations on this grid (relay_router.py, d4b-r); 0: legacy L-route points')
+    ap.add_argument('--jobs', type=int, default=1)
     a = ap.parse_args()
     c = Path(a.case); R = a.reach
     contract = json.loads(Path(a.contract).read_text())
@@ -88,13 +106,34 @@ def main():
         for l in lds:
             b['spts'][l[0]].append(l[2])
     rows, tiles, skipped = [], collections.Counter(), collections.defaultdict(list)
+    global _ROUTER
+    routed = {}
+    if a.route_grid > 0:
+        import relay_router as RR
+        _ROUTER = RR.Router(man['placement'], man['die_um'], R, G=a.route_grid)
+        jobs = []
+        for (di, sk), b in buses.items():
+            if pl[di]['master'] == 'ot_hbm_su_programme' or any(re.match(r'(por_|rst|reset)', p_) for p_ in b['ports']):
+                continue
+            jobs.append(((di, sk), bus_points(b), 48 if b['bits'] <= 48 else 624, list(b['spts'])))
+        import multiprocessing as mp
+        with mp.get_context('fork').Pool(a.jobs) as pool:
+            for key, res in pool.imap_unordered(_plan_job, jobs, chunksize=4):
+                routed[key] = res
+        viol = [(h, f'{k[0]} -> {len(k[1])} sinks: {w}') for k, r_ in routed.items() for h, w in r_[3]]
+        print(f'routed {len(routed)} buses; hop violations {len(viol)}; worst {sorted(viol)[-5:] if viol else None}', flush=True)
     for (di, sk), b in sorted(buses.items(), key=lambda kv: -kv[1]['bits']):
         dp = '+'.join(sorted(b['ports']))
-        cen = lambda pts: (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts))
-        root = cen(b['dpts']); sinks = list(b['spts']); spts = [cen(b['spts'][s]) for s in sinks]
+        root, spts = bus_points(b); sinks = list(b['spts'])
         P, par, dist = tree(root, spts)
         kids = collections.Counter(p for p in par if p >= 0)
-        depth = [max(0, math.ceil(dist[i] / R) - 1) for i in range(1, len(P))]
+        if a.route_grid > 0:
+            if (di, sk) not in routed:
+                depth = [max(0, math.ceil(dist[i] / R) - 1) for i in range(1, len(P))]
+            else:
+                rsl, rtail, depth, rviol = routed[(di, sk)]
+        else:
+            depth = [max(0, math.ceil(dist[i] / R) - 1) for i in range(1, len(P))]
         dmax = max(depth)
         if dmax == 0:
             continue
@@ -109,7 +148,12 @@ def main():
         bits = b['bits']
         master = (48, math.ceil(bits / 48)) if bits <= 48 else (624, math.ceil(bits / 624))
         stations = []
-        for v in range(1, len(P)):
+        if a.route_grid > 0:
+            for st_ in rsl:
+                stations.append(dict(depth=st_['depth'], x=st_['x'], y=st_['y'], toward=st_['toward'], master=st_['master'],
+                                     tiles=master[1], parent=st_['parent'], hop_um=st_['hop_um']))
+                tiles[f'hbfd_rly_{master[0]}'] += master[1]
+        for v in (range(1, len(P)) if a.route_grid <= 0 else ()):
             u = par[v]; k0 = int(dist[u] // R) + 1; k1 = math.ceil(dist[v] / R) - 1
             for k in range(k0, k1 + 1):
                 x, y = along(P[u], P[v], k * R - dist[u])
@@ -121,18 +165,23 @@ def main():
         if cls == 'equal_age_pad':
             for i, s in enumerate(sinks):
                 if depth[i] < dmax:
-                    pads.append(dict(sink=s, stages=dmax - depth[i], x=round(spts[i][0], 1), y=round(spts[i][1], 1)))
+                    hp = _ROUTER.nearest_free(spts[i]) if a.route_grid > 0 else spts[i]
+                    pads.append(dict(sink=s, stages=dmax - depth[i], x=round(hp[0], 1), y=round(hp[1], 1)))
                     tiles[f'hbfd_rly_{master[0]}'] += (dmax - depth[i]) * master[1]
         rows.append(dict(driver=f'{di}.{dp}', driver_master=pl[di]['master'], bits=bits, cls=cls,
                          domain=dom_of.get(di, 'UNKNOWN'), depth=dmax, sinks=sinks,
                          sink_depths=depth, stations=stations, branch_points=branch, pads=pads,
+                         hop_violations=(rviol if a.route_grid > 0 and (di, sk) in routed else []),
                          nets=b['nets'] if bits <= 4 else f"{len(b['nets'])} nets ({b['nets'][0]}..)"))
     res = dict(schema='opentallas.hbm.die_relay_stations.v1', case=str(c), reach_um=R,
                die_um=man['die_um'], placement_sha='see manifest input_sha256', buses=len(rows),
                bits_relayed=sum(r['bits'] for r in rows), station_tiles=dict(tiles),
                by_class=dict(collections.Counter(r['cls'] for r in rows)), not_relayed=dict(skipped),
                clock_rule='each station = a hardened hbfd_rly tile (clk entry pin); DIE-CLOCK balance_group per domain',
-               qualification='GEOMETRY_ONLY route points; tiles legalised by die_case (planned relay home)', rows=rows)
+               qualification='GEOMETRY_ONLY route points; tiles legalised by die_case (planned relay home)',
+               route=(dict(model='relay_router obstacle-aware (stations in free cells, wires may cross macros <= R/2-G deep)',
+                           grid_um=a.route_grid) if a.route_grid > 0 else dict(model='legacy L route')),
+               hop_violations=sum(len(r['hop_violations']) for r in rows), rows=rows)
     Path(a.out).write_text(json.dumps(res) + '\n')
     print(f"{len(rows)} buses, {res['bits_relayed']} bits, tiles {dict(tiles)}, classes {res['by_class']}")
 
