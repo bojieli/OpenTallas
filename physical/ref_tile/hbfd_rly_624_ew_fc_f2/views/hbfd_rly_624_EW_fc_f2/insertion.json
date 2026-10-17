@@ -180,5 +180,114 @@
    "lib_clock_pin": "clk_in",
    "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk_in}]"
   }
+ },
+ "forwarded_clock": {
+  "arc": "clk_in -> clk_out<k> combinational positive_unate (one kept buffer per branch, off the CTS tree)",
+  "model": "per branch: 1 x clk_in pin cap; + wire 405 um x 0.15 fF/um",
+  "etm": "re-exported without the clk_out*_fwd generated clocks (tools/hbm_f1/fc_etm_reexport.sh); register arcs byte-identical to the closure-loop export",
+  "corners": {
+   "tt": {
+    "R_ps": 150.0,
+    "clk_in_pin_ff": 23.5654,
+    "pins": {
+     "clk_out0": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 37.83
+      },
+      "pins": {
+       "load_ff": 23.57,
+       "ps": 45.26
+      },
+      "pins_wire": {
+       "load_ff": 84.32,
+       "ps": 66.89
+      }
+     },
+     "clk_out1": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 38.89
+      },
+      "pins": {
+       "load_ff": 23.57,
+       "ps": 46.33
+      },
+      "pins_wire": {
+       "load_ff": 84.32,
+       "ps": 67.96
+      }
+     }
+    }
+   },
+   "ff": {
+    "R_ps": 123.9,
+    "clk_in_pin_ff": 24.3407,
+    "pins": {
+     "clk_out0": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 32.59
+      },
+      "pins": {
+       "load_ff": 24.34,
+       "ps": 38.12
+      },
+      "pins_wire": {
+       "load_ff": 85.09,
+       "ps": 53.3
+      }
+     },
+     "clk_out1": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 33.51
+      },
+      "pins": {
+       "load_ff": 24.34,
+       "ps": 39.05
+      },
+      "pins_wire": {
+       "load_ff": 85.09,
+       "ps": 54.23
+      }
+     }
+    }
+   },
+   "ss": {
+    "R_ps": 193.9,
+    "clk_in_pin_ff": 23.0671,
+    "pins": {
+     "clk_out0": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 45.14
+      },
+      "pins": {
+       "load_ff": 23.07,
+       "ps": 56.02
+      },
+      "pins_wire": {
+       "load_ff": 83.82,
+       "ps": 90.11
+      }
+     },
+     "clk_out1": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 46.4
+      },
+      "pins": {
+       "load_ff": 23.07,
+       "ps": 57.3
+      },
+      "pins_wire": {
+       "load_ff": 83.82,
+       "ps": 91.4
+      }
+     }
+    }
+   }
+  }
  }
 }
