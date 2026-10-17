@@ -180,5 +180,198 @@
    "lib_clock_pin": "clk_in",
    "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk_in}]"
   }
+ },
+ "forwarded_clock": {
+  "arc": "clk_in -> clk_out<k> combinational positive_unate (one kept buffer per branch, off the CTS tree)",
+  "model": "per branch: 1 x clk_in pin cap; + wire 405 um x 0.15 fF/um",
+  "etm": "re-exported without the clk_out*_fwd generated clocks (tools/hbm_f1/fc_etm_reexport.sh); register arcs byte-identical to the closure-loop export",
+  "corners": {
+   "tt": {
+    "R_ps": 49.7,
+    "clk_in_pin_ff": 14.9851,
+    "pins": {
+     "clk_out0": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 20.21
+      },
+      "pins": {
+       "load_ff": 14.99,
+       "ps": 24.15
+      },
+      "pins_wire": {
+       "load_ff": 75.74,
+       "ps": 46.11
+      }
+     },
+     "clk_out1": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 20.86
+      },
+      "pins": {
+       "load_ff": 14.99,
+       "ps": 24.8
+      },
+      "pins_wire": {
+       "load_ff": 75.74,
+       "ps": 46.76
+      }
+     },
+     "clk_out2": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 16.33
+      },
+      "pins": {
+       "load_ff": 14.99,
+       "ps": 20.27
+      },
+      "pins_wire": {
+       "load_ff": 75.74,
+       "ps": 42.19
+      }
+     },
+     "clk_out3": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 21.49
+      },
+      "pins": {
+       "load_ff": 14.99,
+       "ps": 25.43
+      },
+      "pins_wire": {
+       "load_ff": 75.74,
+       "ps": 47.39
+      }
+     }
+    }
+   },
+   "ff": {
+    "R_ps": 38.2,
+    "clk_in_pin_ff": 16.1067,
+    "pins": {
+     "clk_out0": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 16.99
+      },
+      "pins": {
+       "load_ff": 16.11,
+       "ps": 20.13
+      },
+      "pins_wire": {
+       "load_ff": 76.86,
+       "ps": 35.46
+      }
+     },
+     "clk_out1": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 17.62
+      },
+      "pins": {
+       "load_ff": 16.11,
+       "ps": 20.76
+      },
+      "pins_wire": {
+       "load_ff": 76.86,
+       "ps": 36.09
+      }
+     },
+     "clk_out2": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 13.16
+      },
+      "pins": {
+       "load_ff": 16.11,
+       "ps": 16.3
+      },
+      "pins_wire": {
+       "load_ff": 76.86,
+       "ps": 31.62
+      }
+     },
+     "clk_out3": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 18.22
+      },
+      "pins": {
+       "load_ff": 16.11,
+       "ps": 21.37
+      },
+      "pins_wire": {
+       "load_ff": 76.86,
+       "ps": 36.7
+      }
+     }
+    }
+   },
+   "ss": {
+    "R_ps": 69.6,
+    "clk_in_pin_ff": 14.2605,
+    "pins": {
+     "clk_out0": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 25.71
+      },
+      "pins": {
+       "load_ff": 14.26,
+       "ps": 31.3
+      },
+      "pins_wire": {
+       "load_ff": 75.01,
+       "ps": 65.73
+      }
+     },
+     "clk_out1": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 26.37
+      },
+      "pins": {
+       "load_ff": 14.26,
+       "ps": 31.96
+      },
+      "pins_wire": {
+       "load_ff": 75.01,
+       "ps": 66.39
+      }
+     },
+     "clk_out2": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 21.89
+      },
+      "pins": {
+       "load_ff": 14.26,
+       "ps": 27.47
+      },
+      "pins_wire": {
+       "load_ff": 75.01,
+       "ps": 61.9
+      }
+     },
+     "clk_out3": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 27.0
+      },
+      "pins": {
+       "load_ff": 14.26,
+       "ps": 32.59
+      },
+      "pins_wire": {
+       "load_ff": 75.01,
+       "ps": 67.01
+      }
+     }
+    }
+   }
+  }
  }
 }
