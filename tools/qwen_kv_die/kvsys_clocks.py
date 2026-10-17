@@ -14,6 +14,7 @@ writes LIBS/clocks_<c>.tcl (c = tt ff ss) for sta_tcl.py (OT_STA_CLOCKS=LIBS/clo
 """
 import argparse
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -124,7 +125,8 @@ def main(argv=None):
     a.out.mkdir(parents=True, exist_ok=True)
     for c in CORNERS:
         if all(c in leaves[m_] for m_ in leaves):
-            (a.out / f'clocks_{c}.tcl').write_text(clock_tcl(doms, leaves, c, periods=periods_for(doms)))
+            (a.out / f'clocks_{c}.tcl').write_text(clock_tcl(doms, leaves, c, periods=periods_for(doms),
+                                                                  hold_budget=os.environ.get('OT_HOLD_BUDGET', 'tile')))
     rec = dict(schema='opentallas.qwen_kvsys_clocks.v1', sinks=sinks, domains={d: len(v) for d, v in doms.items()},
                source_periods_ps=periods_for(doms), period_source='qkd_pll_analog_model real half-periods; no implicit domain fallback',
                measured=src, assumed_ideal=sorted(m_ for m_ in leaves if m_ not in src),

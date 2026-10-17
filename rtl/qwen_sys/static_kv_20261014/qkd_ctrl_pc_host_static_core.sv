@@ -57,7 +57,7 @@ module qkd_ctrl_pc_host_static_core #(
     output wire completion_v,completion_we,completion_fault,
     // Registered observations only. A parent drain barrier must join BOTH
     // domains plus actual upstream quiet, front idle and return-ring idle.
-    output reg idle_core,idle_hbm,output reg drain_fault_core,drain_fault_hbm,
+    output wire idle_core,output reg idle_hbm,output reg drain_fault_core,drain_fault_hbm,
     // ---- hardened-child seams (wires-parent qkd_ctrl_pc_host_static); every seam output is flop-driven ----
     output wire         p_col_v, p_col_we, p_col_sr,     // dv[LW-2] flops: one edge before the port's pin capture
     output reg          p_w_v,                         // static write data, registered (+1 hclk, hidden by >= 4-edge column)
@@ -266,12 +266,25 @@ module qkd_ctrl_pc_host_static_core #(
     // u_ecc (ot_qfd_kv_landing_ecc) is the hardened child qkd_ctrl_pc_ecc_child. Its PIPE stage 0 captures i_v / i_code
     // (port flops) and i_sec / i_row on the same edge; the head metadata is registered here one edge ahead: the head
     // at edge t is tq[tr + kv_v] at t-1 (an entry is written >= RL + PHY edges before its beat returns).
-    wire         l_v = e_l_v, ecc_fault = e_fault;
-    wire [TQA:0] tr_nx   = tr + {{TQA{1'b0}}, kv_v};
-    wire [33:0]  h_nx    = tq[tr_nx[TQA-1:0]];
-    wire [9:0]   h_nx_j  = (MUT == 3) ? {h_nx[9:2], h_nx[0], h_nx[1]} : h_nx[9:0];
-    wire [7:0]   h_nx_l  = h_nx[17:10] - 8'(ROW0);
-    always @(posedge hclk) begin e_sec <= {h_nx_l[5:0], h_nx_j[9:7], 1'b0, h_nx_j[6:0]}; e_row <= h_nx[17:10]; end
+    // KVCTRL core_s4 (2026-10-16): e_l_v is captured in a pin flop (was a 13-level input cone into drain_kv). l_v only
+    // feeds the drain debt / idle observations: drain_kv now counts the landing one hclk edge later (debt held one edge
+    // longer, never early); the raw pin bit stays in the activity veto so idle cannot assert in between. Traffic 0 edges.
+    reg          l_v_q;
+    always @(posedge hclk or negedge h_rn) if (!h_rn) l_v_q <= 1'b0; else l_v_q <= e_l_v;
+    wire         l_v = l_v_q, ecc_fault = e_fault;
+    // KVCTRL core_s4: identical to e_sec/e_row <= f(tq[tr + kv_v]), but both candidates f(tq[tr]) and f(tq[tr1]) (tr1 a
+    // register = tr + 1) are formed in parallel and the port child's kv_v selects LAST (core_s1: p_kv_v -> e_sec 13 levels).
+    reg  [TQA-1:0] tr1;
+    always @(posedge hclk or negedge h_rn) if (!h_rn) tr1 <= TQA'(1); else if (kv_v) tr1 <= tr1 + 1'b1;
+    wire [33:0]  h_c0    = tq[tr[TQA-1:0]];
+    wire [33:0]  h_c1    = tq[tr1];
+    wire [9:0]   h_c0_j  = (MUT == 3) ? {h_c0[9:2], h_c0[0], h_c0[1]} : h_c0[9:0];
+    wire [9:0]   h_c1_j  = (MUT == 3) ? {h_c1[9:2], h_c1[0], h_c1[1]} : h_c1[9:0];
+    wire [7:0]   h_c0_l  = h_c0[17:10] - 8'(ROW0);
+    wire [7:0]   h_c1_l  = h_c1[17:10] - 8'(ROW0);
+    wire [16:0]  e_sec_c0 = {h_c0_l[5:0], h_c0_j[9:7], 1'b0, h_c0_j[6:0]};
+    wire [16:0]  e_sec_c1 = {h_c1_l[5:0], h_c1_j[9:7], 1'b0, h_c1_j[6:0]};
+    always @(posedge hclk) begin e_sec <= kv_v ? e_sec_c1 : e_sec_c0; e_row <= kv_v ? h_c1[17:10] : h_c0[17:10]; end
     reg [15:0] ep0,ep1,ep2;
     always @(posedge hclk)begin ep0<=t_head[33:18];ep1<=ep0;ep2<=ep1;end
     assign corrected_epoch=ep2;
@@ -360,7 +373,20 @@ module qkd_ctrl_pc_host_static_core #(
     // Register wide reductions independently, and require two quiet edges so
     // a stale zero summary cannot hide an intake captured on the previous edge.
     // Current activity remains an eager veto; only idle assertion may be later.
-    wire core_drain_activity=es[0]||es_v_q||completion_v||e_v||er_v||s_credit||er_cr;
+    wire core_drain_activity_q=es_v_q||completion_v||e_v||er_v||s_credit||er_cr;   // all but the raw es[0] pin
+    // KVCTRL core_s6 (2026-10-16): the raw es[0] pin no longer enters the quiet pipe. es_v_q <= es[0] on the same reset
+    // and every edge, and es_v_q is in core_drain_activity_q, so the edge after es[0] already vetoes every idle_core_r
+    // that the raw bit vetoed (core_quiet_q[0] is only read through &core_quiet_q one edge later, beside
+    // !core_drain_activity_q): cycle-identical. es[0] now loads ONLY pin flops (es_v_q, es0_idle_q), so the flow's input
+    // hold pad covers it (s5 route: ports with a combinational load get no pad and RSZ could not buffer them).
+    wire core_drain_activity=core_drain_activity_q;
+    // KVCTRL core_s5 (2026-10-16): idle split, cycle-identical. idle_core_r registers the idle AND WITHOUT the raw es[0]
+    // pin; es0_idle_q is a dedicated es[0] pin flop; idle_core = idle_core_r & !es0_idle_q is exactly the former
+    // registered AND (both flops capture on the same edge). core_s4 gate: es[0] -> idle_core in->reg -34.9 ps.
+    reg idle_core_r;
+    (* keep *) reg es0_idle_q;
+    always @(posedge ck or negedge rs_q) if(!rs_q) es0_idle_q<=1'b0; else es0_idle_q<=es[0];
+    assign idle_core=idle_core_r&&!es0_idle_q;
     reg core_debt_zero_q;reg [1:0] core_quiet_q;
     always @(posedge ck or negedge rs_q)
       if(!rs_q)begin core_debt_zero_q<=0;core_quiet_q<=0;end
@@ -371,7 +397,7 @@ module qkd_ctrl_pc_host_static_core #(
     always @(posedge ck or negedge rs_q)
       if(!rs_q)begin
         drain_desc<=0;drain_reads<=0;drain_credits<=0;
-        drain_fault_core<=0;idle_core<=0;
+        drain_fault_core<=0;idle_core_r<=0;
       end else begin
         case({dc_push,dc_pop})
           2'b10:drain_desc<=drain_desc+16'd1;
@@ -394,15 +420,22 @@ module qkd_ctrl_pc_host_static_core #(
            (dc_push&&!dc_pop&&drain_desc==16'hffff)||
            (dr_push&&!dr_pop&&drain_reads==16'hffff)||
            (dq_push&&!dq_pop&&drain_credits==16'hffff))drain_fault_core<=1;
-        if(DRAIN_PIPE!=0)idle_core<=core_debt_zero_q&&(&core_quiet_q)&&!core_drain_activity&&
+        if(DRAIN_PIPE!=0)idle_core_r<=core_debt_zero_q&&(&core_quiet_q)&&!core_drain_activity_q&&
           !drain_fault_core&&!completion_fault&&!f_core&&!native_intake_fault;
-        else idle_core<=drain_desc==0&&drain_reads==0&&drain_credits==0&&
-          !es[0]&&!es_v_q&&!completion_v&&!e_v&&!er_v&&!s_credit&&!er_cr&&
+        else idle_core_r<=drain_desc==0&&drain_reads==0&&drain_credits==0&&
+          !es_v_q&&!completion_v&&!e_v&&!er_v&&!s_credit&&!er_cr&&
           !drain_fault_core&&!completion_fault&&!f_core&&!native_intake_fault;
       end
     // KV corrected returns include tag, PHY raw, pcport and landing ECC
     // pipelines. Static reads are covered above through their actual e_v.
     reg [15:0] drain_kv;
+    // KVCTRL core_s6 (2026-10-16): the raw e_l_v pin left the activity veto (structural fix of core_s5 EARLY_FAIL_HOLD:
+    // e_l_v -> l_v_q/D FF hold -17.17 ps was the ONE endpoint the CTS hold repair could not fix -- the port also fed this
+    // combinational OR, so the flow gave it no input hold pad, and the repair could not buffer it). A legal landing always
+    // has drain_kv >= 1 two edges before l_v (rd_kv precedes its landing by >= RL + PHY edges), so hbm_debt_zero_q already
+    // vetoes idle_hbm on every edge the raw bit did; l_v (= e_l_v one edge later) stays in the veto. Cycle-identical for
+    // all legal traffic; an unsolicited zero-debt landing still raises drain_fault_hbm and drops idle_hbm one edge later.
+    // e_l_v now loads only its pin flop.
     wire hbm_drain_activity=obs_commit_valid||rd_kv||tc_v||cmd_v||static_v_q||c_v||s_cr||wv_q||cv_q||hand_q||
       wcon_q||row_v||col_v||po[0]||po[28]||rv_q||rawslot_q||kv_v||em_v||l_v||native_commit_valid;
     reg hbm_debt_zero_q;reg [1:0] hbm_quiet_q;
@@ -427,7 +460,7 @@ module qkd_ctrl_pc_host_static_core #(
         else idle_hbm<=hgo&&ctl_phase_idle&&t_empty&&raw_out==0&&drain_kv==0&&
           !tc_v&&!cmd_v&&!static_v_q&&!c_v&&!s_cr&&!wv_q&&!cv_q&&!hand_q&&
           hold==0&&!wcon_q&&dv==0&&av_s==0&&!row_v&&!col_v&&!po[0]&&!po[28]&&
-          !rv_q&&!rawslot_q&&!kv_v&&!em_v&&!l_v&&!native_commit_valid&&!obs_commit_valid&&
+          !rv_q&&!rawslot_q&&!kv_v&&!em_v&&!l_v&&!e_l_v&&!native_commit_valid&&!obs_commit_valid&&
           !drain_fault_hbm&&!fo&&!f_ecdc;
       end
 endmodule

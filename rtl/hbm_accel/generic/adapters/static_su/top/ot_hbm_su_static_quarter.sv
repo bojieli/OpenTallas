@@ -13,7 +13,8 @@
 // slice p/2), rf_rd_cmd [6 classes x {v,addr8}], red_cmd {v,op3,a10,b10,dst10,tag32,osel,lane7}.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_su_static_quarter #(
- parameter integer QID=0,READ_RETURN=10,WRITE_RETURN=7,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0,PIN_REG=0
+ parameter integer QID=0,READ_RETURN=10,WRITE_RETURN=7,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0,PIN_REG=0,COLLPORT=0,
+ RF_LOCAL=0   // 1: RF broadcast local copy in every slice (pgslice/qcore RF_LOCAL; compiler --rf-local 1)
 )(
  input wire [3:0] pg_clk,
  input wire [1023:0] clk_lane, input wire [511:0] clk_insert, input wire [127:0] rst_lane_n,
@@ -33,6 +34,10 @@ module ot_hbm_su_static_quarter #(
  input wire [73:0] red_cmd,
  input wire [3:0] rf_wv, input wire [4*8-1:0] rf_wa, input wire [4*32-1:0] rf_wd,
  output wire red_sv, output wire [31:0] red_tag, output wire [31:0] red_x, output wire red_rf_v,
+ // Optional native RED_CARRY return. Serial pins come from the real cxport;
+ // default COLLPORT=0 preserves the original RF-only programme composition.
+ input wire rr_wv, input wire [4:0] rr_wa, input wire [255:0] rr_wd,
+ input wire [31:0] sfu_x,
  output wire [8*17-1:0] lg_rq, output wire [8*281-1:0] lg_wq,
  input wire [8*257-1:0] lg_rr, input wire [7:0] lg_w_done,
  output wire [4:0] fault                      // {core, slice 3..0}
@@ -41,7 +46,7 @@ module ot_hbm_su_static_quarter #(
  wire [11:0] red_sel={red_cmd[73],red_cmd[72:70],red_cmd[7],red_cmd[6:0]};
  for(genvar g=0;g<4;g=g+1)begin:g_slice
   ot_hbm_su_static_pgslice #(.QID(QID),.G(g),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),
-   .FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG)) u_slice(
+   .FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG),.RF_LOCAL(RF_LOCAL)) u_slice(
    .pg_clk(pg_clk[g]),
    .clk_lane({clk_lane[(64+16*g)*8+:128],clk_lane[(16*g)*8+:128]}),
    .clk_insert({clk_insert[(64+16*g)*4+:64],clk_insert[(16*g)*4+:64]}),
@@ -55,9 +60,10 @@ module ot_hbm_su_static_quarter #(
    .lg_rq(lg_rq[(2*g)*17+:34]),.lg_wq(lg_wq[(2*g)*281+:562]),.lg_rr(lg_rr[(2*g)*257+:514]),
    .lg_w_done(lg_w_done[2*g+:2]),.fault(fault[g]));
  end
- ot_hbm_su_static_qcore #(.MUT(MUT)) u_core(.clk_rf(clk_rf),.clk_ctl(clk_core),.clk_red(clk_red),.rst_n(rst_n),
+ ot_hbm_su_static_qcore #(.MUT(MUT),.COLLPORT(COLLPORT),.RF_LOCAL(RF_LOCAL)) u_core(.clk_rf(clk_rf),.clk_ctl(clk_core),.clk_red(clk_red),.rst_n(rst_n),
   .rf_rd_cmd(rf_rd_cmd),.red_cmd(red_cmd),.rf_drain_cmd(vmw_cmd[38:37]),.slice_x(slice_x),
   .rf_wv(rf_wv),.rf_wa(rf_wa),.rf_wd(rf_wd),.rf_bword(rf_bword),.rf_bcmd(rf_bcmd),.rf_dsec(rf_dsec),
-  .red_sv(red_sv),.red_tag(red_tag),.red_x(red_x),.red_rf_v(red_rf_v),.fault(fault[4]));
+  .red_sv(red_sv),.red_tag(red_tag),.red_x(red_x),.red_rf_v(red_rf_v),
+  .rr_wv(rr_wv),.rr_wa(rr_wa),.rr_wd(rr_wd),.sfu_x(sfu_x),.fault(fault[4]));
 endmodule
 `default_nettype wire
