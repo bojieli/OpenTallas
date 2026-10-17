@@ -159,7 +159,9 @@
  "merge_target": null,
  "structural_change": "su6 (Q-ELEM 1315): su5 composed wd capture ~199.5 TT (raw 130.2 + data256 child R 69.3; wd pins spread over 162 um of the W face). wd ranged [52.0,136.5] on W between ck_in_lo and ck_in_hi, bits 0-255 toward u_in_lo (y 25.92-77.76), 256-511 toward u_in_hi (116.64-168.48); 0 edges, same ports/outline/faces.",
  "reroute_reason": {
-  "kind": "rtl_change",
-  "why": "native-fail: su3 view native audit launch 300.1 (q, 512 pins), capture ra[2] 168.1 raw / ~223 child-R composed"
+  "kind": "slot_change",
+  "slot_change_request": "Q-KVSYS-DIE approved 2026-10-16 ~14:55 (el1013-qwen-elements-r4.log 14:54:56 'QVM su6 (wd pin range, Q-KVSYS-DIE approved)'): W-face pin region change, wd ranged left:52-136.5 in front of u_in_lo/u_in_hi (su5: wd unranged over 162 um of W). Same outline 371.52x241.92, same ports/faces, 0 edges.",
+  "source": "results/arch/qwen_split_1014/compute_native_audit_1015/qvm_su_bank_native_su5.json",
+  "why": "su5 native capture on wd: raw 130.2 PASS but composed with the hard qvm_data256_native child insertion (TT 69.3, ne5 method) = ~199.5 TT > 190 capture budget; all other buses PASS (q 182.5 launch)."
  }
 }
