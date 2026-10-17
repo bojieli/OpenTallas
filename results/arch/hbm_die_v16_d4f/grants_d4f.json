@@ -109532,8 +109532,8 @@
   },
   {
    "name": "sfucore_SW",
-   "cell": "ot_hgi_sfu_scheduled_engine",
-   "kind": "tile",
+   "cell": "ot_hgi_sfu_core_split2",
+   "kind": "cluster",
    "parent": "die",
    "outline": {
     "w": 950.4,
@@ -109550,17 +109550,17 @@
     "layer": "M5",
     "offset": 381.78
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M7",
    "io_budget": {
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 1,
-   "grant": "sfu_core_home_0030",
-   "rtl_owner": "H-SU: ot_hgi_sfu_scheduled_engine",
+   "version": 2,
+   "grant": "d4f_sfucore_k8_1016",
+   "rtl_owner": "H-SU: ot_hgi_sfu_core_split2 (k8 kit hbm_sfucore_k8, claude/hsu-corekit-0700 2191c672a)",
    "faces": {
     "W": "SU qcore / SFU leaf LG paths (band)",
     "E": "COLL / DMA-back stack",
@@ -109574,8 +109574,8 @@
   },
   {
    "name": "sfucore_SE",
-   "cell": "ot_hgi_sfu_scheduled_engine",
-   "kind": "tile",
+   "cell": "ot_hgi_sfu_core_split2",
+   "kind": "cluster",
    "parent": "die",
    "outline": {
     "w": 950.4,
@@ -109592,17 +109592,17 @@
     "layer": "M5",
     "offset": 381.78
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M7",
    "io_budget": {
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 1,
-   "grant": "sfu_core_home_0030",
-   "rtl_owner": "H-SU: ot_hgi_sfu_scheduled_engine",
+   "version": 2,
+   "grant": "d4f_sfucore_k8_1016",
+   "rtl_owner": "H-SU: ot_hgi_sfu_core_split2 (k8 kit hbm_sfucore_k8, claude/hsu-corekit-0700 2191c672a)",
    "faces": {
     "W": "SU qcore / SFU leaf LG paths (band)",
     "E": "COLL / DMA-back stack",
@@ -109616,8 +109616,8 @@
   },
   {
    "name": "sfucore_NW",
-   "cell": "ot_hgi_sfu_scheduled_engine",
-   "kind": "tile",
+   "cell": "ot_hgi_sfu_core_split2",
+   "kind": "cluster",
    "parent": "die",
    "outline": {
     "w": 950.4,
@@ -109634,17 +109634,17 @@
     "layer": "M5",
     "offset": 381.78
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M7",
    "io_budget": {
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 1,
-   "grant": "sfu_core_home_0030",
-   "rtl_owner": "H-SU: ot_hgi_sfu_scheduled_engine",
+   "version": 2,
+   "grant": "d4f_sfucore_k8_1016",
+   "rtl_owner": "H-SU: ot_hgi_sfu_core_split2 (k8 kit hbm_sfucore_k8, claude/hsu-corekit-0700 2191c672a)",
    "faces": {
     "W": "SU qcore / SFU leaf LG paths (band)",
     "E": "COLL / DMA-back stack",
@@ -109658,8 +109658,8 @@
   },
   {
    "name": "sfucore_NE",
-   "cell": "ot_hgi_sfu_scheduled_engine",
-   "kind": "tile",
+   "cell": "ot_hgi_sfu_core_split2",
+   "kind": "cluster",
    "parent": "die",
    "outline": {
     "w": 950.4,
@@ -109676,17 +109676,17 @@
     "layer": "M5",
     "offset": 381.78
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M7",
    "io_budget": {
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 1,
-   "grant": "sfu_core_home_0030",
-   "rtl_owner": "H-SU: ot_hgi_sfu_scheduled_engine",
+   "version": 2,
+   "grant": "d4f_sfucore_k8_1016",
+   "rtl_owner": "H-SU: ot_hgi_sfu_core_split2 (k8 kit hbm_sfucore_k8, claude/hsu-corekit-0700 2191c672a)",
    "faces": {
     "W": "SU qcore / SFU leaf LG paths (band)",
     "E": "COLL / DMA-back stack",
@@ -118054,6 +118054,13 @@
    "pin_file": "results/arch/hbm_die_v16_d4f/sm_column_pins_0cfed29dc.json",
    "source_commit": "0cfed29dc",
    "ports": 15
+  }
+ ],
+ "d4f_sfucore_grant": [
+  {
+   "slots": 4,
+   "kit": "claude/hsu-corekit-0700 2191c672a",
+   "layers": "M2-M7, die straps M8"
   }
  ]
 }
