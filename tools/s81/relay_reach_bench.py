@@ -8,8 +8,7 @@ the die's layer rules; estimate_parasitics -global_routing gives the RC; OpenSTA
 
     TT setup  at 833.33 ps (stream) and 1111.1 ps (serial)     FF hold                SS 833.33 setup = sensitivity only
     clock: ideal, defined on each instance's clock pin (ck / fi0 / cw); neighbour skew 80 ps applied ADVERSELY as
-           set_clock_uncertainty -setup 80 / -hold 80 (forwarded neighbour clocking, coordinator standard); no other
-           uncertainty, no margin.  Same-class pair: the view's own clock insertion cancels (equal on both sides).
+           set_clock_uncertainty -setup 80 / -hold 80 (forwarded neighbour clocking, coordinator standard); base uncertainty 60 ps setup / 25 ps hold is added; no planning margin.  Same-class pair: the view's own clock insertion cancels (equal on both sides).
     wire:  UNBUFFERED.  The bench never inserts a buffer / repeater (no repair_design, no repair_timing): the routed
            wire between the two relays is the whole hop (owner rule: generator max wire length = reach, no buffering of
            long wires).
@@ -42,6 +41,8 @@ IMAGE = 'openroad/orfs:asap7lock'
 PLAT = '/OpenROAD-flow-scripts/flow/platforms/asap7'
 T_STREAM, T_SERIAL = 833.333, 1111.111
 SKEW = 80.0
+SETUP_UNCERTAINTY = 60.0
+HOLD_UNCERTAINTY = 25.0
 GRID = 0.192                     # instance origin snap (LCM of the M4/M5 0.048 and M6/M7 0.064 pitches)
 # out bus -> in bus of the next instance of the same class
 BUS_MAP = {'o': 'i', 'dq': 'di', 'do0': 'di0', 'xa': 'xai', 'xb': 'xbi', 'cc': 'cci', 'so': 'si'}
@@ -270,7 +271,7 @@ def cmd_plan(a):
         index.append(write_batch(bd, its, stage, lay, adj, a))
     (run / 'plan.json').write_text(json.dumps(dict(
         schema='opentallas.s81.relay_reach_plan.v1', layers=a.layers, signal_layers=lay, adjustments=adj, sweep_um=ds,
-        skew_ps=SKEW, periods_ps=dict(stream=T_STREAM, serial=T_SERIAL), image=IMAGE, stage=str(stage),
+        skew_ps=SKEW, base_setup_uncertainty_ps=SETUP_UNCERTAINTY, base_hold_uncertainty_ps=HOLD_UNCERTAINTY, periods_ps=dict(stream=T_STREAM, serial=T_SERIAL), image=IMAGE, stage=str(stage),
         batches=index), indent=1))
     print(f'{len(batches)} batches, {len(sel)} classes, {len(ds)} sweep points: ' +
           ', '.join(f"{b['dir']} {b['classes']} cls {b['nets']} nets" for b in index))
@@ -299,6 +300,7 @@ def write_batch(bd, its, stage, lay, adj, a):
         W = max(W, x)
     H = y + rowh
     insts, nets, sinks, place, masters = [], [], {}, [], set()
+    clock_paths = []
     v = ['module reach_top ();']
     for k, (b, ox, oy) in enumerate(placed):
         m, d, g, mod, bw, bh, mg = b
@@ -328,6 +330,7 @@ def write_batch(bd, its, stage, lay, adj, a):
                                             drv=f'{src}/{op}', L=round(abs(sx - tx) + abs(sy - ty), 3),
                                             faces=f'{p["out_face"]}>{p["in_face"]}')
         for I in (A, B):
+            clock_paths.extend(f'{I}/{c}' for c in mod['clocks'])
             v.append(f'  {m} {I} ({", ".join(conn[I])});')
         insts.append(dict(k=k, cls=m, d=d, A=pos[A], B=pos[B]))
     v.append('endmodule')
@@ -336,8 +339,7 @@ def write_batch(bd, its, stage, lay, adj, a):
     vdir = '/stage/views'
     lefs = '\n'.join(f'read_lef {vdir}/{m}/{m}_lef.lef' for m in sorted(masters))
     libs = lambda c: '\n'.join(f'read_liberty {vdir}/{m}/{m}_{c}.lib' for m in sorted(masters))  # noqa: E731
-    clk_pins = ' '.join(sorted({f'*/{c}' for m in masters for c in json.loads(
-        (stage / 'views' / m / 'model.json').read_text())['clocks']}))
+    clk_regex = '|'.join('^' + re.escape(c) + '$' for c in clock_paths)
     tcl = f"""# relay_reach_bench batch {bd.name}: {len(placed)} pairs, {len(sinks)} sink bits, die {W:.1f} x {H:.1f} um
 proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
   regexp {{VmHWM:\\s+(\\d+)}} $s -> h; puts "OTMEM $tag hwm_mb=[expr {{$h/1024}}] t=[clock seconds]"; flush stdout }}
@@ -372,9 +374,11 @@ puts OT_REACH_GRT_DONE
 read_verilog /work/reach_grt.v
 link_design reach_top
 read_spef /work/reach.spef
-create_clock -name clk -period {per} [get_pins -quiet {{{clk_pins}}}]
-set_clock_uncertainty -setup {SKEW} [all_clocks]
-set_clock_uncertainty -hold {SKEW} [all_clocks]
+set cp [get_pins -regexp {{{clk_regex}}}]
+if {{[llength $cp] != {len(clock_paths)}}} {{ error "clock pin coverage mismatch" }}
+create_clock -name clk -period {per} $cp
+set_clock_uncertainty -setup {SKEW + SETUP_UNCERTAINTY} [all_clocks]
+set_clock_uncertainty -hold {SKEW + HOLD_UNCERTAINTY} [all_clocks]
 set f [open /work/{name}.slk w]
 set fp [open /work/sinks.txt r]
 set n 0
@@ -413,6 +417,13 @@ echo BATCH_DONE
 
 
 # ------------------------------------------------------------------------------------------------ collect
+def finite_float(value):
+    x = float(value)
+    if not math.isfinite(x):
+        raise ValueError('unconstrained/non-finite timing value')
+    return x
+
+
 def read_slk(p):
     out = {}
     if not p.exists():
@@ -421,7 +432,7 @@ def read_slk(p):
         s = line.split()
         if len(s) >= 2:
             try:
-                out[s[0]] = (float(s[1]), float(s[2]) if len(s) > 2 else None)
+                out[s[0]] = (finite_float(s[1]), finite_float(s[2]) if len(s) > 2 else None)
             except ValueError:
                 out[s[0]] = (None, None)
     return out
@@ -493,14 +504,21 @@ def cmd_collect(a):
                                     sweep_um=plan['sweep_um'], batches=[])
         for b in plan['batches']:
             bd = rd / b['dir']
-            ok = (bd / 'sta_ff_hold.slk').exists() and 'BATCH_DONE' in (bd / 'run.out').read_text(errors='ignore') \
-                if (bd / 'run.out').exists() else (bd / 'sta_ff_hold.slk').exists()
+            corners = ('tt833', 'tt1111', 'ff_hold', 'ss833')
+            ok = all((bd / f'{c}.slk').exists() and
+                     (bd / f'sta_{c}.log').exists() and
+                     f'OT_REACH_STA_DONE {c} ' in (bd / f'sta_{c}.log').read_text(errors='ignore')
+                     for c in corners)
+            ok = ok and (bd / 'grt.log').exists() and 'OT_REACH_GRT_DONE' in (bd / 'grt.log').read_text(errors='ignore')
             runs[plan['layers']]['batches'].append(dict(dir=str(bd), complete=bool(ok), job=_job(bd)))
             if not ok:
                 continue
             mp = json.loads((bd / 'map.json').read_text())['sinks']
             slk = {c: read_slk(bd / f'{c}.slk') for c in ('tt833', 'tt1111', 'ff_hold', 'ss833')}
             ovf = _overflow(bd / 'grt.log')
+            if any(set(v) != set(mp) or any(s is None for s, _ in v.values()) for v in slk.values()):
+                runs[plan['layers']]['batches'][-1].update(complete=False, reason='incomplete/non-finite STA coverage')
+                continue
             rows = collections.defaultdict(lambda: collections.defaultdict(list))
             slews = collections.defaultdict(list)
             for pin, s in mp.items():
@@ -527,11 +545,12 @@ def cmd_collect(a):
                        '(die layer rules) and extracted by estimate_parasitics -global_routing (setRC.tcl); OpenSTA per '
                        'bit: TT setup 833.33 ps (stream) / 1111.1 ps (serial), FF hold, SS 833 setup sensitivity; ideal '
                        'clock on each instance clock pin with 80 ps neighbour skew applied adversely (uncertainty -setup '
-                       '80 / -hold 80), no other margin.  UNBUFFERED: no repair_design / repair_timing / repeaters; '
+                       '140 / -hold 105 = base60/25 plus neighbour80), no planning margin.  UNBUFFERED: no repair_design / repair_timing / repeaters; '
                        'the wire between the relays is the whole hop.  reach_um = min over bits of the largest '
                        'pin-to-pin Manhattan L at which the bit passed TT setup at that and every shorter sweep point.'),
                caveats=['GRT + estimate_parasitics RC, not detail-route + RCX (no DRT calibration in this record unless '
                         'listed under calibration)',
+                        'Reach measurements are component screens; overflow and unmeasured real clock distribution cannot qualify a die',
                         'driver ETM output tables are characterised to 92.16 fF; longer wires extrapolate the table',
                         'ETM setup / hold are scalar (input slew independent): a slow edge at the receiver is not '
                         'penalised by the view; sink slew is reported (max_sink_slew_tt_ps_within_reach) for the DRV '
@@ -552,12 +571,12 @@ def cmd_collect(a):
             row['measured'] = res.get(m, {})
         else:
             g = res[m][a.gate_layers]
-            row.update(status='MEASURED', measured=res[m])
+            row.update(status='MEASURED' if g['grt_overflow'] == [0, 0, 0] else 'TIMING_MEASURED_ROUTE_UNQUALIFIED', measured=res[m])
             row['reach_um'] = g['stream']['reach_um']
             row['reach_serial_um'] = g['serial']['reach_um']
             row['planning_um'] = round(0.9 * g['stream']['reach_um'], 1)
             row['planning_serial_um'] = round(0.9 * g['serial']['reach_um'], 1)
-            hm = g['hold_ff'].get('hold_min_um') or 0.0
+            hm = g['hold_ff'].get('hold_min_um')
             row['hold_min_um'] = hm
             if row['reach_um'] < a.flag_um:
                 row['flag'] = 'REBUILD' if row['reach_um'] < a.rebuild_um or row['instances_c26l'] >= a.rebuild_inst \
@@ -566,14 +585,14 @@ def cmd_collect(a):
     meas = {m: r for m, r in out['classes'].items() if r['status'] == 'MEASURED'}
     out['summary'] = dict(
         classes=len(out['classes']), measured=len(meas),
-        not_measured={m: r['reason'] for m, r in out['classes'].items() if r['status'] != 'MEASURED'},
+        not_measured={m: r.get('reason', r['status']) for m, r in out['classes'].items() if r['status'] != 'MEASURED'},
         below_flag_um=a.flag_um,
         flagged=sorted(([m, r['reach_um'], r['instances_c26l'], r['flag']] for m, r in meas.items() if r.get('flag')),
                        key=lambda x: x[1]),
         worst15_instance_weighted=[[m, r['reach_um'], r['instances_c26l']] for m, r in sorted(
             meas.items(), key=lambda kv: (kv[1]['reach_um'], -kv[1]['instances_c26l']))
             if r['instances_c26l'] > 0][:15],
-        hold_floor=sorted([[m, r['hold_min_um']] for m, r in meas.items() if r['hold_min_um']], key=lambda x: -x[1]),
+        hold_floor=sorted([[m, r['hold_min_um']] for m, r in meas.items() if r['hold_min_um'] is not None and r['hold_min_um'] > 0], key=lambda x: -x[1]),
         min_reach_um=min((r['reach_um'] for r in meas.values()), default=None),
         min_reach_used_um=min((r['reach_um'] for r in meas.values() if r['instances_c26l']), default=None))
     Path(a.out).write_text(json.dumps(out, indent=1))
