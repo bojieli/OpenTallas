@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_d2d_static",
+ "enable": false,
+ "reason": "RTL is already pin-registered: d2d_pinreg_gen.py PR=1 wraps qfd_d2d_static_core with exactly one flop per functional port (FIRM at the pin via io_flop_at_pins); the link calendar is compiled --pinreg; a second synthesized pin register would add +1 cycle per port with no timing purpose"
+}

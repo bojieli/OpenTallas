@@ -79,7 +79,9 @@ THRESHOLDS = {
     "reach_min_count": 1,
     # util / channels: WARN only (closed blocks at 6-58% util and 0.07 / 17 um channels)
     "util_min": 0.45,
-    "util_max": 0.65,
+    "util_max": 0.65,              # std-cell density over the placeable area (core - macros - halos) when macros exist
+    "fill_max": 0.90,              # total (std + macro) / core sanity bound, macros only
+    "macro_halo_um": 2.16,
     "channel_um": 20.0,
 }
 # MEASURED CLOCK RULE (owner decision 2026-10-13, stream el1013-rule-enforcement; supersedes the WARN-only 15k line and
@@ -1073,7 +1075,26 @@ def util_findings(dump, T, F, M):
     util = (std + mac) / core_area if core_area else 0.0
     M["util"] = round(util, 4)
     bad = []
-    if util < T["util_min"] or util > T["util_max"]:
+    if mac > 0:
+        # macro-dominated tile: gate the std-cell density over the placeable area, bound the total fill
+        halo = float(dump.get("macro_halo_um", T["macro_halo_um"]))
+        keep = 0.0
+        for m in dump.get("macros", []):
+            b = m["bbox"]
+            ox = max(0.0, min(b[2] + halo, core[2]) - max(b[0] - halo, core[0]))
+            oy = max(0.0, min(b[3] + halo, core[3]) - max(b[1] - halo, core[1]))
+            keep += ox * oy
+        placeable = max(core_area - min(keep, core_area), 1e-9)
+        dens = std / placeable
+        M["std_density"] = round(dens, 4)
+        M["total_fill"] = round(util, 4)
+        if dens > T["util_max"]:
+            bad.append(f"std-cell density {dens:.1%} > {T['util_max']:.0%} (std {std:.0f} um2 in placeable {placeable:.0f} um2 = "
+                       f"core {core_area:.0f} - macros/halos; total fill {util:.1%}): grow the outline")
+        if util > T["fill_max"]:
+            bad.append(f"total fill {util:.1%} > {T['fill_max']:.0%} (std {std:.0f} + macro {mac:.0f} um2 in {core_area:.0f} um2): "
+                       "grow the outline")
+    elif util < T["util_min"] or util > T["util_max"]:
         bad.append(f"utilisation {util:.1%} outside {T['util_min']:.0%}-{T['util_max']:.0%} (std {std:.0f} + macro "
                    f"{mac:.0f} um2 in {core_area:.0f} um2): " + ("shrink the outline (long wires / sparse placement)"
                                                                 if util < T["util_min"] else "grow the outline"))

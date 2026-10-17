@@ -1,0 +1,57 @@
+Startpoint: a (rising edge-triggered flip-flop clocked by ck)
+Endpoint: c (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+ Delay   Time   Description
+-------------------------------------------------------
+   0.0    0.0   clock ck (rise edge)
+  40.0   40.0   clock network delay (ideal)
+   0.0   40.0 ^ a/CLK (DFFHQNx1_ASAP7_75t_R)
+  29.3   69.3 v a/QN (DFFHQNx1_ASAP7_75t_R)
+  14.0   83.3 v b/Y (BUFx2_ASAP7_75t_R)
+   0.0   83.3 v c/D (DFFHQNx1_ASAP7_75t_R)
+         83.3   data arrival time
+
+   0.0    0.0   clock ck (rise edge)
+ 130.0  130.0   clock network delay (ideal)
+  25.0  155.0   clock uncertainty
+   0.0  155.0   clock reconvergence pessimism
+        155.0 ^ c/CLK (DFFHQNx1_ASAP7_75t_R)
+   8.7  163.7   library hold time
+        163.7   data required time
+-------------------------------------------------------
+        163.7   data required time
+        -83.3   data arrival time
+-------------------------------------------------------
+        -80.4   slack (VIOLATED)
+
+
+Startpoint: d (input port clocked by ck)
+Endpoint: a (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+ Delay   Time   Description
+-------------------------------------------------------
+   0.0    0.0   clock ck (rise edge)
+   0.0    0.0   clock network delay (ideal)
+   0.0    0.0 v input external delay
+   0.0    0.0 v d (in)
+   0.0    0.0 v a/D (DFFHQNx1_ASAP7_75t_R)
+          0.0   data arrival time
+
+   0.0    0.0   clock ck (rise edge)
+  40.0   40.0   clock network delay (ideal)
+  25.0   65.0   clock uncertainty
+   0.0   65.0   clock reconvergence pessimism
+         65.0 ^ a/CLK (DFFHQNx1_ASAP7_75t_R)
+   9.2   74.2   library hold time
+         74.2   data required time
+-------------------------------------------------------
+         74.2   data required time
+         -0.0   data arrival time
+-------------------------------------------------------
+        -74.2   slack (VIOLATED)
+
+
