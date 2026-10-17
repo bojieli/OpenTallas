@@ -27,7 +27,7 @@ for c in "${cases[@]}"; do
  "$out/obj-$c/sim" > "$out/$c.log" 2>&1 || rc=$?
  if ((raw)); then
   echo "RAW $c rc=$rc"; grep -E 'WB_INTEGRITY|^PASS' "$out/$c.log" | head -3 || true
-  test "$rc" = 0 && grep -q '^PASS tb_hbm_svc_wb_kshare_splitstrap_q' "$out/$c.log"
+  if [[ "$rc" != 0 ]] || ! grep -q '^PASS tb_hbm_svc_wb_kshare_splitstrap_q' "$out/$c.log"; then echo "RAW_FAIL $c"; rm -rf "$out/obj-$c"; exit 1; fi
  elif [[ "$c" == baseline ]]; then
   test "$rc" = 0 && grep -q '^PASS tb_hbm_svc_wb_kshare_splitstrap_q' "$out/$c.log"
  else

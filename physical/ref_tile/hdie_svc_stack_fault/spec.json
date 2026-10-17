@@ -128,7 +128,8 @@
      "iverilog"
     ],
     "pass_regex": "^PASS tb_hbm_svc_stack_fault MUT=0 OWN_W=6",
-    "min_count_regex": "checks=(\\d+)"
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/ref_tile/hbmasvc_witness_1017/sf_mut0.log"
    },
    {
     "name": "sf_mut_pair",
@@ -141,7 +142,8 @@
     ],
     "pass_regex": "^PASS tb_hbm_svc_stack_fault",
     "fail_regex": "^FAIL tb_hbm_svc_stack_fault MUT=1",
-    "note": "CA pair rule 2c/2c+2"
+    "note": "CA pair rule 2c/2c+2",
+    "fail_witness": "results/rtl/ref_tile/hbmasvc_witness_1017/sf_mut1.log"
    },
    {
     "name": "sf_mut_owner_cdc",
@@ -154,12 +156,14 @@
     ],
     "pass_regex": "^PASS tb_hbm_svc_stack_fault",
     "fail_regex": "^FAIL tb_hbm_svc_stack_fault MUT=2",
-    "note": "owner class fault_cdc crossing dropped"
+    "note": "owner class fault_cdc crossing dropped",
+    "fail_witness": "results/rtl/ref_tile/hbmasvc_witness_1017/sf_mut2.log"
    }
   ],
   "extra_paths": [
    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_stack_fault.sv",
-   "rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh"
+   "rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh",
+   "results/rtl/ref_tile/hbmasvc_witness_1017/"
   ]
  },
  "macros": [],

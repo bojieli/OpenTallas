@@ -207,7 +207,8 @@
      "verilator"
     ],
     "pass_regex": "QUALIFIED baseline expected_exit=0",
-    "min_count_regex": "PASS tb_hbm_svc_wb_kshare_splitstrap_q .*group_req=(\\d+)"
+    "min_count_regex": "PASS tb_hbm_svc_wb_kshare_splitstrap_q .*group_req=(\\d+)",
+    "pass_witness": "results/rtl/ref_tile/hbmasvc_witness_1017/vmks_baseline.log"
    },
    {
     "name": "vmks_mut_hbmstrap",
@@ -220,7 +221,8 @@
     ],
     "pass_regex": "^PASS tb_hbm_svc_wb_kshare_splitstrap_q",
     "fail_regex": "WB_INTEGRITY",
-    "note": "KSMUT=7: hbm-domain strap ignored"
+    "note": "KSMUT=7: hbm-domain strap ignored",
+    "fail_witness": "results/rtl/ref_tile/hbmasvc_witness_1017/vmks_raw_hbmstrap.log"
    },
    {
     "name": "vmks_mut_overlap",
@@ -233,15 +235,26 @@
     ],
     "pass_regex": "^PASS tb_hbm_svc_wb_kshare_splitstrap_q",
     "fail_regex": "WB_INTEGRITY",
-    "note": "KSMUT=3: WB window does not wait for outstanding group writes"
+    "note": "KSMUT=3: WB window does not wait for outstanding group writes",
+    "fail_witness": "results/rtl/ref_tile/hbmasvc_witness_1017/vmks_raw_overlap.log"
    }
   ],
   "extra_paths": [
-   "rtl/hbm_accel/loader/service_native",
+   "rtl/hbm_accel/loader/service_native/run_wb_kshare_splitstrap_bench.sh",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_splitstrap_q.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_cutthrough_cdc.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_leaves.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv",
    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv",
    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
-   "rtl/lib",
-   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "results/rtl/ref_tile/hbmasvc_witness_1017/"
   ]
  }
 }
