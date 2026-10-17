@@ -6,8 +6,10 @@ dsfd_cfifo_crs.sv).  It has no stream clock input (ck), no column-clock root out
 Re-wiring of every root r (applied to the built model before finalize_r8):
   * the column clock net ck_col_<r> is driven by the x lane's last forwarded station clock (the cx<r> chain's fn0 that
     formerly fed cf.xf: F1, the hub-side chain forwards its clock and drives the column tree);
-  * its loads: every former column-clock sink (cf.cr included) + cf.cr_s + cf.xf + cf.xf2 + the first return station's
-    fi (formerly fed by cf.rf) -- RETURN_CLOCK = 'top_net' (the alternative, a co-like cluster output, is not built);
+  * its loads: every former column-clock sink (cf.cr included) + cf.cr_s + cf.xf + cf.xf2 + cob<r>.fi;
+  * cob<r> (one clock buffer in the cfifo row, E of the cfifo, inside the column cluster) drives co_<r> -> the first
+    return station's fi (formerly cf.rf).  DIE-CLOCK 10-16: co is a balanced leaf of the cluster tree at the
+    return-launch registers' branch, ck_col -> co is a plain ETM arc; hop 1 is a neighbour pair <= 80 ps TT/FF;
   * cf.ck (clk_stream) is dropped from the stream clock; the x2 lane's last-station fn0 stays an unused output.
 Cycle notes for the compiler (S-ELEM receipt bd9235f06 results/rtl/s81_cfifo_crs_1016/r5f/routed_507e1b0c3):
 status +1 edge (ri -> rd), forwarded marker after the 4th root reset edge (N edge 2 / S edge 4).
@@ -16,7 +18,8 @@ from __future__ import annotations
 
 MASTER = 'dsfd_cfifo_crs'
 OUTLINE = (280.8, 69.12)
-RETURN_CLOCK = 'top_net'
+RETURN_CLOCK = 'co_buffer'    # DIE-CLOCK 10-16: return first station fi0 = co, one ck_col-tree buffer at the return-launch branch
+CO_MASTER = 'dsfd_lkck_NS'     # one forwarded-clock buffer (glue: assign fo = fi; the cluster CTS sizes / balances it)
 RTL_FILES = ('rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_crs.sv',
              'rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress_hr.sv',
              'rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross_hr.sv',
@@ -59,8 +62,10 @@ def rewire(G, m):
         bc = B[kc]
         assert jc == 0, ('co is not the column clock driver', bc[0])
         loads = [e for e in bc[3][1:] if not (e[0] == cf and G.pslice(e[1])[0] in ('cr',))]
-        loads = [(cf, 'cr'), (cf, 'cr_s'), (cf, 'xf'), (cf, 'xf2')] + loads + ret
+        cob = place_co_buffer(G, m, it, r)
+        loads = [(cf, 'cr'), (cf, 'cr_s'), (cf, 'xf'), (cf, 'xf2')] + loads + [(cob.name, 'fi')]
         B[kc] = (bc[0], bc[1], bc[2], [drv] + loads)
+        B.append((f'co_{r}', 'fclk', 1, [(cob.name, 'fo')] + ret))
         # stream clock: drop cf.ck
         for k4, j4 in idx.get((cf, 'ck'), []):
             b4 = B[k4]
@@ -73,6 +78,24 @@ def rewire(G, m):
     m['cfifo_crsplit'] = dict(master=MASTER, outline_um=list(OUTLINE), return_clock=RETURN_CLOCK, cycles=CYCLES,
                               roots=len(rec), removed_buses=len(drop))
     return rec
+
+
+def place_co_buffer(G, m, cf, r):
+    """the co clock buffer: first free 8.64-um site in the cfifo row E of the cfifo (inside the column cluster)."""
+    w, h = G.LKCK_WH[0] - G.SHAVE, G.LKCK_WH[1] - G.SHAVE
+    reg = f'frame_{r}'
+    boxes = [i.box() for i in m['insts'] if i.region == reg]
+    y = cf.y
+    x = G.up(cf.x + cf.w + 4.32, G.GX)
+    f = m['frames'][r]
+    while x + w <= f['x'] + G.COL_W8 - 4.32:
+        bx = (x, y, x + w, y + h)
+        if not any(bx[0] < b[2] + .432 and b[0] < bx[2] + .432 and bx[1] < b[3] + .432 and b[1] < bx[3] + .432 for b in boxes):
+            it = G.Inst(f'cob{r}', CO_MASTER, x, y, w, h, 'R0', kind='lkck', region=reg, domain='fwd')
+            m['insts'].append(it)
+            return it
+        x = G.up(x + 4.32, G.GX)
+    raise ValueError(f'--cfifo-crsplit: no co buffer site E of cf{r}')
 
 
 def rtl_text(root):

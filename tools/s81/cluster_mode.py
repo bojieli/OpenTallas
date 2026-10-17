@@ -368,10 +368,14 @@ def collapse(G, m):
             if e[0] in owner:
                 per[owner[e[0]]].append(j)
         for r, J in per.items():
-            cfn = f'cf{r}'
-            if all(eps[j][0] == cfn for j in J):
-                for j in J:                       # a column FIFO pin: one cluster port per pin
+            cfn, cob = f'cf{r}', f'cob{r}'
+            if all(eps[j][0] in (cfn, cob) for j in J):
+                for j in J:                       # a column FIFO pin (or the co clock buffer): one cluster port per pin
                     base = G.pslice(eps[j][1])[0]
+                    if eps[j][0] == cob:
+                        assert base == 'fo' and j == 0, ('co buffer boundary', bid, eps[j])
+                        bnd[r].append((k, [j], 'co', 'output', 1))
+                        continue
                     d_, w_ = m['pdir'][by_[cfn].master][base]
                     bnd[r].append((k, [j], PORT_RENAME.get(base, base), d_, w_))
             else:
@@ -449,7 +453,7 @@ def collapse(G, m):
                 r = owner[e[0]]
                 base = G.pslice(e[1])[0]
                 port = portof[(k, j)]
-                ne = (f'col{r}', port + (e[1][len(base):] if port == PORT_RENAME.get(base, base) else ''))
+                ne = (f'col{r}', port + (e[1][len(base):] if port == PORT_RENAME.get(base, base) and port != 'co' else ''))
                 if ne not in neps:
                     neps.append(ne)
             else:
@@ -491,7 +495,7 @@ def faces(G, Mx, ports):
                 pos[mm.group(1)] = (mm.group(2), float(mm.group(3)))
         x0 = G.CF_X
         for p, (d_, bits) in ports.items():
-            if p in ('ck_col', 'rst_col'):
+            if p in ('ck_col', 'rst_col', 'co'):
                 continue
             vals = []
             for i in range(bits):
@@ -501,7 +505,8 @@ def faces(G, Mx, ports):
                 vals.append((f'{p}[{i}]', layer, (round(x0 + x - 0.012, 4), 0.0, round(x0 + x + 0.012, 4), 0.4)))
             Mx.ports[p] = ('rects', vals)
             Mx.order.append(p)
-        for p, dx in (('ck_col', -6.0), ('rst_col', -12.0)):
+        rd_end = max((pos[k_][1] for k_ in pos if k_.startswith('rd[')), default=270.0)
+        for p, dx in (('ck_col', -6.0), ('rst_col', -12.0), ('co', rd_end + 2.4)):
             if p in ports:
                 Mx.ports[p] = ('rects', [(f'{p}[0]', 'M5', (round(x0 + dx - 0.012, 4), 0.0, round(x0 + dx + 0.012, 4), 0.4))])
                 Mx.order.append(p)
