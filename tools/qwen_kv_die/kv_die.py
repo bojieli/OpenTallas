@@ -2423,6 +2423,17 @@ def _relays(m):
             if it_.master == 'qkd_pvfork' or it_.master.startswith('qkd_pvtap'):
                 for p_ in PVT_PORTS['qkd_pvfork' if it_.master == 'qkd_pvfork' else 'qkd_pvtap']:
                     _PIN_HINT[(it_.name, p_)] = pvt_port_xy(it_, p_)
+            elif it_.master == 'qkd_pv16_vport':
+                # the V port's vo / pr words: _split_pins draws them on its N face at x 43.2 / 72.0 (canonical R0); aim
+                # at them from pass 1 (f3 plan: pvin first hops / pvrq last hops 420-637 um after drawing -> pin repair
+                # stages that broke WP + O = PV_W)
+                for p_, cx_ in (('vo', 43.2), ('pr', 72.0)):
+                    x_, y_ = cx_, it_.h
+                    if it_.orient in ('MY', 'R180'):
+                        x_ = it_.w - x_
+                    if it_.orient in ('MX', 'R180'):
+                        y_ = it_.h - y_
+                    _PIN_HINT[(it_.name, p_)] = (it_.x + x_, it_.y + y_)
     if HOST_V14.get('trees') and 'serdes_host' in by:
         # v1.4.2 (kvs7c TT -7.6 ns, 1,044 endpoints: rly_host_fdi_55 -> serdes_host tx_flit 2.2 mm): the hard SerDes PHY's
         # FDI pins are on its W face (LEF ot_qfd_serdes_112g_x12_phy: tx_flit y 600.19..650.21, rx_flit 650.30..700.32,
@@ -3151,32 +3162,6 @@ def masters(m, k=1, port_bits=None):
                         sp[5] = 2          # 2-track pitch where the face has room (emf[221] DRT-0073 at 1 track)
                     mm.ports[p] = tuple(sp)
                     mm.order.append(p)
-            if REACH_FIX:
-                # KVPLAN3 0230 (kvs13l3 real case: DRT-0073 no access point for land_*/c0i[0]): a c<k>i word moved level
-                # with the closed CDC's co pins landed ON the er<k> word of the same face (c0i[0] = er0[35], M4 y 235.44).
-                # Slide each moved c<k>i word along its face to the nearest span clear of every other face word (1 um)
-                def span_(q):
-                    hw_ = (q[1] - 1) / 2 * 0.048 * q[5]
-                    return q[4] - hw_, q[4] + hw_
-                for p in list(mm.ports):
-                    mt = __import__('re').fullmatch(r'c(\d+)i', p)
-                    if not mt or mm.ports[p][0] != 'face':
-                        continue
-                    sp = list(mm.ports[p])
-                    others = [span_(q) for p2, q in mm.ports.items() if p2 != p and q[0] == 'face' and q[2] == sp[2]]
-                    lim = mm.w if sp[2] in 'NS' else mm.h
-                    for d_ in sorted((i * 0.48 for i in range(-2000, 2001)), key=abs):
-                        q_ = list(sp); q_[4] = round(sp[4] + d_, 4)
-                        a_, b_ = span_(q_)
-                        if a_ >= 1.0 and b_ <= lim - 1.0 and all(b_ + 1.0 <= o0 or a_ - 1.0 >= o1 for o0, o1 in others):
-                            sp = q_
-                            break
-                    else:
-                        raise ValueError(f'{name}.{p}: no clear span on face {sp[2]}')
-                    if abs(sp[4] - mm.ports[p][4]) > 1e-6:
-                        print(f'kv die REACH_FIX: {name}.{p} slid {sp[4] - mm.ports[p][4]:+.2f} um clear of the other '
-                              f'{sp[2]}-face words', file=sys.stderr)
-                    mm.ports[p] = tuple(sp)
         else:
             w, h = (183.72,183.72) if name == 'qkd_cdc_wleaf' and m['geo'].get('kv_wq_leaf_s') else (t['w'],t['h'])
             mm = F.Master(name, w, h, t['obs_top'], t['note'])
@@ -3338,6 +3323,8 @@ def masters(m, k=1, port_bits=None):
             _slice_pins(m, mm, down=mst == 'qkd_hslice_dn')
         if mst in LEVEL_PIN_MASTERS:
             _land_level_pins(m, mm, inst0, face_load, by)
+        if REACH_FIX and mst in ('qkd_land', 'qkd_land_n'):
+            _reach_fix_slide(mst, mm)
     if m['geo'].get('split'):
         _split_pins(M, m)
     if 'qkd_d2ds' in M and 'serdes_up' not in M['qkd_d2ds'].ports:
@@ -3745,6 +3732,36 @@ def _strip_face_pins(mst, mm):
                 F.PIN_REVERSE.add((mst, p))
             continue
         mm.ports[p] = ('face', sp[1], 'E' if mst.startswith('qkd_land') else 'W', 'M4', y, 1)
+
+
+def _reach_fix_slide(name, mm):
+    """KVPLAN3 0230 (OT_KV_REACH_FIX; kvs13l3 real case DRT-0073 'no access point for land_*/c0i[0]'): a c<k>i word moved
+    level with the closed CDC's co pins landed ON the er<k> word of the same face (c0i[0] = er0[35], M4 y 235.44).  After
+    every face word of the landing master is drawn (_strip_face_pins / level pins), each c<k>i slides along its face to
+    the nearest span clear of every other word on that face (1-um gap)."""
+    def span_(q):
+        hw_ = (q[1] - 1) / 2 * 0.048 * q[5]
+        return q[4] - hw_, q[4] + hw_
+    for p in list(mm.ports):
+        mt = re.fullmatch(r'c(\d+)i', p)
+        if not mt or mm.ports[p][0] != 'face':
+            continue
+        sp = list(mm.ports[p])
+        others = [span_(q) for p2, q in mm.ports.items() if p2 != p and q[0] == 'face' and q[2] == sp[2]]
+        lim = mm.w if sp[2] in 'NS' else mm.h
+        for d_ in sorted((i * 0.48 for i in range(-4000, 4001)), key=abs):
+            q_ = list(sp)
+            q_[4] = round(sp[4] + d_, 4)
+            a_, b_ = span_(q_)
+            if a_ >= 1.0 and b_ <= lim - 1.0 and all(b_ + 1.0 <= o0 or a_ - 1.0 >= o1 for o0, o1 in others):
+                sp = q_
+                break
+        else:
+            raise ValueError(f'{name}.{p}: no clear span on face {sp[2]}')
+        if abs(sp[4] - mm.ports[p][4]) > 0.01:
+            print(f'kv die REACH_FIX: {name}.{p} slid {sp[4] - mm.ports[p][4]:+.2f} um clear of the other {sp[2]}-face words',
+                  file=sys.stderr)
+        mm.ports[p] = tuple(sp)
 
 
 _HOP_STRIP_DY = dict(qkd_ctrl=dict(er=-50.9, es=159.4), qkd_ctrl_n=dict(er=-28.9, es=120.5))

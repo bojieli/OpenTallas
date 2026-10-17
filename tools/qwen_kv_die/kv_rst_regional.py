@@ -42,6 +42,7 @@ WIN = 240.0
 # every 360-400 um die chain hop doubled the HOST boot chain (kvt13k rr test: hboot depth 217 >= RELAY_FLUSH)
 KEEP_UM = float(os.environ.get('OT_KV_RST_KEEP_UM', '401'))
 STATION = 'qkd_rlys_1'
+SEAM = os.environ.get('OT_KV_SEAM', '0') == '1'
 CORNERS = ('tt', 'ff', 'ss')
 
 
@@ -217,6 +218,17 @@ def main(argv=None):
         ys = [dxy[1]] + [L[3][1] for L in mov]
         dnm = drv[0]
         ck = next((c[2] for c in insts[dnm][2] if c[0] == 'ck'), None) or 'n_clk_core_c'
+        if SEAM:
+            # KVPLAN3 0230 (OT_KV_SEAM, DIE-CLOCK kv_rt3: 267 seam pairs = reset stations on n_clk_core_c feeding stack
+            # tiles): the stations run on the core tree most of the loads they feed are on (a load's own 'ck' / 'clk' net)
+            cks_ = defaultdict(int)
+            for L in mov:
+                lc_ = next((c[2] for c in insts[L[0]][2] if c[0].startswith(('ck', 'clk')) and isinstance(c[2], str)
+                            and c[2].startswith('n_clk_core_')), None)
+                if lc_:
+                    cks_[lc_] += 1
+            if cks_:
+                ck = max(sorted(cks_), key=lambda c_: cks_[c_])
         net = ref.rsplit('[', 1)[0]
         base = re.sub(r'[^A-Za-z0-9_]', '_', ref)
         err = None
@@ -253,7 +265,7 @@ def main(argv=None):
                 rep['far_loads'].append(dict(net=ref, load=f'{nm}.{insts[nm][2][ci][0]}', master=L[4], um=round(dl_, 1)))
             else:
                 leaf_r = max(leaf_r, dl_)
-        rep['nets'][ref] = dict(driver=dnm, loads=len(mov), kept_excluded=len(keep), radius_before_um=round(rad, 1),
+        rep["nets"][ref] = dict(driver=dnm, ck=ck, loads=len(mov), kept_excluded=len(keep), radius_before_um=round(rad, 1),
                                 stations=len(st), max_depth=max(depth.values()), max_hop_um=max(s_['hop_um'] for s_ in st),
                                 max_leaf_um=round(leaf_r, 1))
         rep['stations'] += len(st)
