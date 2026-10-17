@@ -21,7 +21,7 @@ def header_ports(src_files, top, params):
     for f in src_files:
         t = (ROOT / f).read_text(errors="replace")
         if re.search(r"\bmodule\s+%s\b" % re.escape(top), t):
-            txt = t
+            txt = re.sub(r"//[^\n]*", "", re.sub(r"/\*.*?\*/", "", t, flags=re.S))
             break
     m = re.search(r"\bmodule\s+%s\s*(#\s*\((.*?)\))?\s*\((.*?)\);" % re.escape(top), txt, re.S)
     if not m:
