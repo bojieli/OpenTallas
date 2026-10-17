@@ -16,14 +16,13 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
-QDM reference pin u.u_stage.o[0]$_DFF_PN0_/CLK clock arrival max 58.596279 min 56.245472 skew 90 hold 50
+QDM reference pin u.u_stage.o[0]$_DFF_PN0_/CLK clock arrival max 42.087597 min 39.855576 skew 90 hold 50
 OT_IO_INTER 0 inputs 0 outputs at 150 ps
-OT_FC_CLOCK: clk_out = clk_out_fwd (clk_in, divide 1); 48 o vs clk_out_fwd (max 166.667 / min -50), 48 i vs clk_in (max 166.667 / min 50)
-OT_FC: clk_out buffer dont_touch restored after CTS
+OT_FC_CLOCK: clk_out = clk_out_fwd (clk_in, divide 1); 48 o vs clk_out_fwd (max 166.667 / min -55), 48 i vs clk_in (max 166.667 / min 55)
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 OT_IOREF clock-port clk_in (core_clk): data input delays dropped
 OT_IOREF clock-port clk_out (clk_out_fwd): data input delays dropped
 OT_IOREF_EDGE core_clk boundary 48 negedge 0 noarc 0 inverted 0
-OT_IOREF ot_lb_v_core_clk core_clk mean 58.8 min 57.9 max 59.6 n 48 boundary
-OT_WS max 4.3169484653660106e-10 min 2.5574334316935676e-11
+OT_IOREF ot_lb_v_core_clk core_clk mean 42.0 min 41.6 max 42.4 n 48 boundary
+OT_WS max 4.310251877637228e-10 min 3.5123251529434185e-11
 OT_EXPORT_DONE
