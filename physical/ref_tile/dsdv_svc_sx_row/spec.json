@@ -22,11 +22,11 @@
  "macros": [],
  "pins": {
   "N": [
+   "gi_n",
+   "si_n",
    "ck",
    "rst",
-   "gi_n",
    "go_n",
-   "si_n",
    "so_n"
   ],
   "E": [
@@ -65,7 +65,10 @@
   "peak_ram_gb": 24,
   "hold_margin_ns": 0.03,
   "io_hold_margin_ns": 0.0,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
+  }
  },
  "structural_change": "S81U-SVCX (S81-DV p4h regional service slice, owner-approved DV plan): the score exchange dsdv_svc_sx (monolith 6,420 lane pins per face, unkittable) split into 4 x this hardened-once centre leaf (one score ROW: 16 qaddf node + gather/scatter crossbars, every pin registered) + closed dsfd_dvrly_276 relay stations on every face lane; bit-identical, zero added cycles.",
  "job": {
@@ -145,5 +148,99 @@
  },
  "keep_pin_regs": true,
  "children": [],
- "inter": []
+ "inter": [],
+ "pin_ranges": {
+  "gi_n": [
+   5.4,
+   130.77
+  ],
+  "si_n": [
+   130.77,
+   194.17
+  ],
+  "ck": [
+   194.17,
+   195.17
+  ],
+  "rst": [
+   195.17,
+   196.17
+  ],
+  "go_n": [
+   196.17,
+   321.54
+  ],
+  "so_n": [
+   321.54,
+   383.4
+  ],
+  "gi_e": [
+   5.4,
+   99.64
+  ],
+  "go_e": [
+   99.64,
+   193.87
+  ],
+  "si_e": [
+   193.87,
+   241.52
+  ],
+  "so_e": [
+   241.52,
+   289.16
+  ],
+  "rt_o": [
+   289.16,
+   383.4
+  ],
+  "gi_s": [
+   5.4,
+   127.59
+  ],
+  "go_s": [
+   127.59,
+   249.77
+  ],
+  "si_s": [
+   249.77,
+   311.55
+  ],
+  "so_s": [
+   311.55,
+   373.33
+  ],
+  "t_o": [
+   373.33,
+   382.26
+  ],
+  "sid": [
+   382.26,
+   383.26
+  ],
+  "fault": [
+   383.26,
+   383.4
+  ],
+  "gi_w": [
+   5.4,
+   99.64
+  ],
+  "go_w": [
+   99.64,
+   193.87
+  ],
+  "si_w": [
+   193.87,
+   241.52
+  ],
+  "so_w": [
+   241.52,
+   289.16
+  ],
+  "l_i": [
+   289.16,
+   383.4
+  ]
+ }
 }
