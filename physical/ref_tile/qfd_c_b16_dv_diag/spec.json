@@ -15,15 +15,19 @@
  "params": {},
  "clock": "spine",
  "child_clock_ref": "pin",
- "clock_port": "ck_sw",
+ "clock_port": "ck_w0",
  "clock_ports": [
-  "ck_sw",
-  "ck_se",
-  "ck_nw",
-  "ck_ne"
+  "ck_w0",
+  "ck_w1",
+  "ck_w2",
+  "ck_w3",
+  "ck_e0",
+  "ck_e1",
+  "ck_e2",
+  "ck_e3"
  ],
  "orfs_vars": {
-  "OT_SPINE_PORTS": "ck_sw,ck_se,ck_nw,ck_ne",
+  "OT_SPINE_PORTS": "ck_w0,ck_w1,ck_w2,ck_w3,ck_e0,ck_e1,ck_e2,ck_e3",
   "OT_SPINE_MACRO_LEAF": "1",
   "OT_SPINE_MACRO_PIN_LEAF": "1",
   "PRE_GLOBAL_PLACE_TCL": "physical/qcluster/fabric_sites_place.tcl",
@@ -231,8 +235,8 @@
    "bco1",
    "bco2",
    "bco3",
-   "ck_nw",
-   "ck_ne"
+   "ck_w3",
+   "ck_e3"
   ],
   "S": [
    "bc0",
@@ -241,16 +245,22 @@
    "rs_o",
    "bc2",
    "bc3",
-   "ck_sw",
+   "ck_w0",
    "rst_n",
    "far",
    "cid",
    "tie_hi",
    "tie_lo",
-   "ck_se"
+   "ck_e0"
   ],
-  "E": [],
-  "W": []
+  "E": [
+   "ck_e1",
+   "ck_e2"
+  ],
+  "W": [
+   "ck_w1",
+   "ck_w2"
+  ]
  },
  "pin_ranges": {
   "bc0": [
@@ -277,33 +287,33 @@
    2182.4,
    2354.4
   ],
-  "ck_sw": [
-   687.966,
-   688.266
+  "ck_w0": [
+   661.227,
+   661.527
   ],
   "rst_n": [
-   688.966,
-   689.266
+   662.227,
+   662.527
   ],
   "far": [
-   689.966,
-   690.266
+   663.227,
+   663.527
   ],
   "cid": [
-   690.966,
-   696.966
+   664.227,
+   670.227
   ],
   "tie_hi": [
-   697.666,
-   697.966
+   670.927,
+   671.227
   ],
   "tie_lo": [
-   698.666,
-   698.966
+   671.927,
+   672.227
   ],
-  "ck_se": [
-   1754.301,
-   1754.601
+  "ck_e0": [
+   1626.944,
+   1627.244
   ],
   "bco0": [
    4.32,
@@ -325,13 +335,29 @@
    2182.4,
    2354.4
   ],
-  "ck_nw": [
-   695.225,
-   695.525
+  "ck_w3": [
+   661.227,
+   661.527
   ],
-  "ck_ne": [
-   1757.04,
-   1757.34
+  "ck_e3": [
+   1643.397,
+   1643.697
+  ],
+  "ck_w1": [
+   2020.438,
+   2020.738
+  ],
+  "ck_w2": [
+   3369.235,
+   3369.535
+  ],
+  "ck_e1": [
+   2064.216,
+   2064.516
+  ],
+  "ck_e2": [
+   3321.825,
+   3322.125
   ]
  },
  "pin_layers": {
@@ -341,20 +367,24 @@
   "rs_o": "M5",
   "bc2": "M5",
   "bc3": "M5",
-  "ck_sw": "M5",
+  "ck_w0": "M5",
   "rst_n": "M5",
   "far": "M5",
   "cid": "M5",
   "tie_hi": "M5",
   "tie_lo": "M5",
-  "ck_se": "M5",
+  "ck_e0": "M5",
   "bco0": "M5",
   "rs_i": "M5",
   "bco1": "M5",
   "bco2": "M5",
   "bco3": "M5",
-  "ck_nw": "M5",
-  "ck_ne": "M5"
+  "ck_w3": "M5",
+  "ck_e3": "M5",
+  "ck_w1": "M4",
+  "ck_w2": "M4",
+  "ck_e1": "M4",
+  "ck_e2": "M4"
  },
  "route": {
   "pd": 0.5,
@@ -376,11 +406,11 @@
   "reason": "qc_gen.py RTL registers every data pin in the S / N strip (bc / rs_i entry flops, bco / rs / rs_o exit flops, rst_n pin register); cid / far are static straps from the instance's own tie cells"
  },
  "relay_sites": "results/arch/qwen_cluster_1017/relay_sites_dv.json",
- "structural_change": "Q-CLUSTER qfd_c_b16_dv (SPEC.md): CB cluster with A/T/B corridors 129.6 um (cut 1.79 -> 0.90 worst, trunks <= 0.54), four quadrant clock roots, registered pins hold_budget die, DV rs_i -> rs_o feedthrough (14 edges) in T.",
+ "structural_change": "Q-CLUSTER qfd_c_b16_dv (SPEC.md): CB cluster with A/T/B corridors 129.6 um (cut 1.79 -> 0.90 worst, trunks <= 0.54), eight regional clock roots (side x tile row, <= 13.4k sinks each; the four quadrant roots measured 26,984 sinks / spread 3.9 ns), registered pins hold_budget die, DV rs_i -> rs_o feedthrough (14 edges) in T.",
  "job": {
   "owner": "Claude:Q-CLUSTER",
   "branch": "claude/qcluster-1017",
-  "tag": "diag0",
+  "tag": "diag3",
   "purpose": "qfd_c_b16_dv cluster (dv2r8f, 48 instances)",
   "submit": false,
   "benches": [

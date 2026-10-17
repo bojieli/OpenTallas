@@ -35,11 +35,47 @@
   "x": 1179.3600000000001,
   "y": 2613.6000000000004
  },
- "register_centroid_x": {
-  "sw": 694.0,
-  "se": 1754.8,
-  "nw": 695.7,
-  "ne": 1757.5
+ "region_seams": {
+  "x": 1179.3600000000001,
+  "y": [
+   1317.6,
+   2613.6,
+   3909.6
+  ]
+ },
+ "register_centroid": {
+  "w0": [
+   612.6,
+   716.5
+  ],
+  "w1": [
+   607.7,
+   2020.4
+  ],
+  "w2": [
+   590.6,
+   3369.2
+  ],
+  "w3": [
+   604.7,
+   4577.6
+  ],
+  "e0": [
+   1627.4,
+   728.2
+  ],
+  "e1": [
+   1687.0,
+   2064.2
+  ],
+  "e2": [
+   1628.8,
+   3321.8
+  ],
+  "e3": [
+   1643.9,
+   4552.1
+  ]
  },
  "tiles": [
   {
@@ -172,49 +208,77 @@
   }
  ],
  "clocks": {
-  "sw": {
-   "pin": "ck_sw",
-   "fabric_flops": 24774,
+  "w0": {
+   "pin": "ck_w0",
+   "fabric_flops": 12375,
    "tiles": [
     "0_0",
+    "1_0"
+   ],
+   "tile_entry_pins": 78
+  },
+  "w1": {
+   "pin": "ck_w1",
+   "fabric_flops": 8766,
+   "tiles": [
     "0_1",
-    "1_0",
     "1_1"
    ],
-   "tile_entry_pins": 156
+   "tile_entry_pins": 78
   },
-  "se": {
-   "pin": "ck_se",
-   "fabric_flops": 18571,
-   "tiles": [
-    "2_0",
-    "2_1",
-    "3_0",
-    "3_1"
-   ],
-   "tile_entry_pins": 152
-  },
-  "nw": {
-   "pin": "ck_nw",
-   "fabric_flops": 21132,
+  "w2": {
+   "pin": "ck_w2",
+   "fabric_flops": 10818,
    "tiles": [
     "0_2",
+    "1_2"
+   ],
+   "tile_entry_pins": 78
+  },
+  "w3": {
+   "pin": "ck_w3",
+   "fabric_flops": 6700,
+   "tiles": [
     "0_3",
-    "1_2",
     "1_3"
    ],
-   "tile_entry_pins": 156
+   "tile_entry_pins": 78
   },
-  "ne": {
-   "pin": "ck_ne",
-   "fabric_flops": 13406,
+  "e0": {
+   "pin": "ck_e0",
+   "fabric_flops": 9825,
+   "tiles": [
+    "2_0",
+    "3_0"
+   ],
+   "tile_entry_pins": 74
+  },
+  "e1": {
+   "pin": "ck_e1",
+   "fabric_flops": 12379,
+   "tiles": [
+    "2_1",
+    "3_1"
+   ],
+   "tile_entry_pins": 78
+  },
+  "e2": {
+   "pin": "ck_e2",
+   "fabric_flops": 10315,
    "tiles": [
     "2_2",
+    "3_2"
+   ],
+   "tile_entry_pins": 78
+  },
+  "e3": {
+   "pin": "ck_e3",
+   "fabric_flops": 6705,
+   "tiles": [
     "2_3",
-    "3_2",
     "3_3"
    ],
-   "tile_entry_pins": 156
+   "tile_entry_pins": 78
   }
  },
  "fabric_flops": 77883,
@@ -383,16 +447,16 @@
    "note": "column word (corridor run)"
   },
   {
-   "port": "ck_sw",
+   "port": "ck_w0",
    "bits": 1,
    "face": "S",
    "layer": "M5",
    "range_um": [
-    687.966,
-    688.266
+    661.227,
+    661.527
    ],
    "pins_per_um": null,
-   "note": "quadrant sw entry island (register centroid x 694)"
+   "note": "region w0 entry island (register centroid x 613, y 716)"
   },
   {
    "port": "rst_n",
@@ -400,11 +464,11 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    688.966,
-    689.266
+    662.227,
+    662.527
    ],
    "pins_per_um": null,
-   "note": "quadrant sw entry island (register centroid x 694)"
+   "note": "region w0 entry island (register centroid x 613, y 716)"
   },
   {
    "port": "far",
@@ -412,11 +476,11 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    689.966,
-    690.266
+    663.227,
+    663.527
    ],
    "pins_per_um": null,
-   "note": "quadrant sw entry island (register centroid x 694)"
+   "note": "region w0 entry island (register centroid x 613, y 716)"
   },
   {
    "port": "cid",
@@ -424,11 +488,11 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    690.966,
-    696.966
+    664.227,
+    670.227
    ],
    "pins_per_um": null,
-   "note": "quadrant sw entry island (register centroid x 694)"
+   "note": "region w0 entry island (register centroid x 613, y 716)"
   },
   {
    "port": "tie_hi",
@@ -436,11 +500,11 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    697.666,
-    697.966
+    670.927,
+    671.227
    ],
    "pins_per_um": null,
-   "note": "quadrant sw entry island (register centroid x 694)"
+   "note": "region w0 entry island (register centroid x 613, y 716)"
   },
   {
    "port": "tie_lo",
@@ -448,23 +512,23 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    698.666,
-    698.966
+    671.927,
+    672.227
    ],
    "pins_per_um": null,
-   "note": "quadrant sw entry island (register centroid x 694)"
+   "note": "region w0 entry island (register centroid x 613, y 716)"
   },
   {
-   "port": "ck_se",
+   "port": "ck_e0",
    "bits": 1,
    "face": "S",
    "layer": "M5",
    "range_um": [
-    1754.301,
-    1754.601
+    1626.944,
+    1627.244
    ],
    "pins_per_um": null,
-   "note": "quadrant se entry island (register centroid x 1755)"
+   "note": "region e0 entry island (register centroid x 1627, y 728)"
   },
   {
    "port": "bco0",
@@ -532,28 +596,76 @@
    "note": "registered feed-through to the far cluster"
   },
   {
-   "port": "ck_nw",
+   "port": "ck_w3",
    "bits": 1,
    "face": "N",
    "layer": "M5",
    "range_um": [
-    695.225,
-    695.525
+    661.227,
+    661.527
    ],
    "pins_per_um": null,
-   "note": "quadrant nw entry island (register centroid x 696)"
+   "note": "region w3 entry island (register centroid x 605, y 4578)"
   },
   {
-   "port": "ck_ne",
+   "port": "ck_e3",
    "bits": 1,
    "face": "N",
    "layer": "M5",
    "range_um": [
-    1757.04,
-    1757.34
+    1643.397,
+    1643.697
    ],
    "pins_per_um": null,
-   "note": "quadrant ne entry island (register centroid x 1758)"
+   "note": "region e3 entry island (register centroid x 1644, y 4552)"
+  },
+  {
+   "port": "ck_w1",
+   "bits": 1,
+   "face": "W",
+   "layer": "M4",
+   "range_um": [
+    2020.438,
+    2020.738
+   ],
+   "pins_per_um": null,
+   "note": "region w1 entry (register centroid y 2020, x 608)"
+  },
+  {
+   "port": "ck_w2",
+   "bits": 1,
+   "face": "W",
+   "layer": "M4",
+   "range_um": [
+    3369.235,
+    3369.535
+   ],
+   "pins_per_um": null,
+   "note": "region w2 entry (register centroid y 3369, x 591)"
+  },
+  {
+   "port": "ck_e1",
+   "bits": 1,
+   "face": "E",
+   "layer": "M4",
+   "range_um": [
+    2064.216,
+    2064.516
+   ],
+   "pins_per_um": null,
+   "note": "region e1 entry (register centroid y 2064, x 1687)"
+  },
+  {
+   "port": "ck_e2",
+   "bits": 1,
+   "face": "E",
+   "layer": "M4",
+   "range_um": [
+    3321.825,
+    3322.125
+   ],
+   "pins_per_um": null,
+   "note": "region e2 entry (register centroid y 3322, x 1629)"
   }
  ],
  "a0": {

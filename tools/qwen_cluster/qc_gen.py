@@ -5,9 +5,12 @@ Base: the CB cluster generator (claude/q3h-cb-1016 e7e22d5b6, copied as tools/qw
 Its geometry helpers, morton tree, host map, leg router, column runs and reset tree are reused through module globals.
 This generator changes:
   * corridors A / T / B 64.8 -> 129.6 um (SPEC 1; outline 2285.28 x 5184), reach: planning hop 390 <= limit 405;
-  * four quadrant clock roots ck_sw / ck_se / ck_nw / ck_ne (SPEC 2): every register (station, relay, pin register,
-    reset stage) and every A0 tile clock entry takes the root of the quadrant it sits in; region seams are crossed only
-    by registered hops;
+  * eight regional clock roots ck_w0..ck_w3 / ck_e0..ck_e3 (SPEC 2, Q-CLUSTER2 10-17: the four quadrant roots measured
+    26,984 sinks / iter-0 spread 3.9 ns on ck_sw, so each quadrant is split into its two tile rows): region = side (W/E
+    of the T centreline) x tile row (seams at the row-gap centres); every register (station, relay, pin register, reset
+    stage) and every A0 tile clock entry takes the root of the region it sits in; region seams are crossed only by
+    registered hops.  Entries beside the register mass: rows 0 / 3 on the S / N face, rows 1 / 2 on the W / E face, each
+    at its region's register centroid;
   * the DV far-band feedthrough rs_i (N face) -> rs_o (S face), 514 b, in the T centre lane: N pin register, relays,
     S pin register (SPEC 1, 14 edges);
   * every relay stage is its own qfd_q3h_stn instance (named, site-planned, clocked by its region).
@@ -42,7 +45,7 @@ STRIP_UM = 86.4
 LATTICE = 43.2
 HOP, LIMIT = 390.0, 405.0
 BW, DW = g.BW, g.DW
-QUADS = ("sw", "se", "nw", "ne")
+QUADS = ("w0", "w1", "w2", "w3", "e0", "e1", "e2", "e3")   # regional clock roots (name kept: was the four quadrants)
 
 
 def setup():
@@ -72,15 +75,18 @@ def setup():
 setup()
 WIDTH, HEIGHT = g.WIDTH, g.HEIGHT
 XT = g.ccx("T")
-YMID = (g.ROWY[1] + g.TH + g.ROWY[2]) / 2
+YSEAM = [(g.ROWY[r] + g.TH + g.ROWY[r + 1]) / 2 for r in range(3)]   # region seams = row-gap centres
+YMID = YSEAM[1]
 
 
 def quad(x, y):
-    return ("s" if y < YMID else "n") + ("w" if x <= XT else "e")
+    """clock region of a register at (x, y): side of the T centreline + tile row band"""
+    # the T centre lane (x == XT: the rs_i -> rs_o feedthrough, 16 x 514 b) belongs to the E side, which is lighter
+    return ("w" if x < XT - 1e-6 else "e") + str(sum(y >= v for v in YSEAM))
 
 
 def tile_quad(c, r):
-    return ("s" if r < 2 else "n") + ("w" if c < 2 else "e")
+    return ("w" if c < 2 else "e") + str(r)
 
 
 A0_REF = "30d3d3510"   # Q-ROMPARENT-2 c1r6 (codex/romleaf-native-1621): ck_tx4/5 on E face M4, mirror-legal
@@ -332,18 +338,19 @@ def pin_plan(rsx, E):
     first registered hop stays inside reach); overlapping ranges are pushed apart in run order.  Each quadrant clock
     entry sits in a free gap of its face nearest the quadrant's register centroid x (with rst_n / straps beside ck_sw)."""
     DENS = 3.0
-    cen = {}
+    cen, ceny = {}, {}
     for q in QUADS:
         ss = [x for x in E.sites if x["region"] == q]
         cen[q] = sum(x["at"][0] * x["bits"] for x in ss) / sum(x["bits"] for x in ss)
+        ceny[q] = sum(x["at"][1] * x["bits"] for x in ss) / sum(x["bits"] for x in ss)
     lane = {f"bc{c}": g.run_x(c) for c in range(4)}
     lane.update({f"bco{c}": g.run_x(c) for c in range(4)})
     lane.update(rs=rsx["poly"][-1][0], rs_o=XT, rs_i=rsx["poly"][-1][0])   # rs_i above rs (Q-DV dv2r8f5)
     note = {"bc": "column word (corridor run)", "bco": "registered feed-through to the far cluster",
             "rs": "block word {fault, valid, 512}", "rs_i": "DV: far-band rs word in", "rs_o": "DV: far-band rs word out (rs_i + 15 edges)"}
     faces = {"S": ["bc0", "rs", "bc1", "rs_o", "bc2", "bc3"], "N": ["bco0", "rs_i", "bco1", "bco2", "bco3"]}
-    islands = {"S": [("sw", ["ck_sw", "rst_n", "far", "cid", "tie_hi", "tie_lo"]), ("se", ["ck_se"])],
-               "N": [("nw", ["ck_nw"]), ("ne", ["ck_ne"])]}
+    islands = {"S": [("w0", ["ck_w0", "rst_n", "far", "cid", "tie_hi", "tie_lo"]), ("e0", ["ck_e0"])],
+               "N": [("w3", ["ck_w3"]), ("e3", ["ck_e3"])]}
     pins = []
     lo0, hi0 = 4.32, WIDTH - 4.32
     for f, names in faces.items():
@@ -381,17 +388,24 @@ def pin_plan(rsx, E):
                 w_ = 6.0 if n == "cid" else 0.3
                 pins.append(dict(port=n, bits=12 if n == "cid" else 1, face=f, layer="M5",
                                  range_um=[round(x0, 3), round(x0 + w_, 3)], pins_per_um=None,
-                                 note=f"quadrant {q} entry island (register centroid x {cen[q]:.0f})"))
+                                 note=f"region {q} entry island (register centroid x {cen[q]:.0f}, y {ceny[q]:.0f})"))
                 x0 += w_ + 0.7
+    # interior rows 1 / 2 have no S / N face within 1.3 mm: their entry is on the W / E face (M4) at the region's
+    # register centroid y; the die delivers them along the inter-cluster sliver (no data pin on W / E)
+    for q in ("w1", "w2", "e1", "e2"):
+        f = "W" if q[0] == "w" else "E"
+        y0 = round(ceny[q], 3)
+        pins.append(dict(port=f"ck_{q}", bits=1, face=f, layer="M4", range_um=[y0, round(y0 + 0.3, 3)], pins_per_um=None,
+                         note=f"region {q} entry (register centroid y {ceny[q]:.0f}, x {cen[q]:.0f})"))
     for p_ in pins:
         if p_["pins_per_um"] and p_["pins_per_um"] > 6.0:
             raise SystemExit(f"pin density over 6/um: {p_}")
-    for f in "NS":
+    for f in "NSWE":
         rs_ = sorted(p_["range_um"] + [p_["port"]] for p_ in pins if p_["face"] == f)
         for a, b in zip(rs_, rs_[1:]):
             if b[0] < a[1] + 0.2:
                 raise SystemExit(f"pin overlap on {f}: {a} {b}")
-    return pins, cen
+    return pins, cen, ceny
 
 
 def plot(path, host, spare, legs, rsx, E, pins):
@@ -400,7 +414,8 @@ def plot(path, host, spare, legs, rsx, E, pins):
     import matplotlib.pyplot as plt
     from matplotlib.patches import Rectangle
     fig, ax = plt.subplots(figsize=(8, 17))
-    qcol = {"sw": "#e8f0fb", "se": "#eaf7e8", "nw": "#fbf1e4", "ne": "#f5e8f7"}
+    qcol = {"w0": "#e8f0fb", "w1": "#fbf1e4", "w2": "#e8f0fb", "w3": "#fbf1e4",
+            "e0": "#eaf7e8", "e1": "#f5e8f7", "e2": "#eaf7e8", "e3": "#f5e8f7"}
     for c in range(4):
         for r in range(4):
             x0, y0 = g.COLX[c][0], g.ROWY[r]
@@ -411,25 +426,32 @@ def plot(path, host, spare, legs, rsx, E, pins):
     for k, (lo, hi) in g.CORR.items():
         ax.add_patch(Rectangle((lo, 0), hi - lo, HEIGHT, fc="none", ec="#bbb", lw=0.4, ls="--"))
         ax.text((lo + hi) / 2, HEIGHT + 30, k, ha="center", fontsize=7)
-    ax.axhline(YMID, color="#999", lw=0.6, ls=":")
+    for v in YSEAM:
+        ax.axhline(v, color="#999", lw=0.6, ls=":")
     ax.axvline(XT, color="#999", lw=0.6, ls=":")
     for x in legs + [rsx]:
         p = x["poly"]
         ax.plot([q[0] for q in p], [q[1] for q in p], color="#06c" if x is not rsx else "#a0a", lw=0.7)
-    colr = {"sw": "#1f4e9c", "se": "#2a7a2a", "nw": "#b26b00", "ne": "#8a2a9c"}
+    colr = {"w0": "#1f4e9c", "w1": "#b26b00", "w2": "#1f4e9c", "w3": "#b26b00",
+            "e0": "#2a7a2a", "e1": "#8a2a9c", "e2": "#2a7a2a", "e3": "#8a2a9c"}
     for s in E.sites:
         ax.plot(s["at"][0], s["at"][1], "s" if s.get("station") else ".", color=colr[s["region"]],
                 ms=5 if s.get("station") else 2.5)
     for p_ in pins:
         lo, hi = p_["range_um"]
+        if p_["face"] in "WE":
+            x = 0 if p_["face"] == "W" else WIDTH
+            ax.plot([x, x], [lo - 25, hi + 25], lw=6, color="#d00")
+            ax.text(x + (-55 if p_["face"] == "W" else 10), lo, p_["port"], fontsize=6, color="#d00")
+            continue
         y = 0 if p_["face"] == "S" else HEIGHT
         ax.plot([lo, hi], [y, y], lw=4, color="#a0a" if p_["port"].startswith("rs") else ("#c33" if p_["port"].startswith("bc") else "#333"))
         ax.text((lo + hi) / 2, y + (-70 if p_["face"] == "S" else 60), p_["port"], ha="center", fontsize=5.5, rotation=90)
-    ax.set_xlim(-60, WIDTH + 60)
+    ax.set_xlim(-140, WIDTH + 140)
     ax.set_ylim(-260, HEIGHT + 200)
     ax.set_aspect("equal")
-    ax.set_title(f"{MASTER} {WIDTH} x {HEIGHT} um (A/T/B 129.6): tile fill = clock quadrant; dots = registers coloured by\n"
-                 "quadrant root; blue = tree legs, purple = rs / rs_i->rs_o; dotted = quadrant seams", fontsize=8)
+    ax.set_title(f"{MASTER} {WIDTH} x {HEIGHT} um: tile fill = clock region (8 roots); dots = registers coloured by\n"
+                 "region root; red = W/E clock entries; blue = tree legs, purple = rs / rs_i->rs_o; dotted = region seams", fontsize=8)
     fig.tight_layout()
     fig.savefig(path, dpi=110)
 
@@ -458,7 +480,7 @@ def main():
            f"localparam integer QC_LAT_FT = {nft};",
            f"localparam integer Q3H_RST_DEPTH = {RD};"]
     (ROOT / "rtl/test/qcluster_lat.svh").write_text("\n".join(hdr) + "\n")
-    pins, cen = pin_plan(rsx, E)
+    pins, cen, ceny = pin_plan(rsx, E)
     # hop audit (pin to pin, Manhattan between consecutive registers of each run)
     by = {}
     for s in E.sites:
@@ -477,7 +499,8 @@ def main():
         generator="tools/qwen_cluster/qc_gen.py", base="tools/qwen_cluster/cb_base.py (claude/q3h-cb-1016 e7e22d5b6)",
         spec="results/arch/qwen_cluster_1017/SPEC.md",
         outline_um=dict(w=WIDTH, h=HEIGHT), corridors={k: list(v) for k, v in g.CORR.items()},
-        quadrant_seams=dict(x=XT, y=YMID), register_centroid_x={q: round(v, 1) for q, v in cen.items()},
+        quadrant_seams=dict(x=XT, y=YMID), region_seams=dict(x=XT, y=[round(v, 3) for v in YSEAM]),
+        register_centroid={q: [round(cen[q], 1), round(ceny[q], 1)] for q in QUADS},
         tiles=[dict(inst=f'u_t_{c}_{r}', at=[g.COLX[c][0], g.ROWY[r]], orient=g.COL_ORIENT[c]) for c in range(4) for r in range(4)],
         clocks={q: dict(pin=f"ck_{q}", fabric_flops=E.regions[q],
                         tiles=[g.sname(c, r) for c in range(4) for r in range(4) if tile_quad(c, r) == q],

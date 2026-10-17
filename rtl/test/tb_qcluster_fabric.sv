@@ -77,10 +77,14 @@ module tb #(parameter integer MUT = 0);
     wire [507:0] tap_3_3; wire trst_3_3; wire [513:0] t_out_3_3;
     wire [513:0] n_a_3_3, n_b_3_3, n_y_3_3;
     qfd_c_b16_dv_fabric #(.MUT(MUT)) u_fab (
-        .ck_sw(ck),
-        .ck_se(ck),
-        .ck_nw(ck),
-        .ck_ne(ck),
+        .ck_w0(ck),
+        .ck_w1(ck),
+        .ck_w2(ck),
+        .ck_w3(ck),
+        .ck_e0(ck),
+        .ck_e1(ck),
+        .ck_e2(ck),
+        .ck_e3(ck),
         .rst_n(rst_n),
         .far(far),
         .bc0(bcw[0]),

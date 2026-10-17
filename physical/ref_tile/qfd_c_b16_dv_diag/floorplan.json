@@ -37,8 +37,8 @@
    "bco1",
    "bco2",
    "bco3",
-   "ck_nw",
-   "ck_ne"
+   "ck_w3",
+   "ck_e3"
   ],
   "S": [
    "bc0",
@@ -47,18 +47,24 @@
    "rs_o",
    "bc2",
    "bc3",
-   "ck_sw",
+   "ck_w0",
    "rst_n",
    "far",
    "cid",
    "tie_hi",
    "tie_lo",
-   "ck_se"
+   "ck_e0"
   ],
-  "E": [],
-  "W": []
+  "E": [
+   "ck_e1",
+   "ck_e2"
+  ],
+  "W": [
+   "ck_w1",
+   "ck_w2"
+  ]
  },
- "clock_port": "ck_sw",
+ "clock_port": "ck_w0",
  "blocks": [
   {
    "kind": "child",
