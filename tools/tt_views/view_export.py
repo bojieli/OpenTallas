@@ -94,14 +94,19 @@ if {[llength [get_ports -quiet clk_in]] && [llength [get_ports -quiet clk_out]]}
   unset_input_delay [get_ports clk_in]
   set_propagated_clock [all_clocks]
   sta::find_timing_paths -path_delay max -group_path_count 1
-  set ot_fc_pin [get_pins "[$ot_fc_inst getName]/[[$ot_fc_it getMTerm] getName]"]
+  set ot_fc_driver_pin [get_pins "[$ot_fc_inst getName]/[[$ot_fc_it getMTerm] getName]"]
+  set ot_fc_pin [sta::get_port_pin [lindex [get_ports clk_out] 0]]
   foreach prop {arrival_max_rise arrival_min_rise arrival_max_fall arrival_min_fall slew_max_rise slew_max_fall} {
     set value [get_property $ot_fc_pin $prop]
+    set driver_value [get_property $ot_fc_driver_pin $prop]
     if {[string match arrival_* $prop]} {
       set edge [expr {[string match *_fall $prop] ? 1 : 0}]
-      set value [expr {$value - [sta::time_sta_ui [lindex $ot_fc_wave $edge]]}]
+      set phase [sta::time_sta_ui [lindex $ot_fc_wave $edge]]
+      set value [expr {$value - $phase}]
+      set driver_value [expr {$driver_value - $phase}]
     }
     puts "OT_FC_METRIC $prop $value"
+    puts "OT_FC_DRIVER_METRIC $prop $driver_value"
   }
   puts "OT_FC_ROOT clk_in"
 }
@@ -128,10 +133,19 @@ def forwarded_clock_receipt(log, corner, odb_sha256, spef_sha256):
     for edge in ('rise', 'fall'):
         if values['arrival_min_' + edge] > values['arrival_max_' + edge]:
             raise VerdictError('reversed native forwarded-clock early/late bounds')
+    raw_driver = re.findall(r"^OT_FC_DRIVER_METRIC (\S+) (\S+)$", log, re.M)
+    driver_values = dict(raw_driver)
+    if len(raw_driver) != len(required) or set(driver_values) != set(required):
+        raise VerdictError('missing physical driver-to-boundary provenance')
+    driver_values = {k: float(v) for k, v in driver_values.items()}
+    if not all(math.isfinite(v) and v >= 0 for v in driver_values.values()):
+        raise VerdictError('nonphysical forwarded-clock driver measurement')
     return dict(corner=corner, input_pin='clk_in', output_pin='clk_out',
                 driver_cell=driver[0][0], driver_instance=driver[0][1],
                 direct_root_buffer=True, units='ps', clk_in_to_clk_out_ps=values,
-                measured_at='physical output-driver Y; routed SPEF, propagated primary clock',
+                driver_y_ps=driver_values,
+                output_net_delta_ps={k: values[k]-driver_values[k] for k in required},
+                measured_at='physical clk_out STA terminal including output-net routed SPEF; propagated primary clock',
                 odb_sha256=odb_sha256, spef_sha256=spef_sha256)
 
 
