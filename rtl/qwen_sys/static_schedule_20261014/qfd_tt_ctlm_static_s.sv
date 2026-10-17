@@ -65,19 +65,6 @@ module qfd_tt_ctlm_static_s #(parameter integer XPF_TRANSPORT_EDGES=-1) (
     wire w_m_fin_o;
     wire [17:0] w_m_fidx_o;
     wire [31:0] w_m_fval_o;
-    wire w_kvd_v;
-    wire [23:0] w_kvd_wbase;
-    wire [23:0] w_kvd_ts;
-    wire [23:0] w_kvd_ks;
-    wire [23:0] w_kvd_js;
-    wire [23:0] w_kvd_wcs;
-    wire [3:0] w_kvd_split;
-    wire [2:0] w_kvd_jsh;
-    wire [17:0] w_kvd_tiles;
-    wire [17:0] w_kvd_k;
-    wire [17:0] w_kvd_nout;
-    wire w_kvd_kindk;
-    wire [17:0] w_kvd_pos;
     wire w_me_clk_en;
     wire w_c_fault;
     wire w_up_fault;
@@ -215,19 +202,6 @@ module qfd_tt_ctlm_static_s #(parameter integer XPF_TRANSPORT_EDGES=-1) (
         .m_fin_o(w_m_fin_o),
         .m_fidx_o(w_m_fidx_o),
         .m_fval_o(w_m_fval_o),
-        .kvd_v(w_kvd_v),
-        .kvd_wbase(w_kvd_wbase),
-        .kvd_ts(w_kvd_ts),
-        .kvd_ks(w_kvd_ks),
-        .kvd_js(w_kvd_js),
-        .kvd_wcs(w_kvd_wcs),
-        .kvd_split(w_kvd_split),
-        .kvd_jsh(w_kvd_jsh),
-        .kvd_tiles(w_kvd_tiles),
-        .kvd_k(w_kvd_k),
-        .kvd_nout(w_kvd_nout),
-        .kvd_kindk(w_kvd_kindk),
-        .kvd_pos(w_kvd_pos),
         .me_clk_en(w_me_clk_en),
         .c_fault(w_c_fault),
         .up_fault(w_up_fault),
