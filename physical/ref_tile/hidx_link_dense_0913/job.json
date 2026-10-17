@@ -2,12 +2,12 @@
  "name": "hidx_link_dense_0913-dense0913-COMMIT",
  "block": "ot_hbm_idx_topk_link_static_dense",
  "ref_tile": true,
- "owner": "Codex:H-NETLIST",
+ "owner": "Claude:H-NETLIST/gates-1045",
  "purpose": "Isolated actual dense master native measurement, eight SRAM clock entries. Default old master untouched. Five continuous frame fullpayload/timeline old-new miter plus two semantic mutants.",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/hnl-idxreg-0030",
+  "branch": "claude/hnl-vmd-1045",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/test/hbm_idx_static",
@@ -33,6 +33,13 @@
     "cmd": "bash rtl/test/hbm_idx_static/run_link_dense_0905.sh {RUN}/dense_proof",
     "expect": "pass",
     "pass_regex": "IDX_LINK_DENSE_GATE_PASS",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "dense_mut1_semantic",
+    "cmd": "vl=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator; [ -x \"$vl\" ] || vl=verilator; mkdir -p {RUN}/mut1 && { \"$vl\" --binary --timing -j 4 -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --top-module tb_idx_link_dense_0905 -GMUT=1 --Mdir {RUN}/mut1/obj rtl/test/hbm_idx_static/tb_idx_link_dense_0905.sv rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_dense.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v > {RUN}/mut1/build.log 2>&1 || { echo MUT1_BUILD_FAILED_NOT_A_SEMANTIC_FAIL; exit 0; }; } && cd {RUN}/mut1 && ./obj/Vtb_idx_link_dense_0905 > run.log 2>&1; rc=$?; grep IDX_LINK_DENSE run.log; if [ $rc != 0 ] && grep -q 'dense compaction exact/miter/timeline mismatch' run.log; then echo DENSE_MUT1_REJECTED; exit 1; fi; exit 0",
+    "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 8
    }
