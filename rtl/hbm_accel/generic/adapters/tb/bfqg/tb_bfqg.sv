@@ -28,7 +28,8 @@ module tb_bfqg;
         .clk_m4(clk),.clk_m5(clk),.clk_m6(clk),.clk_m7(clk),
         .clk_l0(lc[0]),.clk_l1(lc[1]),.clk_l2(lc[2]),.clk_l3(lc[3]),
         .clk_l4(lc[4]),.clk_l5(lc[5]),.clk_l6(lc[6]),.clk_l7(lc[7]),
-        .rst_n(rst_n),.c_d(c_d),.wce(wce),.mhi(dhi),.mlo({8{mlo}}),
+        .rst_n(rst_n),.c_d(c_d),.wce(wce),.mhi0(dhi[0]),.mhi1(dhi[1]),.mhi2(dhi[2]),.mhi3(dhi[3]),.mhi4(dhi[4]),.mhi5(dhi[5]),.mhi6(dhi[6]),.mhi7(dhi[7]),
+        .mlo0(mlo),.mlo1(mlo),.mlo2(mlo),.mlo3(mlo),.mlo4(mlo),.mlo5(mlo),.mlo6(mlo),.mlo7(mlo),
         .wa(wa),.r_ce(r_ce),.r_a(r_a),.rwq(dut_q));
     task automatic tick(input bit compare);
         begin
