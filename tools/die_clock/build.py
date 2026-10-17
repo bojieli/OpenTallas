@@ -319,10 +319,20 @@ def build(a):
                              flop_max=round(max(pv), 1))
             for lb, m in lv.items():
                 deficit[lb] = T - m
-        rec['iterations'].append(dict(iter=it_, pad_ps=round(pad_ps, 2), pads=pad_n, trees=stats))
-        worst = max((s['flop_spread'] for s in stats.values()), default=0)
+        # a balance group shares one target, so it is converged only when its WHOLE flop spread (across its trees) is
+        # within tol: per-tree spreads alone stop the trim with one tree of the group still far below the group target
+        gstats = {}
+        for tn, s in stats.items():
+            k = tree_group.get(tn)
+            if not k:
+                continue
+            pv = [flop[p] for p in flop if tree_group.get(sink_pins[p]['tree']) == k]
+            gstats[k] = dict(flop_spread=round(max(pv) - min(pv), 1), flop_max=round(max(pv), 1),
+                             trees=sorted(t for t in by_tree if tree_group.get(t) == k))
+        rec['iterations'].append(dict(iter=it_, pad_ps=round(pad_ps, 2), pads=pad_n, trees=stats, groups=gstats))
+        worst = max([s['flop_spread'] for s in stats.values()] + [s['flop_spread'] for s in gstats.values()], default=0)
         log('iter', it_, 'pad_ps', round(pad_ps, 1), 'pads', pad_n, 'worst flop spread', worst,
-            json.dumps({k: v for k, v in list(stats.items())[:4]}))
+            json.dumps({k: v for k, v in list(stats.items())[:4]}), json.dumps(gstats))
         if it_ == a.iters or worst <= a.tol:
             break
         # calibrate the pad delay on the previous iteration's padded leaves
