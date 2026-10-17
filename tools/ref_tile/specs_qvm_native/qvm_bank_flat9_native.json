@@ -1,0 +1,166 @@
+{
+  "params": {
+    "MUT": 0
+  },
+  "job": {
+    "owner": "Codex:qwen_vm_physical",
+    "branch": "codex/q-vm-physical-1015",
+    "tag": "f91",
+    "purpose": "Same verified nine-root bank RTL hardened with seven real CTS domains and two raw SRAM clock entries; no register-macro channel overhead or added cycles.",
+    "views_to": "physical/ref_tile/qvm_bank_flat9_native/views",
+    "record_to": "results/rtl/ref_tile/qvm_bank_flat9_native",
+    "cycles_added": 0,
+    "extra_paths": [
+      "rtl/qwen_sys/vm_native_physical_20261015",
+      "rtl/qwen_sys/vm_plane_20261013",
+      "rtl/qwen_sys/vm_me_20261008",
+      "rtl/qwen_sys/rtl_finish_20261007",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+      "physical/ref_tile/qvm_data256_native/views",
+      "physical/ref_tile/qvm_bank_ctrl_native/views"
+    ],
+    "benches": [
+      {
+        "name": "bank_m0",
+        "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_bank_banked_native -GMUT=0 -j 2 --Mdir {RUN}/bench/m0 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v > {RUN}/bench/m0.build.log 2>&1 && {RUN}/bench/m0/Vtb_qvm_bank_banked_native",
+        "expect": "pass",
+        "pass_regex": "PASS qvm_bank_banked_native",
+        "threads": 2,
+        "peak_ram_gb": 2,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "bank_m1",
+        "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_bank_banked_native -GMUT=1 -j 2 --Mdir {RUN}/bench/m1 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v > {RUN}/bench/m1.build.log 2>&1 && {RUN}/bench/m1/Vtb_qvm_bank_banked_native",
+        "expect": "fail",
+        "pass_regex": "PASS qvm_bank_banked_native",
+        "threads": 2,
+        "peak_ram_gb": 2,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "bank_m2",
+        "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_bank_banked_native -GMUT=2 -j 2 --Mdir {RUN}/bench/m2 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v > {RUN}/bench/m2.build.log 2>&1 && {RUN}/bench/m2/Vtb_qvm_bank_banked_native",
+        "expect": "fail",
+        "pass_regex": "PASS qvm_bank_banked_native",
+        "threads": 2,
+        "peak_ram_gb": 2,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ],
+    "structural_change": "Flatten seven register stages into one hard bank with seven independent CTS roots and two raw SRAM entries. Preserve all 1571/1575 FF and four edges, with SRAMs MY. Remove artificial capture I/O padding and seven macro channels. M7 cluster routing cost remains explicit."
+  },
+  "name": "qvm_bank_flat9_native",
+  "top": "qvm_bank_banked_native",
+  "kind": "cluster",
+  "sources": [
+    "rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+  ],
+  "clock": "hybrid_entries",
+  "clock_port": "ck_ctrl",
+  "clock_ports": [
+    "ck_ctrl",
+    "ck_in_lo",
+    "ck_in_hi",
+    "ck_mem_lo",
+    "ck_mem_hi",
+    "ck_cap_lo",
+    "ck_cap_hi",
+    "ck_out_lo",
+    "ck_out_hi"
+  ],
+  "reset_ports": [
+    "rst_n"
+  ],
+  "std_area_um2": 573,
+  "outline": {
+    "w": 218.16,
+    "h": 183.6
+  },
+  "pins": {
+    "W": [
+      "re",
+      "we",
+      "ra",
+      "wl",
+      "wm",
+      "wd"
+    ],
+    "E": [
+      "q"
+    ],
+    "S": [
+      "ck_ctrl",
+      "ck_in_lo",
+      "ck_in_hi",
+      "ck_mem_lo",
+      "ck_mem_hi",
+      "ck_cap_lo",
+      "ck_cap_hi",
+      "ck_out_lo",
+      "ck_out_hi",
+      "rst_n"
+    ]
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "macro_halo_um": 5.4
+  },
+  "slot_change_request": "New nine-clock M7 bank cluster at original {'w': 218.16, 'h': 183.6} footprint. Exact clock and pin contracts differ from the old M5 singleton. No old physical qualification or die fit inherited; global blocked M6/M7 tracks require checking.",
+  "children": [],
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+      "count": 1,
+      "inst": "u_lo",
+      "at": [
+        22.464,
+        38.88
+      ],
+      "clock_entry": {
+        "port": "ck_mem_lo",
+        "pin": "clk",
+        "reference": "raw_liberty_clock_pin"
+      },
+      "orient": "MY"
+    },
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+      "count": 1,
+      "inst": "u_hi",
+      "at": [
+        22.464,
+        101.52
+      ],
+      "clock_entry": {
+        "port": "ck_mem_hi",
+        "pin": "clk",
+        "reference": "raw_liberty_clock_pin"
+      },
+      "orient": "MY"
+    }
+  ],
+  "child_lattice_um": 4.32,
+  "clock_cts_roots": [
+    "ck_ctrl",
+    "ck_in_lo",
+    "ck_in_hi",
+    "ck_cap_lo",
+    "ck_cap_hi",
+    "ck_out_lo",
+    "ck_out_hi"
+  ],
+  "reroute_reason": {
+    "kind": "slot_change",
+    "slot_change_request": "New nine-clock M7 bank cluster at original {'w': 218.16, 'h': 183.6} footprint. Exact clock and pin contracts differ from the old M5 singleton. No old physical qualification or die fit inherited; global blocked M6/M7 tracks require checking."
+  }
+}

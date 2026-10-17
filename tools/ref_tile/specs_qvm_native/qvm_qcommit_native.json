@@ -1,0 +1,84 @@
+{
+  "name": "qvm_qcommit_native",
+  "top": "qfd_vm_qcommit",
+  "kind": "tile",
+  "sources": [
+    "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv",
+    "rtl/hdc/ot_hdc_delay.sv"
+  ],
+  "params": {
+    "LAW": 8
+  },
+  "clock_port": "ck",
+  "reset_ports": [
+    "rst_n",
+    "bank_rst_n"
+  ],
+  "outline": {
+    "w": 12.96,
+    "h": 15.12
+  },
+  "layer_cap": "M5",
+  "pins": {
+    "W": [
+      "ck",
+      "rst_n",
+      "bank_rst_n",
+      "we",
+      "wl",
+      "wm"
+    ],
+    "E": [
+      "cv",
+      "cl",
+      "cm"
+    ]
+  },
+  "route": {
+    "pd": 0.5,
+    "period_ps": 770,
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "m5_pg_pitch": 2.7
+  },
+  "slot_change_request": "New actual central VM local leaf slot12.96x15.12um after measured synth26/22um2; no global home approved until actual cohort pins/edges audited.",
+  "job": {
+    "owner": "Codex:q_vm_physical",
+    "branch": "codex/q-vm-physical-1015",
+    "tag": "np1",
+    "purpose": "Actual selected central VM native control/commit leaf; dedicated 2048-cycle reference and meaningful mutant; no VM parent timing inherited.",
+    "views_to": "physical/ref_tile/qvm_qcommit_native/views",
+    "record_to": "results/rtl/ref_tile/qvm_qcommit_native",
+    "cycles_added": 0,
+    "extra_paths": [
+      "rtl/qwen_sys/vm_native_physical_20261015",
+      "rtl/qwen_sys/vm_nox_20261014",
+      "rtl/hdc"
+    ],
+    "benches": [
+      {
+        "name": "leaf_m0",
+        "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_native_controls -GOBS=1 -GMUT=0 -j 2 --Mdir {RUN}/bench/m0 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_native_controls.sv rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv rtl/hdc/ot_hdc_delay.sv > {RUN}/bench/m0.build.log 2>&1 && {RUN}/bench/m0/Vtb_qvm_native_controls",
+        "expect": "pass",
+        "pass_regex": "PASS qvm_native_controls",
+        "threads": 2,
+        "peak_ram_gb": 2,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "leaf_m1",
+        "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_native_controls -GOBS=1 -GMUT=1 -j 2 --Mdir {RUN}/bench/m1 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_native_controls.sv rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv rtl/hdc/ot_hdc_delay.sv > {RUN}/bench/m1.build.log 2>&1 && {RUN}/bench/m1/Vtb_qvm_native_controls",
+        "expect": "fail",
+        "pass_regex": "PASS qvm_native_controls",
+        "threads": 2,
+        "peak_ram_gb": 2,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ],
+    "structural_change": "New actual central VM leaf physical binding; separates 39 real commit observer roots and 64 control roots; preserves exact pipeline stages."
+  }
+}

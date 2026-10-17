@@ -127,7 +127,7 @@ def load(spec, root):
     return dict(entries=entries, bindings_tcl='set ::ot_ce_direct_entries {' + ' '.join(rows) + '}\n' + BODY)
 
 
-BODY = r'''
+SCENE_TRACE_TCL = r'''
 # get_lib_cells -of_objects returns the network's first-linked Liberty cell,
 # even when the active delay scene uses another library. Audit the successful
 # native scene definition instead. This trace observes arguments without
@@ -139,14 +139,46 @@ proc ot_ce_direct_scene_defined {command code result operation} {
   if {[llength [get_scenes $scene]] != 1} { error "OT_DIRECT_MACRO: defined scene not present $scene" }
   dict set ::ot_ce_direct_scene_libraries $scene [list $libs_min $libs_max]
 }
-if {[llength $::ot_ce_direct_entries] && ![info exists ::ot_ce_direct_scene_trace_installed]} {
+proc ot_ce_direct_scenes_reset {command code result operation} {
+  if {$code != 0} { return }
+  set ::ot_ce_direct_scene_libraries {}
+  foreach scene [get_scenes *] {
+    dict set ::ot_ce_direct_scene_libraries [get_property $scene name] [list {} {}]
+  }
+}
+proc ot_ce_direct_library_read {command code result operation} {
+  if {$code != 0 || !$result} { return }
+  if {[llength $command] != 5} { error "OT_DIRECT_MACRO: unknown native read_liberty API" }
+  lassign $command ignored filename scene min_max infer_latches
+  set name [get_property $scene name]
+  if {![dict exists $::ot_ce_direct_scene_libraries $name]} {
+    # Do not assert complete coverage of a scene whose creation was unobserved.
+    return
+  }
+  if {$min_max ni {min max min_max}} { error "OT_DIRECT_MACRO: unknown actual library analysis scope" }
+  set rows [dict get $::ot_ce_direct_scene_libraries $name]
+  foreach i {0 1} scope {min max} {
+    if {$min_max eq "min_max" || $min_max eq $scope} {
+      set bindings [lindex $rows $i]
+      if {$filename ni $bindings} { lappend bindings $filename }
+      lset rows $i $bindings
+    }
+  }
+  dict set ::ot_ce_direct_scene_libraries $name $rows
+}
+if {![info exists ::ot_ce_direct_scene_trace_installed]} {
   set ::ot_ce_direct_scene_libraries {}
   if {![llength [info commands ::sta::define_scene_cmd]]} {
     error "OT_DIRECT_MACRO: native scene definition API unavailable"
   }
   trace add execution ::sta::define_scene_cmd leave ot_ce_direct_scene_defined
+  trace add execution ::sta::define_scenes_cmd leave ot_ce_direct_scenes_reset
+  trace add execution ::sta::read_liberty_cmd leave ot_ce_direct_library_read
   set ::ot_ce_direct_scene_trace_installed 1
 }
+'''
+
+BODY = ('if {[llength $::ot_ce_direct_entries]} {\n' + SCENE_TRACE_TCL + '}\n') + r'''
 proc ot_ce_direct_actual_libcell {cell master libraries corner} {
   set expected "[dict get $libraries $corner]/$master"
   if {![sta::multi_scene]} {
