@@ -1,0 +1,116 @@
+{
+ "name": "qkd_static_kv_landing_lane_h3-h3-e1c94a243",
+ "block": "qkd_static_kv_landing_lane",
+ "ref_tile": true,
+ "owner": "Claude:Q-KV KVCTRL-1815",
+ "purpose": "KVCTRL 1815 (lead Q-KV 2026-10-16): structural variant of qkd_static_kv_landing_seg. The flat ls5 tile (151.2 x 1,512 um) is 9 % utilised and its ONE ck root measured 722..753 ps TT insertion over 1,512 um (9,492 sinks): even a CLOSED flat view fails native launch (<= 220 ps). qkd_static_kv_landing_seg_h = wires-only parent of hardened children with short local roots: 4 x qkd_static_kv_landing_lane (one master: landing PC + SRAM + that PC's 256-b response data pipe, at the PC pitch; lanes 2/3 mirrored), qkd_static_kv_landing_row (rowctl DATA 0 + near-branch hops 1/2) at the centre, 2 x qkd_static_kv_landing_relay (far-branch 0/3 hops, half way). Same registers, same edges: cycle-identical to the flat seg (latency 8); cycles_added 0. Bench = the flat seg bench with seg_h as DUT (run_landing_seg_h.sh) + the flat bench logs compared. Lane = one landing PC: E face = its return-slot word (actual_*/expected_*), W face = its 256-b rsp_data lane, N face = row/relay seam + arm/epoch/layer/cfg/reset/clock; placed 4 x (lanes 2/3 MX so N faces the centre). h2: lane h1 gate measured TT insertion 168.5..231.9 (spread 63.4) with logic in W/E pin bands + an N cluster and an empty S half (103.68 tall, 36% util): compact to 140.4 x 88.56 with the SRAM low (>= 20 um from every core edge), so the clock tree spans less. h3: h2 gate TT insertion 183.2..248.9 (boundary mean 203.8, spread 65.7) with ck at the NW corner: ck pin centred on the N face (x 69-71.4) so the tree reaches the W rsp_data and E actual_* pin-flop bands symmetrically.",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/kvctrl-lseg-1816",
+  "commit": "e1c94a243",
+  "extra_paths": [
+   "rtl/qwen_sys/static_kv_20261014",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_static_kv_landing_lane u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_seg_h.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_hop.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "landing_seg_h_exact",
+    "cmd": "bash tools/qwen_static_kv/run_landing_seg_h.sh pos {RUN}/bench/pos",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS landing_seg exact",
+    "note": "tb_static_landing PHYS=1 with qkd_static_kv_landing_seg_h as DUT (all lane/relay clock entries on the TB clock): 32 segments x 4 PCs, K CTX 1000/2048/4096/8192 + PV16 V; fault modes 1-5 and the aliasing ordinal must FAIL"
+   },
+   {
+    "name": "landing_seg_h_mutant",
+    "cmd": "bash tools/qwen_static_kv/run_landing_seg_h.sh neg {RUN}/bench/neg",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL landing_seg mutant detected",
+    "note": "lane 0 response data hop flips a data bit (HOP_MUT 1)"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_static_kv_landing_lane_h3/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_static_kv_landing_lane_h3/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_static_kv_landing_lane_h3 --out {RUN}/record/views/qkd_static_kv_landing_lane --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_static_kv_landing_lane_h3/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_static_kv_landing_lane_h3/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_static_kv_landing_lane_h3/qkd_static_kv_landing_lane_h3-h3-e1c94a243"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "KVCTRL 1815 (lead Q-KV 2026-10-16): structural variant of qkd_static_kv_landing_seg. The flat ls5 tile (151.2 x 1,512 um) is 9 % utilised and its ONE ck root measured 722..753 ps TT insertion over 1,512 um (9,492 sinks): even a CLOSED flat view fails native launch (<= 220 ps). qkd_static_kv_landing_seg_h = wires-only parent of hardened children with short local roots: 4 x qkd_static_kv_landing_lane (one master: landing PC + SRAM + that PC's 256-b response data pipe, at the PC pitch; lanes 2/3 mirrored), qkd_static_kv_landing_row (rowctl DATA 0 + near-branch hops 1/2) at the centre, 2 x qkd_static_kv_landing_relay (far-branch 0/3 hops, half way). Same registers, same edges: cycle-identical to the flat seg (latency 8); cycles_added 0. Bench = the flat seg bench with seg_h as DUT (run_landing_seg_h.sh) + the flat bench logs compared. h2: lane h1 gate measured TT insertion 168.5..231.9 (spread 63.4) with logic in W/E pin bands + an N cluster and an empty S half (103.68 tall, 36% util): compact to 140.4 x 88.56 with the SRAM low (>= 20 um from every core edge), so the clock tree spans less. h3: h2 gate TT insertion 183.2..248.9 (boundary mean 203.8, spread 65.7) with ck at the NW corner: ck pin centred on the N face (x 69-71.4) so the tree reaches the W rsp_data and E actual_* pin-flop bands symmetrically."
+}
