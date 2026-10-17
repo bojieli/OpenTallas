@@ -454,6 +454,53 @@
   },
   {
    "design": "s81",
+   "unit": "BF.COL_PINREG (dsfd_bf_col_cl hardened-cluster column: BFRED +1 and BFSEG +1 registered child inputs per ROM field pass; BF16 +2 charged on every field node, FP4 actual +1; FXST relocation into BFFP +0)",
+   "group": "BF.COL_PINREG",
+   "measured": 3.0,
+   "price": 1.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 3.0,
+   "e2e_loss_pct": 0.07,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 829446.4,
+     "added_cycles": 580.0,
+     "runs_per_token": 334,
+     "critical_runs": 290,
+     "overlapped_runs": 44,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 668.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.07
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1178220.1,
+     "added_cycles": 704.0,
+     "runs_per_token": 312,
+     "critical_runs": 312,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 624.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 16.0,
+     "e2e_loss_pct": 0.06
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "/home/ubuntu/claude-takeover-20261007/el1016-s81-cfifo.log",
+   "evidence_grade": "interim_log",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "S-ELEM CFIFO/BF 1815 2020: source claude/selem-bfcol-2020 b840085dc (gen_bf_column_cluster.py); conservative +2 on all field nodes; not yet routed"
+  },
+  {
+   "design": "s81",
    "unit": "CAPT.CD_PINREG (dsfd_capt_cd PINREG=1: f_st pin registers, capture DONE toggle t_cd +1 ckv = 1.111 ns, charged as +2 stream cycles (ceil) on every field-capture phase)",
    "group": "CAPT.CD_PINREG",
    "measured": 2.0,
@@ -2102,11 +2149,11 @@
   },
   "s81": {
    "accepted_pct": 23.391,
-   "proposed_pct": 1.969,
-   "accepted_plus_proposed_pct": 25.36,
+   "proposed_pct": 2.039,
+   "accepted_plus_proposed_pct": 25.43,
    "limit_pct": 15.0,
    "accepted_rows": 11,
-   "proposed_rows": 10,
+   "proposed_rows": 11,
    "headroom_pct": -8.391,
    "owner_exception_rows": 2,
    "over_limit_by_owner_exception": true
