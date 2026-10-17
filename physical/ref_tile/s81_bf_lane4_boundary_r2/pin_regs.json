@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_v41_bf_lane4",
+ "enable": false,
+ "reason": "Real existing lane/chain input registers and arithmetic pipeline outputs retain the compiled timeline; native launch/capture/comb gates remain binding."
+}
