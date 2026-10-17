@@ -528,8 +528,8 @@ module qkd_ctrl_pc_sched #(
     input  wire [287:0] p_wd,
     input  wire         p_kv_v, p_em_v,                // p_em_v: activity veto only (the beat itself lands in the cdc child)
     input  wire         p_fault,
-    output reg  [16:0]  e_sec,                         // tag-queue head, registered one edge ahead (lookahead pop)
-    output reg  [7:0]   e_row,
+    output wire [16:0]  e_sec,                         // tag-queue head, registered one edge ahead (lookahead pop)
+    output wire [7:0]   e_row,                         // PINREG: 2:1 select of two registers by the p_kv_v pin flop
     input  wire         e_l_v, e_fault,
     // ---- KVCTRL core_s7 seams (lead Q-KV 2026-10-17: the core is split into sched / cdc / obs hardened children) ----
     output reg  [4:0]   pc_q,                          // -> cdc (core-domain strap capture)
@@ -762,8 +762,10 @@ module qkd_ctrl_pc_sched #(
     // register = tr + 1) are formed in parallel and the port child's kv_v selects LAST (core_s1: p_kv_v -> e_sec 13 levels).
     reg  [TQA-1:0] tr1;
     always @(posedge hclk or negedge h_rn) if (!h_rn) tr1 <= TQA'(1); else if (kv_v) tr1 <= tr1 + 1'b1;
+    wire        kvs;                               // PINREG: the p_kv_v pin flop (kvc_q); 0 otherwise
     generate if (PINREG != 0) begin : g_trd
         reg kvc_q;
+        assign kvs = kvc_q;
         reg [TQA:0] trd, trd_p1, trd_p2;
         always @(posedge hclk or negedge h_rn)
             if (!h_rn) begin kvc_q <= 1'b0; trd <= '0; trd_p1 <= (TQA+1)'(1); trd_p2 <= (TQA+1)'(2); end
@@ -774,6 +776,7 @@ module qkd_ctrl_pc_sched #(
         assign trv  = kvc_q ? trd_p1 : trd;
         assign tr1v = kvc_q ? trd_p2[TQA-1:0] : trd_p1[TQA-1:0];
     end else begin : g_tr
+        assign kvs = 1'b0;
         assign trv = tr; assign tr1v = tr1;
     end endgenerate
     wire [33:0]  h_c0    = tq[trv[TQA-1:0]];
@@ -784,7 +787,29 @@ module qkd_ctrl_pc_sched #(
     wire [7:0]   h_c1_l  = h_c1[17:10] - 8'(ROW0);
     wire [16:0]  e_sec_c0 = {h_c0_l[5:0], h_c0_j[9:7], 1'b0, h_c0_j[6:0]};
     wire [16:0]  e_sec_c1 = {h_c1_l[5:0], h_c1_j[9:7], 1'b0, h_c1_j[6:0]};
-    always @(posedge hclk) begin e_sec <= kv_v ? e_sec_c1 : e_sec_c0; e_row <= kv_v ? h_c1[17:10] : h_c0[17:10]; end
+    // KVCTRL sched_s9 (PINREG): p_kv_v lands ONLY in its pin flop kvc_q.  Both lookahead candidates are registered
+    // (es0/er0 = f(tq[tr]), es1/er1 = f(tq[tr + 1]) at the same edge as the s7b e_sec register) and the pin flop selects
+    // between the two registers after the edge: e_sec = kvc_q ? es1 : es0 = the s7b register (kv_v ? c1 : c0) on every
+    // edge (0 cycles).  s8 probe: p_kv_v capture 222.4 ps (> 190) on the 25-bit select fan-out before the flops.
+    reg  [16:0]  es0, es1, e_sec_r;
+    reg  [7:0]   er0, er1, e_row_r;
+    always @(posedge hclk) begin
+        e_sec_r <= kv_v ? e_sec_c1 : e_sec_c0; e_row_r <= kv_v ? h_c1[17:10] : h_c0[17:10];
+        es0 <= e_sec_c0; es1 <= e_sec_c1; er0 <= h_c0[17:10]; er1 <= h_c1[17:10];
+    end
+    // s9 gate f8ca7be68 probe: with ONE pin flop (kvc_q also drives trv = the 64-entry tag-queue read address) the
+    // output select launched at 251.7 ps on e_sec / e_row.  Two dedicated p_kv_v pin-flop copies (kept) drive only
+    // the e_sec (17) and e_row (8) selects; kvc_q keeps the read pointer / tag check / idle veto.  p_kv_v: 3 flop loads.
+    (* keep *) reg kvse_q, kvsr_q;
+    always @(posedge hclk or negedge h_rn) if (!h_rn) begin kvse_q <= 1'b0; kvsr_q <= 1'b0; end
+                                           else begin kvse_q <= kv_v; kvsr_q <= kv_v; end
+`ifdef OT_SCHED_ESEC_MUT
+    wire         esel = 1'b0, rsel = 1'b0;         // mutant: drops the late p_kv_v select (always the tq[tr] head)
+`else
+    wire         esel = kvse_q, rsel = kvsr_q;
+`endif
+    assign e_sec = (PINREG != 0) ? (esel ? es1 : es0) : e_sec_r;
+    assign e_row = (PINREG != 0) ? (rsel ? er1 : er0) : e_row_r;
     reg [15:0] ep0,ep1,ep2;
     always @(posedge hclk)begin ep0<=t_head[33:18];ep1<=ep0;ep2<=ep1;end
     assign corrected_epoch=ep2;
@@ -865,9 +890,10 @@ module qkd_ctrl_pc_sched #(
     // decode) -> both moved behind pin flops here.
     generate if (PINREG != 0) begin : g_pin
         // pin flops of raw inputs (plain registers: D(x))
-        (* keep *) reg c_v_q, cw_q, kv_v_q, em_v_q, obs_q, nat_q, fi_q, pf_q, ef_q, fe_q, nof_q;
+        (* keep *) reg c_v_q, cw_q, em_v_q, obs_q, nat_q, fi_q, pf_q, ef_q, fe_q, nof_q;
+        wire kv_v_q = kvs;                         // sched_s9: the one p_kv_v pin flop (kvc_q)
         always @(posedge hclk) begin
-            c_v_q <= c_v; cw_q <= c_d[286]; kv_v_q <= kv_v; em_v_q <= em_v; obs_q <= obs_commit_valid;
+            c_v_q <= c_v; cw_q <= c_d[286]; em_v_q <= em_v; obs_q <= obs_commit_valid;
             nat_q <= native_commit_valid; fi_q <= fi; pf_q <= port_fault; ef_q <= ecc_fault; fe_q <= f_ecdc;
             nof_q <= native_observer_fault;
         end
