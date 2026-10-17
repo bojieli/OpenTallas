@@ -64,11 +64,11 @@
  "children": [],
  "inter": [],
  "clock": "cts",
- "structural_change": "NEW master (HBM-SU 2026-10-17): root register of the partitioned SU programme (die instance su_pgr at the minimax of the four pgp_<q> producer slots; H-NETLIST/SU-PART factored ot_hbm_su_programme_root out of ot_hbm_su_programme_part, beb931307). Hard master ot_hbm_su_programme_root_h = root PARTS 4 x 98 macros FREG 1 (fault registered: no combinational pin-to-pin path). Pin-bound register tile: 303 inputs W (host cfg 280 b + start/length 17 + 4 producer faults + clk/rst), 349 outputs E (start/length 17 + per-producer we/bank 68 + row/data 263 + fault); 86.4 x 86.4 (4.0 pins/um E). Faces are placeholders for the die pin assignment (top-down pin rule). Covered by the part lockstep bench PIPE=1 (root FREG 1 inside ot_hbm_su_programme_part).",
+ "structural_change": "NEW master (HBM-SU 2026-10-17): root register of the partitioned SU programme (die instance su_pgr at the minimax of the four pgp_<q> producer slots; H-NETLIST/SU-PART factored ot_hbm_su_programme_root out of ot_hbm_su_programme_part, beb931307). Hard master ot_hbm_su_programme_root_h = root PARTS 4 x 98 macros FREG 1 (fault registered: no combinational pin-to-pin path). Pin-bound register tile: 303 inputs W (host cfg 280 b + start/length 17 + 4 producer faults + clk/rst), 349 outputs E (start/length 17 + per-producer we/bank 68 + row/data 263 + fault); 86.4 x 86.4 (4.0 pins/um E). Faces are placeholders for the die pin assignment (top-down pin rule). Covered by the part lockstep bench PIPE=1 (root FREG 1 inside ot_hbm_su_programme_part). g2: pin_ranges spread both faces over ~83 of 86.4 um (gate g1 PNG: E outputs on ~35 um, ~10 pins/um).",
  "job": {
   "owner": "Claude:HBM-SU",
   "branch": "claude/hbm-su-lane-1017",
-  "tag": "g1",
+  "tag": "g2",
   "purpose": "partitioned SU programme root register (su_pgr): registered start/length + per-producer config decode + registered fault",
   "views_to": "physical/ref_tile/hbm_su_pgroot_1017/views",
   "record_to": "results/rtl/ref_tile/hbm_su_pgroot_1017",
@@ -102,6 +102,72 @@
      "verilator"
     ]
    }
+  ]
+ },
+ "pin_ranges": {
+  "cfg_data": [
+   2.0,
+   58.0
+  ],
+  "cfg_bank": [
+   60.0,
+   68.0
+  ],
+  "cfg_row": [
+   68.5,
+   72.0
+  ],
+  "cfg_we": [
+   72.5,
+   73.5
+  ],
+  "clk": [
+   58.5,
+   59.5
+  ],
+  "rst_n": [
+   74.0,
+   75.0
+  ],
+  "start": [
+   75.5,
+   76.5
+  ],
+  "length": [
+   77.0,
+   82.0
+  ],
+  "p_fault": [
+   82.5,
+   84.0
+  ],
+  "r_data": [
+   2.0,
+   60.0
+  ],
+  "r_bank": [
+   60.5,
+   75.0
+  ],
+  "r_row": [
+   75.5,
+   77.5
+  ],
+  "r_we": [
+   78.0,
+   79.0
+  ],
+  "r_start": [
+   79.5,
+   80.0
+  ],
+  "r_len": [
+   80.5,
+   83.5
+  ],
+  "fault": [
+   83.7,
+   84.2
   ]
  },
  "macros": []
