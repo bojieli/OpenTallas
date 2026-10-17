@@ -15,7 +15,9 @@
 // the tier line and sent over the V rung without any staging.
 // Every input lands in a flop; every output leaves a flop.  Static schedule: a y beat index out of order is a fault.
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_s81sl_vq (
+module ot_s81sl_vq #(
+    parameter integer AQ_XMEM = 0    // 1: ot_dsrom_aq12's x wait line as an SRAM ring (4 x 128x256 macros), bit-exact; the kit sets 1
+) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          y_v,          // normed y from vn
@@ -73,7 +75,7 @@ module ot_s81sl_vq (
     // the quantiser registers x itself (aq12 S0): blk feeds it directly; bv is high in the cycle after the block's last
     // sub-beat was written, so aq12 samples the complete block (the next sub-beat lands on the same edge)
     wire vo, af; wire [255:0] q; wire signed [9:0] e; wire [511:0] qy;
-    ot_dsrom_aq12 u_aq (.clk(clk), .rst_n(rs_q), .v(bv), .x(blk), .vo(vo), .q(q), .e(e), .y(qy), .fault(af));
+    ot_dsrom_aq12 #(.XMEM(AQ_XMEM)) u_aq (.clk(clk), .rst_n(rs_q), .v(bv), .x(blk), .vo(vo), .q(q), .e(e), .y(qy), .fault(af));
     // block index rides the quantiser latency
     wire blo;
     ot_hdc_delay #(.W(1), .D(18)) u_bi (.clk(clk), .rst_n(rs_q), .d(bbk), .q(blo));

@@ -14,7 +14,14 @@
 // codes E4M3 of x * 2^-e (RNE); y = codes * 2^e as BF16.  Nonfinite input raises `fault`.
 // LATENCY 18 (vs 13): S0 | 5 max levels | 5 multiply | e | 2 grid | 2 round | 2 encode.
 // ---------------------------------------------------------------------------
-module ot_dsrom_aq12 (
+module ot_dsrom_aq12 #(
+    // XMEM = 1 (S81-TILES2 2026-10-17, opt-in; default 0 = the flop line): the 11-deep x wait line u_x becomes a
+    // fixed-pointer SRAM ring, four ot_sram_1r1w_128x256_m1_r2c2 (1024 b wide, 16 of 128 rows used), written every
+    // cycle at wp and read every cycle at wp - 10 (free-running 4-bit pointer: no enables, no flow control).  The macro
+    // read is registered, so the address leaves one cycle early: rd_out in cycle c = s0_x of cycle c - 11, exactly the
+    // flop line's xg.  Removes 11,264 data flops (the vq hold class line[i] -> line[i+1024]).
+    parameter integer XMEM = 0
+) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          v,
@@ -38,8 +45,31 @@ module ot_dsrom_aq12 (
     // elements wait from S0 to the grid stage (S0 + 5 + 5 + 1 = 11 registers)
     reg  [1023:0] s0_x;
     always @(posedge clk) s0_x <= x;
-    wire [1023:0] xg;
-    ot_hdc_delay #(.W(1024), .D(11)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(xg));
+    wire [1023:0] xg, xq, xm;
+    // the flop line keeps its name u_x (XMEM = 0: unchanged hierarchy u_x.g_line.line; XMEM = 1: D = 0, a wire)
+    ot_hdc_delay #(.W(1024), .D((XMEM != 0) ? 0 : 11)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(xq));
+    assign xg = (XMEM != 0) ? xm : xq;
+    generate
+        if (XMEM != 0) begin : g_xmem
+            // s0_x (cycle c) is written at the end of cycle c to row wp(c); xm(c) is the macro output register loaded
+            // at the end of cycle c - 1 from row wp(c - 1) - 10 = wp(c - 11) (read before write: rows 10 apart).
+            reg  [3:0] wp;
+            always @(posedge clk or negedge rst_n) if (!rst_n) wp <= 4'd0; else wp <= wp + 4'd1;
+`ifdef OT_AQ12_MUT_XPTR
+            wire [3:0] rp = wp - 4'd9;      // mutant: one cycle short (the bench must catch it)
+`else
+            wire [3:0] rp = wp - 4'd10;
+`endif
+            genvar b;
+            for (b = 0; b < 4; b = b + 1) begin : g_m
+                ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk), .r_ce_in(1'b1), .r_addr_in({3'd0, rp}), .rd_out(xm[256*b +: 256]),
+                    .w_ce_in(1'b1), .w_addr_in({3'd0, wp}), .wd_in(s0_x[256*b +: 256]), .w_mask_in({256{1'b1}}),
+                    .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+            end
+        end else begin : g_xnone
+            assign xm = {1024{1'b0}};
+        end
+    endgenerate
 
     // -- S1..S4: 32 -> 2, one compare level a stage ---------------------------------------------
     reg [30:0] m1 [0:15];
