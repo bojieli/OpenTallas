@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qfd_c_b16_dv_diag",
  "verdict": "FAIL",
- "generated": "2026-10-17T07:04:07-0700",
- "host": "ot-epyc4",
+ "generated": "2026-10-17T12:59:39-0700",
+ "host": "ot-pve1",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "d0fea05a315ccb9f6095d59e2f36e3972f7b6067",
+  "start_commit": "ac70ed19ae9431bea08bcd620dd757dfd4a1e3da",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "ce8dea432a487e3c538fca80d145d1d8cd7d4c0622fb54f76b63f846bcc09d2f",
-  "manifest_sha256": "7b0357b080aacaff9b0d84f03bd393b235e8300852216f3e1c50fe2030c4279b",
+  "archive_sha256": "2d1bcd79d8808f821ef4a5167028a1afc85e8338e4304a6592c0282c2d1869c8",
+  "manifest_sha256": "d2d63da09e57ee5a71c731998a6931fc4544c06e276cbf9d48ce668609733c49",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -17907,8 +17907,8 @@
    {
     "path": "physical/ref_tile/qfd_c_b16_dv_diag/kit.env",
     "kind": "file",
-    "sha256": "ec2a15fc96a9741865b9e693bbd2c577bd003201d5b9f44b44337b40c3c9e0e7",
-    "git_blob": "eeede738f75742cc25c83c1c02ff3f22fb255553",
+    "sha256": "c8e560b36c76dd5b37f1ef1279d946e9d8566c3c316e361a0f0a50521d175d7c",
+    "git_blob": "99b0adc01ea2d615142d5d92f900b90c96f3c980",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18019,8 +18019,8 @@
    {
     "path": "physical/ref_tile/qfd_c_b16_dv_diag/spec.json",
     "kind": "file",
-    "sha256": "946b29d6444ea576ab05c4162c066182b785e43c8204cb0d7d72ff9897256dd6",
-    "git_blob": "5403026ca2518d5327d4dd86558f2754f622db2e",
+    "sha256": "c7ad05169eb2fa22f8792d44e4235977b7bafb0c7943671005f10ce5ff65264c",
+    "git_blob": "9153d101edc468817aa80da566ba8a893c15c2de",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -112363,8 +112363,8 @@
    {
     "path": "tools/qwen_cluster/qc_kit.py",
     "kind": "file",
-    "sha256": "6db272929fdbb01ef495c2f8d29a2a64e5c1307232c25599925a6cb83434f40d",
-    "git_blob": "66bdf9f1d93c730d1814843a04d5c0fe3bebd2c2",
+    "sha256": "d08d88b38eb0c0849a13174d2e7b0d810d23a1d42f702258c9bad5d51fb137d3",
+    "git_blob": "66072071032e805fd968256a93c620d66286fb04",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -129195,8 +129195,8 @@
    {
     "path": "tools/ref_tile/specs_qcluster/qfd_c_b16_dv_diag.json",
     "kind": "file",
-    "sha256": "11f1551a6fb32e49798644a4e6cab6e8d25774b4c990801945d6531307b3f126",
-    "git_blob": "624d502c446e547b53c2a68636127f2a0d3b361a",
+    "sha256": "271c8be0741b18c2a900abd0d8059a7a9965bd6f8998727ba5b0f7bba8b58793",
+    "git_blob": "b0110c068dec58d4514f9efbdae1663e474c99d7",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -161443,14 +161443,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 145576214,
+   "archive_bytes": 145576381,
    "unpacked_bytes": 912625664,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "2fb4cbd866ffb02b49af93202618eb89a65b6e54",
+   "origin_main": "53453f830d5840529d8ed55e4eaac324d5d372ea",
    "content_sha256": "4f2b695b26c78a1b5935dc7c649ac2be2da4be89f87a7422b51595af09f13760",
    "files": [
     {
@@ -161957,7 +161957,7 @@
     "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nl_rp2_romleaf_rr/qfd_tile_nl_rp2_romleaf_rr_tt.lib": "b10339f3fb175cdb1c11e181e6384271b79dc1d573bffc8b05ddfebcebb0508f",
     "physical/ref_tile/qfd_c_b16_dv_diag/clock.sdc": "b92c4a10bb4b385a5251f28dbceb52ddf886882ef7b5b8b665b48852ff5a1020",
     "physical/ref_tile/qfd_c_b16_dv_diag/floorplan.json": "8c082464ab751fd668961488728c704dfbc99e9cd3f4d4e3eb58fc1b5dce4000",
-    "physical/ref_tile/qfd_c_b16_dv_diag/kit.env": "ec2a15fc96a9741865b9e693bbd2c577bd003201d5b9f44b44337b40c3c9e0e7",
+    "physical/ref_tile/qfd_c_b16_dv_diag/kit.env": "c8e560b36c76dd5b37f1ef1279d946e9d8566c3c316e361a0f0a50521d175d7c",
     "physical/ref_tile/qfd_c_b16_dv_diag/pdn.tcl": "6ea883092d2fbb70ea4e35d68e74d5534a658541f4495c269c42c5aa1d0e284d",
     "physical/ref_tile/qfd_c_b16_dv_diag/pin_regs.json": "cae845b28829187fe0a07e2a75696302127089b294cb6335b397fa82553937fa",
     "physical/ref_tile/qfd_c_b16_dv_diag/place.tcl": "588f0e628fe45847e9c2854bac40e72b09bc8d628ae7d6eb0091514a17bfb5b1",
@@ -161971,7 +161971,7 @@
     "physical/ref_tile/qfd_c_b16_dv_diag/pre_grt.tcl": "7a4a8cb6aef83160c9b8e910ab2c5b5d2d00ccdbd315290c0b54bc0723fdd169",
     "physical/ref_tile/qfd_c_b16_dv_diag/signoff.sdc": "ff7a7933aa1a3f648a76741e2795b789bfb8e89e0c58567380587abe0b5b7925",
     "physical/ref_tile/qfd_c_b16_dv_diag/signoff_ffrepair.sdc": "3b66b6b10f91ed4b835d2d947cfb89a33d91333e5f14df249b9202cf33341140",
-    "physical/ref_tile/qfd_c_b16_dv_diag/spec.json": "946b29d6444ea576ab05c4162c066182b785e43c8204cb0d7d72ff9897256dd6",
+    "physical/ref_tile/qfd_c_b16_dv_diag/spec.json": "c7ad05169eb2fa22f8792d44e4235977b7bafb0c7943671005f10ce5ff65264c",
     "physical/ref_tile/qfd_c_b16_dv_diag/spine_ins.tcl": "032347f591ae59ef8627e68e0c06723071e7a42068b2a21783a965f0f0139006",
     "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
     "rtl/physical/qcluster/qfd_c_b16_dv.sv": "0bcb1486054d40256ee5b1dfb2cf0383100869554bbd688dfb34706775900267",
@@ -162003,36 +162003,22 @@
    },
    "digest": "2830e7a2f21ac7eadea26951095cc17f7181a5867bba124c93dd066102e30084"
   },
-  "captured": "2026-10-17T06:40:42-0700",
+  "captured": "2026-10-17T07:07:13-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qfd_c_b16_dv_diag/signoff_ffrepair.sdc"
   },
-  "remote_script_sha256": "56a10f8dffc40c7700e491bd66fb0c8357ea962eee0bf091512bc92eec09c7c5",
+  "remote_script_sha256": "505c42f321524a971302310af384b37dfd16d81c0d9513e228066eeaf214c34c",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_c_b16_dv_diag-20261017-063955",
-  "remote_archive_verified": true,
-  "runtime_tool_provenance": [
-   "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
-   "GATE_TOOL_CTS_MACRO_CLUSTER="
-  ]
+  "remote_host": "ot-pve1",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_c_b16_dv_diag-20261017-070604"
  },
  "clock": {
-  "max_root_sinks": 26984,
-  "root": "port:ck_sw",
   "cts": true,
-  "tt_insertion_ps": null,
-  "tt_spread_ps": null,
-  "declared_clock": "spine",
-  "limits": {
-   "sinks": 15000,
-   "insertion_ps": 300.0,
-   "spread_ps": 80.0
-  },
   "verdict": "REFUSE",
-  "text": "26,984 sinks on one clock root > 15,000: no measured clock tree (no --cts gate evidence)"
+  "status": "REMOTE_INCOMPLETE",
+  "text": "transport or script ended without verified GATE_DONE; no clock qualification"
  },
  "items": [
   {
@@ -162138,70 +162124,10 @@
    "fix": "export the child's clock insertion (ref_tile export)"
   },
   {
-   "severity": "WARN",
-   "check": "util",
-   "message": "synthesized std area 29382 um2 + macros 8545886 in core 12296749: util 70%",
-   "fix": "set \"std_area_um2\": 29382 and drop 'outline' (gen sizes to util 0.52)"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.clock_domain",
-   "message": "clock root port ck_sw: 26,828 flops > 15,000 on one root (+0 ICGs, 156 macro clock pins; e.g. u_fab.u_dn0_entry.q[0]$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
-   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.clock_domain",
-   "message": "clock root port ck_nw: 22,158 flops > 15,000 on one root (+0 ICGs, 156 macro clock pins; e.g. u_fab.u_dn0_exit.q[0]$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
-   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.clock_domain",
-   "message": "clock root port ck_se: 20,625 flops > 15,000 on one root (+0 ICGs, 152 macro clock pins; e.g. u_fab.u_dn2_entry.q[0]$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
-   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.clock_domain",
-   "message": "clock root port ck_ne: 15,460 flops > 15,000 on one root (+0 ICGs, 156 macro clock pins; e.g. u_fab.u_dn2_exit.q[0]$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
-   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.util_channel",
-   "message": "utilisation 69.7% outside 45%-65% (std 29428 + macro 8545886 um2 in 12296749 um2): grow the outline",
-   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
-  },
-  {
    "severity": "FAIL",
-   "check": "cts_run",
-   "message": "placement / CTS of the kit failed: ",
-   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
-  },
-  {
-   "severity": "WARN",
-   "check": "cts_calibration",
-   "message": "CTS rc=2 ck_insertion rc=1",
-   "fix": ""
-  },
-  {
-   "severity": "FAIL",
-   "check": "clock_rule",
-   "message": "26,984 sinks on one clock root > 15,000: no measured clock tree (no --cts gate evidence) (declared clock 'spine' does not waive it)",
-   "fix": "hardened leaves with their own clock roots (kind cluster: each leaf <= 15,000 sinks, registered seams); a larger root needs `pre_route_gate.py <kit> --remote <host> --cts` evidence committed as <kit>/gate_result.json"
-  },
-  {
-   "severity": "FAIL",
-   "check": "remote_script",
-   "message": "remote script completed with exit 1",
-   "fix": "read the original terminal log and fix the reported failure"
-  },
-  {
-   "severity": "FAIL",
-   "check": "trial_route",
-   "message": "trial global route produced no congestion table (GATE_GRT_RC=2)",
-   "fix": "read the remote grt.log"
+   "check": "remote_incomplete",
+   "message": "remote gate has no verified terminal completion (ot-run exit 143); original job may still run at ot-pve1:/srv/opentallas-scratch/claude/ref_gate/qfd_c_b16_dv_diag-20261017-070604; script /tmp/ref_gate_qfd_c_b16_dv_diag_20261017-070604.sh; log /tmp/ref_gate_qfd_c_b16_dv_diag_20261017-070604.log",
+   "fix": "inspect the original live handle and collect its terminal output; do not submit a duplicate"
   }
  ]
 }
