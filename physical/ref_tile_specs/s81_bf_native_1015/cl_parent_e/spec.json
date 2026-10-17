@@ -1,7 +1,7 @@
 {
  "name": "s81bf_col_cl_e",
  "top": "dsfd_bf_col_cl",
- "kind": "tile",
+ "kind": "cluster",
  "sources": [
   "rtl/s81/ot_s81_bf_native.sv",
   "rtl/common/ot_prefix.sv",
@@ -58,7 +58,7 @@
   "rs"
  ],
  "outline": {
-  "w": 529.2,
+  "w": 583.2,
   "h": 198.72,
   "exact": true
  },
@@ -90,7 +90,7 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "S-ELEM BF column hardened cluster (gen_bf_column_cluster.py): hybrid12 flat ten-root CTS failed (710 ps insertion, 100-390 spread, FF -314). Seven single-root hardened children (lane4_cl x4, fp, red, seg) placed in a W->E row under their own N clock pins; ROM pair + ck pipeline in the parent at the W face; parent = ck pipeline + glue. Outline 529.2 x 198.72 (S-DIE confirmed). Column BF16 +3 / FP4 +2 (ledger BF.COL_PINREG).",
+ "structural_change": "S-ELEM BF column hardened cluster (gen_bf_column_cluster.py): hybrid12 flat ten-root CTS failed (710 ps insertion, 100-390 spread, FF -314). Seven single-root hardened children (lane4_cl x4, fp, red, seg) placed in a W->E row under their own N clock pins; ROM pair + ck pipeline in the parent at the W face; parent = ck pipeline + glue. Outline 583.2 x 198.72 (S-DIE approved 2026-10-17, 20 um channels; lane pairs abut N-S). Column BF16 +3 / FP4 +2 (ledger BF.COL_PINREG).",
  "reroute_reason": {
   "kind": "rtl_change",
   "why": "hybrid12 CTS topology failure",
@@ -292,7 +292,7 @@
    "count": 1,
    "inst": "*g_pp*u_rom0",
    "at": [
-    4.32,
+    2.16,
     25.92
    ],
    "orient": "R0",
@@ -307,7 +307,7 @@
    "count": 1,
    "inst": "*g_pp*u_rom1",
    "at": [
-    4.32,
+    2.16,
     112.32
    ],
    "orient": "R0",
@@ -324,8 +324,8 @@
    "count": 1,
    "inst": "*g_l3*u_fp",
    "at": [
-    408.24,
-    69.12
+    451.44,
+    89.856
    ],
    "orient": "R0"
   },
@@ -334,8 +334,8 @@
    "count": 1,
    "inst": "*u_seg",
    "at": [
-    408.24,
-    0.0
+    451.44,
+    4.32
    ],
    "orient": "R0"
   },
@@ -344,7 +344,7 @@
    "count": 1,
    "inst": "*u_red",
    "at": [
-    320.76,
+    350.352,
     0.0
    ],
    "orient": "R0"
@@ -354,7 +354,7 @@
    "count": 1,
    "inst": "*g_group?0?*u_lane4",
    "at": [
-    135.0,
+    147.744,
     4.32
    ],
    "orient": "R0"
@@ -364,8 +364,8 @@
    "count": 1,
    "inst": "*g_group?1?*u_lane4",
    "at": [
-    135.0,
-    103.68
+    147.744,
+    99.36
    ],
    "orient": "R0"
   },
@@ -374,7 +374,7 @@
    "count": 1,
    "inst": "*g_group?2?*u_lane4",
    "at": [
-    227.88,
+    249.264,
     4.32
    ],
    "orient": "R0"
@@ -384,8 +384,8 @@
    "count": 1,
    "inst": "*g_group?3?*u_lane4",
    "at": [
-    227.88,
-    103.68
+    249.264,
+    99.36
    ],
    "orient": "R0"
   }
@@ -407,13 +407,6 @@
   "reason": "Actual column already captures allci input bits at boundary and has registered actual segment/return outputs. No extra payload stage added; native220/190/80+comb gates remain required."
  },
  "clock_cts_roots": [
-  "ck",
-  "leaf_ck[0]",
-  "leaf_ck[1]",
-  "leaf_ck[2]",
-  "leaf_ck[3]",
-  "leaf_ck[4]",
-  "leaf_ck[5]",
-  "leaf_ck[6]"
+  "ck"
  ]
 }

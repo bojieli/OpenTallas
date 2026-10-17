@@ -87,12 +87,14 @@
   "rst_pin"
  ],
  "outline": {
-  "w": 86.4,
+  "w": 81.0,
   "h": 95.04,
   "exact": true
  },
  "pins": {
   "W": [
+   "fclk",
+   "rst_pin",
    "ze_d",
    "v_s",
    "w_s",
@@ -105,18 +107,12 @@
    "cfault",
    "cs_p",
    "ct_p"
-  ],
-  "S": [
-   "rst_pin"
-  ],
-  "N": [
-   "fclk"
   ]
  },
  "macros": [],
  "children": [],
  "inter": [],
- "structural_change": "S-ELEM BF column hardened cluster. lane4 r2 CTS gate native FAIL launch 238.2 (cs_p of lane 3, 6 pins > 220; R 191.7): lane chain registers sit behind per-lane ICGs deep in the tile. ot_v41_bf_lane4_cl adds a pin-side output register on its own local gated clock: +1 edge on the BF16 path (column BF16 +3, FP4 +1). r2 outline 86.4x95.04 (util ~0.56) for the 529.2-wide parent row; gate 80dc00520 at 95.04x95.04 native PASS L181.0/C160.7/sp8.1.",
+ "structural_change": "S-ELEM BF column hardened cluster. lane4 r2 CTS gate native FAIL launch 238.2 (cs_p of lane 3, 6 pins > 220; R 191.7): lane chain registers sit behind per-lane ICGs deep in the tile. ot_v41_bf_lane4_cl adds a pin-side output register on its own local gated clock: +1 edge on the BF16 path (column BF16 +3, FP4 +1). r2 outline 86.4x95.04 (util ~0.56) for the 529.2-wide parent row; gate 80dc00520 at 95.04x95.04 native PASS L181.0/C160.7/sp8.1. r3 (parent 583.2 x 198.72, 20 um channel rule): 81x95.04 and ALL pins on W/E (clock/reset moved off N/S) so two lanes abut N-S (abutted_stack) in the parent; RTL unchanged.",
  "pin_regs": {
   "enable": false,
   "reason": "RTL registers every child input at the pin (gen_bf_column_cluster.py); outputs come from arithmetic pipeline registers."
