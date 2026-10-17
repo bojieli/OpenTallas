@@ -1487,6 +1487,15 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
             # measured shortfall of the north home -> hub shift south (while the south envelope fits) + die growth
             short = PVW[1] - (n_hi - n_lo)
             dy_, gr_ = 0.0, 0.0
+            short_s = PVW[1] - (s_hi - s_lo)
+            if PV_T and short_s > 0:
+                # KVPLAN 1815: the trunked pair is taller than the south room too: the hub moves NORTH by the south
+                # shortfall and the die grows by both shortfalls (the north band rises with it)
+                dy_ = -up(short_s, LAT)
+                gr_ = up(max(0.0, short) - dy_, LAT)
+                V144S.update(resolved=True, ahub_dy=round(dy_, 6), grow=round(gr_, 6), north_short_um=round(short, 3),
+                             south_short_um=round(short_s, 3), mode='pv_t_grow_both')
+                return _build(**_args)
             if short > 0:
                 if V144_MODE == 'ahub':
                     spare_s = (s_hi - s_lo) - PVW[1]
