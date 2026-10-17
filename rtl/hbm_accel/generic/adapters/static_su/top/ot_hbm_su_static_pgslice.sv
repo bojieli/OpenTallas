@@ -159,6 +159,63 @@ module ot_hbm_su_static_pgslice #(
    end else begin:g_fn_comb assign side_fn=c_ci_sfu; assign side_fn_out=c_cs_sfu; end
   end
   if(PIN_REG)begin:g_pr
+`ifdef OT_HARD_CHILDREN
+  // OT_HARD_CHILDREN (H-SU pgslice cluster, 2026-10-16): the lane is its hardened leaf view (LAT4/LEAF1, pin-registered,
+  // PIN_RST 1): KIND0 LIGHT / KIND1 HEAVY / KIND2 FULL wrappers. The cluster configuration must equal the leaves'.
+  if(!(MLAT==4&&ALAT==3&&LEAF==1&&FETCH_EXTRA_EDGES==2))begin:g_bad_cfg $error("OT_HARD_CHILDREN needs MLAT4/ALAT3/LEAF1/FETCH2 (the hardened lane leaves)"); end
+  if(KIND==2)begin:g_k2
+  ot_hbm_su_static_kind2_lat4_leaf1_physical u_lane(
+
+   .clk_stage_0(clk_lane[n*8+0]),.clk_stage_1(clk_lane[n*8+1]),.clk_stage_2(clk_lane[n*8+2]),.clk_stage_3(clk_lane[n*8+3]),
+   .clk_stage_4(clk_lane[n*8+4]),.clk_stage_5(clk_lane[n*8+5]),.clk_stage_6(clk_lane[n*8+6]),.clk_stage_7(clk_lane[n*8+7]),
+   .clk_insert_0(clk_insert[n*4+0]),.clk_insert_1(clk_insert[n*4+1]),.clk_insert_2(clk_insert[n*4+2]),.clk_insert_3(clk_insert[n*4+3]),.rst_n(rst_lane_n[n]),.lane_id(11'(L)),
+   .cx_srcs(c_srcs),.ld(c_ld),.ld_bank(c_ld_bank),.ld_c(terms),.emit(c_emit),.bank(c_bank),.o_v(c_o_v),.i_v(c_i_v),
+   .no(c_no),.ni(c_ni),.ls(c_ls),.lvw(c_lvw),.vb(c_vb),.krow(c_krow),.obase(c_obase),.aibase(c_aibase),.aind(c_aind),
+   .gsh(c_gsh),.cpair(c_cpair),.dst(c_dst),.srcs(c_srcs),.cx_arnd(c_cx_arnd),.cx_arelu(c_cx_arelu),.cx_amin(c_cx_amin),
+   .cx_cclip(c_cx_cclip),.cx_imm3(c_cx_imm3),.cp_m1(c_cp_m1),.cp_imm1(c_cp_imm1),.cm_m1(c_cm_m1),.cm_m2(c_cm_m2),
+   .cm_qm(c_cm_qm),.cm_imm1(c_cm_imm1),.ca_ad(c_ca_ad),.ca_imm2(c_ca_imm2),.ci_sfu(c_ci_sfu),.cs_sfu(c_cs_sfu),
+   .cs_e1(c_cs_e1),.cs_imm2(c_cs_imm2),.ce_e2(c_ce_e2),.ce_imm1(c_ce_imm1),.co_rnd(c_co_rnd),.co_dst(c_co_dst),
+   .vi_q(vi_q[n*32+:32]),.rd_q(rd_q[n*128+:128]),.vi_re(vi_re[n]),.vm_we(vm_we[n]),.kv_we(kv_we[n]),.ro_v(ro_v[n]),
+   .fault(l_fault[n]),.coll(l_coll[n]),.vi_addr(vi_addr[n*24+:24]),.vm_waddr(vm_waddr[n*24+:24]),
+   .kv_waddr(kv_waddr[n*24+:24]),.rd_addr(rd_addr[n*96+:96]),.rd_re(rd_re[n*4+:4]),.rd_src(rd_src[n*8+:8]),
+   .vm_wdata(vm_wdata[n*32+:32]),.kv_wdata(kv_wdata[n*32+:32]),.ro_x(ro_x[n*32+:32]),
+   .side_v(sv),.side_x(sx),.side_y(side_y));
+  end else if(KIND==1)begin:g_k1
+  ot_hbm_su_static_kind1_lat4_leaf1_physical u_lane(
+
+   .clk_stage_0(clk_lane[n*8+0]),.clk_stage_1(clk_lane[n*8+1]),.clk_stage_2(clk_lane[n*8+2]),.clk_stage_3(clk_lane[n*8+3]),
+   .clk_stage_4(clk_lane[n*8+4]),.clk_stage_5(clk_lane[n*8+5]),.clk_stage_6(clk_lane[n*8+6]),.clk_stage_7(clk_lane[n*8+7]),
+   .clk_insert_0(clk_insert[n*4+0]),.clk_insert_1(clk_insert[n*4+1]),.clk_insert_2(clk_insert[n*4+2]),.clk_insert_3(clk_insert[n*4+3]),.rst_n(rst_lane_n[n]),.lane_id(11'(L)),
+   .cx_srcs(c_srcs),.ld(c_ld),.ld_bank(c_ld_bank),.ld_c(terms),.emit(c_emit),.bank(c_bank),.o_v(c_o_v),.i_v(c_i_v),
+   .no(c_no),.ni(c_ni),.ls(c_ls),.lvw(c_lvw),.vb(c_vb),.krow(c_krow),.obase(c_obase),.aibase(c_aibase),.aind(c_aind),
+   .gsh(c_gsh),.cpair(c_cpair),.dst(c_dst),.srcs(c_srcs),.cx_arnd(c_cx_arnd),.cx_arelu(c_cx_arelu),.cx_amin(c_cx_amin),
+   .cx_cclip(c_cx_cclip),.cx_imm3(c_cx_imm3),.cp_m1(c_cp_m1),.cp_imm1(c_cp_imm1),.cm_m1(c_cm_m1),.cm_m2(c_cm_m2),
+   .cm_qm(c_cm_qm),.cm_imm1(c_cm_imm1),.ca_ad(c_ca_ad),.ca_imm2(c_ca_imm2),.ci_sfu(c_ci_sfu),.cs_sfu(c_cs_sfu),
+   .cs_e1(c_cs_e1),.cs_imm2(c_cs_imm2),.ce_e2(c_ce_e2),.ce_imm1(c_ce_imm1),.co_rnd(c_co_rnd),.co_dst(c_co_dst),
+   .vi_q(vi_q[n*32+:32]),.rd_q(rd_q[n*128+:128]),.vi_re(vi_re[n]),.vm_we(vm_we[n]),.kv_we(kv_we[n]),.ro_v(ro_v[n]),
+   .fault(l_fault[n]),.coll(l_coll[n]),.vi_addr(vi_addr[n*24+:24]),.vm_waddr(vm_waddr[n*24+:24]),
+   .kv_waddr(kv_waddr[n*24+:24]),.rd_addr(rd_addr[n*96+:96]),.rd_re(rd_re[n*4+:4]),.rd_src(rd_src[n*8+:8]),
+   .vm_wdata(vm_wdata[n*32+:32]),.kv_wdata(kv_wdata[n*32+:32]),.ro_x(ro_x[n*32+:32]),
+   .side_v(sv),.side_x(sx),.side_y(side_y));
+  end else begin:g_k0
+  ot_hbm_su_static_kind0_lat4_leaf1_physical u_lane(
+
+   .clk_stage_0(clk_lane[n*8+0]),.clk_stage_1(clk_lane[n*8+1]),.clk_stage_2(clk_lane[n*8+2]),.clk_stage_3(clk_lane[n*8+3]),
+   .clk_stage_4(clk_lane[n*8+4]),.clk_stage_5(clk_lane[n*8+5]),.clk_stage_6(clk_lane[n*8+6]),.clk_stage_7(clk_lane[n*8+7]),
+   .clk_insert_0(clk_insert[n*4+0]),.clk_insert_1(clk_insert[n*4+1]),.clk_insert_2(clk_insert[n*4+2]),.clk_insert_3(clk_insert[n*4+3]),.rst_n(rst_lane_n[n]),.lane_id(11'(L)),
+   .cx_srcs(c_srcs),.ld(c_ld),.ld_bank(c_ld_bank),.ld_c(terms),.emit(c_emit),.bank(c_bank),.o_v(c_o_v),.i_v(c_i_v),
+   .no(c_no),.ni(c_ni),.ls(c_ls),.lvw(c_lvw),.vb(c_vb),.krow(c_krow),.obase(c_obase),.aibase(c_aibase),.aind(c_aind),
+   .gsh(c_gsh),.cpair(c_cpair),.dst(c_dst),.srcs(c_srcs),.cx_arnd(c_cx_arnd),.cx_arelu(c_cx_arelu),.cx_amin(c_cx_amin),
+   .cx_cclip(c_cx_cclip),.cx_imm3(c_cx_imm3),.cp_m1(c_cp_m1),.cp_imm1(c_cp_imm1),.cm_m1(c_cm_m1),.cm_m2(c_cm_m2),
+   .cm_qm(c_cm_qm),.cm_imm1(c_cm_imm1),.ca_ad(c_ca_ad),.ca_imm2(c_ca_imm2),.ci_sfu(c_ci_sfu),.cs_sfu(c_cs_sfu),
+   .cs_e1(c_cs_e1),.cs_imm2(c_cs_imm2),.ce_e2(c_ce_e2),.ce_imm1(c_ce_imm1),.co_rnd(c_co_rnd),.co_dst(c_co_dst),
+   .vi_q(vi_q[n*32+:32]),.rd_q(rd_q[n*128+:128]),.vi_re(vi_re[n]),.vm_we(vm_we[n]),.kv_we(kv_we[n]),.ro_v(ro_v[n]),
+   .fault(l_fault[n]),.coll(l_coll[n]),.vi_addr(vi_addr[n*24+:24]),.vm_waddr(vm_waddr[n*24+:24]),
+   .kv_waddr(kv_waddr[n*24+:24]),.rd_addr(rd_addr[n*96+:96]),.rd_re(rd_re[n*4+:4]),.rd_src(rd_src[n*8+:8]),
+   .vm_wdata(vm_wdata[n*32+:32]),.kv_wdata(kv_wdata[n*32+:32]),.ro_x(ro_x[n*32+:32]),
+   .side_v(sv),.side_x(sx),.side_y(side_y));
+  end
+`else
   ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(KIND),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES)) u_lane(
    .clk_stage(clk_lane[n*8+:8]),.clk_insert(clk_insert[n*4+:4]),.rst_n(rst_lane_n[n]),.lane_id(11'(L)),
    .cx_srcs(c_srcs),.ld(c_ld),.ld_bank(c_ld_bank),.ld_c(terms),.emit(c_emit),.bank(c_bank),.o_v(c_o_v),.i_v(c_i_v),
@@ -172,6 +229,7 @@ module ot_hbm_su_static_pgslice #(
    .kv_waddr(kv_waddr[n*24+:24]),.rd_addr(rd_addr[n*96+:96]),.rd_re(rd_re[n*4+:4]),.rd_src(rd_src[n*8+:8]),
    .vm_wdata(vm_wdata[n*32+:32]),.kv_wdata(kv_wdata[n*32+:32]),.ro_x(ro_x[n*32+:32]),
    .side_v(sv),.side_x(sx),.side_y(side_y));
+`endif
   end else begin:g_plain
   ot_hbm_su_static_lane #(.LN(7),.KIND(KIND),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES)) u_lane(
    .clk_stage(clk_lane[n*8+:8]),.clk_insert(clk_insert[n*4+:4]),.rst_n(rst_lane_n[n]),.lane_id(11'(L)),
@@ -308,9 +366,19 @@ module ot_hbm_su_static_pgslice #(
   assign st_id_fault[n]=idf;
   // OT_SU_SYNC_RST: the bank is the CLOSED physical wrapper's configuration (bank6_clock7 r12: RD_ROOT 1, WS_ROOT 2,
   // PIN_RST 1 = rst_n a registered W-face data input) fed from its row region's relay copy
+`ifdef OT_HARD_CHILDREN
+  // the CLOSED bank view (bank6_clock7 r12; requires OT_SU_SYNC_RST's PIN_RST form)
+  if(!SYNC_RST)begin:g_bad_rst $error("OT_HARD_CHILDREN needs OT_SU_SYNC_RST (closed bank view is PIN_RST 1)"); end
+  ot_hbm_su_static_bank6_clock_physical u_bank(.clk(clk_bank[n]),.clk_rd(clk_bank[n]),.clk_ws(clk_bank[n]),
+   .clk_macro0(clk_bank_macro[n*6+0]),.clk_macro1(clk_bank_macro[n*6+1]),.clk_macro2(clk_bank_macro[n*6+2]),
+   .clk_macro3(clk_bank_macro[n*6+3]),.clk_macro4(clk_bank_macro[n*6+4]),.clk_macro5(clk_bank_macro[n*6+5]),.rst_n(rst_b[n/4]),
+   .read_v(rv),.read_addr(ra),.read_data(q),.read_return(),.write_v(lw|fw|dwn),
+   .write_addr(fw?fr_row[H]:dwn?dwr:{la[17:16],la[13:7]}),.write_data(fw?fr_dat[H][K*32+:32]:dwn?dwd:ldat));
+`else
   ot_hbm_su_static_pinned_bank #(.READERS(6),.RB(9),.RD_ROOT(SYNC_RST),.WS_ROOT(2*SYNC_RST),.PIN_RST(SYNC_RST)) u_bank(.clk(clk_bank[n]),.clk_rd(clk_bank[n]),.clk_ws(clk_bank[n]),.clk_macro(clk_bank_macro[n*6+:6]),.rst_n(rst_b[n/4]),.read_v(rv),.read_addr(ra),
    .read_data(q),.read_return(),.write_v(lw|fw|dwn),.write_addr(fw?fr_row[H]:dwn?dwr:{la[17:16],la[13:7]}),
    .write_data(fw?fr_dat[H][K*32+:32]:dwn?dwd:ldat));
+`endif
  end
  // ------------------------------------------------------------------ RF broadcast into lane operands
  wire [4*32-1:0] rf_bword_u; wire [4*9-1:0] rf_bcmd_u; wire [255:0] rf_dsec_u;   // as used (local copy or pins)

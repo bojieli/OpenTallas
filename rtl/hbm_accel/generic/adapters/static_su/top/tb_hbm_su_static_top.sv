@@ -12,7 +12,7 @@
 // RTL mutants (separate builds, -GMUT=): 1 fill phase, 2 drain group, 4 RF broadcast phase, 8 missing relay route.
 // ---------------------------------------------------------------------------------------------------------------------
 module tb_hbm_su_static_top;
- parameter integer NE=7111,NW=135184,NS=9,RF_RELAY=8,MUT=0,MLAT=3,ALAT=3,LEAF=0,RF_LOCAL=0,
+ parameter integer NE=7111,NW=135184,NS=9,RF_RELAY=8,MUT=0,MLAT=3,ALAT=3,LEAF=0,RF_LOCAL=0,PIN_REG=0,
   SYNC_RST=0; // 1 (OT_SU_SYNC_RST builds): the slice reset relays release 3 edges after rst_n; the host starts 4 edges later
  localparam integer QW=2422;
  reg clk=0; always #5 clk=~clk;
@@ -29,7 +29,7 @@ module tb_hbm_su_static_top;
  end
  wire [4*8*17-1:0] lg_rq; wire [4*8*281-1:0] lg_wq; reg [4*8*257-1:0] lg_rr=0; reg [31:0] lg_w_done=0;
  wire [19:0] fault;
- ot_hbm_su_static_top #(.RF_RELAY(RF_RELAY),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.RF_LOCAL(RF_LOCAL)) dut(
+ ot_hbm_su_static_top #(.RF_RELAY(RF_RELAY),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.RF_LOCAL(RF_LOCAL),.PIN_REG(PIN_REG)) dut(
   .pg_clk({16{clk}}),.clk_lane({4096{clk}}),.clk_insert({2048{clk}}),.rst_lane_n({512{rst_n}}),
   .clk_bcast({64{clk}}),.rst_bcast_n({64{rst_n}}),.clk_bank({512{clk}}),.clk_bank_macro({3072{clk}}),.clk_rf({256{clk}}),.clk_ctl({16{clk}}),
   .clk_core({4{clk}}),.clk_red({4{clk}}),.clk_side({6{clk}}),.clk_relay({4{clk}}),.rst_n(rst_n),
