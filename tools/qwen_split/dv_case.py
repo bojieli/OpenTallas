@@ -110,6 +110,9 @@ def apply_dv(v, m):
             d['y'] = round(uk['y'] + uk['h'] - d['h'], 3)
         orient.update(d2d_rom='R180', ucie_kv='R180', native59='MY')
     DI = {i['n']: i for i in D['insts'] if i['m'] != 'outline_marker'}
+    for n, d in DI.items():                   # the model's own orientations (dv2r8f6+: 'o', e.g. the top cluster)
+        if d.get('o') and not n.startswith(('c16_', 'dvs_')):
+            orient.setdefault(n, d['o'])
     by = {i.name: i for i in m['insts']}
     # retained instances take the dv model's places BEFORE the masters are drawn (the collective / PHY frames follow
     # their instance outline: OT_SPLIT_PHY_TALL edge variants, collective re-kitted tall; PHYs above it are MX)
@@ -233,6 +236,10 @@ def apply_dv(v, m):
         i.x, i.y = d['x'], d['y']
         if i.name.startswith('c16_'):
             i.master, i.w, i.h = CDV, CWN - Q.SHAVE, ch - Q.SHAVE
+            if getattr(i, 'orient', 'R0') in ('MY', 'R180') and sw > CWN + 1e-3:
+                # dv2r8f7 lattice: the slot (= slice) is wider than the cluster; an x-mirrored cluster right-aligns
+                # in it so its mirrored N / S pins land on the mirrored slice's (both mirror about their own width)
+                i.x = round(i.x + sw - CWN, 3)
         keep.append(i)
     have = {i.name for i in keep}
     for n, d in DI.items():
