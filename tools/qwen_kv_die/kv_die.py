@@ -2211,6 +2211,23 @@ def _relays(m):
     # recorded compiler/boot constant (m['tree_depth']); reset release waits >= RELAY_FLUSH core cycles (kv_relays).
     tree_meta = {}                                 # segment bid -> dict(root, children=[...], members=[...])
     region_roots = bool(m['geo'].get('split') and V143['on'])
+    if PV_T:
+        # KVPLAN 1815: the trunked pair's chunk / header face pins (plan.json, canonical R0) are the chain targets from the
+        # first pass: a chunk chain must run along the side channel to its GS group's channel, not end at the frame edge
+        P_ = pvt_plan()
+        for it_ in m['insts']:
+            if not it_.master.startswith('qkd_pvw'):
+                continue
+            def die_xy_(cx, cy, it=it_):
+                fx_ = it.w - cx if it.orient in ('MY', 'R180') else cx
+                fy_ = it.h - cy if it.orient in ('MX', 'R180') else cy
+                return (it.x + fx_, it.y + fy_)
+            for k_ in range(8):
+                for g_ in range(8):
+                    f_, yc_ = P_['face_pins']['vc'][f'vc{k_}_{g_}']
+                    _PIN_HINT[(it_.name, f'vc{k_}_{g_}')] = die_xy_(0.0 if f_ == 'W' else it_.w, yc_ + ((k_ % 4) - 1.5) * 70.0)
+                _PIN_HINT[(it_.name, f'vh{k_}')] = die_xy_(P_['strip']['x'] - 400.0 + 40.0 * k_, it_.h)
+                _PIN_HINT[(it_.name, f'vrq{k_}')] = die_xy_(P_['strip']['x'] + 200.0 + 30.0 * k_, it_.h)
     if HOST_V14.get('trees') and 'serdes_host' in by:
         # v1.4.2 (kvs7c TT -7.6 ns, 1,044 endpoints: rly_host_fdi_55 -> serdes_host tx_flit 2.2 mm): the hard SerDes PHY's
         # FDI pins are on its W face (LEF ot_qfd_serdes_112g_x12_phy: tx_flit y 600.19..650.21, rx_flit 650.30..700.32,
