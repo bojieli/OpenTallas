@@ -29,7 +29,7 @@ proc ot_ref_pick {by master pat} {
 }
 set ot_ref_n 0
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_64x546_m1 {*u_dmem}]
-$i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w2c_64x546_m1 at 43.2 43.2 MY"
+$i setOrient MY; $i setLocation [expr {round(29.376 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w2c_64x546_m1 at 29.376 43.2 MY"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 1} { error "ref_tile place: expected 1 macros, netlist has $nb" }
