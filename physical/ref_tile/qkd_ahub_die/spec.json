@@ -34,7 +34,8 @@
   "ck_sr[2]",
   "ck_sr[3]",
   "ck_rx",
-  "ck_ry"
+  "ck_ry",
+  "ck_si"
  ],
  "clock_cts_roots": [
   "ck_sr[0]",
@@ -42,7 +43,8 @@
   "ck_sr[2]",
   "ck_sr[3]",
   "ck_rx",
-  "ck_ry"
+  "ck_ry",
+  "ck_si"
  ],
  "reset_ports": [
   "rst_n"
@@ -60,7 +62,8 @@
    "pi_valid",
    "pi_g",
    "pi_beat",
-   "pi_data"
+   "pi_data",
+   "ck_si"
   ],
   "N": [
    "am",
@@ -292,7 +295,7 @@
   ],
   "cycles_added": 1
  },
- "structural_change": "hp3 (KV-TILES-B 10-17): hp2 FLOORPLAN_MARGIN wire_reach (181 S-face core inputs start/si_*/pi_valid/pi_g up to 1119 um unregistered to the core in the Z row). SI_RLY=1: one ck_core relay stage on every core data input + PI_RLY+1 on the beat-store copy (uniform input retime, +1 hub edge, values unchanged, bench r3); those 181 pins grouped in the S-face window under the core column (x 518.4-669.6: pin -> relay -> core ~280 um a stage). new parent kit (the hub parent was never hardened: q8 EARLY_FAIL_HOLD with one cluster clock over 12 hard tiles); per-child clock entries, core in the Z row centre",
+ "structural_change": "hp3 (KV-TILES-B 10-17): hp2 FLOORPLAN_MARGIN wire_reach (181 S-face core inputs start/si_*/pi_valid/pi_g up to 1119 um unregistered to the core in the Z row). SI_RLY=1: one relay stage (own CTS root ck_si, S face centre) on every core data input + PI_RLY+1 on the beat-store copy (uniform input retime, +1 hub edge, values unchanged, bench r3); those 181 pins grouped in the S-face window under the core column (x 518.4-669.6: pin -> relay -> core ~280 um a stage). new parent kit (the hub parent was never hardened: q8 EARLY_FAIL_HOLD with one cluster clock over 12 hard tiles); per-child clock entries, core in the Z row centre",
  "defines": [
   "QKD_AHUB_RLY_CLK"
  ],
@@ -348,6 +351,10 @@
   "pi_g": [
    518.4,
    669.6
+  ],
+  "ck_si": [
+   590.0,
+   600.0
   ]
  },
  "cycle_cost": "+1 edge hub input -> output (SI_RLY 1 on start/si_*/pi_*): the attention calendar adds 1 to every hub-relative age"

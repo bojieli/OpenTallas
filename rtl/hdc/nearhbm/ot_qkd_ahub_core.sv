@@ -427,6 +427,7 @@ module ot_qkd_ahub_die #(
     input  wire [3:0]    ck_sr,            // u_sr (pbst -> pvlg relays), the pvlg clock
     input  wire          ck_rx,            // u_rxi (core -> recip), the recip clock
     input  wire          ck_ry,            // u_ryo (recip -> core), the core clock
+    input  wire          ck_si,            // u_si / u_pi (hub input relays, SI_RLY / PI_RLY), a CTS root of its own
 `endif
     input  wire          rst_n,
     input  wire          start,
@@ -453,10 +454,15 @@ module ot_qkd_ahub_die #(
     wire [255:0] zh_root;   wire [15:0]  zh_err;
     wire         rc_v, rc_vo, rc_fault;  wire [31:0] rc_x, rc_y;
     wire [23:0]  pb_ra;     wire [3:0] pl_v;  wire [127:0] pl_rz;  wire [511:0] pl_y;  wire [15:0] pl_pf;
+`ifdef QKD_AHUB_RLY_CLK
+    wire [3:0] ck_srr = ck_sr;  wire ck_rxr = ck_rx;  wire ck_ryr = ck_ry;  wire ck_sir = ck_si;  wire [3:0] ck_pir = {4{ck_si}};
+`else
+    wire [3:0] ck_srr = ck_pvlg;  wire ck_rxr = ck_recip;  wire ck_ryr = ck_core;  wire ck_sir = ck_core;  wire [3:0] ck_pir = ck_pbst;
+`endif
     // hub input relays (SI_RLY): the core's copy
     wire c_start;  wire [3:0] c_si_valid, c_si_g, c_si_any, c_pi_valid, c_pi_g;  wire [7:0] c_si_type, c_si_hh;
     wire [15:0] c_si_k;  wire [127:0] c_si_data;
-    ot_qkd_drly #(.W(181), .N(SI_RLY)) u_si (.clk(ck_core),
+    ot_qkd_drly #(.W(181), .N(SI_RLY)) u_si (.clk(ck_sir),
         .d({start, si_valid, si_type, si_g, si_hh, si_k, si_any, si_data, pi_valid, pi_g}),
         .q({c_start, c_si_valid, c_si_type, c_si_g, c_si_hh, c_si_k, c_si_any, c_si_data, c_pi_valid, c_pi_g}));
 `ifdef QKD_AHUB_RLY_CLK
@@ -495,16 +501,13 @@ module ot_qkd_ahub_die #(
     assign rc_y = ryo[31:0];  assign rc_vo = ryo[32];  assign rc_fault = rf;
     // beat stores and lane groups
 `ifdef QKD_AHUB_RLY_CLK
-    wire [3:0] ck_srr = ck_sr;  wire ck_rxr = ck_rx;  wire ck_ryr = ck_ry;
-`else
-    wire [3:0] ck_srr = ck_pvlg;  wire ck_rxr = ck_recip;  wire ck_ryr = ck_core;
-`endif
+
     wire [2047:0] sr_t, sr;
     generate for (g = 0; g < 4; g = g + 1) begin : g_s
         wire [5:0] ra;  wire [519:0] pin;
         ot_qkd_drly #(.W(6), .N(RA_RLY)) u_ra (.clk(ck_pbst[g]), .d(pb_ra[6*g +: 6]), .q(ra));
         // pi_* to the tile: the core captures pi_valid / pi_g in its pin flop, the tile in its own pin flop (= hub_p _b)
-        ot_qkd_drly #(.W(520), .N(PI_RLY + SI_RLY)) u_pi (.clk(ck_pbst[g]),
+        ot_qkd_drly #(.W(520), .N(PI_RLY + SI_RLY)) u_pi (.clk(ck_pir[g]),
             .d({pi_valid[g], pi_g[g], pi_beat[6*g +: 6], pi_data[512*g +: 512]}), .q(pin));
         ot_nhb_pbst u_pbst (.clk(ck_pbst[g]), .rst_n(rst_n), .pv(pin[519]), .pgi(pin[518]), .pbeat(pin[517:512]),
                             .pdata(pin[511:0]), .ra(ra), .sr(sr_t[512*g +: 512]));
@@ -572,7 +575,7 @@ module ot_qwen_nearhbm_attn_hub_d #(
         $display("AHUB_D am copies disagree at %0t", $time);
 `endif
     ot_qkd_ahub_die #(.HD(HD), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .ZW(ZW), .ZW_RLY(ZW_RLY), .ZR_RLY(ZR_RLY), .RA_RLY(RA_RLY), .SR_RLY(SR_RLY), .PV_RLY(PV_RLY), .Y_RLY(Y_RLY), .RX_RLY(RX_RLY), .RY_RLY(RY_RLY), .PI_RLY(PI_RLY), .SI_RLY(SI_RLY)) u_die (.ck_core(clk), .ck_zh({4{clk}}), .ck_recip(clk), .ck_pbst({4{clk}}),
-        .ck_pvlg({4{clk}}), .rst_n(rst_n), .start(start), .si_valid(si_valid), .si_type(si_type), .si_g(si_g), .si_hh(si_hh),
+        .ck_pvlg({4{clk}}), .ck_si(clk), .rst_n(rst_n), .start(start), .si_valid(si_valid), .si_type(si_type), .si_g(si_g), .si_hh(si_hh),
         .si_k(si_k), .si_any(si_any), .si_data(si_data), .pi_valid(pi_valid), .pi_g(pi_g), .pi_beat(pi_beat),
         .pi_data(pi_data), .am(am), .out_valid(out_valid), .out_g(out_g), .out_beat(out_beat), .out_data(out_data),
         .fault(fault), .ev(ev));
