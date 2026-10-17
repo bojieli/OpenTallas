@@ -1,0 +1,11 @@
+test_consecutive_paths_and_worst_leg_not_average (test_vm_relay_stages.RelayPaths) ... ok
+test_coverage_domain_disconnected_and_unpadded_reject (test_vm_relay_stages.RelayPaths) ... ok
+test_explicit_zero_stage_is_preserved (test_vm_relay_stages.RelayPaths) ... ok
+test_missing_bus_fails_including_missing_zero_stage (test_vm_relay_stages.RelayPaths) ... ok
+test_selected_ledger_preserves_core_charge_and_tracks_table (test_vm_relay_stages.RelayPaths) ... ok
+test_stale_source_or_changed_stage_fails (test_vm_relay_stages.RelayPaths) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.005s
+
+OK

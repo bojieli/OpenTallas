@@ -536,6 +536,11 @@ def build(a):
             # the group targets are set ONCE (first trim) and then held: later iterations only correct residuals
             # against them (re-deriving them each iteration walked the target up by the raise every time); they move
             # only if a leaf overshoots
+            if gk in gtarget and gtarget[gk][0] > Ttt + RAISE_CAP_PS:
+                # stale hold: the group's arrivals FELL (Qwen KV kv_rt1: iter-0 c tree 22.7 ns with an over-loaded
+                # trunk net, 10.2 ns after the first trim re-buffered it); a held 22.9 ns target then asked for 12 ns of
+                # pads everywhere and the neighbour gaps never closed.  Re-derive from the current arrivals.
+                del gtarget[gk]
             if gk in gtarget:
                 # a leaf that overshoots the held target by less than tol/2 does NOT raise it (t9: raising the target
                 # to every new maximum walked the group up ~70 ps/iteration and left the slowest-trimmed leaves ~100 ps
@@ -558,11 +563,9 @@ def build(a):
                 df = max(0.0, tg[y][1] - nbB - Tf) if two else 0.0
                 if dt <= 1e-6 and df <= 1e-6:
                     continue
-                if two:
-                    if df < rlo * dt:
-                        df = rlo * dt
-                    elif df > rhi * dt:
-                        dt = df / rhi
+                # TT and FF are relaxed independently (coupling them through the element cone ran away on Qwen KV
+                # kv_nb2: every FF raise forced dt = df / rhi, which re-raised the neighbours, +6..17 ns per iteration);
+                # the per-leaf P/W solve absorbs the residual cone mismatch
                 tg[x] = (Tt + dt, (Tf + df) if two else None, b1, b2)
                 moved = True
             if not moved:
@@ -597,6 +600,7 @@ def build(a):
         # (min over its leaves minus what its parent already carries): group offsets land on the common path at the
         # root, subtree offsets at their branch point, only the residual at the leaves
         plan = []
+        src_bufs = set(rec.get('root_buffer', {}).values()) if spec.get('clock_at_root_buffer') else set()
         for ty in ('W', 'P'):   # W first: wire stages above, gate pads nearer the node
             units, par_of = {}, {}
             for lb, nn_ in need.items():
@@ -608,7 +612,10 @@ def build(a):
                     if prev is not None:
                         par_of[prev] = x
                     px = rec['parent'].get(x)
-                    if px not in insts:
+                    # with clock_at_root_buffer the clock is DEFINED at the root buffer input: an element placed before
+                    # the root buffer is upstream of the clock source and adds nothing (Qwen KV kv_rt2: WN/EN 4 ns
+                    # offsets requested at dc_root_* every iteration, arrivals moved ~120 ps); stop below it
+                    if px not in insts or px in src_bufs:
                         par_of.setdefault(x, None)
                         break
                     prev, x = x, px
