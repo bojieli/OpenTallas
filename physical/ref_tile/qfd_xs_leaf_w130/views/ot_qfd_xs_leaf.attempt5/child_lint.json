@@ -1,0 +1,6 @@
+{
+ "verdict": "FAIL",
+ "fails": [
+  "child_lint FAIL: (c) strap layer M6+ not clear: 21 OBS on M6, 0 signal pins, PG on - (child signals must stop below the parent strap layer, or own M5 as full PG stripes and leave M6 free); (f) face-pin access: 2 of 2439 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. w_d[96] M6 (0.037,16.832), wo_d[20] M6 (0.037,43.904)); fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef (73e17f447): move the pin's own same-layer stub from OBS into its PORT"
+ ]
+}
