@@ -486,6 +486,11 @@ def remaster_layers(insts, specs, problems):
                 i['rtl_deps'] = list(r['rtl_deps'])
             if r.get('port_split'):
                 PORT_SPLIT[n] = {p: [tuple(x) for x in v] for p, v in r['port_split'].items()}
+        for n, sl in s_.get('slot_override', {}).items():   # layer key 'slot_override' {instance: slot} (H-DIE grants)
+            if n not in insts:
+                problems.append(f'slot_override: {n} is not an instance'); continue
+            insts[n]['note'] = insts[n].get('note', '') + f" | {s_['region']}: slot {insts[n].get('slot')} -> {sl}"
+            insts[n]['slot'] = sl
         dc = {tuple(x) for x in s_.get('drop_clocks', [])}
         if dc:   # clock / reset bindings of ports a remaster removed (e.g. hoisted banks' clk_bank)
             for t_ in specs:
