@@ -1,0 +1,490 @@
+{
+ "name": "hbm_sfu_programme_store_r6p_1016",
+ "top": "ot_hgi_sfu_programme_store_r6",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_static.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_io_calendar_static.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_calendar_paged_static.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r6.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "params": {
+  "PAGE_AW": 1
+ },
+ "outline": {
+  "w": 447.12,
+  "h": 1023.84,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_io.g_stripe?0?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    23.76
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_io.g_stripe?0?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_io.g_stripe?1?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    114.48
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_io.g_stripe?1?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    114.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_io.g_stripe?2?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    205.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_io.g_stripe?2?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    205.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?0?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    295.92
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?0?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    295.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?1?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    386.64
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?1?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    386.64
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?2?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    477.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?2?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    477.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?3?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    568.08
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?3?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    568.08
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?4?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    658.8
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?4?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    658.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?5?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    749.52
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?5?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    749.52
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?6?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    840.24
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?6?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    840.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?7?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    930.96
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?7?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    930.96
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "io_word",
+   "clk",
+   "rst_n",
+   "compiler_control"
+  ],
+  "E": [
+   "cfg_we",
+   "cfg_stripe",
+   "cfg_addr",
+   "start_base",
+   "start_limit",
+   "start_loops",
+   "programme_active",
+   "programme_done",
+   "programme_ordinal",
+   "io_cfg_we",
+   "io_cfg_stripe",
+   "io_cfg_addr",
+   "io_start_v",
+   "io_start_base",
+   "io_start_limit",
+   "io_start_loops",
+   "io_active",
+   "io_done",
+   "io_ordinal",
+   "fault",
+   "cfg_data",
+   "io_cfg_data"
+  ]
+ },
+ "pin_ranges": {
+  "clk": [
+   506.0,
+   514.0
+  ],
+  "rst_n": [
+   515.0,
+   519.0
+  ],
+  "io_word": [
+   23.0,
+   290.0
+  ],
+  "compiler_control": [
+   520.5,
+   1004.0
+  ],
+  "cfg_data": [
+   704.0,
+   958.0
+  ],
+  "io_cfg_data": [
+   446.0,
+   700.0
+  ],
+  "cfg_we": [
+   962.0,
+   962.659
+  ],
+  "cfg_stripe": [
+   962.659,
+   964.636
+  ],
+  "cfg_addr": [
+   964.636,
+   971.886
+  ],
+  "start_base": [
+   971.886,
+   979.136
+  ],
+  "start_limit": [
+   979.136,
+   987.045
+  ],
+  "start_loops": [
+   987.045,
+   997.591
+  ],
+  "programme_active": [
+   997.591,
+   998.25
+  ],
+  "programme_done": [
+   998.25,
+   998.909
+  ],
+  "programme_ordinal": [
+   998.909,
+   1020.0
+  ],
+  "io_cfg_we": [
+   384.0,
+   384.652
+  ],
+  "io_cfg_stripe": [
+   384.652,
+   385.955
+  ],
+  "io_cfg_addr": [
+   385.955,
+   393.124
+  ],
+  "io_start_v": [
+   393.124,
+   393.775
+  ],
+  "io_start_base": [
+   393.775,
+   400.944
+  ],
+  "io_start_limit": [
+   400.944,
+   408.764
+  ],
+  "io_start_loops": [
+   408.764,
+   419.191
+  ],
+  "io_active": [
+   419.191,
+   419.843
+  ],
+  "io_done": [
+   419.843,
+   420.494
+  ],
+  "io_ordinal": [
+   420.494,
+   441.348
+  ],
+  "fault": [
+   441.348,
+   442.0
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_group_max": 16,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 1
+  }
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL (ot_hgi_sfu_programme_store_r6) already registers every input (r_* pin registers) and every output (io_word/compiler_control/status/fault output registers) at the boundary, per OWNER RULE 19:50; a kit-level flop stage would add a redundant edge to the +3 split latency the equivalence receipt prices"
+ },
+ "children": [],
+ "inter": [],
+ "structural_change": "r6 (H-SU 2026-10-16): r5 hbm_sfu_programme_store_1016-r5-eface-cb302f3ff NEEDS_RTL TT -187.68 (rst_n recovery into ~3,300 async-reset flops incl. the 2,213 io_word/compiler_control output regs; TT insertion ~852 ps) / reg2reg -80.0 / FF -50.1. ot_hgi_sfu_programme_store_r6: rst_n -> ot_rst_relay (3 regions), output data regs without reset, +1 relay stage between the calendars and the W-face output registers (SFU invocation +4 edges, was +3). Same floorplan/pins as r5 (host pins E). | NEW master: SFU programme store (both fixed SFU calendars, 11 stripes x 2 pages = 22 ot_sram_1r1w_1024x256) split out of ot_hgi_sfu_scheduled_engine (main 697997629, split equivalence receipt results/rtl/hbm_sfu_split_1016) for die slot sfus_<q>. Each stripe = one row of two back-to-back SRAMs (W MY, E R0) whose rd_out faces a shared 40 um logic channel; the 222-bit stripe word runs west along its own 20 um row channel to the W-face output registers toward sfucore_<q>; host cfg/start on N. | r1 gate (41fbe28f5) TritonCTS: 16 buffers per path, TT insertion 565.8..745.2 ps / spread 179.4 over 447x1024 um -> pre-placed balanced clock spine from the W-centre entry; N host pins spread (cfg_data / io_cfg_data ranged across the face, were clustered in 40 um); W output ranges aligned to the stripe rows (io_word rows 0-2, compiler_control rows 3-10). | Codex r2: exact r1 PPL-0086 showed 32-bit ordered group cannot fit 23 remaining TOP slots at cfg_data constraint edge; bound ordered IO groups to16 with unchanged tracks, bit order, port ranges, outline and balanced spine. This repairs placement granularity, not routing/timing gates. | r3: actual g16 IOP still PPL-0086 (0/8 slots remain in constrained cfg boundary sections). Unconstrained 177 host/status pins competed across cfg_data / io_cfg_data windows. Give all88 arithmetic controls/status a disjoint N0.3..19.7 band, all89 IO controls/status a disjoint N427.3..446.7 band. Existing data windows and all W outputs unchanged. Capacity each 19.4um *10.5pins/um=203 slots vs88/89 pins; eliminates unconstrained overlap instead of further group-size tuning. | r4 (Claude H-SU 10-16): actual 092026 IOP PPL-0086 io_cfg_addr group 11 in N427.3..446.7: measured N slots are ~2.3-5 per um (PPL-0078 sections, e.g. 4.75 um = 11 slots), not 10.5, so 88/89 control bits do not fit 19.4 um bands. Control bands widened to N0.3..48.0 and N399.0..446.7 (47.7 um each, ~2x the measured need); cfg_data N50..215 and io_cfg_data N232..397 (165 um / 256 bits = 1.55/um, the r1-r3 data windows ran 1.31/um). Same face, ports, bit order, group size 16, outline, W face, clock/reset tracks. | r4b: r4 gate 094919 IOP PPL-0086 'group of size 1': PPL places the 16-bit compiler_control groups (range W296..1004) before the scalar clk (W506..514) / rst_n (W515..519) groups, and they took those slots. compiler_control now W520.5..1004 (1742 bits / 483.5 um = 3.6/um on M4), disjoint from clk/rst; clock entry stays at the W centre. Rows 3-5 (y296..505) compiler_control bits run up to 220 um north inside the tile; W296..505 left free. | r5 (Claude H-SU): r4b 095449 IOP PPL-0086 again on TOP: measured TOP sections hold only ~0.5-1 slot/um (PPL-0078: 4 slots in 399.1..403.3, 8 in 200.6..215.0) under the M3/M5 straps, so 689 N pins cannot fit 447 um. The W face carries 2,213 M4 pins at 3.6/um. r5: all host cfg/start/status pins move N->E (M4): arithmetic ctl E962..1020, cfg_data E704..958, io_cfg_data E446..700, io ctl E384..442 (<=1.5 pins/um). W face/clk/rst unchanged. | r6p (H-SU/PIN 1840, 10-16): <= 6 pins/um face rule (coordinator HBM die audit / H-DIE d4c band): balanced pin placement (route.pin_balance, uniform over each port range) instead of PPL slot packing (10.5/um local on io_word / cfg_data / compiler_control); the shared E control windows 962-1020 and 384-442 split into disjoint per-port sub-ranges by bit count. Max range density 3.6/um (compiler_control 1742 in 483.5 um). Same RTL, outline, faces, windows.",
+ "job": {
+  "owner": "Codex:H-SU",
+  "branch": "claude/hsu-store-r4-1016",
+  "tag": "r6p",
+  "purpose": "NEW master: SFU programme store (both fixed SFU calendars, 11 stripes x 2 pages = 22 ot_sram_1r1w_1024x256) split out of ot_hgi_sfu_scheduled_engine (main 697997629, split equivalence receipt results/rtl/hbm_sfu_split_1016) for die slot sfus_<q>. Each stripe = one row of two back-to-back SRAMs (W MY, E R0) whose rd_out faces a shared 40 um logic channel; the 222-bit stripe word runs west along its own 20 um row channel to the W-face output registers toward sfucore_<q>; host cfg/start on N. | r1 gate (41fbe28f5) TritonCTS: 16 buffers per path, TT insertion 565.8..745.2 ps / spread 179.4 over 447x1024 um -> pre-placed balanced clock spine from the W-centre entry; N host pins spread (cfg_data / io_cfg_data ranged across the face, were clustered in 40 um); W output ranges aligned to the stripe rows (io_word rows 0-2, compiler_control rows 3-10). | r4 (Claude H-SU 10-16): actual 092026 IOP PPL-0086 io_cfg_addr group 11 in N427.3..446.7: measured N slots are ~2.3-5 per um (PPL-0078 sections, e.g. 4.75 um = 11 slots), not 10.5, so 88/89 control bits do not fit 19.4 um bands. Control bands widened to N0.3..48.0 and N399.0..446.7 (47.7 um each, ~2x the measured need); cfg_data N50..215 and io_cfg_data N232..397 (165 um / 256 bits = 1.55/um, the r1-r3 data windows ran 1.31/um). Same face, ports, bit order, group size 16, outline, W face, clock/reset tracks. | r4b: r4 gate 094919 IOP PPL-0086 'group of size 1': PPL places the 16-bit compiler_control groups (range W296..1004) before the scalar clk (W506..514) / rst_n (W515..519) groups, and they took those slots. compiler_control now W520.5..1004 (1742 bits / 483.5 um = 3.6/um on M4), disjoint from clk/rst; clock entry stays at the W centre. Rows 3-5 (y296..505) compiler_control bits run up to 220 um north inside the tile; W296..505 left free. | r5 (Claude H-SU): r4b 095449 IOP PPL-0086 again on TOP: measured TOP sections hold only ~0.5-1 slot/um (PPL-0078: 4 slots in 399.1..403.3, 8 in 200.6..215.0) under the M3/M5 straps, so 689 N pins cannot fit 447 um. The W face carries 2,213 M4 pins at 3.6/um. r5: all host cfg/start/status pins move N->E (M4): arithmetic ctl E962..1020, cfg_data E704..958, io_cfg_data E446..700, io ctl E384..442 (<=1.5 pins/um). W face/clk/rst unchanged.",
+  "views_to": "physical/ref_tile/hbm_sfu_programme_store_1016/views",
+  "record_to": "results/rtl/ref_tile/hbm_sfu_programme_store_1016",
+  "extra_paths": [
+   "results/arch/hbm_native_1013/sfu_native_quarter",
+   "results/rtl/hbm_hc_sfu_static_1015/qswiglu",
+   "rtl/test/hbm_accel/generic",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros",
+   "rtl/hbm_accel/generic/peers",
+   "physical/ref_tile/sfu_lane_ring3_rt/src",
+   "tools/hbm_static",
+   "rtl/lib/ot_rst_relay.sv"
+  ],
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_sfu_programme_store_r6 #(.PAGE_AW(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_static.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_io_calendar_static.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_calendar_paged_static.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r6.sv rtl/lib/ot_rst_relay.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_equiv_exact",
+    "cmd": "OUT={RUN}/bench/pos SFU_LG_R=23 STORE6=1 bash tools/hbm_static/run_sfu_split_equiv.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_SPLIT_GATE POSITIVE PASS",
+    "min_count_regex": "SFU_SPLIT_EQUIV PASS edges=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_flip",
+    "cmd": "OUT={RUN}/bench/flip SFU_LG_R=23 STORE6=1 EQ_MUT=flip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/flip/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_skip_pinreg",
+    "cmd": "OUT={RUN}/bench/skip SFU_LG_R=23 STORE6=1 EQ_MUT=skip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/skip/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "clock": "spine",
+ "orfs_vars": {
+  "OT_SPINE_LEAF_N": "16"
+ }
+}
