@@ -1117,6 +1117,10 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
                 # die-top broadcast H-tree replaces the comb (tools/qwen_split/q3h_cluster.py)
                 from qwen_split.q3h_cluster import apply as apply_q3h
                 apply_q3h(v, m)
+                if os.environ.get('OT_SPLIT_DV', '').strip():
+                    # Q-DIEPLAN3 2026-10-17: DIAGNOSTIC dv2r8f2 die case on the q3h model (tools/qwen_split/dv_case.py)
+                    from qwen_split.dv_case import apply_dv
+                    apply_dv(v, m)
             _late_pin_grant(v)
             _relays(v, m, relay_pitch)
         finally:
