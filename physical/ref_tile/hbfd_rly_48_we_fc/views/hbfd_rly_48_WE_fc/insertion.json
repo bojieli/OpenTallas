@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.closure_loop.ck_insertion.v1",
- "base": "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_48_we_fc-fc1-8cd3001df/routes/hbfd_rly_48_we_fc_fc1_8cd3001df/work/orfs/results/asap7/opentallas_hbfd_rly_48_WE_fc_asap7_ref_hbfd_rly_48_we_fc_fc1_8cd3001df/base",
+ "base": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/routes/hbfd_rly_48_we_fc_fc2_f87700624/work/orfs/results/asap7/opentallas_hbfd_rly_48_WE_fc_asap7_ref_hbfd_rly_48_we_fc_fc2_f87700624/base",
  "db": "6_final.odb",
  "sdc": "6_final.sdc",
  "clock": "core_clk",
@@ -9,15 +9,15 @@
  "ss": {
   "boundary": {
    "n": 48,
-   "mean": 111.4,
-   "min": 110.8,
-   "max": 111.7
+   "mean": 80.2,
+   "min": 79.5,
+   "max": 80.5
   },
   "all": {
    "n": 48,
-   "mean": 111.4,
-   "min": 110.8,
-   "max": 111.7
+   "mean": 80.2,
+   "min": 79.5,
+   "max": 80.5
   },
   "errors": [],
   "macros": null,
@@ -26,15 +26,15 @@
  "tt": {
   "boundary": {
    "n": 48,
-   "mean": 77.6,
-   "min": 77.2,
-   "max": 77.9
+   "mean": 55.9,
+   "min": 55.3,
+   "max": 56.3
   },
   "all": {
    "n": 48,
-   "mean": 77.6,
-   "min": 77.2,
-   "max": 77.9
+   "mean": 55.9,
+   "min": 55.3,
+   "max": 56.3
   },
   "errors": [],
   "macros": null,
@@ -43,15 +43,15 @@
  "ff": {
   "boundary": {
    "n": 48,
-   "mean": 57.8,
-   "min": 57.5,
-   "max": 58.1
+   "mean": 41.8,
+   "min": 41.2,
+   "max": 42.3
   },
   "all": {
    "n": 48,
-   "mean": 57.8,
-   "min": 57.5,
-   "max": 58.1
+   "mean": 41.8,
+   "min": 41.2,
+   "max": 42.3
   },
   "errors": [],
   "macros": null,
@@ -66,24 +66,24 @@
   "outliers": []
  },
  "env": {
-  "CK_SS_MEAN": 111,
-  "CK_SS_ALL_MEAN": 111,
-  "CK_SS_MIN": 111,
-  "CK_SS_ALL_MIN": 111,
-  "CK_SS_MAX": 112,
-  "CK_SS_ALL_MAX": 112,
-  "CK_TT_MEAN": 78,
-  "CK_TT_ALL_MEAN": 78,
-  "CK_TT_MIN": 77,
-  "CK_TT_ALL_MIN": 77,
-  "CK_TT_MAX": 78,
-  "CK_TT_ALL_MAX": 78,
-  "CK_FF_MEAN": 58,
-  "CK_FF_ALL_MEAN": 58,
-  "CK_FF_MIN": 58,
-  "CK_FF_ALL_MIN": 58,
-  "CK_FF_MAX": 58,
-  "CK_FF_ALL_MAX": 58,
+  "CK_SS_MEAN": 80,
+  "CK_SS_ALL_MEAN": 80,
+  "CK_SS_MIN": 80,
+  "CK_SS_ALL_MIN": 80,
+  "CK_SS_MAX": 80,
+  "CK_SS_ALL_MAX": 80,
+  "CK_TT_MEAN": 56,
+  "CK_TT_ALL_MEAN": 56,
+  "CK_TT_MIN": 55,
+  "CK_TT_ALL_MIN": 55,
+  "CK_TT_MAX": 56,
+  "CK_TT_ALL_MAX": 56,
+  "CK_FF_MEAN": 42,
+  "CK_FF_ALL_MEAN": 42,
+  "CK_FF_MIN": 41,
+  "CK_FF_ALL_MIN": 41,
+  "CK_FF_MAX": 42,
+  "CK_FF_ALL_MAX": 42,
   "CK_ROUTE_REF": "SS"
  },
  "lib_clock_pin": "clk_in",
@@ -91,7 +91,7 @@
  "clock_measurements": {
   "clk_in": {
    "schema": "opentallas.closure_loop.ck_insertion.v1",
-   "base": "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_48_we_fc-fc1-8cd3001df/routes/hbfd_rly_48_we_fc_fc1_8cd3001df/work/orfs/results/asap7/opentallas_hbfd_rly_48_WE_fc_asap7_ref_hbfd_rly_48_we_fc_fc1_8cd3001df/base",
+   "base": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/routes/hbfd_rly_48_we_fc_fc2_f87700624/work/orfs/results/asap7/opentallas_hbfd_rly_48_WE_fc_asap7_ref_hbfd_rly_48_we_fc_fc2_f87700624/base",
    "db": "6_final.odb",
    "sdc": "6_final.sdc",
    "clock": "core_clk",
@@ -100,15 +100,15 @@
    "ss": {
     "boundary": {
      "n": 48,
-     "mean": 111.4,
-     "min": 110.8,
-     "max": 111.7
+     "mean": 80.2,
+     "min": 79.5,
+     "max": 80.5
     },
     "all": {
      "n": 48,
-     "mean": 111.4,
-     "min": 110.8,
-     "max": 111.7
+     "mean": 80.2,
+     "min": 79.5,
+     "max": 80.5
     },
     "errors": [],
     "macros": null,
@@ -117,15 +117,15 @@
    "tt": {
     "boundary": {
      "n": 48,
-     "mean": 77.6,
-     "min": 77.2,
-     "max": 77.9
+     "mean": 55.9,
+     "min": 55.3,
+     "max": 56.3
     },
     "all": {
      "n": 48,
-     "mean": 77.6,
-     "min": 77.2,
-     "max": 77.9
+     "mean": 55.9,
+     "min": 55.3,
+     "max": 56.3
     },
     "errors": [],
     "macros": null,
@@ -134,15 +134,15 @@
    "ff": {
     "boundary": {
      "n": 48,
-     "mean": 57.8,
-     "min": 57.5,
-     "max": 58.1
+     "mean": 41.8,
+     "min": 41.2,
+     "max": 42.3
     },
     "all": {
      "n": 48,
-     "mean": 57.8,
-     "min": 57.5,
-     "max": 58.1
+     "mean": 41.8,
+     "min": 41.2,
+     "max": 42.3
     },
     "errors": [],
     "macros": null,
@@ -157,84 +157,28 @@
     "outliers": []
    },
    "env": {
-    "CK_SS_MEAN": 111,
-    "CK_SS_ALL_MEAN": 111,
-    "CK_SS_MIN": 111,
-    "CK_SS_ALL_MIN": 111,
-    "CK_SS_MAX": 112,
-    "CK_SS_ALL_MAX": 112,
-    "CK_TT_MEAN": 78,
-    "CK_TT_ALL_MEAN": 78,
-    "CK_TT_MIN": 77,
-    "CK_TT_ALL_MIN": 77,
-    "CK_TT_MAX": 78,
-    "CK_TT_ALL_MAX": 78,
-    "CK_FF_MEAN": 58,
-    "CK_FF_ALL_MEAN": 58,
-    "CK_FF_MIN": 58,
-    "CK_FF_ALL_MIN": 58,
-    "CK_FF_MAX": 58,
-    "CK_FF_ALL_MAX": 58,
+    "CK_SS_MEAN": 80,
+    "CK_SS_ALL_MEAN": 80,
+    "CK_SS_MIN": 80,
+    "CK_SS_ALL_MIN": 80,
+    "CK_SS_MAX": 80,
+    "CK_SS_ALL_MAX": 80,
+    "CK_TT_MEAN": 56,
+    "CK_TT_ALL_MEAN": 56,
+    "CK_TT_MIN": 55,
+    "CK_TT_ALL_MIN": 55,
+    "CK_TT_MAX": 56,
+    "CK_TT_ALL_MAX": 56,
+    "CK_FF_MEAN": 42,
+    "CK_FF_ALL_MEAN": 42,
+    "CK_FF_MIN": 41,
+    "CK_FF_ALL_MIN": 41,
+    "CK_FF_MAX": 42,
+    "CK_FF_ALL_MAX": 42,
     "CK_ROUTE_REF": "SS"
    },
    "lib_clock_pin": "clk_in",
    "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk_in}]"
-  }
- },
- "forwarded_clock": {
-  "schema": "opentallas.hbm.rly_fc_forwarded_clock.v1",
-  "base": "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_48_we_fc-fc1-8cd3001df/routes/hbfd_rly_48_we_fc_fc1_8cd3001df/work/orfs/results/asap7/opentallas_hbfd_rly_48_WE_fc_asap7_ref_hbfd_rly_48_we_fc_fc1_8cd3001df/base",
-  "rule": "F1 (DIE-CLOCK): clk_out = clk_in through one kept BUFx12f; die STA uses R (clk_in -> register CK) and D (clk_in -> clk_out) per corner",
-  "ss": {
-   "clk_in_to_clk_out_ps": {
-    "rise_max": 85.95,
-    "rise_min": 83.47,
-    "fall_max": 102.31,
-    "fall_min": 100.12,
-    "slew_rise": 8.21,
-    "slew_fall": 8.52,
-    "measured_at": "clk_out buffer Y pin (drives the clk_out port)"
-   },
-   "R_all": {
-    "n": 48,
-    "min": 110.8,
-    "max": 111.7,
-    "mean": 111.4
-   }
-  },
-  "tt": {
-   "clk_in_to_clk_out_ps": {
-    "rise_max": 60.22,
-    "rise_min": 58.68,
-    "fall_max": 66.67,
-    "fall_min": 65.2,
-    "slew_rise": 5.63,
-    "slew_fall": 5.54,
-    "measured_at": "clk_out buffer Y pin (drives the clk_out port)"
-   },
-   "R_all": {
-    "n": 48,
-    "min": 77.2,
-    "max": 77.9,
-    "mean": 77.6
-   }
-  },
-  "ff": {
-   "clk_in_to_clk_out_ps": {
-    "rise_max": 45.11,
-    "rise_min": 44.05,
-    "fall_max": 47.73,
-    "fall_min": 46.67,
-    "slew_rise": 4.27,
-    "slew_fall": 4.09,
-    "measured_at": "clk_out buffer Y pin (drives the clk_out port)"
-   },
-   "R_all": {
-    "n": 48,
-    "min": 57.5,
-    "max": 58.1,
-    "mean": 57.8
-   }
   }
  }
 }
