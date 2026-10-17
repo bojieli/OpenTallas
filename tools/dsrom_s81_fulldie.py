@@ -2305,8 +2305,23 @@ write_db /work/floorplan.odb
                variant=m['variant'])
     if bnd:
         man['bound_views'] = dict(table=VIEW_BINDING, masters=bnd)
+    man['relay_stages'] = _export_relay_stages(m, work)
     (work / 'manifest.json').write_text(json.dumps(man, indent=1))
     return man
+
+
+def _export_relay_stages(m, work):
+    """ROOT RELAY-SCHEMA 10-16: per-bus relay stages of this case -> work/relay_stages.json (opentallas.die_relay_stages.v1,
+    tools/s81/relay_stages_export.py); additive report, never a gate here (tools/die_relay_check.py is the check)"""
+    try:
+        sys.path.insert(0, str(ROOT / 'tools' / 's81'))
+        import relay_stages_export as RSX
+        doc = RSX.export_model(m, f"s81:{Path(work).name}:{m.get('variant')}", sources=['tools/dsrom_s81_fulldie.py'])
+        import die_relay_stages as DRS_
+        DRS_.write(Path(work) / 'relay_stages.json', doc)
+        return dict(file='relay_stages.json', digest=doc['digest'], buses=doc['bus_count'])
+    except Exception as e_:                      # noqa: BLE001 -- the export never changes the case
+        return dict(error=repr(e_)[:500])
 
 
 # ------------------------------------------------------------------------------------------------ case (b): GRT

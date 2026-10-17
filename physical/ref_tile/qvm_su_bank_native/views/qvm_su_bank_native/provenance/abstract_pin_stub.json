@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/qvm_su_bank_native.lef",
-    "sha256": "e843cb9b13e8e195e0a7c03a284d50a6e9691257a1c0c50cb2b86c25a8dba9d0"
+    "sha256": "24375320e59fa918a0462bb738659a1ffdd50f0fe8032ca94200c5c7184f4968"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch/claude/closure-loop/qvm_su_bank_native-su5-d625218dc/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch/claude/closure-loop/qvm_su_bank_native-su6-2efd107e5/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch/claude/closure-loop/qvm_su_bank_native-su5-d625218dc/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch/claude/closure-loop/qvm_su_bank_native-su5-d625218dc/record/views/qvm_su_bank_native/provenance/raw/qvm_su_bank_native.lef",
-    "/srv/opentallas-scratch/claude/closure-loop/qvm_su_bank_native-su5-d625218dc/record/views/qvm_su_bank_native/provenance/qvm_su_bank_native.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/qvm_su_bank_native-su6-2efd107e5/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/qvm_su_bank_native-su6-2efd107e5/record/views/qvm_su_bank_native/provenance/raw/qvm_su_bank_native.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/qvm_su_bank_native-su6-2efd107e5/record/views/qvm_su_bank_native/provenance/qvm_su_bank_native.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 7 OBS rects moved into 7 pins: ck_cap_hi, ck_cap_lo, ck_ctrl, ck_in_lo, ck_mem_hi, ck_mem_lo, rst_n; pockets: 61 OBS rects added on M7 (gaps < 2.048 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 8 OBS rects moved into 8 pins: ck_cap_hi, ck_cap_lo, ck_ctrl, ck_in_hi, ck_in_lo, ck_mem_hi, ck_mem_lo, rst_n; pockets: 63 OBS rects added on M7 (gaps < 2.048 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch/claude/closure-loop/qvm_su_bank_native-su5-d625218dc/record/views/qvm_su_bank_native/provenance/qvm_su_bank_native.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/qvm_su_bank_native-su6-2efd107e5/record/views/qvm_su_bank_native/provenance/qvm_su_bank_native.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "qvm_su_bank_native 371.52 x 241.92: PG M7 VDD 34 stripes (96% spread, 100% cov) / VSS 34 stripes (96% spread, 100% cov); strap M8; face pins 1072 blocked-above 0 blocked-same 0; clock ck_cap_hi insertion 11 ps; clock ck_cap_lo insertion 37 ps; clock ck_ctrl insertion 95 ps; clock ck_in_hi insertion 1 ps; clock ck_in_lo insertion 1 ps; clock ck_mem_hi insertion 6 ps; clock ck_mem_lo insertion 3 ps; clock ck_out_hi insertion 144 ps; clock ck_out_lo insertion 109 ps; pockets M7 0 (closed)",
+    "summary": "qvm_su_bank_native 371.52 x 241.92: PG M7 VDD 34 stripes (96% spread, 100% cov) / VSS 34 stripes (96% spread, 100% cov); strap M8; face pins 1072 blocked-above 0 blocked-same 0; clock ck_cap_hi insertion 11 ps; clock ck_cap_lo insertion 36 ps; clock ck_ctrl insertion 67 ps; clock ck_in_hi insertion 1 ps; clock ck_in_lo insertion 1 ps; clock ck_mem_hi insertion 6 ps; clock ck_mem_lo insertion 3 ps; clock ck_out_hi insertion 143 ps; clock ck_out_lo insertion 113 ps; pockets M7 0 (closed)",
     "info": {
       "cell": "qvm_su_bank_native",
       "W": 371.52,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 1072,
         "blocked_above": 0,
-        "covered_below": 51,
+        "covered_below": 31,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -81,36 +81,36 @@
           "min_ps": 10.76
         },
         "ck_cap_lo": {
-          "max_ps": 37.43,
-          "min_ps": 37.43
+          "max_ps": 36.32,
+          "min_ps": 36.32
         },
         "ck_ctrl": {
-          "max_ps": 94.59,
-          "min_ps": 80.73
+          "max_ps": 66.62,
+          "min_ps": 53.69
         },
         "ck_in_hi": {
           "max_ps": 1.18,
           "min_ps": 1.18
         },
         "ck_in_lo": {
-          "max_ps": 1.19,
-          "min_ps": 1.19
+          "max_ps": 1.17,
+          "min_ps": 1.17
         },
         "ck_mem_hi": {
-          "max_ps": 6.28,
-          "min_ps": 6.28
+          "max_ps": 6.4,
+          "min_ps": 6.4
         },
         "ck_mem_lo": {
-          "max_ps": 3.03,
-          "min_ps": 3.03
+          "max_ps": 3.04,
+          "min_ps": 3.04
         },
         "ck_out_hi": {
-          "max_ps": 143.93,
-          "min_ps": 123.38
+          "max_ps": 142.81,
+          "min_ps": 123.54
         },
         "ck_out_lo": {
-          "max_ps": 109.1,
-          "min_ps": 93.09
+          "max_ps": 112.74,
+          "min_ps": 93.47
         }
       },
       "pockets": {
@@ -119,7 +119,7 @@
         "marker": {
           "layer": "M7",
           "d_um": 2.048,
-          "added": 61
+          "added": 63
         },
         "count": 0,
         "area_um2": 0,
@@ -129,6 +129,6 @@
   },
   "output": {
     "path": "qvm_su_bank_native.lef",
-    "sha256": "a96a0beb6e827e7e9f9788619b165e56fe6b85958adda053dd886da6b373faeb"
+    "sha256": "836101f6b4e61ae0941a93817a86d7346582e5b6f7e5bd3202f301bc13d26481"
   }
 }
