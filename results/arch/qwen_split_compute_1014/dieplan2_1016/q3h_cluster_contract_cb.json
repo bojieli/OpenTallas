@@ -1,0 +1,2548 @@
+{
+ "schema": "opentallas.qwen.q3h.cluster_contract.v1",
+ "provisional": true,
+ "master": "qfd_c_b16",
+ "unit": "C_B16",
+ "owner": "Q-DIEPLAN3-CB (claude/q3h-cb-1016)",
+ "generator": "tools/qwen_split/q3h_cb16_gen.py",
+ "rtl": [
+  "rtl/physical/q3h/qfd_c_b16.sv",
+  "rtl/physical/q3h/qfd_c_b16_fabric.sv",
+  "rtl/physical/q3h/qfd_q3h_stn.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv (qfd_xcst_n, unchanged)",
+  "qfd_tile_nk_rp2_romleaf / qfd_tile_nl_rp2_romleaf (origin/codex/romleaf-native-1621, A0 parent RPH 3)"
+ ],
+ "outline_um": {
+  "w": 2350.08,
+  "h": 5184.0,
+  "area_mm2": 12.1828,
+  "note": "includes 64.8-um S / N strips (pin + entry / exit registers) and the internal row gaps; clusters may abut; corridors T / A / B are 129.6 um: T carries two 516-b runs (cols 1, 2) and two xcst stations per row side by side; A / B carry the tree's vertical leg runs (at 64.8 um corridor A peaked at 3,084 b = cut 0.98 on M3+M5)"
+ },
+ "placement_on_die": {
+  "W_half": "bands 0-1 (S of the head gap) MX, bands 2-3 R0: the master S face (bc, ck, straps) faces the head gap for the near band (1 / 2); the far band (0 / 3) takes bc from the near cluster's bco across the band gap",
+  "E_half": "MY (bands 2-3) / R180 (bands 0-1): local column 0 is the column farthest from the spine",
+  "local_column_of_die_column": "W: lc = c % 4; E: lc = 3 - c % 4",
+  "straps": {
+   "cid": "block index b = (die col // 4) * 4 + die row // 4 (today's ref_tile_id block); tile_id = 16 b + morton(lc, lr)",
+   "far": "1 for bands 0 and 3"
+  },
+  "die_head_tids": "column head of die column c (unchanged qfd_xcol, NH 8): N station k: k<4 -> 16*cid(band 2) + morton(lc, k); k>=4 -> 16*cid(band 3) + morton(lc, 7-k).  S station k: k<4 -> 16*cid(band 1) + morton(lc, k); k>=4 -> 16*cid(band 0) + morton(lc, 7-k).  Pooled pair (N s, S 7-s) = same slot, blocks 2 apart: the same id relation as today (rows s / s+8)."
+ },
+ "geometry": {
+  "corridors": {
+   "L": [
+    0.0,
+    64.8
+   ],
+   "A": [
+    522.72,
+    652.32
+   ],
+   "T": [
+    1110.24,
+    1239.84
+   ],
+   "B": [
+    1697.76,
+    1827.36
+   ],
+   "R": [
+    2285.28,
+    2350.08
+   ]
+  },
+  "columns": {
+   "0": {
+    "x": [
+     64.8,
+     522.72
+    ],
+    "orient": "MY",
+    "tree_face_corridor": "A",
+    "tap_face_corridor": "L"
+   },
+   "1": {
+    "x": [
+     652.32,
+     1110.24
+    ],
+    "orient": "R0",
+    "tree_face_corridor": "A",
+    "tap_face_corridor": "T"
+   },
+   "2": {
+    "x": [
+     1239.84,
+     1697.76
+    ],
+    "orient": "MY",
+    "tree_face_corridor": "B",
+    "tap_face_corridor": "T"
+   },
+   "3": {
+    "x": [
+     1827.36,
+     2285.28
+    ],
+    "orient": "R0",
+    "tree_face_corridor": "B",
+    "tap_face_corridor": "R"
+   }
+  },
+  "rows": {
+   "0": {
+    "y": [
+     64.8,
+     1231.2
+    ],
+    "orient": "R0"
+   },
+   "1": {
+    "y": [
+     1360.8,
+     2527.2
+    ],
+    "orient": "R0"
+   },
+   "2": {
+    "y": [
+     2656.8,
+     3823.2
+    ],
+    "orient": "R0"
+   },
+   "3": {
+    "y": [
+     3952.8,
+     5119.2
+    ],
+    "orient": "R0"
+   }
+  },
+  "channels": [
+   [
+    0.0,
+    64.8
+   ],
+   [
+    1231.2,
+    1360.8
+   ],
+   [
+    2527.2,
+    2656.8
+   ],
+   [
+    3823.2,
+    3952.8
+   ],
+   [
+    5119.2,
+    5184.0
+   ]
+  ],
+  "rule": "vertical runs in corridors, horizontal runs only in channels (tiles cap M7, cluster PG M7, signals <= M6)"
+ },
+ "children": {
+  "tiles": [
+   {
+    "inst": "u_t_0_0",
+    "slot": [
+     0,
+     0
+    ],
+    "master": "qfd_tile_nk_rp2_romleaf",
+    "view": "qfd_tile_nk_romleaf_a0 (pending)",
+    "at": [
+     64.8,
+     64.8
+    ],
+    "orient": "MY",
+    "k_slice": 0,
+    "hosts": [
+     "(1,0)"
+    ]
+   },
+   {
+    "inst": "u_t_0_1",
+    "slot": [
+     0,
+     1
+    ],
+    "master": "qfd_tile_nk_rp2_romleaf",
+    "view": "qfd_tile_nk_romleaf_a0 (pending)",
+    "at": [
+     64.8,
+     1360.8
+    ],
+    "orient": "MY",
+    "k_slice": 2,
+    "hosts": [
+     "(1,1)"
+    ]
+   },
+   {
+    "inst": "u_t_0_2",
+    "slot": [
+     0,
+     2
+    ],
+    "master": "qfd_tile_nk_rp2_romleaf",
+    "view": "qfd_tile_nk_romleaf_a0 (pending)",
+    "at": [
+     64.8,
+     2656.8
+    ],
+    "orient": "MY",
+    "k_slice": 8,
+    "hosts": [
+     "(1,4)"
+    ]
+   },
+   {
+    "inst": "u_t_0_3",
+    "slot": [
+     0,
+     3
+    ],
+    "master": "qfd_tile_nk_rp2_romleaf",
+    "view": "qfd_tile_nk_romleaf_a0 (pending)",
+    "at": [
+     64.8,
+     3952.8
+    ],
+    "orient": "MY",
+    "k_slice": 10,
+    "hosts": [
+     "(2,2)"
+    ]
+   },
+   {
+    "inst": "u_t_1_0",
+    "slot": [
+     1,
+     0
+    ],
+    "master": "qfd_tile_nk_rp2_romleaf",
+    "view": "qfd_tile_nk_romleaf_a0 (pending)",
+    "at": [
+     652.32,
+     64.8
+    ],
+    "orient": "R0",
+    "k_slice": 1,
+    "hosts": [
+     "(2,0)"
+    ]
+   },
+   {
+    "inst": "u_t_1_1",
+    "slot": [
+     1,
+     1
+    ],
+    "master": "qfd_tile_nk_rp2_romleaf",
+    "view": "qfd_tile_nk_romleaf_a0 (pending)",
+    "at": [
+     652.32,
+     1360.8
+    ],
+    "orient": "R0",
+    "k_slice": 3,
+    "hosts": [
+     "(2,1)"
+    ]
+   },
+   {
+    "inst": "u_t_1_2",
+    "slot": [
+     1,
+     2
+    ],
+    "master": "qfd_tile_nk_rp2_romleaf",
+    "view": "qfd_tile_nk_romleaf_a0 (pending)",
+    "at": [
+     652.32,
+     2656.8
+    ],
+    "orient": "R0",
+    "k_slice": 9,
+    "hosts": [
+     "(3,0)"
+    ]
+   },
+   {
+    "inst": "u_t_1_3",
+    "slot": [
+     1,
+     3
+    ],
+    "master": "qfd_tile_nk_rp2_romleaf",
+    "view": "qfd_tile_nk_romleaf_a0 (pending)",
+    "at": [
+     652.32,
+     3952.8
+    ],
+    "orient": "R0",
+    "k_slice": 11,
+    "hosts": [
+     "(1,5)"
+    ]
+   },
+   {
+    "inst": "u_t_2_0",
+    "slot": [
+     2,
+     0
+    ],
+    "master": "qfd_tile_nk_rp2_romleaf",
+    "view": "qfd_tile_nk_romleaf_a0 (pending)",
+    "at": [
+     1239.84,
+     64.8
+    ],
+    "orient": "MY",
+    "k_slice": 4,
+    "hosts": [
+     "(1,2)"
+    ]
+   },
+   {
+    "inst": "u_t_2_1",
+    "slot": [
+     2,
+     1
+    ],
+    "master": "qfd_tile_nk_rp2_romleaf",
+    "view": "qfd_tile_nk_romleaf_a0 (pending)",
+    "at": [
+     1239.84,
+     1360.8
+    ],
+    "orient": "MY",
+    "k_slice": 6,
+    "hosts": [
+     "(1,3)"
+    ]
+   },
+   {
+    "inst": "u_t_2_2",
+    "slot": [
+     2,
+     2
+    ],
+    "master": "qfd_tile_nk_rp2_romleaf",
+    "view": "qfd_tile_nk_romleaf_a0 (pending)",
+    "at": [
+     1239.84,
+     2656.8
+    ],
+    "orient": "MY",
+    "k_slice": 12,
+    "hosts": [
+     "(1,7)"
+    ]
+   },
+   {
+    "inst": "u_t_2_3",
+    "slot": [
+     2,
+     3
+    ],
+    "master": "qfd_tile_nk_rp2_romleaf",
+    "view": "qfd_tile_nk_romleaf_a0 (pending)",
+    "at": [
+     1239.84,
+     3952.8
+    ],
+    "orient": "MY",
+    "k_slice": 14,
+    "hosts": [
+     "(3,1)"
+    ]
+   },
+   {
+    "inst": "u_t_3_0",
+    "slot": [
+     3,
+     0
+    ],
+    "master": "qfd_tile_nl_rp2_romleaf",
+    "view": "qfd_tile_nl_romleaf_a0 (pending)",
+    "at": [
+     1827.36,
+     64.8
+    ],
+    "orient": "R0",
+    "k_slice": 5,
+    "hosts": []
+   },
+   {
+    "inst": "u_t_3_1",
+    "slot": [
+     3,
+     1
+    ],
+    "master": "qfd_tile_nk_rp2_romleaf",
+    "view": "qfd_tile_nk_romleaf_a0 (pending)",
+    "at": [
+     1827.36,
+     1360.8
+    ],
+    "orient": "R0",
+    "k_slice": 7,
+    "hosts": [
+     "(1,6)"
+    ]
+   },
+   {
+    "inst": "u_t_3_2",
+    "slot": [
+     3,
+     2
+    ],
+    "master": "qfd_tile_nk_rp2_romleaf",
+    "view": "qfd_tile_nk_romleaf_a0 (pending)",
+    "at": [
+     1827.36,
+     2656.8
+    ],
+    "orient": "R0",
+    "k_slice": 13,
+    "hosts": [
+     "(2,3)"
+    ]
+   },
+   {
+    "inst": "u_t_3_3",
+    "slot": [
+     3,
+     3
+    ],
+    "master": "qfd_tile_nk_rp2_romleaf",
+    "view": "qfd_tile_nk_romleaf_a0 (pending)",
+    "at": [
+     1827.36,
+     3952.8
+    ],
+    "orient": "R0",
+    "k_slice": 15,
+    "hosts": [
+     "(4,0)"
+    ]
+   }
+  ],
+  "stations": [
+   {
+    "inst": "u_fab.u_x_0_0",
+    "master": "qfd_xcst_n",
+    "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+    "centre": [
+     32.4,
+     526.332
+    ],
+    "orient": "MY",
+    "sidx": "near: 0, far: 7"
+   },
+   {
+    "inst": "u_fab.u_x_0_1",
+    "master": "qfd_xcst_n",
+    "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+    "centre": [
+     32.4,
+     1822.332
+    ],
+    "orient": "MY",
+    "sidx": "near: 1, far: 6"
+   },
+   {
+    "inst": "u_fab.u_x_0_2",
+    "master": "qfd_xcst_n",
+    "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+    "centre": [
+     32.4,
+     3118.332
+    ],
+    "orient": "MY",
+    "sidx": "near: 2, far: 5"
+   },
+   {
+    "inst": "u_fab.u_x_0_3",
+    "master": "qfd_xcst_n",
+    "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+    "centre": [
+     32.4,
+     4414.332
+    ],
+    "orient": "MY",
+    "sidx": "near: 3, far: 4"
+   },
+   {
+    "inst": "u_fab.u_x_1_0",
+    "master": "qfd_xcst_n",
+    "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+    "centre": [
+     1142.64,
+     526.332
+    ],
+    "orient": "R0",
+    "sidx": "near: 0, far: 7"
+   },
+   {
+    "inst": "u_fab.u_x_1_1",
+    "master": "qfd_xcst_n",
+    "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+    "centre": [
+     1142.64,
+     1822.332
+    ],
+    "orient": "R0",
+    "sidx": "near: 1, far: 6"
+   },
+   {
+    "inst": "u_fab.u_x_1_2",
+    "master": "qfd_xcst_n",
+    "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+    "centre": [
+     1142.64,
+     3118.332
+    ],
+    "orient": "R0",
+    "sidx": "near: 2, far: 5"
+   },
+   {
+    "inst": "u_fab.u_x_1_3",
+    "master": "qfd_xcst_n",
+    "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+    "centre": [
+     1142.64,
+     4414.332
+    ],
+    "orient": "R0",
+    "sidx": "near: 3, far: 4"
+   },
+   {
+    "inst": "u_fab.u_x_2_0",
+    "master": "qfd_xcst_n",
+    "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+    "centre": [
+     1207.44,
+     526.332
+    ],
+    "orient": "MY",
+    "sidx": "near: 0, far: 7"
+   },
+   {
+    "inst": "u_fab.u_x_2_1",
+    "master": "qfd_xcst_n",
+    "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+    "centre": [
+     1207.44,
+     1822.332
+    ],
+    "orient": "MY",
+    "sidx": "near: 1, far: 6"
+   },
+   {
+    "inst": "u_fab.u_x_2_2",
+    "master": "qfd_xcst_n",
+    "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+    "centre": [
+     1207.44,
+     3118.332
+    ],
+    "orient": "MY",
+    "sidx": "near: 2, far: 5"
+   },
+   {
+    "inst": "u_fab.u_x_2_3",
+    "master": "qfd_xcst_n",
+    "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+    "centre": [
+     1207.44,
+     4414.332
+    ],
+    "orient": "MY",
+    "sidx": "near: 3, far: 4"
+   },
+   {
+    "inst": "u_fab.u_x_3_0",
+    "master": "qfd_xcst_n",
+    "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+    "centre": [
+     2317.68,
+     526.332
+    ],
+    "orient": "R0",
+    "sidx": "near: 0, far: 7"
+   },
+   {
+    "inst": "u_fab.u_x_3_1",
+    "master": "qfd_xcst_n",
+    "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+    "centre": [
+     2317.68,
+     1822.332
+    ],
+    "orient": "R0",
+    "sidx": "near: 1, far: 6"
+   },
+   {
+    "inst": "u_fab.u_x_3_2",
+    "master": "qfd_xcst_n",
+    "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+    "centre": [
+     2317.68,
+     3118.332
+    ],
+    "orient": "R0",
+    "sidx": "near: 2, far: 5"
+   },
+   {
+    "inst": "u_fab.u_x_3_3",
+    "master": "qfd_xcst_n",
+    "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+    "centre": [
+     2317.68,
+     4414.332
+    ],
+    "orient": "R0",
+    "sidx": "near: 3, far: 4"
+   }
+  ],
+  "relays": {
+   "down_run": [
+    {
+     "name": "entry",
+     "y": 32.4
+    },
+    {
+     "name": "rly0",
+     "y": 279.366
+    },
+    {
+     "name": "rly1",
+     "y": 850.332
+    },
+    {
+     "name": "rly2",
+     "y": 1174.332
+    },
+    {
+     "name": "rly3",
+     "y": 1498.332
+    },
+    {
+     "name": "rly4",
+     "y": 2146.332
+    },
+    {
+     "name": "rly5",
+     "y": 2470.332
+    },
+    {
+     "name": "rly6",
+     "y": 2794.332
+    },
+    {
+     "name": "rly7",
+     "y": 3442.332
+    },
+    {
+     "name": "rly8",
+     "y": 3766.332
+    },
+    {
+     "name": "rly9",
+     "y": 4090.332
+    },
+    {
+     "name": "rly10",
+     "y": 4660.088
+    },
+    {
+     "name": "rly11",
+     "y": 4905.844
+    },
+    {
+     "name": "exit",
+     "y": 5151.6
+    }
+   ],
+   "down_run_x": {
+    "0": 32.4,
+    "1": 1142.64,
+    "2": 1207.4399999999998,
+    "3": 2317.68
+   },
+   "tree_legs": [
+    {
+     "node": [
+      1,
+      0
+     ],
+     "side": "a",
+     "host": [
+      0,
+      0
+     ],
+     "src": [
+      "t_out",
+      [
+       0,
+       0
+      ]
+     ],
+     "um": 330.7,
+     "relays": 0,
+     "min_relays": 0,
+     "at": []
+    },
+    {
+     "node": [
+      1,
+      0
+     ],
+     "side": "b",
+     "host": [
+      0,
+      0
+     ],
+     "src": [
+      "t_out",
+      [
+       1,
+       0
+      ]
+     ],
+     "um": 230.1,
+     "relays": 0,
+     "min_relays": 0,
+     "at": []
+    },
+    {
+     "node": [
+      1,
+      1
+     ],
+     "side": "a",
+     "host": [
+      0,
+      1
+     ],
+     "src": [
+      "t_out",
+      [
+       0,
+       1
+      ]
+     ],
+     "um": 330.7,
+     "relays": 0,
+     "min_relays": 0,
+     "at": []
+    },
+    {
+     "node": [
+      1,
+      1
+     ],
+     "side": "b",
+     "host": [
+      0,
+      1
+     ],
+     "src": [
+      "t_out",
+      [
+       1,
+       1
+      ]
+     ],
+     "um": 230.1,
+     "relays": 0,
+     "min_relays": 0,
+     "at": []
+    },
+    {
+     "node": [
+      1,
+      2
+     ],
+     "side": "a",
+     "host": [
+      2,
+      0
+     ],
+     "src": [
+      "t_out",
+      [
+       2,
+       0
+      ]
+     ],
+     "um": 330.7,
+     "relays": 0,
+     "min_relays": 0,
+     "at": []
+    },
+    {
+     "node": [
+      1,
+      2
+     ],
+     "side": "b",
+     "host": [
+      2,
+      0
+     ],
+     "src": [
+      "t_out",
+      [
+       3,
+       0
+      ]
+     ],
+     "um": 230.1,
+     "relays": 0,
+     "min_relays": 0,
+     "at": []
+    },
+    {
+     "node": [
+      1,
+      3
+     ],
+     "side": "a",
+     "host": [
+      2,
+      1
+     ],
+     "src": [
+      "t_out",
+      [
+       2,
+       1
+      ]
+     ],
+     "um": 330.7,
+     "relays": 0,
+     "min_relays": 0,
+     "at": []
+    },
+    {
+     "node": [
+      1,
+      3
+     ],
+     "side": "b",
+     "host": [
+      2,
+      1
+     ],
+     "src": [
+      "t_out",
+      [
+       3,
+       1
+      ]
+     ],
+     "um": 230.1,
+     "relays": 0,
+     "min_relays": 0,
+     "at": []
+    },
+    {
+     "node": [
+      1,
+      4
+     ],
+     "side": "a",
+     "host": [
+      0,
+      2
+     ],
+     "src": [
+      "t_out",
+      [
+       0,
+       2
+      ]
+     ],
+     "um": 330.7,
+     "relays": 0,
+     "min_relays": 0,
+     "at": []
+    },
+    {
+     "node": [
+      1,
+      4
+     ],
+     "side": "b",
+     "host": [
+      0,
+      2
+     ],
+     "src": [
+      "t_out",
+      [
+       1,
+       2
+      ]
+     ],
+     "um": 230.1,
+     "relays": 0,
+     "min_relays": 0,
+     "at": []
+    },
+    {
+     "node": [
+      1,
+      5
+     ],
+     "side": "a",
+     "host": [
+      1,
+      3
+     ],
+     "src": [
+      "t_out",
+      [
+       0,
+       3
+      ]
+     ],
+     "um": 330.7,
+     "relays": 0,
+     "min_relays": 0,
+     "at": []
+    },
+    {
+     "node": [
+      1,
+      5
+     ],
+     "side": "b",
+     "host": [
+      1,
+      3
+     ],
+     "src": [
+      "t_out",
+      [
+       1,
+       3
+      ]
+     ],
+     "um": 230.1,
+     "relays": 0,
+     "min_relays": 0,
+     "at": []
+    },
+    {
+     "node": [
+      1,
+      6
+     ],
+     "side": "a",
+     "host": [
+      3,
+      1
+     ],
+     "src": [
+      "t_out",
+      [
+       2,
+       2
+      ]
+     ],
+     "um": 1626.7,
+     "relays": 4,
+     "min_relays": 4,
+     "at": [
+      [
+       1762.56,
+       2708.268
+      ],
+      [
+       1762.56,
+       2382.924
+      ],
+      [
+       1762.56,
+       2057.58
+      ],
+      [
+       1762.56,
+       1732.236
+      ]
+     ]
+    },
+    {
+     "node": [
+      1,
+      6
+     ],
+     "side": "b",
+     "host": [
+      3,
+      1
+     ],
+     "src": [
+      "t_out",
+      [
+       3,
+       2
+      ]
+     ],
+     "um": 1526.1,
+     "relays": 4,
+     "min_relays": 4,
+     "at": [
+      [
+       1762.56,
+       2728.39
+      ],
+      [
+       1762.56,
+       2423.167
+      ],
+      [
+       1762.56,
+       2117.945
+      ],
+      [
+       1762.56,
+       1812.722
+      ]
+     ]
+    },
+    {
+     "node": [
+      1,
+      7
+     ],
+     "side": "a",
+     "host": [
+      2,
+      2
+     ],
+     "src": [
+      "t_out",
+      [
+       2,
+       3
+      ]
+     ],
+     "um": 1626.7,
+     "relays": 4,
+     "min_relays": 4,
+     "at": [
+      [
+       1762.56,
+       4004.268
+      ],
+      [
+       1762.56,
+       3678.924
+      ],
+      [
+       1762.56,
+       3353.58
+      ],
+      [
+       1762.56,
+       3028.236
+      ]
+     ]
+    },
+    {
+     "node": [
+      1,
+      7
+     ],
+     "side": "b",
+     "host": [
+      2,
+      2
+     ],
+     "src": [
+      "t_out",
+      [
+       3,
+       3
+      ]
+     ],
+     "um": 1526.1,
+     "relays": 4,
+     "min_relays": 4,
+     "at": [
+      [
+       1762.56,
+       4024.39
+      ],
+      [
+       1762.56,
+       3719.167
+      ],
+      [
+       1762.56,
+       3413.945
+      ],
+      [
+       1762.56,
+       3108.722
+      ]
+     ]
+    },
+    {
+     "node": [
+      2,
+      0
+     ],
+     "side": "a",
+     "host": [
+      1,
+      0
+     ],
+     "src": [
+      "n_y",
+      [
+       0,
+       0
+      ]
+     ],
+     "um": 431.2,
+     "relays": 8,
+     "min_relays": 1,
+     "at": [
+      [
+       570.635,
+       477.324
+      ],
+      [
+       587.52,
+       446.295
+      ],
+      [
+       587.52,
+       398.38
+      ],
+      [
+       587.52,
+       350.465
+      ],
+      [
+       587.52,
+       302.551
+      ],
+      [
+       587.52,
+       254.636
+      ],
+      [
+       587.52,
+       206.721
+      ],
+      [
+       604.405,
+       175.692
+      ]
+     ]
+    },
+    {
+     "node": [
+      2,
+      0
+     ],
+     "side": "b",
+     "host": [
+      1,
+      0
+     ],
+     "src": [
+      "n_y",
+      [
+       0,
+       1
+      ]
+     ],
+     "um": 1626.6,
+     "relays": 4,
+     "min_relays": 4,
+     "at": [
+      [
+       587.52,
+       1512.799
+      ],
+      [
+       587.52,
+       1187.474
+      ],
+      [
+       587.52,
+       862.15
+      ],
+      [
+       587.52,
+       536.825
+      ]
+     ]
+    },
+    {
+     "node": [
+      2,
+      1
+     ],
+     "side": "a",
+     "host": [
+      1,
+      1
+     ],
+     "src": [
+      "n_y",
+      [
+       2,
+       0
+      ]
+     ],
+     "um": 2299.0,
+     "relays": 9,
+     "min_relays": 6,
+     "at": [
+      [
+       1762.56,
+       642.425
+      ],
+      [
+       1762.56,
+       872.326
+      ],
+      [
+       1762.56,
+       1102.226
+      ],
+      [
+       1726.433,
+       1296.0
+      ],
+      [
+       1496.532,
+       1296.0
+      ],
+      [
+       1266.631,
+       1296.0
+      ],
+      [
+       1036.73,
+       1296.0
+      ],
+      [
+       806.83,
+       1296.0
+      ],
+      [
+       587.52,
+       1306.591
+      ]
+     ]
+    },
+    {
+     "node": [
+      2,
+      1
+     ],
+     "side": "b",
+     "host": [
+      1,
+      1
+     ],
+     "src": [
+      "n_y",
+      [
+       2,
+       1
+      ]
+     ],
+     "um": 2058.3,
+     "relays": 5,
+     "min_relays": 5,
+     "at": [
+      [
+       1762.56,
+       1495.08
+      ],
+      [
+       1618.596,
+       1296.0
+      ],
+      [
+       1275.552,
+       1296.0
+      ],
+      [
+       932.508,
+       1296.0
+      ],
+      [
+       589.464,
+       1296.0
+      ]
+     ]
+    },
+    {
+     "node": [
+      2,
+      2
+     ],
+     "side": "a",
+     "host": [
+      0,
+      3
+     ],
+     "src": [
+      "n_y",
+      [
+       0,
+       2
+      ]
+     ],
+     "um": 1124.0,
+     "relays": 4,
+     "min_relays": 3,
+     "at": [
+      [
+       587.52,
+       3229.318
+      ],
+      [
+       587.52,
+       3454.111
+      ],
+      [
+       587.52,
+       3678.905
+      ],
+      [
+       587.52,
+       3903.698
+      ]
+     ]
+    },
+    {
+     "node": [
+      2,
+      2
+     ],
+     "side": "b",
+     "host": [
+      0,
+      3
+     ],
+     "src": [
+      "n_y",
+      [
+       1,
+       3
+      ]
+     ],
+     "um": 330.6,
+     "relays": 0,
+     "min_relays": 0,
+     "at": []
+    },
+    {
+     "node": [
+      2,
+      3
+     ],
+     "side": "a",
+     "host": [
+      3,
+      2
+     ],
+     "src": [
+      "n_y",
+      [
+       3,
+       1
+      ]
+     ],
+     "um": 1124.0,
+     "relays": 4,
+     "min_relays": 3,
+     "at": [
+      [
+       1762.56,
+       1933.318
+      ],
+      [
+       1762.56,
+       2158.111
+      ],
+      [
+       1762.56,
+       2382.905
+      ],
+      [
+       1762.56,
+       2607.698
+      ]
+     ]
+    },
+    {
+     "node": [
+      2,
+      3
+     ],
+     "side": "b",
+     "host": [
+      3,
+      2
+     ],
+     "src": [
+      "n_y",
+      [
+       2,
+       2
+      ]
+     ],
+     "um": 330.6,
+     "relays": 0,
+     "min_relays": 0,
+     "at": []
+    },
+    {
+     "node": [
+      3,
+      0
+     ],
+     "side": "a",
+     "host": [
+      1,
+      2
+     ],
+     "src": [
+      "n_y",
+      [
+       1,
+       0
+      ]
+     ],
+     "um": 2420.0,
+     "relays": 6,
+     "min_relays": 6,
+     "at": [
+      [
+       587.52,
+       758.234
+      ],
+      [
+       587.52,
+       1103.943
+      ],
+      [
+       587.52,
+       1449.653
+      ],
+      [
+       587.52,
+       1795.363
+      ],
+      [
+       587.52,
+       2141.073
+      ],
+      [
+       587.52,
+       2486.782
+      ]
+     ]
+    },
+    {
+     "node": [
+      3,
+      0
+     ],
+     "side": "b",
+     "host": [
+      1,
+      2
+     ],
+     "src": [
+      "n_y",
+      [
+       1,
+       1
+      ]
+     ],
+     "um": 1224.6,
+     "relays": 5,
+     "min_relays": 3,
+     "at": [
+      [
+       587.52,
+       1912.62
+      ],
+      [
+       587.52,
+       2116.716
+      ],
+      [
+       587.52,
+       2320.812
+      ],
+      [
+       587.52,
+       2524.908
+      ],
+      [
+       587.52,
+       2729.004
+      ]
+     ]
+    },
+    {
+     "node": [
+      3,
+      1
+     ],
+     "side": "a",
+     "host": [
+      2,
+      3
+     ],
+     "src": [
+      "n_y",
+      [
+       0,
+       3
+      ]
+     ],
+     "um": 1957.7,
+     "relays": 7,
+     "min_relays": 5,
+     "at": [
+      [
+       587.52,
+       4185.417
+      ],
+      [
+       587.52,
+       3940.71
+      ],
+      [
+       779.517,
+       3888.0
+      ],
+      [
+       1024.224,
+       3888.0
+      ],
+      [
+       1268.931,
+       3888.0
+      ],
+      [
+       1513.638,
+       3888.0
+      ],
+      [
+       1758.345,
+       3888.0
+      ]
+     ]
+    },
+    {
+     "node": [
+      3,
+      1
+     ],
+     "side": "b",
+     "host": [
+      2,
+      3
+     ],
+     "src": [
+      "n_y",
+      [
+       3,
+       2
+      ]
+     ],
+     "um": 1224.6,
+     "relays": 3,
+     "min_relays": 3,
+     "at": [
+      [
+       1762.56,
+       3310.668
+      ],
+      [
+       1762.56,
+       3616.812
+      ],
+      [
+       1762.56,
+       3922.956
+      ]
+     ]
+    },
+    {
+     "node": [
+      4,
+      0
+     ],
+     "side": "a",
+     "host": [
+      3,
+      3
+     ],
+     "src": [
+      "n_y",
+      [
+       1,
+       2
+      ]
+     ],
+     "um": 2299.0,
+     "relays": 6,
+     "min_relays": 6,
+     "at": [
+      [
+       587.52,
+       3332.954
+      ],
+      [
+       587.52,
+       3661.383
+      ],
+      [
+       689.333,
+       3888.0
+      ],
+      [
+       1017.763,
+       3888.0
+      ],
+      [
+       1346.193,
+       3888.0
+      ],
+      [
+       1674.622,
+       3888.0
+      ]
+     ]
+    },
+    {
+     "node": [
+      4,
+      0
+     ],
+     "side": "b",
+     "host": [
+      3,
+      3
+     ],
+     "src": [
+      "n_y",
+      [
+       2,
+       3
+      ]
+     ],
+     "um": 330.6,
+     "relays": 1,
+     "min_relays": 0,
+     "at": [
+      [
+       1762.56,
+       4264.812
+      ]
+     ]
+    }
+   ],
+   "rs": {
+    "root": [
+     3,
+     3
+    ],
+    "um": 851.1,
+    "relays": 2,
+    "exit_register": true,
+    "at": [
+     [
+      1762.56,
+      4584.216
+     ],
+     [
+      1762.56,
+      4867.908
+     ],
+     [
+      1762.56,
+      5151.6
+     ]
+    ]
+   }
+  },
+  "reset": {
+   "depth_edges": 19,
+   "nodes": [
+    {
+     "name": "rst_pin",
+     "parent": null,
+     "at": [
+      1175.04,
+      32.4
+     ]
+    },
+    {
+     "name": "rst_L_1",
+     "parent": "rst_pin",
+     "at": [
+      889.38,
+      32.4
+     ]
+    },
+    {
+     "name": "rst_L_2",
+     "parent": "rst_L_1",
+     "at": [
+      603.72,
+      32.4
+     ]
+    },
+    {
+     "name": "rst_L_3",
+     "parent": "rst_L_2",
+     "at": [
+      318.06,
+      32.4
+     ]
+    },
+    {
+     "name": "rst_L_corner",
+     "parent": "rst_L_3",
+     "at": [
+      32.4,
+      32.4
+     ]
+    },
+    {
+     "name": "rst_L_5",
+     "parent": "rst_L_corner",
+     "at": [
+      32.4,
+      266.454
+     ]
+    },
+    {
+     "name": "rst_L_r0",
+     "parent": "rst_L_5",
+     "at": [
+      32.4,
+      500.508
+     ]
+    },
+    {
+     "name": "rst_L_7",
+     "parent": "rst_L_r0",
+     "at": [
+      32.4,
+      824.508
+     ]
+    },
+    {
+     "name": "rst_L_8",
+     "parent": "rst_L_7",
+     "at": [
+      32.4,
+      1148.508
+     ]
+    },
+    {
+     "name": "rst_L_9",
+     "parent": "rst_L_8",
+     "at": [
+      32.4,
+      1472.508
+     ]
+    },
+    {
+     "name": "rst_L_r1",
+     "parent": "rst_L_9",
+     "at": [
+      32.4,
+      1796.508
+     ]
+    },
+    {
+     "name": "rst_L_11",
+     "parent": "rst_L_r1",
+     "at": [
+      32.4,
+      2120.508
+     ]
+    },
+    {
+     "name": "rst_L_12",
+     "parent": "rst_L_11",
+     "at": [
+      32.4,
+      2444.508
+     ]
+    },
+    {
+     "name": "rst_L_13",
+     "parent": "rst_L_12",
+     "at": [
+      32.4,
+      2768.508
+     ]
+    },
+    {
+     "name": "rst_L_r2",
+     "parent": "rst_L_13",
+     "at": [
+      32.4,
+      3092.508
+     ]
+    },
+    {
+     "name": "rst_L_15",
+     "parent": "rst_L_r2",
+     "at": [
+      32.4,
+      3416.508
+     ]
+    },
+    {
+     "name": "rst_L_16",
+     "parent": "rst_L_15",
+     "at": [
+      32.4,
+      3740.508
+     ]
+    },
+    {
+     "name": "rst_L_17",
+     "parent": "rst_L_16",
+     "at": [
+      32.4,
+      4064.508
+     ]
+    },
+    {
+     "name": "rst_L_r3",
+     "parent": "rst_L_17",
+     "at": [
+      32.4,
+      4388.508
+     ]
+    },
+    {
+     "name": "rst_T_19",
+     "parent": "rst_pin",
+     "at": [
+      1175.04,
+      266.454
+     ]
+    },
+    {
+     "name": "rst_T_r0",
+     "parent": "rst_T_19",
+     "at": [
+      1175.04,
+      500.508
+     ]
+    },
+    {
+     "name": "rst_T_21",
+     "parent": "rst_T_r0",
+     "at": [
+      1175.04,
+      824.508
+     ]
+    },
+    {
+     "name": "rst_T_22",
+     "parent": "rst_T_21",
+     "at": [
+      1175.04,
+      1148.508
+     ]
+    },
+    {
+     "name": "rst_T_23",
+     "parent": "rst_T_22",
+     "at": [
+      1175.04,
+      1472.508
+     ]
+    },
+    {
+     "name": "rst_T_r1",
+     "parent": "rst_T_23",
+     "at": [
+      1175.04,
+      1796.508
+     ]
+    },
+    {
+     "name": "rst_T_25",
+     "parent": "rst_T_r1",
+     "at": [
+      1175.04,
+      2120.508
+     ]
+    },
+    {
+     "name": "rst_T_26",
+     "parent": "rst_T_25",
+     "at": [
+      1175.04,
+      2444.508
+     ]
+    },
+    {
+     "name": "rst_T_27",
+     "parent": "rst_T_26",
+     "at": [
+      1175.04,
+      2768.508
+     ]
+    },
+    {
+     "name": "rst_T_r2",
+     "parent": "rst_T_27",
+     "at": [
+      1175.04,
+      3092.508
+     ]
+    },
+    {
+     "name": "rst_T_29",
+     "parent": "rst_T_r2",
+     "at": [
+      1175.04,
+      3416.508
+     ]
+    },
+    {
+     "name": "rst_T_30",
+     "parent": "rst_T_29",
+     "at": [
+      1175.04,
+      3740.508
+     ]
+    },
+    {
+     "name": "rst_T_31",
+     "parent": "rst_T_30",
+     "at": [
+      1175.04,
+      4064.508
+     ]
+    },
+    {
+     "name": "rst_T_r3",
+     "parent": "rst_T_31",
+     "at": [
+      1175.04,
+      4388.508
+     ]
+    },
+    {
+     "name": "rst_R_33",
+     "parent": "rst_pin",
+     "at": [
+      1460.7,
+      32.4
+     ]
+    },
+    {
+     "name": "rst_R_34",
+     "parent": "rst_R_33",
+     "at": [
+      1746.36,
+      32.4
+     ]
+    },
+    {
+     "name": "rst_R_35",
+     "parent": "rst_R_34",
+     "at": [
+      2032.02,
+      32.4
+     ]
+    },
+    {
+     "name": "rst_R_corner",
+     "parent": "rst_R_35",
+     "at": [
+      2317.68,
+      32.4
+     ]
+    },
+    {
+     "name": "rst_R_37",
+     "parent": "rst_R_corner",
+     "at": [
+      2317.68,
+      266.454
+     ]
+    },
+    {
+     "name": "rst_R_r0",
+     "parent": "rst_R_37",
+     "at": [
+      2317.68,
+      500.508
+     ]
+    },
+    {
+     "name": "rst_R_39",
+     "parent": "rst_R_r0",
+     "at": [
+      2317.68,
+      824.508
+     ]
+    },
+    {
+     "name": "rst_R_40",
+     "parent": "rst_R_39",
+     "at": [
+      2317.68,
+      1148.508
+     ]
+    },
+    {
+     "name": "rst_R_41",
+     "parent": "rst_R_40",
+     "at": [
+      2317.68,
+      1472.508
+     ]
+    },
+    {
+     "name": "rst_R_r1",
+     "parent": "rst_R_41",
+     "at": [
+      2317.68,
+      1796.508
+     ]
+    },
+    {
+     "name": "rst_R_43",
+     "parent": "rst_R_r1",
+     "at": [
+      2317.68,
+      2120.508
+     ]
+    },
+    {
+     "name": "rst_R_44",
+     "parent": "rst_R_43",
+     "at": [
+      2317.68,
+      2444.508
+     ]
+    },
+    {
+     "name": "rst_R_45",
+     "parent": "rst_R_44",
+     "at": [
+      2317.68,
+      2768.508
+     ]
+    },
+    {
+     "name": "rst_R_r2",
+     "parent": "rst_R_45",
+     "at": [
+      2317.68,
+      3092.508
+     ]
+    },
+    {
+     "name": "rst_R_47",
+     "parent": "rst_R_r2",
+     "at": [
+      2317.68,
+      3416.508
+     ]
+    },
+    {
+     "name": "rst_R_48",
+     "parent": "rst_R_47",
+     "at": [
+      2317.68,
+      3740.508
+     ]
+    },
+    {
+     "name": "rst_R_49",
+     "parent": "rst_R_48",
+     "at": [
+      2317.68,
+      4064.508
+     ]
+    },
+    {
+     "name": "rst_R_r3",
+     "parent": "rst_R_49",
+     "at": [
+      2317.68,
+      4388.508
+     ]
+    }
+   ],
+   "note": "1-b equal-depth tree: every tile rst_n and every station rst_n 19 edges after the pin"
+  },
+  "clock": {
+   "entry": "ck, S face at the T corridor centre",
+   "roots": 1,
+   "sinks": "all 36 (nk) / 32 (nl) tile clock entries + every station / relay flop; the cluster CTS balances to each tile entry with that entry's measured insertion (A0 view)"
+  }
+ },
+ "tree": {
+  "order": "reference morton pair tree over K-slices morton(lc, lr); leg a = lower half",
+  "ast": [
+   [
+    [
+     [
+      0,
+      1
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    [
+     [
+      4,
+      5
+     ],
+     [
+      6,
+      7
+     ]
+    ]
+   ],
+   [
+    [
+     [
+      8,
+      9
+     ],
+     [
+      10,
+      11
+     ]
+    ],
+    [
+     [
+      12,
+      13
+     ],
+     [
+      14,
+      15
+     ]
+    ]
+   ]
+  ],
+  "hosts": {
+   "1_0": [
+    0,
+    0
+   ],
+   "1_1": [
+    0,
+    1
+   ],
+   "1_2": [
+    2,
+    0
+   ],
+   "1_3": [
+    2,
+    1
+   ],
+   "1_4": [
+    0,
+    2
+   ],
+   "1_5": [
+    1,
+    3
+   ],
+   "1_6": [
+    3,
+    1
+   ],
+   "1_7": [
+    2,
+    2
+   ],
+   "2_0": [
+    1,
+    0
+   ],
+   "2_1": [
+    1,
+    1
+   ],
+   "2_2": [
+    0,
+    3
+   ],
+   "2_3": [
+    3,
+    2
+   ],
+   "3_0": [
+    1,
+    2
+   ],
+   "3_1": [
+    2,
+    3
+   ],
+   "4_0": [
+    3,
+    3
+   ]
+  },
+  "nl_slot": [
+   3,
+   0
+  ]
+ },
+ "ports": [
+  {
+   "port": "bc0",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    4.32,
+    176.32
+   ],
+   "pins_per_um": 3.0,
+   "note": "column word of local column 0 (corridor L)"
+  },
+  {
+   "port": "bco0",
+   "bits": 516,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    4.32,
+    176.32
+   ],
+   "pins_per_um": 3.0,
+   "note": "feed-through of local column 0 to the far cluster"
+  },
+  {
+   "port": "bc1",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    980.64,
+    1152.64
+   ],
+   "pins_per_um": 3.0,
+   "note": "column word of local column 1 (corridor T)"
+  },
+  {
+   "port": "bco1",
+   "bits": 516,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    980.64,
+    1152.64
+   ],
+   "pins_per_um": 3.0,
+   "note": "feed-through of local column 1 to the far cluster"
+  },
+  {
+   "port": "bc2",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1197.44,
+    1369.44
+   ],
+   "pins_per_um": 3.0,
+   "note": "column word of local column 2 (corridor T)"
+  },
+  {
+   "port": "bco2",
+   "bits": 516,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    1197.44,
+    1369.44
+   ],
+   "pins_per_um": 3.0,
+   "note": "feed-through of local column 2 to the far cluster"
+  },
+  {
+   "port": "bc3",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    2173.76,
+    2345.76
+   ],
+   "pins_per_um": 3.0,
+   "note": "column word of local column 3 (corridor R)"
+  },
+  {
+   "port": "bco3",
+   "bits": 516,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    2173.76,
+    2345.76
+   ],
+   "pins_per_um": 3.0,
+   "note": "feed-through of local column 3 to the far cluster"
+  },
+  {
+   "port": "rs",
+   "bits": 514,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    1676.893,
+    1848.227
+   ],
+   "pins_per_um": 3.0,
+   "note": "block word {fault, valid, 512} (was bword)"
+  },
+  {
+   "port": "ck",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1174.89,
+    1175.19
+   ],
+   "pins_per_um": 3.333,
+   "note": "regional clock root entry (die trunk, neighbour-matched / F1)"
+  },
+  {
+   "port": "rst_n",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1177.04,
+    1177.34
+   ],
+   "pins_per_um": 3.333,
+   "note": ""
+  },
+  {
+   "port": "far",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1178.04,
+    1178.34
+   ],
+   "pins_per_um": 3.333,
+   "note": "strap: 1 = far band (0 / 3)"
+  },
+  {
+   "port": "cid",
+   "bits": 12,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1166.04,
+    1172.04
+   ],
+   "pins_per_um": 2.0,
+   "note": "strap: block index = tile_id[15:4]"
+  },
+  {
+   "port": "tie_hi",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1179.04,
+    1179.34
+   ],
+   "pins_per_um": 3.333,
+   "note": ""
+  },
+  {
+   "port": "tie_lo",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1180.04,
+    1180.34
+   ],
+   "pins_per_um": 3.333,
+   "note": ""
+  }
+ ],
+ "latency_edges": {
+  "bc_to_tap": {
+   "row0": 3,
+   "row1": 7,
+   "row2": 11,
+   "row3": 15
+  },
+  "bc_to_bco": 18,
+  "bc_to_rs": "30 + T_tile + 4 x N_face  (T_tile: tile tap pin -> t_out pin; N_face: n_a pin -> n_y pin of the A0 parent)",
+  "rs_fabric": 30,
+  "note": "all tiles of one row take go on the same edge; rows are a 4-edge wave and the up legs absorb it exactly (no balancing pad on the wave); the four bc words of a cluster must arrive on the same edge (die-top)"
+ },
+ "hops_um": {
+  "limit": 373.0,
+  "plan": 360.0,
+  "tree_max": 345.7,
+  "down_run_max": 324.0,
+  "reset_max": 324.0,
+  "station_to_tap_max": 82.8,
+  "in_cluster_max": 345.7
+ },
+ "relay_flops": {
+  "tree_and_rs": 41634,
+  "down_runs": 28896,
+  "reset": 139
+ },
+ "cuts": {
+  "corridor_L": {
+   "width_um": 64.8,
+   "peak_bits": 516,
+   "tracks_M5": 1350,
+   "tracks_M3_M5": 3150,
+   "cut_M5": 0.382,
+   "cut_M3_M5": 0.164
+  },
+  "corridor_A": {
+   "width_um": 129.60000000000002,
+   "peak_bits": 2570,
+   "tracks_M5": 2700,
+   "tracks_M3_M5": 6300,
+   "cut_M5": 0.952,
+   "cut_M3_M5": 0.408
+  },
+  "corridor_T": {
+   "width_um": 129.5999999999999,
+   "peak_bits": 1032,
+   "tracks_M5": 2699,
+   "tracks_M3_M5": 6299,
+   "cut_M5": 0.382,
+   "cut_M3_M5": 0.164
+  },
+  "corridor_B": {
+   "width_um": 129.5999999999999,
+   "peak_bits": 2570,
+   "tracks_M5": 2699,
+   "tracks_M3_M5": 6299,
+   "cut_M5": 0.952,
+   "cut_M3_M5": 0.408
+  },
+  "corridor_R": {
+   "width_um": 64.80000000000018,
+   "peak_bits": 516,
+   "tracks_M5": 1350,
+   "tracks_M3_M5": 3150,
+   "cut_M5": 0.382,
+   "cut_M3_M5": 0.164
+  },
+  "channel_0_y0.0": {
+   "height_um": 64.8,
+   "peak_bits": 0,
+   "tracks_M4_M6": 2362,
+   "cut_M4_M6": 0.0
+  },
+  "channel_1_y1231.2": {
+   "height_um": 129.5999999999999,
+   "peak_bits": 1028,
+   "tracks_M4_M6": 4724,
+   "cut_M4_M6": 0.218
+  },
+  "channel_2_y2527.2": {
+   "height_um": 129.60000000000036,
+   "peak_bits": 0,
+   "tracks_M4_M6": 4725,
+   "cut_M4_M6": 0.0
+  },
+  "channel_3_y3823.2": {
+   "height_um": 129.5999999999999,
+   "peak_bits": 1028,
+   "tracks_M4_M6": 4724,
+   "cut_M4_M6": 0.218
+  },
+  "channel_4_y5119.2": {
+   "height_um": 64.80000000000018,
+   "peak_bits": 0,
+   "tracks_M4_M6": 2362,
+   "cut_M4_M6": 0.0
+  }
+ },
+ "unit_choice": {
+  "chosen": "C_B16",
+  "C_B16": {
+   "inter_cluster_bits": {
+    "bc": 2064,
+    "bco": 2064,
+    "rs": 514,
+    "straps": 14,
+    "ck_rst": 2,
+    "total": 4658
+   },
+   "tree_legs_crossing": 0,
+   "outline_mm": [
+    2.35,
+    5.184
+   ],
+   "pins_per_um_avg": 0.309
+  },
+  "C_COL": {
+   "inter_cluster_bits": {
+    "corridor_in": 1032,
+    "tree_legs": 5654,
+    "total": 6686
+   },
+   "tree_legs_crossing": "11 per column (8 L1 + 2 L3 + 1 block word): every L1 pair spans two columns",
+   "outline_mm": [
+    0.523,
+    21.427
+   ],
+   "note": "spans all four bands and the head gap; a 21-mm tall hardened master; the block tree crosses cluster faces at every level except L2 / L4"
+  },
+  "reason": "C_B16 keeps the whole block reduction inside the master (one 514-b word out instead of 11 legs), its tree legs never cross a die seam, and it is 5.2 mm tall instead of 21.4 mm"
+ },
+ "x_slice_finding": "The x slice pools tile pairs (N s, S 7-s) = die rows s and s+8 of one column (blocks 2 apart, same morton slot): pool needs equal quad q = tile_id mod S/TG, which today holds because ids differ by 32.  A head inside a C_B16 (16 tiles of ONE block) could never pool (ids differ by < 16 while S/TG >= 32 at SMIN 7), and production k = 24 / 32 ops (NATIVE_AFFINE fp > 64) pool.  So the qfd_xcol heads (unchanged RTL, 48) stay at the die top, and the cluster takes the four corridor words; bc (1,567 b) per cluster is NOT used.",
+ "gating": [
+  "A0 tile views (qfd_tile_nk_romleaf_a0 / nl twin; Q-ROMPARENT, gate3 in GRT repair): no cluster route before they close",
+  "die-top: 48 qfd_xcol heads re-shaped into the 691-um head gap (RTL unchanged) -- the 1,434-um stack no longer fits a corridor",
+  "die-top: the four bc words of one cluster arrive on the same edge (equal-age head tree), far cluster = near + 18",
+  "die-top: tids straps per the formula above (ids follow the slot, not the die row)",
+  "tile ports registered at the pin (the A0 parent already samples tap / tile_id / rst_n on ck_fa4 and n_a / n_b on face roots)"
+ ]
+}

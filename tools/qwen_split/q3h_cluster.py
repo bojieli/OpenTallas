@@ -30,15 +30,17 @@ CMASTER = 'qfd_c_b16'
 HEAD_BITS = 1567
 RS_BITS = 514
 
-PROVISIONAL_PORTS = {      # face is the MASTER face; bands 0-1 sit MX, so 'S' (bc) faces the head gap there too
+PROVISIONAL_PORTS = {      # MASTER faces. Bands 0-1 sit MX (R180 on E), bands 2-3 R0 (MY on E): S faces the head gap
+    # (bands 1/2) or the band-0/1, band-2/3 row gap (bands 0/3); E faces the centre on both sides
     'bc': dict(dir='input', bits=HEAD_BITS, face='S', layer='M5'),
+    'rs': dict(dir='output', bits=RS_BITS, face='S', layer='M5'),
     'bc_o': dict(dir='output', bits=HEAD_BITS, face='N', layer='M5'),
-    'rs': dict(dir='output', bits=RS_BITS, face='E', layer='M4'),
     'fault': dict(dir='output', bits=1, face='E', layer='M4'),
-    'fault_i': dict(dir='input', bits=1, face='E', layer='M4'),
+    'fault_v': dict(dir='input', bits=1, face='E', layer='M4'),
     'ck': dict(dir='input', bits=1, face='E', layer='M4'),
     'rst_n': dict(dir='input', bits=1, face='E', layer='M4'),
     'cid': dict(dir='input', bits=6, face='E', layer='M4'),
+    'fault_i': dict(dir='input', bits=1, face='W', layer='M4'),
 }
 
 
@@ -134,6 +136,8 @@ def _site(rects, x, y, w, h, die, step=8.64, rings=300):
 
 
 def apply(v, m):
+    if os.environ.get('OT_SPLIT_Q3H_GRID', '').strip():
+        return apply_grid(v, m)
     contract = _load('OT_SPLIT_Q3H_CONTRACT') or {}
     htree = _load('OT_SPLIT_Q3H_HTREE')
     ports = contract.get('ports') or PROVISIONAL_PORTS
@@ -202,13 +206,22 @@ def apply(v, m):
     for k, n in sorted(names.items()):
         idx = sorted(names).index(k)
         m['ties'].append((n, 'cid', 6, idx))
-    # fault chain: outermost group inward along each band, bands chained toward the head gap, last -> xs_tap
+    # fault chain (static, sticky): along each band toward the centre (g5 -> g0: fault on the centre face, fault_i on
+    # the outer face, neighbours face to face across the 64.8 corridor), then band to band through the g0 clusters'
+    # fault_v (centre-side channel beside the port column), band 3 -> 2 -> 1 -> 0 ... -> xs_tap
     for side, port in (('W', 'hw_f'), ('E', 'he_f')):
-        order = [names[(side, g, b)] for b in (0, 3, 1, 2) for g in range(5, -1, -1)]
-        m['ties'].append((order[0], 'fault_i', 1, 0))
-        for a, c in zip(order, order[1:]):
-            keep.append((f'q3h_fault_{a}', 'tree_spine', 1, [(a, 'fault'), (c, 'fault_i')]))
-        keep.append((f'q3h_fault_{side}', 'tree_spine', 1, [(order[-1], 'fault'), ('xs_tap', port)]))
+        for b in range(4):
+            m['ties'].append((names[(side, 5, b)], 'fault_i', 1, 0))      # declared outer chain terminus
+            for g in range(5, 0, -1):
+                a_, c_ = names[(side, g, b)], names[(side, g - 1, b)]
+                keep.append((f'q3h_fault_{a_}', 'tree_spine', 1, [(a_, 'fault'), (c_, 'fault_i')]))
+            for g in range(1, 6):
+                m['ties'].append((names[(side, g, b)], 'fault_v', 1, 0))  # only the g0 clusters join the bands
+        m['ties'].append((names[(side, 0, 3)], 'fault_v', 1, 0))
+        for b in (3, 2, 1):
+            a_, c_ = names[(side, 0, b)], names[(side, 0, b - 1)]
+            keep.append((f'q3h_fault_{a_}', 'tree_spine', 1, [(a_, 'fault'), (c_, 'fault_v')]))
+        keep.append((f'q3h_fault_{side}', 'tree_spine', 1, [(names[(side, 0, 0)], 'fault'), ('xs_tap', port)]))
     # broadcast H-tree
     rects = [(i.x, i.y, i.x + i.w, i.y + i.h) for i in m['insts']]
     if htree:
@@ -222,37 +235,41 @@ def apply(v, m):
         src = 'htree-file'
     else:
         src = 'provisional'
-        gap = _head_gap(m, new)
+        glo, ghi = _head_gap_span(m, new)
+        SW, SH = 285.12 - SHAVE, 285.12 - SHAVE
+        # owner 10-16: ONE 1,567-b trunk per cut window. Two horizontal lanes in the 691-um head gap: lane A (lower,
+        # groups 0-2) and lane B (upper, groups 3-5); their stations sit in their own half of the gap, so the two
+        # trunks are >= 260 um apart everywhere. Root in the centre column; half stations beside the port column.
+        yA, yB = glo + 4.32 + SH / 2, ghi - 4.32 - SH / 2
+        mn2 = f'qfd_q3h_st2_{round(SW)}x{round(SH)}'
+        mn3 = f'qfd_q3h_st3_{round(SW)}x{round(SH)}'
+        M.setdefault(mn2, _station_master(v, mn2, SW, SH, 2, HEAD_BITS))
+        M.setdefault(mn3, _station_master(v, mn3, SW, SH, 3, HEAD_BITS))
+
+        def put(n, mn, x, y):
+            x0, y0 = _site(rects, x, y, SW, SH, m['die'], step=4.32)
+            m['insts'].append(v.Inst(n, mn, x0, y0, SW, SH, kind='station', region='field'))
+            rects.append((x0, y0, x0 + SW, y0 + SH))
+            return x0, y0
         for side, port in (('W', 'hw_d'), ('E', 'he_d')):
-            cl = [n for k, n in names.items() if k[0] == side]
             gx = {g: [i for i in new if i.name in (names[(side, g, 1)], names[(side, g, 2)])] for g in range(6)}
             xs = {g: sum(i.cx for i in gx[g]) / 2 for g in range(6)}
-            SW, SH = 285.12 - SHAVE, 285.12 - SHAVE
-            # root: inner edge of the array in the head gap
-            rx = xs[0] + (1 if side == 'W' else -1) * (w / 2 + 400.0)
+            inner = max(i.x + i.w for i in new if i.name.startswith(f'c16_{side}')) if side == 'W' else \
+                min(i.x for i in new if i.name.startswith(f'c16_{side}'))
+            pcol = [i for i in m['insts'] if i.name.startswith('sp_port_tiles') and (i.cx < 16500) == (side == 'W')]
+            pin_ = (min(i.x for i in pcol) if side == 'W' else max(i.x + i.w for i in pcol))
+            sgn = 1 if side == 'W' else -1
             rn = f'q3h_root_{side}'
-            mnr = f'qfd_q3h_st2_{round(SW)}x{round(SH)}'
-            M.setdefault(mnr, _station_master(v, mnr, SW, SH, 2, HEAD_BITS))
-            x0, y0 = _site(rects, rx, gap, SW, SH, m['die'])
-            m['insts'].append(v.Inst(rn, mnr, x0, y0, SW, SH, kind='station', region='field'))
-            rects.append((x0, y0, x0 + SW, y0 + SH))
+            put(rn, mn2, pin_ + sgn * (1036.8 + 450.0), (yA + yB) / 2)      # centre column, beside the port column
             keep.append((f'q3h_bc_{side}_root', 'tree_spine', HEAD_BITS, [('xs_tap', port), (rn, 'd_in')]))
-            # root -> two half stations (groups 0-2 / 3-5) -> group stations -> bands 1 / 2 -> feedthrough bands 0 / 3
-            for hlf, gs in ((0, (0, 1, 2)), (1, (3, 4, 5))):
+            hx = (inner + pin_) / 2
+            for hlf, gs, y in ((0, (0, 1, 2), yA), (1, (3, 4, 5), yB)):
                 hn = f'q3h_half_{side}{hlf}'
-                mnh = f'qfd_q3h_st3_{round(SW)}x{round(SH)}'
-                M.setdefault(mnh, _station_master(v, mnh, SW, SH, 3, HEAD_BITS))
-                hx = sum(xs[g] for g in gs) / 3
-                x0, y0 = _site(rects, hx, gap, SW, SH, m['die'])
-                m['insts'].append(v.Inst(hn, mnh, x0, y0, SW, SH, kind='station', region='field'))
-                rects.append((x0, y0, x0 + SW, y0 + SH))
+                put(hn, mn3, hx, y)
                 keep.append((f'q3h_bc_{side}_h{hlf}', 'tree_spine', HEAD_BITS, [(rn, f'd_out{hlf}'), (hn, 'd_in')]))
                 for j, g in enumerate(gs):
                     gn = f'q3h_grp_{side}{g}'
-                    mng = f'qfd_q3h_st2_{round(SW)}x{round(SH)}'
-                    x0, y0 = _site(rects, xs[g], gap, SW, SH, m['die'])
-                    m['insts'].append(v.Inst(gn, mng, x0, y0, SW, SH, kind='station', region='field'))
-                    rects.append((x0, y0, x0 + SW, y0 + SH))
+                    put(gn, mn2, xs[g], y)
                     keep.append((f'q3h_bc_{side}_g{g}', 'tree_spine', HEAD_BITS, [(hn, f'd_out{j}'), (gn, 'd_in')]))
                     for k_, band in enumerate((1, 2)):
                         keep.append((f'q3h_bc_{side}{g}_{band}', 'tree_spine', HEAD_BITS,
@@ -274,6 +291,15 @@ def apply(v, m):
     return m['q3h']
 
 
+def _head_gap_span(m, clusters):
+    """(lo, hi) of the widest horizontal gap between cluster bands (the head gap between bands 1 and 2)"""
+    spans = sorted({(round(i.y, 1), round(i.y + i.h, 1)) for i in clusters})
+    best = max(((b[0] - a[1], a[1], b[0]) for a, b in zip(spans, spans[1:])), default=None)
+    if best is None or best[0] < 2 * 285.12 + 20:
+        raise ValueError(f'q3h: head gap too small for two station lanes ({spans})')
+    return best[1], best[2]
+
+
 def _head_gap(m, clusters):
     """centre y of the widest horizontal gap between cluster bands (the head gap between bands 1 and 2)"""
     spans = sorted({(round(i.y, 1), round(i.y + i.h, 1)) for i in clusters})
@@ -281,3 +307,127 @@ def _head_gap(m, clusters):
     if best is None or best[0] < 300:
         raise ValueError(f'q3h: no head gap between cluster bands ({spans})')
     return best[1]
+
+
+# ------------------------------------------------------------------------------------------------ contract + grid mode
+_DIR = {'ck': 'input', 'rst_n': 'input', 'far': 'input', 'cid': 'input', 'tie_hi': 'output', 'tie_lo': 'output',
+        'rs': 'output'}
+
+
+def _contract_ports(C):
+    """CB contract ports (list of {port, bits, face, layer, range_um}) -> {port: dict(dir, bits, face, layer, range)}"""
+    out = {}
+    for p in C['ports']:
+        n = p['port']
+        d = _DIR.get(n) or ('output' if n.startswith('bco') else 'input' if n.startswith('bc') else None)
+        if d is None:
+            raise ValueError(f'q3h contract: unknown direction of port {n}')
+        out[n] = dict(dir=d, bits=p['bits'], face=p['face'], layer=p['layer'], range=list(p['range_um']))
+    return out
+
+
+def apply_grid(v, m):
+    """OT_SPLIT_Q3H_GRID (mk_q3h_grid.py) + OT_SPLIT_Q3H_CONTRACT (CB cluster_contract.json): the clusters sit on the
+    re-pitched grid; the 48 x-slice column heads STAY at the die top (CB: the x slice pools tile pairs of blocks 2
+    apart) in the head gap; head n_d / s_d feed the band-2 / band-1 cluster's bc<lc>, the near cluster's bco<lc> the
+    far band; rs replaces the bword source.  The head-row broadcast is the die-top tree file (OT_SPLIT_Q3H_HTREE: its
+    edges into head e_d / w_d replace the head chain) or, without it, the head chain as today."""
+    C = _load('OT_SPLIT_Q3H_CONTRACT')
+    G = _load('OT_SPLIT_Q3H_GRID')
+    htree = _load('OT_SPLIT_Q3H_HTREE')
+    if not C or not G:
+        raise ValueError('q3h grid mode needs OT_SPLIT_Q3H_CONTRACT and OT_SPLIT_Q3H_GRID')
+    ports = _contract_ports(C)
+    w, h = G['cluster']['w'], G['cluster']['h']
+    M = v.masters(m, 1)
+    M[CMASTER] = _master(v, w, h, ports)
+    groups = {}
+    for i in m['insts']:
+        k = _group_of(i.name)
+        if k:
+            groups.setdefault(k, []).append(i)
+    if len(groups) != 48:
+        raise ValueError(f'q3h: expected 48 tile groups, got {len(groups)}')
+    names, new = {}, []
+    for c in G['clusters']:
+        k = (c['side'], c['g'], c['band'])
+        names[k] = c['n']
+        new.append(v.Inst(c['n'], CMASTER, c['x'], c['y'], w, h, orient=c['o'], kind='cluster', region='field',
+                          domain='stream_1p2'))
+    tile_group = {t.name: names[k] for k, ts in groups.items() for t in ts}
+    retired = {i.name for i in m['insts'] if re.fullmatch(r'(t_\d+_\d+|s_\d+_\d+)', i.name)}
+    heads = {int(i.name[2:]): i for i in m['insts'] if re.fullmatch(r'h_\d+', i.name)}
+    if len(heads) != 48:
+        raise ValueError(f'q3h: expected 48 column heads, got {len(heads)}')
+
+    def cluster_of_col(c, band):
+        side = 'W' if c < 24 else 'E'
+        g = (23 - c) // 4 if side == 'W' else (c - 24) // 4
+        lc = c % 4 if side == 'W' else 3 - c % 4
+        return names[(side, g, band)], lc
+    keep, dropped = [], {}
+    tree_heads = set()
+    if htree:
+        tree_heads = {tuple(e['dst']) for e in htree['edges']}
+    for bid, cl, bits, eps in m['buses']:
+        if cl in ('tree_block', 'tap', 'corridor'):
+            dropped[cl] = dropped.get(cl, 0) + 1
+            continue
+        if cl == 'head_chain' and bits > 1 and htree:
+            dropped['head_chain_data'] = dropped.get('head_chain_data', 0) + 1
+            continue
+        if bid.startswith('bword'):
+            keep.append((bid, cl, bits, [(tile_group[eps[0][0]], 'rs')] + list(eps[1:])))
+            continue
+        if cl in ('clock_trunk', 'reset'):
+            e2 = [e for e in eps if e[0] not in retired]
+            add = sorted({tile_group[e[0]] for e in eps if e[0] in tile_group})
+            pin = 'ck' if cl == 'clock_trunk' else 'rst_n'
+            e2 += [(c, pin) for c in add if not any(x == c and p == pin for x, p in e2)]
+            if len(e2) > 1:
+                keep.append((bid, cl, bits, e2))
+            continue
+        if any(e[0] in retired for e in eps):
+            raise ValueError(f'q3h: bus {bid} ({cl}) touches a retired tile/station: {eps[:3]}')
+        keep.append((bid, cl, bits, eps))
+    have = {(e[0], e[1]) for b in keep if b[1] in ('clock_trunk', 'reset') for e in b[3]}
+    miss = [n for n in names.values() if (n, 'ck') not in have or (n, 'rst_n') not in have]
+    if miss:
+        raise ValueError(f'q3h: clusters without ck/rst_n: {miss[:4]}')
+    # head column words -> near clusters, near bco -> far clusters (bands 1 / 2 near, 0 / 3 far)
+    for c, hd in sorted(heads.items()):
+        for port, near, far in (('s_d', 1, 0), ('n_d', 2, 3)):
+            nc, lc = cluster_of_col(c, near)
+            fc, _ = cluster_of_col(c, far)
+            keep.append((f'q3h_col_{c}_{near}', 'tree_spine', 516, [(hd.name, port), (nc, f'bc{lc}')]))
+    for (side, g, band), n in names.items():
+        if band in (1, 2):
+            far = 0 if band == 1 else 3
+            for lc in range(4):
+                keep.append((f'q3h_far_{side}{g}_{band}_{lc}', 'tree_spine', 516,
+                             [(n, f'bco{lc}'), (names[(side, g, far)], f'bc{lc}')]))
+    if htree:
+        for s in htree.get('stations', []):
+            mn = s.get('m') or f"qfd_q3h_st{len(s.get('children', [])) or 2}_{round(s['w'])}x{round(s['h'])}"
+            if mn not in M:
+                M[mn] = _station_master(v, mn, s['w'], s['h'], len(s.get('children', [])) or 2,
+                                        s.get('down_bits', HEAD_BITS))
+            m['insts'].append(v.Inst(s['n'], mn, s['x'], s['y'], s['w'], s['h'], kind='station', region='field'))
+        for e in htree['edges']:
+            keep.append((e['b'], 'tree_spine', e['n'], [tuple(e['src']), tuple(e['dst'])]))
+    m['insts'][:] = [i for i in m['insts'] if i.name not in retired] + new
+    m.setdefault('ties', [])[:] = [t for t in m['ties'] if t[0] not in retired]
+    for (side, g, band), n in sorted(names.items()):
+        c0 = 4 * (5 - g) if side == 'W' else 24 + 4 * g
+        m['ties'].append((n, 'cid', 12, (c0 // 4) * 4 + band))
+        m['ties'].append((n, 'far', 1, 1 if band in (0, 3) else 0))
+    m['buses'] = keep
+    m['q3h'] = dict(mode='contract+grid', clusters=len(new), master=CMASTER, outline=[w, h],
+                    ports={p: d['bits'] for p, d in ports.items()}, contract=os.environ.get('OT_SPLIT_Q3H_CONTRACT'),
+                    grid=os.environ.get('OT_SPLIT_Q3H_GRID'), htree=os.environ.get('OT_SPLIT_Q3H_HTREE') or 'head chain',
+                    retired=len(retired), heads_kept=len(heads), dropped_buses=dropped, die=G['die'])
+
+    def fixed(model, k=1, port_bits=None):
+        return dict(M)
+    v.masters = fixed
+    return m['q3h']

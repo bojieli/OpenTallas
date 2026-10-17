@@ -15,6 +15,8 @@ stacked words overflow GRT).  Calibration: r22ko4 (die GRT overflow 155k on M6/M
 import json, sys, collections
 from pathlib import Path
 import numpy as np
+import os as _os_cut
+FACE_GAP_UM = float(_os_cut.environ.get('OT_CUT_FACE_GAP_UM', '50'))
 HERE = Path(__file__).resolve().parent
 TPU = {'M4': 1 / 0.048, 'M5': 1 / 0.048, 'M6': 1 / 0.064, 'M7': 1 / 0.064, 'M8': 1 / 0.080, 'M9': 1 / 0.080}
 FINE = 260.0
@@ -98,6 +100,11 @@ class Net:
                 ox = min(a['x'] + a['w'], q['x'] + q['w']) - max(a['x'], q['x'])
                 oy = min(a['y'] + a['h'], q['y'] + q['h']) - max(a['y'], q['y'])
                 if (ox > 0 and -1.0 <= -oy <= 1.0) or (oy > 0 and -1.0 <= -ox <= 1.0):
+                    continue
+                # Q-DIEPLAN3 2026-10-16 (q3h VM/SU 43.2-um channel drew a 1.53 'cut' centroid to centroid): two blocks
+                # whose faces overlap across a narrow channel (gap <= FACE_GAP_UM) exchange the bus straight across it,
+                # each pin on its own preferred track (pin_align straight / OK), as abutted blocks do: no die cut
+                if (ox > 0 and 0.0 <= -oy <= FACE_GAP_UM) or (oy > 0 and 0.0 <= -ox <= FACE_GAP_UM):
                     continue
                 seg.append((A[0], A[1], Q[0], Q[1], bits)); cls.append(c)
         self.S = np.array(seg); self.C = np.array(cls)
