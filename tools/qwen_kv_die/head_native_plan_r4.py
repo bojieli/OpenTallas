@@ -11,6 +11,7 @@ import math
 from pathlib import Path
 
 W,H=1079.976,492.456 # actual exported v1.1 outline; nominal 1080 x 492.48
+REACH=500  # KVPLAN2 2026-10-16: --reach (die planning margin 400 = 0.9 x measured KV reach 446)
 CLEAR=5.4
 SHAPES={'front':(648.,32.4),'ktree':(151.2,97.2),'score':(43.2,43.2),
         'lane':(129.6,129.6),'stin':(32.4,43.2),'stk':(32.4,21.6),'nb':(32.4,10.8)}
@@ -55,18 +56,18 @@ def region(points):
     return [(x0,y0),(x1,y0),(x0,y1),(x1,y1)]
 
 
-def plan(closed_pins=None, channel=None):
+def plan(closed_pins=None, channel=None, perm=None, kt_x=388.8, score_x=550.8):
     """channel (kvsys v1.4.3 near-head feed-through, KV die lead 2026-10-15): (dy, x0, x1) opens a free horizontal channel
     between lane rows 0 and 1 by moving lane rows >= 1 up by dy (outline H + dy) and reserving the channel rectangle
     x0..x1 (full channel height) against every stin/stk/nb placement; the neighbour head's feed-through stages live there."""
     global H
     H0=H
     if channel:H=round(H0+channel[0],6)
-    try:return _plan(closed_pins,channel)
+    try:return _plan(closed_pins,channel,perm,kt_x,score_x)
     finally:H=H0
 
 
-def _plan(closed_pins=None, channel=None):
+def _plan(closed_pins=None, channel=None, perm=None, kt_x=388.8, score_x=550.8):
     root=Path(__file__).resolve().parents[2]
     views={'lane':('qkh_lane8_ref_b','ot_qkh_lane8'), 'ktree':('qkh_ktree_ref','ot_qkh_ktree'),
            'score':('qkh_native_score_1014','ot_qkh_head_score_native')}
@@ -76,11 +77,13 @@ def _plan(closed_pins=None, channel=None):
     pins={k:read_pins(p) for k,p in paths.items()}
     def at(kind,r,names):return region([(r[0]+pins[kind][n][0],r[1]+pins[kind][n][1]) for n in names])
 
-    fronts_q={g:(216.+135.*g,5.4,129.6,43.2) for g in range(4)};kt=(388.8,54.,*SHAPES['ktree']);score=(550.8,54.,*SHAPES['score'])
+    fronts_q={g:(216.+135.*g,5.4,129.6,43.2) for g in range(4)};kt=(kt_x,54.,*SHAPES['ktree']);score=(score_x,54.,*SHAPES['score'])
     dy=channel[0] if channel else 0.
     grid=[(43.2+172.8*c,54.+151.2*r+(dy if r>=1 else 0.),*SHAPES['lane']) for c in range(6) for r in range(3)
           if not (r==0 and c in (2,3))]
-    lanes={i:r for i,r in enumerate(grid)}
+    # KVPLAN2 2026-10-16 (perm): logical lane t sits in grid slot perm[t] (the closed ktree's kp_in groups run E -> W
+    # with the lane index while the fronts run W -> E: identity put lane 15 957 um (pin regions) from its ktree group)
+    lanes={i:grid[perm[i]] if perm else r for i,r in enumerate(grid)}
     placed=list(fronts_q.values())+[kt,score]+list(lanes.values())
     keep=None
     if channel:
@@ -127,8 +130,8 @@ def _plan(closed_pins=None, channel=None):
         ideal1=tuple(lc[k]+(tc[k]-lc[k])/3 for k in range(2))
         ideal2=tuple(lc[k]+2*(tc[k]-lc[k])/3 for k in range(2))
         available=[r for r in free['nb'] if not any(overlap(r,f) for f in placed)]
-        c1=[r for r in available if bound(nb,face(r,'W'))<=500]
-        c2=[r for r in available if bound(face(r,'E'),target)<=500]
+        c1=[r for r in available if bound(nb,face(r,'W'))<=REACH]
+        c2=[r for r in available if bound(face(r,'E'),target)<=REACH]
         dist=lambda r,p:abs(r[0]+r[2]/2-p[0])+abs(r[1]+r[3]/2-p[1])
         c1=sorted(c1,key=lambda r:dist(r,ideal1))[:100]
         c2=sorted(c2,key=lambda r:dist(r,ideal2))[:100]
@@ -186,12 +189,14 @@ def _plan(closed_pins=None, channel=None):
             entry.update(clock_pin_assignment='exported closed-view pin',
                          slot_xy_um=[round(r[0]+xy[0],6),round(r[1]+xy[1],6)])
     assert len(children)==len(clocks)==86
-    worst=max(hops,key=lambda h:h[1]);valid=not ov and not outside and worst[1]<=500
+    worst=max(hops,key=lambda h:h[1]);valid=not ov and not outside and worst[1]<=REACH
     return dict(schema='qwen-kvsys-head-native-plan/r4',slot='qkd_rhead',contract='kvsys_v1.1',
         slot_outline_um=[W,H],canonical_orientation='R0; control face S',clock_entries_per_head=86,
         rtl_master='ot_qkh_head_native_r4',latency_change_cycles=0,
         reach_method='maximum Manhattan distance between every endpoint of the assigned pin regions',
-        reach_rule_um=500,valid=valid,worst_hop=dict(name=worst[0],um=round(worst[1],3)),
+        reach_rule_um=REACH,**({'lane_slot_perm':list(perm)} if perm else {}),
+        **({'internal_worst_hop':dict(zip(('name','um'),max(((n,round(d,3)) for n,d in hops if not n.startswith(('die_ti','die_e'))),key=lambda h:h[1])))}
+           if perm else {}),valid=valid,worst_hop=dict(name=worst[0],um=round(worst[1],3)),
         overlaps=ov,outside=outside,front_port_order_W_to_E=front_order,
         shared_children={n:list(children[n]) for n in ['front0','front1','front2','front3','ktree','score']},lanes=sorted(rows,key=lambda r:r['lane']),
         children={n:list(r) for n,r in children.items()},clock_entries=clocks,
@@ -208,9 +213,13 @@ def _plan(closed_pins=None, channel=None):
 
 def main():
     a=argparse.ArgumentParser();a.add_argument('out',type=Path);a.add_argument('--closed-pins',type=Path)
-    a.add_argument('--channel',help='v1.4.3 feed-through channel DY,X0,X1 (um)');args=a.parse_args()
-    r=plan(args.closed_pins,tuple(map(float,args.channel.split(','))) if args.channel else None)
+    a.add_argument('--channel',help='v1.4.3 feed-through channel DY,X0,X1 (um)')
+    a.add_argument("--reach",type=float,default=500);a.add_argument('--ktree-x',type=float,default=388.8);a.add_argument('--score-x',type=float,default=550.8)
+    a.add_argument('--perm',help='lane -> grid slot, 16 comma-separated ints')
+    args=a.parse_args();global REACH;REACH=args.reach
+    r=plan(args.closed_pins,tuple(map(float,args.channel.split(','))) if args.channel else None,
+           [int(v) for v in args.perm.split(',')] if args.perm else None,args.ktree_x,args.score_x)
     args.out.parent.mkdir(parents=True,exist_ok=True);args.out.write_text(json.dumps(r,indent=2)+'\n')
-    print(json.dumps({k:r[k] for k in ['valid','clock_entries_per_head','worst_hop','overlaps','outside']}))
+    print(json.dumps({k:r[k] for k in ['valid','clock_entries_per_head','worst_hop','internal_worst_hop','overlaps','outside'] if k in r}))
     return 0 if r['valid'] else 1
 if __name__=='__main__':raise SystemExit(main())
