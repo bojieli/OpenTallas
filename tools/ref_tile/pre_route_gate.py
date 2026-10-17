@@ -596,6 +596,27 @@ def check_port_latency(g: Gate, kd: Path, spec: dict, out: str, commit=None, now
           f"{sum(1 for p in rep['ports'].values() if not p['register_edges'])} ports pass through (clock/reset/excluded/inout)")
 
 
+def check_memory_ff(g: Gate, out: str):
+    """MEMORY-FF LINT (ROOT 2026-10-17, coordinator from S-ELEM): yosys memory inference folded a register into an
+    inferred ROM/memory read port (MEMORY_DFF after PROC_ROM / MEMORY_BMUX2ROM).  The named RTL register disappears, and the
+    table decode can land in a half-cycle or un-pipelined hop (S81 dsfd_engram_lkp_static14 st6: roll_h absorbed, TT
+    -57.9 ps on 2,355 endpoints).  Reported before routing so the lead confirms or rewrites the table."""
+    merges = re.findall(r"^GATE_MEMFF Checking read port `([^']+)'\[(\d+)\] in module `\\?([^']+)': (merg\w+ [\w ]*FF to cell)",
+                        out, re.M)
+    roms = sum(int(n) for n in re.findall(r"^GATE_MEMFF Converted (\d+) switch", out, re.M))
+    if not merges:
+        if roms:
+            g.add("INFO", "memory_ff", f"yosys converted {roms} case table(s) to ROM; no register was folded into a read port")
+        return
+    where = sorted({f"{mod}:{port}[{i}] ({how})" for port, i, mod, how in merges})
+    g.add("WARN", "memory_ff",
+          f"yosys MEMORY_DFF folded {len(merges)} register(s) into inferred memory/ROM read ports "
+          f"({roms} case table(s) became ROMs): " + "; ".join(where[:8]) + (f" (+{len(where) - 8} more)" if len(where) > 8 else "")
+          + " -- the RTL register is gone from the netlist and its table decode may sit in a half-cycle / un-pipelined hop",
+          "write the table as a one-hot AND-OR select (static14 st7) or keep the register out of the inferred memory "
+          "(e.g. (* rom_style = \"logic\" *) on the table / (* keep *) on the register) and re-gate")
+
+
 def check_kit_shell(g: Gate, kd: Path):
     syntax = subprocess.run(["bash", "-n", str(kd / "kit.env")], capture_output=True, text=True)
     if syntax.returncode or syntax.stderr.strip():
@@ -809,6 +830,9 @@ print("GATE_PORTS "+json.dumps(ports))
 print("GATE_PORT_RANGES "+json.dumps(ranges))
 EOP
 grep -h "Chip area\|chip area" $C/reports/asap7/*/base/synth_stat.txt 2>/dev/null | tail -1 | sed 's/^/GATE_AREA /'
+# MEMORY-FF LINT (ROOT 2026-10-17, S-ELEM static14 TT -57.9): yosys PROC_ROM / MEMORY_BMUX2ROM turn a case table into a
+# $mem ROM and MEMORY_DFF then folds the neighbouring register into its read port; the register vanishes from the netlist
+grep -h "merging output FF to cell\|merged .*FF to cell\|merging .*FF to cell\|^Converted [0-9]* switch" $C/logs/asap7/*/base/1_*yosys*.log 2>/dev/null | head -60 | sed 's/^/GATE_MEMFF /'
 # PORT-LATENCY (ROOT 2215): the elaborated pin-register table + wrapper of this synthesis (ot_pin_regs.tcl) come back for
 # tools/ref_tile/port_latency.py; the closure loop records the same export from the route at CLOSE for the compilers
 [ -s $B/ot_pin_regs.tsv ] && [ -s $B/ot_pin_regs_wrapper.v ] && python3 -c "import zlib,base64,sys;print('GATE_PIN_REGS_B64 '+' '.join(base64.b64encode(zlib.compress(open(f,'rb').read(),9)).decode() for f in sys.argv[1:]))" $B/ot_pin_regs.tsv $B/ot_pin_regs_wrapper.v
@@ -1342,6 +1366,7 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
         g.add(sev, "util", f"synthesized std area {area:.0f} um2 + macros {mac:.0f} in core {core:.0f}: util {u:.0%}",
               f"set \"std_area_um2\": {area:.0f} and drop 'outline' (gen sizes to util 0.52)" if sev != "INFO" else "")
     check_port_latency(g, kd, spec, out, binding.get("commit"), binding=binding)
+    check_memory_ff(g, out)
     for line in re.findall(r"^GATE_TB (.*)$", out, re.M):
         if line.startswith("TEXTBOOK_LINT:"):
             continue

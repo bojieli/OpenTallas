@@ -1614,7 +1614,9 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     for k, v in sorted(s.get("orfs_vars", {}).items()):
         if not re.fullmatch(r"[A-Z][A-Z0-9_]*", k) or re.search(r"\s", str(v)):
             raise SpecError(f"spec: orfs_vars {k}={v!r}: NAME=[A-Z0-9_]+, value without whitespace")
-        vv = f"/src/{v}" if (not str(v).startswith("/") and os.path.isfile(str(v))) else v
+        # ROOT 2026-10-17 (S-ELEM static14): resolve a repo path against ROOT, not the caller's cwd -- `ref_tile.py gen`
+        # run outside the repo root wrote POST_IO_PLACEMENT_TCL as a bare relative path and dropped it from the sources
+        vv = f"/src/{v}" if (not str(v).startswith("/") and (ROOT / str(v)).is_file()) else v
         if k == "POST_TAPCELL_TCL" and s.get("io_tcl"):
             # io_tcl + a POST_TAPCELL pin-flop hook: ORFS sources IO_CONSTRAINTS only at 3_2_place_iop, so the hook saw
             # unplaced ports and FIRM-placed every boundary flop on the W face (smh_pt_e_ref_p40-lf: W 7410 / E 0, both
@@ -1825,7 +1827,7 @@ def referenced_paths(s: dict, kd: str) -> list:
         out.append(s["io_tcl"])
     if literal_pin_bits(s):
         out.append(ASSIGNED_PIN_EXACT_TCL)
-    out += sorted(str(v) for v in s.get("orfs_vars", {}).values() if not str(v).startswith("/") and os.path.isfile(str(v)))
+    out += sorted(str(v) for v in s.get("orfs_vars", {}).values() if not str(v).startswith("/") and (ROOT / str(v)).is_file())
     if s.get("io_flop_at_pins"):
         out += ["physical/qwen_die_masters/io_flop_at_pins.tcl", "physical/qwen_die_masters/out_flop_release.tcl"]
     if s.get("outhold"):
