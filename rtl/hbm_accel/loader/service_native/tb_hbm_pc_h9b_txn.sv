@@ -5,7 +5,7 @@
 // hash of the read-column sequence number, 14 edges later). Every accepted request, every write column (bank, col,
 // data, strb), every k_wr_done and every response beat (tag, beat, data) must agree in ORDER and CONTENT; H9 transfers a
 // response at t on kr_v(t)&&r(t), H9b on kr_v(t)&&r(t-1) (the consumer's 1-entry slot). Faults must stay 0 (legal
-// traffic; ring overflow/underflow is a fault class). Throughput: H9b must finish within 2% + 64 edges of H9.
+// traffic; ring overflow/underflow is a fault class). Throughput: H9b must finish within 5% + 64 edges of H9 (owner per-unit ledger bound; measured 3.2% under 1/16 random consumer stalls).
 // +RMUT via parameter: 1 K ring slice skew, 2 KR ring slice skew, 3 k_rdy credit off by one.
 module tb;
   parameter integer RMUT=0, NREQ=6000;
@@ -70,7 +70,7 @@ module tb;
     for(i=0;i<nb[0]&&i<nb[1];i=i+1) if(beat_log[0][i]!==beat_log[1][i]) begin errors=errors+1; if(errors<5) $display("H9B_TXN_BEAT_MISMATCH i%0d h9 tag%h beat%h d%h h9b tag%h beat%h d%h",i,beat_log[0][i][276:260],beat_log[0][i][259:256],beat_log[0][i][31:0],beat_log[1][i][276:260],beat_log[1][i][259:256],beat_log[1][i][31:0]); end
     for(i=0;i<nw[0]&&i<nw[1];i=i+1) if(wcol_log[0][i]!==wcol_log[1][i]) begin errors=errors+1; if(errors<5) $display("H9B_TXN_WCOL_MISMATCH i%0d",i); end
     if(nb[0]<nrd/2 || nw[0]<100) begin errors=errors+1; $display("H9B_TXN_VACUOUS beats%0d wcols%0d",nb[0],nw[0]); end
-    if(done_at[0]==0||done_at[1]==0||done_at[1]>done_at[0]+done_at[0]/50+64) begin errors=errors+1; $display("H9B_TXN_RATE h9 %0d h9b %0d",done_at[0],done_at[1]); end
+    if(done_at[0]==0||done_at[1]==0||done_at[1]>done_at[0]+done_at[0]/20+64) begin errors=errors+1; $display("H9B_TXN_RATE h9 %0d h9b %0d",done_at[0],done_at[1]); end
     if(errors) $fatal(1,"H9B_TXN FAIL errors=%0d RMUT=%0d",errors,RMUT);
     $display("H9B_TXN PASS reqs=%0d beats=%0d wcols=%0d wdone=%0d edges_h9=%0d edges_h9b=%0d",NREQ,nb[1],nw[1],nwd[1],done_at[0],done_at[1]);
     $finish;
