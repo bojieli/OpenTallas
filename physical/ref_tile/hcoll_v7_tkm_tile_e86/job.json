@@ -36,7 +36,7 @@
     "pass_regex": "TKM_TP192_STATIC_GATE_PASS",
     "min_count_regex": "TKM_STATIC PASS(.*)",
     "threads": 8,
-    "peak_ram_gb": 64,
+    "peak_ram_gb": 160,
     "timeout_s": 21600,
     "needs": [
      "verilator"
@@ -48,7 +48,7 @@
     "expect": "fail",
     "fail_regex": "TKM_STATIC FAIL",
     "threads": 8,
-    "peak_ram_gb": 64,
+    "peak_ram_gb": 160,
     "timeout_s": 21600,
     "needs": [
      "verilator"

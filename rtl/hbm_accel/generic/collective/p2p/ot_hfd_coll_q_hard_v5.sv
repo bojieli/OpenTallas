@@ -428,6 +428,10 @@ module ot_hgi_coll_argmax_m #(parameter integer TP=96)(
  input wire clk,rst_n,start,mode,input wire [7:0] cfg_g,cfg_gbase,cfg_rank,
  input wire [3:0] in_slot,in_v,input wire [255:0] in_key,input wire [131:0] in_meta,input wire flush_slot,publish_slot,
  output wire out_v,output wire [544:0] out_flit,output wire fault);
+ // d4f native (argmax_m_tp192 1b968ff4b: capture 448.7 on rst_n, 1,149 async loads): rst_n loads ONE synchroniser flop
+ // (async assert, release one edge later); rst_l resets the leaf.
+ reg rst_l;
+ always @(posedge clk or negedge rst_n) if(!rst_n)rst_l<=1'b0;else rst_l<=1'b1;
  // u_data: live inputs, data/valid edges exact (its check logic has no load and is removed by synthesis).
  // u_chk : the same actual module on pin-captured inputs; only its sticky fault is used (arg fault ABI +1 edge;
  //         the 15-level input-check cone becomes reg->reg).
@@ -435,15 +439,15 @@ module ot_hgi_coll_argmax_m #(parameter integer TP=96)(
  for(genvar l=0;l<4;l=l+1)begin:g_lane
   assign in_flit[l*545+:545]={in_meta[l*33+:33],448'd0,in_key[l*64+:64]};
  end
- ot_hgi_coll_argmax_static #(.MAX_GROUP(TP)) u_data(.clk(clk),.rst_n(rst_n),.start(start),.cfg_g(cfg_g),.cfg_gbase(cfg_gbase),
+ ot_hgi_coll_argmax_static #(.MAX_GROUP(TP)) u_data(.clk(clk),.rst_n(rst_l),.start(start),.cfg_g(cfg_g),.cfg_gbase(cfg_gbase),
   .cfg_rank(cfg_rank),.in_slot(in_slot & {4{mode}}),.in_v(in_v & {4{mode}}),.in_flit(in_flit),
   .flush_slot(flush_slot),.publish_slot(publish_slot),.out_v(out_v),.out_flit(out_flit),.fault());
  reg start_q,flush_q,pub_q;reg [7:0] g_q,gb_q,rk_q;reg [3:0] slot_q,v_q;reg [2179:0] flit_q;
  always @(posedge clk)begin g_q<=cfg_g;gb_q<=cfg_gbase;rk_q<=cfg_rank;flit_q<=in_flit;end
- always @(posedge clk or negedge rst_n)
-  if(!rst_n)begin start_q<=0;flush_q<=0;pub_q<=0;slot_q<=0;v_q<=0;end
+ always @(posedge clk or negedge rst_l)
+  if(!rst_l)begin start_q<=0;flush_q<=0;pub_q<=0;slot_q<=0;v_q<=0;end
   else begin start_q<=start;flush_q<=flush_slot;pub_q<=publish_slot;slot_q<=in_slot & {4{mode}};v_q<=in_v & {4{mode}};end
- ot_hgi_coll_argmax_static #(.MAX_GROUP(TP)) u_chk(.clk(clk),.rst_n(rst_n),.start(start_q),.cfg_g(g_q),.cfg_gbase(gb_q),
+ ot_hgi_coll_argmax_static #(.MAX_GROUP(TP)) u_chk(.clk(clk),.rst_n(rst_l),.start(start_q),.cfg_g(g_q),.cfg_gbase(gb_q),
   .cfg_rank(rk_q),.in_slot(slot_q),.in_v(v_q),.in_flit(flit_q),
   .flush_slot(flush_q),.publish_slot(pub_q),.out_v(),.out_flit(),.fault(fault));
 endmodule
