@@ -67,6 +67,10 @@ def stand_in_lib(m, ports, c_ps=25.0, u_ps=25.0):
             L += ['      max_capacitance : 40 ;',
                   f'      timing () {{ related_pin : "clk" ; timing_type : rising_edge ; cell_rise (scalar) {{ values ("{c_ps}") ; }} cell_fall (scalar) {{ values ("{c_ps}") ; }} rise_transition (scalar) {{ values ("20") ; }} fall_transition (scalar) {{ values ("20") ; }} }}']
         L.append('    }')
+        if d != 'input':   # forwarded clock out beside the bus (F1 hop 0: the source block forwards its clock)
+            L += [f'    pin (cko_{port}) {{ direction : output ; max_capacitance : 40 ;',
+                  f'      timing () {{ related_pin : "clk" ; timing_sense : positive_unate ; cell_rise (scalar) {{ values ("{c_ps}") ; }} cell_fall (scalar) {{ values ("{c_ps}") ; }} rise_transition (scalar) {{ values ("20") ; }} fall_transition (scalar) {{ values ("20") ; }} }}',
+                  '    }']
     L += ['  }', '}']
     return '\n'.join(L) + '\n'
 
@@ -166,6 +170,16 @@ def main():
                     rect = f'RECT {xx - 0.012:.3f} {yy:.3f} {xx + 0.012:.3f} {yy + 0.1:.3f}'; layer = 'M5'
                 lines += [f'  PIN {port}[{k}]', f'    DIRECTION {d.upper()} ;', '    USE SIGNAL ;', '    PORT',
                           f'      LAYER {layer} ;', f'        {rect} ;', '    END', f'  END {port}[{k}]']
+            if d != 'input':
+                t = span / 2 + PIN_PITCH
+                if f in 'WE':
+                    yy = min(max(ly + t, 0.2), h - 0.2); xx = 0.0 if f == 'W' else w - 0.1
+                    rect = f'RECT {xx:.3f} {yy - 0.012:.3f} {xx + 0.1:.3f} {yy + 0.012:.3f}'; layer = 'M4'
+                else:
+                    xx = min(max(lx + t, 0.2), w - 0.2); yy = 0.0 if f == 'S' else h - 0.1
+                    rect = f'RECT {xx - 0.012:.3f} {yy:.3f} {xx + 0.012:.3f} {yy + 0.1:.3f}'; layer = 'M5'
+                lines += [f'  PIN cko_{port}', '    DIRECTION OUTPUT ;', '    USE SIGNAL ;', '    PORT',
+                          f'      LAYER {layer} ;', f'        {rect} ;', '    END', f'  END cko_{port}']
         lines += ['  PIN clk', '    DIRECTION INPUT ;', '    USE CLOCK ;', '    PORT', '      LAYER M5 ;',
                   f'        RECT {w / 2 - 0.012:.3f} 0.000 {w / 2 + 0.012:.3f} 0.100 ;', '    END', '  END clk']
         lines += ['  OBS', '    LAYER M1 ;', f'      RECT 0.2 0.2 {w - 0.2:.3f} {h - 0.2:.3f} ;']
@@ -190,6 +204,9 @@ def main():
         for port, d, bits, *_ in pins.get(bl['name'], []):
             conns.append(f'.{port}(w_{bl["name"]}_{port})')
             v.append(f'  wire [{bits - 1}:0] w_{bl["name"]}_{port};')
+            if d != 'input':
+                conns.append(f'.cko_{port}(c_{bl["name"]}_{port})')
+                v.append(f'  wire c_{bl["name"]}_{port};')
         v.append(f'  dv_{bl["name"]} u_{bl["name"]} ({", ".join(conns + ["." + "clk(clk)"])});')
     nf = 0
     for nm, n0, po, n1, pi, b, st in nets:
@@ -206,7 +223,7 @@ def main():
         # forwarding BUFx8 ff_k beside the data output starts hop k+1 -- station k+1 clk_in = station k clk_out
         v.append(f'  wire [{st}:0] n{nm}_fck;')
         v.append(f'  wire [{max(st - 1, 0)}:0] n{nm}_lck;')
-        v.append(f'  {BUF} fs_{nm} (.A(clk), .Y(n{nm}_fck[0]));')
+        v.append(f'  assign n{nm}_fck[0] = c_{n0}_{po};   // hop 0: source block forwards its clock (cko beside the bus)')
         for k in range(st):
             wn = f'r_{nm}_{k}'
             v.append(f'  wire [{b - 1}:0] {wn};')
@@ -233,10 +250,6 @@ def main():
         bl = blocks[i]
         pl.append(f'place_inst -name u_{bl["name"]} -location {{{bl["x"] - ox:.3f} {bl["y"] - oy:.3f}}} -orientation R0 -status FIRM')
     # relay flops: a station of `b` flops on a small square of rows / sites at the hop point
-    for nm, n0, po, n1, pi, b, st in nets:
-        if st:
-            sx_, sy_ = fsrc[nm]
-            pl.append(f'place_inst -name fs_{nm} -location {{{round(sx_ / SITE) * SITE:.3f} {round(sy_ / ROW) * ROW + 1.08:.3f}}} -orientation R0 -status PLACED')
     for nm, k, b, px, py in flops:
         if a.relay_ref and b == 276:
             w_, h_ = RLY[sdir[(nm, k)]]
