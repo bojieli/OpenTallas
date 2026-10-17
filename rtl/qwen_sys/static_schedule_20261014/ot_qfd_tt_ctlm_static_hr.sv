@@ -14,7 +14,13 @@
 // h6 (Q-ELEM-TTH 2026-10-16, RSTN=1): rst_n drove ~481 async-clear flops directly (reset pins are excluded from the
 // pin registers; scale-leaf tc1 class: native rst_n capture 357 ps). Now rst_n -> one ot_qfd_rst_stn flop at the pin
 // -> the leaf-internal reset rsl (assert asynchronous, release one ck_head edge later; no data/command edge changes).
-module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1, parameter integer RSTN = 1, parameter integer SREG = 1, parameter integer DPRE = 1) (
+// h10 (Q-IO-1815 TTH 2026-10-16, RSTREP=1): the h9b gate's single reset station flop drove 481 async clears (380 of
+// them the rom_cmd_q datapath register, W face; textbook high_fanout + recovery -154..-197 ps). Three kept station
+// copies, each the identical ot_qfd_rst_stn function of the rst_n port (async assert, release RSTN ck_head edges later):
+// rsl -> u_head / native route / stage regs (~120 loads), rsl_c0 / rsl_c1 -> the two halves of rom_cmd_q (190 each).
+// Release timing identical to the single station (exact, 0 edges).
+module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1, parameter integer RSTN = 1, parameter integer SREG = 1, parameter integer DPRE = 1,
+    parameter integer RSTREP = 1) (
     input wire [94:0] rom_ret_i,
     input wire cp_active,output wire [55:0] cp,
     output wire me_image_ready,output wire [75:0] program_obs,
@@ -60,8 +66,19 @@ module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1, parameter intege
     output wire  me_clk_en,
     output wire  c_fault
 );
-    wire rsl;
-    ot_qfd_rst_stn #(.D(RSTN)) u_rst_stn (.clk(ck_head), .rst_n(rst_n), .rst_q(rsl));
+    wire rsl, rsl_c0, rsl_c1;
+    generate if (RSTREP != 0 && RSTN != 0) begin : g_rrep
+      (* keep = "true", dont_touch = "true" *) reg [RSTN-1:0] r0;
+      (* keep = "true", dont_touch = "true" *) reg [RSTN-1:0] r1;
+      (* keep = "true", dont_touch = "true" *) reg [RSTN-1:0] r2;
+      always @(posedge ck_head or negedge rst_n) if (!rst_n) r0 <= {RSTN{1'b0}}; else r0 <= {r0, 1'b1};
+      always @(posedge ck_head or negedge rst_n) if (!rst_n) r1 <= {RSTN{1'b0}}; else r1 <= {r1, 1'b1};
+      always @(posedge ck_head or negedge rst_n) if (!rst_n) r2 <= {RSTN{1'b0}}; else r2 <= {r2, 1'b1};
+      assign rsl = r0[RSTN-1]; assign rsl_c0 = r1[RSTN-1]; assign rsl_c1 = r2[RSTN-1];
+    end else begin : g_rone
+      ot_qfd_rst_stn #(.D(RSTN)) u_rst_stn (.clk(ck_head), .rst_n(rst_n), .rst_q(rsl));
+      assign rsl_c0 = rsl; assign rsl_c1 = rsl;
+    end endgenerate
     wire [379:0] cmd;
     wire [94:0] ret,rom_ret;
     assign rom_ret=rom_ret_i;
@@ -82,8 +99,10 @@ module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1, parameter intege
       .in_cmd(local_rom_cmd),.in_stage(loaded_stage),.out_cmd(rom_cmd_c),.fault(relocation_fault));
     generate if (CMDREG != 0) begin : g_cmdreg
       reg [379:0] rom_cmd_q;
-      always @(posedge ck_head or negedge rsl)
-        if (!rsl) rom_cmd_q <= 380'd0; else rom_cmd_q <= rom_cmd_c;
+      always @(posedge ck_head or negedge rsl_c0)
+        if (!rsl_c0) rom_cmd_q[189:0] <= 190'd0; else rom_cmd_q[189:0] <= rom_cmd_c[189:0];
+      always @(posedge ck_head or negedge rsl_c1)
+        if (!rsl_c1) rom_cmd_q[379:190] <= 190'd0; else rom_cmd_q[379:190] <= rom_cmd_c[379:190];
       assign rom_cmd = rom_cmd_q;
     end else begin : g_cmdwire
       assign rom_cmd = rom_cmd_c;
