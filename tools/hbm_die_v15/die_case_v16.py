@@ -189,6 +189,62 @@ def communicating_pairs(nets, dom_of, clique_limit=8):
     return {domain: sorted(edges) for domain, edges in pairs.items()}
 
 
+def regional_regions(sinks, entry_map, I, region_map, entry_pairs, near_um, max_um):
+    """H-DIE-R8 10-17: entry alias -> clock region for mode 'regional'.
+    Seed: the DIE-CLOCK region map (instance, else its contract slot, else the nearest region site to the entry).
+    Refinement (coordinator 0dg (2): adjacent communicating tiles share a regional root): communicating entry pairs of
+    different tiles within near_um, nearest first, merge their two regions (union-find) when the merged entry box stays
+    within max_um on both axes.  Returns (alias -> region, report)."""
+    rm_ = json.loads(Path(region_map).read_text()) if region_map else {}
+    rmap = rm_.get('instances', {})
+    sites = [(k, v['site'][0], v['site'][1]) for k, v in rm_.get('regions', {}).items()] or [('all', 0.0, 0.0)]
+    pos = {s[0]: (s[2], s[3]) for s in sinks}
+
+    def seed(alias):
+        tile = entry_map[alias][0]
+        for k in (tile, (I.get(tile) or {}).get('slot')):
+            if k in rmap:
+                v = rmap[k]
+                return v if isinstance(v, str) else v['region']
+        x, y = pos[alias]
+        return min(sites, key=lambda t: abs(t[1] - x) + abs(t[2] - y))[0]
+    reg0 = {a_: seed(a_) for a_ in pos}
+    par = {r: r for r in set(reg0.values())}
+    box = {}
+    for a_, r in reg0.items():
+        x, y = pos[a_]; b = box.get(r)
+        box[r] = [x, y, x, y] if b is None else [min(b[0], x), min(b[1], y), max(b[2], x), max(b[3], y)]
+
+    def find(r):
+        while par[r] != r:
+            par[r] = par[par[r]]; r = par[r]
+        return r
+    near = sorted((abs(pos[x][0] - pos[y][0]) + abs(pos[x][1] - pos[y][1]), x, y) for x, y in entry_pairs
+                  if x in pos and y in pos and entry_map[x][0] != entry_map[y][0])
+    near = [t for t in near if t[0] <= near_um]
+    merged, refused = 0, 0
+    for _, x, y in near:
+        ra, rb = find(reg0[x]), find(reg0[y])
+        if ra == rb:
+            continue
+        A, Bx = box[ra], box[rb]
+        u = [min(A[0], Bx[0]), min(A[1], Bx[1]), max(A[2], Bx[2]), max(A[3], Bx[3])]
+        if u[2] - u[0] <= max_um and u[3] - u[1] <= max_um:
+            par[ra] = rb; box[rb] = u; merged += 1
+        else:
+            refused += 1
+    reg = {a_: find(r) for a_, r in reg0.items()}
+    tiles_near = {tuple(sorted((entry_map[x][0], entry_map[y][0]))) for _, x, y in near}
+    tile_reg = defaultdict(set)
+    for a_, r in reg.items():
+        tile_reg[entry_map[a_][0]].add(r)
+    cross = sum(1 for p_, q_ in tiles_near if not (tile_reg[p_] & tile_reg[q_]))
+    rep = dict(seed_regions=len(set(reg0.values())), regions=len(set(reg.values())), merges=merged, merges_refused_box=refused,
+               near_entry_pairs=len(near), near_tile_pairs=len(tiles_near), near_tile_pairs_cross_region=cross,
+               max_region_um=max_um, near_um=near_um)
+    return reg, rep
+
+
 def clock_entries(insts, placement, cell_of, pin_xy, tile_pairs):
     """Plan each literal clock pin; tile names alone hide long intra-tile stubs.
 
@@ -239,6 +295,13 @@ def main():
     ap.add_argument('--pair-max-tiles', type=int, default=8,
                     help='clique expansion limit; every source-to-sink branch is always a clock pair')
     ap.add_argument('--clock-bin-um', type=float, default=1600.0)
+    ap.add_argument('--clock-region-map', type=Path, default=None,
+                    help="mode 'regional' (H-DIE-R8): DIE-CLOCK region map (region_map.py output: instances/regions/sites); "
+                         "tiles not in it take the region of their contract slot, else the nearest region site")
+    ap.add_argument('--clock-region-max-um', type=float, default=4000.0,
+                    help="regional: two regions joined by a communicating entry pair within --clock-near-um are merged "
+                         "when the merged sink box stays within this side (adjacent communicating tiles share a root)")
+    ap.add_argument('--clock-near-um', type=float, default=405.0, help='regional: near-pair distance (measured reach)')
     ap.add_argument('--diagnostic-param-alias', action='store_true',
                     help='DIAGNOSTIC ONLY: accept same-port parameter aliases (listed in manifest.param_aliases_diagnostic); '
                          'timing of those instances is not their own; the case never qualifies')
@@ -898,7 +961,7 @@ def main():
         for n_ in ii:
             dom_of[n_].add(d_)
     pairs = communicating_pairs(nets, dom_of, a.pair_max_tiles)
-    trees, checks, entry_maps, literal_pairs = {}, {}, {}, []
+    trees, checks, entry_maps, literal_pairs, clock_regions = {}, {}, {}, [], {}
     for di, (dom, insts) in enumerate(sorted(clk.items())):
         # the domain tree starts at the placed REAL hfd_ckgen's pll_<dom> output pin (routed LEF), cross-checked with the grant
         vk = pl[CKGEN]; cp = vxy[cell_of[CKGEN]][f'pll_{dom}']
@@ -911,8 +974,16 @@ def main():
         mode = dict(kv.split('=') for kv in a.clock_mode.split(',')).get(dom, 'htree')
         if mode == 'auto':
             mode = 'graph' if pairs.get(dom) else 'htree'
+        reg_of = None
+        if mode == 'regional':
+            reg_of, rrep = regional_regions(sinks, entry_map, I, a.clock_region_map, entry_pairs, a.clock_near_um,
+                                            a.clock_region_max_um)
+            clock_regions[dom] = dict(report=rrep, tiles={})
+            for al_, r_ in reg_of.items():
+                clock_regions[dom]['tiles'].setdefault(entry_map[al_][0], sorted({r_} | set(clock_regions[dom]['tiles'].get(entry_map[al_][0], []))))
+            print('clock_regions', dom, json.dumps(rrep), flush=True)
         t = dct.build(W, H, obs, (rx, ry), sinks, lambda n: quad[entry_map[n][0]], mode=mode, bin_um=a.clock_bin_um,
-                      pairs=entry_pairs)
+                      pairs=entry_pairs, region_of=(reg_of.get if reg_of else None), near_um=a.clock_near_um)
         checks[dom] = dict(mode=mode, model=t['model'], pairs=len(entry_pairs),
                            **dct.clock_check(t, entry_pairs))
         print('clock_check', dom, mode, json.dumps(checks[dom]['summary']), flush=True)
@@ -938,6 +1009,7 @@ def main():
         print('clock', dom, 'sinks', len(sinks), 'buffers', len(bufs), flush=True)
 
     manifest['clock_entry_map'] = entry_maps
+    manifest['clock_regions'] = clock_regions
     manifest['clock_entry_scope'] = 'Each literal clock pin planned separately; conservative all-entry communicating pairs. Native phase/ownership qualification remains OPEN.'
     (out / 'die_clock_check_pairs.json').write_text(json.dumps(dict(
         pairs=[[x, y, dom] for dom, edges in sorted(pairs.items()) for x, y in edges],
@@ -1165,6 +1237,14 @@ docker run --rm --name $N --cpus=${CPUS:-8} --memory=${MEMG:-256}g -v $D:/work -
   bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads ${CPUS:-8} -no_init -exit /work/run.tcl > /work/out/run.log 2>&1; rc=\\$?; chmod -R a+rwX /work/out; exit \\$rc"
 echo $? > $D/out/run.exit
 ''')
+    # H-DIE-R8 (coordinator 0dg (2)): MEASURED neighbour-skew gate on the die STA clock dump, every die trial
+    (out / 'dcc' / 'hbm_die_v15').mkdir(parents=True, exist_ok=True)
+    shutil.copy(ROOT / 'tools/die_clock_check.py', out / 'dcc' / 'die_clock_check.py')
+    for f_ in ('die_clock_tree.py', 'neighbour_skew_gate.py'):
+        shutil.copy(ROOT / 'tools/hbm_die_v15' / f_, out / 'dcc' / 'hbm_die_v15' / f_)
+    with open(out / 'run.sh', 'a') as f_:
+        f_.write('[ -s $D/out/die_clock_dump.tsv ] && python3 -I $D/dcc/hbm_die_v15/neighbour_skew_gate.py --run $D/out '
+                 f'--near-um {a.clock_near_um} --budget-ps 80 --out $D/out/neighbour_skew_gate.json > $D/out/neighbour_skew_gate.log 2>&1\n')
     if a.hold_budget == 'die':   # classifier beside the case (fleet hosts run the case dir, not the repo)
         shutil.copy(ROOT / 'tools/die_hold_budget.py', out / 'die_hold_budget.py')
         with open(out / 'run.sh', 'a') as f_:
