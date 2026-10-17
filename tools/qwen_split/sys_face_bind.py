@@ -71,6 +71,11 @@ EDGES = [
 ]
 
 
+# Q-CTLM G8 (claude/qctlm-1017 d8f159727): the DV sys_face drops these inputs (their producers, the qfd_crom_g groups and
+# the res trains, left the die); with that RTL their edges are skipped (Q-DIEPLAN6 10-17), with the older RTL they bind
+G8_DROPPED = ('crom_fault_code', 'res_issue_fault')
+
+
 def _bus_of(model, by, inst, port):
     """the existing functional bus carrying (inst, port) whole, or None; a port already split into slice aliases fails"""
     al = {a for a, (r, bits) in model.get('port_join', {}).get(by[inst].master, {}).items() if r == port}
@@ -107,6 +112,8 @@ def apply(model):
     peer_ports = {}
     added, appended = [], []
     for sp, inst, pp in EDGES:
+        if sp in G8_DROPPED and sp not in sf:
+            continue
         if sp not in sf:
             raise ValueError(f'sys face bind: {sp} not a qfd_sys_face port')
         pm = by[inst].master
@@ -129,7 +136,7 @@ def apply(model):
         peer_ports[sp] = inst
     # constant-ROM group fault codes -> crom_fault_code[2g+1:2g]
     alias = model.setdefault('port_join', {}).setdefault(MASTER, {})
-    for g in range(8):
+    for g in (range(8) if 'crom_fault_code' in sf else ()):
         a = f'crom_fault_code__{2 * g}_{2 * g + 1}'
         alias[a] = ('crom_fault_code', [2 * g, 2 * g + 1])
         model['buses'].append((f'sf_crom_fc_{g}', 'spine_local', 2, [(f'crom_g_{g}', 'fault_code'), (INST, a)]))
