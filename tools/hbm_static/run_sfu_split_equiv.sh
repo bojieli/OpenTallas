@@ -37,7 +37,9 @@ if true;then
 fi
 # STORE6=1 (r6, opt-in): the store under test is ot_hgi_sfu_programme_store_r6 (reset relay, relay stage, D=4)
 if [ "${STORE6:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r6.sv rtl/lib/ot_rst_relay.sv); defs+=(-DSFU_PSTORE_R6); fi
-case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
+# STORE7=1 (r7): ot_hgi_sfu_programme_store_r7 (synchronous regional reset tree, release 4 edges; D=4). EQ_MUT=early: config 1 edge early
+if [ "${STORE7:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r7.sv $P/ot_hgi_sfu_program_stripe_sreset.sv $P/ot_hgi_sfu_calendar_paged_sreset.sv $P/ot_hgi_sfu_io_calendar_sreset.sv); defs+=(-DSFU_PSTORE_R7); fi
+case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; early) defs+=(-DSFU_PSTORE_R7_EARLY);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
 rows=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['rows'])" "$OUT/data/io_manifest.json")
 sedge=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['scalar_prefetch_edge'])" "$OUT/data/io_manifest.json")
 defs+=(-DSFU_IO_ROWS=$rows -DSFU_SCALAR_EDGE=$sedge)
