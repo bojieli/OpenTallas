@@ -1,0 +1,48 @@
+ot-run: ot-epyc4       admits    29 GB (avail 334, growth 257, headroom 48, waiters 30/1948 GB) load 61/128 running 38 disk 353 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    21 GB (avail 62, growth 39, headroom 24, waiters 0/0 GB) load 31/64 running 7 disk 179 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-600239-1792206938 after 0 s
+MUT 0 rc 0 expected True
+RST_REGION_PR_PASS regions=3 checks=4329 chains=40/150/200 local=5/60/120 calendar D+2+L exact, re-assert + HOLD
+/srv/opentallas-scratch/claude/codex-qkv-rstpr-1958/rtl/test/qwen_split/tb_qkd_rst_region_pr.sv:71: $finish called at 1445000 (1ps)
+
+MUT 1 rc 1 expected True
+ERR original mismatch cyc=9 got=100 want=000
+ERR original mismatch cyc=10 got=100 want=000
+ERR early/unflushed release region 2 cyc 130
+ERR original mismatch cyc=140 got=100 want=000
+ERR original mismatch cyc=141 got=100 want=000
+ERR early/unflushed release region 2 cyc 260
+ERR early/unflushed release region 2 cyc 261
+RST_REGION_PR_FAIL errors=7
+FATAL: /srv/opentallas-scratch/claude/codex-qkv-rstpr-1958/rtl/test/qwen_split/tb_qkd_rst_region_pr.sv:69: 
+       Time: 1445000  Scope: tb_qkd_rst_region_pr
+
+MUT 2 rc 1 expected True
+ERR original mismatch cyc=447 got=001 want=000
+ERR original mismatch cyc=448 got=001 want=000
+ERR original mismatch cyc=449 got=001 want=000
+ERR original mismatch cyc=450 got=001 want=000
+ERR original mismatch cyc=451 got=001 want=000
+ERR original mismatch cyc=452 got=001 want=000
+ERR early/unflushed release region 0 cyc 452
+ERR original mismatch cyc=453 got=001 want=000
+ERR early/unflushed release region 0 cyc 453
+ERR region 0 not released after re-release
+ERR region 1 not released after re-release
+RST_REGION_PR_FAIL errors=799
+FATAL: /srv/opentallas-scratch/claude/codex-qkv-rstpr-1958/rtl/test/qwen_split/tb_qkd_rst_region_pr.sv:69: 
+       Time: 1445000  Scope: tb_qkd_rst_region_pr
+
+MUT 3 rc 1 expected True
+ERR original mismatch cyc=607 got=000 want=111
+ERR late release region 0 cyc 612 (calendar 612)
+ERR late release region 1 cyc 667 (calendar 667)
+ERR late release region 2 cyc 727 (calendar 727)
+ERR original mismatch cyc=1019 got=000 want=001
+RST_REGION_PR_FAIL errors=5
+FATAL: /srv/opentallas-scratch/claude/codex-qkv-rstpr-1958/rtl/test/qwen_split/tb_qkd_rst_region_pr.sv:69: 
+       Time: 1445000  Scope: tb_qkd_rst_region_pr
+
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-600239-1792206938): exit 0
