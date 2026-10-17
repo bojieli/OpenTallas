@@ -49,7 +49,7 @@
    },
    {
     "name": "kiss_layer_identity_mutant",
-    "cmd": "KISS=1 bash tools/qwen_kv_die/static_k_issuer_bench.sh {RUN}/bench/kiss_m5 5",
+    "cmd": "KISS=1 bash tools/qwen_kv_die/static_k_issuer_bench.sh {RUN}/bench/kiss_m5 5 || { cat {RUN}/bench/kiss_m5/run_5.log; exit 1; }",
     "expect": "fail",
     "threads": 2,
     "peak_ram_gb": 8,
