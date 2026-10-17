@@ -110,6 +110,21 @@ def check_sources(meta, commit, views):
                 raise ValueError(f'Parameter wrapper mismatch: {p}')
 
 
+def check_contract_entry(entry, contract):
+    """A collected wrapper must represent the literal current contract instances."""
+    insts = contract['instances']
+    rep = insts[entry['representative']]
+    if rep['master'] != entry['master'] or rep.get('params', {}) != entry['params']:
+        raise ValueError('View master/parameter identity differs from exact contract')
+    signature = rep['ports']
+    for name in entry['instances']:
+        actual = insts[name]
+        if (actual['master'] != rep['master'] or actual.get('params', {}) != rep.get('params', {})
+                or actual['ports'] != signature):
+            raise ValueError(f'View membership has different exact signature: {name}')
+    return rep
+
+
 def check_direct_master(entry, meta, expected_ports, actual_ports):
     """Only a genuinely unparameterized contract may bind its real, unrenamed master."""
     if entry['params'] != {} or entry.get('params_dropped_yosys') or entry.get('env') or entry.get('blackbox', '-') != '-':
@@ -197,7 +212,7 @@ def main():
         # a failed transfer must not publish a receipt for incomplete views.
         subprocess.run(['rsync', '-az', *[f'{h}:{a.remote_root}/syn/{c}/{f}' for f in files], str(dst) + '/'],
                        check=True)
-        rep = contract['instances'][V[c]['representative']]
+        rep = check_contract_entry(V[c], contract)
         expected_ports = {p: (d['direction'], d['bits']) for p, d in rep['ports'].items()}
         for corner in ('tt', 'ff'):
             check_etm_signature(dst / f'{w}_synth_{corner}.lib', w, expected_ports)
