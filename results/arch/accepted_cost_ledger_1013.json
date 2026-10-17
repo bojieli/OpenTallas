@@ -2170,6 +2170,30 @@
    "date": "2026-10-13",
    "status": "proposed",
    "note": "structural design first (next fetch overlapped under the drain: period 1.0143x <= 1.10; dispatch two edges after the final release on the measured write-before-read lead 6-9 edges); what remains is +29/30 edges start-to-dispatch a record (worst record 169 / 139 = 1.2158x), of which 16 = the closed root composition's measured accept -> release latency (results/rtl/vm8_service_root_1013/root_latency_closed_1013.json: WR +4 / RD +12, hash MATCH) and 13/14 the tracker tail; charged as 30 fixed cycles on every SM.MATVEC record of the S2 schedule (DS 1,095 records, Qwen 5); without the root 0.87 % / 0.16 %, a full 27-edge drain would be 3.79 %"
+  },
+  {
+   "design": "qwen_kv",
+   "unit": "KV.HSLICE_PINCAP (qkd_host_pc_slice_die PINCAP=1: every input pin on its own face flop)",
+   "group": "KV.HSLICE_PINCAP",
+   "measured": 1.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles (edges added on the controller->landing response path)",
+   "unit_ratio": null,
+   "e2e_loss_pct": null,
+   "binding_workload": "qwen_ar",
+   "per_workload": {
+    "qwen_ar": {
+     "model": "edges added per path (bench-measured): ctrl_er->land_er +1 (response, er259 credit return), completion observer +1, reset assert/release +1, status chain sk/sd/so/sf 2 edges/slot (head 2k+1, was k+1), boot chain 2 edges/slot (2k+1, was k+1); command path land_es->ctrl_es and station chain unchanged. Token path: at most +1 edge per dependent HBM KV read at the elastic HBM-controller boundary (owner 10-14); status/boot/reset are boot-time only.",
+     "added_cycles": null,
+     "e2e_loss_pct": null
+    }
+   },
+   "within_unit_limit": null,
+   "evidence": "results/rtl/ref_tile/qkd_hslice/bench_witness_0130/mut0.log",
+   "evidence_grade": "committed_bench (edge counts); e2e not yet priced",
+   "date": "2026-10-17",
+   "status": "proposed",
+   "note": "Q-KVFIX 0130 for Q-KV: native-audit fix of qkd_hslice (ec1 native FAIL capture 435.7 host_rst_n, 218 inputs > 190; launch 232.5 ctrl_es[0]). Branch claude/qkvfix-0130, job qkd_hslice-pc1-5fd00e3ad. e2e tok/s loss to be priced by Q-KV against the KV calendar (+1 edge per dependent KV read)."
   }
  ],
  "totals": {
