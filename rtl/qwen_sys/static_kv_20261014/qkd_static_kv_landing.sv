@@ -9,7 +9,27 @@
 // at PC sector {1,0,t[6],t[12:9],t[3:1]}; its ordinal {t[12:9],t[6],t[3:1]} is then the w16 pair's consumption order.
 // K (get_v 0) is unchanged.  0 = the historical t[2:0] group / t[5:3] sector layout.
 module qkd_static_kv_landing_pc #(
-    parameter integer MUT=0, parameter integer VMAP=0
+    parameter integer MUT=0, parameter integer VMAP=0,
+    // FAULT_PIPE 1 (KVELEM 2026-10-16, landing_seg ls4): the fault conditions are registered once (fq) before the sticky
+    // fault flop: the ticket[ra]/valid[ra] compare cone no longer ends in the fault OR (gate: -105 ps at 770 ps on
+    // u_pc.fault/D).  Fault reports one edge later; no slot or data edge moves.  0 = historical single-edge fault.
+    parameter integer FAULT_PIPE=0,
+    // WRITE_PIPE 1 (KVELEM 2026-10-16, landing_seg ls5): the put side (SRAM write ce/addr/data and the ticket write) is
+    // registered once more (put_d/wa_d/tk_d/ad_d) beside the SRAM and the ticket array: ls3 gate TT -43.3 ps on
+    // ticket[*]/D (wa decode from the face pin register) and -36.3 ps on u_rows/w_addr_in.  The row is written one edge
+    // later; valid[] and every fault check keep the put_q edge.  0 = historical.
+    parameter integer WRITE_PIPE=0,
+    // CHECK_PIPE 1 (KVELEM 2026-10-16, landing_seg ls5): the put/get CHECKER (valid[] / ticket[] / armed / active epoch /
+    // fault) runs one edge behind the data path on relay registers of every operand it reads (k_*).  The checker never
+    // feeds data (SRAM write/read, out_* are unchanged), and put and get are delayed alike, so it sees the identical event
+    // sequence and latches exactly the same faults one edge later.  Why: in the seg tile the put operands land at each PC's
+    // quarter of the E face while get / arm / epoch arrive at the centre; the ls4 gate (TT, placement RC) had all 715
+    // failing endpoints in the checker starting at ps_q (valid[*] -44.4, ticket[*][*] -31.5, fq -30.7, w_addr -21.6) through
+    // ~400 ps of buffered wire.  The relays give that wire a full cycle and leave ps_q beside its pins and SRAM.  The ticket
+    // keeps only {sector[9], ordinal[7]}: its low 7 bits are the row index itself (written at w_a = put_ord[6:0], read at
+    // ra = get_ord[6:0]), so the 9-bit compare reduces to 2 bits exactly; valid[] is updated per bit (set_i | valid & ~clr_i,
+    // the same next state without the shared wa == ra compare).  0 = historical checker on the _q edge.
+    parameter integer CHECK_PIPE=0
 )(
     input wire ck, rst_n,
     input wire [1:0] cfg_stack,input wire [2:0] cfg_group,
@@ -77,9 +97,19 @@ module qkd_static_kv_landing_pc #(
     reg [5:0] active_layer;
     reg armed;
     wire [255:0] mem_q;
+    (* keep *) reg put_d;
+    (* keep *) reg [6:0] wa_d;
+    (* keep *) reg [8:0] tk_d;
+    (* keep *) reg [255:0] ad_d;
+    always @(posedge ck) begin wa_d<=wa;tk_d<=(MUT==1)?(put_ticket^9'b1):put_ticket;ad_d<=ad_q; end
+    always @(posedge ck or negedge rn) if(!rn)put_d<=0; else put_d<=(WRITE_PIPE!=0)&&put_q;
+    wire w_ce=(WRITE_PIPE!=0)?put_d:put_q;
+    wire [6:0] w_a=(WRITE_PIPE!=0)?wa_d:wa;
+    wire [255:0] w_d=(WRITE_PIPE!=0)?ad_d:ad_q;
+    wire [8:0] w_tk=(WRITE_PIPE!=0)?tk_d:((MUT==1)?(put_ticket^9'b1):put_ticket);
     ot_sram_1r1w_128x256_m1_r2c2 u_rows(
       .clk(ck),.r_ce_in(get_q),.r_addr_in(ra),.rd_out(mem_q),
-      .w_ce_in(put_q),.w_addr_in(wa),.wd_in(ad_q),.w_mask_in({256{1'b1}}),
+      .w_ce_in(w_ce),.w_addr_in(w_a),.wd_in(w_d),.w_mask_in({256{1'b1}}),
       .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
     reg read_q;
     reg [13:0] rt_q;
@@ -90,28 +120,76 @@ module qkd_static_kv_landing_pc #(
       rt_q<=gt_q;rv_q<=gv_q;re_q<=ge_q;rl_q<=gl_q;
       out_t<=rt_q;out_v<=rv_q;out_epoch<=re_q;out_layer<=rl_q;
       out_data<=(MUT==2)?(mem_q^256'b1):mem_q;
-      if(put_q)ticket[wa]<=(MUT==1)?(put_ticket^9'b1):put_ticket;
+      if(CHECK_PIPE==0 && w_ce)ticket[w_a]<=w_tk;
     end
     always @(posedge ck or negedge rn)
-      if(!rn)begin valid<=0;fault<=0;active_epoch<=0;active_layer<=0;armed<=0;read_q<=0;out_valid<=0;end
-      else begin
-        read_q<=get_q;out_valid<=read_q;
-        if(arm_q)begin
-          if((|valid)||put_q||get_q)fault<=1;
-          active_epoch<=epoch_q;active_layer<=layer_q;armed<=1;valid<=0;
+      if(!rn)begin read_q<=0;out_valid<=0;end
+      else begin read_q<=get_q;out_valid<=read_q;end
+    (* keep *) reg fq;
+    generate if(CHECK_PIPE==0)begin:g_chk0
+      // registered fault conditions (FAULT_PIPE 1): the same put/get checks as below, captured one edge before fault
+      wire fq_put=put_q&&((!armed||ps_q[8]||as_q!=ps_q||ae_q!=active_epoch||al_q!=active_layer)||(valid[wa]&&!(get_q&&ra==wa)));
+      wire fq_get=get_q&&(!armed||!valid[ra]||ticket[ra]!=get_ticket||ge_q!=active_epoch||gl_q!=active_layer||
+                          gt_q[13]||get_group!=group_q||gt_q[8:7]!=stack_q);
+      always @(posedge ck or negedge rn) if(!rn)fq<=0; else fq<=(FAULT_PIPE!=0)&&(fq_put||fq_get);
+      always @(posedge ck or negedge rn)
+        if(!rn)begin valid<=0;fault<=0;active_epoch<=0;active_layer<=0;armed<=0;end
+        else begin
+          if(FAULT_PIPE!=0 && fq)fault<=1;
+          if(arm_q)begin
+            if((|valid)||put_q||get_q)fault<=1;
+            active_epoch<=epoch_q;active_layer<=layer_q;armed<=1;valid<=0;
+          end
+          if(put_q!=actual_q)fault<=1;
+          if(put_q)begin
+            if(FAULT_PIPE==0 && (!armed||ps_q[8]||as_q!=ps_q||ae_q!=active_epoch||al_q!=active_layer))fault<=1;
+            if(FAULT_PIPE==0 && valid[wa]&&!(get_q&&ra==wa))fault<=1;
+            valid[wa]<=1;
+          end
+          if(get_q)begin
+            if(!armed||!valid[ra]||ticket[ra]!=get_ticket||ge_q!=active_epoch||gl_q!=active_layer||
+               gt_q[13]||get_group!=group_q||gt_q[8:7]!=stack_q)begin if(FAULT_PIPE==0)fault<=1;end
+            if(!(put_q&&wa==ra))valid[ra]<=0;
+          end
         end
-        if(put_q!=actual_q)fault<=1;
-        if(put_q)begin
-          if(!armed||ps_q[8]||as_q!=ps_q||ae_q!=active_epoch||al_q!=active_layer)fault<=1;
-          if(valid[wa]&&!(get_q&&ra==wa))fault<=1;
-          valid[wa]<=1;
-        end
-        if(get_q)begin
-          if(!armed||!valid[ra]||ticket[ra]!=get_ticket||ge_q!=active_epoch||gl_q!=active_layer||
-             gt_q[13]||get_group!=group_q||gt_q[8:7]!=stack_q)fault<=1;
-          if(!(put_q&&wa==ra))valid[ra]<=0;
-        end
+    end else begin:g_chk1
+      // relay stage: every checker operand one edge later (put side computed beside its pin registers, get side beside
+      // the request hop, arm / epoch from the centre); the placer sites the checker between them
+      (* keep *) reg k_arm,k_put,k_act,k_get,k_pchk,k_gchk;
+      (* keep *) reg [6:0] k_wa,k_ra;
+      (* keep *) reg [1:0] k_ptk,k_gtk;
+      (* keep *) reg [15:0] k_ae,k_ge,k_ep;
+      (* keep *) reg [5:0] k_al,k_gl,k_ly;
+      always @(posedge ck)begin
+        k_wa<=wa;k_ra<=ra;
+        k_ptk<={ps_q[9],put_ord[7]}^((MUT==1)?2'b01:2'b00);k_gtk<={gv_q,get_ord[7]};
+        k_pchk<=ps_q[8]||as_q!=ps_q;
+        k_gchk<=gt_q[13]||get_group!=group_q||gt_q[8:7]!=stack_q;
+        k_ae<=ae_q;k_al<=al_q;k_ge<=ge_q;k_gl<=gl_q;k_ep<=epoch_q;k_ly<=layer_q;
       end
+      always @(posedge ck or negedge rn)
+        if(!rn)begin k_arm<=0;k_put<=0;k_act<=0;k_get<=0;end
+        else begin k_arm<=arm_q;k_put<=put_q;k_act<=actual_q;k_get<=get_q;end
+      reg [1:0] tk2[0:127];
+      always @(posedge ck) if(k_put)tk2[k_wa]<=k_ptk;
+      wire k_fput=k_put&&(!armed||k_pchk||k_ae!=active_epoch||k_al!=active_layer||(valid[k_wa]&&!(k_get&&k_ra==k_wa)));
+      wire k_fget=k_get&&(!armed||!valid[k_ra]||tk2[k_ra]!=k_gtk||k_ge!=active_epoch||k_gl!=active_layer||k_gchk);
+      always @(posedge ck or negedge rn) if(!rn)fq<=0; else fq<=(FAULT_PIPE!=0)&&(k_fput||k_fget);
+      // per-bit next state = historical (arm clears, put sets, a get clears unless a put to the same row): set | valid & ~clr
+      wire [127:0] v_set=k_put?(128'b1<<k_wa):128'b0, v_clr=k_get?(128'b1<<k_ra):128'b0;
+      always @(posedge ck or negedge rn)
+        if(!rn)begin valid<=0;fault<=0;active_epoch<=0;active_layer<=0;armed<=0;end
+        else begin
+          valid<=v_set|(valid&~v_clr&{128{!k_arm}});
+          if(FAULT_PIPE!=0 && fq)fault<=1;
+          if(FAULT_PIPE==0 && (k_fput||k_fget))fault<=1;
+          if(k_arm)begin
+            if((|valid)||k_put||k_get)fault<=1;
+            active_epoch<=k_ep;active_layer<=k_ly;armed<=1;
+          end
+          if(k_put!=k_act)fault<=1;
+        end
+    end endgenerate
 endmodule
 
 // Pin-registered row-control leaf. PC request/return faces are explicit so the
