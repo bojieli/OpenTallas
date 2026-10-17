@@ -112,7 +112,8 @@
     "pass_regex": "SM_VM_WR_Q_T BENCH PASS",
     "threads": 1,
     "peak_ram_gb": 4,
-    "pass_witness": "physical/ref_tile/hsm_smvm_wrq_t_r4/witness/39e57ad0e_wrq_t_bench.log"
+    "pass_witness": "physical/ref_tile/hsm_smvm_wrq_t_r4/witness/39e57ad0e_wrq_t_bench.log",
+    "min_count_regex": "rows checked ([0-9]+)$"
    },
    {
     "name": "mut_face_clock_drop",
