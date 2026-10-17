@@ -74,6 +74,24 @@ def ports_of_lib(lib):
     for m in re.finditer(r'\n\s*pin\s*\(\s*"?(\w+)"?\s*\)\s*\{\s*direction\s*:\s*(\w+)', t):
         if m.group(1) not in out:
             out[m.group(1)] = (m.group(2), 1)
+    # H-DIE-R7b: OpenSTA write_lib may emit a cell-level pin whose timing() groups precede 'direction' (forwarded clock
+    # output clk_out of the hbfd_rly_*_fc relays): take the direction at depth 1 of the pin group
+    for m in re.finditer(r'\n\s*pin\s*\(\s*"?(\w+)"?\s*\)\s*\{', t):
+        if m.group(1) in out:
+            continue
+        i, d, j = m.end(), 1, m.end()
+        while d and j < len(t):
+            c = t[j]
+            d += (c == '{') - (c == '}')
+            j += 1
+        body = t[i:j]
+        flat, d = [], 0
+        for c in body:
+            d += (c == '{') - (c == '}')
+            flat.append(c if d == 0 or c == '}' else ' ')
+        dm = re.search(r'direction\s*:\s*(\w+)', ''.join(flat))
+        if dm:
+            out[m.group(1)] = (dm.group(1), 1)
     return out
 
 
