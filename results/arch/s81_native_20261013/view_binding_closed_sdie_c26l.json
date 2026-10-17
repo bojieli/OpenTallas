@@ -11914,6 +11914,60 @@
    "lineage": "EXACT_EXPORT",
    "native": "native PASS (results/rtl/s81_selem_native_1815/native_audit_stations_f9_rly66sw.json)",
    "gate": "S-DIE 1815 explicit native-PASS row"
+  },
+  "dsfd_rly_536_EN": {
+   "verdict": "DIAGNOSTIC_CLOSED",
+   "export_dir": "physical/ref_tile/s81_rly_536_en/views/dsfd_rly_536_EN",
+   "job": "s81_rly_536_en-c26l-82d8ea5b4",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_536_en/views/dsfd_rly_536_EN/dsfd_rly_536_EN.lef",
+     "sha256": "b0e45104a69083fb1ba3f206ce8359a3f9a6d631691ea0a86c4dd2c4dabc8380"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_536_en/views/dsfd_rly_536_EN/dsfd_rly_536_EN_tt.lib",
+     "sha256": "e262f655a21ac52e6cfbbcaf1cd47e4473db244f3515cdefa232fb22b036d540"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_536_en/views/dsfd_rly_536_EN/dsfd_rly_536_EN_ff.lib",
+     "sha256": "c8b7364d2067ef147fd3806de89315af19409b3224aa0690257a0e544d1c477d"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_536_en/views/dsfd_rly_536_EN/dsfd_rly_536_EN_ss.lib",
+     "sha256": "1347596ca024b97d705b267598d8238876789c770c7d97065e0c2355d7072e8b"
+    }
+   },
+   "closure": "TT +316.99 / FF +16.70 ps DRC 0; SS sensitivity +212.55 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS (results/rtl/s81_rly_c26l_1016/native_audit.json)",
+   "gate": "S-DIE 1815 explicit native-PASS row"
+  },
+  "dsfd_rly_66_EN": {
+   "verdict": "DIAGNOSTIC_CLOSED",
+   "export_dir": "physical/ref_tile/s81_rly_66_en/views/dsfd_rly_66_EN",
+   "job": "s81_rly_66_en-c26l-82d8ea5b4",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_66_en/views/dsfd_rly_66_EN/dsfd_rly_66_EN.lef",
+     "sha256": "fcba7bf706dceb2ce10c27e0f34cb1da0dc7437bf76c8a3cddb08cae3d8c403f"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_66_en/views/dsfd_rly_66_EN/dsfd_rly_66_EN_tt.lib",
+     "sha256": "50fc7d17ed9a613027a2f18cae9be932904462a62ebf684362c58b0c7a09dcf4"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_66_en/views/dsfd_rly_66_EN/dsfd_rly_66_EN_ff.lib",
+     "sha256": "7efb3f66e097b4176e7354514ceac77684ab6064c9dbb97bbfd24093a6abc659"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_66_en/views/dsfd_rly_66_EN/dsfd_rly_66_EN_ss.lib",
+     "sha256": "8c07586ba2c7a581007e54fe02962169f9bb22a7a1a27c74ff7281022ed55427"
+    }
+   },
+   "closure": "TT +335.51 / FF +30.29 ps DRC 0; SS sensitivity +240.13 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS (results/rtl/s81_rly_c26l_1016/native_audit.json)",
+   "gate": "S-DIE 1815 explicit native-PASS row"
   }
  },
  "superseded": {
@@ -13489,6 +13543,14 @@
    },
    "dsfd_rly_66_SW": {
     "job": "s81_rly_66_sw-c26l-64acd1733",
+    "replaced": null
+   },
+   "dsfd_rly_536_EN": {
+    "job": "s81_rly_536_en-c26l-82d8ea5b4",
+    "replaced": null
+   },
+   "dsfd_rly_66_EN": {
+    "job": "s81_rly_66_en-c26l-82d8ea5b4",
     "replaced": null
    }
   },
