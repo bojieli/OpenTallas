@@ -42,7 +42,8 @@
     "threads": 2,
     "peak_ram_gb": 4,
     "cmd": "bash rtl/hbm_accel/generic/adapters/tb/bfqg/run.sh {RUN}/bfqg_mutant 9",
-    "fail_regex": "BFQG_FAIL"
+    "fail_regex": "BFQG_FAIL",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_2013/bfqg-scalar/mutant-9.log"
    }
   ],
   "calibrate": {
