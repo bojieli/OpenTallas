@@ -51,8 +51,9 @@ def slice_glue(t):
     s = sub(s, 'module ot_vms_slice_static #(', 'module ot_vms_slice_static_glue #(')
     s = sub(s, "    parameter integer BMUT=0,RMUT=0,\n", "    parameter integer RMUT=0,\n")
     s = sub(s, "    parameter integer STRAP_QUADRANT=-1, // opt-in physical masters; -1 retains historical bank\n", "")
-    s = sub(s, "    parameter integer Q2_MERGE=0 // NW (q2) bank = q0 master + hfd_vms_wq2_merge (ot_vms_bank_native_physical)\n", "")
-    s = sub(s, "    parameter integer NATIVE_SHAPE=0,\n", "    parameter integer NATIVE_SHAPE=0\n")
+    s = sub(s, "    parameter integer Q2_MERGE=0, // NW (q2) bank = q0 master + hfd_vms_wq2_merge (ot_vms_bank_native_physical)\n", "")
+    s = sub(s, "    parameter integer BANK_PIN_IN=0 // literal bank input pin flops (ot_vms_bank_native_physical PIN_IN); ring commit 5 + this\n",
+            "    parameter integer BANK_PIN_IN=0 // the die-level banks carry literal input pin flops: ring-stop COMMIT_DELAY 5 + this\n")
     for line in ('    input wire [7:0] clk_bank,\n', '    input wire [7:0] rslot_v,wslot_v,\n', '    input wire [8*RB-1:0] rslot,\n',
                  '    input wire [8*WB-1:0] wslot,\n', '    input wire [RG*8*17-1:0] rq,\n', '    output wire [RG*8*257-1:0] rr,\n',
                  '    input wire [WG*8*281-1:0] wq,\n', '    output wire [WG*8-1:0] wq_done,\n', '    input wire [8*281-1:0] dq,kq,\n',
@@ -86,7 +87,7 @@ def wrapper_glue(t, q, cfg):
             '    input wire [143:0] bank_status,\n    output wire [2207:0] bk_xq,bk_xq2,\n    input wire [7:0] bk_xq_done,bk_xq2_done,\n'
             '    input wire [2207:0] bk_eg,\n    output wire [2279:0] bk_pq,\n    input wire [2127:0] bk_pr,\n'
             + ('    input wire [7:0] bk_flt,                 // wq2-merge leaves vmm_NWb sticky flt -> bank status bit 17\n' if cfg['merge'] else ''))
-    s = re.sub(r'ot_vms_slice_static #\(.*?\) u_slice \(', f'ot_vms_slice_static_glue #(.NC({2 if q == "SW" else 0}),.RG({cfg["RG"]}),.WG({cfg["WG"]}),.NATIVE_SHAPE(1)) u_slice (', s)
+    s = re.sub(r'ot_vms_slice_static #\(.*?\) u_slice \(', f'ot_vms_slice_static_glue #(.NC({2 if q == "SW" else 0}),.RG({cfg["RG"]}),.WG({cfg["WG"]}),.NATIVE_SHAPE(1),.BANK_PIN_IN(1)) u_slice (', s)
     st = 'bank_status'
     if cfg['merge']:
         s = sub(s, '    ot_vms_slice_static_glue #', '    wire [143:0] bank_status_m;\n    genvar fb;\n'
@@ -97,7 +98,7 @@ def wrapper_glue(t, q, cfg):
     s = sub(s, '        .bank_status(bank_status),\n',
             f'        .bank_status({st}),\n        .bk_xq(bk_xq),.bk_xq2(bk_xq2),.bk_xq_done(bk_xq_done),.bk_xq2_done(bk_xq2_done),\n'
             '        .bk_eg(bk_eg),.bk_pq(bk_pq),.bk_pr(bk_pr),\n')
-    s = re.sub(r'#\(parameter integer STRAP_BANKS=0, STRAP_MUT=0(, Q2_MERGE=0)?\)', '', s)
+    s = re.sub(r'#\(parameter integer STRAP_BANKS=0, STRAP_MUT=0(, Q2_MERGE=0)?(, BANK_PIN_IN=0)?\)', '', s)
     return s
 
 
@@ -110,14 +111,20 @@ def layer():
         ps = {}
         for b in range(8):
             vb = f'vmb_{q}{b}'
+            # banks carry LITERAL input pin flops in RTL (= their views; H-SM 05978a837): hub glue BANK_PIN_IN=1
             if cfg.get('core'):
-                inst.append(dict(name=vb, master='hfd_vms_bank_native_q1_core', source=SRC + 'physical/hfd_vms_bank_native_q1_core.sv',
-                                 rtl_deps=[SRC + 'physical/hfd_vms_bank_native_q1.sv'], params={}, slot=vb, owner='H-SM/H-DIE',
-                                 note=f'{hub} bank {b} hoisted (q1 core-only variant: SM-side client ports absent)'))
+                inst.append(dict(name=vb, master='hfd_vms_bank_native_q1_core_pr', source=SRC + 'physical/hfd_vms_bank_native_q1_core_pr.sv',
+                                 rtl_deps=[SRC + 'physical/hfd_vms_bank_native_q1_core.sv', SRC + 'physical/hfd_vms_bank_native_q1.sv'],
+                                 params={}, slot=vb, owner='H-SM/H-DIE',
+                                 note=f'{hub} bank {b} hoisted (q1 core-only, literal input pin flops; view vm_native_q1core_pr4)'))
+                bclk = ['clk']
             else:
-                inst.append(dict(name=vb, master='hfd_vms_bank_native_q0', source=SRC + 'physical/hfd_vms_bank_native_q0.sv', params={},
-                                 slot=vb, owner='H-SM/H-DIE', note=f'{hub} bank {b} hoisted (native q0 master; view q0C faces)'))
-            clocks += [dict(inst=vb, port='clk', domain='stream', kind='clock'), dict(inst=vb, port='rst_n', domain='stream', kind='reset')]
+                inst.append(dict(name=vb, master='hfd_vms_bank_native_q0_faces', source=SRC + 'faces_q0/hfd_vms_bank_native_q0_faces.sv',
+                                 rtl_deps=[SRC + 'faces_q0/ot_vms_bank_q0_faces_core.sv', SRC + 'faces_q0/ot_vms_bank_q0_faces_body.sv'],
+                                 params={}, slot=vb, owner='H-SM/H-DIE', note=f'{hub} bank {b} hoisted (q0C faces master, literal input pin flops)'))
+                bclk = ['clk', 'clk_n', 'clk_s', 'clk_e', 'clk_w', 'clk_macro0', 'clk_macro1', 'clk_macro2']
+            clocks += [dict(inst=vb, port=c_, domain='stream', kind='clock') for c_ in bclk]
+            clocks += [dict(inst=vb, port='rst_n', domain='stream', kind='reset')]
             straps += [dict(inst=vb, port='bid', value=b, reason=f'identity: bank id {b} of {hub} (slice .bid(3\'(b)))'),
                        dict(inst=vb, port='sid', value=cfg['sid'], reason=f'identity: slice id of {hub}')]
             for p, w in (('xq', 276), ('xq2', 276)):

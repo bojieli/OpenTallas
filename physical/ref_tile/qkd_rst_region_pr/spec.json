@@ -1,0 +1,123 @@
+{
+ "name": "qkd_rst_region_pr",
+ "top": "qkd_rst_region_pr",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkd_rst_region.sv",
+  "rtl/qwen_sys/split_20261014/qkd_rst_region_pr.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "por_n"
+ ],
+ "outline": {
+  "w": 12.96,
+  "h": 12.96,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "a"
+  ],
+  "E": [
+   "b"
+  ],
+  "S": [
+   "ck"
+  ],
+  "N": [
+   "por_n",
+   "dly"
+  ]
+ },
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "All live data inputs are RTL pin captures: a enters original a_q; dly enters eight kept dly_pin flops; b is original registered reset output. por_n is package POR into the original synchronizer. Extra blanket registers would change reset epochs; no timing exception added."
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7,
+  "pin_min_tracks": 3,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "Native successor: original qkd_rst_region raw native capture239.95ps on8dly straps (dynamic a113.34,b173.85); add8RTL dly pin captures in separate wrapper, original core byte-identical. Stable tie-cell straps captured before POR release plus IGNORE255 guarantee unchanged host+D+2+L cold/warm release. 38flops vs30, one root, same12.96x12.96M5relay slot. Every input remains audited; no strap mask.",
+ "slot_change_request": "Same12.96x12.96M5reset relay slot, same a W/b E/ck S/POR+dly N faces. Additive master qkd_rst_region_pr; original CLOSED root stands. New master unbound until exact/mutant/native/TT/FF/DRC gates.",
+ "job": {
+  "owner": "Codex Q-KV takeover1958",
+  "branch": "codex/qkv-takeover-1958",
+  "tag": "pr1",
+  "cycles_added": 0,
+  "purpose": "Register static delay straps at their pins without changing the existing reset-release calendar. OriginalRTL cycle-for-cycle comparison plus chain/hold calendar checks.",
+  "extra_paths": [
+   "tools/qwen_kv_die/run_rst_region_pr_bench.sh",
+   "rtl/test/qwen_split/tb_qkd_rst_region_pr.sv"
+  ],
+  "benches": [
+   {
+    "name": "rst_pr_exact",
+    "cmd": "bash tools/qwen_kv_die/run_rst_region_pr_bench.sh {RUN}/bench/m0 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^RST_REGION_PR_PASS regions=3",
+    "min_count_regex": "^RST_REGION_PR_PASS regions=3 checks=(\\d+)"
+   },
+   {
+    "name": "rst_pr_no_ignore",
+    "cmd": "bash tools/qwen_kv_die/run_rst_region_pr_bench.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^RST_REGION_PR_FAIL errors=[1-9]"
+   },
+   {
+    "name": "rst_pr_no_dly",
+    "cmd": "bash tools/qwen_kv_die/run_rst_region_pr_bench.sh {RUN}/bench/m2 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^RST_REGION_PR_FAIL errors=[1-9]"
+   },
+   {
+    "name": "rst_pr_bad_strap",
+    "cmd": "bash tools/qwen_kv_die/run_rst_region_pr_bench.sh {RUN}/bench/m3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^RST_REGION_PR_FAIL errors=[1-9]"
+   }
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

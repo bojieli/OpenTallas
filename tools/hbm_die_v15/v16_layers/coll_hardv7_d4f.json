@@ -38,6 +38,20 @@
    "slot": null,
    "owner": "H-COLL",
    "note": "COLL inject local copy (1 edge, equal age, INJ_COPY_EDGES=1; view hcoll_injcopy-ic1-cc77f11e3 native PASS); home from the d4f H-DIE stream"
+  },
+  {
+   "name": "tkm_SW",
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "params": {},
+   "slot": "tkm_SW",
+   "owner": "H-COLL",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+    "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+    "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_buffer.sv"
+   ],
+   "note": "d4f (H-DIE 10-17): COLL SW TKM hoisted out of hb_coll_SW (q3_hard_v7x) into its own sub-cluster slot tkm_SW (1740 x 1740, N of coll_SW); TP 192 (EW86 tiles ot_hgi_coll_tkm_tile_e86 x32)"
   }
  ],
  "edges": [
@@ -690,6 +704,279 @@
    "bits": 2,
    "clock": "stream",
    "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tkx_start"
+   ],
+   "dst": [
+    "tkm_SW",
+    "start"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist (q3_hard_v7x body wires -> die sub-cluster)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tkx_arg_mode"
+   ],
+   "dst": [
+    "tkm_SW",
+    "arg_mode"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist (q3_hard_v7x body wires -> die sub-cluster)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tkx_cfg_n"
+   ],
+   "dst": [
+    "tkm_SW",
+    "cfg_n"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist (q3_hard_v7x body wires -> die sub-cluster)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tkx_cfg_k"
+   ],
+   "dst": [
+    "tkm_SW",
+    "cfg_k"
+   ],
+   "bits": 13,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist (q3_hard_v7x body wires -> die sub-cluster)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tkx_cfg_nout"
+   ],
+   "dst": [
+    "tkm_SW",
+    "cfg_nout"
+   ],
+   "bits": 13,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist (q3_hard_v7x body wires -> die sub-cluster)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tkx_cfg_g"
+   ],
+   "dst": [
+    "tkm_SW",
+    "cfg_g"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist (q3_hard_v7x body wires -> die sub-cluster)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tkx_cfg_gbase"
+   ],
+   "dst": [
+    "tkm_SW",
+    "cfg_gbase"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist (q3_hard_v7x body wires -> die sub-cluster)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tkx_cfg_pf"
+   ],
+   "dst": [
+    "tkm_SW",
+    "cfg_pf"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist (q3_hard_v7x body wires -> die sub-cluster)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tkx_cfg_obase"
+   ],
+   "dst": [
+    "tkm_SW",
+    "cfg_obase"
+   ],
+   "bits": 40,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist (q3_hard_v7x body wires -> die sub-cluster)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tkx_cfg_rbase"
+   ],
+   "dst": [
+    "tkm_SW",
+    "cfg_rbase"
+   ],
+   "bits": 40,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist (q3_hard_v7x body wires -> die sub-cluster)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tkx_cfg_has_r"
+   ],
+   "dst": [
+    "tkm_SW",
+    "cfg_has_r"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist (q3_hard_v7x body wires -> die sub-cluster)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tkx_del_slot"
+   ],
+   "dst": [
+    "tkm_SW",
+    "del_slot"
+   ],
+   "bits": 4,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist (q3_hard_v7x body wires -> die sub-cluster)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tkx_del_valid"
+   ],
+   "dst": [
+    "tkm_SW",
+    "del_valid"
+   ],
+   "bits": 4,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist (q3_hard_v7x body wires -> die sub-cluster)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tkx_del_flit"
+   ],
+   "dst": [
+    "tkm_SW",
+    "del_flit"
+   ],
+   "bits": 2180,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist (q3_hard_v7x body wires -> die sub-cluster)"
+  },
+  {
+   "src": [
+    "tkm_SW",
+    "w_v"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "tkx_w_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist"
+  },
+  {
+   "src": [
+    "tkm_SW",
+    "w_addr"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "tkx_w_addr"
+   ],
+   "bits": 40,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist"
+  },
+  {
+   "src": [
+    "tkm_SW",
+    "w_mask"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "tkx_w_mask"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist"
+  },
+  {
+   "src": [
+    "tkm_SW",
+    "w_data"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "tkx_w_data"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist"
+  },
+  {
+   "src": [
+    "tkm_SW",
+    "busy"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "tkx_busy"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist"
+  },
+  {
+   "src": [
+    "tkm_SW",
+    "done"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "tkx_done"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist"
+  },
+  {
+   "src": [
+    "tkm_SW",
+    "fault"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "tkx_fault"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f TKM hoist"
   }
  ],
  "gaps": [],
@@ -789,6 +1076,30 @@
    "port": "rst_n",
    "domain": "stream",
    "kind": "reset"
+  },
+  {
+   "inst": "tkm_SW",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "tkm_SW",
+   "port": "tile_clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "tkm_SW",
+   "port": "buffer_clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "tkm_SW",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
   }
  ],
  "straps": [
@@ -819,7 +1130,7 @@
  ],
  "remaster": {
   "hb_coll_SW": {
-   "master": "ot_hfd_coll_q3_hard_v5",
+   "master": "ot_hfd_coll_q3_hard_v7x",
    "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
    "params": {
     "NLINK": 2,
@@ -1085,6 +1396,13 @@
  ],
  "notes": [
   "hb_coll_<Q> remastered host_v4 -> hard_v7 parent (ot_hfd_coll_q{3,2}_hard_v5, NLINK SW2/SE,NW,NE1, TP192): QID param -> qid strap; clk_issue 4->1, clk_vmwrite 1->16, clk_qslots 2->NLINK+26/25, new clk_vmasm[16]/clk_upipe[16], new output fault_cause[16] (open)",
-  "compiler: INJ_COPY_EDGES=1 on every inject sink (cic_<Q>); SU inject answer latency INJLAT unchanged inside hard_v7 (12) -- the extra copy edge must be covered by the die INJLAT budget (H-DIE/compiler)"
+  "compiler: INJ_COPY_EDGES=1 on every inject sink (cic_<Q>); SU inject answer latency INJLAT unchanged inside hard_v7 (12) -- the extra copy edge must be covered by the die INJLAT budget (H-DIE/compiler)",
+  "TKM hoist: hb_coll_SW = ot_hfd_coll_q3_hard_v7x (no clk_tkm; TKM interface on pins), tkm_SW = ot_hgi_coll_tkm_m_tp192 (clk, tile_clk[32], buffer_clk, rst_n); zero-latency hop (H-DIE grant <= 450 um)"
+ ],
+ "drop_clocks": [
+  [
+   "hb_coll_SW",
+   "clk_tkm"
+  ]
  ]
 }

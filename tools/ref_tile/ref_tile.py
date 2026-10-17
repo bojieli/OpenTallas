@@ -360,7 +360,37 @@ def pin_hook_wrapper(s: dict) -> bool:
     return bool(s.get("inhold") or s.get("outhold") or s.get("pin_reg_split") or s.get("pin_hook_before_flops"))
 
 
+def pin_hook_flops_only(s: dict) -> bool:
+    """opt-in (S-ELEM BF lane16 2026-10-17): pin flops WITHOUT hold stages plus "pin_hook_before_flops" repo hooks (e.g.
+    per-root placement regions) -> the same kit-local pre_gpl.tcl / pre_dpl.tcl, minus the hold-stage scripts"""
+    return bool(s.get("io_flop_at_pins") and not pin_hook_wrapper(s) and s.get("pin_hook_before_flops")
+                and s.get("recipe", 1) >= 2)
+
+
+def kit_pin_hooks(s: dict) -> bool:
+    return pin_hook_wrapper(s) or pin_hook_flops_only(s)
+
+
 def gen_pin_hooks(s: dict) -> dict:
+    if pin_hook_flops_only(s):
+        pre_gpl = ["# ref_tile PRE_GLOBAL_PLACE (pin flops, no hold stages): the spec's pin_hook_before_flops repo hooks, then",
+                   "# every port's single launch / capture flop is fixed at its pin.  ORFS takes one hook per step."]
+        for rel in s["pin_hook_before_flops"]:
+            if not isinstance(rel, str) or rel.startswith("/") or ".." in Path(rel).parts or not re.fullmatch(r"[A-Za-z0-9_./-]+", rel):
+                raise SpecError("pin_hook_before_flops must name safe relative repo Tcl files")
+            if not (ROOT / rel).is_file():
+                raise SpecError(f"missing pin hook: {rel}")
+            pre_gpl.append(f"source /src/{rel}")
+        pre_gpl.append(f"source /src/{QDM}/io_flop_at_pins.tcl")
+        pre_dpl = ["# ref_tile PRE_DETAIL_PLACE (pin flops, no hold stages): release the pin flops for DPL",
+                   f"source /src/{QDM}/out_flop_release.tcl"]
+        for rel in s.get("pre_dpl_extra", []):
+            if not isinstance(rel, str) or rel.startswith("/") or ".." in Path(rel).parts or not re.fullmatch(r"[A-Za-z0-9_./-]+", rel):
+                raise SpecError("pre_dpl_extra must name safe relative repo Tcl files")
+            if not (ROOT / rel).is_file():
+                raise SpecError(f"missing pre-DPL hook: {rel}")
+            pre_dpl.append(f"source /src/{rel}")
+        return {"pre_gpl.tcl": "\n".join(pre_gpl) + "\n", "pre_dpl.tcl": "\n".join(pre_dpl) + "\n"}
     if not pin_hook_wrapper(s):
         if s.get("pre_dpl_extra"):
             raise SpecError("pre_dpl_extra needs the recipe-2 pin-hook wrapper")
@@ -431,6 +461,8 @@ def load_spec(path: str) -> dict:
     # child gets its clock from its OWN port on the cluster face ("clock_ports": one scalar port per child clock pin, the
     # RTL wires port -> child clock pin).  The die delivers phi - R_i at each entry (R_i = entry wire + the child's routed
     # boundary insertion).  "clock_port" stays the first entry (kit CLKPORT, legacy readers).
+    if s.get("cdc_synchronizers") is not None and (s.get("clock") != "multiple_cts_roots" or s["kind"] != "tile"):
+        raise SpecError("cdc_synchronizers (reviewed CDC mode, cdc_sync_constraints.py) requires a multiple_cts_roots leaf tile")
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
         cps = s.get("clock_ports")
         if (s.get("clock") == "multiple_cts_roots" and s["kind"] != "tile" or s.get("clock") == "entries" and s["kind"] != "cluster") or not isinstance(cps, list) or not cps or s["clock_port"] != cps[0]:
@@ -1755,7 +1787,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra.append("--orfs-var PLACE_DENSITY_LB_ADDON=")
     else:
         extra.append(f"--orfs-var PLACE_DENSITY_LB_ADDON={float(s['route']['lb_addon'])}")
-    wrap = pin_hook_wrapper(s)
+    wrap = kit_pin_hooks(s)
     if s.get("io_flop_at_pins"):
         # spec "io_flop_at_pins" {"cols": N} (el1011-q-kvd 2026-10-12): every port's single launch / capture flop FIRM at its
         # own pin (qwen_die_masters/io_flop_at_pins.tcl, N staggered rows per face), released to DPL before detailed placement.
@@ -1769,7 +1801,8 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             extra.append(f"--step-tcl PRE_DETAIL_PLACE={kd}/pre_dpl.tcl")
             # opt-in knobs of io_flop_at_pins.tcl: walk flop <-> port through the inserted BUF / HB4 / BUF stage on top of
             # the <= 3 synthesis INV / BUF (default 4 hops stops inside the stage)
-            extra.append("--orfs-var OT_OFLOP_HOPS=8")
+            if pin_hook_wrapper(s):
+                extra.append("--orfs-var OT_OFLOP_HOPS=8")
         else:
             extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl")
             extra.append("--step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl")
@@ -1944,7 +1977,7 @@ def referenced_paths(s: dict, kd: str) -> list:
         out.append("physical/dsrom_window_source/leaf_inhold.tcl")
         if s.get("inhold_drv", "BUFx4f_ASAP7_75t_R") or pin_hook_wrapper(s):
             out.append("physical/dsrom_window_source/leaf_inhold_release.tcl")
-    if pin_hook_wrapper(s):
+    if kit_pin_hooks(s):
         out += [f"{kd}/pre_gpl.tcl", f"{kd}/pre_dpl.tcl"]
         if s.get("pin_reg_split"):
             out.append(PIN_REG_SPLIT_TCL)
