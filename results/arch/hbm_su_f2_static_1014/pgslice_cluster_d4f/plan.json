@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.hsu.pgslice_cluster_plan.v1",
+ "date": "2026-10-16",
+ "slot": {"source": "claude/hdie-d4c-g2 ce21ef609 results/arch/hbm_die_v16_d4f/grants_d4f.json", "w": 1797.12, "h": 2825.28,
+          "faces": {"W": "LG ports (2 x 556 b, vmb leaves)", "E": "core/command (control 1742, vmr 60, vmw 78, RF 420, red_sel 12, slice_x 32, fault 1; COLLPORT 2230)", "N": "clock/reset entries (658)"}},
+ "rtl": {"branch": "claude/hsu-pgslice-d4c", "defines": ["OT_SU_SYNC_RST", "OT_HARD_CHILDREN"], "params": {"RF_LOCAL": 1, "PIN_REG": 1, "MLAT": 4, "ALAT": 3, "LEAF": 1},
+         "rf_local_proof": "claude/hsu-rflocal-1830 815151a6a (SU_TOP PASS 7111 edges, 4 mutants, schedule mutant FAIL)"},
+ "variants": {
+  "heavy": {"slices": "G1 every quarter, G0 quarters 1-3", "children": {"bank6_clock7 (CLOSED)": 32, "kind0 r2 LIGHT (CLOSED)": 16, "kind1 r1 HEAVY": 16}},
+  "heavy_full": {"slices": "quarter 0 G0", "children": {"bank6_clock7 (CLOSED)": 32, "kind0 r2 LIGHT (CLOSED)": 16, "kind1 r1 HEAVY": 15, "kind2 r1 FULL (SIDE inside)": 1}},
+  "light": {"slices": "G2/G3", "children": {"bank6_clock7 (CLOSED)": 32, "kind0 r2 LIGHT (CLOSED)": 32}}
+ },
+ "rows": "heavy: 8 rows H|BB|LL|BB|H (row 350.48 incl. 20 um channel) = 1322.56 x 2803.84 incl. 20 um edges; light: 2-per-row LL|BB pack (su_band_d4c_1016)",
+ "kind2_fit": {"leaf": [248.4, 432.0], "home": "E service column of the heavy_full slice: x 1362.56..1777.12 (414.56 wide), beside row 0 (its bank 0)",
+               "freed": "u_side (SIDE pipe) moves into the FULL leaf; the KIND1 slot of lane 0 in row 0 stays empty (15 KIND1)",
+               "fits": true, "service_left_mm2": 1.05},
+ "vm_bank_leaf": "soft (zero-latency feed-through + 20-FF return checker) in the E service band",
+ "blocked_on": ["hbm_su_static_kind1_l4_r1_1016 CLOSED + native PASS", "hbm_su_static_kind2_l4_r1_1016 CLOSED + native PASS", "full-SU OT_HARD_CHILDREN proof (claude/hsu-pgslice-d4c 741e594c6, E4 hsu-pghard2)"],
+ "status": "PLAN: cluster kit is written when both leaf views exist"
+}
