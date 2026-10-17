@@ -1,6 +1,6 @@
 #!/bin/bash
 # IDX-SCORE CLUSTER (2026-10-17): the N_Q2/TP192 scheduled gate with ot_hbm_idx_score_cluster (16 chained retimed leaves,
-# +4 scorer edges compiled by hbm_idx_static_calendar.py --score-chain 4).
+# +8 scorer edges compiled by hbm_idx_static_calendar.py --score-chain 8).
 #   run_scheduled_nq2_cl.sh OUT [gate|seam|swap]   gate = every positive + the existing mutants;
 #   seam = leaf(0,1)->leaf(0,2) seam one edge late, swap = leaves (0,0)/(0,1) swapped: each must FAIL (rank 191 run).
 # Full-shape production bench of the pin-registered IDX tiles (H-NETLIST/idxreg 2026-10-16): compiler programme ->
@@ -20,7 +20,7 @@ for rank in 0 127 128 191; do
 done
 for c in reg100:registered:100 reg4:registered:4 none100:none:100; do
  IFS=: read -r tag pins gap <<< "$c"
- python3 tools/hbm_idx_static_calendar.py "$out/cal_$tag" --pins "$pins" --gap "$gap" --score-chain 4 > "$out/cal_$tag.log"
+ python3 tools/hbm_idx_static_calendar.py "$out/cal_$tag" --pins "$pins" --gap "$gap" --score-chain 8 > "$out/cal_$tag.log"
 done
 # Reproduce the old compiler defect using the current schedule: drop the pass
 # field only on the idle SRAM-drain slots. No RTL or programme length changes.

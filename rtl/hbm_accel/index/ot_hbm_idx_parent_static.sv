@@ -39,7 +39,7 @@ module ot_hbm_idx_parent_static #(parameter integer N_Q=4,TP=96,RANK_W=(TP<=1?1:
   wire[11:0]nq=(nkeys<=q*2736)?12'd0:((nkeys-q*2736>=2736)?12'd2736:12'(nkeys-q*2736));
   wire[609:0]score;
 `ifdef OT_IDX_SCORE_CLUSTER
-  ot_hbm_idx_score_cluster #(.TP(TP)) scorer(   // IDX-SCORE 16-leaf chained cluster (+4 edges; compiler --score-chain 4)
+  ot_hbm_idx_score_cluster #(.TP(TP)) scorer(   // IDX-SCORE 16-leaf chained cluster (+8 edges; compiler --score-chain 8)
 `else
   ot_hbm_idx_score_static #(.TP(TP)) scorer(
 `endif.clk_ctl(clk_score[q]),.clk_engine(clk_engine[q*4+:4]),.clk_meta(clk_meta[q*4+:4]),
