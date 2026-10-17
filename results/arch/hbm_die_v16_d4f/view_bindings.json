@@ -104,6 +104,11 @@
    "view": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg",
    "native": "L177.8/C153.8/R111.2/sp40.9 PASS",
    "note": "bind when the d4f contract switches XQL bfq -> bfqg (H-NETLIST)"
+  },
+  "ot_hgi_sm_xload_xq_pegress": {
+   "status": "NOT BINDABLE: x5 native FAIL (capture 337.5 ed5[7], spread 83.0); x3 FAIL",
+   "next": "x6 structural (ed5 pin flop + in-tile replication recipe 4, 2-entry clock split); ed5 edge priced",
+   "die": "SYNTH diagnostic until x6 native PASS"
   }
  }
 }
