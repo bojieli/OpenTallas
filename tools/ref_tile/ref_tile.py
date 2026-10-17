@@ -902,7 +902,7 @@ def gen_pdn(s: dict, lc: dict) -> str:
                 "add_pdn_connect -grid {top} -layers {M1 M2}\nadd_pdn_connect -grid {top} -layers {M2 M5}\n"
                 "add_pdn_connect -grid {top} -layers {M5 M6}\nadd_pdn_connect -grid {top} -layers {M6 M7}\n")
     elif lc.get("cluster_level") == 2:
-        m8 = dict(M8_PG, **{k[7:]: v for k, v in s.get("route", {}).items() if k.startswith("m8_pg_")})
+        m8 = dict(M8_PG, **{k[6:]: v for k, v in s.get("route", {}).items() if k.startswith("m8_pg_")})
         note = (f"two-level cluster: M5/M6/M7 stripes (std-cell corridors; trimmed over the cluster children) + M8 stripes "
                 f"(pins) width {m8['width']} pitch {m8['pitch']} offset {m8['offset']} aligned to the die M8 PG grid; each "
                 "hard child (PG M7) strapped from M8; die M9 only.")
