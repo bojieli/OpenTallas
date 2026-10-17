@@ -171,7 +171,7 @@ module hfd_hgi_vms_static_SE #(parameter integer STRAP_BANKS=0, STRAP_MUT=0) (
 endmodule
 // H-NETLIST 0600 2026-10-16: NC 3->0. Former local clients (CP/FMV/FUSED records of the retired CP) had no static
 // producer on the v16 die; the quadrant's clients use read/write groups. Code 0 = replay.
-module hfd_hgi_vms_static_NW #(parameter integer STRAP_BANKS=0, STRAP_MUT=0) (
+module hfd_hgi_vms_static_NW #(parameter integer STRAP_BANKS=0, STRAP_MUT=0, Q2_MERGE=0) (
     input wire [7:0] clk_bank,
     input wire clk_hub,
     input wire [1:0] clk_ring,
@@ -211,7 +211,7 @@ module hfd_hgi_vms_static_NW #(parameter integer STRAP_BANKS=0, STRAP_MUT=0) (
     output wire [2:0] ring_fault
 );
     wire [273:0] vacant_cr; // NC=0: no local clients exist.
-    ot_vms_slice_static #(.NC(0),.RG(5),.WG(3),.STRAP_QUADRANT(STRAP_BANKS?2:-1),.BMUT(STRAP_MUT),.NATIVE_SHAPE(1)) u_slice (
+    ot_vms_slice_static #(.NC(0),.RG(5),.WG(3),.STRAP_QUADRANT(STRAP_BANKS?2:-1),.BMUT(STRAP_MUT),.NATIVE_SHAPE(1),.Q2_MERGE(Q2_MERGE)) u_slice (
         .clk_bank(clk_bank),
         .clk_hub(clk_hub),
         .clk_ring(clk_ring),

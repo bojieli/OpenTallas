@@ -300,9 +300,16 @@ def fcf_face_len(w: int, n: int) -> float:
     return max(DEPTH, round(math.ceil(need / LAT - 1e-9) * LAT, 2))
 
 
+# per-master depth (ff2): a 624 fork at 21.6 um deep can leave GPL routability inflation at +90 % and diverge (GPL-0305:
+# ff1 hbfd_rly_624_NS_fc_f2 / _WE_fc_f2 -- 624 Q nets fan out ~109 um along the face to the second branch group in a
+# 17.3 um core); 25.92 um gives +20 % horizontal tracks.  Masters that gated / closed at 21.6 keep it.
+FCF_DEPTH = {"hbfd_rly_624_NS_fc_f2": 25.92, "hbfd_rly_624_WE_fc_f2": 25.92}
+
+
 def fcf_outline(w: int, flow: str, n: int) -> dict:
     ln = fcf_face_len(w, n)
-    return {"w": DEPTH, "h": ln} if flow in ("WE", "EW") else {"w": ln, "h": DEPTH}
+    d = FCF_DEPTH.get(fcf_master(w, flow, n), DEPTH)
+    return {"w": d, "h": ln} if flow in ("WE", "EW") else {"w": ln, "h": d}
 
 
 def fcf_master(w: int, flow: str, n: int) -> str:
@@ -360,7 +367,7 @@ def fcf_spec(w: int, flow: str, n: int, owner: str, branch: str) -> dict:
                                f"with its own kept clk_out<k> buffer off the CTS tree + matched o<k> buffers on its face); "
                                f"same ot_hbm_rly stage; faces {fi}: {up}, {fo}: {down}; outline {o['w']} x {o['h']} um")
     j = s["job"]
-    j.update(tag="ff1",
+    j.update(tag="ff2" if mst in FCF_DEPTH else "ff1",
              purpose=f"HBM die F1 forwarded-clock fork relay {mst}: register on clk_in, {n} branches (clk_out<k> = one kept "
                      f"BUFx12f from the clk_in root, o<k> through the same cell beside it); {o['w']} x {o['h']} um, M5 cap",
              extra_paths=[FC_DIR, t, f"{RTL}/test/bench_rly_fc.sh", f"{RTL}/hbfd_rly_masters.sv", f"{RTL}/hbfd_rly_fc_masters.sv"],

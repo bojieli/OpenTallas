@@ -4,10 +4,10 @@
 // Key line p (of this stack's 8 HBM service groups svg_<stack><p>, die wiring idxcoll.json) carries the packed136
 // service tag = tag_base + row with tag_base = 128*p + the block's first beat: tag(p,beat) = (128*p + beat) % 1024
 // (H-NETLIST idxcoll 2026-10-15; was (beat*8 + p) % 1024, which no sequential-tag service block can produce).
-module ot_hbm_idx_score_static #(parameter integer MUT=0)(
+module ot_hbm_idx_score_static #(parameter integer MUT=0,TP=96,RANK_W=(TP<=1?1:$clog2(TP)))(
  input wire clk_ctl,input wire[3:0]clk_engine,clk_meta,clk_tail,
  input wire[15:0]clk_chunk,input wire[511:0]clk_hslice,input wire rst_n,
- input wire[6:0]rank,input wire[10:0]first_ord,input wire[11:0]nkeys,
+ input wire[RANK_W-1:0]rank,input wire[10:0]first_ord,input wire[11:0]nkeys,
  input wire keep_en,input wire[341:0]keep_bitmap,
  input wire ql_v,input wire[7:0]ql_head,input wire[511:0]ql_codes,input wire[31:0]ql_sc,input wire[15:0]ql_w,
  input wire beat_v,input wire[7:0]beat_index,input wire[8791:0]key_lines,
@@ -18,7 +18,7 @@ module ot_hbm_idx_score_static #(parameter integer MUT=0)(
  wire[255:0]val;
  wire[319:0]idx;
  wire[3:0]last;
- wire[19:0]g0=20'(768)*20'(first_ord)+20'(8)*20'(rank)+20'(1536)*20'(beat_index);
+ wire[19:0]g0=20'(8*TP)*20'(first_ord)+20'(8)*20'(rank)+20'(16*TP)*20'(beat_index);
  for(genvar e=0;e<4;e=e+1)begin:ge
   wire[2175:0]keys;
   wire[3:0]valid_keys,keep_keys;
@@ -28,7 +28,7 @@ module ot_hbm_idx_score_static #(parameter integer MUT=0)(
    assign valid_keys[l]=({4'd0,beat_index}*12'd16+12'(lane))<nkeys;
    assign keep_keys[l]=!keep_en||keep_bitmap[int'(beat_index)*2+lane/8];
   end
-  wire[19:0]first=g0+20'((e/2)*768+(e%2)*4);
+  wire[19:0]first=g0+20'((e/2)*(8*TP)+(e%2)*4);
   wire[24:0]meta;
   hidx_meta_w25_d123_r0 md(.clk(clk_meta[e]),.rst_n(rst_n),
    .d({(({4'd0,beat_index}+12'd1)*12'd16>=nkeys),first,4'd0}),.q(meta));
