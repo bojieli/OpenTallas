@@ -54,6 +54,7 @@
   "physical/ref_tile/s81fill2_qbank_s/kit.env",
   "physical/ref_tile/s81fill2_qbank_s/clock.sdc",
   "physical/ref_tile/s81fill2_qbank_s/signoff.sdc",
+  "physical/ref_tile/s81fill2_qbank_s/signoff_ffrepair.sdc",
   "physical/ref_tile/s81fill2_qbank_s/pdn.tcl",
   "physical/ref_tile/s81fill2_qbank_s/pre_cts.tcl",
   "physical/ref_tile/s81fill2_qbank_s/post_cts.tcl",
@@ -74,11 +75,6 @@
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/s81_die_pins/fill2_gen19b/dsfd_qbank_S.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl",
-  "physical/dsrom_window_source/leaf_inhold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/ref_tile/s81fill2_qbank_s/pre_gpl.tcl",
-  "physical/ref_tile/s81fill2_qbank_s/pre_dpl.tcl",
-  "physical/common_flow/pin_reg_split.tcl"
+  "physical/qwen_die_masters/out_flop_release.tcl"
  ]
 }

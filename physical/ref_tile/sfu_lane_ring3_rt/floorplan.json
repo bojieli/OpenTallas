@@ -24,7 +24,9 @@
    "M2",
    "M6"
   ],
-  "strap_layer": "M7"
+  "strap_layer": "M7",
+  "layer_cap": "M6",
+  "cap_basis": "legacy kit (pre-2026-10-12 contract; re-route at M5 per m5_reroute_priority.json)"
  },
  "pins": {
   "W": [
@@ -122,8 +124,14 @@
   "physical/ref_tile/sfu_lane_ring3_rt/kit.env",
   "physical/ref_tile/sfu_lane_ring3_rt/clock.sdc",
   "physical/ref_tile/sfu_lane_ring3_rt/signoff.sdc",
+  "physical/ref_tile/sfu_lane_ring3_rt/signoff_ffrepair.sdc",
   "physical/ref_tile/sfu_lane_ring3_rt/pdn.tcl",
   "physical/ref_tile/sfu_lane_ring3_rt/pre_cts.tcl",
+  "physical/ref_tile/sfu_lane_ring3_rt/post_cts.tcl",
+  "physical/ref_tile/sfu_lane_ring3_rt/post_grt.tcl",
+  "physical/ref_tile/sfu_lane_ring3_rt/pre_drt.tcl",
+  "physical/ref_tile/sfu_lane_ring3_rt/pre_fill.tcl",
+  "physical/ref_tile/sfu_lane_ring3_rt/post_fill.tcl",
   "physical/ref_tile/sfu_lane_ring3_rt/pre_grt.tcl",
   "physical/ref_tile/sfu_lane_ring3_rt/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
@@ -133,6 +141,9 @@
   "physical/qwen_die_masters/pre_cts_skew.tcl",
   "physical/qwen_die_masters/pre_ref_skew.tcl",
   "physical/qwen_die_masters/post_plain.tcl",
-  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl"
  ]
 }
