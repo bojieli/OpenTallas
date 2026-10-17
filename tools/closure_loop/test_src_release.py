@@ -66,3 +66,30 @@ def test_sync_room_counts_inflight_syncs():
         assert not ok and "3 source sync" in msg
         f.syncing = {"h": 1}
         assert f.sync_room("h")[0]          # 70 - 2 x 16 = 38
+
+
+def test_needs_human_keeps_config_named_src_paths(tmp_path):
+    src = tmp_path / "src"
+    (src / "physical/asap7_memory_macros/m1").mkdir(parents=True)
+    (src / "physical/common_flow").mkdir(parents=True)
+    (src / "SOURCE_COMMIT").write_text(C + "\n")
+    for f in ("m1_ss.lib", "m1_tt.lib", "m1.lef"):
+        (src / "physical/asap7_memory_macros/m1" / f).write_text(f)
+    (src / "physical/common_flow/hook.tcl").write_text("x")
+    (src / "physical/common_flow/other.tcl").write_text("x")
+    (src / "physical/big.bin").write_bytes(b"0" * 1000)
+    (tmp_path / "routes/r").mkdir(parents=True)
+    (tmp_path / "routes/r/config.mk").write_text(
+        "export ADDITIONAL_LIBS = /src/physical/asap7_memory_macros/m1/m1_ss.lib\n"
+        "export PRE_CTS_TCL = /src/physical/common_flow/hook.tcl\n")
+    env = dict(os.environ, OT_DR=json.dumps(dict(run=str(tmp_path), mode="src", src_commit=C, refs=[],
+                                                  keep_config_paths=True)))
+    r = subprocess.run([sys.executable, "-"], input=cl.DEEP_RELEASE_PY, text=True, env=env, capture_output=True)
+    assert r.returncode == 0, r.stderr
+    assert (src / "physical/asap7_memory_macros/m1/m1_tt.lib").exists()    # whole macro dir: every corner
+    assert (src / "physical/common_flow/hook.tcl").exists()
+    assert not (src / "physical/common_flow/other.tcl").exists() and not (src / "physical/big.bin").exists()
+    # without the flag (CLOSED / NEEDS_RTL ...) the snapshot is cut as before
+    (src / "TRIMMED_SOURCE_SNAPSHOT").unlink()
+    assert "DEEP_FREED" in _run(tmp_path, []).stdout
+    assert not (src / "physical/asap7_memory_macros/m1/m1_tt.lib").exists()
