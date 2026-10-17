@@ -55,7 +55,8 @@ module tb_hgi_lg_pair_tap_fold;
    .near_rr(near_rr[b*257+:257]),.near_w_done(near_done[b]),.local_rr(ds_rr[b*257+:257]),.far_rr(ds_far_rr[b*257+:257]),
    .local_w_done(ds_done[b]),.far_w_done(ds_far_done[b]),.fault(ds_fault[b]));
  end
- function automatic [561:0] rnd562(input integer s); integer k; begin for(k=0;k<562;k=k+32) rnd562[k+:32]=$urandom; end endfunction
+ // build in a 576-bit temporary: no part-select past bit 561 (a fleet vvp build asserts on that, rc 134)
+ function automatic [561:0] rnd562(input integer s); integer k; reg [575:0] t; begin for(k=0;k<576;k=k+32) t[k+:32]=$urandom; rnd562=t[561:0]; end endfunction
  integer faults=0, valids=0;
  initial begin
   {c_rq,far_rq,c_wq,far_wq,near_rr,near_done,lrd,lwr}=0;
