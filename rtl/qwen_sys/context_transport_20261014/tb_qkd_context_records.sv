@@ -1,9 +1,9 @@
 `timescale 1ns/1ps
 // Actual allocator -> HC22 local producer -> native endpoint -> typed record
 // -> two real static SRAM/CRC links -> retained receiver. The program ledger
-// write-event face and cohort/head execution remain explicit component bounds.
+// actual TT macro receipt ledger. DW/cohort/physical joins remain component bounds.
 module tb_qkd_context_records;
- parameter integer MUT=0;
+ parameter integer MUT=0,HEAD_JOIN=1;
  reg ck=0;always #0.4165 ck=~ck;
  reg fault_inject=0;reg por=0,warm=1;reg rst=0,cmd=0,abort=0;wire rr,gv,av,ad,ack;reg[3:0]drains=0;
  reg[181:0]raw=0;wire[15:0]ge;wire[17:0]gt,gp;wire[1:0]gg;wire[58:0]tag;wire allocfault,allocbusy;
@@ -40,8 +40,14 @@ module tb_qkd_context_records;
  .recovery_clear(1'b0),.cancel_release_v(1'b0),.cancel_release_tag(59'd0),.cancel_release_gen(2'd0),.protocol_fault(ep_fault));
  reg begin_v=0,auth_v=0,pwv=0,dwv=0;reg[9:0]pwa=0;reg[2:0]dwa=0;reg[63:0]pwd=0,dwd=0;
  reg[63:0]digest=64'h51484f5354505247;wire image_ready,cap,commit,ledger_fault;wire[15:0]image_epoch;wire[63:0]image_digest;
- localparam[63:0]FOOTER={32'h58504631,19'd0,1'b0,6'd37,4'd1,2'd2};
- qkd_program_commit ledger(.ck(ck),.rst_n(rst),.execution_active(1'b0),.control_stores_ready(1'b1),.begin_v(begin_v),.begin_epoch(16'h1234),.expected_pw(11'd1024),.expected_dw(4'd8),.auth_v(auth_v),.auth_epoch(16'h1234),.auth_digest(digest),.pw_v(pwv),.pw_addr(pwa),.pw_data(pwd),.pw_full_word(1'b1),.dw_v(dwv),.dw_addr(dwa),.dw_data(dwd),.dw_full_word(1'b1),.commit_v(commit),.ready(image_ready),.fault(ledger_fault),.installed_fusedcap(cap),.commit_epoch(image_epoch),.commit_digest(image_digest));
+ reg[63:0]image[0:1023];string image_path;
+ wire[75:0]head_receipt;wire head_ready,head_fault,head_ctx;wire[17:0]head_tok,head_pos;
+ reg head_start=0;
+ qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1))head(
+ .clk(ck),.ck_sched(ck),.rst_n(rst),.cp_active(1'b0),.layer_context_v(head_ctx),.native_tok(head_tok),.native_pos(head_pos),.me_image_ready(head_ready),.program_obs(head_receipt),
+ .h_start(head_start),.token(ht[36:19]),.pos({5'd0,ht[18:6]}),.prog_base(12'd0),.pw_v(pwv),.pw_addr(pwa),.pw_data(pwd),
+ .x_oacc(24'd3),.x_oidle(1'b1),.x_oprog(16'hffff),.x_orows(16'hffff),.kv_ok(1'b1),.kv_write_drained(1'b1),.me_mem_ok(1'b1),.ret(95'd3),.c_fault(head_fault));
+ qkd_program_commit ledger(.ck(ck),.rst_n(rst),.execution_active(1'b0),.control_stores_ready(head_ready),.begin_v(begin_v),.begin_epoch(16'h1234),.expected_pw(11'd1024),.expected_dw(4'd8),.auth_v(auth_v),.auth_epoch(16'h1234),.auth_digest(digest),.pw_v(head_receipt[75]),.pw_addr(head_receipt[73:64]),.pw_data(head_receipt[63:0]),.pw_full_word(head_receipt[74]),.dw_v(dwv),.dw_addr(dwa),.dw_data(dwd),.dw_full_word(1'b1),.commit_v(commit),.ready(image_ready),.fault(ledger_fault),.installed_fusedcap(cap),.commit_epoch(image_epoch),.commit_digest(image_digest));
  reg send_slot=0;wire tv,ov,tx_fault;wire[547:0]record;
  qkd_host_native_context_tx u_ctx_tx(.ck(ck),.rst_n(rst),.send_slot(send_slot),.request_v(nr),.request_tag(ntag),.request_gen(ngen),.request_token(ntok),.request_position(npos),.token_epoch_valid(tev),.token_epoch(epoch),.program_ready(image_ready),.installed_fusedcap(cap),.program_epoch(image_epoch),.program_digest(image_digest),.tx_v(tv),.tx_observed_v(ov),.tx_record(record),.fault(tx_fault));
  reg le=0,read_slot=0,expect_slot=0,decode_slot=0;wire atv,brv,aa,ba;wire[582:0]atf;wire[547:0]brf;wire[7:0]ac,bc;
@@ -51,26 +57,29 @@ module tb_qkd_context_records;
  ot_qwen_static_slot_link #(.FW(548),.CW(16))b(.ck({5{ck}}),.rst_n(rst),.epoch_begin(le),.epoch(8'h29),.wr_v(1'b0),.wr_observed_v(1'b0),.wr_slot(6'd0),.wr_flit(548'd0),.rd_v(1'b0),.rd_slot(6'd0),.rx_expect_v(expect_slot),.rx_expect_slot(6'd0),.p_tx_up(1'b1),.p_rx_v(vp[4]),.p_rx_flit(fp[2914-:583]),.rx_v(brv),.rx_flit(brf),.epoch_abort(ba),.fault_cause(bc));
  wire valid,rx_fault;wire[15:0]he,ie;wire[58:0]ht;wire[1:0]hg;wire hcapa;wire[63:0]id;
  wire[547:0]rx_mut=brf^(MUT==1?548'(1)<<78:MUT==2?548'(1)<<61:MUT==3?548'(1)<<43:548'd0);
- qfd_host_native_context_rx rx(.ck(ck),.rst_n(rst),.receive_slot(decode_slot),.rx_v(brv),.rx_record(rx_mut),.program_begin_v(1'b0),.program_ready(image_ready),.installed_fusedcap(cap),.program_epoch(image_epoch),.program_digest(image_digest),.head_context_v(1'b0),.head_stage(6'd37),.head_token(18'd140123),.head_position(18'd8191),.native_active(1'b0),.host_epoch_valid(valid),.host_epoch(he),.host_tag(ht),.host_gen(hg),.host_fusedcap(hcapa),.host_image_epoch(ie),.host_image_digest(id),.fault(rx_fault));
+ qfd_host_native_context_rx rx(.ck(ck),.rst_n(rst),.receive_slot(decode_slot),.rx_v(brv),.rx_record(rx_mut),.program_begin_v(1'b0),.program_ready(image_ready),.installed_fusedcap(cap),.program_epoch(image_epoch),.program_digest(image_digest),.head_context_v(head_ctx),.head_stage(6'd37),.head_token(head_tok),.head_position(head_pos),.native_active(1'b0),.host_epoch_valid(valid),.host_epoch(he),.host_tag(ht),.host_gen(hg),.host_fusedcap(hcapa),.host_image_epoch(ie),.host_image_digest(id),.fault(rx_fault));
  always @(negedge ck)txcredit<=tx;
  task tick(input integer n);repeat(n)@(negedge ck);endtask
  integer i;
  initial begin
   tick(5);por=1;rst=1;tick(5);
-  for(i=0;i<1024;i=i+1)begin pwd=i==1023?FOOTER:64'(i*17+3);digest={digest[56:0],digest[63:57]}^pwd^64'(i);end
+  if(!$value$plusargs("IMAGE=%s",image_path))$fatal(1,"actual dense source image required");$readmemh(image_path,image);
+  for(i=0;i<1024;i=i+1)begin pwd=image[i];digest={digest[56:0],digest[63:57]}^pwd^64'(i);end
   for(i=0;i<8;i=i+1)digest={digest[56:0],digest[63:57]}^64'(i+7)^64'(1024+i);
   begin_v=1;le=1;tick(1);begin_v=0;le=0;auth_v=1;tick(1);auth_v=0;tick(1);
   // Ledger boundary events use the exact authorized ascending digest schema.
-  for(i=0;i<1024;i=i+1)begin pwv=1;pwa=i;pwd=i==1023?FOOTER:64'(i*17+3);tick(1);end
-  pwv=0;for(i=0;i<8;i=i+1)begin dwv=1;dwa=i;dwd=i+7;tick(1);end
+  for(i=0;i<1024;i=i+1)begin pwv=1;pwa=i;pwd=image[i];tick(1);end
+  pwv=0;tick(6);for(i=0;i<8;i=i+1)begin dwv=1;dwa=i;dwd=i+7;tick(1);end
   dwv=0;tick(8);
-  if(!image_ready||cap||ledger_fault)$fatal(1,"genuine ledger fixture did not commit actual1032-event image");
+  if(!image_ready||cap||ledger_fault||!head_ready||head_fault)$fatal(1,"genuine ledger fixture did not commit actual1032-event image");
   raw=0;raw[38]=1;raw[35:18]=140123;raw[17:0]=8191;raw[37:36]=2;cmd=1;tick(1);cmd=0;tick(45);
   if(ep_fault||ff||allocfault||!ntag||ntok!=140123||npos!=8191)$fatal(1,"actual HOST source identity failed tev%0b ep%0b ctrl%0b alloc%0b tag%h token%0d pos%0d hc%h",tev,ep_fault,ff,allocfault,ntag,ntok,npos,hc);
   send_slot=1;tick(1);send_slot=0;tick(8);
   read_slot=1;tick(1);read_slot=0;tick(8);expect_slot=1;tick(1);expect_slot=0;tick(1);decode_slot=1;tick(1);decode_slot=0;tick(3);
   if(aa||ba||tx_fault||rx_fault||!valid||ht!==ntag||hg!==ngen||he!==epoch||hcapa!==cap||ie!==image_epoch||id!==image_digest)$fatal(1,"source/record/static SRAM link/retained context mismatch %h %h %b %b",ac,bc,rx_fault,valid);
-  $display("PASS actual allocator/HC22/native endpoint -> kind12 -> SRAM/CRC TX3 PHY5 RX1 -> retained context; image ledger boundary explicit");$finish;
+  head_start=1;tick(1);head_start=0;tick(6);
+  if(head_tok!==ntok||head_pos!==npos||head_fault||rx_fault)$fatal(1,"actual head did not capture transported actual HOST context");
+  $display("PASS actual allocator/HC22/native endpoint -> kind12 -> SRAM/CRC TX3 PHY5 RX1 -> retained context -> actual head accepted token/position; actual TT macro receipt ledger, DW fixture explicit");$finish;
  end
  initial begin tick(2000);$fatal(1,"timeout");end
 endmodule

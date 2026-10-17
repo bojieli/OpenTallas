@@ -30,7 +30,15 @@ def arm_table(calendar, stage_schedule, route, root):
         covered = set()
         earliest = None
         for event in calendar['events']:
-            if event['stage'] != stage or event['pc'] not in record['producer_pcs'] or event.get('kind') != 'vm_write_tap':
+            if event.get('kind') != 'vm_write_tap' or event['stage'] != stage or event.get('pc') not in record['producer_pcs']:
+                continue
+            unit=event.get('producer_unit',event.get('unit'))
+            if unit is None:
+                owners={i['unit']for i in calendar['issues']if i['stage']==stage and i['pc']==event['pc']}
+                if len(owners)!=1:
+                    raise ScheduleError('write tap lacks unambiguous actual producer unit')
+                unit=owners.pop()
+            if unit!=record['producer_unit']:
                 continue
             if not 0 < event['lanes'] <= 64 or event['stride'] not in (0, 1) or event['mask'] >> event['lanes']:
                 raise ScheduleError('unsupported native write-tap vector')
@@ -40,7 +48,12 @@ def arm_table(calendar, stage_schedule, route, root):
                 earliest = event['time_fs'] if earliest is None else min(earliest, event['time_fs'])
         if covered != required:
             raise ScheduleError('compiled native producer writes do not cover entire X epoch')
-        issue = [i for i in calendar['issues'] if i['stage'] == stage and i['pc'] == record['arm_before_pc'] and i['unit'] == record['producer_unit']]
+        if record['producer_unit']==3:
+            issue=[e for e in calendar['events']if e.get('kind')=='copy_issue' and e['stage']==stage and e.get('target_pc')==record['arm_before_pc']]
+            if any(not e.get('rtl_instance') or not e.get('rtl_module') or not e.get('requires') or not e.get('produces') for e in issue):
+                raise ScheduleError('copy arm lacks actual copy source/operand attribution')
+        else:
+            issue = [i for i in calendar['issues'] if i['stage'] == stage and i['pc'] == record['arm_before_pc'] and i['unit'] == record['producer_unit']]
         if len(issue) != 1 or earliest < issue[0]['time_fs']:
             raise ScheduleError('invalid compiled producer issue/write ordering')
         for time in (earliest, issue[0]['time_fs']):
@@ -57,6 +70,6 @@ def arm_table(calendar, stage_schedule, route, root):
         packed = (first << 156) | (issue_cycle << 124) | (arm << 92) | (stage << 86) | (record['producer_unit'] << 84) | (record['arm_before_pc'] << 72) | bits
         rows.append(dict(record, arm_cycle=arm, issue_cycle=issue_cycle, first_write_cycle=first,
                          cfg_data_hex=f'{packed:047x}'))
-    if len(rows) > 8:
-        raise ScheduleError('compiled arms exceed actual eight-record physical bank')
+    if len(rows) > 4:
+        raise ScheduleError('compiled arms exceed actual four-record native physical bank')
     return rows
