@@ -47,11 +47,11 @@
    "fault_hbm",
    "fault_core",
    "idle_hbm",
-   "idle_core"
+   "idle_core",
+   "ck"
   ],
   "S": [
    "pll_hbm",
-   "ck",
    "hrst",
    "rsi",
    "pll_hbm_data"
@@ -65,6 +65,7 @@
   "physical/ref_tile/qkd_static_kv_return_slots_mc_r5/kit.env",
   "physical/ref_tile/qkd_static_kv_return_slots_mc_r5/clock.sdc",
   "physical/ref_tile/qkd_static_kv_return_slots_mc_r5/signoff.sdc",
+  "physical/ref_tile/qkd_static_kv_return_slots_mc_r5/signoff_ffrepair.sdc",
   "physical/ref_tile/qkd_static_kv_return_slots_mc_r5/pdn.tcl",
   "physical/ref_tile/qkd_static_kv_return_slots_mc_r5/pre_cts.tcl",
   "physical/ref_tile/qkd_static_kv_return_slots_mc_r5/post_cts.tcl",
@@ -85,13 +86,6 @@
   "physical/common_flow/grt_macro_top_layer.tcl",
   "results/arch/qwen_split_1014/static_memory_mc_grant_2330/qkd_static_kv_return_slots_mc_r5_inside.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl",
-  "physical/dsrom_window_source/leaf_iohold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/dsrom_window_source/leaf_inhold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/ref_tile/qkd_static_kv_return_slots_mc_r5/pre_gpl.tcl",
-  "physical/ref_tile/qkd_static_kv_return_slots_mc_r5/pre_dpl.tcl",
-  "physical/common_flow/pin_reg_split.tcl"
+  "physical/qwen_die_masters/out_flop_release.tcl"
  ]
 }

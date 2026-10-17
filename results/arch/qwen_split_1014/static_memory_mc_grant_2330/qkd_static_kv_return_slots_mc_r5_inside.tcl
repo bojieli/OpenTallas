@@ -3,7 +3,8 @@
 # straddling it (pre_route_gate floorplan.pin_bounds, 3dd60bc0f: 645 pins [194.328,194.472] outside [0,194.4]).
 # Same pins, layers, faces and along-face coordinates (track alignment unchanged), EXCEPT idle_hbm / idle_core: N face (M5
 # x 38.46/40.38) -> E face M4 y 206.316/206.892, beside fault_hbm/fault_core (slot_change: mc5 CTS probe idle_core
-# launch 223.7 / idle_hbm 215.1 at the lone N-face sinks vs <=208 for every E-face output).
+# launch 223.7 / idle_hbm 215.1 at the lone N-face sinks vs <=208 for every E-face output), AND ck: S face M5 x 51.9 ->
+# E face M4 y 107.964 (mid E face, between actual_data[95]/[96], next to the output pin-flop column; coordinator review 10-17).
 place_pin -pin_name {controller_co[0]} -layer M4 -location {0.072 10.332} -pin_size {.144 .024}
 place_pin -pin_name {controller_co[1]} -layer M4 -location {0.072 10.956} -pin_size {.144 .024}
 place_pin -pin_name {controller_co[2]} -layer M4 -location {0.072 11.580} -pin_size {.144 .024}
@@ -640,7 +641,7 @@ place_pin -pin_name {actual_data[255]} -layer M4 -location {194.328 204.492} -pi
 place_pin -pin_name {fault_hbm} -layer M4 -location {194.328 205.116} -pin_size {.144 .024}
 place_pin -pin_name {fault_core} -layer M4 -location {194.328 205.692} -pin_size {.144 .024}
 place_pin -pin_name {pll_hbm} -layer M5 -location {25.980 0.072} -pin_size {.024 .144}
-place_pin -pin_name {ck} -layer M5 -location {51.900 0.072} -pin_size {.024 .144}
+place_pin -pin_name {ck} -layer M4 -location {194.328 107.964} -pin_size {.144 .024}
 place_pin -pin_name {hrst} -layer M5 -location {77.820 0.072} -pin_size {.024 .144}
 place_pin -pin_name {rsi} -layer M5 -location {103.740 0.072} -pin_size {.024 .144}
 place_pin -pin_name {idle_hbm} -layer M4 -location {194.328 206.316} -pin_size {.144 .024}
