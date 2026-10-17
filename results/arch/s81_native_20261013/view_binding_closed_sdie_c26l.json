@@ -11995,6 +11995,114 @@
    "lineage": "EXACT_EXPORT",
    "native": "native PASS launch185.7/capture142.1/R187.6/spread31.9 (results/rtl/s81_cfifo_crs_1016/r5f/routed_507e1b0c3/receipt.json)",
    "gate": "S-DIE 1815 explicit native-PASS row; die master only with --cfifo-crsplit"
+  },
+  "ot_s81_hc_ret_column_c0": {
+   "verdict": "DIAGNOSTIC_CLOSED",
+   "export_dir": "physical/ref_tile/s81hc_retcol_c0_ref/views/ot_s81_hc_ret_column_c0",
+   "job": "s81hc_retcol_c0_ref-a4e-e4488f820",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81hc_retcol_c0_ref/views/ot_s81_hc_ret_column_c0/ot_s81_hc_ret_column_c0.lef",
+     "sha256": "1868b03e3189a069351a866d3ad5f05cf0ca94305c464cbb79c876aceff40f10"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81hc_retcol_c0_ref/views/ot_s81_hc_ret_column_c0/ot_s81_hc_ret_column_c0_tt.lib",
+     "sha256": "c903803a5d77320fdfff7747ab9723704fb636e57e48ae649f859533155f42ba"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81hc_retcol_c0_ref/views/ot_s81_hc_ret_column_c0/ot_s81_hc_ret_column_c0_ff.lib",
+     "sha256": "799215112b22d6cab3a3118e5b1e1ae623218238e7efa55d44d8e3f7690e6b89"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81hc_retcol_c0_ref/views/ot_s81_hc_ret_column_c0/ot_s81_hc_ret_column_c0_ss.lib",
+     "sha256": "3fb341dde01ea886ff8e9d51e9ba476ed41fddfb78c28b38b0ea9053d51a671f"
+    }
+   },
+   "closure": "TT +137.57 / FF +11.97 ps DRC 0; SS sensitivity -159.70 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS (retcol_a4ef_native.json)",
+   "gate": "S-DIE 1815 explicit native-PASS row; cluster-internal"
+  },
+  "ot_s81_hc_ret_column_c1": {
+   "verdict": "DIAGNOSTIC_CLOSED",
+   "export_dir": "physical/ref_tile/s81hc_retcol_c1f_ref/views/ot_s81_hc_ret_column_c1",
+   "job": "s81hc_retcol_c1f_ref-a4f-fb07f6915",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81hc_retcol_c1f_ref/views/ot_s81_hc_ret_column_c1/ot_s81_hc_ret_column_c1.lef",
+     "sha256": "76758980b5e440e88c092b314ea3873ea8d299a7bba3f1df8f95984ccb8071a6"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81hc_retcol_c1f_ref/views/ot_s81_hc_ret_column_c1/ot_s81_hc_ret_column_c1_tt.lib",
+     "sha256": "ce59c868af163577b5edf67fc3d8562c7b4bc66a17326641ac66975bb0b9f546"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81hc_retcol_c1f_ref/views/ot_s81_hc_ret_column_c1/ot_s81_hc_ret_column_c1_ff.lib",
+     "sha256": "037c1a6a8fd19398e7a1d14c8df679a53c4b9528ad7b033e4227d94808eb7f47"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81hc_retcol_c1f_ref/views/ot_s81_hc_ret_column_c1/ot_s81_hc_ret_column_c1_ss.lib",
+     "sha256": "8b5fbf4867fbaacae5033135e4109671d85f1b395cccb7b06a3ecaa52a0390d3"
+    }
+   },
+   "closure": "TT +126.02 / FF +18.11 ps DRC 0; SS sensitivity -212.67 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS (retcol_a4ef_native.json)",
+   "gate": "S-DIE 1815 explicit native-PASS row; cluster-internal"
+  },
+  "ot_v41_bf_lane4_cl": {
+   "verdict": "DIAGNOSTIC_CLOSED",
+   "export_dir": "physical/s81_die_views/bf_cl_1016/cl_lane4/ot_v41_bf_lane4_cl",
+   "job": "s81_bf_cl_lane4-ref-9dca24d12",
+   "files": {
+    "lef": {
+     "path": "physical/s81_die_views/bf_cl_1016/cl_lane4/ot_v41_bf_lane4_cl/ot_v41_bf_lane4_cl.lef",
+     "sha256": "6e7ae614ba29d4076e30a78c8b170bd94b9f7897a3e33f39691233883d24eb44"
+    },
+    "tt": {
+     "path": "physical/s81_die_views/bf_cl_1016/cl_lane4/ot_v41_bf_lane4_cl/ot_v41_bf_lane4_cl_tt.lib",
+     "sha256": "8d3b62f9426b433ae7aa9945b14722d3e53acd98c50e0902743c3b076f2ee956"
+    },
+    "ff": {
+     "path": "physical/s81_die_views/bf_cl_1016/cl_lane4/ot_v41_bf_lane4_cl/ot_v41_bf_lane4_cl_ff.lib",
+     "sha256": "410b79fb1b0f4b8e79ded11d0a40ab79c19fa4ad7bc3cb70a114dbc7581ba6f1"
+    },
+    "ss": {
+     "path": "physical/s81_die_views/bf_cl_1016/cl_lane4/ot_v41_bf_lane4_cl/ot_v41_bf_lane4_cl_ss.lib",
+     "sha256": "bd0e321daacb073b11969259ee0e7fa6b86a860f600efae580d4862965679a93"
+    }
+   },
+   "closure": "TT +81.61 / FF +22.87 ps DRC 0; SS sensitivity -276.22 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS (main 9071c755b)",
+   "gate": "S-DIE 1815 explicit native-PASS row; cluster-internal"
+  },
+  "ot_v41_bf_seg_cl": {
+   "verdict": "DIAGNOSTIC_CLOSED",
+   "export_dir": "physical/s81_die_views/bf_cl_1016/cl_seg/ot_v41_bf_seg_cl",
+   "job": "s81_bf_cl_seg-ref-9dca24d12",
+   "files": {
+    "lef": {
+     "path": "physical/s81_die_views/bf_cl_1016/cl_seg/ot_v41_bf_seg_cl/ot_v41_bf_seg_cl.lef",
+     "sha256": "8ec5b4691098b772e8196d4bcc17e22cf81acbc29f4c1f8f679430e2d91f7841"
+    },
+    "tt": {
+     "path": "physical/s81_die_views/bf_cl_1016/cl_seg/ot_v41_bf_seg_cl/ot_v41_bf_seg_cl_tt.lib",
+     "sha256": "c25751b2edbad4efa44a40dfc4f4c23cb1a8fffd38c3af103136be3c7268c1f7"
+    },
+    "ff": {
+     "path": "physical/s81_die_views/bf_cl_1016/cl_seg/ot_v41_bf_seg_cl/ot_v41_bf_seg_cl_ff.lib",
+     "sha256": "c00b7fc6974737eebd568bc1475d8f2c505adb7eddcfe5c1a02b711f0f00d3d4"
+    },
+    "ss": {
+     "path": "physical/s81_die_views/bf_cl_1016/cl_seg/ot_v41_bf_seg_cl/ot_v41_bf_seg_cl_ss.lib",
+     "sha256": "23201955055b1506cf5869cf1407ef7231e496ae41498eade9771c8113703359"
+    }
+   },
+   "closure": "TT +170.56 / FF +22.49 ps DRC 0; SS sensitivity -127.10 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS (main 9071c755b)",
+   "gate": "S-DIE 1815 explicit native-PASS row; cluster-internal"
   }
  },
  "superseded": {
@@ -13582,6 +13690,22 @@
    },
    "dsfd_cfifo_crs": {
     "job": "s81coll_cfifo_crs-r5f-507e1b0c3",
+    "replaced": null
+   },
+   "ot_s81_hc_ret_column_c0": {
+    "job": "s81hc_retcol_c0_ref-a4e-e4488f820",
+    "replaced": null
+   },
+   "ot_s81_hc_ret_column_c1": {
+    "job": "s81hc_retcol_c1f_ref-a4f-fb07f6915",
+    "replaced": null
+   },
+   "ot_v41_bf_lane4_cl": {
+    "job": "s81_bf_cl_lane4-ref-9dca24d12",
+    "replaced": null
+   },
+   "ot_v41_bf_seg_cl": {
+    "job": "s81_bf_cl_seg-ref-9dca24d12",
     "replaced": null
    }
   },

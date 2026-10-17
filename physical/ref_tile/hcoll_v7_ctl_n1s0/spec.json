@@ -1,0 +1,144 @@
+{
+ "name": "hcoll_v7_ctl_n1s0",
+ "top": "ot_hgi_coll_ctl_v5_n1s0",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5.sv",
+  "rtl/hdc/ot_hdc_prefix.sv"
+ ],
+ "clock_port": "clk_control",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 108.0,
+  "h": 280.8
+ },
+ "pins": {
+  "W": [
+   "clk_control",
+   "rst_n",
+   "inst",
+   "tap_iteration",
+   "tap_steps",
+   "hgi_start",
+   "hgi_busy",
+   "issue_done"
+  ],
+  "N": [
+   "vm_rv",
+   "tkm_done",
+   "tkm_busy",
+   "dest_v",
+   "rc_v",
+   "rc_tag"
+  ],
+  "S": [
+   "vm_assembled_v",
+   "vm_source_meta",
+   "inj_source_v",
+   "inj_source_meta"
+  ],
+  "E": [
+   "vm_req_pin",
+   "inj_req_pin",
+   "inj_idx_pin",
+   "inj_addr_pin",
+   "delivery_obase_pin",
+   "rgx_addr_pin",
+   "held_epoch",
+   "wr_sequence_pin",
+   "rd_sequence_pin",
+   "rx_sequence_pin",
+   "protocol_fault",
+   "cycles"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "macros": [],
+ "children": [],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.01,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "V6 (H-ELEM 14:20, +1 issue edge): inst/hgi_start/hgi_busy arrive at the issuer's d2 edge and are captured at this leaf's pins (= the d3 edge of the other children); tap_iteration/tap_steps are pin-captured by ot_hgi_coll_iter_mul, then 16x8 partial products, then a registered combine, so only field + offset adders sit between flops. VM read data moved to ot_hgi_coll_vmasm; vm_rv (valid bits) is captured at its pin. Every output is a flop Q. A synthesis pin stage would add edges the V6 schedule and lockstep bench (tb_hgi_coll_q_hard_v5 SH=4) do not carry."
+ },
+ "job": {
+  "owner": "Claude H-NETLIST/COLL 1815",
+  "branch": "claude/hnl-coll-d4f-2130",
+  "tag": "d4f",
+  "purpose": "COLL hard_v7 d4f shape ot_hgi_coll_ctl_v5_n1s0 (NLINK 1, TP192 die): same leaf RTL as the closed ctl2 shape at the d4f link count",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc",
+   "rtl/qwen_sys/split_20261014",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "benches": [
+   {
+    "name": "hard_v7_q2_nl1_pos",
+    "cmd": "HCOLL_NLINK=1 HCOLL_TP=192 bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/pos q2 pos",
+    "expect": "pass",
+    "pass_regex": "HCOLL_Q_HARD_V5_POS_PASS",
+    "min_count_regex": "PASS q2 scen0 checks(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hard_v7_q2_nl1_mut_rcdrop",
+    "cmd": "HCOLL_NLINK=1 HCOLL_TP=192 bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/mut_rcdrop q2 rcdrop",
+    "expect": "fail",
+    "fail_regex": "HCOLL_Q_HARD_V5_MUTANT_REJECTED rcdrop",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hard_v7_q2_nl1_mut_causeswap",
+    "cmd": "HCOLL_NLINK=1 HCOLL_TP=192 bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/mut_causeswap q2 causeswap",
+    "expect": "fail",
+    "fail_regex": "HCOLL_Q_HARD_V5_MUTANT_REJECTED causeswap",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hcoll_v5_ctl2/views",
+  "record_to": "results/rtl/ref_tile/hcoll_v5_ctl2",
+  "hold_eco": {
+   "hold_margin_ps": 5.0,
+   "reason": "HEP w5f recipe (H-ELEM): no input hold pad, HB1 output pad, route hold margin 10 ps, post-route hold ECO goal 5 ps -- ctl2 V7 e11086804 native capture 197.3 was input hold padding"
+  }
+ },
+ "params": {},
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ }
+}

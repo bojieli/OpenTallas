@@ -1,13 +1,13 @@
 `timescale 1ns/1ps
 module tb_hgi_coll_tkm_static;
- parameter integer KMAX=2048,MUT=0;
+ parameter integer KMAX=2048,MUT=0,TP=96,TIE_W_MUT=0;
  reg clk=0,rst_n=0,start=0;always #0.4167 clk=~clk;
- reg[31:0]cfg[0:15],a[0:196607],b[0:196607],eo[0:2047],er[0:2047],ns[0:95];
+ reg[31:0]cfg[0:15],a[0:TP*2048-1],b[0:TP*2048-1],eo[0:2047],er[0:2047],ns[0:TP-1];
  reg[3:0]slots=0,valids=0;reg[2179:0]flits=0;
  wire wv,busy,done,fault;wire[39:0]wa;wire[15:0]wm;wire[511:0]wd;wire[31:0]cycles;
- integer G,N,K,PF,NOUT,HASR,OB,RB,GB,errs=0,words=0,elapsed=0,expected,slotmut=0;
+ integer G,N,K,PF,NOUT,HASR,OB,RB,GB,errs=0,words=0,elapsed=0,expected,slotmut=0,rotate=0;
  bit seeno[0:2047],seenr[0:2047];string dir;
- ot_hgi_coll_tkm_static #(.KMAX(KMAX),.MUT(MUT))dut(.clk(clk),.rst_n(rst_n),.start(start),.tile_clk({32{clk}}),.buffer_clk(clk),
+ ot_hgi_coll_tkm_static #(.KMAX(KMAX),.MUT(MUT),.TP(TP),.RANK_W(TIE_W_MUT?7:$clog2(TP)))dut(.clk(clk),.rst_n(rst_n),.start(start),.tile_clk({32{clk}}),.buffer_clk(clk),
  .cfg_n(12'(N)),.cfg_k(13'(K)),.cfg_nout(13'(NOUT)),.cfg_g(8'(G)),.cfg_gbase(8'(GB)),.cfg_pf(16'(PF)),
  .cfg_obase(40'(OB)),.cfg_rbase(40'(RB)),.cfg_has_r(1'(HASR)),.del_slot(slots),.del_valid(valids),.del_flit(flits),
  .w_v(wv),.w_addr(wa),.w_mask(wm),.w_data(wd),.busy(busy),.done(done),.fault(fault),.stat_cycles(cycles));
@@ -23,7 +23,7 @@ module tb_hgi_coll_tkm_static;
   if(busy&&dut.tick>=8&&dut.tick<dut.ingress_end&&((dut.tick-8)%8==0))begin
    for(integer l=0;l<4;l=l+1)begin:drive
     integer ix;ix=((int'(dut.tick)-8)/8)*4+l;
-    if(ix<G*PF)begin slots[l]=1;valids[l]=1;flits[545*l+:545]=make_flit(ix/PF,ix%PF);end
+    if(ix<G*PF)begin slots[l]=1;valids[l]=1;flits[545*l+:545]=make_flit(((ix/PF)+rotate)%G,ix%PF);end
    end
    if(slotmut!=0&&dut.tick==8)valids[0]=0;
   end
@@ -44,9 +44,10 @@ module tb_hgi_coll_tkm_static;
  initial begin
   if(!$value$plusargs("DIR=%s",dir))$fatal(1,"missing DIR");
   if($value$plusargs("SLOT_MUT=%d",slotmut))begin end
+  if($value$plusargs("ROTATE=%d",rotate))begin end
   $readmemh({dir,"/cfg.hex"},cfg);$readmemh({dir,"/a.hex"},a);$readmemh({dir,"/b.hex"},b);
   $readmemh({dir,"/o.hex"},eo);$readmemh({dir,"/r.hex"},er);$readmemh({dir,"/n.hex"},ns);
-  G=cfg[0];N=cfg[1];K=cfg[2];HASR=cfg[4];NOUT=cfg[5];OB=cfg[9];RB=cfg[10];GB=G==96?0:(int'(cfg[3])/G)*G;PF=(N+7)/8;
+  G=cfg[0];N=cfg[1];K=cfg[2];HASR=cfg[4];NOUT=cfg[5];OB=cfg[9];RB=cfg[10];GB=G>=96?0:(int'(cfg[3])/G)*G;PF=(N+7)/8;
   expected=8+((G*PF+3)/4)*8+2*(3*((KMAX+63)/64)+8)+3*((NOUT+3)/4)+24+1;
   repeat(10)@(negedge clk);rst_n=1;repeat(10)@(negedge clk);start=1;@(negedge clk);start=0;
   while(!done&&elapsed<expected+20)begin @(negedge clk);elapsed=elapsed+1;end
