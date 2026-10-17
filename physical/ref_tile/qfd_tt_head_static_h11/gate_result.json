@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qfd_tt_head_static_h11",
- "verdict": "FAIL",
- "generated": "2026-10-17T00:07:38-0700",
- "host": "ot-epyc4",
+ "verdict": "WARN",
+ "generated": "2026-10-17T01:45:58-0700",
+ "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "cfe9977728981a54874ad3d7edb9c6dd14d76738",
+  "start_commit": "a0611f6729c5ca7d7e90c6926858a99ec7a688b9",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "b3a36882031282c2fdc6c1f86de1f1c5bad2d10a61eff713c63339f9a05ca479",
-  "manifest_sha256": "b8b22aa492de9289f53fc410462081091a70dd3951b2651c193b172da55f76d4",
+  "archive_sha256": "04b2445d705622c743737700f7b36c9678b93cbd91e8375291a14161a220d25b",
+  "manifest_sha256": "67a1ebdbc1a4c763d6d05a111b285b815664fe96833352662d9e048be1f7bd49",
   "files": [
    {
     "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json",
@@ -17363,16 +17363,16 @@
    {
     "path": "physical/ref_tile/qfd_tt_head_static_h11/job.json",
     "kind": "file",
-    "sha256": "ae5c6681ea35291932d15f2e567a9664ed6dd344e942aecc43eb925b63e1a64a",
-    "git_blob": "ccb50d250dc2eb0e5be66600dabe65cc061ca5ba",
+    "sha256": "f0de516eb4a239ca6bc049284bbee66dc89ff70e81dfa93b776af8bfa360e90f",
+    "git_blob": "c20569f636fd4cf96af0bcd78bc91f45d1c761b1",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/qfd_tt_head_static_h11/kit.env",
     "kind": "file",
-    "sha256": "7d8698c587b915371bb02507ef3034b51a26676b0a3079faccb59a8638afdc00",
-    "git_blob": "7d108fedc6ba05a50feeb7a70e76442be36d4476",
+    "sha256": "0fd18923ff84e46554393cc6c0922c654e718ecc2d958afc16c9a6f15fccac81",
+    "git_blob": "f6b617f0e560ffbe5db7f01bcbecc5dd4669e468",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17491,8 +17491,8 @@
    {
     "path": "physical/ref_tile/qfd_tt_head_static_h11/spec.json",
     "kind": "file",
-    "sha256": "74a2f1d0930e90ae364dd24502459cb2f0bfe71f1360998cf0e2c6f34763541d",
-    "git_blob": "ef8dad1abb8c25cefe544a32ba18c24830b99c1d",
+    "sha256": "ef3eabd543c165bbae2986aceef9f89a65cecb31b1eb3baa5c542083d9dc4fa8",
+    "git_blob": "7a66dc76d67d70cc6809c3ba2dde6af624c8c91a",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -155643,14 +155643,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 134762037,
+   "archive_bytes": 134764926,
    "unpacked_bytes": 822157312,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "3c902672a5c36f406358358d35686e0908faf0c0",
+   "origin_main": "852283e03b61434fef7d8ad72fb5c78dee8abef7",
    "content_sha256": "e8a020196deeffbd4d714117c508b0173e9f9a5a3bb6a4a941277940e6505abc",
    "files": [
     {
@@ -156162,7 +156162,7 @@
     "physical/ref_tile/qfd_tt_head_static_h11/clock.sdc": "618b48a6eac443818ccff30af8913c865363736d4f8d1a763675130584573ec8",
     "physical/ref_tile/qfd_tt_head_static_h11/clock_entry.sdc": "11397da8aa9f1cbce1d899c14dc02049d43d13dbeb4d79709154c220347f3fe1",
     "physical/ref_tile/qfd_tt_head_static_h11/floorplan.json": "e563892190f2d2a3a1f7202077db1c9d7eb21fd3a041071279f7137d731c706b",
-    "physical/ref_tile/qfd_tt_head_static_h11/kit.env": "7d8698c587b915371bb02507ef3034b51a26676b0a3079faccb59a8638afdc00",
+    "physical/ref_tile/qfd_tt_head_static_h11/kit.env": "0fd18923ff84e46554393cc6c0922c654e718ecc2d958afc16c9a6f15fccac81",
     "physical/ref_tile/qfd_tt_head_static_h11/pdn.tcl": "525815949907d9938ea34348ba8f742d952bf99c21288f12cf854c0be8e839ad",
     "physical/ref_tile/qfd_tt_head_static_h11/pin_regs.json": "2b80f28fd2bb3c351314cac161a019aa873f2ff66f32bbba3fe3dda007086986",
     "physical/ref_tile/qfd_tt_head_static_h11/place.tcl": "c766bcf0b897bc655f5d6aa3e0743afcc58110468f8339ce71cf3c6ac08e55a2",
@@ -156177,7 +156177,7 @@
     "physical/ref_tile/qfd_tt_head_static_h11/pre_gpl.tcl": "868665071710eb4ce5d4af172b346032f605b49500c67093b5f6f3229928b739",
     "physical/ref_tile/qfd_tt_head_static_h11/pre_grt.tcl": "175ee27da247c2c262645cb79c6154143ac8c23d157452c68206c85416414850",
     "physical/ref_tile/qfd_tt_head_static_h11/signoff.sdc": "6f866d0bb49e488de2e6505c12765c532307c2dc04a63413a69652bf3b9b5c96",
-    "physical/ref_tile/qfd_tt_head_static_h11/spec.json": "74a2f1d0930e90ae364dd24502459cb2f0bfe71f1360998cf0e2c6f34763541d",
+    "physical/ref_tile/qfd_tt_head_static_h11/spec.json": "ef3eabd543c165bbae2986aceef9f89a65cecb31b1eb3baa5c542083d9dc4fa8",
     "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
     "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
     "rtl/hdc/ot_hdc_dyn_ttiles.sv": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
@@ -156225,16 +156225,16 @@
    },
    "digest": "c60a95f07d022bdf33209d0a2de7d3398872f639832a43de024d1104f87db5f2"
   },
-  "captured": "2026-10-16T23:41:56-0700",
+  "captured": "2026-10-17T01:19:33-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qfd_tt_head_static_h11/signoff.sdc"
   },
-  "remote_script_sha256": "28e77561e1ffd74636d91c68ad4df6bfef0049320977795efe576fe8bc9c0ecb",
+  "remote_script_sha256": "f37d9cb6e53381a5cd7ea75a8663eed62333354d994dade7f5491918408e3637",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tt_head_static_h11-20261016-234116",
+  "remote_host": "ot-agidock128",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tt_head_static_h11-20261017-011850",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -156242,56 +156242,434 @@
   ]
  },
  "clock": {
-  "max_root_sinks": null,
-  "root": null,
+  "max_root_sinks": 8570,
+  "root": "port:ck_head",
   "cts": true,
-  "tt_insertion_ps": null,
-  "tt_spread_ps": null,
+  "tt_insertion_ps": 412.8,
+  "tt_spread_ps": 131.6,
   "declared_clock": "hybrid_entries",
   "limits": {
    "sinks": 15000,
    "insertion_ps": 300.0,
    "spread_ps": 80.0
   },
-  "verdict": "UNKNOWN",
-  "text": "clock sinks unknown; no measured clock tree (no --cts gate evidence)"
+  "clock_measurements": [
+   {
+    "source": "ck_head",
+    "clock": "ot_entry_0",
+    "tt": {
+     "boundary": {
+      "n": 1500,
+      "mean": 343.7,
+      "min": 292.4,
+      "max": 408.0
+     },
+     "all": {
+      "n": 7660,
+      "mean": 338.2,
+      "min": 281.2,
+      "max": 412.8
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 1
+    }
+   },
+   {
+    "source": "ck_pm0",
+    "clock": "ot_entry_1",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 10.6,
+      "min": 10.6,
+      "max": 10.6
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 10.6,
+      "max_slew": 33.4,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_head.g_psram.g_m[0].u_pm/clk",
+        "arr": 10.6,
+        "slew": 33.4,
+        "late": -0.0,
+        "net": "ck_pm0"
+       }
+      ]
+     },
+     "macro_libs": 1
+    }
+   },
+   {
+    "source": "ck_pm1",
+    "clock": "ot_entry_2",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 10.6,
+      "min": 10.6,
+      "max": 10.6
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 10.6,
+      "max_slew": 33.4,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_head.g_psram.g_m[1].u_pm/clk",
+        "arr": 10.6,
+        "slew": 33.4,
+        "late": -0.0,
+        "net": "ck_pm1"
+       }
+      ]
+     },
+     "macro_libs": 1
+    }
+   }
+  ],
+  "measured_clock": "ot_entry_0",
+  "verdict": "PASS",
+  "text": "8,570 sinks on the largest root <= 15,000; measured TT insertion 412.8 ps, leaf spread 131.6 ps"
  },
  "items": [
   {
-   "severity": "FAIL",
-   "check": "io_place",
-   "message": "IO placement failed: [ERROR PPL-0086] Pin group of size 32 was not assigned.",
-   "fix": "fix the pin plan / pin layers"
-  },
-  {
-   "severity": "FAIL",
-   "check": "floorplan.pin_geometry",
-   "message": "missing successful actual gate_dump / unique pin-geometry report",
-   "fix": "rerun the actual placed-IO dump and fp_margin_lint pins check; old CTS measurements alone cannot qualify geometry"
-  },
-  {
-   "severity": "FAIL",
-   "check": "port_latency",
-   "message": "kit inserts pin registers (OT_PIN_REGS=1) but synthesis left no ot_pin_regs.tsv / ot_pin_regs_wrapper.v: the compilers would see no per-port stages",
-   "fix": "check that physical/common_flow/ot_keep_regs.tcl sourced ot_pin_regs.tcl in 1_synth (OT_PIN_REGS line in the log)"
-  },
-  {
    "severity": "WARN",
-   "check": "cts_calibration",
-   "message": "CTS rc=None ck_insertion rc=None",
-   "fix": ""
-  },
-  {
-   "severity": "WARN",
-   "check": "clock_rule",
-   "message": "the synthesized netlist's clock sinks were not reported: clock sinks unknown; no measured clock tree (no --cts gate evidence)",
-   "fix": "read the remote log (textbook lint line 'clock_roots')"
-  },
-  {
-   "severity": "WARN",
-   "check": "layout_images",
-   "message": "the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log",
-   "fix": ""
+   "check": "textbook.util_channel",
+   "message": "1 macro channel(s) narrower than 20 um with placement rows (e.g. u_ot_pr_core.u_head.g_psram.g_m\\[0\\].u_pm|u_ot_pr_core.u_head.g_psram.g_m\\[1\\].u_pm 0.0 um): widen to >= 20 um or block the channel",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
- ]
+ ],
+ "port_latency": {
+  "schema": "opentallas.ref_tile.port_latency.v1",
+  "top": "ot_qfd_tt_ctlm_static_hr",
+  "ports": {
+   "rom_ret_i": {
+    "dir": "input",
+    "register_edges": 1,
+    "width": 95,
+    "reason": "pin register"
+   },
+   "cp_active": {
+    "dir": "input",
+    "register_edges": 1,
+    "width": 1,
+    "reason": "pin register"
+   },
+   "cp": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 56,
+    "reason": "pin register"
+   },
+   "me_image_ready": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 1,
+    "reason": "pin register"
+   },
+   "program_obs": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 76,
+    "reason": "pin register"
+   },
+   "layer_context_v": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 1,
+    "reason": "pin register"
+   },
+   "native_tok": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 18,
+    "reason": "pin register"
+   },
+   "native_pos": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 18,
+    "reason": "pin register"
+   },
+   "rom_cmd": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 380,
+    "reason": "pin register"
+   },
+   "command_stage": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 6,
+    "reason": "pin register"
+   },
+   "native_cmd": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 380,
+    "reason": "pin register"
+   },
+   "me_observe": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 16,
+    "reason": "pin register"
+   },
+   "native_ret": {
+    "dir": "input",
+    "register_edges": 1,
+    "width": 95,
+    "reason": "pin register"
+   },
+   "ck_head": {
+    "dir": "input",
+    "register_edges": 0,
+    "width": 1,
+    "reason": "clock"
+   },
+   "ck_pm0": {
+    "dir": "input",
+    "register_edges": 0,
+    "width": 1,
+    "reason": "clock"
+   },
+   "ck_pm1": {
+    "dir": "input",
+    "register_edges": 0,
+    "width": 1,
+    "reason": "clock"
+   },
+   "rst_n": {
+    "dir": "input",
+    "register_edges": 0,
+    "width": 1,
+    "reason": "reset"
+   },
+   "h_start": {
+    "dir": "input",
+    "register_edges": 1,
+    "width": 1,
+    "reason": "pin register"
+   },
+   "token": {
+    "dir": "input",
+    "register_edges": 1,
+    "width": 18,
+    "reason": "pin register"
+   },
+   "pos": {
+    "dir": "input",
+    "register_edges": 1,
+    "width": 18,
+    "reason": "pin register"
+   },
+   "prog_base": {
+    "dir": "input",
+    "register_edges": 1,
+    "width": 12,
+    "reason": "pin register"
+   },
+   "pw_v": {
+    "dir": "input",
+    "register_edges": 1,
+    "width": 1,
+    "reason": "pin register"
+   },
+   "pw_addr": {
+    "dir": "input",
+    "register_edges": 1,
+    "width": 10,
+    "reason": "pin register"
+   },
+   "pw_data": {
+    "dir": "input",
+    "register_edges": 1,
+    "width": 64,
+    "reason": "pin register"
+   },
+   "x_oacc": {
+    "dir": "input",
+    "register_edges": 1,
+    "width": 24,
+    "reason": "pin register"
+   },
+   "x_oidle": {
+    "dir": "input",
+    "register_edges": 1,
+    "width": 1,
+    "reason": "pin register"
+   },
+   "x_oprog": {
+    "dir": "input",
+    "register_edges": 1,
+    "width": 16,
+    "reason": "pin register"
+   },
+   "x_orows": {
+    "dir": "input",
+    "register_edges": 1,
+    "width": 16,
+    "reason": "pin register"
+   },
+   "kv_ok": {
+    "dir": "input",
+    "register_edges": 1,
+    "width": 1,
+    "reason": "pin register"
+   },
+   "kv_write_drained": {
+    "dir": "input",
+    "register_edges": 1,
+    "width": 1,
+    "reason": "pin register"
+   },
+   "me_mem_ok": {
+    "dir": "input",
+    "register_edges": 1,
+    "width": 1,
+    "reason": "pin register"
+   },
+   "m_fin_o": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 1,
+    "reason": "pin register"
+   },
+   "m_fidx_o": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 18,
+    "reason": "pin register"
+   },
+   "m_fval_o": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 32,
+    "reason": "pin register"
+   },
+   "kvd_v": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 1,
+    "reason": "pin register"
+   },
+   "kvd_wbase": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 24,
+    "reason": "pin register"
+   },
+   "kvd_ts": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 24,
+    "reason": "pin register"
+   },
+   "kvd_ks": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 24,
+    "reason": "pin register"
+   },
+   "kvd_js": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 24,
+    "reason": "pin register"
+   },
+   "kvd_wcs": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 24,
+    "reason": "pin register"
+   },
+   "kvd_split": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 4,
+    "reason": "pin register"
+   },
+   "kvd_jsh": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 3,
+    "reason": "pin register"
+   },
+   "kvd_tiles": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 18,
+    "reason": "pin register"
+   },
+   "kvd_k": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 18,
+    "reason": "pin register"
+   },
+   "kvd_nout": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 18,
+    "reason": "pin register"
+   },
+   "kvd_kindk": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 1,
+    "reason": "pin register"
+   },
+   "kvd_pos": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 18,
+    "reason": "pin register"
+   },
+   "me_clk_en": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 1,
+    "reason": "pin register"
+   },
+   "c_fault": {
+    "dir": "output",
+    "register_edges": 1,
+    "width": 1,
+    "reason": "pin register"
+   }
+  },
+  "source_commit": null,
+  "evidence": {
+   "ot_pin_regs.tsv": "5a212f0cb56c0bb7bc0801e51570ae2071a95348a6e3adc303b21aab28610252",
+   "ot_pin_regs_wrapper.v": "46dad7caceec998404da6e5a53373eb226f46015db2fe3d563bfa40a43bf2689"
+  },
+  "scope": "Additional generic wrapper edges only; core RTL stages remain in measured core duration; no physical qualification",
+  "control_roles": {
+   "clocks": [
+    "ck_head",
+    "ck_pm0",
+    "ck_pm1"
+   ],
+   "resets": [
+    "rst_n"
+   ],
+   "excluded_data_ports": [],
+   "source_sha256": {},
+   "reset_meaning": "source RTL polarity and reset semantics preserved by direct wiring"
+  },
+  "source_note": "gate snapshot None: not a git commit; the route's CLOSED record carries the bound report"
+ }
 }
