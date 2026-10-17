@@ -7,6 +7,7 @@ import json
 import math
 import re
 import sys
+from fractions import Fraction
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'hier_contract'))
@@ -49,9 +50,43 @@ def related_data(spec):
         if relationship != dict(kind='same_pll_fixed_phase', ratio=[4, 3], phase_ps=0):
             raise ValueError('related_pll_ratio leaf datapaths require explicit same_pll_fixed_phase ratio4/3 phase0 relationship')
         return True
+    if policy == 'related_pll_dividers':
+        pll_divider_ratios(spec)
+        return True
     if policy != 'related_same_frequency' or relationship != dict(kind='same_pll_fixed_phase', ratio=[1, 1], phase_ps=0):
         raise ValueError('related leaf datapaths require explicit same_pll_fixed_phase ratio1/1 phase0 relationship')
     return True
+
+
+def pll_divider_ratios(spec):
+    """Explicit phase-zero /3, /4 and /12 roots of the same 3.6 GHz PLL.
+
+    The /12 epoch bank removes a direct 3:4 data crossing structurally.
+    Every declared path still receives ordinary setup and hold analysis.
+    A different divider, phase or frequency needs its own reviewed contract.
+    """
+    relationship = spec.get('clock_relationship') or {}
+    if not isinstance(relationship, dict):
+        raise ValueError('PLL clock relationship must be an explicit object')
+    declared = spec.get('clock_entry_domains')
+    dividers = relationship.get('vco_dividers')
+    if (set(relationship) != {'kind', 'phase_ps', 'vco_dividers'}
+            or relationship.get('kind') != 'same_pll_fixed_phase'
+            or relationship.get('phase_ps') != 0
+            or not isinstance(declared, dict) or not isinstance(dividers, dict)
+            or set(dividers) != set(declared) or 'core' not in dividers
+            or any(type(v) is not int or v not in (3, 4, 12) for v in dividers.values())):
+        raise ValueError('related_pll_dividers requires exact phase0 /3,/4,/12 PLL divider ownership for every domain')
+    expected_period = 833.333 * dividers['core'] / 3
+    if abs(signoff_period(spec) - expected_period) > 0.001:
+        raise ValueError('PLL divider signoff period must preserve the actual 3.6 GHz VCO frequency')
+    ratios = {}
+    for name, divider in dividers.items():
+        ratio = Fraction(divider, dividers['core'])
+        ratios[name] = [ratio.numerator, ratio.denominator]
+        if not isinstance(declared[name], dict) or declared[name].get('ratio') != ratios[name]:
+            raise ValueError(f'PLL divider ratio mismatch for {name}')
+    return ratios
 
 
 def native_leaf(spec):
@@ -72,6 +107,9 @@ def domains(spec):
                              inputs=['*'], outputs=['*'])}
     if not isinstance(declared, dict) or 'core' not in declared:
         raise ValueError('entries: explicit domains require core ratio1/1')
+    divided = spec.get('clock_data_paths') == 'related_pll_dividers'
+    if divided:
+        pll_divider_ratios(spec)
     owners = {}
     out = {}
     for name, data in declared.items():
@@ -80,10 +118,10 @@ def domains(spec):
         if set(data) - {'ratio', 'ports', 'inputs', 'outputs', 'io_budget'}:
             raise ValueError('entries: unsupported domain policy (no clock exceptions)')
         ratio = data.get('ratio')
-        if ratio not in ([1, 1], [4, 3]):
+        if not divided and ratio not in ([1, 1], [4, 3]):
             raise ValueError('entries: only related CK1/1 and CKV4/3 are supported')
         pll = leaf and spec.get('clock_data_paths') == 'related_pll_ratio'
-        if leaf and (ratio != [1, 1] and not (pll and ratio == [4, 3] and name != 'core') or len(data.get('ports', [])) != 1):
+        if leaf and (ratio != [1, 1] and not (divided or pll and ratio == [4, 3] and name != 'core') or len(data.get('ports', [])) != 1):
             raise ValueError('multiple_cts_roots requires one actual related phase0 root per domain '
                              '(samefrequency, or a non-core 4/3 domain under related_pll_ratio)')
         if name == 'core' and ratio != [1, 1]:

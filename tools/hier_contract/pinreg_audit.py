@@ -638,7 +638,7 @@ def hops_qwen_case(case, contract, reach):
     pos = {}
     if (D / 'place.tcl').exists():
         for ln in open(D / 'place.tcl'):
-            m = re.match(r'ot_mts::place \[\$_blk findInst (\S+)\] ([\d.]+) ([\d.]+) (\S+)', ln)
+            m = re.search(r'findInst (\S+)\]\s+([\d.]+)\s+([\d.]+)\s+(\w+)', ln)
             if m:
                 pos[m.group(1)] = (float(m.group(2)), float(m.group(3)), m.group(4))
     else:       # HBM die case (tools/hbm_accel_die_fp.py grt): the placement is the place_inst block of run.tcl
