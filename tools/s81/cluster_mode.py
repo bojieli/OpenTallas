@@ -348,6 +348,7 @@ def collapse(G, m):
             members[int(it.region[6:])].append(it)
     assert sorted(members) == sorted(frames), 'cluster mode: frame census'
     owner = {it.name: r for r, L in members.items() for it in L}
+    by_ = {it.name: it for it in m['insts']}
     classes = collections.defaultdict(list)
     for r in sorted(frames):
         classes[class_of(frames[r])].append(r)
@@ -362,21 +363,29 @@ def collapse(G, m):
         if len(rs) == 1 and all(e[0] in owner for e in eps):
             internal[rs.pop()].append(k)
             continue
+        per = collections.defaultdict(list)
         for j, e in enumerate(eps):
             if e[0] in owner:
-                r = owner[e[0]]
-                assert e[0] == f'cf{r}', ('cluster boundary not on the column FIFO', bid, e)
-                bnd[r].append((k, j))
+                per[owner[e[0]]].append(j)
+        for r, J in per.items():
+            cfn = f'cf{r}'
+            if all(eps[j][0] == cfn for j in J):
+                for j in J:                       # a column FIFO pin: one cluster port per pin
+                    base = G.pslice(eps[j][1])[0]
+                    d_, w_ = m['pdir'][by_[cfn].master][base]
+                    bnd[r].append((k, [j], PORT_RENAME.get(base, base), d_, w_))
+            else:
+                # --cfifo-crsplit: the column clock (driven by the x lane's forwarded station) enters ONE port ck_col
+                assert cls == 'col_clock' and eps[0][0] not in owner, ('cluster boundary not on the column FIFO', bid, cls)
+                bnd[r].append((k, J, 'ck_col', 'input', 1))
     # port signature per root: {port: (dir, bits)}
     pdir = m['pdir']
     sig = {}
     for r in frames:
         ports = {}
-        for k, j in bnd[r]:
-            bid, cls, bits, eps = m['buses'][k]
-            base = G.pslice(eps[j][1])[0]
-            d_, w_ = pdir['dsfd_cfifo'][base]
-            ports[PORT_RENAME.get(base, base)] = (d_, w_)
+        for k, J, port, d_, w_ in bnd[r]:
+            assert port not in ports, ('two boundary nets on one cluster port', r, port)
+            ports[port] = (d_, w_)
         sig[r] = ports
     for c, rs in classes.items():
         for r in rs:
@@ -388,12 +397,9 @@ def collapse(G, m):
         sub = dict(m)
         sub['insts'] = list(members[rep])
         sb = [m['buses'][k] for k in internal[rep]]
-        for k, j in bnd[rep]:
-            bid, cls, bits, eps = m['buses'][k]
-            base = G.pslice(eps[j][1])[0]
-            port = PORT_RENAME.get(base, base)
-            d_ = pdir['dsfd_cfifo'][base][0]
-            sb.append((port, 'top_out' if d_ == 'output' else 'top_in', pdir['dsfd_cfifo'][base][1], [eps[j]]))
+        for k, J, port, d_, w_ in bnd[rep]:
+            eps = m['buses'][k][3]
+            sb.append((port, 'top_out' if d_ == 'output' else 'top_in', w_, [eps[j] for j in J]))
         sub['buses'] = sb
         with tempfile.TemporaryDirectory() as td:
             p = Path(td) / 'c.v'
@@ -432,16 +438,20 @@ def collapse(G, m):
                 ('member outside its cluster box', r, it.name, (it.x, it.y, it.w, it.h), bx)
     # rewrite the top: remove members + their internal buses, re-point boundary endpoints
     drop = {k for ks in internal.values() for k in ks}
+    portof = {(k, j): port for r in frames for k, J, port, d_, w_ in bnd[r] for j in J}
     newb = []
     for k, (bid, cls, bits, eps) in enumerate(m['buses']):
         if k in drop:
             continue
         neps = []
-        for e in eps:
+        for j, e in enumerate(eps):
             if e[0] in owner:
                 r = owner[e[0]]
                 base = G.pslice(e[1])[0]
-                neps.append((f'col{r}', PORT_RENAME.get(base, base) + e[1][len(base):]))
+                port = portof[(k, j)]
+                ne = (f'col{r}', port + (e[1][len(base):] if port == PORT_RENAME.get(base, base) else ''))
+                if ne not in neps:
+                    neps.append(ne)
             else:
                 neps.append(e)
         newb.append((bid, cls, bits, neps))
@@ -465,8 +475,37 @@ def collapse(G, m):
     return rep_
 
 
+NSPREAD = 'physical/s81_die_pins/cfifo_crs/dsfd_cfifo_crs_nspread.tcl'
+
+
 def faces(G, Mx, ports):
-    """cluster LEF pins: every port on the S (street) face, in cfifo order, starting above the cfifo."""
+    """cluster LEF pins, all on the S (street) face.  --cfifo-crsplit: xd / xd2 / rd at the dsfd_cfifo_crs r5f nspread S
+    pin x (cfifo x + pin x: each cluster pin straight below its cfifo pin), ck_col / rst_col just W of the cfifo span;
+    otherwise sequential from the cfifo x."""
+    import re as _re
+    if getattr(G, 'CFIFO_CRSPLIT', False):
+        txt = (G.ROOT / NSPREAD).read_text()
+        pos = {}
+        for mm in _re.finditer(r'-pin_name \{([^}]+)\} -layer (\S+) -location \{([-\d.]+) ([-\d.]+)\}', txt):
+            if float(mm.group(4)) < 1.0:
+                pos[mm.group(1)] = (mm.group(2), float(mm.group(3)))
+        x0 = G.CF_X
+        for p, (d_, bits) in ports.items():
+            if p in ('ck_col', 'rst_col'):
+                continue
+            vals = []
+            for i in range(bits):
+                nm = f'{p}[{i}]' if f'{p}[{i}]' in pos else p
+                assert nm in pos, ('cluster port has no cfifo S pin', p, i)
+                layer, x = pos[nm]
+                vals.append((f'{p}[{i}]', layer, (round(x0 + x - 0.012, 4), 0.0, round(x0 + x + 0.012, 4), 0.4)))
+            Mx.ports[p] = ('rects', vals)
+            Mx.order.append(p)
+        for p, dx in (('ck_col', -6.0), ('rst_col', -12.0)):
+            if p in ports:
+                Mx.ports[p] = ('rects', [(f'{p}[0]', 'M5', (round(x0 + dx - 0.012, 4), 0.0, round(x0 + dx + 0.012, 4), 0.4))])
+                Mx.order.append(p)
+        return
     order = ['xd', 'xf', 'xd2', 'xf2', 'rf', 'rd', 'ck_col', 'rst_col']
     rest = sorted(p for p in ports if p not in order)
     seq = [(p, ports[p][1]) for p in order + rest if p in ports]

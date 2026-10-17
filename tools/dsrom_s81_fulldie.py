@@ -3232,6 +3232,7 @@ BF_X2_PAIR = False              # --bf-x2-pair (S-BIND r6): the packed static x 
 # beside go (same class / relay cohort: the producer's DELTA 0 assumes equal go / f_prog ages, bench-measured).
 BF_STATIC_PROG = False
 BF_FRONT_ROOT_ABI = False       # opt-in S81H03 source candidate; no view/timing inheritance
+CFIFO_CRSPLIT = False           # --cfifo-crsplit (H-C27 c27b): column FIFO = closed dsfd_cfifo_crs r5f (s81/cfifo_crsplit.py)
 CLUSTER_MODE = None             # --cluster-mode (H-C27 c27): dict(y_snap_um, column_dy_um, reach_um) or None (s81/cluster_mode.py)
 LEAF, NODEB, STB = 63, 66, 2
 CRET = NODEB + STB                  # column return payload: root word + {fault, busy}
@@ -9729,6 +9730,9 @@ def port_usage(m):
 def finalize_r8(m):
     """field glue masters by role (S13: one master per role and width): slot stations by their port set, return
     nodes by child kinds / fault chain; records m['pdir'][master][port] = (dir, bits)."""
+    if CFIFO_CRSPLIT and not m.get('cfifo_crsplit'):
+        from s81.cfifo_crsplit import rewire as crs_rewire
+        crs_rewire(sys.modules[__name__], m)
     use = port_usage(m)
     if SSTN_SPLIT_MAP and not m.get('sstn_split'):
         if not (SSTN_REG and BF_X2_STATIC):
@@ -11435,8 +11439,15 @@ def glue_rtl(m):
            '// W564 entry crossing; hub end/start blocks: ot_meso_fifo / ot_ratio_cdc_fifo; return nodes wrap',
            '// ot_v41_retn_w17w10 with the ot_v41_field_w17w10 leaf packing.  Lane format vr: d[0] rst_n, d[1] valid.',
            '`timescale 1ns/1ps', '']
+    crs_done = False
     for mst in sorted(pdir):
         if not is_glue(mst):
+            continue
+        if CFIFO_CRSPLIT and mst == 'dsfd_cfifo_crs':
+            if not crs_done:
+                from s81.cfifo_crsplit import rtl_text as crs_rtl
+                out.append(crs_rtl(ROOT))
+                crs_done = True
             continue
         ports = pdir[mst]
         body = []
@@ -11894,6 +11905,10 @@ def die_options(ap):
                     'clusters (frame + cfifo, one master per height x pairs class) on one y lattice phase; STREET-ONLY die-top '
                     'transport (street bands below the clusters, band above each column, S14, die-W edge); the die top '
                     'instantiates cluster masters (s81/cluster_mode.py). Needs --canonical-layout.')
+    ap.add_argument('--cfifo-crsplit', action='store_true', help='H-C27 c27b (S-DIE/DIE-CLOCK 10-16): column FIFO = the closed '
+                    'dsfd_cfifo_crs r5f (280.8 x 69.12): cr / cr_s / xf / xf2 are column-tree sinks, the column clock is driven by '
+                    'the x lane forwarded station (F1), the return chain first station takes that net; needs --cfifo-colck '
+                    '--bf-x2-static --bf-x2-pair --cfifo-fall-launch (s81/cfifo_crsplit.py)')
     ap.add_argument('--cluster-reach', type=float, default=180.0, help='--cluster-mode die-top transport station spacing '
                     'cap (um; provisional, not a timing bound until the measured reach table)')
     ap.add_argument('--canonical-layout', help='Source-pinned full2417 capacity JSON; exact519 BF IDs and128 root bounds, irregular local streets/RSC transit and per-root actual flight calendar')
@@ -12648,6 +12663,12 @@ def apply_options(a):
     CFIFO_COLCK = bool(getattr(a, 'cfifo_colck', False))
     assert not CFIFO_COLCK or CFIFO_V2, '--cfifo-colck needs --cfifo-v2'
     CF_WH = CF_WH_V2 if CFIFO_V2 else (850.176, 47.52)
+    global CFIFO_CRSPLIT
+    CFIFO_CRSPLIT = bool(getattr(a, 'cfifo_crsplit', False))
+    if CFIFO_CRSPLIT:
+        from s81.cfifo_crsplit import OUTLINE as _CRS
+        assert CFIFO_COLCK, '--cfifo-crsplit needs --cfifo-colck'
+        CF_WH = (_CRS[0] + SHAVE, _CRS[1] + SHAVE)
     FWD_REACH = float(a.fwd_pitch) if a.fwd_pitch else LINK_STAGE_UM
     # s81-gen: the OT_S81_HOP_R_CC override (9917e9987) was reset to 410 here, after import (the r4e_rcc runs were no-ops)
     HOP_R_FWD, HOP_R_CC = LINK_STAGE_UM, float(getattr(a, 'hop_r_cc', None) or os.environ.get('OT_S81_HOP_R_CC', 410.0))
