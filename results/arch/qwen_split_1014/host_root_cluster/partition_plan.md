@@ -126,3 +126,20 @@ Every SRAM origin is on the 43.2 lattice with 20-um channels. Each child's clock
 - D4 The host family is tiny. Options: keep the 43.2-um host tile, fold it into a 3-clock CDC leaf, or remove the core->host->ingest hop.
 - D5 Do the pre-existing intra-host credit channels fall under the static-schedule rule? The host and PHY are off-die boundaries.
 - D6 fdi is 2,085 b on a 100-um window (20.8 /um), set by the serdes hard-IP face.
+- A8 Found by the c1 gate: in `qkd_host_rx_class_admission`, the read pointer ir[1:0] of the 16 x 514 ingest queue drives 8,226 and 4,115 loads (textbook high_fanout WARN).
+  Fix: replicate the pointer per 64-bit slice (registered copies, 0 cycles). Not blocking: TT setup is +204 ps.
+
+## 7. First child kits (recipe 4, hold_budget die). Pre-route gates c2 at 3389941db, TT, with --cts
+
+qkd_host_root is CRITICAL: there is no REVIEW.json and nothing is submitted. Specs are in `tools/ref_tile/specs_qhost_cluster/`.
+
+| kit | top | outline | util | gate | CTS TT insertion / spread | sinks | setup / hold WNS (TT pre-route) |
+|---|---|---|---|---|---|---|---|
+| qkd_hr_phy_adp (x8) | qfd_link_adp128 | 237.6 x 86.4 (2.75:1, set by the 174-um SRAM) | 11 % std (33.6 % fill) | PASS | 236.6 / 62.1 ps | 2,491 | +271 / +19 ps |
+| qkd_hr_phy_pad | qkd_host_rx_pad5 | 172.8 x 86.4 (pin-limited: 1,026-pin S face) | 22 % (WARN) | WARN | 188.2 / 20.0 ps | 5,765 | +122 / +42 ps |
+| qkd_hr_core_rx | qkd_host_rx_class_admission | 151.2 x 129.6 | 48 % | WARN (high_fanout ir[1:0], A8) | 219.8 / 15.7 ps | 14,558 | +170 / +14 ps |
+
+The c1 gates found pins clustered on partial faces and the clock on the W face, away from the data. c2 fixes this with per-port pin_ranges and
+route.pin_balance: buses cover the full face (<= 6.2 /um) and ck sits mid-face between the data buses. Moving the clock cut adp insertion/spread from 302.6/89.0 to 236.6/62.1.
+The SRAM sits on the asap7 track lattice (offtrack 0) at (31.5, 28.1). The 43.2 lattice applies to the child origins in the cluster;
+an adp SRAM on the 43.2 lattice would need a 108-um tile (20-um pin-face margin).

@@ -652,7 +652,8 @@
   "A4 rank/top glue (491 + 14 cells; ck_program_loader 2 flops): distribute every glue cone into the child of its consumer; any cone mixing two families gets a synchroniser in the receiving child (none expected besides faults / resets)",
   "A5 child wrapper modules qkd_hr_<child> (one per multi-member child): pure instantiation, one family clock port feeding every member clock, one rst relay (regional reset)",
   "A6 no credits / backpressure added; the existing credit channels are unchanged (PHY + host are off-die boundaries; intra-host v/d/cr channels pre-date the static rule -> coordinator call). Every new intra-family cut adds +1 out +1 in pin-register cycle: check each credit loop covers the +2-cycle RTT (composition bench)",
-  "A7 (option) ot_qwen_die_cdc_ch MEMM=1 on the 4 W546 channels: FIFO body -> dual-clock 1R1W macro (existing opt-in), ~4 x 25k std cells removed from the CDC leaves"
+  "A7 (option) ot_qwen_die_cdc_ch MEMM=1 on the 4 W546 channels: FIFO body -> dual-clock 1R1W macro (existing opt-in), ~4 x 25k std cells removed from the CDC leaves",
+  "A8 qkd_host_rx_class_admission (qkd_hr_core_rx gate c1): read pointer ir[1:0] of the 16 x 514 ingest queue drives 8,226 / 4,115 loads (textbook high_fanout) -> replicate ir per 64-bit slice (registered copies, 0 cycles) or a registered read mux; timing currently +204 ps TT so not blocking"
  ],
  "floorplan_intent": {
   "frame_now": [
