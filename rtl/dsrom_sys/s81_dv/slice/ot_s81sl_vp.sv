@@ -18,8 +18,13 @@
 //   2 POST  a0: coefficient rows (comb[j][k] at word 4j + k, post[k] at word 16 + k), a1: y rows (element order)
 //   3 HLOAD a0: 32 rows (half row i = sub-beat i>>1, half i&1: rows a0 + 2i, a0 + 2i + 1 = vn's 256-b half-row layout)
 //   4 HSTORE a0: the inverse of HLOAD (h -> leaf store)
-//   5 NORM  imm[127:0] = the hc_pre coefficients -> vn n_go; n[0] / n[1] = gather the q / BF16 family -> vq mode
+//   5 NORM  imm[127:0] = the hc_pre coefficients -> vn n_go; n[0] / n[1] = gather the q / BF16 family, a1[7:0] = the
+//           vector's global beat index (5 sid + k for h vectors) -> vq mode
 //   6 RDOUT a0, n: n row pairs (a0 + 2i, a0 + 2i + 1) -> lo (to the centre: ring / collective sends)
+//   8..15  SU ops: forwarded unchanged to the beat's vs sub-leaf (s_v / s_d, one edge), which runs them on its own
+//          fixed timeline through the extension port: row-pair reads (x_rv / x_ra -> x_qv / x_qd, 4 edges: vp pin flop,
+//          macro, output register, vp output flop) and row-pair writes (x_wv / x_wa / x_wm / x_wd).  vs never
+//          overlaps a vp op on a bank port (compiler slots); an overlap is a sticky fault here.
 // Every input lands in a flop; every output leaves a flop.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_vp #(
@@ -43,12 +48,23 @@ module ot_s81sl_vp #(
     // row-pair reads to the centre
     output reg           lo_v,
     output reg  [255:0]  lo_d,
+    // vs seam (SU ops): command pass-through and the leaf-store extension port
+    output reg           s_v,
+    output reg  [159:0]  s_d,
+    input  wire          x_rv,
+    input  wire [9:0]    x_ra,
+    output reg           x_qv,
+    output reg  [255:0]  x_qd,
+    input  wire          x_wv,
+    input  wire [9:0]    x_wa,
+    input  wire [7:0]    x_wm,
+    input  wire [255:0]  x_wd,
     // vn seam
     output reg           hw_v, output reg [2:0] hw_j, output reg hw_hf, output reg [255:0] hw_d,
     output reg           hr_v, output reg [2:0] hr_j, output reg hr_hf,
     input  wire          hq_v, input wire [255:0] hq_d,
     output reg           n_go, output reg [127:0] n_pre,
-    output reg           m_v, output reg m_q, output reg m_b,
+    output reg           m_v, output reg m_q, output reg m_b, output reg [7:0] m_i,
     output reg           wl_v, output reg [2:0] wl_i, output reg [255:0] wl_d,
     output reg           fault
 );
@@ -59,13 +75,14 @@ module ot_s81sl_vp #(
     integer i, k;
 
     // ---------------------------------------------------------------- input pin flops
-    reg cv_c, swv_c, hqv_c; reg [1:0] cwv_c;
+    reg cv_c, swv_c, hqv_c, xrv_c, xwv_c; reg [1:0] cwv_c; reg [9:0] xra_c, xwa_c; reg [7:0] xwm_c; reg [255:0] xwd_c;
     reg [159:0] cd_c; reg [9:0] swa_c; reg [7:0] swm_c; reg [255:0] swd_c; reg [23:0] cwa_c; reg [63:0] cwd_c;
     reg [255:0] hqd_c;
     always @(posedge clk or negedge rs_c)
-        if (!rs_c) begin cv_c <= 1'b0; swv_c <= 1'b0; cwv_c <= 2'b00; hqv_c <= 1'b0; end
-        else begin cv_c <= c_v; swv_c <= sw_v; cwv_c <= cw_v; hqv_c <= hq_v; end
+        if (!rs_c) begin cv_c <= 1'b0; swv_c <= 1'b0; cwv_c <= 2'b00; hqv_c <= 1'b0; xrv_c <= 1'b0; xwv_c <= 1'b0; end
+        else begin cv_c <= c_v; swv_c <= sw_v; cwv_c <= cw_v; hqv_c <= hq_v; xrv_c <= x_rv; xwv_c <= x_wv; end
     always @(posedge clk) begin
+        xra_c <= x_ra; xwa_c <= x_wa; xwm_c <= x_wm; xwd_c <= x_wd;
         cd_c <= c_d; swa_c <= sw_a; swm_c <= sw_m; swd_c <= sw_d; cwa_c <= cw_a; cwd_c <= cw_d; hqd_c <= hq_d;
     end
     wire [3:0] op = cd_c[3:0]; wire [9:0] a0 = cd_c[13:4], a1 = cd_c[23:14]; wire [7:0] cn = cd_c[31:24];
@@ -74,14 +91,14 @@ module ot_s81sl_vp #(
     reg [3:0] sop; reg [7:0] si, sn; reg [9:0] sa0, sa1; reg srun;
     always @(posedge clk or negedge rs_s)
         if (!rs_s) begin srun <= 1'b0; si <= 8'd0; sop <= 4'd0; end
-        else if (cv_c && op != OP_NORM) begin
+        else if (cv_c && op != OP_NORM && !op[3]) begin
             srun <= 1'b1; sop <= op; si <= 8'd0; sa0 <= a0; sa1 <= a1;
             sn <= (op == OP_GAIN) ? 8'd8 : (op == OP_POST) ? 8'd21 : (op == OP_HLOAD || op == OP_HSTORE) ? 8'd16 : cn;
         end else if (srun) begin
             si <= si + 8'd1;
             if (si == sn - 8'd1) srun <= 1'b0;
         end
-    wire busy_hit = cv_c && op != OP_NORM && srun;     // an op issued over a running op: schedule violation
+    wire busy_hit = cv_c && op != OP_NORM && !op[3] && srun;     // an op issued over a running op: schedule violation
 
     // per-cycle leaf-store reads (bank 0 / bank 1 row) and their purpose, by op and step
     //   GAIN   step i: rows a0 + 2i, a0 + 2i + 1 -> wl row i
@@ -94,6 +111,7 @@ module ot_s81sl_vp #(
     always @(*) begin
         re_e = 1'b0; re_o = 1'b0; ra_e = 10'd0; ra_o = 10'd0;
         rr0 = sa0 + {si[6:0], 1'b0}; rr1 = rr0 + 10'd1;
+        if (xrv_c) begin re_e = 1'b1; re_o = 1'b1; ra_e = xra_c[0] ? xra_c + 10'd1 : xra_c; ra_o = xra_c[0] ? xra_c : xra_c + 10'd1; end
         if (srun) case (sop)
             OP_GAIN, OP_HLOAD, OP_RDOUT: begin re_e = 1'b1; re_o = 1'b1; ra_e = rr0[0] ? rr1 : rr0; ra_o = rr0[0] ? rr0 : rr1; end
             OP_POST: begin
@@ -107,6 +125,7 @@ module ot_s81sl_vp #(
     end
     // GAIN / HLOAD / RDOUT need an even base: an odd a0 swaps the banks (rows a0 + 2i even/odd fixed by a0[0])
     wire swp = sa0[0] && (sop == OP_GAIN || sop == OP_HLOAD || sop == OP_RDOUT);
+    wire xrcol = xrv_c && srun && sop != OP_HSTORE;   // the extension read shares the sequencer's read ports
 
     // ---------------------------------------------------------------- leaf store: write port selection per bank
     // writers: row write (sw), capture port 0 / 1, HSTORE (two rows a cycle)
@@ -131,6 +150,14 @@ module ot_s81sl_vp #(
                 wd[k] = {4{cwd_c[32 * i +: 32]}}; wm[k] = 128'd0; wm[k][32 * cwa_c[12 * i +: 2] +: 32] = {32{1'b1}};
                 nw[k] = nw[k] + 3'd1;
             end
+        if (xwv_c) begin
+            k = xwa_c[0];
+            if (|xwm_c[3:0]) begin wv[k] = 1'b1; wa[k] = xwa_c[9:1]; wd[k] = xwd_c[127:0]; nw[k] = nw[k] + 3'd1;
+                for (i = 0; i < 4; i = i + 1) wm[k][32 * i +: 32] = {32{xwm_c[i]}}; end
+            if (|xwm_c[7:4]) begin wv[1 - k] = 1'b1; wa[1 - k] = xwa_c[9:1] + {8'd0, xwa_c[0]}; wd[1 - k] = xwd_c[255:128];
+                nw[1 - k] = nw[1 - k] + 3'd1;
+                for (i = 0; i < 4; i = i + 1) wm[1 - k][32 * i +: 32] = {32{xwm_c[4 + i]}}; end
+        end
         if (hs_v) begin
             wv = 2'b11; wa[0] = hs_a[9:1]; wa[1] = hs_a[9:1];
             wd[hs_a[0]] = hs_d[127:0]; wd[!hs_a[0]] = hs_d[255:128];
@@ -148,7 +175,9 @@ module ot_s81sl_vp #(
     // macro output registers + the step that launched the read (2 edges: address edge, output register)
     reg [127:0] q0, q1; reg [3:0] dop; reg [7:0] dsi; reg dv, dodd, dswp;
     reg [3:0] dop1; reg [7:0] dsi1; reg dv1, dodd1, dswp1;
-    always @(posedge clk) begin q0 <= rq0; q1 <= rq1; end
+    reg xr1, xr2, xsw1, xsw2;
+    always @(posedge clk) begin q0 <= rq0; q1 <= rq1; xsw1 <= xra_c[0]; xsw2 <= xsw1; end
+    always @(posedge clk or negedge rs_s) if (!rs_s) begin xr1 <= 1'b0; xr2 <= 1'b0; end else begin xr1 <= xrv_c; xr2 <= xr1; end
     always @(posedge clk or negedge rs_s)
         if (!rs_s) begin dv1 <= 1'b0; dv <= 1'b0; end
         else begin dv1 <= srun; dv <= dv1; end
@@ -228,7 +257,7 @@ module ot_s81sl_vp #(
     always @(posedge clk) begin hs_a <= hs_base + {hsi_q[3], 1'b0}; hs_d <= hqd_c; end
 
     always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin hw_v <= 1'b0; hr_v <= 1'b0; n_go <= 1'b0; m_v <= 1'b0; wl_v <= 1'b0; lo_v <= 1'b0; end
+        if (!rs_o) begin hw_v <= 1'b0; hr_v <= 1'b0; n_go <= 1'b0; m_v <= 1'b0; wl_v <= 1'b0; lo_v <= 1'b0; s_v <= 1'b0; x_qv <= 1'b0; end
         else begin
             hw_v <= wvl || (dv && dop == OP_HLOAD);
             hr_v <= hrq_v;
@@ -236,6 +265,8 @@ module ot_s81sl_vp #(
             m_v <= cv_c && op == OP_NORM;
             wl_v <= dv && dop == OP_GAIN;
             lo_v <= dv && dop == OP_RDOUT;
+            s_v <= cv_c && op[3];
+            x_qv <= xr2;
         end
     always @(posedge clk) begin
         if (wvl) begin
@@ -246,9 +277,11 @@ module ot_s81sl_vp #(
             hw_j <= dsi[3:1]; hw_hf <= dsi[0]; hw_d <= {qo, qe};
         end
         hr_j <= hrq_i[3:1]; hr_hf <= hrq_i[0];
-        if (cv_c && op == OP_NORM) begin n_pre <= cd_c[159:32]; m_q <= cn[0]; m_b <= cn[1]; end
+        if (cv_c && op == OP_NORM) begin n_pre <= cd_c[159:32]; m_q <= cn[0]; m_b <= cn[1]; m_i <= a1[7:0]; end
         wl_i <= dsi[2:0]; wl_d <= {qo, qe};
         lo_d <= {qo, qe};
+        s_d <= cd_c;
+        x_qd <= xsw2 ? {q0, q1} : {q1, q0};
     end
 
     // ---------------------------------------------------------------- faults
@@ -257,7 +290,7 @@ module ot_s81sl_vp #(
         if (!rs_o) begin fault <= 1'b0; lvbad <= 1'b0; end
         else begin
             lvbad <= (lv[0] != wvl) || (|lv != &lv);
-            fault <= fault | wcol | busy_hit | (|lf) | lvbad | (wvl && dv && dop == OP_HLOAD) |
+            fault <= fault | wcol | busy_hit | xrcol | (|lf) | lvbad | (wvl && dv && dop == OP_HLOAD) |
                      (hsv_q[3] && !hqv_c) | (ydv[1] && !hqv_c);
         end
 endmodule

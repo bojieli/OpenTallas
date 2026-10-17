@@ -18,14 +18,22 @@
 module ot_s81sl_vq (
     input  wire          clk,
     input  wire          rst_n,
-    input  wire          y_v,
+    input  wire          y_v,          // normed y from vn
     input  wire [2:0]    y_i,
     input  wire [255:0]  y,
+    input  wire          u_v,          // SU results to quantise from vs (SW act, QB z): same 8-lane sub-beat stream
+    input  wire [2:0]    u_i,
+    input  wire [255:0]  u,
     input  wire [3:0]    sid,        // straps: slice id, leaf index
     input  wire [2:0]    k,
-    input  wire          m_v,        // gather mode for the next norm: families q / BF16
-    input  wire          m_q,
+    input  wire          m_v,        // gather mode for the next 64-element vector (vp: NORM): families q / BF16, global beat
+    input  wire          m_q,        // index of the vector's 64 elements (the x-buffer index; 5 sid + k for h vectors)
     input  wire          m_b,
+    input  wire [7:0]    m_i,
+    input  wire          um_v,       // the same for a vs stream
+    input  wire          um_q,
+    input  wire          um_b,
+    input  wire [7:0]    um_i,
     output reg           xf_v,
     output reg           xf_s,
     output reg  [275:0]  xf,
@@ -34,10 +42,18 @@ module ot_s81sl_vq (
     wire [1:0] rsv;
     ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
     wire rs_c = rsv[0], rs_q = rsv[1];
-    reg yv_c; reg [2:0] yi_c; reg [255:0] y_c; reg [3:0] sid_c; reg [2:0] k_c; reg mq, mb;
-    always @(posedge clk or negedge rs_c) if (!rs_c) yv_c <= 1'b0; else yv_c <= y_v;
-    always @(posedge clk) begin yi_c <= y_i; y_c <= y; sid_c <= sid; k_c <= k; end
-    always @(posedge clk or negedge rs_c) if (!rs_c) begin mq <= 1'b1; mb <= 1'b0; end else if (m_v) begin mq <= m_q; mb <= m_b; end
+    reg yv_c, uv_c; reg [2:0] yi_c, ui_c; reg [255:0] y_c, u_c; reg [3:0] sid_c; reg [2:0] k_c; reg mq, mb, mcol; reg [7:0] mi;
+    always @(posedge clk or negedge rs_c) if (!rs_c) begin yv_c <= 1'b0; uv_c <= 1'b0; end else begin yv_c <= y_v; uv_c <= u_v; end
+    always @(posedge clk) begin yi_c <= y_i; y_c <= y; ui_c <= u_i; u_c <= u; sid_c <= sid; k_c <= k; end
+    always @(posedge clk or negedge rs_c)
+        if (!rs_c) begin mq <= 1'b1; mb <= 1'b0; mi <= 8'd0; mcol <= 1'b0; end
+        else begin
+            if (m_v) begin mq <= m_q; mb <= m_b; mi <= m_i; end
+            else if (um_v) begin mq <= um_q; mb <= um_b; mi <= um_i; end
+            mcol <= mcol | (m_v && um_v) | (y_v && u_v);
+        end
+    // one stream: vn's y or vs's u (never both in a cycle: compiler slots; both = fault)
+    wire sv_ = yv_c | uv_c; wire [2:0] si_ = yv_c ? yi_c : ui_c; wire [255:0] sd_ = yv_c ? y_c : u_c;
     // block assembly: 4 sub-beats of 8 FP32 words -> 32 words; BF16 copy of all 64
     reg [1023:0] blk; reg bv, bbk; reg [2:0] nexp; reg ord_f;
     reg [1023:0] bf;
@@ -45,14 +61,14 @@ module ot_s81sl_vq (
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin bv <= 1'b0; nexp <= 3'd0; ord_f <= 1'b0; end
         else begin
-            bv <= yv_c && yi_c[1:0] == 2'd3;
-            if (yv_c) begin nexp <= yi_c + 3'd1; if (yi_c != nexp) ord_f <= 1'b1; end
+            bv <= sv_ && si_[1:0] == 2'd3;
+            if (sv_) begin nexp <= si_ + 3'd1; if (si_ != nexp) ord_f <= 1'b1; end
         end
-    always @(posedge clk) bbk <= yi_c[2];
+    always @(posedge clk) bbk <= si_[2];
     always @(posedge clk)
-        if (yv_c) begin
-            for (j = 0; j < 4; j = j + 1) if (yi_c[1:0] == j) blk[256 * j +: 256] <= y_c;
-            for (j = 0; j < 8; j = j + 1) if (yi_c == j) for (l = 0; l < 8; l = l + 1) bf[(8 * j + l) * 16 +: 16] <= y_c[l * 32 + 16 +: 16];
+        if (sv_) begin
+            for (j = 0; j < 4; j = j + 1) if (si_[1:0] == j) blk[256 * j +: 256] <= sd_;
+            for (j = 0; j < 8; j = j + 1) if (si_ == j) for (l = 0; l < 8; l = l + 1) bf[(8 * j + l) * 16 +: 16] <= sd_[l * 32 + 16 +: 16];
         end
     // the quantiser registers x itself (aq12 S0): blk feeds it directly; bv is high in the cycle after the block's last
     // sub-beat was written, so aq12 samples the complete block (the next sub-beat lands on the same edge)
@@ -65,7 +81,7 @@ module ot_s81sl_vq (
     // stagger: a step counter from the quantiser output; XQ leaves at step 4k, XB at step 20 + 4k
     reg [5:0] st; reg run;
     wire [1103:0] xb_full;
-    wire [7:0] gidx = {2'b00, sid_c, 2'b00} + {4'd0, sid_c} + {5'd0, k_c};   // 5 sid + k
+    wire [7:0] gidx = mi;                                            // the vector's global beat index (command)
     // the beat being sent: header {idx, src sid, hops 1, kind, v} + payload
     assign xb_full = (st >= 6'd20) ? {59'd0, bf, gidx, sid_c, 5'd1, 3'd2, 1'b1} : {551'd0, xqd, gidx, sid_c, 5'd1, 3'd1, 1'b1};
     always @(posedge clk or negedge rs_q)
@@ -75,7 +91,7 @@ module ot_s81sl_vq (
             else if (run) begin st <= st + 6'd1; if (st == 6'd39) run <= 1'b0; end
             xf_v <= run && ((mq && st[5:2] == {1'b0, k_c}) || (mb && st[5:2] == 4'd5 + {1'b0, k_c}));
             xf_s <= run && ((mq && st == {1'b0, k_c, 2'b00}) || (mb && st == 6'd20 + {1'b0, k_c, 2'b00}));
-            fault <= fault | (vo && af) | ord_f | (vo && blo && run);
+            fault <= fault | (vo && af) | ord_f | mcol | (vo && blo && run);
         end
     always @(posedge clk) begin
         if (vo && !blo) begin q0 <= q; e0 <= e; end

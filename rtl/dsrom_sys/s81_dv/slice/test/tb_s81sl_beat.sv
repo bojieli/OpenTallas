@@ -41,7 +41,7 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37
     localparam integer R_GA = 0, R_GF = 16, R_CA = 32, R_CF = 40, R_YA = 48, R_YF = 64, R_H0 = 96, R_HS = 128;
     reg rst_n = 1'b0, c_v = 1'b0, sw_v = 1'b0, rb_v = 1'b0;
     reg [159:0] c_d = 0; reg [9:0] sw_a = 0; reg [255:0] sw_d = 0; reg [7:0] sw_m = 0; reg [31:0] rb_d = 0;
-    wire lo_v, hw_v, hr_v, hq_v, n_go, wl_v, fp, fn, fq, p_v, y_v, hw_hf, hr_hf, m_v, m_q, m_b;
+    wire lo_v, hw_v, hr_v, hq_v, n_go, wl_v, fp, fn, fq, p_v, y_v, hw_hf, hr_hf, m_v, m_q, m_b; wire [7:0] m_i;
     wire [255:0] lo_d, hw_d, hq_d, wl_d, y; wire [2:0] hw_j, hr_j, wl_i, y_i; wire [127:0] n_pre; wire [31:0] p_d;
     // the leaf's x beats arrive as 4 x 276-b fragments: re-assemble them (as the ring stop does)
     wire xf_v, xf_s; wire [275:0] xf; reg [1103:0] xo = 0; reg [1:0] frn = 0; reg xo_v = 0;
@@ -57,15 +57,16 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37
     ot_s81sl_vp u_p (.clk(clk), .rst_n(rst_n), .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
         .cw_v(2'b00), .cw_a(24'd0), .cw_d(64'd0), .lo_v(lo_v), .lo_d(lo_d),
         .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d), .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf),
-        .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre), .m_v(m_v), .m_q(m_q), .m_b(m_b),
+        .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i),
+        .s_v(), .s_d(), .x_rv(1'b0), .x_ra(10'd0), .x_qv(), .x_qd(), .x_wv(1'b0), .x_wa(10'd0), .x_wm(8'd0), .x_wd(256'd0),
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .fault(fp));
     ot_s81sl_vn u_n (.clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),
         .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf), .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre),
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .rb_v(rb_v), .rb_d(rb_d), .p_v(p_v), .p_d(p_d),
         .y_v(y_v), .y_i(y_i), .y(y), .fault(fn));
     localparam [3:0] SID = BEAT / 5; localparam [2:0] KL = BEAT % 5;
-    ot_s81sl_vq u_q (.clk(clk), .rst_n(rst_n), .y_v(y_v), .y_i(y_i), .y(y), .sid(SID), .k(KL), .m_v(m_v), .m_q(m_q),
-        .m_b(m_b), .xf_v(xf_v), .xf_s(xf_s), .xf(xf), .fault(fq));
+    ot_s81sl_vq u_q (.clk(clk), .rst_n(rst_n), .y_v(y_v), .y_i(y_i), .y(y), .u_v(1'b0), .u_i(3'd0), .u(256'd0),
+        .sid(SID), .k(KL), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i), .um_v(1'b0), .um_q(1'b0), .um_b(1'b0), .um_i(8'd0), .xf_v(xf_v), .xf_s(xf_s), .xf(xf), .fault(fq));
 
     // row image to write: {row, data}
     reg [127:0] img [0:159]; reg [159:0] wr_ok;
@@ -114,7 +115,7 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37
         // per block: GAIN, NORM, rstd, POST, HSTORE, RDOUT
         if (cyc == 220 + 400 * blk && blk < 2) cmd(4'd1, blk ? R_GF : R_GA, 0, 0, 0);            // GAIN
         if (cyc == 240 + 400 * blk && blk < 2) begin
-            cmd(4'd5, 0, 0, 8'd3, {pre[4 * blk + 3], pre[4 * blk + 2], pre[4 * blk + 1], pre[4 * blk + 0]}); t_go = cyc;   // NORM
+            cmd(4'd5, 0, BEAT, 8'd3, {pre[4 * blk + 3], pre[4 * blk + 2], pre[4 * blk + 1], pre[4 * blk + 0]}); t_go = cyc;   // NORM
         end
         if (p_v) begin
             np_ = np_ + 1; t_p = cyc; lat_p[blk] = cyc - t_go;
