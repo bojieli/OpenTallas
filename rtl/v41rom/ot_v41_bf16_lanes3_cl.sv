@@ -103,8 +103,15 @@ module ot_v41_bf16_lanes3_cl #(
     wire [16*(TRW+1)-1:0] ct16;
     ot_v41_bf_lane16_cl #(.NCHB(NCHB),.TRW(TRW),.CUT(CUT),.GRADUAL_RNE(GRADUAL_RNE),.RC(RC),
         .BOUNDARY_STAGE(PARENT_XST>0)) u_lanes
-        (.leaf_clk(leaf_clk[3:0]),.rst_pin(rst_pin),.ze_d(ze_d),.v_s(v_s),.w_s(w_s),.x_s(x_s),.t_p(t_p),
-         .cv(cv16),.cf(cf16),.cfault(fault16),.cs_p(cs16),.ct_p(ct16));
+        (
+         .fclk0(leaf_clk[0]),.rst_pin0(rst_pin),.ze_d0(ze_d),.v_s0(v_s),.w_s0(w_s[0 +: 64]),.x_s0(x_s[0 +: 64]),.t_p0(t_p),
+         .cv0(cv16[0 +: 4]),.cf0(cf16[0 +: 4]),.cfault0(fault16[0 +: 4]),.cs_p0(cs16[0 +: 128]),.ct_p0(ct16[0*(TRW+1) +: 4*(TRW+1)]),
+         .fclk1(leaf_clk[1]),.rst_pin1(rst_pin),.ze_d1(ze_d),.v_s1(v_s),.w_s1(w_s[64 +: 64]),.x_s1(x_s[64 +: 64]),.t_p1(t_p),
+         .cv1(cv16[4 +: 4]),.cf1(cf16[4 +: 4]),.cfault1(fault16[4 +: 4]),.cs_p1(cs16[128 +: 128]),.ct_p1(ct16[4*(TRW+1) +: 4*(TRW+1)]),
+         .fclk2(leaf_clk[2]),.rst_pin2(rst_pin),.ze_d2(ze_d),.v_s2(v_s),.w_s2(w_s[128 +: 64]),.x_s2(x_s[128 +: 64]),.t_p2(t_p),
+         .cv2(cv16[8 +: 4]),.cf2(cf16[8 +: 4]),.cfault2(fault16[8 +: 4]),.cs_p2(cs16[256 +: 128]),.ct_p2(ct16[8*(TRW+1) +: 4*(TRW+1)]),
+         .fclk3(leaf_clk[3]),.rst_pin3(rst_pin),.ze_d3(ze_d),.v_s3(v_s),.w_s3(w_s[192 +: 64]),.x_s3(x_s[192 +: 64]),.t_p3(t_p),
+         .cv3(cv16[12 +: 4]),.cf3(cf16[12 +: 4]),.cfault3(fault16[12 +: 4]),.cs_p3(cs16[384 +: 128]),.ct_p3(ct16[12*(TRW+1) +: 4*(TRW+1)]));
     for (genvar j=0;j<16;j++) begin : g_out
         assign cv[j]=cv16[j];assign cf[j]=cf16[j];assign cfault[j]=fault16[j];
         assign cs[j]=cs16[32*j +: 32];assign ct[j]=ct16[(TRW+1)*j +: TRW+1];

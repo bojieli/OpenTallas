@@ -73,13 +73,11 @@ def lane4():
 def lane16():
     W, H = 164.16, 194.4
     used = set()
-    w = ['rst_pin', 'ze_d', 'v_s'] + bits('t_p', 13)
-    e = []
-    for g in range(4):
-        w += [f'leaf_clk[{g}]'] + [f'w_s[{i}]' for i in range(64 * g, 64 * g + 64)] + [f'x_s[{i}]' for i in range(64 * g, 64 * g + 64)]
-        e += ([f'cv[{i}]' for i in range(4 * g, 4 * g + 4)] + [f'cf[{i}]' for i in range(4 * g, 4 * g + 4)] +
-              [f'cfault[{i}]' for i in range(4 * g, 4 * g + 4)] + [f'cs_p[{i}]' for i in range(128 * g, 128 * g + 128)] +
-              [f'ct_p[{i}]' for i in range(32 * g, 32 * g + 32)])
+    w, e = [], []
+    for g in range(4):  # group g owns the g-th quarter of both faces (its root captures / launches only these pins)
+        w += [f'rst_pin{g}', f'ze_d{g}', f'v_s{g}'] + bits(f't_p{g}', 13) + bits(f'w_s{g}', 32) + [f'fclk{g}'] + \
+             [f'w_s{g}[{i}]' for i in range(32, 64)] + bits(f'x_s{g}', 64)
+        e += bits(f'cv{g}', 4) + bits(f'cf{g}', 4) + bits(f'cfault{g}', 4) + bits(f'cs_p{g}', 128) + bits(f'ct_p{g}', 32)
     a, dw = face(w, 'W', 1.0, H - 1.0, W, H, used)
     b, de = face(e, 'E', 1.0, H - 1.0, W, H, used)
     return a + b, {'W': (len(w), round(dw, 2)), 'E': (len(e), round(de, 2))}

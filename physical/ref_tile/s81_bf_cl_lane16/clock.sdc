@@ -7,10 +7,10 @@ create_clock -name core_clk -period 770.000000000
 create_clock -name ot_io_lane1 -period 770.000000000
 create_clock -name ot_io_lane2 -period 770.000000000
 create_clock -name ot_io_lane3 -period 770.000000000
-create_clock -name ot_entry_0 -period 770.000000000 [get_ports {leaf_clk[0]}]
-create_clock -name ot_entry_1 -period 770.000000000 [get_ports {leaf_clk[1]}]
-create_clock -name ot_entry_2 -period 770.000000000 [get_ports {leaf_clk[2]}]
-create_clock -name ot_entry_3 -period 770.000000000 [get_ports {leaf_clk[3]}]
+create_clock -name ot_entry_0 -period 770.000000000 [get_ports {fclk0}]
+create_clock -name ot_entry_1 -period 770.000000000 [get_ports {fclk1}]
+create_clock -name ot_entry_2 -period 770.000000000 [get_ports {fclk2}]
+create_clock -name ot_entry_3 -period 770.000000000 [get_ports {fclk3}]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set_input_delay 166.667 -clock core_clk [all_inputs -no_clocks]
@@ -25,11 +25,11 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{v_s} {w_s} {x_s} {t_p} {ze_d} {rst_pin}} outputs {{cv} {cf} {cfault} {cs_p} {ct_p}}} {lane1} {clock ot_io_lane1 io_budget_ps 166.667 inputs {} outputs {}} {lane2} {clock ot_io_lane2 io_budget_ps 166.667 inputs {} outputs {}} {lane3} {clock ot_io_lane3 io_budget_ps 166.667 inputs {} outputs {}}]
-set ::ot_ce_source_domains [dict create {leaf_clk[0]} {core} {leaf_clk[1]} {lane1} {leaf_clk[2]} {lane2} {leaf_clk[3]} {lane3}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_pin0} {ze_d0} {v_s0} {w_s0} {x_s0} {t_p0}} outputs {{cv0} {cf0} {cfault0} {cs_p0} {ct_p0}}} {lane1} {clock ot_io_lane1 io_budget_ps 166.667 inputs {{rst_pin1} {ze_d1} {v_s1} {w_s1} {x_s1} {t_p1}} outputs {{cv1} {cf1} {cfault1} {cs_p1} {ct_p1}}} {lane2} {clock ot_io_lane2 io_budget_ps 166.667 inputs {{rst_pin2} {ze_d2} {v_s2} {w_s2} {x_s2} {t_p2}} outputs {{cv2} {cf2} {cfault2} {cs_p2} {ct_p2}}} {lane3} {clock ot_io_lane3 io_budget_ps 166.667 inputs {{rst_pin3} {ze_d3} {v_s3} {w_s3} {x_s3} {t_p3}} outputs {{cv3} {cf3} {cfault3} {cs_p3} {ct_p3}}}]
+set ::ot_ce_source_domains [dict create {fclk0} {core} {fclk1} {lane1} {fclk2} {lane2} {fclk3} {lane3}]
 set ::ot_ce_explicit_domains 1
-set ::ot_ce_cts_roots {{leaf_clk[0]} {leaf_clk[1]} {leaf_clk[2]} {leaf_clk[3]}}
-set ::ot_ce_ports {{leaf_clk[0]} {leaf_clk[1]} {leaf_clk[2]} {leaf_clk[3]}}
+set ::ot_ce_cts_roots {{fclk0} {fclk1} {fclk2} {fclk3}}
+set ::ot_ce_ports {{fclk0} {fclk1} {fclk2} {fclk3}}
 
 # Constants are proved from actual OpenDB connectivity and the loaded Liberty
 # output functions. Cell/port names, case analysis and timing-graph constant
