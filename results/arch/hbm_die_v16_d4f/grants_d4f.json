@@ -3,7 +3,7 @@
  "die": "hbm_v15",
  "version": 9,
  "owner": "H-DIE",
- "updated": "2026-10-16T19:41:08-07:00",
+ "updated": "2026-10-16T20:09:55.104163-07:00",
  "clock_period_ps": 833.333,
  "floorplan": {
   "file": "results/arch/hbm_die_v15/d4f_a2p_fullcore/compact.P.json",
@@ -108122,7 +108122,7 @@
    "source_prerequisite": "53ece5c68",
    "kind": "tile",
    "parent": "die",
-   "version": 7,
+   "version": 8,
    "grant": "universal_calendar_candidate_2330",
    "origin": {
     "x": 16537.92,
@@ -108130,7 +108130,7 @@
     "orient": "R0"
    },
    "outline": {
-    "w": 220.32,
+    "w": 241.92,
     "h": 116.64
    },
    "pg_layer": "M5",
@@ -108458,7 +108458,15 @@
    "planning_group": "vmh_SW",
    "qualified": false,
    "notes": "Source universal W187; compact candidate slot only (174.744x70.488 SRAM, at least20um edge channels, target51.9% total fill). Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers.",
-   "home_rule": "H-DIE-V790 10-16: against vmh_SW W face across a 21.6-um channel, clear of plan blocks, hub face pin windows and RF footprints; E (hub) face toward the hub"
+   "home_rule": "H-DIE-V790 10-16: against vmh_SW W face across a 21.6-um channel, clear of plan blocks, hub face pin windows and RF footprints; E (hub) face toward the hub",
+   "calendar_geometry_2009": {
+    "actual_lef": "physical/ref_tile/hv16_vm_cal_f20_ww/views/hfd_hgi_vm_calendar_f20/hfd_hgi_vm_calendar_f20.lef",
+    "sha256": "e7d59e1cc4ab0eaec95fc211ea78f2a05c532641973911633c6a25cc21997964",
+    "previous_w_um": 220.32,
+    "reason": "actual routed candidate width241.92 exceeds historical220.32; keep actual physical outline, no view renaming",
+    "native": "OPEN; source/dependency/params/clock ABI proof required",
+    "pin_geometry": "actual candidate LEF authoritative for candidate; existing top-down pin table is not newly qualified"
+   }
   },
   {
    "name": "calendar_SE",
@@ -108468,7 +108476,7 @@
    "source_prerequisite": "53ece5c68",
    "kind": "tile",
    "parent": "die",
-   "version": 7,
+   "version": 8,
    "grant": "universal_calendar_candidate_2330",
    "origin": {
     "x": 16537.92,
@@ -108476,7 +108484,7 @@
     "orient": "MY"
    },
    "outline": {
-    "w": 220.32,
+    "w": 241.92,
     "h": 116.64
    },
    "pg_layer": "M5",
@@ -108804,7 +108812,15 @@
    "planning_group": "vmh_SE",
    "qualified": false,
    "notes": "Source universal W187; compact candidate slot only (174.744x70.488 SRAM, at least20um edge channels, target51.9% total fill). Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers.",
-   "home_rule": "H-DIE-V790 10-16: against vmh_SE W face across a 21.6-um channel, clear of plan blocks, hub face pin windows and RF footprints; E (hub) face toward the hub"
+   "home_rule": "H-DIE-V790 10-16: against vmh_SE W face across a 21.6-um channel, clear of plan blocks, hub face pin windows and RF footprints; E (hub) face toward the hub",
+   "calendar_geometry_2009": {
+    "actual_lef": "physical/ref_tile/hv16_vm_cal_f20_ww/views/hfd_hgi_vm_calendar_f20/hfd_hgi_vm_calendar_f20.lef",
+    "sha256": "e7d59e1cc4ab0eaec95fc211ea78f2a05c532641973911633c6a25cc21997964",
+    "previous_w_um": 220.32,
+    "reason": "actual routed candidate width241.92 exceeds historical220.32; keep actual physical outline, no view renaming",
+    "native": "OPEN; source/dependency/params/clock ABI proof required",
+    "pin_geometry": "actual candidate LEF authoritative for candidate; existing top-down pin table is not newly qualified"
+   }
   },
   {
    "name": "calendar_NW",
@@ -108814,7 +108830,7 @@
    "source_prerequisite": "53ece5c68",
    "kind": "tile",
    "parent": "die",
-   "version": 7,
+   "version": 8,
    "grant": "universal_calendar_candidate_2330",
    "origin": {
     "x": 16537.92,
@@ -108822,7 +108838,7 @@
     "orient": "MX"
    },
    "outline": {
-    "w": 220.32,
+    "w": 241.92,
     "h": 116.64
    },
    "pg_layer": "M5",
@@ -109150,7 +109166,15 @@
    "planning_group": "vmh_NW",
    "qualified": false,
    "notes": "Source universal W187; compact candidate slot only (174.744x70.488 SRAM, at least20um edge channels, target51.9% total fill). Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers.",
-   "home_rule": "H-DIE-V790 10-16: against vmh_NW W face across a 21.6-um channel, clear of plan blocks, hub face pin windows and RF footprints; E (hub) face toward the hub"
+   "home_rule": "H-DIE-V790 10-16: against vmh_NW W face across a 21.6-um channel, clear of plan blocks, hub face pin windows and RF footprints; E (hub) face toward the hub",
+   "calendar_geometry_2009": {
+    "actual_lef": "physical/ref_tile/hv16_vm_cal_f20_ww/views/hfd_hgi_vm_calendar_f20/hfd_hgi_vm_calendar_f20.lef",
+    "sha256": "e7d59e1cc4ab0eaec95fc211ea78f2a05c532641973911633c6a25cc21997964",
+    "previous_w_um": 220.32,
+    "reason": "actual routed candidate width241.92 exceeds historical220.32; keep actual physical outline, no view renaming",
+    "native": "OPEN; source/dependency/params/clock ABI proof required",
+    "pin_geometry": "actual candidate LEF authoritative for candidate; existing top-down pin table is not newly qualified"
+   }
   },
   {
    "name": "calendar_NE",
@@ -109160,7 +109184,7 @@
    "source_prerequisite": "53ece5c68",
    "kind": "tile",
    "parent": "die",
-   "version": 7,
+   "version": 8,
    "grant": "universal_calendar_candidate_2330",
    "origin": {
     "x": 16537.92,
@@ -109168,7 +109192,7 @@
     "orient": "R180"
    },
    "outline": {
-    "w": 220.32,
+    "w": 241.92,
     "h": 116.64
    },
    "pg_layer": "M5",
@@ -109496,7 +109520,15 @@
    "planning_group": "vmh_NE",
    "qualified": false,
    "notes": "Source universal W187; compact candidate slot only (174.744x70.488 SRAM, at least20um edge channels, target51.9% total fill). Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers.",
-   "home_rule": "H-DIE-V790 10-16: against vmh_NE W face across a 21.6-um channel, clear of plan blocks, hub face pin windows and RF footprints; E (hub) face toward the hub"
+   "home_rule": "H-DIE-V790 10-16: against vmh_NE W face across a 21.6-um channel, clear of plan blocks, hub face pin windows and RF footprints; E (hub) face toward the hub",
+   "calendar_geometry_2009": {
+    "actual_lef": "physical/ref_tile/hv16_vm_cal_f20_ww/views/hfd_hgi_vm_calendar_f20/hfd_hgi_vm_calendar_f20.lef",
+    "sha256": "e7d59e1cc4ab0eaec95fc211ea78f2a05c532641973911633c6a25cc21997964",
+    "previous_w_um": 220.32,
+    "reason": "actual routed candidate width241.92 exceeds historical220.32; keep actual physical outline, no view renaming",
+    "native": "OPEN; source/dependency/params/clock ABI proof required",
+    "pin_geometry": "actual candidate LEF authoritative for candidate; existing top-down pin table is not newly qualified"
+   }
   },
   {
    "name": "sfucore_SW",
