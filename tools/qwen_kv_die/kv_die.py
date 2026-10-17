@@ -75,8 +75,17 @@ RST_REGION_IGNORE = 255          # v1.4.3 qkd_rst_region IGNORE: a region's chai
 RELAY_FLUSH = 128               # kv_relays.RELAY_FLUSH: reset release >= this many core cycles after the clock runs
 PIN_REACH = 450.0               # qwen-1010/b: pin-to-pin register hop target (SS reach 504 um)
 REACH_TARGET = 470.0            # every register-to-register segment (nearest frame points) <= this (SS reach 504 um)
+# Q-KV 2026-10-16 (COORDINATOR STANDARD, owner 'close at a safe margin'): OT_KV_REACH=<um> sets every planned register hop
+# limit to that value (0.9 x measured relay self-reach: rlys_296 446 um -> 400).  PIN_REACH / REACH_TARGET / RELAY_TARGET /
+# HOP_REACH all clamp to it.  Default unset = the legacy 445/450/470 plan (diagnostic history only).
+KV_REACH = float(__import__('os').environ.get('OT_KV_REACH', '0') or 0)
+if KV_REACH > 0:
+    PIN_REACH = min(PIN_REACH, KV_REACH)
+    REACH_TARGET = min(REACH_TARGET, KV_REACH)
 FIRST_REACH = dict(wencoded=300.0)   # v1.3: first relay of the write-queue controller's group words (ctl_bin f<g>, late launch)
 RELAY_TARGET = 320.0            # placement pitch: keeps every segment (nearest frame points) under the 504 um SS reach
+if KV_REACH > 0:
+    RELAY_TARGET = min(RELAY_TARGET, 0.72 * KV_REACH)   # same pitch/reach ratio as 320/445
 GRID = 43.2                     # relay routing grid (um)
 CHAN = 129.6                    # routing / relay channel beside every column (um)
 STACKS = ('WS', 'WN', 'ES', 'EN')
@@ -1117,7 +1126,7 @@ _PIN_HINT = {}
 # ectl_a rq (R 414 ps, insertion spread 63 ps) -> rly_krq passes <= ~380 um, fails at 437-444 um (-63 ps).  (3) Relay
 # chains keep every hop <= HOP_REACH (the closed standards' native self-reach: rlys_296 446 um, rlys_528 460 um).
 HOP = __import__('os').environ.get('OT_KV_HOP', '0') == '1'
-HOP_REACH = 445.0
+HOP_REACH = 445.0 if KV_REACH <= 0 else min(445.0, KV_REACH)
 HOP_FIRST = dict(krq=340.0, krs=340.0)
 _LEAF_PIN_CACHE = {}
 
