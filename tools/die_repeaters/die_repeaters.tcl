@@ -492,7 +492,8 @@ proc ot_die_rep_post_grt_resize {pins} {
     lassign [$drv getLocation] x y
     set x1 [expr {$x + [$m getWidth]}]; set y1 [expr {$y + [$m getHeight]}]
     set ok [expr {$x1 <= $cx1}]
-    for {set sx [expr {$x + $slw}]} {$ok && $sx < $x1} {incr sx $slw} { if {[dict exists $::ot_die_rep_occ "$sx,$y"]} { set ok 0 } }
+    set xo [expr {$x + [[$drv getMaster] getWidth]}]
+    for {set sx [expr {$x + $slw}]} {$ok && $sx < $x1} {incr sx $slw} { if {$sx >= $xo && [dict exists $::ot_die_rep_occ "$sx,$y"]} { set ok 0 } }
     for {set i [expr {$x / $cb}]} {$ok && $i <= $x1 / $cb} {incr i} {
       for {set j [expr {$y / $cb}]} {$ok && $j <= $y1 / $cb} {incr j} {
         if {![info exists ::ot_die_rep_ob($i,$j)]} { continue }
