@@ -531,3 +531,22 @@ p4f changes:
 | stations on / within 15 um of a block | 745 | 0 |
 | worst slice-to-frame x depth | 9 | 9 (sum 560 -> 384) |
 | MTP (dv_price) | 4,129.3 | 4,129.3 |
+
+### 0b-p4g: regional HBM controllers, cfg7 bfp rebind (10-17)
+`dv_plan.py --layout p4 --tier-w 276 --lanes 4 --frame-w 1436.832 --p4g` (`--p4g` implies `--p4f`; p4f is still reproduced byte-identical without it).
+
+Coordinator decisions 0cw+ (3) and (4):
+- **(3) dsfd_ctrl.** The 8500 x 250 strip (34:1) becomes 16 regional controllers `dsfd_ctrl_rg2`. Each controller is 531.25 x 250 um (2.1:1), and the 16 together keep the strip's 2.125 mm2. Each one serves 2 pseudo-channels: two `dsfd_ctrl_pc` tiles plus its own reset relay, PHY-reset register and {fault, live} register. The centre tile `dsfd_ctrl_ctr` is distributed among them. Each controller abuts the PHY north face over its own PCs, so the DFI (2 x 695 b) is an abutted face. Each controller's status rides in its own rd word (+2 b) and the service half ORs them, so there is no status chain.
+- **svc <-> controller links are now explicit.** Per controller, rq is 682 b (svc -> ctrl) and rd is 562 b (ctrl -> svc). They run as registered links in the 250-um channel between the controller row (top 1.45 mm) and the frames (1.70 mm), at a 15-um lane pitch. Farther controllers take higher lanes, so a drop never crosses a lane that continues.
+- **What p4f hid.** p4f drew svc -> PHY as a zero-length abutted face and left the strip unlinked. Carrying 16 PCs (~9.9 kb) 4.25 mm along the band, at the service-half end, exceeds the band's cross-section: cut 1.01 in 24 band windows. Everywhere else the worst is 0.30. This is the old basis arrangement (service halves at the PHY ends), now measured. The structural fix is either regional service slices next to their controllers (svc has no RTL yet: S81U-1) or more band height. The no-repeater GRT checks whether M6+ absorbs the band.
+- **(4) cfg7.** The BF pair sequencer binds `ot_s81_cfg7_seq_bfp` LAYOUT 1 / PINREG 1 (s81coll_cfg7_seq_bfp_pr-pr1-ef2866774, CLOSED, native PASS), paired with its f_prog consumer `dsfd_bf_front_static`. See `p4g/frame_bind.json`, which uses the bind7_bfprog frame family. Open item: bind7 shows `dsfd_bf_front_static.xb` INPUT_UNCONNECTED x519, which is a no-stubs item for the frame GEN.
+- **Price.** The pin-register edges are ledger row FIELD.CFG7_SEQ_PINREG (+4 lc->go_e per FIELD matrix job), which is kept. Scenario `cfg7_pinreg0_binding` gives MTP 4,134.3 against 4,129.3 bound (-0.12%). The HBM controller sensitivity `dv_hbm_rt_unhidden` (+21 stations once per attention pass, if the KV read were not issued ahead) gives MTP 4,126.7.
+
+| | p4f | p4g |
+|---|---|---|
+| worst cut | 0.403 | 1.010 (band only; rest 0.302) |
+| stations | 2,624 | 2,789 (+165 HBM rq/rd) |
+| relay bit-stages | 0.669 M | 0.772 M |
+| bit-mm | 0.312 M | 0.358 M (+0.046 M HBM) |
+| longest link | tvN_s_6S 6.85 mm, 16 st | same |
+| MTP / AR (dv_price) | 4,129.3 / 1,401.2 | 4,129.3 / 1,401.2 |

@@ -34,6 +34,11 @@ SLICE_W, SLICE_H = 1250.0, 3500.0   # 2.8:1, 4.375 mm2
 LAYOUT = 'p1'                     # p1/p2: 1.30-mm columns; p3 (cancelled 10-17): 0.95-mm columns
 ROW0_MX = False                   # p1b: row-0 frames placed MX so their cfifo x tap faces their slice
 P4F = False                       # p4f (10-17): row-2 frames MX (no x chain over a slice), 30-um street lanes, q/P.V off svc side faces
+P4G = False                       # p4g (10-17, coordinator 0cw+ (3)): the 8500 x 250 dsfd_ctrl strip (34:1) -> 16 regional
+                                  # 2-PC controllers on the PHY face + explicit registered svc <-> controller links
+CTRL_N, CTRL_H = 16, 250.0        # p4g: 16 x (531.25 x 250 um, 2.1:1), same 2.125 mm2 as the strip
+PC_RQ, PC_RD, PC_DFI = 341, 280, 695   # per pseudo-channel: rq {wdata 256, wstrb 32, tag 17, len 4, addr 30, we, v};
+                                  # rd {data 256, tag 17, beat 4, v} + rk + wd; PHY DFI 22,238 / 32 ~ 695 (dsfd_ctrl.sv)
 SVC_W = 4250.0
 LANES, LANE_DX = 1, 6.0           # p4c-lanes: 1,104-b links as LANES x 276-b lanes
 TIER_W = 0                        # p4c: per-column tier-exchange width (0 = p4b end-column ring)
@@ -230,7 +235,15 @@ def build():
     # 8 kb score / P interface is a face, not a die wire (attention = PHY-side unit, irregular operator)
     phy_x = DIE_W / 2 - 4250
     P.block('phy_hbm', 'ot_hbm3e_phy_v41x_aw30_e8p5', 'phy', 'south', phy_x, 20, 8500, 1177)
-    P.block('hbm_ctrl', 'dsfd_ctrl', 'ctrl', 'south', phy_x, 1210, 8500, 250)
+    if P4G:
+        # p4g: regional HBM controllers, 2 pseudo-channels each (the per-PC tiles dsfd_ctrl_pc x 2 + own reset relay,
+        # PHY-reset and {fault, live} registers; the old centre tile dsfd_ctrl_ctr is distributed), abutting the PHY
+        # north face over their own PCs (DFI = abutted face) -- a square-ish tile per region, not a 34:1 strip
+        cw = 8500.0 / CTRL_N
+        for k in range(CTRL_N):
+            P.block(f'ctrl_{k:02d}', 'dsfd_ctrl_rg2', 'ctrl', 'south', phy_x + k * cw, 1200, cw, CTRL_H)
+    else:
+        P.block('hbm_ctrl', 'dsfd_ctrl', 'ctrl', 'south', phy_x, 1210, 8500, 250)
     svh = 13430000.0 / 2 / SVC_W        # service half area kept (13.43 mm2 total), height follows the width
     P.block('svc_W', 'dsfd_svc_half', 'svc', 'south', phy_x - SVC_W - 10, 20, SVC_W, svh)
     P.block('svc_E', 'dsfd_svc_half', 'svc', 'south', phy_x + 8510, 20, SVC_W, svh)
@@ -437,7 +450,8 @@ def build():
         S = P.blocks[P.idx[svc]]
         fx = S['x'] + S['w'] if side == 'W' else S['x']
         src_of[f'hbm{side}'], dst_of[f'hbm{side}'] = svc, 'phy_hbm'
-        face(f'hbm{side}', (fx, 40), (fx, 1150), (8192 + 10912) // 2, 24, 'hbm', 'HBM read+request half (abutted face)')
+        if not P4G:   # p4f and earlier: svc -> PHY drawn as an abutted face (the ctrl strip in between was not linked)
+            face(f'hbm{side}', (fx, 40), (fx, 1150), (8192 + 10912) // 2, 24, 'hbm', 'HBM read+request half (abutted face)')
         src_of[f'sm{side}'], dst_of[f'sm{side}'] = svc, f'sm_{side}0'
         xs = S['x'] if side == 'W' else S['x'] + S['w']
         face(f'sm{side}', (xs, 60), (xs, 1000), 8192, 16, 'attn', 'scores / P (abutted face)')
@@ -461,6 +475,42 @@ def build():
             continue
         P.link(f'q_{side}', 'attn', XB, (sn, 'q', (qx, Sl['y'])), (svc, 'q', (sxq, top)), [(qx, Sl['y']), (qx, top + 100), (sxq, top + 100), (sxq, top)], 'q heads from the ring')
         P.link(f'pv_{side}', 'attn', XB, (svc, 'pv', (sxq + 70, top)), (sn, 'pv', (px, Sl['y'])), [(sxq + 70, top), (sxq + 70, top + 170), (px, top + 170), (px, Sl['y'])], 'P.V rows into the all-gather')
+    if P4G:
+        # p4g: PHY <-> regional controller = abutted face (2 PCs, 2 lanes of PC_DFI); svc half <-> controller = registered
+        # rq / rd links in the 250-um channel between the controller row (top 1.45 mm) and the frames (1.70 mm), one
+        # lane each at 15-um pitch, farther controllers on higher lanes (a drop never crosses a lane that continues);
+        # each controller's {fault, live} rides its own rd word (+2 b), the service half ORs them (no status chain)
+        cw = 8500.0 / CTRL_N
+        for k in range(CTRL_N):
+            cn = f'ctrl_{k:02d}'; C = P.blocks[P.idx[cn]]
+            for j in range(2):
+                x = C['x'] + cw * (j + 0.5) / 2
+                P.link(f'dfi_{k:02d}_{j}', 'dfi', PC_DFI, (cn, f'dfi{j}', (x, C['y'])), ('phy_hbm', f'dfi{k}_{j}', (x, 1197.0)),
+                       [(x, C['y']), (x, 1197.0)], 'PHY DFI of one pseudo-channel (abutted face)')
+            side = 'W' if k < CTRL_N // 2 else 'E'
+            m = k if side == 'W' else CTRL_N - 1 - k          # rank from the service half
+            S = P.blocks[P.idx[f'svc_{side}']]
+            sx = S['x'] + S['w'] if side == 'W' else S['x']
+            stop = S['y'] + S['h']
+            ctop = C['y'] + C['h']
+            for j, (cls_, bits, dx) in enumerate((('rq', 2 * PC_RQ, -30), ('rd', 2 * PC_RD + 2, 30))):
+                lane = 2 * m + j
+                y = ctop + 15 + 15 * lane
+                xk = C['x'] + cw / 2 + dx
+                if y <= stop - 10:
+                    pts = [(sx, y), (xk, y), (xk, ctop)]
+                else:          # above the service half's top: leave its N face (lanes stacked away from the PHY)
+                    up = lane - int((stop - 10 - ctop - 15) // 15)
+                    xs = sx - 15 * up if side == 'W' else sx + 15 * up
+                    pts = [(xs, stop), (xs, y), (xk, y), (xk, ctop)]
+                svc_e = (f'svc_{side}', f'{cls_}{k:02d}', pts[0])
+                ctl_e = (cn, cls_, pts[-1])
+                if cls_ == 'rq':
+                    P.link(f'hrq_{k:02d}', 'hbm', bits, svc_e, ctl_e, pts, 'HBM requests of 2 PCs (svc half -> regional controller)')
+                else:
+                    P.link(f'hrd_{k:02d}', 'hbm', bits, ctl_e, svc_e, pts[::-1], 'HBM reads + rk/wd + {fault, live} of 2 PCs (regional controller -> svc half)')
+        facts['ctrl'] = dict(n=CTRL_N, um=[round(cw, 2), CTRL_H], aspect=round(cw / CTRL_H, 2) if cw > CTRL_H else round(CTRL_H / cw, 2),
+                             mm2=round(CTRL_N * cw * CTRL_H / 1e6, 3), replaces='dsfd_ctrl 8500 x 250 strip (34:1)')
     # collective lanes: edge PHYs <-> end-slice outer face along the street (ring-stop feed-through to coll_edge)
     for side in 'WE':
         c = 0 if side == 'W' else NCOL - 1
@@ -551,7 +601,7 @@ def draw(P, facts, out, tag=None):
     import matplotlib.pyplot as plt
     from matplotlib.patches import Rectangle
     col = dict(frame='#d9d9d9', slice='#2b7bba', unit='#e6a23c', phy='#8c564b', ctrl='#8c564b', svc='#c49c94', link='#7f7f7f', fill='#c7e9c0')
-    lc = dict(xring='#d62728', x_frame='#2ca02c', ret='#9467bd', ctl='#17becf', attn='#ff7f0e', hbm='#8c564b', coll='#e377c2')
+    lc = dict(xring='#d62728', x_frame='#2ca02c', ret='#9467bd', ctl='#17becf', attn='#ff7f0e', hbm='#8c564b', coll='#e377c2', dfi='#bcbd22')
     fig, ax = plt.subplots(figsize=(16.5, 13))
     for b in P.blocks:
         ax.add_patch(Rectangle((b['x'] / 1000, b['y'] / 1000), b['w'] / 1000, b['h'] / 1000, fc=col.get(b['kind'], '#ccc'),
@@ -588,12 +638,15 @@ def main():
     ap.add_argument('--tier-w', type=int, default=0, help='p4c: per-column tier exchange width (bits per direction)')
     ap.add_argument('--lanes', type=int, default=1, help='p4c-lanes: split every 1,104-b link into N cycle-aligned lanes')
     ap.add_argument('--p4f', action='store_true', help='p4f: row-2 frames MX, 30-um street lanes, x lanes off the slices, q/P.V off svc faces')
+    ap.add_argument('--p4g', action='store_true', help='p4g: p4f + 16 regional 2-PC HBM controllers replacing the dsfd_ctrl strip')
     ap.add_argument('--frame-w', type=float, default=None, help='p4: frame width override (S-ELEM bf_col 604.8 -> 1,436.832)')
     a = ap.parse_args()
     HOP_UM = a.hop_um
     global ROW0_MX, TIER_W, LANES, P4F
     ROW0_MX = a.row0_mx
-    P4F = a.p4f
+    P4F = a.p4f or a.p4g
+    global P4G
+    P4G = a.p4g
     TIER_W = a.tier_w
     LANES = a.lanes
     global LAYOUT, SCOL_W, SLICE_W, SLICE_H, PITCH, DIE_W, SVC_W, FRAME_W, FRAME_PITCH, UNIT_W, UNIT_WE
