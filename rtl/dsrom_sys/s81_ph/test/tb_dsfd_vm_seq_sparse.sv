@@ -14,7 +14,7 @@ always @(posedge ck) if(rst) begin
  if(nv)begin bad=bad+1;$display("SPARSE FORWARDED");end
 end
 task step;begin @(negedge ck);cy=cy+1;cmd=0;cv=0;rv=0;cm=0;end endtask
-task issue(input[23:0]arg);begin cmd={1'b1,1'b0,10'd0,21'd0,21'd0,arg,7'(ncmd)};exp[cy+6]={1'b1,1'b0,7'(ncmd)};ncmd=ncmd+1;end endtask
+task issue(input[23:0]arg);begin cmd={1'b1,1'b0,10'd0,21'd0,21'd0,arg,7'(ncmd)};exp[cy+7]={1'b1,1'b0,7'(ncmd)};ncmd=ncmd+1;end endtask
 function[23:0] arm(input integer slot,input integer lo,input integer n);arm={3'(slot<4?5:7),2'(slot%4),10'(lo/16),2'(lo%4),7'(n-1)};endfunction
 function[23:0] check(input integer slot);check={3'(slot<4?5:7),2'(slot%4),19'h7ffff};endfunction
 task commit(input integer r);integer b,g,p;reg[8:0]a;begin

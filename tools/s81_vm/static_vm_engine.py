@@ -2,7 +2,7 @@
 All cycles are sampled engine pin edges; every command retires at pin+6.
 Only declared commit observations establish operand completion; no runtime issue gating.
 """
-DLAT = 6
+DLAT = 7   # r2 seq tile: +1 pin stage on commit/read observations (native seq_tile TT -69.45)
 NSLOT = 8
 ROWS = 16384
 CHECK_FIELD = 0x3FF
