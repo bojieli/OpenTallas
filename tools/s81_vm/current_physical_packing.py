@@ -6,7 +6,7 @@ The result is a development rectangle candidate, never a complete VM die macro.
 import argparse,collections,gzip,hashlib,json,math,pathlib,re
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--inventory',type=pathlib.Path,required=True);ap.add_argument('--local',type=pathlib.Path,required=True);ap.add_argument('--out',type=pathlib.Path,required=True);a=ap.parse_args();inv=json.loads(a.inventory.read_text());old=json.loads(a.local.read_text())['options'][0];oldnodes={n['name']:n for n in old['nodes']};leaves=inv['leaves'];gap=21.6;positions={};binding=[]
+ ap=argparse.ArgumentParser();ap.add_argument('--coherent-groups',type=pathlib.Path);ap.add_argument('--inventory',type=pathlib.Path,required=True);ap.add_argument('--local',type=pathlib.Path,required=True);ap.add_argument('--out',type=pathlib.Path,required=True);a=ap.parse_args();inv=json.loads(a.inventory.read_text());old=json.loads(a.local.read_text())['options'][0];oldnodes={n['name']:n for n in old['nodes']};leaves=inv['leaves'];gap=21.6;positions={};binding=[]
  # Bind exact current hierarchy to predecessor bank-local, q8 write and payload rectangles.
  def oldname(x):
   p=x['path'];m=x['master'];z=re.search(r'u_mem.slice\[(\d+)\].u_slice\.(.*)',p)
@@ -38,9 +38,15 @@ def main():
  baseW,baseH=3952.8,4903.2
  # Group actual cap lane plus its two related-clock halves; retain direct S-to-N interface locality.
  remaining=set(range(len(leaves)))-set(positions);groups=[]
+ coherent=json.loads(a.coherent_groups.read_text())['groups']if a.coherent_groups else []
  for lane in range(16):
   ids=[i for i in remaining if leaves[i]['path'].startswith(f'dut.u_cap.lane[{lane}].')];assert len(ids)==3
+  if coherent:
+   g=next(g for g in coherent if g['name']=='cap_lane'+str(lane));groups.append((*g['outline_um'],{int(k):v for k,v in g['positions'].items()},g['name']));remaining-=set(ids);continue
   by={leaves[i]['master']:i for i in ids};cap=by['dsfd_vm_static_cap_leaf'];s=by['ot_s81_vm_x34_s'];t=by['ot_s81_vm_x34_t'];w=max(leaves[cap]['outline_um'][0],leaves[s]['outline_um'][0]+gap+leaves[t]['outline_um'][0]);h=leaves[cap]['outline_um'][1]+gap+max(leaves[s]['outline_um'][1],leaves[t]['outline_um'][1]);local={cap:[0,0],s:[0,leaves[cap]['outline_um'][1]+gap],t:[leaves[s]['outline_um'][0]+gap,leaves[cap]['outline_um'][1]+gap]};groups.append((w,h,local,'cap_lane'+str(lane)));remaining-=set(ids)
+ for g in coherent:
+  if g['kind']=='related_CDC_halves':
+   loc={int(k):v for k,v in g['positions'].items()};assert set(loc)<=remaining;groups.append((*g['outline_um'],loc,g['name']));remaining-=set(loc)
  # Keep the eight data stripes and corresponding valid leaf in one coherent local read group.
  for q in range(8):
   ids=[i for i in remaining if leaves[i]['master']==f'dsfd_vm_static_read_q{q}_p'];ids.sort(key=lambda i:int(leaves[i]['path'].split('.d')[-1]));v=next(i for i in remaining if leaves[i]['master']==f'dsfd_vm_static_read_v{q}_p');loc={};xx=0;hh=0
@@ -67,7 +73,7 @@ def main():
     X,Y=allpos[j];ww,hh=leaves[j]['outline_um']
     if x<X+ww-1e-6 and x+w>X+1e-6 and y<Y+hh-1e-6 and y+h>Y+1e-6:collisions.append([i,j])
   assert not collisions,collisions[:5]
-  options.append(dict(name=f'body2x2_plus_service_{sideW:g}',outline_um=[W,H],side_service_um=[sideW,height-gap],positions={str(k):v for k,v in allpos.items()},collisions=collisions,body2x2_um=[baseW,baseH],placed_hard_leaves=len(allpos)))
+  options.append(dict(name=f'body2x2_{"coherent_"if coherent else""}plus_service_{sideW:g}',outline_um=[W,H],side_service_um=[sideW,height-gap],positions={str(k):v for k,v in allpos.items()},collisions=collisions,body2x2_um=[baseW,baseH],placed_hard_leaves=len(allpos)))
  for option in list(options):
   new=json.loads(json.dumps(option));new['name']=new['name'].replace('body2x2','body1x4v');new['outline_um']=[option['outline_um'][0]-1987.2,max(9828.0,option['outline_um'][1])];new['body1x4v_um']=[1965.6,9828.0];del new['body2x2_um']
   for key,xy in new['positions'].items():

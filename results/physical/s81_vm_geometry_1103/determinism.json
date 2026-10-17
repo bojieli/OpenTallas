@@ -1,0 +1,13 @@
+{
+ "source_commit": "c3fc1a4a2a9fe2722ba5f9e7bf938a8802c3c381",
+ "source_files_verified": 47,
+ "replayed_frontend": "Verilator5.050 --json-only",
+ "hard_boundaries": 640,
+ "source_static_alias_bits": 29203,
+ "exact_decompressed_pin_join_sha256": "9fb3bbda23b5c7812ef5ca382dc52fda12381a05cd7189f1ac1e0a2111d19c6b",
+ "fresh_flat_source_replay_pin_join_identical": true,
+ "focused_alias_tests": 3,
+ "actual_53slot_payload_bit_checks": 27136,
+ "reviewed_pin_choices": "capture W for banks0..3/E for4..7; actual source-bound E/W south-drain storage pin candidates",
+ "master_pin_map_decompressed_sha256": "1b032639142cf69bafc740ae799408c6f89bca340bde7b82824a6bfc756e3854"
+}

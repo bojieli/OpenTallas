@@ -4,6 +4,7 @@ Input is Verilator5.050 --json-only, explicit READ_PIPE4/CAP_PIPE2 native candid
 No behavioral logic is reclassified as wiring. Missing physical homes stay explicit.
 """
 import argparse,collections,gzip,hashlib,json,pathlib,re,subprocess
+from static_alias_block import evaluate as evaluate_alias_block
 ROOT=pathlib.Path(__file__).resolve().parents[2]
 def sha(b):return hashlib.sha256(b).hexdigest()
 def walk(n):
@@ -27,7 +28,11 @@ def cells(n,path=''):
  elif isinstance(n,list):
   for x in n:yield from cells(x,path)
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--ast',type=pathlib.Path,required=True);ap.add_argument('--out',type=pathlib.Path,required=True);a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=True)
+ ap=argparse.ArgumentParser();ap.add_argument('--ast',type=pathlib.Path,required=True);ap.add_argument('--manifest',type=pathlib.Path,default=ROOT/'results/physical/s81_vm_geometry_1103/source_manifest.json');ap.add_argument('--out',type=pathlib.Path,required=True);a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=True)
+ manifest=json.loads(a.manifest.read_text());source_commit=manifest['commit']
+ for consumed in manifest['files']:
+  pp=ROOT/consumed['path'];data=pp.read_bytes()if pp.exists()else subprocess.check_output(['git','show',source_commit+':'+consumed['path']],cwd=ROOT)
+  assert sha(data)==consumed['sha256'],('AST source manifest mismatch',consumed['path'])
  tree=json.loads(a.ast.read_text());index={n['addr']:n for n in walk(tree) if 'addr'in n};mods={n['addr']:n for n in tree['modulesp']};specs={}
  for p in (ROOT/'physical/ref_tile').glob('*/spec.json'):
   s=json.loads(p.read_text());specs[p.parent.name]=(s,p)
@@ -39,6 +44,13 @@ def main():
  def kit(m,path):
   t=m['origName'];p=params(m)
   fixed={'dsfd_vm_static_bank128':'dsfd_vm_static_bank128_m4_v20','dsfd_vm_static_relay128_b4':'dsfd_vm_static_relay128_b4_native_cb','dsfd_vm_static_relay128_b8':'dsfd_vm_static_relay128_b8_native_cb','dsfd_vm_static_write_capture128':'dsfd_vm_direct_capture_'+('e' if p.get('SIDE',0)==0 else 'w')+'_native','dsfd_vm_static_cap_ctl':'dsfd_vm_static_cap_ctl_1015_r2','dsfd_vm_static_cap_leaf':'dsfd_vm_static_cap_leaf_1015_r7','dsfd_vm_static_rsched_p':'dsfd_vm_static_rsched_p_native_1015_l16','dsfd_vm_seq_tile':'dsfd_vm_seq_tile_native_1015_r1','dsfd_vm_static_landing':'dsfd_vm_static_landing_native_1015_r3'}
+  if t=='dsfd_vm_static_write_capture128':
+   b=int(re.search(r'capture\[(\d+)\]',path)[1]);return 'dsfd_vm_direct_capture_'+('w'if b<4 else'e')+'_native'
+  if t=='dsfd_vm_static_wstage128':
+   b=int(re.search(r'bank\[(\d+)\]',path)[1]);return 'CANDIDATE:'+t+('_east_south'if b%8<4 else'_west_south')
+  if t=='dsfd_vm_static_rsched':return 'dsfd_vm_static_rsched_native_1015_r1'
+  if re.fullmatch('dsfd_vm_static_return_bank8_l[0-3]',t):return t+'_1015_r6'
+  if t=='dsfd_vm_static_cap_leaf'and p.get('PIPE',0)==0:return 'dsfd_vm_static_cap_leaf_1015'
   if t in fixed:return fixed[t]
   if t=='dsfd_vm_static_scatter_b8_out':return 'dsfd_vm_direct_scatter_b%d_native_cb4'%p['BANK_BASE']
   if re.fullmatch('dsfd_vm_static_fsr_b[0-3]',t):return t+'_native_1015_r1'
@@ -46,7 +58,9 @@ def main():
   if re.fullmatch('dsfd_vm_static_read_q[0-7]_p',t):return t+'_native_1015_'+('p2' if '_q0_'in t else 'p1')
   if re.fullmatch('dsfd_vm_static_read_v[0-7]_p',t):return t+'_native_1015_p2'
   if t in ('ot_s81_vm_x34_s','ot_s81_vm_x34_t','ot_s81_vm_x43_s','ot_s81_vm_x43_t'):
-   w=p['W'];return t+'_w%d_1015_'%w+('r4' if t.endswith('_s') else 'r6') if w==542 else t+'_w%d_1015_f4'%w
+   w=p['W']
+   if w==542 and p.get('NAT',0)==0:return t+'_w542_1015_r1'
+   return t+'_w%d_1015_'%w+('r4' if t.endswith('_s') else 'r6') if w==542 else t+'_w%d_1015_f4'%w
   if t in ('dsfd_vm_static_w0_header','dsfd_vm_static_w0_payload','dsfd_vm_static_wdispatch128','dsfd_vm_static_wstage128','dsfd_vm_static_wcontrol'):return 'CANDIDATE:'+t
   return None
  uf={};ranks={}
@@ -60,7 +74,7 @@ def main():
   if x!=y:
    if ranks.get(x,0)<ranks.get(y,0):x,y=y,x
    uf[y]=x;ranks[x]=max(ranks.get(x,0),ranks.get(y,0)+1)
- unknown=collections.Counter();pending=[];leaves=[];sources={};parent_logic=[];qualification_cache={}
+ alias_blocks=[];unknown=collections.Counter();pending=[];leaves=[];sources={};parent_logic=[];qualification_cache={}
  def expr(n,path):
   t=n['type']
   if t=='VARREF':return [(path,n['varp'],i) for i in range(width(n))]
@@ -85,7 +99,7 @@ def main():
    if k in specs:
     s,p=specs[k];rec.update(outline_um=[s['outline']['w'],s['outline']['h']],geometry_source=str(p.relative_to(ROOT)),geometry_sha256=sha(p.read_bytes()),native_view_present=bool(list((p.parent/'views').glob('*/*.lef'))))
    elif k.startswith('CANDIDATE:'):
-    t=m['origName'];pn='dsfd_vm_static_wstage128_east' if t=='dsfd_vm_static_wstage128' else t;p=ROOT/'physical/s81_vm_write_edge_1015'/(pn+'.json')
+    t=m['origName'];pn=k.split(':')[1].removesuffix('_south')if t=='dsfd_vm_static_wstage128'else t;p=ROOT/'physical/s81_vm_write_edge_1015'/(pn+'.json')
     if p.exists():
      s=json.loads(p.read_text());rec.update(outline_um=s['outline_um'],geometry_source=str(p.relative_to(ROOT)),geometry_sha256=sha(p.read_bytes()),geometry_status='SOURCE_PIN_CANDIDATE_NO_CURRENT_NATIVE_KIT')
    if k in specs:
@@ -97,6 +111,7 @@ def main():
      abstracts=sorted((sp.parent/'views').glob('*/abstract.json'));abstract=json.loads(abstracts[0].read_text())if abstracts else{};run=abstract.get('orfs_dir','');hit=re.search(r'-([a-f0-9]{9,40})/routes/',run)
      qualification_cache[k]=dict(kit_params=spec.get('params',{}),gate_start_commit=binding.get('start_commit'),view_route_source_commit=hit[1]if hit else None,source_comparisons=comparisons,qualification='GEOMETRY_ONLY_CURRENT_ROUTE_NETLIST_IDENTITY_UNVERIFIED')
     rec['route_source_binding']=qualification_cache[k];rec['explicit_kit_param_mismatches']={p:dict(elaborated=rec['parameters'].get(p),kit=v)for p,v in spec.get('params',{}).items()if rec['parameters'].get(p)!=v}
+   if k=='dsfd_vm_direct_capture_w_native':rec['physical_master_override']='dsfd_vm_static_write_capture128_W (same functional port/clock interface; die binding not adopted)'
    if 'outline_um'not in rec:rec['geometry_status']='MISSING_ACTUAL_OUTLINE' 
    leaves.append(rec)
    for v in vars:
@@ -108,12 +123,18 @@ def main():
    parent_logic.append(dict(path=path,master=m['origName'],statements=dict(logic),posedge_roots=posedges,physical_home=None))
   for n in local(m['stmtsp']):
    if n['type']=='ASSIGNW':connect(expr(n['lhsp'][0],path),expr(n['rhsp'][0],path))
+  for n in local(m['stmtsp']):
+   if n['type']=='ALWAYS'and not n.get('sentreep')and any(x.get('name')=='p_src'for x in walk(n)):
+    aliases=evaluate_alias_block(n,path,index,width,const)
+    for dest,source in aliases.items():union(dest,source)
+    alias_blocks.append(dict(path=path,block='p_src',final_assigned_bits=len(aliases),method='Static integer-loop execution with ordered blocking overrides; no runtime control accepted'))
   for name,c in cells(m['stmtsp']):
    recurse(mods[c['modp']],path+'.'+name,{pin['name']:expr(pin['exprp'][0],path)for pin in c['pinsp']if pin.get('exprp')})
  top=tree['modulesp'][0];recurse(top,'dut')
  for v in top['stmtsp']:
   if v['type']=='VAR'and v.get('direction')in ('INPUT','OUTPUT'):
    for i in range(width(v)):pending.append((('dut',v['addr'],i),(-1,v['name'],i,'OUTPUT'if v['direction']=='INPUT'else'INPUT')))
+ assert root(('CONST','0',0))!=root(('CONST','1',0)),'Constant alias conflict'
  groups=collections.defaultdict(list)
  for net,ep in pending:groups[root(net)].append(ep)
  counts=collections.Counter();edge_groups=[]
@@ -140,11 +161,15 @@ def main():
      for nm,x,y in re.findall(r'place_pin -pin_name \{([^}]+)\} -layer \S+ -location \{([\d.eE+-]+) ([\d.eE+-]+)\}',txt):pins[nm]=[float(x),float(y)]
    elif 'geometry_source'in leaf:
     pp=ROOT/leaf['geometry_source'];d=json.loads(pp.read_text());src=leaf['geometry_source'];status='SOURCE_PIN_CANDIDATE_NOT_ROUTED';pins={p['name']:p['xy_um']for p in d['pins']}
-   master_pins[k]=dict(source=src,status=status,pins=pins)
+    if k.startswith('CANDIDATE:dsfd_vm_static_wstage128_'):
+     src='results/arch/s81_vm_direct_q8_1015/'+k.split(':')[1]+'.tcl';txt=subprocess.check_output(['git','show','HEAD:'+src],cwd=ROOT,text=True);status='SOURCE_BOUND_Q8_SOUTH_DRAIN_PIN_CANDIDATE_NOT_ROUTED';pins={nm:[float(x),float(y)]for nm,x,y in re.findall(r'place_pin -pin_name \{([^}]+)\} -layer \S+ -location \{([\d.eE+-]+) ([\d.eE+-]+)\}',txt)}
+   pin_bytes=(ROOT/src).read_bytes()if src and(ROOT/src).exists()else subprocess.check_output(['git','show',source_commit+':'+src],cwd=ROOT)if src else b''
+   master_pins[k]=dict(source=src,source_commit=source_commit,source_sha256=sha(pin_bytes),status=status,pins=pins)
   expected=[p if info['bits']==1 else f'{p}[{i}]'for p,info in leaf['ports'].items()for i in range(info['bits'])]
   leaf['physical_pin_missing']=[p for p in expected if p not in master_pins[k]['pins']]
  with gzip.open(a.out/'master_pins.json.gz','wt')as f:json.dump(master_pins,f,separators=(',',':'))
+ configuration=params(tree['modulesp'][0]);config_scope='GENERATOR_DEFAULT_READ_PIPE0_CAP_PIPE0'if configuration['READ_PIPE']==0 and configuration['CAP_PIPE']==0 else'NATIVE_CANDIDATE_READ_PIPE4_CAP_PIPE2_NOT_GENERATOR_ADOPTED'if configuration['READ_PIPE']==4 and configuration['CAP_PIPE']==2 else'EXPLICIT_PARAMETER_CANDIDATE_NOT_GENERATOR_ADOPTED'
  c=collections.Counter(x['master']for x in leaves)
- rec=dict(schema='opentallas.s81.vm-current-physical-inventory.v1',scope='NATIVE_CANDIDATE_READ_PIPE4_CAP_PIPE2_NOT_GENERATOR_ADOPTED',source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),elaboration=dict(read_pipe=4,cap_pipe=2,ast_sha256=sha(a.ast.read_bytes()),verilator='5.050 --json-only'),hard_leaf_count=len(leaves),families=dict(c),leaves=leaves,parent_logic_regions=parent_logic,missing_outlines=[x['path']for x in leaves if'outline_um'not in x],pin_join=dict(consumers_by_status=dict(counts),expression_gaps=dict(unknown),method='Exact bitwise VARREF/SEL/CONCAT/CONST/EXTEND aliases and hierarchy ports only. Behavioral parent logic stays unresolved; no invented producer or straight-wire assumption.'),not_claimed=['No existing complete placement','No native packing adoption','No parent TT/FF/DRC/phi-R or full traffic cut proof'])
+ rec=dict(schema='opentallas.s81.vm-current-physical-inventory.v1',scope=config_scope,configuration=configuration,source_commit=source_commit,analysis_revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),elaboration=dict(read_pipe=configuration['READ_PIPE'],cap_pipe=configuration['CAP_PIPE'],ast_sha256=sha(a.ast.read_bytes()),verilator='5.050 --json-only'),static_alias_blocks=alias_blocks,hard_leaf_count=len(leaves),families=dict(c),leaves=leaves,parent_logic_regions=parent_logic,missing_outlines=[x['path']for x in leaves if'outline_um'not in x],pin_join=dict(consumers_by_status=dict(counts),expression_gaps=dict(unknown),method='Exact bitwise aliases and hierarchy ports plus fail-closed static integer-loop wiring execution (core.p_src). Behavioral parent logic stays unresolved; no invented producer or straight-wire assumption.'),not_claimed=['No existing complete placement','No native packing adoption','No parent TT/FF/DRC/phi-R or full traffic cut proof'])
  (a.out/'inventory.json').write_text(json.dumps(rec,indent=1)+'\n');print(json.dumps({k:rec[k]for k in ['hard_leaf_count','families','missing_outlines','pin_join']},indent=1))
 if __name__=='__main__':main()

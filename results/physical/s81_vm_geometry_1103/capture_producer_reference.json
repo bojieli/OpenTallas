@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.s81.capture-native-vm-join-review.v1",
+ "configuration": {
+  "READ_PIPE": 4,
+  "CAP_PIPE": 2,
+  "WSCATTER_PIPE": 1
+ },
+ "source_checkpoint": "44fd96c34",
+ "wrapper": "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv",
+ "bit_map": "capture_producer_bits.json.gz",
+ "scope": "Actual RTL connection and local LEF pin join; parent placement and native qualification remain separate. Top-level capture-to-VM bus identity is the integration contract, not a claim of completed die routing.",
+ "total_bits": 13376,
+ "active_VM_inputs": 13315,
+ "unused_status_bits": 61,
+ "verification": [
+  "All actual source and consumer local pins present",
+  "Boundary bits 0,831,832,13311 and status 0,2,3,63 checked",
+  "Actual u_x1 offset mutation 832 to831 rejected before export"
+ ],
+ "proof_receipts": [
+  "results/rtl/s81_vm_master_current_scatter_20261015",
+  "results/rtl/s81_vm_raw_read_calendar_20261015",
+  "results/rtl/s81_vm_scatter_pipe1_raw_20261015"
+ ],
+ "published_commit": "a5724f52c",
+ "bit_map_git_blob": "f74e1454273bd1e4a2cea922682b4768df68a6bd",
+ "integration_limit": "Reference only: this producer map uses44fd96c34 READ4/CAP2/WSCATTER1; this geometry inventory pinsc3fc1a4a2 READ4/CAP2 with actualscatterPIPE0. Port/parameter/netlist binding must be rerun before combining snapshots. Producer local pin join does not supply global die homes."
+}

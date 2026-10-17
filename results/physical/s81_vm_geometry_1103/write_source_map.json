@@ -1,0 +1,432 @@
+{
+ "scope": "NATIVE_CANDIDATE_READ_PIPE4_CAP_PIPE2_NOT_GENERATOR_ADOPTED",
+ "source_commit": "c3fc1a4a2a9fe2722ba5f9e7bf938a8802c3c381",
+ "source_pack_static_assigned_bits": 29203,
+ "sources": [
+  {
+   "slot": 0,
+   "source": "SU0",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_su_wqd": 512
+   }
+  },
+  {
+   "slot": 1,
+   "source": "SU1",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_su_wqd": 512
+   }
+  },
+  {
+   "slot": 2,
+   "source": "SU2",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_su_wqd": 512
+   }
+  },
+  {
+   "slot": 3,
+   "source": "SU3",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_su_wqd": 512
+   }
+  },
+  {
+   "slot": 4,
+   "source": "SU4",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_su_wqd": 512
+   }
+  },
+  {
+   "slot": 5,
+   "source": "SU5",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_su_wqd": 512
+   }
+  },
+  {
+   "slot": 6,
+   "source": "SU6",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_su_wqd": 512
+   }
+  },
+  {
+   "slot": 7,
+   "source": "SU7",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_su_wqd": 512
+   }
+  },
+  {
+   "slot": 8,
+   "source": "SU8",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_su_wqd": 512
+   }
+  },
+  {
+   "slot": 9,
+   "source": "SU9",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_su_wqd": 512
+   }
+  },
+  {
+   "slot": 10,
+   "source": "SU10",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_su_wqd": 512
+   }
+  },
+  {
+   "slot": 11,
+   "source": "SU11",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_su_wqd": 512
+   }
+  },
+  {
+   "slot": 12,
+   "source": "SU12",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_su_wqd": 512
+   }
+  },
+  {
+   "slot": 13,
+   "source": "SU13",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_su_wqd": 512
+   }
+  },
+  {
+   "slot": 14,
+   "source": "SU14",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_su_wqd": 512
+   }
+  },
+  {
+   "slot": 15,
+   "source": "SU15",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_su_wqd": 512
+   }
+  },
+  {
+   "slot": 16,
+   "source": "HC0",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_hc_wqd": 512
+   }
+  },
+  {
+   "slot": 17,
+   "source": "HC1",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_hc_wqd": 512
+   }
+  },
+  {
+   "slot": 18,
+   "source": "HC2",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_hc_wqd": 512
+   }
+  },
+  {
+   "slot": 19,
+   "source": "HC3",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_hc_wqd": 512
+   }
+  },
+  {
+   "slot": 20,
+   "source": "HC4",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_hc_wqd": 512
+   }
+  },
+  {
+   "slot": 21,
+   "source": "HC5",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_hc_wqd": 512
+   }
+  },
+  {
+   "slot": 22,
+   "source": "HC6",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_hc_wqd": 512
+   }
+  },
+  {
+   "slot": 23,
+   "source": "HC7",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_hc_wqd": 512
+   }
+  },
+  {
+   "slot": 24,
+   "source": "LANDING0",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_core.u_land.o_d01": 512
+   }
+  },
+  {
+   "slot": 25,
+   "source": "LANDING1",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_core.u_land.o_d01": 512
+   }
+  },
+  {
+   "slot": 26,
+   "source": "LANDING2",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_core.u_land.o_d23": 512
+   }
+  },
+  {
+   "slot": 27,
+   "source": "LANDING3",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_core.u_land.o_d23": 512
+   }
+  },
+  {
+   "slot": 28,
+   "source": "MIX4_0",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_mx_wqd": 512
+   }
+  },
+  {
+   "slot": 29,
+   "source": "MIX4_1",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_mx_wqd": 512
+   }
+  },
+  {
+   "slot": 30,
+   "source": "MIX4_2",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_mx_wqd": 512
+   }
+  },
+  {
+   "slot": 31,
+   "source": "MIX4_3",
+   "payload_bits": 512,
+   "actual_producers": {
+    "TOP.f_mx_wqd": 512
+   }
+  },
+  {
+   "slot": 32,
+   "source": "CAPTURE0",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_cap.lane[0].u_x.u_t.o_d": 512
+   }
+  },
+  {
+   "slot": 33,
+   "source": "CAPTURE1",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_cap.lane[1].u_x.u_t.o_d": 512
+   }
+  },
+  {
+   "slot": 34,
+   "source": "CAPTURE2",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_cap.lane[2].u_x.u_t.o_d": 512
+   }
+  },
+  {
+   "slot": 35,
+   "source": "CAPTURE3",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_cap.lane[3].u_x.u_t.o_d": 512
+   }
+  },
+  {
+   "slot": 36,
+   "source": "CAPTURE4",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_cap.lane[4].u_x.u_t.o_d": 512
+   }
+  },
+  {
+   "slot": 37,
+   "source": "CAPTURE5",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_cap.lane[5].u_x.u_t.o_d": 512
+   }
+  },
+  {
+   "slot": 38,
+   "source": "CAPTURE6",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_cap.lane[6].u_x.u_t.o_d": 512
+   }
+  },
+  {
+   "slot": 39,
+   "source": "CAPTURE7",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_cap.lane[7].u_x.u_t.o_d": 512
+   }
+  },
+  {
+   "slot": 40,
+   "source": "CAPTURE8",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_cap.lane[8].u_x.u_t.o_d": 512
+   }
+  },
+  {
+   "slot": 41,
+   "source": "CAPTURE9",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_cap.lane[9].u_x.u_t.o_d": 512
+   }
+  },
+  {
+   "slot": 42,
+   "source": "CAPTURE10",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_cap.lane[10].u_x.u_t.o_d": 512
+   }
+  },
+  {
+   "slot": 43,
+   "source": "CAPTURE11",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_cap.lane[11].u_x.u_t.o_d": 512
+   }
+  },
+  {
+   "slot": 44,
+   "source": "COLLECTIVE0",
+   "payload_bits": 512,
+   "actual_producers": {
+    "PARENT_LOGIC_OR_UNRESOLVED": 512
+   }
+  },
+  {
+   "slot": 45,
+   "source": "COLLECTIVE1",
+   "payload_bits": 512,
+   "actual_producers": {
+    "PARENT_LOGIC_OR_UNRESOLVED": 512
+   }
+  },
+  {
+   "slot": 46,
+   "source": "COLLECTIVE2",
+   "payload_bits": 512,
+   "actual_producers": {
+    "PARENT_LOGIC_OR_UNRESOLVED": 512
+   }
+  },
+  {
+   "slot": 47,
+   "source": "COLLECTIVE3",
+   "payload_bits": 512,
+   "actual_producers": {
+    "PARENT_LOGIC_OR_UNRESOLVED": 512
+   }
+  },
+  {
+   "slot": 48,
+   "source": "CAPTURE12",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_cap.lane[12].u_x.u_t.o_d": 512
+   }
+  },
+  {
+   "slot": 49,
+   "source": "CAPTURE13",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_cap.lane[13].u_x.u_t.o_d": 512
+   }
+  },
+  {
+   "slot": 50,
+   "source": "CAPTURE14",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_cap.lane[14].u_x.u_t.o_d": 512
+   }
+  },
+  {
+   "slot": 51,
+   "source": "CAPTURE15",
+   "payload_bits": 512,
+   "actual_producers": {
+    "dut.u_cap.lane[15].u_x.u_t.o_d": 512
+   }
+  },
+  {
+   "slot": 52,
+   "source": "WFC",
+   "payload_bits": 512,
+   "actual_producers": {
+    "PARENT_LOGIC_OR_UNRESOLVED": 512
+   }
+  }
+ ],
+ "qualification": "Exact source wiring only; raw external die pin locations and inline collective/WFC combinational/control producers remain physical dependencies."
+}

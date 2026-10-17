@@ -4,7 +4,7 @@
   "clock_regions": [
    {
     "clock": "ck_control_t",
-    "declared_state_bits": 1757,
+    "declared_state_bits": 1725,
     "variables": [
      {
       "name": "dv0",
@@ -25,10 +25,6 @@
      {
       "name": "w_v",
       "declared_bits": 1
-     },
-     {
-      "name": "k",
-      "declared_bits": 32
      },
      {
       "name": "w_row",
@@ -93,7 +89,7 @@
   "clock_regions": [
    {
     "clock": "ck_control_t",
-    "declared_state_bits": 1522,
+    "declared_state_bits": 1374,
     "variables": [
      {
       "name": "dlG",
@@ -116,16 +112,8 @@
       "declared_bits": 40
      },
      {
-      "name": "u",
-      "declared_bits": 32
-     },
-     {
       "name": "u_n",
       "declared_bits": 15
-     },
-     {
-      "name": "k",
-      "declared_bits": 32
      },
      {
       "name": "gw",
@@ -170,10 +158,6 @@
      {
       "name": "f_s",
       "declared_bits": 2
-     },
-     {
-      "name": "n_d",
-      "declared_bits": 84
      },
      {
       "name": "dC",
@@ -236,6 +220,14 @@
     ]
    }
   ],
+  "physical_outline": null,
+  "mapped_cell_area_um2": null,
+  "area_status": "UNMAPPED_SOURCE_STATE_NO_HARDENED_FOOTPRINT_OR_PIN_HOMES",
+  "scope": "Declared storage bits in source variables assigned by edge-triggered nonblocking statements. Mapped replicas/clock/reset/hold repair and combinational logic absent; not a physical FF census."
+ },
+ {
+  "master": "dsfd_vm_static_core",
+  "clock_regions": [],
   "physical_outline": null,
   "mapped_cell_area_um2": null,
   "area_status": "UNMAPPED_SOURCE_STATE_NO_HARDENED_FOOTPRINT_OR_PIN_HOMES",

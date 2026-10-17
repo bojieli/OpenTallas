@@ -1,0 +1,3305 @@
+{
+ "scope": "NATIVE_CANDIDATE_READ_PIPE4_CAP_PIPE2_NOT_GENERATOR_ADOPTED",
+ "source_commit": "c3fc1a4a2a9fe2722ba5f9e7bf938a8802c3c381",
+ "groups": [
+  {
+   "name": "cap_lane0",
+   "kind": "capture_plus_related_CDC_halves",
+   "positions": {
+    "7": [
+     0,
+     86.4
+    ],
+    "8": [
+     194.4,
+     0
+    ],
+    "9": [
+     259.2,
+     0
+    ]
+   },
+   "outline_um": [
+    345.6,
+    345.6
+   ],
+   "internal_bits": 2176,
+   "over500_bits": 0,
+   "max_L1_um": 424.12800000000004,
+   "interfaces": {
+    "dsfd_vm_static_cap_leaf.o_v -> ot_s81_vm_x34_s.s_v": {
+     "bits": 1,
+     "max_L1_um": 424.12800000000004
+    },
+    "dsfd_vm_static_cap_leaf.o_row -> ot_s81_vm_x34_s.s_d": {
+     "bits": 14,
+     "max_L1_um": 272.23199999999997
+    },
+    "dsfd_vm_static_cap_leaf.o_m -> ot_s81_vm_x34_s.s_d": {
+     "bits": 16,
+     "max_L1_um": 259.8
+    },
+    "dsfd_vm_static_cap_leaf.o_d -> ot_s81_vm_x34_s.s_d": {
+     "bits": 512,
+     "max_L1_um": 256.704
+    },
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.791999999999973
+    }
+   }
+  },
+  {
+   "name": "cap_lane1",
+   "kind": "capture_plus_related_CDC_halves",
+   "positions": {
+    "10": [
+     0,
+     86.4
+    ],
+    "11": [
+     194.4,
+     0
+    ],
+    "12": [
+     259.2,
+     0
+    ]
+   },
+   "outline_um": [
+    345.6,
+    345.6
+   ],
+   "internal_bits": 2176,
+   "over500_bits": 0,
+   "max_L1_um": 424.12800000000004,
+   "interfaces": {
+    "dsfd_vm_static_cap_leaf.o_v -> ot_s81_vm_x34_s.s_v": {
+     "bits": 1,
+     "max_L1_um": 424.12800000000004
+    },
+    "dsfd_vm_static_cap_leaf.o_row -> ot_s81_vm_x34_s.s_d": {
+     "bits": 14,
+     "max_L1_um": 272.23199999999997
+    },
+    "dsfd_vm_static_cap_leaf.o_m -> ot_s81_vm_x34_s.s_d": {
+     "bits": 16,
+     "max_L1_um": 259.8
+    },
+    "dsfd_vm_static_cap_leaf.o_d -> ot_s81_vm_x34_s.s_d": {
+     "bits": 512,
+     "max_L1_um": 256.704
+    },
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.791999999999973
+    }
+   }
+  },
+  {
+   "name": "cap_lane2",
+   "kind": "capture_plus_related_CDC_halves",
+   "positions": {
+    "13": [
+     0,
+     86.4
+    ],
+    "14": [
+     194.4,
+     0
+    ],
+    "15": [
+     259.2,
+     0
+    ]
+   },
+   "outline_um": [
+    345.6,
+    345.6
+   ],
+   "internal_bits": 2176,
+   "over500_bits": 0,
+   "max_L1_um": 424.12800000000004,
+   "interfaces": {
+    "dsfd_vm_static_cap_leaf.o_v -> ot_s81_vm_x34_s.s_v": {
+     "bits": 1,
+     "max_L1_um": 424.12800000000004
+    },
+    "dsfd_vm_static_cap_leaf.o_row -> ot_s81_vm_x34_s.s_d": {
+     "bits": 14,
+     "max_L1_um": 272.23199999999997
+    },
+    "dsfd_vm_static_cap_leaf.o_m -> ot_s81_vm_x34_s.s_d": {
+     "bits": 16,
+     "max_L1_um": 259.8
+    },
+    "dsfd_vm_static_cap_leaf.o_d -> ot_s81_vm_x34_s.s_d": {
+     "bits": 512,
+     "max_L1_um": 256.704
+    },
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.791999999999973
+    }
+   }
+  },
+  {
+   "name": "cap_lane3",
+   "kind": "capture_plus_related_CDC_halves",
+   "positions": {
+    "16": [
+     0,
+     86.4
+    ],
+    "17": [
+     194.4,
+     0
+    ],
+    "18": [
+     259.2,
+     0
+    ]
+   },
+   "outline_um": [
+    345.6,
+    345.6
+   ],
+   "internal_bits": 2176,
+   "over500_bits": 0,
+   "max_L1_um": 424.12800000000004,
+   "interfaces": {
+    "dsfd_vm_static_cap_leaf.o_v -> ot_s81_vm_x34_s.s_v": {
+     "bits": 1,
+     "max_L1_um": 424.12800000000004
+    },
+    "dsfd_vm_static_cap_leaf.o_row -> ot_s81_vm_x34_s.s_d": {
+     "bits": 14,
+     "max_L1_um": 272.23199999999997
+    },
+    "dsfd_vm_static_cap_leaf.o_m -> ot_s81_vm_x34_s.s_d": {
+     "bits": 16,
+     "max_L1_um": 259.8
+    },
+    "dsfd_vm_static_cap_leaf.o_d -> ot_s81_vm_x34_s.s_d": {
+     "bits": 512,
+     "max_L1_um": 256.704
+    },
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.791999999999973
+    }
+   }
+  },
+  {
+   "name": "cap_lane4",
+   "kind": "capture_plus_related_CDC_halves",
+   "positions": {
+    "19": [
+     0,
+     86.4
+    ],
+    "20": [
+     194.4,
+     0
+    ],
+    "21": [
+     259.2,
+     0
+    ]
+   },
+   "outline_um": [
+    345.6,
+    345.6
+   ],
+   "internal_bits": 2176,
+   "over500_bits": 0,
+   "max_L1_um": 424.12800000000004,
+   "interfaces": {
+    "dsfd_vm_static_cap_leaf.o_v -> ot_s81_vm_x34_s.s_v": {
+     "bits": 1,
+     "max_L1_um": 424.12800000000004
+    },
+    "dsfd_vm_static_cap_leaf.o_row -> ot_s81_vm_x34_s.s_d": {
+     "bits": 14,
+     "max_L1_um": 272.23199999999997
+    },
+    "dsfd_vm_static_cap_leaf.o_m -> ot_s81_vm_x34_s.s_d": {
+     "bits": 16,
+     "max_L1_um": 259.8
+    },
+    "dsfd_vm_static_cap_leaf.o_d -> ot_s81_vm_x34_s.s_d": {
+     "bits": 512,
+     "max_L1_um": 256.704
+    },
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.791999999999973
+    }
+   }
+  },
+  {
+   "name": "cap_lane5",
+   "kind": "capture_plus_related_CDC_halves",
+   "positions": {
+    "22": [
+     0,
+     86.4
+    ],
+    "23": [
+     194.4,
+     0
+    ],
+    "24": [
+     259.2,
+     0
+    ]
+   },
+   "outline_um": [
+    345.6,
+    345.6
+   ],
+   "internal_bits": 2176,
+   "over500_bits": 0,
+   "max_L1_um": 424.12800000000004,
+   "interfaces": {
+    "dsfd_vm_static_cap_leaf.o_v -> ot_s81_vm_x34_s.s_v": {
+     "bits": 1,
+     "max_L1_um": 424.12800000000004
+    },
+    "dsfd_vm_static_cap_leaf.o_row -> ot_s81_vm_x34_s.s_d": {
+     "bits": 14,
+     "max_L1_um": 272.23199999999997
+    },
+    "dsfd_vm_static_cap_leaf.o_m -> ot_s81_vm_x34_s.s_d": {
+     "bits": 16,
+     "max_L1_um": 259.8
+    },
+    "dsfd_vm_static_cap_leaf.o_d -> ot_s81_vm_x34_s.s_d": {
+     "bits": 512,
+     "max_L1_um": 256.704
+    },
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.791999999999973
+    }
+   }
+  },
+  {
+   "name": "cap_lane6",
+   "kind": "capture_plus_related_CDC_halves",
+   "positions": {
+    "25": [
+     0,
+     86.4
+    ],
+    "26": [
+     194.4,
+     0
+    ],
+    "27": [
+     259.2,
+     0
+    ]
+   },
+   "outline_um": [
+    345.6,
+    345.6
+   ],
+   "internal_bits": 2176,
+   "over500_bits": 0,
+   "max_L1_um": 424.12800000000004,
+   "interfaces": {
+    "dsfd_vm_static_cap_leaf.o_v -> ot_s81_vm_x34_s.s_v": {
+     "bits": 1,
+     "max_L1_um": 424.12800000000004
+    },
+    "dsfd_vm_static_cap_leaf.o_row -> ot_s81_vm_x34_s.s_d": {
+     "bits": 14,
+     "max_L1_um": 272.23199999999997
+    },
+    "dsfd_vm_static_cap_leaf.o_m -> ot_s81_vm_x34_s.s_d": {
+     "bits": 16,
+     "max_L1_um": 259.8
+    },
+    "dsfd_vm_static_cap_leaf.o_d -> ot_s81_vm_x34_s.s_d": {
+     "bits": 512,
+     "max_L1_um": 256.704
+    },
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.791999999999973
+    }
+   }
+  },
+  {
+   "name": "cap_lane7",
+   "kind": "capture_plus_related_CDC_halves",
+   "positions": {
+    "28": [
+     0,
+     86.4
+    ],
+    "29": [
+     194.4,
+     0
+    ],
+    "30": [
+     259.2,
+     0
+    ]
+   },
+   "outline_um": [
+    345.6,
+    345.6
+   ],
+   "internal_bits": 2176,
+   "over500_bits": 0,
+   "max_L1_um": 424.12800000000004,
+   "interfaces": {
+    "dsfd_vm_static_cap_leaf.o_v -> ot_s81_vm_x34_s.s_v": {
+     "bits": 1,
+     "max_L1_um": 424.12800000000004
+    },
+    "dsfd_vm_static_cap_leaf.o_row -> ot_s81_vm_x34_s.s_d": {
+     "bits": 14,
+     "max_L1_um": 272.23199999999997
+    },
+    "dsfd_vm_static_cap_leaf.o_m -> ot_s81_vm_x34_s.s_d": {
+     "bits": 16,
+     "max_L1_um": 259.8
+    },
+    "dsfd_vm_static_cap_leaf.o_d -> ot_s81_vm_x34_s.s_d": {
+     "bits": 512,
+     "max_L1_um": 256.704
+    },
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.791999999999973
+    }
+   }
+  },
+  {
+   "name": "cap_lane8",
+   "kind": "capture_plus_related_CDC_halves",
+   "positions": {
+    "31": [
+     0,
+     86.4
+    ],
+    "32": [
+     194.4,
+     0
+    ],
+    "33": [
+     259.2,
+     0
+    ]
+   },
+   "outline_um": [
+    345.6,
+    345.6
+   ],
+   "internal_bits": 2176,
+   "over500_bits": 0,
+   "max_L1_um": 424.12800000000004,
+   "interfaces": {
+    "dsfd_vm_static_cap_leaf.o_v -> ot_s81_vm_x34_s.s_v": {
+     "bits": 1,
+     "max_L1_um": 424.12800000000004
+    },
+    "dsfd_vm_static_cap_leaf.o_row -> ot_s81_vm_x34_s.s_d": {
+     "bits": 14,
+     "max_L1_um": 272.23199999999997
+    },
+    "dsfd_vm_static_cap_leaf.o_m -> ot_s81_vm_x34_s.s_d": {
+     "bits": 16,
+     "max_L1_um": 259.8
+    },
+    "dsfd_vm_static_cap_leaf.o_d -> ot_s81_vm_x34_s.s_d": {
+     "bits": 512,
+     "max_L1_um": 256.704
+    },
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.791999999999973
+    }
+   }
+  },
+  {
+   "name": "cap_lane9",
+   "kind": "capture_plus_related_CDC_halves",
+   "positions": {
+    "34": [
+     0,
+     86.4
+    ],
+    "35": [
+     194.4,
+     0
+    ],
+    "36": [
+     259.2,
+     0
+    ]
+   },
+   "outline_um": [
+    345.6,
+    345.6
+   ],
+   "internal_bits": 2176,
+   "over500_bits": 0,
+   "max_L1_um": 424.12800000000004,
+   "interfaces": {
+    "dsfd_vm_static_cap_leaf.o_v -> ot_s81_vm_x34_s.s_v": {
+     "bits": 1,
+     "max_L1_um": 424.12800000000004
+    },
+    "dsfd_vm_static_cap_leaf.o_row -> ot_s81_vm_x34_s.s_d": {
+     "bits": 14,
+     "max_L1_um": 272.23199999999997
+    },
+    "dsfd_vm_static_cap_leaf.o_m -> ot_s81_vm_x34_s.s_d": {
+     "bits": 16,
+     "max_L1_um": 259.8
+    },
+    "dsfd_vm_static_cap_leaf.o_d -> ot_s81_vm_x34_s.s_d": {
+     "bits": 512,
+     "max_L1_um": 256.704
+    },
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.791999999999973
+    }
+   }
+  },
+  {
+   "name": "cap_lane10",
+   "kind": "capture_plus_related_CDC_halves",
+   "positions": {
+    "37": [
+     0,
+     86.4
+    ],
+    "38": [
+     194.4,
+     0
+    ],
+    "39": [
+     259.2,
+     0
+    ]
+   },
+   "outline_um": [
+    345.6,
+    345.6
+   ],
+   "internal_bits": 2176,
+   "over500_bits": 0,
+   "max_L1_um": 424.12800000000004,
+   "interfaces": {
+    "dsfd_vm_static_cap_leaf.o_v -> ot_s81_vm_x34_s.s_v": {
+     "bits": 1,
+     "max_L1_um": 424.12800000000004
+    },
+    "dsfd_vm_static_cap_leaf.o_row -> ot_s81_vm_x34_s.s_d": {
+     "bits": 14,
+     "max_L1_um": 272.23199999999997
+    },
+    "dsfd_vm_static_cap_leaf.o_m -> ot_s81_vm_x34_s.s_d": {
+     "bits": 16,
+     "max_L1_um": 259.8
+    },
+    "dsfd_vm_static_cap_leaf.o_d -> ot_s81_vm_x34_s.s_d": {
+     "bits": 512,
+     "max_L1_um": 256.704
+    },
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.791999999999973
+    }
+   }
+  },
+  {
+   "name": "cap_lane11",
+   "kind": "capture_plus_related_CDC_halves",
+   "positions": {
+    "40": [
+     0,
+     86.4
+    ],
+    "41": [
+     194.4,
+     0
+    ],
+    "42": [
+     259.2,
+     0
+    ]
+   },
+   "outline_um": [
+    345.6,
+    345.6
+   ],
+   "internal_bits": 2176,
+   "over500_bits": 0,
+   "max_L1_um": 424.12800000000004,
+   "interfaces": {
+    "dsfd_vm_static_cap_leaf.o_v -> ot_s81_vm_x34_s.s_v": {
+     "bits": 1,
+     "max_L1_um": 424.12800000000004
+    },
+    "dsfd_vm_static_cap_leaf.o_row -> ot_s81_vm_x34_s.s_d": {
+     "bits": 14,
+     "max_L1_um": 272.23199999999997
+    },
+    "dsfd_vm_static_cap_leaf.o_m -> ot_s81_vm_x34_s.s_d": {
+     "bits": 16,
+     "max_L1_um": 259.8
+    },
+    "dsfd_vm_static_cap_leaf.o_d -> ot_s81_vm_x34_s.s_d": {
+     "bits": 512,
+     "max_L1_um": 256.704
+    },
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.791999999999973
+    }
+   }
+  },
+  {
+   "name": "cap_lane12",
+   "kind": "capture_plus_related_CDC_halves",
+   "positions": {
+    "43": [
+     0,
+     86.4
+    ],
+    "44": [
+     194.4,
+     0
+    ],
+    "45": [
+     259.2,
+     0
+    ]
+   },
+   "outline_um": [
+    345.6,
+    345.6
+   ],
+   "internal_bits": 2176,
+   "over500_bits": 0,
+   "max_L1_um": 424.12800000000004,
+   "interfaces": {
+    "dsfd_vm_static_cap_leaf.o_v -> ot_s81_vm_x34_s.s_v": {
+     "bits": 1,
+     "max_L1_um": 424.12800000000004
+    },
+    "dsfd_vm_static_cap_leaf.o_row -> ot_s81_vm_x34_s.s_d": {
+     "bits": 14,
+     "max_L1_um": 272.23199999999997
+    },
+    "dsfd_vm_static_cap_leaf.o_m -> ot_s81_vm_x34_s.s_d": {
+     "bits": 16,
+     "max_L1_um": 259.8
+    },
+    "dsfd_vm_static_cap_leaf.o_d -> ot_s81_vm_x34_s.s_d": {
+     "bits": 512,
+     "max_L1_um": 256.704
+    },
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.791999999999973
+    }
+   }
+  },
+  {
+   "name": "cap_lane13",
+   "kind": "capture_plus_related_CDC_halves",
+   "positions": {
+    "46": [
+     0,
+     86.4
+    ],
+    "47": [
+     194.4,
+     0
+    ],
+    "48": [
+     259.2,
+     0
+    ]
+   },
+   "outline_um": [
+    345.6,
+    345.6
+   ],
+   "internal_bits": 2176,
+   "over500_bits": 0,
+   "max_L1_um": 424.12800000000004,
+   "interfaces": {
+    "dsfd_vm_static_cap_leaf.o_v -> ot_s81_vm_x34_s.s_v": {
+     "bits": 1,
+     "max_L1_um": 424.12800000000004
+    },
+    "dsfd_vm_static_cap_leaf.o_row -> ot_s81_vm_x34_s.s_d": {
+     "bits": 14,
+     "max_L1_um": 272.23199999999997
+    },
+    "dsfd_vm_static_cap_leaf.o_m -> ot_s81_vm_x34_s.s_d": {
+     "bits": 16,
+     "max_L1_um": 259.8
+    },
+    "dsfd_vm_static_cap_leaf.o_d -> ot_s81_vm_x34_s.s_d": {
+     "bits": 512,
+     "max_L1_um": 256.704
+    },
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.791999999999973
+    }
+   }
+  },
+  {
+   "name": "cap_lane14",
+   "kind": "capture_plus_related_CDC_halves",
+   "positions": {
+    "49": [
+     0,
+     86.4
+    ],
+    "50": [
+     194.4,
+     0
+    ],
+    "51": [
+     259.2,
+     0
+    ]
+   },
+   "outline_um": [
+    345.6,
+    345.6
+   ],
+   "internal_bits": 2176,
+   "over500_bits": 0,
+   "max_L1_um": 424.12800000000004,
+   "interfaces": {
+    "dsfd_vm_static_cap_leaf.o_v -> ot_s81_vm_x34_s.s_v": {
+     "bits": 1,
+     "max_L1_um": 424.12800000000004
+    },
+    "dsfd_vm_static_cap_leaf.o_row -> ot_s81_vm_x34_s.s_d": {
+     "bits": 14,
+     "max_L1_um": 272.23199999999997
+    },
+    "dsfd_vm_static_cap_leaf.o_m -> ot_s81_vm_x34_s.s_d": {
+     "bits": 16,
+     "max_L1_um": 259.8
+    },
+    "dsfd_vm_static_cap_leaf.o_d -> ot_s81_vm_x34_s.s_d": {
+     "bits": 512,
+     "max_L1_um": 256.704
+    },
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.791999999999973
+    }
+   }
+  },
+  {
+   "name": "cap_lane15",
+   "kind": "capture_plus_related_CDC_halves",
+   "positions": {
+    "52": [
+     0,
+     86.4
+    ],
+    "53": [
+     194.4,
+     0
+    ],
+    "54": [
+     259.2,
+     0
+    ]
+   },
+   "outline_um": [
+    345.6,
+    345.6
+   ],
+   "internal_bits": 2176,
+   "over500_bits": 0,
+   "max_L1_um": 424.12800000000004,
+   "interfaces": {
+    "dsfd_vm_static_cap_leaf.o_v -> ot_s81_vm_x34_s.s_v": {
+     "bits": 1,
+     "max_L1_um": 424.12800000000004
+    },
+    "dsfd_vm_static_cap_leaf.o_row -> ot_s81_vm_x34_s.s_d": {
+     "bits": 14,
+     "max_L1_um": 272.23199999999997
+    },
+    "dsfd_vm_static_cap_leaf.o_m -> ot_s81_vm_x34_s.s_d": {
+     "bits": 16,
+     "max_L1_um": 259.8
+    },
+    "dsfd_vm_static_cap_leaf.o_d -> ot_s81_vm_x34_s.s_d": {
+     "bits": 512,
+     "max_L1_um": 256.704
+    },
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 543,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.791999999999973
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.791999999999973
+    }
+   }
+  },
+  {
+   "name": "dut.u_xsel",
+   "kind": "related_CDC_halves",
+   "positions": {
+    "0": [
+     0,
+     0
+    ],
+    "1": [
+     64.80000000000001,
+     0
+    ]
+   },
+   "outline_um": [
+    108.00000000000001,
+    345.6
+   ],
+   "internal_bits": 1549,
+   "over500_bits": 0,
+   "max_L1_um": 21.68400000000001,
+   "interfaces": {
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 515,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 515,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 515,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.68400000000001
+    }
+   }
+  },
+  {
+   "name": "dut.u_xcol",
+   "kind": "related_CDC_halves",
+   "positions": {
+    "2": [
+     0,
+     0
+    ],
+    "3": [
+     64.80000000000001,
+     0
+    ]
+   },
+   "outline_um": [
+    108.00000000000001,
+    345.6
+   ],
+   "internal_bits": 1549,
+   "over500_bits": 0,
+   "max_L1_um": 21.68400000000001,
+   "interfaces": {
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 515,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 515,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 515,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.68400000000001
+    }
+   }
+  },
+  {
+   "name": "dut.u_xsw",
+   "kind": "related_CDC_halves",
+   "positions": {
+    "4": [
+     0,
+     0
+    ],
+    "5": [
+     64.80000000000001,
+     0
+    ]
+   },
+   "outline_um": [
+    108.00000000000001,
+    345.6
+   ],
+   "internal_bits": 3085,
+   "over500_bits": 0,
+   "max_L1_um": 21.68400000000004,
+   "interfaces": {
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 1027,
+     "max_L1_um": 21.68400000000004
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 1027,
+     "max_L1_um": 21.68400000000004
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 1027,
+     "max_L1_um": 21.68400000000004
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.68400000000001
+    }
+   }
+  },
+  {
+   "name": "dut.u_wfc.u_xi",
+   "kind": "related_CDC_halves",
+   "positions": {
+    "55": [
+     0,
+     0
+    ],
+    "56": [
+     64.80000000000001,
+     0
+    ]
+   },
+   "outline_um": [
+    108.00000000000001,
+    345.6
+   ],
+   "internal_bits": 1687,
+   "over500_bits": 0,
+   "max_L1_um": 21.68400000000001,
+   "interfaces": {
+    "ot_s81_vm_x34_s.b0 -> ot_s81_vm_x34_t.b0": {
+     "bits": 561,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x34_s.b1 -> ot_s81_vm_x34_t.b1": {
+     "bits": 561,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x34_s.b2 -> ot_s81_vm_x34_t.b2": {
+     "bits": 561,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x34_s.bpar -> ot_s81_vm_x34_t.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x34_s.s_mark -> ot_s81_vm_x34_t.s_mark": {
+     "bits": 1,
+     "max_L1_um": 21.68400000000001
+    }
+   }
+  },
+  {
+   "name": "dut.u_wfc.u_xo",
+   "kind": "related_CDC_halves",
+   "positions": {
+    "57": [
+     0,
+     0
+    ],
+    "58": [
+     64.80000000000001,
+     0
+    ]
+   },
+   "outline_um": [
+    108.00000000000001,
+    345.6
+   ],
+   "internal_bits": 3086,
+   "over500_bits": 0,
+   "max_L1_um": 21.68400000000001,
+   "interfaces": {
+    "ot_s81_vm_x43_t.b0 -> ot_s81_vm_x43_s.b0": {
+     "bits": 1027,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x43_t.b2 -> ot_s81_vm_x43_s.b2": {
+     "bits": 1027,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x43_t.b3 -> ot_s81_vm_x43_s.b3": {
+     "bits": 1027,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x43_t.bpar -> ot_s81_vm_x43_s.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x43_t.t_mark -> ot_s81_vm_x43_s.t_mark": {
+     "bits": 1,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x43_t.ph1_bad -> ot_s81_vm_x43_s.ph1_bad": {
+     "bits": 1,
+     "max_L1_um": 21.68400000000001
+    }
+   }
+  },
+  {
+   "name": "dut.u_xio.u_xq",
+   "kind": "related_CDC_halves",
+   "positions": {
+    "59": [
+     0,
+     0
+    ],
+    "60": [
+     64.80000000000001,
+     0
+    ]
+   },
+   "outline_um": [
+    108.00000000000001,
+    345.6
+   ],
+   "internal_bits": 1544,
+   "over500_bits": 0,
+   "max_L1_um": 21.68400000000001,
+   "interfaces": {
+    "ot_s81_vm_x43_t.b0 -> ot_s81_vm_x43_s.b0": {
+     "bits": 513,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x43_t.b2 -> ot_s81_vm_x43_s.b2": {
+     "bits": 513,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x43_t.b3 -> ot_s81_vm_x43_s.b3": {
+     "bits": 513,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x43_t.bpar -> ot_s81_vm_x43_s.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x43_t.t_mark -> ot_s81_vm_x43_s.t_mark": {
+     "bits": 1,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x43_t.ph1_bad -> ot_s81_vm_x43_s.ph1_bad": {
+     "bits": 1,
+     "max_L1_um": 21.68400000000001
+    }
+   }
+  },
+  {
+   "name": "dut.u_xio.u_xg",
+   "kind": "related_CDC_halves",
+   "positions": {
+    "61": [
+     0,
+     0
+    ],
+    "62": [
+     64.80000000000001,
+     0
+    ]
+   },
+   "outline_um": [
+    108.00000000000001,
+    345.6
+   ],
+   "internal_bits": 1541,
+   "over500_bits": 0,
+   "max_L1_um": 21.68400000000004,
+   "interfaces": {
+    "ot_s81_vm_x43_t.b0 -> ot_s81_vm_x43_s.b0": {
+     "bits": 512,
+     "max_L1_um": 21.68400000000004
+    },
+    "ot_s81_vm_x43_t.b2 -> ot_s81_vm_x43_s.b2": {
+     "bits": 512,
+     "max_L1_um": 21.68400000000004
+    },
+    "ot_s81_vm_x43_t.b3 -> ot_s81_vm_x43_s.b3": {
+     "bits": 512,
+     "max_L1_um": 21.68400000000004
+    },
+    "ot_s81_vm_x43_t.bpar -> ot_s81_vm_x43_s.bpar": {
+     "bits": 3,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x43_t.t_mark -> ot_s81_vm_x43_s.t_mark": {
+     "bits": 1,
+     "max_L1_um": 21.68400000000001
+    },
+    "ot_s81_vm_x43_t.ph1_bad -> ot_s81_vm_x43_s.ph1_bad": {
+     "bits": 1,
+     "max_L1_um": 21.68400000000001
+    }
+   }
+  }
+ ],
+ "read_data_ownership": [
+  {
+   "leaf": 566,
+   "path": "dut.u_core.bounded_read.l14.u_read.d0",
+   "physical_slice": 0,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 298,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 299,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 300,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 301,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 567,
+   "path": "dut.u_core.bounded_read.l14.u_read.d1",
+   "physical_slice": 0,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 298,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 299,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 300,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 301,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 575,
+   "path": "dut.u_core.bounded_read.l14.u_read.d8",
+   "physical_slice": 0,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 298,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 299,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 300,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 301,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 576,
+   "path": "dut.u_core.bounded_read.l14.u_read.d9",
+   "physical_slice": 0,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 298,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 299,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 300,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 301,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 584,
+   "path": "dut.u_core.bounded_read.l14.u_read.d16",
+   "physical_slice": 0,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 298,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 299,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 300,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 301,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 585,
+   "path": "dut.u_core.bounded_read.l14.u_read.d17",
+   "physical_slice": 0,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 298,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 299,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 300,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 301,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 593,
+   "path": "dut.u_core.bounded_read.l14.u_read.d24",
+   "physical_slice": 0,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 298,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 299,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 300,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 301,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 594,
+   "path": "dut.u_core.bounded_read.l14.u_read.d25",
+   "physical_slice": 0,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 298,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 299,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 300,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 301,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 602,
+   "path": "dut.u_core.bounded_read.l14.u_read.d32",
+   "physical_slice": 0,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 298,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 299,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 300,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 301,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 603,
+   "path": "dut.u_core.bounded_read.l14.u_read.d33",
+   "physical_slice": 0,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 298,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 299,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 300,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 301,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 611,
+   "path": "dut.u_core.bounded_read.l14.u_read.d40",
+   "physical_slice": 0,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 298,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 299,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 300,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 301,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 612,
+   "path": "dut.u_core.bounded_read.l14.u_read.d41",
+   "physical_slice": 0,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 298,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 299,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 300,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 301,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 620,
+   "path": "dut.u_core.bounded_read.l14.u_read.d48",
+   "physical_slice": 0,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 298,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 299,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 300,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 301,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 621,
+   "path": "dut.u_core.bounded_read.l14.u_read.d49",
+   "physical_slice": 0,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 298,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 299,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 300,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 301,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 629,
+   "path": "dut.u_core.bounded_read.l14.u_read.d56",
+   "physical_slice": 0,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 298,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 299,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 300,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 301,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 630,
+   "path": "dut.u_core.bounded_read.l14.u_read.d57",
+   "physical_slice": 0,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 298,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 299,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 300,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 301,
+     "path": "dut.u_core.u_mem.slice[0].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 568,
+   "path": "dut.u_core.bounded_read.l14.u_read.d2",
+   "physical_slice": 1,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 386,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 387,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 388,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 389,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 569,
+   "path": "dut.u_core.bounded_read.l14.u_read.d3",
+   "physical_slice": 1,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 386,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 387,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 388,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 389,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 577,
+   "path": "dut.u_core.bounded_read.l14.u_read.d10",
+   "physical_slice": 1,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 386,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 387,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 388,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 389,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 578,
+   "path": "dut.u_core.bounded_read.l14.u_read.d11",
+   "physical_slice": 1,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 386,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 387,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 388,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 389,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 586,
+   "path": "dut.u_core.bounded_read.l14.u_read.d18",
+   "physical_slice": 1,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 386,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 387,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 388,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 389,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 587,
+   "path": "dut.u_core.bounded_read.l14.u_read.d19",
+   "physical_slice": 1,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 386,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 387,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 388,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 389,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 595,
+   "path": "dut.u_core.bounded_read.l14.u_read.d26",
+   "physical_slice": 1,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 386,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 387,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 388,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 389,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 596,
+   "path": "dut.u_core.bounded_read.l14.u_read.d27",
+   "physical_slice": 1,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 386,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 387,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 388,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 389,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 604,
+   "path": "dut.u_core.bounded_read.l14.u_read.d34",
+   "physical_slice": 1,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 386,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 387,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 388,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 389,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 605,
+   "path": "dut.u_core.bounded_read.l14.u_read.d35",
+   "physical_slice": 1,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 386,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 387,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 388,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 389,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 613,
+   "path": "dut.u_core.bounded_read.l14.u_read.d42",
+   "physical_slice": 1,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 386,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 387,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 388,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 389,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 614,
+   "path": "dut.u_core.bounded_read.l14.u_read.d43",
+   "physical_slice": 1,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 386,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 387,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 388,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 389,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 622,
+   "path": "dut.u_core.bounded_read.l14.u_read.d50",
+   "physical_slice": 1,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 386,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 387,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 388,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 389,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 623,
+   "path": "dut.u_core.bounded_read.l14.u_read.d51",
+   "physical_slice": 1,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 386,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 387,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 388,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 389,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 631,
+   "path": "dut.u_core.bounded_read.l14.u_read.d58",
+   "physical_slice": 1,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 386,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 387,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 388,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 389,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 632,
+   "path": "dut.u_core.bounded_read.l14.u_read.d59",
+   "physical_slice": 1,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 386,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 387,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 388,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 389,
+     "path": "dut.u_core.u_mem.slice[1].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 570,
+   "path": "dut.u_core.bounded_read.l14.u_read.d4",
+   "physical_slice": 2,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 474,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 475,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 476,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 477,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 571,
+   "path": "dut.u_core.bounded_read.l14.u_read.d5",
+   "physical_slice": 2,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 474,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 475,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 476,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 477,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 579,
+   "path": "dut.u_core.bounded_read.l14.u_read.d12",
+   "physical_slice": 2,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 474,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 475,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 476,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 477,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 580,
+   "path": "dut.u_core.bounded_read.l14.u_read.d13",
+   "physical_slice": 2,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 474,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 475,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 476,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 477,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 588,
+   "path": "dut.u_core.bounded_read.l14.u_read.d20",
+   "physical_slice": 2,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 474,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 475,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 476,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 477,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 589,
+   "path": "dut.u_core.bounded_read.l14.u_read.d21",
+   "physical_slice": 2,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 474,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 475,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 476,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 477,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 597,
+   "path": "dut.u_core.bounded_read.l14.u_read.d28",
+   "physical_slice": 2,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 474,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 475,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 476,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 477,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 598,
+   "path": "dut.u_core.bounded_read.l14.u_read.d29",
+   "physical_slice": 2,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 474,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 475,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 476,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 477,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 606,
+   "path": "dut.u_core.bounded_read.l14.u_read.d36",
+   "physical_slice": 2,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 474,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 475,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 476,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 477,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 607,
+   "path": "dut.u_core.bounded_read.l14.u_read.d37",
+   "physical_slice": 2,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 474,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 475,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 476,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 477,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 615,
+   "path": "dut.u_core.bounded_read.l14.u_read.d44",
+   "physical_slice": 2,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 474,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 475,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 476,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 477,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 616,
+   "path": "dut.u_core.bounded_read.l14.u_read.d45",
+   "physical_slice": 2,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 474,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 475,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 476,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 477,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 624,
+   "path": "dut.u_core.bounded_read.l14.u_read.d52",
+   "physical_slice": 2,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 474,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 475,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 476,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 477,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 625,
+   "path": "dut.u_core.bounded_read.l14.u_read.d53",
+   "physical_slice": 2,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 474,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 475,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 476,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 477,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 633,
+   "path": "dut.u_core.bounded_read.l14.u_read.d60",
+   "physical_slice": 2,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 474,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 475,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 476,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 477,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 634,
+   "path": "dut.u_core.bounded_read.l14.u_read.d61",
+   "physical_slice": 2,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 474,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 475,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 476,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 477,
+     "path": "dut.u_core.u_mem.slice[2].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 572,
+   "path": "dut.u_core.bounded_read.l14.u_read.d6",
+   "physical_slice": 3,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 562,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 563,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 564,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 565,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 573,
+   "path": "dut.u_core.bounded_read.l14.u_read.d7",
+   "physical_slice": 3,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 562,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 563,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 564,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 565,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 581,
+   "path": "dut.u_core.bounded_read.l14.u_read.d14",
+   "physical_slice": 3,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 562,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 563,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 564,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 565,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 582,
+   "path": "dut.u_core.bounded_read.l14.u_read.d15",
+   "physical_slice": 3,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 562,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 563,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 564,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 565,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 590,
+   "path": "dut.u_core.bounded_read.l14.u_read.d22",
+   "physical_slice": 3,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 562,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 563,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 564,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 565,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 591,
+   "path": "dut.u_core.bounded_read.l14.u_read.d23",
+   "physical_slice": 3,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 562,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 563,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 564,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 565,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 599,
+   "path": "dut.u_core.bounded_read.l14.u_read.d30",
+   "physical_slice": 3,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 562,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 563,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 564,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 565,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 600,
+   "path": "dut.u_core.bounded_read.l14.u_read.d31",
+   "physical_slice": 3,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 562,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 563,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 564,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 565,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 608,
+   "path": "dut.u_core.bounded_read.l14.u_read.d38",
+   "physical_slice": 3,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 562,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 563,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 564,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 565,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 609,
+   "path": "dut.u_core.bounded_read.l14.u_read.d39",
+   "physical_slice": 3,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 562,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 563,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 564,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 565,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 617,
+   "path": "dut.u_core.bounded_read.l14.u_read.d46",
+   "physical_slice": 3,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 562,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 563,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 564,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 565,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 618,
+   "path": "dut.u_core.bounded_read.l14.u_read.d47",
+   "physical_slice": 3,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 562,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 563,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 564,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 565,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 626,
+   "path": "dut.u_core.bounded_read.l14.u_read.d54",
+   "physical_slice": 3,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 562,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 563,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 564,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 565,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 627,
+   "path": "dut.u_core.bounded_read.l14.u_read.d55",
+   "physical_slice": 3,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 562,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 563,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 564,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 565,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 635,
+   "path": "dut.u_core.bounded_read.l14.u_read.d62",
+   "physical_slice": 3,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 562,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 563,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 564,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 565,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  },
+  {
+   "leaf": 636,
+   "path": "dut.u_core.bounded_read.l14.u_read.d63",
+   "physical_slice": 3,
+   "i_data_bits": 256,
+   "actual_producers": [
+    {
+     "leaf": 562,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[0].profile0p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 563,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[1].profile1p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 564,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[2].profile2p.u",
+     "bits": 64
+    },
+    {
+     "leaf": 565,
+     "path": "dut.u_core.u_mem.slice[3].u_return.lane[3].profile3p.u",
+     "bits": 64
+    }
+   ]
+  }
+ ],
+ "fsr_request_groups": [
+  {
+   "leaf": 214,
+   "path": "dut.u_core.u_mem.slice[0].u_slice.u_r.b0",
+   "actual_consumers": [
+    {
+     "leaf": 254,
+     "path": "dut.u_core.u_mem.slice[0].u_slice.bridge[0].u_hop",
+     "bits": 144
+    }
+   ]
+  },
+  {
+   "leaf": 215,
+   "path": "dut.u_core.u_mem.slice[0].u_slice.u_r.b1",
+   "actual_consumers": [
+    {
+     "leaf": 255,
+     "path": "dut.u_core.u_mem.slice[0].u_slice.bridge[1].u_hop",
+     "bits": 144
+    }
+   ]
+  },
+  {
+   "leaf": 216,
+   "path": "dut.u_core.u_mem.slice[0].u_slice.u_r.b2",
+   "actual_consumers": [
+    {
+     "leaf": 256,
+     "path": "dut.u_core.u_mem.slice[0].u_slice.bridge[2].u_hop",
+     "bits": 144
+    }
+   ]
+  },
+  {
+   "leaf": 217,
+   "path": "dut.u_core.u_mem.slice[0].u_slice.u_r.b3",
+   "actual_consumers": [
+    {
+     "leaf": 257,
+     "path": "dut.u_core.u_mem.slice[0].u_slice.bridge[3].u_hop",
+     "bits": 144
+    }
+   ]
+  },
+  {
+   "leaf": 302,
+   "path": "dut.u_core.u_mem.slice[1].u_slice.u_r.b0",
+   "actual_consumers": [
+    {
+     "leaf": 342,
+     "path": "dut.u_core.u_mem.slice[1].u_slice.bridge[0].u_hop",
+     "bits": 144
+    }
+   ]
+  },
+  {
+   "leaf": 303,
+   "path": "dut.u_core.u_mem.slice[1].u_slice.u_r.b1",
+   "actual_consumers": [
+    {
+     "leaf": 343,
+     "path": "dut.u_core.u_mem.slice[1].u_slice.bridge[1].u_hop",
+     "bits": 144
+    }
+   ]
+  },
+  {
+   "leaf": 304,
+   "path": "dut.u_core.u_mem.slice[1].u_slice.u_r.b2",
+   "actual_consumers": [
+    {
+     "leaf": 344,
+     "path": "dut.u_core.u_mem.slice[1].u_slice.bridge[2].u_hop",
+     "bits": 144
+    }
+   ]
+  },
+  {
+   "leaf": 305,
+   "path": "dut.u_core.u_mem.slice[1].u_slice.u_r.b3",
+   "actual_consumers": [
+    {
+     "leaf": 345,
+     "path": "dut.u_core.u_mem.slice[1].u_slice.bridge[3].u_hop",
+     "bits": 144
+    }
+   ]
+  },
+  {
+   "leaf": 390,
+   "path": "dut.u_core.u_mem.slice[2].u_slice.u_r.b0",
+   "actual_consumers": [
+    {
+     "leaf": 430,
+     "path": "dut.u_core.u_mem.slice[2].u_slice.bridge[0].u_hop",
+     "bits": 144
+    }
+   ]
+  },
+  {
+   "leaf": 391,
+   "path": "dut.u_core.u_mem.slice[2].u_slice.u_r.b1",
+   "actual_consumers": [
+    {
+     "leaf": 431,
+     "path": "dut.u_core.u_mem.slice[2].u_slice.bridge[1].u_hop",
+     "bits": 144
+    }
+   ]
+  },
+  {
+   "leaf": 392,
+   "path": "dut.u_core.u_mem.slice[2].u_slice.u_r.b2",
+   "actual_consumers": [
+    {
+     "leaf": 432,
+     "path": "dut.u_core.u_mem.slice[2].u_slice.bridge[2].u_hop",
+     "bits": 144
+    }
+   ]
+  },
+  {
+   "leaf": 393,
+   "path": "dut.u_core.u_mem.slice[2].u_slice.u_r.b3",
+   "actual_consumers": [
+    {
+     "leaf": 433,
+     "path": "dut.u_core.u_mem.slice[2].u_slice.bridge[3].u_hop",
+     "bits": 144
+    }
+   ]
+  },
+  {
+   "leaf": 478,
+   "path": "dut.u_core.u_mem.slice[3].u_slice.u_r.b0",
+   "actual_consumers": [
+    {
+     "leaf": 518,
+     "path": "dut.u_core.u_mem.slice[3].u_slice.bridge[0].u_hop",
+     "bits": 144
+    }
+   ]
+  },
+  {
+   "leaf": 479,
+   "path": "dut.u_core.u_mem.slice[3].u_slice.u_r.b1",
+   "actual_consumers": [
+    {
+     "leaf": 519,
+     "path": "dut.u_core.u_mem.slice[3].u_slice.bridge[1].u_hop",
+     "bits": 144
+    }
+   ]
+  },
+  {
+   "leaf": 480,
+   "path": "dut.u_core.u_mem.slice[3].u_slice.u_r.b2",
+   "actual_consumers": [
+    {
+     "leaf": 520,
+     "path": "dut.u_core.u_mem.slice[3].u_slice.bridge[2].u_hop",
+     "bits": 144
+    }
+   ]
+  },
+  {
+   "leaf": 481,
+   "path": "dut.u_core.u_mem.slice[3].u_slice.u_r.b3",
+   "actual_consumers": [
+    {
+     "leaf": 521,
+     "path": "dut.u_core.u_mem.slice[3].u_slice.bridge[3].u_hop",
+     "bits": 144
+    }
+   ]
+  }
+ ],
+ "physical_rules": [
+  "No orientations/RTL/pin orders/edges changed; all coordinates are R0 actual-pin geometry",
+  "Each64-bit data stripe reads exactly one physical memory slice: group16data leaves withthat slice fourreturn lanes; valid8leaves still aggregate acrossallfour slices",
+  "Capture3leaf345.6square atoms keep full measuredcap->writer andwriter->reader paths local; globalcapctl andexternal832-bit inputs are outsideatoms",
+  "All incidentexternal/group-to-group nets still needfullplacement/route/cuts/clock/staticageproof; zero localover500is notclosure"
+ ]
+}

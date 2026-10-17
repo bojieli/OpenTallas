@@ -7,6 +7,50 @@
   4903.2
  ],
  "stage_rule": "ceil(actual_pin_L1/500um)-1 lower bound only. Requires honest pipeline RTL, uniform age for each compiler interface, related-clock phase STA and measured end-to-end token ledger; no registers/cycles added here.",
+ "uniform_packet_age_classes": {
+  "capture_packet_to_W0": {
+   "bit_hops": 8688,
+   "over500_bit_hops": 8688,
+   "max_L1_um": 8905.434,
+   "geometric_uniform_extra_stage_lower_bound": 17
+  },
+  "rsched_prepare_release_to_return": {
+   "bit_hops": 384,
+   "over500_bit_hops": 360,
+   "max_L1_um": 5776.368,
+   "geometric_uniform_extra_stage_lower_bound": 11
+  },
+  "W0_packet_to_dispatch": {
+   "bit_hops": 134832,
+   "over500_bit_hops": 120372,
+   "max_L1_um": 7861.02,
+   "geometric_uniform_extra_stage_lower_bound": 15
+  },
+  "FSR_request_to_bridge": {
+   "bit_hops": 2304,
+   "over500_bit_hops": 2304,
+   "max_L1_um": 4873.428,
+   "geometric_uniform_extra_stage_lower_bound": 9
+  },
+  "bridge_packet_to_return": {
+   "bit_hops": 17536,
+   "over500_bit_hops": 17132,
+   "max_L1_um": 4979.466,
+   "geometric_uniform_extra_stage_lower_bound": 9
+  },
+  "return_packet_to_read_data": {
+   "bit_hops": 16640,
+   "over500_bit_hops": 16480,
+   "max_L1_um": 7577.418,
+   "geometric_uniform_extra_stage_lower_bound": 15
+  },
+  "read_partial_to_valid": {
+   "bit_hops": 480,
+   "over500_bit_hops": 453,
+   "max_L1_um": 6421.787999999999,
+   "geometric_uniform_extra_stage_lower_bound": 12
+  }
+ },
  "ranked_boundaries": [
   {
    "bit_hops": 108544,
@@ -106,6 +150,62 @@
    "source_port": "o_row",
    "sink_master": "dsfd_vm_static_wdispatch128",
    "sink_port": "i_row",
+   "source_domain": "stream",
+   "sink_domain": "stream",
+   "cross_clock_contract_required": false
+  },
+  {
+   "bit_hops": 8192,
+   "over500_bit_hops": 8192,
+   "max_L1_um": 8092.986000000001,
+   "sum_L1_um": 42307436.54399999,
+   "worst": {
+    "source": [
+     21,
+     "o_d",
+     286,
+     "OUTPUT"
+    ],
+    "sink": [
+     67,
+     "i_data",
+     4608,
+     "INPUT"
+    ],
+    "source_xy_um": [
+     4492.704,
+     170.94
+    ],
+    "sink_xy_um": [
+     1131.9360000000001,
+     4903.158
+    ],
+    "L1_um": 8092.986000000001
+   },
+   "geometric_extra_stage_histogram": {
+    "10": 1406,
+    "6": 731,
+    "15": 743,
+    "11": 1116,
+    "7": 333,
+    "16": 128,
+    "12": 176,
+    "9": 1199,
+    "5": 747,
+    "14": 665,
+    "8": 289,
+    "4": 147,
+    "13": 384,
+    "3": 128
+   },
+   "unique_source_bit_width": 8192,
+   "source_instance_count": 16,
+   "sink_instance_count": 4,
+   "uniform_geometric_extra_stages_at_500um": 16,
+   "source_master": "ot_s81_vm_x34_t",
+   "source_port": "o_d",
+   "sink_master": "dsfd_vm_static_w0_payload",
+   "sink_port": "i_data",
    "source_domain": "stream",
    "sink_domain": "stream",
    "cross_clock_contract_required": false
@@ -619,50 +719,6 @@
    "cross_clock_contract_required": false
   },
   {
-   "bit_hops": 16384,
-   "over500_bit_hops": 2656,
-   "max_L1_um": 527.0820000000003,
-   "sum_L1_um": 6284212.22399997,
-   "worst": {
-    "source": [
-     157,
-     "o_data",
-     0,
-     "OUTPUT"
-    ],
-    "sink": [
-     406,
-     "i_data",
-     0,
-     "INPUT"
-    ],
-    "source_xy_um": [
-     1965.558,
-     3579.936
-    ],
-    "sink_xy_um": [
-     1756.908,
-     3261.504
-    ],
-    "L1_um": 527.0820000000003
-   },
-   "geometric_extra_stage_histogram": {
-    "0": 13728,
-    "1": 2656
-   },
-   "unique_source_bit_width": 16384,
-   "source_instance_count": 128,
-   "sink_instance_count": 128,
-   "uniform_geometric_extra_stages_at_500um": 1,
-   "source_master": "dsfd_vm_static_wstage128",
-   "source_port": "o_data",
-   "sink_master": "dsfd_vm_static_write_capture128",
-   "sink_port": "i_data",
-   "source_domain": "stream",
-   "sink_domain": "stream",
-   "cross_clock_contract_required": false
-  },
-  {
    "bit_hops": 1696,
    "over500_bit_hops": 1696,
    "max_L1_um": 7835.964,
@@ -778,9 +834,9 @@
   },
   {
    "bit_hops": 1792,
-   "over500_bit_hops": 1456,
-   "max_L1_um": 4548.246,
-   "sum_L1_um": 4047751.8720000004,
+   "over500_bit_hops": 1344,
+   "max_L1_um": 4634.466,
+   "sum_L1_um": 4083672.5760000013,
    "worst": {
     "source": [
      78,
@@ -795,24 +851,22 @@
      "INPUT"
     ],
     "source_xy_um": [
-     86.358,
-     857.856
+     37.152,
+     820.842
     ],
     "sink_xy_um": [
      2230.956,
      3261.504
     ],
-    "L1_um": 4548.246
+    "L1_um": 4634.466
    },
    "geometric_extra_stage_histogram": {
-    "0": 336,
+    "0": 448,
     "3": 168,
-    "5": 224,
-    "7": 224,
-    "1": 112,
-    "4": 504,
-    "9": 56,
-    "8": 168
+    "5": 168,
+    "8": 392,
+    "4": 560,
+    "9": 56
    },
    "unique_source_bit_width": 448,
    "source_instance_count": 32,
@@ -870,6 +924,96 @@
    "source_port": "o_ca",
    "sink_master": "dsfd_vm_seq_tile",
    "sink_port": "o_ca",
+   "source_domain": "stream",
+   "sink_domain": "stream",
+   "cross_clock_contract_required": false
+  },
+  {
+   "bit_hops": 1024,
+   "over500_bit_hops": 1024,
+   "max_L1_um": 4263.834000000001,
+   "sum_L1_um": 2891078.4959999938,
+   "worst": {
+    "source": [
+     639,
+     "o_d23",
+     384,
+     "OUTPUT"
+    ],
+    "sink": [
+     68,
+     "i_data",
+     3328,
+     "INPUT"
+    ],
+    "source_xy_um": [
+     1814.3999999999999,
+     1821.1799999999998
+    ],
+    "sink_xy_um": [
+     2996.256,
+     4903.158
+    ],
+    "L1_um": 4263.834000000001
+   },
+   "geometric_extra_stage_histogram": {
+    "2": 256,
+    "3": 256,
+    "7": 256,
+    "8": 256
+   },
+   "unique_source_bit_width": 1024,
+   "source_instance_count": 1,
+   "sink_instance_count": 4,
+   "uniform_geometric_extra_stages_at_500um": 8,
+   "source_master": "dsfd_vm_static_landing",
+   "source_port": "o_d23",
+   "sink_master": "dsfd_vm_static_w0_payload",
+   "sink_port": "i_data",
+   "source_domain": "stream",
+   "sink_domain": "stream",
+   "cross_clock_contract_required": false
+  },
+  {
+   "bit_hops": 1024,
+   "over500_bit_hops": 1024,
+   "max_L1_um": 4235.706,
+   "sum_L1_um": 2975469.935999999,
+   "worst": {
+    "source": [
+     639,
+     "o_d01",
+     384,
+     "OUTPUT"
+    ],
+    "sink": [
+     68,
+     "i_data",
+     3072,
+     "INPUT"
+    ],
+    "source_xy_um": [
+     1889.532,
+     1749.6
+    ],
+    "sink_xy_um": [
+     2971.68,
+     4903.158
+    ],
+    "L1_um": 4235.706
+   },
+   "geometric_extra_stage_histogram": {
+    "3": 512,
+    "8": 512
+   },
+   "unique_source_bit_width": 1024,
+   "source_instance_count": 1,
+   "sink_instance_count": 4,
+   "uniform_geometric_extra_stages_at_500um": 8,
+   "source_master": "dsfd_vm_static_landing",
+   "source_port": "o_d01",
+   "sink_master": "dsfd_vm_static_w0_payload",
+   "sink_port": "i_data",
    "source_domain": "stream",
    "sink_domain": "stream",
    "cross_clock_contract_required": false
@@ -1207,41 +1351,39 @@
   },
   {
    "bit_hops": 1024,
-   "over500_bit_hops": 800,
-   "max_L1_um": 4569.51,
-   "sum_L1_um": 2326788.8640000015,
+   "over500_bit_hops": 768,
+   "max_L1_um": 4655.7300000000005,
+   "sum_L1_um": 2344882.1759999986,
    "worst": {
     "source": [
-     78,
+     94,
      "o_tag",
      7,
      "OUTPUT"
     ],
     "sink": [
-     486,
+     504,
      "i_tag",
      7,
      "INPUT"
     ],
     "source_xy_um": [
-     86.358,
-     871.2959999999999
+     50.592,
+     1987.242
     ],
     "sink_xy_um": [
      2265.6600000000003,
-     3261.504
+     4427.904
     ],
-    "L1_um": 4569.51
+    "L1_um": 4655.7300000000005
    },
    "geometric_extra_stage_histogram": {
-    "0": 224,
+    "0": 256,
     "3": 96,
-    "5": 96,
-    "8": 128,
-    "7": 96,
-    "4": 320,
-    "1": 32,
-    "9": 32
+    "5": 128,
+    "8": 192,
+    "4": 288,
+    "9": 64
    },
    "unique_source_bit_width": 256,
    "source_instance_count": 32,
@@ -3492,6 +3634,61 @@
   {
    "bit_hops": 256,
    "over500_bit_hops": 256,
+   "max_L1_um": 8905.434,
+   "sum_L1_um": 1546289.6640000003,
+   "worst": {
+    "source": [
+     21,
+     "o_d",
+     22,
+     "OUTPUT"
+    ],
+    "sink": [
+     67,
+     "i_mask",
+     144,
+     "INPUT"
+    ],
+    "source_xy_um": [
+     4492.704,
+     18.876
+    ],
+    "sink_xy_um": [
+     432.042,
+     4863.648
+    ],
+    "L1_um": 8905.434
+   },
+   "geometric_extra_stage_histogram": {
+    "12": 52,
+    "8": 24,
+    "16": 28,
+    "17": 20,
+    "13": 20,
+    "11": 40,
+    "7": 28,
+    "10": 12,
+    "6": 8,
+    "15": 12,
+    "9": 4,
+    "5": 4,
+    "14": 4
+   },
+   "unique_source_bit_width": 256,
+   "source_instance_count": 16,
+   "sink_instance_count": 4,
+   "uniform_geometric_extra_stages_at_500um": 17,
+   "source_master": "ot_s81_vm_x34_t",
+   "source_port": "o_d",
+   "sink_master": "dsfd_vm_static_w0_payload",
+   "sink_port": "i_mask",
+   "source_domain": "stream",
+   "sink_domain": "stream",
+   "cross_clock_contract_required": false
+  },
+  {
+   "bit_hops": 256,
+   "over500_bit_hops": 256,
    "max_L1_um": 8013.072,
    "sum_L1_um": 1077178.368,
    "worst": {
@@ -4027,6 +4224,51 @@
    "cross_clock_contract_required": false
   },
   {
+   "bit_hops": 224,
+   "over500_bit_hops": 224,
+   "max_L1_um": 3266.7299999999996,
+   "sum_L1_um": 610132.656,
+   "worst": {
+    "source": [
+     21,
+     "o_d",
+     0,
+     "OUTPUT"
+    ],
+    "sink": [
+     64,
+     "i_row",
+     504,
+     "INPUT"
+    ],
+    "source_xy_um": [
+     4492.704,
+     6.204000000000001
+    ],
+    "sink_xy_um": [
+     1878.528,
+     658.758
+    ],
+    "L1_um": 3266.7299999999996
+   },
+   "geometric_extra_stage_histogram": {
+    "5": 126,
+    "6": 42,
+    "4": 56
+   },
+   "unique_source_bit_width": 224,
+   "source_instance_count": 16,
+   "sink_instance_count": 1,
+   "uniform_geometric_extra_stages_at_500um": 6,
+   "source_master": "ot_s81_vm_x34_t",
+   "source_port": "o_d",
+   "sink_master": "dsfd_vm_static_w0_header",
+   "sink_port": "i_row",
+   "source_domain": "stream",
+   "sink_domain": "stream",
+   "cross_clock_contract_required": false
+  },
+  {
    "bit_hops": 128,
    "over500_bit_hops": 128,
    "max_L1_um": 8007.888000000001,
@@ -4138,150 +4380,6 @@
    "cross_clock_contract_required": false
   },
   {
-   "bit_hops": 512,
-   "over500_bit_hops": 128,
-   "max_L1_um": 527.6580000000004,
-   "sum_L1_um": 195224.83199999994,
-   "worst": {
-    "source": [
-     157,
-     "o_mask",
-     0,
-     "OUTPUT"
-    ],
-    "sink": [
-     406,
-     "i_mask",
-     0,
-     "INPUT"
-    ],
-    "source_xy_um": [
-     1965.558,
-     3579.552
-    ],
-    "sink_xy_um": [
-     1755.9479999999999,
-     3261.504
-    ],
-    "L1_um": 527.6580000000004
-   },
-   "geometric_extra_stage_histogram": {
-    "0": 384,
-    "1": 128
-   },
-   "unique_source_bit_width": 512,
-   "source_instance_count": 128,
-   "sink_instance_count": 128,
-   "uniform_geometric_extra_stages_at_500um": 1,
-   "source_master": "dsfd_vm_static_wstage128",
-   "source_port": "o_mask",
-   "sink_master": "dsfd_vm_static_write_capture128",
-   "sink_port": "i_mask",
-   "source_domain": "stream",
-   "sink_domain": "stream",
-   "cross_clock_contract_required": false
-  },
-  {
-   "bit_hops": 128,
-   "over500_bit_hops": 104,
-   "max_L1_um": 4545.894,
-   "sum_L1_um": 289041.6959999999,
-   "worst": {
-    "source": [
-     78,
-     "o_v",
-     0,
-     "OUTPUT"
-    ],
-    "sink": [
-     486,
-     "i_we",
-     0,
-     "INPUT"
-    ],
-    "source_xy_um": [
-     86.358,
-     856.512
-    ],
-    "sink_xy_um": [
-     2227.26,
-     3261.504
-    ],
-    "L1_um": 4545.894
-   },
-   "geometric_extra_stage_histogram": {
-    "0": 24,
-    "3": 12,
-    "5": 16,
-    "7": 16,
-    "1": 8,
-    "4": 36,
-    "9": 4,
-    "8": 12
-   },
-   "unique_source_bit_width": 32,
-   "source_instance_count": 32,
-   "sink_instance_count": 128,
-   "uniform_geometric_extra_stages_at_500um": 9,
-   "source_master": "dsfd_vm_static_wstage128",
-   "source_port": "o_v",
-   "sink_master": "dsfd_vm_static_write_capture128",
-   "sink_port": "i_we",
-   "source_domain": "stream",
-   "sink_domain": "stream",
-   "cross_clock_contract_required": false
-  },
-  {
-   "bit_hops": 128,
-   "over500_bit_hops": 104,
-   "max_L1_um": 4545.702,
-   "sum_L1_um": 289032.48000000016,
-   "worst": {
-    "source": [
-     78,
-     "o_v",
-     0,
-     "OUTPUT"
-    ],
-    "sink": [
-     486,
-     "i_v",
-     0,
-     "INPUT"
-    ],
-    "source_xy_um": [
-     86.358,
-     856.512
-    ],
-    "sink_xy_um": [
-     2227.068,
-     3261.504
-    ],
-    "L1_um": 4545.702
-   },
-   "geometric_extra_stage_histogram": {
-    "0": 24,
-    "3": 12,
-    "5": 16,
-    "7": 16,
-    "1": 8,
-    "4": 36,
-    "9": 4,
-    "8": 12
-   },
-   "unique_source_bit_width": 32,
-   "source_instance_count": 32,
-   "sink_instance_count": 128,
-   "uniform_geometric_extra_stages_at_500um": 9,
-   "source_master": "dsfd_vm_static_wstage128",
-   "source_port": "o_v",
-   "sink_master": "dsfd_vm_static_write_capture128",
-   "sink_port": "i_v",
-   "source_domain": "stream",
-   "sink_domain": "stream",
-   "cross_clock_contract_required": false
-  },
-  {
    "bit_hops": 96,
    "over500_bit_hops": 96,
    "max_L1_um": 5311.2480000000005,
@@ -4326,6 +4424,102 @@
    "source_port": "o_v",
    "sink_master": "dsfd_vm_static_wcontrol",
    "sink_port": "cap_v",
+   "source_domain": "stream",
+   "sink_domain": "stream",
+   "cross_clock_contract_required": false
+  },
+  {
+   "bit_hops": 128,
+   "over500_bit_hops": 96,
+   "max_L1_um": 4632.1140000000005,
+   "sum_L1_um": 291625.72799999994,
+   "worst": {
+    "source": [
+     94,
+     "o_v",
+     0,
+     "OUTPUT"
+    ],
+    "sink": [
+     504,
+     "i_we",
+     0,
+     "INPUT"
+    ],
+    "source_xy_um": [
+     35.808,
+     1987.242
+    ],
+    "sink_xy_um": [
+     2227.26,
+     4427.904
+    ],
+    "L1_um": 4632.1140000000005
+   },
+   "geometric_extra_stage_histogram": {
+    "0": 32,
+    "3": 12,
+    "5": 12,
+    "8": 28,
+    "4": 40,
+    "9": 4
+   },
+   "unique_source_bit_width": 32,
+   "source_instance_count": 32,
+   "sink_instance_count": 128,
+   "uniform_geometric_extra_stages_at_500um": 9,
+   "source_master": "dsfd_vm_static_wstage128",
+   "source_port": "o_v",
+   "sink_master": "dsfd_vm_static_write_capture128",
+   "sink_port": "i_we",
+   "source_domain": "stream",
+   "sink_domain": "stream",
+   "cross_clock_contract_required": false
+  },
+  {
+   "bit_hops": 128,
+   "over500_bit_hops": 96,
+   "max_L1_um": 4631.9220000000005,
+   "sum_L1_um": 291613.4399999999,
+   "worst": {
+    "source": [
+     78,
+     "o_v",
+     0,
+     "OUTPUT"
+    ],
+    "sink": [
+     486,
+     "i_v",
+     0,
+     "INPUT"
+    ],
+    "source_xy_um": [
+     35.808,
+     820.842
+    ],
+    "sink_xy_um": [
+     2227.068,
+     3261.504
+    ],
+    "L1_um": 4631.9220000000005
+   },
+   "geometric_extra_stage_histogram": {
+    "0": 32,
+    "3": 12,
+    "5": 12,
+    "8": 28,
+    "4": 40,
+    "9": 4
+   },
+   "unique_source_bit_width": 32,
+   "source_instance_count": 32,
+   "sink_instance_count": 128,
+   "uniform_geometric_extra_stages_at_500um": 9,
+   "source_master": "dsfd_vm_static_wstage128",
+   "source_port": "o_v",
+   "sink_master": "dsfd_vm_static_write_capture128",
+   "sink_port": "i_v",
    "source_domain": "stream",
    "sink_domain": "stream",
    "cross_clock_contract_required": false
@@ -4920,6 +5114,49 @@
    "source_port": "o_partial_valid",
    "sink_master": "dsfd_vm_static_read_v0_p",
    "sink_port": "i_partial_valid",
+   "source_domain": "stream",
+   "sink_domain": "stream",
+   "cross_clock_contract_required": false
+  },
+  {
+   "bit_hops": 56,
+   "over500_bit_hops": 56,
+   "max_L1_um": 1133.9340000000002,
+   "sum_L1_um": 63390.48000000001,
+   "worst": {
+    "source": [
+     639,
+     "o_row",
+     0,
+     "OUTPUT"
+    ],
+    "sink": [
+     64,
+     "i_row",
+     336,
+     "INPUT"
+    ],
+    "source_xy_um": [
+     1819.3079999999998,
+     1749.6
+    ],
+    "sink_xy_um": [
+     1862.4,
+     658.758
+    ],
+    "L1_um": 1133.9340000000002
+   },
+   "geometric_extra_stage_histogram": {
+    "2": 56
+   },
+   "unique_source_bit_width": 56,
+   "source_instance_count": 1,
+   "sink_instance_count": 1,
+   "uniform_geometric_extra_stages_at_500um": 2,
+   "source_master": "dsfd_vm_static_landing",
+   "source_port": "o_row",
+   "sink_master": "dsfd_vm_static_w0_header",
+   "sink_port": "i_row",
    "source_domain": "stream",
    "sink_domain": "stream",
    "cross_clock_contract_required": false
@@ -7895,6 +8132,51 @@
    "source_port": "expected_v",
    "sink_master": "dsfd_vm_static_read_q4_p",
    "sink_port": "i_expected",
+   "source_domain": "stream",
+   "sink_domain": "stream",
+   "cross_clock_contract_required": false
+  },
+  {
+   "bit_hops": 16,
+   "over500_bit_hops": 16,
+   "max_L1_um": 3056.886,
+   "sum_L1_um": 43515.58799999999,
+   "worst": {
+    "source": [
+     51,
+     "o_v",
+     0,
+     "OUTPUT"
+    ],
+    "sink": [
+     64,
+     "i_v",
+     50,
+     "INPUT"
+    ],
+    "source_xy_um": [
+     4492.704,
+     1052.796
+    ],
+    "sink_xy_um": [
+     1829.856,
+     658.758
+    ],
+    "L1_um": 3056.886
+   },
+   "geometric_extra_stage_histogram": {
+    "5": 11,
+    "6": 2,
+    "4": 3
+   },
+   "unique_source_bit_width": 16,
+   "source_instance_count": 16,
+   "sink_instance_count": 1,
+   "uniform_geometric_extra_stages_at_500um": 6,
+   "source_master": "ot_s81_vm_x34_t",
+   "source_port": "o_v",
+   "sink_master": "dsfd_vm_static_w0_header",
+   "sink_port": "i_v",
    "source_domain": "stream",
    "sink_domain": "stream",
    "cross_clock_contract_required": false
@@ -13342,6 +13624,49 @@
    "cross_clock_contract_required": false
   },
   {
+   "bit_hops": 4,
+   "over500_bit_hops": 4,
+   "max_L1_um": 1099.4699999999998,
+   "sum_L1_um": 4397.592,
+   "worst": {
+    "source": [
+     639,
+     "o_v",
+     0,
+     "OUTPUT"
+    ],
+    "sink": [
+     64,
+     "i_v",
+     24,
+     "INPUT"
+    ],
+    "source_xy_um": [
+     1818.732,
+     1749.6
+    ],
+    "sink_xy_um": [
+     1827.36,
+     658.758
+    ],
+    "L1_um": 1099.4699999999998
+   },
+   "geometric_extra_stage_histogram": {
+    "2": 4
+   },
+   "unique_source_bit_width": 4,
+   "source_instance_count": 1,
+   "sink_instance_count": 1,
+   "uniform_geometric_extra_stages_at_500um": 2,
+   "source_master": "dsfd_vm_static_landing",
+   "source_port": "o_v",
+   "sink_master": "dsfd_vm_static_w0_header",
+   "sink_port": "i_v",
+   "source_domain": "stream",
+   "sink_domain": "stream",
+   "cross_clock_contract_required": false
+  },
+  {
    "bit_hops": 3,
    "over500_bit_hops": 3,
    "max_L1_um": 4834.518,
@@ -14612,11 +14937,11 @@
   {
    "bit_hops": 1024,
    "over500_bit_hops": 0,
-   "max_L1_um": 451.58400000000006,
-   "sum_L1_um": 360649.72799999954,
+   "max_L1_um": 449.2080000000001,
+   "sum_L1_um": 338629.63199999975,
    "worst": {
     "source": [
-     221,
+     225,
      "o_tag",
      7,
      "OUTPUT"
@@ -14624,18 +14949,18 @@
     "sink": [
      226,
      "i_tag",
-     31,
+     63,
      "INPUT"
     ],
     "source_xy_um": [
-     777.504,
+     86.304,
      796.86
     ],
     "sink_xy_um": [
-     388.476,
+     472.956,
      734.304
     ],
-    "L1_um": 451.58400000000006
+    "L1_um": 449.2080000000001
    },
    "geometric_extra_stage_histogram": {
     "0": 1024
@@ -14655,30 +14980,30 @@
   {
    "bit_hops": 16384,
    "over500_bit_hops": 0,
-   "max_L1_um": 450.52800000000013,
-   "sum_L1_um": 5492811.264,
+   "max_L1_um": 446.2320000000001,
+   "sum_L1_um": 5140489.728000005,
    "worst": {
     "source": [
-     221,
+     225,
      "o_data",
-     126,
+     127,
      "OUTPUT"
     ],
     "sink": [
      226,
      "i_data",
-     510,
+     1023,
      "INPUT"
     ],
     "source_xy_um": [
-     777.504,
-     794.652
+     86.304,
+     794.844
     ],
     "sink_xy_um": [
-     387.32399999999996,
+     471.996,
      734.304
     ],
-    "L1_um": 450.52800000000013
+    "L1_um": 446.2320000000001
    },
    "geometric_extra_stage_histogram": {
     "0": 16384
@@ -14690,6 +15015,92 @@
    "source_master": "dsfd_vm_static_write_capture128",
    "source_port": "o_data",
    "sink_master": "dsfd_vm_static_scatter_b8_out",
+   "sink_port": "i_data",
+   "source_domain": "stream",
+   "sink_domain": "stream",
+   "cross_clock_contract_required": false
+  },
+  {
+   "bit_hops": 512,
+   "over500_bit_hops": 0,
+   "max_L1_um": 441.43800000000033,
+   "sum_L1_um": 171488.25600000008,
+   "worst": {
+    "source": [
+     157,
+     "o_mask",
+     0,
+     "OUTPUT"
+    ],
+    "sink": [
+     406,
+     "i_mask",
+     0,
+     "INPUT"
+    ],
+    "source_xy_um": [
+     1916.448,
+     3542.442
+    ],
+    "sink_xy_um": [
+     1755.9479999999999,
+     3261.504
+    ],
+    "L1_um": 441.43800000000033
+   },
+   "geometric_extra_stage_histogram": {
+    "0": 512
+   },
+   "unique_source_bit_width": 512,
+   "source_instance_count": 128,
+   "sink_instance_count": 128,
+   "uniform_geometric_extra_stages_at_500um": 0,
+   "source_master": "dsfd_vm_static_wstage128",
+   "source_port": "o_mask",
+   "sink_master": "dsfd_vm_static_write_capture128",
+   "sink_port": "i_mask",
+   "source_domain": "stream",
+   "sink_domain": "stream",
+   "cross_clock_contract_required": false
+  },
+  {
+   "bit_hops": 16384,
+   "over500_bit_hops": 0,
+   "max_L1_um": 440.8620000000003,
+   "sum_L1_um": 5487624.1920000035,
+   "worst": {
+    "source": [
+     157,
+     "o_data",
+     0,
+     "OUTPUT"
+    ],
+    "sink": [
+     406,
+     "i_data",
+     0,
+     "INPUT"
+    ],
+    "source_xy_um": [
+     1916.832,
+     3542.442
+    ],
+    "sink_xy_um": [
+     1756.908,
+     3261.504
+    ],
+    "L1_um": 440.8620000000003
+   },
+   "geometric_extra_stage_histogram": {
+    "0": 16384
+   },
+   "unique_source_bit_width": 16384,
+   "source_instance_count": 128,
+   "sink_instance_count": 128,
+   "uniform_geometric_extra_stages_at_500um": 0,
+   "source_master": "dsfd_vm_static_wstage128",
+   "source_port": "o_data",
+   "sink_master": "dsfd_vm_static_write_capture128",
    "sink_port": "i_data",
    "source_domain": "stream",
    "sink_domain": "stream",
@@ -14777,178 +15188,6 @@
    "source_port": "o_wt",
    "sink_master": "dsfd_vm_static_bank128",
    "sink_port": "i_wt",
-   "source_domain": "stream",
-   "sink_domain": "stream",
-   "cross_clock_contract_required": false
-  },
-  {
-   "bit_hops": 512,
-   "over500_bit_hops": 0,
-   "max_L1_um": 435.88800000000015,
-   "sum_L1_um": 163279.87199999992,
-   "worst": {
-    "source": [
-     397,
-     "o_mask",
-     2,
-     "OUTPUT"
-    ],
-    "sink": [
-     402,
-     "i_mask",
-     14,
-     "INPUT"
-    ],
-    "source_xy_um": [
-     777.504,
-     3225.1800000000003
-    ],
-    "sink_xy_um": [
-     370.092,
-     3196.704
-    ],
-    "L1_um": 435.88800000000015
-   },
-   "geometric_extra_stage_histogram": {
-    "0": 512
-   },
-   "unique_source_bit_width": 512,
-   "source_instance_count": 128,
-   "sink_instance_count": 16,
-   "uniform_geometric_extra_stages_at_500um": 0,
-   "source_master": "dsfd_vm_static_write_capture128",
-   "source_port": "o_mask",
-   "sink_master": "dsfd_vm_static_scatter_b8_out",
-   "sink_port": "i_mask",
-   "source_domain": "stream",
-   "sink_domain": "stream",
-   "cross_clock_contract_required": false
-  },
-  {
-   "bit_hops": 1792,
-   "over500_bit_hops": 0,
-   "max_L1_um": 435.50400000000013,
-   "sum_L1_um": 567197.1840000007,
-   "worst": {
-    "source": [
-     397,
-     "o_row",
-     13,
-     "OUTPUT"
-    ],
-    "sink": [
-     402,
-     "i_row",
-     55,
-     "INPUT"
-    ],
-    "source_xy_um": [
-     777.504,
-     3224.4120000000003
-    ],
-    "sink_xy_um": [
-     369.70799999999997,
-     3196.704
-    ],
-    "L1_um": 435.50400000000013
-   },
-   "geometric_extra_stage_histogram": {
-    "0": 1792
-   },
-   "unique_source_bit_width": 1792,
-   "source_instance_count": 128,
-   "sink_instance_count": 16,
-   "uniform_geometric_extra_stages_at_500um": 0,
-   "source_master": "dsfd_vm_static_write_capture128",
-   "source_port": "o_row",
-   "sink_master": "dsfd_vm_static_scatter_b8_out",
-   "sink_port": "i_row",
-   "source_domain": "stream",
-   "sink_domain": "stream",
-   "cross_clock_contract_required": false
-  },
-  {
-   "bit_hops": 128,
-   "over500_bit_hops": 0,
-   "max_L1_um": 434.1120000000001,
-   "sum_L1_um": 40238.592,
-   "worst": {
-    "source": [
-     221,
-     "o_v",
-     0,
-     "OUTPUT"
-    ],
-    "sink": [
-     226,
-     "i_v",
-     3,
-     "INPUT"
-    ],
-    "source_xy_um": [
-     777.504,
-     758.268
-    ],
-    "sink_xy_um": [
-     367.356,
-     734.304
-    ],
-    "L1_um": 434.1120000000001
-   },
-   "geometric_extra_stage_histogram": {
-    "0": 128
-   },
-   "unique_source_bit_width": 128,
-   "source_instance_count": 128,
-   "sink_instance_count": 16,
-   "uniform_geometric_extra_stages_at_500um": 0,
-   "source_master": "dsfd_vm_static_write_capture128",
-   "source_port": "o_v",
-   "sink_master": "dsfd_vm_static_scatter_b8_out",
-   "sink_port": "i_v",
-   "source_domain": "stream",
-   "sink_domain": "stream",
-   "cross_clock_contract_required": false
-  },
-  {
-   "bit_hops": 128,
-   "over500_bit_hops": 0,
-   "max_L1_um": 433.5840000000001,
-   "sum_L1_um": 40254.719999999994,
-   "worst": {
-    "source": [
-     221,
-     "o_we",
-     0,
-     "OUTPUT"
-    ],
-    "sink": [
-     226,
-     "i_we",
-     3,
-     "INPUT"
-    ],
-    "source_xy_um": [
-     777.504,
-     758.46
-    ],
-    "sink_xy_um": [
-     368.07599999999996,
-     734.304
-    ],
-    "L1_um": 433.5840000000001
-   },
-   "geometric_extra_stage_histogram": {
-    "0": 128
-   },
-   "unique_source_bit_width": 128,
-   "source_instance_count": 128,
-   "sink_instance_count": 16,
-   "uniform_geometric_extra_stages_at_500um": 0,
-   "source_master": "dsfd_vm_static_write_capture128",
-   "source_port": "o_we",
-   "sink_master": "dsfd_vm_static_scatter_b8_out",
-   "sink_port": "i_we",
    "source_domain": "stream",
    "sink_domain": "stream",
    "cross_clock_contract_required": false
@@ -15255,6 +15494,49 @@
    "cross_clock_contract_required": false
   },
   {
+   "bit_hops": 512,
+   "over500_bit_hops": 0,
+   "max_L1_um": 397.12800000000016,
+   "sum_L1_um": 152269.82399999996,
+   "worst": {
+    "source": [
+     401,
+     "o_mask",
+     3,
+     "OUTPUT"
+    ],
+    "sink": [
+     402,
+     "i_mask",
+     31,
+     "INPUT"
+    ],
+    "source_xy_um": [
+     86.304,
+     3225.3720000000003
+    ],
+    "sink_xy_um": [
+     454.764,
+     3196.704
+    ],
+    "L1_um": 397.12800000000016
+   },
+   "geometric_extra_stage_histogram": {
+    "0": 512
+   },
+   "unique_source_bit_width": 512,
+   "source_instance_count": 128,
+   "sink_instance_count": 16,
+   "uniform_geometric_extra_stages_at_500um": 0,
+   "source_master": "dsfd_vm_static_write_capture128",
+   "source_port": "o_mask",
+   "sink_master": "dsfd_vm_static_scatter_b8_out",
+   "sink_port": "i_mask",
+   "source_domain": "stream",
+   "sink_domain": "stream",
+   "cross_clock_contract_required": false
+  },
+  {
    "bit_hops": 128,
    "over500_bit_hops": 0,
    "max_L1_um": 397.11600000000044,
@@ -15427,6 +15709,49 @@
    "cross_clock_contract_required": false
   },
   {
+   "bit_hops": 1792,
+   "over500_bit_hops": 0,
+   "max_L1_um": 395.0640000000001,
+   "sum_L1_um": 528662.0159999989,
+   "worst": {
+    "source": [
+     401,
+     "o_row",
+     13,
+     "OUTPUT"
+    ],
+    "sink": [
+     402,
+     "i_row",
+     111,
+     "INPUT"
+    ],
+    "source_xy_um": [
+     86.304,
+     3224.4120000000003
+    ],
+    "sink_xy_um": [
+     453.65999999999997,
+     3196.704
+    ],
+    "L1_um": 395.0640000000001
+   },
+   "geometric_extra_stage_histogram": {
+    "0": 1792
+   },
+   "unique_source_bit_width": 1792,
+   "source_instance_count": 128,
+   "sink_instance_count": 16,
+   "uniform_geometric_extra_stages_at_500um": 0,
+   "source_master": "dsfd_vm_static_write_capture128",
+   "source_port": "o_row",
+   "sink_master": "dsfd_vm_static_scatter_b8_out",
+   "sink_port": "i_row",
+   "source_domain": "stream",
+   "sink_domain": "stream",
+   "cross_clock_contract_required": false
+  },
+  {
    "bit_hops": 1152,
    "over500_bit_hops": 0,
    "max_L1_um": 392.79600000000073,
@@ -15508,6 +15833,92 @@
    "source_port": "o_wa",
    "sink_master": "dsfd_vm_static_relay128_b4",
    "sink_port": "i_wa",
+   "source_domain": "stream",
+   "sink_domain": "stream",
+   "cross_clock_contract_required": false
+  },
+  {
+   "bit_hops": 128,
+   "over500_bit_hops": 0,
+   "max_L1_um": 391.10400000000004,
+   "sum_L1_um": 37486.08000000001,
+   "worst": {
+    "source": [
+     221,
+     "o_v",
+     0,
+     "OUTPUT"
+    ],
+    "sink": [
+     226,
+     "i_v",
+     3,
+     "INPUT"
+    ],
+    "source_xy_um": [
+     734.496,
+     758.268
+    ],
+    "sink_xy_um": [
+     367.356,
+     734.304
+    ],
+    "L1_um": 391.10400000000004
+   },
+   "geometric_extra_stage_histogram": {
+    "0": 128
+   },
+   "unique_source_bit_width": 128,
+   "source_instance_count": 128,
+   "sink_instance_count": 16,
+   "uniform_geometric_extra_stages_at_500um": 0,
+   "source_master": "dsfd_vm_static_write_capture128",
+   "source_port": "o_v",
+   "sink_master": "dsfd_vm_static_scatter_b8_out",
+   "sink_port": "i_v",
+   "source_domain": "stream",
+   "sink_domain": "stream",
+   "cross_clock_contract_required": false
+  },
+  {
+   "bit_hops": 128,
+   "over500_bit_hops": 0,
+   "max_L1_um": 390.57600000000014,
+   "sum_L1_um": 37502.20800000003,
+   "worst": {
+    "source": [
+     309,
+     "o_we",
+     0,
+     "OUTPUT"
+    ],
+    "sink": [
+     314,
+     "i_we",
+     3,
+     "INPUT"
+    ],
+    "source_xy_um": [
+     2721.696,
+     758.46
+    ],
+    "sink_xy_um": [
+     2355.276,
+     734.304
+    ],
+    "L1_um": 390.57600000000014
+   },
+   "geometric_extra_stage_histogram": {
+    "0": 128
+   },
+   "unique_source_bit_width": 128,
+   "source_instance_count": 128,
+   "sink_instance_count": 16,
+   "uniform_geometric_extra_stages_at_500um": 0,
+   "source_master": "dsfd_vm_static_write_capture128",
+   "source_port": "o_we",
+   "sink_master": "dsfd_vm_static_scatter_b8_out",
+   "sink_port": "i_we",
    "source_domain": "stream",
    "sink_domain": "stream",
    "cross_clock_contract_required": false
@@ -16031,30 +16442,30 @@
   {
    "bit_hops": 384,
    "over500_bit_hops": 0,
-   "max_L1_um": 169.82400000000052,
-   "sum_L1_um": 40713.984000000026,
+   "max_L1_um": 83.50800000000072,
+   "sum_L1_um": 24141.311999999998,
    "worst": {
     "source": [
-     142,
+     179,
      "o_v",
-     23,
+     11,
      "OUTPUT"
     ],
     "sink": [
-     153,
+     193,
      "capture_v",
      2,
      "INPUT"
     ],
     "source_xy_um": [
-     108.042,
+     3844.758,
      3531.3599999999997
     ],
     "sink_xy_um": [
-     0.042,
+     3866.442,
      3593.184
     ],
-    "L1_um": 169.82400000000052
+    "L1_um": 83.50800000000072
    },
    "geometric_extra_stage_histogram": {
     "0": 384
@@ -16074,30 +16485,30 @@
   {
    "bit_hops": 768,
    "over500_bit_hops": 0,
-   "max_L1_um": 169.82400000000052,
-   "sum_L1_um": 81427.96799999996,
+   "max_L1_um": 83.50800000000072,
+   "sum_L1_um": 48282.6240000002,
    "worst": {
     "source": [
-     142,
+     179,
      "o_slot",
-     46,
+     22,
      "OUTPUT"
     ],
     "sink": [
-     153,
+     193,
      "capture_slot",
      4,
      "INPUT"
     ],
     "source_xy_um": [
-     108.042,
+     3844.758,
      3531.4559999999997
     ],
     "sink_xy_um": [
-     0.042,
+     3866.442,
      3593.28
     ],
-    "L1_um": 169.82400000000052
+    "L1_um": 83.50800000000072
    },
    "geometric_extra_stage_histogram": {
     "0": 768
@@ -16117,30 +16528,30 @@
   {
    "bit_hops": 5376,
    "over500_bit_hops": 0,
-   "max_L1_um": 169.82400000000052,
-   "sum_L1_um": 569995.7760000193,
+   "max_L1_um": 83.50800000000072,
+   "sum_L1_um": 337978.3680000053,
    "worst": {
     "source": [
-     142,
+     179,
      "o_row",
-     311,
+     143,
      "OUTPUT"
     ],
     "sink": [
-     153,
+     193,
      "capture_row",
      17,
      "INPUT"
     ],
     "source_xy_um": [
-     108.042,
+     3844.758,
      3516.8639999999996
     ],
     "sink_xy_um": [
-     0.042,
+     3866.442,
      3578.688
     ],
-    "L1_um": 169.82400000000052
+    "L1_um": 83.50800000000072
    },
    "geometric_extra_stage_histogram": {
     "0": 5376
@@ -16160,30 +16571,30 @@
   {
    "bit_hops": 1536,
    "over500_bit_hops": 0,
-   "max_L1_um": 169.82400000000052,
-   "sum_L1_um": 162855.935999999,
+   "max_L1_um": 83.50800000000072,
+   "sum_L1_um": 96565.24799999967,
    "worst": {
     "source": [
-     142,
+     179,
      "o_mask",
-     88,
+     40,
      "OUTPUT"
     ],
     "sink": [
-     153,
+     193,
      "capture_mask",
      4,
      "INPUT"
     ],
     "source_xy_um": [
-     108.042,
+     3844.758,
      3517.9199999999996
     ],
     "sink_xy_um": [
-     0.042,
+     3866.442,
      3579.744
     ],
-    "L1_um": 169.82400000000052
+    "L1_um": 83.50800000000072
    },
    "geometric_extra_stage_histogram": {
     "0": 1536
@@ -16203,30 +16614,30 @@
   {
    "bit_hops": 49152,
    "over500_bit_hops": 0,
-   "max_L1_um": 169.82400000000052,
-   "sum_L1_um": 5211389.9520006515,
+   "max_L1_um": 83.50800000000072,
+   "sum_L1_um": 3090087.9359996933,
    "worst": {
     "source": [
-     142,
+     179,
      "o_data",
-     2705,
+     1169,
      "OUTPUT"
     ],
     "sink": [
-     153,
+     193,
      "capture_data",
      17,
      "INPUT"
     ],
     "source_xy_um": [
-     108.042,
+     3844.758,
      3504.8639999999996
     ],
     "sink_xy_um": [
-     0.042,
+     3866.442,
      3566.688
     ],
-    "L1_um": 169.82400000000052
+    "L1_um": 83.50800000000072
    },
    "geometric_extra_stage_histogram": {
     "0": 49152
@@ -16246,30 +16657,30 @@
   {
    "bit_hops": 3072,
    "over500_bit_hops": 0,
-   "max_L1_um": 169.82400000000052,
-   "sum_L1_um": 325711.8720000036,
+   "max_L1_um": 83.50800000000072,
+   "sum_L1_um": 193130.496000001,
    "worst": {
     "source": [
-     142,
+     179,
      "o_tag",
-     176,
+     80,
      "OUTPUT"
     ],
     "sink": [
-     153,
+     193,
      "capture_tag",
      8,
      "INPUT"
     ],
     "source_xy_um": [
-     108.042,
+     3844.758,
      3530.5919999999996
     ],
     "sink_xy_um": [
-     0.042,
+     3866.442,
      3592.416
     ],
-    "L1_um": 169.82400000000052
+    "L1_um": 83.50800000000072
    },
    "geometric_extra_stage_histogram": {
     "0": 3072
@@ -17361,16 +17772,16 @@
  ],
  "candidate_coordinate_cuts": {
   "x1987.2": {
-   "bit_hops": 60982,
-   "unique_source_bit_nets": 43461
+   "bit_hops": 66444,
+   "unique_source_bit_nets": 48923
   },
   "x3952.8": {
-   "bit_hops": 28431,
-   "unique_source_bit_nets": 27951
+   "bit_hops": 37119,
+   "unique_source_bit_nets": 36639
   },
   "y2462.4": {
-   "bit_hops": 53851,
-   "unique_source_bit_nets": 37829
+   "bit_hops": 59099,
+   "unique_source_bit_nets": 43077
   }
  },
  "cut_limit": "Counts only exactly joined functional hardleaf nets crossing infinite coordinate half-planes. Parentlogic/external/clock/reset/PG omitted; no finite corridor capacity or <=0.60 qualification."

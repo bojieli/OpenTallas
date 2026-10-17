@@ -1,0 +1,6655 @@
+{
+ "source_commit": "c3fc1a4a2a9fe2722ba5f9e7bf938a8802c3c381",
+ "reports": [
+  {
+   "option": "body2x2_coherent_plus_service_1555.2",
+   "outline_um": [
+    5529.6,
+    4903.2
+   ],
+   "counts": {
+    "clock_reset_endpoints_excluded": 1328,
+    "external_pin_home_unknown": 55458,
+    "measured_bits": 451846,
+    "over500_bits": 184924,
+    "sum_L1_um": 508852987.78803664,
+    "max_L1_um": 9836.921999999999,
+    "CONSTANT": 634,
+    "PARENT_LOGIC_OR_UNRESOLVED": 5432
+   },
+   "family_pairs": {
+    "ot_s81_vm_x34_t -> dsfd_vm_static_w0_payload": {
+     "bits": 8448,
+     "sum_um": 47822596.608000025,
+     "max_um": 9836.921999999999,
+     "over500": 8448
+    },
+    "dsfd_vm_static_relay128_b8 -> dsfd_vm_seq_tile": {
+     "bits": 1792,
+     "sum_um": 9484853.231999971,
+     "max_um": 8634.953999999998,
+     "over500": 1792
+    },
+    "dsfd_vm_static_wcontrol -> dsfd_vm_static_wstage128": {
+     "bits": 384,
+     "sum_um": 1649258.4960000003,
+     "max_um": 8171.424000000001,
+     "over500": 381
+    },
+    "dsfd_vm_static_wdispatch128 -> dsfd_vm_static_wcontrol": {
+     "bits": 96,
+     "sum_um": 615536.0640000002,
+     "max_um": 7949.280000000001,
+     "over500": 96
+    },
+    "dsfd_vm_static_wcontrol -> dsfd_vm_static_wdispatch128": {
+     "bits": 4240,
+     "sum_um": 18032670.04800001,
+     "max_um": 7931.616,
+     "over500": 4240
+    },
+    "dsfd_vm_static_w0_header -> dsfd_vm_static_wdispatch128": {
+     "bits": 18656,
+     "sum_um": 75181161.79199953,
+     "max_um": 7717.92,
+     "over500": 18628
+    },
+    "dsfd_vm_static_relay128_b8 -> dsfd_vm_static_return_bank8_l3_p": {
+     "bits": 4384,
+     "sum_um": 22294308.384000074,
+     "max_um": 7706.873999999999,
+     "over500": 4384
+    },
+    "dsfd_vm_static_relay128_b8 -> dsfd_vm_static_return_bank8_l2_p": {
+     "bits": 4384,
+     "sum_um": 21827959.20000003,
+     "max_um": 7374.329999999999,
+     "over500": 4384
+    },
+    "dsfd_vm_static_relay128_b8 -> dsfd_vm_static_return_bank8_l1_p": {
+     "bits": 4384,
+     "sum_um": 20850260.255999982,
+     "max_um": 7041.785999999999,
+     "over500": 4384
+    },
+    "dsfd_vm_static_relay128_b8 -> dsfd_vm_static_return_bank8_l0_p": {
+     "bits": 4384,
+     "sum_um": 21111419.71199997,
+     "max_um": 6709.241999999999,
+     "over500": 4384
+    },
+    "ot_s81_vm_x34_t -> dsfd_vm_static_w0_header": {
+     "bits": 240,
+     "sum_um": 1201013.0879999998,
+     "max_um": 6123.642,
+     "over500": 240
+    },
+    "dsfd_vm_static_fsr_b0 -> dsfd_vm_static_relay128_b8": {
+     "bits": 576,
+     "sum_um": 2797228.031999999,
+     "max_um": 5881.92,
+     "over500": 576
+    },
+    "dsfd_vm_static_landing -> dsfd_vm_static_w0_payload": {
+     "bits": 2048,
+     "sum_um": 8688595.919999992,
+     "max_um": 5677.829999999999,
+     "over500": 2048
+    },
+    "dsfd_vm_static_fsr_b2 -> dsfd_vm_static_relay128_b8": {
+     "bits": 576,
+     "sum_um": 2508277.739999999,
+     "max_um": 5514.948,
+     "over500": 576
+    },
+    "dsfd_vm_static_w0_payload -> dsfd_vm_static_wcontrol": {
+     "bits": 12,
+     "sum_um": 35969.976,
+     "max_um": 5146.752,
+     "over500": 12
+    },
+    "dsfd_vm_static_cap_ctl -> dsfd_vm_static_cap_leaf": {
+     "bits": 16,
+     "sum_um": 63354.33599999998,
+     "max_um": 5061.245999999998,
+     "over500": 16
+    },
+    "dsfd_vm_static_fsr_b1 -> dsfd_vm_static_relay128_b8": {
+     "bits": 576,
+     "sum_um": 2314493.951999999,
+     "max_um": 5043.84,
+     "over500": 576
+    },
+    "dsfd_vm_static_fsr_b3 -> dsfd_vm_static_relay128_b8": {
+     "bits": 576,
+     "sum_um": 1864851.0720000004,
+     "max_um": 4823.519999999999,
+     "over500": 576
+    },
+    "dsfd_vm_static_wstage128 -> dsfd_vm_static_write_capture128": {
+     "bits": 19968,
+     "sum_um": 12670906.368000014,
+     "max_um": 4655.7300000000005,
+     "over500": 2304
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v7_p": {
+     "bits": 4,
+     "sum_um": 10492.104000000003,
+     "max_um": 4320.138000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q7_p": {
+     "bits": 520,
+     "sum_um": 986647.2479999999,
+     "max_um": 4310.094000000001,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v6_p": {
+     "bits": 4,
+     "sum_um": 9739.380000000003,
+     "max_um": 4095.210000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q6_p": {
+     "bits": 520,
+     "sum_um": 947807.2319999994,
+     "max_um": 4085.166000000001,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v7_p": {
+     "bits": 4,
+     "sum_um": 10274.376000000004,
+     "max_um": 3987.066000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q7_p": {
+     "bits": 520,
+     "sum_um": 952683.8879999998,
+     "max_um": 3977.886000000001,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v4_p": {
+     "bits": 4,
+     "sum_um": 9435.36,
+     "max_um": 3870.138,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q4_p": {
+     "bits": 520,
+     "sum_um": 947329.8720000003,
+     "max_um": 3859.6619999999994,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 8,
+     "sum_um": 23150.616,
+     "max_um": 3789.03,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v6_p": {
+     "bits": 4,
+     "sum_um": 9374.664000000004,
+     "max_um": 3762.1380000000013,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q6_p": {
+     "bits": 520,
+     "sum_um": 855985.3919999998,
+     "max_um": 3752.958000000001,
+     "over500": 456
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v7_p": {
+     "bits": 4,
+     "sum_um": 9013.368000000004,
+     "max_um": 3653.994000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q7_p": {
+     "bits": 520,
+     "sum_um": 809023.5359999998,
+     "max_um": 3645.678000000001,
+     "over500": 456
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 8,
+     "sum_um": 24237.744,
+     "max_um": 3639.9900000000002,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 8,
+     "sum_um": 21471.215999999997,
+     "max_um": 3567.4139999999998,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v4_p": {
+     "bits": 4,
+     "sum_um": 8621.364,
+     "max_um": 3537.0660000000003,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q4_p": {
+     "bits": 520,
+     "sum_um": 811291.3919999998,
+     "max_um": 3527.4539999999993,
+     "over500": 392
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 8,
+     "sum_um": 23321.039999999997,
+     "max_um": 3489.2220000000007,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v1_p": {
+     "bits": 8,
+     "sum_um": 21820.056,
+     "max_um": 3456.3900000000003,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v6_p": {
+     "bits": 4,
+     "sum_um": 8260.644000000004,
+     "max_um": 3429.066000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q6_p": {
+     "bits": 520,
+     "sum_um": 757289.3759999999,
+     "max_um": 3420.750000000001,
+     "over500": 520
+    },
+    "ot_s81_vm_x34_t -> dsfd_vm_static_landing": {
+     "bits": 2052,
+     "sum_um": 6042183.671999999,
+     "max_um": 3374.7299999999987,
+     "over500": 2052
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v7_p": {
+     "bits": 4,
+     "sum_um": 8357.160000000003,
+     "max_um": 3320.9220000000014,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q7_p": {
+     "bits": 520,
+     "sum_um": 732606.8639999991,
+     "max_um": 3313.4700000000016,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v1_p": {
+     "bits": 8,
+     "sum_um": 21576.624000000003,
+     "max_um": 3307.3500000000004,
+     "over500": 8
+    },
+    "ot_s81_vm_x34_t -> dsfd_vm_seq_tile": {
+     "bits": 12,
+     "sum_um": 35480.08799999998,
+     "max_um": 3285.5939999999987,
+     "over500": 12
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v1_p": {
+     "bits": 8,
+     "sum_um": 19846.679999999997,
+     "max_um": 3234.774,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v4_p": {
+     "bits": 4,
+     "sum_um": 7809.636,
+     "max_um": 3203.994,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q0_p": {
+     "bits": 520,
+     "sum_um": 1245135.8520000002,
+     "max_um": 3201.5099999999984,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q4_p": {
+     "bits": 520,
+     "sum_um": 713071.008,
+     "max_um": 3195.246,
+     "over500": 456
+    },
+    "dsfd_vm_static_read_v0_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 3182.777999999999,
+     "max_um": 3182.777999999999,
+     "over500": 1
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q0_p": {
+     "bits": 168,
+     "sum_um": 424861.9679999995,
+     "max_um": 3175.733999999999,
+     "over500": 168
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v1_p": {
+     "bits": 8,
+     "sum_um": 20659.92,
+     "max_um": 3156.582000000001,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v2_p": {
+     "bits": 4,
+     "sum_um": 10245.9,
+     "max_um": 3125.9100000000003,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v5_p": {
+     "bits": 4,
+     "sum_um": 9436.512,
+     "max_um": 3110.1059999999998,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v6_p": {
+     "bits": 4,
+     "sum_um": 7604.436000000003,
+     "max_um": 3095.9940000000015,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q6_p": {
+     "bits": 520,
+     "sum_um": 679286.5919999994,
+     "max_um": 3088.5420000000017,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q0_p": {
+     "bits": 520,
+     "sum_um": 1269192.912,
+     "max_um": 3047.718,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q5_p": {
+     "bits": 520,
+     "sum_um": 852983.376,
+     "max_um": 3043.4700000000003,
+     "over500": 520
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 48,
+     "sum_um": 143626.0319999999,
+     "max_um": 3013.385999999998,
+     "over500": 48
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v2_p": {
+     "bits": 4,
+     "sum_um": 9458.904,
+     "max_um": 2975.1420000000003,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q0_p": {
+     "bits": 520,
+     "sum_um": 1177945.896,
+     "max_um": 2975.141999999999,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v2_p": {
+     "bits": 4,
+     "sum_um": 9259.212,
+     "max_um": 2902.566,
+     "over500": 4
+    },
+    "dsfd_vm_static_w0_payload -> dsfd_vm_static_wdispatch128": {
+     "bits": 111936,
+     "sum_um": 144064935.9359977,
+     "max_um": 2896.908000000001,
+     "over500": 97504
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v4_p": {
+     "bits": 4,
+     "sum_um": 7300.415999999999,
+     "max_um": 2870.9220000000005,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q1_p": {
+     "bits": 520,
+     "sum_um": 1081760.0759999994,
+     "max_um": 2868.965999999998,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q4_p": {
+     "bits": 520,
+     "sum_um": 670461.0720000007,
+     "max_um": 2863.038,
+     "over500": 520
+    },
+    "dsfd_vm_static_read_v1_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 2850.5699999999997,
+     "max_um": 2850.5699999999997,
+     "over500": 1
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q1_p": {
+     "bits": 160,
+     "sum_um": 352029.02399999974,
+     "max_um": 2850.1979999999985,
+     "over500": 160
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_fsr_b0": {
+     "bits": 2172,
+     "sum_um": 3467333.1599999764,
+     "max_um": 2846.141999999997,
+     "over500": 2172
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q0_p": {
+     "bits": 520,
+     "sum_um": 1188632.5439999998,
+     "max_um": 2845.9739999999997,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v2_p": {
+     "bits": 4,
+     "sum_um": 9518.844,
+     "max_um": 2824.3740000000007,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v3_p": {
+     "bits": 4,
+     "sum_um": 9581.772000000003,
+     "max_um": 2793.558000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v5_p": {
+     "bits": 4,
+     "sum_um": 7931.532,
+     "max_um": 2777.034,
+     "over500": 4
+    },
+    "dsfd_vm_static_fsr_b2 -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 5282.8319999999985,
+     "max_um": 2754.581999999999,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q1_p": {
+     "bits": 520,
+     "sum_um": 1108449.6479999993,
+     "max_um": 2715.1739999999995,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q5_p": {
+     "bits": 520,
+     "sum_um": 778316.7600000002,
+     "max_um": 2711.262,
+     "over500": 519
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q3_p": {
+     "bits": 520,
+     "sum_um": 976034.9759999996,
+     "max_um": 2710.3980000000006,
+     "over500": 520
+    },
+    "dsfd_vm_static_fsr_b0 -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 5892.263999999997,
+     "max_um": 2684.393999999999,
+     "over500": 4
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v1_p": {
+     "bits": 54,
+     "sum_um": 143775.89999999988,
+     "max_um": 2683.001999999999,
+     "over500": 54
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 4700.5920000000015,
+     "max_um": 2670.504,
+     "over500": 3
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_fsr_b1": {
+     "bits": 2172,
+     "sum_um": 3082628.5200000145,
+     "max_um": 2669.021999999997,
+     "over500": 2172
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v3_p": {
+     "bits": 4,
+     "sum_um": 8647.788,
+     "max_um": 2642.790000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q1_p": {
+     "bits": 520,
+     "sum_um": 1038974.0399999993,
+     "max_um": 2642.597999999999,
+     "over500": 520
+    },
+    "dsfd_vm_static_fsr_b1 -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 5280.959999999997,
+     "max_um": 2576.885999999999,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v3_p": {
+     "bits": 4,
+     "sum_um": 8595.084,
+     "max_um": 2570.2140000000004,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q2_p": {
+     "bits": 520,
+     "sum_um": 953703.8039999994,
+     "max_um": 2535.7979999999984,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q1_p": {
+     "bits": 520,
+     "sum_um": 1117804.1279999996,
+     "max_um": 2531.669999999999,
+     "over500": 520
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q2_p": {
+     "bits": 128,
+     "sum_um": 241287.1679999998,
+     "max_um": 2525.525999999999,
+     "over500": 128
+    },
+    "dsfd_vm_static_read_v2_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 2518.506,
+     "max_um": 2518.506,
+     "over500": 1
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v3_p": {
+     "bits": 4,
+     "sum_um": 8854.716000000002,
+     "max_um": 2492.0220000000013,
+     "over500": 4
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_fsr_b2": {
+     "bits": 2172,
+     "sum_um": 2697923.8799999855,
+     "max_um": 2491.9019999999973,
+     "over500": 1629
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v5_p": {
+     "bits": 4,
+     "sum_um": 8191.164000000001,
+     "max_um": 2443.962,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q2_p": {
+     "bits": 520,
+     "sum_um": 950751.9839999996,
+     "max_um": 2382.006,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q5_p": {
+     "bits": 520,
+     "sum_um": 766102.2359999993,
+     "max_um": 2379.0540000000005,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q3_p": {
+     "bits": 520,
+     "sum_um": 881515.7039999998,
+     "max_um": 2378.1900000000005,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q2_p": {
+     "bits": 520,
+     "sum_um": 1046829.2160000001,
+     "max_um": 2377.4700000000003,
+     "over500": 520
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v2_p": {
+     "bits": 48,
+     "sum_um": 112276.89599999998,
+     "max_um": 2358.761999999999,
+     "over500": 48
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 4268.207999999999,
+     "max_um": 2338.296,
+     "over500": 3
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q2_p": {
+     "bits": 520,
+     "sum_um": 960156.0239999992,
+     "max_um": 2330.741999999999,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v5_p": {
+     "bits": 4,
+     "sum_um": 7984.236000000001,
+     "max_um": 2310.582000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v7_p": {
+     "bits": 4,
+     "sum_um": 9233.016,
+     "max_um": 2308.3740000000003,
+     "over500": 4
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q7_p": {
+     "bits": 32,
+     "sum_um": 57910.46400000001,
+     "max_um": 2249.4540000000006,
+     "over500": 32
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q3_p": {
+     "bits": 520,
+     "sum_um": 878986.7160000004,
+     "max_um": 2228.069999999999,
+     "over500": 520
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q3_p": {
+     "bits": 128,
+     "sum_um": 199252.9919999997,
+     "max_um": 2199.701999999999,
+     "over500": 128
+    },
+    "dsfd_vm_static_read_v3_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 2186.442,
+     "max_um": 2186.442,
+     "over500": 1
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v6_p": {
+     "bits": 4,
+     "sum_um": 8327.975999999999,
+     "max_um": 2082.102,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q3_p": {
+     "bits": 520,
+     "sum_um": 834052.1279999997,
+     "max_um": 2049.6540000000005,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q5_p": {
+     "bits": 520,
+     "sum_um": 709528.2239999999,
+     "max_um": 2046.8460000000005,
+     "over500": 520
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v3_p": {
+     "bits": 48,
+     "sum_um": 96600.76799999995,
+     "max_um": 2032.985999999999,
+     "over500": 48
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q6_p": {
+     "bits": 32,
+     "sum_um": 50670.144,
+     "max_um": 2023.0380000000005,
+     "over500": 32
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_return_bank8_l0_p": {
+     "bits": 96,
+     "sum_um": 102631.48800000001,
+     "max_um": 2012.0880000000004,
+     "over500": 96
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 3308.2320000000027,
+     "max_um": 2006.232,
+     "over500": 1
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q5_p": {
+     "bits": 128,
+     "sum_um": 158244.09599999984,
+     "max_um": 1874.0699999999988,
+     "over500": 128
+    },
+    "dsfd_vm_static_read_v5_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 1855.4340000000002,
+     "max_um": 1855.4340000000002,
+     "over500": 1
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v4_p": {
+     "bits": 12,
+     "sum_um": 22131.623999999996,
+     "max_um": 1849.1099999999997,
+     "over500": 12
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q4_p": {
+     "bits": 48,
+     "sum_um": 64546.463999999985,
+     "max_um": 1795.3739999999998,
+     "over500": 48
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_fsr_b3": {
+     "bits": 2172,
+     "sum_um": 2685595.4640000183,
+     "max_um": 1722.9419999999986,
+     "over500": 2172
+    },
+    "dsfd_vm_static_landing -> dsfd_vm_static_w0_header": {
+     "bits": 60,
+     "sum_um": 101080.7280000001,
+     "max_um": 1715.1540000000018,
+     "over500": 60
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v5_p": {
+     "bits": 28,
+     "sum_um": 47604.455999999984,
+     "max_um": 1707.3059999999987,
+     "over500": 28
+    },
+    "dsfd_vm_static_read_q1_p -> dsfd_vm_static_read_v1_p": {
+     "bits": 80,
+     "sum_um": 82411.96799999995,
+     "max_um": 1684.284,
+     "over500": 69
+    },
+    "dsfd_vm_static_read_q2_p -> dsfd_vm_static_read_v2_p": {
+     "bits": 72,
+     "sum_um": 73995.55200000001,
+     "max_um": 1682.7959999999998,
+     "over500": 62
+    },
+    "dsfd_vm_static_read_q3_p -> dsfd_vm_static_read_v3_p": {
+     "bits": 72,
+     "sum_um": 73995.55200000001,
+     "max_um": 1682.7959999999998,
+     "over500": 62
+    },
+    "dsfd_vm_static_read_q5_p -> dsfd_vm_static_read_v5_p": {
+     "bits": 72,
+     "sum_um": 73995.55200000001,
+     "max_um": 1682.7959999999998,
+     "over500": 62
+    },
+    "dsfd_vm_static_read_q0_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 72,
+     "sum_um": 73871.13599999995,
+     "max_um": 1681.0679999999998,
+     "over500": 62
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_return_bank8_l1_p": {
+     "bits": 96,
+     "sum_um": 75871.96800000002,
+     "max_um": 1679.4480000000008,
+     "over500": 48
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 2742.9840000000017,
+     "max_um": 1674.1680000000001,
+     "over500": 2
+    },
+    "dsfd_vm_static_read_v7_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 1659.8820000000005,
+     "max_um": 1659.8820000000005,
+     "over500": 1
+    },
+    "dsfd_vm_static_read_q1_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 8,
+     "sum_um": 7853.088000000002,
+     "max_um": 1600.0439999999999,
+     "over500": 7
+    },
+    "dsfd_vm_static_fsr_b3 -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 4330.440000000001,
+     "max_um": 1562.7780000000002,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_return_bank8_l0_p": {
+     "bits": 48,
+     "sum_um": 42831.36000000003,
+     "max_um": 1510.416000000001,
+     "over500": 36
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_return_bank8_l3_p": {
+     "bits": 48,
+     "sum_um": 42515.71200000007,
+     "max_um": 1497.168000000001,
+     "over500": 36
+    },
+    "dsfd_vm_static_read_v6_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 1435.674,
+     "max_um": 1435.674,
+     "over500": 1
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_return_bank8_l2_p": {
+     "bits": 96,
+     "sum_um": 78706.368,
+     "max_um": 1346.808000000001,
+     "over500": 72
+    },
+    "dsfd_vm_static_read_v4_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 1211.754,
+     "max_um": 1211.754,
+     "over500": 1
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_return_bank8_l1_p": {
+     "bits": 48,
+     "sum_um": 30349.43999999999,
+     "max_um": 1177.7760000000003,
+     "over500": 24
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_return_bank8_l3_p": {
+     "bits": 48,
+     "sum_um": 30034.367999999966,
+     "max_um": 1167.2640000000001,
+     "over500": 24
+    },
+    "dsfd_vm_static_read_q6_p -> dsfd_vm_static_read_v6_p": {
+     "bits": 40,
+     "sum_um": 27503.904,
+     "max_um": 1152.732,
+     "over500": 29
+    },
+    "dsfd_vm_static_read_q7_p -> dsfd_vm_static_read_v7_p": {
+     "bits": 40,
+     "sum_um": 27503.904,
+     "max_um": 1152.732,
+     "over500": 29
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_return_bank8_l1_p": {
+     "bits": 48,
+     "sum_um": 23431.680000000022,
+     "max_um": 1146.6720000000018,
+     "over500": 12
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_return_bank8_l0_p": {
+     "bits": 48,
+     "sum_um": 23620.03200000003,
+     "max_um": 1128.3840000000014,
+     "over500": 12
+    },
+    "dsfd_vm_static_read_q4_p -> dsfd_vm_static_read_v4_p": {
+     "bits": 24,
+     "sum_um": 15927.264000000006,
+     "max_um": 1122.06,
+     "over500": 15
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_return_bank8_l3_p": {
+     "bits": 96,
+     "sum_um": 69991.68000000002,
+     "max_um": 1014.168000000001,
+     "over500": 72
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_return_bank8_l2_p": {
+     "bits": 48,
+     "sum_um": 34661.952000000034,
+     "max_um": 995.472000000002,
+     "over500": 36
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_return_bank8_l0_p": {
+     "bits": 48,
+     "sum_um": 35040.38400000002,
+     "max_um": 979.7760000000017,
+     "over500": 36
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_seq_tile": {
+     "bits": 451,
+     "sum_um": 129417.93599999981,
+     "max_um": 674.4719999999988,
+     "over500": 31
+    },
+    "dsfd_vm_static_read_q1_p -> dsfd_vm_static_read_q0_p": {
+     "bits": 520,
+     "sum_um": 327132.0000000025,
+     "max_um": 629.5320000000002,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_return_bank8_l2_p": {
+     "bits": 48,
+     "sum_um": 15238.079999999996,
+     "max_um": 626.9760000000006,
+     "over500": 12
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_return_bank8_l3_p": {
+     "bits": 48,
+     "sum_um": 15111.359999999999,
+     "max_um": 619.0560000000005,
+     "over500": 12
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_return_bank8_l1_p": {
+     "bits": 48,
+     "sum_um": 18992.447999999982,
+     "max_um": 556.1280000000002,
+     "over500": 24
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_return_bank8_l2_p": {
+     "bits": 48,
+     "sum_um": 18551.807999999968,
+     "max_um": 543.0239999999999,
+     "over500": 24
+    },
+    "dsfd_vm_static_bank128 -> dsfd_vm_static_relay128_b4": {
+     "bits": 20352,
+     "sum_um": 6052386.816000941,
+     "max_um": 486.3960000000002,
+     "over500": 0
+    },
+    "dsfd_vm_static_relay128_b4 -> dsfd_vm_static_bank128": {
+     "bits": 21504,
+     "sum_um": 6297698.304000016,
+     "max_um": 463.23600000000033,
+     "over500": 0
+    },
+    "dsfd_vm_static_write_capture128 -> dsfd_vm_static_scatter_b8_out": {
+     "bits": 19968,
+     "sum_um": 6235039.488000013,
+     "max_um": 449.2080000000001,
+     "over500": 0
+    },
+    "dsfd_vm_static_cap_leaf -> ot_s81_vm_x34_s": {
+     "bits": 8688,
+     "sum_um": 1785722.8799999976,
+     "max_um": 424.1279999999996,
+     "over500": 0
+    },
+    "dsfd_vm_static_relay128_b8 -> dsfd_vm_static_relay128_b4": {
+     "bits": 21504,
+     "sum_um": 4819206.143999644,
+     "max_um": 398.9400000000005,
+     "over500": 0
+    },
+    "dsfd_vm_static_relay128_b4 -> dsfd_vm_static_relay128_b8": {
+     "bits": 20352,
+     "sum_um": 7063312.896000746,
+     "max_um": 397.11600000000044,
+     "over500": 0
+    },
+    "dsfd_vm_static_landing -> dsfd_vm_seq_tile": {
+     "bits": 3,
+     "sum_um": 1040.5439999999999,
+     "max_um": 347.18399999999974,
+     "over500": 0
+    },
+    "dsfd_vm_static_w0_header -> dsfd_vm_static_wcontrol": {
+     "bits": 798,
+     "sum_um": 274144.10400000255,
+     "max_um": 343.692,
+     "over500": 0
+    },
+    "dsfd_vm_static_scatter_b8_out -> dsfd_vm_static_relay128_b8": {
+     "bits": 19200,
+     "sum_um": 4634796.288000025,
+     "max_um": 342.1860000000006,
+     "over500": 0
+    },
+    "dsfd_vm_seq_tile -> dsfd_vm_static_landing": {
+     "bits": 19,
+     "sum_um": 5785.199999999998,
+     "max_um": 307.72800000000007,
+     "over500": 0
+    },
+    "dsfd_vm_static_wdispatch128 -> dsfd_vm_static_wstage128": {
+     "bits": 60288,
+     "sum_um": 3790185.983999881,
+     "max_um": 83.50800000000072,
+     "over500": 0
+    },
+    "ot_s81_vm_x34_s -> ot_s81_vm_x34_t": {
+     "bits": 33998,
+     "sum_um": 740034.4560002423,
+     "max_um": 21.79199999999946,
+     "over500": 0
+    },
+    "ot_s81_vm_x43_t -> ot_s81_vm_x43_s": {
+     "bits": 6171,
+     "sum_um": 133811.9639999854,
+     "max_um": 21.684000000000196,
+     "over500": 0
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_return_bank8_l0_p": {
+     "bits": 48,
+     "sum_um": 504.57600000000093,
+     "max_um": 10.512000000000626,
+     "over500": 0
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_return_bank8_l1_p": {
+     "bits": 48,
+     "sum_um": 376.7040000000038,
+     "max_um": 7.920000000000073,
+     "over500": 0
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_return_bank8_l2_p": {
+     "bits": 48,
+     "sum_um": 252.28799999999956,
+     "max_um": 5.328000000000429,
+     "over500": 0
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_return_bank8_l3_p": {
+     "bits": 48,
+     "sum_um": 126.7200000000048,
+     "max_um": 2.736000000000786,
+     "over500": 0
+    }
+   },
+   "worst_bits": [
+    {
+     "source": [
+      42,
+      "o_d",
+      22,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      172,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      18.876
+     ],
+     "sink_xy_um": [
+      432.042,
+      4866.336
+     ],
+     "L1_um": 9836.921999999999
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      23,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      173,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      19.451999999999998
+     ],
+     "sink_xy_um": [
+      432.042,
+      4866.432
+     ],
+     "L1_um": 9836.442
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      24,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      174,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      20.028
+     ],
+     "sink_xy_um": [
+      432.042,
+      4866.528
+     ],
+     "L1_um": 9835.962
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      25,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      175,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      20.604
+     ],
+     "sink_xy_um": [
+      432.042,
+      4866.624
+     ],
+     "L1_um": 9835.482
+    },
+    {
+     "source": [
+      54,
+      "o_d",
+      22,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      204,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      386.076
+     ],
+     "sink_xy_um": [
+      432.042,
+      4869.408
+     ],
+     "L1_um": 9472.794
+    },
+    {
+     "source": [
+      54,
+      "o_d",
+      23,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      205,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      386.65200000000004
+     ],
+     "sink_xy_um": [
+      432.042,
+      4869.504
+     ],
+     "L1_um": 9472.313999999998
+    },
+    {
+     "source": [
+      54,
+      "o_d",
+      24,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      206,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      387.22800000000007
+     ],
+     "sink_xy_um": [
+      432.042,
+      4869.6
+     ],
+     "L1_um": 9471.833999999999
+    },
+    {
+     "source": [
+      54,
+      "o_d",
+      25,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      207,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      387.80400000000003
+     ],
+     "sink_xy_um": [
+      432.042,
+      4869.696
+     ],
+     "L1_um": 9471.354
+    },
+    {
+     "source": [
+      39,
+      "o_d",
+      22,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      168,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5054.304,
+      18.876
+     ],
+     "sink_xy_um": [
+      432.042,
+      4865.952
+     ],
+     "L1_um": 9469.338
+    },
+    {
+     "source": [
+      39,
+      "o_d",
+      23,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      169,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5054.304,
+      19.451999999999998
+     ],
+     "sink_xy_um": [
+      432.042,
+      4866.048
+     ],
+     "L1_um": 9468.858
+    },
+    {
+     "source": [
+      39,
+      "o_d",
+      24,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      170,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5054.304,
+      20.028
+     ],
+     "sink_xy_um": [
+      432.042,
+      4866.144
+     ],
+     "L1_um": 9468.378
+    },
+    {
+     "source": [
+      39,
+      "o_d",
+      25,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      171,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5054.304,
+      20.604
+     ],
+     "sink_xy_um": [
+      432.042,
+      4866.24
+     ],
+     "L1_um": 9467.898
+    },
+    {
+     "source": [
+      51,
+      "o_d",
+      22,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      200,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5054.304,
+      386.076
+     ],
+     "sink_xy_um": [
+      432.042,
+      4869.024
+     ],
+     "L1_um": 9105.21
+    },
+    {
+     "source": [
+      51,
+      "o_d",
+      23,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      201,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5054.304,
+      386.65200000000004
+     ],
+     "sink_xy_um": [
+      432.042,
+      4869.12
+     ],
+     "L1_um": 9104.73
+    },
+    {
+     "source": [
+      51,
+      "o_d",
+      24,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      202,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5054.304,
+      387.22800000000007
+     ],
+     "sink_xy_um": [
+      432.042,
+      4869.216
+     ],
+     "L1_um": 9104.25
+    },
+    {
+     "source": [
+      51,
+      "o_d",
+      25,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      203,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5054.304,
+      387.80400000000003
+     ],
+     "sink_xy_um": [
+      432.042,
+      4869.312
+     ],
+     "L1_um": 9103.77
+    },
+    {
+     "source": [
+      24,
+      "o_d",
+      22,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      148,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      753.2760000000001
+     ],
+     "sink_xy_um": [
+      432.042,
+      4864.032
+     ],
+     "L1_um": 9100.218
+    },
+    {
+     "source": [
+      24,
+      "o_d",
+      23,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      149,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      753.8520000000001
+     ],
+     "sink_xy_um": [
+      432.042,
+      4864.128000000001
+     ],
+     "L1_um": 9099.738000000001
+    },
+    {
+     "source": [
+      24,
+      "o_d",
+      24,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      150,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      754.4280000000001
+     ],
+     "sink_xy_um": [
+      432.042,
+      4864.224
+     ],
+     "L1_um": 9099.258
+    },
+    {
+     "source": [
+      24,
+      "o_d",
+      25,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      151,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      755.0040000000001
+     ],
+     "sink_xy_um": [
+      432.042,
+      4864.320000000001
+     ],
+     "L1_um": 9098.778
+    },
+    {
+     "source": [
+      12,
+      "o_d",
+      22,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      132,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      4687.104,
+      18.876
+     ],
+     "sink_xy_um": [
+      432.042,
+      4862.496
+     ],
+     "L1_um": 9098.682
+    },
+    {
+     "source": [
+      12,
+      "o_d",
+      23,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      133,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      4687.104,
+      19.451999999999998
+     ],
+     "sink_xy_um": [
+      432.042,
+      4862.592000000001
+     ],
+     "L1_um": 9098.202000000001
+    },
+    {
+     "source": [
+      12,
+      "o_d",
+      24,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      134,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      4687.104,
+      20.028
+     ],
+     "sink_xy_um": [
+      432.042,
+      4862.688
+     ],
+     "L1_um": 9097.722
+    },
+    {
+     "source": [
+      12,
+      "o_d",
+      25,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_mask",
+      135,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      4687.104,
+      20.604
+     ],
+     "sink_xy_um": [
+      432.042,
+      4862.784000000001
+     ],
+     "L1_um": 9097.242
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      286,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5504,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      170.94
+     ],
+     "sink_xy_um": [
+      1217.952,
+      4903.158
+     ],
+     "L1_um": 8935.77
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      287,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5505,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      171.516
+     ],
+     "sink_xy_um": [
+      1218.048,
+      4903.158
+     ],
+     "L1_um": 8935.098000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      288,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5506,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      172.092
+     ],
+     "sink_xy_um": [
+      1218.144,
+      4903.158
+     ],
+     "L1_um": 8934.426
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      289,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5507,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      172.668
+     ],
+     "sink_xy_um": [
+      1218.24,
+      4903.158
+     ],
+     "L1_um": 8933.754
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      290,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5508,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      173.244
+     ],
+     "sink_xy_um": [
+      1218.336,
+      4903.158
+     ],
+     "L1_um": 8933.082
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      291,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5509,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      173.82
+     ],
+     "sink_xy_um": [
+      1218.432,
+      4903.158
+     ],
+     "L1_um": 8932.41
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      292,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5510,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      174.396
+     ],
+     "sink_xy_um": [
+      1218.528,
+      4903.158
+     ],
+     "L1_um": 8931.738000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      293,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5511,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      174.972
+     ],
+     "sink_xy_um": [
+      1218.624,
+      4903.158
+     ],
+     "L1_um": 8931.066
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      294,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5512,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      175.548
+     ],
+     "sink_xy_um": [
+      1218.72,
+      4903.158
+     ],
+     "L1_um": 8930.394
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      295,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5513,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      176.124
+     ],
+     "sink_xy_um": [
+      1218.816,
+      4903.158
+     ],
+     "L1_um": 8929.722000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      296,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5514,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      176.7
+     ],
+     "sink_xy_um": [
+      1218.912,
+      4903.158
+     ],
+     "L1_um": 8929.05
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      297,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5515,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      177.276
+     ],
+     "sink_xy_um": [
+      1219.008,
+      4903.158
+     ],
+     "L1_um": 8928.378
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      298,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5516,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      177.852
+     ],
+     "sink_xy_um": [
+      1219.104,
+      4903.158
+     ],
+     "L1_um": 8927.706
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      299,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5517,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      178.428
+     ],
+     "sink_xy_um": [
+      1219.2,
+      4903.158
+     ],
+     "L1_um": 8927.034
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      300,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5518,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      179.004
+     ],
+     "sink_xy_um": [
+      1219.296,
+      4903.158
+     ],
+     "L1_um": 8926.362000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      301,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5519,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      179.58
+     ],
+     "sink_xy_um": [
+      1219.392,
+      4903.158
+     ],
+     "L1_um": 8925.69
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      302,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5520,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      180.156
+     ],
+     "sink_xy_um": [
+      1219.488,
+      4903.158
+     ],
+     "L1_um": 8925.018
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      303,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5521,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      180.732
+     ],
+     "sink_xy_um": [
+      1219.5839999999998,
+      4903.158
+     ],
+     "L1_um": 8924.346000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      304,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5522,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      181.308
+     ],
+     "sink_xy_um": [
+      1219.6799999999998,
+      4903.158
+     ],
+     "L1_um": 8923.674
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      305,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5523,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      181.88400000000001
+     ],
+     "sink_xy_um": [
+      1219.7759999999998,
+      4903.158
+     ],
+     "L1_um": 8923.002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      306,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5524,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      182.46
+     ],
+     "sink_xy_um": [
+      1219.8719999999998,
+      4903.158
+     ],
+     "L1_um": 8922.33
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      307,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5525,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      183.036
+     ],
+     "sink_xy_um": [
+      1219.9679999999998,
+      4903.158
+     ],
+     "L1_um": 8921.658
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      308,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5526,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      183.612
+     ],
+     "sink_xy_um": [
+      1220.0639999999999,
+      4903.158
+     ],
+     "L1_um": 8920.986
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      309,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5527,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      184.188
+     ],
+     "sink_xy_um": [
+      1220.1599999999999,
+      4903.158
+     ],
+     "L1_um": 8920.314
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      310,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5528,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      184.764
+     ],
+     "sink_xy_um": [
+      1220.2559999999999,
+      4903.158
+     ],
+     "L1_um": 8919.642
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      311,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5529,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      185.34
+     ],
+     "sink_xy_um": [
+      1220.3519999999999,
+      4903.158
+     ],
+     "L1_um": 8918.970000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      312,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5530,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      185.916
+     ],
+     "sink_xy_um": [
+      1220.4479999999999,
+      4903.158
+     ],
+     "L1_um": 8918.298
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      313,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5531,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      186.492
+     ],
+     "sink_xy_um": [
+      1220.5439999999999,
+      4903.158
+     ],
+     "L1_um": 8917.626
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      314,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5532,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      187.068
+     ],
+     "sink_xy_um": [
+      1220.6399999999999,
+      4903.158
+     ],
+     "L1_um": 8916.954
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      315,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5533,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      187.644
+     ],
+     "sink_xy_um": [
+      1220.7359999999999,
+      4903.158
+     ],
+     "L1_um": 8916.282
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      316,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5534,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      188.22
+     ],
+     "sink_xy_um": [
+      1220.8319999999999,
+      4903.158
+     ],
+     "L1_um": 8915.61
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      317,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5535,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      188.796
+     ],
+     "sink_xy_um": [
+      1220.9279999999999,
+      4903.158
+     ],
+     "L1_um": 8914.938
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      318,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5536,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      189.372
+     ],
+     "sink_xy_um": [
+      1221.024,
+      4903.158
+     ],
+     "L1_um": 8914.266
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      319,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5537,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      189.948
+     ],
+     "sink_xy_um": [
+      1221.12,
+      4903.158
+     ],
+     "L1_um": 8913.594000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      320,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5538,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      190.524
+     ],
+     "sink_xy_um": [
+      1221.216,
+      4903.158
+     ],
+     "L1_um": 8912.922
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      321,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5539,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      191.1
+     ],
+     "sink_xy_um": [
+      1221.312,
+      4903.158
+     ],
+     "L1_um": 8912.25
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      322,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5540,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      191.676
+     ],
+     "sink_xy_um": [
+      1221.408,
+      4903.158
+     ],
+     "L1_um": 8911.578
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      323,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5541,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      192.252
+     ],
+     "sink_xy_um": [
+      1221.504,
+      4903.158
+     ],
+     "L1_um": 8910.905999999999
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      324,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5542,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      192.828
+     ],
+     "sink_xy_um": [
+      1221.6,
+      4903.158
+     ],
+     "L1_um": 8910.234
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      325,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5543,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      193.404
+     ],
+     "sink_xy_um": [
+      1221.696,
+      4903.158
+     ],
+     "L1_um": 8909.562000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      326,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5544,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      193.98
+     ],
+     "sink_xy_um": [
+      1221.792,
+      4903.158
+     ],
+     "L1_um": 8908.89
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      327,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5545,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      194.556
+     ],
+     "sink_xy_um": [
+      1221.888,
+      4903.158
+     ],
+     "L1_um": 8908.218
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      328,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5546,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      195.132
+     ],
+     "sink_xy_um": [
+      1221.984,
+      4903.158
+     ],
+     "L1_um": 8907.546000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      329,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5547,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      195.708
+     ],
+     "sink_xy_um": [
+      1222.08,
+      4903.158
+     ],
+     "L1_um": 8906.874
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      330,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5548,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      196.284
+     ],
+     "sink_xy_um": [
+      1222.176,
+      4903.158
+     ],
+     "L1_um": 8906.202000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      331,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5549,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      196.86
+     ],
+     "sink_xy_um": [
+      1222.272,
+      4903.158
+     ],
+     "L1_um": 8905.53
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      332,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5550,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      197.436
+     ],
+     "sink_xy_um": [
+      1222.368,
+      4903.158
+     ],
+     "L1_um": 8904.858
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      333,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5551,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      198.012
+     ],
+     "sink_xy_um": [
+      1222.464,
+      4903.158
+     ],
+     "L1_um": 8904.186000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      334,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5552,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      198.588
+     ],
+     "sink_xy_um": [
+      1222.56,
+      4903.158
+     ],
+     "L1_um": 8903.514
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      335,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5553,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      199.164
+     ],
+     "sink_xy_um": [
+      1222.656,
+      4903.158
+     ],
+     "L1_um": 8902.842
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      336,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5554,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      199.74
+     ],
+     "sink_xy_um": [
+      1222.752,
+      4903.158
+     ],
+     "L1_um": 8902.170000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      337,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5555,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      200.316
+     ],
+     "sink_xy_um": [
+      1222.848,
+      4903.158
+     ],
+     "L1_um": 8901.498
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      338,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5556,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      200.892
+     ],
+     "sink_xy_um": [
+      1222.944,
+      4903.158
+     ],
+     "L1_um": 8900.826000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      339,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5557,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      201.468
+     ],
+     "sink_xy_um": [
+      1223.04,
+      4903.158
+     ],
+     "L1_um": 8900.154
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      340,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5558,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      202.044
+     ],
+     "sink_xy_um": [
+      1223.136,
+      4903.158
+     ],
+     "L1_um": 8899.482
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      341,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5559,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      202.62
+     ],
+     "sink_xy_um": [
+      1223.232,
+      4903.158
+     ],
+     "L1_um": 8898.810000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      342,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5560,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      203.196
+     ],
+     "sink_xy_um": [
+      1223.328,
+      4903.158
+     ],
+     "L1_um": 8898.137999999999
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      343,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5561,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      203.772
+     ],
+     "sink_xy_um": [
+      1223.424,
+      4903.158
+     ],
+     "L1_um": 8897.466
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      344,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5562,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      204.348
+     ],
+     "sink_xy_um": [
+      1223.52,
+      4903.158
+     ],
+     "L1_um": 8896.794000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      345,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5563,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      204.924
+     ],
+     "sink_xy_um": [
+      1223.616,
+      4903.158
+     ],
+     "L1_um": 8896.122
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      346,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5564,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      205.5
+     ],
+     "sink_xy_um": [
+      1223.712,
+      4903.158
+     ],
+     "L1_um": 8895.45
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      347,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5565,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      206.076
+     ],
+     "sink_xy_um": [
+      1223.808,
+      4903.158
+     ],
+     "L1_um": 8894.778
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      348,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5566,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      206.652
+     ],
+     "sink_xy_um": [
+      1223.904,
+      4903.158
+     ],
+     "L1_um": 8894.106
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      349,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5567,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      207.228
+     ],
+     "sink_xy_um": [
+      1224.0,
+      4903.158
+     ],
+     "L1_um": 8893.434000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      350,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5568,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      207.804
+     ],
+     "sink_xy_um": [
+      1224.096,
+      4903.158
+     ],
+     "L1_um": 8892.761999999999
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      351,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5569,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      208.38
+     ],
+     "sink_xy_um": [
+      1224.192,
+      4903.158
+     ],
+     "L1_um": 8892.09
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      352,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5570,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      208.956
+     ],
+     "sink_xy_um": [
+      1224.288,
+      4903.158
+     ],
+     "L1_um": 8891.418000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      353,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5571,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      209.532
+     ],
+     "sink_xy_um": [
+      1224.384,
+      4903.158
+     ],
+     "L1_um": 8890.746
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      354,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5572,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      210.108
+     ],
+     "sink_xy_um": [
+      1224.48,
+      4903.158
+     ],
+     "L1_um": 8890.074
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      355,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5573,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      210.684
+     ],
+     "sink_xy_um": [
+      1224.576,
+      4903.158
+     ],
+     "L1_um": 8889.402
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      356,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5574,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      211.26
+     ],
+     "sink_xy_um": [
+      1224.672,
+      4903.158
+     ],
+     "L1_um": 8888.73
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      357,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5575,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      211.836
+     ],
+     "sink_xy_um": [
+      1224.768,
+      4903.158
+     ],
+     "L1_um": 8888.058
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      358,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5576,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      212.412
+     ],
+     "sink_xy_um": [
+      1224.864,
+      4903.158
+     ],
+     "L1_um": 8887.385999999999
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      359,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5577,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      212.988
+     ],
+     "sink_xy_um": [
+      1224.96,
+      4903.158
+     ],
+     "L1_um": 8886.714
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      360,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5578,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      213.564
+     ],
+     "sink_xy_um": [
+      1225.056,
+      4903.158
+     ],
+     "L1_um": 8886.042000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      361,
+      "OUTPUT"
+     ],
+     "sink": [
+      67,
+      "i_data",
+      5579,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      5421.504,
+      214.14
+     ],
+     "sink_xy_um": [
+      1225.152,
+      4903.158
+     ],
+     "L1_um": 8885.369999999999
+    }
+   ],
+   "all_bits_file": "reach_body2x2_coherent_plus_service_1555.2.jsonl.gz",
+   "scope": "Every pure-wire uniquely joined hardleaf functional bit, at actual LEF/assigned/candidate pin coordinates. Unknown parent-expression/top homes retained; no reach exception, router, timing, clock/PG/cut or static-age proof."
+  },
+  {
+   "option": "body1x4v_coherent_plus_service_1555.2",
+   "outline_um": [
+    3542.4000000000005,
+    9828.0
+   ],
+   "counts": {
+    "clock_reset_endpoints_excluded": 1328,
+    "external_pin_home_unknown": 55458,
+    "measured_bits": 451846,
+    "over500_bits": 184924,
+    "sum_L1_um": 505336901.8800508,
+    "max_L1_um": 12772.218,
+    "CONSTANT": 634,
+    "PARENT_LOGIC_OR_UNRESOLVED": 5432
+   },
+   "family_pairs": {
+    "ot_s81_vm_x34_t -> dsfd_vm_static_w0_payload": {
+     "bits": 8448,
+     "sum_um": 60231019.00799999,
+     "max_um": 12772.218,
+     "over500": 8448
+    },
+    "dsfd_vm_static_relay128_b8 -> dsfd_vm_static_return_bank8_l3_p": {
+     "bits": 4384,
+     "sum_um": 19563910.847999983,
+     "max_um": 7956.09,
+     "over500": 4384
+    },
+    "dsfd_vm_static_landing -> dsfd_vm_static_w0_payload": {
+     "bits": 2048,
+     "sum_um": 10022289.168000001,
+     "max_um": 7950.594000000002,
+     "over500": 2048
+    },
+    "dsfd_vm_static_relay128_b8 -> dsfd_vm_static_return_bank8_l2_p": {
+     "bits": 4384,
+     "sum_um": 19059663.168000013,
+     "max_um": 7792.602000000001,
+     "over500": 4384
+    },
+    "dsfd_vm_static_wstage128 -> dsfd_vm_static_write_capture128": {
+     "bits": 19968,
+     "sum_um": 17337415.68,
+     "max_um": 7723.002000000001,
+     "over500": 2304
+    },
+    "dsfd_vm_static_relay128_b8 -> dsfd_vm_seq_tile": {
+     "bits": 1792,
+     "sum_um": 8582119.919999996,
+     "max_um": 7657.770000000002,
+     "over500": 1792
+    },
+    "dsfd_vm_static_relay128_b8 -> dsfd_vm_static_return_bank8_l1_p": {
+     "bits": 4384,
+     "sum_um": 18969770.40000002,
+     "max_um": 7629.114000000001,
+     "over500": 4384
+    },
+    "dsfd_vm_static_fsr_b2 -> dsfd_vm_static_relay128_b8": {
+     "bits": 576,
+     "sum_um": 2771478.0600000015,
+     "max_um": 7476.228000000001,
+     "over500": 576
+    },
+    "dsfd_vm_static_relay128_b8 -> dsfd_vm_static_return_bank8_l0_p": {
+     "bits": 4384,
+     "sum_um": 18100153.247999948,
+     "max_um": 7318.745999999999,
+     "over500": 4384
+    },
+    "dsfd_vm_static_wcontrol -> dsfd_vm_static_wstage128": {
+     "bits": 384,
+     "sum_um": 1466781.6960000014,
+     "max_um": 7224.672,
+     "over500": 381
+    },
+    "dsfd_vm_static_wcontrol -> dsfd_vm_static_wdispatch128": {
+     "bits": 4240,
+     "sum_um": 16168021.967999987,
+     "max_um": 7072.620000000003,
+     "over500": 4240
+    },
+    "dsfd_vm_static_w0_header -> dsfd_vm_static_wdispatch128": {
+     "bits": 18656,
+     "sum_um": 66976710.24000009,
+     "max_um": 6840.7800000000025,
+     "over500": 18628
+    },
+    "dsfd_vm_static_fsr_b3 -> dsfd_vm_static_relay128_b8": {
+     "bits": 576,
+     "sum_um": 2128051.3920000005,
+     "max_um": 6638.148000000001,
+     "over500": 576
+    },
+    "ot_s81_vm_x34_t -> dsfd_vm_static_w0_header": {
+     "bits": 240,
+     "sum_um": 1201013.0879999998,
+     "max_um": 6123.642000000001,
+     "over500": 240
+    },
+    "dsfd_vm_static_wdispatch128 -> dsfd_vm_static_wcontrol": {
+     "bits": 96,
+     "sum_um": 424764.864,
+     "max_um": 5962.080000000001,
+     "over500": 96
+    },
+    "dsfd_vm_static_fsr_b0 -> dsfd_vm_static_relay128_b8": {
+     "bits": 576,
+     "sum_um": 2437786.7520000013,
+     "max_um": 5955.588000000002,
+     "over500": 576
+    },
+    "dsfd_vm_static_w0_payload -> dsfd_vm_static_wcontrol": {
+     "bits": 12,
+     "sum_um": 39271.86,
+     "max_um": 5773.236,
+     "over500": 12
+    },
+    "dsfd_vm_static_fsr_b1 -> dsfd_vm_static_relay128_b8": {
+     "bits": 576,
+     "sum_um": 1955052.6720000005,
+     "max_um": 5117.508000000002,
+     "over500": 576
+    },
+    "dsfd_vm_static_cap_ctl -> dsfd_vm_static_cap_leaf": {
+     "bits": 16,
+     "sum_um": 63354.33599999998,
+     "max_um": 5061.245999999998,
+     "over500": 16
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v7_p": {
+     "bits": 4,
+     "sum_um": 10492.104000000005,
+     "max_um": 4320.138000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q7_p": {
+     "bits": 520,
+     "sum_um": 986647.248,
+     "max_um": 4310.094000000001,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v6_p": {
+     "bits": 4,
+     "sum_um": 9739.380000000003,
+     "max_um": 4095.210000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q6_p": {
+     "bits": 520,
+     "sum_um": 947807.232,
+     "max_um": 4085.166000000001,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v7_p": {
+     "bits": 4,
+     "sum_um": 10274.376000000006,
+     "max_um": 3987.0660000000016,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q7_p": {
+     "bits": 520,
+     "sum_um": 952683.888,
+     "max_um": 3977.8860000000013,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v4_p": {
+     "bits": 4,
+     "sum_um": 9435.360000000002,
+     "max_um": 3870.138000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q4_p": {
+     "bits": 520,
+     "sum_um": 947329.8720000006,
+     "max_um": 3859.6620000000003,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 8,
+     "sum_um": 23150.616000000005,
+     "max_um": 3789.0300000000007,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v6_p": {
+     "bits": 4,
+     "sum_um": 9374.664000000002,
+     "max_um": 3762.138000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q6_p": {
+     "bits": 520,
+     "sum_um": 855985.3920000005,
+     "max_um": 3752.9580000000005,
+     "over500": 456
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v7_p": {
+     "bits": 4,
+     "sum_um": 9013.368000000006,
+     "max_um": 3653.9940000000015,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q7_p": {
+     "bits": 520,
+     "sum_um": 809023.5360000001,
+     "max_um": 3645.678000000001,
+     "over500": 456
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 8,
+     "sum_um": 24237.744,
+     "max_um": 3639.9900000000007,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 8,
+     "sum_um": 21471.216,
+     "max_um": 3567.4139999999998,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v4_p": {
+     "bits": 4,
+     "sum_um": 8621.364000000001,
+     "max_um": 3537.0660000000007,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q4_p": {
+     "bits": 520,
+     "sum_um": 811291.3920000001,
+     "max_um": 3527.4539999999997,
+     "over500": 392
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 8,
+     "sum_um": 23321.039999999997,
+     "max_um": 3489.2220000000007,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v1_p": {
+     "bits": 8,
+     "sum_um": 21820.056000000004,
+     "max_um": 3456.3900000000003,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v6_p": {
+     "bits": 4,
+     "sum_um": 8260.644000000004,
+     "max_um": 3429.066000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q6_p": {
+     "bits": 520,
+     "sum_um": 757289.3760000004,
+     "max_um": 3420.750000000001,
+     "over500": 520
+    },
+    "ot_s81_vm_x34_t -> dsfd_vm_static_landing": {
+     "bits": 2052,
+     "sum_um": 6042183.672,
+     "max_um": 3374.7299999999996,
+     "over500": 2052
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v7_p": {
+     "bits": 4,
+     "sum_um": 8357.160000000005,
+     "max_um": 3320.9220000000014,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q7_p": {
+     "bits": 520,
+     "sum_um": 732606.8639999998,
+     "max_um": 3313.470000000002,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v1_p": {
+     "bits": 8,
+     "sum_um": 21576.624000000003,
+     "max_um": 3307.3500000000004,
+     "over500": 8
+    },
+    "ot_s81_vm_x34_t -> dsfd_vm_seq_tile": {
+     "bits": 12,
+     "sum_um": 35480.08799999999,
+     "max_um": 3285.593999999999,
+     "over500": 12
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v1_p": {
+     "bits": 8,
+     "sum_um": 19846.68,
+     "max_um": 3234.7740000000003,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v4_p": {
+     "bits": 4,
+     "sum_um": 7809.636000000004,
+     "max_um": 3203.994000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q0_p": {
+     "bits": 520,
+     "sum_um": 1245135.8520000002,
+     "max_um": 3201.509999999999,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q4_p": {
+     "bits": 520,
+     "sum_um": 713071.0080000005,
+     "max_um": 3195.246000000001,
+     "over500": 456
+    },
+    "dsfd_vm_static_read_v0_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 3182.7779999999993,
+     "max_um": 3182.7779999999993,
+     "over500": 1
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q0_p": {
+     "bits": 168,
+     "sum_um": 424861.96799999964,
+     "max_um": 3175.7339999999986,
+     "over500": 168
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v1_p": {
+     "bits": 8,
+     "sum_um": 20659.920000000002,
+     "max_um": 3156.582000000001,
+     "over500": 8
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v2_p": {
+     "bits": 4,
+     "sum_um": 10245.900000000001,
+     "max_um": 3125.9100000000003,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v5_p": {
+     "bits": 4,
+     "sum_um": 9436.512000000002,
+     "max_um": 3110.106,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v6_p": {
+     "bits": 4,
+     "sum_um": 7604.436000000003,
+     "max_um": 3095.9940000000015,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q6_p": {
+     "bits": 520,
+     "sum_um": 679286.5919999997,
+     "max_um": 3088.5420000000013,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q0_p": {
+     "bits": 520,
+     "sum_um": 1269192.912,
+     "max_um": 3047.7180000000003,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q5_p": {
+     "bits": 520,
+     "sum_um": 852983.3760000003,
+     "max_um": 3043.4700000000003,
+     "over500": 520
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 48,
+     "sum_um": 143626.03199999992,
+     "max_um": 3013.3859999999986,
+     "over500": 48
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v2_p": {
+     "bits": 4,
+     "sum_um": 9458.904000000002,
+     "max_um": 2975.1420000000007,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q0_p": {
+     "bits": 520,
+     "sum_um": 1177945.8960000002,
+     "max_um": 2975.1419999999994,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v2_p": {
+     "bits": 4,
+     "sum_um": 9259.212,
+     "max_um": 2902.566,
+     "over500": 4
+    },
+    "dsfd_vm_static_w0_payload -> dsfd_vm_static_wdispatch128": {
+     "bits": 111936,
+     "sum_um": 144064935.9359977,
+     "max_um": 2896.9080000000017,
+     "over500": 97504
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v4_p": {
+     "bits": 4,
+     "sum_um": 7300.416000000003,
+     "max_um": 2870.9220000000014,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q1_p": {
+     "bits": 520,
+     "sum_um": 1081760.0759999994,
+     "max_um": 2868.965999999999,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q4_p": {
+     "bits": 520,
+     "sum_um": 670461.0720000013,
+     "max_um": 2863.0380000000005,
+     "over500": 520
+    },
+    "dsfd_vm_static_read_v1_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 2850.57,
+     "max_um": 2850.57,
+     "over500": 1
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q1_p": {
+     "bits": 160,
+     "sum_um": 352029.02399999974,
+     "max_um": 2850.1979999999985,
+     "over500": 160
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_fsr_b0": {
+     "bits": 2172,
+     "sum_um": 3467333.1599999773,
+     "max_um": 2846.1419999999976,
+     "over500": 2172
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q0_p": {
+     "bits": 520,
+     "sum_um": 1188632.544,
+     "max_um": 2845.974,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v2_p": {
+     "bits": 4,
+     "sum_um": 9518.844000000001,
+     "max_um": 2824.3740000000007,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_v3_p": {
+     "bits": 4,
+     "sum_um": 9581.772000000003,
+     "max_um": 2793.5580000000004,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v5_p": {
+     "bits": 4,
+     "sum_um": 7931.532000000001,
+     "max_um": 2777.0340000000006,
+     "over500": 4
+    },
+    "dsfd_vm_static_fsr_b2 -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 5282.8319999999985,
+     "max_um": 2754.581999999999,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q1_p": {
+     "bits": 520,
+     "sum_um": 1108449.6479999996,
+     "max_um": 2715.1740000000004,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q5_p": {
+     "bits": 520,
+     "sum_um": 778316.7600000008,
+     "max_um": 2711.2620000000006,
+     "over500": 519
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q3_p": {
+     "bits": 520,
+     "sum_um": 976034.976,
+     "max_um": 2710.398,
+     "over500": 520
+    },
+    "dsfd_vm_static_fsr_b0 -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 5892.263999999997,
+     "max_um": 2684.393999999999,
+     "over500": 4
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v1_p": {
+     "bits": 54,
+     "sum_um": 143775.89999999988,
+     "max_um": 2683.001999999999,
+     "over500": 54
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 4700.592000000001,
+     "max_um": 2670.5039999999995,
+     "over500": 3
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_fsr_b1": {
+     "bits": 2172,
+     "sum_um": 3082628.520000015,
+     "max_um": 2669.0219999999977,
+     "over500": 2172
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v3_p": {
+     "bits": 4,
+     "sum_um": 8647.788,
+     "max_um": 2642.790000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q1_p": {
+     "bits": 520,
+     "sum_um": 1038974.0399999997,
+     "max_um": 2642.598,
+     "over500": 520
+    },
+    "dsfd_vm_static_fsr_b1 -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 5280.959999999997,
+     "max_um": 2576.885999999999,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_v3_p": {
+     "bits": 4,
+     "sum_um": 8595.084,
+     "max_um": 2570.214,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q2_p": {
+     "bits": 520,
+     "sum_um": 953703.8039999994,
+     "max_um": 2535.797999999999,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q1_p": {
+     "bits": 520,
+     "sum_um": 1117804.128,
+     "max_um": 2531.67,
+     "over500": 520
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q2_p": {
+     "bits": 128,
+     "sum_um": 241287.16799999986,
+     "max_um": 2525.525999999999,
+     "over500": 128
+    },
+    "dsfd_vm_static_read_v2_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 2518.5060000000003,
+     "max_um": 2518.5060000000003,
+     "over500": 1
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v3_p": {
+     "bits": 4,
+     "sum_um": 8854.716,
+     "max_um": 2492.022000000001,
+     "over500": 4
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_fsr_b2": {
+     "bits": 2172,
+     "sum_um": 2697923.8799999864,
+     "max_um": 2491.9019999999978,
+     "over500": 1629
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_v5_p": {
+     "bits": 4,
+     "sum_um": 8191.164000000002,
+     "max_um": 2443.9620000000004,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q2_p": {
+     "bits": 520,
+     "sum_um": 950751.984,
+     "max_um": 2382.0060000000003,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q5_p": {
+     "bits": 520,
+     "sum_um": 766102.2359999997,
+     "max_um": 2379.054000000001,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q3_p": {
+     "bits": 520,
+     "sum_um": 881515.7039999998,
+     "max_um": 2378.1900000000005,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_read_q2_p": {
+     "bits": 520,
+     "sum_um": 1046829.2160000004,
+     "max_um": 2377.4700000000003,
+     "over500": 520
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v2_p": {
+     "bits": 48,
+     "sum_um": 112276.89599999998,
+     "max_um": 2358.761999999999,
+     "over500": 48
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 4268.208,
+     "max_um": 2338.2959999999994,
+     "over500": 3
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_read_q2_p": {
+     "bits": 520,
+     "sum_um": 960156.0239999993,
+     "max_um": 2330.7419999999997,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_v5_p": {
+     "bits": 4,
+     "sum_um": 7984.236000000003,
+     "max_um": 2310.5820000000012,
+     "over500": 4
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v7_p": {
+     "bits": 4,
+     "sum_um": 9233.016000000003,
+     "max_um": 2308.3740000000007,
+     "over500": 4
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q7_p": {
+     "bits": 32,
+     "sum_um": 57910.46400000002,
+     "max_um": 2249.4540000000006,
+     "over500": 32
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_read_q3_p": {
+     "bits": 520,
+     "sum_um": 878986.7160000004,
+     "max_um": 2228.069999999999,
+     "over500": 520
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q3_p": {
+     "bits": 128,
+     "sum_um": 199252.9919999998,
+     "max_um": 2199.7019999999993,
+     "over500": 128
+    },
+    "dsfd_vm_static_read_v3_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 2186.4420000000005,
+     "max_um": 2186.4420000000005,
+     "over500": 1
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v6_p": {
+     "bits": 4,
+     "sum_um": 8327.976,
+     "max_um": 2082.102,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q3_p": {
+     "bits": 520,
+     "sum_um": 834052.1279999997,
+     "max_um": 2049.6540000000005,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_read_q5_p": {
+     "bits": 520,
+     "sum_um": 709528.2240000003,
+     "max_um": 2046.8460000000007,
+     "over500": 520
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v3_p": {
+     "bits": 48,
+     "sum_um": 96600.76799999998,
+     "max_um": 2032.9859999999996,
+     "over500": 48
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q6_p": {
+     "bits": 32,
+     "sum_um": 50670.144000000015,
+     "max_um": 2023.0380000000011,
+     "over500": 32
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_return_bank8_l0_p": {
+     "bits": 96,
+     "sum_um": 102631.48800000001,
+     "max_um": 2012.088,
+     "over500": 96
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 3308.232000000001,
+     "max_um": 2006.2319999999995,
+     "over500": 1
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q5_p": {
+     "bits": 128,
+     "sum_um": 158244.0959999999,
+     "max_um": 1874.0699999999995,
+     "over500": 128
+    },
+    "dsfd_vm_static_read_v5_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 1855.4340000000007,
+     "max_um": 1855.4340000000007,
+     "over500": 1
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v4_p": {
+     "bits": 12,
+     "sum_um": 22131.624,
+     "max_um": 1849.11,
+     "over500": 12
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_q4_p": {
+     "bits": 48,
+     "sum_um": 64546.463999999985,
+     "max_um": 1795.3739999999996,
+     "over500": 48
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_fsr_b3": {
+     "bits": 2172,
+     "sum_um": 2685595.4640000192,
+     "max_um": 1722.9419999999989,
+     "over500": 2172
+    },
+    "dsfd_vm_static_landing -> dsfd_vm_static_w0_header": {
+     "bits": 60,
+     "sum_um": 101080.72800000013,
+     "max_um": 1715.1540000000023,
+     "over500": 60
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_read_v5_p": {
+     "bits": 28,
+     "sum_um": 47604.45599999999,
+     "max_um": 1707.305999999999,
+     "over500": 28
+    },
+    "dsfd_vm_static_read_q1_p -> dsfd_vm_static_read_v1_p": {
+     "bits": 80,
+     "sum_um": 82411.96800000001,
+     "max_um": 1684.2840000000003,
+     "over500": 69
+    },
+    "dsfd_vm_static_read_q2_p -> dsfd_vm_static_read_v2_p": {
+     "bits": 72,
+     "sum_um": 73995.55200000005,
+     "max_um": 1682.796,
+     "over500": 62
+    },
+    "dsfd_vm_static_read_q3_p -> dsfd_vm_static_read_v3_p": {
+     "bits": 72,
+     "sum_um": 73995.55200000005,
+     "max_um": 1682.796,
+     "over500": 62
+    },
+    "dsfd_vm_static_read_q5_p -> dsfd_vm_static_read_v5_p": {
+     "bits": 72,
+     "sum_um": 73995.55200000005,
+     "max_um": 1682.796,
+     "over500": 62
+    },
+    "dsfd_vm_static_read_q0_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 72,
+     "sum_um": 73871.13599999997,
+     "max_um": 1681.068,
+     "over500": 62
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_return_bank8_l1_p": {
+     "bits": 96,
+     "sum_um": 75871.96800000001,
+     "max_um": 1679.4480000000003,
+     "over500": 48
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 2742.984,
+     "max_um": 1674.1679999999997,
+     "over500": 2
+    },
+    "dsfd_vm_static_read_v7_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 1659.882000000001,
+     "max_um": 1659.882000000001,
+     "over500": 1
+    },
+    "dsfd_vm_static_read_q1_p -> dsfd_vm_static_read_v0_p": {
+     "bits": 8,
+     "sum_um": 7853.088000000001,
+     "max_um": 1600.0439999999996,
+     "over500": 7
+    },
+    "dsfd_vm_static_fsr_b3 -> dsfd_vm_seq_tile": {
+     "bits": 4,
+     "sum_um": 4330.440000000001,
+     "max_um": 1562.7780000000002,
+     "over500": 4
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_return_bank8_l0_p": {
+     "bits": 48,
+     "sum_um": 42831.36000000003,
+     "max_um": 1510.416000000001,
+     "over500": 36
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_return_bank8_l3_p": {
+     "bits": 48,
+     "sum_um": 42515.71200000007,
+     "max_um": 1497.168000000001,
+     "over500": 36
+    },
+    "dsfd_vm_static_read_v6_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 1435.6740000000004,
+     "max_um": 1435.6740000000004,
+     "over500": 1
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_return_bank8_l2_p": {
+     "bits": 96,
+     "sum_um": 78706.36800000002,
+     "max_um": 1346.8080000000004,
+     "over500": 72
+    },
+    "dsfd_vm_static_read_v4_p -> dsfd_vm_seq_tile": {
+     "bits": 1,
+     "sum_um": 1211.7540000000004,
+     "max_um": 1211.7540000000004,
+     "over500": 1
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_return_bank8_l1_p": {
+     "bits": 48,
+     "sum_um": 30349.43999999999,
+     "max_um": 1177.7760000000003,
+     "over500": 24
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_return_bank8_l3_p": {
+     "bits": 48,
+     "sum_um": 30034.367999999966,
+     "max_um": 1167.2640000000001,
+     "over500": 24
+    },
+    "dsfd_vm_static_read_q6_p -> dsfd_vm_static_read_v6_p": {
+     "bits": 40,
+     "sum_um": 27503.904000000006,
+     "max_um": 1152.7320000000002,
+     "over500": 29
+    },
+    "dsfd_vm_static_read_q7_p -> dsfd_vm_static_read_v7_p": {
+     "bits": 40,
+     "sum_um": 27503.904000000006,
+     "max_um": 1152.7320000000002,
+     "over500": 29
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_return_bank8_l1_p": {
+     "bits": 48,
+     "sum_um": 23431.680000000022,
+     "max_um": 1146.6720000000018,
+     "over500": 12
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_return_bank8_l0_p": {
+     "bits": 48,
+     "sum_um": 23620.03200000003,
+     "max_um": 1128.3840000000014,
+     "over500": 12
+    },
+    "dsfd_vm_static_read_q4_p -> dsfd_vm_static_read_v4_p": {
+     "bits": 24,
+     "sum_um": 15927.264000000012,
+     "max_um": 1122.0600000000002,
+     "over500": 15
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_static_return_bank8_l3_p": {
+     "bits": 96,
+     "sum_um": 69991.68,
+     "max_um": 1014.1680000000006,
+     "over500": 72
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_return_bank8_l2_p": {
+     "bits": 48,
+     "sum_um": 34661.952000000034,
+     "max_um": 995.472000000002,
+     "over500": 36
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_return_bank8_l0_p": {
+     "bits": 48,
+     "sum_um": 35040.38400000002,
+     "max_um": 979.7760000000017,
+     "over500": 36
+    },
+    "dsfd_vm_static_rsched_p -> dsfd_vm_seq_tile": {
+     "bits": 451,
+     "sum_um": 129417.93599999989,
+     "max_um": 674.4719999999988,
+     "over500": 31
+    },
+    "dsfd_vm_static_read_q1_p -> dsfd_vm_static_read_q0_p": {
+     "bits": 520,
+     "sum_um": 327132.00000000256,
+     "max_um": 629.5320000000002,
+     "over500": 520
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_return_bank8_l2_p": {
+     "bits": 48,
+     "sum_um": 15238.079999999996,
+     "max_um": 626.9760000000006,
+     "over500": 12
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_return_bank8_l3_p": {
+     "bits": 48,
+     "sum_um": 15111.359999999999,
+     "max_um": 619.0560000000005,
+     "over500": 12
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_return_bank8_l1_p": {
+     "bits": 48,
+     "sum_um": 18992.447999999982,
+     "max_um": 556.1280000000002,
+     "over500": 24
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_return_bank8_l2_p": {
+     "bits": 48,
+     "sum_um": 18551.807999999968,
+     "max_um": 543.0239999999999,
+     "over500": 24
+    },
+    "dsfd_vm_static_bank128 -> dsfd_vm_static_relay128_b4": {
+     "bits": 20352,
+     "sum_um": 6052386.816000941,
+     "max_um": 486.3960000000027,
+     "over500": 0
+    },
+    "dsfd_vm_static_relay128_b4 -> dsfd_vm_static_bank128": {
+     "bits": 21504,
+     "sum_um": 6297698.304000016,
+     "max_um": 463.2360000000024,
+     "over500": 0
+    },
+    "dsfd_vm_static_write_capture128 -> dsfd_vm_static_scatter_b8_out": {
+     "bits": 19968,
+     "sum_um": 6235039.488000013,
+     "max_um": 449.20800000000037,
+     "over500": 0
+    },
+    "dsfd_vm_static_cap_leaf -> ot_s81_vm_x34_s": {
+     "bits": 8688,
+     "sum_um": 1785722.8800000004,
+     "max_um": 424.12800000000027,
+     "over500": 0
+    },
+    "dsfd_vm_static_relay128_b8 -> dsfd_vm_static_relay128_b4": {
+     "bits": 21504,
+     "sum_um": 4819206.143999644,
+     "max_um": 398.9400000000017,
+     "over500": 0
+    },
+    "dsfd_vm_static_relay128_b4 -> dsfd_vm_static_relay128_b8": {
+     "bits": 20352,
+     "sum_um": 7063312.896000746,
+     "max_um": 397.11600000000175,
+     "over500": 0
+    },
+    "dsfd_vm_static_landing -> dsfd_vm_seq_tile": {
+     "bits": 3,
+     "sum_um": 1040.5439999999999,
+     "max_um": 347.18399999999974,
+     "over500": 0
+    },
+    "dsfd_vm_static_w0_header -> dsfd_vm_static_wcontrol": {
+     "bits": 798,
+     "sum_um": 274144.10400000255,
+     "max_um": 343.69200000000023,
+     "over500": 0
+    },
+    "dsfd_vm_static_scatter_b8_out -> dsfd_vm_static_relay128_b8": {
+     "bits": 19200,
+     "sum_um": 4634796.288000025,
+     "max_um": 342.1860000000009,
+     "over500": 0
+    },
+    "dsfd_vm_seq_tile -> dsfd_vm_static_landing": {
+     "bits": 19,
+     "sum_um": 5785.199999999998,
+     "max_um": 307.72800000000007,
+     "over500": 0
+    },
+    "dsfd_vm_static_wdispatch128 -> dsfd_vm_static_wstage128": {
+     "bits": 60288,
+     "sum_um": 3790185.983999881,
+     "max_um": 83.50800000000243,
+     "over500": 0
+    },
+    "ot_s81_vm_x34_s -> ot_s81_vm_x34_t": {
+     "bits": 33998,
+     "sum_um": 740034.4560002423,
+     "max_um": 21.79200000000037,
+     "over500": 0
+    },
+    "ot_s81_vm_x43_t -> ot_s81_vm_x43_s": {
+     "bits": 6171,
+     "sum_um": 133811.9639999854,
+     "max_um": 21.684000000000196,
+     "over500": 0
+    },
+    "dsfd_vm_static_return_bank8_l0_p -> dsfd_vm_static_return_bank8_l0_p": {
+     "bits": 48,
+     "sum_um": 504.57600000000093,
+     "max_um": 10.512000000000626,
+     "over500": 0
+    },
+    "dsfd_vm_static_return_bank8_l1_p -> dsfd_vm_static_return_bank8_l1_p": {
+     "bits": 48,
+     "sum_um": 376.7040000000038,
+     "max_um": 7.920000000000073,
+     "over500": 0
+    },
+    "dsfd_vm_static_return_bank8_l2_p -> dsfd_vm_static_return_bank8_l2_p": {
+     "bits": 48,
+     "sum_um": 252.28799999999956,
+     "max_um": 5.328000000000429,
+     "over500": 0
+    },
+    "dsfd_vm_static_return_bank8_l3_p -> dsfd_vm_static_return_bank8_l3_p": {
+     "bits": 48,
+     "sum_um": 126.7200000000048,
+     "max_um": 2.736000000000786,
+     "over500": 0
+    }
+   },
+   "worst_bits": [
+    {
+     "source": [
+      42,
+      "o_d",
+      26,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      172,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      21.18
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9791.136
+     ],
+     "L1_um": 12772.218
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      27,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      173,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      21.756
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9791.232
+     ],
+     "L1_um": 12771.738000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      28,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      174,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      22.332
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9791.328
+     ],
+     "L1_um": 12771.258
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      29,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      175,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      22.908
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9791.424
+     ],
+     "L1_um": 12770.778000000002
+    },
+    {
+     "source": [
+      54,
+      "o_d",
+      26,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      204,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      388.38000000000005
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9794.208
+     ],
+     "L1_um": 12408.090000000002
+    },
+    {
+     "source": [
+      54,
+      "o_d",
+      27,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      205,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      388.956
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9794.304
+     ],
+     "L1_um": 12407.61
+    },
+    {
+     "source": [
+      54,
+      "o_d",
+      28,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      206,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      389.53200000000004
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9794.4
+     ],
+     "L1_um": 12407.130000000001
+    },
+    {
+     "source": [
+      54,
+      "o_d",
+      29,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      207,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      390.10800000000006
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9794.496000000001
+     ],
+     "L1_um": 12406.650000000001
+    },
+    {
+     "source": [
+      39,
+      "o_d",
+      26,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      168,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3067.1040000000003,
+      21.18
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9790.752
+     ],
+     "L1_um": 12404.634
+    },
+    {
+     "source": [
+      39,
+      "o_d",
+      27,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      169,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3067.1040000000003,
+      21.756
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9790.848
+     ],
+     "L1_um": 12404.154
+    },
+    {
+     "source": [
+      39,
+      "o_d",
+      28,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      170,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3067.1040000000003,
+      22.332
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9790.944
+     ],
+     "L1_um": 12403.673999999999
+    },
+    {
+     "source": [
+      39,
+      "o_d",
+      29,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      171,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3067.1040000000003,
+      22.908
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9791.04
+     ],
+     "L1_um": 12403.194000000001
+    },
+    {
+     "source": [
+      51,
+      "o_d",
+      26,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      200,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3067.1040000000003,
+      388.38000000000005
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9793.824
+     ],
+     "L1_um": 12040.506000000001
+    },
+    {
+     "source": [
+      51,
+      "o_d",
+      27,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      201,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3067.1040000000003,
+      388.956
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9793.92
+     ],
+     "L1_um": 12040.026
+    },
+    {
+     "source": [
+      51,
+      "o_d",
+      28,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      202,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3067.1040000000003,
+      389.53200000000004
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9794.016
+     ],
+     "L1_um": 12039.546
+    },
+    {
+     "source": [
+      51,
+      "o_d",
+      29,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      203,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3067.1040000000003,
+      390.10800000000006
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9794.112000000001
+     ],
+     "L1_um": 12039.066
+    },
+    {
+     "source": [
+      24,
+      "o_d",
+      26,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      148,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      755.58
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9788.832
+     ],
+     "L1_um": 12035.514000000001
+    },
+    {
+     "source": [
+      24,
+      "o_d",
+      27,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      149,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      756.1560000000001
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9788.928
+     ],
+     "L1_um": 12035.034
+    },
+    {
+     "source": [
+      24,
+      "o_d",
+      28,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      150,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      756.7320000000001
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9789.024000000001
+     ],
+     "L1_um": 12034.554000000002
+    },
+    {
+     "source": [
+      24,
+      "o_d",
+      29,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      151,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      757.3080000000001
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9789.12
+     ],
+     "L1_um": 12034.074
+    },
+    {
+     "source": [
+      12,
+      "o_d",
+      26,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      132,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      2699.9040000000005,
+      21.18
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9787.296
+     ],
+     "L1_um": 12033.978000000001
+    },
+    {
+     "source": [
+      12,
+      "o_d",
+      27,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      133,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      2699.9040000000005,
+      21.756
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9787.392
+     ],
+     "L1_um": 12033.498000000001
+    },
+    {
+     "source": [
+      12,
+      "o_d",
+      28,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      134,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      2699.9040000000005,
+      22.332
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9787.488000000001
+     ],
+     "L1_um": 12033.018000000002
+    },
+    {
+     "source": [
+      12,
+      "o_d",
+      29,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_mask",
+      135,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      2699.9040000000005,
+      22.908
+     ],
+     "sink_xy_um": [
+      432.04199999999975,
+      9787.584
+     ],
+     "L1_um": 12032.538000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      414,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5504,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      244.668
+     ],
+     "sink_xy_um": [
+      1217.9519999999998,
+      9827.958
+     ],
+     "L1_um": 11799.642000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      415,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5505,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      245.244
+     ],
+     "sink_xy_um": [
+      1218.0479999999998,
+      9827.958
+     ],
+     "L1_um": 11798.970000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      416,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5506,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      245.82
+     ],
+     "sink_xy_um": [
+      1218.1439999999998,
+      9827.958
+     ],
+     "L1_um": 11798.298
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      417,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5507,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      246.396
+     ],
+     "sink_xy_um": [
+      1218.2399999999998,
+      9827.958
+     ],
+     "L1_um": 11797.626
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      418,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5508,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      246.972
+     ],
+     "sink_xy_um": [
+      1218.3359999999998,
+      9827.958
+     ],
+     "L1_um": 11796.954000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      419,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5509,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      247.548
+     ],
+     "sink_xy_um": [
+      1218.4319999999998,
+      9827.958
+     ],
+     "L1_um": 11796.282
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      420,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5510,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      248.124
+     ],
+     "sink_xy_um": [
+      1218.5279999999998,
+      9827.958
+     ],
+     "L1_um": 11795.61
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      421,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5511,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      248.7
+     ],
+     "sink_xy_um": [
+      1218.6239999999998,
+      9827.958
+     ],
+     "L1_um": 11794.938
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      422,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5512,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      249.276
+     ],
+     "sink_xy_um": [
+      1218.7199999999998,
+      9827.958
+     ],
+     "L1_um": 11794.266000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      423,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5513,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      249.852
+     ],
+     "sink_xy_um": [
+      1218.8159999999998,
+      9827.958
+     ],
+     "L1_um": 11793.594000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      424,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5514,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      250.428
+     ],
+     "sink_xy_um": [
+      1218.9119999999998,
+      9827.958
+     ],
+     "L1_um": 11792.922
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      425,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5515,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      251.004
+     ],
+     "sink_xy_um": [
+      1219.0079999999998,
+      9827.958
+     ],
+     "L1_um": 11792.25
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      426,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5516,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      251.58
+     ],
+     "sink_xy_um": [
+      1219.1039999999998,
+      9827.958
+     ],
+     "L1_um": 11791.578000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      427,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5517,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      252.156
+     ],
+     "sink_xy_um": [
+      1219.1999999999998,
+      9827.958
+     ],
+     "L1_um": 11790.905999999999
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      428,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5518,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      252.732
+     ],
+     "sink_xy_um": [
+      1219.2959999999998,
+      9827.958
+     ],
+     "L1_um": 11790.234
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      429,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5519,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      253.308
+     ],
+     "sink_xy_um": [
+      1219.3919999999998,
+      9827.958
+     ],
+     "L1_um": 11789.562000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      430,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5520,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      253.88400000000001
+     ],
+     "sink_xy_um": [
+      1219.4879999999998,
+      9827.958
+     ],
+     "L1_um": 11788.890000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      431,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5521,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      254.46
+     ],
+     "sink_xy_um": [
+      1219.5839999999998,
+      9827.958
+     ],
+     "L1_um": 11788.218
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      432,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5522,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      255.036
+     ],
+     "sink_xy_um": [
+      1219.6799999999998,
+      9827.958
+     ],
+     "L1_um": 11787.546
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      433,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5523,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      255.612
+     ],
+     "sink_xy_um": [
+      1219.7759999999998,
+      9827.958
+     ],
+     "L1_um": 11786.874000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      434,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5524,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      256.188
+     ],
+     "sink_xy_um": [
+      1219.8719999999998,
+      9827.958
+     ],
+     "L1_um": 11786.202000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      435,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5525,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      256.764
+     ],
+     "sink_xy_um": [
+      1219.9679999999998,
+      9827.958
+     ],
+     "L1_um": 11785.530000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      436,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5526,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      257.34
+     ],
+     "sink_xy_um": [
+      1220.0639999999999,
+      9827.958
+     ],
+     "L1_um": 11784.858
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      437,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5527,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      257.916
+     ],
+     "sink_xy_um": [
+      1220.1599999999999,
+      9827.958
+     ],
+     "L1_um": 11784.186000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      438,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5528,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      258.492
+     ],
+     "sink_xy_um": [
+      1220.2559999999999,
+      9827.958
+     ],
+     "L1_um": 11783.514000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      439,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5529,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      259.068
+     ],
+     "sink_xy_um": [
+      1220.3519999999999,
+      9827.958
+     ],
+     "L1_um": 11782.842
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      440,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5530,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      259.644
+     ],
+     "sink_xy_um": [
+      1220.4479999999999,
+      9827.958
+     ],
+     "L1_um": 11782.17
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      441,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5531,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      260.22
+     ],
+     "sink_xy_um": [
+      1220.5439999999999,
+      9827.958
+     ],
+     "L1_um": 11781.498000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      442,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5532,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      260.796
+     ],
+     "sink_xy_um": [
+      1220.6399999999999,
+      9827.958
+     ],
+     "L1_um": 11780.826000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      443,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5533,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      261.372
+     ],
+     "sink_xy_um": [
+      1220.7359999999999,
+      9827.958
+     ],
+     "L1_um": 11780.154000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      444,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5534,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      261.948
+     ],
+     "sink_xy_um": [
+      1220.8319999999999,
+      9827.958
+     ],
+     "L1_um": 11779.482
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      445,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5535,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      262.524
+     ],
+     "sink_xy_um": [
+      1220.9279999999999,
+      9827.958
+     ],
+     "L1_um": 11778.810000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      446,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5536,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      263.1
+     ],
+     "sink_xy_um": [
+      1221.024,
+      9827.958
+     ],
+     "L1_um": 11778.138
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      447,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5537,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      263.676
+     ],
+     "sink_xy_um": [
+      1221.12,
+      9827.958
+     ],
+     "L1_um": 11777.466
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      448,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5538,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      264.252
+     ],
+     "sink_xy_um": [
+      1221.216,
+      9827.958
+     ],
+     "L1_um": 11776.794
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      449,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5539,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      264.828
+     ],
+     "sink_xy_um": [
+      1221.312,
+      9827.958
+     ],
+     "L1_um": 11776.122000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      450,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5540,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      265.404
+     ],
+     "sink_xy_um": [
+      1221.408,
+      9827.958
+     ],
+     "L1_um": 11775.45
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      451,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5541,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      265.98
+     ],
+     "sink_xy_um": [
+      1221.504,
+      9827.958
+     ],
+     "L1_um": 11774.778000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      452,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5542,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      266.556
+     ],
+     "sink_xy_um": [
+      1221.6,
+      9827.958
+     ],
+     "L1_um": 11774.106
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      453,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5543,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      267.132
+     ],
+     "sink_xy_um": [
+      1221.696,
+      9827.958
+     ],
+     "L1_um": 11773.434000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      454,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5544,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      267.708
+     ],
+     "sink_xy_um": [
+      1221.792,
+      9827.958
+     ],
+     "L1_um": 11772.762
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      455,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5545,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      268.284
+     ],
+     "sink_xy_um": [
+      1221.888,
+      9827.958
+     ],
+     "L1_um": 11772.09
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      456,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5546,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      268.86
+     ],
+     "sink_xy_um": [
+      1221.984,
+      9827.958
+     ],
+     "L1_um": 11771.418
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      457,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5547,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      269.436
+     ],
+     "sink_xy_um": [
+      1222.08,
+      9827.958
+     ],
+     "L1_um": 11770.746000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      458,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5548,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      270.012
+     ],
+     "sink_xy_um": [
+      1222.176,
+      9827.958
+     ],
+     "L1_um": 11770.074
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      459,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5549,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      270.588
+     ],
+     "sink_xy_um": [
+      1222.272,
+      9827.958
+     ],
+     "L1_um": 11769.402000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      460,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5550,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      271.164
+     ],
+     "sink_xy_um": [
+      1222.368,
+      9827.958
+     ],
+     "L1_um": 11768.73
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      461,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5551,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      271.74
+     ],
+     "sink_xy_um": [
+      1222.464,
+      9827.958
+     ],
+     "L1_um": 11768.058
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      462,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5552,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      272.316
+     ],
+     "sink_xy_um": [
+      1222.5599999999997,
+      9827.958
+     ],
+     "L1_um": 11767.386
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      463,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5553,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      272.892
+     ],
+     "sink_xy_um": [
+      1222.6559999999997,
+      9827.958
+     ],
+     "L1_um": 11766.714
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      464,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5554,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      273.468
+     ],
+     "sink_xy_um": [
+      1222.7519999999997,
+      9827.958
+     ],
+     "L1_um": 11766.042000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      465,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5555,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      274.044
+     ],
+     "sink_xy_um": [
+      1222.8479999999997,
+      9827.958
+     ],
+     "L1_um": 11765.37
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      466,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5556,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      274.62
+     ],
+     "sink_xy_um": [
+      1222.9439999999997,
+      9827.958
+     ],
+     "L1_um": 11764.698
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      467,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5557,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      275.196
+     ],
+     "sink_xy_um": [
+      1223.0399999999997,
+      9827.958
+     ],
+     "L1_um": 11764.026000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      468,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5558,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      275.772
+     ],
+     "sink_xy_um": [
+      1223.1359999999997,
+      9827.958
+     ],
+     "L1_um": 11763.354
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      469,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5559,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      276.348
+     ],
+     "sink_xy_um": [
+      1223.2319999999997,
+      9827.958
+     ],
+     "L1_um": 11762.682
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      470,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5560,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      276.924
+     ],
+     "sink_xy_um": [
+      1223.3279999999997,
+      9827.958
+     ],
+     "L1_um": 11762.01
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      471,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5561,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      277.5
+     ],
+     "sink_xy_um": [
+      1223.4239999999998,
+      9827.958
+     ],
+     "L1_um": 11761.338
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      472,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5562,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      278.076
+     ],
+     "sink_xy_um": [
+      1223.5199999999998,
+      9827.958
+     ],
+     "L1_um": 11760.666000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      473,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5563,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      278.652
+     ],
+     "sink_xy_um": [
+      1223.6159999999998,
+      9827.958
+     ],
+     "L1_um": 11759.994
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      474,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5564,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      279.228
+     ],
+     "sink_xy_um": [
+      1223.7119999999998,
+      9827.958
+     ],
+     "L1_um": 11759.322000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      475,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5565,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      279.804
+     ],
+     "sink_xy_um": [
+      1223.8079999999998,
+      9827.958
+     ],
+     "L1_um": 11758.650000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      476,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5566,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      280.38
+     ],
+     "sink_xy_um": [
+      1223.9039999999998,
+      9827.958
+     ],
+     "L1_um": 11757.978000000003
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      477,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5567,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      280.956
+     ],
+     "sink_xy_um": [
+      1223.9999999999998,
+      9827.958
+     ],
+     "L1_um": 11757.306
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      478,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5568,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      281.532
+     ],
+     "sink_xy_um": [
+      1224.0959999999998,
+      9827.958
+     ],
+     "L1_um": 11756.634000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      479,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5569,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      282.108
+     ],
+     "sink_xy_um": [
+      1224.1919999999998,
+      9827.958
+     ],
+     "L1_um": 11755.962
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      480,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5570,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      282.684
+     ],
+     "sink_xy_um": [
+      1224.2879999999998,
+      9827.958
+     ],
+     "L1_um": 11755.29
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      481,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5571,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      283.26
+     ],
+     "sink_xy_um": [
+      1224.3839999999998,
+      9827.958
+     ],
+     "L1_um": 11754.618
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      482,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5572,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      283.836
+     ],
+     "sink_xy_um": [
+      1224.4799999999998,
+      9827.958
+     ],
+     "L1_um": 11753.946000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      483,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5573,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      284.412
+     ],
+     "sink_xy_um": [
+      1224.5759999999998,
+      9827.958
+     ],
+     "L1_um": 11753.274000000001
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      484,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5574,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      284.988
+     ],
+     "sink_xy_um": [
+      1224.6719999999998,
+      9827.958
+     ],
+     "L1_um": 11752.602000000003
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      485,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5575,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      285.564
+     ],
+     "sink_xy_um": [
+      1224.7679999999998,
+      9827.958
+     ],
+     "L1_um": 11751.93
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      486,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5576,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      286.14
+     ],
+     "sink_xy_um": [
+      1224.8639999999998,
+      9827.958
+     ],
+     "L1_um": 11751.258000000002
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      487,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5577,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      286.716
+     ],
+     "sink_xy_um": [
+      1224.9599999999998,
+      9827.958
+     ],
+     "L1_um": 11750.586
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      488,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5578,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      287.292
+     ],
+     "sink_xy_um": [
+      1225.0559999999998,
+      9827.958
+     ],
+     "L1_um": 11749.914
+    },
+    {
+     "source": [
+      42,
+      "o_d",
+      489,
+      "OUTPUT"
+     ],
+     "sink": [
+      68,
+      "i_data",
+      5579,
+      "INPUT"
+     ],
+     "source_xy_um": [
+      3434.304,
+      287.868
+     ],
+     "sink_xy_um": [
+      1225.1519999999998,
+      9827.958
+     ],
+     "L1_um": 11749.242
+    }
+   ],
+   "all_bits_file": "reach_body1x4v_coherent_plus_service_1555.2.jsonl.gz",
+   "scope": "Every pure-wire uniquely joined hardleaf functional bit, at actual LEF/assigned/candidate pin coordinates. Unknown parent-expression/top homes retained; no reach exception, router, timing, clock/PG/cut or static-age proof."
+  }
+ ]
+}
