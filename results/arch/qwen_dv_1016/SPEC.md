@@ -193,3 +193,87 @@ Files in this directory:
 - `metr.py`: metrics;
 - `render.py`: PNG;
 - `dv1.json`, `dv1.png`, `metrics.txt`, `ledger_dv1.json`, `receipt.json`.
+
+---
+
+# Addendum 2026-10-16 ~23:30: dv2 co-location (coordinator review of dv1)
+
+The coordinator's review of dv1 found a problem. dv1 partitions the centre but does not co-locate. Every 530-b lane still runs up to about 13 mm into the centre, and the broadcast runs back out again. That breaks principle 1. This addendum covers dv2 (`build_dv2.py`), the full-path ledger (`cycles_v2.py`) and the comparison.
+
+## dv2 geometry
+
+- **Slice placement.** Each quad's slice sits in the head gap directly beside its own column group. It is one cluster pitch wide (2,090.9 um). The gap is widened to the slice height plus a 129.6-um relay lane above and below.
+- **What the slice absorbs:**
+  - the quad's reduction station (levels 7-9 and the row scale);
+  - its 4 column x-slice heads;
+  - the VM slice, the SU slice and the constants.
+- **Reduction.** b1 and b2 rs abut the slice. b0 and b3 still use the near-cluster `rs_i -> rs_o` feedthrough, so the corridor-fit question remains for dv2 too.
+- **Next-layer input.** A bidirectional slice-to-slice neighbour stream (1,088 b each way) runs along the gap. It crosses the centre on its own relay lane. tt_ctlm's ib/go enters at g0 on both sides.
+- **Global scalars.** A 96-b tree runs along the gap.
+- **Edge endpoints.** Each has its own relay lane:
+  - AR and D2D chains run slice to slice to g0;
+  - g0 connects to io_collective (S) and to native59 -> d2d_rom (N).
+
+## (b) RMSNorm gamma folded into the ROM, 1/rms after the matvec: NOT bit-exact, not adopted
+
+- **Golden order.** `h = (x*r)*g`, then `bf16(h)`, then the INT8 x BF16 csum8 matvec, then the row scale.
+- **Why folding breaks it:**
+  - folding g into the INT8 codes re-quantises every row, so the codes change;
+  - applying r after the matvec moves the BF16 rounding point and the product order.
+- **Status.** This is the AGENTS.md level-6 algebraic reorder (excluded). The related norm-after-matvec check (QC-NAM) is closed as REJECTED on a numerical-stability FAIL (docs/INTEGRATED_PHYSICAL_PLAN.md: "do not reopen or credit").
+- **Exact alternative adopted instead: norm at the consumer (dv2r).**
+  - The residual x is replicated per side. Both sides do the identical residual add, which is exact and deterministic.
+  - Each slice streams raw x to the side's slices WHILE the sum-of-squares tree runs.
+  - Each slice applies `h = (x*r)*g` (the golden ops, in order, with g from a per-slice BF16 gamma ROM of 4.7 Mbit) and rounds to BF16 where the corridor word is formed.
+  - The critical path becomes `max(tree, stream)` instead of `tree + stream`.
+  - Only the act broadcast (the down input) still crosses the die.
+
+## (c) Comparison
+
+Full-path stages / layer; tok/s from `accepted_cost.py ... --node-delta`. SU-lane beats and the seam (21 registered VM<->SU crossings / layer) are counted this time, and AR rows are streamed farthest-first.
+
+| design | layer cycles (non-common part) | delta / layer | tok/s | worst cut | bit-mm | stages@405 | die mm² |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| q3h | 776 | 0 | ref | 1.435 | 1.077 M | 11,948 | 742 |
+| dv1 (partitioned centre, L8) | 759 | -17 | +0.25 % | 0.488 | 0.893 M | 5,175 | 742 |
+| dv2 single owner (L8) | 887 | +111 | about -1.6 % | (same geometry) | | | |
+| **dv2r8 (pick)** | 767 | -9 | +0.13 % | 0.416 | 0.889 M | 6,761 | 797 |
+| dv2r16 | 657 | -119 | +1.75 % | 0.439 | 0.924 M | 7,060 | 825 |
+
+Per-term values (R / P / QK / K / O / A / NORM / SILU / BCA / SEAM) are in `led_dv2r8.json` and `led_dv2r16.json`.
+
+**dv2 wins on:**
+
+| term | q3h | dv2 |
+|---|---:|---:|
+| R: result landing | 52 | 13 |
+| NORM | 158 | 177 at L8, 134 at L16 |
+| seam | 21 | 0 |
+
+**dv2 loses on:**
+
+| term | q3h | dv2 | why |
+|---|---:|---:|---|
+| BCA: act all-gather crosses the die | 30 | 81 | |
+| K: export from W4 | 28 | 59 | |
+| A: g0 <-> collective | 34 | 50 | |
+
+The edge endpoints are now 8-11 mm away.
+
+**PNGs viewed:** `dv1.png`, `dv2r8.png`, `dv2r16.png`.
+
+**Stage counts.** dv2 stages@405 include about 1.4 k from the existing N-edge bump nets (`lnk_fwd_epoch`, `rst_d2d`, max 56-59) that now reach the gap row. Those get their own relay plans in the relay-stage step.
+
+**Centre column.** It is about 150 mm² of white because the die width is fixed by the S-edge IO band (3 SerDes + UCIe = 7.74 mm). Narrowing it to about 4.3 mm, by stacking the PHYs, needs a package/PHY decision and is not assumed.
+
+## Pick (floorplan-objective rule: bit-mm + relay stages + flow PNG, then cut): dv2r8
+
+dv2r8 is preferred because:
+- it is the only co-located plan, so it meets principle 1;
+- the reduction lands next to the group (R 13 against 52);
+- there is no centre star;
+- its slice is the squarest (2,091 x 2,581, 1.23:1);
+- its die is smaller than dv2r16's (797 against 825 mm²);
+- it is tok/s-neutral against q3h at the lowest bit-mm.
+
+dv1 has fewer stages, but it fails co-location. dv2r16's +1.75 % is below the "significant gains" bar and costs +28 mm². SU LANES is a slice-RTL parameter, so 16 lanes can be swapped in later.
