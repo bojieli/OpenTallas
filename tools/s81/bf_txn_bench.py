@@ -159,7 +159,7 @@ def main():
         assert a.die_pair and a.static_prog is not None
         names += ['ot_v41_bf_col_roots','ot_v41_bf16_lanes3_roots','dsfd_bf_col_roots','ot_v41_bf_lane4','ot_v41_bf_reduce','ot_v41_bf_segment_leaf','ot_v41_bf_fp4_chain','ot_v41_bf_fp4_pair_leaf']
         if a.column_cl:
-            names += ['ot_v41_bf_col_cl','ot_v41_bf16_lanes3_cl','dsfd_bf_col_cl','ot_v41_bf_red_cl','ot_v41_bf_seg_cl','ot_v41_bf_fp_cl']
+            names += ['ot_v41_bf_col_cl','ot_v41_bf16_lanes3_cl','dsfd_bf_col_cl','ot_v41_bf_red_cl','ot_v41_bf_seg_cl','ot_v41_bf_fp_cl','ot_v41_bf_lane4_cl']
     if a.column_west_roots:
         assert a.column_roots
         names += ['dsfd_bf_col_roots_w']
@@ -222,7 +222,7 @@ def main():
         muts += [(m.split('=')[0], ['+define+' + m.split('=', 1)[1]]) for m in a.mutant]
     if a.column_roots:
         for n in ['rtl/v41rom/ot_v41_bf_fp4_leaves.sv','rtl/v41rom/ot_v41_bf_segment_leaf.sv','rtl/v41rom/ot_v41_bf_reduce.sv','rtl/v41rom/ot_v41_bf_lane4.sv','rtl/v41rom/ot_v41_bf_col_roots.sv', 'rtl/v41rom/ot_v41_bf16_lanes3_roots.sv',
-                  'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv'] + (['rtl/v41rom/ot_v41_bf_cl_leaves.sv','rtl/v41rom/ot_v41_bf16_lanes3_cl.sv','rtl/v41rom/ot_v41_bf_col_cl.sv','rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_cl.sv'] if a.column_cl else []):
+                  'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv'] + (['rtl/v41rom/ot_v41_bf_cl_leaves.sv','rtl/v41rom/ot_v41_bf_lane4_cl.sv','rtl/v41rom/ot_v41_bf16_lanes3_cl.sv','rtl/v41rom/ot_v41_bf_col_cl.sv','rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_cl.sv'] if a.column_cl else []):
             fn='x_'+Path(n).name
             files[fn]=candify((ROOT/n).read_text(), names)
             extra.append(fn)

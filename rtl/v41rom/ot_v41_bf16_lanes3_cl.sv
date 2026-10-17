@@ -102,7 +102,7 @@ module ot_v41_bf16_lanes3_cl #(
         wire [3:0] cv_g,cf_g,fault_g;
         wire [127:0] cs_g;
         wire [4*(TRW+1)-1:0] ct_g;
-        ot_v41_bf_lane4 #(.NCHB(NCHB),.TRW(TRW),.CUT(CUT),
+        ot_v41_bf_lane4_cl #(.NCHB(NCHB),.TRW(TRW),.CUT(CUT),
             .GRADUAL_RNE(GRADUAL_RNE),.RC(RC),.GROUP(g),.BOUNDARY_STAGE(PARENT_XST>0)) u_lane4
             (.fclk(leaf_clk[g]),.rst_pin(rst_pin),.ze_d(ze_d),.v_s(v_s),
              .w_s(w_s[64*g +: 64]),.x_s(x_s[64*g +: 64]),.t_p(t_p),
