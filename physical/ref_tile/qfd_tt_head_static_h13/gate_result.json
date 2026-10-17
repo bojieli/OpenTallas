@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qfd_tt_head_static_h13",
  "verdict": "FAIL",
- "generated": "2026-10-17T06:59:11-0700",
- "host": "ot-epyc4",
+ "generated": "2026-10-17T08:50:45-0700",
+ "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "63947b09958b75733458e8baf9cb09aee878499f",
+  "start_commit": "4dd2b4624632cf271de3aca06ca10ddf63af4c04",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "daab95ff126fed9459b4b5ff7dcdde6f7a04e9e1ad311785cdc60b86f0986c9f",
-  "manifest_sha256": "ffadf0453f893001df7f073af4d78d11e132db0db70e1b3fa2dc6b8433fd1556",
+  "archive_sha256": "5e0e105fe7521855424aedf5ca133d8b3e3b6b0d9a652c842df0e63ea1328db0",
+  "manifest_sha256": "ecca9e51a7bbc795db67d37536acbc353925cba542ab11445e289b74babe8548",
   "files": [
    {
     "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json",
@@ -146635,8 +146635,8 @@
    {
     "path": "tools/textbook_lint.py",
     "kind": "file",
-    "sha256": "8b0a5f822f7fd447dad82b442a584d2623a581380a72371c11c6bbd9dde5cd43",
-    "git_blob": "65426dd2f5cdd4a5e39de56a9e840d910e7082d2",
+    "sha256": "0fda292bb25637f2ddf9a0db09e964b794fdce006a45bcc6dd79a6be8e1adbbb",
+    "git_blob": "6f2c3d2f1864646f9feee7c4c334687d06ed23cb",
     "source": "daemon_overlay",
     "matches_provenance_commit": false
    },
@@ -155643,15 +155643,15 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 134765987,
+   "archive_bytes": 134766330,
    "unpacked_bytes": 822161408,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "8e0315200d09ff0d508a1690044b54ff85cd3c57",
-   "content_sha256": "e8a020196deeffbd4d714117c508b0173e9f9a5a3bb6a4a941277940e6505abc",
+   "origin_main": "c3e39685aad9e54fc2ab36d0daf9610669f86499",
+   "content_sha256": "a0e001d382bea342bccaf9862c1aac0cd4a3c3e469828583eadb8e540c02aa58",
    "files": [
     {
      "path": "physical/common_flow/cg_pushdown.tcl",
@@ -155999,10 +155999,10 @@
     },
     {
      "path": "tools/textbook_lint.py",
-     "sha256": "8b0a5f822f7fd447dad82b442a584d2623a581380a72371c11c6bbd9dde5cd43",
-     "git_blob": "65426dd2f5cdd4a5e39de56a9e840d910e7082d2",
+     "sha256": "0fda292bb25637f2ddf9a0db09e964b794fdce006a45bcc6dd79a6be8e1adbbb",
+     "git_blob": "6f2c3d2f1864646f9feee7c4c334687d06ed23cb",
      "mode": 436,
-     "resolution": "same",
+     "resolution": "stale",
      "literal_git_blob": "65426dd2f5cdd4a5e39de56a9e840d910e7082d2"
     },
     {
@@ -156219,22 +156219,22 @@
     "tools/ref_tile/path_classes.tcl": "47d06c968afc42e5773c9490bab1c13d02d042fc7221f32bf9c76ce4efc54f73",
     "tools/ref_tile/ref_route.sh": "193dc145408ba7705e4802144bb16dffddd1efaced1bb5e9e6372c8e2e51c2d6",
     "tools/run_abi3_physical.py": "14f20a2ed72ad7fcec609e0364d8656c9c9d92374a7c2326c36ceb36a1cedcaf",
-    "tools/textbook_lint.py": "8b0a5f822f7fd447dad82b442a584d2623a581380a72371c11c6bbd9dde5cd43",
+    "tools/textbook_lint.py": "0fda292bb25637f2ddf9a0db09e964b794fdce006a45bcc6dd79a6be8e1adbbb",
     "tools/w18/corner_sta.py": "7801f467617d68c7e8a3f906e5415c8913de77188a6af30dbfe835fc28b05fd1",
     "tools/w18/corner_sta_ref.py": "bd70080bbbd23db830914e4b52682c086b4de5cc9adc6873a026c260099419fa"
    },
    "digest": "0e4e6b4c7589351dfdc7e9de6979801f144976fa8d329946470f39eb1039c69c"
   },
-  "captured": "2026-10-17T06:43:38-0700",
+  "captured": "2026-10-17T08:30:28-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qfd_tt_head_static_h13/signoff.sdc"
   },
-  "remote_script_sha256": "e8e2c89c0b825824c8cf72c2660642d0ea0c2ff84f92d0504b7c1c09894a1c3a",
+  "remote_script_sha256": "7f5ed3872ab199d87bdf05c640a7ef62ba575b8d75e093467bd255304d8e1689",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tt_head_static_h13-20261017-064239",
+  "remote_host": "ot-agidock128",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tt_head_static_h13-20261017-082935",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -156350,12 +156350,6 @@
    "check": "util",
    "message": "synthesized std area 5827 um2 + macros 26639 in core 41608: util 78%",
    "fix": "set \"std_area_um2\": 5827 and drop 'outline' (gen sizes to util 0.52)"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.util_channel",
-   "message": "utilisation 75.3% outside 45%-65% (std 4711 + macro 26639 um2 in 41608 um2): grow the outline",
-   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   },
   {
    "severity": "WARN",
