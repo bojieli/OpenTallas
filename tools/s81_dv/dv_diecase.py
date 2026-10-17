@@ -71,6 +71,22 @@ def stand_in_lib(m, ports, c_ps=25.0, u_ps=25.0):
     return '\n'.join(L) + '\n'
 
 
+RLY = {'EW': (17.28, 32.4), 'WE': (17.28, 32.4), 'NS': (25.92, 17.28), 'SN': (25.92, 17.28)}
+
+
+def station_dir(hops, px, py):
+    """direction of travel on the straight piece that ENDS at the station point -> relay master suffix"""
+    best = None
+    for x1, y1, x2, y2, _ in hops:
+        d = abs(x2 - px) + abs(y2 - py)
+        if best is None or d < best[0]:
+            best = (d, x2 - x1, y2 - y1)
+    _, dx, dy = best
+    if abs(dx) >= abs(dy):
+        return 'WE' if dx > 0 else 'EW'
+    return 'SN' if dy > 0 else 'NS'
+
+
 def face_of(b, x, y):
     d = {'W': abs(x - b['x']), 'E': abs(x - b['x'] - b['w']), 'S': abs(y - b['y']), 'N': abs(y - b['y'] - b['h'])}
     return min(d, key=d.get)
@@ -85,6 +101,8 @@ def main():
     ap.add_argument('--die-repair', action='store_true', help='splice DIE-FLOW step output (die_repeaters_step.tcl)')
     ap.add_argument('--congestion-iterations', type=int, default=30)
     ap.add_argument('--dieflow-ref', default='origin/main')
+    ap.add_argument('--relay-ref', default=None, help='git ref holding the closed dsfd_dvrly_276_{EW,WE,NS,SN} views '
+                    '(276-b lane stations become real relay macros; other widths stay DFF stand-ins)')
     a = ap.parse_args()
     plan = load(a.plan)
     out = Path(a.out); (out / 'views').mkdir(parents=True, exist_ok=True); (out / 'out').mkdir(exist_ok=True)
@@ -101,7 +119,7 @@ def main():
     # ------------------------------------------------------------------ links -> ports on blocks + relay chains
     pins = collections.defaultdict(list)          # inst -> [(port, dir, bits, x, y, face)]
     nets, flops, chains = [], [], []
-    fsrc = {}
+    fsrc, sdir = {}, {}
     nbits = 0
     used = collections.Counter()
     for l in plan['links']:
@@ -124,6 +142,7 @@ def main():
         chains.append(dict(link=l['i'], cls=l['c'], bits=b, stages=st, src=f'{n0}.{po}', dst=f'{n1}.{pi}', hop_um=round(max(abs(h[2] - h[0]) + abs(h[3] - h[1]) for h in hops), 1)))
         for k, (px, py) in enumerate(pts):
             flops.append((nm, k, b, px, py))
+            sdir[(nm, k)] = station_dir(hops, px + ox, py + oy)
         nets.append((nm, n0, po, n1, pi, b, st))
         fsrc[nm] = (x0_ - ox, y0_ - oy)
         nbits += b
@@ -155,8 +174,16 @@ def main():
         lines += ['  END', f'END {m}', '']
         (out / 'views' / f'{m}.lib').write_text(stand_in_lib(m, pins.get(bl['name'], [])))
         (out / 'views' / f'{m}.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(lines) + 'END LIBRARY\n')
+    if a.relay_ref:
+        import subprocess
+        for d in RLY:
+            base = f'physical/ref_tile/s81dv_rly_276_{d.lower()}/views/dsfd_dvrly_276_{d}/dsfd_dvrly_276_{d}'
+            for ext, dst in (('.lef', f'rly_{d}.lef'), ('_tt.lib', f'rly_{d}_tt.lib')):
+                (out / 'views' / dst).write_bytes(subprocess.run(['git', '-C', str(ROOT), 'show', f'{a.relay_ref}:{base}{ext}'],
+                                                                 capture_output=True, check=True).stdout)
     # ------------------------------------------------------------------ die netlist
-    v = ['module dv_die (input clk);']
+    v = ['module dv_die (input clk, input rst);', '  wire n_rst_dv = rst;']
+    nreal = 0
     for i in sorted(keep):
         bl = blocks[i]
         conns = []
@@ -183,6 +210,13 @@ def main():
         for k in range(st):
             wn = f'r_{nm}_{k}'
             v.append(f'  wire [{b - 1}:0] {wn};')
+            if a.relay_ref and b == 276:
+                # real closed station (flop-first, recipe 4): ck = hop clock in, ck_o = forwarded out (F1)
+                v.append(f'  dsfd_dvrly_276_{sdir[(nm, k)]} st_{nm}_{k} (.i({prev}), .o({wn}), .ck(n{nm}_fck[{k}]), '
+                         f'.ck_o(n{nm}_fck[{k + 1}]), .rs(n_rst_dv));')
+                nreal += 1
+                prev = wn
+                continue
             v.append(f'  {LCB} lcb_{nm}_{k} (.A(n{nm}_fck[{k}]), .Y(n{nm}_lck[{k}]));')
             for j in range(b):
                 v.append(f'  {DFF} f_{nm}_{k}_{j} (.CLK(n{nm}_lck[{k}]), .D({prev}[{j}]), .QN({wn}[{j}]));')
@@ -204,9 +238,15 @@ def main():
             sx_, sy_ = fsrc[nm]
             pl.append(f'place_inst -name fs_{nm} -location {{{round(sx_ / SITE) * SITE:.3f} {round(sy_ / ROW) * ROW + 1.08:.3f}}} -orientation R0 -status PLACED')
     for nm, k, b, px, py in flops:
+        if a.relay_ref and b == 276:
+            w_, h_ = RLY[sdir[(nm, k)]]
+            pl.append(f'place_inst -name st_{nm}_{k} -location {{{px - w_ / 2:.3f} {py - h_ / 2:.3f}}} -orientation R0 -status FIRM')
+            continue
         pl.append(f'place_inst -name ff_{nm}_{k} -location {{{round((px - 2) / SITE) * SITE:.3f} {round((py - 1) / ROW) * ROW + 1.08:.3f}}} -orientation R0 -status PLACED')
         pl.append(f'place_inst -name lcb_{nm}_{k} -location {{{round((px - 4) / SITE) * SITE:.3f} {round((py - 2) / ROW) * ROW + 1.08:.3f}}} -orientation R0 -status PLACED')
     for nm, k, b, px, py in flops:
+        if a.relay_ref and b == 276:
+            continue
         side = max(1, int(math.ceil(math.sqrt(b * 0.648 / (ROW * SITE)) / 12)))   # ~12 sites per DFF
         cols = max(1, int(math.ceil(math.sqrt(b))))
         for j in range(b):
@@ -291,7 +331,8 @@ rc=$?; echo $rc > $D/out/run.exit; exit $rc
     kinds = collections.Counter(blocks[i]['kind'] for i in keep)
     area = W * H / 1e6
     info = dict(schema='opentallas.s81_dv.die_case.v1', plan=str(a.plan), region=a.region, die_um=[W, H], area_mm2=round(area, 2),
-                blocks=dict(kinds), census={k: CENSUS.get(k, 'stand-in') for k in kinds}, real_views=0,
+                blocks=dict(kinds), census={k: CENSUS.get(k, 'stand-in') for k in kinds},
+                real_views=dict(relay_276_stations=nreal, relay_ref=a.relay_ref),
                 links=len(nets), bits=nbits, bits_by_class=dict(used), relay_flops=nf,
                 die_nets_est=nbits + nf, die_repair=a.die_repair,
                 memory_note=('H-REACH measured ~3.5 GB/mm2 for full-die GRT (flat, with block internals); this case is die-top '

@@ -246,7 +246,15 @@ def build():
              1: [('bk_sel', 'dsfd_bk_selector', 2000)], 6: [('bk_col', 'dsfd_bk_collector', 2900)],
              2: [('mix4_w', 'dsfd_engram_mix4_half', 2600)], 5: [('mix4_e', 'dsfd_engram_mix4_half', 2600)],
              3: [('gunit', 'dsdv_gunit', 2800)], 4: [('seqhost', 'dsdv_seq_host', 2200)]}
-      if LAYOUT == 'p4':
+      if LAYOUT == 'p4' and TIER_W:
+          # p4e: units between the edge lane strips (0.68 mm wide stacked leaf clusters, one ring stop each),
+          # redistributed so every inter-tier void fits
+          units = {0: [('coll_WS', 'dsdv_coll_edge', 1200), ('coll_WN', 'dsdv_coll_edge', 1200)],
+                   7: [('coll_ES', 'dsdv_coll_edge', 1200), ('coll_EN', 'dsdv_coll_edge', 1200)],
+                   1: [('bk_col', 'dsfd_bk_collector', 2900)], 2: [('mix4_w', 'dsfd_engram_mix4_half', 2600)],
+                   3: [('gunit', 'dsdv_gunit', 2800)], 4: [('bk_sel', 'dsfd_bk_selector', 2000), ('seqhost', 'dsdv_seq_host', 2200)],
+                   5: [('mix4_e', 'dsfd_engram_mix4_half', 2600)]}
+      elif LAYOUT == 'p4':
           # p4b (slice-master variants, S81-SLICE 10-17): one void-side (V) or band-side (B) use per slice ->
           # bk to the column-2/5 S slices (the column-1/6 S slices keep only the attention B port)
           units.pop(1); units.pop(6)
@@ -274,7 +282,7 @@ def build():
               yy = y if y is not None else (lo_ if j == 0 else hi_ - hh)
               if y is not None and tier.get(nm) == 'N' and len(us) == 1:
                   yy = hi_ - hh
-              P.block(nm, master, 'unit', 'void', colx(c) + (160 if LAYOUT != 'p4' else 75), yy, wu, hh)
+              P.block(nm, master, 'unit', 'void', colx(c) + (160 if LAYOUT != 'p4' else (160 if TIER_W else 75)), yy, wu, hh)
               if y is not None:
                   y += h + 100
     ys, yn = streets[0] + STREET / 2, streets[1] + STREET / 2
@@ -343,7 +351,7 @@ def build():
                     fy = F['y'] + F['h'] - 400 if ((LAYOUT == 'p3' or ROW0_MX) and r == 0) else F['y'] + 400   # p3: row 0 MX
                     sxp = S['x'] if side == 'L' else S['x'] + S['w']
                     vx = colx(c) + {'p3': (8 + 9 * r if side == 'L' else SCOL_W - 78 + 9 * r),
-                                    'p4': (10 + 10 * r if side == 'L' else SCOL_W - 95 + 10 * r)}.get(
+                                    'p4': (40 + 0 * r if side == 'L' else SCOL_W - 130 + 0 * r)}.get(
                                     LAYOUT, 20 + 15 * r if side == 'L' else SCOL_W - 125 + 15 * r)
                     sy = S['y'] if fy < S['y'] else S['y'] + S['h']
                     if r in (1, 2):
@@ -557,8 +565,10 @@ def main():
         # coordinator decision 10-17: bf_col 583.2 um widens the frames to 1,393.632 um; 1.00-mm slice columns; the
         # slice is a CLUSTER of 5 near-square hardened leaves (0.95 x 0.92 mm, one 64-lane beat each, own regional root)
         LAYOUT, FRAME_W, SCOL_W, SLICE_W, SLICE_H = 'p4', a.frame_w or 1393.632, 1000.0, 950.0, 4600.0
+        global LANE_DX
+        LANE_DX = 30.0     # p4e (pilot 10-17): 4 lanes 30 um apart -- the 6-um pitch crammed the station flop clusters
         FRAME_PITCH = FRAME_W + 8.7
-        UNIT_W, UNIT_WE = 820.0, 545.0
+        UNIT_W, UNIT_WE = (680.0, 680.0) if a.tier_w else (820.0, 545.0)
         PITCH = 2 * FRAME_PITCH + SCOL_W
         DIE_W = 2 * EDGE + NCOL * PITCH
     if a.layout == 'p3':
