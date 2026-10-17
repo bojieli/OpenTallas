@@ -57,7 +57,9 @@ STATIC_OWNERS = {
     ('layer_programme', 'start'): ('DIE_JOIN', 'd2d engine_result_token RESULT (token-run trigger)', 'KVJ-G2'),
     ('layer_programme', 'authority_'): ('DIE_JOIN', 'host root token authority (token_epoch / native_request_*)', 'KVJ-G2'),
     ('layer_programme', 'programme_'): ('DIE_JOIN', 'host root program_authorized_* / program_epoch / program_digest', 'KVJ-G2'),
-    ('attention_programme', 'compiled_'): ('NEW_RTL', 'qkd_attn_cal_gen (N1, KVJ-B 58f9ebdbb, not pushed)', 'KVJ-B'),
+    ('attention_programme', 'compiled_'): ('DIE_JOIN', 'qkd_attn_cal_gen STRETCH=1 (D_QK, D_RL, SERVICE_END from the die '
+                                           'report; KVJ-SMALL 10-17) cal / rx_cmd / tx_first / end_age in the attention '
+                                           'control tile', 'KVJ-G2'),
     ('attention_programme', 'fused_program_capability'): ('COMPILER', 'boot image capability bit', 'item 9 compiler'),
     # KVJ-SMALL (a) 10-17: request_ready / result_* / service_fault are joined (kv_static_attn_join: attn_root +
     # attn_face); the face's own inputs from the PV final join and the unit faults are die joins

@@ -5,13 +5,15 @@
 // Phase 1 issues every T back to back (initiation interval 1) and checks each done in order (cal, link ages, epoch tag,
 // latency LAT); phase 2 issues single tokens with gaps (held result, valid); phase 3 checks fault stays low, then
 // rises on T = 0 / 8193 / 16383.  Prints CALGEN PASS / CALGEN FAIL.
+// STRETCH=1 (KVJ-SMALL 10-17): the gold is kv_static_programme.attention_calendar(T, profile, service_end) with the
+// fixed link words (run_cal_gen_bench.sh stretch configs); D_QK / D_RL / SERVICE_END come from that profile.
 module tb_qkd_attn_cal_gen;
- parameter integer G3S2=1,RX_CMD=2,MUT=0;
+ parameter integer G3S2=1,RX_CMD=2,STRETCH=0,D_QK=0,D_RL=0,SERVICE_END=1777,MUT=0;
  localparam integer LAT=10;
  reg clk=0,rst_n=0;always #1 clk=~clk;
  reg go=0;reg [13:0] ctx_t=0;reg [15:0] epoch=0;
  wire [175:0] cal;wire [15:0] rx_cmd,tx_first,end_age,cal_epoch;wire done,valid,fault;
- qkd_attn_cal_gen #(.G3S2(G3S2),.RX_CMD(RX_CMD),.MUT(MUT)) u(.ck(clk),.rst_n(rst_n),.go(go),.ctx_t(ctx_t),.epoch(epoch),
+ qkd_attn_cal_gen #(.G3S2(G3S2),.RX_CMD(RX_CMD),.STRETCH(STRETCH),.D_QK(D_QK),.D_RL(D_RL),.SERVICE_END(SERVICE_END),.MUT(MUT)) u(.ck(clk),.rst_n(rst_n),.go(go),.ctx_t(ctx_t),.epoch(epoch),
   .cal(cal),.rx_cmd(rx_cmd),.tx_first(tx_first),.end_age(end_age),.cal_epoch(cal_epoch),.done(done),.valid(valid),.fault(fault));
  reg [223:0] gold[0:8191];integer ng=0,issued=0,checked=0,errors=0,cyc=0;
  integer q_idx[0:65535];integer q_cyc[0:65535];integer qw=0,qr=0;
@@ -38,7 +40,7 @@ module tb_qkd_attn_cal_gen;
   integer fd,c,k;reg [223:0] v;
   if(!$value$plusargs("GOLD=%s",gf))$fatal(1,"+GOLD required");
   fd=$fopen(gf,"r");while(!$feof(fd)&&ng<8192)begin c=$fscanf(fd,"%h\n",v);if(c==1)begin gold[ng]=v;ng=ng+1;end end $fclose(fd);
-  $display("CALGEN start G3S2=%0d RX_CMD=%0d MUT=%0d gold=%0d",G3S2,RX_CMD,MUT,ng);
+  $display("CALGEN start G3S2=%0d RX_CMD=%0d STRETCH=%0d D_QK=%0d D_RL=%0d SERVICE_END=%0d MUT=%0d gold=%0d",G3S2,RX_CMD,STRETCH,D_QK,D_RL,SERVICE_END,MUT,ng);
   repeat(3)@(posedge clk);#0.5 rst_n=1;
   for(k=0;k<ng;k=k+1)issue(k);                                  // phase 1: II = 1
   @(posedge clk);#0.25 go=0;

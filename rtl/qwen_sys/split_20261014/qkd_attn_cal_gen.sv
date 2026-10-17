@@ -21,10 +21,23 @@
 // edges; the result is held in the output registers until the next done (ctx_t is constant over the token's 36 layers).
 // fault (sticky): a go with T outside 1..8192.  Static schedule: no ready/credit; the compiler places go >= LAT edges
 // before the attention programme's issue.
-// MUT (diagnostic, bench only): 1 = zwalk [r <= 120], 2 = scan without min(63, .), 3 = P1 always the non-empty law.
+// STRETCH=1 (KVJ-SMALL 10-17, coordinator decision 4; the static die's production setting, the KV static programme
+// compiler law kv_static_programme.attention_calendar(T, profile, service_end)): the die ages shift the chain and the
+// pair outputs before the PV_START max, and R stretches so the service ends on the link's fixed RESULT slot:
+//   LMAX..HUB_PUB += D_QK (= QK_ISSUE_AGE - 34),  P0 / P1 += D_RL (= RL - 19),  PV_START = Z - 64 + max(0, 481 - P0)
+//   on the shifted fields,  R = SERVICE_END - 49 - PV_START,  tx_first = RX_CMD + 2 + SERVICE_END - 31 (constant),
+//   end = tx_first + 34 (constant).  fault also rises (sticky) when the context does not fit the slot (R < P0, i.e.
+//   PV_START + P0 + 49 > SERVICE_END): the compiler refuses such a die image, so this is a configuration check only.
+// STRETCH=0 keeps the minimal-R / per-T link-age generator (bench-feeding calendars; D_QK / D_RL / SERVICE_END unused).
+// MUT (diagnostic, bench only): 1 = zwalk [r <= 120], 2 = scan without min(63, .), 3 = P1 always the non-empty law,
+// 4 = R stretched one edge short, 5 = D_RL left out of the PV_START max.
 module qkd_attn_cal_gen #(
  parameter integer G3S2=1,
  parameter integer RX_CMD=2,
+ parameter integer STRETCH=0,
+ parameter integer D_QK=0,
+ parameter integer D_RL=0,
+ parameter integer SERVICE_END=1777,
  parameter integer MUT=0
 )(
  input wire ck,rst_n,
@@ -38,6 +51,8 @@ module qkd_attn_cal_gen #(
  output reg fault
 );
  localparam integer LAT=10;
+ localparam integer DQ=STRETCH?D_QK:0, DR=STRETCH?D_RL:0;
+ localparam integer TXF=RX_CMD+2+SERVICE_END-31, RLINK=SERVICE_END-49;
  // ---- S1: capture ----
  reg v1;reg [13:0] t1;reg [15:0] e1;
  always @(posedge ck or negedge rst_n)if(!rst_n)v1<=0;else v1<=go;
@@ -54,7 +69,7 @@ module qkd_attn_cal_gen #(
  end
  // ---- S3: zwalk lane terms, scan operands, pair output ages ----
  reg v3,f3;reg [15:0] e3;reg [3:0] p3,sm3,b3;reg [7:0] a3[0:3];reg [3:0] cnt3[0:3];reg [9:0] xs3[0:3];
- reg [10:0] m3,mm3;reg nbig3;reg [9:0] po0_3,po1_3;
+ reg [10:0] m3,mm3;reg nbig3;reg [11:0] po0_3,po1_3;
  always @(posedge ck or negedge rst_n)if(!rst_n)v3<=0;else v3<=v2;
  always @(posedge ck)if(v2)begin
   f3<=f2;e3<=e2;p3<=p2;
@@ -66,36 +81,37 @@ module qkd_attn_cal_gen #(
    b3[s]<=(MUT==1)?(x2[s][8:0]<=9'd120):(x2[s][8:0]<9'd120);
   end
   m3<=11'(ns2-12'd1);mm3<=11'(ns2-12'd65);nbig3<=ns2<=12'd1024;
-  po0_3<=10'(10'd153+{c0_2,4'd0});                                   // 137 + 16 (c0 + 1)
-  po1_3<=(big1||MUT==3)?10'(10'd153+{c1_2,4'd0}):10'd137;
+  po0_3<=12'(12'(153+DR)+{c0_2,4'd0});                               // 137 + 16 (c0 + 1) (+ D_RL)
+  po1_3<=(big1||MUT==3)?12'(12'(153+DR)+{c1_2,4'd0}):12'(137+DR);
  end
  // ---- S4: lane values, scan, P.V adjust ----
- reg v4,f4;reg [15:0] e4;reg [9:0] zv4[0:3];reg [7:0] scan4;reg [9:0] po0_4,po1_4;reg [8:0] adj4;
+ reg v4,f4;reg [15:0] e4;reg [9:0] zv4[0:3];reg [7:0] scan4;reg [11:0] po0_4,po1_4;reg [8:0] adj4;
  wire [6:0] lo7=mm3[6:0];
  always @(posedge ck or negedge rst_n)if(!rst_n)v4<=0;else v4<=v3;
  always @(posedge ck)if(v3)begin
   f4<=f3;e4<=e3;po0_4<=po0_3;po1_4<=po1_3;
   for(integer s=0;s<4;s=s+1)zv4[s]<=!p3[s]?10'd0:sm3[s]?xs3[s]:10'(a3[s]-{4'd0,cnt3[s]}+{7'd0,b3[s]});
   scan4<=nbig3?8'(m3>>3):8'(8'd128+{1'b0,mm3[10:7],3'd0}+((MUT==2)?{5'd0,lo7[5:3]}|{4'd0,lo7[6],3'd0}:((lo7>=7'd63)?8'd7:{5'd0,lo7[5:3]})));
-  adj4<=(po0_3<=10'd480)?9'(10'd481-po0_3):9'd0;
+  if(MUT==5)adj4<=(po0_3-12'(DR)<=12'd480)?9'(12'd481-(po0_3-12'(DR))):9'd0;
+  else adj4<=(po0_3<=12'd480)?9'(12'd481-po0_3):9'd0;
  end
  // ---- S5: zwalk max level 1, LMAX ----
- reg v5,f5;reg [15:0] e5;reg [9:0] za5,zb5;reg [15:0] lmax5;reg [9:0] po0_5,po1_5;reg [8:0] adj5;
+ reg v5,f5;reg [15:0] e5;reg [9:0] za5,zb5;reg [15:0] lmax5;reg [11:0] po0_5,po1_5;reg [8:0] adj5;
  always @(posedge ck or negedge rst_n)if(!rst_n)v5<=0;else v5<=v4;
  always @(posedge ck)if(v4)begin
   f5<=f4;e5<=e4;po0_5<=po0_4;po1_5<=po1_4;adj5<=adj4;
   za5<=(zv4[0]>zv4[1])?zv4[0]:zv4[1];zb5<=(zv4[2]>zv4[3])?zv4[2]:zv4[3];
-  lmax5<=16'(scan4)+16'(151+5*G3S2);
+  lmax5<=16'(scan4)+16'(151+5*G3S2+DQ);
  end
  // ---- S6: zwalk max, EXP, Z base, HUB_LMAX ----
- reg v6,f6;reg [15:0] e6;reg [9:0] zw6;reg [15:0] lmax6,exp6,zb6,hl6;reg [9:0] po0_6,po1_6;reg [8:0] adj6;
+ reg v6,f6;reg [15:0] e6;reg [9:0] zw6;reg [15:0] lmax6,exp6,zb6,hl6;reg [11:0] po0_6,po1_6;reg [8:0] adj6;
  always @(posedge ck or negedge rst_n)if(!rst_n)v6<=0;else v6<=v5;
  always @(posedge ck)if(v5)begin
   f6<=f5;e6<=e5;po0_6<=po0_5;po1_6<=po1_5;adj6<=adj5;lmax6<=lmax5;
   zw6<=(za5>zb5)?za5:zb5;exp6<=lmax5+16'd15;zb6<=lmax5+16'd265;hl6<=lmax5+16'd7;
  end
  // ---- S7: Z; link-age base ----
- reg v7,f7;reg [15:0] e7;reg [15:0] lmax7,exp7,z7,hl7,pvo7,lk7,le7;reg [9:0] po0_7,po1_7;
+ reg v7,f7;reg [15:0] e7;reg [15:0] lmax7,exp7,z7,hl7,pvo7,lk7,le7;reg [11:0] po0_7,po1_7;
  always @(posedge ck or negedge rst_n)if(!rst_n)v7<=0;else v7<=v6;
  always @(posedge ck)if(v6)begin
   f7<=f6;e7<=e6;lmax7<=lmax6;exp7<=exp6;hl7<=hl6;po0_7<=po0_6;po1_7<=po1_6;
@@ -105,19 +121,21 @@ module qkd_attn_cal_gen #(
   le7<=16'(po0_6)+16'(RX_CMD+54);                                      // end - PV_START
  end
  // ---- S8: hub ages, PV_START ----
- reg v8,f8;reg [15:0] e8;reg [15:0] lmax8,exp8,z8,hl8,hz8,hr8,hp8,pv8,lk8,le8;reg [9:0] po0_8,po1_8;
+ reg v8,f8;reg [15:0] e8;reg [15:0] lmax8,exp8,z8,hl8,hz8,hr8,hp8,pv8,lk8,le8;reg [11:0] po0_8,po1_8;
  always @(posedge ck or negedge rst_n)if(!rst_n)v8<=0;else v8<=v7;
  always @(posedge ck)if(v7)begin
   f8<=f7;e8<=e7;lmax8<=lmax7;exp8<=exp7;z8<=z7;hl8<=hl7;po0_8<=po0_7;po1_8<=po1_7;lk8<=lk7;le8<=le7;
   hz8<=z7+16'd261;hr8<=z7+16'd342;hp8<=z7+16'd415;pv8<=z7+pvo7;
  end
  // ---- S9: link ages ----
- reg v9,f9;reg [15:0] e9;reg [175:0] cal9;reg [15:0] tx9,en9;
+ reg v9,f9;reg [15:0] e9;reg [175:0] cal9;reg [15:0] tx9,en9,p09;reg [16:0] r9;
  always @(posedge ck or negedge rst_n)if(!rst_n)v9<=0;else v9<=v8;
  always @(posedge ck)if(v8)begin
   f9<=f8;e9<=e8;
-  cal9<={16'(po0_8),16'(po1_8),16'(po0_8),pv8,hp8,hr8,hz8,hl8,z8,lmax8,exp8};
-  tx9<=pv8+lk8;en9<=pv8+le8;
+  r9<=17'(RLINK-((MUT==4)?1:0))-{1'b0,pv8};                          // stretched R (bit 16: does not fit)
+  p09<=16'(po0_8);
+  cal9<={STRETCH?16'(RLINK-((MUT==4)?1:0))-pv8:16'(po0_8),16'(po1_8),16'(po0_8),pv8,hp8,hr8,hz8,hl8,z8,lmax8,exp8};
+  tx9<=STRETCH?16'(TXF):pv8+lk8;en9<=STRETCH?16'(TXF+34):pv8+le8;
  end
  // ---- S10: held result ----
  always @(posedge ck or negedge rst_n)begin
@@ -127,7 +145,7 @@ module qkd_attn_cal_gen #(
    if(v9)valid<=1;else if(go)valid<=0;     // a result landing on a go edge (II = 1) stays valid
    if(v9)begin
     cal<=cal9;tx_first<=tx9;end_age<=en9;cal_epoch<=e9;rx_cmd<=16'(RX_CMD);
-    if(f9)fault<=1;
+    if(f9||(STRETCH!=0&&(r9[16]||r9[15:0]<p09)))fault<=1;
    end
   end
  end
