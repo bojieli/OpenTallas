@@ -11,12 +11,12 @@ module ot_hbm_engram_return_tree_static #(
     parameter integer MUT_DATA=0,MUT_RIGHT_SKEW=0
 )(
     input wire[30:0]node_clk,input wire rst_n,
-    input wire[31:0]kr_v,output wire[31:0]kr_rdy,
+    input wire[31:0]kr_v,output wire[31:0]kr_rdy,input wire[31:0]k_wr_done,
     input wire[543:0]kr_tag,input wire[127:0]kr_beat,input wire[8191:0]kr_data,
     output wire out_v,output wire[264:0]out_word,output wire fault
 );
     wire[30:0]valid,errors;wire[264:0]word[0:30];
-    assign out_v=valid[0];assign out_word=word[0] ^ (265'(MUT_DATA)<<256);assign fault=|errors;
+    assign out_v=valid[0];assign out_word=word[0] ^ (265'(MUT_DATA)<<256);assign fault=errors[0];
     for(genvar leaf=0;leaf<16;leaf=leaf+1)begin:g_pair
         localparam integer N=15+leaf,P0=2*leaf,P1=2*leaf+1;
         reg[5:0]phase;reg v,sticky;reg[264:0]payload;
@@ -33,7 +33,7 @@ module ot_hbm_engram_return_tree_static #(
                 phase<=phase+1'b1;v<=(take0||take1)&&!(bad0||bad1);
                 if(take0)payload<={kr_tag[P0*17+:9],kr_data[P0*256+:256]};
                 if(take1)payload<={kr_tag[P1*17+:9],kr_data[P1*256+:256]};
-                if(bad0||bad1)sticky<=1;
+                if(bad0||bad1||k_wr_done[P0]||k_wr_done[P1])sticky<=1;
             end
         end
     end
@@ -43,32 +43,32 @@ module ot_hbm_engram_return_tree_static #(
         localparam integer RELAY=(DEPTH==0)?(ONE_ROW?4:0):(DEPTH==1)?2:(DEPTH==2)?1:0;
         localparam integer LEFT=2*n+1,RIGHT=2*n+2;
         localparam integer RD=RELAY+((n==0&&MUT_RIGHT_SKEW)?1:0);
-        wire lv,rv;wire[264:0]ld,rd;
+        wire lv,rv,le,re;wire[264:0]ld,rd;
         if(RELAY==0)begin:l_direct
-            assign lv=valid[LEFT];assign ld=word[LEFT];
+            assign lv=valid[LEFT];assign ld=word[LEFT];assign le=errors[LEFT];
         end else begin:l_registered
-            reg[RELAY-1:0]pv;reg[264:0]pd[0:RELAY-1];
+            reg[RELAY-1:0]pv,pe;reg[264:0]pd[0:RELAY-1];
             always @(posedge node_clk[n] or negedge rst_n)begin
-                if(!rst_n)pv<=0;
+                if(!rst_n)begin pv<=0;pe<=0;end
                 else begin
-                    pv[0]<=valid[LEFT];if(valid[LEFT])pd[0]<=word[LEFT];
-                    for(integer s=1;s<RELAY;s=s+1)begin pv[s]<=pv[s-1];if(pv[s-1])pd[s]<=pd[s-1];end
+                    pe[0]<=errors[LEFT];pv[0]<=valid[LEFT];if(valid[LEFT])pd[0]<=word[LEFT];
+                    for(integer s=1;s<RELAY;s=s+1)begin pe[s]<=pe[s-1];pv[s]<=pv[s-1];if(pv[s-1])pd[s]<=pd[s-1];end
                 end
             end
-            assign lv=pv[RELAY-1];assign ld=pd[RELAY-1];
+            assign lv=pv[RELAY-1];assign ld=pd[RELAY-1];assign le=pe[RELAY-1];
         end
         if(RD==0)begin:r_direct
-            assign rv=valid[RIGHT];assign rd=word[RIGHT];
+            assign rv=valid[RIGHT];assign rd=word[RIGHT];assign re=errors[RIGHT];
         end else begin:r_registered
-            reg[RD-1:0]pv;reg[264:0]pd[0:RD-1];
+            reg[RD-1:0]pv,pe;reg[264:0]pd[0:RD-1];
             always @(posedge node_clk[n] or negedge rst_n)begin
-                if(!rst_n)pv<=0;
+                if(!rst_n)begin pv<=0;pe<=0;end
                 else begin
-                    pv[0]<=valid[RIGHT];if(valid[RIGHT])pd[0]<=word[RIGHT];
-                    for(integer s=1;s<RD;s=s+1)begin pv[s]<=pv[s-1];if(pv[s-1])pd[s]<=pd[s-1];end
+                    pe[0]<=errors[RIGHT];pv[0]<=valid[RIGHT];if(valid[RIGHT])pd[0]<=word[RIGHT];
+                    for(integer s=1;s<RD;s=s+1)begin pe[s]<=pe[s-1];pv[s]<=pv[s-1];if(pv[s-1])pd[s]<=pd[s-1];end
                 end
             end
-            assign rv=pv[RD-1];assign rd=pd[RD-1];
+            assign rv=pv[RD-1];assign rd=pd[RD-1];assign re=pe[RD-1];
         end
         reg v,sticky;reg[264:0]payload;
         assign valid[n]=v;assign word[n]=payload;assign errors[n]=sticky;
@@ -76,7 +76,7 @@ module ot_hbm_engram_return_tree_static #(
             if(!rst_n)begin v<=0;sticky<=0;end
             else begin
                 v<=lv|rv;if(lv)payload<=ld;else if(rv)payload<=rd;
-                if(lv&&rv)sticky<=1;
+                if((lv&&rv)||le||re)sticky<=1;
             end
         end
     end
