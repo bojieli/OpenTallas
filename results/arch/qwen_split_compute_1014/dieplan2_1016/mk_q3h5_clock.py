@@ -91,6 +91,14 @@ for n, r in (('LANE_RS_hi_v', [14170.0, cy - 20.0, 14210.0, 17027.0]), ('LANE_RS
     keep.append(dict(n=n, kind='clock_lane', rect=[round(z, 3) for z in r], free=ok))
     if not ok:
         print(f'WARN {n} {r} collides: ' + str([q[4] for q in rects if q[0] < r[2] and r[0] < q[2] and q[1] < r[3] and r[1] < q[3]][:6]))
+# DIE-CLOCK 21:2x: RS_hgE from clk_rx's E side S of the VM (symmetric with RS_hgW): 40-um strip y 6209-6249 to x 19370,
+# 40-um vertical lane x 19330-19370 up to RS_hgE
+for n, r in (('LANE_RS_hgE_h', [ck['x'] + ck['w'] + 0.2, cy - 20.0, 19370.0, cy + 20.0]),
+             ('LANE_RS_hgE_v', [19330.0, cy - 20.0, 19370.0, 11188.48])):
+    ok = free(r)
+    keep.append(dict(n=n, kind='clock_lane', rect=[round(z, 3) for z in r], free=ok))
+    if not ok:
+        print(f'WARN {n} {r} collides: ' + str([q[4] for q in rects if q[0] < r[2] and r[0] < q[2] and q[1] < r[3] and r[1] < q[3]][:6]))
 for n, y in (('L_hg1', hg0), ('L_hg2', hg1 - 20.0)):
     for side, x0, x1 in (('Wx', xw1, 13900.0), ('Ex', 19400.0, xe0)):
         r = [round(x0, 3), round(y, 3), round(x1, 3), round(y + 20.0, 3)]
