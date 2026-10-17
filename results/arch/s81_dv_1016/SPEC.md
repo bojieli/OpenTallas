@@ -5,7 +5,7 @@ Stream S81-DV (owner decision 0cj, 2026-10-16 ~22:00). Plan level: nothing in th
 **Status: COMPOSED_NOT_NATIVE.** Every rate below is composed from the token-path DAG and plan geometry. It becomes a
 measured rate only once the slice benches and the die trial report their latencies.
 
-**Current die-trial base: p4** (coordinator decision 10-17, option B; section 0a). The earlier base was p1b (10-17). It is p1's geometry plus two changes:
+**Current die-trial base: p4b**: p4 plus the slice-master port variants (section 0a). p4 itself is the coordinator decision of 10-17, option B. The earlier base was p1b (10-17). It is p1's geometry plus two changes:
 - the row-0 frames are placed MX, so their cfifo x tap faces the slice;
 - each shared unit sits against the slice it talks to.
 
@@ -200,6 +200,24 @@ Drivers:
 | Keep SU/HC rows + SU +25% | 1,237.0 | 3,708.9 | +11.9% |
 
 The leaf hops cost about 1.5% against p1b. Routing returned rows straight to the owning leaf, along the column, would win part of that back.
+
+### 0b. p4b: slice-master port variants (with S81-SLICE, 10-17)
+
+Open or tied ports are not allowed on a hardened slice. The slice master therefore exists in 3 **centre-leaf** variants; the 4 beat leaves are identical in all of them.
+
+| Variant | Ports | Slices |
+|---|---|---|
+| C1 | ring E/W + **V** (void-side, one 1,104-b ring-format pair) | 11: s_0S/N, s_7S/N (vertical end ring), s_2S/s_5S (bk_sel/bk_col), s_2N/s_5N (mix4), s_3S/N (G-unit injection), s_4N (seqhost) |
+| C2 | ring E/W + **B** (band-side; attention q/P·V) | 2: s_1S, s_6S |
+| C0 | ring E/W only | 3: s_1N, s_4S, s_6N |
+
+What makes exactly one V or B use per slice possible:
+- the bk units move to columns 2/5 (S slices);
+- the collective edge engines become ring stops on the end-column vertical ring (s_cS V → coll S → coll N → s_cN V);
+- the end slices' outward E/W ring port carries the PHY link lanes along the street;
+- the ctl tree rides the ring and street lanes on every slice.
+
+Metrics: cut 0.427, 0 over-reach, relays 1,768, 0.39 M bit·mm. MTP 4,154.0 (+25.4% vs today's 3,311.6 on main's current ledger). Explorer record `s81_dv_p4b`.
 
 ## 1. Why
 
