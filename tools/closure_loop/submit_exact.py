@@ -23,7 +23,10 @@ Run it from the worktree that holds the spec's source commit.  Steps:
     (m6_pin_grant source_commit, *grant_commit) exists and is on an origin branch; run the daemon's submit check; on a source_binding refusal print every differing file;
  5. --regate: run pre_route_gate.py <kit> --commit <C> <gate-args>, commit the gate result by path, move the spec to
     that commit, re-check;
- 6. drop the spec atomically into the closure-loop drop dir (only after a PASS/WARN).
+ 6. PRE-ROUTE VISUAL REVIEW: an element on critical_tiles.txt (block or kit name) or with >= 2 earlier non-CLOSED routes
+    needs a committed <kit>/gate_layout/REVIEW.json {reviewer, time, gate_commit (= the kit gate's commit), verdict
+    APPROVED|CHANGES, checklist {lattice, std_cell_band, pin_spread, clock_entry, shape}}; else REVIEW_REQUIRED + PNGs;
+ 7. drop the spec atomically into the closure-loop drop dir (only after a PASS/WARN).
 Exit 0 submitted (or dry-run PASS), 1 refused locally, 2 usage/git error.
 """
 import argparse
@@ -198,6 +201,83 @@ def preflight(spec, root, daemon):
     return PRG.submit_check(spec, str(root), **kw)
 
 
+# PRE-ROUTE VISUAL REVIEW (owner via coordinator, 2026-10-17): elements on the critical list, or with >= 2 earlier
+# non-CLOSED routes, need a human/agent layout review receipt bound to the kit's gate before they route.  Opt-in by list:
+# every other job is unaffected.
+CRITICAL_TILES = Path(os.environ.get("OT_CRITICAL_TILES", "/home/ubuntu/claude-takeover-20261007/critical_tiles.txt"))
+REVIEW_FAILED_ROUTES = 2
+REVIEW_CHECKLIST = ("lattice", "std_cell_band", "pin_spread", "clock_entry", "shape")
+_ROUTE_FAIL = ("NEEDS_RTL", "NEEDS_HUMAN")
+
+
+def critical_names():
+    try:
+        return {ln.split("#", 1)[0].strip() for ln in CRITICAL_TILES.read_text().splitlines()} - {""}
+    except OSError:
+        return set()
+
+
+def failed_routes(block, jobs_dir=None):
+    n = []
+    for f in (jobs_dir or STATE / "jobs").glob("*.json"):
+        try:
+            j = json.loads(f.read_text())
+        except (OSError, ValueError):
+            continue
+        st = str(j.get("status") or "")
+        if (j.get("spec") or {}).get("block") == block and (st.startswith("EARLY_FAIL") or st in _ROUTE_FAIL):
+            n.append(j.get("name"))
+    return sorted(n)
+
+
+def review_required(spec, kit, jobs_dir=None):
+    """(why or None): critical list hit (block, kit dir or spec name prefix) or >= REVIEW_FAILED_ROUTES failed routes"""
+    names, block = critical_names(), spec.get("block")
+    kitname = Path(kit).name if kit else None
+    hit = [x for x in (block, kitname) if x and x in names]
+    if hit:
+        return f"{hit[0]} is on {CRITICAL_TILES}"
+    bad = failed_routes(block, jobs_dir)
+    if len(bad) >= REVIEW_FAILED_ROUTES:
+        return f"{block} has {len(bad)} earlier non-CLOSED routes ({', '.join(bad[-3:])})"
+    return None
+
+
+def review_check(root, commit, kit, show=None):
+    """None when the committed REVIEW.json approves THIS gate, else the refusal text."""
+    def rd(p):
+        if show:
+            return show(p)
+        r = subprocess.run(["git", "-C", str(root), "show", f"{commit}:{p}"], capture_output=True, text=True)
+        return r.stdout if r.returncode == 0 else None
+    pngs = [str(root / kit / "gate_layout" / n) for n in ("floorplan.png", "density.png", "placed.png", "cts.png")
+            if (root / kit / "gate_layout" / n).exists()]
+    tail = " -- review these and commit physical/ref_tile/<kit>/gate_layout/REVIEW.json: " + (", ".join(pngs) or
+                                                                                              f"{kit}/gate_layout/*.png")
+    try:
+        gate = json.loads(rd(f"{kit}/gate_result.json") or "null")
+        rev = json.loads(rd(f"{kit}/gate_layout/REVIEW.json") or "null")
+    except ValueError as ex:
+        return f"REVIEW_REQUIRED: unreadable gate/review JSON ({ex})" + tail
+    if not isinstance(rev, dict):
+        return f"REVIEW_REQUIRED: no {kit}/gate_layout/REVIEW.json at {commit[:9]}" + tail
+    missing = [k for k in ("reviewer", "time", "gate_commit", "verdict", "checklist") if not rev.get(k)]
+    if missing:
+        return f"REVIEW_REQUIRED: REVIEW.json lacks {', '.join(missing)}" + tail
+    gc = str(rev["gate_commit"])
+    ids = [str(x) for x in ((gate or {}).get("commit"), ((gate or {}).get("source_binding") or {}).get("commit"),
+                            (gate or {}).get("generated")) if x]
+    if not ids or not any(i.startswith(gc) or gc.startswith(i) for i in ids if len(gc) >= 7 or i == gc):
+        return f"REVIEW_REQUIRED: REVIEW.json gate_commit {gc} does not match the kit's gate ({', '.join(ids) or 'none'})" + tail
+    cl = rev["checklist"] if isinstance(rev["checklist"], dict) else {}
+    absent = [k for k in REVIEW_CHECKLIST if k not in cl]
+    if absent:
+        return f"REVIEW_REQUIRED: checklist lacks {', '.join(absent)} (items: {', '.join(REVIEW_CHECKLIST)})" + tail
+    if rev["verdict"] != "APPROVED":
+        return f"REVIEW_REQUIRED: reviewer {rev['reviewer']} verdict {rev['verdict']}" + tail
+    return None
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("spec")
@@ -291,6 +371,14 @@ def main(argv=None):
         git(root, "commit", "-m", a.message or f"{kit}: gate result on {commit[:9]} (submit_exact)", "--", *out)
         spec = move_spec(spec, git(root, "rev-parse", "HEAD"))
         push()
+    kit = kit_of(spec)
+    why = review_required(spec, kit) if kit else None
+    if why:
+        rr = review_check(root, git(root, "rev-parse", f"{spec['source']['commit']}^{{commit}}"), kit)
+        if rr:
+            print(f"REFUSED LOCALLY ({why}): {rr}")
+            return 1
+        print(f"visual review receipt OK ({why})")
     if a.dry_run:
         print(f"DRY RUN: would submit {spec['name']} at {spec['source']['commit']}")
         return 0
