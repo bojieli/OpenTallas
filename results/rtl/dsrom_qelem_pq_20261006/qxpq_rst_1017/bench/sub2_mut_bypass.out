@@ -1,0 +1,3 @@
+mut_bypass seed 1 expect fail -> QXPQ_RSTP FAIL OK | QXPQ_RSTP cycles=1773914 windows=51 rel_ref=1 rel_dut=1 rel_bad=51 mism=394 first_mism=86 phases=300 resets=50 early=25 go=300 cfg=7511 xs=140300 pv_cycles=2790 busy=1769810 fault=0 bank_free=1761228 walking=1752835
+MUTANT_DETECTED mut_bypass
+rc=1

@@ -30,7 +30,8 @@
     "threads": 16,
     "peak_ram_gb": 4,
     "expect": "fail",
-    "fail_regex": "^MUTANT_DETECTED mut_bypass$"
+    "fail_regex": "^MUTANT_DETECTED mut_bypass$",
+    "fail_witness": "results/rtl/dsrom_qelem_pq_20261006/qxpq_rst_1017/bench/sub2_mut_bypass.out"
    },
    {
     "name": "tb_qxpq_rstp_mut_late",
@@ -38,7 +39,8 @@
     "threads": 16,
     "peak_ram_gb": 4,
     "expect": "fail",
-    "fail_regex": "^MUTANT_DETECTED mut_late$"
+    "fail_regex": "^MUTANT_DETECTED mut_late$",
+    "fail_witness": "results/rtl/dsrom_qelem_pq_20261006/qxpq_rst_1017/bench/sub2_mut_late.out"
    }
   ],
   "calibrate": {
