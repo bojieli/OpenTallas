@@ -60,7 +60,7 @@ def load(path):
                 nodes[f[1]] = dict(kind={"B": "cell", "T": "tile", "F": "flop"}[k], cell=f[2], x=float(f[3]),
                                    y=float(f[4]), parent=f[5], sta_max=num(f[6]), sta_min=num(f[7]))
             elif k == "P":
-                pairs.append((f[1], f[2], f[3] if len(f) > 3 else ""))
+                pairs.append((f[1], f[2], (f[3] if len(f) > 3 else "") + ("|directed" if len(f) > 4 and f[4] == "d" else "")))
             elif k == "S":
                 summary[f[1]] = f[2]
     return nodes, pairs, summary
@@ -324,6 +324,14 @@ def neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes):
         if ff is not None and ff.get(ea) is not None and ff.get(eb) is not None:
             f_ = abs(ff[ea] + Rf(ea, 1) - ff[eb] - Rf(eb, 1))
         c["tt"].append(tt); c["ff"].append(f_)
+        # SIGNED capture-minus-launch flop clock difference (FLOW-HOLD 10-16: die FF hold sizes cells from delta's
+        # sign): only for directed rows (geom dump --pairs: launch = the net's block driver, written first)
+        if str(p.get("net", "")).endswith("|directed"):
+            sa, sb = nodes[ea]["sta_max"], nodes[eb]["sta_max"]
+            if None not in (sa, sb):
+                c.setdefault("delta_tt", []).append(sb + (R(nodes[eb]["cell"], eb) if R else 0) - sa - (R(nodes[ea]["cell"], ea) if R else 0))
+            if ff is not None and ff.get(ea) is not None and ff.get(eb) is not None:
+                c.setdefault("delta_ff", []).append(ff[eb] + Rf(eb, 1) - ff[ea] - Rf(ea, 1))
         bad = (tt is not None and tt > budget) or (f_ is not None and f_ > budget)
         if bad:
             c["over"] += 1
@@ -331,6 +339,10 @@ def neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes):
     for k, c in classes.items():
         if c.get("judged"):
             c["tt_ps"] = stats(c.pop("tt")); c["ff_ps"] = stats(c.pop("ff"))
+            for kk in ("delta_tt", "delta_ff"):
+                if kk in c:
+                    v = c.pop(kk)
+                    c[kk + "_signed_ps"] = dict(stats(v), positive=sum(1 for x in v if x > 0))
     judged = [c for c in classes.values() if c.get("judged")]
     worst.sort(key=lambda w: -max(w["tt_ps"] or 0, w["ff_ps"] or 0))
     return dict(budget_ps=budget, ff_measured=ff is not None,
@@ -369,8 +381,10 @@ def table(r, top=20):
                  f"{nb['verdict']}  judged {nb['pairs_judged']} pairs, over {nb['pairs_over']}")
         for k, c in nb["classes"].items():
             if c.get("judged"):
+                dff = c.get("delta_ff_signed_ps")
                 L.append(f"  {k[:40]:40} pairs {c['pairs']:6} over {c['over']:5}  TT max {(c['tt_ps'] or {}).get('max')}  "
-                         f"FF max {(c['ff_ps'] or {}).get('max')}")
+                         f"FF max {(c['ff_ps'] or {}).get('max')}"
+                         + (f"  FF delta(cap-launch) {dff['min']}..{dff['max']} med {dff['median']}" if dff else ""))
             else:
                 L.append(f"  {k[:40]:40} pairs {c['pairs']:6} (async family crossing: CDC / FIFO, not judged)")
     L.append(f"worst {min(top, len(r['pairs']))} pairs (non-common = max side from the branch point):")

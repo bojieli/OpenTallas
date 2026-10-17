@@ -2099,6 +2099,43 @@
   },
   {
    "design": "r25gq",
+   "unit": "VM.NW_WQ2_MERGE (NW SM-writer wq1 + quantiser wq2 through hfd_vms_wq2_merge: +2 edges a write)",
+   "group": "VM.NW_WQ2_MERGE",
+   "measured": 6.0,
+   "price": 4.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.5,
+   "e2e_loss_pct": 0.125,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "S2 schedule, fixed cycles added to every record of the op",
+     "base_cycles": 576702.4,
+     "cycles": 577424.4,
+     "added_cycles": 722.0,
+     "program_records": 1135,
+     "added_cycles_per_record": 2.0,
+     "e2e_loss_pct": 0.125
+    },
+    "qwen_ar": {
+     "model": "S2 schedule, fixed cycles added to every record of the op",
+     "base_cycles": 1269120.1,
+     "cycles": 1269410.1,
+     "added_cycles": 290.0,
+     "program_records": 5,
+     "added_cycles_per_record": 2.0,
+     "e2e_loss_pct": 0.023
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/hbm_vm_q2merge_1016/calendar_bench.txt",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "H-SM 2026-10-16: q2 (NW) banks reuse the exact q0C master (WG3->2); wq2 (hb_quant_NW) and wq1 (smw_NW) reach the bank wq1 port through the merge leaf (2 edges: pin flop + merge flop; RTL equivalence tb_vms_wq2_merge vs the q2 master 0 mismatches; leaf native PASS L181.3/C152.6/sp19.5 main 035a607b4). Compiler: tools/hbm_static/vm_abi_remap_q2merge.py (owners 1,2 -> 1 at +2 edges, k>=3 -> k-1; collisions/loop wraps are errors); calendar bench PASS 62,125/62,125 writes, edges 1/3 mutants FAIL. Charged conservatively as +2 cycles on EVERY SM.MATVEC and FUSED.QDQ_* record (pattern [SF][MU]*.[MQ][AD][TQ]*), as if every NW write were on the critical path; write->done 4 -> 6 edges. Qwen: SM.MATVEC only (no quantiser records)."
+  },
+  {
+   "design": "r25gq",
    "unit": "VM8 x-load service start-to-dispatch (ot_hbm_b2_xcommit XR_LEAD 6 + closed vm_cp_root, WR +4 / RD +12)",
    "group": "VM8.XLOAD_SERVICE",
    "measured": 169.0,
@@ -2160,11 +2197,11 @@
   },
   "r25gq": {
    "accepted_pct": 0.895,
-   "proposed_pct": 113.912,
-   "accepted_plus_proposed_pct": 114.807,
+   "proposed_pct": 114.037,
+   "accepted_plus_proposed_pct": 114.932,
    "limit_pct": 15.0,
    "accepted_rows": 1,
-   "proposed_rows": 21,
+   "proposed_rows": 22,
    "headroom_pct": 14.105,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false

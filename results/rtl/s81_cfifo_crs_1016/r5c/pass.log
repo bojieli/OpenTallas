@@ -1,0 +1,7 @@
+CFIFO_X2 PASS pha=2 phb=2 words=390 first=1 offset=197000 warm=0 cold_words=0
+CFIFO_X2 PASS pha=0 phb=0 words=390 first=1 offset=197000 warm=0 cold_words=0
+CFIFO_X2 PASS pha=3 phb=4 words=391 first=1 offset=187000 warm=0 cold_words=0
+CFIFO_X2 PASS pha=7 phb=7 words=391 first=1 offset=187000 warm=0 cold_words=0
+CFIFO_X2 PASS pha=9 phb=8 words=391 first=1 offset=187000 warm=0 cold_words=0
+CFIFO_X2_GATE PASS 5 phase pairs
+RC pass 0
