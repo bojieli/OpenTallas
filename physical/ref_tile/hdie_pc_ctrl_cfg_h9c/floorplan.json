@@ -62,13 +62,12 @@
   "W": [
    "clk",
    "rst_n",
-   "owner_fault_split"
-  ],
-  "E": [
+   "owner_fault_split",
    "pc_fault",
    "pc_id",
    "refresh_reload"
-  ]
+  ],
+  "E": []
  },
  "clock_port": "clk",
  "blocks": [

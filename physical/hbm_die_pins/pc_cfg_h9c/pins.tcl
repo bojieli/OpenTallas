@@ -70,7 +70,7 @@ proc ot_assigned_pin_exact {name layer face center_um} {
     return [dict create pin $name face $face layer $layer center_um [expr {$got/double($units)}] width_dbu $width height_dbu $height seeded $seeded seed_center_um [expr {$seed_center/double($units)}]]
 }
 
-# H9c (HBMA-H9B 10-17): h9b pc_cfg_h9 grants (cf302625a) rescaled 185.76x164.16 -> 155.52x155.52: same faces, order, layers; snapped to tracks.
+# H9c (HBMA-H9B 10-17): h9b pc_cfg_h9 grants (cf302625a) rescaled 185.76x164.16 -> 155.52x155.52: same N/S/W faces, order, layers, snapped to tracks; the E strap/fault pins (pc_fault, pc_id, refresh_reload) move to W at the same y (no sink beyond the SRAM stack from the W clock).
 ot_assigned_pin_exact {k_v} M3 N 4.473
 ot_assigned_pin_exact {k_rdy} M5 N 4.716
 ot_assigned_pin_exact {k_we} M3 N 4.941
@@ -1278,20 +1278,20 @@ ot_assigned_pin_exact {dram_rdata[252]} M5 S 150.300
 ot_assigned_pin_exact {dram_rdata[253]} M3 S 150.561
 ot_assigned_pin_exact {dram_rdata[254]} M5 S 150.780
 ot_assigned_pin_exact {dram_rdata[255]} M3 S 151.065
-ot_assigned_pin_exact {pc_fault} M4 E 9.036
-ot_assigned_pin_exact {pc_id[0]} M4 E 28.668
-ot_assigned_pin_exact {pc_id[1]} M4 E 38.460
-ot_assigned_pin_exact {pc_id[2]} M4 E 48.300
-ot_assigned_pin_exact {pc_id[3]} M4 E 58.140
-ot_assigned_pin_exact {pc_id[4]} M4 E 67.932
-ot_assigned_pin_exact {refresh_reload[0]} M4 E 77.772
-ot_assigned_pin_exact {refresh_reload[1]} M4 E 87.612
-ot_assigned_pin_exact {refresh_reload[2]} M4 E 97.404
-ot_assigned_pin_exact {refresh_reload[3]} M4 E 107.244
-ot_assigned_pin_exact {refresh_reload[4]} M4 E 117.084
-ot_assigned_pin_exact {refresh_reload[5]} M4 E 126.876
-ot_assigned_pin_exact {refresh_reload[6]} M4 E 136.716
-ot_assigned_pin_exact {refresh_reload[7]} M4 E 146.508
+ot_assigned_pin_exact {pc_fault} M4 W 9.036
+ot_assigned_pin_exact {pc_id[0]} M4 W 28.668
+ot_assigned_pin_exact {pc_id[1]} M4 W 38.460
+ot_assigned_pin_exact {pc_id[2]} M4 W 48.300
+ot_assigned_pin_exact {pc_id[3]} M4 W 58.140
+ot_assigned_pin_exact {pc_id[4]} M4 W 67.932
+ot_assigned_pin_exact {refresh_reload[0]} M4 W 77.772
+ot_assigned_pin_exact {refresh_reload[1]} M4 W 87.612
+ot_assigned_pin_exact {refresh_reload[2]} M4 W 97.404
+ot_assigned_pin_exact {refresh_reload[3]} M4 W 107.244
+ot_assigned_pin_exact {refresh_reload[4]} M4 W 117.084
+ot_assigned_pin_exact {refresh_reload[5]} M4 W 126.876
+ot_assigned_pin_exact {refresh_reload[6]} M4 W 136.716
+ot_assigned_pin_exact {refresh_reload[7]} M4 W 146.508
 ot_assigned_pin_exact {owner_fault_split[0]} M4 W 18.396
 ot_assigned_pin_exact {owner_fault_split[1]} M4 W 18.588
 ot_assigned_pin_exact {owner_fault_split[2]} M4 W 18.732
