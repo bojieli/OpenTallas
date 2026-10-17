@@ -1,0 +1,3923 @@
+[
+ {
+  "cell": "ot_hgi_dma_back",
+  "view": "physical/ref_tile/hgi_dma_back_b2_ref/views/ot_hgi_dma_back",
+  "job": "hgi_dma_back_b2_ref-a-01e2a5600-hs-cx",
+  "design": "hbm",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 381.62373 > 220 (432 pins); capture 332.91839 > 190 (1084 pins); spread 186.3 > 80",
+  "spread": 186.3,
+  "R": 395.2,
+  "cap_lib": 332.9,
+  "launch_lib": 381.6,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_hgi_seq_fe",
+  "view": "physical/ref_tile/hgi_seq_fe/views/ot_hgi_seq_fe",
+  "job": "hgi_seq_fe-s4-05bf45654",
+  "design": "hbm",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 358.09418 > 220 (308 pins); capture 311.82657 > 190 (2 pins)",
+  "spread": 49.2,
+  "R": 590.5,
+  "cap_lib": 311.8,
+  "launch_lib": 358.1,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.4567846928770223e-11,
+   "i2r": 19.862112,
+   "r2o": 33.738514,
+   "r2r": 14.567847
+  },
+  "ff_after": {
+   "ws": 1.4567846928770223e-11,
+   "i2r": 69.862114,
+   "r2o": 83.738518,
+   "r2r": 14.567847
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -18.8,
+   "median": -35.4
+  },
+  "die_demand": {
+   "0": {
+    "pins": 816,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 816,
+    "pins_pos": 622,
+    "mean": 4.8,
+    "max": 21.2
+   },
+   "80": {
+    "pins": 816,
+    "pins_pos": 735,
+    "mean": 40.3,
+    "max": 61.2
+   }
+  },
+  "tile_pad_now_ff_per_pin": 46.4,
+  "launch_lib_estimated": 475,
+  "cap_causes": {
+   "logic": 1,
+   "wire_buffer": 1
+  },
+  "launch_causes": {
+   "logic": 35,
+   "pad": 273
+  },
+  "cap_new": 311.8,
+  "cap_buf": 201.6,
+  "cap_worst_pin": "f_req_rdy",
+  "cap_over": 2,
+  "cap_over_new": 2,
+  "launch_new": 335.0,
+  "launch_buf": 131.1,
+  "launch_over_new": 35,
+  "in_pad_ff_ps": 29808,
+  "in_pad_removable_ff_ps": 29808,
+  "in_padded_pins": 735,
+  "inputs": 816,
+  "out_pad_ff_ps": 8095,
+  "out_pad_removable_ff_ps": 8095,
+  "outputs": 239,
+  "ff_launch_min": 111.3,
+  "ff_launch_min_unpadded": null,
+  "class": "B_logic_at_pin"
+ },
+ {
+  "cell": "ot_hgi_seq_be",
+  "view": "physical/ref_tile/hgi_seq_be/views/ot_hgi_seq_be",
+  "job": "hgi_seq_be-s1-26d458185",
+  "design": "hbm",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 337.36566 > 220 (1538 pins); capture 255.14561 > 190 (17 pins)",
+  "spread": 27.0,
+  "R": 203.5,
+  "cap_lib": 255.1,
+  "launch_lib": 337.4,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 2.2490884155068613e-11,
+   "i2r": 25.941166,
+   "r2o": 27.170349,
+   "r2r": 22.490885
+  },
+  "ff_after": {
+   "ws": 2.2490884155068613e-11,
+   "i2r": 75.9412,
+   "r2o": 77.170357,
+   "r2r": 22.490885
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -40.6,
+   "median": -83.7
+  },
+  "die_demand": {
+   "0": {
+    "pins": 809,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 809,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "80": {
+    "pins": 809,
+    "pins_pos": 262,
+    "mean": 5.8,
+    "max": 39.4
+   }
+  },
+  "tile_pad_now_ff_per_pin": 5.8,
+  "launch_lib_estimated": 2755,
+  "cap_causes": {
+   "logic": 13,
+   "pad": 4
+  },
+  "launch_causes": {
+   "pad": 1538
+  },
+  "cap_new": 255.1,
+  "cap_buf": 255.1,
+  "cap_worst_pin": "db_loff[10]",
+  "cap_over": 17,
+  "cap_over_new": 13,
+  "launch_new": 196.0,
+  "launch_buf": 166.9,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 3936,
+  "in_pad_removable_ff_ps": 3936,
+  "in_padded_pins": 171,
+  "inputs": 809,
+  "out_pad_ff_ps": 717,
+  "out_pad_removable_ff_ps": 717,
+  "outputs": 18,
+  "ff_launch_min": 102.2,
+  "ff_launch_min_unpadded": null,
+  "class": "B_logic_at_pin"
+ },
+ {
+  "cell": "ot_hgi_coll_tkm_tile",
+  "view": "physical/ref_tile/coll_tkm_tile_cx/views/ot_hgi_coll_tkm_tile",
+  "job": "coll_tkm_tile_cx-r1-5ab85cbc7",
+  "design": "hbm",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 324.52793 > 220 (177 pins); capture 416.47668 > 190 (378 pins)",
+  "spread": 37.9,
+  "R": 323.1,
+  "cap_lib": 416.5,
+  "launch_lib": 324.5,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_hcoll_port",
+  "view": "physical/ref_tile/hcoll_port_cx/views/ot_hcoll_port",
+  "job": "hcoll_port_cx-r2-ddb173c36",
+  "design": "hbm",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 318.9928 > 220 (116 pins); capture 464.61241 > 190 (663 pins)",
+  "spread": 76.8,
+  "R": 632.5,
+  "cap_lib": 464.6,
+  "launch_lib": 319.0,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_hgi_sv_head",
+  "view": "physical/ref_tile/hgi_sv_head_slot/views/ot_hgi_sv_head",
+  "job": "hgi_sv_head_slot-r4-pre-04c986630",
+  "design": "hbm",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 272.78163 > 220 (4 pins); capture 229.90057 > 190 (3 pins)",
+  "spread": 51.2,
+  "R": 274.2,
+  "cap_lib": 229.9,
+  "launch_lib": 272.8,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_su12_sfu",
+  "view": "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu",
+  "job": "sfu_lane_ring3_rt-rt-ae5899467",
+  "design": "hbm",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 242.21344 > 220 (7 pins); capture 417.55707 > 190 (2 pins)",
+  "spread": 23.4,
+  "R": 331.5,
+  "cap_lib": 417.6,
+  "launch_lib": 242.2,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 7.126799150825036e-13,
+   "i2r": 3.693656,
+   "r2o": 0.71268,
+   "r2r": 1.705525
+  },
+  "ff_after": {
+   "ws": 1.7055246104291655e-12,
+   "i2r": 53.693661,
+   "r2o": 50.712685,
+   "r2r": 1.705525
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -27.3,
+   "median": -38.9
+  },
+  "die_demand": {
+   "0": {
+    "pins": 930,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 930,
+    "pins_pos": 541,
+    "mean": 2.9,
+    "max": 12.7
+   },
+   "80": {
+    "pins": 930,
+    "pins_pos": 905,
+    "mean": 38.6,
+    "max": 52.7
+   }
+  },
+  "tile_pad_now_ff_per_pin": 14.9,
+  "launch_lib_estimated": 266,
+  "cap_causes": {
+   "wire_buffer": 2
+  },
+  "launch_causes": {
+   "pad": 7
+  },
+  "cap_new": 417.6,
+  "cap_buf": 169.5,
+  "cap_worst_pin": "rst_n",
+  "cap_over": 2,
+  "cap_over_new": 2,
+  "launch_new": 62.8,
+  "launch_buf": 62.8,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 13839,
+  "in_pad_removable_ff_ps": 13839,
+  "in_padded_pins": 778,
+  "inputs": 930,
+  "out_pad_ff_ps": 0,
+  "out_pad_removable_ff_ps": 0,
+  "outputs": 0,
+  "ff_launch_min": null,
+  "ff_launch_min_unpadded": null,
+  "class": "B_pinflop_wire"
+ },
+ {
+  "cell": "ot_hgi_sv_lane2",
+  "view": "physical/ref_tile/hgi_sv_lane2_pf/views/ot_hgi_sv_lane2",
+  "job": "hgi_sv_lane2_pf-r5sc-pinsplit-5d316da54",
+  "design": "hbm",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 230.1892 > 220 (4 pins)",
+  "spread": 41.5,
+  "R": 158.9,
+  "cap_lib": 175.5,
+  "launch_lib": 230.2,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.791802817230348e-11,
+   "i2r": 23.475513,
+   "r2o": 31.718794,
+   "r2r": 17.918028
+  },
+  "ff_after": {
+   "ws": 1.791802817230348e-11,
+   "i2r": 73.475517,
+   "r2o": 81.718788,
+   "r2r": 17.918028
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -30.2,
+   "median": -63.2
+  },
+  "die_demand": {
+   "0": {
+    "pins": 1191,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 1191,
+    "pins_pos": 1,
+    "mean": 0.0,
+    "max": 9.8
+   },
+   "80": {
+    "pins": 1191,
+    "pins_pos": 1190,
+    "mean": 17.0,
+    "max": 49.8
+   }
+  },
+  "tile_pad_now_ff_per_pin": 13.7,
+  "launch_lib_estimated": 1244,
+  "cap_causes": {},
+  "launch_causes": {
+   "pad": 4
+  },
+  "cap_new": 175.5,
+  "cap_buf": 130.4,
+  "cap_worst_pin": "lid[2]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 166.2,
+  "launch_buf": 102.0,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 15006,
+  "in_pad_removable_ff_ps": 15006,
+  "in_padded_pins": 1062,
+  "inputs": 1191,
+  "out_pad_ff_ps": 1270,
+  "out_pad_removable_ff_ps": 1270,
+  "outputs": 50,
+  "ff_launch_min": 109.6,
+  "ff_launch_min_unpadded": null,
+  "class": "A_padding_only"
+ },
+ {
+  "cell": "ot_hgi_sv_lane2",
+  "view": "physical/ref_tile/hgi_sv_lane2/views/ot_hgi_sv_lane2",
+  "job": "hgi_sv_lane2-r1-spread-1fe4e13fb",
+  "design": "hbm",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "launch 344.09392 > 220 (696 pins); capture 451.80098 > 190 (3 pins)",
+  "spread": 38.6,
+  "R": 153.3,
+  "cap_lib": 451.8,
+  "launch_lib": 344.1,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 2.4271820664445443e-11,
+   "i2r": 35.345295,
+   "r2o": 36.267685,
+   "r2r": 24.27182
+  },
+  "ff_after": {
+   "ws": 2.4271820664445443e-11,
+   "i2r": 85.345314,
+   "r2o": 86.267685,
+   "r2r": 24.27182
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -50.5,
+   "median": -90.8
+  },
+  "die_demand": {
+   "0": {
+    "pins": 1191,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 1191,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "80": {
+    "pins": 1191,
+    "pins_pos": 140,
+    "mean": 0.3,
+    "max": 29.5
+   }
+  },
+  "tile_pad_now_ff_per_pin": 0.5,
+  "launch_lib_estimated": 1278,
+  "cap_causes": {
+   "wire_buffer": 3
+  },
+  "launch_causes": {
+   "pad": 696
+  },
+  "cap_new": 451.8,
+  "cap_buf": 166.6,
+  "cap_worst_pin": "rst_n",
+  "cap_over": 3,
+  "cap_over_new": 3,
+  "launch_new": 191.7,
+  "launch_buf": 98.3,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 16,
+  "in_pad_removable_ff_ps": 16,
+  "in_padded_pins": 1,
+  "inputs": 1191,
+  "out_pad_ff_ps": 617,
+  "out_pad_removable_ff_ps": 617,
+  "outputs": 16,
+  "ff_launch_min": 128.1,
+  "ff_launch_min_unpadded": null,
+  "class": "B_pinflop_wire"
+ },
+ {
+  "cell": "hgi_mtp_native",
+  "view": "physical/ref_tile/hbm_native_mtp_pinaccess_m5_1014/views/hgi_mtp_native",
+  "job": "hbm_native_mtp_pinaccess_m5_1014-pinM5-e5adab2d8-packfix",
+  "design": "hbm",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "launch 266.0817 > 220 (239 pins); capture 345.51357 > 190 (51 pins)",
+  "spread": 63.3,
+  "R": 261.6,
+  "cap_lib": 345.5,
+  "launch_lib": 266.1,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_hdc_v41x_idx_hslice",
+  "view": "physical/ref_tile/idx_hslice_rt_a/views/ot_hdc_v41x_idx_hslice",
+  "job": "idx_hslice_rt_a-i1012-63dc36f91",
+  "design": "hbm",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "launch 263.94244 > 220 (17 pins); capture 215.72453 > 190 (6 pins)",
+  "spread": 41.4,
+  "R": 200.0,
+  "cap_lib": 215.7,
+  "launch_lib": 263.9,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_hdc_v41x_idx_hslice",
+  "view": "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/views/ot_hdc_v41x_idx_hslice",
+  "job": "ot_hdc_v41x_idx_hslice_m5-m5-8dcfc40b3",
+  "design": "hbm",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "capture 205.27429 > 190 (3 pins)",
+  "spread": 46.5,
+  "R": 207.9,
+  "cap_lib": 205.3,
+  "launch_lib": 216.2,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.3756260019981426e-11,
+   "i2r": 34.101486,
+   "r2o": 13.75626,
+   "r2r": 16.540686
+  },
+  "ff_after": {
+   "ws": 1.654068548795351e-11,
+   "i2r": 84.101486,
+   "r2o": 63.756264,
+   "r2r": 16.540686
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -38.1,
+   "median": -60.0
+  },
+  "die_demand": {
+   "0": {
+    "pins": 1156,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 1156,
+    "pins_pos": 1,
+    "mean": 0.0,
+    "max": 1.9
+   },
+   "80": {
+    "pins": 1156,
+    "pins_pos": 1124,
+    "mean": 19.0,
+    "max": 41.9
+   }
+  },
+  "tile_pad_now_ff_per_pin": 77.4,
+  "launch_lib_estimated": 0,
+  "cap_causes": {
+   "wire_buffer": 3
+  },
+  "launch_causes": {},
+  "cap_new": 205.3,
+  "cap_buf": 154.0,
+  "cap_worst_pin": "cs_in[30]",
+  "cap_over": 3,
+  "cap_over_new": 3,
+  "launch_new": 196.5,
+  "launch_buf": 159.6,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 34302,
+  "in_pad_removable_ff_ps": 34302,
+  "in_padded_pins": 1142,
+  "inputs": 1156,
+  "out_pad_ff_ps": 55187,
+  "out_pad_removable_ff_ps": 55187,
+  "outputs": 1146,
+  "ff_launch_min": 88.8,
+  "ff_launch_min_unpadded": null,
+  "class": "B_pinflop_wire"
+ },
+ {
+  "cell": "ot_hgi_seq_au",
+  "view": "physical/ref_tile/hgi_seq_au/views/ot_hgi_seq_au",
+  "job": "hgi_seq_au-s1-26d458185",
+  "design": "hbm",
+  "used": "yes",
+  "native": "PASS",
+  "why": "",
+  "spread": 20.5,
+  "R": 232.6,
+  "cap_lib": 169.7,
+  "launch_lib": 213.4,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 2.4689292277280117e-11,
+   "i2r": 31.07406,
+   "r2o": 40.113968,
+   "r2r": 24.689293
+  },
+  "ff_after": {
+   "ws": 2.4689292277280117e-11,
+   "i2r": 81.074066,
+   "r2o": 90.11396,
+   "r2r": 24.689293
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -11.7,
+   "median": -90.1
+  },
+  "die_demand": {
+   "0": {
+    "pins": 426,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 426,
+    "pins_pos": 9,
+    "mean": 0.2,
+    "max": 28.3
+   },
+   "80": {
+    "pins": 426,
+    "pins_pos": 31,
+    "mean": 1.2,
+    "max": 68.3
+   }
+  },
+  "tile_pad_now_ff_per_pin": 0.9,
+  "launch_lib_estimated": 137,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 169.7,
+  "cap_buf": 143.0,
+  "cap_worst_pin": "fe_s1_n[10]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 73.0,
+  "launch_buf": 73.0,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 397,
+  "in_pad_removable_ff_ps": 397,
+  "in_padded_pins": 10,
+  "inputs": 426,
+  "out_pad_ff_ps": 0,
+  "out_pad_removable_ff_ps": 0,
+  "outputs": 0,
+  "ff_launch_min": null,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "ot_hdc_v41x_idx_hslice",
+  "view": "physical/hgi_idx_chunk_h/views/ot_hdc_v41x_idx_hslice",
+  "job": null,
+  "design": "hbm",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "no insertion.json (R unproven)",
+  "spread": 34.7,
+  "R": 202.7,
+  "cap_lib": 135.0,
+  "launch_lib": 176.2,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_hdc_v41x_idx_hslice",
+  "view": "physical/ref_tile/idx_hslice_rt_b/views/ot_hdc_v41x_idx_hslice",
+  "job": "idx_hslice_rt_b-i1012-63dc36f91",
+  "design": "hbm",
+  "used": "cell",
+  "native": "PASS",
+  "why": "",
+  "spread": 33.8,
+  "R": 218.7,
+  "cap_lib": 185.3,
+  "launch_lib": 213.8,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "qkd_kvwq_leaf_s_w129_m",
+  "view": "physical/ref_tile/qkd_kvwq_leaf_s_w129_m/views/qkd_kvwq_leaf_s_w129_m",
+  "job": "qkd_kvwq_leaf_s_w129_m-np1-02ee93f57",
+  "design": "qwen",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "capture 213.61732 > 190 (2 pins)",
+  "spread": 35.6,
+  "R": 169.5,
+  "cap_lib": 213.6,
+  "launch_lib": 208.2,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "qkd_cdc_wleaf",
+  "view": "physical/ref_tile/qkd_cdc_wleaf_ref/views/qkd_cdc_wleaf",
+  "job": "qkd_cdc_wleaf_ref-np1-fcbeb7654",
+  "design": "qwen",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "capture 396.96114 > 190 (1 pins)",
+  "spread": 35.6,
+  "R": 220.5,
+  "cap_lib": 397.0,
+  "launch_lib": 173.2,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.7190415757539768e-13,
+   "i2r": 1.417394,
+   "r2o": 5.51173,
+   "r2r": 0.171904
+  },
+  "ff_after": {
+   "ws": -8.787973126977988e-11,
+   "i2r": 66.491508,
+   "r2o": -86.343987,
+   "r2r": 0.171904
+  },
+  "hold_only_relaxes": false,
+  "die_need_new_ps": {
+   "max": -36.6,
+   "median": -56.4
+  },
+  "die_demand": {
+   "0": {
+    "pins": 585,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 585,
+    "pins_pos": 28,
+    "mean": 0.1,
+    "max": 3.4
+   },
+   "80": {
+    "pins": 585,
+    "pins_pos": 584,
+    "mean": 24.2,
+    "max": 43.4
+   }
+  },
+  "tile_pad_now_ff_per_pin": 0.0,
+  "launch_lib_estimated": 612,
+  "cap_causes": {
+   "logic": 1
+  },
+  "launch_causes": {},
+  "cap_new": 397.0,
+  "cap_buf": 397.0,
+  "cap_worst_pin": "h_hand",
+  "cap_over": 1,
+  "cap_over_new": 1,
+  "launch_new": 164.5,
+  "launch_buf": 164.5,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 0,
+  "in_pad_removable_ff_ps": 0,
+  "in_padded_pins": 0,
+  "inputs": 585,
+  "out_pad_ff_ps": 21,
+  "out_pad_removable_ff_ps": 0,
+  "outputs": 1,
+  "ff_launch_min": 118.3,
+  "ff_launch_min_unpadded": null,
+  "class": "B_logic_at_pin"
+ },
+ {
+  "cell": "qkd_embgw",
+  "view": "physical/ref_tile/qkd_embgw/views/qkd_embgw",
+  "job": "qkd_embgw-sl2-4ca7b8091",
+  "design": "qwen",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "launch 311.96606 > 220 (1072 pins)",
+  "spread": 69.6,
+  "R": 256.5,
+  "cap_lib": 178.8,
+  "launch_lib": 312.0,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.1429940327545296e-11,
+   "i2r": 20.668522,
+   "r2o": 41.327747,
+   "r2r": 11.42994
+  },
+  "ff_after": {
+   "ws": 1.1429940327545296e-11,
+   "i2r": 70.668526,
+   "r2o": 91.327736,
+   "r2r": 11.42994
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -40.4,
+   "median": -89.0
+  },
+  "die_demand": {
+   "0": {
+    "pins": 2394,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 2394,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "80": {
+    "pins": 2394,
+    "pins_pos": 466,
+    "mean": 2.3,
+    "max": 39.6
+   }
+  },
+  "tile_pad_now_ff_per_pin": 0.9,
+  "launch_lib_estimated": 1682,
+  "cap_causes": {},
+  "launch_causes": {
+   "pad": 1071,
+   "wire_buffer": 1
+  },
+  "cap_new": 178.8,
+  "cap_buf": 152.5,
+  "cap_worst_pin": "emr_WN[482]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 226.6,
+  "launch_buf": 152.0,
+  "launch_over_new": 1,
+  "in_pad_ff_ps": 2106,
+  "in_pad_removable_ff_ps": 2106,
+  "in_padded_pins": 100,
+  "inputs": 2394,
+  "out_pad_ff_ps": 37,
+  "out_pad_removable_ff_ps": 37,
+  "outputs": 1,
+  "ff_launch_min": 195.0,
+  "ff_launch_min_unpadded": null,
+  "class": "B_pinflop_wire"
+ },
+ {
+  "cell": "qfd_cst_n",
+  "view": "physical/ref_tile/qfd_cst_n/views/qfd_cst_n",
+  "job": "qfd_cst_n-st1-465253000",
+  "design": "qwen",
+  "used": "yes",
+  "native": "PASS",
+  "why": "",
+  "spread": 13.4,
+  "R": 115.8,
+  "cap_lib": 162.5,
+  "launch_lib": 197.2,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.1089046347834142e-11,
+   "i2r": 23.775982,
+   "r2o": 11.089046,
+   "r2r": 33.68132
+  },
+  "ff_after": {
+   "ws": 3.368132162062665e-11,
+   "i2r": 73.775986,
+   "r2o": 61.089043,
+   "r2r": 33.68132
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -19.2,
+   "median": -54.3
+  },
+  "die_demand": {
+   "0": {
+    "pins": 511,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 511,
+    "pins_pos": 34,
+    "mean": 0.1,
+    "max": 20.8
+   },
+   "80": {
+    "pins": 511,
+    "pins_pos": 498,
+    "mean": 24.4,
+    "max": 60.8
+   }
+  },
+  "tile_pad_now_ff_per_pin": 118.7,
+  "launch_lib_estimated": 0,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 148.2,
+  "cap_buf": 91.0,
+  "cap_worst_pin": "b_d[354]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 197.2,
+  "launch_buf": 167.2,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 8360,
+  "in_pad_removable_ff_ps": 8360,
+  "in_padded_pins": 377,
+  "inputs": 511,
+  "out_pad_ff_ps": 52307,
+  "out_pad_removable_ff_ps": 52307,
+  "outputs": 1017,
+  "ff_launch_min": 86.1,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "qfd_chead_e",
+  "view": "physical/ref_tile/qfd_chead_e/views/qfd_chead_e",
+  "job": "qfd_chead_e-st1-465253000",
+  "design": "qwen",
+  "used": "yes",
+  "native": "PASS",
+  "why": "",
+  "spread": 14.4,
+  "R": 115.6,
+  "cap_lib": 186.6,
+  "launch_lib": 192.3,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 2.2814083955324804e-11,
+   "i2r": 22.814083,
+   "r2o": 24.739225,
+   "r2r": 31.171885
+  },
+  "ff_after": {
+   "ws": 3.1171884518066406e-11,
+   "i2r": 72.814102,
+   "r2o": 74.739227,
+   "r2r": 31.171885
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -13.8,
+   "median": -46.9
+  },
+  "die_demand": {
+   "0": {
+    "pins": 512,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 512,
+    "pins_pos": 88,
+    "mean": 0.5,
+    "max": 26.2
+   },
+   "80": {
+    "pins": 512,
+    "pins_pos": 512,
+    "mean": 29.8,
+    "max": 66.2
+   }
+  },
+  "tile_pad_now_ff_per_pin": 194.0,
+  "launch_lib_estimated": 0,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 159.8,
+  "cap_buf": 126.9,
+  "cap_worst_pin": "w_d[320]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 122.4,
+  "launch_buf": 98.9,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 10402,
+  "in_pad_removable_ff_ps": 10402,
+  "in_padded_pins": 436,
+  "inputs": 512,
+  "out_pad_ff_ps": 88919,
+  "out_pad_removable_ff_ps": 88919,
+  "outputs": 1525,
+  "ff_launch_min": 99.7,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "qfd_chead_w",
+  "view": "physical/ref_tile/qfd_chead_w/views/qfd_chead_w",
+  "job": "qfd_chead_w-st1-465253000",
+  "design": "qwen",
+  "used": "yes",
+  "native": "PASS",
+  "why": "",
+  "spread": 17.4,
+  "R": 111.6,
+  "cap_lib": 184.9,
+  "launch_lib": 191.0,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.448620390309685e-11,
+   "i2r": 27.918556,
+   "r2o": 14.486204,
+   "r2r": 53.168415
+  },
+  "ff_after": {
+   "ws": 5.316841411584505e-11,
+   "i2r": 77.918564,
+   "r2o": 64.486206,
+   "r2r": 53.168415
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -14.4,
+   "median": -47.3
+  },
+  "die_demand": {
+   "0": {
+    "pins": 512,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 512,
+    "pins_pos": 19,
+    "mean": 0.1,
+    "max": 25.6
+   },
+   "80": {
+    "pins": 512,
+    "pins_pos": 512,
+    "mean": 28.3,
+    "max": 65.6
+   }
+  },
+  "tile_pad_now_ff_per_pin": 187.1,
+  "launch_lib_estimated": 0,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 154.5,
+  "cap_buf": 90.4,
+  "cap_worst_pin": "e_d[424]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 154.2,
+  "launch_buf": 130.2,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 8537,
+  "in_pad_removable_ff_ps": 8537,
+  "in_padded_pins": 390,
+  "inputs": 512,
+  "out_pad_ff_ps": 87281,
+  "out_pad_removable_ff_ps": 87281,
+  "outputs": 1525,
+  "ff_launch_min": 89.5,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "qfd_cst_s",
+  "view": "physical/ref_tile/qfd_cst_s/views/qfd_cst_s",
+  "job": "qfd_cst_s-st1-465253000",
+  "design": "qwen",
+  "used": "yes",
+  "native": "PASS",
+  "why": "",
+  "spread": 22.0,
+  "R": 119.2,
+  "cap_lib": 161.0,
+  "launch_lib": 189.7,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 2.2187751635982522e-11,
+   "i2r": 22.187752,
+   "r2o": 22.763721,
+   "r2r": 31.260925
+  },
+  "ff_after": {
+   "ws": 3.1260924404641344e-11,
+   "i2r": 72.187759,
+   "r2o": 72.763725,
+   "r2r": 31.260925
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -7.8,
+   "median": -54.2
+  },
+  "die_demand": {
+   "0": {
+    "pins": 511,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 511,
+    "pins_pos": 63,
+    "mean": 0.7,
+    "max": 32.2
+   },
+   "80": {
+    "pins": 511,
+    "pins_pos": 508,
+    "mean": 27.0,
+    "max": 72.2
+   }
+  },
+  "tile_pad_now_ff_per_pin": 133.3,
+  "launch_lib_estimated": 0,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 141.0,
+  "cap_buf": 95.4,
+  "cap_worst_pin": "a_d[403]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 103.2,
+  "launch_buf": 85.4,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 8029,
+  "in_pad_removable_ff_ps": 8029,
+  "in_padded_pins": 450,
+  "inputs": 511,
+  "out_pad_ff_ps": 60112,
+  "out_pad_removable_ff_ps": 60112,
+  "outputs": 1017,
+  "ff_launch_min": 97.8,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "qkd_kvwq_ctl_bin",
+  "view": "physical/ref_tile/qkd_kvwq_ctl_bin/views/qkd_kvwq_ctl_bin",
+  "job": "qkd_kvwq_ctl_bin-sl3-8a9ae6449",
+  "design": "qwen",
+  "used": "cell",
+  "native": "PASS",
+  "why": "",
+  "spread": 40.4,
+  "R": 199.8,
+  "cap_lib": 160.5,
+  "launch_lib": 197.3,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.5751011606113252e-12,
+   "i2r": 21.871214,
+   "r2o": 24.633808,
+   "r2r": 1.575101
+  },
+  "ff_after": {
+   "ws": 1.5751011606113252e-12,
+   "i2r": 71.871193,
+   "r2o": 74.633797,
+   "r2r": 1.575101
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -53.5,
+   "median": -65.0
+  },
+  "die_demand": {
+   "0": {
+    "pins": 1056,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 1056,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "80": {
+    "pins": 1056,
+    "pins_pos": 1055,
+    "mean": 15.1,
+    "max": 26.5
+   }
+  },
+  "tile_pad_now_ff_per_pin": 39.0,
+  "launch_lib_estimated": 24,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 131.2,
+  "cap_buf": 107.1,
+  "cap_worst_pin": "kvn_d[971]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 158.6,
+  "launch_buf": 97.7,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 15167,
+  "in_pad_removable_ff_ps": 15167,
+  "in_padded_pins": 1038,
+  "inputs": 1056,
+  "out_pad_ff_ps": 26065,
+  "out_pad_removable_ff_ps": 26065,
+  "outputs": 1117,
+  "ff_launch_min": 103.2,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "qkd_kvwq_leaf_s_w129_m",
+  "view": "physical/qwen_die_masters/views/qkd_kvwq_leaf_s_w129_m",
+  "job": "qkd_kvwq_leaf_s_w129_m-b90ad2fab-tc-hm10",
+  "design": "qwen",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "no insertion.json (R unproven)",
+  "spread": 31.6,
+  "R": 146.0,
+  "cap_lib": 177.1,
+  "launch_lib": 176.8,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "dsfd_coll_ces0",
+  "view": "physical/ref_tile/dscoll_ces0_sp/views/dsfd_coll_ces0",
+  "job": "dscoll_ces0_sp-sp1-d4bed2783",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 526.57045 > 220 (751 pins); capture 262.62284 > 190 (2 pins); spread 250.8 > 80",
+  "spread": 250.8,
+  "R": 478.7,
+  "cap_lib": 262.6,
+  "launch_lib": 526.6,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "dsfd_coll_cesn",
+  "view": "physical/ref_tile/dscoll_cesn_sp/views/dsfd_coll_cesn",
+  "job": "dscoll_cesn_sp-sp1-d4bed2783",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 493.01113 > 220 (700 pins); capture 250.79351 > 190 (2 pins); spread 188.0 > 80",
+  "spread": 188.0,
+  "R": 409.9,
+  "cap_lib": 250.8,
+  "launch_lib": 493.0,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "dsfd_coll_lane_w",
+  "view": "physical/ref_tile/dscoll_lane_w_cxea/views/dsfd_coll_lane_w",
+  "job": "dscoll_lane_w_cxea-cxea3-a011f9e61",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 439.81672 > 220 (240 pins); capture 494.04493 > 190 (741 pins); spread 114.6 > 80",
+  "spread": 114.6,
+  "R": 419.2,
+  "cap_lib": 494.0,
+  "launch_lib": 439.8,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_s81_hc_crootr_f",
+  "view": "physical/ref_tile/s81hc_crrfw_ref/views/ot_s81_hc_crootr_f",
+  "job": "s81hc_crrfw_ref-v2-pinplan-f41de6496",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 429.17406 > 220 (2281 pins); capture 497.04998 > 190 (2838 pins)",
+  "spread": 71.2,
+  "R": 300.8,
+  "cap_lib": 497.0,
+  "launch_lib": 429.2,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.639882674098203e-12,
+   "i2r": 7.239875,
+   "r2o": 14.649698,
+   "r2r": 1.639883
+  },
+  "ff_after": {
+   "ws": 1.639882674098203e-12,
+   "i2r": 57.23988,
+   "r2o": 64.649704,
+   "r2r": 1.639883
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -47.0,
+   "median": -243.0
+  },
+  "die_demand": {
+   "0": {
+    "pins": 3952,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 3952,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "80": {
+    "pins": 3952,
+    "pins_pos": 88,
+    "mean": 0.3,
+    "max": 33.0
+   }
+  },
+  "tile_pad_now_ff_per_pin": 0.0,
+  "launch_lib_estimated": 0,
+  "cap_causes": {
+   "wire_buffer": 2836,
+   "clock": 2
+  },
+  "launch_causes": {
+   "wire_buffer": 2281
+  },
+  "cap_new": 497.0,
+  "cap_buf": 292.0,
+  "cap_worst_pin": "p_y[1213]",
+  "cap_over": 2838,
+  "cap_over_new": 2838,
+  "launch_new": 429.2,
+  "launch_buf": 206.4,
+  "launch_over_new": 2281,
+  "in_pad_ff_ps": 0,
+  "in_pad_removable_ff_ps": 0,
+  "in_padded_pins": 0,
+  "inputs": 3952,
+  "out_pad_ff_ps": 27,
+  "out_pad_removable_ff_ps": 27,
+  "outputs": 2929,
+  "ff_launch_min": 89.6,
+  "ff_launch_min_unpadded": null,
+  "class": "B_insertion_spread"
+ },
+ {
+  "cell": "dsfd_mtp_hrow_cbw",
+  "view": "physical/ref_tile/hrow5_cbw_cx/views/dsfd_mtp_hrow_cbw",
+  "job": "hrow5_cbw_cx-r8b-cl-b05bb421d",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 422.79547 > 220 (991 pins); capture 440.43333 > 190 (962 pins); spread 89.2 > 80",
+  "spread": 89.2,
+  "R": 538.5,
+  "cap_lib": 440.4,
+  "launch_lib": 422.8,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.4702183914749867e-11,
+   "i2r": 14.702184,
+   "r2o": 28.750391,
+   "r2r": 15.80236
+  },
+  "ff_after": {
+   "ws": 1.5802359421002166e-11,
+   "i2r": 64.702187,
+   "r2o": 78.750366,
+   "r2r": 15.80236
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -7.1,
+   "median": -92.4
+  },
+  "die_demand": {
+   "0": {
+    "pins": 2084,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 2084,
+    "pins_pos": 51,
+    "mean": 0.1,
+    "max": 32.9
+   },
+   "80": {
+    "pins": 2084,
+    "pins_pos": 687,
+    "mean": 5.0,
+    "max": 72.9
+   }
+  },
+  "tile_pad_now_ff_per_pin": 6.7,
+  "launch_lib_estimated": 2079,
+  "cap_causes": {
+   "wire_buffer": 823,
+   "clock": 131,
+   "pad": 8
+  },
+  "launch_causes": {
+   "pad": 991
+  },
+  "cap_new": 440.4,
+  "cap_buf": 261.0,
+  "cap_worst_pin": "f_w[75]",
+  "cap_over": 962,
+  "cap_over_new": 954,
+  "launch_new": 76.5,
+  "launch_buf": 76.5,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 13913,
+  "in_pad_removable_ff_ps": 13913,
+  "in_padded_pins": 512,
+  "inputs": 2084,
+  "out_pad_ff_ps": 0,
+  "out_pad_removable_ff_ps": 0,
+  "outputs": 0,
+  "ff_launch_min": null,
+  "ff_launch_min_unpadded": null,
+  "class": "B_insertion_spread"
+ },
+ {
+  "cell": "ot_s81_hc_crootr_r",
+  "view": "physical/ref_tile/s81hc_crrre_ref/views/ot_s81_hc_crootr_r",
+  "job": "s81hc_crrre_ref-v2-pinplan-f41de6496",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 414.69283 > 220 (706 pins); capture 397.38753 > 190 (1911 pins); spread 95.4 > 80",
+  "spread": 95.4,
+  "R": 265.4,
+  "cap_lib": 397.4,
+  "launch_lib": 414.7,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_p2h_head",
+  "view": "physical/ref_tile/p2h_head_ref/views/ot_p2h_head",
+  "job": "p2h_head_ref-r5-bc9de2c89",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 413.09053 > 220 (331 pins); capture 289.17439 > 190 (529 pins); spread 181.4 > 80",
+  "spread": 181.4,
+  "R": 392.7,
+  "cap_lib": 289.2,
+  "launch_lib": 413.1,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.007435801447798e-11,
+   "i2r": 15.146606,
+   "r2o": 10.881684,
+   "r2r": 10.074358
+  },
+  "ff_after": {
+   "ws": 1.007435801447798e-11,
+   "i2r": 65.146614,
+   "r2o": 60.881687,
+   "r2r": 10.074358
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": 3.4,
+   "median": -66.5
+  },
+  "die_demand": {
+   "0": {
+    "pins": 1337,
+    "pins_pos": 4,
+    "mean": 0.0,
+    "max": 3.4
+   },
+   "40": {
+    "pins": 1337,
+    "pins_pos": 172,
+    "mean": 2.0,
+    "max": 43.4
+   },
+   "80": {
+    "pins": 1337,
+    "pins_pos": 1024,
+    "mean": 17.8,
+    "max": 83.4
+   }
+  },
+  "tile_pad_now_ff_per_pin": 83.4,
+  "launch_lib_estimated": 0,
+  "cap_causes": {
+   "logic": 3,
+   "wire_buffer": 23,
+   "pad": 503
+  },
+  "launch_causes": {
+   "wire_buffer": 253,
+   "clock": 7,
+   "pad": 71
+  },
+  "cap_new": 289.2,
+  "cap_buf": 273.8,
+  "cap_worst_pin": "f_s[102]",
+  "cap_over": 529,
+  "cap_over_new": 26,
+  "launch_new": 413.1,
+  "launch_buf": 239.0,
+  "launch_over_new": 260,
+  "in_pad_ff_ps": 57896,
+  "in_pad_removable_ff_ps": 57847,
+  "in_padded_pins": 1215,
+  "inputs": 1337,
+  "out_pad_ff_ps": 53596,
+  "out_pad_removable_ff_ps": 53596,
+  "outputs": 1728,
+  "ff_launch_min": 85.9,
+  "ff_launch_min_unpadded": null,
+  "class": "B_insertion_spread"
+ },
+ {
+  "cell": "ot_s81_hc_ccf",
+  "view": "physical/ref_tile/s81hc_ccfh2_ref/views/ot_s81_hc_ccf",
+  "job": "s81hc_ccfh2_ref-v5-sspread-m5strip-3f81e581e",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 408.2241 > 220 (1502 pins); capture 544.34652 > 190 (1848 pins); spread 171.2 > 80",
+  "spread": 171.2,
+  "R": 539.1,
+  "cap_lib": 544.3,
+  "launch_lib": 408.2,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "dsfd_su_t_qbe",
+  "view": "physical/ref_tile/s81su_qbe_sp8_ref/views/dsfd_su_t_qbe",
+  "job": "s81su_qbe_sp8_ref-v5-sp8-2df2353b8",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 406.35269 > 220 (183 pins); capture 375.55503 > 190 (180 pins); spread 82.4 > 80",
+  "spread": 82.4,
+  "R": 773.9,
+  "cap_lib": 375.6,
+  "launch_lib": 406.4,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.768440949234673e-11,
+   "i2r": 25.892067,
+   "r2o": 19.171165,
+   "r2r": 17.68441
+  },
+  "ff_after": {
+   "ws": 1.768440949234673e-11,
+   "i2r": 75.892067,
+   "r2o": 69.171165,
+   "r2r": 17.68441
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -29.4,
+   "median": -83.7
+  },
+  "die_demand": {
+   "0": {
+    "pins": 1327,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 1327,
+    "pins_pos": 1,
+    "mean": 0.0,
+    "max": 10.6
+   },
+   "80": {
+    "pins": 1327,
+    "pins_pos": 487,
+    "mean": 2.0,
+    "max": 50.6
+   }
+  },
+  "tile_pad_now_ff_per_pin": 60.8,
+  "launch_lib_estimated": 0,
+  "cap_causes": {
+   "wire_buffer": 176,
+   "clock": 4
+  },
+  "launch_causes": {
+   "pad": 96,
+   "wire_buffer": 87
+  },
+  "cap_new": 375.6,
+  "cap_buf": 251.8,
+  "cap_worst_pin": "cfg_b[2]",
+  "cap_over": 180,
+  "cap_over_new": 180,
+  "launch_new": 364.8,
+  "launch_buf": 160.6,
+  "launch_over_new": 87,
+  "in_pad_ff_ps": 351,
+  "in_pad_removable_ff_ps": 351,
+  "in_padded_pins": 14,
+  "inputs": 1327,
+  "out_pad_ff_ps": 80349,
+  "out_pad_removable_ff_ps": 80334,
+  "outputs": 1341,
+  "ff_launch_min": 94.2,
+  "ff_launch_min_unpadded": null,
+  "class": "B_insertion_spread"
+ },
+ {
+  "cell": "dsfd_mtp_hrow_cbe",
+  "view": "physical/ref_tile/hrow5_cbe_cx/views/dsfd_mtp_hrow_cbe",
+  "job": "hrow5_cbe_cx-r8a-cl-ac3fc3db7",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 398.99666 > 220 (971 pins); capture 505.86272 > 190 (870 pins); spread 98.5 > 80",
+  "spread": 98.5,
+  "R": 747.2,
+  "cap_lib": 505.9,
+  "launch_lib": 399.0,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 2.4229784845175573e-11,
+   "i2r": 24.229784,
+   "r2o": 28.881618,
+   "r2r": 26.949665
+  },
+  "ff_after": {
+   "ws": 2.6949664722053512e-11,
+   "i2r": 74.22979,
+   "r2o": 78.881622,
+   "r2r": 26.949665
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -25.6,
+   "median": -91.6
+  },
+  "die_demand": {
+   "0": {
+    "pins": 2084,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 2084,
+    "pins_pos": 2,
+    "mean": 0.0,
+    "max": 14.4
+   },
+   "80": {
+    "pins": 2084,
+    "pins_pos": 608,
+    "mean": 2.7,
+    "max": 54.4
+   }
+  },
+  "tile_pad_now_ff_per_pin": 2.1,
+  "launch_lib_estimated": 2079,
+  "cap_causes": {
+   "wire_buffer": 680,
+   "clock": 180,
+   "pad": 10
+  },
+  "launch_causes": {
+   "pad": 971
+  },
+  "cap_new": 427.4,
+  "cap_buf": 316.7,
+  "cap_worst_pin": "f_r[7]",
+  "cap_over": 870,
+  "cap_over_new": 860,
+  "launch_new": 83.5,
+  "launch_buf": 83.5,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 4373,
+  "in_pad_removable_ff_ps": 4373,
+  "in_padded_pins": 197,
+  "inputs": 2084,
+  "out_pad_ff_ps": 0,
+  "out_pad_removable_ff_ps": 0,
+  "outputs": 0,
+  "ff_launch_min": null,
+  "ff_launch_min_unpadded": null,
+  "class": "B_insertion_spread"
+ },
+ {
+  "cell": "dsfd_coll_ct",
+  "view": "physical/ref_tile/dsfd_coll_ct_rt/views/dsfd_coll_ct",
+  "job": "dsfd_coll_ct_rt-rt-9dbc1bc00",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 367.56875 > 220 (751 pins); capture 515.8902 > 190 (1094 pins); spread 88.6 > 80",
+  "spread": 88.6,
+  "R": 574.9,
+  "cap_lib": 515.9,
+  "launch_lib": 367.6,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.631322854578343e-11,
+   "i2r": 25.503988,
+   "r2o": 22.833902,
+   "r2r": 16.313229
+  },
+  "ff_after": {
+   "ws": 1.631322854578343e-11,
+   "i2r": 75.504051,
+   "r2o": 72.833961,
+   "r2r": 16.313229
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": 5.1,
+   "median": -88.7
+  },
+  "die_demand": {
+   "0": {
+    "pins": 2227,
+    "pins_pos": 24,
+    "mean": 0.1,
+    "max": 5.1
+   },
+   "40": {
+    "pins": 2227,
+    "pins_pos": 95,
+    "mean": 0.7,
+    "max": 45.1
+   },
+   "80": {
+    "pins": 2227,
+    "pins_pos": 1042,
+    "mean": 10.1,
+    "max": 85.1
+   }
+  },
+  "tile_pad_now_ff_per_pin": 40.3,
+  "launch_lib_estimated": 0,
+  "cap_causes": {
+   "pad": 129,
+   "wire_buffer": 957,
+   "clock": 8
+  },
+  "launch_causes": {
+   "wire_buffer": 711,
+   "clock": 19,
+   "pad": 21
+  },
+  "cap_new": 515.9,
+  "cap_buf": 288.4,
+  "cap_worst_pin": "eli_d[514]",
+  "cap_over": 1094,
+  "cap_over_new": 965,
+  "launch_new": 367.6,
+  "launch_buf": 223.7,
+  "launch_over_new": 730,
+  "in_pad_ff_ps": 41657,
+  "in_pad_removable_ff_ps": 41380,
+  "in_padded_pins": 1129,
+  "inputs": 2227,
+  "out_pad_ff_ps": 48072,
+  "out_pad_removable_ff_ps": 48072,
+  "outputs": 2226,
+  "ff_launch_min": 97.8,
+  "ff_launch_min_unpadded": null,
+  "class": "B_insertion_spread"
+ },
+ {
+  "cell": "dsfd_su_t_qbt",
+  "view": "physical/ref_tile/s81su_qbt_ref/views/dsfd_su_t_qbt",
+  "job": "s81su_qbt_ref-v4-cceaf47dc",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 358.84435 > 220 (4658 pins); capture 415.90698 > 190 (4541 pins); spread 102.2 > 80",
+  "spread": 102.2,
+  "R": 576.8,
+  "cap_lib": 415.9,
+  "launch_lib": 358.8,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "dsfd_su_t_ctl",
+  "view": "physical/ref_tile/s81su_ctl_ref/views/dsfd_su_t_ctl",
+  "job": "s81su_ctl_ref-v3-136b26407",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 354.258 > 220 (13 pins)",
+  "spread": 43.6,
+  "R": 277.5,
+  "cap_lib": 179.8,
+  "launch_lib": 354.3,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "dsfd_coll_cbr",
+  "view": "physical/ref_tile/dsfd_coll_cbr_m5/views/dsfd_coll_cbr",
+  "job": "dsfd_coll_cbr_m5-m5-e5e8e058b",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 322.17329 > 220 (138 pins); capture 225.8033 > 190 (39 pins)",
+  "spread": 27.6,
+  "R": 273.2,
+  "cap_lib": 225.8,
+  "launch_lib": 322.2,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 8.19144752028933e-12,
+   "i2r": 8.191447,
+   "r2o": 22.893881,
+   "r2r": 23.067244
+  },
+  "ff_after": {
+   "ws": 2.3067242560514956e-11,
+   "i2r": 58.191425,
+   "r2o": 72.893883,
+   "r2r": 23.067244
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -35.6,
+   "median": -77.1
+  },
+  "die_demand": {
+   "0": {
+    "pins": 1114,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 1114,
+    "pins_pos": 1,
+    "mean": 0.0,
+    "max": 4.4
+   },
+   "80": {
+    "pins": 1114,
+    "pins_pos": 613,
+    "mean": 7.9,
+    "max": 44.4
+   }
+  },
+  "tile_pad_now_ff_per_pin": 36.1,
+  "launch_lib_estimated": 0,
+  "cap_causes": {
+   "wire_buffer": 39
+  },
+  "launch_causes": {
+   "wire_buffer": 136,
+   "pad": 1,
+   "clock": 1
+  },
+  "cap_new": 225.8,
+  "cap_buf": 188.9,
+  "cap_worst_pin": "x_li_d[211]",
+  "cap_over": 39,
+  "cap_over_new": 39,
+  "launch_new": 322.2,
+  "launch_buf": 232.6,
+  "launch_over_new": 137,
+  "in_pad_ff_ps": 11451,
+  "in_pad_removable_ff_ps": 11451,
+  "in_padded_pins": 480,
+  "inputs": 1114,
+  "out_pad_ff_ps": 28756,
+  "out_pad_removable_ff_ps": 28756,
+  "outputs": 1113,
+  "ff_launch_min": 97.9,
+  "ff_launch_min_unpadded": null,
+  "class": "B_insertion_spread"
+ },
+ {
+  "cell": "dsfd_su_t_kvq",
+  "view": "physical/ref_tile/s81su_kvq_ref/views/dsfd_su_t_kvq",
+  "job": "s81su_kvq_ref-v4-ebdb80f0e",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 304.91075 > 220 (117 pins); capture 360.72595 > 190 (1100 pins)",
+  "spread": 60.2,
+  "R": 542.3,
+  "cap_lib": 360.7,
+  "launch_lib": 304.9,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_s81_hc_ccr",
+  "view": "physical/ref_tile/s81hc_ccr_ref/views/ot_s81_hc_ccr",
+  "job": "s81hc_ccr_ref-v1-ee56cc32d",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 295.81342 > 220 (73 pins); capture 234.22515 > 190 (2 pins)",
+  "spread": 22.3,
+  "R": 225.0,
+  "cap_lib": 234.2,
+  "launch_lib": 295.8,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_s81_hc_crootr_t",
+  "view": "physical/ref_tile/s81hc_crrte_ref/views/ot_s81_hc_crootr_t",
+  "job": "s81hc_crrte_ref-v1-d71bc15c1",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 293.29958 > 220 (108 pins); capture 406.62137 > 190 (1306 pins)",
+  "spread": 51.4,
+  "R": 282.9,
+  "cap_lib": 406.6,
+  "launch_lib": 293.3,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "dsfd_su_t_swe",
+  "view": "physical/ref_tile/s81su_swe_gfix_ref/views/dsfd_su_t_swe",
+  "job": "s81su_swe_gfix_ref-v3-gfix-1065bcb90",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 270.80188 > 220 (20 pins); capture 223.24007 > 190 (30 pins)",
+  "spread": 26.0,
+  "R": 311.0,
+  "cap_lib": 223.2,
+  "launch_lib": 270.8,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "dsfd_su_t_pin",
+  "view": "physical/ref_tile/dsfd_su_t_pin_rt/views/dsfd_su_t_pin",
+  "job": "dsfd_su_t_pin_rt-rt3-57ee0354e",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 267.12347 > 220 (541 pins); capture 244.85071 > 190 (179 pins); spread 83.4 > 80",
+  "spread": 83.4,
+  "R": 471.5,
+  "cap_lib": 244.9,
+  "launch_lib": 267.1,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_s81_hc_cseq",
+  "view": "physical/ref_tile/s81hc_cseq_ref/views/ot_s81_hc_cseq",
+  "job": "s81hc_cseq_ref-v1-ee56cc32d",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 263.74531 > 220 (69 pins)",
+  "spread": 34.1,
+  "R": 222.1,
+  "cap_lib": 162.5,
+  "launch_lib": 263.7,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 2.832345469272468e-12,
+   "i2r": 6.430384,
+   "r2o": 6.740081,
+   "r2r": 2.832345
+  },
+  "ff_after": {
+   "ws": 2.832345469272468e-12,
+   "i2r": 53.776981,
+   "r2o": 59.393475,
+   "r2r": 2.832345
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -15.5,
+   "median": -40.0
+  },
+  "die_demand": {
+   "0": {
+    "pins": 1102,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 1102,
+    "pins_pos": 550,
+    "mean": 3.3,
+    "max": 24.5
+   },
+   "80": {
+    "pins": 1102,
+    "pins_pos": 1100,
+    "mean": 39.7,
+    "max": 64.5
+   }
+  },
+  "tile_pad_now_ff_per_pin": 27.9,
+  "launch_lib_estimated": 9,
+  "cap_causes": {},
+  "launch_causes": {
+   "wire_buffer": 66,
+   "clock": 1,
+   "pad": 2
+  },
+  "cap_new": 162.5,
+  "cap_buf": 162.5,
+  "cap_worst_pin": "x_wdone",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 263.7,
+  "launch_buf": 187.3,
+  "launch_over_new": 67,
+  "in_pad_ff_ps": 12994,
+  "in_pad_removable_ff_ps": 12994,
+  "in_padded_pins": 807,
+  "inputs": 1070,
+  "out_pad_ff_ps": 17760,
+  "out_pad_removable_ff_ps": 17760,
+  "outputs": 3463,
+  "ff_launch_min": 84.4,
+  "ff_launch_min_unpadded": null,
+  "class": "B_insertion_spread"
+ },
+ {
+  "cell": "ot_s81_hc_crootr_w",
+  "view": "physical/ref_tile/s81hc_crrww_ref/views/ot_s81_hc_crootr_w",
+  "job": "s81hc_crrww_ref-v2-pinplan-f41de6496",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 250.61298 > 220 (81 pins); capture 276.41793 > 190 (1213 pins)",
+  "spread": 45.4,
+  "R": 263.5,
+  "cap_lib": 276.4,
+  "launch_lib": 250.6,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.176639341515795e-11,
+   "i2r": 39.999783,
+   "r2o": 11.766394,
+   "r2r": 23.531122
+  },
+  "ff_after": {
+   "ws": 2.3531121495778962e-11,
+   "i2r": 89.999786,
+   "r2o": 61.766384,
+   "r2r": 23.531122
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -77.3,
+   "median": -118.0
+  },
+  "die_demand": {
+   "0": {
+    "pins": 2174,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 2174,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "80": {
+    "pins": 2174,
+    "pins_pos": 22,
+    "mean": 0.0,
+    "max": 2.7
+   }
+  },
+  "tile_pad_now_ff_per_pin": 21.8,
+  "launch_lib_estimated": 0,
+  "cap_causes": {
+   "wire_buffer": 1213
+  },
+  "launch_causes": {
+   "wire_buffer": 81
+  },
+  "cap_new": 276.4,
+  "cap_buf": 249.5,
+  "cap_worst_pin": "s_w[1818]",
+  "cap_over": 1213,
+  "cap_over_new": 1213,
+  "launch_new": 250.6,
+  "launch_buf": 150.6,
+  "launch_over_new": 81,
+  "in_pad_ff_ps": 21,
+  "in_pad_removable_ff_ps": 21,
+  "in_padded_pins": 1,
+  "inputs": 2174,
+  "out_pad_ff_ps": 47441,
+  "out_pad_removable_ff_ps": 47441,
+  "outputs": 2173,
+  "ff_launch_min": 86.8,
+  "ff_launch_min_unpadded": null,
+  "class": "B_pinflop_wire"
+ },
+ {
+  "cell": "dsfd_coll_cbq0",
+  "view": "physical/ref_tile/dsfd_coll_cbq0_m5/views/dsfd_coll_cbq0",
+  "job": "dsfd_coll_cbq0_m5-m5-e5e8e058b",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "launch 247.61428 > 220 (2 pins); capture 218.62015 > 190 (3 pins)",
+  "spread": 46.3,
+  "R": 268.4,
+  "cap_lib": 218.6,
+  "launch_lib": 247.6,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.1115303122366527e-11,
+   "i2r": 54.006966,
+   "r2o": 11.115303,
+   "r2r": 19.305141
+  },
+  "ff_after": {
+   "ws": 1.930514081927015e-11,
+   "i2r": 104.006943,
+   "r2o": 61.115307,
+   "r2r": 19.305141
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -53.9,
+   "median": -65.7
+  },
+  "die_demand": {
+   "0": {
+    "pins": 423,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 423,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "80": {
+    "pins": 423,
+    "pins_pos": 374,
+    "mean": 13.1,
+    "max": 26.1
+   }
+  },
+  "tile_pad_now_ff_per_pin": 78.7,
+  "launch_lib_estimated": 0,
+  "cap_causes": {
+   "wire_buffer": 2,
+   "pad": 1
+  },
+  "launch_causes": {
+   "wire_buffer": 2
+  },
+  "cap_new": 218.6,
+  "cap_buf": 166.0,
+  "cap_worst_pin": "bw_v",
+  "cap_over": 3,
+  "cap_over_new": 2,
+  "launch_new": 247.6,
+  "launch_buf": 125.0,
+  "launch_over_new": 2,
+  "in_pad_ff_ps": 14083,
+  "in_pad_removable_ff_ps": 14083,
+  "in_padded_pins": 421,
+  "inputs": 423,
+  "out_pad_ff_ps": 19194,
+  "out_pad_removable_ff_ps": 19194,
+  "outputs": 436,
+  "ff_launch_min": 86.1,
+  "ff_launch_min_unpadded": null,
+  "class": "B_pinflop_wire"
+ },
+ {
+  "cell": "dsfd_vm_be_sl",
+  "view": "physical/ref_tile/dsfd_vm_be_sl/views/dsfd_vm_be_sl",
+  "job": "dsfd_vm_be_sl-r6-8abef0fbf",
+  "design": "s81",
+  "used": "yes",
+  "native": "FAIL",
+  "why": "capture 258.70151 > 190 (3 pins)",
+  "spread": 27.8,
+  "R": 285.1,
+  "cap_lib": 258.7,
+  "launch_lib": 214.4,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 2.30040986259894e-12,
+   "i2r": 36.02224,
+   "r2o": 33.791027,
+   "r2r": 2.30041
+  },
+  "ff_after": {
+   "ws": 2.30040986259894e-12,
+   "i2r": 86.022247,
+   "r2o": 83.791031,
+   "r2r": 2.30041
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -49.2,
+   "median": -61.5
+  },
+  "die_demand": {
+   "0": {
+    "pins": 1408,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 1408,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "80": {
+    "pins": 1408,
+    "pins_pos": 1401,
+    "mean": 17.8,
+    "max": 30.8
+   }
+  },
+  "tile_pad_now_ff_per_pin": 22.8,
+  "launch_lib_estimated": 2669,
+  "cap_causes": {
+   "pad": 2,
+   "wire_buffer": 1
+  },
+  "launch_causes": {},
+  "cap_new": 258.7,
+  "cap_buf": 187.8,
+  "cap_worst_pin": "rn_in[0]",
+  "cap_over": 3,
+  "cap_over_new": 1,
+  "launch_new": 121.9,
+  "launch_buf": 68.1,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 31841,
+  "in_pad_removable_ff_ps": 31841,
+  "in_padded_pins": 1398,
+  "inputs": 1407,
+  "out_pad_ff_ps": 269,
+  "out_pad_removable_ff_ps": 269,
+  "outputs": 6,
+  "ff_launch_min": 123.3,
+  "ff_launch_min_unpadded": null,
+  "class": "B_pinflop_wire"
+ },
+ {
+  "cell": "ot_s81_hc_cpin",
+  "view": "physical/ref_tile/s81hc_cpin_ref/views/ot_s81_hc_cpin",
+  "job": "s81hc_cpin_ref-v2-be8de3bc6",
+  "design": "s81",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "launch 427.89761 > 220 (3721 pins); capture 469.64792 > 190 (2756 pins)",
+  "spread": 45.3,
+  "R": 264.4,
+  "cap_lib": 469.6,
+  "launch_lib": 427.9,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_s81_hc_crooty_w",
+  "view": "physical/ref_tile/s81hc_crywe_ref/views/ot_s81_hc_crooty_w",
+  "job": "s81hc_crywe_ref-v4-outhold-splice-a7343353d",
+  "design": "s81",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "launch 385.9993 > 220 (2160 pins); capture 372.90762 > 190 (2155 pins)",
+  "spread": 48.2,
+  "R": 228.1,
+  "cap_lib": 372.9,
+  "launch_lib": 386.0,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_s81_hc_crooty_w",
+  "view": "physical/ref_tile/s81hc_cryww_ref/views/ot_s81_hc_crooty_w",
+  "job": "s81hc_cryww_ref-v3-outhold-276e553ee",
+  "design": "s81",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "launch 379.14098 > 220 (2171 pins); capture 331.08286 > 190 (2128 pins)",
+  "spread": 59.9,
+  "R": 232.3,
+  "cap_lib": 331.1,
+  "launch_lib": 379.1,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_s81_hc_crootr_r",
+  "view": "physical/ref_tile/s81hc_crrrw_ref/views/ot_s81_hc_crootr_r",
+  "job": "s81hc_crrrw_ref-v2-pinplan-f41de6496",
+  "design": "s81",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "launch 365.59066 > 220 (812 pins); capture 393.26241 > 190 (1657 pins); spread 101.5 > 80",
+  "spread": 101.5,
+  "R": 262.4,
+  "cap_lib": 393.3,
+  "launch_lib": 365.6,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.876521160681932e-11,
+   "i2r": 20.814074,
+   "r2o": 21.067982,
+   "r2r": 18.765211
+  },
+  "ff_after": {
+   "ws": 1.876521160681932e-11,
+   "i2r": 70.814079,
+   "r2o": 71.067986,
+   "r2r": 18.765211
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -15.4,
+   "median": -131.2
+  },
+  "die_demand": {
+   "0": {
+    "pins": 2166,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 2166,
+    "pins_pos": 114,
+    "mean": 0.7,
+    "max": 24.6
+   },
+   "80": {
+    "pins": 2166,
+    "pins_pos": 134,
+    "mean": 3.1,
+    "max": 64.6
+   }
+  },
+  "tile_pad_now_ff_per_pin": 22.8,
+  "launch_lib_estimated": 0,
+  "cap_causes": {
+   "wire_buffer": 1628,
+   "pad": 29
+  },
+  "launch_causes": {
+   "wire_buffer": 591,
+   "clock": 122,
+   "pad": 99
+  },
+  "cap_new": 393.3,
+  "cap_buf": 248.7,
+  "cap_worst_pin": "ch_rd[329]",
+  "cap_over": 1657,
+  "cap_over_new": 1628,
+  "launch_new": 365.6,
+  "launch_buf": 244.1,
+  "launch_over_new": 713,
+  "in_pad_ff_ps": 6687,
+  "in_pad_removable_ff_ps": 6687,
+  "in_padded_pins": 134,
+  "inputs": 2166,
+  "out_pad_ff_ps": 42708,
+  "out_pad_removable_ff_ps": 42708,
+  "outputs": 3573,
+  "ff_launch_min": 96.1,
+  "ff_launch_min_unpadded": null,
+  "class": "B_insertion_spread"
+ },
+ {
+  "cell": "dsfd_su_t_qbe",
+  "view": "physical/ref_tile/s81su_qbe_spx_ref/views/dsfd_su_t_qbe",
+  "job": "s81su_qbe_spx_ref-v5-spx-2df2353b8",
+  "design": "s81",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "launch 360.21761 > 220 (161 pins); capture 388.40743 > 190 (138 pins)",
+  "spread": 71.6,
+  "R": 580.4,
+  "cap_lib": 388.4,
+  "launch_lib": 360.2,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "dsfd_coll_ces0",
+  "view": "physical/ref_tile/dscoll_ces0_cxsp/views/dsfd_coll_ces0",
+  "job": "dscoll_ces0_cxsp-cxsp-d8b0f7a0e",
+  "design": "s81",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "launch 317.88073 > 220 (49 pins); capture 450.1501 > 190 (39 pins); spread 90.6 > 80",
+  "spread": 90.6,
+  "R": 431.8,
+  "cap_lib": 450.2,
+  "launch_lib": 317.9,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.9966805986371128e-12,
+   "i2r": 38.438641,
+   "r2o": 16.592838,
+   "r2r": 1.996681
+  },
+  "ff_after": {
+   "ws": 1.9966805986371128e-12,
+   "i2r": 88.438675,
+   "r2o": 66.592842,
+   "r2r": 1.996681
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -33.2,
+   "median": -94.1
+  },
+  "die_demand": {
+   "0": {
+    "pins": 2022,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 2022,
+    "pins_pos": 1,
+    "mean": 0.0,
+    "max": 6.8
+   },
+   "80": {
+    "pins": 2022,
+    "pins_pos": 1,
+    "mean": 0.0,
+    "max": 46.8
+   }
+  },
+  "tile_pad_now_ff_per_pin": 9.1,
+  "launch_lib_estimated": 0,
+  "cap_causes": {
+   "wire_buffer": 39
+  },
+  "launch_causes": {
+   "pad": 12,
+   "wire_buffer": 37
+  },
+  "cap_new": 450.2,
+  "cap_buf": 220.7,
+  "cap_worst_pin": "qp[3]",
+  "cap_over": 39,
+  "cap_over_new": 39,
+  "launch_new": 317.9,
+  "launch_buf": 182.2,
+  "launch_over_new": 37,
+  "in_pad_ff_ps": 50,
+  "in_pad_removable_ff_ps": 50,
+  "in_padded_pins": 1,
+  "inputs": 2022,
+  "out_pad_ff_ps": 18368,
+  "out_pad_removable_ff_ps": 18368,
+  "outputs": 751,
+  "ff_launch_min": 91.6,
+  "ff_launch_min_unpadded": null,
+  "class": "B_insertion_spread"
+ },
+ {
+  "cell": "dsfd_su_t_swe",
+  "view": "physical/ref_tile/s81su_swe_spx_ref/views/dsfd_su_t_swe",
+  "job": "s81su_swe_spx_ref-v4-spx-1ec43dde7",
+  "design": "s81",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "launch 271.40878 > 220 (24 pins); capture 228.98321 > 190 (24 pins)",
+  "spread": 25.0,
+  "R": 387.4,
+  "cap_lib": 229.0,
+  "launch_lib": 271.4,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "dsfd_su_t_swe",
+  "view": "physical/ref_tile/s81su_swe_sp8_ref/views/dsfd_su_t_swe",
+  "job": "s81su_swe_sp8_ref-v4-sp8-1ec43dde7",
+  "design": "s81",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "launch 266.35878 > 220 (28 pins); capture 294.17687 > 190 (80 pins)",
+  "spread": 46.1,
+  "R": 435.7,
+  "cap_lib": 294.2,
+  "launch_lib": 266.4,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.5082185500503442e-11,
+   "i2r": 35.401016,
+   "r2o": 30.21447,
+   "r2r": 15.082186
+  },
+  "ff_after": {
+   "ws": 1.5082185500503442e-11,
+   "i2r": 85.401016,
+   "r2o": 80.214478,
+   "r2r": 15.082186
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -32.0,
+   "median": -91.1
+  },
+  "die_demand": {
+   "0": {
+    "pins": 477,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 477,
+    "pins_pos": 1,
+    "mean": 0.0,
+    "max": 8.0
+   },
+   "80": {
+    "pins": 477,
+    "pins_pos": 43,
+    "mean": 0.9,
+    "max": 48.0
+   }
+  },
+  "tile_pad_now_ff_per_pin": 12.1,
+  "launch_lib_estimated": 0,
+  "cap_causes": {
+   "logic": 62,
+   "pad": 18
+  },
+  "launch_causes": {
+   "wire_buffer": 28
+  },
+  "cap_new": 294.2,
+  "cap_buf": 216.8,
+  "cap_worst_pin": "c_id[91]",
+  "cap_over": 80,
+  "cap_over_new": 62,
+  "launch_new": 266.4,
+  "launch_buf": 165.4,
+  "launch_over_new": 28,
+  "in_pad_ff_ps": 1426,
+  "in_pad_removable_ff_ps": 1426,
+  "in_padded_pins": 45,
+  "inputs": 477,
+  "out_pad_ff_ps": 4364,
+  "out_pad_removable_ff_ps": 4364,
+  "outputs": 142,
+  "ff_launch_min": 105.2,
+  "ff_launch_min_unpadded": null,
+  "class": "B_logic_at_pin"
+ },
+ {
+  "cell": "ot_s81_hc_crootr_w",
+  "view": "physical/ref_tile/s81hc_crrwe_ref/views/ot_s81_hc_crootr_w",
+  "job": "s81hc_crrwe_ref-v2r-pinplan-e462b5235",
+  "design": "s81",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "launch 259.58518 > 220 (102 pins); capture 278.35304 > 190 (1131 pins)",
+  "spread": 61.0,
+  "R": 263.6,
+  "cap_lib": 278.4,
+  "launch_lib": 259.6,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "dsfd_su_t_pin",
+  "view": "physical/ref_tile/s81su_pinns_ref/views/dsfd_su_t_pin",
+  "job": "s81su_pinns_ref-v1-6494b8a37",
+  "design": "s81",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "launch 240.1524 > 220 (426 pins)",
+  "spread": 62.9,
+  "R": 306.0,
+  "cap_lib": 188.9,
+  "launch_lib": 240.2,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 2.4462099013078387e-12,
+   "i2r": 24.146601,
+   "r2o": 37.039928,
+   "r2r": 2.44621
+  },
+  "ff_after": {
+   "ws": 2.4462099013078387e-12,
+   "i2r": 74.146576,
+   "r2o": 87.039932,
+   "r2r": 2.44621
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -2.8,
+   "median": -93.8
+  },
+  "die_demand": {
+   "0": {
+    "pins": 4285,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 4285,
+    "pins_pos": 1,
+    "mean": 0.0,
+    "max": 37.2
+   },
+   "80": {
+    "pins": 4285,
+    "pins_pos": 1085,
+    "mean": 2.3,
+    "max": 77.2
+   }
+  },
+  "tile_pad_now_ff_per_pin": 23.8,
+  "launch_lib_estimated": 2232,
+  "cap_causes": {},
+  "launch_causes": {
+   "pad": 426
+  },
+  "cap_new": 187.4,
+  "cap_buf": 159.8,
+  "cap_worst_pin": "rs_d[1429]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 164.6,
+  "launch_buf": 100.8,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 15125,
+  "in_pad_removable_ff_ps": 15125,
+  "in_padded_pins": 983,
+  "inputs": 4285,
+  "out_pad_ff_ps": 87025,
+  "out_pad_removable_ff_ps": 87025,
+  "outputs": 2180,
+  "ff_launch_min": 113.5,
+  "ff_launch_min_unpadded": null,
+  "class": "A_padding_only"
+ },
+ {
+  "cell": "ot_s81_hc_crootr_t",
+  "view": "physical/ref_tile/s81hc_crrtw_ref/views/ot_s81_hc_crootr_t",
+  "job": "s81hc_crrtw_ref-v1-d71bc15c1",
+  "design": "s81",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "launch 223.21676 > 220 (2 pins); capture 415.49691 > 190 (1320 pins)",
+  "spread": 47.6,
+  "R": 269.9,
+  "cap_lib": 415.5,
+  "launch_lib": 223.2,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "dsfd_qbank_S",
+  "view": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S",
+  "job": "s81fill2_qbank_s-g1-5dd9ba367",
+  "design": "s81",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "launch 222.07801 > 220 (2 pins); capture 303.47967 > 190 (1 pins)",
+  "spread": 12.8,
+  "R": 92.1,
+  "cap_lib": 303.5,
+  "launch_lib": 222.1,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 2.1408805284117705e-11,
+   "i2r": 21.408806,
+   "r2o": 26.134762,
+   "r2r": Infinity
+  },
+  "ff_after": {
+   "ws": 7.140880942113625e-11,
+   "i2r": 71.408813,
+   "r2o": 76.134758,
+   "r2r": Infinity
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -45.2,
+   "median": -59.8
+  },
+  "die_demand": {
+   "0": {
+    "pins": 605,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 605,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "80": {
+    "pins": 605,
+    "pins_pos": 605,
+    "mean": 20.0,
+    "max": 34.8
+   }
+  },
+  "tile_pad_now_ff_per_pin": 72.4,
+  "launch_lib_estimated": 0,
+  "cap_causes": {
+   "wire_buffer": 1
+  },
+  "launch_causes": {
+   "pad": 2
+  },
+  "cap_new": 272.6,
+  "cap_buf": 97.0,
+  "cap_worst_pin": "rs[0]",
+  "cap_over": 1,
+  "cap_over_new": 1,
+  "launch_new": 119.0,
+  "launch_buf": 89.9,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 9638,
+  "in_pad_removable_ff_ps": 9638,
+  "in_padded_pins": 392,
+  "inputs": 605,
+  "out_pad_ff_ps": 34155,
+  "out_pad_removable_ff_ps": 34155,
+  "outputs": 604,
+  "ff_launch_min": 101.1,
+  "ff_launch_min_unpadded": null,
+  "class": "B_pinflop_wire"
+ },
+ {
+  "cell": "dsfd_vm_be_sl",
+  "view": "physical/s81_ph_views/vm_master/views/dsfd_vm_be_sl",
+  "job": "s81vm-besl-b235ed401-tc-rd-pd55",
+  "design": "s81",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "no insertion.json (R unproven); capture 246.001005 > 190 (10 pins)",
+  "spread": 43.5,
+  "R": 262.3,
+  "cap_lib": 246.0,
+  "launch_lib": 186.9,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_s81_hc_cntree",
+  "view": "physical/ref_tile/s81hc_cntree_ref/views/ot_s81_hc_cntree",
+  "job": "s81hc_cntree_ref-v1-ee56cc32d",
+  "design": "s81",
+  "used": "cell",
+  "native": "FAIL",
+  "why": "capture 221.46561 > 190 (3 pins)",
+  "spread": 23.1,
+  "R": 226.1,
+  "cap_lib": 221.5,
+  "launch_lib": 140.0,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "dsfd_su_t_kvt",
+  "view": "physical/ref_tile/s81su_kvt_ref/views/dsfd_su_t_kvt",
+  "job": "s81su_kvt_ref-v2-cceaf47dc",
+  "design": "s81",
+  "used": "yes",
+  "native": "PASS",
+  "why": "",
+  "spread": 25.0,
+  "R": 225.7,
+  "cap_lib": 169.4,
+  "launch_lib": 219.2,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 2.5872790021530534e-11,
+   "i2r": 25.872789,
+   "r2o": 26.667585,
+   "r2r": 26.250196
+  },
+  "ff_after": {
+   "ws": 2.6250196460964048e-11,
+   "i2r": 72.961319,
+   "r2o": 79.579041,
+   "r2r": 26.250196
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -25.7,
+   "median": -51.5
+  },
+  "die_demand": {
+   "0": {
+    "pins": 2145,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 2145,
+    "pins_pos": 642,
+    "mean": 0.8,
+    "max": 14.3
+   },
+   "80": {
+    "pins": 2145,
+    "pins_pos": 2145,
+    "mean": 29.8,
+    "max": 54.3
+   }
+  },
+  "tile_pad_now_ff_per_pin": 169.9,
+  "launch_lib_estimated": 0,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 117.2,
+  "cap_buf": 98.1,
+  "cap_worst_pin": "dn_d[944]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 111.2,
+  "launch_buf": 90.1,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 64422,
+  "in_pad_removable_ff_ps": 64422,
+  "in_padded_pins": 2145,
+  "inputs": 2145,
+  "out_pad_ff_ps": 300075,
+  "out_pad_removable_ff_ps": 300075,
+  "outputs": 4704,
+  "ff_launch_min": 104.6,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "ot_s81_hc_crx",
+  "view": "physical/ref_tile/s81hc_crx_ref/views/ot_s81_hc_crx",
+  "job": "s81hc_crx_ref-v1-d02b035e3",
+  "design": "s81",
+  "used": "yes",
+  "native": "PASS",
+  "why": "",
+  "spread": 21.8,
+  "R": 138.2,
+  "cap_lib": 127.7,
+  "launch_lib": 216.9,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "dsfd_mtp_hrow_hub",
+  "view": "physical/ref_tile/hrow5_hub/views/dsfd_mtp_hrow_hub",
+  "job": "hrow5_hub-n1-0030-0a700187e",
+  "design": "s81",
+  "used": "yes",
+  "native": "PASS",
+  "why": "",
+  "spread": 36.6,
+  "R": 276.1,
+  "cap_lib": 180.2,
+  "launch_lib": 198.5,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.8621243436101054e-11,
+   "i2r": 20.093149,
+   "r2o": 37.850224,
+   "r2r": 18.621244
+  },
+  "ff_after": {
+   "ws": 1.8621243436101054e-11,
+   "i2r": 70.093155,
+   "r2o": 87.850227,
+   "r2r": 18.621244
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -31.8,
+   "median": -60.5
+  },
+  "die_demand": {
+   "0": {
+    "pins": 3180,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 3180,
+    "pins_pos": 1,
+    "mean": 0.0,
+    "max": 8.2
+   },
+   "80": {
+    "pins": 3180,
+    "pins_pos": 3180,
+    "mean": 18.4,
+    "max": 48.2
+   }
+  },
+  "tile_pad_now_ff_per_pin": 22.4,
+  "launch_lib_estimated": 1073,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 132.0,
+  "cap_buf": 108.5,
+  "cap_worst_pin": "f_pr1[610]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 144.3,
+  "launch_buf": 82.0,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 71183,
+  "in_pad_removable_ff_ps": 71183,
+  "in_padded_pins": 2970,
+  "inputs": 3180,
+  "out_pad_ff_ps": 23,
+  "out_pad_removable_ff_ps": 23,
+  "outputs": 1,
+  "ff_launch_min": 129.5,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "ot_s81_hc_cryys",
+  "view": "physical/ref_tile/s81hc_cryys_ref/views/ot_s81_hc_cryys",
+  "job": "s81hc_cryys_ref-v1-flopslice-023a586ca",
+  "design": "s81",
+  "used": "yes",
+  "native": "PASS",
+  "why": "",
+  "spread": 14.2,
+  "R": 256.4,
+  "cap_lib": 165.6,
+  "launch_lib": 197.3,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 2.3356844236488428e-11,
+   "i2r": 46.925297,
+   "r2o": 26.307318,
+   "r2r": 23.356844
+  },
+  "ff_after": {
+   "ws": 2.3356844236488428e-11,
+   "i2r": 96.925301,
+   "r2o": 76.307304,
+   "r2r": 23.356844
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -80.5,
+   "median": -86.9
+  },
+  "die_demand": {
+   "0": {
+    "pins": 259,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 259,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "80": {
+    "pins": 259,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   }
+  },
+  "tile_pad_now_ff_per_pin": 64.8,
+  "launch_lib_estimated": 0,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 165.6,
+  "cap_buf": 137.5,
+  "cap_worst_pin": "y_s[235]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 105.4,
+  "launch_buf": 88.0,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 0,
+  "in_pad_removable_ff_ps": 0,
+  "in_padded_pins": 0,
+  "inputs": 259,
+  "out_pad_ff_ps": 16778,
+  "out_pad_removable_ff_ps": 16778,
+  "outputs": 257,
+  "ff_launch_min": 101.3,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "dsfd_su_t_kvr",
+  "view": "physical/ref_tile/s81su_kvr_ref/views/dsfd_su_t_kvr",
+  "job": "s81su_kvr_ref-v1-00167e741",
+  "design": "s81",
+  "used": "yes",
+  "native": "PASS",
+  "why": "",
+  "spread": 24.5,
+  "R": 207.4,
+  "cap_lib": 124.2,
+  "launch_lib": 183.1,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.9455409505653165e-12,
+   "i2r": 4.719516,
+   "r2o": 17.930559,
+   "r2r": 1.945541
+  },
+  "ff_after": {
+   "ws": 1.9455409505653165e-12,
+   "i2r": 54.719452,
+   "r2o": 67.93055,
+   "r2r": 1.945541
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -11.9,
+   "median": -31.1
+  },
+  "die_demand": {
+   "0": {
+    "pins": 174,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 174,
+    "pins_pos": 99,
+    "mean": 5.8,
+    "max": 28.1
+   },
+   "80": {
+    "pins": 174,
+    "pins_pos": 174,
+    "mean": 41.8,
+    "max": 68.1
+   }
+  },
+  "tile_pad_now_ff_per_pin": 29.5,
+  "launch_lib_estimated": 0,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 113.8,
+  "cap_buf": 86.0,
+  "cap_worst_pin": "i_eps[30]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 183.1,
+  "launch_buf": 124.3,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 3505,
+  "in_pad_removable_ff_ps": 3505,
+  "in_padded_pins": 159,
+  "inputs": 174,
+  "out_pad_ff_ps": 1635,
+  "out_pad_removable_ff_ps": 1635,
+  "outputs": 34,
+  "ff_launch_min": 92.9,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "dsfd_su_t_kvp",
+  "view": "physical/ref_tile/s81su_kvp_ref/views/dsfd_su_t_kvp",
+  "job": "s81su_kvp_ref-v1-00167e741",
+  "design": "s81",
+  "used": "yes",
+  "native": "PASS",
+  "why": "",
+  "spread": 12.3,
+  "R": 202.1,
+  "cap_lib": 125.4,
+  "launch_lib": 157.1,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "dsfd_mtp_hrow_ing",
+  "view": "physical/ref_tile/hrow5_ing/views/dsfd_mtp_hrow_ing",
+  "job": "hrow5_ing-r5d-1a91bcdd1",
+  "design": "s81",
+  "used": "yes",
+  "native": "PASS",
+  "why": "",
+  "spread": 20.4,
+  "R": 147.7,
+  "cap_lib": 119.5,
+  "launch_lib": 155.7,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "dsfd_su_t_kve",
+  "view": "physical/ref_tile/s81su_kve_ref/views/dsfd_su_t_kve",
+  "job": "s81su_kve_ref-v1-00167e741",
+  "design": "s81",
+  "used": "yes",
+  "native": "PASS",
+  "why": "",
+  "spread": 16.7,
+  "R": 175.9,
+  "cap_lib": 128.0,
+  "launch_lib": 155.5,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 3.2252117643238876e-12,
+   "i2r": 4.399106,
+   "r2o": 8.323106,
+   "r2r": 3.225212
+  },
+  "ff_after": {
+   "ws": 3.2252117643238876e-12,
+   "i2r": 54.399109,
+   "r2o": 58.323097,
+   "r2r": 3.225212
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -17.6,
+   "median": -38.7
+  },
+  "die_demand": {
+   "0": {
+    "pins": 296,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 296,
+    "pins_pos": 156,
+    "mean": 2.5,
+    "max": 22.4
+   },
+   "80": {
+    "pins": 296,
+    "pins_pos": 296,
+    "mean": 37.5,
+    "max": 62.4
+   }
+  },
+  "tile_pad_now_ff_per_pin": 29.5,
+  "launch_lib_estimated": 0,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 128.0,
+  "cap_buf": 122.3,
+  "cap_worst_pin": "i_x[2]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 108.0,
+  "launch_buf": 85.1,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 2632,
+  "in_pad_removable_ff_ps": 2632,
+  "in_padded_pins": 180,
+  "inputs": 296,
+  "out_pad_ff_ps": 6103,
+  "out_pad_removable_ff_ps": 6103,
+  "outputs": 163,
+  "ff_launch_min": 83.3,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "ot_s81_hc_pad_f8",
+  "view": "physical/ref_tile/s81hc_pad_f8_ref/views/ot_s81_hc_pad_f8",
+  "job": "s81hc_pad_f8_ref-v1-cx-relay-678198f73",
+  "design": "s81",
+  "used": "yes",
+  "native": "PASS",
+  "why": "",
+  "spread": 17.1,
+  "R": 157.9,
+  "cap_lib": 125.6,
+  "launch_lib": 155.3,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_s81_hc_pad_r5",
+  "view": "physical/ref_tile/s81hc_pad_r5_ref/views/ot_s81_hc_pad_r5",
+  "job": "s81hc_pad_r5_ref-v2-cx-lattice-21e8aac25",
+  "design": "s81",
+  "used": "yes",
+  "native": "PASS",
+  "why": "",
+  "spread": 12.1,
+  "R": 179.1,
+  "cap_lib": 114.0,
+  "launch_lib": 153.7,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_s81_hc_cntree",
+  "view": "physical/ref_tile/s81hc_cntreeh2_ref/views/ot_s81_hc_cntree",
+  "job": "s81hc_cntreeh2_ref-v2-native-capture-62fe033d592286033494c9f63c6e0daa8ee475e6",
+  "design": "s81",
+  "used": "yes",
+  "native": "PASS",
+  "why": "",
+  "spread": 33.0,
+  "R": 230.8,
+  "cap_lib": 128.6,
+  "launch_lib": 149.5,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.952826789164419e-12,
+   "i2r": 5.703577,
+   "r2o": 4.397815,
+   "r2r": 1.952827
+  },
+  "ff_after": {
+   "ws": 1.952826789164419e-12,
+   "i2r": 46.036369,
+   "r2o": 64.065002,
+   "r2r": 1.952827
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -21.2,
+   "median": -38.8
+  },
+  "die_demand": {
+   "0": {
+    "pins": 1309,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 1309,
+    "pins_pos": 728,
+    "mean": 2.8,
+    "max": 18.8
+   },
+   "80": {
+    "pins": 1309,
+    "pins_pos": 1309,
+    "mean": 39.5,
+    "max": 58.8
+   }
+  },
+  "tile_pad_now_ff_per_pin": 12.6,
+  "launch_lib_estimated": 0,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 107.5,
+  "cap_buf": 84.9,
+  "cap_worst_pin": "e_ex[367]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 77.2,
+  "launch_buf": 61.1,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 14857,
+  "in_pad_removable_ff_ps": 14857,
+  "in_padded_pins": 984,
+  "inputs": 1309,
+  "out_pad_ff_ps": 1628,
+  "out_pad_removable_ff_ps": 1628,
+  "outputs": 34,
+  "ff_launch_min": 89.1,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "ot_s81_hc_pad_meta2",
+  "view": "physical/ref_tile/s81hc_pad_meta2_ref/views/ot_s81_hc_pad_meta2",
+  "job": "s81hc_pad_meta2_ref-v1-cx-relay-21e8aac25",
+  "design": "s81",
+  "used": "yes",
+  "native": "PASS",
+  "why": "",
+  "spread": 18.9,
+  "R": 114.9,
+  "cap_lib": 110.0,
+  "launch_lib": 149.2,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_s81_hc_crx",
+  "view": "physical/ref_tile/s81hc_crxh2_ref/views/ot_s81_hc_crx",
+  "job": "s81hc_crxh2_ref-v1-70eafa55c",
+  "design": "s81",
+  "used": "cell",
+  "native": "PASS",
+  "why": "",
+  "spread": 33.3,
+  "R": 142.1,
+  "cap_lib": 133.3,
+  "launch_lib": 217.7,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 4.495140371041373e-12,
+   "i2r": 4.495141,
+   "r2o": 5.323589,
+   "r2r": 8.416018
+  },
+  "ff_after": {
+   "ws": 8.416017882595384e-12,
+   "i2r": 51.87431,
+   "r2o": 57.944412,
+   "r2r": 8.416018
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -16.2,
+   "median": -46.6
+  },
+  "die_demand": {
+   "0": {
+    "pins": 513,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 513,
+    "pins_pos": 157,
+    "mean": 3.4,
+    "max": 23.8
+   },
+   "80": {
+    "pins": 513,
+    "pins_pos": 513,
+    "mean": 35.9,
+    "max": 63.8
+   }
+  },
+  "tile_pad_now_ff_per_pin": 46.8,
+  "launch_lib_estimated": 0,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 133.3,
+  "cap_buf": 108.8,
+  "cap_worst_pin": "e_rv[3]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 217.7,
+  "launch_buf": 180.8,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 3343,
+  "in_pad_removable_ff_ps": 3343,
+  "in_padded_pins": 190,
+  "inputs": 513,
+  "out_pad_ff_ps": 20651,
+  "out_pad_removable_ff_ps": 20651,
+  "outputs": 753,
+  "ff_launch_min": 82.9,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "ot_s81_hc_cseq",
+  "view": "physical/ref_tile/s81hc_cseqh2_ref/views/ot_s81_hc_cseq",
+  "job": "s81hc_cseqh2_ref-pr5srs-d2142092a",
+  "design": "s81",
+  "used": "cell",
+  "native": "PASS",
+  "why": "",
+  "spread": 50.4,
+  "R": 232.0,
+  "cap_lib": 165.2,
+  "launch_lib": 208.5,
+  "comb": 0,
+  "probe": "missing"
+ },
+ {
+  "cell": "ot_s81_hc_crootr_f",
+  "view": "physical/ref_tile/s81hc_crrfw_local_ref/views/ot_s81_hc_crootr_f",
+  "job": "s81hc_crrfw_local_ref-v7-y-order-532b3221d",
+  "design": "s81",
+  "used": "cell",
+  "native": "PASS",
+  "why": "",
+  "spread": 50.4,
+  "R": 318.1,
+  "cap_lib": 180.2,
+  "launch_lib": 192.5,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.6006806990986888e-11,
+   "i2r": 22.174623,
+   "r2o": 30.962011,
+   "r2r": 16.006807
+  },
+  "ff_after": {
+   "ws": 1.6006806990986888e-11,
+   "i2r": 72.174629,
+   "r2o": 80.962013,
+   "r2r": 16.006807
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -26.7,
+   "median": -64.2
+  },
+  "die_demand": {
+   "0": {
+    "pins": 3952,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 3952,
+    "pins_pos": 54,
+    "mean": 0.1,
+    "max": 13.3
+   },
+   "80": {
+    "pins": 3952,
+    "pins_pos": 3945,
+    "mean": 17.5,
+    "max": 53.3
+   }
+  },
+  "tile_pad_now_ff_per_pin": 61.3,
+  "launch_lib_estimated": 1,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 138.9,
+  "cap_buf": 112.0,
+  "cap_worst_pin": "p_y[1498]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 102.1,
+  "launch_buf": 83.9,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 70402,
+  "in_pad_removable_ff_ps": 70402,
+  "in_padded_pins": 3759,
+  "inputs": 3952,
+  "out_pad_ff_ps": 171965,
+  "out_pad_removable_ff_ps": 171965,
+  "outputs": 2938,
+  "ff_launch_min": 106.0,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "ot_s81_hc_crootr_f",
+  "view": "physical/ref_tile/s81hc_crrfe_ref/views/ot_s81_hc_crootr_f",
+  "job": "s81hc_crrfe_ref-v6-056c994dd",
+  "design": "s81",
+  "used": "cell",
+  "native": "PASS",
+  "why": "",
+  "spread": 56.6,
+  "R": 309.5,
+  "cap_lib": 181.1,
+  "launch_lib": 190.8,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.3140405430434043e-11,
+   "i2r": 14.628687,
+   "r2o": 21.17112,
+   "r2r": 13.140406
+  },
+  "ff_after": {
+   "ws": 1.3140405430434043e-11,
+   "i2r": 64.628693,
+   "r2o": 71.171127,
+   "r2r": 13.140406
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -25.2,
+   "median": -62.7
+  },
+  "die_demand": {
+   "0": {
+    "pins": 3952,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 3952,
+    "pins_pos": 358,
+    "mean": 0.4,
+    "max": 14.8
+   },
+   "80": {
+    "pins": 3952,
+    "pins_pos": 3948,
+    "mean": 19.6,
+    "max": 54.8
+   }
+  },
+  "tile_pad_now_ff_per_pin": 66.3,
+  "launch_lib_estimated": 1,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 138.2,
+  "cap_buf": 111.9,
+  "cap_worst_pin": "p_y[607]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 105.3,
+  "launch_buf": 89.3,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 78538,
+  "in_pad_removable_ff_ps": 78538,
+  "in_padded_pins": 3750,
+  "inputs": 3952,
+  "out_pad_ff_ps": 183670,
+  "out_pad_removable_ff_ps": 183670,
+  "outputs": 2938,
+  "ff_launch_min": 96.2,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "ot_s81_hc_ccr",
+  "view": "physical/ref_tile/s81hc_ccrh2_ref/views/ot_s81_hc_ccr",
+  "job": "s81hc_ccrh2_ref-pr6spr-b056d6776",
+  "design": "s81",
+  "used": "cell",
+  "native": "PASS",
+  "why": "",
+  "spread": 31.8,
+  "R": 214.3,
+  "cap_lib": 129.6,
+  "launch_lib": 188.6,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 2.4174273693944315e-12,
+   "i2r": 8.455819,
+   "r2o": 12.666534,
+   "r2r": 2.417427
+  },
+  "ff_after": {
+   "ws": 2.4174273693944315e-12,
+   "i2r": 58.610699,
+   "r2o": 62.51165,
+   "r2r": 2.417427
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -44.5,
+   "median": -61.2
+  },
+  "die_demand": {
+   "0": {
+    "pins": 2165,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 2165,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "80": {
+    "pins": 2165,
+    "pins_pos": 2165,
+    "mean": 19.2,
+    "max": 35.5
+   }
+  },
+  "tile_pad_now_ff_per_pin": 7.8,
+  "launch_lib_estimated": 1892,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 129.6,
+  "cap_buf": 105.0,
+  "cap_worst_pin": "ch_rd[375]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 154.4,
+  "launch_buf": 93.6,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 339,
+  "in_pad_removable_ff_ps": 339,
+  "in_padded_pins": 28,
+  "inputs": 2165,
+  "out_pad_ff_ps": 16602,
+  "out_pad_removable_ff_ps": 16602,
+  "outputs": 792,
+  "ff_launch_min": 90.7,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "ot_s81_hc_caq",
+  "view": "physical/ref_tile/s81hc_caq_ref/views/ot_s81_hc_caq",
+  "job": "s81hc_caq_ref-pr3-040b9550a",
+  "design": "s81",
+  "used": "cell",
+  "native": "PASS",
+  "why": "",
+  "spread": 18.8,
+  "R": 182.8,
+  "cap_lib": 123.4,
+  "launch_lib": 183.7,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.5461243396686086e-12,
+   "i2r": 14.285364,
+   "r2o": 20.912453,
+   "r2r": 1.546124
+  },
+  "ff_after": {
+   "ws": 1.5461243396686086e-12,
+   "i2r": 64.285385,
+   "r2o": 70.91246,
+   "r2r": 1.546124
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -49.1,
+   "median": -59.8
+  },
+  "die_demand": {
+   "0": {
+    "pins": 1568,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 1568,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "80": {
+    "pins": 1568,
+    "pins_pos": 1568,
+    "mean": 20.1,
+    "max": 30.9
+   }
+  },
+  "tile_pad_now_ff_per_pin": 0.4,
+  "launch_lib_estimated": 779,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 123.4,
+  "cap_buf": 100.5,
+  "cap_worst_pin": "w_d[351]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 135.7,
+  "launch_buf": 75.6,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 0,
+  "in_pad_removable_ff_ps": 0,
+  "in_padded_pins": 0,
+  "inputs": 1568,
+  "out_pad_ff_ps": 550,
+  "out_pad_removable_ff_ps": 550,
+  "outputs": 25,
+  "ff_launch_min": 98.8,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "dsfd_qbank_S",
+  "view": "physical/ref_tile/s81fill2_qbank_s_t/views/dsfd_qbank_S",
+  "job": "s81fill2_qbank_s_t-nr1-a0a4982dd",
+  "design": "s81",
+  "used": "cell",
+  "native": "PASS",
+  "why": "",
+  "spread": 8.0,
+  "R": 83.8,
+  "cap_lib": 132.3,
+  "launch_lib": 182.1,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 2.38472991354044e-11,
+   "i2r": 24.481556,
+   "r2o": 23.8473,
+   "r2r": 45.1838
+  },
+  "ff_after": {
+   "ws": 4.518380114504339e-11,
+   "i2r": 74.48156,
+   "r2o": 73.847298,
+   "r2r": 45.1838
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -22.2,
+   "median": -59.6
+  },
+  "die_demand": {
+   "0": {
+    "pins": 605,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 605,
+    "pins_pos": 1,
+    "mean": 0.0,
+    "max": 17.8
+   },
+   "80": {
+    "pins": 605,
+    "pins_pos": 605,
+    "mean": 20.3,
+    "max": 57.8
+   }
+  },
+  "tile_pad_now_ff_per_pin": 59.3,
+  "launch_lib_estimated": 0,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 120.9,
+  "cap_buf": 95.1,
+  "cap_worst_pin": "i_x0[88]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 159.7,
+  "launch_buf": 131.4,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 4671,
+  "in_pad_removable_ff_ps": 4671,
+  "in_padded_pins": 355,
+  "inputs": 605,
+  "out_pad_ff_ps": 31184,
+  "out_pad_removable_ff_ps": 31184,
+  "outputs": 604,
+  "ff_launch_min": 98.8,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "dsfd_qbank_N",
+  "view": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N",
+  "job": "s81fill2_qbank_n-g1-7b1c80004",
+  "design": "s81",
+  "used": "cell",
+  "native": "PASS",
+  "why": "",
+  "spread": 2.8,
+  "R": 76.8,
+  "cap_lib": 184.5,
+  "launch_lib": 121.3,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.5802914532514478e-12,
+   "i2r": 18.866144,
+   "r2o": 1.580292,
+   "r2r": Infinity
+  },
+  "ff_after": {
+   "ws": 5.1580288651376094e-11,
+   "i2r": 68.86615,
+   "r2o": 51.580288,
+   "r2r": Infinity
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -47.6,
+   "median": -65.3
+  },
+  "die_demand": {
+   "0": {
+    "pins": 129,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 129,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "80": {
+    "pins": 129,
+    "pins_pos": 129,
+    "mean": 14.8,
+    "max": 32.4
+   }
+  },
+  "tile_pad_now_ff_per_pin": 27.0,
+  "launch_lib_estimated": 0,
+  "cap_causes": {},
+  "launch_causes": {},
+  "cap_new": 184.5,
+  "cap_buf": 184.5,
+  "cap_worst_pin": "rs[0]",
+  "cap_over": 0,
+  "cap_over_new": 0,
+  "launch_new": 80.5,
+  "launch_buf": 65.3,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 0,
+  "in_pad_removable_ff_ps": 0,
+  "in_padded_pins": 0,
+  "inputs": 129,
+  "out_pad_ff_ps": 3485,
+  "out_pad_removable_ff_ps": 3485,
+  "outputs": 128,
+  "ff_launch_min": 76.6,
+  "ff_launch_min_unpadded": null
+ },
+ {
+  "cell": "ot_hgi_coll_ctl_v5_q2",
+  "view": "physical/ref_tile/hcoll_v5_ctl2/views/ot_hgi_coll_ctl_v5_q2",
+  "job": "hcoll_v5_ctl2-v7-e11086804",
+  "design": "hbm",
+  "used": "refused",
+  "native": "FAIL",
+  "why": "capture 197.3 (refused bind)",
+  "spread": null,
+  "R": null,
+  "cap_lib": 197.3,
+  "launch_lib": null,
+  "comb": 0,
+  "probe": "ok",
+  "ff_before": {
+   "ws": 1.480464362213496e-11,
+   "i2r": 17.376143,
+   "r2o": 33.463009,
+   "r2r": 14.804644
+  },
+  "ff_after": {
+   "ws": 1.480464362213496e-11,
+   "i2r": 67.376122,
+   "r2o": 83.463013,
+   "r2r": 14.804644
+  },
+  "hold_only_relaxes": true,
+  "die_need_new_ps": {
+   "max": -35.4,
+   "median": -67.3
+  },
+  "die_demand": {
+   "0": {
+    "pins": 1161,
+    "pins_pos": 0,
+    "mean": 0.0,
+    "max": 0.0
+   },
+   "40": {
+    "pins": 1161,
+    "pins_pos": 20,
+    "mean": 0.0,
+    "max": 4.6
+   },
+   "80": {
+    "pins": 1161,
+    "pins_pos": 1139,
+    "mean": 13.3,
+    "max": 44.6
+   }
+  },
+  "tile_pad_now_ff_per_pin": 20.8,
+  "launch_lib_estimated": 956,
+  "cap_causes": {
+   "pad": 1
+  },
+  "launch_causes": {},
+  "cap_new": 133.1,
+  "cap_buf": 110.1,
+  "cap_worst_pin": "inst[1216]",
+  "cap_over": 1,
+  "cap_over_new": 0,
+  "launch_new": 173.9,
+  "launch_buf": 115.2,
+  "launch_over_new": 0,
+  "in_pad_ff_ps": 23245,
+  "in_pad_removable_ff_ps": 23245,
+  "in_padded_pins": 1153,
+  "inputs": 1161,
+  "out_pad_ff_ps": 914,
+  "out_pad_removable_ff_ps": 914,
+  "outputs": 43,
+  "ff_launch_min": 146.9,
+  "ff_launch_min_unpadded": null,
+  "class": "A_padding_only"
+ }
+]
