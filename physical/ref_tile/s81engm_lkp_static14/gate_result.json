@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "s81engm_lkp_static14",
  "verdict": "WARN",
- "generated": "2026-10-17T04:08:03-0700",
- "host": "ot-agidock128",
+ "generated": "2026-10-17T08:46:37-0700",
+ "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "9032fcf04f609882d0cd7cc667f2b5e8d051907e",
+  "start_commit": "0b8eab454089d6747387375bac297694a96a7b2d",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "1da0d3fdfebf29d4207d2febc677bff1fbd589033f24a7f501c2500a12c5bb9b",
-  "manifest_sha256": "3f6fcd99ecfc9826ec2460c2526c9e848279cbdd6ea1e2ef06d0077740d2bb2a",
+  "archive_sha256": "525f88f4610dd18ae3636c19d4900f4b28366ae121a707097fba1574fadba6e2",
+  "manifest_sha256": "a05c1ee84ad577816a201bca0d4d94d98af08184b774b33bf80b9116608321cf",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -20371,16 +20371,16 @@
    {
     "path": "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_static.sv",
     "kind": "file",
-    "sha256": "1034469ca5c088dd69e8329e80e4c238e1caaa4c2d8e2859a8965f5b922f88cc",
-    "git_blob": "d09b1bb81d91987fcf6ec4036881146b90b00f13",
+    "sha256": "5b24784c74c14fc739d7065dc27ddedce7f656fcca1573e68a58b7f9db42bd9b",
+    "git_blob": "fa35c4c4082e77b46a55d8cda31a0fb92f0b6058",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_rowbank_static_leaf.sv",
     "kind": "file",
-    "sha256": "d89a87cefe3220afa54eb4008b14700bb9698eec22f684f77763a9520daea997",
-    "git_blob": "2d438a5d45b875fb1ffec9b894910befe24dd037",
+    "sha256": "a27d0f5732efa152d4c867362f2a76e529d337834987355d21a72447429c07ee",
+    "git_blob": "36e233960cf103e2e5aad2961c6055adccc1111e",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -20395,16 +20395,16 @@
    {
     "path": "rtl/dsrom_sys/engram/static_lookup_1015/tb_s81_engram_lkp_static14.sv",
     "kind": "file",
-    "sha256": "1cba394f671e845c4efbf3e6f4249804b7c4e476cbc893dd64372fd843af6d6f",
-    "git_blob": "bd1bb42a6ff935852dd86d6adc795ff340b31239",
+    "sha256": "492b82e3dad2055a4d2ca41b353c63df0d34e1cb92bfa5f550a8c472278962df",
+    "git_blob": "264ef3b0ba7bc7a4cf5fd29849963b72422d109f",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/dsrom_sys/engram/static_lookup_1015/tb_s81_engram_static.sv",
     "kind": "file",
-    "sha256": "13034f51843f67e33e6a070f273b82bef339d9defc2d2f12d6ee0dc68b877f06",
-    "git_blob": "9a5bca073904cfbb2fd81c06b1132ab9918485d6",
+    "sha256": "e46b76b601d718a3b9026a3d069ca3a96c3350447a5969e162931b895778ab29",
+    "git_blob": "8c932f25944c547d7f601a6262deaa5d8ebf1407",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -160851,14 +160851,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 137427212,
+   "archive_bytes": 137427164,
    "unpacked_bytes": 837144576,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "852283e03b61434fef7d8ad72fb5c78dee8abef7",
+   "origin_main": "8e0315200d09ff0d508a1690044b54ff85cd3c57",
    "content_sha256": "4f2b695b26c78a1b5935dc7c649ac2be2da4be89f87a7422b51595af09f13760",
    "files": [
     {
@@ -161973,11 +161973,11 @@
     "rtl/dsrom_sys/engram/rso_candidate/tb_engram_rso.sv": "2b33ede764338125fe7edcf1eacac97ee23dac9898b3169c28375f34c5f0acd9",
     "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_static14.sv": "ced9568c512b967dd9de40f1dacaf4cbe6531d31c678f56c95aa0c342b559e78",
     "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_static.sv": "018fcdb4fde663581e37476e885c21970ed7cd997849b4cc12dd0b0033fdd8e6",
-    "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_static.sv": "1034469ca5c088dd69e8329e80e4c238e1caaa4c2d8e2859a8965f5b922f88cc",
-    "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_rowbank_static_leaf.sv": "d89a87cefe3220afa54eb4008b14700bb9698eec22f684f77763a9520daea997",
+    "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_static.sv": "5b24784c74c14fc739d7065dc27ddedce7f656fcca1573e68a58b7f9db42bd9b",
+    "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_rowbank_static_leaf.sv": "a27d0f5732efa152d4c867362f2a76e529d337834987355d21a72447429c07ee",
     "rtl/dsrom_sys/engram/static_lookup_1015/tb_s81_engram_hash_static_equiv.sv": "6144c473426059715381ec073387464d685ae54a8d9a23bcaa4b305ef938ba57",
-    "rtl/dsrom_sys/engram/static_lookup_1015/tb_s81_engram_lkp_static14.sv": "1cba394f671e845c4efbf3e6f4249804b7c4e476cbc893dd64372fd843af6d6f",
-    "rtl/dsrom_sys/engram/static_lookup_1015/tb_s81_engram_static.sv": "13034f51843f67e33e6a070f273b82bef339d9defc2d2f12d6ee0dc68b877f06",
+    "rtl/dsrom_sys/engram/static_lookup_1015/tb_s81_engram_lkp_static14.sv": "492b82e3dad2055a4d2ca41b353c63df0d34e1cb92bfa5f550a8c472278962df",
+    "rtl/dsrom_sys/engram/static_lookup_1015/tb_s81_engram_static.sv": "e46b76b601d718a3b9026a3d069ca3a96c3350447a5969e162931b895778ab29",
     "rtl/dsrom_sys/engram/tiles/ot_engc_pbank.sv": "e6956a55e008f12d2df42bd1d44b92a78dbe26378405bbfb2977dc63709b5194",
     "rtl/dsrom_sys/engram/tiles/ot_engc_pt.sv": "97e6ff9016afbd1a525d356a355cd22f7ed38dfa456668da4b4adf2627c7ac11",
     "rtl/dsrom_sys/engram/tiles/ot_engc_t_io.sv": "e44800cb3072cff19eb9408d945b66748f74b6c4ef34b928a0190cc7149b5e7f",
@@ -162487,16 +162487,16 @@
    },
    "digest": "7d2838154575c85819add47bb6ec3e2c86d17abb4cd7812f7f03606116ccb28f"
   },
-  "captured": "2026-10-17T01:23:21-0700",
+  "captured": "2026-10-17T06:46:01-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/s81engm_lkp_static14/signoff.sdc"
   },
-  "remote_script_sha256": "5c9dca2edc216036bb19d212e3a4fab6bc98b52560cf9729736768bdad7c9fce",
+  "remote_script_sha256": "2ae359d1e6aa589fa0d6e9e36ac74b3df307b0b0b6273d7d0e480f18b96f5727",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81engm_lkp_static14-20261017-012140",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81engm_lkp_static14-20261017-064455",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -162507,8 +162507,8 @@
   "max_root_sinks": 8638,
   "root": "port:ck",
   "cts": true,
-  "tt_insertion_ps": 407.1,
-  "tt_spread_ps": 93.3,
+  "tt_insertion_ps": 412.2,
+  "tt_spread_ps": 114.3,
   "declared_clock": "multiple_cts_roots",
   "limits": {
    "sinks": 15000,
@@ -162522,15 +162522,15 @@
     "tt": {
      "boundary": {
       "n": 900,
-      "mean": 337.2,
-      "min": 320.5,
-      "max": 368.6
+      "mean": 322.1,
+      "min": 302.6,
+      "max": 383.3
      },
      "all": {
       "n": 8638,
-      "mean": 341.8,
-      "min": 313.8,
-      "max": 407.1
+      "mean": 324.7,
+      "min": 297.9,
+      "max": 412.2
      },
      "errors": [],
      "macros": null,
@@ -162544,9 +162544,9 @@
      "boundary": null,
      "all": {
       "n": 2896,
-      "mean": 140.6,
-      "min": 128.1,
-      "max": 158.8
+      "mean": 238.8,
+      "min": 228.0,
+      "max": 259.6
      },
      "errors": [],
      "macros": null,
@@ -162560,9 +162560,9 @@
      "boundary": null,
      "all": {
       "n": 2902,
-      "mean": 239.3,
-      "min": 231.5,
-      "max": 257.2
+      "mean": 168.5,
+      "min": 158.7,
+      "max": 187.0
      },
      "errors": [],
      "macros": null,
@@ -162576,9 +162576,9 @@
      "boundary": null,
      "all": {
       "n": 2899,
-      "mean": 182.6,
-      "min": 172.0,
-      "max": 201.1
+      "mean": 189.0,
+      "min": 175.9,
+      "max": 204.6
      },
      "errors": [],
      "macros": null,
@@ -162592,9 +162592,9 @@
      "boundary": null,
      "all": {
       "n": 2898,
-      "mean": 221.1,
-      "min": 209.4,
-      "max": 234.2
+      "mean": 217.9,
+      "min": 206.9,
+      "max": 242.6
      },
      "errors": [],
      "macros": null,
@@ -162608,9 +162608,9 @@
      "boundary": null,
      "all": {
       "n": 2918,
-      "mean": 183.0,
-      "min": 175.1,
-      "max": 204.8
+      "mean": 171.1,
+      "min": 164.1,
+      "max": 186.1
      },
      "errors": [],
      "macros": null,
@@ -162624,9 +162624,9 @@
      "boundary": null,
      "all": {
       "n": 2905,
-      "mean": 249.1,
-      "min": 238.3,
-      "max": 288.8
+      "mean": 202.6,
+      "min": 193.8,
+      "max": 221.6
      },
      "errors": [],
      "macros": null,
@@ -162640,9 +162640,9 @@
      "boundary": null,
      "all": {
       "n": 3150,
-      "mean": 254.8,
-      "min": 237.0,
-      "max": 280.6
+      "mean": 256.2,
+      "min": 241.4,
+      "max": 276.3
      },
      "errors": [],
      "macros": null,
@@ -162656,9 +162656,9 @@
      "boundary": null,
      "all": {
       "n": 3150,
-      "mean": 246.5,
-      "min": 227.3,
-      "max": 282.4
+      "mean": 256.1,
+      "min": 244.6,
+      "max": 276.2
      },
      "errors": [],
      "macros": null,
@@ -162672,9 +162672,9 @@
      "boundary": null,
      "all": {
       "n": 3150,
-      "mean": 245.3,
-      "min": 226.1,
-      "max": 269.4
+      "mean": 260.2,
+      "min": 248.9,
+      "max": 280.2
      },
      "errors": [],
      "macros": null,
@@ -162688,9 +162688,9 @@
      "boundary": null,
      "all": {
       "n": 3150,
-      "mean": 254.8,
-      "min": 236.8,
-      "max": 271.6
+      "mean": 254.3,
+      "min": 243.8,
+      "max": 276.6
      },
      "errors": [],
      "macros": null,
@@ -162704,9 +162704,9 @@
      "boundary": null,
      "all": {
       "n": 3150,
-      "mean": 255.5,
-      "min": 239.9,
-      "max": 269.9
+      "mean": 261.1,
+      "min": 241.3,
+      "max": 298.4
      },
      "errors": [],
      "macros": null,
@@ -162720,9 +162720,9 @@
      "boundary": null,
      "all": {
       "n": 3150,
-      "mean": 256.9,
-      "min": 244.0,
-      "max": 269.7
+      "mean": 240.8,
+      "min": 224.4,
+      "max": 255.9
      },
      "errors": [],
      "macros": null,
@@ -162736,9 +162736,9 @@
      "boundary": null,
      "all": {
       "n": 2760,
-      "mean": 232.4,
-      "min": 214.0,
-      "max": 264.5
+      "mean": 236.6,
+      "min": 223.6,
+      "max": 276.0
      },
      "errors": [],
      "macros": null,
@@ -162748,119 +162748,119 @@
   ],
   "measured_clock": "ot_entry_0",
   "verdict": "PASS",
-  "text": "8,638 sinks on the largest root <= 15,000; measured TT insertion 407.1 ps, leaf spread 93.3 ps",
+  "text": "8,638 sinks on the largest root <= 15,000; measured TT insertion 412.2 ps, leaf spread 114.3 ps",
   "per_root": [
    {
     "source": "ck",
     "sinks": 8638,
-    "tt_insertion_ps": 407.1,
-    "tt_spread_ps": 93.30000000000001,
+    "tt_insertion_ps": 412.2,
+    "tt_spread_ps": 114.30000000000001,
     "verdict": "PASS",
-    "text": "8,638 sinks on the largest root <= 15,000; measured TT insertion 407.1 ps, leaf spread 93.3 ps"
+    "text": "8,638 sinks on the largest root <= 15,000; measured TT insertion 412.2 ps, leaf spread 114.3 ps"
    },
    {
     "source": "ck_hash[0]",
     "sinks": 2896,
-    "tt_insertion_ps": 158.8,
-    "tt_spread_ps": 30.700000000000017,
+    "tt_insertion_ps": 259.6,
+    "tt_spread_ps": 31.600000000000023,
     "verdict": "PASS",
-    "text": "2,896 sinks on the largest root <= 15,000; measured TT insertion 158.8 ps, leaf spread 30.7 ps"
+    "text": "2,896 sinks on the largest root <= 15,000; measured TT insertion 259.6 ps, leaf spread 31.6 ps"
    },
    {
     "source": "ck_hash[1]",
     "sinks": 2902,
-    "tt_insertion_ps": 257.2,
-    "tt_spread_ps": 25.69999999999999,
+    "tt_insertion_ps": 187.0,
+    "tt_spread_ps": 28.30000000000001,
     "verdict": "PASS",
-    "text": "2,902 sinks on the largest root <= 15,000; measured TT insertion 257.2 ps, leaf spread 25.7 ps"
+    "text": "2,902 sinks on the largest root <= 15,000; measured TT insertion 187.0 ps, leaf spread 28.3 ps"
    },
    {
     "source": "ck_hash[2]",
     "sinks": 2899,
-    "tt_insertion_ps": 201.1,
-    "tt_spread_ps": 29.099999999999994,
+    "tt_insertion_ps": 204.6,
+    "tt_spread_ps": 28.69999999999999,
     "verdict": "PASS",
-    "text": "2,899 sinks on the largest root <= 15,000; measured TT insertion 201.1 ps, leaf spread 29.1 ps"
+    "text": "2,899 sinks on the largest root <= 15,000; measured TT insertion 204.6 ps, leaf spread 28.7 ps"
    },
    {
     "source": "ck_hash[3]",
     "sinks": 2898,
-    "tt_insertion_ps": 234.2,
-    "tt_spread_ps": 24.799999999999983,
+    "tt_insertion_ps": 242.6,
+    "tt_spread_ps": 35.69999999999999,
     "verdict": "PASS",
-    "text": "2,898 sinks on the largest root <= 15,000; measured TT insertion 234.2 ps, leaf spread 24.8 ps"
+    "text": "2,898 sinks on the largest root <= 15,000; measured TT insertion 242.6 ps, leaf spread 35.7 ps"
    },
    {
     "source": "ck_hash[4]",
     "sinks": 2918,
-    "tt_insertion_ps": 204.8,
-    "tt_spread_ps": 29.700000000000017,
+    "tt_insertion_ps": 186.1,
+    "tt_spread_ps": 22.0,
     "verdict": "PASS",
-    "text": "2,918 sinks on the largest root <= 15,000; measured TT insertion 204.8 ps, leaf spread 29.7 ps"
+    "text": "2,918 sinks on the largest root <= 15,000; measured TT insertion 186.1 ps, leaf spread 22.0 ps"
    },
    {
     "source": "ck_hash[5]",
     "sinks": 2905,
-    "tt_insertion_ps": 288.8,
-    "tt_spread_ps": 50.5,
+    "tt_insertion_ps": 221.6,
+    "tt_spread_ps": 27.799999999999983,
     "verdict": "PASS",
-    "text": "2,905 sinks on the largest root <= 15,000; measured TT insertion 288.8 ps, leaf spread 50.5 ps"
+    "text": "2,905 sinks on the largest root <= 15,000; measured TT insertion 221.6 ps, leaf spread 27.8 ps"
    },
    {
     "source": "ck_rows[0]",
     "sinks": 3150,
-    "tt_insertion_ps": 280.6,
-    "tt_spread_ps": 43.60000000000002,
+    "tt_insertion_ps": 276.3,
+    "tt_spread_ps": 34.900000000000006,
     "verdict": "PASS",
-    "text": "3,150 sinks on the largest root <= 15,000; measured TT insertion 280.6 ps, leaf spread 43.6 ps"
+    "text": "3,150 sinks on the largest root <= 15,000; measured TT insertion 276.3 ps, leaf spread 34.9 ps"
    },
    {
     "source": "ck_rows[1]",
     "sinks": 3150,
-    "tt_insertion_ps": 282.4,
-    "tt_spread_ps": 55.099999999999966,
+    "tt_insertion_ps": 276.2,
+    "tt_spread_ps": 31.599999999999994,
     "verdict": "PASS",
-    "text": "3,150 sinks on the largest root <= 15,000; measured TT insertion 282.4 ps, leaf spread 55.1 ps"
+    "text": "3,150 sinks on the largest root <= 15,000; measured TT insertion 276.2 ps, leaf spread 31.6 ps"
    },
    {
     "source": "ck_rows[2]",
     "sinks": 3150,
-    "tt_insertion_ps": 269.4,
-    "tt_spread_ps": 43.29999999999998,
+    "tt_insertion_ps": 280.2,
+    "tt_spread_ps": 31.299999999999983,
     "verdict": "PASS",
-    "text": "3,150 sinks on the largest root <= 15,000; measured TT insertion 269.4 ps, leaf spread 43.3 ps"
+    "text": "3,150 sinks on the largest root <= 15,000; measured TT insertion 280.2 ps, leaf spread 31.3 ps"
    },
    {
     "source": "ck_rows[3]",
     "sinks": 3150,
-    "tt_insertion_ps": 271.6,
-    "tt_spread_ps": 34.80000000000001,
+    "tt_insertion_ps": 276.6,
+    "tt_spread_ps": 32.80000000000001,
     "verdict": "PASS",
-    "text": "3,150 sinks on the largest root <= 15,000; measured TT insertion 271.6 ps, leaf spread 34.8 ps"
+    "text": "3,150 sinks on the largest root <= 15,000; measured TT insertion 276.6 ps, leaf spread 32.8 ps"
    },
    {
     "source": "ck_rows[4]",
     "sinks": 3150,
-    "tt_insertion_ps": 269.9,
-    "tt_spread_ps": 29.99999999999997,
+    "tt_insertion_ps": 298.4,
+    "tt_spread_ps": 57.099999999999966,
     "verdict": "PASS",
-    "text": "3,150 sinks on the largest root <= 15,000; measured TT insertion 269.9 ps, leaf spread 30.0 ps"
+    "text": "3,150 sinks on the largest root <= 15,000; measured TT insertion 298.4 ps, leaf spread 57.1 ps"
    },
    {
     "source": "ck_rows[5]",
     "sinks": 3150,
-    "tt_insertion_ps": 269.7,
-    "tt_spread_ps": 25.69999999999999,
+    "tt_insertion_ps": 255.9,
+    "tt_spread_ps": 31.5,
     "verdict": "PASS",
-    "text": "3,150 sinks on the largest root <= 15,000; measured TT insertion 269.7 ps, leaf spread 25.7 ps"
+    "text": "3,150 sinks on the largest root <= 15,000; measured TT insertion 255.9 ps, leaf spread 31.5 ps"
    },
    {
     "source": "ck_seed",
     "sinks": 2760,
-    "tt_insertion_ps": 264.5,
-    "tt_spread_ps": 50.5,
+    "tt_insertion_ps": 276.0,
+    "tt_spread_ps": 52.400000000000006,
     "verdict": "PASS",
-    "text": "2,760 sinks on the largest root <= 15,000; measured TT insertion 264.5 ps, leaf spread 50.5 ps"
+    "text": "2,760 sinks on the largest root <= 15,000; measured TT insertion 276.0 ps, leaf spread 52.4 ps"
    }
   ]
  },
@@ -162874,7 +162874,7 @@
   {
    "severity": "WARN",
    "check": "textbook.logic_depth",
-   "message": "reg->reg stage u_e.u_hash.g_col[10].x[56]$_DFF_P_ -> u_e.u_hash.g_col[10].s1[7][23]$_DFF_P_/D: ~720 ps estimated (20 logic levels) > 600 ps: pipeline / restructure the stage",
+   "message": "reg->reg stage u_e.u_hash.g_col[40].x[39]$_DFF_P_ -> u_e.u_hash.g_col[46].s1[4][23]$_DFF_P_/D: ~712 ps estimated (20 logic levels) > 600 ps: pipeline / restructure the stage",
    "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
   }
  ]
