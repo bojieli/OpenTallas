@@ -23,7 +23,7 @@ module ot_s81_su_cp_vm #(
     output wire [15:0] wq_mask,
     output wire done,
     output wire fault,
-    output wire [15:0] scheduled_cycles
+    output reg [15:0] scheduled_cycles
 );
     reg [13:0] kb,sb,ob;
     reg pool,run;
@@ -57,14 +57,16 @@ module ot_s81_su_cp_vm #(
     reg [511:0] assembly;
     localparam integer RETIRE_DELAY=(WCOMMIT>2)?WCOMMIT-1:1;
     wire [15:0] core_sched;
-    assign scheduled_cycles=core_sched+RETIRE_DELAY;
+    // Fixed successor latency includes registered bank issue/history/lane faces.
+    localparam integer POOL_CYCLES=LVM+128+3+133+RETIRE_DELAY;
+    localparam integer STORE_CYCLES=LVM+128+1+RETIRE_DELAY;
     ot_hdc_delay #(.W(1),.D(RETIRE_DELAY),.RESET(1)) u_retire(clk,rst_n,core_done,done);
     assign fault=bridge_fault|core_fault;
     assign wq_mask=16'hffff;
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n)begin
             run<=0;age<=0;held_valid<=0;bridge_fault<=0;
-            wq_v<=0;opart<=0;orow<=0;pool<=0;
+            wq_v<=0;opart<=0;orow<=0;pool<=0;scheduled_cycles<=0;
         end else begin
             wq_v<=0;
             if(start)begin
@@ -72,7 +74,7 @@ module ot_s81_su_cp_vm #(
                    descriptor[96+:32]>16352 || descriptor[0+:32]>16352 ||
                    descriptor[160+:32]>3) bridge_fault<=1;
                 kb<=descriptor[32+:14];sb<=descriptor[96+:14];ob<=descriptor[0+:14];
-                pool<=descriptor[161];run<=1;age<=1;opart<=0;orow<=0;held_valid<=0;
+                pool<=descriptor[161];scheduled_cycles<=descriptor[161]?POOL_CYCLES:STORE_CYCLES;run<=1;age<=1;opart<=0;orow<=0;held_valid<=0;
             end else if(run)begin
                 age<=age+1;
                 if(rs_v!={2{response_slot}})bridge_fault<=1;

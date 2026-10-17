@@ -49,7 +49,7 @@ module tb_s81_su_cp_vm;
                 end
                 if(dn)begin
                     $display("CP_VM_DONE slot%0d cycles%0d scheduled%0d fault%0d rows%0d",slot,t,sch,flt,nout);
-                    if(t!=(slot?272:139))errors=errors+1;
+                    if(t!=(slot?275:140))errors=errors+1;
                     break;
                 end
             end

@@ -31,7 +31,7 @@ module tb_s81_su_cp;
                 end
                 if(done)begin
                     $display("CP_DONE slot%0d cycles%0d scheduled%0d fault%0d outputs%0d",slot,t,sch,fault,nout);
-                    if(t!=(slot?271:138))errors=errors+1;
+                    if(t!=(slot?274:139))errors=errors+1;
                     break;
                 end
             end

@@ -75,17 +75,18 @@ module ot_s81_su_cp_ctl #(parameter integer IN_CYCLE=10) (
     input wire i_v,
     input wire [255:0] i_d,mem0_q,mem1_q,
     input wire [3:0] lv,lf,
-    output wire [1:0] mem_we,mem_re,
-    output wire [6:0] mem_addr,
-    output wire [255:0] mem_wd,
+    output reg [1:0] mem_we,mem_re,
+    output reg [6:0] mem_addr,
+    output reg [255:0] mem_wd,
     output reg slot,
     output wire lane_v,
     output wire [255:0] previous,current,
     output reg done,fault,active,
-    output wire [15:0] scheduled_cycles
+    output reg [15:0] scheduled_cycles
 );
-    localparam integer BEATS=128, LANE_LAT=132, READ_LAT=1;
+    localparam integer BEATS=128, LANE_LAT=133, READ_LAT=3;
     localparam integer STORE_END=IN_CYCLE+BEATS;
+    localparam integer STORE_DONE=STORE_END+1;
     localparam integer POOL_END=IN_CYCLE+BEATS+READ_LAT+LANE_LAT;
     reg pool;
     reg [31:0] group;
@@ -96,34 +97,42 @@ module ot_s81_su_cp_ctl #(parameter integer IN_CYCLE=10) (
     wire reserved=active && age>=IN_CYCLE && age<STORE_END;
     wire [6:0] row=7'(age-IN_CYCLE);
     wire [255:0] old0=mem0_q,old1=mem1_q;
-    assign mem_addr=row;
-    assign mem_wd=i_d;
-    assign mem_we={2{reserved}} & {slot,~slot};
-    assign mem_re={2{reserved && pool}} & {~slot,slot};
-    reg input_q;
-    reg [255:0] current_q;
+    // Registered SRAM request pins: issue at the compiled beat, macro edge +1.
     always @(posedge clk or negedge rst_n)
-        if(!rst_n) input_q<=0;
-        else input_q<=reserved && pool;
-    always @(posedge clk) current_q<=i_d;
-    wire [255:0] history=slot?old0:old1;
-    assign lane_v=input_q;
-    assign previous=history;
-    assign current=current_q;
-    assign scheduled_cycles=pool?POOL_END:STORE_END;
+        if(!rst_n)begin mem_we<=0;mem_re<=0;end
+        else begin
+            mem_we<={2{reserved}} & {slot,~slot};
+            mem_re<={2{reserved && pool}} & {~slot,slot};
+        end
+    always @(posedge clk)begin mem_addr<=row;mem_wd<=i_d;end
+    // SRAM output is captured after its real macro edge. The current operand
+    // and validity receive exactly the matching two extra register stages.
+    reg input_q,input_q1,lane_q;
+    reg [255:0] current_q,current_q1,current_out,history_out;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)begin input_q<=0;input_q1<=0;lane_q<=0;end
+        else begin input_q<=reserved && pool;input_q1<=input_q;lane_q<=input_q1;end
+    always @(posedge clk)begin
+        current_q<=i_d;current_q1<=current_q;current_out<=current_q1;
+        history_out<=slot?old0:old1;
+    end
+    assign lane_v=lane_q;
+    assign previous=history_out;
+    assign current=current_out;
     always @(posedge clk or negedge rst_n) begin
-        if(!rst_n) begin active<=0;age<=0;valid_slot<=0;fault<=0;done<=0;nout<=0;slot<=0;pool<=0;group<=0;end
+        if(!rst_n) begin active<=0;age<=0;valid_slot<=0;fault<=0;done<=0;nout<=0;slot<=0;pool<=0;group<=0;scheduled_cycles<=0;end
         else begin
             done<=0;
             if(|lf || (lv!={4{lv[0]}})) fault<=1;
             if(start) begin
                 if(active) fault<=1;
                 active<=1;age<=1;slot<=slot_i;pool<=pool_i;group<=group_i;nout<=0;
+                scheduled_cycles<=pool_i?POOL_END:STORE_DONE;
                 if(pool_i && (!valid_slot[!slot_i] || owner[!slot_i]!=group_i)) fault<=1;
             end else if(active) begin
                 age<=age+1;
                 if(i_v!=reserved) fault<=1;
-                if(reserved && age==STORE_END-1) begin valid_slot[slot]<=1;owner[slot]<=group;end
+                if(age==STORE_END) begin valid_slot[slot]<=1;owner[slot]<=group;end
                 if(lv[0]) nout<=nout+1;
                 if(age==scheduled_cycles) begin
                     active<=0;done<=1;
@@ -142,7 +151,7 @@ module ot_s81_su_cp_lane #(parameter integer MUT=0) (
     input wire [31:0] kv0,kv1,sc0,sc1,
     output wire o_v,
     output reg [31:0] o_d,
-    output wire fault
+    output reg fault
 );
     localparam integer A=5,E=76,D=33,M=6;
     function automatic [31:0] key(input [31:0] x);
@@ -152,12 +161,17 @@ module ot_s81_su_cp_lane #(parameter integer MUT=0) (
         reg [32:0] y;
         begin y={1'b0,x}+33'h7fff+{32'd0,x[16]};bf16={y[31:16],16'd0};end
     endfunction
-    reg vq;
+    // Every arithmetic input first lands on a raw input-face register.
+    reg raw_v,vq;
+    reg [31:0] raw_s0,raw_s1,raw_k0,raw_k1;
     reg [31:0] mq,s0q,s1q,k0q,k1q;
-    always @(posedge clk or negedge rst_n) if(!rst_n) vq<=0;else vq<=i_v;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)begin raw_v<=0;vq<=0;end
+        else begin raw_v<=i_v;vq<=raw_v;end
     always @(posedge clk) begin
-        mq<=key(sc0)>=key(sc1)?sc0:sc1;
-        s0q<=sc0;s1q<=sc1;k0q<=kv0;k1q<=kv1;
+        raw_s0<=sc0;raw_s1<=sc1;raw_k0<=kv0;raw_k1<=kv1;
+        mq<=key(raw_s0)>=key(raw_s1)?raw_s0:raw_s1;
+        s0q<=raw_s0;s1q<=raw_s1;k0q<=raw_k0;k1q<=raw_k1;
     end
     wire [A:0] av;
     ot_hdc_vline #(.D(A)) u_av(clk,rst_n,vq,av);
@@ -188,5 +202,8 @@ module ot_s81_su_cp_lane #(parameter integer MUT=0) (
     always @(posedge clk or negedge rst_n) if(!rst_n)outv<=0;else outv<=ov[M+A];
     always @(posedge clk) o_d<=bf16(sum);
     assign o_v=outv;
-    assign fault=af0|af1|ef0|ef1|df|pf0|pf1|mf0|mf1|sf|(ev0^ev1)|(pv0^pv1);
+    // Sticky registered fault pin; diagnostics never gate the static pipeline.
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)fault<=0;
+        else if(af0|af1|ef0|ef1|df|pf0|pf1|mf0|mf1|sf|(ev0^ev1)|(pv0^pv1))fault<=1;
 endmodule

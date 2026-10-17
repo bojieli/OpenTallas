@@ -35,7 +35,7 @@ protocol_mutant=None
 if variant=='vm' and mode==0:
  p=subprocess.run([str(out/'obj/sim'),f'+DIR={base}/L02','+LATE=1'],capture_output=True,text=True)
  (out/'run_late_L02.log').write_text(p.stdout+p.stderr)
- ok=p.returncode!=0 and 'CP_VM FAIL' in p.stdout and 'cycles139 scheduled139 fault1' in p.stdout and 'cycles272 scheduled272 fault1' in p.stdout
+ ok=p.returncode!=0 and 'CP_VM FAIL' in p.stdout and 'cycles140 scheduled140 fault1' in p.stdout and 'cycles275 scheduled275 fault1' in p.stdout
  protocol_mutant=dict(satisfied=ok,rc=p.returncode,summary=[l for l in p.stdout.splitlines() if l.startswith(('CP_VM_DONE','CP_VM_RESULT'))])
  checks.append(dict(layer=2,expected='late VM response FAIL on unchanged schedule',satisfied=ok))
  print('PROTOCOL_MUTANT',ok,p.stdout[-500:],flush=True)

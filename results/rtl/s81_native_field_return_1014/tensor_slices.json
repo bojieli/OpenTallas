@@ -682,11 +682,348 @@
       "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
       "native_capture_base": null,
       "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 0,
+      "rank": 0,
+      "phase": "L0.router@s0",
+      "matrix": "layers.0.ffn.gate",
+      "alias": "gate",
+      "rows": [
+        0,
+        96
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 96,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 0,
+      "rank": 1,
+      "phase": "L0.router@s0",
+      "matrix": "layers.0.ffn.gate",
+      "alias": "gate",
+      "rows": [
+        96,
+        192
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 96,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 0,
+      "rank": 2,
+      "phase": "L0.router@s0",
+      "matrix": "layers.0.ffn.gate",
+      "alias": "gate",
+      "rows": [
+        192,
+        288
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 96,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 0,
+      "rank": 3,
+      "phase": "L0.router@s0",
+      "matrix": "layers.0.ffn.gate",
+      "alias": "gate",
+      "rows": [
+        288,
+        384
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 96,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 0,
+      "phase": "L2.a_proj.bf16@s6.compressor.wkv+compressor.wgate",
+      "matrix": "layers.2.attn.compressor.wkv",
+      "alias": "compressor.wkv",
+      "rows": [
+        0,
+        128
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 128,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 0,
+      "phase": "L2.a_proj.bf16@s6.compressor.wkv+compressor.wgate",
+      "matrix": "layers.2.attn.compressor.wgate",
+      "alias": "compressor.wgate",
+      "rows": [
+        0,
+        128
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 128,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 0,
+      "phase": "L2.router@s6",
+      "matrix": "layers.2.ffn.gate",
+      "alias": "gate",
+      "rows": [
+        0,
+        96
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 96,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 1,
+      "phase": "L2.a_proj.bf16@s6.compressor.wkv+compressor.wgate",
+      "matrix": "layers.2.attn.compressor.wkv",
+      "alias": "compressor.wkv",
+      "rows": [
+        128,
+        256
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 128,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 1,
+      "phase": "L2.a_proj.bf16@s6.compressor.wkv+compressor.wgate",
+      "matrix": "layers.2.attn.compressor.wgate",
+      "alias": "compressor.wgate",
+      "rows": [
+        128,
+        256
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 128,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 1,
+      "phase": "L2.router@s6",
+      "matrix": "layers.2.ffn.gate",
+      "alias": "gate",
+      "rows": [
+        96,
+        192
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 96,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 2,
+      "phase": "L2.a_proj.bf16@s6.compressor.wkv+compressor.wgate",
+      "matrix": "layers.2.attn.compressor.wkv",
+      "alias": "compressor.wkv",
+      "rows": [
+        256,
+        384
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 128,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 2,
+      "phase": "L2.a_proj.bf16@s6.compressor.wkv+compressor.wgate",
+      "matrix": "layers.2.attn.compressor.wgate",
+      "alias": "compressor.wgate",
+      "rows": [
+        256,
+        384
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 128,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 2,
+      "phase": "L2.router@s6",
+      "matrix": "layers.2.ffn.gate",
+      "alias": "gate",
+      "rows": [
+        192,
+        288
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 96,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 3,
+      "phase": "L2.a_proj.bf16@s6.compressor.wkv+compressor.wgate",
+      "matrix": "layers.2.attn.compressor.wkv",
+      "alias": "compressor.wkv",
+      "rows": [
+        384,
+        512
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 128,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 3,
+      "phase": "L2.a_proj.bf16@s6.compressor.wkv+compressor.wgate",
+      "matrix": "layers.2.attn.compressor.wgate",
+      "alias": "compressor.wgate",
+      "rows": [
+        384,
+        512
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 128,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
+    },
+    {
+      "layer": 2,
+      "rank": 3,
+      "phase": "L2.router@s6",
+      "matrix": "layers.2.ffn.gate",
+      "alias": "gate",
+      "rows": [
+        288,
+        384
+      ],
+      "cols": [
+        0,
+        5120
+      ],
+      "entry_rows": 96,
+      "field_output_format": "fp32",
+      "weight_format": "bf16",
+      "output_scalar_view": "16 FP32-shaped words per512b capture row; BF16 outputs RNE/widened with low16zero",
+      "native_capture_base": null,
+      "native_global_row_tags_generated": false
     }
   ],
   "notes": [
     "Actual production1792 binding plans, not private fixtureVM allocation",
     "Rows and cols are literal global tensor slices; repeated indexer matrices on fourranks are replicated, not headsharded",
-    "a_proj allgather448words/rank = wq_a320 + wkv128. Fullcombined1280+512 =1792words; nativecapturelanepermutation and TPvisibility remainunimplemented here."
+    "a_proj allgather448words/rank = wq_a320 + wkv128. Fullcombined1280+512 =1792words; nativecapturelanepermutation and TPvisibility remainunimplemented here.",
+    "Ratio2 compressor adds128kv+128score FP32 words/rank to ordinary448words/rank: total704words=44records/rank. Mainrouter is96FP32words/rank=6records; DSpark router binding not included."
   ]
 }
