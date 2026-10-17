@@ -16,9 +16,12 @@ module tb_hgi_coll_inj_copy;
    ea=a;er=r;
    for(integer w=0;w<5;w=w+1)a[w*32+:32]=$random;
    r=$random;
-   @(posedge clk);#0.1;
+   #0.1;                                  // new input applied, edge not yet taken: output still holds the old word
    checks=checks+1;cov[er]=cov[er]+1;
-   if(ao!==ea||ro!==er)bad=bad+1;
+   if(c>0 && (ao!==ea||ro!==er))bad=bad+1;
+   @(posedge clk);#0.1;                   // one edge later every bit (addr and rd) carries the new word
+   checks=checks+1;
+   if(ao!==a||ro!==r)bad=bad+1;
   end
   for(integer k=0;k<4;k=k+1)begin $display("INJCOPY rd%0d seen%0d",k,cov[k]);if(cov[k]==0)bad=bad+1;end
   if(bad!=0)$fatal(1,"INJCOPY FAIL mismatches%0d checks%0d",bad,checks);
