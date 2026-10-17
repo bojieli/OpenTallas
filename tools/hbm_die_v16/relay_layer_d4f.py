@@ -81,16 +81,30 @@ def main():
     insts, clocks, edges, splice, consts, problems = [], [], [], [], [], []
     tiles = collections.Counter(); hops_over = []
     used_regions = collections.Counter()
+    # bus bits per row: driver bits on the row's ports whose sink-instance set is the row's; a row whose ports no longer
+    # exist (remastered driver, e.g. the writer per-SM port split) takes the UNCLAIMED driver bits with the same sink set
+    rowbits, claimed, notes = {}, collections.defaultdict(set), []
+    for bi, r in enumerate(st['rows']):
+        di, ports = r['driver'].split('.', 1); ports = set(ports.split('+'))
+        rowbits[bi] = sorted((p, k, ls) for p, k, ls in by_drv.get(di, []) if p in ports and {x[0] for x in ls} == set(r['sinks']))
+        claimed[di] |= {(p, k) for p, k, _ in rowbits[bi]}
+    for bi, r in enumerate(st['rows']):
+        di = r['driver'].split('.', 1)[0]
+        if not rowbits[bi] and di in inst:
+            rowbits[bi] = sorted((p, k, ls) for p, k, ls in by_drv[di] if (p, k) not in claimed[di] and {x[0] for x in ls} == set(r['sinks']))
+            claimed[di] |= {(p, k) for p, k, _ in rowbits[bi]}
+            if rowbits[bi]:
+                notes.append(f'{r["driver"]}: ports remastered -> {len(rowbits[bi])} bits on {sorted({p for p, _, _ in rowbits[bi]})[:6]}')
     for bi, r in enumerate(st['rows']):
         di, ports = r['driver'].split('.', 1); ports = set(ports.split('+'))
         sinks = list(r['sinks']); sset = set(sinks)
         if di not in inst:
             problems.append(f'{r["driver"]}: driver not in contract'); continue
-        bits = sorted((p, k, ls) for p, k, ls in by_drv[di] if p in ports and {x[0] for x in ls} == sset)
+        bits = rowbits[bi]
+        if not bits:
+            problems.append(f'{r["driver"]}: no contract bits (list {r["bits"]})'); continue
         if len(bits) != r['bits']:
-            problems.append(f'{r["driver"]}: {len(bits)} contract bits vs list {r["bits"]}')
-            if not bits:
-                continue
+            notes.append(f'{r["driver"]}: {len(bits)} contract bits relayed (list {r["bits"]})')
         n = len(bits); dom = r['domain']; cls = r['cls']
         sl = [dict(x) for x in r['stations']]
         rd = region(di); rs_ = {s_: region(s_) for s_ in sinks}
@@ -253,7 +267,7 @@ def main():
     rep = dict(schema='opentallas.hbm.relays_d4f_report.v1', tile_categories=dict(sorted(cat.items())), reach_um=R, region_source=region_src, buses=len(splice),
                tiles=dict(sorted(tiles.items())), kinds=dict(collections.Counter(x['kind'] for x in consts)),
                fork_buses=sum(1 for x in consts if x['fork']), inter_region_buses=sum(1 for x in consts if x['inter_region']),
-               equal_age_max_depth_by_domain=dict(eq), hops_over_reach=hops_over, problems=problems, compiler=consts)
+               equal_age_max_depth_by_domain=dict(eq), hops_over_reach=hops_over, problems=problems, notes=notes, compiler=consts)
     Path(a.report).write_text(json.dumps(rep, indent=1) + '\n')
     print(json.dumps({k: rep[k] for k in ('buses', 'tile_categories', 'kinds', 'fork_buses', 'inter_region_buses', 'equal_age_max_depth_by_domain')}),
           len(hops_over), 'hops over reach,', len(problems), 'problems', problems[:4])
