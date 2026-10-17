@@ -37,6 +37,8 @@ if true;then
 fi
 # CORE2=1 (k7, opt-in): the core under test is ot_hgi_sfu_core_split2 (W/E lane ports, regional clock roots, reset relay)
 if [ "${CORE2:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_core_split2.sv rtl/lib/ot_rst_relay.sv); defs+=(-DSFU_CORE_SPLIT2); fi
+# CORE3=1 (k9, opt-in): ot_hgi_sfu_core_split3 = split2 re-sliced into W/N/E/S lane face groups (pure port wrapper)
+if [ "${CORE3:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_core_split2.sv $P/ot_hgi_sfu_core_split3.sv rtl/lib/ot_rst_relay.sv); defs+=(-DSFU_CORE_SPLIT3); fi
 # SYNC_RST=1 (k8, owner standard 10-16): synchronous regional resets in the SFU core files (OT_SFU_SYNC_RST)
 if [ "${SYNC_RST:-0}" = 1 ];then defs+=(-DOT_SFU_SYNC_RST); fi
 case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; clkpw) defs+=(-DOT_SFU_CORE2_MUT_CLKPW);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac

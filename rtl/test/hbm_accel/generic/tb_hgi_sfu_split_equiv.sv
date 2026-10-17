@@ -102,7 +102,28 @@ reg io_cfg_we=0,io_start_v=0;
  wire [15:0] c_vire,c_rov,c_kvwe;
  wire [383:0] c_viaddr,c_kvwaddr;
  wire [511:0] c_rox,c_kvwdata;
-`ifdef SFU_CORE_SPLIT2
+`ifdef SFU_CORE_SPLIT3
+ // k9 (H-SU 10-17): ot_hgi_sfu_core_split3 -- split2 re-sliced into four face groups (lanes 0-3 _w, 4-7 _n, 8-11 _e,
+ // 12-15 _s); a pure port wrapper, so the 16-lane buses are the face groups concatenated in lane order.
+`ifdef OT_SFU_CORE2_MUT_CLKPW
+ wire eq_clk_pw=1'b0;
+`else
+ wire eq_clk_pw=clk;
+`endif
+ ot_hgi_sfu_core_split3 #(.LG_PATH(EQ_LG)) eq_core(.clk(clk),.clk_pw(eq_clk_pw),.clk_pe(clk),.rst_n(rst_n),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),
+  .clk_lane({16{clk}}),.clk_map({16{clk}}),.rst_lane_n({16{rst_n}}),.rst_map_n({16{rst_n}}),
+  .io_word(s_io),.compiler_control(s_ctl),
+  .local_rq(c_rq),.local_rr(rr_d[D-2]),.local_wq(c_wq),.local_w_done(wd_d[D-2]),
+  .vi_re_w(c_vire[3:0]),.vi_re_n(c_vire[7:4]),.vi_re_e(c_vire[11:8]),.vi_re_s(c_vire[15:12]),
+  .vi_addr_w(c_viaddr[95:0]),.vi_addr_n(c_viaddr[191:96]),.vi_addr_e(c_viaddr[287:192]),.vi_addr_s(c_viaddr[383:288]),
+  .vi_q_w(vq_d[D-1][127:0]),.vi_q_n(vq_d[D-1][255:128]),.vi_q_e(vq_d[D-1][383:256]),.vi_q_s(vq_d[D-1][511:384]),
+  .ro_v_w(c_rov[3:0]),.ro_v_n(c_rov[7:4]),.ro_v_e(c_rov[11:8]),.ro_v_s(c_rov[15:12]),
+  .kv_we_w(c_kvwe[3:0]),.kv_we_n(c_kvwe[7:4]),.kv_we_e(c_kvwe[11:8]),.kv_we_s(c_kvwe[15:12]),
+  .ro_x_w(c_rox[127:0]),.ro_x_n(c_rox[255:128]),.ro_x_e(c_rox[383:256]),.ro_x_s(c_rox[511:384]),
+  .kv_wdata_w(c_kvwdata[127:0]),.kv_wdata_n(c_kvwdata[255:128]),.kv_wdata_e(c_kvwdata[383:256]),.kv_wdata_s(c_kvwdata[511:384]),
+  .kv_waddr_w(c_kvwaddr[95:0]),.kv_waddr_n(c_kvwaddr[191:96]),.kv_waddr_e(c_kvwaddr[287:192]),.kv_waddr_s(c_kvwaddr[383:288]),
+  .fault(s_cfault));
+`elsif SFU_CORE_SPLIT2
  // k7 (H-SU 10-16): ot_hgi_sfu_core_split2 -- W/E lane port split (lanes 0..7 = low half = _w), regional clock roots
  // clk_pw/clk_pe tied to the same clock, reset relay. OT_SFU_CORE2_MUT_CLKPW (negative control): W pin-register
  // clock root left undriven -> local_* never update -> must mismatch.
