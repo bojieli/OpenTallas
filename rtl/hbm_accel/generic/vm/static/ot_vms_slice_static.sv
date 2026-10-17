@@ -12,7 +12,8 @@ module ot_vms_slice_static #(
     parameter integer BMUT=0,RMUT=0,
     parameter integer NATIVE_SHAPE=0,
     parameter integer STRAP_QUADRANT=-1, // opt-in physical masters; -1 retains historical bank
-    parameter integer Q2_MERGE=0 // NW (q2) bank = q0 master + hfd_vms_wq2_merge (ot_vms_bank_native_physical)
+    parameter integer Q2_MERGE=0, // NW (q2) bank = q0 master + hfd_vms_wq2_merge (ot_vms_bank_native_physical)
+    parameter integer BANK_PIN_IN=0 // literal bank input pin flops (ot_vms_bank_native_physical PIN_IN); ring commit 5 + this
 )(
     input wire [7:0] clk_bank,
     input wire clk_hub,
@@ -91,7 +92,7 @@ module ot_vms_slice_static #(
         end
         if(STRAP_QUADRANT>=0)begin:g_physical_strap
         if(NATIVE_SHAPE)begin:g_native
-        ot_vms_bank_native_physical #(.RG(RG),.WG(WG),.QUADRANT(STRAP_QUADRANT),.MUT(BMUT),.Q2_MERGE(Q2_MERGE)) u_bank(
+        ot_vms_bank_native_physical #(.RG(RG),.WG(WG),.QUADRANT(STRAP_QUADRANT),.MUT(BMUT),.Q2_MERGE(Q2_MERGE),.PIN_IN(BANK_PIN_IN)) u_bank(
             .clk(clk_bank[b]),.rst_n(rst_n),.sid(sid),.bid(3'(b)),
             .rslot_v(rslot_v[b]),.rslot(rslot[b*RB+:RB]),
             .wslot_v(wslot_v[b]),.wslot(wslot[b*WB+:WB]),
@@ -129,13 +130,13 @@ module ot_vms_slice_static #(
             .status(bank_status[b*18+:18]));
         end
     end endgenerate
-    ot_vms_rstop_static #(.MUT(RMUT)) u_cw(
+    ot_vms_rstop_static #(.COMMIT_DELAY(5+BANK_PIN_IN),.MUT(RMUT)) u_cw(
         .clk(clk_ring[0]),.rst_n(rst_n),.sid(sid),.dir(1'b0),
         .tx_enable(ring_tx_enable[0]),.tx_source(ring_tx_source[0+:3]),
         .l_in(cw_in),.l_out(cw_out),.pi(pi0),.eg(eg),.xq(xq0),.xq_done(xd0),
         .rce(rce0),.ri(ri0),.wko(wk01),.wki(wk10),.cco(cco0),
         .ack_o(ack01),.ack_i(ack10),.mirror_busy(mirror_busy[0]),.fault(ring_fault[0]));
-    ot_vms_rstop_static #(.MUT(RMUT)) u_ccw(
+    ot_vms_rstop_static #(.COMMIT_DELAY(5+BANK_PIN_IN),.MUT(RMUT)) u_ccw(
         .clk(clk_ring[1]),.rst_n(rst_n),.sid(sid),.dir(1'b1),
         .tx_enable(ring_tx_enable[1]),.tx_source(ring_tx_source[3+:3]),
         .l_in(ccw_in),.l_out(ccw_out),.pi(pi1),.eg(eg),.xq(xq1),.xq_done(xd1),
