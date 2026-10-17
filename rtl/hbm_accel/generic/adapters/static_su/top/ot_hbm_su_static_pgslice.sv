@@ -161,14 +161,13 @@ module ot_hbm_su_static_pgslice #(
   if(PIN_REG)begin:g_pr
 `ifdef OT_HARD_CHILDREN
   // OT_HARD_CHILDREN (H-SU pgslice cluster, 2026-10-16): the lane is its hardened leaf view (LAT4/LEAF1, pin-registered,
-  // PIN_RST 1): KIND0 LIGHT / KIND1 HEAVY / KIND2 FULL wrappers. The cluster configuration must equal the leaves'.
+  // PIN_RST 1): KIND0 LIGHT (closed r2, stage roots) / KIND1 HEAVY + KIND2 FULL two-root r1 leaves (pin root clk_lane[0], lane root clk_lane[1]; KIND2 carries the SIDE pipe). The cluster configuration must equal the leaves'.
   if(!(MLAT==4&&ALAT==3&&LEAF==1&&FETCH_EXTRA_EDGES==2))begin:g_bad_cfg $error("OT_HARD_CHILDREN needs MLAT4/ALAT3/LEAF1/FETCH2 (the hardened lane leaves)"); end
   if(KIND==2)begin:g_k2
-  ot_hbm_su_static_kind2_lat4_leaf1_physical u_lane(
+  ot_hbm_su_static_kind2_lat4_leaf1_r1_physical u_lane(
 
-   .clk_stage_0(clk_lane[n*8+0]),.clk_stage_1(clk_lane[n*8+1]),.clk_stage_2(clk_lane[n*8+2]),.clk_stage_3(clk_lane[n*8+3]),
-   .clk_stage_4(clk_lane[n*8+4]),.clk_stage_5(clk_lane[n*8+5]),.clk_stage_6(clk_lane[n*8+6]),.clk_stage_7(clk_lane[n*8+7]),
-   .clk_insert_0(clk_insert[n*4+0]),.clk_insert_1(clk_insert[n*4+1]),.clk_insert_2(clk_insert[n*4+2]),.clk_insert_3(clk_insert[n*4+3]),.rst_n(rst_lane_n[n]),.lane_id(11'(L)),
+   .clk_pin(clk_lane[n*8+0]),.clk(clk_lane[n*8+1]),  // two-root leaf: pin-register root / lane root
+  .rst_n(rst_lane_n[n]),.lane_id(11'(L)),
    .cx_srcs(c_srcs),.ld(c_ld),.ld_bank(c_ld_bank),.ld_c(terms),.emit(c_emit),.bank(c_bank),.o_v(c_o_v),.i_v(c_i_v),
    .no(c_no),.ni(c_ni),.ls(c_ls),.lvw(c_lvw),.vb(c_vb),.krow(c_krow),.obase(c_obase),.aibase(c_aibase),.aind(c_aind),
    .gsh(c_gsh),.cpair(c_cpair),.dst(c_dst),.srcs(c_srcs),.cx_arnd(c_cx_arnd),.cx_arelu(c_cx_arelu),.cx_amin(c_cx_amin),
@@ -178,14 +177,13 @@ module ot_hbm_su_static_pgslice #(
    .vi_q(vi_q[n*32+:32]),.rd_q(rd_q[n*128+:128]),.vi_re(vi_re[n]),.vm_we(vm_we[n]),.kv_we(kv_we[n]),.ro_v(ro_v[n]),
    .fault(l_fault[n]),.coll(l_coll[n]),.vi_addr(vi_addr[n*24+:24]),.vm_waddr(vm_waddr[n*24+:24]),
    .kv_waddr(kv_waddr[n*24+:24]),.rd_addr(rd_addr[n*96+:96]),.rd_re(rd_re[n*4+:4]),.rd_src(rd_src[n*8+:8]),
-   .vm_wdata(vm_wdata[n*32+:32]),.kv_wdata(kv_wdata[n*32+:32]),.ro_x(ro_x[n*32+:32]),
-   .side_v(sv),.side_x(sx),.side_y(side_y));
+   .vm_wdata(vm_wdata[n*32+:32]),.kv_wdata(kv_wdata[n*32+:32]),.ro_x(ro_x[n*32+:32]));
+  assign sv=1'b0; assign sx=32'd0;   // the FULL leaf carries its SIDE pipe inside
   end else if(KIND==1)begin:g_k1
-  ot_hbm_su_static_kind1_lat4_leaf1_physical u_lane(
+  ot_hbm_su_static_kind1_lat4_leaf1_r1_physical u_lane(
 
-   .clk_stage_0(clk_lane[n*8+0]),.clk_stage_1(clk_lane[n*8+1]),.clk_stage_2(clk_lane[n*8+2]),.clk_stage_3(clk_lane[n*8+3]),
-   .clk_stage_4(clk_lane[n*8+4]),.clk_stage_5(clk_lane[n*8+5]),.clk_stage_6(clk_lane[n*8+6]),.clk_stage_7(clk_lane[n*8+7]),
-   .clk_insert_0(clk_insert[n*4+0]),.clk_insert_1(clk_insert[n*4+1]),.clk_insert_2(clk_insert[n*4+2]),.clk_insert_3(clk_insert[n*4+3]),.rst_n(rst_lane_n[n]),.lane_id(11'(L)),
+   .clk_pin(clk_lane[n*8+0]),.clk(clk_lane[n*8+1]),  // two-root leaf: pin-register root / lane root
+  .rst_n(rst_lane_n[n]),.lane_id(11'(L)),
    .cx_srcs(c_srcs),.ld(c_ld),.ld_bank(c_ld_bank),.ld_c(terms),.emit(c_emit),.bank(c_bank),.o_v(c_o_v),.i_v(c_i_v),
    .no(c_no),.ni(c_ni),.ls(c_ls),.lvw(c_lvw),.vb(c_vb),.krow(c_krow),.obase(c_obase),.aibase(c_aibase),.aind(c_aind),
    .gsh(c_gsh),.cpair(c_cpair),.dst(c_dst),.srcs(c_srcs),.cx_arnd(c_cx_arnd),.cx_arelu(c_cx_arelu),.cx_amin(c_cx_amin),
@@ -247,8 +245,12 @@ module ot_hbm_su_static_pgslice #(
   end
  end
  if(QID==0&&G==0)begin:g_side_pipe
+`ifdef OT_HARD_CHILDREN
+  assign side_y=32'd0; assign side_fault=1'b0;   // the SIDE pipe is inside the FULL r1 leaf
+`else
   ot_hbm_su_static_side u_side(.clk(clk_side),.rst_n(rst_s),.v(side_v),.fn(side_fn),.x(side_x),.fn_out(side_fn_out),
    .y(side_y),.fault(side_fault));
+`endif
  end else begin:g_no_side
   // no FULL lane in this slice: the side result input of its SFU/LIGHT lanes is not used by the lane
   assign side_y=32'd0; assign side_fault=1'b0;

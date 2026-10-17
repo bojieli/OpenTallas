@@ -22,7 +22,7 @@ obj="$out/obj_m$mut"
  $S/top/ot_hbm_su_static_pgslice.sv $S/top/ot_hbm_su_static_qcore.sv $S/top/ot_hbm_su_static_quarter.sv \
  $S/top/ot_hbm_su_static_top.sv $S/top/tb_hbm_su_static_top.sv rtl/lib/ot_rst_relay.sv $S/arithmetic/ot_hbm_su_static_lane_pinreg.sv \
  $S/arithmetic/ot_hbm_su_static_kind0_lat4_leaf1_physical.sv $S/arithmetic/ot_hbm_su_static_kind1_lat4_leaf1_physical.sv \
- $S/arithmetic/ot_hbm_su_static_kind2_lat4_leaf1_physical.sv $S/data_store/ot_hbm_su_static_bank6_clock_physical.sv rtl/lib/ot_sync_rst_relay.sv \
+ $S/arithmetic/ot_hbm_su_static_kind2_lat4_leaf1_physical.sv $S/arithmetic/ot_hbm_su_static_kind1_lat4_leaf1_r1_physical.sv $S/arithmetic/ot_hbm_su_static_kind2_lat4_leaf1_r1_physical.sv $S/data_store/ot_hbm_su_static_bank6_clock_physical.sv rtl/lib/ot_sync_rst_relay.sv \
  rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv \
  rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv \
  rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv \
