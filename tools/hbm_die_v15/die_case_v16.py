@@ -6,7 +6,8 @@
 Same pattern as die_case.py (d2: service engine + SM), extended to EVERY v16 source-contract instance
 (results/arch/hbm_die_v16/contract.json): views from tools/hbm_die_v15/v16_views.py (+ v16_synth_drive.py / v16_fetch.py),
 nets bit-exact from the contract edges, die clock trees per contract clock domain (die_clock_tree.py), die repeaters
-(repair_design -max_wire_length 400), global route, TT setup / FF hold STA.  Open inputs stay open (manifest, with
+(repair_design -max_wire_length = --max-wire-um, default the measured HBM die reach in
+results/arch/die_reach_1016.json via tools/die_reach.py; above it only with --allow-over-reach REASON), global route, TT setup / FF hold STA.  Open inputs stay open (manifest, with
 owner); straps are constants of the design and stay open in this timing case (listed); nothing is tied or stubbed.
 The v16 strict port bind FAILs (51 exposed input ports) -> every result of this case is labelled NOT_A_DIE_RESULT.
 
@@ -42,6 +43,8 @@ from die_case import synth_lef, entry_cap, ports_of_lib, rect_of, _minus, grant_
 from view_case import lef_pins, lef_xy  # noqa: E402
 import clock_sites
 import die_clock_tree as dct  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import die_reach  # noqa: E402
 
 CONTRACT = ROOT / 'results/arch/hbm_die_v16/contract.json'
 GRANTS = ROOT / 'results/arch/hier_contract_1015/hbm_v15.json'
@@ -247,7 +250,9 @@ def main():
     ap.add_argument('--d4b-homes', action='store_true',
                     help='d4b (H-DIE 10-16): LG banks beside their user (pgslice / lg_pair / hc_q), not inside VM plan '
                          'blocks; xload ctlw at the Manhattan minimax point of its SM peers')
+    die_reach.add_args(ap, 'hbm')
     a = ap.parse_args()
+    mw = die_reach.from_args(a, 'hbm')
     C = json.loads(a.contract.read_text()); G = json.loads(a.grants.read_text()); P = json.loads(a.plan.read_text())
     import reticle; RETICLE = reticle.require_contract(G, "die_case_v16 GEN")   # OWNER 10-16: >= 0.5 mm margin in W AND H
     V = json.loads((a.views / 'views.json').read_text())
@@ -819,6 +824,7 @@ def main():
     manifest['pin_density_over'] = pin_density_over
     if param_aliases:
         manifest['label'] += f' PARAM_ALIAS_DIAGNOSTIC: {len(param_aliases)} instances use a different-parameter view'
+    manifest['max_wire'] = dict(mw, applied=bool(a.die_repeaters))
     manifest['pc_strip'] = strip
     manifest['d4b_homes'] = bool(a.d4b_homes)
     manifest['layout_image_status'] = 'DEFERRED' if a.no_plot else 'GENERATED'
@@ -1070,7 +1076,7 @@ puts OT_DONE
 estimate_parasitics -placement
 set_dont_touch [get_nets -quiet {{dk?_* n_dk?_* ckg_*}}]
 set r0 [clock seconds]
-repair_design -max_wire_length 400 -buffer_gain 4.0
+{die_reach.repair_tcl(mw, '-buffer_gain 4.0')}
 puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"'''
     (out / 'run.tcl').write_text(tcl.replace('{REPEAT}', rep_))
     shutil.copy(ROOT / 'tools/die_clock_check.tcl', out / 'die_clock_check.tcl')

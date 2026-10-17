@@ -10,7 +10,11 @@ Run inside the ORFS container:
 spec.json: {"trees": [{"name": N, "root": "inst/pin", "period": ps, "balance_group": G (optional, shared target),
                         "select": {"master_prefix": [...]} | {"exclude_master_prefix": [...]} | "all"},
                        {"name": "col", "root_master_prefix": "dsfd_cfifo", "root_port": "co[0]", "period": ps}, ...],
-             "rc_layer": "M8", "leaf_um": 60, "leaf_max": 12}
+             "rc_layer": "M8", "leaf_um": 60, "leaf_max": 12,
+             "neighbours": [[treeA, treeB], ...], "neighbour_budget_ps": 60}
+  NEIGHBOUR-RELATIVE (owner 2026-10-16): trees without a shared balance_group are regions; each listed neighbour pair
+  (communicating regions) is trimmed so that every flop arrival of one is within neighbour_budget_ps of every flop
+  arrival of the other at TT and FF.  There is no die-wide target.  Pads are added only where a pair needs them.
   a tree with root_master_prefix expands to one tree per instance of that master (name = <name>_<inst>).
 targets: the die kit's kit.json (masters[m].insertion_per_clock_pin_ps / insertion_in_arcs_ps, [ss, ff, tt]):
   the in-arc insertion R of each sink pin.  The trim balances arrival + R (flop arrival), i.e. pin at phi - R.
@@ -350,8 +354,15 @@ def build(a):
         ri.findITerm('Y').connect(nn)
         ri.findITerm('A').connect(rnet)
         rec['parent'][rn] = root
+        rec.setdefault('root_buffer', {})[root] = rn
         log('root buffer', rn, 'drives', len(loads), 'tree inputs of', root)
     log('instantiated', len(rec['cells']), 'cells')
+    if spec.get('clock_at_root_buffer'):
+        # the PLL model has no output drive / timing arc (Qwen KV qkd_pllm: STA slew 114 ns at the root buffer input);
+        # the clock is defined at the root buffer input beside the PLL pin, so the delivered tree is what is measured
+        clocks = [(n, rec.get('root_buffer', {}).get(p) + '/A' if rec.get('root_buffer', {}).get(p) else p, per)
+                  for n, p, per in clocks]
+        rec['clock_source'] = 'root buffer input (spec clock_at_root_buffer)'
     D.setup_sta(clocks, spec.get('rc_layer', 'M8'))
     # measured trim.  Two delay elements: PAD (BUFx12f stacked on one site: gate delay, FF/TT ~0.77) and WPAD (BUFx24
     # local/far buffer PAIRS WPAD_UM apart: buffered wire like the tree's own repeater stages, FF/TT ~0.84).  One corner: PAD only.
@@ -404,10 +415,30 @@ def build(a):
         for g_ in gstats.values():
             g_['flop_spread'] = round(g_['flop_max'] - g_['flop_min'], 1)
             g_['ff_spread'] = round(g_['ff_max'] - g_['ff_min'], 1) if two else None
-        rec['iterations'].append(dict(iter=it_, elements=json.loads(json.dumps(el)), pads=dict(pad_n), trees=stats, groups=gstats))
+        # neighbour pairs: worst flop-arrival difference between any sink of one region and any of the other
+        nstats = {}
+        for x, y in spec.get('neighbours', []):
+            ex = [s_ for t_, s_ in stats.items() if tree_group.get(t_, t_) == tree_group.get(x, x)]
+            ey = [s_ for t_, s_ in stats.items() if tree_group.get(t_, t_) == tree_group.get(y, y)]
+            if not ex or not ey:
+                continue
+            mx = lambda e, k: max(v[k] for v in e)
+            mn = lambda e, k, sk: min(v[k] - v[sk] for v in e)
+            d_ = dict(tt=round(max(mx(ex, 'flop_max') - mn(ey, 'flop_max', 'flop_spread'),
+                                   mx(ey, 'flop_max') - mn(ex, 'flop_max', 'flop_spread')), 1))
+            if two:
+                d_['ff'] = round(max(mx(ex, 'ff_max') - mn(ey, 'ff_max', 'ff_spread'),
+                                     mx(ey, 'ff_max') - mn(ex, 'ff_max', 'ff_spread')), 1)
+            nstats[f'{x}|{y}'] = d_
+        rec['iterations'].append(dict(iter=it_, elements=json.loads(json.dumps(el)), pads=dict(pad_n), trees=stats, groups=gstats,
+                                      neighbours=nstats))
         sp = [s_['flop_spread'] for s_ in stats.values()] + [g_['flop_spread'] for g_ in gstats.values()]
+        sp += [v['tt'] - spec.get('neighbour_budget_ps', 60.0) + a.tol for v in nstats.values()]
         if two:
             sp += [s_['ff_spread'] for s_ in stats.values()] + [g_['ff_spread'] for g_ in gstats.values()]
+            sp += [v['ff'] - spec.get('neighbour_budget_ps', 60.0) + a.tol for v in nstats.values()]
+        if nstats:
+            log('iter', it_, 'neighbours', json.dumps(nstats))
         worst = max(sp, default=0)
         cols = [v['flop_spread'] for k, v in stats.items() if k.startswith('col_')]
         log('iter', it_, 'elements', json.dumps(el), 'pads', dict(pad_n), 'worst spread', worst, 'groups', json.dumps(gstats),
@@ -483,16 +514,17 @@ def build(a):
         # the smallest for which EVERY leaf's deficit lies in the cone of the two elements (FF/TT ratio between PAD's
         # and WPAD's), then each leaf solves nP * P + nW * W = (D_tt, D_ff).
         need = {}
+        groups_L, tg = {}, {}
+        (p1, p2), (w1, w2) = el['P'], el['W']
+        rlo, rhi = sorted((p2 / p1, w2 / w1))
         for gk in set(tree_group.get(t, t) for t in by_tree):
             tl = [t for t in by_tree if tree_group.get(t, t) == gk]
             L = [(lb, by_tree[t][lb], by_treef[t].get(lb, by_tree[t][lb])) for t in tl for lb in by_tree[t]]
+            groups_L[gk] = L
             Ttt = max(v[1] for v in L)
             if not two:
-                for lb, ft, _ in L:
-                    need[lb] = (int((Ttt - ft) / el['P'][0] + 0.5), 0)
+                tg[gk] = (Ttt, None, Ttt, None)
                 continue
-            (p1, p2), (w1, w2) = el['P'], el['W']
-            rlo, rhi = sorted((p2 / p1, w2 / w1))
             # closed form: Tf(Tt) = rlo*Tt + A is the least FF target with every leaf's FF deficit >= rlo x its TT
             # deficit; Tt is raised (capped at RAISE_CAP_PS) until no leaf's FF deficit exceeds rhi x its TT deficit.
             # Leaves still outside the cone are solved by clamped least squares (their residual is reported).
@@ -505,8 +537,45 @@ def build(a):
             # against them (re-deriving them each iteration walked the target up by the raise every time); they move
             # only if a leaf overshoots
             if gk in gtarget:
-                Tt = max(gtarget[gk][0], Ttt)
-                Tf = max(gtarget[gk][1], base_ff_max)
+                # a leaf that overshoots the held target by less than tol/2 does NOT raise it (t9: raising the target
+                # to every new maximum walked the group up ~70 ps/iteration and left the slowest-trimmed leaves ~100 ps
+                # behind for ten iterations)
+                Tt = max(gtarget[gk][0], Ttt - 0.5 * a.tol)
+                Tf = max(gtarget[gk][1], base_ff_max - 0.5 * a.tol)
+            tg[gk] = (Tt, Tf, Ttt, base_ff_max)
+        # NEIGHBOUR-RELATIVE targets (owner 2026-10-16): no die-wide target; each communicating neighbour pair of
+        # regions (spec "neighbours", tree or group names) must be within neighbour_budget_ps at TT and FF.  Targets
+        # only rise (delay can only be added): difference-constraint relaxation to the least fixpoint; a raise keeps
+        # its FF/TT ratio inside the element cone [rlo, rhi].
+        nb_pairs = [(tree_group.get(x, x), tree_group.get(y, y)) for x, y in spec.get('neighbours', [])]
+        nbB = float(spec.get('neighbour_budget_ps', 60.0))
+        nb_pairs = [(x, y) for x, y in nb_pairs if x in tg and y in tg and x != y]
+        for _ in range(10 * max(1, len(tg))):
+            moved = False
+            for x, y in nb_pairs + [(y, x) for x, y in nb_pairs]:
+                Tt, Tf, b1, b2 = tg[x]
+                dt = max(0.0, tg[y][0] - nbB - Tt)
+                df = max(0.0, tg[y][1] - nbB - Tf) if two else 0.0
+                if dt <= 1e-6 and df <= 1e-6:
+                    continue
+                if two:
+                    if df < rlo * dt:
+                        df = rlo * dt
+                    elif df > rhi * dt:
+                        dt = df / rhi
+                tg[x] = (Tt + dt, (Tf + df) if two else None, b1, b2)
+                moved = True
+            if not moved:
+                break
+        if nb_pairs:
+            rec.setdefault('neighbour_targets', []).append({k: [round(v[0], 1), round(v[1], 1) if v[1] is not None else None]
+                                                            for k, v in tg.items()})
+        for gk, L in groups_L.items():
+            Tt, Tf, Ttt, _ = tg[gk]
+            if not two:
+                for lb, ft, _ in L:
+                    need[lb] = (int((Tt - ft) / el['P'][0] + 0.5), 0)
+                continue
             gtarget[gk] = (Tt, Tf)
             det = p1 * w2 - w1 * p2
             for lb, ft, ff_ in L:
@@ -517,7 +586,12 @@ def build(a):
                     nP, nW = 0.0, (dt * w1 + df * w2) / (w1 * w1 + w2 * w2)
                 elif nW < 0:
                     nW, nP = 0.0, (dt * p1 + df * p2) / (p1 * p1 + p2 * p2)
-                need[lb] = (int(DAMP * nP + 0.5), int(DAMP * nW + 0.5))
+                # W (a ~100 ps wire round trip) is coarse: take whole W units only below the damped need (floor), then
+                # trim the remainder with P (~15 ps) so W rounding never overshoots the target
+                kW = max(0, int(DAMP * nW))
+                rt_, rf_ = dt - kW * w1, df - kW * w2
+                kP = max(0, int(DAMP * max(0.0, (rt_ * p1 + rf_ * p2) / (p1 * p1 + p2 * p2)) + 0.5))
+                need[lb] = (kP, kW)
             log('group', gk, 'targets tt', round(Tt, 1), 'ff', round(Tf, 1), '(raised tt by', round(Tt - Ttt, 1), ')')
         # HIERARCHICAL TRIM: the part of a type that every leaf below a node needs goes ONCE at that node's input
         # (min over its leaves minus what its parent already carries): group offsets land on the common path at the

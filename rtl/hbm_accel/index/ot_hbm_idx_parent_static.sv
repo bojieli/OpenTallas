@@ -3,24 +3,27 @@
 // every query load/head emit, key beat, radix pass and collective emission.
 // Service supplies actual staged key_lines; its upstream PHY/staging join must
 // be bound separately. No credit or ready input exists in this parent.
-module ot_hbm_idx_parent_static(
+// N_Q (A2P half die, 2026-10-16): number of KV quadrants whose key lines this client scores (one scorer each, slot
+// i = key_lines[i*8792+:8792], key ordinals compacted: slot i holds ordinals i*2736.. ). 4 = the full die (unchanged);
+// 2 = A2P (SW, NW). Absent scorer slots feed the 4-group selector no valid lane (kv 0).
+module ot_hbm_idx_parent_static #(parameter integer N_Q=4)(
  input wire clk_operand,clk_query,clk_quant,clk_quant_delay,input wire[3:0]clk_query_bank,
- input wire[3:0]clk_score,input wire[15:0]clk_engine,clk_meta,clk_tail,
- input wire[63:0]clk_chunk,input wire[2047:0]clk_hslice,
+ input wire[N_Q-1:0]clk_score,input wire[4*N_Q-1:0]clk_engine,clk_meta,clk_tail,
+ input wire[16*N_Q-1:0]clk_chunk,input wire[512*N_Q-1:0]clk_hslice,
  input wire clk_sel,input wire[3:0]clk_sel_q,input wire[11:0]clk_sel_mem,
  input wire clk_link,input wire[7:0]clk_link_mem,input wire rst_n,
  input wire[1:0]sid,input wire frame_start,
  input wire weight_slot,query_slot,input wire[6:0]query_index,input wire[15:0]weight_sector,query_sector,
  output wire[135:0]vm_rq,input wire[2055:0]vm_rr,
  input wire query_emit,input wire[4:0]query_emit_head,
- input wire[6:0]rank,input wire[7:0]gbase,input wire[13:0]nkeys,input wire keep_en,input wire[1367:0]keep_bitmap,
- input wire beat_v,input wire[7:0]beat_index,input wire[35167:0]key_lines,
+ input wire[6:0]rank,input wire[7:0]gbase,input wire[13:0]nkeys,input wire keep_en,input wire[342*N_Q-1:0]keep_bitmap,
+ input wire beat_v,input wire[7:0]beat_index,input wire[8792*N_Q-1:0]key_lines,
  input wire[3:0]sel_op,input wire[1:0]sel_pass,input wire[7:0]sel_addr,
  input wire link_flush,link_emit,input wire[3:0]link_group,
  output wire[3:0]tx_v,output wire[2179:0]tx,
- output wire[2439:0]score_observe,output wire fault
+ output wire[610*N_Q-1:0]score_observe,output wire fault
 );
- wire bv;wire[4:0]bh;wire[1:0]bn;wire[1023:0]bd;wire[15:0]bw;wire vf,qf,lf,sf;wire[3:0]scf;
+ wire bv;wire[4:0]bh;wire[1:0]bn;wire[1023:0]bd;wire[15:0]bw;wire vf,qf,lf,sf;wire[N_Q-1:0]scf;
  ot_hbm_idx_vm_query_static operands(.clk(clk_operand),.rst_n(rst_n),.sid(sid),.weight_slot(weight_slot),.query_slot(query_slot),
  .query_index(query_index),.weight_sector(weight_sector),.query_sector(query_sector),.vm_rq(vm_rq),.vm_rr(vm_rr),
  .block_v(bv),.block_head(bh),.block_number(bn),.block_data(bd),.head_weight(bw),.fault(vf));
@@ -29,7 +32,10 @@ module ot_hbm_idx_parent_static(
  .rst_n(rst_n),.frame_start(frame_start),.block_v(bv),.block_head(bh),.block_number(bn),.block_data(bd),.head_weight(bw),
  .emit_v(query_emit),.emit_head(query_emit_head),.ql_v(qv),.ql_head(qh),.ql_codes(qc),.ql_sc(qs),.ql_w(qw),.fault(qf));
  wire[2367:0]sel_in;wire[3:0]selected_v;wire[2367:0]selected_line;
- for(genvar q=0;q<4;q=q+1)begin:gscore
+ if(N_Q<4)begin:gabsent
+  assign sel_in[2367:N_Q*592]='0;                // absent scorer slots: no valid lane (kv 0) into the 4-group selector
+ end
+ for(genvar q=0;q<N_Q;q=q+1)begin:gscore
   wire[11:0]nq=(nkeys<=q*2736)?12'd0:((nkeys-q*2736>=2736)?12'd2736:12'(nkeys-q*2736));
   wire[609:0]score;
   ot_hbm_idx_score_static scorer(.clk_ctl(clk_score[q]),.clk_engine(clk_engine[q*4+:4]),.clk_meta(clk_meta[q*4+:4]),

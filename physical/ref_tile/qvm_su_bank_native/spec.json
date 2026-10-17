@@ -5,7 +5,7 @@
  "job": {
   "owner": "Claude:Q-VMWB (el1015-qwen-attn.log)",
   "branch": "claude/qvm-su5-1016",
-  "tag": "su5",
+  "tag": "su6",
   "purpose": "su5 native pin-register successor of su3 (same ports/edges/contents/outline/faces; ctrl + output stages as parent pin registers on CTS roots), as qvm_bank ne5.",
   "views_to": "physical/ref_tile/qvm_su_bank_native/views",
   "record_to": "results/rtl/ref_tile/qvm_su_bank_native",
@@ -86,7 +86,7 @@
     ]
    }
   ],
-  "structural_change": "su5 NATIVE successor of su3-b025a43b6 (CLOSED TT +5.78/FF +21.35/DRC0, native FAIL: q launch 300.1 on 512 pins from hard u_out_lo/hi data256 leaves; ra/re capture 168.1 raw, ~223 with the hard u_ctrl leaf's 54.9 ps insertion). Fix (as qvm_bank ne5, CLOSED + native PASS 186.7/187.7): control stage (exact qvm_su_bank_ctrl_native body) and output stage (exact qvm_data256_native body) become parent pin registers on CTS roots ck_ctrl/ck_out_lo/ck_out_hi (hybrid_entries); u_in/u_cap hard leaves and both 1024x256 SRAMs keep direct entries. Ports, outline 371.52x237.6, pin faces, data edges and contents unchanged; cycles_added 0."
+  "structural_change": "su6 (Q-ELEM 1315): su5 composed wd capture ~199.5 TT (raw 130.2 + data256 child R 69.3; wd pins spread over 162 um of the W face). wd ranged [52.0,136.5] on W between ck_in_lo and ck_in_hi, bits 0-255 toward u_in_lo (y 25.92-77.76), 256-511 toward u_in_hi (116.64-168.48); 0 edges, same ports/outline/faces. su5 NATIVE successor of su3-b025a43b6 (CLOSED TT +5.78/FF +21.35/DRC0, native FAIL: q launch 300.1 on 512 pins from hard u_out_lo/hi data256 leaves; ra/re capture 168.1 raw, ~223 with the hard u_ctrl leaf's 54.9 ps insertion). Fix (as qvm_bank ne5, CLOSED + native PASS 186.7/187.7): control stage (exact qvm_su_bank_ctrl_native body) and output stage (exact qvm_data256_native body) become parent pin registers on CTS roots ck_ctrl/ck_out_lo/ck_out_hi (hybrid_entries); u_in/u_cap hard leaves and both 1024x256 SRAMs keep direct entries. Ports, outline 371.52x237.6, pin faces, data edges and contents unchanged; cycles_added 0."
  },
  "name": "qvm_su_bank_native",
  "top": "qvm_su_bank_native",
@@ -271,6 +271,10 @@
   "ck_cap_hi": [
    274.0,
    276.0
+  ],
+  "wd": [
+   52.0,
+   136.5
   ]
  },
  "clock_cts_roots": [
@@ -284,5 +288,6 @@
  },
  "fill_reason": {
   "pin_bound": "Die-assigned QVM operand-bank slot 371.52x237.6 (su3 outline/pin faces, bound by Q-VMWB qfd_sp_vector_memory_par NATIVE_BANKS=1 as the 48 operand banks) is set by the 1,140-pin interface (W 575 / E 512 q) and the two 1024x256 SRAMs, not std-cell area; su5 replaces 3 hard leaves by 552 parent pin flops at the unchanged slot."
- }
+ },
+ "structural_change": "su6 (Q-ELEM 1315): su5 composed wd capture ~199.5 TT (raw 130.2 + data256 child R 69.3; wd pins spread over 162 um of the W face). wd ranged [52.0,136.5] on W between ck_in_lo and ck_in_hi, bits 0-255 toward u_in_lo (y 25.92-77.76), 256-511 toward u_in_hi (116.64-168.48); 0 edges, same ports/outline/faces. "
 }

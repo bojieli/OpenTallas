@@ -15,6 +15,8 @@ st(){ echo "$(date -u +%FT%TZ) $*" >> $M/STATUS.log; }
 st "start src $(cat $S/SOURCE_SHA) recipe $R kind $KIND"
 /srv/opentallas-scratch/admit.sh 40 -- python3 tools/dsrom_s81_fulldie.py real $A --work $M/a_real > $M/real_gen.log 2>&1 || { st "GEN_FAIL $(grep -a 'OT_HOP_GATE\|hop gate' $M/real_gen.log | tail -1)"; exit 1; }
 st "GEN_DONE $(grep -a OT_HOP_GATE $M/real_gen.log | tail -1) $(grep -a OT_VIEW_BINDING $M/real_gen.log | tail -1)"
+# ROOT RELAY-SCHEMA 10-16: die relay stages vs the compiled schedule (OT_RELAY_SCHEDULE; SKIPPED when unset)
+RCL=$(bash tools/die_relay_chain_step.sh $M/a_real/relay_stages.json "${OT_RELAY_SCHEDULE:-}" $M/relay_check.json) && RCR=0 || RCR=$?; st "$RCL"; [ "$RCR" = 0 ] || exit 1
 # r6 2026-10-14 (owner 08:05 NO STUBS): every die chain carries the port-bind check of its own netlist (netlist mode of the
 # same recipe: die.v + die_glue.sv + params sidecar, tools/die_port_bind.py on the die RTL manifest). Recorded, not a GEN stop:
 # a chain whose PORT_BIND is FAIL is PATHFINDING, never a die result.

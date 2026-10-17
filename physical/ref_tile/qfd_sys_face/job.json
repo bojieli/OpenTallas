@@ -1,5 +1,5 @@
 {
- "name": "qfd_sys_face-ec1-b0ac80953",
+ "name": "qfd_sys_face-ec1-4458091af",
  "block": "qfd_sys_face",
  "ref_tile": true,
  "owner": "Claude:ELEM-CENSUS kit helper",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/census-qkit-1016",
-  "commit": "b0ac80953",
+  "commit": "4458091af",
   "extra_paths": [
    "rtl/test/qwen_split",
    "rtl/qwen_split",
@@ -41,7 +41,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "pass_witness": "results/rtl/ref_tile/qfd_sys_face/bench_witness_1016/exact_mut0-4.log"
    },
    {
     "name": "sys_face_t_late_mutant",
@@ -52,7 +53,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/ref_tile/qfd_sys_face/bench_witness_1016/mut1.log"
    },
    {
     "name": "sys_face_emb_index_mutant",
@@ -63,7 +65,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/ref_tile/qfd_sys_face/bench_witness_1016/mut2.log"
    }
   ],
   "calibrate": {
@@ -116,7 +119,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_sys_face/qfd_sys_face-ec1-b0ac80953"
+   "to": "results/rtl/ref_tile/qfd_sys_face/qfd_sys_face-ec1-4458091af"
   }
  ],
  "cycles_added": 2,
