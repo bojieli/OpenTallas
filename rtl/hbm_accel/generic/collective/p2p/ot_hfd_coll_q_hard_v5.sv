@@ -447,6 +447,13 @@ module ot_hgi_coll_argmax_m #(parameter integer TP=96)(
   .cfg_rank(rk_q),.in_slot(slot_q),.in_v(v_q),.in_flit(flit_q),
   .flush_slot(flush_q),.publish_slot(pub_q),.out_v(),.out_flit(),.fault(fault));
 endmodule
+// d4f TP=192 shape (A2P 2-stack groups: 192-rank seen state), hardened under its own name.
+module ot_hgi_coll_argmax_m_tp192(
+ input wire clk,rst_n,start,mode,input wire [7:0] cfg_g,cfg_gbase,cfg_rank,
+ input wire [3:0] in_slot,in_v,input wire [255:0] in_key,input wire [131:0] in_meta,input wire flush_slot,publish_slot,
+ output wire out_v,output wire [544:0] out_flit,output wire fault);
+ ot_hgi_coll_argmax_m #(.TP(192)) u(.*);
+endmodule
 
 module ot_hgi_coll_tkm_m #(parameter integer TP=96)(
  input wire clk,rst_n,start,arg_mode,input wire [31:0] tile_clk,input wire buffer_clk,
@@ -624,12 +631,21 @@ module ot_hfd_coll_q_hard_v5_body #(
    .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
    .protocol_fault(protocol_fault),.cycles(stat_cycles));
   end
-  ot_hgi_coll_argmax_m #(.TP(TP)) u_arg(.clk(clk_arg),.rst_n(rst_n),.start(a_arg_start),.mode(a_arg_mode),
+if(TP==96)begin:t96
+  ot_hgi_coll_argmax_m u_arg(.clk(clk_arg),.rst_n(rst_n),.start(a_arg_start),.mode(a_arg_mode),
    .cfg_g(p_tkm_cfg_g),.cfg_gbase(p_tkm_cfg_gbase),.cfg_rank(a_pub_src),
    .in_slot(a_arg_in_slot),.in_v(dest_v[NPT+8+:4]),
    .in_key({dest_d[(NPT+11)*PWT+:64],dest_d[(NPT+10)*PWT+:64],dest_d[(NPT+9)*PWT+:64],dest_d[(NPT+8)*PWT+:64]}),
    .in_meta({dest_d[(NPT+11)*PWT+512+:33],dest_d[(NPT+10)*PWT+512+:33],dest_d[(NPT+9)*PWT+512+:33],dest_d[(NPT+8)*PWT+512+:33]}),
    .flush_slot(a_arg_flush),.publish_slot(a_arg_publish),.out_v(arg_out_v),.out_flit(arg_out_data),.fault(arg_fault));
+  end else begin:t192
+  ot_hgi_coll_argmax_m_tp192 u_arg(.clk(clk_arg),.rst_n(rst_n),.start(a_arg_start),.mode(a_arg_mode),
+   .cfg_g(p_tkm_cfg_g),.cfg_gbase(p_tkm_cfg_gbase),.cfg_rank(a_pub_src),
+   .in_slot(a_arg_in_slot),.in_v(dest_v[NPT+8+:4]),
+   .in_key({dest_d[(NPT+11)*PWT+:64],dest_d[(NPT+10)*PWT+:64],dest_d[(NPT+9)*PWT+:64],dest_d[(NPT+8)*PWT+:64]}),
+   .in_meta({dest_d[(NPT+11)*PWT+512+:33],dest_d[(NPT+10)*PWT+512+:33],dest_d[(NPT+9)*PWT+512+:33],dest_d[(NPT+8)*PWT+512+:33]}),
+   .flush_slot(a_arg_flush),.publish_slot(a_arg_publish),.out_v(arg_out_v),.out_flit(arg_out_data),.fault(arg_fault));
+  end
   ot_hgi_coll_tkm_m #(.TP(TP)) u_tkm(.clk(clk_tkm[33]),.tile_clk(clk_tkm[31:0]),.buffer_clk(clk_tkm[32]),.rst_n(rst_n),
    .start(p_tkm_start),.arg_mode(a_arg_mode),.cfg_n(p_tkm_cfg_n),.cfg_k(p_tkm_cfg_k),.cfg_nout(p_tkm_cfg_nout),
    .cfg_g(p_tkm_cfg_g),.cfg_gbase(p_tkm_cfg_gbase),.cfg_pf(p_tkm_cfg_pf),.cfg_obase(p_tkm_cfg_obase),
