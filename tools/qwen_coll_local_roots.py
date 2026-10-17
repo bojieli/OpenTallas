@@ -47,7 +47,7 @@ def derive(root=ROOT):
            ["    always @(posedge clk) ir_q <= {in_tag, in_mode, in_last, in_data};"])
     change("iv_q <= 1'b0; ta_v", "ta_v")
     change("            iv_q <= in_valid;\n", "")
-    record("    reg upv_q; reg [PW-1:0] uprec_q;", "upv_q", "uprec_q", "PW", "ir_q", "ta_v && iv_q", "rs_p", 1,
+    record("    reg upv_q; reg [PW-1:0] uprec_q;", "upv_q", "uprec_q", "PW", "ir_q", "ta_v", "rs_p", 1,
            ["    always @(posedge clk) uprec_q <= ir_q;",
             "    always @(posedge clk or negedge rs_p) if (!rs_p) upv_q <= 1'b0; else upv_q <= ta_v && iv_q;"])
     record("    reg dpv_q; reg [PW-1:0] dpr_q;", "dpv_q", "dpr_q", "PW", "dp_rec", "dp_valid", "rs_p", 2,
@@ -59,6 +59,8 @@ def derive(root=ROOT):
     record("    reg drv_q; reg [RW-1:0] drr_q;", "drv_q", "drr_q", "RW", "dr_rec", "dr_valid", "rs_r", 11,
            ["    always @(posedge clk) drr_q <= dr_rec;",
             "    always @(posedge clk or negedge rs_r) if (!rs_r) drv_q <= 1'b0; else drv_q <= dr_valid;"])
+    change("ot_coll_local_record #(.W(PW),.ID(1)) u_region_1", "ot_coll_local_record_qualified #(.W(PW),.ID(1)) u_region_1")
+    change(".dv(ta_v),.d(ir_q),.qv(upv_q)", ".dv(ta_v),.qual(iv_q),.d(ir_q),.qv(upv_q)")
     change("    reg [2:0] srv_q; reg [PW-1:0] srr_q [0:2];", "    wire [2:0] srv_q; wire [PW-1:0] srr_q [0:2];")
     change("        always @(posedge clk) srr_q[gj] <= sr_rec[gj*PW +: PW];", """        for(gsi=0;gsi<4;gsi=gsi+1)begin:g_quarter
             localparam integer RID=(gsi==0)?6+gj:50+gj*3+gsi;
@@ -109,12 +111,13 @@ def derive(root=ROOT):
         ot_coll_local_sring_meta #(.LS(LS),.ID(41)) u_region(
           .ctl_ck(clk_region[41]),.mem_ck(CCLK?clk_mem[6]:clk),.rst_counter_n(rs_s),
           .tc_v(tc_v),.tc_o(tc_o),.tc_l(tc_l),.tc_t(tc_t),
-          .g_run(g_run),.g_r(g_r),.g_od(g_d),.g_l(g_l),.g_t(g_t),.rd(s_rd[512 +:128]));
+          .g_run(g_run),.g_r(g_r),.g_od(g_d),.g_l(g_l),.g_t(g_t),.rd(s_rd[512 +:128]),.td_v(td_v));
       end
     end endgenerate
 
 """+text[end:]
 
+    change("    reg [9:0] warm;\n    always @(posedge clk or negedge rs_s) if (!rs_s) warm <= 0; else if (warm != 10'(LS + 3)) warm <= warm + 10'd1;\n    wire       td_v  = s_rd[549] && (warm == 10'(LS + 3));", "    wire td_v;")
     change("    reg [FW-1:0] lo_q, hi_q; reg red_q;", "    wire [FW-1:0] lo_q, hi_q; reg red_q;")
     change("        always @(posedge clk) if (tbv_r[gr]) begin lo_q[gr*128 +: 128] <= lo[gr*128 +: 128]; hi_q[gr*128 +: 128] <= hi[gr*128 +: 128]; end",
            "        ot_coll_local_pair_capture #(.W(128),.ID(13+gr)) u_region (.clk(clk_region[13+gr]),.rst_n(rs_p),.die_d(die_ps),.token_d(tab[4*(DAB-1)-1]),.local_data(pr_rd[gr*128 +: 128]),.peer_data(dpr_q[gr*128 +: 128]),.lo(lo_q[gr*128 +: 128]),.hi(hi_q[gr*128 +: 128]));")
@@ -140,10 +143,10 @@ def derive(root=ROOT):
     generate for(gr=0;gr<NS;gr=gr+1) begin:g_output_region
         localparam integer RID=(gr==0)?12:33+gr;
         wire qv,ql,qe;wire[2:0]qr;
-        ot_coll_local_output #(.W(128),.ID(RID)) u_region(
+        ot_coll_local_output_td #(.W(128),.ID(RID)) u_region(
           .clk(clk_region[RID]),.rst_n(rs_r),.pkg_d(pkg_s),
           .tf_v_d(tef[3*(DEF-1)-1]),.tf_o_d(tef[3*(DEF-1)-2]),
-          .tf_v(tf_v),.tf_l(tf_l),.rf_e(rf_e),.gd_v(gd_v),
+          .tf_v(tf_v),.tf_l(tf_l),.tf_o(tf_o),.rr_e(rr_rd[FW+1]),.dr_e(drr_q[FW+1]),.td_v(td_v),.td_m(td_m),
           .td_r(td_r),.td_od(td_od),.td_l(td_l),
           .rr(rr_rd[gr*128 +:128]),.dr(drr_q[gr*128 +:128]),
           .td(td_d[gr*128 +:128]),.sr0(srr_q[0][gr*128 +:128]),
@@ -168,9 +171,9 @@ def derive(root=ROOT):
     localparam integer LOCAL_XF_MUT=0;
 `endif
     generate for(gs=0;gs<NS;gs=gs+1)begin:g_xf
-      (* keep_hierarchy = 1 *) ot_coll_local_xfold #(.MUT_RANK(LOCAL_XF_MUT)) u_region(
+      (* keep_hierarchy = 1 *) ot_coll_local_xfold_td #(.MUT_RANK(LOCAL_XF_MUT)) u_region(
         .ctl_ck(clk_region[28+gs]),.fold_ck(CCLK?clk_xfold[gs]:clk),.rst_n(rst_n),
-        .pkg_s(pkg_s),.red_in(red2),.td(td_d[gs*128 +:128]),
+        .pkg_s(pkg_s),.td_v(td_v),.td_m(td_m),.td_od(td_od),.td(td_d[gs*128 +:128]),
         .sr0(srr_q[0][gs*128 +:128]),.sr1(srr_q[1][gs*128 +:128]),.sr2(srr_q[2][gs*128 +:128]),
         .sum(xs_sum[gs*128 +:128]),.v_out(xs_v[gs]),.e_out(xs_e[gs]));
     end endgenerate
@@ -180,8 +183,6 @@ def derive(root=ROOT):
         change(decl, decl.replace("reg ", "wire "))
         change(old, f"    ot_coll_local_delay #(.W({width}),.ID({index})) u_region_{index} (.clk(clk_region[{index}]),.rst_n({reset}),.d({expr}),.q({decl.split()[-1].rstrip(';')}));")
 
-    delay("    reg [4*DAB-1:0] tab;", "    always @(posedge clk or negedge rs_p) if (!rs_p) tab <= 0;\n        else tab <= {tab[4*(DAB-1)-1:0], ta_v, ta_m, ta_l, ta_p};", "4*DAB", "{tab[4*(DAB-1)-1:0], ta_v, ta_m, ta_l, ta_p}", "rs_p", 25)
-    delay("    reg [3*DDE-1:0] tde;", "    always @(posedge clk or negedge rs_r) if (!rs_r) tde <= 0;\n        else tde <= {tde[3*(DDE-1)-1:0], td_v && !td_m, td_od, td_l};", "3*DDE", "{tde[3*(DDE-1)-1:0], td_v && !td_m, td_od, td_l}", "rs_r", 26)
     delay("    reg [3*DEF-1:0] tef;", "    always @(posedge clk or negedge rs_r) if (!rs_r) tef <= 0;\n        else tef <= {tef[3*(DEF-1)-1:0], te_v, te_o, te_l};", "3*DEF", "{tef[3*(DEF-1)-1:0], te_v, te_o, te_l}", "rs_r", 27)
     change("    reg [TBW*DBC-1:0] tbc;", "    wire [TBW*DBC-1:0] tbc;")
     change("    always @(posedge clk or negedge rs_p) if (!rs_p) tbc <= 0;\n        else tbc <= {tbc[TBW*(DBC-1)-1:0], tb_v && !tb_m, own_b, tb_l, pr_rd[FW+2 +: TAGW]};",
@@ -228,6 +229,11 @@ def derive(root=ROOT):
  input wire clk,rst_n,dv,input wire[W-1:0]d,output reg qv,output reg[W-1:0]q);
  always @(posedge clk) q<=d;
  always @(posedge clk or negedge rst_n) if(!rst_n)qv<=0;else qv<=dv;
+endmodule
+(* keep_hierarchy = 1 *) module ot_coll_local_record_qualified #(parameter integer W=546,ID=0)(
+ input wire clk,rst_n,dv,qual,input wire[W-1:0]d,output reg qv,output reg[W-1:0]q);
+ always @(posedge clk)q<=d;
+ always @(posedge clk or negedge rst_n)if(!rst_n)qv<=0;else qv<=dv&&qual;
 endmodule
 (* keep_hierarchy = 1 *) module ot_coll_local_capture #(parameter integer W=128,ID=0)(
  input wire clk,en,input wire[W-1:0]d,output reg[W-1:0]q);
@@ -305,7 +311,10 @@ endmodule
 endmodule
 (* keep_hierarchy = 1 *) module ot_coll_local_sring_meta #(parameter integer LS=376,ID=0)(
  input wire ctl_ck,mem_ck,rst_counter_n,tc_v,tc_o,tc_l,input wire[31:0]tc_t,
- input wire g_run,input wire[1:0]g_r,input wire g_od,g_l,input wire[31:0]g_t,output wire[127:0]rd);
+ input wire g_run,input wire[1:0]g_r,input wire g_od,g_l,input wire[31:0]g_t,output wire[127:0]rd,output wire td_v);
+ reg[9:0]warm;
+ always @(posedge ctl_ck or negedge rst_counter_n)if(!rst_counter_n)warm<=0;else if(warm!=10'(LS+3))warm<=warm+10'd1;
+ assign td_v=rd[37]&&(warm==10'(LS+3));
  reg[8:0]cc;
  always @(posedge ctl_ck or negedge rst_counter_n)if(!rst_counter_n)cc<=0;else cc<=cc+9'd1;
  wire[127:0]wd={90'd0,tc_v||g_run,tc_v?2'd0:g_r,tc_v?tc_o:g_od,!tc_v,tc_v?tc_l:g_l,tc_v?tc_t:g_t};

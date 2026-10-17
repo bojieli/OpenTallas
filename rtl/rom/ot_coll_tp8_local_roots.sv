@@ -141,7 +141,7 @@ module ot_coll_tp8_local_roots #(
         end
     wire a_bad = (iv_q != ta_v) || (ta_v && iv_q && (ir_q[FW +: TAGW + 2] != {ta_t, ta_m, ta_l}));
     wire upv_q; wire [PW-1:0] uprec_q;
-    ot_coll_local_record #(.W(PW),.ID(1)) u_region_1 (.clk(clk_region[1]),.rst_n(rs_p),.dv(ta_v && iv_q),.d(ir_q),.qv(upv_q),.q(uprec_q));
+    ot_coll_local_record_qualified #(.W(PW),.ID(1)) u_region_1 (.clk(clk_region[1]),.rst_n(rs_p),.dv(ta_v),.qual(iv_q),.d(ir_q),.qv(upv_q),.q(uprec_q));
 
 
     reg upc_q;
@@ -166,8 +166,9 @@ module ot_coll_tp8_local_roots #(
     end endgenerate
     // schedule token A -> B (LU + 2 edges): {v, mode, last, parity}
     localparam integer DAB = LU + 2;
-    wire [4*DAB-1:0] tab;
-    ot_coll_local_delay #(.W(4*DAB),.ID(25)) u_region_25 (.clk(clk_region[25]),.rst_n(rs_p),.d({tab[4*(DAB-1)-1:0], ta_v, ta_m, ta_l, ta_p}),.q(tab));
+    reg [4*DAB-1:0] tab;
+    always @(posedge clk or negedge rs_p) if (!rs_p) tab <= 0;
+        else tab <= {tab[4*(DAB-1)-1:0], ta_v, ta_m, ta_l, ta_p};
     wire tb_v = tab[4*DAB-1], tb_m = tab[4*DAB-2], tb_l = tab[4*DAB-3], tb_p = tab[4*DAB-4];
 
     // ---------------- B: peer partial pins, pairing check, owner, package fold ----------------
@@ -276,7 +277,7 @@ module ot_coll_tp8_local_roots #(
         ot_coll_local_sring_meta #(.LS(LS),.ID(41)) u_region(
           .ctl_ck(clk_region[41]),.mem_ck(CCLK?clk_mem[14]:clk),.rst_counter_n(rs_s),
           .tc_v(tc_v),.tc_o(tc_o),.tc_l(tc_l),.tc_t(tc_t),
-          .g_run(g_run),.g_r(g_r),.g_od(g_d),.g_l(g_l),.g_t(g_t),.rd(s_rd[512 +:128]));
+          .g_run(g_run),.g_r(g_r),.g_od(g_d),.g_l(g_l),.g_t(g_t),.rd(s_rd[512 +:128]),.td_v(td_v));
       end
     end endgenerate
 
@@ -297,9 +298,7 @@ module ot_coll_tp8_local_roots #(
     end endgenerate
 
     // a token is meaningful only once the ring has been written LS + 1 cycles after reset (ring power-up content)
-    reg [9:0] warm;
-    always @(posedge clk or negedge rs_s) if (!rs_s) warm <= 0; else if (warm != 10'(LS + 3)) warm <= warm + 10'd1;
-    wire       td_v  = s_rd[549] && (warm == 10'(LS + 3));
+    wire td_v;
     wire [1:0] td_r  = s_rd[548:547];
     wire       td_od = s_rd[546], td_m = s_rd[545], td_l = s_rd[544];
     wire [TAGW-1:0] td_t = s_rd[512 +: TAGW];
@@ -324,9 +323,9 @@ module ot_coll_tp8_local_roots #(
     localparam integer LOCAL_XF_MUT=0;
 `endif
     generate for(gs=0;gs<NS;gs=gs+1)begin:g_xf
-      (* keep_hierarchy = 1 *) ot_coll_local_xfold #(.MUT_RANK(LOCAL_XF_MUT)) u_region(
+      (* keep_hierarchy = 1 *) ot_coll_local_xfold_td #(.MUT_RANK(LOCAL_XF_MUT)) u_region(
         .ctl_ck(clk_region[28+gs]),.fold_ck(CCLK?clk_xfold[gs]:clk),.rst_n(rst_n),
-        .pkg_s(pkg_s),.red_in(red2),.td(td_d[gs*128 +:128]),
+        .pkg_s(pkg_s),.td_v(td_v),.td_m(td_m),.td_od(td_od),.td(td_d[gs*128 +:128]),
         .sr0(srr_q[0][gs*128 +:128]),.sr1(srr_q[1][gs*128 +:128]),.sr2(srr_q[2][gs*128 +:128]),
         .sum(xs_sum[gs*128 +:128]),.v_out(xs_v[gs]),.e_out(xs_e[gs]));
     end endgenerate
@@ -334,8 +333,9 @@ module ot_coll_tp8_local_roots #(
     wire gd_v = td_v && td_m;
     // reduce token D -> E (SL + 1 edges): {v, own, last}
     localparam integer DDE = SL + 1;
-    wire [3*DDE-1:0] tde;
-    ot_coll_local_delay #(.W(3*DDE),.ID(26)) u_region_26 (.clk(clk_region[26]),.rst_n(rs_r),.d({tde[3*(DDE-1)-1:0], td_v && !td_m, td_od, td_l}),.q(tde));
+    reg [3*DDE-1:0] tde;
+    always @(posedge clk or negedge rs_r) if (!rs_r) tde <= 0;
+        else tde <= {tde[3*(DDE-1)-1:0], td_v && !td_m, td_od, td_l};
     wire te_v = tde[3*DDE-1], te_o = tde[3*DDE-2], te_l = tde[3*DDE-3];
 
     // ---------------- E: cross-fold result, R ring write, UCIe R send ----------------
@@ -386,10 +386,10 @@ module ot_coll_tp8_local_roots #(
     generate for(gr=0;gr<NS;gr=gr+1) begin:g_output_region
         localparam integer RID=(gr==0)?12:33+gr;
         wire qv,ql,qe;wire[2:0]qr;
-        ot_coll_local_output #(.W(128),.ID(RID)) u_region(
+        ot_coll_local_output_td #(.W(128),.ID(RID)) u_region(
           .clk(clk_region[RID]),.rst_n(rs_r),.pkg_d(pkg_s),
           .tf_v_d(tef[3*(DEF-1)-1]),.tf_o_d(tef[3*(DEF-1)-2]),
-          .tf_v(tf_v),.tf_l(tf_l),.rf_e(rf_e),.gd_v(gd_v),
+          .tf_v(tf_v),.tf_l(tf_l),.tf_o(tf_o),.rr_e(rr_rd[FW+1]),.dr_e(drr_q[FW+1]),.td_v(td_v),.td_m(td_m),
           .td_r(td_r),.td_od(td_od),.td_l(td_l),
           .rr(rr_rd[gr*128 +:128]),.dr(drr_q[gr*128 +:128]),
           .td(td_d[gr*128 +:128]),.sr0(srr_q[0][gr*128 +:128]),
@@ -495,6 +495,11 @@ endmodule
  always @(posedge clk) q<=d;
  always @(posedge clk or negedge rst_n) if(!rst_n)qv<=0;else qv<=dv;
 endmodule
+(* keep_hierarchy = 1 *) module ot_coll_local_record_qualified #(parameter integer W=546,ID=0)(
+ input wire clk,rst_n,dv,qual,input wire[W-1:0]d,output reg qv,output reg[W-1:0]q);
+ always @(posedge clk)q<=d;
+ always @(posedge clk or negedge rst_n)if(!rst_n)qv<=0;else qv<=dv&&qual;
+endmodule
 (* keep_hierarchy = 1 *) module ot_coll_local_capture #(parameter integer W=128,ID=0)(
  input wire clk,en,input wire[W-1:0]d,output reg[W-1:0]q);
  always @(posedge clk) if(en)q<=d;
@@ -571,7 +576,10 @@ endmodule
 endmodule
 (* keep_hierarchy = 1 *) module ot_coll_local_sring_meta #(parameter integer LS=376,ID=0)(
  input wire ctl_ck,mem_ck,rst_counter_n,tc_v,tc_o,tc_l,input wire[31:0]tc_t,
- input wire g_run,input wire[1:0]g_r,input wire g_od,g_l,input wire[31:0]g_t,output wire[127:0]rd);
+ input wire g_run,input wire[1:0]g_r,input wire g_od,g_l,input wire[31:0]g_t,output wire[127:0]rd,output wire td_v);
+ reg[9:0]warm;
+ always @(posedge ctl_ck or negedge rst_counter_n)if(!rst_counter_n)warm<=0;else if(warm!=10'(LS+3))warm<=warm+10'd1;
+ assign td_v=rd[37]&&(warm==10'(LS+3));
  reg[8:0]cc;
  always @(posedge ctl_ck or negedge rst_counter_n)if(!rst_counter_n)cc<=0;else cc<=cc+9'd1;
  wire[127:0]wd={90'd0,tc_v||g_run,tc_v?2'd0:g_r,tc_v?tc_o:g_od,!tc_v,tc_v?tc_l:g_l,tc_v?tc_t:g_t};
