@@ -1,0 +1,168 @@
+{
+ "name": "vm_native_q1core_pr4",
+ "top": "hfd_vms_bank_native_q1_core_pr",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_strap.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "bid",
+   "sid",
+   "rslot_v",
+   "rslot",
+   "wslot_v",
+   "wslot",
+   "kq_done",
+   "kq",
+   "status"
+  ],
+  "S": [
+   "rq3",
+   "rr3",
+   "pq",
+   "pr"
+  ],
+  "E": [
+   "xq2",
+   "xq2_done",
+   "eg"
+  ],
+  "W": [
+   "rq0",
+   "rr0",
+   "wq0",
+   "wq_done0",
+   "xq",
+   "xq_done"
+  ]
+ },
+ "outline": {
+  "w": 270.0,
+  "h": 270.0,
+  "exact": true
+ },
+ "layer_cap": "M6",
+ "recipe": 4,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    47.52,
+    29.232
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    47.52,
+    99.744
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    47.52,
+    170.256
+   ],
+   "at_exact": true
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0,
+  "hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Claude H-SM 2200",
+  "branch": "claude/hsm-q1core-2200",
+  "tag": "pr4",
+  "purpose": "SE/NE core-only VM bank (H-NETLIST d4f 1b42352f8: q1 master with dq, rq1/rq2, wq1 absent) native closure for the vmb_SE/NE0..7 hoist.",
+  "structural_change": "SE/NE bank = hfd_vms_bank_native_q1_core_pr (literal input pin flops in RTL, outputs bank registers) on recipe 4 (hold_budget die, no pads), nat2 geometry 270x270 / spine clock; the hub takes it with BANK_PIN_IN=1 (05978a837).",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+   "physical/common_flow/macro_channel_block.tcl",
+   "physical/ref_tile_specs/smh/vm_q1core_post_iop.tcl",
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/lib/ot_rst_relay.sv",
+   "tools/hbm_die_v15/v16_layers/vm_hoist_d4f.json",
+   "tools/hbm_die_v16/gen_vms_hoist.py",
+   "tools/hbm_die_v16/run_vms_hoist_equiv_q.sh",
+   "tools/hbm_die_v16/vms_hoist_equiv.py"
+  ],
+  "record_to": "results/rtl/ref_tile/vm_native_q1core_pr4",
+  "views_to": "physical/ref_tile/vm_native_q1core_pr4/views",
+  "benches": [
+   {
+    "name": "pr_wrapper_equiv",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/physical/q1core_pr/run.sh {RUN}/bench/pr 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "min_count_regex": "Q1CORE_PR EQUIV PASS checks=(\\d+) errors=0"
+   },
+   {
+    "name": "pr_wrapper_mutant_no_pin_flop",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/physical/q1core_pr/run.sh {RUN}/bench/prm 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "fail_regex": "Q1CORE_PR EQUIV FAIL checks=[0-9]+ errors=[1-9]"
+   },
+   {
+    "name": "hoist_equiv_SE",
+    "cmd": "bash tools/hbm_die_v16/run_vms_hoist_equiv_q.sh SE pos {RUN}/bench/SE",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "min_count_regex": "VMS_HOIST_EQUIV SE PASS checks=(\\d+) errors=0"
+   }
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "clock": "spine",
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "physical/ref_tile_specs/smh/vm_q1core_post_iop.tcl"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every pin: hfd_vms_bank_native_q1_core_pr has a literal flop on every data input (q0_faces convention) and every output is a bank-body register; view == RTL (H-NETLIST source binding)"
+ },
+ "floorplan_note": "SE/NE bank = hfd_vms_bank_native_q1_core_pr (literal input pin flops in RTL, outputs bank registers) on recipe 4 (hold_budget die, no pads), nat2 geometry 270x270 / spine clock; the hub takes it with BANK_PIN_IN=1 (05978a837).",
+ "pg_layer": "M6",
+ "layer_cap_grant": "H-DIE 2210 v4: VM bank strap masters are pin-perimeter bound (270 x 270, ~1,260 b per face): PG moves to M6 so M5 pins need no stripe clearance; parent strap M7 (H-DIE 2210, H-SM proposal)",
+ "structural_change": "SE/NE bank = hfd_vms_bank_native_q1_core_pr (literal input pin flops in RTL, outputs bank registers) on recipe 4 (hold_budget die, no pads), nat2 geometry 270x270 / spine clock; the hub takes it with BANK_PIN_IN=1 (05978a837).",
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false
+}
