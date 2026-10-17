@@ -10,7 +10,11 @@ Run inside the ORFS container:
 spec.json: {"trees": [{"name": N, "root": "inst/pin", "period": ps, "balance_group": G (optional, shared target),
                         "select": {"master_prefix": [...]} | {"exclude_master_prefix": [...]} | "all"},
                        {"name": "col", "root_master_prefix": "dsfd_cfifo", "root_port": "co[0]", "period": ps}, ...],
-             "rc_layer": "M8", "leaf_um": 60, "leaf_max": 12}
+             "rc_layer": "M8", "leaf_um": 60, "leaf_max": 12,
+             "neighbours": [[treeA, treeB], ...], "neighbour_budget_ps": 60}
+  NEIGHBOUR-RELATIVE (owner 2026-10-16): trees without a shared balance_group are regions; each listed neighbour pair
+  (communicating regions) is trimmed so that every flop arrival of one is within neighbour_budget_ps of every flop
+  arrival of the other at TT and FF.  There is no die-wide target.  Pads are added only where a pair needs them.
   a tree with root_master_prefix expands to one tree per instance of that master (name = <name>_<inst>).
 targets: the die kit's kit.json (masters[m].insertion_per_clock_pin_ps / insertion_in_arcs_ps, [ss, ff, tt]):
   the in-arc insertion R of each sink pin.  The trim balances arrival + R (flop arrival), i.e. pin at phi - R.
@@ -272,7 +276,15 @@ def build(a):
             builders[t['name']] = b_
             log('tree', t['name'], 'sinks', len(sinks), json.dumps(model))
         unclaimed = [x for x in loads if f'{x.getInst().getName()}/{x.getMTerm().getName()}' not in claimed]
-        if unclaimed:
+        if unclaimed and spec.get('unclaimed') == 'disconnect_diagnostic':
+            # DIAGNOSTIC partial clock (e.g. macro trees before relay stations are legal): the unclaimed loads are
+            # disconnected from the root net and listed in the manifest; the result is never a complete die clock.
+            for x in unclaimed:
+                rec.setdefault('unclaimed_disconnected', []).append(
+                    f'{x.getInst().getName()}/{x.getMTerm().getName()}')
+                x.disconnect()
+            log('DIAGNOSTIC', root, len(unclaimed), 'unclaimed loads disconnected (spec unclaimed=disconnect_diagnostic)')
+        elif unclaimed:
             raise ValueError(f'{root}: {len(unclaimed)} loads not claimed by any tree spec')
     # instantiate
     masters, cell_xy = {}, {}
@@ -396,10 +408,30 @@ def build(a):
         for g_ in gstats.values():
             g_['flop_spread'] = round(g_['flop_max'] - g_['flop_min'], 1)
             g_['ff_spread'] = round(g_['ff_max'] - g_['ff_min'], 1) if two else None
-        rec['iterations'].append(dict(iter=it_, elements=json.loads(json.dumps(el)), pads=dict(pad_n), trees=stats, groups=gstats))
+        # neighbour pairs: worst flop-arrival difference between any sink of one region and any of the other
+        nstats = {}
+        for x, y in spec.get('neighbours', []):
+            ex = [s_ for t_, s_ in stats.items() if tree_group.get(t_, t_) == tree_group.get(x, x)]
+            ey = [s_ for t_, s_ in stats.items() if tree_group.get(t_, t_) == tree_group.get(y, y)]
+            if not ex or not ey:
+                continue
+            mx = lambda e, k: max(v[k] for v in e)
+            mn = lambda e, k, sk: min(v[k] - v[sk] for v in e)
+            d_ = dict(tt=round(max(mx(ex, 'flop_max') - mn(ey, 'flop_max', 'flop_spread'),
+                                   mx(ey, 'flop_max') - mn(ex, 'flop_max', 'flop_spread')), 1))
+            if two:
+                d_['ff'] = round(max(mx(ex, 'ff_max') - mn(ey, 'ff_max', 'ff_spread'),
+                                     mx(ey, 'ff_max') - mn(ex, 'ff_max', 'ff_spread')), 1)
+            nstats[f'{x}|{y}'] = d_
+        rec['iterations'].append(dict(iter=it_, elements=json.loads(json.dumps(el)), pads=dict(pad_n), trees=stats, groups=gstats,
+                                      neighbours=nstats))
         sp = [s_['flop_spread'] for s_ in stats.values()] + [g_['flop_spread'] for g_ in gstats.values()]
+        sp += [v['tt'] - spec.get('neighbour_budget_ps', 60.0) + a.tol for v in nstats.values()]
         if two:
             sp += [s_['ff_spread'] for s_ in stats.values()] + [g_['ff_spread'] for g_ in gstats.values()]
+            sp += [v['ff'] - spec.get('neighbour_budget_ps', 60.0) + a.tol for v in nstats.values()]
+        if nstats:
+            log('iter', it_, 'neighbours', json.dumps(nstats))
         worst = max(sp, default=0)
         cols = [v['flop_spread'] for k, v in stats.items() if k.startswith('col_')]
         log('iter', it_, 'elements', json.dumps(el), 'pads', dict(pad_n), 'worst spread', worst, 'groups', json.dumps(gstats),
@@ -475,16 +507,17 @@ def build(a):
         # the smallest for which EVERY leaf's deficit lies in the cone of the two elements (FF/TT ratio between PAD's
         # and WPAD's), then each leaf solves nP * P + nW * W = (D_tt, D_ff).
         need = {}
+        groups_L, tg = {}, {}
+        (p1, p2), (w1, w2) = el['P'], el['W']
+        rlo, rhi = sorted((p2 / p1, w2 / w1))
         for gk in set(tree_group.get(t, t) for t in by_tree):
             tl = [t for t in by_tree if tree_group.get(t, t) == gk]
             L = [(lb, by_tree[t][lb], by_treef[t].get(lb, by_tree[t][lb])) for t in tl for lb in by_tree[t]]
+            groups_L[gk] = L
             Ttt = max(v[1] for v in L)
             if not two:
-                for lb, ft, _ in L:
-                    need[lb] = (int((Ttt - ft) / el['P'][0] + 0.5), 0)
+                tg[gk] = (Ttt, None, Ttt, None)
                 continue
-            (p1, p2), (w1, w2) = el['P'], el['W']
-            rlo, rhi = sorted((p2 / p1, w2 / w1))
             # closed form: Tf(Tt) = rlo*Tt + A is the least FF target with every leaf's FF deficit >= rlo x its TT
             # deficit; Tt is raised (capped at RAISE_CAP_PS) until no leaf's FF deficit exceeds rhi x its TT deficit.
             # Leaves still outside the cone are solved by clamped least squares (their residual is reported).
@@ -499,6 +532,40 @@ def build(a):
             if gk in gtarget:
                 Tt = max(gtarget[gk][0], Ttt)
                 Tf = max(gtarget[gk][1], base_ff_max)
+            tg[gk] = (Tt, Tf, Ttt, base_ff_max)
+        # NEIGHBOUR-RELATIVE targets (owner 2026-10-16): no die-wide target; each communicating neighbour pair of
+        # regions (spec "neighbours", tree or group names) must be within neighbour_budget_ps at TT and FF.  Targets
+        # only rise (delay can only be added): difference-constraint relaxation to the least fixpoint; a raise keeps
+        # its FF/TT ratio inside the element cone [rlo, rhi].
+        nb_pairs = [(tree_group.get(x, x), tree_group.get(y, y)) for x, y in spec.get('neighbours', [])]
+        nbB = float(spec.get('neighbour_budget_ps', 60.0))
+        nb_pairs = [(x, y) for x, y in nb_pairs if x in tg and y in tg and x != y]
+        for _ in range(10 * max(1, len(tg))):
+            moved = False
+            for x, y in nb_pairs + [(y, x) for x, y in nb_pairs]:
+                Tt, Tf, b1, b2 = tg[x]
+                dt = max(0.0, tg[y][0] - nbB - Tt)
+                df = max(0.0, tg[y][1] - nbB - Tf) if two else 0.0
+                if dt <= 1e-6 and df <= 1e-6:
+                    continue
+                if two:
+                    if df < rlo * dt:
+                        df = rlo * dt
+                    elif df > rhi * dt:
+                        dt = df / rhi
+                tg[x] = (Tt + dt, (Tf + df) if two else None, b1, b2)
+                moved = True
+            if not moved:
+                break
+        if nb_pairs:
+            rec.setdefault('neighbour_targets', []).append({k: [round(v[0], 1), round(v[1], 1) if v[1] is not None else None]
+                                                            for k, v in tg.items()})
+        for gk, L in groups_L.items():
+            Tt, Tf, Ttt, _ = tg[gk]
+            if not two:
+                for lb, ft, _ in L:
+                    need[lb] = (int((Tt - ft) / el['P'][0] + 0.5), 0)
+                continue
             gtarget[gk] = (Tt, Tf)
             det = p1 * w2 - w1 * p2
             for lb, ft, ff_ in L:

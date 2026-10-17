@@ -77,5 +77,48 @@ class DieClockCheck(unittest.TestCase):
             D.report(self.f, pj, strict_entry_pairs=True)
 
 
+
+NB = ("R\tpll/a\t0\t0\t-\t-\nR\tpll/b\t0\t0\t-\t-\nR\tpll/h\t0\t0\t-\t-\n"
+      "B\tdc_W0_a_B1/Y\tBUFx24_ASAP7_75t_R\t10\t10\tpll/a\t1000\t900\n"
+      "B\tdc_E0_b_B1/Y\tBUFx24_ASAP7_75t_R\t20\t10\tpll/b\t1050\t960\n"
+      "B\tdc_E1_b_B1/Y\tBUFx24_ASAP7_75t_R\t20\t20\tpll/b\t1300\t1100\n"
+      "B\tdc_hb_B1/Y\tBUFx24_ASAP7_75t_R\t20\t20\tpll/h\t3000\t2900\n"
+      "T\tt0/ck\tm\t10\t10\tdc_W0_a_B1/Y\t1000\t900\nT\tt1/ck\tm\t20\t10\tdc_E0_b_B1/Y\t1050\t960\n"
+      "T\tt2/ck\tm\t20\t20\tdc_E1_b_B1/Y\t1300\t1100\nT\tt3/ck\tm\t20\t20\tdc_hb_B1/Y\t3000\t2900\n"
+      "P\tt0\tt1\tn1\nP\tt1\tt2\tn2\nP\tt2\tt3\tn3\n")
+
+
+class NeighbourCheck(unittest.TestCase):
+    """owner 2026-10-16 neighbour-relative clocking: communicating pairs judged against the budget per class, async
+    families listed not judged, no FF dump -> INCOMPLETE; cross-root pairs of one family are still synchronous."""
+    def setUp(self):
+        self.d = tempfile.mkdtemp()
+        self.f = os.path.join(self.d, "tt.tsv"); open(self.f, "w").write(NB)
+        self.ff = os.path.join(self.d, "ff.tsv"); open(self.ff, "w").write(NB.replace("\t1100\n", "\t1000\n"))
+        self.spec = os.path.join(self.d, "spec.json")
+        json.dump({"trees": [{"name": "W0_a", "balance_group": "W0"}, {"name": "E0_b", "balance_group": "E0"},
+                             {"name": "E1_b", "balance_group": "E1"}, {"name": "hb"}]}, open(self.spec, "w"))
+        self.fam = os.path.join(self.d, "fam.json")
+        json.dump({"core": ["pll/a", "pll/b"], "hbm": ["pll/h"]}, open(self.fam, "w"))
+
+    def test_classes_and_verdict(self):
+        r = D.report(self.f, budget=80, region_map=self.spec, families=self.fam, ff_dump=self.ff)["neighbour_check"]
+        c = r["classes"]
+        self.assertEqual(c["neighbour:E0|W0"]["pairs"], 1)           # different roots, one family: judged
+        self.assertEqual(c["neighbour:E0|W0"]["over"], 0)            # 50 TT / 60 FF
+        self.assertEqual(c["neighbour:E0|E1"]["over"], 1)            # 250 TT
+        self.assertFalse(c["async:core|hbm"]["judged"])
+        self.assertEqual(r["verdict"], "FAIL")
+        self.assertEqual(r["worst"][0]["a"], "t1")
+
+    def test_no_ff_is_incomplete(self):
+        good = NB.replace("\t1300\t1100\n", "\t1060\t970\n")
+        open(self.f, "w").write(good)
+        r = D.report(self.f, budget=80, region_map=self.spec, families=self.fam)["neighbour_check"]
+        self.assertEqual(r["pairs_over"], 0)
+        self.assertEqual(r["verdict"], "INCOMPLETE")
+        r = D.report(self.f, budget=80, region_map=self.spec, families=self.fam, ff_dump=self.f)["neighbour_check"]
+        self.assertEqual(r["verdict"], "PASS")
+
 if __name__ == "__main__":
     unittest.main()
