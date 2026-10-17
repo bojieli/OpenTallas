@@ -1,0 +1,123 @@
+{
+ "name": "qkd_ahub_die-hp1-COMMIT",
+ "block": "ot_qkd_ahub_die",
+ "ref_tile": true,
+ "owner": "Claude:Q-KVSYS-STRIP",
+ "purpose": "KV/system die attention hub PARENT ot_qkd_ahub_die (VIS-ROM QKV-07): core hd3 + 4 ot_nhb_zh + 4 ot_nhb_pbst + 4 ot_nhb_pvlg + ot_qkh_recip_leaf (all CLOSED), 14 clock entries (6 CTS roots carry the composition's relay flops), slot 1,175.04 x 760.32 unchanged",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/qkvelem-1016",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/test/nearhbm",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/ref_tile/nhb_pbst_ref",
+   "physical/ref_tile/nhb_pvlg_ref",
+   "physical/ref_tile/ot_nhb_zh_m5",
+   "physical/ref_tile/qkh_recip_ref",
+   "physical/ref_tile/qkd_ahub_core"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qkd_ahub_die u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DQKD_AHUB_RLY_CLK --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hdc/nearhbm/ot_qkd_ahub_core.sv rtl/hdc/ot_hdc_delay.sv rtl/lib/ot_rst_pipe.sv rtl/hdc/nearhbm/ot_nhb_tiles_bb.v rtl/hdc/nearhbm/ot_qkh_recip_leaf_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "qkd_ahub_d_eq_exact",
+    "cmd": "bash rtl/test/nearhbm/run_qkd_ahub_d_eq.sh pos {RUN}/bench/eq_pos",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qkd_ahub_d eq all"
+   },
+   {
+    "name": "qkd_ahub_d_eq_mutant",
+    "cmd": "bash rtl/test/nearhbm/run_qkd_ahub_d_eq.sh neg {RUN}/bench/eq_neg",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qkd_ahub_d mutant detected"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_ahub_die/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_ahub_die/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_ahub_die --out {RUN}/record/views/ot_qkd_ahub_die --macro-view physical/ref_tile/nhb_pbst_ref/views/ot_nhb_pbst --macro-view physical/ref_tile/nhb_pvlg_ref/views/ot_nhb_pvlg --macro-view physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh --macro-view physical/ref_tile/qkd_ahub_core/views/qkd_ahub_core --macro-view physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_ahub_die/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/nhb_pbst_ref/views/ot_nhb_pbst",
+   "physical/ref_tile/nhb_pvlg_ref/views/ot_nhb_pvlg",
+   "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+   "physical/ref_tile/qkd_ahub_core/views/qkd_ahub_core",
+   "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_ahub_die/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_ahub_die/qkd_ahub_die-hp1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "new parent kit (the hub parent was never hardened: q8 EARLY_FAIL_HOLD with one cluster clock over 12 hard tiles); per-child clock entries, core in the Z row centre"
+}

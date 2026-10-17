@@ -43,8 +43,13 @@ module ot_v41_bf_red_cl #(parameter integer TRW=7, parameter [8:0] CUT=9'b1_1111
  input wire fclk,rst_pin,ze_d,iv,
  input wire [511:0] values_in,input wire [15:0] errors_in,input wire [TRW:0] tag_in,
  output wire ov,output wire [31:0] oval,output wire oerr,output wire [TRW:0] tag_out);
+ // r2 reset frontier (routed r1 native: rst_pin capture 235.3 > 190 into three tile-clock synchronisers spread over
+ // the 198.7-tall strip): one pin-side async-assert / sync-release flop; +1 boot-release edge, 0 payload edges.
+ reg rp_q;
+ always @(posedge fclk or negedge rst_pin) if(!rst_pin) rp_q<=1'b0; else rp_q<=1'b1;
+ wire rst_l=rp_q;
  wire clk,rst_n;
- ot_v41_tile_clk u_tc(.fclk(fclk),.rst_pin(rst_pin),.ze_d(ze_d),.gclk(clk),.rst_n(rst_n));
+ ot_v41_tile_clk u_tc(.fclk(fclk),.rst_pin(rst_l),.ze_d(ze_d),.gclk(clk),.rst_n(rst_n));
  reg iv_q;reg [511:0] v_q;reg [15:0] e_q;reg [TRW:0] t_q;
  always @(posedge clk or negedge rst_n) if(!rst_n) iv_q<=1'b0; else iv_q<=iv;
  always @(posedge clk) begin v_q<=values_in;e_q<=errors_in;t_q<=tag_in; end
@@ -55,11 +60,11 @@ module ot_v41_bf_red_cl #(parameter integer TRW=7, parameter [8:0] CUT=9'b1_1111
 `endif
  wire v_low;wire [255:0] low_values;wire [7:0] low_errors;wire [TRW:0] low_tag;
  ot_v41_bf_reduce #(.NIN(16),.LEVELS(1),.TRW(TRW),.CUT(CUT)) u_reduce_low
-   (.fclk(fclk),.rst_pin(rst_pin),.ze_d(ze_d),.iv(iv_d),
+   (.fclk(fclk),.rst_pin(rst_l),.ze_d(ze_d),.iv(iv_d),
     .values_in(v_q),.errors_in(e_q),.tag_in(t_q),
     .ov(v_low),.values_out(low_values),.errors_out(low_errors),.tag_out(low_tag));
  ot_v41_bf_reduce #(.NIN(8),.LEVELS(3),.TRW(TRW),.CUT(CUT)) u_reduce_high
-   (.fclk(fclk),.rst_pin(rst_pin),.ze_d(ze_d),.iv(v_low),
+   (.fclk(fclk),.rst_pin(rst_l),.ze_d(ze_d),.iv(v_low),
     .values_in(low_values),.errors_in(low_errors),.tag_in(low_tag),
     .ov(ov),.values_out(oval),.errors_out(oerr),.tag_out(tag_out));
 endmodule
