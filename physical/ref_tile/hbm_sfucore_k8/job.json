@@ -1,0 +1,133 @@
+{
+ "name": "hbm_sfucore_k8-k8-COMMIT",
+ "block": "ot_hgi_sfu_core_split2",
+ "ref_tile": true,
+ "owner": "Claude:H-SU/core-kit",
+ "purpose": "SFU core k8 (ot_hgi_sfu_core_split2) re-aspect for the d4c 3.30 mm SU/VM band: 950.4 x 3132, lanes W/E columns 393.12 pitch, 80 SRAMs in two back-to-back middle columns, all W/E pins over the full face span (<= 6/um); clock roots clk/clk_pw/clk_pe + reset relay as k7",
+ "threads": 16,
+ "peak_ram_gb": 96,
+ "source": {
+  "branch": "claude/hsu-corekit-0700",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "results/arch/hbm_native_1013/sfu_native_quarter",
+   "results/rtl/hbm_hc_sfu_static_1015/qswiglu",
+   "rtl/test/hbm_accel/generic",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros",
+   "rtl/hbm_accel/generic/peers",
+   "rtl/hdc",
+   "physical/ref_tile/sfu_lane_ring3_rt/src",
+   "tools/hbm_static",
+   "rtl/lib/ot_rst_relay.sv"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_sfu_core_split2 #(.LWB(15), .LG_PATH(24)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_HARD_CHILDREN --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_arithmetic_grid.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_bcast_tree.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_quarter.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv rtl/hdc/ot_hdc_cg.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_delay_ring.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat_c12.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_fdiv64.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fsqrt_c12.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_su_f12.sv rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split2.sv rtl/lib/ot_rst_relay.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_equiv_r23",
+    "cmd": "OUT={RUN}/bench/r23 SFU_LG_R=23 CORE2=1 bash tools/hbm_static/run_sfu_split_equiv.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_SPLIT_GATE POSITIVE PASS",
+    "min_count_regex": "SFU_SPLIT_EQUIV PASS edges=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_skip_pinreg",
+    "cmd": "OUT={RUN}/bench/skip SFU_LG_R=23 CORE2=1 EQ_MUT=skip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/skip/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_clkpw",
+    "cmd": "OUT={RUN}/bench/clkpw SFU_LG_R=23 CORE2=1 EQ_MUT=clkpw bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/clkpw/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_sfucore_k8/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_sfucore_k8/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 96
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_sfucore_k8 --out {RUN}/record/views/ot_hgi_sfu_core_split2 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2 --macro-view physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_sfucore_k8/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_sfucore_k8/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_sfucore_k8/hbm_sfucore_k8-k8-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "k7 (H-SU 2026-10-16): k6 hbm_sfucore_split-k6-dea957e63 FLOORPLAN_MARGIN bank_distance (lanes 0/3/6/12.. 502 um from their E-face pins: only one lane column can sit within 100 um of one face) + TEXTBOOK REFUSE clk 18,143 sinks / rst_n 13,745 loads. Fix: ot_hgi_sfu_core_split2 splits the lane-direct buses W (lanes 0-7) / E (8-15) so each lane column hugs its own face; pin regs on their own roots clk_pw (W ~4.4k) / clk_pe (E ~2.7k), clk keeps bridge+engine (~10.9k); rst_n -> ot_rst_relay (4 regions). Floorplan: lane columns R0 W / MY E at 32.4 um from the faces, 352.08 pitch (21.6 um row gaps), 80 SRAMs abutted in the middle column (x 295.488), local_* W and io/ctl E moved above the lane field (2838.8..3560). Same outline 763.56 x 3580. | k8 (H-SU 1815 fork, 10-16): d4c SU/VM band <= 3.30 mm (die <= 25.2 mm, portrait SM rows): k7 763.56 x 3580 was taller than the band. Re-aspect only (same RTL ot_hgi_sfu_core_split2, same clock roots / reset relays / benches): outline 950.4 x 3132; lane columns W (0-7, R0) / E (8-15, MY) 32.4 um from their faces at 393.12 pitch (62.64 um row gaps = horizontal corridors); the 80 operand SRAMs fold from one 3,283 um column into two columns of 40 with a 21.9 um middle channel (W column x 291.456 MY, pins facing the 43 um W channel; E column x 486.144 R0, pins facing the 43 um E channel; y 745.2..2386.8); local_* (4,448) now share the W face and io_word/compiler_control (2,214) the E face with the lane buses over the full 23.76..3108.24 span (W ~1.9 pins/um, E ~1.1 pins/um, <= 6/um), no pin region above the lane field."
+}

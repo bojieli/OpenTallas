@@ -1,0 +1,1347 @@
+{
+ "name": "hbm_sfucore_k8",
+ "top": "ot_hgi_sfu_core_split2",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_arithmetic_grid.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_bcast_tree.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_quarter.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_delay_ring.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv64.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt_c12.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split2.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "params": {
+  "LWB": 15,
+  "LG_PATH": 24
+ },
+ "defines": [
+  "OT_HARD_CHILDREN"
+ ],
+ "hard_define": "OT_HARD_CHILDREN",
+ "clock": "hybrid_entries",
+ "clock_port": "clk",
+ "clock_ports": [
+  "clk",
+  "clk_pw",
+  "clk_pe",
+  "clk_lg[0]",
+  "clk_lg[1]",
+  "clk_lg[2]",
+  "clk_lg[3]",
+  "clk_map[0]",
+  "clk_map[1]",
+  "clk_map[2]",
+  "clk_map[3]",
+  "clk_map[4]",
+  "clk_map[5]",
+  "clk_map[6]",
+  "clk_map[7]",
+  "clk_map[8]",
+  "clk_map[9]",
+  "clk_map[10]",
+  "clk_map[11]",
+  "clk_map[12]",
+  "clk_map[13]",
+  "clk_map[14]",
+  "clk_map[15]",
+  "clk_lane[0]",
+  "clk_lane[1]",
+  "clk_lane[2]",
+  "clk_lane[3]",
+  "clk_lane[4]",
+  "clk_lane[5]",
+  "clk_lane[6]",
+  "clk_lane[7]",
+  "clk_lane[8]",
+  "clk_lane[9]",
+  "clk_lane[10]",
+  "clk_lane[11]",
+  "clk_lane[12]",
+  "clk_lane[13]",
+  "clk_lane[14]",
+  "clk_lane[15]"
+ ],
+ "clock_cts_roots": [
+  "clk",
+  "clk_pw",
+  "clk_pe",
+  "clk_lg[0]",
+  "clk_lg[1]",
+  "clk_lg[2]",
+  "clk_lg[3]",
+  "clk_map[0]",
+  "clk_map[1]",
+  "clk_map[2]",
+  "clk_map[3]",
+  "clk_map[4]",
+  "clk_map[5]",
+  "clk_map[6]",
+  "clk_map[7]",
+  "clk_map[8]",
+  "clk_map[9]",
+  "clk_map[10]",
+  "clk_map[11]",
+  "clk_map[12]",
+  "clk_map[13]",
+  "clk_map[14]",
+  "clk_map[15]"
+ ],
+ "reset_ports": [
+  "rst_n",
+  "rst_lg_n",
+  "rst_lane_n",
+  "rst_map_n"
+ ],
+ "outline": {
+  "w": 950.4,
+  "h": 3132.0,
+  "exact": true
+ },
+ "child_lattice_um": 2.16,
+ "layer_cap": "M7",
+ "recipe": 2,
+ "pins": {
+  "W": [
+   "clk",
+   "clk_pw",
+   "rst_n",
+   "clk_lg",
+   "rst_lg_n",
+   "clk_lane",
+   "clk_map",
+   "rst_lane_n",
+   "rst_map_n",
+   "local_rq",
+   "local_rr",
+   "local_wq",
+   "local_w_done",
+   "vi_re_w",
+   "vi_addr_w",
+   "vi_q_w",
+   "ro_v_w",
+   "kv_we_w",
+   "ro_x_w",
+   "kv_wdata_w",
+   "kv_waddr_w"
+  ],
+  "E": [
+   "clk_pe",
+   "io_word",
+   "compiler_control",
+   "fault",
+   "vi_re_e",
+   "vi_addr_e",
+   "vi_q_e",
+   "ro_v_e",
+   "kv_we_e",
+   "ro_x_e",
+   "kv_wdata_e",
+   "kv_waddr_e"
+  ]
+ },
+ "pin_ranges": {
+  "clk": [
+   1546.56,
+   1566.0
+  ],
+  "clk_pw": [
+   1576.8,
+   1587.6
+  ],
+  "rst_n": [
+   1566.0,
+   1576.8
+  ],
+  "clk_lg": [
+   1598.4,
+   1641.6
+  ],
+  "rst_lg_n": [
+   1641.6,
+   1663.2
+  ],
+  "clk_lane": [
+   23.76,
+   3108.24
+  ],
+  "clk_map": [
+   23.76,
+   3108.24
+  ],
+  "rst_lane_n": [
+   23.76,
+   3108.24
+  ],
+  "rst_map_n": [
+   23.76,
+   3108.24
+  ],
+  "local_rq": [
+   23.76,
+   3108.24
+  ],
+  "local_rr": [
+   23.76,
+   3108.24
+  ],
+  "local_wq": [
+   23.76,
+   3108.24
+  ],
+  "local_w_done": [
+   23.76,
+   3108.24
+  ],
+  "vi_re_w": [
+   23.76,
+   3108.24
+  ],
+  "vi_addr_w": [
+   23.76,
+   3108.24
+  ],
+  "vi_q_w": [
+   23.76,
+   3108.24
+  ],
+  "ro_v_w": [
+   23.76,
+   3108.24
+  ],
+  "kv_we_w": [
+   23.76,
+   3108.24
+  ],
+  "ro_x_w": [
+   23.76,
+   3108.24
+  ],
+  "kv_wdata_w": [
+   23.76,
+   3108.24
+  ],
+  "kv_waddr_w": [
+   23.76,
+   3108.24
+  ],
+  "clk_pe": [
+   1555.2,
+   1566.0
+  ],
+  "io_word": [
+   23.76,
+   3108.24
+  ],
+  "compiler_control": [
+   23.76,
+   3108.24
+  ],
+  "fault": [
+   23.76,
+   3108.24
+  ],
+  "vi_re_e": [
+   23.76,
+   3108.24
+  ],
+  "vi_addr_e": [
+   23.76,
+   3108.24
+  ],
+  "vi_q_e": [
+   23.76,
+   3108.24
+  ],
+  "ro_v_e": [
+   23.76,
+   3108.24
+  ],
+  "kv_we_e": [
+   23.76,
+   3108.24
+  ],
+  "ro_x_e": [
+   23.76,
+   3108.24
+  ],
+  "kv_wdata_e": [
+   23.76,
+   3108.24
+  ],
+  "kv_waddr_e": [
+   23.76,
+   3108.24
+  ]
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu",
+   "count": 1,
+   "inst": "*g_lane?0?*u_sfu",
+   "at": [
+    32.4,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu",
+   "count": 1,
+   "inst": "*g_lane?1?*u_sfu",
+   "at": [
+    32.4,
+    416.88
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu",
+   "count": 1,
+   "inst": "*g_lane?2?*u_sfu",
+   "at": [
+    32.4,
+    810.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu",
+   "count": 1,
+   "inst": "*g_lane?3?*u_sfu",
+   "at": [
+    32.4,
+    1203.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu",
+   "count": 1,
+   "inst": "*g_lane?4?*u_sfu",
+   "at": [
+    32.4,
+    1596.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu",
+   "count": 1,
+   "inst": "*g_lane?5?*u_sfu",
+   "at": [
+    32.4,
+    1989.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu",
+   "count": 1,
+   "inst": "*g_lane?6?*u_sfu",
+   "at": [
+    32.4,
+    2382.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu",
+   "count": 1,
+   "inst": "*g_lane?7?*u_sfu",
+   "at": [
+    32.4,
+    2775.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu",
+   "count": 1,
+   "inst": "*g_lane?8?*u_sfu",
+   "at": [
+    702.0,
+    23.76
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu",
+   "count": 1,
+   "inst": "*g_lane?9?*u_sfu",
+   "at": [
+    702.0,
+    416.88
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu",
+   "count": 1,
+   "inst": "*g_lane?10?*u_sfu",
+   "at": [
+    702.0,
+    810.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu",
+   "count": 1,
+   "inst": "*g_lane?11?*u_sfu",
+   "at": [
+    702.0,
+    1203.12
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu",
+   "count": 1,
+   "inst": "*g_lane?12?*u_sfu",
+   "at": [
+    702.0,
+    1596.24
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu",
+   "count": 1,
+   "inst": "*g_lane?13?*u_sfu",
+   "at": [
+    702.0,
+    1989.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu",
+   "count": 1,
+   "inst": "*g_lane?14?*u_sfu",
+   "at": [
+    702.0,
+    2382.48
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu",
+   "count": 1,
+   "inst": "*g_lane?15?*u_sfu",
+   "at": [
+    702.0,
+    2775.6
+   ],
+   "orient": "MY"
+  }
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    745.2
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    786.24
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    827.28
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    868.32
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    909.36
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    950.4
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    991.44
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1032.48
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1073.52
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1114.56
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1155.6
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1196.64
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1237.68
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1278.72
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1319.76
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1360.8
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1401.84
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1442.88
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1483.92
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1524.96
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1566.0
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1607.04
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1648.08
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1689.12
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1730.16
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1771.2
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1812.24
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1853.28
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1894.32
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1935.36
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    1976.4
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    2017.44
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    2058.48
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    2099.52
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    2140.56
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    2181.6
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    2222.64
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    2263.68
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    2304.72
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    291.456,
+    2345.76
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    745.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    786.24
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    827.28
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    868.32
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    909.36
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    950.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    991.44
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1032.48
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1073.52
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1114.56
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1155.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1196.64
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1237.68
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1278.72
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1319.76
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1360.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1401.84
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1442.88
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1483.92
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1524.96
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1566.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1607.04
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1648.08
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1689.12
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1730.16
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1771.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1812.24
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1853.28
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1894.32
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1935.36
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    1976.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    2017.44
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    2058.48
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    2099.52
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    2140.56
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    2181.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    2222.64
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    2263.68
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    2304.72
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    486.144,
+    2345.76
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "std_area_um2": 84666.4,
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "pin_balance": {
+   "group_max": 1
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:H-SU/core-kit",
+  "branch": "claude/hsu-corekit-0700",
+  "tag": "k8",
+  "purpose": "SFU core k8 (ot_hgi_sfu_core_split2) re-aspect for the d4c 3.30 mm SU/VM band: 950.4 x 3132, lanes W/E columns 393.12 pitch, 80 SRAMs in two back-to-back middle columns, all W/E pins over the full face span (<= 6/um); clock roots clk/clk_pw/clk_pe + reset relay as k7",
+  "benches": [
+   {
+    "name": "split_equiv_r23",
+    "cmd": "OUT={RUN}/bench/r23 SFU_LG_R=23 CORE2=1 bash tools/hbm_static/run_sfu_split_equiv.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_SPLIT_GATE POSITIVE PASS",
+    "min_count_regex": "SFU_SPLIT_EQUIV PASS edges=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_skip_pinreg",
+    "cmd": "OUT={RUN}/bench/skip SFU_LG_R=23 CORE2=1 EQ_MUT=skip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/skip/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_clkpw",
+    "cmd": "OUT={RUN}/bench/clkpw SFU_LG_R=23 CORE2=1 EQ_MUT=clkpw bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/clkpw/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "results/arch/hbm_native_1013/sfu_native_quarter",
+   "results/rtl/hbm_hc_sfu_static_1015/qswiglu",
+   "rtl/test/hbm_accel/generic",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros",
+   "rtl/hbm_accel/generic/peers",
+   "rtl/hdc",
+   "physical/ref_tile/sfu_lane_ring3_rt/src",
+   "tools/hbm_static",
+   "rtl/lib/ot_rst_relay.sv"
+  ]
+ },
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "k7 (H-SU 2026-10-16): k6 hbm_sfucore_split-k6-dea957e63 FLOORPLAN_MARGIN bank_distance (lanes 0/3/6/12.. 502 um from their E-face pins: only one lane column can sit within 100 um of one face) + TEXTBOOK REFUSE clk 18,143 sinks / rst_n 13,745 loads. Fix: ot_hgi_sfu_core_split2 splits the lane-direct buses W (lanes 0-7) / E (8-15) so each lane column hugs its own face; pin regs on their own roots clk_pw (W ~4.4k) / clk_pe (E ~2.7k), clk keeps bridge+engine (~10.9k); rst_n -> ot_rst_relay (4 regions). Floorplan: lane columns R0 W / MY E at 32.4 um from the faces, 352.08 pitch (21.6 um row gaps), 80 SRAMs abutted in the middle column (x 295.488), local_* W and io/ctl E moved above the lane field (2838.8..3560). Same outline 763.56 x 3580. | k8 (H-SU 1815 fork, 10-16): d4c SU/VM band <= 3.30 mm (die <= 25.2 mm, portrait SM rows): k7 763.56 x 3580 was taller than the band. Re-aspect only (same RTL ot_hgi_sfu_core_split2, same clock roots / reset relays / benches): outline 950.4 x 3132; lane columns W (0-7, R0) / E (8-15, MY) 32.4 um from their faces at 393.12 pitch (62.64 um row gaps = horizontal corridors); the 80 operand SRAMs fold from one 3,283 um column into two columns of 40 with a 21.9 um middle channel (W column x 291.456 MY, pins facing the 43 um W channel; E column x 486.144 R0, pins facing the 43 um E channel; y 745.2..2386.8); local_* (4,448) now share the W face and io_word/compiler_control (2,214) the E face with the lane buses over the full 23.76..3108.24 span (W ~1.9 pins/um, E ~1.1 pins/um, <= 6/um), no pin region above the lane field."
+}
