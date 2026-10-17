@@ -7,13 +7,17 @@ forwarded-clock relay chains.
 
     cluster_extract.py stagemap  --canonical-layout L --out J      phase-fixed stage map (compiler input; BF ids remapped)
     cluster_extract.py analyze   --plan P [--die-v V] --out J      column signatures + isomorphism report of a GEN plan
-    cluster_extract.py extract   --plan P --die-v V --glue G --out D   column (+ hub) cluster masters: Verilog wrapper,
-                                                                   placement, ports, clock/reset entries, ref_tile spec
+    cluster_extract.py extract   --plan P --die-v V --lef L --out D   exact column wrappers, local placement,
+                                                                   literal ports and transport overlap census
 
 BF phase (--bf-phase-fixed in tools/dsrom_s81_fulldie.py): the allocator keeps every root's pair range and BF count
 (stage_map region_bounds and per-root BF count unchanged), but the BF pairs inside a root follow ONE pattern per
 (pairs, BF) class, so all frames of a class pack to the same element order.  Before: 32 frame signatures, only because
 floor(i * 1973 / 424) rotates the in-root BF phase.
+
+Extraction preserves every distinct physical signature; phase fixing does not
+prove that four logical classes yield only four physical masters. Hub grouping,
+native binding, compiled timing and routable transit channels remain separate.
 
 Column cluster = one field frame (region frame_<r>) + its column FIFO cf<r> (already a member of the frame region).
 Every frame boundary net of the c26 plan goes through cf<r> (xd/xf, xd2/xf2 forwarded entries, rd/rf forwarded return,
