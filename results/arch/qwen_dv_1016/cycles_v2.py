@@ -79,7 +79,10 @@ def dv2(f, lanes=8, rep=False):
     tree_die = 2 * st(I, 'dvs_W5', 'dvs_W4', 'dvs_W3', 'dvs_W2', 'dvs_W1', 'dvs_W0', 'dvx_w')
     K = st(I, 'dvs_W4', 'dvs_W3', 'dvs_W2', 'dvs_W1', 'dvs_W0', 'dvk_W', 'native59', 'd2d_rom')
     O = st(I, 'd2d_rom', 'native59', 'dvk_W', 'dvs_W0', 'dvs_W1', 'dvs_W2', 'dvs_W3', 'dvs_W4', 'dvs_W5')
-    A = st(I, 'dvs_W0', 'dva_W', 'io_collective') + st(I, 'io_collective', 'dva_W', 'dvs_W0')
+    if d.get('variant') == 'A':                     # dv2r8e A: collective at the W edge, AR enters at the backbone end W5
+        A = st(I, 'dvs_W5', 'io_collective') + st(I, 'io_collective', 'dvs_W5')
+    else:
+        A = st(I, 'dvs_W0', 'dva_W', 'io_collective') + st(I, 'io_collective', 'dva_W', 'dvs_W0')
     o = dict(R=R, P=P, K=K, O=O, A=A, QK=2 * beats(128, lanes), SILU=beats(128, lanes), BCA=far, SEAM=0, far=far, within=within)
     if rep:
         o.update(NORM=beats(683, lanes) + max(tree_side, within) + 64 + 3, tree=tree_side)

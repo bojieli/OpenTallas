@@ -338,3 +338,38 @@ Two consequences for this plan:
   - It gates on FF hold >= 0.
   - Any shortfall is fixed only in relay stations or die-net hold cells.
 - **Opt-outs:** none planned. The slice is single-domain.
+
+## dv2r8e: IO on the die edge (owner question via coordinator, 2026-10-17) -- ADOPTED
+
+`build_dv2e.py` starts from dv2r8 and makes three changes:
+- **IO column.** The 3 SerDes PHYs, io_collective and io_ucie are rotated into ONE W-edge column (1,672 um wide), centred on the slice row beside `dvs_W5`. That slice is the end of the stream backbone. Stack order is serdes_2, serdes_1, collective, ucie, serdes, so every FDI goes to a neighbour.
+- **D2D side.** ucie_kv / d2d / native59 / sys_face stay on the N edge at the centre axis, where the KV die abuts. That is the shortest, package-legal choice.
+- **Centre.** The centre is closed to 994 um: tt_ctlm plus two 108-um channels for the W<->E stream lane.
+
+Variant B was tried and rejected:
+- the collective stayed in the centre and the SerDes were split across the W/E edges;
+- the FDI links then cross the slice row, giving cut 1.348 and 13 lines > 0.55.
+
+Comparison (same metr.py / cycles_v2.py; @200 = 200-um hop sensitivity):
+
+| | q3h | dv1 | dv2r8 | dv2r16 | **dv2r8e** |
+|---|---:|---:|---:|---:|---:|
+| worst cut | 1.435 | 0.488 | 0.416 | 0.439 | **0.414** |
+| stages @405 | 11,948 | 5,175 | 4,297 | 7,060 | **4,185** |
+| stages @200 | 24,543 | 10,575 | 8,988 | 14,517 | **8,641** |
+| bit-mm | 1.077 M | 0.893 M | 0.857 M | 0.924 M | **0.807 M** |
+| die mm² | 742 | 742 | 797 | 825 | **670 (27.8 x 24.1)** |
+| longest single link | 18.9 mm bword_1 | 15.4 | 20.2 | 23.9 | 23.3 mm `sf_io_shared_fault` (1 b) |
+| cycles / layer vs q3h @405 | 0 | -17 | -9 | -119 | **-138 (about +2 % tok/s)** |
+| cycles / layer vs q3h @200 | 0 | +32 | -90 | -200 | **-351** |
+
+**Decision by routing ease (cut, then stages, then bit-mm): dv2r8e.**
+- It is at least as good as dv2r8 on all three.
+- It is also smaller by 126 mm² and faster: the AR enters at the backbone end (A 50 -> 4), and the narrower centre shortens the K, O and BCA paths.
+- The longest links are 1-b io_collective <-> sys_face/tt control and fault nets that span the W edge to the N centre. They get relay chains.
+
+Outputs:
+- `compare_all.png`: q3h | dv1 | dv2r8 | dv2r16 | dv2r8e, same scale and colours, viewed.
+- `dv2r8e.png`: viewed.
+
+The plan is now asymmetric: all IO is on the W edge. The E-side AR rows ride the backbone. That traffic is within the collective's own 512 b/cycle, and is ordered farthest-first.
