@@ -90653,8 +90653,8 @@
     "h": 330.48
    },
    "origin": {
-    "x": 16299.28,
-    "y": 16709.44,
+    "x": 8540.0,
+    "y": 17300.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -90942,7 +90942,8 @@
     "W": 0.1522,
     "N": 0.0195
    },
-   "plan_block": "sucore_NE"
+   "plan_block": "sucore_NE",
+   "note_r7b": "H-DIE-R7b 10-17 coordinator 0dc: qcore RE-HOMED beside its pgslices (was (16299.28, 16709.44), ~12 mm from su_NE0..3); now in the su_NE1/su_NE2 channel next to sfucore_NE; structural successor (one root + reducer child) still owed by HBM-SU"
   },
   {
    "name": "sucore_NW",
@@ -90954,8 +90955,8 @@
     "h": 330.48
    },
    "origin": {
-    "x": 16299.28,
-    "y": 20409.44,
+    "x": 8700.0,
+    "y": 21000.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -91243,7 +91244,8 @@
     "E": 0.1522,
     "N": 0.0195
    },
-   "plan_block": "sucore_NW"
+   "plan_block": "sucore_NW",
+   "note_r7b": "H-DIE-R7b 10-17 coordinator 0dc: qcore RE-HOMED beside its pgslices (was (16299.28, 20409.44), ~12 mm from su_NW0..3); now in the su_NW1/su_NW2 channel next to sfucore_NW; structural successor (one root + reducer child) still owed by HBM-SU"
   },
   {
    "name": "sucore_SE",
@@ -91255,8 +91257,8 @@
     "h": 330.48
    },
    "origin": {
-    "x": 16299.28,
-    "y": 15129.52,
+    "x": 8540.0,
+    "y": 14100.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -91544,7 +91546,8 @@
     "W": 0.1522,
     "N": 0.0195
    },
-   "plan_block": "sucore_SE"
+   "plan_block": "sucore_SE",
+   "note_r7b": "H-DIE-R7b 10-17 coordinator 0dc: qcore RE-HOMED beside its pgslices (was (16299.28, 15129.52), ~12 mm from su_SE0..3); now in the su_SE1/su_SE2 channel next to sfucore_SE; structural successor (one root + reducer child) still owed by HBM-SU"
   },
   {
    "name": "sucore_SW",
@@ -91556,8 +91559,8 @@
     "h": 330.48
    },
    "origin": {
-    "x": 15390.08,
-    "y": 11429.52,
+    "x": 8540.0,
+    "y": 10400.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -91845,7 +91848,8 @@
     "E": 0.1522,
     "N": 0.0195
    },
-   "plan_block": "sucore_SW"
+   "plan_block": "sucore_SW",
+   "note_r7b": "H-DIE-R7b 10-17 coordinator 0dc: qcore RE-HOMED beside its pgslices (was (15390.08, 11429.52), ~12 mm from su_SW0..3); now in the su_SW1/su_SW2 channel next to sfucore_SW; structural successor (one root + reducer child) still owed by HBM-SU"
   },
   {
    "name": "host_N",
@@ -98400,6 +98404,44 @@
    "pin_status": "FACES_ONLY",
    "grant": "d4f_r6_slot_1017",
    "notes": "own slot E of idx_op (peer hb_idx__ctl 2,192 b); was OWNER-BLOCK MISFIT in run3"
+  },
+  {
+   "name": "refcfg_SW",
+   "cell": "ot_hbm_pc_refresh_cfg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 129.6,
+    "h": 129.6
+   },
+   "origin": {
+    "x": 9890.0,
+    "y": 1680.0,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_r7b_refcfg_1017",
+   "notes": "H-DIE-R7b 10-17 coordinator 0da+ (d): ot_hbm_pc_refresh_cfg of the SW stack (HBM-TIE bc32a2e45, F20 target 126) at the middle of the svc_SW_s0..s7 PC row; pc_rst_n fans out to the 32 PCs (per-stack balanced reset relay tree still owed by H-NETLIST)"
+  },
+  {
+   "name": "refcfg_NW",
+   "cell": "ot_hbm_pc_refresh_cfg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 129.6,
+    "h": 129.6
+   },
+   "origin": {
+    "x": 9890.0,
+    "y": 30140.0,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_r7b_refcfg_1017",
+   "notes": "H-DIE-R7b 10-17 coordinator 0da+ (d): ot_hbm_pc_refresh_cfg of the NW stack (HBM-TIE bc32a2e45, F20 target 127) at the middle of the svc_NW_s0..s7 PC row; pc_rst_n fans out to the 32 PCs (per-stack balanced reset relay tree still owed by H-NETLIST)"
   }
  ],
  "sub_layouts": {
