@@ -1,0 +1,240 @@
+{
+  "time": "2026-10-16T20:01:40.087679-07:00",
+  "qualification": false,
+  "status": "CTS calibration partial, live parent/gate retained",
+  "note": "Placement RC raw all-sink arrival, not boundary-native launch/capture. ck/ck_rs/ck_rn fail spread80. Eight TX consumer roots all <=214ps max with <=29ps spread: measured split works for TX. b1/NL b1 placement GPL0305; b2/NL b2 still active.",
+  "rows": [
+    {
+      "port": "ck",
+      "sinks": 4396,
+      "tt_mean_ps": 601.7,
+      "tt_min_ps": 565.2,
+      "tt_max_ps": 914.4,
+      "tt_spread_ps": 349.2
+    },
+    {
+      "port": "ck_rs",
+      "sinks": 1024,
+      "tt_mean_ps": 389.4,
+      "tt_min_ps": 350.0,
+      "tt_max_ps": 539.8,
+      "tt_spread_ps": 189.8
+    },
+    {
+      "port": "ck_rn",
+      "sinks": 1024,
+      "tt_mean_ps": 495.8,
+      "tt_min_ps": 458.1,
+      "tt_max_ps": 610.4,
+      "tt_spread_ps": 152.3
+    },
+    {
+      "port": "ck_tx0",
+      "sinks": 781,
+      "tt_mean_ps": 133.7,
+      "tt_min_ps": 126.6,
+      "tt_max_ps": 141.6,
+      "tt_spread_ps": 15.0
+    },
+    {
+      "port": "ck_tx1",
+      "sinks": 781,
+      "tt_mean_ps": 126.7,
+      "tt_min_ps": 120.8,
+      "tt_max_ps": 132.6,
+      "tt_spread_ps": 11.8
+    },
+    {
+      "port": "ck_tx2",
+      "sinks": 781,
+      "tt_mean_ps": 134.0,
+      "tt_min_ps": 125.0,
+      "tt_max_ps": 154.1,
+      "tt_spread_ps": 29.1
+    },
+    {
+      "port": "ck_tx3",
+      "sinks": 781,
+      "tt_mean_ps": 160.3,
+      "tt_min_ps": 151.5,
+      "tt_max_ps": 169.4,
+      "tt_spread_ps": 17.9
+    },
+    {
+      "port": "ck_tx4",
+      "sinks": 781,
+      "tt_mean_ps": 193.1,
+      "tt_min_ps": 187.5,
+      "tt_max_ps": 202.3,
+      "tt_spread_ps": 14.8
+    },
+    {
+      "port": "ck_tx5",
+      "sinks": 781,
+      "tt_mean_ps": 198.4,
+      "tt_min_ps": 187.7,
+      "tt_max_ps": 214.1,
+      "tt_spread_ps": 26.4
+    },
+    {
+      "port": "ck_tx6",
+      "sinks": 781,
+      "tt_mean_ps": 102.9,
+      "tt_min_ps": 95.5,
+      "tt_max_ps": 109.3,
+      "tt_spread_ps": 13.8
+    },
+    {
+      "port": "ck_tx7",
+      "sinks": 781,
+      "tt_mean_ps": 102.2,
+      "tt_min_ps": 95.7,
+      "tt_max_ps": 109.3,
+      "tt_spread_ps": 13.6
+    },
+    {
+      "port": "ck_rp0",
+      "sinks": 1,
+      "tt_mean_ps": 21.4,
+      "tt_min_ps": 21.4,
+      "tt_max_ps": 21.4,
+      "tt_spread_ps": 0.0
+    },
+    {
+      "port": "ck_rp1",
+      "sinks": 1,
+      "tt_mean_ps": 21.4,
+      "tt_min_ps": 21.4,
+      "tt_max_ps": 21.4,
+      "tt_spread_ps": 0.0
+    },
+    {
+      "port": "ck_rp2",
+      "sinks": 1,
+      "tt_mean_ps": 21.4,
+      "tt_min_ps": 21.4,
+      "tt_max_ps": 21.4,
+      "tt_spread_ps": 0.0
+    },
+    {
+      "port": "ck_rp3",
+      "sinks": 1,
+      "tt_mean_ps": 21.4,
+      "tt_min_ps": 21.4,
+      "tt_max_ps": 21.4,
+      "tt_spread_ps": 0.0
+    },
+    {
+      "port": "ck_rp4",
+      "sinks": 1,
+      "tt_mean_ps": 21.4,
+      "tt_min_ps": 21.4,
+      "tt_max_ps": 21.4,
+      "tt_spread_ps": 0.0
+    },
+    {
+      "port": "ck_rp5",
+      "sinks": 1,
+      "tt_mean_ps": 21.4,
+      "tt_min_ps": 21.4,
+      "tt_max_ps": 21.4,
+      "tt_spread_ps": 0.0
+    },
+    {
+      "port": "ck_rp6",
+      "sinks": 1,
+      "tt_mean_ps": 21.4,
+      "tt_min_ps": 21.4,
+      "tt_max_ps": 21.4,
+      "tt_spread_ps": 0.0
+    },
+    {
+      "port": "ck_rp7",
+      "sinks": 1,
+      "tt_mean_ps": 21.4,
+      "tt_min_ps": 21.4,
+      "tt_max_ps": 21.4,
+      "tt_spread_ps": 0.0
+    },
+    {
+      "port": "ck_rp8",
+      "sinks": 1,
+      "tt_mean_ps": 21.4,
+      "tt_min_ps": 21.4,
+      "tt_max_ps": 21.4,
+      "tt_spread_ps": 0.0
+    },
+    {
+      "port": "ck_rp9",
+      "sinks": 1,
+      "tt_mean_ps": 21.4,
+      "tt_min_ps": 21.4,
+      "tt_max_ps": 21.4,
+      "tt_spread_ps": 0.0
+    },
+    {
+      "port": "ck_fa0",
+      "sinks": 514,
+      "tt_mean_ps": 91.6,
+      "tt_min_ps": 86.9,
+      "tt_max_ps": 94.7,
+      "tt_spread_ps": 7.8
+    },
+    {
+      "port": "ck_fa1",
+      "sinks": 514,
+      "tt_mean_ps": 91.2,
+      "tt_min_ps": 86.3,
+      "tt_max_ps": 95.2,
+      "tt_spread_ps": 8.9
+    },
+    {
+      "port": "ck_fa2",
+      "sinks": 514,
+      "tt_mean_ps": 89.2,
+      "tt_min_ps": 84.7,
+      "tt_max_ps": 93.3,
+      "tt_spread_ps": 8.6
+    },
+    {
+      "port": "ck_fa3",
+      "sinks": 516,
+      "tt_mean_ps": 90.5,
+      "tt_min_ps": 86.0,
+      "tt_max_ps": 93.8,
+      "tt_spread_ps": 7.8
+    },
+    {
+      "port": "ck_fa4",
+      "sinks": 287,
+      "tt_mean_ps": 87.4,
+      "tt_min_ps": 85.3,
+      "tt_max_ps": 90.3,
+      "tt_spread_ps": 5.0
+    },
+    {
+      "port": "ck_lsl0",
+      "sinks": 1,
+      "tt_mean_ps": 39.1,
+      "tt_min_ps": 39.1,
+      "tt_max_ps": 39.1,
+      "tt_spread_ps": 0.0
+    },
+    {
+      "port": "ck_lsl1",
+      "sinks": 1,
+      "tt_mean_ps": 35.0,
+      "tt_min_ps": 35.0,
+      "tt_max_ps": 35.0,
+      "tt_spread_ps": 0.0
+    },
+    {
+      "port": "ck_lsl2",
+      "sinks": 1,
+      "tt_mean_ps": 31.1,
+      "tt_min_ps": 31.1,
+      "tt_max_ps": 31.1,
+      "tt_spread_ps": 0.0
+    }
+  ]
+}

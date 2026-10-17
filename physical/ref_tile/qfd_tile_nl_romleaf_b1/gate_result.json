@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qfd_tile_nl_romleaf_b1",
  "verdict": "FAIL",
- "generated": "2026-10-16T18:43:20-0700",
- "host": "ot-pve1",
+ "generated": "2026-10-16T20:00:57-0700",
+ "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "9e6ae81bcf14a4bf05278fcea801df5959aa5112",
+  "start_commit": "16bde8ddd9556fda36d8264901fa0eeb35483f5c",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "27c6c7cc0d075b1336c76730ee7485228fa9ba9ba730bda11e466cb941df5ae1",
-  "manifest_sha256": "3451e87355a9ef842a14d7e3df02a2029a93da36af24e8524523a703227176dc",
+  "archive_sha256": "70dd783636d1654a502300aac33a5afcbf9095360c65fb19395847037bc54d9b",
+  "manifest_sha256": "88bcff63bd539746987759aa4d62d7c8e5e3ad25bbf82e0a321022c3987081e4",
   "files": [
    {
     "path": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
@@ -49635,8 +49635,8 @@
    {
     "path": "tools/qwen_romleaf/parent_nk_tx_pins.tcl",
     "kind": "file",
-    "sha256": "6fde245350b5847ecd704940b0f8a835b15456274362ee507afab3cdf0e713a2",
-    "git_blob": "0b81910bf00cf19b8eede5dbccf88dc68744e8e3",
+    "sha256": "bc8726bdcd7476722a26db7e7d93ad7d98621ad8ec7908b4a05a031d8a524472",
+    "git_blob": "0236ae288b817973b2e84d6f8af0e5107f358605",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -49651,8 +49651,8 @@
    {
     "path": "tools/qwen_romleaf/parent_nl_tx_pins.tcl",
     "kind": "file",
-    "sha256": "8f8ffe04ebd3de282288fcd72a4a8bf893e465622b05e5bfc37e86c2796bc06d",
-    "git_blob": "5b12174d92694fc590544742db51c10c6cafb1b3",
+    "sha256": "e802ecc6c70520df8f335cf810effbcc5a0c583192b4bd1d87d64a468f4c11b5",
+    "git_blob": "1a5c1d8da220e86c8f7b63333658b1a15264091a",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -71955,14 +71955,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 24243457,
+   "archive_bytes": 24243582,
    "unpacked_bytes": 159252480,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "e5627bdd9376190bad72a9314c55b80e184cd96f",
+   "origin_main": "d9ae75efa02680a9856ec31a9435f777daa608bc",
    "content_sha256": "00593ad7dc8c08b376e47b34a727ef07be5d8818f8ae042f4265f48690b7b1c5",
    "files": [
     {
@@ -72610,9 +72610,9 @@
     "tools/qwen_romleaf/parent_consumer_boxes.tcl": "f457eb24959eb5731eb0333a7cf5ef602c17955da75ade2acd5a2a54ea0e83ac",
     "tools/qwen_romleaf/parent_nk_assigned_pins.tcl": "d4c90292755b2a5fadc7beb4804941f972d83a3b71f8df471e9b7ef23c74b27a",
     "tools/qwen_romleaf/parent_nk_bench.sh": "69363dc0bdec836af614c6e55fa7e8a0e8cc6c4bc06b9bafce14e0d5b3ff5b9e",
-    "tools/qwen_romleaf/parent_nk_tx_pins.tcl": "6fde245350b5847ecd704940b0f8a835b15456274362ee507afab3cdf0e713a2",
+    "tools/qwen_romleaf/parent_nk_tx_pins.tcl": "bc8726bdcd7476722a26db7e7d93ad7d98621ad8ec7908b4a05a031d8a524472",
     "tools/qwen_romleaf/parent_nl_assigned_pins.tcl": "079adfbf1959687bae80dd21350c02023b51d66ff44c3b01553d287201e50311",
-    "tools/qwen_romleaf/parent_nl_tx_pins.tcl": "8f8ffe04ebd3de282288fcd72a4a8bf893e465622b05e5bfc37e86c2796bc06d",
+    "tools/qwen_romleaf/parent_nl_tx_pins.tcl": "e802ecc6c70520df8f335cf810effbcc5a0c583192b4bd1d87d64a468f4c11b5",
     "tools/qwen_romleaf/parent_plan.py": "ccc15ed8123cc436752c47ded64f853b391c598fce26894dfc9ff36ed37ac7d3",
     "tools/qwen_romleaf/parent_regions.tcl": "abc1834246b6e6ace96ad134fac04508289d2818841025228735ce50b106ff5c",
     "tools/qwen_romleaf/parent_regions_b1.tcl": "3f448a4125e804da181ada6c361c76f859c392c122c51cdccccf47c5b65c76ab",
@@ -72631,16 +72631,16 @@
    },
    "digest": "0a8b12e1f313eaa24822856a0cc9c943afaea844cb775b560f88898fb36ea500"
   },
-  "captured": "2026-10-16T18:36:40-0700",
+  "captured": "2026-10-16T18:55:38-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qfd_tile_nl_romleaf_b1/signoff.sdc"
   },
-  "remote_script_sha256": "c08d3b27d4bb3522fe030885c9330a6e4dff7be5655eeb5410a9dfbc13321a15",
+  "remote_script_sha256": "29ef74f8b036515bbc23042c13c6d35269a8647488ded9d35d89203413010a54",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-pve1",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nl_romleaf_b1-20261016-183626",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nl_romleaf_b1-20261016-185525",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -72648,8 +72648,8 @@
   ]
  },
  "clock": {
-  "max_root_sinks": null,
-  "root": null,
+  "max_root_sinks": 6255,
+  "root": "port:ck",
   "cts": true,
   "tt_insertion_ps": null,
   "tt_spread_ps": null,
@@ -72659,8 +72659,8 @@
    "insertion_ps": 300.0,
    "spread_ps": 80.0
   },
-  "verdict": "UNKNOWN",
-  "text": "clock sinks unknown; no measured clock tree (no --cts gate evidence)"
+  "verdict": "PASS",
+  "text": "6,255 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
  },
  "items": [
   {
@@ -72827,27 +72827,27 @@
   },
   {
    "severity": "FAIL",
-   "check": "floorplan.pin_track",
-   "message": "8 signal/clock pins have no full min-width landing on any actual preferred routing track (ck_tx0: M4 [0.054, 420.996, 0.138, 421.02]; ck_tx1: M4 [0.054, 249.972, 0.138, 249.996]; ck_tx2: M4 [0.054, 95.988, 0.138, 96.012]): correct the die-assigned pin coordinates against the DEF track grid; do not silently snap a grant",
-   "fix": "fix actual pin shapes/coordinates against the die and DEF tracks; retain the assigned native pin plan"
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
   },
   {
    "severity": "WARN",
    "check": "cts_calibration",
-   "message": "CTS rc=None ck_insertion rc=None",
+   "message": "CTS rc=2 ck_insertion rc=1",
    "fix": ""
   },
   {
-   "severity": "WARN",
-   "check": "clock_rule",
-   "message": "the synthesized netlist's clock sinks were not reported: clock sinks unknown; no measured clock tree (no --cts gate evidence)",
-   "fix": "read the remote log (textbook lint line 'clock_roots')"
+   "severity": "FAIL",
+   "check": "remote_script",
+   "message": "remote script completed with exit 1",
+   "fix": "read the original terminal log and fix the reported failure"
   },
   {
-   "severity": "WARN",
-   "check": "layout_images",
-   "message": "the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log",
-   "fix": ""
+   "severity": "FAIL",
+   "check": "trial_route",
+   "message": "trial global route produced no congestion table (GATE_GRT_RC=2)",
+   "fix": "read the remote grt.log"
   }
  ]
 }

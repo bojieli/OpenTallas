@@ -1,0 +1,74 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_romleaf_b3-20261016-185527/routes/gate/work/orfs/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_asap7_ref_gate/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "ot_entry_7",
+ "parasitics": "placement-estimated",
+ "raw_source": true,
+ "ss": {
+  "boundary": null,
+  "all": {
+   "n": 781,
+   "mean": 244.8,
+   "min": 239.8,
+   "max": 254.8
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 3
+ },
+ "tt": {
+  "boundary": null,
+  "all": {
+   "n": 781,
+   "mean": 193.1,
+   "min": 187.5,
+   "max": 202.3
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 3
+ },
+ "ff": {
+  "boundary": null,
+  "all": {
+   "n": 781,
+   "mean": 160.6,
+   "min": 154.5,
+   "max": 169.3
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 3
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 0,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 245,
+  "CK_SS_ALL_MEAN": 245,
+  "CK_SS_MIN": 240,
+  "CK_SS_ALL_MIN": 240,
+  "CK_SS_MAX": 255,
+  "CK_SS_ALL_MAX": 255,
+  "CK_TT_MEAN": 193,
+  "CK_TT_ALL_MEAN": 193,
+  "CK_TT_MIN": 188,
+  "CK_TT_ALL_MIN": 188,
+  "CK_TT_MAX": 202,
+  "CK_TT_ALL_MAX": 202,
+  "CK_FF_MEAN": 161,
+  "CK_FF_ALL_MEAN": 161,
+  "CK_FF_MIN": 154,
+  "CK_FF_ALL_MIN": 154,
+  "CK_FF_MAX": 169,
+  "CK_FF_ALL_MAX": 169,
+  "CK_ROUTE_REF": "SS"
+ }
+}
