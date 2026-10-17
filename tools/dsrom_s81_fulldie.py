@@ -2328,6 +2328,16 @@ write_db /work/floorplan.odb
     if bnd:
         man['bound_views'] = dict(table=VIEW_BINDING, masters=bnd)
     man['relay_stages'] = _export_relay_stages(m, work)
+    if m.get('cluster_modules') is not None:
+        # --cluster-mode: the die-top plan record (the canonical_screen record format) for dataflow_links / reviews,
+        # and one pins LEF of every die-top master (generated + constant real + bound views)
+        rec_ = dict(scope='CLUSTER_MODE_DIE_TOP', die=list(DIE), insts=[[i.name, i.master, i.x, i.y, i.w, i.h, i.orient, i.kind,
+                    i.region] for i in m['insts']], buses=m['buses'], frames=m['frames'], regions=m['regions'],
+                    variant=m['variant'], cluster_boxes=m.get('cluster_boxes'))
+        (work / 'cluster_top_plan.json.gz').write_bytes(gzip.compress(json.dumps(rec_, default=str).encode(), mtime=0))
+        (work / 'all_pins.lef').write_text('\n'.join((work / f).read_text() for f in (
+            'elements.lef', 'q_elem.lef', 'cfg.lef', 'phy.lef', 'serdes.lef', 'ucie.lef', 'bound_views.lef') if (work / f).exists()))
+        man['cluster_mode'] = dict(plan='cluster_top_plan.json.gz', report='cluster_mode.json', modules='die_clusters.v')
     (work / 'manifest.json').write_text(json.dumps(man, indent=1))
     return man
 
