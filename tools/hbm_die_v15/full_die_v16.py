@@ -189,6 +189,67 @@ def engine_region():
                 drop_v15_edges=[], notes='coordinator region (die_case.py)')
 
 
+def soft_relay_splice(buses, ports, drv, E, problems):
+    """H-DIE-R7 10-17: F1 relay trees for buses touching soft-parent children, applied at bit level after the soft
+    flatten.  Every listed load bit must be driven by its listed driver bit in the flattened netlist (else a problem);
+    it is then re-driven by its last station (the direct bits leave E), and the station edges are bound as usual."""
+    tmp = []
+    st_edges = apply_relay_splice_v2(buses, [], ports, tmp)
+    problems += [x for x in tmp if not x.startswith('relay splice v2:')]
+    cut = set(); bad = 0
+    for b in buses:
+        for (p, k), ls in zip(b['driver_bits'], b['loads']):
+            for (si, sp, sb) in ls:
+                sk = b['sinks'].get(si)
+                if sk is None or (sk['src'][0] is None and not sk['chain']):
+                    continue
+                if drv.get((si, sp, sb)) != (b['driver'], p, k):
+                    bad += 1; continue
+                del drv[(si, sp, sb)]; cut.add((si, sp, sb))
+    if bad:
+        problems.append(f'soft relay splice: {bad} listed load bits not driven by their listed driver bit')
+    newE = []
+    for e in E:
+        si, sp, slo, shi = e['source']; di, dp, dlo, dhi = e['sink']
+        keep = [(di, dp, dlo + k) not in cut for k in range(shi - slo)]
+        if all(keep):
+            newE.append(e); continue
+        k = 0
+        while k < len(keep):
+            if not keep[k]:
+                k += 1; continue
+            k2 = k
+            while k2 + 1 < len(keep) and keep[k2 + 1]:
+                k2 += 1
+            newE.append(dict(e, name=f"{e['name']}__sr{k}", bits=k2 - k + 1, source=[si, sp, slo + k, slo + k2 + 1],
+                             sink=[di, dp, dlo + k, dlo + k2 + 1]))
+            k = k2 + 1
+    for e in st_edges:
+        try:
+            si, sp, slo, shi = rng(e['src'], ports); di, dp, dlo, dhi = rng(e['dst'], ports)
+        except KeyError as x:
+            problems.append(f"soft relay edge {e['name']}: unknown instance/port {x}"); continue
+        if si not in ports or di not in ports or sp not in ports[si] or dp not in ports[di]:
+            problems.append(f"soft relay edge {e['name']}: unknown {si}.{sp} / {di}.{dp}"); continue
+        if ports[si][sp]['direction'] != 'output' or ports[di][dp]['direction'] != 'input':
+            problems.append(f"soft relay edge {e['name']}: not output->input"); continue
+        if shi - slo != dhi - dlo or shi > ports[si][sp]['bits'] or dhi > ports[di][dp]['bits']:
+            problems.append(f"soft relay edge {e['name']}: width mismatch"); continue
+        clash = False
+        for k in range(shi - slo):
+            if (di, dp, dlo + k) in drv and drv[(di, dp, dlo + k)] != (si, sp, slo + k):
+                problems.append(f"soft relay edge {e['name']}: {di}.{dp}[{dlo + k}] already driven by {drv[(di, dp, dlo + k)]}")
+                clash = True; break
+        if clash:
+            continue
+        for k in range(shi - slo):
+            drv[(di, dp, dlo + k)] = (si, sp, slo + k)
+        newE.append(dict(name=e['name'], bits=shi - slo, source=[si, sp, slo, shi], sink=[di, dp, dlo, dhi],
+                         clock=e.get('clock'), ready_or_credit=False, allowed_exception=None, basis=e.get('basis', ''),
+                         region=e['region']))
+    E[:] = newE
+
+
 # ------------------------------------------------------------------------------------------------ build
 def rng(ref, ports):
     """[inst, port, lo?, hi?] -> (inst, port, lo, hi) with the whole port when omitted"""
@@ -1047,6 +1108,16 @@ def build(specs_dir, out, extra=(), soft_idx=None):
         edges = a2p_edge_remap(edges, problems)
     if PORT_SPLIT:
         edges = port_split_edges(edges, problems)
+    # H-DIE-R7 10-17: relay buses whose driver or a sink is a soft-parent child (hb_idx__*) are spliced after the
+    # soft flatten (the children have no ports yet here); see soft_relay_splice below.
+    soft_buses = []
+    if soft_idx:
+        for s in specs:
+            v2 = s.get('relay_splice_v2') or []
+            keep = [b for b in v2 if not (b['driver'].startswith('hb_idx__') or any(k.startswith('hb_idx__') for k in b['sinks']))]
+            if len(keep) != len(v2):
+                soft_buses += [b for b in v2 if b not in keep]
+                s['relay_splice_v2'] = keep
     edges = apply_relay_splice(specs, edges, ports, problems)
     # ---------------- bit-level driver map
     drv = {}          # (inst, port, bit) -> (inst, port, bit) | ('PIN', name, bit)
@@ -1146,6 +1217,8 @@ def build(specs_dir, out, extra=(), soft_idx=None):
         import soft_parent
         nm = json.loads(Path(soft_idx).read_text())
         soft_rec = soft_parent.soft_flatten('hb_idx', nm, insts, ports, drv, E, clocks, straps, rtl, problems)
+        if soft_buses:
+            soft_relay_splice(soft_buses, ports, drv, E, problems)
         if soft_rec:
             soft_rec['netmap'] = str(soft_idx)
             soft_rec['netmap_sha256'] = sha(Path(soft_idx))
