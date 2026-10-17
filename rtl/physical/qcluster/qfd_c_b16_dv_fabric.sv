@@ -502,22 +502,24 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     wire [513:0] rs_0;  qfd_q3h_stn #(.W(514), .N(1)) u_rs_0 (.ck(ck_sw), .d(n_y_0_0), .q(rs_0));   // (574.56, 307.78) sw
     wire [513:0] rs_1;  qfd_q3h_stn #(.W(514), .N(1)) u_rs_1 (.ck(ck_sw), .d(rs_0), .q(rs_1));   // (574.56, 43.20) sw pin register
     assign rs = rs_1;
-    // ---- DV far-band feedthrough rs_i (N) -> rs_o (S): 14 registers in the T centre lane, hop <= 395.4 um
+    // ---- DV far-band feedthrough rs_i (N) -> rs_o (S): 16 registers in the T centre lane, hop <= 383.0 um
     wire [513:0] rs_i_m5 = (MUT == 5) ? {rs_i[513:2], rs_i[0], rs_i[1]} : rs_i;
-    wire [513:0] ft_0;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_0 (.ck(ck_nw), .d(rs_i_m5), .q(ft_0));   // (1179.36, 5184.00) nw rs_i pin register
-    wire [513:0] ft_1;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_1 (.ck(ck_nw), .d(ft_0), .q(ft_1));   // (1179.36, 4788.55) nw
-    wire [513:0] ft_2;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_2 (.ck(ck_nw), .d(ft_1), .q(ft_2));   // (1179.36, 4393.11) nw
-    wire [513:0] ft_3;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_3 (.ck(ck_nw), .d(ft_2), .q(ft_3));   // (1179.36, 3997.66) nw
-    wire [513:0] ft_4;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_4 (.ck(ck_nw), .d(ft_3), .q(ft_4));   // (1179.36, 3602.22) nw
-    wire [513:0] ft_5;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_5 (.ck(ck_nw), .d(ft_4), .q(ft_5));   // (1179.36, 3206.77) nw
-    wire [513:0] ft_6;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_6 (.ck(ck_nw), .d(ft_5), .q(ft_6));   // (1179.36, 2811.32) nw
-    wire [513:0] ft_7;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_7 (.ck(ck_sw), .d(ft_6), .q(ft_7));   // (1179.36, 2415.88) sw
-    wire [513:0] ft_m4;  qfd_q3h_run #(.W(514), .D(MUT == 4 ? 1 : 0)) u_m4 (.ck(ck_sw), .d(ft_7), .q(ft_m4));
-    wire [513:0] ft_8;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_8 (.ck(ck_sw), .d(ft_m4), .q(ft_8));   // (1179.36, 2020.43) sw
-    wire [513:0] ft_9;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_9 (.ck(ck_sw), .d(ft_8), .q(ft_9));   // (1179.36, 1624.98) sw
-    wire [513:0] ft_10;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_10 (.ck(ck_sw), .d(ft_9), .q(ft_10));   // (1179.36, 1229.54) sw
-    wire [513:0] ft_11;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_11 (.ck(ck_sw), .d(ft_10), .q(ft_11));   // (1179.36, 834.09) sw
-    wire [513:0] ft_12;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_12 (.ck(ck_sw), .d(ft_11), .q(ft_12));   // (1179.36, 438.65) sw
-    wire [513:0] ft_13;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_13 (.ck(ck_sw), .d(ft_12), .q(ft_13));   // (1179.36, 43.20) sw rs_o pin register
-    assign rs_o = ft_13;
+    wire [513:0] ft_0;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_0 (.ck(ck_nw), .d(rs_i_m5), .q(ft_0));   // (574.56, 5184.00) nw rs_i pin register
+    wire [513:0] ft_1;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_1 (.ck(ck_nw), .d(ft_0), .q(ft_1));   // (957.60, 5184.00) nw
+    wire [513:0] ft_2;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_2 (.ck(ck_nw), .d(ft_1), .q(ft_2));   // (1179.36, 5022.72) nw
+    wire [513:0] ft_3;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_3 (.ck(ck_nw), .d(ft_2), .q(ft_3));   // (1179.36, 4639.68) nw
+    wire [513:0] ft_4;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_4 (.ck(ck_nw), .d(ft_3), .q(ft_4));   // (1179.36, 4256.64) nw
+    wire [513:0] ft_5;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_5 (.ck(ck_nw), .d(ft_4), .q(ft_5));   // (1179.36, 3873.60) nw
+    wire [513:0] ft_6;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_6 (.ck(ck_nw), .d(ft_5), .q(ft_6));   // (1179.36, 3490.56) nw
+    wire [513:0] ft_7;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_7 (.ck(ck_nw), .d(ft_6), .q(ft_7));   // (1179.36, 3107.52) nw
+    wire [513:0] ft_8;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_8 (.ck(ck_nw), .d(ft_7), .q(ft_8));   // (1179.36, 2724.48) nw
+    wire [513:0] ft_m4;  qfd_q3h_run #(.W(514), .D(MUT == 4 ? 1 : 0)) u_m4 (.ck(ck_nw), .d(ft_8), .q(ft_m4));
+    wire [513:0] ft_9;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_9 (.ck(ck_sw), .d(ft_m4), .q(ft_9));   // (1179.36, 2341.44) sw
+    wire [513:0] ft_10;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_10 (.ck(ck_sw), .d(ft_9), .q(ft_10));   // (1179.36, 1958.40) sw
+    wire [513:0] ft_11;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_11 (.ck(ck_sw), .d(ft_10), .q(ft_11));   // (1179.36, 1575.36) sw
+    wire [513:0] ft_12;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_12 (.ck(ck_sw), .d(ft_11), .q(ft_12));   // (1179.36, 1192.32) sw
+    wire [513:0] ft_13;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_13 (.ck(ck_sw), .d(ft_12), .q(ft_13));   // (1179.36, 809.28) sw
+    wire [513:0] ft_14;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_14 (.ck(ck_sw), .d(ft_13), .q(ft_14));   // (1179.36, 426.24) sw
+    wire [513:0] ft_15;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_15 (.ck(ck_sw), .d(ft_14), .q(ft_15));   // (1179.36, 43.20) sw rs_o pin register
+    assign rs_o = ft_15;
 endmodule

@@ -1540,7 +1540,10 @@ def gen_hooks(s: dict, kd: str) -> dict:
     if spine:
         pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
         ins = child_insertions(s)
-        files["spine_ins.tcl"] = SPINE_INS.format(ins=" ".join(f"{k} {v}" for k, v in sorted(ins.items())),
+        # ROOT review 10-17: a per-pin key with Tcl-special characters (bus-bit entry 'ckv[0]') is braced, else
+        # [dict create ...] would command-substitute '[0]'; plain keys stay unbraced (existing kits byte-identical)
+        tk = lambda k: "{" + k + "}" if re.search(r"[\[\]$\\{}\s;\"]", k) else k  # noqa: E731
+        files["spine_ins.tcl"] = SPINE_INS.format(ins=" ".join(f"{tk(k)} {v}" for k, v in sorted(ins.items())),
                                                   pinlookup=SPINE_PIN_LOOKUP if s.get("child_clock_ref") == "pin" else "")
     # Explicit clock adapters must wrap the established spine before the IO boundary wrapper.
     # These are routed source dependencies, not post-generation hand edits.

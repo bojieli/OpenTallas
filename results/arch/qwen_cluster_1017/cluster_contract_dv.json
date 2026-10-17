@@ -38,7 +38,7 @@
  "register_centroid_x": {
   "sw": 694.0,
   "se": 1754.8,
-  "nw": 692.1,
+  "nw": 695.7,
   "ne": 1757.5
  },
  "tiles": [
@@ -196,7 +196,7 @@
   },
   "nw": {
    "pin": "ck_nw",
-   "fabric_flops": 20104,
+   "fabric_flops": 21132,
    "tiles": [
     "0_2",
     "0_3",
@@ -217,7 +217,7 @@
    "tile_entry_pins": 156
   }
  },
- "fabric_flops": 76855,
+ "fabric_flops": 77883,
  "latency_edges": {
   "tap": {
    "0": 3,
@@ -227,7 +227,7 @@
   },
   "bco": 17,
   "rs_fabric": 35,
-  "rs_i_to_rs_o": 14,
+  "rs_i_to_rs_o": 16,
   "reset": 18
  },
  "hop_um": {
@@ -354,7 +354,7 @@
    ],
    "pins_per_um": 3.0,
    "lane_x": 1179.4,
-   "note": "DV: far-band rs word out (14 edges)"
+   "note": "DV: far-band rs word out (rs_i + 15 edges)"
   },
   {
    "port": "bc2",
@@ -480,30 +480,30 @@
    "note": "registered feed-through to the far cluster"
   },
   {
-   "port": "bco1",
-   "bits": 516,
-   "face": "N",
-   "layer": "M5",
-   "range_um": [
-    920.693,
-    1092.693
-   ],
-   "pins_per_um": 3.0,
-   "lane_x": 1130.4,
-   "note": "registered feed-through to the far cluster"
-  },
-  {
    "port": "rs_i",
    "bits": 514,
    "face": "N",
    "layer": "M5",
    "range_um": [
-    1093.693,
-    1265.027
+    488.893,
+    660.227
    ],
    "pins_per_um": 3.0,
-   "lane_x": 1179.4,
+   "lane_x": 574.6,
    "note": "DV: far-band rs word in"
+  },
+  {
+   "port": "bco1",
+   "bits": 516,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    1006.86,
+    1178.86
+   ],
+   "pins_per_um": 3.0,
+   "lane_x": 1130.4,
+   "note": "registered feed-through to the far cluster"
   },
   {
    "port": "bco2",
@@ -511,8 +511,8 @@
    "face": "N",
    "layer": "M5",
    "range_um": [
-    1266.027,
-    1438.027
+    1179.86,
+    1351.86
    ],
    "pins_per_um": 3.0,
    "lane_x": 1228.3,
@@ -537,11 +537,11 @@
    "face": "N",
    "layer": "M5",
    "range_um": [
-    691.628,
-    691.928
+    695.225,
+    695.525
    ],
    "pins_per_um": null,
-   "note": "quadrant nw entry island (register centroid x 692)"
+   "note": "quadrant nw entry island (register centroid x 696)"
   },
   {
    "port": "ck_ne",
@@ -640,12 +640,13 @@
   ]
  },
  "die_crossing": {
-  "rule": "(a) + (c): no die link crosses a qfd_c_b16_dv outline (die repeaters never sit inside it; M9 over the cluster carries die PG only in dv2r8f).  Die links run in the band gaps, the slice / head row and the W column; the only data that passes through a cluster is its own registered feedthroughs bc -> bco (4 x 516 b, 17 edges) and rs_i -> rs_o (514 b, 14 edges).  No die feedthrough repeater sites are reserved.",
+  "rule": "(a) + (c): no die link crosses a qfd_c_b16_dv outline (die repeaters never sit inside it; M9 over the cluster carries die PG only in dv2r8f).  Die links run in the band gaps, the slice / head row and the W column; the only data that passes through a cluster is its own registered feedthroughs bc -> bco (4 x 516 b, 17 edges) and rs_i -> rs_o (514 b, 15 edges).  No die feedthrough repeater sites are reserved.",
   "registered_feedthroughs": {
    "bc0..3->bco0..3": 17,
-   "rs_i->rs_o": 14
+   "rs_i->rs_o": 16
   }
  },
+ "far_position": "ONE master: in the far bands (0 / 3) rs_i is a declared-idle terminus tied to the instance's own tie_lo by the die (valid bit 0 every cycle) and rs_o is left unconnected (output only)",
  "gating": [
   "A0 views qfd_tile_nk_romleaf_a0 / nl twin not CLOSED (Q-ROMPARENT-2): diagnostics only, no binding"
  ]

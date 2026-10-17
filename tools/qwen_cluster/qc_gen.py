@@ -100,12 +100,16 @@ NK_CLOCKS = a0_clocks(f"rtl/physical/{A0_NK}.sv")
 NL_CLOCKS = a0_clocks(f"rtl/physical/{A0_NL}.sv")
 
 
-def ft_chain():
-    """rs_i -> rs_o: N pin register, relays every <= HOP down the T centre lane, S pin register."""
-    y0, y1 = HEIGHT - g.STRIP / 2, g.STRIP / 2
-    k = max(0, math.ceil((y0 - y1) / LIMIT) - 1)      # 5,119 um / 13 = 394 um hops: 14 edges (SPEC 1)
-    ys = [y0] + [round(y0 - (y0 - y1) * i / (k + 1), 3) for i in range(1, k + 1)] + [y1]
-    return [(XT, y) for y in ys]
+def ft_chain(rs_x):
+    """rs_i -> rs_o.  Q-DV dv2r8f5 delta (10-17): rs_i sits on the N face straight above rs (x of the rs lane), so every
+    far-cluster rs crosses the band gap face to face with no jog; inside the cluster the word runs along the N strip to
+    the T centre lane and down T to rs_o on the S face.  Registers every <= LIMIT along that path (pin registers at both
+    ends)."""
+    yN, yS = HEIGHT - g.STRIP / 2, g.STRIP / 2
+    P = [(rs_x, yN), (XT, yN), (XT, yS)]
+    L = g.plen(P)
+    k = max(0, math.ceil(L / LIMIT) - 1)
+    return [g.along(P, i / (k + 1)) for i in range(k + 2)]
 
 
 class Emit:
@@ -228,9 +232,9 @@ def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap):
         prev = f"rs_{j}"
     w(f"    assign rs = {prev};")
     # DV feedthrough
-    ch = ft_chain()
+    ch = ft_chain(rsx["poly"][-1][0])
     w(f"    // ---- DV far-band feedthrough rs_i (N) -> rs_o (S): {len(ch)} registers in the T centre lane, hop <= "
-      f"{max(a[1] - b[1] for a, b in zip(ch, ch[1:])):.1f} um")
+      f"{max(abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(ch, ch[1:])):.1f} um")
     prev = "rs_i_m5"
     w(f"    wire [{BW-1}:0] rs_i_m5 = (MUT == 5) ? {{rs_i[{BW-1}:2], rs_i[0], rs_i[1]}} : rs_i;")
     for j, (px, py) in enumerate(ch):
@@ -334,10 +338,10 @@ def pin_plan(rsx, E):
         cen[q] = sum(x["at"][0] * x["bits"] for x in ss) / sum(x["bits"] for x in ss)
     lane = {f"bc{c}": g.run_x(c) for c in range(4)}
     lane.update({f"bco{c}": g.run_x(c) for c in range(4)})
-    lane.update(rs=rsx["poly"][-1][0], rs_o=XT, rs_i=XT)
+    lane.update(rs=rsx["poly"][-1][0], rs_o=XT, rs_i=rsx["poly"][-1][0])   # rs_i above rs (Q-DV dv2r8f5)
     note = {"bc": "column word (corridor run)", "bco": "registered feed-through to the far cluster",
-            "rs": "block word {fault, valid, 512}", "rs_i": "DV: far-band rs word in", "rs_o": "DV: far-band rs word out (14 edges)"}
-    faces = {"S": ["bc0", "rs", "bc1", "rs_o", "bc2", "bc3"], "N": ["bco0", "bco1", "rs_i", "bco2", "bco3"]}
+            "rs": "block word {fault, valid, 512}", "rs_i": "DV: far-band rs word in", "rs_o": "DV: far-band rs word out (rs_i + 15 edges)"}
+    faces = {"S": ["bc0", "rs", "bc1", "rs_o", "bc2", "bc3"], "N": ["bco0", "rs_i", "bco1", "bco2", "bco3"]}
     islands = {"S": [("sw", ["ck_sw", "rst_n", "far", "cid", "tie_hi", "tie_lo"]), ("se", ["ck_se"])],
                "N": [("nw", ["ck_nw"]), ("ne", ["ck_ne"])]}
     pins = []
@@ -463,8 +467,8 @@ def main():
     for c in range(4):
         ch = g.chain_for(c)
         hops += [b[1] - a[1] for a, b in zip(ch, ch[1:])]
-    ft = ft_chain()
-    hops += [a[1] - b[1] for a, b in zip(ft, ft[1:])]
+    ft = ft_chain(rsx["poly"][-1][0])
+    hops += [abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(ft, ft[1:])]
     if max(hops) > LIMIT:
         raise SystemExit(f"hop over reach: {max(hops):.1f} > {LIMIT}")
     nflops = sum(s["bits"] for s in E.sites)
@@ -488,8 +492,10 @@ def main():
             rule="(a) + (c): no die link crosses a qfd_c_b16_dv outline (die repeaters never sit inside it; M9 over the "
                  "cluster carries die PG only in dv2r8f).  Die links run in the band gaps, the slice / head row and the W "
                  "column; the only data that passes through a cluster is its own registered feedthroughs bc -> bco "
-                 "(4 x 516 b, 17 edges) and rs_i -> rs_o (514 b, 14 edges).  No die feedthrough repeater sites are reserved.",
+                 "(4 x 516 b, 17 edges) and rs_i -> rs_o (514 b, 15 edges).  No die feedthrough repeater sites are reserved.",
             registered_feedthroughs={"bc0..3->bco0..3": g.STAGE["exit"], "rs_i->rs_o": nft}),
+        far_position="ONE master: in the far bands (0 / 3) rs_i is a declared-idle terminus tied to the instance's own "
+                     "tie_lo by the die (valid bit 0 every cycle) and rs_o is left unconnected (output only)",
         gating=["A0 views qfd_tile_nk_romleaf_a0 / nl twin not CLOSED (Q-ROMPARENT-2): diagnostics only, no binding"])
     OUT_ARCH.mkdir(parents=True, exist_ok=True)
     (OUT_ARCH / "cluster_contract_dv.json").write_text(json.dumps(contract, indent=1) + "\n")
