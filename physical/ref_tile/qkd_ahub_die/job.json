@@ -1,13 +1,13 @@
 {
- "name": "qkd_ahub_die-hp1-COMMIT",
+ "name": "qkd_ahub_die-hp2-COMMIT",
  "block": "ot_qkd_ahub_die",
  "ref_tile": true,
- "owner": "Claude:Q-KVSYS-STRIP",
- "purpose": "KV/system die attention hub PARENT ot_qkd_ahub_die (VIS-ROM QKV-07): core hd3 + 4 ot_nhb_zh + 4 ot_nhb_pbst + 4 ot_nhb_pvlg + ot_qkh_recip_leaf (all CLOSED), 14 clock entries (6 CTS roots carry the composition's relay flops), slot 1,175.04 x 760.32 unchanged",
+ "owner": "Claude:KVE-2 lane 10-17",
+ "purpose": "KVE-2 10-17: first route of the KV-die attention hub PARENT ot_qkd_ahub_die (hp1 kit never gated/routed): core hd3 + 4 ot_nhb_zh (m5, native PASS) + 4 ot_nhb_pbst (nhb_pbst_ref, native PASS; ot_nhb_pbst_m5 FAILS capture 275.9 / spread 107.4) + 4 ot_nhb_pvlg + ot_qkh_recip_leaf; all children native PASS (audit 10-17); slot 1,175.04 x 760.32 unchanged",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/qkvelem-1016",
+  "branch": "claude/kve2-1017",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/hdc",
@@ -110,7 +110,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_ahub_die/qkd_ahub_die-hp1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_ahub_die/qkd_ahub_die-hp2-COMMIT"
   }
  ],
  "cycles_added": 0,
