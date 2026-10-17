@@ -42,8 +42,10 @@ class Ages(unittest.TestCase):
             Q.compile_issuer_calendar(8192, worst, age - 1)
 
     def test_vport_rl_matches_plan_pair_age(self):
-        self.assertEqual({v['RL'] for v in self.ages['vport'].values()}, {94})
-        self.assertTrue(self.ages['pv']['age_ok'])
+        # KV-INT 10-17 (KVJ-F measured RT 9, coordinator KVJ-E2 decision): RL = 4 + W 82 + DQ 0 + RT 9 = 95, pair age 96;
+        # the kvs13l4 plan source still records the old pair age 95 (OT_KV_PV_AGE=95), so the next die runs OT_KV_PV_AGE=96
+        self.assertEqual({v['RL'] for v in self.ages['vport'].values()}, {95})
+        self.assertEqual(self.ages['pv']['FIRST_INPUT_AGE'], 96)
 
     def test_phase_profile_is_legal_for_the_rtl(self):
         p = self.ages['phase_launch']

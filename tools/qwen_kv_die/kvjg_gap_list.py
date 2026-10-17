@@ -21,6 +21,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import kv_static as K                                   # noqa: E402
 import kv_static_boot_join as B                         # noqa: E402
+import kv_static_kvjf_join as F                         # noqa: E402
 
 CLOCK_RESET = {'ck', 'rst_n', 'hck', 'hrst_n', 'hrst', 'por_n', 'cal_hck', 'cal_rst_n', 'front_hck', 'return_hck',
                'return_ck', 'pll_hbm', 'pll_hbm_port', 'pll_hbm_ecc', 'pll_hbm_cdc', 'pll_hbm_obs'}
@@ -92,10 +93,8 @@ def owner(table, a, port):
 
 
 def static_gaps():
-    graph, _ = K.template()
-    B.boot_join(graph)
-    B.boot_cdc_join(graph)
-    B.host_admission_join(graph)
+    # KV-INT 10-17: the full merged join (template + boot + 160 boot CDC + host admission + KVJ-F ownership_obs + die cfg)
+    graph, _ = F.build()
     rows, ck = defaultdict(lambda: dict(instances=0)), Counter()
     for i in graph['instances']:
         for p, v in i['inputs'].items():

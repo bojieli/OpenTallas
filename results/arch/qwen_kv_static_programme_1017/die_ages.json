@@ -529,161 +529,161 @@
  "vport": {
   "vport_WS_0": {
    "DQ": 0,
-   "RT": 8,
+   "RT": 9,
    "WP": 51,
    "O": 31,
    "W": 82,
-   "RL": 94,
+   "RL": 95,
    "channel_crossing_um": 129.072,
    "cls": "COLOCATED"
   },
   "vport_WS_1": {
    "DQ": 0,
-   "RT": 8,
+   "RT": 9,
    "WP": 59,
    "O": 23,
    "W": 82,
-   "RL": 94,
+   "RL": 95,
    "channel_crossing_um": 129.072,
    "cls": "COLOCATED"
   },
   "vport_WS_2": {
    "DQ": 0,
-   "RT": 8,
+   "RT": 9,
    "WP": 40,
    "O": 42,
    "W": 82,
-   "RL": 94,
+   "RL": 95,
    "channel_crossing_um": 129.072,
    "cls": "COLOCATED"
   },
   "vport_WS_3": {
    "DQ": 0,
-   "RT": 8,
+   "RT": 9,
    "WP": 67,
    "O": 15,
    "W": 82,
-   "RL": 94,
+   "RL": 95,
    "channel_crossing_um": 129.072,
    "cls": "COLOCATED"
   },
   "vport_WN_0": {
    "DQ": 0,
-   "RT": 8,
+   "RT": 9,
    "WP": 59,
    "O": 23,
    "W": 82,
-   "RL": 94,
+   "RL": 95,
    "channel_crossing_um": 129.072,
    "cls": "COLOCATED"
   },
   "vport_WN_1": {
    "DQ": 0,
-   "RT": 8,
+   "RT": 9,
    "WP": 49,
    "O": 33,
    "W": 82,
-   "RL": 94,
+   "RL": 95,
    "channel_crossing_um": 129.072,
    "cls": "COLOCATED"
   },
   "vport_WN_2": {
    "DQ": 0,
-   "RT": 8,
+   "RT": 9,
    "WP": 66,
    "O": 16,
    "W": 82,
-   "RL": 94,
+   "RL": 95,
    "channel_crossing_um": 129.072,
    "cls": "COLOCATED"
   },
   "vport_WN_3": {
    "DQ": 0,
-   "RT": 8,
+   "RT": 9,
    "WP": 44,
    "O": 38,
    "W": 82,
-   "RL": 94,
+   "RL": 95,
    "channel_crossing_um": 129.072,
    "cls": "COLOCATED"
   },
   "vport_ES_0": {
    "DQ": 0,
-   "RT": 8,
+   "RT": 9,
    "WP": 48,
    "O": 34,
    "W": 82,
-   "RL": 94,
+   "RL": 95,
    "channel_crossing_um": 128.616,
    "cls": "COLOCATED"
   },
   "vport_ES_1": {
    "DQ": 0,
-   "RT": 8,
+   "RT": 9,
    "WP": 58,
    "O": 24,
    "W": 82,
-   "RL": 94,
+   "RL": 95,
    "channel_crossing_um": 128.616,
    "cls": "COLOCATED"
   },
   "vport_ES_2": {
    "DQ": 0,
-   "RT": 8,
+   "RT": 9,
    "WP": 39,
    "O": 43,
    "W": 82,
-   "RL": 94,
+   "RL": 95,
    "channel_crossing_um": 128.616,
    "cls": "COLOCATED"
   },
   "vport_ES_3": {
    "DQ": 0,
-   "RT": 8,
+   "RT": 9,
    "WP": 66,
    "O": 16,
    "W": 82,
-   "RL": 94,
+   "RL": 95,
    "channel_crossing_um": 128.616,
    "cls": "COLOCATED"
   },
   "vport_EN_0": {
    "DQ": 0,
-   "RT": 8,
+   "RT": 9,
    "WP": 56,
    "O": 26,
    "W": 82,
-   "RL": 94,
+   "RL": 95,
    "channel_crossing_um": 128.616,
    "cls": "COLOCATED"
   },
   "vport_EN_1": {
    "DQ": 0,
-   "RT": 8,
+   "RT": 9,
    "WP": 45,
    "O": 37,
    "W": 82,
-   "RL": 94,
+   "RL": 95,
    "channel_crossing_um": 128.616,
    "cls": "COLOCATED"
   },
   "vport_EN_2": {
    "DQ": 0,
-   "RT": 8,
+   "RT": 9,
    "WP": 63,
    "O": 19,
    "W": 82,
-   "RL": 94,
+   "RL": 95,
    "channel_crossing_um": 128.616,
    "cls": "COLOCATED"
   },
   "vport_EN_3": {
    "DQ": 0,
-   "RT": 8,
+   "RT": 9,
    "WP": 39,
    "O": 43,
    "W": 82,
-   "RL": 94,
+   "RL": 95,
    "channel_crossing_um": 128.616,
    "cls": "COLOCATED"
   }
@@ -765,7 +765,9 @@
    "note": "qkd_kv_landing_cal LD = return-slot output register + relays; pc_path children abut their landing group"
   }
  },
- "notes": [],
+ "notes": [
+  "PV pair FIRST_INPUT_AGE 96 != the plan-accepted 95"
+ ],
  "qk": {
   "response_lat_range": [
    10,
@@ -777,10 +779,10 @@
   "rule": "QK_ISSUE_AGE >= max RESPONSE_LAT + 11 (static_qk_calendar write-before-read); one age for all 32 ECTL A: the slowest group binds the layer anyway, so equal ages cost nothing over it"
  },
  "pv": {
-  "RL": 94,
-  "FIRST_INPUT_AGE": 95,
+  "RL": 95,
+  "FIRST_INPUT_AGE": 96,
   "plan_age_bound": 95,
-  "age_ok": true,
+  "age_ok": false,
   "rule": "RL = 4 + W + DQ + RT equal on all 16 ports; pair FIRST_INPUT_AGE = RL + 1"
  }
 }

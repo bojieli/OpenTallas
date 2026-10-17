@@ -38,7 +38,8 @@ LANDING_SEG_LAT = 8      # qkd_static_kv_landing_seg header: request -> response
 ISSUER_RING_EXTRA = 7    # kv_static.validate_native_edges / static_qk_calendar: ECTL ROW_RETURN_LAT = RESPONSE_LAT + 7
 QK_WRITE_BEFORE_READ = 11  # static_qk_calendar.compile_calendar: write 7 + (seg + 2) + s < read age - 1 + s
 QK_ISSUE_AGE_KIT = 34    # template / attn_calendar QK_CONSUME (the bench-measured ECTL A age)
-VPORT_RT_LANDING = 8     # qkd_pv16_vport r5/r6: RT = landing VREQ 8 + request / return relays
+VPORT_RT_LANDING = 9     # qkd_pv16_vport r5/r6: RT = abutted landing seg -> vport 9 (KVJ-F b4d7accd4 tb_static_landing_vport:
+                         # 'landing 8 + relays' faults every slot; kv_die VPORT_RT_SEG = 9) + request / return relays
 REACH_WIDE_UM = 340     # kvs13l4 OT_KV_REACH_W 36:400,296:370,100000:340 (words > 296 b)
 VPORT_RL_BASE = 4        # qkd_pv16_vport: RL = 4 + W + DQ + RT; pair FIRST_INPUT_AGE = RL + 1
 CORE_U, HBM_U = 625, 768  # qkd_static_kv_phase_launch / qkd_kv_landing_cal: core 833.33 ps = 625 u, HBM 1024 ps = 768 u
