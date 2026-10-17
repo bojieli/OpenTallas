@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.qwen.dvm.head_pin_change.v1",
+ "master": "qfd_xhead_w",
+ "kit": "physical/ref_tile/qfd_xhead_w_w130",
+ "owner": "Q-IO-1815 2026-10-16",
+ "approved_by": [
+  "Q-ELEM (Q-KV lead)",
+  "Q-COMPUTE-DIE: PENDING"
+ ],
+ "change": "n_d[0..515]: W face M4 y 4.092..53.916 -> W face M4 y 214.044..299.580 (bit order kept, even spread over free M4 tracks)",
+ "unchanged": [
+  "all other pins",
+  "N/S faces",
+  "M6 E/W grant contacts",
+  "ck (W face 210.492)",
+  "rst_n W 212.508"
+ ],
+ "die_action": "route n_d (head north copy) from the W face band 214-300 um instead of 4-54 um (closer to the N side)",
+ "reason": "w5 (Q-IO-1815 2026-10-16, both heads, die pin move pending Q-COMPUTE-DIE OK): n_d (516 M4 outputs) moved from W face y 4.09-53.92 (10.3 pins/um, at the SW corner beside S cs_wd 824 M3/M5 + W M6 cs_wv/cs_wm/cs_wd) to the empty W band y 214.04-299.58 (6.0 pins/um, above rst_n 212.51, below rn_* at 300.06). Measured cause: W w3 route qfd_xhead_w_w130-w3-64ae90680 EARLY_FAIL_CONGESTION 123 (M2 68/M4 55) at x7.4-9.7 y1.7-31 on n_d/cs_wd/cs_wm/outhold nets (images inspected, cc6db97d0); E w4 native launch 227.6 on the same SW corner"
+}
