@@ -218,12 +218,16 @@ def compact_return_relays(G,m,CH):
  CH.P.occ=occ
  m['canonical_rsc_repack']=dict(return_bundle_lanes=4,station_width_um=G.stn_dims([G.CRET+2]*4,False)[0],moves=receipt,physical_qualified=False)
 
-def _cm_reach(G,name=''):
+def _cm_reach(G,name='',path=None):
  """--cluster-mode FIELD transport station spacing cap (provisional; None = the chain default).  Hub-side stretches
  (cx*_spine prefix from the injector, cr*_hub into the gather end block) keep the chain default: they run inside the
  future hub clusters and are re-qualified there."""
  cm=getattr(G,'CLUSTER_MODE',None)
  if not cm or name.endswith(('_spine','_spine_x2','_hub')):return None
+ if path and G.wide_hub():
+  # a stretch that runs only in the S14 roads beside the hub (the shared vertical spine) keeps the chain default
+  sp=[G.wide_hub()['s14w'],G.wide_hub()['s14e']]
+  if all(any(lo-60.0<=p[0]<=hi+60.0 for lo,hi in sp) for p in path):return None
  return cm['reach_um']
 
 def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
@@ -291,11 +295,11 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
     path=G._vmc_reroute(m,path,ends,name)
     actual=G._poly_len(path)
     forced=[s*actual/length if length else s for s in forced]
-   sa=CH.run(name,LA,path,allowed,src,forced=forced,reach=_cm_reach(G,name))
+   sa=CH.run(name,LA,path,allowed,src,forced=forced,reach=_cm_reach(G,name,path))
    G.chain_nets(CH,name,srcA,[i for i,_,_ in sa],LA)
    tA=(sa[-1][0].name,'fo0','do0') if sa else srcA
    if not pair:return sa,tA,None
-   sb=CH.run(name+'_x2',LB,path,allowed,src,forced=sorted(set([round(s_,3) for _,s_,_ in sa]+list(forced))),reach=_cm_reach(G,name))
+   sb=CH.run(name+'_x2',LB,path,allowed,src,forced=sorted(set([round(s_,3) for _,s_,_ in sa]+list(forced))),reach=_cm_reach(G,name,path))
    assert len(sb)==len(sa),('--bf-x2-pair: unequal station counts',name,len(sa),len(sb))
    G.chain_nets(CH,name+'_x2',srcB,[i for i,_,_ in sb],LB)
    return sa,tA,(sb[-1][0].name,'fo0','do0') if sb else srcB
@@ -361,7 +365,7 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
       ordered=sorted(active);positions=[byname[active[j][0]] for j in ordered]
       src=(sum(i.x+i.w/2 for i in positions)/len(positions),sum(i.y+i.h/2 for i in positions)/len(positions))
       path=G._dedup([src,(path[0][0],src[1])]+path)
-      stages=CH.run(name,[G.CRET+2]*len(ordered),path,allowed,src,forced=[G._poly_len(path)],reach=_cm_reach(G,name))
+      stages=CH.run(name,[G.CRET+2]*len(ordered),path,allowed,src,forced=[G._poly_len(path)],reach=_cm_reach(G,name,path))
       for k,(obj,_s,_hop) in enumerate(stages):
        byname[obj.name]=obj
        for j,lane in enumerate(ordered):
