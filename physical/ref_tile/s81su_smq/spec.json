@@ -80,7 +80,7 @@
   "io_hold_margin_ns": 0.0,
   "macro_halo_um": 5.4
  },
- "structural_change": "S81U-2 (S81-DV p4h, SM 1/16 per regional service slice): per-head softmax tap, successor of dsfd_su_t_smt (73x346 um, 5.4k pins on two faces, native capture FAIL 266/319 ps): one 512-b serial row port instead of the 2,560-b parameter tap, ~2.5k pins on four full faces of a 151x151 um square (<= 5.7 pins/um), flop-first pins, die hold budget (no input hold padding).",
+ "structural_change": "S81U-2 (S81-DV p4h, SM 1/16 per regional service slice): per-head softmax tap, successor of dsfd_su_t_smt (73x346 um, 5.4k pins on two faces, native capture FAIL 266/319 ps): one 512-b serial row port instead of the 2,560-b parameter tap, ~2.5k pins on four full faces of a 151x151 um square (<= 5.7 pins/um), flop-first pins, die hold budget (no input hold padding). g2 (DRC fix): the S-face clk pin had no pin range, so it landed inside the e_d run (x 75.6) and caused the one M3 Metal Spacing DRC (e_d[404] vs clk) in all three routes; clk now has its own range 92.88-93.6 with 0.72 um gaps to e_d (7.56-92.16, 6.05 pins/um as before) and o_vi.",
  "job": {
   "owner": "Claude:S81U-2",
   "branch": "claude/s81u2-1017",
@@ -244,14 +244,14 @@
   ],
   "e_v": [
    6.48,
-   8.801
+   7.56
   ],
   "e_d": [
-   8.801,
-   93.301
+   7.56,
+   92.16
   ],
   "o_vi": [
-   93.301,
+   94.32,
    95.622
   ],
   "o_di": [
@@ -265,6 +265,10 @@
   "f_i": [
    141.273,
    144.72
+  ],
+  "clk": [
+   92.88,
+   93.6
   ]
  },
  "children": [],
