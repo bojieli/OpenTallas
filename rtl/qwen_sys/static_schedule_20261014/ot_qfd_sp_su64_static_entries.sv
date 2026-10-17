@@ -60,6 +60,9 @@ module ot_qfd_sp_su64_static_entries #(
     input wire[63:0]ck_head,ck_exp,ck_rcp,ck_rsq,
     input wire[15:0]ck_align,input wire[63:0]ck_lane,input wire[8:0]ck_red,
     input  wire              clk,
+    // E-face station clock (Q-IO-1815 2026-10-17): the crom answer input station and the crom/kv output station clock
+    // from clk_e; the only parent (qfd_sp_su64_sfu) drives it with ck (SPLIT=0) or its second root ck_e (SPLIT=1).
+    input  wire              clk_e,
     input  wire              rst_n,
     // control (stationed)
     input  wire              go,
@@ -133,8 +136,10 @@ module ot_qfd_sp_su64_static_entries #(
     wire [NW-1:0] tok_q;
     wire [SW*64-1:0] crq_q, crq_q0;
     wire [SW*64-1:0] crom_m = (MUT != 0) ? (crom_q ^ {{(SW*64-1){1'b0}}, 1'b1}) : crom_q;
-    ot_hdc_delay #(.W(FI + NW + SW*64), .D(IS)) u_if (.clk(clk), .rst_n(rst_n),
-        .d({f_d, tok, crom_m}), .q({f_q, tok_q, crq_q0}));
+    ot_hdc_delay #(.W(FI + NW), .D(IS)) u_if (.clk(clk), .rst_n(rst_n),
+        .d({f_d, tok}), .q({f_q, tok_q}));
+    ot_hdc_delay #(.W(SW*64), .D(IS)) u_ic (.clk(clk_e), .rst_n(rst_n),
+        .d(crom_m), .q(crq_q0));
     ot_hdc_delay #(.W(2), .D(IS), .RESET(1)) u_ig (.clk(clk), .rst_n(rst_n), .d({go, a_src}),
         .q({go_q, asrc_q}));
     // ---- static mapped embedding row buffer + exact decode; GO never held ----
@@ -264,11 +269,13 @@ module ot_qfd_sp_su64_static_entries #(
     // ---- output stations ----
     localparam integer FS = 24 + 1 + 1 + 1 + 8 + 1 + 1 + SW + SW + 32;
     localparam integer FD = SW*AW + SW*AW + SW*32;
-    ot_hdc_delay #(.W(FS), .D(OS), .RESET(1)) u_os (.clk(clk), .rst_n(rst_n),
+    ot_hdc_delay #(.W(FS - 2*SW), .D(OS), .RESET(1)) u_os (.clk(clk), .rst_n(rst_n),
         .d({accepted_count, s_ready, s_idle, s_active, s_inflight, s_fault || e_fault, s_wrom_re,
-            s_crom_re, s_kv_we, s_progress, s_rows}),
-        .q({accepted_ops, ready, idle, obs_active, obs_inflight, fault, wrom_fault, crom_re, kv_we, progress,
+            s_progress, s_rows}),
+        .q({accepted_ops, ready, idle, obs_active, obs_inflight, fault, wrom_fault, progress,
             progress_rows}));
-    ot_hdc_delay #(.W(FD), .D(OS)) u_od (.clk(clk), .rst_n(rst_n),
+    ot_hdc_delay #(.W(2*SW), .D(OS), .RESET(1)) u_ose (.clk(clk_e), .rst_n(rst_n),
+        .d({s_crom_re, s_kv_we}), .q({crom_re, kv_we}));
+    ot_hdc_delay #(.W(FD), .D(OS)) u_od (.clk(clk_e), .rst_n(rst_n),
         .d({s_crom_addr, s_kv_waddr, s_kv_wdata}), .q({crom_addr, kv_waddr, kv_wdata}));
 endmodule

@@ -1,9 +1,10 @@
 import sys
 clk_ports=['ck']+[f'ck_{f}{i}' for f,n in [('head',64),('exp',64),('rcp',64),('rsq',64),('align',16),('lane',64),('red',9)] for i in range(n)]
-def inst(name,pinreg,mut):
+def inst(name,pinreg,mut,split):
     c=",".join(f".{p}(clk)" for p in clk_ports)
     cas=",".join(f".ca{g}({name}_ca[{g}]),.cq{g}(cq[{g}])" for g in range(8))
-    return f"""    qfd_sp_su64_sfu #(.PINREG({pinreg}),.PRMUT({mut})) {name} ({c},
+    return f"""    qfd_sp_su64_sfu #(.PINREG({pinreg}),.PRMUT({mut}),.SPLIT({split}),.RSTR(RSTR)) {name} ({c},.ck_e(clk),
+        .si_cbs0(cbs),.si_cbs1(cbs),.si_cbs2(cbs),.si_cbs3(cbs),
         .rst_n(rst_n),.external_a_re({name}_ea_re),.external_a_addr({name}_ea_addr),.external_a_q({name}_ea_q),
         .external_vm_a_re({name}_evm_re),.external_vm_a_addr({name}_ea_addr),.external_embed_fault(1'b0),
         .si(si),.sd({name}_sd),.acc({name}_acc),.native_issue({name}_ni),.va({name}_va),.vq({name}_vq),.cp(cp),
@@ -50,6 +51,9 @@ body=f"""`timescale 1ns/1ps
 // PRMUT (mutants, must FAIL): 1 old VM/cb edge, 2 copy latency, 3 sd old edge, 4 cp old edge.
 module tb_qfd_su64_pinreg;
     parameter integer MODE = 0, PRMUT = 0, OPS = 48, SEED = 11, MAXCYC = 20000;
+    // Q-IO-1815 SU: SPLIT (d1: cb_stage from the E-face same-age copies si_cbs*, E stations on ck_e) and RSTR (reset relay,
+    // both DUTs).  CBSMUT = 1 (must FAIL): the si_cbs copies arrive one edge late (proves d1 reads si_cbs, not si).
+    parameter integer SPLIT = 1, RSTR = 1, CBSMUT = 0;
     reg clk = 0, rst_n = 0;
     always #0.5 clk = ~clk;
     function [31:0] hw(input [31:0] x);
@@ -57,8 +61,10 @@ module tb_qfd_su64_pinreg;
         begin y = x * 32'h9e3779b1; y = y ^ (y >> 15); y = y * 32'h85ebca6b; hw = y ^ (y >> 13); end
     endfunction
     reg [481:0] si; reg [55:0] cp; reg [511:0] cq [0:7];
+    reg [5:0] cbs_late; always @(posedge clk) cbs_late <= si[481:476];
+    wire [5:0] cbs = (CBSMUT != 0) ? cbs_late : si[481:476];
 {decl('d0')}{decl('d1')}
-{inst('d0',0,0)}{inst('d1',1,'PRMUT')}
+{inst('d0',0,0,0)}{inst('d1',1,'PRMUT','SPLIT')}
     integer cyc = 0, errs = 0, g, ops = 0, copies = 0, ev0 = 0, ev1 = 0;
     // one-edge history of d0 / d1 for the shifted compares
     reg [107:0] d0_sd_p; reg [63:0] d1_ea_re_p; reg [1535:0] d1_ea_addr_p; reg [5:0] d0_cst_p [0:7]; integer gp;

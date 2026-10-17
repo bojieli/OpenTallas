@@ -1,6 +1,7 @@
 rtl/qwen_split/qfd_sp_su64_sfu.sv
 rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv
 rtl/hdc/ot_hdc_delay.sv
+rtl/lib/ot_rst_relay.sv
 rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv
 rtl/physical/ot_hdc_vred_pending_guard.sv
 rtl/physical/ot_hdc_vreduce_entries64.sv

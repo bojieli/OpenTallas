@@ -18,8 +18,18 @@
 // Schedule deltas: results/rtl/qwen_su64_pinreg_1016/schedule_delta.json.  PRMUT (bench mutants only): 1 = va/ca
 // registers without the internal relay compensation (the old edge), 2 = copy read latency not compensated,
 // 3 = sd not registered (the old status edge), 4 = cp not registered (the old copy-start edge).
-module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0,EXTERNAL_EMBED=1,PINREG=0,PRMUT=0)(
+// Q-IO-1815 SU 2026-10-17 (opt-in, defaults unchanged):
+// SPLIT = 1: (a) the ca cb_stage field comes from si_cbs0..3, four die-delivered SAME-AGE copies of si[481:476] on the E
+//            face beside ca2k/ca2k+1 (the die equalises their relay count with si's), instead of the W-face si pins: the
+//            48 si -> ca7 pin-register stages spanned >= 2,418 um (one stage); ca values unchanged on every edge;
+//            (b) the E-face stations (ca pin registers, entries' crom answer input station and crom/kv output station)
+//            clock from ck_e, a second standard-cell root (ck: 23,949 sinks -> ~12.9k, ck_e ~11.0k), same clock.
+// RSTR = 1:  rst_n drives only an ot_rst_relay (2 sync + 1 relay flop, 5 kept region copies: W pins, S pins, E pins,
+//            SU entries, copy engine); release 3 edges after the port, the same edge in every region (rst_n 14,748 loads).
+module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0,EXTERNAL_EMBED=1,PINREG=0,PRMUT=0,SPLIT=0,RSTR=0)(
     input wire ck,rst_n,
+    input wire ck_e,
+    input wire [5:0] si_cbs0,si_cbs1,si_cbs2,si_cbs3,
     output wire [63:0] external_a_re,
     output wire [1535:0] external_a_addr,
     input wire [2047:0] external_a_q,
@@ -402,8 +412,18 @@ module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0,EXTERNAL
     output wire [205:0] ca7,
     input wire [511:0] cq7
 );
- always @(posedge ck or negedge rst_n)
-  if(!rst_n)native_issue<=0;
+ wire [4:0] rr;   // region resets: 0 W pins, 1 S pins, 2 E pins, 3 SU entries, 4 copy engine
+ generate if(RSTR!=0)begin:g_rstr
+  ot_rst_relay #(.REGIONS(5),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rr(.clk(ck),.rst_n_in(rst_n),.rst_n(rr));
+ end else begin:g_rstw
+  assign rr={5{rst_n}};
+ end endgenerate
+ wire ck_ex=(SPLIT!=0)?ck_e:ck;
+ wire [5:0] cbs[0:3];
+ assign cbs[0]=(SPLIT!=0)?si_cbs0:si[481:476]; assign cbs[1]=(SPLIT!=0)?si_cbs1:si[481:476];
+ assign cbs[2]=(SPLIT!=0)?si_cbs2:si[481:476]; assign cbs[3]=(SPLIT!=0)?si_cbs3:si[481:476];
+ always @(posedge ck or negedge rr[0])
+  if(!rr[0])native_issue<=0;
   else native_issue<={si[293:270],si[269:268],si[36:1],si[0]};
  wire [2:0] re0,re1;wire [71:0] a0,a1;
  wire [63:0] sw_mask;wire[23:0] sw_a0,sw_a1;wire[2047:0] sw_data;
@@ -414,38 +434,44 @@ module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0,EXTERNAL
  // Export a real pin register. Local availability remains the true internal
  // occupancy; the new status edge never changes copy/arithmetic issue timing.
  ot_hdc_delay #(.W(1),.D(1),.RESET(1))u_copy_active_pin
-  (.clk(ck),.rst_n(rst_n),.d(copy_active_internal),.q(cp_active));
+  (.clk(ck),.rst_n(rr[0]),.d(copy_active_internal),.q(cp_active));
  wire embed_epoch_fault=1'b0;   // epoch identity is checked by the external provider (preload face + core store)
  wire[2366:0] arithmetic_va;
  wire[107:0] sd_c={su_fault|wrom_fault|copy_fault|embed_epoch_fault,rows,progress,kv_we,idle&&!copy_active_internal,ready&&!copy_active_internal,inflight,active|copy_active_internal};
  wire[205:0] ca_c[0:7];
  wire[2366:0] va_c;wire[2136:0] xsw_c;wire[55:0] cp_c;
- assign ca_c[0]={si[481:476],crom_addr[0+:192],crom_re[0+:8]};
+ assign ca_c[0]={cbs[0],crom_addr[0+:192],crom_re[0+:8]};
  assign crom_q[0+:512]=cq0;
- assign ca_c[1]={si[481:476],crom_addr[192+:192],crom_re[8+:8]};
+ assign ca_c[1]={cbs[0],crom_addr[192+:192],crom_re[8+:8]};
  assign crom_q[512+:512]=cq1;
- assign ca_c[2]={si[481:476],crom_addr[384+:192],crom_re[16+:8]};
+ assign ca_c[2]={cbs[1],crom_addr[384+:192],crom_re[16+:8]};
  assign crom_q[1024+:512]=cq2;
- assign ca_c[3]={si[481:476],crom_addr[576+:192],crom_re[24+:8]};
+ assign ca_c[3]={cbs[1],crom_addr[576+:192],crom_re[24+:8]};
  assign crom_q[1536+:512]=cq3;
- assign ca_c[4]={si[481:476],crom_addr[768+:192],crom_re[32+:8]};
+ assign ca_c[4]={cbs[2],crom_addr[768+:192],crom_re[32+:8]};
  assign crom_q[2048+:512]=cq4;
- assign ca_c[5]={si[481:476],crom_addr[960+:192],crom_re[40+:8]};
+ assign ca_c[5]={cbs[2],crom_addr[960+:192],crom_re[40+:8]};
  assign crom_q[2560+:512]=cq5;
- assign ca_c[6]={si[481:476],crom_addr[1152+:192],crom_re[48+:8]};
+ assign ca_c[6]={cbs[3],crom_addr[1152+:192],crom_re[48+:8]};
  assign crom_q[3072+:512]=cq6;
- assign ca_c[7]={si[481:476],crom_addr[1344+:192],crom_re[56+:8]};
+ assign ca_c[7]={cbs[3],crom_addr[1344+:192],crom_re[56+:8]};
  assign crom_q[3584+:512]=cq7;
  qfd_su_vm_pack u_pack(.s_re0(re0),.s_re1(re1),.s_a0(a0),.s_a1(a1),.sw_mask(sw_mask),.sw_a0(sw_a0),.sw_a1(sw_a1),.sw_data(sw_data),.red_we(red_we),.red_addr(red_addr),.red_data(red_data),.va(arithmetic_va));
- qfd_su_static_copy #(.READ_EDGES(15+((PINREG!=0&&PRMUT!=2)?1:0)),.DATA_MUT(COPY_DATA_MUT)) u_copy(.ck(ck),.rst_n(rst_n),.cp(cp_c),.su_va(arithmetic_va),.vq(vq),.va(va_c),.xsw(xsw_c),.cp_active(copy_active_internal),.cp_done(cp_done),.fault(copy_fault));
+ qfd_su_static_copy #(.READ_EDGES(15+((PINREG!=0&&PRMUT!=2)?1:0)),.DATA_MUT(COPY_DATA_MUT)) u_copy(.ck(ck),.rst_n(rr[4]),.cp(cp_c),.su_va(arithmetic_va),.vq(vq),.va(va_c),.xsw(xsw_c),.cp_active(copy_active_internal),.cp_done(cp_done),.fault(copy_fault));
  // ---- pin registers (PINREG): one flop per pin, no logic between the flop and the pin ----
  generate if(PINREG!=0)begin:g_pinreg
   reg[2366:0] va_r;reg[2136:0] xsw_r;reg[107:0] sd_r;reg[55:0] cp_r;reg[205:0] ca_r[0:7];
   integer k;
   // async-assert reset on every pin register (strobes / valid bits are mixed into the packed faces)
-  always @(posedge ck or negedge rst_n)
-   if(!rst_n)begin va_r<=0;xsw_r<=0;sd_r<=0;cp_r<=0;for(k=0;k<8;k=k+1)ca_r[k]<=0;end
-   else begin va_r<=va_c;xsw_r<=xsw_c;sd_r<=sd_c;cp_r<=cp;for(k=0;k<8;k=k+1)ca_r[k]<=ca_c[k];end
+  always @(posedge ck or negedge rr[0])
+   if(!rr[0])begin xsw_r<=0;sd_r<=0;cp_r<=0;end
+   else begin xsw_r<=xsw_c;sd_r<=sd_c;cp_r<=cp;end
+  always @(posedge ck or negedge rr[1])
+   if(!rr[1])va_r<=0;
+   else va_r<=va_c;
+  always @(posedge ck_ex or negedge rr[2])
+   if(!rr[2])begin for(k=0;k<8;k=k+1)ca_r[k]<=0;end
+   else begin for(k=0;k<8;k=k+1)ca_r[k]<=ca_c[k];end
   assign va=va_r;assign xsw=xsw_r;assign sd=(PRMUT==3)?sd_c:sd_r;assign cp_c=(PRMUT==4)?cp:cp_r;
   assign ca0=ca_r[0];assign ca1=ca_r[1];assign ca2=ca_r[2];assign ca3=ca_r[3];
   assign ca4=ca_r[4];assign ca5=ca_r[5];assign ca6=ca_r[6];assign ca7=ca_r[7];
@@ -457,7 +483,7 @@ module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0,EXTERNAL
  ot_qfd_sp_su64_static_entries #(.EXTERNAL_EMBED(EXTERNAL_EMBED),.VL(14),.CRX(CBUF_EDGES-1),.LMIN(15),.PINREG((PINREG!=0&&PRMUT!=1)?1:0)) u_su(
  .external_a_re(external_a_re),.external_a_addr(external_a_addr),.external_a_q(external_a_q),
  .external_vm_a_re(external_vm_a_re),.external_vm_a_addr(external_vm_a_addr),.external_embed_fault(external_embed_fault),
- .clk(ck),.rst_n(rst_n),.go(si[0]),.accepted_ops(acc),.ready(ready),.idle(idle),.obs_active(active),.obs_inflight(inflight),
+ .clk(ck),.clk_e(ck_ex),.rst_n(rr[3]),.go(si[0]),.accepted_ops(acc),.ready(ready),.idle(idle),.obs_active(active),.obs_inflight(inflight),
  .ck_head({ck_head63,ck_head62,ck_head61,ck_head60,ck_head59,ck_head58,ck_head57,ck_head56,ck_head55,ck_head54,ck_head53,ck_head52,ck_head51,ck_head50,ck_head49,ck_head48,ck_head47,ck_head46,ck_head45,ck_head44,ck_head43,ck_head42,ck_head41,ck_head40,ck_head39,ck_head38,ck_head37,ck_head36,ck_head35,ck_head34,ck_head33,ck_head32,ck_head31,ck_head30,ck_head29,ck_head28,ck_head27,ck_head26,ck_head25,ck_head24,ck_head23,ck_head22,ck_head21,ck_head20,ck_head19,ck_head18,ck_head17,ck_head16,ck_head15,ck_head14,ck_head13,ck_head12,ck_head11,ck_head10,ck_head9,ck_head8,ck_head7,ck_head6,ck_head5,ck_head4,ck_head3,ck_head2,ck_head1,ck_head0}),
  .ck_exp({ck_exp63,ck_exp62,ck_exp61,ck_exp60,ck_exp59,ck_exp58,ck_exp57,ck_exp56,ck_exp55,ck_exp54,ck_exp53,ck_exp52,ck_exp51,ck_exp50,ck_exp49,ck_exp48,ck_exp47,ck_exp46,ck_exp45,ck_exp44,ck_exp43,ck_exp42,ck_exp41,ck_exp40,ck_exp39,ck_exp38,ck_exp37,ck_exp36,ck_exp35,ck_exp34,ck_exp33,ck_exp32,ck_exp31,ck_exp30,ck_exp29,ck_exp28,ck_exp27,ck_exp26,ck_exp25,ck_exp24,ck_exp23,ck_exp22,ck_exp21,ck_exp20,ck_exp19,ck_exp18,ck_exp17,ck_exp16,ck_exp15,ck_exp14,ck_exp13,ck_exp12,ck_exp11,ck_exp10,ck_exp9,ck_exp8,ck_exp7,ck_exp6,ck_exp5,ck_exp4,ck_exp3,ck_exp2,ck_exp1,ck_exp0}),
  .ck_rcp({ck_rcp63,ck_rcp62,ck_rcp61,ck_rcp60,ck_rcp59,ck_rcp58,ck_rcp57,ck_rcp56,ck_rcp55,ck_rcp54,ck_rcp53,ck_rcp52,ck_rcp51,ck_rcp50,ck_rcp49,ck_rcp48,ck_rcp47,ck_rcp46,ck_rcp45,ck_rcp44,ck_rcp43,ck_rcp42,ck_rcp41,ck_rcp40,ck_rcp39,ck_rcp38,ck_rcp37,ck_rcp36,ck_rcp35,ck_rcp34,ck_rcp33,ck_rcp32,ck_rcp31,ck_rcp30,ck_rcp29,ck_rcp28,ck_rcp27,ck_rcp26,ck_rcp25,ck_rcp24,ck_rcp23,ck_rcp22,ck_rcp21,ck_rcp20,ck_rcp19,ck_rcp18,ck_rcp17,ck_rcp16,ck_rcp15,ck_rcp14,ck_rcp13,ck_rcp12,ck_rcp11,ck_rcp10,ck_rcp9,ck_rcp8,ck_rcp7,ck_rcp6,ck_rcp5,ck_rcp4,ck_rcp3,ck_rcp2,ck_rcp1,ck_rcp0}),

@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 # Q-ELEM-SUC 2026-10-16: qfd_sp_su64_sfu PINREG differential bench (rtl/test/qwen_split/tb_qfd_su64_pinreg.sv).
-#   run_su64_pinreg_bench.sh OUTDIR MODE PRMUT [SEED]   -> prints PASS/FAIL qfd_su64_pinreg ...
+#   run_su64_pinreg_bench.sh OUTDIR MODE PRMUT [SEED] [CBSMUT] [SPLIT] [RSTR]   -> prints PASS/FAIL qfd_su64_pinreg ...
 set -euo pipefail
 root=$(cd "$(dirname "$0")/../.." && pwd)
-out=${1:?out dir}; mode=${2:-0}; mut=${3:-0}; seed=${4:-11}
+out=${1:?out dir}; mode=${2:-0}; mut=${3:-0}; seed=${4:-11}; cbsmut=${5:-0}; split=${6:-1}; rstr=${7:-1}
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 mkdir -p "$out"
 srcs=(
   "$root/rtl/qwen_split/qfd_sp_su64_sfu.sv"
   "$root/rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv"
   "$root/rtl/hdc/ot_hdc_delay.sv"
+  "$root/rtl/lib/ot_rst_relay.sv"
   "$root/rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv"
   "$root/rtl/physical/ot_hdc_vred_pending_guard.sv"
   "$root/rtl/physical/ot_hdc_vreduce_entries64.sv"
@@ -36,5 +37,5 @@ srcs=(
 )
 "$V" --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH \
   -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j "${BENCH_JOBS:-8}" --top-module tb_qfd_su64_pinreg \
-  -GMODE="$mode" -GPRMUT="$mut" -GSEED="$seed" --Mdir "$out/obj" "${srcs[@]}" > "$out/build.log" 2>&1
+  -GMODE="$mode" -GPRMUT="$mut" -GSEED="$seed" -GCBSMUT="$cbsmut" -GSPLIT="$split" -GRSTR="$rstr" --Mdir "$out/obj" "${srcs[@]}" > "$out/build.log" 2>&1
 "$out/obj/Vtb_qfd_su64_pinreg" | tee "$out/run.log"
