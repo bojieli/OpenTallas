@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.hbm_lane_a.design_decision.v1",
+ "agent": "HBMA-LKEP",
+ "date": "2026-10-17",
+ "element": "ot_hbm_lk_ep (d4f host_cp_ep, region host_cp)",
+ "verdict": "BLOCKED_ON_DECISION: no cluster kit built; recommend replacing the host_cp endpoint pair (ot_hbm_lk_ep + hfd_lk_ep_face) with the closed native-PASS static endpoint hfd_ep_static",
+ "hard_children": {
+  "ot_lkep_sub x3 (NS=3; cluster lkep_sub_w_ref / lkep_sub_cx, 842.4x518.4 um)": "NEVER CLOSED (no closure_loop verdict; wires-only parent over retry macro + ti/ts/rp)",
+  "ot_hbm_link_retry_pipeline x3 (hbm_retry545_ref, 501.12x300.24 um each)": "CLOSED; native FAIL launch 409.2 (405 pins) capture 428.0 (454 pins)",
+  "ot_lkep_ti x3 (lkep_ti_ref-s1-e4598e48e)": "CLOSED; native FAIL launch 223.9 (8) capture 271.6 (26)",
+  "ot_lkep_ts x3 (lkep_ts_ref-s1-e4598e48e)": "CLOSED; native PASS (L 218.1 C 163.0)",
+  "ot_lkep_rp x3 (lkep_rp_ref-s1-e4598e48e)": "CLOSED; native FAIL launch 290.7 (345) capture 254.2 (18)",
+  "ot_lkep_tx_shared (lkep_tx_shared_ref-txsplit1-7a34d98ba)": "CLOSED; native FAIL launch 290.1 (1) capture 433.7 (3)",
+  "ot_lkep_rx_shared (lkep_rx_shared_ref-rxsplit1-ee8c826c0)": "CLOSED; native FAIL capture 434.4 (3)",
+  "ot_lkep_ctrl_phy_data (lkep_ctrl_phy_data_ref-statuscut3-186443da1-arg2)": "CLOSED; native FAIL launch 327.0 (656) capture 447.8 (401)",
+  "ot_lkep_status_shared (lkep_status_shared_ref-statuscut3-1fbe64bd5)": "CLOSED; native FAIL capture 407.7 (96)"
+ },
+ "native_tool": "tools/hier_contract/native_pin_audit.py audit_one on origin/main views (thresholds launch 220 / capture 190 / spread 80 ps)",
+ "why_not_cluster_kit": [
+  "die rule 4 (native audit PASS before binding): 7 of 8 hard child masters FAIL native; the sub cluster never closed",
+  "area: the 3 retry macros alone are 0.451 mm2 and the 3 sub clusters 1.31 mm2, against the d4f slot 584.28x584.28 = 0.341 mm2 (a std-cell-only SYNTH estimate)",
+  "owner static rule: ot_hbm_lk_ep keeps an on-die credit loop (t_cr / r_cr to host_cp_packet / landing); hfd_ep_static's header records that this on-die COLL-side credit edge is what 0az forbids (flow control is allowed only at the off-die boundary)",
+  "hfd_ep_static (hep_static_ref_1015) is the explicit v15 successor of this retired v14 hfd_lk_ep (13 failed flat routes)"
+ ],
+ "alternative": {
+  "master": "hfd_ep_static",
+  "kit": "physical/ref_tile/hep_static_ref_1015",
+  "state": "CLOSED, native PASS (L 174.8 C 183.3 spread 53.4, receipt results/rtl/hbm_lane_a_1017/native_1017.json on claude/hbma-lane-1017)",
+  "outline_um": [
+   434.72,
+   315.36
+  ],
+  "already_on_d4f": "5 instances (ep_S0, ep_S1, ...)",
+  "host_adoption_needs": [
+   "host_cp_packet / host_cp_landing speak hfd_ep_static's static die side (tx_v/tx_frame[612] on a compiler slot calendar; rx_arm/release/slot/pin pingpong) instead of the 545-b flit + t_cr credit bus",
+   "link reliability (sequence, CRC-32, replay, epoch abort) on the host side, as COLL's ot_hgi_coll_static_link_capture does for the SerDes links",
+   "off-die side sd_tx/sd_rx/sd_st (512 b) straight to host_N (ot_pdie_ucie rx[511:0], st[1:0]); ot_hbm_host_phy_adapt (487<->512) becomes redundant (it also sits ~900 um from host_cp_ep today)",
+   "hfd_lk_ep_face (and its successor lkep_face_ff_ref) retire with ot_hbm_lk_ep"
+  ]
+ },
+ "decision_owner": "H-DIE + host-path owner (coordinator)"
+}
