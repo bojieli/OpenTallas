@@ -16,7 +16,7 @@ src=("$p/tb_hgi_coll_q_hard_v5.sv" "$p/ot_hfd_coll_q_hard_v5.sv" "$p/ot_hgi_coll
  "$p/ot_hfd_coll_q2_static_host_v4.sv" "$p/ot_hgi_coll_static_program_target.sv" "$p/ot_hfd_coll_q_static_v4.sv"
  "$p/ot_hgi_coll_static_issuer.sv" "$p/ot_hgi_coll_static_issuer_v5.sv" "$p/ot_hgi_coll_static_issuer_v6.sv" "$p/ot_hgi_coll_qslots.sv" "$p/ot_hgi_coll_qslots_capture_pin_v2.sv"
  "$p/ot_hgi_coll_pring_static.sv" "$p/ot_hgi_coll_pring_captured_static.sv" "$p/ot_hgi_coll_pring_static_state_capture.sv"
- "$p/ot_hgi_coll_reduce_static.sv" "$p/ot_hgi_coll_argmax_static.sv" "$ROOT/rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv"
+ "$p/ot_hgi_coll_slice_v7.sv" "$p/ot_hgi_coll_reduce_static.sv" "$p/ot_hgi_coll_argmax_static.sv" "$ROOT/rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv"
  "$p/ot_hgi_coll_static_vmwrite.sv" "$p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv" "$p/ot_hgi_coll_static_vmwrite_roots_v6.sv"
  "$p/ot_hgi_coll_static_link_capture.sv" "$p/ot_hgi_coll_static_capture_ctl.sv" "$p/ot_hgi_coll_static_pinreg_ctl.sv"
  "$p/ot_hgi_coll_static_pinreg_store.sv" "$p/ot_hgi_coll_static_seq_ctl.sv"

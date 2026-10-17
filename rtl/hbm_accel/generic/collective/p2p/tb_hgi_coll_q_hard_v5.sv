@@ -98,11 +98,11 @@ module tb_hgi_coll_q_hard_v5;
   .pr_cw_i(280'd0),.pr_ccw_i(280'd0),.pr_cw_o(r_cw),.pr_ccw_o(r_ccw),
   .vm_rq(r_rq),.vm_rr(r_vm_response),.vm_kq(r_kq),.fault(r_fault),.done(r_done2),.stat_cycles(r_cyc));
 `ifdef Q3
- ot_hfd_coll_q3_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm(clk),.clk_upipe(clk),
+ ot_hfd_coll_q3_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm({16{clk}}),.clk_upipe({16{clk}}),
   .clk_issue(clk),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),.clk_arg(clk),
   .clk_tkm({34{clk}}),.clk_vmwrite({16{clk}}),.clk_link({15{clk}}),
 `else
- ot_hfd_coll_q2_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm(clk),.clk_upipe(clk),
+ ot_hfd_coll_q2_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm({16{clk}}),.clk_upipe({16{clk}}),
   .clk_issue(clk),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),
   .clk_vmwrite({16{clk}}),.clk_link({10{clk}}),
 `endif
