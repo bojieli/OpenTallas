@@ -3,7 +3,7 @@
  "die": "hbm_v15",
  "version": 9,
  "owner": "H-DIE",
- "updated": "2026-10-17T06:49:28-07:00",
+ "updated": "2026-10-17T07:34:26-07:00",
  "clock_period_ps": 833.333,
  "floorplan": {
   "file": "results/arch/hbm_die_v15/d4f_a2p_fullcore/compact.P.json",
@@ -564,12 +564,12 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 800.0,
-    "h": 560.0
+    "w": 560.0,
+    "h": 400.0
    },
    "origin": {
     "x": 15484.16,
-    "y": 9034.72,
+    "y": 9584.72,
     "orient": "MY"
    },
    "io_budget": {
@@ -1260,7 +1260,7 @@
    },
    "fit_r2": {
     "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
-    "moved_um": 0.0
+    "moved_um": 550.0
    }
   },
   {
@@ -1269,12 +1269,12 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 800.0,
-    "h": 560.0
+    "w": 560.0,
+    "h": 400.0
    },
    "origin": {
     "x": 15484.16,
-    "y": 22574.72,
+    "y": 22144.72,
     "orient": "MY"
    },
    "io_budget": {
@@ -1965,7 +1965,7 @@
    },
    "fit_r2": {
     "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
-    "moved_um": 0.0
+    "moved_um": 430.0
    }
   },
   {
@@ -82694,7 +82694,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {
     "QID": 3,
     "G": 0,
@@ -83191,7 +83191,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {
     "QID": 3,
     "G": 1,
@@ -83688,7 +83688,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {
     "QID": 3,
     "G": 2,
@@ -84185,7 +84185,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {
     "QID": 3,
     "G": 3,
@@ -84702,7 +84702,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {
     "QID": 2,
     "G": 0,
@@ -85199,7 +85199,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {
     "QID": 2,
     "G": 1,
@@ -85696,7 +85696,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {
     "QID": 2,
     "G": 2,
@@ -86193,7 +86193,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {
     "QID": 2,
     "G": 3,
@@ -86710,7 +86710,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {
     "QID": 1,
     "G": 0,
@@ -87207,7 +87207,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {
     "QID": 1,
     "G": 1,
@@ -87704,7 +87704,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {
     "QID": 1,
     "G": 2,
@@ -88201,7 +88201,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {
     "QID": 1,
     "G": 3,
@@ -88718,7 +88718,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {
     "QID": 0,
     "G": 0,
@@ -89215,7 +89215,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {
     "QID": 0,
     "G": 1,
@@ -89712,7 +89712,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {
     "QID": 0,
     "G": 2,
@@ -90209,7 +90209,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {
     "QID": 0,
     "G": 3,
@@ -90675,7 +90675,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "6c2baeafe0b6aa44f2b51218970f2da25153b5c4f1849a7c41359c687734705c",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -90976,7 +90976,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "6c2baeafe0b6aa44f2b51218970f2da25153b5c4f1849a7c41359c687734705c",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -91277,7 +91277,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "6c2baeafe0b6aa44f2b51218970f2da25153b5c4f1849a7c41359c687734705c",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -91578,7 +91578,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "6c2baeafe0b6aa44f2b51218970f2da25153b5c4f1849a7c41359c687734705c",
-   "source_prerequisite": "19e540eda",
+   "source_prerequisite": "e206e9123",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -96351,11 +96351,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 447.12,
-    "h": 1023.84
+    "w": 1020.0,
+    "h": 1412.0
    },
    "origin": {
-    "x": 7856.64,
+    "x": 6806.64,
     "y": 10800.72,
     "orient": "R0"
    },
@@ -96382,7 +96382,7 @@
    "pin_status": "FACES_ONLY",
    "fit_r2": {
     "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
-    "moved_um": 0.0
+    "moved_um": 1050.0
    }
   },
   {
@@ -96427,11 +96427,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 447.12,
-    "h": 1023.84
+    "w": 1020.0,
+    "h": 1412.0
    },
    "origin": {
-    "x": 7856.64,
+    "x": 6806.64,
     "y": 14500.72,
     "orient": "R0"
    },
@@ -96458,7 +96458,7 @@
    "pin_status": "FACES_ONLY",
    "fit_r2": {
     "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
-    "moved_um": 0.0
+    "moved_um": 1050.0
    }
   },
   {
@@ -96503,11 +96503,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 447.12,
-    "h": 1023.84
+    "w": 1020.0,
+    "h": 1412.0
    },
    "origin": {
-    "x": 8045.696,
+    "x": 6995.696,
     "y": 19956.72,
     "orient": "R0"
    },
@@ -96534,7 +96534,7 @@
    "pin_status": "FACES_ONLY",
    "fit_r2": {
     "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
-    "moved_um": 0.0
+    "moved_um": 1050.0
    }
   },
   {
@@ -96579,11 +96579,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 447.12,
-    "h": 1023.84
+    "w": 1020.0,
+    "h": 1412.0
    },
    "origin": {
-    "x": 7856.64,
+    "x": 6806.64,
     "y": 16256.72,
     "orient": "R0"
    },
@@ -96610,7 +96610,7 @@
    "pin_status": "FACES_ONLY",
    "fit_r2": {
     "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
-    "moved_um": 0.0
+    "moved_um": 1050.0
    }
   },
   {
@@ -98238,6 +98238,144 @@
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
    "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "wbk_SW",
+   "cell": "ot_hbm_svc_wb_kport",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 520.0,
+    "h": 520.0
+   },
+   "origin": {
+    "x": 15484.16,
+    "y": 9034.72,
+    "orient": "MY"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_own_slot_1017",
+   "notes": "own slot (was sharing hb_dbk_SW); contract slot retarget requested from H-NETLIST",
+   "fit_r2": {
+    "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
+    "moved_um": 0.0
+   }
+  },
+  {
+   "name": "wbk_NW",
+   "cell": "ot_hbm_svc_wb_kport",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 520.0,
+    "h": 520.0
+   },
+   "origin": {
+    "x": 15484.16,
+    "y": 22574.72,
+    "orient": "MY"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_own_slot_1017",
+   "notes": "own slot (was sharing hb_dbk_NW); contract slot retarget requested from H-NETLIST",
+   "fit_r2": {
+    "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
+    "moved_um": 0.0
+   }
+  },
+  {
+   "name": "sfup_SW",
+   "cell": "ot_hgi_sfu_programme_store",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 447.12,
+    "h": 1023.84
+   },
+   "origin": {
+    "x": 7856.64,
+    "y": 10800.72,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_own_slot_1017",
+   "notes": "own slot (was sharing sfus_SW); contract slot retarget requested from H-NETLIST",
+   "fit_r2": {
+    "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
+    "moved_um": 0.0
+   }
+  },
+  {
+   "name": "sfup_SE",
+   "cell": "ot_hgi_sfu_programme_store",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 447.12,
+    "h": 1023.84
+   },
+   "origin": {
+    "x": 7856.64,
+    "y": 14500.72,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_own_slot_1017",
+   "notes": "own slot (was sharing sfus_SE); contract slot retarget requested from H-NETLIST",
+   "fit_r2": {
+    "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
+    "moved_um": 0.0
+   }
+  },
+  {
+   "name": "sfup_NE",
+   "cell": "ot_hgi_sfu_programme_store",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 447.12,
+    "h": 1023.84
+   },
+   "origin": {
+    "x": 7856.64,
+    "y": 16256.72,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_own_slot_1017",
+   "notes": "own slot (was sharing sfus_NE); contract slot retarget requested from H-NETLIST",
+   "fit_r2": {
+    "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
+    "moved_um": 0.0
+   }
+  },
+  {
+   "name": "sfup_NW",
+   "cell": "ot_hgi_sfu_programme_store",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 447.12,
+    "h": 1023.84
+   },
+   "origin": {
+    "x": 8045.696,
+    "y": 19956.72,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_own_slot_1017",
+   "notes": "own slot (was sharing sfus_NW); contract slot retarget requested from H-NETLIST",
+   "fit_r2": {
+    "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
+    "moved_um": 0.0
+   }
   }
  ],
  "sub_layouts": {
@@ -105951,6 +106089,50 @@
      "w": 1598.4,
      "h": 1771.2
     }
+   },
+   {
+    "slot": "sfus_SW",
+    "old": {
+     "w": 1020.0,
+     "h": 1412.0
+    },
+    "new": {
+     "w": 447.12,
+     "h": 1023.84
+    }
+   },
+   {
+    "slot": "sfus_SE",
+    "old": {
+     "w": 1020.0,
+     "h": 1412.0
+    },
+    "new": {
+     "w": 447.12,
+     "h": 1023.84
+    }
+   },
+   {
+    "slot": "sfus_NW",
+    "old": {
+     "w": 1020.0,
+     "h": 1412.0
+    },
+    "new": {
+     "w": 447.12,
+     "h": 1023.84
+    }
+   },
+   {
+    "slot": "sfus_NE",
+    "old": {
+     "w": 1020.0,
+     "h": 1412.0
+    },
+    "new": {
+     "w": 447.12,
+     "h": 1023.84
+    }
    }
   ],
   "new": [],
@@ -106138,7 +106320,7 @@
     "h": 32169.44
    },
    "mapped": 129,
-   "resized": 26,
+   "resized": 30,
    "new": [],
    "translated": 9,
    "regranted": 36,

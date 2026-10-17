@@ -10,9 +10,20 @@ import json, sys
 g, pd = sys.argv[1], sys.argv[2]
 G = json.load(open(g)); P = json.load(open(pd + '/compact.P.json'))
 W, H = G['slots'][0]['outline']['w'], G['slots'][0]['outline']['h']
-FIT = {'hb_dbk_SW': (800.0, 560.0), 'hb_dbk_NW': (800.0, 560.0), 'host_cp': (1300.0, 700.0)}
+FIT = {'hb_dbk_SW': (560.0, 400.0), 'hb_dbk_NW': (560.0, 400.0), 'host_cp': (1300.0, 700.0)}
 for q in ('SW', 'SE', 'NE', 'NW'):
-    FIT[f'sfus_{q}'] = (447.12, 1023.84)
+    FIT[f'sfus_{q}'] = (1020.0, 1412.0)          # the SU SFU store partition (ot_hbm_su_static_sfustore) keeps its own slot
+NEW = {'wbk_SW': ('ot_hbm_svc_wb_kport', 'hb_dbk_SW', 520.0, 520.0), 'wbk_NW': ('ot_hbm_svc_wb_kport', 'hb_dbk_NW', 520.0, 520.0)}
+for q in ('SW', 'SE', 'NE', 'NW'):
+    NEW[f'sfup_{q}'] = ('ot_hgi_sfu_programme_store', f'sfus_{q}', 447.12, 1023.84)   # routed r6/r7c outline (H-SU)
+names = {s['name'] for s in G['slots']}
+for n, (cell, anchor, w, h) in NEW.items():
+    if n not in names:
+        a_ = next(s for s in G['slots'] if s['name'] == anchor)
+        G['slots'].append(dict(name=n, cell=cell, kind='tile', parent='die', outline=dict(w=w, h=h), origin=dict(a_['origin']),
+                               pins=[], pin_status='FACES_ONLY', grant='d4f_own_slot_1017',
+                               notes=f'own slot (was sharing {anchor}); contract slot retarget requested from H-NETLIST'))
+    FIT[n] = (w, h)
 S = {s['name']: s for s in G['slots']}
 def rects(skip):
     r = [(k, b['x'], b['y'], b['w'], b['h']) for k, b in P.items() if k not in skip]
