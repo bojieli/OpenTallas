@@ -384,7 +384,9 @@ def build():
     # G-unit: commands, expert ids, HC coefficients to s_3S / s_3N, then along the streets through the ring stops
     gname = 'gunit' if 'gunit' in P.idx else 'gunit_r'
     G = P.blocks[P.idx[gname]]
-    for c in range(NCOL):
+    # p4c/p4d: NO separate ctl star -- the G-unit is a ring stop on column 3's tier chain (s_3S V <-> gunit <-> s_3N V)
+    # and ctl rides the tier lines E/W inside the ring lanes (TDM); slices have no feed-throughs
+    for c in (range(NCOL) if not (LAYOUT == 'p4' and TIER_W) else ()):
         for t in 'SN':
             sn = f's_{c}{t}'
             S = P.blocks[P.idx[sn]]

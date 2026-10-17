@@ -283,8 +283,8 @@ Two layout refinements apply:
 | Die | **31.73 × 25.00 mm = 793.2 mm²**; margins 0.64 / 0.50 mm per side under the reticle |
 | Worst cut / windows > 0.55 | **0.403 / 0** |
 | Over-reach | **0** |
-| Stations (276 b) | **3,725** (relay bit-stages 0.89 M) |
-| bit·mm | 0.39 M |
+| Stations (276 b) | **3,272** (relay bit-stages 0.85 M); ctl rides the ring (G-unit on column 3 V chain), no separate ctl star |
+| bit·mm | 0.37 M |
 | Phase path / scalar exchange | 119 / 96 stages |
 | MTP (DV base) | **4,137.3 (+24.9%)**; worst stacked 3,689.6 (+11.4%) |
 
