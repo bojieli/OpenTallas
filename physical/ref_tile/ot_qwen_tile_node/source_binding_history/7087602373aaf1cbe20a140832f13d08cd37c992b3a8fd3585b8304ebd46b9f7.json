@@ -1,0 +1,35 @@
+{
+ "qualification_status": "unqualified_previous_source_binding",
+ "original_result": {
+  "schema": "opentallas.ref_tile.gate_result.v1",
+  "kit": "ot_qwen_tile_node",
+  "verdict": "WARN",
+  "generated": "2026-10-13T10:04:07-0700",
+  "host": "ot-pve1",
+  "cts": true,
+  "commit": "34ad9d266",
+  "clock": {
+   "max_root_sinks": 12102,
+   "root": "port:clk",
+   "cts": true,
+   "tt_insertion_ps": 258.2,
+   "tt_spread_ps": 33.0,
+   "declared_clock": null,
+   "limits": {
+    "sinks": 15000,
+    "insertion_ps": 300.0,
+    "spread_ps": 80.0
+   },
+   "verdict": "PASS",
+   "text": "12,102 sinks on the largest root <= 15,000; measured TT insertion 258.2 ps, leaf spread 33.0 ps"
+  },
+  "items": [
+   {
+    "severity": "WARN",
+    "check": "textbook.util_channel",
+    "message": "utilisation 40.6% outside 45%-65% (std 7498 + macro 0 um2 in 18476 um2): shrink the outline (long wires / sparse placement)",
+    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+   }
+  ]
+ }
+}
