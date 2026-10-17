@@ -1,0 +1,595 @@
+{
+  "schema": "opentallas.hbm.bfqg.local_roots.v1",
+  "source": "3b28e0e0f",
+  "qualification": "CANDIDATE_PENDING_PHYSICAL_NATIVE",
+  "grant_um": [
+    302.4,
+    298.08
+  ],
+  "outline_growth_um": [
+    0,
+    0
+  ],
+  "logical_cycle_delta": 0,
+  "macro_count_delta": 0,
+  "mask_flop_delta": 14,
+  "total_cell_area_delta_um2": null,
+  "area_note": "14 additional mask captures is a structural count, not measured cell-area cost; synchronous consumer reset mapping can alter logic. Fresh gate synthesis must measure total area.",
+  "top_pin_count": 1340,
+  "predecessor_pin_count": 1317,
+  "clock_port_count": 20,
+  "cts_root_count": 12,
+  "clock_domains": {
+    "core": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "n": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_n"
+      ],
+      "inputs": [
+        "c_d"
+      ],
+      "outputs": []
+    },
+    "s": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_s"
+      ],
+      "inputs": [],
+      "outputs": [
+        "rwq"
+      ]
+    },
+    "macro0": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_m0"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "macro1": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_m1"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "macro2": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_m2"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "macro3": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_m3"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "macro4": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_m4"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "macro5": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_m5"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "macro6": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_m6"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "macro7": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_m7"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "control": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_ctrl"
+      ],
+      "inputs": [
+        "rst_n",
+        "wce",
+        "wa",
+        "r_ce",
+        "r_a"
+      ],
+      "outputs": []
+    },
+    "local0": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_l0"
+      ],
+      "inputs": [
+        "mhi0",
+        "mlo0"
+      ],
+      "outputs": []
+    },
+    "local1": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_l1"
+      ],
+      "inputs": [
+        "mhi1",
+        "mlo1"
+      ],
+      "outputs": []
+    },
+    "local2": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_l2"
+      ],
+      "inputs": [
+        "mhi2",
+        "mlo2"
+      ],
+      "outputs": []
+    },
+    "local3": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_l3"
+      ],
+      "inputs": [
+        "mhi3",
+        "mlo3"
+      ],
+      "outputs": []
+    },
+    "local4": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_l4"
+      ],
+      "inputs": [
+        "mhi4",
+        "mlo4"
+      ],
+      "outputs": []
+    },
+    "local5": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_l5"
+      ],
+      "inputs": [
+        "mhi5",
+        "mlo5"
+      ],
+      "outputs": []
+    },
+    "local6": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_l6"
+      ],
+      "inputs": [
+        "mhi6",
+        "mlo6"
+      ],
+      "outputs": []
+    },
+    "local7": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_l7"
+      ],
+      "inputs": [
+        "mhi7",
+        "mlo7"
+      ],
+      "outputs": []
+    }
+  },
+  "all_clock_roots_common_pll_phase_required": true,
+  "native_source_bound_views_available": false,
+  "new_pinplan": [
+    {
+      "port": "clk_ctrl",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 148.788
+    },
+    {
+      "port": "mhi0",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 35.94
+    },
+    {
+      "port": "mlo0",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 37.908
+    },
+    {
+      "port": "clk_l0",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 41.94
+    },
+    {
+      "port": "mhi1",
+      "layer": "M4",
+      "x_um": 302.4,
+      "y_um": 35.94
+    },
+    {
+      "port": "mlo1",
+      "layer": "M4",
+      "x_um": 302.4,
+      "y_um": 37.908
+    },
+    {
+      "port": "clk_l1",
+      "layer": "M4",
+      "x_um": 302.4,
+      "y_um": 41.94
+    },
+    {
+      "port": "mhi2",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 102.9
+    },
+    {
+      "port": "mlo2",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 104.868
+    },
+    {
+      "port": "clk_l2",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 108.9
+    },
+    {
+      "port": "mhi3",
+      "layer": "M4",
+      "x_um": 302.4,
+      "y_um": 102.9
+    },
+    {
+      "port": "mlo3",
+      "layer": "M4",
+      "x_um": 302.4,
+      "y_um": 104.868
+    },
+    {
+      "port": "clk_l3",
+      "layer": "M4",
+      "x_um": 302.4,
+      "y_um": 108.9
+    },
+    {
+      "port": "mhi4",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 169.86
+    },
+    {
+      "port": "mlo4",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 171.828
+    },
+    {
+      "port": "clk_l4",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 175.86
+    },
+    {
+      "port": "mhi5",
+      "layer": "M4",
+      "x_um": 302.4,
+      "y_um": 169.86
+    },
+    {
+      "port": "mlo5",
+      "layer": "M4",
+      "x_um": 302.4,
+      "y_um": 171.828
+    },
+    {
+      "port": "clk_l5",
+      "layer": "M4",
+      "x_um": 302.4,
+      "y_um": 175.86
+    },
+    {
+      "port": "mhi6",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 236.82
+    },
+    {
+      "port": "mlo6",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 238.788
+    },
+    {
+      "port": "clk_l6",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 242.82
+    },
+    {
+      "port": "mhi7",
+      "layer": "M4",
+      "x_um": 302.4,
+      "y_um": 236.82
+    },
+    {
+      "port": "mlo7",
+      "layer": "M4",
+      "x_um": 302.4,
+      "y_um": 238.788
+    },
+    {
+      "port": "clk_l7",
+      "layer": "M4",
+      "x_um": 302.4,
+      "y_um": 242.82
+    }
+  ],
+  "control_capture_pins": [
+    {
+      "port": "rst_n",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 138.996
+    },
+    {
+      "port": "wce",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 139.284
+    },
+    {
+      "port": "wa[0]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 139.572
+    },
+    {
+      "port": "wa[1]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 139.86
+    },
+    {
+      "port": "wa[2]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 140.148
+    },
+    {
+      "port": "wa[3]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 140.436
+    },
+    {
+      "port": "wa[4]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 140.724
+    },
+    {
+      "port": "wa[5]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 141.012
+    },
+    {
+      "port": "wa[6]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 141.3
+    },
+    {
+      "port": "r_ce[0]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 141.588
+    },
+    {
+      "port": "r_ce[1]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 141.876
+    },
+    {
+      "port": "r_ce[2]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 142.164
+    },
+    {
+      "port": "r_ce[3]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 142.452
+    },
+    {
+      "port": "r_ce[4]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 142.74
+    },
+    {
+      "port": "r_ce[5]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 143.028
+    },
+    {
+      "port": "r_ce[6]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 143.316
+    },
+    {
+      "port": "r_ce[7]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 143.604
+    },
+    {
+      "port": "r_a[0]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 143.892
+    },
+    {
+      "port": "r_a[1]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 144.18
+    },
+    {
+      "port": "r_a[2]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 144.468
+    },
+    {
+      "port": "r_a[3]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 144.756
+    },
+    {
+      "port": "r_a[4]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 145.044
+    },
+    {
+      "port": "r_a[5]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 145.332
+    },
+    {
+      "port": "r_a[6]",
+      "layer": "M4",
+      "x_um": 0.0,
+      "y_um": 145.62
+    }
+  ],
+  "mapping": {
+    "per_bank": {
+      "mask_input_half_high": "mhi{i}",
+      "mask_input_half_low": "mlo{i}",
+      "capture_root": "clk_l{i}",
+      "sram_root": "clk_m{i}",
+      "mask_loads_per_bit": 128,
+      "root_clock_sink_flops": 2
+    },
+    "control": {
+      "root": "clk_ctrl",
+      "capture_state_flops": 25,
+      "reset_relay_flops": 3
+    },
+    "other": "clk captures2048 data+512 reduction+8select FF; clk_n captures1024 c_d; clk_s launches256 rwq"
+  },
+  "die_grant_ack": "H-DIE confirmed same-slot additive internal clocks and zero cycles; no inherited old11-clock proof or die-level ABI waiver."
+}
