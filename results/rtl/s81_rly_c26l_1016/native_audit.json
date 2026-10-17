@@ -1,0 +1,89 @@
+{
+ "schema": "opentallas.native_pin_audit_receipt.v1",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one",
+ "limits": {
+  "launch_ps": 220,
+  "capture_ps": 190,
+  "spread_ps": 80,
+  "comb_pins": 0
+ },
+ "jobs": {
+  "dsfd_rly_536_EN": "s81_rly_536_en-c26l-82d8ea5b4 CLOSED TT +316.99 / FF +16.70 DRC 0 (main 47ba58075)",
+  "dsfd_rly_66_EN": "s81_rly_66_en-c26l-82d8ea5b4 CLOSED TT +335.51 / FF +30.29 DRC 0 (main e08332b10)",
+  "dsfd_rly_66_SW": "s81_rly_66_sw-c26l-64acd1733 CLOSED TT +333.08 / FF +29.72 DRC 0"
+ },
+ "verdict": "PASS",
+ "rows": [
+  {
+   "cell": "dsfd_rly_536_EN",
+   "view": "physical/ref_tile/s81_rly_536_en/views/dsfd_rly_536_EN",
+   "lib_cell": "dsfd_rly_536_EN",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 90.8,
+   "spread_ps": 8.8,
+   "outputs": 536,
+   "inputs": 537,
+   "launch_ps": 200.1,
+   "launch_pin": "o[4]",
+   "capture_ps": 146.6,
+   "capture_pin": "i[479]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  },
+  {
+   "cell": "dsfd_rly_66_EN",
+   "view": "physical/ref_tile/s81_rly_66_en/views/dsfd_rly_66_EN",
+   "lib_cell": "dsfd_rly_66_EN",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 61.7,
+   "spread_ps": 1.4,
+   "outputs": 66,
+   "inputs": 67,
+   "launch_ps": 183.0,
+   "launch_pin": "o[16]",
+   "capture_ps": 120.7,
+   "capture_pin": "i[42]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  },
+  {
+   "cell": "dsfd_rly_66_SW",
+   "view": "physical/ref_tile/s81_rly_66_sw/views/dsfd_rly_66_SW",
+   "lib_cell": "dsfd_rly_66_SW",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 62.2,
+   "spread_ps": 2.4,
+   "outputs": 66,
+   "inputs": 67,
+   "launch_ps": 185.6,
+   "launch_pin": "o[39]",
+   "capture_ps": 119.8,
+   "capture_pin": "i[41]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  }
+ ],
+ "images_viewed": "route GRT congestion 0 gcells (536_EN, 66_EN); gate floorplan/density viewed",
+ "reach_note": "out pins driven by BUFx2 into receiver HB2xp67 (same pair as the stnv566 225 um electrical failure); opt-in BUFx8 variant s81_rly_536_en_od8 under H-REACH measurement"
+}

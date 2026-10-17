@@ -1,0 +1,8 @@
+REGION_GLUE_MISMATCH rqr cyc=2
+REGION_GLUE_MISMATCH rqr cyc=5
+REGION_GLUE_MISMATCH rqr cyc=6
+REGION_GLUE_MISMATCH rqr cyc=7
+REGION_GLUE_FAIL mut=2 errors=135 checks=512
+[2586000] %Fatal: tb_qwen_region_glue.sv:49: Assertion failed in tb_qwen_region_glue: exact recurrence mismatch
+%Error: rtl/test/tb_qwen_region_glue.sv:49: Verilog $stop
+Aborting...
