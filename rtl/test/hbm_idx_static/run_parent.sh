@@ -4,7 +4,8 @@ root=$(cd "$(dirname "$0")/../../.." && pwd)
 cd "$root"
 out=$(realpath -m "${1:-/tmp/hbm-idx-static-parent-proof}")
 mkdir -p "$out"
-OPENBLAS_NUM_THREADS=1 python3 tools/hbm_idx_static_parent_vectors.py "$out"
+NQ=${NQ:-4}   # scorer slots (A2P half die: NQ=2); MUT=n: tb mutation plusarg
+OPENBLAS_NUM_THREADS=1 python3 tools/hbm_idx_static_parent_vectors.py "$out" $NQ
 vl=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
 [ -x "$vl" ]||vl=verilator
 src=(rtl/hbm_accel/index/ot_hbm_idx_parent_static.sv rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv
@@ -18,6 +19,6 @@ src=(rtl/hbm_accel/index/ot_hbm_idx_parent_static.sv rtl/hbm_accel/index/ot_hbm_
  physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
  physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
  rtl/test/hbm_idx_static/tb_idx_parent_static.sv rtl/test/hbm_idx_static/parent.vlt)
-"$vl" --hierarchical --binary --timing -j 4 -O1 -Wno-fatal -Wno-lint -Wno-style --top-module tb_idx_parent_static --Mdir "$out/obj" "${src[@]}" > "$out/build.log" 2>&1
-(cd "$out"&&"$out/obj/Vtb_idx_parent_static") > "$out/run.log" 2>&1
-cat "$out/run.log"
+"$vl" --hierarchical --binary --timing -j 4 -O1 -Wno-fatal -Wno-lint -Wno-style --top-module tb_idx_parent_static -GNQ=$NQ --Mdir "$out/obj" "${src[@]}" > "$out/build.log" 2>&1
+rc=0; (cd "$out"&&"$out/obj/Vtb_idx_parent_static" +MUT=${MUT:-0}) > "$out/run.log" 2>&1 || rc=$?
+cat "$out/run.log"; exit $rc

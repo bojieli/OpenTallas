@@ -10,7 +10,7 @@ to: ["P", <client port>, bit] (a port of hb_idx = ot_hbm_idx_client_static_sw, i
 soft_parent.py), which replaces the die instance hb_idx by its children hb_idx__<child>. The module must hold wires
 and constants only (asserted: no cell other than the children).
 """
-import hashlib, json, subprocess, sys, tempfile
+import hashlib, json, re, subprocess, sys, tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -29,11 +29,12 @@ TOP = 'ot_hbm_idx_client_static_soft'
 
 def main():
     out = Path(sys.argv[1])
+    nq = int(sys.argv[2]) if len(sys.argv) > 2 else 4          # N_Q of the composition (A2P half die: 2)
     with tempfile.TemporaryDirectory() as td:
         j = Path(td) / 'soft.json'
         lib = ' '.join(str(ROOT / f) for f in CHILD_SRC.values())
         r = subprocess.run(['yosys', '-q', '-p', f'read_verilog -sv -lib {lib}; read_verilog -sv {ROOT / SOFT}; '
-                            f'hierarchy -top {TOP}; proc; opt_clean -purge; write_json {j}'], capture_output=True, text=True)
+                            f'chparam -set N_Q {nq} {TOP}; hierarchy -top {TOP}; proc; opt_clean -purge; write_json {j}'], capture_output=True, text=True)
         if r.returncode:
             sys.exit(r.stdout + r.stderr)
         d = json.loads(j.read_text())
@@ -61,7 +62,7 @@ def main():
                 else:
                     v.append(['N', bit])
             conns[p] = dict(direction=c['port_directions'][p], bits=v)
-        children[cn.lstrip('\\')] = dict(master=c['type'], source=CHILD_SRC[c['type']], ports=conns)
+        children[re.sub(r'^gscore\[(\d)\]\.scorer$', r'scorer\1', cn.lstrip('\\'))] = dict(master=c['type'], source=CHILD_SRC[c['type']], ports=conns)
     # client outputs: which net / constant / input drives each bit
     outs = {}
     for p, x in m['ports'].items():
@@ -92,7 +93,7 @@ def main():
     for p, v in outs.items():
         for t in v:
             assert t[0] != 'N' or t[1] in drivers, ('undriven client output', p)
-    rec = dict(schema='opentallas.hbm_idx_soft_netmap.v1', top=TOP, replaces='hb_idx (ot_hbm_idx_client_static_sw)',
+    rec = dict(schema='opentallas.hbm_idx_soft_netmap.v1', top=TOP, params=dict(N_Q=nq), replaces='hb_idx (ot_hbm_idx_client_static_sw)',
                sources={f: hashlib.sha256((ROOT / f).read_bytes()).hexdigest() for f in [SOFT] + list(CHILD_SRC.values())},
                children=children, outputs=outs, net_drivers={str(k): v for k, v in drivers.items()})
     out.parent.mkdir(parents=True, exist_ok=True)

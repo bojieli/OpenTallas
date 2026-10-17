@@ -11,7 +11,7 @@
 //                                            (ot_hbm_idx_parent_static.sv:33,55,58-63)
 // No new logic, latency or flow control: the equivalence of ot_hbm_idx_client_static_soft against
 // ot_hbm_idx_client_static_sw (children cut) is proven in results/arch/hbm_idx_soft_parent_1016.
-module ot_hbm_idx_ctl_static(
+module ot_hbm_idx_ctl_static #(parameter integer N_Q=4)(   // N_Q: scorer slots (A2P half die 2; see ot_hbm_idx_parent_static)
  input wire clk_program,clk_program_mem,clk_sel,clk_topk,input wire[3:0]clk_pair,input wire rst_n,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
  input wire start,input wire[11:0]length,
@@ -22,10 +22,10 @@ module ot_hbm_idx_ctl_static(
  output wire key_slot,output wire[7:0]key_index,
  output wire[3:0]sel_op,output wire[1:0]sel_pass,output wire[7:0]sel_addr,
  output wire link_flush,link_emit,output wire[3:0]link_group,
- output wire[47:0]nq,
+ output wire[12*N_Q-1:0]nq,
  input wire[3:0]selected_v,output wire ingest_v,
  input wire score0_ev,
- input wire vf,qf,input wire[3:0]scf,input wire sf,lf,
+ input wire vf,qf,input wire[N_Q-1:0]scf,input wire sf,lf,
  output wire done,fault,
  // TOPK
  input wire topk_go,input wire[3:0]topk_k,input wire topk_order,input wire[19:0]topk_n,topk_m,
@@ -49,7 +49,7 @@ module ot_hbm_idx_ctl_static(
  assign query_emit=issue_v&&ins[29];assign query_emit_head=ins[24:20];
  assign sel_op=issue_v?ins[19:16]:4'd0;assign sel_pass=ins[15:14];assign sel_addr=ins[13:6];
  assign link_flush=issue_v&&ins[5];assign link_emit=issue_v&&ins[4];assign link_group=ins[3:0];
- for(genvar q=0;q<4;q=q+1)begin:gscore
+ for(genvar q=0;q<N_Q;q=q+1)begin:gscore
   assign nq[q*12+:12]=(nkeys<=q*2736)?12'd0:((nkeys-q*2736>=2736)?12'd2736:12'(nkeys-q*2736));
  end
  assign ingest_v=&selected_v;
