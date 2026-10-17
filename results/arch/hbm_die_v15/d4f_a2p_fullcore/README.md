@@ -26,3 +26,10 @@ E column 3.1 -> 2.0 mm (hc_eng 2,000 x 4,750, aspect 2.4), SerDes lk tiles 250 x
 800 x 560 (dbk + wb_kport), host_cp 1,300 x 700 (4 users), sfus_<Q> = SFU programme store r6 447.12 x 1,023.84; COLL v7 / tkm_SW
 grants unchanged. Grants rebuilt by d4f_grants_build.sh: 0 outside / 0 overlaps. Root sites regenerated -> d4f_root_sites_r2.json
 (36, 0 failed, 0 slot collisions). compact_plan: + --column 2000 --sucx 270 270; a2p_fix --lk-sq 600.
+
+## Revision r3 (H-DIE 10-17 ~02:40): IDX soft hierarchy (contract claude/hnl-idxd4f-2050 50de1fe73: hb_idx -> 7 die instances)
+E column back to 3.1 mm, now filled: idx_s0 / idx_s1 scorer clusters 2,950 x 2,950 (ot_hbm_idx_score_static 4.70 mm2 std /
+9.45M flops -> hardened cluster of 16 replicated ~700 um square leaves, 4x4, regional roots) below / above the ep+lk stacks,
+idx_sel 600x450 + idx_link 650x500 (S), idx_ctl 300x260 + idx_q 260x260 + idx_op 216x108 (N); hc_eng 3,100 x 3,065; lk 600 sq.
+21,002.24 x 32,169.44 um = 675.6 mm2, margins 0.83 / 5.00 mm. Grants: d4f_grants_build.sh (+ d4f_idx_plan.py on the plan,
+d4f_idx_grant.py): 150 slots, 0 outside / 0 overlaps. Root sites -> d4f_root_sites_r3.json (36, 0 failed, 0 collisions).

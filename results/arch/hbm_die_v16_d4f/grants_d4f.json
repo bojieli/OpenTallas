@@ -3,27 +3,27 @@
  "die": "hbm_v15",
  "version": 9,
  "owner": "H-DIE",
- "updated": "2026-10-17T01:17:00-07:00",
+ "updated": "2026-10-17T01:20:28-07:00",
  "clock_period_ps": 833.333,
  "floorplan": {
   "file": "results/arch/hbm_die_v15/d4f_a2p_fullcore/compact.P.json",
   "candidate": "d4f_a2p_fullcore",
   "adopted": "H-DIE d4f gate-2 (coordinator d4f; HBM-ARRAY TP-192), UNQUALIFIED until GEN+GRT",
   "die_um": [
-   19902.24,
+   21002.24,
    32169.44
   ],
   "metrics": {
-   "sum_bits_mm": 1117447.374639999,
-   "traffic_mm_qwen": 1899711190.7911894,
-   "traffic_mm_ds": 2059523719.2737026,
-   "relay_flops": 2122177.0,
-   "bits_over_500": 160411.0,
+   "sum_bits_mm": 1124025.9734559986,
+   "traffic_mm_qwen": 1899880621.2669046,
+   "traffic_mm_ds": 2063407886.8046224,
+   "relay_flops": 2131929.0,
+   "bits_over_500": 159355.0,
    "fixed_return_violation_bits": 17792,
    "fixed_return_violations": 32,
    "overlaps": 0,
    "outside": 0,
-   "J": 11.810696972268268,
+   "J": 11.819036123373742,
    "n_long_returns": 285
   },
   "previous": {
@@ -146,7 +146,7 @@
    "kind": "die",
    "parent": null,
    "outline": {
-    "w": 19902.24,
+    "w": 21002.24,
     "h": 32169.44
    },
    "origin": {
@@ -33122,6 +33122,368 @@
    "notes": " | v5: soft group, PCs at pc_homes (no band hardening)"
   },
   {
+   "name": "idx_s0",
+   "cell": "ot_hbm_idx_score_static",
+   "kind": "cluster",
+   "parent": "die",
+   "outline": {
+    "w": 2950.0,
+    "h": 2950.0
+   },
+   "origin": {
+    "x": 17934.84,
+    "y": 9587.262,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "clock_entry": {
+    "pin": "clk_ctl",
+    "face": "E",
+    "layer": "M4",
+    "offset": 1460.568
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M7",
+   "version": 7,
+   "pins": [],
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv",
+   "params": {},
+   "layer_rule": "cluster",
+   "instance": "hb_idx/index/parent/gscore[0]/scorer",
+   "stack": "SW",
+   "children": {
+    "hslice": {
+     "cell": "ot_hbm_idx_hslice_ready_native",
+     "count": 512,
+     "outline": [
+      172.8,
+      103.68
+     ],
+     "view": "CLOSED ready3-2065d438f exact reuse (Codex IDX 08:30)"
+    },
+    "engine_glue": {
+     "cell": "ot_hbm_idx_engine_static",
+     "count": 4,
+     "synth": {
+      "std_um2": 5250.56418,
+      "macros": {},
+      "ff": 0,
+      "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_engine/idx_engine.stat"
+     }
+    },
+    "meta": {
+     "cell": "ot_hbm_idx_score_static (local)",
+     "synth": {
+      "std_um2": 2910.35754,
+      "macros": {},
+      "ff": 0,
+      "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_score_meta/idx_score_meta.stat"
+     }
+    }
+   },
+   "key_lines_long_return": "8,792 b/scorer from stack SW service lines -> scorer: crosses the SM block through the centre spine (~9-11 mm, relay stations needed, priced by GLOBAL-FP-H / H-IDX)",
+   "own_plan_faces": {
+    "W": 0.029,
+    "E": 0.038,
+    "S": 0.22
+   },
+   "face_utilisation": {
+    "E": 0.029,
+    "W": 0.038,
+    "N": 0.22
+   },
+   "shared_plan": {
+    "reference": "idx_s3",
+    "orient": "R180",
+    "own_face_match_bits": 1.0
+   },
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
+   "plan_block": "idx_s0",
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_idx_soft_1017",
+   "notes": "IDX scorer: hardened cluster of 16 replicated ~700 um square leaves (4x4, regional roots), view 4.70 mm2 std / 9.45M flops"
+  },
+  {
+   "name": "idx_s1",
+   "cell": "ot_hbm_idx_score_static",
+   "kind": "cluster",
+   "parent": "die",
+   "outline": {
+    "w": 2950.0,
+    "h": 2950.0
+   },
+   "origin": {
+    "x": 17934.84,
+    "y": 19392.178,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "clock_entry": {
+    "pin": "clk_ctl",
+    "face": "E",
+    "layer": "M4",
+    "offset": 1460.568
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M7",
+   "version": 7,
+   "pins": [],
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv",
+   "params": {},
+   "layer_rule": "cluster",
+   "instance": "hb_idx/index/parent/gscore[1]/scorer",
+   "stack": "SE",
+   "children": {
+    "hslice": {
+     "cell": "ot_hbm_idx_hslice_ready_native",
+     "count": 512,
+     "outline": [
+      172.8,
+      103.68
+     ],
+     "view": "CLOSED ready3-2065d438f exact reuse (Codex IDX 08:30)"
+    },
+    "engine_glue": {
+     "cell": "ot_hbm_idx_engine_static",
+     "count": 4,
+     "synth": {
+      "std_um2": 5250.56418,
+      "macros": {},
+      "ff": 0,
+      "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_engine/idx_engine.stat"
+     }
+    },
+    "meta": {
+     "cell": "ot_hbm_idx_score_static (local)",
+     "synth": {
+      "std_um2": 2910.35754,
+      "macros": {},
+      "ff": 0,
+      "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_score_meta/idx_score_meta.stat"
+     }
+    }
+   },
+   "key_lines_long_return": "8,792 b/scorer from stack SE service lines -> scorer: crosses the SM block through the centre spine (~9-11 mm, relay stations needed, priced by GLOBAL-FP-H / H-IDX)",
+   "own_plan_faces": {
+    "W": 0.029,
+    "E": 0.038,
+    "S": 0.22
+   },
+   "face_utilisation": {
+    "E": 0.029,
+    "W": 0.038,
+    "N": 0.22
+   },
+   "shared_plan": {
+    "reference": "idx_s3",
+    "orient": "R180",
+    "own_face_match_bits": 1.0
+   },
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
+   "plan_block": "idx_s1",
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_idx_soft_1017",
+   "notes": "IDX scorer: hardened cluster of 16 replicated ~700 um square leaves (4x4, regional roots), view 4.70 mm2 std / 9.45M flops"
+  },
+  {
+   "name": "idx_sel",
+   "cell": "ot_hbm_idx_selector_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 600.0,
+    "h": 450.0
+   },
+   "origin": {
+    "x": 17859.84,
+    "y": 12687.262,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "clock_entry": {
+    "pin": "clk_ctl",
+    "face": "E",
+    "layer": "M4",
+    "offset": 581.304
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "version": 1,
+   "pins": [],
+   "face_utilisation": {
+    "E": 0.001,
+    "W": 0.594
+   },
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv",
+   "params": {},
+   "layer_rule": "tile",
+   "synth": null,
+   "need_um2": 0,
+   "plan_block": "idx_sel",
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_idx_soft_1017",
+   "notes": "IDX soft-hierarchy child (contract 50de1fe73)"
+  },
+  {
+   "name": "idx_link",
+   "cell": "ot_hbm_idx_topk_link_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 650.0,
+    "h": 500.0
+   },
+   "origin": {
+    "x": 18559.84,
+    "y": 12637.262,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "E",
+    "layer": "M4",
+    "offset": 372.168
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "version": 1,
+   "pins": [],
+   "face_utilisation": {
+    "E": 0.001,
+    "W": 0.591
+   },
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv",
+   "params": {},
+   "layer_rule": "tile",
+   "synth": null,
+   "need_um2": 0,
+   "plan_block": "idx_link",
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_idx_soft_1017",
+   "notes": "IDX soft-hierarchy child (contract 50de1fe73)"
+  },
+  {
+   "name": "idx_q",
+   "cell": "ot_hbm_idx_query_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 260.0,
+    "h": 260.0
+   },
+   "origin": {
+    "x": 18259.84,
+    "y": 19032.178,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "E",
+    "layer": "M4",
+    "offset": 224.304
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "version": 1,
+   "pins": [],
+   "face_utilisation": {
+    "E": 0.002,
+    "W": 0.347
+   },
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
+   "params": {},
+   "layer_rule": "tile",
+   "synth": {
+    "std_um2": 8420.12496,
+    "macros": {},
+    "ff": 0,
+    "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_qbank/idx_qbank.stat",
+    "note": "4 x query bank"
+   },
+   "need_um2": 16840,
+   "plan_block": "idx_q",
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_idx_soft_1017",
+   "notes": "IDX soft-hierarchy child (contract 50de1fe73)"
+  },
+  {
+   "name": "idx_op",
+   "cell": "ot_hbm_idx_vm_query_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 216.0,
+    "h": 108.0
+   },
+   "origin": {
+    "x": 18619.84,
+    "y": 19032.178,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4",
+    "offset": 158.712
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "version": 1,
+   "pins": [],
+   "face_utilisation": {
+    "W": 0.001,
+    "E": 0.33,
+    "S": 0.583
+   },
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv",
+   "params": {},
+   "layer_rule": "tile",
+   "synth": {
+    "std_um2": 3067.69032,
+    "macros": {},
+    "ff": 0,
+    "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_vmquery/idx_vmquery.stat"
+   },
+   "need_um2": 6135,
+   "plan_block": "idx_op",
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_idx_soft_1017",
+   "notes": "IDX soft-hierarchy child (contract 50de1fe73)"
+  },
+  {
    "name": "vm_status4",
    "cell": "ot_vms_status4_static",
    "instance": "vm_status4",
@@ -33135,7 +33497,7 @@
    },
    "origin": {
     "x": 17859.840000000004,
-    "y": 13094.52,
+    "y": 13937.262,
     "orient": "R0"
    },
    "version": 2,
@@ -34146,8 +34508,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 19425.12,
-    "y": 18559.72,
+    "x": 20525.12,
+    "y": 17716.978,
     "orient": "R0"
    },
    "clock_entry": {
@@ -34202,8 +34564,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 18940.4,
-    "y": 18559.72,
+    "x": 20040.4,
+    "y": 17716.978,
     "orient": "R0"
    },
    "clock_entry": {
@@ -34227,7 +34589,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 273.18,
+     "offset": 392.8,
      "span_um": 122.4,
      "bits": 1224,
      "peer": "coll_NE",
@@ -34258,8 +34620,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 19425.12,
-    "y": 13094.52,
+    "x": 20525.12,
+    "y": 13937.262,
     "orient": "R0"
    },
    "clock_entry": {
@@ -34314,8 +34676,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 18940.4,
-    "y": 13094.52,
+    "x": 20040.4,
+    "y": 13937.262,
     "orient": "R0"
    },
    "clock_entry": {
@@ -34370,8 +34732,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 18455.68,
-    "y": 13094.52,
+    "x": 19555.68,
+    "y": 13937.262,
     "orient": "R0"
    },
    "clock_entry": {
@@ -34395,7 +34757,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 119.62,
+     "offset": 0.0,
      "span_um": 122.4,
      "bits": 1224,
      "peer": "coll_SE",
@@ -35622,12 +35984,12 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 2000.0,
-    "h": 4750.0
+    "w": 3100.0,
+    "h": 3064.516
    },
    "origin": {
     "x": 17859.84,
-    "y": 13709.72,
+    "y": 14552.462,
     "orient": "R0"
    },
    "clock_entry": {
@@ -35649,8 +36011,8 @@
    "notes": "HC:ot_hbm_hc_eng_static (H-NETLIST 406a2d5f9, ~9.5 mm2 model hbm_hc_eng_0030) centre-column void; H-DIE-V790 centre-column home, pins from the plan pin windows (v16 widths)",
    "pin_windows": [
     {
-     "face": "W",
-     "layer": "M4",
+     "face": "S",
+     "layer": "M5",
      "offset": 0.0,
      "span_um": 210.0,
      "bits": 2100,
@@ -35659,8 +36021,8 @@
      "link": "hc_SW>hc_eng:HC_ENG"
     },
     {
-     "face": "W",
-     "layer": "M4",
+     "face": "S",
+     "layer": "M5",
      "offset": 210.0,
      "span_um": 77.2,
      "bits": 772,
@@ -35671,7 +36033,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 600.48,
+     "offset": 0.0,
      "span_um": 210.0,
      "bits": 2100,
      "peer": "hc_SE",
@@ -35681,7 +36043,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 810.48,
+     "offset": 210.0,
      "span_um": 77.2,
      "bits": 772,
      "peer": "hc_SE",
@@ -35691,7 +36053,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 3939.52,
+     "offset": 2777.32,
      "span_um": 210.0,
      "bits": 2100,
      "peer": "hc_NE",
@@ -35701,7 +36063,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 4149.52,
+     "offset": 2987.32,
      "span_um": 77.2,
      "bits": 772,
      "peer": "hc_NE",
@@ -35709,9 +36071,9 @@
      "link": "hc_eng>hc_NE:HC_ENG"
     },
     {
-     "face": "W",
-     "layer": "M4",
-     "offset": 4462.8,
+     "face": "N",
+     "layer": "M5",
+     "offset": 0.0,
      "span_um": 210.0,
      "bits": 2100,
      "peer": "hc_NW",
@@ -35719,9 +36081,9 @@
      "link": "hc_NW>hc_eng:HC_ENG"
     },
     {
-     "face": "W",
-     "layer": "M4",
-     "offset": 4672.8,
+     "face": "N",
+     "layer": "M5",
+     "offset": 210.0,
      "span_um": 77.2,
      "bits": 772,
      "peer": "hc_NW",
@@ -35743,8 +36105,8 @@
     "h": 600.0
    },
    "origin": {
-    "x": 19259.84,
-    "y": 19174.92,
+    "x": 20359.84,
+    "y": 18332.178,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -35791,8 +36153,8 @@
     "h": 600.0
    },
    "origin": {
-    "x": 18559.84,
-    "y": 19174.92,
+    "x": 19659.84,
+    "y": 18332.178,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -35839,8 +36201,8 @@
     "h": 600.0
    },
    "origin": {
-    "x": 19259.84,
-    "y": 12394.52,
+    "x": 20359.84,
+    "y": 13237.262,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -35887,8 +36249,8 @@
     "h": 600.0
    },
    "origin": {
-    "x": 18559.84,
-    "y": 12394.52,
+    "x": 19659.84,
+    "y": 13237.262,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -35935,8 +36297,8 @@
     "h": 600.0
    },
    "origin": {
-    "x": 17859.84,
-    "y": 12394.52,
+    "x": 18959.84,
+    "y": 13237.262,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -82333,7 +82695,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {
     "QID": 3,
     "G": 0,
@@ -82830,7 +83192,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {
     "QID": 3,
     "G": 1,
@@ -83327,7 +83689,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {
     "QID": 3,
     "G": 2,
@@ -83824,7 +84186,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {
     "QID": 3,
     "G": 3,
@@ -84341,7 +84703,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {
     "QID": 2,
     "G": 0,
@@ -84838,7 +85200,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {
     "QID": 2,
     "G": 1,
@@ -85335,7 +85697,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {
     "QID": 2,
     "G": 2,
@@ -85832,7 +86194,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {
     "QID": 2,
     "G": 3,
@@ -86349,7 +86711,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {
     "QID": 1,
     "G": 0,
@@ -86846,7 +87208,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {
     "QID": 1,
     "G": 1,
@@ -87343,7 +87705,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {
     "QID": 1,
     "G": 2,
@@ -87840,7 +88202,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {
     "QID": 1,
     "G": 3,
@@ -88357,7 +88719,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {
     "QID": 0,
     "G": 0,
@@ -88854,7 +89216,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {
     "QID": 0,
     "G": 1,
@@ -89351,7 +89713,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {
     "QID": 0,
     "G": 2,
@@ -89848,7 +90210,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {
     "QID": 0,
     "G": 3,
@@ -90314,7 +90676,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -90615,7 +90977,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -90916,7 +91278,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -91217,7 +91579,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "62426b713",
+   "source_prerequisite": "553e200d4",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -92858,7 +93220,7 @@
    },
    "origin": {
     "x": 17859.840000000004,
-    "y": 19174.92,
+    "y": 18332.178,
     "orient": "R0"
    },
    "version": 7,
@@ -96299,7 +96661,7 @@
    },
    "origin": {
     "x": 17859.840000000004,
-    "y": 18559.72,
+    "y": 17716.978,
     "orient": "R0"
    },
    "clock_entry": {
@@ -96336,7 +96698,7 @@
    },
    "origin": {
     "x": 18045.84,
-    "y": 18559.72,
+    "y": 17716.978,
     "orient": "R0"
    },
    "clock_entry": {
@@ -96613,6 +96975,30 @@
    "pg_layer": "M7",
    "strap_layer": "M8",
    "notes": "separate hardened TKM sub-cluster N of coll_SW (COLL helper recommendation); needs the contract to hoist tkm_m out of hb_coll_SW"
+  },
+  {
+   "name": "idx_ctl",
+   "parent": "die",
+   "cell": "ot_hbm_idx_ctl_static",
+   "kind": "tile",
+   "outline": {
+    "w": 300.0,
+    "h": 260.0
+   },
+   "origin": {
+    "x": 17859.84,
+    "y": 19032.178,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "plan_block": "idx_ctl",
+   "grant": "d4f_idx_soft_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "IDX soft-hierarchy child (contract 50de1fe73)"
   }
  ],
  "sub_layouts": {
@@ -103986,14 +104372,8 @@
    "svc_NE_s6",
    "svc_NE_s7",
    "svc_NE_s8",
-   "idx_s0",
-   "idx_s1",
    "idx_s2",
    "idx_s3",
-   "idx_sel",
-   "idx_link",
-   "idx_q",
-   "idx_op",
    "idx_s0_meta0",
    "idx_s0_meta1",
    "idx_s0_meta2",
@@ -104045,7 +104425,7 @@
    "hc_eng_tgt",
    "hc_tbl_tgt"
   ],
-  "mapped": 123,
+  "mapped": 129,
   "resized": [
    {
     "slot": "hc_eng",
@@ -104054,8 +104434,8 @@
      "h": 3114.754
     },
     "new": {
-     "w": 2000.0,
-     "h": 4750.0
+     "w": 3100.0,
+     "h": 3064.516
     }
    },
    {
@@ -104338,14 +104718,14 @@
   "translated": [
    {
     "slot": "vm_status4",
-    "anchor": "hc_eng",
-    "dx": 2889.84,
-    "dy": 5173.79
+    "anchor": "idx_sel",
+    "dx": 1856.32,
+    "dy": -486.188
    },
    {
     "slot": "host_N",
     "anchor": "ep_N2",
-    "dx": 2890.176,
+    "dx": 3990.176,
     "dy": 7004.238,
     "edge_kept": [
      "N"
@@ -104354,7 +104734,7 @@
    {
     "slot": "host_cp",
     "anchor": "ep_N0",
-    "dx": 3374.896,
+    "dx": 4474.896,
     "dy": 7004.238,
     "edge_kept": [
      "N"
@@ -104362,9 +104742,9 @@
    },
    {
     "slot": "hb_ckgen",
-    "anchor": "hc_eng",
-    "dx": 1839.84,
-    "dy": 5173.79
+    "anchor": "idx_link",
+    "dx": 1841.12,
+    "dy": -486.188
    },
    {
     "slot": "quant_NW_xp",
@@ -104476,23 +104856,89 @@
    "sucore_NE"
   ],
   "outside": [],
-  "overlaps": [],
+  "overlaps": [
+   [
+    "idx_s0",
+    "idx_sel"
+   ],
+   [
+    "idx_s0",
+    "idx_link"
+   ],
+   [
+    "idx_s0",
+    "lk_S0"
+   ],
+   [
+    "idx_s0",
+    "lk_S1"
+   ],
+   [
+    "idx_s0",
+    "lk_S3"
+   ],
+   [
+    "idx_s1",
+    "idx_q"
+   ],
+   [
+    "idx_sel",
+    "idx_link"
+   ],
+   [
+    "idx_q",
+    "idx_op"
+   ]
+  ],
   "points_in_hard_blocks": [],
   "qualification": "UNQUALIFIED_GEOMETRY_PROPOSAL",
   "blockers": {
-   "dropped": 70,
+   "dropped": 64,
    "die": {
-    "w": 19902.24,
+    "w": 21002.24,
     "h": 32169.44
    },
-   "mapped": 123,
+   "mapped": 129,
    "resized": 26,
    "new": [],
    "translated": 9,
    "regranted": 36,
    "outside": [],
-   "n_overlaps": 0,
-   "overlaps": [],
+   "n_overlaps": 8,
+   "overlaps": [
+    [
+     "idx_s0",
+     "idx_sel"
+    ],
+    [
+     "idx_s0",
+     "idx_link"
+    ],
+    [
+     "idx_s0",
+     "lk_S0"
+    ],
+    [
+     "idx_s0",
+     "lk_S1"
+    ],
+    [
+     "idx_s0",
+     "lk_S3"
+    ],
+    [
+     "idx_s1",
+     "idx_q"
+    ],
+    [
+     "idx_sel",
+     "idx_link"
+    ],
+    [
+     "idx_q",
+     "idx_op"
+    ]
+   ],
    "points_in_hard_blocks": [],
    "n_bad_points": 0
   }

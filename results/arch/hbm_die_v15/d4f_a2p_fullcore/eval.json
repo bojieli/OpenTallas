@@ -1,10 +1,10 @@
 {
- "tag": "d4fw_r2a",
+ "tag": "d4fw_r3",
  "die_um": [
-  19902.24,
+  21002.24,
   32169.44
  ],
- "die_mm2": 640.24,
+ "die_mm2": 675.63,
  "placed_mm2": 381.35,
  "cut_lanes": {
   "worst_v": {
@@ -16,11 +16,11 @@
    ]
   },
   "worst_h": {
-   "ratio": 0.545,
-   "y": 13000.0,
+   "ratio": 0.521,
+   "y": 17600.0,
    "x": [
-    18100.0,
-    19100.0
+    17400.0,
+    18400.0
    ]
   },
   "lines_over_060": 17,
@@ -28,7 +28,7 @@
  },
  "cut_no_lanes": 0.97,
  "faces_over_1": 10,
- "stages_bw": 9.448,
+ "stages_bw": 9.638,
  "per_class": {
   "HBM_K": {
    "bits": 35392,
@@ -36,7 +36,7 @@
   },
   "SM_X": {
    "bits": 34944,
-   "stages_bw": 11.59
+   "stages_bw": 11.69
   },
   "SM_HBM": {
    "bits": 18112,
@@ -56,7 +56,7 @@
   },
   "HC_CORE": {
    "bits": 17792,
-   "stages_bw": 23.33
+   "stages_bw": 23.67
   },
   "VM_RING": {
    "bits": 17792,
@@ -64,23 +64,23 @@
   },
   "COLL_VM": {
    "bits": 17760,
-   "stages_bw": 18.31
+   "stages_bw": 18.34
   },
   "VM_HUB": {
    "bits": 17216,
-   "stages_bw": 27.44
+   "stages_bw": 27.66
   },
   "HC_ENG": {
    "bits": 11488,
-   "stages_bw": 7.88
+   "stages_bw": 9.2
   },
   "COLL_RING": {
    "bits": 6608,
-   "stages_bw": 13.25
+   "stages_bw": 13.5
   },
   "COLL_EP": {
    "bits": 6120,
-   "stages_bw": 14.8
+   "stages_bw": 18.4
   },
   "EP_SERDES": {
    "bits": 5280,
@@ -96,26 +96,26 @@
   },
   "HBM_VM": {
    "bits": 4096,
-   "stages_bw": 32.5
+   "stages_bw": 32.25
   },
   "VM_HBM": {
    "bits": 4096,
-   "stages_bw": 31.5
+   "stages_bw": 31.25
   },
   "SFU_CORE": {
    "bits": 3072,
-   "stages_bw": 15.08
+   "stages_bw": 14.92
   },
   "SU_CORE": {
    "bits": 3072,
-   "stages_bw": 12.75
+   "stages_bw": 12.83
   },
   "KV_DESC": {
    "bits": 1024,
    "stages_bw": 20.81
   }
  },
- "relay_flops": 1990393.0,
+ "relay_flops": 2015721.0,
  "su_slice": [
   1797.12,
   2825.28
@@ -127,11 +127,11 @@
  "fits_reticle": true,
  "reticle": {
   "die_um": [
-   19902.24,
+   21002.24,
    32169.44
   ],
   "long_margin_um": 830.56,
-  "short_margin_um": 6097.76,
+  "short_margin_um": 4997.76,
   "margin_req_um": 500.0,
   "ok": true
  }
