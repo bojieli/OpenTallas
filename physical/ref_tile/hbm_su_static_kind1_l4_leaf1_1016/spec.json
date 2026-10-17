@@ -189,9 +189,14 @@
   "clk_stage_1",
   "clk_stage_2",
   "clk_stage_3",
+  "clk_stage_4",
   "clk_stage_5",
   "clk_stage_6",
-  "clk_stage_7"
+  "clk_stage_7",
+  "clk_insert_0",
+  "clk_insert_1",
+  "clk_insert_2",
+  "clk_insert_3"
  ],
  "clock_data_paths": "related_same_frequency",
  "clock_relationship": {
@@ -245,11 +250,6 @@
     "ci_sfu",
     "cs_sfu",
     "side_y",
-    "clk_stage_4",
-    "clk_insert_0",
-    "clk_insert_1",
-    "clk_insert_2",
-    "clk_insert_3",
     "cp_m1",
     "cp_imm1",
     "cm_m1",
@@ -351,6 +351,61 @@
     "fault",
     "coll"
    ]
+  },
+  "stage4": {
+   "ports": [
+    "clk_stage_4"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "insert0": {
+   "ports": [
+    "clk_insert_0"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "insert1": {
+   "ports": [
+    "clk_insert_1"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "insert2": {
+   "ports": [
+    "clk_insert_2"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "insert3": {
+   "ports": [
+    "clk_insert_3"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
   }
  },
  "params": {},
@@ -372,7 +427,7 @@
   "enable": false,
   "reason": "the RTL (ot_hbm_su_static_lane_pinreg, PIN_RST=1) already registers every data input, rst_n and every output at the pin; a kit-level flop stage would add a second, unscheduled boundary edge"
  },
- "structural_change": "New leaf (first route): KIND1 HEAVY lane in the CLOSED KIND0 r2 leaf form (pin-registered lane_pinreg, PIN_RST=1, LAT4/LEAF1); outline 166.32 x 330.48 = the d4c pgslice row plan (KIND1 synth 22,528 um2 at the measured kind0 0.416 synth:outline ratio). Pins <= 6/um (new-tile guidance): pin_min_tracks 4 (0.192 um, 5.2/um); the 840-bit ld_c moves from N to the 330-um W face (N keeps the 12 clock entries; W 1,032 / S 562 / E 315 bits).",
+ "structural_change": "New leaf (first route): KIND1 HEAVY lane in the CLOSED KIND0 r2 leaf form (pin-registered lane_pinreg, PIN_RST=1, LAT4/LEAF1); outline 166.32 x 330.48 = the d4c pgslice row plan (KIND1 synth 22,528 um2 at the measured kind0 0.416 synth:outline ratio). Pins <= 6/um (new-tile guidance): pin_min_tracks 4 (0.192 um, 5.2/um); the 840-bit ld_c moves from N to the 330-um W face (N keeps the 12 clock entries; W 1,032 / S 562 / E 315 bits). Correction after pre-floorplan OT_MULTI_ROOT refusal: declare all eight arithmetic stage roots and four insertion-line roots, including SFU stage4 and insert[3:0], rather than inheriting KIND0 unused-clock data inputs. No cycle, area, clock period or RTL change.",
  "outline": {
   "w": 166.32,
   "h": 330.48
