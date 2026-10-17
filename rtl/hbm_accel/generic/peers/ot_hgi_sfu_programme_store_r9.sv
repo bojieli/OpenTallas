@@ -110,7 +110,7 @@ module ot_hgi_sfu_programme_store_r9 #(
  wire [1:0] v2,a2,d2,f2;
  wire [31:0] o0,o1,o2,oio;
  wire [2:1] m0,m1,mio;
- wire [1:1] m2;
+ wire m2;
  wire io470;
  wire p_sv=rb[2] && io470;                       // r7c: rb(stripe) & io[470]
  ot_hgi_sfu_store_leaf3_r9 #(.PAGE_AW(PAGE_AW)) u_leaf_p0(.clk(clk),.rst_a(ra_leaf[0]),.in_we(p_we[2:0]),.in_addr(h_addr[0]),
@@ -146,7 +146,7 @@ module ot_hgi_sfu_programme_store_r9 #(
  wire p_cv=(&pv) && !(|pf);
  wire io_cv=(&vio) && !(|iof);
  assign io470=io_cv && iowords[470];
- wire [7:0] pmm={m2[1]|(o2!=o0),o2!=o0,m1[2]|(o1!=o0),m1[1]|(o1!=o0),o1!=o0,m0[2],m0[1],1'b0};
+ wire [7:0] pmm={m2|(o2!=o0),o2!=o0,m1[2]|(o1!=o0),m1[1]|(o1!=o0),o1!=o0,m0[2],m0[1],1'b0};
  wire p_dis=(|pv && !(&pv)) || (|pd && !(&pd)) || (|pa && !(&pa)) || |(pv&pmm);
  wire io_dis=(|vio && !(&vio)) || (|dio && !(&dio)) || (|aio && !(&aio)) || |(vio[2:1]&mio);
  reg p_fault,io_fault;

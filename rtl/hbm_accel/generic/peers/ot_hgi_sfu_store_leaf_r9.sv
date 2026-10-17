@@ -179,7 +179,7 @@ module ot_hgi_sfu_store_leaf2_r9 #(parameter integer PAGE_AW=1, AW=10+PAGE_AW)(
  output wire [221:0] out_cal0,out_cal1,
  output wire [1:0] out_v,out_active,out_done,out_fault,
  output wire [31:0] out_ord,
- output wire [1:1] out_mm
+ output wire out_mm            // scalar: stripe 1 ordinal != stripe 0 ordinal
 );
  ot_hgi_sfu_store_leaf_r9 #(.NS(2),.PAGE_AW(PAGE_AW)) u_leaf(.clk(clk),.rst_a(rst_a),.in_we(in_we),.in_addr(in_addr),
   .in_data(in_data),.in_start_v(in_start_v),.in_start_base(in_start_base),.in_legal(in_legal),.in_span(in_span),
