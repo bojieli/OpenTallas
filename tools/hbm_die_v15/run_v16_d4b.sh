@@ -21,6 +21,12 @@ EXTRA=$(python3 -c "
 import json; c=json.load(open('$OUT/contract.json'))
 print(' '.join(sorted({'--rtl-file '+f for i in c['instances'].values() for f in [i['source']]+i.get('rtl_deps',[])
       if not (f.startswith('rtl/') or '/rtl/' in f)})))")
+# H-NETLIST (H-DIE 10-17): every instance source / rtl_dep must exist in THIS tree; a missing non-rtl/ dep (e.g.
+# physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv under ot_hbm_xp_aq_tree13_fmt) would otherwise bind as a STUB.
+python3 -c "
+import json,os,sys; c=json.load(open('$OUT/contract.json'))
+miss=sorted({f for i in c['instances'].values() for f in [i['source']]+i.get('rtl_deps',[]) if not os.path.isfile(f)})
+print('CONTRACT_SOURCES_PRESENT', 'PASS' if not miss else 'FAIL missing='+','.join(miss)); sys.exit(1 if miss else 0)" || exit 4
 bind_rc=0
 python3 tools/die_port_bind.py $OUT/die.v --top hbm_v16_die $EXTRA --allow-model ot_hbm3e_phy_rc_e8p5 --allow-model ot_hbm_pll_bb \
   --define OT_SMH_FC_HIER --strap-file $OUT/straps.json --out $OUT/port_bind.json > $OUT/port_bind.log 2>&1 || bind_rc=$?
