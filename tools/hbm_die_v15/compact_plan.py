@@ -46,7 +46,7 @@ EDGE = 120.0
 SC_GAP = 100.0                         # relay row between the two scorers of a die half (cross-column relay homes)
 
 
-def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=None, smw=None, smh=None, carry=False, layout='v5', core_at=4, sfu_at_hub=False, mirror_east=False, sfu_at_group=None, core_w=None, core_h=None, core_column_w=None, sfu_store_side=False, hc_eng_mm2=None, hc_links_v16=False, hc_x_beats=1, hc_client_inner=False, sm_columns=None, band_low=False, sm_portrait=False, qw_extra=0.0, pocket=False, sfucore_w=763.56, pocket_core_up=False, slim_column=False, sm_rows='abcd', centre_strip=0.0, sm_col_real=False, half_die=False, full_core=False, serdes=0, core_channel=None, sm_band_channel=None):
+def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=None, smw=None, smh=None, carry=False, layout='v5', core_at=4, sfu_at_hub=False, mirror_east=False, sfu_at_group=None, core_w=None, core_h=None, core_column_w=None, sfu_store_side=False, hc_eng_mm2=None, hc_links_v16=False, hc_x_beats=1, hc_client_inner=False, sm_columns=None, band_low=False, sm_portrait=False, qw_extra=0.0, pocket=False, sfucore_w=763.56, pocket_core_up=False, slim_column=False, sm_rows='abcd', centre_strip=0.0, sm_col_real=False, half_die=False, full_core=False, serdes=0, core_channel=None, sm_band_channel=None, fill='a'):
     """v6 (H-DIE-V6PLAN 10-16, OWNER 02:15 die may grow): su_w/su_h = SU slice outline (default 1250 x 1780), smw/smh = SM
     slot (default 6609.6 x 1712.08), carry = also place the v5 grants that are not graph nodes (sfucore_<q> 763.56 x
     1936.44 after the SU core; DMA back at its granted 511.92 width, shifted 79.92 um west as hb_dbk_<q>).  Defaults
@@ -487,16 +487,20 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
                 cc_ = core_channel if core_channel is not None else GAP
                 y_ = b['y'] - (BAND + cc_) if north else b['y'] + (BAND + cc_)
                 P[k] = dict(b, x=round(x_, 3), y=round(y_, 3))
-            rt = {k: k.replace('_SE', '_SW').replace('_NE', '_NW') for k in sm_side}
-            for l in G['links']:
-                l['src'] = rt.get(l['src'], l['src']); l['dst'] = rt.get(l['dst'], l['dst'])
+            if fill == 'b':     # cross-quadrant fill: the E core's SM-side links re-target the W SM side (k -> k)
+                rt = {k: k.replace('_SE', '_SW').replace('_NE', '_NW') for k in sm_side}
+                for l in G['links']:
+                    l['src'] = rt.get(l['src'], l['src']); l['dst'] = rt.get(l['dst'], l['dst'])
+            # fill 'a' (H-NETLIST P1, VMS client-absent): the E hubs have no SM side; their SM-side links are dropped
             E = sm_side
         for k in E:
             P.pop(k, None); N.pop(k, None)
         if serdes:
-            for side, n_ in (('S', (serdes + 1) // 2), ('N', serdes // 2)):
-                for k in [k for k in list(P) if k.startswith((f'lk_{side}', f'ep_{side}')) and int(k[4:]) >= n_]:
-                    P.pop(k, None); N.pop(k, None)
+            # H-DIE 10-16 (H-NETLIST P1): one switch link per COLL engine + host/spare = S0 (SW), S3 (SE), N0 (NW), N2 (NE), S1
+            keep = {'S0', 'S3', 'N0', 'N2', 'S1', 'S2', 'N1', 'N3', 'S4'}
+            keep = set(['S0', 'S3', 'N0', 'N2', 'S1', 'S2', 'N1', 'N3', 'S4'][:serdes])
+            for k in [k for k in list(P) if k.startswith(('lk_', 'ep_')) and k[3:] not in keep]:
+                P.pop(k, None); N.pop(k, None)
         G['links'] = [l for l in G['links'] if l['src'] in P and l['dst'] in P]
         W = EDGE + qw + channel + COLUMN_W + EDGE
     return G, P, W, H
@@ -546,6 +550,7 @@ def main():
     ap.add_argument('--full-core', action='store_true', help='with --half-die: keep all 4 quadrant cores (2nd band row per half)')
     ap.add_argument('--core-channel', type=float, help='with --full-core: channel between the two band rows of a half (default --gap)')
     ap.add_argument('--sm-band-channel', type=float, help='with --sm-columns: channel between the SM column tops (xw windows) and the band')
+    ap.add_argument('--fill', default='a', choices=('a', 'b'), help="--full-core E hubs: a = no SM side (VM ring only), b = cross-quadrant fill")
     ap.add_argument('--serdes', type=int, default=0, help='with --half-die: keep this many lk/ep pairs (S gets the odd one)')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
@@ -556,7 +561,7 @@ def main():
         COLUMN_W = a.column
     SFU_DIM.update(core_h=a.sfucore_h, store_w=a.sfus_wh[0], store_h=a.sfus_wh[1], store_yoff=a.sfus_yoff)
     globals()['GAP'] = a.gap
-    kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout, core_at=a.core_at, sfu_at_hub=a.sfu_at_hub, mirror_east=a.mirror_east,sfu_at_group=a.sfu_at_group,core_w=a.core_w,core_h=a.core_h,core_column_w=a.core_column_w,sfu_store_side=a.sfu_store_side,hc_eng_mm2=a.hc_eng_mm2,hc_links_v16=a.hc_links_v16,hc_x_beats=a.hc_x_beats,hc_client_inner=a.hc_client_inner,sm_columns=a.sm_columns,band_low=a.band_low,sm_portrait=a.sm_portrait,qw_extra=a.qw_extra,pocket=a.pocket,sfucore_w=a.sfucore_w,slim_column=a.slim_column,sm_rows=a.sm_rows,centre_strip=a.centre_strip,sm_col_real=a.sm_col_real,half_die=a.half_die,full_core=a.full_core,serdes=a.serdes,core_channel=a.core_channel,sm_band_channel=a.sm_band_channel)
+    kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout, core_at=a.core_at, sfu_at_hub=a.sfu_at_hub, mirror_east=a.mirror_east,sfu_at_group=a.sfu_at_group,core_w=a.core_w,core_h=a.core_h,core_column_w=a.core_column_w,sfu_store_side=a.sfu_store_side,hc_eng_mm2=a.hc_eng_mm2,hc_links_v16=a.hc_links_v16,hc_x_beats=a.hc_x_beats,hc_client_inner=a.hc_client_inner,sm_columns=a.sm_columns,band_low=a.band_low,sm_portrait=a.sm_portrait,qw_extra=a.qw_extra,pocket=a.pocket,sfucore_w=a.sfucore_w,slim_column=a.slim_column,sm_rows=a.sm_rows,centre_strip=a.centre_strip,sm_col_real=a.sm_col_real,half_die=a.half_die,full_core=a.full_core,serdes=a.serdes,core_channel=a.core_channel,sm_band_channel=a.sm_band_channel,fill=a.fill)
     G0 = json.loads((ROOT / a.graph).read_text())
     if a.fit:
         area = a.area

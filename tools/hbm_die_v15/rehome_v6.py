@@ -82,6 +82,9 @@ def main():
     ap.add_argument('--sm-carve', type=float, help='SM frame edge feedthrough carve width (W column + N row, OWNER/H-SM rp4c 40.32)')
     ap.add_argument('--quadrants', default='SW,SE,NW,NE', help='OWNER 10-16 A2P half die: keep only these quadrants (e.g. SW,NW); '
                     'slots, PC homes and RF routes of the other quadrants are DROPPED (the half-die netlist has no such instances)')
+    ap.add_argument('--sm-side-drop', default='', help='d4f full core (HBM-ARRAY 10-16): for these quadrants (e.g. SE,NE) drop only '
+                    'the SM side (sm_, svc_ PC bands, phy_, hb_dbk_) and its PC homes; the core slots stay')
+    ap.add_argument('--drop-slots', default='', help='comma list of slot names to drop (e.g. SerDes pairs removed by the plan)')
     ap.add_argument('--drop-ghosts', action='store_true', help='drop the v15 IDX scorer/glue slots (idx_*; not in the v16 contract)')
     ap.add_argument('--sm-column', action='store_true', help='A2P: SM slots take the plan column outline with FACES_ONLY pins '
                     '(H-SM portrait column kit pending; exact pins re-granted from that kit)')
@@ -105,10 +108,13 @@ def main():
     KQ = a.quadrants.split(',')
     DQ = [q for q in ('SW', 'SE', 'NW', 'NE') if q not in KQ]
     dropped = []
-    if DQ or a.drop_ghosts:
+    SQ = [q for q in a.sm_side_drop.split(',') if q]
+    XS = set(x for x in a.drop_slots.split(',') if x)
+    if DQ or a.drop_ghosts or SQ or XS:
         rxq = _re.compile(r'(^|_)(' + '|'.join(DQ) + r')(\d|_|$)') if DQ else None
+        rxs = _re.compile(r'^(sm_|svc_|phy_|hb_dbk_)(' + '|'.join(SQ) + r')(\d|_|$)') if SQ else None
         def gone(n):
-            return bool((rxq and rxq.search(n)) or (a.drop_ghosts and n.startswith('idx_')))
+            return bool((rxq and rxq.search(n)) or (rxs and rxs.search(n)) or n in XS or (a.drop_ghosts and n.startswith('idx_')))
         keep = [slots[0]]
         for s_ in slots[1:]:
             if gone(s_['name']) or (s_.get('parent') not in (None, 'die') and gone(s_.get('parent', ''))):
@@ -118,7 +124,8 @@ def main():
         slots[:] = keep
         C['pc_homes']['homes'] = {k: v for k, v in C['pc_homes']['homes'].items() if not gone(k) and not gone(v.get('band', ''))}
         C['su_rf_relays_v7']['routes'] = [r for r in C['su_rf_relays_v7']['routes'] if r['src'] in KQ and r['dst'] in KQ]
-        die['notes'] = f'A2P half die (OWNER 10-16: 16 SMs + 2 HBM stacks; quadrants {a.quadrants})'
+        die['notes'] = (f'A2P half die (OWNER 10-16: 16 SMs + 2 HBM stacks; quadrants {a.quadrants}'
+                        + (f'; full core, SM side dropped in {a.sm_side_drop} (HBM-ARRAY TP-192, coordinator d4f)' if SQ else '') + ')')
     log = dict(mapped=[], resized=[], translated=[], new=[])
     S = {s['name']: s for s in slots}
     # 1. plan-block slots
@@ -214,7 +221,7 @@ def main():
         if not s or f'vmh_{q}' not in P6:
             continue
         hb, cw, chh, ch = P6[f'vmh_{q}'], s['outline']['w'], s['outline']['h'], 21.6
-        east = q.endswith('E')                               # SE/NE: band lies east of the hub
+        east = P6[f'sucore_{q}']['x'] > hb['x'] if f'sucore_{q}' in P6 else q.endswith('E')   # band side of the hub (d4f: E cores un-mirrored)
         hubface = 'E' if east else 'W'
         x = hb['x'] + hb['w'] + ch if east else hb['x'] - ch - cw
         wins = [(p['offset_um'], p['offset_um'] + p['span_um']) for p in pins6['blocks'][f'vmh_{q}']['faces'].get(hubface, {}).get('pins', [])]
@@ -260,22 +267,28 @@ def main():
     else:
         for r in C['su_rf_relays_v7']['routes']:
             r['homes'] = [list(tr(x, y)[:2]) for x, y in r['homes']]
-            if DQ and r['src'] != r['dst']:
+            if (DQ or SQ) and r['src'] != r['dst']:
                 # A2P half die: the cross-quadrant RF route is a short straight run between the two quarter cores (the
                 # bands abut at the die centre); the contract's stage count is kept (equal-age pad, compiler-fixed) and its
                 # homes spread evenly along the src-core -> dst-core centre line (Manhattan: vertical, then horizontal)
                 a_, b_ = P6[f"sucore_{r['src']}"], P6[f"sucore_{r['dst']}"]
-                up = b_['y'] > a_['y']
-                p0 = (a_['x'] + a_['w'] / 2, a_['y'] + (a_['h'] if up else 0.0))
-                p1 = (b_['x'] + b_['w'] / 2, b_['y'] + (0.0 if up else b_['h']))
-                L = abs(p1[1] - p0[1]) + abs(p1[0] - p0[0]); n_ = len(r['homes'])
-                hs = []
+                # corridor: the channel between the VM hubs and the E column (clear of every band block)
+                xc = (max(P6[k]['x'] + P6[k]['w'] for k in P6 if k.startswith('vmh_')) + P6['hc_eng']['x']) / 2
+                p0 = (a_['x'] + a_['w'], a_['y'] + a_['h'] / 2); p1 = (b_['x'] + b_['w'], b_['y'] + b_['h'] / 2)
+                pts_ = [p0, (xc, p0[1]), (xc, p1[1]), p1]
+                segs = list(zip(pts_, pts_[1:])); L = sum(abs(q_[0] - p_[0]) + abs(q_[1] - p_[1]) for p_, q_ in segs)
+                n_ = len(r['homes']); hs = []
                 for i in range(n_):
-                    t = (i + 1) * L / (n_ + 1); dy = abs(p1[1] - p0[1])
-                    hs.append([round(p0[0], 3), round(p0[1] + (t if up else -t), 3)] if t <= dy else
-                              [round(p0[0] + (t - dy) * (1 if p1[0] > p0[0] else -1), 3), round(p1[1], 3)])
+                    t = (i + 1) * L / (n_ + 1)
+                    for p_, q_ in segs:
+                        sl = abs(q_[0] - p_[0]) + abs(q_[1] - p_[1])
+                        if t <= sl or (p_, q_) == segs[-1]:
+                            f_ = min(1.0, t / sl) if sl else 0.0
+                            hs.append([round(p_[0] + f_ * (q_[0] - p_[0]), 3), round(p_[1] + f_ * (q_[1] - p_[1]), 3)]); break
+                        t -= sl
+                p0, p1 = pts_[0], pts_[-1]
                 r.update(homes=hs, length_um=round(L, 3), max_hop_um=round(L / (n_ + 1), 3), footprints=[],
-                         path=[list(p0), [p0[0], p1[1]], list(p1)],
+                         path=[list(x_) for x_ in pts_],
                          note=f'A2P half die: {n_} equal-age stages kept on a {L:.0f} um core-to-core run (H-NETLIST may '
                               'reduce the count; the compiler table must follow)')
     for r in C.get('request_slots', []):
@@ -322,6 +335,8 @@ def main():
             R.ft_forbid_sm, R.ft_record_sm = R.ft_forbid, R.ft_record
         try:
             for i in range(8):
+                if q in SQ:
+                    continue
                 if a.sm_column:
                     sm_ = S[f'sm_{q}{i}']
                     sm_.update(pins=[], pin_status='FACES_ONLY', reserved_channels=[],

@@ -1,8 +1,12 @@
-# d4f A2P full core (HBM-ARRAY 10-16 TP-192 census: 4 COLL delivery lanes, SU 1,024 lanes, VM 2^18 words, 5 SerDes)
-16 SMs (F108 columns) + 2 stacks, but the full d4c core: the SE/NE band content un-mirrored into the W half as a second
-band row next to the die centre (4 hubs/COLL/SU cores, 16 SU slices, 32 VM banks), 5 lk/ep pairs, 400 um between band rows.
-19,502.24 x 31,694.24 um = 618.1 mm2; reticle margins 1.31 (long) / 6.50 (short) mm; blocks 377.3 mm2 (0.61), ~0.69 incl relays.
-Stages: SM_X 15.1, SM_HBM 3.2, COLL_EP 17.8, HBM_VM 33.6, VM_HUB 26.1, HC_ENG 7.9, SM_OUT 22.3; cuts 0.646/0.626, 6 lines > 0.60
-(guidance; the 100-um band->column-top strip carries the 4-hub SM_X; widening it to 400 um moves the worst cut to the PC row).
-Variants (same flags): core-channel 100: 606.4 mm2, cuts 0.698/0.629, 20 lines > 0.60; core 400 + sm-band 400: 629.8 mm2, 0.661/0.627.
-compact_plan <d4e args> --full-core --serdes 5 --core-channel 400; a2p_fix.py DIR --phy-shift 4000.
+# d4f A2P full core, widened (coordinator 10-16 21:30: d4f chosen; widen to spread the core; HBM-ARRAY TP-192 core)
+16 SMs (H-SM F108 columns) + 2 stacks; full d4c core: 4 VM hubs + 32 banks (2^18 words), 4 COLL engines, 4 SU quarter
+cores + 16 slices (1,024 lanes), 4 SFU, 4 HC clients + hc_eng; 5 SerDes = ep/lk S0 (COLL_SW), S3 (SE), N0 (NW), N2 (NE),
+S1 (host/spare). E-quadrant cores un-mirrored into the W half as a second band row per half (400 um apart); E hubs have
+no SM side (H-NETLIST P1, VMS client-absent = fill option a; plan graph drops their SM-side links).
+21,002.24 x 32,094.24 um = 674.1 mm2; reticle margins 0.91 (long) / 5.00 (short) mm; blocks 377 mm2 (0.56), ~0.60 incl relays.
+Cuts 0.470 / 0.521, 0 lines > 0.60 (fill a). Under fill b (cross-quadrant fill) the same outline gives 0.625 / 0.539, 2 lines.
+Stages: SM_X 11.8, SM_HBM 2.75, COLL_EP 19.2, HBM_VM 32.0, VM_HUB 27.4, VM_RING 5.5, COLL_RING 15.1, HC_ENG 9.5, SM_OUT 21.1.
+Grants: results/arch/hbm_die_v16_d4f/grants_d4f.json (rehome_v6 --sm-side-drop SE,NE --drop-slots <4 SerDes pairs>
+--drop-ghosts --sm-column --homes homes.json; a2p_sm_column_grant.py F108 pins): 0 outside/overlaps/bad points, reticle OK.
+Reproduce: compact_plan <d4e args> --full-core --fill a --serdes 5 --core-channel 400 --channel 600 --sm-band-channel 300
+--qw-extra 3760; a2p_fix.py DIR --phy-shift 4000.
