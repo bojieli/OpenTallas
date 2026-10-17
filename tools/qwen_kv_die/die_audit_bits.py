@@ -72,6 +72,7 @@ def main():
     ap.add_argument('--metric', choices=('bbox', 'radius'), default='bbox')
     ap.add_argument('--out')
     ap.add_argument('--top', type=int, default=40)
+    ap.add_argument('--explain', default='', help='comma list of nets: print the worst bit\'s pins (inst, master, pin, x, y)')
     a = ap.parse_args()
     D = a.case
     size, pins, dirs = lef(D + '/elements.lef')
@@ -140,6 +141,16 @@ def main():
             per_net[net] = dict(um=round(v, 1), bbox=round(bbox, 1), radius=round(rad, 1), loads=len(pts) - 1,
                                 worst_bit=b, masters=masters, bits=width.get(net, 1))
     over = {n: r for n, r in per_net.items() if r['um'] > a.reach}
+    for n in [x for x in a.explain.split(',') if x]:
+        r = per_net.get(n)
+        if not r:
+            print('explain', n, 'not measured')
+            continue
+        print('explain', n, {k: r[k] for k in ('um', 'bbox', 'radius', 'loads', 'worst_bit')})
+        for i, p in bitpins[r['worst_bit']]:
+            q = xy(i, p)
+            print('   ', i, inst[i], p, dirs.get(inst[i], {}).get(p, dirs.get(inst[i], {}).get(p.split('[')[0])),
+                  q and (round(q[0], 1), round(q[1], 1)), pos.get(i))
 
     def cls(r):
         if any(m in PHY for m in r['masters']):
