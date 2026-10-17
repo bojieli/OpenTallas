@@ -1,0 +1,108 @@
+{
+ "schema": "opentallas.qcluster.kit_identity.v1",
+ "main": "4c05fe9e12acf42e1fe8ae6f07f373571fbdf730",
+ "mine": "0c1f23841f6a61410989035b95b9b67669545c4a",
+ "method": "ref_tile.py gen of 24 randomly picked specs (seed 7: 10 cluster + 14 tile) in a main worktree and a branch worktree; diff -r of each generated kit dir",
+ "specs": [
+  {
+   "spec": "tools/ref_tile/specs_hbmfq/qw_h_ref.json",
+   "rc": 2
+  },
+  {
+   "spec": "tools/ref_tile/specs_dscoll_ces/dscoll_cesn_sp.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_idx/hgi_topk_w8c_rt_j.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_qcollio/qfd_io_collective_w3.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs/qkd_d2d_p2_ref.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs/qkd_d2d_pf_ref.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_qwen_tp8/coll_tp8_rt.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_q_tile_repack/qfd_tile_nk_rp1_a1.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_dscoll_ces/dscoll_ces0_pc.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_idx/hgi_topk_w8c_rt_h.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_sv/hgi_sv_head_slot.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_hbm_die_v16/hv16_vm_cal_f20.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_s81vm_a2f_parent_0310/payload_r2.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_q13/qkd_cdc_wleaf.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs/s81_rly_66_ws.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_hbm_v15_harden/hv15_svc_pc.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_s81hc/s81hc_crrfe_ref.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_s81engm/s81engm_sigmoid.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_hbm_p2p_coll_1014/vms_bank_w3.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_qdvm/qfd_xcst_n.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_hbm_vm_static/hfd_vms_bank_static_rg7wg3.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_s81vm_scatter_cb/dsfd_vm_direct_scatter_b24_native_cb4.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_s81hc/s81hc_ccf_ref.json",
+   "rc": 1
+  },
+  {
+   "spec": "tools/ref_tile/specs_hbm_front_leaves_1013/hgi_dfe2_ctrl.json",
+   "rc": 0
+  }
+ ],
+ "generated": 22,
+ "identical": 22,
+ "differ": 0,
+ "note": "the 2 specs that fail gen fail identically on both sides (same exit code)"
+}
