@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_astk_ex",
+ "enable": false,
+ "reason": "the RTL registers every data pin: qkd_astk_lanes captures ui/di/pi/ci/kui/kdi/tui/tdi/fi in one (* keep *) flop each and drives uo/do_/po/co/kuo/kdo/tuo/tdo/fo straight from those flops; xa lands in the xq pin register and xe is a register (qkd_astk_ex, rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv). Extra pin registers would add 2 edges to every ASTK lane hop (32 a strip)."
+}
