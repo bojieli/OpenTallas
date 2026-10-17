@@ -185,6 +185,55 @@ def class_model(lef_text, lib_text):
                 pin_layer={p: v[0] for p, v in lp.items()}), None
 
 
+# ------------------------------------------------------------------------------------------------ 1-bit buses
+def one_bit_buses(lib_text):
+    return set(re.findall(r'type \("?(\w+)"?\) \{\s*base_type : array;\s*data_type : bit;\s*bit_width : 1;', lib_text))
+
+
+def scalarize_lib(text, names):
+    """bench adapter: a 1-bit Liberty bus X (pin X[0]) becomes the scalar pin X.  OpenROAD's Verilog reader segfaults
+    (orfs:asap7lock, VerilogReader::makeModuleInst) on any connection to a 1-bit bus port of an ETM (dsfd_hstnh_1,
+    measured 2026-10-16), and drops an escaped bit-port connection silently; the arcs / values are unchanged."""
+    lines = text.split('\n')
+    out, i = [], 0
+    while i < len(lines):
+        m = re.match(r'^(\s*)bus\("?(\w+)"?\) \{\s*$', lines[i])
+        if m and m.group(2) in names:
+            ind, x = m.group(1), m.group(2)
+            j = i + 1
+            while not re.match(r'^\s*pin\("?' + re.escape(x) + r'\[0\]"?\) \{', lines[j]):
+                j += 1
+            k = j + 1
+            pind = re.match(r'^(\s*)', lines[j]).group(1)
+            while lines[k] != pind + '}':
+                k += 1
+            out.append(lines[j].replace(f'{x}[0]', x))
+            out.extend(lines[j + 1:k + 1])
+            e = k + 1
+            while lines[e] != ind + '}':
+                e += 1
+            i = e + 1
+            continue
+        out.append(lines[i])
+        i += 1
+    t = '\n'.join(out)
+    for x in names:
+        t = t.replace(f'"{x}[0]"', f'"{x}"')
+    return t
+
+
+def scalarize_lef(text, names):
+    for x in names:
+        t = re.sub(r'(\b(?:PIN|END)\s+)' + re.escape(x) + r'\[0\](\s)', r'\g<1>' + x + r'\g<2>', text)
+        text = t
+    return text
+
+
+def scalar_pin(pin, names):
+    b, i = bit_index(pin)
+    return b if (i == 0 and b in names) else pin
+
+
 # ------------------------------------------------------------------------------------------------ stage
 def classes_from_binding(binding):
     b = json.loads(Path(binding).read_text())['bound']
@@ -283,18 +332,31 @@ def cmd_plan(a):
         for d in ds:
             g = pair_geometry(mod, d)
             items.append((m, d, bits, g, mod))
-    # batches: whole classes, net budget
-    batches, cur, curn = [], [], 0
+    # batches: whole classes, bounded by net count AND by die area (GRT memory follows the die area:
+    # measured 2026-10-16, 20-128 GB peak RSS at 5.6-36 mm2, ~3.5 GB/mm2 -- declared 8-16 GB was wrong and made
+    # earlyoom kill closure routes on AGIdock; see mem_gb_for_area)
+    def cls_area(its):
+        a_ = 0.0
+        for m, d, bits, g, mod in its:
+            if g is None:
+                continue
+            x0, y0, x1, y1 = g[2]
+            mg = 30.0 + 0.05 * max(x1 - x0, y1 - y0)
+            a_ += (x1 - x0 + 2 * mg) * (y1 - y0 + 2 * mg)
+        return a_ * 1.7 / 1e6          # shelf-packing overhead (measured die / box area ~1.5-1.8)
+    batches, cur, curn, cura = [], [], 0, 0.0
     by_cls = collections.OrderedDict()
     for it in items:
         by_cls.setdefault(it[0], []).append(it)
     for m, its in by_cls.items():
         n = sum(i[2] for i in its)
-        if cur and curn + n > a.net_budget:
+        ar = cls_area(its)
+        if cur and (curn + n > a.net_budget or cura + ar > a.max_area_mm2):
             batches.append(cur)
-            cur, curn = [], 0
+            cur, curn, cura = [], 0, 0.0
         cur += its
         curn += n
+        cura += ar
     if cur:
         batches.append(cur)
     lay, adj = LAYERS[a.layers]
@@ -309,6 +371,12 @@ def cmd_plan(a):
         batches=index), indent=1))
     print(f'{len(batches)} batches, {len(sel)} classes, {len(ds)} sweep points: ' +
           ', '.join(f"{b['dir']} {b['classes']} cls {b['nets']} nets" for b in index))
+
+
+def mem_gb_for_area(mm2):
+    """honest ot-heavy declaration and docker --memory cap for one GRT batch: measured peak RSS 20-128 GB over
+    5.6-36.2 mm2 dies (fwd_die b01-b07, fwd_die2, fwd_die3 2026-10-16) = 3.3-3.6 GB/mm2; 4 GB/mm2 + 8 GB"""
+    return int(math.ceil(4.0 * mm2 + 8))
 
 
 def write_batch(bd, its, stage, lay, adj, a):
@@ -334,6 +402,16 @@ def write_batch(bd, its, stage, lay, adj, a):
         W = max(W, x)
     H = y + rowh
     insts, nets, sinks, place, masters = [], [], {}, [], set()
+    scal = {}
+    for m_ in {b[0] for b in boxes}:
+        vd_ = stage / 'views' / m_
+        names = one_bit_buses((vd_ / f'{m_}_tt.lib').read_text())
+        scal[m_] = names
+        if names:
+            (vd_ / f'{m_}_lef_s.lef').write_text(scalarize_lef((vd_ / f'{m_}_lef.lef').read_text(), names))
+            for c_ in ('tt', 'ff', 'ss'):
+                if (vd_ / f'{m_}_{c_}.lib').exists():
+                    (vd_ / f'{m_}_{c_}_s.lib').write_text(scalarize_lib((vd_ / f'{m_}_{c_}.lib').read_text(), names))
     clock_paths = []
     fclk = {}
     v = ['module reach_top ();']
@@ -352,13 +430,11 @@ def write_batch(bd, its, stage, lay, adj, a):
                 continue
             src, dst = (A, B) if p['dir'] == 'fwd' else (B, A)
             wn = f'n{k}_{p["out"]}'
-            if p['width'] == 1:
-                # a 1-bit Liberty bus port connected by name crashes OpenSTA's VerilogReader::makeModuleInst
-                # (orfs:asap7lock, measured 2026-10-16 on dsfd_hstnh_1); connect the escaped bit port to a scalar net
-                (op1,), (ip1,) = p['out_pins'].values(), p['in_pins'].values()
+            if p['width'] == 1:     # scalar pin, or a 1-bit bus scalarized by the bench adapter
+                # 1-bit Liberty bus: connect the scalarized pin (bench adapter, see scalarize_lib)
                 v.append(f'  wire {wn};')
-                conn[src].append(f'.\\{op1} ({wn})')
-                conn[dst].append(f'.\\{ip1} ({wn})')
+                conn[src].append(f'.{p["out"]}({wn})')
+                conn[dst].append(f'.{p["inp"]}({wn})')
             else:
                 v.append(f'  wire [{p["width"] - 1}:0] {wn};')
                 conn[src].append(f'.{p["out"]}({wn})')
@@ -369,27 +445,28 @@ def write_batch(bd, its, stage, lay, adj, a):
                 sy = pos[src][1] + mod['pin_xy'][op][1]
                 tx = pos[dst][0] + mod['pin_xy'][ip][0]
                 ty = pos[dst][1] + mod['pin_xy'][ip][1]
-                sinks[f'{dst}/{ip}'] = dict(cls=m, d=d, bus=f'{p["out"]}->{p["inp"]}', dir=p['dir'],
+                sinks[f'{dst}/{scalar_pin(ip, scal[m])}'] = dict(cls=m, d=d, bus=f'{p["out"]}->{p["inp"]}', dir=p['dir'],
                                             drv=f'{src}/{op}', L=round(abs(sx - tx) + abs(sy - ty), 3),
                                             faces=f'{p["out_face"]}>{p["in_face"]}')
         if getattr(a, 'fwd_clock', False) and 'fo0[0]' in mod['pin_xy'] and 'fi0[0]' in mod['pin_xy']:
             # --fwd-clock: route the die's forwarded clock A.fo0 -> B.fi0 (chain_nets fclk) for the native composed pair
             # bench (relay_native_pair.py); the ETM STA here still defines its clock on each fi0 pin
-            v.append(f'  wire [0:0] n{k}_fck;')
+            v.append(f'  wire n{k}_fck;' if 'fo0' in scal[m] else f'  wire [0:0] n{k}_fck;')
             conn[A].append(f'.fo0(n{k}_fck)')
             conn[B].append(f'.fi0(n{k}_fck)')
             fx = [pos[A][i] + mod['pin_xy']['fo0[0]'][i] - pos[B][i] - mod['pin_xy']['fi0[0]'][i] for i in (0, 1)]
             fclk[f'n{k}_fck'] = dict(cls=m, d=d, drv=f'{A}/fo0[0]', sink=f'{B}/fi0[0]', L=round(abs(fx[0]) + abs(fx[1]), 3))
         for I in (A, B):
-            clock_paths.extend(f'{I}/{c}' for c in mod['clocks'])
+            clock_paths.extend(f'{I}/{scalar_pin(c, scal[m])}' for c in mod['clocks'])
             v.append(f'  {m} {I} ({", ".join(conn[I])});')
         insts.append(dict(k=k, cls=m, d=d, A=pos[A], B=pos[B]))
     v.append('endmodule')
     (bd / 'reach.v').write_text('\n'.join(v) + '\n')
     (bd / 'map.json').write_text(json.dumps(dict(sinks=sinks, insts=insts, die_um=[W, H], fclk=fclk)))
     vdir = '/stage/views'
-    lefs = '\n'.join(f'read_lef {vdir}/{m}/{m}_lef.lef' for m in sorted(masters))
-    libs = lambda c: '\n'.join(f'read_liberty {vdir}/{m}/{m}_{c}.lib' for m in sorted(masters))  # noqa: E731
+    sx = lambda m: '_s' if scal.get(m) else ''  # noqa: E731
+    lefs = '\n'.join(f'read_lef {vdir}/{m}/{m}_lef{sx(m)}.lef' for m in sorted(masters))
+    libs = lambda c: '\n'.join(f'read_liberty {vdir}/{m}/{m}_{c}{sx(m)}.lib' for m in sorted(masters))  # noqa: E731
     clk_queries = ' '.join('[get_pins -regexp {' + re.escape(c) + '}]' for c in clock_paths)
     tcl = f"""# relay_reach_bench batch {bd.name}: {len(placed)} pairs, {len(sinks)} sink bits, die {W:.1f} x {H:.1f} um
 proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
@@ -444,12 +521,15 @@ report_checks -path_delay {chk} -group_path_count 3 -fields {{slew cap}} -digits
 puts "OT_REACH_STA_DONE {name} $n"
 """
         (bd / f'sta_{name}.tcl').write_text(sta)
+    mem = mem_gb_for_area(W * H / 1e6)
     (bd / 'run.sh').write_text(f"""#!/bin/bash
 # relay_reach_bench batch: GRT + parasitics (openroad), then 4 sta sessions; inputs /stage (views) + /work (this dir)
+# DECLARE {max(mem, 24)} GB to ot-heavy (ot-run --mem): GRT docker --memory={mem}g (die {W * H / 1e6:.2f} mm2, 4 GB/mm2 + 8),
+# then 4 x sta at --memory=6g each; peak RSS is logged (/usr/bin/time -v)
 set -u
 B=$(cd "$(dirname "$0")" && pwd); S=${{1:?stage dir}}; T=${{2:-8}}
 cd $B
-docker run --rm --name reach_$(basename $(dirname $B))_$(basename $B) --cpus=$T -v $B:/work -v $S:/stage:ro -w /work {IMAGE} \\
+docker run --rm --name reach_$(basename $(dirname $B))_$(basename $B) --cpus=$T --memory={mem}g -v $B:/work -v $S:/stage:ro -w /work {IMAGE} \\
   bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads $T -no_init -exit /work/grt.tcl > /work/grt.log 2>&1; rc=\\$?; chmod -R a+rwX /work; exit \\$rc"
 echo $? > grt.exit
 grep -q OT_REACH_GRT_DONE grt.log || {{ echo GRT_FAIL; exit 1; }}
@@ -457,8 +537,8 @@ grep -q OT_REACH_GRT_DONE grt.log || {{ echo GRT_FAIL; exit 1; }}
 # OpenSTA rejects it. Remove only that empty header; all extracted RC stays byte-identical.
 sed '/^[*]PORTS$/d' reach.spef > reach_sta.spef
 for c in tt833 tt1111 ff_hold ss833; do
-  docker run --rm --name reach_$(basename $(dirname $B))_$(basename $B)_$c --cpus=2 -v $B:/work -v $S:/stage:ro -w /work {IMAGE} \\
-    bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; sta -no_init -exit /work/sta_$c.tcl > /work/sta_$c.log 2>&1; chmod -R a+rwX /work" &
+  docker run --rm --name reach_$(basename $(dirname $B))_$(basename $B)_$c --cpus=2 --memory=6g -v $B:/work -v $S:/stage:ro -w /work {IMAGE} \\
+    bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v sta -no_init -exit /work/sta_$c.tcl > /work/sta_$c.log 2>&1; chmod -R a+rwX /work" &
 done
 wait
 for c in tt833 tt1111 ff_hold ss833; do grep -q OT_REACH_STA_DONE sta_$c.log || {{ echo STA_FAIL $c; exit 1; }}; done
@@ -466,7 +546,7 @@ rm -f reach.spef.gz; gzip -f reach.spef
 echo BATCH_DONE
 """)
     (bd / 'run.sh').chmod(0o755)
-    return dict(dir=bd.name, classes=len({p[0][0] for p in placed}), pairs=len(placed), nets=len(sinks),
+    return dict(dir=bd.name, mem_gb=max(mem, 24), classes=len({p[0][0] for p in placed}), pairs=len(placed), nets=len(sinks),
                 die_um=[round(W, 1), round(H, 1)], skipped_overlap=[(m, d) for m, d, _, g, _ in its if g is None])
 
 
@@ -693,6 +773,7 @@ def main(argv=None):
     p.add_argument('--d1', type=float, default=1000.0)
     p.add_argument('--step', type=float, default=25.0)
     p.add_argument('--net-budget', type=int, default=150000)
+    p.add_argument('--max-area-mm2', type=float, default=8.0, help='per-batch die area bound (GRT memory ~3.5 GB/mm2)')
     p.add_argument('--classes', nargs='*')
     p.add_argument('--fwd-clock', action='store_true', help='also route A.fo0 -> B.fi0 (forwarded clock) where both exist')
     c = sp.add_parser('collect')

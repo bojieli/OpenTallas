@@ -93,7 +93,11 @@ def parse_verilog(text):
             continue
         cells.append((m.group(1), m.group(2).strip(), conns))
     if alias:
-        cells = [(c, i, [(p, alias.get(n, n)) for p, n in conns]) for c, i, conns in cells]
+        # OpenROAD write_verilog: `assign dq[8] = \\dq[8]9 ;` makes \\dq[8]9 the PORT net, while a bare dq[8] in a cell
+        # connection is the INTERNAL net literally named "dq[8]" (its SPEF D_NET has no *P).  Keep them apart: the bare
+        # name becomes the escaped internal net, the alias becomes the port bit.
+        assigned = set(alias.values())
+        cells = [(c, i, [(p, alias.get(n, '\\' + n if n in assigned else n)) for p, n in conns]) for c, i, conns in cells]
     return mod, ports, cells
 
 
@@ -439,18 +443,18 @@ puts OT_NATIVE_PAIR_DONE
             (vd / f'sta_{name}.tcl').write_text(tcl)
     (out / 'stage.json').write_text(json.dumps(rec, indent=1))
     (out / 'run.sh').write_text(f"""#!/bin/bash
-# relay_native_pair: one sta session per variant x corner (flat composed native pair, merged SPEF)
+# relay_native_pair: one sta session per variant x corner (flat composed native pair, merged SPEF).
+# DECLARE 24 GB to ot-heavy (ot-run --mem 24): at most 4 sessions at a time, each docker --memory=6g; peak RSS logged.
 set -u
 B=$(cd "$(dirname "$0")" && pwd)
 for v in {' '.join(variants)}; do [ -f $B/$v/pair.spef ] || gunzip -kf $B/$v/pair.spef.gz; done
-for v in {' '.join(variants)}; do for c in {' '.join(c[0] for c in CORNERS)}; do
-  docker run --rm --name npair_$(basename $B)_${{v}}_$c --cpus=1 -v $B/$v:/work -w /work {IMAGE} \\
-    bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; sta -no_init -exit /work/sta_$c.tcl > /work/sta_$c.log 2>&1; chmod -R a+rwX /work" &
-done; done
-wait
+one() {{ v=$1; c=$2; docker run --rm --name npair_$(basename $B)_${{v}}_$c --cpus=1 --memory=6g -v $B/$v:/work -w /work {IMAGE} \\
+    bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v sta -no_init -exit /work/sta_$c.tcl > /work/sta_$c.log 2>&1; chmod -R a+rwX /work"; }}
+export -f one; export B
+for v in {' '.join(variants)}; do for c in {' '.join(c[0] for c in CORNERS)}; do echo "$v $c"; done; done | xargs -P 4 -L 1 bash -c 'one $0 $1'
 rc=0
 for v in {' '.join(variants)}; do for c in {' '.join(c[0] for c in CORNERS)}; do grep -q OT_NATIVE_PAIR_DONE $B/$v/sta_$c.log || {{ echo STA_FAIL $v $c; rc=1; }}; done; done
-for v in {' '.join(variants)}; do gzip -f $B/$v/pair.spef; done
+for v in {' '.join(variants)}; do rm -f $B/$v/pair.spef; done
 [ $rc = 0 ] && echo NATIVE_PAIR_DONE
 exit $rc
 """)
@@ -484,21 +488,30 @@ def parse_end_report(text):
 
 
 def parse_drv(p):
-    """report_check_types -violators -> {k: (count, worst slack)}"""
-    out = collections.defaultdict(lambda: [0, 0.0])
+    """report_check_types -max_slew -max_capacitance -violators -> {k: dict(slew_n, slew_max, cap_n, cap_worst)}
+    slew_max = the largest violating transition (ps) of pair k; cap_worst = worst max-cap slack (fF)"""
     if not p.exists():
         return None
+    out = collections.defaultdict(lambda: dict(slew_n=0, slew_max=0.0, cap_n=0, cap_worst=0.0))
+    sec = None
     for line in p.read_text().splitlines():
+        if line.startswith('max slew'):
+            sec = 'slew'
+        elif line.startswith('max capacitance'):
+            sec = 'cap'
         s = line.split()
-        if len(s) >= 4 and 'VIOLATED' in line and re.match(r'^k\d+[ab]_', s[0]):
+        if sec and len(s) >= 4 and 'VIOLATED' in line and re.match(r'^k\d+[ab]_', s[0]):
             k = int(re.match(r'^k(\d+)', s[0]).group(1))
-            try:
-                sl = float(s[3])
-            except ValueError:
-                sl = 0.0
-            out[k][0] += 1
-            out[k][1] = min(out[k][1], sl)
+            if sec == 'slew':
+                out[k]['slew_n'] += 1
+                out[k]['slew_max'] = max(out[k]['slew_max'], float(s[2]))
+            else:
+                out[k]['cap_n'] += 1
+                out[k]['cap_worst'] = min(out[k]['cap_worst'], float(s[3]))
     return out
+
+
+SLEW_LIMITS = (260.0, 320.0)    # native block SDC set_max_transition (gate) / ASAP7 library default_max_transition
 
 
 def cmd_collect(a):
@@ -520,28 +533,51 @@ def cmd_collect(a):
         for k, pt in sorted(rec['points'].items(), key=lambda kv: kv[1]['d']):
             k = int(k)
             g = lambda c: (rows.get(c) or {}).get(k)  # noqa: E731
-            el_tt = (drv['tt833'] or {}).get(k, [0, 0.0])
-            el_ff = (drv['ff_hold'] or {}).get(k, [0, 0.0])
+            z = dict(slew_n=0, slew_max=0.0, cap_n=0, cap_worst=0.0)
+            e_tt = (drv['tt833'] or {}).get(k, z)
+            e_ff = (drv['ff_hold'] or {}).get(k, z)
             pts.append(dict(d=pt['d'], L_max=pt['L_max'],
                             tt833=g('tt833') and g('tt833')['slack'], tt1111=g('tt1111') and g('tt1111')['slack'],
                             ff_hold=g('ff_hold') and g('ff_hold')['slack'], ss833=g('ss833') and g('ss833')['slack'],
                             worst_end_tt833=g('tt833') and g('tt833')['end'],
-                            drv_tt=el_tt[0], drv_tt_worst=el_tt[1], drv_ff=el_ff[0], drv_ff_worst=el_ff[1]))
-        def reach(key):
-            best = None
+                            slew_viol_tt=e_tt['slew_n'], max_slew_tt_ps=e_tt['slew_max'] or None,
+                            slew_viol_ff=e_ff['slew_n'], max_slew_ff_ps=e_ff['slew_max'] or None,
+                            cap_viol_tt=e_tt['cap_n'], cap_viol_ff=e_ff['cap_n'],
+                            drv_tt=e_tt['slew_n'] + e_tt['cap_n'], drv_ff=e_ff['slew_n'] + e_ff['cap_n']))
+
+        def electrical_ok(p, lim):
+            if p['cap_viol_tt'] or p['cap_viol_ff']:
+                return False
+            return max(p['max_slew_tt_ps'] or 0.0, p['max_slew_ff_ps'] or 0.0) <= lim
+
+        def reach(key, lim=SLEW_LIMITS[0]):
+            """ceiling: last swept d of the initial run with setup >= 0 and zero TT/FF electrical violations; floor:
+            smallest d from which FF hold >= 0 at every point up to the ceiling (None: hold fails at the ceiling)"""
+            best, first_fail = None, None
             for p in pts:
-                ok = p[key] is not None and p[key] >= 0 and p['ff_hold'] is not None and p['ff_hold'] >= 0 \
-                    and p['drv_tt'] == 0 and p['drv_ff'] == 0
-                if not ok:
-                    return best, p['d']
-                best = p
-            return best, None
+                if p[key] is not None and p[key] >= 0 and electrical_ok(p, lim):
+                    best = p
+                else:
+                    first_fail = p
+                    break
+            floor = None
+            if best is not None:
+                upto = [p for p in pts if p['d'] <= best['d']]
+                for i_ in range(len(upto) - 1, -1, -1):
+                    if upto[i_]['ff_hold'] is None or upto[i_]['ff_hold'] < 0:
+                        break
+                    floor = upto[i_]
+            return best, first_fail, floor
         r = {}
         for key, lab in (('tt833', 'stream'), ('tt1111', 'serial')):
-            b, ff = reach(key)
+            b, ff, fl = reach(key)
+            ok = b is not None and fl is not None
             r[lab] = dict(reach_d_um=b and b['d'], reach_L_um=b and b['L_max'], slack_at_reach_ps=b and b[key],
-                          first_fail_d_um=ff,
-                          first_fail_reason=_why(next((p for p in pts if p['d'] == ff), None), key) if ff else None)
+                          hold_floor_d_um=fl and fl['d'], hold_floor_L_um=fl and fl['L_max'],
+                          window_valid=ok, first_fail_d_um=ff and ff['d'], first_fail_reason=_why(ff, key))
+            b2, ff2, fl2 = reach(key, SLEW_LIMITS[1])
+            r[lab]['sensitivity_slew320'] = dict(reach_d_um=b2 and b2['d'], reach_L_um=b2 and b2['L_max'],
+                                                 window_valid=b2 is not None and fl2 is not None)
         res['variants'][vn] = dict(sha256=rec['variants'][vn], points=pts, **r)
     (out / 'result.json').write_text(json.dumps(res, indent=1))
     for vn, v in res['variants'].items():
@@ -557,7 +593,8 @@ def _why(p, key):
     if p['ff_hold'] is None or p['ff_hold'] < 0:
         w.append(f'hold {p["ff_hold"]}')
     if p['drv_tt'] or p['drv_ff']:
-        w.append(f'electrical {p["drv_tt"]}/{p["drv_ff"]} violations (TT/FF), worst {min(p["drv_tt_worst"], p["drv_ff_worst"])}')
+        w.append(f'electrical: slew>260 {p["slew_viol_tt"]}/{p["slew_viol_ff"]} pins (TT/FF) max '
+                 f'{max(p["max_slew_tt_ps"] or 0, p["max_slew_ff_ps"] or 0):.1f} ps, max-cap {p["cap_viol_tt"]}/{p["cap_viol_ff"]}')
     return '; '.join(w)
 
 
