@@ -218,7 +218,7 @@ module ot_hgi_sm_xload_cl2_ctl #(
     // and the BD tag line follow L1); rq unchanged.
     reg l0_v; reg [3:0] l0_g; reg [2:0] l0_p, l0_wq; reg [6:0] l0_rem; reg [8*256-1:0] l0_d;
     reg l_v; reg [3:0] l_g; reg [2:0] l_p, l_wq; reg [6:0] l_rem; reg [8*256-1:0] l_d;
-    reg [2:0] s0r [0:NR-1];
+    (* keep = 1 *) reg [2:0] s0r [0:NR-1];   // replicas kept (ctlw gate: yosys merged them, s0r[27] drove 4,887 loads)
     always @(posedge clk or negedge rn)
         if (!rn) for (integer k = 0; k < NR; k = k + 1) s0r[k] <= 3'd0;
         else for (integer k = 0; k < NR; k = k + 1) s0r[k] <= md[RD_LAT][9:7];
@@ -311,7 +311,7 @@ module ot_hgi_sm_xload_cl2_ctl #(
         end
     end endgenerate
     wire [EW-1:0] e6 = ed[RDP-1];
-    reg [7:0] e5r [0:NR-1];                // {ok, b} of ed[RDP-2], replicated
+    (* keep = 1 *) reg [7:0] e5r [0:NR-1];              // {ok, b} of ed[RDP-2], replicated
     always @(posedge clk_eg or negedge rn)
         if (!rn) for (integer k = 0; k < NR; k = k + 1) e5r[k] <= 8'd0;
         else for (integer k = 0; k < NR; k = k + 1) e5r[k] <= {ed[RDP-3][EW-2], ed[RDP-3][6:0]};
@@ -474,7 +474,7 @@ module ot_hgi_sm_xload_cl2_ctl #(
     // bq_* (the ring leaf's beat register edge) and bc_* (that beat captured at the ctl pins, egress + 1)
     reg bq_v, bq_last; reg [6:0] bq_addr, bq_b;
     reg bc_v, bc_last; reg [6:0] bc_addr, bc_b; reg [2047:0] bq_c;
-    reg [NR-1:0] bqvr;                     // bc_v replicated (xw data select)
+    (* keep = 1 *) reg [NR-1:0] bqvr;                  // bc_v replicated (xw data select)
     always @(posedge clk or negedge rn) begin
         if (!rn) begin bq_v <= 1'b0; bq_last <= 1'b0; end
         else begin bq_v <= bs_v; bq_last <= bs_last; end
