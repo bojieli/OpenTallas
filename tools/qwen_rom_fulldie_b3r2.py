@@ -3021,6 +3021,15 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         if idx not in pre_far:
             PT_EXT[_pt_key(P1)] = pos.ext(*eps[1])
         d = abs(P0[0] - P1[0]) + abs(P0[1] - P1[1])
+        # Q-DIEPLAN3 2026-10-16 (Codex 20:18: 25 q3h hops passed on the centroid but their worst BIT ran 422-444 um > the
+        # measured reach): the direct-wire decision bounds the worst bit by the centroid distance plus both pin groups'
+        # half extents (a bit at one end of a group meets its partner at the other end of the facing group at most that
+        # far off); OT_RELAY_WORST_BIT=0 restores the centroid rule
+        # (face-to-face seams across <= 60 um keep the centroid rule: their pins are per-bit aligned on one track each,
+        # as the seam pin audit proves for the VM/SU channel)
+        if _os.environ.get('OT_RELAY_WORST_BIT', '1') != '0' and d > 60.0:
+            e0_, e1_ = PT_EXT.get(_pt_key(P0)) or (0.0, 0.0), PT_EXT.get(_pt_key(P1)) or (0.0, 0.0)
+            d = d + e0_[0] + e1_[0] + e0_[1] + e1_[1]
         terminal = getattr(v, 'TERMINAL_TIGHT', {})
         direct_limit = min(terminal.get(tuple(eps[0]), float('inf')), terminal.get(tuple(eps[-1]), float('inf')))
         if _dbg and bid in _dbg:
