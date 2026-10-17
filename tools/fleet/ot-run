@@ -42,7 +42,7 @@ listening; a command that already started is left running and the message says s
 """
 import concurrent.futures as cf, json, os, shlex, signal, subprocess, sys, time
 
-HOSTS = ["ot-epyc1tb", "ot-epyc4", "ot-pve1", "ot-agidock128"]
+HOSTS = ["ot-epyc4", "ot-pve1", "ot-agidock128"]
 
 
 def probe(host, d):

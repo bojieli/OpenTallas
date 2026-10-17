@@ -1,0 +1,15 @@
+{
+  "scope": "Exact actual LEF/gate boundary pin registry; NOT native qualification, placement or die timing.",
+  "source_commit": "0ca4b7f37a160a6c32be9e0a3ad693bb4030fdbe",
+  "source_manifest_sha256": "e2aaa64f9b61a0b94f9fde2d635620b34d746daf70308ad03d39ba36b5f9b52c",
+  "xml_sha256": "baee58c8c44bbf7ec2cedcb0e6464b455cde9ed271cd8a785b33cc98bdf2cc5e",
+  "leaf_instances": 538,
+  "unique_pin_models": 70,
+  "missing_leaves": [],
+  "signal_pin_shapes": 90346,
+  "native_blockers": [
+    "WFC return r5 is actual CLOSED route but strict native FAIL launch238.23ps; geometry evidence only. r6 strict CTS FAIL221.409, structural256slice pending and not in this production source.",
+    "Current x34_sw2 has live2bit fault OR without hardened home.",
+    "Old repeated model native/PG/source receipts remain separately required; registry does not assert those."
+  ]
+}

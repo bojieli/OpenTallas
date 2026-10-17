@@ -1,0 +1,150 @@
+{
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pg_layer": "M6",
+ "layer_cap": "M5",
+ "kind": "tile",
+ "defines": [],
+ "params": {},
+ "children": [],
+ "inter": [],
+ "macros": [],
+ "name": "hgi_sm_xq_pegress",
+ "top": "ot_hgi_sm_xload_xq_pegress",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rn"
+ ],
+ "pins": {
+  "W": [
+   "bq_d"
+  ],
+  "S": [
+   "rwq"
+  ],
+  "N": [
+   "xw_data",
+   "xw_en",
+   "xw_last",
+   "xw_addr",
+   "xw_grp",
+   "x_done"
+  ],
+  "E": [
+   "clk",
+   "rn",
+   "ed5",
+   "ede",
+   "bq_v",
+   "bq_last",
+   "bq_addr",
+   "bq_b"
+  ]
+ },
+ "outline": {
+  "w": 302.4,
+  "h": 302.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every input lands in a pin register in RTL (rw, e6, e5r replicas, bc_*, bq_c, bqvr) and every output is a register (owner rule 19:50)"
+ },
+ "floorplan_note": "XQL pair-egress leaf (H-SM 10-16): W face 2,048 bq_d from the pair bdring (6.8/um as the bdring E face), S face 1,024 rwq from the 2x2 bfq stack, N face 2,063 xw pins toward the pair SM windows, E face controls from the equal-age tree.",
+ "slot_change_request": "NEW leaf of the XQL pair cluster (H-DIE pair-store slot re-home): 302.4 x 302.4",
+ "job": {
+  "owner": "Claude H-SM 1315",
+  "branch": "codex/hbm-sm-1552",
+  "tag": "x1",
+  "purpose": "XQL pair-egress leaf: the ctl egress (rw capture, replicated beat select, BD beat capture, xw pins) per SM pair, beside the pair store",
+  "structural_change": "new leaf (XQL, coordinator decision 10-16; d4b SM_X 63 stages -> pair-local egress)",
+  "extra_paths": [
+   "physical/asap7_memory_macros",
+   "physical/hbm_xp_aq_tree13_1014",
+   "rtl/hbm_accel/generic/adapters/tb",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "rtl/hbm_accel/generic/vm",
+   "rtl/hbm_accel/host_static_20261015",
+   "rtl/hdc",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/link/ot_fifo_sram_fwft.sv",
+   "tools/hbm_sm_xload_static_timing.py",
+   "results/hbm_sm_attention_1015/hsm_1552/xql"
+  ],
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_sm_xload_xq_pegress u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xql_lock_exact",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_lock_exact",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "^XLOAD_STATIC_LOCK PASS$",
+    "pass_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/pos2.log",
+    "min_count_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, ([0-9]+) pair beats, 0 differ$",
+    "min_count": 13440
+   },
+   {
+    "name": "xql_pair_write_drop_mutant",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 XQL_MUT=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_m1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, [0-9]+ pair beats, [1-9][0-9]* differ$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/m1.log"
+   },
+   {
+    "name": "xql_pair_skew_mutant",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 XQL_MUT=2 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_m2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, [0-9]+ pair beats, [1-9][0-9]* differ$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/m2.log"
+   },
+   {
+    "name": "xql_pair_map_mutant",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 XQL_MUT=3 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_m3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, [0-9]+ pair beats, [1-9][0-9]* differ$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/m3.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/hgi_sm_xq_pegress/views",
+  "record_to": "results/rtl/ref_tile/hgi_sm_xq_pegress"
+ }
+}

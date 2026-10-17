@@ -57,6 +57,9 @@ def compile_calendar(programs, contract, root):
     if contract.get('schema') != 'opentallas.qwen-native-microcalendar.v1':
         raise ScheduleError('unknown microcalendar schema')
     pins(root, contract['source_sha256'])
+    # Apply hardware deltas before dependencies and native resources are solved.
+    from qwen_static_schedule.b2_timing import fold
+    contract = fold(contract, root)
     clocks = contract['clocks']
     if not clocks or any(d['period_fs'] <= 0 or not 0 <= d['phase_fs'] < d['period_fs'] for d in clocks.values()):
         raise ScheduleError('invalid implemented clock periods/phases')
@@ -98,12 +101,16 @@ def compile_calendar(programs, contract, root):
             raise ScheduleError(f'missing native instance/module: {key}')
         clock = clocks[impl['clock']]
         relative = impl['events']
+        # Resource occupancy is a compiler reservation, not a fabricated RTL
+        # port event in the timeline consumed by native trace verification.
+        reserve_only = impl.get('b2_copy_reservations', [])
+        slots = relative + reserve_only
         if not relative and not impl.get('control_only', False):
             raise ScheduleError(f'missing native port events: {key}')
         ids = [e['id'] for e in relative]
         if len(ids) != len(set(ids)):
             raise ScheduleError('duplicate microevent id')
-        for e in relative:
+        for e in slots:
             if e['offset_fs'] < 0 or e['resource'] not in resources:
                 raise ScheduleError('negative/unmapped native event')
             if e.get('dynamic', False):
@@ -116,9 +123,9 @@ def compile_calendar(programs, contract, root):
                 # Read edge must be strictly after the committed write edge.
                 candidate = max(candidate, produced[dependency] + 1 - event['offset_fs'])
         candidate = edge_after(candidate, clock)
-        alignment_period = math.lcm(clock['period_fs'], *(clocks[resources[e['resource']]['clock']]['period_fs'] for e in relative))
+        alignment_period = math.lcm(clock['period_fs'], *(clocks[resources[e['resource']]['clock']]['period_fs'] for e in slots))
         alignment_start = candidate
-        while any(edge_after(candidate + e['offset_fs'], clocks[resources[e['resource']]['clock']]) != candidate + e['offset_fs'] for e in relative):
+        while any(edge_after(candidate + e['offset_fs'], clocks[resources[e['resource']]['clock']]) != candidate + e['offset_fs'] for e in slots):
             candidate += clock['period_fs']
             if candidate - alignment_start >= alignment_period:
                 raise ScheduleError('incompatible clock/phase microcalendar')
@@ -126,7 +133,7 @@ def compile_calendar(programs, contract, root):
         while True:
             local = {}
             conflict = False
-            for event in relative:
+            for event in slots:
                 time = candidate + event['offset_fs']
                 resource = resources[event['resource']]
                 if edge_after(time, clocks[resource['clock']]) != time:
@@ -151,6 +158,12 @@ def compile_calendar(programs, contract, root):
         if 'issue_at_fs' in impl and candidate != impl['issue_at_fs']:
             raise ScheduleError(f'fixed issue slot conflicts with dependencies/resources: {key}')
         issues.append(dict(stage=key[0], pc=key[1], time_fs=candidate, unit=impl['unit']))
+        for reservation in reserve_only:
+            time = candidate + reservation['offset_fs']
+            if time > contract['deadline_fs']:
+                raise ScheduleError('native copy reservation exceeds compiled deadline')
+            slot = reservation['resource'], time
+            occupied[slot] = occupied.get(slot, 0) + 1
         for event in relative:
             time = candidate + event['offset_fs']
             if time > contract['deadline_fs']:
@@ -185,6 +198,7 @@ def compile_calendar(programs, contract, root):
                 program_sha256=[sha(p) for p in programs],
                 contract_sha256=hashlib.sha256(json.dumps(contract, sort_keys=True).encode()).hexdigest(),
                 issues=issues, events=events, buffer_peaks=peaks,
+                b2_timing_applied=contract.get('b2_timing_applied'),
                 end_fs=max([e['time_fs'] for e in events] + [i['time_fs'] for i in issues]),
                 claim='Compiler reservations only. Native RTL trace, complete hardware binding and physical qualification remain required.')
 

@@ -1,0 +1,27 @@
+{
+ "cell": "qfd_xs_tap",
+ "view": "qfd_xs_tap",
+ "lib_cell": "qfd_xs_tap",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 259.6,
+ "spread_ps": 72.6,
+ "outputs": 3135,
+ "inputs": 3145,
+ "launch_ps": 206.9,
+ "launch_pin": "hw_d[11]",
+ "capture_ps": 168.5,
+ "capture_pin": "sw[2075]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "job": "qfd_xs_tap-xt12-952eba3a5",
+ "record": "53725e59d",
+ "audited": "2026-10-16 Q-DVM+LINK",
+ "verdict": "CLOSED TT +99.95 / FF +2.02 / DRC 0; native PASS; supersedes xt11 (native capture FAIL, run data deleted)"
+}

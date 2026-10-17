@@ -153,6 +153,9 @@ def compact_record_words(records, issue_cycles, resident_sid):
     return words
 
 
+QUANT_READ_GROUP, QUANT_WRITE_GROUP = 3, 2   # native NW group indices (die edges hb_quant_NW rq[408:544], wq[4496:6744])
+
+
 def compact_native_nw_programme(records, issue_cycles, resident_sid, layout):
     """Compile real NW bank slots for timestamped record issue, current zero-station pins.
 
@@ -161,8 +164,10 @@ def compact_native_nw_programme(records, issue_cycles, resident_sid, layout):
     physical stations must extend this source-derived calendar, never be hidden.
     """
     compact_record_words(records,issue_cycles,resident_sid)
-    if layout['params']['RG']!=7 or layout['params']['WG']!=3 or layout['bits']!=187:
-        raise ValueError('Quant compact NW requires source-matched native RG7/WG3 layout')
+    # H-NETLIST 0600: current native NW = RG5/WG3 (0253 compaction + 0600 retirement): read groups 0 LG, 1 DMA-back,
+    # 2 x-load, 3 QUANT, 4 COLL; write groups 0 LG, 1 SM writer, 2 QUANT. Quant read owner code 3, write owner 2.
+    if layout['params']['RG']!=5 or layout['params']['WG']!=3 or layout['bits']!=187:
+        raise ValueError('Quant compact NW requires the current native RG5/WG3 universal layout')
     fields={f['name']:f for f in layout['fields']}
     commands=[c for record,tick in zip(records,issue_cycles) for c in lower_record(record,tick,resident_sid)]
     length=max(c['cycle']+35 for c in commands)+5
@@ -170,7 +175,7 @@ def compact_native_nw_programme(records, issue_cycles, resident_sid, layout):
         raise ValueError('Actual NW calendar storage exceeds1024 words; native global VM paging/resident profiles required')
     values=[0]*length
     for c in commands:
-        for offset,key,owner,enabled,selected in [(1,'src',4,'rslot_v','rslot'),(35,'dst',2,'wslot_v','wslot')]:
+        for offset,key,owner,enabled,selected in [(1,'src',QUANT_READ_GROUP,'rslot_v','rslot'),(35,'dst',QUANT_WRITE_GROUP,'wslot_v','wslot')]:
             e,s=fields[enabled],fields[selected]
             for j in range(4):
                 bank=(c[key]+j)&7;i=c['cycle']+offset
@@ -186,7 +191,7 @@ def native_nw_programme(result, layout):
     output+8/engine captures+9. Read bank input+10 => NW ordinal3. Write bank
     input+44 => ordinal37. Actual stations must extend both calendars together.
     """
-    assert layout['params']['RG']==7 and layout['params']['WG']==3 and layout['bits']==187
+    assert layout['params']['RG']==5 and layout['params']['WG']==3 and layout['bits']==187   # current native NW (0600)
     fields={f['name']:f for f in layout['fields']}
     nr=3+result['read_station_edges_each_way']
     nw=37+2*result['read_station_edges_each_way']+result['write_station_edges']
@@ -194,7 +199,7 @@ def native_nw_programme(result, layout):
     if length>1024:raise ValueError('native NW calendar exceeds actual programme macro')
     values=[0]*length
     for c in result['commands']:
-        for offset,key,owner,enabled,selected in [(nr,'src',4,'rslot_v','rslot'),(nw,'dst',2,'wslot_v','wslot')]:
+        for offset,key,owner,enabled,selected in [(nr,'src',QUANT_READ_GROUP,'rslot_v','rslot'),(nw,'dst',QUANT_WRITE_GROUP,'wslot_v','wslot')]:
             e,s=fields[enabled],fields[selected]
             for j in range(4):
                 bank=(c[key]+j)&7

@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_s81_hc_ccr.lef",
+    "sha256": "e6cff48ec06aab25b1e54128ee137d76841f34f5159da101b84c1aaa091ab843"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccrh2_ref-pr6spr-b056d6776/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccrh2_ref-pr6spr-b056d6776/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccrh2_ref-pr6spr-b056d6776/record/views/ot_s81_hc_ccr/provenance/raw/ot_s81_hc_ccr.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccrh2_ref-pr6spr-b056d6776/record/views/ot_s81_hc_ccr/provenance/ot_s81_hc_ccr.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 11 OBS rects moved into 11 pins: ch_rv[0], ch_rv[1], ch_rv[2], ch_rv[3], ch_rv[4], ch_rv[5], ch_rv[6], ch_rv[7], ex1_o[354], ex1_o[438], ex1_o[58]; pockets: 1081 OBS rects added on M6 (gaps < 2.048 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccrh2_ref-pr6spr-b056d6776/record/views/ot_s81_hc_ccr/provenance/ot_s81_hc_ccr.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_s81_hc_ccr 151.2 x 190.08: PG M6 VDD 17 stripes (91% spread, 100% cov) / VSS 18 stripes (97% spread, 100% cov); strap M7; face pins 4850 blocked-above 0 blocked-same 0; clock sk insertion 249 ps; pockets M6 0 (closed)",
+    "info": {
+      "cell": "ot_s81_hc_ccr",
+      "W": 151.2,
+      "H": 190.08,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M6",
+            "stripes": 17,
+            "dir": "H",
+            "spread": 0.909,
+            "coverage": 1.0,
+            "shapes_on_top": 17
+          },
+          "VSS": {
+            "top_layer": "M6",
+            "stripes": 18,
+            "dir": "H",
+            "spread": 0.966,
+            "coverage": 1.0,
+            "shapes_on_top": 18
+          }
+        },
+        "top_layer": "M6",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M6",
+      "strap_layer": "M7",
+      "cap": null,
+      "face": {
+        "face_pins": 4850,
+        "blocked_above": 0,
+        "covered_below": 15,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "sk": {
+          "max_ps": 249.02,
+          "min_ps": 184.11
+        }
+      },
+      "pockets": {
+        "layer": "M6",
+        "d_um": 2.048,
+        "marker": {
+          "layer": "M6",
+          "d_um": 2.048,
+          "added": 1081
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "ot_s81_hc_ccr.lef",
+    "sha256": "2cad37df27dcd006a5549f89aba202eae5de2b8a3200b60b0902a60997384913"
+  }
+}

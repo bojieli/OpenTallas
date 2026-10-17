@@ -19,6 +19,10 @@ the libs and abstract.json were last written by ONE git commit (one export bundl
 record), the LEF is a fixed point of abstract_pin_stub (it is the post-processed form) and its MACRO / signal pin set
 equals the TT liberty's cell / pin set.  Exact raw-replay recovery (export_manifest_0010) supersedes this lineage.
 
+RECEIPT-BACKED LINEAGE (ROOT 10-16): a view with no loop job of its own (strict re-export from the closed archive; derived
+scalar-pin rename) binds through the CLOSED job named by its view_lineage.json, only while tools/view_lineage.py verify
+passes (receipt PASS, files unchanged, job still CLOSED); lineage ARCHIVE_REEXPORT / SCALAR_PIN_RENAME.
+
 It never relaxes a gate: native launch/capture/spread audits and production-throughput qualification stay owed per tile
 and are listed as open in the table ('native_open'). Rows use DIAGNOSTIC_CLOSED and require
 OT_S81_DIAGNOSTIC_CLOSED_VIEWS=1, so a trial cannot promote them to native QUALIFIED.  The generator still refuses any binding whose pins / outline /
@@ -38,6 +42,8 @@ import subprocess
 import sys
 from view_binding import export_fix
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import view_lineage as VL  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 JOBS = Path.home() / ".local/state/closure_loop/jobs"
@@ -51,7 +57,16 @@ def sha(p: Path) -> str:
 
 def job_of(abstract: dict) -> str | None:
     m = re.search(r"/closure-loop/([^/]+)/", abstract.get("orfs_dir", ""))
-    return m.group(1) if m else None
+    if m:
+        return m.group(1)
+    # closed-archive re-export (tools/tt_views/view_export.py job replay, --require-check): the export ran on a restored
+    # copy of the closed run, so orfs_dir is the restore dir; the job is the one whose verdict the export reproduced
+    # (verdict.check ok against verdict.job's record) -- the same job-state gates then apply to that CLOSED job
+    v = abstract.get("verdict") if isinstance(abstract.get("verdict"), dict) else {}
+    chk = v.get("check") or {}
+    if v.get("job") and all((chk.get(c) or {}).get("ok") for c in ("tt", "ff")):
+        return v["job"]
+    return None
 
 
 def verdict_ok(reason: str):
@@ -69,14 +84,20 @@ def verdict_ok(reason: str):
 _LAST = None
 
 
+# S-DIE 0600 10-16: re-exports of closed views from the closed archive (no re-route, e.g. dsfd_stnh_566x1 main 57fe5b94b)
+# live under physical/s81_die_views/views; the same gates apply (job state, export, lint, bench, current)
+VIEW_ABSTRACT_GLOBS = ("physical/ref_tile/*/views/*/abstract.json", "physical/s81_die_views/views/*/abstract.json",
+                       "physical/ref_tile/*/views_scalar/*/abstract.json")   # derived scalar-pin views (view_lineage.json)
+
+
 def last_commits(paths):
     """{path: commit sha} of the last commit that wrote each view file (one git log over physical/ref_tile views)"""
     global _LAST
     if _LAST is None:
         _LAST = {}
         out = subprocess.run(["git", "-C", str(ROOT), "log", "--format=C %H", "--name-only", "--",
-                              "physical/ref_tile/*/views/*/abstract.json", "physical/ref_tile/*/views/*/*.lef",
-                              "physical/ref_tile/*/views/*/*.lib"], capture_output=True, text=True, check=True).stdout
+                              *[pat_.replace("abstract.json", f_) for pat_ in VIEW_ABSTRACT_GLOBS
+                                for f_ in ("abstract.json", "*.lef", "*.lib")]], capture_output=True, text=True, check=True).stdout
         cur = None
         for ln in out.split("\n"):
             if ln.startswith("C "):
@@ -155,7 +176,7 @@ def main():
         from concurrent.futures import ProcessPoolExecutor
         last_commits([])
         todo = []
-        for ab in sorted(glob.glob(str(ROOT / "physical/ref_tile/*/views/*/abstract.json"))):
+        for ab in sorted(g_ for pat_ in VIEW_ABSTRACT_GLOBS for g_ in glob.glob(str(ROOT / pat_))):
             d_, m_ = Path(ab).parent, Path(ab).parent.name
             if not S81.match(m_) or m_ in a.exclude_master:
                 continue
@@ -168,7 +189,7 @@ def main():
         with ProcessPoolExecutor(max_workers=28) as ex:
             for (m_, d_, _r), res in zip(todo, ex.map(_ps_job, todo)):
                 ps_cache[str(d_)] = res
-    for ab in sorted(glob.glob(str(ROOT / "physical/ref_tile/*/views/*/abstract.json"))):
+    for ab in sorted(g_ for pat_ in VIEW_ABSTRACT_GLOBS for g_ in glob.glob(str(ROOT / pat_))):
         ab = Path(ab)
         d = ab.parent
         master = d.name
@@ -184,6 +205,16 @@ def main():
         why = []
         js = Path(a.jobs) / f"{job}.json" if job else None
         jd = json.loads(js.read_text()) if js and js.exists() else None
+        lineage_rcpt = None
+        if (d / VL.RECEIPT).is_file():
+            # RECEIPT-BACKED LINEAGE (ROOT 10-16): a strict re-export from the closed archive (or a derived scalar-pin
+            # rename) has no loop job of its own; it binds through the CLOSED job its verified view_lineage.json names
+            ok_l, why_l, rcpt = VL.verify(d, Path(a.jobs))
+            if ok_l:
+                job, lineage_rcpt = rcpt["original_job"], rcpt
+                jd = json.loads((Path(a.jobs) / f"{job}.json").read_text())
+            else:
+                why.append(f"view_lineage refused: {why_l}")
         if jd is None:
             why.append(f"no closure-loop job state for {job}")
         else:
@@ -204,6 +235,12 @@ def main():
         # their verdict SDC and match the files recorded by that export.
         ok_export, export_why = export_fix(dict(master=master, export_dir=str(rel)))
         lineage = "EXACT_EXPORT"
+        if lineage_rcpt is not None:
+            lineage = lineage_rcpt["kind"].upper()
+            if lineage_rcpt["kind"] == "scalar_pin_rename" and not ok_export:
+                # the rename changes the recorded LEF/lib bytes by construction; the receipt pins the parent's
+                # verdict-replay export and maps every renamed file back to it
+                ok_export, export_why = True, "scalar_pin_rename of a verdict-replay export (view_lineage.json)"
         if not ok_export and a.poststub_same_commit and export_why == f"{master}.lef on disk is not the file the verdict-replay export recorded":
             ok_ps, ps_why = ps_cache.get(str(d)) or poststub_lineage(master, d, rec)
             if ok_ps:
@@ -231,7 +268,8 @@ def main():
             cands.setdefault(master, []).append(entry)
     bound, superseded = {}, {}
     for master, es in cands.items():
-        es.sort(key=lambda e: str(e.get("finished_at") or ""), reverse=True)
+        # newest export first; of one export, its derived scalar-pin view (pins named as the RTL) before the parent
+        es.sort(key=lambda e: (str(e.get("finished_at") or ""), e.get("lineage") == "SCALAR_PIN_RENAME"), reverse=True)
         best = es[0]
         bound[master] = dict(verdict="DIAGNOSTIC_CLOSED", export_dir=best["export_dir"], job=best["job"], files=best["files"],
                              closure=best["closure"], lineage=best.get("lineage", "EXACT_EXPORT"), gate="closed+export+lint+bench+current (view_binding_closed.py)",

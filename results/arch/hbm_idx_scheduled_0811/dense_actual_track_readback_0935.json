@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.hbm.actual_gate_track_readback.v1",
+  "scope": "Actual original tail floorplan ODB track grid; supersedes stale canonical M4phase0.036 assumption. Dense-specific actual placed readback remains required.",
+  "host": "ot-agidock128",
+  "run": "/srv/opentallas-scratch/claude/ref_gate/hidx_tail_native_0854-20261016-085254",
+  "dump_sha256": "3c9b0c6638c949ffd72bf9ecfc868d598a72061ea305f8a5e93f12204526fd40",
+  "dbu": 1000.0,
+  "layers": [
+    {
+      "name": "M4",
+      "level": 4,
+      "dir": "HORIZONTAL",
+      "pitch": 0.048,
+      "width": 0.024,
+      "track_patterns": [
+        [
+          0.012,
+          2160,
+          0.048
+        ]
+      ]
+    },
+    {
+      "name": "M5",
+      "level": 5,
+      "dir": "VERTICAL",
+      "pitch": 0.048,
+      "width": 0.024,
+      "track_patterns": [
+        [
+          0.012,
+          2340,
+          0.048
+        ]
+      ]
+    }
+  ],
+  "old_literal_grant": "2700305f1 RETIRED/HOLD",
+  "corrected_plan": "dense_pin_plan_0913.json",
+  "corrected_clock_centres": {
+    "clk": 372.156,
+    "clk_mem[0]": 372.252,
+    "clk_mem[1]": 372.348,
+    "clk_mem[2]": 372.444,
+    "clk_mem[3]": 372.54,
+    "clk_mem[4]": 372.636,
+    "clk_mem[5]": 372.732,
+    "clk_mem[6]": 372.828,
+    "clk_mem[7]": 372.924
+  }
+}

@@ -45,6 +45,7 @@ import check_macro_track_alignment as cmta  # noqa: E402
 import child_lint  # noqa: E402
 import pin_fit  # noqa: E402
 import clock_entry_constraints  # noqa: E402
+import raw_macro_clocks  # noqa: E402
 
 KIT_ROOT = "physical/ref_tile"
 QDM = "physical/qwen_die_masters"
@@ -299,6 +300,8 @@ def pin_hook_wrapper(s: dict) -> bool:
 
 def gen_pin_hooks(s: dict) -> dict:
     if not pin_hook_wrapper(s):
+        if s.get("pre_dpl_extra"):
+            raise SpecError("pre_dpl_extra needs the recipe-2 pin-hook wrapper")
         if s.get("pin_hook_before_flops"):
             raise SpecError("pin_hook_before_flops needs the recipe-2 pin-hook wrapper (io_flop_at_pins + inhold/outhold, recipe >= 2)")
         return {}
@@ -322,6 +325,14 @@ def gen_pin_hooks(s: dict) -> dict:
     pre_dpl = ["# ref_tile PRE_DETAIL_PLACE (kit recipe 2): release the FIRM hold cells / drivers and the pin flops for DPL",
                "source /src/physical/dsrom_window_source/leaf_inhold_release.tcl",
                f"source /src/{QDM}/out_flop_release.tcl"]
+    # Actual repair/cone ownership can be reconciled only after FIRM pin cells are released.
+    # Keep this opt-in hook in both the generated stage and its frozen source manifest.
+    for rel in s.get("pre_dpl_extra", []):
+        if not isinstance(rel, str) or rel.startswith("/") or ".." in Path(rel).parts or not re.fullmatch(r"[A-Za-z0-9_./-]+", rel):
+            raise SpecError("pre_dpl_extra must name safe relative repo Tcl files")
+        if not (ROOT / rel).is_file():
+            raise SpecError(f"missing pre-DPL hook: {rel}")
+        pre_dpl.append(f"source /src/{rel}")
     return {"pre_gpl.tcl": "\n".join(pre_gpl) + "\n", "pre_dpl.tcl": "\n".join(pre_dpl) + "\n"}
 
 
@@ -659,6 +670,16 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
             out.update(pg_layer=cap, rlayers=("M2", cap), strap_layer=f"M{metal(cap) + 1}", layer_cap=cap, cap_basis=why)
         if s.get("m6_pin_grant") or (slot or {}).get("m6_pin_grant"):
             out["m6_pin_grant"] = s.get("m6_pin_grant") or slot["m6_pin_grant"]
+        stub = m6_pin_access_stub(s)
+        if stub:
+            # Q-XSLEAF 2026-10-16 (Q-COMPUTE-DIE option 1): M6 face pins above an M5 signal cap crash DRT pin access
+            # (V5 via outside the maze); route M2-M6 with M6 obstructed except the E/W pin stubs (m6_pin_access.tcl)
+            if not out.get("m6_pin_grant") or why != "pin-only grant":
+                raise SpecError("pin_access.m6_stub_um needs a named M6 pin grant (pin-only, cap M5)")
+            deep = min(float(p["max_depth_um"]) for p in out["m6_pin_grant"]["ports"])
+            if not 0 < stub <= deep:
+                raise SpecError(f"pin_access.m6_stub_um {stub} must be > 0 and <= the grant's max_depth_um {deep}")
+            out.update(rlayers=("M2", "M6"), m6_pin_access_stub_um=stub)
         if slot:
             ok = {slot.get("layer_cap") or slot.get("pg_layer"), slot.get("view_cap") if why == "legacy" else None}
             if out["pg_layer"] not in ok:
@@ -697,6 +718,14 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
     if slot and slot.get("pg_layer") and slot["pg_layer"] != out["pg_layer"]:
         raise SpecError(f"layer contract: spec PG {out['pg_layer']} != contract slot PG {slot['pg_layer']}")
     return out
+
+
+M6_PIN_ACCESS_TCL = "physical/common_flow/m6_pin_access.tcl"
+
+
+def m6_pin_access_stub(s: dict) -> float | None:
+    v = (s.get("pin_access") or {}).get("m6_stub_um")
+    return float(v) if v else None
 
 
 def clock_rlayers(lc: dict) -> tuple[str, str] | None:
@@ -1363,6 +1392,10 @@ HDLY_TCL = "physical/qwen_die_masters/hdly_dont_touch.tcl"
 
 
 def gen_hooks(s: dict, kd: str) -> dict:
+    try:
+        raw_bindings, _ = raw_macro_clocks.contract(s, ROOT)
+    except (ValueError, OSError) as error:
+        raise SpecError(str(error)) from error
     fwd = bool(s.get("forwarded_clock"))
     spine = s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine"
     pre_cts = ["# ref_tile PRE_CTS: io_ref boundary switch after the tree (qwen_die_masters/pre_cts_skew.tcl)"
@@ -1375,6 +1408,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
         if s.get("clock") in ("hybrid_entries", "multiple_cts_roots"):
             roots = clock_ports(s) if s.get("clock") == "multiple_cts_roots" else s["clock_cts_roots"]
             pre_cts.append("set ::ot_ce_cts_roots {" + " ".join(roots) + "}")
+            pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
     if spine:
         pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
@@ -1427,6 +1461,12 @@ def gen_hooks(s: dict, kd: str) -> dict:
         lc = layer_contract(s, contract_slot(s))
         post_drt += ["source /src/tools/ref_tile/signal_layer_audit.tcl",
                      f"ot_ref_audit_signal_layers {lc['rlayers'][1]} {lc['pg_layer']} [file join $::env(RESULTS_DIR) signal_layer_audit.json]"]
+    if s["kind"] == "tile" and m6_pin_access_stub(s):
+        m6pa = [f"set ::ot_m6_stub_um {m6_pin_access_stub(s)}", f"source /src/{M6_PIN_ACCESS_TCL}"]
+        # The face-pin keepout recomputes its rectangles at remove time.
+        # Deepen pins before it runs so add/remove see identical terminal geometry.
+        pre_grt = ["set ::ot_m6_pin_access_mode add"] + m6pa + pre_grt
+        post_drt += ["set ::ot_m6_pin_access_mode remove"] + m6pa
     corridor = s.get("pin_access", {}).get("corridor")
     if corridor:
         for post, hook in ((0, pre_grt), (1, post_drt)):
@@ -1701,7 +1741,7 @@ def pin_balance_env(r: dict, lc: dict | None = None) -> list:
 
 def referenced_paths(s: dict, kd: str) -> list:
     """every repo file the routed flow reads (for the source-sync check of the gate)"""
-    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", *([f"{kd}/signoff_ffrepair.sdc"] if io_hold_relief_ps(s) else []), f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
+    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), *s.get("pre_dpl_extra", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", *([f"{kd}/signoff_ffrepair.sdc"] if io_hold_relief_ps(s) else []), f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
            *[f"{kd}/{f}" for f in ("post_cts.tcl", "post_grt.tcl", "pre_drt.tcl", "pre_fill.tcl", "post_fill.tcl")],
            f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
@@ -1712,6 +1752,8 @@ def referenced_paths(s: dict, kd: str) -> list:
     if ((s["kind"] == "tile" and s.get("signal_max_layer")) or
             (s["kind"] == "cluster" and cluster_signal_cap(s, contract_slot(s))[0] == "M6")):
         out.append("tools/ref_tile/signal_layer_audit.tcl")
+    if s["kind"] == "tile" and m6_pin_access_stub(s):
+        out.append(M6_PIN_ACCESS_TCL)
     if s.get("forwarded_clock"):
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     if s.get("io_tcl"):
@@ -1745,6 +1787,12 @@ def referenced_paths(s: dict, kd: str) -> list:
         out += [f"{v}/{view_name(v)}.lef"] + [f"{v}/{view_name(v)}_{c}.lib" for c in ("ss", "ff", "tt")]
     if s["macros"] or s["children"]:
         out.append(f"{kd}/place.tcl")
+    if s.get("soft_root_macro_masters") or s.get("soft_root_macro_bindings"):
+        try:
+            _, raw_paths = raw_macro_clocks.contract(s, ROOT)
+        except (ValueError, OSError) as error:
+            raise SpecError(str(error)) from error
+        out += ["tools/ref_tile/raw_macro_clocks.py", *raw_paths]
     return out
 
 
@@ -1843,7 +1891,10 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
                                 "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"}],
                     "post_sdc": [f"{kd}/signoff.sdc", "physical/common_flow/link_budget_consistent.sdc"],
                     "macros": views},
-        "hold_eco": {"enabled": True, "session": "mm", "reason": "ref_tile: corrected FF hold flow"},
+        # spec job "hold_eco" (S-VM-CAPT-X8S2 2026-10-16): per-kit post-route hold ECO knobs (closure_loop start_hold_eco:
+        # hold_margin_ps / setup_filter_ps / ...) merged over the default, e.g. a pin-flop leaf whose native capture budget
+        # forbids the default +18 ps goal padding every input pin when one internal arc misses by a few ps
+        "hold_eco": {"enabled": True, "session": "mm", "reason": "ref_tile: corrected FF hold flow", **(j.get("hold_eco") or {})},
         "budget": {"enabled": False, "reason": "ref_tile: boundary budget 0.2 T applied in-run"},
         "record": [{"from": "{RUN}/record/views", "to": j.get("views_to", f"{kd}/views")},
                    {"from": "{RUN}/record/route", "to": j.get("record_to", f"results/rtl/ref_tile/{s['name']}") + f"/{name}"}],
@@ -2049,6 +2100,19 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
                    lint_kwargs=dict(cap="M5" if grant else None, pin_grant=grant, routed_def=routed_def,
                        tech_lef=str(o / "pin_only_tech.lef") if grant and (o / "pin_only_tech.lef").exists() else None),
                    transform=not bool(grant))
+    # SCALAR-PIN LINT (ROOT 10-16, coordinator): a scalar RTL port must export as pin x, never x[0] (recipe-3 wrapper
+    # declared [0:0] before e3919f90e; such a view mis-binds every die netlist that connects .x(...))
+    try:
+        sys.path.insert(0, str(ROOT / "tools/ref_tile"))
+        from scalar_pin_view import scalar_pin_lint
+        bad_sc = scalar_pin_lint(o / f"{top}.lef", ROOT / kit, top) if (o / f"{top}.lef").is_file() else []
+    except Exception as e:  # noqa: BLE001
+        bad_sc = []
+        res.setdefault("warns", []).append(f"scalar_pin_lint not run: {type(e).__name__}: {e}")
+    if bad_sc:
+        res.setdefault("fails", []).append(f"scalar_pin_lint: RTL-scalar ports exported as one-bit buses {bad_sc[:8]} "
+                                           f"({len(bad_sc)}): rebuild with ot_pin_regs.tcl >= e3919f90e")
+        res["verdict"] = "FAIL"
     (o / "child_lint.json").write_text(json.dumps(res, indent=1) + "\n")
     print(f"REF_TILE export {top}: views rc={rc} child_lint {res['verdict']} "
           + "; ".join(res.get("fails", []) + res.get("warns", []))[:800])

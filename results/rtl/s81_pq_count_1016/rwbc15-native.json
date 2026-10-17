@@ -1,0 +1,23 @@
+{
+  "cell": "ot_s81_pq_rwbc15",
+  "view": "physical/ref_tile/s81pq_rwbc15/views/ot_s81_pq_rwbc15",
+  "lib_cell": "ot_s81_pq_rwbc15",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 96.1,
+  "spread_ps": 10.0,
+  "outputs": 21,
+  "inputs": 66,
+  "launch_ps": 144.0,
+  "launch_pin": "ga[13]",
+  "capture_ps": 173.8,
+  "capture_pin": "live[1]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+}

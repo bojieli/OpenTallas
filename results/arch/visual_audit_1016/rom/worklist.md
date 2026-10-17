@@ -1,9 +1,24 @@
-# VIS-ROM worklist: every open finding, grouped by owner (2026-10-16 ~03:30 PT)
+# VIS-ROM worklist: every open finding, grouped by owner (2026-10-16 ~03:30 PT; round 3 at ~10:00 PT)
 
 For parallel execution, use one helper per item. Sev: 1 = blocks closure, 2 = costs timing/congestion/area, 3 = waste/low. "partial" = owner already partly fixed it.
 Gains are the measured figure from the audit (see `findings.json` for full evidence and images); closure items are counted as closure, not ps.
 Total open items: 54. Closure-blocking status is tracked separately in `status.md`.
 
+
+
+## ROUND 3 (2026-10-16 ~10:00 PT): new and changed items, do these first
+
+| sev | id | owner | item | expected gain | suggested helper |
+|---|---|---|---|---|---|
+| 1 | S81F-02b | S-ELEM-PQ | dsfd_cfifo g69 failed GRT: xd 20.9 pins/um, xa/xb 21/um, M5 only, N span 0.33 | closure: GRT congestion 677 -> 0; unblocks 68,864 die bits | re-kit on the 432x95 die slot at 2-track pitch, gate, then route |
+| 1 | S81F-16 | S-NET+FILL | sstn *_x2 (5 masters) failed GRT 10 times; flops in a 6 um N band, util 9.9% | closure: bind the closed split (base566 + payload536) instead | S-DIE rebind request; stop x2 re-routes |
+| 1 | S81H-15 | S-ENGRAM+NORM | HC ccf_bankpipe bank/bank128: SRAM pins W/E vs N->S buses | closure: TT -34.99 / DRC 2 / GRT congestion 49,847 -> 0 | bus faces onto the SRAM pin faces, or SRAM R90 + ~130x216 outline |
+| 2 | D-S81-04 | S-DIE | c26b_r hub 210/317 mm2 empty; candidate c74342891 leaves ~100 mm2 south white | bit-mm / stages: field columns pulled inward or die height cut | price c26b_r vs candidate (bit-mm, stages, cut) for owner review |
+| 2 | D-QC-03 | Q-COMPUTE-DIE | r2h5 centre 55.6 mm2 + row gap 20.5 mm2 empty; ports all W of centre | area ~20-45 mm2; cross-centre bits -> 0 with b2 | r2h6/b2 next; document or close the row gap |
+| 2 | D-QK-03 | Q-KVSYS-DIE | kvs12a/b contain no PV; spine 26.5 mm2 empty | the trial does not measure PV routing | v1.4.4 spine-PV trial next; retire kvs12a if 12b passes |
+| 2 | S81H-16 | S-ELEM-PQ | bf_front c10 closed at TT +0.00, N register band >1.0 | die-STA risk | watch die STA only |
+
+Closed since 04:00 (confirmed): QKV-02, QC-05, QKV-13, QKV-07, QC-03, S81H-14, S81V-01, S81H-03 (pins). See status.md.
 
 ## Q-COMPUTE-DIE (5 items)
 

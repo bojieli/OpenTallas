@@ -17,6 +17,8 @@ validate_case() {
   local log=$1 stage=$2
   python3 "$H/case_status.py" --log "$C/$log" --stage "$stage" --process-exit "$(cat "$C/$log.exit" 2>/dev/null || echo 1)"
 }
+# Q-KV 2026-10-16: the prep's OT_KV_* flags (kvsys_prep.sh kv_flags.env) for the strict bind re-imports of kv_die
+[ "$DIE" = kv ] && [ -f "$R/kv_flags.env" ] && . "$R/kv_flags.env"
 say() { echo "$(date '+%F %T %Z') $*" >> $R/STATUS.log; }
 case $DIE in kv) P1=20; P2=80; P3=60; P4=40;; r22k) P1=40; P2=130; P3=160; P4=110;; *) echo bad die; exit 2;; esac
 say "chain start die=$DIE src=$(cat $C/SOURCE_COMMIT 2>/dev/null) from=${OT_FROM:-case}"
@@ -102,6 +104,13 @@ for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
   CP=; [ -s $R/clock/plan.json ] && CP=$R/clock/plan.json
   python3 $H/sta_tcl.py $DIE $c $D/grt_$c.tcl $CP || { say "STA $c Tcl generation FAIL"; sta_failed=1; continue; }
   say "STA $c clock: ${OT_STA_CLOCKS:-${CP:-ideal (no clock plan)}}"
+  # ROOT 2026-10-16 (coordinator, owner-approved): shared die clock check on every die trial (tools/die_clock_check.*);
+  # dumped inside the STA session after the reports, corners in OT_DCC_CORNERS (default tt)
+  DCC=0; case " ${OT_DCC_CORNERS:-tt} " in *" $c "*) DCC=1;; esac
+  if [ "$DCC" = 1 ] && [ -f "$SRC/tools/die_clock_check.tcl" ]; then
+    cp "$SRC/tools/die_clock_check.tcl" $D/die_clock_check.tcl
+    printf '%s\n' 'if {[catch {set ::env(OT_DCC_OUT) /work/die_clock_dump.tsv; source /work/die_clock_check.tcl} err]} { puts "OT_DCC_FAIL $err" } else { puts OT_DCC_DONE }' >> $D/grt_$c.tcl
+  fi
   $ADMIT $P4 -- $H/dietop_run.sh $D grt_$c.tcl 8 $((P4+60)); sta_rc=$?
   [ "$sta_rc" = 0 ] && sta_rc=$(cat "$D/run.exit" 2>/dev/null || echo 1)
   if ! python3 "$H/case_status.py" --log "$D/grt_$c.log" --stage "grt_$c.tcl" --process-exit "$sta_rc"; then
@@ -109,6 +118,23 @@ for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
     sta_failed=1
   fi
   say "STA $c: $(grep -E '^(wns|tns|worst slack)' $D/grt_$c.log | tr '\n' ' ')"
+  if [ "$DCC" = 1 ] && [ -s $D/die_clock_dump.tsv ]; then
+    python3 "$SRC/tools/die_clock_check.py" report $D/die_clock_dump.tsv --out $D/die_clock_check.json > $D/die_clock_check.txt 2>&1 \
+      && say "DIE CLOCK CHECK $c: $D/die_clock_check.txt" || say "DIE CLOCK CHECK $c report FAIL (see $D/die_clock_check.txt)"
+  elif [ "$DCC" = 1 ]; then say "DIE CLOCK CHECK $c: no dump ($(grep -m1 OT_DCC_FAIL $D/grt_$c.log))"; fi
 done
 [ "$sta_failed" = 0 ] || { say "chain FAIL: one or more STA corners did not complete"; exit 1; }
+# Every completed KV die trial carries its endpoint cause table and actual GRT
+# congestion/pin/channel readout. The enclosing ot-run scope admits this work;
+# standalone callers retain the normal stage admission rather than running a
+# memory-heavy endpoint/guide walk outside the resource book.
+if [ "$DIE" = kv ]; then
+  if $ADMIT 8 -- python3 "$SRC/tools/qwen_kv_die/kvsys_classify.py" --run "$R" --out "$R/classify.json" > "$R/classify.log" 2>&1 &&
+     $ADMIT 8 -- python3 "$SRC/tools/qwen_kv_die/kv_readout.py" --run "$R" --classify "$R/classify.json" --out "$R/readout" > "$R/readout.log" 2>&1; then
+    say "KV READOUT: $R/classify.json $R/readout/readout.md"
+  else
+    say "KV READOUT FAIL: see $R/classify.log and $R/readout.log (physical/STA logs preserved)"
+    exit 1
+  fi
+fi
 say "chain done"

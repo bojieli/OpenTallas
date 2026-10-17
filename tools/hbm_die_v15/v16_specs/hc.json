@@ -1,20 +1,8 @@
 {
  "region": "hc",
  "author": "Claude H-NETLIST sub-agent hc (2026-10-15)",
- "basis_commit": "c458a8176",
+ "basis_commit": "aa54435c7",
  "instances": [
-  {
-   "name": "hc_tgt_SW",
-   "master": "ot_static_program_target",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "params": {
-    "TARGET": "8'd108",
-    "PCW": 10
-   },
-   "slot": null,
-   "owner": "HC owner (H-NETLIST hc)",
-   "note": "F20 programme target 108 of the static HC quadrant client hc_SW (HC target range 108..111 = SW,SE,NW,NE); host_cp_ingress TARGET_MASK must admit 108"
-  },
   {
    "name": "hc_SW",
    "master": "ot_hbm_hc_q_static",
@@ -61,18 +49,6 @@
    "slot": "hc_SW3",
    "owner": "HC owner (H-NETLIST hc)",
    "note": "HC bank-pair LG boundary leaf for banks 6,7 of lg_SW_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
-  },
-  {
-   "name": "hc_tgt_SE",
-   "master": "ot_static_program_target",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "params": {
-    "TARGET": "8'd109",
-    "PCW": 10
-   },
-   "slot": null,
-   "owner": "HC owner (H-NETLIST hc)",
-   "note": "F20 programme target 109 of the static HC quadrant client hc_SE (HC target range 108..111 = SW,SE,NW,NE); host_cp_ingress TARGET_MASK must admit 109"
   },
   {
    "name": "hc_SE",
@@ -122,18 +98,6 @@
    "note": "HC bank-pair LG boundary leaf for banks 6,7 of lg_SE_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
   },
   {
-   "name": "hc_tgt_NW",
-   "master": "ot_static_program_target",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "params": {
-    "TARGET": "8'd110",
-    "PCW": 10
-   },
-   "slot": null,
-   "owner": "HC owner (H-NETLIST hc)",
-   "note": "F20 programme target 110 of the static HC quadrant client hc_NW (HC target range 108..111 = SW,SE,NW,NE); host_cp_ingress TARGET_MASK must admit 110"
-  },
-  {
    "name": "hc_NW",
    "master": "ot_hbm_hc_q_static",
    "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv",
@@ -179,18 +143,6 @@
    "slot": "hc_NW3",
    "owner": "HC owner (H-NETLIST hc)",
    "note": "HC bank-pair LG boundary leaf for banks 6,7 of lg_NW_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
-  },
-  {
-   "name": "hc_tgt_NE",
-   "master": "ot_static_program_target",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "params": {
-    "TARGET": "8'd111",
-    "PCW": 10
-   },
-   "slot": null,
-   "owner": "HC owner (H-NETLIST hc)",
-   "note": "F20 programme target 111 of the static HC quadrant client hc_NE (HC target range 108..111 = SW,SE,NW,NE); host_cp_ingress TARGET_MASK must admit 111"
   },
   {
    "name": "hc_NE",
@@ -728,12 +680,12 @@
     "cfg_v"
    ],
    "dst": [
-    "hc_tgt_SW",
+    "hc_SW",
     "cfg_v"
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -741,12 +693,12 @@
     "cfg_target"
    ],
    "dst": [
-    "hc_tgt_SW",
+    "hc_SW",
     "cfg_target"
    ],
    "bits": 8,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -754,12 +706,12 @@
     "cfg_addr"
    ],
    "dst": [
-    "hc_tgt_SW",
+    "hc_SW",
     "cfg_addr"
    ],
    "bits": 12,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -767,12 +719,12 @@
     "cfg_data"
    ],
    "dst": [
-    "hc_tgt_SW",
+    "hc_SW",
     "cfg_data"
    ],
    "bits": 256,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -780,12 +732,12 @@
     "desc_v"
    ],
    "dst": [
-    "hc_tgt_SW",
+    "hc_SW",
     "desc_v"
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -793,12 +745,12 @@
     "desc_base"
    ],
    "dst": [
-    "hc_tgt_SW",
+    "hc_SW",
     "desc_base"
    ],
    "bits": 12,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -806,12 +758,12 @@
     "desc_limit"
    ],
    "dst": [
-    "hc_tgt_SW",
+    "hc_SW",
     "desc_limit"
    ],
    "bits": 13,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -819,12 +771,12 @@
     "desc_loops"
    ],
    "dst": [
-    "hc_tgt_SW",
+    "hc_SW",
     "desc_loops"
    ],
    "bits": 16,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -832,116 +784,12 @@
     "launch_v"
    ],
    "dst": [
-    "hc_tgt_SW",
+    "hc_SW",
     "launch_v"
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_SW",
-    "program_active"
-   ],
-   "dst": [
-    "hc_tgt_SW",
-    "program_active"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_SW",
-    "program_cfg_we"
-   ],
-   "dst": [
-    "hc_SW",
-    "cfg_we"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_SW",
-    "program_cfg_addr"
-   ],
-   "dst": [
-    "hc_SW",
-    "cfg_addr"
-   ],
-   "bits": 10,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_SW",
-    "program_cfg_data"
-   ],
-   "dst": [
-    "hc_SW",
-    "cfg_data"
-   ],
-   "bits": 256,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_SW",
-    "program_start_v"
-   ],
-   "dst": [
-    "hc_SW",
-    "start_v"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_SW",
-    "program_start_base"
-   ],
-   "dst": [
-    "hc_SW",
-    "start_base"
-   ],
-   "bits": 10,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_SW",
-    "program_start_limit"
-   ],
-   "dst": [
-    "hc_SW",
-    "start_limit"
-   ],
-   "bits": 11,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_SW",
-    "program_start_loops"
-   ],
-   "dst": [
-    "hc_SW",
-    "start_loops"
-   ],
-   "bits": 16,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -1429,12 +1277,12 @@
     "cfg_v"
    ],
    "dst": [
-    "hc_tgt_SE",
+    "hc_SE",
     "cfg_v"
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -1442,12 +1290,12 @@
     "cfg_target"
    ],
    "dst": [
-    "hc_tgt_SE",
+    "hc_SE",
     "cfg_target"
    ],
    "bits": 8,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -1455,12 +1303,12 @@
     "cfg_addr"
    ],
    "dst": [
-    "hc_tgt_SE",
+    "hc_SE",
     "cfg_addr"
    ],
    "bits": 12,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -1468,12 +1316,12 @@
     "cfg_data"
    ],
    "dst": [
-    "hc_tgt_SE",
+    "hc_SE",
     "cfg_data"
    ],
    "bits": 256,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -1481,12 +1329,12 @@
     "desc_v"
    ],
    "dst": [
-    "hc_tgt_SE",
+    "hc_SE",
     "desc_v"
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -1494,12 +1342,12 @@
     "desc_base"
    ],
    "dst": [
-    "hc_tgt_SE",
+    "hc_SE",
     "desc_base"
    ],
    "bits": 12,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -1507,12 +1355,12 @@
     "desc_limit"
    ],
    "dst": [
-    "hc_tgt_SE",
+    "hc_SE",
     "desc_limit"
    ],
    "bits": 13,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -1520,12 +1368,12 @@
     "desc_loops"
    ],
    "dst": [
-    "hc_tgt_SE",
+    "hc_SE",
     "desc_loops"
    ],
    "bits": 16,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -1533,116 +1381,12 @@
     "launch_v"
    ],
    "dst": [
-    "hc_tgt_SE",
+    "hc_SE",
     "launch_v"
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_SE",
-    "program_active"
-   ],
-   "dst": [
-    "hc_tgt_SE",
-    "program_active"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_SE",
-    "program_cfg_we"
-   ],
-   "dst": [
-    "hc_SE",
-    "cfg_we"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_SE",
-    "program_cfg_addr"
-   ],
-   "dst": [
-    "hc_SE",
-    "cfg_addr"
-   ],
-   "bits": 10,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_SE",
-    "program_cfg_data"
-   ],
-   "dst": [
-    "hc_SE",
-    "cfg_data"
-   ],
-   "bits": 256,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_SE",
-    "program_start_v"
-   ],
-   "dst": [
-    "hc_SE",
-    "start_v"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_SE",
-    "program_start_base"
-   ],
-   "dst": [
-    "hc_SE",
-    "start_base"
-   ],
-   "bits": 10,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_SE",
-    "program_start_limit"
-   ],
-   "dst": [
-    "hc_SE",
-    "start_limit"
-   ],
-   "bits": 11,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_SE",
-    "program_start_loops"
-   ],
-   "dst": [
-    "hc_SE",
-    "start_loops"
-   ],
-   "bits": 16,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -2130,12 +1874,12 @@
     "cfg_v"
    ],
    "dst": [
-    "hc_tgt_NW",
+    "hc_NW",
     "cfg_v"
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -2143,12 +1887,12 @@
     "cfg_target"
    ],
    "dst": [
-    "hc_tgt_NW",
+    "hc_NW",
     "cfg_target"
    ],
    "bits": 8,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -2156,12 +1900,12 @@
     "cfg_addr"
    ],
    "dst": [
-    "hc_tgt_NW",
+    "hc_NW",
     "cfg_addr"
    ],
    "bits": 12,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -2169,12 +1913,12 @@
     "cfg_data"
    ],
    "dst": [
-    "hc_tgt_NW",
+    "hc_NW",
     "cfg_data"
    ],
    "bits": 256,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -2182,12 +1926,12 @@
     "desc_v"
    ],
    "dst": [
-    "hc_tgt_NW",
+    "hc_NW",
     "desc_v"
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -2195,12 +1939,12 @@
     "desc_base"
    ],
    "dst": [
-    "hc_tgt_NW",
+    "hc_NW",
     "desc_base"
    ],
    "bits": 12,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -2208,12 +1952,12 @@
     "desc_limit"
    ],
    "dst": [
-    "hc_tgt_NW",
+    "hc_NW",
     "desc_limit"
    ],
    "bits": 13,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -2221,12 +1965,12 @@
     "desc_loops"
    ],
    "dst": [
-    "hc_tgt_NW",
+    "hc_NW",
     "desc_loops"
    ],
    "bits": 16,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -2234,116 +1978,12 @@
     "launch_v"
    ],
    "dst": [
-    "hc_tgt_NW",
+    "hc_NW",
     "launch_v"
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_NW",
-    "program_active"
-   ],
-   "dst": [
-    "hc_tgt_NW",
-    "program_active"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_NW",
-    "program_cfg_we"
-   ],
-   "dst": [
-    "hc_NW",
-    "cfg_we"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_NW",
-    "program_cfg_addr"
-   ],
-   "dst": [
-    "hc_NW",
-    "cfg_addr"
-   ],
-   "bits": 10,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_NW",
-    "program_cfg_data"
-   ],
-   "dst": [
-    "hc_NW",
-    "cfg_data"
-   ],
-   "bits": 256,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_NW",
-    "program_start_v"
-   ],
-   "dst": [
-    "hc_NW",
-    "start_v"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_NW",
-    "program_start_base"
-   ],
-   "dst": [
-    "hc_NW",
-    "start_base"
-   ],
-   "bits": 10,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_NW",
-    "program_start_limit"
-   ],
-   "dst": [
-    "hc_NW",
-    "start_limit"
-   ],
-   "bits": 11,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_NW",
-    "program_start_loops"
-   ],
-   "dst": [
-    "hc_NW",
-    "start_loops"
-   ],
-   "bits": 16,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -2831,12 +2471,12 @@
     "cfg_v"
    ],
    "dst": [
-    "hc_tgt_NE",
+    "hc_NE",
     "cfg_v"
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -2844,12 +2484,12 @@
     "cfg_target"
    ],
    "dst": [
-    "hc_tgt_NE",
+    "hc_NE",
     "cfg_target"
    ],
    "bits": 8,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -2857,12 +2497,12 @@
     "cfg_addr"
    ],
    "dst": [
-    "hc_tgt_NE",
+    "hc_NE",
     "cfg_addr"
    ],
    "bits": 12,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -2870,12 +2510,12 @@
     "cfg_data"
    ],
    "dst": [
-    "hc_tgt_NE",
+    "hc_NE",
     "cfg_data"
    ],
    "bits": 256,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -2883,12 +2523,12 @@
     "desc_v"
    ],
    "dst": [
-    "hc_tgt_NE",
+    "hc_NE",
     "desc_v"
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -2896,12 +2536,12 @@
     "desc_base"
    ],
    "dst": [
-    "hc_tgt_NE",
+    "hc_NE",
     "desc_base"
    ],
    "bits": 12,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -2909,12 +2549,12 @@
     "desc_limit"
    ],
    "dst": [
-    "hc_tgt_NE",
+    "hc_NE",
     "desc_limit"
    ],
    "bits": 13,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -2922,12 +2562,12 @@
     "desc_loops"
    ],
    "dst": [
-    "hc_tgt_NE",
+    "hc_NE",
     "desc_loops"
    ],
    "bits": 16,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   },
   {
    "src": [
@@ -2935,116 +2575,12 @@
     "launch_v"
    ],
    "dst": [
-    "hc_tgt_NE",
+    "hc_NE",
     "launch_v"
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_NE",
-    "program_active"
-   ],
-   "dst": [
-    "hc_tgt_NE",
-    "program_active"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_NE",
-    "program_cfg_we"
-   ],
-   "dst": [
-    "hc_NE",
-    "cfg_we"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_NE",
-    "program_cfg_addr"
-   ],
-   "dst": [
-    "hc_NE",
-    "cfg_addr"
-   ],
-   "bits": 10,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_NE",
-    "program_cfg_data"
-   ],
-   "dst": [
-    "hc_NE",
-    "cfg_data"
-   ],
-   "bits": 256,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_NE",
-    "program_start_v"
-   ],
-   "dst": [
-    "hc_NE",
-    "start_v"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_NE",
-    "program_start_base"
-   ],
-   "dst": [
-    "hc_NE",
-    "start_base"
-   ],
-   "bits": 10,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_NE",
-    "program_start_limit"
-   ],
-   "dst": [
-    "hc_NE",
-    "start_limit"
-   ],
-   "bits": 11,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
-  },
-  {
-   "src": [
-    "hc_tgt_NE",
-    "program_start_loops"
-   ],
-   "dst": [
-    "hc_NE",
-    "start_loops"
-   ],
-   "bits": 16,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+   "basis": "H-NETLIST 0600 collar fold (H-DIE option A): the F20 programme target 108+QID is inside hc_q (ot_static_program_target TGT_PIN=1, id = strap tgt); HCENG c1a7786b2 bench rtl/test/tb_hbm_hc_q_static.sv"
   }
  ],
  "drop_v15_edges": [],
@@ -3098,18 +2634,6 @@
    "kind": "reset"
   },
   {
-   "inst": "hc_tgt_SW",
-   "port": "clk",
-   "domain": "stream",
-   "kind": "clock"
-  },
-  {
-   "inst": "hc_tgt_SW",
-   "port": "rst_n",
-   "domain": "stream",
-   "kind": "reset"
-  },
-  {
    "inst": "hc_SW",
    "port": "clk",
    "domain": "stream",
@@ -3165,18 +2689,6 @@
   },
   {
    "inst": "hc_SE3",
-   "port": "rst_n",
-   "domain": "stream",
-   "kind": "reset"
-  },
-  {
-   "inst": "hc_tgt_SE",
-   "port": "clk",
-   "domain": "stream",
-   "kind": "clock"
-  },
-  {
-   "inst": "hc_tgt_SE",
    "port": "rst_n",
    "domain": "stream",
    "kind": "reset"
@@ -3242,18 +2754,6 @@
    "kind": "reset"
   },
   {
-   "inst": "hc_tgt_NW",
-   "port": "clk",
-   "domain": "stream",
-   "kind": "clock"
-  },
-  {
-   "inst": "hc_tgt_NW",
-   "port": "rst_n",
-   "domain": "stream",
-   "kind": "reset"
-  },
-  {
    "inst": "hc_NW",
    "port": "clk",
    "domain": "stream",
@@ -3309,18 +2809,6 @@
   },
   {
    "inst": "hc_NE3",
-   "port": "rst_n",
-   "domain": "stream",
-   "kind": "reset"
-  },
-  {
-   "inst": "hc_tgt_NE",
-   "port": "clk",
-   "domain": "stream",
-   "kind": "clock"
-  },
-  {
-   "inst": "hc_tgt_NE",
    "port": "rst_n",
    "domain": "stream",
    "kind": "reset"
@@ -3338,7 +2826,32 @@
    "kind": "reset"
   }
  ],
- "straps": [],
+ "straps": [
+  {
+   "inst": "hc_SW",
+   "port": "tgt",
+   "value": 108,
+   "reason": "identity: F20 target id 108 of hc_SW"
+  },
+  {
+   "inst": "hc_SE",
+   "port": "tgt",
+   "value": 109,
+   "reason": "identity: F20 target id 109 of hc_SE"
+  },
+  {
+   "inst": "hc_NW",
+   "port": "tgt",
+   "value": 110,
+   "reason": "identity: F20 target id 110 of hc_NW"
+  },
+  {
+   "inst": "hc_NE",
+   "port": "tgt",
+   "value": 111,
+   "reason": "identity: F20 target id 111 of hc_NE"
+  }
+ ],
  "gaps": [
   {
    "id": "G-HC-ENG",

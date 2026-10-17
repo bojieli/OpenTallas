@@ -51,7 +51,16 @@ REDESIGN = {'NEEDS_RTL', 'NEEDS_BUDGET', 'FLOORPLAN_MARGIN', 'PREROUTE_MARGIN',
 FAIL = REDESIGN | {'NEEDS_HUMAN', 'INVALID', 'REFUSED'}
 CATS = ['closed (TT era)', 'closed (TT re-verified)', 'closed (earlier)', 'first trial in flight', 'failed, re-running',
         'revoked, re-running', 'revoked (no live job)', 'needs redesign (no live job)', 'flow failure (no live job)',
-        'cancelled only', 'superseded', 'implementation recorded (no physical job)', 'not started (open)']
+        'cancelled only', 'superseded', 'implementation recorded (no physical job)', 'not started (open)',
+        'closed, margin-thin']
+# DIE-BINDABLE (coordinator, owner safe margins, 2026-10-16): a CLOSED view binds into a die only with native PASS
+# (launch <= 220 / capture <= 190 / boundary spread <= 80 ps, no combinational pin arc) AND TT >= +25 ps AND FF >= +10 ps.
+# Below that the row stays closed (closure is NOT revoked) but is listed 'closed, margin-thin' (appended last so the
+# numeric CATS[i] indices above keep their meaning).  Native verdicts come from the committed per-view audit
+# results/arch/margin_thin_1016.json (tools/fleet_viz/margin_thin.py); TT/FF from the row's best closed job.
+MARGIN_THIN = 'closed, margin-thin'
+MARGIN_FILE = 'results/arch/margin_thin_1016.json'
+BIND_TT_PS, BIND_FF_PS = 25.0, 10.0
 NOT_STARTED = 'not started (open)'   # registry-sync 10-15: a current die-contract element with no physical job yet
 # per-design count buckets (fleet header): every non-superseded category is closed, in flight, failed or not started
 BUCKET = {'first trial in flight': 'in_flight', 'failed, re-running': 'in_flight', 'revoked, re-running': 'in_flight',
@@ -537,8 +546,18 @@ class Elements:
             r['throughput'] = tq
             r['gate'] = gate_text(r['category'], tq)
             rows.append(r)
+        # ELEM-CENSUS 10-16: an 'alternative' fold whose block has no job of its own (a die-name binding / module alias of
+        # a master, e.g. qkd_hgs = closed qkh_head_gather_stage) was ignored, so apply_contracts re-added it as NOT_STARTED.
+        # Attach it to its master's variants so the contract membership lands on the master row instead.
+        byel = {r['element']: r for r in rows}
+        self._alias = {b: vmap[b] for b, v in ov['variants'].items() if b in vmap and v.get('kind', 'alternative') == 'alternative'}
+        for b, v in ov['variants'].items():
+            m = vmap.get(b)
+            if v.get('kind', 'alternative') == 'alternative' and m in byel and b not in byel and b not in byel[m]['variants']:
+                byel[m]['variants'].append(b)
         dsum, dsrc = self.apply_contracts(rows) if hasattr(self, 'contracts') else ({}, None)
         flow = self.flow.annotate(rows, groups, TARGETS)   # r['flow'] / flow_label / die_used / m5_reroute
+        self.apply_die_bindable(rows)
         rows.sort(key=lambda r: (TARGETS.index(r['target']), CATS.index(r['category']), r['element']))
         independent, integration, identity = (master_identity.classify(rows, self.contracts.repo)
             if hasattr(self, 'contracts') else (rows, [], {}))
@@ -571,6 +590,48 @@ class Elements:
                                  superseded=str(self.superseded_path) if sup else None, n_superseded=len(sup)))
 
     # ---- top-down: current die contracts (die_contracts.py, results/fleet_viz/die_contracts.json)
+    def margin_audit(self):
+        """per-view native verdicts from MARGIN_FILE (origin/main; cached by blob id)"""
+        repo = self.contracts.repo if hasattr(self, 'contracts') else None
+        try:
+            blob = subprocess.run(['git', '-C', str(self.repo), 'rev-parse', 'origin/main:' + MARGIN_FILE],
+                                  capture_output=True, text=True, timeout=20).stdout.strip()
+        except Exception:
+            blob = ''
+        if getattr(self, '_margin', (None,))[0] == blob:
+            return self._margin[1]
+        d = {}
+        try:
+            text = repo.read(MARGIN_FILE) if repo is not None and blob else None
+            doc = json.loads(text) if text else {}
+            for v in doc.get('views', []):
+                for k in filter(None, (v.get('job'), v.get('cell'))):
+                    d.setdefault(k, v)
+        except Exception as e:  # noqa: BLE001 -- a bad file never breaks the table; rows show 'native unaudited'
+            self.log('elements: margin audit: %s' % e)
+        self._margin = (blob, d)
+        return d
+
+    def apply_die_bindable(self, rows):
+        audit = self.margin_audit()
+        for r in rows:
+            if not r['category'].startswith('closed'):
+                r['die_bindable'] = None
+                continue
+            b = r.get('best') or {}
+            tt, ff = b.get('tt'), b.get('ff')
+            v = audit.get(b.get('job')) or next((audit[k] for k in [r['element']] + r.get('variants', []) if k in audit), None)
+            native = (v or {}).get('native')            # PASS / FAIL / None (no audited view)
+            why = []
+            if native != 'PASS':
+                why.append('native %s' % ((v or {}).get('native_why') or 'FAIL') if native == 'FAIL' else 'native unaudited (no view on main)')
+            if tt is None or tt < BIND_TT_PS: why.append('TT %s < +%g' % (tt, BIND_TT_PS))
+            if ff is None or ff < BIND_FF_PS: why.append('FF %s < +%g' % (ff, BIND_FF_PS))
+            r['die_bindable'] = dict(ok=not why, native=native, tt=tt, ff=ff, why='; '.join(why),
+                                     view=(v or {}).get('view'), rule='native PASS & TT>=+%g & FF>=+%g ps' % (BIND_TT_PS, BIND_FF_PS))
+            if why:
+                r['closed_category'] = r['category']; r['category'] = MARGIN_THIN
+
     def apply_contracts(self, rows):
         """Annotate rows with their die / role / owner stream / native check, add every contract element that has no
         row as NOT_STARTED, supersede (with the contract as evidence) rows a contract retired and, for designs whose
@@ -641,6 +702,7 @@ class Elements:
         sup = self.superseded()
         for e, x in E.items():
             if e in by_name or all(v in ('macro', 'soft') for v in x['roles'].values()): continue
+            if getattr(self, '_alias', {}).get(e) in E: continue   # ELEM-CENSUS 10-16: alias of another contract master, counted once there
             # S-NET+FILL 10-15: a contract element retired with source evidence in superseded_elements.json (e.g. a
             # GEN18-bind master the current die case no longer instantiates) was re-added as NOT_STARTED here, so 34
             # evidence-backed retirements never left the open count.  Honour the declaration as for job rows.

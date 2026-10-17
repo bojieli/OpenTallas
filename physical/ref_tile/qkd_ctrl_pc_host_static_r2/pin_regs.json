@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_ctrl_pc_host_static_r2",
+ "enable": false,
+ "reason": "RTL registers every seam/pin explicitly (children: input pin flops or the wrapped module's first stage; outputs flop-driven). No extra wrapper edges."
+}

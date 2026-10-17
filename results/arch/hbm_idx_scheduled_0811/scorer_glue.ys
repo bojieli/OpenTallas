@@ -1,0 +1,21 @@
+read_verilog -sv -DSYNTHESIS -DOT_IDX_HSLICE_HARD rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv
+read_verilog -sv -DSYNTHESIS -DOT_IDX_HSLICE_HARD rtl/lib/ot_rst_relay.sv
+read_verilog -sv -DSYNTHESIS -DOT_IDX_HSLICE_HARD rtl/hdc/v41x/ot_hbm_idx_owned_native.sv
+read_verilog -sv -DSYNTHESIS -DOT_IDX_HSLICE_HARD rtl/hdc/ot_hdc_fastfp.sv
+read_verilog -sv -DSYNTHESIS -DOT_IDX_HSLICE_HARD rtl/hdc/ot_hdc_prefix.sv
+read_verilog -sv -DSYNTHESIS -DOT_IDX_HSLICE_HARD rtl/hdc/ot_hdc_fp32_add_lat.sv
+read_verilog -sv -DSYNTHESIS -DOT_IDX_HSLICE_HARD rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv
+read_verilog -sv -DSYNTHESIS -DOT_IDX_HSLICE_HARD rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv
+read_verilog -sv -DSYNTHESIS -DOT_IDX_HSLICE_HARD rtl/hdc/ot_hdc_delay.sv
+read_verilog -sv -DSYNTHESIS -DOT_IDX_HSLICE_HARD rtl/hbm_accel/index/ot_hbm_idx_engine_static.sv
+read_verilog -sv -DSYNTHESIS -DOT_IDX_HSLICE_HARD rtl/hbm_accel/index/ot_hbm_idx_score_static.sv
+blackbox ot_hbm_idx_hslice_ready_native
+blackbox hidx_meta_w25_d123_r0
+hierarchy -check -top ot_hbm_idx_score_static
+tee -o /out/scorer_glue.hier.stat stat
+synth -top ot_hbm_idx_score_static
+dfflibmap -liberty /tmp/lib/seq.lib
+abc -liberty /tmp/lib/all.lib
+opt_clean
+tee -o /out/scorer_glue.stat stat -liberty /tmp/lib/all.lib
+write_verilog -noattr /out/scorer_glue.netlist.v

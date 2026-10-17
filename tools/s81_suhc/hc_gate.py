@@ -60,6 +60,7 @@ RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv", "rtl/dsrom_sys/s81_suhc/dsfd_
        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cntree.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccr.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cpad.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf.sv",
        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctile.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_pad_split.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv",
+       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_return_columns.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctfn_banks_candidate.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth_ntc.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctnl_io.sv",
        "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv", "rtl/lib/ot_async_fifo.sv", "rtl/lib/ot_reset_sync.sv",
        "rtl/lib/ot_skid_buffer.sv",
        "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv", "rtl/hdc/v41x/ot_dsrom_su_add6.sv", "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
@@ -499,24 +500,24 @@ HCG = re.compile(r"HCG jobs=(\d+) done=(\d+) err=(\d+) rows=(\d+) fault=(\d+) co
 JOB = re.compile(r"HCJ op=(\d+) kind=(\d+) start=(\d+) done=(\d+)")
 
 
-def build(out: Path, ng, fp, mut, amut, lvm, hier=0, cnl_pin=0, chain_step=4, lane_specialize=0, pad_hard=0, probes=(), tmut=None, tmax=0, pipe=0, pipe_pd=40, ntree=0, nt_k=80, nt_dbg=0):
+def build(out: Path, ng, fp, mut, amut, lvm, hier=0, cnl_pin=0, chain_step=4, lane_specialize=0, pad_hard=0, probes=(), tmut=None, tmax=0, pipe=0, pipe_pd=40, ntree=0, nt_k=80, nt_dbg=0, ccf_bp=0, retcol=0):
     # hier: 1 = root split + column chains of octet sub-tiles; 2 = the structural variant (half-octet sub-tiles, split
     # column roots)
     tag = f"ng{ng}_{fp}_m{mut}_a{amut}" + {0: "", 1: "_hier", 2: "_hier2", 3: "_hier3tail"}[hier]
     tag += f"_cp{cnl_pin}_cs{chain_step}_ls{lane_specialize}" + (f"_pipe{pipe_pd}" if pipe else "")
-    tag += (f"_nt{nt_k}" if ntree else "") + ("_ntdbg" if nt_dbg else "")
-    tag += ("_ph" if pad_hard else "") + ("_probe" if probes else "") + (f"_tm-{tmut}" if tmut else "")
+    tag += (f"_nt{nt_k}" if ntree else "") + ("_ntdbg" if nt_dbg else "") + ("_retcol" if retcol else "")
+    tag += (f"_ccfbp{ccf_bp}" if ccf_bp else "") + ("_ph" if pad_hard else "") + ("_probe" if probes else "") + (f"_tm-{tmut}" if tmut else "")
     obj = out / f"build_{tag}"
     exe = obj / "Vtb_s81_hc_master"
     if not exe.exists():
         obj.mkdir(parents=True, exist_ok=True)
-        srcs = [ROOT / s for s in FP[fp] + RTL + [TB]]
+        srcs = [ROOT / s for s in FP[fp] + RTL + (["rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf_bankpipe.sv"] if ccf_bp else []) + [TB]]
         if fp == "dpi":
             srcs = dpi_rest(obj) + srcs
         srcs = tile_edit(srcs, obj, probes, tmut)
         cmd = [VERILATOR, "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_s81_hc_master",
                "-Mdir", str(obj), "-j", "16", "--unroll-count", "4", "-fno-dfg", f"-GNG={ng}", f"-GMUT={mut}",
-               *([f"-GPIPE={pipe}", f"-GPIPE_PD={pipe_pd}"] if pipe else []), *([f"-GNTREE=1", f"-GNT_K={nt_k}"] if ntree else []), *(["-GNT_DBG=1"] if nt_dbg else []), f"-GLANE_SPECIALIZE={lane_specialize}", f"-GCNL_PIN={cnl_pin}", f"-GCHAIN_STEP={chain_step}", f"-GAMUT={amut}", f"-GLVM={lvm}", f"-GHIER={min(hier, 1)}", f"-GHALF={int(hier >= 2)}", f"-GCSPLIT={int(hier >= 2)}", f"-GTAIL_SPLIT={2 if hier == 3 else 0}", f"-GHEAD_ROWS={10 if ng == 256 else 2}", *(["+define+OT_S81_HC_PAD_HARD"] if pad_hard else []), *([f"-GTMAX={tmax}"] if tmax else []), *map(str, srcs), "-CFLAGS", "-O1"]
+               *([f"-GPIPE={pipe}", f"-GPIPE_PD={pipe_pd}"] if pipe else []), *([f"-GNTREE=1", f"-GNT_K={nt_k}"] if ntree else []), *(["-GNT_DBG=1"] if nt_dbg else []), *(["-GRETCOL=1"] if retcol else []), f"-GLANE_SPECIALIZE={lane_specialize}", f"-GCNL_PIN={cnl_pin}", f"-GCHAIN_STEP={chain_step}", f"-GAMUT={amut}", f"-GLVM={lvm}", f"-GHIER={min(hier, 1)}", f"-GHALF={int(hier >= 2)}", f"-GCSPLIT={int(hier >= 2)}", f"-GTAIL_SPLIT={2 if hier == 3 else 0}", f"-GHEAD_ROWS={10 if ng == 256 else 2}", *(["+define+OT_S81_HC_PAD_HARD"] if pad_hard else []), *(["+define+OT_S81_HC_PAD_RP2"] if (pad_hard and retcol) else []), *([f"-GTMAX={tmax}"] if tmax else []), *([f"-GCCF_BP={ccf_bp}"] if ccf_bp else []), *map(str, srcs), "-CFLAGS", "-O1"]
         r = subprocess.run(cmd, capture_output=True, text=True)
         (out / f"build_{tag}.log").write_text(" ".join(cmd) + "\n" + r.stdout + r.stderr)
         if r.returncode != 0:
@@ -532,7 +533,7 @@ def cmd_run(a):
         if x not in TILES:
             sys.exit(f"unknown tile {x}: {', '.join(TILES)}")
     exe, tag = build(out, a.ng, a.fp, a.mut, a.amut, a.lvm, a.hier, a.cnl_pin, a.chain_step, a.lane_specialize,
-                     a.pad_hard, probes, a.tile_mut, a.tmax, a.pipe, a.pipe_pd, a.ntree, a.nt_k, a.nt_dbg)
+                     a.pad_hard, probes, a.tile_mut, a.tmax, a.pipe, a.pipe_pd, a.ntree, a.nt_k, a.nt_dbg, a.ccf_bp, a.retcol)
     res = []
     tiles = None
     for meta in json.loads((out / "runs.json").read_text())["runs"]:
@@ -554,7 +555,7 @@ def cmd_run(a):
         print(meta["run"], "PASS" if row["ok"] else "FAIL", row["err_rows"], "/", row["rows"], "fault", row["fault"],
               "cyc", row["cycles"], flush=True)
     rec = dict(schema="opentallas.s81_suhc.hc_gate.run.v1", generated_utc=datetime.datetime.utcnow().isoformat() + "Z",
-               ng=a.ng, fp=a.fp, mut=a.mut, amut=a.amut, lvm=a.lvm, hier=a.hier, cnl_pin=a.cnl_pin, chain_step=a.chain_step, lane_specialize=a.lane_specialize, pipe=a.pipe, pipe_pd=a.pipe_pd, ntree=a.ntree, nt_k=a.nt_k, runs=res,
+               ng=a.ng, fp=a.fp, mut=a.mut, amut=a.amut, lvm=a.lvm, hier=a.hier, cnl_pin=a.cnl_pin, chain_step=a.chain_step, lane_specialize=a.lane_specialize, pipe=a.pipe, pipe_pd=a.pipe_pd, ntree=a.ntree, nt_k=a.nt_k, retcol=a.retcol, runs=res,
                status="pass" if res and all(x["ok"] for x in res) and all(t["ok"] for t in (tiles or {}).values()) else "fail",
                pad_hard=a.pad_hard, tile_mut=a.tile_mut, tile_mut_edit=list(TILES[a.tile_mut]["mut"]) if a.tile_mut else None,
                tiles=tiles,
@@ -589,10 +590,12 @@ def main():
     p.add_argument("--pipe-pd", type=int, default=40, help="PIPE guard cycles after the last y beat (0 = negative control: must fail)")
     p.add_argument("--ntree", type=int, default=0, help="1: NORM tree variant (hier/ot_s81_hc_ntree.sv, dsfd_sp_hc NTREE 1; --hier 2 / 3)")
     p.add_argument("--nt-k", type=int, default=67, help="NTREE: bottom collectors' fire offset NT_K")
+    p.add_argument("--retcol", type=int, default=0, help="NTREE: 1 = ot_s81_hc_cth_ntc rows (four-column return + ctrn_col slices, dsfd_sp_hc RETCOL 1)")
     p.add_argument("--nt-dbg", type=int, default=0, help="NTREE: print the collectors' lane leaves / vector beats (NT_K calibration)")
     p.add_argument("--pad-hard", type=int, default=0, help="1: define OT_S81_HC_PAD_HARD (pad leaves at their hardened defaults)")
     p.add_argument("--tmax", type=int, default=0, help="testbench cycle cap (default: the bench's 400000); a mutant that hangs then fails in minutes")
     p.add_argument("--tile-probe", default="", help="comma list of TILES (or all): report every instance + parameters; the run fails unless all are routed tuples")
+    p.add_argument("--ccf-bp", type=int, default=0, help="HC-COMB 2026-10-16: 1 = CCF successor ot_s81_hc_ccf_bankpipe + forward pad trim 2 (must PASS at NG 256 production shape); 2 = bankpipe without the trim (negative control: must FAIL); 3 = PINREG bankpipe (all leaf pins registered, +3) + trim 3 (must PASS); 4 = PINREG untrimmed (must FAIL)")
     p.add_argument("--tile-mut", default=None, help="one of TILES: build with that module's mutant (the run must fail)")
     a = ap.parse_args()
     return dict(prep=cmd_prep, run=cmd_run)[a.cmd](a)

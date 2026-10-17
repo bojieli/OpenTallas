@@ -1,0 +1,4563 @@
+{
+ "schema": "opentallas.elem_census.v2",
+ "generated": "2026-10-16T18:20:12-07:00",
+ "by": "ELEM-CENSUS (Claude 1815 relaunch)",
+ "source_main": "672e7f4d0",
+ "snapshot": "fleet-viz /api/elements 18:15 PT 10-16: independent_rows + integration_rows with an open category",
+ "supersedes": "census v1 (11:00 PT, 215 rows, main 74ea5d84d)",
+ "classes": {
+  "A": "exact replica of a closed master (normalized RTL body sha256 identical, same outline/pins) -> bind, no route",
+  "B": "parameter/pin/width variant buildable from closed masters by k-copy/padding/mirror -> mapping",
+  "C": "composition/parent/cluster, closes with its children + a parent kit (not a standalone route)",
+  "D": "blocked on an architecture decision/redesign (named)",
+  "E": "superseded/stale (not in current die contract or replaced; evidence)",
+  "F": "independent, dependency-free, never started -> started by ELEM-CENSUS",
+  "G": "in flight / live job or live gate (owner named)",
+  "M": "hard macro (ROM/PHY/blackbox) bound by its view, not a route element",
+  "R": "failed attempt, no live job: owner holds a named structural successor (not dependency-free, not started by the census)"
+ },
+ "counts": {
+  "Qwen ROM": {
+   "D": 22,
+   "G": 2,
+   "C": 12,
+   "F": 3,
+   "B": 27
+  },
+  "DeepSeek ROM": {
+   "G": 3,
+   "C": 21,
+   "D": 11,
+   "R": 3,
+   "M": 2,
+   "F": 3
+  },
+  "HBM accelerator": {
+   "R": 9,
+   "D": 10,
+   "B": 3,
+   "G": 23,
+   "C": 13,
+   "M": 1
+  }
+ },
+ "rows": [
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_static_kv_landing_seg",
+   "registry_category": "failed, re-running",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "ls2 route FAILED 11:02 EARLY_FAIL_HOLD (CTS hold not converging), no live job; also source conflict main f5a9 (join) vs ls2 35c3 bytes",
+   "owner_stream": "Claude:Q-KVSYS-STRIP / KVELEM",
+   "evidence": [
+    "HANDOFF 0cd Q-KVSYS-DIE 10:56 KNOWN CONFLICT qkd_static_kv_landing_seg.sv main=f5a9 vs ls2=35c3",
+    "HANDOFF 0bm Q-VMWB: DIE BLOCKER static landing VMAP=1 VREQ=1 replaces qkd_land_strip",
+    "body sha 40beaf74a5c5..., wires-only top (stateful False) over hop295/hop38/landing_pc/rowctl (not separate registry elements)"
+   ],
+   "mapping_or_master": null,
+   "blocker": "structural hold fix of the static landing segment (ls3) + KV die adoption of the static landing (v1.5 static join, OT_KV_STATIC) in place of credit qkd_land_strip",
+   "rtl_module": "qkd_static_kv_landing_seg",
+   "body_sha256": "40beaf74a5c50dab6b621e198ebb32c33a81c45bca1c691e3d8e5ebebc66a344",
+   "stateful": false,
+   "live_jobs_1815": 1,
+   "latest_job_1815": "qkd_static_kv_landing_seg-ls2-d9f90ede0",
+   "latest_status_1815": "EARLY_FAIL_HOLD",
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_slab_pair_add",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "port_tiles leaf; pa7b NEEDS_RTL TT+28.61/FF-13.17 (hold ECO missed), arg1/arg2 REFUSED (stale native SDC); no live job",
+   "owner_stream": "Q-COMPUTE-ELEM (q15_compute_elem)",
+   "evidence": [
+    "qfd_slab_pair_add-pa7b-c2f91864f NEEDS_RTL",
+    "RELAUNCH_0945.md b2 approval"
+   ],
+   "mapping_or_master": null,
+   "blocker": "Qwen b2 port remap APPROVED 08:00 10-16 (each port tile serves its own side, one port variant) changes the port tile composition; hold structure fix needed",
+   "rtl_module": "qfd_slab_pair_add",
+   "body_sha256": "43c95ca49700c39b258b9a5f42f2fbd08943e7647ba73586f4e14c76f1b22950",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "qfd_slab_pair_add-pa7b-c2f91864f",
+   "latest_status_1815": "NEEDS_RTL",
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_tt_ctlm_tree_static",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "tt_ctlm tree leaf: t4 GRT congestion, t3 NEEDS_RTL (regroup bench); no live job",
+   "owner_stream": "Q-COMPUTE-ELEM (q15_compute_elem) / Q-B2",
+   "evidence": [
+    "qfd_tt_tree_static-t4-e9fb30751 EARLY_FAIL_CONGESTION"
+   ],
+   "mapping_or_master": null,
+   "blocker": "b2 needs NEW parameter-free calibrated controller qfd_tt_ctlm_b2_c<hash> (phase calibration from allocator ages, Q-B2) + tt_ctlm slot shrink 777.6x561.6 in next homes revision",
+   "rtl_module": "qfd_tt_ctlm_tree_static",
+   "body_sha256": "d7fdfb41241ff6d98ee18d01d1b196e6f301a2733df0e0564b2567bf7cb164c7",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "qfd_tt_tree_static-t4-e9fb30751",
+   "latest_status_1815": "EARLY_FAIL_CONGESTION",
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_astk_ep",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "leaf of qkd_astk/_n/qkd_land/_n strips; ks4 GRT congestion, ks3/ks1 CTS hold; no live job",
+   "owner_stream": "Q-KVSYS-ELEM / Q-KVSYS-STRIP",
+   "evidence": [
+    "qkd_astk_ep-ks4-1dfea0ac7 EARLY_FAIL_CONGESTION",
+    "qkd_astk_ep-ks3-24a3e3d02 EARLY_FAIL_HOLD"
+   ],
+   "mapping_or_master": null,
+   "blocker": "astk segment re-partition qkd_astk_seg (26 leaves/row) awaiting v1.4.4 slot request (results/arch/qwen_split_1014/kvsys_v1_4_4_design/strip_segments_request.json); credit land strip replaced by v1.5 static landing",
+   "rtl_module": "qkd_astk_ep",
+   "body_sha256": "6e6101d6dcb752e4f623b67ac91118d9dd001eb6007497e8f7d593a0c193428e",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "qkd_astk_ep-ks4-1dfea0ac7",
+   "latest_status_1815": "EARLY_FAIL_CONGESTION",
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_d2d_static",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "KV static D2D end; r1 NEEDS_RTL TT-90.96, r2sp/r4sp NEEDS_RTL TT-49.5/FF-12.45/DRC1, r1sp/r3sp GRT congestion; d5 gate native clock FAIL (c_record_tx corner branch 637 ps)",
+   "owner_stream": "Q-DVM+LINK (Q-LINK)",
+   "evidence": [
+    "qkd_d2d_static_r2sp-r4sp-331b4b5e2 NEEDS_RTL",
+    "bind17_producers.json att_tx/emb_tx/kvn_compiled_identity/kv_drain inputs MISSING_PRODUCER",
+    "body sha 6373b8e84b76..."
+   ],
+   "mapping_or_master": null,
+   "blocker": "structural regional record-pin clock root/home fix (no blind resubmit); plus 17 MISSING_PRODUCER inputs on qkd_d2ds (bind17)",
+   "rtl_module": "qkd_d2d_static",
+   "body_sha256": "6373b8e84b762495e5c6fcc2114d2799c413ca64e2ae4fdf4e3d1bc629b1e2e9",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "qkd_d2d_static_r7q-r7q-c0d027277",
+   "latest_status_1815": "EARLY_FAIL_HOLD",
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_sp_su64_sfu",
+   "registry_category": "flow failure (no live job)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "SU cluster die master (stateful 471 lines own logic); SFU rcp/rsq/exp native45 CLOSED; jobs cancelled by human 10-15 18:08",
+   "owner_stream": "Q-ELEM (SU) / Q-COMPUTE-DIE",
+   "evidence": [
+    "qfd_sp_su64_sfu_bv_s2-e0370c82ctt CANCELLED",
+    "CONTRACT.md v1.4 frame 3239.976x3671.976"
+   ],
+   "mapping_or_master": null,
+   "blocker": "SU binds as a generated frame of hardened children (346 clock roots: 345 child entries + ck, CODEX_TAKEOVER.log:931); lane_h crom5_e placeholder; SU cluster kit/pin grant (W-face) not defined; seq_su|SU abut seam cut 1.155",
+   "rtl_module": "qfd_sp_su64_sfu",
+   "body_sha256": "3125b45e9efcd9cfeb5f6731faca507fd308a402961a378d5630ad9fd0be8390",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "qfd_sp_su64_sfu_bv_s2-e0370c82ctt",
+   "latest_status_1815": "CANCELLED",
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_tile_nk",
+   "registry_category": "flow failure (no live job)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "die-name wrappers (wires-only) of the ROM-leaf tile; ROM-leaf a0 CLOSED + native PASS (ot_qwen_tile_romleaf-a0-4fe0c00bd); parent candidate 457.92x1166.4 HELD by Codex on node native 233.3 ps (> 220), zero-cycle boundary repair in CTS (Q-ROMLEAF)",
+   "owner_stream": "Q-ELEM (Q-ROMLEAF)",
+   "evidence": [
+    "closure_loop 18:15",
+    "HANDOFF 0cg 16:33"
+   ],
+   "mapping_or_master": "qfd_tile_nk_rp2_g4 (G)",
+   "blocker": null,
+   "rtl_module": "qfd_tile_nk",
+   "body_sha256": "ec37a86d330b6c1f052e50da7331586790d50a1d11d1a475fa7d9091f7be0352",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "qfd_tile_nk_h3-8c1e8805e-tc-hm0-cl",
+   "latest_status_1815": "NEEDS_HUMAN",
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_clkrx",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "die-generated clock receiver (tools/qwen_split/gen_relay_rtl.py: assign root_k = pll_fwd), pure wires, no standalone route possible; closes with die CTS",
+   "owner_stream": "Q-COMPUTE-DIE (die lead)",
+   "evidence": [
+    "gen_relay_rtl.py:11,88",
+    "el1014-qwen-split-compute.log:336 FILL-Q r3 \"no loop job possible\"",
+    "CONTRACT.md v1.4 row qfd_clkrx 412.536 sq gen"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_collective_static_io_production",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "IO production parent (stateful False; assigns + fault OR-reduce glue) over qfd_collective_static_io + PHY/gearbox; contract leaves qfd_static_ch546, qfd_ucie_six_five CLOSED, qfd_io_collective_static OPEN (D)",
+   "owner_stream": "Q-DVM+LINK (Q-COLL)",
+   "evidence": [
+    "body sha b5b8394289f7...",
+    "not strictly wires-only (combinational fault OR) -> needs parent kit; frame 4157.976x1563.816 gen (CONTRACT.md v1.4)"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": "qfd_collective_static_io_production",
+   "body_sha256": "b5b8394289f7c8a5f4dd17f3f3ba31e4b44123a7a001286ec3be13390a9ca87d",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_embedding_word_provider",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "F",
+   "detail": "compute-die embedding row store (wires-only top over qkd_embedding_static_preload_face + qkd_embedding_static_core_store with ot_sram_1r1w_64x512); RTL+bench landed 10-16 00:58, no kit/job",
+   "owner_stream": "Q-NETLIST (done 01:39) / Q-COMPUTE-DIE",
+   "evidence": [
+    "body sha fe4a44bb9557...",
+    "CONTRACT.md v1.4:38 frame 259.2 x 216 gen"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": "qfd_embedding_word_provider",
+   "body_sha256": "fe4a44bb9557d809ba5d7a83d162f405efd37750164283977ade13e72211afae",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_io_collective_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "static TP8 collective (10,188 FF); s4 flat gate native spread FAIL (TT 325.6/FF 296.2 > 80); flat routes historically hold-flooded; no job",
+   "owner_stream": "Q-COLL (parent QCOLL)",
+   "evidence": [
+    "physical/ref_tile/qfd_io_collective_s4 kit gated bde57501c"
+   ],
+   "mapping_or_master": null,
+   "blocker": "QCOLL parent redesign: quarter-local 32x128 rings / 2x2 / phase4 source + explicit placement request in the IO row (el1014-qwen-kvsys-elements.log:276-277)",
+   "rtl_module": "qfd_io_collective_static",
+   "body_sha256": "053a3701946968c37fcea8e03273775ace424dee0644b612300776229f8ba79b",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_native59_compute_service",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "native59 service die master (stateful; 7 internal children); CONTRACT.md lists owner ORPHAN -> die lead",
+   "owner_stream": "Q-COMPUTE-DIE",
+   "evidence": [
+    "body sha 55f5a1b58af0...",
+    "CONTRACT.md v1.4:37 frame 777.6x518.4 gen"
+   ],
+   "mapping_or_master": null,
+   "blocker": "b2 all-incident pin grant (results/arch/qwen_split_compute_1014/b2_pin_grants/native59_all_incident_0923.json, candidate 35b64a77a) and native-graph geometry not adopted (control-geometry: \"Native59 separate 35b64 proposal preserved\")",
+   "rtl_module": "qfd_native59_compute_service",
+   "body_sha256": "55f5a1b58af0be84d04be77aa4ccfb1ddcdd543be5fb186d326cc92de0d1ef20",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_port_tiles_0",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "band port tile (own state: tc/ty/tw/rq/tf pipeline flops, ~11.9k FF) over slab_word_half/slab_result_half; child qfd_slab_pair_add NEEDS_RTL",
+   "owner_stream": "Q-COMPUTE-ELEM / Q-PORTMAP (Q-B2)",
+   "evidence": [
+    "renamed-body sha256 b08ffb318d1373b787f519670bd8b9745f5aa6841f1d7b64938da3a0e8241495 (master_identity.normalized after renaming to __M__): _0 b08ffb318d1373b7.., _1 2b1bc296f4342525.., _2 b3a66c4a1ed1e0d9.. -> distinct",
+    "diff _0 vs _1/_2: only line `qfd_slab_result_half #(.BAND(0|1|2),.HALF(0))`; qfd_slab_result_half.sv:25,43 uses BAND in ROM_INSTANCE and pt_id",
+    "results/arch/tile_dedupe_1015/dedupe.json: _1/_2 = replicas of _0 \"with registered tile index\" (proposal, RTL not changed)",
+    "jobs qfd_port_tiles_tp8_s14o-v1..v3 are historical (old tp8)"
+   ],
+   "mapping_or_master": null,
+   "blocker": "b2 port remap APPROVED 08:00 10-16: per-side port tiles, ONE port variant, half-band lanes -> current _0/_1/_2 (+_f1) set is superseded once the b2 die emission lands (Q-B2 phase calibration OPEN); child slab_pair_add redesign",
+   "rtl_module": "qfd_port_tiles_0",
+   "body_sha256": "b08ffb318d1373b787f519670bd8b9745f5aa6841f1d7b64938da3a0e8241495",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_port_tiles_1",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "band port tile (own state: tc/ty/tw/rq/tf pipeline flops, ~11.9k FF) over slab_word_half/slab_result_half; child qfd_slab_pair_add NEEDS_RTL; NOT a replica of _0: renamed-body sha differs only in qfd_slab_result_half #(.BAND(n)) which selects ROM_INSTANCE qslab_b<n>_* and pt_id strap -> B-able only after DEDUPE \"registered tile index\" RTL change",
+   "owner_stream": "Q-COMPUTE-ELEM / Q-PORTMAP (Q-B2)",
+   "evidence": [
+    "renamed-body sha256 2b1bc296f4342525c14bb66837eb5f76d67910e44c7a7453d3da1bbc77cff3ea (master_identity.normalized after renaming to __M__): _0 b08ffb318d1373b7.., _1 2b1bc296f4342525.., _2 b3a66c4a1ed1e0d9.. -> distinct",
+    "diff _0 vs _1/_2: only line `qfd_slab_result_half #(.BAND(0|1|2),.HALF(0))`; qfd_slab_result_half.sv:25,43 uses BAND in ROM_INSTANCE and pt_id",
+    "results/arch/tile_dedupe_1015/dedupe.json: _1/_2 = replicas of _0 \"with registered tile index\" (proposal, RTL not changed)",
+    "jobs qfd_port_tiles_tp8_s14o-v1..v3 are historical (old tp8)"
+   ],
+   "mapping_or_master": null,
+   "blocker": "b2 port remap APPROVED 08:00 10-16: per-side port tiles, ONE port variant, half-band lanes -> current _0/_1/_2 (+_f1) set is superseded once the b2 die emission lands (Q-B2 phase calibration OPEN); child slab_pair_add redesign",
+   "rtl_module": "qfd_port_tiles_1",
+   "body_sha256": "2b1bc296f4342525c14bb66837eb5f76d67910e44c7a7453d3da1bbc77cff3ea",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_port_tiles_2",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "band port tile (own state: tc/ty/tw/rq/tf pipeline flops, ~11.9k FF) over slab_word_half/slab_result_half; child qfd_slab_pair_add NEEDS_RTL; NOT a replica of _0: renamed-body sha differs only in qfd_slab_result_half #(.BAND(n)) which selects ROM_INSTANCE qslab_b<n>_* and pt_id strap -> B-able only after DEDUPE \"registered tile index\" RTL change",
+   "owner_stream": "Q-COMPUTE-ELEM / Q-PORTMAP (Q-B2)",
+   "evidence": [
+    "renamed-body sha256 b3a66c4a1ed1e0d94c460b8c2ddca219a7ca8821c6b32c5f4ba00201e16c1297 (master_identity.normalized after renaming to __M__): _0 b08ffb318d1373b7.., _1 2b1bc296f4342525.., _2 b3a66c4a1ed1e0d9.. -> distinct",
+    "diff _0 vs _1/_2: only line `qfd_slab_result_half #(.BAND(0|1|2),.HALF(0))`; qfd_slab_result_half.sv:25,43 uses BAND in ROM_INSTANCE and pt_id",
+    "results/arch/tile_dedupe_1015/dedupe.json: _1/_2 = replicas of _0 \"with registered tile index\" (proposal, RTL not changed)",
+    "jobs qfd_port_tiles_tp8_s14o-v1..v3 are historical (old tp8)"
+   ],
+   "mapping_or_master": null,
+   "blocker": "b2 port remap APPROVED 08:00 10-16: per-side port tiles, ONE port variant, half-band lanes -> current _0/_1/_2 (+_f1) set is superseded once the b2 die emission lands (Q-B2 phase calibration OPEN); child slab_pair_add redesign",
+   "rtl_module": "qfd_port_tiles_2",
+   "body_sha256": "b3a66c4a1ed1e0d94c460b8c2ddca219a7ca8821c6b32c5f4ba00201e16c1297",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_seq_su_gateway",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "source-preserving variant of qfd_seq_su_static exposing an independent gateway clock (fee778245); instantiated by native joins 957..961w but NOT by the die (netlist_0030 / q2o1 homes use qfd_seq_su_static)",
+   "owner_stream": "Q-COMPUTE-ELEM / Q-COMPUTE-DIE",
+   "evidence": [
+    "body sha 6453adcd54e0... != qfd_seq_su_static 1deedc3299fe... (children ot_qfd_seq_su_bi_gateway vs _bi_static)",
+    "git grep: qfd_native_compute_join_961w.sv instantiates qfd_seq_su_gateway; netlist_0030 port_bind masters lack it"
+   ],
+   "mapping_or_master": null,
+   "blocker": "decide which sequencer the die binds (native graph 961w alias vs die master qfd_seq_su_static); one of the two rows is superseded once native_graph_bind is adopted",
+   "rtl_module": "qfd_seq_su_gateway",
+   "body_sha256": "6453adcd54e02957bb0eaa1585c91f41888ca4aa3a97705a1c739b53a3a24878",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_seq_su_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "compute ROM sequencer die master; control-geometry option C selected (seq_su at 14671.176,7900 MY; typed grant 52 ports/11,595 pins, source sha 47a85c1a...)",
+   "owner_stream": "Q-COMPUTE-DIE (Q-CONTROL-GEOMETRY helper stopped)",
+   "evidence": [
+    "body sha 1deedc3299fe..."
+   ],
+   "mapping_or_master": null,
+   "blocker": "qdie-owned native graph/real relay allocator/static programme; new seq body/clock/mapped-memory census + exact whole-parent composition bench before a fresh kit/gate (el1016-qwen-control-geometry.log 09:36)",
+   "rtl_module": "qfd_seq_su_static",
+   "body_sha256": "1deedc3299fea4fb4ffcec78c32db9c3a987d18b870b27c6bb1c971efbc6124e",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_sp_res_train_par_0",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "band result serializer die wrapper (1 reset-capture flop + qfd_res_train_par #(BAND=n)); kit qfd_sp_res_train_par_0_c1 exists, no job; NOT replicas: renamed bodies differ only in .BAND(n) which changes LAG and last-band marker logic in qfd_res_train_par (rtl/qwen_split/qfd_res_train_par.sv:31,48,92)",
+   "owner_stream": "Q-VMWB / Q-B2",
+   "evidence": [
+    "renamed-body sha 6187f4bc86b14580c1e45b8d97bb5db26e666aa6f612aad146c35283afd1e1bc (_0 6187f4bc86b14580.., _1 ee5af73e46f3bc5c.., _2 e25808c197ac86c0..)",
+    "physical/ref_tile/qfd_sp_res_train_par_0_c1"
+   ],
+   "mapping_or_master": null,
+   "blocker": "b2 replaces the band train by six parameter-free halftrain masters (CODEX_TAKEOVER.log:3430-3431, Q-B2 phase calibration OPEN); die slot 777.576x518.376 only valid for option-(a) graph",
+   "rtl_module": "qfd_sp_res_train_par_0",
+   "body_sha256": "6187f4bc86b14580c1e45b8d97bb5db26e666aa6f612aad146c35283afd1e1bc",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_sp_res_train_par_1",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "band result serializer die wrapper (1 reset-capture flop + qfd_res_train_par #(BAND=n)); kit qfd_sp_res_train_par_1_c1 exists, no job; NOT replicas: renamed bodies differ only in .BAND(n) which changes LAG and last-band marker logic in qfd_res_train_par (rtl/qwen_split/qfd_res_train_par.sv:31,48,92)",
+   "owner_stream": "Q-VMWB / Q-B2",
+   "evidence": [
+    "renamed-body sha ee5af73e46f3bc5c4289e5f6859a972117f8bcf71eb67a9d288f118d37432e23 (_0 6187f4bc86b14580.., _1 ee5af73e46f3bc5c.., _2 e25808c197ac86c0..)",
+    "physical/ref_tile/qfd_sp_res_train_par_1_c1"
+   ],
+   "mapping_or_master": null,
+   "blocker": "b2 replaces the band train by six parameter-free halftrain masters (CODEX_TAKEOVER.log:3430-3431, Q-B2 phase calibration OPEN); die slot 777.576x518.376 only valid for option-(a) graph",
+   "rtl_module": "qfd_sp_res_train_par_1",
+   "body_sha256": "ee5af73e46f3bc5c4289e5f6859a972117f8bcf71eb67a9d288f118d37432e23",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_sp_res_train_par_2",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "band result serializer die wrapper (1 reset-capture flop + qfd_res_train_par #(BAND=n)); kit qfd_sp_res_train_par_2_c1 exists, no job; NOT replicas: renamed bodies differ only in .BAND(n) which changes LAG and last-band marker logic in qfd_res_train_par (rtl/qwen_split/qfd_res_train_par.sv:31,48,92)",
+   "owner_stream": "Q-VMWB / Q-B2",
+   "evidence": [
+    "renamed-body sha e25808c197ac86c0d95e8edb46f3a5c88351b5ac9faf2989a1681a3ab843b49b (_0 6187f4bc86b14580.., _1 ee5af73e46f3bc5c.., _2 e25808c197ac86c0..)",
+    "physical/ref_tile/qfd_sp_res_train_par_2_c1"
+   ],
+   "mapping_or_master": null,
+   "blocker": "b2 replaces the band train by six parameter-free halftrain masters (CODEX_TAKEOVER.log:3430-3431, Q-B2 phase calibration OPEN); die slot 777.576x518.376 only valid for option-(a) graph",
+   "rtl_module": "qfd_sp_res_train_par_2",
+   "body_sha256": "e25808c197ac86c0d95e8edb46f3a5c88351b5ac9faf2989a1681a3ab843b49b",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_sp_vector_memory_par",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "VM parent: top body wires-only (stateful False) but child qfd_sp_vector_memory carries residual 12,198 FF + 80 memory -> NOT eligible for master_identity compositions; 10/10 contract leaves CLOSED",
+   "owner_stream": "Q-VMWB",
+   "evidence": [
+    "body sha ff2a65e7876a...",
+    "frame 4708.776x2203.176 gen"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": "qfd_sp_vector_memory_par",
+   "body_sha256": "ff2a65e7876a7ddde0edc61e69880e754f3e41a66de4ec2758de4d527fc17275",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_sys_face",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "F",
+   "detail": "compute-die system face (config ROM ot_rom_4096x72_m8 boot + program replay, T/L/E calendars, qfd_d2d_cal_seq, record port); RTL+bench on main, no kit/job",
+   "owner_stream": "Q-NETLIST (done) / Q-COMPUTE-DIE",
+   "evidence": [
+    "body sha 4eb2e85c7fe8...",
+    "CONTRACT.md v1.4:39 frame 302.4 x 216 gen",
+    "macro physical/asap7_memory_macros/ot_rom_4096x72_m8 present (registry row ot_rom_4096x72_m8 open, owner S-DIE)"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": "qfd_sys_face",
+   "body_sha256": "4eb2e85c7fe8ae41db4d725491cf2bce4439b954e12df6655e366dad939dd8fd",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_tile_nl",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "die-name wrappers (wires-only) of the ROM-leaf tile; ROM-leaf a0 CLOSED + native PASS (ot_qwen_tile_romleaf-a0-4fe0c00bd); parent candidate 457.92x1166.4 HELD by Codex on node native 233.3 ps (> 220), zero-cycle boundary repair in CTS (Q-ROMLEAF)",
+   "owner_stream": "Q-ELEM (Q-ROMLEAF)",
+   "evidence": [
+    "closure_loop 18:15",
+    "HANDOFF 0cg 16:33"
+   ],
+   "mapping_or_master": "qfd_tile_nl_rp2_g4 (G)",
+   "blocker": null,
+   "rtl_module": "qfd_tile_nl",
+   "body_sha256": "12d06b54500153154fd64643bfecc4be94761651873d9a3ae8734f8c1f6eda3b",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_tt_ctlm_static_s",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "TT controller die master (stateful, 249 lines, own reset sync/delay + parent/xpf children); contract child qfd_tt_ctlm_tree_static open",
+   "owner_stream": "Q-COMPUTE-ELEM / Q-B2",
+   "evidence": [
+    "CONTRACT.md v1.4 frame 777.6x1814.4 gen"
+   ],
+   "mapping_or_master": null,
+   "blocker": "b2 parameter-free calibrated controller (Q-B2) + control geometry C chosen (tt_ctlm R0 at 14437.872,8461.576) pending qdie-owned native graph/static programme; TT head h5 (Q-ELEM)",
+   "rtl_module": "qfd_tt_ctlm_static_s",
+   "body_sha256": "c7be06d0eb510123d1eb0ced3a05b8a3f4aa2ad520a93aa2aff816da1449f83a",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_xcol_e",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "DVM x-column (head + 8 leaves); flat 9-root column kits withdrawn as unclosable (FF hold -233/-366, cross-root setup), old head/leaf children superseded in registry; qfd_xcol_w is its mirror (B after this closes)",
+   "owner_stream": "Q-DVM+LINK",
+   "evidence": [
+    "results/arch/tile_dedupe_1015/dedupe.json MIRROR-PAIR qfd_xcol_e",
+    "ROOT drop list: qfd_xcol_e/w(+band/rq) kits"
+   ],
+   "mapping_or_master": null,
+   "blocker": "column envelope/M6 side-contact plan 64.8 x 1473.12 um needs Q-COMPUTE-DIE grant (PG/via/wholegraph reservation + phase/height decision) before standalone head/leaf kits",
+   "rtl_module": "qfd_xcol_e",
+   "body_sha256": "aef3e0f14ea1449322418b54c5194225d9a4bcd0c17342b4bdb7476a18ecdaa2",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_xcol_w",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "DVM x-column (head + 8 leaves); flat 9-root column kits withdrawn as unclosable (FF hold -233/-366, cross-root setup), old head/leaf children superseded in registry; mirror of qfd_xcol_e: renamed bodies differ in .EAST(1/0) + w_d/e_d port direction (sha aef3e0f1.. vs 1672ae30..) -> DEDUPE MIRROR-PAIR candidate, not a replica",
+   "owner_stream": "Q-DVM+LINK",
+   "evidence": [
+    "results/arch/tile_dedupe_1015/dedupe.json MIRROR-PAIR qfd_xcol_e",
+    "ROOT drop list: qfd_xcol_e/w(+band/rq) kits"
+   ],
+   "mapping_or_master": null,
+   "blocker": "column envelope/M6 side-contact plan 64.8 x 1473.12 um needs Q-COMPUTE-DIE grant (PG/via/wholegraph reservation + phase/height decision) before standalone head/leaf kits",
+   "rtl_module": "qfd_xcol_w",
+   "body_sha256": "1672ae300bd15906e2e2d589b1ebd8f891e37e57f6c60c63d5723f200585c3c0",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_embedding_static_core_provider",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "KV-die embedding provider: RTL only (static_embedding_20261014), no kit/view; on the compute die it was replaced by qfd_embedding_word_provider (CONTRACT.md v1.4)",
+   "owner_stream": "Q-KVSYS-DIE / Q-KVSYS-ELEM",
+   "evidence": [
+    "results/arch/qwen_split_1014/kvsys_v1_4_3_design/port_bind_v2/bind17_producers.json",
+    "results/arch/qwen_split_compute_1014/CONTRACT.md:38,70",
+    "superseded-candidate on compute die (registry evidence cites native join 957 node only)"
+   ],
+   "mapping_or_master": null,
+   "blocker": "KV TX port 2 producer undefined: bind17 MISSING_PRODUCER emb_tx_v/emb_tx_payload[547:0]; current module outputs embed_code_q (sequencer ROM ports), not the 548-b typed TX record; v1.5 static join (9469a9218 OT_KV_STATIC) must define the KV-side join+packer",
+   "rtl_module": "qkd_embedding_static_core_provider",
+   "body_sha256": "f50d6c2d3ba601c2cb6f6a49cde3fdcec4202b72a33a1aad1968dd362084e4b1",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_host_rt",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "HOST root qkd_host_root_pt: wires-only top (stateful False, 540 lines) over codec/mux/rank_services/record_port/tp8_coordinator; contract leaves qkd_host_ctl, qfd_link_adp128, qkd_host_prompt_capture_pins CLOSED (3/3)",
+   "owner_stream": "Q-KVSYS-DIE",
+   "evidence": [
+    "body sha 6281ba092fbf...",
+    "bind17_producers.json last entry"
+   ],
+   "mapping_or_master": null,
+   "blocker": "bind17: ctrl_completion_fault[127:0] MISSING_PRODUCER (needs controller swap to qkd_ctrl_pc_host_static, KVCTRL in flight); v1.4.1 bind MISMATCH; cluster kit needed for the glue sub-modules",
+   "rtl_module": "qkd_host_root_pt",
+   "body_sha256": "6281ba092fbfbf654fe34448093bf5633c33be24d428a2e064f908531884e33b",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_hslice",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "F",
+   "detail": "HOST PC slice die master (x64 S stacks; x128 total with mirror _dn); kit exists, S gate WARN 10-15 14:08 (setup +2.63, hold +50.8), never submitted; FILL-Q owner ended",
+   "owner_stream": "FILL-Q r3 (ended 10-15) / Q-KVSYS-ELEM",
+   "evidence": [
+    "body sha qkd_host_pc_slice_die 295c17c9be896cb6070b861a5208bf4e3560194aaa7d4616cc43f8e6c161afca; child qkd_host_pc_slice 2c468c7856c3... -- both unchanged since kit commit feceba3b2",
+    "physical/ref_tile/qkd_hslice on main (regenerated feceba3b2, claude/el1015-fillq-1015)",
+    "pins results/arch/qwen_split_1014/kvsys_v1_4_2/pins (Codex 233825580, cut 0.5/0.333)",
+    "bind17: ctrl_completion_v/we inputs have no producer yet (controller swap) -- does not block the leaf route"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": "qkd_host_pc_slice_die",
+   "body_sha256": "295c17c9be896cb6070b861a5208bf4e3560194aaa7d4616cc43f8e6c161afca",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_hslice_dn",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "same RTL as qkd_hslice (module qkd_host_pc_slice_die, identical body sha 295c17c9...) with chain faces swapped; DEDUPE MIRROR-PAIR -> place qkd_hslice view mirrored (MX), no separate master",
+   "owner_stream": "FILL-Q / Q-KVSYS-ELEM",
+   "evidence": [
+    "results/arch/tile_dedupe_1015/dedupe.json family \"MIRROR-PAIR qkd_hslice\" (main f041848a1)",
+    "el1014-qwen-split-kvsys.log:603 DEDUPE: hslice_dn = mirrored placement of hslice (no separate master)",
+    "generator still emits separate _dn pins: kv_die.py:2353 _slice_pins(down=True) -> generator change needed to use MX of qkd_hslice",
+    "N gate ck_station spread 81.2 > 80 (el1014-qwen-kvsys-elements.log:249/255)"
+   ],
+   "mapping_or_master": "qkd_hslice view placed MX (not yet closed; F)",
+   "blocker": null,
+   "rtl_module": "qkd_host_pc_slice_die",
+   "body_sha256": "295c17c9be896cb6070b861a5208bf4e3560194aaa7d4616cc43f8e6c161afca",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_1",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "1-bit relay class (438 inst in kvs11-v143c) -> qkd_rlys_1 x1, 0 pad bits/inst; all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_1": 1
+    },
+    "pad_bits_per_inst": 0,
+    "reverse": 0,
+    "inst": 438,
+    "targets_closed": [
+     "qkd_rlys_1 CLOSED qkd_rlys_1-v1-6da52734e TT+339.57/FF+35.46 (12.96x12.96)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_1",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_1025",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "1025-bit relay class (252 inst in kvs11-v143c) -> qkd_rlys_528 x2, 31 pad bits/inst; all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_528": 2
+    },
+    "pad_bits_per_inst": 31,
+    "reverse": 0,
+    "inst": 252,
+    "targets_closed": [
+     "qkd_rlys_528 CLOSED qkd_rlys_528-v2-15c66bd8b TT+338.30/FF+28.95 (21.6x82.08)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_1025",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_1048",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "1048-bit relay class (82 inst in kvs11-v143c) -> qkd_rlys_528 x2 + qkd_rlys_1 x1, 9 pad bits/inst (reverse bit rides its own qkd_rlys_1, b->a); all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_528": 2,
+     "qkd_rlys_1": 1
+    },
+    "pad_bits_per_inst": 9,
+    "reverse": 1,
+    "inst": 82,
+    "targets_closed": [
+     "qkd_rlys_528 CLOSED qkd_rlys_528-v2-15c66bd8b TT+338.30/FF+28.95 (21.6x82.08)",
+     "qkd_rlys_1 CLOSED qkd_rlys_1-v1-6da52734e TT+339.57/FF+35.46 (12.96x12.96)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_1048",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_1048__dir",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "per-direction split of the same 1-flop/bit relay (1047 fwd + 1 rev; tools/qwen_kv_die/kv_bound_netlist.py relay_dir_module) -> qkd_rlys_528 x2 (pad 9) + qkd_rlys_1 x1 reversed; all four standards CLOSED; retires with OT_KV_RLY_STD=1 default",
+   "owner_stream": "Q-KVSYS-DIE",
+   "evidence": [
+    "results/arch/qwen_split_1014/kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv",
+    "results/arch/qwen_kv_rly_std_1016/variants.json"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_528": 2,
+     "qkd_rlys_1": 1
+    }
+   },
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_13",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "13-bit relay class (3 inst in kvs11-v143c) -> qkd_rlys_36 x1, 23 pad bits/inst; all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_36": 1
+    },
+    "pad_bits_per_inst": 23,
+    "reverse": 0,
+    "inst": 3,
+    "targets_closed": [
+     "qkd_rlys_36 CLOSED qkd_rlys_36-v1-6da52734e TT+343.85/FF+28.38 (12.96x12.96)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_13",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_17",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "17-bit relay class (228 inst in kvs11-v143c) -> qkd_rlys_36 x1, 19 pad bits/inst; all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_36": 1
+    },
+    "pad_bits_per_inst": 19,
+    "reverse": 0,
+    "inst": 228,
+    "targets_closed": [
+     "qkd_rlys_36 CLOSED qkd_rlys_36-v1-6da52734e TT+343.85/FF+28.38 (12.96x12.96)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_17",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_2",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "2-bit relay class (118 inst in kvs11-v143c) -> qkd_rlys_36 x1, 34 pad bits/inst; all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_36": 1
+    },
+    "pad_bits_per_inst": 34,
+    "reverse": 0,
+    "inst": 118,
+    "targets_closed": [
+     "qkd_rlys_36 CLOSED qkd_rlys_36-v1-6da52734e TT+343.85/FF+28.38 (12.96x12.96)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_2",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_2089",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "2089-bit relay class (61 inst in kvs11-v143c) -> qkd_rlys_528 x4, 23 pad bits/inst; all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_528": 4
+    },
+    "pad_bits_per_inst": 23,
+    "reverse": 0,
+    "inst": 61,
+    "targets_closed": [
+     "qkd_rlys_528 CLOSED qkd_rlys_528-v2-15c66bd8b TT+338.30/FF+28.95 (21.6x82.08)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_2089",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_2089__dir",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "per-direction split of the same 1-flop/bit relay (1044 fwd + 1044 rev + 1 rev; tools/qwen_kv_die/kv_bound_netlist.py relay_dir_module) -> qkd_rlys_528 x2 fwd (pad 12) + qkd_rlys_528 x2 reversed (pad 12) + qkd_rlys_1 x1 reversed; all four standards CLOSED; retires with OT_KV_RLY_STD=1 default",
+   "owner_stream": "Q-KVSYS-DIE",
+   "evidence": [
+    "results/arch/qwen_split_1014/kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv",
+    "results/arch/qwen_kv_rly_std_1016/variants.json"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_528": 4,
+     "qkd_rlys_1": 1
+    }
+   },
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_21",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "21-bit relay class (12 inst in kvs11-v143c) -> qkd_rlys_36 x1, 15 pad bits/inst; all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_36": 1
+    },
+    "pad_bits_per_inst": 15,
+    "reverse": 0,
+    "inst": 12,
+    "targets_closed": [
+     "qkd_rlys_36 CLOSED qkd_rlys_36-v1-6da52734e TT+343.85/FF+28.38 (12.96x12.96)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_21",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_284",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "284-bit relay class (2 inst in kvs11-v143c) -> qkd_rlys_296 x1 + qkd_rlys_1 x1, 13 pad bits/inst (reverse bit rides its own qkd_rlys_1, b->a); all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_296": 1,
+     "qkd_rlys_1": 1
+    },
+    "pad_bits_per_inst": 13,
+    "reverse": 1,
+    "inst": 2,
+    "targets_closed": [
+     "qkd_rlys_296 CLOSED qkd_rlys_296-v1-838dc5048 TT+297.80/FF+25.21 (21.6x47.52)",
+     "qkd_rlys_1 CLOSED qkd_rlys_1-v1-6da52734e TT+339.57/FF+35.46 (12.96x12.96)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_284",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_284__dir",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "per-direction split of the same 1-flop/bit relay (283 fwd + 1 rev; tools/qwen_kv_die/kv_bound_netlist.py relay_dir_module) -> qkd_rlys_296 x1 (pad 13) + qkd_rlys_1 x1 reversed; all four standards CLOSED; retires with OT_KV_RLY_STD=1 default",
+   "owner_stream": "Q-KVSYS-DIE",
+   "evidence": [
+    "results/arch/qwen_split_1014/kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv",
+    "results/arch/qwen_kv_rly_std_1016/variants.json"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_296": 1,
+     "qkd_rlys_1": 1
+    }
+   },
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_289",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "289-bit relay class (86 inst in kvs11-v143c) -> qkd_rlys_296 x1 + qkd_rlys_1 x1, 8 pad bits/inst (reverse bit rides its own qkd_rlys_1, b->a); all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_296": 1,
+     "qkd_rlys_1": 1
+    },
+    "pad_bits_per_inst": 8,
+    "reverse": 1,
+    "inst": 86,
+    "targets_closed": [
+     "qkd_rlys_296 CLOSED qkd_rlys_296-v1-838dc5048 TT+297.80/FF+25.21 (21.6x47.52)",
+     "qkd_rlys_1 CLOSED qkd_rlys_1-v1-6da52734e TT+339.57/FF+35.46 (12.96x12.96)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_289",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_289__dir",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "per-direction split of the same 1-flop/bit relay (288 fwd + 1 rev; tools/qwen_kv_die/kv_bound_netlist.py relay_dir_module) -> qkd_rlys_296 x1 (pad 8) + qkd_rlys_1 x1 reversed; all four standards CLOSED; retires with OT_KV_RLY_STD=1 default",
+   "owner_stream": "Q-KVSYS-DIE",
+   "evidence": [
+    "results/arch/qwen_split_1014/kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv",
+    "results/arch/qwen_kv_rly_std_1016/variants.json"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_296": 1,
+     "qkd_rlys_1": 1
+    }
+   },
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_291",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "291-bit relay class (155 inst in kvs11-v143c) -> qkd_rlys_296 x1, 5 pad bits/inst; all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_296": 1
+    },
+    "pad_bits_per_inst": 5,
+    "reverse": 0,
+    "inst": 155,
+    "targets_closed": [
+     "qkd_rlys_296 CLOSED qkd_rlys_296-v1-838dc5048 TT+297.80/FF+25.21 (21.6x47.52)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_291",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_293",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "293-bit relay class (124 inst in kvs11-v143c) -> qkd_rlys_296 x1, 3 pad bits/inst; all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_296": 1
+    },
+    "pad_bits_per_inst": 3,
+    "reverse": 0,
+    "inst": 124,
+    "targets_closed": [
+     "qkd_rlys_296 CLOSED qkd_rlys_296-v1-838dc5048 TT+297.80/FF+25.21 (21.6x47.52)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_293",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_32",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "32-bit relay class (934 inst in kvs11-v143c) -> qkd_rlys_36 x1, 4 pad bits/inst; all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_36": 1
+    },
+    "pad_bits_per_inst": 4,
+    "reverse": 0,
+    "inst": 934,
+    "targets_closed": [
+     "qkd_rlys_36 CLOSED qkd_rlys_36-v1-6da52734e TT+343.85/FF+28.38 (12.96x12.96)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_32",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_33",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "33-bit relay class (162 inst in kvs11-v143c) -> qkd_rlys_36 x1, 3 pad bits/inst; all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_36": 1
+    },
+    "pad_bits_per_inst": 3,
+    "reverse": 0,
+    "inst": 162,
+    "targets_closed": [
+     "qkd_rlys_36 CLOSED qkd_rlys_36-v1-6da52734e TT+343.85/FF+28.38 (12.96x12.96)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_33",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_36",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "36-bit relay class (14 inst in kvs11-v143c) -> qkd_rlys_36 x1, 0 pad bits/inst; all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_36": 1
+    },
+    "pad_bits_per_inst": 0,
+    "reverse": 0,
+    "inst": 14,
+    "targets_closed": [
+     "qkd_rlys_36 CLOSED qkd_rlys_36-v1-6da52734e TT+343.85/FF+28.38 (12.96x12.96)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_36",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_520",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "520-bit relay class (23 inst in kvs11-v143c) -> qkd_rlys_528 x1, 8 pad bits/inst; all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_528": 1
+    },
+    "pad_bits_per_inst": 8,
+    "reverse": 0,
+    "inst": 23,
+    "targets_closed": [
+     "qkd_rlys_528 CLOSED qkd_rlys_528-v2-15c66bd8b TT+338.30/FF+28.95 (21.6x82.08)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_520",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_521",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "521-bit relay class (85 inst in kvs11-v143c) -> qkd_rlys_528 x1 + qkd_rlys_1 x1, 8 pad bits/inst (reverse bit rides its own qkd_rlys_1, b->a); all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_528": 1,
+     "qkd_rlys_1": 1
+    },
+    "pad_bits_per_inst": 8,
+    "reverse": 1,
+    "inst": 85,
+    "targets_closed": [
+     "qkd_rlys_528 CLOSED qkd_rlys_528-v2-15c66bd8b TT+338.30/FF+28.95 (21.6x82.08)",
+     "qkd_rlys_1 CLOSED qkd_rlys_1-v1-6da52734e TT+339.57/FF+35.46 (12.96x12.96)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_521",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_521__dir",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "per-direction split of the same 1-flop/bit relay (520 fwd + 1 rev; tools/qwen_kv_die/kv_bound_netlist.py relay_dir_module) -> qkd_rlys_528 x1 (pad 8) + qkd_rlys_1 x1 reversed; all four standards CLOSED; retires with OT_KV_RLY_STD=1 default",
+   "owner_stream": "Q-KVSYS-DIE",
+   "evidence": [
+    "results/arch/qwen_split_1014/kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv",
+    "results/arch/qwen_kv_rly_std_1016/variants.json"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_528": 1,
+     "qkd_rlys_1": 1
+    }
+   },
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_540",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "540-bit relay class (67 inst in kvs11-v143c) -> qkd_rlys_528 x1 + qkd_rlys_36 x1, 24 pad bits/inst; all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_528": 1,
+     "qkd_rlys_36": 1
+    },
+    "pad_bits_per_inst": 24,
+    "reverse": 0,
+    "inst": 67,
+    "targets_closed": [
+     "qkd_rlys_528 CLOSED qkd_rlys_528-v2-15c66bd8b TT+338.30/FF+28.95 (21.6x82.08)",
+     "qkd_rlys_36 CLOSED qkd_rlys_36-v1-6da52734e TT+343.85/FF+28.38 (12.96x12.96)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_540",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_563",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "563-bit relay class (16 inst in kvs11-v143c) -> qkd_rlys_528 x1 + qkd_rlys_36 x1, 1 pad bits/inst; all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_528": 1,
+     "qkd_rlys_36": 1
+    },
+    "pad_bits_per_inst": 1,
+    "reverse": 0,
+    "inst": 16,
+    "targets_closed": [
+     "qkd_rlys_528 CLOSED qkd_rlys_528-v2-15c66bd8b TT+338.30/FF+28.95 (21.6x82.08)",
+     "qkd_rlys_36 CLOSED qkd_rlys_36-v1-6da52734e TT+343.85/FF+28.38 (12.96x12.96)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_563",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_93",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "93-bit relay class (1 inst in kvs11-v143c) -> qkd_rlys_36 x3, 15 pad bits/inst; all target standards CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "results/arch/qwen_kv_rly_std_1016/variants.json (main b43dace89) selected 1/36/296/528, 9,133 replicas, 27,132 pad bits",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (ot_qkd_rlys #(W) 1 flop/bit, no reset)",
+    "per-width qkd_rly_<W> RTL is generated per die case by tools/qwen_kv_die/kv_relays.py (not on main; v1.4.3 mixed-direction ones in kvsys_v1_4_3_design/port_bind_v2/current/kv_relays_dir.sv) -> no hash replica claim; old frame 52.68x30.24 != standard frames so not A anyway",
+    "superseded-candidate: once OT_KV_RLY_STD=1 is the default generator mode the qkd_rly_<W> rows disappear (kv_rly_std.py rewrites die.v/LEF)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_36": 3
+    },
+    "pad_bits_per_inst": 15,
+    "reverse": 0,
+    "inst": 1,
+    "targets_closed": [
+     "qkd_rlys_36 CLOSED qkd_rlys_36-v1-6da52734e TT+343.85/FF+28.38 (12.96x12.96)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": "qkd_rly_93",
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_rly_t1",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "width-1 reset-tree relay (5,413 inst) -> qkd_rlys_1 x1, 0 pad bits; target CLOSED",
+   "owner_stream": "Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+   "evidence": [
+    "variants.json mapping qkd_rly_t1 inst 5413 width 1 replicas [1] pads 0",
+    "registry evidence: v1.4.3 master absent from v1.4.1 bind (Q-KVSYS-NETLIST 10-16)"
+   ],
+   "mapping_or_master": {
+    "standards": {
+     "qkd_rlys_1": 1
+    },
+    "pad_bits_per_inst": 0,
+    "inst": 5413,
+    "targets_closed": [
+     "qkd_rlys_1 CLOSED qkd_rlys_1-v1-6da52734e TT+339.57/FF+35.46 (12.96x12.96)"
+    ]
+   },
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_seq",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "wires-only top (stateful False) over 3 CLOSED leaves qkd_seq_core/fan/xs, but strict bind MISMATCH: r_x3_d/r_sd/r_kvd/t_ar_cr have no producer",
+   "owner_stream": "Q-KVSYS-ELEM with Q-LINK",
+   "evidence": [
+    "body sha 602e09fb8df6...",
+    "kvsys_v1_4_1 port_bind MISMATCH; v1.4.3 bind17 qkd_seq inputs MISSING_PRODUCER",
+    "would be a master_identity composition only after the RTL face change"
+   ],
+   "mapping_or_master": null,
+   "blocker": "bind17: static sequencer link adapter needed (or qkd_seq replaced by native attention programme + qkd_kv_static_writer_native); t_ar_cr on-die credit must be removed in RTL (static-schedule rule)",
+   "rtl_module": "qkd_seq",
+   "body_sha256": "602e09fb8df6a0991705a1ed9fe5c793f2fedc1c8cd2449eb6c732cc1bde5340",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_cfifo_crs",
+   "registry_category": "failed, re-running",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "opt-in CFIFO split-cr-roots successor; hr6 route RUNNING EPYC4 (s81coll_cfifo_crs-hr6-915d5b74e), native CTS PASS before submit",
+   "owner_stream": "S-ELEM (CFIFO-HOLD)",
+   "evidence": [
+    "closure_loop status 18:15",
+    "CODEX_TAKEOVER.log 0cg 16:33"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 1,
+   "latest_job_1815": "s81coll_cfifo_crs-hr6-915d5b74e",
+   "latest_status_1815": "RUNNING",
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_l2r_vr_1100x1__hx_W",
+   "registry_category": "failed, re-running",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "failed congestion -> re-running (r1d1 / r1)",
+   "owner_stream": "Claude:s81-net-resid (S-NET+FILL helper S-NET-RESID)",
+   "evidence": [
+    "c21h netlist master (successor of retired dsfd_l2r_vr_564x1__hx_*, results/arch/s81_netlist_0030/absent_master_resolution.json)",
+    "not yet in contracts.json elements (contract file lags c21h)",
+    "jobs: s81net_l2r_vr_1100x1__hx_w-r1-6728ad2be RUNNING; s81net_l2r_vr_1100x1__hx_w_ie-r1ie-6728ad2be EARLY_FAIL_CONGESTION"
+   ],
+   "mapping_or_master": "RTL-identical E/W pair (rtl/dsrom_sys/s81_static_net/gen/*.sv @6728ad2be, normalized body c17ad192f25f26011bb63f41e8e9f4a05cff67d86eabc5809afd5175d6ccfc86 both) but NOT a replica: kits differ (hx_e 142.56x185.76 vs hx_w 274.32x120.96, different pin tcl physical/s81_die_pins/snet_c26b/*.tcl, kit.env/floorplan differ)",
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 1,
+   "latest_job_1815": "s81net_l2r_vr_1100x1__hx_w_ie-r1ie-6728ad2be",
+   "latest_status_1815": "EARLY_FAIL_CONGESTION",
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_capt_status_dual",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "wires-only pair wrappers (capture_split.py) over x8x_t/x8x_s and status_x43_t/_s; all halves CLOSED + native PASS (S-VM 14:00/15:26); added to master_identity compositions 18:15; S-DIE binds the pair",
+   "owner_stream": "S-DIE",
+   "evidence": [
+    "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+    "HANDOFF 0cf S-VM 14:30"
+   ],
+   "mapping_or_master": "new leaf of capture split (body 43201f37993d01282d5445ea0c8c512f8c651f86916681d234b67566a5009392)",
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "dsfd_capt_status_dual_split1016b-split1b-136794711",
+   "latest_status_1815": "CANCELLED",
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_capt_x8_data_e",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "wires-only pair wrappers (capture_split.py) over x8x_t/x8x_s and status_x43_t/_s; all halves CLOSED + native PASS (S-VM 14:00/15:26); added to master_identity compositions 18:15; S-DIE binds the pair",
+   "owner_stream": "S-DIE",
+   "evidence": [
+    "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+    "HANDOFF 0cf S-VM 14:30"
+   ],
+   "mapping_or_master": "dsfd_capt_x8_data_e == dsfd_capt_x8_data_w == dsfd_capt_x8_data RTL (normalized body a4a06eba478ad126a9fd1a8ec00a7868a8c63a0189be3e801dd5ad51a1e5a548, all three). Kits physical/ref_tile/dsfd_capt_x8_data_{e,w}_split1016: all 19 files identical after name substitution EXCEPT io_tcl physical/s81_die_pins/capture_split_1016/dsfd_capt_x8_data_{e,w}.tcl (f_w[*] on x=108 E face vs mirrored; sha a42cbfe1.. vs e332937a..) -> physical identity differs; could become ONE master only if the die places the W copy mirrored (MY) and pin order is mirror-exact",
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "dsfd_capt_x8_data_e_split1016-split1-00e50305e",
+   "latest_status_1815": "NEEDS_RTL",
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_capt_x8_data_w",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "wires-only pair wrappers (capture_split.py) over x8x_t/x8x_s and status_x43_t/_s; all halves CLOSED + native PASS (S-VM 14:00/15:26); added to master_identity compositions 18:15; S-DIE binds the pair",
+   "owner_stream": "S-DIE",
+   "evidence": [
+    "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+    "HANDOFF 0cf S-VM 14:30"
+   ],
+   "mapping_or_master": "dsfd_capt_x8_data_e == dsfd_capt_x8_data_w == dsfd_capt_x8_data RTL (normalized body a4a06eba478ad126a9fd1a8ec00a7868a8c63a0189be3e801dd5ad51a1e5a548, all three). Kits physical/ref_tile/dsfd_capt_x8_data_{e,w}_split1016: all 19 files identical after name substitution EXCEPT io_tcl physical/s81_die_pins/capture_split_1016/dsfd_capt_x8_data_{e,w}.tcl (f_w[*] on x=108 E face vs mirrored; sha a42cbfe1.. vs e332937a..) -> physical identity differs; could become ONE master only if the die places the W copy mirrored (MY) and pin order is mirror-exact",
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "dsfd_capt_x8_data_w_split1016-split1-00e50305e",
+   "latest_status_1815": "EARLY_FAIL_HOLD",
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_engram_lkp_static14",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "failed x3 (st1 INVALID, st3 + st4 EARLY_FAIL_HOLD hold plateau) - no live job at 11:12",
+   "owner_stream": "Claude:S-ENGRAM+NORM helper ENGRAM-3",
+   "evidence": [
+    "not in contracts.json elements; not a c21h master",
+    "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_static14.sv @c6ea17117",
+    "jobs: s81engm_lkp_static14-st4-xroot-c6ea17117 RUNNING; s81engm_lkp_static14-st3-main0600-b64134583 EARLY_FAIL_HOLD; s81engm_lkp_static14-st1-5f22e3190 INVALID"
+   ],
+   "mapping_or_master": "static successor of credit wrapper dsfd_engram_lkp_14roots (ot_s81_engram_lookup_static)",
+   "blocker": "element structural redesign: CTS hold repair non-convergent twice (st4-xroot hold WNS -15.6ps after 2710 it); also lives on the Engram HOME die kind (layer1e, absent_master_resolution die_kind:layer1e dsfd_engram_c), not on the layer1 die -> Engram home-die architecture item",
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "s81engm_lkp_static14-st4-xroot-c6ea17117",
+   "latest_status_1815": "EARLY_FAIL_HOLD",
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_host_c",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "R",
+   "detail": "n1 EARLY_FAIL_HOLD (CTS hold buffers 49,457 > cap 40,992); o3 one-clock successor kit (dsfd_host_c_oneclk_1016) gated 10:06-11:30 on AGI but NEVER SUBMITTED (no closure job at 18:15) -> S-ELEM(PQ) to look at gate images and submit_exact",
+   "owner_stream": "S-ELEM (PQ/HOST)",
+   "evidence": [
+    "dsfd_host_c_pq_native_1425-n1-COMMIT-1b9fab129",
+    "S-ELEM-PQ log 10:06"
+   ],
+   "mapping_or_master": "die master (contract)",
+   "blocker": null,
+   "rtl_module": "dsfd_host_c",
+   "body_sha256": "d7e2854fa39d8cd725fda78c5bfb63b45bc5ee4c59397da20293b12785236aba",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "dsfd_host_c_pq_native_1425-n1-COMMIT-1b9fab129",
+   "latest_status_1815": "EARLY_FAIL_HOLD",
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_wfc_vmx_p",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "wires-only parent of 3 never-kitted split leaves",
+   "owner_stream": "S-ELEM-B / S-FUNC (producer)",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv dsfd_wfc_vmx_p)=f657e90c50d401664aa2abce1f43b71fc98a8f5812e267ab2a6acd5c38b816fd stateful=False",
+    "contract element (canonical layer1.f) and RTL child u_vp of dsfd_wfc_stg",
+    "jobs: dsfd_wfc_vmx_p-p2-9c102f743 EARLY_FAIL_HOLD; dsfd_wfc_vmx_p-p1-e41190e1e NEEDS_HUMAN"
+   ],
+   "mapping_or_master": "main body is now wires-only (stateful False, f657e90c50d40166): dsfd_wfc_vmx_w + dsfd_wfc_vmx_r + dsfd_wfc_hep_t (no rows, no jobs)",
+   "blocker": "WFC vmx_w START/epoch producer redesign: \"Production epoch blocker is external issuer/START source ... dsfd_wfc_vmx_w, owned by S-FUNC\"; vmx_w/vmx_r also still use ot_ratio_cdc_fifo w_rdy + skid/ltx valid-ready (verify vs static no-backpressure rule); split leaves never kitted",
+   "rtl_module": "dsfd_wfc_vmx_p",
+   "body_sha256": "f657e90c50d401664aa2abce1f43b71fc98a8f5812e267ab2a6acd5c38b816fd",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "dsfd_wfc_vmx_p-p2-9c102f743",
+   "latest_status_1815": "EARLY_FAIL_HOLD",
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "ot_s81_hc_ccf_bankpipe_bank",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "becomes wires-only composition of 2x bank256 (successor in flight)",
+   "owner_stream": "Claude:S-ENGRAM+NORM HC-COMB-3",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf_bankpipe.sv ot_s81_hc_ccf_bankpipe_bank)=451b86737fc6507b9adcae81e389c91ebe1b006b42110e72557b4f1e915fe17c stateful=True",
+    "contract rtl_leaf of dsfd_sp_hc_c",
+    "jobs: s81hc_ccfbp_bank_ref-v1-2b1061e5e NEEDS_RTL; s81hc_ccfbp_bank_ref-v1-18d2d35a2 INVALID"
+   ],
+   "mapping_or_master": "on claude/s81hc-comb3-bank256b d317ebd34 the module body is wires-only (normalized 2d5d013dab6fb4f43b1087ad3bb1a779c2e660fa4df8af64eb4abb84a3ef8950, no always/reg) = 2 x ot_s81_hc_ccf_bankpipe_bank256 (h0 data[255:0], h1 data[511:256]); main body 451b8673.. (stateful) failed NEEDS_RTL TT -34.99",
+   "blocker": "bank256 closure (3 variants READY) + merge of d317ebd34; then add to master_identity compositions",
+   "rtl_module": "ot_s81_hc_ccf_bankpipe_bank",
+   "body_sha256": "451b86737fc6507b9adcae81e389c91ebe1b006b42110e72557b4f1e915fe17c",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "s81hc_ccfbp_bank_ref-v1-2b1061e5e",
+   "latest_status_1815": "NEEDS_RTL",
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "ot_s81_hc_ctfx_cap",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "HC capture structure undecided",
+   "owner_stream": "Claude:S-ENGRAM+NORM (HC/NORM)",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv ot_s81_hc_ctfx_cap)=f1b91bbb49f69002e6de66552754c85c7eee0ed87bfa1a6d5039dac646cd08d2 stateful=True",
+    "contract rtl_leaf of dsfd_sp_hc_c/dsfd_sp_hc_t/ot_s81_hc_cth",
+    "jobs: s81hc_ctfxcap_margin_ref-s26-COMMIT-d78dc7988 NEEDS_RTL; s81hc_ctfxcap_margin_ref-k4-COMMIT-dcdfc32a6 EARLY_FAIL_CONGESTION; s81hc_ctfxcap_ref-v3-assigned-reset-d9f350600 EARLY_FAIL_HOLD"
+   ],
+   "mapping_or_master": "candidate successor ot_s81_hc_ctfx_cap_pinpipe CLOSED (s81hc_ctfxcap_pinpipe_ref-ncap-slaunch-caps-COMMIT-16fc576b0 TT+279.90/FF+6.79) but NOT adopted; NT parent uses ot_s81_hc_ctfxs_nt + ot_s81_hc_ctfl_nt (both CLOSED) instead",
+   "blocker": "HC parent choice cth (serial cap) vs cth_nt/cth_ntc (XS+FL) + pinpipe +1 serial edge must compose across the HC chain (compiler calendar); 4+1 congestion fails on the serial cap",
+   "rtl_module": "ot_s81_hc_ctfx_cap",
+   "body_sha256": "f1b91bbb49f69002e6de66552754c85c7eee0ed87bfa1a6d5039dac646cd08d2",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "s81hc_ctfxcap_margin_ref-k4-COMMIT-dcdfc32a6",
+   "latest_status_1815": "EARLY_FAIL_CONGESTION",
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "ot_s81_hc_ctra",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "superseded-in-progress by RETCOL four-column return",
+   "owner_stream": "Claude:S-ENGRAM+NORM helper HC-HOMES",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv ot_s81_hc_ctra)=740eb31b16643b41bd1d72f874bf3ae579608d367f332389a063fdd25ee9d980 stateful=False",
+    "contract rtl_leaf of dsfd_sp_hc_c/dsfd_sp_hc_t/ot_s81_hc_cth",
+    "/home/ubuntu/claude-takeover-20261007/el1011-s81die.log 2026-10-15 07:27 HC FOUR-COLUMN RETURN shape granted v22 (main 2a1663ee3)",
+    "jobs: s81hc_ctra_ref-v1-a9cfb97b9 EARLY_FAIL_CONGESTION"
+   ],
+   "mapping_or_master": "successor: 4 x ot_s81_hc_ctra_column (contract v22 candidate, claude/s81-return-columns-1015) in parent cth_ntc; ctra body 740eb31b.. != ctrb 3e69e91d.. (distinct)",
+   "blocker": "HC RETCOL adoption: POST lane mismatch isolation (ctnl_l2io vs ctfn_banks) before submit; +5 cycle compiler calendar lag (RETCOL) must be carried; original strips failed native capture (2,231/2,211 pins >190ps) and clock insertion >300ps",
+   "rtl_module": "ot_s81_hc_ctra",
+   "body_sha256": "740eb31b16643b41bd1d72f874bf3ae579608d367f332389a063fdd25ee9d980",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "s81hc_ctra_ref-v1-a9cfb97b9",
+   "latest_status_1815": "EARLY_FAIL_CONGESTION",
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "ot_s81_hc_ctrb",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "superseded-in-progress by RETCOL four-column return",
+   "owner_stream": "Claude:S-ENGRAM+NORM helper HC-HOMES",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv ot_s81_hc_ctrb)=3e69e91dedd8fd416529148b6ae88c2ca6fa9b2045cbae1f261927e5df1d65e5 stateful=False",
+    "contract rtl_leaf of dsfd_sp_hc_c/dsfd_sp_hc_t/ot_s81_hc_cth",
+    "/home/ubuntu/claude-takeover-20261007/el1011-s81die.log 2026-10-15 07:27 HC FOUR-COLUMN RETURN shape granted v22 (main 2a1663ee3)",
+    "jobs: s81hc_ctrb_ref-v1-a9cfb97b9 EARLY_FAIL_CONGESTION"
+   ],
+   "mapping_or_master": "successor: 4 x ot_s81_hc_ctrb_column (contract v22 candidate, claude/s81-return-columns-1015) in parent cth_ntc; ctra body 740eb31b.. != ctrb 3e69e91d.. (distinct)",
+   "blocker": "HC RETCOL adoption: POST lane mismatch isolation (ctnl_l2io vs ctfn_banks) before submit; +5 cycle compiler calendar lag (RETCOL) must be carried; original strips failed native capture (2,231/2,211 pins >190ps) and clock insertion >300ps",
+   "rtl_module": "ot_s81_hc_ctrb",
+   "body_sha256": "3e69e91dedd8fd416529148b6ae88c2ca6fa9b2045cbae1f261927e5df1d65e5",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "s81hc_ctrb_ref-v1-a9cfb97b9",
+   "latest_status_1815": "EARLY_FAIL_CONGESTION",
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "ot_s81_hc_ctrn_col_e",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "R",
+   "detail": "E/W mirror pair (same RTL file ot_s81_hc_cth_ntc.sv, faces mirrored, NOT replicas); a4 routes EARLY_FAIL_CONGESTION; structural successor owned by S-NORM (HC column)",
+   "owner_stream": "S-NORM",
+   "evidence": [
+    "s81hc_ctrncol_e_ref-a4-ce4e837d4 / _w_ EARLY_FAIL_CONGESTION",
+    "ds-1010.log"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "s81hc_ctrncol_e_ref-a4-ce4e837d4",
+   "latest_status_1815": "EARLY_FAIL_CONGESTION",
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "ot_s81_hc_ctrn_col_w",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "R",
+   "detail": "E/W mirror pair (same RTL file ot_s81_hc_cth_ntc.sv, faces mirrored, NOT replicas); a4 routes EARLY_FAIL_CONGESTION; structural successor owned by S-NORM (HC column)",
+   "owner_stream": "S-NORM",
+   "evidence": [
+    "s81hc_ctrncol_e_ref-a4-ce4e837d4 / _w_ EARLY_FAIL_CONGESTION",
+    "ds-1010.log"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "s81hc_ctrncol_w_ref-a4-ce4e837d4",
+   "latest_status_1815": "EARLY_FAIL_CONGESTION",
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_bk_collector_c1",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "stateful parent carrying on-die credit",
+   "owner_stream": "S-ELEM-B (no 10-16 activity found)",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_bk_collector_c1.sv dsfd_bk_collector_c1)=c4e00e7b906376f56f619a3586134e9951ff5dc0a93062b29a58d8e4f0690ff0 stateful=True",
+    "/home/ubuntu/claude-takeover-20261007/el1015-fill-s81.log 2026-10-15 13:30:56",
+    "c21h port-bind PASS"
+   ],
+   "mapping_or_master": "children dsfd_colt_lane (CLOSED), dsfd_dw_ep_c (CLOSED), dsfd_colt_mrgn (no row) + 7 internal hop regs",
+   "blocker": "static (credit-free) successor: body relays colt credit t_cr/f_cr through HOPS regs (FILL-S2 10-15 13:30 \"bk_selector_c1/bk_collector_c1 (credit colt lanes, need a static successor)\") vs owner static-schedule/no-credit rule; also hub re-floorplan collector+selector adjacency (OWNER 08:10)",
+   "rtl_module": "dsfd_bk_collector_c1",
+   "body_sha256": "c4e00e7b906376f56f619a3586134e9951ff5dc0a93062b29a58d8e4f0690ff0",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_bk_selector_c1",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "wires-only parent (composition-eligible once selt_xq closes)",
+   "owner_stream": "S-ELEM-B / S-ELEM-PQ (selt_xq)",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_bk_selector_c1.sv dsfd_bk_selector_c1)=566446035cc88da6162c27e3bdea2a1f4138ddc1610b3164295d61bf37efd241 stateful=False",
+    "c21h port-bind PASS"
+   ],
+   "mapping_or_master": "children dsfd_bk_selector, dsfd_dw_ep_s (CLOSED), dsfd_selt_xq (G, x3 running); contract leaves 3/5 closed (dsfd_selt_q superseded)",
+   "blocker": "dsfd_selt_xq closure; verify dsfd_bk_selector lanes are credit-free (FILL-S2 flag)",
+   "rtl_module": "dsfd_bk_selector_c1",
+   "body_sha256": "566446035cc88da6162c27e3bdea2a1f4138ddc1610b3164295d61bf37efd241",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_ctrl",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "stateful parent (1 always: st reg) of 32x ctrl_pc + ctr; HBM controller boundary (off-die elastic allowed)",
+   "owner_stream": "S-ELEM-B",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_ph/dsfd_ctrl.sv dsfd_ctrl)=9eddf180907c2ae42083b41549fb1bca63ee5852efe34f90a02aa28eb2fea498 stateful=True",
+    "GENERATED by tools/s81_ph/gen_ctrl_top.py; c21h PASS (ctrl_SW)"
+   ],
+   "mapping_or_master": "children dsfd_ctrl_pc (CLOSED), dsfd_ctrl_ctr (CLOSED) 2/2",
+   "blocker": "parent kit/die placement only",
+   "rtl_module": "dsfd_ctrl",
+   "body_sha256": "9eddf180907c2ae42083b41549fb1bca63ee5852efe34f90a02aa28eb2fea498",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_engram_mix4_c",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "MIX4 parent has no home / being restructured",
+   "owner_stream": "Claude:S-ENGRAM+NORM ENGRAM-3 + S-DIE",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv dsfd_engram_mix4_c)=673a9fbf470f5ec6af797d995dff350eeb9231859114a19eb18632759a9297d1 stateful=True",
+    "results/arch/s81_netlist_0030/leaf_reach_c21h.json NOT_REACHED",
+    "results/arch/s81_netlist_0030/absent_master_resolution.json bound: --mix4-bind slot A engine 10"
+   ],
+   "mapping_or_master": "main body = 4-copy banded mixq parent (stateful); successor flat parent (dsfd_engram_mix4_flat.sv: ot_s81_mx4_ctl CLOSED, mx4_mcol CLOSED, mx4_rq x2 in flight, shctlp reroute at production VM_LAT)",
+   "blocker": "S81 hub re-floorplan: MIX4 slot A lost in c74342891 (VM overlaps slot A); ENGRAM-3 asked S-DIE for 1518.048x3652.56 W of VM; S-DIE v3h/v3i places MX on VM N face west end; adoption gated on owner Explorer review. Also not reached in c21h (bound only by --mix4-bind later GENs)",
+   "rtl_module": "dsfd_engram_mix4_c",
+   "body_sha256": "673a9fbf470f5ec6af797d995dff350eeb9231859114a19eb18632759a9297d1",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_sp_collective_static_c",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "stateful parent, 1/1 contract leaf CLOSED",
+   "owner_stream": "S-ELEM-B / S-ELEM-PQ CFIFO",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv dsfd_sp_collective_static_c)=7a90222a39b69d94ce9bee112d57f0cfd32606ab2aec50154dfe2ef410535be0 stateful=True",
+    "c21h port-bind PASS"
+   ],
+   "mapping_or_master": "children dsfd_coll_ck, ot_s81ph_ckbuf, s81_static_collective_slab (+ s81_static_calendar_controller7_resetpins CLOSED)",
+   "blocker": "pending S-DIE grants: t_hc_y5[4:0] pin request (HC-HOMES 10:22) and CFIFO 128 parent pin/clock REBIND (S-ELEM-PQ); cfifo_x2 variants in flight",
+   "rtl_module": "dsfd_sp_collective_static_c",
+   "body_sha256": "7a90222a39b69d94ce9bee112d57f0cfd32606ab2aec50154dfe2ef410535be0",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_sp_gather_c",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "stateful parent, 1/1 contract leaf CLOSED",
+   "owner_stream": "S-GATHER",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_gather_c.sv dsfd_sp_gather_c)=81eef6ef26ca9e25fed28338297b90a90dce4b31724768fafbf49e15b76bc58e stateful=True",
+    "c21h PASS"
+   ],
+   "mapping_or_master": "children dsfd_sp_gather, ot_s81_slab_ep; contract leaf ot_s81ph_root_tile CLOSED",
+   "blocker": "parent kit + hub placement",
+   "rtl_module": "dsfd_sp_gather_c",
+   "body_sha256": "81eef6ef26ca9e25fed28338297b90a90dce4b31724768fafbf49e15b76bc58e",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_sp_hc_c",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "stateful parent, 23/32 contract leaves CLOSED",
+   "owner_stream": "S-ELEM-B / S-ENGRAM+NORM HC",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_suhc/dsfd_sp_hc_c.sv dsfd_sp_hc_c)=f87cd57c3df68637169329f8ea1f7c64a391724c4b479d8bd3953e647e1db3f7 stateful=True",
+    "c21h PASS"
+   ],
+   "mapping_or_master": "open leaves: ot_s81_hc_cth (C), ot_s81_hc_ctfx_cap (D), ot_s81_hc_ccf_bankpipe_bank (C/bank256 G), ot_s81_hc_ctra/ctrb (D)",
+   "blocker": "HC structure (cth vs cth_nt/cth_ntc RETCOL) + hub re-floorplan HC fold (64-group)",
+   "rtl_module": "dsfd_sp_hc_c",
+   "body_sha256": "f87cd57c3df68637169329f8ea1f7c64a391724c4b479d8bd3953e647e1db3f7",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_sp_hc_t",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "stateful parent, 16/20 contract leaves CLOSED",
+   "owner_stream": "S-ELEM-B / S-ENGRAM+NORM HC",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv dsfd_sp_hc_t)=97e70827b21d7988259d699aa6033f85590674efc57478f8dc1ed904b4c50be5 stateful=True",
+    "c21h PASS"
+   ],
+   "mapping_or_master": "open leaves: ot_s81_hc_cth, ctfx_cap, ctra, ctrb",
+   "blocker": "same HC structure items as dsfd_sp_hc_c",
+   "rtl_module": "dsfd_sp_hc_t",
+   "body_sha256": "97e70827b21d7988259d699aa6033f85590674efc57478f8dc1ed904b4c50be5",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_sp_pq_n",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "stateful PQ cluster parent",
+   "owner_stream": "S-ELEM-B / S-ELEM-PQ",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv dsfd_sp_pq_n)=61eac9be9c011772aa2ccd1118ed0667a484fb2e4ffaf62a21161abf5bbc533d stateful=True",
+    "c21h input_unconnected f_iss"
+   ],
+   "mapping_or_master": "RTL children dsfd_pq_lx, ot_s81_pq_core_native, ot_s81_pq_stream_rom4_sel (canonical OT_PQ_* leaf set); PQ rwbc15/rwbc2 CLOSED native PASS",
+   "blocker": "c21h port-bind FAIL f_iss unconnected -> fixed by generator --pq-producer (child of dsfd_sp_pq_produced); S-DIE to bind rwbc + BFP views; PQ joint control extraction proof next",
+   "rtl_module": "dsfd_sp_pq_n",
+   "body_sha256": "61eac9be9c011772aa2ccd1118ed0667a484fb2e4ffaf62a21161abf5bbc533d",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_sp_su_c",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "stateful parent, 15/18 contract leaves CLOSED",
+   "owner_stream": "S-ELEM-B / S-ENGRAM+NORM",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_suhc/dsfd_sp_su_c.sv dsfd_sp_su_c)=b4fb35f10ab6c79379a9d6d07ba40eceb896296c35eed73834de6f50eb035d14 stateful=True",
+    "c21h PASS"
+   ],
+   "mapping_or_master": "open: ot_s81_su_sm (C region, its smt/sml/smc/smr/smd closed); superseded: su_t_qn0/qn1/swt",
+   "blocker": "SML source/view mismatch fresh master; SU-south hub band placement",
+   "rtl_module": "dsfd_sp_su_c",
+   "body_sha256": "b4fb35f10ab6c79379a9d6d07ba40eceb896296c35eed73834de6f50eb035d14",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_sp_vm",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "wires-only parent, 47/47 contract leaves CLOSED (composition-eligible)",
+   "owner_stream": "S-ELEM-A / S-VM",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv dsfd_sp_vm)=a698be1957e7cde93223ba7292cf5a14ae6a4ef7c68cc88c2cf581fbaaa529b9 stateful=False",
+    "master_identity composition candidate body_sha256 a698be1957e7cde93223ba7292cf5a14ae6a4ef7c68cc88c2cf581fbaaa529b9"
+   ],
+   "mapping_or_master": "children dsfd_vm_static_cap/core/wfc/xio + 3 x ot_s81_vm_x34",
+   "blocker": "c21h port-bind FAIL: f_mx_* x6 unconnected (needs MIX4 bind, see dsfd_engram_mix4_c D); dsfd_vm_seq_static row covered by closed dsfd_vm_seq_tile",
+   "rtl_module": "dsfd_sp_vm",
+   "body_sha256": "a698be1957e7cde93223ba7292cf5a14ae6a4ef7c68cc88c2cf581fbaaa529b9",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_stage_seq_static_c10",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "c10 v2 issuer kit s81issuer_c10_v2 7cbfb3921 (540x86.4 E-anchored grant, same pin plan; supersedes c8/c9 for the die) gated since 06:26 but NEVER SUBMITTED (no closure job at 18:15) -> S-ELEM(PQ/SSEQ) to submit_exact",
+   "owner_stream": "S-ELEM (PQ/SSEQ)",
+   "evidence": [
+    "S-ELEM-PQ/SSEQ 06:26 claude/s81-sseq-c10-0600"
+   ],
+   "mapping_or_master": "die sequencer successor of c8/c9 (engines 0..7 + 10 MIX4 + 12 VM + 13 PQ); kit s81issuer_c10_pwroots, S-DIE grant 540x86.4",
+   "blocker": null,
+   "rtl_module": "dsfd_stage_seq_static_c10",
+   "body_sha256": "d222882840a77d139a7f9e92e0f1a5ec8a07238fbe81d65a6552c7bd448f3df4",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_vm_seq_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "covered internal leaf of a CLOSED tile",
+   "owner_stream": "S-ELEM-A / S-VM",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_static.sv dsfd_vm_seq_static)=699f942632e7dcc1ea145f3dbb95b6727cad35bbebd0ed009a0a16301ce860c2 stateful=True",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_tile.sv line 47"
+   ],
+   "mapping_or_master": "instantiated only as u_seq inside dsfd_vm_seq_tile (CLOSED dsfd_vm_seq_tile_native_1015_r3-flt3-017fbf8fe; tile body 85bd1db6b453a486); hf4 successor RUNNING",
+   "blocker": "none (should move to integration/covered_internal_modules, not an independent route)",
+   "rtl_module": "dsfd_vm_seq_static",
+   "body_sha256": "699f942632e7dcc1ea145f3dbb95b6727cad35bbebd0ed009a0a16301ce860c2",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_wfc_stg",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "stateful parent; 3/3 contract leaves CLOSED but RTL child dsfd_wfc_vmx_p open (D)",
+   "owner_stream": "S-ELEM-B",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv dsfd_wfc_stg)=5abc5cd801a60210cb00ec92f0521470145256a7ac5d0d1d7216c3c5407d6989 stateful=True",
+    "c21h port-bind PASS (output_open t_hep)"
+   ],
+   "mapping_or_master": "children dsfd_wfc_hop_ep, dsfd_wfc_lnk (CLOSED), dsfd_wfc_vmx_p (D), ot_dsrom_wfc_tokpipe_stg (CLOSED)",
+   "blocker": "dsfd_wfc_vmx_p redesign; output_open t_hep in c21h",
+   "rtl_module": "dsfd_wfc_stg",
+   "body_sha256": "5abc5cd801a60210cb00ec92f0521470145256a7ac5d0d1d7216c3c5407d6989",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "ot_pdie_serdes",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "M",
+   "detail": "hard link macro (outside A-G) with an un-hardened DIGITAL sublayer",
+   "owner_stream": "S-DIE (by assignment)",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv ot_pdie_serdes)=b3252d8b5bcc8fa49e7e2686619e6b8a960052338ffa2eceabce478825c7b9b4 stateful=True",
+    "c21h PASS (ot_pdie_serdes)",
+    "ot_pdie_serdes.sv header: \"Hard PHY analog cores may be behavioural models, but their digital link/controller layer must be real RTL\""
+   ],
+   "mapping_or_master": "physical: pin-shell LEF/bb physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes; functional RTL rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv = real digital layer (ot_s81_kp4_enc + ot_s81_kp4_dec (RS(544,514) FEC) + ot_s81_rate_match) over behavioural PMA ot_s81_pma_bm",
+   "blocker": "the digital sublayer has no rows/jobs: under the all-on-chip-real-hardware rule it is on-die logic hidden inside a hard-macro bb",
+   "rtl_module": "ot_pdie_serdes",
+   "body_sha256": "b3252d8b5bcc8fa49e7e2686619e6b8a960052338ffa2eceabce478825c7b9b4",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "ot_pdie_ucie",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "M",
+   "detail": "hard link macro (outside A-G) with an un-hardened DIGITAL sublayer",
+   "owner_stream": "S-DIE (by assignment)",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv ot_pdie_ucie)=c297d366412739cc23f2a5cdaf610f35d38df3235f99a8b657a7f8f713a8c7bb stateful=True",
+    "c21h PASS (ot_pdie_ucie)",
+    "ot_pdie_serdes.sv header: \"Hard PHY analog cores may be behavioural models, but their digital link/controller layer must be real RTL\""
+   ],
+   "mapping_or_master": "physical: pin-shell LEF/bb physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie; functional RTL rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv = real digital layer (ot_s81_rate_match only (no FEC)) over behavioural PMA ot_s81_pma_bm",
+   "blocker": "the digital sublayer has no rows/jobs: under the all-on-chip-real-hardware rule it is on-die logic hidden inside a hard-macro bb",
+   "rtl_module": "ot_pdie_ucie",
+   "body_sha256": "c297d366412739cc23f2a5cdaf610f35d38df3235f99a8b657a7f8f713a8c7bb",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "ot_s81_embed_expand",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "role-home reservation, no RTL",
+   "owner_stream": "S-ELEM-B / S-DIE",
+   "evidence": [
+    "results/arch/s81_netlist_0030/absent_master_resolution.json scope role_home",
+    "results/arch/s81_netlist_0030/leaf_reach_c21h.json NOT_REACHED rtl=null"
+   ],
+   "mapping_or_master": "contract slot sp_embed_expand NATIVE_LEAF_RESERVATION (results/arch/hier_contract_1011/s81_v23_hc_budget.json)",
+   "blocker": "open S-DIE die-architecture item: whether the single layer1 die mask must carry the role homes (engine 9 emb lives on other die roles; die_ctrl_bindings role_absent.layer1 emb)",
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "ot_s81_hc_cth",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "stateful HC tile parent, 9/13 contract leaves CLOSED",
+   "owner_stream": "S-NORM / S-ENGRAM+NORM HC-HOMES",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv ot_s81_hc_cth)=de407f63738170dd792789bed1b9666d926ebf908b0028711739af0044049171 stateful=True",
+    "contract leaf of dsfd_sp_hc_c/_t; slot \"legacy cap M6\""
+   ],
+   "mapping_or_master": "open: ctfx_cap (D), ctra (D), ctrb (D); ctnl superseded; successor parents cth_nt / cth_ntc (RETCOL) under HC-HOMES",
+   "blocker": "HC structure decision (serial cap vs XS+FL; RETCOL) - may itself be superseded by cth_nt/cth_ntc",
+   "rtl_module": "ot_s81_hc_cth",
+   "body_sha256": "de407f63738170dd792789bed1b9666d926ebf908b0028711739af0044049171",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "ot_s81_hcx_controller",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "role-home reservation (RTL exists, not on layer1 die)",
+   "owner_stream": "S-ELEM-B / S-GATHER / S-DIE",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_hcx/ot_s81_hcx_controller.sv ot_s81_hcx_controller)=09adcd12ab9a71aa06570b7ee540ced820cd7cddb970d9643eb35a57849b9971 stateful=True",
+    "results/arch/s81_netlist_0030/absent_master_resolution.json scope role_home",
+    "results/arch/s81_netlist_0030/leaf_reach_c21h.json NOT_REACHED",
+    "/home/ubuntu/claude-takeover-20261007/el1011-s81die.log 2026-10-16T02:11:40 \"OPEN: the hcx_* homes are not in layer1 (S-DIE decision)\""
+   ],
+   "mapping_or_master": "contract v23 slot reservation; RTL rtl/dsrom_sys/s81_hcx/ot_s81_hcx_controller.sv",
+   "blocker": "open S-DIE die-architecture item: HCX homes not in layer1 (engine 11 HC projection on other die roles); \"no production adoption without static calendar/native checks\"",
+   "rtl_module": "ot_s81_hcx_controller",
+   "body_sha256": "09adcd12ab9a71aa06570b7ee540ced820cd7cddb970d9643eb35a57849b9971",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "ot_s81_hcx_gatherpack",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "role-home reservation (RTL exists, not on layer1 die)",
+   "owner_stream": "S-ELEM-B / S-GATHER / S-DIE",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_hcx/ot_s81_hcx_gatherpack.sv ot_s81_hcx_gatherpack)=c231faacca78fc60095449b3322219554178e98eb3f622d36e35deb4751460c0 stateful=True",
+    "results/arch/s81_netlist_0030/absent_master_resolution.json scope role_home",
+    "results/arch/s81_netlist_0030/leaf_reach_c21h.json NOT_REACHED",
+    "/home/ubuntu/claude-takeover-20261007/el1011-s81die.log 2026-10-16T02:11:40 \"OPEN: the hcx_* homes are not in layer1 (S-DIE decision)\""
+   ],
+   "mapping_or_master": "contract v23 slot reservation; RTL rtl/dsrom_sys/s81_hcx/ot_s81_hcx_gatherpack.sv",
+   "blocker": "open S-DIE die-architecture item: HCX homes not in layer1 (engine 11 HC projection on other die roles); \"no production adoption without static calendar/native checks\"",
+   "rtl_module": "ot_s81_hcx_gatherpack",
+   "body_sha256": "c231faacca78fc60095449b3322219554178e98eb3f622d36e35deb4751460c0",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "ot_s81_hcx_projection_leaf",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "role-home reservation (RTL exists, not on layer1 die)",
+   "owner_stream": "S-ELEM-B / S-GATHER / S-DIE",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_hcx/ot_s81_hcx_projection_leaf.sv ot_s81_hcx_projection_leaf)=a8a02b4e705ca8e8ebc4ca35ee94f01d40635d0ab8864aae4d4c1cb0f0c6d4f1 stateful=True",
+    "results/arch/s81_netlist_0030/absent_master_resolution.json scope role_home",
+    "results/arch/s81_netlist_0030/leaf_reach_c21h.json NOT_REACHED",
+    "/home/ubuntu/claude-takeover-20261007/el1011-s81die.log 2026-10-16T02:11:40 \"OPEN: the hcx_* homes are not in layer1 (S-DIE decision)\""
+   ],
+   "mapping_or_master": "contract v23 slot reservation; RTL rtl/dsrom_sys/s81_hcx/ot_s81_hcx_projection_leaf.sv",
+   "blocker": "open S-DIE die-architecture item: HCX homes not in layer1 (engine 11 HC projection on other die roles); \"no production adoption without static calendar/native checks\"",
+   "rtl_module": "ot_s81_hcx_projection_leaf",
+   "body_sha256": "a8a02b4e705ca8e8ebc4ca35ee94f01d40635d0ab8864aae4d4c1cb0f0c6d4f1",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "ot_s81_kp4_dec",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "F",
+   "detail": "real on-die link digital sublayer under ot_pdie_serdes/ot_pdie_ucie (contract rows main 20130f663, S-DIE ok); kp4 RTL structural rewrite 7a8b12424 (KP4_GATE PASS); kit+submit by ELEM-CENSUS helper S81-LINK",
+   "owner_stream": "S-DIE",
+   "evidence": [
+    "el1011-s81die.log 12:20/12:40",
+    "HANDOFF 0cf H-DIE 14:20"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "ot_s81_kp4_enc",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "F",
+   "detail": "real on-die link digital sublayer under ot_pdie_serdes/ot_pdie_ucie (contract rows main 20130f663, S-DIE ok); kp4 RTL structural rewrite 7a8b12424 (KP4_GATE PASS); kit+submit by ELEM-CENSUS helper S81-LINK",
+   "owner_stream": "S-DIE",
+   "evidence": [
+    "el1011-s81die.log 12:20/12:40",
+    "HANDOFF 0cf H-DIE 14:20"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "ot_s81_rate_match",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "F",
+   "detail": "real on-die link digital sublayer under ot_pdie_serdes/ot_pdie_ucie (contract rows main 20130f663, S-DIE ok); kp4 RTL structural rewrite 7a8b12424 (KP4_GATE PASS); kit+submit by ELEM-CENSUS helper S81-LINK",
+   "owner_stream": "S-DIE",
+   "evidence": [
+    "el1011-s81die.log 12:20/12:40",
+    "HANDOFF 0cf H-DIE 14:20"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "ot_s81_su_sm",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "contract region (no RTL module of this name) over closed leaves",
+   "owner_stream": "S-ELEM-B / S-ENGRAM+NORM",
+   "evidence": [
+    "contract slot legacy cap M6, leaf of dsfd_sp_su_c"
+   ],
+   "mapping_or_master": "region over ot_s81_su_smt/sml/smc/smr/smd: jobs s81su_smt_hb1/hb2, sml(+tail133 CLOSED 10:35 native PASS), smc, smr, smd_u65 CLOSED",
+   "blocker": "S-DIE bind dsfd_su_t_sml view (256 instances) + SML source/view mismatch fresh master",
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "hfd_vms_bank_native_q2_faces",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "R",
+   "detail": "VM q2 face-local clocks: q2E (291.6x313.2, accepted by H-DIE as built) route EARLY_FAIL_CONGESTION at 18:xx (vm_native_q2_faces_g313e-mclkE-68aad3fec); next structural kit owned by S-VM/H-SM faces helper",
+   "owner_stream": "H-ELEM (VM faces)",
+   "evidence": [
+    "closure_loop status 18:15",
+    "HANDOFF 0cf H-ELEM 15:00"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "vm_native_q2_faces_g313e-mclkE-68aad3fec",
+   "latest_status_1815": "EARLY_FAIL_CONGESTION",
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_gpu_rf_visibility_fence",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "HBM MTP fence parent (165 roots/8,499 FF), EARLY_FAIL_SETUP",
+   "owner_stream": "Claude:mtp-hbm (parked)",
+   "evidence": [
+    "HANDOFF 0bm ~07:25",
+    "body_sha fbd7783a1aa58d9801bc5b01aeccd9ad35a4bc99ba43442be0d5811ff4261bd0 file physical/hbm_native_fence_banks_1014/ot_gpu_rf_visibility_fence.sv stateful=True",
+    "v16 die: NOT in v16 hierarchy"
+   ],
+   "mapping_or_master": null,
+   "blocker": "OWNER 10-16 07:25 HBM MTP deferred",
+   "rtl_module": "ot_gpu_rf_visibility_fence",
+   "body_sha256": "fbd7783a1aa58d9801bc5b01aeccd9ad35a4bc99ba43442be0d5811ff4261bd0",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "mtp_fence_a1_lvt-fc1b8a377-tc",
+   "latest_status_1815": "EARLY_FAIL_SETUP",
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hbm_su_static_pinned_bank",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "param variant of CLOSED ot_hbm_su_static_bank6_clock_physical (hbm_su_static_bank6_clock7_1015-r12-0a5f7732e, wraps pinned_bank READERS6 RB9 RD_ROOT=1 WS_ROOT=2 PIN_RST=1). pgslice.sv:270 instantiates pinned_bank READERS6 RB9 with default RD_ROOT/WS_ROOT/PIN_RST -> rebind pgslice u_bank to the closed physical wrapper (512 replicas); sfustore READERS=1 is a different variant",
+   "owner_stream": "H-SU",
+   "evidence": [
+    "H-SU log 469: \"pinned_bank stays untouched (r12 valid)\"",
+    "body_sha 3cf727d648b8e39c420d4a875b52fa6b85763f81d9dda6107148f355eafe7505 file rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv stateful=True",
+    "v16 die: IN ot_hbm_su_static_pinned_bank<-ot_hbm_su_static_pgslice"
+   ],
+   "mapping_or_master": "ot_hbm_su_static_bank6_clock_physical (closed r12)",
+   "blocker": null,
+   "rtl_module": "ot_hbm_su_static_pinned_bank",
+   "body_sha256": "3cf727d648b8e39c420d4a875b52fa6b85763f81d9dda6107148f355eafe7505",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "hbm_su_static_bank6_1015-r1-bd6f144ff",
+   "latest_status_1815": "NEEDS_RTL",
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hbm_svc_pc_ctrl_leaf_cfg",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "svcPC cfg redesign: H6 NOT_MET TT -50.14 (serial eligibility/age/winner reductions); successor ot_hbm_svc_pc_ctrl_leaf_cfg_faults (H7 fault split) provisional",
+   "owner_stream": "H-NETLIST/H-HARDEN (prev Codex:H-PCCTRL)",
+   "evidence": [
+    "el1011-hbmdie.log 925 H6 FINAL NOT_MET",
+    "results/arch/hbm_die_v16/h7_fault_split_provisional_0920.json",
+    "body_sha 5c0396edb713355c838abf0c349c033fca2d140d90147cb9c518b36dca84ecd4 file rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv stateful=True",
+    "v16 die: IN ot_hbm_svc_pc_ctrl_leaf_cfg<-ot_hbm_svc_pc_ctrl_leaf"
+   ],
+   "mapping_or_master": null,
+   "blocker": "DMA/svcPC redesign: H7 CTS gate live PVE PID 261234 (hdie_pc_ctrl_faults_h7); adopt only if TT>=0 and spread<=80",
+   "rtl_module": "ot_hbm_svc_pc_ctrl_leaf_cfg",
+   "body_sha256": "5c0396edb713355c838abf0c349c033fca2d140d90147cb9c518b36dca84ecd4",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "hdie_pc_ctrl_cfg-cfg-h6-nooverflight-west-6a9d24cd2",
+   "latest_status_1815": "NEEDS_RTL",
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_coll_ctl_v5_q3",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "R",
+   "detail": "COLL V6 q3 protocol leaf: V6c route NEEDS_RTL (bench_hard_v5_q3_pos rc=2, hcoll_v5_ctl3-c1045-7d6120e84); owner H-NETLIST/COLL",
+   "owner_stream": "H-ELEM (COLL)",
+   "evidence": [
+    "closure_loop status 18:15"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "hcoll_v5_ctl3-c1045-7d6120e84",
+   "latest_status_1815": "NEEDS_RTL",
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_coll_vmasm",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "R",
+   "detail": "COLL V6 VM-assembly leaf: V6c EARLY_FAIL_CONGESTION (hcoll_v6_vmasm-c1045-440e737a7); structural successor (HANDOFF 0cf H-ELEM 15:25)",
+   "owner_stream": "H-ELEM (COLL)",
+   "evidence": [
+    "closure_loop status 18:15"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "hcoll_v6_vmasm-c1045-440e737a7",
+   "latest_status_1815": "EARLY_FAIL_CONGESTION",
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_sfu_core_split",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "R",
+   "detail": "k4 NEEDS_RTL; successor k7 = ot_hgi_sfu_core_split2 (W/E lane split, 3 roots, rst relays; RTL 006229fd4, bench PASS) CTS gate; H-DIE option (b) equal relay depth",
+   "owner_stream": "H-ELEM (H-SU)",
+   "evidence": [
+    "el1011-hbmdie.log 17:50",
+    "H-SU 15:25"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": "ot_hgi_sfu_core_split",
+   "body_sha256": "4ce9392fda6e903eb0430752caa8b511a350729e3e3b18a409f3c1beba00459c",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "hbm_sfucore_split-k4-ec4856d31",
+   "latest_status_1815": "NEEDS_RTL",
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_sfu_programme_store",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "R",
+   "detail": "SFU programme store r5 NEEDS_RTL (rst_n 3,300 async loads, insertion 852) -> r6 pipelined reset (H-SU)",
+   "owner_stream": "H-ELEM (H-SU)",
+   "evidence": [
+    "hbm_sfu_programme_store_1016-r5-eface-cb302f3ff",
+    "HANDOFF 0cf H-ELEM 15:25"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "hbm_sfu_programme_store_1016-r5-eface-cb302f3ff",
+   "latest_status_1815": "NEEDS_RTL",
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_sm_xload_cl2_bfqf",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "R",
+   "detail": "bfqf cl2f route NEEDS_RTL TT -9.3 / FF -3.74 (hold ECO missed); XQL packet (Codex merge 273ee538c 16:19) is the structural successor",
+   "owner_stream": "H-ELEM (H-SM)",
+   "evidence": [
+    "hgi_sm_xl2_bfqf-cl2f-e44e5aab3",
+    "CODEX_TAKEOVER.log 16:19"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "hgi_sm_xl2_bfqf-cl2f-e44e5aab3",
+   "latest_status_1815": "NEEDS_RTL",
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_sm_xload_cl2_ctlw",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "R",
+   "detail": "f20a NEEDS_RTL TT -58.79; successor cl2g (XW_ADD 2->3) in the XQL packet published by Codex 16:19 (273ee538c); exact regate+submit by H-SM",
+   "owner_stream": "H-ELEM (H-SM)",
+   "evidence": [
+    "CODEX_TAKEOVER.log 16:19"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": "ot_hgi_sm_xload_cl2_ctlw",
+   "body_sha256": "ef4e62c4ea5798f563518c6b4a68a484dfa327722aade912f7ad43c61685d431",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "hgi_sm_xl2_ctlw-f20a-ba27075db",
+   "latest_status_1815": "NEEDS_RTL",
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_sm_xload_xq_pegress",
+   "registry_category": "needs redesign (no live job)",
+   "integration_row": false,
+   "census_class": "R",
+   "detail": "XQL pair-egress leaf x1 EARLY_FAIL_CONGESTION (hgi_sm_xq_pegress-x1-ee1d52825); next kit owned by H-SM",
+   "owner_stream": "H-ELEM (H-SM)",
+   "evidence": [
+    "closure_loop status 18:15"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "hgi_sm_xq_pegress-x1-ee1d52825",
+   "latest_status_1815": "EARLY_FAIL_CONGESTION",
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_coll_uop_slice96",
+   "registry_category": "flow failure (no live job)",
+   "integration_row": false,
+   "census_class": "R",
+   "detail": "REFUSED at intake: SUBMIT_LINT REF_GATE, 3 referenced files outside the synced source paths (flow-only; add the paths and re-submit unchanged); parent integration held",
+   "owner_stream": "H-ELEM (COLL; Codex upipe96 1635)",
+   "evidence": [
+    "~/.local/state/closure_loop/jobs/hcoll_upipe96-u96-c3658c05f.json",
+    "el1016-hcoll-upipe96.log"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": "hcoll_upipe96-u96-c3658c05f",
+   "latest_status_1815": "REFUSED",
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "hfd_stn_v15_cc2224",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "plain 1-stage 2,224-b register (a->b); map to 2x side-by-side CLOSED hbfd_rly_1136_<flow> (2,272 b, pad 48); all four rly_1136 flows closed. v16 die.v uses hbfd_rly_48/624 instances; stn only survives as relay_templates entry",
+   "owner_stream": "H-DIE",
+   "evidence": [
+    "tile_dedupe_1015 action 147",
+    "v16 contract relays_physical.templates",
+    "body_sha None file None stateful=None",
+    "v16 die: NOT in v16 hierarchy"
+   ],
+   "mapping_or_master": "2x hbfd_rly_1136_{WE,EW,NS,SN} (closed)",
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "hfd_stn_v15_cc2248",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "B",
+   "detail": "as cc2224, 2,248 b, pad 24",
+   "owner_stream": "H-DIE",
+   "evidence": [
+    "tile_dedupe_1015 action 148",
+    "body_sha None file None stateful=None",
+    "v16 die: NOT in v16 hierarchy"
+   ],
+   "mapping_or_master": "2x hbfd_rly_1136_<flow> (closed)",
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hbm_idx_actquant_owned_native",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "IDX child of hb_idx (ot_hbm_idx_client_static_sw); pin-register shells (H-NETLIST idxreg 774a3cd1c) with scheduled benches running (sel K=4 drain mutant still survives at 15:15); hardened IDX parent composing CLOSED tail+link/sel/q/op is H-NETLIST NEXT",
+   "owner_stream": "H-ELEM (H-NETLIST)",
+   "evidence": [
+    "el H-NETLIST 13:10, 15:15"
+   ],
+   "mapping_or_master": "ot_hbm_idx_query_static",
+   "blocker": null,
+   "rtl_module": "ot_hbm_idx_actquant_owned_native",
+   "body_sha256": "5b4c3e08729e3ff02706d9df689bd26b7fa4c4e51ad8a23fe43613d9b14232b2",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hbm_idx_calendar_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "stateful glue (SRAM 256x256) under scheduled_static; no slot/outline/pin grant (grants v8 have idx_q/s0..3/sel/link/op only)",
+   "owner_stream": "H-NETLIST (COLL+IDX)",
+   "evidence": [
+    "hbm_v15.json slots",
+    "body_sha c545c15321f040046515a1da8e55ab44c0de2f3ae8d9b8b5e415a50a9ab220c3 file rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv stateful=True",
+    "v16 die: IN ot_hbm_idx_calendar_static<-ot_hbm_idx_scheduled_static<-ot_hbm_idx_client_static<-ot_hbm_idx_client_static_sw"
+   ],
+   "mapping_or_master": null,
+   "blocker": "IDX glue home lacking outline/pin grant (hb_idx parent)",
+   "rtl_module": "ot_hbm_idx_calendar_static",
+   "body_sha256": "c545c15321f040046515a1da8e55ab44c0de2f3ae8d9b8b5e415a50a9ab220c3",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hbm_idx_engine_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "glue leaf (engine_glue x4 per idx_s cluster, std 5,250 um2) flattened into scorer cluster; closes with idx_s kit",
+   "owner_stream": "H-NETLIST (COLL+IDX)",
+   "evidence": [
+    "hbm_v15.json idx_s* children.engine_glue",
+    "body_sha 53e8393d7add22917b51e3515e9bb3751776fb8520a3363578ecf512d5490f61 file rtl/hbm_accel/index/ot_hbm_idx_engine_static.sv stateful=True",
+    "v16 die: IN ot_hbm_idx_engine_static<-ot_hbm_idx_score_static<-ot_hbm_idx_parent_static<-ot_hbm_idx_scheduled_static"
+   ],
+   "mapping_or_master": "ot_hbm_idx_score_static",
+   "blocker": "scorer cluster kit not started",
+   "rtl_module": "ot_hbm_idx_engine_static",
+   "body_sha256": "53e8393d7add22917b51e3515e9bb3751776fb8520a3363578ecf512d5490f61",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hbm_idx_parent_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "parent WITH glue (stateful, 56 lines) of query/score x4/selector/topk_link(+dense)/vm_query; not composition-eligible; closes when children close + parent glue kit",
+   "owner_stream": "H-NETLIST (COLL+IDX)",
+   "evidence": [
+    "body 41a9cdb852",
+    "body_sha 41a9cdb85261b60e39140328440e3952f4c8218c49a9763bfe8d770e659a69c0 file rtl/hbm_accel/index/ot_hbm_idx_parent_static.sv stateful=True",
+    "v16 die: IN ot_hbm_idx_parent_static<-ot_hbm_idx_scheduled_static<-ot_hbm_idx_client_static<-ot_hbm_idx_client_static_sw"
+   ],
+   "mapping_or_master": null,
+   "blocker": "children open; parent geometry is H-NETLIST NEXT (\"source-derived scorer/COLL parent geometry\")",
+   "rtl_module": "ot_hbm_idx_parent_static",
+   "body_sha256": "41a9cdb85261b60e39140328440e3952f4c8218c49a9763bfe8d770e659a69c0",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hbm_idx_query_bank_native",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "IDX child of hb_idx (ot_hbm_idx_client_static_sw); pin-register shells (H-NETLIST idxreg 774a3cd1c) with scheduled benches running (sel K=4 drain mutant still survives at 15:15); hardened IDX parent composing CLOSED tail+link/sel/q/op is H-NETLIST NEXT",
+   "owner_stream": "H-ELEM (H-NETLIST)",
+   "evidence": [
+    "el H-NETLIST 13:10, 15:15"
+   ],
+   "mapping_or_master": "ot_hbm_idx_query_static",
+   "blocker": null,
+   "rtl_module": "ot_hbm_idx_query_bank_native",
+   "body_sha256": "7aa0927a67c8b2f6f6d42905cdef5f29f217386320a7db13945fafe29b38659f",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hbm_idx_query_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "IDX child of hb_idx (ot_hbm_idx_client_static_sw); pin-register shells (H-NETLIST idxreg 774a3cd1c) with scheduled benches running (sel K=4 drain mutant still survives at 15:15); hardened IDX parent composing CLOSED tail+link/sel/q/op is H-NETLIST NEXT",
+   "owner_stream": "H-ELEM (H-NETLIST)",
+   "evidence": [
+    "el H-NETLIST 13:10, 15:15"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": "ot_hbm_idx_query_static",
+   "body_sha256": "b4fcf7a4d81859b6a730e8ad2f7f003bfa71197d4fc8ea9673b7df78318e5f56",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hbm_idx_score_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "cluster idx_s0..3 (granted slots, \"child leaf grants present; parent proof OPEN\"): 512x CLOSED ot_hbm_idx_hslice_ready_native (ready3-2065d438f exact reuse) + 4x CLOSED hidx_meta_w25_d123_r0 + 4x engine_static glue; measured glue 91,553 FF on 25 soft roots",
+   "owner_stream": "H-NETLIST (COLL+IDX)",
+   "evidence": [
+    "results/arch/hbm_idx_scheduled_0811/scorer_leaf_layout.json",
+    "grants idx_s* engine_glue",
+    "body_sha 8a76c3eb15bc4f28acee426161f90640a7c7ba3a324ca12bda64fae44c17928e file rtl/hbm_accel/index/ot_hbm_idx_score_static.sv stateful=True",
+    "v16 die: IN ot_hbm_idx_score_static<-ot_hbm_idx_parent_static<-ot_hbm_idx_scheduled_static<-ot_hbm_idx_client_static"
+   ],
+   "mapping_or_master": null,
+   "blocker": "scorer parent geometry/pin/clock/PG not started; leaf-pack option A 3.94x3.06 mm vs slot 3.84x3.01",
+   "rtl_module": "ot_hbm_idx_score_static",
+   "body_sha256": "8a76c3eb15bc4f28acee426161f90640a7c7ba3a324ca12bda64fae44c17928e",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hbm_idx_selector_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "IDX child of hb_idx (ot_hbm_idx_client_static_sw); pin-register shells (H-NETLIST idxreg 774a3cd1c) with scheduled benches running (sel K=4 drain mutant still survives at 15:15); hardened IDX parent composing CLOSED tail+link/sel/q/op is H-NETLIST NEXT",
+   "owner_stream": "H-ELEM (H-NETLIST)",
+   "evidence": [
+    "el H-NETLIST 13:10, 15:15"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": "ot_hbm_idx_selector_static",
+   "body_sha256": "90ff275abe587542183b4e31b7988cee9c1e13c9a74b1d61903e94120be555da",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hbm_idx_topk_link_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "IDX child of hb_idx (ot_hbm_idx_client_static_sw); pin-register shells (H-NETLIST idxreg 774a3cd1c) with scheduled benches running (sel K=4 drain mutant still survives at 15:15); hardened IDX parent composing CLOSED tail+link/sel/q/op is H-NETLIST NEXT",
+   "owner_stream": "H-ELEM (H-NETLIST)",
+   "evidence": [
+    "el H-NETLIST 13:10, 15:15"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": "ot_hbm_idx_topk_link_static",
+   "body_sha256": "4f61442648289d9a38e5c5ea0c7208163d5185a3eaa4a82a42af8c178269a99c",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hbm_idx_vm_query_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "gated (kit hidx_op_pr) but CTS spread 92.8 ps > 80 native; no PNR; structural clock successor needed",
+   "owner_stream": "H-NETLIST (COLL+IDX)",
+   "evidence": [
+    "el1015-hbm-netlist.log 92 \"hidx_op gate has CTSspread92.8/nativeOPEN\"",
+    "body_sha 39dcf08519bf09400b140d7e1cd03e49c308969d4c4eb34df3f0381182f77847 file rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv stateful=True",
+    "v16 die: IN ot_hbm_idx_vm_query_static<-ot_hbm_idx_parent_static<-ot_hbm_idx_scheduled_static<-ot_hbm_idx_client_static"
+   ],
+   "mapping_or_master": null,
+   "blocker": "IDX op clock successor (no live job)",
+   "rtl_module": "ot_hbm_idx_vm_query_static",
+   "body_sha256": "39dcf08519bf09400b140d7e1cd03e49c308969d4c4eb34df3f0381182f77847",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hbm_idx_vm_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "leaf inside vm_query_static_core; follows hidx_op successor",
+   "owner_stream": "H-NETLIST (COLL+IDX)",
+   "evidence": [
+    "body_sha 18580dfe9d44ea16aacc5b3733c5cc1bb331e48ee9aefafb59ad9720e7d8645c file rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv stateful=True",
+    "v16 die: IN ot_hbm_idx_vm_static<-ot_hbm_idx_vm_query_static_core<-ot_hbm_idx_vm_query_static<-ot_hbm_idx_parent_static"
+   ],
+   "mapping_or_master": "ot_hbm_idx_vm_query_static",
+   "blocker": "as vm_query",
+   "rtl_module": "ot_hbm_idx_vm_static",
+   "body_sha256": "18580dfe9d44ea16aacc5b3733c5cc1bb331e48ee9aefafb59ad9720e7d8645c",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hbm_pll_bb",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "M",
+   "detail": "(* blackbox *) analog PLL interface, bound as a hard macro view; not a route element",
+   "owner_stream": "H-DIE",
+   "evidence": [
+    "rtl/hbm_accel/control/ot_hbm_pll_bb.sv"
+   ],
+   "mapping_or_master": "hfd_ckgen (closed)",
+   "blocker": null,
+   "rtl_module": "ot_hbm_pll_bb",
+   "body_sha256": "72639dbd68b0fb022f9967093e84e5c82b246e63882b62fef304f9e4089aaff5",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hbm_su_static_vm_bank_leaf",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "leaf inside v16 cluster ot_hbm_su_static_pgslice (16 inst, RTL only); old parent vm_ports retired",
+   "owner_stream": "H-SU",
+   "evidence": [
+    "v16 hierarchy pgslice",
+    "body_sha 6c9fb2960a95d471e726b889387128f8a0f391eb218da5d54f6943e87c4e62ca file rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv stateful=True",
+    "v16 die: IN ot_hbm_su_static_vm_bank_leaf<-ot_hbm_su_static_pgslice"
+   ],
+   "mapping_or_master": "ot_hbm_su_static_pgslice",
+   "blocker": "pgslice cluster kit not started (H-SU)",
+   "rtl_module": "ot_hbm_su_static_vm_bank_leaf",
+   "body_sha256": "6c9fb2960a95d471e726b889387128f8a0f391eb218da5d54f6943e87c4e62ca",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hbm_vm_lg_static_bank",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "grant now exists in d4b frozen placement (96 inst, slot 33.696 x 34.56 um, main 2fc2b2c40) BUT the only routed view (d066faae2, physical/ref_tile/vm_lg_bank_hc_static_1015, never in the closure loop) is 150.336 x 151.2 um: slot and view disagree by ~20x area -> H-DIE must size the d4c slot from the view (or H-ELEM re-pack); no kit until they agree",
+   "owner_stream": "H-DIE + H-ELEM",
+   "evidence": [
+    "results/arch/hbm_die_v16/d4b_frozen_placement.json lg_*",
+    "physical/ref_tile/vm_lg_bank_hc_static_1015/views/ot_hbm_vm_lg_static_bank/ot_hbm_vm_lg_static_bank.lef SIZE"
+   ],
+   "mapping_or_master": null,
+   "blocker": "no outline/pin grant for lg_<q>_<k>_b<n> in grants v8 / plan v5 core4_sfu2_b3624",
+   "rtl_module": "ot_hbm_vm_lg_static_bank",
+   "body_sha256": "3237ebaaca2eeebffd973f9efe02844b98eb5ab06a61acac7b370a6bbf1daa54",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_coll_qslots_capture",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "COLL child of hb_coll_<q>: replaced by hard_v5/V6 successors (qcap/qso native PASS 13:55; issuer v6b gate -117 ps -> structural next; tkm inside q3 lockstep bench); owner H-NETLIST/COLL",
+   "owner_stream": "H-ELEM (COLL)",
+   "evidence": [
+    "HANDOFF 0cf Q-KVSYS/H-ELEM 13:55, H-NETLIST 15:15"
+   ],
+   "mapping_or_master": "ot_hgi_coll_qslots_capture_pin_v2",
+   "blocker": null,
+   "rtl_module": "ot_hgi_coll_qslots_capture",
+   "body_sha256": "b01e04a16d8ca83e2226c76e73321202ae717ef8d60e188bce41ff5a107399b6",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_coll_qslots_output",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "COLL child of hb_coll_<q>: replaced by hard_v5/V6 successors (qcap/qso native PASS 13:55; issuer v6b gate -117 ps -> structural next; tkm inside q3 lockstep bench); owner H-NETLIST/COLL",
+   "owner_stream": "H-ELEM (COLL)",
+   "evidence": [
+    "HANDOFF 0cf Q-KVSYS/H-ELEM 13:55, H-NETLIST 15:15"
+   ],
+   "mapping_or_master": "ot_hgi_coll_qso_q{2,3}_b{1,32}",
+   "blocker": null,
+   "rtl_module": "ot_hgi_coll_qslots_output",
+   "body_sha256": "7ca0e5e05c7d741675f74dc56bef3c1be13bf0238690b385630b69a77d6ff27f",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_coll_static_issuer",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "COLL child of hb_coll_<q>: replaced by hard_v5/V6 successors (qcap/qso native PASS 13:55; issuer v6b gate -117 ps -> structural next; tkm inside q3 lockstep bench); owner H-NETLIST/COLL",
+   "owner_stream": "H-ELEM (COLL)",
+   "evidence": [
+    "HANDOFF 0cf Q-KVSYS/H-ELEM 13:55, H-NETLIST 15:15"
+   ],
+   "mapping_or_master": "ot_hgi_coll_issuer_m",
+   "blocker": null,
+   "rtl_module": "ot_hgi_coll_static_issuer",
+   "body_sha256": "d20e99e18ba07e1d0f2db896a0ebdb303334cce19df24ba210ead81d12b4b545",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_coll_static_program_bank",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "COLL child of hb_coll_<q>: replaced by hard_v5/V6 successors (qcap/qso native PASS 13:55; issuer v6b gate -117 ps -> structural next; tkm inside q3 lockstep bench); owner H-NETLIST/COLL",
+   "owner_stream": "H-ELEM (COLL)",
+   "evidence": [
+    "HANDOFF 0cf Q-KVSYS/H-ELEM 13:55, H-NETLIST 15:15"
+   ],
+   "mapping_or_master": "ot_hgi_coll_issuer_m",
+   "blocker": null,
+   "rtl_module": "ot_hgi_coll_static_program_bank",
+   "body_sha256": "344935e83ea8670fe2027a83057656a3b6d8cea24344c221e3b568e31261c278",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_coll_tkm_buffer",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "COLL child of hb_coll_<q>: replaced by hard_v5/V6 successors (qcap/qso native PASS 13:55; issuer v6b gate -117 ps -> structural next; tkm inside q3 lockstep bench); owner H-NETLIST/COLL",
+   "owner_stream": "H-ELEM (COLL)",
+   "evidence": [
+    "HANDOFF 0cf Q-KVSYS/H-ELEM 13:55, H-NETLIST 15:15"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": "ot_hgi_coll_tkm_buffer",
+   "body_sha256": "a95134c85a4c47fb0d712aa3f43ec27771a39a37690bc90b8a6b774de23ffea6",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_coll_tkm_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "C",
+   "detail": "hybrid sub-cluster (tkm_m in hard_v5): control root + tkm_buffer (gate live) + 32 CLOSED ot_hgi_coll_tkm_tile (coll_tkm_tile_cx-r1-5ab85cbc7)",
+   "owner_stream": "H-NETLIST/COLL",
+   "evidence": [
+    "plan.json ot_hgi_coll_tkm_m",
+    "body_sha b6a6f80327786c2f6731675d9d00edb6e767e729040856cb9419bc91251df580 file rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv stateful=True",
+    "v16 die: IN ot_hgi_coll_tkm_static<-ot_hfd_coll_q_static_v4<-ot_hfd_coll_q3_static_v4<-ot_hfd_coll_q3_static_host_v4"
+   ],
+   "mapping_or_master": null,
+   "blocker": "tkm_buffer not closed; tkm_m kit not started",
+   "rtl_module": "ot_hgi_coll_tkm_static",
+   "body_sha256": "b6a6f80327786c2f6731675d9d00edb6e767e729040856cb9419bc91251df580",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_sfu_arithmetic_grid",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "covered-internal: flattened into the SFU core kit; parent successor is now k7 ot_hgi_sfu_core_split2 (gating), hard children = closed ot_su12_sfu; no standalone route",
+   "owner_stream": "H-ELEM (H-SU)",
+   "evidence": [
+    "H-SU 15:25 k7"
+   ],
+   "mapping_or_master": "ot_hgi_sfu_core_split",
+   "blocker": null,
+   "rtl_module": "ot_hgi_sfu_arithmetic_grid",
+   "body_sha256": "14ae2ffa70c384ae5e31582b420d58ab284f5c6b201fcb57a3f06c4a97e8680a",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_sfu_bcast_e0",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "covered-internal: flattened into the SFU core kit; parent successor is now k7 ot_hgi_sfu_core_split2 (gating), hard children = closed ot_su12_sfu; no standalone route",
+   "owner_stream": "H-ELEM (H-SU)",
+   "evidence": [
+    "H-SU 15:25 k7"
+   ],
+   "mapping_or_master": "ot_hgi_sfu_core_split",
+   "blocker": null,
+   "rtl_module": "ot_hgi_sfu_bcast_e0",
+   "body_sha256": "19f1ddad8988774b43b88ead9f96e87cc79255cea6b1f05875e9694eb9b49ce3",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_sfu_calendar_paged_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "covered-internal leaf of ot_hgi_sfu_programme_store (r5 NEEDS_RTL -> r6 pipelined reset); no standalone route",
+   "owner_stream": "H-ELEM (H-SU)",
+   "evidence": [
+    "HANDOFF 0cf H-ELEM 15:25"
+   ],
+   "mapping_or_master": "ot_hgi_sfu_programme_store",
+   "blocker": null,
+   "rtl_module": "ot_hgi_sfu_calendar_paged_static",
+   "body_sha256": "1ff942142aa05d1ccb87b5c8e4b92222222af6606662eb3c710541a53a9f6043",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_sfu_io_calendar_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "covered-internal leaf of ot_hgi_sfu_programme_store (r5 NEEDS_RTL -> r6 pipelined reset); no standalone route",
+   "owner_stream": "H-ELEM (H-SU)",
+   "evidence": [
+    "HANDOFF 0cf H-ELEM 15:25"
+   ],
+   "mapping_or_master": "ot_hgi_sfu_programme_store",
+   "blocker": null,
+   "rtl_module": "ot_hgi_sfu_io_calendar_static",
+   "body_sha256": "7fc8d8b49bc4b18f955c465034d34a6b86fe93f5041c065b8760d12621eeac33",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_sfu_lane_map_e123",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "covered-internal: flattened into the SFU core kit; parent successor is now k7 ot_hgi_sfu_core_split2 (gating), hard children = closed ot_su12_sfu; no standalone route",
+   "owner_stream": "H-ELEM (H-SU)",
+   "evidence": [
+    "H-SU 15:25 k7"
+   ],
+   "mapping_or_master": "ot_hgi_sfu_core_split",
+   "blocker": null,
+   "rtl_module": "ot_hgi_sfu_lane_map_e123",
+   "body_sha256": "31f3b6144a466b177f6880b4ba17421123d23ba41e633ae6de032545190afd22",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_sfu_program_stripe_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "covered-internal leaf of ot_hgi_sfu_programme_store (r5 NEEDS_RTL -> r6 pipelined reset); no standalone route",
+   "owner_stream": "H-ELEM (H-SU)",
+   "evidence": [
+    "HANDOFF 0cf H-ELEM 15:25"
+   ],
+   "mapping_or_master": "ot_hgi_sfu_programme_store",
+   "blocker": null,
+   "rtl_module": "ot_hgi_sfu_program_stripe_static",
+   "body_sha256": "54ac609a49d5e815c304744867e0c5be6e9bd6e5460a5400e07c86f27a397fa0",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_sfu_static_engine",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "covered-internal: flattened into the SFU core kit; parent successor is now k7 ot_hgi_sfu_core_split2 (gating), hard children = closed ot_su12_sfu; no standalone route",
+   "owner_stream": "H-ELEM (H-SU)",
+   "evidence": [
+    "H-SU 15:25 k7"
+   ],
+   "mapping_or_master": "ot_hgi_sfu_core_split",
+   "blocker": null,
+   "rtl_module": "ot_hgi_sfu_static_engine",
+   "body_sha256": "7e3da8052e383982cb9ab8001d4f4f8ff3af578589d9811824b5d3490520859c",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_sfu_static_operand_store",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "covered-internal: flattened into the SFU core kit; parent successor is now k7 ot_hgi_sfu_core_split2 (gating), hard children = closed ot_su12_sfu; no standalone route",
+   "owner_stream": "H-ELEM (H-SU)",
+   "evidence": [
+    "H-SU 15:25 k7"
+   ],
+   "mapping_or_master": "ot_hgi_sfu_core_split",
+   "blocker": null,
+   "rtl_module": "ot_hgi_sfu_static_operand_store",
+   "body_sha256": "8731ca5ef3ff94b8daf709bfc23340b5fe51b4a95c645cbd6c323276fb9d1b3a",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_sfu_static_quarter",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "covered-internal: flattened into the SFU core kit; parent successor is now k7 ot_hgi_sfu_core_split2 (gating), hard children = closed ot_su12_sfu; no standalone route",
+   "owner_stream": "H-ELEM (H-SU)",
+   "evidence": [
+    "H-SU 15:25 k7"
+   ],
+   "mapping_or_master": "ot_hgi_sfu_core_split",
+   "blocker": null,
+   "rtl_module": "ot_hgi_sfu_static_quarter",
+   "body_sha256": "ab573e438bdc8d63c77925170cdd0607332e1bd952998ce436fe8bfee0fc925b",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_sfu_vm_static_bridge",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "covered-internal: flattened into the SFU core kit; parent successor is now k7 ot_hgi_sfu_core_split2 (gating), hard children = closed ot_su12_sfu; no standalone route",
+   "owner_stream": "H-ELEM (H-SU)",
+   "evidence": [
+    "H-SU 15:25 k7"
+   ],
+   "mapping_or_master": "ot_hgi_sfu_core_split",
+   "blocker": null,
+   "rtl_module": "ot_hgi_sfu_vm_static_bridge",
+   "body_sha256": "b6c2fc16af6a27e690eb2f5a8964a769890d38a5df67f98bdf69b48ecbf3ef08",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_su_lbank",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "covered-internal: flattened into the SFU core kit; parent successor is now k7 ot_hgi_sfu_core_split2 (gating), hard children = closed ot_su12_sfu; no standalone route",
+   "owner_stream": "H-ELEM (H-SU)",
+   "evidence": [
+    "H-SU 15:25 k7"
+   ],
+   "mapping_or_master": "ot_hgi_sfu_core_split",
+   "blocker": null,
+   "rtl_module": "ot_hgi_su_lbank",
+   "body_sha256": "5dc3e61f25e02f9c6599987476e89acb71383efc9f88eb57723e9bc2709be6fc",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_su_lgroup2",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "covered-internal: flattened into the SFU core kit; parent successor is now k7 ot_hgi_sfu_core_split2 (gating), hard children = closed ot_su12_sfu; no standalone route",
+   "owner_stream": "H-ELEM (H-SU)",
+   "evidence": [
+    "H-SU 15:25 k7"
+   ],
+   "mapping_or_master": "ot_hgi_sfu_core_split",
+   "blocker": null,
+   "rtl_module": "ot_hgi_su_lgroup2",
+   "body_sha256": "980cea13b6328a3d35714485dc1f2728b124e26cf08b0746ea4cb327e82bf7ff",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true,
+   "updated_1815": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_qkvd_llr_replay_sram_leaf",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "G",
+   "detail": "covered-internal: leaf of ot_hgi_coll_static_pinreg_store (v16 link_capture); pinreg_store gated as hcoll_v5_lkst",
+   "owner_stream": "H-NETLIST/COLL-LANE-1045",
+   "evidence": [
+    "v16 hierarchy: ot_qkvd_llr_replay_sram_leaf<-ot_hgi_coll_static_pinreg_store<-ot_hgi_coll_static_link_capture<-ot_hfd_coll_q_static_v4",
+    "pinreg_store source byte-identical to CLOSED hcoll-pinreg-store141-44720c8ad-tc (route_master M6/M7, no exported view -> not reusable)",
+    "body_sha b932c5169b89b932c44ff7ab30c7d866e1285470eab51fb33e7c73fee1d387d3 file rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv stateful=True",
+    "v16 die: IN ot_qkvd_llr_replay_sram_leaf<-ot_hgi_coll_static_pinreg_store<-ot_hgi_coll_static_link_capture<-ot_hfd_coll_q_static_v4"
+   ],
+   "mapping_or_master": "ot_hgi_coll_static_pinreg_store",
+   "blocker": null,
+   "rtl_module": "ot_qkvd_llr_replay_sram_leaf",
+   "body_sha256": "b932c5169b89b932c44ff7ab30c7d866e1285470eab51fb33e7c73fee1d387d3",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_vms_hub_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "stateful VMS slice glue leaf; credit-free redesign, NOT a variant of closed ot_vms_* (token similarity 0.15-0.57)",
+   "owner_stream": "H-SM",
+   "evidence": [
+    "HANDOFF line 1940 hb_vms params {} -> generic bank",
+    "body_sha 9b3cc150c3003034fd335a68037651535dcbceeb3163aedaa1b83612a4fb7e35 file rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv stateful=True",
+    "v16 die: IN ot_vms_hub_static<-ot_vms_slice_static<-hfd_hgi_vms_static_SW"
+   ],
+   "mapping_or_master": null,
+   "blocker": "VMS homes/pins absent (no leaf slots in grants v8 / plan v5) + VM slice parent binding (STRAP_BANKS/native opt-in, nat2 flip HOLD)",
+   "rtl_module": "ot_vms_hub_static",
+   "body_sha256": "9b3cc150c3003034fd335a68037651535dcbceeb3163aedaa1b83612a4fb7e35",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_vms_rcl_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "stateful VMS slice glue leaf; credit-free redesign, NOT a variant of closed ot_vms_* (token similarity 0.15-0.57)",
+   "owner_stream": "H-SM",
+   "evidence": [
+    "HANDOFF line 1940 hb_vms params {} -> generic bank",
+    "body_sha ba8cc496e7893589da8f4300822e9c0d4d8f4eaf73eb515ec4ab1bf87b3200ea file rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv stateful=True",
+    "v16 die: IN ot_vms_rcl_static<-ot_vms_slice_static<-hfd_hgi_vms_static_SW"
+   ],
+   "mapping_or_master": null,
+   "blocker": "VMS homes/pins absent (no leaf slots in grants v8 / plan v5) + VM slice parent binding (STRAP_BANKS/native opt-in, nat2 flip HOLD)",
+   "rtl_module": "ot_vms_rcl_static",
+   "body_sha256": "ba8cc496e7893589da8f4300822e9c0d4d8f4eaf73eb515ec4ab1bf87b3200ea",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_vms_rstop_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "stateful VMS slice glue leaf; credit-free redesign, NOT a variant of closed ot_vms_* (token similarity 0.15-0.57)",
+   "owner_stream": "H-SM",
+   "evidence": [
+    "HANDOFF line 1940 hb_vms params {} -> generic bank",
+    "body_sha ba8a4b5c4b3844db44876adad9ede64e42b258a35546d8bd5e2a259060da945f file rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv stateful=True",
+    "v16 die: IN ot_vms_rstop_static<-ot_vms_slice_static<-hfd_hgi_vms_static_SW"
+   ],
+   "mapping_or_master": null,
+   "blocker": "VMS homes/pins absent (no leaf slots in grants v8 / plan v5) + VM slice parent binding (STRAP_BANKS/native opt-in, nat2 flip HOLD)",
+   "rtl_module": "ot_vms_rstop_static",
+   "body_sha256": "ba8a4b5c4b3844db44876adad9ede64e42b258a35546d8bd5e2a259060da945f",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_vms_status_static",
+   "registry_category": "not started (open)",
+   "integration_row": false,
+   "census_class": "D",
+   "detail": "stateful VMS slice glue leaf; credit-free redesign, NOT a variant of closed ot_vms_* (token similarity 0.15-0.57)",
+   "owner_stream": "H-SM",
+   "evidence": [
+    "HANDOFF line 1940 hb_vms params {} -> generic bank",
+    "body_sha b55c90175129071f112d00b03fbd9e91250c480d284171309edd206041a6bc0c file rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv stateful=True",
+    "v16 die: IN ot_vms_status_static<-ot_vms_slice_static<-hfd_hgi_vms_static_SW"
+   ],
+   "mapping_or_master": null,
+   "blocker": "VMS homes/pins absent (no leaf slots in grants v8 / plan v5) + VM slice parent binding (STRAP_BANKS/native opt-in, nat2 flip HOLD)",
+   "rtl_module": "ot_vms_status_static",
+   "body_sha256": "b55c90175129071f112d00b03fbd9e91250c480d284171309edd206041a6bc0c",
+   "stateful": true,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_port_tiles_0_f1",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only parent of word/result half children (master_identity composition, body hash pinned); integration row, not a route",
+   "owner_stream": "Q-COMPUTE-DIE",
+   "evidence": [
+    "tools/fleet_viz/master_identity.json compositions",
+    "fleet-viz integration_rows 18:15"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_port_tiles_1_f1",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only parent of word/result half children (master_identity composition, body hash pinned); integration row, not a route",
+   "owner_stream": "Q-COMPUTE-DIE",
+   "evidence": [
+    "tools/fleet_viz/master_identity.json compositions",
+    "fleet-viz integration_rows 18:15"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_port_tiles_2_f1",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only parent of word/result half children (master_identity composition, body hash pinned); integration row, not a route",
+   "owner_stream": "Q-COMPUTE-DIE",
+   "evidence": [
+    "tools/fleet_viz/master_identity.json compositions",
+    "fleet-viz integration_rows 18:15"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_land",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only KV v1.4.1 slot parents (master_identity composition, body hash pinned); integration row, not a route",
+   "owner_stream": "Q-KVSYS-DIE",
+   "evidence": [
+    "tools/fleet_viz/master_identity.json compositions",
+    "fleet-viz integration_rows 18:15"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_land_n",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only KV v1.4.1 slot parents (master_identity composition, body hash pinned); integration row, not a route",
+   "owner_stream": "Q-KVSYS-DIE",
+   "evidence": [
+    "tools/fleet_viz/master_identity.json compositions",
+    "fleet-viz integration_rows 18:15"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_astk",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only KV v1.4.1 slot parents (master_identity composition, body hash pinned); integration row, not a route",
+   "owner_stream": "Q-KVSYS-DIE",
+   "evidence": [
+    "tools/fleet_viz/master_identity.json compositions",
+    "fleet-viz integration_rows 18:15"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_astk_n",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only KV v1.4.1 slot parents (master_identity composition, body hash pinned); integration row, not a route",
+   "owner_stream": "Q-KVSYS-DIE",
+   "evidence": [
+    "tools/fleet_viz/master_identity.json compositions",
+    "fleet-viz integration_rows 18:15"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": null,
+   "body_sha256": null,
+   "stateful": null,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": false,
+   "updated_1815": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qkd_ahub",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only parent ot_qkd_ahub_die (stateful False) of qkd_ahub_core (CLOSED hd3-7ff6d109e) + ot_nhb_zh/pbst/pvlg + ot_qkh_recip_leaf (all CLOSED) + ot_qkd_drly relays (real child state, no registry row); parent kit physical/ref_tile/qkd_ahub_die waited on hd3 view, now CLOSED",
+   "owner_stream": "Q-KVSYS-STRIP (Q-KVSYS-ELEM)",
+   "evidence": [
+    "current body sha 3c05d51e9b956aba1f600411d0e711adcc75837a61c24214b02e21c17be42187 (main == hd3 source 7ff6d109e)",
+    "STALE master_identity.json composition entry for qkd_ahub records body_sha256 2c5f33425ace22c2... (pre 4fb8759f4 hd3 Z-bus split, 10-16 01:39) -> re-record",
+    "already in master_identity compositions (element qkd_ahub, module ot_qkd_ahub_die)"
+   ],
+   "mapping_or_master": null,
+   "blocker": null,
+   "rtl_module": "ot_qkd_ahub_die",
+   "body_sha256": "3c05d51e9b956aba1f600411d0e711adcc75837a61c24214b02e21c17be42187",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "Qwen ROM",
+   "element": "qfd_band_upper_tp8",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "pass-through wrapper (stateful False, 21 lines) of ONE CLOSED ot_qfd_band_upper (qfd_tt_up4_leafr-r1-2f82af99b); view alias after numeric pin/param equality (file header); master_identity composition-eligible",
+   "owner_stream": "Q-ELEM",
+   "evidence": [
+    "body sha 53f98cbbc980c435d1861a55f221b9295dea5a781733785f01820b98659e09c6",
+    "CONTRACT.md v1.4: \"64.8 x 205.2 CLOSED view\"",
+    "superseded-candidate under b2: tree top becomes qfd_band_upper_b2_l2_s4 (G); option-(a) q2o1 trial still instantiates 4x qfd_band_upper_tp8"
+   ],
+   "mapping_or_master": "ot_qfd_band_upper CLOSED qfd_tt_up4_leafr-r1-2f82af99b TT+236.01/FF+18.69",
+   "blocker": null,
+   "rtl_module": "qfd_band_upper_tp8",
+   "body_sha256": "53f98cbbc980c435d1861a55f221b9295dea5a781733785f01820b98659e09c6",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_bf_col",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only generated die-name wrapper (composition-eligible)",
+   "owner_stream": "S-ELEM-B -> S-ELEM-PQ/BF",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv dsfd_bf_col)=09eabb86491d88bf2a75fd90a912caf219b6b9109934aad49a7e364ae5a09bff stateful=False",
+    "c21h port-bind PASS",
+    "master_identity composition candidate: path rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv module dsfd_bf_col body_sha256 09eabb86491d88bf2a75fd90a912caf219b6b9109934aad49a7e364ae5a09bff"
+   ],
+   "mapping_or_master": "dsfd_bf_col (x1038 c21h instances) = CLOSED ot_v41_bf_col view bfh_compact199_col_kreg_a1200_05a8d46ee-cl (TT+33.00/FF+15.37); tools/s81/gen_bf_die_wrappers.py",
+   "blocker": "none for the wrapper; caveat: S-ELEM-PQ/BF says production column needs real 2 raw-ROM + 10 CTS entry ABI (hybrid12 E/W column CTS FAIL 10:11 -> next = column as cluster), which would replace the child",
+   "rtl_module": "dsfd_bf_col",
+   "body_sha256": "09eabb86491d88bf2a75fd90a912caf219b6b9109934aad49a7e364ae5a09bff",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_sp_capture_c",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only parent, all 8 contract leaves CLOSED (composition-eligible)",
+   "owner_stream": "S-ELEM-A / codex:S81 hub parents",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv dsfd_sp_capture_c)=73ecfcc957291eeec8fffa676f8d0351752f6f59fec4466e2d5208d6427ddb8c stateful=False",
+    "c21h port-bind PASS",
+    "master_identity composition candidate body_sha256 73ecfcc957291eeec8fffa676f8d0351752f6f59fec4466e2d5208d6427ddb8c"
+   ],
+   "mapping_or_master": "children dsfd_capt_cd/ctl/g2/x8_dual/x/grp + relays (all CLOSED); capture-split candidate (codex hub parents) may replace g2/x8_dual/relays",
+   "blocker": "parent kit + hub re-floorplan placement; decide split adoption (owner review) before freezing composition",
+   "rtl_module": "dsfd_sp_capture_c",
+   "body_sha256": "73ecfcc957291eeec8fffa676f8d0351752f6f59fec4466e2d5208d6427ddb8c",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_sp_pq_produced",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only PQ slot master (composition-eligible)",
+   "owner_stream": "S-ELEM-PQ",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_produced.sv dsfd_sp_pq_produced)=640644f76954f76d52463ffb49b7491aaba855e9488c6a545736a9117952b127 stateful=False",
+    "contracts: S-DIE-NETLIST 2026-10-16 PQ slot master under --pq-producer (59014b2c2)",
+    "not in c21h (newer GEN)"
+   ],
+   "mapping_or_master": "children dsfd_sp_pq_n (C), ot_s81_pq_calendar_rom, ot_s81_pq_command_endpoint (CLOSED)",
+   "blocker": "dsfd_sp_pq_n + producer path (c10 engine 13)",
+   "rtl_module": "dsfd_sp_pq_produced",
+   "body_sha256": "640644f76954f76d52463ffb49b7491aaba855e9488c6a545736a9117952b127",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "DeepSeek ROM",
+   "element": "dsfd_svc_c",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only parent, 10/10 contract leaves CLOSED (composition-eligible)",
+   "owner_stream": "S-ELEM-B",
+   "evidence": [
+    "body_sha(main rtl/dsrom_sys/s81_ph/svc/dsfd_svc_c.sv dsfd_svc_c)=2a89eb89378884de33ca1cefd3ca79081f62342e2c2c4cd48cc0734174ee77ff stateful=False",
+    "c21h PASS",
+    "master_identity composition candidate body_sha256 2a89eb89378884de33ca1cefd3ca79081f62342e2c2c4cd48cc0734174ee77ff"
+   ],
+   "mapping_or_master": "children dsfd_svc_hs/idx/pc/quad, dsfd_svch_rly/xstn, dsfd_svcio_job, ot_s81_svc_probability_frame, ot_s81ph_svc_io_t",
+   "blocker": "parent kit + hub placement (3 service536 homes conflict 1106/1119 at SW anchor, Codex 0cb)",
+   "rtl_module": "dsfd_svc_c",
+   "body_sha256": "2a89eb89378884de33ca1cefd3ca79081f62342e2c2c4cd48cc0734174ee77ff",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "hfd_hgi_vms_static_NE",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only quadrant wrapper of ot_vms_slice_static (stateful=False). Not a replica of any sibling; B-mappable to SE: NE body with .sid(2'd3)->2'd1 and STRAP_QUADRANT 3->1 hashes to SE body b5224af2 (proved). STRAP_QUADRANT is dead in v16 (STRAP_BANKS default 0), so NE=SE up to the sid tie constant -> make sid a strap pin (as hfd_vms_bank_native_q1 already does) and harden once",
+   "owner_stream": "H-SM (assigned, master_owners_0600)",
+   "evidence": [
+    "body aaad32024b",
+    "dedupe.json fam 28",
+    "HANDOFF 0cd H-SM 09:45 nat2 flip HOLD",
+    "body_sha aaad32024bccdb17f9c1da68f7a787db7b06622e9f7a32399e8112ef8b2180ee file rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv stateful=False",
+    "v16 die: IN hfd_hgi_vms_static_NE"
+   ],
+   "mapping_or_master": "hfd_hgi_vms_static_SE (sid strap)",
+   "blocker": "VM slice parent binding: v16 hb_vms_<q> params {} -> STRAP_BANKS=0 elaborates generic ot_vms_bank_static, not native masters; nat2 atomic client flip HOLD (q0/q2 native FAIL)",
+   "rtl_module": "hfd_hgi_vms_static_NE",
+   "body_sha256": "aaad32024bccdb17f9c1da68f7a787db7b06622e9f7a32399e8112ef8b2180ee",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "hfd_hgi_vms_static_NW",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only wrapper; DISTINCT: rq 680/rr 10280/wq 6744/wq_done 24, slice RG5/WG3 (NE/SE RG4/WG2) -- dedupe claim \"NW=SW up to constants\" is false on current RTL",
+   "owner_stream": "H-SM",
+   "evidence": [
+    "body bd290e3c25",
+    "vm_retire_0600: NW NC3->0",
+    "body_sha bd290e3c2536c2b56a151069d794b8a75b2f0dde560e47459e8b9e11ec7e8134 file rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv stateful=False",
+    "v16 die: IN hfd_hgi_vms_static_NW"
+   ],
+   "mapping_or_master": null,
+   "blocker": "same as NE",
+   "rtl_module": "hfd_hgi_vms_static_NW",
+   "body_sha256": "bd290e3c2536c2b56a151069d794b8a75b2f0dde560e47459e8b9e11ec7e8134",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "hfd_hgi_vms_static_SE",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only wrapper of ot_vms_slice_static; family master for NE (see NE)",
+   "owner_stream": "H-SM",
+   "evidence": [
+    "body b5224af206",
+    "body_sha b5224af2062ddf524037f5b5939c91cc64168709e04b52056c29f8fbf68ca586 file rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv stateful=False",
+    "v16 die: IN hfd_hgi_vms_static_SE"
+   ],
+   "mapping_or_master": null,
+   "blocker": "same as NE",
+   "rtl_module": "hfd_hgi_vms_static_SE",
+   "body_sha256": "b5224af2062ddf524037f5b5939c91cc64168709e04b52056c29f8fbf68ca586",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "hfd_hgi_vms_static_SW",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only wrapper; DISTINCT: has cq/cr client ports, NC2 RG5 WG2, client_seq 6b",
+   "owner_stream": "H-SM",
+   "evidence": [
+    "body cffe6d91cc",
+    "vm_retire_0600: SW NC3->2",
+    "body_sha cffe6d91cc704c755ad7101e139ebeed373a45806e7973a2200fac22356e8ea3 file rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv stateful=False",
+    "v16 die: IN hfd_hgi_vms_static_SW"
+   ],
+   "mapping_or_master": null,
+   "blocker": "same as NE",
+   "rtl_module": "hfd_hgi_vms_static_SW",
+   "body_sha256": "cffe6d91cc704c755ad7101e139ebeed373a45806e7973a2200fac22356e8ea3",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hbm_idx_client_static",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only composition (children scheduled_static, topk_static, vm_share_static) inside v16 master ot_hbm_idx_client_static_sw (hb_idx); master_identity-composition eligible",
+   "owner_stream": "H-NETLIST (COLL+IDX)",
+   "evidence": [
+    "body f7a6edb57c stateful=False",
+    "body_sha f7a6edb57c8041e537d305df87c81068398d3b563dd9c8b2ad2f6c921cdac7b2 file rtl/hbm_accel/index/ot_hbm_idx_client_static.sv stateful=False",
+    "v16 die: IN ot_hbm_idx_client_static<-ot_hbm_idx_client_static_sw"
+   ],
+   "mapping_or_master": null,
+   "blocker": "IDX parent (hb_idx) not hardened; children in flight",
+   "rtl_module": "ot_hbm_idx_client_static",
+   "body_sha256": "f7a6edb57c8041e537d305df87c81068398d3b563dd9c8b2ad2f6c921cdac7b2",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hbm_idx_scheduled_static",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only composition (calendar_static + parent_static); composition eligible",
+   "owner_stream": "H-NETLIST (COLL+IDX)",
+   "evidence": [
+    "body 0d62198896 stateful=False",
+    "body_sha 0d621988962839bff378f1d5df52c55ba8c85275f69fd035c16b1877d6929fa4 file rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv stateful=False",
+    "v16 die: IN ot_hbm_idx_scheduled_static<-ot_hbm_idx_client_static<-ot_hbm_idx_client_static_sw"
+   ],
+   "mapping_or_master": null,
+   "blocker": "children open",
+   "rtl_module": "ot_hbm_idx_scheduled_static",
+   "body_sha256": "0d621988962839bff378f1d5df52c55ba8c85275f69fd035c16b1877d6929fa4",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_hgi_coll_qslots",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only parent (capture/output); hard_v5 flattens it into capture_pin_v2 + qso leaves (no own route)",
+   "owner_stream": "H-NETLIST/COLL",
+   "evidence": [
+    "body c9d314d9d0 stateful=False",
+    "el1015-hbm-netlist.log 11:25 REBIND TRIAL",
+    "body_sha c9d314d9d050ed40267603fdaa0ac246fb1453afbfc0e38b96183cf4dbb6996e file rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv stateful=False",
+    "v16 die: IN ot_hgi_coll_qslots<-ot_hfd_coll_q_static_v4<-ot_hfd_coll_q3_static_v4<-ot_hfd_coll_q3_static_host_v4"
+   ],
+   "mapping_or_master": null,
+   "blocker": "v5 rebind awaiting H-NETLIST lead approval of port delta",
+   "rtl_module": "ot_hgi_coll_qslots",
+   "body_sha256": "c9d314d9d050ed40267603fdaa0ac246fb1453afbfc0e38b96183cf4dbb6996e",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  },
+  {
+   "design": "HBM accelerator",
+   "element": "ot_vms_slice_static",
+   "registry_category": "not started (open)",
+   "integration_row": true,
+   "census_class": "C",
+   "detail": "wires-only (no always/reg) slice parent: children hub/rcl/rstop x2/status + 8 banks (generic bank_static or native/strap physical by STRAP_QUADRANT/NATIVE_SHAPE generate). Closed physical bank masters: hfd_vms_bank_native_q0/q1/q2 (nat2 CLOSED; native q1 PASS, q0/q2 FAIL). Eligible for master_identity compositions only after the bank binding is fixed",
+   "owner_stream": "H-SM",
+   "evidence": [
+    "body 2123354226",
+    "ot_vms_slice_static.sv:91-118 generate",
+    "body_sha 2123354226bcef6b20db7eb9e3ce7c35120832ea28c33ddfb6de4fbebaa12272 file rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv stateful=False",
+    "v16 die: IN ot_vms_slice_static<-hfd_hgi_vms_static_SW"
+   ],
+   "mapping_or_master": null,
+   "blocker": "native-bank binding decision + nat2 q0/q2 native FAIL",
+   "rtl_module": "ot_vms_slice_static",
+   "body_sha256": "2123354226bcef6b20db7eb9e3ce7c35120832ea28c33ddfb6de4fbebaa12272",
+   "stateful": false,
+   "live_jobs_1815": 0,
+   "latest_job_1815": null,
+   "latest_status_1815": null,
+   "carried_from_1100": true
+  }
+ ],
+ "resolved_since_1100": [
+  {
+   "element": "qkd_ctrl_pc_host_static_core",
+   "class_1100": "G",
+   "category_1815": "superseded",
+   "best_job": "qkd_ctrl_pc_core_s4-s4-ddcddb0a2"
+  },
+  {
+   "element": "qkd_d2ds",
+   "class_1100": "A",
+   "category_1815": "(row gone)",
+   "best_job": null
+  },
+  {
+   "element": "qkd_hgs",
+   "class_1100": "A",
+   "category_1815": "(row gone)",
+   "best_job": null
+  },
+  {
+   "element": "qkd_hss",
+   "class_1100": "A",
+   "category_1815": "(row gone)",
+   "best_job": null
+  },
+  {
+   "element": "qkd_rst_region",
+   "class_1100": "F",
+   "category_1815": "closed (TT era)",
+   "best_job": "qkd_rst_region-ec1-5fe4533d3"
+  },
+  {
+   "element": "qfd_band_upper_b2_l2_s4",
+   "class_1100": "G",
+   "category_1815": "closed (TT era)",
+   "best_job": "qfd_upper_b2_l2_s4_1016-s4r2-9786b01fb"
+  },
+  {
+   "element": "qfd_tile_nk_rp2_g4",
+   "class_1100": "G",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "qfd_tile_nl_rp2_g4",
+   "class_1100": "G",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_qwen_rom_tile_nk",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": "qfd_tile_nk_h4-r4-cx-4275ae49c"
+  },
+  {
+   "element": "dsfd_capt_g2_dualho",
+   "class_1100": "G",
+   "category_1815": "closed (TT era)",
+   "best_job": "dsfd_capt_g2_dualho_split1016-split1-00e50305e"
+  },
+  {
+   "element": "dsfd_capt_rly_12_SN",
+   "class_1100": "G",
+   "category_1815": "closed (TT era)",
+   "best_job": "dsfd_capt_rly_12_sn_split1016-split1-00e50305e"
+  },
+  {
+   "element": "dsfd_capt_rly_31_EW",
+   "class_1100": "G",
+   "category_1815": "closed (TT era)",
+   "best_job": "dsfd_capt_rly_31_ew_split1016-split1-00e50305e"
+  },
+  {
+   "element": "dsfd_capt_rly_36_WE",
+   "class_1100": "G",
+   "category_1815": "closed (TT era)",
+   "best_job": "dsfd_capt_rly_36_we_split1016-split1-00e50305e"
+  },
+  {
+   "element": "dsfd_capt_rly_64_EW",
+   "class_1100": "G",
+   "category_1815": "closed (TT era)",
+   "best_job": "dsfd_capt_rly_64_ew_split1016r-split1r-ed140b590"
+  },
+  {
+   "element": "ot_s81_hc_ccf_bankpipe_bank256",
+   "class_1100": "G",
+   "category_1815": "closed (TT era)",
+   "best_job": "s81hc_ccfbp_bank256w_ref-w1-d317ebd34"
+  },
+  {
+   "element": "ot_s81_mx4_ctl",
+   "class_1100": "G",
+   "category_1815": "closed (TT era)",
+   "best_job": "s81engm_mx4ctl-f1-131bd82c0"
+  },
+  {
+   "element": "ot_s81_mx4_rq",
+   "class_1100": "G",
+   "category_1815": "closed (TT era)",
+   "best_job": "s81engm_mx4rq1-p17c-d11a778b4"
+  },
+  {
+   "element": "dsfd_bf_front_roots",
+   "class_1100": "G",
+   "category_1815": "closed (TT era)",
+   "best_job": "s81bf_front_five_roots_nlock_h03-ref-392d7efcb"
+  },
+  {
+   "element": "dsfd_l2r_vr_1100x1__hx_E",
+   "class_1100": "G",
+   "category_1815": "closed (TT era)",
+   "best_job": "s81net_l2r_vr_1100x1__hx_e_d1-r1d1-6728ad2be"
+  },
+  {
+   "element": "ot_s81_mx4_mcol",
+   "class_1100": "G",
+   "category_1815": "closed (TT era)",
+   "best_job": "s81engm_mx4mcol-f2spread-6c778147a"
+  },
+  {
+   "element": "dsfd_hstnv_129s",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "dsfd_selt_xq",
+   "class_1100": "G",
+   "category_1815": "closed (TT era)",
+   "best_job": "s81sel_xq-x5-5338e4a5a"
+  },
+  {
+   "element": "dsfd_sstn_e0c0_x2",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "dsfd_sstn_e0c0si_x2",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "dsfd_sstn_e0c0sinf_x2",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "dsfd_sstn_e0e1c0c1si_x2",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "dsfd_sstn_e0e1c0c1sinf_x2",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "dsfd_stage_seq_static_c9",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_s81_hc_ccf_bankpipe_bank128",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "s81_a2f_control4",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": "s81_a2f_control4_pilot_1015_r1-pilot1-COMMIT-1dcfed2c0"
+  },
+  {
+   "element": "s81_a2f_field16",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "s81_a2f_meta26",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_s81_hc_ctfx_reset_native",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "dsfd_su_t_rxc",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": "s81su_rxc_ref-g4-0950-0664b086d"
+  },
+  {
+   "element": "dsfd_stage_seq_static_c8",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "class_1100": "M",
+   "category_1815": "(row gone)",
+   "best_job": null
+  },
+  {
+   "element": "ot_rom_4096x72_m8",
+   "class_1100": "M",
+   "category_1815": "(row gone)",
+   "best_job": null
+  },
+  {
+   "element": "ot_hbm_idx_tail_native",
+   "class_1100": "G",
+   "category_1815": "closed (TT era)",
+   "best_job": "hidx_tail_native_rr-tailrr-ef47ceed7"
+  },
+  {
+   "element": "hfd_lk_ep",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "hfd_vms_bank_strap_q0",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": "vm_strap_q0_ref-strap4hookfix-ab60ca16a"
+  },
+  {
+   "element": "ot_hbm_accel_smh_front_c",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_hbm_accel_smh_tile_eg",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": "smh_tile_eg_ref-r16-c363cffe3"
+  },
+  {
+   "element": "ot_hbm_accel_smh_tile_wg",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": "smh_tile_wg_ref-r16-cea5b1fa8"
+  },
+  {
+   "element": "ot_hgi_coll_pring_static_state_lane",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_hgi_sm_xload_cl2_ctl",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": "hgi_sm_xl2_ctl-cl2d-COMMIT-b0d45974d"
+  },
+  {
+   "element": "ot_hgi_xp_xwm",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "hfd_idx_score_lane12",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_hgi_sm_pub",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "hfd_idx_score_lane4",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "hfd_idx_score_lane8",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "hfd_vms_bank_identity_q2_b0",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "hfd_cmdproc",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "hfd_hc_eng",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "hfd_hgi_am",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "hfd_host_slab",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "hfd_idx_score_native_grid",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "hfd_serdes_slab",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "hfd_sm",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_hbm_su_static_vm_ports",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_hbm_svc_static_landing",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_hbm_svc_static_vm_delivery",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_hbm_vm_lg_static_split",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_hfd_coll_q2_static",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_hfd_coll_q3_static",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_hfd_coll_q_static",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_hgi_coll_pring_static",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_hgi_coll_static_link",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_hgi_sfu_programmed_engine",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_hgi_sfu_scheduled_engine",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_qwen_static_slot_ctl",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_qwen_static_slot_link",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  },
+  {
+   "element": "ot_vms_bank_static",
+   "class_1100": "E",
+   "category_1815": "superseded",
+   "best_job": null
+  }
+ ]
+}

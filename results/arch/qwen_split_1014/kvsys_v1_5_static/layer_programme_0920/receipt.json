@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.qwen_kv_static.layer_programme_component.v1",
+  "status": "COMPONENT_PASS_WITH_FAILING_MUTANTS",
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv": "505b84b501d1df0a45fa57999f310011d72ef1a11e7e9bacd388d9d165117232",
+    "rtl/test/qwen_static_kv/tb_static_layer_programme.sv": "686e58fc2c97711a3d2d287ffa55b2b8932d828bdf66c7c8d21c729fc57730ce"
+  },
+  "results": [
+    {
+      "mutant": 0,
+      "exit": 0,
+      "expected_result": true,
+      "output": "PASS real all36 control roots, persistent two-token context, invalid image/start checks MUT=0"
+    },
+    {
+      "mutant": 1,
+      "exit": 1,
+      "expected_result": true,
+      "output": "FATAL: /home/ubuntu/wt/qkv-static-join-1016/rtl/test/qwen_static_kv/tb_static_layer_programme.sv:47: fixed event differs stage1 age7 bits11\n       Time: 10006000 Scope: tb_static_layer_programme.execute"
+    },
+    {
+      "mutant": 2,
+      "exit": 1,
+      "expected_result": true,
+      "output": "FATAL: /home/ubuntu/wt/qkv-static-join-1016/rtl/test/qwen_static_kv/tb_static_layer_programme.sv:37: actual accepted start differs\n       Time: 9936000 Scope: tb_static_layer_programme.execute"
+    },
+    {
+      "mutant": 3,
+      "exit": 1,
+      "expected_result": true,
+      "output": "FATAL: /home/ubuntu/wt/qkv-static-join-1016/rtl/test/qwen_static_kv/tb_static_layer_programme.sv:45: authoritative context relabeled\n       Time: 9946000 Scope: tb_static_layer_programme.execute"
+    }
+  ],
+  "actual_component": {
+    "layers": 36,
+    "persistent_tokens": 2,
+    "stage_frames": 72,
+    "fixed_control_events": 504,
+    "boot_words": 327,
+    "roots_per_layer": 9,
+    "root_storage_bits": 10368,
+    "guard": "actual authorized programme digest/epoch and authoritative token metadata are captured; no ready or data input schedules an event"
+  },
+  "scope": "Actual all36 root/control/metadata hardware, declared boundary boot and authorized HOST stimuli. No internal arithmetic/memory/link results supplied or claimed.",
+  "native_full_layer": false,
+  "physical_qualified": false,
+  "gaps": [
+    "source-pinned actual compiler roots and installed HOST boot image path",
+    "context-parametric controller images and native-attention calendar176 producer",
+    "actual fixed-phase core/HBM launch and pin/relay ages",
+    "actual arithmetic/link/memory/HOST native composition and physical qualification"
+  ]
+}

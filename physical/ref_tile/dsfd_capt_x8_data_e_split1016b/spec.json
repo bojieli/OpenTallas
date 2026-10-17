@@ -1,0 +1,141 @@
+{
+ "name": "dsfd_capt_x8_data_e_split1016b",
+ "top": "dsfd_capt_x8_data_e",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv",
+  "rtl/common/ot_ratio_cdc_fifo.sv",
+  "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+  "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_cd.sv"
+ ],
+ "params": {},
+ "clock_port": "ck[0]",
+ "reset_ports": [
+  "rst",
+  "rsv"
+ ],
+ "outline": {
+  "w": 108,
+  "h": 162
+ },
+ "macros": [],
+ "pins": {
+  "ANY": [
+   "ck",
+   "ckv",
+   "f_w",
+   "rst",
+   "rsv",
+   "t_ho",
+   "t_vm"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-exact capture cones retain every used data/status/fault sampling edge. Native registered boundary capture/launch checks and recipe2 dedicated outputflops still apply; blanket recipe3 registers would insert unpriced semantic stages into this exact comparison."
+ },
+ "clock": "multiple_cts_roots",
+ "io_tcl": "physical/s81_die_pins/capture_split_1016/dsfd_capt_x8_data_e_b.tcl",
+ "structural_change": "Successor of split1016 (FF hold stall ~-84 ps on 3376 ck->ckv ratio-FIFO R2R crossings): ck/rst entry moved from the N face to the S face beside ckv/rsv, so both clock trees start at one point and share topology. Outline and data pins unchanged; RTL unchanged.",
+ "job": {
+  "owner": "codex:S81 hub parents",
+  "branch": "codex/s81-hub-parents-0811",
+  "tag": "split1b",
+  "purpose": "Source-exact candidate; no parent adoption or inherited native view.",
+  "extra_paths": [
+   "tools/s81_ph",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_glue",
+   "physical/s81_die_pins/capture_split_1016"
+  ],
+  "benches": [
+   {
+    "name": "capture_split_exact",
+    "cmd": "bash tools/s81_ph/capc_split_bench.sh {RUN}/bench eq 'mix mix11 mix12 mix13 trace err over range rreq'",
+    "expect": "pass",
+    "pass_regex": "^CAPC_BENCH PASS cases=9$",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "capture_split_mutant",
+    "cmd": "bash tools/s81_ph/capc_split_bench.sh {RUN}/mut mut 'mix' S81PH_CAPS_MUT_STATUS",
+    "expect": "fail",
+    "fail_regex": "CAPC_EQ mismatches=[1-9][0-9]*.*EQ_FAIL",
+    "threads": 8,
+    "peak_ram_gb": 16
+   }
+  ]
+ },
+ "clock_ports": [
+  "ck[0]",
+  "ckv[0]"
+ ],
+ "clock_data_paths": "related_pll_ratio",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   4,
+   3
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck[0]"
+   ],
+   "inputs": [
+    "rst",
+    "f_w"
+   ],
+   "outputs": [
+    "t_ho"
+   ]
+  },
+  "serial": {
+   "ratio": [
+    4,
+    3
+   ],
+   "ports": [
+    "ckv[0]"
+   ],
+   "inputs": [
+    "rsv"
+   ],
+   "outputs": [
+    "t_vm"
+   ]
+  }
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

@@ -36,6 +36,8 @@ step special {
   puts "OT_SPECIAL clock_reset_nets=$n"
 }
 step grt { global_route -congestion_iterations $::env(OT_ITERS) -allow_congestion -verbose -congestion_report_file /work/grt_congestion.rpt }
+# die readout (owner 10-16): GRT routing-usage heat map, 50 um bins, for tools/qwen_split/die_readout.py
+step heat { catch {gui::set_heatmap Routing GridX 50}; catch {gui::set_heatmap Routing GridY 50}; gui::dump_heatmap Routing /work/grt_heatmap.csv }
 step guides { write_guides /work/route.guide }
 step ckpt { write_db /work/ckpt_grt.odb }
 step wl { report_wire_length -net * -global_route -file /work/wirelength.csv }

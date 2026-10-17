@@ -8,6 +8,12 @@
 // reaches the two valid pin flops and ONE reset pin flop (async assert, sync release) that resets the rest.
 // Read sample n -> pin flop n+1 -> macro n+2 -> raw n+2 -> output n+3 -> downstream MAC input n+4 (TML4, +1 read edge
 // vs v1 TML3: the HC engine schedule must add it).
+// v3 (H-NETLIST/vmdel 2026-10-16, native audit of the CLOSED v2 route hbm_hc_residual_half_static-native1-36070f827:
+// capture 243.8 ps > 190 on rst_n, the only failing pin: rst_n still reached three async-clear / recovery endpoints).
+// rst_n now lands ONLY on the D pin of one dedicated synchronous pin flop rst_s (no async clear); the two valid pin
+// flops are plain data pin flops (the ports are held 0 while the die is in reset), and every other flop resets from
+// rst_s.  Release timing is unchanged (state first updates on the second edge after rst_n rises, as v2's rst_q);
+// reset assertion takes effect one edge after rst_n falls (synchronous reset: the die clock runs during reset).
 module ot_hgi_hc_residual_half_static(
  input wire clk,rst_n,
  input wire write_v,
@@ -18,8 +24,8 @@ module ot_hgi_hc_residual_half_static(
  output reg read_valid,fault,
  output reg [255:0] residual_data
 );
- reg rst_q;
- always @(posedge clk or negedge rst_n) if(!rst_n) rst_q<=1'b0; else rst_q<=1'b1;
+ reg rst_s;  // the only rst_n load: a synchronous pin flop (D = rst_n)
+ always @(posedge clk) rst_s<=rst_n;
  reg wv_q,rv_p,rv_q,rv_qq;
  reg [9:0] wa_q,ra_q;
  reg [255:0] wd_q,raw_capture;
@@ -28,11 +34,10 @@ module ot_hgi_hc_residual_half_static(
   wa_q<=write_word;wd_q<=write_data;ra_q<=read_word;
   raw_capture<=raw;residual_data<=raw_capture;
  end
- // the two valid pin flops reset from the pin (a command on the first edge after release is captured, as in v1)
- always @(posedge clk or negedge rst_n)
-  if(!rst_n)begin wv_q<=0;rv_p<=0;end else begin wv_q<=write_v;rv_p<=read_v;end
- always @(posedge clk or negedge rst_q)begin
-  if(!rst_q)begin rv_q<=0;rv_qq<=0;read_valid<=0;fault<=0;end
+ // the two valid pin flops are plain data pin flops (a command on the first edge after release is captured, as in v1)
+ always @(posedge clk) begin wv_q<=write_v;rv_p<=read_v;end
+ always @(posedge clk)begin
+  if(!rst_s)begin rv_q<=0;rv_qq<=0;read_valid<=0;fault<=0;end
   else begin
    rv_q<=rv_p;rv_qq<=rv_q;read_valid<=rv_qq;
    if(wv_q&&wa_q>=640)fault<=1;

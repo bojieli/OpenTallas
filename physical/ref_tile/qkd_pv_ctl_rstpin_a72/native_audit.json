@@ -1,0 +1,36 @@
+{
+ "schema": "kvctrl.native_pin_audit_one.v1",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one",
+ "limits": {
+  "launch_ps": 220.0,
+  "capture_ps": 190.0
+ },
+ "job": "qkd_pv_ctl_rstpin_a72-a72-e37f92c3c",
+ "source_commit": "b9393539723b0df29d966a4284a5c2c13326f12e",
+ "views": {
+  "ot_qwen_tp8_pv_wide_ctl": {
+   "cell": "ot_qwen_tp8_pv_wide_ctl",
+   "view": "physical/ref_tile/qkd_pv_ctl_rstpin_a72/views/ot_qwen_tp8_pv_wide_ctl",
+   "lib_cell": "ot_qwen_tp8_pv_wide_ctl",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 99.8,
+   "spread_ps": 10.1,
+   "outputs": 177,
+   "inputs": 345,
+   "launch_ps": 190.4,
+   "launch_pin": "req_t[10]",
+   "capture_ps": 133.7,
+   "capture_pin": "col_fault[11]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  }
+ },
+ "verdict": "PASS"
+}

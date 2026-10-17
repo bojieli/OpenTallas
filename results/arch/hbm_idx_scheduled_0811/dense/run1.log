@@ -1,0 +1,13 @@
+DENSE_MITER cycle182
+DENSE_RECORD frame0 record0 expected00000000ffff0000 gotffff000000000000
+DENSE_RECORD frame0 record1 expected00000001ffff0000 gotffff000000000001
+DENSE_RECORD frame0 record2 expected00000002ffff0000 gotffff000000000002
+IDX_LINK_DENSE frame0 MUT1 records512 flits64 errors528 fault0
+IDX_LINK_DENSE frame1 MUT1 records512 flits64 errors1056 fault0
+IDX_LINK_DENSE frame2 MUT1 records512 flits64 errors1584 fault0
+IDX_LINK_DENSE frame3 MUT1 records512 flits64 errors2112 fault0
+IDX_LINK_DENSE frame4 MUT1 records512 flits64 errors2640 fault0
+IDX_LINK_DENSE_TOTAL MUT1 records2560 miter1540 errors2640 fillsff maxpack71
+[15440000] %Fatal: tb_idx_link_dense_0905.sv:60: Assertion failed in tb_idx_link_dense_0905: dense compaction exact/miter/timeline mismatch
+%Error: rtl/test/hbm_idx_static/tb_idx_link_dense_0905.sv:60: Verilog $stop
+Aborting...

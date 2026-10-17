@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.closure_loop.ck_insertion.v1",
- "base": "/srv/opentallas-scratch/claude/closure-loop/hgi_sm_xl2_bfq-cl2b-COMMIT-0be21dfd5/routes/hgi_sm_xl2_bfq_cl2b_COMMIT_0be21dfd5/work/orfs/results/asap7/opentallas_ot_hgi_sm_xload_cl2_bfq_asap7_ref_hgi_sm_xl2_bfq_cl2b_COMMIT_0be21dfd5/base",
+ "base": "/srv/opentallas-scratch2/claude/closure-loop/hgi_sm_xl2_bfq-cl2dh-4ccbe3242/routes/hgi_sm_xl2_bfq_cl2dh_4ccbe3242/work/orfs/results/asap7/opentallas_ot_hgi_sm_xload_cl2_bfq_asap7_ref_hgi_sm_xl2_bfq_cl2dh_4ccbe3242/base",
  "db": "6_final.odb",
  "sdc": "6_final.sdc",
  "clock": "core_clk",
@@ -8,80 +8,80 @@
  "raw_source": true,
  "ss": {
   "boundary": {
-   "n": 1432,
-   "mean": 432.8,
-   "min": 383.6,
-   "max": 480.2
+   "n": 1308,
+   "mean": 447.1,
+   "min": 387.2,
+   "max": 487.9
   },
   "all": {
-   "n": 4000,
-   "mean": 408.7,
-   "min": 330.6,
-   "max": 480.2
+   "n": 3884,
+   "mean": 422.3,
+   "min": 362.5,
+   "max": 487.9
   },
   "errors": [],
   "macros": {
    "n": 8,
    "nets": 4,
    "max_per_net": 2,
-   "reg_mean": 408.7,
-   "max_slew": 179.2,
-   "max_late": -46.7,
+   "reg_mean": 422.3,
+   "max_slew": 219.8,
+   "max_late": -18.2,
    "pins": [
     {
      "pin": "g_t[0].u_m/clk",
-     "arr": 348.7,
-     "slew": 137.5,
-     "late": -60.0,
+     "arr": 379.6,
+     "slew": 133.4,
+     "late": -42.7,
      "net": "clknet_2_0_0_clk"
     },
     {
      "pin": "g_t[1].u_m/clk",
-     "arr": 352.8,
-     "slew": 154.4,
-     "late": -55.9,
+     "arr": 392.4,
+     "slew": 175.1,
+     "late": -29.9,
      "net": "clknet_2_1_0_clk"
     },
     {
      "pin": "g_t[2].u_m/clk",
-     "arr": 341.0,
-     "slew": 116.3,
-     "late": -67.7,
+     "arr": 371.9,
+     "slew": 112.1,
+     "late": -50.4,
      "net": "clknet_2_0_0_clk"
     },
     {
      "pin": "g_t[3].u_m/clk",
-     "arr": 341.1,
-     "slew": 122.1,
-     "late": -67.6,
+     "arr": 378.5,
+     "slew": 136.0,
+     "late": -43.8,
      "net": "clknet_2_1_0_clk"
     },
     {
      "pin": "g_t[4].u_m/clk",
-     "arr": 350.1,
-     "slew": 145.8,
-     "late": -58.6,
+     "arr": 391.7,
+     "slew": 184.6,
+     "late": -30.6,
      "net": "clknet_2_2_0_clk"
     },
     {
      "pin": "g_t[5].u_m/clk",
-     "arr": 330.6,
-     "slew": 90.4,
-     "late": -78.1,
+     "arr": 362.5,
+     "slew": 95.0,
+     "late": -59.8,
      "net": "clknet_2_3_0_clk"
     },
     {
      "pin": "g_t[6].u_m/clk",
-     "arr": 362.0,
-     "slew": 179.2,
-     "late": -46.7,
+     "arr": 404.1,
+     "slew": 219.8,
+     "late": -18.2,
      "net": "clknet_2_2_0_clk"
     },
     {
      "pin": "g_t[7].u_m/clk",
-     "arr": 343.1,
-     "slew": 123.6,
-     "late": -65.6,
+     "arr": 378.6,
+     "slew": 137.8,
+     "late": -43.7,
      "net": "clknet_2_3_0_clk"
     }
    ]
@@ -90,80 +90,80 @@
  },
  "tt": {
   "boundary": {
-   "n": 1432,
-   "mean": 343.8,
-   "min": 299.7,
-   "max": 388.0
+   "n": 1308,
+   "mean": 353.2,
+   "min": 296.1,
+   "max": 391.4
   },
   "all": {
-   "n": 4000,
-   "mean": 320.4,
-   "min": 255.3,
-   "max": 388.0
+   "n": 3884,
+   "mean": 328.8,
+   "min": 277.7,
+   "max": 391.4
   },
   "errors": [],
   "macros": {
    "n": 8,
    "nets": 4,
    "max_per_net": 2,
-   "reg_mean": 320.4,
-   "max_slew": 180.5,
-   "max_late": -32.7,
+   "reg_mean": 328.8,
+   "max_slew": 220.1,
+   "max_late": -8.5,
    "pins": [
     {
      "pin": "g_t[0].u_m/clk",
-     "arr": 274.3,
-     "slew": 138.3,
-     "late": -46.1,
+     "arr": 295.8,
+     "slew": 134.7,
+     "late": -33.0,
      "net": "clknet_2_0_0_clk"
     },
     {
      "pin": "g_t[1].u_m/clk",
-     "arr": 278.2,
-     "slew": 154.6,
-     "late": -42.2,
+     "arr": 308.1,
+     "slew": 175.4,
+     "late": -20.7,
      "net": "clknet_2_1_0_clk"
     },
     {
      "pin": "g_t[2].u_m/clk",
-     "arr": 266.3,
-     "slew": 115.2,
-     "late": -54.1,
+     "arr": 287.8,
+     "slew": 111.6,
+     "late": -41.0,
      "net": "clknet_2_0_0_clk"
     },
     {
      "pin": "g_t[3].u_m/clk",
-     "arr": 266.4,
-     "slew": 120.3,
-     "late": -54.0,
+     "arr": 294.1,
+     "slew": 134.3,
+     "late": -34.7,
      "net": "clknet_2_1_0_clk"
     },
     {
      "pin": "g_t[4].u_m/clk",
-     "arr": 275.5,
-     "slew": 144.7,
-     "late": -44.9,
+     "arr": 307.5,
+     "slew": 182.6,
+     "late": -21.3,
      "net": "clknet_2_2_0_clk"
     },
     {
      "pin": "g_t[5].u_m/clk",
-     "arr": 255.3,
-     "slew": 86.6,
-     "late": -65.1,
+     "arr": 277.7,
+     "slew": 89.8,
+     "late": -51.1,
      "net": "clknet_2_3_0_clk"
     },
     {
      "pin": "g_t[6].u_m/clk",
-     "arr": 287.7,
-     "slew": 180.5,
-     "late": -32.7,
+     "arr": 320.3,
+     "slew": 220.1,
+     "late": -8.5,
      "net": "clknet_2_2_0_clk"
     },
     {
      "pin": "g_t[7].u_m/clk",
-     "arr": 267.9,
-     "slew": 122.2,
-     "late": -52.5,
+     "arr": 293.8,
+     "slew": 135.3,
+     "late": -35.0,
      "net": "clknet_2_3_0_clk"
     }
    ]
@@ -172,80 +172,80 @@
  },
  "ff": {
   "boundary": {
-   "n": 1432,
-   "mean": 289.0,
-   "min": 248.2,
-   "max": 330.0
+   "n": 1308,
+   "mean": 296.6,
+   "min": 242.1,
+   "max": 333.1
   },
   "all": {
-   "n": 4000,
-   "mean": 266.5,
-   "min": 211.3,
-   "max": 330.0
+   "n": 3884,
+   "mean": 272.9,
+   "min": 228.5,
+   "max": 333.1
   },
   "errors": [],
   "macros": {
    "n": 8,
    "nets": 4,
    "max_per_net": 2,
-   "reg_mean": 266.5,
-   "max_slew": 188.3,
-   "max_late": -21.1,
+   "reg_mean": 272.9,
+   "max_slew": 227.5,
+   "max_late": 0.0,
    "pins": [
     {
      "pin": "g_t[0].u_m/clk",
-     "arr": 231.7,
-     "slew": 145.1,
-     "late": -34.8,
+     "arr": 248.0,
+     "slew": 142.0,
+     "late": -24.9,
      "net": "clknet_2_0_0_clk"
     },
     {
      "pin": "g_t[1].u_m/clk",
-     "arr": 235.4,
-     "slew": 160.7,
-     "late": -31.1,
+     "arr": 260.1,
+     "slew": 181.7,
+     "late": -12.8,
      "net": "clknet_2_1_0_clk"
     },
     {
      "pin": "g_t[2].u_m/clk",
-     "arr": 223.2,
-     "slew": 119.9,
-     "late": -43.3,
+     "arr": 239.5,
+     "slew": 116.7,
+     "late": -33.4,
      "net": "clknet_2_0_0_clk"
     },
     {
      "pin": "g_t[3].u_m/clk",
-     "arr": 223.1,
-     "slew": 124.2,
-     "late": -43.4,
+     "arr": 245.6,
+     "slew": 138.5,
+     "late": -27.3,
      "net": "clknet_2_1_0_clk"
     },
     {
      "pin": "g_t[4].u_m/clk",
-     "arr": 232.4,
-     "slew": 149.5,
-     "late": -34.1,
+     "arr": 259.3,
+     "slew": 186.8,
+     "late": -13.6,
      "net": "clknet_2_2_0_clk"
     },
     {
      "pin": "g_t[5].u_m/clk",
-     "arr": 211.3,
-     "slew": 88.2,
-     "late": -55.2,
+     "arr": 228.5,
+     "slew": 90.4,
+     "late": -44.4,
      "net": "clknet_2_3_0_clk"
     },
     {
      "pin": "g_t[6].u_m/clk",
-     "arr": 245.4,
-     "slew": 188.3,
-     "late": -21.1,
+     "arr": 272.9,
+     "slew": 227.5,
+     "late": 0.0,
      "net": "clknet_2_2_0_clk"
     },
     {
      "pin": "g_t[7].u_m/clk",
-     "arr": 224.4,
-     "slew": 126.4,
-     "late": -42.1,
+     "arr": 245.0,
+     "slew": 138.6,
+     "late": -27.9,
      "net": "clknet_2_3_0_clk"
     }
    ]
@@ -261,49 +261,49 @@
   "outliers": [
    {
     "pin": "g_t[0].u_m/clk",
-    "why": "ss slew 138 ps > 120; tt slew 138 ps > 120; ff slew 145 ps > 120"
+    "why": "ss slew 133 ps > 120; tt slew 135 ps > 120; ff slew 142 ps > 120"
    },
    {
     "pin": "g_t[1].u_m/clk",
-    "why": "ss slew 154 ps > 120; tt slew 155 ps > 120; ff slew 161 ps > 120"
+    "why": "ss slew 175 ps > 120; tt slew 175 ps > 120; ff slew 182 ps > 120"
    },
    {
     "pin": "g_t[3].u_m/clk",
-    "why": "ss slew 122 ps > 120; tt slew 120 ps > 120; ff slew 124 ps > 120"
+    "why": "ss slew 136 ps > 120; tt slew 134 ps > 120; ff slew 138 ps > 120"
    },
    {
     "pin": "g_t[4].u_m/clk",
-    "why": "ss slew 146 ps > 120; tt slew 145 ps > 120; ff slew 150 ps > 120"
+    "why": "ss slew 185 ps > 120; tt slew 183 ps > 120; ff slew 187 ps > 120"
    },
    {
     "pin": "g_t[6].u_m/clk",
-    "why": "ss slew 179 ps > 120; tt slew 180 ps > 120; ff slew 188 ps > 120"
+    "why": "ss slew 220 ps > 120; tt slew 220 ps > 120; ff slew 228 ps > 120"
    },
    {
     "pin": "g_t[7].u_m/clk",
-    "why": "ss slew 124 ps > 120; tt slew 122 ps > 120; ff slew 126 ps > 120"
+    "why": "ss slew 138 ps > 120; tt slew 135 ps > 120; ff slew 139 ps > 120"
    }
   ]
  },
  "env": {
-  "CK_SS_MEAN": 433,
-  "CK_SS_ALL_MEAN": 409,
-  "CK_SS_MIN": 384,
-  "CK_SS_ALL_MIN": 331,
-  "CK_SS_MAX": 480,
-  "CK_SS_ALL_MAX": 480,
-  "CK_TT_MEAN": 344,
-  "CK_TT_ALL_MEAN": 320,
-  "CK_TT_MIN": 300,
-  "CK_TT_ALL_MIN": 255,
-  "CK_TT_MAX": 388,
-  "CK_TT_ALL_MAX": 388,
-  "CK_FF_MEAN": 289,
-  "CK_FF_ALL_MEAN": 266,
-  "CK_FF_MIN": 248,
-  "CK_FF_ALL_MIN": 211,
-  "CK_FF_MAX": 330,
-  "CK_FF_ALL_MAX": 330,
+  "CK_SS_MEAN": 447,
+  "CK_SS_ALL_MEAN": 422,
+  "CK_SS_MIN": 387,
+  "CK_SS_ALL_MIN": 362,
+  "CK_SS_MAX": 488,
+  "CK_SS_ALL_MAX": 488,
+  "CK_TT_MEAN": 353,
+  "CK_TT_ALL_MEAN": 329,
+  "CK_TT_MIN": 296,
+  "CK_TT_ALL_MIN": 278,
+  "CK_TT_MAX": 391,
+  "CK_TT_ALL_MAX": 391,
+  "CK_FF_MEAN": 297,
+  "CK_FF_ALL_MEAN": 273,
+  "CK_FF_MIN": 242,
+  "CK_FF_ALL_MIN": 228,
+  "CK_FF_MAX": 333,
+  "CK_FF_ALL_MAX": 333,
   "CK_ROUTE_REF": "SS"
  },
  "lib_clock_pin": "clk",
@@ -311,7 +311,7 @@
  "clock_measurements": {
   "clk": {
    "schema": "opentallas.closure_loop.ck_insertion.v1",
-   "base": "/srv/opentallas-scratch/claude/closure-loop/hgi_sm_xl2_bfq-cl2b-COMMIT-0be21dfd5/routes/hgi_sm_xl2_bfq_cl2b_COMMIT_0be21dfd5/work/orfs/results/asap7/opentallas_ot_hgi_sm_xload_cl2_bfq_asap7_ref_hgi_sm_xl2_bfq_cl2b_COMMIT_0be21dfd5/base",
+   "base": "/srv/opentallas-scratch2/claude/closure-loop/hgi_sm_xl2_bfq-cl2dh-4ccbe3242/routes/hgi_sm_xl2_bfq_cl2dh_4ccbe3242/work/orfs/results/asap7/opentallas_ot_hgi_sm_xload_cl2_bfq_asap7_ref_hgi_sm_xl2_bfq_cl2dh_4ccbe3242/base",
    "db": "6_final.odb",
    "sdc": "6_final.sdc",
    "clock": "core_clk",
@@ -319,80 +319,80 @@
    "raw_source": true,
    "ss": {
     "boundary": {
-     "n": 1432,
-     "mean": 432.8,
-     "min": 383.6,
-     "max": 480.2
+     "n": 1308,
+     "mean": 447.1,
+     "min": 387.2,
+     "max": 487.9
     },
     "all": {
-     "n": 4000,
-     "mean": 408.7,
-     "min": 330.6,
-     "max": 480.2
+     "n": 3884,
+     "mean": 422.3,
+     "min": 362.5,
+     "max": 487.9
     },
     "errors": [],
     "macros": {
      "n": 8,
      "nets": 4,
      "max_per_net": 2,
-     "reg_mean": 408.7,
-     "max_slew": 179.2,
-     "max_late": -46.7,
+     "reg_mean": 422.3,
+     "max_slew": 219.8,
+     "max_late": -18.2,
      "pins": [
       {
        "pin": "g_t[0].u_m/clk",
-       "arr": 348.7,
-       "slew": 137.5,
-       "late": -60.0,
+       "arr": 379.6,
+       "slew": 133.4,
+       "late": -42.7,
        "net": "clknet_2_0_0_clk"
       },
       {
        "pin": "g_t[1].u_m/clk",
-       "arr": 352.8,
-       "slew": 154.4,
-       "late": -55.9,
+       "arr": 392.4,
+       "slew": 175.1,
+       "late": -29.9,
        "net": "clknet_2_1_0_clk"
       },
       {
        "pin": "g_t[2].u_m/clk",
-       "arr": 341.0,
-       "slew": 116.3,
-       "late": -67.7,
+       "arr": 371.9,
+       "slew": 112.1,
+       "late": -50.4,
        "net": "clknet_2_0_0_clk"
       },
       {
        "pin": "g_t[3].u_m/clk",
-       "arr": 341.1,
-       "slew": 122.1,
-       "late": -67.6,
+       "arr": 378.5,
+       "slew": 136.0,
+       "late": -43.8,
        "net": "clknet_2_1_0_clk"
       },
       {
        "pin": "g_t[4].u_m/clk",
-       "arr": 350.1,
-       "slew": 145.8,
-       "late": -58.6,
+       "arr": 391.7,
+       "slew": 184.6,
+       "late": -30.6,
        "net": "clknet_2_2_0_clk"
       },
       {
        "pin": "g_t[5].u_m/clk",
-       "arr": 330.6,
-       "slew": 90.4,
-       "late": -78.1,
+       "arr": 362.5,
+       "slew": 95.0,
+       "late": -59.8,
        "net": "clknet_2_3_0_clk"
       },
       {
        "pin": "g_t[6].u_m/clk",
-       "arr": 362.0,
-       "slew": 179.2,
-       "late": -46.7,
+       "arr": 404.1,
+       "slew": 219.8,
+       "late": -18.2,
        "net": "clknet_2_2_0_clk"
       },
       {
        "pin": "g_t[7].u_m/clk",
-       "arr": 343.1,
-       "slew": 123.6,
-       "late": -65.6,
+       "arr": 378.6,
+       "slew": 137.8,
+       "late": -43.7,
        "net": "clknet_2_3_0_clk"
       }
      ]
@@ -401,80 +401,80 @@
    },
    "tt": {
     "boundary": {
-     "n": 1432,
-     "mean": 343.8,
-     "min": 299.7,
-     "max": 388.0
+     "n": 1308,
+     "mean": 353.2,
+     "min": 296.1,
+     "max": 391.4
     },
     "all": {
-     "n": 4000,
-     "mean": 320.4,
-     "min": 255.3,
-     "max": 388.0
+     "n": 3884,
+     "mean": 328.8,
+     "min": 277.7,
+     "max": 391.4
     },
     "errors": [],
     "macros": {
      "n": 8,
      "nets": 4,
      "max_per_net": 2,
-     "reg_mean": 320.4,
-     "max_slew": 180.5,
-     "max_late": -32.7,
+     "reg_mean": 328.8,
+     "max_slew": 220.1,
+     "max_late": -8.5,
      "pins": [
       {
        "pin": "g_t[0].u_m/clk",
-       "arr": 274.3,
-       "slew": 138.3,
-       "late": -46.1,
+       "arr": 295.8,
+       "slew": 134.7,
+       "late": -33.0,
        "net": "clknet_2_0_0_clk"
       },
       {
        "pin": "g_t[1].u_m/clk",
-       "arr": 278.2,
-       "slew": 154.6,
-       "late": -42.2,
+       "arr": 308.1,
+       "slew": 175.4,
+       "late": -20.7,
        "net": "clknet_2_1_0_clk"
       },
       {
        "pin": "g_t[2].u_m/clk",
-       "arr": 266.3,
-       "slew": 115.2,
-       "late": -54.1,
+       "arr": 287.8,
+       "slew": 111.6,
+       "late": -41.0,
        "net": "clknet_2_0_0_clk"
       },
       {
        "pin": "g_t[3].u_m/clk",
-       "arr": 266.4,
-       "slew": 120.3,
-       "late": -54.0,
+       "arr": 294.1,
+       "slew": 134.3,
+       "late": -34.7,
        "net": "clknet_2_1_0_clk"
       },
       {
        "pin": "g_t[4].u_m/clk",
-       "arr": 275.5,
-       "slew": 144.7,
-       "late": -44.9,
+       "arr": 307.5,
+       "slew": 182.6,
+       "late": -21.3,
        "net": "clknet_2_2_0_clk"
       },
       {
        "pin": "g_t[5].u_m/clk",
-       "arr": 255.3,
-       "slew": 86.6,
-       "late": -65.1,
+       "arr": 277.7,
+       "slew": 89.8,
+       "late": -51.1,
        "net": "clknet_2_3_0_clk"
       },
       {
        "pin": "g_t[6].u_m/clk",
-       "arr": 287.7,
-       "slew": 180.5,
-       "late": -32.7,
+       "arr": 320.3,
+       "slew": 220.1,
+       "late": -8.5,
        "net": "clknet_2_2_0_clk"
       },
       {
        "pin": "g_t[7].u_m/clk",
-       "arr": 267.9,
-       "slew": 122.2,
-       "late": -52.5,
+       "arr": 293.8,
+       "slew": 135.3,
+       "late": -35.0,
        "net": "clknet_2_3_0_clk"
       }
      ]
@@ -483,80 +483,80 @@
    },
    "ff": {
     "boundary": {
-     "n": 1432,
-     "mean": 289.0,
-     "min": 248.2,
-     "max": 330.0
+     "n": 1308,
+     "mean": 296.6,
+     "min": 242.1,
+     "max": 333.1
     },
     "all": {
-     "n": 4000,
-     "mean": 266.5,
-     "min": 211.3,
-     "max": 330.0
+     "n": 3884,
+     "mean": 272.9,
+     "min": 228.5,
+     "max": 333.1
     },
     "errors": [],
     "macros": {
      "n": 8,
      "nets": 4,
      "max_per_net": 2,
-     "reg_mean": 266.5,
-     "max_slew": 188.3,
-     "max_late": -21.1,
+     "reg_mean": 272.9,
+     "max_slew": 227.5,
+     "max_late": 0.0,
      "pins": [
       {
        "pin": "g_t[0].u_m/clk",
-       "arr": 231.7,
-       "slew": 145.1,
-       "late": -34.8,
+       "arr": 248.0,
+       "slew": 142.0,
+       "late": -24.9,
        "net": "clknet_2_0_0_clk"
       },
       {
        "pin": "g_t[1].u_m/clk",
-       "arr": 235.4,
-       "slew": 160.7,
-       "late": -31.1,
+       "arr": 260.1,
+       "slew": 181.7,
+       "late": -12.8,
        "net": "clknet_2_1_0_clk"
       },
       {
        "pin": "g_t[2].u_m/clk",
-       "arr": 223.2,
-       "slew": 119.9,
-       "late": -43.3,
+       "arr": 239.5,
+       "slew": 116.7,
+       "late": -33.4,
        "net": "clknet_2_0_0_clk"
       },
       {
        "pin": "g_t[3].u_m/clk",
-       "arr": 223.1,
-       "slew": 124.2,
-       "late": -43.4,
+       "arr": 245.6,
+       "slew": 138.5,
+       "late": -27.3,
        "net": "clknet_2_1_0_clk"
       },
       {
        "pin": "g_t[4].u_m/clk",
-       "arr": 232.4,
-       "slew": 149.5,
-       "late": -34.1,
+       "arr": 259.3,
+       "slew": 186.8,
+       "late": -13.6,
        "net": "clknet_2_2_0_clk"
       },
       {
        "pin": "g_t[5].u_m/clk",
-       "arr": 211.3,
-       "slew": 88.2,
-       "late": -55.2,
+       "arr": 228.5,
+       "slew": 90.4,
+       "late": -44.4,
        "net": "clknet_2_3_0_clk"
       },
       {
        "pin": "g_t[6].u_m/clk",
-       "arr": 245.4,
-       "slew": 188.3,
-       "late": -21.1,
+       "arr": 272.9,
+       "slew": 227.5,
+       "late": 0.0,
        "net": "clknet_2_2_0_clk"
       },
       {
        "pin": "g_t[7].u_m/clk",
-       "arr": 224.4,
-       "slew": 126.4,
-       "late": -42.1,
+       "arr": 245.0,
+       "slew": 138.6,
+       "late": -27.9,
        "net": "clknet_2_3_0_clk"
       }
      ]
@@ -572,49 +572,49 @@
     "outliers": [
      {
       "pin": "g_t[0].u_m/clk",
-      "why": "ss slew 138 ps > 120; tt slew 138 ps > 120; ff slew 145 ps > 120"
+      "why": "ss slew 133 ps > 120; tt slew 135 ps > 120; ff slew 142 ps > 120"
      },
      {
       "pin": "g_t[1].u_m/clk",
-      "why": "ss slew 154 ps > 120; tt slew 155 ps > 120; ff slew 161 ps > 120"
+      "why": "ss slew 175 ps > 120; tt slew 175 ps > 120; ff slew 182 ps > 120"
      },
      {
       "pin": "g_t[3].u_m/clk",
-      "why": "ss slew 122 ps > 120; tt slew 120 ps > 120; ff slew 124 ps > 120"
+      "why": "ss slew 136 ps > 120; tt slew 134 ps > 120; ff slew 138 ps > 120"
      },
      {
       "pin": "g_t[4].u_m/clk",
-      "why": "ss slew 146 ps > 120; tt slew 145 ps > 120; ff slew 150 ps > 120"
+      "why": "ss slew 185 ps > 120; tt slew 183 ps > 120; ff slew 187 ps > 120"
      },
      {
       "pin": "g_t[6].u_m/clk",
-      "why": "ss slew 179 ps > 120; tt slew 180 ps > 120; ff slew 188 ps > 120"
+      "why": "ss slew 220 ps > 120; tt slew 220 ps > 120; ff slew 228 ps > 120"
      },
      {
       "pin": "g_t[7].u_m/clk",
-      "why": "ss slew 124 ps > 120; tt slew 122 ps > 120; ff slew 126 ps > 120"
+      "why": "ss slew 138 ps > 120; tt slew 135 ps > 120; ff slew 139 ps > 120"
      }
     ]
    },
    "env": {
-    "CK_SS_MEAN": 433,
-    "CK_SS_ALL_MEAN": 409,
-    "CK_SS_MIN": 384,
-    "CK_SS_ALL_MIN": 331,
-    "CK_SS_MAX": 480,
-    "CK_SS_ALL_MAX": 480,
-    "CK_TT_MEAN": 344,
-    "CK_TT_ALL_MEAN": 320,
-    "CK_TT_MIN": 300,
-    "CK_TT_ALL_MIN": 255,
-    "CK_TT_MAX": 388,
-    "CK_TT_ALL_MAX": 388,
-    "CK_FF_MEAN": 289,
-    "CK_FF_ALL_MEAN": 266,
-    "CK_FF_MIN": 248,
-    "CK_FF_ALL_MIN": 211,
-    "CK_FF_MAX": 330,
-    "CK_FF_ALL_MAX": 330,
+    "CK_SS_MEAN": 447,
+    "CK_SS_ALL_MEAN": 422,
+    "CK_SS_MIN": 387,
+    "CK_SS_ALL_MIN": 362,
+    "CK_SS_MAX": 488,
+    "CK_SS_ALL_MAX": 488,
+    "CK_TT_MEAN": 353,
+    "CK_TT_ALL_MEAN": 329,
+    "CK_TT_MIN": 296,
+    "CK_TT_ALL_MIN": 278,
+    "CK_TT_MAX": 391,
+    "CK_TT_ALL_MAX": 391,
+    "CK_FF_MEAN": 297,
+    "CK_FF_ALL_MEAN": 273,
+    "CK_FF_MIN": 242,
+    "CK_FF_ALL_MIN": 228,
+    "CK_FF_MAX": 333,
+    "CK_FF_ALL_MAX": 333,
     "CK_ROUTE_REF": "SS"
    },
    "lib_clock_pin": "clk",

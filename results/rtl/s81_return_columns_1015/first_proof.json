@@ -1,0 +1,44 @@
+{
+  "status": "PASS",
+  "scope": "component delayed equivalence; not canonical programme or physical closure",
+  "cycles_per_positive": 2500,
+  "added_return_cycles": 1,
+  "source_sha256": "9dda1d9e774a2619e814e3186dd5db5b79f2a5ed53aa2c2846da69f2ce38a773",
+  "results": [
+    {
+      "variant": "positive",
+      "half": "a",
+      "returncode": 0,
+      "expected_verdict": true,
+      "log": "/tmp/s81_return_columns_1015/proof/positive_a.log"
+    },
+    {
+      "variant": "positive",
+      "half": "b",
+      "returncode": 0,
+      "expected_verdict": true,
+      "log": "/tmp/s81_return_columns_1015/proof/positive_b.log"
+    },
+    {
+      "variant": "bad_lane",
+      "half": "a",
+      "returncode": -6,
+      "expected_verdict": true,
+      "log": "/tmp/s81_return_columns_1015/proof/bad_lane_a.log"
+    },
+    {
+      "variant": "bad_lane",
+      "half": "b",
+      "returncode": -6,
+      "expected_verdict": true,
+      "log": "/tmp/s81_return_columns_1015/proof/bad_lane_b.log"
+    },
+    {
+      "variant": "drop_fault",
+      "half": "a",
+      "returncode": -6,
+      "expected_verdict": true,
+      "log": "/tmp/s81_return_columns_1015/proof/drop_fault_a.log"
+    }
+  ]
+}

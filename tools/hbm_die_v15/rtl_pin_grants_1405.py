@@ -124,6 +124,27 @@ def ft_record(o):
                  owner='die (relay stations)', master_keepout='hard placement + M5/M6 route')]
 
 
+SM_CARVE = None      # H-DIE-V790 10-16 (OWNER feedthrough carve, H-SM rp4c): um width of the SM frame's W-edge column and
+                     # N-edge row (40.32); None = the centred v15 column/row of ft_forbid/ft_record
+
+
+def ft_forbid_sm(o):
+    """SM slots: pins stay out of the carve footprint on the faces it touches (W-column foot on N/S, N-row foot on E/W)"""
+    if SM_CARVE is None:
+        return ft_forbid(o)
+    c = SM_CARVE + FT_MARGIN
+    return dict(N=[(0.0, c)], S=[(0.0, c)], E=[(o['h'] - c, o['h'])], W=[(o['h'] - c, o['h'])])
+
+
+def ft_record_sm(o):
+    if SM_CARVE is None:
+        return ft_record(o)
+    return [dict(kind='feedthrough_relay_column', x_um=[0.0, SM_CARVE], y_um=[0.0, o['h']], edge='W',
+                 owner='die (relay stations; OWNER SM feedthrough carve, H-SM rp4c frame)', master_keepout='hard placement + route'),
+            dict(kind='feedthrough_relay_row', x_um=[0.0, o['w']], y_um=[round(o['h'] - SM_CARVE, 3), o['h']], edge='N',
+                 owner='die (relay stations; OWNER SM feedthrough carve)', master_keepout='hard placement; ports cross on M5 only')]
+
+
 def windows(s, cls):
     return [w for w in s.get('pin_windows', []) if w['cls'] == cls]
 
@@ -135,11 +156,11 @@ def common(s, key, cell, params, ref, sha, note):
     s.pop('rtl_pending', None)
 
 
-def grant_su(s, P, q, g, ref, sha):
+def grant_su(s, P, q, g, ref, sha, corex=None):
     o = s['outline']
     lg = windows(s, 'LG_SU')
     lgf = lg[0]['face']
-    corex = 'E' if q in ('SW', 'NW') else 'W'       # sucore sits at the hub end of the slice row
+    corex = corex or ('E' if q in ('SW', 'NW') else 'W')       # sucore sits at the hub end of the slice row (v5)
     assert lgf != corex, (s['name'], lgf)
     bank_w = {}
     for w in lg:
@@ -159,10 +180,14 @@ def grant_su(s, P, q, g, ref, sha):
         faces[corex].append((rng(p, P[p][1]), P[p][1], mid + 60))
     for p in cmd:
         faces[corex].append((rng(p, P[p][1]), P[p][1], mid - 260))
-    clocks = [p for p in P if p.startswith(('clk', 'pg_clk', 'rst'))]
+    # H-NETLIST suport (COLL inject/delivery through the quarter cxport sucx_<q>, at the core end): core face
+    cx = [p for p in ('inj_rd', 'inj_addr', 'inj_q', 'dw_v', 'dw_row', 'dw_d') if p in P]
+    for p in cx:
+        faces[corex].append((rng(p, P[p][1]), P[p][1], mid + 700))
+    clocks = [p for p in P if p.startswith(('clk', 'pg_clk', 'rst', 'bridge_rst'))]
     for p in clocks:
         faces['N'].append((rng(p, P[p][1]), P[p][1], o['w'] / 2 + 80))
-    assert set(per) | set(core) | set(cmd) | set(clocks) == set(P), set(P) - (set(per) | set(core) | set(cmd) | set(clocks))
+    assert set(per) | set(core) | set(cmd) | set(cx) | set(clocks) == set(P), set(P) - (set(per) | set(core) | set(cmd) | set(clocks))
     pins, dens = mkpins(o, faces, ft_forbid(o))
     common(s, 'pgslice', TOP['pgslice'], dict(QID=QID[q], G=g, READ_RETURN=10, WRITE_RETURN=7), ref, sha,
            f'SU port-group slice G={g} of quarter {q} (banks {2*g},{2*g+1}); LG ports on {lgf} at the bank windows, '
@@ -182,14 +207,18 @@ def grant_core(s, P, q, rf, ref, sha):
     src = [r['src_pin']['xy'][1] - y0 for r in rf['routes'] if r['src_pin']['block'] == s['name']]
     dst = [r['dst_pin']['xy'][1] - y0 for r in rf['routes'] if r['dst_pin']['block'] == s['name']]
     faces = {slicef: [], chan: [], 'N': []}
-    for p in ('rf_bword', 'rf_bcmd', 'rf_dsec', 'slice_x', 'rf_drain_now'):
+    for p in ('rf_bword', 'rf_bcmd', 'rf_dsec', 'slice_x', 'rf_drain_cmd' if 'rf_drain_cmd' in P else 'rf_drain_now'):
         faces[slicef].append((rng(p, P[p][1]), P[p][1], o['h'] / 2 - 200))
     for p in ('rf_wv', 'rf_wa', 'rf_wd'):
         faces[chan].append((rng(p, P[p][1]), P[p][1], sum(dst) / len(dst)))
-    for p in ('red_sv', 'red_tag', 'red_x'):
+    for p in ('red_sv', 'red_tag', 'red_x') + (('red_rf_v',) if 'red_rf_v' in P else ()):
         faces[chan].append((rng(p, P[p][1]), P[p][1], sum(src) / len(src)))
     for p in ('rf_rd_cmd', 'red_cmd', 'fault'):
         faces[slicef].append((rng(p, P[p][1]), P[p][1], o['h'] / 2 + 200))
+    # H-NETLIST suport: COLL RED_CARRY RF writes + SFU operand, both registered in the cxport sucx_<q> (channel side)
+    for p in ('rr_wv', 'rr_wa', 'rr_wd', 'sfu_x'):
+        if p in P:
+            faces[chan].append((rng(p, P[p][1]), P[p][1], o['h'] / 2))
     clocks = [p for p in P if p.startswith(('clk', 'rst'))]
     for p in clocks:
         faces['N'].append((rng(p, P[p][1]), P[p][1], o['w'] / 2))
@@ -230,14 +259,14 @@ def grant_sm(s, P, ref, sha):
     faces = {f: v for f, v in faces.items() if v}
     got = {n.split('[')[0] for f in faces.values() for n, _, _ in f}
     assert got == set(P), set(P) ^ got
-    pins, dens = mkpins(o, faces, ft_forbid(o))
+    pins, dens = mkpins(o, faces, ft_forbid_sm(o))
     common(s, 'sm', TOP['sm'], {}, ref, sha,
            'static SM successor ot_hbm_accel_smh_static (compiler 83-bit command + 1099-bit packet, no req/d ready); '
            f'packet/expected_request at the PC (SM_HBM {hf}), xw_data bank b at its SM_X window, results at SM_OUT, '
            'command at the KV_DESC/VM-hub window; die feedthrough column+row reserved. Attention ports (KV_DESC 64 b, '
            'ot_hbm_accel_smh_attn) re-pin on landing in main.')
     s.update(pins=pins, face_density=dens, clock_entry=dict(pin='clk', face=hf, layer='M5',
-             offset=next(p['offset'] for p in pins if p['name'] == 'clk')), reserved_channels=ft_record(o))
+             offset=next(p['offset'] for p in pins if p['name'] == 'clk')), reserved_channels=ft_record_sm(o))
 
 
 def grant_quant(c, S, ref, sha_lg, sha_x):

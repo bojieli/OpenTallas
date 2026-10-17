@@ -1,0 +1,35 @@
+{
+ "schema": "opentallas.hbm.place_postprocess.proof.v1",
+ "qualification": "DIAGNOSTIC_ONLY; no data nets, no route/timing/native acceptance",
+ "source_sha256": {
+  "tools/hbm_die_v15/postprocess_place.py": "ab97c40ac627a18f9919f015af973d84877c0e4a311914d9b657235cef02334d",
+  "tools/hbm_die_v15/test_postprocess_place.py": "217927905fb052e6e3fd2cfece3ef95a0589e022c480242da2dd1cdfd76d90bd"
+ },
+ "tests": 5,
+ "full_case_pending": "E4 GEN PID3012420/sourcef3e29321f still advancing; no full36379 audit claimed",
+ "native_openroad_positive": {
+  "unit": "oth-ubuntu-3078813-1792192944",
+  "exit": 0,
+  "components": 2,
+  "component_terminals": 30419,
+  "clock_nets": 1,
+  "connections": 13,
+  "literal_clock_sinks": 12,
+  "case": "/srv/opentallas-scratch/codex/hdie-postprocess-1623",
+  "roots": [
+   "hb_ckgen/pll_stream"
+  ],
+  "receiver": "hb_vms_SW; exact clk_bank[0..7],clk_hub,clk_ring[0..1],clk_replay"
+ },
+ "preserved_initial_failure": {
+  "unit": "oth-ubuntu-3076358-1792192922",
+  "exit": 1,
+  "cause": "DEF bus identifiers incorrectly Tcl escaped; ten literal bus terminals missing, OpenROAD hard refused; corrected exporter uses literal brackets"
+ },
+ "artifacts": {
+  "place_only.def": "10b209d6d5761d2cde7ec5f4167a9d65b52a16356878d52ada9064669053a93b",
+  "export_place.tcl": "8b707a268797f8c544da3d35653c3d67d00d9565e06fd44ac98e6c4219f62613",
+  "literal_clocks.json": "4455f0bce8bcead072b35310922456c706323eb21a270bfb41b014d459bdc831",
+  "place_only.odb": "727525649d94eaf1b2749f80ab2912a69d97a10ea01e16517c569b0396ed63a7"
+ }
+}

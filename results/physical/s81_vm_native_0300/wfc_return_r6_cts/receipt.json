@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.ref-tile.cts-native-probe.v1",
+  "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+  "kit": "physical/ref_tile/dsfd_vm_wfc_return_hop1_native_1016_r6",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_wfc_return_hop1_native_1016_r6-20261016-080118",
+  "gate_source_commit": "705e771f72d236611eea64088379e0e5c7479a2b",
+  "gate_result_sha256": "14c0de39abc1d2f495eab1263c2f3c0625617fb114d4717c96ba8cfa35a45921",
+  "library_sha256": "616886e27d4e551012e574785afd4a74b76fbf2bf7acf45b1e21686d827e2dd2",
+  "insertion_sha256": "62f06531c3630258918c54319b24467be9f21df01c3fd4dbac79bc855df8f384",
+  "probe_tcl_sha256": "03e5b45c2bc10b7745823aa59fc9d3ab21f3a05cd8d27df5bcc4b909c6b53900",
+  "launch": {
+    "ps": 221.40879999999999,
+    "pin": "s_d[497]"
+  },
+  "capture": {
+    "ps": 163.27760999999998,
+    "pin": "e_d[2045]"
+  },
+  "launch_over": 3,
+  "capture_over": 0,
+  "comb_pins": [],
+  "clock_refs": {
+    "ck": {
+      "rise": 175.7,
+      "fall": 187.312775,
+      "min": 147.46176,
+      "max": 188.16136,
+      "src": "insertion.json boundary mean",
+      "bmin": 155.4,
+      "bmax": 188.2,
+      "n": 3088
+    }
+  },
+  "spread_ps": {
+    "ck": 32.79999999999998
+  },
+  "measured_reference_coverage": true,
+  "diagnostic_pass": false,
+  "verdict": "CTS_NATIVE_FAIL_NO_ROUTE_SUBMITTED",
+  "images_actually_viewed": true,
+  "image_review": "Actual gate images show NE and east/north pin bands occupied; west/southwestern region sparse. Interleaved r6 reduces clock spread and longest physical corner but strict launch still exceeds 220ps on3pins. No native budget relaxed.",
+  "structural_next": "Two 256-bit lane data slices, each four256-bit inputs and two257-bit outputs, independent small clock roots, exact identical tail stage count and observed diagnostic faults. Source change requires new exact/mutant proof plus compiler profile remeasurement before adoption.",
+  "images_sha256": {
+    "floorplan.png": "6d0854bcd4495eccba71b18b136b5efa62da318c2244c8e42f8cefe45ed3896f",
+    "density.png": "b036d656498a19809d7258670507bc5aca3e03bdd860b22e5c80a430a1417b4f"
+  },
+  "probe_lib_sha256": "616886e27d4e551012e574785afd4a74b76fbf2bf7acf45b1e21686d827e2dd2"
+}

@@ -45,13 +45,14 @@
   "pin_h": "M4",
   "pin_v": "M3 M5",
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.01
  },
- "slot_change_request": "xt10 tap pin plan (Q-DVM+LINK 2026-10-16): aw spread over S face x 28.38..187.42, ck N-centre 108.012; other pins as die f7574712e",
+ "slot_change_request": "xt11 tap pin plan (Q-DVM+LINK 2026-10-16): hw_d N/M5 re-spread x 32.796..183.132 -> 11.964..210.012 (same order/layer; 10.4 -> 7.9 pins/um) for the xt10 native launch miss; aw/ck as xt10; other pins as die f7574712e. Die (Q-COMPUTE-DIE) must adopt assigned_pins.tcl.",
  "job": {
   "owner": "Claude:el1014-qwen-dvm-build",
   "branch": "claude/qwen-dvm-1014",
-  "tag": "xt10",
+  "tag": "xt12",
   "purpose": "Qwen TP8 distributed x slice FILL TAP r3: taps the VM write stream (SU 64 + attention-return 16 lanes) inside the armed x range, rounds to the consumer's BF16 operand, and emits the head-row word {fill, ib, go} to BOTH roots from two kept register copies: go / ib (gi from the tree top) ride the fill's own pipeline (fill-before-go); root fault chains in.",
   "benches": [
    {
@@ -100,8 +101,8 @@
    108.012
   ],
   "hw_d": [
-   32.796,
-   183.132
+   11.964,
+   210.012
   ],
   "he_d": [
    32.796,
@@ -151,10 +152,10 @@
  "reroute_reason": {
   "kind": "pin_register",
   "cell": "qfd_xs_tap",
-  "launch_ps": 230.9,
-  "capture_ps": 198.6,
-  "source": "results/arch/qwen_dvm_banked_leaf_1015/native_tap8/native_audit.json",
-  "fix": "xt10: (a) aw 553-bit S bus spread 26.5 um -> 159 um (0.288 pitch) and ck moved from the NW corner to N-face centre (xt6 native capture 502 ps / xt9 gate: diagonal S->NE flop chain, corner clock, fill 7%); (b) recipe 3 pin registers on every input/output (owner 19:50); (c) pin-flop columns 8 + full-depth pin-access keepout (xt8 61 gi pins under routed M5); same RTL/outline"
+  "launch_ps": 206.5,
+  "capture_ps": 210.8,
+  "source": "results/rtl/qwen_link_0030/xs_tap_xt11_native_audit.json",
+  "fix": "xt12: CLOSED xt11 native capture 210.8 (34 sw NW-corner pins) = 7 route hold-repair BUFx2 (~131 ps) behind the HB2 inhold pad on late-clock corner flops; the route FF repair uses the 30 ps hold margin at the boundary. io_hold_margin_ns 0.010 relieves only the boundary-input route repair (sign-off SDC unchanged; FF >= 0 still required). Pins/RTL identical to xt11."
  },
  "pin_access": {
   "frac": 1.0

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_controller_hbm_calendar",
+ "enable": false,
+ "reason": "Actual input captures and output registers; fixed producer two pin edges are compiled. No wrapper edges permitted."
+}

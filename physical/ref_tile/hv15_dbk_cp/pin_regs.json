@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_dma_back_static_vp4_banks_cp",
+ "enable": false,
+ "reason": "Banks/controller are hard children owning their registered endpoints; the folded collar registers every input in a pin flop and drives every output from a flop (ot_static_cmd_target pin rule)."
+}

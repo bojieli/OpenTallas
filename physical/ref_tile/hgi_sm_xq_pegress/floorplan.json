@@ -1,0 +1,93 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hgi_sm_xq_pegress",
+ "top": "ot_hgi_sm_xload_xq_pegress",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  302.4,
+  302.4
+ ],
+ "core": [
+  2.16,
+  2.16,
+  300.23999999999995,
+  300.23999999999995
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "bq_d"
+  ],
+  "S": [
+   "rwq"
+  ],
+  "N": [
+   "xw_data",
+   "xw_en",
+   "xw_last",
+   "xw_addr",
+   "xw_grp",
+   "x_done"
+  ],
+  "E": [
+   "clk",
+   "rn",
+   "ed5",
+   "ede",
+   "bq_v",
+   "bq_last",
+   "bq_addr",
+   "bq_b"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+  "physical/ref_tile/hgi_sm_xq_pegress/kit.env",
+  "physical/ref_tile/hgi_sm_xq_pegress/clock.sdc",
+  "physical/ref_tile/hgi_sm_xq_pegress/signoff.sdc",
+  "physical/ref_tile/hgi_sm_xq_pegress/pdn.tcl",
+  "physical/ref_tile/hgi_sm_xq_pegress/pre_cts.tcl",
+  "physical/ref_tile/hgi_sm_xq_pegress/post_cts.tcl",
+  "physical/ref_tile/hgi_sm_xq_pegress/post_grt.tcl",
+  "physical/ref_tile/hgi_sm_xq_pegress/pre_drt.tcl",
+  "physical/ref_tile/hgi_sm_xq_pegress/pre_fill.tcl",
+  "physical/ref_tile/hgi_sm_xq_pegress/post_fill.tcl",
+  "physical/ref_tile/hgi_sm_xq_pegress/pre_grt.tcl",
+  "physical/ref_tile/hgi_sm_xq_pegress/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/hgi_sm_xq_pegress/pre_gpl.tcl",
+  "physical/ref_tile/hgi_sm_xq_pegress/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
+ ]
+}

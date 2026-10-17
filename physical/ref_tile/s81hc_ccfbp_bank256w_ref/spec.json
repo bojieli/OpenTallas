@@ -1,0 +1,117 @@
+{
+ "kind": "tile",
+ "clock_port": "clk",
+ "reset_ports": [
+  "srs"
+ ],
+ "recipe": 3,
+ "children": [],
+ "inter": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "orfs_vars": {
+  "OT_OUTHOLD_FREE": "1",
+  "OT_MEG_DEPTH_UM": "2.4"
+ },
+ "name": "s81hc_ccfbp_bank256w_ref",
+ "top": "ot_s81_hc_ccf_bankpipe_bank256",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf_bankpipe.sv",
+  "rtl/link/ot_fifo_sram_fwft.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {
+  "DEPTH": 32
+ },
+ "std_area_um2": 1200,
+ "outline": {
+  "w": 172.8,
+  "h": 97.2,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "u_fifo.g_tile[0].genblk1.genblk1.g_m2.u_m",
+   "at": [
+    38.88,
+    27.0
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "clk",
+   "srs",
+   "pop_i",
+   "push_i",
+   "data_i",
+   "hv_o",
+   "ovf_o"
+  ],
+  "S": [
+   "head_o"
+  ]
+ },
+ "refglob": "*head*",
+ "pin_regs": {
+  "enable": false,
+  "reason": "HC-COMB 2026-10-16: leaf of the CCF successor ot_s81_hc_ccf_bankpipe PINREG=1 (branch claude/s81hc-comb-ccfbp-0700): the RTL registers every data input and output at the pin (pop/push keep flops, data d0, head/hv/ovf output registers; srs = reset relay); a second register would move the uniform +3 public shift that the comb's forward pad trim 3 absorbs (exact HC composition, CCF_BP=3)."
+ },
+ "job": {
+  "owner": "Claude:S-ENGRAM+NORM/HC-COMB",
+  "branch": "claude/s81hc-comb3-bank256b",
+  "tag": "w1",
+  "purpose": "CCF bankpipe HALF bank leaf (u_cf.g_bank[0..4].u_b.u_h0/u_h1, one master x10): 256-bit FWFT FIFO on one ot_sram_1r1w_128x256 macro, registered head/hv/ovf; same cycles as the 512-bit bank",
+  "benches": [
+   {
+    "name": "ccf_bankpipe_component",
+    "cmd": "bash tools/s81_suhc/ccf_bankpipe_gate.sh {RUN}/bench/ccfbp 3",
+    "expect": "pass",
+    "pass_regex": "^CCF_BANKPIPE_COMPONENT_GATE PASS$",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ccf_bankpipe_neg_head",
+    "cmd": "mkdir -p {RUN}/neg && sed 's/head_o<=head;/head_o<=~head;/' rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf_bankpipe.sv > {RUN}/neg/ot_s81_hc_ccf_bankpipe_mut.sv && iverilog -g2012 -s tb_ccf_bankpipe -Ptb_ccf_bankpipe.EXTRA=3 -o {RUN}/neg/mut.vvp rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf.sv {RUN}/neg/ot_s81_hc_ccf_bankpipe_mut.sv rtl/link/ot_fifo_sram_fwft.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/dsrom_sys/s81_suhc/test/tb_ccf_bankpipe.sv && vvp {RUN}/neg/mut.vvp +MODE=0 +SEED=17",
+    "expect": "fail",
+    "fail_regex": "CCF_BANKPIPE_FAIL",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_suhc",
+   "tools/s81_suhc",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "structural_change": "HC-COMB-3 structural partition (bank128 g128edge24 EARLY_FAIL_CONGESTION GRT overflow 49,847; bank v1 TT -34.99 rd_out[383]->b1[127] W-channel detour + 2 CTS M4 shorts at macro E edge): one 64x512 SRAM (171.3x77.8, all pins W/E on M4, ~1,300 N->S bits turned through 20-25 um side channels, congestion.png all in W channel + NW/SW corners) -> bank = 2 half leaves on one 128x256 SRAM (94.8x41.1), half the bits per side channel, 0 added cycles; macro-edge M5 via guard 2.4 um (Codex measured DRC 1.33 um inside the macro). Wide-channel variant: 39 um side channels."
+ },
+ "io_tcl": "physical/ref_tile/s81hc_ccfbp_bank256w_ref/io_spread.tcl",
+ "clock": "spine"
+}

@@ -35,7 +35,8 @@ module ot_hgi_sm_xload_cl2_ctl #(
     parameter integer PMAX   = 8,
     parameter integer RD_LAT = 6,
     parameter integer MUT    = 0,
-    parameter integer NR     = 32        // select replicas (each drives 2048 / NR data bits)
+    parameter integer NR     = 32,       // select replicas (each drives 2048 / NR data bits)
+    parameter integer EGRESS_SPLIT = 0   // XQL (H-SM 10-16): 1 = export the egress controls (eg_*) to pair-egress leaves
 ) (
     input  wire               clk,
     input  wire               clk_eg,    // egress root (rw / BD-beat pin capture, beat select, xw pins): related phase 0
@@ -80,11 +81,16 @@ module ot_hgi_sm_xload_cl2_ctl #(
     output reg  [2*((PMAX*3152+2047)/2048)-1:0] bsel,   // one-hot {parity a, beat b} of (ea, eb2), same edge
 
     output reg  [PMAX*8-1:0]  lane_en,
-    input  wire [2047:0]      bq_d
+    input  wire [2047:0]      bq_d,
+    // ---- XQL egress controls (EGRESS_SPLIT = 1; tied 0 otherwise): ed[RDP-3] {ok, b}, ed[RDP-2], the BD beat tag
+    output wire [7:0]         eg_ed5,
+    output wire [16:0]        eg_ede,
+    output wire               eg_bqv, eg_bqlast,
+    output wire [6:0]         eg_bqaddr, eg_bqb
 );
     localparam integer XC = 3152, XOFF = 2128;
     localparam integer NBMAX = (PMAX * XC + 2047) / 2048;
-    localparam integer LAND = 3;
+    localparam integer LAND = 4;           // cl2g: + 1 landing stage (L1) between the rotation mux and l_d_o / C
     localparam integer RDP = 7;            // + 1: rw captured at the ctl pins (egress edge)
     localparam integer RB = 2048 / NR;     // data bits per select replica
     // ---- local reset relay
@@ -212,22 +218,29 @@ module ot_hgi_sm_xload_cl2_ctl #(
     always @* for (integer b = 0; b < 8; b = b + 1) rr_v_seen[b] = rr_c[b*257 + 256];
     assign resp_bad = (m_v && rr_v_seen != 8'hFF) || (!m_v && rr_v_seen != 8'h00);
     // ---- L: capture + rotate; the rotation select is replicated (NR copies of md[RD_LAT][9:7], same edge)
+    // cl2g (ctlw f20a route TT -58.79: rr_c / s0r / md -> rotation mux -> ~300 um wire -> l_d_o pin register, 399 paths):
+    // the rotation result lands in L0 next to the rr pins and is re-registered in L1 (plain wire to the l_d_o pin
+    // registers / the C stage).  + 1 edge on EVERY xw beat and x_done of both formats (LAND 3 -> 4, quantiser valids
+    // and the BD tag line follow L1); rq unchanged.
+    reg l0_v; reg [3:0] l0_g; reg [2:0] l0_p, l0_wq; reg [6:0] l0_rem; reg [8*256-1:0] l0_d;
     reg l_v; reg [3:0] l_g; reg [2:0] l_p, l_wq; reg [6:0] l_rem; reg [8*256-1:0] l_d;
     reg [2:0] s0r [0:NR-1];
     always @(posedge clk or negedge rn)
         if (!rn) for (integer k = 0; k < NR; k = k + 1) s0r[k] <= 3'd0;
         else for (integer k = 0; k < NR; k = k + 1) s0r[k] <= md[RD_LAT][9:7];
-    always @(posedge clk or negedge rn) if (!rn) l_v <= 1'b0; else l_v <= m_v;
+    always @(posedge clk or negedge rn) if (!rn) begin l0_v <= 1'b0; l_v <= 1'b0; end else begin l0_v <= m_v; l_v <= l0_v; end
     always @(posedge clk) begin
-        {l_g, l_p, l_wq} <= mr[MW-2 -: 10]; l_rem <= mr[6:0];
+        {l0_g, l0_p, l0_wq} <= mr[MW-2 -: 10]; l0_rem <= mr[6:0];
         for (integer k = 0; k < NR; k = k + 1)
-            l_d[k*RB +: RB] <= rr_c[(3'(s0r[k] + 3'((k*RB) / 256) + ((MUT == 1) ? 3'd1 : 3'd0)))*257 + (k*RB) % 256 +: RB];
+            l0_d[k*RB +: RB] <= rr_c[(3'(s0r[k] + 3'((k*RB) / 256) + ((MUT == 1) ? 3'd1 : 3'd0)))*257 + (k*RB) % 256 +: RB];
+        {l_g, l_p, l_wq} <= {l0_g, l0_p, l0_wq}; l_rem <= l0_rem; l_d <= l0_d;
     end
     assign l_d_o = l_d;
-    // quantiser valids registered on the landing edge (= l_v && bdm && l_wq[2] / [1] of cl)
+    // quantiser valids registered with L1 (= l_v && bdm && l_wq[2] / [1] of cl)
+    reg qv0_lo, qv0_hi;
     always @(posedge clk or negedge rn)
-        if (!rn) begin qv_lo <= 1'b0; qv_hi <= 1'b0; end
-        else begin qv_lo <= m_v && bdm && mr[12]; qv_hi <= m_v && bdm && mr[11]; end
+        if (!rn) begin qv0_lo <= 1'b0; qv0_hi <= 1'b0; qv_lo <= 1'b0; qv_hi <= 1'b0; end
+        else begin qv0_lo <= m_v && bdm && mr[12]; qv0_hi <= m_v && bdm && mr[11]; qv_lo <= qv0_lo; qv_hi <= qv0_hi; end
     // ---- C: BF16 convert (was clk_bf in cl; same edge), with the per-quarter write enables of the W stage
     reg c_v; reg [3:0] c_g; reg [2:0] c_pp, c_wq;
     always @(posedge clk or negedge rn)
@@ -478,6 +491,13 @@ module ot_hgi_sm_xload_cl2_ctl #(
     end
     always @(posedge clk) begin bq_addr <= bs_addr; bq_b <= bs_b; end
     always @(posedge clk_eg) begin bc_addr <= bq_addr; bc_b <= bq_b; bq_c <= bq_d; end
+    // ---- XQL: egress controls exported to the pair-egress leaves (their pin registers = this module's clk_eg stage)
+    generate if (EGRESS_SPLIT != 0) begin : g_egx
+        assign eg_ed5 = {ed[RDP-3][EW-2], ed[RDP-3][6:0]}; assign eg_ede = ed[RDP-2];
+        assign eg_bqv = bq_v; assign eg_bqlast = bq_last; assign eg_bqaddr = bq_addr; assign eg_bqb = bq_b;
+    end else begin : g_egx0
+        assign eg_ed5 = 8'd0; assign eg_ede = '0; assign eg_bqv = 1'b0; assign eg_bqlast = 1'b0; assign eg_bqaddr = 7'd0; assign eg_bqb = 7'd0;
+    end endgenerate
     // ---- xw pins (egress root)
     always @(posedge clk_eg or negedge rn) begin
         if (!rn) begin xw_en <= 1'b0; xw_last <= 1'b0; x_done <= 1'b0; end
@@ -494,6 +514,98 @@ module ot_hgi_sm_xload_cl2_ctl #(
 endmodule
 
 // One lane quarter of the BF16 x-store: macros m[t] (t < 8) with per-macro pin registers, gated capture, OR-4 tree.
+// =====================================================================================================================
+// ot_hgi_sm_xload_cl2_ctlw (H-SM 2026-10-16, H-NETLIST/H-DIE option A): the die master of the x-load control leaf.
+// The x-load issuer (ot_static_cmd_target MODE 1, CW 108, TARGET from the identity strap tgt, TGT_PIN 1; one 128 x 256
+// command-calendar SRAM) folds into the ctl leaf as pin-registered soft logic: the leaf face takes the raw F20 host
+// broadcast (cfg_v/target8/addr12/data256, desc base12/limit13/loops16, launch_v) and the strap tgt[7:0] directly, every
+// one landing in the issuer's pin flops; configured / fault / active leave from the issuer's status flops.  The old
+// command face (x_v + 108 b fields, x_busy, x_fault) becomes internal: issuer cmd flops -> ctl command pin flops (the
+// ctl edges are unchanged), x_busy -> tgt_active, x_fault -> tgt_fault.  x_done / xw_last stay on the face (open on
+// the die, as before).  Fire edge: x_v reaches the ctl command flops at launch_v(ingress) + 2 + LEAD + at.
+// MUT 1..5 = ctl mutants; MUT 6 = issuer fires one edge late (must FAIL the F20 lock bench).
+// =====================================================================================================================
+module ot_hgi_sm_xload_cl2_ctlw #(
+    parameter integer PMAX   = 8,
+    parameter integer RD_LAT = 6,
+    parameter integer MUT    = 0,
+    parameter integer NR     = 32,
+    parameter integer LEAD   = 8,
+    parameter integer EGRESS_SPLIT = 0   // XQL: export the egress controls (eg_*), see ot_hgi_sm_xload_static_xql
+) (
+    input  wire               clk,
+    input  wire               clk_eg,
+    input  wire               clk_cal,   // hard clock entry of the issuer's calendar SRAM only (die: phi - R, as the DMA fold's clk_tab)
+    input  wire               rst_n,
+    input  wire [7:0]         tgt,       // identity strap (x-load issuer TARGET 100 + QID), die constant
+    input  wire               cfg_v,
+    input  wire [7:0]         cfg_target,
+    input  wire [11:0]        cfg_addr,
+    input  wire [255:0]       cfg_data,
+    input  wire               desc_v,
+    input  wire [11:0]        desc_base,
+    input  wire [12:0]        desc_limit,
+    input  wire [15:0]        desc_loops,
+    input  wire               launch_v,
+    output wire               configured,
+    output wire               fault,
+    output wire               active,
+    output wire               x_done,
+    output wire               xw_en,
+    output wire               xw_last,
+    output wire [6:0]         xw_addr,
+    output wire [6:0]         xw_grp,
+    output wire [2047:0]      xw_data,
+    output wire [8*17-1:0]    rq,
+    input  wire [8*257-1:0]   rr,
+    output wire               rn_o,
+    output wire [1023:0]      c_d,
+    output wire [3:0]         c_wce,
+    output wire               c_mhi, c_mlo,
+    output wire [6:0]         c_wa,
+    output wire [7:0]         r_ce,
+    output wire [6:0]         r_a,
+    input  wire [1023:0]      rwq,
+    output wire [2047:0]      l_d_o,
+    output wire               qv_lo, qv_hi,
+    input  wire               qo_lo, qo_hi, qf_lo, qf_hi,
+    output wire [15:0]        r_wsel,
+    output wire               zlo, zhi,
+    output wire [2*((PMAX*3152+2047)/2048)-1:0] bsel,
+    output wire [PMAX*8-1:0]  lane_en,
+    input  wire [2047:0]      bq_d,
+    output wire [7:0]         eg_ed5,
+    output wire [16:0]        eg_ede,
+    output wire               eg_bqv, eg_bqlast,
+    output wire [6:0]         eg_bqaddr, eg_bqb
+);
+    wire x_v, x_busy, x_fault; wire [107:0] xc;
+    // issuer = ot_static_cmd_target_core + its calendar SRAM on the hard entry clk_cal (the multiple_cts_roots flow lets a
+    // CTS root reach standard-cell clock pins only; same pattern as ot_hgi_dma_back_static_vp4_banks_cp's clk_tab)
+    wire t_rce; wire [6:0] t_raddr, t_waddr; wire [0:0] t_wce; wire [255:0] t_wdata, t_rd;
+    ot_static_cmd_target_core #(.TARGET(8'hff), .MODE(1), .CW(108), .RELF(0), .NA(1), .NF(1), .LEAD(LEAD),
+                                .MUT((MUT == 6) ? 1 : 0), .TGT_PIN(1)) u_iss (
+        .clk(clk), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+        .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
+        .tgt_active(x_busy), .tgt_fault(x_fault),
+        .a_we(), .a_addr(), .a_data(), .b_we(), .b_addr(), .b_data(), .run_v(), .run_base(), .run_count(),
+        .cmd_v(x_v), .cmd(xc), .cycle(), .configured(configured), .fault(fault), .active(active),
+        .tab_r_ce(t_rce), .tab_r_addr(t_raddr), .tab_rd_word(t_rd), .tab_w_ce(t_wce), .tab_w_addr(t_waddr), .tab_w_data(t_wdata));
+    ot_sram_1r1w_128x256_m1_r2c2 u_tab (.clk(clk_cal), .r_ce_in(t_rce), .r_addr_in(t_raddr), .rd_out(t_rd),
+        .w_ce_in(t_wce[0]), .w_addr_in(t_waddr), .wd_in(t_wdata), .w_mask_in({256{1'b1}}),
+        .rr_en(2'b0), .rr_addr(12'b0), .cr_en(2'b0), .cr_sel(16'b0));
+    // cmd = {x_xb7, x_fmt2, x_space2, x_stride32, x_p4, x_n21, x_base40} (die contract v16 cp1_194..201)
+    ot_hgi_sm_xload_cl2_ctl #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT((MUT <= 5) ? MUT : 0), .NR(NR), .EGRESS_SPLIT(EGRESS_SPLIT)) u_ctl (
+        .clk(clk), .clk_eg(clk_eg), .rst_n(rst_n), .x_v(x_v), .x_base(xc[39:0]), .x_n(xc[60:40]), .x_p(xc[64:61]),
+        .x_stride(xc[96:65]), .x_space(xc[98:97]), .x_fmt(xc[100:99]), .x_xb(xc[107:101]),
+        .x_busy(x_busy), .x_done(x_done), .x_fault(x_fault), .xw_en(xw_en), .xw_last(xw_last), .xw_addr(xw_addr),
+        .xw_grp(xw_grp), .xw_data(xw_data), .rq(rq), .rr(rr), .rn_o(rn_o), .c_d(c_d), .c_wce(c_wce), .c_mhi(c_mhi),
+        .c_mlo(c_mlo), .c_wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(rwq), .l_d_o(l_d_o), .qv_lo(qv_lo), .qv_hi(qv_hi),
+        .qo_lo(qo_lo), .qo_hi(qo_hi), .qf_lo(qf_lo), .qf_hi(qf_hi), .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .bsel(bsel),
+        .lane_en(lane_en), .bq_d(bq_d), .eg_ed5(eg_ed5), .eg_ede(eg_ede), .eg_bqv(eg_bqv), .eg_bqlast(eg_bqlast),
+        .eg_bqaddr(eg_bqaddr), .eg_bqb(eg_bqb));
+endmodule
+
 module ot_hgi_sm_xload_cl2_bfq (
     input  wire               clk,
     input  wire               rst_n,
@@ -510,33 +622,37 @@ module ot_hgi_sm_xload_cl2_bfq (
     //     enable/select flops, which are idle until the ctl issues after its own release);
     // (2) the write-mask pair is ONE pin register each (was 8 per-macro copies 250 um from the W pins), driving the
     //     macros' mask pins through its buffer tree: same edge as wp_d/wp_ce, so every macro sees the same write.
+    // cl2d (native audit of CLOSED cl2c TT +77.02/FF +13.11: capture 260.5 ps on 537 c_d pins, boundary clock spread
+    // 120.8 ps): every c_d bit fed TWO per-macro flops (wp_d lo/hi copies) and wa/r_a/wce fed 8 per-macro copies, so
+    // io_flop_at_pins (pin + ONE flop D) left them unanchored, placed at the macros up to ~230 um from the pins.  Now
+    // every input has exactly ONE pin register (c_d -> cdq, wa -> wa_q, r_a -> ra_q, wce -> wce_q; r_ce[t] already one),
+    // which drives the macro pins directly through its buffer tree: same edges (they replace wp_d / wp_a / rp_a / wp_ce).
     wire [0:0] rn_l;
     ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn_l));
     (* keep = 1 *) reg mask_hi, mask_lo;
     always @(posedge clk) begin mask_hi <= mhi; mask_lo <= mlo; end
+    (* keep = 1 *) reg [1023:0] cdq; (* keep = 1 *) reg [6:0] wa_q, ra_q;
+    always @(posedge clk) begin cdq <= c_d; wa_q <= wa; ra_q <= r_a; end
+    (* keep = 1 *) reg wce_q;
+    always @(posedge clk or negedge rn_l[0]) if (!rn_l[0]) wce_q <= 1'b0; else wce_q <= wce;
     wire [255:0] cap [0:7];
     genvar gt;
     generate for (gt = 0; gt < 8; gt = gt + 1) begin : g_t
-        (* keep = 1 *) reg rp_ce; (* keep = 1 *) reg [6:0] rp_a; reg rp_sel;
-        (* keep = 1 *) reg wp_ce; (* keep = 1 *) reg [6:0] wp_a; reg [255:0] wp_d;
+        (* keep = 1 *) reg rp_ce; reg rp_sel;
+        wire [255:0] wp_d = {cdq[gt*128 +: 128], cdq[gt*128 +: 128]};   // c_d[(t 8 + l) 16 +: 16] -> lane l, both halves
         wire [255:0] wp_m = {{128{mask_hi}}, {128{mask_lo}}};
         reg [255:0] cq;
         wire [255:0] rd;
         always @(posedge clk or negedge rn_l[0]) begin
-            if (!rn_l[0]) begin rp_ce <= 1'b0; rp_sel <= 1'b0; wp_ce <= 1'b0; end
-            else begin rp_ce <= r_ce[gt]; rp_sel <= rp_ce; wp_ce <= wce; end
+            if (!rn_l[0]) begin rp_ce <= 1'b0; rp_sel <= 1'b0; end
+            else begin rp_ce <= r_ce[gt]; rp_sel <= rp_ce; end
         end
         always @(posedge clk) begin
-            rp_a <= r_a; wp_a <= wa;
-            for (integer l = 0; l < 8; l = l + 1) begin
-                wp_d[16*l +: 16] <= c_d[(gt*8 + l)*16 +: 16];
-                wp_d[128 + 16*l +: 16] <= c_d[(gt*8 + l)*16 +: 16];
-            end
             cq <= rd & {256{rp_sel}};
         end
         ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk),
-            .r_ce_in(rp_ce), .r_addr_in(rp_a), .rd_out(rd),
-            .w_ce_in(wp_ce), .w_addr_in(wp_a), .wd_in(wp_d), .w_mask_in(wp_m),
+            .r_ce_in(rp_ce), .r_addr_in(ra_q), .rd_out(rd),
+            .w_ce_in(wce_q), .w_addr_in(wa_q), .wd_in(wp_d), .w_mask_in(wp_m),
             .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
         assign cap[gt] = cq;
     end endgenerate
@@ -668,6 +784,70 @@ module ot_hgi_sm_xload_static_cl2 #(
     ot_hgi_sm_xload_cl2_ctl #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT(MUT)) u_ctl (
         .clk(clk), .clk_eg(clk_eg), .rst_n(rst_n), .x_v(x_v), .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space),
         .x_fmt(x_fmt), .x_xb(x_xb), .x_busy(x_busy), .x_done(x_done), .x_fault(x_fault), .xw_en(xw_en), .xw_last(xw_last),
+        .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .rq(rq), .rr(rr), .rn_o(rn),
+        .c_d(c_d), .c_wce(c_wce), .c_mhi(c_mhi), .c_mlo(c_mlo), .c_wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(rwq),
+        .l_d_o(l_d), .qv_lo(qv_lo), .qv_hi(qv_hi), .qo_lo(qo_lo), .qo_hi(qo_hi), .qf_lo(qf_lo), .qf_hi(qf_hi),
+        .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .bsel(bsel), .lane_en(lane_en), .bq_d(bq_d));
+    genvar gq;
+    generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_q
+        ot_hgi_sm_xload_cl2_bfq u_bfq (.clk(clk_bf[gq]), .rst_n(rn), .c_d(c_d), .wce(c_wce[gq]), .mhi(c_mhi), .mlo(c_mlo),
+            .wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(rwq[256*gq +: 256]));
+    end endgenerate
+    ot_hbm_xp_aq_tree13 u_aq_lo (.clk(clk_qlo), .rst_n(rn), .v(qv_lo), .fp4(1'b0), .x(l_d[1023:0]), .vo(qo_lo), .q(qq_lo),
+                             .e(qe_lo), .y(), .fault(qf_lo));
+    ot_hbm_xp_aq_tree13 u_aq_hi (.clk(clk_qhi), .rst_n(rn), .v(qv_hi), .fp4(1'b0), .x(l_d[2047:1024]), .vo(qo_hi), .q(qq_hi),
+                             .e(qe_hi), .y(), .fault(qf_hi));
+    ot_hgi_sm_xload_cl2_bdring #(.PMAX(PMAX)) u_bd (.clk(clk_bd), .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .qq_lo(qq_lo),
+        .qq_hi(qq_hi), .qe_lo(qe_lo), .qe_hi(qe_hi), .bsel(bsel),
+        .lane_en_i(lane_en), .bq_d(bq_d));
+endmodule
+
+// ot_hgi_sm_xload_static_cl2f (H-SM 2026-10-16): the cl2 cluster with the F20-faced ctl die master (ctlw); bench vehicle
+// of tb_hgi_xload_static_lock -DXLOAD_F20 (same leaves, same edges after the issuer fire).
+module ot_hgi_sm_xload_static_cl2f #(
+    parameter integer PMAX   = 8,
+    parameter integer RD_LAT = 6,
+    parameter integer MUT    = 0
+) (
+    input  wire               clk,
+    input  wire               clk_eg,    // cl2d: ctl egress root (rw / BD-beat capture, beat select, xw pins), related phase 0
+    input  wire [3:0]         clk_bf,    // cl2d: one die clock entry per BF quarter leaf (was one scalar collapsing 4 roots)
+    input  wire               clk_qlo,
+    input  wire               clk_qhi,
+    input  wire               clk_bd,
+    input  wire               clk_cal,
+    input  wire               rst_n,
+    input  wire [7:0]         tgt,
+    input  wire               cfg_v,
+    input  wire [7:0]         cfg_target,
+    input  wire [11:0]        cfg_addr,
+    input  wire [255:0]       cfg_data,
+    input  wire               desc_v,
+    input  wire [11:0]        desc_base,
+    input  wire [12:0]        desc_limit,
+    input  wire [15:0]        desc_loops,
+    input  wire               launch_v,
+    output wire               configured,
+    output wire               fault,
+    output wire               active,
+    output wire               x_done,
+    output wire               xw_en,
+    output wire               xw_last,
+    output wire [6:0]         xw_addr,
+    output wire [6:0]         xw_grp,
+    output wire [2047:0]      xw_data,
+    output wire [8*17-1:0]    rq,
+    input  wire [8*257-1:0]   rr
+);
+    wire rn;
+    wire [1023:0] c_d; wire [3:0] c_wce; wire c_mhi, c_mlo; wire [6:0] c_wa; wire [7:0] r_ce; wire [6:0] r_a;
+    wire [1023:0] rwq;
+    wire [2047:0] l_d; wire qv_lo, qv_hi, qo_lo, qo_hi, qf_lo, qf_hi; wire [255:0] qq_lo, qq_hi; wire signed [9:0] qe_lo, qe_hi;
+    wire [15:0] r_wsel; wire zlo, zhi; wire [2*((PMAX*3152+2047)/2048)-1:0] bsel; wire [PMAX*8-1:0] lane_en; wire [2047:0] bq_d;
+    ot_hgi_sm_xload_cl2_ctlw #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT(MUT)) u_ctl (
+        .clk(clk), .clk_eg(clk_eg), .clk_cal(clk_cal), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr),
+        .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops),
+        .launch_v(launch_v), .configured(configured), .fault(fault), .active(active), .x_done(x_done), .xw_en(xw_en), .xw_last(xw_last),
         .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .rq(rq), .rr(rr), .rn_o(rn),
         .c_d(c_d), .c_wce(c_wce), .c_mhi(c_mhi), .c_mlo(c_mlo), .c_wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(rwq),
         .l_d_o(l_d), .qv_lo(qv_lo), .qv_hi(qv_hi), .qo_lo(qo_lo), .qo_hi(qo_hi), .qf_lo(qf_lo), .qf_hi(qf_hi),

@@ -29,6 +29,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from view_case import lef_pins, lef_xy  # noqa: E402
 import clock_sites
 import die_clock_tree as dct  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import die_reach  # noqa: E402
 
 GRANTS = ROOT / 'results/arch/hier_contract_1015/hbm_v15.json'
 PLAN = ROOT / 'results/arch/hbm_die_v15/compact660_v5/compact.P.json'
@@ -86,7 +88,22 @@ def entry_cap(lib, ff=2.0):
     return n
 
 
-def synth_lef(name, w, h, pins, path):
+def _minus(rects, keepout):
+    """rectangles minus keep-out rectangles (x0, y0, x1, y1), as disjoint rectangles"""
+    for (c0, d0, c1, d1) in keepout:
+        nr = []
+        for (a0, b0, a1, b1) in rects:
+            if c0 >= a1 or c1 <= a0 or d0 >= b1 or d1 <= b0:
+                nr.append((a0, b0, a1, b1)); continue
+            for r in ((a0, b0, c0, b1), (c1, b0, a1, b1), (max(a0, c0), b0, min(a1, c1), d0),
+                      (max(a0, c0), d1, min(a1, c1), b1)):
+                if r[2] - r[0] > 0.01 and r[3] - r[1] > 0.01:
+                    nr.append(r)
+        rects = nr
+    return rects
+
+
+def synth_lef(name, w, h, pins, path, keepout=()):
     """Abstract of a SYNTH view: real outline, pins at the given (face, lo, hi) spans, every bit on a track (M5 N/S at
     x = 0.012 + 0.048 k, M4 E/W at y = 0.012 + 0.048 k), OBS M1..M5 (the die routes M6+ over it, M4/M5 in channels)."""
     L = ['VERSION 5.7 ;', 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f'MACRO {name}', '  CLASS BLOCK ;',
@@ -113,7 +130,12 @@ def synth_lef(name, w, h, pins, path):
             L += [f'  PIN {bit}', f'    DIRECTION {d.upper()} ;',
                   '    USE CLOCK ;' if re.search(r'clk', pn) else '    USE SIGNAL ;', '    PORT', f'      LAYER {lay} ;',
                   f'      RECT {r[0]:.3f} {r[1]:.3f} {r[2]:.3f} {r[3]:.3f} ;', '    END', f'  END {bit}']
-    L += ['  OBS'] + [f'    LAYER M{k} ;\n    RECT 0 0 {w:.3f} {h:.3f} ;' for k in range(1, 6)] + ['  END', f'END {name}', '', 'END LIBRARY']
+    # die-owned feedthrough column / row (grant reserved_channels, H-SM 10-16 owner 07:30): no OBS on M1-M6 there, so the
+    # die places relays / clock repeaters and routes through; the rest of the outline stays OBS M1-M5 as before
+    ko = [(c['x_um'][0], c['y_um'][0], c['x_um'][1], c['y_um'][1]) for c in keepout]
+    obs = _minus([(0.0, 0.0, w, h)], ko)
+    L += ['  OBS'] + [f'    LAYER M{k} ;\n' + '\n'.join(f'    RECT {r[0]:.3f} {r[1]:.3f} {r[2]:.3f} {r[3]:.3f} ;' for r in obs)
+                      for k in range(1, 6)] + ['  END', f'END {name}', '', 'END LIBRARY']
     Path(path).write_text('\n'.join(L) + '\n')
 
 
@@ -172,7 +194,8 @@ def main():
     ap.add_argument('--stn-view', type=Path, help='dir with hfd_stn_v15_cc1182_synth_{tt,ff}.lib: insert SM_HBM relay '
                     'stages (<= 480 um reach) on every service group -> SM link')
     ap.add_argument('--die-repeaters', action='store_true',
-                    help='die-level repeaters on the inter-block signal nets (repair_design -max_wire_length 400 on '
+                    help='die-level repeaters on the inter-block signal nets (repair_design -max_wire_length --max-wire-um, default = '
+                         'the measured HBM die reach, results/arch/die_reach_1016.json, on '
                          'placement parasitics before GRT): the die buffering every block-to-block wire needs; not legalised')
     ap.add_argument('--paths', type=int, default=200000)
     ap.add_argument('--clock-pads', type=Path)
@@ -184,7 +207,9 @@ def main():
     ap.add_argument('--clock-bin-um', type=float, default=1600.0)
     ap.add_argument('--clock-in-reserved-channels', action='store_true',
                     help='allow die clock repeaters in the slot reserved_channels (only when the views carve them)')
+    die_reach.add_args(ap, 'hbm')
     a = ap.parse_args()
+    mw = die_reach.from_args(a, 'hbm')
     G = json.loads(GRANTS.read_text()); P = json.loads(PLAN.read_text())
     slots = {s['name']: s for s in G['slots']}
     W, H = G['floorplan']['die_um']
@@ -237,7 +262,7 @@ def main():
     pins, miss, extra = grant_pins(s0, sm_ports)
     assert not miss, ('SM ports whose grant pins do not cover the view port', miss)
     kinds['sm_grant_ports_absent_in_view'] = extra
-    synth_lef(SM_M, s0['outline']['w'], s0['outline']['h'], pins, vd / f'{SM_M}.lef')
+    synth_lef(SM_M, s0['outline']['w'], s0['outline']['h'], pins, vd / f'{SM_M}.lef', keepout=s0.get('reserved_channels', []))
     kinds[SM_M] = 'SYNTH (hierarchical mapped netlist ETM, -DOT_SMH_FC_HIER; outline + pins = v6 grant)'
     MS = [PHY_M, CTL_M, SVG_M, SM_M]
     if a.stn_view:
@@ -466,8 +491,7 @@ def main():
             if d:
                 clkpins[d][l].append(p)
     for di, (dom, insts) in enumerate(sorted(clkpins.items())):
-        rx = ck['origin']['x'] + ck['outline']['w'] * (0.3 + 0.4 * di)
-        ry = ck['origin']['y'] + ck['outline']['h'] / 2
+        rx, ry = dct.ckgen_pin_xy(ck, f'pll_{dom}')     # the domain's die tree starts at its ckgen output pin
         sinks = []
         for l, pl in insts.items():
             v = leaves[l]
@@ -652,7 +676,7 @@ set_clock_groups -asynchronous -group hbm -group stream
 estimate_parasitics -placement
 set_dont_touch [get_nets -quiet {{dk?_* n_dk?_* clk_*}}]
 set r0 [clock seconds]
-repair_design -max_wire_length 400 -buffer_gain 4.0
+{die_reach.repair_tcl(mw, '-buffer_gain 4.0')}
 puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"'''
     tcl = tcl.replace('{REPEAT}', rep)
     (out / 'run.tcl').write_text(tcl)
@@ -680,7 +704,8 @@ echo $? > $D/out/run.exit
                die_clock_trees={d: t['model'] for d, t in trees.items()}, sm_hbm_relays=relay_rep,
                open_pins_by_master={m: dict(v) for m, v in open_pins.items()}, open_owner=owner,
                placement={l: v for l, v in leaves.items()},
-               corners='setup TT, hold FF (owner option B); SS not run')
+               corners='setup TT, hold FF (owner option B); SS not run',
+               max_wire=dict(mw, applied=bool(a.die_repeaters)))
     (out / 'manifest.json').write_text(json.dumps(man, indent=1))
     print(json.dumps({k: man[k] for k in ('instances', 'signal_nets', 'clock_domains')}))
 

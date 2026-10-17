@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_rly4",
+ "enable": false,
+ "reason": "One real RTL capture flop; additional pin registers would add an unpriced cycle."
+}
