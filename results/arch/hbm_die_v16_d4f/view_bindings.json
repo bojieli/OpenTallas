@@ -22,8 +22,26 @@
    "instances": "ep_S0..4, ep_N0..3"
   },
   "hbfd_rly_fc2": {
-   "status": "PENDING_REEXPORT",
-   "note": "F1 fc2 relays native PASS (receipts f4bd68931): 48_WE 440a8fe94, 624_NS 27bfda7f2, 624_SN 012c0aecf, 624_WE 6b6c9dc0f; bind ONLY after DIE-CLOCK-requested re-export (plain clk_in->clk_out arc instead of generated clock_out); fwd 15 ps TT / 12 ps FF; R 56 (48) / 94 (624) ps TT; fc1 REVOKED; 48_EW/NS/SN + 624_EW pending"
+   "status": "BINDABLE (re-exported plain clk_in->clk_out arc)",
+   "commit": "claude/hnl-f1fc2-etm-2100 f8812b907",
+   "views": "physical/ref_tile/hbfd_rly_*_fc/views",
+   "native": {
+    "48_WE": "L139.5/C118.0",
+    "624_NS": "L156.8/C126.9",
+    "624_SN": "L151.1/C119.1",
+    "624_WE": "L150.2/C116.4",
+    "624_EW": "L154.8/C115.8"
+   },
+   "pending": "48_EW/NS/SN (ROOT flow fix)",
+   "revoked": "fc1 views (never bind)",
+   "fwd_ps": {
+    "TT": 15,
+    "FF": 12
+   },
+   "R_ps": {
+    "rly48": 56,
+    "rly624": 94
+   }
   }
  }
 }
