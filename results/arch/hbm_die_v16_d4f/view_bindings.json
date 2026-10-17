@@ -20,6 +20,10 @@
    "outline": "434.72 x 371.52 (fits the 434.72 x 515.2 ep plan block)",
    "replaces": "w5c (native FAIL)",
    "instances": "ep_S0..4, ep_N0..3"
+  },
+  "hbfd_rly_fc2": {
+   "status": "PENDING_REEXPORT",
+   "note": "F1 fc2 relays native PASS (receipts f4bd68931): 48_WE 440a8fe94, 624_NS 27bfda7f2, 624_SN 012c0aecf, 624_WE 6b6c9dc0f; bind ONLY after DIE-CLOCK-requested re-export (plain clk_in->clk_out arc instead of generated clock_out); fwd 15 ps TT / 12 ps FF; R 56 (48) / 94 (624) ps TT; fc1 REVOKED; 48_EW/NS/SN + 624_EW pending"
   }
  }
 }
