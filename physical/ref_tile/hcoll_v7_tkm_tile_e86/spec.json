@@ -1,0 +1,109 @@
+{
+ "name": "hcoll_v7_tkm_tile_e86",
+ "top": "ot_hgi_coll_tkm_tile_e86",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "clock": "cts",
+ "reset_ports": [],
+ "outline": {
+  "w": 300,
+  "h": 300
+ },
+ "layer_cap": "M6",
+ "layer_cap_grant": "B2 SPEC D-B2-7 TKM kept inside hb_coll; hardened chain children use M6 beneath M7 parent straps",
+ "pins": {
+  "N": [
+   "ins_v",
+   "ins_b",
+   "up_out"
+  ],
+  "S": [
+   "ovf_v",
+   "ovf_b",
+   "up_in"
+  ],
+  "W": [
+   "clk",
+   "tid",
+   "clr",
+   "conv",
+   "tau_t",
+   "tau_l",
+   "tau_o",
+   "busy"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 40,
+  "hold_margin_ns": 0.025,
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude H-NETLIST/COLL 1815",
+  "branch": "claude/hnl-coll-tp192",
+  "tag": "d4f",
+  "purpose": "TKM tile at d4f TP=192 (EW 86, PT 64) x32 per SW tkm_m; the closed EW85 tile (coll_tkm_tile_cx) does not bind at TP192",
+  "benches": [
+   {
+    "name": "tkm_tp192_static_gate",
+    "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_tp192_static.sh {RUN}/bench/tp192",
+    "expect": "pass",
+    "pass_regex": "TKM_TP192_STATIC_GATE_PASS",
+    "min_count_regex": "TKM_STATIC PASS(.*)",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "timeout_s": 21600,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "tkm_tp192_tie_mut",
+    "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_tp192_tile_mut.sh {RUN}/bench/mut",
+    "expect": "fail",
+    "fail_regex": "TKM_STATIC FAIL",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "timeout_s": 21600,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "tools/hgi_coll_tkm_tp192_vectors.py",
+   "tools/hgi_coll_tkm_vectors.py"
+  ],
+  "cycles_added": 0,
+  "views_to": "physical/ref_tile/hcoll_v7_tkm_tile_e86/views",
+  "record_to": "results/rtl/ref_tile/hcoll_v7_tkm_tile_e86"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "pin_reg_split": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_hgi_coll_tkm_tile registers its inputs (p_* stage) and every output is a flop (ovf_v/ovf_b/up_out/tau_o/busy reg): the TKM chain timing is fixed by tkm_static SETTLE"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}
