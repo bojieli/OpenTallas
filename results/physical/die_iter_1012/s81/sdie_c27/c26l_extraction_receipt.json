@@ -1,0 +1,41 @@
+{
+ "schema": "opentallas.s81.structural_extraction_receipt.v1",
+ "status": "STRUCTURAL_EXTRACTION_ONLY",
+ "tool_commit": "a4f93967a37c8a36e03b39077f3c985a52247a2e",
+ "tool_sha256": "0d9c1d75c327c18302c5de7a5ed8c695b9f9a5900e02a929df98e23f58ffb1f4",
+ "input_source": "c26l immutable58867f133 construction_pass0",
+ "input_sha256": {
+  "plan": "2275d00c9c7929c25aae7e72a8b4c4ce8955c29a1d3c933d59b616c169e26a6f",
+  "die.v": "e0665824dd6cec413e7dbe1d3a6c53f6c3148e4d0a606900b67a8bcbaa644765",
+  "pins.lef.gz": "6e7102f58895bb0b560eaebca89796ef0f48e1050faec41276b9ac226765df8f"
+ },
+ "host": "ot-epyc4",
+ "unit": "oth-ubuntu-122594-1792206019",
+ "exit": 0,
+ "elapsed_s": 85.13,
+ "max_rss_kb": 4366268,
+ "frames": 128,
+ "masters": 58,
+ "transport_collision_count": 1611,
+ "output_dir": "/srv/opentallas-scratch/claude/sdie-c27/extract_a4f93967a/c26l",
+ "outputs": {
+  "die_hier.v": {
+   "bytes": 127832502,
+   "sha256": "c01d352713a7500e0c8b6600036fd41f5b5c228e2ff7a789dd9ea015d4117272"
+  },
+  "clusters.json": {
+   "bytes": 11829893,
+   "sha256": "579e7370eb5c08884b724039efe177de89a2d3629b6509685a09312d1c2704e2"
+  }
+ },
+ "proof_scope": "Actual LEF directions, source terminal partitions, width/constant equivalence, 128sourceframes conserved; external original source retained. Separate small sequential flat/hier bench passes and data mutant fails.",
+ "not_qualified": [
+  "Native die binding",
+  "Routed clock/reset/PHY",
+  "Same-phase component sweep is invalid forwarded-clock reach",
+  "Compiled phase/calendar",
+  "Cuts",
+  "Full die numerical throughput",
+  "GRT/TTsetup/FFhold/SSsensitivity"
+ ]
+}

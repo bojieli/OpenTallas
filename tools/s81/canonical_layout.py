@@ -78,6 +78,10 @@ def corridors(G,m,cor):
  for access in d.get('service_access_corridors',[]):
   rect=tuple(access['rect_um']);assert len(rect)==4 and rect[0]<rect[2] and rect[1]<rect[3]
   cor['svc_access_'+access['name']]=rect
+ if getattr(G,'CLUSTER_MODE',None):
+  # H-C27 --cluster-mode: rsclane = the die-top transit channel, cfstreet = the band below the cluster, clusters reserved
+  from s81.cluster_mode import patch_corridors
+  patch_corridors(G,m,cor)
  return cor
 
 class Roadmap:
@@ -87,6 +91,11 @@ class Roadmap:
   self.cols=cols;nw=m['canonical_layout']['west_columns'];self.nw=nw
   levels={i:set() for i in range(len(cols))};streets={i:[] for i in range(len(cols))}
   self.sx={i:c['x_um']+G.COL_W8-(15.12 if return_lanes else G.RSC_W/2) for i,c in enumerate(cols)}
+  if getattr(G,'CLUSTER_MODE',None):
+   # H-C27 --cluster-mode: STREET-ONLY die-top transport (no lane through a column cluster): s81/cluster_mode.py
+   from s81.cluster_mode import street_roadmap
+   street_roadmap(self,G,m,cols,nw,return_lanes)
+   return
   for r,f in m['frames'].items():
    a=f['street'][1];b=f['street'][3]
    # Broadcast and returns use separate rows inside the actual local street.
@@ -209,6 +218,25 @@ def compact_return_relays(G,m,CH):
  CH.P.occ=occ
  m['canonical_rsc_repack']=dict(return_bundle_lanes=4,station_width_um=G.stn_dims([G.CRET+2]*4,False)[0],moves=receipt,physical_qualified=False)
 
+def _cm_reach(G,name='',path=None):
+ """--cluster-mode FIELD transport station spacing cap (provisional; None = the chain default).  Hub-side stretches
+ (cx*_spine prefix from the injector, cr*_hub into the gather end block) keep the chain default: they run inside the
+ future hub clusters and are re-qualified there."""
+ cm=getattr(G,'CLUSTER_MODE',None)
+ if not cm or name.endswith(('_spine','_spine_x2','_hub')):return None
+ if path and G.wide_hub():
+  # a stretch that runs only in the S14 roads beside the hub (the shared vertical spine) keeps the chain default
+  sp=[G.wide_hub()['s14w'],G.wide_hub()['s14e']]
+  if all(any(lo-60.0<=p[0]<=hi+60.0 for lo,hi in sp) for p in path):return None
+ return cm['reach_um']
+
+def _cm_allowed(G,name,path,allowed,cor):
+ """--cluster-mode: a FIELD stretch (capped spacing) may not take hub interior sites (hub_w / strip_w): those belong to
+ the hub chains built after the field transport; spine / hub / S14-only stretches keep the full list."""
+ if _cm_reach(G,name,path) is None:return allowed
+ hub=[cor[k] for k in ('hub_w','strip_w') if k in cor]+([G.wide_return_strip(cor)] if G.wide_hub() and 'strip_w' in cor else [])
+ return [a for a in allowed if all(a is not h and tuple(a)!=tuple(h) for h in hub)]
+
 def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
  """Actual per-root chains, preserving immutable logical gather lane ordering.
  Geometry-independent equal-delay assertions are deliberately absent: actual
@@ -274,11 +302,11 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
     path=G._vmc_reroute(m,path,ends,name)
     actual=G._poly_len(path)
     forced=[s*actual/length if length else s for s in forced]
-   sa=CH.run(name,LA,path,allowed,src,forced=forced)
+   sa=CH.run(name,LA,path,_cm_allowed(G,name,path,allowed,cor),src,forced=forced,reach=_cm_reach(G,name,path))
    G.chain_nets(CH,name,srcA,[i for i,_,_ in sa],LA)
    tA=(sa[-1][0].name,'fo0','do0') if sa else srcA
    if not pair:return sa,tA,None
-   sb=CH.run(name+'_x2',LB,path,allowed,src,forced=sorted(set([round(s_,3) for _,s_,_ in sa]+list(forced))))
+   sb=CH.run(name+'_x2',LB,path,_cm_allowed(G,name,path,allowed,cor),src,forced=sorted(set([round(s_,3) for _,s_,_ in sa]+list(forced))),reach=_cm_reach(G,name,path))
    assert len(sb)==len(sa),('--bf-x2-pair: unequal station counts',name,len(sa),len(sb))
    G.chain_nets(CH,name+'_x2',srcB,[i for i,_,_ in sb],LB)
    return sa,tA,(sb[-1][0].name,'fo0','do0') if sb else srcB
@@ -344,7 +372,7 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
       ordered=sorted(active);positions=[byname[active[j][0]] for j in ordered]
       src=(sum(i.x+i.w/2 for i in positions)/len(positions),sum(i.y+i.h/2 for i in positions)/len(positions))
       path=G._dedup([src,(path[0][0],src[1])]+path)
-      stages=CH.run(name,[G.CRET+2]*len(ordered),path,allowed,src,forced=[G._poly_len(path)])
+      stages=CH.run(name,[G.CRET+2]*len(ordered),path,_cm_allowed(G,name,path,allowed,cor),src,forced=[G._poly_len(path)],reach=_cm_reach(G,name,path))
       for k,(obj,_s,_hop) in enumerate(stages):
        byname[obj.name]=obj
        for j,lane in enumerate(ordered):

@@ -2168,7 +2168,14 @@ def bundle_bound_lefs(texts):
 def emit_case_glue(m, work):
     """Keep RTL glue and import provenance from the exact model that emitted die.v."""
     import gzip
-    (work / 'die_glue.sv').write_text(glue_rtl(m))
+    if m.get('cluster_modules') is not None:
+        # --cluster-mode: the flat model's glue (cluster children) + the cluster master modules (die-top port-bind RTL)
+        (work / 'die_glue.sv').write_text(m['_flat_glue'] + '\n// --cluster-mode column cluster masters (s81/cluster_mode.py)\n'
+                                          + m['cluster_modules'] + '\n')
+        (work / 'die_clusters.v').write_text(m['cluster_modules'] + '\n')
+        (work / 'cluster_mode.json').write_text(json.dumps(m['cluster_report'], indent=1, default=str) + '\n')
+    else:
+        (work / 'die_glue.sv').write_text(glue_rtl(m))
     reset_path = work / 'die_glue.reset_contract.json'
     if RLY536_RSTREG:
         reset_path.write_text(json.dumps(rly536_reset_contract(m), indent=1) + '\n')
@@ -2323,6 +2330,16 @@ write_db /work/floorplan.odb
     if bnd:
         man['bound_views'] = dict(table=VIEW_BINDING, masters=bnd)
     man['relay_stages'] = _export_relay_stages(m, work)
+    if m.get('cluster_modules') is not None:
+        # --cluster-mode: the die-top plan record (the canonical_screen record format) for dataflow_links / reviews,
+        # and one pins LEF of every die-top master (generated + constant real + bound views)
+        rec_ = dict(scope='CLUSTER_MODE_DIE_TOP', die=list(DIE), insts=[[i.name, i.master, i.x, i.y, i.w, i.h, i.orient, i.kind,
+                    i.region] for i in m['insts']], buses=m['buses'], frames=m['frames'], regions=m['regions'],
+                    variant=m['variant'], cluster_boxes=m.get('cluster_boxes'))
+        (work / 'cluster_top_plan.json.gz').write_bytes(gzip.compress(json.dumps(rec_, default=str).encode(), mtime=0))
+        (work / 'all_pins.lef').write_text('\n'.join((work / f).read_text() for f in (
+            'elements.lef', 'q_elem.lef', 'cfg.lef', 'phy.lef', 'serdes.lef', 'ucie.lef', 'bound_views.lef') if (work / f).exists()))
+        man['cluster_mode'] = dict(plan='cluster_top_plan.json.gz', report='cluster_mode.json', modules='die_clusters.v')
     (work / 'manifest.json').write_text(json.dumps(man, indent=1))
     return man
 
@@ -3247,6 +3264,9 @@ BF_X2_PAIR = False              # --bf-x2-pair (S-BIND r6): the packed static x 
 # beside go (same class / relay cohort: the producer's DELTA 0 assumes equal go / f_prog ages, bench-measured).
 BF_STATIC_PROG = False
 BF_FRONT_ROOT_ABI = False       # opt-in S81H03 source candidate; no view/timing inheritance
+X2_NATIVE_SITE = False          # --x2-native-site (H-C27 c27b): reserved native rly_536 x2 relay site per slot
+CFIFO_CRSPLIT = False           # --cfifo-crsplit (H-C27 c27b): column FIFO = closed dsfd_cfifo_crs r5f (s81/cfifo_crsplit.py)
+CLUSTER_MODE = None             # --cluster-mode (H-C27 c27): dict(y_snap_um, column_dy_um, reach_um) or None (s81/cluster_mode.py)
 LEAF, NODEB, STB = 63, 66, 2
 CRET = NODEB + STB                  # column return payload: root word + {fault, busy}
 STEP8 = 400.0                       # nominal forwarded-stage spacing (<= LINK_STAGE_UM after placement)
@@ -3292,6 +3312,7 @@ LANE_EQUAL = False             # --lane-equal (ds-1010 lat-audit): equal column-
 CFG_RGAP_AT = 4
 RSV_RECTS = []                 # reserved relay sites (x0, y0, x1, y1, tag): tag 'rt' (--cfg-rgap) / 'x' (--xb-rgap)
 RSV_ALLOW = None               # the tag whose sites the relay being placed may take (None: no reserved site)
+CLUSTER_OK = None              # --cluster-mode: 'col_cluster:<root>' while placing a relay of a net internal to that frame
 # --xb-rgap UM (ds-1010/s81die 2026-10-10, efs q pin plan = x0 / x1 / cfg / go on ONE S-face bank in the element's
 # middle): a reserved relay site of UM in every right-lane cfg ROM row between the pair sequencer and ROM 0, for the
 # slot's x-lane relays only (xa_ / xb_ / cc_ column and hop relays).  Root cause (efs check, src 734e82437): the slot
@@ -3761,7 +3782,7 @@ class Placer:
             r = (x, y, x + w, y + h)
             if not _inside(r, allowed) or not self.occ.free(r, 0.432):
                 continue
-            if RSV_RECTS and any(t_ != RSV_ALLOW and a_ < r[2] and r[0] < c_ and b_ < r[3] and r[1] < d_
+            if RSV_RECTS and any(t_ != RSV_ALLOW and t_ != CLUSTER_OK and a_ < r[2] and r[0] < c_ and b_ < r[3] and r[1] < d_
                                  for a_, b_, c_, d_, t_ in RSV_RECTS):
                 continue
             return x, y
@@ -4260,6 +4281,21 @@ class Chains:
         fb_seen, max_stn = {}, int(L / 100.0) + len(stops) + 32
         while True:
             if len(out) > max_stn:
+                near_ = sorted((abs(i_.x + i_.w / 2 - end[0]) + abs(i_.y + i_.h / 2 - end[1]), i_.name, i_.master)
+                               for i_ in self.m.get('insts', []) if abs(i_.x + i_.w / 2 - end[0]) + abs(i_.y + i_.h / 2 - end[1]) < 600.0)
+                print('OT_CHAIN_NO_PROGRESS_NEAR', name, json.dumps([(round(d_, 1), n_, m_) for d_, n_, m_ in near_[:40]]),
+                      file=sys.stderr, flush=True)
+                xs_ = [q[0] for q in path] + [src[0]]
+                ys_ = [q[1] for q in path] + [src[1]]
+                bb_ = (min(xs_) - 700, min(ys_) - 400, max(xs_) + 700, max(ys_) + 400)
+                print('OT_CHAIN_NO_PROGRESS_OWN', name, json.dumps([(o_[0].name, round(o_[0].x, 1), round(o_[0].y, 1)) for o_ in out]),
+                      json.dumps([[round(v, 1) for v in q] for q in path]), file=sys.stderr, flush=True)
+                pre_ = defaultdict(int)
+                for i_ in self.m.get('insts', []):
+                    if i_.x < bb_[2] and i_.x + i_.w > bb_[0] and i_.y < bb_[3] and i_.y + i_.h > bb_[1]:
+                        pre_[re.sub(r'\d+', '#', i_.name)[:40]] += 1
+                print('OT_CHAIN_NO_PROGRESS_BBOX', name, [round(v, 1) for v in bb_],
+                      json.dumps(sorted(pre_.items(), key=lambda kv: -kv[1])[:60]), file=sys.stderr, flush=True)
                 raise RuntimeError(f'OT_CHAIN_NO_PROGRESS chain {name}: {len(out)} stations > bound {max_stn} for '
                                    f'{L:.0f} um (last at s={pos:.0f}, cur={tuple(round(v, 1) for v in cur)}, end={end})')
             nxt = stops[fi] if fi < len(stops) else None
@@ -4675,6 +4711,16 @@ def build_r8(variant=None):
                 XSITES[(r, s)] = [(sx_, ylo_), (sx_, yhi_)]
                 for xs_, ys_ in XSITES[(r, s)]:
                     RSV_RECTS.append((xs_, ys_, xs_ + rw_, ys_ + rh_, 'xs'))
+                if X2_NATIVE_SITE:
+                    # --x2-native-site (H-C27 c27b, S-DIE 10-16): the slot's x2 lane relay site at the native rly_536
+                    # envelope, E of the xa / xb sites inside the --xb-rgap gap (cost: the R lane's ROM row moves E by
+                    # the gap growth; the column outline is unchanged)
+                    w2_, h2_ = relay_dims(X2B, True)
+                    sx2_ = up(sx_ + rw_ + 0.432, GX)
+                    assert sx2_ + w2_ + 0.432 <= x0 + LANE_W + R_CFGX + XB_RGAP + 1e-6, \
+                        ('--x2-native-site: gap too narrow (grow --xb-rgap)', r, s, round(sx2_ + w2_ - (x0 + LANE_W + R_CFGX + XB_RGAP), 3))
+                    assert yy + h2_ <= sy + CFG_DY + rc['h'] + 1e-6, ('--x2-native-site: band too short', r, s)
+                    RSV_RECTS.append((sx2_, yy, sx2_ + w2_, yy + h2_, 'x2s'))
         if REV == 'r9':
             for p, kind, s, ln in elems:
                 if kind == 'q':
@@ -5241,6 +5287,11 @@ def build_r8(variant=None):
     if CANONICAL_LAYOUT is not None:
         m['canonical_layout'] = CANONICAL_LAYOUT
         variant['canonical_layout'] = dict(path=CANONICAL_LAYOUT['path'], sha256=CANONICAL_LAYOUT['sha256'], pair_count=PAIRS, bf_pairs=BF_PAIRS, root_count=128, wide_hub=CANONICAL_LAYOUT.get('wide_hub'), phase_width_by_stage=CANONICAL_LAYOUT['stages'], supplemental_homes_status='unbound reservations, not substituted native masters')
+        if CLUSTER_MODE:
+            variant['cluster_mode'] = dict(CLUSTER_MODE)
+        if CANONICAL_LAYOUT.get('bf_phase_fixed'):
+            variant['canonical_layout']['bf_phase_fixed'] = {k: v for k, v in CANONICAL_LAYOUT['bf_phase_fixed'].items()
+                                                             if k != 'moved_ids'}
         # Preserve exact supplemental HCP geometry against all station searches.
         for home in CANONICAL_LAYOUT['hcp_homes']:
             xx, yy = home['at_um']; oo = home['outline']
@@ -6757,6 +6808,8 @@ def _q_pin_pt(it, port):
 
 
 def _rsv_tag(bid):
+    if X2_NATIVE_SITE and re.match(r'x2_\d+_\d+$', bid):
+        return 'x2s'
     return 'rt' if bid.startswith('rt_') else ('x' if re.match(r'(xa|xb|cc)_\d+_\d+$', bid) else None)
 
 
@@ -6950,7 +7003,7 @@ def _hop_fix(m, P):
     added_frame = defaultdict(lambda: defaultdict(int))
     fwd_add = defaultdict(int)
     new = []
-    global RSV_ALLOW
+    global RSV_ALLOW, CLUSTER_OK
     for i in range(len(B)):
         bid, cls, bits, eps = B[i]
         RSV_ALLOW = _rsv_tag(bid)              # reserved relay sites: return tree ('rt') / slot x lanes ('x')
@@ -6980,6 +7033,8 @@ def _hop_fix(m, P):
                 R = min(R, HOP_SPREAD_R[key])             # --hop-spread: worst-bit reach of a wide hub bus
             n = math.ceil(L / (R - 20.0) - 1e-9) - 1
             reg = next((x.region for x in (d0, l0) if x.region and x.region.startswith('frame_')), None)
+            CLUSTER_OK = ('col_cluster:' + d0.region[6:]) if (CLUSTER_MODE and d0.region and d0.region.startswith('frame_')
+                                                              and d0.region == l0.region) else None
             if fwd:
                 fport = 'fi' + e[1][2:] if e[1].startswith('di') else None
                 fi_ = fclk_of.get((eps[0][0], e[0], fport)) if fport else None
@@ -7230,6 +7285,7 @@ def _hop_fix(m, P):
             q['max_added'] = max(q['max_added'], n)
         B[i] = (bid, cls, bits, keep)
     RSV_ALLOW = None
+    CLUSTER_OK = None
     B[:] = [b for b in B if len(b[3]) > 1 or b[1] in ('col_clock', 'col_reset')] + new
     # inserted relays: faces toward their driver and load
     by = {it.name: it for it in m['insts']}
@@ -7480,7 +7536,7 @@ def _col_relays(m, P):
     out, added = [], defaultdict(int)       # (bus id) -> relays
     ck_add = defaultdict(list)
     tt_col = []                             # --relay-tt-reach: pass-1 relays placed in the TT-reach tier
-    global RSV_ALLOW
+    global RSV_ALLOW, CLUSTER_OK
 
     def _need(bid, cls, eps):
         """(frame, L, n, far) of a column net, or None when it takes no relays"""
@@ -7508,6 +7564,9 @@ def _col_relays(m, P):
                 lane_n[k_] = max(lane_n.get(k_, 0), n_ or 0)
     for bid, cls, bits, eps in list(B):
         RSV_ALLOW = _rsv_tag(bid)              # reserved relay sites: return tree ('rt') / slot x lanes ('x')
+        d0_ = by.get(eps[0][0]) if eps else None
+        CLUSTER_OK = ('col_cluster:' + d0_.region[6:]) if (CLUSTER_MODE and d0_ is not None and d0_.region
+                                                           and d0_.region.startswith('frame_')) else None
         if cls not in RCLS or bid.endswith('_eb'):
             out.append((bid, cls, bits, eps))
             continue
@@ -7692,6 +7751,7 @@ def _col_relays(m, P):
         out.append((bid, cls, bits, [prev] + list(eps[1:])))
         added[bid] = n
     RSV_ALLOW = None
+    CLUSTER_OK = None
     B[:] = out
     for i, (bid, cls, bits, eps) in enumerate(B):
         if cls in ('col_clock', 'col_reset') and bid.rsplit('_', 1)[-1].isdigit():
@@ -9727,6 +9787,9 @@ def port_usage(m):
 def finalize_r8(m):
     """field glue masters by role (S13: one master per role and width): slot stations by their port set, return
     nodes by child kinds / fault chain; records m['pdir'][master][port] = (dir, bits)."""
+    if CFIFO_CRSPLIT and not m.get('cfifo_crsplit'):
+        from s81.cfifo_crsplit import rewire as crs_rewire
+        crs_rewire(sys.modules[__name__], m)
     use = port_usage(m)
     if SSTN_SPLIT_MAP and not m.get('sstn_split'):
         if not (SSTN_REG and BF_X2_STATIC):
@@ -10805,6 +10868,10 @@ def _faces_r8(m, Mx, it, ports):
         if rest_(['f_prog', 'io_clk']):
             _lay(Mx, 'S', rest_(['f_prog', 'io_clk']), 'M5')
         return
+    if it.kind == 'col_cluster':
+        from s81.cluster_mode import faces as cluster_faces
+        cluster_faces(sys.modules[__name__], Mx, ports)
+        return
     P_ = lambda names: [(n, ports[n][1]) for n in names if n in ports]
     kind, mst = it.kind, Mx.name
     if kind == 'stn':
@@ -11429,8 +11496,15 @@ def glue_rtl(m):
            '// W564 entry crossing; hub end/start blocks: ot_meso_fifo / ot_ratio_cdc_fifo; return nodes wrap',
            '// ot_v41_retn_w17w10 with the ot_v41_field_w17w10 leaf packing.  Lane format vr: d[0] rst_n, d[1] valid.',
            '`timescale 1ns/1ps', '']
+    crs_done = False
     for mst in sorted(pdir):
         if not is_glue(mst):
+            continue
+        if CFIFO_CRSPLIT and mst == 'dsfd_cfifo_crs':
+            if not crs_done:
+                from s81.cfifo_crsplit import rtl_text as crs_rtl
+                out.append(crs_rtl(ROOT))
+                crs_done = True
             continue
         ports = pdir[mst]
         body = []
@@ -11879,6 +11953,23 @@ def _stn_lanes(m, it):
 
 def die_options(ap):
     """die-variant options shared by main and tools/die_top_lint.py (--s81-opts)"""
+    ap.add_argument('--bf-phase-fixed', action='store_true', help='H-C27 c27 (S-DIE 10-16, hierarchical S81): with '
+                    '--canonical-layout, every root keeps its pair range and BF count but its BF pairs sit at ONE fixed '
+                    'in-root position pattern per (pairs, BF) class (s81/cluster_extract.py bf_phase_pattern), so all '
+                    'frames of a height class pack identically (one column cluster master per class instead of 32 '
+                    'BF-phase signatures). The remapped stage map is written to the work dir (compiler input).')
+    ap.add_argument('--cluster-mode', action='store_true', help='H-C27 c27 (owner 10-16: hierarchical S81): column '
+                    'clusters (frame + cfifo, one master per height x pairs class) on one y lattice phase; STREET-ONLY die-top '
+                    'transport (street bands below the clusters, band above each column, S14, die-W edge); the die top '
+                    'instantiates cluster masters (s81/cluster_mode.py). Needs --canonical-layout.')
+    ap.add_argument('--x2-native-site', action='store_true', help='H-C27 c27b: per slot, reserve the x2 lane relay site at the '
+                    'native rly_536 envelope (needs --native-slot-envelopes --x-site-pair and a --xb-rgap wide enough)')
+    ap.add_argument('--cfifo-crsplit', action='store_true', help='H-C27 c27b (S-DIE/DIE-CLOCK 10-16): column FIFO = the closed '
+                    'dsfd_cfifo_crs r5f (280.8 x 69.12): cr / cr_s / xf / xf2 are column-tree sinks, the column clock is driven by '
+                    'the x lane forwarded station (F1), the return chain first station takes that net; needs --cfifo-colck '
+                    '--bf-x2-static --bf-x2-pair --cfifo-fall-launch (s81/cfifo_crsplit.py)')
+    ap.add_argument('--cluster-reach', type=float, default=405.0, help='--cluster-mode die-top FIELD transport station '
+                    'spacing (um; OWNER 0cl 10-16: planning hop 405 with die repair_design repeaters from ~175 um)')
     ap.add_argument('--canonical-layout', help='Source-pinned full2417 capacity JSON; exact519 BF IDs and128 root bounds, irregular local streets/RSC transit and per-root actual flight calendar')
     ap.add_argument('--die', default='layer', choices=['layer', 'layer1', 'layer1e', 'head'])
     ap.add_argument('--ctrl-rq', action='store_true', help='s81-gen 2026-10-09: every stack controller\'s request '
@@ -12225,7 +12316,7 @@ def die_options(ap):
 def apply_options(a):
     """configure the module globals for the die variant in `a` (die_options)"""
     global CTRL_SLAB, CTRL_ROLE, CTRL_BINDINGS, VIEW_BINDING, ORIENT_QUAL
-    global CANONICAL_LAYOUT, PAIRS, BF_PAIRS, NV_PAIRS
+    global CANONICAL_LAYOUT, PAIRS, BF_PAIRS, NV_PAIRS, CLUSTER_MODE
     if getattr(a, 'view_binding', None):
         VIEW_BINDING = a.view_binding
     if getattr(a, 'orientation_qualification', None):
@@ -12635,6 +12726,13 @@ def apply_options(a):
     CFIFO_COLCK = bool(getattr(a, 'cfifo_colck', False))
     assert not CFIFO_COLCK or CFIFO_V2, '--cfifo-colck needs --cfifo-v2'
     CF_WH = CF_WH_V2 if CFIFO_V2 else (850.176, 47.52)
+    global CFIFO_CRSPLIT, X2_NATIVE_SITE
+    CFIFO_CRSPLIT = bool(getattr(a, 'cfifo_crsplit', False))
+    X2_NATIVE_SITE = bool(getattr(a, 'x2_native_site', False))
+    if CFIFO_CRSPLIT:
+        from s81.cfifo_crsplit import OUTLINE as _CRS
+        assert CFIFO_COLCK, '--cfifo-crsplit needs --cfifo-colck'
+        CF_WH = (_CRS[0] + SHAVE, _CRS[1] + SHAVE)
     FWD_REACH = float(a.fwd_pitch) if a.fwd_pitch else LINK_STAGE_UM
     # s81-gen: the OT_S81_HOP_R_CC override (9917e9987) was reset to 410 here, after import (the r4e_rcc runs were no-ops)
     HOP_R_FWD, HOP_R_CC = LINK_STAGE_UM, float(getattr(a, 'hop_r_cc', None) or os.environ.get('OT_S81_HOP_R_CC', 410.0))
@@ -12675,6 +12773,28 @@ def apply_options(a):
         PAIRS, BF_PAIRS, NV_PAIRS = CANONICAL_LAYOUT['pair_count'], CANONICAL_LAYOUT['bf_pairs'], 0
         BF_PER_REGION = None
         BF_EXPLICIT_IDS = frozenset(CANONICAL_LAYOUT['bf_ids'])
+        if getattr(a, 'bf_phase_fixed', False):
+            # H-C27 c27: one in-root BF position pattern per (pairs, BF) class; counts per root unchanged
+            from s81.cluster_extract import bf_phase_fixed_ids
+            new_ids, receipt = bf_phase_fixed_ids(CANONICAL_LAYOUT)
+            CANONICAL_LAYOUT['bf_ids'] = set(new_ids)
+            CANONICAL_LAYOUT['bf_phase_fixed'] = receipt
+            BF_EXPLICIT_IDS = frozenset(new_ids)
+        if getattr(a, 'cluster_mode', False):
+            from s81.cluster_mode import cluster_layout
+            CLUSTER_MODE = dict(cluster_layout(CANONICAL_LAYOUT, GY), reach_um=a.cluster_reach)
+            w_ = wide_hub()
+            if w_ and os.environ.get('OT_C27_S14CLIP') == '1':
+                # (off by default: clipping the S14W road re-spread the hub-side lanes and starved the SU|VM street,
+                # hb_su_s_wq_d_6144_8191_vm; the column cluster boxes are reserved anyway, so no station lands in them)
+                # the W seam roads move the W hub-side column E: the S14W road keeps only the real gap to the hub
+                xs_ = sorted(c['x_um'] for c in CANONICAL_LAYOUT['columns'])
+                e_ = xs_[CLUSTER_MODE['west_columns'] - 1] + COL_W8 + 4.32
+                w_['s14w'] = [max(w_['s14w'][0], e_), w_['s14w'][1]]
+                assert w_['s14w'][1] - w_['s14w'][0] >= 300.0, ('--cluster-mode: S14W road closed', w_['s14w'])
+                CLUSTER_MODE['s14w'] = list(w_['s14w'])
+        else:
+            CLUSTER_MODE = None
         slot_geometry()
 
 
@@ -12724,6 +12844,15 @@ def main(argv=None):
                     print('WARNING ' + msg_, file=sys.stderr)
                 else:
                     raise SystemExit(msg_)
+    if CLUSTER_MODE and a.gen == 'r8' and a.mode in ('real', 'netlist'):
+        # H-C27 --cluster-mode: the glue of the FLAT model (cluster children included), then the die top collapses to
+        # cluster masters + inter-cluster transport (s81/cluster_mode.py)
+        from s81.cluster_mode import collapse as cluster_collapse
+        m['_flat_glue'] = glue_rtl(m)
+        crep_ = cluster_collapse(sys.modules[__name__], m)
+        print('OT_CLUSTER_MODE masters %d top_instances %d member_instances %d removed_buses %d roots_with_deltas %d' % (
+            len(crep_['masters']), crep_['top_instances'], crep_['member_instances'], crep_['removed_internal_buses'],
+            len(crep_['deltas_vs_representative'])), flush=True)
     cov = dict(COV)
     for kv in filter(None, a.cov.split(',')):
         k_, v = kv.split('=')

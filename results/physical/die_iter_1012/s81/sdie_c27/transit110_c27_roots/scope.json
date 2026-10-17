@@ -1,0 +1,13 @@
+{
+ "source": "c27 roots screen immutablef084e240e, construction_pass0 only",
+ "status": "REQUEST_NOT_ADOPTED",
+ "source_plan_sha256": "929153dc5d36f7512e51a5e240adf67b8108d084fdd1529c82f21e2b46adf337",
+ "unresolved": [
+  "Native qbank/536/xstg envelopes only prepared in later source; not included in this plan",
+  "5400local leaves require literal top ownership; existing top transport still needs rehome",
+  "No electrically and phase-correct perclass reach selected",
+  "Actual ot_fwd_link_stage negedgefi0+invertedfo0 makes downstream halfcycle; samephase833 sweeps invalid as forwarded timing",
+  "Final whole-group native footprints, cuts, all actual pin joins and compiler phase/calendar required",
+  "No final regional clock/reset/PHY proof or GRT/TT/FF/SS signoff"
+ ]
+}
