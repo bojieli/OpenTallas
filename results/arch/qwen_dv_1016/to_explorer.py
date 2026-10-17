@@ -20,7 +20,7 @@ for b, c, bits, eps in d['buses']:
         A, Q = cl(I[ix[a]], cen(I[ix[q]])), cl(I[ix[q]], cen(I[ix[a]]))
         L.append(dict(i=b if len(pairs) == 1 else f'{b}#{k}', c=c, b=bits, d=1, e=[[ix[a], 'o', round(A[0], 2), round(A[1], 2), 'pin'], [ix[q], 'i', round(Q[0], 2), round(Q[1], 2), 'pin']], s=None))
 W = max(i['x'] + i['w'] for i in I) + 21.6; H = max(i['y'] + i['h'] for i in I) + 21.6
-rec = dict(schema='opentallas.dataflow.links.v1', id=rid, label=label, design='qwen_rom', revision=rev, role='candidate',
+rec = dict(schema='opentallas.dataflow.links.v1', id=rid, label=label, design='qwen_rom', token_designs=['qwen_rom'], revision=rev, role='candidate',
            scope='Q-DV relay-skip planning model (graph surgery on q3h final smoke); no GEN, no routed qualification',
            reach_um=405.0, reach_source='planning hop 405 um (provisional; H-REACH buffered reach pending)', outline=[round(W, 2), round(H, 2)],
            registers='relays implicit (stage counts = ceil(L/405)-1 in cycles_v2.py)', stages_explicit=False,
