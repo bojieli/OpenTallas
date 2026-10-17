@@ -79,8 +79,8 @@
   "rst_pin"
  ],
  "outline": {
-  "w": 64.8,
-  "h": 198.72,
+  "w": 108.0,
+  "h": 129.6,
   "exact": true
  },
  "pins": {
@@ -94,14 +94,14 @@
    "wq0",
    "we0"
   ],
-  "E": [
+  "S": [
    "xq1",
    "xe1",
    "wq1",
-   "we1"
+   "we1",
+   "rst_pin"
   ],
-  "S": [
-   "rst_pin",
+  "E": [
    "q_v",
    "q_val",
    "q_err",
@@ -116,7 +116,7 @@
  "macros": [],
  "children": [],
  "inter": [],
- "structural_change": "S-ELEM BF column hardened cluster (hybrid12 ten-root CTS failed: 710 ps insertion, 100-390 ps spread, FF -314). FP4 chunk pair (fp0 pair leaf + fp1 chain) as one hardened single-root child; input register = last FXST relay stage moved from the parent (+0 cycles).",
+ "structural_change": "S-ELEM BF column hardened cluster (hybrid12 ten-root CTS failed: 710 ps insertion, 100-390 ps spread, FF -314). FP4 chunk pair (fp0 pair leaf + fp1 chain) as one hardened single-root child; input register = last FXST relay stage moved from the parent (+0 cycles). r2: gate 7127751e2 native FAIL (R 257.2 on the 64.8x198.72 strip, launch 308.5 q_val mux, rst capture 204.3; std 7911 um2): compact 108x129.6 outline (util ~0.57) and a pin-side output register on a local gated clock (+1 FP4; column FP4 +2).",
  "pin_regs": {
   "enable": false,
   "reason": "RTL registers every child input at the pin (gen_bf_column_cluster.py); outputs come from arithmetic pipeline registers."

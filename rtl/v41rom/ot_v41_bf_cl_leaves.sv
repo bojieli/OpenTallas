@@ -66,6 +66,7 @@ module ot_v41_bf_fp_cl #(parameter integer NCH=16,TG=7,TW=$clog2(NCH)+TG+6,
  input wire fclk,rst_pin,ze_d,v0,v1,input wire [TW-1:0] tag,
  input wire [255:0] xq0,wq0,xq1,wq1,input wire [9:0] xe0,we0,xe1,we1,
  output wire q_v,output wire [31:0] q_val,output wire q_err,output wire [TG:0] q_tag,output wire fault0,fault1);
+ wire qv_i,qe_i,f0_i,f1_i;wire [31:0] qval_i;wire [TG:0] qt_i;
  wire clk,rst_n;
  ot_v41_tile_clk u_tc(.fclk(fclk),.rst_pin(rst_pin),.ze_d(ze_d),.gclk(clk),.rst_n(rst_n));
  reg [1:0] v_q;reg [TW-1:0] t_q;reg [255:0] xq0_q,wq0_q,xq1_q,wq1_q;reg [9:0] xe0_q,we0_q,xe1_q,we1_q;
@@ -82,9 +83,18 @@ module ot_v41_bf_fp_cl #(parameter integer NCH=16,TG=7,TW=$clog2(NCH)+TG+6,
    (.fclk(fclk),.rst_pin(rst_pin),.ze_d(ze_d),.v(v_d[1]),.fp4(t_q[0]),
     .xq(xq0_q),.xe(xe0_q),.wq(wq0_q),.we(we0_q),.tag(t_q),
     .other_v(c1_v),.other_sum(c1_s),.other_f(c1_f),.other_tag(c1_t),
-    .q_v(q_v),.q_val(q_val),.q_err(q_err),.q_tag(q_tag),.fault(fault0));
+    .q_v(qv_i),.q_val(qval_i),.q_err(qe_i),.q_tag(qt_i),.fault(f0_i));
  ot_v41_bf_fp4_chain #(.NCH(NCH),.TG(TG),.TW(TW),.CUT(CUT)) u_fp1_leaf
    (.fclk(fclk),.rst_pin(rst_pin),.ze_d(ze_d),.v(v_d[0]),.fp4(1'b1),
     .xq(xq1_q),.xe(xe1_q),.wq(wq1_q),.we(we1_q),.tag(t_q),
-    .cv(c1_v),.cs(c1_s),.cf(c1_f),.ct(c1_t),.fault(fault1));
+    .cv(c1_v),.cs(c1_s),.cf(c1_f),.ct(c1_t),.fault(f1_i));
+ // Pin-side output stage on a local gated clock (+1 FP4 edge): q_val is a registered-select mux and the chain
+ // registers sit deep in the tile (gate s81_bf_cl_fp native launch 308.5 on q_val).
+ wire oclk,orst;
+ ot_v41_tile_clk u_oc(.fclk(fclk),.rst_pin(rst_pin),.ze_d(ze_d),.gclk(oclk),.rst_n(orst));
+ reg qv_q,qe_q,f0_q,f1_q;reg [31:0] qval_q;reg [TG:0] qt_q;
+ always @(posedge oclk or negedge orst) if(!orst) begin qv_q<=1'b0;f0_q<=1'b0;f1_q<=1'b0; end
+  else begin qv_q<=qv_i;f0_q<=f0_i;f1_q<=f1_i; end
+ always @(posedge oclk) begin qval_q<=qval_i;qe_q<=qe_i;qt_q<=qt_i; end
+ assign q_v=qv_q;assign q_val=qval_q;assign q_err=qe_q;assign q_tag=qt_q;assign fault0=f0_q;assign fault1=f1_q;
 endmodule

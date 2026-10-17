@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  64.8,
-  198.72
+  108.0,
+  129.6
  ],
  "core": [
   2.16,
   2.16,
-  62.64,
-  196.56
+  105.84,
+  127.44
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
@@ -39,14 +39,14 @@
    "wq0",
    "we0"
   ],
-  "E": [
+  "S": [
    "xq1",
    "xe1",
    "wq1",
-   "we1"
+   "we1",
+   "rst_pin"
   ],
-  "S": [
-   "rst_pin",
+  "E": [
    "q_v",
    "q_val",
    "q_err",
