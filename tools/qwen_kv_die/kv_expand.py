@@ -84,9 +84,9 @@ SUBLEVELS['qkd_pvw_die_e'] = SUBLEVELS['qkd_pvw_die']     # kvs13d (OT_KV_V144_R
 # v1.4.4: parent inputs with NO producer RTL on the die yet: left UNCONNECTED (never tied; strict port bind MISMATCH),
 # each with the element that owes the producer.  Only these ports may stay unbound; any other unbound input still refuses.
 PV_OPEN = dict(
-    start='Q-ATTN-RATE / Q-KVSYS-DIE: PV start slot from the static attention calendar (hub / ECTL issue word)',
-    context_len='Q-ATTN-RATE: per-layer context word of the static calendar (seq / ahub)',
-    epoch='Q-ATTN-RATE: layer epoch word (seq / ahub)',
+    start='KVJ-B: qkd_attn_service_root.start_pv (PV_LEAD = the die relay edges to this pair); join pending (plan item 10)',
+    context_len='KVJ-B: qkd_attn_service_root.ctx (held accept-to-accept; same relay chain as start)',
+    epoch='KVJ-B: qkd_attn_service_root.ep (held accept-to-accept; same relay chain as start)',
     in_epoch='Q-VMWB: V arrival epoch per port (the r5 vport carries none; landing rsp_epoch not on its vo word)',
     in_e='Q-ATTN-RATE (ASTK): qkd_astk_native_er_service_w 4-wide e read face (not in the die ASTK strip qkd_astk_strip_s)')
 FLIP = dict(R0=(0, 0), MX=(0, 1), MY=(1, 0), R180=(1, 1))
