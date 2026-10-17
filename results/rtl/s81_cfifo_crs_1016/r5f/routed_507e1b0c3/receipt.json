@@ -1,0 +1,7 @@
+{"job":"s81coll_cfifo_crs-r5f-507e1b0c3","verdict":"CLOSED TT +71.04 / FF +17.32 ps DRC 0 (SS sensitivity -95.13)","record":"claude/selem-cfifo-nsp 0b744bd28, auto-merged main c2e5317db",
+ "view":"physical/ref_tile/s81coll_cfifo_crs/views/dsfd_cfifo_crs",
+ "native_routed":{"pass":true,"launch_ps":185.7,"launch_pin":"rd[48]","capture_ps":142.1,"capture_pin":"ri[38]","R_ps":187.6,"spread_ps":31.9,"comb":0},
+ "images_viewed":"0 congested gcells; N and S pin-flop bands thin full-width rows, core centred",
+ "pin_plan":"physical/s81_die_pins/cfifo_crs/dsfd_cfifo_crs_nspread.tcl (N/S data pins full width same order; clocks cr N 140.316, xf S 68.652, xf2 S 198.924, cr_s S 270.636)",
+ "rtl":"r5d: h+sel on negedge cr, r5c gated bank (16 ICG), r5b Gray reg, r4 reset frontier, r3 cr split; 0 stream cycles vs r4",
+ "die_adoption":"generator --cfifo-crsplit; deliver cr (N) and cr_s/xf/xf2 (S) same-PLL phase-0 column branches at the new pin x; die_sta map rd -> cr_s; compiler status +1 (ri->rd) and marker after fourth root reset edge (north edge2/south edge4); re-pin both abutments to nspread order/range"}

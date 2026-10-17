@@ -7,15 +7,15 @@ set -euo pipefail
 cd "$(dirname "$0")/../.."
 out=$(realpath -m "$1"); mut=${2:-0}
 mkdir -p "$out"
-mlat=${SU_TOP_MLAT:-3}; alat=${SU_TOP_ALAT:-3}; leaf=${SU_TOP_LEAF:-0}; relay=${SU_TOP_RF_RELAY:-8}
-[ -f "$out/vec/prog.mem" ] || python3 tools/hbm_static/su_top_compile.py "$out/vec" --rf-relay "$relay" --mlat "$mlat" --alat "$alat" --leaf "$leaf" > "$out/vec.log"
+mlat=${SU_TOP_MLAT:-3}; alat=${SU_TOP_ALAT:-3}; leaf=${SU_TOP_LEAF:-0}; relay=${SU_TOP_RF_RELAY:-8}; rfl=${SU_TOP_RF_LOCAL:-0}; rflv=${SU_TOP_RF_LOCAL_VEC:-$rfl}   # VEC != RTL = schedule mutant
+[ -f "$out/vec/prog.mem" ] || python3 tools/hbm_static/su_top_compile.py "$out/vec" --rf-relay "$relay" --mlat "$mlat" --alat "$alat" --leaf "$leaf" --rf-local "$rflv" > "$out/vec.log"
 read -r NE NW NS < <(python3 -c 'import json,sys;d=json.load(open(sys.argv[1]));print(d["edges"],d["expected_vm_writes"],d["expected_scalars"])' "$out/vec/programme.json")
 S=rtl/hbm_accel/generic/adapters/static_su
 vl=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 obj="$out/obj_m$mut"
 "$vl" --binary --timing --hierarchical -O1 -j "${SU_TOP_JOBS:-4}" -CFLAGS -O0 -Wno-fatal -Wno-lint -Wno-style \
  --top-module tb_hbm_su_static_top -GNE="$NE" -GNW="$NW" -GNS="$NS" -GRF_RELAY="$relay" -GMUT="$mut" \
- -GMLAT="$mlat" -GALAT="$alat" -GLEAF="$leaf" --Mdir "$obj" \
+ -GMLAT="$mlat" -GALAT="$alat" -GLEAF="$leaf" -GRF_LOCAL="$rfl" --Mdir "$obj" \
  $S/arithmetic/ot_hbm_su_static_ins.sv $S/arithmetic/ot_hbm_su_static_lane.sv $S/arithmetic/ot_hbm_su_static_side.sv \
  $S/data_store/ot_hbm_su_static_data_store.sv $S/data_store/ot_hbm_su_static_pinned_bank.sv \
  $S/register_file/ot_hbm_su_static_rf.sv $S/reduction/ot_hbm_su_reduce_static.sv $S/ot_hbm_su_static_vm_ports.sv \

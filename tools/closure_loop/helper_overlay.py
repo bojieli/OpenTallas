@@ -117,6 +117,43 @@ def compare_plans(frozen, effective):
 FLEET_RUN = ("tools/closure_loop/tt_overlay.py",)
 
 
+# LINT-ONLY HELPERS (ROOT 2026-10-16 URGENT, 9 jobs NEEDS_HUMAN after 2c5779073 added the native_capture CLOSED-STANDS kind):
+# textbook_lint.py holds lint/gate constants and rule text; it never changes routed geometry or timing.  A frozen plan
+# whose ONLY drift is such a path, from one main revision to a later main revision (same mode), is not a source change:
+# the route runs with its FROZEN bytes (recovered exactly from the plan's committed origin tree), so the execution is the
+# original one and the frozen plan stays valid.
+LINT_ONLY = ("tools/textbook_lint.py",)
+
+
+# SUBMIT-ONLY lint names (ROOT 2026-10-16, coordinator): constants of tools/textbook_lint.py read only by the submit-time
+# CLOSED-STANDS lint, never by the pre-route gate.  A textbook_lint change confined to them (and to comments / docstrings)
+# leaves every gate verdict valid.
+SUBMIT_ONLY_LINT_NAMES = ("CLOSED_STANDS_KINDS", "CLOSED_STANDS_INSTEAD", "DIE_WINDOW_CUT_MIN")
+
+
+def lint_change_is_submit_only(old, new, names=SUBMIT_ONLY_LINT_NAMES):
+    """True when two textbook_lint.py versions differ only in comments/docstrings or in assignments to `names`."""
+    import ast
+
+    def norm(data):
+        tree = ast.parse(data.decode() if isinstance(data, bytes) else data)
+        body = []
+        for node in tree.body:
+            if isinstance(node, ast.Expr) and isinstance(getattr(node, "value", None), ast.Constant) \
+                    and isinstance(node.value.value, str):
+                continue                                                   # module / stray docstrings
+            if isinstance(node, (ast.Assign, ast.AnnAssign)):
+                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+                if all(isinstance(t, ast.Name) and t.id in names for t in targets):
+                    continue
+            body.append(ast.dump(node, include_attributes=False))
+        return body
+    try:
+        return norm(old) == norm(new)
+    except (SyntaxError, ValueError, UnicodeDecodeError):
+        return False
+
+
 def _main_blobs(repo, head, rel):
     p = subprocess.run(["git", "-C", str(repo), "log", "--format=", "--raw", "--no-abbrev", "--no-renames", head, "--", rel],
                        capture_output=True, text=True, timeout=180)
@@ -139,6 +176,13 @@ def compare_plans_sanctioned(frozen, effective, repo, head=None):
         o, n = old.get(rel), new.get(rel)
         if o == n:
             continue
+        if rel in LINT_ONLY and o is not None and n is not None and head and o["mode"] == n["mode"]:
+            hist = _main_blobs(repo, head, rel)
+            if o["git_blob"] in hist and n["git_blob"] in hist:
+                sanctioned.append(dict(path=rel, kind="lint_frozen", frozen_git_blob=o["git_blob"],
+                                       frozen_sha256=o["sha256"], current_git_blob=n["git_blob"],
+                                       current_sha256=n["sha256"], origin_main=head))
+                continue
         if rel not in FLEET_RUN or o is None or n is None or not head:
             return False, f"effective route helper drift: {rel} (frozen {o}, current {n})", []
         p = subprocess.run(["git", "-C", str(repo), "rev-parse", f"{head}:{rel}"], capture_output=True, text=True, timeout=60)
@@ -146,9 +190,9 @@ def compare_plans_sanctioned(frozen, effective, repo, head=None):
         if n["git_blob"] != tip or o["mode"] != n["mode"] or o["git_blob"] not in _main_blobs(repo, head, rel):
             return False, (f"effective route helper drift: {rel} (frozen {o}, current {n}; fleet-run path, but current is "
                            f"not origin/main {str(tip)[:9]} or frozen is not an earlier main revision)"), []
-        sanctioned.append(dict(path=rel, frozen_git_blob=o["git_blob"], frozen_sha256=o["sha256"],
+        sanctioned.append(dict(path=rel, kind="fleet_run", frozen_git_blob=o["git_blob"], frozen_sha256=o["sha256"],
                                current_git_blob=n["git_blob"], current_sha256=n["sha256"], origin_main=head))
-    return True, "helper bytes match the frozen plan except sanctioned fleet-run paths at origin/main", sanctioned
+    return True, "helper bytes match the frozen plan except sanctioned fleet-run / lint-only paths", sanctioned
 
 
 def frozen_rows(plan):

@@ -75,6 +75,14 @@ hbfd_rly_<W>_<dir>_fc / qkd_rlys_*_fc ( clk_in, rs, i[W], o[W], clk_out )
   - DIE-CLOCK trims the phase with pads on the sink-root branch, until it meets TT setup and FF hold.
 - **Intra-region buses and neighbour-matched crossings.** No forwarding and no added cycle. Stations use the root of
   the region they sit in.
+- **Fork variant `_fc_f<n>`, n = 2..4.** Used on branch stations whose total branch wire is over 600 um, or that
+  have more than 2 children. Each branch gets its own `clk_out<k>` buffer and its own matched data buffer `o<k>`.
+  - Measured on the fc2 views: one buffer driving a 4-way fork plus 4 x 405 um took 104-109 ps at TT, which breaks the
+    80 ps per-hop budget.
+  - Light-load hop: 15 ps TT / 12 ps FF.
+- **ETM.** `clk_in -> clk_out` is a plain positive-unate combinational arc, never a generated clock, so one clock
+  propagates through every chain with CRPR. `insertion.json` carries `forwarded_clock` (light, fork, fork + wire) and R
+  per corner.
 - **Equal-age pads.** At the sink, on the sink root.
 - **`rs`.** The domain reset (a reset-forest leaf), unchanged.
 - **Contract.** Every `clk_in` / `clk_out` is bound explicitly. Strict port-bind refuses any implicit clock.
@@ -112,3 +120,16 @@ die_clock_check.py report dump_tt.tsv --ff-dump dump_ff.tsv --targets targets.js
 - The verdict is PASS only when every judged pair is within 80 ps at TT AND FF. Without an FF dump the verdict is
   INCOMPLETE.
 - Look at the clock images (`plot.py`) of the whole die and of the worst regions on every trial.
+
+## 6. Current root plans
+
+- HBM A2P (d4e): `a2p_root_sites.json`, 28 sites.
+- HBM d4f: `d4f_root_sites.json`, 36 sites (16 SM column cluster roots, 12 band, 4 E column rows, 4 PC). Generated
+  and legalised by `tools/die_clock/root_sites.py`, then adopted by H-DIE (5e2ff52f1).
+- Qwen compute q3h5 (hierarchical, 48 C_B16 clusters + 48 heads):
+  - Roots: RS_lo (16650, 5400), RS_hi (16650, 17077), RS_hgW (13950, 11238), RS_hgE (19350, 11238).
+  - Strips: 20 um edge strips L_lo / L_hg1 / L_hg2 / L_hi along the cluster ck faces.
+  - Lanes: clk_rx -> RS lanes reserved by Q-DIEPLAN3 (q3h5_grid.json keepouts).
+  - All 96 entries form one balance group, with neighbour pairs judged by die_clock_check.
+- Qwen KV (kvs13h): one regional tree per PLL output (c, WS, WN, ES, EN), with neighbours c<->stacks, WS<->WN, ES<->EN.
+  The clock is defined at the root buffer (`clock_at_root_buffer`), because the qkd_pllm model has no drive arc.

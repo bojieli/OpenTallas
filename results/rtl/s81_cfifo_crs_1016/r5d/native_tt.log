@@ -1,0 +1,144 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_core_s can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_core_s can not be propagated.
+OT_HYBRID CTS_MEASURE tt cr sinks=3391 reference_scope=boundary boundary_sinks=1171 min=155.577829019582 mean=170.3073412727835 max=184.69928438319522 all_mean=163.7150141846902
+OT_HYBRID CTS_MEASURE tt cr_s sinks=119 reference_scope=boundary boundary_sinks=70 min=112.4562739093685 mean=114.41791369639152 max=115.92681028153261 all_mean=110.09975963984836
+OT_HYBRID CTS_MEASURE tt xf sinks=5125 reference_scope=boundary boundary_sinks=566 min=217.5472310994287 mean=219.75120402720552 max=221.91097659294238 all_mean=234.22653957475998
+OT_HYBRID CTS_MEASURE tt xf2 sinks=4873 reference_scope=boundary boundary_sinks=538 min=215.11977007974957 mean=217.4282030927906 max=221.02192386905787 all_mean=229.1046003110952
+OT_ENTRIES LEVEL cr deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt cr -> cc[0]$_DFF_P_/CLK wire=0 R=170.3073412727835 latency=49.443862754422014 phi=219.75120402720552
+OT_ENTRIES LEVEL cr_s deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt cr_s -> ot_prs_00001_ff/CLK wire=0 R=114.41791369639152 latency=105.333290330814 phi=219.75120402720552
+OT_ENTRIES LEVEL xf deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt xf -> u_x.pin[0]$_DFF_P_/CLK wire=0 R=219.75120402720552 latency=0.0 phi=219.75120402720552
+OT_ENTRIES LEVEL xf2 deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt xf2 -> u_x2.pin[0]$_DFF_P_/CLK wire=0 R=217.4282030927906 latency=2.323000934414921 phi=219.75120402720552
+OT_ENTRIES DOMAIN core 833.333008ps IO69/1101 boundary=205.021691774004..234.14314713761723
+OT_ENTRIES DOMAIN lane 833.333008ps IO566/0 boundary=217.5472310994287..221.91097659294235
+OT_ENTRIES DOMAIN lane2 833.333008ps IO538/0 boundary=217.4427710141645..223.34492480347282
+OT_ENTRIES DOMAIN core_s 833.333008ps IO0/70 boundary=217.78956424018253..221.2601006123466
+OT_MULTI_ROOT RELATED_PATH core -> core_s max slack=405.934540 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> core_s min slack=65.895790 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane -> core_s max slack=265.195984 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane -> core_s min slack=90.635223 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane -> core max slack=35.090431 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane -> core min slack=389.615204 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core_s -> core max slack=90.787743 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core_s -> core min slack=396.712891 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane2 -> core_s max slack=250.162781 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane2 -> core_s min slack=88.457962 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane2 -> core max slack=47.280651 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane2 -> core min slack=393.319366 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=4 registers=13508 inputs=1173 outputs=1171 async_control_pins=224
+OT_ENTRIES COMP DONE tt 4 entries phi=219.75120402720552 boundary=205.021691774004..234.14314713761723
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_core_s can not be propagated.
+GATE_PC constraints signoff /src/physical/ref_tile/s81coll_cfifo_crs/signoff.sdc (TT placement RC; diagnostic)
+Startpoint: rst (input port clocked by core_clk)
+Endpoint: ot_prs_00002_ff (recovery check against rising-edge clock ot_entry_0)
+Path Group: asynchronous
+Path Type: max
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock core_clk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+ 490.810  490.810 ^ input external delay
+   0.000  490.810 ^ rst (in)
+  69.153  559.964 ^ hold7797/Y (BUFx2_ASAP7_75t_R)
+  38.424  598.388 ^ input128/Y (BUFx2_ASAP7_75t_R)
+  22.631  621.019 ^ hold7798/Y (BUFx2_ASAP7_75t_R)
+   0.278  621.297 ^ ot_prs_00002_ff/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+          621.297   data arrival time
+
+ 833.333  833.333   clock ot_entry_0 (rise edge)
+  49.444  882.777   clock source latency
+   0.000  882.777 ^ cr (in)
+  26.531  909.308 ^ clkbuf_0_cr/Y (BUFx24_ASAP7_75t_R)
+  29.945  939.253 ^ clkbuf_1_1_0_cr/Y (BUFx24_ASAP7_75t_R)
+  26.099  965.353 ^ clkbuf_3_6_0_cr/Y (BUFx24_ASAP7_75t_R)
+  32.977  998.330 ^ clkbuf_4_13__f_cr/Y (BUFx24_ASAP7_75t_R)
+  41.270 1039.600 ^ clkbuf_leaf_79_cr/Y (BUFx24_ASAP7_75t_R)
+   0.359 1039.959 ^ ot_prs_00002_ff/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.000  979.959   clock uncertainty
+   0.000  979.959   clock reconvergence pessimism
+  20.058 1000.016   library recovery time
+         1000.016   data required time
+-----------------------------------------------------------
+         1000.016   data required time
+         -621.297   data arrival time
+-----------------------------------------------------------
+          378.720   slack (MET)
+
+
+Startpoint: rst (input port clocked by core_clk)
+Endpoint: rsync_q[0]$_DFF_PN0_
+          (removal check against rising-edge clock ot_entry_0)
+Path Group: asynchronous
+Path Type: min
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock core_clk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+ 205.022  205.022 ^ input external delay
+   0.000  205.022 ^ rst (in)
+  68.783  273.805 ^ hold7797/Y (BUFx2_ASAP7_75t_R)
+  37.745  311.549 ^ input128/Y (BUFx2_ASAP7_75t_R)
+  21.764  333.313 ^ hold7798/Y (BUFx2_ASAP7_75t_R)
+   0.063  333.376 ^ rsync_q[0]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+          333.376   data arrival time
+
+   0.000    0.000   clock ot_entry_0 (rise edge)
+  49.444   49.444   clock source latency
+   0.000   49.444 ^ cr (in)
+  27.421   76.865 ^ clkbuf_0_cr/Y (BUFx24_ASAP7_75t_R)
+  31.229  108.094 ^ clkbuf_1_1_0_cr/Y (BUFx24_ASAP7_75t_R)
+  27.110  135.204 ^ clkbuf_3_6_0_cr/Y (BUFx24_ASAP7_75t_R)
+  35.168  170.372 ^ clkbuf_4_13__f_cr/Y (BUFx24_ASAP7_75t_R)
+  45.471  215.842 ^ clkbuf_leaf_80_cr/Y (BUFx24_ASAP7_75t_R)
+   0.729  216.571 ^ rsync_q[0]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.000  241.571   clock uncertainty
+   0.000  241.571   clock reconvergence pessimism
+  30.043  271.614   library removal time
+          271.614   data required time
+-----------------------------------------------------------
+          271.614   data required time
+         -333.376   data arrival time
+-----------------------------------------------------------
+           61.762   slack (MET)
+
+

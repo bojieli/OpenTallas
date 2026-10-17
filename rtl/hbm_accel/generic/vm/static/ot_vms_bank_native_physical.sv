@@ -2,7 +2,12 @@
 `default_nettype none
 // Wires-only adapter to the actual physical quadrant masters. No memory/compute substitute.
 module ot_vms_bank_native_physical #(
- parameter integer RG=5, WG=2, QUADRANT=0, MUT=0
+ parameter integer RG=5, WG=2, QUADRANT=0, MUT=0,
+ // Q2_MERGE (H-SM 1016 aef736948, H-NETLIST d4f): the q2 (NW) bank = the exact q0 master + hfd_vms_wq2_merge, which
+ // ORs the valid-masked wq1 (SM writer) / wq2 (quantiser) onto the q0 bank's wq1 port (+2 edges, compiler issues them
+ // 2 edges earlier; owner codes 2->1, k>=3 -> k-1) and steers wq_done1 back through a fixed 5-edge shift; its sticky
+ // flt (same-edge collision = compiler schedule error) joins the bank fault status bit 17.  0 = hfd_vms_bank_native_q2.
+ parameter integer Q2_MERGE=0
 ) (
     input wire clk, rst_n,
     input wire [2:0] bid,               // strap: bank identity (die constant)
@@ -94,7 +99,41 @@ module ot_vms_bank_native_physical #(
 .wq0(wq[0*281+:281]),.wq_done0(wq_done[0]),
 .wq1(wq[1*281+:281]),.wq_done1(wq_done[1]));
  end
- if(QUADRANT==2)begin:q2
+ if(QUADRANT==2&&Q2_MERGE!=0)begin:q2m
+ wire[280:0] m_wq; wire m_done, m_flt; wire[17:0] b_status;
+ hfd_vms_wq2_merge u_merge(.clk(die_clk),.rst_n(rst_n),.wq1(wq[1*281+:281]),.wq2(wq[2*281+:281]),.wq_m(m_wq),
+   .done_m(m_done),.wq_done1(wq_done[1]),.wq_done2(wq_done[2]),.flt(m_flt));
+ assign status={b_status[17]|m_flt,b_status[16:0]};
+ hfd_vms_bank_native_q0 u_bank(
+.bid(die_bid),
+   .sid(die_sid),
+   .clk(die_clk),
+   .rst_n(rst_n),
+   .rslot_v(rslot_v),
+   .rslot(rslot),
+   .wslot_v(wslot_v),
+   .wslot(wslot),
+   .dq(dq),
+   .dq_done(dq_done),
+   .kq(kq),
+   .kq_done(kq_done),
+   .xq(xq),
+   .xq_done(xq_done),
+   .xq2(xq2),
+   .xq2_done(xq2_done),
+   .eg(eg),
+   .pq(pq),
+   .pr(pr),
+   .status(b_status),
+.rq0(rq[0*17+:17]),.rr0(rr[0*257+:257]),
+.rq1(rq[1*17+:17]),.rr1(rr[1*257+:257]),
+.rq2(rq[2*17+:17]),.rr2(rr[2*257+:257]),
+.rq3(rq[3*17+:17]),.rr3(rr[3*257+:257]),
+.rq4(rq[4*17+:17]),.rr4(rr[4*257+:257]),
+.wq0(wq[0*281+:281]),.wq_done0(wq_done[0]),
+.wq1(m_wq),.wq_done1(m_done));
+ end
+ if(QUADRANT==2&&Q2_MERGE==0)begin:q2
  hfd_vms_bank_native_q2 u_bank(
 .bid(die_bid),
    .sid(die_sid),

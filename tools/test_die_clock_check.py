@@ -111,6 +111,15 @@ class NeighbourCheck(unittest.TestCase):
         self.assertEqual(r["verdict"], "FAIL")
         self.assertEqual(r["worst"][0]["a"], "t1")
 
+    def test_signed_delta_directed(self):
+        open(self.f, "w").write(NB.replace("P\tt0\tt1\tn1\n", "P\tt1\tt0\tn1\td\n"))
+        r = D.report(self.f, budget=80, region_map=self.spec, families=self.fam, ff_dump=self.ff)["neighbour_check"]
+        c = r["classes"]["neighbour:E0|W0"]
+        # launch t1 (1050 TT / 960 FF) -> capture t0 (1000 / 900): capture - launch is NEGATIVE
+        self.assertAlmostEqual(c["delta_tt_signed_ps"]["max"], -50.0, places=1)
+        self.assertAlmostEqual(c["delta_ff_signed_ps"]["max"], -60.0, places=1)
+        self.assertEqual(c["delta_ff_signed_ps"]["positive"], 0)
+
     def test_no_ff_is_incomplete(self):
         good = NB.replace("\t1300\t1100\n", "\t1060\t970\n")
         open(self.f, "w").write(good)

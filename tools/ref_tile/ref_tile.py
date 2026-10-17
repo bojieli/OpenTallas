@@ -87,13 +87,23 @@ FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
 #      table is $RESULTS_DIR/ot_pin_regs.tsv of the route).  io_flop_at_pins anchors them at the pin face.  Opt-out only
 #      with a recorded reason: "pin_regs": {"enable": false, "reason": "..."}; per-port: "pin_regs": {"exclude":
 #      "<regexp>", "reason": "..."}; a multi-clock tile names the data clock: "pin_regs": {"clock": "<port>"}.
-RECIPE_LATEST = 3
+#   4  (coordinator 2026-10-16, owner-approved die boundary hold budget, FLOW-HOLD) recipe 3 + "hold_budget": "die" for
+#      leaf tiles: flop-first pins (no inhold / outhold pads), boundary min delays credit the guaranteed launch C, the
+#      link's skew / uncertainty / shortfall are the die's (results/arch/boundary_hold_budget_1016/RULE.md).  A tile that
+#      does not qualify (CDC / async leaf, unregistered pin) opts out with "hold_budget": "tile" + "hold_budget_reason".
+RECIPE_LATEST = 4
 PIN_REGS_RULE = "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin"
 RECIPE_HOLD_PAD = "HB2xp67_ASAP7_75t_R"
 HOLD_PAD_STRONG = "HB4xp67_ASAP7_75t_R"
 PIN_REG_SPLIT_TCL = "physical/common_flow/pin_reg_split.tcl"
 RECIPE_HOLD_MARGIN_NS = 0.030
 RECIPE_HALO_UM = 5.4
+# DIE BOUNDARY HOLD BUDGET (FLOW-HOLD, owner 2026-10-16 ~22:00; results/arch/boundary_hold_budget_1016/RULE.md).  Spec
+# "hold_budget": "die" (default "tile" = unchanged): a registered-pin tile carries NO boundary hold padding; the sender
+# guarantees launch >= L_min + C at FF, the receiver credits it, and the link's skew / uncertainty / shortfall belong to
+# the die (relay stations, die FF STA >= 0 on the tiles' ETMs).  Setup constraints are unchanged.
+HOLD_BUDGET_C_PS = 25      # guaranteed FF launch of a pin register (clk->Q, no pad) relative to the tile reference L_min
+HOLD_BUDGET_U_PS = 25      # the tile hold uncertainty, cancelled on boundary paths only (die STA applies it once per link)
 # a spec that already owns the boundary placement keeps it (no default pin hooks on top of it)
 RECIPE_OWN_HOOK_VARS = ("POST_TAPCELL_TCL", "PRE_GLOBAL_PLACE_TCL", "PRE_DETAIL_PLACE_TCL")
 
@@ -144,12 +154,58 @@ def kit_recipe(s: dict, out_root: Path | None = None, spec_path: str | None = No
     return v
 
 
+def hold_budget_die(s: dict) -> bool:
+    """spec "hold_budget": "tile" (default) | "die" (FLOW-HOLD 2026-10-16).  SpecError on an unknown value."""
+    v = s.get("hold_budget", "tile")
+    if v not in ("tile", "die"):
+        raise SpecError(f'spec: hold_budget must be "tile" or "die", got {v!r}')
+    return v == "die"
+
+
+def check_hold_budget(s: dict) -> None:
+    """Qualification of hold_budget "die" (RULE.md section 4): a leaf tile whose every data pin is registered -- recipe 3
+    pin_regs on with no per-port exclusion, or pin_regs off with a recorded reason (the RTL already registers every pin,
+    e.g. hcoll_v5_ctl2) -- and no pin hold pads.  The export is then checked structurally by the native audit (no
+    combinational pin arc; launch / capture budgets), which a non-registered pin fails."""
+    if not hold_budget_die(s):
+        if s.get("recipe", 1) >= 4 and s.get("kind") == "tile" and not str(s.get("hold_budget_reason") or "").strip():
+            raise SpecError('spec: recipe 4 leaf tile with hold_budget "tile" needs "hold_budget_reason" (e.g. CDC leaf)')
+        return
+    pr = s.get("pin_regs") or {}
+    # Q-CLUSTER 2026-10-17 (coordinator): a two-level cluster (cluster_level 2) whose own RTL registers every boundary pin
+    # (pin_regs off with that reason) qualifies under the same rule and the same native audit
+    if s.get("kind") != "tile" and not (s.get("kind") == "cluster" and s.get("cluster_level") == 2):
+        raise SpecError('spec: hold_budget "die" applies to leaf tiles (kind "tile") and two-level clusters only')
+    if not isinstance(pr, dict) or pr.get("exclude") or not (pr.get("enable") or str(pr.get("reason") or "").strip()):
+        raise SpecError('spec: hold_budget "die" needs every data pin registered (pin_regs enabled without exclude, '
+                        'or disabled with the reason the RTL registers them)')
+    if s.get("inhold") or s.get("outhold"):
+        raise SpecError('spec: hold_budget "die" forbids pin hold pads (inhold / outhold): boundary hold is the die\'s')
+
+
+def hold_budget_vars(s: dict) -> list:
+    """route-time env of the die hold budget (pre-CTS..fill hooks read io_ref_skew.sdc through ORFS vars)"""
+    if not hold_budget_die(s):
+        return []
+    return ["--orfs-var OT_IO_HOLD_BUDGET=die", f"--orfs-var OT_BH_LAUNCH_MIN_PS={HOLD_BUDGET_C_PS}",
+            f"--orfs-var OT_BH_TILE_HOLD_UNC_PS={HOLD_BUDGET_U_PS}", f"--orfs-var OT_BH_ROUTE_RELIEF_PS={io_hold_relief_ps(s)}"]
+
+
 def apply_recipe(s: dict, recipe: int) -> dict:
     """write the recipe's defaults into the spec (in place; idempotent).  Recipe 1 leaves the spec untouched."""
     if recipe < 2:
+        if hold_budget_die(s):
+            raise SpecError('spec: hold_budget "die" needs recipe >= 3 (pin registers)')
         return s
     s["recipe"] = recipe
     r = s["route"]
+    if recipe >= 4 and s.get("kind") == "tile":
+        s.setdefault("hold_budget", "die")
+    if hold_budget_die(s):
+        # no pin hold pads (inhold / outhold), boundary repaired at margin 0 against the credited launch
+        s.setdefault("inhold", False)
+        s.setdefault("outhold", False)
+        r.setdefault("io_hold_margin_ns", 0.0)
     r.setdefault("hold_margin_ns", RECIPE_HOLD_MARGIN_NS)
     r.setdefault("macro_halo_um", RECIPE_HALO_UM)
     own = [k for k in RECIPE_OWN_HOOK_VARS if k in s.get("orfs_vars", {})]
@@ -655,6 +711,20 @@ probe may measure routing before the phase audit exists, but cannot auto-merge.
     return cap, {"source": g["source"], "sha256": g["sha256"], "obligations": rec}
 
 
+def cluster_level(s: dict) -> int:
+    """spec "cluster_level": 1 (default, children PG <= M6, cluster PG M7) | 2 (children are clusters: PG <= M7,
+    cluster PG M8 aligned to the die grid, signals M2-M7; coordinator decision 2026-10-17, Q-CLUSTER)"""
+    v = s.get("cluster_level", 1)
+    if v not in (1, 2) or isinstance(v, bool):
+        raise SpecError(f"spec: cluster_level must be 1 or 2, got {v!r}")
+    if v == 2 and s.get("kind") != "cluster":
+        raise SpecError("spec: cluster_level 2 needs kind cluster")
+    return v
+
+
+M8_PG = dict(width=0.48, pitch=8.64, offset=4.32)   # two-level cluster M8 PG stripes (die M8 grid pitch 8.64)
+
+
 def layer_contract(s: dict, slot: dict | None) -> dict:
     """leaf tile: signals AND PG <= layer_cap (M5 default, M6 granted), PG = full-length stripes on the cap layer as pins,
     parent strap = cap + 1; legacy kits: signals M2-M6, PG M6 or M7.
@@ -696,6 +766,22 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
             if metal(sig) is None or not 2 <= metal(sig) <= limit:
                 raise SpecError(f"tile signal_max_layer {sig!r} must be M2..M{limit}; it cannot loosen the layer contract")
             out.update(rlayers=("M2", sig), signal_max_layer=sig)
+        return out
+    if cluster_level(s) == 2:
+        # TWO-LEVEL cluster (Q-CLUSTER, coordinator decision 2026-10-17): the children are clusters themselves (PG top M7),
+        # the cluster's PG = M8 stripes (pins) aligned to the die PG grid, signals M2-M7 in the corridors (children
+        # obstruct M1-M7), the die keeps M9 and uses M8 over the cluster for PG only.  Opt-in: spec "cluster_level": 2.
+        for ch in s["children"]:
+            m = read_view_lef(ch["view"])
+            top = child_lint.check_pg(m)["top_layer"]
+            if metal(top) is None or metal(top) > 7:
+                raise SpecError(f"layer contract (two-level): child {view_name(ch['view'])} PG top layer {top} must be <= M7")
+            out["children"][view_name(ch["view"])] = top
+        if (pg or "M8") != "M8":
+            raise SpecError("layer contract (two-level): the cluster PG layer is M8")
+        if s.get("signal_max_layer") not in (None, "M7"):
+            raise SpecError("layer contract (two-level): signals are M2-M7 (M8 PG, M9 die)")
+        out.update(pg_layer="M8", rlayers=("M2", "M7"), strap_layer="M9", cluster_level=2)
         return out
     for ch in s["children"]:
         m = read_view_lef(ch["view"])
@@ -815,6 +901,17 @@ def gen_pdn(s: dict, lc: dict) -> str:
                 "add_pdn_stripe -grid {top} -layer {M7} -width {0.288} -spacing {5.112} -pitch {10.8} -offset {1.0}\n"
                 "add_pdn_connect -grid {top} -layers {M1 M2}\nadd_pdn_connect -grid {top} -layers {M2 M5}\n"
                 "add_pdn_connect -grid {top} -layers {M5 M6}\nadd_pdn_connect -grid {top} -layers {M6 M7}\n")
+    elif lc.get("cluster_level") == 2:
+        m8 = dict(M8_PG, **{k[6:]: v for k, v in s.get("route", {}).items() if k.startswith("m8_pg_")})
+        note = (f"two-level cluster: M5/M6/M7 stripes (std-cell corridors; trimmed over the cluster children) + M8 stripes "
+                f"(pins) width {m8['width']} pitch {m8['pitch']} offset {m8['offset']} aligned to the die M8 PG grid; each "
+                "hard child (PG M7) strapped from M8; die M9 only.")
+        body = ("add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {5.4} -offset {0.513}\n"
+                "add_pdn_stripe -grid {top} -layer {M7} -width {0.288} -spacing {5.112} -pitch {10.8} -offset {1.0}\n"
+                f"add_pdn_stripe -grid {{top}} -layer {{M8}} -width {{{m8['width']}}} -pitch {{{m8['pitch']}}} -offset {{{m8['offset']}}}\n"
+                "add_pdn_connect -grid {top} -layers {M1 M2}\nadd_pdn_connect -grid {top} -layers {M2 M5}\n"
+                "add_pdn_connect -grid {top} -layers {M5 M6}\nadd_pdn_connect -grid {top} -layers {M6 M7}\n"
+                "add_pdn_connect -grid {top} -layers {M7 M8}\n")
     else:
         note = ("cluster: M5/M6 stripes + M7 stripes (pins); each hard child strapped from the layer above its own PG pins "
                 "(recipe physical/hgi_idx_hier/pdn_hier.tcl @8d848821f).")
@@ -1289,6 +1386,7 @@ def sdc_extra(s: dict) -> str:
 def gen_signoff(s: dict, refglob: str, inter: str) -> str:
     signoff = clock_entry_constraints.signoff_period(s)
     io = "" if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else (ROOT / QDM / "io_ref_skew.sdc").read_text()
+    io = clock_entry_constraints.strip_hold_budget(io, hold_budget_die(s))
     return (f"# {s['name']}: sign-off at {signoff} ps (generated by tools/ref_tile/ref_tile.py; same form as\n"
             f"# {QDM}/jobs/signoff_sdc.py): clock re-created at the real period, propagated, 60 / 25 ps uncertainty,\n"
             f"# die-context boundary io_ref_skew.sdc with this block's REFGLOB / INTER bound.\n"
@@ -1296,6 +1394,9 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
             + "set_propagated_clock [all_clocks]\nset_clock_uncertainty -setup 60 [all_clocks]\n"
             "set_clock_uncertainty -hold 25 [all_clocks]\nset ::env(OT_IO_SKEW) 90\nset ::env(OT_IO_HOLD_SKEW) 50\n"
             + "".join(f"set ::env({k}) {v}\n" for k, v in io_budget_env(s).items())
+            + (f"set ::env(OT_IO_HOLD_BUDGET) die\nset ::env(OT_BH_LAUNCH_MIN_PS) {HOLD_BUDGET_C_PS}\n"
+               f"set ::env(OT_BH_TILE_HOLD_UNC_PS) {HOLD_BUDGET_U_PS}\nset ::env(OT_BH_ROUTE_RELIEF_PS) 0\n"
+               if hold_budget_die(s) else "")
             + f"set ::env(OT_REF_GLOB) {{{refglob}}}\nset ::env(OT_IO_INTER) {{{inter}}}\nset ::env(OT_IO_SKEW_INTER) 150\n"
             + io + sdc_extra(s)
             + ("set ::ot_ce_require_wire 1\n" if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else "")
@@ -1328,6 +1429,12 @@ def gen_signoff_ffrepair(s: dict, refglob: str, inter: str) -> str | None:
     if not d:
         return None
     base = gen_signoff(s, refglob, inter)
+    if hold_budget_die(s):
+        old = "set ::env(OT_BH_ROUTE_RELIEF_PS) 0\n"
+        assert base.count(old) == 1
+        return (f"# {s['name']}: ROUTE-TIME FF hold-repair SDC (NOT sign-off; generated by tools/ref_tile/ref_tile.py): signoff.sdc\n"
+                f"# with the die-budget boundary repaired {d} ps below the core margin (hold_margin - io_hold_margin).\n"
+                + base.replace(old, f"set ::env(OT_BH_ROUTE_RELIEF_PS) {d}\n") + "set ::env(OT_BH_ROUTE_RELIEF_PS) 0\n")
     old = "set ::env(OT_IO_HOLD_SKEW) 50\n"
     assert base.count(old) == 1
     return (f"# {s['name']}: ROUTE-TIME FF hold-repair SDC (NOT sign-off; generated by tools/ref_tile/ref_tile.py): signoff.sdc\n"
@@ -1550,7 +1657,9 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     for k, v in sorted(s.get("orfs_vars", {}).items()):
         if not re.fullmatch(r"[A-Z][A-Z0-9_]*", k) or re.search(r"\s", str(v)):
             raise SpecError(f"spec: orfs_vars {k}={v!r}: NAME=[A-Z0-9_]+, value without whitespace")
-        vv = f"/src/{v}" if (not str(v).startswith("/") and os.path.isfile(str(v))) else v
+        # ROOT 2026-10-17 (S-ELEM static14): resolve a repo path against ROOT, not the caller's cwd -- `ref_tile.py gen`
+        # run outside the repo root wrote POST_IO_PLACEMENT_TCL as a bare relative path and dropped it from the sources
+        vv = f"/src/{v}" if (not str(v).startswith("/") and (ROOT / str(v)).is_file()) else v
         if k == "POST_TAPCELL_TCL" and s.get("io_tcl"):
             # io_tcl + a POST_TAPCELL pin-flop hook: ORFS sources IO_CONSTRAINTS only at 3_2_place_iop, so the hook saw
             # unplaced ports and FIRM-placed every boundary flop on the W face (smh_pt_e_ref_p40-lf: W 7410 / E 0, both
@@ -1643,6 +1752,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             if not wrap:
                 extra.append("--step-tcl PRE_DETAIL_PLACE=physical/dsrom_window_source/leaf_inhold_release.tcl")
     extra += hold_pad_vars(s)
+    extra += hold_budget_vars(s)
     extra += pin_regs_vars(s)
     if s.get("keep_pin_regs"):
         extra.append("--orfs-var OT_KEEP_PIN_REGS=1")
@@ -1760,7 +1870,7 @@ def referenced_paths(s: dict, kd: str) -> list:
         out.append(s["io_tcl"])
     if literal_pin_bits(s):
         out.append(ASSIGNED_PIN_EXACT_TCL)
-    out += sorted(str(v) for v in s.get("orfs_vars", {}).values() if not str(v).startswith("/") and os.path.isfile(str(v)))
+    out += sorted(str(v) for v in s.get("orfs_vars", {}).values() if not str(v).startswith("/") and (ROOT / str(v)).is_file())
     if s.get("io_flop_at_pins"):
         out += ["physical/qwen_die_masters/io_flop_at_pins.tcl", "physical/qwen_die_masters/out_flop_release.tcl"]
     if s.get("outhold"):
@@ -1927,6 +2037,7 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
         write: bool = True) -> dict:
     s = load_spec(spec_path)
     apply_recipe(s, kit_recipe(s, out_root, spec_path))
+    check_hold_budget(s)
     slot = contract_slot(s)
     lc = layer_contract(s, slot)
     if lc.get("m6_pin_grant"):
@@ -2103,7 +2214,7 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     res = finalize(o, top, ROOT / "tools/hier_contract/abstract_pin_stub.py", child_lint,
                    lint_kwargs=dict(cap="M5" if grant else None, pin_grant=grant, routed_def=routed_def,
                        tech_lef=str(o / "pin_only_tech.lef") if grant and (o / "pin_only_tech.lef").exists() else None),
-                   transform=not bool(grant))
+                   transform='m6_grant_obs' if grant and routed_def else not bool(grant))
     # SCALAR-PIN LINT (ROOT 10-16, coordinator): a scalar RTL port must export as pin x, never x[0] (recipe-3 wrapper
     # declared [0:0] before e3919f90e; such a view mis-binds every die netlist that connects .x(...))
     try:

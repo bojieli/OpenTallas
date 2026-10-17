@@ -18,6 +18,7 @@ bundle whose bits run both ways takes the bundle's direction; a port the bus lis
 import argparse
 import json
 import math
+import os
 import re
 import shutil
 import sys
@@ -30,6 +31,10 @@ from die_port_bind import parse_die, expr_bits
 
 HARD = {'ot_hbm3e_phy': 'physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy'}
 PERIOD = dict(stream=833.333, serial=833.333 * 4.0 / 3.0, ucie=833.333, serdes=833.333)
+# DIE-FLOW 2026-10-17 (FLOW-HOLD RULE.md, owner-approved): --hold-budget die = U 25 once per link on every pair (the
+# boundary hold budget is judged by die STA on the bound ETMs + tools/die_hold_budget.py); tile = legacy H1 50 + 50
+HOLD_U = dict(tile=100.0, die=25.0)
+HOLD_NOTE = dict(tile='hold H1 100 ps', die='hold U 25 ps once per link (FLOW-HOLD die budget)')
 
 
 def domain(net):
@@ -80,7 +85,7 @@ def assumed_clock_refs(master, ports, physical_ports=None, clock_ports=None):
     return refs
 
 
-def clock_tcl(doms, leaves, corner, periods=None, related_domains=()):
+def clock_tcl(doms, leaves, corner, periods=None, related_domains=(), hold_budget='tile'):
     # Each domain has related shallow / earlier-tap clock objects. Separate
     # domains remain asynchronous; no exception is created between levels.
     # Source latency shifts the boundary while propagated ETMs retain insertion.
@@ -117,9 +122,9 @@ def clock_tcl(doms, leaves, corner, periods=None, related_domains=()):
         for launch, lname in sorted(names.items()):
             for capture, cname in sorted(names.items()):
                 skew = 150.0 if launch or capture else 90.0
-                lines += [f'# BUDGET {lname} -> {cname}: setup 60 + skew {skew:g} ps; hold H1 100 ps',
+                lines += [f'# BUDGET {lname} -> {cname}: setup 60 + skew {skew:g} ps; ' + HOLD_NOTE[hold_budget],
                           f'set_clock_uncertainty -setup {60.0 + skew:.6f} -from [get_clocks {lname}] -to [get_clocks {cname}]',
-                          f'set_clock_uncertainty -hold 100.000000 -from [get_clocks {lname}] -to [get_clocks {cname}]']
+                          f'set_clock_uncertainty -hold {HOLD_U[hold_budget]:.6f} -from [get_clocks {lname}] -to [get_clocks {cname}]']
     # Preserve every relation explicitly declared by the source programme.
     # An asynchronous group is permitted only between independent groups.
     groups = []
@@ -139,7 +144,7 @@ def clock_tcl(doms, leaves, corner, periods=None, related_domains=()):
                     for cname in domain_clocks[capture]:
                         skew = 150.0 if lname.endswith('__early') or cname.endswith('__early') else 90.0
                         lines += [f'set_clock_uncertainty -setup {60+skew:.6f} -from [get_clocks {lname}] -to [get_clocks {cname}]',
-                                  f'set_clock_uncertainty -hold 100.000000 -from [get_clocks {lname}] -to [get_clocks {cname}]']
+                                  f'set_clock_uncertainty -hold {HOLD_U[hold_budget]:.6f} -from [get_clocks {lname}] -to [get_clocks {cname}]']
     if len(groups) > 1:
         lines.append('set_clock_groups -asynchronous ' + ' '.join(
             '-group [get_clocks {' + ' '.join(name for d in group for name in domain_clocks[d]) + '}]' for group in groups))
@@ -183,6 +188,9 @@ def main():
     ap.add_argument('--repo', required=True)
     ap.add_argument('--bind', required=True)
     ap.add_argument('--out', required=True)
+    ap.add_argument('--hold-budget', choices=('tile', 'die'), default=os.environ.get('OT_HOLD_BUDGET', 'tile'),
+                    help='die: hold uncertainty 25 once per link (FLOW-HOLD); assumed masters listed hold-diagnostic '
+                         '(default $OT_HOLD_BUDGET or tile = legacy H1 100 ps)')
     a = ap.parse_args()
     case, root, out = Path(a.case), Path(a.repo).resolve(), Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -261,9 +269,9 @@ def main():
     periods = contract.get('periods_ps')
     related = contract.get('related_domains', ())
     for c in ('tt', 'ff', 'ss'):
-        (out / f'clocks_{c}.tcl').write_text(clock_tcl(leaf_doms, leaves, c, periods, related))
+        (out / f'clocks_{c}.tcl').write_text(clock_tcl(leaf_doms, leaves, c, periods, related, a.hold_budget))
     # Existing callers naming clocks.tcl are redirected by sta_tcl.py per corner.
-    (out / 'clocks.tcl').write_text(clock_tcl(leaf_doms, leaves, 'tt', periods, related))
+    (out / 'clocks.tcl').write_text(clock_tcl(leaf_doms, leaves, 'tt', periods, related, a.hold_budget))
     views.update(source_clock_contract=contract, schema='opentallas.qwen-tp8.die-sta-libs.v1', clocks={d: len(p) for d, p in leaf_doms.items()},
                  clock_source_drivers={d: len(set(p)) for d, p in doms.items()},
                  clock_nets=len(sinks), clock_nets_without_driver=undriven[:40],
@@ -271,6 +279,12 @@ def main():
                  clock_budget='related shallow/early levels: setup 60 + 90 ps shallow/shallow, 60 + 150 ps when either TT R > 300 ps; hold H1 50 margin + 50 skew = 100 ps',
                  insertion_ps={m: v for m, v in leaves.items() if m in views['real']},
                  note='PATHFINDING: unbound masters remain assumed single-flop views; no physical die CTS proof')
+    if a.hold_budget == 'die':
+        views.update(clock_budget=views['clock_budget'].replace('hold H1 50 margin + 50 skew = 100 ps', HOLD_NOTE['die']),
+                     hold_budget=dict(mode='die', U_ps=HOLD_U['die'], rule='results/arch/boundary_hold_budget_1016/RULE.md',
+                                      launch_min='bound ETM clk->out min (real); ASSUMED single-flop constants (assumed): '
+                                                 'their links are hold DIAGNOSTIC (tools/die_hold_budget.py --qwen-views)',
+                                      hold_diagnostic=views['assumed']))
     (out / 'views.json').write_text(json.dumps(views, indent=1) + '\n')
     print(json.dumps(dict(real=len(views['real']), hard_macro=len(views['hard_macro']), assumed=len(lef), clocks=views['clocks'],
                           clock_nets=len(sinks), undriven=len(undriven))))

@@ -1,0 +1,26 @@
+== m/q3h_final.json
+  rb (port-local)                            {'bits': 3306, 'bit_mm': 35290, 'mean_mm': 10.67, 'max_mm': 12.59, 'box_bit_mm': 19740}
+  to sp_su64_sfu                             {'bits': 8511, 'bit_mm': 30187, 'mean_mm': 3.55, 'max_mm': 3.55, 'box_bit_mm': 368}
+  to seq_su                                  {'bits': 3115, 'bit_mm': 11692, 'mean_mm': 3.75, 'max_mm': 3.75, 'box_bit_mm': 135}
+  to native59                                {'bits': 2023, 'bit_mm': 8049, 'mean_mm': 3.98, 'max_mm': 3.98, 'box_bit_mm': 87}
+  to tt_ctlm                                 {'bits': 571, 'bit_mm': 3604, 'mean_mm': 6.31, 'max_mm': 6.31, 'box_bit_mm': 2134}
+  to xs_tap                                  {'bits': 553, 'bit_mm': 2207, 'mean_mm': 3.99, 'max_mm': 3.99, 'box_bit_mm': 323}
+  TOTAL slice/VM-external (excl rb, local)   {'bits': 14773, 'bit_mm': 55739, 'mean_mm': 3.77, 'box_bit_mm': 3046}
+== m/q3h_A.json
+  to sp_su64_sfu                             {'bits': 13746, 'bit_mm': 116361, 'mean_mm': 8.47, 'max_mm': 9.54, 'box_bit_mm': 48857}
+  to native59                                {'bits': 12138, 'bit_mm': 112380, 'mean_mm': 9.26, 'max_mm': 13.0, 'box_bit_mm': 87721}
+  to seq_su                                  {'bits': 9474, 'bit_mm': 85178, 'mean_mm': 8.99, 'max_mm': 12.44, 'box_bit_mm': 66443}
+  to xs_tap                                  {'bits': 3318, 'bit_mm': 29401, 'mean_mm': 8.86, 'max_mm': 11.9, 'box_bit_mm': 23341}
+  to tt_ctlm                                 {'bits': 3426, 'bit_mm': 25844, 'mean_mm': 7.54, 'max_mm': 12.3, 'box_bit_mm': 15347}
+  rb (port-local)                            {'bits': 3306, 'bit_mm': 7915, 'mean_mm': 2.39, 'max_mm': 2.78, 'box_bit_mm': 830}
+  TOTAL slice/VM-external (excl rb, local)   {'bits': 42102, 'bit_mm': 369163, 'mean_mm': 8.77, 'box_bit_mm': 241709}
+== m/q3h_C.json
+  to seq_su                                  {'bits': 16722, 'bit_mm': 147853, 'mean_mm': 8.84, 'max_mm': 12.44, 'box_bit_mm': 112586}
+  to native59                                {'bits': 15849, 'bit_mm': 146693, 'mean_mm': 9.26, 'max_mm': 13.0, 'box_bit_mm': 113228}
+  to xs_tap                                  {'bits': 5455, 'bit_mm': 47373, 'mean_mm': 8.68, 'max_mm': 11.9, 'box_bit_mm': 37165}
+  to tt_ctlm                                 {'bits': 3763, 'bit_mm': 27948, 'mean_mm': 7.43, 'max_mm': 12.3, 'box_bit_mm': 16558}
+  slice-local VM<->SU                        {'bits': 8511, 'bit_mm': 11359, 'mean_mm': 1.33, 'max_mm': 1.33, 'box_bit_mm': 184}
+  rb (port-local)                            {'bits': 3306, 'bit_mm': 7915, 'mean_mm': 2.39, 'max_mm': 2.78, 'box_bit_mm': 830}
+  to slice                                   {'bits': 384, 'bit_mm': 2746, 'mean_mm': 7.15, 'max_mm': 8.26, 'box_bit_mm': 2059}
+  to embed_prov                              {'bits': 1, 'bit_mm': 7, 'mean_mm': 7.12, 'max_mm': 7.12, 'box_bit_mm': 5}
+  TOTAL slice/VM-external (excl rb, local)   {'bits': 42174, 'bit_mm': 372619, 'mean_mm': 8.84, 'box_bit_mm': 281602}

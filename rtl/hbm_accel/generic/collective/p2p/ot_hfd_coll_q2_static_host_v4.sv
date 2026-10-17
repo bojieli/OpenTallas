@@ -5,7 +5,7 @@
 // physical phi-R insertion is supplied independently at each clock entry.
 // NLINK (H-NETLIST D4F 2026-10-16): SerDes link lanes of this engine (d4f: SW 2, SE/NW/NE 1); default = the
 // original count.  Lane k <-> tx/rx/phy_up slice k; the compiler programme uses lanes 0..NLINK-1 only (others fault).
-module ot_hfd_coll_q2_static_host_v4 #(parameter integer NLINK=2,parameter [1:0] QID=2'd1,parameter integer INJLAT=12)(
+module ot_hfd_coll_q2_static_host_v4 #(parameter integer NLINK=2,parameter [1:0] QID=2'd1,parameter integer INJLAT=12,parameter integer TP=96)(
  input wire rst_n,
  input wire clk_program,
  input wire clk_control,
@@ -75,7 +75,7 @@ module ot_hfd_coll_q2_static_host_v4 #(parameter integer NLINK=2,parameter [1:0]
   if(!rst_n)fault<=0;
   else fault<=fault | program_fault | quad_fault;
  assign hgi_fault=fault;
- ot_hfd_coll_q2_static_v4 #(.INJLAT(INJLAT),.NLINK(NLINK)) u_q(
+ ot_hfd_coll_q2_static_v4 #(.INJLAT(INJLAT),.NLINK(NLINK),.TP(TP)) u_q(
   .rst_n(rst_n),.clk_control(clk_control),.clk_issue(clk_issue),
   .clk_qslots(clk_qslots),.clk_ring(clk_ring),.clk_reduce(clk_reduce),
   .clk_vmwrite(clk_vmwrite),.clk_link(clk_link),.qid(QID),

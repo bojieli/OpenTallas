@@ -6,7 +6,10 @@ mkdir -p "$OUT"
 mapfile -t sources < results/arch/hbm_native_1013/sfu_native_quarter/r2_sources.txt
 manifest=results/arch/hbm_native_1013/sfu_native_quarter/closed_ae5899467.sha256
 frozen="$OUT/frozen"
-[ -d "$frozen" ] || while read -r digest path;do mkdir -p "$frozen/$(dirname "$path")";git show "ae5899467:physical/ref_tile/sfu_lane_ring3_rt/src/$path" > "$frozen/$path";done < "$manifest"
+# the closed ae5899467 lane sources are committed at physical/ref_tile/sfu_lane_ring3_rt/src (all 23 manifest hashes match);
+# copy them from the tree (closure-loop bench exports are not git repos), hash-checked below; git show only as fallback
+lane_src=physical/ref_tile/sfu_lane_ring3_rt/src
+[ -d "$frozen" ] || while read -r digest path;do mkdir -p "$frozen/$(dirname "$path")";if [ -f "$lane_src/$path" ];then cp "$lane_src/$path" "$frozen/$path";else git show "ae5899467:$lane_src/$path" > "$frozen/$path";fi;done < "$manifest"
 frozen=$(realpath "$frozen")
 (cd "$frozen" && sha256sum -c --quiet "$OLDPWD/$manifest")
 declare -A closed_paths
@@ -32,7 +35,22 @@ if true;then
  sources+=($P/ot_hgi_sfu_split_engine.sv $P/ot_hgi_sfu_lg_relay.sv $P/ot_hgi_sfu_lg_pair_leaf.sv)
  defs+=(-DSFU_LG_R=$SFU_LG_R)
 fi
-case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
+# STORE6=1 (r6, opt-in): the store under test is ot_hgi_sfu_programme_store_r6 (reset relay, relay stage, D=4)
+if [ "${STORE6:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r6.sv rtl/lib/ot_rst_relay.sv); defs+=(-DSFU_PSTORE_R6); fi
+# STORE7=1 (r7): ot_hgi_sfu_programme_store_r7 (synchronous regional reset tree, release 4 edges; D=4). EQ_MUT=early: config 1 edge early
+if [ "${STORE7:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r7.sv $P/ot_hgi_sfu_program_stripe_sreset.sv $P/ot_hgi_sfu_calendar_paged_sreset.sv $P/ot_hgi_sfu_io_calendar_sreset.sv); defs+=(-DSFU_PSTORE_R7); fi
+if [ "${SFU_LOCAL_KEEP:-0}" = 1 ];then defs+=(-DOT_SFU_LOCAL_KEEP);fi
+# STORE7B=1 (r7b): ot_hgi_sfu_programme_store_r7b (r7 reset tree + SRAM pipelining; D=10, status 8)
+if [ "${STORE7B:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r7b.sv $P/ot_hgi_sfu_program_stripe_pipe.sv $P/ot_hgi_sfu_calendar_paged_pipe.sv $P/ot_hgi_sfu_io_calendar_pipe.sv); defs+=(-DSFU_PSTORE_R7B); fi
+# STORE7D=1 (r7d): ot_hgi_sfu_programme_store_r7d (r7c + 8 regional clock roots; D=4, status 2)
+if [ "${STORE7D:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r7d.sv $P/ot_hgi_sfu_program_stripe_rc.sv $P/ot_hgi_sfu_calendar_paged_rd.sv $P/ot_hgi_sfu_io_calendar_rd.sv); defs+=(-DSFU_PSTORE_R7D); fi
+# STORE7C=1 (r7c): ot_hgi_sfu_programme_store_r7c (r7 reset tree + kept per-pair SRAM write copies; D=4, status 2)
+if [ "${STORE7C:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r7c.sv $P/ot_hgi_sfu_program_stripe_rc.sv $P/ot_hgi_sfu_calendar_paged_rc.sv $P/ot_hgi_sfu_io_calendar_rc.sv); defs+=(-DSFU_PSTORE_R7C); fi
+# CORE2=1 (k7, opt-in): the core under test is ot_hgi_sfu_core_split2 (W/E lane ports, regional clock roots, reset relay)
+if [ "${CORE2:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_core_split2.sv rtl/lib/ot_rst_relay.sv); defs+=(-DSFU_CORE_SPLIT2); fi
+# SYNC_RST=1 (k8, owner standard 10-16): synchronous regional resets in the SFU core files (OT_SFU_SYNC_RST)
+if [ "${SYNC_RST:-0}" = 1 ];then defs+=(-DOT_SFU_SYNC_RST); fi
+case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; early) defs+=(-DSFU_PSTORE_R7_EARLY);; clkpw) defs+=(-DOT_SFU_CORE2_MUT_CLKPW);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
 rows=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['rows'])" "$OUT/data/io_manifest.json")
 sedge=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['scalar_prefetch_edge'])" "$OUT/data/io_manifest.json")
 defs+=(-DSFU_IO_ROWS=$rows -DSFU_SCALAR_EDGE=$sedge)
@@ -42,11 +60,12 @@ set +e
 "$OUT/obj/Vtb_hgi_sfu_split_equiv" > "$OUT/run.log" 2>&1
 rc=$?
 set -e
+grep -h "SFU_SPLIT_EQUIV" "$OUT/run.log" || true   # the verdict/edge-count line (closure-loop min_count_regex reads stdout)
 tail -n 4 "$OUT/run.log"
 if [ -z "${EQ_MUT:-}" ];then
  [ "$rc" = 0 ] && grep -q 'SFU_SPLIT_EQUIV PASS' "$OUT/run.log" && grep -q '^PASS canonical' "$OUT/run.log" && echo "SFU_SPLIT_GATE POSITIVE PASS" && exit 0
  echo "SFU_SPLIT_GATE POSITIVE FAIL rc=$rc";exit 1
 else
- [ "$rc" != 0 ] && grep -q 'SFU_SPLIT_EQUIV FAIL\|SFU_SPLIT_EQUIV_MISMATCH' "$OUT/run.log" && echo "SFU_SPLIT_GATE MUTANT ${EQ_MUT} REJECTED (expected)" && exit 0
+ [ "$rc" != 0 ] && grep -q 'SFU_SPLIT_EQUIV FAIL\|SFU_SPLIT_EQUIV_MISMATCH\|SFU_SPLIT_FAULT' "$OUT/run.log" && echo "SFU_SPLIT_GATE MUTANT ${EQ_MUT} REJECTED (expected)" && exit 0
  echo "SFU_SPLIT_GATE MUTANT ${EQ_MUT} ESCAPED rc=$rc";exit 1
 fi
