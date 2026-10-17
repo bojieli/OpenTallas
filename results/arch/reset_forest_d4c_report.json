@@ -1,0 +1,181 @@
+{
+ "schema": "opentallas.hbm.reset_forest.v1",
+ "reach_um": 405.0,
+ "fanout_cap": 2048,
+ "domains": {
+  "hbm:por_hbm": {
+   "sinks": 204,
+   "regions": {
+    "NE": {
+     "sinks": 51,
+     "leaves": 31,
+     "root": [
+      27272,
+      24145
+     ],
+     "pre_root_hops": 49
+    },
+    "NW": {
+     "sinks": 51,
+     "leaves": 32,
+     "root": [
+      5737,
+      24143
+     ],
+     "pre_root_hops": 54
+    },
+    "SE": {
+     "sinks": 51,
+     "leaves": 31,
+     "root": [
+      27272,
+      1494
+     ],
+     "pre_root_hops": 54
+    },
+    "SW": {
+     "sinks": 51,
+     "leaves": 32,
+     "root": [
+      5719,
+      1504
+     ],
+     "pre_root_hops": 59
+    }
+   },
+   "age": 94,
+   "tiles": 4865
+  },
+  "serial:por_serial": {
+   "sinks": 1178,
+   "regions": {
+    "C": {
+     "sinks": 193,
+     "leaves": 40,
+     "root": [
+      17252,
+      10483
+     ],
+     "pre_root_hops": 8
+    },
+    "NE": {
+     "sinks": 204,
+     "leaves": 11,
+     "root": [
+      24545,
+      17602
+     ],
+     "pre_root_hops": 26
+    },
+    "NW": {
+     "sinks": 266,
+     "leaves": 20,
+     "root": [
+      9416,
+      16859
+     ],
+     "pre_root_hops": 27
+    },
+    "SE": {
+     "sinks": 206,
+     "leaves": 11,
+     "root": [
+      24529,
+      6835
+     ],
+     "pre_root_hops": 34
+    },
+    "SW": {
+     "sinks": 309,
+     "leaves": 32,
+     "root": [
+      9798,
+      7314
+     ],
+     "pre_root_hops": 35
+    }
+   },
+   "age": 63,
+   "tiles": 4318
+  },
+  "stream:por_stream": {
+   "sinks": 912,
+   "regions": {
+    "C": {
+     "sinks": 53,
+     "leaves": 32,
+     "root": [
+      17294,
+      13911
+     ],
+     "pre_root_hops": 0
+    },
+    "NE": {
+     "sinks": 209,
+     "leaves": 80,
+     "root": [
+      26801,
+      19344
+     ],
+     "pre_root_hops": 36
+    },
+    "NW": {
+     "sinks": 220,
+     "leaves": 83,
+     "root": [
+      6543,
+      19275
+     ],
+     "pre_root_hops": 40
+    },
+    "SE": {
+     "sinks": 209,
+     "leaves": 91,
+     "root": [
+      26781,
+      6114
+     ],
+     "pre_root_hops": 41
+    },
+    "SW": {
+     "sinks": 221,
+     "leaves": 88,
+     "root": [
+      6474,
+      6173
+     ],
+     "pre_root_hops": 46
+    }
+   },
+   "age": 75,
+   "tiles": 12885
+  },
+  "bridge:subr_NE": {
+   "sinks": 5,
+   "age": 24
+  },
+  "bridge:subr_NW": {
+   "sinks": 5,
+   "age": 25
+  },
+  "bridge:subr_SE": {
+   "sinks": 5,
+   "age": 19
+  },
+  "bridge:subr_SW": {
+   "sinks": 5,
+   "age": 19
+  }
+ },
+ "unplaced": {
+  "ot_hbm_idx_client_static_sw": 1,
+  "ot_hbm_svc_wbw_copy": 8
+ },
+ "tiles": 22503,
+ "reset_ports": 1618,
+ "problems": [],
+ "tiles_by_master": {
+  "hbfd_rrl_hop": 22489,
+  "hbfd_rrl_sync": 14
+ }
+}

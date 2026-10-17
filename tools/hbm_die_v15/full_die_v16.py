@@ -728,6 +728,10 @@ def build(specs_dir, out, extra=()):
             if c['inst'] in folded:
                 continue
             ckdom[(c['inst'], c['port'])] = (c['domain'], c.get('kind', 'clock'))
+    # H-NETLIST 1815 reset forest layer: its leaf tiles drive these reset ports by edges (no hb_ckgen por binding)
+    rforest = {tuple(x) for s in specs for x in s.get('reset_forest_ports', [])}
+    for k in [k for k in ckdom if k in rforest and ckdom[k][1] == 'reset']:
+        del ckdom[k]
     clocks = []
     for (i, p), (dm, kind) in sorted(ckdom.items()):
         if i not in ports or p not in ports[i]:
