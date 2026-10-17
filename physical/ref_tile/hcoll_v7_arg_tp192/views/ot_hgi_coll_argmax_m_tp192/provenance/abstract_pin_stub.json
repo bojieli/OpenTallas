@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/ot_hgi_coll_argmax_m_tp192.lef",
-    "sha256": "0d7c5232f2a19daa883fa1d76e4eefd5b2a2c1bdba05da34025e8da7d4795359"
+    "sha256": "5c7106c7f6ca81486b9d6d91c4cf50c46381e3dc08831e748e057d3c984e425f"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch/claude/closure-loop/hcoll_v7_arg_tp192-d4f-0377e2057/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v7_arg_tp192-d4f2-2390e32f8/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch/claude/closure-loop/hcoll_v7_arg_tp192-d4f-0377e2057/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch/claude/closure-loop/hcoll_v7_arg_tp192-d4f-0377e2057/record/views/ot_hgi_coll_argmax_m_tp192/provenance/raw/ot_hgi_coll_argmax_m_tp192.lef",
-    "/srv/opentallas-scratch/claude/closure-loop/hcoll_v7_arg_tp192-d4f-0377e2057/record/views/ot_hgi_coll_argmax_m_tp192/provenance/ot_hgi_coll_argmax_m_tp192.candidate.lef"
+    "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v7_arg_tp192-d4f2-2390e32f8/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v7_arg_tp192-d4f2-2390e32f8/record/views/ot_hgi_coll_argmax_m_tp192/provenance/raw/ot_hgi_coll_argmax_m_tp192.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v7_arg_tp192-d4f2-2390e32f8/record/views/ot_hgi_coll_argmax_m_tp192/provenance/ot_hgi_coll_argmax_m_tp192.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 248 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 244 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch/claude/closure-loop/hcoll_v7_arg_tp192-d4f-0377e2057/record/views/ot_hgi_coll_argmax_m_tp192/provenance/ot_hgi_coll_argmax_m_tp192.candidate.lef",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v7_arg_tp192-d4f2-2390e32f8/record/views/ot_hgi_coll_argmax_m_tp192/provenance/ot_hgi_coll_argmax_m_tp192.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "ot_hgi_coll_argmax_m_tp192 95.04 x 47.52: PG M5 VDD 17 stripes (91% spread, 100% cov) / VSS 17 stripes (91% spread, 100% cov); strap M6; face pins 973 blocked-above 0 blocked-same 0; clock clk insertion 131 ps; pockets M5 0 (closed)",
+    "summary": "ot_hgi_coll_argmax_m_tp192 95.04 x 47.52: PG M5 VDD 17 stripes (91% spread, 100% cov) / VSS 17 stripes (91% spread, 100% cov); strap M6; face pins 973 blocked-above 0 blocked-same 0; clock clk insertion 132 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "ot_hgi_coll_argmax_m_tp192",
       "W": 95.04,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 973,
         "blocked_above": 0,
-        "covered_below": 94,
+        "covered_below": 286,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "clk": {
-          "max_ps": 131.47,
-          "min_ps": 99.62
+          "max_ps": 131.69,
+          "min_ps": 94.29
         }
       },
       "pockets": {
@@ -87,7 +87,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 248
+          "added": 244
         },
         "count": 0,
         "area_um2": 0,
@@ -97,6 +97,6 @@
   },
   "output": {
     "path": "ot_hgi_coll_argmax_m_tp192.lef",
-    "sha256": "42f305ab1db691850f5dd56ff0cc1403b4809d95c55a62f5591668aa3881b6e9"
+    "sha256": "fc5c7b5730cdf235de4feacd1885d37234884fa3653a0986fdf51fd9b4aa9912"
   }
 }
