@@ -1,0 +1,18 @@
+{
+  "pid": 3310552,
+  "cmd": [
+    "/home/ubuntu/bin/ot-run",
+    "--mem",
+    "16",
+    "--threads",
+    "4",
+    "--dir",
+    "/srv/opentallas-scratch/codex/sdie-reach-1016",
+    "--",
+    "bash",
+    "/srv/opentallas-scratch/codex/sdie-reach-1016/stnv566_fine_die/b00/run.sh",
+    "/srv/opentallas-scratch/codex/sdie-reach-1016/stage",
+    "4"
+  ],
+  "source": "ee92917d6"
+}
