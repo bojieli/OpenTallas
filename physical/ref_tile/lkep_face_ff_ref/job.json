@@ -1,5 +1,5 @@
 {
- "name": "lkep_face_ff_ref-ffirst-017a40aa9",
+ "name": "lkep_face_ff_ref-ffirst-COMMIT",
  "block": "hfd_lk_ep_face",
  "ref_tile": true,
  "owner": "Claude:HBMA-LKEP",
@@ -8,9 +8,10 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/hbma-lkep-1017",
-  "commit": "017a40aa9",
+  "commit": "COMMIT",
   "extra_paths": [
-   "rtl/hbm_accel/tu/lk_ep_20261010"
+   "rtl/hbm_accel/tu/lk_ep_20261010",
+   "results/rtl/hbm_lane_a_1017/lkep_face_ff_witness"
   ]
  },
  "stages": {
@@ -31,13 +32,24 @@
     "expect": "pass",
     "pass_regex": "LKEP_FACE PASS edges=3000",
     "threads": 4,
-    "peak_ram_gb": 4
+    "peak_ram_gb": 4,
+    "pass_witness": "results/rtl/hbm_lane_a_1017/lkep_face_ff_witness/face_exact.log"
    },
    {
     "name": "face_valid_flit_mutant",
     "cmd": "bash rtl/hbm_accel/tu/lk_ep_20261010/run_face_bench.sh {RUN}/bench/face_mutant 1",
     "expect": "fail",
     "fail_regex": "LKEP_FACE MUTANT FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "fail_witness": "results/rtl/hbm_lane_a_1017/lkep_face_ff_witness/face_valid_flit_mutant.log"
+   },
+   {
+    "name": "face_orig_latency_mutant",
+    "cmd": "bash rtl/hbm_accel/tu/lk_ep_20261010/run_face_bench.sh {RUN}/bench/face_latmut 0 1",
+    "expect": "fail",
+    "fail_regex": "LKEP_FACE MUTANT FAIL",
+    "fail_witness": "results/rtl/hbm_lane_a_1017/lkep_face_ff_witness/face_orig_latency_mutant.log",
     "threads": 4,
     "peak_ram_gb": 4
    }
@@ -90,7 +102,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/lkep_face_ff_ref/lkep_face_ff_ref-ffirst-017a40aa9"
+   "to": "results/rtl/ref_tile/lkep_face_ff_ref/lkep_face_ff_ref-ffirst-COMMIT"
   }
  ],
  "cycles_added": 0,

@@ -15,6 +15,7 @@ module ot_hbm_lk_ep #(parameter NS=3, LW=487, TXQ=32, FCR=256, HARD_CLOCKS=0)(
 endmodule
 module tb_lkep_face;
  parameter integer MUT_FACE=0;
+ parameter integer GOLD_STAGES=2;   // 2 = flop-first face (+1 edge on session and {fault,locked}); 1 = original wrapper (latency mutant: must FAIL)
  reg clk=0;always #0.5 clk=~clk;reg rst_n=0;
  wire[1119:0] n_bus,g_bus;wire[973:0] n_phy,g_phy;
  reg[547:0] ins=0;reg[23:0] session=0;reg[486:0] rx=0;
@@ -22,7 +23,7 @@ module tb_lkep_face;
  assign n_bus[1117:1094]=session;assign g_bus[1117:1094]=session;
  assign n_phy[973:487]=rx;assign g_phy[973:487]=rx;
  hfd_lk_ep #(.HARD_CLOCKS(1),.MUT_FACE(MUT_FACE)) n(.clk(clk),.clk_face(clk),.clk_sub({12{clk}}),.clk_tx_shared(clk),.clk_rx_shared(clk),.clk_status_shared(clk),.rst_n(rst_n),.f_lk(n_bus),.phy(n_phy));
- hfd_lk_ep_face_golden #(.SESS_STAGES(2),.STAT_STAGES(2)) g(.clk(clk),.rst_n(rst_n),.f_lk(g_bus),.phy(g_phy));
+ hfd_lk_ep_face_golden #(.SESS_STAGES(GOLD_STAGES),.STAT_STAGES(GOLD_STAGES)) g(.clk(clk),.rst_n(rst_n),.f_lk(g_bus),.phy(g_phy));
  integer count=0;reg[31:0] prng=32'h34ea0013;
  task automatic step_random;begin
   prng^=prng<<13;prng^=prng>>17;prng^=prng<<5;
