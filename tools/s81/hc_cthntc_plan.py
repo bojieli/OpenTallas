@@ -35,6 +35,7 @@ SL_ROW = 2 * SL_H if SPLIT else SL_H
 # allowance > 65% at 72.90) -> 75.06 projected c0 65.9% incl hold (route-synth std 5827) -> a4d 77.76 (+4.86, 18 rows; 13 cs_rel legs 502.4 um > 500, reported); every row below moves down by RET_GROW.
 import os
 RET_H = round(float(os.environ.get('OT_CTHNTC_RET_H', '77.76')), 3)
+PFLT_COLS = {int(x) for x in os.environ.get('OT_CTHNTC_PFLT_COLS', '2').split(',') if x != ''}   # a4g: pflt_n/s beside nflt_col (c2 first: a4f native)
 NS_SPREAD = float(os.environ.get('OT_CTHNTC_NS_SPREAD', '0.072'))   # a4e: min N/S pin spacing of the ret_column leaves (um)
 NS_SPREAD_COLS = {int(x) for x in os.environ.get('OT_CTHNTC_NS_SPREAD_COLS', '0,1,2,3').split(',') if x != ''}  # a4e: all four columns (a4d c0-c3 all GRT-0116 at the S-face hrq band)
 SL_GROW, RET_GROW = round(SL_ROW - 25.92, 3), round(RET_H - 72.90, 3)
@@ -268,6 +269,13 @@ def build():
             L.add('rq_q', 'S', HX[('hdr_in', 36 + b)])
         # ctpl group c flags; hov (column 0 source)
         for nm, half, face in (('hnz_n', 0, 'N'), ('pflt_n', 0, 'N'), ('hnz_s', 1, 'S'), ('pflt_s', 1, 'S')):
+            if c in PFLT_COLS and nm.startswith('pflt'):
+                # a4g (HC-COL 10-16): the per-face fault flop ORs nflt_col (x ~26-36) with pflt (x ~142): one flop
+                # cannot sit at both pins (a4f c2 native capture 191.7 at pflt_s).  pflt lands beside its face's nflt
+                # pins (the ctpl leg grows by ~110 um, ctpl_flag joins stay < 500 um); 0 cycles.
+                js = (0, 1) if face == 'N' else (2, 3)
+                L.add(nm, face, statistics.mean(rel(ctnl_abs(lanes, j, c, 'flt', 0)[0]) for j in js) + 0.5)
+                continue
             L.add(nm, face, rel(LW * c + ctpl[nm[:-2] + '_d'][0][2]))
         if c == 0:
             L.add('hov_in', 'N', rel(ctpl['hov_d'][0][2]))
