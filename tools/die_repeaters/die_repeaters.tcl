@@ -131,6 +131,8 @@ proc ot_die_repeaters {cfg} {
     foreach n [get_nets -quiet $repeat_nets] { set nm [get_full_name $n]; if {[dict exists $skip $nm] && [dict get $skip $nm] ne "glob"} { dict unset skip $nm; incr n_rep } }
   }
   set skip_names [dict keys $skip]
+  set ::ot_die_rep_skip $skip
+  set fh [open [file rootname $report].skip_nets.txt w]; puts $fh [join $skip_names "\n"]; close $fh
   set dt {}
   foreach n $skip_names { set o [get_nets -quiet [string map {\[ \\[ \] \\]} $n]]; if {[llength $o]} { lappend dt {*}$o } }
   if {[llength $dt]} { set_dont_touch $dt }
@@ -262,4 +264,34 @@ proc ot_die_repeaters {cfg} {
   close $f
   ot_die_rep_log "$verdict repeaters=$repeaters violations=$viol over_reach=[llength $over] legalize=($legal) s=[expr {[clock seconds] - $t0}]"
   return $viol
+}
+
+# Post-GRT electrical audit (DIE-FLOW 10-17, after the d4f region run: the placement-estimate audit was clean while GRT
+# detours at dense relay pin faces left 4,754 slew violators).  Call after estimate_parasitics -global_routing (same
+# session as the step, or a later STA session with skip_file = <report>.skip_nets.txt).  Writes REPORT (JSON) and
+# returns the number of violators on repeated die nets (pins on untouched clock/reset nets are counted apart).
+proc ot_die_rep_post_grt_audit {report {skip_file ""}} {
+  set blk [ord::get_db_block]
+  if {[info exists ::ot_die_rep_skip]} { set skip $::ot_die_rep_skip } else { set skip [dict create] }
+  if {$skip_file ne "" && [file exists $skip_file]} {
+    set fh [open $skip_file]; foreach n [split [string trim [read $fh]] "\n"] { if {$n ne ""} { dict set skip $n file } }; close $fh
+  }
+  set rpt [file rootname $report].rpt
+  report_check_types -max_slew -max_capacitance -violators > $rpt
+  set fh [open $rpt]; set txt [read $fh]; close $fh
+  set sl 0; set cp 0; set sk 0; set sec ""; set worst 0.0; set top {}
+  foreach line [split $txt "\n"] {
+    if {[string match -nocase "*max slew*" $line]} { set sec slew; continue }
+    if {[string match -nocase "*max capacitance*" $line]} { set sec cap; continue }
+    if {[regexp {^(\S+)\s+(-?[0-9.]+)\s+(-?[0-9.]+)\s+(-?[0-9.]+)\s+\(VIOLATED\)} $line -> pin lim val slk]} {
+      if {[dict exists $skip [ot_die_rep_pin_net $blk $pin]]} { incr sk; continue }
+      if {$sec eq "slew"} { incr sl; if {$val > $worst} { set worst $val } } elseif {$sec eq "cap"} { incr cp }
+      if {[llength $top] < 50} { lappend top "\[[ot_die_rep_json_str $sec], [ot_die_rep_json_str $pin], $lim, $val\]" }
+    }
+  }
+  set f [open $report w]
+  puts $f "{\"schema\": \"opentallas.die_repeaters.post_grt.v1\", \"verdict\": \"[expr {$sl + $cp == 0 ? "PASS" : "FAIL"}]\", \"slew_violators\": $sl, \"cap_violators\": $cp, \"worst_slew_ps\": $worst, \"on_skip_nets\": $sk, \"top\": \[[join $top {, }]\]}"
+  close $f
+  ot_die_rep_log "post-GRT violators slew=$sl cap=$cp worst_slew=$worst (on untouched clock/reset/skip nets: $sk)"
+  return [expr {$sl + $cp}]
 }

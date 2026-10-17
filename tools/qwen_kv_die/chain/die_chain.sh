@@ -130,6 +130,11 @@ for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
     cp "$SRC/tools/die_clock_check.tcl" $D/die_clock_check.tcl
     printf '%s\n' 'if {[catch {set ::env(OT_DCC_OUT) /work/die_clock_dump.tsv; source /work/die_clock_check.tcl} err]} { puts "OT_DCC_FAIL $err" } else { puts OT_DCC_DONE }' >> $D/grt_$c.tcl
   fi
+  # DIE-FLOW 10-17: post-GRT slew/cap audit of the repeated die nets (TT session; GRT detours are invisible pre-GRT)
+  if [ "${OT_DIE_REPAIR:-0}" = 1 ] && [ "$c" = tt ] && [ -f $G/die_repeaters.tcl ]; then
+    cp $G/die_repeaters.tcl $G/die_repeaters.skip_nets.txt $D/ 2>/dev/null
+    printf '%s\n' 'if {[catch {source /work/die_repeaters.tcl; ot_die_rep_post_grt_audit /work/die_repeaters.post_grt.json /work/die_repeaters.skip_nets.txt} err]} { puts "OT_DIE_REP_POST_GRT_FAIL $err" }' >> $D/grt_$c.tcl
+  fi
   $ADMIT $P4 -- $H/dietop_run.sh $D grt_$c.tcl 8 $((P4+60)); sta_rc=$?
   [ "$sta_rc" = 0 ] && sta_rc=$(cat "$D/run.exit" 2>/dev/null || echo 1)
   if ! python3 "$H/case_status.py" --log "$D/grt_$c.log" --stage "grt_$c.tcl" --process-exit "$sta_rc"; then

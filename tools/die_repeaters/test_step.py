@@ -83,7 +83,11 @@ proc repair_design {args} { ot_orig_repair_design {*}$args
   set i [odb::dbInst_create [ord::get_db_block] [[ord::get_db] findMaster DFFHQNx1_ASAP7_75t_R] mut_flop]
   $i setLocation 500000 10800; $i setPlacementStatus PLACED }
 '''
-CHECK_TCL = '''foreach c [get_cells *] { puts "OT_CELL [get_full_name $c] [get_property $c ref_name]" }
+CHECK_TCL = '''set_routing_layers -signal M2-M7
+global_route -allow_congestion
+estimate_parasitics -global_routing
+puts "OT_POSTGRT [ot_die_rep_post_grt_audit /work/post_grt.json]"
+foreach c [get_cells *] { puts "OT_CELL [get_full_name $c] [get_property $c ref_name]" }
 puts "OT_CLKNET [llength [[[ord::get_db_block] findNet clk] getITerms]]"
 '''
 
@@ -124,6 +128,9 @@ def test_integration_pass_and_mutant(tmp_path):
     assert cells['r0'] == cells['r1'] == cells['r2'] == 'DFFHQNx1_ASAP7_75t_R' and cells['g0'] == 'INVx1_ASAP7_75t_R'
     assert sum(1 for m in cells.values() if m.startswith('DFF')) == 3
     assert 'OT_CLKNET 3' in r.stdout          # clock net still drives exactly the 3 register clock pins
+    pg = json.loads((w / 'post_grt.json').read_text())
+    assert pg['schema'] == 'opentallas.die_repeaters.post_grt.v1' and pg['on_skip_nets'] == 3
+    assert 'OT_POSTGRT %d' % (pg['slew_violators'] + pg['cap_violators']) in r.stdout
     ok, line = step.check(w / 'die_repeaters.json')
     assert ok, line
     r, w = _run(tmp_path, True)

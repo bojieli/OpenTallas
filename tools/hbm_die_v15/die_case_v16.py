@@ -1017,6 +1017,8 @@ if {{[catch {{
   close $out
 }} e]}} {{ puts "OT_GCELL_FAIL $e" }}
 estimate_parasitics -global_routing
+# DIE-FLOW 10-17: post-GRT slew/cap audit of the repeated die nets (GRT detours the placement estimate cannot see)
+if {{[llength [info procs ot_die_rep_post_grt_audit]]}} {{ ot_die_rep_post_grt_audit /work/out/die_repeaters.post_grt.json }}
 {clocks}
 {groups}
 set_propagated_clock [all_clocks]
