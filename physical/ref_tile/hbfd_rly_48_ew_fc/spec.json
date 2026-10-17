@@ -61,11 +61,11 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "F1 forwarded-clock variant of hbfd_rly_48_EW (owner neighbour-relative clocking; DIE-CLOCK form F1): same ot_hbm_rly stage on clk_in, clk_out + every o through one kept BUFx12f each, data face 21.6 um (<= 6 pins/um; was 21.6), outline 21.6 x 21.6",
+ "structural_change": "F1 forwarded-clock variant of hbfd_rly_48_EW (owner neighbour-relative clocking; DIE-CLOCK form F1): same ot_hbm_rly stage on clk_in, clk_out + every o through one kept BUFx12f each, data face 21.6 um (<= 6 pins/um; was 21.6), outline 21.6 x 21.6. fc2: the clk_out buffer input is held off the clk_in net through CTS and reconnected to the root (fc1: TritonCTS made it a tree sink, clk_in->clk_out 58 ps through CTS buffers); forwarded-hop min separation 85 / 55 ps (fc1 50 ps padded the 624 inputs: native capture 193.5)",
  "job": {
   "owner": "Claude:H-NETLIST/F1",
   "branch": "claude/hnl-f1rly-1815",
-  "tag": "fc1",
+  "tag": "fc2",
   "purpose": "HBM die F1 forwarded-clock relay hbfd_rly_48_EW_fc: register on clk_in, clk_out = kept BUFx12f, o through the same cell on the downstream face beside clk_out; i/clk_in upstream (E), o/clk_out downstream (W), rs S; 21.6 x 21.6 um, M5 cap",
   "extra_paths": [
    "physical/hbm_rly_fc",

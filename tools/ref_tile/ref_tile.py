@@ -2086,6 +2086,10 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
             (o / "CLOCK_INSERTION_FAILED").write_text(f"clock measurement exit {cr.returncode}; no insertion.json published\n")
         else:
             (o / "CLOCK_INSERTION_FAILED").unlink(missing_ok=True)
+            if (o / "forwarded_clock.json").exists():
+                clock_record = json.loads(insertion.read_text())
+                clock_record["forwarded_clock"] = json.loads((o / "forwarded_clock.json").read_text())
+                insertion.write_text(json.dumps(clock_record, indent=1) + "\n")
     routed_def = None
     if grant and base is not None:
         # Require final detailed-route geometry; never GRT or an abstract reconstructed from pins.
@@ -2099,7 +2103,7 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     res = finalize(o, top, ROOT / "tools/hier_contract/abstract_pin_stub.py", child_lint,
                    lint_kwargs=dict(cap="M5" if grant else None, pin_grant=grant, routed_def=routed_def,
                        tech_lef=str(o / "pin_only_tech.lef") if grant and (o / "pin_only_tech.lef").exists() else None),
-                   transform=not bool(grant))
+                   transform='m6_grant_obs' if grant and routed_def else not bool(grant))
     # SCALAR-PIN LINT (ROOT 10-16, coordinator): a scalar RTL port must export as pin x, never x[0] (recipe-3 wrapper
     # declared [0:0] before e3919f90e; such a view mis-binds every die netlist that connects .x(...))
     try:

@@ -1464,29 +1464,29 @@
   "dsfd_hstnv_11": {
    "verdict": "DIAGNOSTIC_CLOSED",
    "export_dir": "physical/ref_tile/s81fill_hstnv_11/views/dsfd_hstnv_11",
-   "job": "s81fill_hstnv_11-f1-e5bab3fc7",
+   "job": "s81fill_hstnv_11-f9-64acd1733",
    "files": {
     "lef": {
      "path": "physical/ref_tile/s81fill_hstnv_11/views/dsfd_hstnv_11/dsfd_hstnv_11.lef",
-     "sha256": "3308e089c1e22422b3ffeb87b5e0ded98771fa6313746c5d5c2a4fc54a7a8492"
+     "sha256": "1be7dd5c00bd799dcfe220ee8b590d4ac4fdd7559825cc7fc5430bfc8352c2c6"
     },
     "tt": {
      "path": "physical/ref_tile/s81fill_hstnv_11/views/dsfd_hstnv_11/dsfd_hstnv_11_tt.lib",
-     "sha256": "5f89e3ef1766b179276a7f5a33763ea6185aa0ddf02f7632807bc65baeb09ef6"
+     "sha256": "f2ad914ca7fa6a8c78bd7199001a9930594f4f5551beb3a55154511d8c7f4a12"
     },
     "ff": {
      "path": "physical/ref_tile/s81fill_hstnv_11/views/dsfd_hstnv_11/dsfd_hstnv_11_ff.lib",
-     "sha256": "3625a257fa309dccbd3a6c97696bd6c3b5f80c52a948d8818db49fc7c196e9f8"
+     "sha256": "df09513f4d6ac25ac468aa043ed8743ce410012d4cdf1fa1c4bf89e498164bb2"
     },
     "ss": {
      "path": "physical/ref_tile/s81fill_hstnv_11/views/dsfd_hstnv_11/dsfd_hstnv_11_ss.lib",
-     "sha256": "7db7fb1634b947aeeec1320349cd3998414e299ae8bf759c0d2d4a417ace7692"
+     "sha256": "b98090f24b010e70b31ab5eebfed48ae816e04204c92563095a4f32b0eeaf35e"
     }
    },
-   "closure": "TT +348.16 / FF +27.75 / DRC 0",
-   "lineage": "POSTSTUB_SAME_COMMIT c3482ab955da",
-   "gate": "closed+export+lint+bench+current (view_binding_closed.py)",
-   "native_open": "tile native launch/capture/spread audit and production-throughput bench stay with the tile owner; this binding is the die-context view, not qualification"
+   "closure": "TT +354.37 / FF +32.58 ps DRC 0; SS sensitivity +271.20 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS (results/rtl/s81_selem_native_1815/native_audit_stations_f9_rly66sw.json)",
+   "gate": "S-DIE 1815 explicit native-PASS row"
   },
   "dsfd_hstnv_15": {
    "verdict": "DIAGNOSTIC_CLOSED",
@@ -1545,29 +1545,29 @@
   "dsfd_hstnv_20": {
    "verdict": "DIAGNOSTIC_CLOSED",
    "export_dir": "physical/ref_tile/s81fill_hstnv_20/views/dsfd_hstnv_20",
-   "job": "s81fill_hstnv_20-f1-e5bab3fc7",
+   "job": "s81fill_hstnv_20-f9-64acd1733",
    "files": {
     "lef": {
      "path": "physical/ref_tile/s81fill_hstnv_20/views/dsfd_hstnv_20/dsfd_hstnv_20.lef",
-     "sha256": "268add52c9ef407e2357458f15a0756b337f0a9a2e09c5c1da7958122f5f9035"
+     "sha256": "10b499739cd94a04eae218d200364222222952f8341d3cf4a87e7c09d97bddf6"
     },
     "tt": {
      "path": "physical/ref_tile/s81fill_hstnv_20/views/dsfd_hstnv_20/dsfd_hstnv_20_tt.lib",
-     "sha256": "b7c30c943370408c7e2919bdb88005d5289a0be11e8110000bda525b3132b01d"
+     "sha256": "2aebf71a8de6c336540371cfff832463ea190d6638c6f18589199041b034c645"
     },
     "ff": {
      "path": "physical/ref_tile/s81fill_hstnv_20/views/dsfd_hstnv_20/dsfd_hstnv_20_ff.lib",
-     "sha256": "0d5f2a32f3db87452f59bb25b39f5e868ce44e50e85d2854544ae7185a0443d4"
+     "sha256": "d49f0398f72537679f803c7f3ad87d2e61e8593181c61bd7e00a552c7c64e53e"
     },
     "ss": {
      "path": "physical/ref_tile/s81fill_hstnv_20/views/dsfd_hstnv_20/dsfd_hstnv_20_ss.lib",
-     "sha256": "7aa3a31dfda427b9a98ea9931041163bb5beb8029c328abe5536aef1d6637033"
+     "sha256": "079a7f20a9b770c6e0b0f999bbe1fc6313c5578c21b389d5d667063608b48d6e"
     }
    },
-   "closure": "TT +345.27 / FF +28.6 / DRC 0",
+   "closure": "TT +351.71 / FF +31.18 ps DRC 0; SS sensitivity +266.73 ps",
    "lineage": "EXACT_EXPORT",
-   "gate": "closed+export+lint+bench+current (view_binding_closed.py)",
-   "native_open": "tile native launch/capture/spread audit and production-throughput bench stay with the tile owner; this binding is the die-context view, not qualification"
+   "native": "native PASS (results/rtl/s81_selem_native_1815/native_audit_stations_f9_rly66sw.json)",
+   "gate": "S-DIE 1815 explicit native-PASS row"
   },
   "dsfd_hstnv_2049": {
    "verdict": "DIAGNOSTIC_CLOSED",
@@ -1923,29 +1923,29 @@
   "dsfd_hstnv_6": {
    "verdict": "DIAGNOSTIC_CLOSED",
    "export_dir": "physical/ref_tile/s81fill_hstnv_6/views/dsfd_hstnv_6",
-   "job": "s81fill_hstnv_6-f1-e5bab3fc7",
+   "job": "s81fill_hstnv_6-f9-64acd1733",
    "files": {
     "lef": {
      "path": "physical/ref_tile/s81fill_hstnv_6/views/dsfd_hstnv_6/dsfd_hstnv_6.lef",
-     "sha256": "659d2c57a15362c6e267e066f0d28a9cf36defd2e8d053c76796f9d665a327ed"
+     "sha256": "38986db52aa2767248069321bded5b826982604844742c7bd47a9e07a7003e7b"
     },
     "tt": {
      "path": "physical/ref_tile/s81fill_hstnv_6/views/dsfd_hstnv_6/dsfd_hstnv_6_tt.lib",
-     "sha256": "fb52ed38057596756274be90043809b4b6e9fabc8de3ff0c729ec36f91788987"
+     "sha256": "51d17670cc152aee5436a17215a23b344e4c1705357b5c82ec37524ffa67f5e6"
     },
     "ff": {
      "path": "physical/ref_tile/s81fill_hstnv_6/views/dsfd_hstnv_6/dsfd_hstnv_6_ff.lib",
-     "sha256": "adfeca3e59443dc1553fb137f6fd51f2c6091c4d46ab1d8f9307845cca4f4505"
+     "sha256": "93ebc440491cdf8ffd739eaf91130a1390355c7bc0070535c344ce4fc17ffe86"
     },
     "ss": {
      "path": "physical/ref_tile/s81fill_hstnv_6/views/dsfd_hstnv_6/dsfd_hstnv_6_ss.lib",
-     "sha256": "9b3a4604fe50ef6a6e67c7ebb341c4f103a495749193e878c0bafdb72997540b"
+     "sha256": "0a34e64829c9b13f983768bab98a4a3ed76f9111dfe076b4ea87f44ff0572a23"
     }
    },
-   "closure": "TT +349.8 / FF +29.02 / DRC 0",
-   "lineage": "POSTSTUB_SAME_COMMIT a9d3df72fe84",
-   "gate": "closed+export+lint+bench+current (view_binding_closed.py)",
-   "native_open": "tile native launch/capture/spread audit and production-throughput bench stay with the tile owner; this binding is the die-context view, not qualification"
+   "closure": "TT +355.66 / FF +33.32 ps DRC 0; SS sensitivity +273.12 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS (results/rtl/s81_selem_native_1815/native_audit_stations_f9_rly66sw.json)",
+   "gate": "S-DIE 1815 explicit native-PASS row"
   },
   "dsfd_hstnv_690": {
    "verdict": "DIAGNOSTIC_CLOSED",
@@ -2085,56 +2085,56 @@
   "dsfd_hstnv_85": {
    "verdict": "DIAGNOSTIC_CLOSED",
    "export_dir": "physical/ref_tile/s81fill_hstnv_85/views/dsfd_hstnv_85",
-   "job": "s81fill_hstnv_85-f1-e5bab3fc7",
+   "job": "s81fill_hstnv_85-f9-64acd1733",
    "files": {
     "lef": {
      "path": "physical/ref_tile/s81fill_hstnv_85/views/dsfd_hstnv_85/dsfd_hstnv_85.lef",
-     "sha256": "951e7ed4a95159e8bd7c233f82f68a25d1d997913260462c54fa966ceb63751e"
+     "sha256": "98d6e27745c17a1c74d324df312cbb54af12c7ba099f2168d027542ed854ee28"
     },
     "tt": {
      "path": "physical/ref_tile/s81fill_hstnv_85/views/dsfd_hstnv_85/dsfd_hstnv_85_tt.lib",
-     "sha256": "bd51f3ca5fe9dcc0ecb26425e8862dcd9c1c81c71e68fe9894e40fec188585ab"
+     "sha256": "b075a71dbc6f79db0d0adaf49ca2939b3e7a85a0ace0257f5d8a2277fca25877"
     },
     "ff": {
      "path": "physical/ref_tile/s81fill_hstnv_85/views/dsfd_hstnv_85/dsfd_hstnv_85_ff.lib",
-     "sha256": "d23cc21606cee342d296c6fb34ed4406cddbf416f2ee90d798b328fe5ac9fc2a"
+     "sha256": "0bc5a06175b06e550149f77515988a00ba0f195e2e9a5979f575256d1af13598"
     },
     "ss": {
      "path": "physical/ref_tile/s81fill_hstnv_85/views/dsfd_hstnv_85/dsfd_hstnv_85_ss.lib",
-     "sha256": "ba234e3319003ffe3efc8c4c3c653a806d5ca1fd4be66db7672dbbe973854fdf"
+     "sha256": "2176eb4171ce0683f5b6d42ae4036a1174f7aed20316f8cf7fdd682261f1348f"
     }
    },
-   "closure": "TT +330.74 / FF +29.68 / DRC 0",
+   "closure": "TT +392.66 / FF +1.47 ps DRC 0; SS sensitivity +328.49 ps",
    "lineage": "EXACT_EXPORT",
-   "gate": "closed+export+lint+bench+current (view_binding_closed.py)",
-   "native_open": "tile native launch/capture/spread audit and production-throughput bench stay with the tile owner; this binding is the die-context view, not qualification"
+   "native": "native PASS (results/rtl/s81_selem_native_1815/native_audit_stations_f9_rly66sw.json)",
+   "gate": "S-DIE 1815 explicit native-PASS row"
   },
   "dsfd_hstnv_9": {
    "verdict": "DIAGNOSTIC_CLOSED",
    "export_dir": "physical/ref_tile/s81fill_hstnv_9/views/dsfd_hstnv_9",
-   "job": "s81fill_hstnv_9-f1-e5bab3fc7",
+   "job": "s81fill_hstnv_9-f9-64acd1733",
    "files": {
     "lef": {
      "path": "physical/ref_tile/s81fill_hstnv_9/views/dsfd_hstnv_9/dsfd_hstnv_9.lef",
-     "sha256": "bc91f385eca5e45a0056888c2a914418eef334861185068f8589e115fd651cc3"
+     "sha256": "74b3b3b63fe34bf31b12fea89ef99b7f4f3fc6a425aea4d1a7458f8ae2950f08"
     },
     "tt": {
      "path": "physical/ref_tile/s81fill_hstnv_9/views/dsfd_hstnv_9/dsfd_hstnv_9_tt.lib",
-     "sha256": "e7e3357d6ce2f7dd0efc78435a4156c669bb1d8d88ea794b76646dc8b0f9757d"
+     "sha256": "09d386eee230df09e31d6db48453d40e8f0857051137e35272981ee4f82d95e0"
     },
     "ff": {
      "path": "physical/ref_tile/s81fill_hstnv_9/views/dsfd_hstnv_9/dsfd_hstnv_9_ff.lib",
-     "sha256": "dbcf32fb290d3c36f31443fd7e4e855c7f0bf04757eb4da7bdc3a413e9b2ce0b"
+     "sha256": "bc0a6099b4c8179451ed60dea143da117454e1d0ee127f53687f4d59b7c2d15e"
     },
     "ss": {
      "path": "physical/ref_tile/s81fill_hstnv_9/views/dsfd_hstnv_9/dsfd_hstnv_9_ss.lib",
-     "sha256": "738604da5bd95fff66a895332fa43ecc8a47adfd17009dd5becf628a6a43b029"
+     "sha256": "c453b180d94cfa039483b961c20ae354055afc6ec6903b9ef55de529b23c48bb"
     }
    },
-   "closure": "TT +349.09 / FF +27.74 / DRC 0",
-   "lineage": "POSTSTUB_SAME_COMMIT b58a299dba5b",
-   "gate": "closed+export+lint+bench+current (view_binding_closed.py)",
-   "native_open": "tile native launch/capture/spread audit and production-throughput bench stay with the tile owner; this binding is the die-context view, not qualification"
+   "closure": "TT +354.80 / FF +32.69 ps DRC 0; SS sensitivity +271.71 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS (results/rtl/s81_selem_native_1815/native_audit_stations_f9_rly66sw.json)",
+   "gate": "S-DIE 1815 explicit native-PASS row"
   },
   "dsfd_l2r_vc_291x1__hs_hwSW": {
    "verdict": "DIAGNOSTIC_CLOSED",
@@ -11698,6 +11698,222 @@
    "lineage": "EXACT_EXPORT",
    "native": "native PASS launch209.5/capture141.4 (S-ELEM 10-16 19:45)",
    "gate": "S-DIE 1815 explicit native-PASS row"
+  },
+  "ot_s81_hc_ctrn_own_w": {
+   "verdict": "DIAGNOSTIC_CLOSED",
+   "export_dir": "physical/ref_tile/s81hc_ctrnown_w_ref/views/ot_s81_hc_ctrn_own_w",
+   "job": "s81hc_ctrnown_w_ref-a5-f068a2c9c",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81hc_ctrnown_w_ref/views/ot_s81_hc_ctrn_own_w/ot_s81_hc_ctrn_own_w.lef",
+     "sha256": "7c88c9d99fe1c195bdc607c341ed9f8fa171542540e84b3b26e8d4e036364569"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81hc_ctrnown_w_ref/views/ot_s81_hc_ctrn_own_w/ot_s81_hc_ctrn_own_w_tt.lib",
+     "sha256": "39d7264822580550ecee6010c6a23460dd06130c006dc982d85e04ce69818d08"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81hc_ctrnown_w_ref/views/ot_s81_hc_ctrn_own_w/ot_s81_hc_ctrn_own_w_ff.lib",
+     "sha256": "5ab80657edf5d566e93ec5158e986a8efd50e9a0f37ea2298e25d4a2210734e7"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81hc_ctrnown_w_ref/views/ot_s81_hc_ctrn_own_w/ot_s81_hc_ctrn_own_w_ss.lib",
+     "sha256": "a081c3b118259d3f1fac591283df1635010ff50099d454aabbaf9d6e1e00095c"
+    }
+   },
+   "closure": "TT +318.22 / FF +22.86 ps DRC 0; SS sensitivity +221.06 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS launch/capture 193.9/175.7 (S-ELEM 10-16)",
+   "gate": "S-DIE 1815 explicit native-PASS row; cluster-internal (cth_ntc parent, hub H2)"
+  },
+  "ot_s81_hc_ctrn_par_w": {
+   "verdict": "DIAGNOSTIC_CLOSED",
+   "export_dir": "physical/ref_tile/s81hc_ctrnpar_w_ref/views/ot_s81_hc_ctrn_par_w",
+   "job": "s81hc_ctrnpar_w_ref-a5-f068a2c9c",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81hc_ctrnpar_w_ref/views/ot_s81_hc_ctrn_par_w/ot_s81_hc_ctrn_par_w.lef",
+     "sha256": "e6d0a4333ef525dfdb4f21371de0fbe875e31f5f87710db094ed9c10a776b678"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81hc_ctrnpar_w_ref/views/ot_s81_hc_ctrn_par_w/ot_s81_hc_ctrn_par_w_tt.lib",
+     "sha256": "082496cf443722e83a0986eac942d04fe89e59ce4ec8da85339295ad0e4c067f"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81hc_ctrnpar_w_ref/views/ot_s81_hc_ctrn_par_w/ot_s81_hc_ctrn_par_w_ff.lib",
+     "sha256": "b452da08d082f3b21b4855322c8c9091ed7524f9a7e3046bd1d253ed2a5f11ea"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81hc_ctrnpar_w_ref/views/ot_s81_hc_ctrn_par_w/ot_s81_hc_ctrn_par_w_ss.lib",
+     "sha256": "5f3e283f2d03fa0ab7bdd54ea90bad0dd36d52b4b925f55593a71b5072e87357"
+    }
+   },
+   "closure": "TT +321.56 / FF +26.94 ps DRC 0; SS sensitivity +220.11 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS launch/capture 195.9/127.6 (S-ELEM 10-16)",
+   "gate": "S-DIE 1815 explicit native-PASS row; cluster-internal (cth_ntc parent, hub H2)"
+  },
+  "ot_s81_hc_ctrn_par_e": {
+   "verdict": "DIAGNOSTIC_CLOSED",
+   "export_dir": "physical/ref_tile/s81hc_ctrnpar_e_ref/views/ot_s81_hc_ctrn_par_e",
+   "job": "s81hc_ctrnpar_e_ref-a5-f068a2c9c",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81hc_ctrnpar_e_ref/views/ot_s81_hc_ctrn_par_e/ot_s81_hc_ctrn_par_e.lef",
+     "sha256": "398320a678d0d4426e578077b6d8f08510bfb3cef4817821ed8fac3799723fac"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81hc_ctrnpar_e_ref/views/ot_s81_hc_ctrn_par_e/ot_s81_hc_ctrn_par_e_tt.lib",
+     "sha256": "e286aea95fd7cfbc8b820ddf7b5835c82f5366cad2c89108a4668514cd32ef33"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81hc_ctrnpar_e_ref/views/ot_s81_hc_ctrn_par_e/ot_s81_hc_ctrn_par_e_ff.lib",
+     "sha256": "21139eb04147e9778ddc1d61a4fb9bf6860fed359a1d2ff9f060104ef35fc786"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81hc_ctrnpar_e_ref/views/ot_s81_hc_ctrn_par_e/ot_s81_hc_ctrn_par_e_ss.lib",
+     "sha256": "b3f6878599922f5b2eaf3bbb932f033c9bd0ab15a85567b8e1b0b466f24f896e"
+    }
+   },
+   "closure": "TT +321.35 / FF +25.53 ps DRC 0; SS sensitivity +224.09 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS launch/capture 193.1/127.5 (S-ELEM 10-16)",
+   "gate": "S-DIE 1815 explicit native-PASS row; cluster-internal (cth_ntc parent, hub H2)"
+  },
+  "ot_s81_hc_ctrn_own_e": {
+   "verdict": "DIAGNOSTIC_CLOSED",
+   "export_dir": "physical/ref_tile/s81hc_ctrnown_e_ref/views/ot_s81_hc_ctrn_own_e",
+   "job": "s81hc_ctrnown_e_ref-a7-3beae3cbf",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81hc_ctrnown_e_ref/views/ot_s81_hc_ctrn_own_e/ot_s81_hc_ctrn_own_e.lef",
+     "sha256": "1dc9360e56d799c9bd7773acaf58c9ff34a4099ebfda366c54dcb8d365dd4c32"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81hc_ctrnown_e_ref/views/ot_s81_hc_ctrn_own_e/ot_s81_hc_ctrn_own_e_tt.lib",
+     "sha256": "4e7c48a6ef8e5b60fce048dce5ab96f24851c3799546f87c1b538445b8690599"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81hc_ctrnown_e_ref/views/ot_s81_hc_ctrn_own_e/ot_s81_hc_ctrn_own_e_ff.lib",
+     "sha256": "dfb4bcb9bf2de9e52c9ef6bbd86b5a6b3e97f9a4f56a4d87d735103544245b44"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81hc_ctrnown_e_ref/views/ot_s81_hc_ctrn_own_e/ot_s81_hc_ctrn_own_e_ss.lib",
+     "sha256": "552e4e62cf521f1491c5fc9c91484edaae74370c119d0bde5f7ce917691c85f5"
+    }
+   },
+   "closure": "TT +298.56 / FF +22.89 ps DRC 0; SS sensitivity +196.45 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS launch/capture 207.9/188.6 (S-ELEM 10-16)",
+   "gate": "S-DIE 1815 explicit native-PASS row; cluster-internal (cth_ntc parent, hub H2)"
+  },
+  "dsfd_hstnv_13": {
+   "verdict": "DIAGNOSTIC_CLOSED",
+   "export_dir": "physical/ref_tile/s81fill_hstnv_13/views/dsfd_hstnv_13",
+   "job": "s81fill_hstnv_13-f9-64acd1733",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81fill_hstnv_13/views/dsfd_hstnv_13/dsfd_hstnv_13.lef",
+     "sha256": "48f9406aa0fbc24f035110419ab8ab8fb06b53a8e25ddd2ce849e0e4b2ef3baf"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81fill_hstnv_13/views/dsfd_hstnv_13/dsfd_hstnv_13_tt.lib",
+     "sha256": "6cd79af97e34b2fcdf2c637e0e069f08b24a46ff6fc5b63858bc2a97363e4321"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81fill_hstnv_13/views/dsfd_hstnv_13/dsfd_hstnv_13_ff.lib",
+     "sha256": "7b955cdef00154aae4864ff4100c10e35d958bf6cef17bb4f32d10abb9a2d5a9"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81fill_hstnv_13/views/dsfd_hstnv_13/dsfd_hstnv_13_ss.lib",
+     "sha256": "24a9a40d629dcecd6b6a06f2b2ed04b90ffb14c3d620d39887b4892cb76b8e81"
+    }
+   },
+   "closure": "TT +353.80 / FF +32.36 ps DRC 0; SS sensitivity +269.98 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS (results/rtl/s81_selem_native_1815/native_audit_stations_f9_rly66sw.json)",
+   "gate": "S-DIE 1815 explicit native-PASS row"
+  },
+  "dsfd_hstnh_12": {
+   "verdict": "DIAGNOSTIC_CLOSED",
+   "export_dir": "physical/ref_tile/s81fill_hstnh_12/views/dsfd_hstnh_12",
+   "job": "s81fill_hstnh_12-f9-64acd1733",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81fill_hstnh_12/views/dsfd_hstnh_12/dsfd_hstnh_12.lef",
+     "sha256": "4718fdb96db648f2e0dfbc35aa821d3662b80b8a595cd4fd5bf9a6001a4a1778"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81fill_hstnh_12/views/dsfd_hstnh_12/dsfd_hstnh_12_tt.lib",
+     "sha256": "57e79c453fcf20101e1cc24f7a0ac8b7724ecdfbebc4c025d81ea42e01159c84"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81fill_hstnh_12/views/dsfd_hstnh_12/dsfd_hstnh_12_ff.lib",
+     "sha256": "f10af0fd46895b31de2dd52c01c7721a27d7f4fd1c018600df278dcc678dd946"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81fill_hstnh_12/views/dsfd_hstnh_12/dsfd_hstnh_12_ss.lib",
+     "sha256": "9f0946a718cccd0a1c88b7220ab8b36ea7a9adeb7fd5261e307b823fbaa8327f"
+    }
+   },
+   "closure": "TT +353.98 / FF +32.51 ps DRC 0; SS sensitivity +270.21 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS (results/rtl/s81_selem_native_1815/native_audit_stations_f9_rly66sw.json)",
+   "gate": "S-DIE 1815 explicit native-PASS row"
+  },
+  "dsfd_hstnh_13": {
+   "verdict": "DIAGNOSTIC_CLOSED",
+   "export_dir": "physical/ref_tile/s81fill_hstnh_13/views/dsfd_hstnh_13",
+   "job": "s81fill_hstnh_13-f9-64acd1733",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81fill_hstnh_13/views/dsfd_hstnh_13/dsfd_hstnh_13.lef",
+     "sha256": "b190dba15c91bd2f57f6bf51a69294d66ee7a3d99679bd2d8705f2664f4ca0f0"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81fill_hstnh_13/views/dsfd_hstnh_13/dsfd_hstnh_13_tt.lib",
+     "sha256": "3e6775ccea5ffceb5a959a8e55f5878b19618df784e7f43f8985d23946241246"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81fill_hstnh_13/views/dsfd_hstnh_13/dsfd_hstnh_13_ff.lib",
+     "sha256": "71675130c23286e525c2e0f615164560f1c12c708ee5d5213999bedb55df532c"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81fill_hstnh_13/views/dsfd_hstnh_13/dsfd_hstnh_13_ss.lib",
+     "sha256": "e8b955472eb711e135df91a2271de405e40e50800f06243ff91d1efc1d8ae89d"
+    }
+   },
+   "closure": "TT +353.97 / FF +32.28 ps DRC 0; SS sensitivity +270.21 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS (results/rtl/s81_selem_native_1815/native_audit_stations_f9_rly66sw.json)",
+   "gate": "S-DIE 1815 explicit native-PASS row"
+  },
+  "dsfd_rly_66_SW": {
+   "verdict": "DIAGNOSTIC_CLOSED",
+   "export_dir": "physical/ref_tile/s81_rly_66_sw/views/dsfd_rly_66_SW",
+   "job": "s81_rly_66_sw-c26l-64acd1733",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_66_sw/views/dsfd_rly_66_SW/dsfd_rly_66_SW.lef",
+     "sha256": "923b9122b2687f820359d35ca48e6583f371b47bf0e2b9b1d552a22ed183210a"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_66_sw/views/dsfd_rly_66_SW/dsfd_rly_66_SW_tt.lib",
+     "sha256": "9af96ab3fc897993e06a618d85c684cf63acffb488d724d9608106065447c78f"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_66_sw/views/dsfd_rly_66_SW/dsfd_rly_66_SW_ff.lib",
+     "sha256": "85fafdea40fdb4d7224c573ee6306706e9fca11c100ddb2be1b63ae5725a5956"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_66_sw/views/dsfd_rly_66_SW/dsfd_rly_66_SW_ss.lib",
+     "sha256": "934ff9b85ff324dee888836d9cc199d7b67de04ea075edd6fee7f8b6a4022d80"
+    }
+   },
+   "closure": "TT +333.08 / FF +29.72 ps DRC 0; SS sensitivity +235.91 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS (results/rtl/s81_selem_native_1815/native_audit_stations_f9_rly66sw.json)",
+   "gate": "S-DIE 1815 explicit native-PASS row"
   }
  },
  "superseded": {
@@ -13221,6 +13437,58 @@
    },
    "dsfd_rly_536_WS": {
     "job": "s81_rly_536_ws-rs1s56-e95957137",
+    "replaced": null
+   },
+   "ot_s81_hc_ctrn_own_w": {
+    "job": "s81hc_ctrnown_w_ref-a5-f068a2c9c",
+    "replaced": null
+   },
+   "ot_s81_hc_ctrn_par_w": {
+    "job": "s81hc_ctrnpar_w_ref-a5-f068a2c9c",
+    "replaced": null
+   },
+   "ot_s81_hc_ctrn_par_e": {
+    "job": "s81hc_ctrnpar_e_ref-a5-f068a2c9c",
+    "replaced": null
+   },
+   "ot_s81_hc_ctrn_own_e": {
+    "job": "s81hc_ctrnown_e_ref-a7-3beae3cbf",
+    "replaced": null
+   },
+   "dsfd_hstnv_20": {
+    "job": "s81fill_hstnv_20-f9-64acd1733",
+    "replaced": "s81fill_hstnv_20-f1-e5bab3fc7"
+   },
+   "dsfd_hstnv_9": {
+    "job": "s81fill_hstnv_9-f9-64acd1733",
+    "replaced": "s81fill_hstnv_9-f1-e5bab3fc7"
+   },
+   "dsfd_hstnv_11": {
+    "job": "s81fill_hstnv_11-f9-64acd1733",
+    "replaced": "s81fill_hstnv_11-f1-e5bab3fc7"
+   },
+   "dsfd_hstnv_13": {
+    "job": "s81fill_hstnv_13-f9-64acd1733",
+    "replaced": null
+   },
+   "dsfd_hstnv_6": {
+    "job": "s81fill_hstnv_6-f9-64acd1733",
+    "replaced": "s81fill_hstnv_6-f1-e5bab3fc7"
+   },
+   "dsfd_hstnv_85": {
+    "job": "s81fill_hstnv_85-f9-64acd1733",
+    "replaced": "s81fill_hstnv_85-f1-e5bab3fc7"
+   },
+   "dsfd_hstnh_12": {
+    "job": "s81fill_hstnh_12-f9-64acd1733",
+    "replaced": null
+   },
+   "dsfd_hstnh_13": {
+    "job": "s81fill_hstnh_13-f9-64acd1733",
+    "replaced": null
+   },
+   "dsfd_rly_66_SW": {
+    "job": "s81_rly_66_sw-c26l-64acd1733",
     "replaced": null
    }
   },
