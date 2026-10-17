@@ -20,7 +20,7 @@
  ],
  "outline": {
   "w": 345.6,
-  "h": 244.08
+  "h": 213.84
  },
  "children": [
   {
@@ -29,7 +29,7 @@
    "inst": "*u_smc",
    "at": [
     43.2,
-    86.4
+    43.2
    ]
   },
   {
@@ -38,7 +38,7 @@
    "inst": "*u_smr",
    "at": [
     216.0,
-    86.4
+    43.2
    ]
   }
  ],
@@ -52,17 +52,19 @@
    "q_ev",
    "q_el",
    "q_skv",
-   "q_mx",
    "q_e",
    "m_v",
    "m_nmb",
    "dn_v",
    "dn",
    "den_v"
+  ],
+  "N": [
+   "q_mx"
   ]
  },
  "structural_change": "S81U-SMH2 (10-17): root regional cluster (x1 per head) of the split per-head SM subtree (see s81su_smhq): row sum smc + max/den root smr with their SRL link, own clock pin + registered reset relay; quad links arrive registered (station 1 in the quad), max/den broadcast leaves registered.",
- "why_floorplan": "smc + smr side by side on the 43.2 lattice over an 86-um S band for the 1,028-b quad input stations; ~1.1k pins on the S face (3.2 pins/um) toward the slice's central band; 346 x 244 um.",
+ "why_floorplan": "smc + smr side by side on the 43.2 lattice between a 43-um S band (q_e + control stations, clk) and a 43-um N band (q_mx stations); pin-bound: ~590 pins S (1.7/um) + 512 q_mx pins N (1.5/um), the quads sit on both sides of the root in the slice; 346 x 216 um. g1 (one face, 346 x 251) failed fill 31% (pin demand S 78%).",
  "job": {
   "owner": "Claude:S81U-2",
   "branch": "claude/s81u2-1017",
