@@ -9,6 +9,10 @@ set -eu
 O=$(readlink -f $1); S=$(cd $(dirname $0)/../../.. && pwd); cd $S
 [ -z "$(git status --porcelain -- tools rtl physical)" ] || { echo "dirty tree: commit first"; exit 2; }
 mkdir -p $O/libs
+# Q-KV 2026-10-16 18:40: record the OT_KV_* build flags so die_chain.sh re-exports them for the strict bind
+# (kv_port_bind_v2.sh / die_port_bind_kv.py re-import kv_die: without the flags they used the non-V144_R6 vport binding
+# and reported 256 phantom undriven pvin epoch bits on kvs13h)
+env | grep -E '^OT_KV_[A-Z0-9_]*=' | sed -E "s/^([^=]*)=(.*)$/export \1='\2'/" > $O/kv_flags.env
 # v1.4 (OT_KV_HOST_V14=1): real HOST root core + 128 die-placed PC slices + PLL model (kv_die.py --host-v14)
 H14=; V14=
 if [ "${OT_KV_HOST_V14:-0}" = 1 ]; then H14=--host-v14; V14=,host_v14; fi
