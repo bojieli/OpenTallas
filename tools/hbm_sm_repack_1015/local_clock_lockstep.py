@@ -4,7 +4,7 @@ This is component arithmetic/clock proof. The legacy PQ test driver does not
 qualify the fixed-cycle production compiler, attention path or full native die.
 """
 import argparse,inspect,json,pathlib,re,sys
-p=argparse.ArgumentParser();p.add_argument('--out',required=True);p.add_argument('--workdir',required=True);p.add_argument('--mut-clockdrop',action='store_true');p.add_argument('--jobs',type=int,default=8);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--out',required=True);p.add_argument('--workdir',required=True);p.add_argument('--mut-clockdrop',action='store_true');p.add_argument('--jobs',type=int,default=8);p.add_argument('--one',action='store_true',help='RP4f one-root tile (ot_hbm_smh_rp4_one_gated)');a=p.parse_args()
 r=pathlib.Path(__file__).resolve().parents[2];sys.path.insert(0,str(r/'tools'));import dshbm_sm_pq_seq as M
 out=pathlib.Path(a.workdir).resolve();out.mkdir(parents=True,exist_ok=True)
 base=r/'rtl/hbm_accel/sm/ot_hbm_accel_smh.sv';s=base.read_text()
@@ -12,11 +12,11 @@ for name in ['ot_hbm_accel_smh_tile_eg','ot_hbm_accel_smh_tile_wg']:
  m=re.search(r'^module '+name+r'\b.*?^endmodule',s,re.M|re.S)
  if not m:raise RuntimeError(name)
  body=m[0];header=body[:body.index(');')+2]
- body=header+'\n ot_hbm_smh_rp4_gated #(.MUT_CLKDROP('+str(int(a.mut_clockdrop))+')) u(.*);\nendmodule'
+ body=header+'\n '+('ot_hbm_smh_rp4_one_gated' if a.one else 'ot_hbm_smh_rp4_gated')+' #(.MUT_CLKDROP('+str(int(a.mut_clockdrop))+')) u(.*);\nendmodule'
  s=s[:m.start()]+body+s[m.end():]
 shadow=out/'smh_rp4_shadow.sv';shadow.write_text(s)
 M.SMH_SRC=[str(shadow) if x=='rtl/hbm_accel/sm/ot_hbm_accel_smh.sv' else x for x in M.SMH_SRC]
-M.SMH_SRC+=['rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_clocks.sv']
+M.SMH_SRC+=['rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_clocks.sv']+(['rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_one.sv'] if a.one else [])
 # Preserve the test's coarse-gate activity monitor after the real controller
 # moved into the die-level distributor. This changes no stimulus or checker.
 tb=(r/'rtl/test/tb_hbm_accel_sm_pq_seq.sv').read_text()
