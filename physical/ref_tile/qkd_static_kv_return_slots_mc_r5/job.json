@@ -1,0 +1,129 @@
+{
+ "name": "qkd_static_kv_return_slots_mc_r5-mc5-COMMIT",
+ "block": "qkd_static_kv_return_slots_mc",
+ "ref_tile": true,
+ "owner": "Claude:Q-KVRET",
+ "purpose": "mc5 (Q-KVRET 10-16, rtl_change): main mc_r4 (eb93a6a22) is FUNCTIONALLY WRONG: its one-stage idle_core (current occupancy AND only the previous edge's slot) fails tb_static_return_idle_mc at both phases (+1 ck reference). r5 = mc_r4 regional resets (rs_a/rs_b/rs_c) + mc_r3c two-stage idle_core_pre/idle_hbm_pre. CLOSED mc3c (mc_r3-mc3c-b1633f90c, TT +78.98/FF +13.00) native FAIL launch 223.1 idle_core / 220.7 fault_hbm > 220. Measured on the routed mc3c db (OpenSTA, ot-pve1): every output = pin flop -> INV -> BUF/HB4/BUF out pad -> port BUF (~190 ps fixed, data pins 201-202); idle_core's flop IS at its N-face pin (40.4,212.2) but sits on a lone-sink leaf (clknet_leaf_61: 1 far u_rq flop + idle_core, leaf 71.3 ps vs 47-53) -> clock 251.4 vs 231.6 ps at the E-face pin flops (+20 ps). Fix: (1) RTL: idle_*/fault_* exports are plain pin flops (no async clear, synchronous regional clear rs_c/rs_a/hr), sticky fault state a separate internal flop, so each export Q drives only its port (single-flop anchor, no pin_reg_split copy); (2) clock topology: bounded sink clusters 16 sinks / 30 um + 20 um buffer spacing (as dscoll cesc0 ln: spread 82.3->54.5), so a lone pin-face flop gets a local leaf instead of a long return to a far cluster. Same outline/pins/grant as mc_r3/mc_r4; 0 normal-cycle delta on data; drain/fault exports clear one local edge later on reset assertion only. | mc4 (Q-KVSYS-DIE 10-16, rtl_change): native audit of the CLOSED mc3b view (mc_r3-mc3b-d4c0e5fee) FAILS capture on expected_put 259.3 ps > 190 (p_lb 248.7: idle_core compared the RAW expected_put pin) and launch actual_data 221.1 > 220. Fix: idle_core from registered captures only (slot, actual_valid; drain observation one ck edge later, never earlier, no schedule use). Same outline/pins/grant as mc_r3. | Four actual independent phase-aligned pll_hbm_data storage roots: fixed bit slices replace a single >15k storage root; no clock gating, no timing exception between same-phase roots, no normal-cycle delta. Front width259.2 removes measured66.4% utilization failure. | mc3b (Q-ELEM 10-16): mc3-9196b2eb1 EARLY_FAIL_HOLD at CTS: the only failing endpoint was idle_hbm (setup -527 / hold -90 ps): raw controller_co[0]/compiled_hbm_put pins fed the idle compare, and idle_hbm was constrained as a core_clk output. Fix: idle_hbm from registered pin captures only (+1 pll_hbm edge on the drain observation, no schedule use) and idle_hbm in the hclk output set.",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/qkvret-r5-1016",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/qwen_kv_die_native_static_pins",
+   "results/arch/qwen_split_1014/kvsys_v1_3_candidate/static_io",
+   "results/arch/qwen_split_1014/kvsys_v1_4_3_design/static_io",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv",
+   "results/arch/qwen_split_1014/static_memory_mc_grant_2330",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots.sv"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_static_kv_return_slots_mc #(.DEPTH(64)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots_mc.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "return_slots_exact_two_phases_and_mutants",
+    "cmd": "DEPTH=64 bash tools/qwen_static_kv/run_return_slots_mc_gate.sh {RUN}/bench/exact",
+    "expect": "pass",
+    "pass_regex": "^PASS native return slots",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "return_slots_mutant_read_addr_strict",
+    "cmd": "mkdir -p {RUN}/bench/mut && verilator --binary --timing -j 2 -Wno-fatal +define+OT_KV_RETURN_MUT_READ_ADDR -GDEPTH=64 --top-module tb_static_return_slots_mc --Mdir {RUN}/bench/mut/obj rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots_mc.sv rtl/test/qwen_static_kv/tb_static_return_slots_mc.sv > {RUN}/bench/mut/build.log 2>&1 && {RUN}/bench/mut/obj/Vtb_static_return_slots_mc +faultmode=0",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "return_idle_mc_reference_and_mutants",
+    "cmd": "DEPTH=64 bash tools/qwen_static_kv/run_return_idle_mc_gate.sh {RUN}/bench/idle",
+    "expect": "pass",
+    "pass_regex": "^PASS native return idle mc",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_static_kv_return_slots_mc_r5/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_static_kv_return_slots_mc_r5/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_static_kv_return_slots_mc_r5 --out {RUN}/record/views/qkd_static_kv_return_slots_mc  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_static_kv_return_slots_mc_r5/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_static_kv_return_slots_mc_r3/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_static_kv_return_slots_mc_r3/qkd_static_kv_return_slots_mc_r5-mc5-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "mc5 (Q-KVRET 10-16, rtl_change): main mc_r4 (eb93a6a22) is FUNCTIONALLY WRONG: its one-stage idle_core (current occupancy AND only the previous edge's slot) fails tb_static_return_idle_mc at both phases (+1 ck reference). r5 = mc_r4 regional resets (rs_a/rs_b/rs_c) + mc_r3c two-stage idle_core_pre/idle_hbm_pre. CLOSED mc3c (mc_r3-mc3c-b1633f90c, TT +78.98/FF +13.00) native FAIL launch 223.1 idle_core / 220.7 fault_hbm > 220. Measured on the routed mc3c db (OpenSTA, ot-pve1): every output = pin flop -> INV -> BUF/HB4/BUF out pad -> port BUF (~190 ps fixed, data pins 201-202); idle_core's flop IS at its N-face pin (40.4,212.2) but sits on a lone-sink leaf (clknet_leaf_61: 1 far u_rq flop + idle_core, leaf 71.3 ps vs 47-53) -> clock 251.4 vs 231.6 ps at the E-face pin flops (+20 ps). Fix: (1) RTL: idle_*/fault_* exports are plain pin flops (no async clear, synchronous regional clear rs_c/rs_a/hr), sticky fault state a separate internal flop, so each export Q drives only its port (single-flop anchor, no pin_reg_split copy); (2) clock topology: bounded sink clusters 16 sinks / 30 um + 20 um buffer spacing (as dscoll cesc0 ln: spread 82.3->54.5), so a lone pin-face flop gets a local leaf instead of a long return to a far cluster. Same outline/pins/grant as mc_r3/mc_r4; 0 normal-cycle delta on data; drain/fault exports clear one local edge later on reset assertion only. | Four actual independent phase-aligned pll_hbm_data storage roots: fixed bit slices replace a single >15k storage root; no clock gating, no timing exception between same-phase roots, no normal-cycle delta. Front width259.2 removes measured66.4% utilization failure. | mc3b (Q-ELEM 10-16): mc3-9196b2eb1 EARLY_FAIL_HOLD at CTS: the only failing endpoint was idle_hbm (setup -527 / hold -90 ps): raw controller_co[0]/compiled_hbm_put pins fed the idle compare, and idle_hbm was constrained as a core_clk output. Fix: idle_hbm from registered pin captures only (+1 pll_hbm edge on the drain observation, no schedule use) and idle_hbm in the hclk output set.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "detail": "main mc_r4 functional FAIL (tb_static_return_idle_mc both phases) + closed mc3c native launch FAIL 223.1 idle_core / 220.7 fault_hbm: r4 resets + r3c idle, plain status pin flops, bounded CTS sink clusters"
+ }
+}
