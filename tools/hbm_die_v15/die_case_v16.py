@@ -423,6 +423,8 @@ def main():
     per = [('row_v', 1), ('row_op', 3), ('row_bank', 5), ('row_row', 19), ('col_v', 1), ('col_we', 1), ('col_bank', 5),
            ('col_col', 5), ('col_data', 256), ('col_strb', 32), ('dram_rvalid', 1), ('dram_rdata', 256)]
     for q in Q:
+        if f'phy_{q}' not in cell_of or f'phy_{q}' not in P:     # d4f A2P: 2 stacks (SW, NW) -- no SE/NE PHY side
+            continue
         s = slots[f'phy_{q}']; b = P[f'phy_{q}']
         north = b['y'] > H / 2; east = b['x'] > W / 2
         po = ('R180' if east else 'MX') if north else ('MY' if east else 'R0')
@@ -454,7 +456,7 @@ def main():
             continue
         n = users[0]; sl = slots[s]
         x_, y_, o_ = sl['origin']['x'], sl['origin']['y'], sl['origin'].get('orient', 'R0')
-        if re.fullmatch(r'sm_S[WE]\d+', n) and o_ == 'R0':
+        if re.fullmatch(r'sm_S[WE]\d+', n) and o_ == 'R0' and not str(sl.get('pin_status', '')).startswith('COLUMN_PIN_FILE_EXACT'):
             # H-DIE/V790 10-16: the H-SM frame has its SM_HBM window on N; the die grant puts the packet face toward the PC
             # band (S for the S quadrants) -> S-quadrant SM frames placed MX (carve row + XC at the S edge); H-SM: an MX'd
             # frame's y origin must be 0.024 mod 0.048 um so the M4 W/E pins stay on track
