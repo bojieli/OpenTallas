@@ -1,6 +1,7 @@
 #!/bin/bash
 # rxh_eq_gate.sh OUT [SEEDS] (S-ELEM-C 2026-10-15): the RX cluster ot_s81_su_rxh (v2) against the flat tile ot_s81_su_rxt
 # (tb_s81_su_rxh_eq.sv), XMUT 0 on every seed (must PASS) and XMUT 1..5 (each leaf's negative control, must FAIL; 5 = RA front leaf drops the max(x,0) clamp, 6 = control QR row index stuck).
+# XMUT 5 / 6 are forced from the bench onto leaf internals (--public-flat-rw keeps them forceable).
 # Run from the repository root (via ot-run on a fleet host).  Writes OUT/receipt.json with the source hashes.
 set -u
 OUT=${1:?out dir}; SEEDS=${2:-"1 2 3 4"}; NJOB=${NJOB:-48}
@@ -15,7 +16,7 @@ rc_all=0; : > "$OUT/summary.txt"
 for X in ${XLIST:-0 1 2 3 4 5 6}; do
   obj="$OUT/obj_x$X"
   verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --top-module tb_s81_su_rxh_eq -Mdir "$obj" -j 16 \
-      -GXMUT=$X -GNJOB=$NJOB $SRC > "$OUT/build_x$X.log" 2>&1 || { echo "BUILD FAIL x$X" | tee -a "$OUT/summary.txt"; rc_all=1; continue; }
+      -GXMUT=$X -GNJOB=$NJOB $([ $X -ge 5 ] && echo --public-flat-rw) $SRC > "$OUT/build_x$X.log" 2>&1 || { echo "BUILD FAIL x$X" | tee -a "$OUT/summary.txt"; rc_all=1; continue; }
   if [ $X -eq 0 ]; then ss="$SEEDS"; else ss="1"; fi
   for S in $ss; do
     "$obj/Vtb_s81_su_rxh_eq" +SEED=$S > "$OUT/run_x${X}_s$S.log" 2>&1
