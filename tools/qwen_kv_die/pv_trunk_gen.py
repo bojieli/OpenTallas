@@ -24,7 +24,7 @@ block column 1 | E lane):
     the chunk words must arrive DELTA_G = D_g - 6 die edges after the header (kv_die pads the chunk relay chains);
   * column flags: F1 over the join -> (2 pads, even rows) -> F2 at CT -> U-shaped return trunk (down CT to h_0, then up to
     the control tile): D_g + R_r is one constant, so the control tile keeps one check slot (ctl_t TRUNK_D / FLAG_D);
-  * sf[6] (bank 6 fault -> join: 551 um) takes two stations in the channel below (fault timing only).
+  * sf[6] (bank 6 fault -> join): a direct wire to the r6 join's E-face pin (214 um; KVPLAN3 0230, was two stations).
 Outputs: column s's y / y_valid at its own static age A_s = out_age + COL_D[s] - COL_D[0] (RTL localparam + plan JSON).
 
     pv_trunk_gen.py --out-sv rtl/qwen_sys/split_20261014/qkd_pvw_die_t.sv --out-plan results/arch/qwen_kv_die/pv_trunk_t/plan.json
@@ -48,7 +48,9 @@ PV_JOIN = (194.4, 194.4, 'R0')
 STD = {1: (12.96, 12.96), 36: (12.96, 12.96), 296: (21.6, 47.52)}
 LEAF_LEF = dict(
     ot_qwen_tp8_pv_slice_t=RT / 'qkd_pv_slice_rstpin_r5/views/ot_qwen_tp8_pv_slice_t/ot_qwen_tp8_pv_slice_t.lef',
-    ot_qwen_tp8_pv_join_t=RT / 'qkd_pv_join_rstpin_r5/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef',
+    # KVPLAN3 0230: the PV join re-pin successor qkd_pv_join_sfe_r6 (CLOSED TT +57.72 / FF +14.85, native PASS 214.2 / 167.4):
+    # same RTL / outline as r5, sf[7:4] on the E face -> bank 4..7 fault -> join hops 27-214 um, so sf[6] needs no stations
+    ot_qwen_tp8_pv_join_t=RT / 'qkd_pv_join_sfe_r6/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef',
     ot_qwen_tp8_pv_wide_ctl=RT / 'qkd_pv_ctl_rstpin_a72/views/ot_qwen_tp8_pv_wide_ctl/ot_qwen_tp8_pv_wide_ctl.lef',
     **{f'qkd_rlys_{s}': RT / f'qkd_rlys_{s}/views/qkd_rlys_{s}/qkd_rlys_{s}.lef' for s in STD})
 FLIP = dict(R0=(0, 0), MX=(0, 1), MY=(1, 0), R180=(1, 1))
@@ -574,17 +576,8 @@ class Gen:
             prev = self.station(f'FU{r}', keys, prev, (ctx, self.hy(r)), rowclk(r), CTR, lanes=['f1'], prio=0)
             self.flag_chain.append(prev)
         self.flag_top = prev
-        # 5. sf[6]: bank 6 fault -> 2 stations in the channel below -> join sf[6]
-        self.sf6 = {}
-        for r in range(16):
-            for c in range(2):
-                s = col_of(c, r)
-                fx, _ = self.tpin(f'u_s{s}_b6', 'fault')
-                jx, _ = self.tpin(f'u_s{s}_j', 'sf[6]')
-                self.root[('SF', s)] = f'sf_{s}[6]'
-                self.rootpin[('SF', s)] = self.tpin(f'u_s{s}_b6', 'fault')
-                a1 = self.station(f'Q{s}a', [('SF', s)], None, (fx, self.hy(r)), f'col_clk[{s}]', self.chan(r), prio=4)
-                self.sf6[s] = self.station(f'Q{s}b', [('SF', s)], a1, (jx, self.hy(r)), f'col_clk[{s}]', self.chan(r), prio=4)
+        # 5. sf[6]: KVPLAN3 0230 -- the r6 join takes sf[7:4] on its E face (bank 6 fault -> join 214 um): a direct wire, no
+        #    stations (the r5 join's W-face sf[6] needed two stations in the channel below, 455-475 um)
         for k in ctl_keys:
             self.rootpin[k] = self.tpin('u_ctl', f'cmd[{k[1]}]') if k[0] == 'C' else (ctx, self.FH)
         self.place_all()
@@ -651,9 +644,8 @@ class Gen:
                     hops.append((_d(bout[(S1, k)], self.tpin(f'u_s{s}_b{t}', f'{pn}[{i}]')), f'{S1}->s{s}b{t}', pn))
             hops.append((_d(bout[(self.rst_src(s, t), ('R',))], self.tpin(f'u_s{s}_b{t}', 'rst_n')), f'{self.rst_src(s, t)}->s{s}b{t}', 'rst_n'))
         for s in range(32):
-            hops.append((_d(bout[(self.sf6[s], ('SF', s))], self.tpin(f'u_s{s}_j', 'sf[6]')), f'Q{s}b->j', 'sf6'))
             for l_ in range(8):
-                if l_ != 6:
+                if True:
                     hops.append((_d(self.tpin(f'u_s{s}_b{l_}', 'fault'), self.tpin(f'u_s{s}_j', f'sf[{l_}]')), f's{s}b{l_}->j', 'sf'))
                 for i in range(0, 512, 37):
                     tsn, base = ['ts0', 'ts1', 'ts2', 'ts3'][l_ // 2], 512 * (l_ % 2)
@@ -717,7 +709,7 @@ class Gen:
                          f'.rst_n({ox(self.rst_src(s, l_), ("R",))}),.pv2({cat(pv2)}),.pe2({cat(pe2)}),.bc({cat(bc)}),'
                          f'.ts(ts_{s}[{512 * l_ + 511}:{512 * l_}]),.fault(sf_{s}[{l_}]));')
             Sj = self.s1_of[(s, 'j')]
-            sfj = '{' + ', '.join([f'sf_{s}[7]', ox(self.sf6[s], ('SF', s))] + [f'sf_{s}[{i}]' for i in range(5, -1, -1)]) + '}'
+            sfj = f'sf_{s}'
             L.append(f' ot_qwen_tp8_pv_join_t #(.MUT(MUT),.RESET_PIN(LEAF_RESET_PIN)) u_s{s}_j(.clk(col_clk[{s}]),'
                      f'.rst_n({ox(Sj, ("R",))}),.ts0(ts_{s}[1023:0]),.ts1(ts_{s}[2047:1024]),'
                      f'.ts2(ts_{s}[3071:2048]),.ts3(ts_{s}[4095:3072]),.join_go({ox(Sj, ("C", 31))}),'

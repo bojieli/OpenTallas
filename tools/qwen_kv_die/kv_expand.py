@@ -48,7 +48,9 @@ VIEWS = dict(
     # Q-ELEM 2026-10-15 22:34 (G3S2 composition: HXK5 silently wrong 512/512, HXK13 exact 53/53): OT_KV_ECTL_H13=1 binds
     # a -> the h5 view (synthesis byte-identical to h13, results/arch/qwen_ectl_h13_2115/ab_reuse.json; the a_h13 view is
     # pending its native capture fix), b -> h5 (identical, native PASS), c -> the CLOSED h13 view (e033dce09). Never c_h5.
-    qkd_ectl_a_tp8_epoch_direct=(f'{RT}/qkd_ectl_a_tp8_epoch_direct_h5/views/qkd_ectl_a_tp8_epoch_direct' if ECTL_H13 else
+    # KVPLAN3 0230 (Q-KVFIX 0130): a -> the CLOSED pg16s view (same synth netlist as h5, native PASS launch 185.5 / capture
+    # 161.3 / R 314.5, LEF = the ECTL A pin grant 2638/2638; h5 = native FAIL capture 221.0 rs, R 413.6).
+    qkd_ectl_a_tp8_epoch_direct=(f'{RT}/qkd_ectl_a_tp8_epoch_direct_pg16/views/qkd_ectl_a_tp8_epoch_direct' if ECTL_H13 else
                                  f'{RT}/qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_epoch_direct'),
     qkd_ectl_b_tp8_direct=(f'{RT}/qkd_ectl_b_tp8_direct_h5/views/qkd_ectl_b_tp8_direct' if ECTL_H13 else
                            f'{RT}/qkd_ectl_b_tp8_direct/views/qkd_ectl_b_tp8_direct'),
@@ -61,7 +63,8 @@ VIEWS = dict(
     qkh_head_sstage=f'{RT}/qkh_head_sstage/views/qkh_head_sstage',
     # v1.4.4 PV16 wide pair leaves (CLOSED, all reset-pin r5: RESET_PIN 1 = the pair's LEAF_RESET_PIN / CTL_RESET_PIN 1)
     ot_qwen_tp8_pv_slice_t=f'{RT}/qkd_pv_slice_rstpin_r5/views/ot_qwen_tp8_pv_slice_t',
-    ot_qwen_tp8_pv_join_t=f'{RT}/qkd_pv_join_rstpin_r5/views/ot_qwen_tp8_pv_join_t',
+    # KVPLAN3 0230: join re-pin successor r6 (sf[7:4] E face; CLOSED TT +57.72 / FF +14.85, native PASS 214.2 / 167.4)
+    ot_qwen_tp8_pv_join_t=f'{RT}/qkd_pv_join_sfe_r6/views/ot_qwen_tp8_pv_join_t',
     # kvs13d: OT_KV_PV_CTL_KIT names the closed ctl kit whose FIRST_INPUT_AGE equals the die's (r5 = 20)
     ot_qwen_tp8_pv_wide_ctl=f"{RT}/{__import__('os').environ.get('OT_KV_PV_CTL_KIT', 'qkd_pv_ctl_rstpin_r5')}/views/ot_qwen_tp8_pv_wide_ctl",
     # KVPLAN 1815 (OT_KV_PV_T): the trunked pair's control tile and its relay-standard stations

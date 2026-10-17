@@ -81,6 +81,16 @@ RST_REGION_BOX = float(__import__('os').environ.get('OT_KV_RST_REGION_BOX', '480
 # host_fdi -211.6 ps on a 485-um last hop), so the PHY-side wire is short and the long wire is a planned relay hop
 PHY_REG = __import__('os').environ.get('OT_KV_PHY_REG', '0') == '1'
 PHY_REACH = float(__import__('os').environ.get('OT_KV_PHY_REACH', '150'))
+# KVPLAN3 0230 (Q-KV decision 10-17 after DIE-CLOCK kv_rt3: 299 failing c <-> stack seam pairs = 267 reset-forest stations
+# clocked on n_clk_core_c whose last hop feeds a stack tile's rst_n + 32 pvin / pvrq seam hops; kvs13k TT reset -> head
+# stin rst_n -159 ps over 72 um): OT_KV_SEAM=1 -- (1) every reset-tree relay is clocked from the core tree of the tiles it
+# FEEDS (its leader's clk_core_<region>), so a stack region's whole reset chain + local tree (kv_rst_regional inherits the
+# region root's ck) runs on that stack's root; (2) the ONE hop of a chain that crosses core trees (tree: HOST -> first
+# station; data chain: last relay -> a load on another tree, e.g. pvin -> fork, pvrq -> V port) is held to SEAM_REACH so
+# the regional skew (~200 ps c <-> stack at kv_rt3) sits on a short wire; no added edge.  The seam list is recorded
+# (m['clock_seams']) for the die STA / DIE-CLOCK neighbour check.  Default off: plans unchanged.
+SEAM = __import__('os').environ.get('OT_KV_SEAM', '0') == '1'
+SEAM_REACH = float(__import__('os').environ.get('OT_KV_SEAM_REACH', '150'))
 PHY_MASTERS = ('qkd_hbm3e_phy_pc', 'ot_qfd_serdes_112g_x12_phy', 'ot_qkvd_ucie_x64_phy')
 # KVPLAN2 2215 (OT_KV_REACH_FIX=1, kvs13k radius@401: non-PV families over the measured KV reach 446):
 #   head kp_k / kp_t / gf_t 457-468 -> head plans re-assigned at 400 (results/arch/qwen_kv_die/head_reach400: lane t in
@@ -2227,6 +2237,12 @@ def _relays(m):
                 owner.setdefault((gx, gy), set()).add(kn_)
     occ = [(i.x, i.y, i.x + i.w, i.y + i.h) for i in m['insts']]
     rocc = {}
+    ckdom = {}                     # KVPLAN3 0230 (OT_KV_SEAM): instance -> its core clock trunk (clk_core_<c|st>)
+    for bid_, cl_, _b, eps_ in m['buses']:
+        if cl_ == 'clock_trunk' and bid_.startswith('clk_core_'):
+            for inst_, _p in eps_[1:]:
+                ckdom.setdefault(inst_, bid_)
+    seams = m.setdefault('clock_seams', [])
     SP = dict(on=False)        # v1.1: set for a chain's retry: route around cells other chains' relays hold
 
     def free(x, y, w, h, gap=4.32, bgap=21.6):
@@ -2705,11 +2721,20 @@ def _relays(m):
 
         phy_a = PHY_REG and by[a].master in PHY_MASTERS
         phy_b = PHY_REG and by[b].master in PHY_MASTERS
+        # KVPLAN3 0230 (OT_KV_SEAM): which hop of this chain crosses core clock trees.  A tree hop's relays run on the
+        # leader's tree, so its seam is the FIRST hop (HOST / parent -> first station); a data chain's relays run on its
+        # driver's tree, so its seam is the LAST hop (last relay -> load)
+        src_dom = ckdom.get(tree_meta[bid].get('rdrv', a) if bid in tree_meta else a)
+        dst_dom = ckdom.get(b)
+        seam_first = SEAM and bid in tree_meta and src_dom and dst_dom and src_dom != dst_dom
+        seam_last = SEAM and bid not in tree_meta and src_dom and dst_dom and src_dom != dst_dom
 
         def end_reach_():
             # the chain stops once the load end is within this of its last register
             if bid in tree_meta:
                 return TREE_LAST
+            if seam_last:
+                return min(SEAM_REACH, PHY_REACH if phy_b else SEAM_REACH, reach_())
             return min(PHY_REACH, reach_()) if phy_b else reach_()
 
         def reach_():
@@ -2734,6 +2759,8 @@ def _relays(m):
             return min(reach0_(), width_reach(bits)) if bid not in tree_meta and not bid.startswith('pv') else reach0_()
 
         def reach0_():
+            if seam_first and st_['prev_pt'] is None:
+                return min(SEAM_REACH, HOP_REACH if HOP else PIN_REACH)
             if phy_a and st_['prev_pt'] is None:
                 return min(PHY_REACH, HOP_REACH if HOP else PIN_REACH)
             # v1.3 (kvs5L TT -17.19: CLOSED ctl_bin launches f<g> late, 413 um to its first relay): a bus whose driver is a
@@ -2803,6 +2830,8 @@ def _relays(m):
                 m['insts'].append(it)
                 by[nm] = it                       # v1.4.2: a tree's next-level chain starts at this relay
                 rly_ends[nm] = (tree_meta[bid]['rdrv'] if bid in tree_meta else a, b)   # tree: the HOST's trunk
+                if SEAM and bid in tree_meta:
+                    rly_ends[nm] = (b, b)          # KVPLAN3 0230: a reset station runs on the tree of the tiles it feeds
                 for gx in range(int(it.x // G), int((it.x + fw) // G) + 1):
                     for gy in range(int(it.y // G), int((it.y + fh) // G) + 1):
                         r_ = (it.x, it.y, it.x + fw, it.y + fh)
@@ -2875,13 +2904,20 @@ def _relays(m):
                 try:
                     st_['path'] = route(a, b, pa, pb)
                 except ValueError:
-                    if bid not in tree_meta:
+                    if bid not in tree_meta and __import__('os').environ.get('OT_KV_RLY_STD', '0') != '1':
                         raise
-                    SP['on'] = False           # v1.4.2 tree hop: the relay-avoiding route can be closed; keep the plain one
+                    # v1.4.2 tree hop: the relay-avoiding route can be closed; keep the plain one.  KVPLAN3 0230 (HDR_CTL
+                    # plan: pvin_ES_3 fork ring enclosed by the trunks' first stages -> 'no route' raised out of the
+                    # retry loop): under OT_KV_RLY_STD every chain has retries 2-4, so a closed relay-avoiding route
+                    # falls back to the plain one and the next attempt re-routes with a dilation
+                    SP['on'] = False
                     st_['path'] = route(a, b, pa, pb)
                 finally:
                     SP['on'] = False
         n = st_['k']
+        if (seam_first or seam_last) and n:
+            seams.append(dict(bus=bid, hop='first' if seam_first else 'last', src=src_dom, dst=dst_dom, stages=n,
+                              reach=SEAM_REACH))
         if st_.get('exact_k') is not None and n != st_['exact_k']:
             m.setdefault('pvt_chunk_mismatch', []).append(dict(bus=bid, stages=n, need=st_['exact_k'], route_um=lengths.get(bid),
                                                                a=f'{a}.{pa}', b=f'{b}.{pb}'))
@@ -3071,6 +3107,32 @@ def masters(m, k=1, port_bits=None):
                         sp[5] = 2          # 2-track pitch where the face has room (emf[221] DRT-0073 at 1 track)
                     mm.ports[p] = tuple(sp)
                     mm.order.append(p)
+            if REACH_FIX:
+                # KVPLAN3 0230 (kvs13l3 real case: DRT-0073 no access point for land_*/c0i[0]): a c<k>i word moved level
+                # with the closed CDC's co pins landed ON the er<k> word of the same face (c0i[0] = er0[35], M4 y 235.44).
+                # Slide each moved c<k>i word along its face to the nearest span clear of every other face word (1 um)
+                def span_(q):
+                    hw_ = (q[1] - 1) / 2 * 0.048 * q[5]
+                    return q[4] - hw_, q[4] + hw_
+                for p in list(mm.ports):
+                    mt = __import__('re').fullmatch(r'c(\d+)i', p)
+                    if not mt or mm.ports[p][0] != 'face':
+                        continue
+                    sp = list(mm.ports[p])
+                    others = [span_(q) for p2, q in mm.ports.items() if p2 != p and q[0] == 'face' and q[2] == sp[2]]
+                    lim = mm.w if sp[2] in 'NS' else mm.h
+                    for d_ in sorted((i * 0.48 for i in range(-2000, 2001)), key=abs):
+                        q_ = list(sp); q_[4] = round(sp[4] + d_, 4)
+                        a_, b_ = span_(q_)
+                        if a_ >= 1.0 and b_ <= lim - 1.0 and all(b_ + 1.0 <= o0 or a_ - 1.0 >= o1 for o0, o1 in others):
+                            sp = q_
+                            break
+                    else:
+                        raise ValueError(f'{name}.{p}: no clear span on face {sp[2]}')
+                    if abs(sp[4] - mm.ports[p][4]) > 1e-6:
+                        print(f'kv die REACH_FIX: {name}.{p} slid {sp[4] - mm.ports[p][4]:+.2f} um clear of the other '
+                              f'{sp[2]}-face words', file=sys.stderr)
+                    mm.ports[p] = tuple(sp)
         else:
             w, h = (183.72,183.72) if name == 'qkd_cdc_wleaf' and m['geo'].get('kv_wq_leaf_s') else (t['w'],t['h'])
             mm = F.Master(name, w, h, t['obs_top'], t['note'])
@@ -4018,6 +4080,28 @@ def pv_trunk_record(m):
                                   'qwen_rom PV16.TRUNK (+1,836 cycles / token, 0.731 %)'),
                 open_hops=[h for h in P_['worst_hops'] if h['um'] > 400][:4],
                 decision='Q-KV 10-16 ~21:30: option (a) accepted, die ~345 mm2 (+68 mm2) for closure')
+
+
+def pvt_verify(m):
+    """KVPLAN3 0230: the FINAL plan's PV schedule (after pin repair, which adds registered stages and updates
+    relay_stages): every chunk g lands exactly pvh + DELTA_g die edges after its fork, and every V port's request + V
+    word sum WP + O equals PV_W.  A violation is a schedule error, never a diagnostic."""
+    if not PV_T:
+        return dict(on=False)
+    D_ = {int(k_): v_ for k_, v_ in pvt_plan()['chunk_delta_vs_header'].items()}
+    st = m.get('relay_stages', {})
+    rec = pv_trunk_record(m)
+    bad = []
+    for k_, v_ in rec['chunk_total_edges'].items():
+        sk_, g_ = k_.rsplit('_', 1)
+        need_ = st.get(f'pvh_{sk_}', 0) + D_[int(g_)]
+        if v_ != need_:
+            bad.append(dict(chunk=k_, edges=v_, need=need_))
+    vt_ = pv_vport_timing(m).get('r6', {})
+    pv_fix = [a_['bus'] for a_ in (m.get('pin_repair') or {}).get('added', []) if a_['bus'].startswith('pv')]
+    return dict(on=True, chunks=len(rec['chunk_total_edges']), chunk_mismatch=bad, W=vt_.get('W'), W_equal=vt_.get('W_equal'),
+                W_target=vt_.get('W_target'), pv_pin_repair=sorted(set(pv_fix)),
+                ok=not bad and vt_.get('W_equal', True) and (not vt_ or vt_.get('W') == [PV_W]))
 
 
 def check(m):
