@@ -57,13 +57,14 @@
   "pin_h": "M4",
   "pin_v": "M3 M5",
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0
  },
  "job": {
-  "owner": "Claude:hbm-group-B-r2-1014",
-  "branch": "claude/hbm-group-b2-1014",
-  "tag": "r5-pinsplit",
-  "purpose": "SU.VOP redesign (owner 10-13) leaf ot_hgi_sv_lane2, hardened ONCE x16 a SU quarter (leaf index = pin strap lid): 2 VM wide lanes + their 2 banks' stage-write / drain-read ports, 6 stage + 2 drain job slots, cmd / status relay through the leaf (every hop a pin flop); N = VM wide-lane pins 1,112 b and S = bank ports 1,116 b on M3 + M5 (0.57 of 20.6 slots/um), E / W = head relay chain; structural placement repair: dense-face pin flops start behind measured hold strips and use face-derived columns (flow fix 9f14eb944) Local 4-sector/lane prefetch FIFO decouples local bank read latency from the eight actual VM write credits; no native bank/relay parameter change.",
+  "owner": "Claude FLOW-HOLD 1016 (for Claude:hbm-group-B-r2-1014)",
+  "branch": "claude/flowhold-1016",
+  "tag": "bh1",
+  "purpose": "FLOW-HOLD re-route of closed hgi_sv_lane2_pf-r5sc-pinsplit-5d316da54 under hold_budget die (native A_padding_only)",
   "extra_paths": [
    "compiler",
    "results/arch/hgi_sim_20261009/conformance",
@@ -117,14 +118,13 @@
  "structural_change": "r5 (Claude group-B r2 10-14): same RTL as CLOSED r4; kit regenerated with recipe-2 pin defaults of main >= 36de4b87f (pin_reg_split + keep_pin_regs + HB2 pad) because the r4 view launches 295.6 ps > 220 on 310 outputs. r4 (Claude 10-14, native pin audit of the CLOSED r3 view vs r25gq v12: rst_n in 472.7 ps (raw async rst_n to every reset flop), 166 output bits lsw_d/cmd_r/wwq/status 281 ps after the latest boundary clock, pair cost 766.3 > 683.3): rst_n port -> ot_rst_relay (4 regions; head gets the same 3-edge relay so the chain still releases on one edge) and kit recipe 2 (flops at pins, pin hold cells, 5.4 um halo). Leaf gate PASS + mutants 1/2/5/9 FAIL with the relay. Previous: The old leaf reserved VM credits at local bank read issue, lengthening the remote credit loop by all local read/pin stages. This successor reserves four independent local prefetch entries per lane and consumes the eight VM credits only on registered VM write send. Outstanding local reads plus buffered sectors never exceed four; per-job busy/write completion includes buffered writes; no added native VM credits or relay stages.",
  "reroute_reason": {
   "kind": "pin_register",
-  "source": "results/arch/hbm_group_b2_1014/pinreg_lane2_r4.json",
+  "source": "results/arch/boundary_hold_budget_1016/impact.json",
   "cell": "ot_hgi_sv_lane2",
-  "launch_ps": 295.6,
-  "capture_ps": 180.4,
-  "pair_cost_ps": 476.0,
-  "fix": "310 outputs over 220 (worst wwq[547] 295.6, 83 bits 102 ps over a pin flop): the r4 kit predates recipe-2 pin_reg_split (main 36de4b87f); r5 regenerates the same RTL with one dedicated launch flop per output pin (pin_reg_split.tcl), keep_pin_regs, HB2 pad, flops at pins"
+  "launch_ps": 230.2,
+  "capture_ps": 175.5,
+  "fix": "FLOW-HOLD die boundary hold budget (coordinator-approved 2026-10-16, RULE.md): recipe 4 hold_budget die -- flop-first pins, no inhold/outhold pads, C=25 ps credit, die STA owns link hold. Impact class A_padding_only: launch 230.2->166.2 (Liberty estimate; output pads removed)."
  },
- "recipe": 2,
+ "recipe": 4,
  "macros": [],
  "children": [],
  "inter": [],
@@ -132,11 +132,12 @@
   "cols": 4,
   "allow_none": true
  },
- "inhold": true,
- "outhold": true,
  "keep_pin_regs": true,
- "pin_reg_split": true,
- "hold_pad": {
-  "cell": "HB2xp67_ASAP7_75t_R"
- }
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "FLOW-HOLD 2026-10-16: the RTL already registers the data pins (pin-flop variant; closed hgi_sv_lane2_pf-r5sc-pinsplit-5d316da54); a synthesis pin stage would add schedule cycles. Flop-first via io_flop_at_pins."
+ },
+ "inhold": false,
+ "outhold": false
 }

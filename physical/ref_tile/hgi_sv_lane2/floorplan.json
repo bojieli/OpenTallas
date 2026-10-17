@@ -68,7 +68,6 @@
   "physical/ref_tile/hgi_sv_lane2/kit.env",
   "physical/ref_tile/hgi_sv_lane2/clock.sdc",
   "physical/ref_tile/hgi_sv_lane2/signoff.sdc",
-  "physical/ref_tile/hgi_sv_lane2/signoff_ffrepair.sdc",
   "physical/ref_tile/hgi_sv_lane2/pdn.tcl",
   "physical/ref_tile/hgi_sv_lane2/pre_cts.tcl",
   "physical/ref_tile/hgi_sv_lane2/post_cts.tcl",
@@ -88,6 +87,12 @@
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl"
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/hgi_sv_lane2/pre_gpl.tcl",
+  "physical/ref_tile/hgi_sv_lane2/pre_dpl.tcl"
  ]
 }
