@@ -2,12 +2,12 @@
  "name": "qfd_d2d_static_r8c-r8c-COMMIT",
  "block": "qfd_d2d_static",
  "ref_tile": true,
- "owner": "Claude:Q-DVM+LINK",
+ "owner": "Claude:Q-LINK2-0640 (el1013-qwen-elements-r4.log)",
  "purpose": "Q-LINK static D2D link end qfd_d2d_static (compiler calendars, 583-bit PHY word slot link with 4x137 SRAM store, explicit recovery mode; no credits/backpressure). PHY on face S.",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "codex/qwen-link-recovery-0253",
+  "branch": "claude/qlink-1815-d2d",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/qwen_sys",
@@ -34,7 +34,7 @@
     "name": "d2d_dies_exact",
     "cmd": "bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/d0 0",
     "expect": "pass",
-    "pass_regex": "D2D_DIES_PASS",
+    "pass_regex": "^D2D_DIES_PASS",
     "threads": 1,
     "peak_ram_gb": 8,
     "pass_witness": "results/arch/qwen_link_native_1640/bench_witness/r8b_d2d_dies_exact.log"
@@ -45,6 +45,7 @@
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 8,
+    "fail_regex": "^D2D_DIES_FAIL",
     "fail_witness": "results/arch/qwen_link_native_1640/bench_witness/r8b_d2d_dies_mut_slot.log"
    }
   ],

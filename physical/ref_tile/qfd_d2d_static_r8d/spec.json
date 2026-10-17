@@ -144,7 +144,7 @@
   "io_hold_margin_ns": 0.0
  },
  "job": {
-  "owner": "Claude:Q-LINK-1815 (el1013-qwen-elements-r4.log)",
+  "owner": "Claude:Q-LINK2-0640 (el1013-qwen-elements-r4.log)",
   "branch": "claude/qlink-1815-d2d",
   "tag": "r8d",
   "purpose": "Q-LINK static D2D link end qfd_d2d_static (compiler calendars, 583-bit PHY word slot link with 4x137 SRAM store, explicit recovery mode; no credits/backpressure). PHY on face S.",
@@ -163,7 +163,8 @@
     "expect": "pass",
     "pass_regex": "^D2D_DIES_PASS",
     "threads": 1,
-    "peak_ram_gb": 8
+    "peak_ram_gb": 8,
+    "pass_witness": "results/arch/qwen_link_native_1640/bench_witness/r8b_d2d_dies_exact.log"
    },
    {
     "name": "d2d_dies_mut_slot",
@@ -171,7 +172,8 @@
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 8,
-    "fail_regex": "^D2D_DIES_FAIL"
+    "fail_regex": "^D2D_DIES_FAIL",
+    "fail_witness": "results/arch/qwen_link_native_1640/bench_witness/r8b_d2d_dies_mut_slot.log"
    }
   ],
   "views_to": "physical/ref_tile/qfd_d2d_static_r6/views",
