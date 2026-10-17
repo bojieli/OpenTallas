@@ -16,11 +16,13 @@
 // Every input lands in a flop; every output leaves a flop.  Static schedule: a y beat index out of order is a fault.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_vq #(
-    // 1: ot_dsrom_aq12's x wait line as an SRAM ring (4 x 128x256 macros, a 1024-b-wide bank), bit-exact.
+    // 0: the shared ot_dsrom_aq12 with its 1024 x 11 flop wait line (reference).
     // 2 (the kit's setting, S81-TILES2 10-17): the wait line is rebuilt from the 256-b sub-beat stream: every sub-beat
     // sd_ is written to ONE ot_sram_1r1w_128x256_m1_r2c2 ring (free-running 4-bit pointer, read 11 rows behind) and
     // replayed 12 cycles later, with its (valid, slot) control from a 3-b x 12 flop line, into a 1024-b re-assembly
     // register xr; blk changes only on those events, so xr(c) = blk(c - 12) = aq12's flop-line xg(c) on every cycle.
+    // The quantiser is then the vq-only fork ot_s81sl_aq12x (xd port, no u_x line; S81-TILES3 10-17): the shared
+    // ot_dsrom_aq12 stays byte-identical with main.  (The former AQ_XMEM = 1, a 4-macro ring inside aq12, is dropped.)
     parameter integer AQ_XMEM = 0
 ) (
     input  wire          clk,
@@ -109,8 +111,13 @@ module ot_s81sl_vq #(
             assign xr_w = {1024{1'b0}};
         end
     endgenerate
-    ot_dsrom_aq12 #(.XMEM(AQ_XMEM)) u_aq (.clk(clk), .rst_n(rs_q), .v(bv), .x(blk), .vo(vo), .q(q), .e(e), .y(qy), .fault(af),
-        .xd(xr_w));
+    generate
+        if (AQ_XMEM == 2) begin : g_aqx
+            ot_s81sl_aq12x u_aq (.clk(clk), .rst_n(rs_q), .v(bv), .x(blk), .vo(vo), .q(q), .e(e), .y(qy), .fault(af), .xd(xr_w));
+        end else begin : g_aq
+            ot_dsrom_aq12 u_aq (.clk(clk), .rst_n(rs_q), .v(bv), .x(blk), .vo(vo), .q(q), .e(e), .y(qy), .fault(af));
+        end
+    endgenerate
     // block index rides the quantiser latency
     wire blo;
     ot_hdc_delay #(.W(1), .D(18)) u_bi (.clk(clk), .rst_n(rs_q), .d(bbk), .q(blo));

@@ -1,28 +1,33 @@
 `timescale 1ns/1ps
-// tb_aq12_xmem_eq (S81-TILES2 2026-10-17): ot_dsrom_aq12 XMEM = 1 (SRAM-ring x wait line) against XMEM = 0 (the flop
-// line), side by side on one random stimulus; every output compared every cycle (vo / fault from reset release, the
-// unreset data outputs q / e / y once both lines hold written data: cycle >= WARM).  Second pair: ot_s81sl_vq
-// AQ_XMEM 1 vs 0 on random in-order sub-beat streams (xf / xf_v / xf_s / fault every cycle).  +define+OT_AQ12_MUT_XPTR
-// shortens the ring by one row: the bench must FAIL.  Third: ot_s81sl_vq AQ_XMEM 2 (one-macro sub-beat ring) vs 0 on the
-// same stream, beats alternating at random between the y and the u port; +define+OT_VQ_MUT_XPTR (ring one row short)
-// must FAIL (vq2_err).
+// tb_aq12_xmem_eq (S81-TILES2 2026-10-17; S81-TILES3 10-17 fork): the vq-only fork ot_s81sl_aq12x, its xd driven with
+// x delayed 12 cycles by a testbench line, against the shared ot_dsrom_aq12 (flop wait line), side by side on one random
+// stimulus; every output compared every cycle (vo / fault from reset release, the unreset data outputs q / e / y once
+// both lines hold written data: cycle >= WARM).  +define+OT_AQ12_MUT_XPTR delays xd by 11 only: the bench must FAIL
+// (aq_err).  Second: ot_s81sl_vq AQ_XMEM 2 (one-macro sub-beat ring + the fork) vs 0 (shared aq12) on random in-order
+// sub-beat streams, beats alternating at random between the y and the u port (xf / xf_v / xf_s / fault every cycle);
+// +define+OT_VQ_MUT_XPTR (ring one row short) must FAIL (vq2_err).
 module tb_aq12_xmem_eq #(parameter integer N = 20000, parameter integer SEED = 1017);
     localparam integer WARM = 40;
     reg clk = 1'b0, rst_n = 1'b0;
     always #0.5 clk = ~clk;
     reg v; reg [1023:0] x;
     wire vo0, vo1, f0, f1; wire [255:0] q0, q1; wire signed [9:0] e0, e1; wire [511:0] y0, y1;
-    ot_dsrom_aq12 #(.XMEM(0)) u_ref (.clk(clk), .rst_n(rst_n), .v(v), .x(x), .vo(vo0), .q(q0), .e(e0), .y(y0), .fault(f0));
-    ot_dsrom_aq12 #(.XMEM(1)) u_dut (.clk(clk), .rst_n(rst_n), .v(v), .x(x), .vo(vo1), .q(q1), .e(e1), .y(y1), .fault(f1));
+    ot_dsrom_aq12 u_ref (.clk(clk), .rst_n(rst_n), .v(v), .x(x), .vo(vo0), .q(q0), .e(e0), .y(y0), .fault(f0));
+`ifdef OT_AQ12_MUT_XPTR
+    localparam integer XD = 11;     // mutant: one cycle short
+`else
+    localparam integer XD = 12;
+`endif
+    reg [1023:0] xl [0:XD-1];
+    integer t;
+    always @(posedge clk) begin xl[0] <= x; for (t = 1; t < XD; t = t + 1) xl[t] <= xl[t-1]; end
+    ot_s81sl_aq12x u_dut (.clk(clk), .rst_n(rst_n), .v(v), .x(x), .vo(vo1), .q(q1), .e(e1), .y(y1), .fault(f1), .xd(xl[XD-1]));
     // vq pair
     reg yv; reg [2:0] yi; reg [255:0] yd; reg mv, mq, mb; reg [7:0] mi;
     wire xfv0, xfv1, xfs0, xfs1, vf0, vf1; wire [275:0] xf0, xf1;
     ot_s81sl_vq #(.AQ_XMEM(0)) v_ref (.clk(clk), .rst_n(rst_n), .y_v(yv), .y_i(yi), .y(yd), .u_v(1'b0), .u_i(3'd0), .u(256'd0),
         .sid(4'd3), .k(3'd2), .m_v(mv), .m_q(mq), .m_b(mb), .m_i(mi), .um_v(1'b0), .um_q(1'b0), .um_b(1'b0), .um_i(8'd0),
         .xf_v(xfv0), .xf_s(xfs0), .xf(xf0), .fault(vf0));
-    ot_s81sl_vq #(.AQ_XMEM(1)) v_dut (.clk(clk), .rst_n(rst_n), .y_v(yv), .y_i(yi), .y(yd), .u_v(1'b0), .u_i(3'd0), .u(256'd0),
-        .sid(4'd3), .k(3'd2), .m_v(mv), .m_q(mq), .m_b(mb), .m_i(mi), .um_v(1'b0), .um_q(1'b0), .um_b(1'b0), .um_i(8'd0),
-        .xf_v(xfv1), .xf_s(xfs1), .xf(xf1), .fault(vf1));
     wire xfv2, xfs2, vf2; wire [275:0] xf2;
     reg uon;
     ot_s81sl_vq #(.AQ_XMEM(2)) v_d2 (.clk(clk), .rst_n(rst_n), .y_v(yv && !uon), .y_i(yi), .y(yd), .u_v(yv && uon), .u_i(yi), .u(yd),
@@ -54,9 +59,6 @@ module tb_aq12_xmem_eq #(parameter integer N = 20000, parameter integer SEED = 1
                 err = err + 1; if (err < 10) $display("MISMATCH aq data cyc=%0d vo=%b", cyc, vo0);
             end
             if (vo0) nvo = nvo + 1;
-            if (xfv0 !== xfv1 || xfs0 !== xfs1 || vf0 !== vf1 || (cyc >= WARM && xf0 !== xf1)) begin
-                verr = verr + 1; if (verr < 10) $display("MISMATCH vq cyc=%0d xf_v %b/%b fault %b/%b", cyc, xfv0, xfv1, vf0, vf1);
-            end
             if (xfv0) nxf = nxf + 1;
             if (xfv0 !== xfv2 || xfs0 !== xfs2 || vf0 !== vf2 || (cyc >= WARM && xf0 !== xf2)) begin
                 verr2 = verr2 + 1; if (verr2 < 10) $display("MISMATCH vq2 cyc=%0d xf_v %b/%b fault %b/%b", cyc, xfv0, xfv2, vf0, vf2);
