@@ -1,129 +1,105 @@
-# Open / not-started element census (ELEM-CENSUS, 2026-10-16)
+# Open / not-started element census, revision 2 (ELEM-CENSUS, 2026-10-16 18:15 PT)
 
-Owner question (10-16 ~11:00): what are the many "open" and "not started" fleet-viz element rows? Are they replicas or
-duplicates (numbered suffixes) that can be built by copying a closed element? Start anything that does not wait on an
-architecture change.
+Owner question (10-16 ~11:00): what are the many "open" and "not started" fleet-viz element rows? Are they numbered-suffix
+replicas that copying one closed element would cover? Start everything that does not wait on an architecture change.
 
-Snapshot: fleet-viz elements.py compute() at ~11:00 PT, main a3e2ffe29. There were 215 open rows: Qwen 63, S81 65, HBM 87.
-census.json has the full per-row table with evidence.
+Revision 1 (11:00 PT, main 74ea5d84d) classified 215 rows. This revision re-reads fleet-viz /api/elements at 18:15 PT
+(main 672e7f4d0). It keeps every row that still has an open category, in both independent_rows and integration_rows,
+which gives 168 rows. It also classifies the 26 rows that appeared since 11:00. Of the 215 revision-1 rows, 72 left the
+open set: 52 superseded, 15 closed, and 5 rows gone.
+census.json holds every row with its evidence, the 18:15 live-job state (live_jobs_1815, latest_job_1815) and
+resolved_since_1100.
 
-Identity is proven with the fleet-viz method (master_identity.normalized):
-- comments and whitespace are stripped and the module name is substituted;
-- the sha256 of the resulting body is compared.
-
-Rows are never matched by name.
+Identity is proven by the fleet-viz method (master_identity.normalized): comments and whitespace are stripped, the
+module name is substituted, and the sha256 of the body is compared. Rows are never matched by name.
 
 Classes:
-- A: exact replica of a closed master (same body hash, same outline and pins). Bind it; no route.
-- B: width, pin or mirror variant that can be built from closed masters (k-copy, padding or mirrored placement).
-- C: composition, parent or cluster. It closes when its children close plus a parent kit.
+- A: exact replica (same body hash, outline and pins). Bind it; no route.
+- B: width, pin or mirror variant built from closed masters (k-copy, padding or mirror).
+- C: composition or parent. It closes with its children plus parent integration.
 - D: blocked on a named architecture item.
-- E: superseded or stale (evidence given per row).
-- F: independent, never started. Started by ELEM-CENSUS.
-- G: in flight (live job or live gate).
-- M: hard macro, bound by its view.
+- E: superseded.
+- F: independent, never started. Started by the census.
+- G: in flight, or covered inside an in-flight parent kit.
+- M: hard macro.
+- R (new): a failed attempt with no live job, where the owner holds a named structural successor.
 
-| design | A | B | C | D | E | F | G | M | total |
+| design (fleet-viz target) | A | B | C | D | F | G | M | R | open rows |
 |---|---|---|---|---|---|---|---|---|---|
-| Qwen ROM (compute + KV/system) | 3 | 22 | 5 | 22 | 1 | 4 | 6 | 0 | 63 |
-| DeepSeek ROM (S81) | 0 | 0 | 18 | 11 | 14 | 0 | 18 | 4 | 65 |
-| HBM accelerator | 0 | 3 | 14 | 10 | 34 | 0 | 26 | 0 | 87 |
+| Qwen compute die (qfd_*) | 0 | 0 | 7 | 16 | 2 | 2 | 0 | 0 | 27 |
+| Qwen KV/system die (qkd_*) | 0 | 27 | 5 | 6 | 1 | 0 | 0 | 0 | 39 |
+| DeepSeek ROM (S81) | 0 | 0 | 21 | 11 | 3 | 3 | 2 | 3 | 43 |
+| HBM accelerator | 0 | 3 | 13 | 10 | 0 | 23 | 1 | 9 | 59 |
+| total | 0 | 30 | 46 | 43 | 6 | 28 | 3 | 12 | 168 |
 
-## Numbered / side suffixes
+No A rows remain: the three exact replicas from revision 1 are folded into their masters. ot_hgi_coll_pring_static_add_lane
+is a new exact reuse of the CLOSED ot_hgi_coll_pring_add_lane (master_identity replica_groups with view_reuse). fleet-viz
+already shows it as closed, so it is not counted.
 
-Only 3 of the 215 rows are exact replicas. Most suffix families are real parameter or mirror variants.
+## Numbered and side suffixes
 
-- **qkd_rly_<W> (21 rows, KV die): class B, not A.**
-  - These are generated per-width relay stations.
-  - They map onto 4 closed hardened standards: qkd_rlys_1, qkd_rlys_36, qkd_rlys_296 and qkd_rlys_528
-    (results/arch/qwen_kv_rly_std_1016/variants.json).
-  - Examples: 2089 = 4 x 528 and 1025 = 2 x 528 (padded), 93 = 3 x 36, t1 and 1 = rlys_1.
-  - The rows go away once OT_KV_RLY_STD=1 is the generator default. Q-KVSYS-DIE will switch it after the kvs12b GRT.
-- **qfd_port_tiles_0/1/2 and qfd_sp_res_train_par_0/1/2: not replicas.**
-  - The bodies differ only in .BAND(n), but BAND changes the ROM instance, the pt_id strap and the train logic.
-  - Both families are D: the approved b2 remap replaces them (one port variant, six parameter-free half-trains).
-- **Same or mirrored RTL, but kits differ in pin faces and outline, so mirror variants, not replicas:**
-  qfd_xcol_e/w, smh_tile_eg/wg, dsfd_capt_x8_data_e/w, dsfd_l2r_vr_1100x1__hx_E/W.
-- **hfd_hgi_vms_static_NE/NW/SE/SW: four distinct bodies, all wires-only wrappers, so C.**
-  - NE equals SE except for one quadrant-id tie constant. Making sid a strap would let one master serve both.
-  - NW and SW differ in port widths, so the 10-15 note "NW = SW up to constants" is false on current RTL.
-- **qkd_hslice / qkd_hslice_dn:** same module and same body hash; only the chain-face pins differ.
-  - _dn is B: the qkd_hslice view placed mirrored (approved by Q-KVSYS-DIE).
-  - qkd_hslice itself is F (started).
-- **A rows, folded into their masters:**
-  - qkd_hgs = the closed qkh_head_gather_stage (body b60a6b40, LEF 324 x 21.6).
-  - qkd_hss = the closed qkh_head_sstage (body 335a3954, LEF 21.6 x 21.6).
-  - qkd_d2ds is a die-name alias of qkd_d2d_static, which is still open (D).
+- **qkd_rly_<W> (22 rows) and the new qkd_rly_<W>__dir (5 rows): class B, not replicas.**
+  - __dir is the same one-flop-per-bit relay with a / b split into per-direction ports.
+    It comes from tools/qwen_kv_die/kv_bound_netlist.py relay_dir_module.
+  - Each maps onto the four CLOSED standards qkd_rlys_1/36/296/528. Examples:
+    - 2089__dir: 1044 forward + 1044 reverse + 1 reverse = 528 x2, 528 x2 mirrored, and rlys_1.
+    - 284__dir: 283 forward + 1 reverse = 296 (13 pad bits) + rlys_1.
+  - The rows go away when OT_KV_RLY_STD=1 becomes the generator default (Q-KVSYS-DIE).
+- **qfd_port_tiles_{0,1,2} vs qfd_port_tiles_{0,1,2}_f1:**
+  - The plain rows are BAND logic variants waiting on the b2 remap (D).
+  - The _f1 rows are wires-only parents of the word/result halves (C, integration rows).
+- **qfd_sp_res_train_par_0/1/2:** D. b2 replaces them with six parameter-free half-trains.
+- **Mirror pairs** (same RTL file, mirrored faces, so not replicas):
+  - ot_s81_hc_ctrn_col_e/_w: R. Both a4 routes failed congestion; S-NORM owns the successor.
+  - qfd_xcol_e/_w: D. Column envelope grant.
+  - dsfd_capt_x8_data_e/_w: now C, see below.
+- **dsfd_capt_x8_data_e/_w and dsfd_capt_status_dual: G -> C.**
+  - Each is a wires-only pair wrapper over two S-VM capture-split leaves.
+  - All of those leaves are CLOSED and native PASS (S-VM 14:00 / 15:26).
+  - Added to master_identity compositions; S-DIE binds the pairs.
+- **qkd_hslice / qkd_hslice_dn:** same body. hslice is F (being submitted); _dn is B (mirrored placement of the hslice view).
 
-## Blocked on architecture (D)
+## Revision-2 changes to fleet-viz (tools/fleet_viz/master_identity.json)
 
-- **Qwen b2 port remap:**
-  - qfd_port_tiles_0/1/2, qfd_sp_res_train_par_0/1/2, qfd_slab_pair_add
-  - qfd_tt_ctlm_static_s and qfd_tt_ctlm_tree_static (need the parameter-free calibrated controller)
-  - qfd_native59_compute_service (needs the b2 pin grant)
-- **Qwen compute die, other:**
-  - qfd_xcol_e/w: column envelope grant.
-  - qfd_io_collective_static: quarter-local ring redesign.
-  - qfd_sp_su64_sfu: SU frame of hardened children.
-  - qfd_seq_su_static vs qfd_seq_su_gateway: sequencer choice.
-- **Qwen KV die, 17 inputs with no producer** (kvsys_v1_4_3_design/port_bind_v2/bind17_producers.json):
-  - qkd_seq (the t_ar_cr on-die credit must go)
-  - qkd_host_rt (needs the controller swap)
-  - qkd_embedding_static_core_provider
-  - qkd_d2d_static
-- **Qwen KV die, other:**
-  - qkd_astk_ep: v1.4.4 segment slot.
-  - qkd_static_kv_landing_seg: hold fix plus the v1.5 static join.
+- Three new wires-only compositions: dsfd_capt_x8_data_e, dsfd_capt_x8_data_w and dsfd_capt_status_dual.
+- Re-hashed dsfd_bk_selector_c1 and dsfd_sp_vm. fleet-viz had reported "source body changed"; both bodies are still
+  wires-only, so the compositions apply again.
+
+## Blocked (D), changes since 11:00
+
+- **ot_hbm_vm_lg_static_bank: the d4b slot and the routed view disagree.**
+  - d4b now gives it 96 slots of 33.696 x 34.56 um.
+  - Its only routed view (main d066faae2, vm_lg_bank_hc_static_1015, routed outside the loop) is 150.336 x 151.2 um.
+  - H-DIE was told to size the d4c slot from the view.
+- **VMS glue (ot_vms_hub/rcl/rstop/status_static):** still has no d4b slot.
+- The other D items are unchanged from revision 1: Qwen b2 remap, the KV bind17 missing producers, the S81 HCX / embed
+  homes, HC RETCOL, WFC epoch, the credit-free bk_collector, and HBM IDX glue.
+
+## Failed with no live job, successor named (R): 12 rows
+
 - **S81:**
-  - Hub re-floorplan c74342891: dsfd_engram_mix4_c lost MIX4 slot A.
-  - S-DIE role-home decision: ot_s81_hcx_* (3 rows) and ot_s81_embed_expand.
-  - HC RETCOL adoption: ot_s81_hc_ctra/ctrb.
-  - HC parent choice: ot_s81_hc_ctfx_cap.
-  - WFC epoch producer: dsfd_wfc_vmx_p.
-  - Credit-free successor needed: dsfd_bk_collector_c1 relays colt credits on die.
-  - Engram LKP hold redesign: dsfd_engram_lkp_static14.
+  - dsfd_host_c: the o3 kit gated at 11:30 but was never submitted.
+  - ot_s81_hc_ctrn_col_e/_w.
 - **HBM:**
-  - VMS glue has no homes or pins in grants v8 / plan v5, and the nat2 bank flip is on hold: ot_vms_hub/rcl/rstop/status_static.
-  - No outline or pin grant: ot_hbm_vm_lg_static_bank (64 instances).
-  - IDX glue home: ot_hbm_idx_calendar_static.
-  - IDX op clock-spread successor: ot_hbm_idx_vm_query_static and ot_hbm_idx_vm_static.
-  - svcPC H7 gate: ot_hbm_svc_pc_ctrl_leaf_cfg.
-  - HBM MTP deferred (owner 10-16 07:25): ot_gpu_rf_visibility_fence.
+  - VM q2 faces: q2E failed congestion.
+  - COLL: ctl_v5_q3 (NEEDS_RTL), vmasm (congestion), uop_slice96 (refused at intake on a source-path lint; flow-only fix).
+  - SFU: core_split (successor k7 split2), programme_store (r5 -> r6).
+  - SM x-load: cl2_ctlw (successor cl2g), cl2_bfqf, xq_pegress.
 
-## Started (F)
+Each owner was told in its stream log.
 
-All four were cleared with their die leads first.
-- qkd_rst_region and qkd_hslice: Q-KVSYS-DIE.
-- qfd_sys_face and qfd_embedding_word_provider: Q-COMPUTE-DIE.
+## Independent, started by the census (F)
 
-Job ids are recorded in the stream logs under the prefix [ELEM-CENSUS kit].
+- **qkd_rst_region:** CLOSED. qkd_rst_region-ec1-5fe4533d3, TT +277.01 / FF +30.02, DRC 0.
+- **qkd_hslice, qfd_sys_face, qfd_embedding_word_provider:**
+  - Kits are on claude/census-qkit-1016. Helper Q-KIT runs benches and mutants, re-gates, and submits.
+  - Job ids are below and in the stream logs under [ELEM-CENSUS kit].
+- **ot_s81_kp4_enc, ot_s81_kp4_dec, ot_s81_rate_match:**
+  - The S81 link digital sublayer under the pdie macros; the contract rows are on main 20130f663.
+  - Helper S81-LINK kits and submits them on claude/census-s81link-1016.
 
-S81 and HBM have no F rows: every never-started row there either has an active owner or lacks an outline/pin grant.
+## Gated but never submitted (fleet fill)
 
-Kit-ready work found outside the registry:
-- **S81 link digital sublayer** (ot_s81_kp4_enc, ot_s81_kp4_dec, ot_s81_rate_match). It sits inside the ot_pdie_serdes /
-  ot_pdie_ucie blackbox macros. It is real on-die logic with no rows or jobs and should be added to the S81 contract (S-DIE).
-- **S81 dsfd_wfc_vmx_r / dsfd_wfc_hep_t.** These need a no-backpressure check first.
-
-## Fleet-viz fixes (evidence kept)
-
-- **E rows:** 48 entries added to ~/claude-takeover-20261007/superseded_elements.json, each with source_evidence.
-  - ot_hbm_su_static_vm_ports gained source_evidence, so its existing entry now applies.
-  - Backup: superseded_elements.json.bak-census-1016.
-- **A rows:** qkd_hgs, qkd_hss and qkd_d2ds are folded into their masters in element_overrides.json (kind alternative).
-  - The reason field records the hash and LEF evidence.
-  - Backup: element_overrides.json.bak-census-1016.
-- **C rows, wires-only:** 15 rows added to the compositions in tools/fleet_viz/master_identity.json.
-  - They now appear as integration rows instead of independent not-started masters.
-  - Each entry is gated on its pinned body sha256 and on the no-state check.
-  - qkd_ahub was re-hashed after the hd3 Z-bus split (2c5f3342 -> 3c05d51e).
-- **C rows with their own state** (dsfd_sp_hc_c/t, dsfd_sp_su_c, ot_s81_hc_cth, IDX score/parent, TKM): left listed.
-  They need a parent kit.
-- **B and M rows:** left counted, with their mappings recorded here.
-  - qkd_rly_* disappears once OT_KV_RLY_STD is the default.
-  - Macros need a macro pattern in results/fleet_viz/die_contracts.json (die leads).
-- **Stale contract sources:**
-  - KV die: now reads v1.4.3 port_bind_v2 (Q-KVSYS-DIE, main 49fd7b44a).
-  - Compute die: still reads netlist_0030; switches when the b2 die.v lands.
-  - HBM: the registry reads the v15.1 contract while the die is at v16. Most of the 34 HBM E rows are v15/v14 masters
-    absent from v16. H-DIE should repoint the source.
+- dsfd_stage_seq_static_c10: the v2 kit 7cbfb3921 has been gating since 06:26.
+- dsfd_host_c: the o3 kit.
+- Both were sent to S-ELEM(PQ).

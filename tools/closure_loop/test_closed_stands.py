@@ -79,7 +79,7 @@ class Gate(unittest.TestCase):
     # ---------------------------------------------------------------- when the gate does not apply
     def test_constants(self):
         self.assertEqual(TL.CLOSED_STANDS_KINDS, ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap",
-                                                  "pin_register", "native_launch"))
+                                                  "pin_register", "native_launch", "native_capture"))
         self.assertEqual(TL.DIE_WINDOW_CUT_MIN, 0.6)
 
     def test_new_block_and_unclosed_history_pass(self):
@@ -238,6 +238,36 @@ class Gate(unittest.TestCase):
         r = self.run_(spec(reroute_reason=ok))
         self.assertEqual(r["verdict"], "REFUSE")
         self.assertIn("another cause", r["message"])
+
+    # ---------------------------------------------------------------- native_capture
+    def test_native_capture(self):
+        import json as _j
+        rc = "results/arch/native_rc.json"
+        self.r.c["bbbbbbbbb"][rc] = _j.dumps({"v": {"cell": "ot_t", "capture_ps": 214.6, "launch_ps": 190.0}})
+        ex = lambda p: p in (rc, "results/arch/cuts.json")  # noqa: E731
+        ok = {"kind": "native_capture", "source": rc, "cell": "ot_t",
+              "fix": "input pin flops at the S face + clock entry moved to the capture side"}
+        r = self.run_(spec(reroute_reason=ok), exists=ex)
+        self.assertEqual((r["verdict"], r["kind"]), ("PASS", "native_capture"), r["message"])
+        self.assertIn("214.6", r["message"])
+        for k in ("source", "cell", "fix"):
+            self.assertEqual(self.run_(spec(reroute_reason={a: b for a, b in ok.items() if a != k}), exists=ex)["verdict"],
+                             "REFUSE", k)
+        r = self.run_(spec(reroute_reason=dict(ok, cell="ot_other")), exists=ex)   # receipt has no such cell
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("no record", r["message"])
+        self.r.c["bbbbbbbbb"][rc] = _j.dumps([{"cell": "ot_t", "capture_ps": 171.2}])
+        r = self.run_(spec(reroute_reason=ok), exists=ex)                            # within the budget: stands
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("stands", r["message"])
+        self.r.c["ccccccccc"][rc] = _j.dumps({"cell": "ot_t", "capture_ps": 230.0})
+        r = self.run_(spec(commit="ccccccccc", reroute_reason=ok), exists=ex)       # RTL changed: not a re-kit
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("rtl_change", r["message"])
+        self.r.c["eeeeeeeee"][rc] = _j.dumps({"cell": "ot_t", "capture_ps": 230.0})
+        r = self.run_(spec(commit="eeeeeeeee", reroute_reason=ok), exists=ex)       # outline moved: slot_change
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("FW", r["message"])
 
     # ---------------------------------------------------------------- param_change
     def test_param_change(self):

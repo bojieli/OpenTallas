@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_qwen_tile_operand",
+ "enable": false,
+ "reason": "Every input terminates at an explicit existing register (operand mq/gm/wsrc or RQR word_q); every output is the explicit existing s2/word_q register. Hardening preserves these exact register stages. Additional auto pin registers would duplicate existing boundary stages and change the priced recurrence."
+}

@@ -62,21 +62,21 @@
   ]
  },
  "outline": {
-  "w": 302.4,
-  "h": 302.4
+  "w": 369.36,
+  "h": 369.36
  },
  "pin_regs": {
   "enable": false,
   "reason": "every input lands in a pin register in RTL (rw, e6, e5r replicas, bc_*, bq_c, bqvr) and every output is a register (owner rule 19:50)"
  },
- "floorplan_note": "XQL pair-egress leaf (H-SM 10-16): W face 2,048 bq_d from the pair bdring (6.8/um as the bdring E face), S face 1,024 rwq from the 2x2 bfq stack, N face 2,063 xw pins toward the pair SM windows, E face controls from the equal-age tree.",
- "slot_change_request": "NEW leaf of the XQL pair cluster (H-DIE pair-store slot re-home): 302.4 x 302.4",
+ "floorplan_note": "XQL pair-egress leaf x3 (H-SM 10-16, SM_X option (b) confirmed by H-DIE 18:43: 4 pair stores/quadrant in one band-gap column at the pair boundary, enclosed-row egress at the column E corner, xw windows >= 360 um, cut <= 0.55, <= 6 pins/um per face (target 5.73), 100 um pair channel, die ~855.3 mm2): 369.36 x 369.36; every face spread evenly by spread_face_pins.py (margin 4.32): N 2,063 xw pins over 360.72 um = 5.72/um (alternating M3/M5), W 2,048 bq_d over 360.72 = 5.68/um (M4), S 1,024 rwq = 2.84/um, E 42 controls, clk centred on E. Pin-limited leaf (3,923 um2 std, 5,135 pins): util stays low by construction. x2 345.6 x 302.4 had N 6.1/um and W 7.0/um (> owner 6 pins/um rule); x1 auto pin bands 9.8/um -> GRT-0116.",
+ "slot_change_request": "XQL pair-store column leaf, SM_X option (b) (H-DIE 18:43): 369.36 x 369.36 (x2 345.6 x 302.4, x1 302.4 x 302.4)",
  "job": {
-  "owner": "Claude H-SM 1315",
-  "branch": "codex/hbm-sm-1552",
-  "tag": "x1",
+  "owner": "Claude H-SM 1830",
+  "branch": "claude/hsm-xqb-1830",
+  "tag": "x3",
   "purpose": "XQL pair-egress leaf: the ctl egress (rw capture, replicated beat select, BD beat capture, xw pins) per SM pair, beside the pair store",
-  "structural_change": "new leaf (XQL, coordinator decision 10-16; d4b SM_X 63 stages -> pair-local egress)",
+  "structural_change": "x3 supersedes x2 (hgi_sm_xq_pegress-x2-153565d5e): SM_X option (b) geometry + owner <= 6 pins/um per face: 369.36 x 369.36, N xw 5.72/um over a 360.72 um span (H-DIE window >= 360 um, target 5.73/um), W bq_d 5.68/um, S rwq 2.84/um, even spread (spread_face_pins.py). x1 hgi_sm_xq_pegress-x1-ee1d52825 GRT-0116 cause: auto pin regions packed 2,063 xw pins into a 210 um band (9.8/um) + 2 outhold pads/pin -> 29 top-row gcells M3 V cap+1. RTL, benches, pin faces unchanged.",
   "extra_paths": [
    "physical/asap7_memory_macros",
    "physical/hbm_xp_aq_tree13_1014",
@@ -146,5 +146,6 @@
   ],
   "views_to": "physical/ref_tile/hgi_sm_xq_pegress/views",
   "record_to": "results/rtl/ref_tile/hgi_sm_xq_pegress"
- }
+ },
+ "io_tcl": "physical/ref_tile/hgi_sm_xq_pegress/spread_pins.tcl"
 }
