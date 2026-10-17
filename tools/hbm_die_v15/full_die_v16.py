@@ -461,9 +461,9 @@ def a2p_edge_remap(edges, problems):
     out = []
     if True:
         for e in edges:
-        if DROP_SM_Q and e['dst'][:2] == ['hb_idx', 'rank']:
-            e = dict(e, src=['col_idx', 'prm', 74, 82], bits=8,
-                     basis='A2P TP192: same full 8-bit configured die_id as ARGMAX (cp2 operand row0 bits81:74)')
+            if DROP_SM_Q and e['dst'][:2] == ['hb_idx', 'rank']:
+                e = dict(e, src=['col_idx', 'prm', 74, 82], bits=8,
+                         basis='A2P TP192: same full 8-bit configured die_id as ARGMAX (cp2 operand row0 bits81:74)')
             parts = [e]
             for side, oth in (('dst', 'src'), ('src', 'dst')):
                 nxt = []
