@@ -197,7 +197,12 @@
    }
   ],
   "views_to": "physical/ref_tile/hdie_host_status_fa_r3/views",
-  "record_to": "results/rtl/ref_tile/hdie_host_status_fa_r3"
+  "record_to": "results/rtl/ref_tile/hdie_host_status_fa_r3",
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "vs": "hdie_host_status_r2-r2-1807890a7",
+   "change": "top ot_hbm_status_join -> ot_hbm_status_join_fa (HBM-FAULT 35d786635 fault-tree root: +NA 4 a_fault pin flops, sticky a_cause, FCLR 125 clear, block_ready/die_fault one more register) + wrapper reset relay; r2 hardens the bare join without the fault-tree pins"
+  }
  },
  "slot_change_request": "HBM-TILES-A2 10-17 -> H-DIE: host_status master ot_hbm_status_join -> ot_hbm_status_join_fa (NA 4, FCLR 125; +4 a_fault W, +4 a_cause E), slot 23.76 sq as r2.",
  "structural_change": "HBM-TILES-A2 10-17: hardens ot_hbm_status_join_fa (fault-tree root, HBM-FAULT 35d786635) instead of the bare ot_hbm_status_join; RRELAY=1 also relays the wrapper flops. r2 (hdie_host_status_r2-r2-1807890a7) hardens a master without the fault-tree pins, so H-DIE-R7b cannot bind the 22-leaf tree to it."
