@@ -269,7 +269,7 @@
      "face": "master S (beside rs)"
     }
    ],
-   "feedthrough": "registered rs_i -> rs_o in corridor T, 14 edges (Q-CLUSTER measured)",
+   "feedthrough": "rs_i (N, 488.893-660.227, above rs) -> rs_o (S, 1,093.7-1,265.0): 16 edges",
    "positions": "near bands (1, 2) carry the far cluster rs; far bands (0, 3) have no far neighbour: near/far master split or one master with a band strap is Q-CLUSTER's choice (OPEN)",
    "ports_from_plan": {
     "c16_W2_1": [
@@ -381,7 +381,8 @@
       "peer": "c16_W2_1"
      }
     ]
-   }
+   },
+   "placement": "43.2 lattice, pitch 2,376.0, 17.28 slivers (Q-CLUSTER option a); E-row clusters right-aligned in their slot"
   }
  },
  "moved": {
