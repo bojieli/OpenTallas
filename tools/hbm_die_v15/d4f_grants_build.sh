@@ -13,3 +13,4 @@ python3 tools/hbm_die_v15/d4f_sfucore_grant.py $OUT
 python3 tools/hbm_die_v15/d4f_wq2_merge_grant.py $OUT $N
 python3 tools/hbm_die_v15/d4f_calendar_grant.py $OUT
 python3 tools/hbm_die_v15/reticle.py $OUT
+python3 tools/hbm_die_v15/d4f_coll_grant.py $OUT $N
