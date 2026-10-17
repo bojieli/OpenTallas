@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.s81.die_lead_grant.v1",
+ "by": "coordinator (HANDOFF 0co COORD 10-17 ~18:45), recorded by S81-TILES3",
+ "supersedes_in_part": "results/physical/die_iter_1012/s81/grants/coord_1017_engram_static14_st9_clk2.json (st9: 676 pins / 16 roots)",
+ "grants": [
+  {
+   "master": "dsfd_engram_lkp_static14",
+   "variant": "st10 (branch claude/s81-static14-st9 @7cdde19aa)",
+   "pin_plan": "physical/s81_die_pins/v28_engram_static14_candidate/dsfd_engram_lkp_static14.tcl (branch claude/s81-static14-st9 @7cdde19aa)",
+   "decision": "GRANTED +1 clock pin: ck_rd S face M5 x 249.996 (y 0.042); 677 pins incl 17 clock roots (ck, ck_seed, 6 hash, 6 rows, ck_n, ck_s, ck_rd); the 676 st9 rectangles unchanged; outline 324 x 216 unchanged",
+   "why": "st9 CTS gate (a3304a6bd): core root ck 7,984 sinks entered mid-W while its register mass sits at x 110-321, TT insertion 388.5 / spread 87.4 ps > 300/80; st10 splits the core into regional roots at their masses (ck W ~1.3k, ck_s ~1.7k, ck_rd ~4.1k read captures, ck_n ~1.5k); 0 cycles",
+   "check": "ck_rd lies east of the last S data pin hr_d[255] 228.876 (21.1 um clear), under the read-capture mass; same .042 y and M5 layer as ck_s",
+   "die_side": "the parent (MIX4 / S81-DV die) delivers ck_rd as a phase-0 1:1 regional clock of the same source as ck (neighbour-relative clocking, delivered phi - R_i from the tile's measured per-root insertion)",
+   "binding": "bind st8, st9 or st10, whichever passes native first (coordinator)"
+  }
+ ]
+}
