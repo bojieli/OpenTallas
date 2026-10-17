@@ -351,7 +351,7 @@ def audit(lanes, ctpl, ctfl, rets, slices):
     spos = lambda c: (CW * c, ybot(0, SL_ROW))
     skind = lambda c: 'e' if c < 2 else 'w'
     def j(kind, a, b):
-        joins.append(dict(kind=kind, um=round(abs(a[0] - b[0]) + abs(a[1] - b[1]), 3)))
+        joins.append(dict(kind=kind, column=c, source_xy=list(a), sink_xy=list(b), um=round(abs(a[0] - b[0]) + abs(a[1] - b[1]), 3)))
     for c in range(4):
         R = rets[c]; x0, y0 = rpos(c)
         for jj in range(4):
@@ -418,10 +418,12 @@ def audit(lanes, ctpl, ctfl, rets, slices):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument('--out', required=True, type=Path); ap.add_argument('--split', action='store_true'); ap.add_argument('--spread-retcol', action='store_true')
+    ap = argparse.ArgumentParser(); ap.add_argument('--out', required=True, type=Path); ap.add_argument('--split', action='store_true'); ap.add_argument('--spread-retcol', action='store_true'); ap.add_argument('--joins-out', type=Path)
     a = ap.parse_args()
     lanes, ctpl, ctfl, rets, slices = build()
     summ, joins = audit(lanes, ctpl, ctfl, rets, slices)
+    if a.joins_out:
+        a.joins_out.write_text(json.dumps(joins, separators=(',', ':')) + '\n')
     a.out.mkdir(parents=True, exist_ok=True)
     for L in rets + [x for S in slices.values() for x in (S.leaves() if SPLIT else [S])]:
         (a.out / f'{L.name}.tcl').write_text(L.tcl())
