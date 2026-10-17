@@ -76,7 +76,7 @@
   "branch": "claude/hsm-xl2-0230",
   "tag": "cl2h",
   "purpose": "x-load cl2 leaf (H-SM 2026-10-15): the flat clock-leaf cl failed its --cts gate (multiple_cts_roots source on 32 SRAMs; bs_a 8,642 / md 5,635 / bq_v 4,125-load nets; bw->rq 21 levels). cl2 = cluster of hardened leaves (ctl, 4 x BF quarter of one master, 2 x the CLOSED tree13 quantiser tile, BD ring), one clock root each < 15k sinks, every leaf pin registered (owner 19:50), running issue-word registers (no multiply), replicated selects; +2 fixed edges on every xw beat (lock bench vs cl shifted 2).",
-  "structural_change": "cl2h gate 026aac167 io_place FAIL PPL-0090: an rwq pin group of 32 took the 2 slots of the literal clk_s range 147.80-147.90 (placement-order dependent; the e44 gate got lucky). rwq now confined to S x 2.16-146.88 (W half, 1,500 M5 slots for 256 pins), clk_s range untouched. | cl2f route e44e5aab3 TT -9.30/FF -3.74 (ECO least-bad TT -4.04/FF +13.43; LVT 13 cells reached TT +3.18 but hold repair took it back): every TT/SS-worst rd path is a W-column SRAM (g_t[0]/[2]) rd_out -> cap flop, 177 ps on the first gate: the LEF puts ALL 256 rd_out (and r_addr/clk) on the macro's x=0 edge, so W-column R0 macros present their read pins at the tile W edge, ~130 um from the centre capture/OR column. cl2h: W-column SRAMs MY (read pins face the centre channel like the E column); RTL/pins/edges unchanged. | cl2dh CLOSED TT +97.07/FF +7.59 but native FAIL: launch 262.9 (75 rwq pins), capture 222.1 (612 c_d pins), boundary spread 95.3 around R 353.2 (one CTS root from the N clock pin: N c_d pin flops early, S rwq pin flops late; cl2e balanced-CTS gate spread 119.7, no gain). bfqf = same edges, face-local CTS roots clk_n (c_d pin regs) / clk_s (rwq pin regs) / clk core + 8 direct SRAM clock entries clk_m0..7 (VM q0 faces recipe, native PASS L193.2/C186.1).",
+  "structural_change": "cl2h gate 026aac167 io_place FAIL PPL-0090: an rwq pin group of 32 took the 2 slots of the literal clk_s range 147.80-147.90 (placement-order dependent; the e44 gate got lucky). now an explicit even pin plan io_spread.tcl (results/hbm_sm_attention_1015/hsm_1315/bfqf_pinplan.py on spread_face_pins.py): every face <= 6 pins/um (peak 20-um window N 3.55 / S 0.9 / W 0.15), clock pins at their literal pin_ranges, data pins kept 0.5 um off them. | cl2f route e44e5aab3 TT -9.30/FF -3.74 (ECO least-bad TT -4.04/FF +13.43; LVT 13 cells reached TT +3.18 but hold repair took it back): every TT/SS-worst rd path is a W-column SRAM (g_t[0]/[2]) rd_out -> cap flop, 177 ps on the first gate: the LEF puts ALL 256 rd_out (and r_addr/clk) on the macro's x=0 edge, so W-column R0 macros present their read pins at the tile W edge, ~130 um from the centre capture/OR column. cl2h: W-column SRAMs MY (read pins face the centre channel like the E column); RTL/pins/edges unchanged. | cl2dh CLOSED TT +97.07/FF +7.59 but native FAIL: launch 262.9 (75 rwq pins), capture 222.1 (612 c_d pins), boundary spread 95.3 around R 353.2 (one CTS root from the N clock pin: N c_d pin flops early, S rwq pin flops late; cl2e balanced-CTS gate spread 119.7, no gain). bfqf = same edges, face-local CTS roots clk_n (c_d pin regs) / clk_s (rwq pin regs) / clk core + 8 direct SRAM clock entries clk_m0..7 (VM q0 faces recipe, native PASS L193.2/C186.1).",
   "extra_paths": [
    "physical/asap7_memory_macros",
    "physical/hbm_xp_aq_tree13_1014",
@@ -354,10 +354,6 @@
   "clk_m7": [
    227.532,
    227.628
-  ],
-  "rwq": [
-   2.16,
-   146.88
   ]
  },
  "clock": "hybrid_entries",
@@ -522,5 +518,6 @@
    "inputs": [],
    "outputs": []
   }
- }
+ },
+ "io_tcl": "physical/ref_tile/hgi_sm_xl2_bfqf/io_spread.tcl"
 }
