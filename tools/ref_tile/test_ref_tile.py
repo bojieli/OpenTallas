@@ -1,5 +1,6 @@
 """tools/ref_tile (ref-flow-1011): kit generation invariants and gate checks that need no fleet host."""
 import json
+import os
 import shlex
 import sys
 import tempfile
@@ -501,6 +502,22 @@ class Sources(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class OrfsVarPathCwd(unittest.TestCase):
+    """ROOT 2026-10-17 (S-ELEM static14): an orfs_vars repo path is /src/<path> and a kit source whatever the cwd."""
+    def test_relative_hook_resolves_against_root_not_cwd(self):
+        hook = "tools/ref_tile/ref_tile.py"                      # any committed repo file
+        old = os.getcwd()
+        with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as elsewhere:
+            os.chdir(elsewhere)
+            try:
+                r = RT.gen(spec(Recipe.EXN, route={"pd": 0.5}, hold_budget="tile", hold_budget_reason="test",
+                                orfs_vars={"POST_IO_PLACEMENT_TCL": hook}), commit="c" * 40, out_root=Path(a))
+                env = (Path(a) / r["kit"] / "kit.env").read_text()
+            finally:
+                os.chdir(old)
+        self.assertIn(f"POST_IO_PLACEMENT_TCL=/src/{hook}", env)
 
 
 class PgSpread(unittest.TestCase):
