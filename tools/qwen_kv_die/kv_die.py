@@ -91,6 +91,10 @@ PHY_REACH = float(__import__('os').environ.get('OT_KV_PHY_REACH', '150'))
 # (m['clock_seams']) for the die STA / DIE-CLOCK neighbour check.  Default off: plans unchanged.
 SEAM = __import__('os').environ.get('OT_KV_SEAM', '0') == '1'
 SEAM_REACH = float(__import__('os').environ.get('OT_KV_SEAM_REACH', '150'))
+# data-chain seams (pvin -> fork, pvrq -> V port, ...): OT_KV_SEAM_DATA_REACH um (0 = recorded only, normal reach).  The
+# 150-um last hop into the fork column does not plan (d0 plan: pvin_WS_2 no spot 220 um from its fork); Q-KV's forwarded
+# c <-> stack link station (+1 edge) needs a forwarded-clock relay master -- open
+SEAM_DATA_REACH = float(__import__('os').environ.get('OT_KV_SEAM_DATA_REACH', '0'))
 PHY_MASTERS = ('qkd_hbm3e_phy_pc', 'ot_qfd_serdes_112g_x12_phy', 'ot_qkvd_ucie_x64_phy')
 # KVPLAN2 2215 (OT_KV_REACH_FIX=1, kvs13k radius@401: non-PV families over the measured KV reach 446):
 #   head kp_k / kp_t / gf_t 457-468 -> head plans re-assigned at 400 (results/arch/qwen_kv_die/head_reach400: lane t in
@@ -356,6 +360,41 @@ PVT_FORK_PITCH = float(__import__('os').environ.get('OT_KV_PVT_FORK_PITCH', '80'
 # request words end on the control tile u_ctl (the kvs13l2 case measured 1.1-1.5-mm unrelayed hops from the side-face pins to
 # the tile inside the wires-only frame) through a PVT_HUB_CLEAR relay channel between the hub and the strip
 PVT_HDR_CTL = __import__('os').environ.get('OT_KV_PVT_HDR_CTL', '0') == '1'
+# KVPLAN3 0230 (OT_KV_PVT_PINS=1; kvs13l3 flags' final plan: pin repair added 64 relays on pvin / pvta / pvtb / pvc ->
+# W 59..75, 64 chunks off header + DELTA_g): every fork / tap of one master took its pin faces from ONE instance (the
+# masters() auto-pin rule), so an E-side tap had tc on the face AWAY from its pair and an N-pair tap ti / to reversed, and
+# the planner measured those ends to the frame's nearest point (401-457-um hops after drawing).  With this flag the forks /
+# taps are oriented by side (W: R0 / E: MY; S pair as is, N pair + MX), their ports drawn on fixed canonical faces
+# (PVT_PORTS: fraction along the face) and the planner aims at exactly those pins from the first pass.
+PVT_PINS = __import__('os').environ.get('OT_KV_PVT_PINS', '0') == '1'
+PVT_PORTS = dict(qkd_pvfork=dict(vi=('W', 0.5), vh=('N', 0.5), vta=('S', 0.3), vtb=('S', 0.7)),
+                 qkd_pvtap=dict(ti=('N', 0.5), to=('S', 0.5), tc=('E', 0.5)))
+
+
+def pvt_port(master, port):
+    """OT_KV_PVT_PINS: (face, fraction) of a fork / tap port in its canonical (W side, S pair = R0) frame, else None"""
+    if not PVT_PINS:
+        return None
+    k_ = 'qkd_pvtap' if master.startswith('qkd_pvtap') else master
+    return PVT_PORTS.get(k_, {}).get(port.lstrip('*'))
+
+
+def pvt_orient(st):
+    return {('W', 'S'): 'R0', ('E', 'S'): 'MY', ('W', 'N'): 'MX', ('E', 'N'): 'R180'}[(st[0], st[1])] if PVT_PINS else 'R0'
+
+
+def pvt_port_xy(it, port):
+    """die point of a fork / tap port under OT_KV_PVT_PINS (the drawn word centre, orientation applied)"""
+    fp_ = pvt_port(it.master, port)
+    if fp_ is None:
+        return None
+    f_, fr_ = fp_
+    x_, y_ = {'E': (it.w, fr_ * it.h), 'W': (0.0, fr_ * it.h), 'N': (fr_ * it.w, it.h), 'S': (fr_ * it.w, 0.0)}[f_]
+    if it.orient in ('MY', 'R180'):
+        x_ = it.w - x_
+    if it.orient in ('MX', 'R180'):
+        y_ = it.h - y_
+    return (it.x + x_, it.y + y_)
 PVT_HUB_CLEAR = float(__import__('os').environ.get('OT_KV_PVT_HUB_CLEAR', '86.4')) if PVT_HDR_CTL else 21.6
 
 
@@ -1665,7 +1704,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
                         # face pins, all in one column PVFORK_GAP off the face
                         yh_ = PVW[1] - PVT_HDR_Y0 - PVT_FORK_PITCH * k
                         fy_ = py_ + (yh_ if por_ == 'R0' else PVW[1] - yh_) - fh_ / 2
-                        add(f'pvfork_{st}_{k}', 'qkd_pvfork', fx_, up(fy_, GY), fw_ - SHAVE, fh_ - SHAVE, 'R0', 'relay', 'attn')
+                        add(f'pvfork_{st}_{k}', 'qkd_pvfork', fx_, up(fy_, GY), fw_ - SHAVE, fh_ - SHAVE, pvt_orient(st), 'relay', 'attn')
                         for g in PVT_TAPS:
                             tw_, th_ = pvtap_frame(g)
                             tx_ = up(x_ - PVFORK_GAP - tw_, GX) if st[0] == 'W' else up(x_ + PVW[0] + PVFORK_GAP, GX)
@@ -1673,7 +1712,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
                             # strip: room between the fork column and group 7's taps for the four first stages)
                             yc_ = pvt_plan()['face_pins']['vc'][f'vc{k}_{g}'][1] + PVT_ORD * (1.5 - k) * PVT_PIN_DY - PVT_TAP_DY
                             ty_ = py_ + (yc_ if por_ == 'R0' else PVW[1] - yc_) - th_ / 2
-                            add(f'pvtap_{st}_{k}_{g}', f'qkd_pvtap{pvtap_n(g)}', tx_, up(ty_, GY), tw_ - SHAVE, th_ - SHAVE, 'R0', 'relay', 'attn')
+                            add(f'pvtap_{st}_{k}_{g}', f'qkd_pvtap{pvtap_n(g)}', tx_, up(ty_, GY), tw_ - SHAVE, th_ - SHAVE, pvt_orient(st), 'relay', 'attn')
         # the 16 V ports qkd_pv16_vport (Q-VMWB r5, the V issuer): port k of stack st serves landing groups {k, 0} / {k, 1}
         # (vport_wiring.txt: groups 2k / 2k + 1, adjacent strip slots, LAND_GROUP_ORDER) -> its home is the landing-inner
         # channel (landing | engine group) level with the middle of ITS two groups, so the V get / rsp words (RT) cross
@@ -2379,6 +2418,11 @@ def _relays(m):
                     yh_ = it_.h - PVT_HDR_Y0 - PVT_PIN_DY * (k_ % 4)
                     _PIN_HINT[(it_.name, f'vh{k_}')] = die_xy_(0.0 if k_ < 4 else it_.w, yh_)
                     _PIN_HINT[(it_.name, f'vrq{k_}')] = die_xy_(0.0 if k_ < 4 else it_.w, yh_ - 30.0)
+    if PV_T and PVT_PINS:
+        for it_ in m['insts']:
+            if it_.master == 'qkd_pvfork' or it_.master.startswith('qkd_pvtap'):
+                for p_ in PVT_PORTS['qkd_pvfork' if it_.master == 'qkd_pvfork' else 'qkd_pvtap']:
+                    _PIN_HINT[(it_.name, p_)] = pvt_port_xy(it_, p_)
     if HOST_V14.get('trees') and 'serdes_host' in by:
         # v1.4.2 (kvs7c TT -7.6 ns, 1,044 endpoints: rly_host_fdi_55 -> serdes_host tx_flit 2.2 mm): the hard SerDes PHY's
         # FDI pins are on its W face (LEF ot_qfd_serdes_112g_x12_phy: tx_flit y 600.19..650.21, rx_flit 650.30..700.32,
@@ -2733,8 +2777,8 @@ def _relays(m):
             # the chain stops once the load end is within this of its last register
             if bid in tree_meta:
                 return TREE_LAST
-            if seam_last:
-                return min(SEAM_REACH, PHY_REACH if phy_b else SEAM_REACH, reach_())
+            if seam_last and SEAM_DATA_REACH > 0:
+                return min(SEAM_DATA_REACH, PHY_REACH if phy_b else SEAM_DATA_REACH, reach_())
             return min(PHY_REACH, reach_()) if phy_b else reach_()
 
         def reach_():
@@ -2917,7 +2961,7 @@ def _relays(m):
         n = st_['k']
         if (seam_first or seam_last) and n:
             seams.append(dict(bus=bid, hop='first' if seam_first else 'last', src=src_dom, dst=dst_dom, stages=n,
-                              reach=SEAM_REACH))
+                              reach=SEAM_REACH if seam_first else (SEAM_DATA_REACH or None)))
         if st_.get('exact_k') is not None and n != st_['exact_k']:
             m.setdefault('pvt_chunk_mismatch', []).append(dict(bus=bid, stages=n, need=st_['exact_k'], route_um=lengths.get(bid),
                                                                a=f'{a}.{pa}', b=f'{b}.{pb}'))
@@ -3214,6 +3258,10 @@ def masters(m, k=1, port_bits=None):
                 continue
             if mst.startswith('qkd_rly'):
                 mm.face(p, bits, 'W' if p == 'a' else 'E', 'M4', mm.h / 2, 1)   # wide relays: frame height = the word
+                continue
+            if pvt_port(mst, p) is not None:
+                f_, fr_ = pvt_port(mst, p)    # KVPLAN3 0230 (OT_KV_PVT_PINS): fork / tap ports on fixed canonical faces
+                mm.face(p, bits, f_, 'M4' if f_ in 'EW' else 'M5', round(fr_ * (mm.h if f_ in 'EW' else mm.w), 4), 1)
                 continue
             pe = peer.get((mst, p), [inst0])[0]
             dxp, dyp = pe.x + pe.w / 2 - (inst0.x + inst0.w / 2), pe.y + pe.h / 2 - (inst0.y + inst0.h / 2)
