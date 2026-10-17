@@ -484,6 +484,12 @@ def main():
         hop_um=dict(limit=LIMIT, plan=HOP, max=round(max(hops), 1)),
         tree=dict(hosts={f"{l}_{i}": list(h) for (l, i), h in host.items()}, nl_slot=list(spare)),
         ports=pins, a0=dict(ref=A0_REF, nk=A0_NK, nl=A0_NL, nk_clocks=NK_CLOCKS, nl_clocks=NL_CLOCKS),
+        die_crossing=dict(
+            rule="(a) + (c): no die link crosses a qfd_c_b16_dv outline (die repeaters never sit inside it; M9 over the "
+                 "cluster carries die PG only in dv2r8f).  Die links run in the band gaps, the slice / head row and the W "
+                 "column; the only data that passes through a cluster is its own registered feedthroughs bc -> bco "
+                 "(4 x 516 b, 17 edges) and rs_i -> rs_o (514 b, 14 edges).  No die feedthrough repeater sites are reserved.",
+            registered_feedthroughs={"bc0..3->bco0..3": g.STAGE["exit"], "rs_i->rs_o": nft}),
         gating=["A0 views qfd_tile_nk_romleaf_a0 / nl twin not CLOSED (Q-ROMPARENT-2): diagnostics only, no binding"])
     OUT_ARCH.mkdir(parents=True, exist_ok=True)
     (OUT_ARCH / "cluster_contract_dv.json").write_text(json.dumps(contract, indent=1) + "\n")
