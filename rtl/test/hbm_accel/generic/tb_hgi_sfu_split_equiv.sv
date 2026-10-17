@@ -81,6 +81,12 @@ reg io_cfg_we=0,io_start_v=0;
 `ifdef SFU_PSTORE_R7C
  `define SFU_PSTORE_R7_ANY
 `endif
+`ifdef SFU_PSTORE_R7D
+ `define SFU_PSTORE_R7_ANY
+ `define SFU_PSTORE_XCLK ,.clk_wl(clk),.clk_wu(clk),.clk_io(clk),.clk_p0(clk),.clk_p1(clk),.clk_p2(clk),.clk_p3(clk)
+`else
+ `define SFU_PSTORE_XCLK
+`endif
 `ifndef SFU_LG_R
  initial $fatal(1,"tb_hgi_sfu_split_equiv needs SFU_LG_R (reference = split engine R, core LG_PATH = R, core bridge R+1)");
 `endif
@@ -88,6 +94,8 @@ reg io_cfg_we=0,io_start_v=0;
  localparam integer EQ_LG=`SFU_LG_R;
 `ifdef SFU_PSTORE_R7B
  localparam integer D=10;  // r7b store: r7 + SRAM pipelining: every calendar +3, programme started by the IO word -> +6
+`elsif SFU_PSTORE_R7D
+ localparam integer D=4;   // r7d store: r7c + 8 regional clock roots (bench drives all from clk; phase-0 same frequency)
 `elsif SFU_PSTORE_R7C
  localparam integer D=4;   // r7c store: r7 + kept per-pair SRAM write copies + precomputed launch; datapath unchanged
 `elsif SFU_PSTORE_R7
@@ -101,7 +109,7 @@ reg io_cfg_we=0,io_start_v=0;
  wire [1741:0] s_ctl;
  wire s_pact,s_pdone,s_ioact,s_iodone,s_sfault,s_cfault;
  wire [31:0] s_pord,s_ioord;
- `ifdef SFU_PSTORE_R7C ot_hgi_sfu_programme_store_r7c `elsif SFU_PSTORE_R7B ot_hgi_sfu_programme_store_r7b `elsif SFU_PSTORE_R7 ot_hgi_sfu_programme_store_r7 `elsif SFU_PSTORE_R6 ot_hgi_sfu_programme_store_r6 `else ot_hgi_sfu_programme_store `endif #(.PAGE_AW(1)) eq_store(.clk(clk),.rst_n(rst_n),
+ `ifdef SFU_PSTORE_R7D ot_hgi_sfu_programme_store_r7d `elsif SFU_PSTORE_R7C ot_hgi_sfu_programme_store_r7c `elsif SFU_PSTORE_R7B ot_hgi_sfu_programme_store_r7b `elsif SFU_PSTORE_R7 ot_hgi_sfu_programme_store_r7 `elsif SFU_PSTORE_R6 ot_hgi_sfu_programme_store_r6 `else ot_hgi_sfu_programme_store `endif #(.PAGE_AW(1)) eq_store(.clk(clk),.rst_n(rst_n) `SFU_PSTORE_XCLK ,
   .cfg_we(cfg_we),.cfg_stripe(cfg_stripe),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
   .start_base(11'd0),.start_limit(12'(NINST)),.start_loops(16'd1),
   .programme_active(s_pact),.programme_done(s_pdone),.programme_ordinal(s_pord),

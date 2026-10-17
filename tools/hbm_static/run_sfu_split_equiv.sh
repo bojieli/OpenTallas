@@ -42,6 +42,8 @@ if [ "${STORE7:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r7.sv $P/
 if [ "${SFU_LOCAL_KEEP:-0}" = 1 ];then defs+=(-DOT_SFU_LOCAL_KEEP);fi
 # STORE7B=1 (r7b): ot_hgi_sfu_programme_store_r7b (r7 reset tree + SRAM pipelining; D=10, status 8)
 if [ "${STORE7B:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r7b.sv $P/ot_hgi_sfu_program_stripe_pipe.sv $P/ot_hgi_sfu_calendar_paged_pipe.sv $P/ot_hgi_sfu_io_calendar_pipe.sv); defs+=(-DSFU_PSTORE_R7B); fi
+# STORE7D=1 (r7d): ot_hgi_sfu_programme_store_r7d (r7c + 8 regional clock roots; D=4, status 2)
+if [ "${STORE7D:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r7d.sv $P/ot_hgi_sfu_program_stripe_rc.sv $P/ot_hgi_sfu_calendar_paged_rd.sv $P/ot_hgi_sfu_io_calendar_rd.sv); defs+=(-DSFU_PSTORE_R7D); fi
 # STORE7C=1 (r7c): ot_hgi_sfu_programme_store_r7c (r7 reset tree + kept per-pair SRAM write copies; D=4, status 2)
 if [ "${STORE7C:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r7c.sv $P/ot_hgi_sfu_program_stripe_rc.sv $P/ot_hgi_sfu_calendar_paged_rc.sv $P/ot_hgi_sfu_io_calendar_rc.sv); defs+=(-DSFU_PSTORE_R7C); fi
 # CORE2=1 (k7, opt-in): the core under test is ot_hgi_sfu_core_split2 (W/E lane ports, regional clock roots, reset relay)
