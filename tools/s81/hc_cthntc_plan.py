@@ -35,7 +35,7 @@ SL_ROW = 2 * SL_H if SPLIT else SL_H
 # allowance > 65% at 72.90) -> 75.06 projected c0 65.9% incl hold (route-synth std 5827) -> a4d 77.76 (+4.86, 18 rows; 13 cs_rel legs 502.4 um > 500, reported); every row below moves down by RET_GROW.
 import os
 RET_H = round(float(os.environ.get('OT_CTHNTC_RET_H', '77.76')), 3)
-PFLT_COLS = {int(x) for x in os.environ.get('OT_CTHNTC_PFLT_COLS', '0,2,3').split(',') if x != ''}   # a4g: pflt_n/s beside nflt_col (c0,c2,c3; c1 bound as a4f, native PASS)
+PFLT_COLS = {int(x) for x in os.environ.get('OT_CTHNTC_PFLT_COLS', '2,3').split(',') if x != ''}   # a4g: pflt_n/s beside nflt_col (c2,c3; c0 a4e and c1 a4f bound with native PASS)
 NS_SPREAD = float(os.environ.get('OT_CTHNTC_NS_SPREAD', '0.072'))   # a4e: min N/S pin spacing of the ret_column leaves (um)
 NS_SPREAD_COLS = {int(x) for x in os.environ.get('OT_CTHNTC_NS_SPREAD_COLS', '0,1,2,3').split(',') if x != ''}  # a4e: all four columns (a4d c0-c3 all GRT-0116 at the S-face hrq band)
 SL_GROW, RET_GROW = round(SL_ROW - 25.92, 3), round(RET_H - 72.90, 3)
