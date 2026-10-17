@@ -84,6 +84,9 @@ def net_bits(expr, wires):
     return out
 
 
+SCALAR = set()                     # nets declared without a range: referenced bare (a bit-select of a scalar is illegal)
+
+
 def pack(bits):
     """bit refs (LSB first) -> a compact Verilog concatenation (MSB first), runs of one wire as slices"""
     runs = []
@@ -95,7 +98,7 @@ def pack(bits):
             runs.append([m.group(1), int(m.group(2)), int(m.group(2))])
         else:
             runs.append([b, None, None])
-    parts = [n if lo is None else (f'{n}[{lo}]' if lo == hi else f'{n}[{hi}:{lo}]') for n, lo, hi in reversed(runs)]
+    parts = [n if lo is None or n in SCALAR else (f'{n}[{lo}]' if lo == hi else f'{n}[{hi}:{lo}]') for n, lo, hi in reversed(runs)]
     return parts[0] if len(parts) == 1 else '{' + ', '.join(parts) + '}'
 
 
@@ -127,6 +130,7 @@ def main(argv=None):
             m = re.match(r'\s*wire\s+(\S+);', ln)
             if m:
                 wires[m.group(1)] = 1
+                SCALAR.add(m.group(1))
     place = (case / 'place.tcl').read_text().split('\n')
     pos = {}
     for ln in place:
@@ -145,7 +149,7 @@ def main(argv=None):
         conns = []
         for c in re.finditer(r'\.(\\?\S+?)\((\{[^}]*\}|[^)]*)\)', body):
             refs = net_bits(c.group(2).strip(), wires)
-            conns.append([c.group(1), refs])
+            conns.append([c.group(1), refs, c.group(2).strip(), list(refs)])
             for i, r in enumerate(refs):
                 if RST_NET.match(r.rsplit('[', 1)[0]):
                     bitpins[r].append((nm, len(conns) - 1, i))
@@ -158,7 +162,7 @@ def main(argv=None):
 
     def pin_of(nm, ci, i):
         mst = insts[nm][1]
-        p, refs = insts[nm][2][ci]
+        p, refs = insts[nm][2][ci][:2]
         key = f'{p}[{i}]' if f'{p}[{i}]' in pins[mst] else p
         q = pins[mst].get(key)
         if q is None or nm not in pos:
@@ -174,7 +178,7 @@ def main(argv=None):
     drv_of, relay_in, loc = {}, {}, {}
     for nm, (li, mst, conns) in insts.items():
         if RELAY.match(mst):
-            for p, refs in conns:
+            for p, refs, *_ in conns:
                 if p == 'a' and len(refs) == 1:
                     relay_in[nm] = refs[0]
     for ref in sorted(bitpins):
@@ -212,7 +216,7 @@ def main(argv=None):
         xs = [dxy[0]] + [L[3][0] for L in mov]
         ys = [dxy[1]] + [L[3][1] for L in mov]
         dnm = drv[0]
-        ck = next((refs[0] for p, refs in insts[dnm][2] if p == 'ck'), None) or 'n_clk_core_c[0]'
+        ck = next((c[2] for c in insts[dnm][2] if c[0] == 'ck'), None) or 'n_clk_core_c'
         net = ref.rsplit('[', 1)[0]
         base = re.sub(r'[^A-Za-z0-9_]', '_', ref)
         err = None
@@ -231,7 +235,7 @@ def main(argv=None):
         for s_ in st:
             wn = f'n_{s_["name"]}'
             add_wires.append(f'  wire [0:0] {wn};')
-            a_ = ref if s_['parent'] is None else f'n_{s_["parent"]}[0]'
+            a_ = pack([ref]) if s_['parent'] is None else f'n_{s_["parent"]}[0]'
             add_lines.append(f'  {STATION} {s_["name"]} (.ck({ck}), .a({a_}), .b({wn}[0]));')
             add_place.append(f'ot_mts::place [$_blk findInst {s_["name"]}] {s_["x"]:.3f} {s_["y"]:.3f} R0')
             gst[s_['name']] = (s_['x'], s_['y'], s_['x'] + CR.STN, s_['y'] + CR.STN)
@@ -259,7 +263,8 @@ def main(argv=None):
     for nm in touched:
         li, mst, conns = insts[nm]
         ind = re.match(r'^(\s+)', lines[li]).group(1)
-        lines[li] = f'{ind}{mst} {nm} ({", ".join(f".{p}({pack(refs)})" for p, refs in conns)});'
+        # ports this pass did not rewrite keep their original connection text exactly
+        lines[li] = f'{ind}{mst} {nm} ({", ".join(f".{c[0]}({pack(c[1]) if c[1] != c[3] else c[2]})" for c in conns)});'
     k = max(i for i, ln in enumerate(lines) if re.match(r'\s*wire\b', ln))
     lines[k + 1:k + 1] = add_wires
     e = max(i for i, ln in enumerate(lines) if re.match(r'\s*endmodule\b', ln))
@@ -306,7 +311,7 @@ def main(argv=None):
         if d is None:
             return 0
         up = (arrive(d) + 1) if (RELAY.match(insts[d][1]) and insts[d][1] != 'qkd_rst_region') else 0
-        ci = next(k for k, (p, _) in enumerate(insts[nm][2]) if p == 'a')
+        ci = next(k for k, c in enumerate(insts[nm][2]) if c[0] == 'a')
         memo[nm] = up + loc.get((nm, ci, 0), 0)
         return memo[nm]
     worst = (0, None)
