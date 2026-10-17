@@ -206,6 +206,14 @@ module ot_hgi_coll_q_static_ctl_v5 #(
  reg [7:0] vm_req_valid;
  for(genvar bank=0;bank<8;bank=bank+1)assign vm_req_pin[bank*17+:17]={vm_req_valid[bank],vm_req_sector[bank*16+:16]};
  reg [7:0] link_epoch[0:NPT-1];
+ // V7 (ctl3 7d6120e84 TT -17.1 ps: m_del_l -> 40-bit field add as a 22-level MAJ ripple -> delivery_obase_pin):
+ // the twelve 40-bit field+offset adds are explicit Kogge-Stone prefix adders (rtl/hdc/ot_hdc_prefix.sv), same sums.
+ wire [159:0] ks_inj_addr,ks_del,ks_rgx;
+ for(genvar j=0;j<4;j=j+1)begin:g_ks40
+  ot_hdc_ksadd_k #(.W(40)) u_ia(.a(p_inj_addr[j*40+:40]),.b(off_iaddr),.cin(1'b0),.s(ks_inj_addr[j*40+:40]),.cout());
+  ot_hdc_ksadd_k #(.W(40)) u_de(.a(p_del_obase[j*40+:40]),.b(off_del),.cin(1'b0),.s(ks_del[j*40+:40]),.cout());
+  ot_hdc_ksadd_k #(.W(40)) u_rg(.a(p_rgx_addr[j*40+:40]),.b(off_rgx),.cin(1'b0),.s(ks_rgx[j*40+:40]),.cout());
+ end
  // Registered requests and metadata have one real, explicit protocol root.
  // Request launch P ->SU source capture P+INJLAT; VM capture P+10.
  always @(posedge clk_control) begin
@@ -218,14 +226,14 @@ module ot_hgi_coll_q_static_ctl_v5 #(
   for(integer j=0;j<2;j=j+1)begin
    inj_idx_pin[j*16+:16]<=p_inj_idx[j*16+:16]+m_idx;
    for(integer h=0;h<2;h=h+1)
-    inj_addr_pin[j*80+h*40+:40]<=p_inj_addr[j*80+h*40+:40]+off_iaddr;
+    inj_addr_pin[j*80+h*40+:40]<=ks_inj_addr[j*80+h*40+:40];
    inj_meta_pipe[0][j*33+:33]<={p_inj_meta[j*33+16+:17],
      16'(p_inj_meta[j*33+:16]+m_idx)};
   end
   for(integer j=1;j<INJLAT;j=j+1)inj_meta_pipe[j]<=inj_meta_pipe[j-1];
   for(integer j=0;j<4;j=j+1)begin
-   delivery_obase_pin[j*40+:40]<=p_del_obase[j*40+:40]+off_del;
-   rgx_addr_pin[j*40+:40]<=p_rgx_addr[j*40+:40]+off_rgx;
+   delivery_obase_pin[j*40+:40]<=ks_del[j*40+:40];
+   rgx_addr_pin[j*40+:40]<=ks_rgx[j*40+:40];
   end
   vm_meta_pipe[0]<=p_vm_meta;
   for(integer j=1;j<10;j=j+1)vm_meta_pipe[j]<=vm_meta_pipe[j-1];
