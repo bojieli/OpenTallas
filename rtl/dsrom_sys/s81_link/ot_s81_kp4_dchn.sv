@@ -1,41 +1,35 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------
-// ot_s81_kp4_dec_b (S81-KP4 2026-10-17): BACK hard sub-tile of the S81 KP4 RS(544,514) decoder cluster ot_s81_kp4_dec
-// (frame / code: tools/s81_link/rs544.py; structure and schedule: ot_s81_kp4_dec.sv).  East tile, core side:
-//   forward Chien search + Forney (55 lanes, two registered stages; e = Omega(X^-1) X^-30 / Lambda_odd(X^-1)), root
-//   count and the uncorrectable decision, correction masks re-cut to PMA words and delayed in u_cmem (32 x 546), the
-//   corrected word d_q ^ mask and the lane beats.  From the front tile (west face): d_q (received words) and the
-//   key-equation result k_* -- both through the same seam, so every time here is relative to k_v: with T' = the cycle
-//   k_v is seen minus 42, chunk c is evaluated at T' + 43 + c and beat k leaves q_d at T' + 58 + k.
-// The Forney inverse cell is a kept-hierarchy LUT (ot_s81_kp4_inv): yosys must not fold the E1 register into an
-// inferred ROM read port (that moved the 1024-entry decode into the Lambda-evaluation stage: 17 levels, 683 ps).
-// Regional synchronous reset, no datapath reset.  MUT 2: Forney value without the division (bench mutant).
+// ot_s81_kp4_dchn (S81-KP4 2026-10-17): Chien / Forney hard tile of the S81 KP4 RS(544,514) decoder cluster
+// ot_s81_kp4_dec (frame / code: tools/s81_link/rs544.py; cluster structure and schedule: ot_s81_kp4_dec.sv).
+//   forward Chien search + Forney over 55 lanes in two registered stages (E1: Lambda(X^-1), Omega(X^-1) X^-30,
+//   Lambda_odd(X^-1); E2: e = Omega X^-30 / Lambda_odd with a kept-hierarchy inverse LUT, so yosys cannot fold the E1
+//   register into an inferred ROM), a 64-leaf balanced root-count tree, the uncorrectable decision (L > 15 or roots
+//   != L), and the correction masks re-cut to 544-bit PMA words (cw_q, to ot_s81_kp4_dout).  Every time is relative to
+//   the k_v the tile sees: T' = that cycle - 42; chunk c is evaluated at T' + 43 + c, cw_q of word k at T' + 46 + k,
+//   apply / o_unc / o_ne / fs at T' + 56.  Regional synchronous reset, no datapath reset.
+// MUT 2: Forney value without the division (bench mutant).
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_kp4_dec_b #(parameter integer MUT = 0) (
+module ot_s81_kp4_dchn #(parameter integer MUT = 0) (
     input  wire          clk,
     input  wire          rst_n,
-    input  wire [543:0]  d_q,
     input  wire [3:0]    k_v,
     input  wire [309:0]  k_lo,
     input  wire [4:0]    k_L,
     input  wire          k_any,
-    output reg           q_v,
-    output reg  [511:0]  q_d,
-    output reg           q_first,
-    output reg           q_unc,
-    output reg  [4:0]    q_nerr,
-    output reg  [7:0]    q_seq,
+    output reg  [543:0]  cw_q,          // correction mask of PMA word k (to ot_s81_kp4_dout's SRAM delay)
+    output reg  [7:0]    apply,         // the frame is corrected (8 identical copies, 68 mask bits each in dout)
+    output reg           o_unc,         // the frame is uncorrectable
+    output reg  [4:0]    o_ne,          // symbols corrected
+    output reg           fs,            // frame start: beat 0 of the frame leaves dout's beat register next cycle
     output reg  [31:0]   n_corr, n_unc
 );
 `include "ot_s81_gf1024.svh"
     localparam integer NT = 30, SPC = 55;
     localparam integer NRL = 2;          // Chien lambda / omega register copies (lanes 0..27 / 28..54)
     localparam integer NRW = 17;         // corr-word select copies (32 bits each)
-    localparam integer NRA = 8;          // apply copies (68 bits each)
-    localparam integer NRO = 16;         // beat select copies (32 bits each)
-    localparam integer DC = 9;           // corr SRAM delay (write T' + 46 + k, read T' + 55 + k)
-    wire [2:0] rs_n;
-    ot_s81_kp4_rst #(.NL(3)) u_rst (.clk(clk), .rst_n(rst_n), .rs_n(rs_n));
+    wire [1:0] rs_n;
+    ot_s81_kp4_rst #(.NL(2)) u_rst (.clk(clk), .rst_n(rst_n), .rs_n(rs_n));
     integer i, q;
     genvar gk, gb, gi, gu;
     wire [309:0] lsel = k_lo;
@@ -128,7 +122,6 @@ module ot_s81_kp4_dec_b #(parameter integer MUT = 0) (
     always @(posedge clk) nacc <= (ce2[0] ? 6'd0 : nacc) + nrc;
     // correction words: word w = {chunk w-1, chunk w}[549 + 6 w -: 544] at T + 45 + w -> cw_q at T + 46 + w
     reg  [549:0] crp;
-    reg  [543:0] cw_q;
     always @(posedge clk) crp <= crc;
     wire [1099:0] wc2 = {crp, crc};
     wire [543:0]  csrc [0:9];
@@ -142,56 +135,20 @@ module ot_s81_kp4_dec_b #(parameter integer MUT = 0) (
         end
         always @(posedge clk) cw_q[gb] <= |(s & cw_s[gb / 32]);
     end endgenerate
-    // ================= correction-mask SRAM delay (write and read every cycle; fixed distance DC)
-    reg  [4:0] ptr;                      // free-running cycle pointer
-    always @(posedge clk) if (!rs_n[1]) ptr <= 5'd0; else ptr <= ptr + 5'd1;
-    wire [4:0] rd_c = ptr - DC[4:0];
-    wire [545:0] c_rd;
-    ot_sram_1r1w_32x546_m1 u_cmem (.clk(clk), .r_ce_in(1'b1), .r_addr_in(rd_c), .rd_out(c_rd),
-        .w_ce_in(1'b1), .w_addr_in(ptr), .wd_in({2'b00, cw_q}), .w_mask_in({546{1'b1}}));
-    // ================= decision (T + 55 -> T + 56), corrected words (T + 57 + k), beats (q_d at T + 58 + k)
+    // ================= decision (T' + 55 -> T' + 56): apply / o_unc / o_ne / fs to dout, counters
     wire unc_n = fin_any && (fin_bad || nacc != {1'b0, fin_L});
-    reg  o_unc;
-    reg  [4:0] o_ne;
-    (* keep *) reg [NRA-1:0] apply;
-    reg  [13:0] pl;                      // cl delayed: pl[13] at T + 56
-    (* keep *) reg [9:0] os [0:NRO-1];   // one-hot beat index: os[*][k] at T + 57 + k
+    reg  [12:0] pl;                      // cl delayed: fs at T' + 56
     always @(posedge clk)
-        if (!rs_n[2]) begin
-            pl <= 0; apply <= 0; o_unc <= 1'b0; o_ne <= 0; n_corr <= 0; n_unc <= 0;
-            for (i = 0; i < NRO; i = i + 1) os[i] <= 10'd0;
+        if (!rs_n[1]) begin
+            pl <= 0; fs <= 1'b0; apply <= 0; o_unc <= 1'b0; o_ne <= 0; n_corr <= 0; n_unc <= 0;
         end else begin
-            pl <= {pl[12:0], cl[1]};
-            for (i = 0; i < NRO; i = i + 1) os[i] <= {os[i][8:0], pl[13]};
+            pl <= {pl[11:0], cl[1]};
+            fs <= pl[12];
             if (ce3_9) begin
-                apply <= {NRA{!unc_n}};
+                apply <= {8{!unc_n}};
                 o_unc <= unc_n;
                 o_ne  <= (fin_any && !unc_n) ? fin_L : 5'd0;
                 if (unc_n) n_unc <= n_unc + 1; else if (fin_any) n_corr <= n_corr + fin_L;
             end
-        end
-    reg  [543:0] cwo, cwp;
-    generate for (gb = 0; gb < 544; gb = gb + 1) begin : g_cor
-        always @(posedge clk) cwo[gb] <= d_q[gb] ^ (apply[gb / 68] & c_rd[gb]);
-    end endgenerate
-    always @(posedge clk) cwp <= cwo;
-    wire [1087:0] w2 = {cwp, cwo};
-    wire [511:0]  bsrc [0:9];
-    generate for (gk = 0; gk < 10; gk = gk + 1) begin : g_bsrc
-        assign bsrc[gk] = w2[523 + 32 * gk -: 512];
-    end endgenerate
-    generate for (gb = 0; gb < 512; gb = gb + 1) begin : g_bm_o
-        wire [9:0] s;
-        for (gk = 0; gk < 10; gk = gk + 1) begin : g_s
-            assign s[gk] = bsrc[gk][gb];
-        end
-        always @(posedge clk) q_d[gb] <= |(s & os[gb / 32]);
-    end endgenerate
-    always @(posedge clk)
-        if (!rs_n[2]) begin q_v <= 1'b0; q_first <= 1'b0; q_unc <= 1'b0; q_nerr <= 0; q_seq <= 0; end
-        else begin
-            q_v <= |os[0];
-            q_first <= os[0][0];
-            if (os[0][0]) begin q_unc <= o_unc; q_nerr <= o_ne; q_seq <= cwo[531:524]; end
         end
 endmodule

@@ -13,7 +13,7 @@ case $mode in base) g="";; emut) g="-GEMUT=1";; dmut) g="-GDMUT=2";; amut) g="-G
 python3 "$R/tools/s81_link/rs544.py" selftest > "$out/ref_selftest.log" 2>&1 || { echo "KP4_LEAF REF_SELFTEST_FAIL"; exit 2; }
 python3 "$R/tools/s81_link/rs544.py" vectors "$out/vec.hex" --n 16 --seed 5 > /dev/null
 verilator --binary --timing -j ${KP4_J:-8} -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT +incdir+$L \
-  --top-module tb_s81_kp4 $g --Mdir "$out/obj" -o tb "$L/ot_s81_kp4_common.sv" "$L/ot_s81_kp4_enc.sv" "$L/ot_s81_kp4_bm.sv" "$L/ot_s81_kp4_dec_a.sv" "$L/ot_s81_kp4_dec_b.sv" \
+  --top-module tb_s81_kp4 $g --Mdir "$out/obj" -o tb "$L/ot_s81_kp4_common.sv" "$L/ot_s81_kp4_enc.sv" "$L/ot_s81_kp4_bm.sv" "$L/ot_s81_kp4_dsyn.sv" "$L/ot_s81_kp4_ddly.sv" "$L/ot_s81_kp4_dchn.sv" "$L/ot_s81_kp4_dout.sv" \
   "$L/ot_s81_kp4_dec.sv" "$M/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v" "$M/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v" \
   "$L/tb_s81_kp4.sv" \
   > "$out/build.log" 2>&1 || { echo "KP4_LEAF BUILD_FAIL $mode"; tail -5 "$out/build.log"; exit 2; }

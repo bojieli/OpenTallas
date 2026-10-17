@@ -1,22 +1,20 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------
-// ot_s81_kp4_dec_a (S81-KP4 2026-10-17): FRONT hard sub-tile of the S81 KP4 RS(544,514) decoder cluster ot_s81_kp4_dec
-// (frame / code: tools/s81_link/rs544.py; structure and schedule: ot_s81_kp4_dec.sv).  West tile, PMA side:
+// ot_s81_kp4_dsyn (S81-KP4 2026-10-17): front hard tile of the S81 KP4 RS(544,514) decoder cluster ot_s81_kp4_dec
+// (frame / code: tools/s81_link/rs544.py; cluster structure and schedule: ot_s81_kp4_dec.sv).  West tile, PMA side:
 //   codeword alignment (AM hunt / lock, as 8cd04168b) on REGISTERED port data (am_ok and p_v are registered before the
-//   FSM: no popcount -> FSM -> 32-bit counter path from the pins), syndromes on the arriving stream, NBM = 3 RiBM
-//   key-equation units (round robin), and the received-word SRAM delay line u_dmem (64 x 546, written at T + k, read
-//   at T + 55 + k).  To the back tile (east face): the delayed words d_q (straight from the macro read port into the
-//   output pin registers) and the key-equation result of the unit that finishes (k_v x 4 copies, k_lo = {omega,
-//   lambda}, k_L, k_any) -- both cross the same seam, so the back tile's fixed schedule is unchanged by its latency.
-//   T = the cycle word 0 of a frame sits in x1.  Regional synchronous reset, no datapath reset.
+//   FSM: no popcount -> FSM -> 32-bit counter path from the pins), syndromes on the arriving stream (fixed-offset
+//   one-hot chunk select, window matrix registered a cycle ahead), NBM = 3 RiBM key-equation units taken round robin,
+//   and the 3:1 result select.  Out: the received words x_q (to ot_s81_kp4_ddly) and the key-equation result k_* (to
+//   ot_s81_kp4_dchn).  T = the cycle word 0 of a frame sits in x1.  Regional synchronous reset, no datapath reset.
 // MUT 3: the syndrome loop is not restarted at chunk 0 (stale syndromes) -- bench mutant of this tile.
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_kp4_dec_a #(parameter integer MUT = 0, parameter integer NBM = 3) (
+module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          p_v,
     input  wire [543:0]  p_d,
-    output wire [543:0]  d_q,           // received word k of a frame at T + 56 + k (macro read port)
+    output wire [543:0]  x_q,           // received word k of a frame at T + k (to the word delay tile)
     output wire [3:0]    k_v,           // key-equation result valid (4 identical copies)
     output wire [309:0]  k_lo,          // {omega_14..0, lambda_15..0}, 10 b each
     output reg  [4:0]    k_L,
@@ -27,9 +25,8 @@ module ot_s81_kp4_dec_a #(parameter integer MUT = 0, parameter integer NBM = 3) 
 `include "ot_s81_gf1024.svh"
     localparam integer NT = 30;
     localparam integer NRS = 4;          // syndrome chunk-select copies (138 window bits each)
-    localparam integer DD = 55;          // data SRAM delay (write T + k, read T + 55 + k)
-    wire [3:0] rs_n;
-    ot_s81_kp4_rst #(.NL(4)) u_rst (.clk(clk), .rst_n(rst_n), .rs_n(rs_n));
+    wire [2:0] rs_n;
+    ot_s81_kp4_rst #(.NL(3)) u_rst (.clk(clk), .rst_n(rst_n), .rs_n(rs_n));
     integer i, q;
     genvar gk, gb, gu;
     // ================= alignment: am_ok / p_v registered with the word (x0); FSM -> one-hot index registered (x1)
@@ -143,12 +140,5 @@ module ot_s81_kp4_dec_a #(parameter integer MUT = 0, parameter integer NBM = 3) 
         k_L = 5'd0; k_any = 1'b0;
         for (q = 0; q < NBM; q = q + 1) if (u_dn[q][0]) begin k_L = k_L | u_L[q]; k_any = k_any | u_any[q]; end
     end
-    // ================= received-word SRAM delay line (write and read every cycle; fixed distance DD)
-    reg  [5:0] ptr;
-    always @(posedge clk) if (!rs_n[3]) ptr <= 6'd0; else ptr <= ptr + 6'd1;
-    wire [5:0] rd_d = ptr - DD[5:0];
-    wire [545:0] d_rd;
-    ot_sram_1r1w2c_64x546_m1 u_dmem (.wclk(clk), .rclk(clk), .r_ce_in(1'b1), .r_addr_in(rd_d), .rd_out(d_rd),
-        .w_ce_in(1'b1), .w_addr_in(ptr), .wd_in({2'b00, x1}), .w_mask_in({546{1'b1}}));
-    assign d_q = d_rd[543:0];
+    assign x_q = x1;
 endmodule
