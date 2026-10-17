@@ -103,11 +103,13 @@ proc ot_cluster_snap_legalize {report} {
       set y [expr {$ry0 + (($y - $ry0) / $rh) * $rh}]
       if {$x < $cx0} { set x [expr {$x + $sw}] }; if {$y < $cy0} { set y [expr {$y + $rh}] }
       set hit -1
-      set ci [expr {($x + $w / 2) / $bin}]; set cj [expr {($y + $h / 2) / $bin}]
-      if {[info exists mb($ci,$cj)]} {
-        foreach k $mb($ci,$cj) {
-          lassign [lindex $macros $k] mx0 my0 mx1 my1
-          if {$x < $mx1 && $x + $w > $mx0 && $y < $my1 && $y + $h > $my0} { set hit $k; break }
+      for {set ci [expr {$x / $bin}]} {$ci <= ($x + $w) / $bin && $hit < 0} {incr ci} {
+        for {set cj [expr {$y / $bin}]} {$cj <= ($y + $h) / $bin && $hit < 0} {incr cj} {
+          if {![info exists mb($ci,$cj)]} { continue }
+          foreach k $mb($ci,$cj) {
+            lassign [lindex $macros $k] mx0 my0 mx1 my1
+            if {$x < $mx1 && $x + $w > $mx0 && $y < $my1 && $y + $h > $my0} { set hit $k; break }
+          }
         }
       }
       if {$hit < 0} { break }
@@ -125,7 +127,33 @@ proc ot_cluster_snap_legalize {report} {
       if {$best eq ""} { break }
       set x [lindex $best 1]; set y [lindex $best 2]
     }
-    if {$hit >= 0} { incr on_macro }
+    if {$hit >= 0} {
+      # abutting macros: the edge escape lands on a neighbour -- ring search outward (2..6400 um, 16 directions)
+      set dbu [$blk getDbUnitsPerMicron]
+      set found 0
+      foreach r_um {2 5 10 20 40 80 160 240 400 800 1600 3200 6400} {
+        set r [expr {int($r_um * $dbu)}]
+        foreach {dx dy} {1 0 -1 0 0 1 0 -1 1 1 1 -1 -1 1 -1 -1 2 1 2 -1 -2 1 -2 -1 1 2 1 -2 -1 2 -1 -2} {
+          set tx [expr {$x0 + $dx * $r / 2}]; set ty [expr {$y0 + $dy * $r / 2}]
+          if {$tx < $cx0 || $tx + $w > $cx1 || $ty < $cy0 || $ty + $h > $cy1} { continue }
+          set tx [expr {$rx0 + (($tx - $rx0) / $sw) * $sw}]; set ty [expr {$ry0 + (($ty - $ry0) / $rh) * $rh}]
+          if {$tx < $cx0 || $ty < $cy0} { continue }
+          set clash 0
+          for {set bi [expr {$tx / $bin}]} {$bi <= ($tx + $w) / $bin && !$clash} {incr bi} {
+            for {set bj [expr {$ty / $bin}]} {$bj <= ($ty + $h) / $bin && !$clash} {incr bj} {
+              if {![info exists mb($bi,$bj)]} { continue }
+              foreach k $mb($bi,$bj) {
+                lassign [lindex $macros $k] mx0 my0 mx1 my1
+                if {$tx < $mx1 && $tx + $w > $mx0 && $ty < $my1 && $ty + $h > $my0} { set clash 1; break }
+              }
+            }
+          }
+          if {!$clash} { set x $tx; set y $ty; set found 1; break }
+        }
+        if {$found} { break }
+      }
+      if {!$found} { incr on_macro }
+    }
     set orient [expr {((($y - $ry0) / $rh) % 2) == 0 ? $ro0 : $ro1}]
     $inst setOrient $orient
     $inst setLocation $x $y

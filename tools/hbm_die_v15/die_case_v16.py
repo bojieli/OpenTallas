@@ -45,6 +45,8 @@ import clock_sites
 import die_clock_tree as dct  # noqa: E402
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import die_reach  # noqa: E402
+from die_repeaters import step as die_repeaters_step  # noqa: E402
+import die_hold_budget  # noqa: E402
 
 CONTRACT = ROOT / 'results/arch/hbm_die_v16/contract.json'
 GRANTS = ROOT / 'results/arch/hier_contract_1015/hbm_v15.json'
@@ -218,8 +220,15 @@ def main():
     ap.add_argument('--views', required=True, type=Path)
     ap.add_argument('--out', required=True, type=Path)
     ap.add_argument('--contract', type=Path, default=CONTRACT, help='source contract (default: main); freeze it to the synthesis snapshot')
-    ap.add_argument('--die-repeaters', action='store_true')
+    ap.add_argument('--die-repeaters', action='store_true',
+                    help='shared die-net repeater step (tools/die_repeaters, DIE-FLOW 10-17, owner 0cl)')
+    ap.add_argument('--repeater-max-wire-um', type=float, default=None, help='repeater spacing (default 160 um)')
+    ap.add_argument('--legacy-die-repeaters', action='store_true',
+                    help='old repair_design -max_wire_length = reach (no native-aware spacing, no checks)')
     ap.add_argument('--paths', type=int, default=200000)
+    ap.add_argument('--hold-budget', choices=('tile', 'die'), default='tile',
+                    help='die (DIE-FLOW 2026-10-17, FLOW-HOLD RULE.md): also dump every FF min path (full_clock_expanded) '
+                         'to out/hold_links_ff.rpt + hold_budget_masters.json for tools/die_hold_budget.py; tile = legacy run.tcl')
     ap.add_argument('--plan', type=Path, default=PLAN, help='die plan (compact660_v5 default; v6 for d4)')
     ap.add_argument('--grants', type=Path, default=GRANTS)
     ap.add_argument('--lanes', type=Path, default=LANES)
@@ -826,7 +835,12 @@ def main():
     manifest['pin_density_over'] = pin_density_over
     if param_aliases:
         manifest['label'] += f' PARAM_ALIAS_DIAGNOSTIC: {len(param_aliases)} instances use a different-parameter view'
-    manifest['max_wire'] = dict(mw, applied=bool(a.die_repeaters))
+    manifest['max_wire'] = dict(mw, applied=bool(a.die_repeaters),
+                                role='repair max wire' if a.legacy_die_repeaters else 'over-reach threshold (shared step)')
+    manifest['die_repeaters'] = (None if not a.die_repeaters else
+                                 'legacy' if a.legacy_die_repeaters else
+                                 die_repeaters_step.config('hbm', '/work/out/die_repeaters.json', reach_um=mw['value_um'],
+                                                           max_wire_um=a.repeater_max_wire_um))
     manifest['pc_strip'] = strip
     manifest['d4b_homes'] = bool(a.d4b_homes)
     manifest['layout_image_status'] = 'DEFERRED' if a.no_plot else 'GENERATED'
@@ -1041,6 +1055,8 @@ if {{[catch {{
   close $out
 }} e]}} {{ puts "OT_GCELL_FAIL $e" }}
 estimate_parasitics -global_routing
+# DIE-FLOW 10-17: post-GRT slew/cap audit of the repeated die nets (GRT detours the placement estimate cannot see)
+if {{[llength [info procs ot_die_rep_post_grt_audit]]}} {{ ot_die_rep_post_grt_audit /work/out/die_repeaters.post_grt.json }}
 {clocks}
 {groups}
 set_propagated_clock [all_clocks]
@@ -1073,13 +1089,37 @@ report_clock_skew -setup > /work/out/clock_skew.rpt
 report_clock_skew -hold >> /work/out/clock_skew.rpt
 puts OT_DONE
 '''
+    # DIE-FLOW 10-17 (owner 0cl): --die-repeaters runs the shared native-aware die-net repeater step
+    # (tools/die_repeaters: max wire 160 um / 260 ps native first-cell slew, BUFx4-8 only, registers + relays checked
+    # unchanged, clock nets untouched, snap-legalised off the macros); the measured die reach (mw) is the over-reach
+    # threshold (missing relay register), no longer the repeater spacing.  --legacy-die-repeaters = the old line.
+    if a.die_repeaters and not a.legacy_die_repeaters:
+        die_repeaters_step.copy(out)
+    rep_call = (die_reach.repair_tcl(mw, '-buffer_gain 4.0') if a.legacy_die_repeaters else
+                die_repeaters_step.tcl_call('hbm', '/work/out/die_repeaters.json', reach_um=mw['value_um'],
+                                            repair_args='-buffer_gain 4.0', max_wire_um=a.repeater_max_wire_um).rstrip())
     rep_ = '' if not a.die_repeaters else f'''{clocks}
 {groups}
 estimate_parasitics -placement
 set_dont_touch [get_nets -quiet {{dk?_* n_dk?_* ckg_*}}]
 set r0 [clock seconds]
-{die_reach.repair_tcl(mw, '-buffer_gain 4.0')}
+{rep_call}
 puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"'''
+    if a.hold_budget == 'die':
+        # DIE-FLOW 2026-10-17 (FLOW-HOLD D1-D3): per-link FF hold dump (U = 25 once per link, propagated die trees,
+        # sender launch-min from each view's ETM) for tools/die_hold_budget.py; SYNTH / DIAGNOSTIC views label their links
+        assert tcl.count('\nputs OT_DONE\n') == 1
+        tcl = tcl.replace('\nputs OT_DONE\n', '\n' + die_hold_budget.tcl_dump('/work/out/hold_links_ff.rpt', a.paths, corner='ff')
+                          + '\nputs OT_HOLD_DUMP\nputs OT_DONE\n')
+        (out / 'hold_budget_masters.json').write_text(json.dumps(dict(
+            schema='opentallas.die_hold_budget.masters.v1', design='hbm', paths_cap=a.paths,
+            diagnostic=sorted(c for c, k in kinds.items() if k.startswith('SYNTH') or 'DIAGNOSTIC' in k),
+            real=sorted(c for c, k in kinds.items() if not (k.startswith('SYNTH') or 'DIAGNOSTIC' in k)),
+            relay=sorted(c for c in kinds if V[c]['master'].startswith('hbfd_rly')),
+            launch_source={c: ('SYNTH ETM (ideal clocks, no wires): hold DIAGNOSTIC' if k.startswith('SYNTH') else 'routed view ETM clk->out min')
+                           for c, k in sorted(kinds.items())},
+            classify=f'python3 tools/die_hold_budget.py classify --report out/hold_links_ff.rpt --masters hold_budget_masters.json '
+                     f'--paths-cap {a.paths} --design hbm --out out/hold_budget.json'), indent=1) + '\n')
     (out / 'run.tcl').write_text(tcl.replace('{REPEAT}', rep_))
     shutil.copy(ROOT / 'tools/die_clock_check.tcl', out / 'die_clock_check.tcl')
     shutil.copy(ROOT / 'tools/ref_tile/layout_dump.tcl', out / 'layout_dump.tcl')
@@ -1090,6 +1130,12 @@ docker run --rm --name $N --cpus=${CPUS:-8} --memory=${MEMG:-256}g -v $D:/work -
   bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads ${CPUS:-8} -no_init -exit /work/run.tcl > /work/out/run.log 2>&1; rc=\\$?; chmod -R a+rwX /work/out; exit \\$rc"
 echo $? > $D/out/run.exit
 ''')
+    if a.hold_budget == 'die':   # classifier beside the case (fleet hosts run the case dir, not the repo)
+        shutil.copy(ROOT / 'tools/die_hold_budget.py', out / 'die_hold_budget.py')
+        with open(out / 'run.sh', 'a') as f_:
+            f_.write('[ -s $D/out/hold_links_ff.rpt ] && python3 -I $D/die_hold_budget.py classify --report $D/out/hold_links_ff.rpt '
+                     f'--masters $D/hold_budget_masters.json --paths-cap {a.paths} --design hbm --out $D/out/hold_budget.json '
+                     '> $D/out/hold_budget.log 2>&1\n')
     open_pins = defaultdict(lambda: defaultdict(int))
     for n in inst:
         for p in vpins[cell_of[n]]:
