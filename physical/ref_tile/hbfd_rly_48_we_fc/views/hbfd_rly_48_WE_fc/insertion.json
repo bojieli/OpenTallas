@@ -180,5 +180,61 @@
    "lib_clock_pin": "clk_in",
    "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk_in}]"
   }
+ },
+ "forwarded_clock": {
+  "schema": "opentallas.hbm.rly_fc_forwarded_clock.v1",
+  "base": "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_48_we_fc-fc1-8cd3001df/routes/hbfd_rly_48_we_fc_fc1_8cd3001df/work/orfs/results/asap7/opentallas_hbfd_rly_48_WE_fc_asap7_ref_hbfd_rly_48_we_fc_fc1_8cd3001df/base",
+  "rule": "F1 (DIE-CLOCK): clk_out = clk_in through one kept BUFx12f; die STA uses R (clk_in -> register CK) and D (clk_in -> clk_out) per corner",
+  "ss": {
+   "clk_in_to_clk_out_ps": {
+    "rise_max": 85.95,
+    "rise_min": 83.47,
+    "fall_max": 102.31,
+    "fall_min": 100.12,
+    "slew_rise": 8.21,
+    "slew_fall": 8.52,
+    "measured_at": "clk_out buffer Y pin (drives the clk_out port)"
+   },
+   "R_all": {
+    "n": 48,
+    "min": 110.8,
+    "max": 111.7,
+    "mean": 111.4
+   }
+  },
+  "tt": {
+   "clk_in_to_clk_out_ps": {
+    "rise_max": 60.22,
+    "rise_min": 58.68,
+    "fall_max": 66.67,
+    "fall_min": 65.2,
+    "slew_rise": 5.63,
+    "slew_fall": 5.54,
+    "measured_at": "clk_out buffer Y pin (drives the clk_out port)"
+   },
+   "R_all": {
+    "n": 48,
+    "min": 77.2,
+    "max": 77.9,
+    "mean": 77.6
+   }
+  },
+  "ff": {
+   "clk_in_to_clk_out_ps": {
+    "rise_max": 45.11,
+    "rise_min": 44.05,
+    "fall_max": 47.73,
+    "fall_min": 46.67,
+    "slew_rise": 4.27,
+    "slew_fall": 4.09,
+    "measured_at": "clk_out buffer Y pin (drives the clk_out port)"
+   },
+   "R_all": {
+    "n": 48,
+    "min": 57.5,
+    "max": 58.1,
+    "mean": 57.8
+   }
+  }
  }
 }
