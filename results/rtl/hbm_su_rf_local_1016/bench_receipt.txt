@@ -1,0 +1,7 @@
+SU_TOP PASS lanes=512 slices=16 store_banks=512 SRAMs=3072+8 reducers=4 rf_replicas=4 edges=7111 fill_reads=32768 vm_writes=135184 scalars=9 RF_RELAY=8 MLAT=3 RF_LOCAL=1
+mut_DATA: [71570000] %Fatal: tb_hbm_su_static_top.sv:126: Assertion failed in tb_hbm_su_static_top.unnamedblk2: SU_TOP FAIL errors=15 reads=32768 writes=135184 scalars=9
+mut_ADDR: [71570000] %Fatal: tb_hbm_su_static_top.sv:126: Assertion failed in tb_hbm_su_static_top.unnamedblk2: SU_TOP FAIL errors=6164 reads=32768 writes=135184 scalars=9
+mut_RF: [71570000] %Fatal: tb_hbm_su_static_top.sv:126: Assertion failed in tb_hbm_su_static_top.unnamedblk2: SU_TOP FAIL errors=1492 reads=32768 writes=135184 scalars=9
+mut_RED: [71570000] %Fatal: tb_hbm_su_static_top.sv:126: Assertion failed in tb_hbm_su_static_top.unnamedblk2: SU_TOP FAIL errors=4102 reads=32768 writes=135184 scalars=9
+vecmut(RTL RF_LOCAL=1, rf-local 0 vectors): [71570000] %Fatal: tb_hbm_su_static_top.sv:126: Assertion failed in tb_hbm_su_static_top.unnamedblk2: SU_TOP FAIL errors=5372 reads=32768 writes=135184 scalars=9
+SU_TOP ERROR cyc=1795 DUT fault 10000100001000010000
