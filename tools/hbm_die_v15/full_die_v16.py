@@ -198,10 +198,114 @@ def rng(ref, ports):
     return i, p, 0, ports[i][p]['bits']
 
 
+def apply_relay_splice_v2(buses, edges, ports, problems):
+    """H-NETLIST 1017 (d4f F1 relay layer, tools/hbm_die_v16/relay_layer_d4f.py): generic relay trees.  Per bus:
+    driver / driver_bits / loads as v1; nodes = [{id, parent, pbranch, names[lane], outs[branch port]}]; sinks =
+    {sink: {src: [node id | None, branch], chain: [[name per lane] per sink-root stage]}}; W = lane width, T = lanes.
+    Lane t carries bus bits [t*W, (t+1)*W); positions >= bits are driven by REAL driver bits (j % bits), never tied."""
+    rmap = {}
+    for b in buses:
+        for j, ((p, k), ls) in enumerate(zip(b['driver_bits'], b['loads'])):
+            for (si, sp, sb) in ls:
+                sk = b['sinks'].get(si)
+                if sk is None or (sk['src'][0] is None and not sk['chain']):
+                    continue
+                rmap[(b['driver'], p, k, si, sp, sb)] = 1
+    drivers = {b['driver'] for b in buses}
+    found = set(); out = []
+    for e in edges:
+        if e['src'][0] not in drivers:
+            out.append(e); continue
+        try:
+            si, sp, slo, shi = rng(e['src'], ports); di, dp, dlo, dhi = rng(e['dst'], ports)
+        except KeyError:
+            out.append(e); continue
+        keep = [(si, sp, slo + k, di, dp, dlo + k) not in rmap for k in range(shi - slo)]
+        if all(keep):
+            out.append(e); continue
+        for k in range(shi - slo):
+            if not keep[k]:
+                found.add((si, sp, slo + k, di, dp, dlo + k))
+        k = 0
+        while k < len(keep):
+            if not keep[k]:
+                k += 1; continue
+            k2 = k
+            while k2 + 1 < len(keep) and keep[k2 + 1]:
+                k2 += 1
+            out.append(dict(e, name=f"{e['name']}__kr{k}", src=[si, sp, slo + k, slo + k2 + 1], dst=[di, dp, dlo + k, dlo + k2 + 1], bits=k2 - k + 1))
+            k = k2 + 1
+    miss = [x for x in rmap if x not in found]
+    if miss:
+        problems.append(f'relay splice v2: {len(miss)} listed load bits not driven by their listed driver bit (e.g. {miss[:3]})')
+    for b in buses:
+        W, T, n, tag, ck = b['width'], b['tiles'], b['bits'], b['bus'], b['domain']
+        bas = f"d4f F1 relay tree {tag} ({b['cls']}, {b['driver']}) -- relay_layer_d4f.py"
+        def E(src, dst, bits, nm):
+            out.append(dict(name=f'{tag}__{nm}', src=src, dst=dst, bits=bits, clock=ck, basis=bas, region='relays_d4f'))
+        def from_driver(names):
+            for t in range(T):
+                run = None
+                for L in range(W):
+                    j = t * W + L
+                    p, k = b['driver_bits'][j if j < n else j % n]
+                    if run and run[0] == p and run[2] + 1 == k and run[4] + 1 == L:
+                        run[2] = k; run[4] = L
+                    else:
+                        if run:
+                            E([b['driver'], run[0], run[1], run[2] + 1], [names[t], 'i', run[3], run[4] + 1], run[4] - run[3] + 1, f'drv_{names[t]}_{run[3]}')
+                        run = [p, k, k, L, L]
+                E([b['driver'], run[0], run[1], run[2] + 1], [names[t], 'i', run[3], run[4] + 1], run[4] - run[3] + 1, f'drv_{names[t]}_{run[3]}')
+        nodes = {nd['id']: nd for nd in b['nodes']}
+        for nd in b['nodes']:
+            if nd['parent'] is None:
+                from_driver(nd['names'])
+            else:
+                pn = nodes[nd['parent']]
+                for t in range(T):
+                    E([pn['names'][t], pn['outs'][nd['pbranch']]], [nd['names'][t], 'i'], W, f"t_{nd['names'][t]}")
+        for snk, sk in b['sinks'].items():
+            src_node, br = sk['src']
+            prev = None if src_node is None else (nodes[src_node]['names'], nodes[src_node]['outs'][br])
+            for stage in sk['chain']:
+                if prev is None:
+                    from_driver(stage)
+                else:
+                    for t in range(T):
+                        E([prev[0][t], prev[1]], [stage[t], 'i'], W, f't_{stage[t]}')
+                prev = (stage, 'o')
+            sk['_last'] = prev
+        seq = collections.defaultdict(list)
+        for j, ls in enumerate(b['loads']):
+            for (si, sp, sb) in ls:
+                sk = b['sinks'].get(si)
+                if sk is None or sk.get('_last') is None:
+                    continue
+                seq[si].append((j, sp, sb))
+        for si, lst in seq.items():
+            names, port = b['sinks'][si]['_last']
+            lst.sort(key=lambda x: (x[0] // W, x[1], x[2]))
+            cur = None
+            for j, sp, sb in lst:
+                t, L = divmod(j, W)
+                if cur and cur[0] == t and cur[1] == sp and cur[3] + 1 == L and cur[5] + 1 == sb:
+                    cur[3] = L; cur[5] = sb
+                else:
+                    if cur:
+                        E([names[cur[0]], port, cur[2], cur[3] + 1], [si, cur[1], cur[4], cur[5] + 1], cur[3] - cur[2] + 1, f'ld_{si}_{cur[1]}_{cur[4]}')
+                    cur = [t, sp, L, L, sb, sb]
+            if cur:
+                E([names[cur[0]], port, cur[2], cur[3] + 1], [si, cur[1], cur[4], cur[5] + 1], cur[3] - cur[2] + 1, f'ld_{si}_{cur[1]}_{cur[4]}')
+    return out
+
+
 def apply_relay_splice(specs, edges, ports, problems):
     """H-NETLIST/H-ELEM 2026-10-16 (d4b relay stations, tools/hbm_die_v15/relay_contract_d4b.py): rewire every listed
     bus load bit through its registered station chain. A listed load bit must be driven by the listed driver bit in the
     contract as built so far (else a problem: the station list is stale against this netlist)."""
+    v2 = [b for s in specs for b in s.get('relay_splice_v2', [])]
+    if v2:
+        edges = apply_relay_splice_v2(v2, edges, ports, problems)
     buses = [b for s in specs for b in s.get('relay_splice', [])]
     if not buses:
         return edges
@@ -392,6 +496,13 @@ STATUS_JOINS = {   # master -> (slot param, ports, target-id param, slot width, 
 # all 128 PCs); its six registered owner fault classes owner_fault_split[5:0] land in the quadrant stack fault leaf
 # (ot_hbm_svc_stack_fault OWN_W=6: the sticky owner bit is their OR) instead of the scalar owner_fault.
 PC_H8 = False
+# --pc-h9b (H-SU 70905a93e): same ports / straps as H8 (owner_fault_split), +1 K request edge, kr_rdy ready-latency-1
+# (its consumers vmks_<q><k> must run KRL1=1: layer vm_kshare_krl1_d4f.json)
+PC_H9B_MASTER = dict(master='ot_hbm_svc_pc_ctrl_leaf_cfg_h9b', source='rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv',
+                     deps=['rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv', 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv',
+                           'rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv'],
+                     keep=dict(OREG=1, KREG=1, KRREG=1, RREG=1, WPAY=1, QREG=1))
+PC_H9B = False
 PC_H8_MASTER = dict(master='ot_hbm_svc_pc_ctrl_leaf_cfg_h8', source=_SVC + 'ot_hbm_svc_pc_ctrl_leaf_cfg_h8.sv',
                     deps=[_SVC + 'ot_hbm_svc_pc_ctrl_leaf.sv', 'rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h7.sv'],
                     keep=dict(OREG=1, KREG=1, KRREG=1, RREG=1, WPAY=1, QREG=1))
@@ -479,6 +590,11 @@ def remaster_layers(insts, specs, problems):
                 i['rtl_deps'] = list(r['rtl_deps'])
             if r.get('port_split'):
                 PORT_SPLIT[n] = {p: [tuple(x) for x in v] for p, v in r['port_split'].items()}
+        for n, sl in s_.get('slot_override', {}).items():   # layer key 'slot_override' {instance: slot} (H-DIE grants)
+            if n not in insts:
+                problems.append(f'slot_override: {n} is not an instance'); continue
+            insts[n]['note'] = insts[n].get('note', '') + f" | {s_['region']}: slot {insts[n].get('slot')} -> {sl}"
+            insts[n]['slot'] = sl
         dc = {tuple(x) for x in s_.get('drop_clocks', [])}
         if dc:   # clock / reset bindings of ports a remaster removed (e.g. hoisted banks' clk_bank)
             for t_ in specs:
@@ -549,7 +665,8 @@ def a2p_edge_remap(edges, problems):
 
 def a2p_drop(insts, specs, problems):
     drop = {n for n in insts if (m := _QTAG.search(n)) and KEEP_Q and m.group(1) not in KEEP_Q}
-    drop |= {n for n in insts if (m := _QTAG.search(n)) and m.group(1) in DROP_SM_Q and insts[n]['master'] in SM_SIDE}
+    drop |= {n for n in insts if (m := _QTAG.search(n)) and m.group(1) in DROP_SM_Q
+             and (insts[n]['master'] in SM_SIDE or insts[n]['master'].startswith('ot_hbm_svc_pc_ctrl_leaf'))}   # every PC master generation
     for n in DROP_INST:
         if n not in insts:
             problems.append(f'--drop-instances: {n} is not an instance')
@@ -618,7 +735,7 @@ def universal_calendar_fields():
     return [(name, lo, b) for lo, name, b in f]
 
 
-def build(specs_dir, out, extra=()):
+def build(specs_dir, out, extra=(), soft_idx=None):
     v15 = json.loads((ROOT / V15).read_text())
     grants = json.loads((ROOT / GRANTS).read_text())
     plan = json.loads((ROOT / PLAN).read_text())
@@ -659,6 +776,21 @@ def build(specs_dir, out, extra=()):
                             replaces_v15=prev['master'] if prev else None)
             if i.get('rtl_deps'):
                 insts[n]['rtl_deps'] = list(i['rtl_deps'])
+    # H-NETLIST/D4F-RELAY 10-17: layer key 'rehome' {inst: {home: [x, y], master?, why}}: a relay tile keeps its name, ports
+    # and stage position in its chain; only its planned home (die_case reads 'home (x, y) um' from the note) and its flow
+    # letter (same source file, same ports) change
+    for s_ in specs:
+        for n, h in s_.get('rehome', {}).items():
+            if n not in insts:
+                problems.append(f'rehome: {n} is not an instance'); continue
+            i = insts[n]
+            if h.get('master') and h['master'] != i['master']:
+                if not (i['master'].startswith('hbfd_rly_') and h['master'].rsplit('_', 1)[0] == i['master'].rsplit('_', 1)[0]):
+                    problems.append(f"rehome: {n} master {i['master']} -> {h['master']} is not a flow-letter change"); continue
+                i['master'] = h['master']
+            home = f"home ({h['home'][0]}, {h['home'][1]}) um"
+            note = re.sub(r'home \([-\d.]+, [-\d.]+\) um', home, i.get('note', ''))
+            i['note'] = (note if home in note else f'{note}; {home}') + f" | {s_['region']}: re-homed ({h.get('why', '')})"
     # H-NETLIST 0600 (H-DIE option A): a programme target whose only consumer is a universal VM calendar is FOLDED into
     # it (hfd_hgi_vm_calendar_f20 = target + calendar; a standalone ~630-pin collar is pin-bound as its own tile).
     folded = {}       # target instance -> consumer instance
@@ -697,7 +829,7 @@ def build(specs_dir, out, extra=()):
             if not r:
                 continue
             if PC_H8 and i['master'] == 'ot_hbm_svc_pc_ctrl_leaf':
-                r = dict(r, **PC_H8_MASTER)
+                r = dict(r, **(PC_H9B_MASTER if PC_H9B else PC_H8_MASTER))
                 h8.add(n)
             old = dict(i['params'])
             for port, fn in r['straps']:
@@ -1008,6 +1140,16 @@ def build(specs_dir, out, extra=()):
             for b in range(lo, hi):
                 drv[(i, p, b)] = ('CONST', (int(st['value']) >> (b - lo)) & 1, 0)
             straps.append(dict(st, lo=lo, hi=hi, master=insts[i]['master']))
+    # ---------------- soft parents (H-NETLIST/IDX 2026-10-16, grant 6413258a6): hb_idx -> die-level children
+    soft_rec = None
+    if soft_idx:
+        import soft_parent
+        nm = json.loads(Path(soft_idx).read_text())
+        soft_rec = soft_parent.soft_flatten('hb_idx', nm, insts, ports, drv, E, clocks, straps, rtl, problems)
+        if soft_rec:
+            soft_rec['netmap'] = str(soft_idx)
+            soft_rec['netmap_sha256'] = sha(Path(soft_idx))
+            soft_rec['netmap_sources'] = nm.get('sources')
     # ---------------- die pins
     pins = []
     for i, pp in ports.items():
@@ -1024,7 +1166,15 @@ def build(specs_dir, out, extra=()):
         for g in s.get('gaps', []):
             g = dict(g, region=s['region'])
             aff = []
+            affects = []
             for a in g.get('affects', []):
+                if soft_rec and a[0] == soft_rec['parent']:      # soft parent: account on its children
+                    pp_ = soft_rec['_parent_ports'][a[1]]
+                    lo, hi = (int(a[2]), int(a[3])) if len(a) >= 4 and a[2] is not None else (0, pp_['bits'])
+                    affects += soft_rec['_map_range'](a[1], lo, hi)
+                else:
+                    affects.append(a)
+            for a in affects:
                 i, p = a[0], a[1]
                 if i in flat:
                     continue        # accounting range on a flattened array wrapper (its leaves carry the bits)
@@ -1107,7 +1257,8 @@ def build(specs_dir, out, extra=()):
                                   '(latency counted in the compiler stage counts); logical relays that the RTL '
                                   'semantics require (SU RF_RELAY) are instances of their region spec',
                              templates=grants.get('relay_templates'), su_rf=grants.get('su_rf_relays_v7', {}).get('RF_RELAY')),
-        notes={s['region']: s.get('notes') for s in specs})
+        notes={s['region']: s.get('notes') for s in specs},
+        soft_parents=[{k: v for k, v in soft_rec.items() if not k.startswith('_')}] if soft_rec else [])
     out.mkdir(parents=True, exist_ok=True)
     (out / 'contract.json').write_text(json.dumps(contract, indent=1) + '\n')
     emit_die(out, insts, ports, drv, pins, straps)
@@ -1232,15 +1383,19 @@ def main():
     ap.add_argument('--drop-sm-side', default='', help='A2P: comma list of quadrants whose SM side is removed')
     ap.add_argument('--drop-instances', default='', help='A2P: comma list of extra instances to remove')
     ap.add_argument('--keep-quadrants', default='', help='A2P: comma list of quadrants to keep (e.g. SW,NW)')
+    ap.add_argument('--pc-h9b', action='store_true', help='with --pc-h8: the PC master is H9b (PC_H9B_MASTER)')
     ap.add_argument('--pc-h8', action='store_true', help='with --identity-straps: PC controller = the H8 view (PC_H8_MASTER)')
+    ap.add_argument('--soft-idx', type=Path, help='net map of the soft hb_idx composition (idx_soft_netmap_1016.py): '
+                    'replace hb_idx by its children hb_idx__<child> (H-DIE grant 6413258a6)')
     a = ap.parse_args()
-    global IDENTITY_STRAPS, PC_H8, KEEP_Q, DROP_SM_Q, DROP_INST
+    global IDENTITY_STRAPS, PC_H8, KEEP_Q, DROP_SM_Q, DROP_INST, PC_H9B
+    PC_H9B = a.pc_h9b
     DROP_SM_Q = tuple(x for x in a.drop_sm_side.split(',') if x)
     DROP_INST = tuple(x for x in a.drop_instances.split(',') if x)
     KEEP_Q = tuple(x for x in a.keep_quadrants.split(',') if x)
     IDENTITY_STRAPS = a.identity_straps
     PC_H8 = a.pc_h8
-    c = build(a.specs, a.out, a.extra_spec)
+    c = build(a.specs, a.out, a.extra_spec, a.soft_idx)
     print(json.dumps(c['summary'], indent=1))
     for p in c['problems'][:40]:
         print('PROBLEM', p)
