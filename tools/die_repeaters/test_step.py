@@ -99,13 +99,13 @@ def _docker_ok():
     return r.returncode == 0
 
 
-def _run(tmp_path, mutant):
-    w = tmp_path / ('mut' if mutant else 'base')
+def _run(tmp_path, mutant, tag=None, check=True, **kw):
+    w = tmp_path / (tag or ('mut' if mutant else 'base'))
     w.mkdir()
     (w / 't.v').write_text(DESIGN_V)
     step.copy(w)
-    call = step.tcl_call('cluster', '/work/die_repeaters.json', legalize='dpl', reach_um=400.0)
-    (w / 'run.tcl').write_text(SETUP_TCL + (MUTANT if mutant else '') + call + CHECK_TCL)
+    call = step.tcl_call('cluster', '/work/die_repeaters.json', legalize='dpl', reach_um=400.0, **kw)
+    (w / 'run.tcl').write_text(SETUP_TCL + (MUTANT if mutant else '') + call + (CHECK_TCL if check else ''))
     r = subprocess.run(['docker', 'run', '--rm', '--memory=2g', '-v', f'{w}:/work', IMAGE, 'bash', '-lc',
                         'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -no_init -no_splash -exit '
                         '/work/run.tcl; rc=$?; chmod -R a+rwX /work; exit $rc'], capture_output=True, text=True)
@@ -138,3 +138,15 @@ def test_integration_pass_and_mutant(tmp_path):
     rep = json.loads((w / 'die_repeaters.json').read_text())
     assert rep['verdict'] == 'FAIL' and rep['resized'] == 1 and rep['non_buffer_inserted'] == 1
     assert not step.check(w / 'die_repeaters.json')[0]
+
+
+@pytest.mark.skipif(os.environ.get('OT_SKIP_DOCKER') == '1' or not _docker_ok(), reason='no docker / ORFS image')
+def test_repeat_nets_odb_match(tmp_path):
+    # a clock-pin net named by repeat_nets is repeated (odb string match, bracket globs included); a glob that matches
+    # nothing fails the step (S81-DV p4e: forwarded clocks silently left unrepeated)
+    r, w = _run(tmp_path, False, tag='rep', check=False, repeat_nets=['cl[k]'])
+    rep = json.loads((w / 'die_repeaters.json').read_text())
+    assert r.returncode == 0 and rep['repeated_clock_nets'] == 1 and rep['skip_nets'] == 0, r.stdout[-2000:]
+    r, w = _run(tmp_path, False, tag='none', check=False, repeat_nets=['n*_fck*'])
+    rep = json.loads((w / 'die_repeaters.json').read_text())
+    assert r.returncode == 3 and rep['verdict'] == 'FAIL' and rep['repeated_clock_nets'] == 0
