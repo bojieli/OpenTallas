@@ -98249,9 +98249,9 @@
     "h": 520.0
    },
    "origin": {
-    "x": 15484.16,
-    "y": 9034.72,
-    "orient": "MY"
+    "x": 14560.2,
+    "y": 1240.4,
+    "orient": "R0"
    },
    "pins": [],
    "pin_status": "FACES_ONLY",
@@ -98260,7 +98260,8 @@
    "fit_r2": {
     "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
     "moved_um": 0.0
-   }
+   },
+   "r6": "PC band E end, beside its 8 vmks consumers (H-DIE-R6 coordinator item 7)"
   },
   {
    "name": "wbk_NW",
@@ -98272,9 +98273,9 @@
     "h": 520.0
    },
    "origin": {
-    "x": 15484.16,
-    "y": 22574.72,
-    "orient": "MY"
+    "x": 14560.2,
+    "y": 30409.04,
+    "orient": "MX"
    },
    "pins": [],
    "pin_status": "FACES_ONLY",
@@ -98283,7 +98284,8 @@
    "fit_r2": {
     "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
     "moved_um": 0.0
-   }
+   },
+   "r6": "PC band E end, beside its 8 vmks consumers (H-DIE-R6 coordinator item 7)"
   },
   {
    "name": "sfup_SW",
@@ -98376,6 +98378,25 @@
     "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
     "moved_um": 0.0
    }
+  },
+  {
+   "name": "hb_argmax",
+   "cell": "ot_hbm_argmax_static_sw_vm",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 118.8,
+    "h": 118.8
+   },
+   "origin": {
+    "x": 20639.04,
+    "y": 19032.178,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4f_r6_slot_1017",
+   "notes": "own slot E of idx_op (peer hb_idx__ctl 2,192 b); was OWNER-BLOCK MISFIT in run3"
   }
  ],
  "sub_layouts": {

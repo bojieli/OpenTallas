@@ -71,6 +71,7 @@ OWNER = [(r'hb_vms_(SW|SE|NW|NE)', lambda m: rf'(vmh|vmb)_{m.group(1)}\d*'),
          (r'hb_(idx|argmax)', lambda m: r'idx_\w+')]
 
 
+_CH_ROUTER = None
 PIN_STEP0 = 0.096   # granted die pin pitch (10.417 pins/um, hbm_v15 grants)
 
 
@@ -256,6 +257,11 @@ def main():
     ap.add_argument('--compact-pins', action='store_true',
                     help='d4b (H-DIE 10-16): SYNTH abstracts pack each bus at 0.096 um centred toward its peers '
                          '(direction averaged over all instances of the master) instead of spreading over 90 percent of the face')
+    ap.add_argument('--slot-map', default='',
+                    help='inst=slot[,inst=slot..]: die-side contract slot retarget (H-DIE-R6; same as an H-NETLIST slot_override layer)')
+    ap.add_argument('--replan-chains', default='',
+                    help='regex of contract relay instances whose planned homes are ignored: each chain is re-planned at even '
+                         'spacing along an obstacle-aware route (relay_router, free cells) between its placed ends (H-DIE-R6)')
     ap.add_argument('--d4b-homes', action='store_true',
                     help='d4b (H-DIE 10-16): LG banks beside their user (pgslice / lg_pair / hc_q), not inside VM plan '
                          'blocks; xload ctlw at the Manhattan minimax point of its SM peers')
@@ -270,6 +276,16 @@ def main():
     slots = {s['name']: s for s in G['slots']}
     W, H = G['floorplan']['die_um']
     I = C['instances']
+    slot_map = dict(kv.split('=') for kv in a.slot_map.split(',') if kv)
+    for n_, s_ in slot_map.items():
+        I[n_]['slot'] = s_
+    replanned = []
+    if a.replan_chains:
+        for n_, v_ in I.items():
+            if re.match(a.replan_chains, n_) and re.search(r'home \(([\d.]+), ([\d.]+)\) um', v_.get('note', '')):
+                v_['note'] = re.sub(r'home \(([\d.]+), ([\d.]+)\) um', r'old home (\1, \2) um ignored (r6 chain re-plan)', v_['note'])
+                replanned.append(n_)
+        print('replan chains: planned homes ignored for', len(replanned), 'relays')
     strip = None
     if a.pc_strip:
         dh = a.pc_strip
@@ -631,6 +647,16 @@ def main():
             path = [p0, (p0[0], lane['h']), (p1[0], lane['h']), p1]
         else:
             path = [p0, (p1[0], p0[1]), p1]
+        if a.replan_chains and re.match(a.replan_chains, chain[0]):
+            # r6: obstacle-aware routed path through free channels (wires may cross macro edges), relays on free cells
+            global _CH_ROUTER
+            if _CH_ROUTER is None:
+                import relay_router as RR
+                _CH_ROUTER = RR.Router({k: dict(m=v['m'], x=v['x'], y=v['y'], w=v['w'], h=v['h'], o=v['o']) for k, v in pl.items()},
+                                       (W, H), 405.0, G=20.0)
+            rt = _CH_ROUTER; nodes = rt.route(p0, p1)
+            path = [p0] + [rt.centre(k) for k in nodes if k >= 0] + [p1]
+            lane = 'routed'
         seg = [abs(path[i + 1][0] - path[i][0]) + abs(path[i + 1][1] - path[i][1]) for i in range(len(path) - 1)]
         L = sum(seg) or 1.0
         for r, rn in enumerate(chain):
@@ -842,6 +868,7 @@ def main():
                                  die_repeaters_step.config('hbm', '/work/out/die_repeaters.json', reach_um=mw['value_um'],
                                                            max_wire_um=a.repeater_max_wire_um))
     manifest['pc_strip'] = strip
+    manifest['slot_map'] = slot_map; manifest['replanned_chain_relays'] = dict(regex=a.replan_chains, n=len(replanned))
     manifest['d4b_homes'] = bool(a.d4b_homes)
     manifest['layout_image_status'] = 'DEFERRED' if a.no_plot else 'GENERATED'
     if not a.no_plot:
