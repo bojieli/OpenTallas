@@ -12,7 +12,7 @@ srcs="$(sort -u physical/hbm_norm_split_20261008/sources.f | tr '\n' ' ') rtl/hd
 /usr/bin/time -v -o $O/time.log $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD $DEF -GBEAT=$B --top-module tb_s81sl_beat -Mdir $O/obj $srcs \
   --build-jobs ${J:-4} -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build.log 2>&1 || { echo "BUILD_FAILED"; tail -n 8 $O/build.log; exit 3; }
 (cd $O/run && ../obj/Vtb_s81sl_beat > ../run.log 2>&1)
-grep -E "^SLBEAT|MISMATCH" $O/run.log | head -14
+grep -E "MISMATCH" $O/run.log | head -12; grep -E "^SLBEAT" $O/run.log   # SLBEAT apart: >13 mismatches hid it behind head (s81sl_vq a58a22ede)
 if [ "$M" = base ]; then grep -q '^PASS' $O/run.log && { echo "PASS beat $M B=$B $L"; exit 0; }; echo "FAIL beat"; exit 1; fi
 [ "${5:-}" = raw ] && { grep -q '^PASS' $O/run.log && exit 0; exit 1; }
 grep -q '^FAIL' $O/run.log && { echo "NEGATIVE_CONTROL_FAILED_AS_EXPECTED $M"; exit 0; }; echo "NEGATIVE_CONTROL_PASSED $M (bench blind)"; exit 1
