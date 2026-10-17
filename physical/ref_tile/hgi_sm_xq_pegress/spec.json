@@ -62,21 +62,21 @@
   ]
  },
  "outline": {
-  "w": 302.4,
+  "w": 345.6,
   "h": 302.4
  },
  "pin_regs": {
   "enable": false,
   "reason": "every input lands in a pin register in RTL (rw, e6, e5r replicas, bc_*, bq_c, bqvr) and every output is a register (owner rule 19:50)"
  },
- "floorplan_note": "XQL pair-egress leaf (H-SM 10-16): W face 2,048 bq_d from the pair bdring (6.8/um as the bdring E face), S face 1,024 rwq from the 2x2 bfq stack, N face 2,063 xw pins toward the pair SM windows, E face controls from the equal-age tree.",
- "slot_change_request": "NEW leaf of the XQL pair cluster (H-DIE pair-store slot re-home): 302.4 x 302.4",
+ "floorplan_note": "XQL pair-egress leaf x2 (H-SM 18:30 10-16, option B pair-store slot): 345.6 x 302.4; N face 2,063 xw pins spread evenly over the full 345.6 um (= the SM xw window width, 345 um S-face M5) alternating M3/M5; W face 2,048 bq_d evenly over 302.4 (bdring E face match); S 1,024 rwq; E controls, clk centred. x1 (302.4 square, auto pin regions) packed the 2,063 xw pins into a 210 um centre band at min-track pitch (9.8 pins/um) with two output hold pads per pin: GRT-0116 29 gcells all in the top row y 297.5-298.1, M3 V usage cap+1 (xw_data + ot_outhold nets), rwq in a 100 um S band. Pin-limited leaf (3,923 um2 std, 5,135 pins) -> util stays low by construction; outline set by the faces, not by area.",
+ "slot_change_request": "XQL pair cluster leaf, option B pair-store slot (H-DIE provisional 950.4 x 600.48, xql_pair_store_grant_1016.json): 345.6 x 302.4 (was 302.4 x 302.4)",
  "job": {
-  "owner": "Claude H-SM 1315",
-  "branch": "codex/hbm-sm-1552",
-  "tag": "x1",
+  "owner": "Claude H-SM 1830",
+  "branch": "claude/hsm-xqb-1830",
+  "tag": "x2",
   "purpose": "XQL pair-egress leaf: the ctl egress (rw capture, replicated beat select, BD beat capture, xw pins) per SM pair, beside the pair store",
-  "structural_change": "new leaf (XQL, coordinator decision 10-16; d4b SM_X 63 stages -> pair-local egress)",
+  "structural_change": "x1 hgi_sm_xq_pegress-x1-ee1d52825 EARLY_FAIL_CONGESTION: GRT-0116 29 overflow gcells (M3 V 24, M5 V 5, max +1), every one in the N-face top row: auto pin placement clumped 2,063 xw pins into a 210 um band (9.8/um) plus 2 outhold pads per pin. x2: explicit even pin spread on every face (tools/ref_tile/spread_face_pins.py, N/S alternate M3/M5, W/E M4, clk centred), N face widened 302.4 -> 345.6 to the SM xw window width (6.1 xw pins/um over the whole face, 2 layers). RTL, benches, pin faces unchanged.",
   "extra_paths": [
    "physical/asap7_memory_macros",
    "physical/hbm_xp_aq_tree13_1014",
@@ -146,5 +146,6 @@
   ],
   "views_to": "physical/ref_tile/hgi_sm_xq_pegress/views",
   "record_to": "results/rtl/ref_tile/hgi_sm_xq_pegress"
- }
+ },
+ "io_tcl": "physical/ref_tile/hgi_sm_xq_pegress/spread_pins.tcl"
 }
