@@ -2,7 +2,7 @@
  "name": "s81coll_cfifo_crs-r5d-COMMIT",
  "block": "dsfd_cfifo_crs",
  "ref_tile": true,
- "owner": "Claude:S-ELEM-CFIFO-1815",
+ "owner": "Codex:S-ELEM-2004",
  "purpose": "Additive opt-in dsfd_cfifo_crs r5: split cr roots, pin-capture ri (+1 status edge), reset frontier (+2 init edges), half-cycle column read (0 edges; removes the cross-root full-cycle hold flood). No default parent adoption.",
  "threads": 8,
  "peak_ram_gb": 16,
@@ -39,7 +39,8 @@
     "needs": [
      "iverilog"
     ],
-    "min_count_regex": "CFIFO_X2_GATE PASS (\\d+) phase pairs"
+    "min_count_regex": "CFIFO_X2_GATE PASS (\\d+) phase pairs",
+    "pass_witness": "results/rtl/s81_cfifo_crs_1016/r5d/pass.log"
    },
    {
     "name": "x2_payload_mutant",
@@ -50,7 +51,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_cfifo_crs_1016/r5d/mut_payload.log"
    },
    {
     "name": "x2_valid_mutant",
@@ -61,7 +63,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_cfifo_crs_1016/r5d/mut_valid.log"
    },
    {
     "name": "cold_warm_5phase",
@@ -73,7 +76,8 @@
     "needs": [
      "iverilog"
     ],
-    "min_count_regex": "CFIFO_X2_GATE PASS (\\d+) phase pairs"
+    "min_count_regex": "CFIFO_X2_GATE PASS (\\d+) phase pairs",
+    "pass_witness": "results/rtl/s81_cfifo_crs_1016/r5d/warm.log"
    },
    {
     "name": "wrong_forwarded_clock_mutant",
@@ -84,7 +88,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_cfifo_crs_1016/r5d/mut_clock.log"
    },
    {
     "name": "ri_pin_register_mutant",
@@ -95,7 +100,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_cfifo_crs_1016/r5d/mut_ripin.log"
    },
    {
     "name": "stopped_south_root_mutant",
@@ -106,7 +112,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_cfifo_crs_1016/r5d/mut_stop_s.log"
    },
    {
     "name": "reset_frontier_bypass_mutant",
@@ -117,7 +124,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_cfifo_crs_1016/r5d/mut_reset_frontier.log"
    },
    {
     "name": "half_cycle_stage_bypass_mutant",
@@ -128,7 +136,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_cfifo_crs_1016/r5d/mut_hstage.log"
    },
    {
     "name": "half_cycle_select_mutant",
@@ -139,7 +148,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_cfifo_crs_1016/r5d/mut_hsel.log"
    },
    {
     "name": "epoch_gray_mutant",
@@ -150,7 +160,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_cfifo_crs_1016/r5d/mut_hgray.log"
    }
   ],
   "calibrate": {
