@@ -30,37 +30,13 @@
   "signal_max_layer": "M5"
  },
  "pins": {
-  "N": [
+  "S": [
    "clk_pin",
    "clk",
    "clk_sfu",
    "clk_ins",
    "clk_ins2",
-   "clk_side"
-  ],
-  "W": [
-   "ld_c",
-   "rd_q",
-   "vi_q"
-  ],
-  "E": [
-   "coll",
-   "fault",
-   "kv_waddr",
-   "kv_wdata",
-   "kv_we",
-   "rd_addr",
-   "rd_re",
-   "rd_src",
-   "ro_v",
-   "ro_x",
-   "vi_addr",
-   "vi_re",
-   "vm_waddr",
-   "vm_wdata",
-   "vm_we"
-  ],
-  "S": [
+   "clk_side",
    "rst_n",
    "lane_id",
    "ld",
@@ -104,6 +80,28 @@
    "ce_imm1",
    "co_rnd",
    "co_dst"
+  ],
+  "W": [
+   "ld_c",
+   "rd_q",
+   "vi_q"
+  ],
+  "E": [
+   "coll",
+   "fault",
+   "kv_waddr",
+   "kv_wdata",
+   "kv_we",
+   "rd_addr",
+   "rd_re",
+   "rd_src",
+   "ro_v",
+   "ro_x",
+   "vi_addr",
+   "vi_re",
+   "vm_waddr",
+   "vm_wdata",
+   "vm_we"
   ]
  },
  "clock_port": "clk_pin",

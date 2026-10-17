@@ -31,37 +31,13 @@
   "rst_n"
  ],
  "pins": {
-  "N": [
+  "S": [
    "clk_pin",
    "clk",
    "clk_sfu",
    "clk_ins",
    "clk_ins2",
-   "clk_side"
-  ],
-  "W": [
-   "ld_c",
-   "rd_q",
-   "vi_q"
-  ],
-  "E": [
-   "coll",
-   "fault",
-   "kv_waddr",
-   "kv_wdata",
-   "kv_we",
-   "rd_addr",
-   "rd_re",
-   "rd_src",
-   "ro_v",
-   "ro_x",
-   "vi_addr",
-   "vi_re",
-   "vm_waddr",
-   "vm_wdata",
-   "vm_we"
-  ],
-  "S": [
+   "clk_side",
    "rst_n",
    "lane_id",
    "ld",
@@ -105,6 +81,28 @@
    "ce_imm1",
    "co_rnd",
    "co_dst"
+  ],
+  "W": [
+   "ld_c",
+   "rd_q",
+   "vi_q"
+  ],
+  "E": [
+   "coll",
+   "fault",
+   "kv_waddr",
+   "kv_wdata",
+   "kv_we",
+   "rd_addr",
+   "rd_re",
+   "rd_src",
+   "ro_v",
+   "ro_x",
+   "vi_addr",
+   "vi_re",
+   "vm_waddr",
+   "vm_wdata",
+   "vm_we"
   ]
  },
  "layer_cap": "M5",
@@ -121,13 +119,18 @@
   "macro_halo_um": 5.4,
   "pin_min_tracks": 4,
   "io_hold_margin_ns": 0.0,
-  "hold_margin_ns": 0.03
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
  },
  "job": {
   "owner": "Claude:H-SU/PGSLICE",
   "branch": "claude/hsu-pgslice-d4c",
   "tag": "r3",
-  "purpose": "Regional roots per lane leaf, meeting only at registered seams (r1 gate: one lane root of 32,978 sinks failed the measured >15k insertion/spread rule; s2 EARLY_FAIL_HOLD from per-stage roots): clk_pin pin registers, clk stages 0-3+5-7 (~13.1k), clk_sfu stage-4 SFU (~10.8k), clk_ins / clk_ins2 insertion regions 0-1 / 2-3 (21.8k in all), clk_side[5:0] the SIDE pipe six-root partition (41.8k in all); seams = stage-3 registers -> SFU/insertion inputs and their outputs -> stage-5 merge. OT_QMUL4_INCUT, recipe 4 (hold_budget die), sync regional reset (relays sample on the pin root). KIND2 carries the SIDE pipe inside (no side pins), outline 345.6 x 367.2 (87.6k flops, std ~63k um2; r3 first gate: clk_side 41,758 / clk_ins 21,784 sinks on one root each).",
+  "purpose": "Regional roots per lane leaf, meeting only at registered seams (r1 gate: one lane root of 32,978 sinks failed the measured >15k insertion/spread rule; s2 EARLY_FAIL_HOLD from per-stage roots): clk_pin pin registers, clk stages 0-3+5-7 (~13.1k), clk_sfu stage-4 SFU (~10.8k), clk_ins / clk_ins2 insertion regions 0-1 / 2-3 (21.8k in all), clk_side[5:0] the SIDE pipe six-root partition (41.8k in all); seams = stage-3 registers -> SFU/insertion inputs and their outputs -> stage-5 merge. OT_QMUL4_INCUT, recipe 4 (hold_budget die), sync regional reset (relays sample on the pin root). KIND2 carries the SIDE pipe inside (no side pins), outline 345.6 x 367.2 (87.6k flops, std ~63k um2; r3 first gate: clk_side 41,758 / clk_ins 21,784 sinks on one root each). Pins spread over the FULL W/E/S faces (pin_ranges proportional to bits, balanced placer, <= ~3.4/um); clock entries at the S-face centre beside the register mass (r3 KIND1 gate: N-corner entry, lane root TT insertion 455.9 / spread 131.1 ps).",
   "extra_paths": [],
   "benches": [
    {
@@ -202,7 +205,7 @@
   "enable": false,
   "reason": "the RTL (ot_hbm_su_static_lane_pinreg, PIN_RST=1) already registers every data input, rst_n and every output at the pin; a kit-level flop stage would add a second, unscheduled boundary edge"
  },
- "structural_change": "Regional roots per lane leaf, meeting only at registered seams (r1 gate: one lane root of 32,978 sinks failed the measured >15k insertion/spread rule; s2 EARLY_FAIL_HOLD from per-stage roots): clk_pin pin registers, clk stages 0-3+5-7 (~13.1k), clk_sfu stage-4 SFU (~10.8k), clk_ins / clk_ins2 insertion regions 0-1 / 2-3 (21.8k in all), clk_side[5:0] the SIDE pipe six-root partition (41.8k in all); seams = stage-3 registers -> SFU/insertion inputs and their outputs -> stage-5 merge. OT_QMUL4_INCUT, recipe 4 (hold_budget die), sync regional reset (relays sample on the pin root). KIND2 carries the SIDE pipe inside (no side pins), outline 345.6 x 367.2 (87.6k flops, std ~63k um2; r3 first gate: clk_side 41,758 / clk_ins 21,784 sinks on one root each).",
+ "structural_change": "Regional roots per lane leaf, meeting only at registered seams (r1 gate: one lane root of 32,978 sinks failed the measured >15k insertion/spread rule; s2 EARLY_FAIL_HOLD from per-stage roots): clk_pin pin registers, clk stages 0-3+5-7 (~13.1k), clk_sfu stage-4 SFU (~10.8k), clk_ins / clk_ins2 insertion regions 0-1 / 2-3 (21.8k in all), clk_side[5:0] the SIDE pipe six-root partition (41.8k in all); seams = stage-3 registers -> SFU/insertion inputs and their outputs -> stage-5 merge. OT_QMUL4_INCUT, recipe 4 (hold_budget die), sync regional reset (relays sample on the pin root). KIND2 carries the SIDE pipe inside (no side pins), outline 345.6 x 367.2 (87.6k flops, std ~63k um2; r3 first gate: clk_side 41,758 / clk_ins 21,784 sinks on one root each). Pins spread over the FULL W/E/S faces (pin_ranges proportional to bits, balanced placer, <= ~3.4/um); clock entries at the S-face centre beside the register mass (r3 KIND1 gate: N-corner entry, lane root TT insertion 455.9 / spread 131.1 ps).",
  "outline": {
   "w": 345.6,
   "h": 367.2
@@ -422,5 +425,275 @@
  },
  "hold_budget": "die",
  "inhold": false,
- "outhold": false
+ "outhold": false,
+ "pin_ranges": {
+  "ld_c": [
+   4.32,
+   305.51
+  ],
+  "rd_q": [
+   305.51,
+   351.406
+  ],
+  "vi_q": [
+   351.406,
+   362.88
+  ],
+  "coll": [
+   4.32,
+   5.591
+  ],
+  "fault": [
+   5.591,
+   6.863
+  ],
+  "kv_waddr": [
+   6.863,
+   37.379
+  ],
+  "kv_wdata": [
+   37.379,
+   78.066
+  ],
+  "kv_we": [
+   78.066,
+   79.338
+  ],
+  "rd_addr": [
+   79.338,
+   201.401
+  ],
+  "rd_re": [
+   201.401,
+   206.487
+  ],
+  "rd_src": [
+   206.487,
+   216.659
+  ],
+  "ro_v": [
+   216.659,
+   217.93
+  ],
+  "ro_x": [
+   217.93,
+   258.618
+  ],
+  "vi_addr": [
+   258.618,
+   289.134
+  ],
+  "vi_re": [
+   289.134,
+   290.405
+  ],
+  "vm_waddr": [
+   290.405,
+   320.921
+  ],
+  "vm_wdata": [
+   320.921,
+   361.609
+  ],
+  "vm_we": [
+   361.609,
+   362.88
+  ],
+  "clk_pin": [
+   168.048,
+   168.144
+  ],
+  "clk": [
+   168.912,
+   169.008
+  ],
+  "clk_sfu": [
+   169.776,
+   169.872
+  ],
+  "clk_ins": [
+   170.64,
+   170.736
+  ],
+  "clk_ins2": [
+   171.504,
+   171.6
+  ],
+  "clk_side": [
+   172.368,
+   176.784
+  ],
+  "rst_n": [
+   4.32,
+   4.81
+  ],
+  "lane_id": [
+   4.81,
+   10.195
+  ],
+  "ld": [
+   10.195,
+   10.685
+  ],
+  "ld_bank": [
+   10.685,
+   11.174
+  ],
+  "emit": [
+   11.174,
+   11.664
+  ],
+  "bank": [
+   11.664,
+   12.154
+  ],
+  "o_v": [
+   12.154,
+   23.904
+  ],
+  "i_v": [
+   23.904,
+   35.654
+  ],
+  "no": [
+   35.654,
+   47.405
+  ],
+  "ni": [
+   47.405,
+   59.155
+  ],
+  "ls": [
+   59.155,
+   61.114
+  ],
+  "lvw": [
+   61.114,
+   63.072
+  ],
+  "vb": [
+   63.072,
+   121.824
+  ],
+  "krow": [
+   121.824,
+   133.574
+  ],
+  "obase": [
+   133.574,
+   145.325
+  ],
+  "aibase": [
+   145.325,
+   157.075
+  ],
+  "aind": [
+   157.075,
+   158.054
+  ],
+  "gsh": [
+   158.054,
+   160.502
+  ],
+  "cpair": [
+   160.502,
+   160.992
+  ],
+  "dst": [
+   160.992,
+   161.971
+  ],
+  "srcs": [
+   161.971,
+   165.888
+  ],
+  "cx_srcs": [
+   179.712,
+   185.283
+  ],
+  "cx_arnd": [
+   185.283,
+   185.98
+  ],
+  "cx_arelu": [
+   185.98,
+   186.676
+  ],
+  "cx_amin": [
+   186.676,
+   187.373
+  ],
+  "cx_cclip": [
+   187.373,
+   188.069
+  ],
+  "cx_imm3": [
+   188.069,
+   210.354
+  ],
+  "cp_m1": [
+   210.354,
+   212.443
+  ],
+  "cp_imm1": [
+   212.443,
+   234.729
+  ],
+  "cm_m1": [
+   234.729,
+   236.818
+  ],
+  "cm_m2": [
+   236.818,
+   238.211
+  ],
+  "cm_qm": [
+   238.211,
+   240.3
+  ],
+  "cm_imm1": [
+   240.3,
+   262.585
+  ],
+  "ca_ad": [
+   262.585,
+   264.674
+  ],
+  "ca_imm2": [
+   264.674,
+   286.96
+  ],
+  "ci_sfu": [
+   286.96,
+   289.049
+  ],
+  "cs_sfu": [
+   289.049,
+   291.138
+  ],
+  "cs_e1": [
+   291.138,
+   293.227
+  ],
+  "cs_imm2": [
+   293.227,
+   315.513
+  ],
+  "ce_e2": [
+   315.513,
+   316.906
+  ],
+  "ce_imm1": [
+   316.906,
+   339.191
+  ],
+  "co_rnd": [
+   339.191,
+   339.887
+  ],
+  "co_dst": [
+   339.887,
+   341.28
+  ]
+ }
 }
