@@ -31,4 +31,5 @@ exec(compile(f,'<production compile_bench with O1>', 'exec'),M.__dict__)
 spec=json.loads((r/'physical/ref_tile/smh_tile_rp3/spec.json').read_text())
 args=['run','--seq','stress','--nc','8','--active','8','--rmax','4096','--req-credit','--smh','--cg','--cg-gap','300','--build-jobs',str(a.jobs),'--workdir',str(out),'--out',a.out]
 for d in spec['defines']:args+=['--define',d]
+if a.one:args+=['--define','OT_SMH_RP4_SRST']
 raise SystemExit(M.main(args))

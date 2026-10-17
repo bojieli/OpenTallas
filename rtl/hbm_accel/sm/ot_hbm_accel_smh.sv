@@ -373,7 +373,13 @@ module ot_hbm_accel_smh_kreg #(
     input  wire [W-1:0] d,
     output reg  [W-1:0] q
 );
-    generate if (RST != 0) begin : g_r
+    // RST = 1: asynchronous clear; RST = 2: SYNCHRONOUS clear from a registered regional reset tree (RP4f, owner
+    // 2026-10-16: regional sync reset trees, no async fan-out / removal checks across roots)
+    generate if (RST == 2) begin : g_s
+        always @(posedge clk)
+            if (!rst_n) q <= {W{1'b0}};
+            else if (EN == 0 || en) q <= d;
+    end else if (RST != 0) begin : g_r
         always @(posedge clk or negedge rst_n)
             if (!rst_n) q <= {W{1'b0}};
             else if (EN == 0 || en) q <= d;
@@ -393,7 +399,9 @@ module ot_hbm_accel_smh_kregk #(
     output wire [W-1:0] q
 );
     (* keep *) reg [W-1:0] r;
-    generate if (RST != 0) begin : g_r
+    generate if (RST == 2) begin : g_s
+        always @(posedge clk) if (!rst_n) r <= {W{1'b0}}; else r <= d;
+    end else if (RST != 0) begin : g_r
         always @(posedge clk or negedge rst_n) if (!rst_n) r <= {W{1'b0}}; else r <= d;
     end else begin : g_n
         always @(posedge clk) r <= d;
@@ -2124,7 +2132,8 @@ module ot_hbm_accel_smh_bundle_reg #(
     parameter integer V = 4,        // bits below the NV top valids that are data (c's non-valid part, w ...)
     parameter integer NV = 2,
     parameter integer X = 7,        // x_ce sits at bit X (above the X-bit x address)
-    parameter integer K = 0         // 1: kept flops (a deliberate duplicate of another bundle register)
+    parameter integer K = 0,        // 1: kept flops (a deliberate duplicate of another bundle register)
+    parameter integer RSTK = 1      // reset kind of the valid / x_ce flops: 1 async clear, 2 synchronous clear (RP4f)
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -2132,16 +2141,16 @@ module ot_hbm_accel_smh_bundle_reg #(
     output wire [W-1:0] q
 );
     generate if (K != 0) begin : g_k
-        ot_hbm_accel_smh_kregk #(.W(NV), .RST(1)) u_v (.clk(clk), .rst_n(rst_n), .d(d[W-1 -: NV]), .q(q[W-1 -: NV]));
+        ot_hbm_accel_smh_kregk #(.W(NV), .RST(RSTK)) u_v (.clk(clk), .rst_n(rst_n), .d(d[W-1 -: NV]), .q(q[W-1 -: NV]));
         ot_hbm_accel_smh_kregk #(.W(W-NV-X-1)) u_d (.clk(clk), .rst_n(rst_n), .d(d[W-NV-1:X+1]), .q(q[W-NV-1:X+1]));
-        ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_x (.clk(clk), .rst_n(rst_n), .d(d[X]), .q(q[X]));
+        ot_hbm_accel_smh_kregk #(.W(1), .RST(RSTK)) u_x (.clk(clk), .rst_n(rst_n), .d(d[X]), .q(q[X]));
         ot_hbm_accel_smh_kregk #(.W(X)) u_a (.clk(clk), .rst_n(rst_n), .d(d[X-1:0]), .q(q[X-1:0]));
     end else begin : g_p
-    ot_hbm_accel_smh_kreg #(.W(NV), .RST(1)) u_v (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(d[W-1 -: NV]),
+    ot_hbm_accel_smh_kreg #(.W(NV), .RST(RSTK)) u_v (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(d[W-1 -: NV]),
         .q(q[W-1 -: NV]));
     ot_hbm_accel_smh_kreg #(.W(W-NV-X-1)) u_d (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(d[W-NV-1:X+1]),
         .q(q[W-NV-1:X+1]));
-    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_x (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(d[X]), .q(q[X]));
+    ot_hbm_accel_smh_kreg #(.W(1), .RST(RSTK)) u_x (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(d[X]), .q(q[X]));
     ot_hbm_accel_smh_kreg #(.W(X)) u_a (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(d[X-1:0]), .q(q[X-1:0]));
     end endgenerate
 endmodule

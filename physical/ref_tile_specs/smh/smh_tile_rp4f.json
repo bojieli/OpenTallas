@@ -62,7 +62,8 @@
   "OT_SMH_COMPACT_PT",
   "OT_SMH_GROUP_TRANSPORT",
   "OT_SMH_WEST_SPLIT",
-  "OT_SMH_TRANSPORT_KEEP"
+  "OT_SMH_TRANSPORT_KEEP",
+  "OT_SMH_RP4_SRST"
  ],
  "clock_port": "clk",
  "reset_ports": [
@@ -306,7 +307,7 @@
   "owner": "Claude H-SM 1815",
   "branch": "claude/hsm-rp4-0030",
   "tag": "rp4f",
-  "structural_change": "RP4e CTS gate (PVE1 smh_tile_rp4e-20261016-152829): in-flow post-CTS setup WNS -280 ps on 4,683 endpoints (u.g_gl[2].u_d3, clk_region[1]->[2]), hold -234 on 5,096; clk_region[0] avg sink wire 1272 um depth 10-11 vs clk_region[1] 0 leaf buffers; rp4d -391.7 on u_v2 ([0]->[1]). Cause = paths crossing the 10 soft CTS roots + 18 hard entries with different trees. Owner 2026-10-16 neighbour-relative clocking: one regional root per tile, no cross-root equalisation. rp4f: same rp4e floorplan/pins/children/RTL body/cycles; the 28 clock ports collapse to ONE port clk (W face y 651.996, centre band) and one balanced clock spine with child-insertion leaf targets.",
+  "structural_change": "RP4e CTS gate (PVE1 smh_tile_rp4e-20261016-152829): in-flow post-CTS setup WNS -280 ps on 4,683 endpoints (u.g_gl[2].u_d3, clk_region[1]->[2]), hold -234 on 5,096; clk_region[0] avg sink wire 1272 um depth 10-11 vs clk_region[1] 0 leaf buffers; rp4d -391.7 on u_v2 ([0]->[1]). Cause = paths crossing the 10 soft CTS roots + 18 hard entries with different trees. Owner 2026-10-16 neighbour-relative clocking: one regional root per tile, no cross-root equalisation. rp4f: same rp4e floorplan/pins/children/RTL body/cycles; the 28 clock ports collapse to ONE port clk (W face y 651.996, centre band) and one balanced clock spine with child-insertion leaf targets. OT_SMH_RP4_SRST: all rp4 glue resets synchronous from the registered regional tree (rp4e hold -234 at RESETN removal fixed at the source, not by padding).",
   "purpose": "MATVEC body clock-structure closure only; not attention/fullSM/native chip qualification.",
   "benches": [
    {
