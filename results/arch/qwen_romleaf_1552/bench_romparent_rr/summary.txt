@@ -1,0 +1,11 @@
+BENCH nk MUT0 exit 0 ROMLEAF_PARENT_NK_NATIVE_PASS checks6399 valids2560 nonzero2560 leaves'{'ha00, 'ha00, 'ha00, 'ha00, 'ha00, 'ha
+BENCH nl MUT0 exit 0 ROMLEAF_PARENT_NATIVE_PASS checks6399 valids2560 nonzero2560 leaves'{'ha00, 'ha00, 'ha00, 'ha00, 'ha00, 'ha00,
+BENCH nkrr MUT0 exit 0 ROMLEAF_PARENT_NK_NATIVE_PASS checks6399 valids2560 nonzero2560 leaves'{'ha00, 'ha00, 'ha00, 'ha00, 'ha00, 'ha
+BENCH nkrr MUT22 exit 1 ROMLEAF_PARENT_NK_NATIVE_FAIL MUT22 errors3600 checks6399 valids2560 nonzero2560
+BENCH nkrr MUT25 exit 1 ROMLEAF_PARENT_NK_NATIVE_FAIL MUT25 errors6250 checks6399 valids2560 nonzero2560
+BENCH nlrr MUT0 exit 0 ROMLEAF_PARENT_NATIVE_PASS checks6399 valids2560 nonzero2560 leaves'{'ha00, 'ha00, 'ha00, 'ha00, 'ha00, 'ha00,
+BENCH nlrr MUT23 exit 1 ROMLEAF_PARENT_NATIVE_FAIL MUT23 errors2650 checks6399 valids2560 nonzero2560
+BENCH nlrr MUT24 exit 1 ROMLEAF_PARENT_NATIVE_FAIL MUT24 errors6250 checks6399 valids2560 nonzero2560
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-403751-1792207330): exit 0
+
+[exited with code 0]
