@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "s81sl_vq",
  "verdict": "FAIL",
- "generated": "2026-10-17T13:11:48-0700",
- "host": "ot-epyc4",
+ "generated": "2026-10-17T13:38:41-0700",
+ "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "e1b961089d741e6b8ca3551ea7b80159705e06a4",
+  "start_commit": "42ee479830b5c63cee9b787654916c27881875be",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "d24d9557d9883e1747e337c9921b10a343e1023aa4f861cdc707f03047b8159f",
-  "manifest_sha256": "3ab70c03c22b1fdb80fff42a21a754a6c1ea29b8e9b04f4cba0661368e648e0e",
+  "archive_sha256": "8358bb6c84e8f1c6bd0ec8252383182ba1b4ce75bc570c2a7f24ae656c6dd515",
+  "manifest_sha256": "651e739cc67da370aecf2ddf1a57206c14017156706f2e00dfd3cb739c4fc3a5",
   "files": [
    {
     "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json",
@@ -17811,8 +17811,8 @@
    {
     "path": "physical/ref_tile/s81sl_vq/kit.env",
     "kind": "file",
-    "sha256": "ed7b7d19b175fa3a0a18ce1910fd9170a70d3a21b7d719f178251ce3f42889d7",
-    "git_blob": "57056b8228c43ab7382896a75585e7e41989329f",
+    "sha256": "d4bc30ae1caf1c9f7a4f3df59d6f78871676430b0a9fa4bf18090805f54d95be",
+    "git_blob": "e5e1f681b280ea1b7e245fc0b112a720e40ca45b",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17923,8 +17923,8 @@
    {
     "path": "physical/ref_tile/s81sl_vq/spec.json",
     "kind": "file",
-    "sha256": "d443f2da769b4959ff9799ff26258b2a165bdd5cb6d0708a689d3e8ec3c935f9",
-    "git_blob": "65c68b8ac93ff5c9d542bfb862e4c4fd79c20b39",
+    "sha256": "c207b47c333a60fb8ca49214c6d6752842cfff0f0d5b68a3131f6693ddd5e3ed",
+    "git_blob": "c39a527288d0a6733393eb3dc7cb59647a0bf1bd",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -133803,8 +133803,8 @@
    {
     "path": "tools/ref_tile/specs_s81slice/s81sl_vq.json",
     "kind": "file",
-    "sha256": "03afa154d05fc2f3278c7dab170b21859386e741015c0532ca49c3433e6cd52a",
-    "git_blob": "5b50974bbcfcf44a26a23ce3d6eca4cebf151a22",
+    "sha256": "e56f8317a054730c525123b0f34b41c52ad58c7206aceb19fd2db8c995374860",
+    "git_blob": "01776fcc01ee1b5acdc64619e5e6bd0ce5eed5c7",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -161955,14 +161955,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 145609865,
+   "archive_bytes": 145609878,
    "unpacked_bytes": 909537280,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "5b151b9eba3591ebd4bff59e17bf9e37cb336f87",
+   "origin_main": "e7dda061729886b1e61a0a4ed5e0025d96fd7da3",
    "content_sha256": "46212c4a006d162487f2749d8e6001edbd7428d03a257e125b6e20e6b3202016",
    "files": [
     {
@@ -162707,7 +162707,7 @@
     "physical/qwen_die_masters/sram_edge_guard.tcl": "99c528dfa06f28b7bdde5b807832a3614949c527fa38b0fcc58071d9e5fa14a2",
     "physical/ref_tile/s81sl_vq/clock.sdc": "caf6a5ad536509512b1df7bd1b39883d0fc26a6e81a66514b78e2dcbd272dcdf",
     "physical/ref_tile/s81sl_vq/floorplan.json": "066d4f9a62aff60b89b30c79cb64a24985aa8a1df28397da36be98aaba692d46",
-    "physical/ref_tile/s81sl_vq/kit.env": "ed7b7d19b175fa3a0a18ce1910fd9170a70d3a21b7d719f178251ce3f42889d7",
+    "physical/ref_tile/s81sl_vq/kit.env": "d4bc30ae1caf1c9f7a4f3df59d6f78871676430b0a9fa4bf18090805f54d95be",
     "physical/ref_tile/s81sl_vq/pdn.tcl": "279c254ad5f5ea52552cbc0d3445f0bc9b88e4b81667cd77705e3f41394ad936",
     "physical/ref_tile/s81sl_vq/pin_regs.json": "910ebc43b0e07d3d4bb9faa4ed0dbcaac1806d17ee71c3ee0ec30b02161cee77",
     "physical/ref_tile/s81sl_vq/place.tcl": "d94589fdae7e312723c22187477179926750976e174c6d95044e37de271a9bf8",
@@ -162721,7 +162721,7 @@
     "physical/ref_tile/s81sl_vq/pre_grt.tcl": "96bd1f80dfc8803a9d6e392004ae8a911f97bc7c1639ec5dac57ef1ee0c3c469",
     "physical/ref_tile/s81sl_vq/signoff.sdc": "1410eed015903cd5a859dcf374815148173d8207cdbecfe5b5dfceb9ef23f364",
     "physical/ref_tile/s81sl_vq/signoff_ffrepair.sdc": "e141e2e8d74c43647d33e13e4083c5d5012cc78694d26a52d5a7a34efc02c37f",
-    "physical/ref_tile/s81sl_vq/spec.json": "d443f2da769b4959ff9799ff26258b2a165bdd5cb6d0708a689d3e8ec3c935f9",
+    "physical/ref_tile/s81sl_vq/spec.json": "c207b47c333a60fb8ca49214c6d6752842cfff0f0d5b68a3131f6693ddd5e3ed",
     "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv": "7a2cbb1261d912fd85b3a56dec3f80e15a654cf1ed7496459c2f257d2c60c9c2",
     "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv": "5d8f0616888895c3916c04e493ee4cd975d3d5eadceba057e09100bebc73f1d8",
     "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv": "5a6683229d62201c9da5b1a0e0d132c75906d31afd07b5c3633018048932a69d",
@@ -163005,16 +163005,16 @@
    },
    "digest": "6936c2c9d51dd00e4682a28d18c671742e0a7892309a5a7049438c2a22cb8f2a"
   },
-  "captured": "2026-10-17T12:54:49-0700",
+  "captured": "2026-10-17T13:18:32-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/s81sl_vq/signoff_ffrepair.sdc"
   },
-  "remote_script_sha256": "791203f5385bc3dc12057f844c1c85e08466bf6824ba9488ac22a41c19deb9b4",
+  "remote_script_sha256": "3e3298edcf87ad3bf5ba8b81e98dc02f5f327bf8a02924201b141b1734635093",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81sl_vq-20261017-125123",
+  "remote_host": "ot-agidock128",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81sl_vq-20261017-131331",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
