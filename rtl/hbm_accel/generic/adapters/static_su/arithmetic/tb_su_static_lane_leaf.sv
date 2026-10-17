@@ -5,7 +5,7 @@
 // (ot_hbm_su_static_pinned_bank, 6 real 128x256 SRAM models) seeded with its column of the N512 seed, one broadcast
 // register in front of the leaf (as in ot_hbm_su_static_pgslice), and the independent NumPy hdc_golden expected words.
 // Checks: every output on its compiled edge (8 + LATENCY + issue), exact data, exact address identity, the actual SRAM
-// commit read back, no lane fault/collision. Mutants (plusargs): +MUT_ADDR (actual A SRAM read request wrong row), +MUT_DATA (one
+// commit read back, no lane fault/collision. Mutants (plusargs): +MUT_ADDR (actual A SRAM read request XOR64 (wrong operand bank)), +MUT_DATA (one
 // SRAM read bit flipped), +MUT_PHASE (control one edge late).
 `ifndef LEAF_TOP
 `define LEAF_TOP ot_hbm_su_static_kind0_lat4_leaf1_physical
@@ -41,7 +41,7 @@ module tb_su_static_lane_leaf;
  bit mut_addr,mut_data,mut_phase;
  for(genvar p=0;p<4;p=p+1)begin:g_rd
   wire [23:0] a=rd_addr[p*24+:24];
-  assign ra[p*9+:9]={a[17:16],a[13:7]} ^ ((mut_addr&&p==0) ? 9'd1 : 9'd0); assign rv[p]=rd_re[p];
+  assign ra[p*9+:9]={a[17:16],a[13:7]} ^ ((mut_addr&&p==0) ? 9'd64 : 9'd0); assign rv[p]=rd_re[p];
   assign rd_q[p*32+:32]=q[p*32+:32]^(mut_data&&p==0?32'h00010000:32'h0);
  end
  assign ra[4*9+:9]={vi_addr[16+:2],vi_addr[7+:7]}; assign rv[4]=vi_re; assign vi_q=q[4*32+:32];
