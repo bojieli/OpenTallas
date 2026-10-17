@@ -49,7 +49,7 @@ module tb_idx_parent_static;
     for(integer r=0;r<8;r=r+1)begin
      integer id,ord;id=int'(tx[l*545+256+r*32+:32]);ord=(id/768)*8+id%8;records++;
      if(ord>=NK)errors++;
-     else begin if(!gold[ord]||seen[ord]||tx[l*545+r*32+:32]!=={scores[ord],16'd0})errors++;seen[ord]=1;end
+     else begin if(!gold[ord]||seen[ord]||tx[l*545+r*32+:32]!=={scores[ord],16'd0})begin errors++;if(errors<6)$display("RECBAD ord%0d gold%0d seen%0d rec%h score%h",ord,gold[ord],seen[ord],tx[l*545+r*32+:32],scores[ord]);end seen[ord]=1;end
     end
    end
   end
@@ -100,6 +100,7 @@ module tb_idx_parent_static;
   repeat(4)tick(0,0,2);
   for(integer i=0;i<NK;i=i+1)if(gold[i]!==seen[i])errors++;
   $display("IDX_PARENT_STATIC nq%0d gap%0d mutation%0d scores%0d records%0d flits%0d errors%0d fault%0d scoreedges%0d..%0d TXedges%0d..%0d",NQ,guard_edges,mutation,checked,records,flits,errors,fault,firstscore-scanstart,lastscore-scanstart,firsttx-scanstart,lasttx-scanstart);
+  $display("IDX_PARENT_FAULTS vf%0d qf%0d scf%b sf%0d lf%0d cal%0d sel_thr%h",dut.vf,dut.qf,dut.scf,dut.sf,dut.lf,dut.calendar_fault,dut.threshold);
   if(errors||fault||checked!=NK||records!=512||flits!=64)$fatal(1,"fullshape real static INDEX parent mismatch");$finish;
  end
 endmodule
