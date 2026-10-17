@@ -550,3 +550,24 @@ Coordinator decisions 0cw+ (3) and (4):
 | bit-mm | 0.312 M | 0.358 M (+0.046 M HBM) |
 | longest link | tvN_s_6S 6.85 mm, 16 st | same |
 | MTP / AR (dv_price) | 4,129.3 / 1,401.2 | 4,129.3 / 1,401.2 |
+
+### 0b-p4h: regional service slices (10-17)
+`dv_plan.py --layout p4 --tier-w 276 --lanes 4 --frame-w 1436.832 --p4h --p4h-drop 6` (`--p4h` implies `--p4g`; p4g still reproduces byte-identical).
+
+Coordinator decision COORD 10-17 ~11:15: the two service halves become 16 regional service slices, one beside each regional controller. S81U-1 had no slice interface yet (no `lanes/S81U-1.md`), so each slice takes the per-channel-pair share (1/16) of the svc-half traffic.
+- **Where they fit.** The PHY's 8.5-mm north face leaves only 250 um below the frames, so nothing square-ish fits there. The row-0 S-tier frames over the PHY (2R, 3L, 3R, 4L, 4R, 5L; 9 slots each) give way. The region from x 10.54 to 21.19 mm and y 1.65 to 4.37 mm takes a 2 x 8 grid of `dsdv_svc_rg2` slices, each 1,222 x 1,338 um (1.09:1, 1.635 mm2). The lower row serves the even controllers and the upper row the odd ones.
+- **The SM share moves with the svc share (assumption A1, for S81U-1/S81U-2).** Scores/P are 8 kb per side, about as much as the HBM traffic. Leaving the 8 `ot_s81_su_sm` tiles at the band ends would recreate the long band. Each slice therefore holds svc 1/16 (13.43 mm2 estimate, no RTL) plus SM 1/16 (10.42 mm2), 1.491 mm2 needed, fit 1.10. The softmax max/sum per head then needs a tiny cross-slice tree; it rides the q/P.V tree.
+- **`--p4h-drop 4`** (3L-4R only) leaves 0.863 x 1.338 mm slices: fit 0.77 against svc+SM. It is rejected unless svc+SM comes in at 1.15 mm2 or less.
+- **Links.** The DFI is the abutted face, as in p4g. Lower slice <-> controller rq/rd (682/562 b) runs straight up through a 200-um channel. Each upper slice takes the column gap nearest its controller; a gap is 110 um per controller it carries (1,244 b at <= 0.55), and gap 5 carries two. q/P.V per half: s_3S / s_4S -> the root slice directly below (0.92 mm, 2 stations). From there a broadcast/reduce tree runs neighbour-only along the upper row and up -> low in each column (no star). The deepest root -> leaf path is <= 1.3 mm.
+- **Cost.** ROM slots fall 1,184 -> 1,130 and stages 92 -> 97. Slices s_2S/s_5S keep 7 frames and s_3S/s_4S keep 6, so the compiler rebalances y[a:b]. q/P.V move from s_1S/s_6S to s_3S/s_4S: the B-port slice variant moves to columns 3/4.
+- The empty band corners (x < 10.5 and x > 21.2, y < 1.7 mm) lie under the frames and no link crosses them, so they stay empty.
+
+| | p4f | p4g | p4h |
+|---|---|---|---|
+| worst cut | 0.403 | 1.010 (24 band windows) | **0.454** (hrq/hrd_14/15 drop, 0 windows > 0.55) |
+| stations | 2,624 | 2,789 | 2,347 |
+| relay bit-stages | 0.669 M | 0.772 M | 0.628 M |
+| bit-mm | 0.312 M | 0.358 M | 0.299 M |
+| longest link | tvN_s_6S 6.85 mm, 16 st | same | same; HBM longest 2.32 mm / 5 st (p4g 4.46 / 11) |
+| ROM slots / stages | 1,184 / 92 | 1,184 / 92 | 1,130 / 97 |
+| MTP / AR (dv_price) | 4,129.3 / 1,401.2 | 4,129.3 / 1,401.2 | 4,112.1 / 1,392.9 (-0.42%) |

@@ -39,6 +39,11 @@ P4G = False                       # p4g (10-17, coordinator 0cw+ (3)): the 8500 
 CTRL_N, CTRL_H = 16, 250.0        # p4g: 16 x (531.25 x 250 um, 2.1:1), same 2.125 mm2 as the strip
 PC_RQ, PC_RD, PC_DFI = 341, 280, 695   # per pseudo-channel: rq {wdata 256, wstrb 32, tag 17, len 4, addr 30, we, v};
                                   # rd {data 256, tag 17, beat 4, v} + rk + wd; PHY DFI 22,238 / 32 ~ 695 (dsfd_ctrl.sv)
+P4H = False                       # p4h (10-17, coordinator COORD ~11:15): the two service halves -> 16 REGIONAL service slices, one
+                                  # per regional controller, in the PHY-front region freed by the 4 row-0 S-tier frames over the PHY
+P4H_DROP = ((3, 'L'), (3, 'R'), (4, 'L'), (4, 'R'))   # frame columns whose row-0 S-tier frame (9 slots) gives way
+RSV_GAP, RSV_CH, RSV_GU = 40.0, 200.0, 110.0     # p4h: gap between regional slices (upper-row rq/rd lanes) / channel above the controllers
+SVC_MM2, SM_MM2 = 13.43, 8 * 1.231 * 1.058   # service halves (estimate, no RTL) + 8 ot_s81_su_sm tiles: shared out 1/16 each
 SVC_W = 4250.0
 LANES, LANE_DX = 1, 6.0           # p4c-lanes: 1,104-b links as LANES x 276-b lanes
 TIER_W = 0                        # p4c: per-column tier-exchange width (0 = p4b end-column ring)
@@ -191,6 +196,119 @@ def place_units_p3(P, facts, colx, streets):
     facts['p3_segments_um'] = {c: {k: round(v[1] - v[0]) for k, v in sg.items()} for c, sg in segs.items()}
 
 
+def place_rsv(P, facts):
+    """p4h: 16 regional service slices (svc 1/16 + its SM softmax share, abutted inside the slice) in a 2 x 8 grid in
+    the PHY-front region freed by the dropped row-0 S-tier frames, directly above the 16 regional controllers.
+    Slice k serves controller k: lower row = even controllers, upper row = odd ones.  The upper slices' rq / rd come
+    down the column gaps (the gap left of column j, column 0 shares gap 1), so the gaps are sized for 1,244 b per
+    controller at cut <= 0.55 (21.1 tracks/um on two layers at 75%: 1,244 / 0.55 / 21.1 = 107 um)."""
+    rows1 = [P.blocks[P.idx[f'f_{c}{s}01']] for c, s in P4H_DROP]
+    x0 = min(b['x'] for b in rows1); x1 = max(b['x'] + b['w'] for b in rows1)
+    ytop = min(b['y'] for b in rows1) - 30.0
+    ctop = 1200.0 + CTRL_H
+    y0 = ctop + RSV_CH
+    # each upper slice takes the column gap (left or right) nearest its controller; a gap is RSV_GU wide per
+    # controller it carries (RSV_GAP when none); two passes so the assignment sees the sized gaps
+    cxs = [DIE_W / 2 - 4250 + (k + 0.5) * 8500.0 / CTRL_N for k in range(CTRL_N)]
+    gaps = [RSV_GU] * 7
+    for _ in range(3):
+        w = (x1 - x0 - sum(gaps)) / 8
+        xs = [x0]
+        for g in gaps:
+            xs.append(xs[-1] + w + g)
+        gmid = {j: xs[j] - gaps[j - 1] / 2 for j in range(1, 8)}       # gap j sits left of column j
+        gap_of = {}
+        for j in range(8):
+            cand = [g for g in (j, j + 1) if 1 <= g <= 7]
+            gap_of[j] = min(cand, key=lambda g: abs(gmid[g] - cxs[2 * j + 1]))
+        cnt = [sum(1 for v in gap_of.values() if v == g) for g in range(1, 8)]
+        gaps = [RSV_GU * n if n else RSV_GAP for n in cnt]
+    w = (x1 - x0 - sum(gaps)) / 8
+    xs = [x0]
+    for g in gaps:
+        xs.append(xs[-1] + w + g)
+    facts['_rsv_gap_of'] = gap_of
+    h = (ytop - y0 - RSV_GAP) / 2
+    for j in range(8):
+        P.block(f'rsv_{2 * j:02d}', 'dsdv_svc_rg2', 'svc', 'south', xs[j], y0, w, h)
+        P.block(f'rsv_{2 * j + 1:02d}', 'dsdv_svc_rg2', 'svc', 'south', xs[j], y0 + h + RSV_GAP, w, h)
+    need = (SVC_MM2 + SM_MM2) / 16
+    facts['rsv'] = dict(n=16, um=[round(w, 1), round(h, 1)], aspect=round(max(w, h) / min(w, h), 2), mm2=round(w * h / 1e6, 3),
+                        need_mm2=round(need, 3), fit=round(w * h / 1e6 / need, 3), region_um=[round(x0, 1), round(y0, 1), round(x1, 1), round(ytop, 1)],
+                        frames_dropped=[f'f_{c}{s}00' for c, s in P4H_DROP], gap_um=gaps,
+                        content='svc 1/16 (13.43 mm2 estimate, no RTL) + ot_s81_su_sm 1/16 (8 tiles 10.42 mm2): scores / P stay inside')
+
+
+def rsv_links(P, facts, colx):
+    """p4h links: PHY DFI (abutted, as p4g); controller k <-> regional slice k (rq 682 / rd 562, short, vertical);
+    q broadcast tree / P.V reduce tree per half (cols 0-3 from s_3S, cols 4-7 from s_4S): entry = the upper slice
+    under the slice column, then neighbour-only edges along the upper row and up->low in each column (no star)."""
+    cw = 8500.0 / CTRL_N
+    gx = {}
+    for j in range(1, 8):
+        A, B = P.blocks[P.idx[f'rsv_{2 * j - 2:02d}']], P.blocks[P.idx[f'rsv_{2 * j:02d}']]
+        gx[j] = (A['x'] + A['w'], B['x'])
+    for k in range(CTRL_N):
+        cn = f'ctrl_{k:02d}'; C = P.blocks[P.idx[cn]]
+        for j in range(2):
+            x = C['x'] + cw * (j + 0.5) / 2
+            P.link(f'dfi_{k:02d}_{j}', 'dfi', PC_DFI, (cn, f'dfi{j}', (x, C['y'])), ('phy_hbm', f'dfi{k}_{j}', (x, 1197.0)),
+                   [(x, C['y']), (x, 1197.0)], 'PHY DFI of one pseudo-channel (abutted face)')
+        rn = f'rsv_{k:02d}'; R = P.blocks[P.idx[rn]]
+        ctop = C['y'] + C['h']; xc = C['x'] + cw / 2
+        col = k // 2
+        for cls_, bits, dx, yj in (('rq', 2 * PC_RQ, -30, 30), ('rd', 2 * PC_RD + 2, 30, 70)):
+            xk = xc + dx
+            if k % 2 == 0:     # lower slice: up through the channel into its S face
+                xs_ = min(max(xk, R['x'] + 40), R['x'] + R['w'] - 40)
+                pts = [(xs_, R['y']), (xs_, ctop + yj), (xk, ctop + yj), (xk, ctop)]
+            else:              # upper slice: down its assigned column gap to the channel, then to the controller
+                g = facts['_rsv_gap_of'][col]
+                a, b = gx[g]
+                users = sorted(c_ for c_, v in facts['_rsv_gap_of'].items() if v == g)
+                n, i = len(users), users.index(col)
+                gxx = a + (b - a) * ((i + (0.35 if cls_ == 'rq' else 0.65)) / n)
+                ys = R['y'] + 60
+                pts = [(R['x'] if gxx < R['x'] else R['x'] + R['w'], ys), (gxx, ys), (gxx, ctop + yj + 100), (xk, ctop + yj + 100), (xk, ctop)]
+            if cls_ == 'rq':
+                P.link(f'hrq_{k:02d}', 'hbm', bits, (rn, 'rq', pts[0]), (cn, 'rq', pts[-1]), pts, 'HBM requests of 2 PCs (regional svc slice -> its controller)')
+            else:
+                P.link(f'hrd_{k:02d}', 'hbm', bits, (cn, 'rd', pts[-1]), (rn, 'rd', pts[0]), pts[::-1], 'HBM reads + rk/wd + {fault, live} of 2 PCs (controller -> its regional svc slice)')
+    # q / P.V trees
+    tree = {}
+    for half, c, cols in (('W', 3, range(0, 4)), ('E', 4, range(4, 8))):
+        sn = f's_{c}S'; Sl = P.blocks[P.idx[sn]]
+        qx = colx(c) + 460; px = qx + 120
+        ups = [P.blocks[P.idx[f'rsv_{2 * j + 1:02d}']] for j in cols]
+        e = min(cols, key=lambda j: abs(P.blocks[P.idx[f'rsv_{2 * j + 1:02d}']]['x'] + P.blocks[P.idx[f'rsv_{2 * j + 1:02d}']]['w'] / 2 - (qx + 60)))
+        E = P.blocks[P.idx[f'rsv_{2 * e + 1:02d}']]; et = E['y'] + E['h']
+        cl = lambda v: min(max(v, E['x'] + 60), E['x'] + E['w'] - 60)
+        P.link(f'q_{half}', 'attn', XB, (sn, 'q', (qx, Sl['y'])), (f'rsv_{2 * e + 1:02d}', 'q', (cl(qx), et)),
+               [(qx, Sl['y']), (qx, et + 150), (cl(qx), et + 150), (cl(qx), et)], 'q heads from the ring -> tree root')
+        P.link(f'pv_{half}', 'attn', XB, (f'rsv_{2 * e + 1:02d}', 'pv', (cl(px), et)), (sn, 'pv', (px, Sl['y'])),
+               [(cl(px), et), (cl(px), et + 270), (px, et + 270), (px, Sl['y'])], 'reduced P.V rows into the all-gather')
+        edges = [(2 * j + 1 + (2 if j < e else -2), 2 * j + 1) for j in cols if j != e]   # along the upper row, outward from e
+        edges += [(2 * j + 1, 2 * j) for j in cols]                                       # upper -> lower in each column
+        tree[half] = dict(entry=f'rsv_{2 * e + 1:02d}', edges=[(f'rsv_{a:02d}', f'rsv_{b:02d}') for a, b in edges])
+        for a, b in edges:
+            A, B = P.blocks[P.idx[f'rsv_{a:02d}']], P.blocks[P.idx[f'rsv_{b:02d}']]
+            if a % 2 == 1 and b % 2 == 1:      # horizontal neighbour edge in the upper row
+                xa, xb = (A['x'] + A['w'], B['x']) if A['x'] < B['x'] else (A['x'], B['x'] + B['w'])
+                yq, yp = A['y'] + A['h'] - 300, A['y'] + A['h'] - 450
+            else:                              # vertical: upper S face -> lower N face
+                xa = xb = None
+                yq = yp = None
+            if xa is not None:
+                P.link(f'tq_{a:02d}_{b:02d}', 'attn', XB, (f'rsv_{a:02d}', 'qo', (xa, yq)), (f'rsv_{b:02d}', 'qi', (xb, yq)), [(xa, yq), (xb, yq)], 'q broadcast tree (neighbour)')
+                P.link(f'tp_{b:02d}_{a:02d}', 'attn', XB, (f'rsv_{b:02d}', 'po', (xb, yp)), (f'rsv_{a:02d}', 'pi', (xa, yp)), [(xb, yp), (xa, yp)], 'P.V reduce tree (in flight)')
+            else:
+                xq, xp = A['x'] + A['w'] * 0.35, A['x'] + A['w'] * 0.65
+                P.link(f'tq_{a:02d}_{b:02d}', 'attn', XB, (f'rsv_{a:02d}', 'qo', (xq, A['y'])), (f'rsv_{b:02d}', 'qi', (xq, B['y'] + B['h'])), [(xq, A['y']), (xq, B['y'] + B['h'])], 'q broadcast tree (neighbour)')
+                P.link(f'tp_{b:02d}_{a:02d}', 'attn', XB, (f'rsv_{b:02d}', 'po', (xp, B['y'] + B['h'])), (f'rsv_{a:02d}', 'pi', (xp, A['y'])), [(xp, B['y'] + B['h']), (xp, A['y'])], 'P.V reduce tree (in flight)')
+    facts['rsv_tree'] = tree
+    facts['rsv']['upper_gap_of_column'] = facts.pop('_rsv_gap_of')
+
+
 def build():
     P = Plan()
     pitch, scol_w = PITCH, SCOL_W
@@ -216,6 +334,9 @@ def build():
                     if r == 2:
                         y = streets[t] + STREET
                     h = hs[4 * t + r]
+                    if P4H and t == 0 and r == 0 and (c, side) in P4H_DROP:
+                        y += h      # p4h: this footprint becomes the regional service region (no frame)
+                        continue
                     mst = ('col_h9' if h == H9 else 'col_h10') + ('_MX' if ((ROW0_MX or LAYOUT == 'p3') and r == 0) or (P4F and r == 2) else '')
                     P.block(f'f_{c}{side}{t}{r}', mst, 'frame', f'cl{c}{"SN"[t]}', fx, y, FRAME_W, h)
                     y += h
@@ -244,14 +365,17 @@ def build():
             P.block(f'ctrl_{k:02d}', 'dsfd_ctrl_rg2', 'ctrl', 'south', phy_x + k * cw, 1200, cw, CTRL_H)
     else:
         P.block('hbm_ctrl', 'dsfd_ctrl', 'ctrl', 'south', phy_x, 1210, 8500, 250)
-    svh = 13430000.0 / 2 / SVC_W        # service half area kept (13.43 mm2 total), height follows the width
-    P.block('svc_W', 'dsfd_svc_half', 'svc', 'south', phy_x - SVC_W - 10, 20, SVC_W, svh)
-    P.block('svc_E', 'dsfd_svc_half', 'svc', 'south', phy_x + 8510, 20, SVC_W, svh)
-    assert svh <= BAND - 20, svh
-    for k in range(4):
-        P.block(f'sm_W{k}', 'ot_s81_su_sm', 'unit', 'south', phy_x - SVC_W - 20 - (k + 1) * 1235, 20, 1231, 1058)
-        P.block(f'sm_E{k}', 'ot_s81_su_sm', 'unit', 'south', phy_x + 8520 + SVC_W + k * 1235, 20, 1231, 1058)
-    assert P.blocks[P.idx['sm_W3']]['x'] >= 0 and P.blocks[P.idx['sm_E3']]['x'] + 1231 <= DIE_W
+    if P4H:
+        place_rsv(P, facts)
+    else:
+        svh = 13430000.0 / 2 / SVC_W        # service half area kept (13.43 mm2 total), height follows the width
+        P.block('svc_W', 'dsfd_svc_half', 'svc', 'south', phy_x - SVC_W - 10, 20, SVC_W, svh)
+        P.block('svc_E', 'dsfd_svc_half', 'svc', 'south', phy_x + 8510, 20, SVC_W, svh)
+        assert svh <= BAND - 20, svh
+        for k in range(4):
+            P.block(f'sm_W{k}', 'ot_s81_su_sm', 'unit', 'south', phy_x - SVC_W - 20 - (k + 1) * 1235, 20, 1231, 1058)
+            P.block(f'sm_E{k}', 'ot_s81_su_sm', 'unit', 'south', phy_x + 8520 + SVC_W + k * 1235, 20, 1231, 1058)
+        assert P.blocks[P.idx['sm_W3']]['x'] >= 0 and P.blocks[P.idx['sm_E3']]['x'] + 1231 <= DIE_W
     # ---------------------------------------------------------------- inter-tier void: global / edge units
     # the S tier's x chains use the void's lower part and the N tier's its upper part; the middle holds the small
     # global units (white space reused), 1.0 mm wide on the column's left; the right 270 um stay a channel
@@ -369,6 +493,8 @@ def build():
             for side in 'LR':
                 for r in range(4):
                     fn = f'f_{c}{side}{t}{r}'
+                    if fn not in P.idx:
+                        continue        # p4h: dropped row-0 frame (no chain forward / return)
                     F = P.blocks[P.idx[fn]]
                     fx = F['x'] + F['w'] if side == 'L' else F['x']
                     mx = ((LAYOUT == 'p3' or ROW0_MX) and r == 0) or (P4F and r == 2)
@@ -446,7 +572,7 @@ def build():
             t = (k + 0.5) / lanes
             p0 = (x1, y1 + (y2 - y1) * t); p1 = (x1 + 1, y1 + (y2 - y1) * t)
             P.link(f'{nm}_{k}', cls, bits // lanes, (src_of[nm], 'f', p0), (dst_of[nm], 'f', p1), [p0, p1], note)
-    for side, svc, c in (('W', 'svc_W', 1), ('E', 'svc_E', NCOL - 2)):
+    for side, svc, c in ((('W', 'svc_W', 1), ('E', 'svc_E', NCOL - 2)) if not P4H else ()):
         S = P.blocks[P.idx[svc]]
         fx = S['x'] + S['w'] if side == 'W' else S['x']
         src_of[f'hbm{side}'], dst_of[f'hbm{side}'] = svc, 'phy_hbm'
@@ -475,7 +601,9 @@ def build():
             continue
         P.link(f'q_{side}', 'attn', XB, (sn, 'q', (qx, Sl['y'])), (svc, 'q', (sxq, top)), [(qx, Sl['y']), (qx, top + 100), (sxq, top + 100), (sxq, top)], 'q heads from the ring')
         P.link(f'pv_{side}', 'attn', XB, (svc, 'pv', (sxq + 70, top)), (sn, 'pv', (px, Sl['y'])), [(sxq + 70, top), (sxq + 70, top + 170), (px, top + 170), (px, Sl['y'])], 'P.V rows into the all-gather')
-    if P4G:
+    if P4H:
+        rsv_links(P, facts, colx)
+    elif P4G:
         # p4g: PHY <-> regional controller = abutted face (2 PCs, 2 lanes of PC_DFI); svc half <-> controller = registered
         # rq / rd links in the 250-um channel between the controller row (top 1.45 mm) and the frames (1.70 mm), one
         # lane each at 15-um pitch, farther controllers on higher lanes (a drop never crosses a lane that continues);
@@ -543,8 +671,26 @@ def geometry_facts(P, facts):
                  worst_slice_to_slice_um=round(ss), phase_path_um=round(worst_ag + ret),
                  phase_path_stages=math.ceil(worst_ag / HOP_UM) + math.ceil(ret / HOP_UM),
                  scalar_exchange_stages=math.ceil(ss / HOP_UM))
-    att = [P.blocks[P.idx[n]] for n in ('svc_W', 'svc_E')]
-    facts['worst_slice_to_attention_um'] = round(max(min(abs(fc(s)[0] - fc(a)[0]) + abs(fc(s)[1] - fc(a)[1]) for a in att) for s in slices))
+    if P4H:
+        # p4h: slice -> its half's tree-root slice (centre to centre), plus the deepest root -> leaf path of the q tree
+        # (sum of the tree-edge link lengths), plus the s_3S / s_4S -> root q link
+        L = {l['i'].rsplit('_l', 1)[0] if '_l' in l['i'] else l['i']: l['L'] for l in P.links}
+        deep = 0.0
+        for half, t in facts['rsv_tree'].items():
+            par = {b: a for a, b in t['edges']}
+            for leaf in par:
+                d, n = 0.0, leaf
+                while n in par:
+                    d += L[f'tq_{par[n][4:]}_{n[4:]}']; n = par[n]
+                deep = max(deep, d + L[f'q_{half}'])
+        roots = [P.blocks[P.idx[t['entry']]] for t in facts['rsv_tree'].values()]
+        ent = [P.blocks[P.idx[n]] for n in ('s_3S', 's_4S')]
+        facts['worst_slice_to_attention_um'] = round(max(min(abs(fc(s)[0] - fc(a)[0]) + abs(fc(s)[1] - fc(a)[1]) for a in ent) for s in slices) + deep)
+        facts['rsv_tree_deepest_um'] = round(deep)
+        att = [b for b in P.blocks if b['kind'] == 'svc']
+    else:
+        att = [P.blocks[P.idx[n]] for n in ('svc_W', 'svc_E')]
+        facts['worst_slice_to_attention_um'] = round(max(min(abs(fc(s)[0] - fc(a)[0]) + abs(fc(s)[1] - fc(a)[1]) for a in att) for s in slices))
     facts['worst_attention_to_frame_um'] = round(max(min(abs(fc(a)[0] - fc(f)[0]) + abs(fc(a)[1] - fc(f)[1]) for a in att) for f in frames))
     return facts
 
@@ -639,14 +785,19 @@ def main():
     ap.add_argument('--lanes', type=int, default=1, help='p4c-lanes: split every 1,104-b link into N cycle-aligned lanes')
     ap.add_argument('--p4f', action='store_true', help='p4f: row-2 frames MX, 30-um street lanes, x lanes off the slices, q/P.V off svc faces')
     ap.add_argument('--p4g', action='store_true', help='p4g: p4f + 16 regional 2-PC HBM controllers replacing the dsfd_ctrl strip')
+    ap.add_argument('--p4h', action='store_true', help='p4h: p4g + the svc halves -> 16 regional service slices above their controllers')
+    ap.add_argument('--p4h-drop', type=int, default=4, choices=(4, 6), help='p4h: row-0 S-tier frames given to the service region (4: 3L-4R; 6: 2R-5L)')
     ap.add_argument('--frame-w', type=float, default=None, help='p4: frame width override (S-ELEM bf_col 604.8 -> 1,436.832)')
     a = ap.parse_args()
     HOP_UM = a.hop_um
     global ROW0_MX, TIER_W, LANES, P4F
     ROW0_MX = a.row0_mx
-    P4F = a.p4f or a.p4g
-    global P4G
-    P4G = a.p4g
+    P4F = a.p4f or a.p4g or a.p4h
+    global P4G, P4H, P4H_DROP
+    P4G = a.p4g or a.p4h
+    P4H = a.p4h
+    if a.p4h_drop == 6:
+        P4H_DROP = ((2, 'R'), (3, 'L'), (3, 'R'), (4, 'L'), (4, 'R'), (5, 'L'))
     TIER_W = a.tier_w
     LANES = a.lanes
     global LAYOUT, SCOL_W, SLICE_W, SLICE_H, PITCH, DIE_W, SVC_W, FRAME_W, FRAME_PITCH, UNIT_W, UNIT_WE
