@@ -9,7 +9,7 @@ set -euo pipefail
 cd "$(dirname "$0")/../.."
 LAYER=${LAYER:-tools/hbm_die_v15/v16_relays/relays_d4f.json.gz} IDSTRAPS=1 PCH8=1 PCH9B=1 SOFT_IDX=${SOFT_IDX-results/arch/hbm_idx_soft_parent_1016/netmap_nq2_tp192.json} DROPSM=SE,NE \
 DROPI=ep_S2,lk_S2,ep_S4,lk_S4,ep_N1,lk_N1,ep_N3,lk_N3 \
-EXTRA_LAYERS="tools/hbm_die_v15/v16_layers/xql_d4f_bfqg.json tools/hbm_die_v15/v16_layers/sfu_split3_d4f.json tools/hbm_die_v15/v16_layers/vm_q2merge_d4f.json tools/hbm_die_v15/v16_layers/vm_hoist_d4f.json tools/hbm_die_v15/v16_layers/coll_hardv7_d4f.json tools/hbm_die_v15/v16_layers/su_rflocal_d4f.json tools/hbm_die_v15/v16_layers/vm_kshare_krl1_d4f.json tools/hbm_die_v15/v16_layers/wrq_lanes_d4f.json tools/hbm_die_v15/v16_layers/slots_r6_d4f.json" \
+EXTRA_LAYERS="tools/hbm_die_v15/v16_layers/xql_d4f_bfqg.json tools/hbm_die_v15/v16_layers/sfu_split3_d4f.json tools/hbm_die_v15/v16_layers/vm_q2merge_d4f.json tools/hbm_die_v15/v16_layers/vm_hoist_d4f.json tools/hbm_die_v15/v16_layers/coll_hardv7_d4f.json tools/hbm_die_v15/v16_layers/su_rflocal_d4f.json tools/hbm_die_v15/v16_layers/vm_kshare_krl1_d4f.json tools/hbm_die_v15/v16_layers/wrq_lanes_d4f.json tools/hbm_die_v15/v16_layers/slots_r6_d4f.json tools/hbm_die_v15/v16_layers/xq_pegress_x6_clocks_d4f.json" \
 bash tools/hbm_die_v15/run_v16_d4b.sh "${1:-results/arch/hbm_die_v16_d4f}"
 # H-DIE-R7b 10-17 (coordinator 0da+): HBM-TIE layer (bc32a2e45) on the generated contract + die.v: top-k K from col_idx.prm,
 # 2 ot_hbm_pc_refresh_cfg (refcfg_SW/NW, PC reset held until loaded), xl_<q>_ctl -> ctlx. TIE=0 skips it.
