@@ -1,5 +1,5 @@
 {
- "name": "qfd_sp_su64_sfu_pr-pr1-COMMIT",
+ "name": "qfd_sp_su64_sfu_pr-pr2-COMMIT",
  "block": "qfd_sp_su64_sfu",
  "ref_tile": true,
  "owner": "Claude:Q-ELEM-SUC",
@@ -17,7 +17,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_sp_su64_sfu #(.PINREG(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_SU_LANE_HARD --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_sp_su64_sfu.sv rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv rtl/hdc/ot_hdc_delay.sv rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/physical/ot_hdc_vreduce_entries64.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_vreduce.sv rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/physical/ot_qfd_su_align_entries64.sv rtl/qwen_sys/static_embedding_20261014/ot_qfd_su_embed_static.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/qwen_split/qfd_su_static_copy.sv rtl/qwen_split/qfd_su_vm_pack.sv rtl/physical/qfd_su64_native_children_bind.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_sp_su64_sfu #(.PINREG(1), .SPLIT(1), .RSTR(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_SU_LANE_HARD --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_sp_su64_sfu.sv rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv rtl/hdc/ot_hdc_delay.sv rtl/lib/ot_rst_relay.sv rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/physical/ot_hdc_vreduce_entries64.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_vreduce.sv rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/physical/ot_qfd_su_align_entries64.sv rtl/qwen_sys/static_embedding_20261014/ot_qfd_su_embed_static.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/qwen_split/qfd_su_static_copy.sv rtl/qwen_split/qfd_su_vm_pack.sv rtl/physical/qfd_su64_native_children_bind.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -27,7 +27,7 @@
    },
    {
     "name": "lint_parent_hard",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -DSYNTHESIS -DOT_SU_LANE_HARD -GPINREG=1 --top-module qfd_sp_su64_sfu rtl/qwen_split/qfd_sp_su64_sfu.sv rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv rtl/hdc/ot_hdc_delay.sv rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/physical/ot_hdc_vreduce_entries64.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_vreduce.sv rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/physical/ot_qfd_su_align_entries64.sv rtl/qwen_sys/static_embedding_20261014/ot_qfd_su_embed_static.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/qwen_split/qfd_su_static_copy.sv rtl/qwen_split/qfd_su_vm_pack.sv rtl/physical/qfd_su64_native_children_bind.sv rtl/test/qwen_split/su64_native_views_bb.v",
+    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -DSYNTHESIS -DOT_SU_LANE_HARD -GPINREG=1 --top-module qfd_sp_su64_sfu rtl/qwen_split/qfd_sp_su64_sfu.sv rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv rtl/hdc/ot_hdc_delay.sv rtl/lib/ot_rst_relay.sv rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/physical/ot_hdc_vreduce_entries64.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_vreduce.sv rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/physical/ot_qfd_su_align_entries64.sv rtl/qwen_sys/static_embedding_20261014/ot_qfd_su_embed_static.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/qwen_split/qfd_su_static_copy.sv rtl/qwen_split/qfd_su_vm_pack.sv rtl/physical/qfd_su64_native_children_bind.sv rtl/test/qwen_split/su64_native_views_bb.v",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 8,
@@ -40,7 +40,7 @@
     "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_su_ops 0 0",
     "expect": "pass",
     "threads": 8,
-    "peak_ram_gb": 72,
+    "peak_ram_gb": 48,
     "needs": [
      "verilator"
     ],
@@ -51,7 +51,7 @@
     "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_copy 1 0",
     "expect": "pass",
     "threads": 8,
-    "peak_ram_gb": 72,
+    "peak_ram_gb": 48,
     "needs": [
      "verilator"
     ],
@@ -62,7 +62,7 @@
     "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_mut_old_vm_edge 0 1",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 72,
+    "peak_ram_gb": 48,
     "needs": [
      "verilator"
     ],
@@ -73,7 +73,7 @@
     "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_mut_copy_latency 1 2",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 72,
+    "peak_ram_gb": 48,
     "needs": [
      "verilator"
     ],
@@ -84,7 +84,7 @@
     "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_mut_sd_old_edge 0 3",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 72,
+    "peak_ram_gb": 48,
     "needs": [
      "verilator"
     ],
@@ -95,7 +95,18 @@
     "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_mut_cp_old_edge 1 4",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 72,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_su64_pinreg"
+   },
+   {
+    "name": "pinreg_mut_cbs_late",
+    "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_mut_cbs_late 0 0 11 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
     "needs": [
      "verilator"
     ],
@@ -166,7 +177,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_sp_su64_sfu_pr/qfd_sp_su64_sfu_pr-pr1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_sp_su64_sfu_pr/qfd_sp_su64_sfu_pr-pr2-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -175,7 +186,7 @@
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
  "merge_target": null,
- "structural_change": "Hardened qfd_sp_su64_sfu (die master, PINREG=1): 64 x (CROM5 lane head crom5_f + exp/rcp/rsq native45), every pin registered (va/ca/xsw/sd/cp pin registers; SU requests/writes keep their far-pin edge via RD-1 lane request relays + align EML 1), 256 hard-child clock entries as interior M7 pins over each child clock pin, 90 standard-cell CTS roots (ck, ck_lane x64, ck_align x16, ck_red x9; vred soft, its closed views fail the native audit).  Schedule deltas: results/rtl/qwen_su64_pinreg_1016/schedule_delta.json.",
+ "structural_change": "pr2 (Q-IO-1815 2026-10-17, SPLIT=1 RSTR=1, 0 edges): pr1 synthesized-netlist lint refused wire_reach (111 one-stage pin-register spans > 500 um: 48 si[481:476] -> ca0..7 cb_stage W->E up to 2,418 um and 63 si -> native_issue W->E) and high_fanout (rst_n 14,748 loads), and ck carried 23,949 sinks. Fix: cb_stage from four E-face same-age die copies si_cbs0..3 beside each ca pair; native_issue pins moved to the W face beside si; E-face stations on a second std root ck_e; rst_n -> ot_rst_relay (5 region copies, +3 release edges in every region). | Hardened qfd_sp_su64_sfu (die master, PINREG=1): 64 x (CROM5 lane head crom5_f + exp/rcp/rsq native45), every pin registered (va/ca/xsw/sd/cp pin registers; SU requests/writes keep their far-pin edge via RD-1 lane request relays + align EML 1), 256 hard-child clock entries as interior M7 pins over each child clock pin, 90 standard-cell CTS roots (ck, ck_lane x64, ck_align x16, ck_red x9; vred soft, its closed views fail the native audit).  Schedule deltas: results/rtl/qwen_su64_pinreg_1016/schedule_delta.json.",
  "reroute_reason": {
   "kind": "rtl_change",
   "source": "results/rtl/qwen_su64_pinreg_1016/schedule_delta.json",

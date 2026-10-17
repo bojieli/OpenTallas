@@ -10,9 +10,9 @@ subprocess.run([sys.executable, str(ROOT / 'tools/qwen_split/su64_parent_plan.py
 pins = json.loads((KIT / 'assigned_pins.json').read_text())
 children = json.loads((KIT / 'children.json').read_text())
 (KIT / 'children.json').unlink()
-clocks = ['ck'] + [f'ck_{f}{i}' for f, n in [('head', 64), ('exp', 64), ('rcp', 64), ('rsq', 64), ('align', 16), ('lane', 64),
+clocks = ['ck', 'ck_e'] + [f'ck_{f}{i}' for f, n in [('head', 64), ('exp', 64), ('rcp', 64), ('rsq', 64), ('align', 16), ('lane', 64),
                                              ('red', 9)] for i in range(n)]
-soft = ['ck'] + [f'ck_lane{i}' for i in range(64)] + [f'ck_align{i}' for i in range(16)] + [f'ck_red{i}' for i in range(9)]
+soft = ['ck', 'ck_e'] + [f'ck_lane{i}' for i in range(64)] + [f'ck_align{i}' for i in range(16)] + [f'ck_red{i}' for i in range(9)]
 hard = {f'ck_{k}{l}': f'u_su.u_su.g_lane[{l}].g_tile.u_tile.u_{k}.u_n/clk' for l in range(64) for k in ('head', 'exp', 'rcp', 'rsq')}
 faces = {f: [p for p in v] for f, v in pins['pins'].items()}
 faces['ANY'] = clocks
@@ -32,6 +32,7 @@ benches = [
     bench('pinreg_mut_copy_latency', 1, 2, 'fail'),
     bench('pinreg_mut_sd_old_edge', 0, 3, 'fail'),
     bench('pinreg_mut_cp_old_edge', 1, 4, 'fail'),
+    dict(bench('pinreg_mut_cbs_late', 0, 0, 'fail'), cmd=B % ('pinreg_mut_cbs_late', 0, 0) + ' 11 1'),
     dict(name='copy_module_gate', cmd='bash tools/qwen_split/run_su_static_copy_gate.sh {RUN}/bench/copy_module_gate',
          expect='pass', pass_regex='^PASS raw4096words', threads=1, peak_ram_gb=4, needs=['iverilog']),
 ]
@@ -39,7 +40,7 @@ spec = dict(
     name=NAME, top='qfd_sp_su64_sfu', kind='cluster', clock='hybrid_entries', clock_port='ck', clock_ports=clocks,
     clock_cts_roots=soft, required_hybrid_roots=dict(standard_cell_cts=soft, hard_child_entry=hard),
     outline=pins['outline'], children=children, macros=[], sources=SRCS, defines=['OT_SU_LANE_HARD'],
-    hard_define='OT_SU_LANE_HARD', params={'PINREG': 1}, layer_cap='M7', recipe=2, reset_ports=['rst_n'],
+    hard_define='OT_SU_LANE_HARD', params={'PINREG': 1, 'SPLIT': 1, 'RSTR': 1}, layer_cap='M7', recipe=2, reset_ports=['rst_n'],
     keep_pin_regs=True, pin_reg_split=True, inhold=True, outhold=True, io_flop_at_pins={'cols': 8},
     route=dict(pd=0.5, threads=32, peak_ram_gb=160, hold_margin_ns=0.03, macro_halo_um=5.4),
     pins=faces, pin_ranges=pins['pin_ranges'], io_tcl=f'physical/ref_tile/{NAME}/assigned_pins.tcl',
@@ -49,7 +50,13 @@ spec = dict(
                  'children (4.84 mm2) in an 8x8 lane grid at 388.8 x 432 (43.2-um child lattice) pitch spread over the whole slot (no empty '
                  'quadrant); the 26,025 data pins on three faces (S 8,511 / W 8,057 / E 7,405 at <= 10.4 pins/um/layer) and '
                  'the face pin registers set the edges.'},
-    structural_change=('Hardened qfd_sp_su64_sfu (die master, PINREG=1): 64 x (CROM5 lane head crom5_f + exp/rcp/rsq native45), '
+    structural_change=('pr2 (Q-IO-1815 2026-10-17, SPLIT=1 RSTR=1, 0 edges): pr1 synthesized-netlist lint refused wire_reach '
+                       '(111 one-stage pin-register spans > 500 um: 48 si[481:476] -> ca0..7 cb_stage W->E up to 2,418 um and '
+                       '63 si -> native_issue W->E) and high_fanout (rst_n 14,748 loads), and ck carried 23,949 sinks. '
+                       'Fix: cb_stage from four E-face same-age die copies si_cbs0..3 beside each ca pair; native_issue pins '
+                       'moved to the W face beside si; E-face stations on a second std root ck_e; rst_n -> ot_rst_relay '
+                       '(5 region copies, +3 release edges in every region). | '
+                       'Hardened qfd_sp_su64_sfu (die master, PINREG=1): 64 x (CROM5 lane head crom5_f + exp/rcp/rsq native45), '
                        'every pin registered (va/ca/xsw/sd/cp pin registers; SU requests/writes keep their far-pin edge via '
                        'RD-1 lane request relays + align EML 1), 256 hard-child clock entries as interior M7 pins over each '
                        'child clock pin, 90 standard-cell CTS roots (ck, ck_lane x64, ck_align x16, ck_red x9; vred soft, its '
@@ -57,7 +64,7 @@ spec = dict(
     reroute_reason=dict(kind='rtl_change', source='results/rtl/qwen_su64_pinreg_1016/schedule_delta.json', cell='qfd_sp_su64_sfu',
                         why='First hardened SU parent; replaces the generated q2o1 frame. PINREG removes the comb pin->pin arcs '
                             '(external_vm_a->va, si stage->ca) and registers va/xsw/sd/cp.'),
-    job=dict(owner='Claude:Q-ELEM-SUC', branch='claude/qelem-suc-1016', tag='pr1',
+    job=dict(owner='Claude:Q-ELEM-SUC', branch='claude/qelem-suc-1016', tag='pr2',
              purpose='Hardened SU parent qfd_sp_su64_sfu (PINREG=1) from native lane heads/SFUs, interior clock entries',
              benches=benches, extra_paths=['rtl/test/qwen_split'], cycles_added=0,
              views_to=f'physical/ref_tile/{NAME}/views', record_to=f'results/rtl/ref_tile/{NAME}'),

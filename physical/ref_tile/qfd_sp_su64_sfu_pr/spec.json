@@ -6,6 +6,7 @@
  "clock_port": "ck",
  "clock_ports": [
   "ck",
+  "ck_e",
   "ck_head0",
   "ck_head1",
   "ck_head2",
@@ -354,6 +355,7 @@
  ],
  "clock_cts_roots": [
   "ck",
+  "ck_e",
   "ck_lane0",
   "ck_lane1",
   "ck_lane2",
@@ -447,6 +449,7 @@
  "required_hybrid_roots": {
   "standard_cell_cts": [
    "ck",
+   "ck_e",
    "ck_lane0",
    "ck_lane1",
    "ck_lane2",
@@ -3367,6 +3370,7 @@
   "rtl/qwen_split/qfd_sp_su64_sfu.sv",
   "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv",
   "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv",
   "rtl/physical/ot_hdc_vred_pending_guard.sv",
   "rtl/physical/ot_hdc_vreduce_entries64.sv",
@@ -3392,7 +3396,9 @@
  ],
  "hard_define": "OT_SU_LANE_HARD",
  "params": {
-  "PINREG": 1
+  "PINREG": 1,
+  "SPLIT": 1,
+  "RSTR": 1
  },
  "layer_cap": "M7",
  "recipe": 2,
@@ -3427,6 +3433,7 @@
    "external_vm_a_re",
    "sd",
    "si",
+   "native_issue",
    "xsw",
    "cp",
    "cp_active",
@@ -3436,20 +3443,23 @@
    "kv_waddr",
    "kv_wdata",
    "kv_we",
-   "native_issue",
    "ca0",
+   "si_cbs0",
    "ca1",
    "cq0",
    "cq1",
    "ca2",
+   "si_cbs1",
    "ca3",
    "cq2",
    "cq3",
    "ca4",
+   "si_cbs2",
    "ca5",
    "cq4",
    "cq5",
    "ca6",
+   "si_cbs3",
    "ca7",
    "cq6",
    "cq7"
@@ -3460,6 +3470,7 @@
   ],
   "ANY": [
    "ck",
+   "ck_e",
    "ck_head0",
    "ck_head1",
    "ck_head2",
@@ -3817,40 +3828,44 @@
    546.54
   ],
   "acc": [
-   406.8,
-   408.396
+   404.364,
+   405.612
   ],
   "external_a_addr": [
-   409.356,
-   499.596
+   406.572,
+   497.1
   ],
   "external_a_q": [
-   500.556,
-   621.072
+   498.06,
+   618.828
   ],
   "external_a_re": [
-   622.092,
-   625.932
+   619.792,
+   623.248
   ],
   "external_vm_a_addr": [
-   626.96,
-   717.516
+   624.3,
+   714.54
   ],
   "external_vm_a_re": [
-   718.476,
-   722.316
+   715.5,
+   719.248
   ],
   "sd": [
-   723.344,
-   729.516
+   720.272,
+   726.732
   ],
   "si": [
-   730.476,
-   758.796
+   727.696,
+   755.984
+  ],
+  "native_issue": [
+   756.972,
+   760.72
   ],
   "xsw": [
-   759.824,
-   885.612
+   761.744,
+   887.532
   ],
   "cp": [
    1639.5,
@@ -3865,84 +3880,96 @@
    1644.492
   ],
   "kv_waddr": [
-   254.412,
-   344.976
+   256.62,
+   347.052
   ],
   "kv_wdata": [
-   345.996,
-   466.476
+   348.012,
+   468.876
   ],
   "kv_we": [
-   467.436,
-   471.056
-  ],
-  "native_issue": [
-   472.044,
-   475.792
+   469.836,
+   473.676
   ],
   "ca0": [
-   664.812,
-   676.752
+   664.044,
+   675.984
+  ],
+  "si_cbs0": [
+   677.004,
+   677.264
   ],
   "ca1": [
-   677.772,
-   690.064
+   678.252,
+   690.348
   ],
   "cq0": [
-   691.088,
-   721.164
+   691.308,
+   721.548
   ],
   "cq1": [
-   722.192,
-   752.076
+   722.576,
+   752.46
   ],
   "ca2": [
-   1219.98,
-   1231.98
+   1219.404,
+   1231.404
+  ],
+  "si_cbs1": [
+   1232.364,
+   1232.652
   ],
   "ca3": [
-   1232.94,
-   1245.228
+   1233.68,
+   1245.996
   ],
   "cq2": [
-   1246.224,
-   1276.14
+   1246.992,
+   1276.908
   ],
   "cq3": [
-   1277.196,
-   1307.408
+   1277.868,
+   1307.792
   ],
   "ca4": [
-   1775.12,
-   1787.148
+   1774.476,
+   1786.572
+  ],
+  "si_cbs2": [
+   1787.532,
+   1787.792
   ],
   "ca5": [
-   1788.108,
-   1800.08
+   1788.78,
+   1800.72
   ],
   "cq4": [
-   1801.068,
-   1831.212
+   1801.74,
+   1831.596
   ],
   "cq5": [
-   1832.172,
-   1862.416
+   1832.556,
+   1862.8
   ],
   "ca6": [
-   2330.028,
-   2342.316
+   2329.548,
+   2341.904
+  ],
+  "si_cbs3": [
+   2342.892,
+   2343.18
   ],
   "ca7": [
-   2343.276,
-   2355.276
+   2344.14,
+   2356.14
   ],
   "cq6": [
-   2356.236,
-   2386.476
+   2357.1,
+   2387.34
   ],
   "cq7": [
-   2387.436,
-   2417.68
+   2388.3,
+   2418.576
   ],
   "rst_n": [
    2000.4,
@@ -3963,7 +3990,7 @@
  "fill_reason": {
   "pin_bound": "Die frame 3240 x 3672 (q2o1 SU slot, Q-COMPUTE-DIE option (a), 2026-10-16) holds 256 hard children (4.84 mm2) in an 8x8 lane grid at 388.8 x 432 (43.2-um child lattice) pitch spread over the whole slot (no empty quadrant); the 26,025 data pins on three faces (S 8,511 / W 8,057 / E 7,405 at <= 10.4 pins/um/layer) and the face pin registers set the edges."
  },
- "structural_change": "Hardened qfd_sp_su64_sfu (die master, PINREG=1): 64 x (CROM5 lane head crom5_f + exp/rcp/rsq native45), every pin registered (va/ca/xsw/sd/cp pin registers; SU requests/writes keep their far-pin edge via RD-1 lane request relays + align EML 1), 256 hard-child clock entries as interior M7 pins over each child clock pin, 90 standard-cell CTS roots (ck, ck_lane x64, ck_align x16, ck_red x9; vred soft, its closed views fail the native audit).  Schedule deltas: results/rtl/qwen_su64_pinreg_1016/schedule_delta.json.",
+ "structural_change": "pr2 (Q-IO-1815 2026-10-17, SPLIT=1 RSTR=1, 0 edges): pr1 synthesized-netlist lint refused wire_reach (111 one-stage pin-register spans > 500 um: 48 si[481:476] -> ca0..7 cb_stage W->E up to 2,418 um and 63 si -> native_issue W->E) and high_fanout (rst_n 14,748 loads), and ck carried 23,949 sinks. Fix: cb_stage from four E-face same-age die copies si_cbs0..3 beside each ca pair; native_issue pins moved to the W face beside si; E-face stations on a second std root ck_e; rst_n -> ot_rst_relay (5 region copies, +3 release edges in every region). | Hardened qfd_sp_su64_sfu (die master, PINREG=1): 64 x (CROM5 lane head crom5_f + exp/rcp/rsq native45), every pin registered (va/ca/xsw/sd/cp pin registers; SU requests/writes keep their far-pin edge via RD-1 lane request relays + align EML 1), 256 hard-child clock entries as interior M7 pins over each child clock pin, 90 standard-cell CTS roots (ck, ck_lane x64, ck_align x16, ck_red x9; vred soft, its closed views fail the native audit).  Schedule deltas: results/rtl/qwen_su64_pinreg_1016/schedule_delta.json.",
  "reroute_reason": {
   "kind": "rtl_change",
   "source": "results/rtl/qwen_su64_pinreg_1016/schedule_delta.json",
@@ -3973,12 +4000,12 @@
  "job": {
   "owner": "Claude:Q-ELEM-SUC",
   "branch": "claude/qelem-suc-1016",
-  "tag": "pr1",
+  "tag": "pr2",
   "purpose": "Hardened SU parent qfd_sp_su64_sfu (PINREG=1) from native lane heads/SFUs, interior clock entries",
   "benches": [
    {
     "name": "lint_parent_hard",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -DSYNTHESIS -DOT_SU_LANE_HARD -GPINREG=1 --top-module qfd_sp_su64_sfu rtl/qwen_split/qfd_sp_su64_sfu.sv rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv rtl/hdc/ot_hdc_delay.sv rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/physical/ot_hdc_vreduce_entries64.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_vreduce.sv rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/physical/ot_qfd_su_align_entries64.sv rtl/qwen_sys/static_embedding_20261014/ot_qfd_su_embed_static.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/qwen_split/qfd_su_static_copy.sv rtl/qwen_split/qfd_su_vm_pack.sv rtl/physical/qfd_su64_native_children_bind.sv rtl/test/qwen_split/su64_native_views_bb.v",
+    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -DSYNTHESIS -DOT_SU_LANE_HARD -GPINREG=1 --top-module qfd_sp_su64_sfu rtl/qwen_split/qfd_sp_su64_sfu.sv rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv rtl/hdc/ot_hdc_delay.sv rtl/lib/ot_rst_relay.sv rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/physical/ot_hdc_vreduce_entries64.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_vreduce.sv rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/physical/ot_qfd_su_align_entries64.sv rtl/qwen_sys/static_embedding_20261014/ot_qfd_su_embed_static.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/qwen_split/qfd_su_static_copy.sv rtl/qwen_split/qfd_su_vm_pack.sv rtl/physical/qfd_su64_native_children_bind.sv rtl/test/qwen_split/su64_native_views_bb.v",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 8,
@@ -3991,7 +4018,7 @@
     "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_su_ops 0 0",
     "expect": "pass",
     "threads": 8,
-    "peak_ram_gb": 72,
+    "peak_ram_gb": 48,
     "needs": [
      "verilator"
     ],
@@ -4002,7 +4029,7 @@
     "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_copy 1 0",
     "expect": "pass",
     "threads": 8,
-    "peak_ram_gb": 72,
+    "peak_ram_gb": 48,
     "needs": [
      "verilator"
     ],
@@ -4013,7 +4040,7 @@
     "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_mut_old_vm_edge 0 1",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 72,
+    "peak_ram_gb": 48,
     "needs": [
      "verilator"
     ],
@@ -4024,7 +4051,7 @@
     "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_mut_copy_latency 1 2",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 72,
+    "peak_ram_gb": 48,
     "needs": [
      "verilator"
     ],
@@ -4035,7 +4062,7 @@
     "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_mut_sd_old_edge 0 3",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 72,
+    "peak_ram_gb": 48,
     "needs": [
      "verilator"
     ],
@@ -4046,7 +4073,18 @@
     "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_mut_cp_old_edge 1 4",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 72,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_su64_pinreg"
+   },
+   {
+    "name": "pinreg_mut_cbs_late",
+    "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_mut_cbs_late 0 0 11 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
     "needs": [
      "verilator"
     ],
@@ -4070,6 +4108,5 @@
   "cycles_added": 0,
   "views_to": "physical/ref_tile/qfd_sp_su64_sfu_pr/views",
   "record_to": "results/rtl/ref_tile/qfd_sp_su64_sfu_pr"
- },
- "slot_change_request": "Q-COMPUTE-DIE el1014-qwen-split-compute.log 2026-10-16 11:53:46 DECISION SU parent option (a) FINAL (outline 3239.976x3671.976, 346 interior clock entries, S M5+M7 / W,E M4+M6) + 12:28:40 pin plan accepted (physical/ref_tile/qfd_sp_su64_sfu_pr/assigned_pins.json); the q2o2 split-die frame supersedes qwen_rom_tp8.json v4 slot sp_su64_sfu"
+ }
 }

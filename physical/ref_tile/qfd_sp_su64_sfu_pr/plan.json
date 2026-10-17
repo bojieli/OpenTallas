@@ -2857,12 +2857,16 @@
   "ck": [
    1619.984,
    1836.0
+  ],
+  "ck_e": [
+   3040.016,
+   1400.216
   ]
  },
  "m8_phase_check": {
   "rule": "die M8 PG at SU-local y = 0 mod 8.64 (0.48 wide): every interior M7 clock pin >= 0.5 um clear",
-  "pins": 346,
-  "min_clearance_um": 0.54,
+  "pins": 347,
+  "min_clearance_um": 0.536,
   "violations": []
  },
  "groups": {
@@ -2876,14 +2880,14 @@
     0.0
    ]
   ],
-  "W:acc,external_a_addr,external_a_q,external_a_re,external_vm_a_addr,external_vm_a_re,sd,si,xsw": [
+  "W:acc,external_a_addr,external_a_q,external_a_re,external_vm_a_addr,external_vm_a_re,sd,si,native_issue,xsw": [
    [
     0.0,
-    406.8
+    404.364
    ],
    [
     0.0,
-    885.612
+    887.532
    ]
   ],
   "W:cp,cp_active,cp_done": [
@@ -2896,54 +2900,54 @@
     1644.492
    ]
   ],
-  "E:kv_waddr,kv_wdata,kv_we,native_issue": [
+  "E:kv_waddr,kv_wdata,kv_we": [
    [
     3240.0,
-    254.412
+    256.62
    ],
    [
     3240.0,
-    475.792
+    473.676
    ]
   ],
-  "E:ca0,ca1,cq0,cq1": [
+  "E:ca0,si_cbs0,ca1,cq0,cq1": [
    [
     3240.0,
-    664.812
+    664.044
    ],
    [
     3240.0,
-    752.076
+    752.46
    ]
   ],
-  "E:ca2,ca3,cq2,cq3": [
+  "E:ca2,si_cbs1,ca3,cq2,cq3": [
    [
     3240.0,
-    1219.98
+    1219.404
    ],
    [
     3240.0,
-    1307.408
+    1307.792
    ]
   ],
-  "E:ca4,ca5,cq4,cq5": [
+  "E:ca4,si_cbs2,ca5,cq4,cq5": [
    [
     3240.0,
-    1775.12
+    1774.476
    ],
    [
     3240.0,
-    1862.416
+    1862.8
    ]
   ],
-  "E:ca6,ca7,cq6,cq7": [
+  "E:ca6,si_cbs3,ca7,cq6,cq7": [
    [
     3240.0,
-    2330.028
+    2329.548
    ],
    [
     3240.0,
-    2417.68
+    2418.576
    ]
   ],
   "N:rst_n,external_embed_fault": [

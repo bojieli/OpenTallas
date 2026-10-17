@@ -65,7 +65,10 @@ PORTS = {  # name: (bits, direction)
     'rst_n': (1, 'input')}
 for g in range(8):
     PORTS[f'ca{g}'] = (206, 'output'); PORTS[f'cq{g}'] = (512, 'input')
-CLOCKS = ['ck'] + [f'ck_{f}{i}' for f, n in [('head', 64), ('exp', 64), ('rcp', 64), ('rsq', 64), ('align', 16), ('lane', 64),
+# Q-IO-1815 SU 2026-10-17 (SPLIT=1): four E-face same-age copies of the cb_stage si[481:476], one per ca pair window
+for k in range(4):
+    PORTS[f'si_cbs{k}'] = (6, 'input')
+CLOCKS = ['ck', 'ck_e'] + [f'ck_{f}{i}' for f, n in [('head', 64), ('exp', 64), ('rcp', 64), ('rsq', 64), ('align', 16), ('lane', 64),
                                              ('red', 9)] for i in range(n)]
 for c in CLOCKS:
     PORTS[c] = (1, 'input')
@@ -84,13 +87,13 @@ for g in range(8):
 GROUPS = [
     ('S', ['va', 'vq'], (2.028, 412.524), 30.0, None),
     ('W', ['acc', 'external_a_addr', 'external_a_q', 'external_a_re', 'external_vm_a_addr', 'external_vm_a_re', 'sd', 'si',
-           'xsw'], (258.06, 1033.836), 30.0, None),
+           'native_issue', 'xsw'], (258.06, 1033.836), 30.0, None),
     ('W', ['cp', 'cp_active', 'cp_done'], (1638.924, 1645.26), None, None),
-    ('E', ['kv_waddr', 'kv_wdata', 'kv_we', 'native_issue'], (185.484, 544.62), 30.0, None),
-    ('E', ['ca0', 'ca1', 'cq0', 'cq1'], (638.124, 778.86), None, None),
-    ('E', ['ca2', 'ca3', 'cq2', 'cq3'], (1193.196, 1333.932), None, None),
-    ('E', ['ca4', 'ca5', 'cq4', 'cq5'], (1748.364, 1888.98), None, None),
-    ('E', ['ca6', 'ca7', 'cq6', 'cq7'], (2303.436, 2444.172), None, None),
+    ('E', ['kv_waddr', 'kv_wdata', 'kv_we'], (185.484, 544.62), 30.0, None),
+    ('E', ['ca0', 'si_cbs0', 'ca1', 'cq0', 'cq1'], (638.124, 778.86), None, None),
+    ('E', ['ca2', 'si_cbs1', 'ca3', 'cq2', 'cq3'], (1193.196, 1333.932), None, None),
+    ('E', ['ca4', 'si_cbs2', 'ca5', 'cq4', 'cq5'], (1748.364, 1888.98), None, None),
+    ('E', ['ca6', 'si_cbs3', 'ca7', 'cq6', 'cq7'], (2303.436, 2444.172), None, None),
     ('N', ['rst_n', 'external_embed_fault'], (2000.268, 2001.324), None, None),
 ]
 GAP = 0.96   # between ports of a group
@@ -188,6 +191,9 @@ def main(out):
         interior[f'ck_red{i}'] = (m7_track_near(129.6 + 3 * 388.8 + 324.0 + 32.4), round(172.8 + i * 432.0 + 324.0 + 54.0, 3))
     interior['ck_red8'] = (m7_track_near(600.0), 40.0)
     interior['ck'] = (m7_track_near(1620.0), 1836.0)
+    # ck_e (SPLIT=1): the E-face stations (ca pin registers, crom answer input / crom+kv output stations) sit behind the
+    # E face between the kv window (y 185-545) and ca6/7 (y 2444): entry at their centroid, 200 um in from the E face
+    interior['ck_e'] = (m7_track_near(W - 200.0), 1400.0)
     interior = {k: (x, m8_phase_fix(y)) for k, (x, y) in interior.items()}
     assert len(interior) == len(CLOCKS) and set(interior) == set(CLOCKS)
     m8_check = dict(rule='die M8 PG at SU-local y = 0 mod 8.64 (0.48 wide): every interior M7 clock pin >= 0.5 um clear',
