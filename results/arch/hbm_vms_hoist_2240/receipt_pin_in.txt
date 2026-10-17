@@ -1,0 +1,3 @@
+VM bank hoist equivalence with literal bank input pin flops (H-SM 05978a837 / 83254407f; BANK_PIN_IN=1), EPYC4 unit oth-ubuntu-2854618-1792226101:
+reference = hfd_hgi_vms_static_<Q>(_core) #(STRAP_BANKS=1, BANK_PIN_IN=1[, Q2_MERGE=1]) vs layer composition (glue BANK_PIN_IN=1 + hfd_vms_bank_native_q0_faces SW/NW, hfd_vms_bank_native_q1_core_pr SE/NE, NW merges)
+pos SW PASS 36000/0  mut FAIL 1167 | pos NW PASS 33000/0 mut FAIL 1224 | pos SE PASS 30000/0 mut FAIL 526 | pos NE PASS 30000/0 mut FAIL 526 | VMS_HOIST_EQUIV_GATE PASS
