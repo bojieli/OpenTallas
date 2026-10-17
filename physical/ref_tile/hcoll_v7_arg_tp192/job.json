@@ -7,7 +7,7 @@
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/hnl-coll-tp192",
+  "branch": "claude/hnl-coll-arg3",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective",
@@ -148,6 +148,6 @@
  "merge_target": null,
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "argmax_m_tp192 d4f2 2390e32f8 native FAIL capture 278.1 on start (live into the 192-bit seen clear): START_REG=1 pin-registers start + cfg (ARGMAX start +1, compiler offset); 0377e2057 failed rst_n 448.7 (fixed by the reset synchroniser)"
+  "why": "argmax_m_tp192 d4f2 2390e32f8 native FAIL capture 278.1 on start (live into the 192-bit seen clear): START_REG=1 pin-registers start + cfg (ARGMAX start +1, compiler offset); 0377e2057 failed rst_n 448.7 (fixed by the reset synchroniser). Coordinator 0co APPROVED gate 0279e0fed."
  }
 }
