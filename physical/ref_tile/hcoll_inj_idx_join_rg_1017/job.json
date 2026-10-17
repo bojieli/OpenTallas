@@ -11,7 +11,10 @@
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective/p2p/run_inj_idx_join_bench.sh",
-   "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_inj_idx_join.sv"
+   "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_inj_idx_join.sv",
+   "rtl/hbm_accel/generic/collective/p2p/run_inj_idx_join_rg_bench.sh",
+   "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_inj_idx_join_rg_lockstep.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_idx_join.sv"
   ]
  },
  "stages": {
@@ -30,7 +33,81 @@
     "name": "inj_idx_join_rg",
     "cmd": "OUT={RUN}/bench bash -c 'mkdir -p {RUN}/bench && bash rtl/hbm_accel/generic/collective/p2p/run_inj_idx_join_rg_bench.sh'",
     "expect": "pass",
-    "pass_regex": "INJ_IDX_JOIN_RG_BENCH PASS",
+    "pass_regex": "^INJ_IDX_JOIN_RG_BENCH PASS$",
+    "pass_witness": "results/rtl/hbm_tiles_b_1017/cij_rg_bench.log",
+    "min_count_regex": "^LOCKSTEP MUT=0 CIJ_RG_LOCKSTEP PASS checks=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "inj_idx_join_rg_mut1",
+    "cmd": "OUT={RUN}/mut1 bash -c 'mkdir -p {RUN}/mut1 && bash rtl/hbm_accel/generic/collective/p2p/run_inj_idx_join_rg_bench.sh bench:1'",
+    "expect": "fail",
+    "fail_regex": "^BENCH MUT=1 inj_idx_join MUT=1 idx_words=[1-9][0-9]* su_words=[1-9][0-9]* .*FAIL",
+    "fail_witness": "results/rtl/hbm_tiles_b_1017/cij_rg_mut_bench_1.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "inj_idx_join_rg_mut2",
+    "cmd": "OUT={RUN}/mut2 bash -c 'mkdir -p {RUN}/mut2 && bash rtl/hbm_accel/generic/collective/p2p/run_inj_idx_join_rg_bench.sh bench:2'",
+    "expect": "fail",
+    "fail_regex": "^BENCH MUT=2 inj_idx_join MUT=2 idx_words=[1-9][0-9]* su_words=[1-9][0-9]* .*FAIL",
+    "fail_witness": "results/rtl/hbm_tiles_b_1017/cij_rg_mut_bench_2.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "inj_idx_join_rg_mut3",
+    "cmd": "OUT={RUN}/mut3 bash -c 'mkdir -p {RUN}/mut3 && bash rtl/hbm_accel/generic/collective/p2p/run_inj_idx_join_rg_bench.sh bench:3'",
+    "expect": "fail",
+    "fail_regex": "^BENCH MUT=3 inj_idx_join MUT=3 idx_words=[1-9][0-9]* su_words=[1-9][0-9]* .*FAIL",
+    "fail_witness": "results/rtl/hbm_tiles_b_1017/cij_rg_mut_bench_3.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "inj_idx_join_rg_mut4",
+    "cmd": "OUT={RUN}/mut4 bash -c 'mkdir -p {RUN}/mut4 && bash rtl/hbm_accel/generic/collective/p2p/run_inj_idx_join_rg_bench.sh bench:4'",
+    "expect": "fail",
+    "fail_regex": "^BENCH MUT=4 inj_idx_join MUT=4 idx_words=[1-9][0-9]* su_words=[1-9][0-9]* .*FAIL",
+    "fail_witness": "results/rtl/hbm_tiles_b_1017/cij_rg_mut_bench_4.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "inj_idx_join_rg_lockstep_mut1",
+    "cmd": "OUT={RUN}/ls1 bash -c 'mkdir -p {RUN}/ls1 && bash rtl/hbm_accel/generic/collective/p2p/run_inj_idx_join_rg_bench.sh lockstep:1'",
+    "expect": "fail",
+    "fail_regex": "^LOCKSTEP MUT=1 CIJ_RG_LOCKSTEP FAIL checks=[1-9][0-9]* errors=[1-9][0-9]*",
+    "fail_witness": "results/rtl/hbm_tiles_b_1017/cij_rg_mut_lockstep_1.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "inj_idx_join_rg_lockstep_mut2",
+    "cmd": "OUT={RUN}/ls2 bash -c 'mkdir -p {RUN}/ls2 && bash rtl/hbm_accel/generic/collective/p2p/run_inj_idx_join_rg_bench.sh lockstep:2'",
+    "expect": "fail",
+    "fail_regex": "^LOCKSTEP MUT=2 CIJ_RG_LOCKSTEP FAIL checks=[1-9][0-9]* errors=[1-9][0-9]*",
+    "fail_witness": "results/rtl/hbm_tiles_b_1017/cij_rg_mut_lockstep_2.log",
     "threads": 1,
     "peak_ram_gb": 4,
     "needs": [
