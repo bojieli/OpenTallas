@@ -584,3 +584,29 @@ That way no FDI crosses another block. A first stack, with the D2D group between
 - **PHY FDI.** The PHY variants put their FDI on the SHORT edge facing the collective. The PHYs below are R0 with FDI on N; io_ucie and io_serdes above are MX with FDI on S. The narrow collective takes the FDI windows on its S/N faces and its core pins on E. This gives straight FDI wires; there is no E-face FDI.
 - **Slice lateral faces.** Both lateral faces are symmetric, with an in and an out per kind. The E-row slices are MY.
 - **W0 | E0 seam: a 108-um seam channel** with a die-level in/out swap jog. MY keeps the y order, so out would otherwise meet out. This adds no cell and no stage. The fallback is a seam crossover relay tile (+1 cycle).
+
+## dv2r8f6 = the Q-DIEPLAN3 dv2f6 die case (claude/q3h3-1016 b1b97efb7) -- CURRENT
+
+The dv2f6 die case has **0 pin_align FAILs**. It combines:
+- the edge-keeping W column: single-file, every PHY on the W edge, the channel at 432 um, only serdes_2 relayed (2.54 mm);
+- the 108-um seam with a swap jog;
+- the top-cluster fix: d2d_rom / ucie_kv R180 with the ucie_kv beachfront on the N die edge, native59 MY, the group +216 off the edge;
+- rs_i straight above rs, with jog 0.
+
+The GEN + chain is running on E4.
+
+**Folded into the Q-DV model as dv2r8f6:**
+
+| | value |
+|---|---:|
+| worst cut | 0.340 (DIEPLAN3 smoke 0.347) |
+| stages @405 | 3,317 |
+| bit-mm | 0.800 M |
+| die | 30.43 x 24.00 = 730.4 mm² |
+| cycles / layer vs q3h, @405 | -64 (pipelined root) |
+| cycles / layer vs q3h, @200 | -230 |
+
+**Not worth a model change: moving native59 / tt_ctlm toward the slice row.** Q-DIEPLAN3 asked because these links have the 25-stage max chain.
+- native59 sits on the d2d -> W5 path, so moving it only moves the long hop onto more bits.
+- tt -> W5 is static and pre-issued.
+- Revisit only if die STA or the clock check flags that chain.
