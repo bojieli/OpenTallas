@@ -43,7 +43,11 @@ DEFAULTS = dict(max_wire_um=160.0, slew_ps=260.0, over_reach='report', rc_layer=
 # per die flow: the die_reach design key and the clock / reset distribution net globs the step never touches
 # (on top of the automatic skips: nets on register-clock / clock lib pins, CLOCK/POWER/GROUND sig type, special nets)
 DESIGNS = {
-    's81': dict(reach='s81', skip=('n_clk_*', 'n_rst_*', 'n_ck_col_*', 'n_rs_col_*')),
+    # S81 (H-REACH / DIE-CLOCK 2026-10-17): one repeater cell (BUFx8) so a hop's forwarded clock and data get matched
+    # stage counts by construction; the fclk-vs-data audit (fclk_audit.tcl) runs after the repair on the fclk globs
+    # (cfg fclk_globs, default = repeat_nets; OT_DIE_REPAIR_FCLK_GLOBS adds), policy report|fail (OT_DIE_REPAIR_FCLK_POLICY)
+    's81': dict(reach='s81', skip=('n_clk_*', 'n_rst_*', 'n_ck_col_*', 'n_rs_col_*'),
+                buffers=('BUFx8_ASAP7_75t_R',), fclk_audit=1),
     'qwen_compute': dict(reach='qwen_compute', skip=('n_clk_*', 'n_fck_*')),   # + n_rst_* unless OT_ROUTE_RESET=1
     'qwen_kv': dict(reach='qwen_kv', skip=('n_clk_*', 'n_fck_*')),
     'hbm': dict(reach='hbm', skip=('dk?_*', 'n_dk?_*', 'ckg_*')),
@@ -72,7 +76,15 @@ def config(design, report, **kw):
         raise SystemExit(f'die_repeaters: unknown design {design!r} (known: {sorted(DESIGNS)})')
     c = dict(DEFAULTS, design=design, report=report, reach_um=_reach(design),
              skip_nets=list(DESIGNS[design]['skip']))
+    for k_ in ('buffers', 'fclk_audit'):
+        if k_ in DESIGNS[design]:
+            v_ = DESIGNS[design][k_]
+            c[k_] = list(v_) if isinstance(v_, tuple) else v_
     env = os.environ
+    if env.get('OT_DIE_REPAIR_FCLK_GLOBS'):
+        c['fclk_globs'] = list(c.get('fclk_globs') or []) + env['OT_DIE_REPAIR_FCLK_GLOBS'].split()
+    if env.get('OT_DIE_REPAIR_FCLK_POLICY'):
+        c['fclk_policy'] = env['OT_DIE_REPAIR_FCLK_POLICY']
     if env.get('OT_DIE_REPAIR_MAX_WIRE'):
         c['max_wire_um'] = float(env['OT_DIE_REPAIR_MAX_WIRE'])
     if env.get('OT_DIE_REPAIR_SLEW'):
@@ -96,6 +108,8 @@ def config(design, report, **kw):
         raise SystemExit("die_repeaters: over_reach must be 'report' or 'fail'")
     if c.get('post_drv', 'report') not in ('report', 'fail'):
         raise SystemExit("die_repeaters: post_drv must be 'report' or 'fail'")
+    if c.get('fclk_policy', 'report') not in ('report', 'fail'):
+        raise SystemExit("die_repeaters: fclk_policy must be 'report' or 'fail'")
     if c['legalize'] not in ('snap', 'dpl', 'none'):
         raise SystemExit("die_repeaters: legalize must be snap | dpl | none")
     return c
@@ -105,6 +119,9 @@ def tcl_call(design, report, tcl_dir='/work', fail_exit=3, **kw):
     """Tcl text: source the shared step and call it; exits the session with fail_exit on a violation."""
     c = config(design, report, **kw)
     rs = c.pop('receiver_slew', None) or {}
+    fa = bool(c.pop('fclk_audit', 0))
+    fg = list(c.pop('fclk_globs', None) or []) or list(c.get('repeat_nets') or [])
+    fp = c.pop('fclk_policy', 'report')
     parts = []
     for k, v in c.items():
         if isinstance(v, (list, tuple)):
@@ -116,18 +133,30 @@ def tcl_call(design, report, tcl_dir='/work', fail_exit=3, **kw):
     if rs:
         parts.append('receiver_slew {%s}' % ' '.join(f'{{{m}}} {float(p):g}' for m, p in sorted(rs.items())))
     parts.append(f'bounds_tcl {{{tcl_dir}/cluster_bounds.tcl}}')
+    pre = post = ''
+    if fa and not fg:      # no forwarded-clock nets named for this die: nothing to audit (said so in the log)
+        post = 'puts "OT_DIE_REP_FCLK skipped: no fclk globs (fclk_globs / repeat_nets / OT_DIE_REPAIR_FCLK_GLOBS)"\n'
+    elif fa:
+        bufs = c.get('buffers') or list(BUFFERS)
+        prefix = str(Path(report).with_suffix('')) + '.fclk'
+        pre = f'source {tcl_dir}/fclk_audit.tcl\not_die_rep_fclk_snapshot\n'
+        post = (f'set ot_die_rep_fb [ot_die_rep_fclk_audit {{{prefix}}} {_tcl_list(fg)} {_tcl_list(bufs)}]\n'
+                + (f'if {{$ot_die_rep_fb != 0}} {{ puts "OT_DIE_REP FAIL fclk_mismatch_hops=$ot_die_rep_fb"; flush stdout; '
+                   f'exit {fail_exit} }}\n' if fp == 'fail' else ''))
     return (f'# shared die-net repeater step (tools/die_repeaters/step.py, design {design})\n'
-            f'source {tcl_dir}/die_repeaters.tcl\n'
+            f'source {tcl_dir}/die_repeaters.tcl\n' + pre +
             f'set ot_die_rep_v [ot_die_repeaters [dict create {" ".join(parts)}]]\n'
-            f'if {{$ot_die_rep_v != 0}} {{ puts "OT_DIE_REP FAIL violations=$ot_die_rep_v"; flush stdout; exit {fail_exit} }}\n')
+            f'if {{$ot_die_rep_v != 0}} {{ puts "OT_DIE_REP FAIL violations=$ot_die_rep_v"; flush stdout; exit {fail_exit} }}\n'
+            + post)
 
 
 def copy(dest):
     dest = Path(dest)
     dest.mkdir(parents=True, exist_ok=True)
     shutil.copy(TCL, dest / 'die_repeaters.tcl')
+    shutil.copy(Path(TCL).parent / 'fclk_audit.tcl', dest / 'fclk_audit.tcl')
     shutil.copy(BOUNDS_TCL, dest / 'cluster_bounds.tcl')
-    return [dest / 'die_repeaters.tcl', dest / 'cluster_bounds.tcl']
+    return [dest / 'die_repeaters.tcl', dest / 'fclk_audit.tcl', dest / 'cluster_bounds.tcl']
 
 
 def check(report):
@@ -162,6 +191,9 @@ def main(argv=None):
     t.add_argument('--skip', nargs='*', default=None, help='extra net globs left untouched')
     t.add_argument('--repeat-nets', nargs='*', default=None,
                    help='forwarded-clock net globs repeated with their data bits (override the clock skips)')
+    t.add_argument('--fclk-globs', nargs='*', default=None, help='forwarded-clock nets audited against their data '
+                   'repeater counts (default: --repeat-nets)')
+    t.add_argument('--fclk-policy', choices=['report', 'fail'], help='|fclk - data| > 1 on a hop: report (default) or fail')
     t.add_argument('--over-reach', choices=['report', 'fail'])
     t.add_argument('--post-drv', choices=['report', 'fail'], help='residual slew/cap violators after repair: report (default) or fail')
     t.add_argument('--rc-layer')
@@ -188,7 +220,8 @@ def main(argv=None):
     rs = json.loads(a.receiver_slew.read_text()) if a.receiver_slew else None
     body = tcl_call(a.design, a.report, tcl_dir=a.dir, fail_exit=a.exit_code, libs=libs or None, std_corner=a.std_corner,
                     legalize=a.legalize, max_wire_um=a.max_wire_um, slew_ps=a.slew_ps, receiver_slew=rs,
-                    skip_nets=a.skip, repeat_nets=a.repeat_nets, over_reach=a.over_reach, post_drv=a.post_drv, rc_layer=a.rc_layer, repair_args=a.repair_args)
+                    skip_nets=a.skip, repeat_nets=a.repeat_nets, fclk_globs=a.fclk_globs, fclk_policy=a.fclk_policy,
+                    over_reach=a.over_reach, post_drv=a.post_drv, rc_layer=a.rc_layer, repair_args=a.repair_args)
     if a.libs_file:
         body = body.replace('[dict create ', '[dict create libs [concat $ot_die_rep_libs ' + _tcl_list(libs) + '] ', 1)
         body = body.replace(f' libs {_tcl_list(libs)}', '', 1) if libs else body
