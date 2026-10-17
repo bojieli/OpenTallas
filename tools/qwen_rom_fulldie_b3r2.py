@@ -1934,6 +1934,9 @@ if _os_reach.environ.get('OT_RELAY_REACH_UM'):
 # The relay masters must meet the reach: o + s <= 683.3 - 0.76 x 490 = 310.9 ps TT (relay element, compute queue).
 import os as _os_r
 P2P_REACH = _os_r.environ.get('OT_RELAY_P2P', '1') != '0'
+# Q-DIEPLAN5 10-17: the planner's pin-to-pin hop measure counts the block pin group's worst bit at chain ends
+# (OT_RELAY_P2P_WORST_BIT=0 restores the centroid measure)
+P2P_WORST_BIT = _os_r.environ.get('OT_RELAY_P2P_WORST_BIT', '1') != '0'
 RELAY_NEVER = ('clock_trunk', 'reset')
 # Q-DIEPLAN3 10-17 (coordinator: pass-2 repair = one-by-one BFS over up to 400k sites per chain; q3h GENs > 5 h): the
 # per-search site budget (OT_RELAY_BFS_MAX, default the historical 400,000); a smaller budget fails a hopeless tier
@@ -2924,6 +2927,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
 
     GATE = bool(getattr(v, 'RELAY_REACH_GATE', False))
     PT_EXT = {}          # r10: block pin point -> half extents of its pin group (pos.ext)
+    PT_FACE = {}         # Q-DIEPLAN5: block pin point -> the block face (N/S/E/W) its pin group sits on (pos.face)
 
     def _pt_key(o):
         return (round(o[0], 2), round(o[1], 2))
@@ -2934,6 +2938,21 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         if he is None:
             return 0.0
         return max(0.0, (he[1] if f in 'EW' else he[0]) - bits * 0.048 / 2)
+
+    def _end_worst(o, f, bits, face_len):
+        """Q-DIEPLAN5 10-17 (dv2f7: 5 hops passed the planner at <= 395 um pin to pin on CENTROIDS but their worst
+        bit ran 408-486 um): um the worst bit of a block-pin <-> relay-face hop runs beyond the centroid distance.  The
+        relay face (f) carries the word at one track per bit (half extent r); facing faces on one axis with the order
+        preserved meet bit k to bit k (+ the extent DIFFERENCE, as the direct 'ordered' rule); a corner (nested order)
+        or a u-turn (relay face pointing the same way as the block face) adds both half extents."""
+        he = PT_EXT.get(_pt_key(o))
+        if he is None:
+            return 0.0
+        r = min(bits * 0.048, face_len) / 2
+        rx, ry = (r, 0.0) if f in 'NS' else (0.0, r)
+        if PT_FACE.get(_pt_key(o)) == f:
+            return (he[0] + rx) if f in 'NS' else (he[1] + ry)
+        return abs(he[0] - rx) + abs(he[1] - ry)
 
     def frame_faces(pts, k, fr, bits):
         """(in face, out face) of relay frame k of a chain (pts = P0, frame centres, P1): toward the previous / next
@@ -3020,8 +3039,28 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     def p2p_hops(pl):
         """pin-to-pin hop lengths of a chain (the audit's measure); the allocator's own measure (hops_of) is centre to
         centre, up to w / 2 + h / 2 a side shorter"""
-        q = pin_pts(pl)
-        return [abs(q[i][0] - q[i + 1][0]) + abs(q[i][1] - q[i + 1][1]) for i in range(0, len(q), 2)]
+        fc = []
+        q = pin_pts(pl, fc)
+        hp = [abs(q[i][0] - q[i + 1][0]) + abs(q[i][1] - q[i + 1][1]) for i in range(0, len(q), 2)]
+        if P2P_WORST_BIT:
+            # Q-DIEPLAN5: the block-pin ends are judged on their worst bit (block pin group extent), not the centroid
+            fr_ = pl['frames']
+            if fr_:
+                f0, fn = fr_[0], fr_[-1]
+                hp[0] += _end_worst(pl['P0'], fc[0], pl['bits'], f0[2] if fc[0] in 'NS' else f0[3])
+                hp[-1] += _end_worst(pl['P1'], fc[-1], pl['bits'], fn[2] if fc[-1] in 'NS' else fn[3])
+            else:
+                hp[0] += _direct_worst(pl['P0'], pl['P1'])
+        return hp
+
+    def _direct_worst(P0, P1):
+        """Q-DIEPLAN5: block pin group to block pin group (no relay): the 'ordered' rule (extent difference per axis;
+        a corner sums by construction) and a u-turn (both groups on the same-named face) sums both extents"""
+        e0_, e1_ = PT_EXT.get(_pt_key(P0)) or (0.0, 0.0), PT_EXT.get(_pt_key(P1)) or (0.0, 0.0)
+        f0_, f1_ = PT_FACE.get(_pt_key(P0)), PT_FACE.get(_pt_key(P1))
+        if f0_ is not None and f0_ == f1_:
+            return e0_[0] + e1_[0] + e0_[1] + e1_[1]
+        return abs(e0_[0] - e1_[0]) + abs(e0_[1] - e1_[1])
 
     def reach_bad(pl):
         return GATE and max(p2p_hops(pl)) > RELAY_REACH_OK
@@ -3098,8 +3137,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             continue
         P0, P1 = pos(*eps[0]), pre_far.get(idx) or pos(*eps[1])
         PT_EXT[_pt_key(P0)] = pos.ext(*eps[0])
+        if hasattr(pos, 'face'):
+            PT_FACE[_pt_key(P0)] = pos.face(*eps[0])
         if idx not in pre_far:
             PT_EXT[_pt_key(P1)] = pos.ext(*eps[1])
+            if hasattr(pos, 'face'):
+                PT_FACE[_pt_key(P1)] = pos.face(*eps[1])
         d = abs(P0[0] - P1[0]) + abs(P0[1] - P1[1])
         # Q-DIEPLAN3 2026-10-16 (Codex 20:18: 25 q3h hops passed on the centroid but their worst BIT ran 422-444 um > the
         # measured reach): the direct-wire decision bounds the worst bit by the centroid distance plus both pin groups'
@@ -3115,7 +3158,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 # preserved (pin_align 'order preserved' on all of them), so bit k meets bit k: the worst bit is the
                 # centroid distance plus the extent DIFFERENCE.  The per-bit gate (OT_PIN_BIT_REACH_UM) re-measures
                 # every bit after pin assignment and fails the GEN if this ever under-counts.
-                d = d + abs(e0_[0] - e1_[0]) + abs(e0_[1] - e1_[1])
+                d = d + _direct_worst(P0, P1)
             else:
                 d = d + e0_[0] + e1_[0] + e0_[1] + e1_[1]
         terminal = getattr(v, 'TERMINAL_TIGHT', {})
@@ -3395,7 +3438,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         near_cons = near
         def _e_pin(pt, i):            # block pin point -> frame i face (pin to pin estimate)
             dx_, dy_ = abs(ctr[i][0] - pt[0]), abs(ctr[i][1] - pt[1])
-            return dx_ + dy_ - (W / 2 if dx_ >= dy_ else H / 2)
+            e_ = dx_ + dy_ - (W / 2 if dx_ >= dy_ else H / 2)
+            if P2P_WORST_BIT:         # Q-DIEPLAN5: + the worst bit of the block pin group on the face toward it
+                f_ = (('E' if pt[0] > ctr[i][0] else 'W') if dx_ >= dy_ else ('N' if pt[1] > ctr[i][1] else 'S'))
+                e_ += _end_worst(pt, f_, pl["bits"], (H if f_ in 'EW' else W) - v.SHAVE)
+            return e_
 
         def _e_ff(i, j):              # frame i -> frame j, facing faces on the dominant axis
             dx_, dy_ = abs(ctr[i][0] - ctr[j][0]), abs(ctr[i][1] - ctr[j][1])
@@ -4694,6 +4741,14 @@ def _pin_pos(v, m):
         """r10: half extents (x, y) of the port's pin group (a relay in front of it must leave the difference room)"""
         return ext.get(by[inst].master, {}).get(port.lstrip('*'), (0.0, 0.0))
     pos.ext = pin_ext
+
+    def pin_face(inst, port):
+        """Q-DIEPLAN5 10-17: the instance face (N/S/E/W) the port's pin group sits on (nearest instance edge)"""
+        i = by[inst]
+        x, y = pos(inst, port)
+        dd = {'W': abs(x - i.x), 'E': abs(i.x + i.w - x), 'S': abs(y - i.y), 'N': abs(i.y + i.h - y)}
+        return min(dd, key=dd.get)
+    pos.face = pin_face
     return pos
 
 
