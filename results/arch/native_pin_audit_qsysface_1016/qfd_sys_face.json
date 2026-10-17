@@ -1,0 +1,39 @@
+{
+ "schema": "opentallas.native_pin_audit.one.v1",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one",
+ "rows": [
+  {
+   "cell": "qfd_sys_face",
+   "view": "physical/ref_tile/qfd_sys_face/views/qfd_sys_face",
+   "lib_cell": "qfd_sys_face",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 305.8,
+   "spread_ps": 39.5,
+   "outputs": 1303,
+   "inputs": 900,
+   "launch_ps": 191.5,
+   "launch_pin": "seq_dh[18]",
+   "capture_ps": 461.9,
+   "capture_pin": "rst_n",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 461.90077 > 190 (1 pins)",
+   "job": "qfd_sys_face-rq1-8a1b553b0",
+   "closed_by": "loop",
+   "design": "qwen",
+   "audited_commit": "9071c755bda6188de67b30cdbec5629e59b5759b",
+   "limits": {
+    "launch_ps": 220.0,
+    "capture_ps": 190.0,
+    "spread_ps": 80.0
+   },
+   "note": "rst_n capture = recovery of the port async clear on 2,118 flops (u_record 1,153, face core 689, u_cseq 117, u_cal_t/l/e 54/53/52; 1_2_yosys.v). Fix: regional reset relay (rtl_change successor)."
+  }
+ ]
+}

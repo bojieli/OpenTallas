@@ -56,6 +56,13 @@
 // Added cycles: boot / program replay are initialisation; a calendar event of compiled cycle c reaches its consumer pin
 // c edges after the edge that samples the calendar start (dt edges + the face output register; sys_face_image.py
 // CAL_OUT_EDGES = 1).  EMB words: +1 edge (decode register) on the D2D emb_rx_v edge.
+// REGIONAL RESET (Q-SYSFACE 2026-10-16, die standard item "regional reset"; structural fix of the rq1 native pin audit
+// FAIL rst_n capture 461.9 ps > 190, the port's async clear fanned straight out to 2,118 flops): the rst_n port drives
+// only the ot_rst_relay structure, in line (2 synchroniser flops + one kept relay flop per region, assert asynchronous,
+// release synchronous); every region resets from its own relay flop, placed with its loads.  Regions: 0 boot / ROM
+// replay, 1 program record port, 2 T calendar, 3 L + E calendars, 4 D2D sequencer + token loop, 5 event outputs /
+// embedding RX / STATUS.  Release is 3 edges after the port, the same edge in every region (initialisation only; the
+// boot replay and every production event are anchored to boot_done / the epoch strobe, never to the reset edge).
 // ROM output register (2026-10-16): boot replay and program replay decode one edge later (+1 edge each, initialisation
 // only; the admission replay stays inside the compiled ADM_REPLAY window); no token-path edge.
 // MUT (bench only): 1 = T events one edge late, 2 = embedding word index off by one, 3 = PW replay skips row 7.
@@ -158,6 +165,16 @@ module qfd_sys_face #(
     input  wire          res_issue_fault,
     output wire          fault
 );
+    // ================================================================ regional reset relay (ot_rst_relay, in line)
+    localparam integer RST_REGIONS = 6;
+    (* async_reg = "true" *) reg [1:0] rr_s;
+    (* keep = "true", dont_touch = "true" *) reg [RST_REGIONS-1:0] rr_q;   // one kept relay flop per region
+    always @(posedge ck or negedge rst_n) begin
+        if (!rst_n) begin rr_s <= 2'b00; rr_q <= {RST_REGIONS{1'b0}}; end
+        else begin rr_s <= {rr_s[0], 1'b1}; rr_q <= {RST_REGIONS{rr_s[1]}}; end
+    end
+    wire rst_boot = rr_q[0], rst_rec = rr_q[1], rst_calt = rr_q[2], rst_calle = rr_q[3], rst_loop = rr_q[4], rst_out = rr_q[5];
+
     // ================================================================ config ROM
     localparam [11:0] BOOT_BASE = 12'd2048;
     localparam integer PW_ROWS = 1024, IMG_ROWS = 1032;
@@ -203,8 +220,8 @@ module qfd_sys_face #(
     always @* seq_dh = {dh_prog, dh_run};
     wire        any_running;
     wire        boot_row = dq_boot && st == S_BOOT;
-    always @(posedge ck or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge ck or negedge rst_boot) begin
+        if (!rst_boot) begin
             st <= S_RST; rom_ce <= 1'b0; rom_a <= 12'd0; iss_boot <= 1'b0; iss_prog <= 1'b0; rd_boot <= 1'b0; rd_prog <= 1'b0;
             dq_boot <= 1'b0; dq_prog <= 1'b0; dq_idx <= 11'd0; boot_iss_last <= 1'b0;
             iss_idx <= 11'd0; rd_idx <= 11'd0; pidx <= 11'd0; boot_done <= 1'b0; boot_fault <= 1'b0; prog_fault <= 1'b0;
@@ -288,7 +305,7 @@ module qfd_sys_face #(
     wire        rp_tx_v;
     reg         t_running_q;
     qfd_program_record_port u_record (
-        .ck(ck), .rst_n(rst_n), .auth_slot(prog_auth_slot), .context_slot(prog_context_slot), .witness_slot(prog_witness_slot),
+        .ck(ck), .rst_n(rst_rec), .auth_slot(prog_auth_slot), .context_slot(prog_context_slot), .witness_slot(prog_witness_slot),
         .rx_v(prog_rx_v), .rx_record(rx_payload), .execution_active(l_run),
         .program_obs2({seq_program_obs, tt_program_obs}), .descriptor_obs(seq_descriptor_obs),
         .cfg_image_ready({seq_cfg_image_ready, tt_control_stores_ready}),
@@ -306,18 +323,18 @@ module qfd_sys_face #(
     wire        t_go, l_go, ecal_go;
     wire        t_ev, l_ev, e_ev, t_run, l_run, e_run, t_cf, l_cf, e_cf;
     wire [2:0]  t_p, l_p, e_p; wire [3:0] t_k, l_k, e_k; wire [4:0] t_b, l_b, e_b;
-    ot_qwen_d2d_cal #(.NE(64)) u_cal_t (.ck(ck), .rst_n(rst_n), .cfg_we(t_we), .cfg_addr({c_addr[7], c_addr[5:0]}), .cfg_data(c_data),
+    ot_qwen_d2d_cal #(.NE(64)) u_cal_t (.ck(ck), .rst_n(rst_calt), .cfg_we(t_we), .cfg_addr({c_addr[7], c_addr[5:0]}), .cfg_data(c_data),
         .start(t_go), .start_seg(1'b0), .halt(halt), .ev_v(t_ev), .ev_port(t_p), .ev_kind(t_k), .ev_beat(t_b), .running(t_run), .fault(t_cf));
-    ot_qwen_d2d_cal #(.NE(32)) u_cal_l (.ck(ck), .rst_n(rst_n), .cfg_we(l_we), .cfg_addr({c_addr[7], c_addr[4:0]}), .cfg_data(c_data),
+    ot_qwen_d2d_cal #(.NE(32)) u_cal_l (.ck(ck), .rst_n(rst_calle), .cfg_we(l_we), .cfg_addr({c_addr[7], c_addr[4:0]}), .cfg_data(c_data),
         .start(l_go), .start_seg(1'b0), .halt(halt), .ev_v(l_ev), .ev_port(l_p), .ev_kind(l_k), .ev_beat(l_b), .running(l_run), .fault(l_cf));
-    ot_qwen_d2d_cal #(.NE(16)) u_cal_e (.ck(ck), .rst_n(rst_n), .cfg_we(e_we), .cfg_addr({c_addr[7], c_addr[3:0]}), .cfg_data(c_data),
+    ot_qwen_d2d_cal #(.NE(16)) u_cal_e (.ck(ck), .rst_n(rst_calle), .cfg_we(e_we), .cfg_addr({c_addr[7], c_addr[3:0]}), .cfg_data(c_data),
         .start(ecal_go), .start_seg(1'b0), .halt(halt), .ev_v(e_ev), .ev_port(e_p), .ev_kind(e_k), .ev_beat(e_b), .running(e_run), .fault(e_cf));
     assign any_running = t_run | l_run | e_run | t_running_q;
     // D2D link calendars: the Q-LINK sequencer (compiler images as constants) is the ONLY producer of the link end's
     // cfg_* / cal_start / cal_seg; its token start is this face's t_go; reload = the first epoch strobe after an epoch
     // abort (the HOST's recovery: the images are re-written before the new epoch's first token, first_ofs > 2 NE + 2).
     wire cal_ready, cs_running, cs_fault, cs_adm_done; wire [5:0] cs_layer;   // r2: admission run once per epoch (D2D_ADM_OFS after fwd_epoch)
-    qfd_d2d_cal_seq #(.GO_OFS(GO_OFS), .START_ADJ(START_ADJ)) u_cseq (.ck(ck), .rst_n(rst_n),
+    qfd_d2d_cal_seq #(.GO_OFS(GO_OFS), .START_ADJ(START_ADJ)) u_cseq (.ck(ck), .rst_n(rst_loop),
         .reload(fwd_epoch && !fe_q && aborted), .tok_go(t_go), .epoch_go(fwd_epoch), .halt(halt),
         .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
         .cal_start(cal_start), .cal_seg(cal_seg), .cal_ready(cal_ready), .running(cs_running), .layer(cs_layer), .adm_done(cs_adm_done), .tok_start(), .fault(cs_fault));
@@ -367,11 +384,11 @@ module qfd_sys_face #(
     wire        loop_go = ev_end && !halt;
     assign t_go = (e_go || loop_go) && !face_fault;
     reg         go_fault, aborted;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) aborted <= 1'b0; else if (halt) aborted <= 1'b1; else if (fwd_epoch && !fe_q) aborted <= 1'b0;
+    always @(posedge ck or negedge rst_loop)
+        if (!rst_loop) aborted <= 1'b0; else if (halt) aborted <= 1'b1; else if (fwd_epoch && !fe_q) aborted <= 1'b0;
     reg ctx_slot_q; reg [1:0] tstart_q;
-    always @(posedge ck or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge ck or negedge rst_loop) begin
+        if (!rst_loop) begin
             t_running_q <= 1'b0; tok <= 18'd0; pos <= 18'd0; tcyc <= 32'd0; ctx_slot_q <= 1'b0; armed_fault <= 1'b0; tstart_q <= 2'd0;
             ecnt <= 32'd0; ewait <= 1'b0; fe_q <= 1'b0; go_fault <= 1'b0;
         end else begin
@@ -398,8 +415,8 @@ module qfd_sys_face #(
     end
 
     // ================================================================ event outputs (registered)
-    always @(posedge ck or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge ck or negedge rst_out) begin
+        if (!rst_out) begin
             cal_exp <= 1'b0; seg_exp <= 1'b0; dh_run <= 44'd0; tt_kok <= 1'b0; tt_kwd <= 1'b0;
             q_slot <= 1'b0; q_slot_beat <= 5'd0; kv_word_slot <= 1'b0; kv_word_index <= 2'd0;
             visibility_slot <= 1'b0; complete_slot <= 1'b0;
@@ -434,8 +451,8 @@ module qfd_sys_face #(
     // the D2D end presents the compiled kind of the RX slot with the record; port 2 carries only EMB rows and the
     // compute die's own STATUS is TX-only, so the header is told apart from code words by the compiled E slot
     wire        is_hdr = ev_embw && ea[6];
-    always @(posedge ck or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge ck or negedge rst_out) begin
+        if (!rst_out) begin
             emb_word_v <= 1'b0; emb_word_scale <= 1'b0; emb_word_index <= 6'd0; emb_word_token <= 18'd0; emb_word_epoch <= 16'd0;
             row_v <= 1'b0; row_tok <= 18'd0; row_ep <= 16'd0; emb_fault <= 1'b0;
         end else begin
@@ -463,8 +480,8 @@ module qfd_sys_face #(
     // the sequencer's per-epoch ADMISSION start (layer 63, D2D_ADM_OFS after fwd_epoch) is not a T-calendar event;
     // every token / layer start must still coincide with the T image
     wire cal_adm = cal_start && cs_layer == 6'h3f, cal_tok = cal_start && cs_layer != 6'h3f;
-    always @(posedge ck or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge ck or negedge rst_out) begin
+        if (!rst_out) begin
             status_epoch16 <= 16'd0; vm_drained <= 1'b0; collective_drained <= 1'b0; collective_busy <= 1'b0; crom_fault <= 1'b0;
             execution_active <= 1'b0; admit_ready <= 1'b0; result_v <= 1'b0; result_done <= 1'b0; result_fault <= 1'b0;
             result_cause <= 4'd0; result_tag <= 59'd0; result_gen <= 2'd0; result_token <= 18'd0; result_value <= 32'd0;
