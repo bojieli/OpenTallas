@@ -1,5 +1,5 @@
 {
- "name": "hdie_pc_ctrl_cfg_h9c-h9c-cts-155-COMMIT",
+ "name": "hdie_pc_ctrl_cfg_h9c-h9c-cts-155-39834d852",
  "block": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
  "ref_tile": true,
  "owner": "Claude:HBMA-H9B",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/hbma-h9c-1017",
-  "commit": "COMMIT",
+  "commit": "39834d852",
   "extra_paths": [
    "results/arch/hbm_pc_cfg_h8_1623/source",
    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv",
@@ -140,7 +140,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hdie_pc_ctrl_cfg_h9/hdie_pc_ctrl_cfg_h9c-h9c-cts-155-COMMIT"
+   "to": "results/rtl/ref_tile/hdie_pc_ctrl_cfg_h9/hdie_pc_ctrl_cfg_h9c-h9c-cts-155-39834d852"
   }
  ],
  "cycles_added": 0,
