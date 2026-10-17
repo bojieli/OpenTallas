@@ -12,7 +12,8 @@
   "extra_paths": [
    "tools/qwen_kv_die/run_host_slice_pinreg_bench.sh",
    "rtl/test/qwen_split/tb_host_pc_slice_die_pinreg.sv",
-   "results/arch/qwen_split_1014/kvsys_v1_4_2/pins"
+   "results/arch/qwen_split_1014/kvsys_v1_4_2/pins",
+   "results/rtl/ref_tile/qkd_hslice/bench_witness_0130/"
   ]
  },
  "stages": {
@@ -37,7 +38,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "pass_witness": "results/rtl/ref_tile/qkd_hslice/bench_witness_0130/mut0.log"
    },
    {
     "name": "host_slice_lpc_mutant",
@@ -48,7 +50,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/ref_tile/qkd_hslice/bench_witness_0130/mut1.log"
    },
    {
     "name": "host_slice_missing_boot_capture_mutant",
@@ -59,7 +62,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/ref_tile/qkd_hslice/bench_witness_0130/mut2.log"
    },
    {
     "name": "host_slice_er_capture_dropped_mutant",
@@ -70,7 +74,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/ref_tile/qkd_hslice/bench_witness_0130/mut3.log"
    }
   ],
   "calibrate": {
