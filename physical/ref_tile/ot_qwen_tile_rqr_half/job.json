@@ -1,5 +1,5 @@
 {
- "name": "ot_qwen_tile_rqr_half-r0-COMMIT",
+ "name": "ot_qwen_tile_rqr_half-r0-bf6715aee",
  "block": "ot_qwen_tile_rqr_half",
  "ref_tile": true,
  "owner": "Codex:Q-ROM-REGION",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "codex/qwen-regional-2006",
-  "commit": "COMMIT",
+  "commit": "bf6715aee",
   "extra_paths": [
    "rtl/physical/ot_qwen_tile_operand.sv",
    "rtl/physical/ot_qwen_tile_rqr_half.sv",
@@ -99,7 +99,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/ot_qwen_tile_rqr_half/ot_qwen_tile_rqr_half-r0-COMMIT"
+   "to": "results/rtl/ref_tile/ot_qwen_tile_rqr_half/ot_qwen_tile_rqr_half-r0-bf6715aee"
   }
  ],
  "cycles_added": 0,
