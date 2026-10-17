@@ -1922,6 +1922,10 @@ if _os_reach.environ.get('OT_RELAY_REACH_UM'):
 import os as _os_r
 P2P_REACH = _os_r.environ.get('OT_RELAY_P2P', '1') != '0'
 RELAY_NEVER = ('clock_trunk', 'reset')
+# Q-DIEPLAN3 10-17 (coordinator: pass-2 repair = one-by-one BFS over up to 400k sites per chain; q3h GENs > 5 h): the
+# per-search site budget (OT_RELAY_BFS_MAX, default the historical 400,000); a smaller budget fails a hopeless tier
+# fast and moves on to the next tier / rip-up instead of exhausting the die
+BFS_MAX = int(_os_r.environ.get('OT_RELAY_BFS_MAX', '400000'))
 
 
 def _relay_terminal_possible(centers, endpoint, reach_um, is_free, hop_ok=None):
@@ -3325,7 +3329,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 hop_chk[0] is None or hop_chk[0](P0, (float(ctr[i][0]), float(ctr[i][1]))))]
             par = {i: -1 for i in start}
             front, hit = start, None
-            while front and hit is None and len(par) < 400000:
+            while front and hit is None and len(par) < BFS_MAX:
                 for i in front:
                     if abs(ctr[i][0] - P1[0]) + abs(ctr[i][1] - P1[1]) <= De and (not p2p_on or _e_pin(P1, i) <= RCH) and (
                             hop_chk[0] is None or hop_chk[0]((float(ctr[i][0]), float(ctr[i][1])), P1)):
@@ -3386,11 +3390,20 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             lims = [1.0, 0.60 / CAP_FRAC, None] if FIELD_ALLOC else [None]
             lim_cur = [None]
 
+            fit_memo = {}          # Q-DIEPLAN3 10-17: the bookings are fixed during one repair call -> memoise
+
             def hop_fits(pa, pb):
                 """one of the two L routes pa -> pb stays within the window caps with this word added"""
                 lim = lim_cur[0]
                 if lim is None:
                     return True
+                key_ = (lim, pa, pb)
+                r_m = fit_memo.get(key_)
+                if r_m is None:
+                    r_m = fit_memo[key_] = _hop_fits(pa, pb, lim)
+                return r_m
+
+            def _hop_fits(pa, pb, lim):
                 (xa_, ya_), (xb_, yb_) = pa, pb
                 if max(hr(ya_, xa_, xb_, bits), vr(xb_, ya_, yb_, bits)) <= lim:
                     return True
