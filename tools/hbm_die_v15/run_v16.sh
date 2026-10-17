@@ -3,7 +3,7 @@
 # Verilator lint (5.x on a fleet host).   run_v16.sh [OUT_DIR] [LINT_HOST]
 set -uo pipefail
 cd "$(dirname "$0")/../.."
-OUT=${1:-results/arch/hbm_die_v16}; HOST=${2:-ot-epyc1tb}
+OUT=${1:-results/arch/hbm_die_v16}; HOST=${2:-ot-epyc4}
 python3 tools/hbm_die_v15/full_die_v16.py --out $OUT > $OUT.gen.log 2>&1 || { cat $OUT.gen.log; exit 2; }
 mv $OUT.gen.log $OUT/gen.log
 # masters defined outside die_port_bind's default roots (rtl/, physical/**/rtl) enter as explicit RTL files

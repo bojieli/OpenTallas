@@ -20,7 +20,7 @@ assert_owner; mkdir -p "$local_out"
 assert_owner; git archive --format=tar.gz -o "$local_out/source.tar.gz" HEAD rtl tools/hbm_static tools/hdc_golden.py \
  physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2
 assert_owner; sha256sum "$local_out/source.tar.gz" > "$local_out/source.sha256"
-for host in ot-epyc1tb ot-epyc4; do
+for host in ot-epyc4; do  # EPYC1 released 2026-10-16
  assert_owner; ssh -o BatchMode=yes "$host" "mkdir -p '$remote'"
  assert_owner; scp -q "$local_out/source.tar.gz" "$host:$remote/source.tar.gz"
  assert_owner; ssh -o BatchMode=yes "$host" "cd '$remote' && tar xzf source.tar.gz && sha256sum source.tar.gz" > "$local_out/stage_$host.log"
