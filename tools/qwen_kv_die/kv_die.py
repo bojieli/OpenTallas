@@ -310,6 +310,24 @@ PV_ARR = (2 * PV_BLK + PV_GAP, 16 * PV_BLK + 15 * PV_GAP)   # 1,144.8 x 9,309.6
 # collection run in the side relay channels, PV_TREE); OT_KV_V144_STRIP overrides (the 10-16 WIP reserved 216)
 PV_STRIP = float(__import__('os').environ.get('OT_KV_V144_STRIP', '86.4'))
 PVW = (PV_ARR[0], round(PV_ARR[1] + PV_GAP + PV_STRIP, 6))   # 1,144.8 x 9,547.2
+# KVPLAN 1815 (OT_KV_PV_T=1, needs OT_KV_V144_R6=1; Q-KV 10-16 ack +68 mm2): the TRUNKED PV16 pair successor qkd_pvw_die_t
+# (tools/qwen_kv_die/pv_trunk_gen.py): every in-pair wire inside reach by registered relay-standard stations.  The V word of
+# port k reaches the pair as a 31-b header vh<k> (-> the control tile at the strip) and eight 128-b chunks vc<k>_<g>, each
+# entering the W (ports 0-3) / E (ports 4-7) face at its GS group's middle channel; chunk g must arrive DELTA_g die relay
+# edges after its header (padded here).  Frame size / face pins / leaf homes: the generator's plan.json.
+PV_T = __import__('os').environ.get('OT_KV_PV_T', '0') == '1'
+PV_T_PLAN = 'results/arch/qwen_kv_die/pv_trunk_t/plan.json'
+_PVT = {}
+
+
+def pvt_plan():
+    if not _PVT:
+        _PVT.update(json.loads((Path(__file__).resolve().parents[2] / PV_T_PLAN).read_text()))
+    return _PVT
+
+
+if PV_T:
+    PVW = tuple(pvt_plan()['frame_um'])
 PV_CLEAR = 21.6                                   # envelope <-> hub / gateway / SerDes clearance (sliver rule >= 20 um)
 PV_GRANT_Y0 = 1844.346                            # pv_wide_grant.json pvw_0 (kept when the full height fits under the hub)
 # element owner screen (results/arch/qwen_attention_rate_1015/pv_parent_2330/screen.json, gap 21.6): bank l -> (x, y, orient)
@@ -389,7 +407,7 @@ def pv_vport_timing(m):
     for st in STACKS:
         for k in range(4):
             vp = f'vport_{st}_{k}'
-            r_ = dict(WP=st_.get(f'pvrq_{st}_{k}'), O=st_.get(f'pvin_{st}_{k}'))
+            r_ = dict(WP=st_.get(f'pvrq_{st}_{k}'), O=st_.get(f'{"pvh" if PV_T else "pvin"}_{st}_{k}'))
             if f'slg_{st}_{2 * k}' in names:
                 r_['RT'] = 8 + max(st_.get(f'pvvq_{st}_{k}_{g}', 0) + st_.get(f'pvrs_{st}_{k}_{g}', 0) for g in (0, 1))
             rows[vp] = r_
@@ -551,6 +569,14 @@ for _mn, _pair in (('qkd_pvw_s', 0), ('qkd_pvw_n', 1)):
         sliced={f'ck_c{s}': 'ck_c0' for s in range(1, 33)}, classed={})
     if V144_R6:
         SPLIT_BINDINGS[_mn].update(module='qkd_pvw_die_e', file='rtl/qwen_sys/split_20261014/qkd_pvw_die_e.sv')
+    if PV_T:
+        SPLIT_BINDINGS[_mn] = dict(module='qkd_pvw_die_t', file='rtl/qwen_sys/split_20261014/qkd_pvw_die_t.sv',
+            parameters=dict(PAIR=_pair, CTL_RESET_PIN=1, LEAF_RESET_PIN=1, FIRST_INPUT_AGE=PV_AGE, MUT=0, TRUNK_MUT=0, FLAG_D_ADJ=0),
+            ports=dict(ck_c0=['col_clk'], rst_n=['rst_n'], st=['start', 'context_len', 'epoch'], ie=['in_e'],
+                       **{f'vh{k}': [f'vh{k}'] for k in range(8)}, **{f'vrq{k}': [f'vrq{k}'] for k in range(8)},
+                       **{f'vc{k}_{g}': [f'vc{k}_{g}'] for k in range(8) for g in range(8)},
+                       po=['out_valid', 'out_leaf', 'out_epoch'], pf=['fault', 'busy', 'out_age']),
+            sliced={f'ck_c{s}': 'ck_c0' for s in range(1, 33)}, classed={})
 # v1.4.4 PV16 V ports (Q-VMWB r5 = the V ISSUER, kit physical/ref_tile/qkd_pv16_vport_r5): pr = the pair's request for this
 # port, vq0 / vq1 = V gets to static landing groups {k, 0} / {k, 1}, i0 / i1 = those groups' rsp words, vo -> the pair.
 # RL / WP / RT are the kit's (19 / 2 / 8); the die's measured relay depths are recorded in plan pv144.vport_timing.
@@ -564,6 +590,8 @@ if V144_R6:
         ck=['ck'], rst_n=['rst_n'], pr=['pr_valid', 'pr_t'], vq0=['vq0_valid', 'vq0_t'], vq1=['vq1_valid', 'vq1_t'],
         i0=['in0_valid', 'in0_vflag', 'in0_t', 'in0_epoch', 'in0_d'], i1=['in1_valid', 'in1_vflag', 'in1_t', 'in1_epoch', 'in1_d'],
         vo=['out_valid', 'out_t', 'out_epoch', 'out_v_lo', 'out_v_hi'], f=['fault']))
+    if PV_T:      # KVPLAN 1815: vo = the 31-b header (base) + eight 128-b GS chunks vo_c0 .. vo_c7 (sliced, in order)
+        SPLIT_BINDINGS['qkd_pv16_vport']['sliced'] = {f'vo_c{g}': 'vo' for g in range(8)}
 SPLIT_BINDINGS['qkd_hss'] = dict(module='qkh_head_sstage', file='rtl/qwen_sys/split_20261014/qkh_head_stages.sv',
     ports=dict(s_a=['s_a'], s_b=['s_b'], ck=['ck']), classed={})
 SPLIT_PHY = 'qkd_hbm3e_phy_pc'
@@ -1625,7 +1653,12 @@ def _pv144_buses(m, add):
         for k in range(4):
             vp, wp = f'vport_{st}_{k}', k + (4 if st[0] == 'E' else 0)
             add((f'pvrq_{st}_{k}', 'kv_oneway', 15, [(pv_, f'vrq{wp}'), (vp, 'pr')]))
-            add((f'pvin_{st}_{k}', 'kv_oneway', 1055 if V144_R6 else 1039, [(vp, 'vo'), (pv_, f'vin{wp}')]))
+            if PV_T:
+                add((f'pvh_{st}_{k}', 'kv_oneway', 31, [(vp, 'vo'), (pv_, f'vh{wp}')]))
+                for g in range(8):
+                    add((f'pvc_{st}_{k}_{g}', 'kv_oneway', 128, [(vp, f'vo_c{g}'), (pv_, f'vc{wp}_{g}')]))
+            else:
+                add((f'pvin_{st}_{k}', 'kv_oneway', 1055 if V144_R6 else 1039, [(vp, 'vo'), (pv_, f'vin{wp}')]))
             for g in (0, 1):
                 sg = f'slg_{st}_{2 * k + g}'
                 if sg not in names:
@@ -2228,7 +2261,7 @@ def _relays(m):
             order_.sort(key=lambda b_: (b_[0] not in ('lx', 'lr'), b_[0] != 'host_fdi',
                                         not any(b_[0].startswith(p_) for p_ in pri_)))
             if V144_R6:   # kvs13d: every V port's return word is planned first; its request word is then padded to W
-                order_.sort(key=lambda b_: (b_[0].startswith('pvrq_'),))
+                order_.sort(key=lambda b_: (b_[0].startswith('pvrq_'), b_[0].startswith('pvc_')))
     # Q-KVSYS PVJOIN 2026-10-16 (fork buses): m['forks'] = {bid: [load endpoints]} -- loads that leave a bus's driver as a
     # RELAYED BRANCH of their own (bus f'{bid}__f{i}', class kv_oneway) instead of one long unrelayed fan-out wire.  The
     # trunk keeps the bus's own class / relays; after planning, the branch's first segment joins the trunk's source net
@@ -2371,7 +2404,15 @@ def _relays(m):
         st_ = dict(prev_pt=None, prev_ep=(a, pa), k=0, idx0=0, path=path, wide=bid in tree_meta)
         if V144_R6 and bid.startswith('pvrq_'):
             # kvs13d: WP = PV_W - O; spread over the path (hop <= length / (WP + 1)), the rest padded at the V port end
-            st_['min_k'] = max(0, PV_W - stages.get('pvin_' + bid[5:], 0))
+            st_['min_k'] = max(0, PV_W - stages.get(('pvh_' if PV_T else 'pvin_') + bid[5:], 0))
+            st_['wide'] = True
+        if PV_T and bid.startswith('pvc_'):
+            # the chunk lands DELTA_g edges after its header (the pair's in-array V path is 7 + NS stages shorter than
+            # its command path for group g)
+            hb_ = 'pvh_' + bid[4:].rsplit('_', 1)[0]
+            g_ = int(bid.rsplit('_', 1)[1])
+            st_['min_k'] = stages[hb_] + int(pvt_plan()['chunk_delta_vs_header'][str(g_)])
+            st_['exact_k'] = st_['min_k']
             st_['wide'] = True
         offs_wide = [(0, 0)] + [(i * G, j * G) for r_ in range(1, 11) for i in range(-r_, r_ + 1) for j in range(-r_, r_ + 1)
                                 if max(abs(i), abs(j)) == r_]
@@ -2541,6 +2582,9 @@ def _relays(m):
                 finally:
                     SP['on'] = False
         n = st_['k']
+        if st_.get('exact_k') is not None and n != st_['exact_k']:
+            raise ValueError(f'kv die {bid}: {n} relay stages, the PV successor needs exactly {st_["exact_k"]} '
+                             f'(header + DELTA_g): the chunk path is longer than the pair absorbs')
         stages[bid] = n
         if bid in tree_meta:
             tm = tree_meta[bid]
@@ -3051,6 +3095,27 @@ def _split_pins(M, m=None):
     # v1.4.4: the PV pair's 33 clock entries sit on their children (ck_c<s>: column s's join centre, ck_c32: the control
     # tile), rst_n on the control tile (canonical R0 frame, strip at the top; the die places pvw_1 MX)
     for mn in ('qkd_pvw_s', 'qkd_pvw_n'):
+        if mn in M and PV_T:
+            # KVPLAN 1815: the trunked pair's face pins from its plan (canonical R0: strip / control tile at the top)
+            hm, P_ = M[mn], pvt_plan()
+            cells, fw_, fh_ = P_['cells'], P_['frame_um'][0], P_['frame_um'][1]
+            ctx_ = P_['strip']['x']
+            for s_ in range(33):
+                c_ = cells['u_ctl' if s_ == 32 else f'u_s{s_}_j']
+                if f'ck_c{s_}' in hm.ports:
+                    hm.ports[f'ck_c{s_}'] = ('area', 1, round(c_[1] + c_[3] / 2, 3), round(c_[2] + c_[4] / 2, 3), 1)
+            top = dict(rst_n=-150.0, st=-120.0, ie=60.0, **{f'vh{k}': -400.0 + 40.0 * k for k in range(8)},
+                       **{f'vrq{k}': 200.0 + 30.0 * k for k in range(8)})
+            for p_, dx_ in top.items():
+                if p_ in hm.ports:
+                    hm.ports[p_] = ('face', hm.ports[p_][1], 'N', 'M5', round(ctx_ + dx_, 3), 1)
+            for k_ in range(8):
+                for g_ in range(8):
+                    p_ = f'vc{k_}_{g_}'
+                    if p_ in hm.ports:
+                        f_, yc_ = P_['face_pins']['vc'][p_]
+                        hm.ports[p_] = ('face', hm.ports[p_][1], f_, 'M4', round(yc_ + ((k_ % 4) - 1.5) * 70.0, 3), 1)
+            continue
         if mn in M:
             hm, pl = M[mn], pv_plan()
             for s in range(33):
