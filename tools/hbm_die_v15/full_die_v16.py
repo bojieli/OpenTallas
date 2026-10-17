@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import gzip
 import hashlib
 import json
 import re
@@ -197,6 +198,117 @@ def rng(ref, ports):
     return i, p, 0, ports[i][p]['bits']
 
 
+def apply_relay_splice(specs, edges, ports, problems):
+    """H-NETLIST/H-ELEM 2026-10-16 (d4b relay stations, tools/hbm_die_v15/relay_contract_d4b.py): rewire every listed
+    bus load bit through its registered station chain. A listed load bit must be driven by the listed driver bit in the
+    contract as built so far (else a problem: the station list is stale against this netlist)."""
+    buses = [b for s in specs for b in s.get('relay_splice', [])]
+    if not buses:
+        return edges
+    rmap = {}                                    # (di, dport, dbit, sink, sport, sbit) -> (bus, j)
+    for b in buses:
+        for j, ((p, k), ls) in enumerate(zip(b['driver_bits'], b['loads'])):
+            for (si, sp, sb) in ls:
+                if b['sink_feed'].get(si) is None and not b.get('pads', {}).get(si):
+                    continue                     # depth-0 sink (cfg_no_pad near the driver): stays a direct edge
+                rmap[(b['driver'], p, k, si, sp, sb)] = (b['bus'], j)
+    drivers = {b['driver'] for b in buses}
+    found = set()
+    out = []
+    for e in edges:
+        if e['src'][0] not in drivers:
+            out.append(e); continue
+        try:
+            si, sp, slo, shi = rng(e['src'], ports); di, dp, dlo, dhi = rng(e['dst'], ports)
+        except KeyError:
+            out.append(e); continue
+        keep = [not ((si, sp, slo + k, di, dp, dlo + k) in rmap) for k in range(shi - slo)]
+        if all(keep):
+            out.append(e); continue
+        for k in range(shi - slo):
+            if not keep[k]:
+                found.add((si, sp, slo + k, di, dp, dlo + k))
+        k = 0
+        while k < len(keep):                     # keep the unrelayed runs of a partially relayed edge
+            if not keep[k]:
+                k += 1; continue
+            k2 = k
+            while k2 + 1 < len(keep) and keep[k2 + 1]:
+                k2 += 1
+            out.append(dict(e, name=f"{e['name']}__kr{k}", src=[si, sp, slo + k, slo + k2 + 1], dst=[di, dp, dlo + k, dlo + k2 + 1],
+                            bits=k2 - k + 1))
+            k = k2 + 1
+    miss = [x for x in rmap if x not in found]
+    if miss:
+        problems.append(f'relay splice: {len(miss)} listed load bits not driven by their listed driver bit in this '
+                        f'netlist (e.g. {miss[:3]})')
+    def runs(seq):
+        """[(key, lane)] -> maximal runs of the same key with consecutive values and lanes"""
+        res = []
+        for key, v, lane in seq:
+            if res and res[-1][0] == key and res[-1][2] + 1 == v and res[-1][4] + 1 == lane:
+                res[-1][2] = v; res[-1][4] = lane
+            else:
+                res.append([key, v, v, lane, lane])
+        return res
+    for b in buses:
+        W, T, n, tag, ck = b['width'], b['tiles'], b['bits'], b['bus'], b['domain']
+        bas = f"d4b relay station chain {tag} ({b['cls']}, {b['driver']}) -- relay_contract_d4b.py"
+        tn = lambda sid, t: f'{tag}_s{sid:03d}_t{t}'
+        def from_driver(dst_tile_name):
+            for t in range(T):
+                seq = [((b['driver_bits'][j][0]), b['driver_bits'][j][1], j - t * W) for j in range(t * W, min(n, (t + 1) * W))]
+                for key, v0, v1, l0, l1 in runs(seq):
+                    out.append(dict(name=f'{dst_tile_name(t)}__drv{l0}', src=[b['driver'], key, v0, v1 + 1],
+                                    dst=[dst_tile_name(t), 'i', l0, l1 + 1], bits=v1 - v0 + 1, clock=ck, basis=bas, region='relays_d4b'))
+        def tile_to_tile(a, c):
+            for t in range(T):
+                out.append(dict(name=f'{c(t)}__i', src=[a(t), 'o'], dst=[c(t), 'i'], bits=W, clock=ck, basis=bas, region='relays_d4b'))
+        for s in b['stations']:
+            if s['parent'] is None:
+                from_driver(lambda t, s=s: tn(s['id'], t))
+            else:
+                tile_to_tile(lambda t, s=s: tn(s['parent'], t), lambda t, s=s: tn(s['id'], t))
+        last_of = {}
+        for snk, feed in b['sink_feed'].items():
+            pn = b.get('pad_names', {}).get(snk, [])
+            prev = (lambda t, f=feed: tn(f, t)) if feed is not None else None
+            for k, stage in enumerate(pn):
+                cur = (lambda t, st=stage: st[t])
+                if prev is None:
+                    from_driver(cur)
+                else:
+                    tile_to_tile(prev, cur)
+                prev = cur
+            last_of[snk] = prev
+        # loads
+        seq = collections.defaultdict(list)
+        for j, ls in enumerate(b['loads']):
+            for (si, sp, sb) in ls:
+                if b['sink_feed'].get(si) is None and not b.get('pads', {}).get(si):
+                    continue
+                seq[si].append((j, sp, sb))
+        for si, lst in seq.items():
+            src = last_of.get(si)
+            if src is None:
+                problems.append(f'relay splice {tag}: sink {si} has no station/pad (depth 0) -- direct edge expected'); continue
+            lst.sort(key=lambda x: (x[0] // W, x[1], x[2]))
+            cur = None
+            for j, sp, sb in lst:
+                t, L = divmod(j, W)
+                if cur and cur[0] == t and cur[1] == sp and cur[3] + 1 == L and cur[5] + 1 == sb:
+                    cur[3] = L; cur[5] = sb
+                else:
+                    if cur:
+                        out.append(dict(name=f'{tag}__ld_{si}_{cur[1]}_{cur[4]}', src=[src(cur[0]), 'o', cur[2], cur[3] + 1],
+                                        dst=[si, cur[1], cur[4], cur[5] + 1], bits=cur[3] - cur[2] + 1, clock=ck, basis=bas, region='relays_d4b'))
+                    cur = [t, sp, L, L, sb, sb]
+            if cur:
+                out.append(dict(name=f'{tag}__ld_{si}_{cur[1]}_{cur[4]}', src=[src(cur[0]), 'o', cur[2], cur[3] + 1],
+                                dst=[si, cur[1], cur[4], cur[5] + 1], bits=cur[3] - cur[2] + 1, clock=ck, basis=bas, region='relays_d4b'))
+    return out
+
+
 STRAP_TARGET_MASTERS = ('ot_static_cmd_target', 'ot_static_program_target')
 UNIV_CAL_DIR = 'rtl/hbm_accel/generic/vm/static/'
 UNIV_CAL_SRC = UNIV_CAL_DIR + 'hfd_hgi_vm_calendar.sv'
@@ -258,14 +370,14 @@ def universal_calendar_fields():
     return [(name, lo, b) for lo, name, b in f]
 
 
-def build(specs_dir, out):
+def build(specs_dir, out, extra=()):
     v15 = json.loads((ROOT / V15).read_text())
     grants = json.loads((ROOT / GRANTS).read_text())
     plan = json.loads((ROOT / PLAN).read_text())
     rtl = Rtl()
     specs = [engine_region()]
-    for f in sorted(Path(specs_dir).glob('*.json')):
-        s = json.loads(f.read_text())
+    for f in sorted(Path(specs_dir).glob('*.json')) + [Path(x) for x in extra]:
+        s = json.loads(gzip.open(f).read() if str(f).endswith('.gz') else f.read_text())   # --extra-spec: revision layers
         s.setdefault('region', f.stem)
         s['_file'] = str(f.relative_to(ROOT)) if f.is_absolute() and str(f).startswith(str(ROOT)) else str(f)
         specs.append(s)
@@ -480,6 +592,7 @@ def build(specs_dir, out):
             else:
                 cut.append(e)
         edges = cut
+    edges = apply_relay_splice(specs, edges, ports, problems)
     # ---------------- bit-level driver map
     drv = {}          # (inst, port, bit) -> (inst, port, bit) | ('PIN', name, bit)
     E = []
@@ -775,8 +888,10 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n\n')[0])
     ap.add_argument('--out', type=Path, default=ROOT / 'results/arch/hbm_die_v16')
     ap.add_argument('--specs', type=Path, default=ROOT / 'tools/hbm_die_v15/v16_specs')
+    ap.add_argument('--extra-spec', action='append', default=[],
+                    help='revision layer spec (e.g. tools/hbm_die_v15/v16_relays/relays_d4b.json.gz: d4b relay stations)')
     a = ap.parse_args()
-    c = build(a.specs, a.out)
+    c = build(a.specs, a.out, a.extra_spec)
     print(json.dumps(c['summary'], indent=1))
     for p in c['problems'][:40]:
         print('PROBLEM', p)

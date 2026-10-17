@@ -109,6 +109,39 @@
   },
   {
    "design": "qwen_rom",
+   "unit": "DVM.HEAD_ROW_ONWARD2 (qfd_xhead_e/w_w130 ONWARD_REG 2)",
+   "group": "DVM.HEAD_ROW_ONWARD2 (qfd_xhead_e/w_w130 ONWARD_REG 2)",
+   "measured": 28.0,
+   "price": 5.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 5.6,
+   "e2e_loss_pct": 1.319,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 252766.0,
+     "added_cycles": 3335.0,
+     "runs_per_token": 145,
+     "critical_runs": 145,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 3335.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 1.319
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/qwen_link_recovery_0253/head_onward2_receipt.json (branch codex/qwen-link-recovery-0253 ecbb50fc0)",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "Q-ELEM option (a), accepted by Q-COMPUTE-DIE 2026-10-16: the 129.6-um head's 0-cycle onward copy failed native capture (243.6/233.7 ps); input+output onward registers add 1 edge per head-row hop (23 hops a side, equalised) = +23 edges on every dependent ME op's x/go broadcast; prod36 full48 HEAD_CHAIN PASS dvm_minus_ref 5 -> 28. Not hideable (the fill carries the previous op's result). Structural removal: fewer hops (e.g. a mid-row root per half or two heads a slot)."
+  },
+  {
+   "design": "qwen_rom",
    "unit": "KV-end d2d credit class 6 (HCTL, 4 credits)",
    "group": "KV_END.class6",
    "measured": 0.4,
@@ -134,6 +167,39 @@
    "date": "2026-10-13",
    "status": "proposed",
    "note": "pop-flop (PQ) kv_end: the 4-credit class 6 is round-trip bound at 0.40 words/cycle, was 0.44 (ratio 1.10, at the limit); class 6 is HCTL (qkd_host -> sequencer: START / CSR / STOP / status, host-driven, CONTRACT.md) and carries 0 words in a token step; the token classes (sbuf, 8+ credits) hold 1 word/cycle, so the measured attention layer step (1,814) does not move"
+  },
+  {
+   "design": "qwen_rom",
+   "unit": "SU.COPY_PINREG",
+   "group": "SU.COPY_PINREG",
+   "measured": 9.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 0.13,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 249755.0,
+     "added_cycles": 324.0,
+     "runs_per_token": 36,
+     "critical_runs": 36,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 324.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.13
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/qwen_su64_pinreg_1016/schedule_delta.json",
+   "evidence_grade": "interim_log",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "UPPER BOUND (Q-B2r 10-16): qfd_sp_su64_sfu PINREG=1 delays copy VM writes +3 edges and back-to-back copy spacing +2 controller edges (tools/qwen_static_schedule/su_pinreg.py, base windows RTL-measured). No native copy calendar exists yet (copy_issue events are fixtures), so the count is bounded at the issue_rom limit of 3 copy controls per stage, each serial before its consuming ME op: 9 cycles on each of 36 layer qkv nodes. SU op path itself +0 (measured). Re-price on the first real copy calendar."
   },
   {
    "design": "qwen_rom",
@@ -385,6 +451,86 @@
     "date": "2026-10-13",
     "by": "owner 2026-10-14 ~08:20 PT adopted the distributed VM (HANDOFF 0aa): the bit-plane central x read is no longer the TP8 design"
    }
+  },
+  {
+   "design": "s81",
+   "unit": "CAPT.CD_PINREG (dsfd_capt_cd PINREG=1: f_st pin registers, capture DONE toggle t_cd +1 ckv = 1.111 ns, charged as +2 stream cycles (ceil) on every field-capture phase)",
+   "group": "CAPT.CD_PINREG",
+   "measured": 2.0,
+   "price": 1.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 2.0,
+   "e2e_loss_pct": 0.07,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 829448.4,
+     "added_cycles": 582.0,
+     "runs_per_token": 337,
+     "critical_runs": 291,
+     "overlapped_runs": 46,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 674.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.07
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1178222.1,
+     "added_cycles": 706.0,
+     "runs_per_token": 313,
+     "critical_runs": 313,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 626.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 16.0,
+     "e2e_loss_pct": 0.06
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/s81_hub_parents_1016/native_audit_capture_1316/native_audit_cd_split1016p.json (job dsfd_capt_cd_split1016p-split1p-4d451d0fb CLOSED TT +342.86/FF +26.90, native PASS 170.1/123.9); RTL ab1d77b6d; capcd_eq PINREG=1 16/16 + capc_split eq 9/9 at a75a12947",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "S-VM 2026-10-16 (S-FUNC not running; priced by S-VM per coordinator). Old cd views failed native capture (214.2 / 203.7 ps on f_st[2] -> ICG ENA); no zero-cycle structure (hold select on arrival edge). Conservative: +2 stream cycles (ceil of 1.333) on EVERY field matvec node incl idx.q/eng.dot/wkv/accept.seed and lm_head, assuming the field sequencer waits on t_cd before the next phase. Exact +1.333 sensitivity: 0.047 % AR / 0.040 % MTP."
+  },
+  {
+   "design": "s81",
+   "unit": "ENGRAM.LKP_STATIC14_ST6 (dsfd_engram_lkp_static14 st6 row-read root hop: +1 on every row beat and status; element 156 -> 157, engine 154 -> 155)",
+   "group": "ENGRAM.LKP_STATIC14_ST6",
+   "measured": 2.0,
+   "price": 1.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 2.0,
+   "e2e_loss_pct": 0.0,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 828866.4,
+     "added_cycles": 0.0,
+     "runs_per_token": 2,
+     "critical_runs": 0,
+     "overlapped_runs": 2,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 2.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.0
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "/home/ubuntu/claude-takeover-20261007/el1015-s81-surx-engram.log",
+   "evidence_grade": "interim_log",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "S-ELEM COMB+ENGRAM 1315 13:35, claude/s81-static14-0600 5fb84abb0 (exact PASS 157, 7 mutants rejected). Engram lookup is lookahead (E# nodes off the token critical path): +1 on E#.rows_allgather costs 0 cycles in AR (no E nodes in the MTP path). Not yet routed. Priced by S81-PRICE helper."
   },
   {
    "design": "s81",
@@ -665,6 +811,100 @@
   },
   {
    "design": "s81",
+   "unit": "HC.RETCOL_A4_PINREG (ot_s81_hc retcol a4: hrq_col pin register +1 per half-octet row (<=22 rows, NG256) + Y_LAG2 +1 + CS_LAG2 +1 per HC chain; fv pin reg with ctfl launching 1 early = 0 net; hdr_in 0; chain throughput unchanged)",
+   "group": "HC.RETCOL_A4_PINREG",
+   "measured": 25.0,
+   "price": 1.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 25.0,
+   "e2e_loss_pct": 0.464,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 832730.4,
+     "added_cycles": 3864.0,
+     "runs_per_token": 161,
+     "critical_runs": 161,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 3864.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.464
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1182148.1,
+     "added_cycles": 4632.0,
+     "runs_per_token": 173,
+     "critical_runs": 173,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 4152.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 96.0,
+     "e2e_loss_pct": 0.392
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "/home/ubuntu/claude-takeover-20261007/el1015-s81-surx-engram.log",
+   "evidence_grade": "interim_log",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "S-ELEM 1315 retcol a4 decision GO-22 (14:36): retcol c2/c3 a3 CLOSED but native capture 276.8/299.8 (hrq_col same-cycle bank round-trip merge). Charged +24 per HC chain on EVERY hc_pre AND hc_post token-path node (upper: one chain traversal per HC job, no overlap credit; hc_pre only would be 0.234 % AR / 0.197 % MTP). RTL a4 not yet built: re-price on the measured exact HC gate cycles when it lands. Priced by S81-PRICE helper (S-FUNC not running)."
+  },
+  {
+   "design": "s81",
+   "unit": "HC.RETCOL_YCS_LAG1 (four-column return captures y beat and cs one cycle later, ctrs Y_LAG/CS_LAG 1)",
+   "group": "HC.RETCOL_YCS_LAG1",
+   "measured": 3.0,
+   "price": 1.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 3.0,
+   "e2e_loss_pct": 0.019,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 829026.4,
+     "added_cycles": 160.0,
+     "runs_per_token": 80,
+     "critical_runs": 80,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 160.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.019
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1177708.1,
+     "added_cycles": 192.0,
+     "runs_per_token": 86,
+     "critical_runs": 86,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 172.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 4.0,
+     "e2e_loss_pct": 0.016
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "/home/ubuntu/claude-takeover-20261007/el1015-s81-surx-engram.log",
+   "evidence_grade": "interim_log",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "S-ENGRAM+NORM HC-HOMES 10-16 10:22: exact HC gate program 4695 -> 4700 (+5 over 20 jobs incl 4 POST), lag-only control PASS 0/1940. Charged +2 (y +1, cs +1, summed) on every hc_post node (upper vs measured ~1.25 per POST). Previously unpriced. Priced by S81-PRICE helper."
+  },
+  {
+   "design": "s81",
    "unit": "MIX4.BANDED_COPY (dsfd_engram_mix4_banded: chunk8->sum band-relay stage, MIX4 pin-to-pin 810 -> 811; write span 640..799; RS/VM_LAT/BC/WRITE_COMMIT unchanged)",
    "group": "MIX4.BANDED_COPY",
    "measured": 811.0,
@@ -709,6 +949,53 @@
    "date": "2026-10-16",
    "status": "proposed",
    "note": "S-ENGRAM+NORM MIX4-PARENT claude/s81-mix4-parent-0600 1ce30c65c/e1a3198b2/880dc9d88: exact 20480 w/640 wr/4161 rd PASS at 811 cycles (plain + VM-banked), MUT1/26/27/28 rejected; 0 TT-negative joins (was 248, worst -146.99 ps). Priced +1 on every eng.gate/hh/add node (upper). Compiler: die_layer_stim --mix-p2p 811 once the banded cluster is on main."
+  },
+  {
+   "design": "s81",
+   "unit": "MIX4.RQ_DESC_PINREG (ot_s81_mx4_rq desc_rq/desc_row pin register: +1 descriptor-read cycle; flat MIX4 VML17/WCL12 878 -> 879)",
+   "group": "MIX4.RQ_DESC_PINREG",
+   "measured": 2.0,
+   "price": 1.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 2.0,
+   "e2e_loss_pct": 0.0,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 828870.4,
+     "added_cycles": 4.0,
+     "runs_per_token": 6,
+     "critical_runs": 4,
+     "overlapped_runs": 2,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 6.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.0
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1177520.1,
+     "added_cycles": 4.0,
+     "runs_per_token": 4,
+     "critical_runs": 4,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 4.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.0
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/s81_mix4_banded_1016/native_rq_audit_p17b_1016.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "S-ELEM COMB+ENGRAM 1315: RTL d11a778b4, rq0/rq1 p17c CLOSED + native PASS, main 9b53d0594; bench flat 879 PASS / MUT2 FAIL. Banded MIX4 (870) does not instantiate ot_s81_mx4_rq. Priced +1 on every eng.gate/hh/add node (upper, same method as MIX4.BANDED_COPY). Priced by S81-PRICE helper."
   },
   {
    "design": "s81",
@@ -1197,6 +1484,43 @@
    "status": "proposed",
    "note": "per-token attention cycles at measured spans (QK 547/411, PV 808/580 per T640/T128 record, exposed) vs A price 339.144/147.144 a record (38 T640 + 2 T128 layers); exposed -4.57 % e2e (2,024.7 vs 2,121.8 tok/s), KV-prefetched -3.22 % (2,053.5). Structural: dedicated ATT tiles retired (111.1 mm2 / ~161 W freed). Spans are component-shape (r6 bench_r6_canonical, 12/12 gates); SM-element bench r2 in progress; first access, publish, cross-SM merge MODEL. qwen_ar row pending the r2 Qwen measurement (standard 128-B rows + in-SM fold). NOTE r25gq proposed total is already far over 15 % from SM.MATVEC/IDX rows (owner decision needed independent of this row).",
    "share_basis": "modelled"
+  },
+  {
+   "design": "r25gq",
+   "unit": "COLL quadrant hard_v5 V6 issue timing (host launch -> first uop effect 5 -> 9 edges; V5 +3 plus the V6 ctl product/combine stage +1)",
+   "group": "COLL.HARD_V5_ISSUE",
+   "measured": 9.0,
+   "price": 5.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.8,
+   "e2e_loss_pct": 0.331,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "S2 schedule, fixed cycles added to every record of the op",
+     "base_cycles": 576702.4,
+     "cycles": 578611.6,
+     "added_cycles": 1909.2,
+     "program_records": 642,
+     "added_cycles_per_record": 4.0,
+     "e2e_loss_pct": 0.248
+    },
+    "qwen_ar": {
+     "model": "S2 schedule, fixed cycles added to every record of the op",
+     "base_cycles": 1269120.1,
+     "cycles": 1269412.1,
+     "added_cycles": 292.0,
+     "program_records": 3,
+     "added_cycles_per_record": 3.0,
+     "e2e_loss_pct": 0.023
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/hbm_coll_hard_v5_1045/bench_q2_v6 (claude/hnl-coll-ctl-1045; V5 receipt bench_q2_5bb671b57)",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "H-NETLIST/COLL 1045 V5 issue timing of the hard-hierarchy COLL quadrant (ot_hfd_coll_q{2,3}_hard_v5): HOST frame capture +1 at the fj pin registers, uop stream +2 for the pipelined iteration products (ctl gate in->reg -959 ps on the one-cycle 32x16 multiply), so every issue-path output is +3 edges vs host_v4 (lockstep bench tb_hgi_coll_q_hard_v5 SH=3/SHP=1, q2 gate PASS 5bb671b57). V6 (H-ELEM 14:20 accepted +1: ctl3 gate combine/field adders -322 ps, 16x8 stage ~845 ps). Charged conservatively as 4 fixed cycles on EVERY COLL record of the S2 schedule (every record treated as its own programme launch on the critical path; one launch a programme would cost ~3 cycles a token). Programme frames are +1 but frame gaps are relative (unchanged); child faults +1 are exceptional. Compiler constants: tools/hbm_coll_static/parent_timing.py (hard_v5 selectable; host_v4 unchanged; V4 constants on hard_v5 FAIL the lockstep check)."
   },
   {
    "design": "r25gq",
@@ -1767,33 +2091,33 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 1.065,
-   "proposed_pct": 4.331,
-   "accepted_plus_proposed_pct": 5.396,
+   "proposed_pct": 5.78,
+   "accepted_plus_proposed_pct": 6.845,
    "limit_pct": 15.0,
    "accepted_rows": 4,
-   "proposed_rows": 7,
+   "proposed_rows": 9,
    "headroom_pct": 13.935,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
   },
   "s81": {
    "accepted_pct": 23.391,
-   "proposed_pct": 1.416,
-   "accepted_plus_proposed_pct": 24.807,
+   "proposed_pct": 1.969,
+   "accepted_plus_proposed_pct": 25.36,
    "limit_pct": 15.0,
    "accepted_rows": 11,
-   "proposed_rows": 5,
+   "proposed_rows": 10,
    "headroom_pct": -8.391,
    "owner_exception_rows": 2,
    "over_limit_by_owner_exception": true
   },
   "r25gq": {
    "accepted_pct": 0.895,
-   "proposed_pct": 113.581,
-   "accepted_plus_proposed_pct": 114.476,
+   "proposed_pct": 113.912,
+   "accepted_plus_proposed_pct": 114.807,
    "limit_pct": 15.0,
    "accepted_rows": 1,
-   "proposed_rows": 20,
+   "proposed_rows": 21,
    "headroom_pct": 14.105,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false

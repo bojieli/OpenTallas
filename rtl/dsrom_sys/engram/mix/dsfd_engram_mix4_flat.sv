@@ -194,12 +194,18 @@ module ot_s81_mx4_rq #(parameter integer VM_LAT=1, SUP=0)(input wire ck,input wi
  reg [1:0] rs;always @(posedge ck or negedge rst)if(!rst)rs<=0;else rs<={rs[0],1'b1};
  wire rn=rs[1];
  reg [VM_LAT+1:0] dl,vl;
+ // descriptor-read pin register (ENGRAM-3 10-16, native capture: the scalar desc_rq fanned out to the 15-bit injection
+ // mux + delay line + clash check, 200-212 ps > 190 at the pin): desc_rq/desc_row are captured at the pin first; the
+ // descriptor request leaves one edge later (+1 cycle on the descriptor read only) and dtag stays aligned (dl takes dq_q).
+ reg dq_q;reg [13:0] dr_q;
+ always @(posedge ck or negedge rn)if(!rn)dq_q<=0;else dq_q<=desc_rq;
+ always @(posedge ck)dr_q<=desc_row;
  always @(posedge ck or negedge rn)if(!rn)begin rq_v<=0;rq_row<=0;dl<=0;vl<=0;fault<=0;end else begin
   rq_v<=u_v;rq_row<=u_row;
   if(SUP!=0&&u_vtag)begin rq_v[1]<=0;rq_v[2]<=0;end
-  if(desc_rq)begin rq_v[0]<=1'b1;rq_row[0+:14]<=desc_row;end
-  fault<=desc_rq&&u_v[0];
-  dl<={dl[VM_LAT:0],desc_rq};vl<={vl[VM_LAT:0],u_vtag};
+  if(dq_q)begin rq_v[0]<=1'b1;rq_row[0+:14]<=dr_q;end
+  fault<=dq_q&&u_v[0];
+  dl<={dl[VM_LAT:0],dq_q};vl<={vl[VM_LAT:0],u_vtag};
  end
  assign dtag=dl[VM_LAT+1];assign vtag=vl[VM_LAT+1];
 endmodule

@@ -1,0 +1,111 @@
+{
+  "collected_at": "2026-10-16T15:57:38.186408-07:00",
+  "qualification": false,
+  "purpose": "Recover preserved source-exact programmes and gates; no rerun, duplicate submission or job kill",
+  "full512_collective": {
+    "source": "9b338b3c2",
+    "host": "ot-pve1",
+    "unit": "oth-ubuntu-2143611-1792168025",
+    "pid": 2143611,
+    "remote": "/home/ubuntu/hbm-su-collective-9b338",
+    "state": "ACTIVE C++ compile, completed objects preserved",
+    "source_verification": "92 of 92 immutable git and remote source SHA256 match original manifest",
+    "expected_workload": {
+      "lanes": 512,
+      "store_sram": 3072,
+      "serial_edges": 7120,
+      "stream_edges": 9495,
+      "vm_writes": 135184,
+      "scalars": 41
+    },
+    "expected_is_not_measurement": true,
+    "pending": [
+      "positive.log native exact workload",
+      "CARRY_TAG actual negative",
+      "BRIDGE_LEAF positive",
+      "ot-run final RAN/exit"
+    ]
+  },
+  "original_pinreg": {
+    "source": "32b85075e",
+    "host": "ot-epyc4",
+    "parent_pid": 2505856,
+    "remote": "/srv/opentallas-scratch/claude/hsu-pinreg-collport0-0630/out",
+    "positive": "previous receipt5e813c058",
+    "mutants_collected": {
+      "DATA": 14,
+      "ADDR": 6172,
+      "RF": 1500
+    },
+    "mutants_pending": [
+      "RED currently active",
+      "CAL",
+      "EPOCH"
+    ],
+    "failures_are_actual_numeric_dut_checks": true
+  },
+  "pslice": {
+    "source": "b82db77f9",
+    "kit": "d8380dcf8",
+    "grant": "92282bfcb",
+    "gate_parent": 3076005,
+    "host": "ot-agidock128",
+    "remote": "/srv/opentallas-scratch/claude/ref_gate/hbm_su_pslice_1016-20261016-144213",
+    "state": "ACTIVE GRT extra iterations",
+    "actual_sram_per_leaf": 98,
+    "actual_total_sram": 392,
+    "prior_monolithic_sram": 302,
+    "cost_added_sram": 90,
+    "root_plus_pin_depth": 2,
+    "compiler_start_advance_edges": 2,
+    "tt_boundary_R_ps": 1489.2,
+    "tt_boundary_spread_ps": 27.6,
+    "ff_boundary_R_ps": 1190.8,
+    "ff_boundary_spread_ps": 79.3,
+    "tt_all_sinks": 3021,
+    "ff_all_spread_ps": 102.1,
+    "macro_clock_flag": true,
+    "macro_clock_cause": "FF SRAM arrivals36..57ps after register mean exceed30ps policy; requires structural clock fix, no waiver",
+    "looked_images": [
+      "pslice_floorplan.png",
+      "pslice_density.png"
+    ],
+    "actual_layout": "98 macros in7 columns x14 abutted rows, sparse channels, outline fill55%; post-place std area11553.2um2 versus synthesis4744.0um2, macro381374.5um2",
+    "gated_pin_native_and_route_qualification": "OPEN"
+  },
+  "sfucore_k7": {
+    "source": "006229fd4",
+    "kit": "ddb2eaccc",
+    "gate_parent": 3650622,
+    "host": "ot-epyc4",
+    "remote": "/srv/opentallas-scratch/claude/ref_gate/hbm_sfucore_split2-20261016-152251",
+    "state": "ACTIVE floorplan after completed synthesis",
+    "bench_actual": "6681edge positive, skip_pinreg and clkpw mutants reject",
+    "positive_wrapper_note": "k7_pos.out simulation and script_rc0 but outer ot-run exit1; preserve discrepancy and use canonical source-exact gate before submission",
+    "d4c_geometry_grant": "383c865b2",
+    "native_or_rate_qualified": false,
+    "adoption_blocker": "Wface lane traffic detour needs actual relay homes and exact compiler latency; new clk_pw/clk_pe must bind source coherent phi-R"
+  },
+  "store_r6": {
+    "source": "3ebbcd421",
+    "kit": "472fd4b09",
+    "gate_parent": 3658759,
+    "host": "ot-agidock128",
+    "remote": "/srv/opentallas-scratch/claude/ref_gate/hbm_sfu_programme_store_r6_1016-20261016-152427",
+    "state": "ACTIVE CTS hold repair",
+    "bench_actual": "6683edge positive, flip and skip_pinreg mutants reject",
+    "invocation_edges": 4,
+    "prior_invocation_edges": 3,
+    "cost_added_invocation_edges": 1,
+    "reset_relays": 3,
+    "last_observation": "hold repair remains negative (~-325ps), buffers >11600; preserve progress and terminal diagnostics before structural successor",
+    "native_or_route_qualified": false
+  },
+  "next_actions": [
+    "Collect all existing gate parents and final output without duplicate starts or killing progress",
+    "If macro FF lateness persists at terminal gate, correct shared macro/register clock topology with measured per-corner evidence before successor",
+    "If r6 hold repair remains failed, inspect actual endpoint paths ord1 data/control pipeline and account for any added edges",
+    "Use literal d4c pin and station contract before adopting k7 Wface paths; update compiler/static schedule and model with exact relay counts",
+    "Keep physical epoch/production throughput false until native full composition and die pair checks pass"
+  ]
+}

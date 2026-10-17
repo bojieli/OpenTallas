@@ -1,0 +1,39 @@
+ot-run: load hold: every qualifying host has load1 > 1.5 x cores (ot-pve1 71/28); waiting
+ot-run: load hold released after 61 s
+ot-run: ot-epyc4       admits  -177 GB (avail 50, growth 73, headroom 48, waiters 10/172 GB) load 42/128 running 20 disk 537 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    19 GB (avail 56, growth 32, headroom 24, waiters 0/0 GB) load 40/64 running 9 disk 238 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-4131388-1792191409 after 0 s
+PASS   rp=0 base seed=1: DIE_WFC_RETURN256_EQ PASS rpad=0 seed=1 stream_checks=4800 serial_checks=3600 returns=1520 both=594 fault_epochs=8/12 return_fault_only=4 clean=4
+PASS   rp=0 base seed=2: DIE_WFC_RETURN256_EQ PASS rpad=0 seed=2 stream_checks=4800 serial_checks=3600 returns=1513 both=615 fault_epochs=8/12 return_fault_only=4 clean=4
+PASS   rp=0 base seed=3: DIE_WFC_RETURN256_EQ PASS rpad=0 seed=3 stream_checks=4800 serial_checks=3600 returns=1484 both=592 fault_epochs=8/12 return_fault_only=4 clean=4
+tools/s81_wfc_return256/die_eq_gate.sh: line 20: 4132553 Aborted                    (core dumped) "$d/obj/Vtb_die_wfc_return256_eq" +seed=$seed > "$d/seed$seed.log" 2>&1
+FAILS  rp=0 S81_RETURN256_MUT_HIGH seed=1 (required): [32528] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t39 ref v1 new v1
+tools/s81_wfc_return256/die_eq_gate.sh: line 20: 4132711 Aborted                    (core dumped) "$d/obj/Vtb_die_wfc_return256_eq" +seed=$seed > "$d/seed$seed.log" 2>&1
+FAILS  rp=0 S81_RETURN256_MUT_HIGH seed=2 (required): [30860] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t37 ref v1 new v1
+tools/s81_wfc_return256/die_eq_gate.sh: line 20: 4132937 Aborted                    (core dumped) "$d/obj/Vtb_die_wfc_return256_eq" +seed=$seed > "$d/seed$seed.log" 2>&1
+FAILS  rp=0 S81_RETURN256_MUT_HIGH seed=3 (required): [31694] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t38 ref v1 new v1
+tools/s81_wfc_return256/die_eq_gate.sh: line 20: 4134018 Aborted                    (core dumped) "$d/obj/Vtb_die_wfc_return256_eq" +seed=$seed > "$d/seed$seed.log" 2>&1
+FAILS  rp=0 S81_RETURN256_MUT_TAIL seed=1 (required): [31694] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t38 ref v0 new v1
+tools/s81_wfc_return256/die_eq_gate.sh: line 20: 4134093 Aborted                    (core dumped) "$d/obj/Vtb_die_wfc_return256_eq" +seed=$seed > "$d/seed$seed.log" 2>&1
+FAILS  rp=0 S81_RETURN256_MUT_TAIL seed=2 (required): [30026] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t36 ref v0 new v1
+tools/s81_wfc_return256/die_eq_gate.sh: line 20: 4134205 Aborted                    (core dumped) "$d/obj/Vtb_die_wfc_return256_eq" +seed=$seed > "$d/seed$seed.log" 2>&1
+FAILS  rp=0 S81_RETURN256_MUT_TAIL seed=3 (required): [30860] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t37 ref v0 new v1
+PASS   rp=2 base seed=1: DIE_WFC_RETURN256_EQ PASS rpad=2 seed=1 stream_checks=4800 serial_checks=3600 returns=1501 both=589 fault_epochs=8/12 return_fault_only=4 clean=4
+PASS   rp=2 base seed=2: DIE_WFC_RETURN256_EQ PASS rpad=2 seed=2 stream_checks=4800 serial_checks=3600 returns=1500 both=612 fault_epochs=8/12 return_fault_only=4 clean=4
+PASS   rp=2 base seed=3: DIE_WFC_RETURN256_EQ PASS rpad=2 seed=3 stream_checks=4800 serial_checks=3600 returns=1472 both=587 fault_epochs=8/12 return_fault_only=4 clean=4
+tools/s81_wfc_return256/die_eq_gate.sh: line 20: 4135030 Aborted                    (core dumped) "$d/obj/Vtb_die_wfc_return256_eq" +seed=$seed > "$d/seed$seed.log" 2>&1
+FAILS  rp=2 S81_RETURN256_MUT_HIGH seed=1 (required): [35864] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t43 ref v1 new v1
+tools/s81_wfc_return256/die_eq_gate.sh: line 20: 4135151 Aborted                    (core dumped) "$d/obj/Vtb_die_wfc_return256_eq" +seed=$seed > "$d/seed$seed.log" 2>&1
+FAILS  rp=2 S81_RETURN256_MUT_HIGH seed=2 (required): [34196] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t41 ref v1 new v1
+tools/s81_wfc_return256/die_eq_gate.sh: line 20: 4135340 Aborted                    (core dumped) "$d/obj/Vtb_die_wfc_return256_eq" +seed=$seed > "$d/seed$seed.log" 2>&1
+FAILS  rp=2 S81_RETURN256_MUT_HIGH seed=3 (required): [35030] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t42 ref v1 new v1
+tools/s81_wfc_return256/die_eq_gate.sh: line 20: 4135820 Aborted                    (core dumped) "$d/obj/Vtb_die_wfc_return256_eq" +seed=$seed > "$d/seed$seed.log" 2>&1
+FAILS  rp=2 S81_RETURN256_MUT_TAIL seed=1 (required): [35030] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t42 ref v0 new v1
+tools/s81_wfc_return256/die_eq_gate.sh: line 20: 4135927 Aborted                    (core dumped) "$d/obj/Vtb_die_wfc_return256_eq" +seed=$seed > "$d/seed$seed.log" 2>&1
+FAILS  rp=2 S81_RETURN256_MUT_TAIL seed=2 (required): [33362] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t40 ref v0 new v1
+tools/s81_wfc_return256/die_eq_gate.sh: line 20: 4136067 Aborted                    (core dumped) "$d/obj/Vtb_die_wfc_return256_eq" +seed=$seed > "$d/seed$seed.log" 2>&1
+FAILS  rp=2 S81_RETURN256_MUT_TAIL seed=3 (required): [34196] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t41 ref v0 new v1
+DIE_EQ_GATE rc=0
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-4131388-1792191409): exit 0

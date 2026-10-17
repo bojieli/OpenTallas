@@ -13,7 +13,8 @@ CBD + E(k, b) + a, written to x-store address ((k mod 64) * 2 + a) + x_xb, group
 
 XW_ADD (H-SM 2026-10-15, owner rule 19:50 accepted by the coordinator): the hardened-leaf cluster
 ot_hgi_sm_xload_static_cl2 registers every leaf pin, which adds exactly 2 fixed edges to EVERY xw beat and x_done of both
-formats (raw rr pin capture + egress pin capture); VM read-group issue edges (rq) are unchanged.  Pass xw_add=2 for cl2.
+formats (raw rr pin capture + egress pin capture); VM read-group issue edges (rq) are unchanged.  cl2g (H-SM 10-16, ctlw
+f20a route TT -58.79 on rotation mux -> l_d_o pin) adds one landing stage L1: pass xw_add=3 (XW_ADD_CL2) for cl2.
 """
 from __future__ import annotations
 import sys
@@ -21,7 +22,7 @@ import sys
 XC = 3152
 PMAX = 8
 CBD = 27          # block-dot: command edge -> xw pins of a pair decided at E = 0
-XW_ADD_CL2 = 2    # ot_hgi_sm_xload_static_cl2: every xw beat / x_done + 2 edges
+XW_ADD_CL2 = 3    # ot_hgi_sm_xload_static_cl2: every xw beat / x_done + 3 edges (2 pin registers + cl2g L1 landing stage, H-SM 10-16)
 
 
 def nb_of(p: int) -> int:
@@ -68,7 +69,7 @@ if __name__ == "__main__":
            (1, 1, 1344, 90), (2, 5, 3296, 377), (1, 4, 5408, 507), (2, 1, 5536, 170), (1, 8, 1568, 314), (2, 1, 4064, 122)]
     bad = [(f, p, k, beats(p, f, k)[-1][0], e) for f, p, k, e in chk if beats(p, f, k)[-1][0] != e]
     # cl2 lock bench (results/hbm_sm_attention_1015/xload_cl2_bench/lock_pos.log): the same commands, + XW_ADD_CL2
-    cl2 = [604, 300, 109, 379, 109, 172, 92, 379, 509, 172, 316, 124]     # measured cl2 last-beat edges, cmds 12..23
+    cl2 = [605, 301, 110, 380, 110, 173, 93, 380, 510, 173, 317, 125]     # measured cl2g last-beat edges, cmds 12..23 (H-SM 10-16 F20/CL2 lock benches)
     bad += [("cl2", f, p, k, e2) for (f, p, k, _e), e2 in zip(chk, cl2) if beats(p, f, k, xw_add=XW_ADD_CL2)[-1][0] != e2]
     print("model vs bench last-beat edges (cl and cl2):", "PASS" if not bad else f"FAIL {bad}")
     sys.exit(1 if bad else 0)

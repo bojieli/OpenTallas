@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_kvn_ctx_cal",
+ "enable": false,
+ "reason": "The RTL registers every input at its pin (rn, cs_q, lay_q, tag_q, gen_q) and every output is a flop (compiled_identity / compiled_generation); the fixed latencies (cohort 2, cal_start 3 edges) are the ones tools/qwen_kv_die/kvn_ctx_golden.py checks against the link compiler's KVN windows (>= 645 edges margin). A flow-inserted second stage is not needed."
+}

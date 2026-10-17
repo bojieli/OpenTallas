@@ -22,6 +22,7 @@ Outputs: manifest.json (trees, cells, topology parent map, leaves, per-iteration
 import argparse
 from collections import defaultdict
 import json
+import math
 import os
 from pathlib import Path
 import statistics
@@ -92,7 +93,7 @@ def esc(n):
 
 def pin_key(p):
     inst, port = p.rsplit('/', 1)
-    return inst, port[:-3] if port.endswith('[0]') else port
+    return inst, port
 
 
 class Die:
@@ -101,9 +102,19 @@ class Die:
         import odb
         self.odb = odb
         self.tech = Tech()
-        for lib in Path(a.libs).read_text().split():
-            self.tech.readLiberty(lib)
-        self.design = Design(self.tech)
+        self.two = bool(getattr(a, 'libs_ff', None))
+        if self.two:
+            # TWO-CORNER mode: TT and FF libs in one STA; a pin's arrival_max = TT late (setup), arrival_min = FF
+            # early (hold), so one measurement balances both sign-off corners (TT setup / FF hold, owner 10-07)
+            self.design = Design(self.tech)
+            self.design.evalTclString('define_corners tt ff')
+            for c, lp in (('tt', a.libs), ('ff', a.libs_ff)):
+                for lib in Path(lp).read_text().split():
+                    self.design.evalTclString(f'read_liberty -corner {c} {lib}')
+        else:
+            for lib in Path(a.libs).read_text().split():
+                self.tech.readLiberty(lib)
+            self.design = Design(self.tech)
         log('read_db', a.odb)
         self.design.readDb(a.odb)
         self.block = self.design.getBlock()
@@ -150,10 +161,21 @@ def load_targets(path):
 
     def v(m, p):
         r = km.get(m, {})
-        pp = r.get('insertion_per_clock_pin_ps', {})
-        if p in pp:
-            return pp[p]
-        return r.get('insertion_in_arcs_ps') or [0.0, 0.0, 0.0]
+        candidates = (p, p[:-3] if p.endswith('[0]') else p + '[0]')
+        value = None
+        for field in ('physical_insertion_per_clock_pin_ps', 'insertion_per_clock_pin_ps'):
+            pp = r.get(field, {})
+            found = next((key for key in candidates if key in pp), None)
+            if found is not None:
+                value = pp[found]
+                break
+        if value is None:
+            value = r.get('insertion_in_arcs_ps')
+        if value is None:
+            raise ValueError(f'missing native insertion R for {m}/{p} in {path}')
+        if not isinstance(value, list) or len(value) != 3 or any(not isinstance(x, (int, float)) or not math.isfinite(x) for x in value):
+            raise ValueError(f'invalid insertion R for {m}/{p}: {value!r}')
+        return value
     return v
 
 
@@ -296,86 +318,145 @@ def build(a):
         rec['parent'].update(b_.parent)
         for lb, L in b_.leaves.items():
             rec['leaves'][lb] = dict(tree=t['name'], pins=L['pins'], key=L['key'])
+    # ROOT BUFFER: a root (PLL / generator output / region root pin) drives ONE BUFx24 next to it, which drives
+    # the trees' first cells (HBM t4: the PLL pin driving five trunk inputs measured 351-388 ps slew > 320 limit).
+    for root, ts in by_root.items():
+        root_it = blk.findITerm(root)
+        rnet = root_it.getNet()
+        loads = [x for x in rnet.getITerms() if x.getIoType() == 'INPUT']
+        if not loads:     # every root (also a single-tree root such as an S81 cfifo co: t3b T1/A slew 1.1 ns
+            continue      # from co driving 350-460 um to the first trunk repeater) drives one buffer beside it
+        rb = root_it.getBBox()
+        rn = f"dc_root_{ts[0]['name']}"
+        ri = mk(rn, rt.BUF, (rb.xMin() + rb.xMax()) / 2 / u, (rb.yMin() + rb.yMax()) / 2 / u)
+        insts[rn] = ri
+        rec['cell_tree'][rn] = ''
+        nn = odb.dbNet.create(blk, f'n_{rn}')
+        nn.setSigType('CLOCK')
+        for x in loads:
+            x.disconnect()
+            x.connect(nn)
+            c = x.getInst().getName()
+            if rec['parent'].get(c) == root:
+                rec['parent'][c] = rn
+        ri.findITerm('Y').connect(nn)
+        ri.findITerm('A').connect(rnet)
+        rec['parent'][rn] = root
+        log('root buffer', rn, 'drives', len(loads), 'tree inputs of', root)
     log('instantiated', len(rec['cells']), 'cells')
     D.setup_sta(clocks, spec.get('rc_layer', 'M8'))
-    # measured trim
-    pad_ps = rt.PAD_PS
+    # measured trim.  Two delay elements: PAD (BUFx12f stacked on one site: gate delay, FF/TT ~0.77) and WPAD (BUFx24
+    # local/far buffer PAIRS WPAD_UM apart: buffered wire like the tree's own repeater stages, FF/TT ~0.84).  One corner: PAD only.
+    # Two corners: each leaf's (TT, FF) deficit is solved as nP PADs + nW WPADs, so the trim matches the tree at BOTH
+    # sign-off corners (HBM t4: PAD-only group offsets of up to 8.5 ns balanced TT to 75 ps but left FF at 685 ps).
+    two = D.two
+    # W seed from native_wire_units.py TT/FF placed-cell measurement; contextual calibration follows.
+    el = dict(P=[rt.PAD_PS, rt.PAD_PS * 0.77], W=[250.0, 212.0])     # seeds [tt, ff] ps per element; measured below
+    cellof = dict(P=rt.PAD, W=rt.BUF)
     leaf_pads = defaultdict(int)
-    pad_n = 0
+    pad_n = defaultdict(int)
     chains = []
+    WPAD_UM = 180.0
+    RAISE_CAP_PS = 300.0
+    DAMP = 0.9     # approach the target from below: an overshooting leaf would raise the whole group's target
+    gtarget = {}
     for it_ in range(a.iters + 1):
         arr = D.measure(sorted(sink_pins), out / f'arr_iter{it_}.tsv')
-        flop = {}
+        flop, flopf = {}, {}
         for p, s in sink_pins.items():
             if arr.get(p, (None,))[0] is not None:
                 flop[p] = arr[p][0] + s['R'][2]
-        stats = {}
-        deficit = {}
-        by_tree = defaultdict(dict)
+                if two and arr[p][1] is not None:
+                    flopf[p] = arr[p][1] + s['R'][1]
+        by_tree, by_treef = defaultdict(dict), defaultdict(dict)
         for lb, L in rec['leaves'].items():
             v = [flop[p] for p in L['pins'] if p in flop]
             if v:
                 by_tree[L['tree']][lb] = statistics.mean(v)
-        # balance groups: trees whose seams are timed synchronously (e.g. S81 stream 833.3 / serial 1111.1 ps, fixed
-        # 3:4 schedule on the common 3.333 ns epoch) share ONE flop-arrival target, so a seam pair sees the same phase
-        gT = defaultdict(float)
-        for tn, lv in by_tree.items():
-            k = tree_group.get(tn, tn)
-            gT[k] = max(gT[k], max(lv.values()))
-        root_deficit = {}
-        for tn, lv in by_tree.items():
-            Tt = max(lv.values())
-            # group alignment goes on the tree's COMMON path (pads before its top buffer), leaf trim only within the
-            # tree: a serial tree 1 ns faster than its seam partner must not carry 1 ns of pads at every leaf
-            root_deficit[tn] = gT[tree_group.get(tn, tn)] - Tt
+            v = [flopf[p] for p in L['pins'] if p in flopf]
+            if v:
+                by_treef[L['tree']][lb] = statistics.mean(v)
+        # balance groups: trees whose seams are timed synchronously (S81 stream 833.3 / serial 1111.1 ps, fixed 3:4
+        # schedule on the common 3.333 ns epoch; HBM serial:stream) share ONE flop-arrival target per corner
+        stats, gstats = {}, {}
+        for tn in by_tree:
             pv = [flop[p] for p in flop if sink_pins[p]['tree'] == tn]
             pa = [arr[p][0] for p in flop if sink_pins[p]['tree'] == tn]
             stats[tn] = dict(flop_spread=round(max(pv) - min(pv), 1), pin_min=round(min(pa), 1), pin_max=round(max(pa), 1),
-                             flop_max=round(max(pv), 1), group_offset=round(root_deficit[tn], 1))
-            for lb, m in lv.items():
-                deficit[lb] = Tt - m
-        gstats = {}
-        for tn, st in stats.items():
+                             flop_max=round(max(pv), 1))
+            if two:
+                fv = [flopf[p] for p in flopf if sink_pins[p]['tree'] == tn]
+                stats[tn].update(ff_spread=round(max(fv) - min(fv), 1), ff_max=round(max(fv), 1))
             k = tree_group.get(tn)
             if k:
-                g_ = gstats.setdefault(k, dict(flop_min=1e18, flop_max=-1e18))
-                pv = [flop[p] for p in flop if sink_pins[p]['tree'] == tn]
+                g_ = gstats.setdefault(k, dict(flop_min=1e18, flop_max=-1e18, ff_min=1e18, ff_max=-1e18))
                 g_['flop_min'] = min(g_['flop_min'], min(pv)); g_['flop_max'] = max(g_['flop_max'], max(pv))
+                if two:
+                    g_['ff_min'] = min(g_['ff_min'], min(fv)); g_['ff_max'] = max(g_['ff_max'], max(fv))
         for g_ in gstats.values():
             g_['flop_spread'] = round(g_['flop_max'] - g_['flop_min'], 1)
-        rec['iterations'].append(dict(iter=it_, pad_ps=round(pad_ps, 2), pads=pad_n, trees=stats, groups=gstats))
-        worst = max([s['flop_spread'] for s in stats.values()] + [g_['flop_spread'] for g_ in gstats.values()], default=0)
+            g_['ff_spread'] = round(g_['ff_max'] - g_['ff_min'], 1) if two else None
+        rec['iterations'].append(dict(iter=it_, elements=json.loads(json.dumps(el)), pads=dict(pad_n), trees=stats, groups=gstats))
+        sp = [s_['flop_spread'] for s_ in stats.values()] + [g_['flop_spread'] for g_ in gstats.values()]
+        if two:
+            sp += [s_['ff_spread'] for s_ in stats.values()] + [g_['ff_spread'] for g_ in gstats.values()]
+        worst = max(sp, default=0)
         cols = [v['flop_spread'] for k, v in stats.items() if k.startswith('col_')]
-        log('iter', it_, 'pad_ps', round(pad_ps, 1), 'pads', pad_n, 'worst flop spread', worst, 'groups', json.dumps(gstats),
+        log('iter', it_, 'elements', json.dumps(el), 'pads', dict(pad_n), 'worst spread', worst, 'groups', json.dumps(gstats),
             json.dumps({k: v for k, v in stats.items() if not k.startswith('col_')}),
             'col trees', len(cols), 'col flop spread max', max(cols, default=None))
         if it_ == a.iters or worst <= a.tol:
             break
-        # calibrate the pad delay on chains inserted last iteration, measured DIRECTLY (arrival at the chain's last pad
-        # output minus its driver's output), so a common-path shift of the whole tree cannot pollute it
+        # element delays measured IN CONTEXT on the nodes trimmed last iteration: (node output now - before) minus
+        # (its upstream driver output now - before), divided by the elements added.  This includes the wire the
+        # elements add in front of the node, and a common-path shift of the whole tree cancels.
+        key = lambda d_: f'{d_}/Y' if d_ in insts else d_
         if chains:
-            pm = []
-            for first, last, k, drv in chains:
-                pm += [f'{last}/Y', f'{drv}/Y' if drv in insts else drv]
+            pm = sorted({q for c in chains for q in (f'{c[0]}/Y', key(c[1]))})
             ca = D.measure(pm, out / f'pads_iter{it_}.tsv')
-            ratios = [(ca[f'{last}/Y'][0] - ca[f'{drv}/Y' if drv in insts else drv][0]) / k for first, last, k, drv in chains
-                      if ca.get(f'{last}/Y', (None,))[0] is not None and ca.get(f'{drv}/Y' if drv in insts else drv, (None,))[0] is not None]
-            if len(ratios) >= 3:
-                pad_ps = max(5.0, statistics.median(ratios))
-                log('pad_ps measured on', len(ratios), 'chains:', round(pad_ps, 2))
+            for ty in el:
+                cs = [c for c in chains if c[3] == ty]
+                kmin = 3 if sum(1 for c in cs if c[2] >= 3) >= 20 else 1
+                for ci in ((0, 1) if two else (0,)):
+                    r_ = []
+                    for nd, dv, k, _, bn, bd in cs:
+                        an, ad = ca.get(f'{nd}/Y', (None, None))[ci], ca.get(key(dv), (None, None))[ci]
+                        if k >= kmin and None not in (an, ad, bn[ci], bd[ci]):
+                            r_.append(((an - bn[ci]) - (ad - bd[ci])) / k)
+                    if len(r_) >= 3:
+                        el[ty][ci] = max(3.0, statistics.median(r_))
+                if not two:
+                    el[ty][1] = el[ty][0] * 0.77
+            log('elements measured in context on', len(chains), 'nodes:', json.dumps(el))
         chains = []
+        calib = {}
 
-        def pad_before(bname, k, tree, tag):
+        def pad_before(bname, k, tree, ty):
             ai = insts[bname].findITerm('A')
             drv_net = ai.getNet()
             ai.disconnect()
             x, y = cell_xy[bname]
+            off = (0.0, 0.0)
+            if ty == 'W':     # stages alternate between the node and a free spot WPAD_UM away (wire like a tree stage)
+                for dx, dy in ((WPAD_UM, 0), (-WPAD_UM, 0), (0, WPAD_UM), (0, -WPAD_UM)):
+                    ix, iy = round((x + dx) / XPITCH), round((y + dy) / YPITCH)
+                    if 0 <= x + dx < D.W and 0 <= y + dy < D.H and sites.legal(ix, iy):
+                        off = (dx, dy)
+                        break
+                else:
+                    off = (WPAD_UM, 0.0)
             orig = rec['parent'][bname]
             first = None
-            for j in range(k):
+            for j in range(k * (2 if ty == 'W' else 1)):
                 leaf_pads[bname] += 1
-                pn = f'{bname}_{tag}{leaf_pads[bname]}'
-                pi = mk(pn, rt.PAD, x, y)
+                pn = f'{bname}_{ty.lower()}p{leaf_pads[bname]}'
+                # Each W unit is a local/far PAIR, including k=1: every unit adds one complete round trip.
+                # An odd single stage at the node has no added wire and is a different delay element (t8).
+                # The first stage stays at the node's spot, so the upstream driver's net
+                # (shared with the node's siblings) keeps its load and wire (t7: a far first stage slowed the siblings,
+                # the group maximum rose ~250 ps per iteration and the trim never converged)
+                far = ty == 'W' and j % 2 == 1
+                pi = mk(pn, cellof[ty], x + (off[0] if far else 0), y + (off[1] if far else 0))
                 insts[pn] = pi
                 rec['cell_tree'][pn] = tree
                 pi.findITerm('A').connect(drv_net)
@@ -387,18 +468,57 @@ def build(a):
                 drv_net = nn
                 first = first or pn
             ai.connect(drv_net)
-            if k >= 3 and len(chains) < 400:
-                chains.append((first, pn, k, orig))
+            if bname in calib:
+                chains.append((bname, orig, k, ty) + calib[bname])
 
-        # HIERARCHICAL TRIM: each leaf needs round(deficit / pad) pads between the root and itself (deficit = its
-        # balance group's target - its flop arrival).  The part every leaf below a node needs goes ONCE at that node's
-        # input (min over its leaves minus what its parent already carries), so a group offset lands on the tree's
-        # common path at the root, a subtree offset at its branch point, and only the residual at the leaves.
-        units, par_of = {}, {}
-        for tn, lv in by_tree.items():
-            T = gT[tree_group.get(tn, tn)]
-            for lb, m in lv.items():
-                u_ = int((T - m) / pad_ps + 0.5)
+        # per-leaf element counts.  One corner: nP = round(D_tt / P).  Two corners: the group targets (Ttt, Tff) are
+        # the smallest for which EVERY leaf's deficit lies in the cone of the two elements (FF/TT ratio between PAD's
+        # and WPAD's), then each leaf solves nP * P + nW * W = (D_tt, D_ff).
+        need = {}
+        for gk in set(tree_group.get(t, t) for t in by_tree):
+            tl = [t for t in by_tree if tree_group.get(t, t) == gk]
+            L = [(lb, by_tree[t][lb], by_treef[t].get(lb, by_tree[t][lb])) for t in tl for lb in by_tree[t]]
+            Ttt = max(v[1] for v in L)
+            if not two:
+                for lb, ft, _ in L:
+                    need[lb] = (int((Ttt - ft) / el['P'][0] + 0.5), 0)
+                continue
+            (p1, p2), (w1, w2) = el['P'], el['W']
+            rlo, rhi = sorted((p2 / p1, w2 / w1))
+            # closed form: Tf(Tt) = rlo*Tt + A is the least FF target with every leaf's FF deficit >= rlo x its TT
+            # deficit; Tt is raised (capped at RAISE_CAP_PS) until no leaf's FF deficit exceeds rhi x its TT deficit.
+            # Leaves still outside the cone are solved by clamped least squares (their residual is reported).
+            A = max(ff_ - rlo * ft for _, ft, ff_ in L)
+            base_ff_max = max(ff_ for _, _, ff_ in L)
+            need_t = max((A - ff_ + rhi * ft) / (rhi - rlo) for _, ft, ff_ in L) if rhi - rlo > 1e-3 else Ttt
+            Tt = Ttt + min(max(0.0, need_t - Ttt), RAISE_CAP_PS)
+            Tf = rlo * Tt + A
+            # the group targets are set ONCE (first trim) and then held: later iterations only correct residuals
+            # against them (re-deriving them each iteration walked the target up by the raise every time); they move
+            # only if a leaf overshoots
+            if gk in gtarget:
+                Tt = max(gtarget[gk][0], Ttt)
+                Tf = max(gtarget[gk][1], base_ff_max)
+            gtarget[gk] = (Tt, Tf)
+            det = p1 * w2 - w1 * p2
+            for lb, ft, ff_ in L:
+                dt, df = Tt - ft, Tf - ff_
+                nP = (dt * w2 - w1 * df) / det
+                nW = (p1 * df - p2 * dt) / det
+                if nP < 0:
+                    nP, nW = 0.0, (dt * w1 + df * w2) / (w1 * w1 + w2 * w2)
+                elif nW < 0:
+                    nW, nP = 0.0, (dt * p1 + df * p2) / (p1 * p1 + p2 * p2)
+                need[lb] = (int(DAMP * nP + 0.5), int(DAMP * nW + 0.5))
+            log('group', gk, 'targets tt', round(Tt, 1), 'ff', round(Tf, 1), '(raised tt by', round(Tt - Ttt, 1), ')')
+        # HIERARCHICAL TRIM: the part of a type that every leaf below a node needs goes ONCE at that node's input
+        # (min over its leaves minus what its parent already carries): group offsets land on the common path at the
+        # root, subtree offsets at their branch point, only the residual at the leaves
+        plan = []
+        for ty in ('W', 'P'):   # W first: wire stages above, gate pads nearer the node
+            units, par_of = {}, {}
+            for lb, nn_ in need.items():
+                u_ = nn_[1] if ty == 'W' else nn_[0]
                 x, prev = lb, None
                 while True:
                     if x not in units or u_ < units[x]:
@@ -410,16 +530,33 @@ def build(a):
                         par_of.setdefault(x, None)
                         break
                     prev, x = x, px
-        added = 0
-        for x, u_ in units.items():
-            pu = units[par_of[x]] if par_of.get(x) else 0
-            k = u_ - pu
-            if k > 0:
-                pad_before(x, k, rec['cell_tree'].get(x, ''), 'hp')
-                added += k
-        pad_n += added
-        log('iter', it_, 'hierarchical trim inserted', added, 'pads at', sum(1 for x, u_ in units.items()
-            if u_ - (units[par_of[x]] if par_of.get(x) else 0) > 0), 'nodes')
+            for x, u_ in units.items():
+                k = u_ - (units[par_of[x]] if par_of.get(x) else 0)
+                if k > 0:
+                    plan.append((x, ty, k))
+        # calibration sample: nodes that get ONE element type this iteration, up to 300 per type
+        one = defaultdict(set)
+        for x, ty, k in plan:
+            one[x].add(ty)
+        samp, cnt = [], defaultdict(int)
+        for x, ty, k in sorted(plan, key=lambda t: -t[2]):
+            if len(one[x]) == 1 and cnt[ty] < 300:
+                samp.append(x); cnt[ty] += 1
+        if samp:
+            pm = sorted({q for x in samp for q in (f'{x}/Y', key(rec['parent'][x]))})
+            cb = D.measure(pm, out / f'pads_before_iter{it_}.tsv')
+            for x in samp:
+                calib[x] = (cb.get(f'{x}/Y', (None, None))[:2], cb.get(key(rec['parent'][x]), (None, None))[:2])
+        added = defaultdict(int)
+        nodes = 0
+        for x, ty, k in plan:
+            pad_before(x, k, rec['cell_tree'].get(x, ''), ty)
+            added[ty] += k
+            nodes += 1
+        for ty, k in added.items():
+            pad_n[ty] += k
+        log('iter', it_, 'hierarchical trim inserted', dict(added), 'elements at', nodes, 'nodes')
+    rec['trim_element_cells'] = dict(P=1, W=2)
     # final: arrivals at every sink and every clock-cell output, slews, DRV
     allpins = sorted(sink_pins) + [f'{c[0]}/Y' for c in rec['cells']]
     D.measure(allpins, out / f'arrivals_{a.corner}.tsv')
@@ -449,6 +586,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--odb', required=True)
     ap.add_argument('--libs', required=True)
+    ap.add_argument('--libs-ff', help='two-corner trim: also balance FF early arrivals (TT late + FF early in one STA)')
     ap.add_argument('--out', required=True)
     ap.add_argument('--spec')
     ap.add_argument('--targets')

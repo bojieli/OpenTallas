@@ -1,0 +1,7 @@
+ot-run: ot-epyc4       admits   514 GB (avail 741, growth 95, headroom 48, waiters 0/0 GB) load 53/128 running 25 disk 500 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-io-1602/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-io-1602/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3045021-1792192030 after 0 s
+PASS dvm NCOL=2 NH=8 GT=128 SMIN=4 SMAX=7 HB=3 DX=14 XOFF=3 XVMR=12 GAP=0 ops=40 cycles=9488 result_writes=2456 operand_checks=232704 fills=40 sw_beats=427 aw_beats=165 bd_ref=26 bd_dvm=31 first_result_delta=5 reused=9 pooled=10
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3045021-1792192030): exit 0

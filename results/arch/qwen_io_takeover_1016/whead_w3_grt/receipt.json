@@ -1,0 +1,37 @@
+{
+  "job": "qfd_xhead_w_w130-w3-64ae90680",
+  "verdict": "EARLY_FAIL_CONGESTION",
+  "max_h": {
+    "M2": 3,
+    "M4": 2
+  },
+  "overflow": {
+    "M2": 68,
+    "M4": 55
+  },
+  "global_usage_percent": 44.81,
+  "images_inspected": [
+    "congestion.png",
+    "floorplan.png"
+  ],
+  "observed_failure_region_um": {
+    "x": [
+      7.4,
+      9.7
+    ],
+    "y": [
+      1.7,
+      31
+    ]
+  },
+  "observed_nets": [
+    "n_d",
+    "cs_wd",
+    "cs_wm",
+    "ot_outhold",
+    "local clock"
+  ],
+  "next_change": "Redistribute the local southwest pin/hold wall within actual approved face spans; no global geometry need demonstrated. New exact source proof/CTS/native and route required.",
+  "native_qualified": false,
+  "unchanged_retry": false
+}

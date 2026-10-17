@@ -62,8 +62,9 @@
  "findings": [],
  "referenced": [
   "rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_crs.sv",
-  "rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv",
-  "rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv",
+  "rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress_hr.sv",
+  "rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross_hr.sv",
+  "physical/ref_tile/s81coll_cfifo_crs/gray_hold.tcl",
   "physical/ref_tile/s81coll_cfifo_crs/kit.env",
   "physical/ref_tile/s81coll_cfifo_crs/clock.sdc",
   "physical/ref_tile/s81coll_cfifo_crs/signoff.sdc",

@@ -1,0 +1,51 @@
+{
+ "scope": "Uncommitted prior-helper r5c candidate, separate from current hr6 r5b-source gate; do not rebind logs",
+ "cause": "8805 bank recirculation self-loop endpoints inside30ps margin (+10.7ps actual FF hold), ~20k padding hold buffers; Gray repair waits until later chunk; r5c uses16 integrated per-slot gates across two lanes to remove feedback mux self-loops",
+ "source": "remote actual SHA in remote_source.sha256; patch is candidate only, not adopted in current source",
+ "bench": {
+  "mut_clock.log": [
+   "CFIFO_X2_GATE FAIL",
+   "RC mut_clock 1"
+  ],
+  "mut_hgray.log": [
+   "CFIFO_X2_GATE FAIL",
+   "RC mut_hgray 1"
+  ],
+  "mut_hsel.log": [
+   "CFIFO_X2_GATE FAIL",
+   "RC mut_hsel 1"
+  ],
+  "mut_hstage.log": [
+   "CFIFO_X2_GATE FAIL",
+   "RC mut_hstage 1"
+  ],
+  "mut_payload.log": [
+   "CFIFO_X2_GATE FAIL",
+   "RC mut_payload 1"
+  ],
+  "mut_reset_frontier.log": [
+   "CFIFO_X2_GATE FAIL",
+   "RC mut_reset_frontier 1"
+  ],
+  "mut_ripin.log": [
+   "CFIFO_X2_GATE FAIL",
+   "RC mut_ripin 1"
+  ],
+  "mut_stop_s.log": [
+   "CFIFO_X2_GATE FAIL",
+   "RC mut_stop_s 1"
+  ],
+  "mut_valid.log": [
+   "CFIFO_X2_GATE FAIL",
+   "RC mut_valid 1"
+  ],
+  "pass.log": [
+   "CFIFO_X2_GATE PASS 5 phase pairs",
+   "RC pass 0"
+  ],
+  "warm.log": [
+   "CFIFO_X2_GATE PASS 5 phase pairs",
+   "RC warm 0"
+  ]
+ }
+}

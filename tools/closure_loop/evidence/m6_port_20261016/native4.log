@@ -1,0 +1,20 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex-m6-flow-1557
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex-m6-flow-1557
+ot-run: ot-agidock128  admits    31 GB (avail 56, growth 19, headroom 24, waiters 0/0 GB) load 34/64 running 8 disk 248 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-4148461-1792191758 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_M6_PIN_ACCESS created M6 obstruction 384 0 129216 69120; deepened 0 E/W M6 pins to 0.384 um
+M6_IDEMPOTENCE add 1
+OT_M6_PIN_ACCESS created M6 obstruction 384 0 129216 69120; deepened 0 E/W M6 pins to 0.384 um
+M6_IDEMPOTENCE add 1
+OT_M6_PIN_ACCESS removed 1 M6 obstruction(s)
+M6_IDEMPOTENCE remove 0
+OT_M6_PIN_ACCESS removed 0 M6 obstruction(s)
+M6_IDEMPOTENCE remove 0
+M6_NATIVE_COUNTEREXAMPLE complete
+M6_NATIVE_POSITIVE complete
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-4148461-1792191758): exit 0
