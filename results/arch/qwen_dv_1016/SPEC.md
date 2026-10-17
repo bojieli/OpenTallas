@@ -373,3 +373,43 @@ Outputs:
 - `dv2r8e.png`: viewed.
 
 The plan is now asymmetric: all IO is on the W edge. The E-side AR rows ride the backbone. That traffic is within the collective's own 512 b/cycle, and is ordered farthest-first.
+
+## dv2r8f: no empty regions (owner correction 0cl, 2026-10-17) -- ADOPTED
+
+`build_dv2f.py` starts from dv2r8e and makes three changes.
+
+1. **Centre closed to 0.**
+   - The W and E arrays and the slice rows abut. `dvs_W0 | dvs_E0` exchange the stream face to face, like every other slice pair.
+   - No die net needs a centre channel any more. The cut model's worst line no longer lies anywhere near the seam.
+2. **tt_ctlm / sys_face / native59 / d2d / ucie_kv / embed / clk_rx / rstseq** are packed two abreast at the N end of the W-edge column.
+   - The KV die still abuts the N edge, now at the W corner.
+   - The KV die cannot sit on the W edge: that edge carries the SerDes beachfront, and the KV die is 24 mm long.
+   - ib/go enters the backbone at W5. It is static and pre-issued, so this costs no latency.
+3. **Column channel = 216 um.**
+   - The 2,516-b D2D + ib lane (native59 -> W5) runs inside it.
+   - At 108 um that lane alone would load the channel about 0.74.
+   - Routed diagonally over W5's clusters it gave cut 0.517.
+
+| | q3h | dv2r8 | dv2r8e | **dv2r8f** |
+|---|---:|---:|---:|---:|
+| worst cut | 1.435 | 0.416 | 0.414 | **0.378** |
+| stages @405 / @200 | 11,948 / 24,543 | 4,297 / 8,988 | 4,185 / 8,641 | **3,304 / 6,951** |
+| bit-mm | 1.077 M | 0.857 M | 0.807 M | **0.792 M** |
+| die | 742.0 | 796.8 | 670.4 | **645.6 mm² (26.8 x 24.0)** |
+| white space | 18.9 % (140 mm²) | 23.6 % (188) | 9.2 % (61.5) | **5.7 % (37.1)** |
+| largest empty rectangle | 30.3 mm² (centre) | 73.9 (centre) | 9.8 (W column) | **10.4 (W column, below the PHYs)** |
+| longest link | 18.9 mm | 20.2 | 23.3 | **10.1 mm (1-b ng_io_cmd_free_0)** |
+| cycles / layer vs q3h @405 (@200) | 0 | -9 (-90) | -138 (-351) | **-66 (-215)**, +0.96 % tok/s |
+
+**Cycles trade.** The q/K/V export and the attention return now run the whole backbone from the W corner: K 49 -> 87 and O 55 -> 93 against dv2r8e. That is +72 cycles a layer against dv2r8e, but it is still a gain over q3h. The rule applied was routing ease, cut and stages no worse, and dv2r8f is better on both.
+
+**Residual white is structural.** It is 37 mm² in total, of which:
+- about 17 mm² are the required band gaps and relay lanes;
+- 10.4 mm² lie in the W column below the PHY stack;
+- a 2.1-mm gap lies between io_serdes and tt_ctlm.
+
+The arrays fix any edge column at 24 mm tall, which is 37.6 mm² at the 1.56-mm PHY depth. The column content is 21.6 mm²: 3 SerDes, the collective, io_ucie, the D2D group and control. An S-edge row would leave the same residual. The collective stays on the slice row so the AR stays at 4 stages.
+
+**Outputs:**
+- `dv2r8f.png` and `compare_all.png` (6 panels, now with white % and the largest empty rectangle) were viewed.
+- Explorer record `qwen_qdv_dv2r8f`: `token_designs ['qwen_rom']`, candidate of `qwen_r2h5`.

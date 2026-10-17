@@ -6,6 +6,7 @@ import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 sys.path.insert(0, '/home/ubuntu/scratch/qdv-1016'); import metr
+sys.path.insert(0, '/home/ubuntu/wt/qdv-1016/results/arch/qwen_dv_1016'); import whitespace
 COL = {'dv_reduce': '#d62728', 'dv_lane': '#ff7f0e', 'dv_gather': '#2ca02c', 'dv_ring': '#9467bd', 'dv_coll': '#8c564b',
        'dv_d2d': '#e377c2', 'head_chain': '#1f77b4', 'tree_spine': '#17becf', 'spine_local': '#7f7f7f', 'coll_fdi': '#bcbd22'}
 FILL = {'qfd_c_b16': '#eef5ee', 'qfd_dv_slice': '#fde0c5', 'qfd_dv_slice2': '#fde0c5', 'qfd_dv_redstn': '#f4a6a6',
@@ -28,9 +29,9 @@ for ax, (name, f) in zip(axs, M):
         for a, q in (zip(p, p[1:]) if len(p) == 2 else [(p[0], t) for t in p[1:]]):
             A, Q = cl(a, cen(q)), cl(q, cen(a)); ax.plot([A[0], Q[0]], [A[1], Q[1]], color=COL[c], lw=max(.3, bits / 900), alpha=.75)
     ax.set_xlim(0, W + 50); ax.set_ylim(0, H + 50); ax.set_aspect('equal'); ax.set_xticks([]); ax.set_yticks([])
-    lh = r['longest_hop']
+    lh = r['longest_hop']; wsr = whitespace.ws(f)
     ax.set_title(f"{name}\ncut {r['worst_cut']}  |  stages@405 {r['stages405']:,}  @200 {r200['stages200']:,}\n"
-                 f"bit-mm {r['bitmm'] / 1e6:.3f} M  |  {r['mm2']} mm2  |  longest {lh[0] / 1000:.1f} mm ({lh[1]})", fontsize=9)
+                 f"bit-mm {r['bitmm'] / 1e6:.3f} M  |  {r['mm2']} mm2  |  longest {lh[0] / 1000:.1f} mm ({lh[1]})\nwhite {wsr['white_pct']} %  |  largest empty {wsr['largest_empty']['mm2']} mm2", fontsize=9)
 for c, col in COL.items(): axs[0].plot([], [], color=col, lw=3, label=c)
 axs[0].legend(loc='lower left', fontsize=6, ncol=2)
 fig.suptitle('Qwen compute die: central reference q3h vs Q-DV distributed-vector plans (relay-skip planning models, same scale and colours)', fontsize=12)
