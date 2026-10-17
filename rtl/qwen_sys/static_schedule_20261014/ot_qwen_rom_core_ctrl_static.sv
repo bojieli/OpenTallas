@@ -71,6 +71,12 @@ module ot_qwen_rom_core_ctrl_static #(
     parameter integer HRCM = 0,       // negative control: copy 0 does not toggle on a load
     parameter integer DPRE = 0,       // TT head h9: decode base+DYN adds computed per FIFO head word (hq / hq1)
                                       // from flops, then a 2:1 select by an h_rd copy (exact, 0 edges; FQ_HEAD 2 only)
+    parameter integer DSEL = 0,       // TT head h14 (Q-TTH14 10-17): the DPRE adds' DYN operand dyn[F(D_*)] registered per head
+                                      //   word (dq0 / dq1), written on the same edge as hq / hq1 by a kept fill slice (dyn is written
+                                      //   only in S_DYN and words fill only in S_RUN, so the register equals dyn[F(D_*)] whenever the
+                                      //   word decodes).  Removes the dyn 8:1 select and its wire from the decode add (h13 gate
+                                      //   dyn[2] -> 400 ps of repeaters -> obase add, -64.8 ps).  Exact, 0 edges; needs DPRE, HFC > 1,
+                                      //   FQ_HEAD 2.  OT_DSEL_MUT: negative control (the registered select reads dyn[idx ^ 1])
     parameter integer HFC = 0,        // Q-COMPUTE-ELEM r2 10-15: FIFO-head FILL as HFC kept slices (exact, 0 cycles). Each slice
                                       //   owns copies of the head-fill state (st==S_RUN, fq_n!=0, hc, h_wr, fq_rd) with the same
                                       //   next state, and writes INSTR_BITS / HFC bits of hq / hq1 (h3 gate: st[1] -> hq_fill ->
@@ -479,6 +485,8 @@ localparam integer W_ME_AMC = 1;
     reg  [INSTR_BITS-1:0] hq;            // FQ_HEAD: registered head word
     reg                   hq_v;
     reg  [INSTR_BITS-1:0] hq1;           // FQ_HEAD 2: second head word
+    reg  [10*AW-1:0]      dq0;           // DSEL (flat, no memory inference): dyn[F(D_*)] of hq, per DPRE field (nout k wbase xbase obase su_nin a b c d)
+    reg  [10*AW-1:0]      dq1;           // DSEL: ... of hq1
     reg                   h_rd, h_wr;    // FQ_HEAD 2: head read / write pointers
     reg  [1:0]            hc;            // FQ_HEAD 2: head words held
     wire                  hv = (FQ_HEAD >= 2) ? (hc != 2'd0) : hq_v;
@@ -692,6 +700,38 @@ localparam integer W_ME_AMC = 1;
                 $fatal(1, "HFC slice %0d diverged from the head-fill state", k);
 `endif
         end
+        if (DSEL != 0) begin : g_dsel
+`ifdef OT_DSEL_MUT
+            localparam [2:0] DSX = 3'd1;
+`else
+            localparam [2:0] DSX = 3'd0;
+`endif
+            // one more kept fill slice (same next state as the HFC slices) writing the registered DYN selects
+            (* keep *) reg run_d, fqnz_d, hcf_d, hwr_d;
+            (* keep *) reg [1:0] fqrd_d;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin run_d <= 1'b0; fqnz_d <= 1'b0; hcf_d <= 1'b1; hwr_d <= 1'b0; fqrd_d <= 2'd0; end
+                else begin
+                    run_d <= (st_nx == S_RUN); fqnz_d <= (fqn_nx != 3'd0); hcf_d <= (hc_nx != HCF);
+                    hwr_d <= hwr_nx; fqrd_d <= fqrd_nx;
+                end
+            wire fill_d = run_d && fqnz_d && hcf_d;
+            wire [3*10-1:0] dix = {fq[fqrd_d][O_D_D +: 3], fq[fqrd_d][O_C_D +: 3], fq[fqrd_d][O_B_D +: 3],
+                                   fq[fqrd_d][O_A_D +: 3], fq[fqrd_d][O_SU_D_NIN +: 3], fq[fqrd_d][O_ME_D_OBASE +: 3],
+                                   fq[fqrd_d][O_ME_D_XBASE +: 3], fq[fqrd_d][O_ME_D_WBASE +: 3], fq[fqrd_d][O_ME_D_K +: 3],
+                                   fq[fqrd_d][O_ME_D_NOUT +: 3]};
+            genvar df;
+            for (df = 0; df < 10; df = df + 1) begin : g_f
+                always @(posedge clk) begin
+                    if (fill_d && !hwr_d) dq0[AW*df +: AW] <= dyn[dix[3*df +: 3] ^ DSX];
+                    if (fill_d && hwr_d) dq1[AW*df +: AW] <= dyn[dix[3*df +: 3] ^ DSX];
+                end
+            end
+`ifndef SYNTHESIS
+            always @(posedge clk) if (rst_n && (fill_d !== hq_fill || hwr_d !== h_wr || fqrd_d !== fq_rd))
+                $fatal(1, "DSEL fill slice diverged from the head-fill state");
+`endif
+        end
     end else begin : g_hf1
         always @(posedge clk) begin
             if (FQ_HEAD >= 2) begin
@@ -864,44 +904,44 @@ localparam integer W_ME_AMC = 1;
 `else
     localparam integer DPRE_X = 0;
 `endif
-    wire [$bits(me_nout)-1:0] pa0_me_nout = `FW(hq,ME_NOUT), pb0_me_nout = dyn[`FW(hq,ME_D_NOUT)], pre0_me_nout;
-    wire [$bits(me_nout)-1:0] pa1_me_nout = `FW(hq1,ME_NOUT), pb1_me_nout = dyn[`FW(hq1,ME_D_NOUT)], pre1_me_nout;
+    wire [$bits(me_nout)-1:0] pa0_me_nout = `FW(hq,ME_NOUT), pb0_me_nout = (DSEL != 0) ? dq0[AW*0 +: $bits(me_nout)] : dyn[`FW(hq,ME_D_NOUT)], pre0_me_nout;
+    wire [$bits(me_nout)-1:0] pa1_me_nout = `FW(hq1,ME_NOUT), pb1_me_nout = (DSEL != 0) ? dq1[AW*0 +: $bits(me_nout)] : dyn[`FW(hq1,ME_D_NOUT)], pre1_me_nout;
     wire [$bits(me_nout)-1:0] dec_me_nout = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[1%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_me_nout : pre0_me_nout)
                                                  : `F(ME_NOUT) + dyn[`F(ME_D_NOUT)];
-    wire [$bits(me_k)-1:0] pa0_me_k = `FW(hq,ME_K), pb0_me_k = dyn[`FW(hq,ME_D_K)], pre0_me_k;
-    wire [$bits(me_k)-1:0] pa1_me_k = `FW(hq1,ME_K), pb1_me_k = dyn[`FW(hq1,ME_D_K)], pre1_me_k;
+    wire [$bits(me_k)-1:0] pa0_me_k = `FW(hq,ME_K), pb0_me_k = (DSEL != 0) ? dq0[AW*1 +: $bits(me_k)] : dyn[`FW(hq,ME_D_K)], pre0_me_k;
+    wire [$bits(me_k)-1:0] pa1_me_k = `FW(hq1,ME_K), pb1_me_k = (DSEL != 0) ? dq1[AW*1 +: $bits(me_k)] : dyn[`FW(hq1,ME_D_K)], pre1_me_k;
     wire [$bits(me_k)-1:0] dec_me_k = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[4%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_me_k : pre0_me_k)
                                                  : `F(ME_K) + dyn[`F(ME_D_K)];
-    wire [$bits(me_wbase)-1:0] pa0_me_wbase = `FW(hq,ME_WBASE), pb0_me_wbase = dyn[`FW(hq,ME_D_WBASE)], pre0_me_wbase;
-    wire [$bits(me_wbase)-1:0] pa1_me_wbase = `FW(hq1,ME_WBASE), pb1_me_wbase = dyn[`FW(hq1,ME_D_WBASE)], pre1_me_wbase;
+    wire [$bits(me_wbase)-1:0] pa0_me_wbase = `FW(hq,ME_WBASE), pb0_me_wbase = (DSEL != 0) ? dq0[AW*2 +: $bits(me_wbase)] : dyn[`FW(hq,ME_D_WBASE)], pre0_me_wbase;
+    wire [$bits(me_wbase)-1:0] pa1_me_wbase = `FW(hq1,ME_WBASE), pb1_me_wbase = (DSEL != 0) ? dq1[AW*2 +: $bits(me_wbase)] : dyn[`FW(hq1,ME_D_WBASE)], pre1_me_wbase;
     wire [$bits(me_wbase)-1:0] dec_me_wbase = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[7%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_me_wbase : pre0_me_wbase)
                                                  : `F(ME_WBASE) + dyn[`F(ME_D_WBASE)];
-    wire [$bits(me_xbase)-1:0] pa0_me_xbase = `FW(hq,ME_XBASE), pb0_me_xbase = dyn[`FW(hq,ME_D_XBASE)], pre0_me_xbase;
-    wire [$bits(me_xbase)-1:0] pa1_me_xbase = `FW(hq1,ME_XBASE), pb1_me_xbase = dyn[`FW(hq1,ME_D_XBASE)], pre1_me_xbase;
+    wire [$bits(me_xbase)-1:0] pa0_me_xbase = `FW(hq,ME_XBASE), pb0_me_xbase = (DSEL != 0) ? dq0[AW*3 +: $bits(me_xbase)] : dyn[`FW(hq,ME_D_XBASE)], pre0_me_xbase;
+    wire [$bits(me_xbase)-1:0] pa1_me_xbase = `FW(hq1,ME_XBASE), pb1_me_xbase = (DSEL != 0) ? dq1[AW*3 +: $bits(me_xbase)] : dyn[`FW(hq1,ME_D_XBASE)], pre1_me_xbase;
     wire [$bits(me_xbase)-1:0] dec_me_xbase = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[10%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_me_xbase : pre0_me_xbase)
                                                  : `F(ME_XBASE) + dyn[`F(ME_D_XBASE)];
-    wire [$bits(me_obase)-1:0] pa0_me_obase = `FW(hq,ME_OBASE), pb0_me_obase = dyn[`FW(hq,ME_D_OBASE)], pre0_me_obase;
-    wire [$bits(me_obase)-1:0] pa1_me_obase = `FW(hq1,ME_OBASE), pb1_me_obase = dyn[`FW(hq1,ME_D_OBASE)], pre1_me_obase;
+    wire [$bits(me_obase)-1:0] pa0_me_obase = `FW(hq,ME_OBASE), pb0_me_obase = (DSEL != 0) ? dq0[AW*4 +: $bits(me_obase)] : dyn[`FW(hq,ME_D_OBASE)], pre0_me_obase;
+    wire [$bits(me_obase)-1:0] pa1_me_obase = `FW(hq1,ME_OBASE), pb1_me_obase = (DSEL != 0) ? dq1[AW*4 +: $bits(me_obase)] : dyn[`FW(hq1,ME_D_OBASE)], pre1_me_obase;
     wire [$bits(me_obase)-1:0] dec_me_obase = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[13%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_me_obase : pre0_me_obase)
                                                  : `F(ME_OBASE) + dyn[`F(ME_D_OBASE)];
-    wire [$bits(su_nin)-1:0] pa0_su_nin = `FW(hq,SU_NIN), pb0_su_nin = dyn[`FW(hq,SU_D_NIN)], pre0_su_nin;
-    wire [$bits(su_nin)-1:0] pa1_su_nin = `FW(hq1,SU_NIN), pb1_su_nin = dyn[`FW(hq1,SU_D_NIN)], pre1_su_nin;
+    wire [$bits(su_nin)-1:0] pa0_su_nin = `FW(hq,SU_NIN), pb0_su_nin = (DSEL != 0) ? dq0[AW*5 +: $bits(su_nin)] : dyn[`FW(hq,SU_D_NIN)], pre0_su_nin;
+    wire [$bits(su_nin)-1:0] pa1_su_nin = `FW(hq1,SU_NIN), pb1_su_nin = (DSEL != 0) ? dq1[AW*5 +: $bits(su_nin)] : dyn[`FW(hq1,SU_D_NIN)], pre1_su_nin;
     wire [$bits(su_nin)-1:0] dec_su_nin = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[16%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_su_nin : pre0_su_nin)
                                                  : `F(SU_NIN) + dyn[`F(SU_D_NIN)];
-    wire [$bits(a_base)-1:0] pa0_a_base = `FW(hq,A_BASE), pb0_a_base = dyn[`FW(hq,A_D)], pre0_a_base;
-    wire [$bits(a_base)-1:0] pa1_a_base = `FW(hq1,A_BASE), pb1_a_base = dyn[`FW(hq1,A_D)], pre1_a_base;
+    wire [$bits(a_base)-1:0] pa0_a_base = `FW(hq,A_BASE), pb0_a_base = (DSEL != 0) ? dq0[AW*6 +: $bits(a_base)] : dyn[`FW(hq,A_D)], pre0_a_base;
+    wire [$bits(a_base)-1:0] pa1_a_base = `FW(hq1,A_BASE), pb1_a_base = (DSEL != 0) ? dq1[AW*6 +: $bits(a_base)] : dyn[`FW(hq1,A_D)], pre1_a_base;
     wire [$bits(a_base)-1:0] dec_a_base = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[19%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_a_base : pre0_a_base)
                                                  : `F(A_BASE) + dyn[`F(A_D)];
-    wire [$bits(b_base)-1:0] pa0_b_base = `FW(hq,B_BASE), pb0_b_base = dyn[`FW(hq,B_D)], pre0_b_base;
-    wire [$bits(b_base)-1:0] pa1_b_base = `FW(hq1,B_BASE), pb1_b_base = dyn[`FW(hq1,B_D)], pre1_b_base;
+    wire [$bits(b_base)-1:0] pa0_b_base = `FW(hq,B_BASE), pb0_b_base = (DSEL != 0) ? dq0[AW*7 +: $bits(b_base)] : dyn[`FW(hq,B_D)], pre0_b_base;
+    wire [$bits(b_base)-1:0] pa1_b_base = `FW(hq1,B_BASE), pb1_b_base = (DSEL != 0) ? dq1[AW*7 +: $bits(b_base)] : dyn[`FW(hq1,B_D)], pre1_b_base;
     wire [$bits(b_base)-1:0] dec_b_base = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[22%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_b_base : pre0_b_base)
                                                  : `F(B_BASE) + dyn[`F(B_D)];
-    wire [$bits(c_base)-1:0] pa0_c_base = `FW(hq,C_BASE), pb0_c_base = dyn[`FW(hq,C_D)], pre0_c_base;
-    wire [$bits(c_base)-1:0] pa1_c_base = `FW(hq1,C_BASE), pb1_c_base = dyn[`FW(hq1,C_D)], pre1_c_base;
+    wire [$bits(c_base)-1:0] pa0_c_base = `FW(hq,C_BASE), pb0_c_base = (DSEL != 0) ? dq0[AW*8 +: $bits(c_base)] : dyn[`FW(hq,C_D)], pre0_c_base;
+    wire [$bits(c_base)-1:0] pa1_c_base = `FW(hq1,C_BASE), pb1_c_base = (DSEL != 0) ? dq1[AW*8 +: $bits(c_base)] : dyn[`FW(hq1,C_D)], pre1_c_base;
     wire [$bits(c_base)-1:0] dec_c_base = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[25%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_c_base : pre0_c_base)
                                                  : `F(C_BASE) + dyn[`F(C_D)];
-    wire [$bits(d_base)-1:0] pa0_d_base = `FW(hq,D_BASE), pb0_d_base = dyn[`FW(hq,D_D)], pre0_d_base;
-    wire [$bits(d_base)-1:0] pa1_d_base = `FW(hq1,D_BASE), pb1_d_base = dyn[`FW(hq1,D_D)], pre1_d_base;
+    wire [$bits(d_base)-1:0] pa0_d_base = `FW(hq,D_BASE), pb0_d_base = (DSEL != 0) ? dq0[AW*9 +: $bits(d_base)] : dyn[`FW(hq,D_D)], pre0_d_base;
+    wire [$bits(d_base)-1:0] pa1_d_base = `FW(hq1,D_BASE), pb1_d_base = (DSEL != 0) ? dq1[AW*9 +: $bits(d_base)] : dyn[`FW(hq1,D_D)], pre1_d_base;
     wire [$bits(d_base)-1:0] dec_d_base = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[28%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_d_base : pre0_d_base)
                                                  : `F(D_BASE) + dyn[`F(D_D)];
 
