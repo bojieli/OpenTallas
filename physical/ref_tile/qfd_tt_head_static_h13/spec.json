@@ -133,8 +133,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 231.12,
-  "h": 199.8
+  "w": 216.0,
+  "h": 200.88
  },
  "recipe": 2,
  "layer_cap": "M5",
@@ -143,8 +143,8 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
    "count": 1,
    "at": [
-    29.7,
-    42.12
+    22.464,
+    22.176
    ],
    "orient": "R0",
    "inst": "*u_head*g_m?0?*u_pm",
@@ -159,8 +159,8 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
    "count": 1,
    "at": [
-    29.7,
-    119.88
+    22.464,
+    99.984
    ],
    "orient": "R0",
    "inst": "*u_head*g_m?1?*u_pm",
@@ -256,7 +256,7 @@
   "OT_ROW_MIN_UM": "6",
   "OT_OFLOP_GAP": "4.5"
  },
- "structural_change": "h13 (Q-IO-1815 TTH 2026-10-17): outline 259.2x259.2 -> 231.12x199.8 (-31%), SRAM pair abutted flush N (x 29.7, y 42.12/119.88), logic = one U (W/E columns ~28 um + S band 40 um) beside its pins; every W/E pin balanced over the full face (E 1,089 = 5.6/um at 1 track), ck_head/rst_n moved N -> S face (logic band), ck_pm at the SRAM clk y; pin regs; CMDREG=1. | h11 (Q-IO-1815 TTH 2026-10-16): h10 RTL (RSTREP) + f10 macro placement (both program SRAMs abutted at the S edge, x 43.2) + EVERY W/E data pin banded to y 60-255 (PPL ordered groups failed PPL-0086 in 19-um sections at 105-255 and 60-255; balanced placer, disjoint per-bus ranges proportional to width, 1-track minimum: E 1,089 pins need >=105 um at 1 track / 209 um at 2) beside the N logic band (E 1,089 M4 pins = 7.3/um, W 494 = 3.3/um); ck_head/rst_n stay N. f10 failed (-514) because its pins stayed at y 3-173 beside the SRAMs while the logic sat N; h10 (centred SRAMs) is a thin ring (-223). Pin registers per the owner rule (recipe-3 ot_pin_regs, clock ck_head): +1 edge on every port not already registered at its pin (per-port table ot_pin_regs.tsv; compiler schedule absorbs; die/ledger to be told). | h10 (Q-IO-1815 TTH 2026-10-16): h9b + RSTREP=1: the reset station flop drove 481 async clears (380 = rom_cmd_q, W face; gate high_fanout warn, recovery -154..-197 ps); three kept station copies of the identical function (rsl ~120 loads, rom_cmd_q halves 190 each), release unchanged, 0 edges (m0 REGROUP_PASS 65120 identical, OT_DPRE_MUT FAIL 19964). Control for the h10k two-root measurement. | h9 (Q-ELEM 1315): h8 gate worst moved to controller decode h_rd_c -> ir mux -> F(BASE)+dyn[F(D)] -> me_obase/xbase (-565.5). DPRE=1: the 10 base+DYN adds are computed per FIFO head word (hq, hq1) from flops and selected by h_rd copies after the add; exact, 0 edges. h8 (Q-ELEM 1315): h7 gate placement TT reg->reg -470.7 ps over 2,648 flops: u_issue.cycle -> 32-bit cycle==head compare (~410 ps OR tree) -> controller fan-out (~650 ps incl. cross-tile buffering) -> kvd fields / pin regs. Fix: SREG=1 (ot_qwen_fixed_issue): 'scheduled' is a register loaded with the exact next-state value; bit-identical every cycle (sim self-check + regroup bench vs ref), 0 edges. h3 (Q-COMPUTE-ELEM r14): h2 CTS refused by the strict multiple-CTS profile (ck_head drove 4,831 std FF + 2 raw SRAM clock pins: mixed source). The two program SRAMs now take explicit raw-macro clock entries ck_pm0/ck_pm1 (qfd_tt_ctlm_head_static_rk, derived by tools/qwen_split/derive_tt_head_rawck.py; shared source unchanged), W-face pins at the SRAM clk heights; std roots ck_head / ck_me_sched unchanged (clock hybrid_entries, flow 891a5f188). Parent delivers ck_pm0/1 from the same PLL phase as ck_head (same_pll_fixed_phase 0 ps). Logic, edges and outline unchanged. NEW head-side leaf of the selected static TT controller: exact original parent body minus the ROM tree (u_head + native route + resident relocation + loaded stage), formally equivalent regrouping (physical/qwen_tt_static_cluster_1015). Roots ck_head (4,813+route) / ck_me_sched (877), related phase-0; 2 SRAM 64x512; no ICG.",
+ "structural_change": "h13 (Q-IO-1815 TTH 2026-10-17): outline 259.2x259.2 -> 216.0x200.88 (-35%): the ref_tile rules keep >= 20 um between each SRAM and every core edge, so the minimum outline is the abutted pair (171.288 x 155.568, at_exact 22.464, 22.176 / 99.984) + 20-um channels; logic = one 20-um ring beside its pins; every W/E pin balanced over the full face (E 1,089 = 5.6/um at 1 track), ck_head/rst_n moved N -> S face (logic band), ck_pm at the SRAM clk y; pin regs; CMDREG=1. | h11 (Q-IO-1815 TTH 2026-10-16): h10 RTL (RSTREP) + f10 macro placement (both program SRAMs abutted at the S edge, x 43.2) + EVERY W/E data pin banded to y 60-255 (PPL ordered groups failed PPL-0086 in 19-um sections at 105-255 and 60-255; balanced placer, disjoint per-bus ranges proportional to width, 1-track minimum: E 1,089 pins need >=105 um at 1 track / 209 um at 2) beside the N logic band (E 1,089 M4 pins = 7.3/um, W 494 = 3.3/um); ck_head/rst_n stay N. f10 failed (-514) because its pins stayed at y 3-173 beside the SRAMs while the logic sat N; h10 (centred SRAMs) is a thin ring (-223). Pin registers per the owner rule (recipe-3 ot_pin_regs, clock ck_head): +1 edge on every port not already registered at its pin (per-port table ot_pin_regs.tsv; compiler schedule absorbs; die/ledger to be told). | h10 (Q-IO-1815 TTH 2026-10-16): h9b + RSTREP=1: the reset station flop drove 481 async clears (380 = rom_cmd_q, W face; gate high_fanout warn, recovery -154..-197 ps); three kept station copies of the identical function (rsl ~120 loads, rom_cmd_q halves 190 each), release unchanged, 0 edges (m0 REGROUP_PASS 65120 identical, OT_DPRE_MUT FAIL 19964). Control for the h10k two-root measurement. | h9 (Q-ELEM 1315): h8 gate worst moved to controller decode h_rd_c -> ir mux -> F(BASE)+dyn[F(D)] -> me_obase/xbase (-565.5). DPRE=1: the 10 base+DYN adds are computed per FIFO head word (hq, hq1) from flops and selected by h_rd copies after the add; exact, 0 edges. h8 (Q-ELEM 1315): h7 gate placement TT reg->reg -470.7 ps over 2,648 flops: u_issue.cycle -> 32-bit cycle==head compare (~410 ps OR tree) -> controller fan-out (~650 ps incl. cross-tile buffering) -> kvd fields / pin regs. Fix: SREG=1 (ot_qwen_fixed_issue): 'scheduled' is a register loaded with the exact next-state value; bit-identical every cycle (sim self-check + regroup bench vs ref), 0 edges. h3 (Q-COMPUTE-ELEM r14): h2 CTS refused by the strict multiple-CTS profile (ck_head drove 4,831 std FF + 2 raw SRAM clock pins: mixed source). The two program SRAMs now take explicit raw-macro clock entries ck_pm0/ck_pm1 (qfd_tt_ctlm_head_static_rk, derived by tools/qwen_split/derive_tt_head_rawck.py; shared source unchanged), W-face pins at the SRAM clk heights; std roots ck_head / ck_me_sched unchanged (clock hybrid_entries, flow 891a5f188). Parent delivers ck_pm0/1 from the same PLL phase as ck_head (same_pll_fixed_phase 0 ps). Logic, edges and outline unchanged. NEW head-side leaf of the selected static TT controller: exact original parent body minus the ROM tree (u_head + native route + resident relocation + loaded stage), formally equivalent regrouping (physical/qwen_tt_static_cluster_1015). Roots ck_head (4,813+route) / ck_me_sched (877), related phase-0; 2 SRAM 64x512; no ICG.",
  "job": {
   "owner": "Claude:Q-ELEM-TTH",
   "branch": "claude/qelem-tth-1016",
@@ -349,20 +349,20 @@
  ],
  "pin_ranges": {
   "ck_pm0": [
-   40.9,
-   44.9
+   20.956,
+   24.956
   ],
   "ck_pm1": [
-   118.66,
-   122.66
+   98.764,
+   102.764
   ],
   "ck_head": [
-   113.0,
-   117.0
+   104.0,
+   108.0
   ],
   "rst_n": [
-   118.0,
-   122.0
+   109.0,
+   113.0
   ],
   "cp_active": [
    3.0,
@@ -370,179 +370,179 @@
   ],
   "cp": [
    3.384,
-   12.955
+   13.01
   ],
   "me_image_ready": [
-   13.147,
-   13.339
+   13.202,
+   13.394
   ],
   "program_obs": [
-   13.531,
-   26.52
+   13.586,
+   26.651
   ],
   "layer_context_v": [
-   26.712,
-   26.904
+   26.843,
+   27.035
   ],
   "native_tok": [
-   27.096,
-   30.172
+   27.227,
+   30.321
   ],
   "native_pos": [
-   30.364,
-   33.441
+   30.513,
+   33.607
   ],
   "command_stage": [
-   33.633,
-   34.658
+   33.799,
+   34.831
   ],
   "native_cmd": [
-   34.85,
-   99.796
+   35.023,
+   100.345
   ],
   "native_ret": [
-   99.988,
-   116.224
+   100.537,
+   116.868
   ],
   "h_start": [
-   116.416,
-   116.608
+   117.06,
+   117.252
   ],
   "token": [
-   116.8,
-   119.876
+   117.444,
+   120.538
   ],
   "pos": [
-   120.068,
-   123.145
+   120.73,
+   123.824
   ],
   "prog_base": [
-   123.337,
-   125.388
+   124.016,
+   126.079
   ],
   "pw_v": [
-   125.58,
-   125.772
+   126.271,
+   126.463
   ],
   "pw_addr": [
-   125.964,
-   127.673
+   126.655,
+   128.374
   ],
   "pw_data": [
-   127.865,
-   138.803
+   128.566,
+   139.568
   ],
   "x_oacc": [
-   138.995,
-   143.097
+   139.76,
+   143.885
   ],
   "x_oidle": [
-   143.289,
-   143.481
+   144.077,
+   144.269
   ],
   "x_oprog": [
-   143.673,
-   146.407
+   144.461,
+   147.212
   ],
   "x_orows": [
-   146.599,
-   149.334
+   147.404,
+   150.154
   ],
   "kv_ok": [
-   149.526,
-   149.718
+   150.346,
+   150.538
   ],
   "kv_write_drained": [
-   149.91,
-   150.102
+   150.73,
+   150.922
   ],
   "me_mem_ok": [
-   150.294,
-   150.486
+   151.114,
+   151.306
   ],
   "m_fin_o": [
-   150.678,
-   150.87
+   151.498,
+   151.69
   ],
   "m_fidx_o": [
-   151.062,
-   154.138
+   151.882,
+   154.976
   ],
   "m_fval_o": [
-   154.33,
-   159.799
+   155.168,
+   160.669
   ],
   "c_fault": [
-   159.991,
-   160.183
+   160.861,
+   161.053
   ],
   "kvd_v": [
-   160.375,
-   160.567
+   161.245,
+   161.437
   ],
   "kvd_wbase": [
-   160.759,
-   164.861
+   161.629,
+   165.755
   ],
   "kvd_ts": [
-   165.053,
-   169.155
+   165.947,
+   170.072
   ],
   "kvd_ks": [
-   169.347,
-   173.449
+   170.264,
+   174.39
   ],
   "kvd_js": [
-   173.641,
-   177.743
+   174.582,
+   178.708
   ],
   "kvd_wcs": [
-   177.935,
-   182.036
+   178.9,
+   183.025
   ],
   "kvd_split": [
-   182.228,
-   182.912
+   183.217,
+   183.905
   ],
   "kvd_jsh": [
-   183.104,
-   183.617
+   184.097,
+   184.612
   ],
   "kvd_tiles": [
-   183.809,
-   186.885
+   184.804,
+   187.899
   ],
   "kvd_k": [
-   187.077,
-   190.153
+   188.091,
+   191.185
   ],
   "kvd_nout": [
-   190.345,
-   193.422
+   191.377,
+   194.471
   ],
   "kvd_kindk": [
-   193.614,
-   193.806
+   194.663,
+   194.855
   ],
   "kvd_pos": [
-   193.998,
-   197.074
+   195.047,
+   198.141
   ],
   "rom_cmd": [
    3.0,
-   152.238
+   153.072
   ],
   "rom_ret_i": [
-   152.43,
-   189.74
+   153.264,
+   190.782
   ],
   "me_observe": [
-   189.932,
-   196.215
+   190.974,
+   197.293
   ],
   "me_clk_en": [
-   196.407,
-   196.8
+   197.485,
+   197.88
   ]
  },
  "pin_regs": {

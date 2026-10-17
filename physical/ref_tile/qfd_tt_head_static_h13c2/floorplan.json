@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  231.12,
+  216.0,
   200.88
  ],
  "core": [
   2.16,
   2.16,
-  228.96,
+  213.84,
   198.72
  ],
  "why": "spec outline",
@@ -101,12 +101,12 @@
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
    "inst": "*u_head*g_m?0?*u_pm",
    "idx": 0,
-   "x": 29.7,
-   "y": 42.12,
+   "x": 22.464,
+   "y": 22.176,
    "w": 171.288,
    "h": 77.76,
    "orient": "R0",
-   "offtrack": 1585
+   "offtrack": 0
   },
   {
    "kind": "macro",
@@ -114,34 +114,15 @@
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
    "inst": "*u_head*g_m?1?*u_pm",
    "idx": 0,
-   "x": 29.7,
-   "y": 119.88,
+   "x": 22.464,
+   "y": 99.984,
    "w": 171.288,
    "h": 77.76,
    "orient": "R0",
-   "offtrack": 1585
+   "offtrack": 0
   }
  ],
- "findings": [
-  [
-   "FAIL",
-   "macro_grid",
-   "ot_sram_1r1w_64x512_m1_r2c2#0: 1585 signal pins off the asap7 tracks (M1-M9, each layer's own pitch / offset) at its origin",
-   "no origin fixes it: the view's LEF is off-lattice -- re-export the child on the track grid"
-  ],
-  [
-   "FAIL",
-   "macro_edge",
-   "ot_sram_1r1w_64x512_m1_r2c2#0 1.1 um from the N core edge (< 20 um)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
-   "FAIL",
-   "macro_grid",
-   "ot_sram_1r1w_64x512_m1_r2c2#0: 1585 signal pins off the asap7 tracks (M1-M9, each layer's own pitch / offset) at its origin",
-   "no origin fixes it: the view's LEF is off-lattice -- re-export the child on the track grid"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
   "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv",
