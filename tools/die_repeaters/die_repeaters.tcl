@@ -18,8 +18,16 @@
 #     new instance is an allowed buffer.  Any violation fails the step (caller exits non-zero).
 #   * die nets longer than the die reach (planning defect: a missing relay register, standard 1) are measured before
 #     repair from report_long_wires and reported; policy 'fail' makes them a step violation.
-#   * legalisation of the new buffers: 'snap' (ot_cluster_snap_legalize of tools/die_cluster/cluster_bounds.tcl --
-#     die-scale safe), 'dpl' (detailed_placement; small dies only), or 'none' (caller legalises).
+#   * legalisation of the new buffers: 'spread' (DIE-FLOW2 10-17, default; 'snap' is an alias): every new repeater is
+#     put on its own free slot (rows x sites, never on a macro, a pre-existing cell or another repeater) of the nearest
+#     density bin (bin_um, default 8.64 um) that is under the utilisation cap (spread_util, default 0.30) -- repeaters
+#     spread over the channel instead of stacking at their ideal points (S81-DV p4e: 2.42M stacked repeaters -> GRT
+#     overflow 5.96M M2/M3); then repair passes (repair_passes, default 3) re-run repair_design on the legal positions
+#     and spread the new buffers again, so the displacement leaves no slew violator.  'dpl' (detailed_placement; small
+#     dies only), or 'none' (caller legalises).
+#   * post-GRT: ot_die_rep_post_grt_audit (called by every die flow after estimate_parasitics -global_routing) first
+#     re-buffers the post-GRT slew / cap violators in the same session (repair_design on GRT parasitics, spread,
+#     incremental GRT; post_grt_rounds, default 2), then audits.
 # Output: the JSON report (schema opentallas.die_repeaters.v1).  Returns the number of violations.
 
 proc ot_die_rep_log {msg} { puts "OT_DIE_REP $msg"; flush stdout }
@@ -49,19 +57,171 @@ proc ot_die_rep_pin_net {blk pin} {
 
 proc ot_die_rep_json_str {s} { return "\"[string map {\\ \\\\ \" \\\"} $s]\"" }
 
+# ---- spread legaliser (DIE-FLOW2 10-17).  insts: odb instances to place (new repeaters).  Each takes one slot (row x
+# slot of the widest master) of the nearest bin with free capacity; a bin's capacity = util x its free slots (slots
+# clear of the core edge, every hard macro and every other placed cell), filled in a stride order that spreads the
+# cells over the bin.  Bins only fill, so the nearest-available ring of a source bin never shrinks (memo: fast).
+proc ot_die_rep_spread {insts report {util 0.30} {bin_um 8.64}} {
+  set t0 [clock seconds]
+  set blk [ord::get_db_block]
+  set dbu [$blk getDbUnitsPerMicron]
+  set core [$blk getCoreArea]
+  set cx0 [$core xMin]; set cy0 [$core yMin]; set cx1 [$core xMax]; set cy1 [$core yMax]
+  set r0 [lindex [$blk getRows] 0]
+  set site [$r0 getSite]; set sw [$site getWidth]; set rh [$site getHeight]
+  lassign [$r0 getOrigin] rx0 ry0
+  set ro0 [$r0 getOrient]; set ro1 [expr {$ro0 eq "R0" ? "MX" : "R0"}]
+  if {![llength $insts]} {
+    set f [open $report w]; puts $f "{\"schema\": \"opentallas.die_repeaters.spread.v1\", \"placed\": 0, \"unplaced\": 0}"; close $f
+    return 0
+  }
+  set maxw 0; set mine [dict create]
+  foreach inst $insts { set w [[$inst getMaster] getWidth]; if {$w > $maxw} { set maxw $w }; dict set mine [$inst getName] 1 }
+  set slw [expr {(($maxw + $sw - 1) / $sw) * $sw}]
+  set BR [expr {max(1, int(round($bin_um * $dbu / double($rh))))}]
+  set BS [expr {max(1, int(round($bin_um * $dbu / double($slw))))}]
+  # obstacles: every placed instance that is not one of ours (macros + pre-existing cells), coarse 200-um buckets
+  set cb 200000; set obs {}
+  array set ob {}
+  foreach inst [$blk getInsts] {
+    if {[dict exists $mine [$inst getName]]} { continue }
+    if {![$inst isPlaced]} { continue }
+    set bb [$inst getBBox]
+    set m [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
+    set k [llength $obs]; lappend obs $m
+    for {set i [expr {[lindex $m 0] / $cb}]} {$i <= [lindex $m 2] / $cb} {incr i} {
+      for {set j [expr {[lindex $m 1] / $cb}]} {$j <= [lindex $m 3] / $cb} {incr j} { lappend ob($i,$j) $k }
+    }
+  }
+  array set cap {}; array set used {}; array set fl {}; array set memo {}
+  set nbins 0; set placed 0; set unplaced 0; set dsum 0.0; set dmax 0.0; set ringmax 0; set full 0
+  set maxring [expr {int(4000.0 / $bin_um) + 1}]
+  foreach inst $insts {
+    set mst [$inst getMaster]; set w [$mst getWidth]; set h [$mst getHeight]
+    set loc [$inst getLocation]
+    set ix [expr {[lindex $loc 0] + $w / 2}]; set iy [expr {[lindex $loc 1] + $h / 2}]
+    set gs [expr {($ix - $rx0) / $slw}]; set gr [expr {($iy - $ry0) / $rh}]
+    set bi [expr {$gs / $BS}]; set bj [expr {$gr / $BR}]
+    set d [expr {[info exists memo($bi,$bj)] ? $memo($bi,$bj) : 0}]
+    set got ""
+    while {$got eq "" && $d <= $maxring} {
+      set best ""; set bd 1e30
+      for {set di -$d} {$di <= $d} {incr di} {
+        set step [expr {(abs($di) == $d) ? 1 : 2 * $d}]
+        if {$step == 0} { set step 1 }
+        for {set dj -$d} {$dj <= $d} {incr dj $step} {
+          set b "[expr {$bi + $di}],[expr {$bj + $dj}]"
+          if {![info exists cap($b)]} {
+            # lazy bin init: free slots (row-major), capacity, stride order
+            incr nbins
+            set bx [expr {$bi + $di}]; set by [expr {$bj + $dj}]
+            set s0 [expr {$bx * $BS}]; set g0 [expr {$by * $BR}]
+            set xa [expr {$rx0 + $s0 * $slw}]; set xb [expr {$xa + $BS * $slw}]
+            set ya [expr {$ry0 + $g0 * $rh}]; set yb [expr {$ya + $BR * $rh}]
+            set near {}
+            if {$xb > $cx0 && $xa < $cx1 && $yb > $cy0 && $ya < $cy1} {
+              set seen [dict create]
+              for {set i [expr {$xa / $cb}]} {$i <= $xb / $cb} {incr i} {
+                for {set j [expr {$ya / $cb}]} {$j <= $yb / $cb} {incr j} {
+                  if {![info exists ob($i,$j)]} { continue }
+                  foreach k $ob($i,$j) {
+                    if {[dict exists $seen $k]} { continue }; dict set seen $k 1
+                    lassign [lindex $obs $k] ox0 oy0 ox1 oy1
+                    if {$ox0 < $xb && $ox1 > $xa && $oy0 < $yb && $oy1 > $ya} { lappend near [list $ox0 $oy0 $ox1 $oy1] }
+                  }
+                }
+              }
+              set sl {}
+              for {set r 0} {$r < $BR} {incr r} {
+                set y [expr {$ya + $r * $rh}]
+                if {$y < $cy0 || $y + $rh > $cy1} { continue }
+                for {set c 0} {$c < $BS} {incr c} {
+                  set x [expr {$xa + $c * $slw}]
+                  if {$x < $cx0 || $x + $slw > $cx1} { continue }
+                  set hit 0
+                  foreach o $near {
+                    lassign $o ox0 oy0 ox1 oy1
+                    if {$x < $ox1 && $x + $slw > $ox0 && $y < $oy1 && $y + $rh > $oy0} { set hit 1; break }
+                  }
+                  if {!$hit} { lappend sl [list $x $y [expr {($g0 + $r) % 2}]] }
+                }
+              }
+              set n [llength $sl]
+            } else { set sl {}; set n 0 }
+            set cap($b) [expr {$n ? max(1, int($util * $n + 0.5)) : 0}]
+            set used($b) 0
+            if {$n > 1} {
+              set st [expr {max(1, int($n * 0.381966))}]
+              while {[ot_die_rep_gcd $st $n] != 1} { incr st }
+              set o {}; for {set k 0} {$k < $cap($b)} {incr k} { lappend o [lindex $sl [expr {($k * $st) % $n}]] }
+              set fl($b) $o
+            } else { set fl($b) $sl }
+          }
+          if {$used($b) >= $cap($b)} { continue }
+          lassign [split $b ,] bx by
+          set ddx [expr {($rx0 + ($bx * $BS + $BS / 2.0) * $slw) - $ix}]; set ddy [expr {($ry0 + ($by * $BR + $BR / 2.0) * $rh) - $iy}]
+          set dd [expr {$ddx * $ddx + $ddy * $ddy}]
+          if {$dd < $bd} { set bd $dd; set best $b }
+        }
+      }
+      if {$best ne ""} { set got $best } else { incr d }
+    }
+    set memo($bi,$bj) $d
+    if {$got eq ""} { incr unplaced; continue }
+    if {$d > $ringmax} { set ringmax $d }
+    lassign [lindex $fl($got) $used($got)] x y odd
+    incr used($got)
+    if {$used($got) == $cap($got)} { incr full }
+    $inst setOrient [expr {$odd ? $ro1 : $ro0}]
+    $inst setLocation $x $y
+    $inst setPlacementStatus PLACED
+    incr placed
+    set dm [expr {(abs($x + $w / 2 - $ix) + abs($y + $h / 2 - $iy)) / double($dbu)}]
+    set dsum [expr {$dsum + $dm}]; if {$dm > $dmax} { set dmax $dm }
+  }
+  set f [open $report w]
+  puts $f "{\"schema\": \"opentallas.die_repeaters.spread.v1\", \"placed\": $placed, \"unplaced\": $unplaced, \"util\": $util, \"bin_um\": $bin_um, \"slot_width_um\": [expr {$slw / double($dbu)}], \"bins_initialised\": $nbins, \"bins_full\": $full, \"max_ring\": $ringmax, \"mean_disp_um\": [format %.2f [expr {$placed ? $dsum / $placed : 0}]], \"max_disp_um\": [format %.2f $dmax], \"seconds\": [expr {[clock seconds] - $t0}]}"
+  close $f
+  ot_die_rep_log "spread placed=$placed unplaced=$unplaced util=$util bin_um=$bin_um bins=$nbins full=$full max_ring=$ringmax mean_disp_um=[format %.2f [expr {$placed ? $dsum / $placed : 0}]] max_disp_um=[format %.2f $dmax] s=[expr {[clock seconds] - $t0}]"
+  return $unplaced
+}
+
+proc ot_die_rep_gcd {a b} { while {$b} { set t $b; set b [expr {$a % $b}]; set a $t }; return $a }
+
+# instances of the block not named in dict `known` (the cells the last repair_design inserted)
+proc ot_die_rep_new_insts {blk known} {
+  set n {}
+  foreach inst [$blk getInsts] { if {![dict exists $known [$inst getName]]} { lappend n $inst } }
+  return $n
+}
+
+# buffers-only window: every other lib cell dont_use; returns the flagged list for ot_die_rep_restore_use
+proc ot_die_rep_buffers_only {buffers} {
+  set flagged {}
+  foreach lc [get_lib_cells -quiet *] {
+    if {[lsearch -exact $buffers [get_name $lc]] >= 0} { continue }
+    if {![get_property $lc dont_use]} { lappend flagged $lc }
+  }
+  foreach lc $flagged { set_dont_use $lc }
+  foreach b $buffers { unset_dont_use [get_lib_cells -quiet $b] }
+  return $flagged
+}
+proc ot_die_rep_restore_use {flagged} { foreach lc $flagged { unset_dont_use $lc } }
+
 # cfg: Tcl dict; keys (defaults): report (required), max_wire_um 160, slew_ps 260, receiver_slew {} (master ps ...),
 # buffers {BUFx4_ASAP7_75t_R ...}, skip_nets {} (globs), repeat_nets {} (globs: forwarded-clock nets repeated WITH their
 # data bits -- DIE-CLOCK accepts fclk repeaters matched to the data to +-1 stage; they override the clock skips), skip_sigtypes {CLOCK POWER GROUND}, skip_clock_pins 1,
 # reach_um 0, over_reach report|fail, long_wire_scan 5000, rc_layer M4 ("" = keep caller's), repair_args "",
-# legalize snap|dpl|none, bounds_tcl /work/cluster_bounds.tcl, libs {} (liberty files to read first), std_corner ""
+# legalize spread|snap(=spread)|dpl|none, spread_util 0.30, bin_um 8.64, repair_passes 3, slew_margin 10 (%), post_grt_rounds 2,
+# bounds_tcl /work/cluster_bounds.tcl, libs {} (liberty files to read first), std_corner ""
 # (TT|FF|SS: read the ASAP7 RVT std libs of that corner), design ""
 proc ot_die_repeaters {cfg} {
   set t0 [clock seconds]
   set d [dict create max_wire_um 160 slew_ps 260 receiver_slew {} \
            buffers {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_75t_R BUFx5_ASAP7_75t_R BUFx6f_ASAP7_75t_R BUFx8_ASAP7_75t_R} \
            skip_nets {} repeat_nets {} skip_sigtypes {CLOCK POWER GROUND} skip_clock_pins 1 reach_um 0 over_reach report \
-           long_wire_scan 5000 post_drv report rc_layer M4 repair_args "" legalize snap bounds_tcl /work/cluster_bounds.tcl \
-           libs {} std_corner "" design ""]
+           long_wire_scan 5000 post_drv report rc_layer M4 repair_args "" legalize spread bounds_tcl /work/cluster_bounds.tcl \
+           libs {} std_corner "" design "" spread_util 0.30 bin_um 8.64 repair_passes 3 slew_margin 10 post_grt_rounds 2]
   set d [dict merge $d $cfg]
   dict with d {}
   if {![info exists report]} { error "ot_die_repeaters: cfg has no report path" }
@@ -184,30 +344,40 @@ proc ot_die_repeaters {cfg} {
   }
 
   # ---- buffers only: everything else dont_use for this step (restored after)
-  set flagged {}
-  foreach lc [get_lib_cells -quiet *] {
-    if {[lsearch -exact $buffers [get_name $lc]] >= 0} { continue }
-    if {![get_property $lc dont_use]} { lappend flagged $lc }
-  }
-  foreach lc $flagged { set_dont_use $lc }
-  foreach b $buffers { unset_dont_use [get_lib_cells -quiet $b] }
-
+  set flagged [ot_die_rep_buffers_only $buffers]
   set r0 [clock seconds]
-  set rc [catch {eval repair_design -max_wire_length $max_wire_um -slew_margin 0 -cap_margin 0 $repair_args} err]
-  foreach lc $flagged { unset_dont_use $lc }
-  if {$rc} { ot_die_rep_log "FAIL repair_design: $err"; error "ot_die_repeaters: repair_design: $err" }
+  set rcmd "repair_design -max_wire_length $max_wire_um -slew_margin $slew_margin -cap_margin $slew_margin $repair_args"
+  set rc [catch {eval $rcmd} err]
+  if {$rc} { ot_die_rep_restore_use $flagged; ot_die_rep_log "FAIL repair_design: $err"; error "ot_die_repeaters: repair_design: $err" }
   set repair_s [expr {[clock seconds] - $r0}]
 
   # ---- legalise the new buffers
-  set legal "none"
-  if {$legalize eq "snap"} {
-    if {![llength [info procs ot_cluster_snap_legalize]]} { source $bounds_tcl }
-    set left [ot_cluster_snap_legalize [file rootname $report].snap.json]
-    set legal "snap still_on_macro=$left"
-    if {$left != 0} { incr viol $left; lappend notes "repeaters left on a hard macro: $left" }
+  set legal "none"; set passes {}
+  if {$legalize eq "snap" || $legalize eq "spread"} {
+    # spread (snap is an alias since DIE-FLOW2: the plain snap stacked every repeater at its ideal point).  Pass k > 1
+    # re-runs repair_design on the legal positions (the spread displacement can leave long segments) and spreads again.
+    set known $pre; set left 0
+    for {set pass 1} {$pass <= $repair_passes} {incr pass} {
+      set new [ot_die_rep_new_insts $blk $known]
+      foreach inst $new { dict set known [$inst getName] [[$inst getMaster] getName] }
+      if {$pass > 1 && ![llength $new]} { break }
+      incr left [ot_die_rep_spread $new [file rootname $report].spread$pass.json $spread_util $bin_um]
+      lappend passes [llength $new]
+      if {$pass == $repair_passes} { break }
+      estimate_parasitics -placement
+      if {[catch {eval $rcmd} err]} { ot_die_rep_restore_use $flagged; error "ot_die_repeaters: repair_design pass [expr {$pass + 1}]: $err" }
+    }
+    set new [ot_die_rep_new_insts $blk $known]
+    if {[llength $new]} { incr left [ot_die_rep_spread $new [file rootname $report].spread_last.json $spread_util $bin_um]; lappend passes [llength $new] }
+    set legal "spread util=$spread_util bin_um=$bin_um passes=[join $passes /] unplaced=$left"
+    if {$left != 0} { incr viol $left; lappend notes "repeaters without a free slot: $left" }
   } elseif {$legalize eq "dpl"} {
     if {[catch {detailed_placement} e]} { incr viol; lappend notes "detailed_placement: $e"; set legal "dpl FAIL" } else { set legal dpl }
   }
+  ot_die_rep_restore_use $flagged
+  set ::ot_die_rep_cfg [dict create buffers $buffers max_wire_um $max_wire_um slew_margin $slew_margin repair_args $repair_args \
+                          spread_util $spread_util bin_um $bin_um post_grt_rounds $post_grt_rounds report $report]
+  set ::ot_die_rep_pre $pre
 
   # ---- residual electrical audit on placement parasitics after repair + legalisation (every die net, not only the
   # repaired ones): pins still over the native max_transition / max_capacitance are listed; post_drv_policy fail
@@ -276,8 +446,52 @@ proc ot_die_repeaters {cfg} {
 # detours at dense relay pin faces left 4,754 slew violators).  Call after estimate_parasitics -global_routing (same
 # session as the step, or a later STA session with skip_file = <report>.skip_nets.txt).  Writes REPORT (JSON) and
 # returns the number of violators on repeated die nets (pins on untouched clock/reset nets are counted apart).
+# Post-GRT re-buffer (same session as the step, after global_route + estimate_parasitics -global_routing): the
+# violators the GRT detours leave get repair_design on GRT parasitics (buffers only), the new buffers are spread, and
+# GRT routes them incrementally (the ORFS post-GRT repair order).  Returns the buffers added.
+proc ot_die_rep_post_grt_repair {round} {
+  set c $::ot_die_rep_cfg
+  set blk [ord::get_db_block]
+  set known [dict create]; foreach inst [$blk getInsts] { dict set known [$inst getName] 1 }
+  set flagged [ot_die_rep_buffers_only [dict get $c buffers]]
+  set rc [catch {eval repair_design -max_wire_length [dict get $c max_wire_um] -slew_margin [dict get $c slew_margin] \
+                   -cap_margin [dict get $c slew_margin] [dict get $c repair_args]} err]
+  ot_die_rep_restore_use $flagged
+  if {$rc} { ot_die_rep_log "post-GRT repair_design FAIL: $err"; return -1 }
+  set new [ot_die_rep_new_insts $blk $known]
+  global_route -start_incremental
+  set left [ot_die_rep_spread $new [file rootname [dict get $c report]].post_grt_spread$round.json [dict get $c spread_util] [dict get $c bin_um]]
+  global_route -end_incremental
+  estimate_parasitics -global_routing
+  ot_die_rep_log "post-GRT round $round re-buffer added=[llength $new] unplaced=$left"
+  return [llength $new]
+}
+
 proc ot_die_rep_post_grt_audit {report {skip_file ""}} {
   set blk [ord::get_db_block]
+  set rounds {}
+  if {[info exists ::ot_die_rep_cfg] && [dict get $::ot_die_rep_cfg post_grt_rounds] > 0} {
+    set pre_rpt [file rootname $report].pre_repair.rpt
+    for {set k 1} {$k <= [dict get $::ot_die_rep_cfg post_grt_rounds]} {incr k} {
+      report_check_types -max_slew -max_capacitance -violators > $pre_rpt
+      set fh [open $pre_rpt]; set txt [read $fh]; close $fh
+      set nv 0
+      foreach line [split $txt "\n"] {
+        if {[regexp {^(\S+)\s+(-?[0-9.]+)\s+(-?[0-9.]+)\s+(-?[0-9.]+)\s+\(VIOLATED\)} $line -> pin]} {
+          if {![dict exists $::ot_die_rep_skip [ot_die_rep_pin_net $blk $pin]]} { incr nv }
+        }
+      }
+      if {$nv == 0} { break }
+      set added [ot_die_rep_post_grt_repair $k]
+      lappend rounds "\{\"round\": $k, \"violators_before\": $nv, \"buffers_added\": $added\}"
+      if {$added <= 0} { break }
+    }
+  }
+  # pre-existing instances (registers / relay stages) must survive the re-buffer unchanged
+  set pg_bad 0
+  if {[info exists ::ot_die_rep_pre]} {
+    dict for {n m} $::ot_die_rep_pre { set i [$blk findInst $n]; if {$i eq "NULL" || $i eq "" || [[$i getMaster] getName] ne $m} { incr pg_bad } }
+  }
   if {[info exists ::ot_die_rep_skip]} { set skip $::ot_die_rep_skip } else { set skip [dict create] }
   if {$skip_file ne "" && [file exists $skip_file]} {
     set fh [open $skip_file]; foreach n [split [string trim [read $fh]] "\n"] { if {$n ne ""} { dict set skip $n file } }; close $fh
@@ -296,8 +510,8 @@ proc ot_die_rep_post_grt_audit {report {skip_file ""}} {
     }
   }
   set f [open $report w]
-  puts $f "{\"schema\": \"opentallas.die_repeaters.post_grt.v1\", \"verdict\": \"[expr {$sl + $cp == 0 ? "PASS" : "FAIL"}]\", \"slew_violators\": $sl, \"cap_violators\": $cp, \"worst_slew_ps\": $worst, \"on_skip_nets\": $sk, \"top\": \[[join $top {, }]\]}"
+  puts $f "{\"schema\": \"opentallas.die_repeaters.post_grt.v1\", \"verdict\": \"[expr {$sl + $cp + $pg_bad == 0 ? "PASS" : "FAIL"}]\", \"rebuffer_rounds\": \[[join $rounds {, }]\], \"pre_existing_changed\": $pg_bad, \"slew_violators\": $sl, \"cap_violators\": $cp, \"worst_slew_ps\": $worst, \"on_skip_nets\": $sk, \"top\": \[[join $top {, }]\]}"
   close $f
   ot_die_rep_log "post-GRT violators slew=$sl cap=$cp worst_slew=$worst (on untouched clock/reset/skip nets: $sk)"
-  return [expr {$sl + $cp}]
+  return [expr {$sl + $cp + $pg_bad}]
 }
