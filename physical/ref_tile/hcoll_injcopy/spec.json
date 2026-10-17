@@ -1,0 +1,107 @@
+{
+ "name": "hcoll_injcopy",
+ "top": "ot_hgi_coll_inj_copy",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_copy.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 34.56,
+  "h": 34.56
+ },
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n"
+  ],
+  "E": [
+   "inj_addr_i",
+   "inj_rd_i"
+  ],
+  "W": [
+   "inj_addr_o",
+   "inj_rd_o"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "macros": [],
+ "children": [],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "m5_pg_pitch": 2.7
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "The leaf IS one register stage (INJ_COPY_EDGES=1); a pin stage would change the declared latency."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "job": {
+  "owner": "Claude H-NETLIST/COLL 1815",
+  "branch": "claude/hnl-coll-1815",
+  "tag": "ic1",
+  "purpose": "COLL inject local copy (H-DIE d4c 2 mm rule; faces confirmed by H-DIE claude/hdie-1815 4f9d49e8f): 162 b, 1 edge, equal age. One master, SW/NW as drawn (in E, out W), SE/NE mirrored MY.",
+  "structural_change": "New per-quadrant 1-edge copy leaf between hb_coll inject pins and the sink row; latency declared INJ_COPY_EDGES=1.",
+  "cycles_added": 1,
+  "views_to": "physical/ref_tile/hcoll_injcopy/views",
+  "record_to": "results/rtl/ref_tile/hcoll_injcopy",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_copy.sv",
+   "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_inj_copy.sv",
+   "rtl/hbm_accel/generic/collective/p2p/run_inj_copy.sh",
+   "physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl",
+   "physical/hgi_idx_hier/pdn_hier.tcl",
+   "physical/qwen_die_masters/hdly_dont_touch.tcl",
+   "results/arch/hbm_coll_hard_v5_1045/inj_copy_1815"
+  ],
+  "benches": [
+   {
+    "name": "injcopy_pos",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_inj_copy.sh {RUN}/bench/pos pos",
+    "expect": "pass",
+    "pass_regex": "INJCOPY PASS checks8000 bits162 age1",
+    "min_count_regex": "INJCOPY PASS checks(\\d+) bits162",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_witness": "results/arch/hbm_coll_hard_v5_1045/inj_copy_1815/pos_run.log"
+   },
+   {
+    "name": "injcopy_skew",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_inj_copy.sh {RUN}/bench/skew skew",
+    "expect": "fail",
+    "pass_regex": "INJCOPY PASS checks8000",
+    "fail_regex": "INJCOPY FAIL mismatches3013 checks8000",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_witness": "results/arch/hbm_coll_hard_v5_1045/inj_copy_1815/skew_run.log"
+   }
+  ]
+ },
+ "params": {},
+ "inter": []
+}
