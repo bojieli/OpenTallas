@@ -1542,8 +1542,8 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
                 sts_ = ('WS', 'ES') if pi_ == 0 else ('WN', 'EN')
                 for st in sts_:
                     for k in range(4):
-                        fx_ = up(x_ - 2 * GX - fw_, GX) if st[0] == 'W' else up(x_ + PVW[0] + 2 * GX, GX)
-                        fy_ = ystrip - (k * (fh_ + 2 * GY) if por_ == 'R0' else -k * (fh_ + 2 * GY))
+                        fx_ = up(x_ - 2 * GRID - fw_, GX) if st[0] == 'W' else up(x_ + PVW[0] + 2 * GRID, GX)
+                        fy_ = ystrip - (k * (fh_ + GRID) if por_ == 'R0' else -k * (fh_ + GRID))
                         add(f'pvfork_{st}_{k}', 'qkd_pvfork', fx_, up(fy_, GY), fw_ - SHAVE, fh_ - SHAVE, 'R0', 'relay', 'attn')
         # the 16 V ports qkd_pv16_vport (Q-VMWB r5, the V issuer): port k of stack st serves landing groups {k, 0} / {k, 1}
         # (vport_wiring.txt: groups 2k / 2k + 1, adjacent strip slots, LAND_GROUP_ORDER) -> its home is the landing-inner
