@@ -83,7 +83,13 @@ else say "PDN FAIL rc=$pdn_rc ($C/run_pdn.log)"; exit 1; fi
 fi
 fi
 mkdir -p $G; cp $H/grt.tcl $G/; ln -f $C/floorplan_pdn.odb $G/floorplan_pdn.odb
-$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0}
+# OWNER 0cl (10-17): die-net repeaters, default ON for the Qwen compute die (r22k); the KV die keeps its owner's switch
+[ "$DIE" = r22k ] && OT_DIE_REPEATERS=${OT_DIE_REPEATERS:-1}
+if [ "${OT_DIE_REPEATERS:-0}" = 1 ]; then
+  mkdir -p $G/libs; for f in $R/libs/*_tt.lib; do [ -f "$f" ] && cp "$f" $G/libs/; done
+  say "die-net repeaters ON: repair_design -max_wire_length ${OT_DIE_REPEAT_UM:-175} um (libs: $(ls $G/libs | wc -l) TT views)"
+fi
+$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0} OT_DIE_REPEATERS=${OT_DIE_REPEATERS:-0} OT_DIE_REPEAT_UM=${OT_DIE_REPEAT_UM:-175}
 OV=$(awk '/Final congestion report/{f=1} f && /^Total/{print $NF; exit}' $G/grt.log)
 say "full-die GRT exit=$(cat $G/run.exit) overflow=${OV:-none} ($(grep -m1 'Total wirelength' $G/grt.log))"
 [ "${OT_STOP:-}" = grt ] && { say "stop after GRT (OT_STOP=grt)"; exit 0; }
