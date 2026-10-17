@@ -1,16 +1,24 @@
 #!/bin/bash
 # S81U-2: exact bench of the per-slice SM share ot_s81_su_sms (smq + smh) vs the slab's SM stop (smt + 2 smh, DOP SRL+2).
 #   bash tools/s81_su_sm/sms_bench.sh OUTDIR MUT [TI SEED NJOB]   (MUT 0 = base: PASS; 1, 2, 3, 5 = mutants: FAIL)
+#   SMT=1 bash ...: the share's head subtree is the HARDENED regional-cluster composition dsfd_su_t_smh (-DSU_SMU_T:
+#   4 lane quads dsfd_su_t_smhq + root dsfd_su_t_smhr over the hard leaf tops); MUT 6 = its root -> quad hop short.
 # The verdict line "SMS PASS ..." / "SMS FAIL ..." is printed LAST and unconditionally.
 set -u
 OUT=$1; MUT=$2; TI=${3:-5}; SEED=${4:-1017}; NJOB=${5:-12}
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
+SMTX=()
+if [ "${SMT:-0}" = 1 ]; then
+  D="$ROOT/rtl/dsrom_sys"
+  SMTX=(-DSU_SMU_T "$D/s81_dv/su_sm/dsfd_su_t_smh.sv" "$D/s81_dv/su_sm/dsfd_su_t_smhq.sv" "$D/s81_dv/su_sm/dsfd_su_t_smhr.sv"
+        "$D/s81_suhc/hier/dsfd_su_t_sm.sv")
+fi
 mkdir -p "$OUT"
 S="$ROOT/rtl"
 VL=${OPENTALLAS_TOOLS_ROOT:-$HOME/.local/opentallas-tools}/verilator-5.050/bin/verilator
 [ -x "$VL" ] || VL=verilator
 "$VL" --binary --timing -O2 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style --top-module tb_s81_su_sms -Mdir "$OUT/obj" -j 16 --unroll-count 4 -fno-dfg \
-  -GMUT=$MUT -GTI=$TI -GSEED=$SEED -GNJOB=$NJOB -CFLAGS -O1 \
+  -GMUT=$MUT -GTI=$TI -GSEED=$SEED -GNJOB=$NJOB -CFLAGS -O1 "${SMTX[@]}" \
   "$S/dsrom_sys/s81_dv/su_sm/test/tb_s81_su_sms.sv" "$S/dsrom_sys/s81_dv/su_sm/ot_s81_su_sms.sv" \
   "$S/dsrom_sys/s81_dv/su_sm/ot_s81_su_smq.sv" "$S/dsrom_sys/s81_dv/su_sm/ot_s81_su_smh.sv" \
   "$S/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv" "$S/hdc/ot_hdc_delay.sv" "$S/hdc/ot_hdc_fastfp_lat_f12.sv" \

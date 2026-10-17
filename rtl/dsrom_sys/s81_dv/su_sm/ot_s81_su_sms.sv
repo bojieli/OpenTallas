@@ -18,6 +18,8 @@
 // fixed number of cycles after the row that produced it; the compiler schedules the slice's row port and write window
 // from them.  SRL = relay stations on every intra-cluster link (2, the hardened cluster's value).
 // MUT (bench mutants): 1..3 = ot_s81_su_smq's (sink column, SO half mask, cos / sin pair), 5 = stale den (smd).
+// -DSU_SMU_T: the head subtree is the regional-cluster composition dsfd_su_t_smh (4 lane quads + root); MUT 6 = its
+// root -> quad hop one station short (split-latency mutant).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_su_sms #(
     parameter integer SM_NVMAX = 40, LM = 5, LA = 4, SRL = 2, MUT = 0
@@ -57,7 +59,7 @@ module ot_s81_su_sms #(
 
     // the tap forwards its operand row registered WITH the valids: DOP = SRL
 `ifdef SU_SMU_T
-    dsfd_su_t_smh #(.SRL(SRL)) u_smh (
+    dsfd_su_t_smh #(.SRL(SRL), .MUT((MUT == 5 || MUT == 6) ? MUT : 0)) u_smh (
 `else
     ot_s81_su_smh #(.SM_NVMAX(SM_NVMAX), .LM(LM), .LA(LA), .SRL(SRL), .MUT(MUT == 5 ? 5 : 0), .DOP(SRL)) u_smh (
 `endif
