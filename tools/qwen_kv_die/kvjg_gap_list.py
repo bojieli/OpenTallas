@@ -39,9 +39,10 @@ DIE_OWNERS = {
                             'the gq/gr bundles (kv_die.py edit in progress, not pushed)', 'KVJ-C2'),
     ('qkd_host_pc_slice_die', 'ctrl_completion'): ('pc_path completion_v/we x128 (static pc_path parent, '
                                                    'qkd_static_kv_pc_path_emb); die must instantiate pc_path', 'KVJ-C2 + KVJ-G2'),
-    ('qkd_host_root_admission', 'ctrl_completion_fault'): ('OR of 128 pc_path completion_fault: NO reducer RTL yet '
-                                                           '(fold into the ownership tile beside the host root)', 'KVJ-F'),
-    ('qkd_host_root_pt', 'ctrl_completion_fault'): ('as qkd_host_root_admission.ctrl_completion_fault (pre-KVJ-A die.v)', 'KVJ-F'),
+    ('qkd_host_root_admission', 'ctrl_completion_fault'): ('cf_root.fault (qkd_kv_cfault_tree registered radix-4 neighbour OR '
+                                                           'of the 128 pc_path completion_fault, kv_static_cfault_join; bit 0, '
+                                                           '[127:1] tree-reduced)', 'KVJ-G2 (wiring); KVJ-A3 port narrowing'),
+    ('qkd_host_root_pt', 'ctrl_completion_fault'): ('as qkd_host_root_admission.ctrl_completion_fault (pre-KVJ-A die.v)', 'KVJ-G2'),
     ('qkd_host_root_admission', 'static_setup_ready'): ('boot.setup_ready (HOST_DIE_JOINS, kv_static_boot_join)', 'KVJ-G2'),
     ('qkd_host_root_admission', 'native_reserved'): ('ownership.native_reserved (HOST_DIE_JOINS)', 'KVJ-G2'),
     ('qkd_host_root_admission', 'ownership_valid'): ('ownership.ownership_valid (HOST_DIE_JOINS)', 'KVJ-G2'),
