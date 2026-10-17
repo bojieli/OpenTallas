@@ -34,7 +34,7 @@
 // ot_hgi_coll_static_program_target #(TARGET 52); the identity strap compares the raw HOST target with 52+qid
 // before the target's own input capture, so the captured target equals 52 exactly when the original TARGET
 // 52+QID instance would have matched.
-module ot_hgi_coll_fj_core #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18)(
+module ot_hgi_coll_fj_core #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18,PT_LOOKAHEAD=0)(
  input wire clk,rst_n,
  input wire [1:0] qid,
  input wire cfg_v,
@@ -90,7 +90,7 @@ module ot_hgi_coll_fj_core #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18)(
    sel_q<=select_fault;unav_q<=unavailable_fault;lk_q<=link_abort;tdel_q<=tkm_del_slot;tdest_q<=tkm_dest_v;
   end
  wire [7:0] target_eff=(tgt_q==(8'd52+{6'd0,qid_q}))?8'd52:8'd0;
- ot_hgi_coll_static_program_target #(.TARGET(8'd52)) u_program(
+ ot_hgi_coll_static_program_target #(.TARGET(8'd52),.LOOKAHEAD(PT_LOOKAHEAD)) u_program(
   .clk(clk),.rst_n(rst_q),.cfg_v(cv_q),.cfg_target(target_eff),
   .cfg_addr(addr_q),.cfg_data(data_q),.desc_v(dv_q),.desc_base(base_q),
   .desc_limit(limit_q),.desc_loops(loops_q),.launch_v(lv_q),
@@ -189,7 +189,7 @@ module ot_hgi_coll_fj_n1s0(
  input wire [0:0] link_abort,input wire ring_fault,writer_fault,reduce_fault,
  input wire arg_capture_slot,tkm_start,input wire [3:0] tkm_del_slot,tkm_dest_v,
  output wire fault,output wire [15:0] fault_cause);
- ot_hgi_coll_fj_core #(.NPT(1),.SOLO(0),.NS(8),.NSL(18)) u(.*,.arg_fault(1'b0),.tkm_fault(1'b0));
+ ot_hgi_coll_fj_core #(.NPT(1),.SOLO(0),.NS(8),.NSL(18),.PT_LOOKAHEAD(1)) u(.*,.arg_fault(1'b0),.tkm_fault(1'b0));
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -447,6 +447,13 @@ module ot_hgi_coll_argmax_m #(parameter integer TP=96)(
   .cfg_rank(rk_q),.in_slot(slot_q),.in_v(v_q),.in_flit(flit_q),
   .flush_slot(flush_q),.publish_slot(pub_q),.out_v(),.out_flit(),.fault(fault));
 endmodule
+// d4f TP=192 shape (A2P 2-stack groups: 192-rank seen state), hardened under its own name.
+module ot_hgi_coll_argmax_m_tp192(
+ input wire clk,rst_n,start,mode,input wire [7:0] cfg_g,cfg_gbase,cfg_rank,
+ input wire [3:0] in_slot,in_v,input wire [255:0] in_key,input wire [131:0] in_meta,input wire flush_slot,publish_slot,
+ output wire out_v,output wire [544:0] out_flit,output wire fault);
+ ot_hgi_coll_argmax_m #(.TP(192)) u(.*);
+endmodule
 
 module ot_hgi_coll_tkm_m #(parameter integer TP=96)(
  input wire clk,rst_n,start,arg_mode,input wire [31:0] tile_clk,input wire buffer_clk,
@@ -624,12 +631,21 @@ module ot_hfd_coll_q_hard_v5_body #(
    .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
    .protocol_fault(protocol_fault),.cycles(stat_cycles));
   end
-  ot_hgi_coll_argmax_m #(.TP(TP)) u_arg(.clk(clk_arg),.rst_n(rst_n),.start(a_arg_start),.mode(a_arg_mode),
+if(TP==96)begin:t96
+  ot_hgi_coll_argmax_m u_arg(.clk(clk_arg),.rst_n(rst_n),.start(a_arg_start),.mode(a_arg_mode),
    .cfg_g(p_tkm_cfg_g),.cfg_gbase(p_tkm_cfg_gbase),.cfg_rank(a_pub_src),
    .in_slot(a_arg_in_slot),.in_v(dest_v[NPT+8+:4]),
    .in_key({dest_d[(NPT+11)*PWT+:64],dest_d[(NPT+10)*PWT+:64],dest_d[(NPT+9)*PWT+:64],dest_d[(NPT+8)*PWT+:64]}),
    .in_meta({dest_d[(NPT+11)*PWT+512+:33],dest_d[(NPT+10)*PWT+512+:33],dest_d[(NPT+9)*PWT+512+:33],dest_d[(NPT+8)*PWT+512+:33]}),
    .flush_slot(a_arg_flush),.publish_slot(a_arg_publish),.out_v(arg_out_v),.out_flit(arg_out_data),.fault(arg_fault));
+  end else begin:t192
+  ot_hgi_coll_argmax_m_tp192 u_arg(.clk(clk_arg),.rst_n(rst_n),.start(a_arg_start),.mode(a_arg_mode),
+   .cfg_g(p_tkm_cfg_g),.cfg_gbase(p_tkm_cfg_gbase),.cfg_rank(a_pub_src),
+   .in_slot(a_arg_in_slot),.in_v(dest_v[NPT+8+:4]),
+   .in_key({dest_d[(NPT+11)*PWT+:64],dest_d[(NPT+10)*PWT+:64],dest_d[(NPT+9)*PWT+:64],dest_d[(NPT+8)*PWT+:64]}),
+   .in_meta({dest_d[(NPT+11)*PWT+512+:33],dest_d[(NPT+10)*PWT+512+:33],dest_d[(NPT+9)*PWT+512+:33],dest_d[(NPT+8)*PWT+512+:33]}),
+   .flush_slot(a_arg_flush),.publish_slot(a_arg_publish),.out_v(arg_out_v),.out_flit(arg_out_data),.fault(arg_fault));
+  end
   ot_hgi_coll_tkm_m #(.TP(TP)) u_tkm(.clk(clk_tkm[33]),.tile_clk(clk_tkm[31:0]),.buffer_clk(clk_tkm[32]),.rst_n(rst_n),
    .start(p_tkm_start),.arg_mode(a_arg_mode),.cfg_n(p_tkm_cfg_n),.cfg_k(p_tkm_cfg_k),.cfg_nout(p_tkm_cfg_nout),
    .cfg_g(p_tkm_cfg_g),.cfg_gbase(p_tkm_cfg_gbase),.cfg_pf(p_tkm_cfg_pf),.cfg_obase(p_tkm_cfg_obase),

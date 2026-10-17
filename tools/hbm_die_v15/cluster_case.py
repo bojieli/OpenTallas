@@ -49,6 +49,8 @@ def main():
     ap.add_argument('--pin-spacing-tracks', type=int, default=2)
     ap.add_argument('--allowed-edges', default='NESW', help='outline edges that may carry ports (die-edge sides excluded)')
     ap.add_argument('--max-pin-density', type=float, default=6.0)
+    ap.add_argument('--max-dpl-gsites', type=float, default=2.0,
+                    help='core sites (G) above which the snap legaliser replaces detailed_placement (DPL site-grid memory)')
     ap.add_argument('--allow-boundary-errors', action='store_true', help='write the case although boundary.json has errors')
     a = ap.parse_args()
     C = json.loads(a.contract.read_text())
@@ -203,7 +205,7 @@ def main():
            'set c0 [clock seconds]\n'
            'if {[catch {clock_tree_synthesis -buf_list {BUFx4_ASAP7_75t_R BUFx8_ASAP7_75t_R BUFx12_ASAP7_75t_R} '
            '-root_buf BUFx16f_ASAP7_75t_R -sink_clustering_enable} e]} { puts "OT_CTS_FAIL $e" }\n'
-           'puts "OT_CTS_S [expr {[clock seconds]-$c0}]"\n' + CB.legalize_tcl('cts') + '\n')
+           'puts "OT_CTS_S [expr {[clock seconds]-$c0}]"\n' + CB.legalize_tcl('cts', max_dpl_gsites=a.max_dpl_gsites) + '\n')
     clocks = '\n'.join(f'create_clock -name {d} -period {PERIOD[d]} [get_ports clk_{d}]' for d in sorted(doms))
     io = []
     ins = collections.defaultdict(list); outs = collections.defaultdict(list)
@@ -249,7 +251,7 @@ estimate_parasitics -placement
 set r0 [clock seconds]
 repair_design -max_wire_length {a.reach:.0f}
 puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"
-{CB.legalize_tcl('repair')}
+{CB.legalize_tcl('repair', max_dpl_gsites=a.max_dpl_gsites)}
 {cts}{CB.bounds_check_tcl('/work/out/cluster_bounds.json', 'pre_grt')}set_routing_layers -signal M4-M9 -clock M5-M9
 set_global_routing_layer_adjustment M4-M5 0.30
 set_global_routing_layer_adjustment M6-M9 0.146

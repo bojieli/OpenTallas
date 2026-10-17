@@ -7,13 +7,13 @@
   0,
   0,
   218.16,
-  21.6
+  25.92
  ],
  "core": [
   2.16,
   2.16,
   216.0,
-  19.44
+  23.76
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
@@ -50,8 +50,8 @@
   "rtl/lib/ot_rst_relay.sv",
   "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
   "rtl/hbm_accel/die_glue/ot_hbm_rly_fc.sv",
-  "rtl/hbm_accel/die_glue/ot_hbm_rly_fcf.sv",
-  "rtl/hbm_accel/die_glue/hbfd_rly_fcf_masters.sv",
+  "rtl/hbm_accel/die_glue/ot_hbm_rly_fcfr.sv",
+  "rtl/hbm_accel/die_glue/hbfd_rly_fcfr_masters.sv",
   "physical/hbm_rly_fc/fcf_clock.tcl",
   "physical/hbm_rly_fc/fcf_pre_cts.tcl",
   "physical/ref_tile/hbfd_rly_624_sn_fc_f2/kit.env",

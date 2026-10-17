@@ -1,0 +1,26 @@
+{
+ "cell": "qkd_host_pc_slice_die",
+ "view": "physical/ref_tile/qkd_hslice/views/qkd_host_pc_slice_die",
+ "lib_cell": "qkd_host_pc_slice_die",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 221.0,
+ "spread_ps": 54.8,
+ "outputs": 1034,
+ "inputs": 1043,
+ "launch_ps": 232.5,
+ "launch_pin": "ctrl_es[0]",
+ "capture_ps": 435.7,
+ "capture_pin": "host_rst_n",
+ "launch_over": 1,
+ "capture_over": 218,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_launch_min_ps": 104.5,
+ "ff_hold_need_ps": -74.0,
+ "pass": false,
+ "fail_why": "launch 232.47551 > 220 (1 pins); capture 435.71126 > 190 (218 pins)",
+ "job": "qkd_hslice-ec1-75cbc9b99"
+}
