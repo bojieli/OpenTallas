@@ -35,6 +35,8 @@ SL_ROW = 2 * SL_H if SPLIT else SL_H
 # allowance > 65% at 72.90) -> 75.06 projected c0 65.9% incl hold (route-synth std 5827) -> a4d 77.76 (+4.86, 18 rows; 13 cs_rel legs 502.4 um > 500, reported); every row below moves down by RET_GROW.
 import os
 RET_H = round(float(os.environ.get('OT_CTHNTC_RET_H', '77.76')), 3)
+NS_SPREAD = float(os.environ.get('OT_CTHNTC_NS_SPREAD', '0.072'))   # a4e: min N/S pin spacing of the ret_column leaves (um)
+NS_SPREAD_COLS = {int(x) for x in os.environ.get('OT_CTHNTC_NS_SPREAD_COLS', '0,1').split(',') if x != ''}  # a4e: c0/c1 (c2/c3 a4d routing)
 SL_GROW, RET_GROW = round(SL_ROW - 25.92, 3), round(RET_H - 72.90, 3)
 H, W = round(874.26 + SL_GROW + RET_GROW, 3), 576.72
 CW, LW = 144.18, 144.72          # new-leaf column pitch / closed lane-tile pitch
@@ -89,7 +91,7 @@ class Leaf:
     def add(self, port, face, desired, layer=None):
         self.p.setdefault(port, []).append([face, layer, desired])
 
-    def pack(self, spread_we=False):
+    def pack(self, spread_we=False, ns_spread=0.0):
         groups = collections.defaultdict(list)
         if spread_we:
             # a3: W/E peer nets (y beat / cs / flags) evenly over the face height instead of packed from mid-height
@@ -105,6 +107,21 @@ class Leaf:
             layers = ['M5', 'M3'] if face in 'NS' else ['M4']
             vals.sort()
             n = len(vals)
+            if face in 'NS' and ns_spread > 0 and n > 1:
+                # a4e (HC-COL 10-16): a4d c0/c1 GRT-0116 at the S face only, x 20-60 um, where the hrq_col pins (with
+                # their HQ_LAG pin flops + input hold stages) packed at ~20 pins/um.  Spread every N/S pin to a minimum
+                # spacing NS_SPREAD around its desired x (isotonic fit of d_k - k*s, clusters centred on their mean),
+                # pin order kept; the per-layer track snap below is unchanged.
+                sp = min(ns_spread, (length - 0.6) / (n - 1))
+                z = [v[0] - k * sp for k, v in enumerate(vals)]
+                blocks = []                                   # pool-adjacent-violators: [sum, count]
+                for zk in z:
+                    blocks.append([zk, 1])
+                    while len(blocks) > 1 and blocks[-2][0] / blocks[-2][1] > blocks[-1][0] / blocks[-1][1]:
+                        a = blocks.pop(); blocks[-1][0] += a[0]; blocks[-1][1] += a[1]
+                fit = [b[0] / b[1] for b in blocks for _ in range(b[1])]
+                pos = [min(max(fit[k] + k * sp, 0.3 + k * sp), length - 0.3 - (n - 1 - k) * sp) for k in range(n)]
+                vals = [(pos[k], v[1], v[2]) for k, v in enumerate(vals)]
             per = (n + len(layers) - 1) // len(layers)
             # interleave layers: slot k of layer L sits at an offset PITCH/len(layers) * L
             slots = []
@@ -294,7 +311,7 @@ def build():
         for p in ('flag_fault', 'flag_hnz'):
             L.add(p, 'N', own_x(part_e)[('rv', 0)])
         L.add('clk', 'N', CW / 2)
-        L.pack(spread_we=True)
+        L.pack(spread_we=True, ns_spread=NS_SPREAD if c in NS_SPREAD_COLS else 0.0)
         rets.append(L)
     # slices: E (columns 0/1) and W (2/3).  10-16 (a2 GRT-0116 on both slices: every bit was packed into ~50 um
     # windows at the face ends, ~10.5 pins/um, M2 85% / M3 71%): straight-through register columns instead -- bit i's
