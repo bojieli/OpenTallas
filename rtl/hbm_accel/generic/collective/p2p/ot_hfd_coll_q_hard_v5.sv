@@ -352,6 +352,27 @@ module ot_hgi_coll_qso_q2_b1(input wire clk,rst_n,input wire [8:0] captured,inpu
  output wire select_fault,unavailable_fault);
  ot_hgi_coll_qslots_output #(.NS(9),.ND(15),.PWT(1),.SELW(4)) u(.*);
 endmodule
+// d4f NLINK shapes: n2s1 (SW NLINK2: NS10 ND15), n1s0 (SE/NW/NE NLINK1: NS8 ND14)
+module ot_hgi_coll_qso_n2s1_b32(input wire clk,rst_n,input wire [319:0] captured,input wire [9:0] captured_slot,
+ input wire [14:0] sink_slot,input wire [59:0] sink_select,output wire [14:0] dst_v,output wire [479:0] dst_d,
+ output wire select_fault,unavailable_fault);
+ ot_hgi_coll_qslots_output #(.NS(10),.ND(15),.PWT(32),.SELW(4)) u(.*);
+endmodule
+module ot_hgi_coll_qso_n2s1_b1(input wire clk,rst_n,input wire [9:0] captured,input wire [9:0] captured_slot,
+ input wire [14:0] sink_slot,input wire [59:0] sink_select,output wire [14:0] dst_v,output wire [14:0] dst_d,
+ output wire select_fault,unavailable_fault);
+ ot_hgi_coll_qslots_output #(.NS(10),.ND(15),.PWT(1),.SELW(4)) u(.*);
+endmodule
+module ot_hgi_coll_qso_n1s0_b32(input wire clk,rst_n,input wire [255:0] captured,input wire [7:0] captured_slot,
+ input wire [13:0] sink_slot,input wire [55:0] sink_select,output wire [13:0] dst_v,output wire [447:0] dst_d,
+ output wire select_fault,unavailable_fault);
+ ot_hgi_coll_qslots_output #(.NS(8),.ND(14),.PWT(32),.SELW(4)) u(.*);
+endmodule
+module ot_hgi_coll_qso_n1s0_b1(input wire clk,rst_n,input wire [7:0] captured,input wire [7:0] captured_slot,
+ input wire [13:0] sink_slot,input wire [55:0] sink_select,output wire [13:0] dst_v,output wire [13:0] dst_d,
+ output wire select_fault,unavailable_fault);
+ ot_hgi_coll_qslots_output #(.NS(8),.ND(14),.PWT(1),.SELW(4)) u(.*);
+endmodule
 
 // ---------------------------------------------------------------------------------------------------------------
 // Rail: actual link_capture structure (capture-control leaf + 4 native store leaves); the V4 parent's epoch
