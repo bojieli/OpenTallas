@@ -14,23 +14,25 @@
 //   idx_tx_r<r>[a*256+:256]   = idx_tx[a*545+256r+:256]     (flit a data half r)
 //   idx_tx_h[a*33+:33]        = idx_tx[a*545+512+:33]       (flit a header, shared control)
 //   su_inj_d_r<r>[j*256+:256] = su_inj_d[512j+256r+:256],  inj_d_r<r>[j*256+:256] = inj_d[512j+256r+:256]
+// Control pins are REPLICATED per region (die fans the producer register out to both pins; each root captures only its
+// own pins): region 1 uses rst_n_r1, inj_rd_r1, inj_idx_r1, inj_addr_r1, idx_tx_v_r1, idx_tx_h_r1.
 // ot_hgi_coll_inj_idx_join_rg_flat (below) restores the original port shape for benches. MUT 1..4 as the original.
 module ot_hgi_coll_inj_idx_join_rg #(
  parameter integer INJLAT=12, MUT=0
 )(
- input wire clk_r0, clk_r1, rst_n,
- input wire [1:0] inj_rd,
- input wire [31:0] inj_idx,
- input wire [159:0] inj_addr,
+ input wire clk_r0, clk_r1, rst_n, rst_n_r1,
+ input wire [1:0] inj_rd, inj_rd_r1,
+ input wire [31:0] inj_idx, inj_idx_r1,
+ input wire [159:0] inj_addr, inj_addr_r1,
  input wire [511:0] su_inj_d_r0, su_inj_d_r1,
- input wire [3:0] idx_tx_v,
- input wire [131:0] idx_tx_h,
+ input wire [3:0] idx_tx_v, idx_tx_v_r1,
+ input wire [131:0] idx_tx_h, idx_tx_h_r1,
  input wire [1023:0] idx_tx_r0, idx_tx_r1,
  output wire [511:0] inj_d_r0, inj_d_r1,
  output wire fault
 );
  // flat views (wiring only)
- wire [1023:0] su_inj_d, inj_d; wire [2179:0] idx_tx;
+ wire [1023:0] su_inj_d, inj_d; wire [2179:0] idx_tx, idx_tx1;
  for(genvar j=0;j<2;j=j+1)begin:g_flat
   assign su_inj_d[512*j+:256]=su_inj_d_r0[256*j+:256]; assign su_inj_d[512*j+256+:256]=su_inj_d_r1[256*j+:256];
   assign inj_d_r0[256*j+:256]=inj_d[512*j+:256];       assign inj_d_r1[256*j+:256]=inj_d[512*j+256+:256];
@@ -38,6 +40,7 @@ module ot_hgi_coll_inj_idx_join_rg #(
  for(genvar a=0;a<4;a=a+1)begin:g_tx
   assign idx_tx[a*545+:256]=idx_tx_r0[a*256+:256]; assign idx_tx[a*545+256+:256]=idx_tx_r1[a*256+:256];
   assign idx_tx[a*545+512+:33]=idx_tx_h[a*33+:33];
+  assign idx_tx1[a*545+:512]=512'd0; assign idx_tx1[a*545+512+:33]=idx_tx_h_r1[a*33+:33];   // region-1 header view
  end
  localparam integer D=INJLAT-4;
  localparam integer GB=32, NG=256/GB;
@@ -46,15 +49,19 @@ module ot_hgi_coll_inj_idx_join_rg #(
  assign fault=fault_r[0];
  for(genvar r=0;r<2;r=r+1)begin:g_reg
   wire ck = r ? clk_r1 : clk_r0;
+  wire rn = r ? rst_n_r1 : rst_n;
+  wire [1:0] p_rd = r ? inj_rd_r1 : inj_rd; wire [31:0] p_idx = r ? inj_idx_r1 : inj_idx;
+  wire [159:0] p_addr = r ? inj_addr_r1 : inj_addr; wire [3:0] p_txv = r ? idx_tx_v_r1 : idx_tx_v;
+  wire [2179:0] p_tx = r ? idx_tx1 : idx_tx;      // header bits only are read through p_tx
   // ---------------- reset capture (async assert, sync release), one per region
   reg rst_q;
-  always @(posedge ck or negedge rst_n) if(!rst_n) rst_q<=1'b0; else rst_q<=1'b1;
+  always @(posedge ck or negedge rn) if(!rn) rst_q<=1'b0; else rst_q<=1'b1;
   // ---------------- control pin registers (region copy)
   reg [1:0] rq_rd; reg [31:0] rq_idx; reg [159:0] rq_addr;
   reg [3:0] tx_v_q; reg [16:0] tx_h [0:3];       // {v544, flit16}
-  always @(posedge ck) begin rq_idx<=inj_idx; rq_addr<=inj_addr;
-   for(integer a=0;a<4;a=a+1) tx_h[a]<={idx_tx[a*545+544],idx_tx[a*545+512+:16]}; end
-  always @(posedge ck or negedge rst_q) if(!rst_q) begin rq_rd<=0; tx_v_q<=0; end else begin rq_rd<=inj_rd; tx_v_q<=idx_tx_v; end
+  always @(posedge ck) begin rq_idx<=p_idx; rq_addr<=p_addr;
+   for(integer a=0;a<4;a=a+1) tx_h[a]<={p_tx[a*545+544],p_tx[a*545+512+:16]}; end
+  always @(posedge ck or negedge rst_q) if(!rst_q) begin rq_rd<=0; tx_v_q<=0; end else begin rq_rd<=p_rd; tx_v_q<=p_txv; end
   // ---------------- request delay line (region copy)
   wire [18:0] rec0 [0:1];
   for(genvar j=0;j<2;j=j+1)begin:g_rec
@@ -70,7 +77,7 @@ module ot_hgi_coll_inj_idx_join_rg #(
   // ---------------- data pin registers (this region's half)
   reg [255:0] tx_d [0:3]; reg [255:0] su_q [0:1];
   always @(posedge ck) begin
-   for(integer a=0;a<4;a=a+1) tx_d[a]<=idx_tx[a*545+256*r+:256];
+   for(integer a=0;a<4;a=a+1) tx_d[a]<=r ? idx_tx_r1[a*256+:256] : idx_tx_r0[a*256+:256];
    for(integer j=0;j<2;j=j+1) su_q[j]<=su_inj_d[512*j+256*r+:256];
   end
   // ---------------- per 32-bit group: replicated selects, staging slice, read, output
@@ -79,8 +86,8 @@ module ot_hgi_coll_inj_idx_join_rg #(
    (* keep = "true", dont_touch = "true" *) reg [11:0] gs;         // copies of the 4 write slots
    (* keep = "true", dont_touch = "true" *) reg [3:0] rsel [0:1];  // copy of dl[D-1] {src, slot} per lane
    (* keep = "true", dont_touch = "true" *) reg [1:0] srcq;        // copy of src_q
-   always @(posedge ck) for(integer a=0;a<4;a=a+1) gs[a*3+:3]<=idx_tx[a*545+512+:3];
-   always @(posedge ck or negedge rst_q) if(!rst_q) gv<=0; else gv<=idx_tx_v;
+   always @(posedge ck) for(integer a=0;a<4;a=a+1) gs[a*3+:3]<=p_tx[a*545+512+:3];
+   always @(posedge ck or negedge rst_q) if(!rst_q) gv<=0; else gv<=p_txv;
    always @(posedge ck or negedge rst_q)
     if(!rst_q) begin rsel[0]<=0; rsel[1]<=0; srcq<=0; end
     else for(integer j=0;j<2;j=j+1) begin
@@ -146,6 +153,7 @@ module ot_hgi_coll_inj_idx_join_rg_flat #(parameter integer INJLAT=12, MUT=0)(
  end
  ot_hgi_coll_inj_idx_join_rg #(.INJLAT(INJLAT),.MUT(MUT)) u(.clk_r0(clk_r0),.clk_r1(clk_r1),.rst_n(rst_n),.inj_rd(inj_rd),
   .inj_idx(inj_idx),.inj_addr(inj_addr),.su_inj_d_r0(s0),.su_inj_d_r1(s1),.idx_tx_v(idx_tx_v),.idx_tx_h(h),.idx_tx_r0(t0),
+  .rst_n_r1(rst_n),.inj_rd_r1(inj_rd),.inj_idx_r1(inj_idx),.inj_addr_r1(inj_addr),.idx_tx_v_r1(idx_tx_v),.idx_tx_h_r1(h),
   .idx_tx_r1(t1),.inj_d_r0(o0),.inj_d_r1(o1),.fault(fault));
 endmodule
 `default_nettype wire

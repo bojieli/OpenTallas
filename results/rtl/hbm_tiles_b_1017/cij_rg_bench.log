@@ -1,3 +1,7 @@
+5
+hcoll_inj_idx_join_rg_1017
+REF_TILE kit physical/ref_tile/hcoll_inj_idx_join_rg_1017 outline 216.0 x 432.0 um (spec outline (ex
+PRE_ROUTE_GATE: WARN (0 fail, 1 warn)
 BENCH MUT=0 inj_idx_join MUT=0 idx_words=64 su_words=148 mismatches=0 faultA=0 faultB=1 PASS 
 BENCH MUT=1 inj_idx_join MUT=1 idx_words=64 su_words=148 mismatches=212 faultA=0 faultB=1 FAIL 
 BENCH MUT=2 inj_idx_join MUT=2 idx_words=64 su_words=148 mismatches=212 faultA=0 faultB=1 FAIL 

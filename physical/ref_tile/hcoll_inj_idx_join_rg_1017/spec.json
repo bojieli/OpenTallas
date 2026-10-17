@@ -7,7 +7,8 @@
  ],
  "clock_port": "clk_r0",
  "reset_ports": [
-  "rst_n"
+  "rst_n",
+  "rst_n_r1"
  ],
  "params": {
   "INJLAT": 12,
@@ -26,6 +27,8 @@
    "idx_tx_r0",
    "idx_tx_v",
    "idx_tx_h",
+   "idx_tx_v_r1",
+   "idx_tx_h_r1",
    "idx_tx_r1"
   ],
   "W": [
@@ -35,6 +38,10 @@
    "inj_addr",
    "rst_n",
    "fault",
+   "rst_n_r1",
+   "inj_rd_r1",
+   "inj_idx_r1",
+   "inj_addr_r1",
    "su_inj_d_r1"
   ]
  },
@@ -51,7 +58,7 @@
  },
  "outline": {
   "w": 216.0,
-  "h": 388.8,
+  "h": 432.0,
   "exact": true
  },
  "macros": [],
@@ -142,6 +149,12 @@
     "clk_r1"
    ],
    "inputs": [
+    "rst_n_r1",
+    "inj_rd_r1",
+    "inj_idx_r1",
+    "inj_addr_r1",
+    "idx_tx_v_r1",
+    "idx_tx_h_r1",
     "su_inj_d_r1",
     "idx_tx_r1"
    ],
@@ -153,47 +166,71 @@
  "pin_ranges": {
   "idx_tx_r0": [
    3.0,
-   182.4
+   190.0
   ],
   "idx_tx_v": [
-   182.4,
-   184.4
+   190.0,
+   192.0
   ],
   "idx_tx_h": [
-   184.4,
-   204.4
+   192.0,
+   215.0
+  ],
+  "idx_tx_v_r1": [
+   217.0,
+   219.0
+  ],
+  "idx_tx_h_r1": [
+   219.0,
+   242.0
   ],
   "idx_tx_r1": [
-   206.4,
-   385.8
+   242.0,
+   429.0
   ],
   "su_inj_d_r0": [
    3.0,
-   154.4
+   144.0
   ],
   "inj_rd": [
-   154.4,
-   156.4
+   144.0,
+   146.0
   ],
   "inj_idx": [
-   156.4,
-   164.4
+   146.0,
+   154.0
   ],
   "inj_addr": [
-   164.4,
-   224.4
+   154.0,
+   208.0
   ],
   "rst_n": [
-   224.4,
-   226.4
+   208.0,
+   210.0
   ],
   "fault": [
-   226.4,
-   228.4
+   210.0,
+   212.0
+  ],
+  "rst_n_r1": [
+   220.0,
+   222.0
+  ],
+  "inj_rd_r1": [
+   222.0,
+   224.0
+  ],
+  "inj_idx_r1": [
+   224.0,
+   232.0
+  ],
+  "inj_addr_r1": [
+   232.0,
+   286.0
   ],
   "su_inj_d_r1": [
-   234.4,
-   385.8
+   288.0,
+   429.0
   ],
   "inj_d_r0": [
    3.0,
@@ -213,5 +250,5 @@
   ]
  },
  "std_area_um2": 8200,
- "structural_change": "cij successor (HBM-TILES-B 10-17) after the hcoll_inj_idx_join gate (HBM-C): one 9,926-sink root at TT insertion 396 ps, dl[7] slot select 4,208/4,180 loads, rst_q 321 loads. rg: TWO regional roots (clk_r0 lower half, clk_r1 upper half) by DATA BIT HALF (region r owns bits [256r+:256] of every 512-bit word: staging, SU word, output); per 32-bit group kept copies of the slot/source selects and of tx_v/write slots (<= ~256 loads each); one reset capture per region. Ports split by region (die contract bit-range edges, see RTL header). Same edges and faults: original bench MUT0 PASS / MUT1-4 FAIL on the rg, random lockstep vs the original PASS (skewed clk_r1 and slot mutant FAIL). 216x388.8: E idx data 1,024 b per half over ~182 um (5.6/um), header between them."
+ "structural_change": "cij successor (HBM-TILES-B 10-17) after the hcoll_inj_idx_join gate (HBM-C): one 9,926-sink root at TT insertion 396 ps, dl[7] slot select 4,208/4,180 loads, rst_q 321 loads. rg: TWO regional roots (clk_r0 lower half, clk_r1 upper half) by DATA BIT HALF (region r owns bits [256r+:256] of every 512-bit word: staging, SU word, output); per 32-bit group kept copies of the slot/source selects and of tx_v/write slots (<= ~256 loads each); one reset capture per region. Ports split by region (die contract bit-range edges, see RTL header). Same edges and faults: original bench MUT0 PASS / MUT1-4 FAIL on the rg, random lockstep vs the original PASS (skewed clk_r1 and slot mutant FAIL). 216x432: control pins replicated per region (each root captures only its own pins); E idx data 1,024 b per half over ~187 um (5.5/um)."
 }

@@ -6,22 +6,22 @@ name='hcoll_inj_idx_join_rg_1017'
 s['name']=name; s['top']='ot_hgi_coll_inj_idx_join_rg'
 s['sources']=['rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_idx_join_rg.sv']
 s['params']={'INJLAT':12,'MUT':0}
-W,H=216.0,388.8
+W,H=216.0,432.0
 s['outline']={'w':W,'h':H,'exact':True}
 s.pop('util',None)
 s['clock_port']='clk_r0'; s['clock']='multiple_cts_roots'; s['clock_ports']=['clk_r0','clk_r1']
 s['clock_data_paths']='related_same_frequency'; s['clock_relationship']={'kind':'same_pll_fixed_phase','ratio':[1,1],'phase_ps':0}
 ctl_in=['inj_rd','inj_idx','inj_addr','idx_tx_v','idx_tx_h','rst_n']
 s['clock_entry_domains']={'core':{'ratio':[1,1],'ports':['clk_r0'],'inputs':['rst_n','inj_rd','inj_idx','inj_addr','idx_tx_v','idx_tx_h','su_inj_d_r0','idx_tx_r0'],'outputs':['inj_d_r0','fault']},
-                          'r1':{'ratio':[1,1],'ports':['clk_r1'],'inputs':['su_inj_d_r1','idx_tx_r1'],'outputs':['inj_d_r1']}}
-s['reset_ports']=['rst_n']
+                          'r1':{'ratio':[1,1],'ports':['clk_r1'],'inputs':['rst_n_r1','inj_rd_r1','inj_idx_r1','inj_addr_r1','idx_tx_v_r1','idx_tx_h_r1','su_inj_d_r1','idx_tx_r1'],'outputs':['inj_d_r1']}}
+s['reset_ports']=['rst_n','rst_n_r1']
 # region 0 = lower half, region 1 = upper half. E: idx data halves around the header; W: SU halves around the request
 # control; S/N: each region's output half with its own clock entry at the face centre.
-s['pins']={'S':['inj_d_r0','clk_r0'],'N':['inj_d_r1','clk_r1'],'E':['idx_tx_r0','idx_tx_v','idx_tx_h','idx_tx_r1'],
-           'W':['su_inj_d_r0','inj_rd','inj_idx','inj_addr','rst_n','fault','su_inj_d_r1']}
+s['pins']={'S':['inj_d_r0','clk_r0'],'N':['inj_d_r1','clk_r1'],'E':['idx_tx_r0','idx_tx_v','idx_tx_h','idx_tx_v_r1','idx_tx_h_r1','idx_tx_r1'],
+           'W':['su_inj_d_r0','inj_rd','inj_idx','inj_addr','rst_n','fault','rst_n_r1','inj_rd_r1','inj_idx_r1','inj_addr_r1','su_inj_d_r1']}
 m=H/2
-s['pin_ranges']={'idx_tx_r0':[3.0,m-12],'idx_tx_v':[m-12,m-10],'idx_tx_h':[m-10,m+12-2],'idx_tx_r1':[m+12-2+2,H-3.0],
-                 'su_inj_d_r0':[3.0,m-40],'inj_rd':[m-40,m-38],'inj_idx':[m-38,m-30],'inj_addr':[m-30,m+30],'rst_n':[m+30,m+32],'fault':[m+32,m+34],'su_inj_d_r1':[m+40,H-3.0],
+s['pin_ranges']={'idx_tx_r0':[3.0,m-26],'idx_tx_v':[m-26,m-24],'idx_tx_h':[m-24,m-1],'idx_tx_v_r1':[m+1,m+3],'idx_tx_h_r1':[m+3,m+26],'idx_tx_r1':[m+26,H-3.0],
+                 'su_inj_d_r0':[3.0,m-72],'inj_rd':[m-72,m-70],'inj_idx':[m-70,m-62],'inj_addr':[m-62,m-8],'rst_n':[m-8,m-6],'fault':[m-6,m-4],'rst_n_r1':[m+4,m+6],'inj_rd_r1':[m+6,m+8],'inj_idx_r1':[m+8,m+16],'inj_addr_r1':[m+16,m+70],'su_inj_d_r1':[m+72,H-3.0],
                  'inj_d_r0':[3.0,W/2-3],'clk_r0':[W/2,W/2+1],'inj_d_r1':[3.0,W/2-3],'clk_r1':[W/2,W/2+1]}
 # outputs on S/N: put the clock in the middle by splitting the output range around it
 s['pin_ranges']['inj_d_r0']=[3.0,W-3.0]; s['pin_ranges']['inj_d_r1']=[3.0,W-3.0]
@@ -32,8 +32,7 @@ s['structural_change']=('cij successor (HBM-TILES-B 10-17) after the hcoll_inj_i
  'upper half) by DATA BIT HALF (region r owns bits [256r+:256] of every 512-bit word: staging, SU word, output); per 32-bit '
  'group kept copies of the slot/source selects and of tx_v/write slots (<= ~256 loads each); one reset capture per region. '
  'Ports split by region (die contract bit-range edges, see RTL header). Same edges and faults: original bench MUT0 PASS / '
- 'MUT1-4 FAIL on the rg, random lockstep vs the original PASS (skewed clk_r1 and slot mutant FAIL). 216x388.8: E idx data '
- '1,024 b per half over ~182 um (5.6/um), header between them.')
+ 'MUT1-4 FAIL on the rg, random lockstep vs the original PASS (skewed clk_r1 and slot mutant FAIL). 216x432: control pins replicated per region (each root captures only its own pins); E idx data 1,024 b per half over ~187 um (5.5/um).')
 j=s['job']; j['owner']='Claude:HBM-TILES-B'; j['branch']='claude/hbmc-1017'; j['tag']='rg1'
 j['purpose']='cij successor: 2 regional roots by bit half + replicated slot selects (HBM-TILES-B item 3)'
 j['record_to']='results/rtl/ref_tile/'+name; j['views_to']=f'physical/ref_tile/{name}/views'

@@ -7,13 +7,13 @@
   0,
   0,
   216.0,
-  388.8
+  432.0
  ],
  "core": [
   2.16,
   2.16,
   213.84,
-  386.64
+  429.84
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": 8200,
@@ -41,6 +41,8 @@
    "idx_tx_r0",
    "idx_tx_v",
    "idx_tx_h",
+   "idx_tx_v_r1",
+   "idx_tx_h_r1",
    "idx_tx_r1"
   ],
   "W": [
@@ -50,6 +52,10 @@
    "inj_addr",
    "rst_n",
    "fault",
+   "rst_n_r1",
+   "inj_rd_r1",
+   "inj_idx_r1",
+   "inj_addr_r1",
    "su_inj_d_r1"
   ]
  },
@@ -63,7 +69,7 @@
   [
    "WARN",
    "util",
-   "utilisation 10% outside 45%-60% (std 8200 + macro 0 in core 81387 um2)",
+   "utilisation 9% outside 45%-60% (std 8200 + macro 0 in core 90531 um2)",
    "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   ]
  ],
