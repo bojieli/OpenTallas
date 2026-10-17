@@ -1,8 +1,0 @@
-{
-  "source_commit": "ba8e898717a6c604ffdbc3478187240b5a741783",
-  "admission": false,
-  "unit": "oth-ubuntu-1804253-1791971511",
-  "exit": 0,
-  "verdict": "PASS",
-  "proof": "Held actual PB2 final child release and actual IO command-FIFO read-domain final release, stopped clock, async assertion, repeated epoch. Both matched omitted-state mutants explicitly FUNCTIONAL_FAIL_CAUGHT. Default functional candidate behavior unchanged from ack10 exact/cost."
-}

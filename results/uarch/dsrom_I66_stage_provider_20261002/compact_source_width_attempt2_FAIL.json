@@ -1,7 +1,0 @@
-{
-  "actual_RTL_or_runtime_changed": false,
-  "command": "compact_kernel(resolve_call(L0.I66,EID288,rank0,generation1,user0,accepted_read))",
-  "correction": "Use exact208 source bits; still one payloadflit +one236bitheader, no cycle-fit or packet-count change.",
-  "reason": "compact kernel proposal assumed QE_NB21; pinned full ISA declares QE_NB8. Source contract raised ValueError before any build.",
-  "verdict": "FAIL_STATIC_SOURCE_WIDTH"
-}

@@ -1,9 +1,0 @@
-# Qwen G4/W4 reduced memory tile: full-route timeout
-
-The full-route attempt is pinned to source and driver commit `152dc714e2af7f9c13aa2eda8edb04e2667450f9`. Its focused differential RTL gate passed all 16 × 16 output slots and ingress commits. The target was 1.5 ns at ASAP7 RVT TT with 320 ps maximum transition and 60% slew repair margin. This reduced tile places one ROM, four KV SRAM and four X SRAM analytical macro instances.
-
-The driver returned **`status: error` and `flow_completed: false`** at its 21,600-second ORFS route-stage timeout on 2026-09-28 05:05:24 UTC. The flow was still in global-route hold repair and had not started detailed route. The last saved global-route iteration (560) showed hold WNS −493.010 ps, hold TNS −242,214.562 ps, and 8,948 inserted buffers *at that iteration*. These are intermediate repair values, not final signoff results. [physical.json](physical.json) records the exact timeout and source, driver, and library pins; [grt_live_snapshot.log](grt_live_snapshot.log) preserves the progress trace. The timed-out Docker client left its specific OpenROAD container running, so that orphan was stopped after saving the trace.
-
-There is no completed global route, detailed-route DRC, antenna check, extracted setup or hold timing, final slew/cap/fanout verdict, or final hold-buffer count/area for this attempt. Its incomplete buffer count cannot be compared as area improvement to the previously routed W4/G2 tile's 18,810 final hold buffers. The separately recorded G4/W4 CTS checkpoint already failed setup and hold timing.
-
-The ROM/SRAM LEF and Liberty views are analytical proxies without characterized memory internals or macro GDS. ASAP7 is a predictive academic PDK. This is reduced block characterization, not closure of the two-reticle Qwen3 8B package with 8-bit weights, UCIe layer partitioning, eight HBM3E stacks and 6,144 lane groups per die.

@@ -1,5 +1,0 @@
-{
-  "exit_code": 2,
-  "output": "results/rtl/dsrom_actual_element_rowfix_prepare_20261002/ot_v41_rom_elem_w10.diff:25: trailing whitespace.\n+ \nresults/rtl/dsrom_actual_element_rowfix_prepare_20261002/ot_v41_rom_elem_w10.diff:25: new blank line at EOF.\n",
-  "diagnosis": "Unified-diff artifact has a valid blank context line (space marker), which Git flags as whitespace when stored as added text. No RTL whitespace defect. Use zero-context review diff to avoid artifact marker false positive."
-}

@@ -1,6 +1,0 @@
-JOIN_MISMATCH ready=1/0 fault=0/0 stage= 2/ 2 pos=   102/   102
-JOIN_MISMATCH ready=1/0 fault=0/0 stage= 3/ 3 pos=   103/   103
-JOIN_MISMATCH ready=1/0 fault=0/0 stage= 9/ 9 pos=   109/   109
-JOIN_MISMATCH ready=1/0 fault=0/0 stage=10/10 pos=   110/   110
-FAIL ready_join8 checks=564 bad=159
-rtl/test/redesign_qwen/tb_qfd_cbuf_ready_join8.sv:32: $finish called at 475380 (1ps)

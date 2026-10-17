@@ -1,6 +1,0 @@
-ILOAD f 0 rows 400 n 8: 1668 cycles, 7.7 destination B / cycle, 7.7 source B / cycle = 0.2 % of 3.80 TB/s
-ILOAD f 1 rows 300 n 64: 1269 cycles, 60.5 destination B / cycle, 30.3 source B / cycle = 1.0 % of 3.80 TB/s
-FAIL iload f 2 cnt 96: done 0 fault 1 ids 38
-[18324000] %Fatal: tb_hgi_dma_front_native6.sv:84: Assertion failed in tb_hgi_dma_front_native6: FATAL native transport faults queue0000ff00 router00 lease0
-%Error: rtl/hbm_accel/generic/peers/tb_hgi_dma_front_native6.sv:84: Verilog $stop
-Aborting...

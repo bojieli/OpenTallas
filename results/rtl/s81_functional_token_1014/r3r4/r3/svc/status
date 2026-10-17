@@ -1,7 +1,0 @@
-vec L2 FAIL            ~~~^^^^^^^^^^^^^^^^^
-AssertionError: {'stored_rows_equal_golden_rows': False, 'q_is_q_rope_out': True, 'sc_equals_golden_s_raw': True, 'pv_equals_golden_pv': True}
-vec L21 FAIL            ~~~^^^^^^^^^^^^^^^^^
-AssertionError: {'stored_rows_equal_golden_rows': False, 'q_is_q_rope_out': True, 'sc_equals_golden_s_raw': True, 'pv_equals_golden_pv': True}
-vectors: L0 L1 L3 L14 L20 L24 2026-10-14T12:37:06-07:00
-vec L2 OK 2026-10-14T16:16:54-07:00
-vec L21 OK 2026-10-14T16:16:54-07:00

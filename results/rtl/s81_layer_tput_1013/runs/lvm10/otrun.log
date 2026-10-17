@@ -1,8 +1,0 @@
-ot-run: ot-epyc1tb     free  -203 GB (avail 703, growth 732, headroom 64, waiters 1/110 GB) running 27 disk 1185 GB 
-ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/rom-layer-tput-s81/su_main/src
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/rom-layer-tput-s81/su_main/src
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/rom-layer-tput-s81/su_main/src
-ot-run: -> ot-epyc1tb (will queue: -203 GB free < 64 GB)
-ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3437106-1791938248 after 65 s
-LVM 10 rc=0
-ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3437106-1791938248): exit 0

@@ -1,7 +1,0 @@
-{
-  "status": "FAIL_PREPARATION_PARSER",
-  "solver_launched": false,
-  "error": "ValueError: unparsed source reg output reg[23:0]wrom_addr)",
-  "cause": "header output reg declarations incorrectly parsed as body state",
-  "successor_fix": "parse body separately; retain explicit output register widths"
-}

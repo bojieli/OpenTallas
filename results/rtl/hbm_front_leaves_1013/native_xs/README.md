@@ -1,5 +1,0 @@
-Native B2 formatter endpoint: sixteen held277-bit packets and eight sixteen-way onehot selections; output eight280-bit {mirror,global_sector15,data256,wordmask8} packets plus registered valid and bad bits. Five registered capture edges. Main sectors<32768 retain destination sid; mirror32768..36863 sets mirror and retains low15sector; >=36864 emits bad with zero mask because HCAP is separate.
-
-Dense480record scoreboard independently checks FP32/BF16/FP8/INT8/U32 conversion, main global sid, mirror boundaries, unsupported range, valid, data and mask through bubbles. Exact PASS; BF16 reversal MUT1 observes192errors and mirror-drop MUT8 observes320errors; actual fatal exits.
-
-The enclosing real four-B2 vehicle must route by destination sid, broadcast mirror, reserve downstream capacity for issued selections, and return source-owner completion after commits. This formatter alone proves no native DMA acceptance or production latency. Physical kit is a requested slot pending actual pins and CTS.

@@ -1,4 +1,0 @@
-launched 2026-10-03T04:19:23-07:00 by claude (qwen async collective). source: de1d9348de31b9a360d4830de5cf7729d1ba139e (git archive rtl tools configs)
-inputs: in/ = ot-pve1 /home/ubuntu/w12/st_tp4_sw64/sw/L{0,1}-d{0..3}, /home/ubuntu/w12/oracle_tp4, /tmp/qwen-vocab-embed-token0
-images: img256 (qwen_rom_ar256_stage_images.py), imgF/imgC/imgFC (qwen_rom_async_coll.py --fuse/--cut); L1-d0 program 23e52eb4 (img256)
-jobs: chain.sh -> chain.log, exit/*.rc, res/*.json

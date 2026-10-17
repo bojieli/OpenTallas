@@ -1,5 +1,0 @@
-Oct 02 07:24:19 ubuntu systemd[1537]: Started /usr/bin/taskset --cpu-list 8-23 /usr/bin/python3 -B /home/ubuntu/OpenTallas-hbm-rf-service/tools/run_hbm_rf_connected_thin_archive_r7.py --proposal /home/ubuntu/OpenTallas-hbm-rf-service/results/uarch/hbm_connected_thin_archive_r7_20261002/prepared_gate.json --go /home/ubuntu/OpenTallas/results/rtl/hbm_connected_thin_parent_20261002_r1/GO.json --go-commit 280c68212 --out /tmp/hbm-native-connected-thin-parent-20261002-r1.
-Oct 02 07:32:41 ubuntu taskset[4067667]: DS/simulation failed: PHASE_TIMEOUT
-Oct 02 07:32:41 ubuntu systemd[1537]: hbm-native-connected-thin-parent-20261002-r1.service: Main process exited, code=exited, status=1/FAILURE
-Oct 02 07:32:41 ubuntu systemd[1537]: hbm-native-connected-thin-parent-20261002-r1.service: Failed with result 'exit-code'.
-Oct 02 07:32:41 ubuntu systemd[1537]: hbm-native-connected-thin-parent-20261002-r1.service: Consumed 1h 17min 10.749s CPU time.

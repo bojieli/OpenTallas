@@ -1,3 +1,0 @@
-read_verilog -sv -D MUTANT results/arch/hbm_native_1013/attention/fpipe_equivalence.sv
-prep -top proof -flatten
-sat -seq 10 -prove-skip 4 -prove good 1 -show-inputs -show-outputs

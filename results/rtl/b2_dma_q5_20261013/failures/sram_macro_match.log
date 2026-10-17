@@ -1,8 +1,0 @@
-GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
-GATE INFO oflop: E face 10.5 pins/um (kv_c_rdy, kv_idle_w, kv_creq): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)
-GATE INFO oflop: N face 6.0 pins/um (il_active, il_vmq, il_vmr): recipe-2 hold stages take 2.01 um behind the face, the pin flops need gap 2.6 um and 12 columns (derived in the flow)
-GATE INFO oflop: S face 9.0 pins/um (k_req_v, k_req_rdy, k_req_we): recipe-2 hold stages take 3.02 um behind the face, the pin flops need gap 3.9 um and 18 columns (derived in the flow)
-GATE INFO remote: ot-run selected ot-epyc4 for 32 GB; inputs ship there before admission
-GATE INFO remote: remote log /tmp/ref_gate_b2_dma_mv_q5_ref_20261013-202032.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/b2_dma_mv_q5_ref-20261013-202032
-GATE FAIL floorplan_run: synthesis + floorplan + PDN failed: FAILED: FlowError: ORFS place-and-route through floorplan failed with exit 2:; Error: macro_place.tcl, 6 ref_tile place: no unplaced instance of ot_sram_1r1w_64x16_m1 matching 'u_cf_mem.g_tile[0].g_m3.u_m'; Error: macro_place.tcl, 6 ref_tile place: no unplaced instance of ot_sram_1r1w_64x16_m1 matching 'u_cf_mem.g_tile[0].g_m3.u_m'  -> FIX: read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL
-PRE_ROUTE_GATE: FAIL (1 fail, 0 warn)

@@ -1,7 +1,0 @@
-{
-  "status": "FAIL_PREPARATION_PARSER",
-  "solver_launched": false,
-  "error": "ValueError: unparsed source reg ister stages computed from the latched fields",
-  "cause": "comment substring registers matched as declaration",
-  "successor_fix": "strip Verilog comments before declaration inventory"
-}
