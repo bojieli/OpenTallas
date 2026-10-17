@@ -12,7 +12,7 @@ s.pop('util',None)
 s['clock_port']='clk_r0'; s['clock']='multiple_cts_roots'; s['clock_ports']=['clk_r0','clk_r1']
 s['clock_data_paths']='related_same_frequency'; s['clock_relationship']={'kind':'same_pll_fixed_phase','ratio':[1,1],'phase_ps':0}
 ctl_in=['inj_rd','inj_idx','inj_addr','idx_tx_v','idx_tx_h','rst_n']
-s['clock_entry_domains']={'core':{'ratio':[1,1],'ports':['clk_r0'],'inputs':['inj_rd','inj_idx','inj_addr','idx_tx_v','idx_tx_h','su_inj_d_r0','idx_tx_r0'],'outputs':['inj_d_r0','fault']},
+s['clock_entry_domains']={'core':{'ratio':[1,1],'ports':['clk_r0'],'inputs':['rst_n','inj_rd','inj_idx','inj_addr','idx_tx_v','idx_tx_h','su_inj_d_r0','idx_tx_r0'],'outputs':['inj_d_r0','fault']},
                           'r1':{'ratio':[1,1],'ports':['clk_r1'],'inputs':['su_inj_d_r1','idx_tx_r1'],'outputs':['inj_d_r1']}}
 s['reset_ports']=['rst_n']
 # region 0 = lower half, region 1 = upper half. E: idx data halves around the header; W: SU halves around the request

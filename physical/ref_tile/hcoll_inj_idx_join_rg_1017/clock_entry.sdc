@@ -5,7 +5,7 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{inj_rd} {inj_idx} {inj_addr} {idx_tx_v} {idx_tx_h} {su_inj_d_r0} {idx_tx_r0}} outputs {{inj_d_r0} {fault}}} {r1} {clock ot_io_r1 io_budget_ps 166.667 inputs {{su_inj_d_r1} {idx_tx_r1}} outputs {{inj_d_r1}}}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n} {inj_rd} {inj_idx} {inj_addr} {idx_tx_v} {idx_tx_h} {su_inj_d_r0} {idx_tx_r0}} outputs {{inj_d_r0} {fault}}} {r1} {clock ot_io_r1 io_budget_ps 166.667 inputs {{su_inj_d_r1} {idx_tx_r1}} outputs {{inj_d_r1}}}]
 set ::ot_ce_source_domains [dict create {clk_r0} {core} {clk_r1} {r1}]
 set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{clk_r0} {clk_r1}}
