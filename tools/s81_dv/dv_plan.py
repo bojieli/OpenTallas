@@ -13,6 +13,7 @@ Outputs (in --out): plan.json (blocks + links + geometry facts), dv_links_record
 for `dataflow_links.py import`), dv_flow.png.  Every die-level link is a registered relay chain at <= HOP_UM.
 """
 import argparse
+import collections
 import json
 import math
 from pathlib import Path
@@ -43,6 +44,10 @@ P4H = False                       # p4h (10-17, coordinator COORD ~11:15): the t
                                   # per regional controller, in the PHY-front region freed by the 4 row-0 S-tier frames over the PHY
 P4H_DROP = ((3, 'L'), (3, 'R'), (4, 'L'), (4, 'R'))   # frame columns whose row-0 S-tier frame (9 slots) gives way
 RSV_GAP, RSV_CH, RSV_GU = 40.0, 200.0, 110.0     # p4h: gap between regional slices (upper-row rq/rd lanes) / channel above the controllers
+P4I = False                       # p4i (10-17, coordinator 0cj ~15:00): coll_edge deleted (end-column rung = relays only; the end
+                                  # slices carry the cross-die link endpoints), regional service slices dsdv_svc_rs chained
+                                  # neighbour-only toward the centre (fixed order, centre fold), HP beat kind, host/job paths
+SVC_CH = 512                      # p4i: svc_rs chain lane per direction (S81U-1 sp_w / sp_e partial-score lane, 512 b)
 SVC_MM2, SM_MM2 = 13.43, 8 * 1.231 * 1.058   # service halves (estimate, no RTL) + 8 ot_s81_su_sm tiles: shared out 1/16 each
 SVC_W = 4250.0
 LANES, LANE_DX = 1, 6.0           # p4c-lanes: 1,104-b links as LANES x 276-b lanes
@@ -230,8 +235,9 @@ def place_rsv(P, facts):
     facts['_rsv_gap_of'] = gap_of
     h = (ytop - y0 - RSV_GAP) / 2
     for j in range(8):
-        P.block(f'rsv_{2 * j:02d}', 'dsdv_svc_rg2', 'svc', 'south', xs[j], y0, w, h)
-        P.block(f'rsv_{2 * j + 1:02d}', 'dsdv_svc_rg2', 'svc', 'south', xs[j], y0 + h + RSV_GAP, w, h)
+        rm = 'dsdv_svc_rs' if P4I else 'dsdv_svc_rg2'
+        P.block(f'rsv_{2 * j:02d}', rm, 'svc', 'south', xs[j], y0, w, h)
+        P.block(f'rsv_{2 * j + 1:02d}', rm, 'svc', 'south', xs[j], y0 + h + RSV_GAP, w, h)
     need = (SVC_MM2 + SM_MM2) / 16
     facts['rsv'] = dict(n=16, um=[round(w, 1), round(h, 1)], aspect=round(max(w, h) / min(w, h), 2), mm2=round(w * h / 1e6, 3),
                         need_mm2=round(need, 3), fit=round(w * h / 1e6 / need, 3), region_um=[round(x0, 1), round(y0, 1), round(x1, 1), round(ytop, 1)],
@@ -274,15 +280,20 @@ def rsv_links(P, facts, colx):
                 P.link(f'hrq_{k:02d}', 'hbm', bits, (rn, 'rq', pts[0]), (cn, 'rq', pts[-1]), pts, 'HBM requests of 2 PCs (regional svc slice -> its controller)')
             else:
                 P.link(f'hrd_{k:02d}', 'hbm', bits, (cn, 'rd', pts[-1]), (rn, 'rd', pts[0]), pts[::-1], 'HBM reads + rk/wd + {fault, live} of 2 PCs (controller -> its regional svc slice)')
-    # q / P.V trees
+    # q / P.V trees (p4i: chains toward the centre, SVC_CH-bit lanes, plus the centre fold)
     tree = {}
+    CW = SVC_CH if P4I else XB
     for half, c, cols in (('W', 3, range(0, 4)), ('E', 4, range(4, 8))):
         sn = f's_{c}S'; Sl = P.blocks[P.idx[sn]]
         qx = colx(c) + 460; px = qx + 120
         ups = [P.blocks[P.idx[f'rsv_{2 * j + 1:02d}']] for j in cols]
         e = min(cols, key=lambda j: abs(P.blocks[P.idx[f'rsv_{2 * j + 1:02d}']]['x'] + P.blocks[P.idx[f'rsv_{2 * j + 1:02d}']]['w'] / 2 - (qx + 60)))
+        if P4I:
+            e = c          # p4i: the chain enters at the centre column (W half: col 3, E half: col 4) = the fold point
         E = P.blocks[P.idx[f'rsv_{2 * e + 1:02d}']]; et = E['y'] + E['h']
-        cl = lambda v: min(max(v, E['x'] + 60), E['x'] + E['w'] - 60)
+        cl0 = lambda v: min(max(v, E['x'] + 60), E['x'] + E['w'] - 60)
+        cq_ = cl0(qx)
+        cl = lambda v: cl0(v) if (not P4I or v == qx or cl0(v) != cq_) else cq_ + (120 if cq_ <= E['x'] + 60 else -120)
         P.link(f'q_{half}', 'attn', XB, (sn, 'q', (qx, Sl['y'])), (f'rsv_{2 * e + 1:02d}', 'q', (cl(qx), et)),
                [(qx, Sl['y']), (qx, et + 150), (cl(qx), et + 150), (cl(qx), et)], 'q heads from the ring -> tree root')
         P.link(f'pv_{half}', 'attn', XB, (f'rsv_{2 * e + 1:02d}', 'pv', (cl(px), et)), (sn, 'pv', (px, Sl['y'])),
@@ -299,12 +310,31 @@ def rsv_links(P, facts, colx):
                 xa = xb = None
                 yq = yp = None
             if xa is not None:
-                P.link(f'tq_{a:02d}_{b:02d}', 'attn', XB, (f'rsv_{a:02d}', 'qo', (xa, yq)), (f'rsv_{b:02d}', 'qi', (xb, yq)), [(xa, yq), (xb, yq)], 'q broadcast tree (neighbour)')
-                P.link(f'tp_{b:02d}_{a:02d}', 'attn', XB, (f'rsv_{b:02d}', 'po', (xb, yp)), (f'rsv_{a:02d}', 'pi', (xa, yp)), [(xb, yp), (xa, yp)], 'P.V reduce tree (in flight)')
+                P.link(f'tq_{a:02d}_{b:02d}', 'attn', CW, (f'rsv_{a:02d}', 'qo', (xa, yq)), (f'rsv_{b:02d}', 'qi', (xb, yq)), [(xa, yq), (xb, yq)], 'q broadcast tree (neighbour)')
+                P.link(f'tp_{b:02d}_{a:02d}', 'attn', CW, (f'rsv_{b:02d}', 'po', (xb, yp)), (f'rsv_{a:02d}', 'pi', (xa, yp)), [(xb, yp), (xa, yp)], 'P.V reduce tree (in flight)')
             else:
                 xq, xp = A['x'] + A['w'] * 0.35, A['x'] + A['w'] * 0.65
-                P.link(f'tq_{a:02d}_{b:02d}', 'attn', XB, (f'rsv_{a:02d}', 'qo', (xq, A['y'])), (f'rsv_{b:02d}', 'qi', (xq, B['y'] + B['h'])), [(xq, A['y']), (xq, B['y'] + B['h'])], 'q broadcast tree (neighbour)')
-                P.link(f'tp_{b:02d}_{a:02d}', 'attn', XB, (f'rsv_{b:02d}', 'po', (xp, B['y'] + B['h'])), (f'rsv_{a:02d}', 'pi', (xp, A['y'])), [(xp, B['y'] + B['h']), (xp, A['y'])], 'P.V reduce tree (in flight)')
+                P.link(f'tq_{a:02d}_{b:02d}', 'attn', CW, (f'rsv_{a:02d}', 'qo', (xq, A['y'])), (f'rsv_{b:02d}', 'qi', (xq, B['y'] + B['h'])), [(xq, A['y']), (xq, B['y'] + B['h'])], 'q broadcast tree (neighbour)')
+                P.link(f'tp_{b:02d}_{a:02d}', 'attn', CW, (f'rsv_{b:02d}', 'po', (xp, B['y'] + B['h'])), (f'rsv_{a:02d}', 'pi', (xp, A['y'])), [(xp, B['y'] + B['h']), (xp, A['y'])], 'P.V reduce tree (in flight)')
+    if P4I:
+        # centre fold: the W half's chain root (rsv_07, col 3) and the E half's (rsv_09, col 4) are abutting neighbours
+        # across the centre gap; partial scores / P.V partials fold (W + E) in a fixed order, the folded result goes back
+        A, B = P.blocks[P.idx['rsv_07']], P.blocks[P.idx['rsv_09']]
+        yf0, yf1 = A['y'] + A['h'] - 600, A['y'] + A['h'] - 750
+        P.link('fc_07_09', 'attn', SVC_CH, ('rsv_07', 'fo', (A['x'] + A['w'], yf0)), ('rsv_09', 'fi', (B['x'], yf0)),
+               [(A['x'] + A['w'], yf0), (B['x'], yf0)], 'centre fold W -> E (partials)')
+        P.link('fc_09_07', 'attn', SVC_CH, ('rsv_09', 'fo', (B['x'], yf1)), ('rsv_07', 'fi', (A['x'] + A['w'], yf1)),
+               [(B['x'], yf1), (A['x'] + A['w'], yf1)], 'centre fold E -> W (folded result)')
+        order = {}
+        for h, t in tree.items():
+            up = sorted({b for a, b in t['edges'] if int(b[4:]) % 2} | {t['entry']},
+                        key=lambda n: abs(P.blocks[P.idx[n]]['x'] - P.blocks[P.idx[t['entry']]]['x']))
+            order[h] = dict(outward_upper_row=up, column_folds=[(f'rsv_{int(n[4:]) - 1:02d}', n) for n in up])
+        facts['svc_chain'] = dict(lane_bits=SVC_CH, master='dsdv_svc_rs', fold=['rsv_07', 'rsv_09'],
+                                  reduction_order='per half: each column folds lower -> upper, then the upper row toward the '
+                                  'centre (W half cols 0 -> 3, E half cols 7 -> 4), then W + E at the centre fold; fixed, '
+                                  'compiler-visible; S81U-1 must match the golden head-dim reduction order (open item 3)',
+                                  order=order)
     facts['rsv_tree'] = tree
     facts['rsv']['upper_gap_of_column'] = facts.pop('_rsv_gap_of')
 
@@ -350,7 +380,8 @@ def build():
     for c in range(NCOL):
         for t in range(2):
             ym = streets[t] + STREET / 2
-            P.block(f's_{c}{"SN"[t]}', 'dsdv_slice', 'slice', f'cl{c}{"SN"[t]}', colx(c) + (scol_w - SLICE_W) / 2, ym - SLICE_H / 2, SLICE_W, SLICE_H)
+            sm_ = 'dsdv_slice_lep' if P4I and c in (0, NCOL - 1) else 'dsdv_slice'   # p4i: end slices = link endpoint variant
+            P.block(f's_{c}{"SN"[t]}', sm_, 'slice', f'cl{c}{"SN"[t]}', colx(c) + (scol_w - SLICE_W) / 2, ym - SLICE_H / 2, SLICE_W, SLICE_H)
     # ---------------------------------------------------------------- south band: [SM_W x4][svc_W][PHY+ctrl][svc_E][SM_E x4]
     # the HBM service halves abut the PHY; each attention softmax group (SU SM tiles) abuts its service half, so the
     # 8 kb score / P interface is a face, not a die wire (attention = PHY-side unit, irregular operator)
@@ -392,7 +423,13 @@ def build():
              1: [('bk_sel', 'dsfd_bk_selector', 2000)], 6: [('bk_col', 'dsfd_bk_collector', 2900)],
              2: [('mix4_w', 'dsfd_engram_mix4_half', 2600)], 5: [('mix4_e', 'dsfd_engram_mix4_half', 2600)],
              3: [('gunit', 'dsdv_gunit', 2800)], 4: [('seqhost', 'dsdv_seq_host', 2200)]}
-      if LAYOUT == 'p4' and TIER_W:
+      if LAYOUT == 'p4' and TIER_W and P4I:
+          # p4i (coordinator 0cj ~15:00 (a)): the 4 dsdv_coll_edge blocks are deleted (no function beyond relaying V);
+          # the end-column tier rung is relay stations only, the cross-die link endpoints live in the end slices
+          units = {1: [('bk_col', 'dsfd_bk_collector', 2900)], 2: [('mix4_w', 'dsfd_engram_mix4_half', 2600)],
+                   3: [('gunit', 'dsdv_gunit', 2800)], 4: [('bk_sel', 'dsfd_bk_selector', 2000), ('seqhost', 'dsdv_seq_host', 2200)],
+                   5: [('mix4_e', 'dsfd_engram_mix4_half', 2600)]}
+      elif LAYOUT == 'p4' and TIER_W:
           # p4e: units between the edge lane strips (0.68 mm wide stacked leaf clusters, one ring stop each),
           # redistributed so every inter-tier void fits
           units = {0: [('coll_WS', 'dsdv_coll_edge', 1200), ('coll_WN', 'dsdv_coll_edge', 1200)],
@@ -695,6 +732,54 @@ def geometry_facts(P, facts):
     return facts
 
 
+def p4i_facts(P, facts):
+    """p4i: slice protocol (HP kind), end-slice link endpoints, and the seq_host host / job paths.
+
+    The column-4 void (bk_sel + seqhost) is enclosed: slices s_4S / s_4N above and below, frames left and right with
+    8.7-um gaps.  A direct die wire into it would run beside a slice (p4f rule: no lane beside a slice) or over a frame,
+    so the host / job link is a compiler-scheduled TDM path on existing registered links with fixed time of flight:
+      host in : cross-die link rx (end slice LEP, lr_lk_WN0) -> N tier line E (s_0N .. s_4N ring stops) -> V rung
+                s_4N -> seqhost (HOST beat = CTL kind, dst seqhost; vstop tap+sink)
+      job out : seqhost -> V rung -> bk_sel (vstop) -> s_4S -> band port bo (q lane TDM, JOB words) -> rsv_09 -> chain
+                (E half outward; W half via the centre fold) -> every regional svc slice (j 33 b + window, hw 292 b)
+      hc back : regional svc slice status (hc 9 b) rides the inward chain -> P.V lane -> s_4S -> V -> seqhost
+    Stages = sum of the links' relay stations + 2 edges per intermediate stop (slice ring stop / vstop / svc slice)."""
+    L = collections.defaultdict(int)
+    for l in P.links:
+        L[l['i'].rsplit('_l', 1)[0] if l['i'].rsplit('_l', 1)[-1].isdigit() and '_l' in l['i'] else l['i']] = l['s']
+
+    def path(links, stops):
+        return dict(links=links, stations=sum(L[x] for x in links), stops=stops,
+                    cycles=sum(L[x] + 1 for x in links) + 2 * len(stops))
+    host_in = path(['lr_lk_WN0', 'xrE_0N', 'xrE_1N', 'xrE_2N', 'xrE_3N', 'tvS_s_4N'], ['s_0N', 's_1N', 's_2N', 's_3N', 's_4N'])
+    job_e = ['tvS_seqhost', 'tvS_bk_sel', 'q_E', 'tq_09_11', 'tq_11_13', 'tq_13_15', 'tq_15_14']
+    job_w = ['tvS_seqhost', 'tvS_bk_sel', 'q_E', 'fc_09_07', 'tq_07_05', 'tq_05_03', 'tq_03_01', 'tq_01_00']
+    job_out = dict(far_E=path(job_e, ['bk_sel', 's_4S', 'rsv_09', 'rsv_11', 'rsv_13', 'rsv_15']),
+                   far_W=path(job_w, ['bk_sel', 's_4S', 'rsv_09', 'rsv_07', 'rsv_05', 'rsv_03', 'rsv_01']))
+    hc_back = path(['tp_00_01', 'tp_01_03', 'tp_03_05', 'tp_05_07', 'fc_07_09', 'pv_E', 'tvN_s_4S', 'tvN_bk_sel'],
+                   ['rsv_01', 'rsv_03', 'rsv_05', 'rsv_07', 'rsv_09', 's_4S', 'bk_sel'])
+    facts['host_job'] = dict(decision='TDM on existing registered links (column-4 void is enclosed; no lane beside a slice)',
+                             host_in=host_in, job_out=job_out, hc_back=hc_back,
+                             widths=dict(host_word=276, job_j=33, window_hw=292, hc=9),
+                             critical_path='off the token critical path: jobs are issued ahead by the static schedule '
+                             '(boot program load + per-token start); priced as the dispatch lead only')
+    facts['slice_protocol'] = dict(
+        kinds={0: 'CTL', 1: 'XQ', 2: 'XB', 3: 'NX', 4: 'RD', 5: 'SC', 6: 'CL', 7: 'HP'},
+        HP='HC projection partial (golden-subtree roots of the 24 HC coefficients), single beat, slice -> tier line -> '
+           'column-3 V rung -> gunit (vstop tap + sink kind 7); same route and cost class as SC (router scores)',
+        rtl_owed='S81-SLICE: K_HP = 3\'d7 in ot_s81sl_xr (relay to V like SC) and ot_s81sl_rstop (deliver as CS); '
+                 'S81U-1: vstop strap tap_k/sink_k[7] at gunit')
+    lep = {}
+    for c, side in ((0, 'W'), (NCOL - 1, 'E')):
+        for t in 'SN':
+            sn = f's_{c}{t}'
+            lep[sn] = dict(master='dsdv_slice_lep', tx=[f'lt_lk_{side}{t}{k}' for k in '01'], rx=[f'lr_lk_{side}{t}{k}' for k in '01'],
+                           lane_bits=COLL_LANE, rtl_owed='S81-SLICE: end-slice variant with 2 x 512-b link tx/rx ports '
+                           '(ot_s81ph_link_ep / ot_s81ph_coll_lane reuse); fold (p0+p1)+(p2+p3) stays in the slice')
+    facts['end_slice_lep'] = lep
+    facts['coll_edge'] = 'deleted (coordinator 0cj ~15:00 (a)): columns 0 / 7 tier rung = relay stations s_cS <-> s_cN'
+
+
 def fill(P, facts, ws):
     """Fill every over-channel empty rectangle inside a slice column with a designated fill block (PDN decap for
     the slices' SU/HC lanes + relay / repeater site bank for the column and street die nets + ECO spares).  The
@@ -786,6 +871,7 @@ def main():
     ap.add_argument('--p4f', action='store_true', help='p4f: row-2 frames MX, 30-um street lanes, x lanes off the slices, q/P.V off svc faces')
     ap.add_argument('--p4g', action='store_true', help='p4g: p4f + 16 regional 2-PC HBM controllers replacing the dsfd_ctrl strip')
     ap.add_argument('--p4h', action='store_true', help='p4h: p4g + the svc halves -> 16 regional service slices above their controllers')
+    ap.add_argument('--p4i', action='store_true', help='p4i: p4h - coll_edge + end-slice link endpoints + svc_rs centre chain + HP kind + host/job paths')
     ap.add_argument('--p4h-drop', type=int, default=4, choices=(4, 6), help='p4h: row-0 S-tier frames given to the service region (4: 3L-4R; 6: 2R-5L)')
     ap.add_argument('--frame-w', type=float, default=None, help='p4: frame width override (S-ELEM bf_col 604.8 -> 1,436.832)')
     a = ap.parse_args()
@@ -793,9 +879,11 @@ def main():
     global ROW0_MX, TIER_W, LANES, P4F
     ROW0_MX = a.row0_mx
     P4F = a.p4f or a.p4g or a.p4h
-    global P4G, P4H, P4H_DROP
-    P4G = a.p4g or a.p4h
-    P4H = a.p4h
+    global P4G, P4H, P4H_DROP, P4I
+    P4I = a.p4i
+    P4F = P4F or P4I
+    P4G = a.p4g or a.p4h or P4I
+    P4H = a.p4h or P4I
     if a.p4h_drop == 6:
         P4H_DROP = ((2, 'R'), (3, 'L'), (3, 'R'), (4, 'L'), (4, 'R'), (5, 'L'))
     TIER_W = a.tier_w
@@ -818,6 +906,8 @@ def main():
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     P, facts = build()
     geometry_facts(P, facts)
+    if P4I:
+        p4i_facts(P, facts)
     import whitespace as ws
     facts['whitespace_before'] = {k: v for k, v in ws.analyse(dict(facts=facts, blocks=P.blocks)).items() if k != 'over_channel'}
     if a.fill:

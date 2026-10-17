@@ -190,7 +190,9 @@ def main():
     man = lambda p, q: abs(p[0] - q[0]) + abs(p[1] - q[1])
     g = dict(f, hop_um=f.get('hop_um', 405.0),
              worst_slice_to_gunit_um=max(man(cen(s), cen(B['gunit'])) for s in sl),
-             worst_slice_to_edge_um=max(min(man(cen(s), cen(B[c])) for c in ('coll_WS', 'coll_WN', 'coll_ES', 'coll_EN')) for s in sl))
+             # p4i: coll_edge deleted -> the cross-die link endpoints are the 4 end slices (dsdv_slice_lep)
+             worst_slice_to_edge_um=max(min(man(cen(s), cen(B[c])) for c in (('coll_WS', 'coll_WN', 'coll_ES', 'coll_EN')
+                                        if 'coll_WS' in B else ('s_0S', 's_0N', 's_7S', 's_7N'))) for s in sl))
     hl = {l['i']: l['s'] for l in plan['links'] if l['i'].startswith(('hrq_', 'hrd_'))}
     if hl:
         g['hbm_rt_stages'] = max(hl.get(f'hrq_{k}', 0) + hl.get(f'hrd_{k}', 0) for k in {i[4:] for i in hl})

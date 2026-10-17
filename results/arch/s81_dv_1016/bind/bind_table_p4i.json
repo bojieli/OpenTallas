@@ -1,0 +1,588 @@
+{
+ "schema": "opentallas.s81_dv.bind_table.v2",
+ "note": "S81-DV p4i REAL-RTL bind table (S81-DIE 10-17, from S81-BIND v1). module null = OPEN BINDING (no RTL; never stubbed), listed with its owner. Port map key = <plan endpoint port>.<o|i>; lane = RTL lane width; ck = the RTL forwarded-clock output used as hop-0 source. view = the CLOSED view the die binds (null = none yet). mode_unused = ports tied 0 because the mode is provably unused at that position (coordinator 0da (c)); each is declared to the strict check as a pad.",
+ "rtl_refs": {
+  "57bc4ad63f81e29f35a758ec36e4827265047874": [
+   "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv"
+  ],
+  "62b8c2cca981b951fd487d31c3966babf5a6fb32": [
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv"
+  ]
+ },
+ "prefer": [
+  "claude_s81slice-1017/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
+  "claude_s81slice-1017/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv",
+  "claude_s81slice-1017/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+  "claude_s81slice-1017/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv",
+  "claude_s81slice-1017/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv",
+  "claude_s81slice-1017/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
+  "claude_s81slice-1017/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv",
+  "claude_s81slice-1017/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv",
+  "62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv"
+ ],
+ "allow_model": [
+  "ot_s81_pma_bm",
+  "ot_s81_hbm3e_dev_bm"
+ ],
+ "rtl_widths": {
+  "ot_s81sl_slice": {
+   "ri_w": 1104,
+   "ri_e": 1104,
+   "ro_e": 1104,
+   "ro_w": 1104,
+   "bi": 1104,
+   "bo": 1104,
+   "vi": 276,
+   "vo": 276,
+   "xc": 4416,
+   "rt": 560,
+   "ck_line": 16,
+   "ck_v": 2,
+   "ck_xc": 16,
+   "ck_rt": 8
+  },
+  "ot_pdie_serdes": {
+   "tx": 512,
+   "rx": 512
+  },
+  "ot_pdie_ucie": {
+   "tx": 512,
+   "rx": 512
+  }
+ },
+ "masters": {
+  "col_h9": {
+   "module": null,
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "col_h10": {
+   "module": null,
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "col_h9_MX": {
+   "module": null,
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "dsfd_engram_mix4_half": {
+   "module": null,
+   "owner": "S81U-3",
+   "reason": "no half module over engram_mix4_c (audit S-6)"
+  },
+  "dsdv_gunit": {
+   "module": null,
+   "owner": "S81U-1",
+   "reason": "G-unit RTL in progress (S81U-1 worktree s81u1-1017, uncommitted dsdv_gunit.sv); needs vstop HP kind 7"
+  },
+  "dsdv_seq_host": {
+   "module": null,
+   "owner": "S81U-1",
+   "reason": "no DV wrapper over stage_seq_static/host_c (audit S-6)"
+  },
+  "ot_s81_su_sm": {
+   "module": null,
+   "owner": "S81-A",
+   "reason": "no module ot_s81_su_sm exists on main (only leaves smt/sml/smc/smr/smd in rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv); su_sm parent RTL owed"
+  },
+  "dsdv_slice": {
+   "module": "ot_s81sl_slice",
+   "ref": "57bc4ad63f81e29f35a758ec36e4827265047874",
+   "view": null,
+   "view_note": "cluster not hardened (S81-SLICE); leaf views vq/vp/hcpl in flight",
+   "clk": "clk",
+   "rst": [
+    "rst_n",
+    "low"
+   ],
+   "hb_param": "HB",
+   "straps": [
+    "sid"
+   ],
+   "strap_values": {
+    "sid": "auto_slice"
+   },
+   "ports": {
+    "xrE.o": {
+     "port": "ro_e",
+     "lane": 276,
+     "ck": "ck_line",
+     "ck_base": 4
+    },
+    "xrE.i": {
+     "port": "ri_w",
+     "lane": 276
+    },
+    "xrW.o": {
+     "port": "ro_w",
+     "lane": 276,
+     "ck": "ck_line",
+     "ck_base": 12
+    },
+    "xrW.i": {
+     "port": "ri_e",
+     "lane": 276
+    },
+    "vN.o": {
+     "port": "vo",
+     "lane": 276,
+     "ck": "ck_v",
+     "ck_base": 1
+    },
+    "vS.o": {
+     "port": "vo",
+     "lane": 276,
+     "ck": "ck_v",
+     "ck_base": 1
+    },
+    "vN.i": {
+     "port": "vi",
+     "lane": 276
+    },
+    "vS.i": {
+     "port": "vi",
+     "lane": 276
+    },
+    "xf.o": {
+     "port": "xc",
+     "lane": 276,
+     "kind": "xc",
+     "ck": "ck_xc"
+    },
+    "ret.i": {
+     "port": "rt",
+     "lane": 70,
+     "order": "ret"
+    },
+    "q.o": {
+     "port": "bo",
+     "lane": 276,
+     "hb": 1
+    },
+    "pv.i": {
+     "port": "bi",
+     "lane": 276,
+     "hb": 1
+    }
+   },
+   "mode_unused": [
+    {
+     "port": "bi",
+     "when": "hb0",
+     "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+    },
+    {
+     "port": "ri_w",
+     "when": "col0",
+     "reason": "tier line W end (column 0): no west neighbour; the snake end carries xfin on V"
+    },
+    {
+     "port": "ri_e",
+     "when": "col7",
+     "reason": "tier line E end (column 7): no east neighbour; the snake end carries xfin on V"
+    }
+   ]
+  },
+  "dsfd_ctrl": {
+   "module": "dsfd_ctrl",
+   "view": null,
+   "view_note": "dsfd_ctrl_pc_m5 is a child kit; 8500x250 strip REJECTED (p4g reshapes)",
+   "clk": "ckh",
+   "clk_extra": [
+    "cks"
+   ],
+   "rst": [
+    "rst",
+    "low"
+   ],
+   "ports": {}
+  },
+  "dsfd_bk_selector": {
+   "module": "dsfd_bk_selector",
+   "view": null,
+   "clk": "ck",
+   "rst": [
+    "rst",
+    "low"
+   ],
+   "ports": {},
+   "port_note": "hub-era module: no V-rung (vstop) ports; DV partition owed by S81U-2"
+  },
+  "dsfd_bk_collector": {
+   "module": "dsfd_bk_collector",
+   "view": null,
+   "clk": "ck",
+   "rst": [
+    "rst",
+    "low"
+   ],
+   "ports": {},
+   "port_note": "hub-era module: no V-rung (vstop) ports; DV partition owed by S81U-2"
+  },
+  "ot_pdie_serdes": {
+   "clk": "clk",
+   "rst": [
+    "rst",
+    "low"
+   ],
+   "ports": {
+    "tx.i": {
+     "port": "tx",
+     "lane": 512
+    },
+    "rx.o": {
+     "port": "rx",
+     "lane": 512
+    }
+   },
+   "module": "ot_pdie_serdes",
+   "view": null,
+   "phy": true,
+   "top_ports": [
+    {
+     "port": "pma_tx",
+     "dir": "output",
+     "bits": 544
+    },
+    {
+     "port": "pma_tck",
+     "dir": "output",
+     "bits": 1
+    },
+    {
+     "port": "pma_rx",
+     "dir": "input",
+     "bits": 544
+    },
+    {
+     "port": "pma_rck",
+     "dir": "input",
+     "bits": 1
+    }
+   ]
+  },
+  "ot_pdie_ucie": {
+   "clk": "clk",
+   "rst": [
+    "rst",
+    "low"
+   ],
+   "ports": {
+    "tx.i": {
+     "port": "tx",
+     "lane": 512
+    },
+    "rx.o": {
+     "port": "rx",
+     "lane": 512
+    }
+   },
+   "module": "ot_pdie_ucie",
+   "view": null,
+   "phy": true,
+   "top_ports": [
+    {
+     "port": "pma_tx",
+     "dir": "output",
+     "bits": 513
+    },
+    {
+     "port": "pma_tck",
+     "dir": "output",
+     "bits": 1
+    },
+    {
+     "port": "pma_rx",
+     "dir": "input",
+     "bits": 513
+    },
+    {
+     "port": "pma_rck",
+     "dir": "input",
+     "bits": 1
+    }
+   ]
+  },
+  "ot_hbm3e_phy_v41x_aw30_e8p5": {
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "view": null,
+   "phy": true,
+   "clk": "clk",
+   "rst": [
+    "rst_n",
+    "low"
+   ],
+   "ports": {},
+   "port_note": "p4h plan models 32 x 695-b DFI lanes from dsfd_ctrl_rg2; the RTL PHY takes the k_*/w_* controller bundle -- no plan DFI lane maps to an RTL port"
+  },
+  "dsfd_ctrl_rg2": {
+   "module": null,
+   "owner": "S81-DV / HBM-ctrl",
+   "reason": "no wrapper RTL over 2 x dsfd_ctrl_pc + reset relay + PHY-reset register (p4g SPEC (3))"
+  },
+  "dsdv_slice_lep": {
+   "module": "ot_s81sl_slice",
+   "ref": "57bc4ad63f81e29f35a758ec36e4827265047874",
+   "view": null,
+   "view_note": "cluster not hardened (S81-SLICE); leaf views vq/vp/hcpl in flight",
+   "clk": "clk",
+   "rst": [
+    "rst_n",
+    "low"
+   ],
+   "hb_param": "HB",
+   "straps": [
+    "sid"
+   ],
+   "strap_values": {
+    "sid": "auto_slice"
+   },
+   "ports": {
+    "xrE.o": {
+     "port": "ro_e",
+     "lane": 276,
+     "ck": "ck_line",
+     "ck_base": 4
+    },
+    "xrE.i": {
+     "port": "ri_w",
+     "lane": 276
+    },
+    "xrW.o": {
+     "port": "ro_w",
+     "lane": 276,
+     "ck": "ck_line",
+     "ck_base": 12
+    },
+    "xrW.i": {
+     "port": "ri_e",
+     "lane": 276
+    },
+    "vN.o": {
+     "port": "vo",
+     "lane": 276,
+     "ck": "ck_v",
+     "ck_base": 1
+    },
+    "vS.o": {
+     "port": "vo",
+     "lane": 276,
+     "ck": "ck_v",
+     "ck_base": 1
+    },
+    "vN.i": {
+     "port": "vi",
+     "lane": 276
+    },
+    "vS.i": {
+     "port": "vi",
+     "lane": 276
+    },
+    "xf.o": {
+     "port": "xc",
+     "lane": 276,
+     "kind": "xc",
+     "ck": "ck_xc"
+    },
+    "ret.i": {
+     "port": "rt",
+     "lane": 70,
+     "order": "ret"
+    },
+    "q.o": {
+     "port": "bo",
+     "lane": 276,
+     "hb": 1
+    },
+    "pv.i": {
+     "port": "bi",
+     "lane": 276,
+     "hb": 1
+    }
+   },
+   "mode_unused": [
+    {
+     "port": "bi",
+     "when": "hb0",
+     "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+    },
+    {
+     "port": "ri_w",
+     "when": "col0",
+     "reason": "tier line W end (column 0): no west neighbour; the snake end carries xfin on V"
+    },
+    {
+     "port": "ri_e",
+     "when": "col7",
+     "reason": "tier line E end (column 7): no east neighbour; the snake end carries xfin on V"
+    }
+   ],
+   "plan_only_ports": {
+    "owner": "S81-SLICE",
+    "ports": [
+     "tx0.o",
+     "tx1.o",
+     "rx0.i",
+     "rx1.i"
+    ],
+    "reason": "end-slice cross-die link endpoint (2 x 512-b tx/rx, ot_s81ph_link_ep / ot_s81ph_coll_lane reuse) not yet in ot_s81sl_slice (coordinator 0cj ~15:00 (a))"
+   }
+  },
+  "dsdv_svc_rs": {
+   "module": null,
+   "owner": "S81U-1",
+   "reason": "regional service slice (svc 2-PC share + SM 1/16, W->E chain, centre fold) has no RTL"
+  }
+ },
+ "plan": "S81-DV p4i (results/arch/s81_dv_1016/p4i/plan.json)",
+ "relay_views": {
+  "dsfd_dvrly_276_EW": "dv4c-33a9d31b4 (native PASS)",
+  "dsfd_dvrly_276_WE": "dv4-cfe2c1cf4 (native PASS)",
+  "dsfd_dvrly_276_NS": "dv4-cfe2c1cf4 (native PASS)",
+  "dsfd_dvrly_276_SN": "dv4-cfe2c1cf4 (native PASS)",
+  "dsfd_rly_1_WN": "g18-8a9388ce8 (native PASS; regional reset station master, all directions by orientation)"
+ },
+ "relay_views_owed": "dsfd_dvrly_{68,512,562,682}_<dir>: RTL dsfd_rly_masters_dvw.sv (ot_s81_rly RSREG=1, same body as 276); kits cloned from s81dv_rly_276_* owed",
+ "reset_master": "dsfd_rly_1_WN",
+ "frame_wrapper": {
+  "masters": [
+   "col_h9",
+   "col_h10",
+   "col_h9_MX"
+  ],
+  "owner": "S81U-3",
+  "note": "the frame cluster wrapper has no RTL (audit S-1), so the frame stays an OPEN binding in the die netlist; its member contract below is checked against the members' RTL (module exists at the ref, every named port and parameter exists, clock-tie targets exist) and is what the wrapper generator must instantiate"
+ },
+ "frame_members": [
+  {
+   "master": "ot_s81_cfg7_seq_bfp",
+   "ref": "origin/main",
+   "path": "rtl/v41die/ot_s81_cfg7_seq_bfp.sv",
+   "params": {
+    "LAYOUT": 1,
+    "PINREG": 1
+   },
+   "view": "s81coll_cfg7_seq_bfp_pr-pr1-ef2866774 (CLOSED TT +244.3 / FF +23.9; native PASS)",
+   "replaces": "ot_s81_cfg7_seq_bf",
+   "ports_used": [
+    "clk",
+    "rst_n",
+    "lc",
+    "cfg",
+    "go_e",
+    "st",
+    "f_prog"
+   ],
+   "decision": "coordinator 0cw+ (4)"
+  },
+  {
+   "master": "dsfd_cfifo_crs",
+   "ref": "origin/main",
+   "path": "rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_crs.sv",
+   "view": "r5f-507e1b0c3 (CLOSED TT +71.04 / FF +17.32; native PASS)",
+   "replaces": "dsfd_cfifo",
+   "ports_used": [
+    "xd",
+    "ri",
+    "rd",
+    "rst",
+    "cr",
+    "cr_s",
+    "xa",
+    "xb"
+   ],
+   "decision": "coordinator 0db+ (2): re-pin the frame slot to its 1173/1171 interface"
+  },
+  {
+   "master": "dsfd_bf_front_roots",
+   "ref": "origin/main",
+   "path": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv",
+   "view": "h03-392d7efcb (CLOSED TT +0.00 / FF +18.20; native PASS)",
+   "replaces": "dsfd_bf_front / dsfd_bf_front_static slot",
+   "ports_used": [
+    "ck",
+    "rs",
+    "f_prog",
+    "xb_data",
+    "xb_meta",
+    "go",
+    "cfg",
+    "st"
+   ],
+   "decision": "coordinator 0db+ (3); f_prog from cfg7_seq_bfp"
+  },
+  {
+   "master": "dsfd_bf_col_cl",
+   "ref": "origin/claude/selem-bfcol-2020",
+   "path": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_cl.sv",
+   "view": null,
+   "view_note": "parent dsfd_bf_col gate waits on lane4r (s81_bf_cl_lane4r-r2-7c317a644) + fp views",
+   "ports_used": [
+    "leaf_ck",
+    "lane_ckl",
+    "lane_cko",
+    "rom_ck0",
+    "rom_ck1",
+    "ck",
+    "rs"
+   ],
+   "clock_ties": [
+    {
+     "port": "lane_ckl[0]",
+     "to": "leaf_ck[2]"
+    },
+    {
+     "port": "lane_cko[0]",
+     "to": "leaf_ck[2]"
+    },
+    {
+     "port": "lane_ckl[1]",
+     "to": "leaf_ck[3]"
+    },
+    {
+     "port": "lane_cko[1]",
+     "to": "leaf_ck[3]"
+    },
+    {
+     "port": "lane_ckl[2]",
+     "to": "leaf_ck[4]"
+    },
+    {
+     "port": "lane_cko[2]",
+     "to": "leaf_ck[4]"
+    },
+    {
+     "port": "lane_ckl[3]",
+     "to": "leaf_ck[5]"
+    },
+    {
+     "port": "lane_cko[3]",
+     "to": "leaf_ck[5]"
+    }
+   ],
+   "decision": "COORD 10-17 ~16:20 BF: lane band roots leaf_ck[2+g] / lane_ckl[g] / lane_cko[g] all = frame leaf clock 2+g"
+  },
+  {
+   "master": "ot_v41_rom_elem_q_qxpq_w10",
+   "ref": "origin/claude/qxpq-rst-1017",
+   "path": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+   "params": {
+    "RSTP": 1
+   },
+   "view": "dsrom-qelem-qs5f-rstp-35152e3e1-tc-hm10-cl (SUBMITTED)",
+   "ports_used": [
+    "clk",
+    "rst_n"
+   ],
+   "reset": "rst_n released ONE regional edge earlier: the frame reset pin reads the PARENT station of its cell (co 0co 14:25)"
+  }
+ ]
+}

@@ -571,3 +571,54 @@ Coordinator decision COORD 10-17 ~11:15: the two service halves become 16 region
 | longest link | tvN_s_6S 6.85 mm, 16 st | same | same; HBM longest 2.32 mm / 5 st (p4g 4.46 / 11) |
 | ROM slots / stages | 1,184 / 92 | 1,184 / 92 | 1,130 / 97 |
 | MTP / AR (dv_price) | 4,129.3 / 1,401.2 | 4,129.3 / 1,401.2 | 4,112.1 / 1,392.9 (-0.42%) |
+
+### 0b-p4i: coll_edge out, end-slice link endpoints, svc_rs centre chain, HP kind, host/job paths, REAL-RTL bind (10-17)
+`dv_plan.py --layout p4 --tier-w 276 --lanes 4 --frame-w 1436.832 --p4i --p4h-drop 6` (`--p4i` implies `--p4h`; p4h still reproduces byte-identical).
+
+Coordinator 0cj ~15:00 (a)-(c):
+- **coll_edge deleted.** Columns 0 and 7 have no void unit. Their tier rung is relay stations only, s_cS <-> s_cN. The 4 end slices become master `dsdv_slice_lep`: ot_s81sl_slice plus 2 x 512-b link tx/rx endpoints. The link-port RTL is owed by S81-SLICE (reuse ot_s81ph_link_ep / coll_lane).
+- **svc_rs chain.** The 16 `dsdv_svc_rs` form a neighbour chain with 512-b lanes each way (S81U-1 sp_w / sp_e). Each half enters at its centre column (W: s_3S -> rsv_07, E: s_4S -> rsv_09). Every column folds its lower slice into its upper slice, then partials move along the upper row toward the centre (W cols 0->3, E cols 7->4) and fold W + E across the centre gap (fc_07_09 / fc_09_07). Broadcast (q, P) runs outward on the same edges. The order is fixed and compiler-visible. S81U-1 must confirm that it matches the golden head-dim reduction order.
+- **HP beat kind.** Kind 7 = HP, the HC projection partial (golden-subtree roots). It is a single beat on the same route as SC: slice -> tier line -> column-3 V -> gunit (vstop tap+sink 7). There are no new wires. RTL owed: K_HP in ot_s81sl_xr / rstop (S81-SLICE) and the vstop strap (S81U-1).
+- **seq_host host/job.** The column-4 void is enclosed: slices above and below, frames at 8.7-um gaps on both sides. A direct wire would run beside a slice (p4f rule) or over a frame. Host and job therefore use compiler-scheduled TDM on existing registered links:
+  - host in: lr_lk_WN0 -> N line -> s_4N -> V -> seqhost, 31 stations, 47 cycles;
+  - job out: seqhost -> V -> s_4S -> q_E -> chain, 24 cycles (far E) to 28 (far W via the fold);
+  - hc back: on the inward chain.
+  These paths are off the token critical path because jobs are issued ahead.
+
+| | p4h | p4i |
+|---|---|---|
+| worst cut | 0.454 | 0.454 (0 windows > 0.55) |
+| stations | 2,347 | 2,403 (end rung now spans the old coll blocks) |
+| relay bit-stages | 0.628 M | 0.643 M |
+| bit-mm | 0.299 M | 0.304 M |
+| worst slice -> edge endpoint | 14.7 mm (coll) | 11.7 mm (end slice) |
+| worst slice -> attention | 24.3 mm | 25.3 mm (centre entry) |
+| MTP / AR (dv_price) | 4,112.1 / 1,392.9 | 4,115.4 / 1,394.4 (+0.08% / +0.11%) |
+
+**REAL-RTL binding** (`dv_diecase.py --bind real --bind-table bind/bind_table_p4i.json`, tools/s81_dv/dv_bind.py, from S81-BIND):
+- Every plan master binds its RTL module. Masters with no RTL keep their plan master name and are listed as OPEN BINDINGS; nothing is stubbed.
+- Every link stage is a real F1 relay master. The 276-b stations bind closed views. The 68/512/562/682-b masters come from dsfd_rly_masters_dvw.sv; their views are still owed.
+- Reset is a regional synchronous-release relay tree of `dsfd_rly_1_WN` (closed view, 1,050 stations, 400-um cells, release depth up to 107). Frames read the parent station, so their release is one edge earlier, as the qxpq RSTP=1 change requires.
+- Forwarded clocks are sourced either from the slice ck_* outputs or from a clock-forward cell on the source region root (381 cells).
+- Mode-unused ties are declared as pads (coordinator 0da (c)): slice bi on HB=0 slices x14, ri_w at column 0 x2, ri_e at column 7 x2.
+- The frame member contract (bind/frame_contract.json, PASS 5/5) is checked against the members' RTL:
+  - ot_s81_cfg7_seq_bfp, LAYOUT 1 / PINREG 1;
+  - dsfd_cfifo_crs;
+  - dsfd_bf_front_roots (f_prog from bfp);
+  - dsfd_bf_col_cl, with lane_ckl[g] and lane_cko[g] tied to leaf_ck[2+g];
+  - qxpq_w10 RSTP=1.
+  The frame wrapper has no RTL, so frames stay an open binding owned by S81U-3.
+- Strict die_port_bind result: FAIL.
+  - masters 30, instances 4,019, unbound masters 8 (158 instances);
+  - stub 0, port_not_in_rtl 0, width mismatch 0, input_tied 0;
+  - input_unconnected 21 (bk_sel / bk_col V ports, PHY k_* from the open ctrl_rg2);
+  - undriven bits 95,048 (outputs of the open masters, plus slice_lep tx/rx);
+  - straps 1 (sid), pad bits 19,872.
+  The S81-BIND p4h baseline was 15 unbound / 24 unconnected / 84,816 undriven.
+- Open bindings and their owners:
+  - col_h9 / col_h10 / col_h9_MX x122 (S81U-3);
+  - dsfd_ctrl_rg2 x16 (HBM-ctrl / S81-DV);
+  - dsdv_svc_rs x16, dsdv_gunit, dsdv_seq_host (S81U-1);
+  - dsfd_engram_mix4_half x2 (S81U-3);
+  - slice_lep tx/rx ports (S81-SLICE);
+  - bk_sel / bk_col V-rung ports (S81U-2).
