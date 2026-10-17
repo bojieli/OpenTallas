@@ -1,0 +1,128 @@
+{
+ "name": "hbfd_rly_624_ew_fc_f2",
+ "top": "hbfd_rly_624_EW_fc_f2",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+  "rtl/hbm_accel/die_glue/ot_hbm_rly_fc.sv",
+  "rtl/hbm_accel/die_glue/ot_hbm_rly_fcf.sv",
+  "rtl/hbm_accel/die_glue/hbfd_rly_fcf_masters.sv"
+ ],
+ "params": {},
+ "clock_port": "clk_in",
+ "reset_ports": [
+  "rs"
+ ],
+ "boundary_tcl": [
+  "physical/hbm_rly_fc/fcf_clock.tcl"
+ ],
+ "sdc_extra": [
+  "physical/hbm_rly_fc/fcf_clock.tcl"
+ ],
+ "pre_cts_extra": [
+  "physical/hbm_rly_fc/fcf_pre_cts.tcl"
+ ],
+ "outline": {
+  "w": 25.92,
+  "h": 218.16,
+  "exact": true
+ },
+ "macros": [],
+ "layer_cap": "M5",
+ "pins": {
+  "E": [
+   "i",
+   "clk_in"
+  ],
+  "W": [
+   "o0",
+   "clk_out0",
+   "o1",
+   "clk_out1"
+  ],
+  "S": [
+   "rs"
+  ]
+ },
+ "io_tcl": "physical/hbm_rly_fc/pins/hbfd_rly_624_EW_fc_f2.tcl",
+ "recipe": 3,
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "F1 relay = ONE register stage at the pins by definition: i is captured by the stage register, o leaves it through the matched forwarding buffer; a pin register would add a cycle per hop and break the clk_out / o driver match (DIE-CLOCK F1)"
+ },
+ "orfs_vars": {
+  "PRE_FLOORPLAN_TCL": "/src/physical/hbm_rly_fc/fc_dont_touch.tcl"
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7
+ },
+ "structural_change": "F1 forwarded-clock FORK variant (DIE-CLOCK rule: fork = relay tile with 2 branches, each with its own kept clk_out<k> buffer off the CTS tree + matched o<k> buffers on its face); same ot_hbm_rly stage; faces E: ['i'], W: [0, 1]; outline 25.92 x 218.16 um",
+ "job": {
+  "owner": "Claude:H-NETLIST/F1",
+  "branch": "claude/hnl-f1rly-1815",
+  "tag": "ff2",
+  "purpose": "HBM die F1 forwarded-clock fork relay hbfd_rly_624_EW_fc_f2: register on clk_in, 2 branches (clk_out<k> = one kept BUFx12f from the clk_in root, o<k> through the same cell beside it); 25.92 x 218.16 um, M5 cap",
+  "extra_paths": [
+   "physical/hbm_rly_fc",
+   "rtl/hbm_accel/die_glue/test/bench_rly_fcf.sh",
+   "rtl/hbm_accel/die_glue/test/bench_rly_fc.sh",
+   "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+   "rtl/hbm_accel/die_glue/hbfd_rly_fc_masters.sv"
+  ],
+  "benches": [
+   {
+    "name": "fcf_words",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_fcf.sh pass 624 EW 2 {RUN}/bench_p",
+    "expect": "pass",
+    "pass_regex": "RLY_FCF_BENCH PASS 0 errors 0 clock_errors 0 chain_errors in 20000 words",
+    "min_count_regex": "RLY_FCF_BENCH PASS 0 errors 0 clock_errors 0 chain_errors in (\\d+) words",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "neg_bit0_mutant",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_fcf.sh mut 624 EW 2 {RUN}/bench_m",
+    "expect": "fail",
+    "fail_regex": "RLY_FCF_BENCH FAIL [1-9]",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "neg_clkout0_mutant",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_fcf.sh ckmut0 624 EW 2 {RUN}/bench_c0",
+    "expect": "fail",
+    "fail_regex": "RLY_FCF_BENCH FAIL \\d+ errors [1-9]\\d* clock_errors",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "neg_clkout1_mutant",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_fcf.sh ckmut1 624 EW 2 {RUN}/bench_c1",
+    "expect": "fail",
+    "fail_regex": "RLY_FCF_BENCH FAIL \\d+ errors [1-9]\\d* clock_errors",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hbfd_rly_624_ew_fc_f2/views",
+  "record_to": "results/rtl/ref_tile/hbfd_rly_624_ew_fc_f2"
+ }
+}

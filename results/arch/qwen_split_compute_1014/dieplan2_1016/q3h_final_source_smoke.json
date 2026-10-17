@@ -1,0 +1,64 @@
+{
+ "schema": "opentallas.qwen.q3h.source_smoke.v1",
+ "source_commit": "5b09d2b78",
+ "base_main": "9808a6e01",
+ "qualification": false,
+ "source_sha256": {
+  "tools/qwen_split/q3h_cluster.py": "8f78ded24bc6672ca3e056b2b0404fe698f4fb6f1f9f27a38561359bdf66a203",
+  "tools/qwen_rom_fulldie_b3r2.py": "3e1a0fd30d2ac7bbc56725a28dfd7b7eeef6e1767f45842749a2f217f25b1c91",
+  "results/arch/qwen_split_compute_1014/dieplan2_1016/q3h_cluster_contract_cb.json": "746541a90926f9c8a9e089718af7d21b3b1672a7c048767fb88bca0ad7ee2d8c"
+ },
+ "source_matches_remote": true,
+ "unit": "oth-ubuntu-264873-1792206623",
+ "ot_run_exit": 0,
+ "terminal": "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-264873-1792206623): exit 0",
+ "path": "/srv/opentallas-scratch/codex/q3h-packet-final-2010",
+ "mem_gb": 5,
+ "threads": 1,
+ "measured_class_peak_gb": 0.6,
+ "instances": 178,
+ "die": {
+  "w": 32996.16,
+  "h": 22476.96,
+  "mm2": 741.653,
+  "budget_mm2": 858,
+  "margin_mm2": 116.347
+ },
+ "cuts_worst": 1.435,
+ "pin_align": {
+  "WARN": 648,
+  "OK": 286
+ },
+ "cluster_clock_pins": {
+  "clusters": 48,
+  "per_cluster_connections": 1,
+  "multiply_driven": 0
+ },
+ "emitted_pin_bounds": {
+  "master": "qfd_c_b16",
+  "size_um": [
+   2090.856,
+   5183.976
+  ],
+  "pins": 4659,
+  "outside_pins": [],
+  "lef_sha256": "6f938f61263ecd2165edbcddc3120da463804e94da71212b66708844f84088f0"
+ },
+ "graph_sha256": "63590fc7deff42271afd69d356502e735b940025518d7fad0d9f72406ec22976",
+ "relay_token_cost": {
+  "qualified": false,
+  "cycles_per_ar_token": null,
+  "reason": "OT_RELAY_SKIP: no placed relay stages; no performance evidence"
+ },
+ "targeted_tests": {
+  "passed": 17,
+  "command": "PYTHONPATH=tools python3 -m unittest qwen_split.test_q3h_contract"
+ },
+ "open_gates": [
+  "No placed data relays in source smoke; seven reset nets over500um are deliberately unbuilt by OT_RELAY_SKIP",
+  "C_B16 singleck remains provisional; actual859-entry regional ABI44c0a5398 has no native view yet",
+  "Native D2D replacement and additional real master views missing",
+  "Actual forwarded clock delivery, GRT0 and TT/FF>=0 unavailable",
+  "Full GEN must export actual model relay table; legacy flat price refused"
+ ]
+}

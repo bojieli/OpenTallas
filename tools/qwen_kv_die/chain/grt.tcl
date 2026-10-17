@@ -18,7 +18,16 @@ step coarse {
     make_tracks $ln -x_offset 0.009 -x_pitch $p -y_offset 0.009 -y_pitch $p }
   puts "OT_TILE dbu=[$b getGCellTileSize]"
 }
+# DIE-FLOW 10-17 (owner 0cl): OT_DIE_REPAIR=1 -> the shared die-net repeater step before GRT (die_chain.sh writes
+# /work/die_rep_call.tcl: tools/die_repeaters, element + std TT libs, buffers only, registers/relays checked unchanged,
+# clock / forwarded-clock / reset nets untouched); the STA reads the repaired netlist from ckpt_grt.odb.
+if {[info exists ::env(OT_DIE_REPAIR)] && $::env(OT_DIE_REPAIR) == 1} {
+  set t0 [clock milliseconds]
+  if {[catch {source /work/die_rep_call.tcl} err]} { puts "OT_STEP_FAIL repeaters $err"; flush stdout; exit 3 }
+  puts "OT_TIME step=repeaters s=[format %.1f [expr {([clock milliseconds]-$t0)/1000.0}]]"; mem repeaters
+} else {
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+}
 source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
 set_routing_layers -signal M4-M9 -clock M4-M9
 set_global_routing_layer_adjustment M4-M5 0.30

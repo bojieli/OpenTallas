@@ -83,7 +83,24 @@ else say "PDN FAIL rc=$pdn_rc ($C/run_pdn.log)"; exit 1; fi
 fi
 fi
 mkdir -p $G; cp $H/grt.tcl $G/; ln -f $C/floorplan_pdn.odb $G/floorplan_pdn.odb
-$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0}
+# DIE-FLOW 10-17 (owner 0cl): OT_DIE_REPAIR=1 = shared die-net repeater step before GRT (tools/die_repeaters); the
+# element / ETM / PHY TT libs of this run are what the resizer sees (a master with signal pins and no liberty FAILS it)
+if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
+  mkdir -p $G/libs; : > $G/libs_tt.txt
+  for f in $R/libs/qfd_elements_tt.lib $R/libs/qfd_etm_tt.lib $R/libs/qfd_etm_*_tt.lib $R/libs/ot_hbm3e_phy_tt.lib; do
+    [ -f "$f" ] && cp "$f" $G/libs/ && echo /work/libs/$(basename $f) >> $G/libs_tt.txt; done
+  [ -s $G/libs_tt.txt ] || { say "DIE_REPAIR FAIL: no TT element libs in $R/libs (the resizer would not see the element pins)"; exit 1; }
+  RD=qwen_compute; [ "$DIE" = kv ] && RD=qwen_kv
+  RS=(--skip 'n_rst_*'); [ "${OT_ROUTE_RESET:-0}" = 1 ] && RS=()   # routed registered reset hops are ordinary die nets: repeated
+  python3 $SRC/tools/die_repeaters/step.py copy $G > /dev/null && \
+  python3 $SRC/tools/die_repeaters/step.py tcl --design $RD --report /work/die_repeaters.json --libs-file /work/libs_tt.txt \
+    --std-corner TT --legalize snap "${RS[@]}" > $G/die_rep_call.tcl || { say "DIE_REPAIR FAIL: step generation"; exit 1; }
+fi
+$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0} OT_DIE_REPAIR=${OT_DIE_REPAIR:-0}
+if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
+  say "$(python3 $SRC/tools/die_repeaters/step.py check $G/die_repeaters.json)" || true
+  python3 $SRC/tools/die_repeaters/step.py check $G/die_repeaters.json > /dev/null || { say "DIE_REPAIR FAIL: no GRT result is a die result"; exit 1; }
+fi
 OV=$(awk '/Final congestion report/{f=1} f && /^Total/{print $NF; exit}' $G/grt.log)
 say "full-die GRT exit=$(cat $G/run.exit) overflow=${OV:-none} ($(grep -m1 'Total wirelength' $G/grt.log))"
 [ "${OT_STOP:-}" = grt ] && { say "stop after GRT (OT_STOP=grt)"; exit 0; }

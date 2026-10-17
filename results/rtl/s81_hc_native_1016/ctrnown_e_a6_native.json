@@ -1,0 +1,27 @@
+{
+ "cell": "ot_s81_hc_ctrn_own_e",
+ "view": "physical/ref_tile/s81hc_ctrnown_e_ref/views/ot_s81_hc_ctrn_own_e",
+ "lib_cell": "ot_s81_hc_ctrn_own_e",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 119.1,
+ "spread_ps": 30.5,
+ "outputs": 628,
+ "inputs": 637,
+ "launch_ps": 217.3,
+ "launch_pin": "hdr_out[53]",
+ "capture_ps": 192.5,
+ "capture_pin": "flg_fault[0]",
+ "launch_over": 0,
+ "capture_over": 2,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 192.54137 > 190 (2 pins)",
+ "job": "s81hc_ctrnown_e_ref-a6-fadd15091",
+ "commit": "225e98ab1855cf3f7346fec8a65853e3e261f293",
+ "verdict": "NATIVE FAIL (capture class, 2 pins flg_fault, +2.5 ps); route CLOSED TT +288.92 / FF +19.09 / DRC 0; launch fixed (224.7 -> 217.3)",
+ "fix": "a7: rv/flag-merge flops anchored at the S (rv_c/flag) face, OT_OFLOP_PORT_RE ^(rv_c|a_own|b_own|hdr_out); same RTL/pins/outline"
+}

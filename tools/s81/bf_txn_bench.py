@@ -131,6 +131,7 @@ def main():
     p.add_argument('--params', default='', help="extra shadow parameters, e.g. 'QZE=1,CG=0' (bf-icg 2026-10-08)")
     p.add_argument('--mutant', action='append', default=[], help='extra negative case NAME=DEFINE (must FAIL)')
     p.add_argument('--column-roots', action='store_true', help='actual ten-root column RTL, all roots on the compiled phase')
+    p.add_argument('--column-cl', action='store_true', help='with --column-roots: hardened-cluster column (tools/s81/gen_bf_column_cluster.py, 7 std roots, registered child inputs)')
     p.add_argument('--column-west-roots', action='store_true', help='with --column-roots: actual W-facing R0 source master on the east side of the pair')
     p.add_argument('--front-roots', action='store_true', help='actual five-root static front RTL, all roots on the compiled phase')
     p.add_argument('--mapped-rom-candidate', action='store_true', help='candidate uses real macro functional model and offline via-mask images')
@@ -157,6 +158,8 @@ def main():
     if a.column_roots:
         assert a.die_pair and a.static_prog is not None
         names += ['ot_v41_bf_col_roots','ot_v41_bf16_lanes3_roots','dsfd_bf_col_roots','ot_v41_bf_lane4','ot_v41_bf_reduce','ot_v41_bf_segment_leaf','ot_v41_bf_fp4_chain','ot_v41_bf_fp4_pair_leaf']
+        if a.column_cl:
+            names += ['ot_v41_bf_col_cl','ot_v41_bf16_lanes3_cl','dsfd_bf_col_cl','ot_v41_bf_red_cl','ot_v41_bf_seg_cl','ot_v41_bf_fp_cl','ot_v41_bf_lane4_cl']
     if a.column_west_roots:
         assert a.column_roots
         names += ['dsfd_bf_col_roots_w']
@@ -219,14 +222,15 @@ def main():
         muts += [(m.split('=')[0], ['+define+' + m.split('=', 1)[1]]) for m in a.mutant]
     if a.column_roots:
         for n in ['rtl/v41rom/ot_v41_bf_fp4_leaves.sv','rtl/v41rom/ot_v41_bf_segment_leaf.sv','rtl/v41rom/ot_v41_bf_reduce.sv','rtl/v41rom/ot_v41_bf_lane4.sv','rtl/v41rom/ot_v41_bf_col_roots.sv', 'rtl/v41rom/ot_v41_bf16_lanes3_roots.sv',
-                  'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv']:
+                  'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv'] + (['rtl/v41rom/ot_v41_bf_cl_leaves.sv','rtl/v41rom/ot_v41_bf_lane4_cl.sv','rtl/v41rom/ot_v41_bf16_lanes3_cl.sv','rtl/v41rom/ot_v41_bf_col_cl.sv','rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_cl.sv'] if a.column_cl else []):
             fn='x_'+Path(n).name
             files[fn]=candify((ROOT/n).read_text(), names)
             extra.append(fn)
         fn='x_bf_die_pair_static.sv'
-        files[fn], count=re.subn(r'(?<![\w$])(?:cand_)?dsfd_bf_col #\(', 'cand_dsfd_bf_col_roots #(', files[fn])
+        colm,nl=('cand_dsfd_bf_col_cl',7) if a.column_cl else ('cand_dsfd_bf_col_roots',9)
+        files[fn], count=re.subn(r'(?<![\w$])(?:cand_)?dsfd_bf_col #\(', colm+' #(', files[fn])
         assert count==2, count
-        files[fn]=files[fn].replace('e0w (.ck(clk)', 'e0w (.rom_ck0(clk), .rom_ck1(clk), .leaf_ck({9{clk}}), .ck(clk)').replace('e0e (.ck(clk)', 'e0e (.rom_ck0(clk), .rom_ck1(clk), .leaf_ck({9{clk}}), .ck(clk)')
+        files[fn]=files[fn].replace('e0w (.ck(clk)', 'e0w (.rom_ck0(clk), .rom_ck1(clk), .leaf_ck({%d{clk}}), .ck(clk)'%nl).replace('e0e (.ck(clk)', 'e0e (.rom_ck0(clk), .rom_ck1(clk), .leaf_ck({%d{clk}}), .ck(clk)'%nl)
         if a.column_west_roots:
             pieces=files[fn].split('cand_dsfd_bf_col_roots #(')
             assert len(pieces)==3 and 'e0e' in pieces[2].split(';',1)[0]
@@ -260,6 +264,7 @@ def main():
     out = {'variant': a.variant, 'params': a.params, 'cases': {}, 'pass': True, 'refreshed': refreshed, 'source_commit': commit, 'dirty': dirty, 'column_roots':a.column_roots, 'mapped_candidate_rom':image_rec if a.mapped_rom_candidate else None}
     out['front_roots']=a.front_roots
     out['column_west_roots']=a.column_west_roots
+    out['column_cl']=a.column_cl
     pos = ['+define+QP_CHECK', '+define+QT_CHECK'] if a.variant == 'recut' else []
     positives = [('positive', pos)] + [(x.split('=')[0], pos + ['+define+' + x.split('=', 1)[1]])
                                       for x in a.positive_define]
