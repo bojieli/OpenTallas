@@ -72,7 +72,7 @@ run(){ # name scen expect
  fi
 }
 fail=0
-declare -A MS=([droplink]="OT_COLL_V5_MUT_DROP_LINK 1" [nomask]="OT_COLL_V5_MUT_NOMASK 0" [causeswap]="OT_COLL_V5_MUT_CAUSE_SWAP 4" [droptkm]="OT_COLL_V5_MUT_DROP_TKM 3" [vmsel]="OT_COLL_V6_MUT_VMSEL 7" [obsnoalign]="OT_COLL_V7_MUT_OBS_NOALIGN 7" [rcdrop]="OT_COLL_V7_MUT_RCDROP 2")
+declare -A MS=([droplink]="OT_COLL_V5_MUT_DROP_LINK 1" [nomask]="OT_COLL_V5_MUT_NOMASK 0" [causeswap]="OT_COLL_V5_MUT_CAUSE_SWAP 4" [droptkm]="OT_COLL_V5_MUT_DROP_TKM 3" [vmsel]="OT_COLL_V6_MUT_VMSEL 7" [obsnoalign]="OT_COLL_V7_MUT_OBS_NOALIGN 7" [rcdrop]="OT_COLL_V7_MUT_RCDROP 2" [lastale]="OT_PT_MUT_LA_STALE 0")
 if [ "$MODE" != all ] && [ "$MODE" != pos ] && [ "$MODE" != vmpos ]; then
  set -- ${MS[$MODE]:?unknown mode $MODE}
  build "m_$MODE" -D$1; run "m_$MODE" $2 pass; rm -rf "$OUT/obj_m_$MODE"
