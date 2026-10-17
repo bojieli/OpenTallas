@@ -8,9 +8,11 @@
 // sw write per leaf per cycle (RD unpack pairs, CTL row writes), one partial collection at a time, one mine CTL / RD / lo
 // beat per cycle -- plus noise beats that must be ignored (other slices' CTL / RD / CL, XQ / XB / NX, non-CTL V kinds,
 // SC with relay off, invalid lanes carrying random data).
-// Model latencies (slot n = outputs after the n-th edge; inputs of cycle n are sampled at that edge):
-//   CTL decode (c / x_go / is / cfg / row write) n+1;  V CTL re-inject and SC relay on ci n+1;  RD pair j n+2+j;
-//   packed send (last lo beat) n+2;  partial j to xfin n+2+j;  rstd fan n+1.
+// Model latencies (slot n = outputs after the n-th edge; inputs of cycle n are sampled at that edge), as generated below
+//   (XR1 single-stage timing): CTL decode (c / x_go / is / cfg / row write) n+1;  V CTL re-inject and SC relay on ci n+1;
+//   RD pair j n+2+j;  packed send (last lo beat) n+2;  partial j to xfin n+2+j;  rstd fan n+1.
+// S81U-XR2 (10-17) adds the classify stage: check() compares ci / bo / c / sw / x_go / is / cfg one slot later (XL = 1),
+//   i.e. CTL n+2, V re-inject / SC relay n+2, RD pair j n+3+j, packed send n+3; partials and rstd are unchanged.
 // Checks every cycle: ci_dir, ci_b[0], c_v, sw_v, x_go, x_sv, rb_v, is_v, cfg_v, fault (= 0), bo (HB: whole word); payloads
 // whenever their valid is up (ci_b / bo: the unused pack words of a short send are stale don't-care).
 // Then 13 illegal programs, each from reset, must raise the sticky fault.
@@ -250,19 +252,21 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
         end
     endtask
     task automatic check(input integer s);
+        integer d;
         begin
-            if (ci_dir !== x_cidir[s]) bad("ci_dir", s);
-            if (ci_b[0] !== x_civ[s]) bad("ci_v", s);
-            if (x_civ[s] && ((ci_b ^ x_cib[s]) & x_cim[s]) != 0) bad("ci_b", s);
-            if (((bo ^ x_bo[s]) & x_bom[s]) != 0) bad("bo", s);
-            if (c_v !== x_cv[s]) bad("c_v", s);
-            for (k = 0; k < 5; k = k + 1) if (x_cv[s][k] && c_d[160 * k +: 160] !== x_cd[s]) bad("c_d", s);
-            if (sw_v !== x_swv[s]) bad("sw_v", s);
-            for (k = 0; k < 5; k = k + 1) if (x_swv[s][k] && (sw_a[10 * k +: 10] !== x_swa[s][10 * k +: 10] ||
-                sw_m[8 * k +: 8] !== x_swm[s][8 * k +: 8] || sw_d[256 * k +: 256] !== x_swd[s][256 * k +: 256])) bad("sw", s);
-            if (x_go !== x_go_e[s] || (x_go_e[s] && x_eps !== x_eps_e[s])) bad("x_go", s);
-            if (is_v !== x_isv[s] || (x_isv[s] && is_d !== x_isd[s])) bad("is", s);
-            if (cfg_v !== x_cfgv[s] || (x_cfgv[s] && cfg_d !== x_cfgd[s])) bad("cfg", s);
+            d = (s > 0) ? s - 1 : 0;      // XL = 1: the classify stage (S81U-XR2) delays every CTL / RD / lo / V / SC output
+            if (ci_dir !== x_cidir[d]) bad("ci_dir", d);
+            if (ci_b[0] !== x_civ[d]) bad("ci_v", d);
+            if (x_civ[d] && ((ci_b ^ x_cib[d]) & x_cim[d]) != 0) bad("ci_b", d);
+            if (((bo ^ x_bo[d]) & x_bom[d]) != 0) bad("bo", d);
+            if (c_v !== x_cv[d]) bad("c_v", d);
+            for (k = 0; k < 5; k = k + 1) if (x_cv[d][k] && c_d[160 * k +: 160] !== x_cd[d]) bad("c_d", d);
+            if (sw_v !== x_swv[d]) bad("sw_v", d);
+            for (k = 0; k < 5; k = k + 1) if (x_swv[d][k] && (sw_a[10 * k +: 10] !== x_swa[d][10 * k +: 10] ||
+                sw_m[8 * k +: 8] !== x_swm[d][8 * k +: 8] || sw_d[256 * k +: 256] !== x_swd[d][256 * k +: 256])) bad("sw", d);
+            if (x_go !== x_go_e[d] || (x_go_e[d] && x_eps !== x_eps_e[d])) bad("x_go", d);
+            if (is_v !== x_isv[d] || (x_isv[d] && is_d !== x_isd[d])) bad("is", d);
+            if (cfg_v !== x_cfgv[d] || (x_cfgv[d] && cfg_d !== x_cfgd[d])) bad("cfg", d);
             if (x_sv !== x_xsv[s] || (x_xsv[s] && (x_si !== x_xsi[s] || x_s !== x_xs[s]))) bad("x_s", s);
             if (rb_v !== {5{x_rbv_e[s]}} || (x_rbv_e[s] && rb_d !== x_rbd_e[s])) bad("rb", s);
             if (fault !== 1'b0) bad("fault", s);
