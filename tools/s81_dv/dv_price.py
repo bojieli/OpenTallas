@@ -100,6 +100,15 @@ def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0):
                 add(nid, 'intra_slice_leaf', int(m.group(2)) * (ld + 2 * lm))   # return to owner + x to/from ring stop
             if cls == 'su' and op in ('attn.quant', 'ffn.norm.scale', 'attn.q_quant', 'attn.kv_rope_qdq', 'eng.gate'):
                 add(nid, 'intra_slice_leaf', 2 * lm)                            # partial to xfin leaf, rstd back
+        if g.get('tier_w'):
+            # p4c per-column tier exchange vs p4b end-column ring: the N tier needs the S tier's 40 beats; p4b moves
+            # them over 2 x 1,104-b end links (~20 cycles of serialization each), p4c over 8 x tier_w-bit links
+            # (5 x 1,104 / tier_w cycles per column); + up to 2 registered unit ring stops (+4) on the crossing
+            cross = 5 * 1104 / g['tier_w'] - 20 + 4
+            if m and cls == 'field':
+                add(nid, 'tier_cross', int(m.group(2)) * max(0.0, cross))
+            if cls == 'su' and op in ('attn.quant', 'ffn.norm.scale', 'eng.gate'):
+                add(nid, 'tier_cross', 4 + math.ceil(173 / g['tier_w']) - 1)   # partial flit + unit stops
         if re.search(r'(substage_hop\d+|head\.hop)$', nid):
             add(nid, 'h_xfer_ring', 2 * st(g['worst_slice_to_edge_um']))
     return d, rules

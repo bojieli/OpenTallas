@@ -27,6 +27,7 @@ from die_cluster import boundary as CB   # noqa: E402
 
 PLAT = '/OpenROAD-flow-scripts/flow/platforms/asap7'
 DFF = 'DFFHQNx1_ASAP7_75t_R'
+BUF = 'BUFx8_ASAP7_75t_R'
 ROW, SITE = 0.27, 0.054
 PIN_PITCH = 0.096            # 2 tracks of M4 (y) / M5 (x)
 # what each plan block kind is today (DV p4): a real closed view exists for none of the DV-specific blocks yet
@@ -99,6 +100,7 @@ def main():
     # ------------------------------------------------------------------ links -> ports on blocks + relay chains
     pins = collections.defaultdict(list)          # inst -> [(port, dir, bits, x, y, face)]
     nets, flops, chains = [], [], []
+    fsrc = {}
     nbits = 0
     used = collections.Counter()
     for l in plan['links']:
@@ -112,14 +114,17 @@ def main():
         pins[n0].append((po, 'output', b, x0_ - ox, y0_ - oy, face_of(blocks[bi0], x0_, y0_)))
         pins[n1].append((pi, 'input', b, x1_ - ox, y1_ - oy, face_of(blocks[bi1], x1_, y1_)))
         hops = l['h']
-        st = len(hops) - 1
-        # stage k sits at the end of hop k (k = 0 .. st-1)
-        pts = [(h[2] - ox, h[3] - oy) for h in hops[:-1]]
+        if 'sp' in l:      # explicit station points (stations on straights; die wire turns between stations)
+            pts = [(x - ox, y - oy) for x, y in l['sp']]
+        else:              # older plans: stage k at the end of hop k
+            pts = [(h[2] - ox, h[3] - oy) for h in hops[:-1]]
+        st = len(pts)
         prev = [f'{n0}/{po}'] * 0
         chains.append(dict(link=l['i'], cls=l['c'], bits=b, stages=st, src=f'{n0}.{po}', dst=f'{n1}.{pi}', hop_um=round(max(abs(h[2] - h[0]) + abs(h[3] - h[1]) for h in hops), 1)))
         for k, (px, py) in enumerate(pts):
             flops.append((nm, k, b, px, py))
         nets.append((nm, n0, po, n1, pi, b, st))
+        fsrc[nm] = (x0_ - ox, y0_ - oy)
         nbits += b
         used[l['c']] += b
     # ------------------------------------------------------------------ abstracts (one master per kept instance)
@@ -165,19 +170,22 @@ def main():
             v.append(f'  assign {dst} = {src};')
             continue
         prev = src
+        # forwarded clock per lane (p4c-lanes): source buffer at the driver from the regional clock, stage k clocked
+        # by n<link>_fck[k], a forwarding BUFx8 at each station drives the next segment (DIE-FLOW fclk audit glob
+        # 'n*_fck\\[*\\]'); the sink re-time is the last station (DIE-CLOCK method section 3)
+        v.append(f'  wire [{st}:0] n{nm}_fck;')
+        v.append(f'  {BUF} fs_{nm} (.A(clk), .Y(n{nm}_fck[0]));')
         for k in range(st):
             wn = f'r_{nm}_{k}'
             v.append(f'  wire [{b - 1}:0] {wn};')
             for j in range(b):
-                v.append(f'  {DFF} f_{nm}_{k}_{j} (.CLK(clk), .D({prev}[{j}]), .QN({wn}[{j}]));')
+                v.append(f'  {DFF} f_{nm}_{k}_{j} (.CLK(n{nm}_fck[{k}]), .D({prev}[{j}]), .QN({wn}[{j}]));')
+            v.append(f'  {BUF} ff_{nm}_{k} (.A(n{nm}_fck[{k}]), .Y(n{nm}_fck[{k + 1}]));')
             nf += b
             prev = wn
         v.append(f'  assign {dst} = {prev};')
     v.append('endmodule')
-    for i in sorted(keep):
-        bl = blocks[i]
-        ports = ', '.join(f'{d} [{bits - 1}:0] {port}' for port, d, bits, *_ in pins.get(bl['name'], [])) or ''
-        v.append(f'module dv_{bl["name"]} (input clk{", " + ports if ports else ""});\nendmodule')
+    # blocks are library cells (LEF + stand-in liberty): no Verilog module bodies (an empty module would flatten away)
     (out / 'die.v').write_text('\n'.join(v) + '\n')
     # ------------------------------------------------------------------ placement
     pl = []
@@ -185,6 +193,12 @@ def main():
         bl = blocks[i]
         pl.append(f'place_inst -name u_{bl["name"]} -location {{{bl["x"] - ox:.3f} {bl["y"] - oy:.3f}}} -orientation R0 -status FIRM')
     # relay flops: a station of `b` flops on a small square of rows / sites at the hop point
+    for nm, n0, po, n1, pi, b, st in nets:
+        if st:
+            sx_, sy_ = fsrc[nm]
+            pl.append(f'place_inst -name fs_{nm} -location {{{round(sx_ / SITE) * SITE:.3f} {round(sy_ / ROW) * ROW + 1.08:.3f}}} -orientation R0 -status PLACED')
+    for nm, k, b, px, py in flops:
+        pl.append(f'place_inst -name ff_{nm}_{k} -location {{{round((px - 2) / SITE) * SITE:.3f} {round((py - 1) / ROW) * ROW + 1.08:.3f}}} -orientation R0 -status PLACED')
     for nm, k, b, px, py in flops:
         side = max(1, int(math.ceil(math.sqrt(b * 0.648 / (ROW * SITE)) / 12)))   # ~12 sites per DFF
         cols = max(1, int(math.ceil(math.sqrt(b))))
@@ -200,7 +214,9 @@ def main():
         import subprocess, tempfile
         tmp = Path(tempfile.mkdtemp(prefix='dvrep_'))
         (tmp / 'tools/die_repeaters').mkdir(parents=True)
-        for f in ('__init__.py', 'step.py', 'die_repeaters.tcl'):
+        names = subprocess.run(['git', '-C', str(ROOT), 'ls-tree', '--name-only', a.dieflow_ref, 'tools/die_repeaters/'],
+                               capture_output=True, text=True, check=True).stdout.split()
+        for f in (Path(n).name for n in names):
             (tmp / 'tools/die_repeaters' / f).write_bytes(subprocess.run(['git', '-C', str(ROOT), 'show', f'{a.dieflow_ref}:tools/die_repeaters/{f}'],
                                                                         capture_output=True, check=True).stdout)
         (tmp / 'tools/die_cluster').mkdir(); shutil.copy(ROOT / 'tools/die_cluster/cluster_bounds.tcl', tmp / 'tools/die_cluster/')
@@ -210,7 +226,8 @@ def main():
         subprocess.run([sys.executable, str(tmp / 'tools/die_repeaters/step.py'), 'copy', str(out)], check=True)
         libs = [f'{PLAT}/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', f'{PLAT}/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib']
         t = subprocess.run([sys.executable, str(tmp / 'tools/die_repeaters/step.py'), 'tcl', '--design', 's81', '--report',
-                            '/work/die_repeaters.json', '--legalize', 'snap', '--libs', *libs], capture_output=True, text=True, check=True).stdout
+                            '/work/die_repeaters.json', '--legalize', 'snap',
+                            '--repeat-nets', 'n*_fck\\[*\\]', '--fclk-globs', 'n*_fck\\[*\\]', '--libs', *libs], capture_output=True, text=True, check=True).stdout
         (out / 'die_repeaters_step.tcl').write_text(t)
         repair = f'# DIE-FLOW repeater step ({a.dieflow_ref})\nsource /work/die_repeaters_step.tcl\n'
     tcl = f'''# S81-DV die case (tools/s81_dv/dv_diecase.py) -- NOT_A_DIE_RESULT (stand-in census in case.json)
