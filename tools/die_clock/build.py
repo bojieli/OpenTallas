@@ -558,11 +558,9 @@ def build(a):
                 df = max(0.0, tg[y][1] - nbB - Tf) if two else 0.0
                 if dt <= 1e-6 and df <= 1e-6:
                     continue
-                if two:
-                    if df < rlo * dt:
-                        df = rlo * dt
-                    elif df > rhi * dt:
-                        dt = df / rhi
+                # TT and FF are relaxed independently (coupling them through the element cone ran away on Qwen KV
+                # kv_nb2: every FF raise forced dt = df / rhi, which re-raised the neighbours, +6..17 ns per iteration);
+                # the per-leaf P/W solve absorbs the residual cone mismatch
                 tg[x] = (Tt + dt, (Tf + df) if two else None, b1, b2)
                 moved = True
             if not moved:

@@ -392,6 +392,13 @@ STATUS_JOINS = {   # master -> (slot param, ports, target-id param, slot width, 
 # all 128 PCs); its six registered owner fault classes owner_fault_split[5:0] land in the quadrant stack fault leaf
 # (ot_hbm_svc_stack_fault OWN_W=6: the sticky owner bit is their OR) instead of the scalar owner_fault.
 PC_H8 = False
+# --pc-h9b (H-SU 70905a93e): same ports / straps as H8 (owner_fault_split), +1 K request edge, kr_rdy ready-latency-1
+# (its consumers vmks_<q><k> must run KRL1=1: layer vm_kshare_krl1_d4f.json)
+PC_H9B_MASTER = dict(master='ot_hbm_svc_pc_ctrl_leaf_cfg_h9b', source='rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv',
+                     deps=['rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv', 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv',
+                           'rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv'],
+                     keep=dict(OREG=1, KREG=1, KRREG=1, RREG=1, WPAY=1, QREG=1))
+PC_H9B = False
 PC_H8_MASTER = dict(master='ot_hbm_svc_pc_ctrl_leaf_cfg_h8', source=_SVC + 'ot_hbm_svc_pc_ctrl_leaf_cfg_h8.sv',
                     deps=[_SVC + 'ot_hbm_svc_pc_ctrl_leaf.sv', 'rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h7.sv'],
                     keep=dict(OREG=1, KREG=1, KRREG=1, RREG=1, WPAY=1, QREG=1))
@@ -406,7 +413,7 @@ SM_SIDE = {'ot_hbm3e_phy_rc_e8p5', 'ot_hbm_accel_smh_attn', 'ot_hbm_svc_pc_ctrl_
            'ot_hbm_svc_pc_ctrl_leaf_cfg_h8', 'ot_hbm_svc_sm_group', 'ot_hbm_svc_sm_group_id', 'ot_hbm_svc_sm_xcal_t',
            'ot_hbm_svc_stack_fault', 'ot_hbm_svc_vm_kshare', 'ot_hbm_svc_vmdel_lane', 'ot_hbm_svc_wb_kport',
            'ot_hbm_svc_wbw_copy', 'ot_hbm_sm_vm_wr_q_t', 'ot_hgi_sm_xload_cl2_bdring', 'ot_hgi_sm_xload_cl2_bfq',
-           'ot_hgi_sm_xload_cl2_ctlw', 'ot_hgi_sm_xload_cl2_ctl', 'ot_hgi_sm_xload_xq_pegress', 'ot_hbm_xp_aq_tree13_fmt',
+           'ot_hgi_sm_xload_cl2_ctlw', 'ot_hgi_sm_xload_cl2_ctl', 'ot_hgi_sm_xload_cl2_bfqg', 'ot_hgi_sm_xload_xq_pegress', 'ot_hbm_xp_aq_tree13_fmt',
            'ot_static_cmd_target', 'ot_hgi_dma_back_static_vp4_banks_cp'}
 
 
@@ -549,7 +556,8 @@ def a2p_edge_remap(edges, problems):
 
 def a2p_drop(insts, specs, problems):
     drop = {n for n in insts if (m := _QTAG.search(n)) and KEEP_Q and m.group(1) not in KEEP_Q}
-    drop |= {n for n in insts if (m := _QTAG.search(n)) and m.group(1) in DROP_SM_Q and insts[n]['master'] in SM_SIDE}
+    drop |= {n for n in insts if (m := _QTAG.search(n)) and m.group(1) in DROP_SM_Q
+             and (insts[n]['master'] in SM_SIDE or insts[n]['master'].startswith('ot_hbm_svc_pc_ctrl_leaf'))}   # every PC master generation
     for n in DROP_INST:
         if n not in insts:
             problems.append(f'--drop-instances: {n} is not an instance')
@@ -697,7 +705,7 @@ def build(specs_dir, out, extra=(), soft_idx=None):
             if not r:
                 continue
             if PC_H8 and i['master'] == 'ot_hbm_svc_pc_ctrl_leaf':
-                r = dict(r, **PC_H8_MASTER)
+                r = dict(r, **(PC_H9B_MASTER if PC_H9B else PC_H8_MASTER))
                 h8.add(n)
             old = dict(i['params'])
             for port, fn in r['straps']:
@@ -1251,11 +1259,13 @@ def main():
     ap.add_argument('--drop-sm-side', default='', help='A2P: comma list of quadrants whose SM side is removed')
     ap.add_argument('--drop-instances', default='', help='A2P: comma list of extra instances to remove')
     ap.add_argument('--keep-quadrants', default='', help='A2P: comma list of quadrants to keep (e.g. SW,NW)')
+    ap.add_argument('--pc-h9b', action='store_true', help='with --pc-h8: the PC master is H9b (PC_H9B_MASTER)')
     ap.add_argument('--pc-h8', action='store_true', help='with --identity-straps: PC controller = the H8 view (PC_H8_MASTER)')
     ap.add_argument('--soft-idx', type=Path, help='net map of the soft hb_idx composition (idx_soft_netmap_1016.py): '
                     'replace hb_idx by its children hb_idx__<child> (H-DIE grant 6413258a6)')
     a = ap.parse_args()
-    global IDENTITY_STRAPS, PC_H8, KEEP_Q, DROP_SM_Q, DROP_INST
+    global IDENTITY_STRAPS, PC_H8, KEEP_Q, DROP_SM_Q, DROP_INST, PC_H9B
+    PC_H9B = a.pc_h9b
     DROP_SM_Q = tuple(x for x in a.drop_sm_side.split(',') if x)
     DROP_INST = tuple(x for x in a.drop_instances.split(',') if x)
     KEEP_Q = tuple(x for x in a.keep_quadrants.split(',') if x)
