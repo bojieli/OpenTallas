@@ -1,0 +1,16 @@
+BAD PHY command edge c66 expected65
+BAD PHY command edge c68 expected66
+BAD PHY command edge c70 expected67
+BAD PHY command edge c72 expected68
+BAD PHY command edge c74 expected69
+BAD PHY command edge c76 expected70
+BAD PHY command edge c78 expected71
+BAD PHY command edge c80 expected72
+BAD PHY command edge c82 expected73
+BAD PHY command edge c84 expected74
+BAD PHY command edge c86 expected75
+BAD PHY command edge c88 expected76
+MEASURE mode0 phase137 jit16 reads4096 lands4096 puts4096 returns18432 frees512 stall34428 maxocc17 errors174156
+[67892224000] %Fatal: tb_qkd_kv_compact_boundary.sv:151: Assertion failed in tb_qkd_kv_compact_boundary: BOUNDARY_FAIL
+%Error: /srv/opentallas-scratch/codex/kv-compact-source-s36-r2/source/rtl/test/qwen_static_kv/tb_qkd_kv_compact_boundary.sv:151: Verilog $stop
+Aborting...

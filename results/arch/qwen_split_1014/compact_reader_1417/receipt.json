@@ -1,0 +1,80 @@
+{
+  "status": "PASS_SOURCE_READ_ONLY_HARDWARE_PROGRAMME",
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_emb_cdc.sv": "54e84274ca2b982444f2665c98cf01bd0842559c0a79f92e7543ba63ec8a76ad",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv": "b86f14f5e7e007e5e07b3d80ebd3787f5cbae669e94b984f887d4bef29cd06ca",
+    "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv": "e2be6cd367129f6d74375e642364e3623c6764efb35d8e8be9f9efef4d6ab4a2",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "cca8b078ac2da9c830090f72186eb6d0ae8f666b13f29ff4c30fec80ed98a368",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "79bcd9fb7a948c9cf00a17686ebca4868207eff066b1e44fd3190a031850e442",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots.sv": "58c84c5a4c00eaf641022c3d2417ce9a5a52b17b6f554c2831f2a11b545cc652",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv": "ed7fdbf48dd623a4f91736932aec6c2c5372a1b8cc57706a7b22e17f832a8503",
+    "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv": "b51a8bf496dc40755700d58bd03b492c058dff9529766a771ca94914014f71b7",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv": "e49dcb70cfc2586c267b8d4aee476f127f921e8a5560819103171a5719e8f0c8",
+    "rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv": "6ac2b1238a57260f604cfdde0e05d85e7b621589d5248c6f200d6a914be5adaa",
+    "rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv": "dbeff5405f1386e09915e4f2f205896afb88c285b2805168c2084613d4544d09",
+    "rtl/lib/ot_async_fifo.sv": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_delta_calendar.sv": "68747dbc91374acce9ee097ee667d397bd611a3cd026cd779909d28ac8ee31fc",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_compact_reader.sv": "fb498a6e5b51e6a115f0dd812d0bb22fe8f3ff45e2b6ef5806857cef72470db4",
+    "rtl/test/qwen_static_kv/tb_qkd_kv_compact_boundary.sv": "f27be49293fe0d954ea478739e2a0d55fe2b7c87d7113eaceb184afba6552fb7",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "runs": [
+    {
+      "name": "m0_p137_j0",
+      "returncode": 0,
+      "pass_observed": true,
+      "mutant_rejected": false,
+      "measure": "MEASURE mode0 phase137 jit0 reads18432 lands18432 puts18432 returns18432 frees2304 stall0 maxocc25 errors0"
+    },
+    {
+      "name": "m0_p137_j16",
+      "returncode": 0,
+      "pass_observed": true,
+      "mutant_rejected": false,
+      "measure": "MEASURE mode0 phase137 jit16 reads18432 lands18432 puts18432 returns18432 frees2304 stall0 maxocc11 errors0"
+    },
+    {
+      "name": "m0_p637_j16",
+      "returncode": 0,
+      "pass_observed": true,
+      "mutant_rejected": false,
+      "measure": "MEASURE mode0 phase637 jit16 reads18432 lands18432 puts18432 returns18432 frees2304 stall0 maxocc11 errors0"
+    },
+    {
+      "name": "m1_p137_j16",
+      "returncode": -6,
+      "pass_observed": false,
+      "mutant_rejected": true,
+      "measure": "MEASURE mode0 phase137 jit16 reads288 lands288 puts288 returns18432 frees36 stall58007 maxocc8 errors160815"
+    },
+    {
+      "name": "m2_p137_j16",
+      "returncode": -6,
+      "pass_observed": false,
+      "mutant_rejected": true,
+      "measure": "MEASURE mode0 phase137 jit16 reads4096 lands4096 puts4096 returns18432 frees512 stall34428 maxocc17 errors174156"
+    },
+    {
+      "name": "m3_p137_j16",
+      "returncode": -6,
+      "pass_observed": false,
+      "mutant_rejected": true,
+      "measure": "MEASURE mode0 phase137 jit16 reads18432 lands18432 puts18432 returns18432 frees2304 stall0 maxocc11 errors78800"
+    },
+    {
+      "name": "m4_p137_j16",
+      "returncode": -6,
+      "pass_observed": false,
+      "mutant_rejected": true,
+      "measure": "MEASURE mode0 phase137 jit16 reads3328 lands3328 puts3328 returns18432 frees416 stall58319 maxocc12 errors169655"
+    }
+  ],
+  "gate_sha256": "29c00ab6949b65636c306506af2fc5e466cf68f9014c783421c40db1af8fe5e5",
+  "production_installable": false,
+  "physical_qualified": false,
+  "full_token_qualified": false,
+  "scope": "actual mapped SRAM bytecode drives PROFILE0 controller/front/ring; full512/stage, persistent native reader state. Actual HOST/write/landing/consumer/physical join still OPEN."
+}

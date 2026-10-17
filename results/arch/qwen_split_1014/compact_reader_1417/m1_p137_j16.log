@@ -1,0 +1,16 @@
+BAD front release edge c119 put0 next119
+BAD CORE exact payload/metadata
+BAD CORE ring fault
+BAD CORE exact payload/metadata
+BAD CORE ring fault
+BAD CORE exact payload/metadata
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE exact payload/metadata
+BAD CORE ring fault
+BAD CORE exact payload/metadata
+BAD CORE ring fault
+MEASURE mode0 phase137 jit16 reads288 lands288 puts288 returns18432 frees36 stall58007 maxocc8 errors160815
+[67892224000] %Fatal: tb_qkd_kv_compact_boundary.sv:151: Assertion failed in tb_qkd_kv_compact_boundary: BOUNDARY_FAIL
+%Error: /srv/opentallas-scratch/codex/kv-compact-source-s36-r2/source/rtl/test/qwen_static_kv/tb_qkd_kv_compact_boundary.sv:151: Verilog $stop
+Aborting...

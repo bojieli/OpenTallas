@@ -1,0 +1,43 @@
+{
+  "frame": {
+    "source_ff_bits": 1272,
+    "actual_memory_macros": 4,
+    "remaining_cells": {
+      "$add": 1,
+      "$eq": 1045,
+      "$logic_and": 16,
+      "$logic_not": 11,
+      "$logic_or": 13,
+      "$mul": 1,
+      "$ne": 10,
+      "$mux": 2586,
+      "$pmux": 1,
+      "$reduce_or": 2,
+      "$shiftx": 4,
+      "$shr": 1,
+      "$sub": 1,
+      "$xor": 5
+    }
+  },
+  "delta": {
+    "source_ff_bits": 1010,
+    "actual_memory_macros": 5,
+    "remaining_cells": {
+      "$add": 16,
+      "$eq": 35,
+      "$ge": 1,
+      "$gt": 6,
+      "$logic_and": 23,
+      "$logic_not": 7,
+      "$logic_or": 18,
+      "$lt": 2,
+      "$ne": 7,
+      "$pmux": 3,
+      "$mux": 98,
+      "$reduce_and": 1,
+      "$shr": 2,
+      "$sub": 1,
+      "$xor": 1
+    }
+  }
+}

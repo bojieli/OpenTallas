@@ -1,0 +1,16 @@
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+MEASURE mode0 phase137 jit16 reads18432 lands18432 puts18432 returns18432 frees2304 stall0 maxocc11 errors78800
+[67892224000] %Fatal: tb_qkd_kv_compact_boundary.sv:151: Assertion failed in tb_qkd_kv_compact_boundary: BOUNDARY_FAIL
+%Error: /srv/opentallas-scratch/codex/kv-compact-source-s36-r2/source/rtl/test/qwen_static_kv/tb_qkd_kv_compact_boundary.sv:151: Verilog $stop
+Aborting...

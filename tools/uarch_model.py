@@ -17342,3 +17342,50 @@ def qwen_kv_calendar_replay_model(depth=64, width=64, replicas=1):
       latency_contribution="one start-pin capture edge; event timestamps already include downstream path ages",
       production_image="MISSING persistent boot/ingest, all36 perPC reservations, front capacity/release and independent ring/core expectations",
       status="COMPONENT_RTL_ONLY_NO_PRODUCTION_FIT_OR_RATE_CLAIM")
+
+
+def qwen_kv_compact_delta_model(hbm_bytes=18729, core_bytes=18817, pcs=128):
+    """Sizing-first full36 read-only calendar: actual 128x256 1R1W macros."""
+    import math
+    banks=[math.ceil(n/4096) for n in (hbm_bytes,core_bytes)]
+    return dict(schema="opentallas.qwen-kv-compact-delta.v1",stages=36,sectors_per_stage=512,
+      image_bytes=dict(HBM=hbm_bytes,CORE=core_bytes),macros_per_domain=banks,
+      macro="ot_sram_1r1w_128x256_m1_r2c2",macro_dimensions_um=[94.824,41.064],
+      macro_count_die=pcs*sum(banks),macro_storage_bits_die=pcs*sum(banks)*128*256,
+      raw_macro_area_mm2=pcs*sum(banks)*94.824*41.064/1e6,
+      runtime_macro_bandwidth="one256bit fetch per32 bytecode records; two256bit caches, one-cycle macro Q plus one capture edge",
+      boot_bandwidth="one256bit row per clock, before seal; no runtime writes",
+      bytes_per_cycle=1,macs_per_cycle=0,output_events_per_cycle=1,
+      codec="bit7 emits a fixed slot; bits6:0 positive delta1..127; bit7zero extends the wait without an event",
+      output_slots="registered; event cycles compiled before execution, never selected by arrival/ready",
+      initial_prefetch_edges=4,seal_pin_to_configured_edges=6,core_metadata_output_edges=1,source_frame_edges=1782,hbm_period_fs=1024000,
+      read_only36_hbm_edges=64152,read_only36_time_us=65.691648,
+      flop_buffers_per_domain_bits=512,clock_pin_budget="new controller logic under15000 sinks required; measured CTS missing",
+      physical_slot_grant=False,total_area_with_controller_channels_unknown=True,
+      missing="actual native PC11/writeback/HOST service join, independent landing/consumer lifetimes, full128 phi-R, SRAM placement/TT/FF/DRC and token cost",
+      status="SIZING_ONLY_SOURCE_READ_PROGRAMME_NOT_FULL_TOKEN")
+
+
+def qwen_kv_full_frame_staging_model(frame_slots=1, pcs=128):
+    """CORE-domain full KV frame after actual dual-clock ring; no fake CDC SRAM."""
+    if frame_slots not in (1,2):raise ValueError('one or two actual frame banks')
+    return dict(schema='opentallas.qwen-kv-full-frame-staging.v1',
+      sectors_per_frame=512,sector_bits=256,frame_slots=frame_slots,
+      macros_per_pc=4*frame_slots,macros_die=4*frame_slots*pcs,
+      memory_bits_die=512*frame_slots*256*pcs,
+      raw_macro_area_mm2=4*frame_slots*pcs*94.824*41.064/1e6,
+      incremental_raw_area_vs128_mm2=(4*frame_slots-1)*pcs*94.824*41.064/1e6,
+      valid_flops_pc=512*frame_slots,owner_flops_pc=23*frame_slots,
+      address='frame_slot,kind,ordinal8; macrobank=address>>7; physicalrow=address[6:0]',
+      clocks='CORE only; writes come from real dual-clock return ring, not raw HBM',
+      ports_per_pc=dict(write_bits=256,write_words_per_edge=1,read_bits=256,read_words_per_edge=1),
+      group_output_bits=1024,group_quarters=4,macro_read_edges=1,
+      baseline_physical_group_latency_edges=7,added_memory_read_edges=0,
+      routing='one256bit write broadcast to4banks and256bit4to1 read mux; new22bit expected put metadata perPC',
+      baseline_pc_slot_um=[151.2,172.8],
+      four_macro_vertical_with_5p4_halos_um=[105.624,207.456],
+      four_macro_2x2_with_5p4_halos_um=[211.248,103.728],
+      proposed_pc_slot_um=[237.6,172.8],
+      proposal_status='NO_GRANT: actual macro pins/PG/logic/halo/reach and full repeated die band required',
+      throughput='storage can absorb full512 sectors; four actual V issuers and ordered PV arithmetic still required for2190 budget',
+      native_qualified=False,physical_qualified=False)

@@ -1,0 +1,10 @@
+BAD SRAM group payload/meta row1
+BAD SRAM group payload/meta row2
+BAD SRAM group payload/meta row3
+BAD SRAM group payload/meta row4
+BAD SRAM group payload/meta row5
+BAD SRAM group payload/meta row6
+MEASURE fullframes36 group_rows18432 quarter_words73728 peakPC512 errors18432
+[31603000000] %Fatal: tb_qkd_static_kv_frame.sv:74: Assertion failed in tb_qkd_static_kv_frame: FRAME_FAIL
+%Error: /srv/opentallas-scratch/codex/kv-full-frame-1417-r2/source/rtl/test/qwen_static_kv/tb_qkd_static_kv_frame.sv:74: Verilog $stop
+Aborting...

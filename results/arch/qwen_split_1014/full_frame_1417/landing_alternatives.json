@@ -1,0 +1,336 @@
+{
+  "scope": "ANALYTICAL_SOURCE_READ_ONLY_ONE_PC_LIFETIMES",
+  "actual_consumer": "four-stack proposed fixedmapping only; actual orderedPV pipelinerootowned pending",
+  "rows": [
+    {
+      "stage": 1,
+      "base": 1,
+      "kstart": 209,
+      "vstart": 505,
+      "last_return_and_orderedpv": 2570,
+      "minimum_live_rows": 213,
+      "required_prefetch_lead": 380
+    },
+    {
+      "stage": 2,
+      "base": 2191,
+      "kstart": 209,
+      "vstart": 551,
+      "last_return_and_orderedpv": 2616,
+      "minimum_live_rows": 210,
+      "required_prefetch_lead": 426
+    },
+    {
+      "stage": 3,
+      "base": 4381,
+      "kstart": 209,
+      "vstart": 534,
+      "last_return_and_orderedpv": 2599,
+      "minimum_live_rows": 210,
+      "required_prefetch_lead": 409
+    },
+    {
+      "stage": 4,
+      "base": 6570,
+      "kstart": 209,
+      "vstart": 512,
+      "last_return_and_orderedpv": 2577,
+      "minimum_live_rows": 215,
+      "required_prefetch_lead": 387
+    },
+    {
+      "stage": 5,
+      "base": 8760,
+      "kstart": 209,
+      "vstart": 795,
+      "last_return_and_orderedpv": 2860,
+      "minimum_live_rows": 210,
+      "required_prefetch_lead": 670
+    },
+    {
+      "stage": 6,
+      "base": 10950,
+      "kstart": 209,
+      "vstart": 504,
+      "last_return_and_orderedpv": 2569,
+      "minimum_live_rows": 215,
+      "required_prefetch_lead": 379
+    },
+    {
+      "stage": 7,
+      "base": 13140,
+      "kstart": 209,
+      "vstart": 1055,
+      "last_return_and_orderedpv": 3120,
+      "minimum_live_rows": 210,
+      "required_prefetch_lead": 930
+    },
+    {
+      "stage": 8,
+      "base": 15329,
+      "kstart": 209,
+      "vstart": 505,
+      "last_return_and_orderedpv": 2570,
+      "minimum_live_rows": 215,
+      "required_prefetch_lead": 380
+    },
+    {
+      "stage": 9,
+      "base": 17519,
+      "kstart": 209,
+      "vstart": 593,
+      "last_return_and_orderedpv": 2658,
+      "minimum_live_rows": 176,
+      "required_prefetch_lead": 468
+    },
+    {
+      "stage": 10,
+      "base": 19709,
+      "kstart": 209,
+      "vstart": 504,
+      "last_return_and_orderedpv": 2569,
+      "minimum_live_rows": 215,
+      "required_prefetch_lead": 379
+    },
+    {
+      "stage": 11,
+      "base": 21898,
+      "kstart": 209,
+      "vstart": 708,
+      "last_return_and_orderedpv": 2773,
+      "minimum_live_rows": 210,
+      "required_prefetch_lead": 583
+    },
+    {
+      "stage": 12,
+      "base": 24088,
+      "kstart": 209,
+      "vstart": 524,
+      "last_return_and_orderedpv": 2589,
+      "minimum_live_rows": 215,
+      "required_prefetch_lead": 399
+    },
+    {
+      "stage": 13,
+      "base": 26278,
+      "kstart": 209,
+      "vstart": 534,
+      "last_return_and_orderedpv": 2599,
+      "minimum_live_rows": 210,
+      "required_prefetch_lead": 409
+    },
+    {
+      "stage": 14,
+      "base": 28468,
+      "kstart": 209,
+      "vstart": 509,
+      "last_return_and_orderedpv": 2574,
+      "minimum_live_rows": 215,
+      "required_prefetch_lead": 384
+    },
+    {
+      "stage": 15,
+      "base": 30657,
+      "kstart": 209,
+      "vstart": 505,
+      "last_return_and_orderedpv": 2570,
+      "minimum_live_rows": 210,
+      "required_prefetch_lead": 380
+    },
+    {
+      "stage": 16,
+      "base": 32847,
+      "kstart": 209,
+      "vstart": 505,
+      "last_return_and_orderedpv": 2570,
+      "minimum_live_rows": 215,
+      "required_prefetch_lead": 380
+    },
+    {
+      "stage": 17,
+      "base": 35037,
+      "kstart": 295,
+      "vstart": 764,
+      "last_return_and_orderedpv": 2829,
+      "minimum_live_rows": 210,
+      "required_prefetch_lead": 639
+    },
+    {
+      "stage": 18,
+      "base": 37226,
+      "kstart": 210,
+      "vstart": 505,
+      "last_return_and_orderedpv": 2570,
+      "minimum_live_rows": 215,
+      "required_prefetch_lead": 380
+    },
+    {
+      "stage": 19,
+      "base": 39416,
+      "kstart": 209,
+      "vstart": 591,
+      "last_return_and_orderedpv": 2656,
+      "minimum_live_rows": 210,
+      "required_prefetch_lead": 466
+    },
+    {
+      "stage": 20,
+      "base": 41606,
+      "kstart": 209,
+      "vstart": 505,
+      "last_return_and_orderedpv": 2570,
+      "minimum_live_rows": 215,
+      "required_prefetch_lead": 380
+    },
+    {
+      "stage": 21,
+      "base": 43796,
+      "kstart": 209,
+      "vstart": 562,
+      "last_return_and_orderedpv": 2627,
+      "minimum_live_rows": 210,
+      "required_prefetch_lead": 437
+    },
+    {
+      "stage": 22,
+      "base": 45985,
+      "kstart": 209,
+      "vstart": 689,
+      "last_return_and_orderedpv": 2754,
+      "minimum_live_rows": 210,
+      "required_prefetch_lead": 564
+    },
+    {
+      "stage": 23,
+      "base": 48175,
+      "kstart": 209,
+      "vstart": 522,
+      "last_return_and_orderedpv": 2587,
+      "minimum_live_rows": 215,
+      "required_prefetch_lead": 397
+    },
+    {
+      "stage": 24,
+      "base": 50365,
+      "kstart": 209,
+      "vstart": 949,
+      "last_return_and_orderedpv": 3014,
+      "minimum_live_rows": 210,
+      "required_prefetch_lead": 824
+    },
+    {
+      "stage": 25,
+      "base": 52555,
+      "kstart": 209,
+      "vstart": 504,
+      "last_return_and_orderedpv": 2569,
+      "minimum_live_rows": 215,
+      "required_prefetch_lead": 379
+    },
+    {
+      "stage": 26,
+      "base": 54744,
+      "kstart": 209,
+      "vstart": 633,
+      "last_return_and_orderedpv": 2698,
+      "minimum_live_rows": 152,
+      "required_prefetch_lead": 508
+    },
+    {
+      "stage": 27,
+      "base": 56934,
+      "kstart": 209,
+      "vstart": 505,
+      "last_return_and_orderedpv": 2570,
+      "minimum_live_rows": 215,
+      "required_prefetch_lead": 380
+    },
+    {
+      "stage": 28,
+      "base": 59124,
+      "kstart": 209,
+      "vstart": 602,
+      "last_return_and_orderedpv": 2667,
+      "minimum_live_rows": 210,
+      "required_prefetch_lead": 477
+    },
+    {
+      "stage": 29,
+      "base": 61313,
+      "kstart": 209,
+      "vstart": 505,
+      "last_return_and_orderedpv": 2570,
+      "minimum_live_rows": 215,
+      "required_prefetch_lead": 380
+    },
+    {
+      "stage": 30,
+      "base": 63503,
+      "kstart": 209,
+      "vstart": 717,
+      "last_return_and_orderedpv": 2782,
+      "minimum_live_rows": 210,
+      "required_prefetch_lead": 592
+    },
+    {
+      "stage": 31,
+      "base": 65693,
+      "kstart": 209,
+      "vstart": 504,
+      "last_return_and_orderedpv": 2569,
+      "minimum_live_rows": 213,
+      "required_prefetch_lead": 379
+    },
+    {
+      "stage": 32,
+      "base": 67883,
+      "kstart": 209,
+      "vstart": 543,
+      "last_return_and_orderedpv": 2608,
+      "minimum_live_rows": 210,
+      "required_prefetch_lead": 418
+    },
+    {
+      "stage": 33,
+      "base": 70072,
+      "kstart": 209,
+      "vstart": 520,
+      "last_return_and_orderedpv": 2585,
+      "minimum_live_rows": 215,
+      "required_prefetch_lead": 395
+    },
+    {
+      "stage": 34,
+      "base": 72262,
+      "kstart": 209,
+      "vstart": 514,
+      "last_return_and_orderedpv": 2579,
+      "minimum_live_rows": 210,
+      "required_prefetch_lead": 389
+    },
+    {
+      "stage": 35,
+      "base": 74452,
+      "kstart": 209,
+      "vstart": 504,
+      "last_return_and_orderedpv": 2569,
+      "minimum_live_rows": 215,
+      "required_prefetch_lead": 379
+    },
+    {
+      "stage": 36,
+      "base": 76641,
+      "kstart": 307,
+      "vstart": 774,
+      "last_return_and_orderedpv": 2839,
+      "minimum_live_rows": 210,
+      "required_prefetch_lead": 649
+    }
+  ],
+  "production_installable": false,
+  "assumptions": [
+    "no earlier consumer start invented: earliest feasible read pin from actual source-compiled returns; request source actualphysicalage7 plus orderedPV18 provisional root contract",
+    "all128 clock/strap/physical source origins not supplied; this is PC0 normalized profile",
+    "read occupancy is intrinsic required rows under this earliest legal diagnostic consumer; fixed native PC11 start/writer dependency not supplied"
+  ]
+}
