@@ -23,11 +23,11 @@ for s in G['slots']:
                  notes='COLL hard_v7 parent cluster at d4f params (estimate: sum of child outlines at ~65% fill); kit pending')
 cs = HOME['SW']; TK = (P['tkm_SW']['x'], P['tkm_SW']['y'])
 tk = dict(name='tkm_SW', cell='ot_hgi_coll_tkm_m (TP192 tiles ot_hgi_coll_tkm_tile_e86)', kind='cluster', parent='die',
-          outline=dict(w=1740.0, h=1740.0), origin=dict(x=TK[0], y=TK[1], orient='R0'), pins=[], pin_status='FACES_ONLY',
+          outline=dict(w=P['tkm_SW']['w'], h=P['tkm_SW']['h']), origin=dict(x=TK[0], y=TK[1], orient='R0'), pins=[], pin_status='FACES_ONLY',
           faces=dict(S='del_flit/del_valid in (2,184 b from coll_SW)', W='w_* out (~570 b to coll_SW vmwrite)'),
           grant='d4f_tkm_1017', plan_block='tkm_SW', layer_cap='M7', signal_max_layer='M7', pg_layer='M7', strap_layer='M8',
           notes='separate hardened TKM sub-cluster N of coll_SW (COLL helper recommendation); needs the contract to hoist tkm_m out of hb_coll_SW')
 G['slots'] = [s for s in G['slots'] if s['name'] != 'tkm_SW'] + [tk]
-P['tkm_SW'] = dict(x=TK[0], y=TK[1], w=1740.0, h=1740.0, orient='R0')
+P['tkm_SW'] = dict(P['tkm_SW'], x=TK[0], y=TK[1])
 json.dump(G, open(g, 'w'), indent=1); open(g, 'a').write('\n'); json.dump(P, open(pd + '/compact.P.json', 'w'), indent=1)
 print('coll slots + tkm_SW granted')

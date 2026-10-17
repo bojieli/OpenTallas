@@ -1,26 +1,26 @@
 {
- "tag": "d4fw_r4",
+ "tag": "d4fw_r5",
  "die_um": [
   22762.24,
   32169.44
  ],
  "die_mm2": 732.25,
- "placed_mm2": 381.35,
+ "placed_mm2": 380.77,
  "cut_lanes": {
   "worst_v": {
-   "ratio": 0.499,
-   "x": 8300.0,
+   "ratio": 0.48,
+   "x": 8900.0,
    "y": [
     22300.0,
     23300.0
    ]
   },
   "worst_h": {
-   "ratio": 0.521,
-   "y": 14400.0,
+   "ratio": 0.519,
+   "y": 12400.0,
    "x": [
-    19300.0,
-    20300.0
+    16600.0,
+    17600.0
    ]
   },
   "lines_over_060": 0,
@@ -28,7 +28,7 @@
  },
  "cut_no_lanes": 1.006,
  "faces_over_1": 10,
- "stages_bw": 10.69,
+ "stages_bw": 10.639,
  "per_class": {
   "HBM_K": {
    "bits": 35392,
@@ -36,7 +36,7 @@
   },
   "SM_X": {
    "bits": 34944,
-   "stages_bw": 12.64
+   "stages_bw": 12.7
   },
   "SM_HBM": {
    "bits": 18112,
@@ -44,7 +44,7 @@
   },
   "LG_SU": {
    "bits": 17792,
-   "stages_bw": 0.12
+   "stages_bw": 0.16
   },
   "LG_HC": {
    "bits": 17792,
@@ -56,7 +56,7 @@
   },
   "HC_CORE": {
    "bits": 17792,
-   "stages_bw": 27.2
+   "stages_bw": 26.49
   },
   "VM_RING": {
    "bits": 17792,
@@ -64,23 +64,23 @@
   },
   "COLL_VM": {
    "bits": 17760,
-   "stages_bw": 24.03
+   "stages_bw": 23.53
   },
   "VM_HUB": {
    "bits": 17216,
-   "stages_bw": 31.06
+   "stages_bw": 30.66
   },
   "HC_ENG": {
    "bits": 11488,
-   "stages_bw": 9.13
+   "stages_bw": 9.34
   },
   "COLL_RING": {
    "bits": 6608,
-   "stages_bw": 13.12
+   "stages_bw": 13.5
   },
   "COLL_EP": {
    "bits": 6120,
-   "stages_bw": 15.4
+   "stages_bw": 15.8
   },
   "EP_SERDES": {
    "bits": 5280,
@@ -92,30 +92,30 @@
   },
   "SM_OUT": {
    "bits": 4320,
-   "stages_bw": 23.62
+   "stages_bw": 22.94
   },
   "HBM_VM": {
    "bits": 4096,
-   "stages_bw": 35.81
+   "stages_bw": 35.31
   },
   "VM_HBM": {
    "bits": 4096,
-   "stages_bw": 34.88
+   "stages_bw": 35.88
   },
   "SFU_CORE": {
    "bits": 3072,
-   "stages_bw": 15.33
+   "stages_bw": 16.08
   },
   "SU_CORE": {
    "bits": 3072,
-   "stages_bw": 13.33
+   "stages_bw": 14.42
   },
   "KV_DESC": {
    "bits": 1024,
-   "stages_bw": 22.62
+   "stages_bw": 23.12
   }
  },
- "relay_flops": 2302901.0,
+ "relay_flops": 2272770.0,
  "su_slice": [
   1797.12,
   2825.28

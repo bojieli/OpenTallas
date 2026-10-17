@@ -3,7 +3,7 @@
  "die": "hbm_v15",
  "version": 9,
  "owner": "H-DIE",
- "updated": "2026-10-17T01:42:10-07:00",
+ "updated": "2026-10-17T06:48:21-07:00",
  "clock_period_ps": 833.333,
  "floorplan": {
   "file": "results/arch/hbm_die_v15/d4f_a2p_fullcore/compact.P.json",
@@ -14,17 +14,17 @@
    32169.44
   ],
   "metrics": {
-   "sum_bits_mm": 1250567.1388479986,
-   "traffic_mm_qwen": 2722756526.942938,
-   "traffic_mm_ds": 2346301106.494349,
-   "relay_flops": 2381305.0,
-   "bits_over_500": 162711.0,
+   "sum_bits_mm": 1244185.052511999,
+   "traffic_mm_qwen": 2723134840.8018813,
+   "traffic_mm_ds": 2353436979.4933243,
+   "relay_flops": 2370356.0,
+   "bits_over_500": 162165.0,
    "fixed_return_violation_bits": 17792,
    "fixed_return_violations": 32,
    "overlaps": 0,
    "outside": 0,
-   "J": 12.450823296548485,
-   "n_long_returns": 290
+   "J": 12.063093987415336,
+   "n_long_returns": 294
   },
   "previous": {
    "file": "results/arch/hbm_die_v15/core4_sfu2_b3624/compact.P.json",
@@ -34937,7 +34937,7 @@
     "h": 500.0
    },
    "origin": {
-    "x": 7208.64,
+    "x": 7856.64,
     "y": 18156.48,
     "orient": "R0"
    },
@@ -35012,7 +35012,7 @@
     "h": 500.0
    },
    "origin": {
-    "x": 10305.76,
+    "x": 10953.76,
     "y": 18156.48,
     "orient": "R0"
    },
@@ -35237,7 +35237,7 @@
     "h": 500.0
    },
    "origin": {
-    "x": 7397.696,
+    "x": 8045.696,
     "y": 21856.48,
     "orient": "R0"
    },
@@ -35312,7 +35312,7 @@
     "h": 500.0
    },
    "origin": {
-    "x": 10589.344,
+    "x": 11237.344,
     "y": 21856.48,
     "orient": "R0"
    },
@@ -35537,7 +35537,7 @@
     "h": 500.0
    },
    "origin": {
-    "x": 7208.64,
+    "x": 7856.64,
     "y": 13564.8,
     "orient": "R0"
    },
@@ -35612,7 +35612,7 @@
     "h": 500.0
    },
    "origin": {
-    "x": 10305.76,
+    "x": 10953.76,
     "y": 13564.8,
     "orient": "R0"
    },
@@ -35837,7 +35837,7 @@
     "h": 500.0
    },
    "origin": {
-    "x": 7208.64,
+    "x": 7856.64,
     "y": 9864.8,
     "orient": "R0"
    },
@@ -35912,7 +35912,7 @@
     "h": 500.0
    },
    "origin": {
-    "x": 10305.76,
+    "x": 10953.76,
     "y": 9864.8,
     "orient": "R0"
    },
@@ -36458,7 +36458,7 @@
     "h": 245
    },
    "origin": {
-    "x": 8347.224,
+    "x": 8995.224,
     "y": 22723.1,
     "orient": "R0"
    },
@@ -36515,7 +36515,7 @@
     "h": 245
    },
    "origin": {
-    "x": 11538.872,
+    "x": 12186.872,
     "y": 22723.1,
     "orient": "R0"
    },
@@ -41490,7 +41490,7 @@
     "h": 129.6
    },
    "origin": {
-    "x": 7808.64,
+    "x": 8456.64,
     "y": 17856.48,
     "orient": "R0"
    },
@@ -43939,7 +43939,7 @@
     "h": 129.6
    },
    "origin": {
-    "x": 10905.76,
+    "x": 11553.76,
     "y": 17856.48,
     "orient": "R0"
    },
@@ -51306,7 +51306,7 @@
     "h": 129.6
    },
    "origin": {
-    "x": 7997.696,
+    "x": 8645.696,
     "y": 21556.48,
     "orient": "R0"
    },
@@ -53755,7 +53755,7 @@
     "h": 129.6
    },
    "origin": {
-    "x": 11189.344,
+    "x": 11837.344,
     "y": 21556.48,
     "orient": "R0"
    },
@@ -61122,7 +61122,7 @@
     "h": 129.6
    },
    "origin": {
-    "x": 7808.64,
+    "x": 8456.64,
     "y": 13564.8,
     "orient": "R0"
    },
@@ -63571,7 +63571,7 @@
     "h": 129.6
    },
    "origin": {
-    "x": 10905.76,
+    "x": 11553.76,
     "y": 13564.8,
     "orient": "R0"
    },
@@ -70938,7 +70938,7 @@
     "h": 129.6
    },
    "origin": {
-    "x": 7808.64,
+    "x": 8456.64,
     "y": 9864.8,
     "orient": "R0"
    },
@@ -73387,7 +73387,7 @@
     "h": 129.6
    },
    "origin": {
-    "x": 10905.76,
+    "x": 11553.76,
     "y": 9864.8,
     "orient": "R0"
    },
@@ -77225,7 +77225,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 767.37,
+     "offset": 1415.37,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW4",
@@ -77235,7 +77235,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 794.67,
+     "offset": 1442.67,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW5",
@@ -77581,6 +77581,26 @@
      "face": "E",
      "layer": "M4",
      "offset": 27.0,
+     "span_um": 27.3,
+     "bits": 273,
+     "peer": "vmb_NW6",
+     "cls": "SM_X",
+     "link": "vmb_NW6>sm_NW4:SM_X"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 54.3,
+     "span_um": 27.3,
+     "bits": 273,
+     "peer": "vmb_NW7",
+     "cls": "SM_X",
+     "link": "vmb_NW7>sm_NW4:SM_X"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 81.6,
      "span_um": 6.4,
      "bits": 64,
      "peer": "vmh_NW",
@@ -77646,26 +77666,6 @@
      "peer": "vmb_NW5",
      "cls": "SM_X",
      "link": "vmb_NW5>sm_NW4:SM_X"
-    },
-    {
-     "face": "S",
-     "layer": "M5",
-     "offset": 1710.3,
-     "span_um": 27.3,
-     "bits": 273,
-     "peer": "vmb_NW6",
-     "cls": "SM_X",
-     "link": "vmb_NW6>sm_NW4:SM_X"
-    },
-    {
-     "face": "S",
-     "layer": "M5",
-     "offset": 1737.6,
-     "span_um": 27.3,
-     "bits": 273,
-     "peer": "vmb_NW7",
-     "cls": "SM_X",
-     "link": "vmb_NW7>sm_NW4:SM_X"
     }
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
@@ -78072,9 +78072,9 @@
      "link": "vmb_NW5>sm_NW5:SM_X"
     },
     {
-     "face": "W",
-     "layer": "M4",
-     "offset": 163.8,
+     "face": "S",
+     "layer": "M5",
+     "offset": 249.39,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW6",
@@ -78084,7 +78084,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 0.0,
+     "offset": 276.69,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW7",
@@ -80616,7 +80616,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 559.95,
+     "offset": 1207.95,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW4",
@@ -80626,7 +80626,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 587.25,
+     "offset": 1235.25,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW5",
@@ -81041,7 +81041,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 1568.51,
+     "offset": 1885.08,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW6",
@@ -81051,7 +81051,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 1595.81,
+     "offset": 1912.38,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW7",
@@ -81405,7 +81405,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6460.32,
+     "offset": 6514.92,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW0",
@@ -81415,7 +81415,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6487.62,
+     "offset": 6542.22,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW1",
@@ -81425,7 +81425,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6514.92,
+     "offset": 6569.52,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW2",
@@ -81435,7 +81435,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6542.22,
+     "offset": 6596.82,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW3",
@@ -81445,7 +81445,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6569.52,
+     "offset": 6624.12,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW4",
@@ -81455,7 +81455,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6596.82,
+     "offset": 6651.42,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW5",
@@ -81463,9 +81463,9 @@
      "link": "vmb_SW5>sm_SW5:SM_X"
     },
     {
-     "face": "W",
-     "layer": "M4",
-     "offset": 6624.12,
+     "face": "N",
+     "layer": "M5",
+     "offset": 89.23,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW6",
@@ -81473,9 +81473,9 @@
      "link": "vmb_SW6>sm_SW5:SM_X"
     },
     {
-     "face": "W",
-     "layer": "M4",
-     "offset": 6651.42,
+     "face": "N",
+     "layer": "M5",
+     "offset": 116.53,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW7",
@@ -82693,8 +82693,8 @@
     }
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
-   "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
+   "source_prerequisite": "b0ed19ee4",
    "params": {
     "QID": 3,
     "G": 0,
@@ -83190,8 +83190,8 @@
     }
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
-   "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
+   "source_prerequisite": "b0ed19ee4",
    "params": {
     "QID": 3,
     "G": 1,
@@ -83632,7 +83632,7 @@
     "h": 2825.28
    },
    "origin": {
-    "x": 8408.64,
+    "x": 9056.64,
     "y": 16709.44,
     "orient": "R0"
    },
@@ -83687,8 +83687,8 @@
     }
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
-   "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
+   "source_prerequisite": "b0ed19ee4",
    "params": {
     "QID": 3,
     "G": 2,
@@ -84129,7 +84129,7 @@
     "h": 2825.28
    },
    "origin": {
-    "x": 11505.76,
+    "x": 12153.76,
     "y": 16709.44,
     "orient": "R0"
    },
@@ -84184,8 +84184,8 @@
     }
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
-   "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
+   "source_prerequisite": "b0ed19ee4",
    "params": {
     "QID": 3,
     "G": 3,
@@ -84701,8 +84701,8 @@
     }
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
-   "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
+   "source_prerequisite": "b0ed19ee4",
    "params": {
     "QID": 2,
     "G": 0,
@@ -85198,8 +85198,8 @@
     }
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
-   "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
+   "source_prerequisite": "b0ed19ee4",
    "params": {
     "QID": 2,
     "G": 1,
@@ -85640,7 +85640,7 @@
     "h": 2825.28
    },
    "origin": {
-    "x": 8692.224,
+    "x": 9340.224,
     "y": 20409.44,
     "orient": "R0"
    },
@@ -85695,8 +85695,8 @@
     }
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
-   "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
+   "source_prerequisite": "b0ed19ee4",
    "params": {
     "QID": 2,
     "G": 2,
@@ -86137,7 +86137,7 @@
     "h": 2825.28
    },
    "origin": {
-    "x": 11883.872,
+    "x": 12531.872,
     "y": 20409.44,
     "orient": "R0"
    },
@@ -86192,8 +86192,8 @@
     }
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
-   "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
+   "source_prerequisite": "b0ed19ee4",
    "params": {
     "QID": 2,
     "G": 3,
@@ -86709,8 +86709,8 @@
     }
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
-   "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
+   "source_prerequisite": "b0ed19ee4",
    "params": {
     "QID": 1,
     "G": 0,
@@ -87206,8 +87206,8 @@
     }
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
-   "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
+   "source_prerequisite": "b0ed19ee4",
    "params": {
     "QID": 1,
     "G": 1,
@@ -87648,7 +87648,7 @@
     "h": 2825.28
    },
    "origin": {
-    "x": 8408.64,
+    "x": 9056.64,
     "y": 12634.72,
     "orient": "R0"
    },
@@ -87703,8 +87703,8 @@
     }
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
-   "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
+   "source_prerequisite": "b0ed19ee4",
    "params": {
     "QID": 1,
     "G": 2,
@@ -88145,7 +88145,7 @@
     "h": 2825.28
    },
    "origin": {
-    "x": 11505.76,
+    "x": 12153.76,
     "y": 12634.72,
     "orient": "R0"
    },
@@ -88200,8 +88200,8 @@
     }
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
-   "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
+   "source_prerequisite": "b0ed19ee4",
    "params": {
     "QID": 1,
     "G": 3,
@@ -88717,8 +88717,8 @@
     }
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
-   "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
+   "source_prerequisite": "b0ed19ee4",
    "params": {
     "QID": 0,
     "G": 0,
@@ -89214,8 +89214,8 @@
     }
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
-   "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
+   "source_prerequisite": "b0ed19ee4",
    "params": {
     "QID": 0,
     "G": 1,
@@ -89656,7 +89656,7 @@
     "h": 2825.28
    },
    "origin": {
-    "x": 8408.64,
+    "x": 9056.64,
     "y": 8934.72,
     "orient": "R0"
    },
@@ -89711,8 +89711,8 @@
     }
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
-   "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
+   "source_prerequisite": "b0ed19ee4",
    "params": {
     "QID": 0,
     "G": 2,
@@ -90153,7 +90153,7 @@
     "h": 2825.28
    },
    "origin": {
-    "x": 11505.76,
+    "x": 12153.76,
     "y": 8934.72,
     "orient": "R0"
    },
@@ -90208,8 +90208,8 @@
     }
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
-   "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "0a1f3c86a9e2db093b61b129b06759a54e33fca068a5e084f3f96d6c8504e9cb",
+   "source_prerequisite": "b0ed19ee4",
    "params": {
     "QID": 0,
     "G": 3,
@@ -90674,8 +90674,8 @@
    "notes": "SU quarter core NE: slice-facing RF broadcast/drain + command ports on E, RF write (rf_w*) and reducer result (red_*) on the channel face W at su_rf_route_pins.json (RF_RELAY 36 at 480 um), 66 clock/reset ports on N; reducer child grant sucore_<q>_reducer unchanged",
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
-   "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "6c2baeafe0b6aa44f2b51218970f2da25153b5c4f1849a7c41359c687734705c",
+   "source_prerequisite": "b0ed19ee4",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -90975,8 +90975,8 @@
    "notes": "SU quarter core NW: slice-facing RF broadcast/drain + command ports on W, RF write (rf_w*) and reducer result (red_*) on the channel face E at su_rf_route_pins.json (RF_RELAY 36 at 480 um), 66 clock/reset ports on N; reducer child grant sucore_<q>_reducer unchanged",
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
-   "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "6c2baeafe0b6aa44f2b51218970f2da25153b5c4f1849a7c41359c687734705c",
+   "source_prerequisite": "b0ed19ee4",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -91276,8 +91276,8 @@
    "notes": "SU quarter core SE: slice-facing RF broadcast/drain + command ports on E, RF write (rf_w*) and reducer result (red_*) on the channel face W at su_rf_route_pins.json (RF_RELAY 36 at 480 um), 66 clock/reset ports on N; reducer child grant sucore_<q>_reducer unchanged",
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
-   "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "6c2baeafe0b6aa44f2b51218970f2da25153b5c4f1849a7c41359c687734705c",
+   "source_prerequisite": "b0ed19ee4",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -91553,7 +91553,7 @@
     "h": 330.48
    },
    "origin": {
-    "x": 15650.08,
+    "x": 15490.08,
     "y": 11429.52,
     "orient": "R0"
    },
@@ -91577,8 +91577,8 @@
    "notes": "SU quarter core SW: slice-facing RF broadcast/drain + command ports on W, RF write (rf_w*) and reducer result (red_*) on the channel face E at su_rf_route_pins.json (RF_RELAY 36 at 480 um), 66 clock/reset ports on N; reducer child grant sucore_<q>_reducer unchanged",
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
-   "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "74517d9bd",
+   "source_sha256": "6c2baeafe0b6aa44f2b51218970f2da25153b5c4f1849a7c41359c687734705c",
+   "source_prerequisite": "b0ed19ee4",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -96019,12 +96019,12 @@
   },
   {
    "name": "sfucore_SW",
-   "cell": "ot_hgi_sfu_core_split2",
+   "cell": "ot_hgi_sfu_core_split3",
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 950.4,
-    "h": 3132.0
+    "w": 1598.4,
+    "h": 1771.2
    },
    "origin": {
     "x": 6236.64,
@@ -96035,7 +96035,7 @@
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 381.78
+    "offset": 799.2
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -96047,12 +96047,12 @@
    },
    "version": 2,
    "grant": "d4f_sfucore_k8_1016",
-   "rtl_owner": "H-SU: ot_hgi_sfu_core_split2 (k8 kit hbm_sfucore_k8, claude/hsu-corekit-0700 2191c672a)",
+   "rtl_owner": "H-SU: ot_hgi_sfu_core_split3 (k9 kit hbm_sfucore_k9, claude/hsu-corekit-0700 c3aeb5ce8; 1598.4 x 1771.2, N/S lane buses allowed)",
    "faces": {
-    "W": "SU qcore / SFU leaf LG paths (band)",
-    "E": "COLL / DMA-back stack",
-    "N": "clock + reset",
-    "S": "band channel"
+    "W": "local_rq/rr/wq/w_done, lane clocks/resets, clk_pw, lanes 0-3",
+    "E": "io_word/compiler_control/fault, clk_pe, lanes 8-11",
+    "N": "clk (x 798.1-800.3) + rst_n/clk_lg/rst_lg_n, lanes 4-7",
+    "S": "lanes 12-15"
    },
    "notes": "SFU engine core home in the band gap sucore<->COLL/DBK (H-DIE 0030, H-SU accepted); one outline for all 4; LG path R_padded 23; every pin registered (owner rule 19:50)",
    "pins": [],
@@ -96061,12 +96061,12 @@
   },
   {
    "name": "sfucore_SE",
-   "cell": "ot_hgi_sfu_core_split2",
+   "cell": "ot_hgi_sfu_core_split3",
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 950.4,
-    "h": 3132.0
+    "w": 1598.4,
+    "h": 1771.2
    },
    "origin": {
     "x": 6236.64,
@@ -96077,7 +96077,7 @@
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 381.78
+    "offset": 799.2
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -96089,12 +96089,12 @@
    },
    "version": 2,
    "grant": "d4f_sfucore_k8_1016",
-   "rtl_owner": "H-SU: ot_hgi_sfu_core_split2 (k8 kit hbm_sfucore_k8, claude/hsu-corekit-0700 2191c672a)",
+   "rtl_owner": "H-SU: ot_hgi_sfu_core_split3 (k9 kit hbm_sfucore_k9, claude/hsu-corekit-0700 c3aeb5ce8; 1598.4 x 1771.2, N/S lane buses allowed)",
    "faces": {
-    "W": "SU qcore / SFU leaf LG paths (band)",
-    "E": "COLL / DMA-back stack",
-    "N": "clock + reset",
-    "S": "band channel"
+    "W": "local_rq/rr/wq/w_done, lane clocks/resets, clk_pw, lanes 0-3",
+    "E": "io_word/compiler_control/fault, clk_pe, lanes 8-11",
+    "N": "clk (x 798.1-800.3) + rst_n/clk_lg/rst_lg_n, lanes 4-7",
+    "S": "lanes 12-15"
    },
    "notes": "SFU engine core home in the band gap sucore<->COLL/DBK (H-DIE 0030, H-SU accepted); one outline for all 4; LG path R_padded 23; every pin registered (owner rule 19:50)",
    "pins": [],
@@ -96103,23 +96103,23 @@
   },
   {
    "name": "sfucore_NW",
-   "cell": "ot_hgi_sfu_core_split2",
+   "cell": "ot_hgi_sfu_core_split3",
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 950.4,
-    "h": 3132.0
+    "w": 1598.4,
+    "h": 1771.2
    },
    "origin": {
     "x": 6425.696,
-    "y": 20080.95,
+    "y": 21441.75,
     "orient": "R0"
    },
    "clock_entry": {
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 381.78
+    "offset": 799.2
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -96131,12 +96131,12 @@
    },
    "version": 2,
    "grant": "d4f_sfucore_k8_1016",
-   "rtl_owner": "H-SU: ot_hgi_sfu_core_split2 (k8 kit hbm_sfucore_k8, claude/hsu-corekit-0700 2191c672a)",
+   "rtl_owner": "H-SU: ot_hgi_sfu_core_split3 (k9 kit hbm_sfucore_k9, claude/hsu-corekit-0700 c3aeb5ce8; 1598.4 x 1771.2, N/S lane buses allowed)",
    "faces": {
-    "W": "SU qcore / SFU leaf LG paths (band)",
-    "E": "COLL / DMA-back stack",
-    "N": "clock + reset",
-    "S": "band channel"
+    "W": "local_rq/rr/wq/w_done, lane clocks/resets, clk_pw, lanes 0-3",
+    "E": "io_word/compiler_control/fault, clk_pe, lanes 8-11",
+    "N": "clk (x 798.1-800.3) + rst_n/clk_lg/rst_lg_n, lanes 4-7",
+    "S": "lanes 12-15"
    },
    "notes": "SFU engine core home in the band gap sucore<->COLL/DBK (H-DIE 0030, H-SU accepted); one outline for all 4; LG path R_padded 23; every pin registered (owner rule 19:50)",
    "pins": [],
@@ -96145,23 +96145,23 @@
   },
   {
    "name": "sfucore_NE",
-   "cell": "ot_hgi_sfu_core_split2",
+   "cell": "ot_hgi_sfu_core_split3",
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 950.4,
-    "h": 3132.0
+    "w": 1598.4,
+    "h": 1771.2
    },
    "origin": {
     "x": 6236.64,
-    "y": 16380.95,
+    "y": 17741.75,
     "orient": "R0"
    },
    "clock_entry": {
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 381.78
+    "offset": 799.2
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -96173,12 +96173,12 @@
    },
    "version": 2,
    "grant": "d4f_sfucore_k8_1016",
-   "rtl_owner": "H-SU: ot_hgi_sfu_core_split2 (k8 kit hbm_sfucore_k8, claude/hsu-corekit-0700 2191c672a)",
+   "rtl_owner": "H-SU: ot_hgi_sfu_core_split3 (k9 kit hbm_sfucore_k9, claude/hsu-corekit-0700 c3aeb5ce8; 1598.4 x 1771.2, N/S lane buses allowed)",
    "faces": {
-    "W": "SU qcore / SFU leaf LG paths (band)",
-    "E": "COLL / DMA-back stack",
-    "N": "clock + reset",
-    "S": "band channel"
+    "W": "local_rq/rr/wq/w_done, lane clocks/resets, clk_pw, lanes 0-3",
+    "E": "io_word/compiler_control/fault, clk_pe, lanes 8-11",
+    "N": "clk (x 798.1-800.3) + rst_n/clk_lg/rst_lg_n, lanes 4-7",
+    "S": "lanes 12-15"
    },
    "notes": "SFU engine core home in the band gap sucore<->COLL/DBK (H-DIE 0030, H-SU accepted); one outline for all 4; LG path R_padded 23; every pin registered (owner rule 19:50)",
    "pins": [],
@@ -96355,7 +96355,7 @@
     "h": 1023.84
    },
    "origin": {
-    "x": 7208.64,
+    "x": 7856.64,
     "y": 10800.72,
     "orient": "R0"
    },
@@ -96431,7 +96431,7 @@
     "h": 1023.84
    },
    "origin": {
-    "x": 7208.64,
+    "x": 7856.64,
     "y": 14500.72,
     "orient": "R0"
    },
@@ -96507,7 +96507,7 @@
     "h": 1023.84
    },
    "origin": {
-    "x": 7397.696,
+    "x": 8045.696,
     "y": 19956.72,
     "orient": "R0"
    },
@@ -96583,7 +96583,7 @@
     "h": 1023.84
    },
    "origin": {
-    "x": 7208.64,
+    "x": 7856.64,
     "y": 16256.72,
     "orient": "R0"
    },
@@ -96845,7 +96845,7 @@
     "h": 59.4
    },
    "origin": {
-    "x": 8268.824,
+    "x": 8916.824,
     "y": 23035.46,
     "orient": "R0"
    },
@@ -96873,7 +96873,7 @@
     "h": 59.4
    },
    "origin": {
-    "x": 8268.824,
+    "x": 8916.824,
     "y": 22596.34,
     "orient": "R0"
    },
@@ -96901,7 +96901,7 @@
     "h": 59.4
    },
    "origin": {
-    "x": 11460.472,
+    "x": 12108.472,
     "y": 23035.46,
     "orient": "R0"
    },
@@ -96929,7 +96929,7 @@
     "h": 59.4
    },
    "origin": {
-    "x": 11460.472,
+    "x": 12108.472,
     "y": 22596.34,
     "orient": "R0"
    },
@@ -96953,11 +96953,11 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1740.0,
-    "h": 1740.0
+    "w": 1900.0,
+    "h": 1900.0
    },
    "origin": {
-    "x": 16002.16,
+    "x": 15842.16,
     "y": 10014.72,
     "orient": "R0"
    },
@@ -99729,7 +99729,7 @@
     {
      "name": "su_SW2",
      "origin": {
-      "x": 8408.64,
+      "x": 9056.64,
       "y": 8934.72
      },
      "outline": {
@@ -99763,7 +99763,7 @@
     {
      "name": "su_SW3",
      "origin": {
-      "x": 11505.76,
+      "x": 12153.76,
       "y": 8934.72
      },
      "outline": {
@@ -99799,7 +99799,7 @@
    "core": {
     "name": "sucore_SW",
     "origin": {
-     "x": 15650.08,
+     "x": 15490.08,
      "y": 11429.52
     },
     "outline": {
@@ -99898,7 +99898,7 @@
     {
      "name": "su_SE2",
      "origin": {
-      "x": 8408.64,
+      "x": 9056.64,
       "y": 12634.72
      },
      "outline": {
@@ -99932,7 +99932,7 @@
     {
      "name": "su_SE3",
      "origin": {
-      "x": 11505.76,
+      "x": 12153.76,
       "y": 12634.72
      },
      "outline": {
@@ -100067,7 +100067,7 @@
     {
      "name": "su_NW2",
      "origin": {
-      "x": 8692.224,
+      "x": 9340.224,
       "y": 20409.44
      },
      "outline": {
@@ -100101,7 +100101,7 @@
     {
      "name": "su_NW3",
      "origin": {
-      "x": 11883.872,
+      "x": 12531.872,
       "y": 20409.44
      },
      "outline": {
@@ -100236,7 +100236,7 @@
     {
      "name": "su_NE2",
      "origin": {
-      "x": 8408.64,
+      "x": 9056.64,
       "y": 16709.44
      },
      "outline": {
@@ -100270,7 +100270,7 @@
     {
      "name": "su_NE3",
      "origin": {
-      "x": 11505.76,
+      "x": 12153.76,
       "y": 16709.44
      },
      "outline": {
@@ -100345,7 +100345,7 @@
     {
      "name": "sfu_SW2",
      "origin": {
-      "x": 7808.64,
+      "x": 8456.64,
       "y": 9864.8
      },
      "outline": {
@@ -100356,7 +100356,7 @@
     {
      "name": "sfu_SW3",
      "origin": {
-      "x": 10905.76,
+      "x": 11553.76,
       "y": 9864.8
      },
      "outline": {
@@ -100403,7 +100403,7 @@
     {
      "name": "sfu_SE2",
      "origin": {
-      "x": 7808.64,
+      "x": 8456.64,
       "y": 13564.8
      },
      "outline": {
@@ -100414,7 +100414,7 @@
     {
      "name": "sfu_SE3",
      "origin": {
-      "x": 10905.76,
+      "x": 11553.76,
       "y": 13564.8
      },
      "outline": {
@@ -100461,7 +100461,7 @@
     {
      "name": "sfu_NW2",
      "origin": {
-      "x": 7997.696,
+      "x": 8645.696,
       "y": 21556.48
      },
      "outline": {
@@ -100472,7 +100472,7 @@
     {
      "name": "sfu_NW3",
      "origin": {
-      "x": 11189.344,
+      "x": 11837.344,
       "y": 21556.48
      },
      "outline": {
@@ -100519,7 +100519,7 @@
     {
      "name": "sfu_NE2",
      "origin": {
-      "x": 7808.64,
+      "x": 8456.64,
       "y": 17856.48
      },
      "outline": {
@@ -100530,7 +100530,7 @@
     {
      "name": "sfu_NE3",
      "origin": {
-      "x": 10905.76,
+      "x": 11553.76,
       "y": 17856.48
      },
      "outline": {
@@ -101428,147 +101428,147 @@
     "max_hop_um": 4.8,
     "homes": [
      [
-      16002.16,
+      15842.16,
       11738.4
      ],
      [
-      16002.16,
+      15842.16,
       11716.8
      ],
      [
-      16002.16,
+      15842.16,
       11695.2
      ],
      [
-      16002.16,
+      15842.16,
       11673.6
      ],
      [
-      16002.16,
+      15842.16,
       11652.0
      ],
      [
-      16002.16,
+      15842.16,
       11630.4
      ],
      [
-      16002.16,
+      15842.16,
       11608.8
      ],
      [
-      16002.16,
+      15842.16,
       11587.2
      ],
      [
-      16002.16,
+      15842.16,
       11565.6
      ],
      [
-      16002.16,
+      15842.16,
       11544.0
      ],
      [
-      16002.16,
+      15842.16,
       11522.4
      ],
      [
-      16002.16,
+      15842.16,
       11500.8
      ],
      [
-      16023.76,
+      15863.76,
       11500.8
      ],
      [
-      16023.76,
+      15863.76,
       11522.4
      ],
      [
-      16023.76,
+      15863.76,
       11544.0
      ],
      [
-      16023.76,
+      15863.76,
       11565.6
      ],
      [
-      16023.76,
+      15863.76,
       11587.2
      ],
      [
-      16023.76,
+      15863.76,
       11608.8
      ],
      [
-      16023.76,
+      15863.76,
       11630.4
      ],
      [
-      16023.76,
+      15863.76,
       11652.0
      ],
      [
-      16023.76,
+      15863.76,
       11673.6
      ],
      [
-      16023.76,
+      15863.76,
       11695.2
      ],
      [
-      16023.76,
+      15863.76,
       11716.8
      ],
      [
-      16023.76,
+      15863.76,
       11738.4
      ],
      [
-      16045.36,
+      15885.36,
       11738.4
      ],
      [
-      16045.36,
+      15885.36,
       11716.8
      ],
      [
-      16045.36,
+      15885.36,
       11695.2
      ],
      [
-      16045.36,
+      15885.36,
       11673.6
      ],
      [
-      16045.36,
+      15885.36,
       11652.0
      ],
      [
-      16045.36,
+      15885.36,
       11630.4
      ],
      [
-      16045.36,
+      15885.36,
       11608.8
      ],
      [
-      16045.36,
+      15885.36,
       11587.2
      ],
      [
-      16045.36,
+      15885.36,
       11565.6
      ],
      [
-      16045.36,
+      15885.36,
       11544.0
      ],
      [
-      16045.36,
+      15885.36,
       11522.4
      ],
      [
-      16045.36,
+      15885.36,
       11500.8
      ]
     ],
@@ -101877,159 +101877,159 @@
     "src": "SW",
     "dst": "SE",
     "bits": 41,
-    "length_um": 9729.36,
+    "length_um": 9889.36,
     "stages": 36,
-    "max_hop_um": 262.956,
+    "max_hop_um": 267.28,
     "homes": [
      [
-      16243.516,
+      16087.84,
       11594.76
      ],
      [
-      16506.471,
+      16355.12,
       11594.76
      ],
      [
-      16769.427,
+      16622.4,
       11594.76
      ],
      [
-      17032.383,
+      16889.68,
       11594.76
      ],
      [
-      17295.338,
+      17156.96,
       11594.76
      ],
      [
-      17558.294,
+      17424.24,
       11594.76
      ],
      [
-      17821.25,
+      17691.52,
       11594.76
      ],
      [
-      18084.205,
+      17958.8,
       11594.76
      ],
      [
-      18347.161,
+      18226.08,
       11594.76
      ],
      [
-      18610.117,
+      18493.36,
       11594.76
      ],
      [
-      18873.072,
+      18760.64,
       11594.76
      ],
      [
-      19136.028,
+      19027.92,
+      11594.76
+     ],
+     [
+      19295.2,
       11594.76
      ],
      [
       19319.84,
-      11673.904
+      11837.4
      ],
      [
       19319.84,
-      11936.859
+      12104.68
      ],
      [
       19319.84,
-      12199.815
+      12371.96
      ],
      [
       19319.84,
-      12462.771
+      12639.24
      ],
      [
       19319.84,
-      12725.726
+      12906.52
      ],
      [
       19319.84,
-      12988.682
+      13173.8
      ],
      [
       19319.84,
-      13251.638
+      13441.08
      ],
      [
       19319.84,
-      13514.594
+      13708.36
      ],
      [
       19319.84,
-      13777.549
+      13975.64
      ],
      [
       19319.84,
-      14040.505
+      14242.92
      ],
      [
       19319.84,
-      14303.461
+      14510.2
      ],
      [
       19319.84,
-      14566.416
+      14777.48
      ],
      [
       19319.84,
-      14829.372
+      15044.76
      ],
      [
-      19319.84,
-      15092.328
-     ],
-     [
-      19259.317,
+      19302.56,
       15294.76
      ],
      [
-      18996.361,
+      19035.28,
       15294.76
      ],
      [
-      18733.405,
+      18768.0,
       15294.76
      ],
      [
-      18470.45,
+      18500.72,
       15294.76
      ],
      [
-      18207.494,
+      18233.44,
       15294.76
      ],
      [
-      17944.538,
+      17966.16,
       15294.76
      ],
      [
-      17681.583,
+      17698.88,
       15294.76
      ],
      [
-      17418.627,
+      17431.6,
       15294.76
      ],
      [
-      17155.671,
+      17164.32,
       15294.76
      ],
      [
-      16892.716,
+      16897.04,
       15294.76
      ]
     ],
     "footprints": [],
     "path": [
      [
-      15980.56,
+      15820.56,
       11594.76
      ],
      [
@@ -102045,165 +102045,165 @@
       15294.76
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 9729 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 9889 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "SW",
     "dst": "NW",
     "bits": 41,
-    "length_um": 15009.28,
+    "length_um": 15169.28,
     "stages": 36,
-    "max_hop_um": 405.656,
+    "max_hop_um": 409.981,
     "homes": [
      [
-      16386.216,
+      16230.541,
       11594.76
      ],
      [
-      16791.872,
+      16640.521,
       11594.76
      ],
      [
-      17197.529,
+      17050.502,
       11594.76
      ],
      [
-      17603.185,
+      17460.482,
       11594.76
      ],
      [
-      18008.841,
+      17870.463,
       11594.76
      ],
      [
-      18414.497,
+      18280.443,
       11594.76
      ],
      [
-      18820.154,
+      18690.424,
       11594.76
      ],
      [
-      19225.81,
+      19100.404,
       11594.76
      ],
      [
       19319.84,
-      11906.386
+      11785.305
      ],
      [
       19319.84,
-      12312.042
+      12195.285
      ],
      [
       19319.84,
-      12717.698
+      12605.266
      ],
      [
       19319.84,
-      13123.355
+      13015.246
      ],
      [
       19319.84,
-      13529.011
+      13425.227
      ],
      [
       19319.84,
-      13934.667
+      13835.208
      ],
      [
       19319.84,
-      14340.323
+      14245.188
      ],
      [
       19319.84,
-      14745.979
+      14655.169
      ],
      [
       19319.84,
-      15151.636
+      15065.149
      ],
      [
       19319.84,
-      15557.292
+      15475.13
      ],
      [
       19319.84,
-      15962.948
+      15885.11
      ],
      [
       19319.84,
-      16368.604
+      16295.091
      ],
      [
       19319.84,
-      16774.261
+      16705.071
      ],
      [
       19319.84,
-      17179.917
+      17115.052
      ],
      [
       19319.84,
-      17585.573
+      17525.032
      ],
      [
       19319.84,
-      17991.229
+      17935.013
      ],
      [
       19319.84,
-      18396.885
+      18344.994
      ],
      [
       19319.84,
-      18802.542
+      18754.974
      ],
      [
       19319.84,
-      19208.198
+      19164.955
      ],
      [
       19319.84,
-      19613.854
+      19574.935
      ],
      [
       19319.84,
-      20019.51
+      19984.916
      ],
      [
       19319.84,
-      20425.166
+      20394.896
      ],
      [
-      19063.697,
+      19089.643,
       20574.68
      ],
      [
-      18658.041,
+      18679.663,
       20574.68
      ],
      [
-      18252.385,
+      18269.682,
       20574.68
      ],
      [
-      17846.729,
+      17859.702,
       20574.68
      ],
      [
-      17441.072,
+      17449.721,
       20574.68
      ],
      [
-      17035.416,
+      17039.741,
       20574.68
      ]
     ],
     "footprints": [],
     "path": [
      [
-      15980.56,
+      15820.56,
       11594.76
      ],
      [
@@ -102219,165 +102219,165 @@
       20574.68
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 15009 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 15169 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "SW",
     "dst": "NE",
     "bits": 41,
-    "length_um": 11309.28,
+    "length_um": 11469.28,
     "stages": 36,
-    "max_hop_um": 305.656,
+    "max_hop_um": 309.981,
     "homes": [
      [
-      16286.216,
+      16130.541,
       11594.76
      ],
      [
-      16591.872,
+      16440.521,
       11594.76
      ],
      [
-      16897.529,
+      16750.502,
       11594.76
      ],
      [
-      17203.185,
+      17060.482,
       11594.76
      ],
      [
-      17508.841,
+      17370.463,
       11594.76
      ],
      [
-      17814.497,
+      17680.443,
       11594.76
      ],
      [
-      18120.154,
+      17990.424,
       11594.76
      ],
      [
-      18425.81,
+      18300.404,
       11594.76
      ],
      [
-      18731.466,
+      18610.385,
       11594.76
      ],
      [
-      19037.122,
+      18920.365,
+      11594.76
+     ],
+     [
+      19230.346,
       11594.76
      ],
      [
       19319.84,
-      11617.698
+      11815.246
      ],
      [
       19319.84,
-      11923.355
+      12125.227
      ],
      [
       19319.84,
-      12229.011
+      12435.208
      ],
      [
       19319.84,
-      12534.667
+      12745.188
      ],
      [
       19319.84,
-      12840.323
+      13055.169
      ],
      [
       19319.84,
-      13145.979
+      13365.149
      ],
      [
       19319.84,
-      13451.636
+      13675.13
      ],
      [
       19319.84,
-      13757.292
+      13985.11
      ],
      [
       19319.84,
-      14062.948
+      14295.091
      ],
      [
       19319.84,
-      14368.604
+      14605.071
      ],
      [
       19319.84,
-      14674.261
+      14915.052
      ],
      [
       19319.84,
-      14979.917
+      15225.032
      ],
      [
       19319.84,
-      15285.573
+      15535.013
      ],
      [
       19319.84,
-      15591.229
+      15844.994
      ],
      [
       19319.84,
-      15896.885
+      16154.974
      ],
      [
       19319.84,
-      16202.542
+      16464.955
      ],
      [
       19319.84,
-      16508.198
+      16774.935
      ],
      [
-      19319.84,
-      16813.854
-     ],
-     [
-      19075.01,
+      19109.604,
       16874.68
      ],
      [
-      18769.354,
+      18799.624,
       16874.68
      ],
      [
-      18463.697,
+      18489.643,
       16874.68
      ],
      [
-      18158.041,
+      18179.663,
       16874.68
      ],
      [
-      17852.385,
+      17869.682,
       16874.68
      ],
      [
-      17546.729,
+      17559.702,
       16874.68
      ],
      [
-      17241.072,
+      17249.721,
       16874.68
      ],
      [
-      16935.416,
+      16939.741,
       16874.68
      ]
     ],
     "footprints": [],
     "path": [
      [
-      15980.56,
+      15820.56,
       11594.76
      ],
      [
@@ -102393,158 +102393,158 @@
       16874.68
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 11309 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 11469 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "SE",
     "dst": "SW",
     "bits": 41,
-    "length_um": 9729.36,
+    "length_um": 9889.36,
     "stages": 36,
-    "max_hop_um": 262.956,
+    "max_hop_um": 267.28,
     "homes": [
      [
-      16892.716,
+      16897.04,
       15294.76
      ],
      [
-      17155.671,
+      17164.32,
       15294.76
      ],
      [
-      17418.627,
+      17431.6,
       15294.76
      ],
      [
-      17681.583,
+      17698.88,
       15294.76
      ],
      [
-      17944.538,
+      17966.16,
       15294.76
      ],
      [
-      18207.494,
+      18233.44,
       15294.76
      ],
      [
-      18470.45,
+      18500.72,
       15294.76
      ],
      [
-      18733.405,
+      18768.0,
       15294.76
      ],
      [
-      18996.361,
+      19035.28,
       15294.76
      ],
      [
-      19259.317,
+      19302.56,
       15294.76
      ],
      [
       19319.84,
-      15092.328
+      15044.76
      ],
      [
       19319.84,
-      14829.372
+      14777.48
      ],
      [
       19319.84,
-      14566.416
+      14510.2
      ],
      [
       19319.84,
-      14303.461
+      14242.92
      ],
      [
       19319.84,
-      14040.505
+      13975.64
      ],
      [
       19319.84,
-      13777.549
+      13708.36
      ],
      [
       19319.84,
-      13514.594
+      13441.08
      ],
      [
       19319.84,
-      13251.638
+      13173.8
      ],
      [
       19319.84,
-      12988.682
+      12906.52
      ],
      [
       19319.84,
-      12725.726
+      12639.24
      ],
      [
       19319.84,
-      12462.771
+      12371.96
      ],
      [
       19319.84,
-      12199.815
+      12104.68
      ],
      [
       19319.84,
-      11936.859
+      11837.4
      ],
      [
-      19319.84,
-      11673.904
-     ],
-     [
-      19136.028,
+      19295.2,
       11594.76
      ],
      [
-      18873.072,
+      19027.92,
       11594.76
      ],
      [
-      18610.117,
+      18760.64,
       11594.76
      ],
      [
-      18347.161,
+      18493.36,
       11594.76
      ],
      [
-      18084.205,
+      18226.08,
       11594.76
      ],
      [
-      17821.25,
+      17958.8,
       11594.76
      ],
      [
-      17558.294,
+      17691.52,
       11594.76
      ],
      [
-      17295.338,
+      17424.24,
       11594.76
      ],
      [
-      17032.383,
+      17156.96,
       11594.76
      ],
      [
-      16769.427,
+      16889.68,
       11594.76
      ],
      [
-      16506.471,
+      16622.4,
       11594.76
      ],
      [
-      16243.516,
+      16355.12,
+      11594.76
+     ],
+     [
+      16087.84,
       11594.76
      ]
     ],
@@ -102563,11 +102563,11 @@
       11594.76
      ],
      [
-      15980.56,
+      15820.56,
       11594.76
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 9729 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 9889 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "SE",
@@ -103375,152 +103375,152 @@
     "src": "NW",
     "dst": "SW",
     "bits": 41,
-    "length_um": 15009.28,
+    "length_um": 15169.28,
     "stages": 36,
-    "max_hop_um": 405.656,
+    "max_hop_um": 409.981,
     "homes": [
      [
-      17035.416,
+      17039.741,
       20574.68
      ],
      [
-      17441.072,
+      17449.721,
       20574.68
      ],
      [
-      17846.729,
+      17859.702,
       20574.68
      ],
      [
-      18252.385,
+      18269.682,
       20574.68
      ],
      [
-      18658.041,
+      18679.663,
       20574.68
      ],
      [
-      19063.697,
+      19089.643,
       20574.68
      ],
      [
       19319.84,
-      20425.166
+      20394.896
      ],
      [
       19319.84,
-      20019.51
+      19984.916
      ],
      [
       19319.84,
-      19613.854
+      19574.935
      ],
      [
       19319.84,
-      19208.198
+      19164.955
      ],
      [
       19319.84,
-      18802.542
+      18754.974
      ],
      [
       19319.84,
-      18396.885
+      18344.994
      ],
      [
       19319.84,
-      17991.229
+      17935.013
      ],
      [
       19319.84,
-      17585.573
+      17525.032
      ],
      [
       19319.84,
-      17179.917
+      17115.052
      ],
      [
       19319.84,
-      16774.261
+      16705.071
      ],
      [
       19319.84,
-      16368.604
+      16295.091
      ],
      [
       19319.84,
-      15962.948
+      15885.11
      ],
      [
       19319.84,
-      15557.292
+      15475.13
      ],
      [
       19319.84,
-      15151.636
+      15065.149
      ],
      [
       19319.84,
-      14745.979
+      14655.169
      ],
      [
       19319.84,
-      14340.323
+      14245.188
      ],
      [
       19319.84,
-      13934.667
+      13835.208
      ],
      [
       19319.84,
-      13529.011
+      13425.227
      ],
      [
       19319.84,
-      13123.355
+      13015.246
      ],
      [
       19319.84,
-      12717.698
+      12605.266
      ],
      [
       19319.84,
-      12312.042
+      12195.285
      ],
      [
       19319.84,
-      11906.386
+      11785.305
      ],
      [
-      19225.81,
+      19100.404,
       11594.76
      ],
      [
-      18820.154,
+      18690.424,
       11594.76
      ],
      [
-      18414.497,
+      18280.443,
       11594.76
      ],
      [
-      18008.841,
+      17870.463,
       11594.76
      ],
      [
-      17603.185,
+      17460.482,
       11594.76
      ],
      [
-      17197.529,
+      17050.502,
       11594.76
      ],
      [
-      16791.872,
+      16640.521,
       11594.76
      ],
      [
-      16386.216,
+      16230.541,
       11594.76
      ]
     ],
@@ -103539,11 +103539,11 @@
       11594.76
      ],
      [
-      15980.56,
+      15820.56,
       11594.76
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 15009 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 15169 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "NW",
@@ -104351,152 +104351,152 @@
     "src": "NE",
     "dst": "SW",
     "bits": 41,
-    "length_um": 11309.28,
+    "length_um": 11469.28,
     "stages": 36,
-    "max_hop_um": 305.656,
+    "max_hop_um": 309.981,
     "homes": [
      [
-      16935.416,
+      16939.741,
       16874.68
      ],
      [
-      17241.072,
+      17249.721,
       16874.68
      ],
      [
-      17546.729,
+      17559.702,
       16874.68
      ],
      [
-      17852.385,
+      17869.682,
       16874.68
      ],
      [
-      18158.041,
+      18179.663,
       16874.68
      ],
      [
-      18463.697,
+      18489.643,
       16874.68
      ],
      [
-      18769.354,
+      18799.624,
       16874.68
      ],
      [
-      19075.01,
+      19109.604,
       16874.68
      ],
      [
       19319.84,
-      16813.854
+      16774.935
      ],
      [
       19319.84,
-      16508.198
+      16464.955
      ],
      [
       19319.84,
-      16202.542
+      16154.974
      ],
      [
       19319.84,
-      15896.885
+      15844.994
      ],
      [
       19319.84,
-      15591.229
+      15535.013
      ],
      [
       19319.84,
-      15285.573
+      15225.032
      ],
      [
       19319.84,
-      14979.917
+      14915.052
      ],
      [
       19319.84,
-      14674.261
+      14605.071
      ],
      [
       19319.84,
-      14368.604
+      14295.091
      ],
      [
       19319.84,
-      14062.948
+      13985.11
      ],
      [
       19319.84,
-      13757.292
+      13675.13
      ],
      [
       19319.84,
-      13451.636
+      13365.149
      ],
      [
       19319.84,
-      13145.979
+      13055.169
      ],
      [
       19319.84,
-      12840.323
+      12745.188
      ],
      [
       19319.84,
-      12534.667
+      12435.208
      ],
      [
       19319.84,
-      12229.011
+      12125.227
      ],
      [
       19319.84,
-      11923.355
+      11815.246
      ],
      [
-      19319.84,
-      11617.698
-     ],
-     [
-      19037.122,
+      19230.346,
       11594.76
      ],
      [
-      18731.466,
+      18920.365,
       11594.76
      ],
      [
-      18425.81,
+      18610.385,
       11594.76
      ],
      [
-      18120.154,
+      18300.404,
       11594.76
      ],
      [
-      17814.497,
+      17990.424,
       11594.76
      ],
      [
-      17508.841,
+      17680.443,
       11594.76
      ],
      [
-      17203.185,
+      17370.463,
       11594.76
      ],
      [
-      16897.529,
+      17060.482,
       11594.76
      ],
      [
-      16591.872,
+      16750.502,
       11594.76
      ],
      [
-      16286.216,
+      16440.521,
+      11594.76
+     ],
+     [
+      16130.541,
       11594.76
      ]
     ],
@@ -104515,11 +104515,11 @@
       11594.76
      ],
      [
-      15980.56,
+      15820.56,
       11594.76
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 11309 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 11469 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "NE",
@@ -105915,8 +105915,8 @@
      "h": 3580.0
     },
     "new": {
-     "w": 950.4,
-     "h": 3132.0
+     "w": 1598.4,
+     "h": 1771.2
     }
    },
    {
@@ -105926,8 +105926,8 @@
      "h": 3580.0
     },
     "new": {
-     "w": 950.4,
-     "h": 3132.0
+     "w": 1598.4,
+     "h": 1771.2
     }
    },
    {
@@ -105937,8 +105937,8 @@
      "h": 3580.0
     },
     "new": {
-     "w": 950.4,
-     "h": 3132.0
+     "w": 1598.4,
+     "h": 1771.2
     }
    },
    {
@@ -105948,8 +105948,8 @@
      "h": 3580.0
     },
     "new": {
-     "w": 950.4,
-     "h": 3132.0
+     "w": 1598.4,
+     "h": 1771.2
     }
    }
   ],
@@ -106191,6 +106191,11 @@
   }
  ],
  "d4f_sfucore_grant": [
+  {
+   "slots": 4,
+   "kit": "claude/hsu-corekit-0700 2191c672a",
+   "layers": "M2-M7, die straps M8"
+  },
   {
    "slots": 4,
    "kit": "claude/hsu-corekit-0700 2191c672a",

@@ -3,7 +3,7 @@
 so the core stays next to its hub:
   coll_<q>  = COLL hard_v7 cluster (1080 x 880 SW q3 / 1080 x 790 q2), E edge 100 um W of the quadrant HC client hc_<q>,
               band-side edge unchanged (S-type quadrants grow away from the band edge = up, NW grows down)
-  tkm_SW    = TKM sub-cluster 1740 x 1740 on coll_SW's band-interior face across 100 um, E-aligned with coll_SW
+  tkm_SW    = TKM sub-cluster 1900 x 1900 on coll_SW's band-interior face across 100 um, E-aligned with coll_SW
   cij_<q>   = COLL inject/IDX join on coll's W face (centred);  sucx_<q> = SU cross-port W of cij on coll's band-edge row
   sucore_<q>, dbk_<q> move east by the same shift (dbk is re-homed by d4f_fit_slots.py next to the core)
       d4f_core_shift.py PLAN_DIR"""
@@ -12,6 +12,7 @@ from pathlib import Path
 d = Path(sys.argv[1]); P = json.loads((d / 'compact.P.json').read_text())
 WH = dict(SW=(1080.0, 880.0), SE=(1080.0, 790.0), NE=(1080.0, 790.0), NW=(1080.0, 790.0))
 C = 21.6
+TKM = 1900.0     # COLL helper 10-17: 6x6 e86 tiles at 300.24 + 20-um channels + control + buffer
 for q, (w, h) in WH.items():
     c = P[f'coll_{q}']; hc = P[f'hc_{q}']
     x1 = hc['x'] - 100.0; dx = (x1 - w) - c['x']
@@ -28,7 +29,7 @@ for q, (w, h) in WH.items():
     # DMA back (+ wb_kport region 800 x 560, d4f_fit_slots.py) W of sucx on the band-edge row
     db = P[f'dbk_{q}']; P[f'dbk_{q}'] = dict(db, x=round(sx['x'] - C - 800.0, 3), y=round((y + h - 560.0) if down else y, 3), w=800.0, h=560.0)
     if q == 'SW':
-        P['tkm_SW'] = dict(x=round(x1 - 1740.0, 3), y=round(y + h + 100.0, 3), w=1740.0, h=1740.0, orient='R0')
+        P['tkm_SW'] = dict(x=round(x1 - TKM, 3), y=round(y + h + 100.0, 3), w=TKM, h=TKM, orient='R0')
         sc = P['sucore_SW']; P['sucore_SW'] = dict(sc, x=round(min(sc['x'], P['tkm_SW']['x'] - C - sc['w']), 3))
     print(q, 'core shift', round(dx, 1))
 (d / 'compact.P.json').write_text(json.dumps(P, indent=1))
