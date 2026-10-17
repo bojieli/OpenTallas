@@ -2226,8 +2226,8 @@ def _relays(m):
                 for g_ in range(8):
                     f_, yc_ = P_['face_pins']['vc'][f'vc{k_}_{g_}']
                     _PIN_HINT[(it_.name, f'vc{k_}_{g_}')] = die_xy_(0.0 if f_ == 'W' else it_.w, yc_ + ((k_ % 4) - 1.5) * 70.0)
-                _PIN_HINT[(it_.name, f'vh{k_}')] = die_xy_(P_['strip']['x'] - 400.0 + 40.0 * k_, it_.h)
-                _PIN_HINT[(it_.name, f'vrq{k_}')] = die_xy_(P_['strip']['x'] + 200.0 + 30.0 * k_, it_.h)
+                _PIN_HINT[(it_.name, f'vh{k_}')] = die_xy_(P_['face_pins']['strip']['x'] - 400.0 + 40.0 * k_, it_.h)
+                _PIN_HINT[(it_.name, f'vrq{k_}')] = die_xy_(P_['face_pins']['strip']['x'] + 200.0 + 30.0 * k_, it_.h)
     if HOST_V14.get('trees') and 'serdes_host' in by:
         # v1.4.2 (kvs7c TT -7.6 ns, 1,044 endpoints: rly_host_fdi_55 -> serdes_host tx_flit 2.2 mm): the hard SerDes PHY's
         # FDI pins are on its W face (LEF ot_qfd_serdes_112g_x12_phy: tx_flit y 600.19..650.21, rx_flit 650.30..700.32,
@@ -3155,7 +3155,7 @@ def _split_pins(M, m=None):
             # KVPLAN 1815: the trunked pair's face pins from its plan (canonical R0: strip / control tile at the top)
             hm, P_ = M[mn], pvt_plan()
             cells, fw_, fh_ = P_['cells'], P_['frame_um'][0], P_['frame_um'][1]
-            ctx_ = P_['strip']['x']
+            ctx_ = P_['face_pins']['strip']['x']
             for s_ in range(33):
                 c_ = cells['u_ctl' if s_ == 32 else f'u_s{s_}_j']
                 if f'ck_c{s_}' in hm.ports:
