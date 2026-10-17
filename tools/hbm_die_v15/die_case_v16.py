@@ -136,8 +136,11 @@ def pin(port, bits, k):
     return f'{port}[{k}]' if bits > 1 else port
 
 
-def validate_view_coverage(instances, views):
-    """A missing receipt may be diagnostic; stale instance membership is an error."""
+def validate_view_coverage(instances, views, allow_param_alias=False):
+    """A missing receipt may be diagnostic; stale instance membership is an error.
+    allow_param_alias: parameter aliases (same master/ports, different params) are RETURNED as an explicit
+    diagnostic list instead of refused; the case is then labelled not-qualifying (geometry/GRT evidence only)."""
+    aliases = []
     owners = {}
     for cell, entry in views.items():
         for name in entry['instances']:
@@ -158,7 +161,11 @@ def validate_view_coverage(instances, views):
         # Equal ports do not imply equal implementations: QID, pipeline ages,
         # memory depth and static features can alter the mapped body and timing.
         if instance.get('params', {}) != entry.get('params', {}):
-            raise ValueError(f'view parameter mismatch: {name} -> {owners[name]}')
+            if not allow_param_alias:
+                raise ValueError(f'view parameter mismatch: {name} -> {owners[name]}')
+            aliases.append(dict(instance=name, view=owners[name], instance_params=instance.get('params', {}),
+                                view_params=entry.get('params', {})))
+    return aliases
 
 
 def communicating_pairs(nets, dom_of, clique_limit=8):
@@ -219,6 +226,9 @@ def main():
     ap.add_argument('--pair-max-tiles', type=int, default=8,
                     help='clique expansion limit; every source-to-sink branch is always a clock pair')
     ap.add_argument('--clock-bin-um', type=float, default=1600.0)
+    ap.add_argument('--diagnostic-param-alias', action='store_true',
+                    help='DIAGNOSTIC ONLY: accept same-port parameter aliases (listed in manifest.param_aliases_diagnostic); '
+                         'timing of those instances is not their own; the case never qualifies')
     ap.add_argument('--no-plot', action='store_true', help='defer PNG rendering; manifest retains exact geometry for later rendering')
     ap.add_argument('--no-clock', action='store_true', help='placement/images only (skip die clock trees and run files)')
     ap.add_argument('--pc-strip', type=float, default=0.0,
@@ -234,7 +244,7 @@ def main():
     a = ap.parse_args()
     C = json.loads(a.contract.read_text()); G = json.loads(a.grants.read_text()); P = json.loads(a.plan.read_text())
     V = json.loads((a.views / 'views.json').read_text())
-    validate_view_coverage(C['instances'], V)
+    param_aliases = validate_view_coverage(C['instances'], V, a.diagnostic_param_alias)
     lanes = json.loads(a.lanes.read_text())
     slots = {s['name']: s for s in G['slots']}
     W, H = G['floorplan']['die_um']
@@ -783,6 +793,9 @@ def main():
     manifest['consumed_view_sha256'] = {p.name: digest(p) for p in sorted(vd.iterdir())
                                         if p.suffix in ('.lef', '.lib')}
     manifest['native_complete'] = False
+    manifest['param_aliases_diagnostic'] = param_aliases
+    if param_aliases:
+        manifest['label'] += f' PARAM_ALIAS_DIAGNOSTIC: {len(param_aliases)} instances use a different-parameter view'
     manifest['pc_strip'] = strip
     manifest['d4b_homes'] = bool(a.d4b_homes)
     manifest['layout_image_status'] = 'DEFERRED' if a.no_plot else 'GENERATED'
