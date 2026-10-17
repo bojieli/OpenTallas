@@ -1,0 +1,103 @@
+{
+ "name": "hcoll_vmasm16",
+ "top": "ot_hgi_coll_vmasm_slice16",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [],
+ "outline": {
+  "w": 34.56,
+  "h": 34.56
+ },
+ "pins": {
+  "W": [
+   "sel"
+  ],
+  "N": [
+   "rd_il"
+  ],
+  "S": [
+   "as_il"
+  ],
+  "E": [
+   "clk"
+  ]
+ },
+ "io_tcl": "physical/hbm_coll_vmasm16/pins.tcl",
+ "layer_cap": "M5",
+ "recipe": 3,
+ "macros": [],
+ "children": [],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "m5_pg_pitch": 2.7
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Slice keeps V6 vmasm edges: sel->sp[0..8], rd_il->raw, as_il flop Q; no extra pin stage."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "job": {
+  "owner": "Claude H-NETLIST/COLL 1815",
+  "branch": "claude/hnl-coll-1815",
+  "tag": "s16",
+  "purpose": "One identical 16-column VM read-data assembly leaf (x16) replacing monolithic vmasm (440e737a7 EARLY_FAIL_CONGESTION: 2,048 pins/face on 345.6 um). Same edges as V6 vmasm.",
+  "structural_change": "Split 2048-column assembly into 16 hard leaves of 16 columns (128b in/out, replicated 9-stage select pipe), literal pin request coll_slice_geometry_grant_1552; 0 cycles.",
+  "cycles_added": 0,
+  "views_to": "physical/ref_tile/hcoll_vmasm16/views",
+  "record_to": "results/rtl/ref_tile/hcoll_vmasm16",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+   "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_slice_v7.sv",
+   "rtl/hbm_accel/generic/collective/p2p/run_slice_v7.sh",
+   "physical/hbm_coll_vmasm16",
+   "physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl",
+   "physical/hgi_idx_hier/pdn_hier.tcl",
+   "physical/qwen_die_masters/hdly_dont_touch.tcl"
+  ],
+  "benches": [
+   {
+    "name": "slice_pos",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_slice_v7.sh {RUN}/bench/pos pos",
+    "expect": "pass",
+    "pass_regex": "SLICE_V7 PASS checks1987 bits_per_check6144",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "min_count_regex": "SLICE_V7 PASS checks(\\d+) bits_per_check6144"
+   },
+   {
+    "name": "slice_select",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_slice_v7.sh {RUN}/bench/select select",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "SLICE_V7 FAIL mismatches1987 checks1987"
+   }
+  ]
+ },
+ "params": {},
+ "inter": []
+}
