@@ -26,7 +26,7 @@ Rule (defaults; env OT_DIE_REPAIR_MAX_WIRE / _SLEW / _SKIP / _REPEAT_NETS / _OVE
     liberty fails the step (its nets would be invisible to the resizer).
   * legalisation 'spread' (DIE-FLOW2 10-17; 'snap' = alias): each repeater on its own free slot of the nearest
     density bin under the utilisation cap (8.64 um bins, 0.30), never on a macro / existing cell; repair passes re-run
-    repair_design on the legal positions; after GRT the audit re-buffers the residual slew/cap violators on GRT
+    repair_design on the legal positions (soft cap within 3 bins, else 0.60); after GRT the audit re-buffers the residual slew/cap violators on GRT
     parasitics (incremental GRT) before it judges.
   * die nets longer than the measured die reach (results/arch/die_reach_1016.json via tools/die_reach.py) are a
     planning defect (missing relay register, standard 1): measured before repair and reported; --over-reach fail
@@ -97,7 +97,8 @@ def config(design, report, **kw):
         c['skip_nets'] += env['OT_DIE_REPAIR_SKIP'].split()
     if env.get('OT_DIE_REPAIR_REPEAT_NETS'):
         c['repeat_nets'] = list(c.get('repeat_nets') or []) + env['OT_DIE_REPAIR_REPEAT_NETS'].split()
-    for ek, ck in (('OT_DIE_REPAIR_SPREAD_UTIL', 'spread_util'), ('OT_DIE_REPAIR_BIN_UM', 'bin_um')):
+    for ek, ck in (('OT_DIE_REPAIR_SPREAD_UTIL', 'spread_util'), ('OT_DIE_REPAIR_SPREAD_UTIL_HARD', 'spread_util_hard'),
+                   ('OT_DIE_REPAIR_BIN_UM', 'bin_um')):
         if env.get(ek):
             c[ck] = float(env[ek])
     for ek, ck in (('OT_DIE_REPAIR_PASSES', 'repair_passes'), ('OT_DIE_REPAIR_POST_GRT_ROUNDS', 'post_grt_rounds')):
@@ -197,6 +198,7 @@ def main(argv=None):
     t.add_argument('--legalize', choices=['spread', 'snap', 'dpl', 'none'], help='spread (default; snap = alias): '
                    'repeaters on free slots of density-capped bins + repair passes')
     t.add_argument('--spread-util', type=float, help='bin utilisation cap for the repeaters (default 0.30)')
+    t.add_argument('--spread-util-hard', type=float, help='cap used where the channel is full at the soft cap (default 0.60)')
     t.add_argument('--bin-um', type=float, help='spread density bin (default 8.64 um)')
     t.add_argument('--repair-passes', type=int, help='repair_design + spread passes before GRT (default 3)')
     t.add_argument('--post-grt-rounds', type=int, help='post-GRT re-buffer rounds in the audit (default 2; 0 = audit only)')
@@ -234,7 +236,7 @@ def main(argv=None):
                     f'{{ if {{$l ne ""}} {{ lappend ot_die_rep_libs $l }} }}\n')
     rs = json.loads(a.receiver_slew.read_text()) if a.receiver_slew else None
     body = tcl_call(a.design, a.report, tcl_dir=a.dir, fail_exit=a.exit_code, libs=libs or None, std_corner=a.std_corner,
-                    legalize=a.legalize, spread_util=a.spread_util, bin_um=a.bin_um, repair_passes=a.repair_passes,
+                    legalize=a.legalize, spread_util=a.spread_util, spread_util_hard=a.spread_util_hard, bin_um=a.bin_um, repair_passes=a.repair_passes,
                     post_grt_rounds=a.post_grt_rounds, max_wire_um=a.max_wire_um, slew_ps=a.slew_ps, receiver_slew=rs,
                     skip_nets=a.skip, repeat_nets=a.repeat_nets, fclk_globs=a.fclk_globs, fclk_policy=a.fclk_policy,
                     over_reach=a.over_reach, post_drv=a.post_drv, rc_layer=a.rc_layer, repair_args=a.repair_args)
