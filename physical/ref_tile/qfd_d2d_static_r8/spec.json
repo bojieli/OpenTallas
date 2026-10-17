@@ -197,12 +197,11 @@
   "reason": "RTL is already pin-registered: d2d_pinreg_gen.py PR=1 wraps qfd_d2d_static_core with exactly one flop per functional port (FIRM at the pin via io_flop_at_pins); the link calendar is compiled --pinreg; a second synthesized pin register would add +1 cycle per port with no timing purpose"
  },
  "reroute_reason": {
-  "kind": "pin_register",
+  "kind": "native_capture",
   "source": "results/arch/qwen_link_native_1640/native_audit.json",
   "cell": "qfd_d2d_static",
   "capture_ps": 239.9,
-  "launch_ps": 212.0,
-  "fix": "capture miss = in-flow input hold pads from pin-flop clock spread (routed STA r7f: pin->HB2+BUFx4f+3-4 hold cells->flop, wire ~0); r8 balances ck with the clock spine (tol 8 ps, bins 30) and anchors the rst_n reset-capture pair at its port; same RTL/outline/pins, 0 cycles"
+  "fix": "capture miss = in-flow input hold pads from pin-flop clock spread (routed STA r7f: pin->HB2+BUFx4f+3-4 hold cells->flop, wire ~0); r8b balances ck with the clock spine (tol 8, bins 30; CTS spread 24.7), anchors the rst_n reset-capture pair at its port, boundary FF hold-repair margin 10 ps (sign-off unchanged); CTS native probe 181.7/157.4/24.2; same RTL/outline/pins, 0 cycles"
  },
  "pin_hook_before_flops": [
   "physical/ref_tile/qfd_d2d_static_r8/local_reset_capture.tcl"
