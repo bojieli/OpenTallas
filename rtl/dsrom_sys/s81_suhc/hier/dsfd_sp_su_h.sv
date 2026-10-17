@@ -586,14 +586,20 @@ module dsfd_sp_su_h #(
             genvar hu;
             for (hu = 0; hu < 2; hu = hu + 1) begin : g_hu
                 wire hev, hov, hdv; wire [511:0] hed; wire [255:0] hod; wire [7:0] hff;
+                wire [511:0] hdd;
 `ifdef SU_SMU_T
+                // the hardened cluster is built for the smq tap (DOP = SRL); the spine row needs the 2 stations of the
+                // smt tap's pin + valid registers in front of it
+                ot_hdc_delay #(.W(512), .D(2)) u_hdd (.clk(sk), .rst_n(rst[t]), .d(dd[t][1024 * TI + 512 * hu +: 512]),
+                    .q(hdd));
                 dsfd_su_t_smh #(.SRL(SRL)) u_smh (
 `else
+                assign hdd = dd[t][1024 * TI + 512 * hu +: 512];
                 ot_s81_su_smh #(.SM_NVMAX(SM_NVMAX), .LM(LM), .LA(LA), .SRL(SRL), .MUT(MUT)) u_smh (
 `endif
                     .clk(sk), .rst_in(rst[t]), .s_v(s_v), .p_v(p_v), .c_v(c_v), .c_nv(c_nv), .c_lt(c_lt), .c_scale(c_scale),
                     .c_sink(c_sink[32 * hu +: 32]), .cs_v(cs_v), .cs_i(cs_i), .cs_d(cs_d),
-                    .d(dd[t][1024 * TI + 512 * hu +: 512]),
+                    .d(hdd),
                     .e_v(hev), .e_d(hed), .o_v(hov), .o_d(hod), .den_v(hdv), .f(hff));
                 assign e_d[512 * hu +: 512] = hed; assign o_dd[256 * hu +: 256] = hod;
                 assign he_v[hu] = hev; assign ho_v[hu] = hov; assign hden_v[hu] = hdv; assign hf[8 * hu +: 8] = hff;
