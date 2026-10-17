@@ -29,7 +29,12 @@ module qkd_static_kv_landing_pc #(
     // keeps only {sector[9], ordinal[7]}: its low 7 bits are the row index itself (written at w_a = put_ord[6:0], read at
     // ra = get_ord[6:0]), so the 9-bit compare reduces to 2 bits exactly; valid[] is updated per bit (set_i | valid & ~clr_i,
     // the same next state without the shared wa == ra compare).  0 = historical checker on the _q edge.
-    parameter integer CHECK_PIPE=0
+    parameter integer CHECK_PIPE=0,
+    // PRE_REG 1 (KVCTRL 1815, landing_seg_h): arm / epoch / layer / cfg_stack / cfg_group arrive ALREADY REGISTERED by an
+    // identical register placed upstream (qkd_static_kv_landing_relay / _row, within measured reach of the shared
+    // segment pins); arm_q / epoch_q / layer_q / stack_q / group_q are then those inputs (same edge from the segment pin,
+    // the upstream arm register resets like arm_q). 0 = the PC's own input registers (default, unchanged).
+    parameter integer PRE_REG=0
 )(
     input wire ck, rst_n,
     input wire [1:0] cfg_stack,input wire [2:0] cfg_group,
@@ -58,7 +63,11 @@ module qkd_static_kv_landing_pc #(
 );
     (* keep *) reg [1:0] stack_q;
     (* keep *) reg [2:0] group_q;
-    always @(posedge ck)begin stack_q<=cfg_stack;group_q<=cfg_group;end
+    generate if(PRE_REG==0)begin:g_cfg_r
+      always @(posedge ck)begin stack_q<=cfg_stack;group_q<=cfg_group;end
+    end else begin:g_cfg_w
+      always @(*)begin stack_q=cfg_stack;group_q=cfg_group;end
+    end endgenerate
     (* keep *) reg rn;
     always @(posedge ck) rn <= rst_n;
     (* keep *) reg arm_q, put_q, actual_q, get_q;
@@ -69,13 +78,19 @@ module qkd_static_kv_landing_pc #(
     (* keep *) reg [13:0] gt_q;
     (* keep *) reg gv_q;
     always @(posedge ck) begin
-        epoch_q<=epoch;layer_q<=layer;ae_q<=actual_epoch;al_q<=actual_layer;
+        ae_q<=actual_epoch;al_q<=actual_layer;
         ge_q<=get_epoch;gl_q<=get_layer;ps_q<=expected_sector;as_q<=actual_sector;
         ad_q<=actual_data;gt_q<=get_t;gv_q<=get_v;
     end
     always @(posedge ck or negedge rn)
-      if(!rn)begin arm_q<=0;put_q<=0;actual_q<=0;get_q<=0;end
-      else begin arm_q<=arm;put_q<=expected_put;actual_q<=actual_valid;get_q<=get;end
+      if(!rn)begin put_q<=0;actual_q<=0;get_q<=0;end
+      else begin put_q<=expected_put;actual_q<=actual_valid;get_q<=get;end
+    generate if(PRE_REG==0)begin:g_arm_r
+      always @(posedge ck)begin epoch_q<=epoch;layer_q<=layer;end
+      always @(posedge ck or negedge rn) if(!rn)arm_q<=0; else arm_q<=arm;
+    end else begin:g_arm_w
+      always @(*)begin epoch_q=epoch;layer_q=layer;arm_q=arm;end
+    end endgenerate
     // Row ordinal = the controller's STREAM position of the sector, for K and V alike: rows < T of a group arrive in
     // ascending t, i.e. ascending {t[12:9], t[6], t[5:3] (K) / t[3:1] (V VMAP 1)} = {sec[6:3], sec[7], sec[2:0]}, a
     // gap-free prefix at any T, so with <= 64 rows outstanding (ring bound) no two live rows share a row.
