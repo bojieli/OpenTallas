@@ -244,15 +244,27 @@ module dsdv_sh_vc #(parameter integer V = 276, parameter integer MUT = 0) (
     reg [266:0] cf_q; reg [84:0] cg_q;
     always @(posedge ck) begin tw_q <= rn ? tw_i : 194'd0; cn_q <= rn ? cn_i : 85'd0; cs_q <= rn ? cs_i : 85'd0;
         cf_q <= rn ? cf_i : 267'd0; cg_q <= rn ? cg_i : 85'd0; end
-    // ---- template table (boot written; registered read)
-    reg [185:0] tt [0:127];
-    always @(posedge ck) if (tw_q[193]) tt[tw_q[192:186]] <= tw_q[185:0];
+    // ---- template table (boot written; registered read): three 1R1W 128 x 256 SRAM macros, one per read port
+    //      (N beat, S beat, gunit job), all written by the same boot word.  Same read timing as the former flop
+    //      table (address from the pin flop, data after one edge), so cycle-exact; the 23.8k-flop clock root is gone.
+    //      Writes are boot-only (a template write while a job is held is a fault), so no read/write collision.
+    wire [255:0] rd_n, rd_s, rd_g;
+    ot_sram_1r1w_128x256_m1_r2c2 u_ttn (.clk(ck), .r_ce_in(cn_q[84]), .r_addr_in(cn_q[13:7]), .rd_out(rd_n),
+        .w_ce_in(tw_q[193]), .w_addr_in(tw_q[192:186]), .wd_in({70'd0, tw_q[185:0]}), .w_mask_in({256{1'b1}}),
+        .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
+    ot_sram_1r1w_128x256_m1_r2c2 u_tts (.clk(ck), .r_ce_in(cs_q[84]), .r_addr_in(cs_q[13:7]), .rd_out(rd_s),
+        .w_ce_in(tw_q[193]), .w_addr_in(tw_q[192:186]), .wd_in({70'd0, tw_q[185:0]}), .w_mask_in({256{1'b1}}),
+        .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
+    ot_sram_1r1w_128x256_m1_r2c2 u_ttg (.clk(ck), .r_ce_in(cg_q[84]), .r_addr_in(cg_q[13:7]), .rd_out(rd_g),
+        .w_ce_in(tw_q[193]), .w_addr_in(tw_q[192:186]), .wd_in({70'd0, tw_q[185:0]}), .w_mask_in({256{1'b1}}),
+        .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
     // ---- per direction: read stage, beat register
     // cmd 84 = {slot, user 10, pos 21, tok 21, arg 24, op 7}
-    reg [41:0] rg_t; reg kg, vlg, bag; reg [7:0] tgg; reg [266:0] cf_d;
-    reg [185:0] rn_t, rs_t; reg [51:0] cxn, cxs; reg [1:0] mdn, mds; reg vln, vls, ban, bas; reg [7:0] tgn, tgs;
+    wire [41:0] rg_t = rd_g[41:0]; reg kg, vlg, bag; reg [7:0] tgg; reg [266:0] cf_d;
+    wire [185:0] rn_t = rd_n[185:0], rs_t = rd_s[185:0];
+    reg [51:0] cxn, cxs; reg [1:0] mdn, mds; reg vln, vls, ban, bas; reg [7:0] tgn, tgs;
     always @(posedge ck) begin
-        rn_t <= tt[cn_q[13:7]]; rs_t <= tt[cs_q[13:7]]; rg_t <= tt[cg_q[13:7]][41:0]; kg <= cg_q[14]; tgg <= {cg_q[83], cg_q[6:0]};
+        kg <= cg_q[14]; tgg <= {cg_q[83], cg_q[6:0]};
         cf_d <= cf_q;
         cxn <= cn_q[82:31]; cxs <= cs_q[82:31];
         mdn <= cn_q[15:14]; mds <= cs_q[15:14];

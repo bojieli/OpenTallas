@@ -5,14 +5,40 @@
  "sources": [
   "rtl/lib/ot_rst_relay.sv",
   "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv",
-  "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv"
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
  ],
  "params": {},
  "clock_port": "ck",
  "reset_ports": [
   "rst_n"
  ],
- "macros": [],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "inst": "u_tts",
+   "at": [
+    86.4,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "inst": "u_ttn",
+   "at": [
+    86.4,
+    216.0
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "inst": "u_ttg",
+   "at": [
+    172.8,
+    151.2
+   ]
+  }
+ ],
  "pins": {
   "S": [
    "vi_s",
@@ -55,7 +81,7 @@
   "io_hold_margin_ns": 0.0,
   "macro_halo_um": 5.4
  },
- "structural_change": "S81U-SEQ (S81-DV p4f..p4i, owner-approved DV plan): L2 middle leaf of dsdv_seq_host: ot_dsdv_vstop (shared V-rung stop) + CTL packer with the 128 x 186 template table + the gunit cw port; flop-first / flop-last pins, die hold budget.",
+ "structural_change": "S81U-SEQ (S81-DV p4f..p4i, owner-approved DV plan): L2 middle leaf of dsdv_seq_host: ot_dsdv_vstop (shared V-rung stop) + CTL packer with the 128 x 186 template table in three 1R1W 128x256 SRAM macros (one per read port N / S / gunit; was 23.8k flops > 15k sinks) + the gunit cw port; flop-first / flop-last pins, die hold budget.",
  "job": {
   "owner": "Claude:S81U-SEQ",
   "branch": "claude/s81u-seq-1017",
@@ -63,7 +89,8 @@
   "purpose": "S81-DV seq_host leaf dsdv_sh_vc to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/unit",
-   "results/rtl/s81_dv_unit_1017/seqhost"
+   "results/rtl/s81_dv_unit_1017/seqhost",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
   ],
   "benches": [
    {
