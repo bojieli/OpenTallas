@@ -442,30 +442,42 @@ def floorplan_tcl(W, H, site='asap7sc7p5t', inset_x=1.08, inset_y=1.08):
             f'-core_area {{{inset_x:.3f} {inset_y:.3f} {W - inset_x:.3f} {H - inset_y:.3f}}} -site {site}')
 
 
-def legalize_tcl(tag='repair', row_um=0.27, site_um=0.054):
-    """After repair_design / CTS: legalise every inserted std cell inside the core; fail closed on DPL failure.
-    Hard macros off the row grid (parent macro grid 0.216 vs row 0.27) leave partial rows DPL believes free (smoke
-    SMKr: 423 buffer/macro overlaps of 0.048 um), so each macro first gets a placement blockage rounded OUT to the
-    row / site grid of the core (once per run)."""
-    return f"""if {{![info exists ::ot_cluster_macro_blk]}} {{
-  set ::ot_cluster_macro_blk 0
-  set blk [ord::get_db_block]; set dbu [$blk getDbUnitsPerMicron]
-  set core [$blk getCoreArea]; set cx [$core xMin]; set cy [$core yMin]
-  set rh [expr {{round({row_um} * $dbu)}}]; set sw [expr {{round({site_um} * $dbu)}}]
-  foreach inst [$blk getInsts] {{
-    if {{![[$inst getMaster] isBlock]}} {{ continue }}
-    set bb [$inst getBBox]
-    set x0 [expr {{$cx + int(floor(double([$bb xMin] - $cx) / $sw)) * $sw}}]
-    set y0 [expr {{$cy + int(floor(double([$bb yMin] - $cy) / $rh)) * $rh}}]
-    set x1 [expr {{$cx + int(ceil(double([$bb xMax] - $cx) / $sw)) * $sw}}]
-    set y1 [expr {{$cy + int(ceil(double([$bb yMax] - $cy) / $rh)) * $rh}}]
-    odb::dbBlockage_create $blk $x0 $y0 $x1 $y1
-    incr ::ot_cluster_macro_blk
+def legalize_tcl(tag='repair', row_um=0.27, site_um=0.054, max_dpl_gsites=2.0):
+    """After repair_design / CTS: legalise every inserted std cell inside the core; fail closed.
+    Small clusters (core <= max_dpl_gsites G sites): hard macros off the row grid (parent macro grid 0.216 vs row 0.27)
+    leave partial rows DPL believes free (smoke SMKr: 423 buffer/macro overlaps of 0.048 um), so each macro first gets
+    a placement blockage rounded OUT to the row / site grid, then detailed_placement + check_placement.
+    Die-scale clusters: detailed_placement allocates the whole core's site grid (d4b SW, 13 G sites: OOM at 64 and
+    140 GB with 211 buffers), so ot_cluster_snap_legalize (cluster_bounds.tcl) clamps + snaps + pushes cells off macros
+    instead; std-cell overlaps stay unresolved and the run fails if any cell is left on a macro."""
+    return f"""set ot_blk [ord::get_db_block]; set ot_core [$ot_blk getCoreArea]
+set ot_gsites [expr {{double([$ot_core dx]) * [$ot_core dy] / ({row_um} * {site_um} * pow([$ot_blk getDbUnitsPerMicron], 2)) / 1e9}}]
+if {{$ot_gsites > {max_dpl_gsites}}} {{
+  puts "OT_CLUSTER_LEGAL_MODE snap gsites=[format %.2f $ot_gsites]"
+  if {{![llength [info procs ot_cluster_snap_legalize]]}} {{ source /work/cluster_bounds.tcl }}
+  if {{[ot_cluster_snap_legalize /work/out/snap_legalize_{tag}.json] != 0}} {{ puts "OT_CLUSTER_SNAP_FAIL {tag}"; exit 4 }}
+}} else {{
+  puts "OT_CLUSTER_LEGAL_MODE dpl gsites=[format %.2f $ot_gsites]"
+  if {{![info exists ::ot_cluster_macro_blk]}} {{
+    set ::ot_cluster_macro_blk 0
+    set dbu [$ot_blk getDbUnitsPerMicron]
+    set cx [$ot_core xMin]; set cy [$ot_core yMin]
+    set rh [expr {{round({row_um} * $dbu)}}]; set sw [expr {{round({site_um} * $dbu)}}]
+    foreach inst [$ot_blk getInsts] {{
+      if {{![[$inst getMaster] isBlock]}} {{ continue }}
+      set bb [$inst getBBox]
+      set x0 [expr {{$cx + int(floor(double([$bb xMin] - $cx) / $sw)) * $sw}}]
+      set y0 [expr {{$cy + int(floor(double([$bb yMin] - $cy) / $rh)) * $rh}}]
+      set x1 [expr {{$cx + int(ceil(double([$bb xMax] - $cx) / $sw)) * $sw}}]
+      set y1 [expr {{$cy + int(ceil(double([$bb yMax] - $cy) / $rh)) * $rh}}]
+      odb::dbBlockage_create $ot_blk $x0 $y0 $x1 $y1
+      incr ::ot_cluster_macro_blk
+    }}
+    puts "OT_CLUSTER_MACRO_BLOCKAGES $::ot_cluster_macro_blk"
   }}
-  puts "OT_CLUSTER_MACRO_BLOCKAGES $::ot_cluster_macro_blk"
+  if {{[catch {{detailed_placement}} e]}} {{ puts "OT_CLUSTER_DPL_FAIL {tag} $e"; exit 4 }}
+  if {{[catch {{check_placement -verbose -report_file /work/out/check_placement_{tag}.rpt}} e]}} {{ puts "OT_CLUSTER_CHECK_PLACEMENT_FAIL {tag} $e"; exit 4 }}
 }}
-if {{[catch {{detailed_placement}} e]}} {{ puts "OT_CLUSTER_DPL_FAIL {tag} $e"; exit 4 }}
-if {{[catch {{check_placement -verbose -report_file /work/out/check_placement_{tag}.rpt}} e]}} {{ puts "OT_CLUSTER_CHECK_PLACEMENT_FAIL {tag} $e"; exit 4 }}
 puts "OT_CLUSTER_LEGAL {tag}"
 """
 

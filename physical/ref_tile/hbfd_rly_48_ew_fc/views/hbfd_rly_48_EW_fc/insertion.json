@@ -180,5 +180,72 @@
    "lib_clock_pin": "clk_in",
    "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk_in}]"
   }
+ },
+ "forwarded_clock": {
+  "arc": "clk_in -> clk_out<k> combinational positive_unate (one kept buffer per branch, off the CTS tree)",
+  "model": "fork4: 4 x clk_in pin cap; + wire 4 x 405.0 um x 0.15 fF/um",
+  "etm": "re-exported without the clk_out*_fwd generated clocks (tools/hbm_f1/fc_etm_reexport.sh); register arcs byte-identical to the closure-loop export",
+  "corners": {
+   "tt": {
+    "R_ps": 55.9,
+    "clk_in_pin_ff": 4.0092,
+    "pins": {
+     "clk_out": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 15.33
+      },
+      "pins": {
+       "load_ff": 16.04,
+       "ps": 19.68
+      },
+      "pins_wire": {
+       "load_ff": 259.04,
+       "ps": 105.28
+      }
+     }
+    }
+   },
+   "ff": {
+    "R_ps": 42.1,
+    "clk_in_pin_ff": 4.3113,
+    "pins": {
+     "clk_out": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 12.18
+      },
+      "pins": {
+       "load_ff": 17.25,
+       "ps": 15.64
+      },
+      "pins_wire": {
+       "load_ff": 260.25,
+       "ps": 75.13
+      }
+     }
+    }
+   },
+   "ss": {
+    "R_ps": 80.0,
+    "clk_in_pin_ff": 3.8147,
+    "pins": {
+     "clk_out": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 20.89
+      },
+      "pins": {
+       "load_ff": 15.26,
+       "ps": 27.08
+      },
+      "pins_wire": {
+       "load_ff": 258.26,
+       "ps": 162.17
+      }
+     }
+    }
+   }
+  }
  }
 }

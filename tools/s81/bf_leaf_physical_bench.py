@@ -18,18 +18,24 @@ def main():
     p.add_argument('--work', type=Path, required=True)
     p.add_argument('--mutant', action='store_true')
     p.add_argument('--rom-mutant',action='store_true')
+    p.add_argument('--cluster',action='store_true',help='hardened-cluster column (gen_bf_column_cluster.py)')
+    p.add_argument('--skew-mutant',action='store_true',help='cluster child input register skew negative control')
     p.add_argument('--programme-delta',type=int,required=True,
                    help='Explicit compiler fixture delta: main front0, historical c10 front-1')
     a = p.parse_args()
     work = a.work.resolve()
-    assert not (a.mutant and a.rom_mutant)
-    case = 'rom_stop' if a.rom_mutant else 'root_stop' if a.mutant else 'positive'
+    assert (a.mutant + a.rom_mutant + a.skew_mutant) <= 1 and (a.cluster or not a.skew_mutant)
+    case = 'rom_stop' if a.rom_mutant else 'root_stop' if a.mutant else 'cl_skew' if a.skew_mutant else 'positive'
     cmd = [sys.executable, str(ROOT/'tools/s81/bf_txn_bench.py'),
            '--variant', 'recut', '--die-pair', '--static-prog', str(a.programme_delta),
            '--column-roots', '--mapped-rom-candidate', '--jobs', '8',
            '--desc', str(ROOT/'results/rtl/s81_bf_programme_1015/bf_desc.hex'),
            '--prep', str(ROOT/'results/rtl/s81_bf_compact_20261010/bench_prep_1013'),
            '--work', str(work), '--no-default-mutants', '--only', case]
+    if a.cluster:
+        cmd += ['--column-cl']
+    if a.skew_mutant:
+        cmd += ['--mutant', 'cl_skew=BF_CL_MUTANT_SKEW']
     if a.mutant:
         cmd += ['--mutant', 'root_stop=BF_ROOT_MUTANT_STOP']
     if a.rom_mutant:
@@ -42,7 +48,7 @@ def main():
     c = record['cases'].get(case, {})
     if result.returncode or not c.get('ok'):
         raise SystemExit('ERROR: actual BF bench did not qualify')
-    if a.mutant or a.rom_mutant:
+    if a.mutant or a.rom_mutant or a.skew_mutant:
         log = (work/case/'run.log').read_text()
         if not c.get('returncode') or 'DIFF TXN' not in log:
             raise SystemExit('ERROR: stopped clock did not produce a transaction difference')
