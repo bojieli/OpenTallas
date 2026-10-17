@@ -1112,6 +1112,11 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
             if os.environ.get('OT_SPLIT_B2', '0') == '1':
                 from qwen_split.b2_graph import apply as apply_b2_graph
                 apply_b2_graph(v, m)
+            if os.environ.get('OT_SPLIT_Q3H', '0') == '1':
+                # Q-DIEPLAN3 2026-10-16: q3h hierarchical die -- 48 x C_B16 clusters replace tiles/stations/heads,
+                # die-top broadcast H-tree replaces the comb (tools/qwen_split/q3h_cluster.py)
+                from qwen_split.q3h_cluster import apply as apply_q3h
+                apply_q3h(v, m)
             _late_pin_grant(v)
             _relays(v, m, relay_pitch)
         finally:
@@ -1893,6 +1898,13 @@ RELAY_PITCH_UM = 300.0  # ... at a conservative ~300 um pitch
 # RELAY_REACH_UM; clock / reset trees are built by CTS / the reset tree and are not data hops.
 RELAY_REACH_UM = 500.0
 RELAY_REACH_OK = 490.0
+# Q-DIEPLAN3 2026-10-16 (owner: hop <= 0.9 x reach on the MEASURED relay o/s, HARD): OT_RELAY_REACH_UM is the hard limit
+# (q3h: 373 = 0.9 x 414, xcst m5d native launch 192.6 + capture 186.1 ps, neighbour skew 80, setup unc 60, 0.76 ps/um),
+# OT_RELAY_REACH_OK the planning target (a few um under it for pin offsets).
+import os as _os_reach
+if _os_reach.environ.get('OT_RELAY_REACH_UM'):
+    RELAY_REACH_UM = float(_os_reach.environ['OT_RELAY_REACH_UM'])
+    RELAY_REACH_OK = float(_os_reach.environ.get('OT_RELAY_REACH_OK', RELAY_REACH_UM - 10.0))
 # split-compute C4 (2026-10-14, compute-die lead r2): under the reach gate a relay chain is judged PIN TO PIN only (the
 # owner rule, TT sign-off).  The centre-to-centre RMAX + 25 proxy came from the SS-measured 430.56-um corridor pitch (SS is
 # a sensitivity, owner option B) and made every corridor -> corridor hop of a 472.6 / 522.3-um column pitch illegal (pin
@@ -1998,7 +2010,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     # below still checks every macro and every previously reserved relay.
     from qwen_split.relay_row_gaps import row_gaps, contains_frame
     legal_row_gaps = row_gaps((it.y, it.y + it.h) for it in m['insts']
-                             if re.fullmatch(r't_\d+_\d+', it.name))
+                             if re.fullmatch(r't_\d+_\d+|c16_\w+', it.name))
 
     def corr_of(x):
         j = min(range(COLS), key=lambda c: abs(cx_list[c] - x))
