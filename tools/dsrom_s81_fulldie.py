@@ -4251,6 +4251,15 @@ class Chains:
                                for i_ in self.m.get('insts', []) if abs(i_.x + i_.w / 2 - end[0]) + abs(i_.y + i_.h / 2 - end[1]) < 600.0)
                 print('OT_CHAIN_NO_PROGRESS_NEAR', name, json.dumps([(round(d_, 1), n_, m_) for d_, n_, m_ in near_[:40]]),
                       file=sys.stderr, flush=True)
+                xs_ = [q[0] for q in path] + [src[0]]
+                ys_ = [q[1] for q in path] + [src[1]]
+                bb_ = (min(xs_) - 150, min(ys_) - 150, max(xs_) + 150, max(ys_) + 150)
+                pre_ = defaultdict(int)
+                for i_ in self.m.get('insts', []):
+                    if i_.x < bb_[2] and i_.x + i_.w > bb_[0] and i_.y < bb_[3] and i_.y + i_.h > bb_[1]:
+                        pre_[re.sub(r'\d+', '#', i_.name)[:40]] += 1
+                print('OT_CHAIN_NO_PROGRESS_BBOX', name, [round(v, 1) for v in bb_],
+                      json.dumps(sorted(pre_.items(), key=lambda kv: -kv[1])[:60]), file=sys.stderr, flush=True)
                 raise RuntimeError(f'OT_CHAIN_NO_PROGRESS chain {name}: {len(out)} stations > bound {max_stn} for '
                                    f'{L:.0f} um (last at s={pos:.0f}, cur={tuple(round(v, 1) for v in cur)}, end={end})')
             nxt = stops[fi] if fi < len(stops) else None
