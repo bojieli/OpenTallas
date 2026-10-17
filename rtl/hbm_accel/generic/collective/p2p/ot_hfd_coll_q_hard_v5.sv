@@ -163,6 +163,34 @@ module ot_hgi_coll_fj_q2(
  output wire fault,output wire [15:0] fault_cause);
  ot_hgi_coll_fj_core #(.NPT(2),.SOLO(0),.NS(9),.NSL(18)) u(.*,.arg_fault(1'b0),.tkm_fault(1'b0));
 endmodule
+// d4f NLINK shapes (SW NLINK 2 = n2s1, SE/NW/NE NLINK 1 = n1s0): same leaves, own hardened shape names.
+module ot_hgi_coll_fj_n2s1(
+ input wire clk,rst_n,input wire [1:0] qid,
+ input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
+ input wire desc_v,input wire [11:0] desc_base,input wire [12:0] desc_limit,input wire [15:0] desc_loops,
+ input wire launch_v,program_active,issuer_busy,issuer_fault,issuer_uop_v,input wire [5:0] issuer_uop_pc,
+ output wire [36:0] issuer_cfg,output wire issuer_start,output wire [5:0] issuer_start_pc,
+ output wire configured,init_busy,program_fault,
+ input wire protocol_fault,input wire [9:0] capture_fault,input wire [17:0] select_fault,unavailable_fault,
+ input wire [1:0] link_abort,input wire ring_fault,writer_fault,reduce_fault,arg_fault,tkm_fault,
+ output wire fault,output wire [15:0] fault_cause);
+ ot_hgi_coll_fj_core #(.NPT(2),.SOLO(1),.NS(10),.NSL(18)) u(.*,
+  .arg_capture_slot(1'b0),.tkm_start(1'b0),.tkm_del_slot(4'd0),.tkm_dest_v(4'd0));
+endmodule
+
+module ot_hgi_coll_fj_n1s0(
+ input wire clk,rst_n,input wire [1:0] qid,
+ input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
+ input wire desc_v,input wire [11:0] desc_base,input wire [12:0] desc_limit,input wire [15:0] desc_loops,
+ input wire launch_v,program_active,issuer_busy,issuer_fault,issuer_uop_v,input wire [5:0] issuer_uop_pc,
+ output wire [36:0] issuer_cfg,output wire issuer_start,output wire [5:0] issuer_start_pc,
+ output wire configured,init_busy,program_fault,
+ input wire protocol_fault,input wire [7:0] capture_fault,input wire [17:0] select_fault,unavailable_fault,
+ input wire [0:0] link_abort,input wire ring_fault,writer_fault,reduce_fault,
+ input wire arg_capture_slot,tkm_start,input wire [3:0] tkm_del_slot,tkm_dest_v,
+ output wire fault,output wire [15:0] fault_cause);
+ ot_hgi_coll_fj_core #(.NPT(1),.SOLO(0),.NS(8),.NSL(18)) u(.*,.arg_fault(1'b0),.tkm_fault(1'b0));
+endmodule
 
 // ---------------------------------------------------------------------------------------------------------------
 // Issuer leaf: actual issuer (3 x ot_sram_1r1w_64x512_m1_r2c2) with host_v4's `uop_v ? uop : 0` mask inside the
@@ -276,6 +304,30 @@ module ot_hgi_coll_ctl_v5_q2(
  output wire protocol_fault,output wire [31:0] cycles);
  ot_hgi_coll_ctl_v5_core #(.NPT(2),.SOLO(0)) u(.*);
 endmodule
+module ot_hgi_coll_ctl_v5_n2s1(
+ input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
+ input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [14:0] dest_v,
+ input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,
+ output wire [135:0] vm_req_pin,output wire [1:0] inj_req_pin,output wire [31:0] inj_idx_pin,
+ output wire [159:0] inj_addr_pin,delivery_obase_pin,rgx_addr_pin,
+ output wire [1:0] inj_source_v,output wire [65:0] inj_source_meta,output wire [131:0] vm_source_meta,
+ output wire [3:0] vm_assembled_v,output wire [15:0] held_epoch,
+ output wire [31:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
+ output wire protocol_fault,output wire [31:0] cycles);
+ ot_hgi_coll_ctl_v5_core #(.NPT(2),.SOLO(1)) u(.*);
+endmodule
+module ot_hgi_coll_ctl_v5_n1s0(
+ input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
+ input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [13:0] dest_v,
+ input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,
+ output wire [135:0] vm_req_pin,output wire [1:0] inj_req_pin,output wire [31:0] inj_idx_pin,
+ output wire [159:0] inj_addr_pin,delivery_obase_pin,rgx_addr_pin,
+ output wire [1:0] inj_source_v,output wire [65:0] inj_source_meta,output wire [131:0] vm_source_meta,
+ output wire [3:0] vm_assembled_v,output wire [7:0] held_epoch,
+ output wire [15:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
+ output wire protocol_fault,output wire [31:0] cycles);
+ ot_hgi_coll_ctl_v5_core #(.NPT(1),.SOLO(0)) u(.*);
+endmodule
 
 // ---------------------------------------------------------------------------------------------------------------
 // qslots switch slices (pin_v2 partition): 17 x 32-bit + 1 x 1-bit per quadrant type. Actual V4 shapes:
@@ -351,7 +403,7 @@ endmodule
 // (flit[63:0], ot_hgi_coll_amerge stage 1) and the 33b meta (flit[544:512], argmax_static source/order checks).
 // flit[511:64] has no load in either module (amerge runs with en=1, so its pass-through o_f never reaches out_flit);
 // dropping those 1,792 pins changes no edge or value (lockstep bench) and removes a pin-bound 2,180-bit face.
-module ot_hgi_coll_argmax_m(
+module ot_hgi_coll_argmax_m #(parameter integer TP=96)(
  input wire clk,rst_n,start,mode,input wire [7:0] cfg_g,cfg_gbase,cfg_rank,
  input wire [3:0] in_slot,in_v,input wire [255:0] in_key,input wire [131:0] in_meta,input wire flush_slot,publish_slot,
  output wire out_v,output wire [544:0] out_flit,output wire fault);
@@ -362,7 +414,7 @@ module ot_hgi_coll_argmax_m(
  for(genvar l=0;l<4;l=l+1)begin:g_lane
   assign in_flit[l*545+:545]={in_meta[l*33+:33],448'd0,in_key[l*64+:64]};
  end
- ot_hgi_coll_argmax_static u_data(.clk(clk),.rst_n(rst_n),.start(start),.cfg_g(cfg_g),.cfg_gbase(cfg_gbase),
+ ot_hgi_coll_argmax_static #(.MAX_GROUP(TP)) u_data(.clk(clk),.rst_n(rst_n),.start(start),.cfg_g(cfg_g),.cfg_gbase(cfg_gbase),
   .cfg_rank(cfg_rank),.in_slot(in_slot & {4{mode}}),.in_v(in_v & {4{mode}}),.in_flit(in_flit),
   .flush_slot(flush_slot),.publish_slot(publish_slot),.out_v(out_v),.out_flit(out_flit),.fault());
  reg start_q,flush_q,pub_q;reg [7:0] g_q,gb_q,rk_q;reg [3:0] slot_q,v_q;reg [2179:0] flit_q;
@@ -370,19 +422,19 @@ module ot_hgi_coll_argmax_m(
  always @(posedge clk or negedge rst_n)
   if(!rst_n)begin start_q<=0;flush_q<=0;pub_q<=0;slot_q<=0;v_q<=0;end
   else begin start_q<=start;flush_q<=flush_slot;pub_q<=publish_slot;slot_q<=in_slot & {4{mode}};v_q<=in_v & {4{mode}};end
- ot_hgi_coll_argmax_static u_chk(.clk(clk),.rst_n(rst_n),.start(start_q),.cfg_g(g_q),.cfg_gbase(gb_q),
+ ot_hgi_coll_argmax_static #(.MAX_GROUP(TP)) u_chk(.clk(clk),.rst_n(rst_n),.start(start_q),.cfg_g(g_q),.cfg_gbase(gb_q),
   .cfg_rank(rk_q),.in_slot(slot_q),.in_v(v_q),.in_flit(flit_q),
   .flush_slot(flush_q),.publish_slot(pub_q),.out_v(),.out_flit(),.fault(fault));
 endmodule
 
-module ot_hgi_coll_tkm_m(
+module ot_hgi_coll_tkm_m #(parameter integer TP=96)(
  input wire clk,rst_n,start,arg_mode,input wire [31:0] tile_clk,input wire buffer_clk,
  input wire [11:0] cfg_n,input wire [12:0] cfg_k,cfg_nout,input wire [7:0] cfg_g,cfg_gbase,input wire [15:0] cfg_pf,
  input wire [39:0] cfg_obase,cfg_rbase,input wire cfg_has_r,
  input wire [3:0] del_slot,del_valid,input wire [2179:0] del_flit,
  output wire w_v,output wire [39:0] w_addr,output wire [15:0] w_mask,output wire [511:0] w_data,
  output wire busy,done,fault,output wire [31:0] stat_cycles);
- ot_hgi_coll_tkm_static u(.clk(clk),.tile_clk(tile_clk),.buffer_clk(buffer_clk),.rst_n(rst_n),.start(start),
+ ot_hgi_coll_tkm_static #(.TP(TP)) u(.clk(clk),.tile_clk(tile_clk),.buffer_clk(buffer_clk),.rst_n(rst_n),.start(start),
   .cfg_n(cfg_n),.cfg_k(cfg_k),.cfg_nout(cfg_nout),.cfg_g(cfg_g),.cfg_gbase(cfg_gbase),.cfg_pf(cfg_pf),
   .cfg_obase(cfg_obase),.cfg_rbase(cfg_rbase),.cfg_has_r(cfg_has_r),
   .del_slot(del_slot & {4{!arg_mode}}),.del_valid(del_valid & {4{!arg_mode}}),.del_flit(del_flit),
@@ -407,7 +459,7 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------
 // Wires-only quadrant body. NPT 3 -> q3 children, NPT 2 -> q2 children.
 module ot_hfd_coll_q_hard_v5_body #(
- parameter integer NPT=3,SOLO=1,
+ parameter integer NPT=3,SOLO=1,TP=96,
  parameter integer NS=(SOLO!=0)?NPT+8:NPT+7,ND=NPT+13,NSL=18,NCK=NS+NSL
 )(
  input wire rst_n,
@@ -530,6 +582,7 @@ module ot_hfd_coll_q_hard_v5_body #(
   wire arg_out_v;wire [PWT-1:0] arg_out_data;
   assign source_v[NPT+7]=arg_out_v;assign source_d[(NPT+7)*PWT+:PWT]=arg_out_data;
   assign capture_calendar[NPT+7]=p_ring[82];
+  if(NPT==3)begin:n_u_control 
   ot_hgi_coll_ctl_v5_q3 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
    .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
@@ -539,19 +592,31 @@ module ot_hfd_coll_q_hard_v5_body #(
    .vm_assembled_v(vm_assembled_v),.held_epoch(held_epoch),
    .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
    .protocol_fault(protocol_fault),.cycles(stat_cycles));
-  ot_hgi_coll_argmax_m u_arg(.clk(clk_arg),.rst_n(rst_n),.start(a_arg_start),.mode(a_arg_mode),
+  end else begin:a_u_control
+  ot_hgi_coll_ctl_v5_n2s1 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
+   .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
+   .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
+   .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
+   .delivery_obase_pin(delivery_obase_pin),.rgx_addr_pin(rgx_addr_pin),
+   .inj_source_v(inj_source_v),.inj_source_meta(inj_source_meta),.vm_source_meta(vm_source_meta),
+   .vm_assembled_v(vm_assembled_v),.held_epoch(held_epoch),
+   .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
+   .protocol_fault(protocol_fault),.cycles(stat_cycles));
+  end
+  ot_hgi_coll_argmax_m #(.TP(TP)) u_arg(.clk(clk_arg),.rst_n(rst_n),.start(a_arg_start),.mode(a_arg_mode),
    .cfg_g(p_tkm_cfg_g),.cfg_gbase(p_tkm_cfg_gbase),.cfg_rank(a_pub_src),
    .in_slot(a_arg_in_slot),.in_v(dest_v[NPT+8+:4]),
    .in_key({dest_d[(NPT+11)*PWT+:64],dest_d[(NPT+10)*PWT+:64],dest_d[(NPT+9)*PWT+:64],dest_d[(NPT+8)*PWT+:64]}),
    .in_meta({dest_d[(NPT+11)*PWT+512+:33],dest_d[(NPT+10)*PWT+512+:33],dest_d[(NPT+9)*PWT+512+:33],dest_d[(NPT+8)*PWT+512+:33]}),
    .flush_slot(a_arg_flush),.publish_slot(a_arg_publish),.out_v(arg_out_v),.out_flit(arg_out_data),.fault(arg_fault));
-  ot_hgi_coll_tkm_m u_tkm(.clk(clk_tkm[33]),.tile_clk(clk_tkm[31:0]),.buffer_clk(clk_tkm[32]),.rst_n(rst_n),
+  ot_hgi_coll_tkm_m #(.TP(TP)) u_tkm(.clk(clk_tkm[33]),.tile_clk(clk_tkm[31:0]),.buffer_clk(clk_tkm[32]),.rst_n(rst_n),
    .start(p_tkm_start),.arg_mode(a_arg_mode),.cfg_n(p_tkm_cfg_n),.cfg_k(p_tkm_cfg_k),.cfg_nout(p_tkm_cfg_nout),
    .cfg_g(p_tkm_cfg_g),.cfg_gbase(p_tkm_cfg_gbase),.cfg_pf(p_tkm_cfg_pf),.cfg_obase(p_tkm_cfg_obase),
    .cfg_rbase(p_tkm_cfg_rbase),.cfg_has_r(p_tkm_cfg_has_r),
    .del_slot(p_tkm_del_slot),.del_valid(dest_v[NPT+8+:4]),.del_flit(dest_d[(NPT+8)*PWT+:4*PWT]),
    .w_v(tk_w_v),.w_addr(tk_w_addr),.w_mask(tk_w_mask),.w_data(tk_w_data),
    .busy(tkm_busy),.done(tkm_done),.fault(tkm_fault),.stat_cycles(tk_cycles));
+  if(NPT==3)begin:n_u_fj 
   ot_hgi_coll_fj_q3 u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
    .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),
    .desc_loops(desc_loops),.launch_v(launch_v),.program_active(issue_busy_raw),.issuer_busy(issue_busy_raw),
@@ -562,10 +627,23 @@ module ot_hfd_coll_q_hard_v5_body #(
    .unavailable_fault(unavailable_fault),.link_abort(link_abort),.ring_fault(ring_fault),
    .writer_fault(writer_fault),.reduce_fault(reduce_fault),.arg_fault(arg_fault),.tkm_fault(tkm_fault),
    .fault(fault),.fault_cause(fault_cause));
+  end else begin:a_u_fj
+  ot_hgi_coll_fj_n2s1 u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
+   .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),
+   .desc_loops(desc_loops),.launch_v(launch_v),.program_active(issue_busy_raw),.issuer_busy(issue_busy_raw),
+   .issuer_fault(issue_fault),.issuer_uop_v(uop_v),.issuer_uop_pc(uop_pc),
+   .issuer_cfg(program_cfg),.issuer_start(hgi_start),.issuer_start_pc(hgi_start_pc),
+   .configured(program_configured),.init_busy(program_init_busy),.program_fault(program_fault),
+   .protocol_fault(protocol_fault),.capture_fault(capture_fault),.select_fault(select_fault),
+   .unavailable_fault(unavailable_fault),.link_abort(link_abort),.ring_fault(ring_fault),
+   .writer_fault(writer_fault),.reduce_fault(reduce_fault),.arg_fault(arg_fault),.tkm_fault(tkm_fault),
+   .fault(fault),.fault_cause(fault_cause));
+  end
  end else begin:g_q2
   // No arg/tkm engine in q2: their tkm sinks are unrouted switch outputs; illegal reservations fault in u_fj.
   assign tk_w_v=1'b0;assign tk_w_addr=40'd0;assign tk_w_mask=16'd0;assign tk_w_data=512'd0;
   assign tkm_done=1'b0;assign tkm_busy=1'b0;assign arg_fault=1'b0;assign tkm_fault=1'b0;assign tk_cycles=32'd0;
+  if(NPT==2)begin:n_u_control 
   ot_hgi_coll_ctl_v5_q2 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
    .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
@@ -575,6 +653,18 @@ module ot_hfd_coll_q_hard_v5_body #(
    .vm_assembled_v(vm_assembled_v),.held_epoch(held_epoch),
    .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
    .protocol_fault(protocol_fault),.cycles(stat_cycles));
+  end else begin:a_u_control
+  ot_hgi_coll_ctl_v5_n1s0 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
+   .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
+   .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
+   .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
+   .delivery_obase_pin(delivery_obase_pin),.rgx_addr_pin(rgx_addr_pin),
+   .inj_source_v(inj_source_v),.inj_source_meta(inj_source_meta),.vm_source_meta(vm_source_meta),
+   .vm_assembled_v(vm_assembled_v),.held_epoch(held_epoch),
+   .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
+   .protocol_fault(protocol_fault),.cycles(stat_cycles));
+  end
+  if(NPT==2)begin:n_u_fj 
   ot_hgi_coll_fj_q2 u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
    .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),
    .desc_loops(desc_loops),.launch_v(launch_v),.program_active(issue_busy_raw),.issuer_busy(issue_busy_raw),
@@ -586,6 +676,19 @@ module ot_hfd_coll_q_hard_v5_body #(
    .writer_fault(writer_fault),.reduce_fault(reduce_fault),
    .arg_capture_slot(p_capture_slot[NPT+7]),.tkm_start(p_tkm_start),.tkm_del_slot(p_tkm_del_slot),
    .tkm_dest_v(dest_v[NPT+8+:4]),.fault(fault),.fault_cause(fault_cause));
+  end else begin:a_u_fj
+  ot_hgi_coll_fj_n1s0 u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
+   .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),
+   .desc_loops(desc_loops),.launch_v(launch_v),.program_active(issue_busy_raw),.issuer_busy(issue_busy_raw),
+   .issuer_fault(issue_fault),.issuer_uop_v(uop_v),.issuer_uop_pc(uop_pc),
+   .issuer_cfg(program_cfg),.issuer_start(hgi_start),.issuer_start_pc(hgi_start_pc),
+   .configured(program_configured),.init_busy(program_init_busy),.program_fault(program_fault),
+   .protocol_fault(protocol_fault),.capture_fault(capture_fault),.select_fault(select_fault),
+   .unavailable_fault(unavailable_fault),.link_abort(link_abort),.ring_fault(ring_fault),
+   .writer_fault(writer_fault),.reduce_fault(reduce_fault),
+   .arg_capture_slot(p_capture_slot[NPT+7]),.tkm_start(p_tkm_start),.tkm_del_slot(p_tkm_del_slot),
+   .tkm_dest_v(dest_v[NPT+8+:4]),.fault(fault),.fault_cause(fault_cause));
+  end
  end endgenerate
  // ---- reduction (hybrid cluster)
  ot_hgi_coll_reduce_static u_reduce(
@@ -610,19 +713,27 @@ module ot_hfd_coll_q_hard_v5_body #(
    assign words[s*CW+:CW]=captured[s*PWT+k*32+:CW];
   end
   if(SOLO!=0)begin:g3
-   if(k<NSL-1)begin:w ot_hgi_coll_qso_q3_b32 u_out(.clk(clk_qslots[NS+k]),.rst_n(rst_n),.captured(words),
+   if(k<NSL-1)begin:w if(NPT==3)begin:o ot_hgi_coll_qso_q3_b32 u_out(.clk(clk_qslots[NS+k]),.rst_n(rst_n),.captured(words),
     .captured_slot(captured_slot),.sink_slot(p_sink_slot[ND-1:0]),.sink_select(p_sink_select[ND*SELW-1:0]),
-    .dst_v(slice_v[k]),.dst_d(results),.select_fault(select_fault[k]),.unavailable_fault(unavailable_fault[k])); end
-   else begin:n ot_hgi_coll_qso_q3_b1 u_out(.clk(clk_qslots[NS+k]),.rst_n(rst_n),.captured(words),
+    .dst_v(slice_v[k]),.dst_d(results),.select_fault(select_fault[k]),.unavailable_fault(unavailable_fault[k])); end else begin:a ot_hgi_coll_qso_n2s1_b32 u_out(.clk(clk_qslots[NS+k]),.rst_n(rst_n),.captured(words),
     .captured_slot(captured_slot),.sink_slot(p_sink_slot[ND-1:0]),.sink_select(p_sink_select[ND*SELW-1:0]),
-    .dst_v(slice_v[k]),.dst_d(results),.select_fault(select_fault[k]),.unavailable_fault(unavailable_fault[k])); end
+    .dst_v(slice_v[k]),.dst_d(results),.select_fault(select_fault[k]),.unavailable_fault(unavailable_fault[k])); end end
+   else begin:n if(NPT==3)begin:o ot_hgi_coll_qso_q3_b1 u_out(.clk(clk_qslots[NS+k]),.rst_n(rst_n),.captured(words),
+    .captured_slot(captured_slot),.sink_slot(p_sink_slot[ND-1:0]),.sink_select(p_sink_select[ND*SELW-1:0]),
+    .dst_v(slice_v[k]),.dst_d(results),.select_fault(select_fault[k]),.unavailable_fault(unavailable_fault[k])); end else begin:a ot_hgi_coll_qso_n2s1_b1 u_out(.clk(clk_qslots[NS+k]),.rst_n(rst_n),.captured(words),
+    .captured_slot(captured_slot),.sink_slot(p_sink_slot[ND-1:0]),.sink_select(p_sink_select[ND*SELW-1:0]),
+    .dst_v(slice_v[k]),.dst_d(results),.select_fault(select_fault[k]),.unavailable_fault(unavailable_fault[k])); end end
   end else begin:g2
-   if(k<NSL-1)begin:w ot_hgi_coll_qso_q2_b32 u_out(.clk(clk_qslots[NS+k]),.rst_n(rst_n),.captured(words),
+   if(k<NSL-1)begin:w if(NPT==2)begin:o ot_hgi_coll_qso_q2_b32 u_out(.clk(clk_qslots[NS+k]),.rst_n(rst_n),.captured(words),
     .captured_slot(captured_slot),.sink_slot(p_sink_slot[ND-1:0]),.sink_select(p_sink_select[ND*SELW-1:0]),
-    .dst_v(slice_v[k]),.dst_d(results),.select_fault(select_fault[k]),.unavailable_fault(unavailable_fault[k])); end
-   else begin:n ot_hgi_coll_qso_q2_b1 u_out(.clk(clk_qslots[NS+k]),.rst_n(rst_n),.captured(words),
+    .dst_v(slice_v[k]),.dst_d(results),.select_fault(select_fault[k]),.unavailable_fault(unavailable_fault[k])); end else begin:a ot_hgi_coll_qso_n1s0_b32 u_out(.clk(clk_qslots[NS+k]),.rst_n(rst_n),.captured(words),
     .captured_slot(captured_slot),.sink_slot(p_sink_slot[ND-1:0]),.sink_select(p_sink_select[ND*SELW-1:0]),
-    .dst_v(slice_v[k]),.dst_d(results),.select_fault(select_fault[k]),.unavailable_fault(unavailable_fault[k])); end
+    .dst_v(slice_v[k]),.dst_d(results),.select_fault(select_fault[k]),.unavailable_fault(unavailable_fault[k])); end end
+   else begin:n if(NPT==2)begin:o ot_hgi_coll_qso_q2_b1 u_out(.clk(clk_qslots[NS+k]),.rst_n(rst_n),.captured(words),
+    .captured_slot(captured_slot),.sink_slot(p_sink_slot[ND-1:0]),.sink_select(p_sink_select[ND*SELW-1:0]),
+    .dst_v(slice_v[k]),.dst_d(results),.select_fault(select_fault[k]),.unavailable_fault(unavailable_fault[k])); end else begin:a ot_hgi_coll_qso_n1s0_b1 u_out(.clk(clk_qslots[NS+k]),.rst_n(rst_n),.captured(words),
+    .captured_slot(captured_slot),.sink_slot(p_sink_slot[ND-1:0]),.sink_select(p_sink_select[ND*SELW-1:0]),
+    .dst_v(slice_v[k]),.dst_d(results),.select_fault(select_fault[k]),.unavailable_fault(unavailable_fault[k])); end end
   end
   for(genvar d=0;d<ND;d=d+1)begin:g_res
    assign dest_d[d*PWT+k*32+:CW]=results[d*CW+:CW];
@@ -682,11 +793,11 @@ endmodule
 // clk_vmwrite 1 -> 16; clk_issue 4 -> 1 (issuer leaf has one CTS root, COLL-CTL 1045); new output fault_cause[15:0];
 // V6: + clk_vmasm (VM read-data assembly leaf), + clk_upipe (issue-stream delay leaf); issue path +4 vs host_v4 (was +3).
 // V7: clk_vmasm / clk_upipe 1 -> 16 (one entry per compact slice leaf).
-module ot_hfd_coll_q3_hard_v5(
+module ot_hfd_coll_q3_hard_v5 #(parameter integer NLINK=3,parameter integer TP=96)(
  input wire rst_n,input wire [1:0] qid,
- input wire clk_program,clk_control,input wire [15:0] clk_vmasm,clk_upipe,input wire clk_issue,input wire [28:0] clk_qslots,
+ input wire clk_program,clk_control,input wire [15:0] clk_vmasm,clk_upipe,input wire clk_issue,input wire [NLINK+8+18-1:0] clk_qslots,
  input wire [16:0] clk_ring,input wire [32:0] clk_reduce,input wire clk_arg,input wire [33:0] clk_tkm,
- input wire [15:0] clk_vmwrite,input wire [14:0] clk_link,
+ input wire [15:0] clk_vmwrite,input wire [5*NLINK-1:0] clk_link,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
  input wire desc_v,input wire [11:0] desc_base,input wire [12:0] desc_limit,input wire [15:0] desc_loops,
  input wire launch_v,
@@ -695,20 +806,20 @@ module ot_hfd_coll_q3_hard_v5(
  output wire [3:0] del_valid,output wire [2179:0] del_flit,output wire [159:0] hgi_del_obase,
  input wire rc_v,input wire [2:0] rc_tag,input wire [255:0] rc_d,
  output wire rr_v,output wire [2:0] rr_tag,output wire [255:0] rr_d,
- input wire [2:0] phy_up,output wire [2:0] tx_pin_v,output wire [1835:0] tx_pin_flit,
- input wire [2:0] rx_pin_v,input wire [1835:0] rx_pin_flit,output wire [2:0] retry_requested,
+ input wire [NLINK-1:0] phy_up,output wire [NLINK-1:0] tx_pin_v,output wire [NLINK*612-1:0] tx_pin_flit,
+ input wire [NLINK-1:0] rx_pin_v,input wire [NLINK*612-1:0] rx_pin_flit,output wire [NLINK-1:0] retry_requested,
  input wire [279:0] pr_cw_i,pr_ccw_i,output wire [279:0] pr_cw_o,pr_ccw_o,
  output wire [135:0] vm_rq,input wire [2055:0] vm_rr,output wire [2247:0] vm_kq,
  output wire fault,output wire [15:0] fault_cause,output wire done,output wire [31:0] stat_cycles
 );
- ot_hfd_coll_q_hard_v5_body #(.NPT(3),.SOLO(1)) u_body(.*);
+ ot_hfd_coll_q_hard_v5_body #(.NPT(NLINK),.TP(TP),.SOLO(1)) u_body(.*);
 endmodule
 
-module ot_hfd_coll_q2_hard_v5(
+module ot_hfd_coll_q2_hard_v5 #(parameter integer NLINK=2,parameter integer TP=96)(
  input wire rst_n,input wire [1:0] qid,
- input wire clk_program,clk_control,input wire [15:0] clk_vmasm,clk_upipe,input wire clk_issue,input wire [26:0] clk_qslots,
+ input wire clk_program,clk_control,input wire [15:0] clk_vmasm,clk_upipe,input wire clk_issue,input wire [NLINK+7+18-1:0] clk_qslots,
  input wire [16:0] clk_ring,input wire [32:0] clk_reduce,
- input wire [15:0] clk_vmwrite,input wire [9:0] clk_link,
+ input wire [15:0] clk_vmwrite,input wire [5*NLINK-1:0] clk_link,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
  input wire desc_v,input wire [11:0] desc_base,input wire [12:0] desc_limit,input wire [15:0] desc_loops,
  input wire launch_v,
@@ -717,12 +828,12 @@ module ot_hfd_coll_q2_hard_v5(
  output wire [3:0] del_valid,output wire [2179:0] del_flit,output wire [159:0] hgi_del_obase,
  input wire rc_v,input wire [2:0] rc_tag,input wire [255:0] rc_d,
  output wire rr_v,output wire [2:0] rr_tag,output wire [255:0] rr_d,
- input wire [1:0] phy_up,output wire [1:0] tx_pin_v,output wire [1223:0] tx_pin_flit,
- input wire [1:0] rx_pin_v,input wire [1223:0] rx_pin_flit,output wire [1:0] retry_requested,
+ input wire [NLINK-1:0] phy_up,output wire [NLINK-1:0] tx_pin_v,output wire [NLINK*612-1:0] tx_pin_flit,
+ input wire [NLINK-1:0] rx_pin_v,input wire [NLINK*612-1:0] rx_pin_flit,output wire [NLINK-1:0] retry_requested,
  input wire [279:0] pr_cw_i,pr_ccw_i,output wire [279:0] pr_cw_o,pr_ccw_o,
  output wire [135:0] vm_rq,input wire [2055:0] vm_rr,output wire [2247:0] vm_kq,
  output wire fault,output wire [15:0] fault_cause,output wire done,output wire [31:0] stat_cycles
 );
- ot_hfd_coll_q_hard_v5_body #(.NPT(2),.SOLO(0)) u_body(.*,.clk_arg(1'b0),.clk_tkm(34'd0));
+ ot_hfd_coll_q_hard_v5_body #(.NPT(NLINK),.TP(TP),.SOLO(0)) u_body(.*,.clk_arg(1'b0),.clk_tkm(34'd0));
 endmodule
 `default_nettype wire

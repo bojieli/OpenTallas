@@ -18,10 +18,27 @@
 //   6 programme frame fault on own target                         delta 0, cause bit 0
 // Define Q3 for the SW q3 parent (QID 0, target 52, 3 rails); default q2 (QID 1, target 53, 2 rails).
 module tb_hgi_coll_q_hard_v5;
-`ifdef Q3
- localparam integer NPT=3,QID=0,NCKQ=29,NR=36;
+// d4f: -DOT_TB_NLINK=n (link lanes; default 3 for Q3, 2 for q2) and -DOT_TB_TP=t (ARGMAX/TKM ranks, default 96) set
+// the SAME parameters on the host_v4 reference and the hard parent.
+`ifdef OT_TB_TP
+ localparam integer TPV=`OT_TB_TP;
 `else
- localparam integer NPT=2,QID=1,NCKQ=27,NR=36;
+ localparam integer TPV=96;
+`endif
+`ifdef Q3
+`ifdef OT_TB_NLINK
+ localparam integer NPT=`OT_TB_NLINK;
+`else
+ localparam integer NPT=3;
+`endif
+ localparam integer QID=0,NCKQ=NPT+8+18,NR=36;
+`else
+`ifdef OT_TB_NLINK
+ localparam integer NPT=`OT_TB_NLINK;
+`else
+ localparam integer NPT=2;
+`endif
+ localparam integer QID=1,NCKQ=NPT+7+18,NR=36;
 `endif
  localparam [7:0] TGT=8'd52+8'(QID);
  localparam integer ND=NPT+13,REDSRC=NPT+6;
@@ -80,13 +97,13 @@ module tb_hgi_coll_q_hard_v5;
  always @(posedge clk)begin rxv_h[1]<=rxv;rcv_h[1]<=rcv;for(integer h=2;h<=SH;h=h+1)begin rxv_h[h]<=rxv_h[h-1];rcv_h[h]<=rcv_h[h-1];end end
  wire [NPT-1:0] rxv_d3=rxv_h[SH];wire rcv_d3=rcv_h[SH];
 `ifdef Q3
- ot_hfd_coll_q3_static_host_v4 #(.QID(2'(QID))) ref_q(.rst_n(rst_n),.clk_program(clk),.clk_control(clk),
+ ot_hfd_coll_q3_static_host_v4 #(.NLINK(NPT),.TP(TPV),.QID(2'(QID))) ref_q(.rst_n(rst_n),.clk_program(clk),.clk_control(clk),
   .clk_issue({4{clk}}),.clk_qslots({2{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),.clk_arg(clk),
-  .clk_tkm({34{clk}}),.clk_vmwrite(clk),.clk_link({15{clk}}),
+  .clk_tkm({34{clk}}),.clk_vmwrite(clk),.clk_link({5*NPT{clk}}),
 `else
- ot_hfd_coll_q2_static_host_v4 #(.QID(2'(QID))) ref_q(.rst_n(rst_n),.clk_program(clk),.clk_control(clk),
+ ot_hfd_coll_q2_static_host_v4 #(.NLINK(NPT),.TP(TPV),.QID(2'(QID))) ref_q(.rst_n(rst_n),.clk_program(clk),.clk_control(clk),
   .clk_issue({4{clk}}),.clk_qslots({2{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),
-  .clk_vmwrite(clk),.clk_link({10{clk}}),
+  .clk_vmwrite(clk),.clk_link({5*NPT{clk}}),
 `endif
   .cfg_v(cv),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
   .desc_v(dv_cfg),.desc_base(12'd0),.desc_limit(13'(NR)),.desc_loops(16'd1),.launch_v(launch),
@@ -98,13 +115,13 @@ module tb_hgi_coll_q_hard_v5;
   .pr_cw_i(280'd0),.pr_ccw_i(280'd0),.pr_cw_o(r_cw),.pr_ccw_o(r_ccw),
   .vm_rq(r_rq),.vm_rr(r_vm_response),.vm_kq(r_kq),.fault(r_fault),.done(r_done2),.stat_cycles(r_cyc));
 `ifdef Q3
- ot_hfd_coll_q3_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm({16{clk}}),.clk_upipe({16{clk}}),
+ ot_hfd_coll_q3_hard_v5 #(.NLINK(NPT),.TP(TPV)) dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm({16{clk}}),.clk_upipe({16{clk}}),
   .clk_issue(clk),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),.clk_arg(clk),
-  .clk_tkm({34{clk}}),.clk_vmwrite({16{clk}}),.clk_link({15{clk}}),
+  .clk_tkm({34{clk}}),.clk_vmwrite({16{clk}}),.clk_link({5*NPT{clk}}),
 `else
- ot_hfd_coll_q2_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm({16{clk}}),.clk_upipe({16{clk}}),
+ ot_hfd_coll_q2_hard_v5 #(.NLINK(NPT),.TP(TPV)) dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm({16{clk}}),.clk_upipe({16{clk}}),
   .clk_issue(clk),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),
-  .clk_vmwrite({16{clk}}),.clk_link({10{clk}}),
+  .clk_vmwrite({16{clk}}),.clk_link({5*NPT{clk}}),
 `endif
   .cfg_v(cv),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
   .desc_v(dv_cfg),.desc_base(12'd0),.desc_limit(13'(NR)),.desc_loops(16'd1),.launch_v(launch),
