@@ -1,0 +1,70 @@
+[
+  {
+    "batch": "b00",
+    "pid": 3303479,
+    "cmd": [
+      "/home/ubuntu/bin/ot-run",
+      "--mem",
+      "4",
+      "--threads",
+      "4",
+      "--dir",
+      "/srv/opentallas-scratch/codex/sdie-reach-1016/eight_station_die_u140_105_sta_corrected",
+      "--",
+      "bash",
+      "/srv/opentallas-scratch/codex/sdie-reach-1016/eight_station_die_u140_105_sta_corrected/b00/score.sh",
+      "/srv/opentallas-scratch/codex/sdie-reach-1016/stage"
+    ]
+  },
+  {
+    "batch": "b01",
+    "pid": 3303480,
+    "cmd": [
+      "/home/ubuntu/bin/ot-run",
+      "--mem",
+      "4",
+      "--threads",
+      "4",
+      "--dir",
+      "/srv/opentallas-scratch/codex/sdie-reach-1016/eight_station_die_u140_105_sta_corrected",
+      "--",
+      "bash",
+      "/srv/opentallas-scratch/codex/sdie-reach-1016/eight_station_die_u140_105_sta_corrected/b01/score.sh",
+      "/srv/opentallas-scratch/codex/sdie-reach-1016/stage"
+    ]
+  },
+  {
+    "batch": "b02",
+    "pid": 3303481,
+    "cmd": [
+      "/home/ubuntu/bin/ot-run",
+      "--mem",
+      "4",
+      "--threads",
+      "4",
+      "--dir",
+      "/srv/opentallas-scratch/codex/sdie-reach-1016/eight_station_die_u140_105_sta_corrected",
+      "--",
+      "bash",
+      "/srv/opentallas-scratch/codex/sdie-reach-1016/eight_station_die_u140_105_sta_corrected/b02/score.sh",
+      "/srv/opentallas-scratch/codex/sdie-reach-1016/stage"
+    ]
+  },
+  {
+    "batch": "b03",
+    "pid": 3303482,
+    "cmd": [
+      "/home/ubuntu/bin/ot-run",
+      "--mem",
+      "4",
+      "--threads",
+      "4",
+      "--dir",
+      "/srv/opentallas-scratch/codex/sdie-reach-1016/eight_station_die_u140_105_sta_corrected",
+      "--",
+      "bash",
+      "/srv/opentallas-scratch/codex/sdie-reach-1016/eight_station_die_u140_105_sta_corrected/b03/score.sh",
+      "/srv/opentallas-scratch/codex/sdie-reach-1016/stage"
+    ]
+  }
+]
