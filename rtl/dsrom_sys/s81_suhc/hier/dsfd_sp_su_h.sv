@@ -58,7 +58,8 @@ module dsfd_sp_su_h #(
     // RXH 1 (s81-romB2 2026-10-14): the RA / RB / QR tile ot_s81_su_rxt sits at the SPINE HEAD beside the pin owners:
     // it taps the stop-0 down register and its write slot (slot 0) merges at stop 0's up relay, instead of the far end
     // of the ~2 x SRD x NTL cycle spines (measured hier RB 277 / QR 298 / RA 353 vs flat 69 / 115 / 168). 0 = far end.
-    parameter integer RXH = 1
+    parameter integer RXH = 1,
+    parameter integer VM_LATENCY=10
 ) (
     input  wire                cck, crs,
     input  wire                sk, srs,
@@ -67,6 +68,11 @@ module dsfd_sp_su_h #(
     input wire [15:0] ck_cnnw, rs_cnnw,
     input wire [1:0] ck_ikh, rs_ikh,
     input wire ck_ikr, rs_ikr,
+    input wire [3:0] ck_iq_rope,rs_iq_rope,ck_iq_quant,rs_iq_quant,
+    input wire ck_iq_delay,rs_iq_delay,ck_iq_weight,rs_iq_weight,
+    input wire ck_iq_wdelay,rs_iq_wdelay,ck_iq_frame,rs_iq_frame,ck_iq_tap,rs_iq_tap,
+    input wire ck_cp_bridge,rs_cp_bridge,ck_cp_tap,rs_cp_tap,ck_cp_ctl,
+    input wire [1:0] ck_cp_mem,input wire [3:0] ck_cp_lane,
 `endif
     input  wire                c_cmd_v,
     input  wire [83:0]         c_cmd_d,
@@ -83,7 +89,8 @@ module dsfd_sp_su_h #(
     output wire [S_WR*512-1:0] wq_d,
     output wire                flt,
     output wire                online,
-    output wire [3:0]          fcode
+    output wire [3:0]          fcode,
+    output wire iq_f_v,output wire [511:0] iq_f_d
 );
     localparam integer NQB = 1 + NPB;                  // QB stops: the tap, then the engines
     localparam integer NQN = 1 + NQQ;                  // QN stops: the tap, then the quant engines
@@ -148,6 +155,17 @@ module dsfd_sp_su_h #(
     // ------------------------------------------------------------------ control tile
     wire [S_RD-1:0]    c_rq_v;
     wire [S_RD*14-1:0] c_rq_row;
+    wire [S_RD-1:0]    ctl_rq_v;
+    wire [S_RD*14-1:0] ctl_rq_row;
+    wire [1:0] cp_rq_v;wire [27:0] cp_rq_row;wire cp_done;
+    // Mutually exclusive command calendars drive the same existing pin slots.
+    // This is an OR of statically exclusive sources, with no demand arbitration.
+    assign c_rq_v=ctl_rq_v|{{(S_RD-2){1'b0}},cp_rq_v};
+    assign c_rq_row[13:0]=cp_rq_v[0]?cp_rq_row[13:0]:ctl_rq_row[13:0];
+    assign c_rq_row[27:14]=cp_rq_v[1]?cp_rq_row[27:14]:ctl_rq_row[27:14];
+    generate if(S_RD>2)begin:g_cp_upper
+        assign c_rq_row[S_RD*14-1:28]=ctl_rq_row[S_RD*14-1:28];
+    end endgenerate
     wire [S_RD-1:0]    p_rv;
     wire [S_RD*30-1:0] p_rf;
     wire [S_WR-1:0]    p_uv;
@@ -156,13 +174,65 @@ module dsfd_sp_su_h #(
                     .S_RD(S_RD), .S_WR(S_WR), .NSW((SW_W >= 64) ? SW_W / 64 : 1), .NQB(QB_NB / 2), .NQN(QN_N / 64), .NKV(NKV), .MUT(MUT), .AMUT(AMUT), .QRW((RXH != 0) ? 2 : 1)) u_ctl (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(cc_v), .c_cmd_d(cc_d), .c_done_v(cd_v),
         .c_done_tag(cd_t), .inp(inp), .flt(flt), .online(online), .fcode(fcode), .rst_o(rst_c),
-        .p_rq_v(c_rq_v), .p_rq_row(c_rq_row), .p_rv(p_rv), .p_rf(p_rf), .p_uv(p_uv),
+        .p_rq_v(ctl_rq_v), .p_rq_row(ctl_rq_row), .p_rv(p_rv), .p_rf(p_rf), .p_uv(p_uv),
         .dn_st(dst[0]), .dn_kind(dkd[0]), .dn_gsel(dgs[0]), .dn_fp4(df4[0]), .dn_jid(dji[0]),
-        .up_fu(ufu[0]), .up_fo(ufo[0]), .up_alive(ual[0]), .up_den(ude[0]), .up_rdy(urd[0]), .up_rjid(urj[0]));
+        .up_fu(ufu[0]), .up_fo(ufo[0]), .up_alive(ual[0]), .up_den(ude[0]), .up_rdy(urd[0]), .up_rjid(urj[0]),.up_cp_done(cp_done));
     // reset spine head
     reg rs0;
     always @(posedge sk or negedge rst_c) if (!rst_c) rs0 <= 1'b0; else rs0 <= 1'b1;
     assign rst[0] = rs0;
+
+    wire cp_wv,cp_fu;wire [13:0] cp_wa;wire [15:0] cp_wm;wire [511:0] cp_wd;
+    wire cp_start,cp_tap_fault,cp_engine_fault;
+    wire [511:0] cp_descriptor;wire [1:0] cp_rs_v;wire [15:0] cp_sched;
+`ifdef OT_S81_NATIVE_LEAF_CLOCKS
+    wire cp_bck=ck_cp_bridge,cp_rst=rs_cp_bridge,cp_tck=ck_cp_tap,cp_trst=rs_cp_tap;
+    wire cp_cck=ck_cp_ctl;wire [1:0] cp_mck=ck_cp_mem;wire [3:0] cp_lck=ck_cp_lane;
+`else
+    wire cp_bck=sk,cp_rst=rst[0],cp_tck=sk,cp_trst=rst[0],cp_cck=sk;
+    wire [1:0] cp_mck={2{sk}};wire [3:0] cp_lck={4{sk}};
+`endif
+    ot_s81_su_cpt #(.S_RD(S_RD)) u_cp_tap(.clk(cp_tck),.rst_n(cp_trst),
+        .dn_st(dst[0]),.dn_kind(dkd[0]),.dn_v(dv[0]),.dn_d(dd[0][511:0]),
+        .cp_done(cp_done),.start(cp_start),.descriptor(cp_descriptor),.cp_rs_v(cp_rs_v),.fault(cp_tap_fault));
+    ot_s81_su_cp_vm #(.LVM(2*NRL+4+VM_LATENCY),.WCOMMIT(SRD+NRL+2)) u_cp_vm(
+        .clk(cp_bck),.rst_n(cp_rst),.ck_cp_ctl(cp_cck),.ck_cp_mem(cp_mck),.ck_cp_lane(cp_lck),
+        .start(cp_start),.descriptor(cp_descriptor),.rq_v(cp_rq_v),.rq_row(cp_rq_row),
+        .rs_v(cp_rs_v),.rs_d(dd[0][1023:0]),.wq_v(cp_wv),.wq_row(cp_wa),.wq_d(cp_wd),.wq_mask(cp_wm),
+        .done(cp_done),.fault(cp_engine_fault),.scheduled_cycles(cp_sched));
+    assign cp_fu=cp_tap_fault|cp_engine_fault|(|(cp_rq_v&ctl_rq_v[1:0]));
+
+    // QI15 is a separate native post-FIELD operation. The compiler reserves
+    // the SVC frame link for its actual output; there is no service ready input.
+    wire iq_wv,iq_fu;wire [13:0] iq_wa;wire [15:0] iq_wm;wire [511:0] iq_wd;
+    generate if(S_RD>=9)begin:g_iq
+        wire start,qv,done,core_fault,tap_fault;
+        wire [511:0] header;wire [4:0] head;wire [2047:0] query;
+        wire [15:0] weight;wire [1023:0] cc,ss;
+`ifdef OT_S81_NATIVE_LEAF_CLOCKS
+        wire [3:0] cr=ck_iq_rope,rr=rs_iq_rope,cq=ck_iq_quant,rq=rs_iq_quant;
+        wire cdelay=ck_iq_delay,rdelay=rs_iq_delay,cweight=ck_iq_weight,rweight=rs_iq_weight;
+        wire cwd=ck_iq_wdelay,rwd=rs_iq_wdelay,cf=ck_iq_frame,rf=rs_iq_frame,ct=ck_iq_tap,rt=rs_iq_tap;
+`else
+        // Historical shared-clock diagnostics do not qualify physical roots.
+        wire [3:0] cr={4{sk}},rr={4{rst[0]}},cq={4{sk}},rq={4{rst[0]}};
+        wire cdelay=sk,rdelay=rst[0],cweight=sk,rweight=rst[0];
+        wire cwd=sk,rwd=rst[0],cf=sk,rf=rst[0],ct=sk,rt=rst[0];
+`endif
+        ot_s81_su_iqt #(.S_RD(S_RD),.FIRST_DATA(2*NRL+4+VM_LATENCY+5)) u_tap(.clk(ct),.rst_n(rt),.dn_st(dst[0]),.dn_kind(dkd[0]),
+            .dn_v(dv[0]),.dn_d(dd[0]),.start(start),.header(header),.q_v(qv),.q_head(head),
+            .q_bf16(query),.weight_proj_bf16(weight),.cos_t(cc),.sin_t(ss),.iq_done(done),.iq_fault(core_fault),
+            .o_v(iq_wv),.o_a(iq_wa),.o_m(iq_wm),.o_d(iq_wd),.fault(tap_fault));
+        ot_s81_su_iq u_iq(.ck_rope(cr),.rs_rope(rr),.ck_quant(cq),.rs_quant(rq),
+            .ck_delay(cdelay),.rs_delay(rdelay),.ck_weight(cweight),.rs_weight(rweight),
+            .ck_wdelay(cwd),.rs_wdelay(rwd),.ck_frame(cf),.rs_frame(rf),
+            .start(start),.header(header),.q_v(qv),.q_head(head),.q_bf16(query),.weight_proj_bf16(weight),
+            .cos_t(cc),.sin_t(ss),.f_v(iq_f_v),.f_d(iq_f_d),.done(done),.fault(core_fault));
+        assign iq_fu=tap_fault;
+    end else begin:g_no_iq
+        assign iq_wv=0;assign iq_wa=0;assign iq_wm=0;assign iq_wd=0;assign iq_fu=0;
+        assign iq_f_v=0;assign iq_f_d=0;
+    end endgenerate
 
     // ------------------------------------------------------------------ pin owners (+ NRL relay stations every link)
     genvar o;
@@ -769,6 +839,10 @@ module dsfd_sp_su_h #(
                     ua_q[13:0] <= rx_a; um_q[15:0] <= rx_m; ud_q[511:0] <= rx_d;
                 end else if (t == 0 && s == 1 && rx_v2) begin
                     ua_q[27:14] <= rx_a2; um_q[31:16] <= 16'hFFFF; ud_q[1023:512] <= rx_d2;
+                end else if(t==0 && s==0 && cp_wv)begin
+                    ua_q[13:0]<=cp_wa;um_q[15:0]<=cp_wm;ud_q[511:0]<=cp_wd;
+                end else if(t==0 && s==0 && iq_wv)begin
+                    ua_q[13:0]<=iq_wa;um_q[15:0]<=iq_wm;ud_q[511:0]<=iq_wd;
                 end else begin
                     ua_q[14 * s +: 14] <= ua[t + 1][14 * s +: 14]; um_q[16 * s +: 16] <= um[t + 1][16 * s +: 16];
                     ud_q[512 * s +: 512] <= ud[t + 1][512 * s +: 512];
@@ -777,8 +851,8 @@ module dsfd_sp_su_h #(
         always @(posedge sk or negedge rst[t]) begin
             if (!rst[t]) begin uv_q <= 0; ufu_q <= 0; ufo_q <= 0; ual_q <= 0; ude_q <= 0; urd_q <= 0; urj_q <= 0; end
             else begin
-                for (s = 0; s < S_WR; s = s + 1) uv_q[s] <= uv[t + 1][s] || (s >= W0 && s < W0 + WS && o_v[s - W0]) || (t == 0 && s == 0 && rx_v) || (t == 0 && s == 1 && rx_v2);
-                ufu_q <= ufu[t + 1] || o_fu || (t == 0 && rx_fu); ufo_q <= ufo[t + 1] || o_fo || (t == 0 && rx_fo);
+                for (s = 0; s < S_WR; s = s + 1) uv_q[s] <= uv[t + 1][s] || (s >= W0 && s < W0 + WS && o_v[s - W0]) || (t == 0 && s == 0 && rx_v) || (t == 0 && s == 1 && rx_v2) || (t==0 && s==0 && (iq_wv||cp_wv));
+                ufu_q <= ufu[t + 1] || o_fu || (t == 0 && (rx_fu||iq_fu||cp_fu)); ufo_q <= ufo[t + 1] || o_fo || (t == 0 && rx_fo);
                 ual_q <= ual[t + 1] && o_alive && (t != 0 || rx_alive);
                 ude_q <= ude[t + 1] && o_den; urd_q <= urd[t + 1] || o_rdy; urj_q <= o_rdy ? o_rjid : urj[t + 1];
             end

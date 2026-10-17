@@ -11,7 +11,7 @@ import su_gate as S
 
 def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--mut',type=int,default=0);p.add_argument('--snapshot',type=Path)
- a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
+ a=p.parse_args();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=True)
  if a.snapshot:
   import pickle
   snap=pickle.loads(a.snapshot.read_bytes());src=snap['idx_q'];x=np.asarray(src['x'],np.float32)

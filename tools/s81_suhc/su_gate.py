@@ -41,7 +41,7 @@ SHAPES = dict(reduced=dict(QN_N=64, KV_N=512, QB_NB=4, SW_W=64, SM_H=2, SM_LPH=1
 # the DS HBM SU case set the golden runs draw on: tools/dshbm_baseline_measure.py prep (snapshots sha256 cd0fc866...)
 # -> tools/dshbm_chain_levers.py prep (_il) -> prep2 (_ildr); recorded in results/rtl/hbm_su_fused_compiler_20261005/v2_ildr.json
 CASES_SHA256 = "8c18c0655ccf6a147cde5e8a65e709ad5ccfd62ba9024e2644019289cd8d2108"
-K = dict(QN=0, KV=1, QB=2, SW=3, SE=4, SO=5, GQ=6, GK=7, RA=8, RB=9, QR=10, RW=11, CN=12, IK=13)
+K = dict(QN=0, KV=1, QB=2, SW=3, SE=4, SO=5, GQ=6, GK=7, RA=8, RB=9, QR=10, RW=11, CN=12, IK=13, CP=14, QI=15)
 RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_su_core.sv", "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv", "rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv",
        "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv", "rtl/dsrom_sys/s81_suhc/dsfd_sp_su.sv",
        "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv", "rtl/lib/ot_async_fifo.sv", "rtl/lib/ot_reset_sync.sv",
@@ -63,7 +63,7 @@ HIER = ["rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_hctl.sv", "rtl/dsrom_sys/s81_suhc
         "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv", "rtl/hdc/ot_sram_bank.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
         "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
         "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_cn_ik.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv", "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
-        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxt.sv", "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_h.sv"]
+        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxt.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_iq.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_iqt.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cpt.sv", "rtl/dsrom_sys/s81_suhc/ot_s81_su_cp.sv", "rtl/dsrom_sys/s81_suhc/ot_s81_su_cp_vm.sv", "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v", "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_h.sv"]
 u32, f32, pack, bf16bits = H.u32, H.f32, H.pack, H.bf16bits
 
 
@@ -342,6 +342,30 @@ class Run:
         self.jexp[len(self.prog)-1]=(out,8)
         return dict(qdq_base=out,raw_base=out+4)
 
+    def qi(self, x, weight_input, cos, sin, header):
+        """Native post-FIELD query provider,32x128 BF16-valued source +32 head weights.
+
+        Keep actual FIELD idx.q projections as predecessors. The frame leaves
+        the SU service pin; the single VM row is only its completion receipt.
+        """
+        import hdc_golden_v41 as V
+        x,w=np.asarray(x,F),np.asarray(weight_input,F)
+        if x.shape!=(32,128) or w.shape!=(32,):raise ValueError('QI requires32x128 queries and32 source weights')
+        if not np.array_equal(u32(x),u32(V.to_bf16(x))) or not np.array_equal(u32(w),u32(V.to_bf16(w))):
+            raise ValueError('QI consumes actual BF16-rounded FIELD outputs')
+        if int(header)>>508!=4 or ((int(header)>>480)&4095)!=64 or not ((int(header)>>503)&1):
+            raise ValueError('QI requires actual SVC type4 len64 query header')
+        a=self.put(rows_of(x.reshape(-1)));wb=self.put(rows_of(w));out=self.alloc(1)
+        db=self.desc(out,a,wb,prow=rows_of(np.concatenate([cos,sin]))+[int(header)])
+        self.job('QI',0,db);self.expect(out,[65])
+        ro=V.rope_tail(x,(cos,sin));ww=V.to_bf16(V.mul(w,F(1/64)))
+        frames=[int(header)]
+        for h in range(32):
+            blocks=aq(ro[h],True)
+            frames.append(pack([c for _,cc,_ in blocks for c in cc],4))
+            frames.append(pack([(int(e)+127)&255 for e,_,_ in blocks],8)|(int(bf16bits(ww)[h])<<32))
+        return dict(completion_base=out,frame_words=frames,query_base=a,weight_base=wb,descriptor_base=db)
+
     def write(self, d, meta):
         d.mkdir(parents=True, exist_ok=True)
         with open(d / "vm.mem", "w") as f:
@@ -444,7 +468,7 @@ def build_run(sh, rng, gold=None):
 
 def cmd_prep(a):
     sh = SHAPES[a.shape]
-    out = Path(a.out)
+    out = Path(a.out).resolve()
     if H.sha(a.cases) != CASES_SHA256:
         sys.exit(f"{a.cases}: sha256 {H.sha(a.cases)} is not the pinned su_cases_v2_ildr.pkl {CASES_SHA256}")
     cases = pickle.loads(Path(a.cases).read_bytes())
@@ -468,7 +492,7 @@ JOB = re.compile(r"SUJ op=(\d+) kind=(\d+) start=(-?\d+) done=(-?\d+)")
 
 def cmd_run(a):
     sh = SHAPES[a.shape]
-    out = Path(a.out)
+    out = Path(a.out).resolve()
     tag = f"{a.shape}_{a.fp}_m{a.mut}_a{a.amut}" + (f"_x{a.xmut}" if a.xmut else "") + ("_h" if a.hier else "") + ("_t" if a.tiles else "") + (f"_lvm{a.lvm}" if a.lvm else "")
     rtl = RTL + (HIER if a.hier else [])
     gen = []

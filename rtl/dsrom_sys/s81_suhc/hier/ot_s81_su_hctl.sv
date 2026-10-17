@@ -54,14 +54,15 @@ module ot_s81_su_hctl #(
     input  wire                   up_alive,       // every tile out of reset
     input  wire                   up_den,         // every softmax tile holds this SE job's den
     input  wire                   up_rdy,         // a norm tile's go issued for job up_rjid
-    input  wire [7:0]             up_rjid
+    input  wire [7:0]             up_rjid,
+    input wire up_cp_done
 );
     localparam integer DQ = 1280, DK = 512, NVQ = DQ / QN_N;
     localparam integer SMW = SM_H * SM_LPH;
     localparam integer RQN = QN_N / 16, RKV = KV_N / 16, RQB = 2 * QB_NB, RSW = SW_W / 16, RSM = SMW / 16;
     localparam integer NPV = 512 / SM_LPH;
     localparam [3:0] K_QN = 0, K_KV = 1, K_QB = 2, K_SW = 3, K_SE = 4, K_SO = 5, K_GQ = 6, K_GK = 7;
-    localparam [3:0] K_RA = 8, K_RB = 9, K_QR = 10, K_RW = 11, K_CN = 12, K_IK = 13;   // RW: s81-ftok r3 die item F11 (ffn.weights)
+    localparam [3:0] K_RA = 8, K_RB = 9, K_QR = 10, K_RW = 11, K_CN = 12, K_IK = 13, K_CP=14, K_QI = 15;
     localparam integer XSUB = 16 / RAL;
 
     reg         run;
@@ -75,6 +76,7 @@ module ot_s81_su_hctl #(
     reg         sm_owner_v, sm_owner;
     reg         rdy_ok, alive_q;
     reg  [1:0]  xs;                                  // RA read pacing (RAL < 16)
+    reg qi_gap;reg [4:0] qi_head;
     assign e_cmd_ready = !run && !fault && alive_q;
     assign busy = run;
     wire take = e_cmd_v && e_cmd_ready;
@@ -82,13 +84,14 @@ module ot_s81_su_hctl #(
     wire [13:0] ibase = p0[13:0];
 
     function automatic [15:0] nparams(input [3:0] k);
-        nparams = (k == K_KV || k == K_CN || k == K_IK || k == K_SO || k == K_QR) ? 5 : (k == K_SE) ? 1 + (SM_H + 15) / 16 : 1;
+        nparams = (k == K_QI) ? 6 : (k == K_KV || k == K_CN || k == K_IK || k == K_SO || k == K_QR) ? 5 : (k == K_SE) ? 1 + (SM_H + 15) / 16 : 1;
     endfunction
     function automatic [15:0] rows_out(input [3:0] k, input [15:0] c);     // result row WRITES of the job
         case (k)
             K_QN: rows_out = NVQ * (QN_N / 64 + NQN);             // the exps row: one masked write a lane tile
             K_KV: rows_out = KV_N / 64 + NKV + KV_N / 32;
             K_CN: rows_out = 48; K_IK: rows_out = 8;
+            K_QI: rows_out = 1;
             K_QB: rows_out = c * (QB_NB / 2 + NQB + QB_NB);        // the exps row: one masked write a lane tile
             K_SW: rows_out = c * (SW_W / 64 + NSW + SW_W / 32);
             K_SE: rows_out = c * RSM;
@@ -102,6 +105,7 @@ module ot_s81_su_hctl #(
     function automatic [15:0] rows_in(input [3:0] k, input [15:0] c);
         case (k)
             K_QN: rows_in = NVQ * RQN;  K_KV, K_CN, K_IK: rows_in = RKV;  K_QB: rows_in = c * RQB;  K_SW: rows_in = c * 2 * RSW;
+            K_QI: rows_in = 288;
             K_SE: rows_in = c * RSM;    K_SO: rows_in = NPV * RSM; K_GQ: rows_in = DQ / 16; K_GK: rows_in = DK / 16;
             K_RA: rows_in = c;          K_RB: rows_in = 2 * c;     K_QR: rows_in = 4 * c;
             K_RW: rows_in = c;                                     // the ids row + the score rows, contiguous
@@ -153,7 +157,7 @@ module ot_s81_su_hctl #(
         if (!rst_n || !rst_q) begin
             run <= 0; kind <= 0; jslot <= 0; jtag <= 0; jid <= 0; dbase <= 0; ph <= 0; p0 <= 0;
             ri <= 0; rr <= 0; np <= 0; nrow <= 0; nw <= 0; cw <= 0; sm_owner_v <= 0; sm_owner <= 0;
-            rdy_ok <= 0; alive_q <= 0; xs <= 0;
+            rdy_ok <= 0; alive_q <= 0; xs <= 0;qi_gap<=0;qi_head<=0;
             e_done_v <= 0; e_done_tag <= 0; fault <= 0; fault_code <= 0; st_jobs <= 0; rq_v <= 0; rq_row <= 0;
             dn_st <= 0; dn_kind <= 0; dn_gsel <= 0; dn_fp4 <= 0; dn_jid <= 0;
         end else begin
@@ -166,8 +170,9 @@ module ot_s81_su_hctl #(
                 run <= 1; kind <= c_arg[23:20]; jslot <= e_cmd_d[83]; jtag <= {e_cmd_d[83], e_cmd_d[6:0]};
                 dbase <= c_arg[13:0]; ph <= 0; ri <= 0; rr <= 0; np <= nparams(c_arg[23:20]); cw <= 0;
                 rdy_ok <= 1'b0; jid <= jid + 8'd1;
+                qi_gap<=0;qi_head<=0;
                 dn_st <= 1'b1; dn_kind <= c_arg[23:20]; dn_gsel <= c_arg[19:18]; dn_fp4 <= c_arg[14]; dn_jid <= jid + 8'd1;
-                if (c_arg[23:20] > K_IK) begin fault <= 1; fault_code <= 3; end
+                if (c_arg[23:20] == K_QI && S_RD<9) begin fault <= 1; fault_code <= 3; end
                 if (c_arg[23:20] == K_SO && !(sm_owner_v && sm_owner == e_cmd_d[83])) begin fault <= 1; fault_code <= 6; end
             end
             if (run && !fault) begin
@@ -222,7 +227,25 @@ module ot_s81_su_hctl #(
                         rr <= c;
                     end
                 end
-                if (ph == 2 && !(kind == K_RA || kind == K_RB || kind == K_QR || kind == K_RW)) begin
+                if(ph==2 && kind==K_QI)begin
+                    // Query8rows then weight1row on separate edges. No weight
+                    // bank competes with the eight unique query banks.
+                    qi_gap<=~qi_gap;
+                    if(ri<nrow && !qi_gap)begin
+                        for(s=0;s<8;s=s+1)begin
+                            rq_v[s]<=1;rq_row[14*s+:14]<=ibase+{6'd0,qi_head,3'd0}+14'(s);
+                        end
+                        ri<=ri+8;
+                    end else if(ri<nrow && qi_gap)begin
+                        rq_v[0]<=1;rq_row[13:0]<=p0[14+:14]+{13'd0,qi_head[4]};
+                        ri<=ri+1;qi_head<=qi_head+1;
+                    end
+                    rr<=rr+rs_n;
+                end
+                if(ph==2 && kind==K_CP && up_cp_done)begin
+                    run<=0;e_done_v<=1;e_done_tag<=jtag;st_jobs<=st_jobs+1;
+                end
+                if (ph == 2 && !(kind == K_RA || kind == K_RB || kind == K_QR || kind == K_RW || kind==K_QI || kind==K_CP)) begin
                     if ((kind != K_QN && kind != K_KV) || rdy_ok) begin
                         for (s = 0; s < S_RD; s = s + 1)
                             if (ri + s < nrow) begin rq_v[s] <= 1; rq_row[14 * s +: 14] <= ibase + ri + s; end

@@ -44,17 +44,27 @@ module tb_s81_su_master;
     wire flt, online;
     wire [3:0] fcode;
 `ifdef SU_HIER
+    wire iq_f_v;wire [511:0] iq_f_d;
+    integer iq_dump;
+    initial iq_dump=$fopen("iq_frames.mem","w");
+    always @(negedge sk)if(iq_f_v)$fdisplay(iq_dump,"%0128h",iq_f_d);
+`endif
+`ifdef SU_HIER
     dsfd_sp_su_h #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH), .SM_NVMAX(SM_NVMAX),
-        .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT), .XMUT(XMUT)) dut (
+        .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT), .XMUT(XMUT),.VM_LATENCY(LVM)) dut (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs),
 `ifdef OT_S81_NATIVE_LEAF_CLOCKS
         .ck_cn({20{sk}}),.rs_cn({20{srs}}),.ck_cnnw({16{sk}}),.rs_cnnw({16{srs}}),
         .ck_ikh({2{sk}}),.rs_ikh({2{srs}}),.ck_ikr(sk),.rs_ikr(srs),
+        .ck_iq_rope({4{sk}}),.rs_iq_rope({4{srs}}),.ck_iq_quant({4{sk}}),.rs_iq_quant({4{srs}}),
+        .ck_iq_delay(sk),.rs_iq_delay(srs),.ck_iq_weight(sk),.rs_iq_weight(srs),
+        .ck_iq_wdelay(sk),.rs_iq_wdelay(srs),.ck_iq_frame(sk),.rs_iq_frame(srs),.ck_iq_tap(sk),.rs_iq_tap(srs),
+        .ck_cp_bridge(sk),.rs_cp_bridge(srs),.ck_cp_tap(sk),.rs_cp_tap(srs),.ck_cp_ctl(sk),.ck_cp_mem({2{sk}}),.ck_cp_lane({4{sk}}),
 `endif
         .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v),
         .c_done_tag(c_done_tag), .inp(inp), .rq_v(rq_v), .rq_row(rq_row),
         .rs_v(rs_v), .rs_d(rs_d), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .flt(flt),
-        .online(online), .fcode(fcode));
+        .online(online), .fcode(fcode),.iq_f_v(iq_f_v),.iq_f_d(iq_f_d));
 `else
     dsfd_sp_su #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH), .SM_NVMAX(SM_NVMAX),
         .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT), .XMUT(XMUT)) dut (
