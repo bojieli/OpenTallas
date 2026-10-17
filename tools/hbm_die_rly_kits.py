@@ -301,9 +301,10 @@ def fcf_face_len(w: int, n: int) -> float:
 
 
 # per-master depth (ff2): a 624 fork at 21.6 um deep can leave GPL routability inflation at +90 % and diverge (GPL-0305:
-# ff1 hbfd_rly_624_NS_fc_f2 / _WE_fc_f2 -- 624 Q nets fan out ~109 um along the face to the second branch group in a
+# ff1 hbfd_rly_624_NS / WE / SN _fc_f2 -- 624 Q nets fan out ~109 um along the face to the second branch group in a
 # 17.3 um core); 25.92 um gives +20 % horizontal tracks.  Masters that gated / closed at 21.6 keep it.
-FCF_DEPTH = {"hbfd_rly_624_NS_fc_f2": 25.92, "hbfd_rly_624_WE_fc_f2": 25.92}
+FCF_DEPTH = {"hbfd_rly_624_NS_fc_f2": 25.92, "hbfd_rly_624_WE_fc_f2": 25.92, "hbfd_rly_624_SN_fc_f2": 25.92,
+             "hbfd_rly_624_EW_fc_f2": 25.92}
 
 
 def fcf_outline(w: int, flow: str, n: int) -> dict:
