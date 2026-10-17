@@ -14,7 +14,7 @@ set -euo pipefail
 MODE=${1:?mode}; OUT=${2:?outdir}; mkdir -p "$OUT"
 R=$(cd "$(dirname "$0")/../.." && pwd)
 DUT=$R/rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_crs.sv
-LIB="$R/rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress_hr.sv $R/rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross_hr.sv"
+LIB="$R/rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress_hr.sv $R/rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross_hr.sv $R/rtl/hdc/ot_hdc_cg.sv"
 DEFS=""
 TB=$R/rtl/dsrom_sys/s81_die_bind/test/tb_dsfd_cfifo_crs.sv
 STOP_S=0
@@ -26,7 +26,7 @@ case $MODE in
   mut_stop_s) STOP_S=1; PAIRS="2:2";;
   mut_hstage) DEFS="-DOT_S81_HR_MUT_NOSTAGE"; PAIRS="2:2 7:7";;
   mut_hsel) DEFS="-DOT_S81_HR_MUT_SEL"; PAIRS="2:2 7:7";;
-  mut_hgray) L=$R/rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross_hr.sv; sed 's/else wgr <= wc_n^(wc_n>>1);/else wgr <= wc^(wc>>1);/' "$L" > "$OUT/lane.sv"; cmp -s "$L" "$OUT/lane.sv" && { echo "MUTANT NOT APPLIED"; exit 3; }; LIB="$R/rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress_hr.sv $OUT/lane.sv"; PAIRS="2:2 7:7";;
+  mut_hgray) L=$R/rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross_hr.sv; sed 's/else wgr <= wc_n^(wc_n>>1);/else wgr <= wc^(wc>>1);/' "$L" > "$OUT/lane.sv"; cmp -s "$L" "$OUT/lane.sv" && { echo "MUTANT NOT APPLIED"; exit 3; }; LIB="$R/rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress_hr.sv $OUT/lane.sv $R/rtl/hdc/ot_hdc_cg.sv"; PAIRS="2:2 7:7";;
   mut_reset_frontier) sed 's/posedge cr_s or negedge rsync) if (!rsync)/posedge cr_s or negedge rst) if (!rst)/' "$DUT" > "$OUT/dut.sv"; cmp -s "$DUT" "$OUT/dut.sv" && { echo "MUTANT NOT APPLIED"; exit 3; }; DUT=$OUT/dut.sv; PAIRS="2:2";;
   mut_ripin) sed 's/sti\[0\], ri_q}/sti[0], ri}/' "$DUT" > "$OUT/dut.sv"; cmp -s "$DUT" "$OUT/dut.sv" && { echo "MUTANT NOT APPLIED"; exit 3; }; DUT=$OUT/dut.sv; PAIRS="2:2";;
   *) echo "bad mode $MODE"; exit 2;;
