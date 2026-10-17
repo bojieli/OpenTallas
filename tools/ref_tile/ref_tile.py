@@ -172,8 +172,12 @@ def check_hold_budget(s: dict) -> None:
             raise SpecError('spec: recipe 4 leaf tile with hold_budget "tile" needs "hold_budget_reason" (e.g. CDC leaf)')
         return
     pr = s.get("pin_regs") or {}
-    if s.get("kind") != "tile":
-        raise SpecError('spec: hold_budget "die" applies to leaf tiles only (kind "tile")')
+    # Q-CLUSTER 2026-10-17: a cluster qualifies too when its own RTL registers every boundary pin (pin_regs off with
+    # that reason) and its clocks are regional CTS roots (hybrid_entries, all ports roots): same rule, same native audit
+    cluster_ok = (s.get("kind") == "cluster" and s.get("clock") == "hybrid_entries"
+                  and set(s.get("clock_cts_roots") or []) == set(s.get("clock_ports") or [None]))
+    if s.get("kind") != "tile" and not cluster_ok:
+        raise SpecError('spec: hold_budget "die" applies to leaf tiles (kind "tile") and to all-CTS-root clusters only')
     if not isinstance(pr, dict) or pr.get("exclude") or not (pr.get("enable") or str(pr.get("reason") or "").strip()):
         raise SpecError('spec: hold_budget "die" needs every data pin registered (pin_regs enabled without exclude, '
                         'or disabled with the reason the RTL registers them)')
@@ -433,7 +437,10 @@ def load_spec(path: str) -> dict:
             clock_entry_constraints.domains(s)
         elif s.get("clock") == "hybrid_entries":
             roots = s.get("clock_cts_roots")
-            if not isinstance(roots, list) or not roots or not all(isinstance(p, str) for p in roots) or len(set(roots)) != len(roots) or not set(roots) < set(cps):
+            # Q-CLUSTER 2026-10-17: a cluster may make EVERY clock port a CTS root (regional quadrant roots driving soft
+            # registers and all hard-child entries); a leaf keeps the proper-subset rule (its other ports are raw macro entries)
+            full_ok = s["kind"] == "cluster" and set(roots) == set(cps)
+            if not isinstance(roots, list) or not roots or not all(isinstance(p, str) for p in roots) or len(set(roots)) != len(roots) or not (set(roots) < set(cps) or full_ok):
                 raise SpecError("hybrid_entries needs distinct clock_cts_roots, a nonempty proper subset of clock_ports")
             if s["kind"] == "tile":
                 if any(s.get(k) for k in ("sdc_extra", "boundary_tcl", "pre_cts_extra", "forwarded_clock")):
