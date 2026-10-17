@@ -26,10 +26,24 @@ module ot_hgi_sfu_program_stripe_sreset #(
 );
     localparam integer PCLO=234-AW, MAXW=PCLO-1, PAGES=1<<PAGE_AW;
     initial if(W<1 || W>MAXW || PAGE_AW<1 || PAGE_AW>2)$fatal(1,"SFU paged programme geometry invalid");
+    // Preserve each stripe's physical config/start registers in the r8 kit.
+    // r6 merged them into stripe0, producing long cfg_data->macro paths.
     reg cfg_we_q,start_v_q;
+`ifdef OT_SFU_LOCAL_KEEP
+    (* keep = "true", dont_touch = "true" *)
+`endif
     reg [AW-1:0] cfg_addr_q,start_base_q;
+`ifdef OT_SFU_LOCAL_KEEP
+    (* keep = "true", dont_touch = "true" *)
+`endif
     reg [255:0] cfg_data_q;
+`ifdef OT_SFU_LOCAL_KEEP
+    (* keep = "true", dont_touch = "true" *)
+`endif
     reg [AW:0] start_limit_q;
+`ifdef OT_SFU_LOCAL_KEEP
+    (* keep = "true", dont_touch = "true" *)
+`endif
     reg [15:0] start_loops_q;
     always @(posedge clk)begin
         cfg_addr_q<=cfg_addr;cfg_data_q<=cfg_data;
