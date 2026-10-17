@@ -267,5 +267,12 @@
   "enable": false,
   "reason": "Q-KVFIX 0130: the RTL (PINCAP=1) captures every input at its own flop and drives every output from a flop (station fdq/fvq/cq/aq/ffq, lpc_status, bgi_q, host_rn/hbm_rn, ctrl_er_q, cmp_v_q/cmp_we_q, ski_q/sdi_q/soi_q/sfi_q; outputs fod/fov, co, ao, fault_o, sko/sdo/soo/sfo, bgo, ctrl_es, land_er); recipe-2 io_flop_at_pins allow_none=false anchors each pin's own flop at the face. No recipe-3 wrapper registers. KVE-2 es1: ctrl_es comes from the es_pin stage (unique D, Q -> pin only)."
  },
- "cycle_cost": "+1 edge controller->landing response (ctrl_er -> land_er, credit return er259) and completion observer (elastic HBM-controller boundary, owner 10-14); +1 edge reset assertion/release; status chain sk/sd/so/sf 2 edges a slot (head sees slot k at 2k+1, was k+1; boot/ack status only); boot chain 2 edges a slot (slot k boots 2k+1 after slot-0 bgi, was k+1). Command path (land_es -> ctrl_es) and station chain fi/fo/ci/ai unchanged. KVE-2 es1: +1 ck_boot edge on the command path land_es -> ctrl_es (dedicated ctrl_es pin register stage; HBM command latency +1 cycle at the elastic controller boundary, no throughput change)."
+ "cycle_cost": "+1 edge controller->landing response (ctrl_er -> land_er, credit return er259) and completion observer (elastic HBM-controller boundary, owner 10-14); +1 edge reset assertion/release; status chain sk/sd/so/sf 2 edges a slot (head sees slot k at 2k+1, was k+1; boot/ack status only); boot chain 2 edges a slot (slot k boots 2k+1 after slot-0 bgi, was k+1). Command path (land_es -> ctrl_es) and station chain fi/fo/ci/ai unchanged. KVE-2 es1: +1 ck_boot edge on the command path land_es -> ctrl_es (dedicated ctrl_es pin register stage; HBM command latency +1 cycle at the elastic controller boundary, no throughput change).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "physical/ref_tile/qkd_hslice/native_audit.json",
+  "cell": "qkd_host_pc_slice_die",
+  "launch_ps": 241.7,
+  "fix": "pc1 native launch 241.7 > 220 on ctrl_es[0]: routed path (pc1 6_final, TT) flop QN -> BUFx3 fanout 20 -> INV -> BUFx10 wire buffer -> pin, 184 ps flop->pin, because opt_merge folded the launch_v copy into the pin flop; RTL ESPIN=1 dedicated ctrl_es pin register stage (+1 edge) (qkd_hslice_dn = the same module qkd_host_pc_slice_die with the S-facing pin plan; first route of this kit, on the es1 RTL)"
+ }
 }
