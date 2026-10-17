@@ -44,7 +44,7 @@ C=$M/clock; mkdir -p $C
   gzip -kf $C/plan.json; st "CLOCK_PLAN $(test -s $C/plan.json.gz && echo done || echo failed)"
   rm -rf $M/kit; mkdir -p $M/kit
   /srv/opentallas-scratch/admit.sh 60 -- python3 tools/s81/die_sta.py kit --gen-root $S --views-root $S --s81-opts "$AK" --die $KIND \
-      --out $M/kit --clock-plan $C/plan.json.gz --index-out $M/kit/index.json > $M/kit/kit.log 2>&1; echo $? > $M/kit/kit.exit
+      --out $M/kit --clock-plan $C/plan.json.gz --index-out $M/kit/index.json --hold-budget ${OT_S81_HOLD_BUDGET:-tile} > $M/kit/kit.log 2>&1; echo $? > $M/kit/kit.exit
   echo $S > $M/kit/src_root; st "KIT rc=$(cat $M/kit/kit.exit) $(python3 -c "import json,sys;d=json.load(open('$M/kit/clock_delivery.json'));print('CLOCK_DELIVERY common',d['masters_common'],'early_tap',d['masters_early_tap'],'deep_pins',d['deep_clock_pins'],'estimated_R',len(d['estimated_R']),'spread_defects',len(d['spread_defects']))" 2>/dev/null)"; [ "$(cat $M/kit/kit.exit)" = 0 ] ) &
 CK=$!
 # r7 2026-10-15 (S-DIE r4): the 80,654-instance die PLACE (pin_access on 10.46 M nets) peaked 62.8 GB > the old 60 GB cap (exit 137)

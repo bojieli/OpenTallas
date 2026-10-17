@@ -29,6 +29,13 @@ CLK_NAMES = ('ck', 'clk', 'sk', 'cks', 'ckh', 'cw', 'wclk', 'fi0', 'fi', 'xf', '
 # BUF-HB4-BUF); the placeholder carries that minimum, so a hop between placeholders is neutral (0 at zero wire) and a
 # placeholder launching into a REAL pin is judged against the real pin's hold with the contract launch.
 K = dict(ss=dict(cq=90.0, su=30.0, ho=15.0), tt=dict(cq=55.0, su=18.0, ho=15.0), ff=dict(cq=65.0, su=10.0, ho=15.0))
+# FLOW-HOLD (owner-approved die-wide boundary hold budget 2026-10-16, results/arch/boundary_hold_budget_1016/RULE.md,
+# opt-in --hold-budget die): boundary hold belongs to the die STA.  A recipe-4 (flop-first) tile guarantees only
+# C = 25 ps FF launch after L_min, so an unbuilt placeholder launches at 25 (not the 65 of the old BUF-HB4-BUF relay
+# kits); BOUND tiles time with their own ETM (clk->out min and hold arc H(i)); hold uncertainty 25 once per link (no
+# +50 / +25 plan term: the skew is the measured/propagated clock difference); planning hold pads refused.
+HOLD_BUDGET_C_PS = 25.0
+HOLD_BUDGET_U_PS = 25.0
 # s81-die-iter 2026-10-12 (FF hold, r4f SPEF: hco_SW -> xsco_SW -103.7, hr_W<n> -> f_hr_W<n>_o_1 -77.9, hl_W<n> ->
 # g_hl_W<n>_o_sp_collective_0 -77.6 ps): a closed end block (m2l / r2l / l2r, kind 'hend') is balanced on its MEAN clock
 # insertion, but its boundary output flops ride a shorter branch (~80 vs 152 ps), so its outputs launch ~70 ps early
@@ -836,6 +843,10 @@ def main():
     ap.add_argument('--bf-compose', type=Path, help='composed BF pair record (bf_hier_compose_sta.py compose.json) of the '
                     'die\'s BF blocks: the front clock tap; default the col600 record')
     ap.add_argument('--index-out', type=Path, help='also write the master -> view index (JSON) here')
+    ap.add_argument('--hold-budget', choices=['tile', 'die'], default='tile',
+                    help='FLOW-HOLD 2026-10-16: die = boundary hold owned by the die STA (placeholder FF launch-min 25 ps, '
+                         'hold uncertainty 25 once per link, bound tiles by their ETM, no planning hold pads); '
+                         'tile = legacy (placeholder 65 ps, hold 25 + plan tolerance)')
     ap.add_argument('--legacy-unqualified-libs', action='store_true',
                     help='S81 DIE 2026-10-13: keep the tree-scan binding of routed-view ETMs (closed / assembled) of masters '
                          'that are NOT in the view-binding table (not QUALIFIED by tools/s81/native_view_qualify.py). '
@@ -844,6 +855,10 @@ def main():
     a = ap.parse_args()
     if a.require_real_views and (a.legacy_unqualified_libs or a.planning_hold_pads):
         ap.error('--require-real-views is incompatible with legacy unqualified libraries or planning hold pads')
+    if a.hold_budget == 'die':
+        if a.planning_hold_pads:
+            ap.error('--hold-budget die: hold shortfalls are fixed in relay stations / die HOLD_PAD cells, not planning pads')
+        K['ff'] = dict(K['ff'], cq=HOLD_BUDGET_C_PS)
     S.apply_options(S.die_options(argparse.ArgumentParser()).parse_args(shlex.split(a.s81_opts) + ['--die', a.die]))
     m = S.build()
     pdir = S.finalize_r8(m)
@@ -1076,8 +1091,16 @@ def main():
     # with the CTS plan: setup 60 + 25 plan tolerance, hold 25 + 25 plan tolerance (rule H1: the die-link hold term
     # (+50) is not counted at the die, the receiver block signs off its input min at L; was 75)
     seam_lines, rec['ratio_seams'] = seam_constraints(m)
-    for corner, (us, uh) in ((('ss', (85.0, 50.0)), ('tt', (85.0, 50.0)), ('ff', (85.0, 50.0))) if lat else
-                             (('ss', (210.0, 75.0)), ('tt', (210.0, 75.0)), ('ff', (210.0, 75.0)))):
+    corners_u = ((('ss', (85.0, 50.0)), ('tt', (85.0, 50.0)), ('ff', (85.0, 50.0))) if lat else
+                 (('ss', (210.0, 75.0)), ('tt', (210.0, 75.0)), ('ff', (210.0, 75.0))))
+    if a.hold_budget == 'die':
+        # FLOW-HOLD: U applied once per link; setup terms unchanged
+        corners_u = tuple((c_, (u_[0], HOLD_BUDGET_U_PS)) for c_, u_ in corners_u)
+    rec['hold_budget'] = dict(mode=a.hold_budget, placeholder_ff_launch_ps=K['ff']['cq'],
+                              hold_uncertainty_ps=corners_u[2][1][1],
+                              clock_source='plan latency (CTS-validated arrivals)' if lat else 'ideal (SYNTH_IDEAL_R0: hold DIAGNOSTIC ONLY)',
+                              rule='results/arch/boundary_hold_budget_1016/RULE.md')
+    for corner, (us, uh) in corners_u:
         T = ['set libs [split [string trim [read [open /kit/libs_%s.txt]]] "\\n"]' % corner,
              'foreach l $libs { read_liberty $l }', 'read_verilog /kit/die.v', 'link_design dsfd_die',
              'if {[file exists /kit/die.spef]} { read_spef /kit/die.spef; puts OT_SPEF }']
