@@ -492,3 +492,33 @@ That way no FDI crosses another block. A first stack, with the D2D group between
 | dv2r8f with the measured root | +26 | -0.37 % |
 
 **Step 2 fix:** a pipelined 5-level pairwise root (same order, exact), which should bring the root to about 20 cycles and return dv2r8f to about -66.
+
+## dv2r8f2: re-pitch to the Q-CLUSTER cluster (claude/qcluster-1017 0131f6672) -- ADOPTED (supersedes dv2r8f)
+
+**Q-CLUSTER measured the corridors with CB's router; it corrects my corridor numbers.**
+- The broadcast is 4 x 516 b, not 1,567.
+- A 2 x 257 A/B split is the worst option (1.97).
+- The base cluster already overflows at 64.8 um.
+
+**Adopted cluster:**
+- corridors A/T/B are 129.6 um;
+- `qfd_c_b16` is 2,285.28 x 5,184 um;
+- `rs_i -> rs_o` runs in corridor T;
+- the feedthrough is **14 edges**;
+- the die keeps >= 64.8 um of margin above band 3.
+
+**What `build_dv2f2.py` changes.** It re-pitches dv2r8f: the clusters and slices go to 2,285.28 um, and the slices stay one cluster pitch wide (about 5.9 mm²).
+
+| | dv2r8f | **dv2r8f2** |
+|---|---:|---:|
+| worst cut | 0.378 | **0.378** |
+| stages @405 / @200 | 3,304 / 6,951 | 3,305 / 6,979 |
+| bit-mm | 0.792 M | 0.802 M |
+| longest link | 10.1 mm (1 b) | 10.1 mm (1 b) |
+| die | 645.6 mm² | **702.9 mm² (29.2 x 24.05)** |
+| white | 5.7 % | 5.6 % |
+| cycles / layer vs q3h, pipelined norm root | -66 | **-58 (+0.84 % tok/s)**; 14-edge feed, R 15 |
+| cycles / layer vs q3h, measured 70-cycle root | +26 | **+34 (-0.49 %)** |
+
+- **dv2r8g.** It was already not adopted and is not re-pitched.
+- **Outputs:** `dv2r8f2.png` viewed; Explorer record `qwen_qdv_dv2r8f2`.

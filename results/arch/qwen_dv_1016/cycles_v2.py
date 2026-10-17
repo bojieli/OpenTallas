@@ -30,7 +30,7 @@ def st(I, *path):
     for n in path[1:-1]:
         if n.startswith('dvs_'): s += math.ceil(min(I[n]['w'], I[n]['h']) / HOP) - 1
     return s
-FEED = math.ceil(5184 / HOP) - 1
+FEED = int(os.environ.get("QDV_FEED", math.ceil(5184 / HOP) - 1))   # Q-CLUSTER measured 14 edges (corridor T)
 def beats(rows, lanes): return math.ceil(rows / lanes)
 def base(f):
     I, d = load(f)
