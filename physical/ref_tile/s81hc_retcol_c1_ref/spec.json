@@ -39,10 +39,10 @@
  "reset_ports": [],
  "outline": {
   "w": 144.18,
-  "h": 72.9,
+  "h": 75.06,
   "exact": true
  },
- "why_floorplan": "Return column 1 = ctra_column + ctrb_column (COLUMN 1, YB_STAGE 1, PAYLOAD_STAGE 0) merged into one 144.18 x 72.90 leaf (10-16: grown from 56.16, post-CTS util 75-79% at 56.16); Codex A/B maps 2431+1916 um2 class.",
+ "why_floorplan": "Return column 1 = ctra_column + ctrb_column (COLUMN 1, YB_STAGE 1, PAYLOAD_STAGE 0) merged into one 144.18 x 75.06 leaf (10-16: grown from 56.16, post-CTS util 75-79% at 56.16); Codex A/B maps 2431+1916 um2 class. a4c: 75.06 tall (route util margin).",
  "macros": [],
  "pins": {
   "N": [
@@ -101,7 +101,7 @@
  "job": {
   "owner": "Claude:S-ENGRAM+NORM/HC-COLUMN",
   "branch": "claude/s81-hccol-b-1016",
-  "tag": "a4",
+  "tag": "a4c",
   "purpose": "New cth_ntc return leaf, COLUMN 1: the four-column return with the y-beat / cs relays (y returns +1, requests and h returns unchanged).",
   "views_to": "physical/ref_tile/s81hc_retcol_c1_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_retcol_c1_ref",
@@ -136,6 +136,6 @@
   "enable": false,
   "reason": "Real RTL registers the boundary at its own stage (chain rd/rv -> rdq/rvq, y beat / cs relays, ybuf / psb captures, rdm / header / request / flag registers); a generic pin register would add a cycle to the fixed return calendar. hrq feeds the same-cycle merge (bank round trip) by design."
  },
- "structural_change": "Replaces the failed monolithic ctra / ctrb strips (v1 GRT congestion; native capture 674 ps): one engine per column, y beat and cs relayed one cycle, own payload chunks only. | 10-16 a4 (a3 c2/c3 CLOSED but native capture FAIL: hrq_col 277-279, cs_in 273, fv 262-300, yb_loc 247-249, yb_peer 215-238, hdr_in 201-209 ps > 190): every input family on a pin register -- hrq_col -> hrq_q (HQ_LAG 1: merge + rd relay +1 = +1 cycle per return row), yb own/peer and cs one consumer register each (Y_LAG / CS_LAG 2: y returns +1, cs capture +1), fv = the row's early fv (ctfxs) captured at the pin with ctfl's reset relay (0 cycles); pins: rq_q moves to the S face next to its hdr_in P_Q bit (one rdq flop for capture + launch), yb_fwd / cs_fwd (c3) launch on the N/S face next to their capture pins. Same outline.",
+ "structural_change": "Replaces the failed monolithic ctra / ctrb strips (v1 GRT congestion; native capture 674 ps): one engine per column, y beat and cs relayed one cycle, own payload chunks only. | 10-16 a4 (a3 c2/c3 CLOSED but native capture FAIL: hrq_col 277-279, cs_in 273, fv 262-300, yb_loc 247-249, yb_peer 215-238, hdr_in 201-209 ps > 190): every input family on a pin register -- hrq_col -> hrq_q (HQ_LAG 1: merge + rd relay +1 = +1 cycle per return row), yb own/peer and cs one consumer register each (Y_LAG / CS_LAG 2: y returns +1, cs capture +1), fv = the row's early fv (ctfxs) captured at the pin with ctfl's reset relay (0 cycles); pins: rq_q moves to the S face next to its hdr_in P_Q bit (one rdq flop for capture + launch), yb_fwd / cs_fwd (c3) launch on the N/S face next to their capture pins. Same outline. | 10-16 a4c (HC-COL 1815): a4b c2/c3 route FLOORPLAN_MARGIN (util 65.0-65.1% incl. hold-buffer allowance > 65%) -> ret row 72.90 -> 75.06 (+8 rows; parent cth_ntc +2.16; cs_rel max leg 499.7 um, 0 over 500; RTL unchanged)",
  "slot_change_request": "New cth_ntc leaf (top-down parent plan tools/s81/hc_cthntc_plan.py, physical/s81_die_pins/v28_hc_cthntc: outline growth 10-16: parent 576.72 x 874.26)."
 }
