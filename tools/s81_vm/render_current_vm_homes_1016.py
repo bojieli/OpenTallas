@@ -51,7 +51,7 @@ def main():
    if p=='ck'or p.endswith('_ck')or p.startswith('ck_'):clocks.append(xy(i,p,0))
   if 'wfc'in l['master']or'xio'in l['master']or'native_valid_diag'in l['master']:ax.text(x+w/2,y+h/2,l['path'].removeprefix('dut.').replace('u_',''),fontsize=4.5,ha='center',va='center',zorder=4)
  ax.scatter(*zip(*clocks),s=1.6,c='#b5101d',zorder=3)
- ax.set(xlim=(0,W),ylim=(0,H),aspect='equal',xlabel='VM-local x (um)',ylabel='VM-local y (um)',title=f"{home['case']}:534 actual hard leaves /128 SRAM, held geometry\nActual signal pins and clock entries; complete direct internal bundles. Missing parent grants/live operators prevent adoption")
+ ax.set(xlim=(0,W),ylim=(0,H),aspect='equal',xlabel='VM-local x (um)',ylabel='VM-local y (um)',title=f"{home['case']}:{len(bindings)} actual hard leaves /128 SRAM, held geometry\nActual signal pins and clock entries; complete direct internal bundles. Missing parent grants/live operators prevent adoption")
  ax.legend(handles=[Patch(facecolor=color(m),label=t)for m,t in [('dsfd_vm_static_bank128','128 bank/SRAM'),('s81_a2f_field4','Field4'),('s81_a2_w0_payload33','Payload33 x16'),('dsfd_vm_static_read_q6_p','Read/return'),('dsfd_vm_xio_return','WFC/XIO'),('dsfd_vm_native_valid_diag','Diagnostics')]],loc='upper left',fontsize=7)
  fig.tight_layout();fig.savefig(a.out/(home['case']+'_connected.png'),dpi=155);ax.set(xlim=(0,W),ylim=(1450,2350));fig.set_size_inches(18,5);fig.tight_layout();fig.savefig(a.out/(home['case']+'_middle.png'),dpi=165);plt.close(fig)
  print(home['case'],'largest families',fs[:5]);print('LONGEST',longest[0]if longest else None)
