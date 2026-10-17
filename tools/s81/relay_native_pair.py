@@ -229,6 +229,61 @@ class Merged:
 
 
 # ------------------------------------------------------------------------------------------------ stage
+PAD_RE = re.compile(r'^ot_(inhold|ihdrv|outhold|ohdrv)')
+
+
+def collapse_pads(cells, native):
+    """FLOP-FIRST variant (FLOW-HOLD RULE 1016: no ot_inhold / ot_outhold pin hold pads): every single-input
+    single-output pad cell (ot_inhold_* HB2xp67, ot_ihdrv_*, ot_outhold_*, ot_ohdrv_*) is removed and its output net
+    joined to its input net with the routed wire of both kept (the cell's A and Y become one internal node).  The pins
+    then drive / capture the flops directly; hold is whatever the bare flops give (FF hold reported, not padded).
+    -> (cells, native nets, removed instance count)"""
+    pads = {i: (c, dict(conns)) for c, i, conns in cells if PAD_RE.match(i)}
+    parent = {}
+
+    def find(n):
+        while parent.get(n, n) != n:
+            n = parent[n]
+        return n
+    for i, (c, cn) in pads.items():
+        ins = [n for p, n in cn.items() if p == 'A']
+        outs = [n for p, n in cn.items() if p == 'Y']
+        if len(ins) != 1 or len(outs) != 1 or len(cn) != 2:
+            raise ValueError(f'pad {i} ({c}) is not a 1-in/1-out buffer: {cn}')
+        parent[find(outs[0].strip())] = find(ins[0].strip())
+    keep = [(c, i, [(p, find(n.strip()) if n else n) for p, n in conns]) for c, i, conns in cells if i not in pads]
+    # SPEF: the same union over net names (SPEF names are the verilog names without escapes)
+    sp = lambda n: n.strip().replace('\\', '')  # noqa: E731
+    vparent = {sp(k): sp(find(k)) for k in list(parent)}
+    groups = {}
+    for name, n in native.items():
+        root = name
+        while root in vparent and vparent[root] != root:
+            root = vparent[root]
+        groups.setdefault(root, []).append(name)
+    out = {}
+    padpins = {f'{i}:{p}' for i in pads for p in ('A', 'Y')}
+    for root, names in groups.items():
+        if len(names) == 1 and not any(c[1] in padpins for c in native[names[0]]['conn']):
+            out[root] = native[names[0]]
+            continue
+        conn, caps, res = [], [], []
+        for nm in names:
+            n = native[nm]
+            conn += [c for c in n['conn'] if c[1] not in padpins]
+            own = {c[1] for c in n['conn']}
+            for a_, b_, c_ in n['caps']:       # ground coupling on the own node (as Merged does)
+                if b_ is None or a_ in own or a_.startswith(nm + ':'):
+                    caps.append((a_, None, c_))
+                elif b_ in own or b_.startswith(nm + ':'):
+                    caps.append((b_, None, c_))
+            res += n['res']
+        for i in pads:
+            res.append((f'{i}:A', f'{i}:Y', 1e-6))
+        out[root] = dict(conn=conn, caps=caps, res=res, _name=root)
+    return keep, out, len(pads)
+
+
 def extract_archive(archive, cell, binding_tt_sha, binding_job=None):
     man = json.loads((archive / 'manifest.json').read_text())
     got = {}
@@ -281,12 +336,15 @@ def cmd_stage(a):
     native = parse_spef(spef_txt)
     for k_, n_ in native.items():
         n_['_name'] = k_
+    native_all = native
     port_net = {}
     for name, n in native.items():
         for kind, node, d, cell in n['conn']:
             if kind == '*P':
                 port_net[node] = name
     variants = {'native': (v_txt, v_sha)}
+    if getattr(a, 'flop_first', False):
+        variants['flopfirst'] = (v_txt, v_sha)     # same closed netlist, pin hold pads collapsed (collapse_pads)
     for spec in a.variant or []:
         nm, path = spec.split('=', 1)
         raw = Path(path).read_bytes()
@@ -343,6 +401,9 @@ def cmd_stage(a):
         vd = out / vn
         vd.mkdir(exist_ok=True)
         mod, ports, cells = parse_verilog(vt)
+        native = native_all
+        if vn == 'flopfirst':
+            cells, native, rec['flopfirst_removed'] = collapse_pads(cells, native_all)
         pb = port_bits(ports)
         V, S, top_ports, wires = [], [], {}, set()
         for pr in pairs:
@@ -670,6 +731,7 @@ def main(argv=None):
     s.add_argument('--bench-run', required=True, help='relay_reach_bench batch dir (map.json + reach.spef[.gz])')
     s.add_argument('--stage', required=True)
     s.add_argument('--out', required=True)
+    s.add_argument('--flop-first', action='store_true', help='add the FLOP-FIRST variant: pin hold pads collapsed')
     s.add_argument('--variant', action='append', help='NAME=netlist.v (native netlist with swapped output drivers)')
     s.add_argument('--d-max', type=float)
     s2 = sp.add_parser('stage-many')

@@ -35,15 +35,36 @@ step wl { report_wire_length -net * -global_route -file /work/wirelength_grt.csv
 step spef { estimate_parasitics -global_routing -spef_file /work/die_grt.spef }
 step netlist { write_verilog /work/die_grt.v }
 T
+# OT_DIE_REPAIR=1 (H-REACH 2026-10-16, owner ruling HANDOFF 0cl): native-aware repeaters on the die nets before GRT
+# (die_repair.tcl: -max_wire_length ${OT_DIE_REPAIR_MAX_WIRE:-175} um, 260 ps max_transition, BUFx4..8, clock/reset nets
+# untouched); the GRT container then also mounts the STA kit (/kit) and the source root (kit lib paths), and the die STA
+# reads the repaired netlist die_rep.v.  Default off: the script is byte-for-byte the old flow.
+GV="-v $D:/work"
+if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
+  grep -q '__hp ' $K/die.v && { echo "OT_DIE_REPAIR refuses a kit with planning hold pads (__hp masters in die.v)" > $D/repair.refused; exit 1; }
+  cp $SRC/physical/s81_die_views/dietop/die_repair.tcl $D/die_repair.tcl || exit 1
+  sed -i 's#^foreach l \[glob /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_\*_RVT_SS_nldm_\*.lib\*\] { read_liberty \$l }$#if {[catch {source /work/die_repair.tcl} e]} { puts "OT_DIE_REPAIR FAIL $e"; exit 3 }#' $D/grt.tcl
+  grep -q 'source /work/die_repair.tcl' $D/grt.tcl || { echo "OT_DIE_REPAIR hook not placed" > $D/repair.refused; exit 1; }
+  GV="$GV -v $K:/kit -v $SRC:$SRC:ro"
+fi
 date -u +%FT%TZ > $D/grt.start
-docker run --rm --name s81_grt_$(basename $(dirname $D))_$(basename $D) --cpus=$T --memory=${M}g -v $D:/work -w /work openroad/orfs:asap7lock \
+docker run --rm --name s81_grt_$(basename $(dirname $D))_$(basename $D) --cpus=$T --memory=${M}g $GV -w /work openroad/orfs:asap7lock \
   bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads $T -no_init -exit /work/grt.tcl > /work/grt.log 2>&1; rc=\$?; chmod -R a+rwX /work; exit \$rc"
 echo $? > $D/grt.exit; date -u +%FT%TZ > $D/grt.end
+if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
+  grep -q 'OT_DIE_REPAIR DONE' $D/grt.log && [ -s $D/die_rep.v ] || { echo "OT_DIE_REPAIR did not complete" > $D/sta.skip; exit 1; }
+fi
 SP=$(ls $D/die_grt.spef* 2>/dev/null | head -1)
 [ -n "$SP" ] || { echo "no spef" > $D/sta.skip; exit 1; }
 # die STA, one OpenROAD/OpenSTA session per corner, kit tcl unchanged except the SPEF path
 for c in ss tt ff; do   # owner option B: setup TT, hold FF, SS sensitivity
   sed -e "s#/kit/die.spef#/run/$(basename $SP)#g" $K/sta_$c.tcl | sed -e "s#> /kit/#> /run/#g" > $D/sta_$c.tcl
+  if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then   # repaired netlist + the repeater cells' own corner library
+    C=$(echo $c | tr a-z A-Z)
+    sed -i -e "s#read_verilog /kit/die.v#read_verilog /run/die_rep.v#" \
+      -e "s#^foreach l \$libs { read_liberty \$l }#foreach l \$libs { read_liberty \$l }; foreach l [glob /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*_RVT_${C}_nldm_*.lib*] { read_liberty \$l }#" $D/sta_$c.tcl
+    grep -q 'read_verilog /run/die_rep.v' $D/sta_$c.tcl && grep -q "RVT_${C}_nldm" $D/sta_$c.tcl || { echo "repair STA rewrite failed $c" > $D/sta.skip; exit 1; }
+  fi
   docker run --rm --name s81_sta_${c}_$(basename $(dirname $D))_$(basename $D) --cpus=8 --memory=${M}g -v $D:/run -v $K:/kit -v $SRC:$SRC:ro -w /run openroad/orfs:asap7lock \
     bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v sta -no_init -exit /run/sta_$c.tcl > /run/sta_$c.log 2>&1; chmod -R a+rwX /run" &
 done

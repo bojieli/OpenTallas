@@ -32,6 +32,30 @@ def row_from(res, vn='native'):
                 repeaters_at_reach=next((p.get('repeaters') for p in v['points'] if p['d'] == s['reach_d_um']), None))
 
 
+REPEATER_AREA_UM2 = {'BUFx4_ASAP7_75t_R': 0.0875, 'BUFx4f_ASAP7_75t_R': 0.1021, 'BUFx5_ASAP7_75t_R': 0.1166,
+                     'BUFx6f_ASAP7_75t_R': 0.1458, 'BUFx8_ASAP7_75t_R': 0.175}   # ASAP7 RVT width x 0.27 um row
+
+
+def repeated_summary(res, stg):
+    """repeated-wire rows: the largest swept d that passes setup, FF hold and every slew/cap check (points below it that
+    fail are listed: the bench's ETM-based repair can leave a marginal hop unrepeated), and repeaters / mm / bit"""
+    pts = res['variants']['native']['points']
+    ok = lambda p: (p['tt833'] is not None and p['tt833'] >= 0 and p['ff_hold'] is not None and p['ff_hold'] >= 0  # noqa: E731
+                    and not p['slew_viol_tt'] and not p['slew_viol_ff'] and not p['cap_viol_tt'] and not p['cap_viol_ff'])
+    good = [p for p in pts if ok(p)]
+    best = max(good, key=lambda p: p['d']) if good else None
+    rep = {v['d']: v for v in stg['points'].values()}
+    out = dict(repeated_reach_d_um=best and best['d'], repeated_reach_L_um=best and best['L_max'],
+               repeated_slack_ps=best and best['tt833'],
+               failing_points_below_reach=[[p['d'], 'setup' if (p['tt833'] or 0) < 0 else 'electrical/hold']
+                                           for p in pts if best and p['d'] < best['d'] and not ok(p)])
+    if best:
+        r = rep[best['d']]
+        out['repeaters_per_bit_at_reach'] = round(r['repeaters'] / max(1, r['bits']), 2)
+        out['repeaters_per_mm_per_bit'] = round(r['repeaters'] / max(1, r['bits']) / (best['L_max'] / 1000.0), 2)
+    return out
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--stage', required=True)
@@ -93,9 +117,10 @@ def main(argv=None):
                                         'wire repeated / receiver input rebuilt (see repeated rows)')
         if m in rep:
             row['repeated'] = {}
-            for lay, f in rep[m].items():
+                for lay, f in rep[m].items():
                 res = json.loads(f.read_text())
-                row['repeated'][lay] = dict(result=str(f), **row_from(res))
+                stg = json.loads((f.parent / 'stage.json').read_text())
+                row['repeated'][lay] = dict(result=str(f), **row_from(res), **repeated_summary(res, stg))
         out['classes'][m] = row
     meas = {m: r for m, r in out['classes'].items() if r['status'] == 'MEASURED'}
     used = {m: r for m, r in out['classes'].items() if r['instances_c26l']}

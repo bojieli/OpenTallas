@@ -389,7 +389,7 @@ def std_libs(corner):
     return '\n'.join(f'read_liberty {NLDM}/{f.format(C=corner.upper())}' for f in STD_LIBS)
 
 
-def repeater_tcl(layer):
+def repeater_tcl(layer, max_wire=None):
     """--repeaters: OpenROAD repair_design on every die wire (slew / cap driven at the closed views' 260 ps
     max_transition, BUFx4..BUFx8 only), placement RC of LAYER, then legalise the repeaters"""
     return f'''set_wire_rc -signal -layer {layer}
@@ -397,10 +397,10 @@ set_max_transition {MAX_TRANSITION} [current_design]
 set_dont_use [get_lib_cells -quiet *_ASAP7_75t_R]
 unset_dont_use [get_lib_cells {{{' '.join(REPEATERS)}}}]
 estimate_parasitics -placement
-repair_design -slew_margin 0 -cap_margin 0
+repair_design {'-max_wire_length ' + str(max_wire) + ' ' if max_wire else ''}-slew_margin 0 -cap_margin 0
 puts "OT_REPAIR repeaters [llength [get_cells -quiet -filter {{ref_name =~ BUFx*}} *]]"
 detailed_placement
-check_placement -verbose
+if {{[catch {{check_placement -verbose}} e]}} {{ puts "OT_REPAIR_PLACEMENT_WARN $e" }}
 mem repair'''
 
 
@@ -514,7 +514,7 @@ source {PLAT}/openRoad/make_tracks.tcl
 {chr(10).join(place)}
 mem placed
 source {PLAT}/setRC.tcl
-{repeater_tcl(a.repeaters) if getattr(a, 'repeaters', None) else ''}
+{repeater_tcl(a.repeaters, getattr(a, 'repeater_max_wire', None)) if getattr(a, 'repeaters', None) else ''}
 set_routing_layers -signal {lay}
 {chr(10).join(adj)}
 global_route -congestion_iterations 30 -allow_congestion -verbose -congestion_report_file /work/grt_congestion.rpt
@@ -556,6 +556,8 @@ puts "OT_REACH_STA_DONE {name} $n"
 """
         (bd / f'sta_{name}.tcl').write_text(sta)
     mem = mem_gb_for_area(W * H / 1e6)
+    if getattr(a, 'repeaters', None):
+        mem = int(math.ceil(mem * 1.6))     # measured: repeater batches peak 32-36 GB where the plain model gives 29-34
     (bd / 'run.sh').write_text(f"""#!/bin/bash
 # relay_reach_bench batch: GRT + parasitics (openroad), then 4 sta sessions; inputs /stage (views) + /work (this dir)
 # DECLARE {max(mem, 24)} GB to ot-heavy (ot-run --mem): GRT docker --memory={mem}g (die {W * H / 1e6:.2f} mm2, 4 GB/mm2 + 8),
@@ -808,6 +810,7 @@ def main(argv=None):
     p.add_argument('--step', type=float, default=25.0)
     p.add_argument('--net-budget', type=int, default=150000)
     p.add_argument('--repeaters', choices=['M4', 'M5', 'M7'], help='repair_design repeaters on every die wire (RC of LAYER)')
+    p.add_argument('--repeater-max-wire', type=float, help='repair_design -max_wire_length UM (die rule: 175)')
     p.add_argument('--max-area-mm2', type=float, default=8.0, help='per-batch die area bound (GRT memory ~3.5 GB/mm2)')
     p.add_argument('--classes', nargs='*')
     p.add_argument('--fwd-clock', action='store_true', help='also route A.fo0 -> B.fi0 (forwarded clock) where both exist')

@@ -15,6 +15,8 @@ st(){ echo "$(date -u +%FT%TZ) $*" >> $M/STATUS.log; }
 st "start src $(cat $S/SOURCE_SHA) recipe $R kind $KIND"
 /srv/opentallas-scratch/admit.sh 40 -- python3 tools/dsrom_s81_fulldie.py real $A --work $M/a_real > $M/real_gen.log 2>&1 || { st "GEN_FAIL $(grep -a 'OT_HOP_GATE\|hop gate' $M/real_gen.log | tail -1)"; exit 1; }
 st "GEN_DONE $(grep -a OT_HOP_GATE $M/real_gen.log | tail -1) $(grep -a OT_VIEW_BINDING $M/real_gen.log | tail -1)"
+# ROOT RELAY-SCHEMA 10-16: die relay stages vs the compiled schedule (OT_RELAY_SCHEDULE; SKIPPED when unset)
+RCL=$(bash tools/die_relay_chain_step.sh $M/a_real/relay_stages.json "${OT_RELAY_SCHEDULE:-}" $M/relay_check.json) && RCR=0 || RCR=$?; st "$RCL"; [ "$RCR" = 0 ] || exit 1
 # r6 2026-10-14 (owner 08:05 NO STUBS): every die chain carries the port-bind check of its own netlist (netlist mode of the
 # same recipe: die.v + die_glue.sv + params sidecar, tools/die_port_bind.py on the die RTL manifest). Recorded, not a GEN stop:
 # a chain whose PORT_BIND is FAIL is PATHFINDING, never a die result.
@@ -42,7 +44,7 @@ C=$M/clock; mkdir -p $C
   gzip -kf $C/plan.json; st "CLOCK_PLAN $(test -s $C/plan.json.gz && echo done || echo failed)"
   rm -rf $M/kit; mkdir -p $M/kit
   /srv/opentallas-scratch/admit.sh 60 -- python3 tools/s81/die_sta.py kit --gen-root $S --views-root $S --s81-opts "$AK" --die $KIND \
-      --out $M/kit --clock-plan $C/plan.json.gz --index-out $M/kit/index.json > $M/kit/kit.log 2>&1; echo $? > $M/kit/kit.exit
+      --out $M/kit --clock-plan $C/plan.json.gz --index-out $M/kit/index.json --hold-budget ${OT_S81_HOLD_BUDGET:-tile} > $M/kit/kit.log 2>&1; echo $? > $M/kit/kit.exit
   echo $S > $M/kit/src_root; st "KIT rc=$(cat $M/kit/kit.exit) $(python3 -c "import json,sys;d=json.load(open('$M/kit/clock_delivery.json'));print('CLOCK_DELIVERY common',d['masters_common'],'early_tap',d['masters_early_tap'],'deep_pins',d['deep_clock_pins'],'estimated_R',len(d['estimated_R']),'spread_defects',len(d['spread_defects']))" 2>/dev/null)"; [ "$(cat $M/kit/kit.exit)" = 0 ] ) &
 CK=$!
 # r7 2026-10-15 (S-DIE r4): the 80,654-instance die PLACE (pin_access on 10.46 M nets) peaked 62.8 GB > the old 60 GB cap (exit 137)
@@ -57,7 +59,12 @@ sed -e "s/--name s81_grt_/--name dieit_grt_/" -e "s/--name s81_sta_/--name dieit
 # r5 2026-10-14: die GRT reserves M8/M9 for the die PDN at the recipe's field coverage (--pdn-field-cov c: 0.146 + 2 (c - 0.0439))
 CF=$(echo "$A" | grep -o -- '--pdn-field-cov [0-9.]*' | awk '{print $2}')
 [ -n "$CF" ] && export OT_M89_ADJ=$(python3 -c "print(round(max(0.146, 0.146 + 2 * ($CF - 0.0439)), 4))")
+# H-REACH 2026-10-16 (owner ruling HANDOFF 0cl): OT_DIE_REPAIR=1 inserts native-aware repeaters on the die nets before
+# GRT (physical/s81_die_views/dietop/die_repair.tcl; OT_DIE_REPAIR_MAX_WIRE default 175 um, 260 ps); the env passes
+# through admit.sh (exec) into dietop_grt_sta.sh.  Recorded in STATUS either way.
+st "DIE_REPAIR ${OT_DIE_REPAIR:-0} max_wire ${OT_DIE_REPAIR_MAX_WIRE:-175}"
 cd $M && /srv/opentallas-scratch/admit.sh 120 -- $M/dietop_grt_sta.sh a_real grt kit 48 ${OT_GRT_DOCKER_GB:-400} 9.6 ${OT_GRT_ITERS:-30} || { st GRT_STA_FAIL; exit 1; }
+[ "${OT_DIE_REPAIR:-0}" = 1 ] && st "DIE_REPAIR_DONE $(cat $M/grt/die_repair.json 2>/dev/null)"
 grep -q OT_SPEF $M/grt/sta_tt.log || { st STA_NO_SPEF; exit 1; }
 for c in tt ff ss; do echo "$c $(grep -E "^(worst slack|tns)" $M/grt/sta_$c.log | tr "\n" " ")"; done > $M/grt/summary.txt
 st "CHAIN_DONE $(tr '\n' ' ' < $M/grt/summary.txt)"
