@@ -1,0 +1,95 @@
+{
+  "schema": "opentallas.ref-tile.cts-native-probe.v1",
+  "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+  "kit": "physical/ref_tile/qkd_static_kv_return_slots_mc_r5",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_static_kv_return_slots_mc_r5-20261017-013351",
+  "gate_source_commit": "05f98447be76ba767c27f64909c93156f5f0b4d9",
+  "gate_result_sha256": "964e16eb083a4e45456515ea0861aa6713441b91cf3a862d3909f54c2296e7f8",
+  "library_sha256": "c416f194f1bfecafdbc37b4daecef120dcc0c36cf2da57ee1621d9ada0d93e59",
+  "insertion_sha256": "9e19a7647bbb31206171b6d01cbf1e0df337fc312b123f6499442f6fd6e5084f",
+  "probe_tcl_sha256": "03e5b45c2bc10b7745823aa59fc9d3ab21f3a05cd8d27df5bcc4b909c6b53900",
+  "launch": {
+    "ps": 217.12552,
+    "pin": "actual_data[249]"
+  },
+  "capture": {
+    "ps": 126.45797999999999,
+    "pin": "controller_co[192]"
+  },
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": [],
+  "clock_refs": {
+    "ck": {
+      "rise": 267.6,
+      "fall": 289.00912,
+      "min": 243.3981,
+      "max": 298.43137,
+      "src": "insertion.json boundary mean",
+      "bmin": 253.4,
+      "bmax": 291.7,
+      "n": 327
+    },
+    "pll_hbm": {
+      "rise": 295.7,
+      "fall": 321.419595,
+      "min": 264.86108,
+      "max": 341.285,
+      "src": "insertion.json boundary mean",
+      "bmin": 278.8,
+      "bmax": 341.3,
+      "n": 293
+    },
+    "pll_hbm_data[3]": {
+      "rise": 271.023515,
+      "fall": 294.599655,
+      "min": 258.1554,
+      "max": 283.89163,
+      "src": "lib midrange",
+      "bmin": 258.1554,
+      "bmax": 283.89163,
+      "n": null
+    },
+    "pll_hbm_data[2]": {
+      "rise": 252.461535,
+      "fall": 273.83254999999997,
+      "min": 234.71344,
+      "max": 270.20963,
+      "src": "lib midrange",
+      "bmin": 234.71344,
+      "bmax": 270.20963,
+      "n": null
+    },
+    "pll_hbm_data[1]": {
+      "rise": 208.725505,
+      "fall": 225.555155,
+      "min": 199.22678,
+      "max": 218.22423,
+      "src": "lib midrange",
+      "bmin": 199.22678,
+      "bmax": 218.22423,
+      "n": null
+    },
+    "pll_hbm_data[0]": {
+      "rise": 170.11012,
+      "fall": 184.51229999999998,
+      "min": 158.89076,
+      "max": 181.32948,
+      "src": "lib midrange",
+      "bmin": 158.89076,
+      "bmax": 181.32948,
+      "n": null
+    }
+  },
+  "spread_ps": {
+    "ck": 38.29999999999998,
+    "pll_hbm": 62.5,
+    "pll_hbm_data[3]": 25.736230000000035,
+    "pll_hbm_data[2]": 35.49619000000001,
+    "pll_hbm_data[1]": 18.997450000000015,
+    "pll_hbm_data[0]": 22.43871999999999
+  },
+  "measured_reference_coverage": false,
+  "diagnostic_pass": false
+}
