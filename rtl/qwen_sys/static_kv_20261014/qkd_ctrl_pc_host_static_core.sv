@@ -573,8 +573,16 @@ module qkd_ctrl_pc_sched #(
     wire        tc_v;
     wire [31:0] tc_d;
     wire [32:0] ko_r;                              // s7b ko (u_tap o_v / o_d)
+    wire        tap_cv;
+    wire [31:0] tap_cd;
     ot_qkvd_kcmd_tap #(.ROW0(ROW0)) u_tap (.clk(hclk), .rst_n(h_rn), .i_v(ki[0]), .i_d(ki[32:1]),
-        .o_v(ko_r[0]), .o_d(ko_r[32:1]), .c_v(tc_v), .c_d(tc_d));
+        .o_v(ko_r[0]), .o_d(ko_r[32:1]), .c_v(tap_cv), .c_d(tap_cd));
+    // KVCTRL sched_s8 (PINREG): the tap's c_v / c_d registers are exactly the decode of its o_v / o_d registers on the
+    // same edge (both load i_v / i_d on one edge, same reset), so the chain-word pin flops o_v / o_d alone capture ki
+    // and the controller command is decoded after them (0 cycles; s7b ki[32:31] -> c_v / c_d decode before the flop).
+    wire [1:0]  tap_op = ko_r[32:31];
+    assign tc_v = (PINREG != 0) ? (ko_r[0] && (tap_op == 2'd0 || tap_op == 2'd1)) : tap_cv;
+    assign tc_d = (PINREG != 0) ? ((tap_op == 2'd0) ? {2'd0, 11'd1024, 19'(ROW0 + ko_r[20:15])} : {2'd1, 30'd0}) : tap_cd;
 
     // ---- W-face pin flops (CDC ho) -----------------------------------------------------------------------------------
     (* keep *) reg         wv_q, cv_q, hf_q;
@@ -644,7 +652,7 @@ module qkd_ctrl_pc_sched #(
             cr <= cr - {3'd0, cmd_v} + {3'd0, cmd_credit};
             if (cmd_v && cr == 4'd0) f_cmd <= 1'b1;
             if((static_owner_q&&(tc_v||w_pend))||(!static_owner_q&&static_v_q))f_cmd<=1'b1;
-            if(static_owner_q!=static_owner_d && (!ctl_phase_idle||tw!=tr||c_v||cv_q||wv_q))f_cmd<=1'b1;
+            if(static_owner_q!=static_owner_d && (!ctl_phase_idle||tw!=trv||c_v||cv_q||wv_q))f_cmd<=1'b1;
             hand_q <= w_go;
             if (w_go) hold <= 3'(HOFF); else if (hold != 3'd0) hold <= hold - 3'd1;
             if (tc_v && tc_d[31:30] == 2'd0) cur_v <= 1'b1;
@@ -719,9 +727,14 @@ module qkd_ctrl_pc_sched #(
     reg         f_tag;
     wire        rd_kv   = col_v && !col_we && !col_sr;
     wire [9:0]  rj      = {col_bank[4:2], col_col, col_bank[1:0]};
-    wire        t_empty = tw == tr;
-    wire        t_full  = tw[TQA-1:0] == tr[TQA-1:0] && tw[TQA] != tr[TQA];
-    wire [33:0] t_head  = tq[tr[TQA-1:0]];
+    // KVCTRL sched_s8 (PINREG): the read pointer is formed from registers only -- trd counts pops through the p_kv_v
+    // pin flop kvc_q (one edge late) and trv = trd + kvc_q (= the s7b tr on every edge; a mux of precomputed
+    // trd / trd + 1 / trd + 2 registers), so p_kv_v loads only its pin flops and the e_sec / e_row select.
+    wire [TQA:0]   trv;
+    wire [TQA-1:0] tr1v;
+    wire        t_empty = tw == trv;
+    wire        t_full  = tw[TQA-1:0] == trv[TQA-1:0] && tw[TQA] != trv[TQA];
+    wire [33:0] t_head  = tq[trv[TQA-1:0]];
     wire [9:0]  t_j     = (MUT == 3) ? {t_head[9:2], t_head[0], t_head[1]} : t_head[9:0];
     wire [7:0]  t_layer = t_head[17:10] - 8'(ROW0);
     always @(posedge hclk) begin
@@ -749,8 +762,22 @@ module qkd_ctrl_pc_sched #(
     // register = tr + 1) are formed in parallel and the port child's kv_v selects LAST (core_s1: p_kv_v -> e_sec 13 levels).
     reg  [TQA-1:0] tr1;
     always @(posedge hclk or negedge h_rn) if (!h_rn) tr1 <= TQA'(1); else if (kv_v) tr1 <= tr1 + 1'b1;
-    wire [33:0]  h_c0    = tq[tr[TQA-1:0]];
-    wire [33:0]  h_c1    = tq[tr1];
+    generate if (PINREG != 0) begin : g_trd
+        reg kvc_q;
+        reg [TQA:0] trd, trd_p1, trd_p2;
+        always @(posedge hclk or negedge h_rn)
+            if (!h_rn) begin kvc_q <= 1'b0; trd <= '0; trd_p1 <= (TQA+1)'(1); trd_p2 <= (TQA+1)'(2); end
+            else begin
+                kvc_q <= kv_v;
+                if (kvc_q) begin trd <= trd_p1; trd_p1 <= trd_p2; trd_p2 <= trd_p2 + 1'b1; end
+            end
+        assign trv  = kvc_q ? trd_p1 : trd;
+        assign tr1v = kvc_q ? trd_p2[TQA-1:0] : trd_p1[TQA-1:0];
+    end else begin : g_tr
+        assign trv = tr; assign tr1v = tr1;
+    end endgenerate
+    wire [33:0]  h_c0    = tq[trv[TQA-1:0]];
+    wire [33:0]  h_c1    = tq[tr1v];
     wire [9:0]   h_c0_j  = (MUT == 3) ? {h_c0[9:2], h_c0[0], h_c0[1]} : h_c0[9:0];
     wire [9:0]   h_c1_j  = (MUT == 3) ? {h_c1[9:2], h_c1[0], h_c1[1]} : h_c1[9:0];
     wire [7:0]   h_c0_l  = h_c0[17:10] - 8'(ROW0);
@@ -831,8 +858,11 @@ module qkd_ctrl_pc_sched #(
     // output pin register re-times it (po, p_w_d, ko, and physical_context / physical_col_sr / expected_sr with po so
     // every observer sees the launched column on the same edge as before); (2) fo / idle_hbm / p_w_v are computed one
     // edge later from pin flops of their raw inputs and plain registers of their internal terms (D-form: exactly the
-    // s7b register delayed one edge).  p_kv_v keeps its 0-cycle select of the e_sec / e_row lookahead (the ECC child
-    // captures the port beat and e_sec on the same edge) but leaves the idle veto.
+    // s7b register delayed one edge).  p_kv_v keeps only its 0-cycle select of the e_sec / e_row lookahead (the ECC child
+    // captures the port beat and e_sec on the same edge): it leaves the idle veto, the tag check (D(f_tag)) and the read
+    // pointer (trv).  ki lands only in the tap's o_v / o_d pin flops; the tap command is decoded after them (0 cycles).
+    // Gate 374e1e726 CTS probe: launch max 99 ps (was 308.9); capture over on p_kv_v 256 (tr counter) and ki 223 (tap
+    // decode) -> both moved behind pin flops here.
     generate if (PINREG != 0) begin : g_pin
         // pin flops of raw inputs (plain registers: D(x))
         (* keep *) reg c_v_q, cw_q, kv_v_q, em_v_q, obs_q, nat_q, fi_q, pf_q, ef_q, fe_q, nof_q;
@@ -842,14 +872,16 @@ module qkd_ctrl_pc_sched #(
             nof_q <= native_observer_fault;
         end
         // plain registers of internal terms (all registers or logic of registers in s7b)
+        reg ftag_a_d, ftag_e_d, f_tag_d;
         reg h_rn_d, hgo_d, fint_d, cmd_a_d, cmd_b_d, early_d, act_int_d, gate_d, hdz_d, dfh_d;
         wire cmd_a = (cmd_v && cr == 4'd0) || ((static_owner_q && (tc_v || w_pend)) || (!static_owner_q && static_v_q)) ||
-                     (static_owner_q != static_owner_d && (!ctl_phase_idle || tw != tr || cv_q || wv_q));
+                     (static_owner_q != static_owner_d && (!ctl_phase_idle || tw != trv || cv_q || wv_q));
         wire act_int = rd_kv || tc_v || cmd_v || static_v_q || s_cr || wv_q || cv_q || hand_q || wcon_q || row_v || col_v ||
                        po_r[0] || po_r[28] || rv_q || rawslot_q || l_v;
         always @(posedge hclk) begin
             h_rn_d <= h_rn; hgo_d <= hgo;
-            fint_d <= ctl_fault | hf_q | f_late | f_wmis | f_tag | raw_bad;
+            fint_d <= ctl_fault | hf_q | f_late | f_wmis | raw_bad;
+            ftag_a_d <= rd_kv && t_full; ftag_e_d <= t_empty;
             cmd_a_d <= cmd_a; cmd_b_d <= static_owner_q != static_owner_d;
             early_d <= !hgo && (tc_v || static_v_q);
             act_int_d <= act_int;
@@ -862,11 +894,14 @@ module qkd_ctrl_pc_sched #(
             if (!hgo_d) f_cmd_d <= 1'b0; else if (cmd_a_d || (cmd_b_d && c_v_q)) f_cmd_d <= 1'b1;
         always @(posedge hclk or negedge h_rn_d)
             if (!h_rn_d) f_early_d <= 1'b0; else if (early_d || (!hgo_d && c_v_q)) f_early_d <= 1'b1;
+        // D(f_tag): the tag check one edge later (its raw p_kv_v term from the pin flop)
+        always @(posedge hclk or negedge h_rn_d)
+            if (!h_rn_d) f_tag_d <= 1'b0; else if (ftag_a_d || (kv_v_q && ftag_e_d)) f_tag_d <= 1'b1;
         // D(fo): fault chain output register at the N pin
         reg fo_p;
         always @(posedge hclk or negedge h_rn_d)
             if (!h_rn_d) fo_p <= 1'b0;
-            else fo_p <= fo_p | fi_q | pf_q | ef_q | fe_q | nof_q | fint_d | f_cmd_d | f_early_d;
+            else fo_p <= fo_p | fi_q | pf_q | ef_q | fe_q | nof_q | fint_d | f_tag_d | f_cmd_d | f_early_d;
         // D(idle_hbm) (DRAIN_PIPE form): veto from the pin flops + the registered internal activity
         reg [1:0] hq_p;
         reg idle_p;
