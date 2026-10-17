@@ -348,6 +348,34 @@ FOLD_RULES.append(dict(target='ot_static_cmd_target', detect='cmd_v', consumers=
      clocks=('clk_cal',)))   # r2 8e0535ed5: raw hard entry of the issuer table SRAM
 # parameters that became identity strap pins (H-SM DEDUPE 2026-10-16): one hardened master for every value
 PARAM_STRAPS = {'ot_hbm_svc_vm_kshare': {'SM': 'sm'}}
+# H-NETLIST 1815 (owner: few tile variants; 178 die parameter aliases -> exact view requests): masters whose per-instance
+# identity parameters are replaced by strap INPUTS of one generic master (each strap captured by a flop inside it).
+# Enabled by --identity-straps.  value(params) gives the strap; 'keep' parameters are carried with their defaults.
+_SVC = 'rtl/hbm_accel/loader/service_native/'
+
+
+def _pc_refresh_reload(p):
+    # ot_hbm_svc_pc_ctrl_leaf.sv: RP=(PHASE+P*118/32)%118, RELOAD=118+RP+((RP+118+P)%2) -> the cfg master's refresh_reload
+    rp = (int(p.get('PHASE', 0)) + int(p['P']) * 118 // 32) % 118
+    return 118 + rp + ((rp + 118 + int(p['P'])) % 2)
+
+
+IDENTITY_MASTERS = {
+    # the parameterised leaf is a pure wrapper: cfg u_cfg(.pc_id(5'(P)),.refresh_reload(8'(RELOAD))) (bench mutants
+    # OT_PC_CFG_MUT_PC/PHASE in run_sm_groups_issued.sh); the cfg master registers both straps (pc_id_q/refresh_reload_q)
+    'ot_hbm_svc_pc_ctrl_leaf': dict(
+        master='ot_hbm_svc_pc_ctrl_leaf_cfg', source=_SVC + 'ot_hbm_svc_pc_ctrl_leaf_cfg.sv', deps=[],
+        keep=dict(OREG=1, KREG=1, KRREG=1, RREG=1, WPAY=1),
+        straps=[('pc_id', lambda p: int(p['P'])), ('refresh_reload', _pc_refresh_reload)]),
+    # tools/hbm_die_v16/gen_svc_sm_group_id.py; bench rtl/hbm_accel/loader/service_native/run_sm_groups_issued_id.sh
+    'ot_hbm_svc_sm_group': dict(
+        master='ot_hbm_svc_sm_group_id', source=_SVC + 'ot_hbm_svc_sm_group_id.sv',
+        deps=[_SVC + 'ot_hbm_svc_sm_feed_programmed_id.sv', _SVC + 'ot_hbm_svc_sm4pc_cdc_id.sv',
+              _SVC + 'ot_hbm_svc_prefetch_overlap_owner_id.sv'],
+        keep=dict(LBANKS=4, FIXED_GO=0),
+        straps=[('id_stack', lambda p: int(p.get('STACK', 0))), ('id_sm', lambda p: int(p.get('SM', 0)))]),
+}
+IDENTITY_STRAPS = False   # main(): --identity-straps
 # H-NETLIST 0600: logical array wrappers whose RTL is "physically N independently hardened leaves" are FLATTENED in the
 # die netlist into their N leaf instances <inst>_b<k> (one hardened leaf master, bit-sliced edges, same clock root bit).
 _VMS = 'rtl/hbm_accel/generic/vm/static/'
@@ -442,6 +470,20 @@ def build(specs_dir, out, extra=()):
             if prm in i['params']:
                 tgt_straps.append(dict(inst=n, port=port, value=int(i['params'].pop(prm)),
                                        reason=f'identity: {prm} of this instance (was a parameter)'))
+    if IDENTITY_STRAPS:
+        for n, i in insts.items():
+            r = IDENTITY_MASTERS.get(i['master'])
+            if not r:
+                continue
+            old = dict(i['params'])
+            for port, fn in r['straps']:
+                tgt_straps.append(dict(inst=n, port=port, value=fn(old),
+                                       reason=f"identity: {port} of this {i['master']} instance (was parameters {old})"))
+            i.update(master=r['master'], source=r['source'],
+                     params={k: int(old.get(k, v)) for k, v in r['keep'].items()},
+                     note=i.get('note', '') + f" | H-NETLIST 1815 identity straps: one generic master (was {i['master']} {old})")
+            if r['deps']:
+                i['rtl_deps'] = list(r['deps'])
     specs.append(dict(region='target_id_straps', straps=tgt_straps, edges=[], instances=[], clocks=[], gaps=[]))
     # H-NETLIST 0600: fill calendars vmfc_<q> (ot_vms_calendar_static, W<=187) are the CLOSED universal VM calendar
     # master hfd_hgi_vm_calendar (native PASS): same programme ABI, calendar[W-1:0] = its low packed fields cycle for
@@ -890,7 +932,11 @@ def main():
     ap.add_argument('--specs', type=Path, default=ROOT / 'tools/hbm_die_v15/v16_specs')
     ap.add_argument('--extra-spec', action='append', default=[],
                     help='revision layer spec (e.g. tools/hbm_die_v15/v16_relays/relays_d4b.json.gz: d4b relay stations)')
+    ap.add_argument('--identity-straps', action='store_true',
+                    help='IDENTITY_MASTERS: per-instance identity parameters -> strap pins of one generic master')
     a = ap.parse_args()
+    global IDENTITY_STRAPS
+    IDENTITY_STRAPS = a.identity_straps
     c = build(a.specs, a.out, a.extra_spec)
     print(json.dumps(c['summary'], indent=1))
     for p in c['problems'][:40]:
