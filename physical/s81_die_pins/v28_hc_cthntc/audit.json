@@ -2,14 +2,14 @@
  "schema": "opentallas.s81.cthntc_plan.v1",
  "parent": {
   "w": 576.72,
-  "h": 885.06
+  "h": 887.76
  },
  "split": false,
  "slice_leaf_h": 34.56,
  "slice_row_h": 34.56,
  "total": {
   "joins": 16560,
-  "over500": 2060,
+  "over500": 2073,
   "max_um": 750.204
  },
  "by_kind": {
@@ -33,7 +33,7 @@
   },
   "request": {
    "n": 1296,
-   "max_um": 469.746,
+   "max_um": 472.446,
    "over500": 0,
    "over440": 192
   },
@@ -87,14 +87,14 @@
   },
   "yb_peer": {
    "n": 768,
-   "max_um": 493.824,
+   "max_um": 496.512,
    "over500": 0,
    "over440": 32
   },
   "cs_rel": {
    "n": 384,
-   "max_um": 499.692,
-   "over500": 0,
+   "max_um": 502.392,
+   "over500": 13,
    "over440": 128
   },
   "hov_rel": {

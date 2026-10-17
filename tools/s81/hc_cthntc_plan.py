@@ -32,9 +32,9 @@ SPLIT = '--split' in sys.argv
 SL_H = 25.92 if SPLIT else 34.56
 SL_ROW = 2 * SL_H if SPLIT else SL_H
 # a4c (HC-COL 10-16 18:30): retcol a4b c2/c3 hit the route FLOORPLAN_MARGIN (util 65.0-65.1% with the hold-buffer
-# allowance > 65% at 72.90) -> OT_CTHNTC_RET_H=75.06 (+2.16, 8 rows: util+hold ~63%; 77.76 would push 13 cs_rel legs to 502 um > 500); every row below moves down by RET_GROW.
+# allowance > 65% at 72.90) -> 75.06 projected c0 65.9% incl hold (route-synth std 5827) -> a4d 77.76 (+4.86, 18 rows; 13 cs_rel legs 502.4 um > 500, reported); every row below moves down by RET_GROW.
 import os
-RET_H = round(float(os.environ.get('OT_CTHNTC_RET_H', '75.06')), 3)
+RET_H = round(float(os.environ.get('OT_CTHNTC_RET_H', '77.76')), 3)
 SL_GROW, RET_GROW = round(SL_ROW - 25.92, 3), round(RET_H - 72.90, 3)
 H, W = round(874.26 + SL_GROW + RET_GROW, 3), 576.72
 CW, LW = 144.18, 144.72          # new-leaf column pitch / closed lane-tile pitch
