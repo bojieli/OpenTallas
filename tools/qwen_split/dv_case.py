@@ -109,6 +109,12 @@ def apply_dv(v, m):
             d_ = dirs.get(n_) or ('output' if n_.startswith('bco') else 'input')
             ports[n_] = dict(dir=d_, bits=p_['bits'], face=p_['face'], layer=p_['layer'], range=list(p_['range_um']))
         ck_pins = [p for p in ports if p.startswith('ck')]
+        if os.environ.get('OT_SPLIT_DV_RSI_AT_RS') == '1':
+            # the far cluster's rs (S face, 488.9-660.2) feeds the near cluster's rs_i (N face) across the 130-um band
+            # gap; the contract's rs_i sits under rs_o (1093.7-1265.0): a 605-um jog per bit (735 um each, one relay
+            # stage in the gap, dv2f3 GEN: no free spot).  rs_i on the N face straight above rs (free there): a 130-um
+            # face-to-face crossing, no relay; the cluster carries rs_i -> rs_o inside (its registered feedthrough).
+            ports['rs_i']['range'] = list(ports['rs']['range'])
     else:
         sc = CWN / C['outline_um']['w']
         ports = Q._contract_ports(C)
@@ -294,6 +300,11 @@ def apply_dv(v, m):
             m['ties'].append((n, 'rs_i', 514, 0))
     m['ties'][:] = [t for t in m['ties'] if t[0] in names]
     m['buses'] = out
+    # relay routing on the dv array (b3r2 _poly0): field-to-field links stay in their band gap / the W|E seam
+    m['dv_gap_route'] = True
+    w0, e0 = DI['dvs_W0'], DI['dvs_E0']
+    if e0['x'] - (w0['x'] + w0['w']) > 1.0:
+        m['dv_seam'] = (round(w0['x'] + w0['w'], 3), round(e0['x'], 3))
     # ---- die / relay geometry
     W = max(i.x + i.w for i in keep) + 21.6
     H = max(d['y'] + d['h'] for d in D['insts']) + 21.6
@@ -303,8 +314,9 @@ def apply_dv(v, m):
     g['y0'], g['y_top'], g['y_io'] = 0.0, H, H
     arr = [i for i in keep if i.name.startswith(('c16_', 'dvs_'))]
     xm = (min(i.x for i in arr) + max(i.x + i.w for i in arr)) / 2
-    rects = [[min(i.x for i in arr if i.cx < xm), min(i.y for i in arr), xm, max(i.y + i.h for i in arr)],
-             [xm, min(i.y for i in arr), max(i.x + i.w for i in arr), max(i.y + i.h for i in arr)]]
+    xw, xe = m.get('dv_seam') or (xm, xm)      # the W|E seam channel is not tile field: relays may stand in it
+    rects = [[min(i.x for i in arr if i.cx < xm), min(i.y for i in arr), xw, max(i.y + i.h for i in arr)],
+             [xe, min(i.y for i in arr), max(i.x + i.w for i in arr), max(i.y + i.h for i in arr)]]
     fields = sorted([r for r in m['regions'] if r['kind'] == 'tile_field'], key=lambda r: r['rect'][0])
     for r, rr in zip(fields, rects):
         r['rect'] = [round(z, 3) for z in rr]

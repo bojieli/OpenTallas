@@ -2397,6 +2397,19 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             yv = Pv[1] + (130.0 if Ph[1] > Pv[1] else -130.0)
             path = [Pv, (Pv[0], yv), (xl, yv), (xl, Ph[1]), Ph]
             return path if Pv is P0 else path[::-1]
+        if m.get('dv_gap_route') and f0 and f1:
+            # Q-DIEPLAN3 dv (2026-10-17): the dv array has no field corridors (clusters / slices abut; the corridor
+            # lanes are the W-column channel), so a field-to-field link whose ends face one band gap / the W|E seam
+            # runs inside that channel (dv2f3: dv_rsi_E4_0 went 25 mm W to the W-column lane and back)
+            sm = m.get('dv_seam')
+            if sm and all(sm[0] - 1.0 <= P[0] <= sm[1] + 1.0 for P in (P0, P1)):
+                xm = round((sm[0] + sm[1]) / 2, 3)
+                return [P0, (xm, P0[1]), (xm, P1[1]), P1] if abs(P0[1] - P1[1]) > 1.0 else [P0, P1]
+            for a_, b_ in legal_row_gaps:
+                if a_ - 1.0 <= P0[1] <= b_ + 1.0 and a_ - 1.0 <= P1[1] <= b_ + 1.0:
+                    ym = round((a_ + b_) / 2, 3)
+                    return [P0, (P0[0], ym), (P1[0], ym), P1] if abs(P0[0] - P1[0]) > 1.0 else [P0, P1]
+            raise ValueError(f'dv: field-to-field link {bid} {P0} -> {P1} faces no band gap / seam (no die corridor)')
         if cl == 'corridor' or (abs(P0[0] - P1[0]) < 1.0 and not (FIELD_ALLOC and f0 and f1 and not cl.startswith('kvn'))):
             # it19: under FIELD_ALLOC a same-x field word goes through field_route too (the straight vertical
             # shortcut stacked 3 x 512-b tree words + a corridor word in one column channel: 0.72 / 0.68 / 0.65)
@@ -3044,9 +3057,17 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         # far off); OT_RELAY_WORST_BIT=0 restores the centroid rule
         # (face-to-face seams across <= 60 um keep the centroid rule: their pins are per-bit aligned on one track each,
         # as the seam pin audit proves for the VM/SU channel)
-        if _os.environ.get('OT_RELAY_WORST_BIT', '1') != '0' and d > 60.0:
+        _wb = _os.environ.get('OT_RELAY_WORST_BIT', '1')
+        if _wb != '0' and d > 60.0:
             e0_, e1_ = PT_EXT.get(_pt_key(P0)) or (0.0, 0.0), PT_EXT.get(_pt_key(P1)) or (0.0, 0.0)
-            d = d + e0_[0] + e1_[0] + e0_[1] + e1_[1]
+            if _wb == 'ordered':
+                # dv die (Q-DIEPLAN3 10-17): every die bundle is written bit-ascending on both faces with the order
+                # preserved (pin_align 'order preserved' on all of them), so bit k meets bit k: the worst bit is the
+                # centroid distance plus the extent DIFFERENCE.  The per-bit gate (OT_PIN_BIT_REACH_UM) re-measures
+                # every bit after pin assignment and fails the GEN if this ever under-counts.
+                d = d + abs(e0_[0] - e1_[0]) + abs(e0_[1] - e1_[1])
+            else:
+                d = d + e0_[0] + e1_[0] + e0_[1] + e1_[1]
         terminal = getattr(v, 'TERMINAL_TIGHT', {})
         direct_limit = min(terminal.get(tuple(eps[0]), float('inf')), terminal.get(tuple(eps[-1]), float('inf')))
         if _dbg and bid in _dbg:
