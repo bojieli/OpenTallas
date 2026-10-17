@@ -1,0 +1,142 @@
+schedule: last SM-writer emission at cycle 529
+SM writes 2368, LG writes 605, rows checked 650
+TB_HBM_SM_VM_WR_Q_T PASS MUT=0
+rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv:238: $finish called at 16704000 (1ps)
+schedule: last SM-writer emission at cycle 529
+MISMATCH bank 0 row 64 word 0: got 44d80000 want a60e0000
+MISMATCH bank 0 row 64 word 1: got 93d00000 want 9da60000
+MISMATCH bank 0 row 64 word 2: got e75a0000 want 28a70000
+MISMATCH bank 0 row 64 word 3: got eda90000 want 7fc00000
+MISMATCH bank 0 row 64 word 4: got 31710000 want 839c0000
+MISMATCH bank 0 row 64 word 5: got 06500000 want d72d0000
+MISMATCH bank 0 row 64 word 6: got 8c030000 want 586b0000
+MISMATCH bank 0 row 64 word 7: got 6f590000 want 69800000
+MISMATCH bank 1 row 64 word 0: got 13580000 want 910f0000
+MISMATCH bank 1 row 64 word 1: got 81150000 want d83d0000
+SM writes 2368, LG writes 605, rows checked 650
+TB_HBM_SM_VM_WR_Q_T FAIL MUT=1 mismatches+faults=2176
+rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv:238: $finish called at 16704000 (1ps)
+schedule: last SM-writer emission at cycle 529
+MISMATCH bank 0 row 0 word 3: got 00000000 want 7f800001
+MISMATCH bank 0 row 0 word 7: got 00000000 want 9e280f3c
+MISMATCH bank 1 row 0 word 3: got 00000000 want 7f800001
+MISMATCH bank 1 row 0 word 7: got 00000000 want bc1cff78
+MISMATCH bank 2 row 0 word 3: got 00000000 want 7f800001
+MISMATCH bank 2 row 0 word 7: got 00000000 want 0fd1a01f
+MISMATCH bank 3 row 0 word 3: got 00000000 want 7f800001
+MISMATCH bank 3 row 0 word 7: got 00000000 want 867b930c
+MISMATCH bank 4 row 0 word 3: got 00000000 want 7f800001
+MISMATCH bank 4 row 0 word 7: got 00000000 want 64ec48c9
+bank 0 FAULT (schedule/decode)
+bank 1 FAULT (schedule/decode)
+bank 2 FAULT (schedule/decode)
+bank 3 FAULT (schedule/decode)
+bank 4 FAULT (schedule/decode)
+bank 5 FAULT (schedule/decode)
+bank 6 FAULT (schedule/decode)
+bank 7 FAULT (schedule/decode)
+SM writes 2368, LG writes 605, rows checked 650
+TB_HBM_SM_VM_WR_Q_T FAIL MUT=2 mismatches+faults=184
+rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv:238: $finish called at 16704000 (1ps)
+schedule: last SM-writer emission at cycle 529
+MISMATCH bank 0 row 0 word 0: got 00000000 want 00076200
+MISMATCH bank 0 row 0 word 1: got 00000000 want 51d788a3
+MISMATCH bank 0 row 0 word 2: got 00000000 want 4f07f89e
+MISMATCH bank 0 row 0 word 3: got 00000000 want 7f800001
+MISMATCH bank 0 row 0 word 4: got 00000000 want c2a33d85
+MISMATCH bank 0 row 0 word 5: got 00000000 want 8b78ff16
+MISMATCH bank 0 row 0 word 6: got 00000000 want 57d14eaf
+MISMATCH bank 0 row 0 word 7: got 00000000 want 9e280f3c
+MISMATCH bank 1 row 0 word 0: got 00000000 want 90d78121
+MISMATCH bank 1 row 0 word 1: got 00000000 want 3d97fa7b
+bank 0 FAULT (schedule/decode)
+bank 1 FAULT (schedule/decode)
+bank 2 FAULT (schedule/decode)
+bank 3 FAULT (schedule/decode)
+bank 4 FAULT (schedule/decode)
+bank 5 FAULT (schedule/decode)
+bank 6 FAULT (schedule/decode)
+bank 7 FAULT (schedule/decode)
+SM writes 2368, LG writes 605, rows checked 650
+TB_HBM_SM_VM_WR_Q_T FAIL MUT=3 mismatches+faults=2120
+rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv:238: $finish called at 16704000 (1ps)
+schedule: last SM-writer emission at cycle 529
+writer/collar FAULT 1 ingress 0 axi 0
+SM writes 2368, LG writes 605, rows checked 650
+TB_HBM_SM_VM_WR_Q_T FAIL MUT=4 mismatches+faults=1
+rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv:238: $finish called at 16704000 (1ps)
+VM_LAT=1 NAT2_MUT=0
+schedule: last SM-writer emission at cycle 529
+SM writes 2368, LG writes 605, rows checked 650
+TB_HBM_SM_VM_WR_Q_T PASS MUT=0
+rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv:238: $finish called at 16704000 (1ps)
+VM_LAT=1 NAT2_MUT=1
+schedule: last SM-writer emission at cycle 529
+MISMATCH bank 0 row 0 word 3: got 00000000 want 7f800001
+MISMATCH bank 0 row 0 word 7: got 00000000 want 9e280f3c
+MISMATCH bank 1 row 0 word 3: got 00000000 want 7f800001
+MISMATCH bank 1 row 0 word 7: got 00000000 want bc1cff78
+MISMATCH bank 2 row 0 word 3: got 00000000 want 7f800001
+MISMATCH bank 2 row 0 word 7: got 00000000 want 0fd1a01f
+MISMATCH bank 3 row 0 word 3: got 00000000 want 7f800001
+MISMATCH bank 3 row 0 word 7: got 00000000 want 867b930c
+MISMATCH bank 4 row 0 word 3: got 00000000 want 7f800001
+MISMATCH bank 4 row 0 word 7: got 00000000 want 64ec48c9
+bank 0 FAULT (schedule/decode)
+bank 1 FAULT (schedule/decode)
+bank 2 FAULT (schedule/decode)
+bank 3 FAULT (schedule/decode)
+bank 4 FAULT (schedule/decode)
+bank 5 FAULT (schedule/decode)
+bank 6 FAULT (schedule/decode)
+bank 7 FAULT (schedule/decode)
+SM writes 2368, LG writes 605, rows checked 650
+TB_HBM_SM_VM_WR_Q_T FAIL MUT=0 mismatches+faults=184
+rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv:238: $finish called at 16704000 (1ps)
+FACE_CLOCK_MUT=1
+schedule: last SM-writer emission at cycle 529
+MISMATCH bank 4 row 0 word 0: got 00000000 want e65795cc
+MISMATCH bank 4 row 0 word 1: got 00000000 want 8ab6ab15
+MISMATCH bank 4 row 0 word 2: got 00000000 want b0d8fb61
+MISMATCH bank 4 row 0 word 3: got 00000000 want 7f800001
+MISMATCH bank 4 row 0 word 4: got 00000000 want c0f6c981
+MISMATCH bank 4 row 0 word 5: got 00000000 want 34f89469
+MISMATCH bank 4 row 0 word 6: got 00000000 want a1ff1f43
+MISMATCH bank 4 row 0 word 7: got 00000000 want 64ec48c9
+MISMATCH bank 5 row 0 word 0: got 00000000 want d990ebb3
+MISMATCH bank 5 row 0 word 1: got 00000000 want 7dc984fb
+SM writes 2368, LG writes 605, rows checked 650
+TB_HBM_SM_VM_WR_Q_T FAIL MUT=0 mismatches+faults=1184
+rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv:238: $finish called at 16704000 (1ps)
+FACE_CLOCK_MUT=2
+schedule: last SM-writer emission at cycle 529
+MISMATCH bank 4 row 0 word 0: got 00000000 want e65795cc
+MISMATCH bank 4 row 0 word 1: got 00000000 want 8ab6ab15
+MISMATCH bank 4 row 0 word 2: got 00000000 want b0d8fb61
+MISMATCH bank 4 row 0 word 3: got 00000000 want 7f800001
+MISMATCH bank 4 row 0 word 4: got 00000000 want c0f6c981
+MISMATCH bank 4 row 0 word 5: got 00000000 want 34f89469
+MISMATCH bank 4 row 0 word 6: got 00000000 want a1ff1f43
+MISMATCH bank 4 row 0 word 7: got 00000000 want 64ec48c9
+MISMATCH bank 5 row 0 word 0: got 00000000 want d990ebb3
+MISMATCH bank 5 row 0 word 1: got 00000000 want 7dc984fb
+SM writes 2368, LG writes 605, rows checked 650
+TB_HBM_SM_VM_WR_Q_T FAIL MUT=0 mismatches+faults=1184
+rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv:238: $finish called at 16704000 (1ps)
+FACE_CLOCK_MUT=3
+schedule: last SM-writer emission at cycle 529
+ERROR install: cfgd 0 fault 0 ingress 0 axi 0
+MISMATCH bank 0 row 0 word 0: got 6657e2cc want 00076200
+MISMATCH bank 0 row 0 word 1: got fca403f9 want 51d788a3
+MISMATCH bank 0 row 0 word 2: got 5c8baeb9 want 4f07f89e
+MISMATCH bank 0 row 0 word 4: got f2a73be5 want c2a33d85
+MISMATCH bank 0 row 0 word 5: got d9ef2fb3 want 8b78ff16
+MISMATCH bank 0 row 0 word 6: got f18bf3e3 want 57d14eaf
+MISMATCH bank 0 row 0 word 7: got a3c16547 want 9e280f3c
+MISMATCH bank 1 row 0 word 0: got 5f634cbe want 90d78121
+MISMATCH bank 1 row 0 word 1: got aa194354 want 3d97fa7b
+writer/collar FAULT 1 ingress 0 axi 0
+SM writes 2368, LG writes 605, rows checked 650
+TB_HBM_SM_VM_WR_Q_T FAIL MUT=0 mismatches+faults=2298
+rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv:238: $finish called at 16704000 (1ps)
+SM_VM_WR_Q_T BENCH PASS (positive PASS, mutants 1/2/3/4 FAIL)
