@@ -11617,6 +11617,87 @@
    "native": "native PASS per S-ELEM 1315",
    "gate": "S-DIE 1815 explicit native-PASS row (owner relay S-ELEM 10-16)",
    "native_open": "production-throughput qualification stays with the tile owner"
+  },
+  "dsfd_rly_536_SN": {
+   "verdict": "DIAGNOSTIC_CLOSED",
+   "export_dir": "physical/ref_tile/s81_rly_536_sn/views/dsfd_rly_536_SN",
+   "job": "s81_rly_536_sn-rs1s56-e95957137",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_536_sn/views/dsfd_rly_536_SN/dsfd_rly_536_SN.lef",
+     "sha256": "c3b4e1f3b6be442c987f1f3071c7d73cd35d7acdd4ce94ceb1a36743fb5a4bd5"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_536_sn/views/dsfd_rly_536_SN/dsfd_rly_536_SN_tt.lib",
+     "sha256": "72f7708c282abe65068b0318f48bb5102e8201a0fc97d54b5cc53128879eeee6"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_536_sn/views/dsfd_rly_536_SN/dsfd_rly_536_SN_ff.lib",
+     "sha256": "d545702882e68bfff932336d60bec48922f31c106bd64618823443d2d9d85ff9"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_536_sn/views/dsfd_rly_536_SN/dsfd_rly_536_SN_ss.lib",
+     "sha256": "b4f1e858ef8497a792ddeebfc5ae316d1210a0365ae6b5d575e630439432e083"
+    }
+   },
+   "closure": "TT +325.99 / FF +20.91 ps DRC 0; SS sensitivity +232.75 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS launch187.1/capture132.2 (S-ELEM 10-16 19:45)",
+   "gate": "S-DIE 1815 explicit native-PASS row"
+  },
+  "dsfd_rly_536_SW": {
+   "verdict": "DIAGNOSTIC_CLOSED",
+   "export_dir": "physical/ref_tile/s81_rly_536_sw/views/dsfd_rly_536_SW",
+   "job": "s81_rly_536_sw-rs1s56-e95957137",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_536_sw/views/dsfd_rly_536_SW/dsfd_rly_536_SW.lef",
+     "sha256": "7e8710ddd980be6aee1266394aa1da372bf4e63548acc732f5f53e40ff440de0"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_536_sw/views/dsfd_rly_536_SW/dsfd_rly_536_SW_tt.lib",
+     "sha256": "fb713a4bae30482649b7c971ac06fe660e2470bbd73b53d531477036a0da0b36"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_536_sw/views/dsfd_rly_536_SW/dsfd_rly_536_SW_ff.lib",
+     "sha256": "8eb08a081601a37f4fbea7eb2eb3a328f096c21eaf7ea2ae4447b5dae05990ab"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_536_sw/views/dsfd_rly_536_SW/dsfd_rly_536_SW_ss.lib",
+     "sha256": "53854aa53129cce3d5c15c573ee08006aa83bc69d843b2de7c95287bd802762f"
+    }
+   },
+   "closure": "TT +304.84 / FF +19.44 ps DRC 0; SS sensitivity +193.63 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS launch210.3/capture137.5 (S-ELEM 10-16 19:45)",
+   "gate": "S-DIE 1815 explicit native-PASS row"
+  },
+  "dsfd_rly_536_WS": {
+   "verdict": "DIAGNOSTIC_CLOSED",
+   "export_dir": "physical/ref_tile/s81_rly_536_ws/views/dsfd_rly_536_WS",
+   "job": "s81_rly_536_ws-rs1s56-e95957137",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_536_ws/views/dsfd_rly_536_WS/dsfd_rly_536_WS.lef",
+     "sha256": "7e3c1a1d4733f61c64eb0ea7c2a6a814bc849ae7bc1b872ada6ee3d36145caf5"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_536_ws/views/dsfd_rly_536_WS/dsfd_rly_536_WS_tt.lib",
+     "sha256": "3f20937b3bd3fcdf9aef7f378f944dd9d2484f2cd26832fcc168b2fd90484532"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_536_ws/views/dsfd_rly_536_WS/dsfd_rly_536_WS_ff.lib",
+     "sha256": "2707bcad197a61b423940002683bbb91b208e900b2cd164c56bf1b816fd55ab3"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_536_ws/views/dsfd_rly_536_WS/dsfd_rly_536_WS_ss.lib",
+     "sha256": "a582f49e60426a4c03e908792015e547432d494825b4216d4c73182cb53d147d"
+    }
+   },
+   "closure": "TT +306.86 / FF +20.72 ps DRC 0; SS sensitivity +196.22 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS launch209.5/capture141.4 (S-ELEM 10-16 19:45)",
+   "gate": "S-DIE 1815 explicit native-PASS row"
   }
  },
  "superseded": {
@@ -13128,6 +13209,18 @@
    },
    "dsfd_bf_front_roots": {
     "job": "s81bf_front_five_roots_nlock_h03-ref-392d7efcb",
+    "replaced": null
+   },
+   "dsfd_rly_536_SN": {
+    "job": "s81_rly_536_sn-rs1s56-e95957137",
+    "replaced": null
+   },
+   "dsfd_rly_536_SW": {
+    "job": "s81_rly_536_sw-rs1s56-e95957137",
+    "replaced": null
+   },
+   "dsfd_rly_536_WS": {
+    "job": "s81_rly_536_ws-rs1s56-e95957137",
     "replaced": null
    }
   },
