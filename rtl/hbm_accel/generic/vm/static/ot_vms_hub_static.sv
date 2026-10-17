@@ -17,7 +17,11 @@
 // acknowledgements must precede the compiler response calendar. Missing ones
 // fault at that edge; they never delay or replay cr. Replay never rebroadcasts.
 // status sticky {range/address fault, byte-mask fault, schedule/identity fault}.
+// N_Q (A2P, H-NETLIST 2026-10-16): 4 = the historical 4-quadrant ring. 2 = the 2-node ring (sid 0 / 2): a native
+// mirror write issues local + CW(other) only and expects 2 acknowledgements; remote access is CW only; a request naming
+// sid 1 / 3 (absent quadrants) is an identity fault.
 module ot_vms_hub_static #(
+    parameter integer N_Q=4,
     parameter integer NC=4,
     parameter integer PHYSICAL_RING=1,
     parameter integer CW=(NC<1)?1:$clog2(NC+1),
@@ -88,8 +92,8 @@ module ot_vms_hub_static #(
     wire [1:0] next_sid=(PHYSICAL_RING!=0)?{nr[1],nr[1]^nr[0]}:me+2'd1;
     wire [1:0] opposite_sid=(PHYSICAL_RING!=0)?{orank[1],orank[1]^orank[0]}:me+2'd2;
     wire [1:0] previous_sid=(PHYSICAL_RING!=0)?{pvr[1],pvr[1]^pvr[0]}:me+2'd3;
-    wire [3:0] cw_dest=(4'b1<<next_sid)|(4'b1<<opposite_sid);
-    wire [3:0] ccw_dest=4'b1<<previous_sid;
+    wire [3:0] cw_dest=(N_Q==2)?(4'b1<<(me^2'b10)):((4'b1<<next_sid)|(4'b1<<opposite_sid));
+    wire [3:0] ccw_dest=(N_Q==2)?4'b0:(4'b1<<previous_sid);
     function automatic [2:0] bank_of(input [337:0] q);
         bank_of=(MUT==1)?q[312:310]:q[311:309];
     endfunction
@@ -103,7 +107,7 @@ module ot_vms_hub_static #(
         cw_needed=(c!=NC)&&((q[324]&&q[336])||(!q[324]&&((4'b1<<q[323:322])&cw_dest)!=0));
     endfunction
     function automatic ccw_needed(input [337:0] q,input integer c);
-        ccw_needed=(c!=NC)&&((q[324]&&q[336])||(!q[324]&&q[323:322]==previous_sid));
+        ccw_needed=(N_Q!=2)&&(c!=NC)&&((q[324]&&q[336])||(!q[324]&&q[323:322]==previous_sid));
     endfunction
     // Every pin payload is captured; only validity/control flops reset.
     always @(posedge clk) begin
@@ -171,6 +175,7 @@ module ot_vms_hub_static #(
             if(active[c][k]) fault[0]=1;
             if(issued_local[c]!=local_needed(q,c)||issued_cw[c]!=cw_needed(q,c)||issued_ccw[c]!=ccw_needed(q,c)) fault[0]=1;
             if(q[335:325]!=0||q[308:304]!=0||(q[324]&&q[323:322]!=0)||(c==NC&&!q[324]&&q[323:322]!=me)) fault[2]=1;
+            if(N_Q==2&&!q[324]&&q[322]) fault[2]=1;
             for(integer w=0;w<8;w=w+1) if(q[336]&&q[16+4*w+:4]!={4{wm[w]}}) fault[1]=1;
         end
         for(c=0;c<N;c=c+1) for(k=0;k<4;k=k+1) begin arrivals[c][k]=0; returned_data[c][k]=0; end
@@ -226,7 +231,7 @@ module ot_vms_hub_static #(
                 if(qvalid[c]) begin
                     active[c][sq[c*2+:2]]<=1;
                     seen[c][sq[c*2+:2]]<=0;
-                    expected[c][sq[c*2+:2]]<=(qr[c*338+324]&&qr[c*338+336]&&c!=NC)?3'd4:3'd1;
+                    expected[c][sq[c*2+:2]]<=(qr[c*338+324]&&qr[c*338+336]&&c!=NC)?((N_Q==2)?3'd2:3'd4):3'd1;
                     writes[c][sq[c*2+:2]]<=qr[c*338+336];
                 end
             end

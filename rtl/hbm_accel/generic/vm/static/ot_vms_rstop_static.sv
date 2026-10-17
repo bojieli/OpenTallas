@@ -5,7 +5,12 @@
 // an assigned cycle; there are no credits, queues, retries or dynamic picks.
 // tx source 0 transit, 1 hub PREQ, 2 bank mirror egress, 3 replay PRSP,
 // 4 opposite-stop WACK. A local eject and transit may share the same cycle.
+// N_Q (A2P, H-NETLIST 2026-10-16): ring size. 4 = the historical 4-quadrant ring (byte-for-byte behaviour).
+// 2 = the 2-node ring of the A2P half die (slices sid 0 = SW and sid 2 = NW): the other node is me^2; a bank mirror
+// egress goes ONLY on the CW stop to that node (one WACK expected); the CCW stop carries PREQ/PRSP/WACK but never a
+// mirror (bank egress is ignored there; a CCW mirror source is a fault); any flit naming sid 1 / 3 is a fault.
 module ot_vms_rstop_static #(
+    parameter integer N_Q=4,
     parameter integer PHYSICAL_RING=1,
     parameter integer COMMIT_DELAY=5,
     parameter integer MUT=0
@@ -55,7 +60,7 @@ module ot_vms_rstop_static #(
     reg [3:0] dest;
     wire [1:0] rank={me[1],me[1]^me[0]};
     wire [1:0] r1=rank+2'd1, r2=rank+2'd2, r3=rank+2'd3;
-    wire [1:0] d1=(PHYSICAL_RING!=0) ? {r1[1],r1[1]^r1[0]} : me+2'd1;
+    wire [1:0] d1=(N_Q==2) ? (me^2'b10) : (PHYSICAL_RING!=0) ? {r1[1],r1[1]^r1[0]} : me+2'd1;
     wire [1:0] d2=(PHYSICAL_RING!=0) ? {r2[1],r2[1]^r2[0]} : me+2'd2;
     wire [1:0] d3=(PHYSICAL_RING!=0) ? {r3[1],r3[1]^r3[0]} : me+2'd3;
     always @* begin
@@ -64,7 +69,8 @@ module ot_vms_rstop_static #(
             lanes[b]=in_q[b*276+275]; ev[b]=eg_q[b*276+275];
             if(lanes[b]) begin bank=3'(b); lane=lane | in_q[b*276+:275]; end
         end
-        dest=dr ? (4'b1 << d3) : ((4'b1 << d1)|(4'b1 << d2));
+        if(N_Q==2) dest=dr ? 4'b0 : (4'b1 << d1);
+        else dest=dr ? (4'b1 << d3) : ((4'b1 << d1)|(4'b1 << d2));
         flit='0;
         if(enable_q) case(source_q)
             0: begin flit=in_q; flit[2223]=transit; flit[2220:2217]=rest; end
@@ -112,7 +118,8 @@ module ot_vms_rstop_static #(
             // The compiler cannot silently discard any arriving work.
             if((transit && (!enable_q || source_q!=0)) ||
                (pi_q[289] && (!enable_q || source_q!=1)) ||
-               ((|ev) && (!enable_q || source_q!=2)) ||
+               ((N_Q==2 && dr) ? (enable_q && source_q==2) : ((|ev) && (!enable_q || source_q!=2))) ||
+               (N_Q==2 && in_q[2223] && (in_q[2218] || in_q[2220])) ||
                (ri_q[265] && (!enable_q || source_q!=3)) ||
                (wki_q[2] && (!enable_q || source_q!=4)) ||
                (enable_q && source_q>4) ||
@@ -128,7 +135,7 @@ module ot_vms_rstop_static #(
                 else wko<={1'b1,commit_src[COMMIT_DELAY-1]};
             end
             // Outstanding is observation only: it never gates any datapath.
-            outstanding<=outstanding + ((flit[2223] && source_q==2)?(dr?16'd1:16'd2):16'd0) - (ack_q?16'd1:16'd0);
+            outstanding<=outstanding + ((flit[2223] && source_q==2)?((N_Q==2)?(dr?16'd0:16'd1):(dr?16'd1:16'd2)):16'd0) - (ack_q?16'd1:16'd0);
             mirror_busy<=outstanding!=0;
             if(ack_q && outstanding==0) fault<=1;
         end
