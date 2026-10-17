@@ -47,7 +47,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "^FAIL"
    },
    {
     "name": "es_merge_mutant2",
@@ -57,7 +58,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "^FAIL"
    },
    {
     "name": "es_merge_mutant3",
@@ -67,7 +69,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "^FAIL"
    }
   ],
   "calibrate": {
