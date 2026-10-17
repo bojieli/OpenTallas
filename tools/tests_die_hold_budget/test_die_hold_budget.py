@@ -1,4 +1,5 @@
 """tools/die_hold_budget.py: OpenSTA full_clock_expanded FF min dumps (ideal latency, propagated tree, ETM macros)."""
+import re
 import json
 import sys
 from pathlib import Path
@@ -108,3 +109,14 @@ def test_qwen_clock_tcl_hold_budget():
     die = Q.clock_tcl(doms, leaves, 'tt', hold_budget='die')
     assert '-hold 100.000000' not in die and die.count('-hold 25.000000') == 4
     assert '-setup 210.000000' in die                                           # setup unchanged
+
+
+def test_zero_ideal_clocks_are_diagnostic():
+    # no die clock model at all (cluster --cts none): every network delay is ideal 0 -> links DIAGNOSTIC, not PASS
+    t = re.sub(r'(?m)^\s*-?\d+(?:\.\d+)?\s+-?\d+(?:\.\d+)?(\s+clock network delay \(ideal\))', r'   0.0    0.0\1',
+               (HERE / 'etm_ff.rpt').read_text())
+    r = D.classify(D.parse(t))
+    assert r['counts']['ideal_clock_links'] == r['coverage']['links'] == 3
+    assert r['verdict'] in ('DIAGNOSTIC', 'FAIL')
+    r2 = D.classify(D.parse((HERE / 'etm_ff.rpt').read_text()))
+    assert r2['counts']['ideal_clock_links'] == 0      # ideal clocks carrying plan latencies stay judged

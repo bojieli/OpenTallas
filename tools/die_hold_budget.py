@@ -68,6 +68,11 @@ def parse(text):
             continue
         p = _parse_block(blk)
         if p:
+            # ideal clocks with ZERO network delay on both sides (no die clock model at all, e.g. cluster --cts none):
+            # delta is not a measured skew -> DIAGNOSTIC link.  Ideal clocks carrying plan latencies (S81 die_sta
+            # set_clock_latency from the CTS-validated plan) are a clock model and stay judged.
+            nd = re.findall(r'(-?\d+(?:\.\d+)?)\s+clock network delay \((ideal|propagated)\)', blk)
+            p['ideal'] = bool(nd) and all(k == 'ideal' and abs(float(v)) < 1e-9 for v, k in nd)
             out.append(p)
     return out
 
@@ -165,7 +170,8 @@ def classify(paths, masters=None, relay_re=RELAY_RE, paths_cap=None, design=None
             lk = links[key] = dict(sender=p['start'], receiver=p['end'], sender_master=p.get('start_master'),
                                    receiver_master=p.get('end_master'), bits=0, worst_slack=p['slack'],
                                    delta=p['delta'], max_abs_delta=abs(p['delta']), launch_min=p['launch_min'],
-                                   min_wire=p['wire'], hold=p['hold'], U=p['U'])
+                                   min_wire=p['wire'], hold=p['hold'], U=p['U'], ideal=False)
+        lk['ideal'] = lk['ideal'] or bool(p.get('ideal'))
         lk['bits'] += 1
         lk['max_abs_delta'] = max(lk['max_abs_delta'], abs(p['delta']))
         lk['min_wire'] = min(lk['min_wire'], p['wire'])
@@ -177,7 +183,7 @@ def classify(paths, masters=None, relay_re=RELAY_RE, paths_cap=None, design=None
                                    min_launch_min=None))
     for lk in links.values():
         sm, rm = lk['sender_master'], lk['receiver_master']
-        diagnostic = sm in diag or rm in diag
+        diagnostic = sm in diag or rm in diag or lk['ideal']
         port = 'PORT' in (sm, rm)
         lk['skew_ok'] = port or lk['max_abs_delta'] <= skew_ps   # a die top port has no sender/receiver clock pair
         if lk['worst_slack'] >= 0:
@@ -186,6 +192,8 @@ def classify(paths, masters=None, relay_re=RELAY_RE, paths_cap=None, design=None
             fix = 'PORT_HOLD'                # die top port (external min delay): not a die link, reported, FAILs
         elif not lk['skew_ok']:
             fix = 'SKEW_GT80'                # D2: a clock fix (regional root / neighbour matching), not a hold cell
+        elif lk['ideal']:
+            fix = 'DIAGNOSTIC_IDEAL_CLOCK'   # no die clock tree in this run: skew / hold not measured
         elif diagnostic:
             fix = 'DIAGNOSTIC_PLACEHOLDER'   # placeholder / SYNTH / ASSUMED sender or receiver: verdict not accepted
         elif is_relay(sm) or is_relay(rm):
@@ -206,6 +214,7 @@ def classify(paths, masters=None, relay_re=RELAY_RE, paths_cap=None, design=None
     skew_fail = sum(1 for lk in links.values() if not lk['skew_ok'])
     viol = sum(1 for lk in links.values() if lk['worst_slack'] < 0)
     ndiag = sum(1 for lk in links.values() if lk['diagnostic'])
+    nideal = sum(1 for lk in links.values() if lk['ideal'])
     placeholder_launch = sorted({lk['sender_master'] for lk in links.values() if lk['sender_master'] in diag})
     if viol or skew_fail or u_bad or errors:
         verdict = 'FAIL'
@@ -219,7 +228,7 @@ def classify(paths, masters=None, relay_re=RELAY_RE, paths_cap=None, design=None
                 coverage=dict(paths=len(paths), parsed=len(good), parse_errors=len(errors), links=len(links),
                               truncated=truncated,
                               note='skew/hold judged on the dumped endpoints; truncated -> DIAGNOSTIC (raise --paths-cap)'),
-                counts=dict(hold_violating_links=viol, skew_fail_links=skew_fail, diagnostic_links=ndiag,
+                counts=dict(hold_violating_links=viol, skew_fail_links=skew_fail, diagnostic_links=ndiag, ideal_clock_links=nideal,
                             paths_with_U_below_25=u_bad, paths_with_U_above_25=u_above, by_fix={k: len(v) for k, v in sorted(by_fix.items())},
                             demand_ps_by_fix={k: round(sum(x['demand_ps'] for x in v), 1) for k, v in sorted(by_fix.items())
                                               if k != 'PASS'}),
