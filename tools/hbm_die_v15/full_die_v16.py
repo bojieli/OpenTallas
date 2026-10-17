@@ -451,7 +451,7 @@ def a2p_remaster(insts, problems):
                         dict(phy_up=1, tx_pin_v=1, tx_pin_flit=612, rx_pin_v=1,
                              rx_pin_flit=612, retry_requested=1, clk_link=5).items()}
         if i['master'] == 'ot_hbm_idx_client_static_sw' and DROP_SM_Q:
-            i['params'] = dict(i['params'], N_Q=len(kept_sid))
+            i['params'] = dict(i['params'], N_Q=len(kept_sid), TP=192 if len(kept_sid)==2 else 96)
             i['note'] = i.get('note', '') + f' | A2P: N_Q={len(kept_sid)} scorer slots = stacks {kept_sid}'
             rules[n] = {p: (w, tuple(kept_sid), 4) for p, w in IDX_SLOTS.items()}
 
@@ -461,6 +461,9 @@ def a2p_edge_remap(edges, problems):
     out = []
     if True:
         for e in edges:
+        if DROP_SM_Q and e['dst'][:2] == ['hb_idx', 'rank']:
+            e = dict(e, src=['col_idx', 'prm', 74, 82], bits=8,
+                     basis='A2P TP192: same full 8-bit configured die_id as ARGMAX (cp2 operand row0 bits81:74)')
             parts = [e]
             for side, oth in (('dst', 'src'), ('src', 'dst')):
                 nxt = []
