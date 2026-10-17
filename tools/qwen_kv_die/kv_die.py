@@ -72,6 +72,27 @@ FRAMES = dict(qkd_ckbump=(43.2, 43.2), qkd_d2d=(777.6, 518.4), qkd_seq=(777.6, 5
 RELAY_PITCH = 430.56
 TREE_LAST = 200.0               # v1.4.2: a reset / boot tree chain ends <= this from its cluster leader
 RST_REGION_IGNORE = 255          # v1.4.3 qkd_rst_region IGNORE: a region's chain depth limit (the host holds reset >= this + 4)
+# KVPLAN 1815: regional reset roots + post-expansion local trees (kv_rst_regional.py); region box (um)
+RST_REGIONAL = __import__('os').environ.get('OT_KV_RST_REGIONAL', '0') == '1'
+RST_REGION_BOX = float(__import__('os').environ.get('OT_KV_RST_REGION_BOX', '4800'))
+# KVPLAN 1815 (OT_KV_PHY_REG=1): REGISTERED PHY BOUNDARY -- a relay chain that starts or ends at a hard PHY macro
+# (HBM PHY, host SerDes, UCIe) puts its first / last register within PHY_REACH um of the PHY pin (kvs12b TT: real -> phy
+# host_fdi -211.6 ps on a 485-um last hop), so the PHY-side wire is short and the long wire is a planned relay hop
+PHY_REG = __import__('os').environ.get('OT_KV_PHY_REG', '0') == '1'
+PHY_REACH = float(__import__('os').environ.get('OT_KV_PHY_REACH', '150'))
+PHY_MASTERS = ('qkd_hbm3e_phy_pc', 'ot_qfd_serdes_112g_x12_phy', 'ot_qkvd_ucie_x64_phy')
+# KVPLAN 1815 (Q-KV 10-16, kvs13c2 TT: every top class a 528-b replica hop at the 445 plan limit): planned hop limit per
+# relay WIDTH class -- a wide word's bits spread over the replica row (<= 82 um) and the far frame face, so its plan hop
+# is shorter.  OT_KV_REACH_W = 'maxbits:um,...' (ascending); unset = no width class (legacy plans unchanged)
+REACH_W = sorted((int(k), float(v)) for k, v in (t.split(':') for t in
+                 __import__('os').environ.get('OT_KV_REACH_W', '').split(',') if t))
+
+
+def width_reach(bits):
+    for mb, um in REACH_W:
+        if bits <= mb:
+            return um
+    return REACH_W[-1][1] if REACH_W else 1e9
 RELAY_FLUSH = 128               # kv_relays.RELAY_FLUSH: reset release >= this many core cycles after the clock runs
 PIN_REACH = 450.0               # qwen-1010/b: pin-to-pin register hop target (SS reach 504 um)
 REACH_TARGET = 470.0            # every register-to-register segment (nearest frame points) <= this (SS reach 504 um)
@@ -2137,6 +2158,12 @@ def _relays(m):
     if HOST_V14.get('trees'):
         m['tree_depth'] = {}
         TREE_BOX, TREE_FAN = (4800.0, 1600.0, 240.0), 12
+        if RST_REGIONAL:
+            # KVPLAN 1815 (OT_KV_RST_REGIONAL=1): the die plans ONLY the express chain HOST -> regional reset root per
+            # REGION-um box (the qkd_rst_region of v1.4.3); the root's whole region is one fan-out net here and
+            # kv_rst_regional.py (after kv_expand) re-plans it as a local registered tree through the free space of the
+            # FLATTENED die (the frame-level level-1/2 chains detoured around packed head columns: rst_die_t2_8 67 hops)
+            TREE_BOX, TREE_FAN = (RST_REGION_BOX,), 0
         keep_ = []
 
         def ctr(e):
@@ -2363,7 +2390,23 @@ def _relays(m):
                 return near_d(rect(by[a]), rect(by[b]))
             return d_ep(st_['prev_pt'], b, pb)
 
+        phy_a = PHY_REG and by[a].master in PHY_MASTERS
+        phy_b = PHY_REG and by[b].master in PHY_MASTERS
+
+        def end_reach_():
+            # the chain stops once the load end is within this of its last register
+            if bid in tree_meta:
+                return TREE_LAST
+            return min(PHY_REACH, reach_()) if phy_b else reach_()
+
         def reach_():
+            # the PV pair words keep the plain reach (their in-array distribution is the PV pair successor's; the width
+            # class moved pvin's planned end off the r6 W-equalised face pins: kvt13k-a 3 unrepaired 1.2-4.2 mm hops)
+            return min(reach0_(), width_reach(bits)) if bid not in tree_meta and not bid.startswith('pv') else reach0_()
+
+        def reach0_():
+            if phy_a and st_['prev_pt'] is None:
+                return min(PHY_REACH, HOP_REACH if HOP else PIN_REACH)
             # v1.3 (kvs5L TT -17.19: CLOSED ctl_bin launches f<g> late, 413 um to its first relay): a bus whose driver is a
             # closed view with a late launch takes its FIRST relay within FIRST_REACH of that pin; later hops keep PIN_REACH
             if HOP:
@@ -2375,7 +2418,7 @@ def _relays(m):
 
         def chain_():
             path_ = st_['path']
-            while remaining_() > (TREE_LAST if bid in tree_meta else reach_()) or st_['k'] < st_.get('min_k', 0):
+            while remaining_() > end_reach_() or st_['k'] < st_.get('min_k', 0):
                 got = None
                 prev_pt_, idx0_ = st_['prev_pt'], st_['idx0']
                 rch = reach_()
@@ -2414,6 +2457,9 @@ def _relays(m):
                         got = best_[1:]
                     if got:
                         break
+                if got is None and phy_b and bid not in tree_meta and remaining_() <= reach_():
+                    m.setdefault('phy_short', []).append((bid, round(remaining_(), 1)))   # no free spot nearer the PHY
+                    break
                 if got is None and bid in tree_meta and remaining_() <= reach_():
                     m.setdefault('tree_short', []).append((bid, round(remaining_(), 1)))   # no spot nearer the leader
                     break
