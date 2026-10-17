@@ -32,28 +32,149 @@ def snap(v, g):
 
 
 # ------------------------------------------------------------------------------------------------ layout
-def cluster_layout(d, y_snap):
-    """put every column's frames on the y_snap lattice (in place); returns a receipt.  Each column's stack shifts
-    UNIFORMLY (streets keep their exact 259.2 / 388.8) by the smallest move that puts its first frame on the lattice, so
-    all frames share one lattice phase and identical frame-relative offsets (the W columns 2-6 stack started at
-    3,061.256, the others at 20: two y-phases = two physical signatures per class).  x is unchanged."""
+SEAM_ROAD_UM = 60.48     # the die-top vertical road opened between W columns 0 and 1 (W columns 1.. move E by this)
+
+
+def _align_column(fs, ref_bottoms, top_limit, first_street=259.2, street=388.8):
+    """re-place one column's frames (any order) so every street bottom equals a street bottom of the neighbour column
+    (ref_bottoms, ascending; the last frame may also stand on the neighbour's last street).  Returns {root: new y} or
+    None.  Depth-first over frame orders by height class; streets keep >= 388.8 (first >= 259.2)."""
+    hs = sorted({f['height_um'] for f in fs})
+    by_h = {h: [f for f in fs if f['height_um'] == h] for h in hs}
+    n = len(fs)
+
+    def rec(k, prev_top, used, counts):
+        if k == n:
+            return []
+        for si, sb in enumerate(ref_bottoms):
+            if si in used or sb < prev_top - 1e-6:
+                continue
+            st = first_street if k == 0 and sb - prev_top < street else street
+            for h in hs:
+                if counts[h] == 0:
+                    continue
+                y = sb + st
+                top = y + h
+                nxt = [b for b in ref_bottoms[si + 1:]]
+                if top > top_limit:
+                    continue
+                if k < n - 1 and not any(b >= top - 1e-6 for b in nxt):
+                    continue
+                counts[h] -= 1
+                rest = rec(k + 1, top, used | {si}, counts)
+                counts[h] += 1
+                if rest is not None:
+                    return [(h, y)] + rest
+        return None
+    plan = rec(0, -1e9, frozenset(), {h: len(v) for h, v in by_h.items()})
+    if plan is None:
+        return None
+    out, pools = {}, {h: list(v) for h, v in by_h.items()}
+    for h, y in plan:
+        out[pools[h].pop(0)['root']] = y
+    return out
+
+
+def cluster_layout(d, y_snap, west_seam=True, align_hub_column=False):
+    """--cluster-mode geometry on the canonical record (in place); returns a receipt.
+    * y lattice: every column's stack shifts UNIFORMLY onto the y_snap lattice (all frames one lattice phase -> one
+      physical signature per class; W columns 2-6 started at 3,061.256, the others at 20);
+    * west_seam: W columns 1.. move E by SEAM_ROAD_UM, opening a vertical die-top road between W columns 0 and 1 (the
+      W field is irregular: column 1's streets do not all meet a neighbour street);
+    * align_hub_column: the W hub-side column (large free height) is re-placed so each of its streets sits on a street
+      of its W neighbour (exact band overlap; frames may change order inside the column, roots keep their ids)."""
     cols = sorted(d['columns'], key=lambda c: c['x_um'])
+    xs = [c['x_um'] for c in cols]
+    gaps = [b - a for a, b in zip(xs, xs[1:])]
+    nw = max(range(len(gaps)), key=gaps.__getitem__) + 1
+    members = {}
+    for c in cols:
+        members[round(c['x_um'], 4)] = sorted((f for f in d['placements'] if abs(f['origin_um'][0] - c['x_um']) < 1e-6),
+                                              key=lambda f: f['origin_um'][1])
+    rec = dict(y_snap_um=y_snap, transport='street_only', west_columns=nw)
+    if align_hub_column:
+        ref = members[round(xs[nw - 2], 4)]
+        ref_b = sorted([ref[0]['origin_um'][1] - 259.2] + [f['origin_um'][1] - 388.8 for f in ref[1:]])
+        fs = members[round(xs[nw - 1], 4)]
+        # its top free band must still meet the neighbour's last street (the W top row joins through it)
+        newy = _align_column(fs, ref_b, min(d['die_outline_um'][1] - 30.0, ref_b[-1] + 150.0))
+        assert newy is not None, '--cluster-mode: the W hub-side column cannot align to its neighbour streets'
+        rec['hub_column_realigned'] = {str(r): [round(next(f['origin_um'][1] for f in fs if f['root'] == r), 3), round(y, 3)]
+                                       for r, y in newy.items()}
+        for f in fs:
+            f['origin_um'] = [f['origin_um'][0], round(newy[f['root']], 4)]
+        fs.sort(key=lambda f: f['origin_um'][1])
+        c = cols[nw - 1]
+        c['y0_um'] = round(fs[0]['origin_um'][1] - 388.8, 4)
+    # W columns between die-W column 0 and the hub-side column: slide each stack UP inside its free top margin to the
+    # offset (2.16 steps) that maximises street-band overlaps >= 60 um with its neighbours
+    def bands_of(x_):
+        fs_ = members[round(x_, 4)]
+        out_, prev_ = [], None
+        for f in fs_:
+            lo_ = f['origin_um'][1] - (388.8 if prev_ is not None else f['origin_um'][1] - cols_y0[round(x_, 4)])
+            out_.append((lo_, f['origin_um'][1] - 108.4))
+            prev_ = f
+        return out_
+    cols_y0 = {round(c['x_um'], 4): c['y0_um'] for c in cols}
+
+    def score(k_):
+        n_ = 0
+        for j_ in (k_ - 1, k_ + 1):
+            if 0 <= j_ < nw:
+                for a0, a1 in bands_of(xs[k_]):
+                    n_ += sum(1 for b0, b1 in bands_of(xs[j_]) if min(a1, b1) - max(a0, b0) >= 60.0)
+        return n_
+    slides = {}
+    for k in range(1, nw - 1):
+        fs = members[round(xs[k], 4)]
+        slack = d['die_outline_um'][1] - 30.0 - (fs[-1]['origin_um'][1] + fs[-1]['height_um'])
+        best = (score(k), 0.0)
+        base = [f['origin_um'][1] for f in fs]
+        y0b = cols_y0[round(xs[k], 4)]
+        steps = int(max(0.0, slack) // 2.16)
+        for t in range(1, steps + 1):
+            dy_ = t * 2.16
+            for f, y_ in zip(fs, base):
+                f['origin_um'][1] = y_ + dy_
+            cols_y0[round(xs[k], 4)] = y0b + dy_
+            sc = score(k)
+            if sc > best[0]:
+                best = (sc, dy_)
+        for f, y_ in zip(fs, base):
+            f['origin_um'][1] = round(y_ + best[1], 4)
+        cols_y0[round(xs[k], 4)] = y0b + best[1]
+        cols[k]['y0_um'] = round(y0b + best[1], 4)
+        if best[1]:
+            slides[str(round(xs[k], 3))] = round(best[1], 3)
+    rec['w_column_slides_um'] = slides
     dys = {}
     for c in cols:
-        fs = sorted((f for f in d['placements'] if abs(f['origin_um'][0] - c['x_um']) < 1e-6), key=lambda f: f['origin_um'][1])
-        assert fs, ('column without frames', c)
+        fs = members[round(c['x_um'], 4)]
         y_first = fs[0]['origin_um'][1]
         dy = round(snap(y_first, y_snap) - y_first, 4)
         for f in fs:
             f['origin_um'] = [f['origin_um'][0], round(f['origin_um'][1] + dy, 4)]
             assert abs(f['origin_um'][1] / y_snap - round(f['origin_um'][1] / y_snap)) < 1e-6, ('y off lattice', f['root'])
+        for a, b in zip(fs, fs[1:]):
+            assert b['origin_um'][1] - a['origin_um'][1] - a['height_um'] >= 388.8 - 1e-6, ('street closed', a['root'], b['root'])
         top = fs[-1]['origin_um'][1] + fs[-1]['height_um']
         assert top <= d['die_outline_um'][1] - 10.0 and fs[0]['origin_um'][1] >= 200.0, ('column off the die', c['x_um'], dy)
         c['y0_um'] = round(c['y0_um'] + dy, 4)
         c['y1_um'] = round(max(c['y1_um'], top + 4.32), 4)
         dys[round(c['x_um'], 3)] = dy
+    if west_seam:
+        # two W seam roads: between W columns 0|1 and between the last two W columns (nw-2 | nw-1)
+        for k, c in enumerate(cols[1:nw], start=1):
+            sh = SEAM_ROAD_UM * (2 if k == nw - 1 else 1)
+            for f in members[round(c['x_um'], 4)]:
+                f['origin_um'] = [round(f['origin_um'][0] + sh, 4), f['origin_um'][1]]
+            c['x_um'] = round(c['x_um'] + sh, 4)
+        rec['west_seams'] = [[0, 1], [nw - 2, nw - 1]]
+        rec['west_seam_um'] = SEAM_ROAD_UM
     d['frames'] = {f['root']: f for f in d['placements']}
-    return dict(y_snap_um=y_snap, column_dy_um={str(k): v for k, v in dys.items()}, transport='street_only')
+    rec['column_dy_um'] = {str(k): v for k, v in dys.items()}
+    return rec
 
 
 def cluster_box(G, f):
@@ -98,8 +219,15 @@ def patch_corridors(G, m, cor):
             assert hi - lo >= 120.0, ('transit band too thin', key, round(hi - lo, 2))
             name = f'cfstreet{key}' if not isinstance(key, tuple) else f'cfstreet_top{i}'
             cor[name] = (x + .432, lo + .432, x + G.COL_W8 - .432, hi - .432)
-    if 'edgeW' in cor and cor['edgeW'][2] - cor['edgeW'][0] >= 40.0:
-        cor['cfstreet_edgeW'] = cor['edgeW']
+    # die-W edge road: from the die edge margin (link column included: its occupied link stations stay obstacles) to
+    # the outer W column, full height
+    x1 = cols[0]['x_um'] - 4.32
+    assert x1 - 20.432 >= 60.0, ('no die-W edge road', x1)
+    cor['cfstreet_edgeW'] = (20.432, 20.432, x1, G.DIE[1] - 20.432)
+    for i in range(len(cols) - 1):
+        gap = cols[i + 1]['x_um'] - (cols[i]['x_um'] + G.COL_W8)
+        if 50.0 <= gap < 1000.0:
+            cor[f'cfstreet_seam{i}'] = (cols[i]['x_um'] + G.COL_W8 + .432, 20.432, cols[i + 1]['x_um'] - .432, G.DIE[1] - 20.432)
     for r, f in m['frames'].items():
         bx = cluster_box(G, f)
         if (*bx, f'col_cluster:{r}') not in G.RSV_RECTS:
@@ -170,6 +298,39 @@ def street_roadmap(road, G, m, cols, nw, return_lanes):
         nodes.sort(key=lambda n: n[1])
         for a, b in zip(nodes, nodes[1:]):
             road.add(a, b)
+    # seam roads: a vertical die-top road in every gap >= 50 um between neighbouring columns of one half
+    for i in range(len(cols) - 1):
+        if i == nw - 1:
+            continue
+        gap = cols[i + 1]['x_um'] - (cols[i]['x_um'] + G.COL_W8)
+        if gap < 50.0:
+            continue
+        sxm = round(cols[i]['x_um'] + G.COL_W8 + gap / 2, 3)
+        nodes = []
+        for ci in (i, i + 1):
+            for key, lo, hi in bands[ci]:
+                for p in rows_of[(ci, key)]:
+                    e = (sxm, p[1])
+                    road.add(e, p)
+                    nodes.append(e)
+        nodes = sorted(set(nodes), key=lambda n: n[1])
+        for a_, b_ in zip(nodes, nodes[1:]):
+            road.add(a_, b_)
+    # every root row must reach its half's S14 entries through streets only
+    for side in 'WE':
+        seen, todo = set(road.entry.get(side, [])), list(road.entry.get(side, []))
+        for a_, b_ in zip(sorted(road.entry.get(side, []), key=lambda n: n[1]), sorted(road.entry.get(side, []), key=lambda n: n[1])[1:]):
+            road.add(a_, b_)
+        while todo:
+            n = todo.pop()
+            for q in road.graph.get(n, ()):
+                if q not in seen:
+                    seen.add(q)
+                    todo.append(q)
+        half = {r for r, f in m['frames'].items() if f['half'] == side}
+        lost = sorted(r for (r, k), n in road.rootnode.items() if r in half and n not in seen)
+        if lost:
+            raise ValueError(f'--cluster-mode street roadmap: {side} roots unreachable through streets: {lost}')
 
 
 # ------------------------------------------------------------------------------------------------ collapse

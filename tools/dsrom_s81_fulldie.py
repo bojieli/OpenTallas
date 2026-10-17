@@ -12694,6 +12694,14 @@ def apply_options(a):
         if getattr(a, 'cluster_mode', False):
             from s81.cluster_mode import cluster_layout
             CLUSTER_MODE = dict(cluster_layout(CANONICAL_LAYOUT, GY), reach_um=a.cluster_reach)
+            w_ = wide_hub()
+            if w_:
+                # the W seam roads move the W hub-side column E: the S14W road keeps only the real gap to the hub
+                xs_ = sorted(c['x_um'] for c in CANONICAL_LAYOUT['columns'])
+                e_ = xs_[CLUSTER_MODE['west_columns'] - 1] + COL_W8 + 4.32
+                w_['s14w'] = [max(w_['s14w'][0], e_), w_['s14w'][1]]
+                assert w_['s14w'][1] - w_['s14w'][0] >= 300.0, ('--cluster-mode: S14W road closed', w_['s14w'])
+                CLUSTER_MODE['s14w'] = list(w_['s14w'])
         else:
             CLUSTER_MODE = None
         slot_geometry()
