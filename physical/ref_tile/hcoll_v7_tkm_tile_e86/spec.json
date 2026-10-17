@@ -11,8 +11,8 @@
  "clock": "cts",
  "reset_ports": [],
  "outline": {
-  "w": 300,
-  "h": 300
+  "w": 259.2,
+  "h": 259.2
  },
  "layer_cap": "M6",
  "layer_cap_grant": "B2 SPEC D-B2-7 TKM kept inside hb_coll; hardened chain children use M6 beneath M7 parent straps",
@@ -59,7 +59,7 @@
     "pass_regex": "TKM_TP192_STATIC_GATE_PASS",
     "min_count_regex": "TKM_STATIC PASS(.*)",
     "threads": 8,
-    "peak_ram_gb": 64,
+    "peak_ram_gb": 160,
     "timeout_s": 21600,
     "needs": [
      "verilator"
@@ -71,7 +71,7 @@
     "expect": "fail",
     "fail_regex": "TKM_STATIC FAIL",
     "threads": 8,
-    "peak_ram_gb": 64,
+    "peak_ram_gb": 160,
     "timeout_s": 21600,
     "needs": [
      "verilator"
