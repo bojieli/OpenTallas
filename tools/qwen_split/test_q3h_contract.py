@@ -77,6 +77,21 @@ class ContractGate(unittest.TestCase):
 
 
 class ClockPinUniqueness(unittest.TestCase):
+    def test_late_pin_grant_refuses_closed_view(self):
+        import tempfile
+        from unittest.mock import patch
+        from types import SimpleNamespace
+        import qwen_rom_fulldie_b3r2 as G
+        closed = object()
+        v = SimpleNamespace(masters=lambda *args: {'qfd_cst_s': closed})
+        with tempfile.TemporaryDirectory() as tmp:
+            grant=Path(tmp)/'grant.json'
+            grant.write_text(json.dumps({'late_masters': {'qfd_cst_s': {'ck': {'positions':[1]}}}}))
+            with patch.dict('os.environ', {'OT_SPLIT_PIN_GRANT': str(grant)}):
+                G._late_pin_grant(v)
+                with self.assertRaisesRegex(ValueError, 'closed view.*immutable'):
+                    v.masters({})
+
     def test_repeated_clock_pin_cannot_split_between_roots(self):
         from types import SimpleNamespace as I
         import qwen_rom_fulldie_b3r2 as G
