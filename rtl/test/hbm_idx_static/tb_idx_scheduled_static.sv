@@ -9,7 +9,7 @@
 // A program compiled with '--pins none' (historical unregistered timeline) must fail on the registered tiles.
 module tb_idx_scheduled_static;
  parameter integer N_Q=4,TP=96,RANK=3,NKEYS=10928;
- localparam integer RW=(TP<=1?1:$clog2(TP));
+ localparam integer RW=(TP<=1?1:$clog2(TP)),GB=(TP==192?0:1);
  integer frame_rank=RANK,frame_nkeys=NKEYS;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,program_we=0,start=0;reg[7:0]program_addr=0;reg[255:0]program_data=0;reg[11:0]length=0;
@@ -22,7 +22,7 @@ module tb_idx_scheduled_static;
  .clk_operand(clk),.clk_query(clk),.clk_quant(clk),.clk_quant_delay(clk),.clk_query_bank({4{clk}}),
  .clk_score({N_Q{clk}}),.clk_engine({(4*N_Q){clk}}),.clk_meta({(4*N_Q){clk}}),.clk_tail({(4*N_Q){clk}}),.clk_chunk({(16*N_Q){clk}}),.clk_hslice({(512*N_Q){clk}}),
  .clk_sel(clk),.clk_sel_q({4{clk}}),.clk_sel_mem({12{clk}}),.clk_link(clk),.clk_link_mem({8{clk}}),.rst_n(rst_n),.sid(2'd0),
- .weight_sector(16'd512),.query_sector(16'd0),.vm_rq(vm_rq),.vm_rr(vm_rr),.rank(RW'(mutation==4 ? (frame_rank&127) : frame_rank)),.gbase(8'd1),.nkeys(14'(frame_nkeys)),
+ .weight_sector(16'd512),.query_sector(16'd0),.vm_rq(vm_rq),.vm_rr(vm_rr),.rank(RW'(mutation==4 ? (frame_rank&127) : frame_rank)),.gbase(8'(GB)),.nkeys(14'(frame_nkeys)),
  .keep_en(1'b0),.keep_bitmap({(342*N_Q){1'b0}}),.key_slot(key_slot),.key_index(key_index),.key_lines(key_lines),
  .tx_v(tx_v),.tx(tx),.score_observe(score_observe),.done(done),.fault(fault));
  for(genvar b=0;b<8;b=b+1)begin:bank
@@ -72,7 +72,7 @@ module tb_idx_scheduled_static;
    if(lasttx>=0&&cycle-lasttx!=8)begin errors++;ecls[0]++;end
    lasttx=cycle;
    for(integer l=0;l<4;l=l+1)begin
-    if(tx[l*545+512+:16]!==16'((frame_rank-1)*64+flits))begin errors++;ecls[1]++;end flits++;
+    if(tx[l*545+512+:16]!==16'((frame_rank-GB)*64+flits))begin errors++;ecls[1]++;end flits++;
     for(integer r=0;r<8;r=r+1)begin
      integer id,ord;id=int'(tx[l*545+256+r*32+:32]);ord=(id/(8*TP))*8+id%8;records++;
      if((id%(8*TP))/8 != frame_rank)begin errors++;ecls[2]++;end
