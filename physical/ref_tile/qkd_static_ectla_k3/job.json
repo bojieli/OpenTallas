@@ -4,11 +4,6 @@
  "ref_tile": true,
  "owner": "claude:ECTLA-2",
  "purpose": "ECTLA-2 2026-10-17 (coordinator 0co (1): k1 qkd_static_ectla_kiss REJECTED at review: TT clock insertion 350 ps, W landing face 1,100 pins at 8.5/um, SRAMs off the 43.2 lattice in x, two std-cell bands). Structural re-plan, same child RTL and cycles (ROW_RETURN_LAT = RESPONSE_LAT + 7): outline re-aspected inside the KV die's ECTL slot to 172.8 x 194.4 (4 x 4.5 lattice; the tile is pin-limited: 2.1k um2 std + 7.8k um2 SRAM); both SRAMs stacked in ONE column on the lattice (x 43.2, y 43.2 / 129.6) with their pin edge (W) facing ONE contiguous std-cell band (landing capture, issuer, ECTL body); the E strip carries only the rs_o / x_i pin flops; W landing 1,100 pins over 190 um (5.8/um, M4 + M6); E rs_o / x_i at the grant's exact y (B abuts bottom-aligned); t0_row (S) / t1_row (N) over x 23..170 (3.5/um). Clock: symmetric insertion-aware spine from ck at the N-face centre (x 86), leaves of 24 sinks and leaf-only balancing pads (OT_SPINE_LEAF_N 24, OT_SPINE_TREE_PAD 0: the in-tree pads of k1 raised every branch to the slowest; measured gate sweep on this outline: k1 knobs 324 ps, LEAF_N 16 338 ps, LEAF_N 16 + fan 16 412 ps, LEAF_N 24 + leaf pads 279 ps / spread 31 ps; k2 216x216 TritonCTS 388 / 123).",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc4",
-  "ot-pve1"
- ],
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
