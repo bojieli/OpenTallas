@@ -1,0 +1,92 @@
+{
+  "schema": "opentallas.s81.hcx8b-producer-diagnosis.v1",
+  "native_qualified": false,
+  "source": "8b2bb9b81c66d1036ce38cd8d936d0c44032ce17",
+  "layers": {
+    "L1": {
+      "raw_log_sha256": "49b927fa853a967c9eef3a9cc68cc32c9e86b5b815695d9d2f6c50669f8bb54c",
+      "raw_evidence": [
+        "HCX_HIN blk 1 row 0 got bdcdbc73bea6bde1 want bdcdbc9bbea1bd48",
+        "HCX_REAL commands=2 at 2722,10254 rank0_h_row_reads=1280 post_vm_writes=8 raw_gather_errors=0 golden_coefficient_injection=0 native_layer=0",
+        "HCX_CHECK hin_bad=0,640 coef_words_bad=0,20 (golden rows used only for this check)",
+        "SUMMARY jobs=1 layer_cycles=12727 (header 1237 -> H_STORE done 13964) stage_done_cycle=14569 jobs_done=1/1 dones=49/49 phases_released=8 field_phases=8 capture_writes=5048 mismatching_roots=0 coll_words_die0=720 coll_errors=0 coll_incomplete=0 y_exact=640/640 y_bad=0 y_consumed=640 norm_rows_exact=480/480 hstore_rows_exact=0/640 ref_fault=0 dut_fault=0 ctrl_flt=0 fvec=0000 stuck=0 ep_faults=0 gather_stage_fault=0 hc_fcode=0 max_done_latency=9 errors=2 first_coll_send=1111"
+      ],
+      "original_programme_sha256": "b2de4796ad0876fc8b42ee7cd12f77f9a6b38a251dc8590e35bb879d2935e4e7",
+      "original_ops": 49,
+      "replay_programme_sha256": "9641a11238f427f6bbf9993ce2699b0c6c666b0bbe2a17871b29b806aa268d07",
+      "replay_ops": 50,
+      "original_intermediate_exports": [],
+      "replay_intermediate_exports": [
+        {
+          "k": 30,
+          "id": "L1.attn.hc.h_store_for_hcx",
+          "port": 2,
+          "eng": "hc",
+          "arg": 1048576,
+          "argument_provenance": "native endpoint descriptor",
+          "preds": [
+            28
+          ]
+        }
+      ],
+      "replay_ffn_consumer": [
+        {
+          "k": 31,
+          "id": "L1.ffn.hc_pre",
+          "port": 2,
+          "eng": "hc",
+          "arg": 4509184,
+          "argument_provenance": "native endpoint descriptor",
+          "preds": [
+            28,
+            29,
+            30
+          ]
+        }
+      ]
+    },
+    "L14": {
+      "raw_log_sha256": "3a4426797253b106ba777bd0a9d15c8975b11a78511b4de7ff90d56e45451058",
+      "raw_evidence": [
+        "HCX_HIN blk 1 row 0 got bdcebe013dd1be31 want bdd5be953da7be2e",
+        "HCX_REAL commands=2 at 2722,18254 rank0_h_row_reads=1280 post_vm_writes=8 raw_gather_errors=0 golden_coefficient_injection=0 native_layer=0",
+        "HCX_CHECK hin_bad=0,640 coef_words_bad=0,20 (golden rows used only for this check)",
+        "SUMMARY jobs=1 layer_cycles=20753 (header 1255 -> H_STORE done 22008) stage_done_cycle=22613 jobs_done=1/1 dones=66/66 phases_released=10 field_phases=10 capture_writes=5560 mismatching_roots=0 coll_words_die0=728 coll_errors=0 coll_incomplete=0 y_exact=640/640 y_bad=0 y_consumed=640 norm_rows_exact=480/480 hstore_rows_exact=0/640 ref_fault=0 dut_fault=0 ctrl_flt=0 fvec=0000 stuck=0 ep_faults=0 gather_stage_fault=0 hc_fcode=0 max_done_latency=9 errors=2 first_coll_send=1111"
+      ],
+      "original_programme_sha256": "4d3af88177d92f263752c97c5ac6efb6f4bdb2ea1163954300532019b1a9ebd0",
+      "original_ops": 66,
+      "replay_programme_sha256": "3dd9fde228a988b3aaf7f2bdc7f529549df09357f252102dede456d165619127",
+      "replay_ops": 67,
+      "original_intermediate_exports": [],
+      "replay_intermediate_exports": [
+        {
+          "k": 47,
+          "id": "L14.attn.hc.h_store_for_hcx",
+          "port": 2,
+          "eng": "hc",
+          "arg": 1048576,
+          "argument_provenance": "native endpoint descriptor",
+          "preds": [
+            45
+          ]
+        }
+      ],
+      "replay_ffn_consumer": [
+        {
+          "k": 48,
+          "id": "L14.ffn.hc_pre",
+          "port": 2,
+          "eng": "hc",
+          "arg": 4509184,
+          "argument_provenance": "native endpoint descriptor",
+          "preds": [
+            45,
+            46,
+            47
+          ]
+        }
+      ]
+    }
+  },
+  "interpretation": "Final HSTORE wrote640rows; hstore_rows_exact=0/640 is a numerical mismatch, not absent traffic. Original programme lacks intermediate export from attention POST private HC SRAM to VM read by FFN HCX. Prepared replay adds that producer. Runtime replay remains required; ideal acceptance is not mapped SRAM commit."
+}

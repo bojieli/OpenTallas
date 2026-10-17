@@ -53,5 +53,16 @@
       "Markov source absent from selected layer1 manifest",
       "whole emitted die, shape and pin binding absent"
     ]
+  },
+  "source_diagnosis": "hcx8b_producer_diagnosis.json",
+  "source_port_parameter_fix": {
+    "source": "992ec99e4",
+    "tests": 3,
+    "note": "required widths use actual emitted instance params; absent instances are unproven, defaults separately reported; no expected widths changed"
+  },
+  "hcx_source_export_fix": {
+    "source": "992ec99e4",
+    "generator_checks": 10,
+    "note": "conditional diagnostic --hcx-real intermediate private HC SRAM -> VM HSTORE export; fixed HCX issue timeline unchanged; native mapped commit still absent"
   }
 }
