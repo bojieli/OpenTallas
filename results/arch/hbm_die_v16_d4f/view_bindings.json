@@ -95,6 +95,15 @@
   },
   "coll_hard_v7_parent": {
    "status": "bind slices against the next d4f contract (H-NETLIST): ctl no vm_sel out; clk_upipe/clk_vmasm 1 -> 16 entries; NLINK 2/1/1/1; TP192"
+  },
+  "ot_hgi_sm_xload_cl2_bfqg": {
+   "kind": "REAL",
+   "route": "hgi_sm_xl2_bfqg-local1r-a327f9402",
+   "closed": "TT +115.25 / FF +11.69 / DRC 0",
+   "record": "adb9b8fd8 (main 118c57211)",
+   "view": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg",
+   "native": "L177.8/C153.8/R111.2/sp40.9 PASS",
+   "note": "bind when the d4f contract switches XQL bfq -> bfqg (H-NETLIST)"
   }
  }
 }
