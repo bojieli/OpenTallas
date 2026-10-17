@@ -142,21 +142,31 @@ module ot_vms_bank_static #(
         w_active[WG+2] = pq_r[284] && pq_r[283];
         w_active[WG+3] = x2_r[275]; w_active[WG+4] = dq_r[280];
         selected_read = 1'b0; selected_write = 1'b0;
-        if (rslot_v_d && int'(read_owner) <= RG) begin
-            selected_read = r_active[read_owner];
-            if (int'(read_owner) == RG) rd_decode = {1'b0,pq_r[282:272]};
-            else rd_decode = dsec(rq_r[int'(read_owner)*17 +: 16],bid_r,sid_r);
+        // Decode compiler slots against constant lane indices. This is a
+        // bounded mux, not arbitration: no other active source can be chosen.
+        // Constant slices also avoid a runtime cast/shift unsupported by the
+        // synthesis frontend and the wide variable-part-select SHARE hazard.
+        if (rslot_v_d) begin
+            for (integer g = 0; g < RG; g = g + 1) if (read_owner == RB'(g)) begin
+                selected_read = r_active[g];
+                rd_decode = dsec(rq_r[g*17 +: 16],bid_r,sid_r);
+            end
+            if (read_owner == RB'(RG)) begin
+                selected_read = r_active[RG]; rd_decode = {1'b0,pq_r[282:272]};
+            end
         end
-        if (wslot_v_d && int'(wslot_d) <= WG+4) begin
-            selected_write = w_active[wslot_d];
-            if (int'(wslot_d) < WG) wr_decode = {dsec(wq_r[int'(wslot_d)*281+264 +: 16],bid_r,sid_r),wq_r[int'(wslot_d)*281 +: 264]};
-            else case (int'(wslot_d))
-                WG:   wr_decode = {dsec(kq_r[279:264],bid_r,sid_r),kq_r[263:0]};
-                WG+1: wr_decode = {1'b0,xq_r[274:0]};
-                WG+2: wr_decode = {1'b0,pq_r[282:8]};
-                WG+3: wr_decode = {1'b0,x2_r[274:0]};
-                WG+4: wr_decode = {dsec(dq_r[279:264],bid_r,sid_r),dq_r[263:0]};
-                default: wr_decode = '0;
+        if (wslot_v_d) begin
+            for (integer g = 0; g < WG; g = g + 1) if (wslot_d == WB'(g)) begin
+                selected_write = w_active[g];
+                wr_decode = {dsec(wq_r[g*281+264 +: 16],bid_r,sid_r),wq_r[g*281 +: 264]};
+            end
+            case (wslot_d)
+                WG:   begin selected_write = w_active[WG]; wr_decode = {dsec(kq_r[279:264],bid_r,sid_r),kq_r[263:0]}; end
+                WG+1: begin selected_write = w_active[WG+1]; wr_decode = {1'b0,xq_r[274:0]}; end
+                WG+2: begin selected_write = w_active[WG+2]; wr_decode = {1'b0,pq_r[282:8]}; end
+                WG+3: begin selected_write = w_active[WG+3]; wr_decode = {1'b0,x2_r[274:0]}; end
+                WG+4: begin selected_write = w_active[WG+4]; wr_decode = {dsec(dq_r[279:264],bid_r,sid_r),dq_r[263:0]}; end
+                default: begin end
             endcase
         end
         schedule_bad = (rslot_v_d && int'(rslot_d)>RG) || (wslot_v_d && int'(wslot_d)>WG+4);
@@ -180,7 +190,10 @@ module ot_vms_bank_static #(
         s1w_p <= 4'(wslot_d); s1w_row <= wr_decode[274:264];
         s1w_d <= wr_decode[263:8]; s1w_m <= wr_decode[275] ? 8'd0 : wr_decode[7:0]; s1w_tag <= wr_tag;
         s1r_p <= 4'(read_owner); s1r_row <= rd_decode[10:0]; s1r_tag <= rd_tag;
-        eg_d <= wr_decode[274:0];
+        // Dedicated boundary state: invalid egress payload is unspecified.
+        // A qualified capture prevents merging it into the internal S1 data.
+        if (selected_write && int'(wslot_d) < WG && wr_decode[274] && !wr_decode[275])
+            eg_d <= wr_decode[274:0];
     end
     // ------------------------------------------------------------------ S2: macro pins
     reg [9:0] m_ra, m_wa; reg m_rA, m_rC, m_rB, m_wA, m_wB, m_wC; reg [311:0] m_wd; reg [7:0] m_mA, m_mC; reg [15:0] m_mB;
@@ -268,6 +281,21 @@ module ot_vms_bank_static #(
             end
         end
     end
+    // nce is bounded by eight codewords. Split the low-nibble add from a
+    // carry-prefix increment of the upper bits; preserve exact saturation and
+    // the existing response/count edge without a full16bit add+compare path.
+    function automatic [15:0] sat_ce_add(input [15:0] count, input [3:0] step);
+        reg [4:0] low;
+        reg [11:0] upper, prefix_mask;
+        begin
+            low = {1'b0,count[3:0]} + {1'b0,step};
+            for (integer b = 0; b < 12; b = b + 1) begin
+                prefix_mask = (12'd1 << b) - 12'd1;
+                upper[b] = count[b+4] ^ (low[4] && ((count[15:4] & prefix_mask) == prefix_mask));
+            end
+            sat_ce_add = (low[4] && (&count[15:4])) ? 16'hffff : {upper,low[3:0]};
+        end
+    endfunction
     reg [15:0] ce; reg ue;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin rr_v <= '0; pr_v <= 1'b0; ce <= 16'd0; ue <= 1'b0; status <= 18'd0; end
@@ -276,13 +304,16 @@ module ot_vms_bank_static #(
             // a packet read (d_p == RG) and a packet write echo are never on the same edge (one packet op a cycle)
             pr_v <= (d_v && d_p == 4'(RG)) || dw_v;
             if (d_v) begin
-                ce <= (ce + {12'd0, nce} < ce) ? 16'hffff : ce + {12'd0, nce};
+                ce <= sat_ce_add(ce,nce);
                 if (nue) ue <= 1'b1;
             end
             status <= {flt, ue, ce};
         end
     always @(posedge clk) begin
-        for (integer g = 0; g < RG; g = g + 1) rr_d[g*256 +: 256] <= cor;
+        // Each face/group retains its own last valid payload. These registers
+        // must not collapse to one shared256bit state across all four faces.
+        for (integer g = 0; g < RG; g = g + 1)
+            if (d_v && d_p == 4'(g)) rr_d[g*256 +: 256] <= cor;
         pr_d <= (d_v && d_p == 4'(RG)) ? {1'b0, d_tag, cor} : {1'b1, dw_tag, 256'd0};
     end
 endmodule
