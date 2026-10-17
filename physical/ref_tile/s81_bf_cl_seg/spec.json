@@ -51,25 +51,22 @@
   "rtl/v41rom/ot_v41_bf_cl_leaves.sv"
  ],
  "layer_cap": "M5",
- "recipe": 2,
+ "recipe": 4,
  "route": {
   "pd": 0.6,
   "threads": 8,
   "peak_ram_gb": 16,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0
  },
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true
  },
- "inhold": true,
- "outhold": true,
+ "inhold": false,
+ "outhold": false,
  "keep_pin_regs": true,
- "pin_reg_split": true,
- "hold_pad": {
-  "cell": "HB2xp67_ASAP7_75t_R"
- },
  "name": "s81_bf_cl_seg",
  "top": "ot_v41_bf_seg_cl",
  "params": {},
@@ -84,7 +81,9 @@
   "exact": true
  },
  "pins": {
-  "S": [
+  "W": [
+   "fclk",
+   "rst_pin",
    "ze_d",
    "in_v",
    "in_tree",
@@ -94,8 +93,7 @@
    "in_err",
    "rows",
    "indices",
-   "counts",
-   "rst_pin"
+   "counts"
   ],
   "E": [
    "pv",
@@ -106,15 +104,12 @@
    "ppos",
    "perr",
    "fault"
-  ],
-  "N": [
-   "fclk"
   ]
  },
  "macros": [],
  "children": [],
  "inter": [],
- "structural_change": "S-ELEM BF column hardened cluster (hybrid12 ten-root CTS failed: 710 ps insertion, 100-390 ps spread, FF -314). Segment tree leaf as one hardened single-root child with registered inputs (+1 cycle both paths). r2 outline 108x64.8 to fit the 529.2-wide parent row (gate 7127751e2 native PASS at the old outline).",
+ "structural_change": "S-ELEM BF column hardened cluster (hybrid12 ten-root CTS failed: 710 ps insertion, 100-390 ps spread, FF -314). Segment tree leaf as one hardened single-root child with registered inputs (+1 cycle both paths). r2 outline 108x64.8 to fit the 529.2-wide parent row (gate 7127751e2 native PASS at the old outline). r3 (parent 604.8): same 108x64.8, re-pinned W (clock, reset, inputs from red/fp mux) / E (partials to the parent E outputs); no S/N pins at the parent core edge; RTL unchanged.",
  "pin_regs": {
   "enable": false,
   "reason": "RTL registers every child input at the pin (gen_bf_column_cluster.py); outputs come from arithmetic pipeline registers."
@@ -173,5 +168,7 @@
   "views_to": "physical/s81_die_views/bf_cl_1016/cl_seg",
   "record_to": "results/physical/s81_bf_cl_1016/cl_seg",
   "branch": "claude/selem-bfcol-2020"
- }
+ },
+ "io_tcl": "physical/ref_tile_specs/s81_bf_native_1015/cl_seg/pins.tcl",
+ "hold_budget": "die"
 }
