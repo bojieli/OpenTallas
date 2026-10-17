@@ -44,6 +44,8 @@ module qfd_dv_scalar2 #(
     output reg  [31:0]   w1_data,
     output reg           tok_v,
     output reg  [23:0]   tok_idx,
+    output reg           tok_own,       // tok_v is this root's own die-wide merge (not a passing broadcast)
+    output reg  [31:0]   tok_val,       // the merged value (root, with tok_own)
     output reg           busy,
     output reg           fault
 );
@@ -182,15 +184,16 @@ module qfd_dv_scalar2 #(
     wire [5:0]  amc_n = amc + (d_amv ? 6'd1 : 6'd0) + (u_amv ? 6'd1 : 6'd0) + (o_am ? 6'd1 : 6'd0);
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin am_best <= 57'd0; amc <= 6'd0; tk_send <= 1'b0; tok_v <= 1'b0; tok_idx <= 24'd0;
-                          di <= 24'd0; ui <= 24'd0; end
+                          di <= 24'd0; ui <= 24'd0; tok_own <= 1'b0; tok_val <= 32'd0; end
         else begin
-            tk_send <= 1'b0; tok_v <= 1'b0;
+            tk_send <= 1'b0; tok_v <= 1'b0; tok_own <= 1'b0;
             if (dv && dk == K_AMI && root) di <= dn_i[23:0];
             if (uv && uk == K_AMI && root) ui <= up_i[23:0];
             if (cfg_v) begin am_best <= 57'd0; amc <= 6'd0; end
             else if (d_amv || u_amv || o_am) begin
                 am_best <= m3;
-                if (amc_n == amnb && amnb != 6'd0) begin amc <= 6'd0; tk_send <= 1'b1; tok_v <= 1'b1; tok_idx <= m3[55:32]; end
+                if (amc_n == amnb && amnb != 6'd0) begin amc <= 6'd0; tk_send <= 1'b1; tok_v <= 1'b1; tok_idx <= m3[55:32];
+                                                          tok_own <= 1'b1; tok_val <= m3[31:0]; end
                 else amc <= amc_n;
             end
             // a non-root slice records the broadcast token as it passes

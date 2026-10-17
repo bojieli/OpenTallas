@@ -17,6 +17,11 @@ bus map (bus_map_dv2r8f2.json, roles in Q-DV's 10-17 message) the port roles:
     port of the retained master is kept;
   * clocks / resets: the q3h trunks without the removed sinks + one ck / rst_n per slice (regions re-filed from the
     placement afterwards).
+FACE MODE (Q-SLICE 10-17, coordinator 0de; OT_SPLIT_DV_FACES=rtl/qwen_dv/qfd_dv_slice2_faces.json): the slices are the
+two RTL face variants qfd_dv_slice2_w (W row, R0) / qfd_dv_slice2_e (E row, MY) with their REAL ports (dn face = W5
+side); every lateral link takes the RTL port names; W5 binds the collective whole-port (in_* / out_* / cmd_*) and, when
+the re-ported masters carry them, native59 (dd_i / dr_o) and tt_ctlm (hr / cmd / ss5 / ag5); no r_<bus> re-home ports;
+the chain-end idle inputs are tied (rule c, straps manifest).
 The strict port bind fails by construction (synthetic slice ports, qfd_c_b16_dv not on the source): chains run
 OT_CHAIN_DIAGNOSTIC=1.  Relay planning, per-bit reach, GRT and die STA are real on this geometry.
 """
@@ -28,6 +33,24 @@ from pathlib import Path
 from qwen_split import q3h_cluster as Q
 
 SLICE = 'qfd_dv_slice2'
+SLICE_W, SLICE_E = 'qfd_dv_slice2_w', 'qfd_dv_slice2_e'
+# face mode: lateral link kinds in one fixed slot order (dn-face member, up-face member travel opposite ways), so the
+# W face of a slice and the E face of its west neighbour (or, across the MY seam, the two E faces) line up slot by slot
+#   (kind, travels 'dn' or 'up', [parts (suffix, bits)])
+LINKS = [('cmd', 'up', [('cmd', 116)]), ('hr', 'up', [('hr', 453)]),
+         ('st_d', 'dn', [('st', 1088)]), ('st_u', 'up', [('st', 1088)]),
+         ('sc_d', 'dn', [('sc', 48)]), ('sc_u', 'up', [('sc', 48)]),
+         ('ar', 'dn', [('arv', 1), ('art', 32), ('arm', 1), ('arl', 1), ('ard', 512)]),
+         ('dd', 'dn', [('dd', 548)]),
+         ('rt', 'up', [('rv', 1), ('re', 1), ('rr', 3), ('rl', 1), ('rd', 512)]),
+         ('dr', 'up', [('dr', 520)]), ('ag', 'dn', [('ag', 10)])]
+# W5 <-> W column (face mode): (W5 port, peer instance, peer port); a pair is emitted only when the peer master has it
+W5_COLL = [('arv_wo', 'in_valid'), ('ard_wo', 'in_data'), ('arl_wo', 'in_last'), ('arm_wo', 'in_mode'),
+           ('art_wo', 'in_tag'), ('rv_wi', 'out_valid'), ('rd_wi', 'out_data'), ('rl_wi', 'out_last'),
+           ('rr_wi', 'out_rank'), ('re_wi', 'out_err'), ('ccv_wo', 'cmd_v'), ('ccm_wo', 'cmd_mode'),
+           ('ccw_wo', 'cmd_words'), ('cct_wo', 'cmd_tag')]
+W5_PEERS = [('dd_wo', 'native59', 'dd_i'), ('dr_wi', 'native59', 'dr_o'), ('hr_wi', 'tt_ctlm', 'hr'),
+            ('cmd_wi', 'tt_ctlm', 'cmd'), ('ss_wo', 'tt_ctlm', 'ss5'), ('ag_wo', 'tt_ctlm', 'ag5')]
 CDV = 'qfd_c_b16_dv'
 WCOL = ('io_collective', 'native59', 'tt_ctlm', 'embed_prov', 'sys_face')
 
@@ -191,6 +214,7 @@ def apply_dv(v, m):
         sp[f'{kind}_eo'] = (bits, 'E')
         sp[f'{kind}_ei'] = (bits, 'E')
     sp.update({'ck': (1, 'W'), 'rst_n': (1, 'W')})
+    FX = _load('OT_SPLIT_DV_FACES')           # face mode: real RTL face variants, no re-home stand-ins
     # W5 re-home ports (one per re-homed q3h bus, same width) go on the W face too
     removed = {n for n in by if n not in DI}
     rehome = []
@@ -213,7 +237,7 @@ def apply_dv(v, m):
         if key in budget and budget[key] >= bits:
             budget[key] -= bits
             pick.append((bid, cl, bits, eps))
-    rehome = pick
+    rehome = pick if not FX else []
     # re-home ports fill the faces with room (W first: the W column is west), at the same 0.192 pitch
     room = {f: (sw if f in 'NS' else sh) - 8.0 - sum((b_ - 1) * Q.PITCH + 4.0 for b_, f_ in sp.values() if f_ == f)
             for f in 'WSNE'}
@@ -224,9 +248,33 @@ def apply_dv(v, m):
             raise ValueError(f'dv slice: no face room for the re-home port of {bid} ({bits} b): {room}')
         sp[f'r_{bid}'] = (bits, f)
         room[f] -= need
-    qs = v.Master(SLICE, sw - Q.SHAVE, sh - Q.SHAVE, 9, 'Q-DV slice2 (SYNTHETIC role ports, RTL step 2 pending)')
-    _place(qs, sp, sw - Q.SHAVE, sh - Q.SHAVE, fixed_rng)
-    M[SLICE] = qs
+    if FX:
+        ns = {k: v_ for k, v_ in sp.items() if v_[1] in 'NS'}
+        for mn, dn in ((SLICE_W, 'w'), (SLICE_E, 'e')):
+            up = 'e' if dn == 'w' else 'w'
+            fd, fu = [('l9_wi' if dn == 'w' else 'l9_eo', 514)], [('l9_eo' if dn == 'w' else 'l9_wi', 514)]
+            for kind, trav, parts in LINKS:
+                for suf, b in parts:
+                    fd.append((f'{suf}_{dn}{"o" if trav == "dn" else "i"}', b))
+                    fu.append((f'{suf}_{up}{"i" if trav == "dn" else "o"}', b))
+            fd += [(f'ss_{dn}o', 107), (f'ccv_{dn}o', 1), (f'ccm_{dn}o', 1), (f'ccw_{dn}o', 16), (f'cct_{dn}o', 32)]
+            sp2 = dict(ns)
+            for n_, b in fd:
+                sp2[n_] = (b, dn.upper())
+            for n_, b in fu:
+                sp2[n_] = (b, up.upper())
+            sp2.update({'ck': (1, 'W'), 'rst_n': (1, 'W')})
+            rtl = {p_['port']: p_['bits'] for p_ in FX[mn]['ports']}
+            bad = sorted(set(sp2) ^ set(rtl)) + sorted(k for k in sp2 if k in rtl and rtl[k] != sp2[k][0])
+            if bad:
+                raise ValueError(f'dv face mode: {mn} frame vs RTL face map mismatch {bad[:12]}')
+            qs = v.Master(mn, sw - Q.SHAVE, sh - Q.SHAVE, 9, f'Q-DV slice2 face variant {mn} (RTL ports, dn = {dn})')
+            _place(qs, sp2, sw - Q.SHAVE, sh - Q.SHAVE, fixed_rng)
+            M[mn] = qs
+    else:
+        qs = v.Master(SLICE, sw - Q.SHAVE, sh - Q.SHAVE, 9, 'Q-DV slice2 (SYNTHETIC role ports, RTL step 2 pending)')
+        _place(qs, sp, sw - Q.SHAVE, sh - Q.SHAVE, fixed_rng)
+        M[SLICE] = qs
     # ---- instances: retained / clusters / slices at the dv model's positions
     keep = []
     for i in m['insts']:
@@ -246,7 +294,8 @@ def apply_dv(v, m):
         if n in have:
             continue
         if d['m'] in (SLICE, 'qfd_dv_slice2'):
-            keep.append(v.Inst(n, SLICE, d['x'], d['y'], sw - Q.SHAVE, sh - Q.SHAVE,
+            mn = SLICE if not FX else (SLICE_E if n.startswith('dvs_E') else SLICE_W)
+            keep.append(v.Inst(n, mn, d['x'], d['y'], sw - Q.SHAVE, sh - Q.SHAVE,
                                orient='MY' if n.startswith('dvs_E') else 'R0', kind='cluster', region='field',
                                domain='stream_1p2'))
         elif d['m'] == 'qfd_dv_lane_relay':
@@ -314,6 +363,23 @@ def apply_dv(v, m):
             s = 's' if band == 1 else 'n'
             out.append((bid + '_a', 'tree_spine', 514, [(eps[0], 'rs'), (eps[1], f'rs_{s}0')]))
             out.append((bid + '_b', 'tree_spine', 514, [(eps[0], 'rs_o'), (eps[1], f'rs_{s}1')]))
+        elif FX and bid.startswith(('dv_st_', 'dv_x0', 'dv_ch_')):
+            wst, est = sorted(eps, key=lambda n: x_of[n])
+            def fl(n, role):                    # master face letter of slice n's dn / up face
+                return ('w' if role == 'dn' else 'e') if n.startswith('dvs_W') else ('e' if role == 'dn' else 'w')
+            # dv_x0 (the W0 | E0 seam) carries the outbound / return chains too: the Q-DV model has no dv_ch seam bus,
+            # so without this the E row's AR / D2D words would never reach W5
+            ch_k, st_k = ('ar', 'dd', 'rt', 'dr', 'ag'), ('cmd', 'hr', 'st_d', 'st_u', 'sc_d', 'sc_u')
+            kinds = ch_k if bid.startswith('dv_ch_') else st_k + ch_k if bid.startswith('dv_x0') else st_k
+            for kind, trav, parts in LINKS:
+                if kind not in kinds:
+                    continue
+                for suf, b in parts:
+                    if trav == 'dn':
+                        e2 = [(est, f'{suf}_{fl(est, "dn")}o'), (wst, f'{suf}_{fl(wst, "up")}i')]
+                    else:
+                        e2 = [(wst, f'{suf}_{fl(wst, "up")}o'), (est, f'{suf}_{fl(est, "dn")}i')]
+                    out.append((f'{bid}_{kind}_{suf}', 'tree_spine', b, e2))
         elif bid.startswith(('dv_l9_', 'dv_st_', 'dv_x0', 'dv_ch_')):
             wst, est = sorted(eps, key=lambda n: x_of[n])
             def lp(n, dieface, kind, d_):       # port on the die face of slice n (MY swaps the master W / E faces)
@@ -334,6 +400,55 @@ def apply_dv(v, m):
                         (bid + '_hr', 'tree_spine', 453, [lp(wst, 'E', 'hr', 'o'), lp(est, 'W', 'hr', 'i')]),
                         (bid + '_cmd', 'tree_spine', 116, [lp(wst, 'E', 'cmd', 'o'), lp(est, 'W', 'cmd', 'i')])]
         # dv_ar_W / dv_kv_* / dv_ib_W / dv_emb: the W-column re-partition is carried by the r_<bus> re-homes
+    if FX:
+        # W5 <-> W column on real ports (whole-port; a pair only when the peer master has the port)
+        def has(inst, port):
+            i_ = by.get(inst)
+            return i_ is not None and inst in names and port in M[i_.master].ports
+        miss = []
+        for a_, b_ in W5_COLL:
+            if has('io_collective', b_):
+                src = [('dvs_W5', a_), ('io_collective', b_)]
+                out.append((f'dvw_{a_}', 'tree_spine', M[by['io_collective'].master].ports[b_][1],
+                            src if a_.endswith('o') else src[::-1]))
+            else:
+                miss.append(f'io_collective.{b_}')
+        for a_, inst, b_ in W5_PEERS:
+            if has(inst, b_):
+                src = [('dvs_W5', a_), (inst, b_)]
+                out.append((f'dvw_{a_}', 'tree_spine', M[by[inst].master].ports[b_][1],
+                            src if a_.endswith('o') else src[::-1]))
+            else:
+                miss.append(f'{inst}.{b_}')
+        for si, sp_, di, dp_ in (('io_collective', 'cmd_free', 'sys_face', 'io_cmd_free'),
+                                 ('tt_ctlm', 'emb_start', 'embed_prov', 'core_start'),
+                                 ('tt_ctlm', 'emb_token', 'embed_prov', 'core_token'),
+                                 ('native59', 'emb_code_re', 'embed_prov', 'embed_code_re'),
+                                 ('native59', 'emb_code_addr', 'embed_prov', 'embed_code_addr'),
+                                 ('native59', 'emb_scale_re', 'embed_prov', 'embed_scale_re'),
+                                 ('native59', 'emb_scale_addr', 'embed_prov', 'embed_scale_addr'),
+                                 ('embed_prov', 'embed_code_q', 'native59', 'emb_code_q'),
+                                 ('embed_prov', 'embed_scale_q', 'native59', 'emb_scale_q')):
+            if has(si, sp_) and has(di, dp_):
+                out.append((f'dvw_{si}_{sp_}', 'spine_local', M[by[si].master].ports[sp_][1], [(si, sp_), (di, dp_)]))
+            else:
+                miss.append(f'{si}.{sp_}->{di}.{dp_}')
+        m.setdefault('q3h', {}).setdefault('dv_face_missing', miss)
+        # chain-end idle inputs (rule c): W5 st/sc up-travelling inputs from the W column side, E5 up-face inputs,
+        # the l9_wi of an unpaired slice -- only where no bus lands
+        conn = {e for b in out for e in b[3]}
+        east = max((n for n in names if n.startswith('dvs_E')), key=lambda n: x_of[n], default=None)
+        for n in sorted(names):
+            if not n.startswith('dvs_'):
+                continue
+            mst = M[SLICE_E if n.startswith('dvs_E') else SLICE_W]
+            for p_, pv in mst.ports.items():
+                if (n, p_) in conn or not (p_.endswith('i') and p_ not in ('rst_n',)):
+                    continue
+                up_in = n == east and p_.endswith('_wi') and not p_.startswith(('l9', 'cmd', 'hr', 'rv', 're', 'rr',
+                                                                                'rl', 'rd', 'dr'))
+                if (n == 'dvs_W5' and p_ in ('st_wi', 'sc_wi')) or up_in or p_ == 'l9_wi':
+                    m['ties'].append((n, p_, pv[1], 0))
     # far-band clusters: rs_i tied low (Q-CLUSTER: the far bands tie the feedthrough input)
     fed = {e[0] for b in out for e in b[3] if e[1] == 'rs_i'}
     for n in sorted(names):

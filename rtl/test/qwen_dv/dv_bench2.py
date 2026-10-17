@@ -122,6 +122,9 @@ def run_sim2(name, ev, work, mut, ncyc, n=2):
 
 def status_ok2(log):
     bad = []
+    for _, ag in log.get("S0AG", [])[:1]:
+        if (ag >> 9) & 1:
+            bad.append(f"S0AG stn_busy still set at the end ({ag:010b})")
     for k in sorted(n for n in log if n.endswith("ST")):
         v = log[k][0][1]
         if (v >> 69) & 1:
@@ -244,7 +247,7 @@ def bench_c2(work, mut, seed=3):
     errs = status_ok2(log)
     got = {}
     for _, w in log.get("S0AR", []):
-        tag = (w >> 513) & 0xFFFFFFFF
+        tag = (w >> 514) & 0xFFFFFFFF          # AR word {v, tag 32, mode, last, data 512}
         for l in range(16):
             got[tag + l] = (w >> (32 * l)) & 0xFFFFFFFF
     ok = n = 0
@@ -313,6 +316,113 @@ def bench_h(work, mut, n=12):
     return ok, n, errs
 
 
+def cmd_xc_coll(mode, words, tag):
+    return B.pack([(1, 1), (0, 3), (0, 2), (mode, 1), (words, 16), (tag, 32)])
+
+
+def cmd_amax2(clear=0, emit=0, arx=0, gather=0):
+    return B.pack([(1, 1), (6, 3), (clear, 1), (emit, 1), (arx, 1), (gather, 1)])
+
+
+def bench_i(work, mut):
+    """XC COLL: the addressed slice puts {v, mode, words, tag} on cc_o for one edge, exactly (collective cmd_* set);
+    a non-zero XC sub raises the port fault of that slice only."""
+    ev = B.Ev()
+    want = [(0, 1, 0x1234, 0xDEADBEEF), (1, 0, 0x0007, 0x00000005), (0, 0, 0xFFFF, 0x80000001), (1, 1, 0x0100, 0x7)]
+    for sl, mode, words, tag in want:
+        ev.at(B.P_CMD + sl, cmd_xc_coll(mode, words, tag))
+        ev.step(5)
+    ev.step(10)
+    log = run_sim2("i", ev, work, mut, ev.t + 20)
+    errs = status_ok2(log)
+    got = {sl: [w for _, w in log.get(f"S{sl}CC", [])] for sl in (0, 1)}
+    ok = 0
+    for sl in (0, 1):
+        exp = [(1 << 49) | (m << 48) | (wd << 32) | tg for s_, m, wd, tg in want if s_ == sl]
+        if got[sl] == exp:
+            ok += 1
+        else:
+            errs.append(f"slice {sl}: cc {[hex(x) for x in got[sl]]} want {[hex(x) for x in exp]}")
+    # negative: an undefined XC sub faults (separate run, slice 1 only)
+    ev = B.Ev()
+    ev.at(B.P_CMD + 1, B.pack([(1, 1), (0, 3), (1, 2)]))
+    ev.step(20)
+    log = run_sim2("i_bad", ev, work, mut, ev.t + 20)
+    st0, st1 = log["S0ST"][0][1], log["S1ST"][0][1]
+    if not ((st1 >> 63) & 1) or ((st0 >> 63) & 1) or log.get("S1CC"):
+        errs.append(f"XC sub 1: slice-1 port fault {(st1 >> 63) & 1} slice-0 {(st0 >> 63) & 1} cc {log.get('S1CC')}")
+    else:
+        ok += 1
+    return ok, 3, errs
+
+
+def okey(v):
+    return (~v & 0xFFFFFFFF) if v >> 31 else (v | 0x80000000)
+
+
+def bench_j(work, mut, seed=11):
+    """Cross-die argmax: (1) the root's die-wide argmax leaves as ONE AR word {v, tag {0, idx}, mode 1, last 1,
+    {0, idx, val}} (AMAX ARX); (2) GATHER: 8 rank-ordered AR returns are merged on every slice (strictly greater okey,
+    a tie keeps the earlier rank), not landed, and the last one sets every slice's status token."""
+    rng = np.random.default_rng(seed)
+    ev = B.Ev()
+    v = (rng.standard_normal(768) * 4.0).astype(F)
+    v[v == 0] = F(1.0)
+    v[517] = F(np.max(np.abs(v)) * 2 + 1)
+    exp_idx = int(np.argmax(G.mul(G.add(v, F(0)), F(1.0))))
+    exp_val = int(B.fbits(G.mul(G.add(v, F(0)), F(1.0)))[exp_idx])
+    for sl in (0, 1):
+        ev.at(B.P_CMD + sl, cmd_amax2(clear=1), t=ev.t + sl)
+    ev.at(B.P_CMD + 0, B.cmd_root(1, 0, 0, amnb=2), t=ev.t + 2)
+    ev.at(B.P_CMD + 1, B.cmd_root(0, 0, 0), t=ev.t + 3)
+    ev.at(B.P_CMD + 0, cmd_amax2(arx=1), t=ev.t + 4)
+    ev.step(8)
+    for rd in range(3):
+        for sl in (0, 1):
+            ev.at(B.P_CMD + sl, B.cmd_stn(0, 1, 8, 0, 0, sl * 384 + rd * 128, amax=1), t=ev.t + sl)
+        ev.step(4 + SK)
+        for k in range(8):
+            for sl in (0, 1):
+                base = sl * 384 + rd * 128 + 16 * k
+                pair2(ev, sl, v[base:base + 16], np.zeros(16, dtype=F), None, None, ev.t)
+            ev.step()
+        ev.step(30)
+    ev.at(B.P_CMD + 1, B.cmd_amax(emit=1)); ev.at(B.P_CMD + 0, B.cmd_amax(emit=1), t=ev.t + 3)
+    ev.step(40)
+    # gather: 8 ranks; rank 2 and rank 5 tie at the maximum -> rank 2's index
+    for sl in (0, 1):
+        ev.at(B.P_CMD + sl, cmd_amax2(gather=1), t=ev.t + sl)
+    ev.step(8)
+    vals = [u for u in B.fbits(rng.standard_normal(8).astype(F))]
+    top = int(B.fbits(np.array([50.0], dtype=F))[0])
+    vals[2] = vals[5] = top
+    vals[6] = int(B.fbits(np.array([-60.0], dtype=F))[0])
+    idxs = [1000 * r + 7 for r in range(8)]
+    for r in range(8):
+        data = (idxs[r] << 32) | int(vals[r])
+        ev.at(P_RET_AR, (1 << 517) | (r << 513) | ((1 if r == 7 else 0) << 512) | data)
+        ev.step()
+    ev.step(20)
+    log = run_sim2("j", ev, work, mut, ev.t + 20)
+    errs = status_ok2(log)
+    ok = 0
+    ar = [w for _, w in log.get("S0AR", [])]
+    want = (1 << 546) | (exp_idx << 514) | (1 << 513) | (1 << 512) | (exp_idx << 32) | exp_val
+    if ar == [want]:
+        ok += 1
+    else:
+        errs.append(f"ARX words {[hex(x) for x in ar]} want [{hex(want)}] (argmax {exp_idx})")
+    best = max(range(8), key=lambda r: (okey(int(vals[r])), -r))
+    for sl in (0, 1):
+        toks = [w & 0xFFFFFF for _, w in log.get(f"S{sl}TOK", [])]
+        stv = (log[f"S{sl}ST"][0][1] >> 74) & 0xFFFFFFFF
+        if toks and toks[-1] == idxs[best] and stv == int(vals[best]):
+            ok += 1
+        else:
+            errs.append(f"slice {sl}: gather tokens {toks} value {stv:08x}, want last {idxs[best]} (rank {best})")
+    return ok, 3, errs
+
+
 def install():
     B.Ev = Ev2
     B.load_vm = load_vm2
@@ -321,12 +431,12 @@ def install():
 
 
 BENCHES = {"a": bench_a2, "b": B.bench_b, "c": bench_c2, "d": B.bench_d, "e": B.bench_e, "f": bench_f2,
-           "g": B.bench_g, "h": bench_h}
+           "g": B.bench_g, "h": bench_h, "i": bench_i, "j": bench_j}
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("benches", nargs="*", default=list("abcdefgh"))
+    ap.add_argument("benches", nargs="*", default=list("abcdefghij"))
     ap.add_argument("--mut", type=int, default=0)
     ap.add_argument("--work", default="/tmp/qdv_bench2v")
     a = ap.parse_args()

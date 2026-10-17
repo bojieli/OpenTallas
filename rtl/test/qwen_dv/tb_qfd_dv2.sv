@@ -6,6 +6,7 @@
 //   stream        TB -> s0.st_up_i (W end); st_up_o -> next; st_dn_o -> previous; up end's st_dn_i idle
 //   scalar        sc_up chain upward, sc_dn chain downward; chain ends idle
 //   outbound      s[k].ch_up_i = s[k+1].ch_dn_o (up end idle); s0.ch_dn_o = the W5 edge (logged: S0AR / S0DD)
+//   cc / ag       S<k>CC logged when valid; ag chain s[k].ag_up_i = s[k+1].ag_dn_o (up end 0), S0AG at the end
 //   return        TB -> s0.ch_dn_i (AR ret / D2D ret, ports 1 / 40); s[k].ch_dn_i = s[k-1].ch_up_o
 // Events (+EV): "cycle port hex": 0 CMD (s0.cmd_i), 1 ARET, 40 DRET, 41 SWI, 2+2k RSS(k), 3+2k RSN(k).
 // Log: S0AR / S0DD (W5 edge), S<k>SU / S<k>SD (scalar words leaving slice k up / down), S<N-1>E (up-end stream),
@@ -22,12 +23,14 @@ module tb_qfd_dv2 (input wire ck);
     wire [452:0]  hrc [0:N];
     wire [1087:0] stu [0:N], std_ [0:N];
     wire [47:0]   scu [0:N], scd [0:N];
-    wire [1093:0] cho [0:N];
+    wire [1094:0] cho [0:N];
+    wire [9:0]    agc [0:N];
+    wire [49:0]   cc [0:N-1];
     wire [1037:0] chr [0:N];
     wire [513:0]  l9o [0:N-1];
-    wire [73:0]   st [0:N-1];
+    wire [106:0]  st [0:N-1];
     assign cmdc[0] = cmd0; assign hrc[0] = hr0; assign stu[0] = swi; assign scu[0] = 48'd0; assign chr[0] = ret0;
-    assign std_[N] = 1088'd0; assign scd[N] = 48'd0; assign cho[N] = 1094'd0;
+    assign std_[N] = 1088'd0; assign scd[N] = 48'd0; assign cho[N] = 1095'd0; assign agc[N] = 10'd0;
     genvar k;
     generate for (k = 0; k < N; k = k + 1) begin : g_s
         wire [513:0] l9i = (k % 2 == 0) ? ((k + 1 < N) ? l9o[k+1] : 514'd0) : l9o[k-1];
@@ -36,7 +39,8 @@ module tb_qfd_dv2 (input wire ck);
             .st_up_i(stu[k]), .st_up_o(stu[k+1]), .st_dn_i(std_[k+1]), .st_dn_o(std_[k]),
             .sc_up_i(scu[k]), .sc_up_o(scu[k+1]), .sc_dn_i(scd[k+1]), .sc_dn_o(scd[k]),
             .ch_up_i(cho[k+1]), .ch_dn_o(cho[k]), .ch_dn_i(chr[k]), .ch_up_o(chr[k+1]),
-            .cw_n0(), .cw_n1(), .cw_n2(), .cw_n3(), .cw_s0(), .cw_s1(), .cw_s2(), .cw_s3(), .st(st[k]));
+            .cw_n0(), .cw_n1(), .cw_n2(), .cw_n3(), .cw_s0(), .cw_s1(), .cw_s2(), .cw_s3(), .st(st[k]),
+            .cc_o(cc[k]), .ag_up_i(agc[k+1]), .ag_dn_o(agc[k]));
     end endgenerate
     integer fd, lg, cyc, ncyc, ec, ep, r, i, pre = 0;
     reg dbg_pf = 0;
@@ -73,12 +77,13 @@ module tb_qfd_dv2 (input wire ck);
     always @(negedge ck) begin
         if (pre < 4) begin pre = pre + 1; if (pre == 4) rst_n = 1'b1; end
         else begin
-            if (cho[0][1093]) $fdisplay(lg, "%0d S0AR %h", cyc, cho[0][1093:548]);
+            if (cho[0][1094]) $fdisplay(lg, "%0d S0AR %h", cyc, cho[0][1094:548]);
             if (cho[0][547])  $fdisplay(lg, "%0d S0DD %h", cyc, cho[0][547:0]);
             for (i = 0; i < N; i = i + 1) begin
                 if (scu[i+1][47]) $fdisplay(lg, "%0d S%0dSU %h", cyc, i, scu[i+1]);
                 if (scd[i][47])   $fdisplay(lg, "%0d S%0dSD %h", cyc, i, scd[i]);
                 if (st[i][24])    $fdisplay(lg, "%0d S%0dTOK %h", cyc, i, st[i][23:0]);
+                if (cc[i][49])    $fdisplay(lg, "%0d S%0dCC %h", cyc, i, cc[i]);
             end
             if (stu[N][1087]) $fdisplay(lg, "%0d S%0dE %h", cyc, N - 1, stu[N]);
 `ifdef DV2_DEBUG
@@ -96,6 +101,7 @@ module tb_qfd_dv2 (input wire ck);
             cyc = cyc + 1;
             if (cyc >= ncyc) begin
                 for (i = 0; i < N; i = i + 1) $fdisplay(lg, "%0d S%0dST %h", cyc, i, st[i]);
+                $fdisplay(lg, "%0d S0AG %h", cyc, agc[0]);
                 $fclose(lg);
                 $finish;
             end
