@@ -28,6 +28,7 @@ from die_cluster import boundary as CB   # noqa: E402
 PLAT = '/OpenROAD-flow-scripts/flow/platforms/asap7'
 DFF = 'DFFHQNx1_ASAP7_75t_R'
 BUF = 'BUFx8_ASAP7_75t_R'
+LCB = 'BUFx16f_ASAP7_75t_R'   # station local clock buffer (F1 chain sink)
 ROW, SITE = 0.27, 0.054
 PIN_PITCH = 0.096            # 2 tracks of M4 (y) / M5 (x)
 # what each plan block kind is today (DV p4): a real closed view exists for none of the DV-specific blocks yet
@@ -173,14 +174,19 @@ def main():
         # forwarded clock per lane (p4c-lanes): source buffer at the driver from the regional clock, stage k clocked
         # by n<link>_fck[k], a forwarding BUFx8 at each station drives the next segment (DIE-FLOW fclk audit glob
         # 'n*_fck\\[*\\]'); the sink re-time is the last station (DIE-CLOCK method section 3)
+        # F1 chain (DIE-CLOCK): the hop net n<link>_fck[k] has ONE sink, the station's local clock buffer lcb_k
+        # (BUFx16f), which drives the station flops on the short local net n<link>_lck[k] (never repeated); the
+        # forwarding BUFx8 ff_k beside the data output starts hop k+1 -- station k+1 clk_in = station k clk_out
         v.append(f'  wire [{st}:0] n{nm}_fck;')
+        v.append(f'  wire [{max(st - 1, 0)}:0] n{nm}_lck;')
         v.append(f'  {BUF} fs_{nm} (.A(clk), .Y(n{nm}_fck[0]));')
         for k in range(st):
             wn = f'r_{nm}_{k}'
             v.append(f'  wire [{b - 1}:0] {wn};')
+            v.append(f'  {LCB} lcb_{nm}_{k} (.A(n{nm}_fck[{k}]), .Y(n{nm}_lck[{k}]));')
             for j in range(b):
-                v.append(f'  {DFF} f_{nm}_{k}_{j} (.CLK(n{nm}_fck[{k}]), .D({prev}[{j}]), .QN({wn}[{j}]));')
-            v.append(f'  {BUF} ff_{nm}_{k} (.A(n{nm}_fck[{k}]), .Y(n{nm}_fck[{k + 1}]));')
+                v.append(f'  {DFF} f_{nm}_{k}_{j} (.CLK(n{nm}_lck[{k}]), .D({prev}[{j}]), .QN({wn}[{j}]));')
+            v.append(f'  {BUF} ff_{nm}_{k} (.A(n{nm}_lck[{k}]), .Y(n{nm}_fck[{k + 1}]));')
             nf += b
             prev = wn
         v.append(f'  assign {dst} = {prev};')
@@ -199,6 +205,7 @@ def main():
             pl.append(f'place_inst -name fs_{nm} -location {{{round(sx_ / SITE) * SITE:.3f} {round(sy_ / ROW) * ROW + 1.08:.3f}}} -orientation R0 -status PLACED')
     for nm, k, b, px, py in flops:
         pl.append(f'place_inst -name ff_{nm}_{k} -location {{{round((px - 2) / SITE) * SITE:.3f} {round((py - 1) / ROW) * ROW + 1.08:.3f}}} -orientation R0 -status PLACED')
+        pl.append(f'place_inst -name lcb_{nm}_{k} -location {{{round((px - 4) / SITE) * SITE:.3f} {round((py - 2) / ROW) * ROW + 1.08:.3f}}} -orientation R0 -status PLACED')
     for nm, k, b, px, py in flops:
         side = max(1, int(math.ceil(math.sqrt(b * 0.648 / (ROW * SITE)) / 12)))   # ~12 sites per DFF
         cols = max(1, int(math.ceil(math.sqrt(b))))
@@ -227,7 +234,7 @@ def main():
         libs = [f'{PLAT}/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', f'{PLAT}/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib']
         t = subprocess.run([sys.executable, str(tmp / 'tools/die_repeaters/step.py'), 'tcl', '--design', 's81', '--report',
                             '/work/die_repeaters.json', '--legalize', 'snap',
-                            '--repeat-nets', 'n*_fck\\[*\\]', '--fclk-globs', 'n*_fck\\[*\\]', '--libs', *libs], capture_output=True, text=True, check=True).stdout
+                            '--repeat-nets', 'n*_fck\\[*\\]', '--fclk-globs', 'n*_fck\\[*\\]', '--skip', 'n*_lck\\[*\\]', '--libs', *libs], capture_output=True, text=True, check=True).stdout
         (out / 'die_repeaters_step.tcl').write_text(t)
         repair = f'# DIE-FLOW repeater step ({a.dieflow_ref})\nsource /work/die_repeaters_step.tcl\n'
     tcl = f'''# S81-DV die case (tools/s81_dv/dv_diecase.py) -- NOT_A_DIE_RESULT (stand-in census in case.json)
