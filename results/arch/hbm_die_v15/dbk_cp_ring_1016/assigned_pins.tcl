@@ -287,6 +287,9 @@ ot_assigned_pin_exact {clk_bank[4]} M5 N 386.748000
 ot_assigned_pin_exact {clk_bank[5]} M5 N 349.932000
 ot_assigned_pin_exact {clk_bank[6]} M5 N 45.468000
 ot_assigned_pin_exact {clk_bank[7]} M5 N 216.108000
+ot_assigned_pin_exact {clk_cp} M4 E 181.980000
+ot_assigned_pin_exact {clk_tab[0]} M5 S 527.820000
+ot_assigned_pin_exact {clk_tab[1]} M5 N 527.820000
 ot_assigned_pin_exact {cp_active} M4 E 257.196000
 ot_assigned_pin_exact {cp_configured} M4 E 256.284000
 ot_assigned_pin_exact {cp_fault} M4 E 256.764000
