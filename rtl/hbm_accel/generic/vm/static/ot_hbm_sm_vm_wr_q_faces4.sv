@@ -134,21 +134,59 @@ module ot_hbm_sm_vm_wr_q_faces4 #(
                 if (emit) begin ps <= last ? 4'd0 : ps + 4'd1; acc <= row + {1'b0, d_stride}; end
                 if (emit && row[10]) flt <= 1'b1;
             end
+        // H-SM 1817 LOOKAHEAD (zero added edges): the clk-domain stage computes NEXT cycle's head word / row / section
+        // (exact next state of rp, ps, acc, cnt, d_*, quad_q and the fq write bypass) and registers the final o_*
+        // values (*_q, rb() included).  The E-face clk_out flops o_* then only retime *_q: the FIFO read mux, column
+        // select, row add and BF16 rounding no longer sit on the ~140 um W->E wire into o_w/o_sec (f4hc route: TT -46.5,
+        // gate reg->reg -42 into g_sm[k].o_w).  o_*(t+1) = f(state(t)) exactly as before.
+        wire wr_en = push && !(full && !pop);
+        wire [AW-1:0] rp_n = pop ? ((rp == AW'(DEPTH-1)) ? '0 : rp + 1'b1) : rp;
+        wire [AW:0] cnt_n = cnt + (wr_en ? 1'b1 : 1'b0) - (pop ? 1'b1 : 1'b0);
+        wire [3:0] ps_n = emit ? (last ? 4'd0 : ps + 4'd1) : ps;
+        wire [10:0] acc_n = emit ? row + {1'b0, d_stride} : acc;
+        wire [9:0] d_base_n = cv_q ? cmd_q[9:0] : d_base;
+        wire d_mir_n = cv_q ? cmd_q[24] : d_mir;
+        wire d_fmt_n = cv_q ? cmd_q[25] : d_fmt;
+        wire [267:0] wr_d = {rrow_q[12*k +: 12], rdata_q[256*k +: 256]};
+        wire [267:0] hd_n = (wr_en && wp == rp_n) ? wr_d : fq[rp_n];
+        wire [11:0] hr_n = hd_n[267:256];
+        wire [10:0] row_n = (ps_n == 4'd0 || MUT == 1) ? ({1'b0, d_base_n} + {2'b0, hr_n[11:3]}) : acc_n;
+        wire [31:0] col_n = hd_n[32*ps_n[2:0] +: 32];
+        reg v_q; reg [15:0] sec_q; reg [31:0] w_q; reg [7:0] m_q;
+        // recipe 4 (no pin hold pads, so no pin_reg_split hook): one launch flop per replicated wq word copy in RTL
+        reg [31:0] o_wr [0:7];
+        always @(posedge clk or negedge rst_q)
+            if (!rst_q) v_q <= 1'b0; else v_q <= (cnt_n != 0) && !row_n[10];
+        always @(posedge clk) begin
+            sec_q <= {d_mir_n, d_mir_n ? 2'b00 : ((MUT == 3) ? 2'b00 : quad), row_n[9:0], 3'(k)};
+            w_q <= rb(col_n, d_fmt_n);
+            m_q <= 8'd1 << hr_n[2:0];
+        end
+`ifndef SYNTHESIS
+        // lookahead == direct form on every valid cycle (a lookahead bug fails the bench, never passes silently)
+        always @(negedge clk) if (rst_q === 1'b1 && v_q !== (emit && !row[10]))
+            $fatal(1, "WRQ LOOKAHEAD MISMATCH sm %0d v", k);
+        always @(negedge clk) if (rst_q === 1'b1 && emit && !row[10] &&
+            (sec_q !== {d_mir, d_mir ? 2'b00 : ((MUT == 3) ? 2'b00 : quad_q), row[9:0], 3'(k)} ||
+             w_q !== rb(col, d_fmt) || m_q !== (8'd1 << hr[2:0])))
+            $fatal(1, "WRQ LOOKAHEAD MISMATCH sm %0d data", k);
+`endif
         always @(posedge clk_out or negedge rst_q)
             if (!rst_q) begin o_v <= 1'b0; l_v <= 1'b0; end
-            else begin o_v <= emit && !row[10]; l_v <= o_v; end
+            else begin o_v <= v_q; l_v <= o_v; end
         always @(posedge clk)
-            if (push && !(full && !pop)) fq[wp] <= {rrow_q[12*k +: 12], rdata_q[256*k +: 256]};
+            if (wr_en) fq[wp] <= wr_d;
         always @(posedge clk_out) begin
-            o_sec <= {d_mir, d_mir ? 2'b00 : ((MUT == 3) ? 2'b00 : quad_q), row[9:0], 3'(k)};
-            o_w <= rb(col, d_fmt);
-            o_m <= 8'd1 << hr[2:0];
+            o_sec <= sec_q;
+            o_w <= w_q;
+            for (int r = 0; r < 8; r = r + 1) o_wr[r] <= w_q;
+            o_m <= m_q;
             l_sec <= o_sec; l_w <= o_w; l_m <= o_m;
         end
         if (MUT == 2) begin : g_late
             assign wq[k*281 +: 281] = {l_v, l_sec, {8{l_w}}, l_m};
         end else begin : g_on
-            assign wq[k*281 +: 281] = {o_v, o_sec, {8{o_w}}, o_m};
+            assign wq[k*281 +: 281] = {o_v, o_sec, o_wr[7], o_wr[6], o_wr[5], o_wr[4], o_wr[3], o_wr[2], o_wr[1], o_wr[0], o_m};
         end
     end endgenerate
 endmodule
