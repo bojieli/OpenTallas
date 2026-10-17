@@ -8,9 +8,12 @@
 // configuration fault. fault = configuration fault | any producer fault (producer faults are registered at the producer).
 // busy/valid/done/edge_index are NOT routed through the root: every producer emits them on the same edge (same start,
 // same length), so each consumer takes them from its own producer (die: col_su from producer 0).
+// FREG (HBM-SU 2026-10-17, default 0 = unchanged): 1 = fault is a register output (fault <= cfg fault | any producer
+// fault), so the hard root has no combinational input -> output path (native pin rule); faults report one edge later.
 module ot_hbm_su_programme_root #(
   parameter integer PARTS=4,
-  parameter [32*PARTS-1:0] SMACROS={PARTS{32'd98}}
+  parameter [32*PARTS-1:0] SMACROS={PARTS{32'd98}},
+  parameter integer FREG=0
 )(input logic clk, rst_n,
   input logic cfg_we, input logic [15:0] cfg_bank, input logic [6:0] cfg_row, input logic [255:0] cfg_data,
   input logic start, input logic [15:0] length,
@@ -34,5 +37,11 @@ module ot_hbm_su_programme_root #(
     for(i=0;i<PARTS;i=i+1) r_bank[16*i+:16]<=cfg_bank-16'(mbase(i));
     r_row<=cfg_row; r_data<=cfg_data;
   end
-  assign fault=cfg_fault | (|p_fault);
+  generate if(FREG==0) begin:g_fc
+    assign fault=cfg_fault | (|p_fault);
+  end else begin:g_fr
+    logic fault_r;
+    always_ff @(posedge clk) if(!rst_n) fault_r<=0; else fault_r<=cfg_fault | (|p_fault);
+    assign fault=fault_r;
+  end endgenerate
 endmodule
