@@ -66,7 +66,7 @@
    "master": "qfd_tile_nk_rp2_romleaf_rr",
    "inst": "u_t_0_0",
    "idx": 0,
-   "x": 43.224,
+   "x": 43.2,
    "y": 86.4,
    "w": 457.92,
    "h": 1166.4,
@@ -79,7 +79,7 @@
    "master": "qfd_tile_nk_rp2_romleaf_rr",
    "inst": "u_t_0_1",
    "idx": 0,
-   "x": 43.224,
+   "x": 43.2,
    "y": 1382.4,
    "w": 457.92,
    "h": 1166.4,
@@ -92,7 +92,7 @@
    "master": "qfd_tile_nk_rp2_romleaf_rr",
    "inst": "u_t_0_2",
    "idx": 0,
-   "x": 43.224,
+   "x": 43.2,
    "y": 2678.4,
    "w": 457.92,
    "h": 1166.4,
@@ -105,7 +105,7 @@
    "master": "qfd_tile_nk_rp2_romleaf_rr",
    "inst": "u_t_0_3",
    "idx": 0,
-   "x": 43.224,
+   "x": 43.2,
    "y": 3974.4,
    "w": 457.92,
    "h": 1166.4,
@@ -170,7 +170,7 @@
    "master": "qfd_tile_nk_rp2_romleaf_rr",
    "inst": "u_t_2_0",
    "idx": 0,
-   "x": 1252.824,
+   "x": 1252.8,
    "y": 86.4,
    "w": 457.92,
    "h": 1166.4,
@@ -183,7 +183,7 @@
    "master": "qfd_tile_nk_rp2_romleaf_rr",
    "inst": "u_t_2_1",
    "idx": 0,
-   "x": 1252.824,
+   "x": 1252.8,
    "y": 1382.4,
    "w": 457.92,
    "h": 1166.4,
@@ -196,7 +196,7 @@
    "master": "qfd_tile_nk_rp2_romleaf_rr",
    "inst": "u_t_2_2",
    "idx": 0,
-   "x": 1252.824,
+   "x": 1252.8,
    "y": 2678.4,
    "w": 457.92,
    "h": 1166.4,
@@ -209,7 +209,7 @@
    "master": "qfd_tile_nk_rp2_romleaf_rr",
    "inst": "u_t_2_3",
    "idx": 0,
-   "x": 1252.824,
+   "x": 1252.8,
    "y": 3974.4,
    "w": 457.92,
    "h": 1166.4,
@@ -272,54 +272,6 @@
  "findings": [
   [
    "WARN",
-   "macro_grid",
-   "qfd_tile_nk_rp2_romleaf_rr#0: origin (43.224, 86.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "qfd_tile_nk_rp2_romleaf_rr#0: origin (43.224, 1382.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "qfd_tile_nk_rp2_romleaf_rr#0: origin (43.224, 2678.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "qfd_tile_nk_rp2_romleaf_rr#0: origin (43.224, 3974.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "qfd_tile_nk_rp2_romleaf_rr#0: origin (1252.824, 86.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "qfd_tile_nk_rp2_romleaf_rr#0: origin (1252.824, 1382.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "qfd_tile_nk_rp2_romleaf_rr#0: origin (1252.824, 2678.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "qfd_tile_nk_rp2_romleaf_rr#0: origin (1252.824, 3974.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
    "fill",
    "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
    "pass --area-um2 / std_area_um2 from the synthesis smoke"
@@ -355,8 +307,9 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
-  "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/qcluster/fabric_sites_place.tcl",
+  "physical/qcluster/fabric_sites_release.tcl",
+  "physical/qcluster/qfd_c_b16_dv_sites.tsv",
   "physical/common_flow/clock_spine.tcl",
   "physical/ref_tile/qfd_c_b16_dv_diag/spine_ins.tcl",
   "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr/qfd_tile_nk_rp2_romleaf_rr.lef",

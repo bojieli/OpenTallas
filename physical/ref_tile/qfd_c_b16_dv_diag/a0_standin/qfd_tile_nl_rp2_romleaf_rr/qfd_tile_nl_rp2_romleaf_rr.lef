@@ -8603,16 +8603,16 @@ MACRO qfd_tile_nl_rp2_romleaf_rr
     DIRECTION INPUT ;
     USE CLOCK ;
     PORT
-      LAYER M5 ;
-        RECT 314.400 0.000 314.424 0.192 ;
+      LAYER M4 ;
+        RECT 457.728 176.976 457.920 177.000 ;
     END
   END ck_tx5
   PIN ck_tx4
     DIRECTION INPUT ;
     USE CLOCK ;
     PORT
-      LAYER M5 ;
-        RECT 315.360 0.000 315.384 0.192 ;
+      LAYER M4 ;
+        RECT 457.728 339.984 457.920 340.008 ;
     END
   END ck_tx4
   PIN VDD

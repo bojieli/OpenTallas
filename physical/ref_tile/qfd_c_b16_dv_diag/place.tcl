@@ -29,17 +29,17 @@ proc ot_ref_pick {by master pat} {
 }
 set ot_ref_n 0
 set i [ot_ref_pick $ot_ref_by qfd_tile_nk_rp2_romleaf_rr {u_t_0_0}]
-$i setOrient MY; $i setLocation [expr {round(43.224 * $dbu)}] [expr {round(86.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 43.224 86.4 MY"
+$i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(86.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 43.2 86.4 MY"
 set i [ot_ref_pick $ot_ref_by qfd_tile_nk_rp2_romleaf_rr {u_t_0_1}]
-$i setOrient MY; $i setLocation [expr {round(43.224 * $dbu)}] [expr {round(1382.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 43.224 1382.4 MY"
+$i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(1382.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 43.2 1382.4 MY"
 set i [ot_ref_pick $ot_ref_by qfd_tile_nk_rp2_romleaf_rr {u_t_0_2}]
-$i setOrient MY; $i setLocation [expr {round(43.224 * $dbu)}] [expr {round(2678.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 43.224 2678.4 MY"
+$i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(2678.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 43.2 2678.4 MY"
 set i [ot_ref_pick $ot_ref_by qfd_tile_nk_rp2_romleaf_rr {u_t_0_3}]
-$i setOrient MY; $i setLocation [expr {round(43.224 * $dbu)}] [expr {round(3974.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 43.224 3974.4 MY"
+$i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(3974.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 43.2 3974.4 MY"
 set i [ot_ref_pick $ot_ref_by qfd_tile_nk_rp2_romleaf_rr {u_t_1_0}]
 $i setOrient R0; $i setLocation [expr {round(648.0 * $dbu)}] [expr {round(86.4 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 648.0 86.4 R0"
@@ -53,17 +53,17 @@ set i [ot_ref_pick $ot_ref_by qfd_tile_nk_rp2_romleaf_rr {u_t_1_3}]
 $i setOrient R0; $i setLocation [expr {round(648.0 * $dbu)}] [expr {round(3974.4 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 648.0 3974.4 R0"
 set i [ot_ref_pick $ot_ref_by qfd_tile_nk_rp2_romleaf_rr {u_t_2_0}]
-$i setOrient MY; $i setLocation [expr {round(1252.824 * $dbu)}] [expr {round(86.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 1252.824 86.4 MY"
+$i setOrient MY; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(86.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 1252.8 86.4 MY"
 set i [ot_ref_pick $ot_ref_by qfd_tile_nk_rp2_romleaf_rr {u_t_2_1}]
-$i setOrient MY; $i setLocation [expr {round(1252.824 * $dbu)}] [expr {round(1382.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 1252.824 1382.4 MY"
+$i setOrient MY; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(1382.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 1252.8 1382.4 MY"
 set i [ot_ref_pick $ot_ref_by qfd_tile_nk_rp2_romleaf_rr {u_t_2_2}]
-$i setOrient MY; $i setLocation [expr {round(1252.824 * $dbu)}] [expr {round(2678.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 1252.824 2678.4 MY"
+$i setOrient MY; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(2678.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 1252.8 2678.4 MY"
 set i [ot_ref_pick $ot_ref_by qfd_tile_nk_rp2_romleaf_rr {u_t_2_3}]
-$i setOrient MY; $i setLocation [expr {round(1252.824 * $dbu)}] [expr {round(3974.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 1252.824 3974.4 MY"
+$i setOrient MY; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(3974.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 1252.8 3974.4 MY"
 set i [ot_ref_pick $ot_ref_by qfd_tile_nl_rp2_romleaf_rr {u_t_3_0}]
 $i setOrient R0; $i setLocation [expr {round(1857.6 * $dbu)}] [expr {round(86.4 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] qfd_tile_nl_rp2_romleaf_rr at 1857.6 86.4 R0"

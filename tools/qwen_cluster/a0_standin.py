@@ -19,7 +19,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-A0_REF = "origin/codex/romleaf-native-1621"
+A0_REF = "30d3d3510"   # Q-ROMPARENT-2 c1r6 (codex/romleaf-native-1621): ck_tx4/5 on E face M4, mirror-legal
 W, H = 457.92, 1166.4
 R = {"tt": 220.0, "ff": 170.0, "ss": 290.0}
 FLOP = {"tt": (40.0, 15.0, 55.0), "ff": (30.0, 12.0, 40.0), "ss": (55.0, 20.0, 75.0)}   # setup, hold, clk->q

@@ -83,7 +83,7 @@ def tile_quad(c, r):
     return ("s" if r < 2 else "n") + ("w" if c < 2 else "e")
 
 
-A0_REF = "origin/codex/romleaf-native-1621"   # Q-ROMPARENT-2 c1 REGROOT wrappers (provisional until the A0 gate passes)
+A0_REF = "30d3d3510"   # Q-ROMPARENT-2 c1r6 (codex/romleaf-native-1621): ck_tx4/5 on E face M4, mirror-legal
 A0_NK, A0_NL = "qfd_tile_nk_rp2_romleaf_rr", "qfd_tile_nl_rp2_romleaf_rr"
 
 
@@ -493,6 +493,12 @@ def main():
         gating=["A0 views qfd_tile_nk_romleaf_a0 / nl twin not CLOSED (Q-ROMPARENT-2): diagnostics only, no binding"])
     OUT_ARCH.mkdir(parents=True, exist_ok=True)
     (OUT_ARCH / "cluster_contract_dv.json").write_text(json.dumps(contract, indent=1) + "\n")
+    tsv = ["# prefix\tx\ty\txlo\txhi  (qc_gen.py; fabric_sites_place.tcl)"]
+    for st in E.sites:
+        x, y = st["at"]
+        cor = next(((lo, hi) for lo, hi in g.CORR.values() if lo - 1e-6 <= x <= hi + 1e-6), (max(0.0, x - 15), min(WIDTH, x + 15)))
+        tsv.append(f"{st['inst']}\t{x}\t{y}\t{cor[0]}\t{cor[1]}")
+    (ROOT / "physical/qcluster/qfd_c_b16_dv_sites.tsv").write_text("\n".join(tsv) + "\n")
     (OUT_ARCH / "relay_sites_dv.json").write_text(json.dumps(dict(schema="opentallas.qcluster.sites.v1", sites=E.sites), indent=1) + "\n")
     plot(OUT_ARCH / "cluster_dv_plan.png", host, spare, legs, rsx, E, pins)
     print(json.dumps(dict(outline=[WIDTH, HEIGHT], rs_fabric=rs_t, ft=nft, bco=g.STAGE["exit"], reset=RD,
