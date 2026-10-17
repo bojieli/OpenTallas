@@ -410,7 +410,7 @@ module ot_hfd_coll_q_hard_v5_body #(
  input wire rst_n,
  input wire [1:0] qid,
  input wire clk_program,clk_control,
- input wire clk_vmasm,                  // V6: VM read-data assembly leaf entry
+ input wire [1:0] clk_vmasm,            // V6d: VM read-data assembly half leaves (one entry each)
  input wire clk_upipe,                  // V6b: issue-stream delay leaf entry
  input wire clk_issue,
  input wire [NCK-1:0] clk_qslots,       // [NS-1:0] capture leaves, [NCK-1:NS] switch slices
@@ -487,7 +487,8 @@ module ot_hfd_coll_q_hard_v5_body #(
    assign vm_assembled[j*512+i]=vm_as_il[i*8+2*j];assign vm_assembled[j*512+256+i]=vm_as_il[i*8+2*j+1];
   end
  end
- ot_hgi_coll_vmasm u_vmasm(.clk(clk_vmasm),.sel(vm_sel),.rd_il(vm_rd_il),.as_il(vm_as_il));
+ ot_hgi_coll_vmasm_half u_vmasm0(.clk(clk_vmasm[0]),.sel(vm_sel),.rd_il(vm_rd_il[1023:0]),.as_il(vm_as_il[1023:0]));
+ ot_hgi_coll_vmasm_half u_vmasm1(.clk(clk_vmasm[1]),.sel(vm_sel),.rd_il(vm_rd_il[2047:1024]),.as_il(vm_as_il[2047:1024]));
  wire [NPT*16-1:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin;wire protocol_fault;
  wire tkm_done,tkm_busy;
  wire [ND-1:0] dest_v;wire [ND*PWT-1:0] dest_d;
@@ -668,7 +669,7 @@ endmodule
 // V6: + clk_vmasm (VM read-data assembly leaf), + clk_upipe (issue-stream delay leaf); issue path +4 vs host_v4 (was +3).
 module ot_hfd_coll_q3_hard_v5(
  input wire rst_n,input wire [1:0] qid,
- input wire clk_program,clk_control,clk_vmasm,clk_upipe,input wire clk_issue,input wire [28:0] clk_qslots,
+ input wire clk_program,clk_control,clk_upipe,input wire [1:0] clk_vmasm,input wire clk_issue,input wire [28:0] clk_qslots,
  input wire [16:0] clk_ring,input wire [32:0] clk_reduce,input wire clk_arg,input wire [33:0] clk_tkm,
  input wire [15:0] clk_vmwrite,input wire [14:0] clk_link,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
@@ -690,7 +691,7 @@ endmodule
 
 module ot_hfd_coll_q2_hard_v5(
  input wire rst_n,input wire [1:0] qid,
- input wire clk_program,clk_control,clk_vmasm,clk_upipe,input wire clk_issue,input wire [26:0] clk_qslots,
+ input wire clk_program,clk_control,clk_upipe,input wire [1:0] clk_vmasm,input wire clk_issue,input wire [26:0] clk_qslots,
  input wire [16:0] clk_ring,input wire [32:0] clk_reduce,
  input wire [15:0] clk_vmwrite,input wire [9:0] clk_link,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,

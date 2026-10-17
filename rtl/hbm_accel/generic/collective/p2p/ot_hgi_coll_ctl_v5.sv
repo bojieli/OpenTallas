@@ -289,12 +289,22 @@ endmodule
 // V6: VM read-data assembly leaf (moved out of the protocol leaf: 2,048 data bits in and out made that leaf pin-bound,
 // 380x280 at util 7%). Same edges as the V5 protocol-leaf code: sel = the protocol leaf's instruction field (flop Q),
 // sp[0] = vm_select_pipe[0]; raw = vm_raw_data; assembled 9 edges after the select.
+// V6d (hcoll_v6_vmasm-c1045-440e737a7 EARLY_FAIL_CONGESTION: horizontal overflow in the S output pin band, M2/M3,
+// as_il nets -- 2,048 pins per face on 345.6 um = 5.9 pins/um): the assembly is split by bit column into two
+// identical half leaves (128 columns, 1,024 pins per face), hardened once, placed side by side by the parent.
 module ot_hgi_coll_vmasm(
  // BIT-INTERLEAVED faces (the parent permutes, wires only): rd_il[i*8+b] = bank b bit i, as_il[i*8+2j+h] = output pair j
  // half h (h 0 = low 256) bit i. A 256-column bit slice holds its 8 inputs, its 8:1 muxes and its 8 outputs, so the
  // pin order along the face keeps every mux local (no 2,048-wire cross-tile shuffle).
- input wire clk,input wire [23:0] sel,input wire [2047:0] rd_il,output reg [2047:0] as_il);
- reg [23:0] sp[0:8];reg [2047:0] raw;
+ input wire clk,input wire [23:0] sel,input wire [2047:0] rd_il,output wire [2047:0] as_il);
+ ot_hgi_coll_vmasm_half u_h0(.clk(clk),.sel(sel),.rd_il(rd_il[1023:0]),.as_il(as_il[1023:0]));
+ ot_hgi_coll_vmasm_half u_h1(.clk(clk),.sel(sel),.rd_il(rd_il[2047:1024]),.as_il(as_il[2047:1024]));
+endmodule
+
+// one half: 128 bit columns (column i: rd_il[i*8+b], as_il[i*8+2j+h])
+module ot_hgi_coll_vmasm_half(
+ input wire clk,input wire [23:0] sel,input wire [1023:0] rd_il,output reg [1023:0] as_il);
+ reg [23:0] sp[0:8];reg [1023:0] raw;
  localparam integer SPX=8;
 `ifdef OT_COLL_V6_MUT_VMSEL
  localparam integer HL=3;                     // mutant: the two halves of every pair swapped
@@ -304,7 +314,7 @@ module ot_hgi_coll_vmasm(
  always @(posedge clk)begin
   sp[0]<=sel;for(integer j=1;j<9;j=j+1)sp[j]<=sp[j-1];
   raw<=rd_il;
-  for(integer i=0;i<256;i=i+1)
+  for(integer i=0;i<128;i=i+1)
    for(integer j=0;j<4;j=j+1)begin
     as_il[i*8+2*j]  <=raw[i*8+int'(sp[SPX][j*6+HL+:3])];
     as_il[i*8+2*j+1]<=raw[i*8+int'(sp[SPX][j*6+3-HL+:3])];
