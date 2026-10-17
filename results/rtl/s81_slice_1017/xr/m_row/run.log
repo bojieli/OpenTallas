@@ -1,16 +1,16 @@
-MISMATCH sw slot=15
-MISMATCH sw slot=17
-MISMATCH sw slot=18
+MISMATCH sw slot=11
+MISMATCH sw slot=12
+MISMATCH sw slot=14
+MISMATCH sw slot=32
+MISMATCH sw slot=36
+MISMATCH sw slot=37
 MISMATCH sw slot=41
-MISMATCH sw slot=58
-MISMATCH sw slot=59
-MISMATCH sw slot=60
-MISMATCH sw slot=63
-MISMATCH sw slot=64
+MISMATCH sw slot=42
+MISMATCH sw slot=43
 MISMATCH sw slot=65
-MISMATCH sw slot=67
-MISMATCH sw slot=76
-XRB hb=1 seed=1 sid=4 cycles=6016 ctl=1546 rd=1209 rowwr=247 lo=2062 sends=873 vreinj=801 screl=86 parts=279 err=1795
+MISMATCH sw slot=66
+MISMATCH sw slot=66
+XRB hb=0 seed=1 sid=4 cycles=6016 ctl=1543 rd=1109 rowwr=228 lo=1990 sends=814 vreinj=815 screl=174 parts=254 err=1599
 XRFAULT case=1 fault=1
 XRFAULT case=2 fault=1
 XRFAULT case=3 fault=1
@@ -28,5 +28,5 @@ XRILL missed=0 of 13
 FAIL
 - rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_xr.sv:324: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 6us; walltime 0.031 s; speed 204.156 us/s
+- Verilator: $finish at 6us; walltime 0.016 s; speed 392.632 us/s
 - Verilator: cpu 0.016 s on 1 threads; allocated 15 MB
