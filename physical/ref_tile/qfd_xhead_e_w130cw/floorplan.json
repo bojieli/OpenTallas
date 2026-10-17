@@ -32,8 +32,8 @@
    "master": "qfd_xhead_e",
    "granted_by": "refreshed by Q-IO-1815 2026-10-16 for w5 (n_d M4 W-face move only; M6 ports/contacts identical). | refreshed by Q-LINK-D2D 2026-10-16 for w2 (ONWARD_REG 2 RTL; ports/contacts identical). | refreshed by Q-LINK-D2D 2026-10-16 for the w130 head outline 129.6x345.6 agreed by Q-COMPUTE-DIE (E/W contacts, spans and ports identical; N/S M3/M5 pins re-spread at leaf w130 x) and the m6u RTL. | Q-COMPUTE-DIE Codex coordinator 2026-10-16; refreshed by Q-DVM+LINK 2026-10-16 for the m6r/m6s/m6t source changes (LOCAL_RST/ONWARD_REG/LEAF_FILL_PIPE params, ot_rst_pipe source; port list, faces, spans and contacts identical)",
    "reason": "Source-bound local M6 PORT-only contacts split actual1170-bit seam pressure across faces; M5 signal/PG interior cap stands. Candidate leaf local64.8x138.24; heads64.8x345.6 R0 only. No parent M7/M9 reservation or whole-die geometry/timing qualification; actual routed DEF/vias/LEF/native220/190/80 gates required.",
-   "source_commit": "00417a0c2aedf89442953ae9a8ef4e443365c372",
-   "source_spec_sha256": "caa6f867d8a643c24ef7d9a47fc4942835c7d2a9423c90a7cb99c0ca91e71759",
+   "source_commit": "42dc870cb0ea44b929687b2fd6312b90afd03fd3",
+   "source_spec_sha256": "0a07c3b35186bd99537cc3d918eee2f8993234839cf40b15b2a85e7617e9e94f",
    "ports": [
     {
      "name": "cs_wv",
