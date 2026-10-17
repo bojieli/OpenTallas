@@ -64,7 +64,8 @@
    "rtl/hbm_accel/generic/vm/static",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "results/arch/hbm_die_v15/dma_ic_grants_1417.json"
   ],
   "record_to": "results/rtl/ref_tile/hv15_dbk_bank_ic1",
   "benches": [
@@ -126,5 +127,14 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
- }
+ },
+ "contract": {
+  "file": "results/arch/hbm_die_v15/dma_ic_grants_1417.json",
+  "slot": "dma_bank_ic0_diagnostic"
+ },
+ "io_tcl": "physical/ref_tile/hv15_dbk_bank_ic1/grant_io.tcl",
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "physical/ref_tile/hv15_dbk_bank_ic1/grant_post_iop.tcl"
+ },
+ "slot_change_request": "H-DIE NEW source-specific diagnostic leaf grant6f47ecef9 dma_bank_ic0_diagnostic; actual IC pins mustmatchliteralrects; no oldtiminginheritance. Proposed461.2x305.68 parentplanningonly,current432wideparentunadopted."
 }
