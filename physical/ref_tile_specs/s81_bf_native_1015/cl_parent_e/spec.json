@@ -48,6 +48,7 @@
   "rtl/v41rom/ot_v41_bf_segment_leaf.sv",
   "rtl/v41rom/ot_v41_bf_cl_leaves.sv",
   "rtl/v41rom/ot_v41_bf_lane4_cl.sv",
+  "rtl/v41rom/ot_v41_bf_lane16_cl.sv",
   "rtl/v41rom/ot_v41_bf16_lanes3_cl.sv",
   "rtl/v41rom/ot_v41_bf_col_cl.sv",
   "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_cl.sv"
@@ -66,13 +67,15 @@
   "W": [
    "rom_ck0",
    "rom_ck1",
-   "ck"
+   "ck",
+   "lane_ckl"
   ],
   "E": [
    "ci",
    "r",
    "qy",
-   "rs"
+   "rs",
+   "lane_cko"
   ]
  },
  "io_tcl": "physical/ref_tile_specs/s81_bf_native_1015/cl_parent_e/pins.tcl",
@@ -85,11 +88,11 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "S-ELEM BF column hardened cluster r4 (gen_bf_column_cluster.py): parent 604.8 x 198.72 (S81-DV approved 2026-10-17), ALL parent pins on W/E (W: rom_ck0/1, ck, lane roots leaf_ck[2..5]; E: ci front abutment unchanged, r/qy/rs, fp/seg/red roots leaf_ck[0,1,6]); children inside the core with 20 um channels/edges: ROM pair W, ONE 4-root lane child 164.16x194.4, red 81x194.4, fp 126.36x108 over seg 108x64.8. Column BF16 +3 / FP4 +2 (ledger BF.COL_PINREG).",
+ "structural_change": "BFCOL-4 10-17: lane slot = FOUR hardened ot_v41_bf_lane4r_cl bands (164.16 x 48.6, coordinator APPROVED 15:20) abutted N-S at (168.48, 2.16 + 48.6 g) under the soft ot_v41_bf_lane16_cl wrapper (u_lanes/u_g<g>), replacing the single lane16 child. Each band has three regional roots and the entry rule is one parent port per child clock pin, so each band gets three entries: leaf_ck[2+g] -> fclk_i and lane_ckl[g] -> fclk on the W face level with the band's W clock pins, lane_cko[g] -> fclk_o on the E face (the band's output root sits at its E face; BFCOL-3). The die ties all three entries of band g to leaf clock 2+g (same PLL, phase 0). S-ELEM BF column hardened cluster r4 (gen_bf_column_cluster.py): parent 604.8 x 198.72 (S81-DV approved 2026-10-17), ALL parent pins on W/E (W: rom_ck0/1, ck, lane roots leaf_ck[2..5]; E: ci front abutment unchanged, r/qy/rs, fp/seg/red roots leaf_ck[0,1,6]); children inside the core with 20 um channels/edges: ROM pair W, ONE 4-root lane child 164.16x194.4, red 81x194.4, fp 126.36x108 over seg 108x64.8. Column BF16 +3 / FP4 +2 (ledger BF.COL_PINREG).",
  "reroute_reason": {
   "kind": "rtl_change",
   "why": "hybrid12 CTS topology failure; 529.2/583.2 cluster floorplans infeasible under channel/edge rules",
-  "fix": "S-ELEM BF column hardened cluster r4 (gen_bf_column_cluster.py): parent 604.8 x 198.72 (S81-DV approved 2026-10-17), ALL parent pins on W/E (W: rom_ck0/1, ck, lane roots leaf_ck[2..5]; E: ci front abutment unchanged, r/qy/rs, fp/seg/red roots leaf_ck[0,1,6]); children inside the core with 20 um channels/edges: ROM pair W, ONE 4-root lane child 164.16x194.4, red 81x194.4, fp 126.36x108 over seg 108x64.8. Column BF16 +3 / FP4 +2 (ledger BF.COL_PINREG)."
+  "fix": "BFCOL-4 10-17: lane slot = FOUR hardened ot_v41_bf_lane4r_cl bands (164.16 x 48.6, coordinator APPROVED 15:20) abutted N-S at (168.48, 2.16 + 48.6 g) under the soft ot_v41_bf_lane16_cl wrapper (u_lanes/u_g<g>), replacing the single lane16 child. Each band has three regional roots and the entry rule is one parent port per child clock pin, so each band gets three entries: leaf_ck[2+g] -> fclk_i and lane_ckl[g] -> fclk on the W face level with the band's W clock pins, lane_cko[g] -> fclk_o on the E face (the band's output root sits at its E face; BFCOL-3). The die ties all three entries of band g to leaf clock 2+g (same PLL, phase 0). S-ELEM BF column hardened cluster r4 (gen_bf_column_cluster.py): parent 604.8 x 198.72 (S81-DV approved 2026-10-17), ALL parent pins on W/E (W: rom_ck0/1, ck, lane roots leaf_ck[2..5]; E: ci front abutment unchanged, r/qy/rs, fp/seg/red roots leaf_ck[0,1,6]); children inside the core with 20 um channels/edges: ROM pair W, ONE 4-root lane child 164.16x194.4, red 81x194.4, fp 126.36x108 over seg 108x64.8. Column BF16 +3 / FP4 +2 (ledger BF.COL_PINREG)."
  },
  "job": {
   "owner": "Claude:S-ELEM-BFCOL-2020",
@@ -153,7 +156,15 @@
   "leaf_ck[5]",
   "leaf_ck[6]",
   "rom_ck0",
-  "rom_ck1"
+  "rom_ck1",
+  "lane_ckl[0]",
+  "lane_ckl[1]",
+  "lane_ckl[2]",
+  "lane_ckl[3]",
+  "lane_cko[0]",
+  "lane_cko[1]",
+  "lane_cko[2]",
+  "lane_cko[3]"
  ],
  "clock_data_paths": "related_same_frequency",
  "clock_relationship": {
@@ -279,6 +290,94 @@
    ],
    "inputs": [],
    "outputs": []
+  },
+  "lane_l_0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "lane_ckl[0]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "lane_o_0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "lane_cko[0]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "lane_l_1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "lane_ckl[1]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "lane_o_1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "lane_cko[1]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "lane_l_2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "lane_ckl[2]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "lane_o_2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "lane_cko[2]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "lane_l_3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "lane_ckl[3]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "lane_o_3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "lane_cko[3]"
+   ],
+   "inputs": [],
+   "outputs": []
   }
  },
  "macros": [
@@ -345,12 +444,42 @@
    "orient": "R0"
   },
   {
-   "view": "physical/s81_die_views/bf_cl_1016/cl_lane16/ot_v41_bf_lane16_cl",
+   "view": "physical/s81_die_views/bf_cl_1016/cl_lane4r/ot_v41_bf_lane4r_cl",
    "count": 1,
-   "inst": "*u_lanes",
+   "inst": "*u_lanes*u_g0",
    "at": [
     168.48,
     2.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/bf_cl_1016/cl_lane4r/ot_v41_bf_lane4r_cl",
+   "count": 1,
+   "inst": "*u_lanes*u_g1",
+   "at": [
+    168.48,
+    50.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/bf_cl_1016/cl_lane4r/ot_v41_bf_lane4r_cl",
+   "count": 1,
+   "inst": "*u_lanes*u_g2",
+   "at": [
+    168.48,
+    99.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/s81_die_views/bf_cl_1016/cl_lane4r/ot_v41_bf_lane4r_cl",
+   "count": 1,
+   "inst": "*u_lanes*u_g3",
+   "at": [
+    168.48,
+    147.96
    ],
    "orient": "R0"
   }

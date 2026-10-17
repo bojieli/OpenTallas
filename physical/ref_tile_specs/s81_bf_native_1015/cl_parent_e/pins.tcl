@@ -846,7 +846,16 @@ place_pin -pin_name {r[62]} -layer M4 -location {604.800 32.484} -pin_size {0.19
 place_pin -pin_name {rom_ck0} -layer M4 -location {0.000 26.700} -pin_size {0.192 0.024} -force_to_die_boundary
 place_pin -pin_name {rom_ck1} -layer M4 -location {0.000 113.100} -pin_size {0.192 0.024} -force_to_die_boundary
 place_pin -pin_name {ck} -layer M4 -location {0.000 99.348} -pin_size {0.192 0.024} -force_to_die_boundary
-place_pin -pin_name {leaf_ck[2]} -layer M4 -location {0.000 32.292} -pin_size {0.192 0.024} -force_to_die_boundary
-place_pin -pin_name {leaf_ck[3]} -layer M4 -location {0.000 78.996} -pin_size {0.192 0.024} -force_to_die_boundary
-place_pin -pin_name {leaf_ck[4]} -layer M4 -location {0.000 125.604} -pin_size {0.192 0.024} -force_to_die_boundary
-place_pin -pin_name {leaf_ck[5]} -layer M4 -location {0.000 172.308} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {leaf_ck[2]} -layer M4 -location {0.000 26.004} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {leaf_ck[3]} -layer M4 -location {0.000 74.604} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {leaf_ck[4]} -layer M4 -location {0.000 123.204} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {leaf_ck[5]} -layer M4 -location {0.000 171.804} -pin_size {0.192 0.024} -force_to_die_boundary
+# BFCOL-4 10-17: lane4r band entries. W: leaf_ck[2+g] -> band fclk_i, lane_ckl[g] -> band fclk (both level with the band W clock pins, 2.16 + 48.6 g + 23.84/24.13); E: lane_cko[g] -> band fclk_o (band E face pin at 2.16 + 48.6 g + 24.32), in the nearest free E track. The die ties all three to leaf clock 2+g.
+place_pin -pin_name {lane_ckl[0]} -layer M4 -location {0.000 26.292} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {lane_cko[0]} -layer M4 -location {604.800 24.708} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {lane_ckl[1]} -layer M4 -location {0.000 74.892} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {lane_cko[1]} -layer M4 -location {604.800 75.060} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {lane_ckl[2]} -layer M4 -location {0.000 123.492} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {lane_cko[2]} -layer M4 -location {604.800 124.164} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {lane_ckl[3]} -layer M4 -location {0.000 172.092} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {lane_cko[3]} -layer M4 -location {604.800 172.260} -pin_size {0.192 0.024} -force_to_die_boundary

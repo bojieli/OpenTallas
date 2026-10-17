@@ -76,6 +76,7 @@ module ot_v41_bf_col_cl #(
 ) (
     input wire [1:0] rom_clk, // explicit raw Liberty macro clock entries
     input wire [6:0] leaf_clk, // cl: fp, segment, four lane groups, reduction
+    input wire [3:0] lane_ckl, lane_cko, // cl BFCOL-4: lane band roots fclk / fclk_o (die: = leaf_clk[2+g])
     input  wire          clk,
     input  wire          rst_n_pin,
     input  wire          ze_d,          // element gate-enable next state (qx tcg_ze_d)
@@ -542,7 +543,7 @@ module ot_v41_bf_col_cl #(
         if (FAST != 0 && QBF != 0 && TCG != 0) begin : g_fqt
         // TCG: the BF lanes as per-lane clock / reset tiles (+ BXST pipelined input stages)
         ot_v41_bf16_lanes3_cl #(.NCHB(NCHB), .TRW(TG), .CUT(CUT), .GRADUAL_RNE(GRADUAL_RNE), .RC(QBF >= 3 ? 2 : QBF >= 2 ? 1 : 0), .XST(BXST)) u_bf (
-            .leaf_clk({leaf_clk[6], leaf_clk[5:2]}), .fclk(clk), .rst_pin(b_rst), .ze_d(b_ze), .v(mi2_v && mi2_bf),
+            .leaf_clk({leaf_clk[6], leaf_clk[5:2]}), .lane_ckl(lane_ckl), .lane_cko(lane_cko), .fclk(clk), .rst_pin(b_rst), .ze_d(b_ze), .v(mi2_v && mi2_bf),
             .w(cap[255:0]), .x(mz_q0), .slot(mi2_t[TW-HW +: $clog2(NCHB)]), .first(mi2_t[5]), .last(mi2_t[4]),
             .tree(mi2_t[TW-HW-1 -: TG]), .final_i(mi2_t[3]), .ov(bf_v), .oval(bf_val), .otree(bf_tree),
             .ofinal(bf_final), .oerr(bf_err), .fault(b_fault));

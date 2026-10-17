@@ -8,6 +8,7 @@
 module dsfd_bf_col_cl #(parameter INSTANCE = "", parameter integer MB = 0) (
     input wire rom_ck0,rom_ck1,
     input wire [6:0] leaf_ck, // cl: fp, seg, lane0..3, red
+    input wire [3:0] lane_ckl, lane_cko, // cl BFCOL-4: lane band entries fclk / fclk_o; the die ties both to leaf_ck[2+g]
     input  wire [775:0] ci,
     output wire qy,
     input  wire ck,
@@ -897,7 +898,7 @@ module dsfd_bf_col_cl #(parameter INSTANCE = "", parameter integer MB = 0) (
     /* verilator lint_off PINCONNECTEMPTY */
     ot_v41_bf_col_cl #(.NSEG(8), .NCH(16), .XF(8), .LV(5), .BF16(1), .NCHB(8), .NB(2), .MTP(1), .EARLY(1), .CG(1), .DRAIN(200), .FAST(1), .PP(1), .BP(0), .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4), .QY(1), .QX(10), .QBF(2), .QZE(1), .TCG(1), .GRADUAL_RNE(1), .BXST(2), .FXST(2), .INSTANCE(INSTANCE), .MB(MB)) u_view (
         .a_ctr(w_a_ctr),
-        .clk(w_clk), .leaf_clk(leaf_ck), .rom_clk({rom_ck1,rom_ck0_live}),
+        .clk(w_clk), .leaf_clk(leaf_ck), .lane_ckl(lane_ckl), .lane_cko(lane_cko), .rom_clk({rom_ck1,rom_ck0_live}),
         .i1_bf(w_i1_bf),
         .i1_bk(w_i1_bk),
         .i1_t(w_i1_t),
