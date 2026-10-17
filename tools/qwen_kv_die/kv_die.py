@@ -3675,7 +3675,24 @@ def record(m):
                              astk_w=ASTK_W, land_w=LAND_W, frames=FRAMES,
                              note='frames without a routed element are sized from synthesis or stated as ASSUMED'),
                 **({'pv144': dict(m['geo']['pv144'], tree=pv_tree(m), vport_timing=pv_vport_timing(m))}
-                   if m['geo'].get('pv144') else {}))
+                   if m['geo'].get('pv144') else {}),
+                **({'pv_trunk': pv_trunk_record(m)} if PV_T else {}))
+
+
+def pv_trunk_record(m):
+    """KVPLAN 1815: the trunked pair's cost record (area, flops, latency) + the planned chunk / header stages"""
+    P_ = pvt_plan()
+    st = m.get('relay_stages', {})
+    hdr = {b_: v_ for b_, v_ in st.items() if b_.startswith('pvh_')}
+    chk = {b_: v_ for b_, v_ in st.items() if b_.startswith('pvc_')}
+    return dict(plan=PV_T_PLAN, frame_um=P_['frame_um'], old_frame_um=[PV_ARR[0], round(PV_ARR[1] + PV_GAP + PV_STRIP, 6)],
+                station_flops_per_pair=P_['station_flops'], replica_area_mm2_per_pair=P_['replica_area_mm2'],
+                trunk_d=P_['trunk_d'], flag_d=P_['flag_d'], age_spread_edges=P_['age_spread_edges'],
+                chunk_delta_vs_header=P_['chunk_delta_vs_header'], header_stages=hdr, chunk_stages=chk,
+                latency_cost=dict(added_edges_per_pv_pass=P_['trunk_d'], ledger='results/arch/accepted_cost_ledger_1013.json '
+                                  'qwen_rom PV16.TRUNK (+1,836 cycles / token, 0.731 %)'),
+                open_hops=[h for h in P_['worst_hops'] if h['um'] > 400][:4],
+                decision='Q-KV 10-16 ~21:30: option (a) accepted, die ~345 mm2 (+68 mm2) for closure')
 
 
 def check(m):
@@ -3926,6 +3943,8 @@ if {[llength $hv5s_cells]} {
         man['assumed_phy_pg_access'] = 'assumed_phy_pg_access.json'
     man.update(die='qwen_kv', die_um=[m['die']['w'], m['die']['h']], generator='tools/qwen_kv_die/kv_die.py')
     (work / 'manifest.json').write_text(json.dumps(man, indent=1))
+    if PV_T:      # KVPLAN 1815: the case carries the trunked pair's cost record (area / flops / latency, chunk stages)
+        (work / 'pv_trunk_record.json').write_text(json.dumps(pv_trunk_record(m), indent=1) + '\n')
     return man
 
 
