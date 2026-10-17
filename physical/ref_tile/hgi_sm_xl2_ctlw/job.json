@@ -1,5 +1,5 @@
 {
- "name": "hgi_sm_xl2_ctlw-f20g-COMMIT",
+ "name": "hgi_sm_xl2_ctlw-f20h-COMMIT",
  "block": "ot_hgi_sm_xload_cl2_ctlw",
  "ref_tile": true,
  "owner": "Claude H-SM",
@@ -42,49 +42,64 @@
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_exact",
     "expect": "pass",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "pass_regex": "^XLOAD_STATIC_LOCK PASS$",
+    "pass_witness": "results/hbm_sm_attention_1015/hsm_1315/ctlw_witness/f20_lock_exact.log",
+    "min_count_regex": "beats (\\d+) span"
    },
    {
     "name": "f20_lock_late_fire_mutant",
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_late_fire_mutant MUT6",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "fail_regex": "^XLOAD_STATIC_LOCK FAIL \\d+$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1315/ctlw_witness/f20_lock_late_fire_mutant.log"
    },
    {
     "name": "f20_lock_rotation_mutant",
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_rotation_mutant MUT1",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "fail_regex": "^XLOAD_STATIC_LOCK FAIL \\d+$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1315/ctlw_witness/f20_lock_rotation_mutant.log"
    },
    {
     "name": "f20_lock_bd_early_mutant",
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_bd_early_mutant MUT2",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "fail_regex": "^XLOAD_STATIC_LOCK FAIL \\d+$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1315/ctlw_witness/f20_lock_bd_early_mutant.log"
    },
    {
     "name": "f20_lock_bd_lane_mutant",
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_bd_lane_mutant MUT3",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "fail_regex": "^XLOAD_STATIC_LOCK FAIL \\d+$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1315/ctlw_witness/f20_lock_bd_lane_mutant.log"
    },
    {
     "name": "f20_lock_halfmask_mutant",
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_halfmask_mutant MUT4",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "fail_regex": "^XLOAD_STATIC_LOCK FAIL \\d+$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1315/ctlw_witness/f20_lock_halfmask_mutant.log"
    },
    {
     "name": "f20_lock_no_lookahead_mutant",
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_no_lookahead_mutant MUT5",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "fail_regex": "^XLOAD_STATIC_LOCK FAIL \\d+$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1315/ctlw_witness/f20_lock_no_lookahead_mutant.log"
    }
   ],
   "calibrate": {
@@ -137,7 +152,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_sm_xl2_ctlw/hgi_sm_xl2_ctlw-f20g-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_sm_xl2_ctlw/hgi_sm_xl2_ctlw-f20h-COMMIT"
   }
  ],
  "cycles_added": 0,

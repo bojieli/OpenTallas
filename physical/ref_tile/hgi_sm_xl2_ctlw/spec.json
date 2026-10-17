@@ -106,9 +106,9 @@
  "job": {
   "owner": "Claude H-SM",
   "branch": "claude/hsm-xl2-0230",
-  "tag": "f20g",
+  "tag": "f20h",
   "purpose": "x-load ctl die master with the folded x-load issuer (H-NETLIST/H-DIE option A, 10-16; replaces cp_xl_* ot_static_cmd_target instances + xl_*_ctl). x-load cl2 leaf (H-SM 2026-10-15): the flat clock-leaf cl failed its --cts gate (multiple_cts_roots source on 32 SRAMs; bs_a 8,642 / md 5,635 / bq_v 4,125-load nets; bw->rq 21 levels). cl2 = cluster of hardened leaves (ctl, 4 x BF quarter of one master, 2 x the CLOSED tree13 quantiser tile, BD ring), one clock root each < 15k sinks, every leaf pin registered (owner 19:50), running issue-word registers (no multiply), replicated selects; +2 fixed edges on every xw beat (lock bench vs cl shifted 2).",
-  "structural_change": "cl2g (26c34a312): ctlw r2 route hgi_sm_xl2_ctlw-f20a-ba27075db TT -58.79: every TT violator is rr_c/s0r/md -> rotation mux -> ~300 um -> l_d_o pin register (399 paths; next class +26.97). + L1 landing stage between the mux and l_d_o / C (LAND 3->4): +1 edge on every xw beat and x_done (XW_ADD_CL2 2->3), rq/RD_LAT unchanged.",
+  "structural_change": "f20h: cl2g RTL (L1 landing stage, XW_ADD 2->3) + select replicas kept (f20g gate at 92b8b654f: yosys merged the NR=32 s0r / bqvr replicas into one flop each -> s0r[27] 4,887 / 4,707 loads, bc_v 4,125 loads, the f20a TT -58.79 rotation-mux fanout); (* keep *) on s0r/e5r/bqvr. Outline kept at the die slot 345.6 x 345.6 (util 11% WARN: slot is the ctl die slot). | cl2g (26c34a312): ctlw r2 route hgi_sm_xl2_ctlw-f20a-ba27075db TT -58.79: every TT violator is rr_c/s0r/md -> rotation mux -> ~300 um -> l_d_o pin register (399 paths; next class +26.97). + L1 landing stage between the mux and l_d_o / C (LAND 3->4): +1 edge on every xw beat and x_done (XW_ADD_CL2 2->3), rq/RD_LAT unchanged.",
   "extra_paths": [
    "physical/asap7_memory_macros",
    "physical/hbm_xp_aq_tree13_1014",
@@ -130,49 +130,64 @@
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_exact",
     "expect": "pass",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "pass_regex": "^XLOAD_STATIC_LOCK PASS$",
+    "pass_witness": "results/hbm_sm_attention_1015/hsm_1315/ctlw_witness/f20_lock_exact.log",
+    "min_count_regex": "beats (\\d+) span"
    },
    {
     "name": "f20_lock_late_fire_mutant",
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_late_fire_mutant MUT6",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "fail_regex": "^XLOAD_STATIC_LOCK FAIL \\d+$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1315/ctlw_witness/f20_lock_late_fire_mutant.log"
    },
    {
     "name": "f20_lock_rotation_mutant",
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_rotation_mutant MUT1",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "fail_regex": "^XLOAD_STATIC_LOCK FAIL \\d+$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1315/ctlw_witness/f20_lock_rotation_mutant.log"
    },
    {
     "name": "f20_lock_bd_early_mutant",
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_bd_early_mutant MUT2",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "fail_regex": "^XLOAD_STATIC_LOCK FAIL \\d+$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1315/ctlw_witness/f20_lock_bd_early_mutant.log"
    },
    {
     "name": "f20_lock_bd_lane_mutant",
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_bd_lane_mutant MUT3",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "fail_regex": "^XLOAD_STATIC_LOCK FAIL \\d+$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1315/ctlw_witness/f20_lock_bd_lane_mutant.log"
    },
    {
     "name": "f20_lock_halfmask_mutant",
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_halfmask_mutant MUT4",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "fail_regex": "^XLOAD_STATIC_LOCK FAIL \\d+$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1315/ctlw_witness/f20_lock_halfmask_mutant.log"
    },
    {
     "name": "f20_lock_no_lookahead_mutant",
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_no_lookahead_mutant MUT5",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "fail_regex": "^XLOAD_STATIC_LOCK FAIL \\d+$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1315/ctlw_witness/f20_lock_no_lookahead_mutant.log"
    }
   ],
   "views_to": "physical/ref_tile/hgi_sm_xl2_ctlw/views",
