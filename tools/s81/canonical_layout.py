@@ -230,6 +230,13 @@ def _cm_reach(G,name='',path=None):
   if all(any(lo-60.0<=p[0]<=hi+60.0 for lo,hi in sp) for p in path):return None
  return cm['reach_um']
 
+def _cm_allowed(G,name,path,allowed,cor):
+ """--cluster-mode: a FIELD stretch (capped spacing) may not take hub interior sites (hub_w / strip_w): those belong to
+ the hub chains built after the field transport; spine / hub / S14-only stretches keep the full list."""
+ if _cm_reach(G,name,path) is None:return allowed
+ hub=[cor[k] for k in ('hub_w','strip_w') if k in cor]+([G.wide_return_strip(cor)] if G.wide_hub() and 'strip_w' in cor else [])
+ return [a for a in allowed if all(a is not h and tuple(a)!=tuple(h) for h in hub)]
+
 def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
  """Actual per-root chains, preserving immutable logical gather lane ordering.
  Geometry-independent equal-delay assertions are deliberately absent: actual
@@ -295,11 +302,11 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
     path=G._vmc_reroute(m,path,ends,name)
     actual=G._poly_len(path)
     forced=[s*actual/length if length else s for s in forced]
-   sa=CH.run(name,LA,path,allowed,src,forced=forced,reach=_cm_reach(G,name,path))
+   sa=CH.run(name,LA,path,_cm_allowed(G,name,path,allowed,cor),src,forced=forced,reach=_cm_reach(G,name,path))
    G.chain_nets(CH,name,srcA,[i for i,_,_ in sa],LA)
    tA=(sa[-1][0].name,'fo0','do0') if sa else srcA
    if not pair:return sa,tA,None
-   sb=CH.run(name+'_x2',LB,path,allowed,src,forced=sorted(set([round(s_,3) for _,s_,_ in sa]+list(forced))),reach=_cm_reach(G,name,path))
+   sb=CH.run(name+'_x2',LB,path,_cm_allowed(G,name,path,allowed,cor),src,forced=sorted(set([round(s_,3) for _,s_,_ in sa]+list(forced))),reach=_cm_reach(G,name,path))
    assert len(sb)==len(sa),('--bf-x2-pair: unequal station counts',name,len(sa),len(sb))
    G.chain_nets(CH,name+'_x2',srcB,[i for i,_,_ in sb],LB)
    return sa,tA,(sb[-1][0].name,'fo0','do0') if sb else srcB
@@ -365,7 +372,7 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
       ordered=sorted(active);positions=[byname[active[j][0]] for j in ordered]
       src=(sum(i.x+i.w/2 for i in positions)/len(positions),sum(i.y+i.h/2 for i in positions)/len(positions))
       path=G._dedup([src,(path[0][0],src[1])]+path)
-      stages=CH.run(name,[G.CRET+2]*len(ordered),path,allowed,src,forced=[G._poly_len(path)],reach=_cm_reach(G,name,path))
+      stages=CH.run(name,[G.CRET+2]*len(ordered),path,_cm_allowed(G,name,path,allowed,cor),src,forced=[G._poly_len(path)],reach=_cm_reach(G,name,path))
       for k,(obj,_s,_hop) in enumerate(stages):
        byname[obj.name]=obj
        for j,lane in enumerate(ordered):
