@@ -235,9 +235,10 @@ def review_required(spec, kit, jobs_dir=None):
     """(why or None): critical list hit (block, kit dir or spec name prefix) or >= REVIEW_FAILED_ROUTES failed routes"""
     names, block = critical_names(), spec.get("block")
     kitname = Path(kit).name if kit else None
-    hit = [x for x in (block, kitname) if x and x in names]
+    # entries are element / kit PREFIXES (coordinator's list: 'ot_v41_bf_', 'qfd_c_b16', ...)
+    hit = [(x, n) for x in (block, kitname, spec.get("name")) if x for n in sorted(names) if x.startswith(n)]
     if hit:
-        return f"{hit[0]} is on {CRITICAL_TILES}"
+        return f"{hit[0][0]} matches '{hit[0][1]}' on {CRITICAL_TILES}"
     bad = failed_routes(block, jobs_dir)
     if len(bad) >= REVIEW_FAILED_ROUTES:
         return f"{block} has {len(bad)} earlier non-CLOSED routes ({', '.join(bad[-3:])})"
