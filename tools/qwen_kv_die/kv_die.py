@@ -2400,7 +2400,9 @@ def _relays(m):
             return min(PHY_REACH, reach_()) if phy_b else reach_()
 
         def reach_():
-            return min(reach0_(), width_reach(bits)) if bid not in tree_meta else reach0_()
+            # the PV pair words keep the plain reach (their in-array distribution is the PV pair successor's; the width
+            # class moved pvin's planned end off the r6 W-equalised face pins: kvt13k-a 3 unrepaired 1.2-4.2 mm hops)
+            return min(reach0_(), width_reach(bits)) if bid not in tree_meta and not bid.startswith('pv') else reach0_()
 
         def reach0_():
             if phy_a and st_['prev_pt'] is None:
