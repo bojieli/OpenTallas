@@ -59,17 +59,30 @@ def selected_plan_summary(plan_path, paths_path, ledger, stages):
                            for r in ledger['rows'] if r['design'] == 's81' and
                            r['status'] == status and wl in r['per_workload']}
                   for status in ('accepted', 'proposed')}
-        losses['accepted']['VM.RELAY'] = price[wl]['upper_every_node']['e2e_loss_pct']
         accepted = sum(losses['accepted'].values())
         proposed = sum(losses['proposed'].values())
-        rates[wl] = dict(hop_only=anchor, accepted_loss_pct=accepted, proposed_loss_pct=proposed,
-                         accepted_tok_s=anchor * (1 - accepted / 100),
-                         accepted_and_proposed_tok_s=anchor * (1 - (accepted + proposed) / 100))
+        # Selection provides a candidate cost; it never confers ledger acceptance.
+        # Remove an existing VM.RELAY row from either status exactly once before
+        # adding the candidate. Other core/commit rows keep their status and cost.
+        baseline = {status: sum(v for group, v in groups.items() if group != 'VM.RELAY')
+                    for status, groups in losses.items()}
+        candidate = price[wl]['upper_every_node']['e2e_loss_pct']
+        baseline_total = sum(baseline.values())
+        rates[wl] = dict(hop_only=anchor,
+                         ledger_unchanged=dict(accepted_loss_pct=accepted, proposed_loss_pct=proposed,
+                             accepted_tok_s=anchor * (1 - accepted / 100),
+                             accepted_and_proposed_tok_s=anchor * (1 - (accepted + proposed) / 100)),
+                         baseline_without_vmrelay=dict(accepted_loss_pct=baseline['accepted'],
+                             proposed_loss_pct=baseline['proposed'],
+                             composed_tok_s=anchor * (1 - baseline_total / 100)),
+                         selected_relay_candidate=dict(e2e_loss_pct=candidate, accepted=False, measured_native=False),
+                         candidate_composed_loss_pct=baseline_total + candidate,
+                         candidate_composed_tok_s=anchor * (1 - (baseline_total + candidate) / 100))
     compiled['compiled']['loaded_from'] = str(plan_path)
     return dict(schema='opentallas.s81.mtp-ledger.v1', grade='COMPOSED_NOT_NATIVE',
                 relay_input=relay, stages=stages, rates=rates, native_qualified=False,
                 open=['Native path/operation coverage and exact timeline remain unproven.',
-                      'Only VM.RELAY is replaced; existing VM core/commit ledger rows remain charged.',
+                      'VM.RELAY replacement is a candidate projection only; existing ledger rows/statuses remain unchanged.',
                       'Owner-declared path alternatives are not a completeness proof.']), compiled
 
 

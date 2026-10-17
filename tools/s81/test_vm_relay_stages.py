@@ -45,7 +45,8 @@ class RelayPaths(unittest.TestCase):
                      per_workload={w: dict(e2e_loss_pct=value) for w in ('ar', 'mtp')})
                 for status, group, value in (('accepted', 'VM.RELAY', 99),
                                             ('accepted', 'VM.READ', 7),
-                                            ('proposed', 'VM.A2_COMMIT_REMAINDER', 2))]
+                                            ('proposed', 'VM.A2_COMMIT_REMAINDER', 2),
+                                            ('proposed', 'VM.RELAY', 88))]
         price = {w: dict(upper_every_node=dict(e2e_loss_pct=3)) for w in ('ar', 'mtp')}
         with tempfile.TemporaryDirectory() as d:
             planfile, pathsfile = Path(d)/'plan.json', Path(d)/'paths.json'
@@ -54,8 +55,13 @@ class RelayPaths(unittest.TestCase):
             with patch.object(ledger.RP, 'price', return_value=price) as priced:
                 report, compiled = ledger.selected_plan_summary(planfile, pathsfile, dict(rows=rows), 89)
             priced.assert_called_once_with(11, 12)
-        self.assertEqual(report['rates']['mtp']['accepted_loss_pct'], 10)
-        self.assertEqual(report['rates']['mtp']['proposed_loss_pct'], 2)
+        rate = report['rates']['mtp']
+        self.assertEqual(rate['ledger_unchanged']['accepted_loss_pct'], 106)
+        self.assertEqual(rate['ledger_unchanged']['proposed_loss_pct'], 90)
+        self.assertEqual(rate['baseline_without_vmrelay']['accepted_loss_pct'], 7)
+        self.assertEqual(rate['baseline_without_vmrelay']['proposed_loss_pct'], 2)
+        self.assertEqual(rate['candidate_composed_loss_pct'], 12)
+        self.assertFalse(rate['selected_relay_candidate']['accepted'])
         self.assertEqual(compiled['compiled']['loaded_digest'], plan['digest'])
         self.assertFalse(report['native_qualified'])
 

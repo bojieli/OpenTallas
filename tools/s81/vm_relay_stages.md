@@ -27,7 +27,9 @@ or runtime fallback is provided.
 
 The relay-only conservative cost uses the maximum write alternative plus the
 maximum read-request alternative plus the maximum read-return alternative.
-It replaces only the VM.RELAY ledger row. Commit stages are reported explicitly;
+The output preserves the original accepted/proposed ledger totals. A separate
+candidate projection excludes VM.RELAY from both statuses and adds the selected
+relay cost once; selection does not mark that cost accepted or measured. Commit stages are reported explicitly;
 existing VM core/commit remainder rows stay charged until the current native
 service composition has been measured. The output retains the table digest and
 records used bus IDs in a compiled table for the existing mismatch checker.
