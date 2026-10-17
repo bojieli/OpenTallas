@@ -234,7 +234,12 @@ def new_spec(a: dict, audit=AUDIT) -> dict:
 
 
 def output_stage_ok(s: dict) -> str | None:
-    """None when the regenerated spec carries the full recipe-2 output stage, else what is missing"""
+    """None when the regenerated spec carries the full output stage, else what is missing.  Recipe 4 (FLOW-HOLD
+    hold_budget die): flop-first pins -- io_flop_at_pins + kept pin registers, no pin pads.  Otherwise recipe 2."""
+    if s.get("hold_budget") == "die":
+        miss = [k for k, ok in (("io_flop_at_pins", s.get("io_flop_at_pins")), ("keep_pin_regs", s.get("keep_pin_regs")),
+                                ("no pin pads", not (s.get("inhold") or s.get("outhold")))) if not ok]
+        return ", ".join(miss) or None
     miss = [k for k, ok in (("recipe 2 pin hook (io_flop_at_pins + inhold/outhold)", RT.pin_hook_wrapper(s)),
                             ("pin_reg_split", s.get("pin_reg_split")), ("keep_pin_regs", s.get("keep_pin_regs")),
                             ("hold_pad HB2", (s.get("hold_pad") or {}).get("cell", RT.RECIPE_HOLD_PAD) == RT.RECIPE_HOLD_PAD
