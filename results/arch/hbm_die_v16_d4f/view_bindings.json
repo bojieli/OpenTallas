@@ -107,7 +107,7 @@
   },
   "ot_hgi_sm_xload_xq_pegress": {
    "status": "NOT BINDABLE: x5 native FAIL (capture 337.5 ed5[7], spread 83.0); x3 FAIL",
-   "next": "x6 structural (ed5 pin flop + in-tile replication recipe 4, 2-entry clock split); ed5 edge priced",
+   "next": "x6 369.36 sq (route hgi_sm_xq_pegress-x6-7103335e0 queued); faces N xw / W bq_d / S rwq / E ctl, 5 clock entries",
    "die": "SYNTH diagnostic until x6 native PASS"
   },
   "hfd_vms_bank_native_q1_core": {
@@ -137,6 +137,15 @@
   "idx_scorer_cluster": {
    "decision": "leaf flat ~530 um (retime ~221k FF), 4x4 + systolic W->E chain (+4 latency), 16 roots/leaf ~13.8k sinks (approved)",
    "slot": "3050 sq max until the cluster kit outline (~2500)"
+  },
+  "ot_hgi_coll_argmax_m_tp192": {
+   "kind": "REAL",
+   "route": "hcoll_v7_arg_tp192-d4f3-c210fbe53",
+   "closed": "TT +3.10 / FF +22.75 / DRC 0",
+   "record": "67c594a58 (main a1d2e92e6)",
+   "native": "L155.4/C113.6/sp12.7 PASS",
+   "watch": "TT +3.10 (fallback d4f4 if die STA names u_chk.fault)",
+   "compiler": "START_REG: ARGMAX start +1"
   }
  }
 }
