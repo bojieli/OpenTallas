@@ -5,7 +5,7 @@ Stream S81-DV (owner decision 0cj, 2026-10-16 ~22:00). Plan level: nothing in th
 **Status: COMPOSED_NOT_NATIVE.** Every rate below is composed from the token-path DAG and plan geometry. It becomes a
 measured rate only once the slice benches and the die trial report their latencies.
 
-**Current die-trial base: p4c**: p4 plus the per-column tier exchange (sections 0a and 0b). p4 itself is the coordinator decision of 10-17, option B. The earlier base was p1b (10-17). It is p1's geometry plus two changes:
+**Current die-trial base: p4c-lanes**: p4, plus the per-column tier exchange, plus every 1,104-b link carried as 4 × 276-b lanes (sections 0a and 0b). p4 itself is the coordinator decision of 10-17, option B. The earlier base was p1b (10-17). It is p1's geometry plus two changes:
 - the row-0 frames are placed MX, so their cfifo x tap faces the slice;
 - each shared unit sits against the slice it talks to.
 
@@ -251,6 +251,24 @@ The structural alternative evaluated is a **per-column tier exchange**. Every co
 - It is structurally simpler: every slice uses its void-side V port the same way, the slice master drops to **two** centre-leaf variants (C1 = ring + V for 14 slices, C3 = ring + V + B for the attention slices s_1S / s_6S), and units become uniform ring stops.
 - The critical-path cost is the +4 cycles of unit stops: −0.3%, inside the model's noise.
 - 1/8 width is rejected: serialization makes it −1.7%.
+
+### 0b (cont.). p4c-lanes: every 1,104-b link as 4 × 276-b lanes (coordinator, 10-17)
+
+Wide stations have been the hard class: 566/624-b stations are slew-limited, and the 624 forks fail. Narrow stations close easily.
+
+The change: every 1,104-b link is carried as **4 parallel 276-b lanes**. That covers the street ring segments, the x chains, q/P·V and the unit ports. Each lane has its own station chain and its own forwarded clock, and the lanes are cycle-aligned: same stage count and same hop points, with the lanes 6 µm apart. This follows HBM's 48-b-lane practice. Bandwidth, the schedule and the slice / unit port widths are unchanged.
+
+| | p4c | **p4c-lanes** |
+|---|---|---|
+| Worst cut / windows > 0.55 | 0.427 / 0 | **0.415 / 0** |
+| Over-reach | 0 | **0** |
+| Station instances | 1,872 (1,104-b class) | **4,332** (≤ 276-b class) |
+| Relay bit-stages | 1,039,072 | **1,039,072** (unchanged) |
+| bit·mm | 0.386 M | **0.386 M** |
+| Phase path | 118 stages | **118 stages** |
+| MTP (DV base) | 4,141.2 | **4,141.2** (unchanged) |
+
+Only the station tiles and the plan change. The widest die-level station is now 276 b, which matches the tier links. The cut falls slightly because the lanes spread over adjacent windows. Explorer record `s81_dv_p4c_lanes`.
 
 ## 1. Why
 
