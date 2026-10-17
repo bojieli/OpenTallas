@@ -39,7 +39,8 @@ module ot_hbm_static_cfg_collar #(
     parameter integer NF=1,        // client fault inputs
     parameter integer TAIL=4,
     parameter integer XSER=0,      // 1: core clk is the 3:4 serial domain, broadcast pins on clk_in (stream)
-    parameter integer MUT=0,       // bench: 1 skip sequential check, 2 ready ignores need, 3 go one edge early, 4 no event seq check
+    parameter integer MUT=0,       // bench: 1 skip sequential check, 2 ready ignores need, 3 go one edge early, 4 no event seq check,
+                                   //        5 (XSER=1) stream domain left without its reset
     parameter integer AW=PAGE_W+11
 )(
     input  wire clk, clk_in, rst_n,
@@ -69,6 +70,24 @@ module ot_hbm_static_cfg_collar #(
     localparam integer SW = (NS>1) ? $clog2(NS) : 1;
     localparam integer RN = (NREC>0) ? NREC : 1;
     localparam integer RW = (NREC>1) ? $clog2(NREC+1) : 1;
+    // ---------------- per-domain reset (HBMA-HOST2 2026-10-17)
+    // XSER=1: rst_n is a serial-domain (por_serial) pin. It lands in a plain pin flop on clk and a second clk stage;
+    // that Q (rst_c_n) is the core-domain reset (in-domain recovery/removal, full serial period). The stream domain
+    // gets its own reset: rst_c_n is re-timed by two clk_in flops (a flop-to-flop 3:4 crossing timed by STA like the
+    // event crossing) and that Q (rst_s_n) clears the clk_in flops. Before this, the raw serial rst_n async-cleared
+    // the clk_in flops directly (pin -> RESETN at the tightest 3:4 edge pair: recovery -129 ps, removal -50 ps).
+    // Release: core +2 serial edges, stream +2 stream edges after that; no datapath latency changes (configuration
+    // events arrive from the elastic host ingress long after power-on reset). XSER=0: unchanged (rst_n direct).
+    wire rst_c_n, rst_s_n;
+    generate if (XSER == 0) begin : g_rst_same
+        assign rst_c_n = rst_n; assign rst_s_n = rst_n;
+    end else begin : g_rst_sync
+        reg [1:0] rc, rs;
+        always @(posedge clk)    rc <= {rc[0], rst_n};
+        always @(posedge clk_in) rs <= {rs[0], rc[1]};
+        assign rst_c_n = rc[1];
+        assign rst_s_n = (MUT == 5) ? 1'b1 : rs[1];
+    end endgenerate
     // ---------------- pin flops
     reg cv, dv, lv, done_q, xfault;
     reg [7:0] ct, tg;
@@ -77,8 +96,8 @@ module ot_hbm_static_cfg_collar #(
     reg [NB-1:0] busy_q;
     reg [NF-1:0] cf_q;
     always @(posedge clk) tg <= tgt;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin done_q <= 0; busy_q <= 0; cf_q <= 0; end
+    always @(posedge clk or negedge rst_c_n)
+        if (!rst_c_n) begin done_q <= 0; busy_q <= 0; cf_q <= 0; end
         else begin done_q <= c_done; busy_q <= c_busy; cf_q <= c_fault; end
     generate if (XSER == 0) begin : g_same
         // broadcast pins in the core clock (clk_in is the same root)
@@ -95,8 +114,8 @@ module ot_hbm_static_cfg_collar #(
         reg pv_cv, pv_dv, pv_lv; reg [7:0] p_ct; reg [11:0] p_ca; reg [255:0] p_cd;
         reg [1:0] h_seq; reg h_cv, h_dv, h_lv; reg [7:0] h_ct; reg [11:0] h_ca; reg [255:0] h_cd;
         always @(posedge clk_in) begin p_ct <= cfg_target; p_ca <= cfg_addr; p_cd <= cfg_data; end
-        always @(posedge clk_in or negedge rst_n)
-            if (!rst_n) begin pv_cv <= 0; pv_dv <= 0; pv_lv <= 0; h_seq <= 0; h_cv <= 0; h_dv <= 0; h_lv <= 0; end
+        always @(posedge clk_in or negedge rst_s_n)
+            if (!rst_s_n) begin pv_cv <= 0; pv_dv <= 0; pv_lv <= 0; h_seq <= 0; h_cv <= 0; h_dv <= 0; h_lv <= 0; end
             else begin
                 pv_cv <= cfg_v; pv_dv <= desc_v; pv_lv <= launch_v;
                 if (pv_cv || pv_dv || pv_lv) begin
@@ -105,18 +124,18 @@ module ot_hbm_static_cfg_collar #(
             end
         // held payload: plain enabled flops outside the async-reset block (HBMA-HOST 2026-10-17). Inside it, synthesis
         // folded the serial-domain rst_n into the stream-domain DFFE enable (a reset on the datapath, crossing domains;
-        // OT_MULTI_ROOT). pv_* are cleared by rst_n, so the enable is low under reset exactly as before: bit-identical.
+        // OT_MULTI_ROOT). pv_* are cleared by the stream reset, so the enable is low under reset exactly as before: bit-identical.
         always @(posedge clk_in)
             if (pv_cv || pv_dv || pv_lv) begin h_ct <= p_ct; h_ca <= p_ca; h_cd <= p_cd; end
         reg [1:0] s_seq, s_prev; reg s_cv, s_dv, s_lv; reg [7:0] s_ct; reg [11:0] s_ca; reg [255:0] s_cd;
         always @(posedge clk) begin s_ct <= h_ct; s_ca <= h_ca; s_cd <= h_cd; end
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin s_seq <= 0; s_prev <= 0; s_cv <= 0; s_dv <= 0; s_lv <= 0; end
+        always @(posedge clk or negedge rst_c_n)
+            if (!rst_c_n) begin s_seq <= 0; s_prev <= 0; s_cv <= 0; s_dv <= 0; s_lv <= 0; end
             else begin s_seq <= h_seq; s_prev <= s_seq; s_cv <= h_cv; s_dv <= h_dv; s_lv <= h_lv; end
         wire ev = s_seq != s_prev;
         always @(posedge clk) begin ct <= s_ct; ca <= s_ca; cd <= s_cd; end
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin cv <= 0; dv <= 0; lv <= 0; xfault <= 0; end
+        always @(posedge clk or negedge rst_c_n)
+            if (!rst_c_n) begin cv <= 0; dv <= 0; lv <= 0; xfault <= 0; end
             else begin
                 cv <= ev && s_cv; dv <= ev && s_dv; lv <= ev && s_lv;
                 xfault <= ev && (s_seq - s_prev) != 2'd1 && MUT != 4;
@@ -150,8 +169,8 @@ module ot_hbm_static_cfg_collar #(
     wire [31:0] cur_off = r_off[(NREC == 0) ? 0 : rptr];
     wire [31:0] cmp_cnt = (MUT == 3) ? cnt + 1 : cnt;
     integer k;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rst_c_n) begin
+        if (!rst_c_n) begin
             pw_we <= 0; start_v <= 0; go <= 0; ready <= 0; active <= 0; fault <= 0;
             sel <= 0; need_set <= 0; wait_mask <= 0; wait_done <= 0; loaded <= 0; armed <= 0; run <= 0;
             cnt <= 0; rptr <= 0; tail <= 0; r_val <= 0;
