@@ -166,5 +166,10 @@
       103.045,
       108.0
     ]
-  }
+  },
+  "reroute_reason": {
+    "kind": "slot_change",
+    "slot_change_request": "S81-SLICE SLOT CHANGE REQUEST 10-17 (S81-DV p4c slice, coordinator-approved gate 0co): the closed lane_pr view 79315a431 is a legacy-flow view (no TT lib, no insertion.json, legacy M6/M7 layers, 85.32 x 115.02) that cannot be a hard child of the current-flow vp cluster; new 114.48 x 114.48 outline, recipe 4 / hold_budget die, full-face pin spread for the DV beat leaf (16 per leaf, 80 per slice). RTL unchanged."
+  },
+  "slot_change_request": "S81-SLICE SLOT CHANGE REQUEST 10-17 (S81-DV p4c slice, coordinator-approved gate 0co): the closed lane_pr view 79315a431 is a legacy-flow view (no TT lib, no insertion.json, legacy M6/M7 layers, 85.32 x 115.02) that cannot be a hard child of the current-flow vp cluster; new 114.48 x 114.48 outline, recipe 4 / hold_budget die, full-face pin spread for the DV beat leaf (16 per leaf, 80 per slice). RTL unchanged."
 }
