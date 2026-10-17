@@ -28,7 +28,7 @@ proc ot_ref_pick {by master pat} {
   error "ref_tile place: no unplaced instance of $master matching '$pat'"
 }
 set ot_ref_n 0
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {store.codes}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {}]
 $i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(114.48 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 43.2 114.48 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }

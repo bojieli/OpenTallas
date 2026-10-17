@@ -1,0 +1,141 @@
+{
+ "name": "s81hc_retcol_c1_ref",
+ "top": "ot_s81_hc_ret_column_c1",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_skid_buffer.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_return_columns.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth_ntc.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [],
+ "outline": {
+  "w": 144.18,
+  "h": 72.9,
+  "exact": true
+ },
+ "why_floorplan": "Return column 1 = ctra_column + ctrb_column (COLUMN 1, YB_STAGE 1, PAYLOAD_STAGE 0) merged into one 144.18 x 72.90 leaf (10-16: grown from 56.16, post-CTS util 75-79% at 56.16); Codex A/B maps 2431+1916 um2 class.",
+ "macros": [],
+ "pins": {
+  "N": [
+   "a_rdm",
+   "b_rdm",
+   "clk",
+   "flag_fault",
+   "flag_hnz",
+   "hdr",
+   "hnz_n",
+   "hs_c",
+   "hs_run",
+   "pflt_n",
+   "rvm"
+  ],
+  "S": [
+   "ao_in",
+   "ap_in",
+   "bo_in",
+   "bp_in",
+   "fdx",
+   "fv",
+   "hdr_in",
+   "hnz_s",
+   "last",
+   "pflt_s",
+   "rq_q",
+   "rst_in",
+   "rv_in",
+   "tid"
+  ],
+  "E": [
+   "cs_fwd",
+   "cs_in"
+  ],
+  "W": [
+   "hov_fwd",
+   "hov_in"
+  ],
+  "ANY": [
+   "hrq_col",
+   "nflt_col",
+   "yb_fwd",
+   "yb_loc",
+   "yb_peer"
+  ]
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:S-ENGRAM+NORM/HC-COLUMN",
+  "branch": "claude/s81-hccol-b-1016",
+  "tag": "a4",
+  "purpose": "New cth_ntc return leaf, COLUMN 1: the four-column return with the y-beat / cs relays (y returns +1, requests and h returns unchanged).",
+  "views_to": "physical/ref_tile/s81hc_retcol_c1_ref/views",
+  "record_to": "results/rtl/ref_tile/s81hc_retcol_c1_ref",
+  "hold_merge": "cth_ntc parent component: the parent kit binds it after every child closes with native PASS; exactness = two-row chain proof + exact HC gate (RETCOL)",
+  "benched_by": "s81hc_ng256_retcol"
+ },
+ "params": {
+  "CHAIN_STEP": 6,
+  "READ_STAGE": 1
+ },
+ "children": [],
+ "inter": [],
+ "layer_cap": "M5",
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "tools/s81_suhc/inherited_exact_iop.tcl",
+  "OT_HC_NATIVE_IO_TCL": "/src/physical/s81_die_pins/v28_hc_cthntc/ot_s81_hc_ret_column_c1.tcl"
+ },
+ "recipe": 2,
+ "io_tcl": "physical/s81_die_pins/v28_hc_cthntc/ot_s81_hc_ret_column_c1.tcl",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Real RTL registers the boundary at its own stage (chain rd/rv -> rdq/rvq, y beat / cs relays, ybuf / psb captures, rdm / header / request / flag registers); a generic pin register would add a cycle to the fixed return calendar. hrq feeds the same-cycle merge (bank round trip) by design."
+ },
+ "structural_change": "Replaces the failed monolithic ctra / ctrb strips (v1 GRT congestion; native capture 674 ps): one engine per column, y beat and cs relayed one cycle, own payload chunks only. | 10-16 a4 (a3 c2/c3 CLOSED but native capture FAIL: hrq_col 277-279, cs_in 273, fv 262-300, yb_loc 247-249, yb_peer 215-238, hdr_in 201-209 ps > 190): every input family on a pin register -- hrq_col -> hrq_q (HQ_LAG 1: merge + rd relay +1 = +1 cycle per return row), yb own/peer and cs one consumer register each (Y_LAG / CS_LAG 2: y returns +1, cs capture +1), fv = the row's early fv (ctfxs) captured at the pin with ctfl's reset relay (0 cycles); pins: rq_q moves to the S face next to its hdr_in P_Q bit (one rdq flop for capture + launch), yb_fwd / cs_fwd (c3) launch on the N/S face next to their capture pins. Same outline.",
+ "slot_change_request": "New cth_ntc leaf (top-down parent plan tools/s81/hc_cthntc_plan.py, physical/s81_die_pins/v28_hc_cthntc: outline growth 10-16: parent 576.72 x 874.26)."
+}

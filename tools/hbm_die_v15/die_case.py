@@ -29,6 +29,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from view_case import lef_pins, lef_xy  # noqa: E402
 import clock_sites
 import die_clock_tree as dct  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import die_reach  # noqa: E402
 
 GRANTS = ROOT / 'results/arch/hier_contract_1015/hbm_v15.json'
 PLAN = ROOT / 'results/arch/hbm_die_v15/compact660_v5/compact.P.json'
@@ -192,7 +194,8 @@ def main():
     ap.add_argument('--stn-view', type=Path, help='dir with hfd_stn_v15_cc1182_synth_{tt,ff}.lib: insert SM_HBM relay '
                     'stages (<= 480 um reach) on every service group -> SM link')
     ap.add_argument('--die-repeaters', action='store_true',
-                    help='die-level repeaters on the inter-block signal nets (repair_design -max_wire_length 400 on '
+                    help='die-level repeaters on the inter-block signal nets (repair_design -max_wire_length --max-wire-um, default = '
+                         'the measured HBM die reach, results/arch/die_reach_1016.json, on '
                          'placement parasitics before GRT): the die buffering every block-to-block wire needs; not legalised')
     ap.add_argument('--paths', type=int, default=200000)
     ap.add_argument('--clock-pads', type=Path)
@@ -204,7 +207,9 @@ def main():
     ap.add_argument('--clock-bin-um', type=float, default=1600.0)
     ap.add_argument('--clock-in-reserved-channels', action='store_true',
                     help='allow die clock repeaters in the slot reserved_channels (only when the views carve them)')
+    die_reach.add_args(ap, 'hbm')
     a = ap.parse_args()
+    mw = die_reach.from_args(a, 'hbm')
     G = json.loads(GRANTS.read_text()); P = json.loads(PLAN.read_text())
     slots = {s['name']: s for s in G['slots']}
     W, H = G['floorplan']['die_um']
@@ -671,7 +676,7 @@ set_clock_groups -asynchronous -group hbm -group stream
 estimate_parasitics -placement
 set_dont_touch [get_nets -quiet {{dk?_* n_dk?_* clk_*}}]
 set r0 [clock seconds]
-repair_design -max_wire_length 400 -buffer_gain 4.0
+{die_reach.repair_tcl(mw, '-buffer_gain 4.0')}
 puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"'''
     tcl = tcl.replace('{REPEAT}', rep)
     (out / 'run.tcl').write_text(tcl)
@@ -699,7 +704,8 @@ echo $? > $D/out/run.exit
                die_clock_trees={d: t['model'] for d, t in trees.items()}, sm_hbm_relays=relay_rep,
                open_pins_by_master={m: dict(v) for m, v in open_pins.items()}, open_owner=owner,
                placement={l: v for l, v in leaves.items()},
-               corners='setup TT, hold FF (owner option B); SS not run')
+               corners='setup TT, hold FF (owner option B); SS not run',
+               max_wire=dict(mw, applied=bool(a.die_repeaters)))
     (out / 'manifest.json').write_text(json.dumps(man, indent=1))
     print(json.dumps({k: man[k] for k in ('instances', 'signal_nets', 'clock_domains')}))
 
