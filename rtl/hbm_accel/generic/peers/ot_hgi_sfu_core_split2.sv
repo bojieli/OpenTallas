@@ -1,5 +1,15 @@
 `timescale 1ns/1ps
 `default_nettype none
+// OT_SFU_SYNC_RST (H-SU k8, 2026-10-16 owner standard: regional SYNC reset trees, no async-clear fanout): when defined,
+// every reset in this file is synchronous to its own clock (the regional rst_n comes registered from ot_rst_relay /
+// the die's regional relays); undefined = the previous asynchronous form, bit-identical behaviour after release.
+`ifndef OT_SFU_ARST
+`ifdef OT_SFU_SYNC_RST
+`define OT_SFU_ARST(r)
+`else
+`define OT_SFU_ARST(r) or negedge r
+`endif
+`endif
 // ot_hgi_sfu_core_split2 (H-SU 2026-10-16, k7; opt-in successor of ot_hgi_sfu_core_split, which stays unchanged):
 // the same SFU core (pin registers, VM bridge, static engine with 16 lanes + 80 operand SRAMs; same latencies) with
 //  (1) the lane-direct buses split by die face so every lane's 116 boundary pins sit beside it: lanes 0..7 on the W
@@ -41,9 +51,15 @@ module ot_hgi_sfu_core_split2 #(
  ot_rst_relay #(.REGIONS(4),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
  reg [470:0] io_r;
  reg [1741:0] ctl_r;
- always @(posedge clk_pe or negedge rr[3])
+`ifdef OT_SFU_SYNC_RST
+ // k8 sync-reset standard: boundary pin registers are pure data stages (no reset; the bridge / engine they feed are
+ // held in reset by their own regional relays until these registers carry live values)
+ always @(posedge clk_pe) begin io_r<=io_word;ctl_r<=compiler_control;end
+`else
+ always @(posedge clk_pe `OT_SFU_ARST(rr[3]))
   if(!rr[3])begin io_r<=0;ctl_r<=0;end
   else begin io_r<=io_word;ctl_r<=compiler_control;end
+`endif
 `ifdef OT_SFU_CORE_MUT_SKIP_REG
  wire [470:0] io=io_word;
  wire [1741:0] control=compiler_control;
@@ -81,12 +97,24 @@ module ot_hgi_sfu_core_split2 #(
  reg [7:0] b_wd;
  wire [15:0] e_rov;
  wire [511:0] e_rox;
- always @(posedge clk_pw or negedge rr[2])
+`ifdef OT_SFU_SYNC_RST
+ // k8 sync-reset standard: boundary pin registers are pure data stages (no reset; the bridge / engine they feed are
+ // held in reset by their own regional relays until these registers carry live values)
+ always @(posedge clk_pw) begin local_rq<=b_rq;local_wq<=b_wq;b_rr<=local_rr;b_wd<=local_w_done;end
+`else
+ always @(posedge clk_pw `OT_SFU_ARST(rr[2]))
   if(!rr[2])begin local_rq<=0;local_wq<=0;b_rr<=0;b_wd<=0;end
   else begin local_rq<=b_rq;local_wq<=b_wq;b_rr<=local_rr;b_wd<=local_w_done;end
- always @(posedge clk_pe or negedge rr[3])
+`endif
+`ifdef OT_SFU_SYNC_RST
+ // k8 sync-reset standard: boundary pin registers are pure data stages (no reset; the bridge / engine they feed are
+ // held in reset by their own regional relays until these registers carry live values)
+ always @(posedge clk_pe) begin {ro_v_e,ro_v_w}<=e_rov;{ro_x_e,ro_x_w}<=e_rox;end
+`else
+ always @(posedge clk_pe `OT_SFU_ARST(rr[3]))
   if(!rr[3])begin ro_v_w<=0;ro_v_e<=0;ro_x_w<=0;ro_x_e<=0;end
   else begin {ro_v_e,ro_v_w}<=e_rov;{ro_x_e,ro_x_w}<=e_rox;end
+`endif
  localparam integer LGB=LG_PATH+1;
  ot_hgi_sfu_vm_static_bridge #(.LWB(LWB),.READ_RETURN(14+2*LGB),.WRITE_RETURN(11+2*LGB)) u_vm(
  .clk(clk),.rst_n(rr[0]),.clk_lg(clk_lg),.rst_lg_n(rst_lg_n),.prefetch_v(prefetch_v),.prefetch_sector(prefetch_sector),.prefetch_group(prefetch_group),
@@ -102,7 +130,7 @@ module ot_hgi_sfu_core_split2 #(
   .drain_v(drain_v),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_result_v),
   .vi_re({vi_re_e,vi_re_w}),.vi_addr({vi_addr_e,vi_addr_w}),.vi_q({vi_q_e,vi_q_w}),.ro_v(e_rov),.ro_x(e_rox),
   .kv_we({kv_we_e,kv_we_w}),.kv_waddr({kv_waddr_e,kv_waddr_w}),.kv_wdata({kv_wdata_e,kv_wdata_w}),.fault(engine_fault));
- always @(posedge clk_pe or negedge rr[3])
+ always @(posedge clk_pe `OT_SFU_ARST(rr[3]))
   if(!rr[3])fault<=0;else if(bridge_fault||engine_fault)fault<=1;
 endmodule
 `default_nettype wire
