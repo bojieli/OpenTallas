@@ -1,0 +1,8 @@
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2949490-1792226782 after 1 s
+MISMATCH cyc862 on1/1 v1/1 kvf/f f0/0 sum 4823a4004200ec404416e3203f580180 / 4823a4004201138042f000003f590580
+MISMATCH cyc1216 on1/1 v1/1 kvf/f ff/f sum bc840000be5b6000c50477acbe2eec00 / bc840000be5b6000c529b7acbe2eec00
+CHUNK_RT_EQUIV checks 2337 outputs 1063 nonzero_sums 1063 errors 2 gapk 2 qlate 1
+[23420000] %Fatal: tb_idx_chunk_rt_equiv.sv:66: Assertion failed in tb_idx_chunk_rt_equiv: CHUNK_RT_EQUIV FAIL
+CHUNK_RT_MODE qlate1 rc=1
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2949490-1792226782): exit 1
