@@ -1,0 +1,417 @@
+{
+ "name": "hsm_smvm_wrq_t_r5",
+ "top": "ot_hbm_sm_vm_wr_q_t_lanes",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_lanes.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_lanes.sv",
+  "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {
+  "DEPTH": 4,
+  "MUT": 0
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 142.56,
+  "h": 388.8
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    23.328,
+    302.4
+   ],
+   "inst": "u_tab",
+   "clock_entry": {
+    "port": "clk_cal",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  }
+ ],
+ "pins": {
+  "W": [
+   "rv_s0",
+   "rrow_s0",
+   "rdata_s0",
+   "smf_s0",
+   "sms_s0",
+   "clk_l0",
+   "rv_s1",
+   "rrow_s1",
+   "rdata_s1",
+   "smf_s1",
+   "sms_s1",
+   "clk_l1",
+   "rv_s2",
+   "rrow_s2",
+   "rdata_s2",
+   "smf_s2",
+   "sms_s2",
+   "clk_l2",
+   "rv_s3",
+   "rrow_s3",
+   "rdata_s3",
+   "smf_s3",
+   "sms_s3",
+   "clk_l3",
+   "rv_s4",
+   "rrow_s4",
+   "rdata_s4",
+   "smf_s4",
+   "sms_s4",
+   "clk_l4",
+   "rv_s5",
+   "rrow_s5",
+   "rdata_s5",
+   "smf_s5",
+   "sms_s5",
+   "clk_l5",
+   "rv_s6",
+   "rrow_s6",
+   "rdata_s6",
+   "smf_s6",
+   "sms_s6",
+   "clk_l6",
+   "rv_s7",
+   "rrow_s7",
+   "rdata_s7",
+   "smf_s7",
+   "sms_s7",
+   "clk_l7"
+  ],
+  "E": [
+   "wq_s0",
+   "wq_s1",
+   "wq_s2",
+   "wq_s3",
+   "wq_s4",
+   "wq_s5",
+   "wq_s6",
+   "wq_s7"
+  ],
+  "N": [
+   "clk",
+   "clk_cal",
+   "rst_n",
+   "tgt",
+   "quad",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "configured",
+   "fault",
+   "active"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 30,
+   "extra": "-balance_levels"
+  },
+  "io_hold_margin_ns": 0.0
+ },
+ "recipe": 4,
+ "purpose": "H-WRQ 2026-10-17: hardened SM result -> VM writer smw_<q> (one master, 4 instances), LANE-ROOT successor of faces4: one clock root per SM lane (pin flops + DEPTH-4 FIFO + server + wq launch flops + descriptor copy, ~1.7k sinks), core root = calendar/N-face host pins (~1.1k), clk_cal = table SRAM. No wide path crosses clock entries (faces4/f4hc: 13.7k cross-entry hold endpoints, ~32k hold buffers, TT -46.5 rp->o_w at the 210 ps inter-entry reserve). 0 edges added: rv(t) -> wq slot 0 at t+3, calendar fire edge unchanged.",
+ "job": {
+  "owner": "Claude H-WRQ 1017",
+  "branch": "claude/hwrq-1017",
+  "tag": "lanes",
+  "purpose": "H-WRQ 2026-10-17: hardened SM result -> VM writer smw_<q> (one master, 4 instances), LANE-ROOT successor of faces4: one clock root per SM lane (pin flops + DEPTH-4 FIFO + server + wq launch flops + descriptor copy, ~1.7k sinks), core root = calendar/N-face host pins (~1.1k), clk_cal = table SRAM. No wide path crosses clock entries (faces4/f4hc: 13.7k cross-entry hold endpoints, ~32k hold buffers, TT -46.5 rp->o_w at the 210 ps inter-entry reserve). 0 edges added: rv(t) -> wq slot 0 at t+3, calendar fire edge unchanged.",
+  "benches": [
+   {
+    "name": "wrq_t_bench",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/run_sm_vm_wr_q_t_lanes.sh {RUN}/bench/wrqt",
+    "expect": "pass",
+    "pass_regex": "SM_VM_WR_Q_T BENCH PASS",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "min_count_regex": "rows checked ([0-9]+)$"
+   },
+   {
+    "name": "mut_lane_clock_drop",
+    "cmd": "mkdir -p {RUN}/mut && iverilog -g2012 -DMUT=0 -DLANE_CLOCK_MUT=6 -s tb_hbm_sm_vm_wr_q_t_lanes -o {RUN}/mut/tbl6 rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_lanes.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_lanes.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_lanes.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && vvp -n {RUN}/mut/tbl6 > {RUN}/mut/tbl6.log 2>&1 && cat {RUN}/mut/tbl6.log && grep -qx 'TB_HBM_SM_VM_WR_Q_T PASS MUT=0' {RUN}/mut/tbl6.log",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "fail_regex": "^TB_HBM_SM_VM_WR_Q_T FAIL MUT=0 mismatches[+]faults=[1-9][0-9]*$"
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/hbm_accel/host_static_20261015",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "views_to": "physical/ref_tile/hsm_smvm_wrq_t_r5/views",
+  "record_to": "results/rtl/ref_tile/hsm_smvm_wrq_t_r5"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every input lands in a source pin flop (lane k: rv/rrow/rdata/smf/sms on clk_l<k>; core: F20 bus in the folded collar, tgt/quad strap flops, rst_n local reset-release flop) and every output is a source flop (lane k wq_s<k>: o_v/o_sec/o_m and 8 kept o_wr copies, one per replicated data pin; collar configured/fault/active)"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": false,
+ "structural_change": "Clock partition by SM lane instead of by face (results/rtl/hsm_wrq_1017/DESIGN_NOTE.md): clk_l0..7 + clk + clk_cal replace clk/clk_in_lo/hi/clk_out_lo/hi/clk_hcfg/clk_cal; per-SM ports (rv_s/rrow_s/rdata_s/smf_s/sms_s/wq_s<k>); recipe 4 hold_budget die. Outline unchanged (pin-cut rule: W >= 344 um, E >= 360 um).",
+ "clock": "hybrid_entries",
+ "clock_ports": [
+  "clk",
+  "clk_l0",
+  "clk_l1",
+  "clk_l2",
+  "clk_l3",
+  "clk_l4",
+  "clk_l5",
+  "clk_l6",
+  "clk_l7",
+  "clk_cal"
+ ],
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_n",
+    "tgt",
+    "quad",
+    "cfg_v",
+    "cfg_target",
+    "cfg_addr",
+    "cfg_data",
+    "desc_v",
+    "desc_base",
+    "desc_limit",
+    "desc_loops",
+    "launch_v"
+   ],
+   "outputs": [
+    "configured",
+    "fault",
+    "active"
+   ]
+  },
+  "cal": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_cal"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "lane0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_l0"
+   ],
+   "inputs": [
+    "rv_s0",
+    "rrow_s0",
+    "rdata_s0",
+    "smf_s0",
+    "sms_s0"
+   ],
+   "outputs": [
+    "wq_s0"
+   ]
+  },
+  "lane1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_l1"
+   ],
+   "inputs": [
+    "rv_s1",
+    "rrow_s1",
+    "rdata_s1",
+    "smf_s1",
+    "sms_s1"
+   ],
+   "outputs": [
+    "wq_s1"
+   ]
+  },
+  "lane2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_l2"
+   ],
+   "inputs": [
+    "rv_s2",
+    "rrow_s2",
+    "rdata_s2",
+    "smf_s2",
+    "sms_s2"
+   ],
+   "outputs": [
+    "wq_s2"
+   ]
+  },
+  "lane3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_l3"
+   ],
+   "inputs": [
+    "rv_s3",
+    "rrow_s3",
+    "rdata_s3",
+    "smf_s3",
+    "sms_s3"
+   ],
+   "outputs": [
+    "wq_s3"
+   ]
+  },
+  "lane4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_l4"
+   ],
+   "inputs": [
+    "rv_s4",
+    "rrow_s4",
+    "rdata_s4",
+    "smf_s4",
+    "sms_s4"
+   ],
+   "outputs": [
+    "wq_s4"
+   ]
+  },
+  "lane5": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_l5"
+   ],
+   "inputs": [
+    "rv_s5",
+    "rrow_s5",
+    "rdata_s5",
+    "smf_s5",
+    "sms_s5"
+   ],
+   "outputs": [
+    "wq_s5"
+   ]
+  },
+  "lane6": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_l6"
+   ],
+   "inputs": [
+    "rv_s6",
+    "rrow_s6",
+    "rdata_s6",
+    "smf_s6",
+    "sms_s6"
+   ],
+   "outputs": [
+    "wq_s6"
+   ]
+  },
+  "lane7": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_l7"
+   ],
+   "inputs": [
+    "rv_s7",
+    "rrow_s7",
+    "rdata_s7",
+    "smf_s7",
+    "sms_s7"
+   ],
+   "outputs": [
+    "wq_s7"
+   ]
+  }
+ },
+ "clock_cts_roots": [
+  "clk",
+  "clk_l0",
+  "clk_l1",
+  "clk_l2",
+  "clk_l3",
+  "clk_l4",
+  "clk_l5",
+  "clk_l6",
+  "clk_l7"
+ ],
+ "io_tcl": "physical/ref_tile_specs/smh/smvm_writer_lanes_pins.tcl",
+ "hold_budget": "die"
+}
