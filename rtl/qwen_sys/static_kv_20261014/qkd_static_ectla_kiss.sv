@@ -35,9 +35,11 @@ endmodule
 // response capture rs, the request flops and the identity pipe), ck clocks the ECTL A body (row ring + both SRAMs, the
 // N/S row flops and the E rs_o / x_i flops).  Both are the same die clock delivered at two entries beside their register
 // masses (related 1:1, every rq / rs crossing keeps normal setup and hold); no cycle, flop or logic is added or removed.
+// Each region also takes its own reset entry (die standard: regional reset): rst_n -> ECTL A body, rst_k -> issuer
+// (the issuer re-registers it, rn, as before).
 module qkd_static_ectla_kiss_rc #(parameter integer RESPONSE_LAT=14, parameter integer QK_ISSUE_AGE=34,
                                   parameter integer HXK=13, parameter integer MUT=0) (
-    input  wire          ck, ck_k, rst_n,
+    input  wire          ck, ck_k, rst_n, rst_k,
     input  wire [4:0]    cfg,
     input  wire          kgo, input wire [15:0] epoch, input wire [5:0] layer,
     output wire          req_valid, output wire [13:0] req_t, output wire req_v,
@@ -53,7 +55,7 @@ module qkd_static_ectla_kiss_rc #(parameter integer RESPONSE_LAT=14, parameter i
     qkd_ectl_a_tp8_direct #(.EPOCH(1), .STATIC_QK(1), .QK_ISSUE_AGE(QK_ISSUE_AGE), .ROW_RETURN_LAT(RESPONSE_LAT+7), .HXK(HXK)) u (
         .ck(ck), .rst_n(rst_n), .cfg(cfg), .rq(rq), .rs(rs), .t0_row(t0_row), .t1_row(t1_row), .x_i(x_i), .rs_o(rs_o));
     qkd_static_k_issuer #(.RESPONSE_LAT(RESPONSE_LAT), .MUT(MUT)) u_k (
-        .ck(ck_k), .rst_n(rst_n), .kgo(kgo), .epoch(epoch), .layer(layer), .rq(rq),
+        .ck(ck_k), .rst_n(rst_k), .kgo(kgo), .epoch(epoch), .layer(layer), .rq(rq),
         .req_valid(req_valid), .req_t(req_t), .req_v(req_v), .req_epoch(req_epoch), .req_layer(req_layer),
         .rsp_valid(rsp_valid), .rsp_data(rsp_data), .rsp_t(rsp_t), .rsp_v(rsp_v), .rsp_epoch(rsp_epoch), .rsp_layer(rsp_layer),
         .rs(rs), .fault(fault));
@@ -77,7 +79,7 @@ module qkd_ectl3_kiss_s #(parameter integer RESPONSE_LAT=14, parameter integer Q
     wire [511:0] a0, a1, b0, b1; wire [15:0] c0, c1; wire [518:0] q0, q1;
 `ifdef OT_KISS_RC
     qkd_static_ectla_kiss_rc #(.RESPONSE_LAT(RESPONSE_LAT), .QK_ISSUE_AGE(QK_ISSUE_AGE), .HXK(HXK), .MUT(MUT)) u_a (
-        .ck(ck[0]), .ck_k(ck[0]), .rst_n(rst_n),
+        .ck(ck[0]), .ck_k(ck[0]), .rst_n(rst_n), .rst_k(rst_n),
 `else
     qkd_static_ectla_kiss #(.RESPONSE_LAT(RESPONSE_LAT), .QK_ISSUE_AGE(QK_ISSUE_AGE), .HXK(HXK), .MUT(MUT)) u_a (
         .ck(ck[0]), .rst_n(rst_n),

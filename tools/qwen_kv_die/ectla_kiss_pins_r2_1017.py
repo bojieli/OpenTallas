@@ -3,9 +3,9 @@
 
 The k1 tile (254.88 x 129.6, ectla_kiss_pins_1017.py) was rejected at review: W landing face 1,100 pins at 8.5 /um,
 SRAMs off the 43.2 lattice in x, two std-cell bands (above / below the SRAMs), 350 ps TT clock insertion from one
-far N-face root.  This plan re-aspects the outline inside the KV die's ECTL slot to 216 x 216 (5 x 5 lattice) with
-both SRAMs stacked in one column at x 86.4 (y 43.2 / 129.6, lattice), their pin edge (W) facing ONE contiguous
-std-cell band (x 2..81) that holds the landing capture, the issuer and the ECTL body:
+far N-face root.  This plan re-aspects the outline inside the KV die's ECTL slot (k3: 172.8 x 194.4; k2 216 x 216 was measured
+TritonCTS 388 ps / spread 123 ps at 6 % std density) with both SRAMs stacked in one column on the lattice (k3 x 43.2,
+y 43.2 / 129.6), their pin edge (W) facing ONE contiguous std-cell band that holds the landing capture, the issuer and the ECTL body:
 
   W  landing K request / response (1,100 b) over 2.2..213.8 on M4 + M6 alternating (M6 off the M6 PG stripes):
      5.2 pins/um (<= 6), bit-ascending in y; the rc variant leaves 106.2..110.2 for ck_k (issuer region root, M4).
@@ -26,11 +26,12 @@ import ectl_pin_grant_1016 as G  # noqa: E402
 ROOT = G.ROOT
 SRC = "results/arch/qwen_kv_static_kvjd_1017/qkd_static_ectla_kiss.tcl"     # k1 plan (E / S control pins from the grant)
 W_OLD = 254.88
+GEOM = {   # name: (W, H, W landing span, ck_k window on W, ck window on N, row span, ck x, ck_k y)
+    "k2": (216.0, 216.0, (2.2, 213.8), (106.2, 110.2), (106.0, 110.0), (23.0, 212.0), 108.0, 108.2),
+    "k3": (172.8, 194.4, (2.2, 192.2), (95.2, 99.2), (84.4, 88.4), (23.0, 170.0), 86.4, 97.2),
+}
 TILE_W, TILE_H = 216.0, 216.0
-W_SPAN = (2.2, 213.8)
-CKK_GAP = (106.2, 110.2)        # W face window left for ck_k (rc variant)
-CK_GAP = (106.0, 110.0)         # N face window for ck
-ROW_SPAN = (23.0, 212.0)
+W_SPAN, CKK_GAP, CK_GAP, ROW_SPAN, CK_X, CKK_Y = (2.2, 213.8), (106.2, 110.2), (106.0, 110.0), (23.0, 212.0), 108.0, 108.2
 W_BUS = [("req_valid", 1), ("req_t", 14), ("req_v", 1), ("req_epoch", 16), ("req_layer", 6),
          ("rsp_valid", 1), ("rsp_data", 1024), ("rsp_t", 14), ("rsp_v", 1), ("rsp_epoch", 16), ("rsp_layer", 6)]
 
@@ -72,10 +73,12 @@ def plan(rc):
             pins[f"{bus}[{b}]"] = dict(layer="M5", x=x, y=round(h / 2 if face == "S" else TILE_H - h / 2, 4), w=w, h=h,
                                        src="r2_rows")
     w, h = G.SIZE["M5"]
-    pins["ck"] = dict(layer="M5", x=G.snap(108.0, "M5"), y=round(TILE_H - h / 2, 4), w=w, h=h, src="r2_ck")
+    pins["ck"] = dict(layer="M5", x=G.snap(CK_X, "M5"), y=round(TILE_H - h / 2, 4), w=w, h=h, src="r2_ck")
     if rc:
         w, h = G.SIZE["M4"]
-        pins["ck_k"] = dict(layer="M4", x=round(w / 2, 4), y=G.snap(108.2, "M4"), w=w, h=h, src="r2_ckk")
+        pins["ck_k"] = dict(layer="M4", x=round(w / 2, 4), y=G.snap(CKK_Y, "M4"), w=w, h=h, src="r2_ckk")
+        w, h = G.SIZE["M5"]
+        pins["rst_k"] = dict(layer="M5", x=G.snap(3.27, "M5"), y=round(h / 2, 4), w=w, h=h, src="r2_rstk")   # issuer regional reset
     return pins
 
 
@@ -86,9 +89,12 @@ def face(p):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--rc", action="store_true", help="two regional clock roots (ck body, ck_k issuer)")
+    ap.add_argument("--geom", default="k3", choices=sorted(GEOM))
     ap.add_argument("--out", default="results/arch/qwen_kv_static_ectla2_1017")
     a = ap.parse_args()
-    cell = "qkd_static_ectla_k2rc" if a.rc else "qkd_static_ectla_k2"
+    global TILE_W, TILE_H, W_SPAN, CKK_GAP, CK_GAP, ROW_SPAN, CK_X, CKK_Y
+    TILE_W, TILE_H, W_SPAN, CKK_GAP, CK_GAP, ROW_SPAN, CK_X, CKK_Y = GEOM[a.geom]
+    cell = f"qkd_static_ectla_{a.geom}" + ("rc" if a.rc else "")
     pins = plan(a.rc)
     out = ROOT / a.out
     out.mkdir(parents=True, exist_ok=True)
