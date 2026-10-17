@@ -1,0 +1,306 @@
+{
+ "gen": "q3h_cb16_gen.py",
+ "hosts": "cb16_hosts.json",
+ "dv": "T",
+ "corr_w": "A=129.6,T=129.6,B=129.6",
+ "width_um": 2285.28,
+ "height_um": 5184.0,
+ "base": {
+  "rs_latency": 36,
+  "relay_bits": 35466,
+  "worst_util_proj": 0.896,
+  "cuts": {
+   "corr_L": {
+    "width_um": 32.4,
+    "peak_bits": 517,
+    "at_y": 0,
+    "fam": {
+     "bc": 516,
+     "rst": 1
+    },
+    "util_proj": 0.721,
+    "util_m3": 0.443,
+    "cap_proj": 717
+   },
+   "corr_A": {
+    "width_um": 129.6,
+    "peak_bits": 2570,
+    "at_y": 260,
+    "fam": {
+     "tree": 2056,
+     "rs": 514
+    },
+    "util_proj": 0.896,
+    "util_m3": 0.55,
+    "cap_proj": 2869
+   },
+   "corr_T": {
+    "width_um": 129.6,
+    "peak_bits": 1547,
+    "at_y": 0,
+    "fam": {
+     "bc": 1032,
+     "rst": 1,
+     "rs_ft": 514
+    },
+    "util_proj": 0.539,
+    "util_m3": 0.331,
+    "cap_proj": 2869
+   },
+   "corr_B": {
+    "width_um": 129.6,
+    "peak_bits": 2056,
+    "at_y": 1560,
+    "fam": {
+     "tree": 2056
+    },
+    "util_proj": 0.717,
+    "util_m3": 0.44,
+    "cap_proj": 2869
+   },
+   "corr_R": {
+    "width_um": 32.4,
+    "peak_bits": 517,
+    "at_y": 0,
+    "fam": {
+     "bc": 516,
+     "rst": 1
+    },
+    "util_proj": 0.721,
+    "util_m3": 0.443,
+    "cap_proj": 717
+   },
+   "chan_0_y0": {
+    "height_um": 64.8,
+    "peak_bits": 0,
+    "at_x": null,
+    "fam": {},
+    "util_proj": 0.0,
+    "util_m3": 0.0,
+    "cap_proj": 1434
+   },
+   "chan_1_y1231": {
+    "height_um": 129.6,
+    "peak_bits": 514,
+    "at_x": 540,
+    "fam": {
+     "tree": 514
+    },
+    "util_proj": 0.179,
+    "util_m3": 0.11,
+    "cap_proj": 2869
+   },
+   "chan_2_y2527": {
+    "height_um": 129.6,
+    "peak_bits": 514,
+    "at_x": 540,
+    "fam": {
+     "tree": 514
+    },
+    "util_proj": 0.179,
+    "util_m3": 0.11,
+    "cap_proj": 2869
+   },
+   "chan_3_y3823": {
+    "height_um": 129.6,
+    "peak_bits": 514,
+    "at_x": 540,
+    "fam": {
+     "tree": 514
+    },
+    "util_proj": 0.179,
+    "util_m3": 0.11,
+    "cap_proj": 2869
+   },
+   "chan_4_y5119": {
+    "height_um": 64.8,
+    "peak_bits": 0,
+    "at_x": null,
+    "fam": {},
+    "util_proj": 0.0,
+    "util_m3": 0.0,
+    "cap_proj": 1434
+   }
+  }
+ },
+ "annealed": {
+  "host": {
+   "1_0": [
+    0,
+    0
+   ],
+   "1_1": [
+    0,
+    1
+   ],
+   "1_2": [
+    3,
+    0
+   ],
+   "1_3": [
+    2,
+    0
+   ],
+   "1_4": [
+    1,
+    2
+   ],
+   "1_5": [
+    0,
+    3
+   ],
+   "1_6": [
+    3,
+    2
+   ],
+   "1_7": [
+    3,
+    3
+   ],
+   "2_0": [
+    1,
+    1
+   ],
+   "2_1": [
+    3,
+    1
+   ],
+   "2_2": [
+    1,
+    3
+   ],
+   "2_3": [
+    2,
+    3
+   ],
+   "3_0": [
+    2,
+    2
+   ],
+   "3_1": [
+    2,
+    1
+   ],
+   "4_0": [
+    0,
+    2
+   ]
+  },
+  "spare": [
+   1,
+   0
+  ],
+  "rs_latency": 45,
+  "relay_bits": 50886,
+  "worst_util_proj": 0.721,
+  "cuts": {
+   "corr_L": {
+    "width_um": 32.4,
+    "peak_bits": 517,
+    "at_y": 0,
+    "fam": {
+     "bc": 516,
+     "rst": 1
+    },
+    "util_proj": 0.721,
+    "util_m3": 0.443,
+    "cap_proj": 717
+   },
+   "corr_A": {
+    "width_um": 129.6,
+    "peak_bits": 2056,
+    "at_y": 1560,
+    "fam": {
+     "tree": 1542,
+     "rs": 514
+    },
+    "util_proj": 0.717,
+    "util_m3": 0.44,
+    "cap_proj": 2869
+   },
+   "corr_T": {
+    "width_um": 129.6,
+    "peak_bits": 1547,
+    "at_y": 0,
+    "fam": {
+     "bc": 1032,
+     "rst": 1,
+     "rs_ft": 514
+    },
+    "util_proj": 0.539,
+    "util_m3": 0.331,
+    "cap_proj": 2869
+   },
+   "corr_B": {
+    "width_um": 129.6,
+    "peak_bits": 2056,
+    "at_y": 260,
+    "fam": {
+     "tree": 2056
+    },
+    "util_proj": 0.717,
+    "util_m3": 0.44,
+    "cap_proj": 2869
+   },
+   "corr_R": {
+    "width_um": 32.4,
+    "peak_bits": 517,
+    "at_y": 0,
+    "fam": {
+     "bc": 516,
+     "rst": 1
+    },
+    "util_proj": 0.721,
+    "util_m3": 0.443,
+    "cap_proj": 717
+   },
+   "chan_0_y0": {
+    "height_um": 64.8,
+    "peak_bits": 0,
+    "at_x": null,
+    "fam": {},
+    "util_proj": 0.0,
+    "util_m3": 0.0,
+    "cap_proj": 1434
+   },
+   "chan_1_y1231": {
+    "height_um": 129.6,
+    "peak_bits": 0,
+    "at_x": null,
+    "fam": {},
+    "util_proj": 0.0,
+    "util_m3": 0.0,
+    "cap_proj": 2869
+   },
+   "chan_2_y2527": {
+    "height_um": 129.6,
+    "peak_bits": 2056,
+    "at_x": 540,
+    "fam": {
+     "tree": 2056
+    },
+    "util_proj": 0.717,
+    "util_m3": 0.44,
+    "cap_proj": 2869
+   },
+   "chan_3_y3823": {
+    "height_um": 129.6,
+    "peak_bits": 0,
+    "at_x": null,
+    "fam": {},
+    "util_proj": 0.0,
+    "util_m3": 0.0,
+    "cap_proj": 2869
+   },
+   "chan_4_y5119": {
+    "height_um": 64.8,
+    "peak_bits": 0,
+    "at_x": null,
+    "fam": {},
+    "util_proj": 0.0,
+    "util_m3": 0.0,
+    "cap_proj": 1434
+   }
+  }
+ }
+}
