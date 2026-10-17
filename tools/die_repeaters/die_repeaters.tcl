@@ -30,6 +30,23 @@ proc ot_die_rep_inst_map {blk} {
   return $m
 }
 
+proc ot_die_rep_pin_net {blk pin} {
+  set k [string last / $pin]
+  if {$k > 0} {
+    set inst [$blk findInst [string range $pin 0 [expr {$k - 1}]]]
+    if {$inst eq "NULL" || $inst eq ""} { return "" }
+    set it [$inst findITerm [string range $pin [expr {$k + 1}] end]]
+    if {$it eq "NULL" || $it eq ""} { return "" }
+    set n [$it getNet]
+  } else {
+    set bt [$blk findBTerm $pin]
+    if {$bt eq "NULL" || $bt eq ""} { return "" }
+    set n [$bt getNet]
+  }
+  if {$n eq "NULL" || $n eq ""} { return "" }
+  return [$n getName]
+}
+
 proc ot_die_rep_json_str {s} { return "\"[string map {\\ \\\\ \" \\\"} $s]\"" }
 
 # cfg: Tcl dict; keys (defaults): report (required), max_wire_um 160, slew_ps 260, receiver_slew {} (master ps ...),
@@ -43,7 +60,7 @@ proc ot_die_repeaters {cfg} {
   set d [dict create max_wire_um 160 slew_ps 260 receiver_slew {} \
            buffers {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_75t_R BUFx5_ASAP7_75t_R BUFx6f_ASAP7_75t_R BUFx8_ASAP7_75t_R} \
            skip_nets {} repeat_nets {} skip_sigtypes {CLOCK POWER GROUND} skip_clock_pins 1 reach_um 0 over_reach report \
-           long_wire_scan 5000 rc_layer M4 repair_args "" legalize snap bounds_tcl /work/cluster_bounds.tcl \
+           long_wire_scan 5000 post_drv report rc_layer M4 repair_args "" legalize snap bounds_tcl /work/cluster_bounds.tcl \
            libs {} std_corner "" design ""]
   set d [dict merge $d $cfg]
   dict with d {}
@@ -184,6 +201,26 @@ proc ot_die_repeaters {cfg} {
     if {[catch {detailed_placement} e]} { incr viol; lappend notes "detailed_placement: $e"; set legal "dpl FAIL" } else { set legal dpl }
   }
 
+  # ---- residual electrical audit on placement parasitics after repair + legalisation (every die net, not only the
+  # repaired ones): pins still over the native max_transition / max_capacitance are listed; post_drv_policy fail
+  # makes them violations (default report: GRT parasitics + die STA are the sign-off)
+  estimate_parasitics -placement
+  set drvf [file rootname $report].post_drv.rpt
+  report_check_types -max_slew -max_capacitance -violators > $drvf
+  set fh [open $drvf]; set drvtxt [read $fh]; close $fh
+  set post_slew 0; set post_cap 0; set post_skipped 0; set sec ""; set drv_top {}
+  foreach line [split $drvtxt "\n"] {
+    if {[string match -nocase "*max slew*" $line]} { set sec slew; continue }
+    if {[string match -nocase "*max capacitance*" $line]} { set sec cap; continue }
+    if {[regexp {^(\S+)\s+(-?[0-9.]+)\s+(-?[0-9.]+)\s+(-?[0-9.]+)\s+\(VIOLATED\)} $line -> pin lim val slk]} {
+      if {[dict exists $skip [ot_die_rep_pin_net $blk $pin]]} { incr post_skipped; continue }
+      if {$sec eq "slew"} { incr post_slew } elseif {$sec eq "cap"} { incr post_cap }
+      if {[llength $drv_top] < 50} { lappend drv_top [list $sec $pin $lim $val] }
+    }
+  }
+  if {($post_slew || $post_cap) && $post_drv eq "fail"} { incr viol [expr {$post_slew + $post_cap}]; lappend notes "residual max slew / cap violators after repair" }
+  ot_die_rep_log "post-repair violators slew=$post_slew cap=$post_cap (on untouched clock/reset/skip nets: $post_skipped)"
+
   # ---- post-state checks: relay stages / registers unchanged, buffers only, skip nets untouched
   set post [ot_die_rep_inst_map $blk]
   set removed 0; set changed 0; set bad_new 0; set by_master [dict create]; set examples {}
@@ -219,6 +256,8 @@ proc ot_die_repeaters {cfg} {
   puts $f " \"removed\": $removed, \"resized\": $changed, \"non_buffer_inserted\": $bad_new, \"skip_nets\": [llength $skip_names], \"skip_nets_modified\": $skip_changed,"
   puts $f " \"skip_by\": {\"sigtype\": $n_sig, \"clock_pin\": $n_ck, \"glob\": [expr {[llength $skip_names] - $n_sig - $n_ck + $n_rep}]}, \"repeated_clock_nets\": $n_rep, \"masters_without_liberty\": [llength $nolib],"
   puts $f " \"reach_um\": $reach_um, \"over_reach_policy\": [ot_die_rep_json_str $over_reach], \"long_wires_scanned\": $scanned, \"longest_um\": $longest, \"over_reach_nets\": [llength $over], \"over_reach_top\": \[[join $ov {, }]\],"
+  set dt_ {}; foreach o $drv_top { lappend dt_ "\[[ot_die_rep_json_str [lindex $o 0]], [ot_die_rep_json_str [lindex $o 1]], [ot_die_rep_json_str [lindex $o 2]], [ot_die_rep_json_str [lindex $o 3]]\]" }
+  puts $f " \"post_drv_policy\": [ot_die_rep_json_str $post_drv], \"post_slew_violators\": $post_slew, \"post_cap_violators\": $post_cap, \"post_violators_on_skip_nets\": $post_skipped, \"post_drv_top\": \[[join $dt_ {, }]\],"
   puts $f " \"notes\": \[[join $nt {, }]\], \"examples\": \[[join $ex {, }]\], \"repair_s\": $repair_s, \"seconds\": [expr {[clock seconds] - $t0}]}"
   close $f
   ot_die_rep_log "$verdict repeaters=$repeaters violations=$viol over_reach=[llength $over] legalize=($legal) s=[expr {[clock seconds] - $t0}]"

@@ -94,6 +94,8 @@ def config(design, report, **kw):
         raise SystemExit('die_repeaters: max_wire_um and slew_ps must be > 0')
     if c['over_reach'] not in ('report', 'fail'):
         raise SystemExit("die_repeaters: over_reach must be 'report' or 'fail'")
+    if c.get('post_drv', 'report') not in ('report', 'fail'):
+        raise SystemExit("die_repeaters: post_drv must be 'report' or 'fail'")
     if c['legalize'] not in ('snap', 'dpl', 'none'):
         raise SystemExit("die_repeaters: legalize must be snap | dpl | none")
     return c
@@ -139,7 +141,7 @@ def check(report):
          f"max_wire={r.get('max_wire_um')} slew={r.get('max_transition_ps')} removed={r.get('removed')} "
          f"resized={r.get('resized')} non_buffer={r.get('non_buffer_inserted')} skip_nets={r.get('skip_nets')} "
          f"longest={r.get('longest_um')} over_reach({r.get('reach_um')})={r.get('over_reach_nets')} "
-         f"legalize={r.get('legalize')!r}")
+         f"post_slew={r.get('post_slew_violators')} post_cap={r.get('post_cap_violators')} legalize={r.get('legalize')!r}")
     return ok, s
 
 
@@ -161,6 +163,7 @@ def main(argv=None):
     t.add_argument('--repeat-nets', nargs='*', default=None,
                    help='forwarded-clock net globs repeated with their data bits (override the clock skips)')
     t.add_argument('--over-reach', choices=['report', 'fail'])
+    t.add_argument('--post-drv', choices=['report', 'fail'], help='residual slew/cap violators after repair: report (default) or fail')
     t.add_argument('--rc-layer')
     t.add_argument('--repair-args')
     t.add_argument('--exit-code', type=int, default=3)
@@ -185,7 +188,7 @@ def main(argv=None):
     rs = json.loads(a.receiver_slew.read_text()) if a.receiver_slew else None
     body = tcl_call(a.design, a.report, tcl_dir=a.dir, fail_exit=a.exit_code, libs=libs or None, std_corner=a.std_corner,
                     legalize=a.legalize, max_wire_um=a.max_wire_um, slew_ps=a.slew_ps, receiver_slew=rs,
-                    skip_nets=a.skip, repeat_nets=a.repeat_nets, over_reach=a.over_reach, rc_layer=a.rc_layer, repair_args=a.repair_args)
+                    skip_nets=a.skip, repeat_nets=a.repeat_nets, over_reach=a.over_reach, post_drv=a.post_drv, rc_layer=a.rc_layer, repair_args=a.repair_args)
     if a.libs_file:
         body = body.replace('[dict create ', '[dict create libs [concat $ot_die_rep_libs ' + _tcl_list(libs) + '] ', 1)
         body = body.replace(f' libs {_tcl_list(libs)}', '', 1) if libs else body

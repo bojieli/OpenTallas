@@ -117,6 +117,8 @@ def test_integration_pass_and_mutant(tmp_path):
     assert rep['repeaters'] >= 10           # two ~890-um nets + the 600-um input -> >= 4-5 each at <= 160 um
     assert set(rep['repeaters_by_master']) <= set(step.BUFFERS)
     assert rep['skip_by']['clock_pin'] == 1 and rep['skip_nets_modified'] == 0
+    assert rep['post_slew_violators'] == 0 and rep['post_cap_violators'] == 0
+    assert rep['post_violators_on_skip_nets'] == 3          # the 3 register clock pins on the untouched clock net
     assert rep['over_reach_nets'] >= 2 and rep['longest_um'] > 800    # reported (policy report), not failed
     cells = dict(l.split()[1:3] for l in r.stdout.splitlines() if l.startswith('OT_CELL'))
     assert cells['r0'] == cells['r1'] == cells['r2'] == 'DFFHQNx1_ASAP7_75t_R' and cells['g0'] == 'INVx1_ASAP7_75t_R'
