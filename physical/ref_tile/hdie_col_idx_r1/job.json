@@ -1,5 +1,5 @@
 {
- "name": "hdie_col_idx_r1-r1-COMMIT",
+ "name": "hdie_col_idx_r1-r1-381c428ad",
  "block": "ot_hbm_static_cfg_collar",
  "ref_tile": true,
  "owner": "Claude:HBMA-HOST",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/hbma-host-1017",
-  "commit": "COMMIT",
+  "commit": "381c428ad",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
@@ -146,7 +146,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hdie_col_idx_r1/hdie_col_idx_r1-r1-COMMIT"
+   "to": "results/rtl/ref_tile/hdie_col_idx_r1/hdie_col_idx_r1-r1-381c428ad"
   }
  ],
  "cycles_added": 0,
