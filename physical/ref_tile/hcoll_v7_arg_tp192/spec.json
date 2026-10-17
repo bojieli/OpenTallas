@@ -40,7 +40,7 @@
   ]
  },
  "layer_cap": "M5",
- "recipe": 3,
+ "recipe": 4,
  "macros": [],
  "children": [],
  "route": {
@@ -48,8 +48,9 @@
   "period_ps": 833.333,
   "threads": 8,
   "peak_ram_gb": 16,
-  "hold_margin_ns": 0.01,
-  "macro_halo_um": 5.4
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0
  },
  "pin_regs": {
   "enable": false,
@@ -59,7 +60,7 @@
   "owner": "Claude H-NETLIST/COLL 1815",
   "branch": "claude/hnl-coll-tp192",
   "tag": "d4f",
-  "purpose": "COLL ARGMAX leaf at d4f TP=192 (192-rank seen state, Codex 80898e86c): ot_hgi_coll_argmax_m #(TP 192)",
+  "purpose": "COLL ARGMAX leaf at d4f TP=192 (192-rank seen state, Codex 80898e86c): ot_hgi_coll_argmax_m #(TP 192) | recipe 4 (FLOW-HOLD die boundary hold budget: flop-first pins, no pads)",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective",
    "rtl/lib/ot_rst_relay.sv",
@@ -106,11 +107,7 @@
    }
   ],
   "views_to": "physical/ref_tile/hcoll_v7_arg_tp192/views",
-  "record_to": "results/rtl/ref_tile/hcoll_v7_arg_tp192",
-  "hold_eco": {
-   "hold_margin_ps": 5.0,
-   "reason": "HEP w5f recipe"
-  }
+  "record_to": "results/rtl/ref_tile/hcoll_v7_arg_tp192"
  },
  "params": {},
  "inter": [],
@@ -119,11 +116,8 @@
   "allow_none": true
  },
  "inhold": false,
- "outhold": true,
+ "outhold": false,
  "keep_pin_regs": true,
- "pin_reg_split": true,
- "hold_pad": {
-  "cell": "HB2xp67_ASAP7_75t_R",
-  "out_cell": "HB1xp67_ASAP7_75t_R"
- }
+ "pin_reg_split": false,
+ "hold_budget": "die"
 }
