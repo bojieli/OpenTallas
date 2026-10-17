@@ -3278,6 +3278,7 @@ LANE_EQUAL = False             # --lane-equal (ds-1010 lat-audit): equal column-
 CFG_RGAP_AT = 4
 RSV_RECTS = []                 # reserved relay sites (x0, y0, x1, y1, tag): tag 'rt' (--cfg-rgap) / 'x' (--xb-rgap)
 RSV_ALLOW = None               # the tag whose sites the relay being placed may take (None: no reserved site)
+CLUSTER_OK = None              # --cluster-mode: 'col_cluster:<root>' while placing a relay of a net internal to that frame
 # --xb-rgap UM (ds-1010/s81die 2026-10-10, efs q pin plan = x0 / x1 / cfg / go on ONE S-face bank in the element's
 # middle): a reserved relay site of UM in every right-lane cfg ROM row between the pair sequencer and ROM 0, for the
 # slot's x-lane relays only (xa_ / xb_ / cc_ column and hop relays).  Root cause (efs check, src 734e82437): the slot
@@ -3746,7 +3747,7 @@ class Placer:
             r = (x, y, x + w, y + h)
             if not _inside(r, allowed) or not self.occ.free(r, 0.432):
                 continue
-            if RSV_RECTS and any(t_ != RSV_ALLOW and a_ < r[2] and r[0] < c_ and b_ < r[3] and r[1] < d_
+            if RSV_RECTS and any(t_ != RSV_ALLOW and t_ != CLUSTER_OK and a_ < r[2] and r[0] < c_ and b_ < r[3] and r[1] < d_
                                  for a_, b_, c_, d_, t_ in RSV_RECTS):
                 continue
             return x, y
@@ -6940,7 +6941,7 @@ def _hop_fix(m, P):
     added_frame = defaultdict(lambda: defaultdict(int))
     fwd_add = defaultdict(int)
     new = []
-    global RSV_ALLOW
+    global RSV_ALLOW, CLUSTER_OK
     for i in range(len(B)):
         bid, cls, bits, eps = B[i]
         RSV_ALLOW = _rsv_tag(bid)              # reserved relay sites: return tree ('rt') / slot x lanes ('x')
@@ -6970,6 +6971,8 @@ def _hop_fix(m, P):
                 R = min(R, HOP_SPREAD_R[key])             # --hop-spread: worst-bit reach of a wide hub bus
             n = math.ceil(L / (R - 20.0) - 1e-9) - 1
             reg = next((x.region for x in (d0, l0) if x.region and x.region.startswith('frame_')), None)
+            CLUSTER_OK = ('col_cluster:' + d0.region[6:]) if (CLUSTER_MODE and d0.region and d0.region.startswith('frame_')
+                                                              and d0.region == l0.region) else None
             if fwd:
                 fport = 'fi' + e[1][2:] if e[1].startswith('di') else None
                 fi_ = fclk_of.get((eps[0][0], e[0], fport)) if fport else None
@@ -7220,6 +7223,7 @@ def _hop_fix(m, P):
             q['max_added'] = max(q['max_added'], n)
         B[i] = (bid, cls, bits, keep)
     RSV_ALLOW = None
+    CLUSTER_OK = None
     B[:] = [b for b in B if len(b[3]) > 1 or b[1] in ('col_clock', 'col_reset')] + new
     # inserted relays: faces toward their driver and load
     by = {it.name: it for it in m['insts']}
@@ -7470,7 +7474,7 @@ def _col_relays(m, P):
     out, added = [], defaultdict(int)       # (bus id) -> relays
     ck_add = defaultdict(list)
     tt_col = []                             # --relay-tt-reach: pass-1 relays placed in the TT-reach tier
-    global RSV_ALLOW
+    global RSV_ALLOW, CLUSTER_OK
 
     def _need(bid, cls, eps):
         """(frame, L, n, far) of a column net, or None when it takes no relays"""
@@ -7498,6 +7502,9 @@ def _col_relays(m, P):
                 lane_n[k_] = max(lane_n.get(k_, 0), n_ or 0)
     for bid, cls, bits, eps in list(B):
         RSV_ALLOW = _rsv_tag(bid)              # reserved relay sites: return tree ('rt') / slot x lanes ('x')
+        d0_ = by.get(eps[0][0]) if eps else None
+        CLUSTER_OK = ('col_cluster:' + d0_.region[6:]) if (CLUSTER_MODE and d0_ is not None and d0_.region
+                                                           and d0_.region.startswith('frame_')) else None
         if cls not in RCLS or bid.endswith('_eb'):
             out.append((bid, cls, bits, eps))
             continue
@@ -7682,6 +7689,7 @@ def _col_relays(m, P):
         out.append((bid, cls, bits, [prev] + list(eps[1:])))
         added[bid] = n
     RSV_ALLOW = None
+    CLUSTER_OK = None
     B[:] = out
     for i, (bid, cls, bits, eps) in enumerate(B):
         if cls in ('col_clock', 'col_reset') and bid.rsplit('_', 1)[-1].isdigit():

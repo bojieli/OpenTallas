@@ -96,8 +96,8 @@ def patch_corridors(G, m, cor):
         bx0, by0, bx1, by1 = cluster_box(G, f)
         assert by0 - a >= 120.0, ('transit band below the cluster too thin', r, round(by0 - a, 2))
         cor[f'cfstreet{r}'] = (x + .432, a + .432, x1 - .432, by0 - .432)
-        if (bx0, by0, bx1, by1, 'col_cluster') not in G.RSV_RECTS:
-            G.RSV_RECTS.append((bx0, by0, bx1, by1, 'col_cluster'))
+        if (bx0, by0, bx1, by1, f'col_cluster:{r}') not in G.RSV_RECTS:
+            G.RSV_RECTS.append((bx0, by0, bx1, by1, f'col_cluster:{r}'))
     m['cluster_boxes'] = {r: cluster_box(G, f) for r, f in m['frames'].items()}
 
 
