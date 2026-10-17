@@ -12,7 +12,13 @@
   "extra_paths": [
    "physical/hbm_die_pins/pc_cfg_h8_1623",
    "results/arch/hbm_pc_cfg_h8_1623/source",
-   "tools/hbm_die_v16/bench_pc_cfg_h8.sh"
+   "tools/hbm_die_v16/bench_pc_cfg_h8.sh",
+   "tools/hbm_die_v16/bench_pc_cfg_all.sh",
+   "tools/hbm_die_v16/bench_pc_cfg_all.py",
+   "tools/hbm_die_v16/bench_pc_cfg_h8_full.sh",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_pc_cfg_h8_full.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv",
+   "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv"
   ]
  },
  "stages": {
@@ -36,7 +42,58 @@
     "needs": [
      "iverilog"
     ],
-    "pass_regex": "PC_H8_PENDING_ID_MUTANT_REJECTED"
+    "pass_regex": "PC_CTRL_FAULTS_MITER PASS edges",
+    "min_count_regex": "PC_CTRL_FAULTS_MITER PASS edges(\\d+)"
+   },
+   {
+    "name": "all32_cfg_exact",
+    "cmd": "bash tools/hbm_die_v16/bench_pc_cfg_all.sh {RUN}/bench/all32",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PC_CFG_ALL32 PASS checks=",
+    "min_count_regex": "PC_CFG_ALL32 PASS checks=(\\d+)"
+   },
+   {
+    "name": "full32_pending_guard",
+    "cmd": "bash tools/hbm_die_v16/bench_pc_cfg_h8_full.sh {RUN}/bench/full",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PC_H8_FULL PASS checks=",
+    "min_count_regex": "PC_H8_FULL PASS checks=(\\d+)"
+   },
+   {
+    "name": "all32_mut1_strap",
+    "cmd": "mkdir -p {RUN}/bench/mut1 && python3 tools/hbm_die_v16/bench_pc_cfg_all.py {RUN}/bench/mut1/tb.sv && iverilog -g2012 -s tb -Ptb.MUT=1 -o {RUN}/bench/mut1/m.vvp {RUN}/bench/mut1/tb.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h8.sv results/arch/hbm_pc_cfg_h8_1623/source/ot_hbm_r14_stream_pc_strap_h7.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && vvp {RUN}/bench/mut1/m.vvp",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PC_CFG_ALL32 PASS",
+    "fail_regex": "PC_CFG_(ROW_|COL_)?MISMATCH pc=\\d+ cycle=\\d+ mut=1",
+    "note": "wrong pc_id strap"
+   },
+   {
+    "name": "all32_mut2_strap",
+    "cmd": "mkdir -p {RUN}/bench/mut2 && python3 tools/hbm_die_v16/bench_pc_cfg_all.py {RUN}/bench/mut2/tb.sv && iverilog -g2012 -s tb -Ptb.MUT=2 -o {RUN}/bench/mut2/m.vvp {RUN}/bench/mut2/tb.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h8.sv results/arch/hbm_pc_cfg_h8_1623/source/ot_hbm_r14_stream_pc_strap_h7.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && vvp {RUN}/bench/mut2/m.vvp",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PC_CFG_ALL32 PASS",
+    "fail_regex": "PC_CFG_(ROW_|COL_)?MISMATCH pc=\\d+ cycle=\\d+ mut=2",
+    "note": "wrong refresh_reload strap"
    }
   ],
   "calibrate": {
