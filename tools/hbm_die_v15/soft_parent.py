@@ -45,9 +45,11 @@ def soft_flatten(parent, nm, insts, ports, drv, E, clocks, straps, rtl, problems
     # ---- new instances
     for c, x in nm['children'].items():
         n = cname[c]
-        insts[n] = dict(master=x['master'], source=x['source'], params={}, slot=slots.get(c), owner=pi.get('owner'),
+        nq = int(nm.get('params', {}).get('N_Q', 4))
+        prm = {'N_Q': nq} if (x['master'] == 'ot_hbm_idx_ctl_static' and nq != 4) else {}   # default N_Q=4 keeps params {}
+        insts[n] = dict(master=x['master'], source=x['source'], params=prm, slot=slots.get(c), owner=pi.get('owner'),
                         region='idx_soft', note=f'soft child {c} of {parent} ({pi["master"]}); H-DIE grant 6413258a6')
-        ports[n] = rtl.ports(x['master'], x['source'], {})
+        ports[n] = rtl.ports(x['master'], x['source'], prm)
         insts[n]['ports'] = ports[n]
         for p, d in x['ports'].items():
             if p not in ports[n] or ports[n][p]['bits'] != len(d['bits']) or ports[n][p]['direction'] != d['direction']:
