@@ -73,7 +73,9 @@ module ot_hbm_su_programme_mem_r4 #(
   localparam integer NOG=(BANKS+OG-1)/OG;
   localparam integer SW=256/RS;
   localparam integer NG=(GRP>0)?(NOG+GRP-1)/GRP:NOG;
+`ifndef SYNTHESIS
   initial if((1<<LOG)!=OG || SW*RS!=256 || BANKS<1) $fatal(1,"mem_r4: OG power of two, RS divides 256");
+`endif
   wire [256*BANKS-1:0] q;
   wire [8:0] bank_a = addr[15:7];
   logic [255:0] og_q [0:NOG-1];
@@ -196,8 +198,12 @@ module ot_hbm_su_programme #(
   localparam integer XI=(PIPE==2)?(2+((IGRP>0)?1:0)):(PIPE!=0)?2:0; // extra index-path edges (pair/og reg [+ group] + indices_r)
   localparam integer XD=(PIPE!=0)?1:0;          // extra dictionary-path edges (pair register)
   localparam integer XP=XI+XD;
+`ifndef SYNTHESIS
   initial if(MACROS!=TOTAL_BANKS) $fatal(1,"programme MACROS capacity mismatch");
+`endif
+`ifndef SYNTHESIS
   initial if(PIPE!=0 && INDEX_PACK!=1) $fatal(1,"programme PIPE requires unpacked indices");
+`endif
   logic issue,v1,v2;
   logic [15:0] pc, count, e1,e2;
   logic busy_i, fault_i;
