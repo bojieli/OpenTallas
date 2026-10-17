@@ -26,7 +26,7 @@ def stage(native, archive, survey, out):
             raise ValueError('missing characterized TT/FF native driver ' + c)
         choices[c] = entries
     native_view = archive / 'run' / 'record' / 'views' / 'dsfd_stnv_566x1'
-    for corner in ('tt', 'ff'):
+    for corner in ('tt', 'ff', 'ss'):
         header = (native_view / f'export_{corner}.tcl').read_text().split('read_db ', 1)[0]
         tcl = header + '''read_db /work/base/6_final.odb
 read_sdc /work/base/6_final.sdc
@@ -85,7 +85,7 @@ report_check_types -max_slew -max_capacitance -violators
     (out / 'run.sh').write_text('''#!/bin/bash
 set -eu
 B=$(cd "$(dirname "$0")" && pwd)
-for c in tt ff; do
+for c in tt ff ss; do
  docker run --rm --cpus=1 -v "$B":/work openroad/orfs:asap7lock bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -threads 1 -no_init -exit /work/$c.tcl > /work/$c.log 2>&1; chmod -R a+rwX /work"
  grep -q OT_DRIVER_SENSITIVITY_DONE "$B/$c.log"
 done
@@ -94,7 +94,7 @@ done
                    source_job=source['job'], source_consumed=source['consumed'], driver_libs=choices,
                    scope='Unrouted native output buffer substitution sensitivity ONLY; 566 data and 2 clock outputs, no RTL cycle change, larger cells may overlap, RC/pin positions not re-extracted; original CLOSED route intact')
     (out/'stage.json').write_text(json.dumps(receipt, indent=2))
-    print('staged four native driver choices, TT+FF; no routing or native qualification')
+    print('staged four native driver choices, TT+FF+SS sensitivity; no routing or native qualification')
 
 
 def main():
