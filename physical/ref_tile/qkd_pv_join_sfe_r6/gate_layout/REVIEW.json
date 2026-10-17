@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qkd_pv_join_sfe_r6",
+ "block": "ot_qwen_tp8_pv_join_t",
+ "reviewer": "ROOT",
+ "verdict": "APPROVED",
+ "gate_commit": "2216c9562",
+ "date": "2026-10-17",
+ "checklist": {
+  "lattice": "PASS: square 172.8 tile on the lattice, PG stripes regular",
+  "std_cell_band": "PASS: body green and even; blue NW block/islands are spare placement room, not congestion",
+  "pin_spread": "PASS: buses on N/S/E/W as planned; pin-flop rows hot along N/S and upper E as in r5; no hotspot at the moved sf corners",
+  "clock_entry": "PASS: mid-W; one root 15,266 sinks, measured TT insertion 243.6 ps <= 300 / spread 35.5 ps <= 80",
+  "shape": "PASS"
+ },
+ "images": ["gate_layout/floorplan.png", "gate_layout/density.png"],
+ "relayed_by": "Q-KV lead"
+}
