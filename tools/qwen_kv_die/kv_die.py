@@ -90,6 +90,7 @@ PHY_REACH = float(__import__('os').environ.get('OT_KV_PHY_REACH', '150'))
 # the regional skew (~200 ps c <-> stack at kv_rt3) sits on a short wire; no added edge.  The seam list is recorded
 # (m['clock_seams']) for the die STA / DIE-CLOCK neighbour check.  Default off: plans unchanged.
 SEAM = __import__('os').environ.get('OT_KV_SEAM', '0') == '1'
+HOST_COHORT_PINS = dict(cohort_tag=('N', 60.0), cohort_gen=('N', 75.0))   # REACH_FIX: (face, um from the E corner)
 SEAM_REACH = float(__import__('os').environ.get('OT_KV_SEAM_REACH', '150'))
 # data-chain seams (pvin -> fork, pvrq -> V port, ...): OT_KV_SEAM_DATA_REACH um (0 = recorded only, normal reach).  The
 # 150-um last hop into the fork column does not plan (d0 plan: pvin_WS_2 no spot 220 um from its fork); Q-KV's forwarded
@@ -367,6 +368,10 @@ PVT_HDR_CTL = __import__('os').environ.get('OT_KV_PVT_HDR_CTL', '0') == '1'
 # taps are oriented by side (W: R0 / E: MY; S pair as is, N pair + MX), their ports drawn on fixed canonical faces
 # (PVT_PORTS: fraction along the face) and the planner aims at exactly those pins from the first pass.
 PVT_PINS = __import__('os').environ.get('OT_KV_PVT_PINS', '0') == '1'
+# KVPLAN3 0230 (kvs13l4 per-bit audit radius@401: pvin hops median 441 / max 506 per bit although planned at <= 400 -- the
+# PV words kept the plain reach, and the replica rows / face pins add 40-100 um per bit): OT_KV_PVT_REACH um = the plan hop
+# of pvin / pvrq / pvh (0 = unchanged)
+PVT_REACH = float(__import__('os').environ.get('OT_KV_PVT_REACH', '0'))
 PVT_PORTS = dict(qkd_pvfork=dict(vi=('W', 0.5), vh=('N', 0.5), vta=('S', 0.3), vtb=('S', 0.7)),
                  qkd_pvtap=dict(ti=('N', 0.5), to=('S', 0.5), tc=('E', 0.5)))
 
@@ -2418,6 +2423,15 @@ def _relays(m):
                     yh_ = it_.h - PVT_HDR_Y0 - PVT_PIN_DY * (k_ % 4)
                     _PIN_HINT[(it_.name, f'vh{k_}')] = die_xy_(0.0 if k_ < 4 else it_.w, yh_)
                     _PIN_HINT[(it_.name, f'vrq{k_}')] = die_xy_(0.0 if k_ < 4 else it_.w, yh_ - 30.0)
+    if REACH_FIX and 'host' in by and by['host'].master == 'qkd_host_rt':
+        h_ = by['host']
+        for p_, (f_, fx_) in HOST_COHORT_PINS.items():
+            x_, y_ = h_.w - fx_, h_.h
+            if h_.orient in ('MY', 'R180'):
+                x_ = h_.w - x_
+            if h_.orient in ('MX', 'R180'):
+                y_ = h_.h - y_
+            _PIN_HINT[('host', p_)] = (h_.x + x_, h_.y + y_)
     if PV_T and PVT_PINS:
         for it_ in m['insts']:
             if it_.master == 'qkd_pvfork' or it_.master.startswith('qkd_pvtap'):
@@ -2811,6 +2825,8 @@ def _relays(m):
                 return min(reach0_(), width_reach(bits))
             if st_.get('hop_override'):
                 return min(reach0_(), st_['hop_override'])
+            if PVT_REACH > 0 and bid.startswith(('pvin_', 'pvrq_', 'pvh_')):
+                return min(reach0_(), PVT_REACH)     # KVPLAN3 0230: PV words planned under the per-bit audit margin
             return min(reach0_(), width_reach(bits)) if bid not in tree_meta and not bid.startswith('pv') else reach0_()
 
         def reach0_():
@@ -3556,6 +3572,15 @@ def _split_pins(M, m=None):
                     hm.ports[f'vrq{k_}'] = ('face', hm.ports[f'vrq{k_}'][1], f_, 'M4', round(yc_ + 40.0, 3), 1)
     # v1.4.4 V ports (Q-VMWB r5 pin faces, canonical R0): W = in0 + vq0, E = in1 + vq1, N = vo (out_valid / out_t / out_v)
     # + pr + ck, S = rst_n + fault
+    if REACH_FIX and 'qkd_host_rt' in M:
+        # KVPLAN3 0230 (kvs13l4 per-bit audit: n_kvnc_cht / chg 1,297-1,303 um UNRELAYED): the forked cohort words had no
+        # auto-pin peer (a merged fork net has 3 endpoints) -> default W face, 1.3 mm from kvnc beyond the host's NE
+        # corner, and the planner (frame-nearest measure) gave the trunk 0 stages.  Drawn on the N face toward kvnc and
+        # hinted from pass 1 (HOST_COHORT_PINS), so the trunk / lprg branch get their relays
+        hm_ = M['qkd_host_rt']
+        for p_, (f_, fx_) in HOST_COHORT_PINS.items():
+            if p_ in hm_.ports:
+                hm_.ports[p_] = ('face', hm_.ports[p_][1], f_, 'M5', round(hm_.w - fx_, 3), 1)
     if 'qkd_pv16_vport' in M:
         vm_ = M['qkd_pv16_vport']
         for p_, f_, c_ in (('i0', 'W', 86.4), ('vq0', 'W', 160.0), ('i1', 'E', 86.4), ('vq1', 'E', 160.0), ('vo', 'N', 43.2),
