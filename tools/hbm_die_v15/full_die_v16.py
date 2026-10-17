@@ -326,7 +326,7 @@ FOLD_RULES = [
          wrapper='ot_hgi_dma_back_static_vp4_banks_cp', source=_DBK + 'ot_hgi_dma_back_static_vp4_banks_cp.sv',
          deps=[_DBK + 'ot_hgi_dma_back_static_vp4_banks.sv', 'rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv'],
          status={'configured': 'cp_configured', 'fault': 'cp_fault', 'active': 'cp_active'},
-         clocks=('clk_cp', 'clk_tab')),   # H-HARDEN 1f18141cb: collar CTS root + raw table-SRAM entries
+         clocks=('clk_cp', 'clk_rst')),   # HCDMA-DBK 10-17: collar leaf clock pin + reset-relay CTS root (table SRAMs inside the leaf)
     dict(target='ot_static_cmd_target', detect='a_we', consumers=('ot_hbm_svc_sm_xcal',),
          wrapper='ot_hbm_svc_sm_xcal_t', source='rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_t.sv',
          deps=['rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv', 'rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv'],
