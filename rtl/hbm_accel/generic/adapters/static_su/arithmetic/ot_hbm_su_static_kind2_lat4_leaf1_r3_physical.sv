@@ -1,6 +1,7 @@
 // REGIONAL-ROOT KIND2 lane leaf (H-SU 10-17, after the r1 gate: one lane root of 32,978 sinks failed the >15k measured
 // insertion/spread rule): clk_pin = pin registers; clk = stages 0-3 and 5-7 (~13.1k); clk_sfu = stage-4 SFU pipeline (~10.8k);
-// clk_ins = the parallel insertion line (~9.4k); clk_side = the SIDE pipe. Roots meet only at the registered seams
+// clk_ins / clk_ins2 = insertion regions 0-1 / 2-3 (KIND2 21.8k in all); clk_side[5:0] = the SIDE pipe's own six-root
+// partition (each <= ~14k; 41.8k in all). Roots meet only at the registered seams
 // stage-3 registers -> SFU / insertion / side inputs and their output registers -> stage-5 merge.
 // TWO-ROOT (pin / lane) KIND2 lane leaf (H-ELEM / coordinator decision 10-16, option (a)): the same pin-registered LAT4/LEAF1 lane
 // with ONE regional clock root driving every pipeline stage and insertion register, so no internal stage hop crosses
@@ -12,8 +13,9 @@ module ot_hbm_su_static_kind2_lat4_leaf1_r3_physical(
  input wire clk_pin,  // regional root of the pin registers (every input, rst_n, every output)
  input wire clk,      // lane root: pipeline stages 0-3 and 5-7
  input wire clk_sfu,  // stage-4 SFU pipeline (exp / den / div) root
- input wire clk_ins,  // insertion (ins line) root, parallel to the SFU
- input wire clk_side, // FULL lane SIDE pipe root (rsqrt / softplus / exp)
+ input wire clk_ins,  // insertion line regions 0-1 root, parallel to the SFU
+ input wire clk_ins2, // insertion line regions 2-3 root
+ input wire [5:0] clk_side, // FULL lane SIDE pipe roots (the side's own partition: rsqrt, sqrt, sp-exp, sp-poly, sp-finish, egate)
  input wire rst_n,
  input wire [10:0] lane_id,
  input wire ld,
@@ -82,7 +84,7 @@ module ot_hbm_su_static_kind2_lat4_leaf1_r3_physical(
  ot_hbm_su_static_lane_pinreg #(.LN(7),.LEAF(1),.KIND(2),.FETCH_EXTRA_EDGES(2),.MLAT(4),.ALAT(3),.PIN_RST(1),.PIN_ROOT(1)) u_native(
  .clk_pin(clk_pin),
  .clk_stage({clk,clk,clk,clk_sfu,clk,clk,clk,clk}),
- .clk_insert({4{clk_ins}}),
+ .clk_insert({clk_ins2,clk_ins2,clk_ins,clk_ins}),
  .rst_n(rst_n),
  .lane_id(lane_id),
  .ld(ld),
@@ -155,7 +157,7 @@ module ot_hbm_su_static_kind2_lat4_leaf1_r3_physical(
  // pgslice applied (PIN_REG g_fn_pin), so the loop timing is unchanged (0 edges). The side fault joins the leaf fault.
  reg [2:0] fn_q, fn_out_q;
  always @(posedge clk_pin) begin fn_q <= ci_sfu; fn_out_q <= cs_sfu; end
- ot_hbm_su_static_side u_side(.clk({6{clk_side}}), .rst_n(side_rst_q), .v(l_side_v), .fn(fn_q), .x(l_side_x), .fn_out(fn_out_q),
+ ot_hbm_su_static_side u_side(.clk(clk_side), .rst_n(side_rst_q), .v(l_side_v), .fn(fn_q), .x(l_side_x), .fn_out(fn_out_q),
   .y(l_side_y), .fault(side_fault));
  reg fault_q;  // the leaf fault leaves through a pin register (lane fault | side fault; sticky at the parent)
  always @(posedge clk_pin) fault_q <= l_fault | side_fault;

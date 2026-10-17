@@ -36,6 +36,7 @@
    "clk",
    "clk_sfu",
    "clk_ins",
+   "clk_ins2",
    "clk_side"
   ],
   "W": [
@@ -126,7 +127,7 @@
   "owner": "Claude:H-SU/PGSLICE",
   "branch": "claude/hsu-pgslice-d4c",
   "tag": "r3",
-  "purpose": "Regional roots per lane leaf, meeting only at registered seams (r1 gate: one lane root of 32,978 sinks failed the measured >15k insertion/spread rule; s2 EARLY_FAIL_HOLD from per-stage roots): clk_pin pin registers, clk stages 0-3+5-7 (~13.1k), clk_sfu stage-4 SFU (~10.8k), clk_ins insertion line (~9.4k), clk_side SIDE pipe; seams = stage-3 registers -> SFU/insertion inputs and their outputs -> stage-5 merge. OT_QMUL4_INCUT, recipe 4 (hold_budget die), sync regional reset (relays sample on the pin root). KIND2 carries the SIDE pipe inside (no side pins), outline 248.4 x 432.",
+  "purpose": "Regional roots per lane leaf, meeting only at registered seams (r1 gate: one lane root of 32,978 sinks failed the measured >15k insertion/spread rule; s2 EARLY_FAIL_HOLD from per-stage roots): clk_pin pin registers, clk stages 0-3+5-7 (~13.1k), clk_sfu stage-4 SFU (~10.8k), clk_ins / clk_ins2 insertion regions 0-1 / 2-3 (21.8k in all), clk_side[5:0] the SIDE pipe six-root partition (41.8k in all); seams = stage-3 registers -> SFU/insertion inputs and their outputs -> stage-5 merge. OT_QMUL4_INCUT, recipe 4 (hold_budget die), sync regional reset (relays sample on the pin root). KIND2 carries the SIDE pipe inside (no side pins), outline 345.6 x 367.2 (87.6k flops, std ~63k um2; r3 first gate: clk_side 41,758 / clk_ins 21,784 sinks on one root each).",
   "extra_paths": [],
   "benches": [
    {
@@ -201,10 +202,10 @@
   "enable": false,
   "reason": "the RTL (ot_hbm_su_static_lane_pinreg, PIN_RST=1) already registers every data input, rst_n and every output at the pin; a kit-level flop stage would add a second, unscheduled boundary edge"
  },
- "structural_change": "Regional roots per lane leaf, meeting only at registered seams (r1 gate: one lane root of 32,978 sinks failed the measured >15k insertion/spread rule; s2 EARLY_FAIL_HOLD from per-stage roots): clk_pin pin registers, clk stages 0-3+5-7 (~13.1k), clk_sfu stage-4 SFU (~10.8k), clk_ins insertion line (~9.4k), clk_side SIDE pipe; seams = stage-3 registers -> SFU/insertion inputs and their outputs -> stage-5 merge. OT_QMUL4_INCUT, recipe 4 (hold_budget die), sync regional reset (relays sample on the pin root). KIND2 carries the SIDE pipe inside (no side pins), outline 248.4 x 432.",
+ "structural_change": "Regional roots per lane leaf, meeting only at registered seams (r1 gate: one lane root of 32,978 sinks failed the measured >15k insertion/spread rule; s2 EARLY_FAIL_HOLD from per-stage roots): clk_pin pin registers, clk stages 0-3+5-7 (~13.1k), clk_sfu stage-4 SFU (~10.8k), clk_ins / clk_ins2 insertion regions 0-1 / 2-3 (21.8k in all), clk_side[5:0] the SIDE pipe six-root partition (41.8k in all); seams = stage-3 registers -> SFU/insertion inputs and their outputs -> stage-5 merge. OT_QMUL4_INCUT, recipe 4 (hold_budget die), sync regional reset (relays sample on the pin root). KIND2 carries the SIDE pipe inside (no side pins), outline 345.6 x 367.2 (87.6k flops, std ~63k um2; r3 first gate: clk_side 41,758 / clk_ins 21,784 sinks on one root each).",
  "outline": {
-  "w": 248.4,
-  "h": 432.0
+  "w": 345.6,
+  "h": 367.2
  },
  "defines": [
   "OT_QMUL4_INCUT",
@@ -216,7 +217,13 @@
   "clk",
   "clk_sfu",
   "clk_ins",
-  "clk_side"
+  "clk_ins2",
+  "clk_side[0]",
+  "clk_side[1]",
+  "clk_side[2]",
+  "clk_side[3]",
+  "clk_side[4]",
+  "clk_side[5]"
  ],
  "clock_data_paths": "related_same_frequency",
  "clock_relationship": {
@@ -335,9 +342,75 @@
    "inputs": [],
    "outputs": []
   },
-  "side": {
+  "ins2": {
    "ports": [
-    "clk_side"
+    "clk_ins2"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "side0": {
+   "ports": [
+    "clk_side[0]"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "side1": {
+   "ports": [
+    "clk_side[1]"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "side2": {
+   "ports": [
+    "clk_side[2]"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "side3": {
+   "ports": [
+    "clk_side[3]"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "side4": {
+   "ports": [
+    "clk_side[4]"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "side5": {
+   "ports": [
+    "clk_side[5]"
    ],
    "ratio": [
     1,

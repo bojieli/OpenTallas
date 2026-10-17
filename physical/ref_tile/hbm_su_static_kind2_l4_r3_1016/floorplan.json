@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  248.4,
-  432.0
+  345.6,
+  367.2
  ],
  "core": [
   2.16,
   2.16,
-  246.24,
-  429.84
+  343.44,
+  365.03999999999996
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -35,6 +35,7 @@
    "clk",
    "clk_sfu",
    "clk_ins",
+   "clk_ins2",
    "clk_side"
   ],
   "W": [
@@ -111,7 +112,13 @@
   "clk",
   "clk_sfu",
   "clk_ins",
-  "clk_side"
+  "clk_ins2",
+  "clk_side[0]",
+  "clk_side[1]",
+  "clk_side[2]",
+  "clk_side[3]",
+  "clk_side[4]",
+  "clk_side[5]"
  ],
  "blocks": [],
  "findings": [],
