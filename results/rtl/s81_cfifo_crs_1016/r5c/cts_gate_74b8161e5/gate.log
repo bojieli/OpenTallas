@@ -1,0 +1,23 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: N face 10.5 pins/um (xa, xb, x2): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)
+GATE INFO oflop: S face 10.5 pins/um (xd, xf, xd2): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc4 for 8 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81coll_cfifo_crs_20261016-181800.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81coll_cfifo_crs_20261016-181800.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/s81coll_cfifo_crs-20261016-181800
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 34 s (gate total 482 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 2348, 'pin_rectangles': 2348, 'pin_track_checked': 2348, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 d269c175f4afc8f983da56394a8ab9d4e0b6a9c1be1c066fd60e77be51c9f351
+GATE WARN util: synthesized std area 5009 um2 + macros 0 in core 17916: util 28%  -> FIX: set "std_area_um2": 5009 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN dsfd_cfifo_crs cells 24,890 flops 13,505 depth 256.7 ps util 0.2799 reach 0.0 um (0.4 s)
+GATE WARN textbook.util_channel: utilisation 28.0% outside 45%-65% (std 5014 + macro 0 um2 in 17916 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 166.6..236.2 ps (spread 69.6), boundary mean 197.3; tt insertion all 121.3..187.3 ps (spread 66.0), boundary mean 151.2; ff insertion all 95.1..157.3 ps (spread 62.2), boundary mean 124.6; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/s81coll_cfifo_crs/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      944 paths, worst slack 32.5 ps (e.g. u_x2.u_cross.h[406]$_DFF_N_/D)
+GATE INFO path_classes: reg->out      370 paths, worst slack 341.7 ps (e.g. rd[5])
+GATE INFO path_classes: in->reg       368 paths, worst slack 358.1 ps (e.g. rsync_q[0]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS 3.2496588753261335e-11 hold WNS 3.5171060508432106e-11
+GATE INFO clock_rule: root port:xf: 5,125 sinks on the largest root <= 15,000; measured TT insertion 244.2 ps, leaf spread 26.6 ps
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/selem-cfifo-1815/physical/ref_tile/s81coll_cfifo_crs/gate_layout/floorplan.png; density /home/ubuntu/wt/selem-cfifo-1815/physical/ref_tile/s81coll_cfifo_crs/gate_layout/density.png
+PRE_ROUTE_GATE: WARN (0 fail, 2 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/selem-cfifo-1815/physical/ref_tile/s81coll_cfifo_crs/source_binding_history/eeff3566311d48804cd69cb9309e63fe9d5a6355de0e9f6a68b6b999afeb0ae0.json
+GATE: s81coll_cfifo_crs/gate_result.json written (exact staged source binding; commit it with the kit)
