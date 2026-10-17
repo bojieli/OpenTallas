@@ -63,3 +63,39 @@ def test_origin_problems_unpushed_source_and_grant(tmp_path):
     g(wt, "add", "k"); g(wt, "commit", "-qm", "d"); g(wt, "push", "-q", "origin", "HEAD:refs/heads/br")
     bad = S.origin_problems(wt, g(wt, "rev-parse", "HEAD"), spec, "k")
     assert len(bad) == 1 and "does not exist" in bad[0]
+
+
+import json as _json_vr
+import unittest
+SE = S
+json = _json_vr
+
+
+class VisualReview(unittest.TestCase):
+    """PRE-ROUTE VISUAL REVIEW (owner 2026-10-17)"""
+    def setUp(self):
+        import tempfile
+        self.t = Path(tempfile.mkdtemp())
+        self.crit = self.t / "critical.txt"; self.crit.write_text("ot_hot  # coordinator\n")
+        self.jobs = self.t / "jobs"; self.jobs.mkdir()
+        SE.CRITICAL_TILES = self.crit
+
+    def test_required_by_list_or_failed_routes(self):
+        self.assertIn("critical", SE.review_required({"block": "ot_hot"}, "physical/ref_tile/k", self.jobs))
+        self.assertIsNone(SE.review_required({"block": "ot_cold"}, "physical/ref_tile/k", self.jobs))
+        for i, st in enumerate(("EARLY_FAIL_HOLD", "NEEDS_RTL", "CLOSED")):
+            (self.jobs / f"j{i}.json").write_text(json.dumps({"name": f"j{i}", "status": st, "spec": {"block": "ot_cold"}}))
+        self.assertIn("2 earlier", SE.review_required({"block": "ot_cold"}, "physical/ref_tile/k", self.jobs))
+
+    def test_receipt_binding(self):
+        gate = {"commit": "abc1234def", "generated": "t"}
+        good = {"reviewer": "R", "time": "now", "gate_commit": "abc1234", "verdict": "APPROVED",
+                "checklist": {k: "ok" for k in SE.REVIEW_CHECKLIST}}
+        files = {"k/gate_result.json": json.dumps(gate), "k/gate_layout/REVIEW.json": json.dumps(good)}
+        self.assertIsNone(SE.review_check(self.t, "c" * 40, "k", show=files.get))
+        for bad in (dict(good, gate_commit="fff9999"), dict(good, verdict="CHANGES"),
+                    dict(good, checklist={"lattice": 1})):
+            files["k/gate_layout/REVIEW.json"] = json.dumps(bad)
+            self.assertIn("REVIEW_REQUIRED", SE.review_check(self.t, "c" * 40, "k", show=files.get))
+        del files["k/gate_layout/REVIEW.json"]
+        self.assertIn("REVIEW_REQUIRED: no", SE.review_check(self.t, "c" * 40, "k", show=files.get))
