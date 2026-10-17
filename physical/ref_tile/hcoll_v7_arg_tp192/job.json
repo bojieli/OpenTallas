@@ -44,7 +44,7 @@
    },
    {
     "name": "argmax_g192_ranktrunc",
-    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_argmax_static_bench.sh {RUN}/bench/rt -GG=192 -GRANK_TRUNC=1",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_argmax_static_bench.sh {RUN}/bench/rt -GG=192 -GRANK_TRUNC=1 || { cat {RUN}/bench/rt/run.log; exit 1; }",
     "expect": "fail",
     "fail_regex": "ARGMAX unexpected protocol fault",
     "threads": 4,
