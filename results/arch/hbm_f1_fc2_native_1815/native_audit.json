@@ -1,0 +1,122 @@
+{
+ "hbfd_rly_48_WE_fc": {
+  "cell": "hbfd_rly_48_WE_fc",
+  "view": "physical/ref_tile/hbfd_rly_48_we_fc/views/hbfd_rly_48_WE_fc",
+  "lib_cell": "hbfd_rly_48_WE_fc",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 55.9,
+  "spread_ps": 1.0,
+  "outputs": 48,
+  "inputs": 49,
+  "launch_ps": 139.5,
+  "launch_pin": "o[20]",
+  "capture_ps": 118.0,
+  "capture_pin": "rs",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "record_commit": "440a8fe94"
+ },
+ "hbfd_rly_624_NS_fc": {
+  "cell": "hbfd_rly_624_NS_fc",
+  "view": "physical/ref_tile/hbfd_rly_624_ns_fc/views/hbfd_rly_624_NS_fc",
+  "lib_cell": "hbfd_rly_624_NS_fc",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 94.6,
+  "spread_ps": 10.4,
+  "outputs": 624,
+  "inputs": 625,
+  "launch_ps": 156.8,
+  "launch_pin": "o[375]",
+  "capture_ps": 126.9,
+  "capture_pin": "rs",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "record_commit": "27bfda7f2"
+ },
+ "hbfd_rly_624_SN_fc": {
+  "cell": "hbfd_rly_624_SN_fc",
+  "view": "physical/ref_tile/hbfd_rly_624_sn_fc/views/hbfd_rly_624_SN_fc",
+  "lib_cell": "hbfd_rly_624_SN_fc",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 92.9,
+  "spread_ps": 11.3,
+  "outputs": 624,
+  "inputs": 625,
+  "launch_ps": 151.1,
+  "launch_pin": "o[492]",
+  "capture_ps": 119.1,
+  "capture_pin": "rs",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "record_commit": "012c0aecf"
+ },
+ "hbfd_rly_624_WE_fc": {
+  "cell": "hbfd_rly_624_WE_fc",
+  "view": "physical/ref_tile/hbfd_rly_624_we_fc/views/hbfd_rly_624_WE_fc",
+  "lib_cell": "hbfd_rly_624_WE_fc",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 92.9,
+  "spread_ps": 9.1,
+  "outputs": 624,
+  "inputs": 625,
+  "launch_ps": 150.2,
+  "launch_pin": "o[17]",
+  "capture_ps": 116.4,
+  "capture_pin": "i[486]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "record_commit": "6b6c9dc0f"
+ },
+ "ot_hgi_coll_inj_copy": {
+  "cell": "ot_hgi_coll_inj_copy",
+  "view": "physical/ref_tile/hcoll_injcopy/views/ot_hgi_coll_inj_copy",
+  "lib_cell": "ot_hgi_coll_inj_copy",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 83.9,
+  "spread_ps": 3.0,
+  "outputs": 162,
+  "inputs": 163,
+  "launch_ps": 209.2,
+  "launch_pin": "inj_addr_o[2]",
+  "capture_ps": 126.6,
+  "capture_pin": "inj_addr_i[25]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "record_commit": "0d269d3cc"
+ }
+}
