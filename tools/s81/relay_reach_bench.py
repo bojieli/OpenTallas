@@ -398,12 +398,12 @@ puts "OT_REACH_STA_DONE {name} $n"
 set -u
 B=$(cd "$(dirname "$0")" && pwd); S=${{1:?stage dir}}; T=${{2:-8}}
 cd $B
-docker run --rm --name reach_$(basename $(dirname $B))_$(basename $B) --cpus=$T --memory=48g -v $B:/work -v $S:/stage:ro -w /work {IMAGE} \\
+docker run --rm --name reach_$(basename $(dirname $B))_$(basename $B) --cpus=$T -v $B:/work -v $S:/stage:ro -w /work {IMAGE} \\
   bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads $T -no_init -exit /work/grt.tcl > /work/grt.log 2>&1; rc=\\$?; chmod -R a+rwX /work; exit \\$rc"
 echo $? > grt.exit
 grep -q OT_REACH_GRT_DONE grt.log || {{ echo GRT_FAIL; exit 1; }}
 for c in tt833 tt1111 ff_hold ss833; do
-  docker run --rm --name reach_$(basename $(dirname $B))_$(basename $B)_$c --cpus=2 --memory=32g -v $B:/work -v $S:/stage:ro -w /work {IMAGE} \\
+  docker run --rm --name reach_$(basename $(dirname $B))_$(basename $B)_$c --cpus=2 -v $B:/work -v $S:/stage:ro -w /work {IMAGE} \\
     bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; sta -no_init -exit /work/sta_$c.tcl > /work/sta_$c.log 2>&1; chmod -R a+rwX /work" &
 done
 wait
