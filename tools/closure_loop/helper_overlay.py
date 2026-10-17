@@ -125,6 +125,35 @@ FLEET_RUN = ("tools/closure_loop/tt_overlay.py",)
 LINT_ONLY = ("tools/textbook_lint.py",)
 
 
+# SUBMIT-ONLY lint names (ROOT 2026-10-16, coordinator): constants of tools/textbook_lint.py read only by the submit-time
+# CLOSED-STANDS lint, never by the pre-route gate.  A textbook_lint change confined to them (and to comments / docstrings)
+# leaves every gate verdict valid.
+SUBMIT_ONLY_LINT_NAMES = ("CLOSED_STANDS_KINDS", "CLOSED_STANDS_INSTEAD", "DIE_WINDOW_CUT_MIN")
+
+
+def lint_change_is_submit_only(old, new, names=SUBMIT_ONLY_LINT_NAMES):
+    """True when two textbook_lint.py versions differ only in comments/docstrings or in assignments to `names`."""
+    import ast
+
+    def norm(data):
+        tree = ast.parse(data.decode() if isinstance(data, bytes) else data)
+        body = []
+        for node in tree.body:
+            if isinstance(node, ast.Expr) and isinstance(getattr(node, "value", None), ast.Constant) \
+                    and isinstance(node.value.value, str):
+                continue                                                   # module / stray docstrings
+            if isinstance(node, (ast.Assign, ast.AnnAssign)):
+                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+                if all(isinstance(t, ast.Name) and t.id in names for t in targets):
+                    continue
+            body.append(ast.dump(node, include_attributes=False))
+        return body
+    try:
+        return norm(old) == norm(new)
+    except (SyntaxError, ValueError, UnicodeDecodeError):
+        return False
+
+
 def _main_blobs(repo, head, rel):
     p = subprocess.run(["git", "-C", str(repo), "log", "--format=", "--raw", "--no-abbrev", "--no-renames", head, "--", rel],
                        capture_output=True, text=True, timeout=180)
