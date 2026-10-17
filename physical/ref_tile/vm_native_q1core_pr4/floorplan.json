@@ -7,13 +7,13 @@
   0,
   0,
   270.0,
-  313.2
+  280.8
  ],
  "core": [
   2.16,
   2.16,
   267.84,
-  311.03999999999996
+  278.64
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
@@ -84,7 +84,7 @@
    "inst": null,
    "idx": 0,
    "x": 43.2,
-   "y": 129.6,
+   "y": 113.712,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",
@@ -97,27 +97,14 @@
    "inst": null,
    "idx": 0,
    "x": 43.2,
-   "y": 216.0,
+   "y": 184.224,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",
    "offtrack": 0
   }
  ],
- "findings": [
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_1024x256_m2_r2c2#0 / ot_sram_1r1w_1024x256_m2_r2c2#0 channel 15.9 um (< 20 um)",
-   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack), or two blocks E-W with bare touching faces (no pin of any use: abutted_row)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_1024x256_m2_r2c2#0 / ot_sram_1r1w_1024x256_m2_r2c2#0 channel 15.9 um (< 20 um)",
-   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack), or two blocks E-W with bare touching faces (no pin of any use: abutted_row)"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
   "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
