@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.hbm.a2p_view_bindings.v1",
+ "rule": "native PASS only (owner 18:54 item 4); TT<+25/FF<+10 = watch list",
+ "bindings": {
+  "hfd_ep_static": {
+   "kind": "REAL",
+   "view": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static",
+   "record": "90e0b5781",
+   "route": "hep_static_w5f_1016-w5f-00f041029",
+   "closed": "TT +217.23 / FF +8.00 / DRC 0",
+   "native": {
+    "audit": "results/arch/hep_static_1015/native_audit_route5f.json@5279b37b0",
+    "launch_ps": 174.8,
+    "capture_ps": 183.3,
+    "spread_ps": 53.4,
+    "R_ps": 386.4,
+    "passed": true
+   },
+   "watch": "FF +8.00 < +10 guidance (watch list, not a blocker)",
+   "outline": "434.72 x 371.52 (fits the 434.72 x 515.2 ep plan block)",
+   "replaces": "w5c (native FAIL)",
+   "instances": "ep_S0..4, ep_N0..3"
+  }
+ }
+}
