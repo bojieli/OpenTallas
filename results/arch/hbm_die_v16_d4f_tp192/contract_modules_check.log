@@ -1,0 +1,10 @@
+CONTRACT_MODULES PASS rev=ef3d48b87 masters=67 modules=391 missing=0 untracked_sources=0
+CONTRACT_MODULES FAIL rev=59a003354 masters=67 modules=390 missing=7 untracked_sources=1
+  MISSING hfd_hgi_vms_static_NE_glue (under hfd_hgi_vms_static_NE_glue)
+  MISSING hfd_hgi_vms_static_SE_glue (under hfd_hgi_vms_static_SE_glue)
+  MISSING hfd_vms_bank_native_q1_core (under hfd_vms_bank_native_q1_core)
+  MISSING ot_hgi_coll_qso_n1s0_b1 (under ot_hfd_coll_q2_hard_v5)
+  MISSING ot_hgi_coll_qso_n1s0_b32 (under ot_hfd_coll_q2_hard_v5)
+  MISSING ot_hgi_coll_qso_n2s1_b1 (under ot_hfd_coll_q2_hard_v5)
+  MISSING ot_hgi_coll_qso_n2s1_b32 (under ot_hfd_coll_q2_hard_v5)
+  UNTRACKED rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv

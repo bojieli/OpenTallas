@@ -1,0 +1,31 @@
+{
+ "cell": "ot_s81_hc_ctrn_own_e",
+ "view": "physical/ref_tile/s81hc_ctrnown_e_ref/views/ot_s81_hc_ctrn_own_e",
+ "lib_cell": "ot_s81_hc_ctrn_own_e",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 118.3,
+ "spread_ps": 26.4,
+ "outputs": 628,
+ "inputs": 637,
+ "launch_ps": 207.9,
+ "launch_pin": "hdr_out[53]",
+ "capture_ps": 188.6,
+ "capture_pin": "flg_fault[0]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "job": "s81hc_ctrnown_e_ref-a7-3beae3cbf",
+ "record": "c32c2c468",
+ "audited": "2026-10-16 S-ELEM 1815",
+ "images_viewed": true,
+ "supersedes": [
+  "a5 f068a2c9c (revoked, launch 224.7)",
+  "a6 fadd15091 (revoked, capture 192.5)"
+ ]
+}

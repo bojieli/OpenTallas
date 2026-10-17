@@ -1,0 +1,1090 @@
+{
+ "region": "coll_hardv7_d4f",
+ "author": "Claude H-NETLIST/COLL 1815",
+ "basis_commit": "claude/hnl-coll-d4f-2130 528c716f9 (hard_v7: ctl V7, compact slices, NLINK/TP)",
+ "instances": [
+  {
+   "name": "cic_SW",
+   "master": "ot_hgi_coll_inj_copy",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_copy.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-COLL",
+   "note": "COLL inject local copy (1 edge, equal age, INJ_COPY_EDGES=1; view hcoll_injcopy-ic1-cc77f11e3 native PASS); home from the d4f H-DIE stream"
+  },
+  {
+   "name": "cic_SE",
+   "master": "ot_hgi_coll_inj_copy",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_copy.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-COLL",
+   "note": "COLL inject local copy (1 edge, equal age, INJ_COPY_EDGES=1; view hcoll_injcopy-ic1-cc77f11e3 native PASS); home from the d4f H-DIE stream"
+  },
+  {
+   "name": "cic_NW",
+   "master": "ot_hgi_coll_inj_copy",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_copy.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-COLL",
+   "note": "COLL inject local copy (1 edge, equal age, INJ_COPY_EDGES=1; view hcoll_injcopy-ic1-cc77f11e3 native PASS); home from the d4f H-DIE stream"
+  },
+  {
+   "name": "cic_NE",
+   "master": "ot_hgi_coll_inj_copy",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_copy.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-COLL",
+   "note": "COLL inject local copy (1 edge, equal age, INJ_COPY_EDGES=1; view hcoll_injcopy-ic1-cc77f11e3 native PASS); home from the d4f H-DIE stream"
+  }
+ ],
+ "edges": [
+  {
+   "src": [
+    "hb_coll_SW",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "cic_SW",
+    "inj_addr_i"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f inject copy"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "inj_rd"
+   ],
+   "dst": [
+    "cic_SW",
+    "inj_rd_i"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f inject copy"
+  },
+  {
+   "src": [
+    "cic_SW",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "cij_SW",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SW",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "cij_SW",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SW",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "sucx_SW",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SW",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "sucx_SW",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SW",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "su_SW0",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SW",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "su_SW0",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SW",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "su_SW1",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SW",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "su_SW1",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SW",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "su_SW2",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SW",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "su_SW2",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SW",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "su_SW3",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SW",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "su_SW3",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "cic_SE",
+    "inj_addr_i"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f inject copy"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "inj_rd"
+   ],
+   "dst": [
+    "cic_SE",
+    "inj_rd_i"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f inject copy"
+  },
+  {
+   "src": [
+    "cic_SE",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "sucx_SE",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SE",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "sucx_SE",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SE",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "su_SE0",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SE",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "su_SE0",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SE",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "su_SE1",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SE",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "su_SE1",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SE",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "su_SE2",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SE",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "su_SE2",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SE",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "su_SE3",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_SE",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "su_SE3",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "cic_NW",
+    "inj_addr_i"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f inject copy"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "inj_rd"
+   ],
+   "dst": [
+    "cic_NW",
+    "inj_rd_i"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f inject copy"
+  },
+  {
+   "src": [
+    "cic_NW",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "sucx_NW",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_NW",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "sucx_NW",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_NW",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "su_NW0",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_NW",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "su_NW0",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_NW",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "su_NW1",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_NW",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "su_NW1",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_NW",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "su_NW2",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_NW",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "su_NW2",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_NW",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "su_NW3",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_NW",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "su_NW3",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "cic_NE",
+    "inj_addr_i"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f inject copy"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "inj_rd"
+   ],
+   "dst": [
+    "cic_NE",
+    "inj_rd_i"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f inject copy"
+  },
+  {
+   "src": [
+    "cic_NE",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "sucx_NE",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_NE",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "sucx_NE",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_NE",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "su_NE0",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_NE",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "su_NE0",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_NE",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "su_NE1",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_NE",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "su_NE1",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_NE",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "su_NE2",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_NE",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "su_NE2",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_NE",
+    "inj_addr_o"
+   ],
+   "dst": [
+    "su_NE3",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  },
+  {
+   "src": [
+    "cic_NE",
+    "inj_rd_o"
+   ],
+   "dst": [
+    "su_NE3",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "coll_hardv7_d4f: inject sink fed from the copy (+1 edge, equal age)"
+  }
+ ],
+ "gaps": [],
+ "clocks": [
+  {
+   "inst": "hb_coll_SW",
+   "port": "clk_vmasm",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SW",
+   "port": "clk_upipe",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SE",
+   "port": "clk_vmasm",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SE",
+   "port": "clk_upipe",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NW",
+   "port": "clk_vmasm",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NW",
+   "port": "clk_upipe",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NE",
+   "port": "clk_vmasm",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NE",
+   "port": "clk_upipe",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "cic_SW",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "cic_SW",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "cic_SE",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "cic_SE",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "cic_NW",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "cic_NW",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "cic_NE",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "cic_NE",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  }
+ ],
+ "straps": [
+  {
+   "inst": "hb_coll_SW",
+   "port": "qid",
+   "value": 0,
+   "reason": "identity: COLL quadrant QID 0 (HOST target 52; was parameter QID)"
+  },
+  {
+   "inst": "hb_coll_SE",
+   "port": "qid",
+   "value": 1,
+   "reason": "identity: COLL quadrant QID 1 (HOST target 53; was parameter QID)"
+  },
+  {
+   "inst": "hb_coll_NW",
+   "port": "qid",
+   "value": 2,
+   "reason": "identity: COLL quadrant QID 2 (HOST target 54; was parameter QID)"
+  },
+  {
+   "inst": "hb_coll_NE",
+   "port": "qid",
+   "value": 3,
+   "reason": "identity: COLL quadrant QID 3 (HOST target 55; was parameter QID)"
+  }
+ ],
+ "remaster": {
+  "hb_coll_SW": {
+   "master": "ot_hfd_coll_q3_hard_v5",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "params": {
+    "NLINK": 2,
+    "TP": 192
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5.sv",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_copy.sv"
+   ]
+  },
+  "hb_coll_SE": {
+   "master": "ot_hfd_coll_q2_hard_v5",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "params": {
+    "NLINK": 1,
+    "TP": 192
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5.sv",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_copy.sv"
+   ]
+  },
+  "hb_coll_NW": {
+   "master": "ot_hfd_coll_q2_hard_v5",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "params": {
+    "NLINK": 1,
+    "TP": 192
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5.sv",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_copy.sv"
+   ]
+  },
+  "hb_coll_NE": {
+   "master": "ot_hfd_coll_q2_hard_v5",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "params": {
+    "NLINK": 1,
+    "TP": 192
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5.sv",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_copy.sv"
+   ]
+  }
+ },
+ "drop_edges": [
+  [
+   "hb_coll_SW",
+   "hgi_inj_addr",
+   "cij_SW"
+  ],
+  [
+   "hb_coll_SW",
+   "inj_rd",
+   "cij_SW"
+  ],
+  [
+   "hb_coll_SW",
+   "hgi_inj_addr",
+   "sucx_SW"
+  ],
+  [
+   "hb_coll_SW",
+   "inj_rd",
+   "sucx_SW"
+  ],
+  [
+   "hb_coll_SW",
+   "hgi_inj_addr",
+   "su_SW0"
+  ],
+  [
+   "hb_coll_SW",
+   "inj_rd",
+   "su_SW0"
+  ],
+  [
+   "hb_coll_SW",
+   "hgi_inj_addr",
+   "su_SW1"
+  ],
+  [
+   "hb_coll_SW",
+   "inj_rd",
+   "su_SW1"
+  ],
+  [
+   "hb_coll_SW",
+   "hgi_inj_addr",
+   "su_SW2"
+  ],
+  [
+   "hb_coll_SW",
+   "inj_rd",
+   "su_SW2"
+  ],
+  [
+   "hb_coll_SW",
+   "hgi_inj_addr",
+   "su_SW3"
+  ],
+  [
+   "hb_coll_SW",
+   "inj_rd",
+   "su_SW3"
+  ],
+  [
+   "hb_coll_SE",
+   "hgi_inj_addr",
+   "sucx_SE"
+  ],
+  [
+   "hb_coll_SE",
+   "inj_rd",
+   "sucx_SE"
+  ],
+  [
+   "hb_coll_SE",
+   "hgi_inj_addr",
+   "su_SE0"
+  ],
+  [
+   "hb_coll_SE",
+   "inj_rd",
+   "su_SE0"
+  ],
+  [
+   "hb_coll_SE",
+   "hgi_inj_addr",
+   "su_SE1"
+  ],
+  [
+   "hb_coll_SE",
+   "inj_rd",
+   "su_SE1"
+  ],
+  [
+   "hb_coll_SE",
+   "hgi_inj_addr",
+   "su_SE2"
+  ],
+  [
+   "hb_coll_SE",
+   "inj_rd",
+   "su_SE2"
+  ],
+  [
+   "hb_coll_SE",
+   "hgi_inj_addr",
+   "su_SE3"
+  ],
+  [
+   "hb_coll_SE",
+   "inj_rd",
+   "su_SE3"
+  ],
+  [
+   "hb_coll_NW",
+   "hgi_inj_addr",
+   "sucx_NW"
+  ],
+  [
+   "hb_coll_NW",
+   "inj_rd",
+   "sucx_NW"
+  ],
+  [
+   "hb_coll_NW",
+   "hgi_inj_addr",
+   "su_NW0"
+  ],
+  [
+   "hb_coll_NW",
+   "inj_rd",
+   "su_NW0"
+  ],
+  [
+   "hb_coll_NW",
+   "hgi_inj_addr",
+   "su_NW1"
+  ],
+  [
+   "hb_coll_NW",
+   "inj_rd",
+   "su_NW1"
+  ],
+  [
+   "hb_coll_NW",
+   "hgi_inj_addr",
+   "su_NW2"
+  ],
+  [
+   "hb_coll_NW",
+   "inj_rd",
+   "su_NW2"
+  ],
+  [
+   "hb_coll_NW",
+   "hgi_inj_addr",
+   "su_NW3"
+  ],
+  [
+   "hb_coll_NW",
+   "inj_rd",
+   "su_NW3"
+  ],
+  [
+   "hb_coll_NE",
+   "hgi_inj_addr",
+   "sucx_NE"
+  ],
+  [
+   "hb_coll_NE",
+   "inj_rd",
+   "sucx_NE"
+  ],
+  [
+   "hb_coll_NE",
+   "hgi_inj_addr",
+   "su_NE0"
+  ],
+  [
+   "hb_coll_NE",
+   "inj_rd",
+   "su_NE0"
+  ],
+  [
+   "hb_coll_NE",
+   "hgi_inj_addr",
+   "su_NE1"
+  ],
+  [
+   "hb_coll_NE",
+   "inj_rd",
+   "su_NE1"
+  ],
+  [
+   "hb_coll_NE",
+   "hgi_inj_addr",
+   "su_NE2"
+  ],
+  [
+   "hb_coll_NE",
+   "inj_rd",
+   "su_NE2"
+  ],
+  [
+   "hb_coll_NE",
+   "hgi_inj_addr",
+   "su_NE3"
+  ],
+  [
+   "hb_coll_NE",
+   "inj_rd",
+   "su_NE3"
+  ]
+ ],
+ "notes": [
+  "hb_coll_<Q> remastered host_v4 -> hard_v7 parent (ot_hfd_coll_q{3,2}_hard_v5, NLINK SW2/SE,NW,NE1, TP192): QID param -> qid strap; clk_issue 4->1, clk_vmwrite 1->16, clk_qslots 2->NLINK+26/25, new clk_vmasm[16]/clk_upipe[16], new output fault_cause[16] (open)",
+  "compiler: INJ_COPY_EDGES=1 on every inject sink (cic_<Q>); SU inject answer latency INJLAT unchanged inside hard_v7 (12) -- the extra copy edge must be covered by the die INJLAT budget (H-DIE/compiler)"
+ ]
+}

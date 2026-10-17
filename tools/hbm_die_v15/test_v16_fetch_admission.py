@@ -1,3 +1,4 @@
+import copy
 import hashlib
 import json
 from pathlib import Path
@@ -6,10 +7,33 @@ import sys
 import tempfile
 import unittest
 
-from v16_fetch import REMOTE_PY, check_direct_master, check_sources, check_etm_signature
+from v16_fetch import REMOTE_PY, check_direct_master, check_sources, check_etm_signature, check_contract_entry
 
 
 class FetchAdmission(unittest.TestCase):
+    def test_current_contract_membership_and_parameter_binding(self):
+        entry = dict(representative='a', instances=['a', 'b'], master='M', params={'N': 2})
+        instance = dict(master='M', params={'N': 2},
+                        ports={'i': {'direction': 'input', 'bits': 2}})
+        contract = {'instances': {'a': copy.deepcopy(instance), 'b': copy.deepcopy(instance)}}
+        self.assertEqual(check_contract_entry(entry, contract), instance)
+        for member in ('a', 'b'):
+            for key, value in [('master', 'OTHER'), ('params', {'N': 4}),
+                               ('ports', {'i': {'direction': 'output', 'bits': 2}}),
+                               ('ports', {'i': {'direction': 'input', 'bits': 3}})]:
+                with self.subTest(member=member, field=key, value=value):
+                    changed = copy.deepcopy(contract)
+                    changed['instances'][member][key] = value
+                    with self.assertRaises(ValueError):
+                        check_contract_entry(entry, changed)
+        for missing in ('a', 'b'):
+            changed = copy.deepcopy(contract)
+            del changed['instances'][missing]
+            with self.subTest(missing=missing), self.assertRaises(KeyError):
+                check_contract_entry(entry, changed)
+        with self.assertRaises(ValueError):
+            check_contract_entry(dict(entry, params={'N': 4}), contract)
+
     def test_actual_liberty_cell_and_ports_are_checked(self):
         with tempfile.TemporaryDirectory() as tmp:
             p = Path(tmp) / 'model.lib'

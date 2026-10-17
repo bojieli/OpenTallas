@@ -45,6 +45,7 @@ module qfd_tile_nk_rp2_45 #(
     parameter integer TOREG = 1,
     parameter integer TIDR = 1,
     parameter integer LRR = 1,
+    parameter integer GLUE_HARD = 0, // consumer-owned hard operand/RQR stages, zero extra edges
     parameter integer RPH = 1,
     parameter integer RQR = 1,
     parameter integer XTX = 2,
@@ -92,6 +93,8 @@ module qfd_tile_nk_rp2_45 #(
     input wire ck_rp9,
     input wire ck_rqr0,
     input wire ck_rqr1,
+    input wire ck_rqr2,
+    input wire ck_rqr3,
     input wire ck_fa0,
     input wire ck_fa1,
     input wire ck_fa2,
@@ -145,12 +148,12 @@ module qfd_tile_nk_rp2_45 #(
 `ifndef SYNTHESIS
         .ROM_TILE(ROM_TILE),
 `endif
-        .LOCAL_ROOTS(1), .CHILD_CLOCKS(1), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
+        .GLUE_HARD(GLUE_HARD), .LOCAL_ROOTS(1), .CHILD_CLOCKS(1), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
         .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX),
         .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR),
         .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .NDH(NDH)) u_tile (
-        .ck_pair1({ck_rp9,ck_rp8,ck_rp7,ck_rp6,ck_rp5}), .ck_rqr({ck_rqr1,ck_rqr0}),
+        .ck_pair1({ck_rp9,ck_rp8,ck_rp7,ck_rp6,ck_rp5}), .ck_rqr({ck_rqr1,ck_rqr0}), .ck_rqre({ck_rqr3,ck_rqr2}),
         .ck_tx({ck_tx7,ck_tx6,ck_tx5,ck_tx4,ck_tx3,ck_tx2,ck_tx1,ck_tx0}),
         .ck_rpair({ck_rp4,ck_rp3,ck_rp2,ck_rp1,ck_rp0}),   // RPH 1: CTS root of soft bank row b
         .ck_rom({ck_rom9,ck_rom8,ck_rom7,ck_rom6,ck_rom5,ck_rom4,ck_rom3,ck_rom2,ck_rom1,ck_rom0}),

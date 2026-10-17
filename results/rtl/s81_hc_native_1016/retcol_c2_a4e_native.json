@@ -1,0 +1,27 @@
+{
+ "cell": "ot_s81_hc_ret_column_c2",
+ "view": "physical/ref_tile/s81hc_retcol_c2_ref/views/ot_s81_hc_ret_column_c2",
+ "lib_cell": "ot_s81_hc_ret_column_c2",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 176.9,
+ "spread_ps": 28.2,
+ "outputs": 775,
+ "inputs": 2254,
+ "launch_ps": 188.3,
+ "launch_pin": "hdr[39]",
+ "capture_ps": 205.7,
+ "capture_pin": "pflt_s",
+ "launch_over": 0,
+ "capture_over": 1,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 205.65253 > 190 (1 pins)",
+ "job": "s81hc_retcol_c2_ref-a4e-fb07f6915",
+ "commit": "326d056be63c262ab56bb98e105152026d32c170",
+ "verdict": "NATIVE FAIL: capture 205.7 at pflt_s (1 pin); route CLOSED TT +135.75 / FF +9.82 / DRC 0",
+ "fix": "a4g: pflt_n/pflt_s pins beside the nflt_col pins"
+}
