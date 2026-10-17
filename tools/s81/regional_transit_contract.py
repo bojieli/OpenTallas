@@ -107,7 +107,8 @@ def main():
         for i in load_plan(args.plan)['insts']:
             if i[0].startswith('sp_'):
                 ax.add_patch(Rectangle((i[2],i[3]),i[4],i[5],fill=False,edgecolor='#111111',lw=1))
-                ax.text(i[2]+i[4]/2,i[3]+i[5]/2,i[0],fontsize=7,ha='center')
+                if i[4] >= 1000 and i[5] >= 80:
+                    ax.text(i[2]+i[4]/2,i[3]+i[5]/2,i[0],fontsize=7,ha='center')
         ax.set(xlim=(0,result['die_um'][0]),ylim=(0,result['die_um'][1]),aspect='equal',
                xlabel='um',ylabel='um',title='S81 transit110 geometry REQUEST: 128 cores + separate gold channels\n'
                f'Fixed body conflicts {len(result["fixed_body_conflicts"])}, outside {len(result["outside_die"])}; '
