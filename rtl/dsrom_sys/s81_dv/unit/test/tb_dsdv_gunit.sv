@@ -21,7 +21,15 @@ module tb_dsdv_gunit (input wire clk);
     reg rst_n = 0;
     reg [V-1:0] vi_s = 0, vi_n = 0; wire [V-1:0] vo_s, vo_n;
     reg cw_v = 0; reg [9:0] cw_a = 0; reg [255:0] cw_d = 0; wire fault;
-    dsdv_gunit #(.V(V), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .sid(4'd3), .vi_s(vi_s), .vo_s(vo_s), .vi_n(vi_n),
+    // GUNIT2: the rung crosses L5 / L4 / L0 (6 edges) above the stop and L1 / L3 (4 edges) below it.  The compiler knows
+    // both times of flight; the bench equalises them by launching the S-side beats FT_N - FT_S edges later, so the stop
+    // (and its window / spacing contract) sees the order the bench schedules.  Latencies are reported at the unit pins
+    // and at the stop's own pins (pins - 2 FT_N: vo_n leaves through the same 6 edges).
+    localparam integer FT_N = 6, FT_S = 4;
+    reg [V-1:0] vs_d [0:FT_N-FT_S-1];
+    integer q;
+    always @(posedge clk) begin vs_d[0] <= vi_s; for (q = 1; q < FT_N - FT_S; q = q + 1) vs_d[q] <= vs_d[q - 1]; end
+    dsdv_gunit #(.V(V), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .sid(4'd3), .vi_s(vs_d[FT_N-FT_S-1]), .vo_s(vo_s), .vi_n(vi_n),
         .vo_n(vo_n), .cw_v(cw_v), .cw_a(cw_a), .cw_d(cw_d), .fault(fault));
     reg [31:0] mem [0:CW*16-1];
     integer N, c, i, j, r, t, errs, cyc, ph, k, base, hb, nexp, gotn, gots, tsc, thp, lr0, lh0, lr, lh, a, nw, dense;
@@ -139,7 +147,7 @@ module tb_dsdv_gunit (input wire clk);
                 if (r == 32) begin thp = cyc; k = 0; a = a + 1; ph = (a == 25) ? 9 : 8; end
             end
             8: begin k = k + 1; if (k >= 3 && (dense || k >= 3 + lf[3:0])) ph = 6; end   // >= 20 edges per window
-            9: begin k = k + 1; if (k == 900) begin
+            9: begin k = k + 1; if (k == 1300) begin
                 if (gotn != 9 || gots != 9) begin errs = errs + 1; $display("ERR case %0d CTL beats n %0d s %0d", c, gotn, gots); end
                 if (lr0 < 0) lr0 = lr; else if (lr != lr0) begin errs = errs + 1; $display("ERR case %0d router latency %0d vs %0d", c, lr, lr0); end
                 if (lh0 < 0) lh0 = lh; else if (lh != lh0) begin errs = errs + 1; $display("ERR case %0d HC latency %0d vs %0d", c, lh, lh0); end
@@ -147,7 +155,7 @@ module tb_dsdv_gunit (input wire clk);
             end end
             10: begin
                 if (fault) begin errs = errs + 1; $display("ERR fault"); end
-                if (errs == 0) $display("GUNIT PASS cases=%0d router_lat=%0d (last SC -> ids row) hc_lat=%0d (last HP -> first coef row)", N, lr0, lh0);
+                if (errs == 0) $display("GUNIT PASS cases=%0d router_lat=%0d (last SC -> ids row at the stop pins; %0d at the unit pins) hc_lat=%0d (last HP -> first coef row at the stop pins; %0d at the unit pins)", N, lr0 - 2 * FT_N, lr0, lh0 - 2 * FT_N, lh0);
                 else $display("GUNIT FAIL %0d (MUT=%0d)", errs, MUT);
                 $finish;
             end

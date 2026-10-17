@@ -1,27 +1,25 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------------
-// S81U-1 (2026-10-17): dsdv_gunit -- the S81-DV G-unit (column 3, 680 x 4035 um, six stacked leaves), whole unit.
+// S81U-1 / S81U-GUNIT2 (2026-10-17): dsdv_gunit -- the S81-DV G-unit (column 3, 680 x 4035 um): SIX stacked hardened
+// leaves and their abutted wiring, nothing else.
 //
-// Interface (p4f/p4h): the column-3 V rung only, s_3S <-> gunit <-> s_3N, 276 b each way, plus the configuration / job
-// port cw (p4i: from seq_host; a registered write port, statically scheduled) and the CTL source-id strap sid.
-//   u_vs   ot_dsdv_vstop   L2   the V-rung stop: 2 edges pin -> pin both ways; taps + sinks SC (kind 5, router scores)
-//                               and HP (kind 7, HC projection partial roots -- PROPOSED kind, p4i adopts it; format in
-//                               dsdv_gunit_hcf); injects the unit's CTL row writes both ways on one edge
-//   u_rt   dsdv_gunit_rt   L1/L3 router: bias + top-6 select (ot_dsrom_su_bias_select = ot_hdc_select_tree + bias add),
-//                               routing-weight normalisation (ot_s81_su_rw); ids row first, weights after
-//   u_hc   dsdv_gunit_hcf  L0/L4/L5 HC coefficients: HP root store, golden-tree finish, rsqrt, mixes, exact tail
-//                               (ot_hbm_hc_tail_unit_static: sigmoid / exp / Sinkhorn on the /SDIV derived clock)
-// CTL: both groups' row writes leave on the rung both ways on the same edge (each slice's xr re-injects them on its tier
-// line).  The compiler keeps those rung slots free and never schedules the two groups' writes on the same edge; a
-// collision is a sticky fault (no arbitration, no ready, no credit).
-// cw: cw_a[9] = 0 table row write (set cw_a[8], row cw_a[5:0]: 0..55 router bias, 56..61 HC bases, 62 scales / route
-// scale / eps); cw_a[9:8] = 2'b10 job (cw_a[0] = 0 router, 1 HC).  Field layouts: dsdv_gunit_rt / dsdv_gunit_hcf.
-// Every input lands in a flop; every output leaves a flop.  MUT (bench only) is passed to the groups.
+//   N face  s_3N rung (vi_n / vo_n)
+//   L5  dsdv_gunit_l5  exact HC tail (sigmoid, exp, Sinkhorn on the ICG-gated stream clock) + coefficient CTL rows
+//   L4  dsdv_gunit_l4  HC finish: golden tree above the slice roots, rsqrt, 24 mixes, tail launch
+//   L0  dsdv_gunit_l0  HP root store, windows, HC job hand-over, group stream
+//   L2  dsdv_gunit_l2  ot_dsdv_vstop (tap + sink SC 5 / HP 7, CTL inject), cw / sid / fault (E face)
+//   L1  dsdv_gunit_l1  router: score store, bias, top-6 select, ids CTL row, merge of the weight rows
+//   L3  dsdv_gunit_l3  routing weights (ot_s81_su_rw), weight CTL rows
+//   S face  s_3S rung (vi_s / vo_s)
+// Every leaf is flop-first / flop-last; a bus a leaf only carries crosses it in 2 edges (dsdv_gunit_pass).  The rung
+// therefore costs 6 edges through L5 / L4 / L0 above the stop and 4 through L1 / L3 below it, each way: wire stages
+// the compiler counts in the column's rung time of flight (static).
+// Interfaces (p4i adopts): HP beat kind 7 (dsdv_gunit_l0), cw table / job layout (dsdv_gunit_l1 / _l0 / _l4 / _l5),
+// CTL rows: router R (ids, mask 0011), R+1 (w0..3), R+2 (w4, w5, mask 0011); HC R..R+5 (pre, post, comb).
+// MUT (bench only) reaches the leaves only when the leaves are soft (`ifndef DSDV_GUNIT_HARD).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit #(
     parameter integer V    = 276,
-    parameter integer NSET = 2,
-    parameter integer SDIV = 8,
     parameter integer MUT  = 0
 ) (
     input  wire          clk,
@@ -30,32 +28,56 @@ module dsdv_gunit #(
     input  wire [V-1:0]  vi_s, output wire [V-1:0] vo_s,      // from / to s_3S
     input  wire [V-1:0]  vi_n, output wire [V-1:0] vo_n,      // from / to s_3N
     input  wire          cw_v, input wire [9:0] cw_a, input wire [255:0] cw_d,
-    output reg           fault
+    output wire          fault
 );
-    localparam [7:0] KSC = 8'h20, KHP = 8'h80;
-    wire dl_nv, dl_sv, f_vs, f_rt, f_hc, rt_v, hc_v; wire [V-1:0] dl_n, dl_s, rt_b, hc_b;
-    reg ct_v; reg [V-1:0] ct_b; reg col;
-    ot_dsdv_vstop #(.V(V)) u_vs (.clk(clk), .rst_n(rst_n), .tap_k(KSC | KHP), .sink_k(KSC | KHP),
-        .vi_s(vi_s), .vo_n(vo_n), .vi_n(vi_n), .vo_s(vo_s), .dl_nv(dl_nv), .dl_n(dl_n), .dl_sv(dl_sv), .dl_s(dl_s),
-        .in_nv(ct_v), .in_n(ct_b), .in_sv(ct_v), .in_s(ct_b), .fault(f_vs));
-    // kind split of the delivered beats (registered, so each group's input flop sees one cycle of decode)
-    reg sa_v, sb_v, ha_v, hb_v; reg [V-1:0] na_b, sb_b;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin sa_v <= 1'b0; sb_v <= 1'b0; ha_v <= 1'b0; hb_v <= 1'b0; end
-        else begin
-            sa_v <= dl_nv && dl_n[3:1] == 3'd5; ha_v <= dl_nv && dl_n[3:1] == 3'd7;
-            sb_v <= dl_sv && dl_s[3:1] == 3'd5; hb_v <= dl_sv && dl_s[3:1] == 3'd7;
-        end
-    always @(posedge clk) begin na_b <= dl_n; sb_b <= dl_s; end
-    dsdv_gunit_rt #(.V(V), .NSET(NSET), .MUT(MUT)) u_rt (.clk(clk), .rst_n(rst_n), .sid(sid), .sa_v(sa_v), .sa_b(na_b),
-        .sb_v(sb_v), .sb_b(sb_b), .cw_v(cw_v), .cw_a(cw_a), .cw_d(cw_d), .ct_v(rt_v), .ct_b(rt_b), .fault(f_rt));
-    dsdv_gunit_hcf #(.V(V), .NSET(NSET), .SDIV(SDIV), .MUT(MUT)) u_hc (.clk(clk), .rst_n(rst_n), .sid(sid), .ha_v(ha_v),
-        .ha_b(na_b), .hb_v(hb_v), .hb_b(sb_b), .cw_v(cw_v), .cw_a(cw_a), .cw_d(cw_d), .ct_v(hc_v), .ct_b(hc_b),
-        .fault(f_hc));
-    // CTL merge (registered): the compiler never schedules both groups on one edge
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin ct_v <= 1'b0; col <= 1'b0; end
-        else begin ct_v <= rt_v || hc_v; col <= col || (rt_v && hc_v); end
-    always @(posedge clk) ct_b <= rt_v ? rt_b : hc_b;
-    always @(posedge clk or negedge rst_n) if (!rst_n) fault <= 1'b0; else fault <= f_vs | f_rt | f_hc | col;   // output flop
+`ifndef DSDV_GUNIT_HARD
+  `define DSDV_GU_MUT #(.MUT(MUT))
+`else
+  `define DSDV_GU_MUT
+`endif
+    // rung segments: d_* southbound (from N), u_* northbound (from S)
+    wire [275:0] d54, u45, d40, u04, d02, u20, d21, u12, d13, u31;
+    // L5 <-> L4
+    wire l_launch, l_tset, l_tw; wire [767:0] l_mixes; wire [9:0] l_trow; wire [4:0] l_tlm; wire [15:0] l_tsm;
+    wire c45_v; wire [9:0] c45_a; wire [255:0] c45_d; wire [3:0] s45; wire h5_v; wire [275:0] h5_b; wire f5;
+    // L4 <-> L0
+    wire g_v, j_v, j_set, j_w; wire [3:0] g_i; wire [4:0] g_acc, j_lm; wire [319:0] g_d; wire [9:0] j_row; wire [15:0] j_sm;
+    wire c04_v; wire [9:0] c04_a; wire [255:0] c04_d; wire [3:0] s04; wire h4_v; wire [275:0] h4_b; wire mix_go, launch_s, f4;
+    // L0 <-> L2
+    wire hp_av, hp_bv; wire [275:0] hp_a, hp_b; wire c20_v; wire [9:0] c20_a; wire [255:0] c20_d; wire [3:0] s20;
+    wire h0_v; wire [275:0] h0_b; wire f0;
+    // L2 <-> L1
+    wire dl_av, dl_bv; wire [275:0] dl_a, dl_b; wire c21_v; wire [9:0] c21_a; wire [255:0] c21_d; wire [3:0] s21;
+    wire r_v; wire [275:0] r_b; wire f1;
+    // L1 <-> L3
+    wire rw_st, rw_v, rw_l; wire [511:0] rw_x; wire [31:0] rw_scale; wire [9:0] rw_row; wire [4:0] rw_lm;
+    wire [15:0] rw_sm; wire [3:0] s13; wire w_v; wire [275:0] w_b; wire f3;
+
+    dsdv_gunit_l5 `DSDV_GU_MUT u_l5 (.clk(clk), .rst_n(rst_n), .rs_i(u45), .rs_o(d54), .launch(l_launch), .mixes(l_mixes),
+        .t_set(l_tset), .t_w(l_tw), .t_row(l_trow), .t_lm(l_tlm), .t_sm(l_tsm), .cw_v(c45_v), .cw_a(c45_a), .cw_d(c45_d),
+        .sid_i(s45), .ct_v(h5_v), .ct_b(h5_b), .fault(f5), .vo_n(vo_n), .vi_n(vi_n));
+    dsdv_gunit_l4 `DSDV_GU_MUT u_l4 (.clk(clk), .rst_n(rst_n), .rs_i(u04), .rs_o(d40), .g_v(g_v), .g_i(g_i),
+        .g_acc(g_acc), .g_d(g_d), .j_v(j_v), .j_set(j_set), .j_w(j_w), .j_row(j_row), .j_lm(j_lm), .j_sm(j_sm),
+        .cw_v(c04_v), .cw_a(c04_a), .cw_d(c04_d), .sid_i(s04), .hct_v(h4_v), .hct_b(h4_b), .mix_go_s(mix_go),
+        .launch_s(launch_s), .fault(f4), .rn_o(u45), .rn_i(d54), .launch(l_launch), .mixes(l_mixes), .t_set(l_tset),
+        .t_w(l_tw), .t_row(l_trow), .t_lm(l_tlm), .t_sm(l_tsm), .cwo_v(c45_v), .cwo_a(c45_a), .cwo_d(c45_d),
+        .sid_o(s45), .hct5_v(h5_v), .hct5_b(h5_b), .f5(f5));
+    dsdv_gunit_l0 `DSDV_GU_MUT u_l0 (.clk(clk), .rst_n(rst_n), .rs_i(u20), .rs_o(d02), .hp_av(hp_av), .hp_a(hp_a),
+        .hp_bv(hp_bv), .hp_b(hp_b), .cw_v(c20_v), .cw_a(c20_a), .cw_d(c20_d), .sid_i(s20), .hct_v(h0_v), .hct_b(h0_b),
+        .fault(f0), .rn_o(u04), .rn_i(d40), .g_v(g_v), .g_i(g_i), .g_acc(g_acc), .g_d(g_d), .j_v(j_v), .j_set(j_set),
+        .j_w(j_w), .j_row(j_row), .j_lm(j_lm), .j_sm(j_sm), .cwo_v(c04_v), .cwo_a(c04_a), .cwo_d(c04_d), .sid_o(s04),
+        .hct4_v(h4_v), .hct4_b(h4_b), .mix_go(mix_go), .launch(launch_s), .f4(f4));
+    dsdv_gunit_l2 `DSDV_GU_MUT u_l2 (.clk(clk), .rst_n(rst_n), .rn_i(d02), .rn_o(u20), .hp_av(hp_av), .hp_a(hp_a), .hp_bv(hp_bv),
+        .hp_b(hp_b), .cwn_v(c20_v), .cwn_a(c20_a), .cwn_d(c20_d), .sidn(s20), .hct_v(h0_v), .hct_b(h0_b), .hf(f0),
+        .rs_i(u12), .rs_o(d21), .dl_av(dl_av), .dl_a(dl_a), .dl_bv(dl_bv), .dl_b(dl_b), .cws_v(c21_v), .cws_a(c21_a),
+        .cws_d(c21_d), .sids(s21), .rct_v(r_v), .rct_b(r_b), .rf(f1), .sid(sid), .cw_v(cw_v), .cw_a(cw_a),
+        .cw_d(cw_d), .fault(fault));
+    dsdv_gunit_l1 `DSDV_GU_MUT u_l1 (.clk(clk), .rst_n(rst_n), .rn_i(d21), .rn_o(u12), .dl_av(dl_av), .dl_a(dl_a),
+        .dl_bv(dl_bv), .dl_b(dl_b), .cw_v(c21_v), .cw_a(c21_a), .cw_d(c21_d), .sid_i(s21), .ct_v(r_v), .ct_b(r_b),
+        .fault(f1), .rs_o(d13), .rs_i(u31), .rw_st(rw_st), .rw_v(rw_v), .rw_l(rw_l), .rw_x(rw_x), .rw_scale(rw_scale),
+        .rw_row(rw_row), .rw_lm(rw_lm), .rw_sm(rw_sm), .sid_o(s13), .w_v(w_v), .w_b(w_b), .f3(f3));
+    dsdv_gunit_l3 `DSDV_GU_MUT u_l3 (.clk(clk), .rst_n(rst_n), .rn_i(d13), .rn_o(u31), .rw_st(rw_st), .rw_v(rw_v),
+        .rw_l(rw_l), .rw_x(rw_x), .rw_scale(rw_scale), .rw_row(rw_row), .rw_lm(rw_lm), .rw_sm(rw_sm), .sid_i(s13),
+        .w_v(w_v), .w_b(w_b), .fault(f3), .vo_s(vo_s), .vi_s(vi_s));
+`undef DSDV_GU_MUT
 endmodule
