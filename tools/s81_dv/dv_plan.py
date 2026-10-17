@@ -338,7 +338,11 @@ def record(P, facts, args):
     keys = ('name', 'master', 'kind', 'group', 'reg', 'x', 'y', 'w', 'h')
     blocks = {k: [b[k] for b in P.blocks] for k in keys}
     return dict(schema='opentallas.dataflow.links.v1', id=args.id, label=args.label, design='ds_rom', revision=args.revision,
-                outline=[0, 0, DIE_W, DIE_H], reach_um=HOP_UM, stages_explicit=True, token_designs=['ds_rom'],
+                outline=[DIE_W, DIE_H],      # [W, H] in um (the Explorer's model.js reads W = outline[0], H = outline[1])
+                reach_um=HOP_UM, stages_explicit=True, token_designs=['ds_rom'],
+                pins='plan points (S81-DV dv_plan.py), not generated pins',
+                direction='first end drives (plan order)',
+                registers=f'relay flops explicit per link: hops cut at <= {HOP_UM:.0f} um, stages = hops - 1 (die-level repair_design repeaters between flops)',
                 reach_source='405 um plan hop (0.9 x S81 measured reach 455 um, results/arch/die_reach_1016.json, rounded down)',
                 blocks=blocks, links=P.links, facts=facts,
                 provenance=dict(tool='tools/s81_dv/dv_plan.py', inputs=[]))
