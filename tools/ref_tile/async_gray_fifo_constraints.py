@@ -198,6 +198,11 @@ TCL = r'''
 set ::ot_ag_seen {}
 proc ot_ag_public_nets {cell} {
   set result {}
+  # The mapped register instance keeps its Yosys register name plus the cell-type suffix ($_DFF_PN0_, $_DFFE_PN0P_, ...)
+  # through placement, CTS and repair; its output net names do not (QN-only ASAP7 flops, buffers inserted after CTS:
+  # HBMA-SVC 10-17 hdie_svc_stack_fault CTS refused rd_gray[0] -> rd_gray_w1[0] with an empty target role).
+  set inst [string map {\\ {}} [get_full_name [get_cells $cell]]]
+  if {[regexp {^(.*)\$_[A-Z0-9_]+_$} $inst unused reg]} {lappend result $reg}
   foreach p [get_pins -quiet -of_objects [get_cells $cell]] {
     if {[get_property $p direction] ne "output"} continue
     foreach net [get_nets -quiet -of_objects $p] {
