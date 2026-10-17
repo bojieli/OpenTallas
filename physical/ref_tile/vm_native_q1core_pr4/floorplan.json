@@ -7,13 +7,13 @@
   0,
   0,
   270.0,
-  270.0
+  313.2
  ],
  "core": [
   2.16,
   2.16,
   267.84,
-  267.84
+  311.03999999999996
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
@@ -30,7 +30,6 @@
  },
  "pins": {
   "N": [
-   "clk",
    "rst_n",
    "bid",
    "sid",
@@ -54,6 +53,7 @@
    "eg"
   ],
   "W": [
+   "clk",
    "rq0",
    "rr0",
    "wq0",
@@ -70,8 +70,8 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 47.52,
-   "y": 29.232,
+   "x": 43.2,
+   "y": 43.2,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",
@@ -83,8 +83,8 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 47.52,
-   "y": 99.744,
+   "x": 43.2,
+   "y": 129.6,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",
@@ -96,15 +96,28 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 47.52,
-   "y": 170.256,
+   "x": 43.2,
+   "y": 216.0,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",
    "offtrack": 0
   }
  ],
- "findings": [],
+ "findings": [
+  [
+   "FAIL",
+   "channel",
+   "ot_sram_1r1w_1024x256_m2_r2c2#0 / ot_sram_1r1w_1024x256_m2_r2c2#0 channel 15.9 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack), or two blocks E-W with bare touching faces (no pin of any use: abutted_row)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "ot_sram_1r1w_1024x256_m2_r2c2#0 / ot_sram_1r1w_1024x256_m2_r2c2#0 channel 15.9 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack), or two blocks E-W with bare touching faces (no pin of any use: abutted_row)"
+  ]
+ ],
  "referenced": [
   "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
   "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",

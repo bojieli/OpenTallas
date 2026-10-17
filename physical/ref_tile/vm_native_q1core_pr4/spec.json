@@ -16,7 +16,6 @@
  ],
  "pins": {
   "N": [
-   "clk",
    "rst_n",
    "bid",
    "sid",
@@ -40,6 +39,7 @@
    "eg"
   ],
   "W": [
+   "clk",
    "rq0",
    "rr0",
    "wq0",
@@ -50,7 +50,7 @@
  },
  "outline": {
   "w": 270.0,
-  "h": 270.0,
+  "h": 313.2,
   "exact": true
  },
  "layer_cap": "M6",
@@ -59,24 +59,24 @@
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
    "at": [
-    47.52,
-    29.232
+    43.2,
+    43.2
    ],
    "at_exact": true
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
    "at": [
-    47.52,
-    99.744
+    43.2,
+    129.6
    ],
    "at_exact": true
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
    "at": [
-    47.52,
-    170.256
+    43.2,
+    216.0
    ],
    "at_exact": true
   }
@@ -100,7 +100,7 @@
   "branch": "claude/hsm-q1core-2200",
   "tag": "pr4",
   "purpose": "SE/NE core-only VM bank (H-NETLIST d4f 1b42352f8: q1 master with dq, rq1/rq2, wq1 absent) native closure for the vmb_SE/NE0..7 hoist.",
-  "structural_change": "SE/NE bank = hfd_vms_bank_native_q1_core_pr (literal input pin flops in RTL, outputs bank registers) on recipe 4 (hold_budget die, no pads), nat2 geometry 270x270 / spine clock; the hub takes it with BANK_PIN_IN=1 (05978a837).",
+  "structural_change": "SE/NE bank = hfd_vms_bank_native_q1_core_pr (literal input pin flops in RTL; view == RTL) on recipe 4 (hold_budget die, no pads). TILE_CHECKLIST: 270 x 313.2 (aspect 1.16, the q0_faces slot), SRAM origins on the 43.2 um lattice (x 43.2; y 43.2/129.6/216.0), the two 15.9 um inter-SRAM gaps placement-blocked so the std cells form ONE C-shaped band (W 43.2 / E 52.1 / N 26.7 / S 43.2 strips), pins spread over full faces (<= 3.5/um), clock entry on the W face beside the SRAM read-pin column and the W register mass; spine clock; hub BANK_PIN_IN=1 (05978a837).",
   "extra_paths": [
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
@@ -158,10 +158,10 @@
   "enable": false,
   "reason": "the RTL registers every pin: hfd_vms_bank_native_q1_core_pr has a literal flop on every data input (q0_faces convention) and every output is a bank-body register; view == RTL (H-NETLIST source binding)"
  },
- "floorplan_note": "SE/NE bank = hfd_vms_bank_native_q1_core_pr (literal input pin flops in RTL, outputs bank registers) on recipe 4 (hold_budget die, no pads), nat2 geometry 270x270 / spine clock; the hub takes it with BANK_PIN_IN=1 (05978a837).",
+ "floorplan_note": "SE/NE bank = hfd_vms_bank_native_q1_core_pr (literal input pin flops in RTL; view == RTL) on recipe 4 (hold_budget die, no pads). TILE_CHECKLIST: 270 x 313.2 (aspect 1.16, the q0_faces slot), SRAM origins on the 43.2 um lattice (x 43.2; y 43.2/129.6/216.0), the two 15.9 um inter-SRAM gaps placement-blocked so the std cells form ONE C-shaped band (W 43.2 / E 52.1 / N 26.7 / S 43.2 strips), pins spread over full faces (<= 3.5/um), clock entry on the W face beside the SRAM read-pin column and the W register mass; spine clock; hub BANK_PIN_IN=1 (05978a837).",
  "pg_layer": "M6",
  "layer_cap_grant": "H-DIE 2210 v4: VM bank strap masters are pin-perimeter bound (270 x 270, ~1,260 b per face): PG moves to M6 so M5 pins need no stripe clearance; parent strap M7 (H-DIE 2210, H-SM proposal)",
- "structural_change": "SE/NE bank = hfd_vms_bank_native_q1_core_pr (literal input pin flops in RTL, outputs bank registers) on recipe 4 (hold_budget die, no pads), nat2 geometry 270x270 / spine clock; the hub takes it with BANK_PIN_IN=1 (05978a837).",
+ "structural_change": "SE/NE bank = hfd_vms_bank_native_q1_core_pr (literal input pin flops in RTL; view == RTL) on recipe 4 (hold_budget die, no pads). TILE_CHECKLIST: 270 x 313.2 (aspect 1.16, the q0_faces slot), SRAM origins on the 43.2 um lattice (x 43.2; y 43.2/129.6/216.0), the two 15.9 um inter-SRAM gaps placement-blocked so the std cells form ONE C-shaped band (W 43.2 / E 52.1 / N 26.7 / S 43.2 strips), pins spread over full faces (<= 3.5/um), clock entry on the W face beside the SRAM read-pin column and the W register mass; spine clock; hub BANK_PIN_IN=1 (05978a837).",
  "hold_budget": "die",
  "inhold": false,
  "outhold": false
