@@ -62,17 +62,29 @@ def apply_dv(v, m):
     DI = {i['n']: i for i in D['insts'] if i['m'] != 'outline_marker'}
     by = {i.name: i for i in m['insts']}
     M = v.masters(m, 1)
-    # ---- cluster master: CB contract scaled to the Q-CLUSTER width + the DV feedthrough
-    sc = CWN / C['outline_um']['w']
-    ports = Q._contract_ports(C)
-    for p, d in ports.items():
-        d['range'] = [round(d['range'][0] * sc, 3), round(d['range'][1] * sc, 3)]
-    tmid = CWN / 2
-    rs = ports['rs']['range']
-    ports['rs_i'] = dict(dir='input', bits=514, face='N', layer='M5', range=[rs[0], rs[0] + 513 * Q.PITCH])
-    ports['rs_o'] = dict(dir='output', bits=514, face='S', layer='M5',
-                         range=[round(rs[1] + 6.0, 3), round(rs[1] + 6.0 + 513 * Q.PITCH, 3)])
-    ch = 5184.0
+    # ---- cluster master: Q-CLUSTER's dv contract (OT_SPLIT_DV_CONTRACT, cluster_contract_dv.json: ports / faces /
+    # ranges incl. rs_i / rs_o and the four quadrant clock entries); without it the CB contract scaled + rs_i / rs_o
+    CD = _load('OT_SPLIT_DV_CONTRACT')
+    ck_pins = ['ck']
+    if CD:
+        CWN, ch = CD['outline_um']['w'], CD['outline_um']['h']
+        dirs = {'bco': 'output', 'rs_o': 'output', 'rs': 'output', 'tie_hi': 'output', 'tie_lo': 'output'}
+        ports = {}
+        for p_ in CD['ports']:
+            n_ = p_['port']
+            d_ = dirs.get(n_) or ('output' if n_.startswith('bco') else 'input')
+            ports[n_] = dict(dir=d_, bits=p_['bits'], face=p_['face'], layer=p_['layer'], range=list(p_['range_um']))
+        ck_pins = [p for p in ports if p.startswith('ck')]
+    else:
+        sc = CWN / C['outline_um']['w']
+        ports = Q._contract_ports(C)
+        for p, d in ports.items():
+            d['range'] = [round(d['range'][0] * sc, 3), round(d['range'][1] * sc, 3)]
+        rs = ports['rs']['range']
+        ports['rs_i'] = dict(dir='input', bits=514, face='N', layer='M5', range=[rs[0], rs[0] + 513 * Q.PITCH])
+        ports['rs_o'] = dict(dir='output', bits=514, face='S', layer='M5',
+                             range=[round(rs[1] + 6.0, 3), round(rs[1] + 6.0 + 513 * Q.PITCH, 3)])
+        ch = 5184.0
     M[CDV] = Q._master(v, CWN - Q.SHAVE, ch - Q.SHAVE, ports)
     M[CDV].name = CDV
     # ---- slice master (synthetic role ports)
@@ -154,6 +166,9 @@ def apply_dv(v, m):
     for bid, cl, bits, eps in m['buses']:
         if cl in ('clock_trunk', 'reset'):
             e2 = [e for e in eps if e[0] in names]
+            if cl == 'clock_trunk':           # a cluster's die clock entries (Q-CLUSTER: four quadrant pins)
+                e2 = [x for e in e2 for x in ([(e[0], p) for p in ck_pins] if e[0].startswith('c16_') and e[1] == 'ck'
+                                              else [e])]
             if cl == 'clock_trunk' and any(e[0].startswith('c16_') for e in e2):
                 e2 += [(s, 'ck') for s in slices if not any(x == s for x, _ in e2)]
             if bid == 'rst_field':
