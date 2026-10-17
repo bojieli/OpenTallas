@@ -217,13 +217,71 @@ module ot_s81dv_xstop #(
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
-// The slice's norm datapath: ot_hbm_norm_grp (G = 64, the slice's NVL beats) + the partial collector (one flit after
-// the slice's last beat partial) + the ring stop + the replicated finish; the finish's rstd feeds the group's scale.
+// ot_s81dv_xfin: the slice's NEW norm logic as one leaf tile -- the partial collector (NVL beat partials -> one flit),
+// the exchange ring stop and the replicated finish.  Every input pin lands in a flop (robust first cell; no hold
+// padding at the pins: hold belongs to the die-level budget at the relay stations).
+// ---------------------------------------------------------------------------------------------------------------------
+module ot_s81dv_xfin #(
+    parameter integer SID = 0,
+    parameter integer NS  = 16,
+    parameter integer NVL = 5,
+    parameter integer LM  = 5,
+    parameter integer LA  = 6
+) (
+    input  wire               clk,
+    input  wire               rst_n,
+    input  wire               go,
+    input  wire [31:0]        eps,
+    input  wire               s_v,          // group beat partials
+    input  wire [7:0]         s_i,
+    input  wire [31:0]        s,
+    input  wire               wi_v, input wire [3:0] wi_h, input wire [7:0] wi_b, input wire [NVL*32-1:0] wi_d,
+    input  wire               ei_v, input wire [3:0] ei_h, input wire [7:0] ei_b, input wire [NVL*32-1:0] ei_d,
+    output wire               eo_v, output wire [3:0] eo_h, output wire [7:0] eo_b, output wire [NVL*32-1:0] eo_d,
+    output wire               wo_v, output wire [3:0] wo_h, output wire [7:0] wo_b, output wire [NVL*32-1:0] wo_d,
+    output reg                rb_v,         // rstd to the group scale
+    output reg  [31:0]        rb_d,
+    output wire               fault
+);
+    localparam integer HE = NS / 2, HW = NS - 1 - NS / 2;
+    reg [1:0] rs;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rs <= 2'b00; else rs <= {rs[0], 1'b1};
+    wire rstn = rs[1];
+    reg go_c; reg [31:0] eps_c; reg sv_c; reg [7:0] si_c; reg [31:0] s_c;
+    always @(posedge clk) begin go_c <= go; eps_c <= eps; si_c <= s_i; s_c <= s; end
+    always @(posedge clk or negedge rstn) if (!rstn) sv_c <= 1'b0; else sv_c <= s_v;
+    reg [NVL*32-1:0] col; reg inj_v;
+    always @(posedge clk or negedge rstn) if (!rstn) inj_v <= 1'b0; else inj_v <= sv_c && si_c == NVL - 1;
+    always @(posedge clk) if (sv_c) col[si_c * 32 +: 32] <= s_c;
+`ifdef OT_S81DV_MUT_BASE
+    // NEGATIVE CONTROL: slice 3 tags its flit as slice 4's (exchange delivers partials to the wrong tree leaves)
+    localparam integer SBASE = (SID == 3) ? 4 * NVL : SID * NVL;
+`else
+    localparam integer SBASE = SID * NVL;
+`endif
+    wire [2:0] dl_v; wire [3*8-1:0] dl_b; wire [3*NVL*32-1:0] dl_d; wire xf, rf;
+    ot_s81dv_xstop #(.K(NVL), .HE(HE), .HW(HW)) u_x (.clk(clk), .rst_n(rstn), .inj_v(inj_v), .inj_base(SBASE[7:0]),
+        .inj_d(col), .wi_v(wi_v), .wi_h(wi_h), .wi_b(wi_b), .wi_d(wi_d), .ei_v(ei_v), .ei_h(ei_h), .ei_b(ei_b), .ei_d(ei_d),
+        .eo_v(eo_v), .eo_h(eo_h), .eo_b(eo_b), .eo_d(eo_d), .wo_v(wo_v), .wo_h(wo_h), .wo_b(wo_b), .wo_d(wo_d),
+        .dl_v(dl_v), .dl_b(dl_b), .dl_d(dl_d), .fault(xf));
+    wire fr_v; wire [31:0] fr;
+    ot_s81dv_norm_finish #(.NV(NS * NVL), .K(NVL), .P(3), .D(64 * NVL * NS), .LM(LM), .LA(LA)) u_f (.clk(clk),
+        .rst_n(rstn), .go(go_c), .f_v(dl_v), .f_base(dl_b), .f_d(dl_d), .eps(eps_c), .r_v(fr_v), .r(fr), .fault(rf));
+    always @(posedge clk or negedge rstn) if (!rstn) rb_v <= 1'b0; else rb_v <= fr_v;
+    always @(posedge clk) rb_d <= fr;
+    reg flt;
+    always @(posedge clk or negedge rstn)
+        if (!rstn) flt <= 1'b0; else if (go_c) flt <= 1'b0; else if (xf || rf) flt <= 1'b1;
+    assign fault = flt;
+endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
+// The slice's norm datapath: ot_hbm_norm_grp (G = 64, the slice's NVL beats, unchanged) + ot_s81dv_xfin.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81dv_norm_slice #(
-    parameter integer SID = 0,          // slice index (ring position)
+    parameter integer SID = 0,
     parameter integer NS  = 16,
-    parameter integer NVL = 5,          // beats per slice (320 elements)
+    parameter integer NVL = 5,
     parameter integer LM  = 5,
     parameter integer LA  = 6
 ) (
@@ -248,43 +306,21 @@ module ot_s81dv_norm_slice #(
     output wire [31:0]        r,
     output wire               fault
 );
-    localparam integer HE = NS / 2, HW = NS - 1 - NS / 2;
     reg [1:0] rs;
     always @(posedge clk or negedge rst_n) if (!rst_n) rs <= 2'b00; else rs <= {rs[0], 1'b1};
     wire rstn = rs[1];
-    // input flops shared by the group and the finish (the group re-registers at its own pins)
-    reg go_c; reg [31:0] eps_c;
-    always @(posedge clk) begin go_c <= go; eps_c <= eps; end
-    wire s_v, gf, rf, xf;
-    wire [7:0] s_i;
-    wire [31:0] s;
-    reg rb_v; reg [31:0] rb_d;
+    wire s_v, gf, xff, rb_v; wire [7:0] s_i; wire [31:0] s, rb_d;
     ot_hbm_norm_grp #(.G(64), .D(64 * NVL), .N(64), .LM(LM), .LA(LA)) u_g (.clk(clk), .rst_n(rstn), .go(go), .in_v(in_v),
         .in_x(in_x), .pre(pre), .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .rb_v(rb_v), .rb_d(rb_d),
         .s_v(s_v), .s_i(s_i), .s(s), .y_v(y_v), .y_i(y_i), .y(y), .gf(gf));
-    // partial collector: NVL beat partials -> one flit (base = SID * NVL)
-    reg [NVL*32-1:0] col; reg inj_v;
-    always @(posedge clk or negedge rstn) if (!rstn) inj_v <= 1'b0; else inj_v <= s_v && s_i == NVL - 1;
-    always @(posedge clk) if (s_v) col[s_i * 32 +: 32] <= s;
-`ifdef OT_S81DV_MUT_BASE
-    // NEGATIVE CONTROL: slice 3 tags its flit as slice 4's (exchange delivers partials to the wrong tree leaves)
-    localparam integer SBASE = (SID == 3) ? 4 * NVL : SID * NVL;
-`else
-    localparam integer SBASE = SID * NVL;
-`endif
-    wire [2:0] dl_v; wire [3*8-1:0] dl_b; wire [3*NVL*32-1:0] dl_d;
-    ot_s81dv_xstop #(.K(NVL), .HE(HE), .HW(HW)) u_x (.clk(clk), .rst_n(rstn), .inj_v(inj_v), .inj_base(SBASE[7:0]),
-        .inj_d(col), .wi_v(wi_v), .wi_h(wi_h), .wi_b(wi_b), .wi_d(wi_d), .ei_v(ei_v), .ei_h(ei_h), .ei_b(ei_b), .ei_d(ei_d),
-        .eo_v(eo_v), .eo_h(eo_h), .eo_b(eo_b), .eo_d(eo_d), .wo_v(wo_v), .wo_h(wo_h), .wo_b(wo_b), .wo_d(wo_d),
-        .dl_v(dl_v), .dl_b(dl_b), .dl_d(dl_d), .fault(xf));
-    wire fr_v; wire [31:0] fr;
-    ot_s81dv_norm_finish #(.NV(NS * NVL), .K(NVL), .P(3), .D(64 * NVL * NS), .LM(LM), .LA(LA)) u_f (.clk(clk),
-        .rst_n(rstn), .go(go_c), .f_v(dl_v), .f_base(dl_b), .f_d(dl_d), .eps(eps_c), .r_v(fr_v), .r(fr), .fault(rf));
-    always @(posedge clk or negedge rstn) if (!rstn) rb_v <= 1'b0; else rb_v <= fr_v;
-    always @(posedge clk) rb_d <= fr;
+    ot_s81dv_xfin #(.SID(SID), .NS(NS), .NVL(NVL), .LM(LM), .LA(LA)) u_xf (.clk(clk), .rst_n(rstn), .go(go), .eps(eps),
+        .s_v(s_v), .s_i(s_i), .s(s), .wi_v(wi_v), .wi_h(wi_h), .wi_b(wi_b), .wi_d(wi_d), .ei_v(ei_v), .ei_h(ei_h),
+        .ei_b(ei_b), .ei_d(ei_d), .eo_v(eo_v), .eo_h(eo_h), .eo_b(eo_b), .eo_d(eo_d), .wo_v(wo_v), .wo_h(wo_h),
+        .wo_b(wo_b), .wo_d(wo_d), .rb_v(rb_v), .rb_d(rb_d), .fault(xff));
     assign r_v = rb_v; assign r = rb_d;
-    reg flt;
+    reg go_c, flt;
+    always @(posedge clk) go_c <= go;
     always @(posedge clk or negedge rstn)
-        if (!rstn) flt <= 1'b0; else if (go_c) flt <= 1'b0; else if (gf || rf || xf) flt <= 1'b1;
+        if (!rstn) flt <= 1'b0; else if (go_c) flt <= 1'b0; else if (gf || xff) flt <= 1'b1;
     assign fault = flt;
 endmodule
