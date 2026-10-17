@@ -1549,11 +1549,11 @@
    "unparsed_conn": [],
    "duplicate_port": []
   },
-  "ot_hgi_sm_xload_cl2_bfq": {
+  "ot_hgi_sm_xload_cl2_bfqg": {
    "verdict": "PASS",
    "fails": [],
    "instances": 32,
-   "rtl": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "rtl": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_bfqg.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -1740,7 +1740,7 @@
   "hbfd_rly_624_SN:i",
   "hbfd_rly_624_WE:i"
  ],
- "die_sha256": "8f85d8c11d56f4e7f827484076b2673d9f3fe18ad9a289bb59196bd175218e1c",
+ "die_sha256": "aaa0e6a289615ab990de7cf64a3884eae34f781596b9591d0faf021f097b4311",
  "straps_declared": [
   "hfd_hgi_vm_calendar_f20:tgt",
   "hfd_vms_bank_native_q0:bid",
