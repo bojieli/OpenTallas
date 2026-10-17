@@ -16,7 +16,8 @@ farthest head) + 2 A (all-reduce out + back) + 2 NORM + SILU + BCA (act -> farth
   Beats: base SU 64 lanes over 4,096 / 640 (q+k) / 1,536 rows; DV L lanes over the slice's own rows (single owner:
      <= 384, dv2r: 683 per side slice), q/k one head (128) per slice."""
 import json, math, sys
-HOP = 405.0
+import os
+HOP = float(os.environ.get("QDV_HOP_UM", "405"))
 def load(f):
     d = json.load(open(f)); return {i['n']: i for i in d['insts']}, d
 def Lf(I, a, b):

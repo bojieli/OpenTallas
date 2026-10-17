@@ -277,3 +277,37 @@ dv2r8 is preferred because:
 - it is tok/s-neutral against q3h at the lowest bit-mm.
 
 dv1 has fewer stages, but it fails co-location. dv2r16's +1.75 % is below the "significant gains" bar and costs +28 mm². SU LANES is a slice-RTL parameter, so 16 lanes can be swapped in later.
+
+## Reach caveat (coordinator / H-REACH, 2026-10-16 ~23:45)
+
+S81 measurements show the following limits:
+- unbuffered M4/M5 relay hops are slew-limited to about 175 um;
+- timing alone would allow about 400-500 um;
+- buffered reach (repeaters on die nets) is still being measured.
+
+Two consequences for this plan:
+- **405 um is provisional.** The ledger takes the hop as `QDV_HOP_UM`.
+- **Qwen's own reach figures were not measured on wires, buffered or unbuffered:**
+  - The KV-die 446 / 460 um (and the compute 425 um) come from `die_reach_1016.json`'s formula: (T - U - skew - launch - capture) / 0.76 ps/um.
+  - Launch and capture come from the relay views' ETMs (rlys_296: 219.7 / 124.5 ps; rlys_528: 179.4 / 154.1 ps).
+  - 0.76 ps/um is an assumed TT BUFFERED die-wire delay.
+  - So these figures already presume repeaters, they ignore slew, and they are not routed-wire measurements.
+
+**200-um sensitivity** (same models, `led_dv2r8_h200.json`):
+
+| design | layer @405 | layer @200 | delta vs q3h @200 | tok/s @200 |
+|---|---:|---:|---:|---:|
+| q3h | 776 | 1,234 | 0 | ref |
+| dv1 | 759 | 1,266 | +32 | -0.46 % |
+| dv2 single owner | 887 | 1,464 | +230 | |
+| **dv2r8** | 767 | 1,144 | **-90** | **+1.32 %** |
+| dv2r16 | 657 | 1,034 | -200 | |
+
+- **dv2r8 is more robust to short reach than q3h and dv1.** Its result landing is local (R 26 against 103), so it has less die wire on the critical path.
+- **Its exposed terms** are the act all-gather (BCA 151), the export (K 114) and the AR (A 100). These are the links to give the best repeater plan.
+- **Absolute cost.** At 200 um every design gets slower: q3h adds +458 cycles a layer. That is a die-wide issue, not a DV one.
+
+**Plan:**
+- Every slice and stream link, the centre crossing lane and the edge-endpoint lanes get die-level repeater buffering. That means buffered relay chains, with stage counts from the measured buffered reach once H-REACH publishes it.
+- Slice input pins get a robust first cell: a sized input flop or buffer at the pin, NOT a hold buffer. Hold belongs to the die-level budget on the relay stations (FLOW-HOLD).
+- The slice RTL helper has been told this. It applies to the qfd_dv_slice port list.
