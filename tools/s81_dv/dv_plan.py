@@ -34,6 +34,8 @@ SLICE_W, SLICE_H = 1250.0, 3500.0   # 2.8:1, 4.375 mm2
 LAYOUT = 'p1'                     # p1/p2: 1.30-mm columns; p3 (cancelled 10-17): 0.95-mm columns
 ROW0_MX = False                   # p1b: row-0 frames placed MX so their cfifo x tap faces their slice
 SVC_W = 4250.0
+LANES, LANE_DX = 1, 6.0           # p4c-lanes: 1,104-b links as LANES x 276-b lanes
+TIER_W = 0                        # p4c: per-column tier-exchange width (0 = p4b end-column ring)
 UNIT_W, UNIT_WE = 980.0, 680.0         # void unit width (end columns narrower: ring end link)
 HOP_UM = 405.0                    # plan hop (0.9 x measured S81 reach 455 um, rounded down to the 405 plan rule)
 XB = 1104                         # x stream beat: 64 FP8 codes + 2 exps (566 b) + second lane (538 b), as c26l cx+x2
@@ -43,21 +45,50 @@ COLL_LANE = 512
 
 
 def chain(pts, hop=None):
-    """Manhattan polyline through pts, cut into <= hop segments -> (hops, relays, length)"""
+    """Manhattan polyline through pts, cut by ARC LENGTH into n = ceil(L / hop) equal hops -> (hops, relays, length).
+    Stations sit on straight segments: a cut that lands within 30 um of a corner is moved 30 um back along the
+    straight (the die wire, with its repeaters, makes the turn between stations; no corner relay needed)."""
     hop = hop or HOP_UM
-    segs, L = [], 0.0
+    legs = []
     for (x1, y1), (x2, y2) in zip(pts, pts[1:]):
         for a, b in (((x1, y1), (x2, y1)), ((x2, y1), (x2, y2))):
             d = abs(b[0] - a[0]) + abs(b[1] - a[1])
-            if d <= 0:
-                continue
-            n = max(1, math.ceil(d / hop))
-            for k in range(n):
-                t0, t1 = k / n, (k + 1) / n
-                segs.append((a[0] + (b[0] - a[0]) * t0, a[1] + (b[1] - a[1]) * t0,
-                             a[0] + (b[0] - a[0]) * t1, a[1] + (b[1] - a[1]) * t1))
-            L += d
-    return segs, max(0, len(segs) - 1), L
+            if d > 0:
+                legs.append((a, b, d))
+    L = sum(d for _, _, d in legs)
+    if not legs:
+        return [], 0, 0.0
+    n = max(1, math.ceil(L / hop))
+    corners = []
+    acc = 0.0
+    for _, _, d in legs[:-1]:
+        acc += d; corners.append(acc)
+    cuts = []
+    for k in range(1, n):
+        t = k * L / n
+        for c in corners:
+            if abs(t - c) < 30.0:
+                t = c - 30.0 if t <= c else c + 30.0
+        cuts.append(t)
+    # build segments (straight pieces) between consecutive cut points, splitting at corners
+    def at(t):
+        acc = 0.0
+        for a, b, d in legs:
+            if t <= acc + d + 1e-9:
+                f = (t - acc) / d
+                return (a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f)
+            acc += d
+        return legs[-1][1]
+    marks = sorted(set([0.0] + cuts + corners + [L]))
+    segs = []
+    for t0, t1 in zip(marks, marks[1:]):
+        if t1 - t0 > 1e-6:
+            p0, p1 = at(t0), at(t1)
+            segs.append((p0[0], p0[1], p1[0], p1[1], t1 in cuts or t1 == L))
+    # hops = groups of segments between stations; record each straight piece, stations = cuts
+    out = [(x1, y1, x2, y2) for x1, y1, x2, y2, _ in segs]
+    chain.stations = [at(t) for t in cuts]
+    return out, len(cuts), L
 
 
 class Plan:
@@ -73,9 +104,22 @@ class Plan:
         return b['x'] + b['w'] / 2, b['y'] + b['h'] / 2
 
     def link(self, lid, cls, bits, src, dst, pts, note=None):
-        """src/dst = (block, port, (x, y)); pts = routed waypoints from src pin to dst pin"""
+        """src/dst = (block, port, (x, y)); pts = routed waypoints from src pin to dst pin.  With LANES > 1 a 1,104-b
+        link becomes LANES parallel lanes of 1104/LANES bits (own station chain + forwarded clock each, cycle
+        aligned; p4c-lanes, coordinator 10-17), offset LANE_DX um across the route."""
+        if LANES > 1 and bits == XB:
+            for k in range(LANES):
+                d = (k - (LANES - 1) / 2) * LANE_DX
+                sh = lambda q: (q[0] + d, q[1] + d)
+                self._link(f'{lid}_l{k}', cls, bits // LANES, (src[0], src[1], sh(src[2])), (dst[0], dst[1], sh(dst[2])),
+                           [sh(q) for q in pts], note)
+            return
+        self._link(lid, cls, bits, src, dst, pts, note)
+
+    def _link(self, lid, cls, bits, src, dst, pts, note=None):
         segs, s, L = chain(pts)
         self.links.append(dict(i=lid, c=cls, b=bits, d=1, s=s, L=round(L, 1),
+                               sp=[[round(x, 1), round(y, 1)] for x, y in chain.stations],
                                e=[[self.idx[src[0]], src[1], round(src[2][0], 1), round(src[2][1], 1), 'box'],
                                   [self.idx[dst[0]], dst[1], round(dst[2][0], 1), round(dst[2][1], 1), 'box']],
                                h=[[round(a, 1), round(b, 1), round(c, 1), round(d, 1), bits] for a, b, c, d in segs],
@@ -202,6 +246,20 @@ def build():
              1: [('bk_sel', 'dsfd_bk_selector', 2000)], 6: [('bk_col', 'dsfd_bk_collector', 2900)],
              2: [('mix4_w', 'dsfd_engram_mix4_half', 2600)], 5: [('mix4_e', 'dsfd_engram_mix4_half', 2600)],
              3: [('gunit', 'dsdv_gunit', 2800)], 4: [('seqhost', 'dsdv_seq_host', 2200)]}
+      if LAYOUT == 'p4' and TIER_W:
+          # p4e: units between the edge lane strips (0.68 mm wide stacked leaf clusters, one ring stop each),
+          # redistributed so every inter-tier void fits
+          units = {0: [('coll_WS', 'dsdv_coll_edge', 1200), ('coll_WN', 'dsdv_coll_edge', 1200)],
+                   7: [('coll_ES', 'dsdv_coll_edge', 1200), ('coll_EN', 'dsdv_coll_edge', 1200)],
+                   1: [('bk_col', 'dsfd_bk_collector', 2900)], 2: [('mix4_w', 'dsfd_engram_mix4_half', 2600)],
+                   3: [('gunit', 'dsdv_gunit', 2800)], 4: [('bk_sel', 'dsfd_bk_selector', 2000), ('seqhost', 'dsdv_seq_host', 2200)],
+                   5: [('mix4_e', 'dsfd_engram_mix4_half', 2600)]}
+      elif LAYOUT == 'p4':
+          # p4b (slice-master variants, S81-SLICE 10-17): one void-side (V) or band-side (B) use per slice ->
+          # bk to the column-2/5 S slices (the column-1/6 S slices keep only the attention B port)
+          units.pop(1); units.pop(6)
+          units[2] = [('bk_sel', 'dsfd_bk_selector', 2000), ('mix4_w', 'dsfd_engram_mix4_half', 2600)]
+          units[5] = [('bk_col', 'dsfd_bk_collector', 2900), ('mix4_e', 'dsfd_engram_mix4_half', 2600)]
       facts['void_free_um'] = {}
       for c, us in units.items():
           lo_, hi_ = chain_top_S(c), chain_bot_N(c)
@@ -224,7 +282,7 @@ def build():
               yy = y if y is not None else (lo_ if j == 0 else hi_ - hh)
               if y is not None and tier.get(nm) == 'N' and len(us) == 1:
                   yy = hi_ - hh
-              P.block(nm, master, 'unit', 'void', colx(c) + (160 if LAYOUT != 'p4' else 75), yy, wu, hh)
+              P.block(nm, master, 'unit', 'void', colx(c) + (160 if LAYOUT != 'p4' else (160 if TIER_W else 75)), yy, wu, hh)
               if y is not None:
                   y += h + 100
     ys, yn = streets[0] + STREET / 2, streets[1] + STREET / 2
@@ -245,13 +303,40 @@ def build():
                 p0, p1 = pin(u, 'E' if d == 'E' else 'W'), pin(v, 'W' if d == 'E' else 'E')
                 P.link(f'xr{d}_{c}{t}', 'xring', XB, (u, 'xr' + d, (p0[0], p0[1] + off)), (v, 'xr' + d, (p1[0], p1[1] + off)),
                        [(p0[0], p0[1] + off), (p1[0], p1[1] + off)], 'x all-gather / collective / scalar exchange (TDM)')
-    for c in (0, NCOL - 1):
+    for c in ((0, NCOL - 1) if LAYOUT != 'p4' else ()):
         a, b = f's_{c}S', f's_{c}N'
         xr = colx(c) + {'p3': 690, 'p4': 680}.get(LAYOUT, 900)
         for d, (u, v, dx) in (('N', (a, b, -30)), ('S', (b, a, 30))):
             p0, p1 = pin(u, 'N' if d == 'N' else 'S'), pin(v, 'S' if d == 'N' else 'N')
             P.link(f'xv{d}_{c}', 'xring', XB, (u, 'xv' + d, (xr + dx, p0[1])), (v, 'xv' + d, (xr + dx, p1[1])),
                    [(xr + dx, p0[1]), (xr + dx, p1[1])], 'ring end column link')
+    if LAYOUT == 'p4' and TIER_W:
+        # p4c (owner question 10-17): per-column tier exchange -- every column links its S and N slice through the
+        # column's void units (units become ring stops), width TIER_W bits per direction, instead of two fat end links
+        vunits = sorted((b for b in P.blocks if b['kind'] == 'unit' and b['group'] in ('void', 'centre', 'edge')),
+                        key=lambda b: b['y'])
+        for c in range(NCOL):
+            x0c, x1c = colx(c), colx(c) + SCOL_W
+            us = [b['name'] for b in vunits if x0c <= b['x'] + b['w'] / 2 <= x1c]
+            chainv = [f's_{c}S'] + us + [f's_{c}N']
+            x = colx(c) + SCOL_W / 2      # column centre: chain segments start / end on the unit faces
+            for u, v in zip(chainv, chainv[1:]):
+                U, V = P.blocks[P.idx[u]], P.blocks[P.idx[v]]
+                y0, y1 = U['y'] + U['h'], V['y']
+                P.link(f'tvN_{u}', 'xtier', TIER_W, (u, 'vN', (x - 12, y0)), (v, 'vS', (x - 12, y1)), [(x - 12, y0), (x - 12, y1)], 'per-column tier exchange (through the column units)')
+                P.link(f'tvS_{v}', 'xtier', TIER_W, (v, 'vS', (x + 12, y1)), (u, 'vN', (x + 12, y0)), [(x + 12, y1), (x + 12, y0)], 'per-column tier exchange (through the column units)')
+        facts['tier_w'] = TIER_W
+    elif LAYOUT == 'p4':
+        # p4b: the end-column vertical ring segment runs THROUGH the collective edge engines (ring stops):
+        # s_cS V -> coll_xS -> coll_xN -> s_cN V and back; the engines fold / inject collective traffic on it
+        for c, side in ((0, 'W'), (NCOL - 1, 'E')):
+            chainv = [f's_{c}S', f'coll_{side}S', f'coll_{side}N', f's_{c}N']
+            for u, v in zip(chainv, chainv[1:]):
+                U, V = P.blocks[P.idx[u]], P.blocks[P.idx[v]]
+                x = colx(c) + 330
+                y0, y1 = U['y'] + U['h'], V['y']
+                P.link(f'xvN_{u}', 'xring', XB, (u, 'vN', (x - 30, y0)), (v, 'vS', (x - 30, y1)), [(x - 30, y0), (x - 30, y1)], 'end-column ring (through the collective engines)')
+                P.link(f'xvS_{v}', 'xring', XB, (v, 'vS', (x + 30, y1)), (u, 'vN', (x + 30, y0)), [(x + 30, y1), (x + 30, y0)], 'end-column ring (through the collective engines)')
     # slice <-> its 8 frames: taps facing the slice body cross the 25-um gap; the others run in fixed column lanes
     # (L side x offsets 110-320, R side 560-770); x is daisy-chained per half-column -> 4 x-out ports per slice
     for c in range(NCOL):
@@ -266,7 +351,7 @@ def build():
                     fy = F['y'] + F['h'] - 400 if ((LAYOUT == 'p3' or ROW0_MX) and r == 0) else F['y'] + 400   # p3: row 0 MX
                     sxp = S['x'] if side == 'L' else S['x'] + S['w']
                     vx = colx(c) + {'p3': (8 + 9 * r if side == 'L' else SCOL_W - 78 + 9 * r),
-                                    'p4': (10 + 10 * r if side == 'L' else SCOL_W - 95 + 10 * r)}.get(
+                                    'p4': (40 + 0 * r if side == 'L' else SCOL_W - 130 + 0 * r)}.get(
                                     LAYOUT, 20 + 15 * r if side == 'L' else SCOL_W - 125 + 15 * r)
                     sy = S['y'] if fy < S['y'] else S['y'] + S['h']
                     if r in (1, 2):
@@ -284,7 +369,12 @@ def build():
                         P.link(f'x_{fn}', 'x_frame', XB, (pn, 'xo', (pfx, pfy)), (fn, 'x', (fx, fy)), [(pfx, pfy), (vx, pfy), (vx, fy), (fx, fy)], 'x chain forward (frame -> next frame)')
                     P.link(f'r_{fn}', 'ret', RET, (fn, 'ret', (fx, fy + 60)), (sn, 'ret', (vx + 30, sy)), [(fx, fy + 60), (vx + 30, fy + 60), (vx + 30, sy)], 'finished rows')
     # void units <-> their column's slices (vertical in the column's right-hand lanes, offsets 900-1100)
-    vpair = facts.pop('_vpair', None) or {'coll_WS': ('s_0S', 'S'), 'coll_WN': ('s_0N', 'N'), 'coll_ES': ('s_7S', 'S'), 'coll_EN': ('s_7N', 'N'),
+    if LAYOUT == 'p4' and TIER_W:
+        facts['_vpair'] = {}
+    elif LAYOUT == 'p4':
+        facts['_vpair'] = {'bk_sel': ('s_2S', 'S'), 'bk_col': ('s_5S', 'S'), 'mix4_w': ('s_2N', 'N'), 'mix4_e': ('s_5N', 'N'),
+                           'seqhost': ('s_4N', 'N')}
+    vpair = facts.pop('_vpair') if '_vpair' in facts else {'coll_WS': ('s_0S', 'S'), 'coll_WN': ('s_0N', 'N'), 'coll_ES': ('s_7S', 'S'), 'coll_EN': ('s_7N', 'N'),
              'bk_sel': ('s_1S', 'S'), 'bk_col': ('s_6S', 'S'), 'mix4_w': ('s_2N', 'N'), 'mix4_e': ('s_5N', 'N'),
              'seqhost': ('s_4N', 'N')}
     for u, (sn, t) in vpair.items():
@@ -302,7 +392,9 @@ def build():
     # G-unit: commands, expert ids, HC coefficients to s_3S / s_3N, then along the streets through the ring stops
     gname = 'gunit' if 'gunit' in P.idx else 'gunit_r'
     G = P.blocks[P.idx[gname]]
-    for c in range(NCOL):
+    # p4c/p4d: NO separate ctl star -- the G-unit is a ring stop on column 3's tier chain (s_3S V <-> gunit <-> s_3N V)
+    # and ctl rides the tier lines E/W inside the ring lanes (TDM); slices have no feed-throughs
+    for c in (range(NCOL) if not (LAYOUT == 'p4' and TIER_W) else ()):
         for t in 'SN':
             sn = f's_{c}{t}'
             S = P.blocks[P.idx[sn]]
@@ -459,17 +551,24 @@ def main():
     ap.add_argument('--fill', action='store_true', help='owner rule no-empty-regions-1017: fill slice-column stretches')
     ap.add_argument('--layout', default='p1', choices=('p1', 'p3', 'p4'))
     ap.add_argument('--row0-mx', action='store_true', help='p1b: row-0 frames MX (tap toward the slice)')
+    ap.add_argument('--tier-w', type=int, default=0, help='p4c: per-column tier exchange width (bits per direction)')
+    ap.add_argument('--lanes', type=int, default=1, help='p4c-lanes: split every 1,104-b link into N cycle-aligned lanes')
+    ap.add_argument('--frame-w', type=float, default=None, help='p4: frame width override (S-ELEM bf_col 604.8 -> 1,436.832)')
     a = ap.parse_args()
     HOP_UM = a.hop_um
-    global ROW0_MX
+    global ROW0_MX, TIER_W, LANES
     ROW0_MX = a.row0_mx
+    TIER_W = a.tier_w
+    LANES = a.lanes
     global LAYOUT, SCOL_W, SLICE_W, SLICE_H, PITCH, DIE_W, SVC_W, FRAME_W, FRAME_PITCH, UNIT_W, UNIT_WE
     if a.layout == 'p4':
         # coordinator decision 10-17: bf_col 583.2 um widens the frames to 1,393.632 um; 1.00-mm slice columns; the
         # slice is a CLUSTER of 5 near-square hardened leaves (0.95 x 0.92 mm, one 64-lane beat each, own regional root)
-        LAYOUT, FRAME_W, SCOL_W, SLICE_W, SLICE_H = 'p4', 1393.632, 1000.0, 950.0, 4600.0
+        LAYOUT, FRAME_W, SCOL_W, SLICE_W, SLICE_H = 'p4', a.frame_w or 1393.632, 1000.0, 950.0, 4600.0
+        global LANE_DX
+        LANE_DX = 30.0     # p4e (pilot 10-17): 4 lanes 30 um apart -- the 6-um pitch crammed the station flop clusters
         FRAME_PITCH = FRAME_W + 8.7
-        UNIT_W, UNIT_WE = 820.0, 545.0
+        UNIT_W, UNIT_WE = (680.0, 680.0) if a.tier_w else (820.0, 545.0)
         PITCH = 2 * FRAME_PITCH + SCOL_W
         DIE_W = 2 * EDGE + NCOL * PITCH
     if a.layout == 'p3':

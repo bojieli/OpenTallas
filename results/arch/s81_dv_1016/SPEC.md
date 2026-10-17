@@ -5,7 +5,7 @@ Stream S81-DV (owner decision 0cj, 2026-10-16 ~22:00). Plan level: nothing in th
 **Status: COMPOSED_NOT_NATIVE.** Every rate below is composed from the token-path DAG and plan geometry. It becomes a
 measured rate only once the slice benches and the die trial report their latencies.
 
-**Current die-trial base: p4** (coordinator decision 10-17, option B; section 0a). The earlier base was p1b (10-17). It is p1's geometry plus two changes:
+**Current die-trial base: p4d** = p4c-lanes on the final bf_col width (sections 0a and 0b). p4 itself is the coordinator decision of 10-17, option B. The earlier base was p1b (10-17). It is p1's geometry plus two changes:
 - the row-0 frames are placed MX, so their cfifo x tap faces the slice;
 - each shared unit sits against the slice it talks to.
 
@@ -200,6 +200,93 @@ Drivers:
 | Keep SU/HC rows + SU +25% | 1,237.0 | 3,708.9 | +11.9% |
 
 The leaf hops cost about 1.5% against p1b. Routing returned rows straight to the owning leaf, along the column, would win part of that back.
+
+### 0b. p4b: slice-master port variants (with S81-SLICE, 10-17)
+
+Open or tied ports are not allowed on a hardened slice. The slice master therefore exists in 3 **centre-leaf** variants; the 4 beat leaves are identical in all of them.
+
+| Variant | Ports | Slices |
+|---|---|---|
+| C1 | ring E/W + **V** (void-side, one 1,104-b ring-format pair) | 11: s_0S/N, s_7S/N (vertical end ring), s_2S/s_5S (bk_sel/bk_col), s_2N/s_5N (mix4), s_3S/N (G-unit injection), s_4N (seqhost) |
+| C2 | ring E/W + **B** (band-side; attention q/P·V) | 2: s_1S, s_6S |
+| C0 | ring E/W only | 3: s_1N, s_4S, s_6N |
+
+What makes exactly one V or B use per slice possible:
+- the bk units move to columns 2/5 (S slices);
+- the collective edge engines become ring stops on the end-column vertical ring (s_cS V → coll S → coll N → s_cN V);
+- the end slices' outward E/W ring port carries the PHY link lanes along the street;
+- the ctl tree rides the ring and street lanes on every slice.
+
+Metrics: cut 0.427, 0 over-reach, relays 1,768, 0.39 M bit·mm. MTP 4,154.0 (+25.4% vs today's 3,311.6 on main's current ledger). Explorer record `s81_dv_p4b`.
+
+### 0b (cont.). Long links (> 2 mm) and the tier crossing (owner question, 10-17)
+
+p4b links longer than 2 mm (`dv_plan.py` record, 405-µm hops):
+
+| Link | Width | Length | Relay stages | Per-layer critical path? |
+|---|---|---|---|---|
+| Street ring segments (slice ↔ slice, E–W) | 1,104 b | 2.9–3.6 mm (cluster pitch) | 7–8 | **Yes**: x all-gather and scalar exchange |
+| End-column N↔S ring (p4b: through the collective engines, 3 segments over a ~7.2-mm void) | 1,104 b | 7.2 mm total | ~18 + 2 stops | **Yes**: the tier crossing of the all-gather |
+| q / P·V (S slices of cols 1/6 ↔ PHY-side attention) | 1,104 b | 4.8 mm | 12 | **Yes**: q → attention priced (+16 vs hub); P·V is the wo_a operand |
+| G-unit ctl bundle (16 × 96 b, column 3 then the streets) | 96 b | 3.6–19.4 mm | 8–48 | Mostly **no**. Issuer words and HC coefficients are sent ahead. The expert ids (top-6 → experts) are on the FFN path, but arrive within the all-gather time already charged (48 < 112 stages) |
+| x-chain / return lanes to row-0/3 frames (R0) | 1,104 / 68 b | 2.7–3.2 mm | 8 | **Yes**: inside the phase path (118 stages) |
+
+The structural alternative evaluated is a **per-column tier exchange**. Every column links its S and N slice through its own void units, which become ring stops; this replaces the two fat end-column links. In every case the lane runs at the column centre, between unit faces.
+
+| | p4b (2 end links) | Tier exchange 1/8 width (138 b) | **Tier exchange 1/4 width (276 b) = p4c** |
+|---|---|---|---|
+| Max tier-link width | 1,104 b | 138 b | **276 b** |
+| Worst cut / windows > 0.55 | 0.427 / 0 | 0.427 / 0 | **0.427 / 0** |
+| Over-reach | 0 | 0 | **0** |
+| Relays | 1,768 | 1,872 | **1,872** |
+| bit·mm | 0.388 M | 0.378 M | **0.386 M** |
+| Phase path / scalar exchange | 118 / 95 | 118 / 95 | **118 / 95** |
+| Crossing serialization (N tier needs 40 S beats) | 2 links × 20 cycles | 40 cycles per column | **20 cycles per column** |
+| Unit ring stops on the crossing | — | +4 | **+4** |
+| MTP tok/s (DV base) | 4,154.0 | 4,084.6 (−1.7%) | **4,141.2 (−0.3%)** |
+| Worst stacked MTP | 3,705.1 | 3,640.7 | **3,693.2** |
+
+**Adopted: 276 b (p4c).**
+- It is better for routing: the widest vertical link drops from 1,104 to 276 b, the two 7.2-mm fat end links disappear, and the N/S traffic spreads over 8 short column chains.
+- It is structurally simpler: every slice uses its void-side V port the same way, the slice master drops to **two** centre-leaf variants (C1 = ring + V for 14 slices, C3 = ring + V + B for the attention slices s_1S / s_6S), and units become uniform ring stops.
+- The critical-path cost is the +4 cycles of unit stops: −0.3%, inside the model's noise.
+- 1/8 width is rejected: serialization makes it −1.7%.
+
+### 0b (cont.). p4c-lanes: every 1,104-b link as 4 × 276-b lanes (coordinator, 10-17)
+
+Wide stations have been the hard class: 566/624-b stations are slew-limited, and the 624 forks fail. Narrow stations close easily.
+
+The change: every 1,104-b link is carried as **4 parallel 276-b lanes**. That covers the street ring segments, the x chains, q/P·V and the unit ports. Each lane has its own station chain and its own forwarded clock, and the lanes are cycle-aligned: same stage count and same hop points, with the lanes 6 µm apart. This follows HBM's 48-b-lane practice. Bandwidth, the schedule and the slice / unit port widths are unchanged.
+
+| | p4c | **p4c-lanes** |
+|---|---|---|
+| Worst cut / windows > 0.55 | 0.427 / 0 | **0.415 / 0** |
+| Over-reach | 0 | **0** |
+| Station instances | 1,872 (1,104-b class) | **4,332** (≤ 276-b class) |
+| Relay bit-stages | 1,039,072 | **1,039,072** (unchanged) |
+| bit·mm | 0.386 M | **0.386 M** |
+| Phase path | 118 stages | **118 stages** |
+| MTP (DV base) | 4,141.2 | **4,141.2** (unchanged) |
+
+Only the station tiles and the plan change. The widest die-level station is now 276 b, which matches the tier links. The cut falls slightly because the lanes spread over adjacent windows. Explorer record `s81_dv_p4c_lanes`.
+
+### 0b (cont.). p4d: final bf_col width (S-ELEM, 10-17)
+
+S-ELEM fixed `dsfd_bf_col` at **604.8 × 198.72 µm**, with all parent pins on W/E and the height unchanged, so each frame is **1,436.832 µm** wide. That makes p4d, which is p4c-lanes at this frame width. The cap was ~613 µm per bf_col; 626.4 would have made the die 32.42 mm, over the limit.
+
+Two layout refinements apply:
+- Station chains are cut by arc length: no station sits on a corner, the die wire turns between stations, and corner relays are not needed.
+- The die-level stations are S-ELEM's flop-first `dsfd_dvrly_276_{EW,WE,NS,SN}` (recipe 4, with a forwarded `ck_o` for the F1 clock chain).
+
+| p4d | |
+|---|---|
+| Die | **31.73 × 25.00 mm = 793.2 mm²**; margins 0.64 / 0.50 mm per side under the reticle |
+| Worst cut / windows > 0.55 | **0.403 / 0** |
+| Over-reach | **0** |
+| Stations (276 b) | **3,272** (relay bit-stages 0.85 M); ctl rides the ring (G-unit on column 3 V chain), no separate ctl star |
+| bit·mm | 0.37 M |
+| Phase path / scalar exchange | 119 / 96 stages |
+| MTP (DV base) | **4,137.3 (+24.9%)**; worst stacked 3,689.6 (+11.4%) |
 
 ## 1. Why
 
@@ -403,3 +490,21 @@ What is not yet measured:
 1. Slice RTL bit-exact against `hdc_golden_v41` (chunk8) on the S81 SU/HC cases, with a 16-slice exchange bench for the norm.
 2. Slice closure via submit_exact.
 3. Hierarchical die trial (die_cluster).
+
+### 0b-p4e: tall units as stacked leaves (coordinator 10-17, accepted with conditions)
+p4e units are 0.68 mm wide. Each one stacks near-square leaves, each leaf with its own regional root:
+
+| Unit | Leaves | Leaf size (µm) |
+|---|---|---|
+| coll_* | 2 | 680 × 600 |
+| bk_col | 6 | 680 × 697 |
+| mix4_w, mix4_e | 6 | 680 × 625 |
+| gunit | 6 | 680 × 673 |
+| bk_sel | 4 | 680 × 721 |
+| seqhost | 5 | 680 × 634 |
+
+Conditions for the unit leads:
+- **Leaf-to-leaf hops are registered at both ends.** Pins are flop-first, and abutting faces put each boundary wire at ≤50 µm, well under the 405-µm hop limit.
+- **Long paths are registered inside the leaf.** A path that crosses a 600-720 µm leaf is registered inside that leaf, and the leaf's own timing closure covers it.
+- **The tier/ring stop sits in the middle leaf.** For 4-6 leaves that is leaf 2 or 3, counted from the slice end. The tier lanes enter and leave that leaf's E/W edge strips.
+- **Not allowed:** a single long tile, like the old 1 × 9.5 mm hc_eng.

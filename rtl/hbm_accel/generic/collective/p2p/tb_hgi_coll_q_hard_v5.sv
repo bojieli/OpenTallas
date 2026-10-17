@@ -114,7 +114,23 @@ module tb_hgi_coll_q_hard_v5;
   .rx_pin_v(rxv),.rx_pin_flit({NPT*612{1'b0}}),.retry_requested(r_rty),
   .pr_cw_i(280'd0),.pr_ccw_i(280'd0),.pr_cw_o(r_cw),.pr_ccw_o(r_ccw),
   .vm_rq(r_rq),.vm_rr(r_vm_response),.vm_kq(r_kq),.fault(r_fault),.done(r_done2),.stat_cycles(r_cyc));
-`ifdef Q3
+`ifdef OT_TB_TKX
+ // d4f TKM hoist: the external-TKM parent q3_hard_v7x + the die-level TKM sub-cluster, wired here (zero-latency hop)
+ wire tx_start,tx_mode,tx_has_r,tx_wv,tx_busy,tx_done,tx_fault;wire [11:0] tx_n;wire [12:0] tx_k,tx_nout;
+ wire [7:0] tx_g,tx_gb;wire [15:0] tx_pf,tx_wm;wire [39:0] tx_ob,tx_rb,tx_wa;wire [3:0] tx_ds,tx_dv;wire [2179:0] tx_df;
+ wire [511:0] tx_wd;
+ ot_hgi_coll_tkm_m #(.TP(TPV)) u_tkx(.clk(clk),.tile_clk({32{clk}}),.buffer_clk(clk),.rst_n(rst_n),.start(tx_start),
+  .arg_mode(tx_mode),.cfg_n(tx_n),.cfg_k(tx_k),.cfg_nout(tx_nout),.cfg_g(tx_g),.cfg_gbase(tx_gb),.cfg_pf(tx_pf),
+  .cfg_obase(tx_ob),.cfg_rbase(tx_rb),.cfg_has_r(tx_has_r),.del_slot(tx_ds),.del_valid(tx_dv),.del_flit(tx_df),
+  .w_v(tx_wv),.w_addr(tx_wa),.w_mask(tx_wm),.w_data(tx_wd),.busy(tx_busy),.done(tx_done),.fault(tx_fault),.stat_cycles());
+ ot_hfd_coll_q3_hard_v7x #(.NLINK(NPT),.TP(TPV)) dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm({16{clk}}),.clk_upipe({16{clk}}),
+  .clk_issue(clk),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),.clk_arg(clk),
+  .clk_vmwrite({16{clk}}),.clk_link({5*NPT{clk}}),
+  .tkx_start(tx_start),.tkx_arg_mode(tx_mode),.tkx_cfg_n(tx_n),.tkx_cfg_k(tx_k),.tkx_cfg_nout(tx_nout),.tkx_cfg_g(tx_g),
+  .tkx_cfg_gbase(tx_gb),.tkx_cfg_pf(tx_pf),.tkx_cfg_obase(tx_ob),.tkx_cfg_rbase(tx_rb),.tkx_cfg_has_r(tx_has_r),
+  .tkx_del_slot(tx_ds),.tkx_del_valid(tx_dv),.tkx_del_flit(tx_df),.tkx_w_v(tx_wv),.tkx_w_addr(tx_wa),.tkx_w_mask(tx_wm),
+  .tkx_w_data(tx_wd),.tkx_busy(tx_busy),.tkx_done(tx_done),.tkx_fault(tx_fault),
+`elsif Q3
  ot_hfd_coll_q3_hard_v5 #(.NLINK(NPT),.TP(TPV)) dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm({16{clk}}),.clk_upipe({16{clk}}),
   .clk_issue(clk),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),.clk_arg(clk),
   .clk_tkm({34{clk}}),.clk_vmwrite({16{clk}}),.clk_link({5*NPT{clk}}),

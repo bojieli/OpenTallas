@@ -42,6 +42,8 @@ HUB_VM_TO_SVC_STAGES = 50    # c26l sp_vm centre -> svc_SW centre ~20 mm at 405 
 # vs 171 with the parallel tree the hub's price already contains -> +63 on every full-h norm (rstd precedes the matvec:
 # norm-after-matvec is AGENTS level 6, excluded, so this latency is on the critical path)
 FINISH_SEQ_EXTRA = 234 - 171
+LEAF_PARTIAL_EXTRA = (112 + 4 + 5) - 100
+LEAF_SCALE_EXTRA = (59 + 4 * 4 + 4) - 76
 
 
 def hop_only(stages):
@@ -78,6 +80,10 @@ def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0):
             if op in ('attn.quant', 'ffn.norm.scale', 'eng.gate') or op.endswith('hc.sumsq'):
                 add(nid, 'norm_tree_full', -18 + xchg)
                 add(nid, 'norm_finish_seq', FINISH_SEQ_EXTRA)
+                # S81-SLICE measured beat leaf (10-17, real vp+vn+vq RTL, bit-exact): go -> beat partial 112 + DL 4 +
+                # collector 5 = 121 vs the hub's sumsq 100; rstd -> XQ complete at the ring stop 59 + 4*4 (last leaf)
+                # + DL 4 = 79 vs the hub's scale 76.  hc_post (63 leaf vs 641 hub) NOT credited until slice-level.
+                add(nid, 'leaf_measured', LEAF_PARTIAL_EXTRA + LEAF_SCALE_EXTRA)
             elif op == 'attn.q_quant':
                 add(nid, 'norm_tree_q', -18 + st(3 * g['cluster_pitch_um']))
             elif op == 'attn.kv_rope_qdq':
@@ -100,6 +106,15 @@ def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0):
                 add(nid, 'intra_slice_leaf', int(m.group(2)) * (ld + 2 * lm))   # return to owner + x to/from ring stop
             if cls == 'su' and op in ('attn.quant', 'ffn.norm.scale', 'attn.q_quant', 'attn.kv_rope_qdq', 'eng.gate'):
                 add(nid, 'intra_slice_leaf', 2 * lm)                            # partial to xfin leaf, rstd back
+        if g.get('tier_w'):
+            # p4c per-column tier exchange vs p4b end-column ring: the N tier needs the S tier's 40 beats; p4b moves
+            # them over 2 x 1,104-b end links (~20 cycles of serialization each), p4c over 8 x tier_w-bit links
+            # (5 x 1,104 / tier_w cycles per column); + up to 2 registered unit ring stops (+4) on the crossing
+            cross = 5 * 1104 / g['tier_w'] - 20 + 4
+            if m and cls == 'field':
+                add(nid, 'tier_cross', int(m.group(2)) * max(0.0, cross))
+            if cls == 'su' and op in ('attn.quant', 'ffn.norm.scale', 'eng.gate'):
+                add(nid, 'tier_cross', 4 + math.ceil(173 / g['tier_w']) - 1)   # partial flit + unit stops
         if re.search(r'(substage_hop\d+|head\.hop)$', nid):
             add(nid, 'h_xfer_ring', 2 * st(g['worst_slice_to_edge_um']))
     return d, rules

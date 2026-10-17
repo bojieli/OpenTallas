@@ -9,7 +9,7 @@
 // (no die port tied, no port open).  These hubs fill over the VM ring and the core engines only.  Kept local (one file) so
 // option (b) (cross-quadrant fill) can replace it.  Writes rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_core.sv;
 // --check verifies the committed file.
-module hfd_hgi_vms_static_SE_core #(parameter integer STRAP_BANKS=0, STRAP_MUT=0) (
+module hfd_hgi_vms_static_SE_core #(parameter integer STRAP_BANKS=0, STRAP_MUT=0, BANK_PIN_IN=0) (
     input wire [7:0] clk_bank,
     input wire clk_hub,
     input wire [1:0] clk_ring,
@@ -54,7 +54,7 @@ module hfd_hgi_vms_static_SE_core #(parameter integer STRAP_BANKS=0, STRAP_MUT=0
     assign rr[2056 +: 2056] = rr_s[6168 +: 2056];
     assign wq_s = {2248'd0, wq[0 +: 2248]};
     assign wq_done[0 +: 8] = wqd_s[0 +: 8];
-    ot_vms_slice_static #(.NC(0),.RG(4),.WG(2),.STRAP_QUADRANT(STRAP_BANKS?1:-1),.BMUT(STRAP_MUT),.NATIVE_SHAPE(1)) u_slice (
+    ot_vms_slice_static #(.NC(0),.RG(4),.WG(2),.STRAP_QUADRANT(STRAP_BANKS?1:-1),.BMUT(STRAP_MUT),.NATIVE_SHAPE(1),.BANK_PIN_IN(BANK_PIN_IN)) u_slice (
         .clk_bank(clk_bank),
         .clk_hub(clk_hub),
         .clk_ring(clk_ring),
@@ -97,7 +97,7 @@ module hfd_hgi_vms_static_SE_core #(parameter integer STRAP_BANKS=0, STRAP_MUT=0
         .ring_fault(ring_fault)
     );
 endmodule
-module hfd_hgi_vms_static_NE_core #(parameter integer STRAP_BANKS=0, STRAP_MUT=0) (
+module hfd_hgi_vms_static_NE_core #(parameter integer STRAP_BANKS=0, STRAP_MUT=0, BANK_PIN_IN=0) (
     input wire [7:0] clk_bank,
     input wire clk_hub,
     input wire [1:0] clk_ring,
@@ -142,7 +142,7 @@ module hfd_hgi_vms_static_NE_core #(parameter integer STRAP_BANKS=0, STRAP_MUT=0
     assign rr[2056 +: 2056] = rr_s[6168 +: 2056];
     assign wq_s = {2248'd0, wq[0 +: 2248]};
     assign wq_done[0 +: 8] = wqd_s[0 +: 8];
-    ot_vms_slice_static #(.NC(0),.RG(4),.WG(2),.STRAP_QUADRANT(STRAP_BANKS?3:-1),.BMUT(STRAP_MUT),.NATIVE_SHAPE(1)) u_slice (
+    ot_vms_slice_static #(.NC(0),.RG(4),.WG(2),.STRAP_QUADRANT(STRAP_BANKS?3:-1),.BMUT(STRAP_MUT),.NATIVE_SHAPE(1),.BANK_PIN_IN(BANK_PIN_IN)) u_slice (
         .clk_bank(clk_bank),
         .clk_hub(clk_hub),
         .clk_ring(clk_ring),

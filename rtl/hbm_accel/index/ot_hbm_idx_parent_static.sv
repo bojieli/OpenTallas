@@ -38,7 +38,11 @@ module ot_hbm_idx_parent_static #(parameter integer N_Q=4,TP=96,RANK_W=(TP<=1?1:
  for(genvar q=0;q<N_Q;q=q+1)begin:gscore
   wire[11:0]nq=(nkeys<=q*2736)?12'd0:((nkeys-q*2736>=2736)?12'd2736:12'(nkeys-q*2736));
   wire[609:0]score;
-  ot_hbm_idx_score_static #(.TP(TP)) scorer(.clk_ctl(clk_score[q]),.clk_engine(clk_engine[q*4+:4]),.clk_meta(clk_meta[q*4+:4]),
+`ifdef OT_IDX_SCORE_CLUSTER
+  ot_hbm_idx_score_cluster #(.TP(TP)) scorer(   // IDX-SCORE 16-leaf chained cluster (+8 edges; compiler --score-chain 8)
+`else
+  ot_hbm_idx_score_static #(.TP(TP)) scorer(
+`endif.clk_ctl(clk_score[q]),.clk_engine(clk_engine[q*4+:4]),.clk_meta(clk_meta[q*4+:4]),
    .clk_tail(clk_tail[q*4+:4]),.clk_chunk(clk_chunk[q*16+:16]),.clk_hslice(clk_hslice[q*512+:512]),.rst_n(rst_n),
    .rank(rank),.first_ord(11'(q*342)),.nkeys(nq),.keep_en(keep_en),.keep_bitmap(keep_bitmap[q*342+:342]),
    .ql_v(qv),.ql_head(qh),.ql_codes(qc),.ql_sc(qs),.ql_w(qw),.beat_v(beat_v),.beat_index(beat_index),

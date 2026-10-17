@@ -21,7 +21,7 @@ def test_config_defaults_and_env(monkeypatch):
     for k in ('OT_DIE_REPAIR_MAX_WIRE', 'OT_DIE_REPAIR_SLEW', 'OT_DIE_REPAIR_SKIP', 'OT_DIE_REPAIR_OVER_REACH'):
         monkeypatch.delenv(k, raising=False)
     c = step.config('s81', '/work/r.json')
-    assert c['max_wire_um'] == 160.0 and c['slew_ps'] == 260.0 and c['legalize'] == 'snap'
+    assert c['max_wire_um'] == 160.0 and c['slew_ps'] == 260.0 and c['legalize'] == 'spread'
     assert 'n_clk_*' in c['skip_nets'] and c['over_reach'] == 'report'
     monkeypatch.setenv('OT_DIE_REPAIR_MAX_WIRE', '175')
     monkeypatch.setenv('OT_DIE_REPAIR_SKIP', 'foo_* bar')
@@ -99,13 +99,13 @@ def _docker_ok():
     return r.returncode == 0
 
 
-def _run(tmp_path, mutant, tag=None, check=True, **kw):
+def _run(tmp_path, mutant, tag=None, check=True, design_v=DESIGN_V, setup=SETUP_TCL, legalize='dpl', extra='', **kw):
     w = tmp_path / (tag or ('mut' if mutant else 'base'))
     w.mkdir()
-    (w / 't.v').write_text(DESIGN_V)
+    (w / 't.v').write_text(design_v)
     step.copy(w)
-    call = step.tcl_call('cluster', '/work/die_repeaters.json', legalize='dpl', reach_um=400.0, **kw)
-    (w / 'run.tcl').write_text(SETUP_TCL + (MUTANT if mutant else '') + call + (CHECK_TCL if check else ''))
+    call = step.tcl_call('cluster', '/work/die_repeaters.json', legalize=legalize, reach_um=400.0, **kw)
+    (w / 'run.tcl').write_text(setup + (MUTANT if mutant else '') + call + (CHECK_TCL if check else '') + extra)
     r = subprocess.run(['docker', 'run', '--rm', '--memory=2g', '-v', f'{w}:/work', IMAGE, 'bash', '-lc',
                         'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -no_init -no_splash -exit '
                         '/work/run.tcl; rc=$?; chmod -R a+rwX /work; exit $rc'], capture_output=True, text=True)
@@ -150,3 +150,42 @@ def test_repeat_nets_odb_match(tmp_path):
     r, w = _run(tmp_path, False, tag='none', check=False, repeat_nets=['n*_fck*'])
     rep = json.loads((w / 'die_repeaters.json').read_text())
     assert r.returncode == 3 and rep['verdict'] == 'FAIL' and rep['repeated_clock_nets'] == 0
+
+
+# spread (DIE-FLOW2): a 24-bit bus of register pairs 890 um apart in one row band -- repair_design puts the 24 bits'
+# repeaters at the same ideal points; spread must give each its own legal slot (no overlap, on the site grid, clear
+# of the macro sitting across the bus), and the post-GRT audit re-buffers before judging.
+NB = 24
+BUS_V = ('module top(input clk, input [%d:0] d, output [%d:0] q);\n' % (NB - 1, NB - 1) + ''.join(
+    f'  wire a{i};\n  DFFHQNx1_ASAP7_75t_R s{i} (.CLK(clk), .D(d[{i}]), .QN(a{i}));\n'
+    f'  DFFHQNx1_ASAP7_75t_R e{i} (.CLK(clk), .D(a{i}), .QN(q[{i}]));\n' for i in range(NB)) + 'endmodule\n')
+BUS_SETUP = SETUP_TCL.split('foreach {i x}')[0] + (
+    'for {set i 0} {$i < %d} {incr i} { foreach {n x} [list s$i 10 e$i 900] { set inst [[ord::get_db_block] findInst $n]; '
+    '$inst setLocation [expr {int($x*1000)}] [expr {10800 + 270*$i}]; $inst setPlacementStatus FIRM } }\n' % NB)
+OVERLAP_TCL = '''set bad 0; set off 0; set boxes {}
+foreach i [[ord::get_db_block] getInsts] { if {[string match s* [$i getName]] || [string match e* [$i getName]]} { continue }
+  set b [$i getBBox]; lappend boxes [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]]
+  if {([$b xMin] % 54) != 0 || (([$b yMin] - 0) % 270) != 0} { incr off } }
+set boxes [lsort -integer -index 0 $boxes]; set n [llength $boxes]
+for {set a 0} {$a < $n} {incr a} { lassign [lindex $boxes $a] x0 y0 x1 y1
+  for {set b [expr {$a + 1}]} {$b < $n} {incr b} { lassign [lindex $boxes $b] u0 v0 u1 v1; if {$u0 >= $x1} { break }
+    if {$v0 < $y1 && $v1 > $y0} { incr bad } } }
+puts "OT_OVERLAP $bad OT_OFFGRID $off OT_NEW $n"
+'''
+
+
+@pytest.mark.skipif(os.environ.get('OT_SKIP_DOCKER') == '1' or not _docker_ok(), reason='no docker / ORFS image')
+def test_spread_no_stacking(tmp_path):
+    r, w = _run(tmp_path, False, tag='spread', design_v=BUS_V, setup=BUS_SETUP, legalize='spread', extra=OVERLAP_TCL)
+    assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]
+    rep = json.loads((w / 'die_repeaters.json').read_text())
+    assert rep['verdict'] == 'PASS' and rep['repeaters'] >= 4 * NB and rep['legalize'].startswith('spread')
+    sp = json.loads((w / 'die_repeaters.spread1.json').read_text())
+    assert sp['placed'] >= 4 * NB and sp['unplaced'] == 0
+    line = [l for l in r.stdout.splitlines() if l.startswith('OT_OVERLAP')][0].split()
+    assert line[1] == '0' and line[3] == '0', line      # no two repeaters overlap, all on the site / row grid
+    assert int(line[5]) >= rep['repeaters']
+    print('\n'.join(l for l in r.stdout.splitlines() if l.startswith('OT_')))
+    assert rep['post_slew_violators'] == 0
+    pg = json.loads((w / 'post_grt.json').read_text())
+    assert 'rebuffer_rounds' in pg and pg['pre_existing_changed'] == 0 and pg['slew_violators'] == 0
