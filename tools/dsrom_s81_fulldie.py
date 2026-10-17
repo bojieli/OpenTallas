@@ -11930,8 +11930,8 @@ def die_options(ap):
                     'dsfd_cfifo_crs r5f (280.8 x 69.12): cr / cr_s / xf / xf2 are column-tree sinks, the column clock is driven by '
                     'the x lane forwarded station (F1), the return chain first station takes that net; needs --cfifo-colck '
                     '--bf-x2-static --bf-x2-pair --cfifo-fall-launch (s81/cfifo_crsplit.py)')
-    ap.add_argument('--cluster-reach', type=float, default=180.0, help='--cluster-mode die-top transport station spacing '
-                    'cap (um; provisional, not a timing bound until the measured reach table)')
+    ap.add_argument('--cluster-reach', type=float, default=405.0, help='--cluster-mode die-top FIELD transport station '
+                    'spacing (um; OWNER 0cl 10-16: planning hop 405 with die repair_design repeaters from ~175 um)')
     ap.add_argument('--canonical-layout', help='Source-pinned full2417 capacity JSON; exact519 BF IDs and128 root bounds, irregular local streets/RSC transit and per-root actual flight calendar')
     ap.add_argument('--die', default='layer', choices=['layer', 'layer1', 'layer1e', 'head'])
     ap.add_argument('--ctrl-rq', action='store_true', help='s81-gen 2026-10-09: every stack controller\'s request '
