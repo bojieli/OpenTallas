@@ -350,8 +350,13 @@ def macro_edge_guard(s: dict) -> bool:
 
 
 def pin_hook_wrapper(s: dict) -> bool:
-    """recipe 2: pin flops AND pin hold stages -> one kit-local PRE_GLOBAL_PLACE / PRE_DETAIL_PLACE hook"""
-    return bool(s.get("io_flop_at_pins") and (s.get("inhold") or s.get("outhold")) and s.get("recipe", 1) >= 2)
+    """recipe 2: pin flops AND pin hold stages -> one kit-local PRE_GLOBAL_PLACE / PRE_DETAIL_PLACE hook.
+    Q-LINK2 2026-10-17: a recipe-4 flop-first kit (hold_budget die: no inhold / outhold) that still needs pin_reg_split
+    or a pin_hook_before_flops (qfd_d2d_static r8c: reset-capture anchors) uses the same wrapper without the hold stage;
+    kits that were valid before regenerate byte-identically (the new cases used to raise SpecError)."""
+    if not (s.get("io_flop_at_pins") and s.get("recipe", 1) >= 2):
+        return False
+    return bool(s.get("inhold") or s.get("outhold") or s.get("pin_reg_split") or s.get("pin_hook_before_flops"))
 
 
 def gen_pin_hooks(s: dict) -> dict:
@@ -367,6 +372,11 @@ def gen_pin_hooks(s: dict) -> dict:
                "# one hook per step, so the two repo hooks are sourced from this kit file.",
                f"source /src/physical/dsrom_window_source/{hold}",
                f"source /src/{QDM}/io_flop_at_pins.tcl"]
+    if not (s.get("inhold") or s.get("outhold")):
+        # flop-first (hold_budget die): no pin hold stage, the wrapper only orders split / anchors / pin flops
+        pre_gpl[0:4] = ["# ref_tile PRE_GLOBAL_PLACE (flop-first, hold_budget die): no pin hold stages; every port's single",
+                        "# launch / capture flop is fixed at its pin.  ORFS takes one hook per step, so the repo hooks are",
+                        "# sourced from this kit file."]
     if s.get("pin_reg_split"):
         # one dedicated launch flop per output pin BEFORE the hold stages walk flop -> port (el1014-root-recipe2)
         pre_gpl.insert(3, f"source /src/{PIN_REG_SPLIT_TCL}")
@@ -1757,7 +1767,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     if s.get("keep_pin_regs"):
         extra.append("--orfs-var OT_KEEP_PIN_REGS=1")
     if s.get("pin_reg_split") and not wrap:
-        raise SpecError("spec: pin_reg_split runs inside the recipe-2 pin hook (io_flop_at_pins + inhold/outhold, recipe >= 2)")
+        raise SpecError("spec: pin_reg_split runs inside the recipe-2 pin hook (io_flop_at_pins, recipe >= 2)")
     refglob = s.get("refglob", "*")
     inter = ",".join(s["inter"]) or "none_*"
     return "\n".join([
