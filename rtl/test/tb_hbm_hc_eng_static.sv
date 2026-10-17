@@ -26,17 +26,22 @@ module tb_hbm_hc_eng_static;
     localparam integer XWB = 4;
 `endif
     localparam integer BW = 8192 / XWB;
+`ifdef NQ
+    localparam integer NQ = `NQ;      // A2P (H-NETLIST 2026-10-16): quadrant clients of the engine (4 full die, 2 half die)
+`else
+    localparam integer NQ = 4;
+`endif
     reg cfg_v = 0, desc_v = 0, launch_v = 0; reg [7:0] cfg_target = 0; reg [11:0] cfg_addr = 0, desc_base = 0;
     reg [255:0] cfg_data = 0; reg [12:0] desc_limit = 0; reg [15:0] desc_loops = 0; wire configured;
-    reg [3:0] x_wave_v = 0; reg [39:0] x_wave_word = 0; reg [4*BW-1:0] x_wave = 0; reg [7:0] x_wave_beat = 0;
-    reg [3:0] gm_v = 0; reg [19:0] gm_row = 0; reg [11:0] gm_pos = 0; reg [127:0] gm_data = 0;
-    wire [3:0] result_v; wire [11:0] result_position; wire [3071:0] result; wire pa, pd, fault;
+    reg [NQ-1:0] x_wave_v = 0; reg [NQ*10-1:0] x_wave_word = 0; reg [NQ*BW-1:0] x_wave = 0; reg [NQ*2-1:0] x_wave_beat = 0;
+    reg [NQ-1:0] gm_v = 0; reg [NQ*5-1:0] gm_row = 0; reg [NQ*3-1:0] gm_pos = 0; reg [NQ*32-1:0] gm_data = 0;
+    wire [NQ-1:0] result_v; wire [NQ*3-1:0] result_position; wire [NQ*768-1:0] result; wire pa, pd, fault;
 `ifdef MUT
     localparam integer MUTP = `MUT;
 `else
     localparam integer MUTP = 0;
 `endif
-    ot_hbm_hc_eng_static #(.MUT(MUTP), .XW_BEATS(XWB)) dut (.clk(clk), .rst_n(rst_n), .tgt(8'd164), .cfg_v(cfg_v),
+    ot_hbm_hc_eng_static #(.MUT(MUTP), .XW_BEATS(XWB), .N_Q(NQ)) dut (.clk(clk), .rst_n(rst_n), .tgt(8'd164), .cfg_v(cfg_v),
         .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
         .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .configured(configured),
         .x_wave_v(x_wave_v), .x_wave_word(x_wave_word), .x_wave(x_wave), .x_wave_beat(x_wave_beat),
@@ -87,7 +92,7 @@ module tb_hbm_hc_eng_static;
                     dut.o_data, expmix[dut.o_pos*24 + dut.o_idx]);
             end
         end
-        for (integer q = 0; q < 4; q = q + 1) if (result_v[q]) begin : chk
+        for (integer q = 0; q < NQ; q = q + 1) if (result_v[q]) begin : chk
             integer p; p = result_position[q*3 +: 3];
             outseen = outseen + 1; last_out_t = t; if (first_out_t < 0) first_out_t = t;
             for (integer j = 0; j < 24; j = j + 1) if (result[q*768 + j*32 +: 32] !== exptail[p*24 + j]) begin
@@ -131,8 +136,8 @@ module tb_hbm_hc_eng_static;
         wait (busy);
         wait (!busy);
         repeat (40) @(posedge clk);
-        $display("HC_ENG_DONE mode=%0d npos=%0d mixes=%0d mixbad=%0d outs=%0d outbad=%0d TB=%0d last_mix_t=%0d first_out_t=%0d last_out_t=%0d HC_MIX_CYCLES=%0d",
-            mode, npos, mixseen, mixbad, outseen, outbad, tb0, last_mix_t, first_out_t, last_out_t, last_out_t - tb0);
+        $display("HC_ENG_DONE nq=%0d mode=%0d npos=%0d mixes=%0d mixbad=%0d outs=%0d outbad=%0d TB=%0d last_mix_t=%0d first_out_t=%0d last_out_t=%0d HC_MIX_CYCLES=%0d",
+            NQ, mode, npos, mixseen, mixbad, outseen, outbad, tb0, last_mix_t, first_out_t, last_out_t, last_out_t - tb0);
         if (mode == 1) $finish;
         if (mixbad || outbad || outseen != nemit || (mode == 0 && mixseen != 24 * npos)) $fatal(1, "HC_ENG FAIL");
         $display("HC_ENG PASS");

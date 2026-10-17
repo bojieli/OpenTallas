@@ -33,12 +33,20 @@
 // launch with any of its 24 mixes unwritten or an emit before the unit's fixed result edge raises fault.
 // Pin registers: every input lands in a pin flop (x_wave/gm/tbl/cfg/start), every output is a flop.
 // Fixed latencies (measured by tb_hbm_hc_eng_static): see results/rtl/hbm_hc_eng_0030/receipt.json.
-// MUT (bench): 1 = bank 3 weight slice rotated, 2 = tail pre-sigmoid eps dropped (unit 0), 3 = x landing one run off.
+// MUT (bench): 1 = bank 3 weight slice rotated, 2 = tail pre-sigmoid eps dropped (unit 0), 3 = x landing one run off,
+// 4 = quadrant clients 0/1 swapped at the x_wave receivers (wrong quadrant mapping).
+// N_Q (H-NETLIST A2P 2026-10-16): number of quadrant clients on the die (4 = full die SW,SE,NW,NE: the original module
+// exactly; 2 = the A2P half die, client 0 = hc_SW, client 1 = hc_NW). Every quadrant port is N_Q x its per-client
+// slice. The event word format is unchanged (2-bit ingest / gathered-mix quadrant fields, 4-bit emit mask): an ingest
+// or gathered-mix event naming a client >= N_Q, or an emit mask with a bit >= N_Q set, raises fault. Per-client cadence
+// is unchanged (one wave every 4 edges), so with N_Q = 2 the compiler moves a weight set in 2 x 960 waves (one client
+// wave per 2 edges on the engine, 3,840 edges a set instead of 1,920) and a position's x in 2 x 40 waves.
 module ot_hbm_hc_eng_static #(
     parameter integer K    = 20480,
     parameter [31:0]  NF   = 32'h46a00000,       // binary32(K)
     parameter integer DRLY = 1,                  // relay registers core <-> bank 0 / bank 7
     parameter integer XW_BEATS = 4,              // x_wave link beats (1 = original 8,192-b form)
+    parameter integer N_Q  = 4,                  // quadrant clients (4 full die, 2 A2P half die)
     parameter integer MUT  = 0
 )(
     input  wire           clk, rst_n,
@@ -54,18 +62,18 @@ module ot_hbm_hc_eng_static #(
     input  wire [15:0]    desc_loops,
     input  wire           launch_v,
     output wire           configured,
-    // quadrant clients hc_<q> (q = 0..3 = SW, SE, NW, NE)
-    input  wire [3:0]     x_wave_v,
-    input  wire [39:0]    x_wave_word,
-    input  wire [4*8192/XW_BEATS-1:0] x_wave,
-    input  wire [7:0]     x_wave_beat,
-    input  wire [3:0]     gathered_mix_v,
-    input  wire [19:0]    gathered_mix_row,
-    input  wire [11:0]    gathered_mix_pos,
-    input  wire [127:0]   gathered_mix_data,
-    output reg  [3:0]     result_v,
-    output reg  [11:0]    result_position,
-    output reg  [3071:0]  result,
+    // quadrant clients hc_<q> (N_Q = 4: q = 0..3 = SW, SE, NW, NE; N_Q = 2: q = 0..1 = SW, NW)
+    input  wire [N_Q-1:0]     x_wave_v,
+    input  wire [N_Q*10-1:0]  x_wave_word,
+    input  wire [N_Q*8192/XW_BEATS-1:0] x_wave,
+    input  wire [N_Q*2-1:0]   x_wave_beat,
+    input  wire [N_Q-1:0]     gathered_mix_v,
+    input  wire [N_Q*5-1:0]   gathered_mix_row,
+    input  wire [N_Q*3-1:0]   gathered_mix_pos,
+    input  wire [N_Q*32-1:0]  gathered_mix_data,
+    output reg  [N_Q-1:0]     result_v,
+    output reg  [N_Q*3-1:0]   result_position,
+    output reg  [N_Q*768-1:0] result,
     output reg            program_active, program_done, fault
 );
     localparam integer W = 256, AW = 10, R = K / (8 * W), WPR = K / 256, NJ = W / 32;
@@ -73,17 +81,19 @@ module ot_hbm_hc_eng_static #(
     localparam integer SYS_LAT = 1 + 7 * (LA + 1 + SOR) + 3 + 2 + (ML - 2) + LM + LA + SOR + 2 * DRLY;
     localparam integer NVW = $clog2(W) + 1;
     initial if (K % (8 * W) != 0 || R > 16 || WPR > 127) $fatal(1, "K must be a multiple of 2,048, <= 32,768");
+    initial if (N_Q < 1 || N_Q > 4) $fatal(1, "N_Q must be 1..4");
 
     // ------------------------------------------------------------------ pin registers
-    wire [3:0] xv_q; wire [39:0] xw_q; wire [32767:0] xd_q; wire [3:0] rx_fault;
+    wire [N_Q-1:0] xv_q; wire [N_Q*10-1:0] xw_q; wire [N_Q*8192-1:0] xd_q; wire [N_Q-1:0] rx_fault;
     genvar gx;
-    for (gx = 0; gx < 4; gx = gx + 1) begin : g_rx
-        ot_hbm_hc_xw_rx_static #(.BEATS(XW_BEATS)) u_rx (.clk(clk), .rst_n(rst_n), .x_v(x_wave_v[gx]),
-            .x_beat(x_wave_beat[gx*2 +: 2]), .x_word(x_wave_word[gx*10 +: 10]),
-            .x_data(x_wave[gx*(8192/XW_BEATS) +: 8192/XW_BEATS]), .wave_v(xv_q[gx]), .wave_word(xw_q[gx*10 +: 10]),
+    for (gx = 0; gx < N_Q; gx = gx + 1) begin : g_rx
+        localparam integer GS = (MUT == 4 && gx < 2 && N_Q > 1) ? (gx ^ 1) : gx;   // bench mutant: clients 0/1 swapped
+        ot_hbm_hc_xw_rx_static #(.BEATS(XW_BEATS)) u_rx (.clk(clk), .rst_n(rst_n), .x_v(x_wave_v[GS]),
+            .x_beat(x_wave_beat[GS*2 +: 2]), .x_word(x_wave_word[GS*10 +: 10]),
+            .x_data(x_wave[GS*(8192/XW_BEATS) +: 8192/XW_BEATS]), .wave_v(xv_q[gx]), .wave_word(xw_q[gx*10 +: 10]),
             .wave(xd_q[gx*8192 +: 8192]), .fault(rx_fault[gx]));
     end
-    reg [3:0] gv_q; reg [19:0] gr_q; reg [11:0] gp_q; reg [127:0] gd_q;
+    reg [N_Q-1:0] gv_q; reg [N_Q*5-1:0] gr_q; reg [N_Q*3-1:0] gp_q; reg [N_Q*32-1:0] gd_q;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) gv_q <= 0; else gv_q <= gathered_mix_v;
     always @(posedge clk) begin
@@ -140,18 +150,20 @@ module ot_hbm_hc_eng_static #(
     wire        e_eunit = ev[123];
 
     // ------------------------------------------------------------------ ingest sequencers (one per quadrant)
-    reg [3:0] in_act, in_kind; reg [1:0] in_ph [0:3]; reg [1:0] in_slot [0:3]; reg [4:0] in_lo [0:3];
-    reg [6:0] in_w [0:3]; reg [11:0] in_left [0:3]; reg [9:0] in_word [0:3];
-    wire [3:0] due;
+    reg [N_Q-1:0] in_act, in_kind; reg [1:0] in_ph [0:N_Q-1]; reg [1:0] in_slot [0:N_Q-1]; reg [4:0] in_lo [0:N_Q-1];
+    reg [6:0] in_w [0:N_Q-1]; reg [11:0] in_left [0:N_Q-1]; reg [9:0] in_word [0:N_Q-1];
+    wire [N_Q-1:0] due;
+    wire ing_q_ok = 32'(e_ingq) < N_Q, gm_q_ok = 32'(e_gmq) < N_Q;
+    wire [3:0] qmask_all = 4'((1 << N_Q) - 1);
     genvar gq;
-    for (gq = 0; gq < 4; gq = gq + 1) begin : g_due
+    for (gq = 0; gq < N_Q; gq = gq + 1) begin : g_due
         assign due[gq] = in_act[gq] && in_ph[gq] == 2'd0;
     end
     // the one due quadrant this edge (fault if more than one)
     reg [1:0] dq; reg dany, dmulti;
     always @* begin
         dq = 2'd0; dany = 1'b0; dmulti = 1'b0;
-        for (integer q = 0; q < 4; q = q + 1) if (due[q]) begin if (dany) dmulti = 1'b1; dany = 1'b1; dq = 2'(q); end
+        for (integer q = 0; q < N_Q; q = q + 1) if (due[q]) begin if (dany) dmulti = 1'b1; dany = 1'b1; dq = 2'(q); end
     end
     wire [8191:0] wave = xd_q[dq*8192 +: 8192];
     wire [6:0] dw = in_w[dq];
@@ -170,11 +182,11 @@ module ot_hbm_hc_eng_static #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             in_act <= 0; b_wv <= 0; b_xv <= 0; ing_fault <= 0;
-            for (integer q = 0; q < 4; q = q + 1) in_ph[q] <= 0;
+            for (integer q = 0; q < N_Q; q = q + 1) in_ph[q] <= 0;
         end else begin
             b_wv <= dany && in_kind[dq]; b_xv <= dany && !in_kind[dq];
             if (dmulti) ing_fault <= 1'b1;
-            for (integer q = 0; q < 4; q = q + 1) begin
+            for (integer q = 0; q < N_Q; q = q + 1) begin
                 if (xv_q[q] && !due[q]) ing_fault <= 1'b1;                        // unsolicited wave
                 if (due[q]) begin
                     if (!xv_q[q] || xw_q[q*10 +: 10] != in_word[q]) ing_fault <= 1'b1;
@@ -190,7 +202,8 @@ module ot_hbm_hc_eng_static #(
                 if (in_act[q]) in_ph[q] <= in_ph[q] + 1'b1;
             end
             if (dany && !in_kind[dq] && lowbad) ing_fault <= 1'b1;               // residual must be BF16-valued
-            if (e_ing) begin
+            if (e_ing && !ing_q_ok) ing_fault <= 1'b1;                          // no such quadrant client
+            if (e_ing && ing_q_ok) begin
                 if (in_act[e_ingq] || e_cnt == 0 || e_w >= WPR || e_lo >= (e_kind ? 24 : 8)) ing_fault <= 1'b1;
                 in_act[e_ingq] <= 1'b1; in_kind[e_ingq] <= e_kind; in_ph[e_ingq] <= 2'd0;
                 in_slot[e_ingq] <= e_slot; in_lo[e_ingq] <= e_lo; in_w[e_ingq] <= e_w;
@@ -249,17 +262,18 @@ module ot_hbm_hc_eng_static #(
     endfunction
 
     // ------------------------------------------------------------------ mix store
-    reg [8*24*32-1:0] mixes; reg [191:0] have; reg mix_fault; reg [3:0] gm_open;
+    reg [8*24*32-1:0] mixes; reg [191:0] have; reg mix_fault; reg [N_Q-1:0] gm_open;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin have <= 0; mix_fault <= 0; gm_open <= 0; end
         else begin
             if (e_clear) have <= 0;
-            if (e_gm) gm_open[e_gmq] <= e_gmo;
+            if (e_gm && gm_q_ok) gm_open[e_gmq] <= e_gmo;
+            if (e_gm && !gm_q_ok) mix_fault <= 1'b1;                              // no such quadrant client
             if (o_valid) begin
                 if (o_idx >= 5'd24) mix_fault <= 1'b1;
                 else begin mixes[(o_pos*24 + o_idx)*32 +: 32] <= o_data; have[o_pos*24 + o_idx] <= 1'b1; end
             end
-            for (integer q = 0; q < 4; q = q + 1) if (gv_q[q]) begin
+            for (integer q = 0; q < N_Q; q = q + 1) if (gv_q[q]) begin
                 if (!gm_open[q] || gr_q[q*5 +: 5] >= 5'd24) mix_fault <= 1'b1;
                 else begin
                     mixes[(gp_q[q*3 +: 3]*24 + gr_q[q*5 +: 5])*32 +: 32] <= gd_q[q*32 +: 32];
@@ -308,15 +322,16 @@ module ot_hbm_hc_eng_static #(
             end
             if (e_tl && have[e_tpos*24 +: 24] != 24'hffffff) tail_fault <= 1'b1;
             if (e_emit && !tready[e_eunit]) tail_fault <= 1'b1;
+            if (e_emit && (e_qmask & ~qmask_all) != 4'd0) tail_fault <= 1'b1;     // emit to a client >= N_Q
         end
     end
 
     // ------------------------------------------------------------------ result pins (all flops)
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) result_v <= 4'd0;
-        else result_v <= e_emit ? e_qmask : 4'd0;
+        if (!rst_n) result_v <= {N_Q{1'b0}};
+        else result_v <= e_emit ? e_qmask[N_Q-1:0] : {N_Q{1'b0}};
     end
-    always @(posedge clk) if (e_emit) for (integer q = 0; q < 4; q = q + 1) if (e_qmask[q]) begin
+    always @(posedge clk) if (e_emit) for (integer q = 0; q < N_Q; q = q + 1) if (e_qmask[q]) begin
         result_position[q*3 +: 3] <= tpos[e_eunit]; result[q*768 +: 768] <= tres[e_eunit*768 +: 768];
     end
 

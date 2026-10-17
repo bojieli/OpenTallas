@@ -30,7 +30,8 @@ SOURCES += [f'physical/asap7_memory_macros/{n}/{n}.v' for n in (
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--objdir', type=Path, required=True)
-    ap.add_argument('--mutant', type=int, choices=range(4), default=0)
+    ap.add_argument('--mutant', type=int, choices=range(5), default=0)
+    ap.add_argument('--nq', type=int, choices=(2, 4), default=4, help='engine N_Q (A2P half die: 2)')
     ap.add_argument('--jobs', type=int, default=16)
     ap.add_argument('--xwb', type=int, choices=(1, 4), default=4)
     ap.add_argument('--manifest-only', action='store_true')
@@ -43,7 +44,7 @@ def main():
         return 0
     ap_x = a.xwb
     cmd = ['verilator', '--binary', '--timing', '--hierarchical', '-j', str(a.jobs), '-CFLAGS', '-O1', '-Wno-fatal', '-Wno-WIDTH',
-           '-Wno-TIMESCALEMOD', '-Wno-lint', '-Wno-style', f'-DMUT={a.mutant}', f'-DXWB={ap_x}', '--output-split', '20000',
+           '-Wno-TIMESCALEMOD', '-Wno-lint', '-Wno-style', f'-DMUT={a.mutant}', f'-DXWB={ap_x}', f'-DNQ={a.nq}', '--output-split', '20000',
            '--top-module', 'tb_hbm_hc_eng_static', '-Mdir', str(a.objdir.resolve()), 'rtl/test/tb_hbm_hc_eng_static_hier.vlt', *SOURCES]
     return subprocess.run(cmd, cwd=ROOT).returncode
 

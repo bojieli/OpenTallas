@@ -68,6 +68,9 @@ def main():
     ap.add_argument('--raw0', type=int, default=0)
     ap.add_argument('--rs', type=int, default=0)
     ap.add_argument('--seed', type=int, default=20261016)
+    ap.add_argument('--nq', type=int, choices=(2, 4), default=4,
+                    help='quadrant clients of the engine (A2P half die: 2 = hc_SW, hc_NW); the schedule splits the same '
+                         'weight rows / x waves over NQ clients, one wave every 4 edges per client')
     a = ap.parse_args()
     run = a.run
     run.mkdir(parents=True, exist_ok=True)
@@ -100,19 +103,20 @@ def main():
     slot = 1
     T0 = 8
     if a.mode != 'g22':
-        # phase A: the weight set (slot 1) from the 4 quadrants, quadrant q rows 6q..6q+5, 480 waves each
-        for q in range(4):
+        NQ = a.nq; RPQ = ROWS // NQ; WQ = WPR // NQ                 # rows per client (weights), waves per client (x)
+        # phase A: the weight set (slot 1) from the NQ quadrants, quadrant q rows RPQ q..RPQ (q+1)-1, RPQ*WPR waves each
+        for q in range(NQ):
             t = T0 + q
-            add(t, ing=1, ingq=q, kind=1, slot=slot, lo=6 * q, w=0, cnt=480, word=0)
-            sched.append((q, t + 1, 480, 1, (6 * q) * WPR, 0))
-        TB = T0 + 4 * 480 + 16                                     # record start (HC_MIX latency counts from here)
-        # phase B: x of P positions; quadrant q supplies waves 20q..20q+19 of every position
+            add(t, ing=1, ingq=q, kind=1, slot=slot, lo=RPQ * q, w=0, cnt=RPQ * WPR, word=0)
+            sched.append((q, t + 1, RPQ * WPR, 1, (RPQ * q) * WPR, 0))
+        TB = T0 + 4 * RPQ * WPR + 16                               # record start (HC_MIX latency counts from here)
+        # phase B: x of P positions; quadrant q supplies waves WQ q..WQ (q+1)-1 of every position
         for p in range(P):
-            for q in range(4):
-                t = TB + q + 80 * p
-                add(t, ing=1, ingq=q, kind=0, slot=0, lo=p, w=20 * q, cnt=20, word=(20 * p) % 1024)
-                sched.append((q, t + 1, 20, 0, p * WPR + 20 * q, (20 * p) % 1024))
-        land0 = TB + 3 + 2 + 4 * 19 + 3                             # last wave of position 0 written in the banks
+            for q in range(NQ):
+                t = TB + q + 4 * WQ * p
+                add(t, ing=1, ingq=q, kind=0, slot=0, lo=p, w=WQ * q, cnt=WQ, word=(WQ * p) % 1024)
+                sched.append((q, t + 1, WQ, 0, p * WPR + WQ * q, (WQ * p) % 1024))
+        land0 = TB + 3 + 2 + 4 * (WQ - 1) + 3                       # last wave of position 0 written in the banks
         TL = land0 + 2
         add(TL - 1, clear=1)
         add(TL, launch=1, npos=P, wslot=slot, eps=EPS)
@@ -151,7 +155,7 @@ def main():
                 e = t + 497
                 while e in ev and 'emit' in ev[e]:
                     e += 1
-                add(e, emit=1, qmask=0xf, eunit=u)
+                add(e, emit=1, qmask=(1 << NQ) - 1, eunit=u)
                 unit_free[u] = e + 1
                 tl_t[p], em_t[p], tf_t[p] = t, e, tft
             events.update(pops={f'{p},{i}': v for (p, i), v in pops.items()}, tail_launch=tl_t, emit=em_t)
@@ -166,7 +170,7 @@ def main():
         t = TB + 2 + 24 + 6
         add(t - 7, tf=1, tset=tset)
         add(t, tl=1, tunit=1, tpos=0)
-        add(t + 497, emit=1, qmask=0b0101, eunit=1)
+        add(t + 497, emit=1, qmask=0b0101 if a.nq == 4 else 0b11, eunit=1)
         events = {'TB': TB, 'tail_launch': t}
         P = 1
     words = []
@@ -178,7 +182,8 @@ def main():
     (run / 'sched.txt').write_text(''.join('%d %d %d %d %d %d\n' % s for s in sched))
     (run / 'gm.txt').write_text(''.join('%d %d %d %d %d\n' % g for g in gm))
     meta = dict(mode=a.mode, npos=P, words=len(words), events=events, waves=sum(s[2] for s in sched),
-                gathered=len(gm), raw0=a.raw0, rs=a.rs, emits=P * (4 if a.mode == 'full' else 2) if a.mode != 'probe' else 0)
+                gathered=len(gm), raw0=a.raw0, rs=a.rs, nq=a.nq,
+                emits=P * (a.nq if a.mode == 'full' else 2) if a.mode != 'probe' else 0)
     (run / 'case.json').write_text(json.dumps(meta, indent=1) + '\n')
     (run / 'plus.txt').write_text(f"+NWORDS={len(words)} +NSCHED={len(sched)} +NGM={len(gm)} +NPOS={P} "
                                   f"+NEMIT={meta['emits']} +TB={events['TB']} +MODE={['full', 'probe', 'g22'].index(a.mode)}\n")
