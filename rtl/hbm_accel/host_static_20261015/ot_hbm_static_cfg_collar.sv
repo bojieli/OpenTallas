@@ -101,9 +101,13 @@ module ot_hbm_static_cfg_collar #(
                 pv_cv <= cfg_v; pv_dv <= desc_v; pv_lv <= launch_v;
                 if (pv_cv || pv_dv || pv_lv) begin
                     h_seq <= h_seq + 1'b1; h_cv <= pv_cv; h_dv <= pv_dv; h_lv <= pv_lv;
-                    h_ct <= p_ct; h_ca <= p_ca; h_cd <= p_cd;
                 end
             end
+        // held payload: plain enabled flops outside the async-reset block (HBMA-HOST 2026-10-17). Inside it, synthesis
+        // folded the serial-domain rst_n into the stream-domain DFFE enable (a reset on the datapath, crossing domains;
+        // OT_MULTI_ROOT). pv_* are cleared by rst_n, so the enable is low under reset exactly as before: bit-identical.
+        always @(posedge clk_in)
+            if (pv_cv || pv_dv || pv_lv) begin h_ct <= p_ct; h_ca <= p_ca; h_cd <= p_cd; end
         reg [1:0] s_seq, s_prev; reg s_cv, s_dv, s_lv; reg [7:0] s_ct; reg [11:0] s_ca; reg [255:0] s_cd;
         always @(posedge clk) begin s_ct <= h_ct; s_ca <= h_ca; s_cd <= h_cd; end
         always @(posedge clk or negedge rst_n)

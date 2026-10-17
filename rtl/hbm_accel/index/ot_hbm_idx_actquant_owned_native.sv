@@ -42,7 +42,12 @@
 // 2->1 and the floor; S3-S7 the scale multiply; S8 e; S9 per-element shift
 // amounts; S10 round; S11 encode (output registers).  LATENCY = 13 cycles.
 // ---------------------------------------------------------------------------
-module ot_hbm_idx_actquant_owned_native (
+module ot_hbm_idx_actquant_owned_native #(
+    // XRF=0 (default, historical): the 9-edge element line is the ot_hdc_delay shift register on clk_delay.
+    // XRF=1 (idx_q successor, H-NETLIST/IDXP-OPQ 2026-10-16): the cycle-exact register-file line ot_hdc_delay_rf
+    // (no zero-logic flop->flop hop), clocked by clk_delay; the caller ties clk_delay to the same root as clk.
+    parameter integer XRF = 0
+) (
     input wire clk,clk_delay,
     input  wire          rst_n,
     input  wire          v,
@@ -137,7 +142,11 @@ module ot_hbm_idx_actquant_owned_native (
 
     // elements, from S0 to S8 (nine registers: S1, S2, S2b, S3-S7, S8)
     wire [1023:0] x8;
-    ot_hdc_delay #(.W(1024), .D(9)) u_x (.clk(clk_delay), .rst_n(rst_n), .d(s0_x), .q(x8));
+    generate if (XRF != 0) begin : g_xrf
+        ot_hdc_delay_rf #(.W(1024), .D(9)) u_x (.clk(clk_delay), .rst_n(rst_n), .d(s0_x), .q(x8));
+    end else begin : g_xsr
+        ot_hdc_delay #(.W(1024), .D(9)) u_x (.clk(clk_delay), .rst_n(rst_n), .d(s0_x), .q(x8));
+    end endgenerate
 
     // -- S8: e = ceil_log2(prod) ------------------------------------------------------------
     reg              s8_v, s8_fp4, s8_nf;
