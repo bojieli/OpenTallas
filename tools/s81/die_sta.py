@@ -21,6 +21,8 @@ ROOT = Path(__file__).resolve().parents[2]
 _g = next((sys.argv[i + 1] for i, x in enumerate(sys.argv[:-1]) if x == '--gen-root'), None)
 sys.path.insert(0, str(Path(_g) / 'tools' if _g else ROOT / 'tools'))
 import dsrom_s81_fulldie as S  # noqa: E402
+sys.path.append(str(ROOT / 'tools'))   # die_hold_budget (after --gen-root: never shadows the generator source)
+import die_hold_budget as DHB  # noqa: E402
 
 CLK_NAMES = ('ck', 'clk', 'sk', 'cks', 'ckh', 'cw', 'wclk', 'fi0', 'fi', 'xf', 'ck_in')
 # s81-die 2026-10-13 (c6p STA by path class, results/physical/die_iter_1012/s81/c6p_sta_classes_1013): FF cq 32 ps against
@@ -847,6 +849,8 @@ def main():
                     help='FLOW-HOLD 2026-10-16: die = boundary hold owned by the die STA (placeholder FF launch-min 25 ps, '
                          'hold uncertainty 25 once per link, bound tiles by their ETM, no planning hold pads); '
                          'tile = legacy (placeholder 65 ps, hold 25 + plan tolerance)')
+    ap.add_argument('--hold-dump-paths', type=int, default=200000,
+                    help='--hold-budget die: FF min paths (one per endpoint) dumped for tools/die_hold_budget.py')
     ap.add_argument('--legacy-unqualified-libs', action='store_true',
                     help='S81 DIE 2026-10-13: keep the tree-scan binding of routed-view ETMs (closed / assembled) of masters '
                          'that are NOT in the view-binding table (not QUALIFIED by tools/s81/native_view_qualify.py). '
@@ -1129,7 +1133,19 @@ def main():
               f'report_worst_slack -{"min" if corner == "ff" else "max"} -digits 1',
               f'report_tns -{"min" if corner == "ff" else "max"} -digits 1',
               f'report_check_types -violators -max_slew -max_capacitance > /kit/drv_{corner}.rpt']
+        if a.hold_budget == 'die' and corner == 'ff':
+            # DIE-FLOW 2026-10-17: per-link FF hold dump for tools/die_hold_budget.py (launch-min / delta / H / U per path)
+            T.append(DHB.tcl_dump('/kit/hold_links_ff.rpt', a.hold_dump_paths))
         (a.out / f'sta_{corner}.tcl').write_text('\n'.join(t for t in T if t) + '\n')
+    if a.hold_budget == 'die':
+        # DIE-FLOW 2026-10-17 (FLOW-HOLD D1/D2/D3): who launches from a bound ETM and who from the C = 25 ps placeholder
+        diag = sorted(m_ for m_, v in rec['masters'].items() if v['view'] in ('interim', 'partitioned'))
+        (a.out / 'hold_budget_masters.json').write_text(json.dumps(dict(
+            schema='opentallas.die_hold_budget.masters.v1', design='s81', paths_cap=a.hold_dump_paths,
+            diagnostic=diag, real=sorted(m_ for m_ in rec['masters'] if m_ not in diag),
+            launch_source={m_: ('placeholder C=%.0f ps (hold DIAGNOSTIC)' % HOLD_BUDGET_C_PS if m_ in diag else 'bound ETM clk->out min')
+                           for m_ in sorted(rec['masters'])},
+            diagnostic_all=None if lat else 'ideal clocks (SYNTH_IDEAL_R0): hold DIAGNOSTIC ONLY'), indent=1) + '\n')
     n = defaultdict(int)
     for v in rec['masters'].values():
         n[v['view']] += 1
