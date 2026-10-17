@@ -16,11 +16,14 @@ for q in ('SW', 'SE', 'NE', 'NW'):
 NEW = {'wbk_SW': ('ot_hbm_svc_wb_kport', 'hb_dbk_SW', 520.0, 520.0), 'wbk_NW': ('ot_hbm_svc_wb_kport', 'hb_dbk_NW', 520.0, 520.0)}
 for q in ('SW', 'SE', 'NE', 'NW'):
     NEW[f'sfup_{q}'] = ('ot_hgi_sfu_programme_store', f'sfus_{q}', 447.12, 1023.84)   # routed r6/r7c outline (H-SU)
+for q in ('SW', 'SE', 'NE', 'NW'):        # partitioned SU programme (H-SU b82db77f9; 92282bfcb grant form), max 940 x 760
+    NEW[f'pgp_{q}'] = ('ot_hbm_su_programme_pslice', f'su_{q}1', 940.0, 760.0)
 names = {s['name'] for s in G['slots']}
 for n, (cell, anchor, w, h) in NEW.items():
     if n not in names:
         a_ = next(s for s in G['slots'] if s['name'] == anchor)
-        G['slots'].append(dict(name=n, cell=cell, kind='tile', parent='die', outline=dict(w=w, h=h), origin=dict(a_['origin']),
+        G['slots'].append(dict(name=n, cell=cell, kind='tile', parent='die', outline=dict(w=w, h=h),
+                               origin=dict(a_['origin'], orient='MX' if n == 'pgp_NW' else 'R0'),
                                pins=[], pin_status='FACES_ONLY', grant='d4f_own_slot_1017',
                                notes=f'own slot (was sharing {anchor}); contract slot retarget requested from H-NETLIST'))
     FIT[n] = (w, h)
