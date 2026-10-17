@@ -89,7 +89,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "^FAIL"
    },
    {
     "name": "embgw_boot_mutant6",
@@ -99,7 +100,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "^FAIL"
    }
   ]
  },
