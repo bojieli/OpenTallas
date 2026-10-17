@@ -46,6 +46,7 @@ import hashlib
 import json
 import re
 import subprocess
+import tempfile
 from pathlib import Path
 
 PLAT = "/OpenROAD-flow-scripts/flow/platforms/asap7"
@@ -53,6 +54,128 @@ CELLS = ["asap7sc7p5t_AO_RVT_{C}_nldm_211120.lib.gz", "asap7sc7p5t_INVBUF_RVT_{C
          "asap7sc7p5t_OA_RVT_{C}_nldm_211120.lib.gz", "asap7sc7p5t_SEQ_RVT_{C}_nldm_220123.lib",
          "asap7sc7p5t_SIMPLE_RVT_{C}_nldm_211120.lib.gz"]
 VT = {"L": ("LVT", "L"), "SL": ("SLVT", "SL")}   # odb cell suffix -> (lib tag, lef tag)
+
+
+# A generated clock at the output makes write_timing_model emit clk_out -> clk_out
+# arcs. Keep the sign-off slack above this extraction intact, then remove only the
+# output boundary clock so the ETM describes the real clk_in -> clk_out path.
+FORWARDED_CLOCK_TCL = r"""
+if {[llength [get_ports -quiet clk_in]] && [llength [get_ports -quiet clk_out]]} {
+  set ot_fc_block [ord::get_db_block]
+  set ot_fc_in [[$ot_fc_block findBTerm clk_in] getNet]
+  set ot_fc_out [[$ot_fc_block findBTerm clk_out] getNet]
+  set ot_fc_drivers {}
+  foreach it [$ot_fc_out getITerms] {
+    if {[$it getIoType] eq "OUTPUT"} {lappend ot_fc_drivers $it}
+  }
+  if {[llength $ot_fc_drivers] != 1} {error "forwarded clk_out must have exactly one physical driver"}
+  set ot_fc_it [lindex $ot_fc_drivers 0]
+  set ot_fc_inst [$ot_fc_it getInst]
+  set ot_fc_inputs 0
+  foreach it [$ot_fc_inst getITerms] {
+    if {[$it getIoType] ne "INPUT"} {continue}
+    incr ot_fc_inputs
+    if {[$it getNet] ne $ot_fc_in} {error "forwarded clk_out is not directly buffered from clk_in"}
+  }
+  if {$ot_fc_inputs != 1} {error "forwarded clk_out driver must have one input"}
+  puts "OT_FC_DRIVER [[$ot_fc_inst getMaster] getName] [$ot_fc_inst getName]"
+  set ot_fc_root {}
+  foreach c [all_clocks] {
+    foreach source [get_property $c sources] {
+      if {[get_full_name $source] eq "clk_in"} {lappend ot_fc_root $c}
+      if {[get_full_name $source] eq "clk_out"} {delete_clock $c}
+    }
+  }
+  if {[llength $ot_fc_root] != 1} {error "forwarded clk_in needs exactly one source clock"}
+  set ot_fc_root [lindex $ot_fc_root 0]
+  set ot_fc_wave [$ot_fc_root waveform]
+  if {[llength $ot_fc_wave] != 2} {error "forwarded clock needs exactly two waveform edges"}
+  set_clock_latency -source 0 $ot_fc_root
+  unset_input_delay [get_ports clk_in]
+  set_propagated_clock [all_clocks]
+  sta::find_timing_paths -path_delay max -group_path_count 1
+  set ot_fc_pin [get_pins "[$ot_fc_inst getName]/[[$ot_fc_it getMTerm] getName]"]
+  foreach prop {arrival_max_rise arrival_min_rise arrival_max_fall arrival_min_fall slew_max_rise slew_max_fall} {
+    set value [get_property $ot_fc_pin $prop]
+    if {[string match arrival_* $prop]} {
+      set edge [expr {[string match *_fall $prop] ? 1 : 0}]
+      set value [expr {$value - [sta::time_sta_ui [lindex $ot_fc_wave $edge]]}]
+    }
+    puts "OT_FC_METRIC $prop $value"
+  }
+  puts "OT_FC_ROOT clk_in"
+}
+"""
+
+
+def forwarded_clock_receipt(log, corner, odb_sha256, spef_sha256):
+    """Parse native propagated STA; absence is ordinary for non-forwarded tiles."""
+    driver = re.findall(r"^OT_FC_DRIVER (\S+) (.+)$", log, re.M)
+    if not driver:
+        if re.search(r'^OT_FC_(?:METRIC|ROOT) ', log, re.M):
+            raise VerdictError('forwarded-clock provenance has no physical driver')
+        return None
+    raw_values = re.findall(r"^OT_FC_METRIC (\S+) (\S+)$", log, re.M)
+    values = dict(raw_values)
+    required = ('arrival_max_rise', 'arrival_min_rise', 'arrival_max_fall',
+                'arrival_min_fall', 'slew_max_rise', 'slew_max_fall')
+    import math
+    if len(driver) != 1 or len(raw_values) != len(required) or 'OT_FC_ROOT clk_in' not in log or set(values) != set(required):
+        raise VerdictError('incomplete native forwarded-clock measurement')
+    values = {k: float(v) for k, v in values.items()}
+    if not all(math.isfinite(v) and v >= 0 for v in values.values()):
+        raise VerdictError('nonphysical native forwarded-clock measurement')
+    for edge in ('rise', 'fall'):
+        if values['arrival_min_' + edge] > values['arrival_max_' + edge]:
+            raise VerdictError('reversed native forwarded-clock early/late bounds')
+    return dict(corner=corner, input_pin='clk_in', output_pin='clk_out',
+                driver_cell=driver[0][0], driver_instance=driver[0][1],
+                direct_root_buffer=True, units='ps', clk_in_to_clk_out_ps=values,
+                measured_at='physical output-driver Y; routed SPEF, propagated primary clock',
+                odb_sha256=odb_sha256, spef_sha256=spef_sha256)
+
+
+def liberty_pin_group(text, pin):
+    matches = list(re.finditer(r'\bpin\s*\(\s*"?' + re.escape(pin) + r'"?\s*\)\s*\{', text))
+    if len(matches) != 1:
+        raise VerdictError(f'need one native {pin} Liberty group')
+    start = matches[0].start()
+    depth, quoted, escaped = 0, False, False
+    for i in range(matches[0].end() - 1, len(text)):
+        char = text[i]
+        if escaped:
+            escaped = False
+        elif char == "\\" and quoted:
+            escaped = True
+        elif char == '"':
+            quoted = not quoted
+        elif not quoted:
+            depth += (char == '{') - (char == '}')
+            if depth == 0:
+                return start, i + 1
+    raise VerdictError('unterminated native forwarded-clock Liberty group')
+
+
+def merge_forwarded_clock_model(main, combinational):
+    """Use the native clock-free characterization for the one combinational path.
+
+    Main ETM registers/setup/hold remain byte-identical. OpenSTA's sequential
+    extraction invents cross-polarity clock arcs; a clock-free second extraction
+    naturally characterizes the actual buffer as clk_in -> clk_out instead.
+    """
+    a, b = liberty_pin_group(main, 'clk_out')
+    x, y = liberty_pin_group(combinational, 'clk_out')
+    group = combinational[x:y]
+    related = re.findall(r'related_pin\s*:\s*"([^";]+)"', group)
+    types = re.findall(r'timing_type\s*:\s*(\w+)\s*;', group)
+    if related != ['clk_in'] or types != ['combinational']:
+        raise VerdictError('native forwarding characterization is not one clk_in combinational arc')
+    if not re.search(r'timing_sense\s*:\s*positive_unate\s*;', group):
+        raise VerdictError('native forwarding characterization is not a noninverting buffer')
+    for table in ('cell_rise', 'cell_fall', 'rise_transition', 'fall_transition'):
+        if not re.search(r'\b' + table + r'\s*\(', group):
+            raise VerdictError('native forwarding characterization is missing load tables')
+    return main[:a] + group + main[b:]
 
 
 def sha(p):
@@ -382,6 +505,9 @@ def main():
     elif a.post_sdc and jb is None:
         for i, f in enumerate(a.post_sdc):
             mounts += ["-v", f"{f.resolve()}:/post{i}.sdc:ro"]
+    rec.pop('forwarded_clock', None)
+    rec.pop('forwarded_clock_errors', None)
+    (out / 'forwarded_clock.json').unlink(missing_ok=True)
     rec["sdc_sequence"] = {}
     mv = []
     for i, d in enumerate(a.macro_view):
@@ -426,10 +552,13 @@ def main():
         tcl = "\n".join([f"read_lef {PLAT}/lef/asap7_tech_1x_201209.lef",
                          f"read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef", *lefs, *libs, *seq, *audit,
                          "puts \"OT_WS max [sta::worst_slack_cmd max] min [sta::worst_slack_cmd min]\"",
+                         FORWARDED_CLOCK_TCL,
                          f"write_timing_model -library_name {a.name}_{c} /out/{a.name}_{c}.lib",
                          f"write_abstract_lef /out/{a.name}.lef" if c == "ss" else "",
                          f"file copy -force {PLAT}/lef/asap7_tech_1x_201209.lef /out/pin_only_tech.lef"
                          if c == "ss" and a.pin_only_tech else "",
+                         'if {[info exists ot_fc_root]} {', 'delete_clock [all_clocks]',
+                         f'write_timing_model -library_name {a.name}_{c}_forwarded /out/forwarded_{c}.lib.raw', '}',
                          "puts \"OT_EXPORT_DONE\"", "exit", ""])
         (out / f"export_{c}.tcl").write_text(tcl)
         if strict:
@@ -452,8 +581,34 @@ def main():
             if not ok:
                 print(f"VIEW_EXPORT FAIL {c}: export session {got} ps vs verdict {want} ps (tol {a.verdict_tol})")
             done = done and ok
+        try:
+            fc = forwarded_clock_receipt(log, c,
+                sha(base / '6_final.odb') if 'OT_FC_DRIVER ' in log else '',
+                sha(base / '6_final.spef') if 'OT_FC_DRIVER ' in log else '')
+            if fc is not None:
+                main_lib = out / f'{a.name}_{c}.lib'
+                comb_lib = out / f'forwarded_{c}.lib.raw'
+                fc['native_combinational_lib_sha256'] = sha(comb_lib)
+                fc['sequential_etm_before_merge_sha256'] = sha(main_lib)
+                merged = merge_forwarded_clock_model(main_lib.read_text(), comb_lib.read_text())
+                # Docker writes the native ETM as root; replace through our output
+                # directory, rather than trying to truncate its root-owned file.
+                with tempfile.NamedTemporaryFile(mode='w', dir=out, delete=False) as tmp:
+                    tmp.write(merged)
+                Path(tmp.name).chmod(0o644)
+                Path(tmp.name).replace(main_lib)
+                fc['exported_etm_sha256'] = sha(main_lib)
+                fc['extraction_tcl_sha256'] = sha(out / f'export_{c}.tcl')
+                rec.setdefault('forwarded_clock', {})[c] = fc
+        except (OSError, ValueError, VerdictError) as exc:
+            rec.setdefault('forwarded_clock_errors', {})[c] = str(exc)
+            done = False
         rec["corners"][c] = dict(returncode=p.returncode, done=done, ws=ws[-1] if ws else None,
                                  image=a.image, command=cmd)
+    if rec.get('forwarded_clock'):
+        (out / 'forwarded_clock.json').write_text(json.dumps(dict(
+            schema='opentallas.forwarded_clock.routed.v1', corners=rec['forwarded_clock'],
+            scope='clock arc only; actual communicating-pair setup/hold remains a die check'), indent=2) + '\n')
     rec["files"] = {f.name: sha(f) for f in sorted(out.iterdir()) if f.suffix in (".lef", ".lib")}
     want = [f"{a.name}.lef"] + [f"{a.name}_{c}.lib" for c in ("ss", "ff", "tt")]
     rec["ok"] = all(v.get("done") for v in rec["corners"].values()) and all(w in rec["files"] for w in want)
