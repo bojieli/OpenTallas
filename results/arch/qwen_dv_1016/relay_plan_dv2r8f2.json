@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.qwen.qdv_relay_plan.v1",
- "model": "/home/ubuntu/wt/qdv-1016/results/arch/qwen_dv_1016/dv2r8f2.json",
+ "model": "dv2r8f2.json",
  "hop_um": 405,
  "rule": "stages = ceil(L/405)-1 on face-projected Manhattan; every stage is a repeater-buffered relay station (die-level buffering, H-REACH); recipe-4 hold_budget die (hold on relay stations, FLOW-HOLD); the 14-edge rs_i -> rs_o feedthrough is INSIDE qfd_c_b16_dv, not a die relay",
  "totals": {
   "links": 401,
-  "relay_bits405": 70179,
-  "relay_bits200": 146961
+  "relay_bits405": 70557,
+  "relay_bits200": 147717
  },
  "links": [
   {
@@ -282,7 +282,7 @@
   {
    "bus": "dv_ib_W",
    "cls": "tree_spine",
-   "bits": 380,
+   "bits": 569,
    "src": "tt_ctlm",
    "dst": "dvl_a",
    "src_pin": [
