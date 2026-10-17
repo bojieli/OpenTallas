@@ -232,10 +232,16 @@ module ot_hfd_coll_q_static_v4 #(
  assign source_v[NPT+7]=arg_out_v;
  assign source_d[(NPT+7)*545+:545]=arg_out_data;
  wire [NS-1:0] capture_calendar;
- assign capture_calendar[9:0]=p_capture_slot;
- generate if(NPT==3)begin:g_arg_capture
-  assign capture_calendar[10]=p_ring[82];
- end endgenerate
+ // NLINK (H-NETLIST D4F 2026-10-16): NPT = the link count (1..3).  Capture slot i < NPT+7 is p_capture_slot[i]; the ARG
+ // source (index NPT+7) is p_ring[82] on the SOLO quadrant, else p_capture_slot[NPT+7] (always faulted, no ARG on q2).
+ // (3,1) and (2,0) are the original assignments exactly.
+ for(genvar ci=0;ci<NS;ci=ci+1)begin:g_capture
+  if(ci==NPT+7 && SOLO!=0)begin:g_arg_capture
+   assign capture_calendar[ci]=p_ring[82];
+  end else begin:g_slot
+   assign capture_calendar[ci]=p_capture_slot[ci];
+  end
+ end
  ot_hgi_coll_reduce_static u_reduce(
   .clk_control(clk_reduce[0]),.clk_state(clk_reduce[16:1]),.clk_add(clk_reduce[32:17]),
   .rst_n(rst_n),.clear(p_ring[83]),.in_v(dest_v[ND-1]),.in_flit(dest_d[(ND-1)*545+:545]),
@@ -337,7 +343,7 @@ module ot_hfd_coll_q_static_v4 #(
   .rr_local_tag(r_rr_local_tag));
 endmodule
 
-module ot_hfd_coll_q3_static_v4 #(parameter integer INJLAT=12)(
+module ot_hfd_coll_q3_static_v4 #(parameter integer INJLAT=12,parameter integer NLINK=3)(
  input wire rst_n,
  input wire clk_control,
  input wire [3:0] clk_issue,
@@ -346,7 +352,7 @@ module ot_hfd_coll_q3_static_v4 #(parameter integer INJLAT=12)(
  input wire [32:0] clk_reduce,
  input wire clk_arg,
  input wire clk_vmwrite,
- input wire [15-1:0] clk_link,
+ input wire [5*NLINK-1:0] clk_link,
  input wire [33:0] clk_tkm,
  input wire [1:0] qid,
  input wire hgi_start,
@@ -370,12 +376,12 @@ module ot_hfd_coll_q3_static_v4 #(parameter integer INJLAT=12)(
  output wire rr_v,
  output wire [2:0] rr_tag,
  output wire [255:0] rr_d,
- input wire [2:0] phy_up,
- output wire [2:0] tx_pin_v,
- output wire [1836-1:0] tx_pin_flit,
- input wire [2:0] rx_pin_v,
- input wire [1836-1:0] rx_pin_flit,
- output wire [2:0] retry_requested,
+ input wire [NLINK-1:0] phy_up,
+ output wire [NLINK-1:0] tx_pin_v,
+ output wire [NLINK*612-1:0] tx_pin_flit,
+ input wire [NLINK-1:0] rx_pin_v,
+ input wire [NLINK*612-1:0] rx_pin_flit,
+ output wire [NLINK-1:0] retry_requested,
  input wire [279:0] pr_cw_i,pr_ccw_i,
  output wire [279:0] pr_cw_o,pr_ccw_o,
  output wire [135:0] vm_rq,
@@ -385,10 +391,10 @@ module ot_hfd_coll_q3_static_v4 #(parameter integer INJLAT=12)(
  output wire done,
  output wire [31:0] stat_cycles
 );
- ot_hfd_coll_q_static_v4 #(.NPT(3),.SOLO(1),.INJLAT(INJLAT)) u_q(.*);
+ ot_hfd_coll_q_static_v4 #(.NPT(NLINK),.SOLO(1),.INJLAT(INJLAT)) u_q(.*);
 endmodule
 
-module ot_hfd_coll_q2_static_v4 #(parameter integer INJLAT=12)(
+module ot_hfd_coll_q2_static_v4 #(parameter integer INJLAT=12,parameter integer NLINK=2)(
  input wire rst_n,
  input wire clk_control,
  input wire [3:0] clk_issue,
@@ -396,7 +402,7 @@ module ot_hfd_coll_q2_static_v4 #(parameter integer INJLAT=12)(
  input wire [16:0] clk_ring,
  input wire [32:0] clk_reduce,
  input wire clk_vmwrite,
- input wire [10-1:0] clk_link,
+ input wire [5*NLINK-1:0] clk_link,
  input wire [1:0] qid,
  input wire hgi_start,
  input wire [5:0] hgi_start_pc,
@@ -419,12 +425,12 @@ module ot_hfd_coll_q2_static_v4 #(parameter integer INJLAT=12)(
  output wire rr_v,
  output wire [2:0] rr_tag,
  output wire [255:0] rr_d,
- input wire [1:0] phy_up,
- output wire [1:0] tx_pin_v,
- output wire [1224-1:0] tx_pin_flit,
- input wire [1:0] rx_pin_v,
- input wire [1224-1:0] rx_pin_flit,
- output wire [1:0] retry_requested,
+ input wire [NLINK-1:0] phy_up,
+ output wire [NLINK-1:0] tx_pin_v,
+ output wire [NLINK*612-1:0] tx_pin_flit,
+ input wire [NLINK-1:0] rx_pin_v,
+ input wire [NLINK*612-1:0] rx_pin_flit,
+ output wire [NLINK-1:0] retry_requested,
  input wire [279:0] pr_cw_i,pr_ccw_i,
  output wire [279:0] pr_cw_o,pr_ccw_o,
  output wire [135:0] vm_rq,
@@ -436,7 +442,7 @@ module ot_hfd_coll_q2_static_v4 #(parameter integer INJLAT=12)(
 );
  wire [33:0] clk_tkm=34'd0;
  wire clk_arg=1'b0;
- ot_hfd_coll_q_static_v4 #(.NPT(2),.SOLO(0),.INJLAT(INJLAT)) u_q(.*);
+ ot_hfd_coll_q_static_v4 #(.NPT(NLINK),.SOLO(0),.INJLAT(INJLAT)) u_q(.*);
 endmodule
 
 // Actual hardenable protocol leaf: all parent request/assembly/pipeline state.
@@ -656,8 +662,13 @@ module ot_hgi_coll_q_static_ctl_v4 #(
       (|a_arg_in_slot) || p_ring[82]))protocol_fault<=1;
    if(SOLO==0 && (p_tkm_start || (|dest_v[NPT+8+:4]) || (|p_tkm_del_slot)))protocol_fault<=1;
    if(|p_ring[87:84])protocol_fault<=1;
-   if(NPT==2 && (p_capture_slot[9] || p_sink_slot[15] || |p_sink_select[63:60] ||
-      p_lk_wr_v[2] || p_lk_rd_v[2] || p_lk_rx_expect[2] || p_lk_epoch_begin[2]))protocol_fault<=1;
+   // NLINK: instruction fields of absent link lanes / slots must be zero (NPT=2: p_capture_slot[9], p_sink_slot[15],
+   // p_sink_select[63:60], link lane 2 -- the original check; NPT=3: none).
+   for(integer ui=0;ui<10;ui=ui+1)if(ui>=NPT+7 && p_capture_slot[ui])protocol_fault<=1;
+   for(integer ui=0;ui<16;ui=ui+1)if(ui>=NPT+13 && p_sink_slot[ui])protocol_fault<=1;
+   for(integer ui=0;ui<64;ui=ui+1)if(ui>=(NPT+13)*$clog2(NPT+8) && p_sink_select[ui])protocol_fault<=1;
+   for(integer ui=0;ui<3;ui=ui+1)
+    if(ui>=NPT && (p_lk_wr_v[ui] || p_lk_rd_v[ui] || p_lk_rx_expect[ui] || p_lk_epoch_begin[ui]))protocol_fault<=1;
 
   end
  end

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """DIE-BINDABLE / margin-thin list (coordinator, owner safe margins, 2026-10-16).
 
-A CLOSED view is die-bindable only with native PASS AND TT >= +25 ps AND FF >= +10 ps.  Native PASS = the
+A CLOSED view is die-bindable with native PASS (owner revised standard, 10-16 evening).  TT >= +25 ps / FF >= +10 ps is a
+WATCH LIST only ('closed, thin margin (watch)'), never a binding blocker.  Native PASS = the
 tools/hier_contract/native_pin_audit.py per-view result passes (TT launch O-R <= 220 ps, capture S+R <= 190 ps, no
 combinational pin arc) AND its boundary clock spread <= 80 ps AND the view carries insertion.json (R = the routed
 boundary mean; without it the reference is unproven).  Closure is never revoked: the fleet-viz element table lists the
-rest as 'closed, margin-thin' (tools/fleet_viz/elements.py apply_die_bindable reads the 'views' list of this file).
+native FAIL/unaudited rows as 'closed, not die-bindable (native)' and thin-TT/FF native-PASS rows as the watch list (tools/fleet_viz/elements.py apply_die_bindable reads the 'views' list of this file).
 
     native_pin_audit.py --root <checkout of main> --out AUDIT
     margin_thin.py --audit AUDIT --elements elements.json [--source SHA] --out results/arch/margin_thin_1016.json
@@ -44,28 +45,33 @@ def main(argv=None):
     for v in views:
         for k in filter(None, (v['job'], v['cell'])): by.setdefault(k, v)
     E = json.loads(pathlib.Path(a.elements).read_text())
-    per, counts = collections.defaultdict(list), collections.defaultdict(collections.Counter)
+    per, nb, counts = collections.defaultdict(list), collections.defaultdict(list), collections.defaultdict(collections.Counter)
     for r in E['independent_rows']:
         cat = r.get('closed_category') or r['category']
         if not cat.startswith('closed') or r['category'] == 'superseded': continue
         b = r.get('best') or {}; tt, ff = b.get('tt'), b.get('ff')
         v = by.get(b.get('job')) or next((by[k] for k in [r['element']] + r.get('variants', []) if k in by), None)
-        native = (v or {}).get('native'); why = []
-        if native != 'PASS': why.append('native ' + ((v or {}).get('native_why') or 'FAIL') if native == 'FAIL' else 'native unaudited (no view on main)')
-        if tt is None or tt < TT_PS: why.append('TT %s < +%g' % (tt, TT_PS))
-        if ff is None or ff < FF_PS: why.append('FF %s < +%g' % (ff, FF_PS))
+        native = (v or {}).get('native')
+        nwhy = '' if native == 'PASS' else ('native ' + ((v or {}).get('native_why') or 'FAIL') if native == 'FAIL' else 'native unaudited (no view on main)')
+        watch = []
+        if tt is None or tt < TT_PS: watch.append('TT %s < +%g' % (tt, TT_PS))
+        if ff is None or ff < FF_PS: watch.append('FF %s < +%g' % (ff, FF_PS))
         t = r['target']; counts[t]['closed'] += 1
-        if not why: counts[t]['die_bindable'] += 1; continue
-        counts[t]['margin_thin'] += 1
-        counts[t]['thin_native_fail'] += native == 'FAIL'; counts[t]['thin_native_unaudited'] += native is None
-        counts[t]['thin_tt'] += tt is None or tt < TT_PS; counts[t]['thin_ff'] += ff is None or ff < FF_PS
-        per[t].append(dict(element=r['element'], category=cat, job=b.get('job'), tt=tt, ff=ff, native=native,
-                           view=(v or {}).get('view'), why='; '.join(why), die_contract=bool(r.get('dies'))))
-    for t in per: per[t].sort(key=lambda x: (not x['die_contract'], x['element']))
+        rec = dict(element=r['element'], category=cat, job=b.get('job'), tt=tt, ff=ff, native=native,
+                   view=(v or {}).get('view'), native_why=nwhy, watch='; '.join(watch), die_contract=bool(r.get('dies')))
+        if native != 'PASS':
+            counts[t]['not_die_bindable'] += 1; counts[t]['native_fail'] += native == 'FAIL'; counts[t]['native_unaudited'] += native is None
+            nb[t].append(rec)
+        else:
+            counts[t]['die_bindable'] += 1
+            if watch: counts[t]['watch_thin'] += 1; per[t].append(rec)
+    for t in list(per) + list(nb):
+        for L in (per, nb):
+            if t in L: L[t].sort(key=lambda x: (not x['die_contract'], x['element']))
     out = dict(schema='opentallas.margin_thin.v1', generated=datetime.datetime.now().astimezone().isoformat(timespec='seconds'),
                source_main=a.source, rule=dict(native='launch<=220, capture<=190 ps TT, no comb pin, spread<=%g ps, insertion.json present' % SPREAD_PS,
-                                               tt_ps=TT_PS, ff_ps=FF_PS, note='closure is NOT revoked; margin-thin rows stay closed'),
-               counts={t: dict(c) for t, c in counts.items()}, margin_thin=dict(per), views=views)
+                                               tt_ps=TT_PS, ff_ps=FF_PS, binding='native PASS only', watch='TT<+25 or FF<+10 on a native-PASS view: watch list, not a blocker', note='closure is NOT revoked'),
+               counts={t: dict(c) for t, c in counts.items()}, watch_thin=dict(per), not_die_bindable=dict(nb), views=views)
     pathlib.Path(a.out).write_text(json.dumps(out, indent=1) + '\n')
     print(json.dumps(out['counts'], indent=1))
 

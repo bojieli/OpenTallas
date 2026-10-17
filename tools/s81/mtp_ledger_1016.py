@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """S81 per-user MTP / AR rate with the honest VM ledger (S-FUNC 2026-10-16).
 
-Inputs (all committed):
+Selected-die relay mode requires --relay-stages, --vm-paths, --stages and
+--compiled-out. See tools/s81/vm_relay_stages.md. No missing-path fallback.
+
+Historical screen (--legacy-relay-screen only) inputs (all committed):
   results/arch/accepted_cost_ledger_1013.json             current S81 rows (accepted / proposed)
   results/arch/s81_mtp_ledger_1016/hub_faces_5037_hop*.json   a2f_hub_faces.py screen of the adopted 5,037 x 4,600.8 VM
                                                            (vmc2 cross faces, caprow, read_near) on today's tools
@@ -25,6 +28,8 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools/s81_vm'))
 sys.path.insert(0, str(ROOT / 'tools/throughput'))
 import a2f_reach_price as RP  # noqa: E402
+from vm_relay_stages import bind as bind_vm_relays
+import die_relay_stages as DRS
 
 LEDGER = 'results/arch/accepted_cost_ledger_1013.json'
 OUT = 'results/arch/s81_mtp_ledger_1016'
@@ -42,11 +47,70 @@ def edges(path):
     return {k: r[k]['added_edges'] for k in ('write', 'read', 'commit')}
 
 
+def selected_plan_summary(plan_path, paths_path, ledger, stages):
+    """Replace only VM.RELAY. Unmeasured core/commit remainder stays charged."""
+    plan = DRS.load(plan_path)
+    paths = json.loads(Path(paths_path).read_text())
+    relay, compiled = bind_vm_relays(plan, paths)
+    price = RP.price(relay['write'], relay['read'])
+    rates = {}
+    for wl, anchor in hop_only(stages).items():
+        losses = {status: {r['group']: r['per_workload'][wl]['e2e_loss_pct']
+                           for r in ledger['rows'] if r['design'] == 's81' and
+                           r['status'] == status and wl in r['per_workload']}
+                  for status in ('accepted', 'proposed')}
+        accepted = sum(losses['accepted'].values())
+        proposed = sum(losses['proposed'].values())
+        # Selection provides a candidate cost; it never confers ledger acceptance.
+        # Remove an existing VM.RELAY row from either status exactly once before
+        # adding the candidate. Other core/commit rows keep their status and cost.
+        baseline = {status: sum(v for group, v in groups.items() if group != 'VM.RELAY')
+                    for status, groups in losses.items()}
+        candidate = price[wl]['upper_every_node']['e2e_loss_pct']
+        baseline_total = sum(baseline.values())
+        rates[wl] = dict(hop_only=anchor,
+                         ledger_unchanged=dict(accepted_loss_pct=accepted, proposed_loss_pct=proposed,
+                             accepted_tok_s=anchor * (1 - accepted / 100),
+                             accepted_and_proposed_tok_s=anchor * (1 - (accepted + proposed) / 100)),
+                         baseline_without_vmrelay=dict(accepted_loss_pct=baseline['accepted'],
+                             proposed_loss_pct=baseline['proposed'],
+                             composed_tok_s=anchor * (1 - baseline_total / 100)),
+                         selected_relay_candidate=dict(e2e_loss_pct=candidate, accepted=False, measured_native=False),
+                         candidate_composed_loss_pct=baseline_total + candidate,
+                         candidate_composed_tok_s=anchor * (1 - (baseline_total + candidate) / 100))
+    compiled['compiled']['loaded_from'] = str(plan_path)
+    return dict(schema='opentallas.s81.mtp-ledger.v1', grade='COMPOSED_NOT_NATIVE',
+                relay_input=relay, stages=stages, rates=rates, native_qualified=False,
+                open=['Native path/operation coverage and exact timeline remain unproven.',
+                      'VM.RELAY replacement is a candidate projection only; existing ledger rows/statuses remain unchanged.',
+                      'Owner-declared path alternatives are not a completeness proof.']), compiled
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--out', default=f'{OUT}/summary.json')
+    ap.add_argument('--relay-stages', type=Path, help='selected S81 die relay-stage table')
+    ap.add_argument('--vm-paths', type=Path, help='source/digest-bound VM bus paths')
+    ap.add_argument('--compiled-out', type=Path, help='table for die_relay_check.py')
+    ap.add_argument('--stages', type=int, help='selected allocator stage count; required with relay table')
+    ap.add_argument('--legacy-relay-screen', action='store_true', help='explicit historical geometry diagnostic')
     a = ap.parse_args()
+    selected = a.relay_stages is not None or a.vm_paths is not None
+    if selected and (a.legacy_relay_screen or not all((a.relay_stages, a.vm_paths, a.compiled_out, a.stages))):
+        ap.error('selected-plan mode requires --relay-stages, --vm-paths, --compiled-out, --stages; no legacy fallback')
+    if not selected and not a.legacy_relay_screen:
+        ap.error('select --relay-stages and --vm-paths; historical screen requires --legacy-relay-screen')
+    if selected and a.stages < 81:
+        ap.error('--stages below the 81-stage anchor is unsupported')
     led = json.loads((ROOT / LEDGER).read_text())
+    if selected:
+        res, compiled = selected_plan_summary(a.relay_stages, a.vm_paths, led, a.stages)
+        p = ROOT / a.out
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(json.dumps(res, indent=1) + '\n')
+        DRS.write(a.compiled_out, compiled)
+        print('MTP_LEDGER COMPOSED_NOT_NATIVE', json.dumps(res['rates']))
+        return
     rows = [r for r in led['rows'] if r['design'] == 's81']
     loss = {st: {wl: {r['group']: r['per_workload'][wl]['e2e_loss_pct'] for r in rows
                       if r['status'] == st and wl in r['per_workload']} for wl in ANCHOR}
@@ -91,7 +155,7 @@ def main():
         'honest_hop1_84_frames20': scenario('honest_hop1_84_frames20', 84, relay_wr['hop1'], rem['hop1'],
                                             '20-pair frames: 2,065 pairs/die (+92), allocator p2065s84h, 84 stages / 336 rank dies'),
     }
-    res = dict(schema='opentallas.s81.mtp-ledger.v1', grade='COMPOSED_NOT_NATIVE',
+    res = dict(schema='opentallas.s81.mtp-ledger.v1', grade='HISTORICAL_GEOMETRY_SCREEN_NOT_NATIVE',
                relay_screen=dict(hop2=e2, hop1=e1, reach_um=900, outline_um=[5037.0, 4600.8],
                                  note='today-tools screen gives write 11 (front_scatter 2), the 2210 summary recorded write 10: VM.RELAY is 29 W+R edges, not 28; commit relay 5 was never in VM.RELAY'),
                core_ages=cal.get('a2f_hop1 (HOP1 1, production)'), core_vs_legacy=core,

@@ -1,0 +1,54 @@
+{
+  "schema": "opentallas.ref_tile.gate_result.v2",
+  "kit": "s81_bf_lane4_boundary_r2",
+  "verdict": "PASS",
+  "generated": "2026-10-16T04:09:29-0700",
+  "host": "ot-epyc4",
+  "clock": {
+    "max_root_sinks": 6040,
+    "root": "port:fclk",
+    "cts": true,
+    "tt_insertion_ps": 200.0,
+    "tt_spread_ps": 20.6,
+    "declared_clock": "cts",
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "fclk",
+        "clock": "core_clk",
+        "tt": {
+          "boundary": {
+            "n": 336,
+            "mean": 189.5,
+            "min": 181.5,
+            "max": 199.7
+          },
+          "all": {
+            "n": 6164,
+            "mean": 188.2,
+            "min": 179.4,
+            "max": 200.0
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "6,040 sinks on the largest root <= 15,000; measured TT insertion 200.0 ps, leaf spread 20.6 ps"
+  },
+  "items": [],
+  "scope": "Exact historical component CTS probe source3a394b56c; same actual lane RTL as review bundle. This is not a current-main job gate binding or routed native signoff.",
+  "source_archive_sha256": "082154bcf0e1cc5d37282a76421043f1a4be10942ae19238767e0a6c2f1af7cf",
+  "personally_viewed_images": [
+    "/home/ubuntu/wt/s81-bf-r2-review/results/rtl/s81_bf_clock_1015/c10/recovery_0253/lane4_r2_gate/density.png",
+    "/home/ubuntu/wt/s81-bf-r2-review/results/rtl/s81_bf_clock_1015/c10/recovery_0253/lane4_r2_gate/floorplan.png"
+  ],
+  "visual_findings": "Full-face W143/E172 signals and centered S clock retained; E-side density is higher, W blue corridors remain. 351 shapes includes34PG shapes and317signals. No macros or pin-edge cluster. CTS PASS does not establish native capture."
+}

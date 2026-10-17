@@ -3902,6 +3902,16 @@ def main(argv=None):
             encoder_sizing=dict(or4_per_group=0 if a.kv_wq_binary else 3, or2_equivalent_total=0 if a.kv_wq_binary else 144,
                                 reserved_frame_mm2=0 if a.kv_wq_binary else round(16*43.2*43.2/1e6,6), measured_cell_area=None))
     a.out.mkdir(parents=True, exist_ok=True)
+    try:                                         # ROOT RELAY-SCHEMA 10-16: additive per-bus stage table, never a gate here
+        sys.path.insert(0, str(ROOT / 'tools'))
+        from qwen_kv_die import relay_stages_export as _rsx
+        import die_relay_stages as _drs
+        _doc = _rsx.export_model(m, f'qwen_kv:{a.out.name}', sources=['tools/qwen_kv_die/kv_die.py'])
+        _drs.write(a.out / 'relay_stages.json', _doc)
+        rec['relay_stages_export'] = dict(file='relay_stages.json', digest=_doc['digest'], buses=_doc['bus_count'],
+                                          problems=_doc['problem_count'])
+    except Exception as _e:                      # noqa: BLE001
+        rec['relay_stages_export'] = dict(error=repr(_e)[:500])
     (a.out / 'plan.json').write_text(json.dumps(rec, indent=1, default=str) + '\n')
     if real_rows:
         (a.out/'actual_pin_bindings.json').write_text(json.dumps(real_rows,indent=1)+'\n')

@@ -11,7 +11,7 @@
 // of host_v4 must equal the documented delta, and fault_cause must name the faulting child at its first edge:
 //   0 none (fault never; foreign-target frames ignored by both)  delta -, cause 0
 //   1 unexpected RX on rail 0                                     delta 0, cause bit 6
-//   2 unexpected RED_CARRY rc_v                                   delta 0, cause bit 2
+//   2 unexpected RED_CARRY rc_v                                   delta +1, cause bit 2 (V7: rc_v pin-captured)
 //   3 q2 illegal tkm reservation                                  delta 0, cause bit 13
 //   4 qslots capture reservation without source (VM0)             delta +1, cause bit 3 (pin_v2)
 //   5 q2 arg capture reservation (no arg source in q2)            delta -1, cause bit 12
@@ -98,11 +98,11 @@ module tb_hgi_coll_q_hard_v5;
   .pr_cw_i(280'd0),.pr_ccw_i(280'd0),.pr_cw_o(r_cw),.pr_ccw_o(r_ccw),
   .vm_rq(r_rq),.vm_rr(r_vm_response),.vm_kq(r_kq),.fault(r_fault),.done(r_done2),.stat_cycles(r_cyc));
 `ifdef Q3
- ot_hfd_coll_q3_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm(clk),.clk_upipe(clk),
+ ot_hfd_coll_q3_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm({16{clk}}),.clk_upipe({16{clk}}),
   .clk_issue(clk),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),.clk_arg(clk),
   .clk_tkm({34{clk}}),.clk_vmwrite({16{clk}}),.clk_link({15{clk}}),
 `else
- ot_hfd_coll_q2_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm(clk),.clk_upipe(clk),
+ ot_hfd_coll_q2_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm({16{clk}}),.clk_upipe({16{clk}}),
   .clk_issue(clk),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),
   .clk_vmwrite({16{clk}}),.clk_link({10{clk}}),
 `endif
@@ -176,7 +176,7 @@ module tb_hgi_coll_q_hard_v5;
   exp_delta=0;exp_bit=-1;
   case(scen)
    1:begin exp_delta=0;exp_bit=6;end
-   2:begin exp_delta=0;exp_bit=2;end
+   2:begin exp_delta=1;exp_bit=2;end
    3:begin exp_delta=0;exp_bit=13;code[20][718]=1;end
    4:begin exp_delta=1;exp_bit=3;code[20][2+NPT]=1;end
    5:begin exp_delta=-1;exp_bit=12;code[20][9]=1;end
