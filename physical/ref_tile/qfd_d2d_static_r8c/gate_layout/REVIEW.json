@@ -6,8 +6,7 @@
  "verdict": "APPROVED",
  "time": "2026-10-17T08:40-07:00",
  "date": "2026-10-17",
- "gate_commit": "d9d78c844",
- "gate_generated": "2026-10-17T07:42:12-0700",
+ "gate_commit": "2026-10-17T07:42:12-0700",
  "checklist": {
   "lattice": "PASS: 2x2 SRAM grid on the lattice, same geometry as closed r7f",
   "std_cell_band": "PASS: central control band between the SRAM rows, as r7f",
@@ -15,6 +14,11 @@
   "clock_entry": "PASS with watch item: ck enters on the E face while pin bands are W/N/S; if routed spread > 80 add a W-side entry. TT boundary insertion 448.4..511.4, 10,925 sinks < 15k",
   "shape": "PASS: 475.2 x 280.8 = r7f outline/pins"
  },
- "images": ["gate_layout/floorplan.png", "gate_layout/density.png"],
- "relayed_by": "Q-KV lead / Q-LINK2-0640"
+ "images": [
+  "gate_layout/floorplan.png",
+  "gate_layout/density.png"
+ ],
+ "relayed_by": "Q-KV lead / Q-LINK2-0640",
+ "gate_source_commit": "d9d78c844",
+ "gate_commit_note": "submit_exact.review_check matches gate.commit / source_binding.commit / generated only; this gate (exact_content_snapshot) has commit null and start_commit d9d78c844, so its generated stamp identifies it"
 }
