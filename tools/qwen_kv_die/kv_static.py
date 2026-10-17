@@ -43,7 +43,7 @@ IDENT = re.compile(r'^[A-Za-z_]\w*$')
 # clock pin has its own parent port, and the die clock tree delivers each one as a SEPARATE entry (phi - R_i, R_i =
 # entry wire + that child's routed insertion), never a tie to a shared net inside the parent.  pll_hbm / pll_hbm_port /
 # pll_hbm_ecc are the hardened controller cluster's core / port / ECC HBM entries (same HBM clock, three entries).
-PC_PATH_CLOCK_ENTRIES = {'pll_hbm': 'hbm', 'pll_hbm_port': 'hbm', 'pll_hbm_ecc': 'hbm', 'cal_hck': 'hbm',
+PC_PATH_CLOCK_ENTRIES = {'pll_hbm': 'hbm', 'pll_hbm_port': 'hbm', 'pll_hbm_ecc': 'hbm', 'pll_hbm_cdc': 'hbm', 'pll_hbm_obs': 'hbm', 'cal_hck': 'hbm',
                          'front_hck': 'hbm', 'return_hck': 'hbm', 'ck': 'core', 'return_ck': 'core'}
 
 
