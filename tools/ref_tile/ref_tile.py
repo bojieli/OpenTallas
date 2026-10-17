@@ -2086,6 +2086,10 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
             (o / "CLOCK_INSERTION_FAILED").write_text(f"clock measurement exit {cr.returncode}; no insertion.json published\n")
         else:
             (o / "CLOCK_INSERTION_FAILED").unlink(missing_ok=True)
+            if (o / "forwarded_clock.json").exists():
+                clock_record = json.loads(insertion.read_text())
+                clock_record["forwarded_clock"] = json.loads((o / "forwarded_clock.json").read_text())
+                insertion.write_text(json.dumps(clock_record, indent=1) + "\n")
     routed_def = None
     if grant and base is not None:
         # Require final detailed-route geometry; never GRT or an abstract reconstructed from pins.
