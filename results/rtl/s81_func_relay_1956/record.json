@@ -35,5 +35,19 @@
     "retcol a5sp pin redistribution0cycles",
     "CFIFO r5d consumer-root movement0cycles"
   ],
-  "qualification": "source mechanism proof only; exact native timeline and throughput remain open"
+  "qualification": "source mechanism proof only; exact native timeline and throughput remain open",
+  "source_port_audit": {
+    "file": "unbound_layer1_port_inventory.json",
+    "expected_verdict": "FAIL",
+    "findings": 27,
+    "scope": "current layer1.f requirements with NO emitted die or shape; not c27 integration inventory",
+    "actual_findings": [
+      "field command default f_iss92 vs required93",
+      "MIX4 ck149 vs required133",
+      "hcpost required module is absent (None)",
+      "Engram lookup unevaluated ports/source absent from selected layer1 manifest",
+      "Markov source absent from selected layer1 manifest",
+      "whole emitted die, shape and pin binding absent"
+    ]
+  }
 }
