@@ -1,0 +1,212 @@
+{
+ "name": "hdie_pc_ctrl_cfg_h9b",
+ "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+  "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "k_v",
+   "k_rdy",
+   "k_we",
+   "k_addr",
+   "k_len",
+   "k_tag",
+   "k_wdata",
+   "k_wstrb",
+   "kr_v",
+   "kr_rdy",
+   "kr_tag",
+   "kr_beat",
+   "kr_data",
+   "k_wr_done"
+  ],
+  "S": [
+   "row_v",
+   "row_op",
+   "row_bank",
+   "row_row",
+   "col_v",
+   "col_we",
+   "col_bank",
+   "col_col",
+   "col_data",
+   "col_strb",
+   "dram_rvalid",
+   "dram_rdata"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "owner_fault_split"
+  ],
+  "E": [
+   "pc_fault",
+   "pc_id",
+   "refresh_reload"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    56.16,
+    30.24
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    56.16,
+    92.88
+   ],
+   "at_exact": true
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:H-PC",
+  "branch": "claude/hbm-pc-h9b",
+  "tag": "h9b-pinflop-ring",
+  "purpose": "H9b (H-PC Claude 2026-10-16): H9 routed nothing but its CTS native probe failed capture 404.8 ps on 37 inputs (k_addr/k_len legality adder + k_v skid push select + kr_rdy skid pop select straight from pins; results/arch/hbm_pc_cfg_h9/cts_native/native_audit.json). H9b: pure K pin flops, legality from flops, 3-entry K ring (no data moves on pop) with registered k_rdy (+1 K request edge, full rate), kr_rdy pin-registered (ready-latency-1, consumer vmks KRL1 3-entry slot), recipe 4 / hold_budget die (no pin pads). Same 185.76 x 164.16 outline and 1229 pins.",
+  "extra_paths": [
+   "physical/hbm_die_pins/pc_cfg_h9",
+   "results/arch/hbm_pc_cfg_h8_1623/source",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_pc_h9b_txn.sv",
+   "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv",
+   "tools/hbm_die_v16/bench_pc_cfg_all_h9.py",
+   "tools/hbm_die_v16/bench_pc_cfg_all_h9.sh",
+   "tools/hbm_die_v16/bench_pc_cfg_h8.sh",
+   "tools/hbm_die_v16/bench_pc_cfg_h9.sh",
+   "tools/hbm_die_v16/bench_pc_cfg_h9_full.sh",
+   "tools/hbm_die_v16/bench_pc_cfg_h9b_txn.sh"
+  ],
+  "record_to": "results/rtl/ref_tile/hdie_pc_ctrl_cfg_h9",
+  "benches": [
+   {
+    "name": "h9b_txn_vs_h9",
+    "cmd": "bash tools/hbm_die_v16/bench_pc_cfg_h9b_txn.sh {RUN}/bench/txn 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^H9B_TXN PASS reqs=",
+    "min_count_regex": "^H9B_TXN PASS reqs=\\d+ beats=(\\d+)"
+   },
+   {
+    "name": "h9b_txn_rmut1",
+    "cmd": "bash tools/hbm_die_v16/bench_pc_cfg_h9b_txn.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^H9B_TXN PASS reqs=",
+    "fail_regex": "H9B_TXN FAIL errors=\\d+ RMUT=1",
+    "note": "K ring slice reads one entry behind"
+   },
+   {
+    "name": "h9b_txn_rmut2",
+    "cmd": "bash tools/hbm_die_v16/bench_pc_cfg_h9b_txn.sh {RUN}/bench/m2 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^H9B_TXN PASS reqs=",
+    "fail_regex": "H9B_TXN FAIL errors=\\d+ RMUT=2",
+    "note": "KR pops on unregistered kr_rdy (ready-latency-0)"
+   },
+   {
+    "name": "h9b_txn_rmut3",
+    "cmd": "bash tools/hbm_die_v16/bench_pc_cfg_h9b_txn.sh {RUN}/bench/m3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^H9B_TXN PASS reqs=",
+    "fail_regex": "H9B_TXN FAIL errors=\\d+ RMUT=3",
+    "note": "k_rdy credit off by one (ring overflow)"
+   }
+  ]
+ },
+ "params": {
+  "OREG": 1,
+  "KREG": 1,
+  "KRREG": 1,
+  "RREG": 1,
+  "WPAY": 1,
+  "QREG": 1
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "H9b registers every pin in RTL: every K input lands in a pure pin flop (kp_*, data unconditional), k_rdy is a flop, kr_rdy is pin-registered (kr_rdy_q), KR outputs leave the per-64b skid head flops, PHY commands leave OREG flops, PHY return enters RREG flops, straps enter pc_id_q/refresh_reload_q; a kit flop stage would add a redundant edge"
+ },
+ "io_tcl": "physical/hbm_die_pins/pc_cfg_h9/pins.tcl",
+ "structural_change": "H9b (H-PC Claude 2026-10-16): H9 routed nothing but its CTS native probe failed capture 404.8 ps on 37 inputs (k_addr/k_len legality adder + k_v skid push select + kr_rdy skid pop select straight from pins; results/arch/hbm_pc_cfg_h9/cts_native/native_audit.json). H9b: pure K pin flops, legality from flops, 3-entry K ring (no data moves on pop) with registered k_rdy (+1 K request edge, full rate), kr_rdy pin-registered (ready-latency-1, consumer vmks KRL1 3-entry slot), recipe 4 / hold_budget die (no pin pads). Same 185.76 x 164.16 outline and 1229 pins.",
+ "clock": "spine",
+ "spine_macro_leaf": true,
+ "std_area_um2": 6327,
+ "outline": {
+  "w": 185.76,
+  "h": 164.16
+ },
+ "orfs_vars": {
+  "OT_MEG_DEPTH_UM": 48
+ },
+ "slot_change_request": "APPROVED isolated H7 measurement grant aeabab04f,185.76x164.16 exact1229signalpins; no d4/default/all128-home adoption",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "H9b (H-PC Claude 2026-10-16): H9 routed nothing but its CTS native probe failed capture 404.8 ps on 37 inputs (k_addr/k_len legality adder + k_v skid push select + kr_rdy skid pop select straight from pins; results/arch/hbm_pc_cfg_h9/cts_native/native_audit.json). H9b: pure K pin flops, legality from flops, 3-entry K ring (no data moves on pop) with registered k_rdy (+1 K request edge, full rate), kr_rdy pin-registered (ready-latency-1, consumer vmks KRL1 3-entry slot), recipe 4 / hold_budget die (no pin pads). Same 185.76 x 164.16 outline and 1229 pins."
+ },
+ "provisional_measurement_grant": {
+  "grant_commit": "aeabab04f",
+  "path": "results/arch/hbm_die_v16/h7_fault_split_provisional_0920.json",
+  "source_request": "cf302625a",
+  "scope": "isolated actual additive H7 leaf only"
+ },
+ "hold_budget": "die"
+}
