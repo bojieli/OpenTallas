@@ -1,7 +1,7 @@
 #!/bin/bash
 # beat_bench.sh <outdir> [base|muttree|mutcoef] [BEAT] [L0|L2]  (cwd = repo root): S81-SLICE beat-leaf bench (vp + vn + vq)
 # on the 1M token's real layer chain (su_cases).  base must PASS; the mutants must FAIL.  Exit 0 = the expected verdict.
-# S81SL_VQ_XMEM=1 builds vq with its SRAM-ring x wait line (ot_s81sl_vq AQ_XMEM, the kit's setting).
+# S81SL_VQ_XMEM=1|2 builds vq with its SRAM-ring x wait line (ot_s81sl_vq AQ_XMEM; the kit sets 2).
 # A 5th argument 'raw' reports a mutant's own verdict instead (prints SLBEAT, exit 1 on FAIL: an expect=fail bench).
 set -u; O=$1; M=${2:-base}; B=${3:-37}; L=${4:-L0}; mkdir -p $O/run
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator

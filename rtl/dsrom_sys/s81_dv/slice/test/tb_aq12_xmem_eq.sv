@@ -3,7 +3,9 @@
 // line), side by side on one random stimulus; every output compared every cycle (vo / fault from reset release, the
 // unreset data outputs q / e / y once both lines hold written data: cycle >= WARM).  Second pair: ot_s81sl_vq
 // AQ_XMEM 1 vs 0 on random in-order sub-beat streams (xf / xf_v / xf_s / fault every cycle).  +define+OT_AQ12_MUT_XPTR
-// shortens the ring by one row: the bench must FAIL.
+// shortens the ring by one row: the bench must FAIL.  Third: ot_s81sl_vq AQ_XMEM 2 (one-macro sub-beat ring) vs 0 on the
+// same stream, beats alternating at random between the y and the u port; +define+OT_VQ_MUT_XPTR (ring one row short)
+// must FAIL (vq2_err).
 module tb_aq12_xmem_eq #(parameter integer N = 20000, parameter integer SEED = 1017);
     localparam integer WARM = 40;
     reg clk = 1'b0, rst_n = 1'b0;
@@ -21,7 +23,12 @@ module tb_aq12_xmem_eq #(parameter integer N = 20000, parameter integer SEED = 1
     ot_s81sl_vq #(.AQ_XMEM(1)) v_dut (.clk(clk), .rst_n(rst_n), .y_v(yv), .y_i(yi), .y(yd), .u_v(1'b0), .u_i(3'd0), .u(256'd0),
         .sid(4'd3), .k(3'd2), .m_v(mv), .m_q(mq), .m_b(mb), .m_i(mi), .um_v(1'b0), .um_q(1'b0), .um_b(1'b0), .um_i(8'd0),
         .xf_v(xfv1), .xf_s(xfs1), .xf(xf1), .fault(vf1));
-    integer seed, cyc, err, nvo, nxf, verr, i, gap, sb;
+    wire xfv2, xfs2, vf2; wire [275:0] xf2;
+    reg uon;
+    ot_s81sl_vq #(.AQ_XMEM(2)) v_d2 (.clk(clk), .rst_n(rst_n), .y_v(yv && !uon), .y_i(yi), .y(yd), .u_v(yv && uon), .u_i(yi), .u(yd),
+        .sid(4'd3), .k(3'd2), .m_v(mv), .m_q(mq), .m_b(mb), .m_i(mi), .um_v(1'b0), .um_q(1'b0), .um_b(1'b0), .um_i(8'd0),
+        .xf_v(xfv2), .xf_s(xfs2), .xf(xf2), .fault(vf2));
+    integer seed, cyc, err, nvo, nxf, verr, verr2, i, gap, sb;
     function automatic [31:0] rword(input integer r1, input integer r2, input integer r3);
         reg [7:0] ex;
         begin
@@ -34,7 +41,7 @@ module tb_aq12_xmem_eq #(parameter integer N = 20000, parameter integer SEED = 1
         end
     endfunction
     initial begin
-        seed = SEED; err = 0; nvo = 0; nxf = 0; verr = 0; gap = 0; sb = 0;
+        seed = SEED; uon = 1'b0; verr2 = 0; err = 0; nvo = 0; nxf = 0; verr = 0; gap = 0; sb = 0;
         v = 1'b0; x = 1024'd0; yv = 1'b0; yi = 3'd0; yd = 256'd0; mv = 1'b0; mq = 1'b1; mb = 1'b0; mi = 8'd0;
         i = $urandom(seed);
         repeat (3) @(posedge clk);
@@ -51,6 +58,9 @@ module tb_aq12_xmem_eq #(parameter integer N = 20000, parameter integer SEED = 1
                 verr = verr + 1; if (verr < 10) $display("MISMATCH vq cyc=%0d xf_v %b/%b fault %b/%b", cyc, xfv0, xfv1, vf0, vf1);
             end
             if (xfv0) nxf = nxf + 1;
+            if (xfv0 !== xfv2 || xfs0 !== xfs2 || vf0 !== vf2 || (cyc >= WARM && xf0 !== xf2)) begin
+                verr2 = verr2 + 1; if (verr2 < 10) $display("MISMATCH vq2 cyc=%0d xf_v %b/%b fault %b/%b", cyc, xfv0, xfv2, vf0, vf2);
+            end
             // aq stimulus: a block on ~70 % of cycles
             v = ($urandom % 10) < 7;
             for (i = 0; i < 32; i = i + 1) x[32*i +: 32] = rword($urandom, $urandom, $urandom);
@@ -62,12 +72,12 @@ module tb_aq12_xmem_eq #(parameter integer N = 20000, parameter integer SEED = 1
                 yv = 1'b1; yi = sb[2:0];
                 for (i = 0; i < 8; i = i + 1) yd[32*i +: 32] = rword($urandom, $urandom, $urandom);
                 sb = sb + 1;
-                if (sb == 8) begin sb = 0; gap = 44 + ($urandom % 20); end
+                if (sb == 8) begin sb = 0; gap = 44 + ($urandom % 20); uon = $urandom; end
             end
             if (!yv && ($urandom % 8) == 0) begin mv = 1'b1; mq = $urandom; mb = $urandom; mi = $urandom; end
         end
-        $display("SUMMARY aq12_xmem_eq N=%0d aq_valid=%0d aq_err=%0d vq_frag=%0d vq_err=%0d", N, nvo, err, nxf, verr);
-        if (err == 0 && verr == 0 && nvo > 1000 && nxf > 100) $display("PASS aq12_xmem_eq");
+        $display("SUMMARY aq12_xmem_eq N=%0d aq_valid=%0d aq_err=%0d vq_frag=%0d vq_err=%0d vq2_err=%0d", N, nvo, err, nxf, verr, verr2);
+        if (err == 0 && verr == 0 && verr2 == 0 && nvo > 1000 && nxf > 100) $display("PASS aq12_xmem_eq");
         else $display("FAIL aq12_xmem_eq");
         $finish;
     end

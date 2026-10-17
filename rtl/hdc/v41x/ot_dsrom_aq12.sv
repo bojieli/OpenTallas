@@ -20,6 +20,9 @@ module ot_dsrom_aq12 #(
     // cycle at wp and read every cycle at wp - 10 (free-running 4-bit pointer: no enables, no flow control).  The macro
     // read is registered, so the address leaves one cycle early: rd_out in cycle c = s0_x of cycle c - 11, exactly the
     // flop line's xg.  Removes 11,264 data flops (the vq hold class line[i] -> line[i+1024]).
+    // XMEM = 2 (S81-TILES2 2026-10-17): the wait line lives in the instantiating tile: xg = xd, which the parent must
+    // drive with x delayed by 12 cycles (= s0_x delayed 11, the flop line's xg) on every cycle.  ot_s81sl_vq AQ_XMEM = 2
+    // rebuilds it from the 256-b sub-beat stream in ONE 128x256 macro (no 1024-b-wide macro bank).  xd unused otherwise.
     parameter integer XMEM = 0
 ) (
     input  wire          clk,
@@ -30,7 +33,8 @@ module ot_dsrom_aq12 #(
     output reg  [255:0]  q,
     output reg  signed [9:0] e,
     output reg  [511:0]  y,
-    output reg           fault
+    output reg           fault,
+    input  wire [1023:0] xd
 );
     localparam integer LATENCY = 18;
     localparam [30:0] FLOOR_FP8 = 31'h38d1b717;   // float32(1e-4)
@@ -48,9 +52,9 @@ module ot_dsrom_aq12 #(
     wire [1023:0] xg, xq, xm;
     // the flop line keeps its name u_x (XMEM = 0: unchanged hierarchy u_x.g_line.line; XMEM = 1: D = 0, a wire)
     ot_hdc_delay #(.W(1024), .D((XMEM != 0) ? 0 : 11)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(xq));
-    assign xg = (XMEM != 0) ? xm : xq;
+    assign xg = (XMEM == 2) ? xd : (XMEM != 0) ? xm : xq;
     generate
-        if (XMEM != 0) begin : g_xmem
+        if (XMEM == 1) begin : g_xmem
             // s0_x (cycle c) is written at the end of cycle c to row wp(c); xm(c) is the macro output register loaded
             // at the end of cycle c - 1 from row wp(c - 1) - 10 = wp(c - 11) (read before write: rows 10 apart).
             reg  [3:0] wp;

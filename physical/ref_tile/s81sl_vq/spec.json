@@ -29,7 +29,7 @@
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv"
  ],
  "params": {
-  "AQ_XMEM": 1
+  "AQ_XMEM": 2
  },
  "clock_port": "clk",
  "reset_ports": [
@@ -42,36 +42,6 @@
    "at": [
     43.2,
     43.2
-   ],
-   "at_exact": true,
-   "orient": "R0"
-  },
-  {
-   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": null,
-   "at": [
-    43.2,
-    84.288
-   ],
-   "at_exact": true,
-   "orient": "R0"
-  },
-  {
-   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": null,
-   "at": [
-    43.2,
-    125.376
-   ],
-   "at_exact": true,
-   "orient": "R0"
-  },
-  {
-   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": null,
-   "at": [
-    43.2,
-    166.464
    ],
    "at_exact": true,
    "orient": "R0"
@@ -98,14 +68,14 @@
    "m_q",
    "m_b",
    "m_i",
+   "clk",
+   "rst_n",
    "um_v",
    "um_q",
    "um_b",
    "um_i"
   ],
   "S": [
-   "clk",
-   "rst_n",
    "fault"
   ]
  },
@@ -128,12 +98,12 @@
   "macro_halo_um": 10.8,
   "io_hold_margin_ns": 0.0
  },
- "structural_change": "S81-TILES2 10-17 (coordinator-approved): aq12 x wait line (1024 b x 11 flops, the FF hold class u_aq.u_x.g_line.line[i]->line[i+1024]) becomes a fixed-pointer SRAM ring (AQ_XMEM=1: 4 x 128x256 macros, one abutted N-S bank at the E side, pins W facing one std-cell band); -11.3k flops; bit-exact vs the flop line (aq12_xmem bench + mutant).",
+ "structural_change": "S81-TILES2 10-17 g3 (one-macro sub-beat ring): the 4-macro 1024-b bank (AQ_XMEM=1) failed gate 2 at its W/E pin walls (trial GRT overflow 502: wd_in-hi + 1,024 tied w_mask pins on the E faces, the wd-hi nets detouring round a 164-um M1-M4 wall since M5 is vertical). AQ_XMEM=2 rebuilds aq12's x wait line from the 256-b sub-beat stream: ONE 128x256 macro written every cycle with sd_, read 11 rows behind, replayed with a 3-b x 12 control line into a 1024-b re-assembly register (xr = blk delayed 12 = the flop line's xg every cycle; bit-exact bench + mutant). 1 macro at (43.2, 43.2) R0, rd/wd-lo face W toward the main std-cell band, back face (117 wd-hi + 256 ties) toward a 34.8-um E strip; outline 172.8 x 129.6 (1.33:1, was 162 x 231.12); clk on N beside the band.",
  "job": {
   "owner": "Claude:S81-TILES2",
   "branch": "claude/s81vq-ring-1017",
   "tag": "s81sl_vq",
-  "purpose": "S81-TILES2: vq with the aq12 x wait line as an SRAM ring (AQ_XMEM=1) to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "purpose": "S81-TILES2: vq with aq12's x wait line as a one-macro sub-beat SRAM ring (AQ_XMEM=2) to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
@@ -153,7 +123,7 @@
   "benches": [
    {
     "name": "slbeat_exact",
-    "cmd": "S81SL_VQ_XMEM=1 bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_exact base 37 L0",
+    "cmd": "S81SL_VQ_XMEM=2 bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_exact base 37 L0",
     "expect": "pass",
     "pass_regex": "^PASS beat base B=37 L0$",
     "threads": 4,
@@ -161,7 +131,7 @@
    },
    {
     "name": "slbeat_muttree",
-    "cmd": "S81SL_VQ_XMEM=1 bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_muttree muttree 37 L0 raw",
+    "cmd": "S81SL_VQ_XMEM=2 bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_muttree muttree 37 L0 raw",
     "expect": "fail",
     "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
     "fail_witness": "results/rtl/s81_slice_1017/beat/g_mt/run.log",
@@ -170,7 +140,7 @@
    },
    {
     "name": "slbeat_mutcoef",
-    "cmd": "S81SL_VQ_XMEM=1 bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_mutcoef mutcoef 37 L0 raw",
+    "cmd": "S81SL_VQ_XMEM=2 bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_mutcoef mutcoef 37 L0 raw",
     "expect": "fail",
     "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
     "fail_witness": "results/rtl/s81_slice_1017/beat/g_mc/run.log",
@@ -193,6 +163,15 @@
     "fail_witness": "results/rtl/s81_slice_1017/aq12_xmem/mut_run.log",
     "threads": 2,
     "peak_ram_gb": 2
+   },
+   {
+    "name": "aq12_xmem_mutvq2",
+    "cmd": "bash tools/s81_slice/aq12_xmem_bench.sh {RUN}/aq12_xmem_mutvq2 mutvq2 20000",
+    "expect": "fail",
+    "fail_regex": "^SUMMARY aq12_xmem_eq N=20000 .* vq2_err=[1-9][0-9]*",
+    "fail_witness": "results/rtl/s81_slice_1017/aq12_xmem/mutvq2_run.log",
+    "threads": 2,
+    "peak_ram_gb": 2
    }
   ],
   "views_to": "physical/ref_tile/s81sl_vq/views",
@@ -202,100 +181,100 @@
   "enable": false,
   "reason": "Source-registered (S81-SLICE): every data input lands in a flop at the pin (the *_c capture flops) and every output is a flop; recipe-3 pin_regs would add a second unpriced stage on every slice seam."
  },
- "util": 0.52,
- "std_area_um2": 6000,
+ "util": 0.42,
+ "std_area_um2": 6600,
  "outline": {
-  "w": 162.0,
-  "h": 231.12
+  "w": 172.8,
+  "h": 129.6
  },
  "pin_ranges": {
   "y_v": [
    6.48,
-   9.035
+   8.64
   ],
   "y_i": [
-   9.035,
-   12.378
+   8.64,
+   12.96
   ],
   "y": [
-   12.378,
-   115.56
+   12.96,
+   64.8
   ],
   "u_v": [
-   115.56,
-   118.115
+   64.8,
+   66.96
   ],
   "u_i": [
-   118.115,
-   121.458
+   66.96,
+   71.28
   ],
   "u": [
-   121.458,
-   224.64
+   71.28,
+   123.12
   ],
   "xf_v": [
    6.48,
-   9.401
+   8.64
   ],
   "xf_s": [
-   9.401,
-   12.323
+   8.64,
+   10.8
   ],
   "xf": [
-   12.323,
-   224.64
+   10.8,
+   123.12
   ],
   "sid": [
    6.48,
-   26.218
+   17.28
   ],
   "k": [
-   26.218,
-   41.561
+   17.28,
+   25.92
   ],
   "m_v": [
-   41.561,
-   48.116
+   25.92,
+   30.24
   ],
   "m_q": [
-   48.116,
-   54.67
+   30.24,
+   34.56
   ],
   "m_b": [
-   54.67,
-   61.225
+   34.56,
+   38.88
   ],
   "m_i": [
-   61.225,
-   98.541
-  ],
-  "um_v": [
-   98.541,
-   105.095
-  ],
-  "um_q": [
-   105.095,
-   111.65
-  ],
-  "um_b": [
-   111.65,
-   118.204
-  ],
-  "um_i": [
-   118.204,
-   155.52
-  ],
-  "fault": [
-   43.2,
-   155.52
+   38.88,
+   58.32
   ],
   "clk": [
-   17.28,
-   19.44
+   62.64,
+   64.8
   ],
   "rst_n": [
-   25.92,
-   28.08
+   69.12,
+   71.28
+  ],
+  "um_v": [
+   75.6,
+   79.92
+  ],
+  "um_q": [
+   79.92,
+   84.24
+  ],
+  "um_b": [
+   84.24,
+   88.56
+  ],
+  "um_i": [
+   88.56,
+   108.0
+  ],
+  "fault": [
+   10.8,
+   21.6
   ]
  },
  "children": [],
