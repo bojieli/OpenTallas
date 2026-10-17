@@ -1,0 +1,26 @@
+KV/system die audit vs COORDINATOR STANDARD (Q-KV, 2026-10-16 ~20:10 PT). Plan = kvs13i (kvs13h + SEQ_STATIC, ecb371b68), die 10.80 x 25.24 mm,
+23,153 die inst / 64,677 nets (die_audit.py, EPYC4 qwen-kvsys/audit-1815/). Latest die STA = kvs12b (no newer terminal): GRT overflow 0, TT -225.0, FF -95.2 (hold min -80.6).
+1 REACH. Measured relay self-reach: rlys_296 446 um, rlys_528 460 um -> 0.9x = 401 / 414 um. Plan HOP_REACH = 445 (first hop krq/krs 340, PIN_REACH 450): the plan sits at 0.97-1.0x reach = NO margin.
+  Nets > 401 um: 7,225. 401-445: 6,402 (planned relay hops at the 445 limit; reset relay chains, hchx/af/mf/emf/emr/hboot/lkf, cdco 439 x128, th/the/tsr 405-411).
+  445-480: 420 (pvin x240 477.8, krs x198 477.8, head kp/gf/kpv 420-463 x384, aq 456, emr/emf 462 -- over the plan's own limit: relay standard replica placement).
+  480-600: 154 (wcf x128 552, hsvc fork 530 x8, kvn 505 x15, rst_phyd2d 501). >600: 249 = UNRELAYED: all reset tree levels (rst_die/hbm/host t0..t13, 0.54-12.3 mm, 2-290 loads)
+  + pvw_0/1 u_pair_cmd[31] = PV join_go, 9.33 mm to 32 joins. kvs12 TT fails were exactly this class (krs hop 547 um -225, real->phy host_fdi -211.6, reset->real -154).
+2 LOCALITY (>2 mm broadcasts): FAIL. 37 reset tree levels span 1.8-12.3 mm with 33-290 loads (worst rst_die_t8_1_0__r1: 290 loads, 10.5 mm, also the PV16 pair reset);
+  PV join_go 9.3 mm/32 loads. No local copies.
+3 ROUTABILITY: plan window model (L-routes, 9.375 tr/um over blocks): fine max 2.26 / coarse 1.89, 449/4,116 fine windows > 0.55 (407 > 0.60) -> FAIL by the plan metric
+  (hot = stack tiles tp/tt/tg EN/ES rows); GRT overflow 0 on kvs12a/b says the model over-counts over-block bits, but the standard needs a planned <=0.55 -> fix model + feedthrough channels.
+  Pin density: 48 faces > 6 pins/um: wide relay frames qkd_rly_2089 19.7/um (host_fdi), rly_174 13.4, rly_1025..1055 12.5-12.9; pv_join E 8.9, embgw W 8.9, ectl/ectl_c E/W 8.0-8.2.
+4 CLOCKING: regional roots exist (pll_c + 4 stack roots) but n_clk_core_c bbox 9.4 x 25.0 mm / 7,427 sinks, stack roots 4.1-4.4 x 23.5 mm; phi-R ideal model,
+  no measured tree. DIE-CLOCK has kvs12a/b GRT odbs + kvs13h floorplan, roots, groups (sent).
+5 NATIVE / 6 MARGINS of the 29 real views bound: native audit JSON committed for only kvn_ctx_cal r2, pv_ctl a72, layer_prog r1 (+ seq_core_st r2, vport r6 PASS in logs);
+  rest need a native census before freeze. Below TT>=+25/FF>=+10: ot_qkh_lane8 FF +1.32 (x2048), ot_qkh_ktree FF +1.21 (x128), qkd_kvwq_ctl_bin FF +1.58,
+  qkd_kvn_ctx_cal r2 FF +0.97, qkd_pv_slice r5 FF +9.27 (x512), qkh frontq FF +9.89, legacy qkd_ctrl_pc TT +4.62/FF +2.52 (x128; replaced by ctrl_pc_host_static c1).
+  All others TT +51..+356 / FF +10.5..+35.
+7 COMPLETENESS: strict bind 21 open inputs / 1,086 undriven bits (no stubs/ties). Still ASSUMED frames: astk x4 (8.5 mm2), landing x4 (8.4), ahub, host_rt, d2ds, embgw, seq_static cluster, lprg, hslice x128.
+FIXES (in the plan, not buffering), in order:
+ A kv_die HOP_REACH 445 -> 400 (0.9 x 446), PIN_REACH 450 -> 400, first hop 340 kept; generator max-wire = reach hard error; fix replica placement so no planned hop > limit (pvin/krs/head/aq/emr).
+ B reset: registered regional reset trees (sync-deassert stage per <=2 mm region, local copy per block row), same scheme as the HOST trees; PV pair reset + join_go relayed along the pair spine (kv_expand PV_TREE, as cmd bits).
+ C wcf / hsvc fork / kvn / cdco hops: replan endpoints (first hop <= 340 from late-launch pins).
+ D routability: window model with channels vs over-block capacity; spread wide relay frames (2089-b host_fdi -> 4 x 523 or taller frame), pv_join E / embgw W / ectl pins to <= 6/um.
+ E re-close below-margin tiles structurally (lane8/ktree/kvwq_ctl_bin/kvn_ctx_cal FF; pv_slice/frontq FF); native census of all 29 bound views.
+ F clock: DIE-CLOCK regional trees on kvs13h; then neighbour-pair die_clock_check.

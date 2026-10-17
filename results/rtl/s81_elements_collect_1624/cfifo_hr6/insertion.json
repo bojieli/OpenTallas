@@ -1,0 +1,88 @@
+{
+  "clock_measurements": {
+    "cr": {
+      "clock": "cr",
+      "lib_clock_pin": "cr",
+      "tt": {
+        "boundary": {
+          "n": 1171,
+          "mean": 182.0,
+          "min": 163.7,
+          "max": 200.7
+        },
+        "all": {
+          "n": 2273,
+          "mean": 180.4,
+          "min": 161.9,
+          "max": 202.1
+        },
+        "errors": [],
+        "macros": null,
+        "macro_libs": 0
+      }
+    },
+    "cr_s": {
+      "clock": "cr_s",
+      "lib_clock_pin": "cr_s",
+      "tt": {
+        "boundary": {
+          "n": 70,
+          "mean": 207.0,
+          "min": 205.7,
+          "max": 207.7
+        },
+        "all": {
+          "n": 1237,
+          "mean": 216.2,
+          "min": 196.5,
+          "max": 228.5
+        },
+        "errors": [],
+        "macros": null,
+        "macro_libs": 0
+      }
+    },
+    "xf": {
+      "clock": "xf",
+      "lib_clock_pin": "xf",
+      "tt": {
+        "boundary": {
+          "n": 566,
+          "mean": 166.2,
+          "min": 161.7,
+          "max": 169.5
+        },
+        "all": {
+          "n": 5125,
+          "mean": 164.3,
+          "min": 156.7,
+          "max": 173.7
+        },
+        "errors": [],
+        "macros": null,
+        "macro_libs": 0
+      }
+    },
+    "xf2": {
+      "clock": "xf2",
+      "lib_clock_pin": "xf2",
+      "tt": {
+        "boundary": {
+          "n": 538,
+          "mean": 146.2,
+          "min": 143.2,
+          "max": 149.7
+        },
+        "all": {
+          "n": 4873,
+          "mean": 143.4,
+          "min": 137.5,
+          "max": 149.7
+        },
+        "errors": [],
+        "macros": null,
+        "macro_libs": 0
+      }
+    }
+  }
+}

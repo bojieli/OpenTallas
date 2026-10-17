@@ -1658,7 +1658,10 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
             return
         a = subprocess.run(["git", "-C", repo, "archive", commit, *paths], capture_output=True, timeout=120)
         subprocess.run(["tar", "-x", "-C", str(dst)], input=a.stdout, check=True)
-    arch([kit, "physical/qwen_die_masters/io_ref_skew.sdc", OFLOP_TCL])
+    # canonical common_flow helpers ref_tile reads at ROOT (Q-XSLEAF 10-16: qfd_xs_leaf_w130-w1 gate went SKIP "literal pin
+    # canonical placement helper is missing from the source archive"); filtered by existence at the commit, so harmless
+    arch([kit, "physical/qwen_die_masters/io_ref_skew.sdc", OFLOP_TCL, RT.ASSIGNED_PIN_EXACT_TCL,
+          getattr(RT, "M6_PIN_ACCESS_TCL", "physical/common_flow/m6_pin_access.tcl")])
     sp = json.loads((dst / kit / "spec.json").read_text())
     # sdc_extra too: without it RT.gen raised FileNotFoundError and the whole gate went SKIP for every kit that has one
     arch(list(sp.get("sources", [])) + list(sp.get("sdc_extra", []))

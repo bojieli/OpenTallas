@@ -1,0 +1,10 @@
+SEED=1
+MISMATCH op@0 split 9 group 0 lane 0: b2 c6350dad today c6350dac lane c6350dac
+MISMATCH op@0 split 9 group 0 lane 2: b2 3cb8fc98 today 3cb8fc90 lane 3cb8fc90
+MISMATCH op@0 split 9 group 1 lane 0: b2 41ba3ca1 today 41ba3ca2 lane 41ba3ca2
+MISMATCH op@0 split 9 group 2 lane 2: b2 42c7f692 today 42c7f693 lane 42c7f693
+MISMATCH op@0 split 9 group 2 lane 3: b2 c6f516ea today c6f516e9 lane c6f516e9
+FAIL qfd_halfband 7849 mismatching words of 25948 (ops 705, NL 4, LNK 0, MUT 1)
+[12030000] %Fatal: tb_qfd_halfband.sv:168: Assertion failed in tb_qfd_halfband
+%Error: rtl/test/qwen_lane_band/tb_qfd_halfband.sv:168: Verilog $stop
+Aborting...

@@ -1,0 +1,162 @@
+{
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.01,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pg_layer": "M6",
+ "layer_cap": "M5",
+ "kind": "tile",
+ "defines": [],
+ "params": {},
+ "children": [],
+ "inter": [],
+ "macros": [],
+ "name": "hgi_sm_xq_pegress",
+ "top": "ot_hgi_sm_xload_xq_pegress",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rn"
+ ],
+ "pins": {
+  "W": [
+   "bq_d"
+  ],
+  "S": [
+   "rwq"
+  ],
+  "N": [
+   "xw_data",
+   "xw_en",
+   "xw_last",
+   "xw_addr",
+   "xw_grp",
+   "x_done"
+  ],
+  "E": [
+   "clk",
+   "rn",
+   "ed5",
+   "ede",
+   "bq_v",
+   "bq_last",
+   "bq_addr",
+   "bq_b"
+  ]
+ },
+ "outline": {
+  "w": 369.36,
+  "h": 369.36
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every input lands in a pin register in RTL (rw, e6, e5r replicas, bc_*, bq_c, bqvr) and every output is a register (owner rule 19:50)"
+ },
+ "floorplan_note": "XQL pair-egress leaf x3 (H-SM 10-16, SM_X option (b) confirmed by H-DIE 18:43: 4 pair stores/quadrant in one band-gap column at the pair boundary, enclosed-row egress at the column E corner, xw windows >= 360 um, cut <= 0.55, <= 6 pins/um per face (target 5.73), 100 um pair channel, die ~855.3 mm2): 369.36 x 369.36; every face spread evenly by spread_face_pins.py (margin 4.32): N 2,063 xw pins over 360.72 um = 5.72/um (alternating M3/M5), W 2,048 bq_d over 360.72 = 5.68/um (M4), S 1,024 rwq = 2.84/um, E 42 controls, clk centred on E. Pin-limited leaf (3,923 um2 std, 5,135 pins): util stays low by construction. x2 345.6 x 302.4 had N 6.1/um and W 7.0/um (> owner 6 pins/um rule); x1 auto pin bands 9.8/um -> GRT-0116.",
+ "slot_change_request": "XQL pair-store column leaf, SM_X option (b) (H-DIE 18:43): 369.36 x 369.36 (x2 345.6 x 302.4, x1 302.4 x 302.4)",
+ "job": {
+  "owner": "Claude H-SM 1830",
+  "branch": "claude/hsm-xqb5-1830",
+  "tag": "x5",
+  "purpose": "XQL pair-egress leaf: the ctl egress (rw capture, replicated beat select, BD beat capture, xw pins) per SM pair, beside the pair store",
+  "structural_change": "x5 (owner die standard: regional SYNC resets), parallel to x4: rn is captured by 4 kept relay flops on their D pins (no async RESETN anywhere in the leaf); each relay copy synchronously clears a quarter of the valid/control flops (e6 en, 32 e5 valids, 32 bq valids, bc_v/last, xw_en/last, x_done); field/data flops (e6 fields, e5 beat index, bc_addr/b, bq_c, rw, xbeat, xw_*) carry no reset. x3 d67bfd40c native FAIL capture rn 332.3 (async clear of 308 flops), ed5 196.4 (32-replica fanout incl. async-reset flops + hold pads). HEP w5f hold recipe kept (HM 10 ps, ECO goal 5 ps). Outline/pins as x3.",
+  "extra_paths": [
+   "physical/asap7_memory_macros",
+   "physical/hbm_xp_aq_tree13_1014",
+   "rtl/hbm_accel/generic/adapters/tb",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "rtl/hbm_accel/generic/vm",
+   "rtl/hbm_accel/host_static_20261015",
+   "rtl/hdc",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/link/ot_fifo_sram_fwft.sv",
+   "tools/hbm_sm_xload_static_timing.py",
+   "results/hbm_sm_attention_1015/hsm_1552/xql"
+  ],
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_sm_xload_xq_pegress u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xql_lock_exact",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_lock_exact",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "^XLOAD_STATIC_LOCK PASS$",
+    "pass_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/pos2.log",
+    "min_count_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, ([0-9]+) pair beats, 0 differ$",
+    "min_count": 13440
+   },
+   {
+    "name": "xql_pair_write_drop_mutant",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 XQL_MUT=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_m1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, [0-9]+ pair beats, [1-9][0-9]* differ$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/m1.log"
+   },
+   {
+    "name": "xql_pair_skew_mutant",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 XQL_MUT=2 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_m2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, [0-9]+ pair beats, [1-9][0-9]* differ$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/m2.log"
+   },
+   {
+    "name": "xql_pair_map_mutant",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 XQL_MUT=3 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_m3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, [0-9]+ pair beats, [1-9][0-9]* differ$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/m3.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/hgi_sm_xq_pegress/views",
+  "record_to": "results/rtl/ref_tile/hgi_sm_xq_pegress",
+  "hold_eco": {
+   "hold_margin_ps": 5.0,
+   "reason": "native capture (HEP w5f recipe, 00f041029 -> native PASS C183.3): x3 d67bfd40c CLOSED TT+42.24/FF+7.97 but native capture FAIL: rn 332.3 (fixed in RTL: local reset relay), ed5[6]/[7]/[2] 196.4/194.8/191.8 and ~188 on rwq/bq_v (input hold pads). Route hold margin 30 -> 10 ps, post-route hold ECO goal 5 ps; FF >= 0 sign-off unchanged."
+  },
+  "reroute_reason": {
+   "kind": "native_capture",
+   "source": "results/hbm_sm_attention_1015/hsm_1830/pegress_x3_d67bfd40c_native.json",
+   "cell": "ot_hgi_sm_xload_xq_pegress",
+   "capture_ps": 332.3,
+   "fix": "x3 d67bfd40c (record 70a897e57) native FAIL launch 193.5 / capture 332.3 / spread 59.2 (R 378.8): rn 332.3 = async clear of 308 control flops; ed5[6]/[7]/[2] 196.4/194.8/191.8. x5 RTL: regional synchronous reset (rn -> 4 relay flops D pins only; sync clear of valid/control flops; no reset on data), HEP w5f hold recipe (route HM 10 ps, hold ECO goal 5 ps). Outline/pins unchanged."
+  }
+ },
+ "io_tcl": "physical/ref_tile/hgi_sm_xq_pegress/spread_pins.tcl"
+}

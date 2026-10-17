@@ -1,0 +1,379 @@
+{
+ "name": "s81bf_col_hybrid12_w_h03",
+ "top": "dsfd_bf_col_roots_w",
+ "kind": "tile",
+ "sources": [
+  "rtl/s81/ot_s81_bf_native.sv",
+  "rtl/common/ot_prefix.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_bmul2.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2_w10.sv",
+  "rtl/v41rom/ot_v41_chain.sv",
+  "rtl/v41rom/ot_v41_chain2.sv",
+  "rtl/v41rom/ot_v41_fadd.sv",
+  "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+  "rtl/v41rom/ot_v41_segtree.sv",
+  "rtl/v41rom/ot_v41_segtree2.sv",
+  "rtl/v41rom/ot_v41_bmul2_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv",
+  "rtl/v41rom/ot_v41_chain2u2.sv",
+  "rtl/v41rom/ot_v41_kreg.sv",
+  "rtl/v41rom/ot_v41_chain3.sv",
+  "rtl/v41rom/ot_v41_chain4.sv",
+  "rtl/v41rom/ot_v41_fadd2.sv",
+  "rtl/v41rom/ot_v41_bterm3_w10.sv",
+  "rtl/v41rom/ot_v41_bterm4_w10.sv",
+  "rtl/v41rom/ot_v41_bterm5_w10.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes3.sv",
+  "rtl/v41rom/ot_v41_tile_clk.sv",
+  "rtl/v41rom/ot_bf_hdly.sv",
+  "rtl/v41rom/ot_v41_bf_col.sv",
+  "rtl/v41rom/ot_v41_segtree3.sv",
+  "rtl/v41rom/ot_v41_segtree4.sv",
+  "rtl/v41rom/ot_v41_segtree5.sv",
+  "rtl/v41rom/ot_v41_segtree6.sv",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+  "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v",
+  "rtl/v41rom/ot_v41_bf_lane4.sv",
+  "rtl/v41rom/ot_v41_bf_reduce.sv",
+  "rtl/v41rom/ot_v41_bf_fp4_leaves.sv",
+  "rtl/v41rom/ot_v41_bf_segment_leaf.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes3_roots.sv",
+  "rtl/v41rom/ot_v41_bf_col_roots.sv",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots_w.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 450.144,
+  "h": 198.72,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "ci"
+  ],
+  "S": [
+   "r",
+   "qy",
+   "rs"
+  ],
+  "N": [
+   "ck",
+   "leaf_ck"
+  ],
+  "E": [
+   "rom_ck0",
+   "rom_ck1"
+  ]
+ },
+ "io_tcl": "physical/ref_tile_specs/s81_bf_native_1015/column_hybrid12_w/pins.tcl",
+ "layer_cap": "M5",
+ "recipe": 3,
+ "route": {
+  "pd": 0.6,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "Measured ten-root CTS refusal: ck reached hard ROM clocks. Structural successor gives each actual ROM a dedicated direct raw-Liberty clock entry; ten CTS roots now drive only standard-cell pins. SamePLL phase0/zero normal edges; 853 pins, unchanged outline and arithmetic, own native proof pending.",
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": "S81H03 independent W-facing R0 counterpart",
+  "why": "Ten-root actual CTS failed strict OT_HYBRID hard-macro ownership guard",
+  "fix": "Measured ten-root CTS refusal: ck reached hard ROM clocks. Structural successor gives each actual ROM a dedicated direct raw-Liberty clock entry; ten CTS roots now drive only standard-cell pins. SamePLL phase0/zero normal edges; 853 pins, unchanged outline and arithmetic, own native proof pending."
+ },
+ "job": {
+  "owner": "Codex:S81-BF-views-0925",
+  "purpose": "Measured ten-root CTS refusal: ck reached hard ROM clocks. Structural successor gives each actual ROM a dedicated direct raw-Liberty clock entry; ten CTS roots now drive only standard-cell pins. SamePLL phase0/zero normal edges; 853 pins, unchanged outline and arithmetic, own native proof pending.",
+  "benches": [
+   {
+    "name": "actual_w_column_full_shape",
+    "cmd": "python3 tools/s81/bf_west_column_physical_bench.py --work {RUN}/west_positive",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "pass_regex": "PASS BF W column actual pair:456 rows,912 values,448 configs"
+   },
+   {
+    "name": "mutant_w_column_data",
+    "cmd": "python3 tools/s81/bf_west_column_physical_bench.py --work {RUN}/west_mutant --mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "fail_regex": "MUTANT BF W column data FAIL: DIFF TXN"
+   },
+   {
+    "name": "mutant_raw_rom_clock_stop",
+    "cmd": "python3 tools/s81/bf_west_column_physical_bench.py --work {RUN}/rom_mutant --rom-mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "fail_regex": "MUTANT BF W column ROM clock FAIL: DIFF TXN"
+   }
+  ],
+  "extra_paths": [
+   "tools/s81",
+   "rtl",
+   "physical/asap7_memory_macros_v2",
+   "physical/asap7_memory_macros",
+   "physical/ref_tile_specs/s81_bf_native_1015/column_hybrid12_w",
+   "results/rtl/s81_bf_programme_1015",
+   "results/rtl/s81_bf_compact_20261010/bench_prep_1013"
+  ],
+  "views_to": "physical/s81_die_views/bf_roots_1016/column_hybrid12_w",
+  "record_to": "results/physical/s81_bf_roots_1016/column_hybrid12_w"
+ },
+ "clock": "hybrid_entries",
+ "clock_ports": [
+  "ck",
+  "leaf_ck[0]",
+  "leaf_ck[1]",
+  "leaf_ck[2]",
+  "leaf_ck[3]",
+  "leaf_ck[4]",
+  "leaf_ck[5]",
+  "leaf_ck[6]",
+  "leaf_ck[7]",
+  "leaf_ck[8]",
+  "rom_ck0",
+  "rom_ck1"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "leaf_0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "leaf_ck[0]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "leaf_1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "leaf_ck[1]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "leaf_2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "leaf_ck[2]"
+   ],
+   "inputs": [],
+   "outputs": [
+    "r"
+   ]
+  },
+  "leaf_3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "leaf_ck[3]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "leaf_4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "leaf_ck[4]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "leaf_5": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "leaf_ck[5]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "leaf_6": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "leaf_ck[6]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "leaf_7": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "leaf_ck[7]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "leaf_8": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "leaf_ck[8]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck"
+   ],
+   "inputs": [
+    "ci",
+    "rs"
+   ],
+   "outputs": [
+    "qy"
+   ]
+  },
+  "rom_0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "rom_ck0"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rom_1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "rom_ck1"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "slot_change_request": {
+  "name": "S81H03 independent12-root column: ten std CTS plus two raw ROM entries",
+  "status": "GRANTED_INDEPENDENT_CANDIDATE",
+  "request_file": "physical/ref_tile_specs/s81_bf_native_1015/column_hybrid12_w/pin_request.json",
+  "outline_um": [
+   450.144,
+   198.72
+  ],
+  "grant": {
+   "owner": "S-DIE",
+   "record": "2026-10-16 direct message to BF views helper",
+   "scope": "Independent candidate only; no adoption into848parents before allincident/clock/PG and native proof"
+  }
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "count": 1,
+   "inst": "*g_pp*u_rom0",
+   "at": [
+    280.8,
+    25.92
+   ],
+   "orient": "MY",
+   "clock_entry": {
+    "port": "rom_ck0",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "count": 1,
+   "inst": "*g_pp*u_rom1",
+   "at": [
+    280.8,
+    112.32
+   ],
+   "orient": "MY",
+   "clock_entry": {
+    "port": "rom_ck1",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual column already captures allci input bits at boundary and has registered actual segment/return outputs. No extra payload stage added; native220/190/80+comb gates remain required."
+ },
+ "clock_cts_roots": [
+  "ck",
+  "leaf_ck[0]",
+  "leaf_ck[1]",
+  "leaf_ck[2]",
+  "leaf_ck[3]",
+  "leaf_ck[4]",
+  "leaf_ck[5]",
+  "leaf_ck[6]",
+  "leaf_ck[7]",
+  "leaf_ck[8]"
+ ]
+}

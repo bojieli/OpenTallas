@@ -1,0 +1,41 @@
+{
+ "schema": "opentallas.native_pin_audit.receipt.v1",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (main)",
+ "budget": {
+  "launch_ps": 220,
+  "capture_ps": 190,
+  "spread_ps": 80
+ },
+ "audits": [
+  {
+   "cell": "ot_s81_hc_ccr",
+   "view": "physical/ref_tile/s81hc_ccrh2_ref/views/ot_s81_hc_ccr",
+   "lib_cell": "ot_s81_hc_ccr",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 240.0,
+   "spread_ps": 48.0,
+   "outputs": 2684,
+   "inputs": 2165,
+   "launch_ps": 270.2,
+   "launch_pin": "crd_o[1491]",
+   "capture_ps": 194.8,
+   "capture_pin": "ch_rd[1288]",
+   "launch_over": 77,
+   "capture_over": 4,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 270.24042 > 220 (77 pins); capture 194.81165 > 190 (4 pins)",
+   "job": "s81hc_ccrh2_ref-pr4oreg-751568752",
+   "commit": "955a4ddc0ea6677149f496d57cb330aa6b0ddbdb"
+  }
+ ],
+ "diagnosis": {
+  "path": "crd_o[1491] TT: clock at flop 269.0 (R 240), DFFHQNx1 QN -> 12.9 fF / slew 133.5 -> INV _117126_ -> ohdrv BUFx4f -> HB2 outhold -> ohdrv BUFx4f -> output BUFx2 -> pin; arrival 516.8",
+  "placement": "flop x 146.34 (pin x 151.1), INV + 3 stage cells + output BUF at x 128.5..129.5: OUTHOLD_FREE let GPL pull the QN inverter and the stage 17 um BEHIND the flop, the path detours ~40 um; crd_o flop x-hist (10 um bins) 140:1888, 80-130:268; last ohdrv x-hist 130:1317 140:1015 80-120:352",
+  "capture": "ch_rd[1288] 194.8: inhold HB2 76.9 + ihdrv + 3 post-route hold-ECO cells (ECO added 17,159 cells for FF -2.93)"
+ }
+}

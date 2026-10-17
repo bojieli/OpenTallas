@@ -265,6 +265,26 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
         unconsumed = sorted(q for q in source_diff + missing if q not in used)
         source_diff = [q for q in source_diff if q in used]
         missing = [q for q in missing if q in used]
+    # LINT-TOLERANT (ROOT 2026-10-16, coordinator): a gate stays valid across a tools/textbook_lint.py change from one main
+    # revision to a later one when the change touches only comments/docstrings or SUBMIT-ONLY constants (CLOSED-STANDS
+    # kinds/text; helper_overlay.lint_change_is_submit_only): the gate's own checks are unchanged.  Reported, not refused.
+    lint_ok = []
+    try:
+        HO_ = overlay_module()
+        head = HO_.main_head(root)
+        by = {e["path"]: e for e in entries}
+        for q in [q for q in overlay_diff + source_diff if q in getattr(HO_, "LINT_ONLY", ())]:
+            blob = by.get(q, {}).get("git_blob")
+            if not head or blob not in HO_._main_blobs(root, head, q):
+                continue
+            old = subprocess.run(["git", "-C", str(root), "cat-file", "blob", blob], capture_output=True, timeout=60)
+            cur = effective.get(q) if q in effective else (daemon / q if q in overlay_diff else root / q).read_bytes()
+            if not old.returncode and HO_.lint_change_is_submit_only(old.stdout, cur):
+                lint_ok.append(q)
+    except Exception:  # noqa: BLE001 -- unresolvable: keep the strict verdict
+        lint_ok = []
+    overlay_diff = [q for q in overlay_diff if q not in lint_ok]
+    source_diff = [q for q in source_diff if q not in lint_ok]
     if overlay_diff or source_diff or missing:
         parts = ([f"gate-executed daemon overlay changed: {name(overlay_diff)}"] if overlay_diff else []) + \
                 ([f"route source differs from staged snapshot: {name(source_diff)}"] if source_diff else []) + \
@@ -273,6 +293,8 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
                                           if unconsumed else "")
     notes = [f"{len(unconsumed)} staged file(s) the gate did not consume differ (reported, not refused): {name(unconsumed)}"] \
         if unconsumed else []
+    if lint_ok:
+        notes.append(f"lint-only drift tolerated (earlier main revision): {name(lint_ok)}")
     if route_overlay and not frozen_recovery and binding.get("route_overlay_plan"):
         drift = route_only_drift(binding["route_overlay_plan"], current, entries)
         if drift:

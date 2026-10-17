@@ -1,0 +1,74 @@
+{
+  "schema": "opentallas.pc_cfg_h8_model.v1",
+  "status": "candidate_not_adopted",
+  "instances": 128,
+  "exact_views_before": 32,
+  "exact_views_after_if_qualified": 1,
+  "static_strap_bits": 13,
+  "static_strap_joins": 256,
+  "static_strap_bit_joins": 1664,
+  "added_registers_vs_h7": 0,
+  "added_cycles_vs_h7": 0,
+  "fixed_input_calendar": true,
+  "slot": {
+    "old_um": [
+      170.64,
+      170.64
+    ],
+    "candidate_um": [
+      185.76,
+      164.16
+    ],
+    "strip_um": 237.6,
+    "per_instance_outline_delta_um2": 1376.3520000000026,
+    "die_outline_delta_mm2": 0.17617305600000033,
+    "grant_status": "aeabab04f explicitly permits isolated same-outline/same1229-pin ABI measurement; H-DIE collector confirmed, all128 adoption remains open",
+    "old_grant": "aeabab04f"
+  },
+  "closure_cause": {
+    "h6_route_tt_ps": -50.14,
+    "h6_ff_ps": 16.39,
+    "h6_drc": 0,
+    "h7_cts_tt_ps": -26.912694,
+    "h7_cts_hold_ps": 38.31235,
+    "h7_clock_sinks": 9541,
+    "h7_clock_boundary_mean_ps": 386.1,
+    "h7_clock_boundary_spread_ps": 28.5,
+    "limiter": "pending_identity write enable traverses command validity/legality cone"
+  },
+  "structural_change": "Refresh pending_wp free slot from registered command head every edge when pending_count<32. Live entries protected. Column read writes same data on same edge as H7; remove validity/legality from 672 identity-flop write enables. Independent full-word SRAM payload remains actual mapped macro.",
+  "gaps": [
+    "Actual generic synth area/pins pending",
+    "Current slot grant pending",
+    "CTS/native launch capture insertion and true TT/FF route pending"
+  ],
+  "proofs": {
+    "safety": "49600edges,2075read/327write requests,5126returns; wrong-slot failsedge49. Random response/backpressure is authorized external DRAM fixture/component safety only; does not add an on-chip scheduler.",
+    "full_slot": "Actual fixed32-request calendar fills32pending entries,200 protected edges unchanged; omitted guard failsfirst edge.",
+    "all32": "Actual H8 versus original specialized wrappers: 15968checks,32writes,106refreshes,512fixedcalendar cycles,+0edges. All32wrongPCs rejectcycle42; reloadmutantrejectcycle122."
+  },
+  "jobs": {
+    "cts": {
+      "pid": 531153,
+      "host": "ot-epyc4",
+      "dir": "/srv/opentallas-scratch/claude/ref_gate/hdie_pc_ctrl_cfg_h8-20261016-162416",
+      "state": "RUNNING_SYNTH_CTS",
+      "auto_submit": false
+    }
+  },
+  "measured_pre_cts": {
+    "cells": 47379,
+    "flops": 9539,
+    "mapped_chip_area_um2": 14371.56684,
+    "utilization": 0.4993,
+    "pin_geometry": {
+      "signal_clock_pins": 1229,
+      "off_track": 0,
+      "inaccessible": 0,
+      "outside": 0
+    },
+    "source_archive_sha256": "505bd36e0054cadc7a93dda48a88c011c94c799f4ae0ab9253b5f6f588163132",
+    "actual_floorplan_viewed": "/home/ubuntu/artifacts/pc-cfg-h8-1623-layout/png/floorplan.png",
+    "image_note": "Two fixed SRAMs with west corridor; viewed image is pre-placement. Density is empty pre-placement and cannot establish congestion. Post-CTS images still required."
+  }
+}

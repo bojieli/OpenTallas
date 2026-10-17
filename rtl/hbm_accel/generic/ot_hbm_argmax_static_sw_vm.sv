@@ -16,6 +16,7 @@
 // output is the unchanged engine's flop; mode-0 behaviour is identical edge for edge (bench: equivalence vs
 // ot_hbm_argmax_static_sw on random VM traffic).  MUT (bench): 1 pass mode through (a STREAM record hangs busy); 2 illegal imm_a on every record.
 module ot_hbm_argmax_static_sw_vm #(
+    parameter integer TP = 96,
     parameter integer MUT = 0,
     parameter integer ACK = 12,
     parameter integer ELAT = 14,
@@ -41,7 +42,7 @@ module ot_hbm_argmax_static_sw_vm #(
 );
     localparam [1:0] SID = 2'd0;
     wire stream_rec = (MUT == 1) ? 1'b0 : (MUT == 2) ? 1'b1 : mode;
-    ot_hbm_argmax_static #(.MUT(EMUT), .ACK(ACK), .ELAT(ELAT)) implementation(.clk(clk), .rst_n(rst_n), .sid(SID),
+    ot_hbm_argmax_static #(.TP(TP), .MUT(EMUT), .ACK(ACK), .ELAT(ELAT)) implementation(.clk(clk), .rst_n(rst_n), .sid(SID),
         .die_id(die_id), .go(go), .mode((MUT == 1) ? mode : 1'b0), .imm_a(stream_rec ? 18'h3FFFF : imm_a),
         .a_mirror(a_mirror), .a_base(a_base), .n(n), .o_base(o_base), .o_is(o_is), .vm_rq(vm_rq), .vm_rr(vm_rr),
         .am_stream(523'd0), .cq(cq), .cq_seq(cq_seq), .cr(cr), .busy(busy), .done(done), .fault(fault),

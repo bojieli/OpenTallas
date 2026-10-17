@@ -1,0 +1,5 @@
+VM_Q2MERGE_CALENDAR PASS edges=2 served=62125 of 62125 writes, 2 negatives rejected, NW universal word compiles
+VM_Q2MERGE_CALENDAR FAIL edges=1 errors=200 served=0 negatives=1
+mutant edges=1 rc=1
+VM_Q2MERGE_CALENDAR FAIL edges=3 errors=200 served=0 negatives=1
+mutant edges=3 rc=1

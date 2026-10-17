@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import gzip
 import hashlib
 import json
 import re
@@ -197,6 +198,117 @@ def rng(ref, ports):
     return i, p, 0, ports[i][p]['bits']
 
 
+def apply_relay_splice(specs, edges, ports, problems):
+    """H-NETLIST/H-ELEM 2026-10-16 (d4b relay stations, tools/hbm_die_v15/relay_contract_d4b.py): rewire every listed
+    bus load bit through its registered station chain. A listed load bit must be driven by the listed driver bit in the
+    contract as built so far (else a problem: the station list is stale against this netlist)."""
+    buses = [b for s in specs for b in s.get('relay_splice', [])]
+    if not buses:
+        return edges
+    rmap = {}                                    # (di, dport, dbit, sink, sport, sbit) -> (bus, j)
+    for b in buses:
+        for j, ((p, k), ls) in enumerate(zip(b['driver_bits'], b['loads'])):
+            for (si, sp, sb) in ls:
+                if b['sink_feed'].get(si) is None and not b.get('pads', {}).get(si):
+                    continue                     # depth-0 sink (cfg_no_pad near the driver): stays a direct edge
+                rmap[(b['driver'], p, k, si, sp, sb)] = (b['bus'], j)
+    drivers = {b['driver'] for b in buses}
+    found = set()
+    out = []
+    for e in edges:
+        if e['src'][0] not in drivers:
+            out.append(e); continue
+        try:
+            si, sp, slo, shi = rng(e['src'], ports); di, dp, dlo, dhi = rng(e['dst'], ports)
+        except KeyError:
+            out.append(e); continue
+        keep = [not ((si, sp, slo + k, di, dp, dlo + k) in rmap) for k in range(shi - slo)]
+        if all(keep):
+            out.append(e); continue
+        for k in range(shi - slo):
+            if not keep[k]:
+                found.add((si, sp, slo + k, di, dp, dlo + k))
+        k = 0
+        while k < len(keep):                     # keep the unrelayed runs of a partially relayed edge
+            if not keep[k]:
+                k += 1; continue
+            k2 = k
+            while k2 + 1 < len(keep) and keep[k2 + 1]:
+                k2 += 1
+            out.append(dict(e, name=f"{e['name']}__kr{k}", src=[si, sp, slo + k, slo + k2 + 1], dst=[di, dp, dlo + k, dlo + k2 + 1],
+                            bits=k2 - k + 1))
+            k = k2 + 1
+    miss = [x for x in rmap if x not in found]
+    if miss:
+        problems.append(f'relay splice: {len(miss)} listed load bits not driven by their listed driver bit in this '
+                        f'netlist (e.g. {miss[:3]})')
+    def runs(seq):
+        """[(key, lane)] -> maximal runs of the same key with consecutive values and lanes"""
+        res = []
+        for key, v, lane in seq:
+            if res and res[-1][0] == key and res[-1][2] + 1 == v and res[-1][4] + 1 == lane:
+                res[-1][2] = v; res[-1][4] = lane
+            else:
+                res.append([key, v, v, lane, lane])
+        return res
+    for b in buses:
+        W, T, n, tag, ck = b['width'], b['tiles'], b['bits'], b['bus'], b['domain']
+        bas = f"d4b relay station chain {tag} ({b['cls']}, {b['driver']}) -- relay_contract_d4b.py"
+        tn = lambda sid, t: f'{tag}_s{sid:03d}_t{t}'
+        def from_driver(dst_tile_name):
+            for t in range(T):
+                seq = [((b['driver_bits'][j][0]), b['driver_bits'][j][1], j - t * W) for j in range(t * W, min(n, (t + 1) * W))]
+                for key, v0, v1, l0, l1 in runs(seq):
+                    out.append(dict(name=f'{dst_tile_name(t)}__drv{l0}', src=[b['driver'], key, v0, v1 + 1],
+                                    dst=[dst_tile_name(t), 'i', l0, l1 + 1], bits=v1 - v0 + 1, clock=ck, basis=bas, region='relays_d4b'))
+        def tile_to_tile(a, c):
+            for t in range(T):
+                out.append(dict(name=f'{c(t)}__i', src=[a(t), 'o'], dst=[c(t), 'i'], bits=W, clock=ck, basis=bas, region='relays_d4b'))
+        for s in b['stations']:
+            if s['parent'] is None:
+                from_driver(lambda t, s=s: tn(s['id'], t))
+            else:
+                tile_to_tile(lambda t, s=s: tn(s['parent'], t), lambda t, s=s: tn(s['id'], t))
+        last_of = {}
+        for snk, feed in b['sink_feed'].items():
+            pn = b.get('pad_names', {}).get(snk, [])
+            prev = (lambda t, f=feed: tn(f, t)) if feed is not None else None
+            for k, stage in enumerate(pn):
+                cur = (lambda t, st=stage: st[t])
+                if prev is None:
+                    from_driver(cur)
+                else:
+                    tile_to_tile(prev, cur)
+                prev = cur
+            last_of[snk] = prev
+        # loads
+        seq = collections.defaultdict(list)
+        for j, ls in enumerate(b['loads']):
+            for (si, sp, sb) in ls:
+                if b['sink_feed'].get(si) is None and not b.get('pads', {}).get(si):
+                    continue
+                seq[si].append((j, sp, sb))
+        for si, lst in seq.items():
+            src = last_of.get(si)
+            if src is None:
+                problems.append(f'relay splice {tag}: sink {si} has no station/pad (depth 0) -- direct edge expected'); continue
+            lst.sort(key=lambda x: (x[0] // W, x[1], x[2]))
+            cur = None
+            for j, sp, sb in lst:
+                t, L = divmod(j, W)
+                if cur and cur[0] == t and cur[1] == sp and cur[3] + 1 == L and cur[5] + 1 == sb:
+                    cur[3] = L; cur[5] = sb
+                else:
+                    if cur:
+                        out.append(dict(name=f'{tag}__ld_{si}_{cur[1]}_{cur[4]}', src=[src(cur[0]), 'o', cur[2], cur[3] + 1],
+                                        dst=[si, cur[1], cur[4], cur[5] + 1], bits=cur[3] - cur[2] + 1, clock=ck, basis=bas, region='relays_d4b'))
+                    cur = [t, sp, L, L, sb, sb]
+            if cur:
+                out.append(dict(name=f'{tag}__ld_{si}_{cur[1]}_{cur[4]}', src=[src(cur[0]), 'o', cur[2], cur[3] + 1],
+                                dst=[si, cur[1], cur[4], cur[5] + 1], bits=cur[3] - cur[2] + 1, clock=ck, basis=bas, region='relays_d4b'))
+    return out
+
+
 STRAP_TARGET_MASTERS = ('ot_static_cmd_target', 'ot_static_program_target')
 UNIV_CAL_DIR = 'rtl/hbm_accel/generic/vm/static/'
 UNIV_CAL_SRC = UNIV_CAL_DIR + 'hfd_hgi_vm_calendar.sv'
@@ -236,6 +348,254 @@ FOLD_RULES.append(dict(target='ot_static_cmd_target', detect='cmd_v', consumers=
      clocks=('clk_cal',)))   # r2 8e0535ed5: raw hard entry of the issuer table SRAM
 # parameters that became identity strap pins (H-SM DEDUPE 2026-10-16): one hardened master for every value
 PARAM_STRAPS = {'ot_hbm_svc_vm_kshare': {'SM': 'sm'}}
+# H-NETLIST 1815 (owner: few tile variants; 178 die parameter aliases -> exact view requests): masters whose per-instance
+# identity parameters are replaced by strap INPUTS of one generic master (each strap captured by a flop inside it).
+# Enabled by --identity-straps.  value(params) gives the strap; 'keep' parameters are carried with their defaults.
+_SVC = 'rtl/hbm_accel/loader/service_native/'
+
+
+def _pc_refresh_reload(p):
+    # ot_hbm_svc_pc_ctrl_leaf.sv: RP=(PHASE+P*118/32)%118, RELOAD=118+RP+((RP+118+P)%2) -> the cfg master's refresh_reload
+    rp = (int(p.get('PHASE', 0)) + int(p['P']) * 118 // 32) % 118
+    return 118 + rp + ((rp + 118 + int(p['P'])) % 2)
+
+
+IDENTITY_MASTERS = {
+    # the parameterised leaf is a pure wrapper: cfg u_cfg(.pc_id(5'(P)),.refresh_reload(8'(RELOAD))) (bench mutants
+    # OT_PC_CFG_MUT_PC/PHASE in run_sm_groups_issued.sh); the cfg master registers both straps (pc_id_q/refresh_reload_q)
+    'ot_hbm_svc_pc_ctrl_leaf': dict(
+        master='ot_hbm_svc_pc_ctrl_leaf_cfg', source=_SVC + 'ot_hbm_svc_pc_ctrl_leaf_cfg.sv', deps=[],
+        keep=dict(OREG=1, KREG=1, KRREG=1, RREG=1, WPAY=1),
+        straps=[('pc_id', lambda p: int(p['P'])), ('refresh_reload', _pc_refresh_reload)]),
+    # tools/hbm_die_v16/gen_svc_sm_group_id.py; bench rtl/hbm_accel/loader/service_native/run_sm_groups_issued_id.sh
+    'ot_hbm_svc_sm_group': dict(
+        master='ot_hbm_svc_sm_group_id', source=_SVC + 'ot_hbm_svc_sm_group_id.sv',
+        deps=[_SVC + 'ot_hbm_svc_sm_feed_programmed_id.sv', _SVC + 'ot_hbm_svc_sm4pc_cdc_id.sv',
+              _SVC + 'ot_hbm_svc_prefetch_overlap_owner_id.sv'],
+        keep=dict(LBANKS=4, FIXED_GO=0),
+        straps=[('id_stack', lambda p: int(p.get('STACK', 0))), ('id_sm', lambda p: int(p.get('SM', 0)))]),
+}
+IDENTITY_STRAPS = False   # main(): --identity-straps
+# --keep-quadrants SW,NW (H-NETLIST 1930, A2P half die): instances of the other quadrants are removed (name tag
+# _<Q>/<Q><digit>), then every untagged instance whose edges all go to removed instances (ep/lk of a dropped
+# quadrant's links) is removed too (fixpoint).  Multi-target status joins are COMPACTED (a2p_compact): their t_ready /
+# t_active slots (NT, TGTS), t_fault (NF) and h_fault (NH) inputs are renumbered over the surviving drivers.  Everything a
+# 2-quadrant die cannot drive otherwise must come from a real N_Q RTL parameter (param_override layers).
+KEEP_Q = ()
+_QTAG = re.compile(r'(?:^|_)(SW|SE|NW|NE)(?=\d|_|$)')
+STATUS_JOINS = {   # master -> (slot param, ports, target-id param, slot width, default)
+    'ot_hbm_status_join': (('NT', ('t_ready', 't_active'), 'TGTS', 1, None), ('NF', ('t_fault',), None, 1, None),
+                           ('NH', ('h_fault',), None, 1, None)),
+    'ot_vms_status4_static': (('NQ', ('quadrant_status',), None, 19, 4),)}
+
+# --pc-h8 (with --identity-straps): the PC controller master is the H8 view (H-SU route hdie_pc_ctrl_cfg_h8, one view for
+# all 128 PCs); its six registered owner fault classes owner_fault_split[5:0] land in the quadrant stack fault leaf
+# (ot_hbm_svc_stack_fault OWN_W=6: the sticky owner bit is their OR) instead of the scalar owner_fault.
+PC_H8 = False
+PC_H8_MASTER = dict(master='ot_hbm_svc_pc_ctrl_leaf_cfg_h8', source=_SVC + 'ot_hbm_svc_pc_ctrl_leaf_cfg_h8.sv',
+                    deps=[_SVC + 'ot_hbm_svc_pc_ctrl_leaf.sv', 'rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h7.sv'],
+                    keep=dict(OREG=1, KREG=1, KRREG=1, RREG=1, WPAY=1, QREG=1))
+
+
+# --drop-sm-side SE,NE (H-NETLIST 1940, A2P TP-192 scope: only the SM side halves): the SM-side masters of those
+# quadrants (PHY, PC controllers, SM service groups, SMs, x-load + XQL stores, SM write, DMA-back, cmd targets, ...)
+# are removed; the core (VM hubs/banks, COLL, SU, SFU, HC, LG) stays.  --drop-instances: explicit extra removals.
+DROP_SM_Q = ()
+DROP_INST = ()
+SM_SIDE = {'ot_hbm3e_phy_rc_e8p5', 'ot_hbm_accel_smh_attn', 'ot_hbm_svc_pc_ctrl_leaf', 'ot_hbm_svc_pc_ctrl_leaf_cfg',
+           'ot_hbm_svc_pc_ctrl_leaf_cfg_h8', 'ot_hbm_svc_sm_group', 'ot_hbm_svc_sm_group_id', 'ot_hbm_svc_sm_xcal_t',
+           'ot_hbm_svc_stack_fault', 'ot_hbm_svc_vm_kshare', 'ot_hbm_svc_vmdel_lane', 'ot_hbm_svc_wb_kport',
+           'ot_hbm_svc_wbw_copy', 'ot_hbm_sm_vm_wr_q_t', 'ot_hgi_sm_xload_cl2_bdring', 'ot_hgi_sm_xload_cl2_bfq',
+           'ot_hgi_sm_xload_cl2_ctlw', 'ot_hgi_sm_xload_cl2_ctl', 'ot_hgi_sm_xload_cl2_bfqg', 'ot_hgi_sm_xload_xq_pegress', 'ot_hbm_xp_aq_tree13_fmt',
+           'ot_static_cmd_target', 'ot_hgi_dma_back_static_vp4_banks_cp'}
+
+
+# A2P re-mastering of instances that lose client slots (H-NETLIST 1940): new master + per-port slot maps
+# (slot width, kept old slots in new order).  An edge range on such a port is cut per kept slot and moved; parts on
+# absent slots must already be gone (their drivers / loads were dropped) else it is a problem.
+_VMS = 'rtl/hbm_accel/generic/vm/static/'
+A2P_REMASTER = {   # (master, quadrant in DROP_SM_Q) -> rule
+    'hfd_hgi_vms_static_SE': dict(master='hfd_hgi_vms_static_SE_core', source=_VMS + 'hfd_hgi_vms_static_core.sv',
+                                  deps=[_VMS + 'hfd_hgi_vms_static.sv'],
+                                  slots=dict(rq=(136, (0, 3)), rr=(2056, (0, 3)), wq=(2248, (0,)), wq_done=(8, (0,)))),
+    'hfd_hgi_vms_static_NE': dict(master='hfd_hgi_vms_static_NE_core', source=_VMS + 'hfd_hgi_vms_static_core.sv',
+                                  deps=[_VMS + 'hfd_hgi_vms_static.sv'],
+                                  slots=dict(rq=(136, (0, 3)), rr=(2056, (0, 3)), wq=(2248, (0,)), wq_done=(8, (0,)))),
+}
+# hb_idx: N_Q scorer slots (IDX helper claude/hnl-idxsoft-1815 03aa09d4c); slot = stack SID (SW0 SE1 NW2 NE3)
+IDX_SLOTS = dict(key_lines=8792, keep_bitmap=342, score_observe=610)
+
+
+A2P_RULES = {}   # instance -> {port: (slot width, kept old slots, old slot count)} (filled by a2p_remaster)
+
+
+def a2p_remaster(insts, problems):
+    kept_sid = [k for k, q in enumerate(('SW', 'SE', 'NW', 'NE')) if q not in DROP_SM_Q]
+    rules = A2P_RULES
+    for n, i in insts.items():
+        r = A2P_REMASTER.get(i['master'])
+        if r and (m := _QTAG.search(n)) and m.group(1) in DROP_SM_Q:
+            i.update(master=r['master'], source=r['source'], rtl_deps=list(r['deps']),
+                     note=i.get('note', '') + ' | A2P: SM-side client slots absent (no SM side in this quadrant)')
+            rules[n] = {p: (w, k, {'rq': 4, 'rr': 4, 'wq': 2, 'wq_done': 2}[p]) for p, (w, k) in r['slots'].items()}
+        if i['master'] in ('ot_hfd_coll_q3_static_host_v4', 'ot_hfd_coll_q2_static_host_v4',
+                           'ot_hfd_coll_q3_hard_v5', 'ot_hfd_coll_q2_hard_v5') and DROP_INST:   # hard_v7 (coll_hardv7_d4f)
+            # Explicitly dropped SerDes peers remove whole physical links.  Keep every core quadrant;
+            # the surviving endpoints retain their ordered lanes and all on-die operations.
+            q = n.rsplit('_', 1)[-1]
+            peers = {'SW': ('S0', 'S1', 'S2'), 'SE': ('S3', 'S4'),
+                     'NW': ('N0', 'N1'), 'NE': ('N2', 'N3')}[q]
+            kept = tuple(k for k, peer in enumerate(peers) if 'ep_' + peer not in DROP_INST)
+            i['params'] = dict(i['params'], NLINK=len(kept), TP=192 if DROP_SM_Q else 96)
+            i['note'] = i.get('note', '') + f' | A2P: NLINK={len(kept)} physical links, ordered lanes {kept}'
+            rules[n] = {p: (w, kept, len(peers)) for p, w in
+                        dict(phy_up=1, tx_pin_v=1, tx_pin_flit=612, rx_pin_v=1,
+                             rx_pin_flit=612, retry_requested=1, clk_link=5).items()}
+        if i['master'] == 'ot_hbm_argmax_static_sw_vm' and DROP_SM_Q:
+            i['params'] = dict(i['params'], TP=192 if len(kept_sid)==2 else 96)
+        if i['master'] == 'ot_hbm_idx_client_static_sw' and DROP_SM_Q:
+            i['params'] = dict(i['params'], N_Q=len(kept_sid), TP=192 if len(kept_sid)==2 else 96)
+            i['note'] = i.get('note', '') + f' | A2P: N_Q={len(kept_sid)} scorer slots = stacks {kept_sid}'
+            rules[n] = {p: (w, tuple(kept_sid), 4) for p, w in IDX_SLOTS.items()}
+
+
+PORT_SPLIT = {}   # instance -> {old port: [(new port, lo, hi)]}  (layer key 'remaster', H-NETLIST 2100)
+
+
+def remaster_layers(insts, specs, problems):
+    """Layer key 'remaster' {instance: {master, source, rtl_deps?, params?, port_split?}}: a master swap whose ports
+    differ only by bus splits (old bus bits [lo:hi) become new port bits [0:hi-lo)); edges are re-cut in
+    port_split_edges().  New clock pins come in the layer's 'clocks'."""
+    for s_ in specs:
+        for n, r in s_.get('remaster', {}).items():
+            if n not in insts:
+                problems.append(f'remaster: {n} is not an instance'); continue
+            i = insts[n]
+            i.update(master=r['master'], source=r['source'],
+                     note=i.get('note', '') + f" | {s_['region']}: remastered {i['master']} -> {r['master']}")
+            if 'params' in r:
+                i['params'] = dict(r['params'])
+            if r.get('rtl_deps'):
+                i['rtl_deps'] = list(r['rtl_deps'])
+            if r.get('port_split'):
+                PORT_SPLIT[n] = {p: [tuple(x) for x in v] for p, v in r['port_split'].items()}
+        dc = {tuple(x) for x in s_.get('drop_clocks', [])}
+        if dc:   # clock / reset bindings of ports a remaster removed (e.g. hoisted banks' clk_bank)
+            for t_ in specs:
+                t_['clocks'] = [c_ for c_ in t_.get('clocks', []) if (c_['inst'], c_['port']) not in dc]
+
+
+def port_split_edges(edges, problems):
+    out = []
+    for e in edges:
+        parts = [e]
+        for side, oth in (('dst', 'src'), ('src', 'dst')):
+            nxt = []
+            for x in parts:
+                end = x[side]; segs = PORT_SPLIT.get(end[0], {}).get(end[1])
+                if not segs:
+                    nxt.append(x); continue
+                full = max(sg[-1] for sg in segs)
+                lo, hi = (end[2], end[3]) if len(end) >= 4 else (0, full)
+                o = list(x[oth]) if len(x[oth]) >= 4 else list(x[oth][:2]) + [0, hi - lo]
+                for sg in segs:   # (new port, lo, hi) on the same instance or (instance, port, lo, hi): a hoist
+                    ni, np_, slo, shi = sg if len(sg) == 4 else (end[0],) + tuple(sg)
+                    a, b = max(lo, slo), min(hi, shi)
+                    if a >= b:
+                        continue
+                    y = dict(x, name=f"{x.get('name', 'e')}__{ni}_{np_}")
+                    y[side] = [ni, np_, a - slo, b - slo]
+                    y[oth] = o[:2] + [o[2] + a - lo, o[2] + b - lo]; y['bits'] = b - a
+                    nxt.append(y)
+            parts = nxt
+        out.extend(parts)
+    return out
+
+
+def a2p_edge_remap(edges, problems):
+    rules = A2P_RULES
+    out = []
+    if True:
+        for e in edges:
+            if DROP_SM_Q and e['dst'][:2] == ['hb_idx', 'rank']:
+                e = dict(e, src=['col_idx', 'prm', 74, 82], bits=8,
+                         basis='A2P TP192: same full 8-bit configured die_id as ARGMAX (cp2 operand row0 bits81:74)')
+            parts = [e]
+            for side, oth in (('dst', 'src'), ('src', 'dst')):
+                nxt = []
+                for x in parts:
+                    end = x[side]
+                    sl = rules.get(end[0], {}).get(end[1])
+                    if not sl:
+                        nxt.append(x); continue
+                    w, keep, nold = sl
+                    lo, hi = (end[2], end[3]) if len(end) >= 4 else (0, nold * w)
+                    o = list(x[oth]) if len(x[oth]) >= 4 else list(x[oth][:2]) + [0, hi - lo]
+                    for old in range(lo // w, (hi - 1) // w + 1):
+                        a, b = max(lo, old * w), min(hi, (old + 1) * w)
+                        if old not in keep:   # sink slot absent: the driver bits stay open; a source slot absent: undriven
+                            if side == 'src':
+                                problems.append(f'a2p slot remap {end[0]}.{end[1]}[{a}:{b}) is an absent source slot')
+                            continue
+                        k = keep.index(old)
+                        y = dict(x, name=f"{x.get('name', 'e')}__a2p{side[0]}{old}")
+                        y[side] = [end[0], end[1], k * w + a - old * w, k * w + b - old * w]
+                        y[oth] = o[:2] + [o[2] + a - lo, o[2] + b - lo]; y['bits'] = b - a
+                        nxt.append(y)
+                parts = nxt
+            out.extend(parts)
+    return out
+
+
+def a2p_drop(insts, specs, problems):
+    drop = {n for n in insts if (m := _QTAG.search(n)) and KEEP_Q and m.group(1) not in KEEP_Q}
+    drop |= {n for n in insts if (m := _QTAG.search(n)) and m.group(1) in DROP_SM_Q and insts[n]['master'] in SM_SIDE}
+    for n in DROP_INST:
+        if n not in insts:
+            problems.append(f'--drop-instances: {n} is not an instance')
+        drop.add(n)
+    while True:
+        nb = collections.defaultdict(set)
+        for s_ in specs:
+            for e in s_.get('edges', []):
+                a, b = e['src'][0], e['dst'][0]
+                nb[a].add(b); nb[b].add(a)
+        more = {n for n in insts if n not in drop and not _QTAG.search(n) and nb[n]
+                and all(x in drop or x == 'hb_ckgen' for x in nb[n]) and insts[n]['master'] not in STATUS_JOINS}
+        if not more:
+            return drop
+        drop |= more
+
+
+def a2p_compact(insts, specs, problems):
+    for n, i in insts.items():
+        for npar, pts, tg, w, dflt in STATUS_JOINS.get(i['master'], ()):
+            old = int(i['params'].get(npar, dflt))
+            def span(d):
+                return (d[2], d[3]) if len(d) > 3 else (0, old * w)
+            used = set()
+            for s_ in specs:
+                for e in s_.get('edges', []):
+                    if e['dst'][0] == n and e['dst'][1] in pts:
+                        lo, hi = span(e['dst']); used |= set(range(lo // w, (hi - 1) // w + 1))
+            new = sorted(used); mp = {o: k for k, o in enumerate(new)}
+            for s_ in specs:
+                for e in s_.get('edges', []):
+                    if e['dst'][0] == n and e['dst'][1] in pts:
+                        d = e['dst']; lo, hi = span(d)
+                        sl = list(range(lo // w, (hi - 1) // w + 1))
+                        if [mp[x] for x in sl] != list(range(mp[sl[0]], mp[sl[0]] + len(sl))):
+                            problems.append(f'a2p compact {n}.{d[1]}[{lo}:{hi}) not contiguous'); continue
+                        nlo = mp[sl[0]] * w + lo % w
+                        e['dst'] = [n, d[1], nlo, nlo + hi - lo]
+            i['params'][npar] = max(1, len(new))
+            if tg:
+                v = str(i['params'][tg]); val = int(v.split("'h")[1], 16) if "'h" in v else int(v)
+                ids = [(val >> (8 * o)) & 255 for o in new]
+                i['params'][tg] = f"{8 * len(new)}'h" + ''.join(f'{x:02x}' for x in reversed(ids))
+            i['note'] = i.get('note', '') + f' | A2P: {npar} {old} -> {len(new)}'
+
+
 # H-NETLIST 0600: logical array wrappers whose RTL is "physically N independently hardened leaves" are FLATTENED in the
 # die netlist into their N leaf instances <inst>_b<k> (one hardened leaf master, bit-sliced edges, same clock root bit).
 _VMS = 'rtl/hbm_accel/generic/vm/static/'
@@ -258,14 +618,14 @@ def universal_calendar_fields():
     return [(name, lo, b) for lo, name, b in f]
 
 
-def build(specs_dir, out):
+def build(specs_dir, out, extra=()):
     v15 = json.loads((ROOT / V15).read_text())
     grants = json.loads((ROOT / GRANTS).read_text())
     plan = json.loads((ROOT / PLAN).read_text())
     rtl = Rtl()
     specs = [engine_region()]
-    for f in sorted(Path(specs_dir).glob('*.json')):
-        s = json.loads(f.read_text())
+    for f in sorted(Path(specs_dir).glob('*.json')) + [Path(x) for x in extra]:
+        s = json.loads(gzip.open(f).read() if str(f).endswith('.gz') else f.read_text())   # --extra-spec: revision layers
         s.setdefault('region', f.stem)
         s['_file'] = str(f.relative_to(ROOT)) if f.is_absolute() and str(f).startswith(str(ROOT)) else str(f)
         specs.append(s)
@@ -330,6 +690,39 @@ def build(specs_dir, out):
             if prm in i['params']:
                 tgt_straps.append(dict(inst=n, port=port, value=int(i['params'].pop(prm)),
                                        reason=f'identity: {prm} of this instance (was a parameter)'))
+    if IDENTITY_STRAPS:
+        h8 = set()
+        for n, i in insts.items():
+            r = IDENTITY_MASTERS.get(i['master'])
+            if not r:
+                continue
+            if PC_H8 and i['master'] == 'ot_hbm_svc_pc_ctrl_leaf':
+                r = dict(r, **PC_H8_MASTER)
+                h8.add(n)
+            old = dict(i['params'])
+            for port, fn in r['straps']:
+                tgt_straps.append(dict(inst=n, port=port, value=fn(old),
+                                       reason=f"identity: {port} of this {i['master']} instance (was parameters {old})"))
+            i.update(master=r['master'], source=r['source'],
+                     params={k: int(old.get(k, v)) for k, v in r['keep'].items()},
+                     note=i.get('note', '') + f" | H-NETLIST 1815 identity straps: one generic master (was {i['master']} {old})")
+            if r['deps']:
+                i['rtl_deps'] = list(r['deps'])
+        if h8:
+            sf = set()
+            for s_ in specs:
+                for e in s_.get('edges', []):
+                    if e['src'][0] in h8 and e['src'][1] == 'owner_fault':
+                        d = list(e['dst']); lo, hi = (d[2], d[3]) if len(d) > 3 else (0, 1)
+                        e['src'] = [e['src'][0], 'owner_fault_split', 0, 6]
+                        e['dst'] = d[:2] + [6 * lo, 6 * hi]
+                        e['bits'] = 6 * (hi - lo)
+                        e['basis'] = e.get('basis', '') + ' | H8: six registered owner fault classes (OR in the stack fault leaf)'
+                        sf.add(d[0])
+            for n in sf:
+                if insts[n]['master'] != 'ot_hbm_svc_stack_fault':
+                    problems.append(f'H8 owner_fault sink {n} is not ot_hbm_svc_stack_fault')
+                insts[n]['params'] = dict(insts[n]['params'], OWN_W=6)
     specs.append(dict(region='target_id_straps', straps=tgt_straps, edges=[], instances=[], clocks=[], gaps=[]))
     # H-NETLIST 0600: fill calendars vmfc_<q> (ot_vms_calendar_static, W<=187) are the CLOSED universal VM calendar
     # master hfd_hgi_vm_calendar (native PASS): same programme ABI, calendar[W-1:0] = its low packed fields cycle for
@@ -379,6 +772,42 @@ def build(specs_dir, out):
             if c_['inst'] in flat:
                 s_['clocks'].remove(c_)
                 s_['clocks'].extend(dict(c_, inst=f"{c_['inst']}_b{k}", port=c_['port']) for k in range(flat[c_['inst']]['n']))
+    # H-NETLIST 1815 (d4c revision layers): 'remove_instances' (with every spec edge / clock / strap touching them),
+    # 'drop_edges' ([src_inst, src_port] or [src_inst, src_port, dst_inst]) and 'param_override' {inst: {param: value}}.
+    remaster_layers(insts, specs, problems)
+    rm = {n for s_ in specs for n in s_.get('remove_instances', [])}
+    if KEEP_Q or DROP_SM_Q or DROP_INST:
+        rm |= a2p_drop(insts, specs, problems)
+    drop_e = [d for s_ in specs for d in s_.get('drop_edges', [])]
+    for n in sorted(rm):
+        if insts.pop(n, None) is None:
+            problems.append(f'remove_instances: {n} is not an instance')
+    if rm or drop_e:
+        def _qdrop(n):   # A2P: also folded / flattened names (not instances any more) of a dropped quadrant
+            if folded.get(n) in rm:
+                return True
+            m_ = KEEP_Q and _QTAG.search(n)
+            return bool(m_) and m_.group(1) not in KEEP_Q
+
+        def _dropped(e):
+            return e['src'][0] in rm or e['dst'][0] in rm or _qdrop(e['src'][0]) or _qdrop(e['dst'][0]) or any(
+                e['src'][0] == d[0] and e['src'][1] == d[1] and (len(d) < 3 or e['dst'][0] == d[2]) for d in drop_e)
+        for s_ in specs:
+            s_['edges'] = [e for e in s_.get('edges', []) if not _dropped(e)]
+            s_['clocks'] = [c_ for c_ in s_.get('clocks', []) if c_['inst'] not in rm]
+            s_['straps'] = [x for x in s_.get('straps', []) if x['inst'] not in rm]
+    if KEEP_Q or DROP_SM_Q or DROP_INST:
+        a2p_compact(insts, specs, problems)
+        a2p_remaster(insts, problems)
+    for s_ in specs:
+        for n, ov in s_.get('param_override', {}).items():
+            if n not in insts and n in rm:
+                continue
+            if n not in insts:
+                problems.append(f'param_override: {n} is not an instance')
+                continue
+            insts[n]['params'].update(ov)
+            insts[n]['note'] = insts[n].get('note', '') + f" | {s_['region']}: params {ov}"
     ports = {}
     for n, i in insts.items():
         ports[n] = rtl.ports(i['master'], i['source'], i['params'])
@@ -389,15 +818,16 @@ def build(specs_dir, out):
     edges = []
     for e in v15['known_actual_edges']:
         a, b = e['source'][0], e['sink'][0]
-        if a in retired or b in retired or e['name'] in dropped:
+        if a in retired or b in retired or e['name'] in dropped or a in rm or b in rm:
             continue
         if (a in redefined or b in redefined):
             # a region re-mastered this instance: keep the v15 edge only if the ports still exist with the same width
             try:
                 sa, sb = rng(e['source'], ports), rng(e['sink'], ports)
             except KeyError:
-                problems.append(f"v15 edge {e['name']} dropped: port gone after re-mastering")
-                continue
+                if not any(end[1] in PORT_SPLIT.get(end[0], {}) for end in (e['source'], e['sink'])):
+                    problems.append(f"v15 edge {e['name']} dropped: port gone after re-mastering")
+                    continue   # (a hoisted port is re-cut onto its new instance by port_split_edges)
         edges.append(dict(name=e['name'], src=e['source'], dst=e['sink'], clock=e.get('clock'),
                           ready_or_credit=e.get('ready_or_credit', False), basis='v15.1 source contract', region='v15'))
     for s in specs:
@@ -480,6 +910,12 @@ def build(specs_dir, out):
             else:
                 cut.append(e)
         edges = cut
+    if KEEP_Q or DROP_SM_Q or DROP_INST:   # A2P: flattened / folded expansions of removed instances
+        edges = [e for e in edges if e['src'][0] in insts and e['dst'][0] in insts]
+        edges = a2p_edge_remap(edges, problems)
+    if PORT_SPLIT:
+        edges = port_split_edges(edges, problems)
+    edges = apply_relay_splice(specs, edges, ports, problems)
     # ---------------- bit-level driver map
     drv = {}          # (inst, port, bit) -> (inst, port, bit) | ('PIN', name, bit)
     E = []
@@ -525,9 +961,17 @@ def build(specs_dir, out):
             if c['inst'] in folded:
                 continue
             ckdom[(c['inst'], c['port'])] = (c['domain'], c.get('kind', 'clock'))
+    # H-NETLIST 1815 reset forest layer: its leaf tiles drive these reset ports by edges (no hb_ckgen por binding)
+    rforest = {tuple(x) for s in specs for x in s.get('reset_forest_ports', [])}
+    for k in [k for k in ckdom if k in rforest and ckdom[k][1] == 'reset']:
+        del ckdom[k]
     clocks = []
     for (i, p), (dm, kind) in sorted(ckdom.items()):
+        if (KEEP_Q or DROP_SM_Q or DROP_INST) and i not in insts:
+            continue
         if i not in ports or p not in ports[i]:
+            if p in PORT_SPLIT.get(i, {}):
+                continue   # hoisted port: the layer binds the new instances' clocks
             problems.append(f'clock {i}.{p}: unknown'); continue
         if i == CK:
             continue
@@ -586,6 +1030,12 @@ def build(specs_dir, out):
                     continue        # accounting range on a flattened array wrapper (its leaves carry the bits)
                 if i in folded.values() and i in ports and p not in ports[i]:
                     continue        # programme pins internal to a folded calendar+target master (H-NETLIST 0600)
+                if KEEP_Q and i not in insts and (m_ := _QTAG.search(i)) and m_.group(1) not in KEEP_Q:
+                    continue        # A2P: the gap's instance belongs to a dropped quadrant
+                if i in rm:
+                    continue        # A2P: accounting gaps for explicitly removed SM-side / link instances
+                if p in PORT_SPLIT.get(i, {}):
+                    continue        # port split / hoisted by a remaster layer: the gap names the old port
                 if i not in ports or p not in ports[i]:
                     problems.append(f"gap {g['id']}: unknown {i}.{p}"); continue
                 ii, pp_, lo, hi = rng(a, ports)
@@ -775,8 +1225,22 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n\n')[0])
     ap.add_argument('--out', type=Path, default=ROOT / 'results/arch/hbm_die_v16')
     ap.add_argument('--specs', type=Path, default=ROOT / 'tools/hbm_die_v15/v16_specs')
+    ap.add_argument('--extra-spec', action='append', default=[],
+                    help='revision layer spec (e.g. tools/hbm_die_v15/v16_relays/relays_d4b.json.gz: d4b relay stations)')
+    ap.add_argument('--identity-straps', action='store_true',
+                    help='IDENTITY_MASTERS: per-instance identity parameters -> strap pins of one generic master')
+    ap.add_argument('--drop-sm-side', default='', help='A2P: comma list of quadrants whose SM side is removed')
+    ap.add_argument('--drop-instances', default='', help='A2P: comma list of extra instances to remove')
+    ap.add_argument('--keep-quadrants', default='', help='A2P: comma list of quadrants to keep (e.g. SW,NW)')
+    ap.add_argument('--pc-h8', action='store_true', help='with --identity-straps: PC controller = the H8 view (PC_H8_MASTER)')
     a = ap.parse_args()
-    c = build(a.specs, a.out)
+    global IDENTITY_STRAPS, PC_H8, KEEP_Q, DROP_SM_Q, DROP_INST
+    DROP_SM_Q = tuple(x for x in a.drop_sm_side.split(',') if x)
+    DROP_INST = tuple(x for x in a.drop_instances.split(',') if x)
+    KEEP_Q = tuple(x for x in a.keep_quadrants.split(',') if x)
+    IDENTITY_STRAPS = a.identity_straps
+    PC_H8 = a.pc_h8
+    c = build(a.specs, a.out, a.extra_spec)
     print(json.dumps(c['summary'], indent=1))
     for p in c['problems'][:40]:
         print('PROBLEM', p)

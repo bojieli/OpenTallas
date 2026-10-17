@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_rate_match",
+ "enable": false,
+ "reason": "two-clock CDC leaf: the recipe-3 pin register is single-clock (one data clock) and cannot serve both domains; the RTL already captures at the face in its own domain -- w_v/w_d are written straight into the 8x512 FIFO flops (wclk; the only logic before them is the IDLE/fill push decode), r_d is a flop output (rclk) and fault leaves the f1/f2 synchroniser flop. A pin register on the wclk side would add one recovered-clock edge only; on the rclk side it would delay the local beat by a cycle -- neither buys timing on a 43 um leaf."
+}

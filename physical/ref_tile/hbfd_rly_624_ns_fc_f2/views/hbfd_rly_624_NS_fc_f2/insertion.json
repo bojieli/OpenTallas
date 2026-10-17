@@ -1,0 +1,293 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_624_ns_fc_f2-ff3-11c71f883/routes/hbfd_rly_624_ns_fc_f2_ff3_11c71f883/work/orfs/results/asap7/opentallas_hbfd_rly_624_NS_fc_f2_asap7_ref_hbfd_rly_624_ns_fc_f2_ff3_11c71f883/base",
+ "db": "6_final.odb",
+ "sdc": "6_final.sdc",
+ "clock": "core_clk",
+ "parasitics": "spef",
+ "raw_source": true,
+ "ss": {
+  "boundary": {
+   "n": 1256,
+   "mean": 186.6,
+   "min": 168.8,
+   "max": 204.9
+  },
+  "all": {
+   "n": 1256,
+   "mean": 186.6,
+   "min": 168.8,
+   "max": 204.9
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "tt": {
+  "boundary": {
+   "n": 1256,
+   "mean": 142.9,
+   "min": 124.2,
+   "max": 159.3
+  },
+  "all": {
+   "n": 1256,
+   "mean": 142.9,
+   "min": 124.2,
+   "max": 159.3
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "ff": {
+  "boundary": {
+   "n": 1256,
+   "mean": 117.4,
+   "min": 98.5,
+   "max": 132.9
+  },
+  "all": {
+   "n": 1256,
+   "mean": 117.4,
+   "min": 98.5,
+   "max": 132.9
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 0,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 187,
+  "CK_SS_ALL_MEAN": 187,
+  "CK_SS_MIN": 169,
+  "CK_SS_ALL_MIN": 169,
+  "CK_SS_MAX": 205,
+  "CK_SS_ALL_MAX": 205,
+  "CK_TT_MEAN": 143,
+  "CK_TT_ALL_MEAN": 143,
+  "CK_TT_MIN": 124,
+  "CK_TT_ALL_MIN": 124,
+  "CK_TT_MAX": 159,
+  "CK_TT_ALL_MAX": 159,
+  "CK_FF_MEAN": 117,
+  "CK_FF_ALL_MEAN": 117,
+  "CK_FF_MIN": 98,
+  "CK_FF_ALL_MIN": 98,
+  "CK_FF_MAX": 133,
+  "CK_FF_ALL_MAX": 133,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "clk_in",
+ "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk_in}]",
+ "clock_measurements": {
+  "clk_in": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_624_ns_fc_f2-ff3-11c71f883/routes/hbfd_rly_624_ns_fc_f2_ff3_11c71f883/work/orfs/results/asap7/opentallas_hbfd_rly_624_NS_fc_f2_asap7_ref_hbfd_rly_624_ns_fc_f2_ff3_11c71f883/base",
+   "db": "6_final.odb",
+   "sdc": "6_final.sdc",
+   "clock": "core_clk",
+   "parasitics": "spef",
+   "raw_source": true,
+   "ss": {
+    "boundary": {
+     "n": 1256,
+     "mean": 186.6,
+     "min": 168.8,
+     "max": 204.9
+    },
+    "all": {
+     "n": 1256,
+     "mean": 186.6,
+     "min": 168.8,
+     "max": 204.9
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "tt": {
+    "boundary": {
+     "n": 1256,
+     "mean": 142.9,
+     "min": 124.2,
+     "max": 159.3
+    },
+    "all": {
+     "n": 1256,
+     "mean": 142.9,
+     "min": 124.2,
+     "max": 159.3
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "ff": {
+    "boundary": {
+     "n": 1256,
+     "mean": 117.4,
+     "min": 98.5,
+     "max": 132.9
+    },
+    "all": {
+     "n": 1256,
+     "mean": 117.4,
+     "min": 98.5,
+     "max": 132.9
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 0,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 187,
+    "CK_SS_ALL_MEAN": 187,
+    "CK_SS_MIN": 169,
+    "CK_SS_ALL_MIN": 169,
+    "CK_SS_MAX": 205,
+    "CK_SS_ALL_MAX": 205,
+    "CK_TT_MEAN": 143,
+    "CK_TT_ALL_MEAN": 143,
+    "CK_TT_MIN": 124,
+    "CK_TT_ALL_MIN": 124,
+    "CK_TT_MAX": 159,
+    "CK_TT_ALL_MAX": 159,
+    "CK_FF_MEAN": 117,
+    "CK_FF_ALL_MEAN": 117,
+    "CK_FF_MIN": 98,
+    "CK_FF_ALL_MIN": 98,
+    "CK_FF_MAX": 133,
+    "CK_FF_ALL_MAX": 133,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "clk_in",
+   "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk_in}]"
+  }
+ },
+ "forwarded_clock": {
+  "arc": "clk_in -> clk_out<k> combinational positive_unate (one kept buffer per branch, off the CTS tree)",
+  "model": "per branch: 1 x clk_in pin cap; + wire 405 um x 0.15 fF/um",
+  "etm": "re-exported without the clk_out*_fwd generated clocks (tools/hbm_f1/fc_etm_reexport.sh); register arcs byte-identical to the closure-loop export",
+  "corners": {
+   "tt": {
+    "R_ps": 142.9,
+    "clk_in_pin_ff": 25.0023,
+    "pins": {
+     "clk_out0": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 37.99
+      },
+      "pins": {
+       "load_ff": 25.0,
+       "ps": 45.94
+      },
+      "pins_wire": {
+       "load_ff": 85.75,
+       "ps": 67.55
+      }
+     },
+     "clk_out1": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 38.64
+      },
+      "pins": {
+       "load_ff": 25.0,
+       "ps": 46.6
+      },
+      "pins_wire": {
+       "load_ff": 85.75,
+       "ps": 68.21
+      }
+     }
+    }
+   },
+   "ff": {
+    "R_ps": 117.4,
+    "clk_in_pin_ff": 25.7776,
+    "pins": {
+     "clk_out0": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 32.66
+      },
+      "pins": {
+       "load_ff": 25.78,
+       "ps": 38.56
+      },
+      "pins_wire": {
+       "load_ff": 86.53,
+       "ps": 53.73
+      }
+     },
+     "clk_out1": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 33.23
+      },
+      "pins": {
+       "load_ff": 25.78,
+       "ps": 39.13
+      },
+      "pins_wire": {
+       "load_ff": 86.53,
+       "ps": 54.3
+      }
+     }
+    }
+   },
+   "ss": {
+    "R_ps": 186.6,
+    "clk_in_pin_ff": 24.504,
+    "pins": {
+     "clk_out0": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 45.4
+      },
+      "pins": {
+       "load_ff": 24.5,
+       "ps": 57.1
+      },
+      "pins_wire": {
+       "load_ff": 85.25,
+       "ps": 91.17
+      }
+     },
+     "clk_out1": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 46.17
+      },
+      "pins": {
+       "load_ff": 24.5,
+       "ps": 57.88
+      },
+      "pins_wire": {
+       "load_ff": 85.25,
+       "ps": 91.96
+      }
+     }
+    }
+   }
+  }
+ }
+}

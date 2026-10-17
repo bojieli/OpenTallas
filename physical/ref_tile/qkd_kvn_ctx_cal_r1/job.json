@@ -1,0 +1,129 @@
+{
+ "name": "qkd_kvn_ctx_cal_r1-r1-COMMIT",
+ "block": "qkd_kvn_ctx_cal",
+ "ref_tile": true,
+ "owner": "Claude:Q-KVSYS-PVJOIN",
+ "purpose": "Q-KVSYS PVJOIN 10-16: KV-side compiled KVN context = the independent expectation kvn_compiled_identity[58:0] / kvn_compiled_generation[1:0] of qkd_d2d_static (2 of the 17 strict-bind open inputs, bind17_producers.json). identity = {HOST cohort epoch16, stage = KV link calendar run index + 1, cohort token18/position13, 0}, generation = HOST cohort_gen; sources the HOST root cohort_tag/cohort_gen and the KV link calendar sequencer qkd_d2d_cal_seq_pin cal_start/layer. Fixed latency, no credits/ready. Bench: real sequencer image + real KVN tx/rx, 2 tokens x 36 runs x 4 words exact vs the link compiler's program calendar; mutants stage-off-by-one and cohort-snapshot FAIL.",
+ "threads": 4,
+ "peak_ram_gb": 8,
+ "source": {
+  "branch": "claude/pvjoin-cal-1016",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/qwen_sys/d2d_static_20261015",
+   "rtl/test/qwen_split/tb_qkd_kvn_ctx_cal.sv",
+   "tools/qwen_split",
+   "tools/qwen_kv_die/kvn_ctx_golden.py",
+   "tools/qwen_kv_die/kvn_ctx_bench.sh",
+   "results/arch/token_path_20261009/qwen_rom.json",
+   "results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvn_ctx_cal #(.MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_cal.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "kvn_ctx_pass",
+    "cmd": "bash tools/qwen_kv_die/kvn_ctx_bench.sh {RUN}/bench/pass 0 12 2",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVN_CTX PASS tokens=2 runs=72 words=288 errors=0",
+    "min_count_regex": "words=(\\d+)"
+   },
+   {
+    "name": "kvn_ctx_mut_stage",
+    "cmd": "bash tools/qwen_kv_die/kvn_ctx_bench.sh {RUN}/bench/mut1 1 12 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVN_CTX PASS",
+    "fail_regex": "^KVN_CTX FAIL tokens=2 runs=72 words=0 errors=2 mut=1"
+   },
+   {
+    "name": "kvn_ctx_mut_snapshot",
+    "cmd": "bash tools/qwen_kv_die/kvn_ctx_bench.sh {RUN}/bench/mut2 2 12 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVN_CTX PASS",
+    "fail_regex": "^KVN_CTX FAIL tokens=2 runs=72 words=0 errors=2 mut=2"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_kvn_ctx_cal_r1/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_kvn_ctx_cal_r1/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 4,
+   "peak_ram_gb": 8
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kvn_ctx_cal_r1 --out {RUN}/record/views/qkd_kvn_ctx_cal  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_kvn_ctx_cal_r1/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_kvn_ctx_cal_r1/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_kvn_ctx_cal_r1/qkd_kvn_ctx_cal_r1-r1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "new leaf (no prior view): KVN compiled context for qkd_d2d_static, 0 cycles on any token path (an expectation register; KVN words land >= 645 edges after it settles)."
+}

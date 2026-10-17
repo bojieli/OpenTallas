@@ -389,8 +389,8 @@
     },
     {
      "element": "ot_hbm3e_phy_v41x_aw30_e8p5",
-     "role": "master",
-     "evidence": "S-DIE-NETLIST 2026-10-16: hard macro / PHY of the die netlist, owner by assignment (coordinator 00:30)",
+     "role": "macro",
+     "evidence": "S-DIE-NETLIST 2026-10-16: hard macro / PHY of the die netlist, owner by assignment (coordinator 00:30); ELEM-CENSUS 10-16 (S-DIE ok): hard macro bound by its LEF/LIB/blackbox view, not a route element",
      "stream": "S-DIE"
     },
     {
@@ -407,9 +407,41 @@
     },
     {
      "element": "ot_rom_4096x72_m8",
-     "role": "master",
-     "evidence": "S-DIE-NETLIST 2026-10-16: hard macro / PHY of the die netlist, owner by assignment (coordinator 00:30)",
+     "role": "macro",
+     "evidence": "S-DIE-NETLIST 2026-10-16: hard macro / PHY of the die netlist, owner by assignment (coordinator 00:30); ELEM-CENSUS 10-16 (S-DIE ok): hard macro bound by its LEF/LIB/blackbox view, not a route element",
      "stream": "S-DIE"
+    },
+    {
+     "element": "ot_s81_kp4_enc",
+     "parent": "ot_pdie_serdes",
+     "role": "leaf",
+     "rtl": "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+     "stream": "S-DIE",
+     "evidence": "ELEM-CENSUS 10-16 (S-DIE ok): real on-die link digital sublayer inside the ot_pdie_serdes blackbox (KP4 RS(544,514) FEC / CDC rate match); hard leaf in the W/E link columns"
+    },
+    {
+     "element": "ot_s81_kp4_dec",
+     "parent": "ot_pdie_serdes",
+     "role": "leaf",
+     "rtl": "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+     "stream": "S-DIE",
+     "evidence": "ELEM-CENSUS 10-16 (S-DIE ok): real on-die link digital sublayer inside the ot_pdie_serdes blackbox (KP4 RS(544,514) FEC / CDC rate match); hard leaf in the W/E link columns"
+    },
+    {
+     "element": "ot_s81_rate_match",
+     "parent": "ot_pdie_serdes",
+     "role": "leaf",
+     "rtl": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+     "stream": "S-DIE",
+     "evidence": "ELEM-CENSUS 10-16 (S-DIE ok): real on-die link digital sublayer inside the ot_pdie_serdes blackbox (KP4 RS(544,514) FEC / CDC rate match); hard leaf in the W/E link columns"
+    },
+    {
+     "element": "ot_s81_rate_match",
+     "parent": "ot_pdie_ucie",
+     "role": "leaf",
+     "rtl": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+     "stream": "S-DIE",
+     "evidence": "ELEM-CENSUS 10-16 (S-DIE ok): real on-die link digital sublayer inside the ot_pdie_ucie blackbox (KP4 RS(544,514) FEC / CDC rate match); hard leaf in the W/E link columns"
     }
    ],
    "retire": [

@@ -9,6 +9,10 @@ set -eu
 O=$(readlink -f $1); S=$(cd $(dirname $0)/../../.. && pwd); cd $S
 [ -z "$(git status --porcelain -- tools rtl physical)" ] || { echo "dirty tree: commit first"; exit 2; }
 mkdir -p $O/libs
+# Q-KV 2026-10-16 18:40: record the OT_KV_* build flags so die_chain.sh re-exports them for the strict bind
+# (kv_port_bind_v2.sh / die_port_bind_kv.py re-import kv_die: without the flags they used the non-V144_R6 vport binding
+# and reported 256 phantom undriven pvin epoch bits on kvs13h)
+env | grep -E '^OT_KV_[A-Z0-9_]*=' | sed -E "s/^([^=]*)=(.*)$/export \1='\2'/" > $O/kv_flags.env
 # v1.4 (OT_KV_HOST_V14=1): real HOST root core + 128 die-placed PC slices + PLL model (kv_die.py --host-v14)
 H14=; V14=
 if [ "${OT_KV_HOST_V14:-0}" = 1 ]; then H14=--host-v14; V14=,host_v14; fi
@@ -23,6 +27,34 @@ if [ "${OT_KV_V143:-0}" = 1 ]; then H14="$H14 --v143"; V14=$V14,v143
   BV="--view qkd_hgs=physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage --view qkd_hss=physical/ref_tile/qkh_head_sstage/views/qkh_head_sstage"; fi
 # OT_KV_DCAL=1 (Q-KVSYS-DIE 10-16): the link calendar sequencer qkd_d2d_cal_seq_pin on its CLOSED view (kv_die.py DCAL)
 [ "${OT_KV_DCAL:-0}" = 1 ] && BV="$BV --view qkd_dcal=physical/ref_tile/qkd_d2d_cal_seq_pin_ep3/views/qkd_d2d_cal_seq_pin"
+# OT_KV_KVNC=1 (Q-KVSYS PVJOIN 10-16, needs OT_KV_DCAL=1): the KVN context leaf qkd_kvn_ctx_cal (kv_die.py KVNC) on its view
+# when the kit has closed (OT_KV_KVNC_KIT, default qkd_kvn_ctx_cal_r2); without a view the frame stays ASSUMED (diagnostic)
+if [ "${OT_KV_KVNC:-0}" = 1 ]; then KVV=physical/ref_tile/${OT_KV_KVNC_KIT:-qkd_kvn_ctx_cal_r2}/views/qkd_kvn_ctx_cal
+  [ -f $KVV/qkd_kvn_ctx_cal.lef ] && BV="$BV --view qkd_kvnc=$KVV" || echo "OT_KV_KVNC: no closed view at $KVV (frame ASSUMED)"; fi
+# OT_KV_SEQ_STATIC=1 (Q-KVSYS PVJOIN 10-16, needs DCAL + KVNC): qkd_seq_static in slot seq (cluster frame, as qkd_seq) and
+# the compile-time-image layer programme lprg on its closed view when available (OT_KV_LPRG_KIT, default qkd_layer_prog_img_r3)
+if [ "${OT_KV_SEQ_STATIC:-0}" = 1 ]; then LPV=physical/ref_tile/${OT_KV_LPRG_KIT:-qkd_layer_prog_img_r3}/views/qkd_static_kv_layer_programme_img
+  [ -f $LPV/qkd_static_kv_layer_programme_img.lef ] && BV="$BV --view qkd_lprg=$LPV" || echo "OT_KV_SEQ_STATIC: no closed view at $LPV (frame ASSUMED)"
+  # the layer image binds the INSTALLED program (digest / epoch checked at the programme start): recompile the roots for
+  # OT_KV_LPRG_PROGRAM (PW1024 + DW8 hex; default the sys_face bench program) / OT_KV_LPRG_EPOCH (default 0x0b0b) on the
+  # link compiler's calendar and refuse a committed image (= the hardened view's constants) that differs
+  mkdir -p $O/lprg_image
+  python3 tools/qwen_split/d2d_link_calendar.py --out $O/lprg_image/cal --txl 6 --phy 5 --profile program --txd-c 1,1,1,2 --txd-k 1,2,1,1 \
+    --host-stages 0 --link-handoff results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json --pinreg > $O/lprg_image/cal.log
+  python3 tools/qwen_static_kv/layer_roots_from_link.py $O/lprg_image/cal $O/lprg_image/lp ${OT_KV_LPRG_PROGRAM:+--program $OT_KV_LPRG_PROGRAM} \
+    --epoch ${OT_KV_LPRG_EPOCH:-0x0b0b} > $O/lprg_image/roots.log
+  if cmp -s $O/lprg_image/lp/layer_programme_image.svh rtl/qwen_sys/static_kv_20261014/layer_programme_image.svh; then echo MATCH > $O/lprg_image/verdict
+  else echo MISMATCH > $O/lprg_image/verdict; echo "OT_KV_SEQ_STATIC: committed layer image != installed program's (re-run layer_roots_from_link.py, re-harden lprg)"
+    [ "${OT_KV_LPRG_ALLOW_MISMATCH:-0}" = 1 ] || exit 5; fi
+fi
+# v1.4.4 (OT_KV_V144=1, read by kv_die.py; needs OT_KV_V143C=1): PV16 wide pairs in the centre spine (closed r5 leaves placed
+# by kv_expand) + the 16 V ports qkd_pv16_vport bound to their closed view (r5, the V issuer)
+if [ "${OT_KV_V144:-0}" = 1 ]; then
+  VPK=qkd_pv16_vport_r5; [ "${OT_KV_V144_R6:-0}" = 1 ] && VPK=qkd_pv16_vport_r6   # kvs13d: r6 (DQ 0 / RT 8, epoch on the V word)
+  VP=physical/ref_tile/${OT_KV_VPORT_KIT:-$VPK}/views/qkd_pv16_vport
+  [ -f $VP/qkd_pv16_vport.lef ] || { echo "v1.4.4: no closed V port view at $VP"; exit 4; }
+  BV="$BV --view qkd_pv16_vport=$VP"
+fi
 python3 tools/qwen_kv_die/kv_die.py case --kv-wq-mirror --split $H14 --out $O/case_kv > $O/case.log
 git rev-parse --short=9 HEAD > $O/case_kv/SOURCE_COMMIT
 python3 tools/die_top_lint.py lint --die qwen_kv --variant kv_wq_mirror,split$V14 --out $O/lint > $O/lint.log 2>&1
@@ -63,5 +95,7 @@ python3 tools/qwen_kv_die/kvsys_clocks.py --case $O/case_kv --views $O/libs/view
 python3 tools/qwen_kv_die/die_port_bind_kv.py $O/case_kv/die.v --split --relay-rtl $O/case_kv/qkd_kv_relays.sv $EXP --out $O/port_bind.json > $O/port_bind.log
 # Q-KVSYS-NETLIST 2026-10-16: the STRICT bit-level bind (die_port_bind v2 on the BINDINGS-bound netlist), recorded
 bash tools/qwen_kv_die/kv_port_bind_v2.sh $O/case_kv/die.v $O/port_bind_v2 $O/case_kv/qkd_kv_relays.sv $O/expand.json > $O/port_bind_v2.log 2>&1 || true
-python3 tools/qwen_kv_die/kvsys_window.py --split $H14 --out $O/window.json > $O/window.log
+# Q-KV 10-16: over-block capacity from each block's real top layer (post-expand elements.lef) -- the old die-layer-only
+# capacity over-counted crossings over M5 tiles (kvs13i fine max 2.26 -> 1.48)
+python3 tools/qwen_kv_die/kvsys_window.py --split $H14 --lef $O/case_kv/elements.lef $( [ -f $O/expand.json ] && echo --expand $O/expand.json ) --out $O/window.json > $O/window.log
 echo "prep done: $(cat $O/case_kv/SOURCE_COMMIT) $(tail -1 $O/bind.log | head -c 300)"

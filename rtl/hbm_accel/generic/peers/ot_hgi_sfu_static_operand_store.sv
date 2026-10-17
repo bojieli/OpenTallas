@@ -1,5 +1,15 @@
 `timescale 1ns/1ps
 `default_nettype none
+// OT_SFU_SYNC_RST (H-SU k8, 2026-10-16 owner standard: regional SYNC reset trees, no async-clear fanout): when defined,
+// every reset in this file is synchronous to its own clock (the regional rst_n comes registered from ot_rst_relay /
+// the die's regional relays); undefined = the previous asynchronous form, bit-identical behaviour after release.
+`ifndef OT_SFU_ARST
+`ifdef OT_SFU_SYNC_RST
+`define OT_SFU_ARST(r)
+`else
+`define OT_SFU_ARST(r) or negedge r
+`endif
+`endif
 // Compiler-prefetched operand store for the actual sixteen-lane SFU.
 // Four independent operand groups and one output group, each with sixteen
 // interleaved physical banks. No issue/return queues, credits or leases.
@@ -42,7 +52,7 @@ module ot_hgi_sfu_static_operand_store #(
  reg scalar_bad;
  always @(posedge clk)for(integer g=0;g<4;g=g+1)
   if(scalar_load[g])begin scalar_addr_q[g]<=scalar_addr[24*g+:24];scalar_data_q[g]<=scalar_data[32*g+:32];end
- always @(posedge clk or negedge rst_n)
+ always @(posedge clk `OT_SFU_ARST(rst_n))
   if(!rst_n)scalar_valid<=0;else scalar_valid<=scalar_valid|scalar_load;
  always @*begin
   scalar_bad=0;
@@ -66,7 +76,7 @@ module ot_hgi_sfu_static_operand_store #(
    for(integer s=0;s<4;s=s+1)
     if(rd_re[4*l+s] && rd_src[8*l+2*s+:2]!=0)bad_source=1;
  end
- always @(posedge clk or negedge rst_n)
+ always @(posedge clk `OT_SFU_ARST(rst_n))
   if(!rst_n)fault<=0;
   else if(bad_source || bad_range || scalar_bad || |group_fault)fault<=1;
  for(genvar g=0;g<4;g=g+1)begin:g_operand

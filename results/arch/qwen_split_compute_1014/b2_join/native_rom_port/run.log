@@ -1,0 +1,40 @@
+CALIBRATION pc1 h0 firsttag321 firstcap335 age14
+CALIBRATION pc1 h1 firsttag321 firstcap335 age14
+CALIBRATION pc1 h2 firsttag321 firstcap335 age14
+CALIBRATION pc1 h3 firsttag321 firstcap335 age14
+CALIBRATION pc1 h4 firsttag321 firstcap335 age14
+CALIBRATION pc1 h5 firsttag321 firstcap335 age14
+PASS actualROMport pc1 firsttag321 caps335,335,335,335,335,335 tag_to_capture14
+CALIBRATION pc12 h0 firsttag3314 firstcap3328 age14
+CALIBRATION pc12 h1 firsttag3314 firstcap3328 age14
+CALIBRATION pc12 h2 firsttag3314 firstcap3328 age14
+CALIBRATION pc12 h3 firsttag3314 firstcap3328 age14
+CALIBRATION pc12 h4 firsttag3314 firstcap3328 age14
+CALIBRATION pc12 h5 firsttag3314 firstcap3328 age14
+PASS actualROMport pc12 firsttag3314 caps3328,3328,3328,3328,3328,3328 tag_to_capture14
+CALIBRATION pc16 h0 firsttag6595 firstcap6609 age14
+CALIBRATION pc16 h1 firsttag6595 firstcap6609 age14
+CALIBRATION pc16 h2 firsttag6595 firstcap6609 age14
+CALIBRATION pc16 h3 firsttag6595 firstcap6609 age14
+CALIBRATION pc16 h4 firsttag6595 firstcap6609 age14
+CALIBRATION pc16 h5 firsttag6595 firstcap6609 age14
+PASS actualROMport pc16 firsttag6595 caps6609,6609,6609,6609,6609,6609 tag_to_capture14
+CALIBRATION pc20 h0 firsttag9428 firstcap9442 age14
+CALIBRATION pc20 h1 firsttag9428 firstcap9442 age14
+CALIBRATION pc20 h2 firsttag9428 firstcap9442 age14
+CALIBRATION pc20 h3 firsttag9428 firstcap9442 age14
+CALIBRATION pc20 h4 firsttag9428 firstcap9442 age14
+CALIBRATION pc20 h5 firsttag9428 firstcap9442 age14
+PASS actualROMport pc20 firsttag9428 caps9442,9442,9442,9442,9442,9442 tag_to_capture14
+CALIBRATION pc103 h0 firsttag12485 firstcap12499 age14
+CALIBRATION pc103 h1 firsttag12485 firstcap12499 age14
+CALIBRATION pc103 h2 firsttag12485 firstcap12499 age14
+CALIBRATION pc103 h3 firsttag12485 firstcap12499 age14
+CALIBRATION pc103 h4 firsttag12485 firstcap12499 age14
+CALIBRATION pc103 h5 firsttag12485 firstcap12499 age14
+PASS actualROMport pc103 firsttag12485 caps12499,12499,12499,12499,12499,12499 tag_to_capture14
+PASS actual native controller→releasedROM→384hardmul port operations writes1200 checkedlanes18176
+- tools/qwen_b2_join/tb_b2_rom_port.sv:95: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 30us; walltime 22.381 s; speed 1.361 us/s
+- Verilator: cpu 22.379 s on 1 threads; allocated 98 MB

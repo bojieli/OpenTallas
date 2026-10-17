@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_s81_engram_mixq_shctl.lef",
+    "sha256": "24ae483e37ae7c3f5528fc2094bfa7daf530633eba49342be99e0f5c470e9549"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/s81engm_shctlp-p29b-f90f15502/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch2/claude/closure-loop/s81engm_shctlp-p29b-f90f15502/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/s81engm_shctlp-p29b-f90f15502/record/views/ot_s81_engram_mixq_shctl/provenance/raw/ot_s81_engram_mixq_shctl.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/s81engm_shctlp-p29b-f90f15502/record/views/ot_s81_engram_mixq_shctl/provenance/ot_s81_engram_mixq_shctl.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 13 OBS rects moved into 13 pins: done, fa, fault, fr, go, gv, iv, mf, ov, phase, start, vtag; pockets: 116 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81engm_shctlp-p29b-f90f15502/record/views/ot_s81_engram_mixq_shctl/provenance/ot_s81_engram_mixq_shctl.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_s81_engram_mixq_shctl 86.4 x 54.0: PG M5 VDD 16 stripes (94% spread, 100% cov) / VSS 16 stripes (94% spread, 100% cov); strap M6; face pins 419 blocked-above 0 blocked-same 0; clock ck insertion 105 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "ot_s81_engram_mixq_shctl",
+      "W": 86.4,
+      "H": 54.0,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 16,
+            "dir": "V",
+            "spread": 0.938,
+            "coverage": 1.0,
+            "shapes_on_top": 16
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 16,
+            "dir": "V",
+            "spread": 0.938,
+            "coverage": 1.0,
+            "shapes_on_top": 16
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 419,
+        "blocked_above": 0,
+        "covered_below": 53,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "ck": {
+          "max_ps": 104.72,
+          "min_ps": 79.01
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 116
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "ot_s81_engram_mixq_shctl.lef",
+    "sha256": "c98dcb83476f308ce3029f02e50e5fda91fe2f0ab1373973c6201108e2b37823"
+  }
+}
