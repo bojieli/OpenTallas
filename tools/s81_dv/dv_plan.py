@@ -38,8 +38,9 @@ CTL = 96                          # slice command (85 b) + done (9 b) + 2 status
 COLL_LANE = 512
 
 
-def chain(pts, hop=HOP_UM):
+def chain(pts, hop=None):
     """Manhattan polyline through pts, cut into <= hop segments -> (hops, relays, length)"""
+    hop = hop or HOP_UM
     segs, L = [], 0.0
     for (x1, y1), (x2, y2) in zip(pts, pts[1:]):
         for a, b in (((x1, y1), (x2, y1)), ((x2, y1), (x2, y2))):
@@ -341,12 +342,15 @@ def draw(P, facts, out):
 
 
 def main():
+    global HOP_UM
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', required=True)
     ap.add_argument('--id', default='s81_dv_p1')
     ap.add_argument('--label', default='S81-DV p1: 16 distributed vector slices, slice ring, narrow columns, 0.5 mm+ reticle margin (plan level)')
     ap.add_argument('--revision', default='dv-p1')
+    ap.add_argument('--hop-um', type=float, default=HOP_UM, help='plan hop (sensitivity: H-REACH unbuffered 200 um)')
     a = ap.parse_args()
+    HOP_UM = a.hop_um
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     P, facts = build()
     geometry_facts(P, facts)
@@ -356,6 +360,7 @@ def main():
     links = [dict(l, mh=max(abs(h[2] - h[0]) + abs(h[3] - h[1]) for h in l['h']), bu=sum(abs(h[2] - h[0]) + abs(h[3] - h[1]) for h in l['h']) * l['b'])
              for l in P.links]
     m = dl.metrics(dict(outline=[0, 0, DIE_W, DIE_H], reach_um=HOP_UM, stages_explicit=True), links)
+    facts['hop_um'] = HOP_UM
     facts.update(worst_cut=m['worst_cut'], over_reach_bits=m['over_reach_bits'], relays=m['relays'],
                  relay_bit_stages=m['relay_bit_stages'], bit_mm=round(m['sum_bit_um_hops'] / 1000),
                  cut_windows_over_limit=m['cut_windows_over_limit'],

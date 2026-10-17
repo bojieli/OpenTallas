@@ -45,7 +45,7 @@ def hop_only(stages):
     return {wl: t * 1e6 / (t * 1e6 / a + add) for wl, (a, t) in ANCHOR.items()}
 
 
-def dv_deltas(doc, g, pinreg=8, su_scale=0.0):
+def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0):
     """per-node delta (cycles) and a per-rule audit"""
     st = lambda um: math.ceil(um / g['hop_um'])
     xchg = g['scalar_exchange_stages']
@@ -56,7 +56,7 @@ def dv_deltas(doc, g, pinreg=8, su_scale=0.0):
         d[nid] = d.get(nid, 0.0) + v
         r = rules.setdefault(rule, dict(nodes=0, cycles=0.0))
         r['nodes'] += 1; r['cycles'] += v
-    r_phase = g['phase_path_stages'] / BASIS_PHASE
+    r_phase = g['phase_path_stages'] / (BASIS_PHASE * basis_scale)
     for n in doc['nodes']:
         note = n.get('src', {}).get('note', '') or ''
         op, nid, cls = n.get('op', ''), n['id'], n.get('cls')
@@ -122,7 +122,7 @@ def ledger_split(path=LEDGER, drop=DROP):
     return kept, dropped, rows
 
 
-def price(g, stages=89, pinreg=8, su_scale=0.0, frames=128, drop=DROP):
+def price(g, stages=89, pinreg=8, su_scale=0.0, frames=128, drop=DROP, basis_scale=1.0):
     kept, dropped, rows = ledger_split(drop=drop)
     st_eff = stages * 128 / frames if frames != 128 else stages
     ho = hop_only(89)
@@ -131,7 +131,7 @@ def price(g, stages=89, pinreg=8, su_scale=0.0, frames=128, drop=DROP):
                ledger_kept_pct=kept, ledger_dropped_pct=dropped, workloads={})
     for wl, name in (('ar', 'ds_rom'), ('mtp', 'ds_rom_mtp')):
         doc = json.loads((TP / f'{name}.json').read_text())
-        delta, rules = dv_deltas(doc, g, pinreg, su_scale)
+        delta, rules = dv_deltas(doc, g, pinreg, su_scale, basis_scale)
         base, new = solve_with_wave(doc, delta)
         dv_loss = ac.loss_pct(base, new)
         cur = ho[wl] * (1 - (kept[wl] + dropped[wl]) / 100)
@@ -155,7 +155,7 @@ def main():
     cen = lambda b: (b['x'] + b['w'] / 2, b['y'] + b['h'] / 2)
     sl = [b for b in plan['blocks'] if b['kind'] == 'slice']
     man = lambda p, q: abs(p[0] - q[0]) + abs(p[1] - q[1])
-    g = dict(f, hop_um=405.0,
+    g = dict(f, hop_um=f.get('hop_um', 405.0),
              worst_slice_to_gunit_um=max(man(cen(s), cen(B['gunit'])) for s in sl),
              worst_slice_to_edge_um=max(min(man(cen(s), cen(B[c])) for c in ('coll_WS', 'coll_WN', 'coll_ES', 'coll_EN')) for s in sl))
     # ROM capacity per die scales the stage count (owner-approved lever: fewer ROMs per die, more dies)
@@ -170,6 +170,8 @@ def main():
                    'pessimistic_keep_SU_HC_rows': price(g, stages=st, pinreg=16, drop=re.compile(r'^VM\.|^CAPT\.CD_PINREG$')),
                    'pessimistic_plus_su25': price(g, stages=st, pinreg=16, su_scale=0.25, drop=re.compile(r'^VM\.|^CAPT\.CD_PINREG$')),
                })
+    if g['hop_um'] < 405:   # reach sensitivity: also price the hub basis on the same hop (today's die degrades too)
+        res['scenarios']['dv_base_hub_basis_same_hop'] = price(g, stages=st, basis_scale=405.0 / g['hop_um'])
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(res, indent=1))
     for k, s in res['scenarios'].items():

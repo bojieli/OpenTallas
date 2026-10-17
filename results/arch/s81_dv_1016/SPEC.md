@@ -53,6 +53,24 @@ Why the column can be narrow:
 | Keep SU/HC rows | 1,319.3 | 3,938.2 | +18.8% |
 | Keep SU/HC rows + SU +25% | 1,271.5 | 3,792.8 | +14.4% |
 
+### Reach sensitivity (coordinator / H-REACH, 10-16)
+
+H-REACH measured native S81 relay cells. UNBUFFERED die wires are slew-limited to 100–200 µm on M4/M5; timing alone would allow about 400–500 µm. Buffered reach (repeaters on the die net) is being measured.
+
+405 µm stays the provisional plan. The table re-plans and re-prices p1 at a 200 µm hop: `dv_plan.py --hop-um 200`, outputs in `p1_h200/`.
+
+| p1 at hop | Relays | Relay bit-stages | Phase path | Scalar exchange | DV base MTP | Worst stacked MTP | DV base with today's die on the same hop |
+|---|---|---|---|---|---|---|---|
+| 405 µm | 2,018 | 1.18 M | 117 stages | 91 stages | 4,248 (+28.1%) | 3,793 (+14.4%) | — |
+| 200 µm | 3,976 | 2.35 M | 235 stages | 184 stages | 3,852 (+16.2%) | 3,424 (+3.3%) | 4,178 (+26.0%) |
+
+- Even with every DV die wire at 200 µm hops and today's die left at its 405-µm-era basis (the worst case for DV), every scenario stays a gain and above the MTP floor.
+- Cut and bit·mm do not change with the hop.
+
+Physical rules carried into the die trial:
+- **(b)** The ring/mesh links, end-column links, x chains, returns and the ctl tree are die nets with **repeater buffering at die level** (`repair_design` at `die_reach.reach_um('s81')`, or the measured buffered reach once H-REACH publishes it) between their relay flops. There are no long unbuffered hops: the plan's ≤405 µm segments are flop-to-flop distances, not unbuffered wire lengths.
+- **(c)** Every slice input pin lands on a robust first cell: a sized buffer or flop at the pin. It does not land on a hold buffer. Hold is fixed in the die-level boundary hold budget at the relay stations (FLOW-HOLD), not by hold padding at tile inputs.
+
 ### The three biggest assumptions behind the price
 
 1. **The hub's ledger rows do not carry over to the slices.**
