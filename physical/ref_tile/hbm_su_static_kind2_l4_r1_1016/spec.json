@@ -114,9 +114,10 @@
   "pin_h": "M4",
   "pin_v": "M3 M5",
   "signoff_period_ps": 1111.111111,
-  "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
-  "pin_min_tracks": 4
+  "pin_min_tracks": 4,
+  "io_hold_margin_ns": 0.0,
+  "hold_margin_ns": 0.03
  },
  "job": {
   "owner": "Claude:H-SU/PGSLICE",
@@ -183,7 +184,7 @@
    }
   ]
  },
- "recipe": 3,
+ "recipe": 4,
  "params": {},
  "macros": [],
  "children": [],
@@ -192,18 +193,12 @@
   "cols": 4,
   "allow_none": true
  },
- "inhold": true,
- "outhold": true,
  "keep_pin_regs": true,
- "pin_reg_split": true,
- "hold_pad": {
-  "cell": "HB2xp67_ASAP7_75t_R"
- },
  "pin_regs": {
   "enable": false,
   "reason": "the RTL (ot_hbm_su_static_lane_pinreg, PIN_RST=1) already registers every data input, rst_n and every output at the pin; a kit-level flop stage would add a second, unscheduled boundary edge"
  },
- "structural_change": "Two regional roots per lane leaf, meeting ONLY at the registered pins: clk_pin (every pin register) and clk (every pipeline stage + insertion register; lane_pinreg PIN_ROOT 1) (was 8 stage + 2-4 insertion entries): s2 bf6a1de70 EARLY_FAIL_HOLD at 4_1_cts (FF -113.9 -> stuck -91.0; 24,819 endpoints carried the 100 ps cross-root hold reserve on internal stage hops). Plus OT_QMUL4_INCUT (s2 gate TT -17.2 at u_e1m.s1_rows). KIND2: the SIDE pipe moves inside the leaf (sync gate FAIL OT_MULTI_ROOT side_v unregistered source domain); 0 edges. KIND2 outline 248.4 x 432 (lane ~22.6k um2 std + SIDE pipe; one FULL instance per die).",
+ "structural_change": "Two regional roots per lane leaf, meeting ONLY at the registered pins: clk_pin (every pin register) and clk (every pipeline stage + insertion register; lane_pinreg PIN_ROOT 1) (was 8 stage + 2-4 insertion entries): s2 bf6a1de70 EARLY_FAIL_HOLD at 4_1_cts (FF -113.9 -> stuck -91.0; 24,819 endpoints carried the 100 ps cross-root hold reserve on internal stage hops). Plus OT_QMUL4_INCUT (s2 gate TT -17.2 at u_e1m.s1_rows). KIND2: the SIDE pipe moves inside the leaf (sync gate FAIL OT_MULTI_ROOT side_v unregistered source domain); 0 edges. KIND2 outline 248.4 x 432 (lane ~22.6k um2 std + SIDE pipe; one FULL instance per die). Recipe 4 (FLOW-HOLD, boundary hold in die STA): flop-first pins, no inhold/outhold pads, hold_budget die.",
  "outline": {
   "w": 248.4,
   "h": 432.0
@@ -312,5 +307,8 @@
    "inputs": [],
    "outputs": []
   }
- }
+ },
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false
 }

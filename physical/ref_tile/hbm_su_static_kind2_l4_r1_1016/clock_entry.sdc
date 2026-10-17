@@ -510,6 +510,13 @@ proc ot_ce_apply {} {
   set sk [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 90}]
   set hk [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}]
   set hki [expr {[info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0}]
+  # OT_BH begin -- DIE BOUNDARY HOLD BUDGET (FLOW-HOLD 2026-10-16, results/arch/boundary_hold_budget_1016/RULE.md;
+  # opt-in OT_IO_HOLD_BUDGET=die): output min = U - (L_min + C), input min = L_min + C + U per domain, as io_ref_skew.sdc
+  set bh_die [expr {[info exists ::env(OT_IO_HOLD_BUDGET)] && $::env(OT_IO_HOLD_BUDGET) eq "die"}]
+  set bhc [expr {[info exists ::env(OT_BH_LAUNCH_MIN_PS)] ? $::env(OT_BH_LAUNCH_MIN_PS) : 25}]
+  set bhu [expr {[info exists ::env(OT_BH_TILE_HOLD_UNC_PS)] ? $::env(OT_BH_TILE_HOLD_UNC_PS) : 25}]
+  set bhr [expr {[info exists ::env(OT_BH_ROUTE_RELIEF_PS)] ? $::env(OT_BH_ROUTE_RELIEF_PS) : 0}]
+  # OT_BH end
   set covered_in {}; set covered_out {}
   dict for {domain info} $::ot_ce_domains {
     if {![dict exists $domain_low $domain]} { error "OT_ENTRIES: domain $domain has no actual child clock pins" }
@@ -545,10 +552,12 @@ proc ot_ce_apply {} {
     if {[llength $inputs]} {
       set_input_delay [expr {$budget+$dlmax+$sk}] -max -clock $vc $inputs
       set_input_delay [expr {$dlmin-$hki}] -min -clock $vc $inputs
+      if {$bh_die} { set_input_delay [expr {$dlmin+$bhc+$bhu+$bhr}] -min -clock $vc $inputs }  ;# OT_BH
     }
     if {[llength $outputs]} {
       set_output_delay [expr {$budget_out-$dlmax+$sk}] -max -clock $vc $outputs
       set_output_delay [expr {-$dlmin-$hk}] -min -clock $vc $outputs
+      if {$bh_die} { set_output_delay [expr {$bhu+$bhr-$dlmin-$bhc}] -min -clock $vc $outputs }  ;# OT_BH
     }
     if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
       foreach pattern [split $::env(OT_IO_INTER) ","] {
