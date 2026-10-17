@@ -915,7 +915,7 @@ if (!REPLAY) pollFJ();
 window.addEventListener('resize', () => { for (const c of cards.values()) layoutGrid(c); drawCpu(); drawClosures(); areaT0 = 0; });
 
 // ---- per-element closure status (/api/elements; replay: RP.elems; share-safe: summary counts only)
-const ECOL = {'closed (TT era)': '#4ade80', 'closed (TT re-verified)': '#2dd4bf', 'closed (earlier)': '#a3e635', 'first trial in flight': '#5ee7ff',
+const ECOL = {'closed, margin-thin': '#facc15', 'closed (TT era)': '#4ade80', 'closed (TT re-verified)': '#2dd4bf', 'closed (earlier)': '#a3e635', 'first trial in flight': '#5ee7ff',
   'failed, re-running': '#fbbf24', 'revoked, re-running': '#fb923c', 'revoked (no live job)': '#f97316', 'needs redesign (no live job)': '#ff5d73',
   'flow failure (no live job)': '#c084fc', 'cancelled only': '#8a97b8', 'superseded': '#64748b', 'implementation recorded (no physical job)': '#93c5fd',
   'not started (open)': '#f472b6'};
