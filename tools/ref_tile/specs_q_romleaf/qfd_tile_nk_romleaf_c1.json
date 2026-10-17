@@ -503,7 +503,8 @@
     "cell": "HB2xp67_ASAP7_75t_R"
   },
   "orfs_vars": {
-    "DONT_BUFFER_PORTS": "1"
+    "DONT_BUFFER_PORTS": "1",
+    "GPL_ROUTABILITY_DRIVEN": "0"
   },
   "hold_merge": "DIAGNOSTIC GATE: route only after all soft roots <=220/190, spread<=80, neighbour skew<=80 TT/FF; node nb1 view bound (e2e96df21)."
 }
