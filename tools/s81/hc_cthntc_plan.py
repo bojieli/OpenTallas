@@ -31,7 +31,10 @@ import v19_pins_1014 as V  # noqa: E402
 SPLIT = '--split' in sys.argv
 SL_H = 25.92 if SPLIT else 34.56
 SL_ROW = 2 * SL_H if SPLIT else SL_H
-RET_H = 72.90
+# a4c (HC-COL 10-16 18:30): retcol a4b c2/c3 hit the route FLOORPLAN_MARGIN (util 65.0-65.1% with the hold-buffer
+# allowance > 65% at 72.90) -> 75.06 projected c0 65.9% incl hold (route-synth std 5827) -> a4d 77.76 (+4.86, 18 rows; 13 cs_rel legs 502.4 um > 500, reported); every row below moves down by RET_GROW.
+import os
+RET_H = round(float(os.environ.get('OT_CTHNTC_RET_H', '77.76')), 3)
 SL_GROW, RET_GROW = round(SL_ROW - 25.92, 3), round(RET_H - 72.90, 3)
 H, W = round(874.26 + SL_GROW + RET_GROW, 3), 576.72
 CW, LW = 144.18, 144.72          # new-leaf column pitch / closed lane-tile pitch
@@ -292,6 +295,16 @@ def build():
             L.add(p, 'N', own_x(part_e)[('rv', 0)])
         L.add('clk', 'N', CW / 2)
         L.pack(spread_we=True)
+        # a5sp: a4d GRT overflow lies only in the inherited hrq/inhold
+        # boundary bands. Use the full existing face, keeping the bit order,
+        # layers, master outline and RTL calendar; parent joins are re-audited.
+        if '--spread-retcol' in sys.argv:
+            for face in 'NS':
+                vv = sorted((b[2], port, i) for port, bb in L.p.items()
+                            for i, b in enumerate(bb) if b[0] == face)
+                for k, (_, port, i) in enumerate(vv):
+                    L.p[port][i][2] = round(0.3 + round(k * (L.w - 0.6) /
+                                             (len(vv) - 1) / 0.048) * 0.048, 3)
         rets.append(L)
     # slices: E (columns 0/1) and W (2/3).  10-16 (a2 GRT-0116 on both slices: every bit was packed into ~50 um
     # windows at the face ends, ~10.5 pins/um, M2 85% / M3 71%): straight-through register columns instead -- bit i's
@@ -405,7 +418,7 @@ def audit(lanes, ctpl, ctfl, rets, slices):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument('--out', required=True, type=Path); ap.add_argument('--split', action='store_true')
+    ap = argparse.ArgumentParser(); ap.add_argument('--out', required=True, type=Path); ap.add_argument('--split', action='store_true'); ap.add_argument('--spread-retcol', action='store_true')
     a = ap.parse_args()
     lanes, ctpl, ctfl, rets, slices = build()
     summ, joins = audit(lanes, ctpl, ctfl, rets, slices)
