@@ -1,0 +1,2461 @@
+{
+ "schema": "opentallas.s81.actual_clock_intent.v1",
+ "scope": "SOURCE_CLOCK_BUS_AND_ACTUAL_PIN_TOPOLOGY_ONLY_NO_NATIVE_CLOCK_QUALIFICATION",
+ "verdict": "FAIL_NATIVE_CLOCK_INTENT_BINDING",
+ "errors": [
+  {
+   "bus": "cx0_fn",
+   "kind": "fclk",
+   "net": "n_cx0_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx0_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx0_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx1_fn",
+   "kind": "fclk",
+   "net": "n_cx1_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx1_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx1_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx2_fn",
+   "kind": "fclk",
+   "net": "n_cx2_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx2_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx2_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx3_fn",
+   "kind": "fclk",
+   "net": "n_cx3_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx3_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx3_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx4_fn",
+   "kind": "fclk",
+   "net": "n_cx4_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx4_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx4_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx7_fn",
+   "kind": "fclk",
+   "net": "n_cx7_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx7_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx7_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx9_fn",
+   "kind": "fclk",
+   "net": "n_cx9_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx9_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx9_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx13_fn",
+   "kind": "fclk",
+   "net": "n_cx13_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx13_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx13_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx16_fn",
+   "kind": "fclk",
+   "net": "n_cx16_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx16_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx16_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx19_fn",
+   "kind": "fclk",
+   "net": "n_cx19_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx19_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx19_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx23_fn",
+   "kind": "fclk",
+   "net": "n_cx23_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx23_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx23_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx25_fn",
+   "kind": "fclk",
+   "net": "n_cx25_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx25_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx25_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx27_fn",
+   "kind": "fclk",
+   "net": "n_cx27_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx27_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx27_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx29_fn",
+   "kind": "fclk",
+   "net": "n_cx29_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx29_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx29_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx30_fn",
+   "kind": "fclk",
+   "net": "n_cx30_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx30_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx30_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx34_fn",
+   "kind": "fclk",
+   "net": "n_cx34_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx34_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx34_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx37_fn",
+   "kind": "fclk",
+   "net": "n_cx37_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx37_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx37_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx51_fn",
+   "kind": "fclk",
+   "net": "n_cx51_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx51_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx51_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx53_fn",
+   "kind": "fclk",
+   "net": "n_cx53_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx53_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx53_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx54_fn",
+   "kind": "fclk",
+   "net": "n_cx54_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx54_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx54_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx55_fn",
+   "kind": "fclk",
+   "net": "n_cx55_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx55_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx55_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx57_fn",
+   "kind": "fclk",
+   "net": "n_cx57_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx57_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx57_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx58_fn",
+   "kind": "fclk",
+   "net": "n_cx58_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx58_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx58_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx59_fn",
+   "kind": "fclk",
+   "net": "n_cx59_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx59_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx59_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx60_fn",
+   "kind": "fclk",
+   "net": "n_cx60_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx60_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx60_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx61_fn",
+   "kind": "fclk",
+   "net": "n_cx61_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx61_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx61_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx62_fn",
+   "kind": "fclk",
+   "net": "n_cx62_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx62_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx62_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx63_fn",
+   "kind": "fclk",
+   "net": "n_cx63_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx63_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx63_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx64_fn",
+   "kind": "fclk",
+   "net": "n_cx64_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx64_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx64_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx65_fn",
+   "kind": "fclk",
+   "net": "n_cx65_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx65_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx65_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx66_fn",
+   "kind": "fclk",
+   "net": "n_cx66_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx66_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx66_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx67_fn",
+   "kind": "fclk",
+   "net": "n_cx67_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx67_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx67_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx68_fn",
+   "kind": "fclk",
+   "net": "n_cx68_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx68_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx68_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx69_fn",
+   "kind": "fclk",
+   "net": "n_cx69_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx69_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx69_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx70_fn",
+   "kind": "fclk",
+   "net": "n_cx70_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx70_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx70_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx71_fn",
+   "kind": "fclk",
+   "net": "n_cx71_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx71_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx71_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx72_fn",
+   "kind": "fclk",
+   "net": "n_cx72_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx72_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx72_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx74_fn",
+   "kind": "fclk",
+   "net": "n_cx74_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx74_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx74_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx79_fn",
+   "kind": "fclk",
+   "net": "n_cx79_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx79_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx79_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx82_fn",
+   "kind": "fclk",
+   "net": "n_cx82_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx82_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx82_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx92_fn",
+   "kind": "fclk",
+   "net": "n_cx92_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx92_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx92_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx95_fn",
+   "kind": "fclk",
+   "net": "n_cx95_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx95_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx95_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx97_fn",
+   "kind": "fclk",
+   "net": "n_cx97_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx97_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx97_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx98_fn",
+   "kind": "fclk",
+   "net": "n_cx98_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx98_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx98_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx100_fn",
+   "kind": "fclk",
+   "net": "n_cx100_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx100_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx100_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx104_fn",
+   "kind": "fclk",
+   "net": "n_cx104_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx104_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx104_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx105_fn",
+   "kind": "fclk",
+   "net": "n_cx105_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx105_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx105_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx106_fn",
+   "kind": "fclk",
+   "net": "n_cx106_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx106_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx106_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx107_fn",
+   "kind": "fclk",
+   "net": "n_cx107_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx107_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx107_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx108_fn",
+   "kind": "fclk",
+   "net": "n_cx108_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx108_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx108_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx112_fn",
+   "kind": "fclk",
+   "net": "n_cx112_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx112_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx112_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx115_fn",
+   "kind": "fclk",
+   "net": "n_cx115_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx115_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx115_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx118_fn",
+   "kind": "fclk",
+   "net": "n_cx118_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx118_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx118_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx121_fn",
+   "kind": "fclk",
+   "net": "n_cx121_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx121_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx121_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx125_fn",
+   "kind": "fclk",
+   "net": "n_cx125_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx125_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx125_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx127_fn",
+   "kind": "fclk",
+   "net": "n_cx127_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx127_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx127_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx5_fn",
+   "kind": "fclk",
+   "net": "n_cx5_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx5_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx5_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx6_fn",
+   "kind": "fclk",
+   "net": "n_cx6_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx6_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx6_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx8_fn",
+   "kind": "fclk",
+   "net": "n_cx8_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx8_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx8_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx10_fn",
+   "kind": "fclk",
+   "net": "n_cx10_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx10_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx10_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx11_fn",
+   "kind": "fclk",
+   "net": "n_cx11_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx11_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx11_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx12_fn",
+   "kind": "fclk",
+   "net": "n_cx12_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx12_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx12_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx14_fn",
+   "kind": "fclk",
+   "net": "n_cx14_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx14_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx14_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx15_fn",
+   "kind": "fclk",
+   "net": "n_cx15_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx15_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx15_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx17_fn",
+   "kind": "fclk",
+   "net": "n_cx17_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx17_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx17_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx18_fn",
+   "kind": "fclk",
+   "net": "n_cx18_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx18_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx18_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx20_fn",
+   "kind": "fclk",
+   "net": "n_cx20_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx20_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx20_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx21_fn",
+   "kind": "fclk",
+   "net": "n_cx21_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx21_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx21_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx22_fn",
+   "kind": "fclk",
+   "net": "n_cx22_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx22_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx22_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx24_fn",
+   "kind": "fclk",
+   "net": "n_cx24_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx24_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx24_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx26_fn",
+   "kind": "fclk",
+   "net": "n_cx26_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx26_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx26_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx28_fn",
+   "kind": "fclk",
+   "net": "n_cx28_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx28_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx28_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx31_fn",
+   "kind": "fclk",
+   "net": "n_cx31_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx31_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx31_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx32_fn",
+   "kind": "fclk",
+   "net": "n_cx32_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx32_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx32_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx33_fn",
+   "kind": "fclk",
+   "net": "n_cx33_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx33_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx33_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx35_fn",
+   "kind": "fclk",
+   "net": "n_cx35_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx35_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx35_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx36_fn",
+   "kind": "fclk",
+   "net": "n_cx36_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx36_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx36_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx38_fn",
+   "kind": "fclk",
+   "net": "n_cx38_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx38_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx38_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx39_fn",
+   "kind": "fclk",
+   "net": "n_cx39_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx39_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx39_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx40_fn",
+   "kind": "fclk",
+   "net": "n_cx40_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx40_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx40_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx41_fn",
+   "kind": "fclk",
+   "net": "n_cx41_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx41_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx41_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx42_fn",
+   "kind": "fclk",
+   "net": "n_cx42_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx42_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx42_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx43_fn",
+   "kind": "fclk",
+   "net": "n_cx43_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx43_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx43_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx44_fn",
+   "kind": "fclk",
+   "net": "n_cx44_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx44_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx44_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx45_fn",
+   "kind": "fclk",
+   "net": "n_cx45_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx45_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx45_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx46_fn",
+   "kind": "fclk",
+   "net": "n_cx46_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx46_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx46_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx47_fn",
+   "kind": "fclk",
+   "net": "n_cx47_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx47_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx47_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx48_fn",
+   "kind": "fclk",
+   "net": "n_cx48_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx48_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx48_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx49_fn",
+   "kind": "fclk",
+   "net": "n_cx49_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx49_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx49_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx50_fn",
+   "kind": "fclk",
+   "net": "n_cx50_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx50_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx50_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx52_fn",
+   "kind": "fclk",
+   "net": "n_cx52_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx52_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx52_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx56_fn",
+   "kind": "fclk",
+   "net": "n_cx56_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx56_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx56_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx73_fn",
+   "kind": "fclk",
+   "net": "n_cx73_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx73_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx73_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx75_fn",
+   "kind": "fclk",
+   "net": "n_cx75_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx75_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx75_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx76_fn",
+   "kind": "fclk",
+   "net": "n_cx76_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx76_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx76_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx77_fn",
+   "kind": "fclk",
+   "net": "n_cx77_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx77_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx77_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx78_fn",
+   "kind": "fclk",
+   "net": "n_cx78_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx78_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx78_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx80_fn",
+   "kind": "fclk",
+   "net": "n_cx80_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx80_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx80_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx81_fn",
+   "kind": "fclk",
+   "net": "n_cx81_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx81_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx81_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx83_fn",
+   "kind": "fclk",
+   "net": "n_cx83_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx83_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx83_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx84_fn",
+   "kind": "fclk",
+   "net": "n_cx84_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx84_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx84_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx85_fn",
+   "kind": "fclk",
+   "net": "n_cx85_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx85_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx85_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx86_fn",
+   "kind": "fclk",
+   "net": "n_cx86_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx86_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx86_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx87_fn",
+   "kind": "fclk",
+   "net": "n_cx87_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx87_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx87_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx88_fn",
+   "kind": "fclk",
+   "net": "n_cx88_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx88_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx88_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx89_fn",
+   "kind": "fclk",
+   "net": "n_cx89_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx89_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx89_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx90_fn",
+   "kind": "fclk",
+   "net": "n_cx90_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx90_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx90_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx91_fn",
+   "kind": "fclk",
+   "net": "n_cx91_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx91_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx91_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx93_fn",
+   "kind": "fclk",
+   "net": "n_cx93_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx93_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx93_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx94_fn",
+   "kind": "fclk",
+   "net": "n_cx94_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx94_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx94_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx96_fn",
+   "kind": "fclk",
+   "net": "n_cx96_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx96_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx96_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx99_fn",
+   "kind": "fclk",
+   "net": "n_cx99_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx99_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx99_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx101_fn",
+   "kind": "fclk",
+   "net": "n_cx101_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx101_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx101_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx102_fn",
+   "kind": "fclk",
+   "net": "n_cx102_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx102_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx102_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx103_fn",
+   "kind": "fclk",
+   "net": "n_cx103_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx103_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx103_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx109_fn",
+   "kind": "fclk",
+   "net": "n_cx109_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx109_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx109_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx110_fn",
+   "kind": "fclk",
+   "net": "n_cx110_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx110_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx110_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx111_fn",
+   "kind": "fclk",
+   "net": "n_cx111_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx111_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx111_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx113_fn",
+   "kind": "fclk",
+   "net": "n_cx113_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx113_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx113_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx114_fn",
+   "kind": "fclk",
+   "net": "n_cx114_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx114_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx114_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx116_fn",
+   "kind": "fclk",
+   "net": "n_cx116_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx116_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx116_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx117_fn",
+   "kind": "fclk",
+   "net": "n_cx117_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx117_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx117_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx119_fn",
+   "kind": "fclk",
+   "net": "n_cx119_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx119_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx119_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx120_fn",
+   "kind": "fclk",
+   "net": "n_cx120_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx120_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx120_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx122_fn",
+   "kind": "fclk",
+   "net": "n_cx122_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx122_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx122_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx123_fn",
+   "kind": "fclk",
+   "net": "n_cx123_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx123_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx123_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx124_fn",
+   "kind": "fclk",
+   "net": "n_cx124_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx124_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx124_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  },
+  {
+   "bus": "cx126_fn",
+   "kind": "fclk",
+   "net": "n_cx126_fn[0]",
+   "reason": "actual output driver count",
+   "output_drivers": 0,
+   "expected_source": [
+    "f_cx126_2",
+    "fn0",
+    "out"
+   ],
+   "actual_source_pins": []
+  },
+  {
+   "bus": "cx126_fn2",
+   "kind": "fclk",
+   "reason": "actual net missing or ambiguous",
+   "count": 0
+  }
+ ],
+ "odb_sha256": "f433e9a7b580451abd8d879940618fe2bb931b16b63066113484006a774d7734",
+ "model_sha256": "ed71cd2325969af469ddcf5d2dbdbfaa693bf6ff5ba484644c3c203683ce3629",
+ "model_source_commit": "17b13fb0637869d53580a1084bdd250d18828d9b",
+ "source_receipt_sha256": "ef2ba1ce963122753dd513a5e20cf839a7f5081b590af020476be229cfe777e1",
+ "roots_by_class": {
+  "col_clock": 128,
+  "fclk": 15564,
+  "clock": 3
+ },
+ "actual_entries_by_class": {
+  "col_clock": 67104,
+  "fclk": 15836,
+  "clock": 2943
+ },
+ "open": [
+  "native source/forwarded/generated-clock ratios",
+  "source-exact real loads and per-child corner R",
+  "physical buffers/wires/PG and propagated TT/FF with unchanged uncertainty"
+ ],
+ "actual_clock_buses": 15695,
+ "binding_failures": 256,
+ "full_artifact": "/srv/opentallas-scratch/codex/s81-die-physical-clock-0910/actual_intent_b/clock_roots.json"
+}

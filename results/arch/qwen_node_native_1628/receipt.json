@@ -1,0 +1,19 @@
+{
+  "state": "DIAGNOSTIC_ONLY_NOT_NATIVE_QUALIFIED",
+  "preserved_job": "ot_qwen_tile_node-r5-78b36aae5",
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch/codex/qwen-node-native-1628",
+  "TT_worst_output_arrival_ps": {
+    "old": 477.51,
+    "HB2_same_RC": 442.94,
+    "delta": -34.57
+  },
+  "TT_boundary_reference_ps": 246.6,
+  "TT_setup_ps": 16.67,
+  "FF_hold_ps": 14.59,
+  "FF_worst_output_hold_ps": 16.1,
+  "swapped_output_pads": 1027,
+  "input_pad_unchanged": "HB4",
+  "route_hold_margin_ns_unchanged": 0.03,
+  "warning": "Cell-swapped diagnostic retains old wire placement and SPEF. It neither re-routes nor qualifies a new native view; actual CTS and final route required. Protected pad dont_touch cleared only in memory to permit diagnostic cell replacement; preserved accepted ODB unchanged."
+}

@@ -1,0 +1,24 @@
+{
+  "scope": "S81 CFIFO crs2 reset frontier, pre-build source model",
+  "base": "a1c811a00 r3, original CTS exact snapshot",
+  "cause": "rst north pin directly reaches south rsyncs recovery pin: CTS native capture251.88117ps; all data captures pass",
+  "structural_change": "south reset synchronizer consumes existing north rsync register instead of raw rst",
+  "added_state_bits_per_instance": 0,
+  "instances": 128,
+  "added_stream_edges": 0,
+  "added_status_edges_vs_r3": 0,
+  "added_initialization_cr_edges": 2,
+  "cold_reset_release": "north rsync goes high at second cr edge after rst release; south rsync_s goes high at fourth corresponding phase-0 edge",
+  "required_phase": "cr and cr_s remain equal-frequency, continuously running, same PLL phase0, compensated physical entry phi-R",
+  "marker_contract": "root reset releases before forwarded marker; existing TRUNK9 test has sufficient fixed initialization reserve; production compiler must reserve fourth edge before marker",
+  "throughput": "one full word per cr edge unchanged; no numeric throughput credit or qualification",
+  "flow_gates": [
+    "exact phase/reset bench and stopped-cr_s mutant",
+    "new source-pinned CTS gate",
+    "TT setup / FF hold including north rsync to south asynchronous recovery/removal",
+    "native all pins launch220 capture190 spread80",
+    "PNG inspection and congestion route",
+    "routed TT/FF/DRC0, exact bench and failing mutants",
+    "parent128 source/clock/marker calendar and pin rebind"
+  ]
+}

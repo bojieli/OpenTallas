@@ -1,0 +1,17 @@
+PHASE 0: ref done 113 cycles after issue, dut +55 cycles
+PHASE 1: ref done 89 cycles after issue, dut +50 cycles
+PHASE 2: ref done 440 cycles after issue, dut +55 cycles
+PHASE 3: ref done 68 cycles after issue, dut +55 cycles
+PHASE 4: ref done 137 cycles after issue, dut +54 cycles
+PHASE 5: ref done 127 cycles after issue, dut +52 cycles
+PHASE 6: ref done 85 cycles after issue, dut +50 cycles
+PHASE 7: ref done 120 cycles after issue, dut +59 cycles
+PHASE 8: ref done 165 cycles after issue, dut +54 cycles
+UNORD reordered_roots=128 fault_run_dut_writes_not_in_ref=0
+SUMMARY phases=9 writes=18016 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=59 timeouts=0 mismatching_roots=0
+RESULT PASS
+- rtl/dsrom_sys/s81_ph/test/tb_s81ph_gather_capture.sv:200: Verilog $finish
+CAPC_EQ mismatches=0 tcd_toggles=9 vm_active_cycles=1476 EQ_PASS
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 13us; walltime 2.899 s; speed 4.366 us/s
+- Verilator: cpu 2.896 s on 1 threads; alloced 1028 MB

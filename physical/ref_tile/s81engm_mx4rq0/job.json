@@ -1,5 +1,5 @@
 {
- "name": "s81engm_mx4rq0-p17-COMMIT",
+ "name": "s81engm_mx4rq0-p17c-COMMIT",
  "block": "ot_s81_mx4_rq",
  "ref_tile": true,
  "owner": "Claude:S-ENGRAM+NORM-ENGRAM-3",
@@ -40,7 +40,7 @@
     "needs": [
      "verilator"
     ],
-    "pass_regex": "PASS native Engram MIX4 flat.*20480words.*writes640 reads4161.*cycles=878"
+    "pass_regex": "PASS native Engram MIX4 flat.*20480words.*writes640 reads4161.*cycles=879"
    },
    {
     "name": "flat_prodlat_mut2",
@@ -102,10 +102,10 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81engm_mx4rq0/s81engm_mx4rq0-p17-COMMIT"
+   "to": "results/rtl/ref_tile/s81engm_mx4rq0/s81engm_mx4rq0-p17c-COMMIT"
   }
  ],
- "cycles_added": 0,
+ "cycles_added": 1,
  "route_hold_corners": "mm",
  "route_hold_margin_ns": 0.03,
  "route_corner": "TC",
@@ -114,7 +114,10 @@
  "hold_merge": "flat MIX4 parent tile: adopt with the flat parent (slot A geometry pending S-DIE).",
  "structural_change": "S-ENGRAM+NORM ENGRAM-3 10-16: new tile of the MIX4 flat parent (dsfd_engram_mix4_flat 1b429b606): top-level glue hardened as tiles so the parent is wires-only",
  "reroute_reason": {
-  "kind": "rtl_change",
-  "reason": "new master ot_s81_mx4_rq VM_LAT 17 SUP 0 (MIX4 flat parent tile)"
+  "kind": "pin_register",
+  "source": "results/arch/s81_mix4_banded_1016/native_rq_audit_p17b_1016.json",
+  "cell": "ot_s81_mx4_rq",
+  "capture_ps": 202.1,
+  "fix": "ot_s81_mx4_rq registers desc_rq/desc_row at the pin (dq_q/dr_q); the descriptor injection mux, the clash fault and the dtag delay line take the registered copy, so the scalar pin loads a single flop. +1 cycle on the descriptor read only (dtag stays aligned); flat MIX4 production bench 878 -> 879 cycles PASS, MUT2 FAIL (EPYC4). Pins unchanged from p17b."
  }
 }

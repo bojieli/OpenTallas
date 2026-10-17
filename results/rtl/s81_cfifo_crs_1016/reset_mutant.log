@@ -1,0 +1,9 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/cfifo-crs-isolated-1308
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/cfifo-crs-isolated-1308
+ot-run: ot-agidock128  admits   -12 GB (avail 68, growth 56, headroom 24, waiters 2/24 GB) load 28/64 running 9 disk 200 GB 
+ot-run: -> ot-agidock128 (will queue: admits -36 GB < 1 GB)
+ot-heavy: waiting for memory on vm-xry57mhfyn: need 1 GB, admissible -13 GB: available 67 GB, growth charged 56 GB, young 37 GB, headroom 24 GB, real floor 25 GB
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3506678-1792181416 after 20 s
+CFIFO_X2 FAIL bad=2 words=390
+CFIFO_X2_GATE FAIL
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3506678-1792181416): exit 1

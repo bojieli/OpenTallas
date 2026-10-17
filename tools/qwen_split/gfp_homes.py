@@ -78,6 +78,10 @@ def apply(model, path):
     if d.get('schema') == 'opentallas.qwen.globalfp-q-homes.2210.v1':
         # re-packed-tile homes (Q-COMPUTE-DIE 2210) carry their own die outline: the field is re-derived, not translated
         model['die']['w'], model['die']['h'] = float(d['die']['w']), float(d['die']['h'])
+        area = model['die']['w'] * model['die']['h'] / 1e6
+        model['die']['mm2'] = round(area, 3)
+        if 'budget_mm2' in model['die']:
+            model['die']['margin_mm2'] = round(model['die']['budget_mm2'] - area, 3)
     if isinstance(d.get('reserve'), list):
         # GLOBAL-FP-Q 1705 homes name their reserved channels (slab vertical channels) without rectangles: they are
         # the gaps the homes leave free, so there is nothing extra to reserve here; the names stay in the receipt

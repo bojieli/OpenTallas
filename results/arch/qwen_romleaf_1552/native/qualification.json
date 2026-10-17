@@ -1,0 +1,160 @@
+{
+  "schema": "opentallas.qwen.romleaf.native_qualification.v1",
+  "at": "2026-10-16T16:20:39.834588-07:00",
+  "status": "NATIVE_LEAF_PASS; parent candidate not qualified",
+  "job": "ot_qwen_tile_romleaf-a0-4fe0c00bd",
+  "source": "4fe0c00bdac38425b00cd71dbe6411678889c1cb",
+  "export_merge": "02c394f1e",
+  "params": {},
+  "production_fixed_parameters": "2233 FF, 1 actual4096x266 ROM, ROM_CAP2=1, ROM_CAPX=2, MPR=1, 0 added edges",
+  "route_source_hashes": {
+    "rtl/physical/ot_qwen_tile_romleaf.sv": "c747da4ffd6c85722aed78db991e98723c084efa6a842c4bcc53848adecbe5c4",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "5cb701b2f8f0fbb49e747ce9e1fcee0eebae88b0ba18ca2611212700d3d69f64"
+  },
+  "audit_tool_hashes": {
+    "tools/hier_contract/pinreg_audit.py": "92044e596e362e836ae157bfc4b03f607eb9f8e6cec7561eebd3cf2f4763eeb1",
+    "tools/hier_contract/native_pin_audit.py": "deb55cfe73d790fd16fa635a9df474c4f87a41c09dced57530e001705f88b3c9"
+  },
+  "export_hashes": {
+    "ot_qwen_tile_romleaf_ss.lib": "0af57ac05455d37df98e56ab2bbfa2a3de9cfc69c300c447854a04f1ab47e5cc",
+    "export_tt.tcl": "885c12acc7730522eceea29cd76fa02c30f7549a5afa113b128bf7677bed8aab",
+    "abstract.json": "f9f7713026831f3f9913a65b6fd412249258e40c2b00ded2df891aa8e04fde7a",
+    "export_ff.tcl": "271b186f97969d23847785e4de98eec3d8ac524cd1ca39efa81715fe3aeb56b5",
+    "ot_qwen_tile_romleaf_ff.lib": "4d10f24c07dfadb02c7a3080e579fcc6bd5b28a847993c2136e85d071e3ebc5e",
+    "insertion.json": "a48d3c344f59103ec21595ce3770baf53deb361fa8f43130a42e834fb678e26f",
+    "export_tt.log": "4b875a6cb20fb5e4c2fb4903158131cebcf3d5ed2d162a708047e9dbdb264659",
+    "ot_qwen_tile_romleaf_tt.lib": "ab92943155147429fc620c7c722c730c79d435ee772a7fbeb76380d657eb272b",
+    "export_ss.log": "fc97170deeef7076aabf07cf3027728610bfa4feaedccc8562cb4a2072ceed82",
+    "export_ff.log": "ca83c4f49f072ab060df2b4ce6a126fb81cf3dbe3669021f74b5eeffd89d5390",
+    "export_ss.tcl": "33dbbaeb838bc690b9b1f2146312980ea67f3b2dd109450d2b84cf599b89baa9",
+    "ot_qwen_tile_romleaf.lef": "f6da1ea46433d2f1f7ae52cf76a1098ecc366070d5f93c3a5a886d5750fe4e37",
+    "child_lint.json": "4bcca4ddb92796c82bf572accdab4771fc637786aeb4e3317c07acde727b1896"
+  },
+  "images": {
+    "density.png": "c5ce764ad5f3f52aec4ac0fcd6ae1256e17e368885ef7c35e9f9bc8654871a5a",
+    "congestion.png": "ef3ad8cb27886ae8a6d0533884b070de1dba797ddefcfafc3c111e10c73e1541",
+    "floorplan.png": "7dad2aa24d83f29c60c3991b2ee6edbe3283e719a662948d10c4ee921b4541b3"
+  },
+  "images_reviewed": "Actual finalODB floorplan, density and GRT congestion viewed. One centered ROM; logic predominantly west and south. No congested GCells. Final route DRC0. Floorplan summary pins592 includes PG; all528 signal pins individually bound.",
+  "native": {
+    "cell": "ot_qwen_tile_romleaf",
+    "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+    "lib_cell": "ot_qwen_tile_romleaf",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 206.9,
+    "spread_ps": 43.9,
+    "outputs": 512,
+    "inputs": 15,
+    "launch_ps": 193.0,
+    "launch_pin": "r_q[240]",
+    "capture_ps": 136.7,
+    "capture_pin": "ad_d[10]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+  },
+  "all_pin_coverage": {
+    "data": 527,
+    "output": 512,
+    "input": 15,
+    "clock": 1,
+    "excluded_supply_only": [
+      "VDD",
+      "VSS"
+    ],
+    "missing_timing": 0,
+    "wrong_clock": 0
+  },
+  "clock": {
+    "tt": {
+      "boundary": {
+        "n": 529,
+        "mean": 206.9,
+        "min": 184.1,
+        "max": 228.0
+      },
+      "all": {
+        "n": 2202,
+        "mean": 201.5,
+        "min": 175.3,
+        "max": 228.1
+      },
+      "errors": [],
+      "macros": {
+        "n": 1,
+        "nets": 1,
+        "max_per_net": 1,
+        "reg_mean": 201.5,
+        "max_slew": 13.4,
+        "max_late": -21.0,
+        "pins": [
+          {
+            "pin": "u_rom/clk",
+            "arr": 180.5,
+            "slew": 13.4,
+            "late": -21.0,
+            "net": "clknet_1_0__leaf_clk"
+          }
+        ]
+      },
+      "macro_libs": 1
+    },
+    "ff": {
+      "boundary": {
+        "n": 529,
+        "mean": 173.9,
+        "min": 152.0,
+        "max": 194.9
+      },
+      "all": {
+        "n": 2202,
+        "mean": 168.2,
+        "min": 139.4,
+        "max": 194.9
+      },
+      "errors": [],
+      "macros": {
+        "n": 1,
+        "nets": 1,
+        "max_per_net": 1,
+        "reg_mean": 168.2,
+        "max_slew": 11.3,
+        "max_late": -28.8,
+        "pins": [
+          {
+            "pin": "u_rom/clk",
+            "arr": 139.4,
+            "slew": 11.3,
+            "late": -28.8,
+            "net": "clknet_1_0__leaf_clk"
+          }
+        ]
+      },
+      "macro_libs": 1
+    }
+  },
+  "physical": {
+    "outline_um": [
+      172.8,
+      110.16
+    ],
+    "TT_setup_ps": 164.49,
+    "FF_hold_ps": 7.36,
+    "DRC": 0,
+    "SS_sensitivity_ps": -17.95
+  },
+  "exactness": {
+    "positive": "8269 checks,7195 nonzero,4096 addresses,2 columns",
+    "latency_mutant": "actual additional output stage rejects at edge16"
+  },
+  "limits": [
+    "Child native proof only. All parent pins/requests/reset stations/physical cuts/clocks require a new actual parent gate.",
+    "Active owner gate: TT setup >=0, FF hold >=0 and DRC0; SS sensitivity is separately reported and is not the current closure gate."
+  ]
+}

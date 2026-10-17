@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_b2_word_status",
+ "enable": false,
+ "reason": "Source registers every data input once (vq/fq/rq) and fault is a flop output; a generated pin stage would add an unpriced edge to an exact checker contract."
+}

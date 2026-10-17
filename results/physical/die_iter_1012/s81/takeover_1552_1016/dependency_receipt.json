@@ -1,0 +1,17 @@
+{
+  "actual_collected_at": "2026-10-16T16:28:45.077228-07:00",
+  "diagnostic_source": "3f21ae39b",
+  "closure_files": 726,
+  "closure_bytes": 51072291,
+  "closure_materialization": "Declared dependencies materialized as hardlinks in one coherent immutable root; undeclared accepted base directories retained as symlinks. This is a consumed dependency receipt, not a claim that only 726 paths exist.",
+  "root": "/srv/opentallas-scratch/codex/s81-die-1552/source_3f21ae39b",
+  "accepted_base": "79ab53db9 plus guard/status/contacts accepted snapshot",
+  "module_root_smoke": "generator, qwen_rom_fulldie and s81.capture_import resolve to same coherent source root",
+  "external_inputs": {
+    "/srv/opentallas-scratch/claude/sdie-hubv3i/v3i5_layout.json": "77cd0e8072840c827ab8a9e005981096aece559d624515b5b775075c9f3a40ec",
+    "/srv/opentallas-scratch/claude/sdie-hubv3i/gen26i_v3i5_test.opts": "6485d82cb516e04721f8bc2eb9c124a0a6bd880ef77f7cc60d406b51408fcf8b"
+  },
+  "geometry_adoption": "Owner Explorer review pending; consumed geometry is diagnostic only",
+  "terminal_result": "GEN_EXIT1 at 2026-10-16T16:19:28-07:00; SSTN split unsupported absent base output; no GRT/STA outputs",
+  "source_successor_protection": "6b5c67e8e prevents inserted native internal stages; not present in immutable diagnostic run"
+}

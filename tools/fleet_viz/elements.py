@@ -537,6 +537,15 @@ class Elements:
             r['throughput'] = tq
             r['gate'] = gate_text(r['category'], tq)
             rows.append(r)
+        # ELEM-CENSUS 10-16: an 'alternative' fold whose block has no job of its own (a die-name binding / module alias of
+        # a master, e.g. qkd_hgs = closed qkh_head_gather_stage) was ignored, so apply_contracts re-added it as NOT_STARTED.
+        # Attach it to its master's variants so the contract membership lands on the master row instead.
+        byel = {r['element']: r for r in rows}
+        self._alias = {b: vmap[b] for b, v in ov['variants'].items() if b in vmap and v.get('kind', 'alternative') == 'alternative'}
+        for b, v in ov['variants'].items():
+            m = vmap.get(b)
+            if v.get('kind', 'alternative') == 'alternative' and m in byel and b not in byel and b not in byel[m]['variants']:
+                byel[m]['variants'].append(b)
         dsum, dsrc = self.apply_contracts(rows) if hasattr(self, 'contracts') else ({}, None)
         flow = self.flow.annotate(rows, groups, TARGETS)   # r['flow'] / flow_label / die_used / m5_reroute
         rows.sort(key=lambda r: (TARGETS.index(r['target']), CATS.index(r['category']), r['element']))
@@ -641,6 +650,7 @@ class Elements:
         sup = self.superseded()
         for e, x in E.items():
             if e in by_name or all(v in ('macro', 'soft') for v in x['roles'].values()): continue
+            if getattr(self, '_alias', {}).get(e) in E: continue   # ELEM-CENSUS 10-16: alias of another contract master, counted once there
             # S-NET+FILL 10-15: a contract element retired with source evidence in superseded_elements.json (e.g. a
             # GEN18-bind master the current die case no longer instantiates) was re-added as NOT_STARTED here, so 34
             # evidence-backed retirements never left the open count.  Honour the declaration as for job rows.

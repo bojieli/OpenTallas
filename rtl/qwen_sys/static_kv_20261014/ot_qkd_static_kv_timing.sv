@@ -29,7 +29,8 @@ module ot_qkd_static_kv_timing #(
   parameter integer PULLIN = 0,
   parameter integer AQ_RD = 0,
   parameter integer AQ_STARVE = 64,
-  parameter integer CONTEXT_DESC = 0 // new descriptor ABI, legacy default unchanged
+  parameter integer CONTEXT_DESC = 0,
+  parameter integer STATIC_REFRESH = 0 // new descriptor ABI, legacy default unchanged
 )(
   input  wire        clk, rst_n,
   input  wire        desc_v, output wire desc_r,
@@ -164,7 +165,9 @@ module ot_qkd_static_kv_timing #(
     // ---- per-bank timing state (down-counters; 0 = allowed) ------------------------------
     wire [31:0] rcd_z, ras_z, rtp_z, aok_z, aok_busy, rcdw_z;
     wire [223:0] keys;
-    reg [4:0] bsel;
+    reg [4:0] bsel;reg [4:0] refresh_rr;
+    initial if(STATIC_REFRESH!=0 && (PULLIN!=0 || REF_MODE!=1))$fatal(1,"static RR refresh requires REFpb/no pullin");
+    always @(posedge clk or negedge rst_n)if(!rst_n)refresh_rr<=0;else if(row_fire&&c_op==REFPB)refresh_rr<=refresh_rr+5'd1;
     // Exact next-state eligibility; no extra decision cycle. The cut is
     // specialised to strict refresh and the write-only queue used by Qwen.
     localparam READY_ACTIVE = READY_CUT && PULLIN == 0 && AQ_RD == 0;
@@ -286,7 +289,7 @@ module ot_qkd_static_kv_timing #(
         for (integer q = 0; q < 2; q = q + 1) begin
           s2k[q] <= m2[q*9 + 2 +: 7]; s2i[q] <= s1i[4*q + m2[q*9 +: 2]];
         end
-        bsel <= (s2k[1] < s2k[0]) ? s2i[1] : s2i[0];
+        bsel <= STATIC_REFRESH!=0?refresh_rr:((s2k[1] < s2k[0]) ? s2i[1] : s2i[0]);
         bkey <= (s2k[1] < s2k[0]) ? s2k[1] : s2k[0];
       end
     // ---- column: one RD per cycle ------------------------------------------------------
@@ -319,7 +322,7 @@ module ot_qkd_static_kv_timing #(
     assign wr_ok = legal_write && (PROFILE == 1 || reserved_write_col);
     // ---- row: refresh > forced PRE > ACT ahead (sets k, k+1) > PRE finished -----------
     function automatic [4:0] act_bank(input integer c, input [2:0] kk);
-      act_bank = {(c >= 4) ? kk + 3'd1 : kk, 2'(c & 3)};
+      act_bank = {(c >= 4) ? (context_active ? (kk ^ 3'd1) : kk + 3'd1) : kk, 2'(c & 3)};
     endfunction
     // candidates (no dynamic indexing on the decision path): per-bank ACT eligibility, the 4-bank
     // groups of sets k and k+1, lowest-first one-hot selection; PRE of finished banks, lowest first
