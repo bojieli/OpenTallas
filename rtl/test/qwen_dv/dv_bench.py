@@ -31,7 +31,8 @@ rtl/qwen_dv/qfd_dv_stream.sv rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstrea
 rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv
 rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv
 rtl/hdc/ot_hdc_sfu_q.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/test/full_sm_service/sram_models.sv
-rtl/test/hbm_rf_visibility/scale_sram_model.sv rtl/test/qwen_dv/tb_qfd_dv.sv""".split()
+rtl/test/hbm_rf_visibility/scale_sram_model.sv rtl/test/qwen_dv/tb_qfd_dv.sv rtl/qwen_dv/qfd_dv_heads.sv
+rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv rtl/lib/ot_rst_pipe.sv""".split()
 
 
 def u32(x):
@@ -73,12 +74,17 @@ def cmd_su(pidx):
     return pack([(1, 1), (1, 3), (pidx, 9)])
 
 
-def cmd_stn(mode, wsrc, nwords, sbase, dst, dbase):
-    return pack([(1, 1), (2, 3), (mode, 2), (wsrc, 1), (nwords, 8), (sbase, 9), (dst, 2), (dbase, 24)])
+def cmd_stn(mode, wsrc, nwords, sbase, dst, dbase, amax=0):
+    return pack([(1, 1), (2, 3), (mode, 2), (wsrc, 1), (nwords, 8), (sbase, 9), (dst, 2), (dbase, 24), (amax, 1)])
 
 
-def cmd_root(root, nb, ss):
-    return pack([(1, 1), (3, 3), (root, 1), (nb, 6), (ss, 24)])
+def cmd_root(root, nb, ss, fuse=0, rx=0, eps=0.0, k=0, amnb=0):
+    return pack([(1, 1), (3, 3), (root, 1), (nb, 6), (ss, 24), (fuse, 1), (rx, 24), (u32(F(eps)), 32), (k, 5),
+                 (amnb, 6)])
+
+
+def cmd_amax(clear=0, emit=0):
+    return pack([(1, 1), (6, 3), (clear, 1), (emit, 1)])
 
 
 def cmd_ports(ar_base, dd_base):
@@ -190,8 +196,8 @@ def status_ok(log):
     bad = []
     for s in ("S0ST", "S1ST"):
         v = log[s][0][1]
-        if v >> 44:
-            bad.append(f"{s} fault bits {v >> 38:07b} (any,su,vm,stn,sc,stm,port)")
+        if v >> 69:
+            bad.append(f"{s} fault bits {v >> 63:07b} (any,su,vm,stn,sc,stm,port)")
     return bad
 
 
@@ -230,38 +236,43 @@ def gap(nvec, depth=160):
 
 
 # ================================================================================================= bench (a)
-def bench_a(work, mut, trials=3, seed=1):
+def bench_a(work, mut, trials=8, seed=1):
     """2 slices: block sums of x^2 (csum8 subtrees, 16 blocks each), PSUMs over the scalar ring to the root,
-    pairwise top levels, *1/4096 + eps, rsqrt on the root's SU, r broadcast back (RB), r read back on both slices."""
+    pipelined pairwise top levels.  Trials alternate: fuse 0 (total -> VM, rsqrt on the root's SU, r broadcast by an
+    SU window-11 write) and fuse 1 (the root forms r itself and broadcasts it).  r read back on both slices."""
     rng = np.random.default_rng(seed)
     ev = Ev()
     X, SSX, RX = 0x0000, 0x3000, 0x3008
-    progs = {}
     for sl in (0, 1):
-        progs[sl] = [
+        load_prog(ev, sl, [
             su(nout=16, nin=128, a=X, aso=128, asi=1, red=1, redsq=1, rb=W_SC | (16 * sl), rso=1),          # 0
             su(nout=1, nin=1, a=SSX, ma=MA_AIMM, imm1=1.0 / 4096, ad=AD_IMM, imm2=EPS, sfu=SFU_RSQRT,
                dst=DST_VM, d=W_SC | RX),                                                                 # 1
             su(nout=1, nin=1, a=RX, dst=DST_VM, d=W_D2D | 0x10),                                         # 2 r -> D2D
-        ]
-        load_prog(ev, sl, progs[sl])
-    exp = []
+        ])
+    exp, fused = [], []
     for t in range(trials):
         x = (rng.standard_normal(4096) * rng.choice([0.05, 1.0, 30.0])).astype(F)
         x[rng.integers(0, 4096, 8)] *= F(50)
+        # block magnitudes spread over decades, so a wrong pairing of block sums changes the rounding
+        x = (x * np.repeat(F(10.0) ** rng.uniform(-1.5, 1.5, 32).astype(F), 128)).astype(F)
         r = G.rsqrt(G.add(G.mul(G.reduce_chunked(G.mul(x, x)), F(1.0 / 4096)), EPS))
         exp.append(u32(r))
+        fu = t % 2
+        fused.append(fu)
         for sl in (0, 1):
             load_vm(ev, sl, X, x[2048 * sl:2048 * (sl + 1)])
-        ev.at(P_CMD + 0, cmd_root(1, 32, SSX)); ev.at(P_CMD + 1, cmd_root(0, 32, SSX)); ev.step(2)
-        ev.at(P_CMD + 0, cmd_su(0)); ev.at(P_CMD + 1, cmd_su(0)); ev.step(gap(256) + 200)
-        ev.at(P_CMD + 0, cmd_su(1)); ev.step(gap(1, 120))
+        ev.at(P_CMD + 0, cmd_root(1, 32, SSX, fuse=fu, rx=RX, eps=EPS, k=12)); ev.at(P_CMD + 1, cmd_root(0, 32, SSX))
+        ev.step(2)
+        ev.at(P_CMD + 0, cmd_su(0)); ev.at(P_CMD + 1, cmd_su(0)); ev.step(gap(256) + 120)
+        if not fu:
+            ev.at(P_CMD + 0, cmd_su(1)); ev.step(gap(1, 120))
         for sl in (0, 1):
             ev.at(P_CMD + sl, cmd_su(2)); ev.step(gap(1, 60))
     log = run_sim("a", ev, work, mut, ev.t + 50)
     errs = status_ok(log)
-    # RB words leaving the root (S0SC kind 2) and the r read back on each slice (D2D kind 0, element 0x10)
-    rb = [w & 0xFFFFFFFF for _, w in log.get("S0SC", []) if (w >> 92) & 7 == 2]
+    rbw = [(c, w & 0xFFFFFFFF) for c, w in log.get("S0SC", []) if (w >> 92) & 7 == 2]
+    rb = [v for _, v in rbw]
     rds = {sl: [w >> 89 & 0xFFFFFFFF for _, w in log.get(f"S{sl}DD", [])] for sl in (0, 1)}
     ok = 0
     for t in range(trials):
@@ -270,6 +281,16 @@ def bench_a(work, mut, trials=3, seed=1):
                 ok += 1
             else:
                 errs.append(f"trial {t} {tag}: got {hex(lst[t]) if t < len(lst) else None} exp {hex(exp[t])}")
+    # latency of the fused root: last PSUM leaving slice 1 -> r leaving the root (both on the ring)
+    ps = [c for c, w in log.get("S1SC", []) if (w >> 92) & 7 == 1]
+    lat = []
+    for t in range(trials):
+        if fused[t] and t < len(rbw):
+            last = max(c for c in ps if c < rbw[t][0])
+            lat.append(rbw[t][0] - last)
+    if lat:
+        print(f"  (measured) fused root: last PSUM out of slice 1 -> r out of the root = {lat} cycles "
+              f"(ring hop 2 + trigger 1 + tree 15 + 1/n 3 + eps 3 + rsqrt 37 + out 1)")
     return ok, 3 * trials, errs
 
 
@@ -357,38 +378,42 @@ def bench_c(work, mut, seed=3):
     w9, x9, s9 = mat(512)
     load_btab(ev, 0, 32, s9)
     ev.step(4)
-    # --- L7
+    SK = 14                                       # near (cw1) words lead the far (cw0) word of a pair by SKEW
+
+    def pair(sl, far, near, t):
+        ev.at(P_CW0 + sl, cluster_word(far), t=t)
+        ev.at(P_CW1 + sl, cluster_word(near), t=t - SK)
+
+    # --- L7 (lower pair: far b0 + near b1; upper pair: far b3 + near b2)
     lg, lu = l6_parts(wg, xg, 128), l6_parts(wu, xu, 128)
-    ev.at(P_CMD, cmd_stn(0, 0, 16, SB, 2, 0x2000)); ev.step(3)
+    ev.at(P_CMD, cmd_stn(0, 0, 16, SB, 2, 0x2000)); ev.step(3 + SK)
     for k in range(8):
-        ev.at(P_CW0, cluster_word(lg[0][16 * k:16 * k + 16])); ev.at(P_CW1, cluster_word(lg[1][16 * k:16 * k + 16]))
-        ev.step()
+        pair(0, lg[0][16 * k:16 * k + 16], lg[1][16 * k:16 * k + 16], ev.t); ev.step()
     for k in range(8):
-        ev.at(P_CW0, cluster_word(lu[0][16 * k:16 * k + 16])); ev.at(P_CW1, cluster_word(lu[1][16 * k:16 * k + 16]))
-        ev.step()
+        pair(0, lu[1][16 * k:16 * k + 16], lu[0][16 * k:16 * k + 16], ev.t); ev.step()
     ev.step(40)
     tests.append(("L7 gate/up", 0, 0x2000, np.concatenate([G.mul(G.matvec(wg, xg, 128), sg),
                                                           G.mul(G.matvec(wu, xu, 128), su_)])))
     # --- L8 scaled, then the same L8 unscaled
     l8 = l6_parts(w8, x8, 256)
     for wsrc, base in ((0, 0x2400), (1, 0x2800)):
-        ev.at(P_CMD, cmd_stn(1, wsrc, 8, 16, 3, base)); ev.step(3)
-        for half in (0, 1):
-            for k in range(8):
-                ev.at(P_CW0, cluster_word(l8[2 * half][16 * k:16 * k + 16]))
-                ev.at(P_CW1, cluster_word(l8[2 * half + 1][16 * k:16 * k + 16]))
-                ev.step()
+        ev.at(P_CMD, cmd_stn(1, wsrc, 8, 16, 3, base)); ev.step(3 + SK)
+        for k in range(8):
+            pair(0, l8[0][16 * k:16 * k + 16], l8[1][16 * k:16 * k + 16], ev.t); ev.step()
+        for k in range(8):
+            pair(0, l8[3][16 * k:16 * k + 16], l8[2][16 * k:16 * k + 16], ev.t); ev.step()
         ev.step(50)
         y = G.matvec(w8, x8, 256)
         tests.append((f"L8 {'unscaled' if wsrc else 'scaled'}", 0, base, G.mul(y, F(1.0)) if wsrc else G.mul(y, s8)))
     # --- L9: slice 0 = even column group (clusters 0..3), slice 1 = odd (clusters 4..7)
     l9 = l6_parts(w9, x9, 512)
-    ev.at(P_CMD + 0, cmd_stn(2, 0, 8, 32, 2, 0x2C00)); ev.at(P_CMD + 1, cmd_stn(3, 0, 8, 0, 0, 0)); ev.step(3)
+    ev.at(P_CMD + 0, cmd_stn(2, 0, 8, 32, 2, 0x2C00)); ev.at(P_CMD + 1, cmd_stn(3, 0, 8, 0, 0, 0)); ev.step(3 + SK)
     for half in (0, 1):
         for k in range(8):
             for sl in (0, 1):
-                ev.at(P_CW0 + sl, cluster_word(l9[4 * sl + 2 * half][16 * k:16 * k + 16]))
-                ev.at(P_CW1 + sl, cluster_word(l9[4 * sl + 2 * half + 1][16 * k:16 * k + 16]))
+                b = 4 * sl + 2 * half
+                far, near = (l9[b], l9[b + 1]) if half == 0 else (l9[b + 1], l9[b])
+                pair(sl, far[16 * k:16 * k + 16], near[16 * k:16 * k + 16], ev.t)
             ev.step()
     ev.step(60)
     tests.append(("L9 pair", 0, 0x2C00, G.mul(G.matvec(w9, x9, 512), s9)))
@@ -474,12 +499,125 @@ def bench_e(work, mut, seed=5):
     return ok, n, errs
 
 
-BENCHES = {"a": bench_a, "b": bench_b, "c": bench_c, "d": bench_d, "e": bench_e}
+# ================================================================================================= bench (f)
+def bench_f(work, mut, seed=6):
+    """LM-head argmax: 2 slices x 3 rounds of 128 logits through the station (L7, scale 1.0, values planted through
+    cw0 + 0), the running (max, lowest index) per slice, the candidates merged at the root over the scalar ring.
+    Trial 0 plants the max at rows 200, 300 (slice 0) and 640 (slice 1): lowest index 200 wins.  Trial 1: unique
+    max in slice 1.  Trial 2: tie across slices only (slice 0 row 383, slice 1 row 384)."""
+    rng = np.random.default_rng(seed)
+    ev = Ev()
+    SK = 14
+    exp = []
+    for t in range(3):
+        v = (rng.standard_normal(768) * 4.0).astype(F)
+        v[v == 0] = F(1.0)
+        top = F(np.max(np.abs(v)) * 2 + 1)
+        plant = {0: [200, 300, 640], 1: [500], 2: [383, 384]}[t]
+        for r in plant:
+            v[r] = top
+        exp.append(int(np.argmax(G.mul(G.add(v, F(0)), F(1.0)))))
+        for sl in (0, 1):
+            ev.at(P_CMD + sl, cmd_amax(clear=1)); 
+        ev.at(P_CMD + 0, cmd_root(1, 0, 0, amnb=2), t=ev.t + 1); ev.at(P_CMD + 1, cmd_root(0, 0, 0), t=ev.t + 1)
+        ev.step(3)
+        for rd in range(3):
+            for sl in (0, 1):
+                ev.at(P_CMD + sl, cmd_stn(0, 1, 8, 0, 0, sl * 384 + rd * 128, amax=1))
+            ev.step(3 + SK)
+            for k in range(8):
+                for sl in (0, 1):
+                    base = sl * 384 + rd * 128 + 16 * k
+                    ev.at(P_CW0 + sl, cluster_word(v[base:base + 16]), t=ev.t)
+                    ev.at(P_CW1 + sl, cluster_word(np.zeros(16, dtype=F)), t=ev.t - SK)
+                ev.step()
+            ev.step(30)
+        for sl in (0, 1):
+            ev.at(P_CMD + sl, cmd_amax(emit=1))
+        ev.step(20)
+    log = run_sim("f", ev, work, mut, ev.t + 20)
+    errs = status_ok(log)
+    tok = [w & 0xFFFFFF for _, w in log.get("S0TOK", [])]
+    ring = [(w >> 64) & 0xFFFFFF for _, w in log.get("S0SC", []) if (w >> 92) & 7 == 4]
+    ok = 0
+    for t in range(3):
+        g1 = tok[t] if t < len(tok) else None
+        g2 = ring[t] if t < len(ring) else None
+        if g1 == exp[t] and g2 == exp[t]:
+            ok += 1
+        else:
+            errs.append(f"trial {t}: token {g1} / ring {g2}, golden argmax {exp[t]}")
+    return ok, 3, errs
+
+
+# ================================================================================================= bench (g)
+def bench_g(work, mut, seed=7):
+    """Production-shape throughput of one layer's slice work (one slice, 683 owned rows on 8 lanes): measured
+    issue -> last output and the output span (rate) of each op against its priced beats."""
+    rng = np.random.default_rng(seed)
+    ev = Ev()
+    R = 683
+    X, T, RX, GB, UB, SSB = 0x0000, 0x0400, 0x3008, 0x0800, 0x0900, 0x3100
+    progs = [
+        # 0 residual + sum of squares: 6 blocks (the 683 rows padded to whole 128-row blocks), PSUMs on the ring
+        su(nout=6, nin=128, a=X, aso=128, asi=1, c=T, cso=128, csi=1, ad=AD_C, dst=DST_VM, d=X, dso=128, dsi=1,
+           red=1, redsq=1, rb=W_SC, rso=1),
+        # 1 consumer norm + BF16 broadcast scale (683 rows): h -> D2D window to time every vector
+        su(nout=1, nin=R, a=X, asi=1, ma=MA_AB, b=RX, csrc=1, c=0, csi=1, mc=1, dst=DST_VM, d=W_D2D, dsi=1),
+        # 2 QK sum of squares, one head (16 beats)
+        su(nout=1, nin=128, a=X, asi=1, ma=MA_AA, red=1, rb=W_SC, rso=1),
+        # 3 QK norm, one head (16 beats)
+        su(nout=1, nin=128, a=X, asi=1, ma=MA_AB, b=RX, csrc=1, c=0, csi=1, mc=1, dst=DST_VM, d=W_D2D, dsi=1),
+        # 4 SiLU * up, one row block (16 beats)
+        su(nout=1, nin=128, a=GB, asi=1, ma=MA_AIMM, imm1=-1.0, sfu=SFU_SIGM, c=GB, csi=1, mc=1, b=UB, bsi=1, md=1,
+           dst=DST_VM, d=W_D2D, dsi=1),
+    ]
+    load_prog(ev, 1, progs)
+    load_crom(ev, 1, 0, G.to_bf16((1.0 + 0.1 * rng.standard_normal(R + 5)).astype(F)))
+    load_vm(ev, 1, X, (rng.standard_normal(768) * 0.5).astype(F))
+    load_vm(ev, 1, T, (rng.standard_normal(768) * 0.1).astype(F))
+    load_vm(ev, 1, GB, (rng.standard_normal(256) * 2).astype(F))
+    load_vm(ev, 1, RX - 8, np.full(16, F(0.5)))
+    ev.at(P_CMD + 0, cmd_root(1, 6, 0x3000)); ev.step(2)          # slice 0 absorbs the PSUMs as the root
+    marks = []
+    for p, name, beats, out in ((0, "residual + sum of squares (6 x 128)", 96, "SC"),
+                                (1, "consumer norm / scale (683 rows)", 86, "DD"),
+                                (2, "QK sum of squares (128)", 16, "SC"),
+                                (3, "QK norm (128)", 16, "DD"),
+                                (4, "SiLU * up (128)", 16, "DD")):
+        ev.at(P_CMD + 1, cmd_su(p)); marks.append((ev.t, name, beats, out)); ev.step(beats + 250)
+    log = run_sim("g", ev, work, mut, ev.t + 20)
+    errs = status_ok(log)
+    rows = []
+    for i, (t0, name, beats, out) in enumerate(marks):
+        t1 = marks[i + 1][0] if i + 1 < len(marks) else 10 ** 9
+        if out == "DD":
+            cs = [c for c, _ in log.get("S1DD", []) if t0 <= c < t1]
+        else:
+            cs = [c for c, w in log.get("S1SC", []) if t0 <= c < t1 and (w >> 92) & 7 == 1]
+        if not cs:
+            errs.append(f"{name}: no output")
+            continue
+        # DD: one output word per vector (span = vectors); SC: one block sum per 16 vectors (span = spacing x count)
+        span = cs[-1] - cs[0] + 1 if out == "DD" else (cs[-1] - cs[0]) + (beats // len(cs))
+        lat = cs[-1] - t0
+        rows.append((name, beats, span, lat))
+    print("  op                                     priced beats  measured span  issue->last out")
+    for name, beats, span, lat in rows:
+        print(f"  {name:40s} {beats:6d}       {span:8d}      {lat:6d}")
+    ok = sum(1 for _, beats, span, _ in rows if span <= 1.10 * beats)
+    for name, beats, span, _ in rows:
+        if span > 1.10 * beats:
+            errs.append(f"{name}: span {span} > 1.10 x {beats}")
+    return ok, 5, errs
+
+
+BENCHES = {"a": bench_a, "b": bench_b, "c": bench_c, "d": bench_d, "e": bench_e, "f": bench_f, "g": bench_g}
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("benches", nargs="*", default=list("abcde"))
+    ap.add_argument("benches", nargs="*", default=list("abcdefg"))
     ap.add_argument("--mut", type=int, default=0)
     ap.add_argument("--work", default="/tmp/qdv_bench")
     a = ap.parse_args()

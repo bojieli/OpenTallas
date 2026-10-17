@@ -20,13 +20,16 @@ module tb_qfd_dv (input wire ck);
     wire [95:0]   sc0, sc1;
     wire [545:0]  ar0_o, ar1_o;
     wire [547:0]  dd0_o, dd1_o;
-    wire [44:0]   st0, st1;
+    wire [69:0]   st0, st1;
+    wire [451:0]  hr0;
     qfd_dv_slice #(.MUT(MUT)) s0 (.ck(ck), .rst_n(rst_n), .sid(4'd0), .cmd(cmd[0]), .cw0(cw0[0]), .cw1(cw1[0]),
         .nb9_i(nb1_o), .nb9_o(nb0_o), .sw_i(swi), .so_e(s0e), .se_i(s1w), .so_w(s0w), .sc_i(sc1), .sc_o(sc0),
-        .ar_o(ar0_o), .ar_i(ar[0]), .dd_o(dd0_o), .dd_i(dd[0]), .st(st0));
+        .ar_o(ar0_o), .ar_i(ar[0]), .dd_o(dd0_o), .dd_i(dd[0]),
+        .hr_i(452'd0), .hr_o(hr0), .n_d(), .s_d(), .st(st0));
     qfd_dv_slice #(.MUT(MUT)) s1 (.ck(ck), .rst_n(rst_n), .sid(4'd1), .cmd(cmd[1]), .cw0(cw0[1]), .cw1(cw1[1]),
         .nb9_i(nb0_o), .nb9_o(nb1_o), .sw_i(s0e), .so_e(s1e), .se_i(1088'd0), .so_w(s1w), .sc_i(sc0), .sc_o(sc1),
-        .ar_o(ar1_o), .ar_i(ar[1]), .dd_o(dd1_o), .dd_i(dd[1]), .st(st1));
+        .ar_o(ar1_o), .ar_i(ar[1]), .dd_o(dd1_o), .dd_i(dd[1]),
+        .hr_i(hr0), .hr_o(), .n_d(), .s_d(), .st(st1));
     // ---------------------------------------------------------------- stimulus
     integer fd, lg, cyc, ncyc, ec, ep, r;
     reg [1087:0] ev;
@@ -74,6 +77,8 @@ module tb_qfd_dv (input wire ck);
             if (sc1[95])    $fdisplay(lg, "%0d S1SC %h", cyc, sc1);
             if (s1e[1087])  $fdisplay(lg, "%0d S1E %h", cyc, s1e);
             if (s0w[1087])  $fdisplay(lg, "%0d S0W %h", cyc, s0w);
+            if (st0[24])    $fdisplay(lg, "%0d S0TOK %h", cyc, st0[23:0]);
+            if (st1[24])    $fdisplay(lg, "%0d S1TOK %h", cyc, st1[23:0]);
             clear;
             while (have && ec == cyc) begin
                 apply(ep, ev);

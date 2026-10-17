@@ -36,6 +36,11 @@ module qfd_dv_stream #(
     output reg  [1:0]     tw_kind,
     output reg  [23:0]    tw_addr,
     output reg  [1023:0]  tw_data,
+    // x tap for the slice's column heads: every x word this slice sees (from W, from E, or its own), one an edge
+    output reg            xt_v,
+    output reg  [23:0]    xt_a,
+    output reg  [1023:0]  xt_d,
+    output reg            xt_bad,          // two x words on one edge (sticky; the compiler slots one x word an edge)
     output reg            fault
 );
     reg [1:0]  dir; reg [27:0] tag;
@@ -105,6 +110,18 @@ module qfd_dv_stream #(
         else tw_we <= te || tw_;
     always @(posedge ck) begin
         tw_kind <= tsrc[1085:1084]; tw_addr <= tsrc[1075:1052]; tw_data <= tsrc[1023:0];
+    end
+    // -------------------------------------------------------------- x tap (registered)
+    wire xe = pe && sw_i[1086:1084] == 3'd0, xw = pw && se_i[1086:1084] == 3'd0;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin xt_v <= 1'b0; xt_bad <= 1'b0; end
+        else begin
+            xt_v <= xe || xw || emit;
+            xt_bad <= xt_bad | ((xe ? 1 : 0) + (xw ? 1 : 0) + (emit ? 1 : 0) > 1);
+        end
+    always @(posedge ck) begin
+        xt_a <= xe ? sw_i[1075:1052] : xw ? se_i[1075:1052] : {2'b00, ebeat, 6'd0};
+        xt_d <= xe ? sw_i[1023:0] : xw ? se_i[1023:0] : eword;
     end
     wire bad = pbad || (pe && ie) || (pw && iw) || (te && tw_) ||
                (pe && sw_i[1086]) || (pw && se_i[1086]);                 // kinds 4..7 are not defined

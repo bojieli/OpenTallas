@@ -9,7 +9,11 @@
 // Word format (cluster, neighbour): {fault, valid, 16 x FP32}, lane l = row base + l.
 //
 // Static schedule (compiler-fixed; no ready, no credit; violations are sticky faults):
-//   cw0 / cw1 carry the LEFT / RIGHT cluster word of one level-7 pair in the same edge.
+//   cw0 = the FAR port (the far band's word over the near cluster's registered rs feedthrough: b0 for the lower
+//   pair, b3 for the upper), cw1 = the NEAR port (b1 / b2).  dv2r8f2: the far word arrives SKEW (14) edges after the
+//   near word of the same pair, so cw1 passes a fixed SKEW-edge line and the two meet at level 7 (b0 + b1 lower,
+//   b3 + b2 upper: IEEE add is commutative, zero results canonical, so the pair's value is the golden (b2 + b3)).
+//   SKEW is compile-time (the compiler issues near words SKEW edges ahead); SKEW = 0 restores same-edge pairs.
 //   MODE 0 (L7, S = 128, gate/up): every level-7 word is a result word (the lower pair's 8 words = the gate block,
 //          then the upper pair's 8 words = the up block).
 //   MODE 1 (L8, S = 256, o/down) and MODE 2/3 (L9, S = 512): level-7 words come in blocks of 16: 8 of the lower pair
@@ -22,6 +26,7 @@
 // =====================================================================================================================
 module qfd_dv_redstn #(
     parameter integer ADD_LAT   = 7,
+    parameter integer SKEW      = 14,
     parameter integer SCALE_LAT = 6,
     parameter integer MUT       = 0
 ) (
@@ -55,14 +60,16 @@ module qfd_dv_redstn #(
         if (!rst_n) begin mode <= 2'd0; wsrc <= 1'b0; nwords <= 8'd0; sbase <= 9'd0; end
         else if (cfg_v) begin mode <= cfg_mode; wsrc <= cfg_wsrc; nwords <= cfg_nwords; sbase <= cfg_sbase; end
     // ---------------------------------------------------------------- level 7
-    wire v7_in = cw0[512] & cw1[512];
+    wire [513:0] cwn;                              // the near word, SKEW edges later
+    ot_hdc_delay #(.W(514), .D(SKEW), .RESET(1)) u_skew (.clk(ck), .rst_n(rst_n), .d(cw1), .q(cwn));
+    wire v7_in = cw0[512] & cwn[512];
     wire [511:0] y7;
     wire [15:0] v7l;
     wire [31:0] e7;
     genvar l;
     generate for (l = 0; l < 16; l = l + 1) begin : g_l7
         ot_hdc_fp32_add_lat #(.LAT(ADD_LAT), .DRST(0)) u_add (.clk(ck), .rst_n(rst_n), .valid_in(v7_in),
-            .a(cw0[32*l +: 32]), .b(cw1[32*l +: 32]), .y(y7[32*l +: 32]), .err(e7[2*l +: 2]), .valid_out(v7l[l]));
+            .a(cw0[32*l +: 32]), .b(cwn[32*l +: 32]), .y(y7[32*l +: 32]), .err(e7[2*l +: 2]), .valid_out(v7l[l]));
     end endgenerate
     wire v7 = v7l[0];
     // ---------------------------------------------------------------- level 8: hold the lower pair's 8 words
@@ -150,7 +157,7 @@ module qfd_dv_redstn #(
     always @(posedge ck) begin r_d <= y; r_idx <= jo; r_last <= lo; end
     // ---------------------------------------------------------------- faults (sticky): valid mismatch, a cluster /
     // neighbour fault bit, an FP error, a neighbour word with no held own word, more result words than configured
-    wire in_bad = (cw0[512] ^ cw1[512]) | cw0[513] | cw1[513] | nb_i[513] | (nbv && mode != 2'd2) |
+    wire in_bad = (cw0[512] ^ cwn[512]) | cw0[513] | cwn[513] | nb_i[513] | (nbv && mode != 2'd2) |
                   (v9_in && lead == 4'd0) | (fv && j >= nwords);
     wire fp_bad = (v7 && |e7) | (v8 && |e8) | (v9 && |e9) | (vs[0] && |es);
     always @(posedge ck or negedge rst_n)

@@ -19,7 +19,8 @@
 // (q / activations, element = addr[21:0]); 11 VM element addr[21:0] AND a scalar-tree broadcast (RB) of the value.
 // Reducer windows: 00 VM; 11 scalar-tree block sum (PSUM, idx = addr[21:0]).  KV writes (SU dst KV, FP8-rounded in
 // the lane): D2D out, kind = waddr[23:22] (1 K, 2 V).
-// MUT: bench negative controls (1 root order, 2 BF16 truncation, 3 scale word +1, 4 CROM lo/hi swap, 5 B <- C).
+// MUT: bench negative controls (1 root order, 2 BF16 truncation, 3 scale word +1, 4 CROM lo/hi swap, 5 B <- C,
+// 6 root pairing, 7 argmax ties high, 8 column head wrong station, 9 head x operand LSB flipped).
 // =====================================================================================================================
 module qfd_dv_slice #(
     parameter integer MUT = 0
@@ -42,7 +43,11 @@ module qfd_dv_slice #(
     input  wire [517:0]   ar_i,         // all-reduce result     {valid, err, rank 3, last, data 512}
     output reg  [547:0]   dd_o,         // D2D out to native59   {valid, kind 2, mask 8, 8 x addr 24, 8 x FP32, 89 x 0}
     input  wire [519:0]   dd_i,         // D2D return            {valid, group, beat 6, data 512}
-    output reg  [44:0]    st            // status to tt_ctlm
+    input  wire [451:0]   hr_i,         // ME head-row control from tt_ctlm: {go, ib 379, xpf 72}, slice chain W5 .. E5
+    output reg  [451:0]   hr_o,         // registered onward copy (one edge a slice: compiler-known skew sid hops)
+    output wire [4*516-1:0] n_d,        // corridor words {tag 8, xl 128, ib 379, go} of the 4 column heads: band 2
+    output wire [4*516-1:0] s_d,        // ... band 1
+    output reg  [69:0]    st            // status to tt_ctlm
 );
     // ------------------------------------------------------------------ regional reset (sync release)
     reg rs1, rst;
@@ -57,13 +62,14 @@ module qfd_dv_slice #(
     reg [95:0]   sc_q;
     reg [517:0]  ar_q;
     reg [519:0]  dd_q;
+    reg [451:0]  hr_q;
     always @(posedge ck or negedge rst)
         if (!rst) begin
             cmd_q <= 116'd0; cw0_q <= 514'd0; cw1_q <= 514'd0; nb_q <= 514'd0; sw_q <= 1088'd0; se_q <= 1088'd0;
-            sc_q <= 96'd0; ar_q <= 518'd0; dd_q <= 520'd0;
+            sc_q <= 96'd0; ar_q <= 518'd0; dd_q <= 520'd0; hr_q <= 452'd0; hr_o <= 452'd0;
         end else begin
             cmd_q <= cmd; cw0_q <= cw0; cw1_q <= cw1; nb_q <= nb9_i; sw_q <= sw_i; se_q <= se_i;
-            sc_q <= sc_i; ar_q <= ar_i; dd_q <= dd_i;
+            sc_q <= sc_i; ar_q <= ar_i; dd_q <= dd_i; hr_q <= hr_i; hr_o <= hr_q;
         end
     always @(posedge ck) sid_q <= sid;
     // ------------------------------------------------------------------ command decode
@@ -146,14 +152,59 @@ module qfd_dv_slice #(
     wire        red_ps = red_we && red_addr[23:22] == 2'b11;
     wire        red_vm = red_we && red_addr[23:22] == 2'b00;
     wire        red_bad = red_we && red_addr[23:22] != 2'b11 && red_addr[23:22] != 2'b00;
+    wire        am_v, tok_v;
+    wire [23:0] am_idx, tok_idx;
+    wire [31:0] am_val;
     qfd_dv_scalar #(.MUT(MUT)) u_sc (.ck(ck), .rst_n(rst), .sid(sid_q),
         .cfg_v(c_root), .cfg_root(cmd_q[4]), .cfg_nb(cmd_q[10:5]), .cfg_ss(cmd_q[34:11]),
+        .cfg_fuse(cmd_q[35]), .cfg_rx(cmd_q[59:36]), .cfg_eps(cmd_q[91:60]), .cfg_k(cmd_q[96:92]),
+        .cfg_amnb(cmd_q[102:97]),
         .sc_i(sc_q), .sc_o(sc_o),
         .ps_v(red_ps), .ps_idx({2'b00, red_addr[21:0]}), .ps_val(red_data),
         .rb_v(su_rb), .rb_idx({2'b00, vm_waddr[21:0]}), .rb_val(vm_wdata[31:0]),
-        .w1_we(sc_w1_we), .w1_addr(sc_w1_addr), .w1_data(sc_w1_data), .busy(sc_busy), .fault(sc_fault));
+        .am_v(am_v), .am_idx(am_idx), .am_val(am_val),
+        .w1_we(sc_w1_we), .w1_addr(sc_w1_addr), .w1_data(sc_w1_data), .tok_v(tok_v), .tok_idx(tok_idx),
+        .busy(sc_busy), .fault(sc_fault));
+    // ------------------------------------------------------------------ LM-head running argmax (max, lowest index)
+    // Station results of an op armed with STN amax (cmd[50]) enter a 16-leaf, 4-level registered compare tree (the
+    // ot_qwen_me_spport_w12 key order: okey(v) = v[31] ? ~v : {1, v[30:0]}; equal keys -> the lower row index), then
+    // the running best.  AMAX command (kind 6): [4] clear, [5] emit the running best as this slice's candidate.
+    reg stn_amax;
+    always @(posedge ck or negedge rst) if (!rst) stn_amax <= 1'b0; else if (c_stn) stn_amax <= cmd_q[50];
+    function automatic [31:0] okey(input [31:0] v);
+        okey = v[31] ? ~v : {1'b1, v[30:0]};
+    endfunction
+    function automatic [56:0] amb(input [56:0] a, input [56:0] b);   // {valid, idx 24, value 32}
+        amb = (a[56] && (!b[56] || okey(a[31:0]) > okey(b[31:0]) ||
+               (okey(a[31:0]) == okey(b[31:0]) && a[55:32] < b[55:32]))) ? a : b;
+    endfunction
+    reg [16*57-1:0] al0;
+    reg [8*57-1:0]  al1;
+    reg [4*57-1:0]  al2;
+    reg [2*57-1:0]  al3;
+    reg [56:0]      al4, am_run;
+    integer q;
+    always @(posedge ck or negedge rst)
+        if (!rst) begin al0 <= 0; al1 <= 0; al2 <= 0; al3 <= 0; al4 <= 0; am_run <= 0; end
+        else begin
+            for (q = 0; q < 16; q = q + 1)
+                al0[57*q +: 57] <= {r_v && stn_amax, r_addr + 24'(q), r_d[32*q +: 32]};
+            for (q = 0; q < 8; q = q + 1) al1[57*q +: 57] <= amb(al0[57*(2*q) +: 57], al0[57*(2*q+1) +: 57]);
+            for (q = 0; q < 4; q = q + 1) al2[57*q +: 57] <= amb(al1[57*(2*q) +: 57], al1[57*(2*q+1) +: 57]);
+            for (q = 0; q < 2; q = q + 1) al3[57*q +: 57] <= amb(al2[57*(2*q) +: 57], al2[57*(2*q+1) +: 57]);
+            al4 <= amb(al3[56:0], al3[113:57]);
+            if (go && kind == 3'd6 && cmd_q[4]) am_run <= 57'd0;
+            else am_run <= amb(am_run, al4);
+        end
+    reg am_emit;
+    always @(posedge ck or negedge rst) if (!rst) am_emit <= 1'b0; else am_emit <= go && kind == 3'd6 && cmd_q[5];
+    assign am_v = am_emit && am_run[56];
+    assign am_idx = am_run[55:32];
+    assign am_val = am_run[31:0];
     // ------------------------------------------------------------------ stream
-    wire        tw_we, stm_fault;
+    wire        tw_we, stm_fault, xt_v, xt_bad;
+    wire [23:0] xt_a;
+    wire [1023:0] xt_d;
     wire [1:0]  tw_kind;
     wire [23:0] tw_addr;
     wire [1023:0] tw_data;
@@ -161,7 +212,15 @@ module qfd_dv_slice #(
         .cfg_v(c_stm), .cfg_dir(cmd_q[5:4]), .cfg_tag(cmd_q[33:6]),
         .sw_i(sw_q), .se_i(se_q), .so_e(so_e), .so_w(so_w),
         .xw_we(su_x_we), .xw_addr(vm_waddr), .xw_data(vm_wdata),
-        .tw_we(tw_we), .tw_kind(tw_kind), .tw_addr(tw_addr), .tw_data(tw_data), .fault(stm_fault));
+        .tw_we(tw_we), .tw_kind(tw_kind), .tw_addr(tw_addr), .tw_data(tw_data),
+        .xt_v(xt_v), .xt_a(xt_a), .xt_d(xt_d), .xt_bad(xt_bad), .fault(stm_fault));
+    // ------------------------------------------------------------------ the quad's 4 column heads + 32 x leaves
+    reg  [64*32-1:0] xt_f;                       // stream BF16 -> the 64-lane write {bf16, 16'h0}
+    always @(*) for (l = 0; l < 64; l = l + 1) xt_f[32*l +: 32] = {xt_d[16*l +: 16] ^ ((MUT == 9) ? 16'd1 : 16'd0), 16'h0000};
+    wire hd_fault;
+    qfd_dv_heads #(.HEAD_MUT((MUT == 8) ? 3 : 0)) u_hd (.ck(ck), .rst_n(rst), .sid(sid_q), .xpf(hr_q[71:0]), .gi({hr_q[450:72], hr_q[451]}),
+        .sw_v(xt_v), .sw_a(xt_a), .sw_m({64{1'b1}}), .sw_d(xt_f), .fe_i(xt_bad),
+        .n_d(n_d), .s_d(s_d), .fault(hd_fault));
     // ------------------------------------------------------------------ VM write merge (16-el and 1-el sources)
     wire ar_v = ar_q[517], dd_v = dd_q[519];
     wire st_vm = r_v && stn_dst[0];
@@ -216,13 +275,13 @@ module qfd_dv_slice #(
         if (!rst) begin port_fault <= 1'b0; ar_rank <= 3'd0; ar_last <= 1'b0; end
         else begin
             port_fault <= port_fault | w16_coll | w1_coll | win_bad | red_bad | dd_bad | (ar_v && ar_q[516]) |
-                          (go && (kind == 3'd0 || kind > 3'd5)) | (su_go && !su_ready);
+                          (go && (kind == 3'd0 || kind > 3'd6)) | (am_emit && !am_run[56]) | (su_go && !su_ready);
             if (ar_v) begin ar_rank <= ar_q[515:513]; ar_last <= ar_q[512]; end
         end
-    wire any_fault = su_fault | vm_fault | stn_fault | sc_fault | stm_fault | port_fault;
+    wire any_fault = su_fault | vm_fault | stn_fault | sc_fault | stm_fault | port_fault | hd_fault;
     always @(posedge ck or negedge rst)
-        if (!rst) st <= 45'd0;
+        if (!rst) st <= 70'd0;
         else st <= {any_fault, su_fault, vm_fault, stn_fault, sc_fault, stm_fault, port_fault,
-                    su_idle, sc_busy, su_prog, su_rows, ar_rank, ar_last};
-    initial if (MUT < 0 || MUT > 5) $fatal(1, "qfd_dv_slice: MUT %0d undefined", MUT);
+                    su_idle, sc_busy, su_prog, su_rows, ar_rank, ar_last, tok_v, tok_idx};
+    initial if (MUT < 0 || MUT > 9) $fatal(1, "qfd_dv_slice: MUT %0d undefined", MUT);
 endmodule
