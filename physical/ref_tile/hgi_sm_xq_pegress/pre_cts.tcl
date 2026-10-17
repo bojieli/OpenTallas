@@ -1,5 +1,5 @@
 # ref_tile PRE_CTS: independent related leaf CTS roots; measure each domain boundary after CTS
-set ::ot_ce_cts_roots {clk clk_w clk_s clk_e}
+set ::ot_ce_cts_roots {clk clk_w clk_s clk_e clk_c}
 source /src/physical/common_flow/clock_entries.tcl
 source /src/physical/qwen_die_masters/repair_budget.tcl
 rename clock_tree_synthesis ::ot_ref_cts_boundary_orig

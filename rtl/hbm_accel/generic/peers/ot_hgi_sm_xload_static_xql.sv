@@ -51,6 +51,7 @@ module ot_hgi_sm_xload_xq_pegress #(
     input  wire               clk_w,
     input  wire               clk_s,
     input  wire               clk_e,
+    input  wire               clk_c,       // x6b: select cluster (replicas + xbeat) root, entered on the W face centre
     input  wire               rn,          // leaf reset (ctl relay output through the tree)
     input  wire [7:0]         ed5,         // x6: {ok, b} of ctl ed[RDP-4] (one edge EARLY; the E pin register restores ed[RDP-3])
     input  wire [16:0]        ede,         // ctl emission tag ed[RDP-2] = {en, ok, last, addr7, grp7}
@@ -120,7 +121,7 @@ module ot_hgi_sm_xload_xq_pegress #(
         (* keep = 1 *) reg e5v;
         (* keep = 1 *) reg [6:0] e5b;
         (* keep = 1 *) reg bqq;
-        always @(posedge clk) begin
+        always @(posedge clk_c) begin
             e5v <= rnr[gr * NRR / NR] ? e5p[7] : 1'b0;
             bqq <= rnr[gr * NRR / NR] ? bvp : 1'b0;
             e5b <= e5p[6:0];
@@ -129,7 +130,7 @@ module ot_hgi_sm_xload_xq_pegress #(
         assign bqvr[gr] = bqq;
     end endgenerate
     reg [2047:0] xbeat;
-    always @(posedge clk) for (integer k = 0; k < NR; k = k + 1) begin
+    always @(posedge clk_c) for (integer k = 0; k < NR; k = k + 1) begin
         xbeat[k*RB +: RB] <= {RB{1'b0}};
         if (e5r[k][7]) for (integer x = 0; x < NBMAX; x = x + 1) if (e5r[k][6:0] == 7'(x)) xbeat[k*RB +: RB] <= beats[x][k*RB +: RB];
     end
@@ -188,7 +189,7 @@ module ot_hgi_sm_xload_xq_pair #(
     assign rwq_m = (MAPMUT != 0) ? {rwq[1023:512], rwq[255:0], rwq[511:256]} : rwq;
     ot_hgi_sm_xload_cl2_bdring #(.PMAX(PMAX)) u_bd (.clk(clk_bd), .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .qq_lo(qq_lo),
         .qq_hi(qq_hi), .qe_lo(qe_lo), .qe_hi(qe_hi), .bsel(bsel), .lane_en_i(lane_en), .bq_d(bq_d));
-    ot_hgi_sm_xload_xq_pegress #(.PMAX(PMAX)) u_eg (.clk(clk_eg), .clk_w(clk_eg), .clk_s(clk_eg), .clk_e(clk_eg), .rn(rn), .ed5(ed5), .ede(ede), .bq_v(bq_v),
+    ot_hgi_sm_xload_xq_pegress #(.PMAX(PMAX)) u_eg (.clk(clk_eg), .clk_w(clk_eg), .clk_s(clk_eg), .clk_e(clk_eg), .clk_c(clk_eg), .rn(rn), .ed5(ed5), .ede(ede), .bq_v(bq_v),
         .bq_last(bq_last), .bq_addr(bq_addr), .bq_b(bq_b), .rwq(rwq_m), .bq_d(bq_d), .x_done(x_done), .xw_en(xw_en),
         .xw_last(xw_last), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data));
 endmodule

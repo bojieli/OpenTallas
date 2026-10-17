@@ -31,6 +31,7 @@
  "pins": {
   "W": [
    "clk_w",
+   "clk_c",
    "bq_d"
   ],
   "S": [
@@ -62,7 +63,8 @@
   "clk",
   "clk_w",
   "clk_s",
-  "clk_e"
+  "clk_e",
+  "clk_c"
  ],
  "blocks": [],
  "findings": [],

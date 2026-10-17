@@ -7,10 +7,12 @@ create_clock -name core_clk -period 833.333333000
 create_clock -name ot_io_w -period 833.333333000
 create_clock -name ot_io_s -period 833.333333000
 create_clock -name ot_io_e -period 833.333333000
+create_clock -name ot_io_c -period 833.333333000
 create_clock -name ot_entry_0 -period 833.333333000 [get_ports {clk}]
 create_clock -name ot_entry_1 -period 833.333333000 [get_ports {clk_w}]
 create_clock -name ot_entry_2 -period 833.333333000 [get_ports {clk_s}]
 create_clock -name ot_entry_3 -period 833.333333000 [get_ports {clk_e}]
+create_clock -name ot_entry_4 -period 833.333333000 [get_ports {clk_c}]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set_input_delay 166.667 -clock core_clk [all_inputs -no_clocks]
@@ -25,11 +27,11 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {} outputs {{xw_data} {xw_en} {xw_last} {xw_addr} {xw_grp} {x_done}}} {w} {clock ot_io_w io_budget_ps 166.667 inputs {{bq_d}} outputs {}} {s} {clock ot_io_s io_budget_ps 166.667 inputs {{rwq}} outputs {}} {e} {clock ot_io_e io_budget_ps 166.667 inputs {{rn} {ed5} {ede} {bq_v} {bq_last} {bq_addr} {bq_b}} outputs {}}]
-set ::ot_ce_source_domains [dict create {clk} {core} {clk_w} {w} {clk_s} {s} {clk_e} {e}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {} outputs {{xw_data} {xw_en} {xw_last} {xw_addr} {xw_grp} {x_done}}} {w} {clock ot_io_w io_budget_ps 166.667 inputs {{bq_d}} outputs {}} {s} {clock ot_io_s io_budget_ps 166.667 inputs {{rwq}} outputs {}} {e} {clock ot_io_e io_budget_ps 166.667 inputs {{rn} {ed5} {ede} {bq_v} {bq_last} {bq_addr} {bq_b}} outputs {}} {c} {clock ot_io_c io_budget_ps 166.667 inputs {} outputs {}}]
+set ::ot_ce_source_domains [dict create {clk} {core} {clk_w} {w} {clk_s} {s} {clk_e} {e} {clk_c} {c}]
 set ::ot_ce_explicit_domains 1
-set ::ot_ce_cts_roots {{clk} {clk_w} {clk_s} {clk_e}}
-set ::ot_ce_ports {{clk} {clk_w} {clk_s} {clk_e}}
+set ::ot_ce_cts_roots {{clk} {clk_w} {clk_s} {clk_e} {clk_c}}
+set ::ot_ce_ports {{clk} {clk_w} {clk_s} {clk_e} {clk_c}}
 
 # Constants are proved from actual OpenDB connectivity and the loaded Liberty
 # output functions. Cell/port names, case analysis and timing-graph constant

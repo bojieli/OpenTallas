@@ -32,6 +32,7 @@
  "pins": {
   "W": [
    "clk_w",
+   "clk_c",
    "bq_d"
   ],
   "S": [
@@ -73,7 +74,7 @@
   "branch": "claude/hsm-xqb6-1830",
   "tag": "x6",
   "purpose": "XQL pair-egress leaf: the ctl egress (rw capture, replicated beat select, BD beat capture, xw pins) per SM pair, beside the pair store",
-  "structural_change": "x6 supersedes x5/x4 (x5 813efc5c6 native FAIL: ed5[7] capture 337.5 = one pin -> 32 replica valids; spread 83.0 over one 369 um root): (a) flop-first pins: every input lands in exactly one pin register, replicas fed from the E-face pin register; the ctl exports ed5 = ed[RDP-4] and bq_v = bs_v (one edge early) so the replica/select timing is unchanged (0 added edges, XQL calendar unchanged); (b) four regional clock entries (N core clk, W clk_w, S clk_s, E clk_e; same PLL phase 0, ordinary related STA), each root spans one face; (c) recipe 4 / hold_budget die: no in/out hold pads. Outline/pin densities as x3 (369.36 sq, <= 5.73 pins/um).",
+  "structural_change": "x6 supersedes x5/x4 (x5 813efc5c6 native FAIL: ed5[7] capture 337.5 = one pin -> 32 replica valids; spread 83.0 over one 369 um root): (a) flop-first pins: every input lands in exactly one pin register, replicas fed from the E-face pin register; the ctl exports ed5 = ed[RDP-4] and bq_v = bs_v (one edge early) so the replica/select timing is unchanged (0 added edges, XQL calendar unchanged); (b) five regional clock entries (N output registers clk, W clk_w, S clk_s, E clk_e, select cluster clk_c on the W face centre next to the replica/xbeat register mass; same PLL phase 0, ordinary related STA), each root spans one face; (c) recipe 4 / hold_budget die: no in/out hold pads. Outline/pin densities as x3 (369.36 sq, <= 5.73 pins/um).",
   "extra_paths": [
    "physical/asap7_memory_macros",
    "physical/hbm_xp_aq_tree13_1014",
@@ -148,7 +149,7 @@
    "source": "results/hbm_sm_attention_1015/hsm_1830/pegress_x5_813efc5c6_native.json",
    "cell": "ot_hgi_sm_xload_xq_pegress",
    "why": "x5 813efc5c6 CLOSED TT+59.73/FF+14.11 native FAIL capture 337.5 ed5[7] (2 pins) / spread 83.0 / launch 195.9 (R 371.0); x3 d67bfd40c native FAIL capture rn 332.3. RTL changes required (pin registers + clock entries).",
-   "fix": "x6: (a) every input lands in ONE E/W/S pin register; ed5/bq_v exported one edge early by the ctl (ed[RDP-4], bs_v) so the replicas see the same edge (0 added edges); (b) four regional clock entries clk(N core)/clk_w/clk_s/clk_e (multiple_cts_roots, related_same_frequency); recipe 4 (no in/out hold pads, die hold budget)."
+   "fix": "x6: (a) every input lands in ONE E/W/S pin register; ed5/bq_v exported one edge early by the ctl (ed[RDP-4], bs_v) so the replicas see the same edge (0 added edges); (b) five regional clock entries clk(N xw regs)/clk_w/clk_s/clk_e/clk_c(select cluster) (multiple_cts_roots, related_same_frequency); recipe 4 (no in/out hold pads, die hold budget)."
   }
  },
  "io_tcl": "physical/ref_tile/hgi_sm_xq_pegress/spread_pins.tcl",
@@ -158,7 +159,8 @@
   "clk",
   "clk_w",
   "clk_s",
-  "clk_e"
+  "clk_e",
+  "clk_c"
  ],
  "clock_data_paths": "related_same_frequency",
  "clock_relationship": {
@@ -231,6 +233,17 @@
     "bq_addr",
     "bq_b"
    ],
+   "outputs": []
+  },
+  "c": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_c"
+   ],
+   "inputs": [],
    "outputs": []
   }
  },
