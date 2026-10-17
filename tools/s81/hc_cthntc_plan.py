@@ -295,6 +295,16 @@ def build():
             L.add(p, 'N', own_x(part_e)[('rv', 0)])
         L.add('clk', 'N', CW / 2)
         L.pack(spread_we=True)
+        # a5sp: a4d GRT overflow lies only in the inherited hrq/inhold
+        # boundary bands. Use the full existing face, keeping the bit order,
+        # layers, master outline and RTL calendar; parent joins are re-audited.
+        if '--spread-retcol' in sys.argv:
+            for face in 'NS':
+                vv = sorted((b[2], port, i) for port, bb in L.p.items()
+                            for i, b in enumerate(bb) if b[0] == face)
+                for k, (_, port, i) in enumerate(vv):
+                    L.p[port][i][2] = round(0.3 + round(k * (L.w - 0.6) /
+                                             (len(vv) - 1) / 0.048) * 0.048, 3)
         rets.append(L)
     # slices: E (columns 0/1) and W (2/3).  10-16 (a2 GRT-0116 on both slices: every bit was packed into ~50 um
     # windows at the face ends, ~10.5 pins/um, M2 85% / M3 71%): straight-through register columns instead -- bit i's
@@ -408,7 +418,7 @@ def audit(lanes, ctpl, ctfl, rets, slices):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument('--out', required=True, type=Path); ap.add_argument('--split', action='store_true')
+    ap = argparse.ArgumentParser(); ap.add_argument('--out', required=True, type=Path); ap.add_argument('--split', action='store_true'); ap.add_argument('--spread-retcol', action='store_true')
     a = ap.parse_args()
     lanes, ctpl, ctfl, rets, slices = build()
     summ, joins = audit(lanes, ctpl, ctfl, rets, slices)
