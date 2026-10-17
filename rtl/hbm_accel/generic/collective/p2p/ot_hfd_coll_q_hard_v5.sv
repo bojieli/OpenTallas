@@ -219,7 +219,7 @@ endmodule
 module ot_hgi_coll_ctl_v5_core #(parameter integer NPT=3,SOLO=1,ND=NPT+13)(
  input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
  input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [ND-1:0] dest_v,
- input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,output wire [23:0] vm_sel,
+ input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,
  output wire [135:0] vm_req_pin,output wire [1:0] inj_req_pin,output wire [31:0] inj_idx_pin,
  output wire [159:0] inj_addr_pin,delivery_obase_pin,rgx_addr_pin,
  output wire [1:0] inj_source_v,output wire [65:0] inj_source_meta,output wire [131:0] vm_source_meta,
@@ -234,13 +234,16 @@ module ot_hgi_coll_ctl_v5_core #(parameter integer NPT=3,SOLO=1,ND=NPT+13)(
  // V6: inst / hgi_start / hgi_busy arrive at the issuer's d2 edge and are captured at the pin (= the d3 edge the
  // other children see); products from ot_hgi_coll_iter_mul land on the same edge.
  reg [1535:0] inst_q;reg hs_q,hb_q;
+ // V7: rst_n loads ONE flop (async assert, synchronous release one edge later); rst_l resets the leaf.
+ reg rst_l;
+ always @(posedge clk_control or negedge rst_n) if(!rst_n)rst_l<=1'b0;else rst_l<=1'b1;
  always @(posedge clk_control) inst_q<=inst;
- always @(posedge clk_control or negedge rst_n) if(!rst_n)begin hs_q<=0;hb_q<=0;end else begin hs_q<=hgi_start;hb_q<=hgi_busy;end
- ot_hgi_coll_q_static_ctl_v5 #(.NPT(NPT),.SOLO(SOLO),.INJLAT(12)) u(.clk_control(clk_control),.rst_n(rst_n),
+ always @(posedge clk_control or negedge rst_l) if(!rst_l)begin hs_q<=0;hb_q<=0;end else begin hs_q<=hgi_start;hb_q<=hgi_busy;end
+ ot_hgi_coll_q_static_ctl_v5 #(.NPT(NPT),.SOLO(SOLO),.INJLAT(12)) u(.clk_control(clk_control),.rst_n(rst_l),
   .inst(inst_q),.m_idx(m_idx),.m_vm(m_vm),.m_iaddr_l(m_iaddr_l),.m_del_l(m_del_l),.m_rgx_l(m_rgx_l),
   .m_iaddr_h(m_iaddr_h),.m_del_h(m_del_h),.m_rgx_h(m_rgx_h),.m_lk_l(m_lk_l),.m_lk_h(m_lk_h),
   .hgi_start(hs_q),.hgi_busy(hb_q),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
-  .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),.vm_sel(vm_sel),.vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),
+  .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),.vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),
   .inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),.delivery_obase_pin(delivery_obase_pin),
   .rgx_addr_pin(rgx_addr_pin),.inj_source_v(inj_source_v),.inj_source_meta(inj_source_meta),
   .vm_source_meta(vm_source_meta),.vm_assembled_v(vm_assembled_v),
@@ -251,7 +254,7 @@ endmodule
 module ot_hgi_coll_ctl_v5_q3(
  input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
  input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [15:0] dest_v,
- input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,output wire [23:0] vm_sel,
+ input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,
  output wire [135:0] vm_req_pin,output wire [1:0] inj_req_pin,output wire [31:0] inj_idx_pin,
  output wire [159:0] inj_addr_pin,delivery_obase_pin,rgx_addr_pin,
  output wire [1:0] inj_source_v,output wire [65:0] inj_source_meta,output wire [131:0] vm_source_meta,
@@ -264,7 +267,7 @@ endmodule
 module ot_hgi_coll_ctl_v5_q2(
  input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
  input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [14:0] dest_v,
- input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,output wire [23:0] vm_sel,
+ input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,
  output wire [135:0] vm_req_pin,output wire [1:0] inj_req_pin,output wire [31:0] inj_idx_pin,
  output wire [159:0] inj_addr_pin,delivery_obase_pin,rgx_addr_pin,
  output wire [1:0] inj_source_v,output wire [65:0] inj_source_meta,output wire [131:0] vm_source_meta,
@@ -477,7 +480,9 @@ module ot_hfd_coll_q_hard_v5_body #(
  wire [159:0] inj_addr_pin,delivery_obase_pin,rgx_addr_pin;wire [65:0] inj_source_meta;wire [131:0] vm_source_meta;
  wire [2047:0] vm_assembled;wire [3:0] vm_assembled_v;wire [8*NPT-1:0] held_epoch;
  // V6: VM read data -> assembly leaf, valid bits -> protocol leaf (wires only)
- wire [7:0] vm_rv;wire [2047:0] vm_rd_il,vm_as_il;wire [23:0] vm_sel;
+ wire [7:0] vm_rv;wire [2047:0] vm_rd_il,vm_as_il;
+ // V7: the pair select is the uop pipe's d3 word (same register edge as the protocol leaf's inst_q)
+ wire [23:0] vm_sel=inst[1383+:24];
  for(genvar b=0;b<8;b=b+1)begin:g_vmsplit
   assign vm_rv[b]=vm_rr[b*257+256];
   for(genvar i=0;i<256;i=i+1)begin:g_bit assign vm_rd_il[i*8+b]=vm_rr[b*257+i];end
@@ -517,7 +522,7 @@ module ot_hfd_coll_q_hard_v5_body #(
   assign capture_calendar[NPT+7]=p_ring[82];
   ot_hgi_coll_ctl_v5_q3 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
-   .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),.vm_sel(vm_sel),
+   .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
    .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
    .delivery_obase_pin(delivery_obase_pin),.rgx_addr_pin(rgx_addr_pin),
    .inj_source_v(inj_source_v),.inj_source_meta(inj_source_meta),.vm_source_meta(vm_source_meta),
@@ -553,7 +558,7 @@ module ot_hfd_coll_q_hard_v5_body #(
   assign tkm_done=1'b0;assign tkm_busy=1'b0;assign arg_fault=1'b0;assign tkm_fault=1'b0;assign tk_cycles=32'd0;
   ot_hgi_coll_ctl_v5_q2 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
-   .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),.vm_sel(vm_sel),
+   .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
    .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
    .delivery_obase_pin(delivery_obase_pin),.rgx_addr_pin(rgx_addr_pin),
    .inj_source_v(inj_source_v),.inj_source_meta(inj_source_meta),.vm_source_meta(vm_source_meta),

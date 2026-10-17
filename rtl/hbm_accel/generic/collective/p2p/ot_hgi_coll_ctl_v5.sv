@@ -73,7 +73,12 @@ module ot_hgi_coll_q_static_ctl_v5 #(
  input wire [ND-1:0] dest_v,
  input wire rc_v,input wire [2:0] rc_tag,
  input wire [7:0] vm_rv,                    // V6: VM read valid bits only (data -> ot_hgi_coll_vmasm)
- output wire [23:0] vm_sel,                  // V6: pair select of the current instruction (flop Q) -> ot_hgi_coll_vmasm
+ // V7 (native ctl2 1ae51f9c3 capture 503.6 ps on 44 pins): (a) vm_sel removed -- the assembly leaf takes the pair
+ // select from the uop pipe's d3 word (the same register edge as this leaf's inst_q), so no inst bit is pulled to an
+ // output face; (b) every OBSERVED protocol input (vm_rv, dest_v, rc_v/rc_tag, tkm_done/tkm_busy, issue_done) is
+ // captured at its pin and checked against the matching EXPECTED predicate delayed one edge: the observed-input
+ // protocol checks raise protocol_fault one edge later (fault ABI +1, scenario 2), inst-only checks unchanged;
+ // (c) rst_n reaches one synchroniser flop (core), never the register array.
  output wire [135:0] vm_req_pin,
  output reg [1:0] inj_req_pin,
  output reg [31:0] inj_idx_pin,
@@ -191,7 +196,10 @@ module ot_hgi_coll_q_static_ctl_v5 #(
  reg [131:0] vm_meta_pipe[0:9];
  reg [23:0] vm_select_pipe[0:8];
  reg [7:0] vm_raw_valid;
- reg [7:0] vm_valid_pipe[0:7];
+ reg [7:0] vm_valid_pipe[0:8];
+ // V7 pin captures of observed inputs + one-edge-delayed expected predicates
+ reg [ND-1:0] dest_q;reg rc_v_q;reg [2:0] rc_tag_q;reg tkm_done_q,tkm_busy_q,issue_done_q;
+ reg [2:0] lk_wr_v_e;reg lp_we_e;reg [2:0] lp_tag_e;reg tkm_done_slot_e,arg_active_e,arg_start_e;
  reg arg_active;
  reg [NPT-1:0] wr_sequence_overflow,rd_sequence_overflow,rx_sequence_overflow;
  reg [127:0] vm_req_sector;
@@ -230,11 +238,16 @@ module ot_hgi_coll_q_static_ctl_v5 #(
   if(!rst_n)begin
    protocol_fault<=0;cycles<=0;arg_active<=0;wr_sequence_overflow<=0;rd_sequence_overflow<=0;rx_sequence_overflow<=0;inj_req_pin<=0;vm_assembled_v<=0;vm_raw_valid<=0;
    for(integer j=0;j<INJLAT;j=j+1)inj_valid_pipe[j]<=0;
-   for(integer j=0;j<8;j=j+1)vm_valid_pipe[j]<=0;
+   for(integer j=0;j<9;j=j+1)vm_valid_pipe[j]<=0;
+   dest_q<=0;rc_v_q<=0;rc_tag_q<=0;tkm_done_q<=0;tkm_busy_q<=0;issue_done_q<=0;
+   lk_wr_v_e<=0;lp_we_e<=0;lp_tag_e<=0;tkm_done_slot_e<=0;arg_active_e<=0;arg_start_e<=0;
    for(integer b=0;b<8;b=b+1)vm_req_valid[b]<=0;
    for(integer k=0;k<NPT;k=k+1)link_epoch[k]<=0;
   end else begin
    if(hgi_start)cycles<=0;else if(hgi_busy)cycles<=cycles+1;
+   dest_q<=dest_v;rc_v_q<=rc_v;rc_tag_q<=rc_tag;tkm_done_q<=tkm_done;tkm_busy_q<=tkm_busy;issue_done_q<=issue_done;
+   lk_wr_v_e<=3'(p_lk_wr_v);lp_we_e<=r_lp_we;lp_tag_e<=r_lp_tag;tkm_done_slot_e<=p_tkm_done_slot;
+   arg_active_e<=arg_active;arg_start_e<=a_arg_start;
    inj_req_pin<=p_inj_rd;
    for(integer b=0;b<8;b=b+1)vm_raw_valid[b]<=vm_rv[b];
    inj_valid_pipe[0]<=p_inj_rd;
@@ -242,9 +255,13 @@ module ot_hgi_coll_q_static_ctl_v5 #(
    for(integer b=0;b<8;b=b+1)begin
     vm_req_valid[b]<=p_vm_rq[b*17+16];
     vm_valid_pipe[0][b]<=p_vm_rq[b*17+16];
-    if(vm_rv[b]!=vm_valid_pipe[7][b])protocol_fault<=1;
+`ifdef OT_COLL_V7_MUT_OBS_NOALIGN
+    if(vm_raw_valid[b]!=vm_valid_pipe[7][b])protocol_fault<=1;   // mutant: observed captured, expected not delayed
+`else
+    if(vm_raw_valid[b]!=vm_valid_pipe[8][b])protocol_fault<=1;
+`endif
    end
-   for(integer j=1;j<8;j=j+1)vm_valid_pipe[j]<=vm_valid_pipe[j-1];
+   for(integer j=1;j<9;j=j+1)vm_valid_pipe[j]<=vm_valid_pipe[j-1];
    for(integer j=0;j<4;j=j+1)begin
     vm_assembled_v[j]<=vm_raw_valid[vm_select_pipe[8][j*6+:3]] &&
                         vm_raw_valid[vm_select_pipe[8][j*6+3+:3]] &&
@@ -256,7 +273,7 @@ module ot_hgi_coll_q_static_ctl_v5 #(
    end
    for(integer k=0;k<NPT;k=k+1)begin
     if(p_lk_epoch_begin[k])link_epoch[k]<=p_lk_epoch;
-    if(dest_v[k]!=p_lk_wr_v[k])protocol_fault<=1;
+    if(dest_q[k]!=lk_wr_v_e[k])protocol_fault<=1;
     wr_sequence_overflow[k]<=(40'({p_lk_wr_seq_high[k*10+:10],p_lk_wr_slot[k*6+:6]})+link_slot_offset)>=65536;
     rd_sequence_overflow[k]<=(40'({p_lk_rd_seq_high[k*10+:10],p_lk_rd_slot[k*6+:6]})+link_slot_offset)>=65536;
     rx_sequence_overflow[k]<=(40'({p_lk_rx_seq_high[k*10+:10],p_lk_rx_slot[k*6+:6]})+link_slot_offset)>=65536;
@@ -264,23 +281,26 @@ module ot_hgi_coll_q_static_ctl_v5 #(
        (p_lk_rd_v[k] && rd_sequence_overflow[k]) ||
        (p_lk_rx_expect[k] && rx_sequence_overflow[k]))protocol_fault<=1;
    end
-   if(rc_v!=r_lp_we || (rc_v && rc_tag!=r_lp_tag))protocol_fault<=1;
-   if(tkm_done!=p_tkm_done_slot || (issue_done && (tkm_busy || arg_active)))protocol_fault<=1;
+`ifndef OT_COLL_V7_MUT_RCDROP
+   if(rc_v_q!=lp_we_e || (rc_v_q && rc_tag_q!=lp_tag_e))protocol_fault<=1;
+`endif
+   if(tkm_done_q!=tkm_done_slot_e || (issue_done_q && (tkm_busy_q || arg_active_e)) || (arg_start_e && tkm_busy_q))
+    protocol_fault<=1;
    if(a_arg_start)arg_active<=1'b1;
    if(a_arg_publish)arg_active<=1'b0;
-   if((a_arg_start && (!a_arg_mode || tkm_busy || p_tkm_start)) ||
+   if((a_arg_start && (!a_arg_mode || p_tkm_start)) ||
       (a_arg_mode && (p_tkm_start || (|p_tkm_del_slot) || p_tkm_done_slot)) || (p_tkm_start && arg_active) ||
       (!a_arg_mode && (a_arg_flush || a_arg_publish || (|a_arg_in_slot))))protocol_fault<=1;
    if(SOLO==0 && (a_arg_mode || a_arg_start || a_arg_flush || a_arg_publish ||
       (|a_arg_in_slot) || p_ring[82]))protocol_fault<=1;
-   if(SOLO==0 && (p_tkm_start || (|dest_v[NPT+8+:4]) || (|p_tkm_del_slot)))protocol_fault<=1;
+   if(SOLO==0 && (p_tkm_start || (|p_tkm_del_slot)))protocol_fault<=1;
+   if(SOLO==0 && (|dest_q[NPT+8+:4]))protocol_fault<=1;
    if(|p_ring[87:84])protocol_fault<=1;
    if(NPT==2 && (p_capture_slot[9] || p_sink_slot[15] || |p_sink_select[63:60] ||
       p_lk_wr_v[2] || p_lk_rd_v[2] || p_lk_rx_expect[2] || p_lk_epoch_begin[2]))protocol_fault<=1;
 
   end
  end
- assign vm_sel=p_vm_pair_select;
  assign inj_source_v=inj_valid_pipe[INJLAT-1];
  assign inj_source_meta=inj_meta_pipe[INJLAT-1];
  assign vm_source_meta=vm_meta_pipe[9];
