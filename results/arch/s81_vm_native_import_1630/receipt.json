@@ -1,0 +1,57 @@
+{
+ "schema": "opentallas.s81.vm-import-plan-receipt.v1",
+ "time": "2026-10-16T16:30:57.881287-07:00",
+ "status": "BLOCKED_IMPORT_PLAN_ONLY",
+ "source_commit": "6136ed7044ef093908fe76f52a49c65827822f14",
+ "source_files_verified": 75,
+ "hard_leaves": 540,
+ "mapped_sram_macros": 128,
+ "actual_pin_models": 70,
+ "literal_clocks": 556,
+ "measured_literal_R": 555,
+ "missing_literal_R": "dut.u_core.u_seq/ck: HF4 param4 route still progressing; no param3 substitution",
+ "missing_signal_bits": 0,
+ "inherited_home_outline_changes": 0,
+ "missing_homes": [
+  "dut.u_wfc.split_return.u_ret.lo",
+  "dut.u_wfc.split_return.u_ret.hi",
+  "dut.u_wfc.split_return.u_ret.diag"
+ ],
+ "immutable_bundle": "/home/ubuntu/artifacts/s81-vm-native-1630/inputs-final.tgz",
+ "bundle_sha256": "7154f43013e3bdf8f6ac82cccfd985884decc5db1e96391a7826c8b9c6238d86",
+ "replay": "python3 tools/s81_vm/native_import_plan.py --inputs inputs --flat-source src --out out; python3 tools/s81_vm/test_native_import_plan.py inputs",
+ "fleet_run": {
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-29571-1792193417",
+  "exit": 0,
+  "remote": "/srv/opentallas-scratch/codex/s81-vm-native-1630-final"
+ },
+ "counterexamples": [
+  "RESPONSE_PAD=3 rejects expected2",
+  "HF4 source X_AL_WIDTH absent rejects expected4",
+  "deleted actual s_d[255] terminal rejects"
+ ],
+ "source_scope": "Actual candidate wiring/pins only; parent legacy instance is not replaced. Placement, native receipts, compiler calendar, clock delivery/epoch and complete reach/cuts remain open.",
+ "clock_reference_view_commit": "8eabbe81095955a36d170cbbf16e45f1de13963f",
+ "outputs_sha256": {
+  "plan.json.gz": "d8346a4ed6cf91a942511059ce984dcb81fbc2a2b25c2099a5496c993413647b",
+  "clock_records.json.gz": "5b3c1cfb2491343535a0b2c9de26a8f7f58cb7516fca190c36c33e93ac3a9aba",
+  "models.json.gz": "00ef59bf0d90c9b519588a3f111d5d7381556d455dfde7af3156ab7094dd343f",
+  "extraction.log": "fd3fafe32613f4bc10bc250e7100b961ea72968a86e71c6162a812cf34408dc0"
+ },
+ "actual_bit_graph_dependency": {
+  "source_receipt_commit": "14ada64ce",
+  "directory": "/home/ubuntu/artifacts/s81-vm-takeover-0815/successor-parent/graph-native",
+  "source_current_xml_sha256": "65b0852e3509a31c0bb0f642d0506048189157849632ea48f9ac62ba51ac86aa",
+  "one_driver_joins": 301645,
+  "constant_nets": 2,
+  "scope": "Authoritative actual bit identities; native body import must conserve every join and must not retime the fixed internal calendar",
+  "files_sha256": {
+   "inventory.json": "dea77b378874b78beb92a84b9f65c373e62354aa11fd00e6371c0b4107704415",
+   "pin_join.jsonl.gz": "5f0e686ded0eb6aab3d5345391ce117d5cbc8855ab2a5b37653039fa6ae32527",
+   "summary.json": "8f79a84be3296c62e7050b7c29be497d5ae115139f10a9975751bddf702719c5",
+   "observability.json": "127e71a491ddfb2bb6567902efdb0ad1a22db7a4c20dcf4ec87aa96182f0eb94"
+  }
+ },
+ "clock_enumeration_proof": "clockproof_receipt.json"
+}

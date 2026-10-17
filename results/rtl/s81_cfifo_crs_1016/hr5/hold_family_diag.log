@@ -1,0 +1,130 @@
+HF hold_buffers 38574
+OT_ENTRIES LEVEL cr deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff cr -> cc[0]$_DFF_P_/CLK wire=0 R=90.9856084780733 latency=85.34776731055213 phi=176.33337578862543
+OT_ENTRIES LEVEL cr_s deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff cr_s -> ot_prs_00001_ff/CLK wire=0 R=176.33337578862543 latency=0.0 phi=176.33337578862543
+OT_ENTRIES LEVEL xf deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff xf -> u_x.pin[0]$_DFF_P_/CLK wire=0 R=137.67520568414812 latency=38.65817010447731 phi=176.33337578862543
+OT_ENTRIES LEVEL xf2 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff xf2 -> u_x2.pin[0]$_DFF_P_/CLK wire=0 R=121.85375557807713 latency=54.479620210548305 phi=176.33337578862543
+OT_ENTRIES DOMAIN core 833.333008ps IO69/1101 boundary=168.656440103973..188.06519256456988
+OT_ENTRIES DOMAIN lane 833.333008ps IO566/0 boundary=167.28762492859153..182.11472287064572
+OT_ENTRIES DOMAIN lane2 833.333008ps IO538/0 boundary=172.97450125839066..179.62422372431746
+OT_ENTRIES DOMAIN core_s 833.333008ps IO0/70 boundary=174.7893919924297..177.5782722414319
+OT_MULTI_ROOT RELATED_PATH core -> core_s max slack=349.581696 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> core_s min slack=58.338558 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core_s -> core max slack=351.101776 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core_s -> core min slack=-76.711807 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane -> core_s max slack=146.753220 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane -> core_s min slack=-68.959480 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane2 -> core_s max slack=140.587982 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane2 -> core_s min slack=-70.297752 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=4 registers=12384 inputs=1173 outputs=1171 async_control_pins=2416
+OT_ENTRIES COMP DONE ff 4 entries phi=176.33337578862543 boundary=167.28762492859153..188.06519256456988
+HF ioref sourced
+HF clk core_clk lat_src=0
+HF clk ot_io_lane lat_src=0
+HF clk ot_io_lane2 lat_src=0
+HF clk ot_io_core_s lat_src=0
+HF clk ot_entry_0 lat_src=1
+HF clk ot_entry_1 lat_src=1
+HF clk ot_entry_2 lat_src=1
+HF clk ot_entry_3 lat_src=1
+HF endpoints_in_margin30 12418
+HF fam n=1 viol=1 worst=-44.1 core_clk>ot_entry_0 rst -> rsync_q[]$_DFF_PN0_/RESETN
+HF fam n=1 viol=1 worst=-43.5 core_clk>ot_entry_0 rst -> rs$_DFF_PN0_/RESETN
+HF fam n=1 viol=1 worst=-43.1 core_clk>ot_entry_0 rst -> ot_prs_N_ff/RESETN
+HF fam n=536 viol=535 worst=-37.8 ot_entry_0>core_clk x2[]$_DFF_P_/QN -> x2[]
+HF fam n=15 viol=15 worst=-33.1 ot_entry_0>core_clk cc[]$_DFF_P_/QN -> cc[]
+HF fam n=266 viol=266 worst=-32.7 ot_entry_0>core_clk xb[]$_DFF_P_/QN -> xb[]
+HF fam n=283 viol=283 worst=-29.0 ot_entry_0>core_clk xa[]$_DFF_P_/QN -> xa[]
+HF fam n=1 viol=1 worst=-27.5 ot_entry_0>core_clk ot_prs_N_ff/QN -> rs
+HF fam n=283 viol=281 worst=-76.7 ot_entry_1>ot_entry_0 u_x.u_cross.o[]$_DFF_PN0_/QN -> xa[]$_DFF_P_/D
+HF fam n=251 viol=134 worst=-73.0 ot_entry_1>ot_entry_0 u_x.u_cross.o[]$_DFF_PN0_/QN -> xb[]$_DFF_P_/D
+HF fam n=127 viol=27 worst=-60.3 ot_entry_1>ot_entry_0 u_x2.u_cross.o[]$_DFF_PN0_/QN -> x2[]$_DFF_P_/D
+HF fam n=15 viol=15 worst=-48.9 ot_entry_1>ot_entry_0 u_x.u_cross.o[]$_DFF_PN0_/QN -> cc[]$_DFF_P_/D
+HF fam n=58 viol=0 worst=10.6 core_clk>ot_entry_0 ri[] -> ri_q[]$_DFF_P_/D
+HF fam n=1 viol=0 worst=11.1 ot_entry_0>ot_entry_0 rsync_q[]$_DFF_PN0_/QN -> rs$_DFF_PN0_/D
+HF fam n=1 viol=0 worst=11.8 ot_entry_0>ot_entry_0 rsync_q[]$_DFF_PN0_/QN -> ot_prs_N_ff/D
+HF fam n=2 viol=0 worst=27.5 core_clk>ot_entry_0 st[] -> sti[]$_DFF_P_/D
+HF fam n=537 viol=534 worst=-70.3 ot_entry_3>ot_entry_1 u_x2.u_cross.bank[][]$_DFFE_PP_/QN -> u_x2.u_cross.o[]$_DFF_PN0_/D
+HF fam n=565 viol=562 worst=-69.0 ot_entry_2>ot_entry_1 u_x.u_cross.bank[][]$_DFFE_PP_/QN -> u_x.u_cross.o[]$_DFF_PN0_/D
+HF fam n=4 viol=4 worst=-44.6 ot_entry_3>ot_entry_1 u_x2.u_cross.wc[]$_DFF_PN0_/QN -> u_x2.u_cross.wg1[]$_DFF_P_/D
+HF fam n=4 viol=4 worst=-28.9 ot_entry_2>ot_entry_1 u_x.u_cross.wc[]$_DFF_PN0_/QN -> u_x.u_cross.wg1[]$_DFF_P_/D
+HF fam n=1 viol=1 worst=-10.4 ot_entry_2>ot_entry_1 u_x.u_cross.identity[][]$_DFFE_PP_/QN -> u_x.u_cross.fault$_DFFE_PN0P_/D
+HF fam n=1 viol=1 worst=-6.1 ot_entry_2>ot_entry_1 u_x.pin[]$_DFF_P_/QN -> u_x.epoch_reset[]$_DFF_PN0_/D
+HF fam n=1 viol=1 worst=-4.9 ot_entry_3>ot_entry_1 u_x2.pin[]$_DFF_P_/QN -> u_x2.epoch_reset[]$_DFF_PN0_/D
+HF fam n=1 viol=1 worst=-2.2 ot_entry_3>ot_entry_1 u_x2.u_cross.identity[][]$_DFFE_PP_/QN -> u_x2.u_cross.fault$_DFFE_PN0P_/D
+HF fam n=4 viol=0 worst=1.2 ot_entry_1>ot_entry_1 u_x2.u_cross.wg2[]$_DFF_P_/QN -> u_x2.u_cross.wg3[]$_DFF_P_/D
+HF fam n=4 viol=0 worst=2.4 ot_entry_1>ot_entry_1 u_x2.u_cross.wg1[]$_DFF_P_/QN -> u_x2.u_cross.wg2[]$_DFF_P_/D
+HF fam n=4 viol=0 worst=3.7 ot_entry_1>ot_entry_1 u_x.u_cross.wg2[]$_DFF_P_/QN -> u_x.u_cross.wg3[]$_DFF_P_/D
+HF fam n=4 viol=0 worst=3.9 ot_entry_1>ot_entry_1 u_x.u_cross.wg1[]$_DFF_P_/QN -> u_x.u_cross.wg2[]$_DFF_P_/D
+HF fam n=1 viol=0 worst=6.7 ot_entry_1>ot_entry_1 u_x.epoch_reset[]$_DFF_PN0_/QN -> u_x.epoch_reset[]$_DFF_PN0_/D
+HF fam n=1 viol=0 worst=7.6 ot_entry_1>ot_entry_1 u_x2.epoch_reset[]$_DFF_PN0_/QN -> u_x2.epoch_reset[]$_DFF_PN0_/D
+HF fam n=1 viol=0 worst=8.8 ot_entry_1>ot_entry_1 rsyncs_q[]$_DFF_PN0_/QN -> rsync_s$_DFF_PN0_/D
+HF fam n=1 viol=0 worst=8.9 ot_entry_1>ot_entry_1 rsyncs_q[]$_DFF_PN0_/QN -> ot_prs_N_ff/D
+HF fam n=3 viol=0 worst=15.2 ot_entry_1>ot_entry_1 u_x.u_cross.warm[]$_DFFE_PN0N_/QN -> u_x.u_cross.warm[]$_DFFE_PN0N_/D
+HF fam n=3 viol=0 worst=19.7 ot_entry_1>ot_entry_1 u_x2.u_cross.warm[]$_DFFE_PN0N_/QN -> u_x2.u_cross.warm[]$_DFFE_PN0N_/D
+HF fam n=32 viol=0 worst=9.3 ot_entry_2>ot_entry_2 u_x.u_cross.identity[][]$_DFFE_PP_/QN -> u_x.u_cross.identity[][]$_DFFE_PP_/D
+HF fam n=4509 viol=0 worst=10.9 ot_entry_2>ot_entry_2 u_x.u_cross.bank[][]$_DFFE_PP_/QN -> u_x.u_cross.bank[][]$_DFFE_PP_/D
+HF fam n=439 viol=0 worst=19.3 ot_io_lane>ot_entry_2 xd[] -> u_x.pin[]$_DFF_P_/D
+HF fam n=1 viol=0 worst=28.7 ot_entry_2>ot_entry_2 u_x.u_cross.wc[]$_DFF_PN0_/QN -> u_x.u_cross.wc[]$_DFF_PN0_/D
+HF fam n=32 viol=0 worst=9.6 ot_entry_3>ot_entry_3 u_x2.u_cross.identity[][]$_DFFE_PP_/QN -> u_x2.u_cross.identity[][]$_DFFE_PP_/D
+HF fam n=4296 viol=0 worst=10.7 ot_entry_3>ot_entry_3 u_x2.u_cross.bank[][]$_DFFE_PP_/QN -> u_x2.u_cross.bank[][]$_DFFE_PP_/D
+HF fam n=57 viol=0 worst=27.6 ot_io_lane2>ot_entry_3 xd2[] -> u_x2.pin[]$_DFF_P_/D
+HF fam n=68 viol=68 worst=-36.9 ot_entry_1>ot_io_core_s rd[]$_DFF_PN0_/QN -> rd[]
+HF fam n=2 viol=2 worst=-35.6 ot_entry_1>ot_io_core_s ot_prs_N_ff/QN -> rd[]
+
+HB total 38574
+HB 6548 u_x.u_cross.bank[][] + u_x.u_cross.o[]
+HB 5920 u_x2.u_cross.bank[][] + u_x2.u_cross.o[]
+HB 4331 u_x.u_cross.o[]
+HB 3793 u_x2.u_cross.o[]
+HB 3227 u_x2.u_cross.bank[][]
+HB 3171 u_x.u_cross.bank[][]
+HB 2638 port:x2[]
+HB 2384 xa[]
+HB 1484 xb[]
+HB 1316 port:xb[]
+HB 1229 x2[]
+HB 1207 port:xa[]
+HB 418 u_x.pin[]
+HB 350 port:rd[]
+HB 98 cc[]
+HB 69 port:cc[]
+HB 66 ri_q[]
+HB 61 u_x2.pin[]
+HB 45 u_x.u_cross.identity[][]
+HB 36 u_x2.u_cross.identity[][]
+HB 21 u_x2.u_cross.fault + u_x2.u_cross.identity[][]
+HB 12 u_x2.u_cross.wg1[]
+HB 12 u_x.u_cross.fault + u_x.u_cross.identity[][]
+HB 12 u_x2.u_cross.wg2[]
+HB 12 u_x.u_cross.wg3[]
+HB 12 u_x.u_cross.wg2[]
+HB 11 u_x.u_cross.wg1[]
+HB 11 u_x2.u_cross.wg3[]
+HB 8 u_x2.u_cross.fault
+HB 7 u_x.u_cross.wc[] + u_x.u_cross.wg1[]
+HB 6 u_x2.u_cross.identity[][] + u_x2.u_cross.wc[] + u_x2.u_cross.wg1[]
+HB 6 u_x.u_cross.fault
+HB 5 u_x2.u_cross.wc[] + u_x2.u_cross.wg1[]
+HB 5 port:rs
+HB 5 u_x.u_cross.warm[]
+HB 4 u_x.u_cross.identity[][] + u_x.u_cross.wc[] + u_x.u_cross.wg1[]
+HB 4 u_x.epoch_reset[]
+HB 4 u_x2.epoch_reset[]
+HB 3 MULTI(4) cc[]
+HB 3 u_x.epoch_reset[] + u_x.u_cross.bank[][] + u_x.u_cross.wc[]
+HB 3 u_x2.u_cross.warm[]
+HB 2 MULTI(4) u_x2.epoch_reset[]
+HB 2 ot_prs_00002_ff + rs + rsync_q[]
+HB 2 ot_prs_00000_ff + rsync_s
+HB 2 ot_prs_00002_ff + rs
+HB 2 MULTI(5) flt
+HB 2 sti[]
+HB 1 rd[]
+HB 1 MULTI(4) u_x.u_cross.fault
+HB 1 u_x2.u_cross.fault + u_x2.u_cross.warm[]
+HB 1 MULTI(4) u_x2.u_cross.fault
+HB 1 u_x2.u_cross.wc[]

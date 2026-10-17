@@ -130,7 +130,7 @@ def load_targets(path):
     return R
 
 
-def report(dump, pairs_file=None, top=20, targets=None):
+def report(dump, pairs_file=None, top=20, targets=None, strict_entry_pairs=False):
     nodes, pairs, summ = load(dump)
     model = model_arrivals(nodes)
     R = load_targets(targets)
@@ -175,6 +175,8 @@ def report(dump, pairs_file=None, top=20, targets=None):
         if not left or not right:
             missing.append([a, b, how])
             continue
+        if strict_entry_pairs and (len(left) != 1 or len(right) != 1):
+            raise ValueError(f'ambiguous timed pair {a} -> {b}: {len(left)} x {len(right)} clock entries; literal launch/capture entries required')
         best = None
         for pa in left:
             for pb in right:
@@ -211,6 +213,8 @@ def report(dump, pairs_file=None, top=20, targets=None):
         if rec["lca"] is None:
             cross += 1
         prs.append(dict(a=a, b=b, net=net, source=how, **rec))
+    if strict_entry_pairs and missing:
+        raise ValueError(f'{len(missing)} timed clock pairs have missing entries: {missing[:3]}')
     prs.sort(key=lambda r: -(r.get("sta_ps") if r.get("sta_ps") is not None else r.get("model_ps", 1e18)))
     # per region: insertion (late / early), flop arrival spread (with targets), intra-region pair NCP / skew;
     # pairs whose ends sit in different regions are listed separately (meso / forwarded crossings or a plan defect)
@@ -288,6 +292,7 @@ def main():
     r.add_argument("dump")
     r.add_argument("--out")
     r.add_argument("--pairs")
+    r.add_argument("--strict-entry-pairs", action="store_true", help="refuse missing or ambiguous launch/capture clock entries")
     r.add_argument("--top", type=int, default=20)
     r.add_argument("--targets", help="die kit kit.json: per master clock pin in-arc insertion R -> flop arrival / skew")
     sub.add_parser("tcl")
@@ -295,7 +300,7 @@ def main():
     if a.cmd == "tcl":
         print(os.path.join(HERE, "die_clock_check.tcl"))
         return
-    res = report(a.dump, a.pairs, a.top, a.targets)
+    res = report(a.dump, a.pairs, a.top, a.targets, a.strict_entry_pairs)
     txt = table(res, a.top)
     if a.out:
         with open(a.out, "w") as fh:

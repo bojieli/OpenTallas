@@ -127,13 +127,57 @@ def spec(half):
         pin_regs=dict(enable=False, reason=PIN_REGS[half]))
 
 
+# split1016y (S-VM-CAPT-X43RST, 2026-10-16): successor of the CLOSED split1016x S leaf (record 9da10a825), which FAILS
+# the native pin audit only on capture rsv[0] 218.0 ps > 190 (rsv was the raw async reset of ~70 flops).  The RTL gives
+# rsv a 2-flop local reset stage with compensated reset values (zero added serial edges, t_st identical at every time);
+# same outline, same pin Tcl.  Extra benches: equivalence against the frozen rsv-direct leaf + the reset-phase mutant.
+RST_AUDIT = 'results/arch/s81_hub_parents_1016/native_audit_capture_1316/native_audit_1316_status_x43.json'  # copy of artifacts/s81-vm-1316/native/native_audit_1316.json
+EQ_TB = 'rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_status_x43.sv rtl/dsrom_sys/s81_ph/test/tb_dsfd_capt_status_x43_eq.sv'
+
+
+def spec_s_y():
+    s = spec('s')
+    s['name'] = 'dsfd_capt_status_x43_s_split1016y'
+    s['structural_change'] = (
+        'Successor of CLOSED dsfd_capt_status_x43_s_split1016x (TT +300.06 / FF +26.69, record 9da10a825), native FAIL capture '
+        'rsv[0] 218.0 ps > 190 (native_audit_1316; launch 173.9, R 81.0, spread 6.5): rsv was the raw async reset of ~70 flops '
+        '(sp/se/warm/mk/flt + 64-bit stq), so the recovery check ran through the reset buffer tree. RTL: rsv now drives only a '
+        '2-flop local stage rv0/rv1 (async assert, synchronous release, as dsfd_capt_x8x_s rv_s); rv1 resets sp/se/flt/stq with '
+        'the values the rsv-direct leaf held after epoch edge 1 (sp 1, se 1; warm constant 1, removed), mk (t_mark pin register) '
+        'unreset. t_st identical to the old leaf at every time for every rsv timing (tb_dsfd_capt_status_x43_eq): 0 added serial '
+        'edges, startup contract unchanged. Same outline 21.6 x 86.4 and pin Tcl as split1016x. ' + LEAF['s'] + TAIL)
+    s.pop('slot_change_request', None)
+    s['reroute_reason'] = dict(
+        kind='pin_register', source=RST_AUDIT, cell='dsfd_capt_status_x43_s', capture_ps=218.0, launch_ps=173.9,
+        fix='RTL: rsv drives only a 2-flop local reset stage (rv0/rv1, async assert / sync release) instead of the async reset '
+            'of ~70 flops; reset values compensated for the 2-edge stage delay (zero streaming-edge change, equivalence bench)',
+        why='native audit 1316: capture rsv[0] 218.0 ps > 190 on the CLOSED split1016x view (only failing pin)',
+        rtl_change='dsfd_capt_status_x43_s reset structure (rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_status_x43.sv)')
+    j = s['job']
+    j.update(owner='claude:S-VM-CAPT-X43RST', branch='claude/svm-capt-x43rst-1016', tag='rst',
+             purpose='dsfd_capt_status_x43_s native-capture successor: rsv -> 2-flop local reset stage, compensated reset values; '
+                     'exact capture split bench + unit/slip + equivalence vs the rsv-direct leaf + mutants, TT/FF/DRC0 + native audit')
+    j['benches'] = j['benches'] + [
+        dict(name='status_x43_rst_equiv', cmd=f'mkdir -p {{RUN}} && iverilog -g2012 -o {{RUN}}/eq -s tb_dsfd_capt_status_x43_eq {EQ_TB} '
+             '&& vvp -n {RUN}/eq', expect='pass', pass_regex='TB_STX43EQ PASS checks [0-9]+', threads=1, peak_ram_gb=2,
+             needs=['iverilog']),
+        dict(name='status_x43_rst_equiv_mut_rvph', cmd=f'mkdir -p {{RUN}} && iverilog -g2012 -DDSFD_CAPT_STX43_MUT_RVPH -o {{RUN}}/eqr '
+             f'-s tb_dsfd_capt_status_x43_eq {EQ_TB} && vvp -n {{RUN}}/eqr', expect='fail',
+             fail_regex='TB_STX43EQ FAIL mismatches [1-9][0-9]*', threads=1, peak_ram_gb=2, needs=['iverilog']),
+        dict(name='status_x43_unit_mut_rvph', cmd=f'mkdir -p {{RUN}} && iverilog -g2012 -DDSFD_CAPT_STX43_MUT_RVPH -o {{RUN}}/simr '
+             f'-s tb_dsfd_capt_status_x43 {TB} && vvp -n {{RUN}}/simr +mode=0', expect='fail', fail_regex='TB_STX43 FAIL mode 0',
+             threads=1, peak_ram_gb=2, needs=['iverilog'])]
+    return s
+
+
 def outputs():
-    """{path: text} of the two status leaves' pin Tcl + spec json"""
+    """{path: text} of the two status leaves' pin Tcl + spec json (+ the split1016y S successor spec)"""
     out = {}
     for half in HALVES:
         top = f'dsfd_capt_status_x43_{half}'
         out[PINS / (top + '.tcl')] = pins(half)
         out[SPECS / (top + '.json')] = json.dumps(spec(half), indent=1) + '\n'
+    out[SPECS / 'dsfd_capt_status_x43_s_y.json'] = json.dumps(spec_s_y(), indent=1) + '\n'
     return out
 
 

@@ -1,0 +1,74 @@
+  TIEHIx1_ASAP7_75t_R _6097_ (
+    .H(_3290_)
+  );
+  TIELOx1_ASAP7_75t_R _6098_ (
+    .L(_3291_)
+  );
+  BUFx2_ASAP7_75t_R _6099_ (
+    .A(\hsd[1] ),
+    .Y(f_aqm_w[27])
+  );
+  BUFx2_ASAP7_75t_R _6100_ (
+    .A(_3291_),
+    .Y(f_kwm_e[20])
+  );
+  BUFx2_ASAP7_75t_R _6101_ (
+    .A(_3291_),
+    .Y(f_kwm_w[20])
+  );
+  BUFx2_ASAP7_75t_R _6102_ (
+    .A(_3291_),
+    .Y(kst[0])
+  );
+  BUFx2_ASAP7_75t_R _6103_ (
+    .A(fault),
+    .Y(kst[9])
+  );
+  BUFx2_ASAP7_75t_R _6104_ (
+    .A(_3291_),
+    .Y(s_kidx[1])
+  );
+  BUFx2_ASAP7_75t_R _6105_ (
+    .A(_3291_),
+    .Y(s_kwn[0])
+  );
+  BUFx2_ASAP7_75t_R _6106_ (
+    .A(\sv[1] ),
+    .Y(tk[82])
+  );
+  BUFx2_ASAP7_75t_R _6107_ (
+    .A(\sv[0] ),
+    .Y(tk[83])
+  );
+  BUFx2_ASAP7_75t_R _6108_ (
+    .A(fault),
+    .Y(tk[84])
+  );
+  BUFx2_ASAP7_75t_R _6109_ (
+    .A(_3291_),
+    .Y(tk[85])
+  );
+  BUFx2_ASAP7_75t_R _6110_ (
+    .A(_3291_),
+    .Y(tk[86])
+  );
+  BUFx2_ASAP7_75t_R _6111_ (
+    .A(_3291_),
+    .Y(tk[87])
+  );
+  BUFx2_ASAP7_75t_R _6112_ (
+    .A(fault),
+    .Y(tk[88])
+  );
+  BUFx2_ASAP7_75t_R _6113_ (
+    .A(drn),
+    .Y(tk[89])
+  );
+  BUFx2_ASAP7_75t_R _6114_ (
+    .A(d_done),
+    .Y(tk[92])
+  );
+  BUFx2_ASAP7_75t_R _6115_ (
+    .A(_3291_),
+    .Y(x_cls[2])
+  );

@@ -13,7 +13,7 @@ module qkd_ctrl_pc_port_child #(
     input  wire         hclk,
     input  wire         hrst,
     input  wire         col_v_e, col_we_e, col_sr_e,   // one edge early
-    input  wire         w_v,                           // remainder flops
+    input  wire         w_v,                           // remainder flops; re-captured at this pin (s3: native capture <= 190 ps)
     input  wire [255:0] w_d,
     input  wire         kw_vi,                         // ci[28]
     input  wire [255:0] kw_di,                         // ci[308:53]
@@ -31,13 +31,15 @@ module qkd_ctrl_pc_port_child #(
     (* keep *) reg cv_q, rv_q, col_v_q, col_we_q, col_sr_q;
     (* keep *) reg [255:0] cdata_q;
     (* keep *) reg [287:0] rd_q;
+    (* keep *) reg w_v_q;
+    (* keep *) reg [255:0] w_d_q;
     always @(posedge hclk or negedge h_rn)
-        if (!h_rn) begin cv_q <= 1'b0; rv_q <= 1'b0; col_v_q <= 1'b0; col_we_q <= 1'b0; col_sr_q <= 1'b0; end
-        else begin cv_q <= kw_vi; rv_q <= pi[0]; col_v_q <= col_v_e; col_we_q <= col_we_e; col_sr_q <= col_sr_e; end
-    always @(posedge hclk) begin cdata_q <= kw_di; rd_q <= pi[288:1]; end
+        if (!h_rn) begin cv_q <= 1'b0; rv_q <= 1'b0; col_v_q <= 1'b0; col_we_q <= 1'b0; col_sr_q <= 1'b0; w_v_q <= 1'b0; end
+        else begin cv_q <= kw_vi; rv_q <= pi[0]; col_v_q <= col_v_e; col_we_q <= col_we_e; col_sr_q <= col_sr_e; w_v_q <= w_v; end
+    always @(posedge hclk) begin cdata_q <= kw_di; rd_q <= pi[288:1]; w_d_q <= w_d; end
     ot_qfd_emb_pcport #(.KVW(2), .RQD(RQD), .MUT(MUT)) u_port (
         .clk(hclk), .rst_n(h_rn), .col_v(col_v_q), .col_we(col_we_q), .col_sr(col_sr_q),
-        .w_v(w_v), .w_d(w_d), .wd(wd), .kw_v(cv_q), .kw_d(cdata_q),
+        .w_v(w_v_q), .w_d(w_d_q), .wd(wd), .kw_v(cv_q), .kw_d(cdata_q),
         .r_v(rv_q), .r_d(rd_q), .kv_v(kv_v), .kv_d(kv_d), .em_v(em_v), .em_d(em_d), .fault(fault));
 endmodule
 

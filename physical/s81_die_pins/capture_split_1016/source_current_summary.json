@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.s81.capture_source_binding.v1",
+  "counts": {
+    "children": 70,
+    "masters": 17,
+    "parent_clock_bits": 70,
+    "literal_clock_contacts": 86,
+    "parent_logic_cells": 0,
+    "overlaps": 0,
+    "internal_bit_paths": 35518
+  },
+  "max_internal_manhattan_um": 499.428,
+  "paths_over500": 0,
+  "native_masters_pass": 17,
+  "max_native_launch_ps": 219.8,
+  "max_native_capture_ps": 183.3,
+  "packet": "physical/s81_die_pins/capture_split_1016/source_current_binding.json.gz",
+  "import_scope": "Place children at local slot-frame at_um; connect source bit IDs through die_ports and internal_paths; actual die origin/orientation must transform every contact and clock entry. No parent view or full-die adoption claimed.",
+  "clock_delivery": "86 literal entries; use per-pin etm_die_balance_R_ps for die_sta balance and R_ps boundary means for native audit; both included, with actual view hashes.",
+  "candidate_home_changes": "x8 t/s tops flush with 10.8um t elevation; row pitch194.4um; status t/s abut; u_cr x590.76 avoids new s leaf overlap."
+}

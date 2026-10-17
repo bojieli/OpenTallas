@@ -18,7 +18,7 @@ NMIX=${NMIX:-2400}
 COMMON="dsfd_vm_static_fsr_bank8.sv dsfd_vm_static_fsr_quartets.sv dsfd_vm_static_read_leaf.sv dsfd_vm_static_read_quartets.sv dsfd_vm_static_read_valid.sv dsfd_vm_static_read_valid_quartets.sv dsfd_vm_static_read_router.sv dsfd_vm_static_read_quartets_p.sv dsfd_vm_static_read_valid_quartets_p.sv dsfd_vm_static_read_router_p.sv dsfd_vm_static_suhc_fsr.sv dsfd_vm_static_suhc_return_map.sv dsfd_vm_static_scatter_b8_out.sv dsfd_vm_static_bank128.sv dsfd_vm_static_relay128.sv dsfd_vm_static_relay128_b8.sv dsfd_vm_static_relay128_b4.sv dsfd_vm_static_return.sv dsfd_vm_static_return32_native_lanes.sv dsfd_vm_static_return_bank8_profiles.sv dsfd_vm_static_return_bank8.sv ot_sram_1r1w_512x128_m4_r2c2.v dsfd_vm_static_rsched.sv dsfd_vm_static_landing.sv dsfd_vm_static_landing_lane.sv dsfd_vm_static_landing_fault_join.sv dsfd_vm_static_landing_joined.sv dsfd_vm_seq_static.sv dsfd_vm_seq_tile.sv ot_s81_vm_x34.sv ot_s81_vm_x43.sv ot_s81_vm_fault_transports.sv dsfd_vm_static_capl_pipe.sv dsfd_vm_static_capl_pre.sv dsfd_vm_static_capl.sv dsfd_vm_static_cap_leaf.sv dsfd_vm_static_cap.sv dsfd_vm_capture_fault_serial.sv dsfd_vm_native_valid_diag.sv dsfd_vm_static_wfc.sv dsfd_vm_static_xio.sv dsfd_vm_xio_request.sv dsfd_vm_xio_return.sv dsfd_vm_xio_serial.sv dsfd_vm_xio_fault_join.sv"
 LEGACY="dsfd_vm_static_write_capture128.sv dsfd_vm_static_scatter_lane.sv dsfd_vm_static_scatter.sv dsfd_vm_static_slice128_suhc.sv dsfd_vm_static512_suhc.sv dsfd_vm_static_wdispatch128.sv dsfd_vm_static_wstage128.sv dsfd_vm_static_w0.sv dsfd_vm_static_wcontrol.sv dsfd_vm_static_wsched.sv dsfd_vm_static_core.sv"
 A2F="area_a2_controlled.sv area_a2f.sv area_a2f_field4.sv area_a2f_control_resetlocal.sv area_a2f_split4m_composed.sv area_a2f_payload33_composed.sv dsfd_vm_a2f_payload33.sv dsfd_vm_a2f_rsched.sv dsfd_vm_a2f_mem.sv dsfd_vm_a2f_core.sv"
-NATIVE="+define+OT_VM_NATIVE_READ +define+OT_VM_NATIVE_READ_L16 +define+OT_VM_NATIVE_CAP +define+OT_VM_NATIVE_CAP_PINREG"
+NATIVE="+define+A2F_NATIVE_SUCCESSOR=${NATIVE_SUCCESSOR:-0} +define+OT_VM_NATIVE_READ +define+OT_VM_NATIVE_READ_L16 +define+OT_VM_NATIVE_CAP +define+OT_VM_NATIVE_CAP_PINREG"
 build() {  # name top files defines...
   local name=$1 top=$2 files=$3; shift 3
   local F=(); for f in $files; do F+=("$S/$f"); done
@@ -27,7 +27,7 @@ build() {  # name top files defines...
   echo "BUILT $name"
 }
 DIFF="$COMMON $LEGACY $A2F tb_dsfd_vm_a2f_diff.sv"
-PAR="$COMMON ot_s81_vm_x34_sw2.sv $A2F dsfd_sp_vm_a2f.sv tb_dsfd_sp_vm_a2f.sv"
+PAR="$COMMON dsfd_vm_wfc_return256.sv dsfd_vm_static_wfc_select256.sv ot_s81_vm_x34_sw2.sv $A2F dsfd_sp_vm_a2f.sv tb_dsfd_sp_vm_a2f.sv"
 XSW="ot_s81_vm_x34.sv ot_s81_vm_x34_sw2.sv tb_ot_s81_vm_x34_sw2_diff.sv"
 PLEG="$COMMON $LEGACY dsfd_sp_vm_static.sv tb_dsfd_sp_vm_static.sv"
 # A full differential Verilator frontend measured 3.76 GB. Eleven overlapping frontends/compiler pools

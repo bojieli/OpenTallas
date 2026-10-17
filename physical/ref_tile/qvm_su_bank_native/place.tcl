@@ -34,9 +34,6 @@ puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 73.44 25.92 
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {u_hi}]
 $i setOrient R180; $i setLocation [expr {round(73.44 * $dbu)}] [expr {round(116.64 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 73.44 116.64 R180"
-set i [ot_ref_pick $ot_ref_by qvm_su_bank_ctrl_native {u_ctrl}]
-$i setOrient R0; $i setLocation [expr {round(25.92 * $dbu)}] [expr {round(190.08 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] qvm_su_bank_ctrl_native at 25.92 190.08 R0"
 set i [ot_ref_pick $ot_ref_by qvm_data256_native {u_in_lo}]
 $i setOrient R0; $i setLocation [expr {round(25.92 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] qvm_data256_native at 25.92 25.92 R0"
@@ -49,11 +46,5 @@ puts "REF_TILE place: [$i getName] qvm_data256_native at 272.16 25.92 R0"
 set i [ot_ref_pick $ot_ref_by qvm_data256_native {u_cap_hi}]
 $i setOrient R0; $i setLocation [expr {round(272.16 * $dbu)}] [expr {round(116.64 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] qvm_data256_native at 272.16 116.64 R0"
-set i [ot_ref_pick $ot_ref_by qvm_data256_native {u_out_lo}]
-$i setOrient R0; $i setLocation [expr {round(319.68 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] qvm_data256_native at 319.68 25.92 R0"
-set i [ot_ref_pick $ot_ref_by qvm_data256_native {u_out_hi}]
-$i setOrient R0; $i setLocation [expr {round(319.68 * $dbu)}] [expr {round(116.64 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] qvm_data256_native at 319.68 116.64 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
-if {$nb != 9} { error "ref_tile place: expected 9 macros, netlist has $nb" }
+if {$nb != 6} { error "ref_tile place: expected 6 macros, netlist has $nb" }

@@ -409,6 +409,16 @@ def _init_real():
 VIEW_BINDING_DEFAULT = 'results/arch/s81_native_20261013/view_binding.json'
 VIEW_BINDING = os.environ.get('OT_S81_VIEW_BINDING', VIEW_BINDING_DEFAULT)
 VIEW_BINDING_SCHEMA = 's81-view-binding-v1'
+CAPTURE_SOURCE_PACKET = None  # explicit source-current hardened capture import
+_CAPTURE_PACKET_CACHE = {}
+
+def capture_source_packet():
+    from s81.capture_import import _load
+    key = (str(ROOT), CAPTURE_SOURCE_PACKET)
+    if key not in _CAPTURE_PACKET_CACHE:
+        _CAPTURE_PACKET_CACHE[key] = _load(CAPTURE_SOURCE_PACKET, ROOT)[0]
+    return _CAPTURE_PACKET_CACHE[key]
+
 _BOUND = {}
 
 
@@ -422,7 +432,7 @@ def bound_views(root=None):
     sha256 differs from the table (the view changed after it was qualified), a LEF whose MACRO is not the master, a
     corner liberty without that cell."""
     diagnostic = os.environ.get('OT_S81_DIAGNOSTIC_CLOSED_VIEWS') == '1'
-    key = (VIEW_BINDING, str(root or ROOT), diagnostic)
+    key = (VIEW_BINDING, str(root or ROOT), diagnostic, CAPTURE_SOURCE_PACKET)
     if key in _BOUND:
         return _BOUND[key]
     out = {}
@@ -433,6 +443,16 @@ def bound_views(root=None):
         tab = json.loads(tp.read_text())
         if tab.get('schema') != VIEW_BINDING_SCHEMA:
             raise SystemExit(f'VIEW_BINDING: {tp} schema {tab.get("schema")!r}, expected {VIEW_BINDING_SCHEMA!r}')
+        if CAPTURE_SOURCE_PACKET:
+            if not diagnostic:
+                raise ValueError('--capture-source-packet requires diagnostic views until die qualification')
+            tab = copy.deepcopy(tab)
+            for mst, view in capture_source_packet()['views'].items():
+                folder = Path(view['view'])
+                paths = dict(lef=folder/(mst+'.lef'), tt=folder/(mst+'_tt.lib'),
+                             ff=folder/(mst+'_ff.lib'), ss=folder/(mst+'_ss.lib'))
+                tab.setdefault('bound', {})[mst] = dict(verdict='DIAGNOSTIC_CLOSED', export_dir=str(folder),
+                    files={c:dict(path=str(path),sha256=view['sha256'][str(path)]) for c,path in paths.items()})
         for mst, rec in sorted(tab.get('bound', {}).items()):
             if rec.get('verdict') != 'QUALIFIED' and not (diagnostic and rec.get('verdict') == 'DIAGNOSTIC_CLOSED'):
                 raise SystemExit(f'VIEW_BINDING: {mst} is in the table without a QUALIFIED verdict ({rec.get("verdict")!r})')
@@ -1717,6 +1737,17 @@ def die_master_params(m):
             raise ValueError('--vm-native-candidate needs an actual dsfd_sp_vm instance')
         out['dsfd_sp_vm'] = dict(vm_native_candidate_params(),
                                 _source='explicit --vm-native-candidate; source construction only, not physical qualification')
+    if WFC_RETURN256:
+        if 'dsfd_sp_vm' not in used:
+            raise ValueError('--wfc-return256 needs an actual dsfd_sp_vm instance')
+        r_ = out.setdefault('dsfd_sp_vm', {})
+        r_.update(wfc_return256_params())
+        r_['_source'] = '; '.join(x_ for x_ in (r_.get('_source'), '--wfc-return256: u_wfc.u_ret = return256 lo/hi + '
+                                                'native valid diag (S-VM 6136ed704), 3 return roots') if x_)
+    if CAPTURE_SOURCE_PACKET:
+        for child in capture_source_packet()['children'].values():
+            if child['parameters']:
+                out[child['master']] = dict(child['parameters'], _source=CAPTURE_SOURCE_PACKET)
     for mst, rel in BOUND_VIEW_RECEIPTS.items():
         if mst in used:
             out[mst] = dict(_receipt_params(rel), _source=rel)
@@ -1747,6 +1778,21 @@ def vm_native_candidate_params():
     requested = dict(READ_PIPE=4, CAP_PIPE=2, WSCATTER_PIPE=1)
     if len(wrappers) != 1 or not set(requested).issubset(wrappers[0].params):
         raise ValueError('--vm-native-candidate requires actual READ_PIPE/CAP_PIPE/WSCATTER_PIPE wrapper parameters')
+    return requested
+
+
+def wfc_return256_params():
+    """--wfc-return256: the dsfd_sp_vm elaboration override; fail closed unless the die VM RTL declares WFC_RETURN256
+    and its return roots are 3 bits wide under it (rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv, S-DIE-WFC 10-16)."""
+    import die_port_bind as DPB
+    source = ROOT / 'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv'
+    modules = DPB.parse_modules(DPB.preprocess(source.read_text(), {}), str(source))
+    wrappers = [md for md in modules if md.name == 'dsfd_sp_vm']
+    requested = dict(WFC_RETURN256=1)
+    if len(wrappers) != 1 or 'WFC_RETURN256' not in wrappers[0].params or any(
+            wrappers[0].width(p_, wrappers[0].env(requested)) != 3 for p_ in WFC_RETURN256_PORTS):
+        raise ValueError('--wfc-return256 requires the dsfd_sp_vm WFC_RETURN256 parameter with 3-bit '
+                         'ck_wfc_return_t / rss_wfc_return_t')
     return requested
 
 
@@ -2104,6 +2150,20 @@ def bundle_bound_lefs(texts):
                      for text in texts) + '\nEND LIBRARY\n'
 
 
+def emit_case_glue(m, work):
+    """Keep RTL glue and import provenance from the exact model that emitted die.v."""
+    import gzip
+    (work / 'die_glue.sv').write_text(glue_rtl(m))
+    reset_path = work / 'die_glue.reset_contract.json'
+    if RLY536_RSTREG:
+        reset_path.write_text(json.dumps(rly536_reset_contract(m), indent=1) + '\n')
+    elif reset_path.exists():
+        reset_path.unlink()
+    if m.get('capture_import'):
+        payload = json.dumps(m['capture_import'], separators=(',', ':')).encode()
+        (work / 'capture_import.json.gz').write_bytes(gzip.compress(payload, mtime=0))
+
+
 def case_real(m, work):
     work.mkdir(parents=True, exist_ok=True)
     npins = write_lefs(m, 1, work / 'elements.lef')
@@ -2121,6 +2181,8 @@ def case_real(m, work):
         bv_ = bound_views()
         (work / 'bound_views.lef').write_text(bundle_bound_lefs(bv_[n_]['text'] for n_ in sorted(bnd)))
     write_netlist(m, 1, work / 'die.v')
+    if GEN == 'r8':
+        emit_case_glue(m, work)
     # pin ALIGNMENT of every die bundle (owner 2026-10-13, tools/hier_contract/pin_align.py): jog along the shared
     # direction, bit order, pin-to-pin length, from the LEFs written above.  FAIL = the jog alone takes > 0.60 of the
     # channel tracks between the two faces (OT_PIN_ALIGN_GATE=warn|off to build anyway)
@@ -3932,6 +3994,8 @@ def _dedupe_pad(m):
     bv = bound_views()
     rec = m.setdefault('pad', {})
     for it in m['insts']:
+        if it.kind == 'capture_leaf':
+            continue  # source-pinned hardened composition; no generic master substitution
         e = mp.get(it.master)
         if not e:
             continue
@@ -3957,7 +4021,7 @@ def _apply_station_footprints(m):
     the data-pin face length unchanged.  Grow toward the output face; if that box is taken, toward the input face; else
     the nearest legal box (<= 120 um).  Counted in m.stn_footprints."""
     W, H = DIE
-    hits = [it for it in m['insts'] if it.master in STN_FOOTPRINTS]
+    hits = [it for it in m['insts'] if it.master in STN_FOOTPRINTS and it.kind != 'capture_leaf']
     if not hits:
         return
     names = {it.name for it in hits}
@@ -5130,6 +5194,15 @@ def build_r8(variant=None):
                                        collective_master=hub['collective'].master if 'collective' in hub else None)
     m['buses'] = []
     buses_r8(m)
+    if CAPTURE_SOURCE_PACKET:
+        from s81.capture_import import expand
+        expand(m, hub['capture'].name, CAPTURE_SOURCE_PACKET, root=ROOT, inst_ctor=Inst)
+        capture_placer = Placer(m)
+        if HOP_FIX and HOP_PLAN:
+            _hop_fix(m, capture_placer)
+        if RELAY_PROGRESS:
+            _relay_progress_fix(m, capture_placer)
+
     if STN70_SPLIT:
         _split_multi_lane_stations(m)
     if DEDUPE_PAD:
@@ -5656,8 +5729,10 @@ def buses_r8(m):
                     bus(f'hr_{half}{t}_o', 'local', ncol * (CRET + 1) + 2, [(endb.name, 'o'), (ga.name, f'r{half}{t}')])
     # ---------------- scan services <-> VM, band links, selector / collector -> VM
     _svc_chains(m, CH8, P, cor, end_spec, hub_block)
-    # ---------------- links: collective <-> link macros
-    _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl)
+    # In a shared SU|VM/link street, allocate native hub pin landings first.
+    # Later links retain every occupancy and reach check; no placement is waived.
+    if not HUB_FIRST_STATIONS:
+        _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl)
     # ---------------- hub-internal buses (adjacent slabs, direct)
     hb = hub
     for a_, b_, bits, pa, pb in (('vm', 'su_s', 1024, 't_su_s', 'f_vm'), ('vm', 'su_n', 1024, 't_su_n', 'f_vm'),
@@ -5713,6 +5788,8 @@ def buses_r8(m):
                            reach_um=SER_STAGE_UM if ser_ else None)
         else:
             bus(f'hb_{a_}_{b_}', 'hub', bits, [(hb[a_].name, pa), (hb[b_].name, pb)])
+    if HUB_FIRST_STATIONS:
+        _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl)
     # ---------------- PHY / controller / service
     npins = len(real_ports_r8()[real_lef(PHY_LEF)['name']]['dfi'])
     for st, ph in m['phys'].items():
@@ -5763,9 +5840,9 @@ def buses_r8(m):
             for b_, n_ in enumerate(rn_[2:]):
                 bus(f'pqrc_2{"abcd"[b_]}', 'rom_ce', 1, [(hub['pq'].name, f'rc2[{b_}:{b_}]'), (n_, 'ce')])
                 bus(f'pqrq_2{"abcd"[b_]}', 'rom_q', 48, [(n_, 'rd'), (hub['pq'].name, f'rq2[{48 * b_}:{48 * b_ + 47}]')])
-    if HOP_FIX and HOP_PLAN:
+    if HOP_FIX and HOP_PLAN and not CAPTURE_SOURCE_PACKET:
         _hop_fix(m, P)
-    if RELAY_PROGRESS:
+    if RELAY_PROGRESS and not CAPTURE_SOURCE_PACKET:
         _relay_progress_fix(m, P)
     if COL_RESET_TREE and ALIGN_EXT[0]:
         _col_reset_tree(m, P)            # --col-reset-tree G: registered equal-depth column reset tree
@@ -5910,6 +5987,7 @@ HOP_FIX = False                 # --hop-fix (S81-RERUN v6, default off): station
                                 #   measured pin anchor to pin anchor on a first build (budget sheets 2026-10-06)
 HOP_PLAN = None                 # {(drv inst, drv port, load inst, load port): (L um, (dx, dy), (lx, ly))}
 VM_FACE_MM2 = None              # --vm-face-mm2 (v9e): minimum VM slab area on every die (layer die 2.6599)
+HUB_FIRST_STATIONS = False     # candidate native hub landings before shared-street links
 PIN_RELAY = False               # --pin-relay (OWNER rule 1, 2026-10-07): a relay station abutting every hardened-block pin
 PIN_SEG = 100.0                 #   on die interfaces (last segment <= 100 um)
 PIN_NEED = False                # --pin-need (hbmdie-1011, compact199): a column net's relay count / path end at a q element
@@ -6099,6 +6177,18 @@ STATIC_COLLECTIVE_MASTER = 'dsfd_sp_collective_static_c'
 STATIC_COLLECTIVE_RTL = 'rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv'
 STATIC_COLLECTIVE = False       # --static-collective: swap the hub collective master (RTL must be on the source tree)
 VM_NATIVE_CANDIDATE = False    # explicit4/2/1 source construction; default remains actual RTL0/0/0
+# S-DIE-WFC 2026-10-16 (--wfc-return256, c26j; S-VM 6136ed704 / 75eb05ada): the die VM's u_wfc.u_ret is the return256
+# split (two dsfd_vm_wfc_return256 slices lo / hi + the closed dsfd_vm_native_valid_diag), dsfd_sp_vm WFC_RETURN256 1:
+# ck_wfc_return_t / rss_wfc_return_t widen 1 -> 3 die roots ([0] lo, [1] hi, [2] diag), each its own phi - R delivery.
+# Default off: the master's default elaboration (scalar return root, legacy dsfd_vm_wfc_return leaf) is unchanged.
+WFC_RETURN256 = False
+WFC_RETURN256_PORTS = ('ck_wfc_return_t', 'rss_wfc_return_t')
+# S-DIE-WFC 2026-10-16 (--pqcnt-lef-pins, c26j; S-ELEM-PQ main 46455e19f): the --pq-cnt count leaves bound to their
+# closed views (ot_s81_pq_rwbc15 / rwbc2) take their assigned-port rectangles from the bound LEF verbatim (the export's
+# literal contacts, <= 24 / 20 nm from the v22 assigned centres) instead of the assigned record's coordinates, so every
+# die-side pin model (masters_r8, spread load maps) is the placed macro's.  Default off.
+PQCNT_LEF_PINS = False
+PQCNT_MASTERS = ('ot_s81_pq_rwbc15', 'ot_s81_pq_rwbc2')
 PIN_OVERRIDES = None            # --pin-overrides (S-DIE r11 10-15): adopted GEO-S face re-assignments, see load_pin_overrides
 PIN_OVERRIDES_APPLIED = {}
 
@@ -6276,6 +6366,8 @@ def rtl_clock_reset_entries(master, manifest='physical/s81_die_rtl/layer1.f'):
                     env[k_] = DPB.ev(v_, env)
                 except Exception:
                     pass
+            if master == 'dsfd_sp_vm' and WFC_RETURN256:
+                env.update(wfc_return256_params())       # --wfc-return256: the die elaborates WFC_RETURN256 1
             out = dict(clock=defaultdict(list), reset=defaultdict(list))
             for pn in md.order:
                 d_, rng = md.ports[pn]
@@ -6290,7 +6382,8 @@ def rtl_clock_reset_entries(master, manifest='physical/s81_die_rtl/layer1.f'):
                 w_ = 1
                 for hi_, lo_ in rng:
                     w_ *= abs(DPB.ev(hi_, env) - DPB.ev(lo_, env)) + 1
-                out[cls_][dom_] += [pn] if (w_ == 1 and not rng) else [f'{pn}[{i_}:{i_}]' for i_ in range(w_)]
+                scalar_ = w_ == 1 and (not rng or (master == 'dsfd_sp_vm' and pn in WFC_RETURN256_PORTS))
+                out[cls_][dom_] += [pn] if scalar_ else [f'{pn}[{i_}:{i_}]' for i_ in range(w_)]
             break
         if out is not None:
             break
@@ -6774,6 +6867,13 @@ def _hop_fix(m, P):
     for i in range(len(B)):
         bid, cls, bits, eps = B[i]
         RSV_ALLOW = _rsv_tag(bid)              # reserved relay sites: return tree ('rt') / slot x lanes ('x')
+        if cls == 'capture_internal':
+            # These joins are part of the exact fixed-bank source calendar.
+            # Keep them in pair/STA analyses; repair timing by a source-proven
+            # rehome or explicit benched calendar change, never generic stages.
+            m.setdefault('capture_internal_retime_protection', []).append(
+                dict(bus=bid, planned_loads=sum((eps[0][0],eps[0][1],ep[0],ep[1]) in plan for ep in eps[1:])))
+            continue
         if cls in HOP_SKIP or len(eps) < 2:
             continue
         keep = [eps[0]]
@@ -9587,6 +9687,9 @@ def finalize_r8(m):
             if old and (old[0] != d or old[1] != b):
                 raise ValueError(f'{it.master}.{p_}: {old} vs {(d, b)} on {it.name}')
             pdir[it.master][p_] = (d, b)
+    if m.get('capture_import'):
+        from s81.capture_import import validate_native_connectivity
+        validate_native_connectivity(m)
     m['pdir'] = pdir
     for it in m['insts']:
         if it.kind == 'hend':
@@ -10230,6 +10333,16 @@ def _assigned_record(master):
             # S-DIE 2026-10-15: a 'released' record in an earlier overlay directory withdraws the later assigned pins of a
             # master whose outline changed (A2 VM reservation, reshaped su_s): the generator lays its face pins (top-down)
             rec = None
+        if CAPTURE_SOURCE_PACKET and master == 'dsfd_sp_capture_c':
+            if rec is None:
+                raise ValueError('source-current capture import requires an assigned parent slot')
+            rec = copy.deepcopy(rec)
+            clocks = defaultdict(list)
+            for entry in capture_source_packet()['clock_entries']:
+                pin = entry['parent_clock_pin']
+                if pin not in clocks[entry['domain']]:
+                    clocks[entry['domain']].append(pin)
+            rec['clock_entries'] = dict(clocks)
         _ASSIGNED_PIN_CACHE[master] = rec
     return _ASSIGNED_PIN_CACHE[master]
 
@@ -10264,6 +10377,9 @@ def _assigned_physical_pins(Mx, ports):
     rec = _assigned_record(Mx.name)
     if not rec:
         return
+    if PQCNT_LEF_PINS and Mx.name in PQCNT_MASTERS and Mx.name in bound_views():
+        _pqcnt_lef_physical_pins(Mx, ports, rec)
+        return
     if HEND_BOUND_FOOTPRINT and '__' in Mx.name:
         # --hend-bound-footprint: a hub end resized to its bound view's outline keeps the view's measured pins (the
         # bound view replaces this generated master in write_lefs); the assignment made for the estimated outline is moot
@@ -10293,6 +10409,45 @@ def _assigned_physical_pins(Mx, ports):
         Mx.ports[port] = ('rects', rects)
         if port not in Mx.order:
             Mx.order.append(port)
+
+
+def _pqcnt_lef_physical_pins(Mx, ports, rec):
+    """--pqcnt-lef-pins: the assigned ports of a bound count leaf at the bound LEF's literal contacts (layer + first
+    RECT of each bit's PIN, verbatim).  Hard errors: outline differs from the view, a bit without its LEF pin, a LEF
+    contact on another face than the assignment, a LEF signal pin outside the die ports."""
+    v_ = bound_views()[Mx.name]
+    if abs(v_['w'] - Mx.w) > BOUND_TOL or abs(v_['h'] - Mx.h) > BOUND_TOL:
+        raise SystemExit(f'--pqcnt-lef-pins: {Mx.name} view {v_["w"]} x {v_["h"]} != slot {Mx.w:.3f} x {Mx.h:.3f}')
+    lef = {}
+    for pm in re.finditer(r'\n\s*PIN (\S+)\s*\n(.*?)\n\s*END \1', v_['text'], re.S):
+        if re.search(r'USE\s+(POWER|GROUND)', pm.group(2)):
+            continue
+        r_ = re.search(r'LAYER\s+(\S+)\s*;\s*RECT\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)', pm.group(2))
+        lef[pm.group(1)] = (r_.group(1), tuple(float(x_) for x_ in r_.groups()[1:]))
+    extra = sorted(set(lef) - {f'{p_}[{i}]' for p_, (_d, n_) in ports.items() for i in range(n_)} - set(ports))
+    if extra:
+        raise SystemExit(f'--pqcnt-lef-pins: {Mx.name} LEF signal pins without a die port: {extra[:4]}')
+    shift = 0.0
+    for port, spec in rec['ports'].items():
+        assert port in ports and spec['bits'] == ports[port][1], (Mx.name, port, spec['bits'], ports.get(port))
+        cs = spec.get('per_bit') or [[spec['face'], spec['layer'], (spec['at'][0] + i * spec['at'][1]) if spec['uniform']
+                                      else spec['at'][i], spec['depth']] for i in range(spec['bits'])]
+        rects = []
+        for i, (face, _l, c, _d) in enumerate(cs):
+            nm = f'{port}[{i}]' if f'{port}[{i}]' in lef else port
+            if nm not in lef:
+                raise SystemExit(f'--pqcnt-lef-pins: {Mx.name} has no LEF pin {port}[{i}]')
+            layer, (x0, y0, x1, y1) = lef[nm]
+            on = {'N': abs(y1 - Mx.h) < 1e-3, 'S': abs(y0) < 1e-3, 'E': abs(x1 - Mx.w) < 1e-3, 'W': abs(x0) < 1e-3}[face]
+            if not on:
+                raise SystemExit(f'--pqcnt-lef-pins: {Mx.name} {nm} LEF contact {lef[nm]} is not on the assigned {face} face')
+            shift = max(shift, abs(((x0 + x1) if face in 'NS' else (y0 + y1)) / 2 - c))
+            rects.append((f'{port}[{i}]', layer, (x0, y0, x1, y1)))
+        Mx.ports[port] = ('rects', rects)
+        if port not in Mx.order:
+            Mx.order.append(port)
+    print('OT_PQCNT_LEF_PINS %s: %d assigned ports at the bound LEF contacts (max shift %.3f um from the assignment)'
+          % (Mx.name, len(rec['ports']), shift), file=sys.stderr)
 
 
 def _require_physical_source_ports(master, ports):
@@ -10502,6 +10657,29 @@ def _spread_ports(Mx, k):
 
 
 def _faces_r8(m, Mx, it, ports):
+    if it.kind == 'capture_leaf':
+        if _LAY_K[0] != 1:
+            raise ValueError('source-current capture leaves require literal unbundled contacts')
+        view = bound_views()[it.master]
+        rects = {}
+        for block in re.finditer(r'\n\s*PIN (\S+)\s*\n(.*?)\n\s*END \1', view['text'], re.S):
+            if re.search(r'USE\s+(POWER|GROUND)', block[2]):
+                continue
+            match = re.search(r'LAYER\s+(\S+)\s*;\s*RECT\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)', block[2])
+            if not match:
+                raise ValueError('capture leaf has no literal rectangle '+it.master+'/'+block[1])
+            rects[block[1]] = (match[1], tuple(map(float, match.groups()[1:])))
+        for port, (_direction, width) in ports.items():
+            values = []
+            for i in range(width):
+                pin = f'{port}[{i}]' if f'{port}[{i}]' in rects else port
+                if pin not in rects:
+                    raise ValueError('capture leaf missing contact '+it.master+'/'+pin)
+                values.append((f'{port}[{i}]', *rects[pin]))
+            Mx.ports[port] = ('rects', values)
+            Mx.order.append(port)
+        return
+
     if it.kind in ('sstn_split_base', 'sstn_split_payload') and _LAY_K[0] == 1:
         from s81.sstn_split import populate
         populate(sys.modules[__name__], Mx, ports)
@@ -11890,6 +12068,14 @@ def die_options(ap):
                     'compiler command edge (manifest define DSFD_SUHC_STATIC_ISSUE); the void VM -> SU / HC t_inp nets leave')
     ap.add_argument('--static-seams', action='store_true', help='S-DIE r11 2026-10-15: static VM<->collective seam (t_vm 2204, t_crq 15, t_crs 513), drop vm.t_collective/tcs credit and hc_s.y_rdy, add collective.t_hc_tag -> hc_s.y_tag')
     ap.add_argument('--static-collective', action='store_true', help='swap the hub collective to dsfd_sp_collective_static_c (needs its RTL in the tree)')
+    ap.add_argument('--pqcnt-lef-pins', action='store_true', help='S-DIE-WFC 2026-10-16 (c26j): bound --pq-cnt count leaves '
+                    '(ot_s81_pq_rwbc15 / rwbc2) take their assigned-port pin rectangles from the bound LEF verbatim')
+    ap.add_argument('--capture-source-packet', help='opt-in source-pinned actual 70-leaf capture import packet; '
+                    'requires literal source/view hashes and diagnostic die qualification')
+    ap.add_argument('--hub-first-stations', action='store_true', help='candidate allocation order: native hub chains '
+                    'before shared-street link stations; unchanged occupancy and reach checks')
+    ap.add_argument('--wfc-return256', action='store_true', help='S-DIE-WFC 2026-10-16 (c26j): dsfd_sp_vm WFC_RETURN256 1 '
+                    '(u_wfc.u_ret = return256 lo/hi + native valid diag, S-VM 6136ed704): ck/rss_wfc_return_t 1 -> 3 roots')
     ap.add_argument('--vm-native-candidate', action='store_true', help='explicit source candidate dsfd_sp_vm READ_PIPE4/CAP_PIPE2/WSCATTER_PIPE1; requires actual wrapper parameters; no physical/native qualification inheritance')
     ap.add_argument('--mix4-slot', help='X,Y,W,H um: Engram MIX4 home reservation (screen)')
     ap.add_argument('--pq-producer', action='store_true', help='S-DIE-NETLIST 2026-10-16: PQ issuer produced on the die: '
@@ -11938,6 +12124,19 @@ def apply_options(a):
     VM_NATIVE_CANDIDATE = bool(getattr(a, 'vm_native_candidate', False))
     if VM_NATIVE_CANDIDATE:
         vm_native_candidate_params()
+    global CAPTURE_SOURCE_PACKET
+    CAPTURE_SOURCE_PACKET = getattr(a, 'capture_source_packet', None)
+    _ASSIGNED_PIN_CACHE.clear()
+    if CAPTURE_SOURCE_PACKET:
+        capture_source_packet()  # verify the exact RTL and native views before allocation
+    global HUB_FIRST_STATIONS
+    HUB_FIRST_STATIONS = bool(getattr(a, 'hub_first_stations', False))
+    global WFC_RETURN256, PQCNT_LEF_PINS
+    PQCNT_LEF_PINS = bool(getattr(a, 'pqcnt_lef_pins', False))
+    WFC_RETURN256 = bool(getattr(a, 'wfc_return256', False))
+    _RTL_CLOCK_CACHE.pop('dsfd_sp_vm', None)
+    if WFC_RETURN256:
+        wfc_return256_params()
     global SUHC_STATIC_ISSUE, BF_X2_STATIC, LSW, BF_STATIC_PROG, BF_X2_PAIR
     BF_STATIC_PROG = bool(getattr(a, 'bf_static_prog', False))
     SUHC_STATIC_ISSUE = bool(getattr(a, 'suhc_static_issue', False))
@@ -12521,11 +12720,7 @@ def main(argv=None):
         work.mkdir(parents=True, exist_ok=True)
         write_netlist(m, 1, work / 'die.v')
         if GEN == 'r8':
-            (work / 'die_glue.sv').write_text(glue_rtl(m))    # this case's glue masters (die_port_bind --rtl-file)
-            if RLY536_RSTREG:
-                (work / 'die_glue.reset_contract.json').write_text(json.dumps(rly536_reset_contract(m), indent=1) + '\n')
-            elif (work / 'die_glue.reset_contract.json').exists():
-                (work / 'die_glue.reset_contract.json').unlink()
+            emit_case_glue(m, work)
         print(json.dumps(dict(die_v=str(work / 'die.v'), insts=len(m['insts']))))
     elif a.mode == 'real':
         print(json.dumps(case_real(m, work)))

@@ -1,0 +1,74 @@
+Actual snapshot: 36,379 contract instances, 63 refreshed declared view entries.
+Exact ABI requests: 148. Existing exact declaration candidates: 63 requests /
+36,201 instances. Missing exact exports: 85 requests / 178 instances.
+Candidates are not qualified native views; no receipt was cloned.
+
+Family                         Requests  Instances  Exact candidates  Wrong aliases
+su_static_cxport                4         4          1                 3
+su_static_pgslice               16        16         1                 15
+su_static_sfustore              4         4          1                 3
+svc_pc_ctrl_leaf                32        128        4                 124
+svc_sm_group                   32        32         1                 31
+coll_q2_static_host_v4          3         3          1                 2
+All other families             57        36,192     36,192            0
+
+Identical hardware proved across DIFFERENT parameter sets: NONE. Source review
+can establish a plausible generic identity boundary, but cannot establish a
+mapped-netlist or timing equivalence proof for existing parameter-specialized
+receipts. Identical exact requests can use one separately verified receipt.
+Example: PC P=0 exists once per quadrant (four exact declaration candidates).
+
+CXPORT: SW B39_NOOP=1 and INJ_RET=9 versus others B39_NOOP=0, INJ_RET=11.
+QID appears in address checking (source lines 152/207), B39 changes request
+validity (148), INJ_RET changes localparam X (99) and the delay chain. SW must
+remain structurally distinct. SE/NW/NE could share a future registered qid
+input master with INJ_RET=11; no existing generic qid RTL/export is asserted.
+
+PGSLICE: QID and G affect global lane number (lid), per-lane KIND (102), and
+QID=0,G=0 alone instantiates the side pipeline (152). This is a real structural
+variant, not just an identity comparator. G0/G1 in non-SW have SFU/light lane
+mixtures; G2/G3 have light lanes. Every group also passes QID/B identities into
+VM bank leaves and address checks. Do not collapse all sixteen requests; even
+an identity-strapped design needs structural lane/side-pipeline variants.
+
+SFUSTORE: QID feeds only the two address-owner checks (35/36). A registered
+qid[1:0] input is a reasonable future generic identity boundary, but introduces
+new pins/identity capture and requires exact bench/mutant, model and new export.
+No such RTL was introduced in this checkpoint.
+
+PC CTRL: Existing top is already a wrapper over cfg with pc_id[4:0] and
+refresh_reload[7:0] inputs. P sets RP=(PHASE+P*118/32)%118 and
+RELOAD=118+RP+((RP+118+P)%2); both identities affect actual hardware. The cfg
+child captures these each clock (cfg source 59/60). pc_cfg_proposal.json records
+128 typed candidate replacements and 256 literal straps, with the unchanged
+structural parameters explicitly expanded (OREG/KREG/KRREG/RREG/WPAY=1).
+It is a proposal for the contract owner, not an adopted contract. One new cfg
+SYNTH export could replace 32 specialized requests after source/port/clock
+checks. Existing P0 wrapper ETM cannot be renamed into the cfg master: it has
+13 fewer input bits, and constant propagation may alter mapped area/timing.
+The proposal adds no RTL registers or cycles: those captures already exist;
+physical generic area, pins, R and timing remain unmeasured.
+
+SM GROUP: STACK/SM propagate via feed_programmed to sm4pc_cdc. SM determines
+PC_BASE=4*SM, reserve_pcs and each prefetch owner's PC; STACK controls descriptor
+ownership at both ends of the CDC FIFO. These are meaningful identity checks.
+Generic STACK/PC-base straps require changes through real producer/owner RTL,
+not merely at the parent boundary. Also the existing representative ETM source
+hashes drift in ot_hbm_svc_async_fifo.sv and ot_hbm_svc_sm4pc_cdc.sv against the
+owned source snapshot. Even representative SM0 is not current-source qualified.
+
+COLL Q2: QID drives the host program target TARGET=52+QID and native quadrant
+qid input. Program-target decode and routing identity must both be preserved.
+A generic qid[1:0] master requires registered target/decode inputs through the
+actual children and new bench/export. QID0 is explicitly disallowed by q2 RTL.
+
+plan.json pins complete ports, params, actual RTL hashes and clock input names
+for every exact request. Candidate receipt metadata hashes, consumed dependency
+drift, and unresolved wrapper/memory files are explicit. It intentionally leaves
+parameter receipt and native qualification false: old metadata lacks the full
+exact_signature record and cannot prove its wrapper literals from a hash alone.
+Actual physical clock R, LEF, TT/FF and insertion identities still need a full
+bound physical-view audit. No source-only alias is accepted as native proof.
+
+No fleet job submitted or stopped. GEN session54373 preserved as diagnostic.
+No native1955.7 rate, target, timing gate, or clock budget changed.

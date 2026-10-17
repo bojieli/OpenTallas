@@ -35,6 +35,27 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 
 
+def qwen_tile_node_native_boundary_model():
+    """Output pad correction on the existing 16-lane FP32 node; no schedule credit."""
+    return dict(schema="opentallas.qwen-tile-node-native-boundary.v1",
+        candidate=True, qualification="pending actual CTS, route, TT/FF and native audit",
+        fp32_adders=16, fp32_add_pipeline_edges=7, input_pin_edges=1,
+        output_pin_edges=1, feedthrough_edges=1, added_edges=0,
+        added_macs_per_cycle=0, memory_bytes_per_cycle=0,
+        inputs_bits=1539, outputs_bits=1027, boundary_bits_per_cycle=2566,
+        outline_um=[47.52, 432.0], outline_area_um2=47.52*432.0,
+        outline_area_delta_um2=0, added_logic_flops=0,
+        baseline_mapped_flops=12102, candidate_mapped_flops=12102,
+        measured_physical_flop_clones=0, dedicated_output_pin_flops=1027,
+        flop_count_evidence="results/arch/qwen_node_native_1628/mapped_count.json",
+        output_pad_replacements=1027, old_output_pad="HB4xp67_ASAP7_75t_R",
+        new_output_pad="HB2xp67_ASAP7_75t_R", input_pad="HB4xp67_ASAP7_75t_R",
+        wire_and_track_demand_delta=0, added_replicas=0,
+        new_mux_demux_fanout=0, throughput_ratio=1.0, token_latency_delta_edges=0,
+        source="results/arch/qwen_node_native_1628/closed_node_native.json",
+        placement_note="TOREG flops share E-side input and W-side output: no extra pipeline stage; output pad delay correction preserves input capture stage")
+
+
 def qwen_native_kv_programme_candidate_model(replicas=1):
     """Writer-only fixed roots; no measured route or token-rate credit."""
     if type(replicas) is not int or replicas < 1:

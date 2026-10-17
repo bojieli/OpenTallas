@@ -35,8 +35,10 @@ footprints. Die-region access and power checks remain the die lead's proof.
 Export checks the untouched LEF plus a raw final detailed-route DEF
 (`6_final.def`, or `5_route.def`) and stores its copy, the grant, and audit
 hashes beside the exported view. LEF M6 PORT rectangles must match actual
-DEF PINS rectangles in both directions. Every M6 OBS and M6/M7 route or PG
-shape fails, even when an abstract omitted it. A signal via may have an M6
+DEF PINS rectangles in both directions. Every M6 OBS, M7 route, or above-M5 PG shape fails, even when an abstract omitted it.
+M6 signal wire is accepted only when its complete rectangle (tech width and
+DEF endpoint extensions included) lies inside one actual granted terminal PORT
+on the same net. Unknown width or unsupported route geometry fails closed. A signal via may have an M6
 landing only completely inside that net's authorized M6 PORT; its remaining
 metal is M5 or below. Named technology vias use the exact read-tech LEF snapshot emitted by
 view_export; its hash is in the audit. DEF-defined vias use explicit RECTs.

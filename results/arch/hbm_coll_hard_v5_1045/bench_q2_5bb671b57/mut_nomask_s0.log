@@ -1,0 +1,8 @@
+MISMATCH cyc2390 conf1/1 init0/0 pf0/0 busy0/0 done0/0 ird0/0 dv0/0 ob0000000000/0000012345 txv0/0 rq_eq1 kq_eq1 dd_eq1 cyc38/38
+MISMATCH cyc2391 conf1/1 init0/0 pf0/0 busy0/0 done0/0 ird0/0 dv0/0 ob0000000000/0000012345 txv0/0 rq_eq1 kq_eq1 dd_eq1 cyc38/38
+MISMATCH cyc2392 conf1/1 init0/0 pf0/0 busy0/0 done0/0 ird0/0 dv0/0 ob0000000000/0000012345 txv0/0 rq_eq1 kq_eq1 dd_eq1 cyc38/38
+MISMATCH cyc2393 conf1/1 init0/0 pf0/0 busy0/0 done0/0 ird0/0 dv0/0 ob0000000000/0000012345 txv0/0 rq_eq1 kq_eq1 dd_eq1 cyc38/38
+MISMATCH cyc2394 conf1/1 init0/0 pf0/0 busy0/0 done0/0 ird0/0 dv0/0 ob0000000000/0000012345 txv0/0 rq_eq1 kq_eq1 dd_eq1 cyc38/38
+[24150000] %Fatal: tb_hgi_coll_q_hard_v5.sv:196: Assertion failed in tb_hgi_coll_q_hard_v5: lockstep: 21 cycles with a non-fault output difference (normal path/containment)
+%Error: /srv/opentallas-scratch/claude/hnl-coll-1045/src_5bb671b57/rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_q_hard_v5.sv:196: Verilog $stop
+Aborting...

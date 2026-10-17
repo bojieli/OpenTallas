@@ -57,6 +57,25 @@ class DieClockCheck(unittest.TestCase):
         self.assertEqual((p['entry_a'], p['entry_b'], p['lca']), ('m0/clk2', 'm2/clk', 'b2/Y'))
         self.assertEqual(r['noncommon']['unmatched_pairs'], 1)
 
+    def test_strict_refuses_nearest_entry_inference(self):
+        with open(self.f, 'a') as f:
+            f.write('T\tm0/clk2\tmaster\t900\t800\tb2/Y\t1500\t1490\n')
+        with self.assertRaisesRegex(ValueError, 'ambiguous timed pair'):
+            D.report(self.f, strict_entry_pairs=True)
+        # Keep only exact timed pairs: nearest geometry is not their source of truth.
+        with open(self.f, 'w') as f:
+            f.write(DUMP.replace('P\tm0\tm1\tr0[0]\n', '').replace('P\tm1\tm2\tr1[0]\n', ''))
+            f.write('T\tm0/clk2\tmaster\t900\t800\tb2/Y\t1500\t1490\n')
+        pj = os.path.join(self.d, 'strict.json')
+        with open(pj, 'w') as f:
+            json.dump({'entry_pairs': [['m0/clk', 'm2/clk']]}, f)
+        r = D.report(self.f, pj, strict_entry_pairs=True)
+        self.assertEqual(r['pairs'][0]['entry_a'], 'm0/clk')
+        with open(pj, 'w') as f:
+            json.dump({'entry_pairs': [['m0/absent', 'm2/clk']]}, f)
+        with self.assertRaisesRegex(ValueError, 'missing entries'):
+            D.report(self.f, pj, strict_entry_pairs=True)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -76,24 +76,33 @@ module ot_s81_kp4_dec #(parameter integer MUT = 0, parameter integer NBM = 4) (
     reg  [9:0]    S [0:NT-1];
     reg  [3:0]    sc;
     reg           s_busy;
-    reg  [9:0]    nS [0:NT-1];
-    reg  [9:0]    sym;
+    wire [10 * NT - 1:0] nS_f;           // nS[j] at [10 j +: 10]
     // symbol p = 55 sc + k - 6 (6 leading zero symbols), p = 0 first (x^543): window = {60'b0, sb} << 550 sc, symbol k at
     // fixed bits [5499 - 10 k -: 10] (55 sc + k <= 549 < 550 = 6 + 544 always; sc > 9 never occurs while busy)
     wire [5499:0] swin = {60'b0, sb} << (10 * SPC * sc);
-    always @* begin
-        for (j = 0; j < NT; j = j + 1) nS[j] = S[j];
-        for (k = 0; k < SPC; k = k + 1) begin
-            sym = swin[5499 - 10 * k -: 10];
-            for (j = 0; j < NT; j = j + 1) nS[j] = gf_mul(nS[j], gf_alpha(j)) ^ sym;
+    // (H-DIE 10-16, yosys frontend: every GF product is a module instance -- constant multipliers derive once per
+    // exponent -- in generate chains, instead of thousands of inlined function calls in one always block.  Same
+    // products in the same order: nS_j = (..(S_j a^j ^ sym_0) a^j ^ sym_1 ..) a^j ^ sym_54.)
+    reg  [10 * NT - 1:0] S_f;
+    integer sj;
+    always @* for (sj = 0; sj < NT; sj = sj + 1) S_f[10 * sj +: 10] = S[sj];
+    genvar gj, gk, ga, gc;
+    generate for (gj = 0; gj < NT; gj = gj + 1) begin : g_syn
+        wire [10 * SPC + 9:0] t;                 // running value before symbol k at [10 k +: 10]
+        assign t[9:0] = S_f[10 * gj +: 10];
+        for (gk = 0; gk < SPC; gk = gk + 1) begin : g_k
+            wire [9:0] p;
+            ot_s81_kp4_dec_cmul #(.E(gj)) u_m (.a(t[10 * gk +: 10]), .y(p));
+            assign t[10 * (gk + 1) +: 10] = p ^ swin[5499 - 10 * gk -: 10];
         end
-    end
+        assign nS_f[10 * gj +: 10] = t[10 * SPC +: 10];
+    end endgenerate
     wire s_fin = s_busy && sc == 4'd9;   // nS = the codeword's syndromes (this cycle); the next strobe may coincide
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin sc <= 0; s_busy <= 1'b0; end
         else begin
             if (s_busy) begin
-                for (j = 0; j < NT; j = j + 1) S[j] <= nS[j];
+                for (j = 0; j < NT; j = j + 1) S[j] <= nS_f[10 * j +: 10];
                 sc <= sc + 1'b1;
                 if (sc == 4'd9) s_busy <= 1'b0;
             end
@@ -118,32 +127,53 @@ module ot_s81_kp4_dec #(parameter integer MUT = 0, parameter integer NBM = 4) (
     reg  [9:0]    bO   [0:NBM-1][0:NT-1];
     genvar u;
     generate for (u = 0; u < NBM; u = u + 1) begin : g_bm
-        reg [9:0] d, coef;
+        reg [9:0] d;
+        wire [9:0] coef, ibb;
         reg [9:0] nC [0:NT];
         reg [9:0] oc_ [0:NT-1];
         reg       sany;
-        integer a, c;
+        integer a, c, f;
+        // flattened unit state (constant-index reads) feeding the GF product instances
+        reg  [10 * (NT + 1) - 1:0] fC, fB, fW;
+        reg  [10 * NT - 1:0]       fS;
+        wire [10 * (NT + 1) - 1:0] pd, pc;       // C_a W_a ; coef B_a
+        wire [10 * (NT * (NT + 1) / 2) - 1:0] po; // C_c S_(a-c) at [10 (a (a + 1) / 2 + c) +: 10]
+        always @* begin
+            for (f = 0; f <= NT; f = f + 1) begin fC[10 * f +: 10] = bC[u][f]; fB[10 * f +: 10] = bB[u][f]; fW[10 * f +: 10] = bW[u][f]; end
+            for (f = 0; f < NT; f = f + 1) fS[10 * f +: 10] = bS[u][f];
+        end
+        for (ga = 0; ga <= NT; ga = ga + 1) begin : g_d
+            ot_s81_kp4_dec_vmul u_d (.a(fC[10 * ga +: 10]), .b(fW[10 * ga +: 10]), .y(pd[10 * ga +: 10]));
+            ot_s81_kp4_dec_vmul u_c (.a(coef), .b(fB[10 * ga +: 10]), .y(pc[10 * ga +: 10]));
+        end
+        for (ga = 0; ga < NT; ga = ga + 1) begin : g_o
+            for (gc = 0; gc <= ga; gc = gc + 1) begin : g_c
+                ot_s81_kp4_dec_vmul u_o (.a(fC[10 * gc +: 10]), .b(fS[10 * (ga - gc) +: 10]),
+                                         .y(po[10 * (ga * (ga + 1) / 2 + gc) +: 10]));
+            end
+        end
+        ot_s81_kp4_dec_inv  u_i (.a(bb[u]), .y(ibb));
+        ot_s81_kp4_dec_vmul u_k (.a(d), .b(ibb), .y(coef));
         always @* begin
             d = 10'd0;
-            for (a = 0; a <= NT; a = a + 1) d = d ^ gf_mul(bC[u][a], bW[u][a]);
-            coef = gf_mul(d, gf_inv(bb[u]));
-            for (a = 0; a <= NT; a = a + 1) nC[a] = bC[u][a] ^ gf_mul(coef, bB[u][a]);
+            for (a = 0; a <= NT; a = a + 1) d = d ^ pd[10 * a +: 10];
+            for (a = 0; a <= NT; a = a + 1) nC[a] = bC[u][a] ^ pc[10 * a +: 10];
             for (a = 0; a < NT; a = a + 1) begin
                 oc_[a] = 10'd0;
-                for (c = 0; c <= a; c = c + 1) oc_[a] = oc_[a] ^ gf_mul(bC[u][c], bS[u][a - c]);
+                for (c = 0; c <= a; c = c + 1) oc_[a] = oc_[a] ^ po[10 * (a * (a + 1) / 2 + c) +: 10];
             end
             sany = 1'b0;
-            for (a = 0; a < NT; a = a + 1) sany = sany | (nS[a] != 10'd0);
+            for (a = 0; a < NT; a = a + 1) sany = sany | (nS_f[10 * a +: 10] != 10'd0);
         end
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin bact[u] <= 1'b0; bn[u] <= 6'd31; end
             else if (s_fin && bsel == u) begin
                 bcw[u] <= sb; bact[u] <= 1'b1; bn[u] <= 6'd0; bL[u] <= 6'd0; bb[u] <= 10'd1; bany[u] <= sany;
-                for (a = 0; a < NT; a = a + 1) bS[u][a] <= nS[a];
+                for (a = 0; a < NT; a = a + 1) bS[u][a] <= nS_f[10 * a +: 10];
                 for (a = 0; a <= NT; a = a + 1) begin
                     bC[u][a] <= (a == 0) ? 10'd1 : 10'd0;
                     bB[u][a] <= (a == 1) ? 10'd1 : 10'd0;       // x^1 * 1
-                    bW[u][a] <= (a == 0) ? nS[0] : 10'd0;
+                    bW[u][a] <= (a == 0) ? nS_f[9:0] : 10'd0;
                 end
             end else if (bact[u] && bn[u] < 6'd30) begin
                 // one BM iteration n = bn
@@ -183,29 +213,73 @@ module ot_s81_kp4_dec #(parameter integer MUT = 0, parameter integer NBM = 4) (
     reg  [9:0]    Ro [0:NT-1];           // omega_i alpha^{-i 55 cc}
     reg  [9:0]    Rx;                    // alpha^{55 cc}
     reg  [5:0]    nroot;
-    reg  [9:0]    lv, ov, dv, ev, xe;
     reg  [5439:0] ncw;
     reg  [549:0]  corr;                  // symbol k of this slice at bits [10 k + 9 -: 10] (position 543 - (55 cc + k))
     reg  [5:0]    nr_add;
     integer e;
+    // (H-DIE 10-16, yosys frontend) slice k: lv = Lambda(X^-1), ov = Omega(X^-1), dv = Lambda'(X^-1) = X * sum_{i odd}
+    // lambda_i X^-i, ev = X ov / dv (MUT 2: without X); the odd lambda terms are the lv products themselves.
+    reg  [159:0] fRl;
+    reg  [10 * NT - 1:0] fRo;
+    integer fi;
+    always @* begin
+        for (fi = 0; fi < 16; fi = fi + 1) fRl[10 * fi +: 10] = Rl[fi];
+        for (fi = 0; fi < NT; fi = fi + 1) fRo[10 * fi +: 10] = Ro[fi];
+    end
+    wire [10 * SPC - 1:0] ch_ev;
+    wire [SPC - 1:0]      ch_lz;
+    generate for (gk = 0; gk < SPC; gk = gk + 1) begin : g_ch
+        wire [159:0] pl;
+        wire [10 * NT - 1:0] pw;
+        reg  [9:0] lv, ov, dv0;
+        wire [9:0] xe, dv, idv, q, ev;
+        integer m;
+        for (ga = 0; ga < 16; ga = ga + 1) begin : g_l
+            ot_s81_kp4_dec_cmul #(.E((1023 - (ga * gk) % 1023) % 1023)) u_m (.a(fRl[10 * ga +: 10]), .y(pl[10 * ga +: 10]));
+        end
+        for (ga = 0; ga < NT; ga = ga + 1) begin : g_w
+            ot_s81_kp4_dec_cmul #(.E((1023 - (ga * gk) % 1023) % 1023)) u_m (.a(fRo[10 * ga +: 10]), .y(pw[10 * ga +: 10]));
+        end
+        always @* begin
+            lv = 10'd0; ov = 10'd0; dv0 = 10'd0;
+            for (m = 0; m < 16; m = m + 1) lv = lv ^ pl[10 * m +: 10];
+            for (m = 0; m < NT; m = m + 1) ov = ov ^ pw[10 * m +: 10];
+            for (m = 1; m < 16; m = m + 2) dv0 = dv0 ^ pl[10 * m +: 10];
+        end
+        ot_s81_kp4_dec_cmul #(.E(gk)) u_x (.a(Rx), .y(xe));
+        ot_s81_kp4_dec_vmul u_dv (.a(dv0), .b(xe), .y(dv));
+        ot_s81_kp4_dec_inv  u_iv (.a(dv), .y(idv));
+        ot_s81_kp4_dec_vmul u_q  (.a(ov), .b(idv), .y(q));
+        if (MUT == 2) begin : g_mut
+            assign ev = q;
+        end else begin : g_ok
+            ot_s81_kp4_dec_vmul u_e (.a(xe), .b(q), .y(ev));
+        end
+        assign ch_ev[10 * gk +: 10] = ev;
+        assign ch_lz[gk] = (lv == 10'd0);
+    end endgenerate
     always @* begin
         corr = 550'd0; nr_add = 0;
         for (k = 0; k < SPC; k = k + 1) begin
             e = SPC * cc + k;                       // degree: X = alpha^e, symbol position 543 - e
-            lv = 10'd0; ov = 10'd0; dv = 10'd0;
-            for (i = 0; i < 16; i = i + 1) lv = lv ^ gf_mul(Rl[i], gf_alpha(-i * k));
-            for (i = 0; i < NT; i = i + 1) ov = ov ^ gf_mul(Ro[i], gf_alpha(-i * k));
-            for (i = 1; i < 16; i = i + 2) dv = dv ^ gf_mul(Rl[i], gf_alpha(-i * k));
-            xe = gf_mul(Rx, gf_alpha(k));
-            dv = gf_mul(dv, xe);                    // Lambda'(X^-1) = X * sum_{i odd} lambda_i X^-i
-            ev = (MUT == 2) ? gf_mul(ov, gf_inv(dv)) : gf_mul(xe, gf_mul(ov, gf_inv(dv)));
-            if (e < 544 && lv == 10'd0) begin
-                corr[10 * k + 9 -: 10] = ev;
+            if (e < 544 && ch_lz[k]) begin
+                corr[10 * k + 9 -: 10] = ch_ev[10 * k +: 10];
                 nr_add = nr_add + 1;
             end
         end
         ncw = cw ^ ({4890'd0, corr} << (10 * SPC * cc));   // symbol 543 - e sits at bits [10 e + 9 -: 10]
     end
+    // slice advance: lambda_i, omega_i times alpha^(-55 i); X times alpha^55
+    wire [159:0] nRl;
+    wire [10 * NT - 1:0] nRo;
+    wire [9:0] nRx;
+    generate for (ga = 0; ga < NT; ga = ga + 1) begin : g_adv
+        ot_s81_kp4_dec_cmul #(.E((1023 - (ga * SPC) % 1023) % 1023)) u_o (.a(fRo[10 * ga +: 10]), .y(nRo[10 * ga +: 10]));
+        if (ga < 16) begin : g_l
+            ot_s81_kp4_dec_cmul #(.E((1023 - (ga * SPC) % 1023) % 1023)) u_l (.a(fRl[10 * ga +: 10]), .y(nRl[10 * ga +: 10]));
+        end
+    end endgenerate
+    ot_s81_kp4_dec_cmul #(.E(SPC)) u_adv_x (.a(Rx), .y(nRx));
     wire       c_fin  = c_busy && cc == 4'd9;
     wire [5:0] nr_fin = nroot + nr_add;
     wire       unc    = c_any && (c_bad || nr_fin != cL);
@@ -215,9 +289,9 @@ module ot_s81_kp4_dec #(parameter integer MUT = 0, parameter integer NBM = 4) (
             if (c_busy) begin
                 cw <= ncw;
                 nroot <= nr_fin;
-                for (i = 0; i < 16; i = i + 1) Rl[i] <= gf_mul(Rl[i], gf_alpha(-i * SPC));
-                for (i = 0; i < NT; i = i + 1) Ro[i] <= gf_mul(Ro[i], gf_alpha(-i * SPC));
-                Rx <= gf_mul(Rx, gf_alpha(SPC));
+                for (i = 0; i < 16; i = i + 1) Rl[i] <= nRl[10 * i +: 10];
+                for (i = 0; i < NT; i = i + 1) Ro[i] <= nRo[10 * i +: 10];
+                Rx <= nRx;
                 cc <= cc + 1'b1;
                 if (cc == 4'd9) c_busy <= 1'b0;
             end
@@ -253,4 +327,19 @@ module ot_s81_kp4_dec #(parameter integer MUT = 0, parameter integer NBM = 4) (
                 o_busy <= 1'b1; oc <= 0;
             end
         end
+endmodule
+// GF(2^10) product cells of the decoder (H-DIE 10-16, yosys frontend): a * alpha^E (one derivation per exponent),
+// a * b, and a^-1 (0 -> 0) -- the same functions as the inlined forms they replace.
+module ot_s81_kp4_dec_cmul #(parameter integer E = 0) (input wire [9:0] a, output wire [9:0] y);
+`include "ot_s81_gf1024.svh"
+    localparam [9:0] C = gf_alpha(E);
+    assign y = gf_mul(a, C);
+endmodule
+module ot_s81_kp4_dec_vmul (input wire [9:0] a, input wire [9:0] b, output wire [9:0] y);
+`include "ot_s81_gf1024.svh"
+    assign y = gf_mul(a, b);
+endmodule
+module ot_s81_kp4_dec_inv (input wire [9:0] a, output reg [9:0] y);
+`include "ot_s81_gf1024.svh"
+    always @* y = gf_inv(a);
 endmodule
