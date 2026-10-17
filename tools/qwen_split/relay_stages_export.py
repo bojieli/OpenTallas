@@ -29,13 +29,13 @@ def port_base(p):
     return m.group(1) if m else p
 
 
-def _make(rec, problems, plan_id, commit, sources, kind, reach=None, design='qwen_compute', skip_cls=RELAY_SKIP, **extra):
+def _make(rec, problems, plan_id, commit, sources, kind, reach=None, design='qwen_compute', skip_cls=RELAY_SKIP, coverage='complete', **extra):
     if reach is None:
         import die_reach
         reach = die_reach.reach_um(design)
     return DRS.make_doc(design, dict(id=plan_id, commit=commit, generator='tools/qwen_split/relay_stages_export.py',
                                      sources=list(sources), kind=kind),
-                        CLOCK_PERIOD_PS, reach, rec, coverage='complete', reach_source='results/arch/die_reach_1016.json',
+                        CLOCK_PERIOD_PS, reach, rec, coverage=coverage, reach_source='results/arch/die_reach_1016.json',
                         skipped_classes=sorted(skip_cls), problems=problems[:200], problem_count=len(problems), **extra)
 
 
@@ -65,7 +65,8 @@ def export_dump(dump, plan_id, commit=None, reach=None):
         seen.add(bid)
         rec.append(dict(id=bid, src=dict(inst=si, port=port_base(sp)), dst=dict(inst=di, port=port_base(dp)),
                         width=int(p['bits']), stages=int(p['n']), domain=None, eq_age_group=None, bid=p['bid']))
-    return _make(rec, problems, plan_id, commit, [str(dump)], 'OT_RELAY_DUMP plans', reach)
+    return _make(rec, problems, plan_id, commit, [str(dump)], 'OT_RELAY_DUMP plans (partial: excludes direct and multicast buses)', reach,
+                 coverage='relayed_only', compiler_qualified=False)
 
 
 def main():

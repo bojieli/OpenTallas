@@ -225,9 +225,12 @@ def fc_spec(w: int, flow: str, owner: str, branch: str) -> dict:
         "route": {"pd": 0.45, "threads": 4, "peak_ram_gb": 8, "m5_pg_pitch": 2.7},
         "structural_change": f"F1 forwarded-clock variant of {master(w, flow)} (owner neighbour-relative clocking; DIE-CLOCK "
                              f"form F1): same ot_hbm_rly stage on clk_in, clk_out + every o through one kept BUFx12f each, "
-                             f"data face {fc_face_len(w)} um (<= 6 pins/um; was {face_len(w)}), outline {o['w']} x {o['h']}",
+                             f"data face {fc_face_len(w)} um (<= 6 pins/um; was {face_len(w)}), outline {o['w']} x {o['h']}. fc2: the clk_out "
+                             f"buffer input is held off the clk_in net through CTS and reconnected to the root (fc1: TritonCTS "
+                             f"made it a tree sink, clk_in->clk_out 58 ps through CTS buffers); forwarded-hop min separation "
+                             f"85 / 55 ps (fc1 50 ps padded the 624 inputs: native capture 193.5)",
         "job": {
-            "owner": owner, "branch": branch, "tag": "fc1",
+            "owner": owner, "branch": branch, "tag": "fc2",
             "purpose": f"HBM die F1 forwarded-clock relay {mst}: register on clk_in, clk_out = kept BUFx12f, o through the "
                        f"same cell on the downstream face beside clk_out; i/clk_in upstream ({fi}), o/clk_out downstream "
                        f"({fo}), rs {side}; {o['w']} x {o['h']} um, M5 cap",
