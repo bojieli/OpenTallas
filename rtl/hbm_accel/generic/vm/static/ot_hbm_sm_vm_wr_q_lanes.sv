@@ -7,11 +7,13 @@
 //   clk_l[k] clocks EVERYTHING of SM lane k: its W pin flops (rv/rrow/rdata/sm_fault/sm_sched_fault), its DEPTH-row FIFO,
 //            its serial server (wp/rp/cnt/ps/acc/flt), its wq launch flops (o_* with one o_wr copy per wq data pin) and a lane
 //            copy of the descriptor (d_*: same reset, same update on cv_q as the shared copy it replaces).
-//   clk      the shared core: cmd pin register (cv_q/cmd_q), quad strap pin flop, cmd_fault, busy, fault, rst_q.
+//   clk_l[4] also clocks the writer hub (cv_q/cmd_q, cmd_fault, busy, fault, reset sync rs2) at the lane-column centre.
+//   clk      the quad strap pin flop (the calendar and the other N-face pins live in the wrapper on the same root).
 // Why (results/rtl/hsm_wrq_1017/DESIGN_NOTE.md): faces4 put the pin flops on face roots and the 8.6k FIFO flops on the
 // core root, so every wide data path crossed clock entries (210 ps setup / 100 ps hold die-skew reserve each): f4hc TT
 // -46.5 (rp -> o_w), ~32k hold buffers.  Here every wide path is inside one lane root; the only cross-entry signals are
-// the quasi-static descriptor (core -> lane), quad_q (core -> o_sec) and the busy / fault OR terms (lane -> core).
+// the quasi-static descriptor (hub -> lane), quad_q (core -> o_sec), the busy / fault OR terms (lane -> hub) and
+// cmd/cmd_v, busy/fault between the calendar (core) and the hub.
 // All roots are the same PLL output at phase 0 (benches tie them to one clock): zero edges added, rv(t) -> wq at t+3.
 // =====================================================================================================================
 module ot_hbm_sm_vm_wr_q_lanes #(
@@ -43,29 +45,38 @@ module ot_hbm_sm_vm_wr_q_lanes #(
             else begin r = x + 32'h7FFF + {31'd0, x[16]}; rb = {r[31:16], 16'd0}; end
         end
     endfunction
-    // ---------------- core: local reset release, cmd pin register, quad strap ----------------
-    reg rst_q;
-    always @(posedge clk or negedge rst_n) if (!rst_n) rst_q <= 1'b0; else rst_q <= 1'b1;
-    reg cv_q; reg [25:0] cmd_q; reg [1:0] quad_q;
-    always @(posedge clk) begin cmd_q <= cmd; quad_q <= quad; end
-    always @(posedge clk or negedge rst_q) if (!rst_q) cv_q <= 1'b0; else cv_q <= cmd_v;
+    // ---------------- writer hub on the CENTRE lane root (clk_l[4]) ----------------
+    // The descriptor register (cv_q/cmd_q) fans out to all 8 lanes and busy/fault/cmd_fault collect all 8 lanes, so
+    // placement puts them at the lane-column centroid (r5 gate d2d62741a: 14 such core flops at y 160-280 stretched the
+    // core tree to TT 193-253 at the N-face pin flops).  They are clocked by the centre lane's root, which they sit inside;
+    // the core root keeps only the calendar and the N-face pins.  Same edges: cmd/cmd_v are registered once here as before.
+    // Reset: wrapper rst_q (core pin flop) -> rs2 (here) is the 2-flop sync; hub flops clear synchronously from rs2;
+    // every lane takes one registered relay rl of rs2 (regional synchronous reset, die standard item 2).
+    wire hclk = clk_l[4];
+    reg rs2;
+    always @(posedge hclk) rs2 <= rst_n;
+    reg [1:0] quad_q;                                   // N-face strap pin flop (core root)
+    always @(posedge clk) quad_q <= quad;
+    reg cv_q; reg [25:0] cmd_q;
+    always @(posedge hclk) cmd_q <= cmd;
+    always @(posedge hclk) if (!rs2) cv_q <= 1'b0; else cv_q <= cmd_v;
     wire [7:0] rv_q, smf_q, sms_q, sm_busy, lane_fault;
     reg cmd_fault;
-    always @(posedge clk or negedge rst_q)
-        if (!rst_q) cmd_fault <= 1'b0;
+    always @(posedge hclk)
+        if (!rs2) cmd_fault <= 1'b0;
         else if (cv_q && (busy || (|rv_q) || cmd_q[23:20] == 4'd0 || cmd_q[23:20] > 4'd8)) cmd_fault <= 1'b1;
-    always @(posedge clk or negedge rst_q)
-        if (!rst_q) begin busy <= 1'b0; fault <= 1'b0; end
+    always @(posedge hclk)
+        if (!rs2) begin busy <= 1'b0; fault <= 1'b0; end
         else begin busy <= |sm_busy || |rv_q; fault <= fault | cmd_fault | (|lane_fault) | (|smf_q) | (|sms_q); end
     // ---------------- lanes ----------------
     genvar k;
     generate for (k = 0; k < 8; k = k + 1) begin : g_sm
         wire lclk = clk_l[k];
-        // regional SYNCHRONOUS reset (die standard item 2, coordinator 10-17): rst_n -> wrapper rst_q -> rst_q here is the
-        // 2-flop sync at the core; rl is this lane's ONE registered relay on its own root, and every lane flop clears
-        // synchronously from it (no async clear crosses into a lane root).  Lanes leave reset one edge after the core.
+        // regional SYNCHRONOUS reset: rl is this lane's ONE registered relay of the hub's rs2 on its own root; every lane
+        // flop clears synchronously from it (no async clear crosses into a lane root).  Lanes leave reset one edge after
+        // the hub.
         reg rl;
-        always @(posedge lclk) rl <= rst_q;
+        always @(posedge lclk) rl <= rs2;
         // pin flops (lane root)
         reg rv_r, smf_r, sms_r; reg [11:0] rrow_r; reg [255:0] rdata_r;
         always @(posedge lclk) begin rrow_r <= rrow[12*k +: 12]; rdata_r <= rdata[256*k +: 256]; end
