@@ -8,6 +8,11 @@
 // Wires only around the unchanged ROLES RTL: no logic, no added edge.  Boot CDC buses are packed by index
 // (cdc i = bits [i*W +: W]).  Phase-profile parameters (PH0 / SAFE_*_U / META_HOLD_CORE) are compiler-priced
 // (plan item 8); the defaults are the component bench's legal profile, not a die measurement.
+// GRPCTL-2 2026-10-17 (coordinator review 0co: hrst_n port fanout 387): the hrst_n port drives ONLY u_hrr, an
+// ot_rst_relay on hck (2-flop synchroniser + one registered relay flop per region, asynchronous assert, synchronous
+// release 3 hck edges after the port).  Region i < 5 resets boot CDC i's HBM side (its ~78 sink / state flops and its
+// FIFO read-domain reset), region 5 the phase launch's HBM side, so no port net spans the tile and each relay flop sits
+// by its own region.  Reset only: no datapath edge, no cycle on any functional path.
 module qkd_kv_grp_ctl #(parameter integer PH0=0, SAFE_LOW_U=200, SAFE_HIGH_U=600, META_HOLD_CORE=8, MUT=0) (
     input  wire          ck, rst_n, hck, hrst_n,
     // phase launch (core in, HBM out)
@@ -29,9 +34,11 @@ module qkd_kv_grp_ctl #(parameter integer PH0=0, SAFE_LOW_U=200, SAFE_HIGH_U=600
     output wire [4:0]    sink_we, output wire [39:0] sink_addr, output wire [319:0] sink_data, output wire [4:0] sink_seal,
     output wire [4:0]    applied_hbm, boot_fault_hbm, boot_fault_core
 );
+    wire [5:0] hrst_r;
+    ot_rst_relay #(.REGIONS(6), .SYNC_STAGES(2), .TREE_STAGES(1)) u_hrr (.clk(hck), .rst_n_in(hrst_n), .rst_n(hrst_r));
     qkd_static_kv_phase_launch #(.PH0(PH0), .SAFE_LOW_U(SAFE_LOW_U), .SAFE_HIGH_U(SAFE_HIGH_U),
                                  .META_HOLD_CORE(META_HOLD_CORE), .MUT((MUT==2)?3:0)) u_phase (
-        .ck(ck), .rst_n(rst_n), .hck(hck), .hrst_n(hrst_n), .ctrl_go(ctrl_go), .kgo(kgo), .vgo(vgo),
+        .ck(ck), .rst_n(rst_n), .hck(hck), .hrst_n(hrst_r[5]), .ctrl_go(ctrl_go), .kgo(kgo), .vgo(vgo),
         .ctx_t(ctx_t), .epoch(epoch), .layer(layer), .ctrl_go_h(ctrl_go_h), .kgo_h(kgo_h), .vgo_h(vgo_h),
         .ctx_t_h(ctx_t_h), .epoch_h(epoch_h), .layer_h(layer_h),
         .fault_core(ph_fault_core), .fault_hbm(ph_fault_hbm), .idle_core(ph_idle_core), .idle_hbm(ph_idle_hbm));
@@ -48,7 +55,7 @@ module qkd_kv_grp_ctl #(parameter integer PH0=0, SAFE_LOW_U=200, SAFE_HIGH_U=600
     genvar i;
     generate for (i = 0; i < 5; i = i + 1) begin : u_cdc
         qkd_static_kv_boot_cdc #(.HAS_SEAL(i == 0 ? 0 : 1), .MUT((MUT==1 && i==2) ? 1 : 0)) u (
-            .ck(ck), .rst_n(rst_n), .hck(hck), .hrst_n(hrst_n),
+            .ck(ck), .rst_n(rst_n), .hck(hck), .hrst_n(hrst_r[i]),
             .cfg_we(cfg_we[i]), .cfg_addr(cfg_addr[8*i +: 8]), .cfg_data(cfg_data[64*i +: 64]), .cfg_last(cfg_last[i]),
             .sink_we(sink_we[i]), .sink_addr(sink_addr[8*i +: 8]), .sink_data(sink_data[64*i +: 64]), .sink_seal(sink_seal[i]),
             .applied_hbm(applied_hbm[i]), .fault_core(boot_fault_core[i]), .fault_hbm(boot_fault_hbm[i]));
