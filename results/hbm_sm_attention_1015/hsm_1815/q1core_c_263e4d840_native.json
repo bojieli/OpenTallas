@@ -1,0 +1,23 @@
+{
+ "cell": "hfd_vms_bank_native_q1_core",
+ "view": "physical/ref_tile/vm_native_q1core_c/views/hfd_vms_bank_native_q1_core",
+ "lib_cell": "hfd_vms_bank_native_q1_core",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 398.7,
+ "spread_ps": 132.8,
+ "outputs": 1078,
+ "inputs": 1447,
+ "launch_ps": 243.8,
+ "launch_pin": "rr0[0]",
+ "capture_ps": 266.2,
+ "capture_pin": "pq[15]",
+ "launch_over": 17,
+ "capture_over": 1041,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 243.84761 > 220 (17 pins); capture 266.22541 > 190 (1041 pins)"
+}

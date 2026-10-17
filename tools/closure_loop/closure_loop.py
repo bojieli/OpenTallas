@@ -92,7 +92,12 @@ TERMINAL = {"SMOKE_OK", "CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "R
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
                          r"admission (?:timed out|refused)|[Bb]us error|SIGBUS|Segmentation fault|internal compiler error|"
-                         r"g\+\+: fatal error|cc1plus: .*(?:killed|error)", re.M)
+                         r"g\+\+: fatal error|cc1plus: .*(?:killed|error)|"
+                         # EARLYOOM-SIGTERM 2026-10-16: earlyoom (-m 3 --prefer python3) SIGTERMs the stage wrapper
+                         # (oom_score_adj 500), not the hog; bash prints 'Terminated <cmd>', status flow_rc=143.
+                         # hgi_sm_xl2_bfqg-local1 / s81engm_lkp_static14-st6 / s81hc_retcol_c2 went NEEDS_HUMAN
+                         # 'resource=False' after a same-host retry into the same pressure (an 80-91 GB die GRT).
+                         r"^\s*Terminated\s|flow_rc=143|exit code 143", re.M)
 # DETERMINISTIC-NO-RETRY 2026-10-15: route first errors that never passed on a same-input retry (see crash())
 DETERMINISTIC_ROUTE_ERR_RE = re.compile(r"\b(?:DPL-0033|GPL-0305|PPL-0093|PPL-0111|ANT-0008|PDN-0233|MPL-0020|STA-0340)\b")
 # a bench whose TOOLS crashed (compiler bus error, segfault, OOM) is not a verdict on the RTL (hbm_su_red_slice_6f2d14e36:

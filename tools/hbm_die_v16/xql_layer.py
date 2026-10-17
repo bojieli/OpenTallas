@@ -21,6 +21,7 @@ SRC = 'rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv'
 XQL = 'rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv'
 PMAX, NR = 8, 32
 NBQ2 = 2 * ((PMAX * 3152 + 2047) // 2048)
+BFQG = False
 B = 'rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv ot_hgi_sm_xload_static_xql / ot_hgi_sm_xload_xq_pair (XQL, H-SM 8d98d5225)'
 
 
@@ -28,7 +29,10 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--out', required=True, type=Path)
     ap.add_argument('--pairs', default='0-1,2-3,4-5,6-7')
+    ap.add_argument('--bfqg', action='store_true', help='BF quarters = ot_hgi_sm_xload_cl2_bfqg (H-SM, native PASS)')
     a = ap.parse_args()
+    global BFQG
+    BFQG = a.bfqg
     pairs = [tuple(int(x) for x in p.split('-')) for p in a.pairs.split(',')]
     assert len(pairs) == 4 and sorted(s for p in pairs for s in p) == list(range(8)), pairs
     inst, edges, clocks, straps, remove, drop = [], [], [], [], [], []
@@ -47,12 +51,23 @@ def main():
             sm_names = [f'sm_{q}{k}' for k in sms]
             for g in range(4):
                 n = f'{pre}_bfq{g}'
-                inst.append(dict(name=n, master='ot_hgi_sm_xload_cl2_bfq', source=SRC, params={}, slot=None, owner='H-SM',
-                                 note=f'XQL pair {p} ({"/".join(sm_names)}) BF16 quarter {g} (kit hgi_sm_xl2_bfq)'))
-                clocks += [dict(inst=n, port='clk', domain='stream', kind='clock')]
+                if BFQG:   # H-SM bfqg (native PASS, route hgi_sm_xl2_bfqg-local1r-a327f9402): bank-local mask captures,
+                    # 8 identical mhi/mlo copies (the caller supplies them on the same compiled edge: one ctl pin, 8 loads)
+                    inst.append(dict(name=n, master='ot_hgi_sm_xload_cl2_bfqg', source='rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_bfqg.sv',
+                                     params={}, slot=None, owner='H-SM',
+                                     note=f'XQL pair {p} ({"/".join(sm_names)}) BF16 quarter {g} (bfqg: view hgi_sm_xl2_bfqg)'))
+                    clocks += [dict(inst=n, port=c_, domain='stream', kind='clock')
+                               for c_ in ['clk', 'clk_n', 'clk_s', 'clk_ctrl'] + [f'clk_m{k}' for k in range(8)] + [f'clk_l{k}' for k in range(8)]]
+                    for k in range(8):
+                        E([ctl, 'c_mhi'], [n, f'mhi{k}'], 1); E([ctl, 'c_mlo'], [n, f'mlo{k}'], 1)
+                    mports = ()
+                else:
+                    inst.append(dict(name=n, master='ot_hgi_sm_xload_cl2_bfq', source=SRC, params={}, slot=None, owner='H-SM',
+                                     note=f'XQL pair {p} ({"/".join(sm_names)}) BF16 quarter {g} (kit hgi_sm_xl2_bfq)'))
+                    clocks += [dict(inst=n, port='clk', domain='stream', kind='clock')]
+                    mports = (('c_mhi', 'mhi', 1), ('c_mlo', 'mlo', 1))
                 E([ctl, 'rn_o'], [n, 'rst_n'], 1, ' (rn through the tree)')
-                for cp, bp, w in (('c_d', 'c_d', 1024), ('c_mhi', 'mhi', 1), ('c_mlo', 'mlo', 1), ('c_wa', 'wa', 7),
-                                  ('r_ce', 'r_ce', 8), ('r_a', 'r_a', 7)):
+                for cp, bp, w in (('c_d', 'c_d', 1024), ('c_wa', 'wa', 7), ('r_ce', 'r_ce', 8), ('r_a', 'r_a', 7)) + mports:
                     E([ctl, cp], [n, bp], w)
                 E([ctl, 'c_wce', g, g + 1], [n, 'wce'], 1)
             bd = f'{pre}_bd'

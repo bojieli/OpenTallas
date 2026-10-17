@@ -1,0 +1,141 @@
+{
+ "name": "qkd_static_kv_landing_lane_h1",
+ "top": "qkd_static_kv_landing_lane",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_seg_h.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_hop.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 140.4,
+  "h": 103.68,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_pc*u_rows",
+   "at": [
+    22.68,
+    31.32
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "rsp_data"
+  ],
+  "E": [
+   "actual_data",
+   "actual_sector",
+   "actual_epoch",
+   "actual_layer",
+   "actual_valid",
+   "expected_sector",
+   "expected_put"
+  ],
+  "N": [
+   "get",
+   "get_t",
+   "get_v",
+   "get_epoch",
+   "get_layer",
+   "out_valid",
+   "out_t",
+   "out_v",
+   "out_epoch",
+   "out_layer",
+   "fault",
+   "arm",
+   "epoch",
+   "layer",
+   "cfg_stack",
+   "cfg_group",
+   "rst_n",
+   "ck"
+  ],
+  "S": []
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every pin is a flop in RTL (landing PC input registers / out_* registers; hop registers; rowctl request and response registers); a synthesis pin stage would add an edge."
+ },
+ "std_area_um2": 1100,
+ "slot_change_request": "KVCTRL 1815: child of qkd_static_kv_landing_seg_h (hierarchical landing seg, 151.2 x 1,512 parent slot unchanged). Lane = one landing PC: E face = its return-slot word (actual_*/expected_*), W face = its 256-b rsp_data lane, N face = row/relay seam + arm/epoch/layer/cfg/reset/clock; placed 4 x (lanes 2/3 MX so N faces the centre).",
+ "structural_change": "KVCTRL 1815 (lead Q-KV 2026-10-16): structural variant of qkd_static_kv_landing_seg. The flat ls5 tile (151.2 x 1,512 um) is 9 % utilised and its ONE ck root measured 722..753 ps TT insertion over 1,512 um (9,492 sinks): even a CLOSED flat view fails native launch (<= 220 ps). qkd_static_kv_landing_seg_h = wires-only parent of hardened children with short local roots: 4 x qkd_static_kv_landing_lane (one master: landing PC + SRAM + that PC's 256-b response data pipe, at the PC pitch; lanes 2/3 mirrored), qkd_static_kv_landing_row (rowctl DATA 0 + near-branch hops 1/2) at the centre, 2 x qkd_static_kv_landing_relay (far-branch 0/3 hops, half way). Same registers, same edges: cycle-identical to the flat seg (latency 8); cycles_added 0. Bench = the flat seg bench with seg_h as DUT (run_landing_seg_h.sh) + the flat bench logs compared.",
+ "job": {
+  "owner": "Claude:Q-KV KVCTRL-1815",
+  "branch": "claude/kvctrl-lseg-1816",
+  "tag": "h1",
+  "purpose": "KVCTRL 1815 (lead Q-KV 2026-10-16): structural variant of qkd_static_kv_landing_seg. The flat ls5 tile (151.2 x 1,512 um) is 9 % utilised and its ONE ck root measured 722..753 ps TT insertion over 1,512 um (9,492 sinks): even a CLOSED flat view fails native launch (<= 220 ps). qkd_static_kv_landing_seg_h = wires-only parent of hardened children with short local roots: 4 x qkd_static_kv_landing_lane (one master: landing PC + SRAM + that PC's 256-b response data pipe, at the PC pitch; lanes 2/3 mirrored), qkd_static_kv_landing_row (rowctl DATA 0 + near-branch hops 1/2) at the centre, 2 x qkd_static_kv_landing_relay (far-branch 0/3 hops, half way). Same registers, same edges: cycle-identical to the flat seg (latency 8); cycles_added 0. Bench = the flat seg bench with seg_h as DUT (run_landing_seg_h.sh) + the flat bench logs compared. Lane = one landing PC: E face = its return-slot word (actual_*/expected_*), W face = its 256-b rsp_data lane, N face = row/relay seam + arm/epoch/layer/cfg/reset/clock; placed 4 x (lanes 2/3 MX so N faces the centre).",
+  "extra_paths": [
+   "rtl/qwen_sys/static_kv_20261014",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "benches": [
+   {
+    "name": "landing_seg_h_exact",
+    "cmd": "bash tools/qwen_static_kv/run_landing_seg_h.sh pos {RUN}/bench/pos",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS landing_seg exact",
+    "note": "tb_static_landing PHYS=1 with qkd_static_kv_landing_seg_h as DUT (all lane/relay clock entries on the TB clock): 32 segments x 4 PCs, K CTX 1000/2048/4096/8192 + PV16 V; fault modes 1-5 and the aliasing ordinal must FAIL"
+   },
+   {
+    "name": "landing_seg_h_mutant",
+    "cmd": "bash tools/qwen_static_kv/run_landing_seg_h.sh neg {RUN}/bench/neg",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL landing_seg mutant detected",
+    "note": "lane 0 response data hop flips a data bit (HOP_MUT 1)"
+   }
+  ],
+  "peak_ram_gb": 16
+ },
+ "children": [],
+ "inter": []
+}

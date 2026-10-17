@@ -26,6 +26,9 @@ src=("$p/tb_hgi_coll_q_hard_v5.sv" "$p/ot_hfd_coll_q_hard_v5.sv" "$p/ot_hgi_coll
  "$ROOT/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v"
  "$ROOT/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v")
 QD=(); [ "$Q" = q3 ] && QD=(-DQ3 --hierarchical "$p/qhard_hier.vlt")
+# d4f parameters (same on reference and hard parent): HCOLL_NLINK link lanes, HCOLL_TP ARGMAX/TKM ranks
+NL=(); [ -n "${HCOLL_NLINK:-}" ] && NL+=(-DOT_TB_NLINK=$HCOLL_NLINK) && echo "HCOLL_NLINK $HCOLL_NLINK"
+[ -n "${HCOLL_TP:-}" ] && NL+=(-DOT_TB_TP=$HCOLL_TP) && echo "HCOLL_TP $HCOLL_TP"
 # q3 elaborates two KMAX-2048 TKMs (host_v4 ref + hard_v5): -j16 hierarchical OOMs 128 GB (EPYC4 oom-kill) and -j4
 # outlives the closure-loop bench timeout (ctl3 7d6120e84: SIGTERM after 80 min). No q3 scenario starts the TKM
 # (scen3 is q2-only; q3 programme rows never set p_tkm_start), so by default BOTH parents get the same KMAX-64 copy of
@@ -46,7 +49,7 @@ sha256sum "${src[@]}" > "$OUT/sources.sha256"
 build(){ # name defines...
  local n=$1; shift
  "$V" --binary --timing -j "${JOBS:-16}" -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT \
-  --top-module tb_hgi_coll_q_hard_v5 "${QD[@]}" "$@" -Mdir "$OUT/obj_$n" "${src[@]}" > "$OUT/$n.build.log" 2>&1 \
+  --top-module tb_hgi_coll_q_hard_v5 "${QD[@]}" "${NL[@]}" "$@" -Mdir "$OUT/obj_$n" "${src[@]}" > "$OUT/$n.build.log" 2>&1 \
   || { tail -30 "$OUT/$n.build.log"; exit 2; }
 }
 vmsel_witness(){
@@ -69,7 +72,7 @@ run(){ # name scen expect
  fi
 }
 fail=0
-declare -A MS=([droplink]="OT_COLL_V5_MUT_DROP_LINK 1" [nomask]="OT_COLL_V5_MUT_NOMASK 0" [causeswap]="OT_COLL_V5_MUT_CAUSE_SWAP 4" [droptkm]="OT_COLL_V5_MUT_DROP_TKM 3" [vmsel]="OT_COLL_V6_MUT_VMSEL 7" [obsnoalign]="OT_COLL_V7_MUT_OBS_NOALIGN 7" [rcdrop]="OT_COLL_V7_MUT_RCDROP 2")
+declare -A MS=([droplink]="OT_COLL_V5_MUT_DROP_LINK 1" [nomask]="OT_COLL_V5_MUT_NOMASK 0" [causeswap]="OT_COLL_V5_MUT_CAUSE_SWAP 4" [droptkm]="OT_COLL_V5_MUT_DROP_TKM 3" [vmsel]="OT_COLL_V6_MUT_VMSEL 7" [obsnoalign]="OT_COLL_V7_MUT_OBS_NOALIGN 7" [rcdrop]="OT_COLL_V7_MUT_RCDROP 2" [lastale]="OT_PT_MUT_LA_STALE 0")
 if [ "$MODE" != all ] && [ "$MODE" != pos ] && [ "$MODE" != vmpos ]; then
  set -- ${MS[$MODE]:?unknown mode $MODE}
  build "m_$MODE" -D$1; run "m_$MODE" $2 pass; rm -rf "$OUT/obj_m_$MODE"

@@ -23,6 +23,7 @@
 // A row may start on the beat after the previous row's last beat.
 // ---------------------------------------------------------------------------
 module ot_hgi_argmax18_value_m #(
+    parameter integer OFFSET_W = 25,
     parameter integer LP   = 8,       // lanes a beat (power of two)
     parameter integer IW   = 17,      // index width (vocabulary)
     parameter integer FLAT = 7,       // ot_gpu_fadd latency (the 1.2 GHz SS depth)
@@ -32,7 +33,7 @@ module ot_hgi_argmax18_value_m #(
 ) (
     input  wire            clk,
     input  wire            rst_n,
-    input wire [24:0] global_offset,
+    input wire [OFFSET_W-1:0] global_offset,
     output reg out_range_fault,
     input  wire            in_v,
     input  wire            in_last,
@@ -193,8 +194,8 @@ module ot_hgi_argmax18_value_m #(
             end
             tnan[lv+1] <= tnan[lv];
         end
-        out_value <= tbits[LL][0]; out_idx <= {8'b0,ti[LL][0]}+{1'b0,global_offset};
-        out_range_fault <= (({8'b0,ti[LL][0]}+{1'b0,global_offset}) >= 26'd262144);
+        out_value <= tbits[LL][0]; out_idx <= (OFFSET_W+1)'(ti[LL][0])+{1'b0,global_offset};
+        out_range_fault <= (((OFFSET_W+1)'(ti[LL][0])+{1'b0,global_offset}) >= 26'd262144);
         out_nan <= tnan[LL];
     end
     // lanes that saw at least one valid value in the row (a lane can be empty on a short row)

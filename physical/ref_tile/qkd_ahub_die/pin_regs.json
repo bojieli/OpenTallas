@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_qkd_ahub_die",
+ "enable": false,
+ "reason": "ot_qkd_ahub_die is the die composition: every hub port lands on a CLOSED leaf pin flop (core native pin form, tiles' own pin flops); parent flops are only the composition's relay stations (u_sr SR_RLY 1, u_rxi RX_RLY 1, u_ryo RY_RLY 1) on their CTS roots"
+}
