@@ -4253,7 +4253,9 @@ class Chains:
                       file=sys.stderr, flush=True)
                 xs_ = [q[0] for q in path] + [src[0]]
                 ys_ = [q[1] for q in path] + [src[1]]
-                bb_ = (min(xs_) - 150, min(ys_) - 150, max(xs_) + 150, max(ys_) + 150)
+                bb_ = (min(xs_) - 700, min(ys_) - 400, max(xs_) + 700, max(ys_) + 400)
+                print('OT_CHAIN_NO_PROGRESS_OWN', name, json.dumps([(o_[0].name, round(o_[0].x, 1), round(o_[0].y, 1)) for o_ in out]),
+                      json.dumps([[round(v, 1) for v in q] for q in path]), file=sys.stderr, flush=True)
                 pre_ = defaultdict(int)
                 for i_ in self.m.get('insts', []):
                     if i_.x < bb_[2] and i_.x + i_.w > bb_[0] and i_.y < bb_[3] and i_.y + i_.h > bb_[1]:
