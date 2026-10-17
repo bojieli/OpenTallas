@@ -22,26 +22,23 @@
    "instances": "ep_S0..4, ep_N0..3"
   },
   "hbfd_rly_fc2": {
-   "status": "BINDABLE (re-exported plain clk_in->clk_out arc)",
-   "commit": "claude/hnl-f1fc2-etm-2100 f8812b907",
-   "views": "physical/ref_tile/hbfd_rly_*_fc/views",
-   "native": {
-    "48_WE": "L139.5/C118.0",
-    "624_NS": "L156.8/C126.9",
-    "624_SN": "L151.1/C119.1",
-    "624_WE": "L150.2/C116.4",
-    "624_EW": "L154.8/C115.8"
+   "status": "BINDABLE (plain clk_in->clk_out arc, insertion forwarded_clock; no generated clock)",
+   "branch": "claude/hnl-f1rly-1815",
+   "fc": {
+    "48_WE,624_NS/SN/WE/EW": "f8812b907",
+    "48_EW/NS/SN": "649220121"
    },
-   "pending": "48_EW/NS/SN (ROOT flow fix)",
-   "revoked": "fc1 views (never bind)",
-   "fwd_ps": {
-    "TT": 15,
-    "FF": 12
+   "forks": {
+    "48_NS_f2,48_WE_f2,48_WE_f3": "b68c0f3ff"
    },
-   "R_ps": {
-    "rly48": 56,
-    "rly624": 94
-   }
+   "pending": "624_NS_f2, 624_WE_f2 routing; 624_EW_f3 collect; 18 fork kits re-gating c7b52fcd3",
+   "area_um2": {
+    "624_f4": 6952,
+    "624_f2": 5655,
+    "624_f3": 4712
+   },
+   "rule": "DIE-CLOCK: branch >600 um wire or >2 children -> fork variant; prefer f2 chains over f4",
+   "revoked": "fc1"
   },
   "hfd_vms_bank_native_q0_faces": {
    "kind": "REAL",
