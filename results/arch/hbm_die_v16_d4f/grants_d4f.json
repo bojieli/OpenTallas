@@ -3,28 +3,28 @@
  "die": "hbm_v15",
  "version": 9,
  "owner": "H-DIE",
- "updated": "2026-10-16T20:09:55.104163-07:00",
+ "updated": "2026-10-16T23:13:19-07:00",
  "clock_period_ps": 833.333,
  "floorplan": {
   "file": "results/arch/hbm_die_v15/d4f_a2p_fullcore/compact.P.json",
   "candidate": "d4f_a2p_fullcore",
-  "adopted": "H-DIE gate-2 10-16 21:40: d4f A2P full core (coordinator; HBM-ARRAY TP-192), UNQUALIFIED until GEN+GRT",
+  "adopted": "H-DIE d4f gate-2 (coordinator d4f; HBM-ARRAY TP-192), UNQUALIFIED until GEN+GRT",
   "die_um": [
    21002.24,
-   32094.24
+   32169.44
   ],
   "metrics": {
-   "sum_bits_mm": 1131291.061455999,
-   "traffic_mm_qwen": 1904544011.455707,
-   "traffic_mm_ds": 2097548639.3750312,
-   "relay_flops": 2161993.0,
-   "bits_over_500": 168251.0,
+   "sum_bits_mm": 1124025.9734559986,
+   "traffic_mm_qwen": 1899880621.2669046,
+   "traffic_mm_ds": 2063407886.8046224,
+   "relay_flops": 2131929.0,
+   "bits_over_500": 159355.0,
    "fixed_return_violation_bits": 17792,
    "fixed_return_violations": 32,
    "overlaps": 0,
    "outside": 0,
-   "J": 10.86788756621785,
-   "n_long_returns": 286
+   "J": 11.819036123373742,
+   "n_long_returns": 285
   },
   "previous": {
    "file": "results/arch/hbm_die_v15/core4_sfu2_b3624/compact.P.json",
@@ -147,7 +147,7 @@
    "parent": null,
    "outline": {
     "w": 21002.24,
-    "h": 32094.24
+    "h": 32169.44
    },
    "origin": {
     "x": 0.0,
@@ -176,7 +176,7 @@
    },
    "origin": {
     "x": 13765.76,
-    "y": 8897.12,
+    "y": 9034.72,
     "orient": "R0"
    },
    "io_budget": {
@@ -739,7 +739,7 @@
    },
    "origin": {
     "x": 13765.76,
-    "y": 12697.12,
+    "y": 12734.72,
     "orient": "R0"
    },
    "io_budget": {
@@ -1302,7 +1302,7 @@
    },
    "origin": {
     "x": 14143.872,
-    "y": 22475.68,
+    "y": 22413.28,
     "orient": "R180"
    },
    "io_budget": {
@@ -1871,7 +1871,7 @@
    },
    "origin": {
     "x": 13765.76,
-    "y": 18675.68,
+    "y": 18713.28,
     "orient": "MX"
    },
    "io_budget": {
@@ -2440,7 +2440,7 @@
    },
    "origin": {
     "x": 14217.2,
-    "y": 9640.16,
+    "y": 9777.76,
     "orient": "MY"
    },
    "io_budget": {
@@ -3145,7 +3145,7 @@
    },
    "origin": {
     "x": 14595.312,
-    "y": 22093.36,
+    "y": 22030.96,
     "orient": "MY"
    },
    "io_budget": {
@@ -19410,7 +19410,7 @@
    },
    "origin": {
     "x": 5457.8,
-    "y": 30475.84,
+    "y": 30313.44,
     "orient": "MX"
    },
    "io_budget": {
@@ -21359,7 +21359,7 @@
    },
    "origin": {
     "x": 6594.6,
-    "y": 30475.84,
+    "y": 30313.44,
     "orient": "MX"
    },
    "io_budget": {
@@ -23774,7 +23774,7 @@
    },
    "origin": {
     "x": 7731.4,
-    "y": 30475.84,
+    "y": 30313.44,
     "orient": "MX"
    },
    "io_budget": {
@@ -25723,7 +25723,7 @@
    },
    "origin": {
     "x": 8868.2,
-    "y": 30475.84,
+    "y": 30313.44,
     "orient": "MX"
    },
    "io_budget": {
@@ -27672,7 +27672,7 @@
    },
    "origin": {
     "x": 10005.0,
-    "y": 30475.84,
+    "y": 30313.44,
     "orient": "MX"
    },
    "io_budget": {
@@ -29155,7 +29155,7 @@
    },
    "origin": {
     "x": 11141.8,
-    "y": 30475.84,
+    "y": 30313.44,
     "orient": "MX"
    },
    "io_budget": {
@@ -31104,7 +31104,7 @@
    },
    "origin": {
     "x": 12278.6,
-    "y": 30475.84,
+    "y": 30313.44,
     "orient": "MX"
    },
    "io_budget": {
@@ -33053,7 +33053,7 @@
    },
    "origin": {
     "x": 13415.4,
-    "y": 30475.84,
+    "y": 30313.44,
     "orient": "MX"
    },
    "io_budget": {
@@ -35005,7 +35005,7 @@
    },
    "origin": {
     "x": 17859.840000000004,
-    "y": 13899.662,
+    "y": 13937.262,
     "orient": "R0"
    },
    "version": 2,
@@ -36913,7 +36913,7 @@
    },
    "origin": {
     "x": 20525.12,
-    "y": 17679.378,
+    "y": 17716.978,
     "orient": "R0"
    },
    "clock_entry": {
@@ -36969,7 +36969,7 @@
    },
    "origin": {
     "x": 20040.4,
-    "y": 17679.378,
+    "y": 17716.978,
     "orient": "R0"
    },
    "clock_entry": {
@@ -37025,7 +37025,7 @@
    },
    "origin": {
     "x": 20525.12,
-    "y": 13899.662,
+    "y": 13937.262,
     "orient": "R0"
    },
    "clock_entry": {
@@ -37081,7 +37081,7 @@
    },
    "origin": {
     "x": 20040.4,
-    "y": 13899.662,
+    "y": 13937.262,
     "orient": "R0"
    },
    "clock_entry": {
@@ -37137,7 +37137,7 @@
    },
    "origin": {
     "x": 19555.68,
-    "y": 13899.662,
+    "y": 13937.262,
     "orient": "R0"
    },
    "clock_entry": {
@@ -37193,7 +37193,7 @@
    },
    "origin": {
     "x": 42.4,
-    "y": 18118.88,
+    "y": 18156.48,
     "orient": "R0"
    },
    "clock_entry": {
@@ -37268,7 +37268,7 @@
    },
    "origin": {
     "x": 3139.52,
-    "y": 18118.88,
+    "y": 18156.48,
     "orient": "R0"
    },
    "clock_entry": {
@@ -37343,7 +37343,7 @@
    },
    "origin": {
     "x": 7208.64,
-    "y": 18118.88,
+    "y": 18156.48,
     "orient": "R0"
    },
    "clock_entry": {
@@ -37418,7 +37418,7 @@
    },
    "origin": {
     "x": 10305.76,
-    "y": 18118.88,
+    "y": 18156.48,
     "orient": "R0"
    },
    "clock_entry": {
@@ -37493,7 +37493,7 @@
    },
    "origin": {
     "x": 42.4,
-    "y": 21918.88,
+    "y": 21856.48,
     "orient": "R0"
    },
    "clock_entry": {
@@ -37568,7 +37568,7 @@
    },
    "origin": {
     "x": 3234.048,
-    "y": 21918.88,
+    "y": 21856.48,
     "orient": "R0"
    },
    "clock_entry": {
@@ -37643,7 +37643,7 @@
    },
    "origin": {
     "x": 7397.696,
-    "y": 21918.88,
+    "y": 21856.48,
     "orient": "R0"
    },
    "clock_entry": {
@@ -37718,7 +37718,7 @@
    },
    "origin": {
     "x": 10589.344,
-    "y": 21918.88,
+    "y": 21856.48,
     "orient": "R0"
    },
    "clock_entry": {
@@ -37793,7 +37793,7 @@
    },
    "origin": {
     "x": 42.4,
-    "y": 13527.2,
+    "y": 13564.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -37868,7 +37868,7 @@
    },
    "origin": {
     "x": 3139.52,
-    "y": 13527.2,
+    "y": 13564.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -37943,7 +37943,7 @@
    },
    "origin": {
     "x": 7208.64,
-    "y": 13527.2,
+    "y": 13564.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -38018,7 +38018,7 @@
    },
    "origin": {
     "x": 10305.76,
-    "y": 13527.2,
+    "y": 13564.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -38093,7 +38093,7 @@
    },
    "origin": {
     "x": 42.4,
-    "y": 9727.2,
+    "y": 9864.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -38168,7 +38168,7 @@
    },
    "origin": {
     "x": 3139.52,
-    "y": 9727.2,
+    "y": 9864.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -38243,7 +38243,7 @@
    },
    "origin": {
     "x": 7208.64,
-    "y": 9727.2,
+    "y": 9864.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -38318,7 +38318,7 @@
    },
    "origin": {
     "x": 10305.76,
-    "y": 9727.2,
+    "y": 9864.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -38393,7 +38393,7 @@
    },
    "origin": {
     "x": 17859.84,
-    "y": 14514.862,
+    "y": 14552.462,
     "orient": "R0"
    },
    "clock_entry": {
@@ -38510,7 +38510,7 @@
    },
    "origin": {
     "x": 20709.784,
-    "y": 18294.578,
+    "y": 18332.178,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -38558,7 +38558,7 @@
    },
    "origin": {
     "x": 20359.728,
-    "y": 18294.578,
+    "y": 18332.178,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -38606,7 +38606,7 @@
    },
    "origin": {
     "x": 20709.784,
-    "y": 11549.446,
+    "y": 11587.046,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -38654,7 +38654,7 @@
    },
    "origin": {
     "x": 20359.728,
-    "y": 11549.446,
+    "y": 11587.046,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -38702,7 +38702,7 @@
    },
    "origin": {
     "x": 20009.672,
-    "y": 11549.446,
+    "y": 11587.046,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -38750,7 +38750,7 @@
    },
    "origin": {
     "x": 991.928,
-    "y": 22785.5,
+    "y": 22723.1,
     "orient": "R0"
    },
    "clock_entry": {
@@ -38807,7 +38807,7 @@
    },
    "origin": {
     "x": 4183.576,
-    "y": 22785.5,
+    "y": 22723.1,
     "orient": "R0"
    },
    "clock_entry": {
@@ -38864,7 +38864,7 @@
    },
    "origin": {
     "x": 8347.224,
-    "y": 22785.5,
+    "y": 22723.1,
     "orient": "R0"
    },
    "clock_entry": {
@@ -38921,7 +38921,7 @@
    },
    "origin": {
     "x": 11538.872,
-    "y": 22785.5,
+    "y": 22723.1,
     "orient": "R0"
    },
    "clock_entry": {
@@ -38978,7 +38978,7 @@
    },
    "origin": {
     "x": 642.4,
-    "y": 17818.88,
+    "y": 17856.48,
     "orient": "R0"
    },
    "clock_entry": {
@@ -41447,7 +41447,7 @@
    },
    "origin": {
     "x": 3739.52,
-    "y": 17818.88,
+    "y": 17856.48,
     "orient": "R0"
    },
    "clock_entry": {
@@ -43896,7 +43896,7 @@
    },
    "origin": {
     "x": 7808.64,
-    "y": 17818.88,
+    "y": 17856.48,
     "orient": "R0"
    },
    "clock_entry": {
@@ -46345,7 +46345,7 @@
    },
    "origin": {
     "x": 10905.76,
-    "y": 17818.88,
+    "y": 17856.48,
     "orient": "R0"
    },
    "clock_entry": {
@@ -48794,7 +48794,7 @@
    },
    "origin": {
     "x": 642.4,
-    "y": 21618.88,
+    "y": 21556.48,
     "orient": "R0"
    },
    "clock_entry": {
@@ -51263,7 +51263,7 @@
    },
    "origin": {
     "x": 3834.048,
-    "y": 21618.88,
+    "y": 21556.48,
     "orient": "R0"
    },
    "clock_entry": {
@@ -53712,7 +53712,7 @@
    },
    "origin": {
     "x": 7997.696,
-    "y": 21618.88,
+    "y": 21556.48,
     "orient": "R0"
    },
    "clock_entry": {
@@ -56161,7 +56161,7 @@
    },
    "origin": {
     "x": 11189.344,
-    "y": 21618.88,
+    "y": 21556.48,
     "orient": "R0"
    },
    "clock_entry": {
@@ -58610,7 +58610,7 @@
    },
    "origin": {
     "x": 642.4,
-    "y": 13527.2,
+    "y": 13564.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -61079,7 +61079,7 @@
    },
    "origin": {
     "x": 3739.52,
-    "y": 13527.2,
+    "y": 13564.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -63528,7 +63528,7 @@
    },
    "origin": {
     "x": 7808.64,
-    "y": 13527.2,
+    "y": 13564.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -65977,7 +65977,7 @@
    },
    "origin": {
     "x": 10905.76,
-    "y": 13527.2,
+    "y": 13564.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -68426,7 +68426,7 @@
    },
    "origin": {
     "x": 642.4,
-    "y": 9727.2,
+    "y": 9864.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -70895,7 +70895,7 @@
    },
    "origin": {
     "x": 3739.52,
-    "y": 9727.2,
+    "y": 9864.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -73344,7 +73344,7 @@
    },
    "origin": {
     "x": 7808.64,
-    "y": 9727.2,
+    "y": 9864.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -75793,7 +75793,7 @@
    },
    "origin": {
     "x": 10905.76,
-    "y": 9727.2,
+    "y": 9864.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -78242,7 +78242,7 @@
    },
    "origin": {
     "x": 42.4,
-    "y": 23597.12,
+    "y": 23434.72,
     "orient": "MX"
    },
    "clock_entry": {
@@ -78666,7 +78666,7 @@
    },
    "origin": {
     "x": 2082.08,
-    "y": 23597.12,
+    "y": 23434.72,
     "orient": "MX"
    },
    "clock_entry": {
@@ -79090,7 +79090,7 @@
    },
    "origin": {
     "x": 4121.76,
-    "y": 23597.12,
+    "y": 23434.72,
     "orient": "MX"
    },
    "clock_entry": {
@@ -79515,7 +79515,7 @@
    },
    "origin": {
     "x": 6161.44,
-    "y": 23597.12,
+    "y": 23434.72,
     "orient": "MX"
    },
    "clock_entry": {
@@ -79940,7 +79940,7 @@
    },
    "origin": {
     "x": 8201.12,
-    "y": 23597.12,
+    "y": 23434.72,
     "orient": "MX"
    },
    "clock_entry": {
@@ -80364,7 +80364,7 @@
    },
    "origin": {
     "x": 10240.8,
-    "y": 23597.12,
+    "y": 23434.72,
     "orient": "MX"
    },
    "clock_entry": {
@@ -80787,7 +80787,7 @@
    },
    "origin": {
     "x": 12280.48,
-    "y": 23597.12,
+    "y": 23434.72,
     "orient": "MX"
    },
    "clock_entry": {
@@ -81210,7 +81210,7 @@
    },
    "origin": {
     "x": 14320.16,
-    "y": 23597.12,
+    "y": 23434.72,
     "orient": "MX"
    },
    "clock_entry": {
@@ -81633,7 +81633,7 @@
    },
    "origin": {
     "x": 42.4,
-    "y": 1818.4,
+    "y": 2056.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -82057,7 +82057,7 @@
    },
    "origin": {
     "x": 2082.08,
-    "y": 1818.4,
+    "y": 2056.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -82481,7 +82481,7 @@
    },
    "origin": {
     "x": 4121.76,
-    "y": 1818.4,
+    "y": 2056.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -82906,7 +82906,7 @@
    },
    "origin": {
     "x": 6161.44,
-    "y": 1818.4,
+    "y": 2056.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -83331,7 +83331,7 @@
    },
    "origin": {
     "x": 8201.12,
-    "y": 1818.4,
+    "y": 2056.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -83755,7 +83755,7 @@
    },
    "origin": {
     "x": 10240.8,
-    "y": 1818.4,
+    "y": 2056.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -84178,7 +84178,7 @@
    },
    "origin": {
     "x": 12280.48,
-    "y": 1818.4,
+    "y": 2056.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -84601,7 +84601,7 @@
    },
    "origin": {
     "x": 14320.16,
-    "y": 1818.4,
+    "y": 2056.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -85024,7 +85024,7 @@
    },
    "origin": {
     "x": 1242.4,
-    "y": 16671.84,
+    "y": 16709.44,
     "orient": "R0"
    },
    "clock_entry": {
@@ -85099,7 +85099,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {
     "QID": 3,
     "G": 0,
@@ -85541,7 +85541,7 @@
    },
    "origin": {
     "x": 4339.52,
-    "y": 16671.84,
+    "y": 16709.44,
     "orient": "R0"
    },
    "clock_entry": {
@@ -85596,7 +85596,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {
     "QID": 3,
     "G": 1,
@@ -86038,7 +86038,7 @@
    },
    "origin": {
     "x": 8408.64,
-    "y": 16671.84,
+    "y": 16709.44,
     "orient": "R0"
    },
    "clock_entry": {
@@ -86093,7 +86093,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {
     "QID": 3,
     "G": 2,
@@ -86535,7 +86535,7 @@
    },
    "origin": {
     "x": 11505.76,
-    "y": 16671.84,
+    "y": 16709.44,
     "orient": "R0"
    },
    "clock_entry": {
@@ -86590,7 +86590,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {
     "QID": 3,
     "G": 3,
@@ -87032,7 +87032,7 @@
    },
    "origin": {
     "x": 1336.928,
-    "y": 20471.84,
+    "y": 20409.44,
     "orient": "R0"
    },
    "clock_entry": {
@@ -87107,7 +87107,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {
     "QID": 2,
     "G": 0,
@@ -87549,7 +87549,7 @@
    },
    "origin": {
     "x": 4528.576,
-    "y": 20471.84,
+    "y": 20409.44,
     "orient": "R0"
    },
    "clock_entry": {
@@ -87604,7 +87604,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {
     "QID": 2,
     "G": 1,
@@ -88046,7 +88046,7 @@
    },
    "origin": {
     "x": 8692.224,
-    "y": 20471.84,
+    "y": 20409.44,
     "orient": "R0"
    },
    "clock_entry": {
@@ -88101,7 +88101,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {
     "QID": 2,
     "G": 2,
@@ -88543,7 +88543,7 @@
    },
    "origin": {
     "x": 11883.872,
-    "y": 20471.84,
+    "y": 20409.44,
     "orient": "R0"
    },
    "clock_entry": {
@@ -88598,7 +88598,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {
     "QID": 2,
     "G": 3,
@@ -89040,7 +89040,7 @@
    },
    "origin": {
     "x": 1242.4,
-    "y": 12597.12,
+    "y": 12634.72,
     "orient": "R0"
    },
    "clock_entry": {
@@ -89115,7 +89115,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {
     "QID": 1,
     "G": 0,
@@ -89557,7 +89557,7 @@
    },
    "origin": {
     "x": 4339.52,
-    "y": 12597.12,
+    "y": 12634.72,
     "orient": "R0"
    },
    "clock_entry": {
@@ -89612,7 +89612,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {
     "QID": 1,
     "G": 1,
@@ -90054,7 +90054,7 @@
    },
    "origin": {
     "x": 8408.64,
-    "y": 12597.12,
+    "y": 12634.72,
     "orient": "R0"
    },
    "clock_entry": {
@@ -90109,7 +90109,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {
     "QID": 1,
     "G": 2,
@@ -90551,7 +90551,7 @@
    },
    "origin": {
     "x": 11505.76,
-    "y": 12597.12,
+    "y": 12634.72,
     "orient": "R0"
    },
    "clock_entry": {
@@ -90606,7 +90606,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {
     "QID": 1,
     "G": 3,
@@ -91048,7 +91048,7 @@
    },
    "origin": {
     "x": 1242.4,
-    "y": 8797.12,
+    "y": 8934.72,
     "orient": "R0"
    },
    "clock_entry": {
@@ -91123,7 +91123,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {
     "QID": 0,
     "G": 0,
@@ -91565,7 +91565,7 @@
    },
    "origin": {
     "x": 4339.52,
-    "y": 8797.12,
+    "y": 8934.72,
     "orient": "R0"
    },
    "clock_entry": {
@@ -91620,7 +91620,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {
     "QID": 0,
     "G": 1,
@@ -92062,7 +92062,7 @@
    },
    "origin": {
     "x": 8408.64,
-    "y": 8797.12,
+    "y": 8934.72,
     "orient": "R0"
    },
    "clock_entry": {
@@ -92117,7 +92117,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {
     "QID": 0,
     "G": 2,
@@ -92559,7 +92559,7 @@
    },
    "origin": {
     "x": 11505.76,
-    "y": 8797.12,
+    "y": 8934.72,
     "orient": "R0"
    },
    "clock_entry": {
@@ -92614,7 +92614,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {
     "QID": 0,
     "G": 3,
@@ -93056,7 +93056,7 @@
    },
    "origin": {
     "x": 13402.88,
-    "y": 16671.84,
+    "y": 16709.44,
     "orient": "R0"
    },
    "clock_entry": {
@@ -93080,7 +93080,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -93357,7 +93357,7 @@
    },
    "origin": {
     "x": 13780.992,
-    "y": 20471.84,
+    "y": 20409.44,
     "orient": "R0"
    },
    "clock_entry": {
@@ -93381,7 +93381,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -93658,7 +93658,7 @@
    },
    "origin": {
     "x": 13402.88,
-    "y": 15091.92,
+    "y": 15129.52,
     "orient": "R0"
    },
    "clock_entry": {
@@ -93682,7 +93682,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -93959,7 +93959,7 @@
    },
    "origin": {
     "x": 13402.88,
-    "y": 11291.92,
+    "y": 11429.52,
     "orient": "R0"
    },
    "clock_entry": {
@@ -93983,7 +93983,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "871908680",
+   "source_prerequisite": "d07c241f9",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -94260,7 +94260,7 @@
    },
    "origin": {
     "x": 17859.840000000004,
-    "y": 30421.816,
+    "y": 30497.016,
     "orient": "MX"
    },
    "version": 6,
@@ -94288,7 +94288,7 @@
    },
    "origin": {
     "x": 18219.84,
-    "y": 31642.24,
+    "y": 31717.44,
     "orient": "R0"
    },
    "clock_entry": {
@@ -94327,7 +94327,7 @@
    },
    "origin": {
     "x": 5455.84,
-    "y": 30895.44,
+    "y": 30970.64,
     "orient": "MX"
    },
    "version": 5,
@@ -106724,7 +106724,7 @@
    },
    "origin": {
     "x": 17859.840000000004,
-    "y": 18294.578,
+    "y": 18332.178,
     "orient": "R0"
    },
    "version": 7,
@@ -107597,7 +107597,7 @@
    },
    "origin": {
     "x": 3699.02,
-    "y": 20591.84,
+    "y": 20529.44,
     "orient": "R0"
    },
    "layer_rule": "cluster",
@@ -108122,11 +108122,11 @@
    "source_prerequisite": "53ece5c68",
    "kind": "tile",
    "parent": "die",
-   "version": 8,
+   "version": 7,
    "grant": "universal_calendar_candidate_2330",
    "origin": {
-    "x": 16537.92,
-    "y": 10363.76,
+    "x": 16516.32,
+    "y": 10501.36,
     "orient": "R0"
    },
    "outline": {
@@ -108461,11 +108461,9 @@
    "home_rule": "H-DIE-V790 10-16: against vmh_SW W face across a 21.6-um channel, clear of plan blocks, hub face pin windows and RF footprints; E (hub) face toward the hub",
    "calendar_geometry_2009": {
     "actual_lef": "physical/ref_tile/hv16_vm_cal_f20_ww/views/hfd_hgi_vm_calendar_f20/hfd_hgi_vm_calendar_f20.lef",
-    "sha256": "e7d59e1cc4ab0eaec95fc211ea78f2a05c532641973911633c6a25cc21997964",
     "previous_w_um": 220.32,
-    "reason": "actual routed candidate width241.92 exceeds historical220.32; keep actual physical outline, no view renaming",
-    "native": "OPEN; source/dependency/params/clock ABI proof required",
-    "pin_geometry": "actual candidate LEF authoritative for candidate; existing top-down pin table is not newly qualified"
+    "native": "OPEN",
+    "moved_west_um": 21.6
    }
   },
   {
@@ -108476,11 +108474,11 @@
    "source_prerequisite": "53ece5c68",
    "kind": "tile",
    "parent": "die",
-   "version": 8,
+   "version": 7,
    "grant": "universal_calendar_candidate_2330",
    "origin": {
-    "x": 16537.92,
-    "y": 12697.12,
+    "x": 16516.32,
+    "y": 12734.72,
     "orient": "MY"
    },
    "outline": {
@@ -108815,11 +108813,9 @@
    "home_rule": "H-DIE-V790 10-16: against vmh_SE W face across a 21.6-um channel, clear of plan blocks, hub face pin windows and RF footprints; E (hub) face toward the hub",
    "calendar_geometry_2009": {
     "actual_lef": "physical/ref_tile/hv16_vm_cal_f20_ww/views/hfd_hgi_vm_calendar_f20/hfd_hgi_vm_calendar_f20.lef",
-    "sha256": "e7d59e1cc4ab0eaec95fc211ea78f2a05c532641973911633c6a25cc21997964",
     "previous_w_um": 220.32,
-    "reason": "actual routed candidate width241.92 exceeds historical220.32; keep actual physical outline, no view renaming",
-    "native": "OPEN; source/dependency/params/clock ABI proof required",
-    "pin_geometry": "actual candidate LEF authoritative for candidate; existing top-down pin table is not newly qualified"
+    "native": "OPEN",
+    "moved_west_um": 21.6
    }
   },
   {
@@ -108830,11 +108826,11 @@
    "source_prerequisite": "53ece5c68",
    "kind": "tile",
    "parent": "die",
-   "version": 8,
+   "version": 7,
    "grant": "universal_calendar_candidate_2330",
    "origin": {
-    "x": 16537.92,
-    "y": 21771.52,
+    "x": 16516.32,
+    "y": 21709.12,
     "orient": "MX"
    },
    "outline": {
@@ -109169,11 +109165,9 @@
    "home_rule": "H-DIE-V790 10-16: against vmh_NW W face across a 21.6-um channel, clear of plan blocks, hub face pin windows and RF footprints; E (hub) face toward the hub",
    "calendar_geometry_2009": {
     "actual_lef": "physical/ref_tile/hv16_vm_cal_f20_ww/views/hfd_hgi_vm_calendar_f20/hfd_hgi_vm_calendar_f20.lef",
-    "sha256": "e7d59e1cc4ab0eaec95fc211ea78f2a05c532641973911633c6a25cc21997964",
     "previous_w_um": 220.32,
-    "reason": "actual routed candidate width241.92 exceeds historical220.32; keep actual physical outline, no view renaming",
-    "native": "OPEN; source/dependency/params/clock ABI proof required",
-    "pin_geometry": "actual candidate LEF authoritative for candidate; existing top-down pin table is not newly qualified"
+    "native": "OPEN",
+    "moved_west_um": 21.6
    }
   },
   {
@@ -109184,11 +109178,11 @@
    "source_prerequisite": "53ece5c68",
    "kind": "tile",
    "parent": "die",
-   "version": 8,
+   "version": 7,
    "grant": "universal_calendar_candidate_2330",
    "origin": {
-    "x": 16537.92,
-    "y": 19278.32,
+    "x": 16516.32,
+    "y": 19315.92,
     "orient": "R180"
    },
    "outline": {
@@ -109523,11 +109517,9 @@
    "home_rule": "H-DIE-V790 10-16: against vmh_NE W face across a 21.6-um channel, clear of plan blocks, hub face pin windows and RF footprints; E (hub) face toward the hub",
    "calendar_geometry_2009": {
     "actual_lef": "physical/ref_tile/hv16_vm_cal_f20_ww/views/hfd_hgi_vm_calendar_f20/hfd_hgi_vm_calendar_f20.lef",
-    "sha256": "e7d59e1cc4ab0eaec95fc211ea78f2a05c532641973911633c6a25cc21997964",
     "previous_w_um": 220.32,
-    "reason": "actual routed candidate width241.92 exceeds historical220.32; keep actual physical outline, no view renaming",
-    "native": "OPEN; source/dependency/params/clock ABI proof required",
-    "pin_geometry": "actual candidate LEF authoritative for candidate; existing top-down pin table is not newly qualified"
+    "native": "OPEN",
+    "moved_west_um": 21.6
    }
   },
   {
@@ -109541,7 +109533,7 @@
    },
    "origin": {
     "x": 6236.64,
-    "y": 8818.89,
+    "y": 8956.49,
     "orient": "R0"
    },
    "clock_entry": {
@@ -109583,7 +109575,7 @@
    },
    "origin": {
     "x": 6236.64,
-    "y": 12618.89,
+    "y": 12656.49,
     "orient": "R0"
    },
    "clock_entry": {
@@ -109625,7 +109617,7 @@
    },
    "origin": {
     "x": 6425.696,
-    "y": 20143.35,
+    "y": 20080.95,
     "orient": "R0"
    },
    "clock_entry": {
@@ -109667,7 +109659,7 @@
    },
    "origin": {
     "x": 6236.64,
-    "y": 16343.35,
+    "y": 16380.95,
     "orient": "R0"
    },
    "clock_entry": {
@@ -109709,7 +109701,7 @@
    },
    "origin": {
     "x": 13700.96,
-    "y": 9188.72,
+    "y": 9326.32,
     "orient": "R0"
    },
    "clock_entry": {
@@ -109749,7 +109741,7 @@
    },
    "origin": {
     "x": 13700.96,
-    "y": 12988.72,
+    "y": 13026.32,
     "orient": "R0"
    },
    "clock_entry": {
@@ -109789,7 +109781,7 @@
    },
    "origin": {
     "x": 14079.072,
-    "y": 22767.28,
+    "y": 22704.88,
     "orient": "R0"
    },
    "clock_entry": {
@@ -109829,7 +109821,7 @@
    },
    "origin": {
     "x": 13700.96,
-    "y": 18967.28,
+    "y": 19004.88,
     "orient": "R0"
    },
    "clock_entry": {
@@ -109869,7 +109861,7 @@
    },
    "origin": {
     "x": 7208.64,
-    "y": 10663.12,
+    "y": 10800.72,
     "orient": "R0"
    },
    "clock_entry": {
@@ -109905,7 +109897,7 @@
    },
    "origin": {
     "x": 16082.16,
-    "y": 10361.6,
+    "y": 10499.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -109941,7 +109933,7 @@
    },
    "origin": {
     "x": 7208.64,
-    "y": 14463.12,
+    "y": 14500.72,
     "orient": "R0"
    },
    "clock_entry": {
@@ -109977,7 +109969,7 @@
    },
    "origin": {
     "x": 16082.16,
-    "y": 14161.6,
+    "y": 14199.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -110013,7 +110005,7 @@
    },
    "origin": {
     "x": 7397.696,
-    "y": 20019.12,
+    "y": 19956.72,
     "orient": "R0"
    },
    "clock_entry": {
@@ -110049,7 +110041,7 @@
    },
    "origin": {
     "x": 16082.16,
-    "y": 21300.64,
+    "y": 21238.24,
     "orient": "R0"
    },
    "clock_entry": {
@@ -110085,7 +110077,7 @@
    },
    "origin": {
     "x": 7208.64,
-    "y": 16219.12,
+    "y": 16256.72,
     "orient": "R0"
    },
    "clock_entry": {
@@ -110121,7 +110113,7 @@
    },
    "origin": {
     "x": 16082.16,
-    "y": 17500.64,
+    "y": 17538.24,
     "orient": "R0"
    },
    "clock_entry": {
@@ -110157,7 +110149,7 @@
    },
    "origin": {
     "x": 17859.840000000004,
-    "y": 17679.378,
+    "y": 17716.978,
     "orient": "R0"
    },
    "clock_entry": {
@@ -110194,7 +110186,7 @@
    },
    "origin": {
     "x": 18045.84,
-    "y": 17679.378,
+    "y": 17716.978,
     "orient": "R0"
    },
    "clock_entry": {
@@ -110231,7 +110223,7 @@
    },
    "origin": {
     "x": 913.528,
-    "y": 23097.86,
+    "y": 23035.46,
     "orient": "R0"
    },
    "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
@@ -110259,7 +110251,7 @@
    },
    "origin": {
     "x": 913.528,
-    "y": 22658.74,
+    "y": 22596.34,
     "orient": "R0"
    },
    "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
@@ -110287,7 +110279,7 @@
    },
    "origin": {
     "x": 4105.176,
-    "y": 23097.86,
+    "y": 23035.46,
     "orient": "R0"
    },
    "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
@@ -110315,7 +110307,7 @@
    },
    "origin": {
     "x": 4105.176,
-    "y": 22658.74,
+    "y": 22596.34,
     "orient": "R0"
    },
    "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
@@ -110343,7 +110335,7 @@
    },
    "origin": {
     "x": 8268.824,
-    "y": 23097.86,
+    "y": 23035.46,
     "orient": "R0"
    },
    "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
@@ -110371,7 +110363,7 @@
    },
    "origin": {
     "x": 8268.824,
-    "y": 22658.74,
+    "y": 22596.34,
     "orient": "R0"
    },
    "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
@@ -110399,7 +110391,7 @@
    },
    "origin": {
     "x": 11460.472,
-    "y": 23097.86,
+    "y": 23035.46,
     "orient": "R0"
    },
    "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
@@ -110427,7 +110419,7 @@
    },
    "origin": {
     "x": 11460.472,
-    "y": 22658.74,
+    "y": 22596.34,
     "orient": "R0"
    },
    "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
@@ -111853,7 +111845,7 @@
      "name": "su_SW0",
      "origin": {
       "x": 1242.4,
-      "y": 8797.12
+      "y": 8934.72
      },
      "outline": {
       "w": 1797.12,
@@ -111901,7 +111893,7 @@
      "name": "su_SW1",
      "origin": {
       "x": 4339.52,
-      "y": 8797.12
+      "y": 8934.72
      },
      "outline": {
       "w": 1797.12,
@@ -111935,7 +111927,7 @@
      "name": "su_SW2",
      "origin": {
       "x": 8408.64,
-      "y": 8797.12
+      "y": 8934.72
      },
      "outline": {
       "w": 1797.12,
@@ -111969,7 +111961,7 @@
      "name": "su_SW3",
      "origin": {
       "x": 11505.76,
-      "y": 8797.12
+      "y": 8934.72
      },
      "outline": {
       "w": 1797.12,
@@ -112005,7 +111997,7 @@
     "name": "sucore_SW",
     "origin": {
      "x": 13402.88,
-     "y": 11291.92
+     "y": 11429.52
     },
     "outline": {
      "w": 330.48,
@@ -112022,7 +112014,7 @@
      "name": "su_SE0",
      "origin": {
       "x": 1242.4,
-      "y": 12597.12
+      "y": 12634.72
      },
      "outline": {
       "w": 1797.12,
@@ -112070,7 +112062,7 @@
      "name": "su_SE1",
      "origin": {
       "x": 4339.52,
-      "y": 12597.12
+      "y": 12634.72
      },
      "outline": {
       "w": 1797.12,
@@ -112104,7 +112096,7 @@
      "name": "su_SE2",
      "origin": {
       "x": 8408.64,
-      "y": 12597.12
+      "y": 12634.72
      },
      "outline": {
       "w": 1797.12,
@@ -112138,7 +112130,7 @@
      "name": "su_SE3",
      "origin": {
       "x": 11505.76,
-      "y": 12597.12
+      "y": 12634.72
      },
      "outline": {
       "w": 1797.12,
@@ -112174,7 +112166,7 @@
     "name": "sucore_SE",
     "origin": {
      "x": 13402.88,
-     "y": 15091.92
+     "y": 15129.52
     },
     "outline": {
      "w": 330.48,
@@ -112191,7 +112183,7 @@
      "name": "su_NW0",
      "origin": {
       "x": 1336.928,
-      "y": 20471.84
+      "y": 20409.44
      },
      "outline": {
       "w": 1797.12,
@@ -112239,7 +112231,7 @@
      "name": "su_NW1",
      "origin": {
       "x": 4528.576,
-      "y": 20471.84
+      "y": 20409.44
      },
      "outline": {
       "w": 1797.12,
@@ -112273,7 +112265,7 @@
      "name": "su_NW2",
      "origin": {
       "x": 8692.224,
-      "y": 20471.84
+      "y": 20409.44
      },
      "outline": {
       "w": 1797.12,
@@ -112307,7 +112299,7 @@
      "name": "su_NW3",
      "origin": {
       "x": 11883.872,
-      "y": 20471.84
+      "y": 20409.44
      },
      "outline": {
       "w": 1797.12,
@@ -112343,7 +112335,7 @@
     "name": "sucore_NW",
     "origin": {
      "x": 13780.992,
-     "y": 20471.84
+     "y": 20409.44
     },
     "outline": {
      "w": 330.48,
@@ -112360,7 +112352,7 @@
      "name": "su_NE0",
      "origin": {
       "x": 1242.4,
-      "y": 16671.84
+      "y": 16709.44
      },
      "outline": {
       "w": 1797.12,
@@ -112408,7 +112400,7 @@
      "name": "su_NE1",
      "origin": {
       "x": 4339.52,
-      "y": 16671.84
+      "y": 16709.44
      },
      "outline": {
       "w": 1797.12,
@@ -112442,7 +112434,7 @@
      "name": "su_NE2",
      "origin": {
       "x": 8408.64,
-      "y": 16671.84
+      "y": 16709.44
      },
      "outline": {
       "w": 1797.12,
@@ -112476,7 +112468,7 @@
      "name": "su_NE3",
      "origin": {
       "x": 11505.76,
-      "y": 16671.84
+      "y": 16709.44
      },
      "outline": {
       "w": 1797.12,
@@ -112512,7 +112504,7 @@
     "name": "sucore_NE",
     "origin": {
      "x": 13402.88,
-     "y": 16671.84
+     "y": 16709.44
     },
     "outline": {
      "w": 330.48,
@@ -112529,7 +112521,7 @@
      "name": "sfu_SW0",
      "origin": {
       "x": 642.4,
-      "y": 9727.2
+      "y": 9864.8
      },
      "outline": {
       "w": 500.0,
@@ -112540,7 +112532,7 @@
      "name": "sfu_SW1",
      "origin": {
       "x": 3739.52,
-      "y": 9727.2
+      "y": 9864.8
      },
      "outline": {
       "w": 500.0,
@@ -112551,7 +112543,7 @@
      "name": "sfu_SW2",
      "origin": {
       "x": 7808.64,
-      "y": 9727.2
+      "y": 9864.8
      },
      "outline": {
       "w": 500.0,
@@ -112562,7 +112554,7 @@
      "name": "sfu_SW3",
      "origin": {
       "x": 10905.76,
-      "y": 9727.2
+      "y": 9864.8
      },
      "outline": {
       "w": 500.0,
@@ -112587,7 +112579,7 @@
      "name": "sfu_SE0",
      "origin": {
       "x": 642.4,
-      "y": 13527.2
+      "y": 13564.8
      },
      "outline": {
       "w": 500.0,
@@ -112598,7 +112590,7 @@
      "name": "sfu_SE1",
      "origin": {
       "x": 3739.52,
-      "y": 13527.2
+      "y": 13564.8
      },
      "outline": {
       "w": 500.0,
@@ -112609,7 +112601,7 @@
      "name": "sfu_SE2",
      "origin": {
       "x": 7808.64,
-      "y": 13527.2
+      "y": 13564.8
      },
      "outline": {
       "w": 500.0,
@@ -112620,7 +112612,7 @@
      "name": "sfu_SE3",
      "origin": {
       "x": 10905.76,
-      "y": 13527.2
+      "y": 13564.8
      },
      "outline": {
       "w": 500.0,
@@ -112645,7 +112637,7 @@
      "name": "sfu_NW0",
      "origin": {
       "x": 642.4,
-      "y": 21618.88
+      "y": 21556.48
      },
      "outline": {
       "w": 500.0,
@@ -112656,7 +112648,7 @@
      "name": "sfu_NW1",
      "origin": {
       "x": 3834.048,
-      "y": 21618.88
+      "y": 21556.48
      },
      "outline": {
       "w": 500.0,
@@ -112667,7 +112659,7 @@
      "name": "sfu_NW2",
      "origin": {
       "x": 7997.696,
-      "y": 21618.88
+      "y": 21556.48
      },
      "outline": {
       "w": 500.0,
@@ -112678,7 +112670,7 @@
      "name": "sfu_NW3",
      "origin": {
       "x": 11189.344,
-      "y": 21618.88
+      "y": 21556.48
      },
      "outline": {
       "w": 500.0,
@@ -112703,7 +112695,7 @@
      "name": "sfu_NE0",
      "origin": {
       "x": 642.4,
-      "y": 17818.88
+      "y": 17856.48
      },
      "outline": {
       "w": 500.0,
@@ -112714,7 +112706,7 @@
      "name": "sfu_NE1",
      "origin": {
       "x": 3739.52,
-      "y": 17818.88
+      "y": 17856.48
      },
      "outline": {
       "w": 500.0,
@@ -112725,7 +112717,7 @@
      "name": "sfu_NE2",
      "origin": {
       "x": 7808.64,
-      "y": 17818.88
+      "y": 17856.48
      },
      "outline": {
       "w": 500.0,
@@ -112736,7 +112728,7 @@
      "name": "sfu_NE3",
      "origin": {
       "x": 10905.76,
-      "y": 17818.88
+      "y": 17856.48
      },
      "outline": {
       "w": 500.0,
@@ -113078,193 +113070,193 @@
   "homes": {
    "svc_NW_s0__u_pc0": {
     "x": 5446.12,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s0"
    },
    "svc_NW_s0__u_pc1": {
     "x": 5711.8,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s0"
    },
    "svc_NW_s0__u_pc2": {
     "x": 5977.48,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s0"
    },
    "svc_NW_s0__u_pc3": {
     "x": 6242.944,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s0"
    },
    "svc_NW_s1__u_pc4": {
     "x": 6588.624,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s1"
    },
    "svc_NW_s1__u_pc5": {
     "x": 6854.088,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s1"
    },
    "svc_NW_s1__u_pc6": {
     "x": 7119.768,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s1"
    },
    "svc_NW_s1__u_pc7": {
     "x": 7385.232,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s1"
    },
    "svc_NW_s1__u_pc8": {
     "x": 7730.912,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s1"
    },
    "svc_NW_s2__u_pc10": {
     "x": 8262.056,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s2"
    },
    "svc_NW_s2__u_pc11": {
     "x": 8527.736,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s2"
    },
    "svc_NW_s2__u_pc12": {
     "x": 8873.2,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s2"
    },
    "svc_NW_s2__u_pc9": {
     "x": 7996.592,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s2"
    },
    "svc_NW_s3__u_pc13": {
     "x": 9138.88,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s3"
    },
    "svc_NW_s3__u_pc14": {
     "x": 9404.344,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s3"
    },
    "svc_NW_s3__u_pc15": {
     "x": 9670.024,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s3"
    },
    "svc_NW_s3__u_pc16": {
     "x": 10015.488,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s3"
    },
    "svc_NW_s4__u_pc17": {
     "x": 10281.168,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s4"
    },
    "svc_NW_s4__u_pc18": {
     "x": 10546.632,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s4"
    },
    "svc_NW_s4__u_pc19": {
     "x": 10812.312,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s4"
    },
    "svc_NW_s5__u_pc20": {
     "x": 11157.992,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s5"
    },
    "svc_NW_s5__u_pc21": {
     "x": 11423.456,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s5"
    },
    "svc_NW_s5__u_pc22": {
     "x": 11689.136,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s5"
    },
    "svc_NW_s5__u_pc23": {
     "x": 11954.6,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s5"
    },
    "svc_NW_s6__u_pc24": {
     "x": 12300.28,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s6"
    },
    "svc_NW_s6__u_pc25": {
     "x": 12565.744,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s6"
    },
    "svc_NW_s6__u_pc26": {
     "x": 12831.424,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s6"
    },
    "svc_NW_s6__u_pc27": {
     "x": 13097.104,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s6"
    },
    "svc_NW_s7__u_pc28": {
     "x": 13442.568,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s7"
    },
    "svc_NW_s7__u_pc29": {
     "x": 13708.248,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s7"
    },
    "svc_NW_s7__u_pc30": {
     "x": 13973.712,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s7"
    },
    "svc_NW_s7__u_pc31": {
     "x": 14239.392,
-    "y": 30772.32,
+    "y": 30847.52,
     "orient": "MX",
     "band": "svc_NW_s7"
    },
@@ -113634,147 +113626,147 @@
     "homes": [
      [
       13754.96,
-      11600.8
+      11738.4
      ],
      [
       13754.96,
-      11579.2
+      11716.8
      ],
      [
       13754.96,
-      11557.6
+      11695.2
      ],
      [
       13754.96,
-      11536.0
+      11673.6
      ],
      [
       13754.96,
-      11514.4
+      11652.0
      ],
      [
       13754.96,
-      11492.8
+      11630.4
      ],
      [
       13754.96,
-      11471.2
+      11608.8
      ],
      [
       13754.96,
-      11449.6
+      11587.2
      ],
      [
       13754.96,
-      11428.0
+      11565.6
      ],
      [
       13754.96,
-      11406.4
+      11544.0
      ],
      [
       13754.96,
-      11384.8
+      11522.4
      ],
      [
       13754.96,
-      11363.2
+      11500.8
      ],
      [
       13776.56,
-      11363.2
+      11500.8
      ],
      [
       13776.56,
-      11384.8
+      11522.4
      ],
      [
       13776.56,
-      11406.4
+      11544.0
      ],
      [
       13776.56,
-      11428.0
+      11565.6
      ],
      [
       13776.56,
-      11449.6
+      11587.2
      ],
      [
       13776.56,
-      11471.2
+      11608.8
      ],
      [
       13776.56,
-      11492.8
+      11630.4
      ],
      [
       13776.56,
-      11514.4
+      11652.0
      ],
      [
       13776.56,
-      11536.0
+      11673.6
      ],
      [
       13776.56,
-      11557.6
+      11695.2
      ],
      [
       13776.56,
-      11579.2
+      11716.8
      ],
      [
       13776.56,
-      11600.8
+      11738.4
      ],
      [
       13798.16,
-      11600.8
+      11738.4
      ],
      [
       13798.16,
-      11579.2
+      11716.8
      ],
      [
       13798.16,
-      11557.6
+      11695.2
      ],
      [
       13798.16,
-      11536.0
+      11673.6
      ],
      [
       13798.16,
-      11514.4
+      11652.0
      ],
      [
       13798.16,
-      11492.8
+      11630.4
      ],
      [
       13798.16,
-      11471.2
+      11608.8
      ],
      [
       13798.16,
-      11449.6
+      11587.2
      ],
      [
       13798.16,
-      11428.0
+      11565.6
      ],
      [
       13798.16,
-      11406.4
+      11544.0
      ],
      [
       13798.16,
-      11384.8
+      11522.4
      ],
      [
       13798.16,
-      11363.2
+      11500.8
      ]
     ],
     "footprints": [
@@ -114082,697 +114074,697 @@
     "src": "SW",
     "dst": "SE",
     "bits": 41,
-    "length_um": 11452.96,
+    "length_um": 11352.96,
     "stages": 36,
-    "max_hop_um": 309.539,
+    "max_hop_um": 306.837,
     "homes": [
      [
-      14042.899,
-      11457.16
+      14040.197,
+      11594.76
      ],
      [
-      14352.439,
-      11457.16
+      14347.034,
+      11594.76
      ],
      [
-      14661.978,
-      11457.16
+      14653.87,
+      11594.76
      ],
      [
-      14971.518,
-      11457.16
+      14960.707,
+      11594.76
      ],
      [
-      15281.057,
-      11457.16
+      15267.544,
+      11594.76
      ],
      [
-      15590.597,
-      11457.16
+      15574.381,
+      11594.76
      ],
      [
-      15900.136,
-      11457.16
+      15881.217,
+      11594.76
      ],
      [
-      16209.676,
-      11457.16
+      16188.054,
+      11594.76
      ],
      [
-      16519.215,
-      11457.16
+      16494.891,
+      11594.76
      ],
      [
-      16828.755,
-      11457.16
+      16801.728,
+      11594.76
      ],
      [
-      17138.294,
-      11457.16
+      17108.564,
+      11594.76
      ],
      [
-      17447.834,
-      11457.16
-     ],
-     [
-      17559.84,
-      11654.693
+      17415.401,
+      11594.76
      ],
      [
       17559.84,
-      11964.232
+      11757.158
      ],
      [
       17559.84,
-      12273.772
+      12063.995
      ],
      [
       17559.84,
-      12583.311
+      12370.831
      ],
      [
       17559.84,
-      12892.851
+      12677.668
      ],
      [
       17559.84,
-      13202.39
+      12984.505
      ],
      [
       17559.84,
-      13511.93
+      13291.342
      ],
      [
       17559.84,
-      13821.469
+      13598.178
      ],
      [
       17559.84,
-      14131.009
+      13905.015
      ],
      [
       17559.84,
-      14440.548
+      14211.852
      ],
      [
       17559.84,
-      14750.088
+      14518.689
      ],
      [
       17559.84,
-      15059.627
+      14825.525
      ],
      [
-      17447.834,
-      15257.16
+      17559.84,
+      15132.362
      ],
      [
-      17138.294,
-      15257.16
+      17415.401,
+      15294.76
      ],
      [
-      16828.755,
-      15257.16
+      17108.564,
+      15294.76
      ],
      [
-      16519.215,
-      15257.16
+      16801.728,
+      15294.76
      ],
      [
-      16209.676,
-      15257.16
+      16494.891,
+      15294.76
      ],
      [
-      15900.136,
-      15257.16
+      16188.054,
+      15294.76
      ],
      [
-      15590.597,
-      15257.16
+      15881.217,
+      15294.76
      ],
      [
-      15281.057,
-      15257.16
+      15574.381,
+      15294.76
      ],
      [
-      14971.518,
-      15257.16
+      15267.544,
+      15294.76
      ],
      [
-      14661.978,
-      15257.16
+      14960.707,
+      15294.76
      ],
      [
-      14352.439,
-      15257.16
+      14653.87,
+      15294.76
      ],
      [
-      14042.899,
-      15257.16
+      14347.034,
+      15294.76
+     ],
+     [
+      14040.197,
+      15294.76
      ]
     ],
     "footprints": [],
     "path": [
      [
       13733.359999999999,
-      11457.16
+      11594.76
      ],
      [
       17559.840000000004,
-      11457.16
+      11594.76
      ],
      [
       17559.840000000004,
-      15257.16
+      15294.76
      ],
      [
       13733.359999999999,
-      15257.16
+      15294.76
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 11453 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 11353 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "SW",
     "dst": "NW",
     "bits": 41,
-    "length_um": 16454.768,
+    "length_um": 16254.768,
     "stages": 36,
-    "max_hop_um": 444.723,
+    "max_hop_um": 439.318,
     "homes": [
      [
-      14178.083,
-      11457.16
+      14172.678,
+      11594.76
      ],
      [
-      14622.807,
-      11457.16
+      14611.996,
+      11594.76
      ],
      [
-      15067.53,
-      11457.16
+      15051.314,
+      11594.76
      ],
      [
-      15512.254,
-      11457.16
+      15490.632,
+      11594.76
      ],
      [
-      15956.977,
-      11457.16
+      15929.95,
+      11594.76
      ],
      [
-      16401.701,
-      11457.16
+      16369.268,
+      11594.76
      ],
      [
-      16846.424,
-      11457.16
+      16808.586,
+      11594.76
      ],
      [
-      17291.148,
-      11457.16
-     ],
-     [
-      17559.84,
-      11633.191
+      17247.904,
+      11594.76
      ],
      [
       17559.84,
-      12077.915
+      11722.142
      ],
      [
       17559.84,
-      12522.638
+      12161.461
      ],
      [
       17559.84,
-      12967.362
+      12600.779
      ],
      [
       17559.84,
-      13412.085
+      13040.097
      ],
      [
       17559.84,
-      13856.808
+      13479.415
      ],
      [
       17559.84,
-      14301.532
+      13918.733
      ],
      [
       17559.84,
-      14746.255
+      14358.051
      ],
      [
       17559.84,
-      15190.979
+      14797.369
      ],
      [
       17559.84,
-      15635.702
+      15236.687
      ],
      [
       17559.84,
-      16080.426
+      15676.005
      ],
      [
       17559.84,
-      16525.149
+      16115.323
      ],
      [
       17559.84,
-      16969.873
+      16554.641
      ],
      [
       17559.84,
-      17414.596
+      16993.959
      ],
      [
       17559.84,
-      17859.32
+      17433.277
      ],
      [
       17559.84,
-      18304.043
+      17872.595
      ],
      [
       17559.84,
-      18748.766
+      18311.913
      ],
      [
       17559.84,
-      19193.49
+      18751.231
      ],
      [
       17559.84,
-      19638.213
+      19190.549
      ],
      [
       17559.84,
-      20082.937
+      19629.867
      ],
      [
       17559.84,
-      20527.66
+      20069.186
      ],
      [
-      17224.536,
-      20637.08
+      17559.84,
+      20508.504
      ],
      [
-      16779.813,
-      20637.08
+      17186.698,
+      20574.68
      ],
      [
-      16335.089,
-      20637.08
+      16747.38,
+      20574.68
      ],
      [
-      15890.366,
-      20637.08
+      16308.062,
+      20574.68
      ],
      [
-      15445.642,
-      20637.08
+      15868.744,
+      20574.68
      ],
      [
-      15000.919,
-      20637.08
+      15429.426,
+      20574.68
      ],
      [
-      14556.195,
-      20637.08
+      14990.108,
+      20574.68
+     ],
+     [
+      14550.79,
+      20574.68
      ]
     ],
     "footprints": [],
     "path": [
      [
       13733.359999999999,
-      11457.16
+      11594.76
      ],
      [
       17559.840000000004,
-      11457.16
+      11594.76
      ],
      [
       17559.840000000004,
-      20637.08
+      20574.68
      ],
      [
       14111.472,
-      20637.08
+      20574.68
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 16455 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 16255 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "SW",
     "dst": "NE",
     "bits": 41,
-    "length_um": 13032.88,
+    "length_um": 12932.88,
     "stages": 36,
-    "max_hop_um": 352.24,
+    "max_hop_um": 349.537,
     "homes": [
      [
-      14085.6,
-      11457.16
+      14082.897,
+      11594.76
      ],
      [
-      14437.84,
-      11457.16
+      14432.435,
+      11594.76
      ],
      [
-      14790.08,
-      11457.16
+      14781.972,
+      11594.76
      ],
      [
-      15142.32,
-      11457.16
+      15131.509,
+      11594.76
      ],
      [
-      15494.56,
-      11457.16
+      15481.046,
+      11594.76
      ],
      [
-      15846.8,
-      11457.16
+      15830.584,
+      11594.76
      ],
      [
-      16199.04,
-      11457.16
+      16180.121,
+      11594.76
      ],
      [
-      16551.28,
-      11457.16
+      16529.658,
+      11594.76
      ],
      [
-      16903.52,
-      11457.16
+      16879.196,
+      11594.76
      ],
      [
-      17255.76,
-      11457.16
-     ],
-     [
-      17559.84,
-      11505.32
+      17228.733,
+      11594.76
      ],
      [
       17559.84,
-      11857.56
+      11613.19
      ],
      [
       17559.84,
-      12209.8
+      11962.728
      ],
      [
       17559.84,
-      12562.04
+      12312.265
      ],
      [
       17559.84,
-      12914.28
+      12661.802
      ],
      [
       17559.84,
-      13266.52
+      13011.339
      ],
      [
       17559.84,
-      13618.76
+      13360.877
      ],
      [
       17559.84,
-      13971.0
+      13710.414
      ],
      [
       17559.84,
-      14323.24
+      14059.951
      ],
      [
       17559.84,
-      14675.48
+      14409.489
      ],
      [
       17559.84,
-      15027.72
+      14759.026
      ],
      [
       17559.84,
-      15379.96
+      15108.563
      ],
      [
       17559.84,
-      15732.2
+      15458.101
      ],
      [
       17559.84,
-      16084.44
+      15807.638
      ],
      [
       17559.84,
-      16436.68
+      16157.175
      ],
      [
       17559.84,
-      16788.92
+      16506.712
      ],
      [
-      17255.76,
-      16837.08
+      17559.84,
+      16856.25
      ],
      [
-      16903.52,
-      16837.08
+      17228.733,
+      16874.68
      ],
      [
-      16551.28,
-      16837.08
+      16879.196,
+      16874.68
      ],
      [
-      16199.04,
-      16837.08
+      16529.658,
+      16874.68
      ],
      [
-      15846.8,
-      16837.08
+      16180.121,
+      16874.68
      ],
      [
-      15494.56,
-      16837.08
+      15830.584,
+      16874.68
      ],
      [
-      15142.32,
-      16837.08
+      15481.046,
+      16874.68
      ],
      [
-      14790.08,
-      16837.08
+      15131.509,
+      16874.68
      ],
      [
-      14437.84,
-      16837.08
+      14781.972,
+      16874.68
      ],
      [
-      14085.6,
-      16837.08
+      14432.435,
+      16874.68
+     ],
+     [
+      14082.897,
+      16874.68
      ]
     ],
     "footprints": [],
     "path": [
      [
       13733.359999999999,
-      11457.16
+      11594.76
      ],
      [
       17559.840000000004,
-      11457.16
+      11594.76
      ],
      [
       17559.840000000004,
-      16837.08
+      16874.68
      ],
      [
       13733.359999999999,
-      16837.08
+      16874.68
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 13033 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 12933 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "SE",
     "dst": "SW",
     "bits": 41,
-    "length_um": 11452.96,
+    "length_um": 11352.96,
     "stages": 36,
-    "max_hop_um": 309.539,
+    "max_hop_um": 306.837,
     "homes": [
      [
-      14042.899,
-      15257.16
+      14040.197,
+      15294.76
      ],
      [
-      14352.439,
-      15257.16
+      14347.034,
+      15294.76
      ],
      [
-      14661.978,
-      15257.16
+      14653.87,
+      15294.76
      ],
      [
-      14971.518,
-      15257.16
+      14960.707,
+      15294.76
      ],
      [
-      15281.057,
-      15257.16
+      15267.544,
+      15294.76
      ],
      [
-      15590.597,
-      15257.16
+      15574.381,
+      15294.76
      ],
      [
-      15900.136,
-      15257.16
+      15881.217,
+      15294.76
      ],
      [
-      16209.676,
-      15257.16
+      16188.054,
+      15294.76
      ],
      [
-      16519.215,
-      15257.16
+      16494.891,
+      15294.76
      ],
      [
-      16828.755,
-      15257.16
+      16801.728,
+      15294.76
      ],
      [
-      17138.294,
-      15257.16
+      17108.564,
+      15294.76
      ],
      [
-      17447.834,
-      15257.16
-     ],
-     [
-      17559.84,
-      15059.627
+      17415.401,
+      15294.76
      ],
      [
       17559.84,
-      14750.088
+      15132.362
      ],
      [
       17559.84,
-      14440.548
+      14825.525
      ],
      [
       17559.84,
-      14131.009
+      14518.689
      ],
      [
       17559.84,
-      13821.469
+      14211.852
      ],
      [
       17559.84,
-      13511.93
+      13905.015
      ],
      [
       17559.84,
-      13202.39
+      13598.178
      ],
      [
       17559.84,
-      12892.851
+      13291.342
      ],
      [
       17559.84,
-      12583.311
+      12984.505
      ],
      [
       17559.84,
-      12273.772
+      12677.668
      ],
      [
       17559.84,
-      11964.232
+      12370.831
      ],
      [
       17559.84,
-      11654.693
+      12063.995
      ],
      [
-      17447.834,
-      11457.16
+      17559.84,
+      11757.158
      ],
      [
-      17138.294,
-      11457.16
+      17415.401,
+      11594.76
      ],
      [
-      16828.755,
-      11457.16
+      17108.564,
+      11594.76
      ],
      [
-      16519.215,
-      11457.16
+      16801.728,
+      11594.76
      ],
      [
-      16209.676,
-      11457.16
+      16494.891,
+      11594.76
      ],
      [
-      15900.136,
-      11457.16
+      16188.054,
+      11594.76
      ],
      [
-      15590.597,
-      11457.16
+      15881.217,
+      11594.76
      ],
      [
-      15281.057,
-      11457.16
+      15574.381,
+      11594.76
      ],
      [
-      14971.518,
-      11457.16
+      15267.544,
+      11594.76
      ],
      [
-      14661.978,
-      11457.16
+      14960.707,
+      11594.76
      ],
      [
-      14352.439,
-      11457.16
+      14653.87,
+      11594.76
      ],
      [
-      14042.899,
-      11457.16
+      14347.034,
+      11594.76
+     ],
+     [
+      14040.197,
+      11594.76
      ]
     ],
     "footprints": [],
     "path": [
      [
       13733.359999999999,
-      15257.16
+      15294.76
      ],
      [
       17559.840000000004,
-      15257.16
+      15294.76
      ],
      [
       17559.840000000004,
-      11457.16
+      11594.76
      ],
      [
       13733.359999999999,
-      11457.16
+      11594.76
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 11453 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 11353 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "SE",
@@ -114784,147 +114776,147 @@
     "homes": [
      [
       13381.28,
-      15400.8
+      15438.4
      ],
      [
       13381.28,
-      15379.2
+      15416.8
      ],
      [
       13381.28,
-      15357.6
+      15395.2
      ],
      [
       13381.28,
-      15336.0
+      15373.6
      ],
      [
       13381.28,
-      15314.4
+      15352.0
      ],
      [
       13381.28,
-      15292.8
+      15330.4
      ],
      [
       13381.28,
-      15271.2
+      15308.8
      ],
      [
       13381.28,
-      15249.6
+      15287.2
      ],
      [
       13381.28,
-      15228.0
+      15265.6
      ],
      [
       13381.28,
-      15206.4
+      15244.0
      ],
      [
       13381.28,
-      15184.8
+      15222.4
      ],
      [
       13381.28,
-      15163.2
+      15200.8
      ],
      [
       13359.68,
-      15163.2
+      15200.8
      ],
      [
       13359.68,
-      15184.8
+      15222.4
      ],
      [
       13359.68,
-      15206.4
+      15244.0
      ],
      [
       13359.68,
-      15228.0
+      15265.6
      ],
      [
       13359.68,
-      15249.6
+      15287.2
      ],
      [
       13359.68,
-      15271.2
+      15308.8
      ],
      [
       13359.68,
-      15292.8
+      15330.4
      ],
      [
       13359.68,
-      15314.4
+      15352.0
      ],
      [
       13359.68,
-      15336.0
+      15373.6
      ],
      [
       13359.68,
-      15357.6
+      15395.2
      ],
      [
       13359.68,
-      15379.2
+      15416.8
      ],
      [
       13359.68,
-      15400.8
+      15438.4
      ],
      [
       13338.08,
-      15400.8
+      15438.4
      ],
      [
       13338.08,
-      15379.2
+      15416.8
      ],
      [
       13338.08,
-      15357.6
+      15395.2
      ],
      [
       13338.08,
-      15336.0
+      15373.6
      ],
      [
       13338.08,
-      15314.4
+      15352.0
      ],
      [
       13338.08,
-      15292.8
+      15330.4
      ],
      [
       13338.08,
-      15271.2
+      15308.8
      ],
      [
       13338.08,
-      15249.6
+      15287.2
      ],
      [
       13338.08,
-      15228.0
+      15265.6
      ],
      [
       13338.08,
-      15206.4
+      15244.0
      ],
      [
       13338.08,
-      15184.8
+      15222.4
      ],
      [
       13338.08,
-      15163.2
+      15200.8
      ]
     ],
     "footprints": [
@@ -115232,175 +115224,175 @@
     "src": "SE",
     "dst": "NW",
     "bits": 41,
-    "length_um": 12654.768,
+    "length_um": 12554.768,
     "stages": 36,
-    "max_hop_um": 342.021,
+    "max_hop_um": 339.318,
     "homes": [
      [
-      14075.381,
-      15257.16
+      14072.678,
+      15294.76
      ],
      [
-      14417.402,
-      15257.16
+      14411.996,
+      15294.76
      ],
      [
-      14759.422,
-      15257.16
+      14751.314,
+      15294.76
      ],
      [
-      15101.443,
-      15257.16
+      15090.632,
+      15294.76
      ],
      [
-      15443.464,
-      15257.16
+      15429.95,
+      15294.76
      ],
      [
-      15785.485,
-      15257.16
+      15769.268,
+      15294.76
      ],
      [
-      16127.505,
-      15257.16
+      16108.586,
+      15294.76
      ],
      [
-      16469.526,
-      15257.16
+      16447.904,
+      15294.76
      ],
      [
-      16811.547,
-      15257.16
+      16787.222,
+      15294.76
      ],
      [
-      17153.568,
-      15257.16
+      17126.541,
+      15294.76
      ],
      [
-      17495.588,
-      15257.16
-     ],
-     [
-      17559.84,
-      15534.929
+      17465.859,
+      15294.76
      ],
      [
       17559.84,
-      15876.95
+      15540.097
      ],
      [
       17559.84,
-      16218.971
+      15879.415
      ],
      [
       17559.84,
-      16560.991
+      16218.733
      ],
      [
       17559.84,
-      16903.012
+      16558.051
      ],
      [
       17559.84,
-      17245.033
+      16897.369
      ],
      [
       17559.84,
-      17587.054
+      17236.687
      ],
      [
       17559.84,
-      17929.074
+      17576.005
      ],
      [
       17559.84,
-      18271.095
+      17915.323
      ],
      [
       17559.84,
-      18613.116
+      18254.641
      ],
      [
       17559.84,
-      18955.137
+      18593.959
      ],
      [
       17559.84,
-      19297.157
+      18933.277
      ],
      [
       17559.84,
-      19639.178
+      19272.595
      ],
      [
       17559.84,
-      19981.199
+      19611.913
      ],
      [
       17559.84,
-      20323.22
+      19951.231
      ],
      [
-      17531.68,
-      20637.08
+      17559.84,
+      20290.549
      ],
      [
-      17189.659,
-      20637.08
+      17504.653,
+      20574.68
      ],
      [
-      16847.638,
-      20637.08
+      17165.334,
+      20574.68
      ],
      [
-      16505.617,
-      20637.08
+      16826.016,
+      20574.68
      ],
      [
-      16163.597,
-      20637.08
+      16486.698,
+      20574.68
      ],
      [
-      15821.576,
-      20637.08
+      16147.38,
+      20574.68
      ],
      [
-      15479.555,
-      20637.08
+      15808.062,
+      20574.68
      ],
      [
-      15137.534,
-      20637.08
+      15468.744,
+      20574.68
      ],
      [
-      14795.514,
-      20637.08
+      15129.426,
+      20574.68
      ],
      [
-      14453.493,
-      20637.08
+      14790.108,
+      20574.68
+     ],
+     [
+      14450.79,
+      20574.68
      ]
     ],
     "footprints": [],
     "path": [
      [
       13733.359999999999,
-      15257.16
+      15294.76
      ],
      [
       17559.840000000004,
-      15257.16
+      15294.76
      ],
      [
       17559.840000000004,
-      20637.08
+      20574.68
      ],
      [
       14111.472,
-      20637.08
+      20574.68
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 12655 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 12555 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "SE",
@@ -115412,166 +115404,166 @@
     "homes": [
      [
       13982.897,
-      15257.16
+      15294.76
      ],
      [
       14232.435,
-      15257.16
+      15294.76
      ],
      [
       14481.972,
-      15257.16
+      15294.76
      ],
      [
       14731.509,
-      15257.16
+      15294.76
      ],
      [
       14981.046,
-      15257.16
+      15294.76
      ],
      [
       15230.584,
-      15257.16
+      15294.76
      ],
      [
       15480.121,
-      15257.16
+      15294.76
      ],
      [
       15729.658,
-      15257.16
+      15294.76
      ],
      [
       15979.196,
-      15257.16
+      15294.76
      ],
      [
       16228.733,
-      15257.16
+      15294.76
      ],
      [
       16478.27,
-      15257.16
+      15294.76
      ],
      [
       16727.808,
-      15257.16
+      15294.76
      ],
      [
       16977.345,
-      15257.16
+      15294.76
      ],
      [
       17226.882,
-      15257.16
+      15294.76
      ],
      [
       17476.419,
-      15257.16
+      15294.76
      ],
      [
       17559.84,
-      15423.277
+      15460.877
      ],
      [
       17559.84,
-      15672.814
+      15710.414
      ],
      [
       17559.84,
-      15922.351
+      15959.951
      ],
      [
       17559.84,
-      16171.889
+      16209.489
      ],
      [
       17559.84,
-      16421.426
+      16459.026
      ],
      [
       17559.84,
-      16670.963
+      16708.563
      ],
      [
       17476.419,
-      16837.08
+      16874.68
      ],
      [
       17226.882,
-      16837.08
+      16874.68
      ],
      [
       16977.345,
-      16837.08
+      16874.68
      ],
      [
       16727.808,
-      16837.08
+      16874.68
      ],
      [
       16478.27,
-      16837.08
+      16874.68
      ],
      [
       16228.733,
-      16837.08
+      16874.68
      ],
      [
       15979.196,
-      16837.08
+      16874.68
      ],
      [
       15729.658,
-      16837.08
+      16874.68
      ],
      [
       15480.121,
-      16837.08
+      16874.68
      ],
      [
       15230.584,
-      16837.08
+      16874.68
      ],
      [
       14981.046,
-      16837.08
+      16874.68
      ],
      [
       14731.509,
-      16837.08
+      16874.68
      ],
      [
       14481.972,
-      16837.08
+      16874.68
      ],
      [
       14232.435,
-      16837.08
+      16874.68
      ],
      [
       13982.897,
-      16837.08
+      16874.68
      ]
     ],
     "footprints": [],
     "path": [
      [
       13733.359999999999,
-      15257.16
+      15294.76
      ],
      [
       17559.840000000004,
-      15257.16
+      15294.76
      ],
      [
       17559.840000000004,
-      16837.08
+      16874.68
      ],
      [
       13733.359999999999,
-      16837.08
+      16874.68
      ]
     ],
     "note": "A2P half die: 36 equal-age stages kept on a 9233 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
@@ -115580,349 +115572,349 @@
     "src": "NW",
     "dst": "SW",
     "bits": 41,
-    "length_um": 16454.768,
+    "length_um": 16254.768,
     "stages": 36,
-    "max_hop_um": 444.723,
+    "max_hop_um": 439.318,
     "homes": [
      [
-      14556.195,
-      20637.08
+      14550.79,
+      20574.68
      ],
      [
-      15000.919,
-      20637.08
+      14990.108,
+      20574.68
      ],
      [
-      15445.642,
-      20637.08
+      15429.426,
+      20574.68
      ],
      [
-      15890.366,
-      20637.08
+      15868.744,
+      20574.68
      ],
      [
-      16335.089,
-      20637.08
+      16308.062,
+      20574.68
      ],
      [
-      16779.813,
-      20637.08
+      16747.38,
+      20574.68
      ],
      [
-      17224.536,
-      20637.08
-     ],
-     [
-      17559.84,
-      20527.66
+      17186.698,
+      20574.68
      ],
      [
       17559.84,
-      20082.937
+      20508.504
      ],
      [
       17559.84,
-      19638.213
+      20069.186
      ],
      [
       17559.84,
-      19193.49
+      19629.867
      ],
      [
       17559.84,
-      18748.766
+      19190.549
      ],
      [
       17559.84,
-      18304.043
+      18751.231
      ],
      [
       17559.84,
-      17859.32
+      18311.913
      ],
      [
       17559.84,
-      17414.596
+      17872.595
      ],
      [
       17559.84,
-      16969.873
+      17433.277
      ],
      [
       17559.84,
-      16525.149
+      16993.959
      ],
      [
       17559.84,
-      16080.426
+      16554.641
      ],
      [
       17559.84,
-      15635.702
+      16115.323
      ],
      [
       17559.84,
-      15190.979
+      15676.005
      ],
      [
       17559.84,
-      14746.255
+      15236.687
      ],
      [
       17559.84,
-      14301.532
+      14797.369
      ],
      [
       17559.84,
-      13856.808
+      14358.051
      ],
      [
       17559.84,
-      13412.085
+      13918.733
      ],
      [
       17559.84,
-      12967.362
+      13479.415
      ],
      [
       17559.84,
-      12522.638
+      13040.097
      ],
      [
       17559.84,
-      12077.915
+      12600.779
      ],
      [
       17559.84,
-      11633.191
+      12161.461
      ],
      [
-      17291.148,
-      11457.16
+      17559.84,
+      11722.142
      ],
      [
-      16846.424,
-      11457.16
+      17247.904,
+      11594.76
      ],
      [
-      16401.701,
-      11457.16
+      16808.586,
+      11594.76
      ],
      [
-      15956.977,
-      11457.16
+      16369.268,
+      11594.76
      ],
      [
-      15512.254,
-      11457.16
+      15929.95,
+      11594.76
      ],
      [
-      15067.53,
-      11457.16
+      15490.632,
+      11594.76
      ],
      [
-      14622.807,
-      11457.16
+      15051.314,
+      11594.76
      ],
      [
-      14178.083,
-      11457.16
+      14611.996,
+      11594.76
+     ],
+     [
+      14172.678,
+      11594.76
      ]
     ],
     "footprints": [],
     "path": [
      [
       14111.472,
-      20637.08
+      20574.68
      ],
      [
       17559.840000000004,
-      20637.08
+      20574.68
      ],
      [
       17559.840000000004,
-      11457.16
+      11594.76
      ],
      [
       13733.359999999999,
-      11457.16
+      11594.76
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 16455 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 16255 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "NW",
     "dst": "SE",
     "bits": 41,
-    "length_um": 12654.768,
+    "length_um": 12554.768,
     "stages": 36,
-    "max_hop_um": 342.021,
+    "max_hop_um": 339.318,
     "homes": [
      [
-      14453.493,
-      20637.08
+      14450.79,
+      20574.68
      ],
      [
-      14795.514,
-      20637.08
+      14790.108,
+      20574.68
      ],
      [
-      15137.534,
-      20637.08
+      15129.426,
+      20574.68
      ],
      [
-      15479.555,
-      20637.08
+      15468.744,
+      20574.68
      ],
      [
-      15821.576,
-      20637.08
+      15808.062,
+      20574.68
      ],
      [
-      16163.597,
-      20637.08
+      16147.38,
+      20574.68
      ],
      [
-      16505.617,
-      20637.08
+      16486.698,
+      20574.68
      ],
      [
-      16847.638,
-      20637.08
+      16826.016,
+      20574.68
      ],
      [
-      17189.659,
-      20637.08
+      17165.334,
+      20574.68
      ],
      [
-      17531.68,
-      20637.08
-     ],
-     [
-      17559.84,
-      20323.22
+      17504.653,
+      20574.68
      ],
      [
       17559.84,
-      19981.199
+      20290.549
      ],
      [
       17559.84,
-      19639.178
+      19951.231
      ],
      [
       17559.84,
-      19297.157
+      19611.913
      ],
      [
       17559.84,
-      18955.137
+      19272.595
      ],
      [
       17559.84,
-      18613.116
+      18933.277
      ],
      [
       17559.84,
-      18271.095
+      18593.959
      ],
      [
       17559.84,
-      17929.074
+      18254.641
      ],
      [
       17559.84,
-      17587.054
+      17915.323
      ],
      [
       17559.84,
-      17245.033
+      17576.005
      ],
      [
       17559.84,
-      16903.012
+      17236.687
      ],
      [
       17559.84,
-      16560.991
+      16897.369
      ],
      [
       17559.84,
-      16218.971
+      16558.051
      ],
      [
       17559.84,
-      15876.95
+      16218.733
      ],
      [
       17559.84,
-      15534.929
+      15879.415
      ],
      [
-      17495.588,
-      15257.16
+      17559.84,
+      15540.097
      ],
      [
-      17153.568,
-      15257.16
+      17465.859,
+      15294.76
      ],
      [
-      16811.547,
-      15257.16
+      17126.541,
+      15294.76
      ],
      [
-      16469.526,
-      15257.16
+      16787.222,
+      15294.76
      ],
      [
-      16127.505,
-      15257.16
+      16447.904,
+      15294.76
      ],
      [
-      15785.485,
-      15257.16
+      16108.586,
+      15294.76
      ],
      [
-      15443.464,
-      15257.16
+      15769.268,
+      15294.76
      ],
      [
-      15101.443,
-      15257.16
+      15429.95,
+      15294.76
      ],
      [
-      14759.422,
-      15257.16
+      15090.632,
+      15294.76
      ],
      [
-      14417.402,
-      15257.16
+      14751.314,
+      15294.76
      ],
      [
-      14075.381,
-      15257.16
+      14411.996,
+      15294.76
+     ],
+     [
+      14072.678,
+      15294.76
      ]
     ],
     "footprints": [],
     "path": [
      [
       14111.472,
-      20637.08
+      20574.68
      ],
      [
       17559.840000000004,
-      20637.08
+      20574.68
      ],
      [
       17559.840000000004,
-      15257.16
+      15294.76
      ],
      [
       13733.359999999999,
-      15257.16
+      15294.76
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 12655 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 12555 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "NW",
@@ -115934,147 +115926,147 @@
     "homes": [
      [
       14133.072,
-      20493.44
+      20431.04
      ],
      [
       14133.072,
-      20515.04
+      20452.64
      ],
      [
       14133.072,
-      20536.64
+      20474.24
      ],
      [
       14133.072,
-      20558.24
+      20495.84
      ],
      [
       14133.072,
-      20579.84
+      20517.44
      ],
      [
       14133.072,
-      20601.44
+      20539.04
      ],
      [
       14133.072,
-      20623.04
+      20560.64
      ],
      [
       14133.072,
-      20644.64
+      20582.24
      ],
      [
       14133.072,
-      20666.24
+      20603.84
      ],
      [
       14133.072,
-      20687.84
+      20625.44
      ],
      [
       14133.072,
-      20709.44
+      20647.04
      ],
      [
       14133.072,
-      20731.04
+      20668.64
      ],
      [
       14154.672,
-      20731.04
+      20668.64
      ],
      [
       14154.672,
-      20709.44
+      20647.04
      ],
      [
       14154.672,
-      20687.84
+      20625.44
      ],
      [
       14154.672,
-      20666.24
+      20603.84
      ],
      [
       14154.672,
-      20644.64
+      20582.24
      ],
      [
       14154.672,
-      20623.04
+      20560.64
      ],
      [
       14154.672,
-      20601.44
+      20539.04
      ],
      [
       14154.672,
-      20579.84
+      20517.44
      ],
      [
       14154.672,
-      20558.24
+      20495.84
      ],
      [
       14154.672,
-      20536.64
+      20474.24
      ],
      [
       14154.672,
-      20515.04
+      20452.64
      ],
      [
       14154.672,
-      20493.44
+      20431.04
      ],
      [
       14176.272,
-      20493.44
+      20431.04
      ],
      [
       14176.272,
-      20515.04
+      20452.64
      ],
      [
       14176.272,
-      20536.64
+      20474.24
      ],
      [
       14176.272,
-      20558.24
+      20495.84
      ],
      [
       14176.272,
-      20579.84
+      20517.44
      ],
      [
       14176.272,
-      20601.44
+      20539.04
      ],
      [
       14176.272,
-      20623.04
+      20560.64
      ],
      [
       14176.272,
-      20644.64
+      20582.24
      ],
      [
       14176.272,
-      20666.24
+      20603.84
      ],
      [
       14176.272,
-      20687.84
+      20625.44
      ],
      [
       14176.272,
-      20709.44
+      20647.04
      ],
      [
       14176.272,
-      20731.04
+      20668.64
      ]
     ],
     "footprints": [
@@ -116382,349 +116374,349 @@
     "src": "NW",
     "dst": "NE",
     "bits": 41,
-    "length_um": 11074.848,
+    "length_um": 10974.848,
     "stages": 36,
-    "max_hop_um": 299.32,
+    "max_hop_um": 296.618,
     "homes": [
      [
-      14410.792,
-      20637.08
+      14408.09,
+      20574.68
      ],
      [
-      14710.112,
-      20637.08
+      14704.707,
+      20574.68
      ],
      [
-      15009.433,
-      20637.08
+      15001.325,
+      20574.68
      ],
      [
-      15308.753,
-      20637.08
+      15297.942,
+      20574.68
      ],
      [
-      15608.073,
-      20637.08
+      15594.56,
+      20574.68
      ],
      [
-      15907.393,
-      20637.08
+      15891.177,
+      20574.68
      ],
      [
-      16206.714,
-      20637.08
+      16187.795,
+      20574.68
      ],
      [
-      16506.034,
-      20637.08
+      16484.412,
+      20574.68
      ],
      [
-      16805.354,
-      20637.08
+      16781.03,
+      20574.68
      ],
      [
-      17104.674,
-      20637.08
+      17077.647,
+      20574.68
      ],
      [
-      17403.994,
-      20637.08
-     ],
-     [
-      17559.84,
-      20493.605
+      17374.265,
+      20574.68
      ],
      [
       17559.84,
-      20194.285
+      20463.638
      ],
      [
       17559.84,
-      19894.965
+      20167.02
      ],
      [
       17559.84,
-      19595.645
+      19870.403
      ],
      [
       17559.84,
-      19296.325
+      19573.785
      ],
      [
       17559.84,
-      18997.004
+      19277.168
      ],
      [
       17559.84,
-      18697.684
+      18980.55
      ],
      [
       17559.84,
-      18398.364
+      18683.933
      ],
      [
       17559.84,
-      18099.044
+      18387.315
      ],
      [
       17559.84,
-      17799.723
+      18090.698
      ],
      [
       17559.84,
-      17500.403
+      17794.08
      ],
      [
       17559.84,
-      17201.083
+      17497.463
      ],
      [
       17559.84,
-      16901.763
+      17200.845
      ],
      [
-      17325.203,
-      16837.08
+      17559.84,
+      16904.228
      ],
      [
-      17025.882,
-      16837.08
+      17292.77,
+      16874.68
      ],
      [
-      16726.562,
-      16837.08
+      16996.153,
+      16874.68
      ],
      [
-      16427.242,
-      16837.08
+      16699.535,
+      16874.68
      ],
      [
-      16127.922,
-      16837.08
+      16402.918,
+      16874.68
      ],
      [
-      15828.602,
-      16837.08
+      16106.3,
+      16874.68
      ],
      [
-      15529.281,
-      16837.08
+      15809.683,
+      16874.68
      ],
      [
-      15229.961,
-      16837.08
+      15513.065,
+      16874.68
      ],
      [
-      14930.641,
-      16837.08
+      15216.448,
+      16874.68
      ],
      [
-      14631.321,
-      16837.08
+      14919.83,
+      16874.68
      ],
      [
-      14332.0,
-      16837.08
+      14623.213,
+      16874.68
      ],
      [
-      14032.68,
-      16837.08
+      14326.595,
+      16874.68
+     ],
+     [
+      14029.978,
+      16874.68
      ]
     ],
     "footprints": [],
     "path": [
      [
       14111.472,
-      20637.08
+      20574.68
      ],
      [
       17559.840000000004,
-      20637.08
+      20574.68
      ],
      [
       17559.840000000004,
-      16837.08
+      16874.68
      ],
      [
       13733.359999999999,
-      16837.08
+      16874.68
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 11075 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 10975 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "NE",
     "dst": "SW",
     "bits": 41,
-    "length_um": 13032.88,
+    "length_um": 12932.88,
     "stages": 36,
-    "max_hop_um": 352.24,
+    "max_hop_um": 349.537,
     "homes": [
      [
-      14085.6,
-      16837.08
+      14082.897,
+      16874.68
      ],
      [
-      14437.84,
-      16837.08
+      14432.435,
+      16874.68
      ],
      [
-      14790.08,
-      16837.08
+      14781.972,
+      16874.68
      ],
      [
-      15142.32,
-      16837.08
+      15131.509,
+      16874.68
      ],
      [
-      15494.56,
-      16837.08
+      15481.046,
+      16874.68
      ],
      [
-      15846.8,
-      16837.08
+      15830.584,
+      16874.68
      ],
      [
-      16199.04,
-      16837.08
+      16180.121,
+      16874.68
      ],
      [
-      16551.28,
-      16837.08
+      16529.658,
+      16874.68
      ],
      [
-      16903.52,
-      16837.08
+      16879.196,
+      16874.68
      ],
      [
-      17255.76,
-      16837.08
-     ],
-     [
-      17559.84,
-      16788.92
+      17228.733,
+      16874.68
      ],
      [
       17559.84,
-      16436.68
+      16856.25
      ],
      [
       17559.84,
-      16084.44
+      16506.712
      ],
      [
       17559.84,
-      15732.2
+      16157.175
      ],
      [
       17559.84,
-      15379.96
+      15807.638
      ],
      [
       17559.84,
-      15027.72
+      15458.101
      ],
      [
       17559.84,
-      14675.48
+      15108.563
      ],
      [
       17559.84,
-      14323.24
+      14759.026
      ],
      [
       17559.84,
-      13971.0
+      14409.489
      ],
      [
       17559.84,
-      13618.76
+      14059.951
      ],
      [
       17559.84,
-      13266.52
+      13710.414
      ],
      [
       17559.84,
-      12914.28
+      13360.877
      ],
      [
       17559.84,
-      12562.04
+      13011.339
      ],
      [
       17559.84,
-      12209.8
+      12661.802
      ],
      [
       17559.84,
-      11857.56
+      12312.265
      ],
      [
       17559.84,
-      11505.32
+      11962.728
      ],
      [
-      17255.76,
-      11457.16
+      17559.84,
+      11613.19
      ],
      [
-      16903.52,
-      11457.16
+      17228.733,
+      11594.76
      ],
      [
-      16551.28,
-      11457.16
+      16879.196,
+      11594.76
      ],
      [
-      16199.04,
-      11457.16
+      16529.658,
+      11594.76
      ],
      [
-      15846.8,
-      11457.16
+      16180.121,
+      11594.76
      ],
      [
-      15494.56,
-      11457.16
+      15830.584,
+      11594.76
      ],
      [
-      15142.32,
-      11457.16
+      15481.046,
+      11594.76
      ],
      [
-      14790.08,
-      11457.16
+      15131.509,
+      11594.76
      ],
      [
-      14437.84,
-      11457.16
+      14781.972,
+      11594.76
      ],
      [
-      14085.6,
-      11457.16
+      14432.435,
+      11594.76
+     ],
+     [
+      14082.897,
+      11594.76
      ]
     ],
     "footprints": [],
     "path": [
      [
       13733.359999999999,
-      16837.08
+      16874.68
      ],
      [
       17559.840000000004,
-      16837.08
+      16874.68
      ],
      [
       17559.840000000004,
-      11457.16
+      11594.76
      ],
      [
       13733.359999999999,
-      11457.16
+      11594.76
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 13033 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 12933 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "NE",
@@ -116736,166 +116728,166 @@
     "homes": [
      [
       13982.897,
-      16837.08
+      16874.68
      ],
      [
       14232.435,
-      16837.08
+      16874.68
      ],
      [
       14481.972,
-      16837.08
+      16874.68
      ],
      [
       14731.509,
-      16837.08
+      16874.68
      ],
      [
       14981.046,
-      16837.08
+      16874.68
      ],
      [
       15230.584,
-      16837.08
+      16874.68
      ],
      [
       15480.121,
-      16837.08
+      16874.68
      ],
      [
       15729.658,
-      16837.08
+      16874.68
      ],
      [
       15979.196,
-      16837.08
+      16874.68
      ],
      [
       16228.733,
-      16837.08
+      16874.68
      ],
      [
       16478.27,
-      16837.08
+      16874.68
      ],
      [
       16727.808,
-      16837.08
+      16874.68
      ],
      [
       16977.345,
-      16837.08
+      16874.68
      ],
      [
       17226.882,
-      16837.08
+      16874.68
      ],
      [
       17476.419,
-      16837.08
+      16874.68
      ],
      [
       17559.84,
-      16670.963
+      16708.563
      ],
      [
       17559.84,
-      16421.426
+      16459.026
      ],
      [
       17559.84,
-      16171.889
+      16209.489
      ],
      [
       17559.84,
-      15922.351
+      15959.951
      ],
      [
       17559.84,
-      15672.814
+      15710.414
      ],
      [
       17559.84,
-      15423.277
+      15460.877
      ],
      [
       17476.419,
-      15257.16
+      15294.76
      ],
      [
       17226.882,
-      15257.16
+      15294.76
      ],
      [
       16977.345,
-      15257.16
+      15294.76
      ],
      [
       16727.808,
-      15257.16
+      15294.76
      ],
      [
       16478.27,
-      15257.16
+      15294.76
      ],
      [
       16228.733,
-      15257.16
+      15294.76
      ],
      [
       15979.196,
-      15257.16
+      15294.76
      ],
      [
       15729.658,
-      15257.16
+      15294.76
      ],
      [
       15480.121,
-      15257.16
+      15294.76
      ],
      [
       15230.584,
-      15257.16
+      15294.76
      ],
      [
       14981.046,
-      15257.16
+      15294.76
      ],
      [
       14731.509,
-      15257.16
+      15294.76
      ],
      [
       14481.972,
-      15257.16
+      15294.76
      ],
      [
       14232.435,
-      15257.16
+      15294.76
      ],
      [
       13982.897,
-      15257.16
+      15294.76
      ]
     ],
     "footprints": [],
     "path": [
      [
       13733.359999999999,
-      16837.08
+      16874.68
      ],
      [
       17559.840000000004,
-      16837.08
+      16874.68
      ],
      [
       17559.840000000004,
-      15257.16
+      15294.76
      ],
      [
       13733.359999999999,
-      15257.16
+      15294.76
      ]
     ],
     "note": "A2P half die: 36 equal-age stages kept on a 9233 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
@@ -116904,175 +116896,175 @@
     "src": "NE",
     "dst": "NW",
     "bits": 41,
-    "length_um": 11074.848,
+    "length_um": 10974.848,
     "stages": 36,
-    "max_hop_um": 299.32,
+    "max_hop_um": 296.618,
     "homes": [
      [
-      14032.68,
-      16837.08
+      14029.978,
+      16874.68
      ],
      [
-      14332.0,
-      16837.08
+      14326.595,
+      16874.68
      ],
      [
-      14631.321,
-      16837.08
+      14623.213,
+      16874.68
      ],
      [
-      14930.641,
-      16837.08
+      14919.83,
+      16874.68
      ],
      [
-      15229.961,
-      16837.08
+      15216.448,
+      16874.68
      ],
      [
-      15529.281,
-      16837.08
+      15513.065,
+      16874.68
      ],
      [
-      15828.602,
-      16837.08
+      15809.683,
+      16874.68
      ],
      [
-      16127.922,
-      16837.08
+      16106.3,
+      16874.68
      ],
      [
-      16427.242,
-      16837.08
+      16402.918,
+      16874.68
      ],
      [
-      16726.562,
-      16837.08
+      16699.535,
+      16874.68
      ],
      [
-      17025.882,
-      16837.08
+      16996.153,
+      16874.68
      ],
      [
-      17325.203,
-      16837.08
-     ],
-     [
-      17559.84,
-      16901.763
+      17292.77,
+      16874.68
      ],
      [
       17559.84,
-      17201.083
+      16904.228
      ],
      [
       17559.84,
-      17500.403
+      17200.845
      ],
      [
       17559.84,
-      17799.723
+      17497.463
      ],
      [
       17559.84,
-      18099.044
+      17794.08
      ],
      [
       17559.84,
-      18398.364
+      18090.698
      ],
      [
       17559.84,
-      18697.684
+      18387.315
      ],
      [
       17559.84,
-      18997.004
+      18683.933
      ],
      [
       17559.84,
-      19296.325
+      18980.55
      ],
      [
       17559.84,
-      19595.645
+      19277.168
      ],
      [
       17559.84,
-      19894.965
+      19573.785
      ],
      [
       17559.84,
-      20194.285
+      19870.403
      ],
      [
       17559.84,
-      20493.605
+      20167.02
      ],
      [
-      17403.994,
-      20637.08
+      17559.84,
+      20463.638
      ],
      [
-      17104.674,
-      20637.08
+      17374.265,
+      20574.68
      ],
      [
-      16805.354,
-      20637.08
+      17077.647,
+      20574.68
      ],
      [
-      16506.034,
-      20637.08
+      16781.03,
+      20574.68
      ],
      [
-      16206.714,
-      20637.08
+      16484.412,
+      20574.68
      ],
      [
-      15907.393,
-      20637.08
+      16187.795,
+      20574.68
      ],
      [
-      15608.073,
-      20637.08
+      15891.177,
+      20574.68
      ],
      [
-      15308.753,
-      20637.08
+      15594.56,
+      20574.68
      ],
      [
-      15009.433,
-      20637.08
+      15297.942,
+      20574.68
      ],
      [
-      14710.112,
-      20637.08
+      15001.325,
+      20574.68
      ],
      [
-      14410.792,
-      20637.08
+      14704.707,
+      20574.68
+     ],
+     [
+      14408.09,
+      20574.68
      ]
     ],
     "footprints": [],
     "path": [
      [
       13733.359999999999,
-      16837.08
+      16874.68
      ],
      [
       17559.840000000004,
-      16837.08
+      16874.68
      ],
      [
       17559.840000000004,
-      20637.08
+      20574.68
      ],
      [
       14111.472,
-      20637.08
+      20574.68
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 11075 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 10975 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "NE",
@@ -117084,147 +117076,147 @@
     "homes": [
      [
       13381.28,
-      16693.44
+      16731.04
      ],
      [
       13381.28,
-      16715.04
+      16752.64
      ],
      [
       13381.28,
-      16736.64
+      16774.24
      ],
      [
       13381.28,
-      16758.24
+      16795.84
      ],
      [
       13381.28,
-      16779.84
+      16817.44
      ],
      [
       13381.28,
-      16801.44
+      16839.04
      ],
      [
       13381.28,
-      16823.04
+      16860.64
      ],
      [
       13381.28,
-      16844.64
+      16882.24
      ],
      [
       13381.28,
-      16866.24
+      16903.84
      ],
      [
       13381.28,
-      16887.84
+      16925.44
      ],
      [
       13381.28,
-      16909.44
+      16947.04
      ],
      [
       13381.28,
-      16931.04
+      16968.64
      ],
      [
       13359.68,
-      16931.04
+      16968.64
      ],
      [
       13359.68,
-      16909.44
+      16947.04
      ],
      [
       13359.68,
-      16887.84
+      16925.44
      ],
      [
       13359.68,
-      16866.24
+      16903.84
      ],
      [
       13359.68,
-      16844.64
+      16882.24
      ],
      [
       13359.68,
-      16823.04
+      16860.64
      ],
      [
       13359.68,
-      16801.44
+      16839.04
      ],
      [
       13359.68,
-      16779.84
+      16817.44
      ],
      [
       13359.68,
-      16758.24
+      16795.84
      ],
      [
       13359.68,
-      16736.64
+      16774.24
      ],
      [
       13359.68,
-      16715.04
+      16752.64
      ],
      [
       13359.68,
-      16693.44
+      16731.04
      ],
      [
       13338.08,
-      16693.44
+      16731.04
      ],
      [
       13338.08,
-      16715.04
+      16752.64
      ],
      [
       13338.08,
-      16736.64
+      16774.24
      ],
      [
       13338.08,
-      16758.24
+      16795.84
      ],
      [
       13338.08,
-      16779.84
+      16817.44
      ],
      [
       13338.08,
-      16801.44
+      16839.04
      ],
      [
       13338.08,
-      16823.04
+      16860.64
      ],
      [
       13338.08,
-      16844.64
+      16882.24
      ],
      [
       13338.08,
-      16866.24
+      16903.84
      ],
      [
       13338.08,
-      16887.84
+      16925.44
      ],
      [
       13338.08,
-      16909.44
+      16947.04
      ],
      [
       13338.08,
-      16931.04
+      16968.64
      ]
     ],
     "footprints": [
@@ -118115,13 +118107,13 @@
     "slot": "vm_status4",
     "anchor": "hc_eng",
     "dx": 2889.84,
-    "dy": 4293.448
+    "dy": 4331.048
    },
    {
     "slot": "host_N",
     "anchor": "ep_N2",
     "dx": 3990.176,
-    "dy": 6929.038,
+    "dy": 7004.238,
     "edge_kept": [
      "N"
     ]
@@ -118130,7 +118122,7 @@
     "slot": "host_cp",
     "anchor": "ep_N0",
     "dx": 4474.896,
-    "dy": 6929.038,
+    "dy": 7004.238,
     "edge_kept": [
      "N"
     ]
@@ -118139,24 +118131,24 @@
     "slot": "hb_ckgen",
     "anchor": "hc_eng",
     "dx": 2939.84,
-    "dy": 4293.448
+    "dy": 4331.048
    },
    {
     "slot": "quant_NW_xp",
     "anchor": "su_NW1",
     "dx": 400.0,
-    "dy": 3424.718
+    "dy": 3362.318
    },
    {
     "slot": "calendar_SW",
     "anchor": "vmh_SW",
     "dx": 2739.84,
-    "dy": 3584.32,
+    "dy": 3721.92,
     "rehomed": {
      "rule": "calendar beside hub",
      "origin": {
       "x": 16537.92,
-      "y": 10363.76,
+      "y": 10501.36,
       "orient": "R0"
      },
      "move_um": 136.08,
@@ -118167,12 +118159,12 @@
     "slot": "calendar_SE",
     "anchor": "vmh_SE",
     "dx": -1690.16,
-    "dy": 7384.32,
+    "dy": 7421.92,
     "rehomed": {
      "rule": "calendar beside hub",
      "origin": {
       "x": 16537.92,
-      "y": 12697.12,
+      "y": 12734.72,
       "orient": "MY"
      },
      "move_um": 1650.72,
@@ -118183,12 +118175,12 @@
     "slot": "calendar_NW",
     "anchor": "vmh_NW",
     "dx": 2739.84,
-    "dy": 3344.718,
+    "dy": 3282.318,
     "rehomed": {
      "rule": "calendar beside hub",
      "origin": {
       "x": 16537.92,
-      "y": 21771.52,
+      "y": 21709.12,
       "orient": "MX"
      },
      "move_um": 252.72,
@@ -118199,12 +118191,12 @@
     "slot": "calendar_NE",
     "anchor": "vmh_NE",
     "dx": -1690.16,
-    "dy": -455.282,
+    "dy": -417.682,
     "rehomed": {
      "rule": "calendar beside hub",
      "origin": {
       "x": 16537.92,
-      "y": 19278.32,
+      "y": 19315.92,
       "orient": "R180"
      },
      "move_um": 1648.56,
@@ -118258,7 +118250,7 @@
    "dropped": 70,
    "die": {
     "w": 21002.24,
-    "h": 32094.24
+    "h": 32169.44
    },
    "mapped": 123,
    "resized": 21,

@@ -1,18 +1,18 @@
 {
- "tag": "d4fw_fa_A2",
+ "tag": "d4fw_f_pc637",
  "die_um": [
   21002.24,
-  32094.24
+  32169.44
  ],
- "die_mm2": 674.05,
- "placed_mm2": 377.29,
+ "die_mm2": 675.63,
+ "placed_mm2": 381.23,
  "cut_lanes": {
   "worst_v": {
-   "ratio": 0.47,
-   "x": 8100.0,
+   "ratio": 1.14,
+   "x": 6100.0,
    "y": [
-    9500.0,
-    10500.0
+    30900.0,
+    31900.0
    ]
   },
   "worst_h": {
@@ -23,12 +23,12 @@
     18400.0
    ]
   },
-  "lines_over_060": 0,
-  "windows_over_060": 0
+  "lines_over_060": 17,
+  "windows_over_060": 17
  },
- "cut_no_lanes": 0.862,
+ "cut_no_lanes": 0.97,
  "faces_over_1": 10,
- "stages_bw": 9.761,
+ "stages_bw": 9.638,
  "per_class": {
   "HBM_K": {
    "bits": 35392,
@@ -36,11 +36,11 @@
   },
   "SM_X": {
    "bits": 34944,
-   "stages_bw": 11.79
+   "stages_bw": 11.69
   },
   "SM_HBM": {
    "bits": 18112,
-   "stages_bw": 2.75
+   "stages_bw": 2.69
   },
   "LG_SU": {
    "bits": 17792,
@@ -60,27 +60,27 @@
   },
   "VM_RING": {
    "bits": 17792,
-   "stages_bw": 5.5
+   "stages_bw": 5.25
   },
   "COLL_VM": {
    "bits": 17760,
-   "stages_bw": 18.53
+   "stages_bw": 18.34
   },
   "VM_HUB": {
    "bits": 17216,
-   "stages_bw": 27.44
+   "stages_bw": 27.66
   },
   "HC_ENG": {
    "bits": 11488,
-   "stages_bw": 9.47
+   "stages_bw": 9.2
   },
   "COLL_RING": {
    "bits": 6608,
-   "stages_bw": 15.12
+   "stages_bw": 13.5
   },
   "COLL_EP": {
    "bits": 6120,
-   "stages_bw": 19.2
+   "stages_bw": 18.4
   },
   "EP_SERDES": {
    "bits": 5280,
@@ -92,30 +92,30 @@
   },
   "SM_OUT": {
    "bits": 4320,
-   "stages_bw": 21.12
+   "stages_bw": 21.06
   },
   "HBM_VM": {
    "bits": 4096,
-   "stages_bw": 32.0
+   "stages_bw": 32.25
   },
   "VM_HBM": {
    "bits": 4096,
-   "stages_bw": 32.25
+   "stages_bw": 31.25
   },
   "SFU_CORE": {
    "bits": 3072,
-   "stages_bw": 15.0
+   "stages_bw": 14.92
   },
   "SU_CORE": {
    "bits": 3072,
-   "stages_bw": 13.5
+   "stages_bw": 12.83
   },
   "KV_DESC": {
    "bits": 1024,
-   "stages_bw": 20.38
+   "stages_bw": 20.81
   }
  },
- "relay_flops": 2048233.0,
+ "relay_flops": 2015721.0,
  "su_slice": [
   1797.12,
   2825.28
@@ -128,9 +128,9 @@
  "reticle": {
   "die_um": [
    21002.24,
-   32094.24
+   32169.44
   ],
-  "long_margin_um": 905.76,
+  "long_margin_um": 830.56,
   "short_margin_um": 4997.76,
   "margin_req_um": 500.0,
   "ok": true

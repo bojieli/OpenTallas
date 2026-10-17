@@ -46,7 +46,7 @@ EDGE = 120.0
 SC_GAP = 100.0                         # relay row between the two scorers of a die half (cross-column relay homes)
 
 
-def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=None, smw=None, smh=None, carry=False, layout='v5', core_at=4, sfu_at_hub=False, mirror_east=False, sfu_at_group=None, core_w=None, core_h=None, core_column_w=None, sfu_store_side=False, hc_eng_mm2=None, hc_links_v16=False, hc_x_beats=1, hc_client_inner=False, sm_columns=None, band_low=False, sm_portrait=False, qw_extra=0.0, pocket=False, sfucore_w=763.56, pocket_core_up=False, slim_column=False, sm_rows='abcd', centre_strip=0.0, sm_col_real=False, half_die=False, full_core=False, serdes=0, core_channel=None, sm_band_channel=None, fill='a'):
+def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=None, smw=None, smh=None, carry=False, layout='v5', core_at=4, sfu_at_hub=False, mirror_east=False, sfu_at_group=None, core_w=None, core_h=None, core_column_w=None, sfu_store_side=False, hc_eng_mm2=None, hc_links_v16=False, hc_x_beats=1, hc_client_inner=False, sm_columns=None, band_low=False, sm_portrait=False, qw_extra=0.0, pocket=False, sfucore_w=763.56, pocket_core_up=False, slim_column=False, sm_rows='abcd', centre_strip=0.0, sm_col_real=False, half_die=False, full_core=False, serdes=0, core_channel=None, sm_band_channel=None, fill='a', pc_h=399.6):
     """v6 (H-DIE-V6PLAN 10-16, OWNER 02:15 die may grow): su_w/su_h = SU slice outline (default 1250 x 1780), smw/smh = SM
     slot (default 6609.6 x 1712.08), carry = also place the v5 grants that are not graph nodes (sfucore_<q> 763.56 x
     1936.44 after the SU core; DMA back at its granted 511.92 width, shifted 79.92 um west as hb_dbk_<q>).  Defaults
@@ -63,7 +63,7 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
     H = area_mm2 * 1e6 / W
     # one quadrant's vertical stack (SW frame)
     y_pc = 21.6 + 1177.2 + 20.0
-    y_a = y_pc + 399.6 + 20.0
+    y_a = y_pc + pc_h + 20.0
     y_b = y_a + SMH + GAP
     y_band = y_b + SMH + GAP
     y_c = y_band + BAND + GAP
@@ -84,11 +84,11 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
         CH = round(SMW * SMH / CW, 3)
         if sm_col_real:   # OWNER 10-16 half die: the real rp4e single-row frame rotated R90 (SM_HBM face to the PC row, xw to the band)
             CW, CH = SMH, SMW
-        y_a = y_pc + 399.6 + sm_columns
+        y_a = y_pc + pc_h + sm_columns
         y_band = y_a + CH + (sm_band_channel if sm_band_channel is not None else GAP)
         top = y_band + BAND
         if band_low:   # option 4: band between the PC row and the SM columns (hub/COLL near the PC row and endpoints)
-            y_band = y_pc + 399.6 + sm_columns
+            y_band = y_pc + pc_h + sm_columns
             y_a = y_band + BAND + GAP
             top = y_a + CH
     if sm_rows != 'abcd':
@@ -178,6 +178,9 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
         # PHY + PC row
         put(f'phy_{q}', 1455.84, 21.6, q)
         pcs = sorted([k for k in N if k.startswith(f'pc_{q}')])
+        if pc_h != 399.6:   # d4f (H-DIE-B d4c finding / d4b --pc-strip 237.6): PC controller leaves + service groups need a taller PC band
+            for p_ in pcs:
+                N[p_] = dict(N[p_], h=pc_h, area_mm2=round(N[p_]['w'] * pc_h / 1e6, 4))
         for k, p in enumerate(pcs):
             put(p, 1457.8 + k * (N[p]['w'] + GAP), y_pc, q)
         sms = sorted([k for k in N if k.startswith(f'sm_{q}')], key=lambda s: int(s[len(f'sm_{q}'):]))
@@ -551,6 +554,7 @@ def main():
     ap.add_argument('--core-channel', type=float, help='with --full-core: channel between the two band rows of a half (default --gap)')
     ap.add_argument('--sm-band-channel', type=float, help='with --sm-columns: channel between the SM column tops (xw windows) and the band')
     ap.add_argument('--fill', default='a', choices=('a', 'b'), help="--full-core E hubs: a = no SM side (VM ring only), b = cross-quadrant fill")
+    ap.add_argument('--pc-h', type=float, default=399.6, help='PC band height (d4b GEN needed 399.6 + 237.6 strip = 637.2)')
     ap.add_argument('--serdes', type=int, default=0, help='with --half-die: keep this many lk/ep pairs (S gets the odd one)')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
@@ -561,7 +565,7 @@ def main():
         COLUMN_W = a.column
     SFU_DIM.update(core_h=a.sfucore_h, store_w=a.sfus_wh[0], store_h=a.sfus_wh[1], store_yoff=a.sfus_yoff)
     globals()['GAP'] = a.gap
-    kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout, core_at=a.core_at, sfu_at_hub=a.sfu_at_hub, mirror_east=a.mirror_east,sfu_at_group=a.sfu_at_group,core_w=a.core_w,core_h=a.core_h,core_column_w=a.core_column_w,sfu_store_side=a.sfu_store_side,hc_eng_mm2=a.hc_eng_mm2,hc_links_v16=a.hc_links_v16,hc_x_beats=a.hc_x_beats,hc_client_inner=a.hc_client_inner,sm_columns=a.sm_columns,band_low=a.band_low,sm_portrait=a.sm_portrait,qw_extra=a.qw_extra,pocket=a.pocket,sfucore_w=a.sfucore_w,slim_column=a.slim_column,sm_rows=a.sm_rows,centre_strip=a.centre_strip,sm_col_real=a.sm_col_real,half_die=a.half_die,full_core=a.full_core,serdes=a.serdes,core_channel=a.core_channel,sm_band_channel=a.sm_band_channel,fill=a.fill)
+    kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout, core_at=a.core_at, sfu_at_hub=a.sfu_at_hub, mirror_east=a.mirror_east,sfu_at_group=a.sfu_at_group,core_w=a.core_w,core_h=a.core_h,core_column_w=a.core_column_w,sfu_store_side=a.sfu_store_side,hc_eng_mm2=a.hc_eng_mm2,hc_links_v16=a.hc_links_v16,hc_x_beats=a.hc_x_beats,hc_client_inner=a.hc_client_inner,sm_columns=a.sm_columns,band_low=a.band_low,sm_portrait=a.sm_portrait,qw_extra=a.qw_extra,pocket=a.pocket,sfucore_w=a.sfucore_w,slim_column=a.slim_column,sm_rows=a.sm_rows,centre_strip=a.centre_strip,sm_col_real=a.sm_col_real,half_die=a.half_die,full_core=a.full_core,serdes=a.serdes,core_channel=a.core_channel,sm_band_channel=a.sm_band_channel,fill=a.fill,pc_h=a.pc_h)
     G0 = json.loads((ROOT / a.graph).read_text())
     if a.fit:
         area = a.area
