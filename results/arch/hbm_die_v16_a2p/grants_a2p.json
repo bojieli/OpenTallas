@@ -56767,13 +56767,13 @@
    "origin": {
     "x": 42.4,
     "y": 15597.12,
-    "orient": "R0"
+    "orient": "MX"
    },
    "clock_entry": {
     "pin": "clk",
-    "face": "N",
-    "layer": "M5",
-    "offset": 3694.4
+    "face": "E",
+    "layer": "M4",
+    "offset": 3339.372
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -56784,7 +56784,7 @@
     "out_delay_frac": 0.2
    },
    "version": 6,
-   "grant": "real_rtl_pins_1405",
+   "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
@@ -56903,15 +56903,281 @@
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
    "source_prerequisite": "4c5ebb78d",
    "params": {},
-   "pin_status": "FACES_ONLY",
+   "pin_status": "COLUMN_PIN_FILE_EXACT (H-SM F108 sm_column_pins.v1; frame kit LEF pending rp4h/i one-root view)",
    "rtl_pin_grant_1405": true,
-   "pins": [],
+   "pins": [
+    {
+     "name": "xw_en",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1579.068,
+     "span_um": [
+      1579.068,
+      1579.068
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_addr[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1579.743,
+     "span_um": [
+      1579.221,
+      1580.265
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_grp[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1580.988,
+     "span_um": [
+      1580.46,
+      1581.516
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_data[2047:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1760.633,
+     "span_um": [
+      1581.669,
+      1939.596
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "command[191:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1654.043,
+     "span_um": [
+      1637.388,
+      1670.697
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "kv_desc[63:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1676.392,
+     "span_um": [
+      1670.892,
+      1681.893
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "packet[1098:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1777.932,
+     "span_um": [
+      1682.076,
+      1873.788
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "request[42:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1877.607,
+     "span_um": [
+      1873.953,
+      1881.261
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rv",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1892.268,
+     "span_um": [
+      1892.268,
+      1892.268
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rrow[11:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1893.377,
+     "span_um": [
+      1892.421,
+      1894.332
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rdata[255:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1916.903,
+     "span_um": [
+      1894.545,
+      1939.26
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M3",
+     "offset": 1939.401,
+     "span_um": [
+      1939.401,
+      1939.401
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "schedule_fault",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1939.596,
+     "span_um": [
+      1939.596,
+      1939.596
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "clk",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3339.372,
+     "span_um": [
+      3339.372,
+      3339.372
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3343.692,
+     "span_um": [
+      3343.692,
+      3343.692
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    }
+   ],
    "face_density": {
     "N": 0.0152,
     "S": 0.0321
    },
    "reserved_channels": [],
-   "plan_block": "sm_NW0"
+   "plan_block": "sm_NW0",
+   "pin_file": {
+    "path": "results/arch/hbm_die_v16_a2p/sm_column_pins_0cfed29dc.json",
+    "sha256": "036646b61838ed87704737601092c521169a9e515024e6445c2bb6a7d6694dff",
+    "source_commit": "0cfed29dc",
+    "frame": "F108 portrait column (witness ab729be8a)",
+    "windows": [
+     {
+      "group": "xw",
+      "face": "N",
+      "x": [
+       1578.96,
+       1939.68
+      ],
+      "length_um": 360.72,
+      "bits": 2063,
+      "pins_per_um": 5.719,
+      "cut": 0.549,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "xw_en",
+       "xw_addr[6:0]",
+       "xw_grp[6:0]",
+       "xw_data[2047:0]"
+      ]
+     },
+     {
+      "group": "sm_hbm",
+      "face": "S",
+      "x": [
+       1637.28,
+       1881.36
+      ],
+      "length_um": 244.08,
+      "bits": 1398,
+      "pins_per_um": 5.728,
+      "cut": 0.5499,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "command[191:0]",
+       "kv_desc[63:0]",
+       "packet[1098:0]",
+       "request[42:0]"
+      ]
+     },
+     {
+      "group": "result",
+      "face": "S",
+      "x": [
+       1892.16,
+       1939.68
+      ],
+      "length_um": 47.52,
+      "bits": 271,
+      "pins_per_um": 5.703,
+      "cut": 0.5475,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "rv",
+       "rrow[11:0]",
+       "rdata[255:0]",
+       "fault",
+       "schedule_fault"
+      ]
+     },
+     {
+      "group": "clock_reset",
+      "face": "E",
+      "y": [
+       3339.372,
+       3343.692
+      ],
+      "bits": 2,
+      "note": "one regional root (DIE-CLOCK 640fa898f); root site in the front column at mid-height; rst_n registered at the front, regional sync reset tree inside the column"
+     }
+    ]
+   }
   },
   {
    "name": "sm_NW1",
@@ -56925,13 +57191,13 @@
    "origin": {
     "x": 2082.08,
     "y": 15597.12,
-    "orient": "R0"
+    "orient": "MX"
    },
    "clock_entry": {
     "pin": "clk",
-    "face": "W",
-    "layer": "M5",
-    "offset": 983.6
+    "face": "E",
+    "layer": "M4",
+    "offset": 3339.372
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -56942,7 +57208,7 @@
     "out_delay_frac": 0.2
    },
    "version": 6,
-   "grant": "real_rtl_pins_1405",
+   "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
@@ -57061,15 +57327,281 @@
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
    "source_prerequisite": "4c5ebb78d",
    "params": {},
-   "pin_status": "FACES_ONLY",
+   "pin_status": "COLUMN_PIN_FILE_EXACT (H-SM F108 sm_column_pins.v1; frame kit LEF pending rp4h/i one-root view)",
    "rtl_pin_grant_1405": true,
-   "pins": [],
+   "pins": [
+    {
+     "name": "xw_en",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1579.068,
+     "span_um": [
+      1579.068,
+      1579.068
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_addr[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1579.743,
+     "span_um": [
+      1579.221,
+      1580.265
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_grp[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1580.988,
+     "span_um": [
+      1580.46,
+      1581.516
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_data[2047:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1760.633,
+     "span_um": [
+      1581.669,
+      1939.596
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "command[191:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1654.043,
+     "span_um": [
+      1637.388,
+      1670.697
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "kv_desc[63:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1676.392,
+     "span_um": [
+      1670.892,
+      1681.893
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "packet[1098:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1777.932,
+     "span_um": [
+      1682.076,
+      1873.788
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "request[42:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1877.607,
+     "span_um": [
+      1873.953,
+      1881.261
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rv",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1892.268,
+     "span_um": [
+      1892.268,
+      1892.268
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rrow[11:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1893.377,
+     "span_um": [
+      1892.421,
+      1894.332
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rdata[255:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1916.903,
+     "span_um": [
+      1894.545,
+      1939.26
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M3",
+     "offset": 1939.401,
+     "span_um": [
+      1939.401,
+      1939.401
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "schedule_fault",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1939.596,
+     "span_um": [
+      1939.596,
+      1939.596
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "clk",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3339.372,
+     "span_um": [
+      3339.372,
+      3339.372
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3343.692,
+     "span_um": [
+      3343.692,
+      3343.692
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    }
+   ],
    "face_density": {
     "S": 0.0321,
     "W": 0.0608
    },
    "reserved_channels": [],
-   "plan_block": "sm_NW1"
+   "plan_block": "sm_NW1",
+   "pin_file": {
+    "path": "results/arch/hbm_die_v16_a2p/sm_column_pins_0cfed29dc.json",
+    "sha256": "036646b61838ed87704737601092c521169a9e515024e6445c2bb6a7d6694dff",
+    "source_commit": "0cfed29dc",
+    "frame": "F108 portrait column (witness ab729be8a)",
+    "windows": [
+     {
+      "group": "xw",
+      "face": "N",
+      "x": [
+       1578.96,
+       1939.68
+      ],
+      "length_um": 360.72,
+      "bits": 2063,
+      "pins_per_um": 5.719,
+      "cut": 0.549,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "xw_en",
+       "xw_addr[6:0]",
+       "xw_grp[6:0]",
+       "xw_data[2047:0]"
+      ]
+     },
+     {
+      "group": "sm_hbm",
+      "face": "S",
+      "x": [
+       1637.28,
+       1881.36
+      ],
+      "length_um": 244.08,
+      "bits": 1398,
+      "pins_per_um": 5.728,
+      "cut": 0.5499,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "command[191:0]",
+       "kv_desc[63:0]",
+       "packet[1098:0]",
+       "request[42:0]"
+      ]
+     },
+     {
+      "group": "result",
+      "face": "S",
+      "x": [
+       1892.16,
+       1939.68
+      ],
+      "length_um": 47.52,
+      "bits": 271,
+      "pins_per_um": 5.703,
+      "cut": 0.5475,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "rv",
+       "rrow[11:0]",
+       "rdata[255:0]",
+       "fault",
+       "schedule_fault"
+      ]
+     },
+     {
+      "group": "clock_reset",
+      "face": "E",
+      "y": [
+       3339.372,
+       3343.692
+      ],
+      "bits": 2,
+      "note": "one regional root (DIE-CLOCK 640fa898f); root site in the front column at mid-height; rst_n registered at the front, regional sync reset tree inside the column"
+     }
+    ]
+   }
   },
   {
    "name": "sm_NW2",
@@ -57083,13 +57615,13 @@
    "origin": {
     "x": 4121.76,
     "y": 15597.12,
-    "orient": "R0"
+    "orient": "MX"
    },
    "clock_entry": {
     "pin": "clk",
-    "face": "N",
-    "layer": "M5",
-    "offset": 3694.4
+    "face": "E",
+    "layer": "M4",
+    "offset": 3339.372
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -57100,7 +57632,7 @@
     "out_delay_frac": 0.2
    },
    "version": 6,
-   "grant": "real_rtl_pins_1405",
+   "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
@@ -57219,16 +57751,282 @@
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
    "source_prerequisite": "4c5ebb78d",
    "params": {},
-   "pin_status": "FACES_ONLY",
+   "pin_status": "COLUMN_PIN_FILE_EXACT (H-SM F108 sm_column_pins.v1; frame kit LEF pending rp4h/i one-root view)",
    "rtl_pin_grant_1405": true,
-   "pins": [],
+   "pins": [
+    {
+     "name": "xw_en",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1579.068,
+     "span_um": [
+      1579.068,
+      1579.068
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_addr[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1579.743,
+     "span_um": [
+      1579.221,
+      1580.265
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_grp[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1580.988,
+     "span_um": [
+      1580.46,
+      1581.516
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_data[2047:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1760.633,
+     "span_um": [
+      1581.669,
+      1939.596
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "command[191:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1654.043,
+     "span_um": [
+      1637.388,
+      1670.697
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "kv_desc[63:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1676.392,
+     "span_um": [
+      1670.892,
+      1681.893
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "packet[1098:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1777.932,
+     "span_um": [
+      1682.076,
+      1873.788
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "request[42:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1877.607,
+     "span_um": [
+      1873.953,
+      1881.261
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rv",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1892.268,
+     "span_um": [
+      1892.268,
+      1892.268
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rrow[11:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1893.377,
+     "span_um": [
+      1892.421,
+      1894.332
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rdata[255:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1916.903,
+     "span_um": [
+      1894.545,
+      1939.26
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M3",
+     "offset": 1939.401,
+     "span_um": [
+      1939.401,
+      1939.401
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "schedule_fault",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1939.596,
+     "span_um": [
+      1939.596,
+      1939.596
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "clk",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3339.372,
+     "span_um": [
+      3339.372,
+      3339.372
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3343.692,
+     "span_um": [
+      3343.692,
+      3343.692
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    }
+   ],
    "face_density": {
     "N": 0.0152,
     "S": 0.0206,
     "E": 0.0461
    },
    "reserved_channels": [],
-   "plan_block": "sm_NW2"
+   "plan_block": "sm_NW2",
+   "pin_file": {
+    "path": "results/arch/hbm_die_v16_a2p/sm_column_pins_0cfed29dc.json",
+    "sha256": "036646b61838ed87704737601092c521169a9e515024e6445c2bb6a7d6694dff",
+    "source_commit": "0cfed29dc",
+    "frame": "F108 portrait column (witness ab729be8a)",
+    "windows": [
+     {
+      "group": "xw",
+      "face": "N",
+      "x": [
+       1578.96,
+       1939.68
+      ],
+      "length_um": 360.72,
+      "bits": 2063,
+      "pins_per_um": 5.719,
+      "cut": 0.549,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "xw_en",
+       "xw_addr[6:0]",
+       "xw_grp[6:0]",
+       "xw_data[2047:0]"
+      ]
+     },
+     {
+      "group": "sm_hbm",
+      "face": "S",
+      "x": [
+       1637.28,
+       1881.36
+      ],
+      "length_um": 244.08,
+      "bits": 1398,
+      "pins_per_um": 5.728,
+      "cut": 0.5499,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "command[191:0]",
+       "kv_desc[63:0]",
+       "packet[1098:0]",
+       "request[42:0]"
+      ]
+     },
+     {
+      "group": "result",
+      "face": "S",
+      "x": [
+       1892.16,
+       1939.68
+      ],
+      "length_um": 47.52,
+      "bits": 271,
+      "pins_per_um": 5.703,
+      "cut": 0.5475,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "rv",
+       "rrow[11:0]",
+       "rdata[255:0]",
+       "fault",
+       "schedule_fault"
+      ]
+     },
+     {
+      "group": "clock_reset",
+      "face": "E",
+      "y": [
+       3339.372,
+       3343.692
+      ],
+      "bits": 2,
+      "note": "one regional root (DIE-CLOCK 640fa898f); root site in the front column at mid-height; rst_n registered at the front, regional sync reset tree inside the column"
+     }
+    ]
+   }
   },
   {
    "name": "sm_NW3",
@@ -57242,13 +58040,13 @@
    "origin": {
     "x": 6161.44,
     "y": 15597.12,
-    "orient": "R0"
+    "orient": "MX"
    },
    "clock_entry": {
     "pin": "clk",
-    "face": "N",
-    "layer": "M5",
-    "offset": 3694.4
+    "face": "E",
+    "layer": "M4",
+    "offset": 3339.372
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -57259,7 +58057,7 @@
     "out_delay_frac": 0.2
    },
    "version": 6,
-   "grant": "real_rtl_pins_1405",
+   "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
@@ -57378,16 +58176,282 @@
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
    "source_prerequisite": "4c5ebb78d",
    "params": {},
-   "pin_status": "FACES_ONLY",
+   "pin_status": "COLUMN_PIN_FILE_EXACT (H-SM F108 sm_column_pins.v1; frame kit LEF pending rp4h/i one-root view)",
    "rtl_pin_grant_1405": true,
-   "pins": [],
+   "pins": [
+    {
+     "name": "xw_en",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1579.068,
+     "span_um": [
+      1579.068,
+      1579.068
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_addr[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1579.743,
+     "span_um": [
+      1579.221,
+      1580.265
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_grp[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1580.988,
+     "span_um": [
+      1580.46,
+      1581.516
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_data[2047:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1760.633,
+     "span_um": [
+      1581.669,
+      1939.596
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "command[191:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1654.043,
+     "span_um": [
+      1637.388,
+      1670.697
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "kv_desc[63:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1676.392,
+     "span_um": [
+      1670.892,
+      1681.893
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "packet[1098:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1777.932,
+     "span_um": [
+      1682.076,
+      1873.788
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "request[42:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1877.607,
+     "span_um": [
+      1873.953,
+      1881.261
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rv",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1892.268,
+     "span_um": [
+      1892.268,
+      1892.268
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rrow[11:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1893.377,
+     "span_um": [
+      1892.421,
+      1894.332
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rdata[255:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1916.903,
+     "span_um": [
+      1894.545,
+      1939.26
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M3",
+     "offset": 1939.401,
+     "span_um": [
+      1939.401,
+      1939.401
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "schedule_fault",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1939.596,
+     "span_um": [
+      1939.596,
+      1939.596
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "clk",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3339.372,
+     "span_um": [
+      3339.372,
+      3339.372
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3343.692,
+     "span_um": [
+      3343.692,
+      3343.692
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    }
+   ],
    "face_density": {
     "N": 0.0152,
     "S": 0.0183,
     "W": 0.0552
    },
    "reserved_channels": [],
-   "plan_block": "sm_NW3"
+   "plan_block": "sm_NW3",
+   "pin_file": {
+    "path": "results/arch/hbm_die_v16_a2p/sm_column_pins_0cfed29dc.json",
+    "sha256": "036646b61838ed87704737601092c521169a9e515024e6445c2bb6a7d6694dff",
+    "source_commit": "0cfed29dc",
+    "frame": "F108 portrait column (witness ab729be8a)",
+    "windows": [
+     {
+      "group": "xw",
+      "face": "N",
+      "x": [
+       1578.96,
+       1939.68
+      ],
+      "length_um": 360.72,
+      "bits": 2063,
+      "pins_per_um": 5.719,
+      "cut": 0.549,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "xw_en",
+       "xw_addr[6:0]",
+       "xw_grp[6:0]",
+       "xw_data[2047:0]"
+      ]
+     },
+     {
+      "group": "sm_hbm",
+      "face": "S",
+      "x": [
+       1637.28,
+       1881.36
+      ],
+      "length_um": 244.08,
+      "bits": 1398,
+      "pins_per_um": 5.728,
+      "cut": 0.5499,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "command[191:0]",
+       "kv_desc[63:0]",
+       "packet[1098:0]",
+       "request[42:0]"
+      ]
+     },
+     {
+      "group": "result",
+      "face": "S",
+      "x": [
+       1892.16,
+       1939.68
+      ],
+      "length_um": 47.52,
+      "bits": 271,
+      "pins_per_um": 5.703,
+      "cut": 0.5475,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "rv",
+       "rrow[11:0]",
+       "rdata[255:0]",
+       "fault",
+       "schedule_fault"
+      ]
+     },
+     {
+      "group": "clock_reset",
+      "face": "E",
+      "y": [
+       3339.372,
+       3343.692
+      ],
+      "bits": 2,
+      "note": "one regional root (DIE-CLOCK 640fa898f); root site in the front column at mid-height; rst_n registered at the front, regional sync reset tree inside the column"
+     }
+    ]
+   }
   },
   {
    "name": "sm_NW4",
@@ -57401,13 +58465,13 @@
    "origin": {
     "x": 8201.12,
     "y": 15597.12,
-    "orient": "R0"
+    "orient": "MX"
    },
    "clock_entry": {
     "pin": "clk",
-    "face": "N",
-    "layer": "M5",
-    "offset": 3694.4
+    "face": "E",
+    "layer": "M4",
+    "offset": 3339.372
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -57418,7 +58482,7 @@
     "out_delay_frac": 0.2
    },
    "version": 6,
-   "grant": "real_rtl_pins_1405",
+   "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
@@ -57537,15 +58601,281 @@
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
    "source_prerequisite": "4c5ebb78d",
    "params": {},
-   "pin_status": "FACES_ONLY",
+   "pin_status": "COLUMN_PIN_FILE_EXACT (H-SM F108 sm_column_pins.v1; frame kit LEF pending rp4h/i one-root view)",
    "rtl_pin_grant_1405": true,
-   "pins": [],
+   "pins": [
+    {
+     "name": "xw_en",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1579.068,
+     "span_um": [
+      1579.068,
+      1579.068
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_addr[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1579.743,
+     "span_um": [
+      1579.221,
+      1580.265
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_grp[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1580.988,
+     "span_um": [
+      1580.46,
+      1581.516
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_data[2047:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1760.633,
+     "span_um": [
+      1581.669,
+      1939.596
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "command[191:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1654.043,
+     "span_um": [
+      1637.388,
+      1670.697
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "kv_desc[63:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1676.392,
+     "span_um": [
+      1670.892,
+      1681.893
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "packet[1098:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1777.932,
+     "span_um": [
+      1682.076,
+      1873.788
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "request[42:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1877.607,
+     "span_um": [
+      1873.953,
+      1881.261
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rv",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1892.268,
+     "span_um": [
+      1892.268,
+      1892.268
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rrow[11:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1893.377,
+     "span_um": [
+      1892.421,
+      1894.332
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rdata[255:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1916.903,
+     "span_um": [
+      1894.545,
+      1939.26
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M3",
+     "offset": 1939.401,
+     "span_um": [
+      1939.401,
+      1939.401
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "schedule_fault",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1939.596,
+     "span_um": [
+      1939.596,
+      1939.596
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "clk",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3339.372,
+     "span_um": [
+      3339.372,
+      3339.372
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3343.692,
+     "span_um": [
+      3343.692,
+      3343.692
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    }
+   ],
    "face_density": {
     "N": 0.0426,
     "E": 0.0189
    },
    "reserved_channels": [],
-   "plan_block": "sm_NW4"
+   "plan_block": "sm_NW4",
+   "pin_file": {
+    "path": "results/arch/hbm_die_v16_a2p/sm_column_pins_0cfed29dc.json",
+    "sha256": "036646b61838ed87704737601092c521169a9e515024e6445c2bb6a7d6694dff",
+    "source_commit": "0cfed29dc",
+    "frame": "F108 portrait column (witness ab729be8a)",
+    "windows": [
+     {
+      "group": "xw",
+      "face": "N",
+      "x": [
+       1578.96,
+       1939.68
+      ],
+      "length_um": 360.72,
+      "bits": 2063,
+      "pins_per_um": 5.719,
+      "cut": 0.549,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "xw_en",
+       "xw_addr[6:0]",
+       "xw_grp[6:0]",
+       "xw_data[2047:0]"
+      ]
+     },
+     {
+      "group": "sm_hbm",
+      "face": "S",
+      "x": [
+       1637.28,
+       1881.36
+      ],
+      "length_um": 244.08,
+      "bits": 1398,
+      "pins_per_um": 5.728,
+      "cut": 0.5499,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "command[191:0]",
+       "kv_desc[63:0]",
+       "packet[1098:0]",
+       "request[42:0]"
+      ]
+     },
+     {
+      "group": "result",
+      "face": "S",
+      "x": [
+       1892.16,
+       1939.68
+      ],
+      "length_um": 47.52,
+      "bits": 271,
+      "pins_per_um": 5.703,
+      "cut": 0.5475,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "rv",
+       "rrow[11:0]",
+       "rdata[255:0]",
+       "fault",
+       "schedule_fault"
+      ]
+     },
+     {
+      "group": "clock_reset",
+      "face": "E",
+      "y": [
+       3339.372,
+       3343.692
+      ],
+      "bits": 2,
+      "note": "one regional root (DIE-CLOCK 640fa898f); root site in the front column at mid-height; rst_n registered at the front, regional sync reset tree inside the column"
+     }
+    ]
+   }
   },
   {
    "name": "sm_NW5",
@@ -57559,13 +58889,13 @@
    "origin": {
     "x": 10240.8,
     "y": 15597.12,
-    "orient": "R0"
+    "orient": "MX"
    },
    "clock_entry": {
     "pin": "clk",
-    "face": "N",
-    "layer": "M5",
-    "offset": 3694.4
+    "face": "E",
+    "layer": "M4",
+    "offset": 3339.372
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -57576,7 +58906,7 @@
     "out_delay_frac": 0.2
    },
    "version": 6,
-   "grant": "real_rtl_pins_1405",
+   "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
@@ -57695,14 +59025,280 @@
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
    "source_prerequisite": "4c5ebb78d",
    "params": {},
-   "pin_status": "FACES_ONLY",
+   "pin_status": "COLUMN_PIN_FILE_EXACT (H-SM F108 sm_column_pins.v1; frame kit LEF pending rp4h/i one-root view)",
    "rtl_pin_grant_1405": true,
-   "pins": [],
+   "pins": [
+    {
+     "name": "xw_en",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1579.068,
+     "span_um": [
+      1579.068,
+      1579.068
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_addr[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1579.743,
+     "span_um": [
+      1579.221,
+      1580.265
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_grp[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1580.988,
+     "span_um": [
+      1580.46,
+      1581.516
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_data[2047:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1760.633,
+     "span_um": [
+      1581.669,
+      1939.596
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "command[191:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1654.043,
+     "span_um": [
+      1637.388,
+      1670.697
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "kv_desc[63:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1676.392,
+     "span_um": [
+      1670.892,
+      1681.893
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "packet[1098:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1777.932,
+     "span_um": [
+      1682.076,
+      1873.788
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "request[42:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1877.607,
+     "span_um": [
+      1873.953,
+      1881.261
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rv",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1892.268,
+     "span_um": [
+      1892.268,
+      1892.268
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rrow[11:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1893.377,
+     "span_um": [
+      1892.421,
+      1894.332
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rdata[255:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1916.903,
+     "span_um": [
+      1894.545,
+      1939.26
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M3",
+     "offset": 1939.401,
+     "span_um": [
+      1939.401,
+      1939.401
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "schedule_fault",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1939.596,
+     "span_um": [
+      1939.596,
+      1939.596
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "clk",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3339.372,
+     "span_um": [
+      3339.372,
+      3339.372
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3343.692,
+     "span_um": [
+      3343.692,
+      3343.692
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    }
+   ],
    "face_density": {
     "N": 0.0473
    },
    "reserved_channels": [],
-   "plan_block": "sm_NW5"
+   "plan_block": "sm_NW5",
+   "pin_file": {
+    "path": "results/arch/hbm_die_v16_a2p/sm_column_pins_0cfed29dc.json",
+    "sha256": "036646b61838ed87704737601092c521169a9e515024e6445c2bb6a7d6694dff",
+    "source_commit": "0cfed29dc",
+    "frame": "F108 portrait column (witness ab729be8a)",
+    "windows": [
+     {
+      "group": "xw",
+      "face": "N",
+      "x": [
+       1578.96,
+       1939.68
+      ],
+      "length_um": 360.72,
+      "bits": 2063,
+      "pins_per_um": 5.719,
+      "cut": 0.549,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "xw_en",
+       "xw_addr[6:0]",
+       "xw_grp[6:0]",
+       "xw_data[2047:0]"
+      ]
+     },
+     {
+      "group": "sm_hbm",
+      "face": "S",
+      "x": [
+       1637.28,
+       1881.36
+      ],
+      "length_um": 244.08,
+      "bits": 1398,
+      "pins_per_um": 5.728,
+      "cut": 0.5499,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "command[191:0]",
+       "kv_desc[63:0]",
+       "packet[1098:0]",
+       "request[42:0]"
+      ]
+     },
+     {
+      "group": "result",
+      "face": "S",
+      "x": [
+       1892.16,
+       1939.68
+      ],
+      "length_um": 47.52,
+      "bits": 271,
+      "pins_per_um": 5.703,
+      "cut": 0.5475,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "rv",
+       "rrow[11:0]",
+       "rdata[255:0]",
+       "fault",
+       "schedule_fault"
+      ]
+     },
+     {
+      "group": "clock_reset",
+      "face": "E",
+      "y": [
+       3339.372,
+       3343.692
+      ],
+      "bits": 2,
+      "note": "one regional root (DIE-CLOCK 640fa898f); root site in the front column at mid-height; rst_n registered at the front, regional sync reset tree inside the column"
+     }
+    ]
+   }
   },
   {
    "name": "sm_NW6",
@@ -57716,13 +59312,13 @@
    "origin": {
     "x": 12280.48,
     "y": 15597.12,
-    "orient": "R0"
+    "orient": "MX"
    },
    "clock_entry": {
     "pin": "clk",
-    "face": "N",
-    "layer": "M5",
-    "offset": 3694.4
+    "face": "E",
+    "layer": "M4",
+    "offset": 3339.372
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -57733,7 +59329,7 @@
     "out_delay_frac": 0.2
    },
    "version": 6,
-   "grant": "real_rtl_pins_1405",
+   "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
@@ -57852,14 +59448,280 @@
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
    "source_prerequisite": "4c5ebb78d",
    "params": {},
-   "pin_status": "FACES_ONLY",
+   "pin_status": "COLUMN_PIN_FILE_EXACT (H-SM F108 sm_column_pins.v1; frame kit LEF pending rp4h/i one-root view)",
    "rtl_pin_grant_1405": true,
-   "pins": [],
+   "pins": [
+    {
+     "name": "xw_en",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1579.068,
+     "span_um": [
+      1579.068,
+      1579.068
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_addr[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1579.743,
+     "span_um": [
+      1579.221,
+      1580.265
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_grp[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1580.988,
+     "span_um": [
+      1580.46,
+      1581.516
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_data[2047:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1760.633,
+     "span_um": [
+      1581.669,
+      1939.596
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "command[191:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1654.043,
+     "span_um": [
+      1637.388,
+      1670.697
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "kv_desc[63:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1676.392,
+     "span_um": [
+      1670.892,
+      1681.893
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "packet[1098:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1777.932,
+     "span_um": [
+      1682.076,
+      1873.788
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "request[42:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1877.607,
+     "span_um": [
+      1873.953,
+      1881.261
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rv",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1892.268,
+     "span_um": [
+      1892.268,
+      1892.268
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rrow[11:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1893.377,
+     "span_um": [
+      1892.421,
+      1894.332
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rdata[255:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1916.903,
+     "span_um": [
+      1894.545,
+      1939.26
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M3",
+     "offset": 1939.401,
+     "span_um": [
+      1939.401,
+      1939.401
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "schedule_fault",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1939.596,
+     "span_um": [
+      1939.596,
+      1939.596
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "clk",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3339.372,
+     "span_um": [
+      3339.372,
+      3339.372
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3343.692,
+     "span_um": [
+      3343.692,
+      3343.692
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    }
+   ],
    "face_density": {
     "N": 0.0473
    },
    "reserved_channels": [],
-   "plan_block": "sm_NW6"
+   "plan_block": "sm_NW6",
+   "pin_file": {
+    "path": "results/arch/hbm_die_v16_a2p/sm_column_pins_0cfed29dc.json",
+    "sha256": "036646b61838ed87704737601092c521169a9e515024e6445c2bb6a7d6694dff",
+    "source_commit": "0cfed29dc",
+    "frame": "F108 portrait column (witness ab729be8a)",
+    "windows": [
+     {
+      "group": "xw",
+      "face": "N",
+      "x": [
+       1578.96,
+       1939.68
+      ],
+      "length_um": 360.72,
+      "bits": 2063,
+      "pins_per_um": 5.719,
+      "cut": 0.549,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "xw_en",
+       "xw_addr[6:0]",
+       "xw_grp[6:0]",
+       "xw_data[2047:0]"
+      ]
+     },
+     {
+      "group": "sm_hbm",
+      "face": "S",
+      "x": [
+       1637.28,
+       1881.36
+      ],
+      "length_um": 244.08,
+      "bits": 1398,
+      "pins_per_um": 5.728,
+      "cut": 0.5499,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "command[191:0]",
+       "kv_desc[63:0]",
+       "packet[1098:0]",
+       "request[42:0]"
+      ]
+     },
+     {
+      "group": "result",
+      "face": "S",
+      "x": [
+       1892.16,
+       1939.68
+      ],
+      "length_um": 47.52,
+      "bits": 271,
+      "pins_per_um": 5.703,
+      "cut": 0.5475,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "rv",
+       "rrow[11:0]",
+       "rdata[255:0]",
+       "fault",
+       "schedule_fault"
+      ]
+     },
+     {
+      "group": "clock_reset",
+      "face": "E",
+      "y": [
+       3339.372,
+       3343.692
+      ],
+      "bits": 2,
+      "note": "one regional root (DIE-CLOCK 640fa898f); root site in the front column at mid-height; rst_n registered at the front, regional sync reset tree inside the column"
+     }
+    ]
+   }
   },
   {
    "name": "sm_NW7",
@@ -57873,13 +59735,13 @@
    "origin": {
     "x": 14320.16,
     "y": 15597.12,
-    "orient": "R0"
+    "orient": "MX"
    },
    "clock_entry": {
     "pin": "clk",
-    "face": "N",
-    "layer": "M5",
-    "offset": 3694.4
+    "face": "E",
+    "layer": "M4",
+    "offset": 3339.372
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -57890,7 +59752,7 @@
     "out_delay_frac": 0.2
    },
    "version": 6,
-   "grant": "real_rtl_pins_1405",
+   "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
@@ -58009,14 +59871,280 @@
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
    "source_prerequisite": "4c5ebb78d",
    "params": {},
-   "pin_status": "FACES_ONLY",
+   "pin_status": "COLUMN_PIN_FILE_EXACT (H-SM F108 sm_column_pins.v1; frame kit LEF pending rp4h/i one-root view)",
    "rtl_pin_grant_1405": true,
-   "pins": [],
+   "pins": [
+    {
+     "name": "xw_en",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1579.068,
+     "span_um": [
+      1579.068,
+      1579.068
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_addr[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1579.743,
+     "span_um": [
+      1579.221,
+      1580.265
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_grp[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1580.988,
+     "span_um": [
+      1580.46,
+      1581.516
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_data[2047:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1760.633,
+     "span_um": [
+      1581.669,
+      1939.596
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "command[191:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1654.043,
+     "span_um": [
+      1637.388,
+      1670.697
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "kv_desc[63:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1676.392,
+     "span_um": [
+      1670.892,
+      1681.893
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "packet[1098:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1777.932,
+     "span_um": [
+      1682.076,
+      1873.788
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "request[42:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1877.607,
+     "span_um": [
+      1873.953,
+      1881.261
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rv",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1892.268,
+     "span_um": [
+      1892.268,
+      1892.268
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rrow[11:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1893.377,
+     "span_um": [
+      1892.421,
+      1894.332
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rdata[255:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1916.903,
+     "span_um": [
+      1894.545,
+      1939.26
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M3",
+     "offset": 1939.401,
+     "span_um": [
+      1939.401,
+      1939.401
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "schedule_fault",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1939.596,
+     "span_um": [
+      1939.596,
+      1939.596
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "clk",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3339.372,
+     "span_um": [
+      3339.372,
+      3339.372
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3343.692,
+     "span_um": [
+      3343.692,
+      3343.692
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    }
+   ],
    "face_density": {
     "N": 0.0473
    },
    "reserved_channels": [],
-   "plan_block": "sm_NW7"
+   "plan_block": "sm_NW7",
+   "pin_file": {
+    "path": "results/arch/hbm_die_v16_a2p/sm_column_pins_0cfed29dc.json",
+    "sha256": "036646b61838ed87704737601092c521169a9e515024e6445c2bb6a7d6694dff",
+    "source_commit": "0cfed29dc",
+    "frame": "F108 portrait column (witness ab729be8a)",
+    "windows": [
+     {
+      "group": "xw",
+      "face": "N",
+      "x": [
+       1578.96,
+       1939.68
+      ],
+      "length_um": 360.72,
+      "bits": 2063,
+      "pins_per_um": 5.719,
+      "cut": 0.549,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "xw_en",
+       "xw_addr[6:0]",
+       "xw_grp[6:0]",
+       "xw_data[2047:0]"
+      ]
+     },
+     {
+      "group": "sm_hbm",
+      "face": "S",
+      "x": [
+       1637.28,
+       1881.36
+      ],
+      "length_um": 244.08,
+      "bits": 1398,
+      "pins_per_um": 5.728,
+      "cut": 0.5499,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "command[191:0]",
+       "kv_desc[63:0]",
+       "packet[1098:0]",
+       "request[42:0]"
+      ]
+     },
+     {
+      "group": "result",
+      "face": "S",
+      "x": [
+       1892.16,
+       1939.68
+      ],
+      "length_um": 47.52,
+      "bits": 271,
+      "pins_per_um": 5.703,
+      "cut": 0.5475,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "rv",
+       "rrow[11:0]",
+       "rdata[255:0]",
+       "fault",
+       "schedule_fault"
+      ]
+     },
+     {
+      "group": "clock_reset",
+      "face": "E",
+      "y": [
+       3339.372,
+       3343.692
+      ],
+      "bits": 2,
+      "note": "one regional root (DIE-CLOCK 640fa898f); root site in the front column at mid-height; rst_n registered at the front, regional sync reset tree inside the column"
+     }
+    ]
+   }
   },
   {
    "name": "sm_SW0",
@@ -58034,9 +60162,9 @@
    },
    "clock_entry": {
     "pin": "clk",
-    "face": "S",
-    "layer": "M5",
-    "offset": 3694.4
+    "face": "E",
+    "layer": "M4",
+    "offset": 3339.372
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -58047,7 +60175,7 @@
     "out_delay_frac": 0.2
    },
    "version": 6,
-   "grant": "real_rtl_pins_1405",
+   "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
@@ -58166,15 +60294,281 @@
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
    "source_prerequisite": "4c5ebb78d",
    "params": {},
-   "pin_status": "FACES_ONLY",
+   "pin_status": "COLUMN_PIN_FILE_EXACT (H-SM F108 sm_column_pins.v1; frame kit LEF pending rp4h/i one-root view)",
    "rtl_pin_grant_1405": true,
-   "pins": [],
+   "pins": [
+    {
+     "name": "xw_en",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1579.068,
+     "span_um": [
+      1579.068,
+      1579.068
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_addr[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1579.743,
+     "span_um": [
+      1579.221,
+      1580.265
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_grp[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1580.988,
+     "span_um": [
+      1580.46,
+      1581.516
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_data[2047:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1760.633,
+     "span_um": [
+      1581.669,
+      1939.596
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "command[191:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1654.043,
+     "span_um": [
+      1637.388,
+      1670.697
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "kv_desc[63:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1676.392,
+     "span_um": [
+      1670.892,
+      1681.893
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "packet[1098:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1777.932,
+     "span_um": [
+      1682.076,
+      1873.788
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "request[42:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1877.607,
+     "span_um": [
+      1873.953,
+      1881.261
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rv",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1892.268,
+     "span_um": [
+      1892.268,
+      1892.268
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rrow[11:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1893.377,
+     "span_um": [
+      1892.421,
+      1894.332
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rdata[255:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1916.903,
+     "span_um": [
+      1894.545,
+      1939.26
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M3",
+     "offset": 1939.401,
+     "span_um": [
+      1939.401,
+      1939.401
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "schedule_fault",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1939.596,
+     "span_um": [
+      1939.596,
+      1939.596
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "clk",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3339.372,
+     "span_um": [
+      3339.372,
+      3339.372
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3343.692,
+     "span_um": [
+      3343.692,
+      3343.692
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    }
+   ],
    "face_density": {
     "N": 0.0321,
     "S": 0.0152
    },
    "reserved_channels": [],
-   "plan_block": "sm_SW0"
+   "plan_block": "sm_SW0",
+   "pin_file": {
+    "path": "results/arch/hbm_die_v16_a2p/sm_column_pins_0cfed29dc.json",
+    "sha256": "036646b61838ed87704737601092c521169a9e515024e6445c2bb6a7d6694dff",
+    "source_commit": "0cfed29dc",
+    "frame": "F108 portrait column (witness ab729be8a)",
+    "windows": [
+     {
+      "group": "xw",
+      "face": "N",
+      "x": [
+       1578.96,
+       1939.68
+      ],
+      "length_um": 360.72,
+      "bits": 2063,
+      "pins_per_um": 5.719,
+      "cut": 0.549,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "xw_en",
+       "xw_addr[6:0]",
+       "xw_grp[6:0]",
+       "xw_data[2047:0]"
+      ]
+     },
+     {
+      "group": "sm_hbm",
+      "face": "S",
+      "x": [
+       1637.28,
+       1881.36
+      ],
+      "length_um": 244.08,
+      "bits": 1398,
+      "pins_per_um": 5.728,
+      "cut": 0.5499,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "command[191:0]",
+       "kv_desc[63:0]",
+       "packet[1098:0]",
+       "request[42:0]"
+      ]
+     },
+     {
+      "group": "result",
+      "face": "S",
+      "x": [
+       1892.16,
+       1939.68
+      ],
+      "length_um": 47.52,
+      "bits": 271,
+      "pins_per_um": 5.703,
+      "cut": 0.5475,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "rv",
+       "rrow[11:0]",
+       "rdata[255:0]",
+       "fault",
+       "schedule_fault"
+      ]
+     },
+     {
+      "group": "clock_reset",
+      "face": "E",
+      "y": [
+       3339.372,
+       3343.692
+      ],
+      "bits": 2,
+      "note": "one regional root (DIE-CLOCK 640fa898f); root site in the front column at mid-height; rst_n registered at the front, regional sync reset tree inside the column"
+     }
+    ]
+   }
   },
   {
    "name": "sm_SW1",
@@ -58192,9 +60586,9 @@
    },
    "clock_entry": {
     "pin": "clk",
-    "face": "W",
-    "layer": "M5",
-    "offset": 983.6
+    "face": "E",
+    "layer": "M4",
+    "offset": 3339.372
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -58205,7 +60599,7 @@
     "out_delay_frac": 0.2
    },
    "version": 6,
-   "grant": "real_rtl_pins_1405",
+   "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
@@ -58324,15 +60718,281 @@
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
    "source_prerequisite": "4c5ebb78d",
    "params": {},
-   "pin_status": "FACES_ONLY",
+   "pin_status": "COLUMN_PIN_FILE_EXACT (H-SM F108 sm_column_pins.v1; frame kit LEF pending rp4h/i one-root view)",
    "rtl_pin_grant_1405": true,
-   "pins": [],
+   "pins": [
+    {
+     "name": "xw_en",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1579.068,
+     "span_um": [
+      1579.068,
+      1579.068
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_addr[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1579.743,
+     "span_um": [
+      1579.221,
+      1580.265
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_grp[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1580.988,
+     "span_um": [
+      1580.46,
+      1581.516
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_data[2047:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1760.633,
+     "span_um": [
+      1581.669,
+      1939.596
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "command[191:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1654.043,
+     "span_um": [
+      1637.388,
+      1670.697
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "kv_desc[63:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1676.392,
+     "span_um": [
+      1670.892,
+      1681.893
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "packet[1098:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1777.932,
+     "span_um": [
+      1682.076,
+      1873.788
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "request[42:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1877.607,
+     "span_um": [
+      1873.953,
+      1881.261
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rv",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1892.268,
+     "span_um": [
+      1892.268,
+      1892.268
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rrow[11:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1893.377,
+     "span_um": [
+      1892.421,
+      1894.332
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rdata[255:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1916.903,
+     "span_um": [
+      1894.545,
+      1939.26
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M3",
+     "offset": 1939.401,
+     "span_um": [
+      1939.401,
+      1939.401
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "schedule_fault",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1939.596,
+     "span_um": [
+      1939.596,
+      1939.596
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "clk",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3339.372,
+     "span_um": [
+      3339.372,
+      3339.372
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3343.692,
+     "span_um": [
+      3343.692,
+      3343.692
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    }
+   ],
    "face_density": {
     "N": 0.0321,
     "W": 0.0608
    },
    "reserved_channels": [],
-   "plan_block": "sm_SW1"
+   "plan_block": "sm_SW1",
+   "pin_file": {
+    "path": "results/arch/hbm_die_v16_a2p/sm_column_pins_0cfed29dc.json",
+    "sha256": "036646b61838ed87704737601092c521169a9e515024e6445c2bb6a7d6694dff",
+    "source_commit": "0cfed29dc",
+    "frame": "F108 portrait column (witness ab729be8a)",
+    "windows": [
+     {
+      "group": "xw",
+      "face": "N",
+      "x": [
+       1578.96,
+       1939.68
+      ],
+      "length_um": 360.72,
+      "bits": 2063,
+      "pins_per_um": 5.719,
+      "cut": 0.549,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "xw_en",
+       "xw_addr[6:0]",
+       "xw_grp[6:0]",
+       "xw_data[2047:0]"
+      ]
+     },
+     {
+      "group": "sm_hbm",
+      "face": "S",
+      "x": [
+       1637.28,
+       1881.36
+      ],
+      "length_um": 244.08,
+      "bits": 1398,
+      "pins_per_um": 5.728,
+      "cut": 0.5499,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "command[191:0]",
+       "kv_desc[63:0]",
+       "packet[1098:0]",
+       "request[42:0]"
+      ]
+     },
+     {
+      "group": "result",
+      "face": "S",
+      "x": [
+       1892.16,
+       1939.68
+      ],
+      "length_um": 47.52,
+      "bits": 271,
+      "pins_per_um": 5.703,
+      "cut": 0.5475,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "rv",
+       "rrow[11:0]",
+       "rdata[255:0]",
+       "fault",
+       "schedule_fault"
+      ]
+     },
+     {
+      "group": "clock_reset",
+      "face": "E",
+      "y": [
+       3339.372,
+       3343.692
+      ],
+      "bits": 2,
+      "note": "one regional root (DIE-CLOCK 640fa898f); root site in the front column at mid-height; rst_n registered at the front, regional sync reset tree inside the column"
+     }
+    ]
+   }
   },
   {
    "name": "sm_SW2",
@@ -58350,9 +61010,9 @@
    },
    "clock_entry": {
     "pin": "clk",
-    "face": "S",
-    "layer": "M5",
-    "offset": 3694.4
+    "face": "E",
+    "layer": "M4",
+    "offset": 3339.372
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -58363,7 +61023,7 @@
     "out_delay_frac": 0.2
    },
    "version": 6,
-   "grant": "real_rtl_pins_1405",
+   "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
@@ -58482,16 +61142,282 @@
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
    "source_prerequisite": "4c5ebb78d",
    "params": {},
-   "pin_status": "FACES_ONLY",
+   "pin_status": "COLUMN_PIN_FILE_EXACT (H-SM F108 sm_column_pins.v1; frame kit LEF pending rp4h/i one-root view)",
    "rtl_pin_grant_1405": true,
-   "pins": [],
+   "pins": [
+    {
+     "name": "xw_en",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1579.068,
+     "span_um": [
+      1579.068,
+      1579.068
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_addr[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1579.743,
+     "span_um": [
+      1579.221,
+      1580.265
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_grp[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1580.988,
+     "span_um": [
+      1580.46,
+      1581.516
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_data[2047:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1760.633,
+     "span_um": [
+      1581.669,
+      1939.596
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "command[191:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1654.043,
+     "span_um": [
+      1637.388,
+      1670.697
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "kv_desc[63:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1676.392,
+     "span_um": [
+      1670.892,
+      1681.893
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "packet[1098:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1777.932,
+     "span_um": [
+      1682.076,
+      1873.788
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "request[42:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1877.607,
+     "span_um": [
+      1873.953,
+      1881.261
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rv",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1892.268,
+     "span_um": [
+      1892.268,
+      1892.268
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rrow[11:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1893.377,
+     "span_um": [
+      1892.421,
+      1894.332
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rdata[255:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1916.903,
+     "span_um": [
+      1894.545,
+      1939.26
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M3",
+     "offset": 1939.401,
+     "span_um": [
+      1939.401,
+      1939.401
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "schedule_fault",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1939.596,
+     "span_um": [
+      1939.596,
+      1939.596
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "clk",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3339.372,
+     "span_um": [
+      3339.372,
+      3339.372
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3343.692,
+     "span_um": [
+      3343.692,
+      3343.692
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    }
+   ],
    "face_density": {
     "N": 0.0206,
     "S": 0.0152,
     "E": 0.0461
    },
    "reserved_channels": [],
-   "plan_block": "sm_SW2"
+   "plan_block": "sm_SW2",
+   "pin_file": {
+    "path": "results/arch/hbm_die_v16_a2p/sm_column_pins_0cfed29dc.json",
+    "sha256": "036646b61838ed87704737601092c521169a9e515024e6445c2bb6a7d6694dff",
+    "source_commit": "0cfed29dc",
+    "frame": "F108 portrait column (witness ab729be8a)",
+    "windows": [
+     {
+      "group": "xw",
+      "face": "N",
+      "x": [
+       1578.96,
+       1939.68
+      ],
+      "length_um": 360.72,
+      "bits": 2063,
+      "pins_per_um": 5.719,
+      "cut": 0.549,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "xw_en",
+       "xw_addr[6:0]",
+       "xw_grp[6:0]",
+       "xw_data[2047:0]"
+      ]
+     },
+     {
+      "group": "sm_hbm",
+      "face": "S",
+      "x": [
+       1637.28,
+       1881.36
+      ],
+      "length_um": 244.08,
+      "bits": 1398,
+      "pins_per_um": 5.728,
+      "cut": 0.5499,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "command[191:0]",
+       "kv_desc[63:0]",
+       "packet[1098:0]",
+       "request[42:0]"
+      ]
+     },
+     {
+      "group": "result",
+      "face": "S",
+      "x": [
+       1892.16,
+       1939.68
+      ],
+      "length_um": 47.52,
+      "bits": 271,
+      "pins_per_um": 5.703,
+      "cut": 0.5475,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "rv",
+       "rrow[11:0]",
+       "rdata[255:0]",
+       "fault",
+       "schedule_fault"
+      ]
+     },
+     {
+      "group": "clock_reset",
+      "face": "E",
+      "y": [
+       3339.372,
+       3343.692
+      ],
+      "bits": 2,
+      "note": "one regional root (DIE-CLOCK 640fa898f); root site in the front column at mid-height; rst_n registered at the front, regional sync reset tree inside the column"
+     }
+    ]
+   }
   },
   {
    "name": "sm_SW3",
@@ -58509,9 +61435,9 @@
    },
    "clock_entry": {
     "pin": "clk",
-    "face": "S",
-    "layer": "M5",
-    "offset": 3694.4
+    "face": "E",
+    "layer": "M4",
+    "offset": 3339.372
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -58522,7 +61448,7 @@
     "out_delay_frac": 0.2
    },
    "version": 6,
-   "grant": "real_rtl_pins_1405",
+   "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
@@ -58641,16 +61567,282 @@
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
    "source_prerequisite": "4c5ebb78d",
    "params": {},
-   "pin_status": "FACES_ONLY",
+   "pin_status": "COLUMN_PIN_FILE_EXACT (H-SM F108 sm_column_pins.v1; frame kit LEF pending rp4h/i one-root view)",
    "rtl_pin_grant_1405": true,
-   "pins": [],
+   "pins": [
+    {
+     "name": "xw_en",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1579.068,
+     "span_um": [
+      1579.068,
+      1579.068
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_addr[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1579.743,
+     "span_um": [
+      1579.221,
+      1580.265
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_grp[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1580.988,
+     "span_um": [
+      1580.46,
+      1581.516
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_data[2047:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1760.633,
+     "span_um": [
+      1581.669,
+      1939.596
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "command[191:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1654.043,
+     "span_um": [
+      1637.388,
+      1670.697
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "kv_desc[63:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1676.392,
+     "span_um": [
+      1670.892,
+      1681.893
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "packet[1098:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1777.932,
+     "span_um": [
+      1682.076,
+      1873.788
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "request[42:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1877.607,
+     "span_um": [
+      1873.953,
+      1881.261
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rv",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1892.268,
+     "span_um": [
+      1892.268,
+      1892.268
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rrow[11:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1893.377,
+     "span_um": [
+      1892.421,
+      1894.332
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rdata[255:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1916.903,
+     "span_um": [
+      1894.545,
+      1939.26
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M3",
+     "offset": 1939.401,
+     "span_um": [
+      1939.401,
+      1939.401
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "schedule_fault",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1939.596,
+     "span_um": [
+      1939.596,
+      1939.596
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "clk",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3339.372,
+     "span_um": [
+      3339.372,
+      3339.372
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3343.692,
+     "span_um": [
+      3343.692,
+      3343.692
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    }
+   ],
    "face_density": {
     "N": 0.0183,
     "S": 0.0152,
     "W": 0.0552
    },
    "reserved_channels": [],
-   "plan_block": "sm_SW3"
+   "plan_block": "sm_SW3",
+   "pin_file": {
+    "path": "results/arch/hbm_die_v16_a2p/sm_column_pins_0cfed29dc.json",
+    "sha256": "036646b61838ed87704737601092c521169a9e515024e6445c2bb6a7d6694dff",
+    "source_commit": "0cfed29dc",
+    "frame": "F108 portrait column (witness ab729be8a)",
+    "windows": [
+     {
+      "group": "xw",
+      "face": "N",
+      "x": [
+       1578.96,
+       1939.68
+      ],
+      "length_um": 360.72,
+      "bits": 2063,
+      "pins_per_um": 5.719,
+      "cut": 0.549,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "xw_en",
+       "xw_addr[6:0]",
+       "xw_grp[6:0]",
+       "xw_data[2047:0]"
+      ]
+     },
+     {
+      "group": "sm_hbm",
+      "face": "S",
+      "x": [
+       1637.28,
+       1881.36
+      ],
+      "length_um": 244.08,
+      "bits": 1398,
+      "pins_per_um": 5.728,
+      "cut": 0.5499,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "command[191:0]",
+       "kv_desc[63:0]",
+       "packet[1098:0]",
+       "request[42:0]"
+      ]
+     },
+     {
+      "group": "result",
+      "face": "S",
+      "x": [
+       1892.16,
+       1939.68
+      ],
+      "length_um": 47.52,
+      "bits": 271,
+      "pins_per_um": 5.703,
+      "cut": 0.5475,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "rv",
+       "rrow[11:0]",
+       "rdata[255:0]",
+       "fault",
+       "schedule_fault"
+      ]
+     },
+     {
+      "group": "clock_reset",
+      "face": "E",
+      "y": [
+       3339.372,
+       3343.692
+      ],
+      "bits": 2,
+      "note": "one regional root (DIE-CLOCK 640fa898f); root site in the front column at mid-height; rst_n registered at the front, regional sync reset tree inside the column"
+     }
+    ]
+   }
   },
   {
    "name": "sm_SW4",
@@ -58668,9 +61860,9 @@
    },
    "clock_entry": {
     "pin": "clk",
-    "face": "S",
-    "layer": "M5",
-    "offset": 3694.4
+    "face": "E",
+    "layer": "M4",
+    "offset": 3339.372
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -58681,7 +61873,7 @@
     "out_delay_frac": 0.2
    },
    "version": 6,
-   "grant": "real_rtl_pins_1405",
+   "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
@@ -58800,15 +61992,281 @@
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
    "source_prerequisite": "4c5ebb78d",
    "params": {},
-   "pin_status": "FACES_ONLY",
+   "pin_status": "COLUMN_PIN_FILE_EXACT (H-SM F108 sm_column_pins.v1; frame kit LEF pending rp4h/i one-root view)",
    "rtl_pin_grant_1405": true,
-   "pins": [],
+   "pins": [
+    {
+     "name": "xw_en",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1579.068,
+     "span_um": [
+      1579.068,
+      1579.068
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_addr[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1579.743,
+     "span_um": [
+      1579.221,
+      1580.265
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_grp[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1580.988,
+     "span_um": [
+      1580.46,
+      1581.516
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_data[2047:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1760.633,
+     "span_um": [
+      1581.669,
+      1939.596
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "command[191:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1654.043,
+     "span_um": [
+      1637.388,
+      1670.697
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "kv_desc[63:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1676.392,
+     "span_um": [
+      1670.892,
+      1681.893
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "packet[1098:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1777.932,
+     "span_um": [
+      1682.076,
+      1873.788
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "request[42:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1877.607,
+     "span_um": [
+      1873.953,
+      1881.261
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rv",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1892.268,
+     "span_um": [
+      1892.268,
+      1892.268
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rrow[11:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1893.377,
+     "span_um": [
+      1892.421,
+      1894.332
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rdata[255:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1916.903,
+     "span_um": [
+      1894.545,
+      1939.26
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M3",
+     "offset": 1939.401,
+     "span_um": [
+      1939.401,
+      1939.401
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "schedule_fault",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1939.596,
+     "span_um": [
+      1939.596,
+      1939.596
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "clk",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3339.372,
+     "span_um": [
+      3339.372,
+      3339.372
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3343.692,
+     "span_um": [
+      3343.692,
+      3343.692
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    }
+   ],
    "face_density": {
     "S": 0.0426,
     "E": 0.0189
    },
    "reserved_channels": [],
-   "plan_block": "sm_SW4"
+   "plan_block": "sm_SW4",
+   "pin_file": {
+    "path": "results/arch/hbm_die_v16_a2p/sm_column_pins_0cfed29dc.json",
+    "sha256": "036646b61838ed87704737601092c521169a9e515024e6445c2bb6a7d6694dff",
+    "source_commit": "0cfed29dc",
+    "frame": "F108 portrait column (witness ab729be8a)",
+    "windows": [
+     {
+      "group": "xw",
+      "face": "N",
+      "x": [
+       1578.96,
+       1939.68
+      ],
+      "length_um": 360.72,
+      "bits": 2063,
+      "pins_per_um": 5.719,
+      "cut": 0.549,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "xw_en",
+       "xw_addr[6:0]",
+       "xw_grp[6:0]",
+       "xw_data[2047:0]"
+      ]
+     },
+     {
+      "group": "sm_hbm",
+      "face": "S",
+      "x": [
+       1637.28,
+       1881.36
+      ],
+      "length_um": 244.08,
+      "bits": 1398,
+      "pins_per_um": 5.728,
+      "cut": 0.5499,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "command[191:0]",
+       "kv_desc[63:0]",
+       "packet[1098:0]",
+       "request[42:0]"
+      ]
+     },
+     {
+      "group": "result",
+      "face": "S",
+      "x": [
+       1892.16,
+       1939.68
+      ],
+      "length_um": 47.52,
+      "bits": 271,
+      "pins_per_um": 5.703,
+      "cut": 0.5475,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "rv",
+       "rrow[11:0]",
+       "rdata[255:0]",
+       "fault",
+       "schedule_fault"
+      ]
+     },
+     {
+      "group": "clock_reset",
+      "face": "E",
+      "y": [
+       3339.372,
+       3343.692
+      ],
+      "bits": 2,
+      "note": "one regional root (DIE-CLOCK 640fa898f); root site in the front column at mid-height; rst_n registered at the front, regional sync reset tree inside the column"
+     }
+    ]
+   }
   },
   {
    "name": "sm_SW5",
@@ -58826,9 +62284,9 @@
    },
    "clock_entry": {
     "pin": "clk",
-    "face": "S",
-    "layer": "M5",
-    "offset": 3694.4
+    "face": "E",
+    "layer": "M4",
+    "offset": 3339.372
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -58839,7 +62297,7 @@
     "out_delay_frac": 0.2
    },
    "version": 6,
-   "grant": "real_rtl_pins_1405",
+   "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
@@ -58958,14 +62416,280 @@
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
    "source_prerequisite": "4c5ebb78d",
    "params": {},
-   "pin_status": "FACES_ONLY",
+   "pin_status": "COLUMN_PIN_FILE_EXACT (H-SM F108 sm_column_pins.v1; frame kit LEF pending rp4h/i one-root view)",
    "rtl_pin_grant_1405": true,
-   "pins": [],
+   "pins": [
+    {
+     "name": "xw_en",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1579.068,
+     "span_um": [
+      1579.068,
+      1579.068
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_addr[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1579.743,
+     "span_um": [
+      1579.221,
+      1580.265
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_grp[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1580.988,
+     "span_um": [
+      1580.46,
+      1581.516
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_data[2047:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1760.633,
+     "span_um": [
+      1581.669,
+      1939.596
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "command[191:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1654.043,
+     "span_um": [
+      1637.388,
+      1670.697
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "kv_desc[63:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1676.392,
+     "span_um": [
+      1670.892,
+      1681.893
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "packet[1098:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1777.932,
+     "span_um": [
+      1682.076,
+      1873.788
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "request[42:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1877.607,
+     "span_um": [
+      1873.953,
+      1881.261
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rv",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1892.268,
+     "span_um": [
+      1892.268,
+      1892.268
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rrow[11:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1893.377,
+     "span_um": [
+      1892.421,
+      1894.332
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rdata[255:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1916.903,
+     "span_um": [
+      1894.545,
+      1939.26
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M3",
+     "offset": 1939.401,
+     "span_um": [
+      1939.401,
+      1939.401
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "schedule_fault",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1939.596,
+     "span_um": [
+      1939.596,
+      1939.596
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "clk",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3339.372,
+     "span_um": [
+      3339.372,
+      3339.372
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3343.692,
+     "span_um": [
+      3343.692,
+      3343.692
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    }
+   ],
    "face_density": {
     "S": 0.0473
    },
    "reserved_channels": [],
-   "plan_block": "sm_SW5"
+   "plan_block": "sm_SW5",
+   "pin_file": {
+    "path": "results/arch/hbm_die_v16_a2p/sm_column_pins_0cfed29dc.json",
+    "sha256": "036646b61838ed87704737601092c521169a9e515024e6445c2bb6a7d6694dff",
+    "source_commit": "0cfed29dc",
+    "frame": "F108 portrait column (witness ab729be8a)",
+    "windows": [
+     {
+      "group": "xw",
+      "face": "N",
+      "x": [
+       1578.96,
+       1939.68
+      ],
+      "length_um": 360.72,
+      "bits": 2063,
+      "pins_per_um": 5.719,
+      "cut": 0.549,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "xw_en",
+       "xw_addr[6:0]",
+       "xw_grp[6:0]",
+       "xw_data[2047:0]"
+      ]
+     },
+     {
+      "group": "sm_hbm",
+      "face": "S",
+      "x": [
+       1637.28,
+       1881.36
+      ],
+      "length_um": 244.08,
+      "bits": 1398,
+      "pins_per_um": 5.728,
+      "cut": 0.5499,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "command[191:0]",
+       "kv_desc[63:0]",
+       "packet[1098:0]",
+       "request[42:0]"
+      ]
+     },
+     {
+      "group": "result",
+      "face": "S",
+      "x": [
+       1892.16,
+       1939.68
+      ],
+      "length_um": 47.52,
+      "bits": 271,
+      "pins_per_um": 5.703,
+      "cut": 0.5475,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "rv",
+       "rrow[11:0]",
+       "rdata[255:0]",
+       "fault",
+       "schedule_fault"
+      ]
+     },
+     {
+      "group": "clock_reset",
+      "face": "E",
+      "y": [
+       3339.372,
+       3343.692
+      ],
+      "bits": 2,
+      "note": "one regional root (DIE-CLOCK 640fa898f); root site in the front column at mid-height; rst_n registered at the front, regional sync reset tree inside the column"
+     }
+    ]
+   }
   },
   {
    "name": "sm_SW6",
@@ -58983,9 +62707,9 @@
    },
    "clock_entry": {
     "pin": "clk",
-    "face": "S",
-    "layer": "M5",
-    "offset": 3694.4
+    "face": "E",
+    "layer": "M4",
+    "offset": 3339.372
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -58996,7 +62720,7 @@
     "out_delay_frac": 0.2
    },
    "version": 6,
-   "grant": "real_rtl_pins_1405",
+   "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
@@ -59115,14 +62839,280 @@
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
    "source_prerequisite": "4c5ebb78d",
    "params": {},
-   "pin_status": "FACES_ONLY",
+   "pin_status": "COLUMN_PIN_FILE_EXACT (H-SM F108 sm_column_pins.v1; frame kit LEF pending rp4h/i one-root view)",
    "rtl_pin_grant_1405": true,
-   "pins": [],
+   "pins": [
+    {
+     "name": "xw_en",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1579.068,
+     "span_um": [
+      1579.068,
+      1579.068
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_addr[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1579.743,
+     "span_um": [
+      1579.221,
+      1580.265
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_grp[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1580.988,
+     "span_um": [
+      1580.46,
+      1581.516
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_data[2047:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1760.633,
+     "span_um": [
+      1581.669,
+      1939.596
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "command[191:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1654.043,
+     "span_um": [
+      1637.388,
+      1670.697
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "kv_desc[63:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1676.392,
+     "span_um": [
+      1670.892,
+      1681.893
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "packet[1098:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1777.932,
+     "span_um": [
+      1682.076,
+      1873.788
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "request[42:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1877.607,
+     "span_um": [
+      1873.953,
+      1881.261
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rv",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1892.268,
+     "span_um": [
+      1892.268,
+      1892.268
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rrow[11:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1893.377,
+     "span_um": [
+      1892.421,
+      1894.332
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rdata[255:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1916.903,
+     "span_um": [
+      1894.545,
+      1939.26
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M3",
+     "offset": 1939.401,
+     "span_um": [
+      1939.401,
+      1939.401
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "schedule_fault",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1939.596,
+     "span_um": [
+      1939.596,
+      1939.596
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "clk",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3339.372,
+     "span_um": [
+      3339.372,
+      3339.372
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3343.692,
+     "span_um": [
+      3343.692,
+      3343.692
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    }
+   ],
    "face_density": {
     "S": 0.0473
    },
    "reserved_channels": [],
-   "plan_block": "sm_SW6"
+   "plan_block": "sm_SW6",
+   "pin_file": {
+    "path": "results/arch/hbm_die_v16_a2p/sm_column_pins_0cfed29dc.json",
+    "sha256": "036646b61838ed87704737601092c521169a9e515024e6445c2bb6a7d6694dff",
+    "source_commit": "0cfed29dc",
+    "frame": "F108 portrait column (witness ab729be8a)",
+    "windows": [
+     {
+      "group": "xw",
+      "face": "N",
+      "x": [
+       1578.96,
+       1939.68
+      ],
+      "length_um": 360.72,
+      "bits": 2063,
+      "pins_per_um": 5.719,
+      "cut": 0.549,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "xw_en",
+       "xw_addr[6:0]",
+       "xw_grp[6:0]",
+       "xw_data[2047:0]"
+      ]
+     },
+     {
+      "group": "sm_hbm",
+      "face": "S",
+      "x": [
+       1637.28,
+       1881.36
+      ],
+      "length_um": 244.08,
+      "bits": 1398,
+      "pins_per_um": 5.728,
+      "cut": 0.5499,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "command[191:0]",
+       "kv_desc[63:0]",
+       "packet[1098:0]",
+       "request[42:0]"
+      ]
+     },
+     {
+      "group": "result",
+      "face": "S",
+      "x": [
+       1892.16,
+       1939.68
+      ],
+      "length_um": 47.52,
+      "bits": 271,
+      "pins_per_um": 5.703,
+      "cut": 0.5475,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "rv",
+       "rrow[11:0]",
+       "rdata[255:0]",
+       "fault",
+       "schedule_fault"
+      ]
+     },
+     {
+      "group": "clock_reset",
+      "face": "E",
+      "y": [
+       3339.372,
+       3343.692
+      ],
+      "bits": 2,
+      "note": "one regional root (DIE-CLOCK 640fa898f); root site in the front column at mid-height; rst_n registered at the front, regional sync reset tree inside the column"
+     }
+    ]
+   }
   },
   {
    "name": "sm_SW7",
@@ -59140,9 +63130,9 @@
    },
    "clock_entry": {
     "pin": "clk",
-    "face": "S",
-    "layer": "M5",
-    "offset": 3694.4
+    "face": "E",
+    "layer": "M4",
+    "offset": 3339.372
    },
    "pg_layer": "M7",
    "strap_layer": "M8",
@@ -59153,7 +63143,7 @@
     "out_delay_frac": 0.2
    },
    "version": 6,
-   "grant": "real_rtl_pins_1405",
+   "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
@@ -59272,14 +63262,280 @@
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
    "source_prerequisite": "4c5ebb78d",
    "params": {},
-   "pin_status": "FACES_ONLY",
+   "pin_status": "COLUMN_PIN_FILE_EXACT (H-SM F108 sm_column_pins.v1; frame kit LEF pending rp4h/i one-root view)",
    "rtl_pin_grant_1405": true,
-   "pins": [],
+   "pins": [
+    {
+     "name": "xw_en",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1579.068,
+     "span_um": [
+      1579.068,
+      1579.068
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_addr[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1579.743,
+     "span_um": [
+      1579.221,
+      1580.265
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_grp[6:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1580.988,
+     "span_um": [
+      1580.46,
+      1581.516
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "xw_data[2047:0]",
+     "face": "N",
+     "layer": "M3/M5",
+     "offset": 1760.633,
+     "span_um": [
+      1581.669,
+      1939.596
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "command[191:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1654.043,
+     "span_um": [
+      1637.388,
+      1670.697
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "kv_desc[63:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1676.392,
+     "span_um": [
+      1670.892,
+      1681.893
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "packet[1098:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1777.932,
+     "span_um": [
+      1682.076,
+      1873.788
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "request[42:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1877.607,
+     "span_um": [
+      1873.953,
+      1881.261
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rv",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1892.268,
+     "span_um": [
+      1892.268,
+      1892.268
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rrow[11:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1893.377,
+     "span_um": [
+      1892.421,
+      1894.332
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rdata[255:0]",
+     "face": "S",
+     "layer": "M3/M5",
+     "offset": 1916.903,
+     "span_um": [
+      1894.545,
+      1939.26
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M3",
+     "offset": 1939.401,
+     "span_um": [
+      1939.401,
+      1939.401
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "schedule_fault",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1939.596,
+     "span_um": [
+      1939.596,
+      1939.596
+     ],
+     "direction": "output",
+     "offset_pending_view": false
+    },
+    {
+     "name": "clk",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3339.372,
+     "span_um": [
+      3339.372,
+      3339.372
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "E",
+     "layer": "M4",
+     "offset": 3343.692,
+     "span_um": [
+      3343.692,
+      3343.692
+     ],
+     "direction": "input",
+     "offset_pending_view": false
+    }
+   ],
    "face_density": {
     "S": 0.0473
    },
    "reserved_channels": [],
-   "plan_block": "sm_SW7"
+   "plan_block": "sm_SW7",
+   "pin_file": {
+    "path": "results/arch/hbm_die_v16_a2p/sm_column_pins_0cfed29dc.json",
+    "sha256": "036646b61838ed87704737601092c521169a9e515024e6445c2bb6a7d6694dff",
+    "source_commit": "0cfed29dc",
+    "frame": "F108 portrait column (witness ab729be8a)",
+    "windows": [
+     {
+      "group": "xw",
+      "face": "N",
+      "x": [
+       1578.96,
+       1939.68
+      ],
+      "length_um": 360.72,
+      "bits": 2063,
+      "pins_per_um": 5.719,
+      "cut": 0.549,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "xw_en",
+       "xw_addr[6:0]",
+       "xw_grp[6:0]",
+       "xw_data[2047:0]"
+      ]
+     },
+     {
+      "group": "sm_hbm",
+      "face": "S",
+      "x": [
+       1637.28,
+       1881.36
+      ],
+      "length_um": 244.08,
+      "bits": 1398,
+      "pins_per_um": 5.728,
+      "cut": 0.5499,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "command[191:0]",
+       "kv_desc[63:0]",
+       "packet[1098:0]",
+       "request[42:0]"
+      ]
+     },
+     {
+      "group": "result",
+      "face": "S",
+      "x": [
+       1892.16,
+       1939.68
+      ],
+      "length_um": 47.52,
+      "bits": 271,
+      "pins_per_um": 5.703,
+      "cut": 0.5475,
+      "min_same_layer_gap_um": {
+       "M3": 0.324,
+       "M5": 0.336
+      },
+      "bus_order": [
+       "rv",
+       "rrow[11:0]",
+       "rdata[255:0]",
+       "fault",
+       "schedule_fault"
+      ]
+     },
+     {
+      "group": "clock_reset",
+      "face": "E",
+      "y": [
+       3339.372,
+       3343.692
+      ],
+      "bits": 2,
+      "note": "one regional root (DIE-CLOCK 640fa898f); root site in the front column at mid-height; rst_n registered at the front, regional sync reset tree inside the column"
+     }
+    ]
+   }
   },
   {
    "name": "su_NW0",
@@ -78019,5 +82275,13 @@
    "points_in_hard_blocks": [],
    "n_bad_points": 0
   }
- }
+ },
+ "a2p_sm_column_grant": [
+  {
+   "slots": 16,
+   "pin_file": "results/arch/hbm_die_v16_a2p/sm_column_pins_0cfed29dc.json",
+   "source_commit": "0cfed29dc",
+   "ports": 15
+  }
+ ]
 }

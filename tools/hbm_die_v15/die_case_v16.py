@@ -30,7 +30,7 @@ Placement order (every generated home is reported in manifest.json 'homes'):
      nearest free area to each point.
 Generated homes keep a 10.8 um halo (>= 21.6 um channels between them); relays have no halo.
 """
-import argparse, hashlib, json, math, re, shutil, sys
+import argparse, collections, hashlib, json, math, re, shutil, sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -38,7 +38,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from die_case import synth_lef, entry_cap, ports_of_lib, rect_of, _minus  # noqa: E402
+from die_case import synth_lef, entry_cap, ports_of_lib, rect_of, _minus, grant_pins  # noqa: E402
 from view_case import lef_pins, lef_xy  # noqa: E402
 import clock_sites
 import die_clock_tree as dct  # noqa: E402
@@ -232,6 +232,9 @@ def main():
     ap.add_argument('--max-pin-density', type=float, default=0.0,
                     help='SYNTH abstracts: pins/um/face cap (coordinator standard: 6); compact runs use >= 1/cap pitch; '
                          'faces whose bus total cannot fit are listed in manifest.pin_density_over (never hidden)')
+    ap.add_argument('--slot-pins', action='store_true',
+                    help='A2P (H-DIE 10-16): a SYNTH master whose grant slots carry exact pins (pin_status COLUMN_PIN_FILE_EXACT, '
+                         'e.g. the H-SM F108 SM column) takes those pins in its abstract instead of the peer-facing generator')
     ap.add_argument('--no-plot', action='store_true', help='defer PNG rendering; manifest retains exact geometry for later rendering')
     ap.add_argument('--no-clock', action='store_true', help='placement/images only (skip die clock trees and run files)')
     ap.add_argument('--pc-strip', type=float, default=0.0,
@@ -692,6 +695,14 @@ def main():
             continue
         rep = next(n for n in V[c]['instances'] if n in pl)
         v = pl[rep]; w, h = size[c]; cx, cy = centre(rep)
+        gsl = slots.get(eslot(rep) or '', {})
+        if a.slot_pins and str(gsl.get('pin_status', '')).startswith('COLUMN_PIN_FILE_EXACT'):
+            gp, bad, extra = grant_pins(gsl, {p: (dirs[c][p], b) for p, b in ports[c].items()})
+            if bad:
+                raise SystemExit(f'{c}: slot pins do not cover the master ports {list(bad.items())[:6]} (extra {extra[:6]})')
+            synth_lef(c, w, h, gp, vd / f'{c}.lef', keepout=[])
+            face_report[c] = dict(collections.Counter(x[2] for x in gp)); flags[c] = 'slot_pins_exact'
+            continue
         cap = {f: 0.9 * (w if f in 'NS' else h) / 0.048 for f in 'NSEW'}
         want = {}
         clockish = set(p for d_ in clk.values() for p in [re.sub(r'\[\d+\]$', '', x) for x in d_.get(rep, [])])
