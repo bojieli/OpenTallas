@@ -521,6 +521,15 @@ def main():
                 add(nm, SUX_PORT, o['dur'], preds, eng='sux', order=i)
         else:
             add(nm, o['port'], o['dur'], preds, eng=o['eng'], order=i)
+    if a.hcx_real:
+        # HC POST rewrites private HC SRAM. FFN HCX reads VM, so export
+        # the updated residual explicitly. The fixed HCX issue edge is never
+        # delayed here: a late export must fail the actual-input checks.
+        # Production still requires a mapped-SRAM commit/clock calendar.
+        store = f'{L}.attn.hc.h_store_for_hcx'
+        order = [x['id'] for x in src].index(f'{L}.attn.hc_post') + 0.5
+        add(store, HC_PORT, 0, [f'{L}.attn.hc_post'], hc_arg(1, hl_base), eng='hc', order=order)
+        nodes[f'{L}.ffn.hc_pre']['preds'].append(store)
     add(f'{L}.hc.h_store', HC_PORT, 0, [f'{L}.ffn.hc_post'], hc_arg(1, S_BASE), eng='hc', order=1e9)
     hcx_meta = None
     if a.hcx_real:
@@ -554,7 +563,11 @@ def main():
         from program import issuer_done_row
         fixed_rows.extend(dict(engine=11, arg=(hset << 15) | (hl_base << 1) | b, issue=iss[b],
                                done=issuer_done_row(iss[b], a.hcx_p2p), pin_to_pin=a.hcx_p2p) for b in range(2))
-        hcx_meta = dict(members=hcx_members, rom_set=hset, issue=iss, issue_phase=hcx_phase, pin_to_pin=a.hcx_p2p, h_base=hl_base,
+        hcx_meta = dict(required_vm_export=dict(operation=store, producer=f'{L}.attn.hc_post',
+                        source='private HC SRAM', destination='ideal bench VM',
+                        writes=640, bytes=40960, minimum_issue_edges=80,
+                        mapped_commit_calendar_bound=False),
+                        members=hcx_members, rom_set=hset, issue=iss, issue_phase=hcx_phase, pin_to_pin=a.hcx_p2p, h_base=hl_base,
                         coef_rows=[C_BASE, C_BASE + 1, C_BASE + COEF_STRIDE, C_BASE + COEF_STRIDE + 1],
                         golden_coefficient_injection=False, native_qualified=False,
                         declared_boundaries=['ideal bench VM', 'TP4 raw gather bench transport (collective glue)',

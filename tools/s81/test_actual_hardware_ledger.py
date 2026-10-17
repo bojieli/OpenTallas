@@ -30,4 +30,21 @@ class LedgerGate(unittest.TestCase):
    self.assertIn('canonical_phase_width_unproven',r['failures'])
    self.assertIn('missing_build_define:STATIC',r['operations'][0]['binding_findings'])
    self.assertIn('source_not_selected_in_manifest',r['operations'][0]['binding_findings'])
+ def test_emitted_parameter_width_not_default_template(self):
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td)
+   rtl=root/'r.sv';rtl.write_text('module leaf #(parameter integer W=4)(input wire [W-1:0] x,output wire [W-1:0] y);assign y=x;endmodule')
+   req=root/'req.json';req.write_text(json.dumps({'scope':'whole','canonical':{},'operations':[{'operation':'leaf','module':'leaf','source':'r.sv','required_ports':{'x':8}}]}))
+   fl=root/'list.f';fl.write_text(str(rtl)+'\n')
+   die=root/'die.v'
+   for width in (8,7):
+    die.write_text(f'module die;wire [{width-1}:0] n;leaf #(.W({width})) u(.x(n),.y(n));endmodule')
+    with patch.object(ledger,'ROOT',root):r=ledger.audit(req,fl,die)
+    row=r['operations'][0]
+    self.assertEqual(row['source_default_ports']['x']['bits'],4)
+    self.assertEqual(row['ports']['x']['bits'],width)
+    self.assertEqual(any(f.startswith('required_port_width:x:') for f in row['binding_findings']),width!=8)
+    self.assertFalse(r['release_qualified'])
+   with patch.object(ledger,'ROOT',root):r=ledger.audit(req,fl)
+   self.assertIn('required_port_unproven_without_emitted_instance:x',r['operations'][0]['binding_findings'])
 if __name__=='__main__':unittest.main()

@@ -32,8 +32,12 @@ def audit(requirements, manifest, die=None, bind_record=None, shape=None):
             for mod in bind.parse_modules(bind.preprocess(p.read_text(),defines),str(p)):
                 idx[mod.name]=mod
     emitted=Counter()
+    emitted_params={}
     if die and die.exists():
-        emitted.update(m for m,_,_,_ in bind.parse_die(die)[3] if m!='__assign__')
+        for master, instance, params, _ in bind.parse_die(die)[3]:
+            if master == '__assign__': continue
+            emitted[master] += 1
+            emitted_params.setdefault(master, []).append((instance, params))
     reasons=[]
     if not die or not die.exists(): reasons.append('missing_emitted_canonical_die')
     shape_record=json.loads(shape.read_text()) if shape and shape.exists() else {}
@@ -54,15 +58,31 @@ def audit(requirements, manifest, die=None, bind_record=None, shape=None):
     rows=[]
     for item in req['operations']:
         row=dict(item);name=item.get('module');mod=idx.get(name);fail=[]
+        if not name:fail.append('unsupported_operation_missing_target')
         if not mod:fail.append('actual_source_module_missing')
         else:
             row['source_sha256']=sha(Path(mod.path))
             row['source']=str(Path(mod.path).relative_to(ROOT))
-            row['ports']={n:{'direction':d[0],'bits':mod.width(n,mod.env())}for n,d in mod.ports.items()}
+            row['source_default_ports']={n:{'direction':d[0],'bits':mod.width(n,mod.env())}for n,d in mod.ports.items()}
+            row['ports']=dict(row['source_default_ports'])
+            row['emitted_instance_ports']=[]
+            for instance, overrides in emitted_params.get(name, []):
+                env=mod.env(overrides)
+                row['emitted_instance_ports'].append(dict(instance=instance, parameters=overrides,
+                    ports={n:{'direction':d[0],'bits':mod.width(n,env)} for n,d in mod.ports.items()}))
+            if row['emitted_instance_ports']:
+                # Every emitted instance must meet a required interface. A default
+                # template does not prove a parameterized emitted port's width.
+                row['ports']={n:dict(direction=d[0],bits=(next(iter(widths)) if len(widths)==1 else None))
+                              for n,d in mod.ports.items()
+                              for widths in [{r['ports'][n]['bits'] for r in row['emitted_instance_ports']}]}
             if mod.port_parse_errors:fail.append('source_header_parse_error')
             if any(p['bits'] is None for p in row['ports'].values()):fail.append('unevaluated_port_width')
             if not any(Path(f).resolve()==Path(mod.path).resolve() for f in files):fail.append('source_not_selected_in_manifest')
         for pn,width in item.get('required_ports',{}).items():
+            if not emitted_params.get(name):
+                fail.append('required_port_unproven_without_emitted_instance:'+pn)
+                continue
             actual=row.get('ports',{}).get(pn,{}).get('bits')
             if actual!=width:fail.append('required_port_width:'+pn+':'+str(actual)+'!='+str(width))
         for d in item.get('required_defines',[]):
