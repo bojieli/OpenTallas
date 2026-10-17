@@ -2,7 +2,7 @@
 // Bench: real static ingress -> ot_hbm_static_cfg_collar (SU/SFU variant A, IDX/TOPK/ARGMAX variant B,
 // spare A for negatives) -> ot_hbm_status_join -> ingress block_ready/program_active/program_fault.
 // Host stimulus = AXI-lite writes only; client busy/done are bench models of the engines' status pins.
-// CMUT -> collar MUT, JMUT -> join MUT. Every mutant must produce FAIL.
+// CMUT -> collar MUT, JMUT -> join MUT. Every mutant must produce FAIL. (CMUT=5: stream domain without its reset)
 module tb_hbm_static_cfg_collar;
 parameter integer CMUT=0, JMUT=0;
 parameter integer NA0=2100, NA1=5, NB0=10;
@@ -169,6 +169,12 @@ initial begin
  chk(program_fault,"join program_fault from target");
  axw(12'hf30,32'd1); chk(last_resp==2,"launch refused after fault");
  chk(guard_err==0,"block_ready held low after configuration frames");
+ // ===== R (HBMA-HOST2 10-17): mid-run reset with stream events in flight clears BOTH domains of the serial
+ // collars (core reset rst_c_n, stream reset rst_s_n): no stale held event or sequence survives the release.
+ @(negedge clk); e_cv=1; repeat(2) @(negedge clk); e_cv=0; repeat(2) @(posedge clk);
+ rst_n=0; repeat(8) @(posedge clk); rst_n=1; repeat(24) @(posedge clk);
+ chk(!e_fault && !d_fault && !c_fault && !program_fault,"reset clears both domains; no stale stream event after release");
+ chk(d_seen==300 && d_starts==1,"no spurious serial write/start after reset");
  if(errors==0) $display("PASS collar+join+ingress checks=%0d A0=%0d A1=%0d B=%0d go=%0d/%0d/%0d", checks,a_seen0,a_seen1,b_seen,go_t[0],go_t[1],go_t[2]);
  else $display("FAIL errors=%0d checks=%0d", errors, checks);
  $finish;
