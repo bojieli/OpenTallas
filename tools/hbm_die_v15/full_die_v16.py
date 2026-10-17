@@ -198,10 +198,114 @@ def rng(ref, ports):
     return i, p, 0, ports[i][p]['bits']
 
 
+def apply_relay_splice_v2(buses, edges, ports, problems):
+    """H-NETLIST 1017 (d4f F1 relay layer, tools/hbm_die_v16/relay_layer_d4f.py): generic relay trees.  Per bus:
+    driver / driver_bits / loads as v1; nodes = [{id, parent, pbranch, names[lane], outs[branch port]}]; sinks =
+    {sink: {src: [node id | None, branch], chain: [[name per lane] per sink-root stage]}}; W = lane width, T = lanes.
+    Lane t carries bus bits [t*W, (t+1)*W); positions >= bits are driven by REAL driver bits (j % bits), never tied."""
+    rmap = {}
+    for b in buses:
+        for j, ((p, k), ls) in enumerate(zip(b['driver_bits'], b['loads'])):
+            for (si, sp, sb) in ls:
+                sk = b['sinks'].get(si)
+                if sk is None or (sk['src'][0] is None and not sk['chain']):
+                    continue
+                rmap[(b['driver'], p, k, si, sp, sb)] = 1
+    drivers = {b['driver'] for b in buses}
+    found = set(); out = []
+    for e in edges:
+        if e['src'][0] not in drivers:
+            out.append(e); continue
+        try:
+            si, sp, slo, shi = rng(e['src'], ports); di, dp, dlo, dhi = rng(e['dst'], ports)
+        except KeyError:
+            out.append(e); continue
+        keep = [(si, sp, slo + k, di, dp, dlo + k) not in rmap for k in range(shi - slo)]
+        if all(keep):
+            out.append(e); continue
+        for k in range(shi - slo):
+            if not keep[k]:
+                found.add((si, sp, slo + k, di, dp, dlo + k))
+        k = 0
+        while k < len(keep):
+            if not keep[k]:
+                k += 1; continue
+            k2 = k
+            while k2 + 1 < len(keep) and keep[k2 + 1]:
+                k2 += 1
+            out.append(dict(e, name=f"{e['name']}__kr{k}", src=[si, sp, slo + k, slo + k2 + 1], dst=[di, dp, dlo + k, dlo + k2 + 1], bits=k2 - k + 1))
+            k = k2 + 1
+    miss = [x for x in rmap if x not in found]
+    if miss:
+        problems.append(f'relay splice v2: {len(miss)} listed load bits not driven by their listed driver bit (e.g. {miss[:3]})')
+    for b in buses:
+        W, T, n, tag, ck = b['width'], b['tiles'], b['bits'], b['bus'], b['domain']
+        bas = f"d4f F1 relay tree {tag} ({b['cls']}, {b['driver']}) -- relay_layer_d4f.py"
+        def E(src, dst, bits, nm):
+            out.append(dict(name=f'{tag}__{nm}', src=src, dst=dst, bits=bits, clock=ck, basis=bas, region='relays_d4f'))
+        def from_driver(names):
+            for t in range(T):
+                run = None
+                for L in range(W):
+                    j = t * W + L
+                    p, k = b['driver_bits'][j if j < n else j % n]
+                    if run and run[0] == p and run[2] + 1 == k and run[4] + 1 == L:
+                        run[2] = k; run[4] = L
+                    else:
+                        if run:
+                            E([b['driver'], run[0], run[1], run[2] + 1], [names[t], 'i', run[3], run[4] + 1], run[4] - run[3] + 1, f'drv_{names[t]}_{run[3]}')
+                        run = [p, k, k, L, L]
+                E([b['driver'], run[0], run[1], run[2] + 1], [names[t], 'i', run[3], run[4] + 1], run[4] - run[3] + 1, f'drv_{names[t]}_{run[3]}')
+        nodes = {nd['id']: nd for nd in b['nodes']}
+        for nd in b['nodes']:
+            if nd['parent'] is None:
+                from_driver(nd['names'])
+            else:
+                pn = nodes[nd['parent']]
+                for t in range(T):
+                    E([pn['names'][t], pn['outs'][nd['pbranch']]], [nd['names'][t], 'i'], W, f"t_{nd['names'][t]}")
+        for snk, sk in b['sinks'].items():
+            src_node, br = sk['src']
+            prev = None if src_node is None else (nodes[src_node]['names'], nodes[src_node]['outs'][br])
+            for stage in sk['chain']:
+                if prev is None:
+                    from_driver(stage)
+                else:
+                    for t in range(T):
+                        E([prev[0][t], prev[1]], [stage[t], 'i'], W, f't_{stage[t]}')
+                prev = (stage, 'o')
+            sk['_last'] = prev
+        seq = collections.defaultdict(list)
+        for j, ls in enumerate(b['loads']):
+            for (si, sp, sb) in ls:
+                sk = b['sinks'].get(si)
+                if sk is None or sk.get('_last') is None:
+                    continue
+                seq[si].append((j, sp, sb))
+        for si, lst in seq.items():
+            names, port = b['sinks'][si]['_last']
+            lst.sort(key=lambda x: (x[0] // W, x[1], x[2]))
+            cur = None
+            for j, sp, sb in lst:
+                t, L = divmod(j, W)
+                if cur and cur[0] == t and cur[1] == sp and cur[3] + 1 == L and cur[5] + 1 == sb:
+                    cur[3] = L; cur[5] = sb
+                else:
+                    if cur:
+                        E([names[cur[0]], port, cur[2], cur[3] + 1], [si, cur[1], cur[4], cur[5] + 1], cur[3] - cur[2] + 1, f'ld_{si}_{cur[1]}_{cur[4]}')
+                    cur = [t, sp, L, L, sb, sb]
+            if cur:
+                E([names[cur[0]], port, cur[2], cur[3] + 1], [si, cur[1], cur[4], cur[5] + 1], cur[3] - cur[2] + 1, f'ld_{si}_{cur[1]}_{cur[4]}')
+    return out
+
+
 def apply_relay_splice(specs, edges, ports, problems):
     """H-NETLIST/H-ELEM 2026-10-16 (d4b relay stations, tools/hbm_die_v15/relay_contract_d4b.py): rewire every listed
     bus load bit through its registered station chain. A listed load bit must be driven by the listed driver bit in the
     contract as built so far (else a problem: the station list is stale against this netlist)."""
+    v2 = [b for s in specs for b in s.get('relay_splice_v2', [])]
+    if v2:
+        edges = apply_relay_splice_v2(v2, edges, ports, problems)
     buses = [b for s in specs for b in s.get('relay_splice', [])]
     if not buses:
         return edges
