@@ -101,7 +101,27 @@ def pins(fw: int) -> list[Pin]:
             Pin("rx_flit", fw, "output", "data_out")]
 
 
-def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float, west: bool = False):
+# ASAP7 M5 tracks (make_tracks.tcl): x = 0.012 + k * 0.048 um; macro origins sit on the 0.054 um site grid. Site and track
+# grids meet only on gcd(54, 48) = 6 nm, so a top-edge M5 pin centre c is reachable in R0/MX iff (c - 12) % 6 == 0 nm and
+# in MY/R180 iff (W - c - 12) % 6 == 0 nm (DBU 1000/um).
+M5_X_OFF_NM, SITE_NM, M5_PITCH_NM = 12, 54, 48
+TRACK_PHASE_NM = math.gcd(SITE_NM, M5_PITCH_NM)
+
+
+def track_phase_x0(x0: float, w: float) -> float:
+    """PHY-ABS 10-17 (dv2f9 'ot_mts ... s597 MX x: site grid (0 + k*54) never meets the legal residues mod 48'): the
+    nface --tall SerDes centred its block at x0 = 753.009 um, a pin-centre phase of 3 nm, legal in no orientation.
+    Snap x0 down to the 6-nm phase (pin centres x0 + 0.012 + i * 0.048); a W that is itself a 6-nm multiple keeps the
+    phase under the mirror about the y axis (MY / R180) too. Already-legal x0 values are returned unchanged."""
+    xn, wn = round(x0 * 1000), round(w * 1000)
+    if wn % TRACK_PHASE_NM:
+        raise SystemExit(f"width {w} um is not a {TRACK_PHASE_NM}-nm multiple: no mirror-legal M5 pin phase")
+    xn -= (xn + 12 - M5_X_OFF_NM) % TRACK_PHASE_NM
+    return xn / 1000
+
+
+def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float, west: bool = False,
+              track_phase: bool = False):
     L = [f"# OpenTallas tools/qwen_missing/link_phy_gen.py: {name} hard-macro ABSTRACT (licensed PHY IP; FDI side only)",
          "VERSION 5.7 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {name}",
          f"  FOREIGN {name} 0 0 ;", "  SYMMETRY X Y ;", f"  SIZE {w:.3f} BY {h:.3f} ;", "  CLASS BLOCK ;"]
@@ -110,6 +130,8 @@ def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float, wes
     if span > (120.0 if west else w - 4.0):
         raise SystemExit(f"{name}: {len(bits)} pins do not fit the {w} um edge at {pitch} um")
     x0 = round((w - span) / 2.0, 3)
+    if track_phase and not west:
+        x0 = track_phase_x0(x0, w)
     pw, pl = 0.024, 0.192
     for i, (p, b) in enumerate(bits):
         x = x0 + i * pitch
@@ -292,7 +314,7 @@ def generate_nface(out: Path, tall: bool = False) -> dict:
             # same macro model, latency and boundary timing (NOT a rotation of a licensed view)
             w, h = h, w
         plist = pins(fw)
-        lef, pin_info = write_lef(name, w, h, plist, 0.048, west=False)
+        lef, pin_info = write_lef(name, w, h, plist, 0.048, west=False, track_phase=True)
         d = out / name
         d.mkdir(parents=True, exist_ok=True)
         (d / f"{name}.lef").write_text(lef)
