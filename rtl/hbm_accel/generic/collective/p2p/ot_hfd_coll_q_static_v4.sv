@@ -73,6 +73,10 @@ module ot_hfd_coll_q_static_v4 #(
   .iteration(iteration),.uop_pc(uop_pc));
  // Validity masks only undefined/idle instruction words, never normal faults.
  wire [1535:0] inst=uop_v?uop:1536'd0;
+ // Every host wrapper propagates NLINK to this actual core. Defaults remain 3/2.
+ initial begin
+  if(NPT<1 || NPT>3)$fatal(1,"COLL NLINK must be in 1..3");
+ end
  wire [9:0] p_capture_slot=inst[0 +: 10];
  wire [15:0] p_sink_slot=inst[10 +: 16];
  wire [63:0] p_sink_select=inst[26 +: 64];
