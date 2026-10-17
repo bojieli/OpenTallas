@@ -21,6 +21,7 @@ bits, pins at >= 0.167 um pitch (<= 6 pins/um/face).  The cluster RTL (qfd_c_b16
 source tree the strict port bind fails and a chain must run OT_CHAIN_DIAGNOSTIC=1 (DIAGNOSTIC_ONLY).
 """
 import json
+import math
 import os
 import re
 from pathlib import Path
@@ -78,7 +79,41 @@ def _orient(side, band):
     return 'R180' if lower else 'MY'
 
 
+def validate_pins(w, h, ports):
+    """Validate the actual snapped pin centres; a contract cannot shrink around stale pins."""
+    if any(isinstance(z, bool) or not isinstance(z, (int, float)) or not math.isfinite(z) or z <= 0
+           for z in (w, h)):
+        raise ValueError('q3h: outline must be positive and finite')
+    occupied = {}
+    for name, d in ports.items():
+        n, face, layer = d['bits'], d['face'], d['layer']
+        if isinstance(n, bool) or not isinstance(n, int) or n < 1:
+            raise ValueError(f'q3h {name}: invalid port width')
+        if face not in ('N', 'S', 'W', 'E') or layer != ('M4' if face in ('W', 'E') else 'M5'):
+            raise ValueError(f'q3h {name}: unsupported face/layer {face}/{layer}')
+        if 'range' not in d:
+            continue  # built-in provisional ports use automatic non-overlapping packing below
+        a, b = d['range']
+        length = w if face in ('N', 'S') else h
+        if any(isinstance(z, bool) or not isinstance(z, (int, float)) or not math.isfinite(z) for z in (a, b)):
+            raise ValueError(f'q3h {name}: pin range must be finite')
+        if a > b or a < .012 or b > length - .012:
+            raise ValueError(f'q3h {name}: unordered or out-of-outline pin range {a}..{b} on {length}')
+        points = [_trk(a + (b - a) * k / max(1, n - 1)) for k in range(n)]
+        if any(p < .012 - 1e-6 or p > length - .012 + 1e-6 for p in points):
+            raise ValueError(f'q3h {name}: snapped pin outside outline')
+        if any(y - x < .048 - 1e-6 for x, y in zip(points, points[1:])):
+            raise ValueError(f'q3h {name}: port pins overlap or lose bit order')
+        occupied.setdefault((face, layer), []).extend((p, name, k) for k, p in enumerate(points))
+    for key, points in occupied.items():
+        points.sort()
+        for x, y in zip(points, points[1:]):
+            if y[0] - x[0] < .048 - 1e-6:
+                raise ValueError(f'q3h {key}: overlapping pin groups {x[1]} and {y[1]}')
+
+
 def _master(v, w, h, ports):
+    validate_pins(w, h, ports)
     q = v.Master(CMASTER, w, h, 9, 'q3h C_B16 cluster: 16 ROM tiles (4x4 reduction group, adders inside) + the '
                  'in-cluster broadcast H-tree stations + regional reset re-time + one regional clock root')
     faces = {}
@@ -317,13 +352,49 @@ _DIR = {'ck': 'input', 'rst_n': 'input', 'far': 'input', 'cid': 'input', 'tie_hi
 def _contract_ports(C):
     """CB contract ports (list of {port, bits, face, layer, range_um}) -> {port: dict(dir, bits, face, layer, range)}"""
     out = {}
+    expected = {**{f'{p}{k}': 516 for p in ('bc', 'bco') for k in range(4)},
+                'rs': 514, 'ck': 1, 'rst_n': 1, 'far': 1, 'cid': 12, 'tie_hi': 1, 'tie_lo': 1}
     for p in C['ports']:
         n = p['port']
+        if n in out or n not in expected or p['bits'] != expected[n] or isinstance(p['bits'], bool):
+            raise ValueError(f'q3h contract: duplicate/unknown/wrong-width port {n}')
         d = _DIR.get(n) or ('output' if n.startswith('bco') else 'input' if n.startswith('bc') else None)
         if d is None:
             raise ValueError(f'q3h contract: unknown direction of port {n}')
         out[n] = dict(dir=d, bits=p['bits'], face=p['face'], layer=p['layer'], range=list(p['range_um']))
+    if set(out) != set(expected):
+        raise ValueError(f'q3h contract: missing ports {sorted(set(expected) - set(out))}')
     return out
+
+
+def validate_contract_grid(C, G):
+    ports = _contract_ports(C)
+    w, h = G['cluster']['w'], G['cluster']['h']
+    dims = [C['outline_um'][a] for a in ('w', 'h')] + [w, h] + [G['die'][a] for a in ('w', 'h')]
+    if any(isinstance(z, bool) or not isinstance(z, (int, float)) or not math.isfinite(z) or z <= 0 for z in dims):
+        raise ValueError('q3h: all contract/grid/die outlines must be finite and positive')
+    # The grid may carry exactly the established 24nm mirror-legal abstract shave,
+    # never a resized slot with the old pin locations.
+    if any(min(abs(C['outline_um'][a] - z), abs(C['outline_um'][a] - SHAVE - z)) > .001
+           for a, z in (('w', w), ('h', h))):
+        raise ValueError('q3h: contract outline and grid differ; regenerate the pin contract')
+    validate_pins(w, h, ports)
+    expected = {(side, g, b) for side in ('W', 'E') for g in range(6) for b in range(4)}
+    rows = G['clusters']
+    if len(rows) != 48 or {(r['side'], r['g'], r['band']) for r in rows} != expected or len({r['n'] for r in rows}) != 48:
+        raise ValueError('q3h: cluster grid must cover all 48 unique groups')
+    for i, a in enumerate(rows):
+        x, y = a['x'], a['y']
+        if abs(a['w'] - w) > .001 or abs(a['h'] - h) > .001:
+            raise ValueError(f"q3h: cluster {a['n']} outline differs from declared grid master")
+        if any(isinstance(z, bool) or not isinstance(z, (int, float)) or not math.isfinite(z) for z in (x, y)):
+            raise ValueError('q3h: nonfinite cluster home')
+        if x < 0 or y < 0 or x + w > G['die']['w'] + .001 or y + h > G['die']['h'] + .001:
+            raise ValueError(f"q3h: {a['n']} outside die outline")
+        for b in rows[:i]:
+            if min(x + w, b['x'] + w) - max(x, b['x']) > .001 and min(y + h, b['y'] + h) - max(y, b['y']) > .001:
+                raise ValueError(f"q3h: cluster overlap (negative gap) {a['n']} / {b['n']}")
+    return ports
 
 
 def apply_grid(v, m):
@@ -337,7 +408,7 @@ def apply_grid(v, m):
     htree = _load('OT_SPLIT_Q3H_HTREE')
     if not C or not G:
         raise ValueError('q3h grid mode needs OT_SPLIT_Q3H_CONTRACT and OT_SPLIT_Q3H_GRID')
-    ports = _contract_ports(C)
+    ports = validate_contract_grid(C, G)
     w, h = G['cluster']['w'], G['cluster']['h']
     M = v.masters(m, 1)
     M[CMASTER] = _master(v, w, h, ports)
