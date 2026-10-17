@@ -63,7 +63,7 @@ def run(cell, row, a, idx, lock, summary):
         log = drive / f'{cell}.r{k}.log'
         with open(log, 'w') as f:
             rc = subprocess.run(['python3', '/home/ubuntu/bin/ot-run', '--mem', str(mem), '--threads', '4', '--dir', S,
-                                 '--priority', 'die', '--', 'bash', '-c', cmd],
+                                 *(['--priority', a.priority] if a.priority != 'normal' else []), '--', 'bash', '-c', cmd],
                                 stdout=f, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL).returncode
         txt = log.read_text()
         hm = re.search(r'^HOST (\S+)', txt, re.M)
@@ -112,6 +112,7 @@ def main():
     ap.add_argument('--views', required=True)
     ap.add_argument('--commit', required=True)
     ap.add_argument('--remote-root', default='/srv/opentallas-scratch/claude/hdie-v16case')
+    ap.add_argument('--priority', default='die', help="ot-run priority; 'normal' = no --priority (H-DIE-B track B, never takes die slots)")
     ap.add_argument('cells', nargs='+')
     a = ap.parse_args()
     (Path(a.views) / 'drive').mkdir(exist_ok=True)
