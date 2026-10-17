@@ -79,6 +79,8 @@ class VisualReview(unittest.TestCase):
         self.crit = self.t / "critical.txt"; self.crit.write_text("ot_hot  # coordinator\n")
         self.jobs = self.t / "jobs"; self.jobs.mkdir()
         SE.CRITICAL_TILES = self.crit
+        self.lock = self.t / "COORDINATOR.lock"; self.lock.write_text('{"owner": "claude"}')
+        SE.COORD_LOCK = self.lock
 
     def test_required_by_list_or_failed_routes(self):
         self.assertIn("critical", SE.review_required({"block": "ot_hot"}, "physical/ref_tile/k", self.jobs))
@@ -89,7 +91,7 @@ class VisualReview(unittest.TestCase):
 
     def test_receipt_binding(self):
         gate = {"commit": "abc1234def", "generated": "t"}
-        good = {"reviewer": "R", "time": "now", "gate_commit": "abc1234", "verdict": "APPROVED",
+        good = {"reviewer": "coordinator (Claude)", "time": "now", "gate_commit": "abc1234", "verdict": "APPROVED",
                 "checklist": {k: "ok" for k in SE.REVIEW_CHECKLIST}}
         files = {"k/gate_result.json": json.dumps(gate), "k/gate_layout/REVIEW.json": json.dumps(good)}
         self.assertIsNone(SE.review_check(self.t, "c" * 40, "k", show=files.get))
@@ -99,3 +101,12 @@ class VisualReview(unittest.TestCase):
             self.assertIn("REVIEW_REQUIRED", SE.review_check(self.t, "c" * 40, "k", show=files.get))
         del files["k/gate_layout/REVIEW.json"]
         self.assertIn("REVIEW_REQUIRED: no", SE.review_check(self.t, "c" * 40, "k", show=files.get))
+
+
+    def test_reviewer_must_be_lock_holder(self):
+        self.assertIsNone(SE.reviewer_allowed("coordinator (Claude 10-17)"))
+        for bad in ("ROOT (Claude)", "Q-KV lead", "codex"):
+            self.assertIsNotNone(SE.reviewer_allowed(bad), bad)
+        self.lock.write_text('{"owner": "codex"}')
+        self.assertIsNone(SE.reviewer_allowed("Codex coordinator"))
+        self.assertIsNotNone(SE.reviewer_allowed("coordinator (Claude)"))
