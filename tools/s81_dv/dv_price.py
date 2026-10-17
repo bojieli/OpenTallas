@@ -42,6 +42,8 @@ HUB_VM_TO_SVC_STAGES = 50    # c26l sp_vm centre -> svc_SW centre ~20 mm at 405 
 # vs 171 with the parallel tree the hub's price already contains -> +63 on every full-h norm (rstd precedes the matvec:
 # norm-after-matvec is AGENTS level 6, excluded, so this latency is on the critical path)
 FINISH_SEQ_EXTRA = 234 - 171
+LEAF_PARTIAL_EXTRA = (112 + 4 + 5) - 100
+LEAF_SCALE_EXTRA = (59 + 4 * 4 + 4) - 76
 
 
 def hop_only(stages):
@@ -78,6 +80,10 @@ def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0):
             if op in ('attn.quant', 'ffn.norm.scale', 'eng.gate') or op.endswith('hc.sumsq'):
                 add(nid, 'norm_tree_full', -18 + xchg)
                 add(nid, 'norm_finish_seq', FINISH_SEQ_EXTRA)
+                # S81-SLICE measured beat leaf (10-17, real vp+vn+vq RTL, bit-exact): go -> beat partial 112 + DL 4 +
+                # collector 5 = 121 vs the hub's sumsq 100; rstd -> XQ complete at the ring stop 59 + 4*4 (last leaf)
+                # + DL 4 = 79 vs the hub's scale 76.  hc_post (63 leaf vs 641 hub) NOT credited until slice-level.
+                add(nid, 'leaf_measured', LEAF_PARTIAL_EXTRA + LEAF_SCALE_EXTRA)
             elif op == 'attn.q_quant':
                 add(nid, 'norm_tree_q', -18 + st(3 * g['cluster_pitch_um']))
             elif op == 'attn.kv_rope_qdq':
