@@ -128,7 +128,13 @@ proc ot_die_repeaters {cfg} {
   }
   set n_rep 0
   if {[llength $repeat_nets]} {
-    foreach n [get_nets -quiet $repeat_nets] { set nm [get_full_name $n]; if {[dict exists $skip $nm] && [dict get $skip $nm] ne "glob"} { dict unset skip $nm; incr n_rep } }
+    # odb-name string match (as fclk_audit.tcl): sta get_nets globs miss bus-bit names ('n0_fck[0]'; S81-DV p4e: the
+    # escaped glob matched 0 nets and every forwarded clock stayed unrepeated -> 42 fclk/data mismatches)
+    dict for {nm why} $skip {
+      if {$why eq "glob"} { continue }
+      foreach g $repeat_nets { if {[string match $g $nm]} { dict unset skip $nm; incr n_rep; break } }
+    }
+    if {$n_rep == 0} { incr viol; lappend notes "repeat_nets {$repeat_nets} matched no clock-skipped net (forwarded clocks would stay unrepeated)" }
   }
   set skip_names [dict keys $skip]
   set ::ot_die_rep_skip $skip
