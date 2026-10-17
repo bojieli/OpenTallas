@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Measured relay-pair reach bench (S-DIE H-REACH 2026-10-16, coordinator mandatory item 1: every die hop within MEASURED reach).
+"""Same-phase relay-pair component timing sensitivity bench (S-DIE H-REACH 2026-10-16, coordinator mandatory item 1: every die hop within MEASURED reach).
+
+CLOCK SCOPE: Both instances receive ideal SAME-PHASE boundary clocks. This is
+component sensitivity only. Native ot_fwd_link_stage captures negedge fi0 and
+inverts fo0, so an actual fo0->fi0 chain has a HALF-cycle timing window. This
+vehicle does not time that real chain; it cannot select a die-safe reach.
 
 For every S81 relay / station class bound at die level (masters dsfd_(rly|stnh|stnv|hstnh|hstnv|sstn|rstg|xstg)* in the
 closed-view binding table) a driver instance and a receiver instance OF THE SAME CLASS are placed at separation d along the
@@ -8,12 +13,12 @@ the die's layer rules; estimate_parasitics -global_routing gives the RC; OpenSTA
 
     TT setup  at 833.33 ps (stream) and 1111.1 ps (serial)     FF hold                SS 833.33 setup = sensitivity only
     clock: ideal, defined on each instance's clock pin (ck / fi0 / cw); neighbour skew 80 ps applied ADVERSELY as
-           set_clock_uncertainty -setup 80 / -hold 80 (forwarded neighbour clocking, coordinator standard); base uncertainty 60 ps setup / 25 ps hold is added; no planning margin.  Same-class pair: the view's own clock insertion cancels (equal on both sides).
+           set_clock_uncertainty -setup 140 / -hold 105 = base60/25 plus neighbour80; no planning margin.  Same-class pair: the view's own clock insertion cancels (equal on both sides).
     wire:  UNBUFFERED.  The bench never inserts a buffer / repeater (no repair_design, no repair_timing): the routed
            wire between the two relays is the whole hop (owner rule: generator max wire length = reach, no buffering of
            long wires).
 
-Measured reach of a class = min over its bits of the largest pin-to-pin Manhattan length L_i at which that bit passed
+Sampled same-phase setup sensitivity lower bound of a class = min over its bits of the largest pin-to-pin Manhattan length L_i at which that bit passed
 TT setup (slack >= 0) at that sweep point and every shorter sweep point.  FF hold is judged per point too: a class whose
 hold fails at short d gets hold_min_um (the shortest L with every bit passing hold) -- a hop shorter than that fails.
 Reported with no margin; planning number = 0.9 x reach.
@@ -299,7 +304,7 @@ def cmd_plan(a):
         bd.mkdir(parents=True, exist_ok=True)
         index.append(write_batch(bd, its, stage, lay, adj, a))
     (run / 'plan.json').write_text(json.dumps(dict(
-        schema='opentallas.s81.relay_reach_plan.v1', layers=a.layers, signal_layers=lay, adjustments=adj, sweep_um=ds,
+        schema='opentallas.s81.relay_reach_plan.v1', clock_scenario='ideal_common_phase_component_sensitivity', real_forwarded_chain_timed=False, layers=a.layers, signal_layers=lay, adjustments=adj, sweep_um=ds,
         skew_ps=SKEW, base_setup_uncertainty_ps=SETUP_UNCERTAINTY, base_hold_uncertainty_ps=HOLD_UNCERTAINTY, periods_ps=dict(stream=T_STREAM, serial=T_SERIAL), image=IMAGE, stage=str(stage),
         batches=index), indent=1))
     print(f'{len(batches)} batches, {len(sel)} classes, {len(ds)} sweep points: ' +
@@ -569,14 +574,17 @@ def cmd_collect(a):
                                            if k in ('reach_um', 'd_pass_um')}
                 r['hold_ff'] = hold_min(cr['ff_hold'])
                 rr = r['stream']['reach_um']
-                sl = [x for d, L, x, pin in slews[m] if x is not None and L <= rr + 1e-6]
+                sl = [x for d, L, x, pin in slews[m] if x is not None and d <= r['stream']['d_pass_um']]
                 r['max_sink_slew_tt_ps_within_reach'] = round(max(sl), 1) if sl else None
                 r['electrical_validity'] = electrical_screen((stage / 'views' / m / f'{m}_tt.lib').read_text(),
-                    [(pin, x) for d, L, x, pin in slews[m] if L <= rr + 1e-6])
+                    [(pin, x) for d, L, x, pin in slews[m] if d <= r['stream']['d_pass_um']])
                 r['batch'] = str(bd)
                 r['grt_overflow'] = ovf
-    out = dict(schema='opentallas.s81.relay_reach_measured.v1', date=a.date,
-               method=('MEASURED (not an estimate): same-class driver->receiver pair at separation d along the flow '
+    out = dict(schema='opentallas.s81.relay_reach_measured.v1', date=a.date, collector_sha256=sha(Path(__file__).read_bytes()),
+               clock_scenario='ideal_common_phase_component_sensitivity',
+               actual_forwarded_half_cycle_chain_status='OPEN: not timed by this bench',
+               qualification='SENSITIVITY_ONLY; no die reach selection',
+               method=('MEASURED COMPONENT SENSITIVITY ONLY (not forwarded-chain reach): same-class driver->receiver pair at separation d along the flow '
                        'direction, real LEF pin faces, R0, ASAP7; every data bit routed by OpenROAD global_route '
                        '(die layer rules) and extracted by estimate_parasitics -global_routing (setRC.tcl); OpenSTA per '
                        'bit: TT setup 833.33 ps (stream) / 1111.1 ps (serial), FF hold, SS 833 setup sensitivity; ideal '
@@ -584,7 +592,8 @@ def cmd_collect(a):
                        '140 / -hold 105 = base60/25 plus neighbour80), no planning margin.  UNBUFFERED: no repair_design / repair_timing / repeaters; '
                        'the wire between the relays is the whole hop.  reach_um = min over bits of the largest '
                        'pin-to-pin Manhattan L at which the bit passed TT setup at that and every shorter sweep point.'),
-               caveats=['GRT + estimate_parasitics RC, not detail-route + RCX (no DRT calibration in this record unless '
+               caveats=['Both fi0 pins use ideal same-phase clocks; actual inverted fo0->fi0 opposite-half-cycle chain remains OPEN',
+                        'GRT + estimate_parasitics RC, not detail-route + RCX (no DRT calibration in this record unless '
                         'listed under calibration)',
                         'Reach measurements are component screens; overflow and unmeasured real clock distribution cannot qualify a die',
                         'driver ETM output tables are characterised to 92.16 fF; longer wires extrapolate the table',
@@ -593,9 +602,8 @@ def cmd_collect(a):
                         'reader',
                         'same-class pair: common clock insertion reference cancels; mixed-class hops need direct timing '
                         'and are not proven by min(self-pair reach of endpoints)',
-                        'forwarded-clock stations (stn*: fi0 -> fo0) are timed with the coordinator neighbour-skew '
-                        'model, not by propagating the forwarded clock (the ETM fo0 arc is self-related and cannot '
-                        'carry fi0 -> fo0)'],
+                        'Forwarded-clock stations are same-phase sensitivities only: the ETM fo0 arc is self-related and cannot '
+                        'propagate actual fi0->fo0 inversion. Real native generated-clock waveform and wire load are mandatory for chain timing'],
                runs=runs, gate_layers=a.gate_layers, classes={})
     for m, r in srec['classes'].items():
         row = dict(instances_c26l=r.get('instances_c26l', 0), flow=r.get('flow'), buses=r.get('buses'),
@@ -608,7 +616,8 @@ def cmd_collect(a):
         else:
             g = res[m][a.gate_layers]
             row.update(status='MEASURED' if g['grt_overflow'] == [0, 0, 0] else 'TIMING_MEASURED_ROUTE_UNQUALIFIED', measured=res[m],
-                       electrical_validity=g['electrical_validity'], usable_as_die_reach_bound=False)
+                       electrical_validity=g['electrical_validity'], usable_as_die_reach_bound=False,
+                       clock_scenario='ideal_common_phase_component_sensitivity', actual_forwarded_half_cycle_chain_status='OPEN')
             row['reach_um'] = g['stream']['reach_um']
             row['reach_serial_um'] = g['serial']['reach_um']
             row['planning_um'] = round(0.9 * g['stream']['reach_um'], 1)

@@ -1,14 +1,19 @@
 {
  "schema": "opentallas.s81.relay_reach_measured.v1",
  "date": "2026-10-16",
- "method": "MEASURED (not an estimate): same-class driver->receiver pair at separation d along the flow direction, real LEF pin faces, R0, ASAP7; every data bit routed by OpenROAD global_route (die layer rules) and extracted by estimate_parasitics -global_routing (setRC.tcl); OpenSTA per bit: TT setup 833.33 ps (stream) / 1111.1 ps (serial), FF hold, SS 833 setup sensitivity; ideal clock on each instance clock pin with 80 ps neighbour skew applied adversely (uncertainty -setup 140 / -hold 105 = base60/25 plus neighbour80), no planning margin.  UNBUFFERED: no repair_design / repair_timing / repeaters; the wire between the relays is the whole hop.  reach_um = min over bits of the largest pin-to-pin Manhattan L at which the bit passed TT setup at that and every shorter sweep point.",
+ "collector_sha256": "5e5abc343b272316d56c258d3b89fe3cf47cc063ed2cbcd75216a0bae6bd5b00",
+ "clock_scenario": "ideal_common_phase_component_sensitivity",
+ "actual_forwarded_half_cycle_chain_status": "OPEN: not timed by this bench",
+ "qualification": "SENSITIVITY_ONLY; no die reach selection",
+ "method": "MEASURED COMPONENT SENSITIVITY ONLY (not forwarded-chain reach): same-class driver->receiver pair at separation d along the flow direction, real LEF pin faces, R0, ASAP7; every data bit routed by OpenROAD global_route (die layer rules) and extracted by estimate_parasitics -global_routing (setRC.tcl); OpenSTA per bit: TT setup 833.33 ps (stream) / 1111.1 ps (serial), FF hold, SS 833 setup sensitivity; ideal clock on each instance clock pin with 80 ps neighbour skew applied adversely (uncertainty -setup 140 / -hold 105 = base60/25 plus neighbour80), no planning margin.  UNBUFFERED: no repair_design / repair_timing / repeaters; the wire between the relays is the whole hop.  reach_um = min over bits of the largest pin-to-pin Manhattan L at which the bit passed TT setup at that and every shorter sweep point.",
  "caveats": [
+  "Both fi0 pins use ideal same-phase clocks; actual inverted fo0->fi0 opposite-half-cycle chain remains OPEN",
   "GRT + estimate_parasitics RC, not detail-route + RCX (no DRT calibration in this record unless listed under calibration)",
   "Reach measurements are component screens; overflow and unmeasured real clock distribution cannot qualify a die",
   "driver ETM output tables are characterised to 92.16 fF; longer wires extrapolate the table",
   "ETM setup / hold are scalar (input slew independent): a slow edge at the receiver is not penalised by the view; sink slew is reported (max_sink_slew_tt_ps_within_reach) for the DRV reader",
   "same-class pair: common clock insertion reference cancels; mixed-class hops need direct timing and are not proven by min(self-pair reach of endpoints)",
-  "forwarded-clock stations (stn*: fi0 -> fo0) are timed with the coordinator neighbour-skew model, not by propagating the forwarded clock (the ETM fo0 arc is self-related and cannot carry fi0 -> fo0)"
+  "Forwarded-clock stations are same-phase sensitivities only: the ETM fo0 arc is self-related and cannot propagate actual fi0->fo0 inversion. Real native generated-clock waveform and wire load are mandatory for chain timing"
  ],
  "runs": {
   "die": {
@@ -3999,7 +4004,7 @@
       "hold_min_um": 25.0,
       "worst_hold_ps": 23.72
      },
-     "max_sink_slew_tt_ps_within_reach": 1159.3,
+     "max_sink_slew_tt_ps_within_reach": 1259.5,
      "electrical_validity": {
       "status": "UNPROVEN",
       "usable_as_die_reach_bound": false,
@@ -4029,6 +4034,8 @@
     "reason": "Mapped receiver cell/final-D load and slew proof is required; scalar ETM setup cannot qualify electrical reach"
    },
    "usable_as_die_reach_bound": false,
+   "clock_scenario": "ideal_common_phase_component_sensitivity",
+   "actual_forwarded_half_cycle_chain_status": "OPEN",
    "reach_um": 550.0,
    "reach_serial_um": 700.0,
    "planning_um": 495.0,

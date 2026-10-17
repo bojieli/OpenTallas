@@ -24,5 +24,8 @@
   "tests": "10 focused pytest checks PASS",
   "remaining": "122 classes not measured; no538 station bound; predecessor M4-M5 t0 job preserved. Native electrical archive replay is next; actual die clocks/reset/mixed joins/GRT/STA remain owed",
   "boundary_native_audit": "Exact TT+insertion file hash pinned audit PASS on nine stations; not full-chip/native hardware integration",
-  "electrical_validity": "UNPROVEN for every measured class: no explicit max_transition/max_capacitance or input slew dependent ETM tables. usable_as_die_reach_bound=false; actual mapped receiver/final-D proof and driver load constraints required"
+  "electrical_validity": "UNPROVEN for every measured class: no explicit max_transition/max_capacitance or input slew dependent ETM tables. usable_as_die_reach_bound=false; actual mapped receiver/final-D proof and driver load constraints required",
+  "clock_scope_correction": "ALL same-phase ideal fi0-pair tables are component sensitivity ONLY; actual RTL captures negedge and fo0 inverts, giving opposite-half-cycle chain. Actual forwarded-clock chain timing OPEN; no die bound selected.",
+  "native_electrical_result": "Actual archived566graph: all25..200um sampled waveform/load cases zero native maxslew/maxcap violations; first225um has1116 slew violations, worst298.38ps vs actual unchanged SDC260ps. At550um2264 slew violations, worst1259.91ps vs260. FinalD~10ps afterholdbuffers hides first-cell failure. Sourceoutput maxcap first575um96.17fF>92.16fF. Reject550um sensitivity electrically.",
+  "next": "Stronger pin-local native output-driver comparison and separate noninverting forwarded-clock option; no route grant yet; full actual native chain TT/FF/clock/geometry/staticcalendar still required."
 }

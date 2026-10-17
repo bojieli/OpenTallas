@@ -119,7 +119,57 @@ grep -q OT_NATIVE_ELECTRICAL_DONE "$B/native.log"
     print(f'staged {len(cases)} actual per-bit waveform/load cases, {len(consumed)} immutable native files')
 
 
+def collect(directory):
+    rec = json.loads((directory / 'stage.json').read_text())
+    text = (directory / 'native.log').read_text()
+    if 'OT_NATIVE_ELECTRICAL_DONE' not in text:
+        raise ValueError('native replay did not complete')
+    rows = []
+    prefix = None
+    failed = False
+    width = len(next(iter(rec['cases'].values())))
+    for d in sorted(map(float, rec['cases'])):
+        if f'OT_NATIVE_ELECTRICAL_END {d}' not in text:
+            raise ValueError('incomplete native case')
+        m = re.search(r'OT_NATIVE_FINAL_D ' + re.escape(str(d)) + r' count=(\d+) worst_ps=([\d.eE+-]+) pin=(\S+)', text)
+        if not m or int(m[1]) != width:
+            raise ValueError('missing or incomplete actual native final D coverage')
+        report = (directory / f'drv_{d}.rpt').read_text()
+        sections = re.split(r'(?m)^max (slew|capacitance)\n', report)
+        checks = {}
+        for i in range(1, len(sections), 2):
+            typ, body = sections[i:i + 2]
+            violations = []
+            for line in body.splitlines():
+                if '(VIOLATED)' in line:
+                    words = line.split()
+                    violations.append(dict(pin=words[0], limit=float(words[-4]), actual=float(words[-3]), slack=float(words[-2])))
+            checks[typ] = dict(violations=len(violations), worst=min(violations, key=lambda r: r['slack']) if violations else None)
+        ok = not any(c['violations'] for c in checks.values())
+        if not ok:
+            failed = True
+        if not failed:
+            prefix = d
+        rows.append(dict(d_um=d, native_final_D_count=int(m[1]), native_final_D_max_slew_ps=float(m[2]),
+                         native_final_D_worst_pin=m[3], electrical_checks=checks, electrical_pass=ok,
+                         report_sha256=digest(report.encode())))
+    result = dict(schema='opentallas.relay_native_electrical_result.v1', job=rec['job'],
+                  stage_sha256=digest((directory/'stage.json').read_bytes()), native_log_sha256=digest(text.encode()),
+                  rows=rows, sampled_electrical_pass_prefix_um=prefix,
+                  usable_as_die_reach_bound=False,
+                  collector_sha256=digest(Path(__file__).read_bytes()),
+                  limit_source='Actual unchanged archived SDC and loaded native standard-cell Liberty; limits recorded in each violated report',
+                  scope='Actual native waveform/load and all-pin DRV replay, not full composed sender-wire-receiver TT/FF timing. No route, clock, input/output delay, exception or electrical limit changed.')
+    (directory / 'result.json').write_text(json.dumps(result, indent=2))
+    print(json.dumps(dict(cases=len(rows), sampled_electrical_pass_prefix_um=prefix,
+                         first_fail=next((r for r in rows if not r['electrical_pass']), None)), indent=2))
+
+
 def main():
+    import sys
+    if len(sys.argv) == 3 and sys.argv[1] == 'collect':
+        collect(Path(sys.argv[2]))
+        return
     p = argparse.ArgumentParser(description=__doc__)
     for a in ('archive', 'run', 'views', 'out'):
         p.add_argument('--' + a, type=Path, required=True)
