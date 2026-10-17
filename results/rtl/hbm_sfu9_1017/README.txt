@@ -8,3 +8,9 @@ r9c bench (this commit's RTL: leaf in_data split into in_data_lo[135:0] / in_dat
   bench_r9c_pos.log PASS edges=6683; bench_r9c_split.log / _flip.log / _cfgdrop.log REJECTED (expected). ot-epyc4,
   /srv/opentallas-scratch/claude/hbm-sfu9-1017/bench_r9c.
 r9 leaf3 gate (6f294ab02): WARN, CTS TT insertion 590.8 / spread 240.9, 2,359 sinks, W face 1,078 pins over 276.5/280.8 um: same defect as leaf2, superseded by r9c. Preserved.
+r9c gates (HBM-TILES-B 10-17 12:04, re-launched: the 10:11 launch died at once, ot-run not on PATH): BOTH FAIL trial GRT,
+  M4 (horizontal) overflow leaf2 307 / leaf3 921; CTS TT insertion 448.6/spread 203.9 (1,686 sinks) and 506.9/155.9 (2,359).
+  Cause: the fully abutted R0 stack leaves no horizontal crossing under the M5 cap, so the E band (in_data_hi flops) gets
+  clock/control round the stack. Preserved (gate_result.json + gate_layout).
+r9d (mkspec_r9d.py): same RTL/pins; the stack is split into two halves with ONE 21.6 um W->E crossing channel at mid-height,
+  where clk + control enter. leaf2d 280.8x349.92 (1.25:1), leaf3d 298.08x492.48 (1.65:1).
