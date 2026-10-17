@@ -1,0 +1,72 @@
+{
+  "schema": "opentallas.qwen.regional_intake.v1",
+  "time": "2026-10-16T20:18:25.623140-07:00",
+  "main_base": "554c2e037",
+  "source_packet": "d0ba79e14",
+  "qualification": false,
+  "default_glue_hard": 0,
+  "physical_parent_qualified": false,
+  "physical_cluster_qualified": false,
+  "exact_leaf_recurrence": {
+    "checks": 512,
+    "mutants": [
+      1,
+      2,
+      3
+    ],
+    "result": "PASS; all mutants rejected"
+  },
+  "actual_parent_component_proof": {
+    "source": "ba6ef8ae1",
+    "checks": 6399,
+    "valids": 2560,
+    "nonzero": 2560,
+    "mac_lanes": 64,
+    "physical_rom_models": 10,
+    "mutants": {
+      "TX0_stopped": 6250,
+      "east_south_RQR_stopped": 3600,
+      "east_north_RQR_stopped": 2650
+    },
+    "added_edges": 0,
+    "result": "PASS",
+    "limitation": "Five operations over all bank rows with literal actual RTL/memory models. Not a full production layer schedule or physical clock timing proof."
+  },
+  "leaves": {
+    "operand": {
+      "clock_sinks": 261,
+      "pre_route_area_um2": 112,
+      "cts_mean_tt_ps": 70.6,
+      "cts_spread_tt_ps": 2.2,
+      "job": "ot_qwen_tile_operand-r0-bf6715aee",
+      "route_observation": "READY after route rc0: TT340.84 / FF27.71 / DRC0, final mutant/export/native pending"
+    },
+    "rqr": {
+      "clock_sinks": 512,
+      "pre_route_area_um2": 209,
+      "cts_mean_tt_ps": 82.8,
+      "cts_spread_tt_ps": 5.5,
+      "job": "ot_qwen_tile_rqr_half-r0-bf6715aee",
+      "route_observation": "live at receipt time"
+    }
+  },
+  "regional_abi": {
+    "entries": 859,
+    "hard_tile_entries": 588,
+    "fabric_entries": 271,
+    "known_fabric_ff": 62953,
+    "unknown_xcst_sink_counts": 16,
+    "common_clock_fallback": false,
+    "physical_pin_sites": "UNMEASURED",
+    "native_insertion": "UNMEASURED",
+    "functional_bench": "ot-run finite job in flight/waiting; source 44c0a5398"
+  },
+  "physical_blockers": [
+    "Combined two-stage per-consumer operand leaf beside LSL is not adopted: RQR->MQ hop to lowest LSL exceeds measured reach. Existing MQ/S2/TX0/TX1 stages must be distributed along actual ROM-column paths; column-half operand and split first TX stages are next geometry-coupled candidate.",
+    "Parent own remaining controller FF must be assigned hardened ownership; current ck still has remaining soft control.",
+    "A0 hard-child guards and all incident bit-level routes/clock entries/reset require new actual slot/grant/native proofs.",
+    "CB region entry coordinates and actual owner clocks are unmeasured; source ABI does not imply physical clock delivery.",
+    "No GRT/STA/native qualification from either candidate parent or provisional cluster."
+  ],
+  "bulk_evidence": "Full immutable gate snapshots/images and historical jobs retained on codex/qwen-regional-2006 bf6715aee, not copied into the clean main intake packet."
+}
