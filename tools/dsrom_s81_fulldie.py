@@ -3224,6 +3224,7 @@ BF_X2_PAIR = False              # --bf-x2-pair (S-BIND r6): the packed static x 
 # rd_out[71:48] columns of rows 0..3 of the phase's cfg block, so BF cfg ROM reads are 72 b).  f_prog travels seq -> front
 # beside go (same class / relay cohort: the producer's DELTA 0 assumes equal go / f_prog ages, bench-measured).
 BF_STATIC_PROG = False
+BF_FRONT_ROOT_ABI = False       # opt-in S81H03 source candidate; no view/timing inheritance
 LEAF, NODEB, STB = 63, 66, 2
 CRET = NODEB + STB                  # column return payload: root word + {fault, busy}
 STEP8 = 400.0                       # nominal forwarded-stage spacing (<= LINK_STAGE_UM after placement)
@@ -5570,6 +5571,9 @@ def buses_r8(m):
         bus(f'rs_col_{r}', 'col_reset', 1, col_rs)
     if BF_HIER:
         _bf_hier_nets(m)
+        if BF_FRONT_ROOT_ABI:
+            from s81.bf_root_die_abi import rewrite_front
+            rewrite_front(m)
     if REV == 'r9':
         _bank_nets(m)
         _col_relays(m, P)
@@ -10717,6 +10721,19 @@ def _faces_r8(m, Mx, it, ports):
         from s81.sstn_split import populate
         populate(sys.modules[__name__], Mx, ports)
         return
+    if BF_FRONT_ROOT_ABI and it.master == 'dsfd_bf_front_roots':
+        if _LAY_K[0] == 1:
+            from s81.bf_root_die_abi import populate_front
+            populate_front(Mx, ports)
+        else:
+            # Bundled figures are projections only. Native geometry is always
+            # the complete literal k1 request and later this leaf's own view.
+            for face, names_ in [('N',['xb_data','io_n']), ('W',['c0','io_w']),
+                                 ('E',['c1','io_e']),
+                                 ('S',['qy0','qy1','x0','x1','go','cfg','st','ck','rs','xb_meta','f_prog','io_clk'])]:
+                _lay(Mx,face,[(p,ports[p][1]) for p in names_ if p in ports],
+                     'M4' if face in 'EW' else 'M5')
+        return
     if _LAY_K[0] == 1 and BF_HIER == 450.144 and BF_ROUTE_H == 198.72 and it.master in ('dsfd_bf_front', 'dsfd_bf_col',
                                                                                          'dsfd_bf_front_static'):
         from s81.bf_direct_pins import populate, groups
@@ -12086,6 +12103,10 @@ def die_options(ap):
                     'face-to-face wide group on the die span shared with its peers (both ends of an abutting pair line up)')
     ap.add_argument('--bf-static-prog', action='store_true', help='S-BIND 2026-10-15: BF pairs run their compiled '
                     'programme (dsfd_bf_front_static + ot_s81_cfg7_seq_bfp; descriptor in the cfg ROM spare columns)')
+    ap.add_argument('--bf-front-root-abi', action='store_true', help='S81H03 independent source candidate: five-root '
+                    'dsfd_bf_front_roots, literal N1024 data / S44 metadata ABI and initialization reset release+1. '
+                    'Requires --bf-static-prog --bf-x2-static --bf-hier-compact --bf-hier-height 198.72. '
+                    'Own physical/native view, per-root phi-R delivery and all incident proofs remain required.')
     ap.add_argument('--bf-x2-pair', action='store_true', help='S-BIND r6 (needs --bf-x2-static): the x tree carries the packed word as two equal-station forwarded lanes (566-b legacy + 538-b x2) with one static ingress each at the column')
     ap.add_argument('--hub-abut', action='store_true', help='S-DIE 2026-10-15: W-column centre-stack gaps 21.6 um (RTL_ABUT_GAP) instead of 172.8')
     ap.add_argument('--vm-span-vch', help='S-DIE 2026-10-15 (coordinator 18:40, A2 VM): VM reservation W,H um spanning the W column + VCH (overrides the contract VM outline)')
@@ -12170,8 +12191,13 @@ def apply_options(a):
     _RTL_CLOCK_CACHE.pop('dsfd_sp_vm', None)
     if WFC_RETURN256:
         wfc_return256_params()
-    global SUHC_STATIC_ISSUE, BF_X2_STATIC, LSW, BF_STATIC_PROG, BF_X2_PAIR
+    global SUHC_STATIC_ISSUE, BF_X2_STATIC, LSW, BF_STATIC_PROG, BF_X2_PAIR, BF_FRONT_ROOT_ABI
     BF_STATIC_PROG = bool(getattr(a, 'bf_static_prog', False))
+    BF_FRONT_ROOT_ABI = bool(getattr(a, 'bf_front_root_abi', False))
+    if BF_FRONT_ROOT_ABI:
+        assert BF_STATIC_PROG and getattr(a, 'bf_x2_static', False) and getattr(a, 'bf_hier_compact', False), \
+            '--bf-front-root-abi requires static programme, actual x2 transport and compact hierarchy'
+        assert abs(getattr(a, 'bf_hier_height', 0)-198.72)<1e-6, '--bf-front-root-abi requires exact H03 height'
     SUHC_STATIC_ISSUE = bool(getattr(a, 'suhc_static_issue', False))
     BF_X2_STATIC = bool(getattr(a, 'bf_x2_static', False))
     BF_X2_PAIR = bool(getattr(a, 'bf_x2_pair', False)) and BF_X2_STATIC
@@ -12415,6 +12441,8 @@ def apply_options(a):
         BF_HIER, BF_FRONT_W, BF_ROUTE_H = 450.144, 100.224, a.bf_hier_height
     else:
         BF_FRONT_W, BF_ROUTE_H = 280.152, 190.08
+    if BF_FRONT_ROOT_ABI:
+        BF_FRONT_W = 116.64
     BF_SEAM_UM = 1.188 if getattr(a, 'bf_hier_compact', False) else 0.0
     BF_FRAME_EXTRA = up(max(0.0, 2 * BF_HIER + BF_FRONT_W + 2 * BF_SEAM_UM + 8.64 - 2 * LANE_W), GX) if BF_HIER else 0.0
     LANES_W = 2 * LANE_W + BF_FRAME_EXTRA
