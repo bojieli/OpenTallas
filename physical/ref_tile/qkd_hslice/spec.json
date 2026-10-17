@@ -179,25 +179,26 @@
   "cols": 4,
   "allow_none": false
  },
- "structural_change": "Exact v1.4.2 per-bit reach-safe pitch6 W/E grant (all571596 stack-local bits <=498.696um), M5 pitch4 chain pins. Capture static lpc at station entry before boot status consumers: one strap initialization edge, no normal data/control latency. Four synchronous CORE833.334 roots; no clock exceptions. Boot pin captured once before related test-root consumers; uniform+1 boot-start edge accepted, existing1edge bgo chain unchanged.",
+ "structural_change": "Q-KVFIX 0130 PINCAP (native FAIL of ec1-75cbc9b99: capture 435.7 host_rst_n, 218 inputs > 190 [ctrl_er 119, ski/sdi/soi/sfi 94, host/hbm_rst_n, ctrl_completion_v/we, bgi]; launch 232.5 ctrl_es[0]): every input pin lands on its own flop at the face: host_rst_n/hbm_rst_n synchronous capture (rn <= rst_n, regional sync reset), ctrl_er 261 b + ctrl_completion_v/we captured on ck_boot, ski on ck_station and sdi/soi/sfi on ck_boot, bgi_q is bgi's only load (bgo <= bgi_q); ctrl_es[0]/[286] pin flops drive only their pins (launch_v/launch_we copies feed the completion observer). Same outline, faces and v1.4.2 pin positions. Exact v1.4.2 per-bit reach-safe pitch6 W/E grant (all571596 stack-local bits <=498.696um), M5 pitch4 chain pins. Capture static lpc at station entry before boot status consumers: one strap initialization edge, no normal data/control latency. Four synchronous CORE833.334 roots; no clock exceptions. Boot pin captured once before related test-root consumers; uniform+1 boot-start edge accepted, existing1edge bgo chain unchanged.",
  "slot_change_request": "results/arch/qwen_split_1014/kvsys_v1_4_2/pins/qkd_hslice.json",
  "job": {
-  "owner": "Claude:ELEM-CENSUS kit helper",
-  "branch": "claude/census-qkit-1016",
-  "tag": "ec1",
-  "cycles_added": 0,
-  "purpose": "ELEM-CENSUS 10-16: submit the existing FILL-Q qkd_hslice kit (Codex aa0c50c21 boot-capture candidate, v1.4.2 pins 233825580; RTL unchanged since feceba3b2) regenerated on current main generator and re-gated on current main. qkd_hslice_dn = MX placement of this view (no separate master). Full parent remains unqualified.",
+  "owner": "Claude:Q-KVFIX-0130 (Q-KV helper)",
+  "branch": "claude/qkvfix-0130",
+  "tag": "pc1",
+  "cycles_added": 1,
+  "purpose": "Q-KVFIX 0130: native-PASS successor of qkd_hslice ec1 (CLOSED TT +62.22/FF +27.90, native FAIL capture 435.7 host_rst_n / launch 232.5 ctrl_es[0]): RTL pin capture of every input + dedicated ctrl_es launch flops; same outline/pins.",
   "extra_paths": [
-   "tools/qwen_kv_die/run_host_slice_leaf_bench.sh",
-   "rtl/test/qwen_split/tb_host_pc_slice_die_pin_capture.sv",
+   "tools/qwen_kv_die/run_host_slice_pinreg_bench.sh",
+   "rtl/test/qwen_split/tb_host_pc_slice_die_pinreg.sv",
    "results/arch/qwen_split_1014/kvsys_v1_4_2/pins"
   ],
   "benches": [
    {
-    "name": "host_slice_32_exact",
-    "cmd": "bash tools/qwen_kv_die/run_host_slice_leaf_bench.sh {RUN}/bench/exact 0",
+    "name": "host_slice_pincap_32_exact",
+    "cmd": "bash tools/qwen_kv_die/run_host_slice_pinreg_bench.sh {RUN}/bench/exact 0",
     "expect": "pass",
-    "pass_regex": "^PASS slice die wrapper: 32 slots",
+    "pass_regex": "^PASS slice die wrapper PINCAP: 32 slots",
+    "min_count_regex": "^PASS slice die wrapper PINCAP: \\d+ slots physical order, (\\d+) cycles",
     "threads": 1,
     "peak_ram_gb": 4,
     "needs": [
@@ -206,7 +207,7 @@
    },
    {
     "name": "host_slice_lpc_mutant",
-    "cmd": "bash tools/qwen_kv_die/run_host_slice_leaf_bench.sh {RUN}/bench/mutant 1",
+    "cmd": "bash tools/qwen_kv_die/run_host_slice_pinreg_bench.sh {RUN}/bench/mutant 1",
     "expect": "fail",
     "fail_regex": "FAIL slice die wrapper",
     "threads": 1,
@@ -217,9 +218,20 @@
    },
    {
     "name": "host_slice_missing_boot_capture_mutant",
-    "cmd": "bash tools/qwen_kv_die/run_host_slice_leaf_bench.sh {RUN}/bench/missing_boot_capture 2",
+    "cmd": "bash tools/qwen_kv_die/run_host_slice_pinreg_bench.sh {RUN}/bench/missing_boot_capture 2",
     "expect": "fail",
     "fail_regex": "boot capture age",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "host_slice_er_capture_dropped_mutant",
+    "cmd": "bash tools/qwen_kv_die/run_host_slice_pinreg_bench.sh {RUN}/bench/er_capture_dropped 3",
+    "expect": "fail",
+    "fail_regex": "FAIL slice die wrapper: \\d+ mismatches",
     "threads": 1,
     "peak_ram_gb": 4,
     "needs": [
@@ -236,6 +248,15 @@
  },
  "pin_regs": {
   "enable": false,
-  "reason": "die-placed HOST PC slice of fixed-latency chains (one register a slot: station fi/fo 291 b, ci/co, ai/ao, fault, status sk/sd/so/sf, boot bgi/bgo; kv_die.py slice chain stages count exactly 1 edge per slot): the RTL already captures the station inputs (fdq/fvq/cq/aq/ffq, lpc_status, bgi_q) and drives every chain output from a flop (fod/fov, co, ao, fault_o, sko/sdo/soo/sfo, bgo); recipe-2 io_flop_at_pins allow_none=false anchors each pin's own flop at the face. Recipe-3 wrapper pin registers would add 2 edges per slot (64 over the 32-slot chain) and change the die's compiled chain latencies; kit stays recipe 2 (FILL-Q 10-15 kit, Codex aa0c50c21 candidate)."
+  "reason": "Q-KVFIX 0130: the RTL (PINCAP=1) captures every input at its own flop and drives every output from a flop (station fdq/fvq/cq/aq/ffq, lpc_status, bgi_q, host_rn/hbm_rn, ctrl_er_q, cmp_v_q/cmp_we_q, ski_q/sdi_q/soi_q/sfi_q; outputs fod/fov, co, ao, fault_o, sko/sdo/soo/sfo, bgo, ctrl_es, land_er); recipe-2 io_flop_at_pins allow_none=false anchors each pin's own flop at the face. No recipe-3 wrapper registers."
+ },
+ "cycle_cost": "+1 edge controller->landing response (ctrl_er -> land_er, credit return er259) and completion observer (elastic HBM-controller boundary, owner 10-14); +1 edge reset assertion/release; status chain sk/sd/so/sf 2 edges a slot (head sees slot k at 2k+1, was k+1; boot/ack status only); boot chain 2 edges a slot (slot k boots 2k+1 after slot-0 bgi, was k+1). Command path (land_es -> ctrl_es) and station chain fi/fo/ci/ai unchanged.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "physical/ref_tile/qkd_hslice/native_audit.json",
+  "cell": "qkd_host_pc_slice_die",
+  "capture_ps": 435.7,
+  "launch_ps": 232.5,
+  "fix": "pin capture flops on every unregistered input (resets sync, ctrl_er, completion, status chain, bgi) + dedicated ctrl_es[0]/[286] pin flops (RTL qkd_host_pc_slice_die PINCAP=1, qkd_hbm_boot_static launch_v/we copies)"
  }
 }

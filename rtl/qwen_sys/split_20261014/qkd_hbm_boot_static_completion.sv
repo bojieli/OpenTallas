@@ -11,7 +11,7 @@ module qkd_hbm_boot_static_completion #(parameter integer TIMEOUT=20000,MUT=0)(
  output wire boot_completion_v,boot_completion_we,
  output wire boot_done,boot_ok,output wire[3:0]boot_cause,
  output wire fault);
- wire test_done,test_ok,base_fault,demux_fault,empty;wire[260:0]raw_normal_er;
+ wire test_done,test_ok,base_fault,demux_fault,empty,launch_v,launch_we;wire[260:0]raw_normal_er;
  reg launch_boot;reg[2:0]retired;reg check_fault,verified;reg waiting;reg[31:0]timer;
  wire qualified=verified&&!fault;
  assign boot_done=test_done&&(test_ok?verified:1'b1);
@@ -19,10 +19,10 @@ module qkd_hbm_boot_static_completion #(parameter integer TIMEOUT=20000,MUT=0)(
  assign fault=base_fault|demux_fault|check_fault;
  qkd_hbm_boot_static #(.TIMEOUT(TIMEOUT))u_boot(.ck(ck),.ck_test(ck_test),.rst_n(rst_n),.boot_go(boot_go),
   .normal_es(qualified?normal_es:288'b0),.normal_er(raw_normal_er),.ctrl_es(ctrl_es),.ctrl_er(ctrl_er),
-  .boot_done(test_done),.boot_ok(test_ok),.boot_cause(boot_cause),.fault(base_fault));
- // Matches the registered choice which produces ctrl_es on the same edge.
+  .boot_done(test_done),.boot_ok(test_ok),.boot_cause(boot_cause),.fault(base_fault),.launch_v(launch_v),.launch_we(launch_we));
+ // Matches the registered choice which produces ctrl_es on the same edge (launch_v/we = in-tile copies of ctrl_es[0]/[286]).
  always @(posedge ck or negedge rst_n)if(!rst_n)launch_boot<=1;else launch_boot<=!(test_done&&test_ok);
- qkd_static_completion_ownerdemux #(.MUT(MUT))u_owner(.ck(ck),.rst_n(rst_n),.launch_v(ctrl_es[0]),.launch_boot(launch_boot),.launch_we(ctrl_es[286]),
+ qkd_static_completion_ownerdemux #(.MUT(MUT))u_owner(.ck(ck),.rst_n(rst_n),.launch_v(launch_v),.launch_boot(launch_boot),.launch_we(launch_we),
   .completion_v(completion_v),.completion_we(completion_we),.normal_completion_v(normal_completion_v),.normal_completion_we(normal_completion_we),
   .boot_completion_v(boot_completion_v),.boot_completion_we(boot_completion_we),.fault(demux_fault),.empty(empty));
  always @(posedge ck or negedge rst_n)begin

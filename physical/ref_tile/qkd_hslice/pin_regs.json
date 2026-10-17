@@ -2,5 +2,5 @@
  "schema": "opentallas.ref_tile.pin_regs.v1",
  "top": "qkd_host_pc_slice_die",
  "enable": false,
- "reason": "die-placed HOST PC slice of fixed-latency chains (one register a slot: station fi/fo 291 b, ci/co, ai/ao, fault, status sk/sd/so/sf, boot bgi/bgo; kv_die.py slice chain stages count exactly 1 edge per slot): the RTL already captures the station inputs (fdq/fvq/cq/aq/ffq, lpc_status, bgi_q) and drives every chain output from a flop (fod/fov, co, ao, fault_o, sko/sdo/soo/sfo, bgo); recipe-2 io_flop_at_pins allow_none=false anchors each pin's own flop at the face. Recipe-3 wrapper pin registers would add 2 edges per slot (64 over the 32-slot chain) and change the die's compiled chain latencies; kit stays recipe 2 (FILL-Q 10-15 kit, Codex aa0c50c21 candidate)."
+ "reason": "Q-KVFIX 0130: the RTL (PINCAP=1) captures every input at its own flop and drives every output from a flop (station fdq/fvq/cq/aq/ffq, lpc_status, bgi_q, host_rn/hbm_rn, ctrl_er_q, cmp_v_q/cmp_we_q, ski_q/sdi_q/soi_q/sfi_q; outputs fod/fov, co, ao, fault_o, sko/sdo/soo/sfo, bgo, ctrl_es, land_er); recipe-2 io_flop_at_pins allow_none=false anchors each pin's own flop at the face. No recipe-3 wrapper registers."
 }
