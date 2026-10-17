@@ -7,7 +7,7 @@ The original advancing runs use source branch claude/q-dieplan3-1016 at b7dbee91
 | Class | Current evidence | Required next step |
 |---|---|---|
 | Relay site | Original q3h2 bword_1 tree_spine vertical at x12512.88 hit C_B16 interiors; source corridor override fixes planning lanes | Collect advancing full GEN hard373 and warning twin; never qualify warning output |
-| Cut / area | Original relay-skip worst0.475, zero lines>0.6;741.65mm2; max chain estimate37 | Full GEN and GRT arbitration; cut thresholds are guidance |
+| Cut / area | Historical subset-only cut0.475 omitted narrow overlapping-face channels without per-bit occupancy proof; NOT total demand;741.65mm2; max chain estimate37 | Packet restores main conservative cut model; recalculate all demand, then full GEN/GRT arbitration |
 | Reach | Measured xcst launch192.6/capture186.1 gives414um at80ps skew;373um chosen planning margin | Audit every generated hop plus die STA with real clocks; flat reach alone is insufficient |
 | Native cluster / clocks | qfd_c_b16 provisional abstract, single ck across5.2mm; no closed/native cluster | Q-ROM actual regional-root cluster and parent native closure; no die binding yet |
 | Native D2D | r5 capture491.3ps; successor r7f capture239.9ps nativeFAIL, r8b hold-margin successor in CTS | Bind only CLOSED + nativePASS replacement |
@@ -18,3 +18,5 @@ The original advancing runs use source branch claude/q-dieplan3-1016 at b7dbee91
 Viewed q3h2_readout.png directly: symmetric four-band six-column cluster arrays; usable central white region, distinct head corridor and VM/SU seam. Long reduction trunks funnel into centre-edge ports; vertical relay lanes must stay outside cluster bodies. This image is a relay-skip floorplan, not routed evidence.
 
 Reproduce the integration smoke with tools/qwen_split/q3h_diagnostic_smoke.sh ABSOLUTE_OUTDIR. Heavy runs use ot-run with measured admission. Full future runs should set OT_DIE_RELAY_STAGES_OUT and OT_DIE_RELAY_STAGES_PLAN_ID; the selected compiler must consume that table, not private stage literals. Actual cluster fabric e7e22d5b6 is a separate sibling intake and remains provisional.
+
+Root review correction: the original branch cut model omitted all overlapping-face channel nets up to50um without actual per-bit track proof. This packet removes that change entirely. Historical .475 is an incomplete-demand diagnostic, not an actual total cut. The first packet compatibility smoke inherited that diagnostic cut model; only its generator topology is usable. Rescaled xcol clock coordinates carry an explicit provisional diagnostic marker. Assigned pin grants reject VIEWS masters; late pin grants now do the same, preserving closed-view geometry.

@@ -1218,6 +1218,9 @@ def _late_pin_grant(v):
     def masters(model, k=1, port_bits=None):
         out = base(model, k, port_bits)
         for mname, ports in late.items():
+            from qwen_kv_die.tp8b_v5 import VIEWS
+            if mname in VIEWS:
+                raise ValueError(f'OT_SPLIT_PIN_GRANT late_masters: closed view {mname} pins are immutable')
             M_ = out.get(mname)
             if M_ is None:
                 raise ValueError(f'OT_SPLIT_PIN_GRANT late_masters: master {mname} not on this die')

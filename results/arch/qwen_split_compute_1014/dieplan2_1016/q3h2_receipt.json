@@ -4,14 +4,45 @@
  "date": "2026-10-16",
  "candidate": "q3h2 (HIERARCHICAL compute die, owner direction 19:00): 48 x C_B16 (qfd_c_b16, CB contract, 4 cols x 4 rows = one reduction group, adder tree inside, rs = bword) + 48 x-slice column heads kept at the die top in the head gap (CB x-slice finding: tile pairs of blocks 2 apart pool) + today's head chain as the head-row top level (HT station chain measured +3/+12 stages, -0.86% tok/s: alternative only)",
  "approved_baseline": "Q-COMPUTE-DIE 2026-10-16 ~20:10 (q3h2_readout.png viewed)",
- "die": {"um": [32996.16, 22476.96], "mm2": 741.65, "vs_A0_flat_mm2": 700.03,
-         "growth_reason": "owner rule: grow up to the reticle when area relieves fit / congestion: the C_B16 hardened cluster needs 64.8-um N/S pin + entry/exit register strips (5184 tall vs 5054.4) and the 48 x-slice heads (w130 column 129.6 x 920.16) need a 1,179.36-um head gap with a relay lane above and below; width held at the reticle (SPEC F2 33,000): cluster 2090.88 = A0 group pitch (CB's 2350.08 gave 36.24 mm and was refused)"},
+ "die": {
+  "um": [
+   32996.16,
+   22476.96
+  ],
+  "mm2": 741.65,
+  "vs_A0_flat_mm2": 700.03,
+  "growth_reason": "owner rule: grow up to the reticle when area relieves fit / congestion: the C_B16 hardened cluster needs 64.8-um N/S pin + entry/exit register strips (5184 tall vs 5054.4) and the 48 x-slice heads (w130 column 129.6 x 920.16) need a 1,179.36-um head gap with a relay lane above and below; width held at the reticle (SPEC F2 33,000): cluster 2090.88 = A0 group pitch (CB's 2350.08 gave 36.24 mm and was refused)"
+ },
  "source": "claude/q-dieplan3-1016; hook tools/qwen_split/q3h_cluster.py apply_grid (OT_SPLIT_Q3H=1, OT_SPLIT_Q3H_GRID, OT_SPLIT_Q3H_CONTRACT), grid/homes mk_q3h_grid.py --cw 2090.88 (q3h2_grid.json, q3h2-homes.json), contract q3h_cluster_contract_cb.json (CB, provisional; width overridden to 2090.88)",
- "relay_skip": {"worst_cut": 0.475, "lines_over_060": 0, "bit_mm": 1077241, "stages": 9565, "max_chain": 37, "instances": 178, "centre_column_white_pct": 58.5},
- "fixes_in": ["measured-reach hard gate 373 um (xcst m5d native L 192.6 / C 186.1 ps, neighbour skew 80): OT_RELAY_REACH_UM=373", "VM/SU seam: 43.2-um routing channel (OT_SU_VM_CHANNEL_UM), unseals ~1,300 VM N-face clock pins + rst_n", "centre-sink tree pads (7007d8329)", "cut model: face-aligned channel crossings <= 50 um are not die cuts (cuts.py)"],
- "bindings": {"d2d_rom": "qfd_d2d_static_r5 view: NATIVE_FAIL_BOUND (capture 491.3 ps on 161 pins, R 420.7); r7f (Q-LINK-D2D) must close + native PASS to replace it", "cluster": "qfd_c_b16 RTL on claude/q3h-cb-1016, not on this source: strict port bind fails by construction -> chain DIAGNOSTIC_ONLY"},
+ "relay_skip": {
+  "worst_cut": 0.475,
+  "lines_over_060": 0,
+  "bit_mm": 1077241,
+  "stages": 9565,
+  "max_chain": 37,
+  "instances": 178,
+  "centre_column_white_pct": 58.5,
+  "cut_qualification": "INVALID for total demand: historical cuts.py omitted all narrow overlapping-face channels <=50um without per-bit occupancy proof; .475 describes counted subset only. Packet restores main conservative cut semantics."
+ },
+ "fixes_in": [
+  "measured-reach hard gate 373 um (xcst m5d native L 192.6 / C 186.1 ps, neighbour skew 80): OT_RELAY_REACH_UM=373",
+  "VM/SU seam: 43.2-um routing channel (OT_SU_VM_CHANNEL_UM), unseals ~1,300 VM N-face clock pins + rst_n",
+  "centre-sink tree pads (7007d8329)",
+  "cut model: face-aligned channel crossings <= 50 um are not die cuts (cuts.py)"
+ ],
+ "bindings": {
+  "d2d_rom": "qfd_d2d_static_r5 view: NATIVE_FAIL_BOUND (capture 491.3 ps on 161 pins, R 420.7); r7f (Q-LINK-D2D) must close + native PASS to replace it",
+  "cluster": "qfd_c_b16 RTL on claude/q3h-cb-1016, not on this source: strict port bind fails by construction -> chain DIAGNOSTIC_ONLY",
+  "xcol_clocks": "DIAGNOSTIC rescaled clock coordinates only, not actual pin or clock tree evidence"
+ },
  "reset_plan": "rst_field relayed reset tree -> one rst_n per C_B16 (48), in-cluster synchronous re-time (CB); rst_spine / rst_seq / rst_seq_ctlm / rst_io regional registered trees",
  "phy_boundary": "results: artifacts q3h_phy_boundary.json; 4 PHYs x 5 coll_fdi -> io_collective (registered FDI in the native collective), ucie_kv <-> d2d_rom 6 buses; per-pin registration audit pending the GEN case",
- "launch": {"q3h2": "E4 /srv/opentallas-scratch/claude/qwen-split-compute/q3h2/gen_then_chain.sh (hard 373)", "q3h2_w": "E4 .../q3h2_w/gen_then_chain.sh (warn gate, routability)"},
- "png_viewed": ["q3h2_readout.png", "q3h_v1_readout.png"]
+ "launch": {
+  "q3h2": "E4 /srv/opentallas-scratch/claude/qwen-split-compute/q3h2/gen_then_chain.sh (hard 373)",
+  "q3h2_w": "E4 .../q3h2_w/gen_then_chain.sh (warn gate, routability)"
+ },
+ "png_viewed": [
+  "q3h2_readout.png",
+  "q3h_v1_readout.png"
+ ]
 }

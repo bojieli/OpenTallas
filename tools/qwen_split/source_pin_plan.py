@@ -260,8 +260,13 @@ def apply_dvm_clocks(M):
             continue
         for k,y in enumerate(ys):
             p = f'ck{k}'
-            # Q-DIEPLAN3 q3h: a re-framed (shorter) column keeps the leaf clock entries at the same relative height
-            y = y * q.h / 1434.216 if abs(q.h - 1434.216) > 1.0 else y
+            # DIAGNOSTIC abstract only: no routed placement supports these rescaled roots.
+            # Closed xcol views must be installed on their exact pins after this source plan.
+            if abs(q.h - 1434.216) > 1.0:
+                if not getattr(q, 'provisional_clock_positions', False):
+                    q.note += ' DIAGNOSTIC rescaled clock positions; no native clock-delivery proof'
+                q.provisional_clock_positions = True
+                y = y * q.h / 1434.216
             q.ports[p] = ('xy',1,'M5',[on_track('M5', (.042,y), q.w, q.h)],1)
             if p not in q.order:
                 q.order.append(p)
