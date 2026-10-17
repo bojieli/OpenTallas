@@ -221,8 +221,11 @@ def main(out):
             if key in seen:
                 raise ValueError(f'pin collision {name} {seen[key]}')
             seen[key] = name
-            yy = y if face != 'interior' else y
-            tcl.append(f'place_pin -pin_name {{{name}}} -layer {Ly} -location {{{x:.4f} {yy:.4f}}} -pin_size {{{size}}}')
+            # place_pin -location is the pin CENTRE: inset face pins by half their 0.192-um depth so the rectangle lies
+            # inside the die (gate floorplan.pin_bounds FAILed 26,025 rectangles straddling the edge at x/y = 0, W, H).
+            xx = {'W': x + 0.096, 'E': x - 0.096}.get(face, x)
+            yy = {'S': y + 0.096, 'N': y - 0.096}.get(face, y)
+            tcl.append(f'place_pin -pin_name {{{name}}} -layer {Ly} -location {{{xx:.4f} {yy:.4f}}} -pin_size {{{size}}}')
     (out / 'assigned_pins.tcl').write_text('\n'.join(tcl) + '\n')
     # ---- json (assigned-pins.v1 + per-bit positions) ----
     faces, ranges, rec = {}, {}, {}
