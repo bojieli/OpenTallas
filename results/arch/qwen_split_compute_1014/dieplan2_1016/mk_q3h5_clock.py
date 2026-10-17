@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Q-DIEPLAN3 (2026-10-16): q3h5 = q3h4 grid + DIE-CLOCK keep-outs (regional root sites, trunk strips, clk_rx lanes).
 
-usage: mk_q3h5_clock.py GRID_IN HOMES OUT_GRID
+usage: mk_q3h5_clock.py GRID_IN HOMES OUT_GRID [OUT_HOMES]
 
 DIE-CLOCK plan (2026-10-16 ~21:00): one balanced distribution to the 48 C_B16 ck entries and the 48 x 9 head clock pins:
 four 100 x 100 root sites (RS_lo band-gap-low, RS_hi band-gap-high, RS_hgW / RS_hgE head gap at the centre-column edges),
@@ -11,7 +11,13 @@ that collides with a block takes the nearest free spot within 300 um (the plan's
 relay planner (m['relay_keepouts'], b3r2 occupancy) and the grid JSON.
 """
 import json, sys
-G = json.load(open(sys.argv[1])); H = json.load(open(sys.argv[2]))['homes']
+G = json.load(open(sys.argv[1])); HB = json.load(open(sys.argv[2])); H = HB['homes']
+# DIE-CLOCK lane x 14170-14210 (W-port / VM gap): the b2 upper-leaf row (tt_up4_leaf*, up4_sel_branch*, rstseq_rom,
+# x 14036-14360 at y ~8.0-8.3 mm) moves 400 um W into the free W port column so the gap carries the clock lane
+if len(sys.argv) > 4:
+    for n_, h_ in H.items():
+        if n_.startswith(('tt_up4_leaf', 'up4_sel_branch')) or n_ == 'rstseq_rom':
+            h_['x'] = round(h_['x'] - 401.76, 3)
 rects = [(h['x'], h['y'], h['x'] + h['w'], h['y'] + h['h'], n) for n, h in H.items()
          if not n.startswith(('t_', 's_'))] + [(c['x'], c['y'], c['x'] + c['w'], c['y'] + c['h'], c['n']) for c in G['clusters']]
 W, Hd = G['die']['w'], G['die']['h']
@@ -77,9 +83,27 @@ for n in ('RS_lo', 'RS_hi'):
         print(f'WARN no straight 40-um lane clk_rx -> {n}: DIE-CLOCK routes it around (obstacle-aware trunk)')
     else:
         keep.append(dict(n=f'LANE_{n}', kind='clock_lane', rect=ln))
+# DIE-CLOCK 21:1x: the RS_hi / RS_hgW lane in the W-port / VM gap (x 14170-14210, clk_rx W side -> y 17027) with a
+# 40-um horizontal hop from clk_rx's W edge; the head-gap strips extend from each RS_hg to the array edge
+xk0 = ck['x']
+for n, r in (('LANE_RS_hi_v', [14170.0, cy - 20.0, 14210.0, 17027.0]), ('LANE_RS_hi_h', [14210.0, cy - 20.0, xk0, cy + 20.0])):
+    ok = free(r)
+    keep.append(dict(n=n, kind='clock_lane', rect=[round(z, 3) for z in r], free=ok))
+    if not ok:
+        print(f'WARN {n} {r} collides: ' + str([q[4] for q in rects if q[0] < r[2] and r[0] < q[2] and q[1] < r[3] and r[1] < q[3]][:6]))
+for n, y in (('L_hg1', hg0), ('L_hg2', hg1 - 20.0)):
+    for side, x0, x1 in (('Wx', xw1, 13900.0), ('Ex', 19400.0, xe0)):
+        r = [round(x0, 3), round(y, 3), round(x1, 3), round(y + 20.0, 3)]
+        ok = free(r)
+        keep.append(dict(n=f'{n}_{side}', kind='clock_strip', rect=r, free=ok))
+        if not ok:
+            print(f'WARN {n}_{side} {r} collides: ' + str([q[4] for q in rects if q[0] < r[2] and r[0] < q[2] and q[1] < r[3] and r[1] < q[3]][:6]))
 G['keepouts'] = keep
 G['dieclock'] = dict(source='DIE-CLOCK 2026-10-16 plan (a)/(b)', clk_rx=[round(cx, 3), round(cy, 3)],
                      note='strips at lane edges (not mid-gap) so the 109 / 129.6-um relay lanes stay whole')
 json.dump(G, open(sys.argv[3], 'w'), indent=1)
+if len(sys.argv) > 4:
+    HB['candidate'] = 'q3h5'
+    json.dump(HB, open(sys.argv[4], 'w'), indent=1)
 for k in keep:
     print(k['n'], k['kind'], k['rect'])
