@@ -23,8 +23,15 @@ if [ "${OT_KV_TREES:-0}" = 1 ]; then H14="$H14 --host-trees"; V14=$V14,host_tree
 # v1.4.3 (OT_KV_V143=1, needs OT_KV_TREES=1): G3S2 staged head ingress on the closed gather / sstage views, near-head
 # feed-through frames, grown groups, regional reset roots (kv_die.py --v143)
 BV=
+if [ "${OT_KV_RST_PIN_REG:-0}" = 1 ]; then
+  RPV=physical/ref_tile/qkd_rst_region_pr/views/qkd_rst_region_pr
+  python3 tools/qwen_kv_die/check_rst_pin_view.py --view "$RPV" > "$O/rst_pin_view_audit.json" || {
+    cat "$O/rst_pin_view_audit.json"; echo 'OT_KV_RST_PIN_REG: selected view is not native PASS'; exit 6;
+  }
+  BV="$BV --view qkd_rst_region=$RPV"
+fi
 if [ "${OT_KV_V143:-0}" = 1 ]; then H14="$H14 --v143"; V14=$V14,v143
-  BV="--view qkd_hgs=physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage --view qkd_hss=physical/ref_tile/qkh_head_sstage/views/qkh_head_sstage"; fi
+  BV="$BV --view qkd_hgs=physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage --view qkd_hss=physical/ref_tile/qkh_head_sstage/views/qkh_head_sstage"; fi
 # OT_KV_DCAL=1 (Q-KVSYS-DIE 10-16): the link calendar sequencer qkd_d2d_cal_seq_pin on its CLOSED view (kv_die.py DCAL)
 [ "${OT_KV_DCAL:-0}" = 1 ] && BV="$BV --view qkd_dcal=physical/ref_tile/qkd_d2d_cal_seq_pin_ep3/views/qkd_d2d_cal_seq_pin"
 # OT_KV_KVNC=1 (Q-KVSYS PVJOIN 10-16, needs OT_KV_DCAL=1): the KVN context leaf qkd_kvn_ctx_cal (kv_die.py KVNC) on its view

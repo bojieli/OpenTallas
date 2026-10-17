@@ -74,6 +74,7 @@ TREE_LAST = 200.0               # v1.4.2: a reset / boot tree chain ends <= this
 RST_REGION_IGNORE = 255          # v1.4.3 qkd_rst_region IGNORE: a region's chain depth limit (the host holds reset >= this + 4)
 # KVPLAN 1815: regional reset roots + post-expansion local trees (kv_rst_regional.py); region box (um)
 RST_REGIONAL = __import__('os').environ.get('OT_KV_RST_REGIONAL', '0') == '1'
+RST_PIN_REG = __import__('os').environ.get('OT_KV_RST_PIN_REG', '0') == '1'
 RST_REGION_BOX = float(__import__('os').environ.get('OT_KV_RST_REGION_BOX', '4800'))
 # KVPLAN 1815 (OT_KV_PHY_REG=1): REGISTERED PHY BOUNDARY -- a relay chain that starts or ends at a hard PHY macro
 # (HBM PHY, host SerDes, UCIe) puts its first / last register within PHY_REACH um of the PHY pin (kvs12b TT: real -> phy
@@ -530,6 +531,9 @@ SPLIT_BINDINGS['qkd_rhead_ft'] = dict(SPLIT_BINDINGS['qkd_rhead'], module='ot_qk
 SPLIT_BINDINGS['qkd_rst_region'] = dict(module='qkd_rst_region', file='rtl/qwen_sys/split_20261014/qkd_rst_region.sv',
     ports=dict(a=['a'], b=['b'], ck=['ck'], dly=['dly']),
     classed={'por_n': 'by_design: package POR pad (off-chip signal), async assert, synchronised inside the root'})
+if RST_PIN_REG:
+    SPLIT_BINDINGS['qkd_rst_region'] = dict(SPLIT_BINDINGS['qkd_rst_region'], module='qkd_rst_region_pr',
+        file='rtl/qwen_sys/split_20261014/qkd_rst_region_pr.sv')
 SPLIT_BINDINGS['qkd_hgs'] = dict(module='qkh_head_gather_stage', file='rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv',
     ports=dict(ti_a=['ti_a'], e_a=['e_a'], ti_b=['ti_b'], e_b=['e_b'], ck=['ck']), classed={})
 # v1.4.4 PV16 wide pairs (die-placed children via kv_expand) behind their wires-only KV-die face qkd_pvw_die (one die word
