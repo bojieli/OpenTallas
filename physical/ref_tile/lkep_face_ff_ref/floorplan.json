@@ -57,6 +57,7 @@
   "physical/ref_tile/lkep_face_ff_ref/kit.env",
   "physical/ref_tile/lkep_face_ff_ref/clock.sdc",
   "physical/ref_tile/lkep_face_ff_ref/signoff.sdc",
+  "physical/ref_tile/lkep_face_ff_ref/signoff_ffrepair.sdc",
   "physical/ref_tile/lkep_face_ff_ref/pdn.tcl",
   "physical/ref_tile/lkep_face_ff_ref/pre_cts.tcl",
   "physical/ref_tile/lkep_face_ff_ref/post_cts.tcl",
@@ -77,13 +78,6 @@
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
-  "physical/dsrom_window_source/leaf_iohold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/dsrom_window_source/leaf_inhold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/ref_tile/lkep_face_ff_ref/pre_gpl.tcl",
-  "physical/ref_tile/lkep_face_ff_ref/pre_dpl.tcl",
-  "physical/common_flow/pin_reg_split.tcl",
   "physical/common_flow/clock_spine.tcl",
   "physical/ref_tile/lkep_face_ff_ref/spine_ins.tcl"
  ]

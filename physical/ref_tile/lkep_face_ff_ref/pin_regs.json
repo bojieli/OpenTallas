@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hfd_lk_ep_face",
+ "enable": false,
+ "reason": "hfd_lk_ep_face registers every pin in RTL: every input (f_lk_rx incl. session, t_cr, r_v, r_flit, fault, locked) lands in a pure pin flop with no logic before it, and every output (f_lk_tx, core_t_v, core_t_flit, core_r_cr, core_session) leaves a pure pin flop; since 10-17 session and {fault,locked} have separate capture and launch pin flops (io_flop_at_pins anchors each)."
+}

@@ -2,7 +2,7 @@
  "name": "lkep_face_ff_ref",
  "top": "hfd_lk_ep_face",
  "kind": "tile",
- "recipe": 2,
+ "recipe": 4,
  "sources": [
   "rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep_face.sv"
  ],
@@ -49,7 +49,9 @@
    "v": "M3 M5"
   },
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "period_ps": 833.333,
+  "io_hold_margin_ns": 0.0
  },
  "clock": "spine",
  "structural_change": "HBMA-LKEP 10-17 successor of lkep_face_ref-face2dir-ce9d51d9f (CLOSED TT +299.83 / FF +26.31 but NATIVE FAIL: capture 204.7 > 190 on 21 inputs = session f_lk_rx[570:547] + fault + locked; launch 218.3 core_session[21]). Cause: session and {fault,locked} crossed the tile through ONE register, so io_flop_at_pins could anchor it at only one pin and the crossing wire sat on both pins. Fix: flop-first both ways -- session gets an input pin register (f_lk side) and a separate output pin register (core side); {fault,locked} get an input pin register (core side) and a separate output pin register (f_lk side). +1 edge on session (pin->core) and +1 edge on {fault,locked} (core->pin); no other path changes. Faces follow the d4f run6 placement (top-down): the core host_cp_ep sits EAST of host_cp_ep_face (x 20655.0 vs face 20595.6..20653.9) and landing/packet/phy WEST/NW, so core buses move W->E and f_lk_rx/f_lk_tx E->W (the closed view had them mirrored). Outline unchanged = die slot 58.32 x 116.64.",
@@ -101,6 +103,12 @@
   "cols": 4,
   "allow_none": true
  },
- "inhold": true,
- "outhold": true
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "hfd_lk_ep_face registers every pin in RTL: every input (f_lk_rx incl. session, t_cr, r_v, r_flit, fault, locked) lands in a pure pin flop with no logic before it, and every output (f_lk_tx, core_t_v, core_t_flit, core_r_cr, core_session) leaves a pure pin flop; since 10-17 session and {fault,locked} have separate capture and launch pin flops (io_flop_at_pins anchors each)."
+ }
 }
