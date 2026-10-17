@@ -1,0 +1,27 @@
+{
+ "ot_hbm_sm_vm_wr_q_t_faces4": {
+  "cell": "ot_hbm_sm_vm_wr_q_t_faces4",
+  "view": "physical/ref_tile/hsm_smvm_wrq_t_r4/views/ot_hbm_sm_vm_wr_q_t_faces4",
+  "lib_cell": "ot_hbm_sm_vm_wr_q_t_faces4",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean",
+   "lib midrange"
+  ],
+  "R_ps": 346.6,
+  "spread_ps": 65.6,
+  "outputs": 2227,
+  "inputs": 2499,
+  "launch_ps": 185.5,
+  "launch_pin": "wq_lo[638]",
+  "capture_ps": 213.2,
+  "capture_pin": "desc_base[7]",
+  "launch_over": 0,
+  "capture_over": 164,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "capture 213.19741 > 190 (164 pins)",
+  "route": "hsm_smvm_wrq_t_r4-faces4-c8e94d78d"
+ }
+}

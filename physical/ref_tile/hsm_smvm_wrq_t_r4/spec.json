@@ -111,7 +111,8 @@
     "expect": "pass",
     "pass_regex": "SM_VM_WR_Q_T BENCH PASS",
     "threads": 1,
-    "peak_ram_gb": 4
+    "peak_ram_gb": 4,
+    "pass_witness": "physical/ref_tile/hsm_smvm_wrq_t_r4/witness/39e57ad0e_wrq_t_bench.log"
    },
    {
     "name": "mut_face_clock_drop",
@@ -119,7 +120,8 @@
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 4,
-    "fail_regex": "^TB_HBM_SM_VM_WR_Q_T FAIL MUT=0 mismatches[+]faults=[1-9][0-9]*$"
+    "fail_regex": "^TB_HBM_SM_VM_WR_Q_T FAIL MUT=0 mismatches[+]faults=[1-9][0-9]*$",
+    "fail_witness": "physical/ref_tile/hsm_smvm_wrq_t_r4/witness/39e57ad0e_wrq_t_bench.log"
    },
    {
     "name": "mut_hcfg_clock_drop",
@@ -127,7 +129,8 @@
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 4,
-    "fail_regex": "^TB_HBM_SM_VM_WR_Q_T FAIL MUT=0 mismatches[+]faults=[1-9][0-9]*$"
+    "fail_regex": "^TB_HBM_SM_VM_WR_Q_T FAIL MUT=0 mismatches[+]faults=[1-9][0-9]*$",
+    "fail_witness": "physical/ref_tile/hsm_smvm_wrq_t_r4/witness/39e57ad0e_wrq_t_bench.log"
    }
   ],
   "extra_paths": [
@@ -137,7 +140,13 @@
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
   ],
   "views_to": "physical/ref_tile/hsm_smvm_wrq_t_r4/views",
-  "record_to": "results/rtl/ref_tile/hsm_smvm_wrq_t_r4"
+  "record_to": "results/rtl/ref_tile/hsm_smvm_wrq_t_r4",
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "source": "results/hbm_sm_attention_1015/hsm_1815/writer_c8e94d78d_native.json",
+   "cell": "ot_hbm_sm_vm_wr_q_t_faces4",
+   "fix": "c8e94d78d native capture 213.2 (164 N-face cfg/desc inputs; core-root NE leaf 98 ps -> 66 ps late pin flops -> 6 hold BUFx2 each). The 320 host pin flops move to a 7th clock entry clk_hcfg (own CTS root: gate R 94.6 / spread 15.5 vs core 340.7..413.4); ot_static_cmd_target_core_pc differs from the shared core only in the pin-flop clock; zero edges added."
+  }
  },
  "pin_regs": {
   "enable": false,
