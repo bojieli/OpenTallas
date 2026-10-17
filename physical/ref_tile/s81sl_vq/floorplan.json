@@ -7,13 +7,13 @@
   0,
   0,
   172.8,
-  129.6
+  151.2
  ],
  "core": [
   2.16,
   2.16,
   170.64000000000001,
-  127.44
+  149.04
  ],
  "why": "spec outline",
  "std_area_um2": 6600,
@@ -54,11 +54,10 @@
    "um_v",
    "um_q",
    "um_b",
-   "um_i"
-  ],
-  "S": [
+   "um_i",
    "fault"
-  ]
+  ],
+  "S": []
  },
  "clock_port": "clk",
  "blocks": [
@@ -68,15 +67,22 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 43.2,
-   "y": 43.2,
+   "x": 55.296,
+   "y": 23.76,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
    "offtrack": 0
   }
  ],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 42% outside 45%-60% (std 6600 + macro 3894 in core 24746 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
  "referenced": [
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/hdc/ot_hdc_sfu.sv",
@@ -90,6 +96,7 @@
   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
   "rtl/hdc/v41/ot_hdc_actquant.sv",
   "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv",
   "rtl/hdc/v41x/ot_dsrom_divc.sv",
   "rtl/hdc/ot_hdc_fastfp.sv",
   "rtl/hdc/ot_hdc_fp32_f12.sv",

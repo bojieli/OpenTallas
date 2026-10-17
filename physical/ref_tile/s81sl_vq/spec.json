@@ -15,6 +15,7 @@
   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
   "rtl/hdc/v41/ot_hdc_actquant.sv",
   "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv",
   "rtl/hdc/v41x/ot_dsrom_divc.sv",
   "rtl/hdc/ot_hdc_fastfp.sv",
   "rtl/hdc/ot_hdc_fp32_f12.sv",
@@ -40,10 +41,9 @@
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "inst": null,
    "at": [
-    43.2,
-    43.2
+    55.296,
+    23.76
    ],
-   "at_exact": true,
    "orient": "R0"
   }
  ],
@@ -73,11 +73,10 @@
    "um_v",
    "um_q",
    "um_b",
-   "um_i"
-  ],
-  "S": [
+   "um_i",
    "fault"
-  ]
+  ],
+  "S": []
  },
  "recipe": 4,
  "hold_budget": "die",
@@ -98,7 +97,7 @@
   "macro_halo_um": 10.8,
   "io_hold_margin_ns": 0.0
  },
- "structural_change": "S81-TILES2 10-17 g3 (one-macro sub-beat ring): the 4-macro 1024-b bank (AQ_XMEM=1) failed gate 2 at its W/E pin walls (trial GRT overflow 502: wd_in-hi + 1,024 tied w_mask pins on the E faces, the wd-hi nets detouring round a 164-um M1-M4 wall since M5 is vertical). AQ_XMEM=2 rebuilds aq12's x wait line from the 256-b sub-beat stream: ONE 128x256 macro written every cycle with sd_, read 11 rows behind, replayed with a 3-b x 12 control line into a 1024-b re-assembly register (xr = blk delayed 12 = the flop line's xg every cycle; bit-exact bench + mutant). 1 macro at (43.2, 43.2) R0, rd/wd-lo face W toward the main std-cell band, back face (117 wd-hi + 256 ties) toward a 34.8-um E strip; outline 172.8 x 129.6 (1.33:1, was 162 x 231.12); clk on N beside the band.",
+ "structural_change": "S81-TILES2 10-17 g3 (one-macro sub-beat ring): the 4-macro 1024-b bank (AQ_XMEM=1) failed gate 2 at its W/E pin walls (trial GRT overflow 502: wd_in-hi + 1,024 tied w_mask pins on the E faces, the wd-hi nets detouring round a 164-um M1-M4 wall since M5 is vertical). AQ_XMEM=2 rebuilds aq12's x wait line from the 256-b sub-beat stream: ONE 128x256 macro written every cycle with sd_, read 11 rows behind, replayed with a 3-b x 12 control line into a 1024-b re-assembly register (xr = blk delayed 12 = the flop line's xg every cycle; bit-exact bench + mutant). 1 macro at (43.2, 43.2) R0, rd/wd-lo face W toward the main std-cell band, back face (117 wd-hi + 256 ties) toward a 34.8-um E strip; outline 172.8 x 129.6 (1.33:1, was 162 x 231.12); clk on N beside the band. S81-TILES3 10-17 (coordinator 0co review): (a) the quantiser is the vq-only fork ot_s81sl_aq12x (xd port, no u_x line); rtl/hdc/v41x/ot_dsrom_aq12.sv is byte-identical with main again. (b) the 128x256 macro moves to the SE corner (55.3, 23.8) R0, 20-um channels to the E pin face and the S core edge (S carries no pins: fault moves to N), so the cells form ONE L-shaped band (W column 53 um wide + N band 84.8-149 full width) instead of a ring around a central macro; outline 172.8 x 151.2 so the E-face xf pins (y 86.4-146.9, 4.9/um) sit beside the N band, above the macro channel. (c) W face: y 6.5-73.4 (4.2/um, from vn), u 73.4-144.7 (4.0/um, from vs); E face: xf to the ring-stop relay (u_up).",
  "job": {
   "owner": "Claude:S81-TILES2",
   "branch": "claude/s81vq-ring-1017",
@@ -185,7 +184,7 @@
  "std_area_um2": 6600,
  "outline": {
   "w": 172.8,
-  "h": 129.6
+  "h": 151.2
  },
  "pin_ranges": {
   "y_v": [
@@ -198,31 +197,31 @@
   ],
   "y": [
    12.96,
-   64.8
+   73.44
   ],
   "u_v": [
-   64.8,
-   66.96
+   73.44,
+   75.6
   ],
   "u_i": [
-   66.96,
-   71.28
+   75.6,
+   79.92
   ],
   "u": [
-   71.28,
-   123.12
+   79.92,
+   144.72
   ],
   "xf_v": [
-   6.48,
-   8.64
+   86.4,
+   88.56
   ],
   "xf_s": [
-   8.64,
-   10.8
+   88.56,
+   90.72
   ],
   "xf": [
-   10.8,
-   123.12
+   90.72,
+   146.88
   ],
   "sid": [
    6.48,
@@ -273,8 +272,8 @@
    108.0
   ],
   "fault": [
-   10.8,
-   21.6
+   112.32,
+   116.64
   ]
  },
  "children": [],
