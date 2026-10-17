@@ -180,5 +180,39 @@
    "lib_clock_pin": "clk_in",
    "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk_in}]"
   }
+ },
+ "forwarded_clock": {
+  "arc": "clk_in -> clk_out combinational positive_unate (one kept buffer u_fcb_ck)",
+  "corners": {
+   "tt": {
+    "light_load_ps": 14.8,
+    "light_load_ff": 5.76,
+    "fork4_pins_ps": 18.81,
+    "fork4_pins_load_ff": 15.16,
+    "fork4_pins_wire_ps": 104.44,
+    "fork4_pins_wire_load_ff": 258.16,
+    "R_ps": 55.9
+   },
+   "ff": {
+    "light_load_ps": 11.65,
+    "light_load_ff": 5.76,
+    "fork4_pins_ps": 14.87,
+    "fork4_pins_load_ff": 16.37,
+    "fork4_pins_wire_ps": 74.39,
+    "fork4_pins_wire_load_ff": 259.37,
+    "R_ps": 41.8
+   },
+   "ss": {
+    "light_load_ps": 20.38,
+    "light_load_ff": 5.76,
+    "fork4_pins_ps": 26.04,
+    "fork4_pins_load_ff": 14.38,
+    "fork4_pins_wire_ps": 161.18,
+    "fork4_pins_wire_load_ff": 257.38,
+    "R_ps": 80.2
+   }
+  },
+  "fork4_model": "4 x clk_in pin cap; +wire 4 x 405.0 um x 0.15 fF/um",
+  "etm": "re-exported without the clk_out_fwd generated clock (tools/hbm_f1/fc_etm_reexport.sh); register arcs byte-identical to the closure-loop export"
  }
 }

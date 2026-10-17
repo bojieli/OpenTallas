@@ -1,0 +1,192 @@
+{
+ "hbfd_rly_48_WE_fc": {
+  "native": {
+   "launch_ps": 139.5,
+   "capture_ps": 118.0,
+   "spread_ps": 1.0,
+   "pass": true,
+   "fail_why": ""
+  },
+  "forwarded_clock": {
+   "tt": {
+    "light_load_ps": 14.8,
+    "light_load_ff": 5.76,
+    "fork4_pins_ps": 18.81,
+    "fork4_pins_load_ff": 15.16,
+    "fork4_pins_wire_ps": 104.44,
+    "fork4_pins_wire_load_ff": 258.16,
+    "R_ps": 55.9
+   },
+   "ff": {
+    "light_load_ps": 11.65,
+    "light_load_ff": 5.76,
+    "fork4_pins_ps": 14.87,
+    "fork4_pins_load_ff": 16.37,
+    "fork4_pins_wire_ps": 74.39,
+    "fork4_pins_wire_load_ff": 259.37,
+    "R_ps": 41.8
+   },
+   "ss": {
+    "light_load_ps": 20.38,
+    "light_load_ff": 5.76,
+    "fork4_pins_ps": 26.04,
+    "fork4_pins_load_ff": 14.38,
+    "fork4_pins_wire_ps": 161.18,
+    "fork4_pins_wire_load_ff": 257.38,
+    "R_ps": 80.2
+   }
+  }
+ },
+ "hbfd_rly_624_EW_fc": {
+  "native": {
+   "launch_ps": 154.8,
+   "capture_ps": 115.8,
+   "spread_ps": 8.5,
+   "pass": true,
+   "fail_why": ""
+  },
+  "forwarded_clock": {
+   "tt": {
+    "light_load_ps": 15.5,
+    "light_load_ff": 5.76,
+    "fork4_pins_ps": 22.95,
+    "fork4_pins_load_ff": 24.06,
+    "fork4_pins_wire_ps": 108.26,
+    "fork4_pins_wire_load_ff": 267.06,
+    "R_ps": 90.6
+   },
+   "ff": {
+    "light_load_ps": 12.36,
+    "light_load_ff": 5.76,
+    "fork4_pins_ps": 18.22,
+    "fork4_pins_load_ff": 26.12,
+    "fork4_pins_wire_ps": 77.46,
+    "fork4_pins_wire_load_ff": 269.12,
+    "R_ps": 72.6
+   },
+   "ss": {
+    "light_load_ps": 21.06,
+    "light_load_ff": 5.76,
+    "fork4_pins_ps": 31.75,
+    "fork4_pins_load_ff": 22.73,
+    "fork4_pins_wire_ps": 166.46,
+    "fork4_pins_wire_load_ff": 265.73,
+    "R_ps": 122.0
+   }
+  }
+ },
+ "hbfd_rly_624_NS_fc": {
+  "native": {
+   "launch_ps": 156.8,
+   "capture_ps": 126.9,
+   "spread_ps": 10.4,
+   "pass": true,
+   "fail_why": ""
+  },
+  "forwarded_clock": {
+   "tt": {
+    "light_load_ps": 15.04,
+    "light_load_ff": 5.76,
+    "fork4_pins_ps": 21.73,
+    "fork4_pins_load_ff": 22.03,
+    "fork4_pins_wire_ps": 107.08,
+    "fork4_pins_wire_load_ff": 265.03,
+    "R_ps": 94.6
+   },
+   "ff": {
+    "light_load_ps": 11.9,
+    "light_load_ff": 5.76,
+    "fork4_pins_ps": 17.24,
+    "fork4_pins_load_ff": 24.09,
+    "fork4_pins_wire_ps": 76.51,
+    "fork4_pins_wire_load_ff": 267.09,
+    "R_ps": 75.9
+   },
+   "ss": {
+    "light_load_ps": 20.6,
+    "light_load_ff": 5.76,
+    "fork4_pins_ps": 30.07,
+    "fork4_pins_load_ff": 20.7,
+    "fork4_pins_wire_ps": 164.89,
+    "fork4_pins_wire_load_ff": 263.7,
+    "R_ps": 127.1
+   }
+  }
+ },
+ "hbfd_rly_624_SN_fc": {
+  "native": {
+   "launch_ps": 151.1,
+   "capture_ps": 119.1,
+   "spread_ps": 11.3,
+   "pass": true,
+   "fail_why": ""
+  },
+  "forwarded_clock": {
+   "tt": {
+    "light_load_ps": 15.31,
+    "light_load_ff": 5.76,
+    "fork4_pins_ps": 21.8,
+    "fork4_pins_load_ff": 21.52,
+    "fork4_pins_wire_ps": 107.18,
+    "fork4_pins_wire_load_ff": 264.52,
+    "R_ps": 92.9
+   },
+   "ff": {
+    "light_load_ps": 12.18,
+    "light_load_ff": 5.76,
+    "fork4_pins_ps": 17.4,
+    "fork4_pins_load_ff": 23.58,
+    "fork4_pins_wire_ps": 76.67,
+    "fork4_pins_wire_load_ff": 266.58,
+    "R_ps": 74.5
+   },
+   "ss": {
+    "light_load_ps": 20.87,
+    "light_load_ff": 5.76,
+    "fork4_pins_ps": 30.03,
+    "fork4_pins_load_ff": 20.19,
+    "fork4_pins_wire_ps": 164.87,
+    "fork4_pins_wire_load_ff": 263.19,
+    "R_ps": 125.2
+   }
+  }
+ },
+ "hbfd_rly_624_WE_fc": {
+  "native": {
+   "launch_ps": 150.2,
+   "capture_ps": 116.4,
+   "spread_ps": 9.1,
+   "pass": true,
+   "fail_why": ""
+  },
+  "forwarded_clock": {
+   "tt": {
+    "light_load_ps": 15.89,
+    "light_load_ff": 5.76,
+    "fork4_pins_ps": 23.91,
+    "fork4_pins_load_ff": 25.61,
+    "fork4_pins_wire_ps": 109.21,
+    "fork4_pins_wire_load_ff": 268.61,
+    "R_ps": 92.9
+   },
+   "ff": {
+    "light_load_ps": 12.74,
+    "light_load_ff": 5.76,
+    "fork4_pins_ps": 18.99,
+    "fork4_pins_load_ff": 27.67,
+    "fork4_pins_wire_ps": 78.21,
+    "fork4_pins_wire_load_ff": 270.67,
+    "R_ps": 74.5
+   },
+   "ss": {
+    "light_load_ps": 21.45,
+    "light_load_ff": 5.76,
+    "fork4_pins_ps": 33.03,
+    "fork4_pins_load_ff": 24.28,
+    "fork4_pins_wire_ps": 167.71,
+    "fork4_pins_wire_load_ff": 267.28,
+    "R_ps": 125.0
+   }
+  }
+ }
+}
