@@ -44,7 +44,7 @@ module tb_hbm_su_static_top;
  end
  integer stop=NE;
  integer cyc=-1,errors=0,ew=0,es=0,reads=0,writes=0,scalars=0,i,q,p,k;
- bit mut_data,mut_addr,mut_rf,mut_red;
+ bit mut_data,mut_addr,mut_rf,mut_red; integer red0;
  reg pend_v [0:31][0:3][0:7]; reg [15:0] pend_s [0:31][0:3][0:7]; reg pend_w [0:31][0:3][0:7];
  task fail(input string m); begin if(errors<12)$display("SU_TOP ERROR cyc=%0d %s",cyc,m); errors=errors+1; end endtask
  function automatic [255:0] vm_image(input integer qq,input [15:0] s);
@@ -104,13 +104,15 @@ module tb_hbm_su_static_top;
   for(i=0;i<32;i=i+1)for(q=0;q<4;q=q+1)for(p=0;p<8;p=p+1)begin pend_v[i][q][p]=0;pend_w[i][q][p]=0;pend_s[i][q][p]=0;end
   $readmemh({dir,"/prog.mem"},prog);$readmemh({dir,"/expw.mem"},expw);$readmemh({dir,"/exps.mem"},exps);
   $readmemh({dir,"/explw.mem"},explw);$readmemh({dir,"/arith/seed.mem"},seed);
+  red0=0; for(i=1;i<stop&&red0==0;i=i+1) if(prog[i][73]) red0=i;
   repeat(4)@(negedge clk); rst_n=1; repeat(2+4*SYNC_RST)@(negedge clk);
   for(i=0;i<stop;i=i+1)begin
    line=prog[i];
    // quarter-1 A affine term bit 0 (control field ld_c, stream A term 0) corrupted at an op's load edge
    if(mut_addr&&i==1040)line[QW+680+(1742-2-1200)+:24]=24'd3;
    if(mut_rf&&line[0*QW+74+9+8])line[0*QW+74+9+:8]=8'd3;
-   if(mut_red&&i>=1040+176+31&&i<1040+176+31+2)line[0+:74]=prog[i-1][0+:74];
+   // first reducer command found in the programme (its edge moves with MLAT/LEAF/PIN_REG), delayed one edge
+   if(mut_red&&i>=red0&&i<red0+2)line[0+:74]=prog[i-1][0+:74];
    cyc=i;
    @(negedge clk);
   end
