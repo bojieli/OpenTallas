@@ -1,0 +1,281 @@
+{
+ "schema": "opentallas.hsu.su_slice_band_d4c.v1",
+ "author": "Claude H-SU/PGSLICE",
+ "date": "2026-10-16",
+ "old_slot": {
+  "w": 1797.12,
+  "h": 2825.28,
+  "mm2": 5.0774
+ },
+ "slot_h": 3149.28,
+ "outlines": {
+  "bank_r12": [
+   369.36,
+   151.2
+  ],
+  "light_kind0_leaf": [
+   151.2,
+   151.2
+  ],
+  "heavy_planned": [
+   166.32,
+   330.48
+  ],
+  "channel": 20.0,
+  "edge": 20.0
+ },
+ "cases": {
+  "heavy_G0G1_1612.8": {
+   "width": 1612.8,
+   "height": 3149.28,
+   "slot_mm2": 5.0792,
+   "rows_w": 1322.56,
+   "rows_h": 2803.84,
+   "fits_height": true,
+   "fits_width": true,
+   "counts": {
+    "bank": 32,
+    "heavy": 16,
+    "light": 16
+   },
+   "hard_mm2": 3.0323,
+   "hard_util": 0.597,
+   "service": {
+    "column_w": 250.24,
+    "strip_h": 305.44,
+    "mm2": 1.1759
+   }
+  },
+  "light_G2G3_1612.8": {
+   "width": 1612.8,
+   "height": 3149.28,
+   "slot_mm2": 5.0792,
+   "rows_w": 1121.12,
+   "rows_h": 2739.2,
+   "fits_height": true,
+   "fits_width": true,
+   "counts": {
+    "bank": 32,
+    "heavy": 0,
+    "light": 32
+   },
+   "hard_mm2": 2.5187,
+   "hard_util": 0.496,
+   "service": {
+    "column_w": 451.68,
+    "strip_h": 370.08,
+    "mm2": 1.8119
+   }
+  },
+  "light_G2G3_1290": {
+   "width": 1290.0,
+   "height": 3149.28,
+   "slot_mm2": 4.0626,
+   "rows_w": 1121.12,
+   "rows_h": 2739.2,
+   "fits_height": true,
+   "fits_width": true,
+   "counts": {
+    "bank": 32,
+    "heavy": 0,
+    "light": 32
+   },
+   "hard_mm2": 2.5187,
+   "hard_util": 0.62,
+   "service": {
+    "column_w": 128.88,
+    "strip_h": 370.08,
+    "mm2": 0.8082
+   }
+  },
+  "heavy_G0G1_min": {
+   "width": 1342.656,
+   "height": 3149.28,
+   "slot_mm2": 4.2284,
+   "rows_w": 1322.56,
+   "rows_h": 2803.84,
+   "fits_height": true,
+   "fits_width": true,
+   "counts": {
+    "bank": 32,
+    "heavy": 16,
+    "light": 16
+   },
+   "hard_mm2": 3.0323,
+   "hard_util": 0.717,
+   "service": {
+    "column_w": 0.0,
+    "strip_h": 305.44,
+    "mm2": 0.3979
+   }
+  }
+ },
+ "pins": {
+  "pitch_um": 0.192,
+  "pins_per_um": 5.21,
+  "N": "none (abuts SM row)",
+  "S": "none (abuts SM row)",
+  "W": {
+   "bits": 5233,
+   "windows": [
+    {
+     "port": "clock_reset (658 entries)",
+     "bits": 658,
+     "lo": 64.8,
+     "hi": 191.136,
+     "span_um": 126.336,
+     "pins_per_um": 5.21
+    },
+    {
+     "port": "control",
+     "bits": 1742,
+     "lo": 212.736,
+     "hi": 547.2,
+     "span_um": 334.464,
+     "pins_per_um": 5.21
+    },
+    {
+     "port": "vmr_cmd",
+     "bits": 60,
+     "lo": 568.8,
+     "hi": 580.32,
+     "span_um": 11.52,
+     "pins_per_um": 5.21
+    },
+    {
+     "port": "vmw_cmd",
+     "bits": 78,
+     "lo": 601.92,
+     "hi": 616.896,
+     "span_um": 14.976,
+     "pins_per_um": 5.21
+    },
+    {
+     "port": "rf_bword",
+     "bits": 128,
+     "lo": 638.496,
+     "hi": 663.072,
+     "span_um": 24.576,
+     "pins_per_um": 5.21
+    },
+    {
+     "port": "rf_bcmd",
+     "bits": 36,
+     "lo": 684.672,
+     "hi": 691.584,
+     "span_um": 6.912,
+     "pins_per_um": 5.21
+    },
+    {
+     "port": "rf_dsec",
+     "bits": 256,
+     "lo": 713.184,
+     "hi": 762.336,
+     "span_um": 49.152,
+     "pins_per_um": 5.21
+    },
+    {
+     "port": "red_sel",
+     "bits": 12,
+     "lo": 783.936,
+     "hi": 786.24,
+     "span_um": 2.304,
+     "pins_per_um": 5.21
+    },
+    {
+     "port": "slice_x",
+     "bits": 32,
+     "lo": 807.84,
+     "hi": 813.984,
+     "span_um": 6.144,
+     "pins_per_um": 5.21
+    },
+    {
+     "port": "fault",
+     "bits": 1,
+     "lo": 835.584,
+     "hi": 835.776,
+     "span_um": 0.192,
+     "pins_per_um": 5.21
+    },
+    {
+     "port": "inj_rd",
+     "bits": 2,
+     "lo": 857.376,
+     "hi": 857.76,
+     "span_um": 0.384,
+     "pins_per_um": 5.21
+    },
+    {
+     "port": "inj_addr",
+     "bits": 160,
+     "lo": 879.36,
+     "hi": 910.08,
+     "span_um": 30.72,
+     "pins_per_um": 5.21
+    },
+    {
+     "port": "inj_q",
+     "bits": 1024,
+     "lo": 931.68,
+     "hi": 1128.288,
+     "span_um": 196.608,
+     "pins_per_um": 5.21
+    },
+    {
+     "port": "dw_v",
+     "bits": 2,
+     "lo": 1149.888,
+     "hi": 1150.272,
+     "span_um": 0.384,
+     "pins_per_um": 5.21
+    },
+    {
+     "port": "dw_row",
+     "bits": 18,
+     "lo": 1171.872,
+     "hi": 1175.328,
+     "span_um": 3.456,
+     "pins_per_um": 5.21
+    },
+    {
+     "port": "dw_d",
+     "bits": 1024,
+     "lo": 1196.928,
+     "hi": 1393.536,
+     "span_um": 196.608,
+     "pins_per_um": 5.21
+    }
+   ],
+   "used_um": 1350.3
+  },
+  "E": {
+   "bits": 1112,
+   "windows": [
+    {
+     "port": "lg_rq/lg_wq/lg_rr/lg_w_done h0",
+     "bits": 556,
+     "lo": 1200.0,
+     "hi": 1306.752,
+     "span_um": 106.752,
+     "pins_per_um": 5.21
+    },
+    {
+     "port": "lg_rq/lg_wq/lg_rr/lg_w_done h1",
+     "bits": 556,
+     "lo": 1328.352,
+     "hi": 1435.104,
+     "span_um": 106.752,
+     "pins_per_um": 5.21
+    }
+   ],
+   "used_um": 256.7
+  },
+  "face_avg_pins_per_um": {
+   "W": 1.662,
+   "E": 0.353
+  },
+  "note": "old grant: E 2x556 b at 10.0/um, W SU_CORE 256 b windows at 10.0/um, 658 clock/reset entries on N"
+ },
+ "status": "PLANNING geometry (rectangles + pin windows). pgslice is RTL-only: no cluster kit; VM bank leaf not started; heavy KIND1 outline planned from synth. No placement / GRT / timing."
+}
