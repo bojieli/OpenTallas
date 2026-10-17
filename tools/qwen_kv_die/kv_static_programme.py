@@ -123,6 +123,35 @@ def link_cfg_words(caldir, end='K', base_seg=2):
     return words
 
 
+ES_CFG_TARGETS, ES_CFG_WORDS = (12, 13), (1024, 8)
+ES_CFG_CTRL_LAT = 92          # KVJ-C3 bench model of the controller es -> er latency (open: measured per-PC value owed)
+
+
+def es_cfg_words(ctrl_lat=ES_CFG_CTRL_LAT, relay=(0, 0, 0, 0)):
+    """KVJ-SMALL b2 10-17: boot dispatcher targets 12 / 13 (qkd_static_kv_boot_dispatch ESCFG=1) for the shared boot bus
+    of qkd_kv_es_fan_root + qkd_embedding_static_join4_cal (KVJ-C3).  Image = kvjc3_pc_chain.boot_words.  Target 12 word
+    a = {stack[1:0], pc[4:0], reg[2:0]} (the dispatcher's es_cfg_addr = a[7:0]; data[17:16] = stack is checked against
+    a[9:8]); target 13 word a = beat segment a (8 words, unused segments {len 0, off 0} = never a slot)."""
+    import kvjc3_pc_chain as C3
+    words = C3.boot_words(C3.emb_calendar(ctrl_lat, list(relay)))
+    pc, beat = [None] * ES_CFG_WORDS[0], [(1 << 62)] * ES_CFG_WORDS[1]
+    for addr, data in words:
+        if data >> 62 == 0:
+            a = (((data >> 16) & 3) << 8) | addr
+            if pc[a] is not None or data >> 18:
+                raise ValueError(f'es cfg: PC word {a} duplicated or malformed')
+            pc[a] = data
+        elif data >> 62 == 1:
+            if addr > 7 or (data >> 24) & ((1 << 38) - 1):
+                raise ValueError(f'es cfg: beat segment word {addr} malformed')
+            beat[addr] = data
+        else:
+            raise ValueError('es cfg: boot word targets only 0 (root) / 1 (join4_cal)')
+    if any(w is None for w in pc):
+        raise ValueError('es cfg: the 128 x 8 PC player constants must all be present')
+    return pc, beat
+
+
 # ---- profile: every age the compile uses -----------------------------------------------------------------------------
 def profile(kind, ages=None):
     if kind == 'component':
@@ -460,6 +489,7 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None):
     with tempfile.TemporaryDirectory(dir=workdir) as td:
         cal = link_calendar(td)
         link_words = link_cfg_words(Path(td) / 'cal')
+    es_pc, es_beat = es_cfg_words()
     prog_cal = cal['program']
     lay = prog_cal['layers']
     starts = [l['start'] for l in lay]
@@ -665,7 +695,10 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None):
                 attention=att, phase=phase, images=images, bundle=bundle,
                 # dispatcher target 11 (LINKCFG=1, order 1..9, 11, 0); not in the HOST class-8 bundle yet: the HOST
                 # loader / program_target_frames accept targets 0..9 only (same as the DIECFG target 10)
-                link_cfg=dict(target=LINK_CFG_TARGET, program=link_words))
+                link_cfg=dict(target=LINK_CFG_TARGET, program=link_words),
+                # dispatcher targets 12 / 13 (ESCFG=1, order 1..9, 11, 12, 13, 0): the KVJ-C3 PC chain root + join4_cal
+                # calendar constants (kvjc3_pc_chain.boot_words at ctrl_lat ES_CFG_CTRL_LAT, relays 0); same HOST note
+                es_cfg=dict(targets=list(ES_CFG_TARGETS), pc=es_pc, beat=es_beat, ctrl_lat=ES_CFG_CTRL_LAT, relay=[0, 0, 0, 0]))
 
 
 # ---- operations on actual template ports (opentallas.qwen_kv_static.programme.v1) -------------------------------------
@@ -761,6 +794,8 @@ def write(r, out, root=ROOT):
         priced = priced_template(r['profile'], root)
         (out / 'static_join.priced.json').write_text(json.dumps(priced.pop('graph'), indent=1) + '\n')
     (out / f'target{LINK_CFG_TARGET}.hex').write_text(''.join(f'{w:016x}\n' for w in r['link_cfg']['program']))
+    for t, k in zip(ES_CFG_TARGETS, ('pc', 'beat')):
+        (out / f'target{t}.hex').write_text(''.join(f'{w:016x}\n' for w in r['es_cfg'][k]))
     for im in r['images']:
         (out / f'target{im["target"]}.hex').write_text(''.join(f'{w:016x}\n' for w in im['program'] + im['descriptors']))
     vec = ''.join(f'{w:08x}' for w in reversed(r['layer']['words'][:324]))
