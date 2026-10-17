@@ -77,7 +77,11 @@ def dv2(f, lanes=8, rep=False):
     within = st(I, *side('W')[::-1])                                     # W5 -> W0
     tree_side = 2 * max(st(I, *side('W')[k:3][::-1] or ['dvs_W2']) if k < 3 else st(I, *side('W')[2:k + 1]) for k in range(6))
     tree_die = 2 * st(I, 'dvs_W5', 'dvs_W4', 'dvs_W3', 'dvs_W2', 'dvs_W1', 'dvs_W0', cross[1])
-    if 'dvl_a' in I:                                 # dv2r8f: D2D group at the N end of the W column, lane to W5
+    if 'package_conditional' in d:                  # dv2r8g: D2D group beside W5 at slice-row height
+        bb = ['dvs_E4', 'dvs_E3', 'dvs_E2', 'dvs_E1', 'dvs_E0', 'dvs_W0', 'dvs_W1', 'dvs_W2', 'dvs_W3', 'dvs_W4', 'dvs_W5']
+        K = st(I, *bb, 'native59', 'd2d_rom')
+        O = st(I, 'd2d_rom', 'native59', 'dvs_W5', 'dvs_W4', 'dvs_W3', 'dvs_W2', 'dvs_W1', 'dvs_W0', 'dvs_E0', 'dvs_E1', 'dvs_E2', 'dvs_E3', 'dvs_E4', 'dvs_E5')
+    elif 'dvl_a' in I:                               # dv2r8f: D2D group at the N end of the W column, lane to W5
         bb = ['dvs_E4', 'dvs_E3', 'dvs_E2', 'dvs_E1', 'dvs_E0', 'dvs_W0', 'dvs_W1', 'dvs_W2', 'dvs_W3', 'dvs_W4', 'dvs_W5']
         K = st(I, *bb, 'dvl_b', 'dvl_a', 'native59', 'd2d_rom')
         O = st(I, 'd2d_rom', 'native59', 'dvl_a', 'dvl_b', 'dvs_W5', 'dvs_W4', 'dvs_W3', 'dvs_W2', 'dvs_W1', 'dvs_W0', 'dvs_E0', 'dvs_E1', 'dvs_E2', 'dvs_E3', 'dvs_E4', 'dvs_E5')

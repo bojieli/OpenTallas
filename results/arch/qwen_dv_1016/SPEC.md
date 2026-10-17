@@ -425,3 +425,35 @@ The arrays fix any edge column at 24 mm tall, which is 37.6 mm² at the 1.56-mm 
   - The band gaps and lanes are routing channels.
 - **White % is information only.**
 - **Judged on cut 0.378, stages 3,304, bit-mm 0.792 M and longest link 10.1 mm (1-b control):** dv2r8f is best of all plans on all four.
+
+## dv2r8g: D2D group + tt_ctlm beside W5 (coordinator risk follow-up) -- NOT adopted, package-conditional
+
+`build_dv2g.py` moves the D2D group (ucie_kv on the W edge, d2d, native59, sys_face) and tt_ctlm / embed / clk / rstseq into the W column at slice-row height. The column is laid out as follows:
+- the PHYs are stacked from the N end down;
+- the collective overlaps the slice row;
+- the D2D group sits under the collective, facing W5.
+
+That way no FDI crosses another block. A first stack, with the D2D group between the PHYs, gave cut 0.516 because the FDIs crossed over it.
+
+| | dv2r8f | dv2r8g |
+|---|---:|---:|
+| cycles / layer vs q3h @405 (@200) | -66 (-215) | **-108 (-297)** (K 87 -> 64, O 93 -> 70) |
+| worst cut | **0.378** | 0.473 |
+| stages @405 / @200 | **3,304 / 6,951** | 3,316 / 6,966 |
+| bit-mm | 0.792 M | **0.783 M** |
+| longest link | 10.1 mm | **9.1 mm** |
+
+- **Package.** The KV die must abut the W edge at slice-row height. That edge also carries the SerDes beachfront, and the KV die is about 10 x 24 mm with HBM PHYs on its long edges, so it would have to attach short side on. That rotates the KV die and widens the package to about 50 mm. This is a KV-die / package decision outside Q-DV.
+- **Decision: not adopted.** dv2r8g is faster but routes worse (cut and stages), and it is package-conditional. It is kept as a record for the owner.
+
+## Corridor numbers for Q-CLUSTER (qfd_c_b16 + the DV feedthrough)
+
+- **Feedthrough.** `rs_i -> rs_o` is 514 b ({fault, valid, 16 x FP32}). It runs only in the NEAR clusters (bands 1 and 2) and carries the far cluster's (band 0 / 3) rs word to the slice-row face.
+- **Faces.**
+  - `rs_i` sits on the face toward the band gap (the near cluster's master N face, beside `bc_o`).
+  - `rs_o` sits on the master S face beside `rs`, so the slice sees 2 x 514 b per near cluster.
+- **Length and registers.** The run is 5,184 um, registered every <= 405 um: 12 stages. These are fixed and compiler-known. The slice aligns b0/b3 with a fixed 12-cycle skew; equivalently, the compiler issues the far band 12 cycles earlier.
+- **Corridor load.** It shares the T corridor (64.8 um) with `bc_o` (1,567 b), for 2,081 b in total. That is 64.8 um / 0.048 = 1,350 tracks per M4/M5 layer and 1,012 per M6/M7 layer, so about 1.5 layers at 100 %.
+  - **Recommendation:** split `rs_i/rs_o` into 2 x 257 b, one half in corridor A and one in B. That gives about 0.2 per layer pair, and leaves T to `bc_o`.
+- **Hold.** Flop-first, recipe 4 (`hold_budget: die`). Robust first cell, no hold pads.
+- **Fallback if no corridor fits:** band-gap overflight relays on M8/M9.
