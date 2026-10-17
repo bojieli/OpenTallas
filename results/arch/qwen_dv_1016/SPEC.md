@@ -522,3 +522,23 @@ That way no FDI crosses another block. A first stack, with the D2D group between
 
 - **dv2r8g.** It was already not adopted and is not re-pitched.
 - **Outputs:** `dv2r8f2.png` viewed; Explorer record `qwen_qdv_dv2r8f2`.
+
+## dv2r8f3: Q-CLUSTER DV contract (claude/qcluster-1017 6d8a5581b) -- CURRENT
+
+**Contract changes:**
+- qfd_c_b16_dv is 2,358.72 x 5,227.2 um;
+- cluster origins sit on the 8.64-um lattice;
+- the die keeps >= 86.4 um of margin above band 3 for the N-face pins;
+- no die link may cross a cluster outline.
+
+**What `build_dv2f3.py` changes.** It re-pitches x, stretches y piecewise band by band, and snaps the clusters to the lattice.
+
+**Result:**
+- 0 off-lattice clusters, 0 block overlaps, 0 links crossing a cluster.
+- Cut 0.378, stages @405 3,308 (@200 6,984), bit-mm 0.811 M, longest link 10.2 mm (1 b), die 30.1 x 24.25 = **730.1 mm²**, white 5.6 %.
+- Cycles: -58 / layer vs q3h with the pipelined root (unchanged); +34 with the measured 70-cycle root.
+
+**Outputs:**
+- Trial inputs: `dv2r8f3.json`, `relay_plan_dv2r8f3.json`, `contract_deltas_dv2r8f3.json`.
+- `dv2r8f3.png` viewed.
+- Explorer record `qwen_qdv_dv2r8f3`.
