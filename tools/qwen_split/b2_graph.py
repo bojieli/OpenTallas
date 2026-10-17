@@ -241,6 +241,14 @@ def prepare(v, m, source_root, *, production=True, mode='b2', full_graph=False, 
             m['insts'].append(st)
             frame(st.master,'rtl/qwen_split/qfd_b2_word_status.sv',43.2,43.2,
                   lambda p:'W'if p in('word_v','word_fault','result_v')else'N'if p in('ck','rst_n')else'E')
+            # Q-B2r 10-16: CLOSED view (qfd_b2_word_status_1016 ws1, native PASS) is the physical truth, as for the upper.
+            from types import SimpleNamespace as _SN
+            from qwen_split.closed_view import view_dir as _vd,install_master as _vi
+            if _vd(st.master) is not None:
+                _r=_vi(M,m,v.Master,_SN(name=st.name,w=43.2,h=43.2),st.master,rtl_ports(source_root/'rtl/qwen_split/qfd_b2_word_status.sv',st.master),
+                       partition_master,note='closed word-status view')
+                frames[st.master]=dict(w=43.2,h=43.2,ports=copy.deepcopy(M[st.master].ports),view=_r['view'])
+                notes.append(f'{st.master}: die frame = closed view {_r["view"]}')
             for hb in range(6):
                 alias(pm,'cw_valid','cw0',[2048]);alias(pm,'cw_fault','cw0',[2049])
                 alias(st.master,f'valid{hb}','word_v',[hb]);alias(st.master,f'fault{hb}','word_fault',[hb]);alias(st.master,f'result{hb}','result_v',[hb])

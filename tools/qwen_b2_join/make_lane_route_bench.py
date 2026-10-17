@@ -139,10 +139,10 @@ always @(negedge clk)if(rs)begin
  if(r_mxwe)begin mx_q[mx_w%QN]={r_mxa,r_mxm,r_mxd};mx_w=mx_w+1;end
  if(d_mxwe)begin if(mx_r>=mx_w||{d_mxa,d_mxm,d_mxd}!==mx_q[mx_r%QN])begin if(errors<8)$display("MISMATCH mx write %0d",mx_r);errors=errors+1;end mx_r=mx_r+1;nmx=nmx+1;end
 end
-task automatic op(input integer pc,nout,tiles,ksize,spacing,wbase,split,wcs,obase,ots,ojs,rounds,xbase,xcs,input integer output_en=1,input integer amax_en=0);
+task automatic op(input integer pc,nout,tiles,ksize,spacing,wbase,split,wcs,obase,ots,ojs,rounds,xbase,xcs,input integer output_en=1,input integer amax_en=0,input integer rmax_en=0,input integer mbase=0);
  integer ref_busy_seen,dut_busy_seen;
  begin
- cmd={24'd0,1'b0,1'(amax_en),1'(output_en),1'b0,24'(ojs),24'(ots),24'(obase),1'(rounds),24'(wcs),4'(split),3'd0,24'(xcs),24'd0,24'd1,24'(xbase),24'd1,24'd8,24'(spacing),24'(wbase),1'b0,18'(ksize),18'(tiles),18'(nout),1'b1};
+ cmd={24'(mbase),1'(rmax_en),1'(amax_en),1'(output_en),1'b0,24'(ojs),24'(ots),24'(obase),1'(rounds),24'(wcs),4'(split),3'd0,24'(xcs),24'd0,24'd1,24'(xbase),24'd1,24'd8,24'(spacing),24'(wbase),1'b0,18'(ksize),18'(tiles),18'(nout),1'b1};
  @(negedge clk);#0.01;cmd[0]=0;
  // The registered command/status path keeps old ready high for several
  // edges. Observe this command becoming busy before accepting ready again;
@@ -178,10 +178,16 @@ initial begin
   op(4,384,2,8,64,0,10,0,768,8,1,1,4096,8,1,1);
   op(103,6144,8,8,64,0,9,29376,0,8,1,1,8192,8,1,1);
  end
- // Ordinary output ops are required in addition to argmax: amax suppresses mx.
+ // Ordinary output ops (no argmax) in addition to the argmax ops.
  op(201,768,1,8,64,0,9,0,768,8,1,1,4096,8,1,0);
  op(202,384,1,8,64,0,10,0,768,8,1,1,4096,8,1,0);
  op(203,128,1,8,64,0,11,0,768,8,1,1,4096,8,1,0);
+ // Row-max (rmax) ops: the controller mx write stream (cmd[mbase,rmax], one mx write per op) is produced only by
+ // rmax ops (Q-B2r 10-16: the 13:30 baseline failed 'vacuous mx' because no op set rmax; amax does not drive mx).
+ op(211,768,1,8,64,0,9,0,768,8,1,1,4096,8,1,0,1,12288);
+ op(212,384,1,8,64,0,10,0,768,8,1,1,4096,8,1,0,1,12352);
+ op(213,128,1,8,64,0,11,0,768,8,1,1,4096,8,1,0,1,12416);
+ op(214,4096,3,2,16,64,8,48,0,8,1,1,50672,2,1,0,1,12480);
  while(!(r_idle&&d_idle))@(negedge clk);
  repeat(400)@(negedge clk);
  for(integer h=0;h<6;h=h+1)if(rq_r[h]!=rq_w[h]||am_r[h]!=am_w[h])begin $display("MISMATCH stream length h%0d rq ref%0d dut%0d am ref%0d dut%0d",h,rq_w[h],rq_r[h],am_w[h],am_r[h]);errors=errors+1;end

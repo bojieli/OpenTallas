@@ -11,7 +11,7 @@
 // of host_v4 must equal the documented delta, and fault_cause must name the faulting child at its first edge:
 //   0 none (fault never; foreign-target frames ignored by both)  delta -, cause 0
 //   1 unexpected RX on rail 0                                     delta 0, cause bit 6
-//   2 unexpected RED_CARRY rc_v                                   delta 0, cause bit 2
+//   2 unexpected RED_CARRY rc_v                                   delta +1, cause bit 2 (V7: rc_v pin-captured)
 //   3 q2 illegal tkm reservation                                  delta 0, cause bit 13
 //   4 qslots capture reservation without source (VM0)             delta +1, cause bit 3 (pin_v2)
 //   5 q2 arg capture reservation (no arg source in q2)            delta -1, cause bit 12
@@ -48,6 +48,23 @@ module tb_hgi_coll_q_hard_v5;
  function automatic [511:0] source_word(input [15:0] index);
   for(integer l=0;l<16;l=l+1)source_word[l*32+:32]=(index==0?32'h3f800000:32'h40000000)+32'(l<<23);
  endfunction
+ // Declared external VM read boundary, fixed seven-edge return after the pin request.
+ reg [7:0] r_vm_valid[0:6],n_vm_valid[0:6];
+ wire [2055:0] r_vm_response,n_vm_response;
+ function automatic [255:0] vm_payload(input integer bank);
+  for(integer w=0;w<8;w=w+1)vm_payload[w*32+:32]=32'h564d0000+32'(bank*256+w);
+ endfunction
+ initial for(integer t=0;t<7;t=t+1)begin r_vm_valid[t]=0;n_vm_valid[t]=0;end
+ always @(posedge clk)begin
+  for(integer bank=0;bank<8;bank=bank+1)begin
+   r_vm_valid[0][bank]<=r_rq[bank*17+16];n_vm_valid[0][bank]<=n_rq[bank*17+16];
+  end
+  for(integer t=1;t<7;t=t+1)begin r_vm_valid[t]<=r_vm_valid[t-1];n_vm_valid[t]<=n_vm_valid[t-1];end
+ end
+ for(genvar bank=0;bank<8;bank=bank+1)begin:VM_INPUT
+  assign r_vm_response[bank*257+:257]={r_vm_valid[6][bank],vm_payload(bank)};
+  assign n_vm_response[bank*257+:257]={n_vm_valid[6][bank],vm_payload(bank)};
+ end
  wire [1023:0] inj_data={512'd0,source_rd[SUL-1]?source_word(source_index[SUL-1]):512'd0};
  // hard parent: its own SU boundary (driven by its own requests) and the same stimuli 2 edges later
  localparam integer SH=4,SHP=1;  // V6 issue path +4 (frame capture +1, uop delay +3); programme target +1
@@ -79,13 +96,13 @@ module tb_hgi_coll_q_hard_v5;
   .rr_v(r_rv),.rr_tag(r_rt),.rr_d(r_rd),.phy_up({NPT{1'b1}}),.tx_pin_v(r_txv),.tx_pin_flit(r_txd),
   .rx_pin_v(rxv),.rx_pin_flit({NPT*612{1'b0}}),.retry_requested(r_rty),
   .pr_cw_i(280'd0),.pr_ccw_i(280'd0),.pr_cw_o(r_cw),.pr_ccw_o(r_ccw),
-  .vm_rq(r_rq),.vm_rr(2056'd0),.vm_kq(r_kq),.fault(r_fault),.done(r_done2),.stat_cycles(r_cyc));
+  .vm_rq(r_rq),.vm_rr(r_vm_response),.vm_kq(r_kq),.fault(r_fault),.done(r_done2),.stat_cycles(r_cyc));
 `ifdef Q3
- ot_hfd_coll_q3_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm(clk),.clk_upipe(clk),
+ ot_hfd_coll_q3_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm({16{clk}}),.clk_upipe({16{clk}}),
   .clk_issue(clk),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),.clk_arg(clk),
   .clk_tkm({34{clk}}),.clk_vmwrite({16{clk}}),.clk_link({15{clk}}),
 `else
- ot_hfd_coll_q2_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm(clk),.clk_upipe(clk),
+ ot_hfd_coll_q2_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm({16{clk}}),.clk_upipe({16{clk}}),
   .clk_issue(clk),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),
   .clk_vmwrite({16{clk}}),.clk_link({10{clk}}),
 `endif
@@ -97,7 +114,7 @@ module tb_hgi_coll_q_hard_v5;
   .rr_v(n_rv),.rr_tag(n_rt),.rr_d(n_rd),.phy_up({NPT{1'b1}}),.tx_pin_v(n_txv),.tx_pin_flit(n_txd),
   .rx_pin_v(rxv_d3),.rx_pin_flit({NPT*612{1'b0}}),.retry_requested(n_rty),
   .pr_cw_i(280'd0),.pr_ccw_i(280'd0),.pr_cw_o(n_cw),.pr_ccw_o(n_ccw),
-  .vm_rq(n_rq),.vm_rr(2056'd0),.vm_kq(n_kq),.fault(n_fault),.fault_cause(n_cause),.done(n_done2),.stat_cycles(n_cyc));
+  .vm_rq(n_rq),.vm_rr(n_vm_response),.vm_kq(n_kq),.fault(n_fault),.fault_cause(n_cause),.done(n_done2),.stat_cycles(n_cyc));
  // ---- lockstep monitor
  integer cyc=0,checks=0,rf=-1,nf=-1,mism=0,outputs=0,halts=0;
  reg [15:0] first_cause=0;
@@ -130,7 +147,7 @@ module tb_hgi_coll_q_hard_v5;
  task pack_ar(input integer row,input [54:0] control);
   begin code[row][1505+:31]=control[30:0];code[row][688+:24]=control[54:31];end
  endtask
- integer exp_delta,exp_bit;
+ integer exp_delta,exp_bit,vm_outputs=0;
  initial begin
   if(!$value$plusargs("SCEN=%d",scen))scen=0;
   for(integer n=0;n<NR;n=n+1)code[n]=0;
@@ -148,10 +165,18 @@ module tb_hgi_coll_q_hard_v5;
   code[29][10+NPT]=1;code[29][26+NPT*4+:4]=4'(REDSRC);
   // the halt row leaves a delivery base on the control pins: an unmasked issuer would keep republishing it
   code[NR-1][874+:40]=40'h12345;
+  // A legal VM read, assembly, slot capture and delivery. Bank0 and bank7 differ in every word.
+  if(scen==7)begin
+   code[4][1034+16]=1;code[4][1034+7*17+16]=1;
+   code[4][1383+:6]={3'd7,3'd0};
+   code[4][1170+:33]={1'b1,8'h56,8'h4d,16'h0700};
+   code[14][2+NPT]=1;
+   code[15][10+NPT]=1;code[15][26+NPT*4+:4]=4'(2+NPT);
+  end
   exp_delta=0;exp_bit=-1;
   case(scen)
    1:begin exp_delta=0;exp_bit=6;end
-   2:begin exp_delta=0;exp_bit=2;end
+   2:begin exp_delta=1;exp_bit=2;end
    3:begin exp_delta=0;exp_bit=13;code[20][718]=1;end
    4:begin exp_delta=1;exp_bit=3;code[20][2+NPT]=1;end
    5:begin exp_delta=-1;exp_bit=12;code[20][9]=1;end
@@ -184,9 +209,13 @@ module tb_hgi_coll_q_hard_v5;
    rxv=(scen==1 && c==20)?{{(NPT-1){1'b0}},1'b1}:'0;
    rcv=(scen==2 && c==20);
    @(posedge clk);#1;
-   if(scen==0)begin
+   if(scen==0 || scen==7)begin
     if(r_fault)$fatal(1,"reference fault in normal programme at cycle%0d",c);
-    if(r_dv!==(c==36?4'b0001:4'b0000))$fatal(1,"reference publication cycle%0d got%h",c,r_dv);
+    if(r_dv!==((c==36 || (scen==7 && c==22))?4'b0001:4'b0000))$fatal(1,"reference publication cycle%0d got%h",c,r_dv);
+    if(scen==7 && c==22)begin
+     if(r_dd[544:0]!=={1'b1,8'h56,8'h4d,16'h0700,vm_payload(7),vm_payload(0)})$fatal(1,"independent VM expected payload");
+     vm_outputs=vm_outputs+1;
+    end
     if(c==36)begin
      if(r_dd[544:512]!=={1'b1,8'hff,8'd7,16'd13})$fatal(1,"reduce metadata");
      for(integer l=0;l<16;l=l+1)if(r_dd[l*32+:32]!==32'h40400000+32'(l<<23))$fatal(1,"FP32 sum lane%0d",l);
@@ -197,8 +226,9 @@ module tb_hgi_coll_q_hard_v5;
   end
   rxv='0;rcv=0;repeat(8)@(negedge clk);
   if(mism!=0)$fatal(1,"lockstep: %0d cycles with a non-fault output difference (normal path/containment)",mism);
-  if(scen==0)begin
+  if(scen==0 || scen==7)begin
    if(rf>=0 || nf>=0)$fatal(1,"normal programme fault ref%0d hard%0d",rf,nf);
+   if(scen==7 && vm_outputs!=1)$fatal(1,"VM coverage outputs%0d",vm_outputs);
    if(outputs!=1 || halts!=1)$fatal(1,"coverage outputs%0d halts%0d",outputs,halts);
    if(n_cause!=0)$fatal(1,"fault_cause nonzero without fault");
   end else begin
@@ -206,6 +236,7 @@ module tb_hgi_coll_q_hard_v5;
    if(nf-rf!=exp_delta+(scen==6?SHP:SH+1))$fatal(1,"scenario%0d fault edge: ref%0d hard%0d delta%0d expected%0d(+%0d issue shift)",scen,rf,nf,nf-rf,exp_delta,scen==6?SHP:SH+1);
    if(!first_cause[exp_bit])$fatal(1,"scenario%0d visibility: first cause %h lacks bit%0d",scen,first_cause,exp_bit);
   end
+  $display("HCOLL_VM_COVERAGE outputs%0d bank0_to_low_bank7_to_high",vm_outputs);
   $display("HCOLL_Q_HARD_V5 PASS %s scen%0d checks%0d ref_fault%0d hard_fault%0d first_cause%h final_cause%h",
 `ifdef Q3
    "q3",

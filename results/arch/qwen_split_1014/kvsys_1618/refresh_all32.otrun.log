@@ -1,0 +1,44 @@
+ot-run: ot-epyc4       admits   537 GB (avail 763, growth 104, headroom 48, waiters 0/0 GB) load 46/128 running 25 disk 504 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits     6 GB (avail 59, growth 45, headroom 24, waiters 0/0 GB) load 39/64 running 10 disk 250 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3021056-1792191678 after 1 s
+REFRESH_CASE 0 0 0 True
+REFRESH_CASE 1 0 0 True
+REFRESH_CASE 3 0 0 True
+REFRESH_CASE 2 0 0 True
+REFRESH_CASE 5 0 0 True
+REFRESH_CASE 4 0 0 True
+REFRESH_CASE 7 0 0 True
+REFRESH_CASE 6 0 0 True
+REFRESH_CASE 8 0 0 True
+REFRESH_CASE 9 0 0 True
+REFRESH_CASE 11 0 0 True
+REFRESH_CASE 10 0 0 True
+REFRESH_CASE 12 0 0 True
+REFRESH_CASE 13 0 0 True
+REFRESH_CASE 14 0 0 True
+REFRESH_CASE 15 0 0 True
+REFRESH_CASE 16 0 0 True
+REFRESH_CASE 17 0 0 True
+REFRESH_CASE 18 0 0 True
+REFRESH_CASE 19 0 0 True
+REFRESH_CASE 20 0 0 True
+REFRESH_CASE 21 0 0 True
+REFRESH_CASE 22 0 0 True
+REFRESH_CASE 23 0 0 True
+REFRESH_CASE 24 0 0 True
+REFRESH_CASE 25 0 0 True
+REFRESH_CASE 26 0 0 True
+REFRESH_CASE 27 0 0 True
+REFRESH_CASE 28 0 0 True
+REFRESH_CASE 29 0 0 True
+REFRESH_CASE 30 0 0 True
+REFRESH_CASE 13 1 1 True
+REFRESH_CASE 13 2 1 True
+REFRESH_CASE 31 0 0 True
+REFRESH_CASE 13 4 1 True
+REFRESH_CASE 13 5 1 True
+REFRESH_CASE 13 3 1 True
+REFRESH_ALL True
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3021056-1792191678): exit 0

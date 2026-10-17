@@ -75,8 +75,17 @@ RST_REGION_IGNORE = 255          # v1.4.3 qkd_rst_region IGNORE: a region's chai
 RELAY_FLUSH = 128               # kv_relays.RELAY_FLUSH: reset release >= this many core cycles after the clock runs
 PIN_REACH = 450.0               # qwen-1010/b: pin-to-pin register hop target (SS reach 504 um)
 REACH_TARGET = 470.0            # every register-to-register segment (nearest frame points) <= this (SS reach 504 um)
+# Q-KV 2026-10-16 (COORDINATOR STANDARD, owner 'close at a safe margin'): OT_KV_REACH=<um> sets every planned register hop
+# limit to that value (0.9 x measured relay self-reach: rlys_296 446 um -> 400).  PIN_REACH / REACH_TARGET / RELAY_TARGET /
+# HOP_REACH all clamp to it.  Default unset = the legacy 445/450/470 plan (diagnostic history only).
+KV_REACH = float(__import__('os').environ.get('OT_KV_REACH', '0') or 0)
+if KV_REACH > 0:
+    PIN_REACH = min(PIN_REACH, KV_REACH)
+    REACH_TARGET = min(REACH_TARGET, KV_REACH)
 FIRST_REACH = dict(wencoded=300.0)   # v1.3: first relay of the write-queue controller's group words (ctl_bin f<g>, late launch)
 RELAY_TARGET = 320.0            # placement pitch: keeps every segment (nearest frame points) under the 504 um SS reach
+if KV_REACH > 0:
+    RELAY_TARGET = min(RELAY_TARGET, 0.72 * KV_REACH)   # same pitch/reach ratio as 320/445
 GRID = 43.2                     # relay routing grid (um)
 CHAN = 129.6                    # routing / relay channel beside every column (um)
 STACKS = ('WS', 'WN', 'ES', 'EN')
@@ -282,8 +291,11 @@ PVW = (PV_ARR[0], round(PV_ARR[1] + PV_GAP + PV_STRIP, 6))   # 1,144.8 x 9,547.2
 PV_CLEAR = 21.6                                   # envelope <-> hub / gateway / SerDes clearance (sliver rule >= 20 um)
 PV_GRANT_Y0 = 1844.346                            # pv_wide_grant.json pvw_0 (kept when the full height fits under the hub)
 # element owner screen (results/arch/qwen_attention_rate_1015/pv_parent_2330/screen.json, gap 21.6): bank l -> (x, y, orient)
-PV_BANK = {0: (0.0, 0.0, 'R0'), 1: (194.4, 0.0, 'R0'), 2: (0.0, 194.4, 'MX'), 3: (0.0, 388.8, 'R180'),
-           4: (194.4, 388.8, 'MX'), 5: (388.8, 388.8, 'MX'), 6: (388.8, 0.0, 'MY'), 7: (388.8, 194.4, 'R0')}
+# kvs13g REAL CASE FAIL (10-16 14:49): ot_mts 'ot_qwen_tp8_pv_slice_t R180 x has no legal origin on this track grid' --
+# the closed slice view's pins are not track-legal under an X flip, so no bank may use MY / R180 (bank 3 R180 -> MX,
+# bank 6 MY -> R0; same homes, y-flip only, as banks 2/4/5 already are).
+PV_BANK = {0: (0.0, 0.0, 'R0'), 1: (194.4, 0.0, 'R0'), 2: (0.0, 194.4, 'MX'), 3: (0.0, 388.8, 'MX'),
+           4: (194.4, 388.8, 'MX'), 5: (388.8, 388.8, 'MX'), 6: (388.8, 0.0, 'R0'), 7: (388.8, 194.4, 'R0')}
 PV_JOIN = (194.4, 194.4, 'R0')
 V144S = dict(resolved=False, grow=0.0, ahub_dy=0.0)
 # Q-VMWB 2026-10-16 (main 551d29b2c): the 16 V ports qkd_pv16_vport (86.4 x 172.8, pin-registered, CLOSED kit
@@ -711,6 +723,36 @@ BINDINGS.update(qkd_kvnc=dict(module='qkd_kvn_ctx_cal', file=KVNC_FILE, paramete
 BINDINGS['qkd_dcal']['ports']['lay'] = ['layer']
 BINDINGS['qkd_d2ds']['ports']['kvi'] = ['kvn_compiled_identity', 'kvn_compiled_generation']
 RTL.update(qkd_kvnc=KVNC_FILE)
+
+# Q-KVSYS PVJOIN 2026-10-16 (OT_KV_SEQ_STATIC=1, needs OT_KV_DCAL=1 + OT_KV_KVNC=1, default off; lead-approved retirement
+# of the credit/event sequencer): MASTER SWAP of the die slot `seq` to qkd_seq_static (rtl/qwen_sys/static_kv_20261014/
+# qkd_seq_static.sv: static control leaf qkd_seq_core_static + the closed qkd_seq_xs_tp8 / qkd_seq_fan leaves).  Its
+# output faces aq_<q> / kvn_<q> / kc_<q> / hs / tk / kst are bit-identical to qkd_seq's; its inputs are the static D2D
+# end's attention RX + KVN receiver (one bus srx, so the Q push and its data keep one latency), the layer programme
+# (lprg: qkd_static_kv_layer_programme_img, compile-time image, start = DCAL tok_start, authority = HOST root) and the
+# end's svc word (a relayed fork branch of hsvc; the HOST cohort reaches lprg as a relayed fork branch of kvnc_cht / chg).  Gone: lx/lr (r_x3_d, r_sd, r_kvd, t_ar_cr, ...) and the host hc load.
+SEQST = __import__('os').environ.get('OT_KV_SEQ_STATIC', '0') == '1'
+SEQST_FILE = 'rtl/qwen_sys/static_kv_20261014/qkd_seq_static.sv'
+LPRG_FILE = 'rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme_rom.sv'
+LPRG_WH = (27.0, 37.8)
+SEQST_RX = ['att_rx_v', 'att_rx_kind', 'att_rx_beat', 'kvn_word_valid', 'kvn_word_tag', 'kvn_word_data']
+BINDINGS.update(qkd_seq_st=dict(module='qkd_seq_static', file=SEQST_FILE, parameters=dict(MUT=0),
+    ports=dict(srx=list(SEQST_RX), lp=['lp_run', 'lp_layer', 'lp_ctx_t'], svc=['svc'],
+               **{f'aq_{q}': [f'aq_{q}'] for q in STACKS}, **{f'kvn_{q}': [f'kvn_{q}_d', f'kvn_{q}_cr'] for q in STACKS},
+               **{f'kc_{q}': [f'kc_{q}'] for q in STACKS}, **{f'af_{q}': [f'af_{q}'] for q in STACKS},
+               **{f'mf_{q}': [f'mf_{q}'] for q in STACKS}, ar=['ar'], hf=['hf'], hs=['hs'], tk=['tk'], kst=['kst'],
+               ck=['ck'], rst_n=['rst_n']), sliced={}, classed={}),
+                qkd_lprg=dict(module='qkd_static_kv_layer_programme_img', file=LPRG_FILE, parameters=dict(MUT=0),
+    ports=dict(ck=['ck'], rst_n=['rst_n'], st=['start'], auth=['token_epoch_valid', 'program_ready', 'program_epoch',
+               'program_digest'], cht=['cohort_tag'], chg=['cohort_gen'], lp=['attention_run', 'layer', 'ctx_t']),
+    sliced={}, classed={}))
+BINDINGS['qkd_dcal']['ports']['tks'] = ['tok_start']
+_hb = BINDINGS['qkd_host_rt']['ports']
+for _p in ('token_epoch_valid', 'program_ready', 'program_epoch', 'program_digest'):
+    _hb.pop(_p, None)
+_hb['auth_lp'] = ['token_epoch_valid', 'program_ready', 'program_epoch', 'program_digest']
+BINDINGS['qkd_d2ds']['ports']['srx'] = list(SEQST_RX)
+RTL.update(qkd_seq_st=SEQST_FILE, qkd_lprg=LPRG_FILE)
 RTL.update(qkd_d2ds=D2DS_FILE)
 RTL.update(qkd_host_rt=HOST_RT_FILE, qkd_hslice=SLICE_DIE_FILE)
 # v1.4.1 HOST-north: the N stacks' slices = the same RTL under a second physical view with swapped chain faces
@@ -1084,7 +1126,7 @@ _PIN_HINT = {}
 # ectl_a rq (R 414 ps, insertion spread 63 ps) -> rly_krq passes <= ~380 um, fails at 437-444 um (-63 ps).  (3) Relay
 # chains keep every hop <= HOP_REACH (the closed standards' native self-reach: rlys_296 446 um, rlys_528 460 um).
 HOP = __import__('os').environ.get('OT_KV_HOP', '0') == '1'
-HOP_REACH = 445.0
+HOP_REACH = 445.0 if KV_REACH <= 0 else min(445.0, KV_REACH)
 HOP_FIRST = dict(krq=340.0, krs=340.0)
 _LEAF_PIN_CACHE = {}
 
@@ -1792,7 +1834,8 @@ def _host_v14_buses(m):
     link_l = [e for e in link_l if e[0] != 'lnk' and e != ('ucie_rom', 'rst_n')]     # ucie rst_n = the d2d end's phy_rst_n
     add(('rst_link', 'reset', 1, [('host', 'link_rst_n')] + list(dict.fromkeys(link_l)) +
          ([('dcal', 'rst_n')] if DCAL and any(i.name == 'dcal' for i in m['insts']) else []) +
-         ([('kvnc', 'rst_n')] if KVNC and any(i.name == 'kvnc' for i in m['insts']) else [])))
+         ([('kvnc', 'rst_n')] if KVNC and any(i.name == 'kvnc' for i in m['insts']) else []) +
+         ([('lprg', 'rst_n')] if SEQST and any(i.name == 'lprg' for i in m['insts']) else [])))
     add(('rst_host', 'reset', 1, [('host', 'host_rst_n')] + [(s, 'host_rst_n') for s in slices]))
     # v1.4.1 HOST-north: the N stacks' chain head is their slot 31 (their top = the HOST row) and the chain runs slot 31 ->
     # slot 0; the S stacks keep slot 0 (die bottom: reached down the free centre column; the slice column has no free
@@ -1915,6 +1958,31 @@ def _d2ds_swap(m):
                 if bid == 'clk_core_c':
                     B[i_] = (bid, cl, bits, list(eps) + [('kvnc', 'ck')])
             m['extra_conns']['kvnc'] = [f'.cs(n_dcal_cfg[{KVNC_CS_BIT}])']
+            if SEQST:
+                # OT_KV_SEQ_STATIC: master swap of slot `seq`; the layer programme sits one channel W of the HOST root,
+                # level with its centre (HOST authority on abutting buses; tok_start rides kv_oneway relays from DCAL)
+                sq_ = by['seq']
+                sq_.master = 'qkd_seq_st'
+                ho_ = by['host']
+                lw_, lh_ = up(LPRG_WH[0] + SHAVE, GX), up(LPRG_WH[1] + SHAVE, GY)
+                lp_ = F.Inst('lprg', 'qkd_lprg', up(ho_.x - 21.6 - lw_, GX), up(ho_.y + ho_.h / 2 - lh_ / 2, GY), lw_ - SHAVE,
+                             lh_ - SHAVE, 'R0', kind='ctl', region='io')
+                m['insts'].append(lp_)
+                for i_, (bid, cl, bits, eps) in enumerate(B):
+                    if bid == 'hc':
+                        B[i_] = (bid, cl, bits, [e for e in eps if e != ('seq', 'hc')])
+                    if bid == 'clk_core_c':
+                        B[i_] = (bid, cl, bits, list(B[i_][3]) + [('lprg', 'ck')])
+                # relayed fork branches (no long unrelayed fan-out): the HOST cohort to lprg, the D2D end's svc word to seq
+                fk_ = m.setdefault('forks', {})
+                fk_['kvnc_cht'] = [('lprg', 'cht')]
+                fk_['kvnc_chg'] = [('lprg', 'chg')]
+                fk_['hsvc'] = [('seq', 'svc')]
+                B[:] = [b_ for b_ in B if not (b_[0] == 'hc' and len(b_[3]) < 2)]     # host hc has no load left
+                add(('lprg_st', 'kv_oneway', 1, [('dcal', 'tks'), ('lprg', 'st')]))
+                add(('lprg_auth', 'spine_local', 1 + 1 + 16 + 64, [('host', 'auth_lp'), ('lprg', 'auth')]))
+                add(('seqst_lp', 'kv_oneway', 1 + 6 + 14, [('lprg', 'lp'), ('seq', 'lp')]))
+                add(('seqst_rx', 'kv_oneway', 1 + 4 + 5 + 1 + 11 + 512, [('d2d_kv', 'srx'), ('seq', 'srx')]))
 
 
 def _centre(it, port=None):
@@ -2130,6 +2198,29 @@ def _relays(m):
                                         not any(b_[0].startswith(p_) for p_ in pri_)))
             if V144_R6:   # kvs13d: every V port's return word is planned first; its request word is then padded to W
                 order_.sort(key=lambda b_: (b_[0].startswith('pvrq_'),))
+    # Q-KVSYS PVJOIN 2026-10-16 (fork buses): m['forks'] = {bid: [load endpoints]} -- loads that leave a bus's driver as a
+    # RELAYED BRANCH of their own (bus f'{bid}__f{i}', class kv_oneway) instead of one long unrelayed fan-out wire.  The
+    # trunk keeps the bus's own class / relays; after planning, the branch's first segment joins the trunk's source net
+    # (the driver pin drives the trunk's first hop and every branch's first hop) and its stage count is recorded.
+    forks_ = {}
+    fork_names = {b_[0] for b_ in order_}
+    for bid_f, loads_f in (m.get('forks') or {}).items():
+        trunks_f = [e_ for e_ in order_ if e_[0] == bid_f]
+        if len(trunks_f) != 1:
+            raise ValueError(f'kv die fork {bid_f}: exactly one trunk required')
+        _, class_f, bits_f, ends_f = trunks_f[0]
+        if class_f in ('clock_trunk', 'reset', 'constant') or class_f in ABUT or len(ends_f) != 2:
+            raise ValueError(f'kv die fork {bid_f}: only point-to-point data trunks may fork')
+        src_f = ends_f[0]
+        if len(set(loads_f)) != len(loads_f) or any(e_ in ends_f for e_ in loads_f):
+            raise ValueError(f'kv die fork {bid_f}: duplicate load or driver alias')
+        for i_f, ld_f in enumerate(loads_f):
+            nm_f = f'{bid_f}__f{i_f}'
+            if nm_f in fork_names:
+                raise ValueError(f'kv die fork {nm_f}: bus name collision')
+            fork_names.add(nm_f)
+            forks_[nm_f] = bid_f
+            order_.append((nm_f, 'kv_oneway', bits_f, [src_f, ld_f]))
     for bid, cl, bits, eps in order_:
         if cl in ABUT or cl in ('clock_trunk', 'reset', 'constant') or len(eps) != 2:
             nb.append((bid, cl, bits, eps))
@@ -2481,6 +2572,23 @@ def _relays(m):
             m['reset_region_calendar'] = dict(D=dmax, release='host release + D + 2 + local depth', ignore=RST_REGION_IGNORE,
                 hold=RELAY_FLUSH, host_min_hold_cycles=RST_REGION_IGNORE + 4, regions=len(m['reset_regions']))
         m['tree_depth'] = {f'{r_}:{e[0]}.{e[1]}': d_ for (r_, e), d_ in sorted(m['tree_depth'].items())}
+    if forks_:
+        # a branch's first segment (named exactly f'{bid}__f{i}', driven by the trunk's driver) joins the trunk's source net
+        idx_ = {e_[0]: i_ for i_, e_ in enumerate(nb)}
+        drop_ = set()
+        for nm_f, bid_f in forks_.items():
+            if nm_f not in idx_ or bid_f not in idx_:
+                raise ValueError(f'kv die fork {nm_f}: segment or trunk {bid_f} missing')
+            bf_, cf_, wf_, ef_ = nb[idx_[nm_f]]
+            bt_, ct_, wt_, et_ = nb[idx_[bid_f]]
+            if wf_ != wt_:
+                raise ValueError(f'kv die fork {nm_f}: width {wf_} != trunk width {wt_}')
+            if ef_[0] != et_[0]:
+                raise ValueError(f'kv die fork {nm_f}: driver {ef_[0]} != trunk driver {et_[0]}')
+            nb[idx_[bid_f]] = (bt_, ct_, wt_, list(et_) + [e_ for e_ in ef_[1:] if e_ not in et_])
+            drop_.add(idx_[nm_f])
+        nb = [e_ for i_, e_ in enumerate(nb) if i_ not in drop_]
+        m['fork_stages'] = {nm_f: stages.get(nm_f, 0) for nm_f in forks_}
     trunk = {}
     for i, (bid_, cl_, _b, eps_) in enumerate(nb):
         if cl_ == 'clock_trunk' and bid_.startswith('clk_core_'):
@@ -3794,6 +3902,16 @@ def main(argv=None):
             encoder_sizing=dict(or4_per_group=0 if a.kv_wq_binary else 3, or2_equivalent_total=0 if a.kv_wq_binary else 144,
                                 reserved_frame_mm2=0 if a.kv_wq_binary else round(16*43.2*43.2/1e6,6), measured_cell_area=None))
     a.out.mkdir(parents=True, exist_ok=True)
+    try:                                         # ROOT RELAY-SCHEMA 10-16: additive per-bus stage table, never a gate here
+        sys.path.insert(0, str(ROOT / 'tools'))
+        from qwen_kv_die import relay_stages_export as _rsx
+        import die_relay_stages as _drs
+        _doc = _rsx.export_model(m, f'qwen_kv:{a.out.name}', sources=['tools/qwen_kv_die/kv_die.py'])
+        _drs.write(a.out / 'relay_stages.json', _doc)
+        rec['relay_stages_export'] = dict(file='relay_stages.json', digest=_doc['digest'], buses=_doc['bus_count'],
+                                          problems=_doc['problem_count'])
+    except Exception as _e:                      # noqa: BLE001
+        rec['relay_stages_export'] = dict(error=repr(_e)[:500])
     (a.out / 'plan.json').write_text(json.dumps(rec, indent=1, default=str) + '\n')
     if real_rows:
         (a.out/'actual_pin_bindings.json').write_text(json.dumps(real_rows,indent=1)+'\n')

@@ -58,8 +58,11 @@ def cluster(sinks, leaf_um=LEAF_UM, leaf_max=LEAF_MAX):
 
 
 class Builder:
-    def __init__(self, grid, prefix):
+    def __init__(self, grid, prefix, r_of=None):
         self.g, self.prefix = grid, prefix
+        # r_of(key) -> the leaf's in-arc insertion R (TT): the merge balances FLOP arrival (pin + R), so the tree
+        # delivers each pin at phi - R by construction instead of leaving the whole R spread to measured trim pads
+        self.r_of = r_of or (lambda k: 0.0)
         self.bufs, self.nets, self.parent = [], [], {}
         self.cnt = defaultdict(int)
         self.leaves = {}          # leaf buf -> dict(pins, key, cell)
@@ -107,7 +110,7 @@ class Builder:
         for s in pts:
             self.parent[s[0]] = b
         # subtree record: (root buffer, root cell, model delay from root buffer INPUT to its sinks)
-        return dict(buf=b, cell=c, d=stage_ps(min(wire, SPAN)) * max(1.0, wire / SPAN), n=1)
+        return dict(buf=b, cell=c, d=stage_ps(min(wire, SPAN)) * max(1.0, wire / SPAN) + self.r_of(pts[0][4]), n=1)
 
     def merge(self, A, B):
         """zero-skew merge point on the routed path A.cell -> B.cell; new BUF there drives both chains.

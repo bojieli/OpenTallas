@@ -19,7 +19,8 @@ module ot_s81_vm_x34_sw2 (
     input  wire          s_v, input wire [1025:0] s_d,
     input  wire          t_ck, t_rst_n,
     output wire          o_v, output wire [1025:0] o_d,
-    output wire          fault
+    output wire          fault,
+    output wire [1:0]    fault_parts
 );
     wire [1:0] hv, hf; wire [513:0] d0, d1;
 `ifdef OT_VM_X34SPLIT_MUT_SWAP
@@ -36,6 +37,7 @@ module ot_s81_vm_x34_sw2 (
     assign o_v = hv[0];
     assign o_d = {d1[512:0], d0[512:0]};
     assign fault = |hf;
+    assign fault_parts = hf;
 `ifndef SYNTHESIS
     always @(posedge t_ck)
         if (hv[1] !== hv[0]) $error("X34SW2 o_v half mismatch h0=%b h1=%b", hv[0], hv[1]);

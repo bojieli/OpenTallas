@@ -1,0 +1,264 @@
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/hccol-a5/row_proof/cs_reg_bypassed.sv:323:187: Instance has missing pin: 'yb_lag'
+  323 |         ot_s81_hc_ctra_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(c),.YB_STAGE(YB_STAGE)) u (
+      |                                                                                                                                                                                           ^
+                     /srv/opentallas-scratch/claude/hccol-a5/row_proof/cs_reg_bypassed.sv:59:35: ... Location of port declaration
+   59 |     output wire [255:0]           yb_lag             
+      |                                   ^~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/cs_reg_bypassed.sv:836:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'FV_PIN' generates 32 bits.
+                                                                                                : ... note: In instance 'check.dut2.g_col[0].g_m0.u_c.u'
+  836 |     generate if (FV_PIN) begin : g_fvp
+      |              ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/cs_reg_bypassed.sv:75:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'YB_STAGE' generates 32 bits.
+                                                                                               : ... note: In instance 'check.dut2.g_col[0].g_m0.u_c.u.u_a'
+   75 |     generate if(YB_STAGE) begin : g_ybstage
+      |              ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/cs_reg_bypassed.sv:120:27: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'FLAG_MERGE' generates 32 bits.
+                                                                                                : ... note: In instance 'check.dut2.g_col[0].g_m0.u_c.u.u_a'
+  120 |     generate if(COLUMN==0 && FLAG_MERGE) begin : g_merge
+      |                           ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/cs_reg_bypassed.sv:160:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'FLAG_SPLIT' generates 32 bits.
+                                                                                                : ... note: In instance 'check.dut2.g_col[0].g_m0.u_c.u.u_a'
+  160 |     generate if(FLAG_SPLIT) begin : g_flag_split
+      |              ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/cs_reg_bypassed.sv:179:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PAYLOAD_STAGE' generates 32 bits.
+                                                                                                : ... note: In instance 'check.dut2.g_col[0].g_m0.u_c.u.u_a'
+  179 |     generate if(PAYLOAD_STAGE) begin : g_hdr_reg
+      |              ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:235:46: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'READ_STAGE' generates 32 bits.
+                                                                                          : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_a.u.u'
+  235 |         localparam integer NRS = (READ_STAGE ? 1 : 0) + HQ_LAG;
+      |                                              ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:169:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CS_LAG' generates 32 bits.
+                                                                                          : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  169 |     end else if (CS_LAG) begin : g_csl
+      |              ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:99:39: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'sc' generates 3 bits.
+                                                                                          : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u.u_q'
+   99 |         else if (sc_run) begin if (sc == NV - 1) sc_run <= 1'b0; sc <= sc + 1'b1; end
+      |                                       ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:185:40: Bit extraction of array[4:0] requires 3 bit index, not 8 bits.
+                                                                                          : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  185 |     always @(posedge clk) if (vs_w) psb[si_w] <= cs;
+      |                                        ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:187:41: Bit extraction of array[4:0] requires 3 bit index, not 8 bits.
+                                                                                          : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  187 |     always @(posedge clk) if (vy_w) ybuf[yi_w] <= yb;
+      |                                         ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:205:104: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'hs_c' generates 16 bits.
+                                                                                            : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  205 |                     if (hs_c + s < HROWS) begin g_v[s] = 1'b1; g_t[s] = 1'b1; g_q[16 * s +: 16] = hs_c + s; end
+      |                                                                                                        ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:205:97: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                          : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  205 |                     if (hs_c + s < HROWS) begin g_v[s] = 1'b1; g_t[s] = 1'b1; g_q[16 * s +: 16] = hs_c + s; end
+      |                                                                                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:205:30: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'hs_c' generates 16 bits.
+                                                                                           : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  205 |                     if (hs_c + s < HROWS) begin g_v[s] = 1'b1; g_t[s] = 1'b1; g_q[16 * s +: 16] = hs_c + s; end
+      |                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:208:110: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'o_r' generates 16 bits.
+                                                                                            : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  208 |                     if (o_r + s < YROWS) begin g_v[s] = 1'b1; g_i[8 * s +: 8] = o_v; g_q[16 * s +: 16] = o_r + s; end
+      |                                                                                                              ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:208:104: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                           : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  208 |                     if (o_r + s < YROWS) begin g_v[s] = 1'b1; g_i[8 * s +: 8] = o_v; g_q[16 * s +: 16] = o_r + s; end
+      |                                                                                                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:208:29: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'o_r' generates 16 bits.
+                                                                                           : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  208 |                     if (o_r + s < YROWS) begin g_v[s] = 1'b1; g_i[8 * s +: 8] = o_v; g_q[16 * s +: 16] = o_r + s; end
+      |                             ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:220:37: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'o_r' generates 16 bits.
+                                                                                           : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  220 |                     else o_r <= o_r + S_RT;
+      |                                     ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:220:30: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                          : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  220 |                     else o_r <= o_r + S_RT;
+      |                              ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:219:29: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'o_r' generates 16 bits.
+                                                                                           : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  219 |                     if (o_r + S_RT >= YROWS) begin o_r <= 0; o_v <= o_v + 8'd1; end
+      |                             ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:224:49: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'hs_c' generates 16 bits.
+                                                                                           : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  224 |             else if (hs_run) begin hs_c <= hs_c + S_RT; if (hs_c + S_RT >= HROWS) hs_run <= 1'b0; end
+      |                                                 ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:224:41: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                          : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  224 |             else if (hs_run) begin hs_c <= hs_c + S_RT; if (hs_c + S_RT >= HROWS) hs_run <= 1'b0; end
+      |                                         ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:224:66: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'hs_c' generates 16 bits.
+                                                                                           : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  224 |             else if (hs_run) begin hs_c <= hs_c + S_RT; if (hs_c + S_RT >= HROWS) hs_run <= 1'b0; end
+      |                                                                  ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:241:20: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's REPLICATE generates 24 bits.
+                                                                                          : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  241 |             else v <= {v, rv2};                   
+      |                    ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:242:33: Operator ASSIGNDLY expects 4312 bits on the Assign RHS, but Assign RHS's REPLICATE generates 6468 bits.
+                                                                                          : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  242 |         always @(posedge clk) d <= {d, rd2};
+      |                                 ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:287:32: Bit extraction of array[4:0] requires 3 bit index, not 8 bits.
+                                                                                          : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  287 |             o[P_D +: 128] = psb[o[P_PI +: 8]];
+      |                                ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:297:30: Bit extraction of array[4:0] requires 3 bit index, not 8 bits.
+                                                                                          : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  297 |                     yr = ybuf[vi];
+      |                              ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:298:23: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's DIV generates 32 bits.
+                                                                                          : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  298 |                     g = ((32 * qx) % NG) / GT; b = (32 * qx) / NG;
+      |                       ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:298:50: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's DIV generates 32 bits.
+                                                                                          : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  298 |                     g = ((32 * qx) % NG) / GT; b = (32 * qx) / NG;
+      |                                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:301:47: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'g' generates 16 bits.
+                                                                                           : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  301 |                             if ((NG >= 32 ? g + k / GT : (k % NG) / GT) == tq && (NG >= 32 ? b : b + k / NG) == qd)
+      |                                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:301:73: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 'tq' generates 8 bits.
+                                                                                           : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  301 |                             if ((NG >= 32 ? g + k / GT : (k % NG) / GT) == tq && (NG >= 32 ? b : b + k / NG) == qd)
+      |                                                                         ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:301:92: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'b' generates 16 bits.
+                                                                                           : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  301 |                             if ((NG >= 32 ? g + k / GT : (k % NG) / GT) == tq && (NG >= 32 ? b : b + k / NG) == qd)
+      |                                                                                            ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:301:100: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'b' generates 16 bits.
+                                                                                            : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  301 |                             if ((NG >= 32 ? g + k / GT : (k % NG) / GT) == tq && (NG >= 32 ? b : b + k / NG) == qd)
+      |                                                                                                    ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:304:24: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's DIV generates 32 bits.
+                                                                                          : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  304 |                     g0 = ((8 * qx) % NG) / 8;
+      |                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:307:52: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 'tq' generates 8 bits.
+                                                                                           : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b.u.u'
+  307 |                         if (g0 * (8 / GT) + k / GT == tq)
+      |                                                    ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/cs_reg_bypassed.sv:445:30: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PAYLOAD_STAGE' generates 32 bits.
+                                                                                                : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_b'
+  445 |     assign rdm=PAYLOAD_STAGE ? payload_delay : payload_own;
+      |                              ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/cs_reg_bypassed.sv:103:30: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'HOV_REG' generates 32 bits.
+                                                                                                : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_a'
+  103 |         assign e_hov=HOV_REG ? hov_q : hov_d; assign hov_fwd=(COLUMN==0) ? hov_q : 1'b0;
+      |                              ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/cs_reg_bypassed.sv:227:30: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PAYLOAD_STAGE' generates 32 bits.
+                                                                                                : ... note: In instance 'check.dut2.g_col[3]....g_m3.u_c.u.u_a'
+  227 |     assign rdm=PAYLOAD_STAGE ? payload_delay : payload_own;
+      |                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:453:59: Output port connection 'rq_q' expects 64 bits on the pin connection, but pin connection's VARREF 'rq_q' generates 16 bits.
+                                                                                           : ... note: In instance 'check.ref2'
+  453 |     .rd_in(rd_in[WA-1:0]), .rvm(rvm), .rdm(rdm[WA-1:0]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
+      |                                                           ^~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:454:6: Output port connection 'rq_q_c1' expects 64 bits on the pin connection, but pin connection's VARREF 'rq_c1' generates 16 bits.
+                                                                                          : ... note: In instance 'check.ref2'
+  454 |     .rq_q_c1(rq_c1), .rq_q_c2(rq_c2), .rq_q_c3(rq_c3), .hs_run_c1(hr1), .hs_run_c2(hr2), .hs_run_c3(hr3),
+      |      ^~~~~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:454:23: Output port connection 'rq_q_c2' expects 64 bits on the pin connection, but pin connection's VARREF 'rq_c2' generates 16 bits.
+                                                                                           : ... note: In instance 'check.ref2'
+  454 |     .rq_q_c1(rq_c1), .rq_q_c2(rq_c2), .rq_q_c3(rq_c3), .hs_run_c1(hr1), .hs_run_c2(hr2), .hs_run_c3(hr3),
+      |                       ^~~~~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/reference.sv:454:40: Output port connection 'rq_q_c3' expects 64 bits on the pin connection, but pin connection's VARREF 'rq_c3' generates 16 bits.
+                                                                                           : ... note: In instance 'check.ref2'
+  454 |     .rq_q_c1(rq_c1), .rq_q_c2(rq_c2), .rq_q_c3(rq_c3), .hs_run_c1(hr1), .hs_run_c2(hr2), .hs_run_c3(hr3),
+      |                                        ^~~~~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/check_cs_reg_bypassed.sv:18:6: Output port connection 'rq_q0' expects 64 bits on the pin connection, but pin connection's VARREF 'd1q0' generates 16 bits.
+                                                                                                     : ... note: In instance 'check'
+   18 |     .rq_q0(d1q0),.rq_q1(d1q1),.rq_q2(d1q2),.rq_q3(d1q3),.hs_run_c(d1hr),.hs_c0(d1h0),.hs_c1(d1h1),.hs_c2(d1h2),.hs_c3(d1h3),
+      |      ^~~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/check_cs_reg_bypassed.sv:18:19: Output port connection 'rq_q1' expects 64 bits on the pin connection, but pin connection's VARREF 'd1q1' generates 16 bits.
+                                                                                                      : ... note: In instance 'check'
+   18 |     .rq_q0(d1q0),.rq_q1(d1q1),.rq_q2(d1q2),.rq_q3(d1q3),.hs_run_c(d1hr),.hs_c0(d1h0),.hs_c1(d1h1),.hs_c2(d1h2),.hs_c3(d1h3),
+      |                   ^~~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/check_cs_reg_bypassed.sv:18:32: Output port connection 'rq_q2' expects 64 bits on the pin connection, but pin connection's VARREF 'd1q2' generates 16 bits.
+                                                                                                      : ... note: In instance 'check'
+   18 |     .rq_q0(d1q0),.rq_q1(d1q1),.rq_q2(d1q2),.rq_q3(d1q3),.hs_run_c(d1hr),.hs_c0(d1h0),.hs_c1(d1h1),.hs_c2(d1h2),.hs_c3(d1h3),
+      |                                ^~~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/check_cs_reg_bypassed.sv:18:45: Output port connection 'rq_q3' expects 64 bits on the pin connection, but pin connection's VARREF 'd1q3' generates 16 bits.
+                                                                                                      : ... note: In instance 'check'
+   18 |     .rq_q0(d1q0),.rq_q1(d1q1),.rq_q2(d1q2),.rq_q3(d1q3),.hs_run_c(d1hr),.hs_c0(d1h0),.hs_c1(d1h1),.hs_c2(d1h2),.hs_c3(d1h3),
+      |                                             ^~~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/check_cs_reg_bypassed.sv:21:6: Output port connection 'rq_q0' expects 64 bits on the pin connection, but pin connection's VARREF 'd2q0' generates 16 bits.
+                                                                                                     : ... note: In instance 'check'
+   21 |     .rq_q0(d2q0),.rq_q1(d2q1),.rq_q2(d2q2),.rq_q3(d2q3),.hs_run_c(d2hr),.hs_c0(d2h0),.hs_c1(d2h1),.hs_c2(d2h2),.hs_c3(d2h3),
+      |      ^~~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/check_cs_reg_bypassed.sv:21:19: Output port connection 'rq_q1' expects 64 bits on the pin connection, but pin connection's VARREF 'd2q1' generates 16 bits.
+                                                                                                      : ... note: In instance 'check'
+   21 |     .rq_q0(d2q0),.rq_q1(d2q1),.rq_q2(d2q2),.rq_q3(d2q3),.hs_run_c(d2hr),.hs_c0(d2h0),.hs_c1(d2h1),.hs_c2(d2h2),.hs_c3(d2h3),
+      |                   ^~~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/check_cs_reg_bypassed.sv:21:32: Output port connection 'rq_q2' expects 64 bits on the pin connection, but pin connection's VARREF 'd2q2' generates 16 bits.
+                                                                                                      : ... note: In instance 'check'
+   21 |     .rq_q0(d2q0),.rq_q1(d2q1),.rq_q2(d2q2),.rq_q3(d2q3),.hs_run_c(d2hr),.hs_c0(d2h0),.hs_c1(d2h1),.hs_c2(d2h2),.hs_c3(d2h3),
+      |                                ^~~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/hccol-a5/row_proof/check_cs_reg_bypassed.sv:21:45: Output port connection 'rq_q3' expects 64 bits on the pin connection, but pin connection's VARREF 'd2q3' generates 16 bits.
+                                                                                                      : ... note: In instance 'check'
+   21 |     .rq_q0(d2q0),.rq_q1(d2q1),.rq_q2(d2q2),.rq_q3(d2q3),.hs_run_c(d2hr),.hs_c0(d2h0),.hs_c1(d2h1),.hs_c2(d2h2),.hs_c3(d2h3),
+      |                                             ^~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/check_cs_reg_bypassed.sv:36:114: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's MODDIVS generates 32 bits.
+                                                                                                      : ... note: In instance 'check'
+   36 |       fv1='0; fv1[3]=(cycle%97==0); fv1[6]=(cycle%83==0); fv1[4]=(cycle%7==0); fv1[5]=(cycle%41==0); fdx1[63 +:8]=cycle%5;
+      |                                                                                                                  ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/check_cs_reg_bypassed.sv:37:115: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's MODDIVS generates 32 bits.
+                                                                                                      : ... note: In instance 'check'
+   37 |       fv2='0; fv2[3]=(cycle%101==1); fv2[6]=(cycle%89==3); fv2[4]=(cycle%7==2); fv2[5]=(cycle%43==5); fdx2[63 +:8]=(cycle+1)%5;
+      |                                                                                                                   ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/check_cs_reg_bypassed.sv:39:47: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's MODDIVS generates 32 bits.
+                                                                                                     : ... note: In instance 'check'
+   39 |       for(j=0;j<4;j=j+1) begin rd_x[4+8*j +:8]=(cycle+j)%5; rd_x[4+32+16*j +:16]=(cycle+j)%640; end
+      |                                               ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/check_cs_reg_bypassed.sv:39:81: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's MODDIVS generates 32 bits.
+                                                                                                     : ... note: In instance 'check'
+   39 |       for(j=0;j<4;j=j+1) begin rd_x[4+8*j +:8]=(cycle+j)%5; rd_x[4+32+16*j +:16]=(cycle+j)%640; end
+      |                                                                                 ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/hccol-a5/row_proof/check_cs_reg_bypassed.sv:40:21: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's MODDIVS generates 32 bits.
+                                                                                                     : ... note: In instance 'check'
+   40 |       rd_x[4+96 +:8]=cycle%5;
+      |                     ^
+make: Entering directory '/srv/opentallas-scratch/claude/hccol-a5/row_proof/obj_cs_reg_bypassed'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vcheck__pch.h -o Vcheck__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vcheck__pch.h -o Vcheck__pch.h.slow.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.slow -c Vcheck__ConstPool__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.slow -c Vcheck___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.slow -c Vcheck___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.slow -c Vcheck_ot_s81_hc_retrow__C6__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.slow -c Vcheck_ot_s81_hc_retrow__C6__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.slow -c Vcheck__Syms__Slow.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.fast -c Vcheck.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.fast -c Vcheck___024root__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.fast -c Vcheck___024root__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.fast -c Vcheck___024root__2.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.fast -c Vcheck_ot_s81_hc_retrow__C6__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.fast -c Vcheck_ot_s81_hc_retrow__C6__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.fast -c Vcheck_ot_s81_hc_retrow__C6__2.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.fast -c Vcheck_ot_s81_hc_retrow__C6__3.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.fast -c Vcheck_ot_s81_hc_retrow__C6__4.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.fast -c Vcheck_ot_s81_hc_retrow__C6__5.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.fast -c Vcheck_ot_s81_hc_retrow__C6__6.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.fast -c Vcheck_ot_s81_hc_retrow__C6__7.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.fast -c Vcheck_ot_s81_hc_retrow__C6__8.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.fast -c Vcheck_ot_s81_hc_retrow__C6__9.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck__pch.h.fast -c Vcheck__main.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vcheck__ALL.a    -pthread -lpthread -latomic   -o Vcheck
+rm Vcheck__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/claude/hccol-a5/row_proof/obj_cs_reg_bypassed'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.238 MB sources in 31 modules, into 18.094 MB in 21 C++ files needing 0.032 MB
+- Verilator: Walltime 8.962 s (elab=0.054, cvt=2.199, bld=6.421); cpu 2.795 s on 8 threads; allocated 247.449 MB
+[258000] %Fatal: check_cs_reg_bypassed.sv:50: Assertion failed in check: rd mismatch cycle=85
+%Error: /srv/opentallas-scratch/claude/hccol-a5/row_proof/check_cs_reg_bypassed.sv:50: Verilog $stop
+Aborting...

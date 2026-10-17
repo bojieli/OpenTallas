@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_hc_ctnl_l2io",
+ "enable": false,
+ "reason": "Real RTL (ot_s81_hc_ctnl PIN_STAGE 1) already registers every data input at the pin (g_pin capture flops) and every output comes from a register (hpr/hrq read registers, yb/cy/flt/acc/sq stage registers); a generic wrapper would add a cycle on the lane chain."
+}

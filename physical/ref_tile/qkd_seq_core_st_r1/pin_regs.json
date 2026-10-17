@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_seq_core_static",
+ "enable": false,
+ "reason": "Every input is captured at its pin (rv/rk/rb, kvv/ktg/cd, lpr/lpl/lpt, sv, ov/og/ob, crq/afq/mfq) except the Q store push x_v, which is registered directly from the att_rx pins so it stays aligned with the payload on the KVN data wires (the store slices capture both at their own pins); every output is a register. The compiled timeline (aq start 47 edges after the CMD pin edge, tools/qwen_static_kv/seq_static_golden.py G_AQ) counts these stages; a flow-inserted stage would break the store alignment."
+}

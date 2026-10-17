@@ -16,11 +16,12 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
-QDM REFGLOB *u_wv* reference: 1 registers, median arrival 334.130432 (range 334.130432 .. 334.130432)
-QDM reference pin u_wv.q$_DFF_PN0_/CLK clock arrival max 334.130432 min 315.956726 skew 90 hold 50
+QDM REFGLOB *u_wv* reference: 1 registers, median arrival 323.484314 (range 323.484314 .. 323.484314)
+QDM reference pin u_wv.q$_DFF_PN0_/CLK clock arrival max 323.484314 min 306.450470 skew 90 hold 50
 OT_IO_INTER 1025 inputs 1026 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 OT_IOREF clock-port clk (core_clk): data input delays dropped
 OT_IOREF_EDGE core_clk boundary 2058 negedge 0 noarc 0 inverted 0
-OT_IOREF ot_lb_v_core_clk core_clk mean 325.2 min 307.6 max 339.3 n 2058 boundary
-OT_WS max -2.823667966111998e-10 min 6.820527476136817e-11
+OT_IOREF ot_lb_v_core_clk core_clk mean 325.2 min 309.0 max 345.0 n 2058 boundary
+OT_WS max -2.0467949557456677e-10 min 7.479894481576821e-11
 OT_EXPORT_DONE

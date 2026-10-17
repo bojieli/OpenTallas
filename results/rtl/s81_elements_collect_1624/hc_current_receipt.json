@@ -1,0 +1,19 @@
+{
+  "scope": "actual current-source NG256 RETCOL composition with main CSEQ preserved",
+  "source_manifest": "results/rtl/s81_elements_1552/hc_current_source_manifest.json",
+  "unit": "oth-ubuntu-3030662-1792191741",
+  "positive": {
+    "cases": 3,
+    "rows_per_case": 1940,
+    "bad_per_case": 0,
+    "cycles": 4835
+  },
+  "mutant_1": {
+    "cases": 3,
+    "bad_per_case": 1770,
+    "rows_per_case": 1940,
+    "cycles": 4835,
+    "exit": 1
+  },
+  "qualification": "behavioural exactness only; no physical adoption"
+}

@@ -7,9 +7,9 @@ The layer programme (rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_program
 qkd_static_kv_layer_programme_rom.sv) emits nine fixed roots per stage.  This compiler places them on the KV link's own
 calendar (tools/qwen_split/d2d_link_calendar.py --profile program, CALDIR/calendar.json):
 
-  frame   programme external start = the KV link calendar sequencer's TOKEN cal_start (qkd_d2d_cal_seq_pin cal_start with
-          layer 0); internal start = +1 edge = the static D2D end's run edge 0 (the end captures cal_start one edge at its
-          pin).  Programme age a == KV run edge a.  Stage 1 = L0, which sits inside the token run at program.layers[0].start
+  frame   programme external start = the KV link calendar sequencer's tok_start (one edge before the token cal_start);
+          internal start = +1 edge = the token cal_start edge = the static D2D end's run edge -1 (the end captures
+          cal_start one edge at its pin).  Programme age a == KV run edge a - 1: every root below is + START_LEAD (1).  Stage 1 = L0, which sits inside the token run at program.layers[0].start
           (its roots carry that base); stage s >= 2 = layer s-1 = the link calendar's layer run s-1, so
           stage_end[1] = START[1], stage_end[s] = START[s] - START[s-1] (s = 2..35), stage_end[36] = layers[35].cycles.
   attention_run     = the CMD record's event edge at the attention programme - RX_CMD (qkd_native_attention_static_ctl:
@@ -47,6 +47,9 @@ Q_TO_START = 2     # qkd_native_attention_static_ctl header: service samples Q b
 ISSUE_TO_RUN = 4   # qkd_static_kv_layer_programme: attention_run >= attention_issue + 4 (guard + descriptor load)
 WRITER_T0 = 4      # qkd_kv_native_programme boot check: t0 >= 4 (first compiled word slot after its start)
 LINK_START = 3     # earliest legal root
+# the programme's external start on the die = the link calendar sequencer's tok_start (qkd_d2d_cal_seq AUTO: one edge
+# BEFORE the token cal_start), so programme age a == KV run edge a - START_LEAD: every root moves by +START_LEAD
+START_LEAD = 1
 FIELDS = ('ctrl_go', 'kgo', 'vgo', 'attention_issue', 'attention_run', 'writer_start', 'link_start', 'expected_quiet',
           'stage_end')
 
@@ -66,9 +69,25 @@ def main():
     ap.add_argument('caldir')
     ap.add_argument('out')
     ap.add_argument('--T', type=int, default=8192)
-    ap.add_argument('--digest', type=lambda s: int(s, 0), default=0x123456789abcdef0)
-    ap.add_argument('--epoch', type=int, default=3)
+    # The authorized programme the image binds (qkd_static_kv_layer_programme start check): digest64 = the HOST program
+    # loader's (qkd_host_program_loader: seed QHOSTPRG, rol7 ^ word ^ {desc, addr}) over the INSTALLED program image
+    # (PW1024 + DW8), computed here exactly as tools/qwen_split/sys_face_image.image_digest; epoch16 = the image epoch
+    # the HOST installs it under.  Default = the compute die system face's bench program (sys_face_image.bench_program,
+    # epoch 0x0b0b, tb_qfd_sys_face) until the deployment program image is committed; --program / --epoch override.
+    ap.add_argument('--program', help='installed program image hex (PW1024 + DW8 64-b words); default: the sys_face bench program')
+    ap.add_argument('--epoch', type=lambda s: int(s, 0), default=0x0b0b)
+    ap.add_argument('--digest', type=lambda s: int(s, 0), help='override the digest (component tests only)')
     a = ap.parse_args()
+    import importlib.util as _iu
+    _sp = _iu.spec_from_file_location('sys_face_image', ROOT / 'tools/qwen_split/sys_face_image.py')
+    SFI = _iu.module_from_spec(_sp)
+    _sp.loader.exec_module(SFI)
+    prog_words = ([int(x, 16) for x in Path(a.program).read_text().split()] if a.program else SFI.bench_program())
+    if len(prog_words) != SFI.PW + SFI.DW:
+        raise SystemExit('installed program image must be PW1024 + DW8 words')
+    if a.digest is None:
+        a.digest = SFI.image_digest(prog_words)
+    prog_src = a.program or 'tools/qwen_split/sys_face_image.py bench_program()'
     cal = json.loads((Path(a.caldir) / 'calendar.json').read_text())
     prog = cal['program']
     lay = prog['layers']
@@ -93,6 +112,7 @@ def main():
     quiet = st[0]['cyc'] + 1
     rel = dict(ctrl_go=kgo, kgo=kgo, vgo=vgo, attention_issue=issue, attention_run=run, writer_start=writer,
                link_start=LINK_START, expected_quiet=quiet)
+    rel = {k: (v + START_LEAD if k != 'link_start' else v) for k, v in rel.items()}
     ends = [starts[1]] + [lay[s]['start'] - lay[s - 1]['start'] for s in range(2, 36)] + [lay[35]['cycles']]
     if lay[1]['start'] != prog['cal_starts'][1]['cycle']:
         raise SystemExit('link calendar layer starts differ from its cal_starts')
@@ -117,7 +137,8 @@ def main():
     (od / 'boot.hex').write_text(''.join(f'{w:016x}\n' for w in words))
     rec = dict(schema='opentallas.qwen_kv_static.layer_roots_from_link.v1', status='COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE',
                T=a.T, kv_qk_start_after_prefetch=lead, pv_start=pvs, layer_relative=rel, start_qk=start_qk,
-               constants=dict(D2D_OUT=D2D_OUT, RX_CMD=RX_CMD, Q_TO_START=Q_TO_START, ISSUE_TO_RUN=ISSUE_TO_RUN,
+               programme=dict(source=prog_src, digest=f'{a.digest:016x}', epoch=a.epoch),
+               constants=dict(START_LEAD=START_LEAD, D2D_OUT=D2D_OUT, RX_CMD=RX_CMD, Q_TO_START=Q_TO_START, ISSUE_TO_RUN=ISSUE_TO_RUN,
                               WRITER_T0=WRITER_T0, LINK_START=LINK_START),
                stage_end=ends, l0_base=starts[0], token_core_cycles=img['token_core_cycles'],
                link_token_cycles_through_L35=prog['token_cycles_through_L35'], rows=rows, events=img['events'],

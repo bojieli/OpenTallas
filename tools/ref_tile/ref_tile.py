@@ -1463,8 +1463,10 @@ def gen_hooks(s: dict, kd: str) -> dict:
                      f"ot_ref_audit_signal_layers {lc['rlayers'][1]} {lc['pg_layer']} [file join $::env(RESULTS_DIR) signal_layer_audit.json]"]
     if s["kind"] == "tile" and m6_pin_access_stub(s):
         m6pa = [f"set ::ot_m6_stub_um {m6_pin_access_stub(s)}", f"source /src/{M6_PIN_ACCESS_TCL}"]
-        pre_grt += m6pa
-        post_drt += m6pa
+        # The face-pin keepout recomputes its rectangles at remove time.
+        # Deepen pins before it runs so add/remove see identical terminal geometry.
+        pre_grt = ["set ::ot_m6_pin_access_mode add"] + m6pa + pre_grt
+        post_drt += ["set ::ot_m6_pin_access_mode remove"] + m6pa
     corridor = s.get("pin_access", {}).get("corridor")
     if corridor:
         for post, hook in ((0, pre_grt), (1, post_drt)):
