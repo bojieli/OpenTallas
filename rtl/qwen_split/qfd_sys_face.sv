@@ -51,8 +51,14 @@
 //     / epoch identify the row; every code word's actual token must equal it.  One register edge.
 //   * STATUS / RESULT (D2D kind 15): real sources only -- the sequencer dc {rom_fault, kv_write_flush, coll_busy,
 //     core_fault, s_fault, s_done, ntok, nval}, the collective's cmd_free, the constant-ROM groups' fault codes, the
-//     calendar state.  fab = registered OR of the die's open fault outputs (collective, D2D, native59, result-train
-//     issue, this face).
+//     calendar state.  fab = registered OR of the die's open fault outputs (collective, D2D, native59, this face).
+// DV RE-PORT (Q-CTLM 2026-10-17, gap G8): the DV die has no qfd_seq_su_static, no qfd_crom_g groups and no result
+// trains.  seq_dh now feeds qfd_tt_ctlm_dv `dh` (token start / stage / token / position + its calendar program copy);
+// seq_dc / seq_program_obs / seq_descriptor_obs / seq_cfg_image_ready come from qfd_tt_ctlm_dv (dc, cal_program_obs,
+// cal_descriptor_obs, cal_image_ready; tt_ctlm sees the W5 ss5 / ag5 status).  crom_fault_code is DROPPED (rule c: the 8
+// constant-ROM groups are gone; the CROM lives in each slice's qfd_dv_vm, its fault reaches seq_dc[55] through ag5 vm);
+// res_issue_fault is DROPPED (rule c: qfd_res_train_issue_b2 is gone).  Port names seq_* are kept; function otherwise
+// unchanged.
 // Added cycles: boot / program replay are initialisation; a calendar event of compiled cycle c reaches its consumer pin
 // c edges after the edge that samples the calendar start (dt edges + the face output register; sys_face_image.py
 // CAL_OUT_EDGES = 1).  EMB words: +1 edge (decode register) on the D2D emb_rx_v edge.
@@ -104,7 +110,7 @@ module qfd_sys_face #(
     output reg  [17:0]   result_token,
     output reg  [31:0]   result_value,
     output reg  [31:0]   result_cycles,
-    // ---------------- ROM sequencer (qfd_seq_su_static) ----------------
+    // ---------------- DV control element (qfd_tt_ctlm_dv; was the ROM sequencer qfd_seq_su_static) ----------------
     input  wire [55:0]   seq_dc,
     input  wire [75:0]   seq_program_obs,
     input  wire [68:0]   seq_descriptor_obs,
@@ -154,8 +160,6 @@ module qfd_sys_face #(
     input  wire          io_cmd_free,
     input  wire          io_fault,
     input  wire          io_shared_fault,
-    input  wire [15:0]   crom_fault_code,      // 8 constant-ROM groups x 2 b
-    input  wire          res_issue_fault,
     output wire          fault
 );
     // ================================================================ config ROM
@@ -475,7 +479,7 @@ module qfd_sys_face #(
             vm_drained <= !t_running_q;
             collective_busy <= seq_dc[53];
             collective_drained <= !seq_dc[53] && io_cmd_free;
-            crom_fault <= seq_dc[55] | (|crom_fault_code);
+            crom_fault <= seq_dc[55];                             // DV: the slice CROM fault (ag5 vm) via tt_ctlm dc[55]
             admit_ready <= boot_done && rp_program_ready && !t_running_q && !face_fault;
             result_v <= ev_res;
             if (ev_res) begin
@@ -488,7 +492,7 @@ module qfd_sys_face #(
                 (ev_lay && l_run) || (ev_tok && e_run) || (t_go && !boot_done) || cs_fault ||
                 cal_tok !== cal_exp || (cal_tok && cal_seg !== seg_exp) || (cal_adm && t_running_q))
                 cal_fault <= 1'b1;
-            tt_fab <= io_fault | io_shared_fault | d2d_fault | native_fault | res_issue_fault | face_fault;
+            tt_fab <= io_fault | io_shared_fault | d2d_fault | native_fault | face_fault;
         end
     end
     assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | rp_fault | armed_fault | go_fault;

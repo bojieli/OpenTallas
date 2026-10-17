@@ -66,8 +66,8 @@ module tb_qfd_sys_face;
         .emb_word_v(ew_v), .emb_word_data(ew_d), .emb_word_token(ew_t), .emb_word_index(ew_i), .emb_word_scale(ew_s),
         .emb_word_epoch(ew_e), .emb_expected_slot(ex_s), .emb_expected_token(ex_t), .emb_expected_word(ex_w),
         .emb_expected_scale(ex_sc), .emb_expected_epoch(ex_e), .emb_fill_begin(fb), .emb_fill_token(f_t), .emb_fill_epoch(f_e),
-        .emb_core_epoch(c_e), .io_cmd_free(1'b1), .io_fault(1'b0), .io_shared_fault(1'b0), .crom_fault_code(16'd0),
-        .res_issue_fault(1'b0), .fault(face_fault));
+        .emb_core_epoch(c_e), .io_cmd_free(1'b1), .io_fault(1'b0), .io_shared_fault(1'b0),
+        .fault(face_fault));
     reg core_start = 0, code_re = 0, scale_re = 0; reg [23:0] code_addr = 0; reg [17:0] scale_addr = 0;
     wire [511:0] code_q; wire [15:0] scale_q; wire prov_fault;
     qfd_embedding_word_provider u_prov (.ck(ck), .rst_n(rst_n), .word_v(ew_v), .word_data(ew_d), .word_token(ew_t),
