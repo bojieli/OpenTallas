@@ -929,7 +929,8 @@ module ot_qfd_xhead #(
         for (fc = 0; fc < 2; fc = fc + 1) begin : g_c
             (* keep = "true" *) reg [5:0] sel [0:16];   // 16 groups of 64 data bits + 1 for the mask
             for (fg = 0; fg < 17; fg = fg + 1) begin : g_s
-                always @(posedge ck) sel[fg] <= a_d[1 + IBW + DESC + 2 + BW +: 6];
+                // MUT 10 (bench only): group 5 of face 1 takes the wrong rotation (bit 0 inverted) -> must FAIL
+                always @(posedge ck) sel[fg] <= a_d[1 + IBW + DESC + 2 + BW +: 6] ^ ((MUT == 10 && fc == 1 && fg == 5) ? 6'd1 : 6'd0);
             end
             wire [1023:0] rd [0:6];
             wire [63:0]   rm [0:6];
