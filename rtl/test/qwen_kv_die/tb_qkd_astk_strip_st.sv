@@ -11,7 +11,9 @@
 `define KVD_STMUT 0
 `endif
 module tb_qkd_astk_strip_st;
- localparam integer EXP_AGE=500, LMAX_AGE=350, Z_AGE=900, Z_STRIDE=16;
+ // Z_AGE 1000 (was 900, copied from tb_qkd_astk_native_stack): on the cal composition (RL relays) the Z block sums of k 0..5 land
+ // after their 900-age slots (Z words 0 + slot fault); 1000 is the first legal calendar with margin (k 6.. were exact at 900).
+ localparam integer EXP_AGE=500, LMAX_AGE=350, Z_AGE=1000, Z_STRIDE=16;
  function automatic [31:0] score_word(input integer eng,addr,head);
   score_word=32'h30000000 | (eng<<12) | (addr<<2) | head;
  endfunction

@@ -15,6 +15,7 @@
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
    "physical/qkd_astk_strip",
    "results/asap7_physical/bitcell_density",
+   "results/rtl/ref_tile/qkd_astk_ep_s/bench_witness_st1/",
    "rtl/hdc",
    "rtl/lib/ot_rst_relay.sv",
    "rtl/proto/ot_fp32_add_rne_pipe.sv",
@@ -51,7 +52,8 @@
      "verilator"
     ],
     "pass_regex": "^PASS qkd_astk_strip_st lockstep",
-    "note": "every edge of qkd_astk_strip_st (ctl_s + 8 ep_s + 32 ex_s + 4 zn) equals qkd_astk_native_stack_cal (the selected static ASTK) on si / ap / lt / e reads / fault; phase 1 functional (T 8192, 8,192 scores, lmax 4, Z 64, 2,048 e reads), phase 2 T 600 random"
+    "note": "every edge of qkd_astk_strip_st (ctl_s + 8 ep_s + 32 ex_s + 4 zn) equals qkd_astk_native_stack_cal (the selected static ASTK) on si / ap / lt / e reads / fault; phase 1 functional (T 8192, 8,192 scores, lmax 4, Z 64, 2,048 e reads), phase 2 T 600 random",
+    "pass_witness": "results/rtl/ref_tile/qkd_astk_ep_s/bench_witness_st1/mut0.log"
    },
    {
     "name": "qkd_astk_ep_s_mutant",
@@ -63,7 +65,8 @@
      "verilator"
     ],
     "fail_regex": "^FAIL qkd_astk_strip_st",
-    "note": "MUT 1: ep_s e rows written one address off"
+    "note": "MUT 1: ep_s e rows written one address off",
+    "fail_witness": "results/rtl/ref_tile/qkd_astk_ep_s/bench_witness_st1/mut1.log"
    }
   ],
   "calibrate": {
