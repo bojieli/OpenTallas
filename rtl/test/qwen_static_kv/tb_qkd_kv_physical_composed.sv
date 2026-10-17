@@ -73,7 +73,7 @@ module tb_qkd_kv_physical_composed;
  generate for(phy=0;phy<4;phy=phy+1)begin:physical
   wire[260:0]er;assign intake_fault[phy]=er[260];
   qkd_ctrl_pc_host_static #(.PROFILE(0))pc_controller(
-   .pll_hbm(ck),.hrst(rst_n),.ck(ck),.rsi(rst_n),.pc(5'(28+phy)),.ci(319'b0),.co(),
+   .pll_hbm(ck), .pll_hbm_port(ck), .pll_hbm_ecc(ck),.hrst(rst_n),.ck(ck),.rsi(rst_n),.pc(5'(28+phy)),.ci(319'b0),.co(),
    .es(es[288*phy+:288]),.er(er),.po(physical_po[phy]),.pi(289'b0),.ki(33'b0),.ko(),.fi(1'b0),.fo(controller_fault[phy]),
    .static_cmd_owner(1'b0),.static_cmd(43'b0),.reserved_rd(1'b0),.reserved_static_col(sr_reservation),.reserved_write_col(1'b0),.static_epoch(16'd9),.expected_raw_valid(1'b0),
    .cfg_stack(2'd1),.es_context({1'b1,oi,og,mask[256*phy+:256]}),.es_expected_valid(ev[phy]),.es_expected_identity(eci),.es_expected_address(ea),.es_expected_pc(epc[5*phy+:5]),.es_expected_stack(estack),

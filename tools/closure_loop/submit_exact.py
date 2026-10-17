@@ -24,7 +24,8 @@ Run it from the worktree that holds the spec's source commit.  Steps:
  5. --regate: run pre_route_gate.py <kit> --commit <C> <gate-args>, commit the gate result by path, move the spec to
     that commit, re-check;
  6. PRE-ROUTE VISUAL REVIEW: an element on critical_tiles.txt (block or kit name) or with >= 2 earlier non-CLOSED routes
-    needs a committed <kit>/gate_layout/REVIEW.json {reviewer, time, gate_commit (= the kit gate's commit), verdict
+    needs a committed <kit>/gate_layout/REVIEW.json {reviewer (= the coordinator lock holder: 'coordinator ...' when
+    Claude holds COORDINATOR.lock, 'codex ...' when Codex does), time, gate_commit (= the kit gate's commit), verdict
     APPROVED|CHANGES, checklist {lattice, std_cell_band, pin_spread, clock_entry, shape}}; else REVIEW_REQUIRED + PNGs;
  7. drop the spec atomically into the closure-loop drop dir (only after a PASS/WARN).
 Exit 0 submitted (or dry-run PASS), 1 refused locally, 2 usage/git error.
@@ -243,6 +244,27 @@ def review_required(spec, kit, jobs_dir=None):
     return None
 
 
+COORD_LOCK = Path(os.environ.get("OT_COORD_LOCK", "/home/ubuntu/claude-takeover-20261007/COORDINATOR.lock"))
+
+
+def reviewer_allowed(reviewer):
+    """owner rule (HANDOFF 0co): the REVIEW.json reviewer is the coordinator -- the Claude coordinator when it holds
+    COORDINATOR.lock ('coordinator ...'), Codex when Codex holds it ('codex ...').  ROOT and leads never self-approve.
+    Returns None when allowed, else the refusal text."""
+    try:
+        owner = str(json.loads(COORD_LOCK.read_text()).get("owner") or "").strip().lower()
+    except (OSError, ValueError):
+        return f"coordinator lock {COORD_LOCK} unreadable: cannot verify the reviewer"
+    r = reviewer.strip().lower()
+    want = {"claude": "coordinator", "codex": "codex"}.get(owner)
+    if not want:
+        return f"coordinator lock owner {owner!r} unknown"
+    if not r.startswith(want) or "root" in r.split():
+        return (f"reviewer {reviewer!r} is not the coordinator (lock owner {owner}: reviewer must start with '{want}'); "
+                "ROOT and stream leads cannot self-approve")
+    return None
+
+
 def review_check(root, commit, kit, show=None):
     """None when the committed REVIEW.json approves THIS gate, else the refusal text."""
     def rd(p):
@@ -273,6 +295,9 @@ def review_check(root, commit, kit, show=None):
     absent = [k for k in REVIEW_CHECKLIST if k not in cl]
     if absent:
         return f"REVIEW_REQUIRED: checklist lacks {', '.join(absent)} (items: {', '.join(REVIEW_CHECKLIST)})" + tail
+    who = reviewer_allowed(str(rev["reviewer"]))
+    if who:
+        return f"REVIEW_REQUIRED: {who}" + tail
     if rev["verdict"] != "APPROVED":
         return f"REVIEW_REQUIRED: reviewer {rev['reviewer']} verdict {rev['verdict']}" + tail
     return None
