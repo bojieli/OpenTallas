@@ -17,8 +17,8 @@ for c in reg100:registered:100 reg4:registered:4 none100:none:100; do
  python3 tools/hbm_idx_static_calendar.py "$out/cal_$tag" --pins "$pins" --gap "$gap" > "$out/cal_$tag.log"
 done
 # Drain mutant (pipelined selector core, H-NETLIST/IDXP-SEL 2026-10-16): the histogram lands 4 edges after the last
-# op4 scan read. Move each scan pass's op5 choose block ONE edge earlier (into the last drain slot) and leave an idle
-# slot carrying the pass after it, so the programme length and every other field are unchanged. The first op5 then
+# op4 scan read. Move each scan pass's op5 choose block THREE edges earlier (into drain slots; one edge survived at
+# 98f4b19a7: the last scan line did not change the stimulus' histogram) and leave idle slots carrying the pass after it, so the programme length and every other field are unchanged. The first op5 then
 # reads a histogram that is missing the last scan line. (The historical "pass dropped on drain slots" defect cannot
 # occur any more: the core carries pass with each scan read.)
 python3 - "$out/cal_reg100" "$out/cal_old_drain" <<'PYDRAIN'
@@ -30,11 +30,14 @@ moved = 0
 for ps in (1, 2):
     idx = [i for i, w in enumerate(words) if ((w >> 16) & 15) == 5 and ((w >> 14) & 3) == ps]
     assert idx == list(range(idx[0], idx[0] + len(idx))), ps
-    pre = words[idx[0] - 1]
-    assert ((pre >> 16) & 15) == 0 and ((pre >> 14) & 3) == ps, hex(pre)   # a drain slot
+    K = int(__import__("os").environ.get("IDX_DRAIN_K", "3"))   # drain slots moved over (bench: 3)
+    for k in range(1, K + 1):
+        pre = words[idx[0] - k]
+        assert ((pre >> 16) & 15) == 0 and ((pre >> 14) & 3) == ps, hex(pre)   # drain slots
     for i in idx:
-        words[i - 1] = (words[i - 1] & ~SEL) | (words[i] & SEL)
-    words[idx[-1]] = (words[idx[-1]] & ~SEL) | (ps << 14)
+        words[i - K] = (words[i - K] & ~SEL) | (words[i] & SEL)
+    for i in idx[-K:]:
+        words[i] = (words[i] & ~SEL) | (ps << 14)
     moved += len(idx)
 assert moved == 32 + 64, moved
 (dst / 'calendar_instructions.hex').write_text(''.join(f'{w:08x}\n' for w in words))
