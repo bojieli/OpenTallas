@@ -1,5 +1,5 @@
 {
- "name": "s81hc_retcol_c3_ref-a4-COMMIT",
+ "name": "s81hc_retcol_c3_ref-a4d-COMMIT",
  "block": "ot_s81_hc_ret_column_c3",
  "ref_tile": true,
  "owner": "Claude:S-ENGRAM+NORM/HC-COLUMN",
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_retcol_c3_ref/s81hc_retcol_c3_ref-a4-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_retcol_c3_ref/s81hc_retcol_c3_ref-a4d-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -82,5 +82,5 @@
  "merge_target": null,
  "benched_by": "s81hc_ng256_retcol",
  "hold_merge": "cth_ntc parent component: the parent kit binds it after every child closes with native PASS; exactness = two-row chain proof + exact HC gate (RETCOL)",
- "structural_change": "Replaces the failed monolithic ctra / ctrb strips (v1 GRT congestion; native capture 674 ps): one engine per column, y beat and cs relayed one cycle, own payload chunks only. | 10-16 a4 (a3 c2/c3 CLOSED but native capture FAIL: hrq_col 277-279, cs_in 273, fv 262-300, yb_loc 247-249, yb_peer 215-238, hdr_in 201-209 ps > 190): every input family on a pin register -- hrq_col -> hrq_q (HQ_LAG 1: merge + rd relay +1 = +1 cycle per return row), yb own/peer and cs one consumer register each (Y_LAG / CS_LAG 2: y returns +1, cs capture +1), fv = the row's early fv (ctfxs) captured at the pin with ctfl's reset relay (0 cycles); pins: rq_q moves to the S face next to its hdr_in P_Q bit (one rdq flop for capture + launch), yb_fwd / cs_fwd (c3) launch on the N/S face next to their capture pins. Same outline."
+ "structural_change": "Replaces the failed monolithic ctra / ctrb strips (v1 GRT congestion; native capture 674 ps): one engine per column, y beat and cs relayed one cycle, own payload chunks only. | 10-16 a4 (a3 c2/c3 CLOSED but native capture FAIL: hrq_col 277-279, cs_in 273, fv 262-300, yb_loc 247-249, yb_peer 215-238, hdr_in 201-209 ps > 190): every input family on a pin register -- hrq_col -> hrq_q (HQ_LAG 1: merge + rd relay +1 = +1 cycle per return row), yb own/peer and cs one consumer register each (Y_LAG / CS_LAG 2: y returns +1, cs capture +1), fv = the row's early fv (ctfxs) captured at the pin with ctfl's reset relay (0 cycles); pins: rq_q moves to the S face next to its hdr_in P_Q bit (one rdq flop for capture + launch), yb_fwd / cs_fwd (c3) launch on the N/S face next to their capture pins. Same outline. | 10-16 a4c (HC-COL 1815): a4b c2/c3 route FLOORPLAN_MARGIN (util 65.0-65.1% incl. hold-buffer allowance > 65%) -> ret row 72.90 -> 77.76 (a4d, +18 rows; a4b route-synth area: c0 std 5827 um2 -> 65.9% incl hold even at 75.06; at 77.76 c0 ~63.5%, c1 ~62.4%; parent cth_ntc +4.86; 13 cs_rel legs 502.4 um > 500, reported; RTL unchanged)"
 }
