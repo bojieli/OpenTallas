@@ -44,10 +44,27 @@ def main():
     st = json.loads(gzip.open(a.stations).read() if a.stations.endswith('.gz') else Path(a.stations).read_text())
     R = st['reach_um']
     rows_by_key = {}
+    # H-DIE 1815: reset nets go to the reset forest (per-region reset relays/sync), as por_* already do, never into data
+    # relay stations: a list row whose driver ports are all resets (e.g. subr_<q>.bridge_rst_n) is excluded here and its
+    # tiles are removed from the reconciliation target.
+    reset_rx = re.compile(r'^(por_\w*|\w*rst_n|\w*_rst|\w*reset\w*)$')
+    reset_rows, reset_tiles = [], collections.Counter()
     for r in st['rows']:
+        if all(reset_rx.match(p_) for p_ in r['driver'].split('.', 1)[1].split('+')):
+            reset_rows.append(r['driver'])
+            W_ = 48 if r['bits'] <= 48 else 624; T_ = math.ceil(r['bits'] / W_)
+            reset_tiles[f'hbfd_rly_{W_}'] += sum(int(s_.get('tiles', T_)) for s_ in r['stations'])
+            reset_tiles[f'hbfd_rly_{W_}'] += sum(int(p_['stages']) * T_ for p_ in r.get('pads', []))
+            continue
         rows_by_key[(r['driver'].split('.')[0], tuple(sorted(r['sinks'])))] = r
     contract = json.loads(Path(a.case_contract).read_text())
     pl, nets, directions, top_inputs = RP.load_case(Path(a.case), contract)
+    GRID = (st.get('route') or {}).get('grid_um', 0) or 0
+    router = None
+    if GRID > 0:                                       # d4b-r: obstacle-aware routed stations (relay_router.py)
+        import relay_router as RR
+        man_ = json.loads((Path(a.case) / 'manifest.json').read_text())
+        router = RR.Router(man_['placement'], man_['die_um'], R, G=GRID, carved=man_.get('carved_feedthrough'))
     buses = collections.defaultdict(lambda: dict(bits=0, dpts=[], spts=collections.defaultdict(list), nets=[], ports=set()))
     for n, ends in nets.items():
         if n in top_inputs or len(ends) < 2:
@@ -64,7 +81,7 @@ def main():
         for l in lds:
             b['spts'][l[0]].append(l[2])
     insts, clocks, straps, splice, consts, problems = [], [], [], [], [], []
-    tiles = collections.Counter(); pad_tiles = 0; hops = []; worst = (0, None)
+    tiles = collections.Counter(); pad_tiles = 0; hops = []; worst = (0, None); hop_viol = []
     seen = set()
     for bi, ((di, sk), b) in enumerate(sorted(buses.items(), key=lambda kv: -kv[1]['bits'])):
         r = rows_by_key.get((di, tuple(sorted(sk))))
@@ -89,6 +106,11 @@ def main():
             u = q.pop(0)
             for v in kids_[u]:
                 order.append(v); q.append(v)
+        if router is not None:
+            sl, tail, depth_r, _v = RR.plan_bus(router, P, par, R, W, sinks)
+            for s_ in sl:
+                s_['pt'] = (s_['x'], s_['y'])
+            order = []
         for v in order:
             u = par[v]; k0 = int(dist[u] // R) + 1; k1 = math.ceil(dist[v] / R) - 1
             prev = tail[u]
@@ -102,7 +124,7 @@ def main():
         b_ = sorted((s['depth'], s['x'], s['y'], s['toward'], s['master']) for s in r['stations'])
         if a_ != b_:
             problems.append(f"bus {r['driver']}: stations do not reproduce ({len(a_)} vs {len(b_)})"); continue
-        depth = [max(0, math.ceil(dist[i] / R) - 1) for i in range(1, len(P))]
+        depth = depth_r if router is not None else [max(0, math.ceil(dist[i] / R) - 1) for i in range(1, len(P))]
         dmax = max(depth)
         pads = {}
         if r['cls'] == 'equal_age_pad':
@@ -118,6 +140,7 @@ def main():
                                   params={}, slot=f"d4b_relay:{r['driver']}", owner='H-DIE relay pass / H-NETLIST',
                                   note=f"d4b station depth {s['depth']} toward {s['toward']} tile {t}/{T}; home ({s['x']}, {s['y']}) um"))
                 tiles[f'hbfd_rly_{W}'] += 1
+        padhome = {p_['sink']: (p_['x'], p_['y']) for p_ in r.get('pads', [])}
         for s_, n in pads.items():
             i = sinks.index(s_)
             for k in range(n):
@@ -125,7 +148,7 @@ def main():
                     insts.append(dict(name=f'{tag}_p{i:02d}_{k:02d}_t{t}', master=f'hbfd_rly_{W}_WE',
                                       source='rtl/hbm_accel/die_glue/hbfd_rly_masters.sv', params={},
                                       slot=f"d4b_relay_pad:{r['driver']}->{s_}", owner='H-DIE relay pass / H-NETLIST',
-                                      note=f"equal-age pad stage {k + 1}/{n} at sink {s_} tile {t}/{T}; home ({round(spts[i][0], 1)}, {round(spts[i][1], 1)}) um"))
+                                      note=f"equal-age pad stage {k + 1}/{n} at sink {s_} tile {t}/{T}; home ({padhome[s_][0]}, {padhome[s_][1]}) um"))
                     tiles[f'hbfd_rly_{W}'] += 1; pad_tiles += 1
         names = [x['name'] for x in insts if x['name'].startswith(tag + '_')]
         for nm in names:
@@ -156,11 +179,13 @@ def main():
         pos = {s['id']: s['pt'] for s in sl}
         for s in sl:
             p0 = root if s['parent'] is None else pos[s['parent']]
-            h = RP.md(p0, s['pt']); hops.append(h)
+            h = s['hop_um'] if router is not None else RP.md(p0, s['pt']); hops.append(h)
+            if h > R + 0.5: hop_viol.append(dict(bus=r['driver'], to=f"station {s['id']}", hop_um=round(h, 1), domain=r.get('domain'), cls=r['cls'], bits=r['bits'], depth=r.get('depth')))
             if h > worst[0]: worst = (h, f"{r['driver']} -> station {s['id']}")
         for i, s_ in enumerate(sinks):
             p0 = root if tail[i + 1] is None else pos[tail[i + 1]]
             h = RP.md(p0, spts[i]); hops.append(h)
+            if h > R + 0.5: hop_viol.append(dict(bus=r['driver'], to=f'sink {s_}', hop_um=round(h, 1), domain=r.get('domain'), cls=r['cls'], bits=r['bits'], depth=r.get('depth')))
             if h > worst[0]: worst = (h, f"{r['driver']} -> sink {s_}")
     missing = [k for k in rows_by_key if k not in seen]
     for k in missing:
@@ -172,13 +197,15 @@ def main():
     spec = dict(region='relays_d4b', author='Claude H-NETLIST/H-ELEM 2026-10-16',
                 basis_commit='d4b_relay_stations_450 (H-DIE) on the frozen d4b placement',
                 instances=insts, clocks=clocks, straps=straps, relay_splice=splice,
-                relay_excluded=st['not_relayed'],
+                relay_excluded=dict(st['not_relayed'], **{'reset_forest (H-DIE 1815: bridge resets, as por_*)': reset_rows}),
                 notes='d4b registered relay stations (reach 450 um): each station = 1 edge; p2p and cfg_no_pad sinks see their own depth, equal_age_pad sinks all see the bus max depth (pad stages at near sinks). Branches are wire fan-outs of the branch station.')
     Path(a.out).write_text(json.dumps(spec) + '\n')
     rep = dict(schema='opentallas.hbm.relays_d4b_report.v1', reach_um=R, buses=len(splice),
                tiles=dict(tiles), pad_tiles=pad_tiles, list_station_tiles=st['station_tiles'],
                reconciliation=dict(rly_624=tiles['hbfd_rly_624'], rly_48=tiles['hbfd_rly_48'], pads=pad_tiles,
-                                   match=(dict(tiles) == st['station_tiles'])),
+                                   reset_forest_tiles=dict(reset_tiles),
+                                   match=(dict(tiles) == {k: v - reset_tiles[k] for k, v in st['station_tiles'].items()})),
+               reset_forest_rows=reset_rows, hop_violations=hop_viol,
                hops=len(hops), worst_hop_um=round(worst[0], 1), worst_hop=worst[1], hop_rule_pass=worst[0] <= R + 0.5,
                excluded=st['not_relayed'], compiler=dict(equal_age_max_depth_by_domain=dict(eq), buses=consts),
                problems=problems)
