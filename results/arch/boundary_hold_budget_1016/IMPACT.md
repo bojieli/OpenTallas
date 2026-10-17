@@ -18,7 +18,7 @@
 
 | class | views | meaning |
 |---|---:|---|
-| A_padding_only | 3 | every over-budget pin passes once the surplus padding is gone. A re-route under hold_budget die is expected to pass native |
+| A_padding_only | 3 | ctl2 v7: capture fully path-traced (197.3 → 133.1). dsfd_su_t_pin / hgi_sv_lane2_pf: launch-only fails, cleared by the Liberty estimate (section 5). In all three, every over-budget pin passes once the surplus padding is gone. A re-route under hold_budget die is expected to pass native |
 | B_insertion_spread | 10 | boundary spread > 80 ps or early capture clock (S+R far above the port→D delay). Needs re-tiling or a clock split, not this rule |
 | B_logic_at_pin | 4 | logic cells between pin and register: the pin is not registered. Needs an RTL pin register |
 | B_pinflop_wire | 8 | a buffered wire (the inhold pad/driver at the pin, then 100–150 ps TT of wire) before the flop. This is the same mechanism H-REACH measured as the slew limit. The rule's flop-first pins (inhold=false, flop anchored at the pin) remove it structurally, but this STA cannot prove it: a re-route under hold_budget die must confirm |
