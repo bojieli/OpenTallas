@@ -1,0 +1,203 @@
+{
+  "schema": "opentallas.frozen_helper_recovery.v1",
+  "jobs": [
+    {
+      "failed_job": "hbfd_rly_48_sn_fc-fc2-71c3d597f",
+      "original_source_commit": "71c3d597feca2319560391f9789cc8075ba59652",
+      "kit": "physical/ref_tile/hbfd_rly_48_sn_fc",
+      "failed_status": "NEEDS_HUMAN",
+      "initial_install_refused": true,
+      "original_route_started": false,
+      "original_benches_started": false,
+      "original_gate_manifest_sha256": "289d374b28cc055032264bfe9c5421678b136e577d15b8747dac259acc76abc8",
+      "original_gate_archive_sha256": "9a2873977c9b128faaba2624143f403d726cb1c024d852eb9aab6976ef12a6f2",
+      "original_gate_run": "/srv/opentallas-scratch/claude/ref_gate/hbfd_rly_48_sn_fc-20261016-193845",
+      "original_gate_host": "ot-epyc4",
+      "source_equality": {
+        "scope": "consumed RTL and physical inputs excluding generated gate evidence",
+        "identical_count": 65,
+        "different_paths": []
+      },
+      "old_textbook_blob": "9369dc5cbe74efe049b5b3db1abaa0d833f86269",
+      "new_textbook_blob": "23ff0dbc2eab362f0eb065f184faeaee29f934fc",
+      "recovery": "fresh current-helper CTS gate; preserve original failed job and gate provenance",
+      "cycles_added": 0
+    },
+    {
+      "failed_job": "s81hc_retcol_c2_ref-a4d-efc12af00",
+      "original_source_commit": "efc12af0093ef7ad185dac6a9481ca49c559279a",
+      "kit": "physical/ref_tile/s81hc_retcol_c2_ref",
+      "failed_status": "NEEDS_HUMAN",
+      "initial_install_refused": true,
+      "original_route_started": false,
+      "original_benches_started": false,
+      "original_gate_manifest_sha256": "3b707b693370c3b95f7996f43a2020aa0f40f9ff582e6266a134c7f09106f2e6",
+      "original_gate_archive_sha256": "b1a9b55a8d4aad757a995119dc6cae01af7e2b22a1a4d16baab69aeed59e88ad",
+      "original_gate_run": "/srv/opentallas-scratch/claude/ref_gate/s81hc_retcol_c2_ref-20261016-193332",
+      "original_gate_host": "ot-agidock128",
+      "source_equality": {
+        "scope": "consumed RTL and physical inputs excluding generated gate evidence",
+        "identical_count": 69,
+        "different_paths": []
+      },
+      "old_textbook_blob": "9369dc5cbe74efe049b5b3db1abaa0d833f86269",
+      "new_textbook_blob": "23ff0dbc2eab362f0eb065f184faeaee29f934fc",
+      "recovery": "fresh current-helper CTS gate; preserve original failed job and gate provenance",
+      "cycles_added": 0
+    },
+    {
+      "failed_job": "hbfd_rly_624_ew_fc-fc2-dc4bf2576",
+      "original_source_commit": "dc4bf257618711f327066f778aee20018b867152",
+      "kit": "physical/ref_tile/hbfd_rly_624_ew_fc",
+      "failed_status": "NEEDS_HUMAN",
+      "initial_install_refused": true,
+      "original_route_started": false,
+      "original_benches_started": false,
+      "original_gate_manifest_sha256": "95373a31c6f2311260fd81128f2feff8bcaaafabfa8ee18471af7bf5d759e9f5",
+      "original_gate_archive_sha256": "7ea694d251ac469be700e0d744536ef76f42448d3fd832cd87885dc2b1dcdd54",
+      "original_gate_run": "/srv/opentallas-scratch/claude/ref_gate/hbfd_rly_624_ew_fc-20261016-193845",
+      "original_gate_host": "ot-epyc4",
+      "source_equality": {
+        "scope": "consumed RTL and physical inputs excluding generated gate evidence",
+        "identical_count": 65,
+        "different_paths": []
+      },
+      "old_textbook_blob": "9369dc5cbe74efe049b5b3db1abaa0d833f86269",
+      "new_textbook_blob": "23ff0dbc2eab362f0eb065f184faeaee29f934fc",
+      "recovery": "fresh current-helper CTS gate; preserve original failed job and gate provenance",
+      "cycles_added": 0
+    },
+    {
+      "failed_job": "hbfd_rly_48_ew_fc-fc2-902acf599",
+      "original_source_commit": "902acf59928d98a31ba145d2a2f0ee29b7d8cdb7",
+      "kit": "physical/ref_tile/hbfd_rly_48_ew_fc",
+      "failed_status": "NEEDS_HUMAN",
+      "initial_install_refused": true,
+      "original_route_started": false,
+      "original_benches_started": false,
+      "original_gate_manifest_sha256": "75f42536ee15adac4319bc64cc4b29bd6904f1c5ce2bfade18fff8ea6a9ec2ee",
+      "original_gate_archive_sha256": "7b175ae25ba02b497d7fbb336ee2e2538ebd49c10bc368e2bfbb033f94f8b51d",
+      "original_gate_run": "/srv/opentallas-scratch/claude/ref_gate/hbfd_rly_48_ew_fc-20261016-193845",
+      "original_gate_host": "ot-epyc4",
+      "source_equality": {
+        "scope": "consumed RTL and physical inputs excluding generated gate evidence",
+        "identical_count": 65,
+        "different_paths": []
+      },
+      "old_textbook_blob": "9369dc5cbe74efe049b5b3db1abaa0d833f86269",
+      "new_textbook_blob": "23ff0dbc2eab362f0eb065f184faeaee29f934fc",
+      "recovery": "fresh current-helper CTS gate; preserve original failed job and gate provenance",
+      "cycles_added": 0
+    },
+    {
+      "failed_job": "s81_rly_66_sw-c26l-82d8ea5b4",
+      "original_source_commit": "82d8ea5b426574f7cdddacc53398a66622dc2dfc",
+      "kit": "physical/ref_tile/s81_rly_66_sw",
+      "failed_status": "NEEDS_HUMAN",
+      "initial_install_refused": true,
+      "original_route_started": false,
+      "original_benches_started": false,
+      "original_gate_manifest_sha256": "1eb4ed4945a92cf94734b8f2913162fa6345b9ae578faff01678c5343ff470d5",
+      "original_gate_archive_sha256": "e2fe8690dbf7fc84af4c426d0f6e9bfb291e66a541fa64f8133a7e9c9f88275d",
+      "original_gate_run": "/srv/opentallas-scratch/claude/ref_gate/s81_rly_66_sw-20261016-193927",
+      "original_gate_host": "ot-agidock128",
+      "source_equality": {
+        "scope": "consumed RTL and physical inputs excluding generated gate evidence",
+        "identical_count": 39,
+        "different_paths": []
+      },
+      "old_textbook_blob": "9369dc5cbe74efe049b5b3db1abaa0d833f86269",
+      "new_textbook_blob": "23ff0dbc2eab362f0eb065f184faeaee29f934fc",
+      "recovery": "fresh current-helper CTS gate; preserve original failed job and gate provenance",
+      "cycles_added": 0
+    },
+    {
+      "failed_job": "hbfd_rly_48_ns_fc-fc2-384a6b0a2",
+      "original_source_commit": "384a6b0a220f440ac597ece2a0b658a1c65e65fb",
+      "kit": "physical/ref_tile/hbfd_rly_48_ns_fc",
+      "failed_status": "NEEDS_HUMAN",
+      "initial_install_refused": true,
+      "original_route_started": false,
+      "original_benches_started": false,
+      "original_gate_manifest_sha256": "faca5b72739715596f3207827a4255cafad8462146615a3600e30a7057ccc5ce",
+      "original_gate_archive_sha256": "e389bd9abb9d6601e22ec2cdf495b8276da8936c60691c13a46b6db8802a5a6a",
+      "original_gate_run": "/srv/opentallas-scratch/claude/ref_gate/hbfd_rly_48_ns_fc-20261016-193845",
+      "original_gate_host": "ot-agidock128",
+      "source_equality": {
+        "scope": "consumed RTL and physical inputs excluding generated gate evidence",
+        "identical_count": 65,
+        "different_paths": []
+      },
+      "old_textbook_blob": "9369dc5cbe74efe049b5b3db1abaa0d833f86269",
+      "new_textbook_blob": "23ff0dbc2eab362f0eb065f184faeaee29f934fc",
+      "recovery": "fresh current-helper CTS gate; preserve original failed job and gate provenance",
+      "cycles_added": 0
+    },
+    {
+      "failed_job": "s81_rly_536_en-c26l-82d8ea5b4",
+      "original_source_commit": "82d8ea5b426574f7cdddacc53398a66622dc2dfc",
+      "kit": "physical/ref_tile/s81_rly_536_en",
+      "failed_status": "NEEDS_HUMAN",
+      "initial_install_refused": true,
+      "original_route_started": false,
+      "original_benches_started": false,
+      "original_gate_manifest_sha256": "89abdb7c2ed543ab8073b2c7daee22e60da70fe2774529a3ac29b3c8dd697d68",
+      "original_gate_archive_sha256": "60b2e8e2ea06d8b72d0c3b13b1856962501a9ca2c181834d6927925d7ddf49d4",
+      "original_gate_run": "/srv/opentallas-scratch/claude/ref_gate/s81_rly_536_en-20261016-193927",
+      "original_gate_host": "ot-agidock128",
+      "source_equality": {
+        "scope": "consumed RTL and physical inputs excluding generated gate evidence",
+        "identical_count": 55,
+        "different_paths": []
+      },
+      "old_textbook_blob": "9369dc5cbe74efe049b5b3db1abaa0d833f86269",
+      "new_textbook_blob": "23ff0dbc2eab362f0eb065f184faeaee29f934fc",
+      "recovery": "fresh current-helper CTS gate; preserve original failed job and gate provenance",
+      "cycles_added": 0
+    },
+    {
+      "failed_job": "s81_rly_66_en-c26l-82d8ea5b4",
+      "original_source_commit": "82d8ea5b426574f7cdddacc53398a66622dc2dfc",
+      "kit": "physical/ref_tile/s81_rly_66_en",
+      "failed_status": "NEEDS_HUMAN",
+      "initial_install_refused": true,
+      "original_route_started": false,
+      "original_benches_started": false,
+      "original_gate_manifest_sha256": "cce4d7a8990f6e7122586f4ec92b353ef644773e7316a713b932f3eaba0a3a47",
+      "original_gate_archive_sha256": "e2f210cc1d82bb5c7e30afa2d60f58b70358100c610bb152c623580d83c54ec6",
+      "original_gate_run": "/srv/opentallas-scratch/claude/ref_gate/s81_rly_66_en-20261016-193927",
+      "original_gate_host": "ot-agidock128",
+      "source_equality": {
+        "scope": "consumed RTL and physical inputs excluding generated gate evidence",
+        "identical_count": 39,
+        "different_paths": []
+      },
+      "old_textbook_blob": "9369dc5cbe74efe049b5b3db1abaa0d833f86269",
+      "new_textbook_blob": "23ff0dbc2eab362f0eb065f184faeaee29f934fc",
+      "recovery": "fresh current-helper CTS gate; preserve original failed job and gate provenance",
+      "cycles_added": 0
+    },
+    {
+      "failed_job": "s81hc_retcol_c3_ref-a4d-efc12af00",
+      "original_source_commit": "efc12af0093ef7ad185dac6a9481ca49c559279a",
+      "kit": "physical/ref_tile/s81hc_retcol_c3_ref",
+      "failed_status": "NEEDS_HUMAN",
+      "initial_install_refused": true,
+      "original_route_started": false,
+      "original_benches_started": false,
+      "original_gate_manifest_sha256": "fb9875aed5b7e97378d38ce04da7eba71e8f2ffede628be726da2255df2aa234",
+      "original_gate_archive_sha256": "ca22da56fa90a9c668f865076fa7139bb082fb09be119670c3777a420ec8591a",
+      "original_gate_run": "/srv/opentallas-scratch/claude/ref_gate/s81hc_retcol_c3_ref-20261016-193332",
+      "original_gate_host": "ot-agidock128",
+      "source_equality": {
+        "scope": "consumed RTL and physical inputs excluding generated gate evidence",
+        "identical_count": 69,
+        "different_paths": []
+      },
+      "old_textbook_blob": "9369dc5cbe74efe049b5b3db1abaa0d833f86269",
+      "new_textbook_blob": "23ff0dbc2eab362f0eb065f184faeaee29f934fc",
+      "recovery": "fresh current-helper CTS gate; preserve original failed job and gate provenance",
+      "cycles_added": 0
+    }
+  ]
+}

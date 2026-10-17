@@ -1,0 +1,13 @@
+{
+  "recorded_at": "2026-10-16T20:02:28.420929-07:00",
+  "helper_guard_regression": {
+    "command": "python3 -m unittest discover -s tools/closure_loop -p test_helper_overlay.py -q",
+    "tests": 26,
+    "result": "PASS"
+  },
+  "source_equality_checks": 9,
+  "source_equality_result": "PASS",
+  "retcol_route_hold": "c0/c1 a4d localized South input hold-band GRT congestion; S-ELEM owns structural successor; c2/c3 gate evidence preserved only",
+  "original_jobs_mutated": false,
+  "waiver_added": false
+}
