@@ -1,0 +1,312 @@
+{
+  "tool": "tools/hier_contract/native_pin_audit.py@ee92917d6",
+  "scope": "Exact-view boundary audit; no native RTL integration or throughput claim",
+  "views": [
+    {
+      "cell": "dsfd_stnh_10x1",
+      "view": "physical/ref_tile/s81fill_stnh_10x1/views/dsfd_stnh_10x1",
+      "lib_cell": "dsfd_stnh_10x1",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 52.8,
+      "spread_ps": 0.3,
+      "outputs": 10,
+      "inputs": 10,
+      "launch_ps": 161.5,
+      "launch_pin": "do0[8]",
+      "capture_ps": 115.2,
+      "capture_pin": "di0[7]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "pinned_inputs": {
+        "tt": {
+          "path": "physical/ref_tile/s81fill_stnh_10x1/views/dsfd_stnh_10x1/dsfd_stnh_10x1_tt.lib",
+          "sha256": "ad79f6412b20ee7b8cad9cb7315fb2a2466312ad594a22f5f576c8e3daa4374a"
+        },
+        "insertion": {
+          "path": "physical/ref_tile/s81fill_stnh_10x1/views/dsfd_stnh_10x1/insertion.json",
+          "sha256": "1c3a1229787863323735ad2fa2189b928f8d4979b76894ef72cb4df95fb5e805",
+          "rev": "aacb894e4"
+        }
+      }
+    },
+    {
+      "cell": "dsfd_stnh_293x1",
+      "view": "physical/ref_tile/s81fill_stnh_293x1/views/dsfd_stnh_293x1",
+      "lib_cell": "dsfd_stnh_293x1",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 79.8,
+      "spread_ps": 6.6,
+      "outputs": 293,
+      "inputs": 293,
+      "launch_ps": 174.0,
+      "launch_pin": "do0[108]",
+      "capture_ps": 118.9,
+      "capture_pin": "di0[71]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "pinned_inputs": {
+        "tt": {
+          "path": "physical/ref_tile/s81fill_stnh_293x1/views/dsfd_stnh_293x1/dsfd_stnh_293x1_tt.lib",
+          "sha256": "1bfbea309eed778250c9158a043865cb370064cfaf43814427f54f1779fbd80b"
+        },
+        "insertion": {
+          "path": "physical/ref_tile/s81fill_stnh_293x1/views/dsfd_stnh_293x1/insertion.json",
+          "sha256": "6d2f84e6062ba4468143d53e782cdd66fb6e8460caebc33de142fcf20694ea1c",
+          "rev": "aacb894e4"
+        }
+      }
+    },
+    {
+      "cell": "dsfd_stnh_566x1",
+      "view": "physical/s81_die_views/views/dsfd_stnh_566x1",
+      "lib_cell": "dsfd_stnh_566x1",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 103.5,
+      "spread_ps": 8.0,
+      "outputs": 566,
+      "inputs": 566,
+      "launch_ps": 112.5,
+      "launch_pin": "do0[482]",
+      "capture_ps": 43.8,
+      "capture_pin": "di0[104]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "pinned_inputs": {
+        "tt": {
+          "path": "physical/s81_die_views/views/dsfd_stnh_566x1/dsfd_stnh_566x1_tt.lib",
+          "sha256": "2baad2bb9e26adf914dc72eea95fbffcc9e8d7a7fdf98ee3fbf0f9a3a2dd69e5"
+        },
+        "insertion": {
+          "path": "physical/s81_die_views/views/dsfd_stnh_566x1/insertion.json",
+          "sha256": "02240a74880b366de53d9f6a9e5abffa885f63702b56af0a2ee66e5f4f419cc7",
+          "rev": "aacb894e4"
+        }
+      }
+    },
+    {
+      "cell": "dsfd_stnh_70x1",
+      "view": "physical/ref_tile/s81fill_stnh_70x1/views/dsfd_stnh_70x1",
+      "lib_cell": "dsfd_stnh_70x1",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 64.2,
+      "spread_ps": 1.5,
+      "outputs": 70,
+      "inputs": 70,
+      "launch_ps": 169.9,
+      "launch_pin": "do0[52]",
+      "capture_ps": 116.7,
+      "capture_pin": "di0[7]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "pinned_inputs": {
+        "tt": {
+          "path": "physical/ref_tile/s81fill_stnh_70x1/views/dsfd_stnh_70x1/dsfd_stnh_70x1_tt.lib",
+          "sha256": "80b04fcfc596b3fc968a45a88ec09a5ba6b64d942312b10a451c9dc688058d1d"
+        },
+        "insertion": {
+          "path": "physical/ref_tile/s81fill_stnh_70x1/views/dsfd_stnh_70x1/insertion.json",
+          "sha256": "4699404e6351e0bd0e75bb3f2c71ff402d26bbfef68ddb3f9ef68baa10f8f333",
+          "rev": "aacb894e4"
+        }
+      }
+    },
+    {
+      "cell": "dsfd_stnv_10x1",
+      "view": "physical/ref_tile/s81fill_stnv_10x1/views/dsfd_stnv_10x1",
+      "lib_cell": "dsfd_stnv_10x1",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 52.9,
+      "spread_ps": 0.7,
+      "outputs": 10,
+      "inputs": 10,
+      "launch_ps": 163.0,
+      "launch_pin": "do0[4]",
+      "capture_ps": 112.6,
+      "capture_pin": "di0[3]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "pinned_inputs": {
+        "tt": {
+          "path": "physical/ref_tile/s81fill_stnv_10x1/views/dsfd_stnv_10x1/dsfd_stnv_10x1_tt.lib",
+          "sha256": "1e13881b022f71bf87f6ab4a9d33ba6c649d2983dac132184cc72ed797e79de1"
+        },
+        "insertion": {
+          "path": "physical/ref_tile/s81fill_stnv_10x1/views/dsfd_stnv_10x1/insertion.json",
+          "sha256": "076fa61d77572404b43da84ec2ee3a351ef5128f795d777c55b1f9926424a4fc",
+          "rev": "aacb894e4"
+        }
+      }
+    },
+    {
+      "cell": "dsfd_stnv_293x1",
+      "view": "physical/ref_tile/s81fill_stnv_293x1/views/dsfd_stnv_293x1",
+      "lib_cell": "dsfd_stnv_293x1",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 93.4,
+      "spread_ps": 8.5,
+      "outputs": 293,
+      "inputs": 293,
+      "launch_ps": 204.4,
+      "launch_pin": "do0[159]",
+      "capture_ps": 123.4,
+      "capture_pin": "di0[131]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "pinned_inputs": {
+        "tt": {
+          "path": "physical/ref_tile/s81fill_stnv_293x1/views/dsfd_stnv_293x1/dsfd_stnv_293x1_tt.lib",
+          "sha256": "98ad708eac987fd7e82535e5efa7b052a04904391a53f4cda7cec3d7f51a9915"
+        },
+        "insertion": {
+          "path": "physical/ref_tile/s81fill_stnv_293x1/views/dsfd_stnv_293x1/insertion.json",
+          "sha256": "c2d325a14a2f52aeae5e624a31cb82be3097461e056bcb7107b72d9fec1293c0",
+          "rev": "aacb894e4"
+        }
+      }
+    },
+    {
+      "cell": "dsfd_stnv_70x1",
+      "view": "physical/ref_tile/s81fill_stnv_70x1/views/dsfd_stnv_70x1",
+      "lib_cell": "dsfd_stnv_70x1",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 66.4,
+      "spread_ps": 1.9,
+      "outputs": 70,
+      "inputs": 70,
+      "launch_ps": 175.3,
+      "launch_pin": "do0[48]",
+      "capture_ps": 120.3,
+      "capture_pin": "di0[48]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "pinned_inputs": {
+        "tt": {
+          "path": "physical/ref_tile/s81fill_stnv_70x1/views/dsfd_stnv_70x1/dsfd_stnv_70x1_tt.lib",
+          "sha256": "3a83d4531a5871e93f6bcf5654c1a2b50aae715d6834868db3c8989cc02a9e31"
+        },
+        "insertion": {
+          "path": "physical/ref_tile/s81fill_stnv_70x1/views/dsfd_stnv_70x1/insertion.json",
+          "sha256": "d2966a61195029cdda8bb151c600f152c95e81a5b71eced96474caaa197ca394",
+          "rev": "aacb894e4"
+        }
+      }
+    },
+    {
+      "cell": "dsfd_stnv_86x1",
+      "view": "physical/ref_tile/s81fill_stnv_86x1/views/dsfd_stnv_86x1",
+      "lib_cell": "dsfd_stnv_86x1",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 67.5,
+      "spread_ps": 1.8,
+      "outputs": 86,
+      "inputs": 86,
+      "launch_ps": 174.5,
+      "launch_pin": "do0[68]",
+      "capture_ps": 116.5,
+      "capture_pin": "di0[63]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "pinned_inputs": {
+        "tt": {
+          "path": "physical/ref_tile/s81fill_stnv_86x1/views/dsfd_stnv_86x1/dsfd_stnv_86x1_tt.lib",
+          "sha256": "474229864770c66e0641c44958465f6ece18648274a8422f192fda07cb9796d7"
+        },
+        "insertion": {
+          "path": "physical/ref_tile/s81fill_stnv_86x1/views/dsfd_stnv_86x1/insertion.json",
+          "sha256": "a4a59e093c35f6cfb42e6146b2476a6d178248a09925cd17597cd1e403580dde",
+          "rev": "aacb894e4"
+        }
+      }
+    },
+    {
+      "cell": "dsfd_stnv_566x1",
+      "view": "physical/ref_tile/s81fill_stnv_566x1/views/dsfd_stnv_566x1",
+      "lib_cell": "dsfd_stnv_566x1",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 86.0,
+      "spread_ps": 6.7,
+      "outputs": 566,
+      "inputs": 566,
+      "launch_ps": 102.5,
+      "launch_pin": "do0[444]",
+      "capture_ps": 123.8,
+      "capture_pin": "di0[393]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "pinned_inputs": {
+        "tt": {
+          "path": "physical/ref_tile/s81fill_stnv_566x1/views/dsfd_stnv_566x1/dsfd_stnv_566x1_tt.lib",
+          "sha256": "c7a4edfa6db045a6d26bb5a249215dd1340726bcc87603e2b12c2915a89b44f5"
+        },
+        "insertion": {
+          "path": "physical/ref_tile/s81fill_stnv_566x1/views/dsfd_stnv_566x1/insertion.json",
+          "sha256": "9a834cefd127c80e4eefb3f116e80bd9845749edd0caa10c2167752081712f03",
+          "rev": "aacb894e4"
+        }
+      }
+    }
+  ]
+}

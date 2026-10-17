@@ -84,6 +84,33 @@ def lef_pins(text):
     return macro, size, {k: v for k, v in out.items() if v}
 
 
+def _lib_number(text, key):
+    m = re.search(r'\b' + key + r'\s*:\s*([-+0-9.eE]+)', text)
+    return finite_float(m.group(1)) if m else None
+
+
+def electrical_screen(lib_text, measured_slew):
+    """Reject a die-safe inference unless actual electrical constraints and receiver evidence exist.
+
+    This ETM-only vehicle has no mapped receiver-D proof or driver pin load measurement.
+    Even explicit pin limits cannot make this vehicle a native electrical qualification.
+    """
+    pins = lib_pins(lib_text)
+    transitions = {p: v['max_transition'] for p, v in pins.items() if v['max_transition'] is not None}
+    caps = {p: v['max_capacitance'] for p, v in pins.items() if v['max_capacitance'] is not None}
+    violations = []
+    for pin, slew in measured_slew:
+        if pin in transitions and slew is not None and slew > transitions[pin]:
+            violations.append(dict(pin=pin, slew_ps=slew, limit_ps=transitions[pin]))
+    dependent = bool(re.search(r'variable_[123]\s*:\s*(?:related_pin_transition|constrained_pin_transition|input_net_transition)', lib_text))
+    return dict(status='FAIL' if violations else 'UNPROVEN', usable_as_die_reach_bound=False,
+                explicit_max_transition_pins=len(transitions), explicit_max_capacitance_pins=len(caps),
+                slew_dependent_tables_present=dependent,
+                transition_violations=violations,
+                max_capacitance_gate='UNPROVEN: driver pin load not measured by this ETM-only vehicle' if caps else 'UNPROVEN: ETM has no explicit max_capacitance',
+                reason='Mapped receiver cell/final-D load and slew proof is required; scalar ETM setup cannot qualify electrical reach')
+
+
 def lib_pins(text):
     """{pin: dict(dir, clock, rel{}, types{})} from a Liberty ETM"""
     pins = {}
@@ -92,7 +119,9 @@ def lib_pins(text):
         d = re.search(r'direction\s*:\s*(\w+)', body)
         pins[m.group(1)] = dict(dir=d.group(1) if d else '?', clock='clock : true' in body,
                                 rel=set(re.findall(r'related_pin\s*:\s*"([^"]+)"', body)),
-                                types=set(re.findall(r'timing_type\s*:\s*(\w+)', body)))
+                                types=set(re.findall(r'timing_type\s*:\s*(\w+)', body)),
+                                max_transition=_lib_number(body, 'max_transition'),
+                                max_capacitance=_lib_number(body, 'max_capacitance'))
     return pins
 
 
@@ -531,7 +560,7 @@ def cmd_collect(a):
                     v = slk[c].get(pin, (None, None))
                     rows[s['cls']][c].append((s['d'], s['L'], v[0], pin, s['bus']))
                     if c == 'tt833':
-                        slews[s['cls']].append((s['d'], s['L'], v[1]))
+                        slews[s['cls']].append((s['d'], s['L'], v[1], pin.split('/', 1)[1]))
             for m, cr in rows.items():
                 r = res.setdefault(m, {}).setdefault(plan['layers'], {})
                 r['stream'] = class_reach(cr['tt833'], 'tt833')
@@ -540,8 +569,10 @@ def cmd_collect(a):
                                            if k in ('reach_um', 'd_pass_um')}
                 r['hold_ff'] = hold_min(cr['ff_hold'])
                 rr = r['stream']['reach_um']
-                sl = [x for d, L, x in slews[m] if x is not None and L <= rr + 1e-6]
+                sl = [x for d, L, x, pin in slews[m] if x is not None and L <= rr + 1e-6]
                 r['max_sink_slew_tt_ps_within_reach'] = round(max(sl), 1) if sl else None
+                r['electrical_validity'] = electrical_screen((stage / 'views' / m / f'{m}_tt.lib').read_text(),
+                    [(pin, x) for d, L, x, pin in slews[m] if L <= rr + 1e-6])
                 r['batch'] = str(bd)
                 r['grt_overflow'] = ovf
     out = dict(schema='opentallas.s81.relay_reach_measured.v1', date=a.date,
@@ -576,7 +607,8 @@ def cmd_collect(a):
             row['measured'] = res.get(m, {})
         else:
             g = res[m][a.gate_layers]
-            row.update(status='MEASURED' if g['grt_overflow'] == [0, 0, 0] else 'TIMING_MEASURED_ROUTE_UNQUALIFIED', measured=res[m])
+            row.update(status='MEASURED' if g['grt_overflow'] == [0, 0, 0] else 'TIMING_MEASURED_ROUTE_UNQUALIFIED', measured=res[m],
+                       electrical_validity=g['electrical_validity'], usable_as_die_reach_bound=False)
             row['reach_um'] = g['stream']['reach_um']
             row['reach_serial_um'] = g['serial']['reach_um']
             row['planning_um'] = round(0.9 * g['stream']['reach_um'], 1)

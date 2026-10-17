@@ -27,3 +27,19 @@ def test_setup_reach_stops_at_first_failing_short_point():
 def test_hold_does_not_claim_untested_short_wire_is_safe():
     rows = [(100, 100.1, 4, 'B/i[0]', 'o->i'), (200, 200, 5, 'B/i[0]', 'o->i')]
     assert hold_min(rows)['hold_min_um'] == 100.1
+
+
+def test_electrical_limits_fail_without_receiver_proof():
+    from relay_reach_bench import electrical_screen
+    lib = 'pin("i[0]") {\n direction : input;\n max_transition : 50;\n max_capacitance : 2;\n    }'
+    r = electrical_screen(lib, [('i[0]', 80)])
+    assert r['status'] == 'FAIL'
+    assert r['transition_violations'][0]['limit_ps'] == 50
+    assert not r['usable_as_die_reach_bound']
+
+
+def test_scalar_etm_without_limits_cannot_prove_die_reach():
+    from relay_reach_bench import electrical_screen
+    r = electrical_screen('pin("i") {\n direction : input;\n    }', [('i', 1)])
+    assert r['status'] == 'UNPROVEN'
+    assert not r['usable_as_die_reach_bound']

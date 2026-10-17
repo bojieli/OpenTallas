@@ -3613,6 +3613,16 @@
       "worst_hold_ps": 94.81
      },
      "max_sink_slew_tt_ps_within_reach": 1093.5,
+     "electrical_validity": {
+      "status": "UNPROVEN",
+      "usable_as_die_reach_bound": false,
+      "explicit_max_transition_pins": 0,
+      "explicit_max_capacitance_pins": 0,
+      "slew_dependent_tables_present": false,
+      "transition_violations": [],
+      "max_capacitance_gate": "UNPROVEN: ETM has no explicit max_capacitance",
+      "reason": "Mapped receiver cell/final-D load and slew proof is required; scalar ETM setup cannot qualify electrical reach"
+     },
      "batch": "/home/ubuntu/artifacts/sdie-reach-1016/eight_station_die_u140_105_sta_corrected/b00",
      "grt_overflow": [
       0,
@@ -3621,6 +3631,17 @@
      ]
     }
    },
+   "electrical_validity": {
+    "status": "UNPROVEN",
+    "usable_as_die_reach_bound": false,
+    "explicit_max_transition_pins": 0,
+    "explicit_max_capacitance_pins": 0,
+    "slew_dependent_tables_present": false,
+    "transition_violations": [],
+    "max_capacitance_gate": "UNPROVEN: ETM has no explicit max_capacitance",
+    "reason": "Mapped receiver cell/final-D load and slew proof is required; scalar ETM setup cannot qualify electrical reach"
+   },
+   "usable_as_die_reach_bound": false,
    "reach_um": 500.1,
    "reach_serial_um": 500.1,
    "planning_um": 450.1,
@@ -3693,6 +3714,16 @@
       "worst_hold_ps": 106.71
      },
      "max_sink_slew_tt_ps_within_reach": 464.2,
+     "electrical_validity": {
+      "status": "UNPROVEN",
+      "usable_as_die_reach_bound": false,
+      "explicit_max_transition_pins": 0,
+      "explicit_max_capacitance_pins": 0,
+      "slew_dependent_tables_present": false,
+      "transition_violations": [],
+      "max_capacitance_gate": "UNPROVEN: ETM has no explicit max_capacitance",
+      "reason": "Mapped receiver cell/final-D load and slew proof is required; scalar ETM setup cannot qualify electrical reach"
+     },
      "batch": "/home/ubuntu/artifacts/sdie-reach-1016/eight_station_die_u140_105_sta_corrected/b00",
      "grt_overflow": [
       0,
@@ -3701,6 +3732,17 @@
      ]
     }
    },
+   "electrical_validity": {
+    "status": "UNPROVEN",
+    "usable_as_die_reach_bound": false,
+    "explicit_max_transition_pins": 0,
+    "explicit_max_capacitance_pins": 0,
+    "slew_dependent_tables_present": false,
+    "transition_violations": [],
+    "max_capacitance_gate": "UNPROVEN: ETM has no explicit max_capacitance",
+    "reason": "Mapped receiver cell/final-D load and slew proof is required; scalar ETM setup cannot qualify electrical reach"
+   },
+   "usable_as_die_reach_bound": false,
    "reach_um": 499.9,
    "reach_serial_um": 499.9,
    "planning_um": 449.9,
@@ -3803,6 +3845,16 @@
       "worst_hold_ps": 3.47
      },
      "max_sink_slew_tt_ps_within_reach": 1147.0,
+     "electrical_validity": {
+      "status": "UNPROVEN",
+      "usable_as_die_reach_bound": false,
+      "explicit_max_transition_pins": 0,
+      "explicit_max_capacitance_pins": 0,
+      "slew_dependent_tables_present": false,
+      "transition_violations": [],
+      "max_capacitance_gate": "UNPROVEN: ETM has no explicit max_capacitance",
+      "reason": "Mapped receiver cell/final-D load and slew proof is required; scalar ETM setup cannot qualify electrical reach"
+     },
      "batch": "/home/ubuntu/artifacts/sdie-reach-1016/eight_station_die_u140_105_sta_corrected/b01",
      "grt_overflow": [
       0,
@@ -3811,6 +3863,17 @@
      ]
     }
    },
+   "electrical_validity": {
+    "status": "UNPROVEN",
+    "usable_as_die_reach_bound": false,
+    "explicit_max_transition_pins": 0,
+    "explicit_max_capacitance_pins": 0,
+    "slew_dependent_tables_present": false,
+    "transition_violations": [],
+    "max_capacitance_gate": "UNPROVEN: ETM has no explicit max_capacitance",
+    "reason": "Mapped receiver cell/final-D load and slew proof is required; scalar ETM setup cannot qualify electrical reach"
+   },
+   "usable_as_die_reach_bound": false,
    "reach_um": 500.0,
    "reach_serial_um": 700.1,
    "planning_um": 450.0,
@@ -3883,6 +3946,16 @@
       "worst_hold_ps": 96.87
      },
      "max_sink_slew_tt_ps_within_reach": 1102.0,
+     "electrical_validity": {
+      "status": "UNPROVEN",
+      "usable_as_die_reach_bound": false,
+      "explicit_max_transition_pins": 0,
+      "explicit_max_capacitance_pins": 0,
+      "slew_dependent_tables_present": false,
+      "transition_violations": [],
+      "max_capacitance_gate": "UNPROVEN: ETM has no explicit max_capacitance",
+      "reason": "Mapped receiver cell/final-D load and slew proof is required; scalar ETM setup cannot qualify electrical reach"
+     },
      "batch": "/home/ubuntu/artifacts/sdie-reach-1016/eight_station_die_u140_105_sta_corrected/b02",
      "grt_overflow": [
       0,
@@ -3891,6 +3964,17 @@
      ]
     }
    },
+   "electrical_validity": {
+    "status": "UNPROVEN",
+    "usable_as_die_reach_bound": false,
+    "explicit_max_transition_pins": 0,
+    "explicit_max_capacitance_pins": 0,
+    "slew_dependent_tables_present": false,
+    "transition_violations": [],
+    "max_capacitance_gate": "UNPROVEN: ETM has no explicit max_capacitance",
+    "reason": "Mapped receiver cell/final-D load and slew proof is required; scalar ETM setup cannot qualify electrical reach"
+   },
+   "usable_as_die_reach_bound": false,
    "reach_um": 500.1,
    "reach_serial_um": 500.1,
    "planning_um": 450.1,
@@ -4023,6 +4107,16 @@
       "worst_hold_ps": 92.41
      },
      "max_sink_slew_tt_ps_within_reach": 1048.2,
+     "electrical_validity": {
+      "status": "UNPROVEN",
+      "usable_as_die_reach_bound": false,
+      "explicit_max_transition_pins": 0,
+      "explicit_max_capacitance_pins": 0,
+      "slew_dependent_tables_present": false,
+      "transition_violations": [],
+      "max_capacitance_gate": "UNPROVEN: ETM has no explicit max_capacitance",
+      "reason": "Mapped receiver cell/final-D load and slew proof is required; scalar ETM setup cannot qualify electrical reach"
+     },
      "batch": "/home/ubuntu/artifacts/sdie-reach-1016/eight_station_die_u140_105_sta_corrected/b02",
      "grt_overflow": [
       0,
@@ -4031,6 +4125,17 @@
      ]
     }
    },
+   "electrical_validity": {
+    "status": "UNPROVEN",
+    "usable_as_die_reach_bound": false,
+    "explicit_max_transition_pins": 0,
+    "explicit_max_capacitance_pins": 0,
+    "slew_dependent_tables_present": false,
+    "transition_violations": [],
+    "max_capacitance_gate": "UNPROVEN: ETM has no explicit max_capacitance",
+    "reason": "Mapped receiver cell/final-D load and slew proof is required; scalar ETM setup cannot qualify electrical reach"
+   },
+   "usable_as_die_reach_bound": false,
    "reach_um": 500.1,
    "reach_serial_um": 500.1,
    "planning_um": 450.1,
@@ -4133,6 +4238,16 @@
       "worst_hold_ps": 107.59
      },
      "max_sink_slew_tt_ps_within_reach": 450.0,
+     "electrical_validity": {
+      "status": "UNPROVEN",
+      "usable_as_die_reach_bound": false,
+      "explicit_max_transition_pins": 0,
+      "explicit_max_capacitance_pins": 0,
+      "slew_dependent_tables_present": false,
+      "transition_violations": [],
+      "max_capacitance_gate": "UNPROVEN: ETM has no explicit max_capacitance",
+      "reason": "Mapped receiver cell/final-D load and slew proof is required; scalar ETM setup cannot qualify electrical reach"
+     },
      "batch": "/home/ubuntu/artifacts/sdie-reach-1016/eight_station_die_u140_105_sta_corrected/b02",
      "grt_overflow": [
       0,
@@ -4141,6 +4256,17 @@
      ]
     }
    },
+   "electrical_validity": {
+    "status": "UNPROVEN",
+    "usable_as_die_reach_bound": false,
+    "explicit_max_transition_pins": 0,
+    "explicit_max_capacitance_pins": 0,
+    "slew_dependent_tables_present": false,
+    "transition_violations": [],
+    "max_capacitance_gate": "UNPROVEN: ETM has no explicit max_capacitance",
+    "reason": "Mapped receiver cell/final-D load and slew proof is required; scalar ETM setup cannot qualify electrical reach"
+   },
+   "usable_as_die_reach_bound": false,
    "reach_um": 300.0,
    "reach_serial_um": 500.1,
    "planning_um": 270.0,
@@ -4273,6 +4399,16 @@
       "worst_hold_ps": 93.36
      },
      "max_sink_slew_tt_ps_within_reach": 1065.4,
+     "electrical_validity": {
+      "status": "UNPROVEN",
+      "usable_as_die_reach_bound": false,
+      "explicit_max_transition_pins": 0,
+      "explicit_max_capacitance_pins": 0,
+      "slew_dependent_tables_present": false,
+      "transition_violations": [],
+      "max_capacitance_gate": "UNPROVEN: ETM has no explicit max_capacitance",
+      "reason": "Mapped receiver cell/final-D load and slew proof is required; scalar ETM setup cannot qualify electrical reach"
+     },
      "batch": "/home/ubuntu/artifacts/sdie-reach-1016/eight_station_die_u140_105_sta_corrected/b02",
      "grt_overflow": [
       0,
@@ -4281,6 +4417,17 @@
      ]
     }
    },
+   "electrical_validity": {
+    "status": "UNPROVEN",
+    "usable_as_die_reach_bound": false,
+    "explicit_max_transition_pins": 0,
+    "explicit_max_capacitance_pins": 0,
+    "slew_dependent_tables_present": false,
+    "transition_violations": [],
+    "max_capacitance_gate": "UNPROVEN: ETM has no explicit max_capacitance",
+    "reason": "Mapped receiver cell/final-D load and slew proof is required; scalar ETM setup cannot qualify electrical reach"
+   },
+   "usable_as_die_reach_bound": false,
    "reach_um": 500.1,
    "reach_serial_um": 500.1,
    "planning_um": 450.1,
@@ -4353,6 +4500,16 @@
       "worst_hold_ps": 94.2
      },
      "max_sink_slew_tt_ps_within_reach": 1059.1,
+     "electrical_validity": {
+      "status": "UNPROVEN",
+      "usable_as_die_reach_bound": false,
+      "explicit_max_transition_pins": 0,
+      "explicit_max_capacitance_pins": 0,
+      "slew_dependent_tables_present": false,
+      "transition_violations": [],
+      "max_capacitance_gate": "UNPROVEN: ETM has no explicit max_capacitance",
+      "reason": "Mapped receiver cell/final-D load and slew proof is required; scalar ETM setup cannot qualify electrical reach"
+     },
      "batch": "/home/ubuntu/artifacts/sdie-reach-1016/eight_station_die_u140_105_sta_corrected/b03",
      "grt_overflow": [
       0,
@@ -4361,6 +4518,17 @@
      ]
     }
    },
+   "electrical_validity": {
+    "status": "UNPROVEN",
+    "usable_as_die_reach_bound": false,
+    "explicit_max_transition_pins": 0,
+    "explicit_max_capacitance_pins": 0,
+    "slew_dependent_tables_present": false,
+    "transition_violations": [],
+    "max_capacitance_gate": "UNPROVEN: ETM has no explicit max_capacitance",
+    "reason": "Mapped receiver cell/final-D load and slew proof is required; scalar ETM setup cannot qualify electrical reach"
+   },
+   "usable_as_die_reach_bound": false,
    "reach_um": 500.1,
    "reach_serial_um": 500.1,
    "planning_um": 450.1,
@@ -4606,7 +4774,5 @@
   ],
   "min_reach_um": 300.0,
   "min_reach_used_um": 300.0
- },
- "scope": "Source-bound same-class ETM/GRT component screen only; no native binding, mixed-class timing, real clock delivery, detailed-route or full die qualification",
- "reach_interpretation": "Largest tested passing lower bound on sampled grid; hold_min_um is shortest tested all-pass geometric length, not a proof for untested shorter lengths"
+ }
 }

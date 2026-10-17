@@ -21,6 +21,8 @@
   },
   "dut": "Two exact LEF+Liberty instances per sampled class/distance; data bus nets only; no internal RTL simulated; clock ideal at boundary; same-class insertion reference cancels",
   "rc": "Unbuffered M4-M9 global route and estimate_parasitics, all four batch overflows [0,0,0], exact extracted RC reused after empty SPEF PORTS parse correction",
-  "tests": "8 focused pytest checks PASS",
-  "remaining": "123 other class measurements missing; no538 station in c26l binding; stnv566 fine sweep LIVE AGI unit525801, local3310552. Native audits, actual regional/forwarded clocks, mixed joins, reset, die GRT/STA still owed"
+  "tests": "10 focused pytest checks PASS",
+  "remaining": "122 classes not measured; no538 station bound; predecessor M4-M5 t0 job preserved. Native electrical archive replay is next; actual die clocks/reset/mixed joins/GRT/STA remain owed",
+  "boundary_native_audit": "Exact TT+insertion file hash pinned audit PASS on nine stations; not full-chip/native hardware integration",
+  "electrical_validity": "UNPROVEN for every measured class: no explicit max_transition/max_capacitance or input slew dependent ETM tables. usable_as_die_reach_bound=false; actual mapped receiver/final-D proof and driver load constraints required"
 }
