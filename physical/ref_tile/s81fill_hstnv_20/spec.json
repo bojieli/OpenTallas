@@ -85,6 +85,11 @@
   "reason": "OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this station IS one flip-flop per bit between its input and output pins (di -> q -> dq, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price"
  },
  "outhold": false,
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": "S-DIE c26l GEN (E4 s81-die-iter/c26l real_gen.log OT_VIEW_MISFIT dsfd_hstnv_20): instances placed MX, outside the bound view's orientation contract R0/MY; codex0827 orientation table MX/R180 FAIL row_parity only (17.256 = 63.9 rows). New outline 17.256 x 16.74 = 62 rows (even) inside the 17.256 x 17.256 generator slot; S-ELEM request 2026-10-16 (c27 inter-cluster relays)",
+  "why": "MX-qualified re-kit of a misfit view"
+ },
  "macros": [],
  "children": [],
  "inter": [],
