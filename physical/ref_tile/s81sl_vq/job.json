@@ -1,5 +1,5 @@
 {
- "name": "s81sl_vq-s81sl_vq-COMMIT",
+ "name": "s81sl_vq-s81sl_vq-2e60a037d",
  "block": "ot_s81sl_vq",
  "ref_tile": true,
  "owner": "Claude:S81-SLICE",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/s81slice-1017",
-  "commit": "COMMIT",
+  "commit": "2e60a037d",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/slice",
    "tools/s81_slice",
@@ -110,7 +110,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81sl_vq/s81sl_vq-s81sl_vq-COMMIT"
+   "to": "results/rtl/ref_tile/s81sl_vq/s81sl_vq-s81sl_vq-2e60a037d"
   }
  ],
  "cycles_added": 0,
