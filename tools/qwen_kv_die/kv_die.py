@@ -317,6 +317,59 @@ PVW = (PV_ARR[0], round(PV_ARR[1] + PV_GAP + PV_STRIP, 6))   # 1,144.8 x 9,547.2
 # edges after its header (padded here).  Frame size / face pins / leaf homes: the generator's plan.json.
 PV_T = __import__('os').environ.get('OT_KV_PV_T', '0') == '1'
 PVFORK = (108.0, 58.32)          # qkd_pvfork frame: 4 x qkd_rlys_296 in a row (+ 4.32-um halos)
+PVFORK_GAP = float(__import__('os').environ.get('OT_KV_PVFORK_GAP', '21.6'))   # fork <-> pair face
+# KVPLAN2 2215 (kvs13l plan: 32 chunk chains a side channel, each padded to header + DELTA_g by die relays at ~200-um pitch,
+# filled the side channels: no first stage at the forks): the eight 128-b chunks of a port travel as ONE trunk down the pair
+# face and TAP off at their GS group -- qkd_pvtap<G> (wires-only: one register stage of closed qkd_rlys_296 replicas) beside
+# group G's face pins takes chunks 0..G, hands chunk G to the face (tc, no die relay) and forwards chunks 0..G-1 (to).  The
+# DELTA steps (6 edges a group, 1,468.8 um) are the trunk's own stages (5 relays + the tap: 245-um hops); the fork sits
+# level with its header pin (pvh 0 stages).  Face pins of the four ports of a group / the header pins: PVT_PIN_DY apart
+# (one tap / fork height 58.32 + the 21.6-um clearance).
+PVT_PIN_DY = 80.0
+PVT_HDR_Y0 = 160.0
+PVT_XLANE = __import__('os').environ.get('OT_KV_PVT_XLANE', '1') == '1'   # S <-> N express words on outer side-channel lanes
+PVT_OFFS = int(__import__('os').environ.get('OT_KV_PVT_OFFS', '8'))   # PV trunk / chunk stage spot search radius (grid cells)
+PVT_A_LANE0 = int(__import__('os').environ.get('OT_KV_PVT_A_LANE0', '2'))   # trunk A's first lane
+PVT_ORD = float(__import__('os').environ.get('OT_KV_PVT_ORD', '1'))   # +1: port 0's face pins / taps highest in a group
+PVT_TAP_DY = float(__import__('os').environ.get('OT_KV_PVT_TAP_DY', '0'))   # taps level with their face pins (h4 plan); > 0 moves them away from the strip
+PVT_LANE = float(__import__('os').environ.get('OT_KV_PVT_LANE', '43.2'))   # a multiple of the 21.6 routing grid: lanes on cell centres   # trunk lane pitch beside the tap column
+
+
+# two 512-b trunks a port (each relay stage ONE replica: a W-in / E-out stage on a vertical run gives up its width per hop,
+# and a 6-edge group step of 1,468.8 um leaves 245 um + width of the 340-um wide-word reach): trunk B = chunks 4..7 (taps at
+# groups 7, 6, 5; chunk 4 from tap 5's forward word), trunk A = chunks 0..3 (taps at 3, 2, 1; chunk 0 from tap 1's)
+PVT_TAPS = {7: 'b', 6: 'b', 5: 'b', 3: 'a', 2: 'a', 1: 'a'}
+PVT_LO = dict(a=0, b=4)
+
+
+def pvtap_n(g):
+    """chunks a tap at group g receives (its own + the lower ones of its trunk)"""
+    return g - PVT_LO[PVT_TAPS[g]] + 1
+
+
+def pvtap_frame(g):
+    n_ = -(-128 * pvtap_n(g) // 296)          # qkd_rlys_296 replicas
+    return (round(4.32 + 25.92 * n_, 4), PVFORK[1])
+
+
+def pvt_exact(bid, stages):
+    """KVPLAN2 2215: die relay stages a chunk's face hop (tap.tc / tap.to -> the pair's face pin) must have so chunk g
+    lands header + DELTA_g edges after the header (each tap one edge).  The trunk runs (fork -> top tap, tap -> tap) aim one
+    stage under their share (pvt_soft: a crowded run that made one stage more than owed failed exactness); whatever the
+    trunk to chunk g's tap is short of header + DELTA_g is made up on the chunk's own face hop."""
+    D_ = {int(k_): v_ for k_, v_ in pvt_plan()['chunk_delta_vs_header'].items()}
+    st_, k_, g_ = bid.split('_')[1], bid.split('_')[2], int(bid.split('_')[3])
+    sk_ = f'{st_}_{k_}'
+    if bid.startswith(('pvta_', 'pvtb_')):
+        return None                  # trunk runs: soft targets (pvt_soft), never an exact count
+    tr_, top_ = ('a', 3) if g_ <= 3 else ('b', 7)
+    run_ = sum(stages[f'pvt{tr_}_{sk_}_{j_}'] + 1 for j_ in range(top_, max(g_, top_ - 2) - 1, -1))
+    need_ = stages[f'pvh_{sk_}'] + D_[g_] - run_
+    if need_ < 0:
+        raise ValueError(f'kv die PV_T: chunk {sk_}_{g_} trunk {run_} edges > header + DELTA_g {stages[f"pvh_{sk_}"] + D_[g_]}')
+    return need_
+
+
 PV_T_PLAN = 'results/arch/qwen_kv_die/pv_trunk_t/plan.json'
 _PVT = {}
 
@@ -594,7 +647,10 @@ if V144_R6:
         vo=['out_valid', 'out_t', 'out_epoch', 'out_v_lo', 'out_v_hi'], f=['fault']))
     if PV_T:      # KVPLAN 1815: the V word fork (wires-only frame of 4 relay standards, expanded by kv_expand)
         SPLIT_BINDINGS['qkd_pvfork'] = dict(module='qkd_pvfork', file='rtl/qwen_sys/split_20261014/qkd_pvfork.sv',
-            ports=dict(ck=['ck'], vi=['vi'], vh=['vh'], **{f'vc{g}': [f'vc{g}'] for g in range(8)}), classed={})
+            ports=dict(ck=['ck'], vi=['vi'], vh=['vh'], vta=['vta'], vtb=['vtb']), classed={})
+        for g_ in (2, 3, 4):         # KVPLAN2 2215: the chunk trunk taps (qkd_pvtap.sv; g_ = chunks in)
+            SPLIT_BINDINGS[f'qkd_pvtap{g_}'] = dict(module=f'qkd_pvtap{g_}', file='rtl/qwen_sys/split_20261014/qkd_pvtap.sv',
+                ports=dict(ck=['ck'], ti=['ti'], tc=['tc'], to=['to']), classed={})
 SPLIT_BINDINGS['qkd_hss'] = dict(module='qkh_head_sstage', file='rtl/qwen_sys/split_20261014/qkh_head_stages.sv',
     ports=dict(s_a=['s_a'], s_b=['s_b'], ck=['ck']), classed={})
 SPLIT_PHY = 'qkd_hbm3e_phy_pc'
@@ -1538,13 +1594,26 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
             # vport -> fork beside its pair's control strip, then the header and 8 GS chunks fan out from there
             fw_, fh_ = PVFORK
             for pi_, (pn_, py_, por_) in enumerate((('pvw_0', y_s, 'R0'), ('pvw_1', y_n, 'MX'))):
-                ystrip = py_ + PVW[1] - 1800.0 if por_ == 'R0' else py_ + 1800.0 - fh_    # clear of the hub corridor
                 sts_ = ('WS', 'ES') if pi_ == 0 else ('WN', 'EN')
                 for st in sts_:
                     for k in range(4):
-                        fx_ = up(x_ - 2 * GRID - fw_, GX) if st[0] == 'W' else up(x_ + PVW[0] + 2 * GRID, GX)
-                        fy_ = ystrip - (k * (fh_ + GRID) if por_ == 'R0' else -k * (fh_ + GRID))
+                        # KVPLAN2 2215: PVFORK_GAP (default PV_CLEAR 21.6) to the pair face and between forks -- an
+                        # 86.4-um slit (716c347f4) let shortest paths squeeze between the pair and the forks where no relay
+                        # fits (kvs13l plan: emr_ES / kvn_ES / aq_ES / ap_ES 'no spot' at the fork column)
+                        fx_ = up(x_ - PVFORK_GAP - fw_, GX) if st[0] == 'W' else up(x_ + PVW[0] + PVFORK_GAP, GX)
+                        # KVPLAN2 2215: fork k level with its header pin (strip end), the taps level with their group's
+                        # face pins, all in one column PVFORK_GAP off the face
+                        yh_ = PVW[1] - PVT_HDR_Y0 - PVT_PIN_DY * k
+                        fy_ = py_ + (yh_ if por_ == 'R0' else PVW[1] - yh_) - fh_ / 2
                         add(f'pvfork_{st}_{k}', 'qkd_pvfork', fx_, up(fy_, GY), fw_ - SHAVE, fh_ - SHAVE, 'R0', 'relay', 'attn')
+                        for g in PVT_TAPS:
+                            tw_, th_ = pvtap_frame(g)
+                            tx_ = up(x_ - PVFORK_GAP - tw_, GX) if st[0] == 'W' else up(x_ + PVW[0] + PVFORK_GAP, GX)
+                            # port 0 highest: equal fork -> tap 7 runs; every tap PVT_TAP_DY below its face pin (away from the
+                            # strip: room between the fork column and group 7's taps for the four first stages)
+                            yc_ = pvt_plan()['face_pins']['vc'][f'vc{k}_{g}'][1] + PVT_ORD * (1.5 - k) * PVT_PIN_DY - PVT_TAP_DY
+                            ty_ = py_ + (yc_ if por_ == 'R0' else PVW[1] - yc_) - th_ / 2
+                            add(f'pvtap_{st}_{k}_{g}', f'qkd_pvtap{pvtap_n(g)}', tx_, up(ty_, GY), tw_ - SHAVE, th_ - SHAVE, 'R0', 'relay', 'attn')
         # the 16 V ports qkd_pv16_vport (Q-VMWB r5, the V issuer): port k of stack st serves landing groups {k, 0} / {k, 1}
         # (vport_wiring.txt: groups 2k / 2k + 1, adjacent strip slots, LAND_GROUP_ORDER) -> its home is the landing-inner
         # channel (landing | engine group) level with the middle of ITS two groups, so the V get / rsp words (RT) cross
@@ -1681,8 +1750,15 @@ def _pv144_buses(m, add):
                 fk_ = f'pvfork_{st}_{k}'
                 add((f'pvin_{st}_{k}', 'kv_oneway', 1055, [(vp, 'vo'), (fk_, 'vi')]))
                 add((f'pvh_{st}_{k}', 'kv_oneway', 31, [(fk_, 'vh'), (pv_, f'vh{wp}')]))
-                for g in range(8):
-                    add((f'pvc_{st}_{k}_{g}', 'kv_oneway', 128, [(fk_, f'vc{g}'), (pv_, f'vc{wp}_{g}')]))
+                tp_ = lambda g_: f'pvtap_{st}_{k}_{g_}'      # noqa: E731
+                for tr_, top_ in (('b', 7), ('a', 3)):
+                    add((f'pvt{tr_}_{st}_{k}_{top_}', 'kv_oneway', 512, [(fk_, f'vt{tr_}'), (tp_(top_), 'ti')]))
+                    for g in (top_ - 1, top_ - 2):
+                        add((f'pvt{tr_}_{st}_{k}_{g}', 'kv_oneway', 128 * pvtap_n(g), [(tp_(g + 1), 'to'), (tp_(g), 'ti')]))
+                for g in PVT_TAPS:
+                    add((f'pvc_{st}_{k}_{g}', 'kv_oneway', 128, [(tp_(g), 'tc'), (pv_, f'vc{wp}_{g}')]))
+                for g in (4, 0):
+                    add((f'pvc_{st}_{k}_{g}', 'kv_oneway', 128, [(tp_(g + 1), 'to'), (pv_, f'vc{wp}_{g}')]))
             else:
                 add((f'pvin_{st}_{k}', 'kv_oneway', 1055 if V144_R6 else 1039, [(vp, 'vo'), (pv_, f'vin{wp}')]))
             for g in (0, 1):
@@ -1734,7 +1810,7 @@ def _buses(m, T, r):
          [(n, c_) for n in cen for c_ in (AHUB_CLK if (n == 'ahub' and m['geo'].get('split')) else
                                          PVW_CLK if n.startswith('pvw_') else ['ck'])] +
          [('ucie_rom', 'clk'), ('serdes_host', 'clk')] +
-         [(i.name, 'ck') for i in m['insts'] if i.master == 'qkd_pvfork']))   # KVPLAN 1815: the V word forks (no reset)
+         [(i.name, 'ck') for i in m['insts'] if i.master == 'qkd_pvfork' or i.master.startswith('qkd_pvtap')]))   # KVPLAN 1815: the V word forks (no reset)
     add(('rst_core_c', 'reset', 1, [('pll', 'rso_c')] + [(n, 'rst_n') for n in cen] +
          [('ucie_rom', 'rst_n'), ('serdes_host', 'rst_n')]))
     add(('pll_fwd', 'clock_trunk', 1, [('pll', 'pll_fwd'), ('ckb_kv', 'pll_ck')]))       # to the clock bump pair
@@ -2225,9 +2301,9 @@ def _relays(m):
             for k_ in range(8):
                 for g_ in range(8):
                     f_, yc_ = P_['face_pins']['vc'][f'vc{k_}_{g_}']
-                    _PIN_HINT[(it_.name, f'vc{k_}_{g_}')] = die_xy_(0.0 if f_ == 'W' else it_.w, yc_ + ((k_ % 4) - 1.5) * 70.0)
+                    _PIN_HINT[(it_.name, f'vc{k_}_{g_}')] = die_xy_(0.0 if f_ == 'W' else it_.w, yc_ + PVT_ORD * (1.5 - (k_ % 4)) * PVT_PIN_DY)
                 # header / request: on the port's side face next to the strip (the strip's top face abuts the hub)
-                yh_ = it_.h - 160.0 - 60.0 * (k_ % 4)
+                yh_ = it_.h - PVT_HDR_Y0 - PVT_PIN_DY * (k_ % 4)
                 _PIN_HINT[(it_.name, f'vh{k_}')] = die_xy_(0.0 if k_ < 4 else it_.w, yh_)
                 _PIN_HINT[(it_.name, f'vrq{k_}')] = die_xy_(0.0 if k_ < 4 else it_.w, yh_ - 30.0)
     if HOST_V14.get('trees') and 'serdes_host' in by:
@@ -2307,7 +2383,12 @@ def _relays(m):
             order_.sort(key=lambda b_: (b_[0] not in ('lx', 'lr'), b_[0] != 'host_fdi',
                                         not any(b_[0].startswith(p_) for p_ in pri_)))
             if V144_R6:   # kvs13d: every V port's return word is planned first; its request word is then padded to W
-                order_.sort(key=lambda b_: (b_[0].startswith('pvrq_'), b_[0].startswith('pvc_')))
+                order_.sort(key=lambda b_: (b_[0].startswith('pvrq_'), b_[0].startswith(('pvta_', 'pvtb_', 'pvc_'))))
+                if PV_T:
+                    # KVPLAN2 2215: the header and the exact-stage PV trunks / chunks claim their lanes beside the pair
+                    # face right after lx / lr / host_fdi (every other chain's stage count is free; theirs is fixed)
+                    pvx_ = tuple(__import__('os').environ.get('OT_KV_PVT_FIRST', 'pvh_,pvta_,pvtb_,pvc_').split(','))
+                    order_.sort(key=lambda b_: (b_[0] not in ('lx', 'lr'), b_[0] != 'host_fdi', not b_[0].startswith(pvx_)))
     # Q-KVSYS PVJOIN 2026-10-16 (fork buses): m['forks'] = {bid: [load endpoints]} -- loads that leave a bus's driver as a
     # RELAYED BRANCH of their own (bus f'{bid}__f{i}', class kv_oneway) instead of one long unrelayed fan-out wire.  The
     # trunk keeps the bus's own class / relays; after planning, the branch's first segment joins the trunk's source net
@@ -2378,6 +2459,70 @@ def _relays(m):
             except ValueError as e_:
                 if V144:
                     print(f'kv die v1.4.4: host_fdi east-lane route failed ({e_}); shortest path', file=sys.stderr)
+                path = None
+        mx_ = re.match(r'(aq|emr|emf|kvn|kc)_([WE])S$', bid) if (PV_T and PVT_XLANE) else None
+        if path is None and mx_ and 'pvw_0' in by:
+            # KVPLAN2 2215: the S-stack <-> north-centre express words cross the corridor in the OUTER (head-side) part of
+            # their side channel, 3 mm either side of the hub, clear of the forks / group-7 taps that sit at both pairs'
+            # strip ends next to the pair faces (aq_ES / emr / kvn / emf ran out of spots there)
+            try:
+                lo_, hi_ = m['geo']['pv144']['centre_column_um'][:2]
+                j_ = ('aq', 'emr', 'emf', 'kvn', 'kc').index(mx_.group(1))
+                lx_ = lo_ + 21.6 + 45.0 + 43.2 * j_ if mx_.group(2) == 'W' else hi_ - 21.6 - 45.0 - 43.2 * j_
+                hy_ = by['ahub'].y + by['ahub'].h / 2
+
+                def xcell_(x_, y_):
+                    wy_ = int(y_ // G)
+                    for dx_ in range(0, 12):
+                        for sgn in (1, -1):
+                            wx_ = int(x_ // G) + sgn * dx_
+                            if 0 <= wx_ < nx and 0 <= wy_ < ny and not owner.get((wx_, wy_)):
+                                return (wx_, wy_)
+                    raise ValueError('no lane cell')
+                ya_, yb_ = by[a].y + by[a].h / 2, by[b].y + by[b].h / 2
+                w1, w2 = xcell_(lx_, hy_ + (3000.0 if ya_ > hy_ else -3000.0)), xcell_(lx_, hy_ + (3000.0 if yb_ > hy_ else -3000.0))
+                q1 = route_(a, 'xl1', near_pin(ring(by[a]), a, pa), {w1})
+                q2 = route_('xl1', 'xl2', [w1], {w2})
+                q3 = route_('xl2', b, [w2], set(near_pin(ring(by[b]), b, pb)))
+                path = q1 + q2[1:] + q3[1:]
+            except ValueError as e_:
+                print(f'kv die PV_T: {bid} express lane failed ({e_}); shortest path', file=sys.stderr)
+                path = None
+        if path is None and PV_T and bid.startswith('pvta_') and bid.endswith('_3'):
+            # KVPLAN2 2215: trunk A's long fork -> tap 3 runs (past trunk B's groups 7..4) take their own vertical lanes
+            # beside the tap column (port k on lane 4 + k, PVT_LANE apart); the short tap -> tap segments (one group step,
+            # 6 edges: no reach slack for a lane jog out and back) run straight down the column
+            try:
+                tap_ = by[a]
+                k_ = int(bid.split('_')[2])
+                pvp_ = by[f'pvw_{STACKS.index(bid.split("_")[1]) % 2}']
+                west_ = tap_.x < pvp_.x
+                # trunk A's fork -> tap 3 run passes trunk B's groups (lanes 4..7); below group 4 trunk B has ended and
+                # trunk A's tap -> tap segments take the near lanes 0..3 (a far lane's jog out and back costs ~2 x its
+                # offset of the 6-edge group step's reach slack)
+                far_ = bid.startswith('pvta_') and bid.endswith('_3')
+                off_ = PVFORK_GAP + pvtap_frame(7)[0] + 21.6 + 4.32 + 15.0 + PVT_LANE * (k_ + (PVT_A_LANE0 if far_ else 0))
+                lx_ = pvp_.x - off_ if west_ else pvp_.x + pvp_.w + off_
+                yb_ = by[b].y + by[b].h / 2
+                pin_ = _PIN_HINT.get((b, pb.lstrip('*')))
+                if pin_ is not None:
+                    yb_ = pin_[1]
+
+                def vcell_(x_, y_):
+                    wy_ = int(y_ // G)
+                    for dx_ in range(0, 12):
+                        for sgn in (1, -1):
+                            wx_ = int(x_ // G) + sgn * dx_
+                            if 0 <= wx_ < nx and 0 <= wy_ < ny and not owner.get((wx_, wy_)):
+                                return (wx_, wy_)
+                    raise ValueError('no lane cell')
+                w1, w2 = vcell_(lx_, tap_.y + tap_.h / 2), vcell_(lx_, yb_)
+                q1 = route_(a, 'pvt_l1', near_pin(ring(by[a]), a, pa), {w1})
+                q2 = route_('pvt_l1', 'pvt_l2', [w1], {w2})
+                q3 = route_('pvt_l2', b, [w2], set(near_pin(ring(by[b]), b, pb)))
+                path = q1 + q2[1:] + q3[1:]
+            except ValueError as e_:
+                print(f'kv die PV_T: {bid} lane route failed ({e_}); shortest path', file=sys.stderr)
                 path = None
         if path is None:
             path = route(a, b, pa, pb)
@@ -2453,21 +2598,34 @@ def _relays(m):
             st_['min_k'] = max(0, PV_W - (stages.get('pvin_' + bid[5:], 0) + 1 + stages.get('pvh_' + bid[5:], 0) if PV_T
                                           else stages.get('pvin_' + bid[5:], 0)))
             st_['wide'] = True
-        if PV_T and bid.startswith('pvc_'):
+        if PV_T and bid.startswith(('pvc_', 'pvta_', 'pvtb_')):
             # the chunk lands DELTA_g edges after its header (the pair's in-array V path is 7 + NS stages shorter than
-            # its command path for group g)
-            hb_ = 'pvh_' + bid[4:].rsplit('_', 1)[0]
-            g_ = int(bid.rsplit('_', 1)[1])
-            st_['min_k'] = stages[hb_] + int(pvt_plan()['chunk_delta_vs_header'][str(g_)])
-            st_['exact_k'] = st_['min_k']
+            # its command path for group g): KVPLAN2 2215 trunk + taps, the stages each bus owes (pvt_exact), spread along
+            # its route by the per-stage pitch in reach_()
+            ex_ = pvt_exact(bid, stages)
+            if ex_ is not None:
+                st_['min_k'] = ex_
+                st_['exact_k'] = ex_
+            elif bid.startswith(('pvta_', 'pvtb_')):
+                # a trunk run aims at one stage under its share (fork -> top tap: header + DELTA_top - 1; tap -> tap: the
+                # group step's 6 edges = 5 relays + the tap) so a crowded run still lands within it; the shortfall goes
+                # to the chunk face hops
+                D_ = pvt_plan()['chunk_delta_vs_header']
+                g_ = int(bid.rsplit('_', 1)[1])
+                sk_ = bid.split('_', 1)[1].rsplit('_', 1)[0]
+                own_ = (stages[f'pvh_{sk_}'] + int(D_[str(g_)]) - 1) if g_ in (3, 7) else \
+                    (int(D_[str(g_)]) - int(D_[str(g_ + 1)]) - 1)
+                st_['soft_k'] = max(0, own_ - 1)
             st_['wide'] = True
-            # spread the stages evenly along the route (hop = route / stages) so the DELTA padding does not bunch at the
-            # pair face (kvs13l-pvt: 'no spot for pvc_WS_2_4 stage 16' next to the face pin)
-            L_ = (len(path) + 1) * G
-            if st_['min_k'] > 0:
-                st_['hop_override'] = max(2 * G, L_ / st_['min_k'])
+            if bid.startswith('pvta_') and bid.endswith('_3'):
+                st_['offmax'] = 2 * G   # the laned run: first try on its own lane (the retries widen to PIN_REACH / 2)
         offs_wide = [(0, 0)] + [(i * G, j * G) for r_ in range(1, 11) for i in range(-r_, r_ + 1) for j in range(-r_, r_ + 1)
                                 if max(abs(i), abs(j)) == r_]
+        if PV_T and bid.startswith(('pvc_', 'pvta_', 'pvtb_')):
+            # KVPLAN2 2215: an exact-stage PV trunk / chunk stage may sit up to PVT_OFFS grid cells off its lane (the free half of
+            # the side channel beside the lanes) -- each hop is still checked against the reach
+            offs_wide = [(0, 0)] + [(i * G, j * G) for r_ in range(1, PVT_OFFS + 1) for i in range(-r_, r_ + 1)
+                                    for j in range(-r_, r_ + 1) if max(abs(i), abs(j)) == r_]
         if bid in tree_meta:      # v1.4.2: a 1-bit tree hop may sit up to 24 grid cells off its path
             offs_wide = [(0, 0)] + [(i * G, j * G) for r_ in range(1, 25) for i in range(-r_, r_ + 1)
                                     for j in range(-r_, r_ + 1) if max(abs(i), abs(j)) == r_]
@@ -2499,6 +2657,20 @@ def _relays(m):
         def reach_():
             # the PV pair words keep the plain reach (their in-array distribution is the PV pair successor's; the width
             # class moved pvin's planned end off the r6 W-equalised face pins: kvt13k-a 3 unrepaired 1.2-4.2 mm hops)
+            tgt_ = st_['exact_k'] if st_.get('exact_k') is not None else st_.get('soft_k')
+            if tgt_ is not None and st_['k'] < tgt_:
+                # KVPLAN2 2215 (kvs13l plan: pvc_WS_0_0 ran 85 stages for exact 49 and stranded off its path): the pitch is
+                # re-derived at every stage from the path still to go over the stages still owed (+ one relay width a
+                # hop: a W-in / E-out relay on a vertical run gives up fw of Manhattan reach), so a stage that lands short
+                # of the even pitch is made up by the next ones instead of accumulating
+                n_ = tgt_ - st_['k']
+                rem_ = max(0.0, (len(st_['path']) - 1 - st_['idx0']) * G) + G
+                if rem_ < 150.0 * n_:
+                    # pure padding on a short route (a chunk's face hop): full reach, the stages fold around the end
+                    return min(reach0_(), width_reach(bits))
+                return min(reach0_(), width_reach(bits), max(2 * G, (rem_ / n_ + fw) * st_.get('pscale', 1.0)))
+            if tgt_ is not None:
+                return min(reach0_(), width_reach(bits))
             if st_.get('hop_override'):
                 return min(reach0_(), st_['hop_override'])
             return min(reach0_(), width_reach(bits)) if bid not in tree_meta and not bid.startswith('pv') else reach0_()
@@ -2531,6 +2703,8 @@ def _relays(m):
                 at_end = bid in tree_meta and not idxs
                 if at_end:
                     idxs = [len(path_) - 1]          # at the path end: spots around the leader itself
+                elif not idxs and PV_T and bid.startswith(('pvta_', 'pvtb_', 'pvc_')):
+                    idxs = [len(path_) - 1]          # KVPLAN2 2215: a stage that sat off the path end -- spots at the end
                 for idx in idxs:
                     px, py = path_[idx]
                     best_ = None
@@ -2595,6 +2769,15 @@ def _relays(m):
         for attempt in (0, 1, 2, 3):
             try:
                 chain_()
+                # KVPLAN2 2215: an exact-stage PV chain that landed one or two stages off re-places on the same route
+                # with a longer / shorter pitch (crowding shortens hops; the count is a static schedule constant)
+                for _ in range(6):
+                    if st_.get('exact_k') is None or st_['k'] == st_['exact_k']:
+                        break
+                    sc_ = st_.get('pscale', 1.0) * (1.12 if st_['k'] > st_['exact_k'] else 0.9)
+                    rollback_()
+                    st_['pscale'] = sc_
+                    chain_()
                 break
             except ValueError:
                 if attempt == 3 or not m['geo'].get('split') or (attempt and bid not in tree_meta
@@ -3167,7 +3350,7 @@ def _split_pins(M, m=None):
                 if p_ in hm.ports:
                     hm.ports[p_] = ('face', hm.ports[p_][1], 'N', 'M5', round(ctx_ + dx_, 3), 1)
             for k_ in range(8):          # header / request on the port's side face next to the strip
-                yh_ = fh_ - 160.0 - 60.0 * (k_ % 4)
+                yh_ = fh_ - PVT_HDR_Y0 - PVT_PIN_DY * (k_ % 4)
                 for p_, y_ in ((f'vh{k_}', yh_), (f'vrq{k_}', yh_ - 30.0)):
                     if p_ in hm.ports:
                         hm.ports[p_] = ('face', hm.ports[p_][1], 'W' if k_ < 4 else 'E', 'M4', round(y_, 3), 1)
@@ -3176,7 +3359,7 @@ def _split_pins(M, m=None):
                     p_ = f'vc{k_}_{g_}'
                     if p_ in hm.ports:
                         f_, yc_ = P_['face_pins']['vc'][p_]
-                        hm.ports[p_] = ('face', hm.ports[p_][1], f_, 'M4', round(yc_ + ((k_ % 4) - 1.5) * 70.0, 3), 1)
+                        hm.ports[p_] = ('face', hm.ports[p_][1], f_, 'M4', round(yc_ + PVT_ORD * (1.5 - (k_ % 4)) * PVT_PIN_DY, 3), 1)
             continue
         if mn in M:
             hm, pl = M[mn], pv_plan()
@@ -3746,11 +3929,24 @@ def pv_trunk_record(m):
     P_ = pvt_plan()
     st = m.get('relay_stages', {})
     hdr = {b_: v_ for b_, v_ in st.items() if b_.startswith('pvh_')}
-    chk = {b_: v_ for b_, v_ in st.items() if b_.startswith('pvc_')}
+    chk = {b_: v_ for b_, v_ in st.items() if b_.startswith(('pvc_', 'pvta_', 'pvtb_'))}
+    # KVPLAN2 2215: chunk g's die edges after the fork = its trunk's segments to its tap (+ one edge a tap) + its face hop
+    tot = {}
+    for b_ in hdr:
+        sk_ = b_[4:]
+        for tr_, top_ in (('b', 7), ('a', 3)):
+            if f'pvt{tr_}_{sk_}_{top_}' not in st:
+                continue
+            run_ = 0
+            for g_ in (top_, top_ - 1, top_ - 2):
+                run_ += st[f'pvt{tr_}_{sk_}_{g_}'] + 1
+                tot[f'{sk_}_{g_}'] = run_ + st.get(f'pvc_{sk_}_{g_}', 0)
+            tot[f'{sk_}_{top_ - 3}'] = run_ + st.get(f'pvc_{sk_}_{top_ - 3}', 0)
     return dict(plan=PV_T_PLAN, frame_um=P_['frame_um'], old_frame_um=[PV_ARR[0], round(PV_ARR[1] + PV_GAP + PV_STRIP, 6)],
                 station_flops_per_pair=P_['station_flops'], replica_area_mm2_per_pair=P_['replica_area_mm2'],
                 trunk_d=P_['trunk_d'], flag_d=P_['flag_d'], age_spread_edges=P_['age_spread_edges'],
-                chunk_delta_vs_header=P_['chunk_delta_vs_header'], header_stages=hdr, chunk_stages=chk,
+                chunk_delta_vs_header=P_['chunk_delta_vs_header'], header_stages=hdr, chunk_stages=chk, chunk_total_edges=tot,
+                chunk_form='two 512-b trunks (chunks 4..7 / 0..3) + qkd_pvtap<n> taps (KVPLAN2 2215)',
                 latency_cost=dict(added_edges_per_pv_pass=P_['trunk_d'], ledger='results/arch/accepted_cost_ledger_1013.json '
                                   'qwen_rom PV16.TRUNK (+1,836 cycles / token, 0.731 %)'),
                 open_hops=[h for h in P_['worst_hops'] if h['um'] > 400][:4],
