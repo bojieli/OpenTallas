@@ -9,6 +9,7 @@
 // the command / done pulses are flopped inside the adapter's CDC FIFOs.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsfd_sp_hc #(
+    parameter integer RETURN_COLUMNS=0,
     parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, LVM = 10, WIN = 2, WOUT = 2, ML = 5, AL = 4,
     parameter integer OQ = 512, MUT = 0, AMUT = 0,
     parameter integer HIER = 0,                          // 0: flat engine ot_s81_hc_core; 1: hierarchical slab = pin tile
@@ -27,6 +28,10 @@ module dsfd_sp_hc #(
     // NT_K: the bottom collectors' fire offset after the vector beat leaves the far tile (cycles).
     parameter integer NTREE = 0, NT_K = 67
 ) (
+`ifdef OT_S81_HC_RETURN_COLUMNS
+    input wire [8*RET_CTHS-1:0] ck_ret, // one distinct delivered clock per return hard leaf
+`endif
+
     output wire [TFW-1:0] t_tf0, t_tf1, t_tf2,
     input  wire [TRW-1:0] f_tr0, f_tr1, f_tr2,
     input  wire                cck, crs,                 // controller clock / reset (dsfd_sp_ctrl domain)
@@ -51,6 +56,17 @@ module dsfd_sp_hc #(
     output wire                online,
     output wire [3:0]          fcode
 );
+    localparam integer RET_NP=(NG/GS+NCOL-1)/NCOL, RET_C0=2*RET_NP;
+    localparam integer RET_C1=(NG/GS>2*RET_NP)?2*(NG/GS-2*RET_NP):0;
+    localparam integer RET_H0=(RET_C0<HEAD_ROWS)?RET_C0:HEAD_ROWS, RET_H1=(RET_C1<HEAD_ROWS)?RET_C1:HEAD_ROWS;
+    localparam integer RET_T0=RET_C0-RET_H0, RET_T1=RET_C1-RET_H1;
+    localparam integer RET_HEADS=2*RET_H0+RET_H1, RET_TAILS=2*RET_T0+RET_T1;
+    localparam integer RET_CTHS=(TAIL_SPLIT==1)?RET_HEADS:2*(NG/GS);
+    initial if(RETURN_COLUMNS && (!HIER || !HALF || !CSPLIT || NTREE || NCOL!=3 || RLY!=2 || S_RT!=4)) $fatal(1,"unsupported RETURN_COLUMNS parent tuple");
+`ifndef OT_S81_HC_RETURN_COLUMNS
+    initial if(RETURN_COLUMNS) $fatal(1,"RETURN_COLUMNS requires explicit per-hard-leaf clock ports");
+`endif
+
     // hierarchical slab layout (HIER=1)
     localparam integer TFW = (72+16*S_RD) + ((S_RD*512 > ((NG/GS+NCOL-1)/NCOL)*GS*32) ? S_RD*512 : ((NG/GS+NCOL-1)/NCOL)*GS*32) + S_RD+5+1+128;
     localparam integer TRW = S_RT+4 + S_RT+24*S_RT+8+512*S_RT;
@@ -252,7 +268,11 @@ module dsfd_sp_hc #(
                     .ul_in(p == LC - 1 ? nt_ul[c * 33 +: 33] : ulo[p < LC - 1 ? p + 1 : 0]), .ul_out(ulo[p]));
                 end else if (HALF) begin : g_h   // el1011-s81hc-ctile: HALF sub-tile split into <=15k-sink hard tiles
                 ot_s81_hc_cth #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .WIN(WIN), .WOUT(WOUT),
-                                .ML(ML), .AL(AL), .RLY(RLY), .CNL_PIN(CNL_PIN), .CHAIN_STEP(CHAIN_STEP), .LANE_SPECIALIZE(LANE_SPECIALIZE)) u_t (
+                                .ML(ML), .AL(AL), .RLY(RLY), .CNL_PIN(CNL_PIN), .CHAIN_STEP(CHAIN_STEP), .LANE_SPECIALIZE(LANE_SPECIALIZE),.RETURN_COLUMNS(RETURN_COLUMNS)) u_t (
+`ifdef OT_S81_HC_RETURN_COLUMNS
+                    .ck_ret(ck_ret[8*(BC+p)+:8]),
+`endif
+
                     .clk(sk), .rst_in(p == 0 ? ch_rst[c] : rso[p > 0 ? p - 1 : 0]), .rst_out(rso[p]), .tid(TID),
                     .last(p == LC - 1),
                     .fv_in(p == 0 ? ch_fv[c * FVW +: FVW] : fvo[p > 0 ? p - 1 : 0]),
@@ -302,9 +322,21 @@ module dsfd_sp_hc #(
             wire [NCOL*TRW-1:0] tr;
             wire [3*NTW-1:0] tdl;
             wire [3*33-1:0]  tul;
+`ifdef OT_S81_HC_RETURN_COLUMNS
+            wire [8*RET_TAILS-1:0] tail_ret_clocks;
+            for(genvar rc=0;rc<3;rc=rc+1) begin : g_tail_ret_clocks
+                localparam integer RBC=(rc==0)?0:(rc==1)?RET_C0:RET_C0+RET_C1;
+                localparam integer RNH=(rc==1)?RET_H1:RET_H0, RNT=(rc==1)?RET_T1:RET_T0;
+                localparam integer ROFF=(rc==0)?0:(rc==1)?RET_T0:RET_T0+RET_T1;
+                assign tail_ret_clocks[8*ROFF+:8*RNT]=ck_ret[8*(RBC+RNH)+:8*RNT];
+            end
+`endif
             dsfd_sp_hc_t_nt #(.NG(NG),.D(D),.S_RD(S_RD),.S_RT(S_RT),.WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),
                           .NCOL(NCOL),.GS(GS),.RLY(RLY),.HEAD_ROWS(HEAD_ROWS),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP), .LANE_SPECIALIZE(LANE_SPECIALIZE),
-                          .NTREE(NTREE),.NT_K(NT_K)) u_tail (
+                          .RETURN_COLUMNS(RETURN_COLUMNS),.NTREE(NTREE),.NT_K(NT_K)) u_tail (
+`ifdef OT_S81_HC_RETURN_COLUMNS
+                .ck_ret(tail_ret_clocks),
+`endif
                 .ck(sk),.f_sf0(tf[0+:TFW]),.f_sf1(tf[TFW+:TFW]),.f_sf2(tf[2*TFW+:TFW]),
                 .t_sr0(tr[0+:TRW]),.t_sr1(tr[TRW+:TRW]),.t_sr2(tr[2*TRW+:TRW]),
                 .srs(srs),.f_dl(tdl),.t_ul(tul));
@@ -325,7 +357,10 @@ module dsfd_sp_hc #(
             localparam integer NH=(LC<HEAD_ROWS)?LC:HEAD_ROWS;
             wire [127:0] cy;
             ot_s81_hc_chain_segment #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),
-                .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.LANE_SPECIALIZE(LANE_SPECIALIZE),.BC(BC),.LC(LC),.START(0),.COUNT(NH),.NTREE(NTREE)) u_head (
+                .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.LANE_SPECIALIZE(LANE_SPECIALIZE),.BC(BC),.LC(LC),.START(0),.COUNT(NH),.RETURN_COLUMNS(RETURN_COLUMNS),.NTREE(NTREE)) u_head (
+`ifdef OT_S81_HC_RETURN_COLUMNS
+                .ck_ret(ck_ret[8*((TAIL_SPLIT==1)?((c==0)?0:(c==1)?RET_H0:RET_H0+RET_H1):BC)+:8*NH]),
+`endif
                 .sk(sk),.rst_in(ch_rst[c]),.fv_in(ch_fv[c*FVW+:FVW]),.fd_in(ch_fd[c*FDW+:FDW]),.cy_in(128'd0),
                 .rv_in(sr[c*TRW+RDW+:RVW]),.rd_in(sr[c*TRW+:RDW]),
                 .rst_out(sf[c*TFW+128+FDW+FVW]),.fv_out(sf[c*TFW+128+FDW+:FVW]),
@@ -372,17 +407,28 @@ endmodule
 
 // Wire-only chain assembly; each cth instance retains its existing hardened local roots.
 module ot_s81_hc_chain_segment #(
+    parameter integer RETURN_COLUMNS=0,
     parameter integer NG=256,D=5120,NCOL=3,GS=8,S_RD=2,S_RT=4,WIN=2,WOUT=2,ML=5,AL=4,RLY=2,
     parameter integer BC=0,LC=22,START=0,COUNT=10,CNL_PIN=0,CHAIN_STEP=AL,LANE_SPECIALIZE=0,NTREE=0,
     parameter integer FVW=S_RD+5, RVW=S_RT+4, NTW=2*137+1,
     parameter integer FDW=(72+16*S_RD)+((S_RD*512>((NG/GS+NCOL-1)/NCOL)*GS*32)?S_RD*512:((NG/GS+NCOL-1)/NCOL)*GS*32),
     parameter integer RDW=S_RT+24*S_RT+8+512*S_RT
-)( input wire sk,rst_in, input wire [FVW-1:0] fv_in,input wire [FDW-1:0] fd_in,
+)(
+`ifdef OT_S81_HC_RETURN_COLUMNS
+    input wire [8*COUNT-1:0] ck_ret, // one distinct delivered clock per return hard leaf
+`endif
+ input wire sk,rst_in, input wire [FVW-1:0] fv_in,input wire [FDW-1:0] fd_in,
    input wire [127:0] cy_in,input wire [RVW-1:0] rv_in,input wire [RDW-1:0] rd_in,
    output wire rst_out,output wire [FVW-1:0] fv_out,output wire [FDW-1:0] fd_out,
    output wire [127:0] cy_out,output wire [RVW-1:0] rv_out,output wire [RDW-1:0] rd_out,
    // NORM tree lanes (NTREE only): partial lane in at the N end / out at the S end, scale lane in S / out N
    input wire [NTW-1:0] dl_in,output wire [NTW-1:0] dl_out,input wire [32:0] ul_in,output wire [32:0] ul_out);
+
+    initial if(RETURN_COLUMNS && (NTREE || RLY!=2 || S_RT!=4 || COUNT<1)) $fatal(1,"unsupported RETURN_COLUMNS parent tuple");
+`ifndef OT_S81_HC_RETURN_COLUMNS
+    initial if(RETURN_COLUMNS) $fatal(1,"RETURN_COLUMNS requires explicit per-hard-leaf clock ports");
+`endif
+
     genvar p;
     generate if(COUNT>0) begin : g_live
             wire [FVW-1:0] fvo [0:COUNT-1];
@@ -411,7 +457,11 @@ module ot_s81_hc_chain_segment #(
                     .ul_in(p == COUNT - 1 ? ul_in : ulo[p < COUNT-1 ? p+1 : 0]), .ul_out(ulo[p]));
                 end else begin : g_h   // el1011-s81hc-ctile: HALF sub-tile split into <=15k-sink hard tiles
                 ot_s81_hc_cth #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .WIN(WIN), .WOUT(WOUT),
-                                .ML(ML), .AL(AL), .RLY(RLY), .CNL_PIN(CNL_PIN), .CHAIN_STEP(CHAIN_STEP), .LANE_SPECIALIZE(LANE_SPECIALIZE)) u_t (
+                                .ML(ML), .AL(AL), .RLY(RLY), .CNL_PIN(CNL_PIN), .CHAIN_STEP(CHAIN_STEP), .LANE_SPECIALIZE(LANE_SPECIALIZE),.RETURN_COLUMNS(RETURN_COLUMNS)) u_t (
+`ifdef OT_S81_HC_RETURN_COLUMNS
+                    .ck_ret(ck_ret[8*p+:8]),
+`endif
+
                     .clk(sk), .rst_in(p == 0 ? rst_in : rso[p > 0 ? p - 1 : 0]), .rst_out(rso[p]), .tid(TID),
                     .last(START + p == LC - 1),
                     .fv_in(p == 0 ? fv_in : fvo[p > 0 ? p - 1 : 0]),
@@ -444,27 +494,62 @@ endmodule
 // (port-bind INPUT_UNCONNECTED f_dl / srs).  With NTREE 0 the core never reads its lane inputs (chain segments g_h,
 // bottom absent); a die NORM tree needs seam lane ports on dsfd_sp_hc_c first (S-NORM swap proposal).
 module dsfd_sp_hc_t #(
+    parameter integer RETURN_COLUMNS=0,
     parameter integer NG=256,D=5120,S_RD=2,S_RT=4,WIN=2,WOUT=2,ML=5,AL=4,NCOL=3,GS=8,RLY=2,HEAD_ROWS=10,CNL_PIN=0,CHAIN_STEP=AL,LANE_SPECIALIZE=0,
     parameter integer NTREE=0,NT_K=67,
     parameter integer FDW=(72+16*S_RD)+((S_RD*512>((NG/GS+NCOL-1)/NCOL)*GS*32)?S_RD*512:((NG/GS+NCOL-1)/NCOL)*GS*32),
     parameter integer FVW=S_RD+5,RVW=S_RT+4,RDW=S_RT+24*S_RT+8+512*S_RT,TFW=FDW+FVW+129,TRW=RDW+RVW,NTW=2*137+1
- )(input wire ck,input wire [TFW-1:0] f_sf0,f_sf1,f_sf2,output wire [TRW-1:0] t_sr0,t_sr1,t_sr2);
+ )(
+`ifdef OT_S81_HC_RETURN_COLUMNS
+    input wire [8*RET_CTHS-1:0] ck_ret, // one distinct delivered clock per return hard leaf
+`endif
+input wire ck,input wire [TFW-1:0] f_sf0,f_sf1,f_sf2,output wire [TRW-1:0] t_sr0,t_sr1,t_sr2);
+    localparam integer RET_NP=(NG/GS+NCOL-1)/NCOL, RET_C0=2*RET_NP;
+    localparam integer RET_C1=(NG/GS>2*RET_NP)?2*(NG/GS-2*RET_NP):0;
+    localparam integer RET_H0=(RET_C0<HEAD_ROWS)?RET_C0:HEAD_ROWS, RET_H1=(RET_C1<HEAD_ROWS)?RET_C1:HEAD_ROWS;
+    localparam integer RET_T0=RET_C0-RET_H0, RET_T1=RET_C1-RET_H1;
+    localparam integer RET_HEADS=2*RET_H0+RET_H1, RET_TAILS=2*RET_T0+RET_T1;
+    localparam integer RET_CTHS=RET_TAILS;
+    initial if(RETURN_COLUMNS && (NTREE || RLY!=2 || S_RT!=4 || RET_CTHS<1)) $fatal(1,"unsupported RETURN_COLUMNS parent tuple");
+`ifndef OT_S81_HC_RETURN_COLUMNS
+    initial if(RETURN_COLUMNS) $fatal(1,"RETURN_COLUMNS requires explicit per-hard-leaf clock ports");
+`endif
+
     initial if (NTREE) $fatal(1,"dsfd_sp_hc_t: the die seam has no NORM-tree lane ports (use the composed TAIL_SPLIT 2 form)");
     wire [3*33-1:0] ul_nc;
     dsfd_sp_hc_t_nt #(.NG(NG),.D(D),.S_RD(S_RD),.S_RT(S_RT),.WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.NCOL(NCOL),.GS(GS),.RLY(RLY),
-        .HEAD_ROWS(HEAD_ROWS),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.LANE_SPECIALIZE(LANE_SPECIALIZE),.NTREE(0),.NT_K(NT_K)) u_t (
+        .HEAD_ROWS(HEAD_ROWS),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.LANE_SPECIALIZE(LANE_SPECIALIZE),.RETURN_COLUMNS(RETURN_COLUMNS),.NTREE(0),.NT_K(NT_K)) u_t (
+`ifdef OT_S81_HC_RETURN_COLUMNS
+        .ck_ret(ck_ret),
+`endif
         .ck(ck),.f_sf0(f_sf0),.f_sf1(f_sf1),.f_sf2(f_sf2),.t_sr0(t_sr0),.t_sr1(t_sr1),.t_sr2(t_sr2),
         .srs(1'b1),.f_dl({3*NTW{1'b0}}),.t_ul(ul_nc));
 endmodule
 
 module dsfd_sp_hc_t_nt #(
+    parameter integer RETURN_COLUMNS=0,
     parameter integer NG=256,D=5120,S_RD=2,S_RT=4,WIN=2,WOUT=2,ML=5,AL=4,NCOL=3,GS=8,RLY=2,HEAD_ROWS=10,CNL_PIN=0,CHAIN_STEP=AL,LANE_SPECIALIZE=0,
     parameter integer NTREE=0,NT_K=67,
     parameter integer FDW=(72+16*S_RD)+((S_RD*512>((NG/GS+NCOL-1)/NCOL)*GS*32)?S_RD*512:((NG/GS+NCOL-1)/NCOL)*GS*32),
     parameter integer FVW=S_RD+5,RVW=S_RT+4,RDW=S_RT+24*S_RT+8+512*S_RT,TFW=FDW+FVW+129,TRW=RDW+RVW,NTW=2*137+1
- )(input wire ck,input wire [TFW-1:0] f_sf0,f_sf1,f_sf2,output wire [TRW-1:0] t_sr0,t_sr1,t_sr2,
+ )(
+`ifdef OT_S81_HC_RETURN_COLUMNS
+    input wire [8*RET_CTHS-1:0] ck_ret, // one distinct delivered clock per return hard leaf
+`endif
+input wire ck,input wire [TFW-1:0] f_sf0,f_sf1,f_sf2,output wire [TRW-1:0] t_sr0,t_sr1,t_sr2,
    // NORM tree (NTREE only): bottom reset, the partial lanes from the head segments, the scale lanes to them
    input wire srs,input wire [3*NTW-1:0] f_dl,output wire [3*33-1:0] t_ul);
+    localparam integer RET_NP=(NG/GS+NCOL-1)/NCOL, RET_C0=2*RET_NP;
+    localparam integer RET_C1=(NG/GS>2*RET_NP)?2*(NG/GS-2*RET_NP):0;
+    localparam integer RET_H0=(RET_C0<HEAD_ROWS)?RET_C0:HEAD_ROWS, RET_H1=(RET_C1<HEAD_ROWS)?RET_C1:HEAD_ROWS;
+    localparam integer RET_T0=RET_C0-RET_H0, RET_T1=RET_C1-RET_H1;
+    localparam integer RET_HEADS=2*RET_H0+RET_H1, RET_TAILS=2*RET_T0+RET_T1;
+    localparam integer RET_CTHS=RET_TAILS;
+    initial if(RETURN_COLUMNS && (NTREE || RLY!=2 || S_RT!=4 || RET_CTHS<1)) $fatal(1,"unsupported RETURN_COLUMNS parent tuple");
+`ifndef OT_S81_HC_RETURN_COLUMNS
+    initial if(RETURN_COLUMNS) $fatal(1,"RETURN_COLUMNS requires explicit per-hard-leaf clock ports");
+`endif
+
     localparam integer NS=NG/GS,NP=(NS+NCOL-1)/NCOL,L1=(NS-2*NP>0)?NS-2*NP:0;
     wire [NCOL*TFW-1:0] sf={f_sf2,f_sf1,f_sf0};
     wire [NCOL*TRW-1:0] sr;
@@ -484,7 +569,10 @@ module dsfd_sp_hc_t_nt #(
         wire [FVW-1:0] fvf;
         wire [FDW-1:0] fdf;
         ot_s81_hc_chain_segment #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),
-            .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.LANE_SPECIALIZE(LANE_SPECIALIZE),.BC(BC),.LC(LC),.START(NH),.COUNT(LC-NH),.NTREE(NTREE)) u_tail (
+            .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.LANE_SPECIALIZE(LANE_SPECIALIZE),.BC(BC),.LC(LC),.START(NH),.COUNT(LC-NH),.RETURN_COLUMNS(RETURN_COLUMNS),.NTREE(NTREE)) u_tail (
+`ifdef OT_S81_HC_RETURN_COLUMNS
+            .ck_ret(ck_ret[8*((c==0)?0:(c==1)?RET_T0:RET_T0+RET_T1)+:8*(LC-NH)]),
+`endif
             .sk(ck),.rst_in(sf[c*TFW+128+FDW+FVW]),.fv_in(sf[c*TFW+128+FDW+:FVW]),
             .fd_in(sf[c*TFW+128+:FDW]),.cy_in(sf[c*TFW+:128]),
             .rv_in((NTREE && c==0) ? {nt_flt,{(S_RT+2){1'b0}}} : {RVW{1'b0}}),.rd_in({RDW{1'b0}}),

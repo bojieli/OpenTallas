@@ -13,12 +13,17 @@
 // selector engines' e_inputs_present 1).  Without the define the historical ready-driven f_inp pin remains (benches).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsfd_sp_hc_c #(
+    parameter integer RETURN_COLUMNS=0,
     parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, S_RT = 4, HIER = 0, HALF = 0, CSPLIT = 0, TAIL_SPLIT = 0, MUT = 0, AMUT = 0,
     // pass-through of the slab's remaining structural parameters (defaults = dsfd_sp_hc's own: no change unless set)
     parameter integer HEAD_ROWS = 10, CNL_PIN = 0, CHAIN_STEP = 4,
     parameter integer PIPE = 1, PIPE_PD = 40,            // POST issue-order done (hierarchical slab; see ot_s81_hc_cseq)
     parameter integer NTREE = 0, NT_K = 67               // NORM tree variant (dsfd_sp_hc NTREE; default 0 = unchanged)
 ) (
+`ifdef OT_S81_HC_RETURN_COLUMNS
+    input wire [8*RET_CTHS-1:0] ck_ret, // one distinct delivered clock per return hard leaf
+`endif
+
     output wire [TFW-1:0] t_tf0,t_tf1,t_tf2,
     input wire [TRW-1:0] f_tr0,f_tr1,f_tr2,
     input  wire [0:0]          ck,
@@ -41,6 +46,17 @@ module dsfd_sp_hc_c #(
     output wire [S_WR*16-1:0]  wq_mask,
     output wire [S_WR*512-1:0] wq_d
 );
+    localparam integer RET_NP=(NG/8+3-1)/3, RET_C0=2*RET_NP;
+    localparam integer RET_C1=(NG/8>2*RET_NP)?2*(NG/8-2*RET_NP):0;
+    localparam integer RET_H0=(RET_C0<HEAD_ROWS)?RET_C0:HEAD_ROWS, RET_H1=(RET_C1<HEAD_ROWS)?RET_C1:HEAD_ROWS;
+    localparam integer RET_T0=RET_C0-RET_H0, RET_T1=RET_C1-RET_H1;
+    localparam integer RET_HEADS=2*RET_H0+RET_H1, RET_TAILS=2*RET_T0+RET_T1;
+    localparam integer RET_CTHS=(TAIL_SPLIT==1)?RET_HEADS:2*(NG/8);
+    initial if(RETURN_COLUMNS && (!HIER || !HALF || !CSPLIT || NTREE || S_RT!=4)) $fatal(1,"unsupported RETURN_COLUMNS parent tuple");
+`ifndef OT_S81_HC_RETURN_COLUMNS
+    initial if(RETURN_COLUMNS) $fatal(1,"RETURN_COLUMNS requires explicit per-hard-leaf clock ports");
+`endif
+
     localparam integer TFW=(72+16*S_RD)+((S_RD*512>((NG/8+2)/3)*8*32)?S_RD*512:((NG/8+2)/3)*8*32)+S_RD+5+129;
     localparam integer TRW=S_RT+24*S_RT+8+512*S_RT+S_RT+4;
     // the slab's fault code stays inside (diagnostic); the die fault is c_st[0] -> the sequencer's s<e> (no die sink
@@ -56,7 +72,10 @@ module dsfd_sp_hc_c #(
     wire dv, flt, onl;
     wire [7:0] dt;
     dsfd_sp_hc #(.NG(NG), .D(D), .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT),.S_RT(S_RT),.HIER(HIER),.HALF(HALF),.CSPLIT(CSPLIT),.TAIL_SPLIT(TAIL_SPLIT),
-                 .HEAD_ROWS(HEAD_ROWS),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.PIPE(PIPE),.PIPE_PD(PIPE_PD),.NTREE(NTREE),.NT_K(NT_K)) u_hc (
+                 .HEAD_ROWS(HEAD_ROWS),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.PIPE(PIPE),.PIPE_PD(PIPE_PD),.RETURN_COLUMNS(RETURN_COLUMNS),.NTREE(NTREE),.NT_K(NT_K)) u_hc (
+`ifdef OT_S81_HC_RETURN_COLUMNS
+        .ck_ret(ck_ret),
+`endif
         .t_tf0(t_tf0),.t_tf1(t_tf1),.t_tf2(t_tf2),.f_tr0(f_tr0),.f_tr1(f_tr1),.f_tr2(f_tr2),
         .cck(ck[0]), .crs(rn), .sk(ck[0]), .srs(rn), .c_cmd_v(cv_q), .c_cmd_d(cd_q), .c_done_v(dv), .c_done_tag(dt),
         .inp(`ifdef DSFD_SUHC_STATIC_ISSUE 1'b1 `else f_inp[0] `endif), .y_v(y_v), .y_rdy(y_rdy), .y_d(y_d), .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v), .rs_d(rs_d),

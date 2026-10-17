@@ -1,0 +1,101 @@
+{
+  "fold": {
+    "status": "PASS",
+    "scope": "component delayed equivalence; not canonical programme or physical closure",
+    "cycles_per_positive": 2500,
+    "added_return_cycles": 1,
+    "folded_ctrn_rly2": true,
+    "reference": "legacy A/B plus real CTRn RLY2",
+    "source_sha256": "e0244afdaac7bc699c347177dd60b9703f87e749cb067321f2b1361aec3e60f5",
+    "results": [
+      {
+        "variant": "positive",
+        "half": "a",
+        "returncode": 0,
+        "expected_verdict": true,
+        "log": "/srv/opentallas-scratch/codex/s81-return-fold-54d016448/fold/positive_a.log"
+      },
+      {
+        "variant": "positive",
+        "half": "b",
+        "returncode": 0,
+        "expected_verdict": true,
+        "log": "/srv/opentallas-scratch/codex/s81-return-fold-54d016448/fold/positive_b.log"
+      },
+      {
+        "variant": "bad_lane",
+        "half": "a",
+        "returncode": -6,
+        "expected_verdict": true,
+        "log": "/srv/opentallas-scratch/codex/s81-return-fold-54d016448/fold/bad_lane_a.log"
+      },
+      {
+        "variant": "bad_lane",
+        "half": "b",
+        "returncode": -6,
+        "expected_verdict": true,
+        "log": "/srv/opentallas-scratch/codex/s81-return-fold-54d016448/fold/bad_lane_b.log"
+      },
+      {
+        "variant": "drop_fault",
+        "half": "a",
+        "returncode": -6,
+        "expected_verdict": true,
+        "log": "/srv/opentallas-scratch/codex/s81-return-fold-54d016448/fold/drop_fault_a.log"
+      },
+      {
+        "variant": "missing_column_clock",
+        "half": "a",
+        "returncode": -6,
+        "expected_verdict": true,
+        "log": "/srv/opentallas-scratch/codex/s81-return-fold-54d016448/fold/missing_column_clock_a.log"
+      },
+      {
+        "variant": "missing_column_clock",
+        "half": "b",
+        "returncode": -6,
+        "expected_verdict": true,
+        "log": "/srv/opentallas-scratch/codex/s81-return-fold-54d016448/fold/missing_column_clock_b.log"
+      },
+      {
+        "variant": "missing_output_stage",
+        "half": "a",
+        "returncode": -6,
+        "expected_verdict": true,
+        "log": "/srv/opentallas-scratch/codex/s81-return-fold-54d016448/fold/missing_output_stage_a.log"
+      },
+      {
+        "variant": "missing_output_stage",
+        "half": "b",
+        "returncode": -6,
+        "expected_verdict": true,
+        "log": "/srv/opentallas-scratch/codex/s81-return-fold-54d016448/fold/missing_output_stage_b.log"
+      }
+    ]
+  },
+  "default_smoke": {
+    "status": "POSITIVE_ONLY_PASS_NOT_GATE",
+    "scope": "component delayed equivalence; not canonical programme or physical closure",
+    "cycles_per_positive": 2500,
+    "added_return_cycles": 1,
+    "folded_ctrn_rly2": false,
+    "reference": "legacy A/B",
+    "source_sha256": "e0244afdaac7bc699c347177dd60b9703f87e749cb067321f2b1361aec3e60f5",
+    "results": [
+      {
+        "variant": "positive",
+        "half": "a",
+        "returncode": 0,
+        "expected_verdict": true,
+        "log": "/srv/opentallas-scratch/codex/s81-return-fold-54d016448/default_smoke/positive_a.log"
+      },
+      {
+        "variant": "positive",
+        "half": "b",
+        "returncode": 0,
+        "expected_verdict": true,
+        "log": "/srv/opentallas-scratch/codex/s81-return-fold-54d016448/default_smoke/positive_b.log"
+      }
+    ]
+  }
+}

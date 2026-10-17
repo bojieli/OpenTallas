@@ -25,9 +25,12 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_cth #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, WIN = 2, WOUT = 2, ML = 5, AL = 4,
-    parameter integer RLY = 2, CNL_PIN = 0, CHAIN_STEP = AL, LANE_SPECIALIZE = 0
+    parameter integer RLY = 2, CNL_PIN = 0, CHAIN_STEP = AL, LANE_SPECIALIZE = 0, RETURN_COLUMNS = 0
 ) (
     input  wire                       clk,
+`ifdef OT_S81_HC_RETURN_COLUMNS
+    input wire [7:0]                  ck_ret, // A0..3 then B0..3; one delivered root per actual leaf
+`endif
     input  wire                       rst_in,
     output wire                       rst_out,
     input  wire [7:0]                 tid,
@@ -50,6 +53,12 @@ module ot_s81_hc_cth #(
 `ifndef SYNTHESIS
     initial if (LANE_SPECIALIZE && !CNL_PIN) $fatal(1,"cth LANE_SPECIALIZE requires CNL_PIN");
     initial if (RLY < 2 || GS != 8) $fatal(1, "ot_s81_hc_cth: RLY >= 2 (the return merge takes a relay stage), GS 8");
+`endif
+
+    initial if(RETURN_COLUMNS && (RLY!=2 || S_RT!=4))
+        $fatal(1,"RETURN_COLUMNS requires real serial S_RT4/RLY2 source");
+`ifndef OT_S81_HC_RETURN_COLUMNS
+    initial if(RETURN_COLUMNS) $fatal(1,"RETURN_COLUMNS requires eight explicit OT_S81_HC_RETURN_COLUMNS clock entries");
 `endif
 
     // Constant bit maps: HLOAD64-bit lane words, GAIN32-bit lane words, shared pre128.
@@ -215,6 +224,27 @@ module ot_s81_hc_cth #(
             assign hqb_s[64 * (SH * j + q) +: 64] = hrq[64 * S_RT * (j + 8) + 64 * (q + SH) +: 64];
         end
     end endgenerate
+`ifdef OT_S81_HC_RETURN_COLUMNS
+    generate if(RETURN_COLUMNS) begin : g_return_columns
+    ot_s81_hc_ctra_columns #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .READ_STAGE(CNL_PIN),.FOLD_CTRN(1)) u_ra (
+        .clk_col(ck_ret[3:0]), .rst_in(rst_c), .tid(tid), .last(last), .fv(fv_local), .fdx(fdx_local[O_D-1:0]), .rv_in(rv_in),
+        .rd_in(rd_in[WA-1:0]), .rvm(rvm), .rdm(rdm[WA-1:0]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
+        .rq_q_c1(rq_col[1]), .rq_q_c2(rq_col[2]), .rq_q_c3(rq_col[3]),
+        .hs_run_c1(hs_run_col[1]), .hs_run_c2(hs_run_col[2]), .hs_run_c3(hs_run_col[3]),
+        .hs_c_c1(hs_c_col[1]), .hs_c_c2(hs_c_col[2]), .hs_c_c3(hs_c_col[3]),
+        .hrq_n(hqa_n), .hrq_s(hqa_s), .yb_n(yb[0 +: 128]), .yb_s(yb[128 +: 128]), .cs(cs),
+        .nflt_n(nflt[7:0]), .nflt_s(nflt[15:8]), .hov_d(hov_d[0]),
+        .hnz_n({hnz_d[6], hnz_d[4], hnz_d[2], hnz_d[0]}), .hnz_s({hnz_d[7], hnz_d[5], hnz_d[3], hnz_d[1]}),
+        .pflt_n({pflt_d[6], pflt_d[4], pflt_d[2], pflt_d[0]}), .pflt_s({pflt_d[7], pflt_d[5], pflt_d[3], pflt_d[1]}));
+    ot_s81_hc_ctrb_columns #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .READ_STAGE(CNL_PIN),.FOLD_CTRN(1)) u_rb (
+        .clk_col(ck_ret[7:4]), .rst_in(rst_c), .tid(tid), .last(last), .fv(fv_local), .fdx(fdx_local[O_D-1:0]), .rv_in(rv_in),
+        .rdh_in(rd_in[P_D-1:0]), .rdd_in(rd_in[RDW-1 -: 512 * SH + 128]), .rdm(rdm[RDW-1 -: 512 * SH]),
+        .hrq_n(hqb_n), .hrq_s(hqb_s), .yb_n(yb[0 +: 128]), .yb_s(yb[128 +: 128]));
+    // These now are the true outgoing return FFs. No central CTRn exists in this branch.
+    assign rv_out=rvm;
+    assign rd_out=rdm;
+    end else begin : g_return_legacy
+`endif
     ot_s81_hc_ctra #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .READ_STAGE(CNL_PIN)) u_ra (
         .clk(clk), .rst_in(rst_c), .tid(tid), .last(last), .fv(fv_local), .fdx(fdx_local[O_D-1:0]), .rv_in(rv_in),
         .rd_in(rd_in[WA-1:0]), .rvm(rvm), .rdm(rdm[WA-1:0]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
@@ -231,6 +261,9 @@ module ot_s81_hc_cth #(
         .hrq_n(hqb_n), .hrq_s(hqb_s), .yb_n(yb[0 +: 128]), .yb_s(yb[128 +: 128]));
     ot_s81_hc_ctrn #(.S_RT(S_RT), .RDW(RDW), .RLY(RLY)) u_rn (
         .clk(clk), .rst_in(rst_c), .rvm(rvm), .rdm(rdm), .rv_out(rv_out), .rd_out(rd_out));
+`ifdef OT_S81_HC_RETURN_COLUMNS
+    end endgenerate
+`endif
 endmodule
 
 // ------------------------------------------------------------------------------------------------ forward bus tiles
