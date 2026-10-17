@@ -322,7 +322,7 @@
     "hb_vms_NE"
    ],
    "param_sets": {
-    "{}": 1
+    "{\"STRAP_BANKS\": \"1\"}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -345,7 +345,7 @@
     "hb_vms_NW"
    ],
    "param_sets": {
-    "{}": 1
+    "{\"Q2_MERGE\": \"1\", \"STRAP_BANKS\": \"1\"}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -368,7 +368,7 @@
     "hb_vms_SE"
    ],
    "param_sets": {
-    "{}": 1
+    "{\"STRAP_BANKS\": \"1\"}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -391,7 +391,7 @@
     "hb_vms_SW"
    ],
    "param_sets": {
-    "{}": 1
+    "{\"STRAP_BANKS\": \"1\"}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -1632,7 +1632,7 @@
   "hbfd_rly_624_SN:i",
   "hbfd_rly_624_WE:i"
  ],
- "die_sha256": "c4f2858f3305ff304e2ec8861e78a05c01c91baba9fbeaf80557d731312b0704",
+ "die_sha256": "4146f996630473f1f0178c1cd8a42ec2484c4474b17cde23a0b6985ddba66c78",
  "straps_declared": [
   "hfd_hgi_vm_calendar_f20:tgt",
   "ot_hbm_hc_eng_static:tgt",
