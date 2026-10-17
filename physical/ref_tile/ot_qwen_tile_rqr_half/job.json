@@ -48,7 +48,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/arch/qwen_region_glue_1016/bench/run_2.log"
    }
   ],
   "calibrate": {
