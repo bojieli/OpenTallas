@@ -1,0 +1,26 @@
+{
+ "cell": "ot_hgi_sfu_programme_store_r7c",
+ "view": "physical/ref_tile/hbm_sfu_programme_store_1016/views/ot_hgi_sfu_programme_store_r7c",
+ "lib_cell": "ot_hgi_sfu_programme_store_r7c",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 857.2,
+ "spread_ps": 68.6,
+ "outputs": 2282,
+ "inputs": 621,
+ "launch_ps": 130.1,
+ "launch_pin": "io_word[185]",
+ "capture_ps": 222.0,
+ "capture_pin": "cfg_we",
+ "launch_over": 0,
+ "capture_over": 1,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_launch_min_ps": 59.2,
+ "ff_hold_need_ps": -31.9,
+ "pass": false,
+ "fail_why": "capture 221.96117 > 190 (1 pins)",
+ "note": "route hbm_sfu_programme_store_r7c4_1016-r7c4-a686d9aa7 CLOSED TT +30.58 / FF +7.18 / DRC 0 (record a042dea7e). Native FAIL on ONE pin: cfg_we capture 222.0 (all other 620 inputs <=190); cfg_we lands on r_cfg_we, a synchronous-reset flop (AND in front of D: not flop-first). Fix candidate: no reset on the pin flops r_cfg_we / r_io_cfg_we / r_io_start_v (their consumers we_q / start_v_q carry the stripe sync reset)."
+}
