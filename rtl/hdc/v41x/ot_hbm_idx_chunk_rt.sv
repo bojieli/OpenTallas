@@ -35,7 +35,12 @@ module ot_hbm_idx_chunk_rt #(
     output reg  [NKT-1:0]        c_kv,
     output reg  [NKT*32-1:0]     c_sum,
     output reg  [NKT-1:0]        c_fault,
-    output reg                   online
+    output reg                   online,
+    // the D inputs of c_* (for the chained leaf: its sum-bus register replaces the c_* register, reg -> reg)
+    output wire                  n_v,
+    output wire [NKT-1:0]        n_kv,
+    output wire [NKT*32-1:0]     n_sum,
+    output wire [NKT-1:0]        n_fault
 );
     localparam integer NB = 4, NKT = 4, FPL = 7, FML = 5, QL = 5, HC = 8;
     localparam integer KW = NB * 136;
@@ -153,8 +158,10 @@ module ot_hbm_idx_chunk_rt #(
             end
         end
         assign cs[0] = 32'd0; assign cf[0] = 1'b0;
+        assign n_sum[32*g +: 32] = cs[HC]; assign n_fault[g] = cf[HC];
         always @(posedge clk) begin c_sum[32*g +: 32] <= cs[HC]; c_fault[g] <= cf[HC]; end
     end endgenerate
-    always @(posedge clk) begin c_v <= vl[0] && rn; c_kv <= vl[NKT:1]; end
+    assign n_v = vl[0] && rn; assign n_kv = vl[NKT:1];
+    always @(posedge clk) begin c_v <= n_v; c_kv <= n_kv; end
 endmodule
 `default_nettype wire
