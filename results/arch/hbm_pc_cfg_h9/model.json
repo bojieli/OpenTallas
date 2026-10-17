@@ -4,6 +4,37 @@
   "cycles_added": 0,
   "bandwidth": "same accepted-edge calendar; 256-bit PHY payload, one column/edge maximum; actual production measurement pending",
   "structural_change": "predecoded K legality in skid, per64bit skid valid/select state, registered next-head pointer and parallel candidate onehots, regional synchronous reset consumers",
-  "area": "measurement pending; metadata 2bits, replicated skid validity +36bits, next-head pointer5bits; reset relay regional replication",
-  "native": "mandatory pending; combinational predecode at K input explicitly must pass native capture before route"
+  "area": "actual synthesis pending; 32 extra register bits estimated versus H8, no new SRAM",
+  "native": "mandatory pending; combinational predecode at K input explicitly must pass native capture before route",
+  "instances": 64,
+  "added_registers_estimate_vs_h8": 32,
+  "added_registers_breakdown": {
+    "legal_head_tail": 2,
+    "regional_skid_control": 18,
+    "next_read_pointer": 5,
+    "reset_regions": 7
+  },
+  "measured_calendar": {
+    "all32_observed_writes": 32,
+    "all32_edges": 512,
+    "all32_payload_bytes": 1024,
+    "observed_fixture_bytes_per_pc_per_edge": 0.0625,
+    "scope": "fixed qualification fixture; not production peak throughput"
+  },
+  "d4f_grant": {
+    "commit": "ce21ef609",
+    "path": "results/arch/hbm_die_v16_d4f/grants_d4f.json",
+    "scope": "existing H8 ABI same185.76x164.16 provisional fit only; H9 not native adopted"
+  },
+  "skid_equivalence": {
+    "checks": 32640,
+    "full": 3343,
+    "stalled": 7211,
+    "widths": [
+      341,
+      277
+    ],
+    "added_edges": 0,
+    "negative": "actual wrong input bit mutant fails first valid word in both widths"
+  }
 }
