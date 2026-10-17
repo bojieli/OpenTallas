@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.hbm_globalfp.pins.v1",
- "candidate": "d4fw_r3",
+ "candidate": "d4fw_r4",
  "die_outline_um": [
-  21002.24,
+  22762.24,
   32169.44
  ],
  "pin_density_per_um": 10.0,
@@ -157,10 +157,10 @@
       }
      ]
     },
-    "N": {
-     "face_len_um": 1036.8,
+    "E": {
+     "face_len_um": 637.2,
      "bits": 512,
-     "utilisation": 0.049,
+     "utilisation": 0.08,
      "pins": [
       {
        "link": "pc_SW0>vmh_SW:HBM_VM",
@@ -168,10 +168,10 @@
        "peer": "vmh_SW",
        "dir": "out",
        "bits": 256,
-       "offset_um": 985.6,
+       "offset_um": 586.0,
        "span_um": 25.6,
-       "x": 6456.2,
-       "y": 1856.0
+       "x": 6494.6,
+       "y": 1817.6
       },
       {
        "link": "vmh_SW>pc_SW0:VM_HBM",
@@ -179,10 +179,10 @@
        "peer": "vmh_SW",
        "dir": "in",
        "bits": 256,
-       "offset_um": 1011.2,
+       "offset_um": 611.6,
        "span_um": 25.6,
-       "x": 6481.8,
-       "y": 1856.0
+       "x": 6494.6,
+       "y": 1843.2
       }
      ]
     }
@@ -364,10 +364,10 @@
       }
      ]
     },
-    "W": {
-     "face_len_um": 637.2,
-     "bits": 1132,
-     "utilisation": 0.178,
+    "N": {
+     "face_len_um": 1036.8,
+     "bits": 1644,
+     "utilisation": 0.159,
      "pins": [
       {
        "link": "pc_SW3>sm_SW3:SM_HBM",
@@ -375,18 +375,11 @@
        "peer": "sm_SW3",
        "dir": "out",
        "bits": 1132,
-       "offset_um": 524.0,
+       "offset_um": 0.0,
        "span_um": 113.2,
-       "x": 8868.2,
-       "y": 1799.4
-      }
-     ]
-    },
-    "N": {
-     "face_len_um": 1036.8,
-     "bits": 512,
-     "utilisation": 0.049,
-     "pins": [
+       "x": 8924.8,
+       "y": 1856.0
+      },
       {
        "link": "pc_SW3>vmh_SW:HBM_VM",
        "cls": "HBM_VM",
@@ -450,9 +443,9 @@
        "peer": "sm_SW4",
        "dir": "out",
        "bits": 1132,
-       "offset_um": 11.3,
+       "offset_um": 451.3,
        "span_um": 113.2,
-       "x": 10072.9,
+       "x": 10512.9,
        "y": 1856.0
       },
       {
@@ -518,9 +511,9 @@
        "peer": "sm_SW5",
        "dir": "out",
        "bits": 1132,
-       "offset_um": 461.8,
+       "offset_um": 671.3,
        "span_um": 113.2,
-       "x": 11660.2,
+       "x": 11869.7,
        "y": 1856.0
       },
       {
@@ -586,9 +579,9 @@
        "peer": "sm_SW6",
        "dir": "out",
        "bits": 1132,
-       "offset_um": 462.74,
+       "offset_um": 872.4,
        "span_um": 113.2,
-       "x": 12797.9,
+       "x": 13207.6,
        "y": 1856.0
       },
       {
@@ -643,10 +636,10 @@
       }
      ]
     },
-    "N": {
-     "face_len_um": 1036.8,
-     "bits": 1644,
-     "utilisation": 0.159,
+    "E": {
+     "face_len_um": 637.2,
+     "bits": 1132,
+     "utilisation": 0.178,
      "pins": [
       {
        "link": "pc_SW7>sm_SW7:SM_HBM",
@@ -654,11 +647,18 @@
        "peer": "sm_SW7",
        "dir": "out",
        "bits": 1132,
-       "offset_um": 872.4,
+       "offset_um": 524.0,
        "span_um": 113.2,
-       "x": 14344.4,
-       "y": 1856.0
-      },
+       "x": 14452.2,
+       "y": 1799.4
+      }
+     ]
+    },
+    "N": {
+     "face_len_um": 1036.8,
+     "bits": 512,
+     "utilisation": 0.049,
+     "pins": [
       {
        "link": "pc_SW7>vmh_SW:HBM_VM",
        "cls": "HBM_VM",
@@ -831,7 +831,7 @@
    }
   },
   "sm_SW1": {
-   "x": 2082.1,
+   "x": 2522.1,
    "y": 2056.0,
    "w": 1939.68,
    "h": 6678.72,
@@ -851,7 +851,7 @@
        "bits": 1132,
        "offset_um": 0.0,
        "span_um": 113.2,
-       "x": 4021.8,
+       "x": 4461.8,
        "y": 2112.6
       },
       {
@@ -862,7 +862,7 @@
        "bits": 270,
        "offset_um": 6536.12,
        "span_um": 27.0,
-       "x": 4021.8,
+       "x": 4461.8,
        "y": 8605.6
       },
       {
@@ -873,7 +873,7 @@
        "bits": 273,
        "offset_um": 6563.12,
        "span_um": 27.3,
-       "x": 4021.8,
+       "x": 4461.8,
        "y": 8632.8
       },
       {
@@ -884,7 +884,7 @@
        "bits": 273,
        "offset_um": 6590.42,
        "span_um": 27.3,
-       "x": 4021.8,
+       "x": 4461.8,
        "y": 8660.1
       },
       {
@@ -895,7 +895,7 @@
        "bits": 273,
        "offset_um": 6617.72,
        "span_um": 27.3,
-       "x": 4021.8,
+       "x": 4461.8,
        "y": 8687.4
       },
       {
@@ -906,7 +906,7 @@
        "bits": 273,
        "offset_um": 6645.02,
        "span_um": 27.3,
-       "x": 4021.8,
+       "x": 4461.8,
        "y": 8714.7
       },
       {
@@ -917,7 +917,7 @@
        "bits": 64,
        "offset_um": 6672.32,
        "span_um": 6.4,
-       "x": 4021.8,
+       "x": 4461.8,
        "y": 8731.5
       }
      ]
@@ -935,7 +935,7 @@
        "bits": 273,
        "offset_um": 6624.12,
        "span_um": 27.3,
-       "x": 2082.1,
+       "x": 2522.1,
        "y": 8693.8
       },
       {
@@ -946,7 +946,7 @@
        "bits": 273,
        "offset_um": 6651.42,
        "span_um": 27.3,
-       "x": 2082.1,
+       "x": 2522.1,
        "y": 8721.1
       }
      ]
@@ -962,7 +962,7 @@
        "peer": "vmb_SW2",
        "dir": "in",
        "bits": 273,
-       "offset_um": 1450.19,
+       "offset_um": 1010.19,
        "span_um": 27.3,
        "x": 3545.9,
        "y": 8734.7
@@ -973,7 +973,7 @@
        "peer": "vmb_SW3",
        "dir": "in",
        "bits": 273,
-       "offset_um": 1477.49,
+       "offset_um": 1037.49,
        "span_um": 27.3,
        "x": 3573.2,
        "y": 8734.7
@@ -983,7 +983,7 @@
    }
   },
   "sm_SW2": {
-   "x": 4121.8,
+   "x": 4561.8,
    "y": 2056.0,
    "w": 1939.68,
    "h": 6678.72,
@@ -1003,7 +1003,7 @@
        "bits": 1132,
        "offset_um": 0.0,
        "span_um": 113.2,
-       "x": 6061.4,
+       "x": 6501.4,
        "y": 2112.6
       },
       {
@@ -1014,7 +1014,7 @@
        "bits": 270,
        "offset_um": 6536.12,
        "span_um": 27.0,
-       "x": 6061.4,
+       "x": 6501.4,
        "y": 8605.6
       },
       {
@@ -1025,7 +1025,7 @@
        "bits": 273,
        "offset_um": 6563.12,
        "span_um": 27.3,
-       "x": 6061.4,
+       "x": 6501.4,
        "y": 8632.8
       },
       {
@@ -1036,7 +1036,7 @@
        "bits": 273,
        "offset_um": 6590.42,
        "span_um": 27.3,
-       "x": 6061.4,
+       "x": 6501.4,
        "y": 8660.1
       },
       {
@@ -1047,7 +1047,7 @@
        "bits": 273,
        "offset_um": 6617.72,
        "span_um": 27.3,
-       "x": 6061.4,
+       "x": 6501.4,
        "y": 8687.4
       },
       {
@@ -1058,7 +1058,7 @@
        "bits": 273,
        "offset_um": 6645.02,
        "span_um": 27.3,
-       "x": 6061.4,
+       "x": 6501.4,
        "y": 8714.7
       },
       {
@@ -1069,15 +1069,15 @@
        "bits": 64,
        "offset_um": 6672.32,
        "span_um": 6.4,
-       "x": 6061.4,
+       "x": 6501.4,
        "y": 8731.5
       }
      ]
     },
     "W": {
      "face_len_um": 6678.7,
-     "bits": 819,
-     "utilisation": 0.012,
+     "bits": 1092,
+     "utilisation": 0.016,
      "pins": [
       {
        "link": "vmb_SW0>sm_SW2:SM_X",
@@ -1085,10 +1085,10 @@
        "peer": "vmb_SW0",
        "dir": "in",
        "bits": 273,
-       "offset_um": 6596.82,
+       "offset_um": 6569.52,
        "span_um": 27.3,
-       "x": 4121.8,
-       "y": 8666.5
+       "x": 4561.8,
+       "y": 8639.2
       },
       {
        "link": "vmb_SW1>sm_SW2:SM_X",
@@ -1096,10 +1096,10 @@
        "peer": "vmb_SW1",
        "dir": "in",
        "bits": 273,
-       "offset_um": 6624.12,
+       "offset_um": 6596.82,
        "span_um": 27.3,
-       "x": 4121.8,
-       "y": 8693.8
+       "x": 4561.8,
+       "y": 8666.5
       },
       {
        "link": "vmb_SW2>sm_SW2:SM_X",
@@ -1107,45 +1107,38 @@
        "peer": "vmb_SW2",
        "dir": "in",
        "bits": 273,
-       "offset_um": 6651.42,
+       "offset_um": 6624.12,
        "span_um": 27.3,
-       "x": 4121.8,
-       "y": 8721.1
-      }
-     ]
-    },
-    "N": {
-     "face_len_um": 1939.7,
-     "bits": 273,
-     "utilisation": 0.014,
-     "pins": [
+       "x": 4561.8,
+       "y": 8693.8
+      },
       {
        "link": "vmb_SW3>sm_SW2:SM_X",
        "cls": "SM_X",
        "peer": "vmb_SW3",
        "dir": "in",
        "bits": 273,
-       "offset_um": 0.0,
+       "offset_um": 6651.42,
        "span_um": 27.3,
-       "x": 4135.4,
-       "y": 8734.7
+       "x": 4561.8,
+       "y": 8721.1
       }
      ]
     }
    }
   },
   "sm_SW3": {
-   "x": 6161.4,
+   "x": 7041.4,
    "y": 2056.0,
    "w": 1939.68,
    "h": 6678.72,
    "kind": "SM",
    "orient": "R0",
    "faces": {
-    "E": {
-     "face_len_um": 6678.7,
-     "bits": 2012,
-     "utilisation": 0.03,
+    "S": {
+     "face_len_um": 1939.7,
+     "bits": 1132,
+     "utilisation": 0.058,
      "pins": [
       {
        "link": "pc_SW3>sm_SW3:SM_HBM",
@@ -1153,11 +1146,18 @@
        "peer": "pc_SW3",
        "dir": "in",
        "bits": 1132,
-       "offset_um": 0.0,
+       "offset_um": 1826.48,
        "span_um": 113.2,
-       "x": 8101.1,
-       "y": 2112.6
-      },
+       "x": 8924.5,
+       "y": 2056.0
+      }
+     ]
+    },
+    "E": {
+     "face_len_um": 6678.7,
+     "bits": 880,
+     "utilisation": 0.013,
+     "pins": [
       {
        "link": "sm_SW3>vmh_SW:SM_OUT",
        "cls": "SM_OUT",
@@ -1166,7 +1166,7 @@
        "bits": 270,
        "offset_um": 6590.72,
        "span_um": 27.0,
-       "x": 8101.1,
+       "x": 8981.1,
        "y": 8660.2
       },
       {
@@ -1177,7 +1177,7 @@
        "bits": 273,
        "offset_um": 6617.72,
        "span_um": 27.3,
-       "x": 8101.1,
+       "x": 8981.1,
        "y": 8687.4
       },
       {
@@ -1188,7 +1188,7 @@
        "bits": 273,
        "offset_um": 6645.02,
        "span_um": 27.3,
-       "x": 8101.1,
+       "x": 8981.1,
        "y": 8714.7
       },
       {
@@ -1199,7 +1199,7 @@
        "bits": 64,
        "offset_um": 6672.32,
        "span_um": 6.4,
-       "x": 8101.1,
+       "x": 8981.1,
        "y": 8731.5
       }
      ]
@@ -1217,7 +1217,7 @@
        "bits": 273,
        "offset_um": 6569.52,
        "span_um": 27.3,
-       "x": 6161.4,
+       "x": 7041.4,
        "y": 8639.2
       },
       {
@@ -1228,7 +1228,7 @@
        "bits": 273,
        "offset_um": 6596.82,
        "span_um": 27.3,
-       "x": 6161.4,
+       "x": 7041.4,
        "y": 8666.5
       },
       {
@@ -1239,7 +1239,7 @@
        "bits": 273,
        "offset_um": 6624.12,
        "span_um": 27.3,
-       "x": 6161.4,
+       "x": 7041.4,
        "y": 8693.8
       },
       {
@@ -1250,7 +1250,7 @@
        "bits": 273,
        "offset_um": 6651.42,
        "span_um": 27.3,
-       "x": 6161.4,
+       "x": 7041.4,
        "y": 8721.1
       }
      ]
@@ -1266,7 +1266,7 @@
        "peer": "vmb_SW4",
        "dir": "in",
        "bits": 273,
-       "offset_um": 1439.95,
+       "offset_um": 559.95,
        "span_um": 27.3,
        "x": 7615.0,
        "y": 8734.7
@@ -1277,7 +1277,7 @@
        "peer": "vmb_SW5",
        "dir": "in",
        "bits": 273,
-       "offset_um": 1467.25,
+       "offset_um": 587.25,
        "span_um": 27.3,
        "x": 7642.3,
        "y": 8734.7
@@ -1287,7 +1287,7 @@
    }
   },
   "sm_SW4": {
-   "x": 8201.1,
+   "x": 9081.1,
    "y": 2056.0,
    "w": 1939.68,
    "h": 6678.72,
@@ -1305,17 +1305,17 @@
        "peer": "pc_SW4",
        "dir": "in",
        "bits": 1132,
-       "offset_um": 1815.18,
+       "offset_um": 1375.18,
        "span_um": 113.2,
-       "x": 10072.9,
+       "x": 10512.9,
        "y": 2056.0
       }
      ]
     },
     "E": {
      "face_len_um": 6678.7,
-     "bits": 607,
-     "utilisation": 0.009,
+     "bits": 334,
+     "utilisation": 0.005,
      "pins": [
       {
        "link": "sm_SW4>vmh_SW:SM_OUT",
@@ -1323,21 +1323,10 @@
        "peer": "vmh_SW",
        "dir": "out",
        "bits": 270,
-       "offset_um": 6618.02,
+       "offset_um": 6645.32,
        "span_um": 27.0,
-       "x": 10140.8,
-       "y": 8687.5
-      },
-      {
-       "link": "vmb_SW6>sm_SW4:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_SW6",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 6645.02,
-       "span_um": 27.3,
-       "x": 10140.8,
-       "y": 8714.7
+       "x": 11020.8,
+       "y": 8714.8
       },
       {
        "link": "vmh_SW>sm_SW4:KV_DESC",
@@ -1347,15 +1336,15 @@
        "bits": 64,
        "offset_um": 6672.32,
        "span_um": 6.4,
-       "x": 10140.8,
+       "x": 11020.8,
        "y": 8731.5
       }
      ]
     },
     "W": {
      "face_len_um": 6678.7,
-     "bits": 1365,
-     "utilisation": 0.02,
+     "bits": 1638,
+     "utilisation": 0.025,
      "pins": [
       {
        "link": "vmb_SW0>sm_SW4:SM_X",
@@ -1363,10 +1352,10 @@
        "peer": "vmb_SW0",
        "dir": "in",
        "bits": 273,
-       "offset_um": 6542.22,
+       "offset_um": 6514.92,
        "span_um": 27.3,
-       "x": 8201.1,
-       "y": 8611.9
+       "x": 9081.1,
+       "y": 8584.6
       },
       {
        "link": "vmb_SW1>sm_SW4:SM_X",
@@ -1374,10 +1363,10 @@
        "peer": "vmb_SW1",
        "dir": "in",
        "bits": 273,
-       "offset_um": 6569.52,
+       "offset_um": 6542.22,
        "span_um": 27.3,
-       "x": 8201.1,
-       "y": 8639.2
+       "x": 9081.1,
+       "y": 8611.9
       },
       {
        "link": "vmb_SW2>sm_SW4:SM_X",
@@ -1385,10 +1374,10 @@
        "peer": "vmb_SW2",
        "dir": "in",
        "bits": 273,
-       "offset_um": 6596.82,
+       "offset_um": 6569.52,
        "span_um": 27.3,
-       "x": 8201.1,
-       "y": 8666.5
+       "x": 9081.1,
+       "y": 8639.2
       },
       {
        "link": "vmb_SW3>sm_SW4:SM_X",
@@ -1396,10 +1385,10 @@
        "peer": "vmb_SW3",
        "dir": "in",
        "bits": 273,
-       "offset_um": 6624.12,
+       "offset_um": 6596.82,
        "span_um": 27.3,
-       "x": 8201.1,
-       "y": 8693.8
+       "x": 9081.1,
+       "y": 8666.5
       },
       {
        "link": "vmb_SW4>sm_SW4:SM_X",
@@ -1407,9 +1396,20 @@
        "peer": "vmb_SW4",
        "dir": "in",
        "bits": 273,
+       "offset_um": 6624.12,
+       "span_um": 27.3,
+       "x": 9081.1,
+       "y": 8693.8
+      },
+      {
+       "link": "vmb_SW5>sm_SW4:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_SW5",
+       "dir": "in",
+       "bits": 273,
        "offset_um": 6651.42,
        "span_um": 27.3,
-       "x": 8201.1,
+       "x": 9081.1,
        "y": 8721.1
       }
      ]
@@ -1420,14 +1420,14 @@
      "utilisation": 0.028,
      "pins": [
       {
-       "link": "vmb_SW5>sm_SW4:SM_X",
+       "link": "vmb_SW6>sm_SW4:SM_X",
        "cls": "SM_X",
-       "peer": "vmb_SW5",
+       "peer": "vmb_SW6",
        "dir": "in",
        "bits": 273,
-       "offset_um": 0.0,
+       "offset_um": 1568.51,
        "span_um": 27.3,
-       "x": 8214.8,
+       "x": 10663.3,
        "y": 8734.7
       },
       {
@@ -1436,9 +1436,9 @@
        "peer": "vmb_SW7",
        "dir": "in",
        "bits": 273,
-       "offset_um": 1912.38,
+       "offset_um": 1595.81,
        "span_um": 27.3,
-       "x": 10127.2,
+       "x": 10690.6,
        "y": 8734.7
       }
      ]
@@ -1446,7 +1446,7 @@
    }
   },
   "sm_SW5": {
-   "x": 10240.8,
+   "x": 11560.8,
    "y": 2056.0,
    "w": 1939.68,
    "h": 6678.72,
@@ -1464,9 +1464,9 @@
        "peer": "pc_SW5",
        "dir": "in",
        "bits": 1132,
-       "offset_um": 1362.8,
+       "offset_um": 252.3,
        "span_um": 113.2,
-       "x": 11660.2,
+       "x": 11869.7,
        "y": 2056.0
       }
      ]
@@ -1484,7 +1484,7 @@
        "bits": 270,
        "offset_um": 6645.32,
        "span_um": 27.0,
-       "x": 12180.5,
+       "x": 13500.5,
        "y": 8714.8
       },
       {
@@ -1495,15 +1495,15 @@
        "bits": 64,
        "offset_um": 6672.32,
        "span_um": 6.4,
-       "x": 12180.5,
+       "x": 13500.5,
        "y": 8731.5
       }
      ]
     },
     "W": {
      "face_len_um": 6678.7,
-     "bits": 1638,
-     "utilisation": 0.025,
+     "bits": 2184,
+     "utilisation": 0.033,
      "pins": [
       {
        "link": "vmb_SW0>sm_SW5:SM_X",
@@ -1511,10 +1511,10 @@
        "peer": "vmb_SW0",
        "dir": "in",
        "bits": 273,
-       "offset_um": 6514.92,
+       "offset_um": 6460.32,
        "span_um": 27.3,
-       "x": 10240.8,
-       "y": 8584.6
+       "x": 11560.8,
+       "y": 8530.0
       },
       {
        "link": "vmb_SW1>sm_SW5:SM_X",
@@ -1522,10 +1522,10 @@
        "peer": "vmb_SW1",
        "dir": "in",
        "bits": 273,
-       "offset_um": 6542.22,
+       "offset_um": 6487.62,
        "span_um": 27.3,
-       "x": 10240.8,
-       "y": 8611.9
+       "x": 11560.8,
+       "y": 8557.3
       },
       {
        "link": "vmb_SW2>sm_SW5:SM_X",
@@ -1533,10 +1533,10 @@
        "peer": "vmb_SW2",
        "dir": "in",
        "bits": 273,
-       "offset_um": 6569.52,
+       "offset_um": 6514.92,
        "span_um": 27.3,
-       "x": 10240.8,
-       "y": 8639.2
+       "x": 11560.8,
+       "y": 8584.6
       },
       {
        "link": "vmb_SW3>sm_SW5:SM_X",
@@ -1544,10 +1544,10 @@
        "peer": "vmb_SW3",
        "dir": "in",
        "bits": 273,
-       "offset_um": 6596.82,
+       "offset_um": 6542.22,
        "span_um": 27.3,
-       "x": 10240.8,
-       "y": 8666.5
+       "x": 11560.8,
+       "y": 8611.9
       },
       {
        "link": "vmb_SW4>sm_SW5:SM_X",
@@ -1555,10 +1555,10 @@
        "peer": "vmb_SW4",
        "dir": "in",
        "bits": 273,
-       "offset_um": 6624.12,
+       "offset_um": 6569.52,
        "span_um": 27.3,
-       "x": 10240.8,
-       "y": 8693.8
+       "x": 11560.8,
+       "y": 8639.2
       },
       {
        "link": "vmb_SW5>sm_SW5:SM_X",
@@ -1566,28 +1566,21 @@
        "peer": "vmb_SW5",
        "dir": "in",
        "bits": 273,
-       "offset_um": 6651.42,
+       "offset_um": 6596.82,
        "span_um": 27.3,
-       "x": 10240.8,
-       "y": 8721.1
-      }
-     ]
-    },
-    "N": {
-     "face_len_um": 1939.7,
-     "bits": 546,
-     "utilisation": 0.028,
-     "pins": [
+       "x": 11560.8,
+       "y": 8666.5
+      },
       {
        "link": "vmb_SW6>sm_SW5:SM_X",
        "cls": "SM_X",
        "peer": "vmb_SW6",
        "dir": "in",
        "bits": 273,
-       "offset_um": 457.71,
+       "offset_um": 6624.12,
        "span_um": 27.3,
-       "x": 10712.2,
-       "y": 8734.7
+       "x": 11560.8,
+       "y": 8693.8
       },
       {
        "link": "vmb_SW7>sm_SW5:SM_X",
@@ -1595,27 +1588,27 @@
        "peer": "vmb_SW7",
        "dir": "in",
        "bits": 273,
-       "offset_um": 485.01,
+       "offset_um": 6651.42,
        "span_um": 27.3,
-       "x": 10739.5,
-       "y": 8734.7
+       "x": 11560.8,
+       "y": 8721.1
       }
      ]
     }
    }
   },
   "sm_SW6": {
-   "x": 12280.5,
+   "x": 13600.5,
    "y": 2056.0,
    "w": 1939.68,
    "h": 6678.72,
    "kind": "SM",
    "orient": "R0",
    "faces": {
-    "S": {
-     "face_len_um": 1939.7,
-     "bits": 1132,
-     "utilisation": 0.058,
+    "W": {
+     "face_len_um": 6678.7,
+     "bits": 3316,
+     "utilisation": 0.05,
      "pins": [
       {
        "link": "pc_SW6>sm_SW6:SM_HBM",
@@ -1623,10 +1616,98 @@
        "peer": "pc_SW6",
        "dir": "in",
        "bits": 1132,
-       "offset_um": 460.86,
+       "offset_um": 0.0,
        "span_um": 113.2,
-       "x": 12797.9,
-       "y": 2056.0
+       "x": 13600.5,
+       "y": 2112.6
+      },
+      {
+       "link": "vmb_SW0>sm_SW6:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_SW0",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 6460.32,
+       "span_um": 27.3,
+       "x": 13600.5,
+       "y": 8530.0
+      },
+      {
+       "link": "vmb_SW1>sm_SW6:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_SW1",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 6487.62,
+       "span_um": 27.3,
+       "x": 13600.5,
+       "y": 8557.3
+      },
+      {
+       "link": "vmb_SW2>sm_SW6:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_SW2",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 6514.92,
+       "span_um": 27.3,
+       "x": 13600.5,
+       "y": 8584.6
+      },
+      {
+       "link": "vmb_SW3>sm_SW6:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_SW3",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 6542.22,
+       "span_um": 27.3,
+       "x": 13600.5,
+       "y": 8611.9
+      },
+      {
+       "link": "vmb_SW4>sm_SW6:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_SW4",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 6569.52,
+       "span_um": 27.3,
+       "x": 13600.5,
+       "y": 8639.2
+      },
+      {
+       "link": "vmb_SW5>sm_SW6:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_SW5",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 6596.82,
+       "span_um": 27.3,
+       "x": 13600.5,
+       "y": 8666.5
+      },
+      {
+       "link": "vmb_SW6>sm_SW6:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_SW6",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 6624.12,
+       "span_um": 27.3,
+       "x": 13600.5,
+       "y": 8693.8
+      },
+      {
+       "link": "vmb_SW7>sm_SW6:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_SW7",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 6651.42,
+       "span_um": 27.3,
+       "x": 13600.5,
+       "y": 8721.1
       }
      ]
     },
@@ -1643,7 +1724,7 @@
        "bits": 270,
        "offset_um": 6645.32,
        "span_um": 27.0,
-       "x": 14220.2,
+       "x": 15540.2,
        "y": 8714.8
       },
       {
@@ -1654,120 +1735,25 @@
        "bits": 64,
        "offset_um": 6672.32,
        "span_um": 6.4,
-       "x": 14220.2,
+       "x": 15540.2,
        "y": 8731.5
-      }
-     ]
-    },
-    "W": {
-     "face_len_um": 6678.7,
-     "bits": 2184,
-     "utilisation": 0.033,
-     "pins": [
-      {
-       "link": "vmb_SW0>sm_SW6:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_SW0",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 6460.32,
-       "span_um": 27.3,
-       "x": 12280.5,
-       "y": 8530.0
-      },
-      {
-       "link": "vmb_SW1>sm_SW6:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_SW1",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 6487.62,
-       "span_um": 27.3,
-       "x": 12280.5,
-       "y": 8557.3
-      },
-      {
-       "link": "vmb_SW2>sm_SW6:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_SW2",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 6514.92,
-       "span_um": 27.3,
-       "x": 12280.5,
-       "y": 8584.6
-      },
-      {
-       "link": "vmb_SW3>sm_SW6:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_SW3",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 6542.22,
-       "span_um": 27.3,
-       "x": 12280.5,
-       "y": 8611.9
-      },
-      {
-       "link": "vmb_SW4>sm_SW6:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_SW4",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 6569.52,
-       "span_um": 27.3,
-       "x": 12280.5,
-       "y": 8639.2
-      },
-      {
-       "link": "vmb_SW5>sm_SW6:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_SW5",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 6596.82,
-       "span_um": 27.3,
-       "x": 12280.5,
-       "y": 8666.5
-      },
-      {
-       "link": "vmb_SW6>sm_SW6:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_SW6",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 6624.12,
-       "span_um": 27.3,
-       "x": 12280.5,
-       "y": 8693.8
-      },
-      {
-       "link": "vmb_SW7>sm_SW6:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_SW7",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 6651.42,
-       "span_um": 27.3,
-       "x": 12280.5,
-       "y": 8721.1
       }
      ]
     }
    }
   },
   "sm_SW7": {
-   "x": 14320.2,
+   "x": 16080.2,
    "y": 2056.0,
    "w": 1939.68,
    "h": 6678.72,
    "kind": "SM",
    "orient": "R0",
    "faces": {
-    "S": {
-     "face_len_um": 1939.7,
-     "bits": 1132,
-     "utilisation": 0.058,
+    "W": {
+     "face_len_um": 6678.7,
+     "bits": 3316,
+     "utilisation": 0.05,
      "pins": [
       {
        "link": "pc_SW7>sm_SW7:SM_HBM",
@@ -1775,10 +1761,98 @@
        "peer": "pc_SW7",
        "dir": "in",
        "bits": 1132,
-       "offset_um": 9.42,
+       "offset_um": 0.0,
        "span_um": 113.2,
-       "x": 14386.2,
-       "y": 2056.0
+       "x": 16080.2,
+       "y": 2112.6
+      },
+      {
+       "link": "vmb_SW0>sm_SW7:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_SW0",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 6460.32,
+       "span_um": 27.3,
+       "x": 16080.2,
+       "y": 8530.0
+      },
+      {
+       "link": "vmb_SW1>sm_SW7:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_SW1",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 6487.62,
+       "span_um": 27.3,
+       "x": 16080.2,
+       "y": 8557.3
+      },
+      {
+       "link": "vmb_SW2>sm_SW7:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_SW2",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 6514.92,
+       "span_um": 27.3,
+       "x": 16080.2,
+       "y": 8584.6
+      },
+      {
+       "link": "vmb_SW3>sm_SW7:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_SW3",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 6542.22,
+       "span_um": 27.3,
+       "x": 16080.2,
+       "y": 8611.9
+      },
+      {
+       "link": "vmb_SW4>sm_SW7:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_SW4",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 6569.52,
+       "span_um": 27.3,
+       "x": 16080.2,
+       "y": 8639.2
+      },
+      {
+       "link": "vmb_SW5>sm_SW7:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_SW5",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 6596.82,
+       "span_um": 27.3,
+       "x": 16080.2,
+       "y": 8666.5
+      },
+      {
+       "link": "vmb_SW6>sm_SW7:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_SW6",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 6624.12,
+       "span_um": 27.3,
+       "x": 16080.2,
+       "y": 8693.8
+      },
+      {
+       "link": "vmb_SW7>sm_SW7:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_SW7",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 6651.42,
+       "span_um": 27.3,
+       "x": 16080.2,
+       "y": 8721.1
       }
      ]
     },
@@ -1795,7 +1869,7 @@
        "bits": 270,
        "offset_um": 6645.32,
        "span_um": 27.0,
-       "x": 16259.8,
+       "x": 18019.8,
        "y": 8714.8
       },
       {
@@ -1806,103 +1880,8 @@
        "bits": 64,
        "offset_um": 6672.32,
        "span_um": 6.4,
-       "x": 16259.8,
+       "x": 18019.8,
        "y": 8731.5
-      }
-     ]
-    },
-    "W": {
-     "face_len_um": 6678.7,
-     "bits": 2184,
-     "utilisation": 0.033,
-     "pins": [
-      {
-       "link": "vmb_SW0>sm_SW7:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_SW0",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 6460.32,
-       "span_um": 27.3,
-       "x": 14320.2,
-       "y": 8530.0
-      },
-      {
-       "link": "vmb_SW1>sm_SW7:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_SW1",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 6487.62,
-       "span_um": 27.3,
-       "x": 14320.2,
-       "y": 8557.3
-      },
-      {
-       "link": "vmb_SW2>sm_SW7:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_SW2",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 6514.92,
-       "span_um": 27.3,
-       "x": 14320.2,
-       "y": 8584.6
-      },
-      {
-       "link": "vmb_SW3>sm_SW7:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_SW3",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 6542.22,
-       "span_um": 27.3,
-       "x": 14320.2,
-       "y": 8611.9
-      },
-      {
-       "link": "vmb_SW4>sm_SW7:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_SW4",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 6569.52,
-       "span_um": 27.3,
-       "x": 14320.2,
-       "y": 8639.2
-      },
-      {
-       "link": "vmb_SW5>sm_SW7:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_SW5",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 6596.82,
-       "span_um": 27.3,
-       "x": 14320.2,
-       "y": 8666.5
-      },
-      {
-       "link": "vmb_SW6>sm_SW7:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_SW6",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 6624.12,
-       "span_um": 27.3,
-       "x": 14320.2,
-       "y": 8693.8
-      },
-      {
-       "link": "vmb_SW7>sm_SW7:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_SW7",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 6651.42,
-       "span_um": 27.3,
-       "x": 14320.2,
-       "y": 8721.1
       }
      ]
     }
@@ -2092,8 +2071,8 @@
    "faces": {
     "S": {
      "face_len_um": 812.8,
-     "bits": 546,
-     "utilisation": 0.067,
+     "bits": 273,
+     "utilisation": 0.034,
      "pins": [
       {
        "link": "vmb_SW1>sm_SW0:SM_X",
@@ -2105,29 +2084,18 @@
        "span_um": 27.3,
        "x": 448.8,
        "y": 9399.8
-      },
-      {
-       "link": "vmb_SW1>sm_SW1:SM_X",
-       "cls": "SM_X",
-       "peer": "sm_SW1",
-       "dir": "out",
-       "bits": 273,
-       "offset_um": 785.51,
-       "span_um": 27.3,
-       "x": 841.6,
-       "y": 9399.8
       }
      ]
     },
     "E": {
      "face_len_um": 365.0,
-     "bits": 3287,
-     "utilisation": 0.9,
+     "bits": 3560,
+     "utilisation": 0.975,
      "pins": [
       {
-       "link": "vmb_SW1>sm_SW2:SM_X",
+       "link": "vmb_SW1>sm_SW1:SM_X",
        "cls": "SM_X",
-       "peer": "sm_SW2",
+       "peer": "sm_SW1",
        "dir": "out",
        "bits": 273,
        "offset_um": 0.0,
@@ -2136,9 +2104,9 @@
        "y": 9413.4
       },
       {
-       "link": "vmb_SW1>sm_SW3:SM_X",
+       "link": "vmb_SW1>sm_SW2:SM_X",
        "cls": "SM_X",
-       "peer": "sm_SW3",
+       "peer": "sm_SW2",
        "dir": "out",
        "bits": 273,
        "offset_um": 27.3,
@@ -2147,9 +2115,9 @@
        "y": 9440.7
       },
       {
-       "link": "vmb_SW1>sm_SW4:SM_X",
+       "link": "vmb_SW1>sm_SW3:SM_X",
        "cls": "SM_X",
-       "peer": "sm_SW4",
+       "peer": "sm_SW3",
        "dir": "out",
        "bits": 273,
        "offset_um": 54.6,
@@ -2158,9 +2126,9 @@
        "y": 9468.0
       },
       {
-       "link": "vmb_SW1>sm_SW5:SM_X",
+       "link": "vmb_SW1>sm_SW4:SM_X",
        "cls": "SM_X",
-       "peer": "sm_SW5",
+       "peer": "sm_SW4",
        "dir": "out",
        "bits": 273,
        "offset_um": 81.9,
@@ -2169,9 +2137,9 @@
        "y": 9495.3
       },
       {
-       "link": "vmb_SW1>sm_SW6:SM_X",
+       "link": "vmb_SW1>sm_SW5:SM_X",
        "cls": "SM_X",
-       "peer": "sm_SW6",
+       "peer": "sm_SW5",
        "dir": "out",
        "bits": 273,
        "offset_um": 109.2,
@@ -2180,9 +2148,9 @@
        "y": 9522.6
       },
       {
-       "link": "vmb_SW1>sm_SW7:SM_X",
+       "link": "vmb_SW1>sm_SW6:SM_X",
        "cls": "SM_X",
-       "peer": "sm_SW7",
+       "peer": "sm_SW6",
        "dir": "out",
        "bits": 273,
        "offset_um": 136.5,
@@ -2191,15 +2159,15 @@
        "y": 9549.9
       },
       {
-       "link": "vmb_SW1>coll_SW:COLL_VM",
-       "cls": "COLL_VM",
-       "peer": "coll_SW",
+       "link": "vmb_SW1>sm_SW7:SM_X",
+       "cls": "SM_X",
+       "peer": "sm_SW7",
        "dir": "out",
-       "bits": 555,
+       "bits": 273,
        "offset_um": 163.8,
-       "span_um": 55.5,
+       "span_um": 27.3,
        "x": 855.2,
-       "y": 9591.3
+       "y": 9577.2
       },
       {
        "link": "vmh_SW>vmb_SW1:VM_HUB",
@@ -2207,10 +2175,10 @@
        "peer": "vmh_SW",
        "dir": "in",
        "bits": 538,
-       "offset_um": 219.3,
+       "offset_um": 191.1,
        "span_um": 53.8,
        "x": 855.2,
-       "y": 9646.0
+       "y": 9617.8
       },
       {
        "link": "vmb_SW1>su_SW0:LG_SU",
@@ -2218,10 +2186,21 @@
        "peer": "su_SW0",
        "dir": "out",
        "bits": 556,
-       "offset_um": 273.1,
+       "offset_um": 244.9,
        "span_um": 55.6,
        "x": 855.2,
-       "y": 9700.7
+       "y": 9672.5
+      },
+      {
+       "link": "vmb_SW1>coll_SW:COLL_VM",
+       "cls": "COLL_VM",
+       "peer": "coll_SW",
+       "dir": "out",
+       "bits": 555,
+       "offset_um": 300.5,
+       "span_um": 55.5,
+       "x": 855.2,
+       "y": 9728.0
       }
      ]
     },
@@ -2510,8 +2489,8 @@
     },
     "S": {
      "face_len_um": 812.8,
-     "bits": 546,
-     "utilisation": 0.067,
+     "bits": 273,
+     "utilisation": 0.034,
      "pins": [
       {
        "link": "vmb_SW2>sm_SW1:SM_X",
@@ -2523,29 +2502,18 @@
        "span_um": 27.3,
        "x": 3545.9,
        "y": 8934.7
-      },
-      {
-       "link": "vmb_SW2>sm_SW2:SM_X",
-       "cls": "SM_X",
-       "peer": "sm_SW2",
-       "dir": "out",
-       "bits": 273,
-       "offset_um": 785.51,
-       "span_um": 27.3,
-       "x": 3938.7,
-       "y": 8934.7
       }
      ]
     },
     "E": {
      "face_len_um": 365.0,
-     "bits": 3014,
-     "utilisation": 0.826,
+     "bits": 3287,
+     "utilisation": 0.9,
      "pins": [
       {
-       "link": "vmb_SW2>sm_SW3:SM_X",
+       "link": "vmb_SW2>sm_SW2:SM_X",
        "cls": "SM_X",
-       "peer": "sm_SW3",
+       "peer": "sm_SW2",
        "dir": "out",
        "bits": 273,
        "offset_um": 0.0,
@@ -2554,9 +2522,9 @@
        "y": 8948.4
       },
       {
-       "link": "vmb_SW2>sm_SW4:SM_X",
+       "link": "vmb_SW2>sm_SW3:SM_X",
        "cls": "SM_X",
-       "peer": "sm_SW4",
+       "peer": "sm_SW3",
        "dir": "out",
        "bits": 273,
        "offset_um": 27.3,
@@ -2565,9 +2533,9 @@
        "y": 8975.7
       },
       {
-       "link": "vmb_SW2>sm_SW5:SM_X",
+       "link": "vmb_SW2>sm_SW4:SM_X",
        "cls": "SM_X",
-       "peer": "sm_SW5",
+       "peer": "sm_SW4",
        "dir": "out",
        "bits": 273,
        "offset_um": 54.6,
@@ -2576,9 +2544,9 @@
        "y": 9003.0
       },
       {
-       "link": "vmb_SW2>sm_SW6:SM_X",
+       "link": "vmb_SW2>sm_SW5:SM_X",
        "cls": "SM_X",
-       "peer": "sm_SW6",
+       "peer": "sm_SW5",
        "dir": "out",
        "bits": 273,
        "offset_um": 81.9,
@@ -2587,9 +2555,9 @@
        "y": 9030.3
       },
       {
-       "link": "vmb_SW2>sm_SW7:SM_X",
+       "link": "vmb_SW2>sm_SW6:SM_X",
        "cls": "SM_X",
-       "peer": "sm_SW7",
+       "peer": "sm_SW6",
        "dir": "out",
        "bits": 273,
        "offset_um": 109.2,
@@ -2598,15 +2566,26 @@
        "y": 9057.6
       },
       {
+       "link": "vmb_SW2>sm_SW7:SM_X",
+       "cls": "SM_X",
+       "peer": "sm_SW7",
+       "dir": "out",
+       "bits": 273,
+       "offset_um": 136.5,
+       "span_um": 27.3,
+       "x": 3952.3,
+       "y": 9084.9
+      },
+      {
        "link": "vmb_SW2>su_SW1:LG_SU",
        "cls": "LG_SU",
        "peer": "su_SW1",
        "dir": "out",
        "bits": 556,
-       "offset_um": 154.72,
+       "offset_um": 163.8,
        "span_um": 55.6,
        "x": 3952.3,
-       "y": 9117.2
+       "y": 9126.3
       },
       {
        "link": "vmh_SW>vmb_SW2:VM_HUB",
@@ -2614,10 +2593,10 @@
        "peer": "vmh_SW",
        "dir": "in",
        "bits": 538,
-       "offset_um": 210.32,
+       "offset_um": 219.4,
        "span_um": 53.8,
        "x": 3952.3,
-       "y": 9171.9
+       "y": 9181.0
       },
       {
        "link": "vmb_SW2>coll_SW:COLL_VM",
@@ -2625,10 +2604,10 @@
        "peer": "coll_SW",
        "dir": "out",
        "bits": 555,
-       "offset_um": 264.12,
+       "offset_um": 273.2,
        "span_um": 55.5,
        "x": 3952.3,
-       "y": 9226.6
+       "y": 9235.7
       }
      ]
     },
@@ -2772,26 +2751,15 @@
        "y": 9522.6
       },
       {
-       "link": "vmb_SW3>coll_SW:COLL_VM",
-       "cls": "COLL_VM",
-       "peer": "coll_SW",
-       "dir": "out",
-       "bits": 555,
-       "offset_um": 150.45,
-       "span_um": 55.5,
-       "x": 3952.3,
-       "y": 9578.0
-      },
-      {
        "link": "vmh_SW>vmb_SW3:VM_HUB",
        "cls": "VM_HUB",
        "peer": "vmh_SW",
        "dir": "in",
        "bits": 538,
-       "offset_um": 205.95,
+       "offset_um": 155.62,
        "span_um": 53.8,
        "x": 3952.3,
-       "y": 9632.6
+       "y": 9582.3
       },
       {
        "link": "vmb_SW3>su_SW1:LG_SU",
@@ -2799,10 +2767,21 @@
        "peer": "su_SW1",
        "dir": "out",
        "bits": 556,
-       "offset_um": 259.75,
+       "offset_um": 209.42,
        "span_um": 55.6,
        "x": 3952.3,
-       "y": 9687.3
+       "y": 9637.0
+      },
+      {
+       "link": "vmb_SW3>coll_SW:COLL_VM",
+       "cls": "COLL_VM",
+       "peer": "coll_SW",
+       "dir": "out",
+       "bits": 555,
+       "offset_um": 265.02,
+       "span_um": 55.5,
+       "x": 3952.3,
+       "y": 9692.5
       }
      ]
     },
@@ -3080,8 +3059,8 @@
     },
     "S": {
      "face_len_um": 812.8,
-     "bits": 546,
-     "utilisation": 0.067,
+     "bits": 273,
+     "utilisation": 0.034,
      "pins": [
       {
        "link": "vmb_SW4>sm_SW3:SM_X",
@@ -3093,29 +3072,18 @@
        "span_um": 27.3,
        "x": 7615.0,
        "y": 8934.7
-      },
-      {
-       "link": "vmb_SW4>sm_SW4:SM_X",
-       "cls": "SM_X",
-       "peer": "sm_SW4",
-       "dir": "out",
-       "bits": 273,
-       "offset_um": 785.51,
-       "span_um": 27.3,
-       "x": 8007.8,
-       "y": 8934.7
       }
      ]
     },
     "E": {
      "face_len_um": 365.0,
-     "bits": 2468,
-     "utilisation": 0.676,
+     "bits": 2741,
+     "utilisation": 0.751,
      "pins": [
       {
-       "link": "vmb_SW4>sm_SW5:SM_X",
+       "link": "vmb_SW4>sm_SW4:SM_X",
        "cls": "SM_X",
-       "peer": "sm_SW5",
+       "peer": "sm_SW4",
        "dir": "out",
        "bits": 273,
        "offset_um": 0.0,
@@ -3124,9 +3092,9 @@
        "y": 8948.4
       },
       {
-       "link": "vmb_SW4>sm_SW6:SM_X",
+       "link": "vmb_SW4>sm_SW5:SM_X",
        "cls": "SM_X",
-       "peer": "sm_SW6",
+       "peer": "sm_SW5",
        "dir": "out",
        "bits": 273,
        "offset_um": 27.3,
@@ -3135,15 +3103,26 @@
        "y": 8975.7
       },
       {
-       "link": "vmb_SW4>sm_SW7:SM_X",
+       "link": "vmb_SW4>sm_SW6:SM_X",
        "cls": "SM_X",
-       "peer": "sm_SW7",
+       "peer": "sm_SW6",
        "dir": "out",
        "bits": 273,
        "offset_um": 54.6,
        "span_um": 27.3,
        "x": 8021.4,
        "y": 9003.0
+      },
+      {
+       "link": "vmb_SW4>sm_SW7:SM_X",
+       "cls": "SM_X",
+       "peer": "sm_SW7",
+       "dir": "out",
+       "bits": 273,
+       "offset_um": 81.9,
+       "span_um": 27.3,
+       "x": 8021.4,
+       "y": 9030.3
       },
       {
        "link": "vmb_SW4>su_SW2:LG_SU",
@@ -3327,26 +3306,15 @@
        "y": 9468.0
       },
       {
-       "link": "vmb_SW5>coll_SW:COLL_VM",
-       "cls": "COLL_VM",
-       "peer": "coll_SW",
-       "dir": "out",
-       "bits": 555,
-       "offset_um": 150.45,
-       "span_um": 55.5,
-       "x": 8021.4,
-       "y": 9578.0
-      },
-      {
        "link": "vmh_SW>vmb_SW5:VM_HUB",
        "cls": "VM_HUB",
        "peer": "vmh_SW",
        "dir": "in",
        "bits": 538,
-       "offset_um": 205.95,
+       "offset_um": 155.62,
        "span_um": 53.8,
        "x": 8021.4,
-       "y": 9632.6
+       "y": 9582.3
       },
       {
        "link": "vmb_SW5>su_SW2:LG_SU",
@@ -3354,10 +3322,21 @@
        "peer": "su_SW2",
        "dir": "out",
        "bits": 556,
-       "offset_um": 259.75,
+       "offset_um": 209.42,
        "span_um": 55.6,
        "x": 8021.4,
-       "y": 9687.3
+       "y": 9637.0
+      },
+      {
+       "link": "vmb_SW5>coll_SW:COLL_VM",
+       "cls": "COLL_VM",
+       "peer": "coll_SW",
+       "dir": "out",
+       "bits": 555,
+       "offset_um": 265.02,
+       "span_um": 55.5,
+       "x": 8021.4,
+       "y": 9692.5
       }
      ]
     },
@@ -3637,9 +3616,9 @@
        "peer": "sm_SW4",
        "dir": "out",
        "bits": 273,
-       "offset_um": 0.0,
+       "offset_um": 343.87,
        "span_um": 27.3,
-       "x": 10319.4,
+       "x": 10663.3,
        "y": 8934.7
       },
       {
@@ -3648,9 +3627,9 @@
        "peer": "sm_SW5",
        "dir": "out",
        "bits": 273,
-       "offset_um": 392.75,
+       "offset_um": 785.51,
        "span_um": 27.3,
-       "x": 10712.2,
+       "x": 11104.9,
        "y": 8934.7
       }
      ]
@@ -3758,8 +3737,8 @@
    "faces": {
     "W": {
      "face_len_um": 365.0,
-     "bits": 1092,
-     "utilisation": 0.299,
+     "bits": 819,
+     "utilisation": 0.224,
      "pins": [
       {
        "link": "vmb_SW7>sm_SW0:SM_X",
@@ -3793,17 +3772,6 @@
        "span_um": 27.3,
        "x": 10305.8,
        "y": 9468.0
-      },
-      {
-       "link": "vmb_SW7>sm_SW3:SM_X",
-       "cls": "SM_X",
-       "peer": "sm_SW3",
-       "dir": "out",
-       "bits": 273,
-       "offset_um": 81.9,
-       "span_um": 27.3,
-       "x": 10305.8,
-       "y": 9495.3
       }
      ]
     },
@@ -3813,9 +3781,9 @@
      "utilisation": 0.101,
      "pins": [
       {
-       "link": "vmb_SW7>sm_SW4:SM_X",
+       "link": "vmb_SW7>sm_SW3:SM_X",
        "cls": "SM_X",
-       "peer": "sm_SW4",
+       "peer": "sm_SW3",
        "dir": "out",
        "bits": 273,
        "offset_um": 0.0,
@@ -3824,20 +3792,20 @@
        "y": 9399.8
       },
       {
-       "link": "vmb_SW7>sm_SW5:SM_X",
+       "link": "vmb_SW7>sm_SW4:SM_X",
        "cls": "SM_X",
-       "peer": "sm_SW5",
+       "peer": "sm_SW4",
        "dir": "out",
        "bits": 273,
-       "offset_um": 392.75,
+       "offset_um": 343.87,
        "span_um": 27.3,
-       "x": 10712.2,
+       "x": 10663.3,
        "y": 9399.8
       },
       {
-       "link": "vmb_SW7>sm_SW6:SM_X",
+       "link": "vmb_SW7>sm_SW5:SM_X",
        "cls": "SM_X",
-       "peer": "sm_SW6",
+       "peer": "sm_SW5",
        "dir": "out",
        "bits": 273,
        "offset_um": 785.51,
@@ -3849,13 +3817,13 @@
     },
     "E": {
      "face_len_um": 365.0,
-     "bits": 1922,
-     "utilisation": 0.527,
+     "bits": 2195,
+     "utilisation": 0.601,
      "pins": [
       {
-       "link": "vmb_SW7>sm_SW7:SM_X",
+       "link": "vmb_SW7>sm_SW6:SM_X",
        "cls": "SM_X",
-       "peer": "sm_SW7",
+       "peer": "sm_SW6",
        "dir": "out",
        "bits": 273,
        "offset_um": 0.0,
@@ -3864,15 +3832,15 @@
        "y": 9413.4
       },
       {
-       "link": "vmb_SW7>coll_SW:COLL_VM",
-       "cls": "COLL_VM",
-       "peer": "coll_SW",
+       "link": "vmb_SW7>sm_SW7:SM_X",
+       "cls": "SM_X",
+       "peer": "sm_SW7",
        "dir": "out",
-       "bits": 555,
-       "offset_um": 150.45,
-       "span_um": 55.5,
+       "bits": 273,
+       "offset_um": 27.3,
+       "span_um": 27.3,
        "x": 11118.6,
-       "y": 9578.0
+       "y": 9440.7
       },
       {
        "link": "vmh_SW>vmb_SW7:VM_HUB",
@@ -3880,10 +3848,10 @@
        "peer": "vmh_SW",
        "dir": "in",
        "bits": 538,
-       "offset_um": 205.95,
+       "offset_um": 155.62,
        "span_um": 53.8,
        "x": 11118.6,
-       "y": 9632.6
+       "y": 9582.3
       },
       {
        "link": "vmb_SW7>su_SW3:LG_SU",
@@ -3891,10 +3859,21 @@
        "peer": "su_SW3",
        "dir": "out",
        "bits": 556,
-       "offset_um": 259.75,
+       "offset_um": 209.42,
        "span_um": 55.6,
        "x": 11118.6,
-       "y": 9687.3
+       "y": 9637.0
+      },
+      {
+       "link": "vmb_SW7>coll_SW:COLL_VM",
+       "cls": "COLL_VM",
+       "peer": "coll_SW",
+       "dir": "out",
+       "bits": 555,
+       "offset_um": 265.02,
+       "span_um": 55.5,
+       "x": 11118.6,
+       "y": 9692.5
       }
      ]
     },
@@ -4105,7 +4084,7 @@
    }
   },
   "sucore_SW": {
-   "x": 13402.9,
+   "x": 15650.1,
    "y": 11429.5,
    "w": 330.48,
    "h": 330.48,
@@ -4114,8 +4093,8 @@
    "faces": {}
   },
   "cij_SW": {
-   "x": 13701.0,
-   "y": 9326.3,
+   "x": 16597.4,
+   "y": 9405.6,
    "w": 43.2,
    "h": 138.24,
    "kind": "COLL inject/IDX join leaf ot_hgi_coll_inj_idx_join (H-NETLIST)",
@@ -4123,17 +4102,17 @@
    "faces": {}
   },
   "coll_SW": {
-   "x": 13765.8,
+   "x": 16662.2,
    "y": 9034.7,
-   "w": 963.36,
-   "h": 721.44,
+   "w": 1080.0,
+   "h": 880.0,
    "kind": "COLL",
    "orient": "R0",
    "faces": {
     "W": {
-     "face_len_um": 721.4,
+     "face_len_um": 880.0,
      "bits": 4440,
-     "utilisation": 0.615,
+     "utilisation": 0.505,
      "pins": [
       {
        "link": "vmb_SW0>coll_SW:COLL_VM",
@@ -4143,7 +4122,7 @@
        "bits": 555,
        "offset_um": 104.77,
        "span_um": 55.5,
-       "x": 13765.8,
+       "x": 16662.2,
        "y": 9167.2
       },
       {
@@ -4154,7 +4133,7 @@
        "bits": 555,
        "offset_um": 160.27,
        "span_um": 55.5,
-       "x": 13765.8,
+       "x": 16662.2,
        "y": 9222.7
       },
       {
@@ -4165,7 +4144,7 @@
        "bits": 555,
        "offset_um": 215.77,
        "span_um": 55.5,
-       "x": 13765.8,
+       "x": 16662.2,
        "y": 9278.2
       },
       {
@@ -4176,7 +4155,7 @@
        "bits": 555,
        "offset_um": 271.27,
        "span_um": 55.5,
-       "x": 13765.8,
+       "x": 16662.2,
        "y": 9333.7
       },
       {
@@ -4185,10 +4164,10 @@
        "peer": "vmb_SW1",
        "dir": "in",
        "bits": 555,
-       "offset_um": 499.44,
+       "offset_um": 519.81,
        "span_um": 55.5,
-       "x": 13765.8,
-       "y": 9561.9
+       "x": 16662.2,
+       "y": 9582.3
       },
       {
        "link": "vmb_SW3>coll_SW:COLL_VM",
@@ -4196,10 +4175,10 @@
        "peer": "vmb_SW3",
        "dir": "in",
        "bits": 555,
-       "offset_um": 554.94,
+       "offset_um": 575.31,
        "span_um": 55.5,
-       "x": 13765.8,
-       "y": 9617.4
+       "x": 16662.2,
+       "y": 9637.8
       },
       {
        "link": "vmb_SW5>coll_SW:COLL_VM",
@@ -4207,10 +4186,10 @@
        "peer": "vmb_SW5",
        "dir": "in",
        "bits": 555,
-       "offset_um": 610.44,
+       "offset_um": 630.81,
        "span_um": 55.5,
-       "x": 13765.8,
-       "y": 9672.9
+       "x": 16662.2,
+       "y": 9693.3
       },
       {
        "link": "vmb_SW7>coll_SW:COLL_VM",
@@ -4218,35 +4197,17 @@
        "peer": "vmb_SW7",
        "dir": "in",
        "bits": 555,
-       "offset_um": 665.94,
+       "offset_um": 686.31,
        "span_um": 55.5,
-       "x": 13765.8,
-       "y": 9728.4
-      }
-     ]
-    },
-    "E": {
-     "face_len_um": 721.4,
-     "bits": 1224,
-     "utilisation": 0.17,
-     "pins": [
-      {
-       "link": "coll_SW>ep_S0:COLL_EP",
-       "cls": "COLL_EP",
-       "peer": "ep_S0",
-       "dir": "out",
-       "bits": 1224,
-       "offset_um": 599.04,
-       "span_um": 122.4,
-       "x": 14729.1,
-       "y": 9695.0
+       "x": 16662.2,
+       "y": 9748.8
       }
      ]
     },
     "N": {
-     "face_len_um": 963.4,
-     "bits": 4528,
-     "utilisation": 0.47,
+     "face_len_um": 1080.0,
+     "bits": 5752,
+     "utilisation": 0.533,
      "pins": [
       {
        "link": "coll_SW>coll_SE:COLL_RING",
@@ -4254,10 +4215,10 @@
        "peer": "coll_SE",
        "dir": "out",
        "bits": 826,
-       "offset_um": 440.38,
+       "offset_um": 498.7,
        "span_um": 82.6,
-       "x": 14247.4,
-       "y": 9756.2
+       "x": 17202.2,
+       "y": 9914.7
       },
       {
        "link": "coll_SE>coll_SW:COLL_RING",
@@ -4265,10 +4226,10 @@
        "peer": "coll_SE",
        "dir": "in",
        "bits": 826,
-       "offset_um": 522.98,
+       "offset_um": 581.3,
        "span_um": 82.6,
-       "x": 14330.0,
-       "y": 9756.2
+       "x": 17284.8,
+       "y": 9914.7
       },
       {
        "link": "coll_NW>coll_SW:COLL_RING",
@@ -4276,10 +4237,10 @@
        "peer": "coll_NW",
        "dir": "in",
        "bits": 826,
-       "offset_um": 629.44,
+       "offset_um": 663.9,
        "span_um": 82.6,
-       "x": 14436.5,
-       "y": 9756.2
+       "x": 17367.4,
+       "y": 9914.7
       },
       {
        "link": "coll_SW>coll_NW:COLL_RING",
@@ -4287,10 +4248,21 @@
        "peer": "coll_NW",
        "dir": "out",
        "bits": 826,
-       "offset_um": 712.04,
+       "offset_um": 746.5,
        "span_um": 82.6,
-       "x": 14519.1,
-       "y": 9756.2
+       "x": 17450.0,
+       "y": 9914.7
+      },
+      {
+       "link": "coll_SW>ep_S0:COLL_EP",
+       "cls": "COLL_EP",
+       "peer": "ep_S0",
+       "dir": "out",
+       "bits": 1224,
+       "offset_um": 835.2,
+       "span_um": 122.4,
+       "x": 17558.6,
+       "y": 9914.7
       },
       {
        "link": "coll_SW>ep_S1:COLL_EP",
@@ -4298,18 +4270,18 @@
        "peer": "ep_S1",
        "dir": "out",
        "bits": 1224,
-       "offset_um": 840.96,
+       "offset_um": 957.6,
        "span_um": 122.4,
-       "x": 14667.9,
-       "y": 9756.2
+       "x": 17681.0,
+       "y": 9914.7
       }
      ]
     }
    }
   },
   "sucx_SW": {
-   "x": 13701.0,
-   "y": 9777.8,
+   "x": 16305.8,
+   "y": 9034.7,
    "w": 270.0,
    "h": 270.0,
    "kind": "SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)",
@@ -4317,16 +4289,16 @@
    "faces": {}
   },
   "dbk_SW": {
-   "x": 14217.2,
-   "y": 9777.8,
-   "w": 511.92,
-   "h": 360.72,
+   "x": 15484.2,
+   "y": 9034.7,
+   "w": 800.0,
+   "h": 560.0,
    "kind": "DMA back (vp4 grant 2330 width when carried)",
    "orient": "R0",
    "faces": {}
   },
   "vmh_SW": {
-   "x": 16779.8,
+   "x": 18539.8,
    "y": 9034.7,
    "w": 480.0,
    "h": 3200.0,
@@ -4346,7 +4318,7 @@
        "bits": 270,
        "offset_um": 47.15,
        "span_um": 27.0,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 9095.4
       },
       {
@@ -4357,7 +4329,7 @@
        "bits": 256,
        "offset_um": 121.29,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 9168.8
       },
       {
@@ -4368,7 +4340,7 @@
        "bits": 256,
        "offset_um": 194.04,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 9241.6
       },
       {
@@ -4379,7 +4351,7 @@
        "bits": 270,
        "offset_um": 266.78,
        "span_um": 27.0,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 9315.0
       },
       {
@@ -4390,7 +4362,7 @@
        "bits": 256,
        "offset_um": 340.93,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 9388.4
       },
       {
@@ -4401,7 +4373,7 @@
        "bits": 256,
        "offset_um": 413.67,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 9461.2
       },
       {
@@ -4412,7 +4384,7 @@
        "bits": 270,
        "offset_um": 486.42,
        "span_um": 27.0,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 9534.6
       },
       {
@@ -4423,7 +4395,7 @@
        "bits": 256,
        "offset_um": 560.56,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 9608.1
       },
       {
@@ -4434,7 +4406,7 @@
        "bits": 256,
        "offset_um": 633.31,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 9680.8
       },
       {
@@ -4445,7 +4417,7 @@
        "bits": 270,
        "offset_um": 706.05,
        "span_um": 27.0,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 9754.3
       },
       {
@@ -4456,7 +4428,7 @@
        "bits": 256,
        "offset_um": 780.2,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 9827.7
       },
       {
@@ -4467,7 +4439,7 @@
        "bits": 256,
        "offset_um": 852.94,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 9900.5
       },
       {
@@ -4478,7 +4450,7 @@
        "bits": 270,
        "offset_um": 925.69,
        "span_um": 27.0,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 9973.9
       },
       {
@@ -4489,7 +4461,7 @@
        "bits": 256,
        "offset_um": 999.84,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 10047.4
       },
       {
@@ -4500,7 +4472,7 @@
        "bits": 256,
        "offset_um": 1072.58,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 10120.1
       },
       {
@@ -4511,7 +4483,7 @@
        "bits": 270,
        "offset_um": 1145.33,
        "span_um": 27.0,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 10193.5
       },
       {
@@ -4522,7 +4494,7 @@
        "bits": 256,
        "offset_um": 1219.47,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 10267.0
       },
       {
@@ -4533,7 +4505,7 @@
        "bits": 256,
        "offset_um": 1292.22,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 10339.7
       },
       {
@@ -4544,7 +4516,7 @@
        "bits": 270,
        "offset_um": 1364.96,
        "span_um": 27.0,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 10413.2
       },
       {
@@ -4555,7 +4527,7 @@
        "bits": 256,
        "offset_um": 1439.11,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 10486.6
       },
       {
@@ -4566,7 +4538,7 @@
        "bits": 256,
        "offset_um": 1671.69,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 10719.2
       },
       {
@@ -4577,7 +4549,7 @@
        "bits": 270,
        "offset_um": 1744.44,
        "span_um": 27.0,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 10792.7
       },
       {
@@ -4588,7 +4560,7 @@
        "bits": 256,
        "offset_um": 1818.58,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 10866.1
       },
       {
@@ -4599,7 +4571,7 @@
        "bits": 256,
        "offset_um": 1891.33,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 10938.8
       },
       {
@@ -4610,7 +4582,7 @@
        "bits": 64,
        "offset_um": 1964.07,
        "span_um": 6.4,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 11002.0
       },
       {
@@ -4621,7 +4593,7 @@
        "bits": 64,
        "offset_um": 2017.62,
        "span_um": 6.4,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 11055.5
       },
       {
@@ -4632,7 +4604,7 @@
        "bits": 64,
        "offset_um": 2071.16,
        "span_um": 6.4,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 11109.1
       },
       {
@@ -4643,7 +4615,7 @@
        "bits": 64,
        "offset_um": 2124.71,
        "span_um": 6.4,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 11162.6
       },
       {
@@ -4654,7 +4626,7 @@
        "bits": 64,
        "offset_um": 2178.26,
        "span_um": 6.4,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 11216.2
       },
       {
@@ -4665,7 +4637,7 @@
        "bits": 64,
        "offset_um": 2231.8,
        "span_um": 6.4,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 11269.7
       },
       {
@@ -4676,7 +4648,7 @@
        "bits": 64,
        "offset_um": 2285.35,
        "span_um": 6.4,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 11323.3
       },
       {
@@ -4687,7 +4659,7 @@
        "bits": 64,
        "offset_um": 2338.89,
        "span_um": 6.4,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 11376.8
       },
       {
@@ -4698,7 +4670,7 @@
        "bits": 538,
        "offset_um": 2392.44,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 11454.1
       },
       {
@@ -4709,7 +4681,7 @@
        "bits": 538,
        "offset_um": 2493.38,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 11555.0
       },
       {
@@ -4720,7 +4692,7 @@
        "bits": 538,
        "offset_um": 2594.33,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 11655.9
       },
       {
@@ -4731,7 +4703,7 @@
        "bits": 538,
        "offset_um": 2695.27,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 11756.9
       },
       {
@@ -4742,7 +4714,7 @@
        "bits": 538,
        "offset_um": 2796.22,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 11857.8
       },
       {
@@ -4753,7 +4725,7 @@
        "bits": 538,
        "offset_um": 2897.16,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 11958.8
       },
       {
@@ -4764,7 +4736,7 @@
        "bits": 538,
        "offset_um": 2998.11,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 12059.7
       },
       {
@@ -4775,7 +4747,7 @@
        "bits": 538,
        "offset_um": 3099.05,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 12160.7
       }
      ]
@@ -4793,7 +4765,7 @@
        "bits": 2224,
        "offset_um": 0.0,
        "span_um": 120.0,
-       "x": 16839.8,
+       "x": 18599.8,
        "y": 12234.7
       },
       {
@@ -4804,7 +4776,7 @@
        "bits": 2224,
        "offset_um": 120.0,
        "span_um": 120.0,
-       "x": 16959.8,
+       "x": 18719.8,
        "y": 12234.7
       },
       {
@@ -4815,7 +4787,7 @@
        "bits": 2224,
        "offset_um": 240.0,
        "span_um": 120.0,
-       "x": 17079.8,
+       "x": 18839.8,
        "y": 12234.7
       },
       {
@@ -4826,7 +4798,7 @@
        "bits": 2224,
        "offset_um": 360.0,
        "span_um": 120.0,
-       "x": 17199.8,
+       "x": 18959.8,
        "y": 12234.7
       }
      ]
@@ -4834,7 +4806,7 @@
    }
   },
   "hc_SW": {
-   "x": 16082.2,
+   "x": 17842.2,
    "y": 10499.2,
    "w": 432.0,
    "h": 432.0,
@@ -4854,7 +4826,7 @@
        "bits": 2100,
        "offset_um": 144.8,
        "span_um": 210.0,
-       "x": 16332.0,
+       "x": 18092.0,
        "y": 10931.2
       },
       {
@@ -4865,7 +4837,7 @@
        "bits": 772,
        "offset_um": 354.8,
        "span_um": 77.2,
-       "x": 16475.6,
+       "x": 18235.6,
        "y": 10931.2
       }
      ]
@@ -4883,7 +4855,7 @@
        "bits": 596,
        "offset_um": 0.0,
        "span_um": 57.88,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 10528.1
       },
       {
@@ -4894,7 +4866,7 @@
        "bits": 516,
        "offset_um": 57.88,
        "span_um": 50.12,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 10582.1
       },
       {
@@ -4905,7 +4877,7 @@
        "bits": 596,
        "offset_um": 108.0,
        "span_um": 57.88,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 10636.1
       },
       {
@@ -4916,7 +4888,7 @@
        "bits": 516,
        "offset_um": 165.88,
        "span_um": 50.12,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 10690.1
       },
       {
@@ -4927,7 +4899,7 @@
        "bits": 596,
        "offset_um": 216.0,
        "span_um": 57.88,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 10744.1
       },
       {
@@ -4938,7 +4910,7 @@
        "bits": 516,
        "offset_um": 273.88,
        "span_um": 50.12,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 10798.1
       },
       {
@@ -4949,7 +4921,7 @@
        "bits": 596,
        "offset_um": 324.0,
        "span_um": 57.88,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 10852.1
       },
       {
@@ -4960,7 +4932,7 @@
        "bits": 516,
        "offset_um": 381.88,
        "span_um": 50.12,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 10906.1
       }
      ]
@@ -5060,26 +5032,15 @@
      "utilisation": 0.452,
      "pins": [
       {
-       "link": "vmb_SE1>coll_SE:COLL_VM",
-       "cls": "COLL_VM",
-       "peer": "coll_SE",
-       "dir": "out",
-       "bits": 555,
-       "offset_um": 150.45,
-       "span_um": 55.5,
-       "x": 855.2,
-       "y": 13278.0
-      },
-      {
        "link": "vmh_SE>vmb_SE1:VM_HUB",
        "cls": "VM_HUB",
        "peer": "vmh_SE",
        "dir": "in",
        "bits": 538,
-       "offset_um": 205.95,
+       "offset_um": 155.62,
        "span_um": 53.8,
        "x": 855.2,
-       "y": 13332.6
+       "y": 13282.3
       },
       {
        "link": "vmb_SE1>su_SE0:LG_SU",
@@ -5087,10 +5048,21 @@
        "peer": "su_SE0",
        "dir": "out",
        "bits": 556,
-       "offset_um": 259.75,
+       "offset_um": 209.42,
        "span_um": 55.6,
        "x": 855.2,
-       "y": 13387.3
+       "y": 13337.0
+      },
+      {
+       "link": "vmb_SE1>coll_SE:COLL_VM",
+       "cls": "COLL_VM",
+       "peer": "coll_SE",
+       "dir": "out",
+       "bits": 555,
+       "offset_um": 265.02,
+       "span_um": 55.5,
+       "x": 855.2,
+       "y": 13392.5
       }
      ]
     },
@@ -5444,26 +5416,15 @@
      "utilisation": 0.452,
      "pins": [
       {
-       "link": "vmb_SE3>coll_SE:COLL_VM",
-       "cls": "COLL_VM",
-       "peer": "coll_SE",
-       "dir": "out",
-       "bits": 555,
-       "offset_um": 150.45,
-       "span_um": 55.5,
-       "x": 3952.3,
-       "y": 13278.0
-      },
-      {
        "link": "vmh_SE>vmb_SE3:VM_HUB",
        "cls": "VM_HUB",
        "peer": "vmh_SE",
        "dir": "in",
        "bits": 538,
-       "offset_um": 205.95,
+       "offset_um": 155.62,
        "span_um": 53.8,
        "x": 3952.3,
-       "y": 13332.6
+       "y": 13282.3
       },
       {
        "link": "vmb_SE3>su_SE1:LG_SU",
@@ -5471,10 +5432,21 @@
        "peer": "su_SE1",
        "dir": "out",
        "bits": 556,
-       "offset_um": 259.75,
+       "offset_um": 209.42,
        "span_um": 55.6,
        "x": 3952.3,
-       "y": 13387.3
+       "y": 13337.0
+      },
+      {
+       "link": "vmb_SE3>coll_SE:COLL_VM",
+       "cls": "COLL_VM",
+       "peer": "coll_SE",
+       "dir": "out",
+       "bits": 555,
+       "offset_um": 265.02,
+       "span_um": 55.5,
+       "x": 3952.3,
+       "y": 13392.5
       }
      ]
     },
@@ -5795,26 +5767,15 @@
      "utilisation": 0.452,
      "pins": [
       {
-       "link": "vmb_SE5>coll_SE:COLL_VM",
-       "cls": "COLL_VM",
-       "peer": "coll_SE",
-       "dir": "out",
-       "bits": 555,
-       "offset_um": 150.45,
-       "span_um": 55.5,
-       "x": 8021.4,
-       "y": 13278.0
-      },
-      {
        "link": "vmh_SE>vmb_SE5:VM_HUB",
        "cls": "VM_HUB",
        "peer": "vmh_SE",
        "dir": "in",
        "bits": 538,
-       "offset_um": 205.95,
+       "offset_um": 155.62,
        "span_um": 53.8,
        "x": 8021.4,
-       "y": 13332.6
+       "y": 13282.3
       },
       {
        "link": "vmb_SE5>su_SE2:LG_SU",
@@ -5822,10 +5783,21 @@
        "peer": "su_SE2",
        "dir": "out",
        "bits": 556,
-       "offset_um": 259.75,
+       "offset_um": 209.42,
        "span_um": 55.6,
        "x": 8021.4,
-       "y": 13387.3
+       "y": 13337.0
+      },
+      {
+       "link": "vmb_SE5>coll_SE:COLL_VM",
+       "cls": "COLL_VM",
+       "peer": "coll_SE",
+       "dir": "out",
+       "bits": 555,
+       "offset_um": 265.02,
+       "span_um": 55.5,
+       "x": 8021.4,
+       "y": 13392.5
       }
      ]
     },
@@ -6128,26 +6100,15 @@
      "utilisation": 0.452,
      "pins": [
       {
-       "link": "vmb_SE7>coll_SE:COLL_VM",
-       "cls": "COLL_VM",
-       "peer": "coll_SE",
-       "dir": "out",
-       "bits": 555,
-       "offset_um": 150.45,
-       "span_um": 55.5,
-       "x": 11118.6,
-       "y": 13278.0
-      },
-      {
        "link": "vmh_SE>vmb_SE7:VM_HUB",
        "cls": "VM_HUB",
        "peer": "vmh_SE",
        "dir": "in",
        "bits": 538,
-       "offset_um": 205.95,
+       "offset_um": 155.62,
        "span_um": 53.8,
        "x": 11118.6,
-       "y": 13332.6
+       "y": 13282.3
       },
       {
        "link": "vmb_SE7>su_SE3:LG_SU",
@@ -6155,10 +6116,21 @@
        "peer": "su_SE3",
        "dir": "out",
        "bits": 556,
-       "offset_um": 259.75,
+       "offset_um": 209.42,
        "span_um": 55.6,
        "x": 11118.6,
-       "y": 13387.3
+       "y": 13337.0
+      },
+      {
+       "link": "vmb_SE7>coll_SE:COLL_VM",
+       "cls": "COLL_VM",
+       "peer": "coll_SE",
+       "dir": "out",
+       "bits": 555,
+       "offset_um": 265.02,
+       "span_um": 55.5,
+       "x": 11118.6,
+       "y": 13392.5
       }
      ]
     },
@@ -6369,7 +6341,7 @@
    }
   },
   "sucore_SE": {
-   "x": 13402.9,
+   "x": 16299.3,
    "y": 15129.5,
    "w": 330.48,
    "h": 330.48,
@@ -6378,8 +6350,8 @@
    "faces": {}
   },
   "cij_SE": {
-   "x": 13701.0,
-   "y": 13026.3,
+   "x": 16597.4,
+   "y": 13060.6,
    "w": 43.2,
    "h": 138.24,
    "kind": "COLL inject/IDX join leaf ot_hgi_coll_inj_idx_join (H-NETLIST)",
@@ -6387,17 +6359,17 @@
    "faces": {}
   },
   "coll_SE": {
-   "x": 13765.8,
+   "x": 16662.2,
    "y": 12734.7,
-   "w": 963.36,
-   "h": 721.44,
+   "w": 1080.0,
+   "h": 790.0,
    "kind": "COLL",
    "orient": "R0",
    "faces": {
     "W": {
-     "face_len_um": 721.4,
+     "face_len_um": 790.0,
      "bits": 4440,
-     "utilisation": 0.615,
+     "utilisation": 0.562,
      "pins": [
       {
        "link": "vmb_SE0>coll_SE:COLL_VM",
@@ -6407,7 +6379,7 @@
        "bits": 555,
        "offset_um": 104.77,
        "span_um": 55.5,
-       "x": 13765.8,
+       "x": 16662.2,
        "y": 12867.2
       },
       {
@@ -6418,7 +6390,7 @@
        "bits": 555,
        "offset_um": 160.27,
        "span_um": 55.5,
-       "x": 13765.8,
+       "x": 16662.2,
        "y": 12922.7
       },
       {
@@ -6429,7 +6401,7 @@
        "bits": 555,
        "offset_um": 215.77,
        "span_um": 55.5,
-       "x": 13765.8,
+       "x": 16662.2,
        "y": 12978.2
       },
       {
@@ -6440,7 +6412,7 @@
        "bits": 555,
        "offset_um": 271.27,
        "span_um": 55.5,
-       "x": 13765.8,
+       "x": 16662.2,
        "y": 13033.7
       },
       {
@@ -6449,10 +6421,10 @@
        "peer": "vmb_SE1",
        "dir": "in",
        "bits": 555,
-       "offset_um": 499.44,
+       "offset_um": 519.81,
        "span_um": 55.5,
-       "x": 13765.8,
-       "y": 13261.9
+       "x": 16662.2,
+       "y": 13282.3
       },
       {
        "link": "vmb_SE3>coll_SE:COLL_VM",
@@ -6460,10 +6432,10 @@
        "peer": "vmb_SE3",
        "dir": "in",
        "bits": 555,
-       "offset_um": 554.94,
+       "offset_um": 575.31,
        "span_um": 55.5,
-       "x": 13765.8,
-       "y": 13317.4
+       "x": 16662.2,
+       "y": 13337.8
       },
       {
        "link": "vmb_SE5>coll_SE:COLL_VM",
@@ -6471,10 +6443,10 @@
        "peer": "vmb_SE5",
        "dir": "in",
        "bits": 555,
-       "offset_um": 610.44,
+       "offset_um": 630.81,
        "span_um": 55.5,
-       "x": 13765.8,
-       "y": 13372.9
+       "x": 16662.2,
+       "y": 13393.3
       },
       {
        "link": "vmb_SE7>coll_SE:COLL_VM",
@@ -6482,17 +6454,17 @@
        "peer": "vmb_SE7",
        "dir": "in",
        "bits": 555,
-       "offset_um": 665.94,
+       "offset_um": 686.31,
        "span_um": 55.5,
-       "x": 13765.8,
-       "y": 13428.4
+       "x": 16662.2,
+       "y": 13448.8
       }
      ]
     },
     "E": {
-     "face_len_um": 721.4,
+     "face_len_um": 790.0,
      "bits": 1224,
-     "utilisation": 0.17,
+     "utilisation": 0.155,
      "pins": [
       {
        "link": "coll_SE>ep_S3:COLL_EP",
@@ -6500,17 +6472,17 @@
        "peer": "ep_S3",
        "dir": "out",
        "bits": 1224,
-       "offset_um": 599.04,
+       "offset_um": 667.6,
        "span_um": 122.4,
-       "x": 14729.1,
-       "y": 13395.0
+       "x": 17742.2,
+       "y": 13463.5
       }
      ]
     },
     "S": {
-     "face_len_um": 963.4,
+     "face_len_um": 1080.0,
      "bits": 1652,
-     "utilisation": 0.171,
+     "utilisation": 0.153,
      "pins": [
       {
        "link": "coll_SW>coll_SE:COLL_RING",
@@ -6518,9 +6490,9 @@
        "peer": "coll_SW",
        "dir": "in",
        "bits": 826,
-       "offset_um": 440.38,
+       "offset_um": 498.7,
        "span_um": 82.6,
-       "x": 14247.4,
+       "x": 17202.2,
        "y": 12734.7
       },
       {
@@ -6529,17 +6501,17 @@
        "peer": "coll_SW",
        "dir": "out",
        "bits": 826,
-       "offset_um": 522.98,
+       "offset_um": 581.3,
        "span_um": 82.6,
-       "x": 14330.0,
+       "x": 17284.8,
        "y": 12734.7
       }
      ]
     },
     "N": {
-     "face_len_um": 963.4,
+     "face_len_um": 1080.0,
      "bits": 1652,
-     "utilisation": 0.171,
+     "utilisation": 0.153,
      "pins": [
       {
        "link": "coll_SE>coll_NE:COLL_RING",
@@ -6547,10 +6519,10 @@
        "peer": "coll_NE",
        "dir": "out",
        "bits": 826,
-       "offset_um": 440.38,
+       "offset_um": 498.7,
        "span_um": 82.6,
-       "x": 14247.4,
-       "y": 13456.2
+       "x": 17202.2,
+       "y": 13524.7
       },
       {
        "link": "coll_NE>coll_SE:COLL_RING",
@@ -6558,18 +6530,18 @@
        "peer": "coll_NE",
        "dir": "in",
        "bits": 826,
-       "offset_um": 522.98,
+       "offset_um": 581.3,
        "span_um": 82.6,
-       "x": 14330.0,
-       "y": 13456.2
+       "x": 17284.8,
+       "y": 13524.7
       }
      ]
     }
    }
   },
   "sucx_SE": {
-   "x": 13701.0,
-   "y": 13477.8,
+   "x": 16305.8,
+   "y": 12734.7,
    "w": 270.0,
    "h": 270.0,
    "kind": "SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)",
@@ -6577,16 +6549,16 @@
    "faces": {}
   },
   "dbk_SE": {
-   "x": 14217.2,
-   "y": 13477.8,
-   "w": 511.92,
-   "h": 360.72,
+   "x": 15484.2,
+   "y": 12734.7,
+   "w": 800.0,
+   "h": 560.0,
    "kind": "DMA back (vp4 grant 2330 width when carried)",
    "orient": "R0",
    "faces": {}
   },
   "vmh_SE": {
-   "x": 16779.8,
+   "x": 18539.8,
    "y": 12734.7,
    "w": 480.0,
    "h": 3200.0,
@@ -6606,7 +6578,7 @@
        "bits": 538,
        "offset_um": 307.73,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 13069.4
       },
       {
@@ -6617,7 +6589,7 @@
        "bits": 538,
        "offset_um": 669.27,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 13430.9
       },
       {
@@ -6628,7 +6600,7 @@
        "bits": 538,
        "offset_um": 1030.8,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 13792.4
       },
       {
@@ -6639,7 +6611,7 @@
        "bits": 538,
        "offset_um": 1392.33,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 14154.0
       },
       {
@@ -6650,7 +6622,7 @@
        "bits": 538,
        "offset_um": 1753.87,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 14515.5
       },
       {
@@ -6661,7 +6633,7 @@
        "bits": 538,
        "offset_um": 2115.4,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 14877.0
       },
       {
@@ -6672,7 +6644,7 @@
        "bits": 538,
        "offset_um": 2476.93,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 15238.6
       },
       {
@@ -6683,7 +6655,7 @@
        "bits": 538,
        "offset_um": 2838.47,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 15600.1
       }
      ]
@@ -6701,7 +6673,7 @@
        "bits": 2224,
        "offset_um": 35.2,
        "span_um": 222.4,
-       "x": 16926.2,
+       "x": 18686.2,
        "y": 12734.7
       },
       {
@@ -6712,7 +6684,7 @@
        "bits": 2224,
        "offset_um": 257.6,
        "span_um": 222.4,
-       "x": 17148.6,
+       "x": 18908.6,
        "y": 12734.7
       }
      ]
@@ -6730,7 +6702,7 @@
        "bits": 2224,
        "offset_um": 35.2,
        "span_um": 222.4,
-       "x": 16926.2,
+       "x": 18686.2,
        "y": 15934.7
       },
       {
@@ -6741,7 +6713,7 @@
        "bits": 2224,
        "offset_um": 257.6,
        "span_um": 222.4,
-       "x": 17148.6,
+       "x": 18908.6,
        "y": 15934.7
       }
      ]
@@ -6749,7 +6721,7 @@
    }
   },
   "hc_SE": {
-   "x": 16082.2,
+   "x": 17842.2,
    "y": 14199.2,
    "w": 432.0,
    "h": 432.0,
@@ -6769,7 +6741,7 @@
        "bits": 2100,
        "offset_um": 144.8,
        "span_um": 210.0,
-       "x": 16514.2,
+       "x": 18274.2,
        "y": 14449.0
       },
       {
@@ -6780,7 +6752,7 @@
        "bits": 772,
        "offset_um": 354.8,
        "span_um": 77.2,
-       "x": 16514.2,
+       "x": 18274.2,
        "y": 14592.6
       }
      ]
@@ -6798,7 +6770,7 @@
        "bits": 596,
        "offset_um": 0.0,
        "span_um": 57.88,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 14228.1
       },
       {
@@ -6809,7 +6781,7 @@
        "bits": 516,
        "offset_um": 57.88,
        "span_um": 50.12,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 14282.1
       },
       {
@@ -6820,7 +6792,7 @@
        "bits": 596,
        "offset_um": 108.0,
        "span_um": 57.88,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 14336.1
       },
       {
@@ -6831,7 +6803,7 @@
        "bits": 516,
        "offset_um": 165.88,
        "span_um": 50.12,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 14390.1
       },
       {
@@ -6842,7 +6814,7 @@
        "bits": 596,
        "offset_um": 216.0,
        "span_um": 57.88,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 14444.1
       },
       {
@@ -6853,7 +6825,7 @@
        "bits": 516,
        "offset_um": 273.88,
        "span_um": 50.12,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 14498.1
       },
       {
@@ -6864,7 +6836,7 @@
        "bits": 596,
        "offset_um": 324.0,
        "span_um": 57.88,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 14552.1
       },
       {
@@ -6875,7 +6847,7 @@
        "bits": 516,
        "offset_um": 381.88,
        "span_um": 50.12,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 14606.1
       }
      ]
@@ -7031,10 +7003,10 @@
       }
      ]
     },
-    "S": {
-     "face_len_um": 1036.8,
+    "E": {
+     "face_len_um": 637.2,
      "bits": 512,
-     "utilisation": 0.049,
+     "utilisation": 0.08,
      "pins": [
       {
        "link": "pc_NW0>vmh_NW:HBM_VM",
@@ -7042,10 +7014,10 @@
        "peer": "vmh_NW",
        "dir": "out",
        "bits": 256,
-       "offset_um": 985.6,
+       "offset_um": 0.0,
        "span_um": 25.6,
-       "x": 6456.2,
-       "y": 30313.4
+       "x": 6494.6,
+       "y": 30326.2
       },
       {
        "link": "vmh_NW>pc_NW0:VM_HBM",
@@ -7053,10 +7025,10 @@
        "peer": "vmh_NW",
        "dir": "in",
        "bits": 256,
-       "offset_um": 1011.2,
+       "offset_um": 25.6,
        "span_um": 25.6,
-       "x": 6481.8,
-       "y": 30313.4
+       "x": 6494.6,
+       "y": 30351.8
       }
      ]
     }
@@ -7238,10 +7210,10 @@
       }
      ]
     },
-    "W": {
-     "face_len_um": 637.2,
-     "bits": 1132,
-     "utilisation": 0.178,
+    "S": {
+     "face_len_um": 1036.8,
+     "bits": 1644,
+     "utilisation": 0.159,
      "pins": [
       {
        "link": "pc_NW3>sm_NW3:SM_HBM",
@@ -7251,16 +7223,9 @@
        "bits": 1132,
        "offset_um": 0.0,
        "span_um": 113.2,
-       "x": 8868.2,
-       "y": 30370.0
-      }
-     ]
-    },
-    "S": {
-     "face_len_um": 1036.8,
-     "bits": 512,
-     "utilisation": 0.049,
-     "pins": [
+       "x": 8924.8,
+       "y": 30313.4
+      },
       {
        "link": "pc_NW3>vmh_NW:HBM_VM",
        "cls": "HBM_VM",
@@ -7324,9 +7289,9 @@
        "peer": "sm_NW4",
        "dir": "out",
        "bits": 1132,
-       "offset_um": 11.3,
+       "offset_um": 451.3,
        "span_um": 113.2,
-       "x": 10072.9,
+       "x": 10512.9,
        "y": 30313.4
       },
       {
@@ -7392,9 +7357,9 @@
        "peer": "sm_NW5",
        "dir": "out",
        "bits": 1132,
-       "offset_um": 461.8,
+       "offset_um": 671.3,
        "span_um": 113.2,
-       "x": 11660.2,
+       "x": 11869.7,
        "y": 30313.4
       },
       {
@@ -7460,9 +7425,9 @@
        "peer": "sm_NW6",
        "dir": "out",
        "bits": 1132,
-       "offset_um": 462.74,
+       "offset_um": 872.4,
        "span_um": 113.2,
-       "x": 12797.9,
+       "x": 13207.6,
        "y": 30313.4
       },
       {
@@ -7517,10 +7482,10 @@
       }
      ]
     },
-    "S": {
-     "face_len_um": 1036.8,
-     "bits": 1644,
-     "utilisation": 0.159,
+    "E": {
+     "face_len_um": 637.2,
+     "bits": 1132,
+     "utilisation": 0.178,
      "pins": [
       {
        "link": "pc_NW7>sm_NW7:SM_HBM",
@@ -7528,11 +7493,18 @@
        "peer": "sm_NW7",
        "dir": "out",
        "bits": 1132,
-       "offset_um": 872.4,
+       "offset_um": 0.0,
        "span_um": 113.2,
-       "x": 14344.4,
-       "y": 30313.4
-      },
+       "x": 14452.2,
+       "y": 30370.0
+      }
+     ]
+    },
+    "S": {
+     "face_len_um": 1036.8,
+     "bits": 512,
+     "utilisation": 0.049,
+     "pins": [
       {
        "link": "pc_NW7>vmh_NW:HBM_VM",
        "cls": "HBM_VM",
@@ -7705,7 +7677,7 @@
    }
   },
   "sm_NW1": {
-   "x": 2082.1,
+   "x": 2522.1,
    "y": 23434.7,
    "w": 1939.68,
    "h": 6678.72,
@@ -7725,7 +7697,7 @@
        "bits": 270,
        "offset_um": -0.0,
        "span_um": 27.0,
-       "x": 4021.8,
+       "x": 4461.8,
        "y": 23448.2
       },
       {
@@ -7736,7 +7708,7 @@
        "bits": 273,
        "offset_um": 27.0,
        "span_um": 27.3,
-       "x": 4021.8,
+       "x": 4461.8,
        "y": 23475.4
       },
       {
@@ -7747,7 +7719,7 @@
        "bits": 273,
        "offset_um": 54.3,
        "span_um": 27.3,
-       "x": 4021.8,
+       "x": 4461.8,
        "y": 23502.7
       },
       {
@@ -7758,7 +7730,7 @@
        "bits": 273,
        "offset_um": 81.6,
        "span_um": 27.3,
-       "x": 4021.8,
+       "x": 4461.8,
        "y": 23530.0
       },
       {
@@ -7769,7 +7741,7 @@
        "bits": 273,
        "offset_um": 108.9,
        "span_um": 27.3,
-       "x": 4021.8,
+       "x": 4461.8,
        "y": 23557.3
       },
       {
@@ -7780,7 +7752,7 @@
        "bits": 64,
        "offset_um": 136.2,
        "span_um": 6.4,
-       "x": 4021.8,
+       "x": 4461.8,
        "y": 23574.1
       },
       {
@@ -7791,7 +7763,7 @@
        "bits": 1132,
        "offset_um": 6565.52,
        "span_um": 113.2,
-       "x": 4021.8,
+       "x": 4461.8,
        "y": 30056.8
       }
      ]
@@ -7809,7 +7781,7 @@
        "bits": 273,
        "offset_um": 0.0,
        "span_um": 27.3,
-       "x": 2082.1,
+       "x": 2522.1,
        "y": 23448.4
       },
       {
@@ -7820,7 +7792,7 @@
        "bits": 273,
        "offset_um": 27.3,
        "span_um": 27.3,
-       "x": 2082.1,
+       "x": 2522.1,
        "y": 23475.7
       }
      ]
@@ -7836,9 +7808,9 @@
        "peer": "vmb_NW2",
        "dir": "in",
        "bits": 273,
-       "offset_um": 1532.17,
+       "offset_um": 1123.08,
        "span_um": 27.3,
-       "x": 3627.9,
+       "x": 3658.8,
        "y": 23434.7
       },
       {
@@ -7847,9 +7819,9 @@
        "peer": "vmb_NW3",
        "dir": "in",
        "bits": 273,
-       "offset_um": 1559.47,
+       "offset_um": 1150.38,
        "span_um": 27.3,
-       "x": 3655.2,
+       "x": 3686.1,
        "y": 23434.7
       }
      ]
@@ -7857,7 +7829,7 @@
    }
   },
   "sm_NW2": {
-   "x": 4121.8,
+   "x": 4561.8,
    "y": 23434.7,
    "w": 1939.68,
    "h": 6678.72,
@@ -7877,7 +7849,7 @@
        "bits": 270,
        "offset_um": -0.0,
        "span_um": 27.0,
-       "x": 6061.4,
+       "x": 6501.4,
        "y": 23448.2
       },
       {
@@ -7888,7 +7860,7 @@
        "bits": 273,
        "offset_um": 27.0,
        "span_um": 27.3,
-       "x": 6061.4,
+       "x": 6501.4,
        "y": 23475.4
       },
       {
@@ -7899,7 +7871,7 @@
        "bits": 273,
        "offset_um": 54.3,
        "span_um": 27.3,
-       "x": 6061.4,
+       "x": 6501.4,
        "y": 23502.7
       },
       {
@@ -7910,7 +7882,7 @@
        "bits": 273,
        "offset_um": 81.6,
        "span_um": 27.3,
-       "x": 6061.4,
+       "x": 6501.4,
        "y": 23530.0
       },
       {
@@ -7921,7 +7893,7 @@
        "bits": 273,
        "offset_um": 108.9,
        "span_um": 27.3,
-       "x": 6061.4,
+       "x": 6501.4,
        "y": 23557.3
       },
       {
@@ -7932,7 +7904,7 @@
        "bits": 64,
        "offset_um": 136.2,
        "span_um": 6.4,
-       "x": 6061.4,
+       "x": 6501.4,
        "y": 23574.1
       },
       {
@@ -7943,15 +7915,15 @@
        "bits": 1132,
        "offset_um": 6565.52,
        "span_um": 113.2,
-       "x": 6061.4,
+       "x": 6501.4,
        "y": 30056.8
       }
      ]
     },
     "W": {
      "face_len_um": 6678.7,
-     "bits": 546,
-     "utilisation": 0.008,
+     "bits": 1092,
+     "utilisation": 0.016,
      "pins": [
       {
        "link": "vmb_NW0>sm_NW2:SM_X",
@@ -7961,7 +7933,7 @@
        "bits": 273,
        "offset_um": 0.0,
        "span_um": 27.3,
-       "x": 4121.8,
+       "x": 4561.8,
        "y": 23448.4
       },
       {
@@ -7972,26 +7944,19 @@
        "bits": 273,
        "offset_um": 27.3,
        "span_um": 27.3,
-       "x": 4121.8,
+       "x": 4561.8,
        "y": 23475.7
-      }
-     ]
-    },
-    "S": {
-     "face_len_um": 1939.7,
-     "bits": 546,
-     "utilisation": 0.028,
-     "pins": [
+      },
       {
        "link": "vmb_NW2>sm_NW2:SM_X",
        "cls": "SM_X",
        "peer": "vmb_NW2",
        "dir": "in",
        "bits": 273,
-       "offset_um": 0.0,
+       "offset_um": 54.6,
        "span_um": 27.3,
-       "x": 4135.4,
-       "y": 23434.7
+       "x": 4561.8,
+       "y": 23503.0
       },
       {
        "link": "vmb_NW3>sm_NW2:SM_X",
@@ -7999,27 +7964,45 @@
        "peer": "vmb_NW3",
        "dir": "in",
        "bits": 273,
-       "offset_um": 27.3,
+       "offset_um": 81.9,
        "span_um": 27.3,
-       "x": 4162.7,
-       "y": 23434.7
+       "x": 4561.8,
+       "y": 23530.3
       }
      ]
     }
    }
   },
   "sm_NW3": {
-   "x": 6161.4,
+   "x": 7041.4,
    "y": 23434.7,
    "w": 1939.68,
    "h": 6678.72,
    "kind": "SM",
    "orient": "R0",
    "faces": {
+    "N": {
+     "face_len_um": 1939.7,
+     "bits": 1132,
+     "utilisation": 0.058,
+     "pins": [
+      {
+       "link": "pc_NW3>sm_NW3:SM_HBM",
+       "cls": "SM_HBM",
+       "peer": "pc_NW3",
+       "dir": "in",
+       "bits": 1132,
+       "offset_um": 1826.48,
+       "span_um": 113.2,
+       "x": 8924.5,
+       "y": 30113.4
+      }
+     ]
+    },
     "E": {
      "face_len_um": 6678.7,
-     "bits": 2012,
-     "utilisation": 0.03,
+     "bits": 880,
+     "utilisation": 0.013,
      "pins": [
       {
        "link": "sm_NW3>vmh_NW:SM_OUT",
@@ -8027,9 +8010,9 @@
        "peer": "vmh_NW",
        "dir": "out",
        "bits": 270,
-       "offset_um": -0.0,
+       "offset_um": 0.0,
        "span_um": 27.0,
-       "x": 8101.1,
+       "x": 8981.1,
        "y": 23448.2
       },
       {
@@ -8040,7 +8023,7 @@
        "bits": 273,
        "offset_um": 27.0,
        "span_um": 27.3,
-       "x": 8101.1,
+       "x": 8981.1,
        "y": 23475.4
       },
       {
@@ -8051,7 +8034,7 @@
        "bits": 273,
        "offset_um": 54.3,
        "span_um": 27.3,
-       "x": 8101.1,
+       "x": 8981.1,
        "y": 23502.7
       },
       {
@@ -8062,19 +8045,8 @@
        "bits": 64,
        "offset_um": 81.6,
        "span_um": 6.4,
-       "x": 8101.1,
+       "x": 8981.1,
        "y": 23519.5
-      },
-      {
-       "link": "pc_NW3>sm_NW3:SM_HBM",
-       "cls": "SM_HBM",
-       "peer": "pc_NW3",
-       "dir": "in",
-       "bits": 1132,
-       "offset_um": 6565.52,
-       "span_um": 113.2,
-       "x": 8101.1,
-       "y": 30056.8
       }
      ]
     },
@@ -8091,7 +8063,7 @@
        "bits": 273,
        "offset_um": 0.0,
        "span_um": 27.3,
-       "x": 6161.4,
+       "x": 7041.4,
        "y": 23448.4
       },
       {
@@ -8102,7 +8074,7 @@
        "bits": 273,
        "offset_um": 27.3,
        "span_um": 27.3,
-       "x": 6161.4,
+       "x": 7041.4,
        "y": 23475.7
       },
       {
@@ -8113,7 +8085,7 @@
        "bits": 273,
        "offset_um": 54.6,
        "span_um": 27.3,
-       "x": 6161.4,
+       "x": 7041.4,
        "y": 23503.0
       },
       {
@@ -8124,7 +8096,7 @@
        "bits": 273,
        "offset_um": 81.9,
        "span_um": 27.3,
-       "x": 6161.4,
+       "x": 7041.4,
        "y": 23530.3
       }
      ]
@@ -8140,9 +8112,9 @@
        "peer": "vmb_NW4",
        "dir": "in",
        "bits": 273,
-       "offset_um": 1574.32,
+       "offset_um": 767.37,
        "span_um": 27.3,
-       "x": 7749.4,
+       "x": 7822.5,
        "y": 23434.7
       },
       {
@@ -8151,9 +8123,9 @@
        "peer": "vmb_NW5",
        "dir": "in",
        "bits": 273,
-       "offset_um": 1601.62,
+       "offset_um": 794.67,
        "span_um": 27.3,
-       "x": 7776.7,
+       "x": 7849.8,
        "y": 23434.7
       }
      ]
@@ -8161,7 +8133,7 @@
    }
   },
   "sm_NW4": {
-   "x": 8201.1,
+   "x": 9081.1,
    "y": 23434.7,
    "w": 1939.68,
    "h": 6678.72,
@@ -8179,17 +8151,17 @@
        "peer": "pc_NW4",
        "dir": "in",
        "bits": 1132,
-       "offset_um": 1815.18,
+       "offset_um": 1375.18,
        "span_um": 113.2,
-       "x": 10072.9,
+       "x": 10512.9,
        "y": 30113.4
       }
      ]
     },
     "E": {
      "face_len_um": 6678.7,
-     "bits": 880,
-     "utilisation": 0.013,
+     "bits": 334,
+     "utilisation": 0.005,
      "pins": [
       {
        "link": "sm_NW4>vmh_NW:SM_OUT",
@@ -8199,30 +8171,8 @@
        "bits": 270,
        "offset_um": 0.0,
        "span_um": 27.0,
-       "x": 10140.8,
+       "x": 11020.8,
        "y": 23448.2
-      },
-      {
-       "link": "vmb_NW6>sm_NW4:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_NW6",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 27.0,
-       "span_um": 27.3,
-       "x": 10140.8,
-       "y": 23475.4
-      },
-      {
-       "link": "vmb_NW7>sm_NW4:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_NW7",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 54.3,
-       "span_um": 27.3,
-       "x": 10140.8,
-       "y": 23502.7
       },
       {
        "link": "vmh_NW>sm_NW4:KV_DESC",
@@ -8230,17 +8180,17 @@
        "peer": "vmh_NW",
        "dir": "in",
        "bits": 64,
-       "offset_um": 81.6,
+       "offset_um": 27.0,
        "span_um": 6.4,
-       "x": 10140.8,
-       "y": 23519.5
+       "x": 11020.8,
+       "y": 23464.9
       }
      ]
     },
     "W": {
      "face_len_um": 6678.7,
-     "bits": 1092,
-     "utilisation": 0.016,
+     "bits": 1638,
+     "utilisation": 0.025,
      "pins": [
       {
        "link": "vmb_NW0>sm_NW4:SM_X",
@@ -8250,7 +8200,7 @@
        "bits": 273,
        "offset_um": 0.0,
        "span_um": 27.3,
-       "x": 8201.1,
+       "x": 9081.1,
        "y": 23448.4
       },
       {
@@ -8261,7 +8211,7 @@
        "bits": 273,
        "offset_um": 27.3,
        "span_um": 27.3,
-       "x": 8201.1,
+       "x": 9081.1,
        "y": 23475.7
       },
       {
@@ -8272,7 +8222,7 @@
        "bits": 273,
        "offset_um": 54.6,
        "span_um": 27.3,
-       "x": 8201.1,
+       "x": 9081.1,
        "y": 23503.0
       },
       {
@@ -8283,8 +8233,30 @@
        "bits": 273,
        "offset_um": 81.9,
        "span_um": 27.3,
-       "x": 8201.1,
+       "x": 9081.1,
        "y": 23530.3
+      },
+      {
+       "link": "vmb_NW4>sm_NW4:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_NW4",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 109.2,
+       "span_um": 27.3,
+       "x": 9081.1,
+       "y": 23557.6
+      },
+      {
+       "link": "vmb_NW5>sm_NW4:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_NW5",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 136.5,
+       "span_um": 27.3,
+       "x": 9081.1,
+       "y": 23584.9
       }
      ]
     },
@@ -8294,25 +8266,25 @@
      "utilisation": 0.028,
      "pins": [
       {
-       "link": "vmb_NW4>sm_NW4:SM_X",
+       "link": "vmb_NW6>sm_NW4:SM_X",
        "cls": "SM_X",
-       "peer": "vmb_NW4",
+       "peer": "vmb_NW6",
        "dir": "in",
        "bits": 273,
-       "offset_um": 9.4,
+       "offset_um": 1710.3,
        "span_um": 27.3,
-       "x": 8224.2,
+       "x": 10805.1,
        "y": 23434.7
       },
       {
-       "link": "vmb_NW5>sm_NW4:SM_X",
+       "link": "vmb_NW7>sm_NW4:SM_X",
        "cls": "SM_X",
-       "peer": "vmb_NW5",
+       "peer": "vmb_NW7",
        "dir": "in",
        "bits": 273,
-       "offset_um": 36.7,
+       "offset_um": 1737.6,
        "span_um": 27.3,
-       "x": 8251.5,
+       "x": 10832.4,
        "y": 23434.7
       }
      ]
@@ -8320,7 +8292,7 @@
    }
   },
   "sm_NW5": {
-   "x": 10240.8,
+   "x": 11560.8,
    "y": 23434.7,
    "w": 1939.68,
    "h": 6678.72,
@@ -8338,9 +8310,9 @@
        "peer": "pc_NW5",
        "dir": "in",
        "bits": 1132,
-       "offset_um": 1362.8,
+       "offset_um": 252.3,
        "span_um": 113.2,
-       "x": 11660.2,
+       "x": 11869.7,
        "y": 30113.4
       }
      ]
@@ -8358,7 +8330,7 @@
        "bits": 270,
        "offset_um": 0.0,
        "span_um": 27.0,
-       "x": 12180.5,
+       "x": 13500.5,
        "y": 23448.2
       },
       {
@@ -8369,15 +8341,15 @@
        "bits": 64,
        "offset_um": 27.0,
        "span_um": 6.4,
-       "x": 12180.5,
+       "x": 13500.5,
        "y": 23464.9
       }
      ]
     },
     "W": {
      "face_len_um": 6678.7,
-     "bits": 1638,
-     "utilisation": 0.025,
+     "bits": 1911,
+     "utilisation": 0.029,
      "pins": [
       {
        "link": "vmb_NW0>sm_NW5:SM_X",
@@ -8387,7 +8359,7 @@
        "bits": 273,
        "offset_um": 0.0,
        "span_um": 27.3,
-       "x": 10240.8,
+       "x": 11560.8,
        "y": 23448.4
       },
       {
@@ -8398,7 +8370,7 @@
        "bits": 273,
        "offset_um": 27.3,
        "span_um": 27.3,
-       "x": 10240.8,
+       "x": 11560.8,
        "y": 23475.7
       },
       {
@@ -8409,7 +8381,7 @@
        "bits": 273,
        "offset_um": 54.6,
        "span_um": 27.3,
-       "x": 10240.8,
+       "x": 11560.8,
        "y": 23503.0
       },
       {
@@ -8420,7 +8392,7 @@
        "bits": 273,
        "offset_um": 81.9,
        "span_um": 27.3,
-       "x": 10240.8,
+       "x": 11560.8,
        "y": 23530.3
       },
       {
@@ -8431,7 +8403,7 @@
        "bits": 273,
        "offset_um": 109.2,
        "span_um": 27.3,
-       "x": 10240.8,
+       "x": 11560.8,
        "y": 23557.6
       },
       {
@@ -8442,36 +8414,36 @@
        "bits": 273,
        "offset_um": 136.5,
        "span_um": 27.3,
-       "x": 10240.8,
+       "x": 11560.8,
        "y": 23584.9
-      }
-     ]
-    },
-    "S": {
-     "face_len_um": 1939.7,
-     "bits": 546,
-     "utilisation": 0.028,
-     "pins": [
+      },
       {
        "link": "vmb_NW6>sm_NW5:SM_X",
        "cls": "SM_X",
        "peer": "vmb_NW6",
        "dir": "in",
        "bits": 273,
-       "offset_um": 759.66,
+       "offset_um": 163.8,
        "span_um": 27.3,
-       "x": 11014.1,
-       "y": 23434.7
-      },
+       "x": 11560.8,
+       "y": 23612.2
+      }
+     ]
+    },
+    "S": {
+     "face_len_um": 1939.7,
+     "bits": 273,
+     "utilisation": 0.014,
+     "pins": [
       {
        "link": "vmb_NW7>sm_NW5:SM_X",
        "cls": "SM_X",
        "peer": "vmb_NW7",
        "dir": "in",
        "bits": 273,
-       "offset_um": 786.96,
+       "offset_um": 0.0,
        "span_um": 27.3,
-       "x": 11041.4,
+       "x": 11574.4,
        "y": 23434.7
       }
      ]
@@ -8479,28 +8451,116 @@
    }
   },
   "sm_NW6": {
-   "x": 12280.5,
+   "x": 13600.5,
    "y": 23434.7,
    "w": 1939.68,
    "h": 6678.72,
    "kind": "SM",
    "orient": "R0",
    "faces": {
-    "N": {
-     "face_len_um": 1939.7,
-     "bits": 1132,
-     "utilisation": 0.058,
+    "W": {
+     "face_len_um": 6678.7,
+     "bits": 3316,
+     "utilisation": 0.05,
      "pins": [
+      {
+       "link": "vmb_NW0>sm_NW6:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_NW0",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 0.0,
+       "span_um": 27.3,
+       "x": 13600.5,
+       "y": 23448.4
+      },
+      {
+       "link": "vmb_NW1>sm_NW6:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_NW1",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 27.3,
+       "span_um": 27.3,
+       "x": 13600.5,
+       "y": 23475.7
+      },
+      {
+       "link": "vmb_NW2>sm_NW6:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_NW2",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 54.6,
+       "span_um": 27.3,
+       "x": 13600.5,
+       "y": 23503.0
+      },
+      {
+       "link": "vmb_NW3>sm_NW6:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_NW3",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 81.9,
+       "span_um": 27.3,
+       "x": 13600.5,
+       "y": 23530.3
+      },
+      {
+       "link": "vmb_NW4>sm_NW6:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_NW4",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 109.2,
+       "span_um": 27.3,
+       "x": 13600.5,
+       "y": 23557.6
+      },
+      {
+       "link": "vmb_NW5>sm_NW6:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_NW5",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 136.5,
+       "span_um": 27.3,
+       "x": 13600.5,
+       "y": 23584.9
+      },
+      {
+       "link": "vmb_NW6>sm_NW6:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_NW6",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 163.8,
+       "span_um": 27.3,
+       "x": 13600.5,
+       "y": 23612.2
+      },
+      {
+       "link": "vmb_NW7>sm_NW6:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_NW7",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 191.1,
+       "span_um": 27.3,
+       "x": 13600.5,
+       "y": 23639.5
+      },
       {
        "link": "pc_NW6>sm_NW6:SM_HBM",
        "cls": "SM_HBM",
        "peer": "pc_NW6",
        "dir": "in",
        "bits": 1132,
-       "offset_um": 460.86,
+       "offset_um": 6565.52,
        "span_um": 113.2,
-       "x": 12797.9,
-       "y": 30113.4
+       "x": 13600.5,
+       "y": 30056.8
       }
      ]
     },
@@ -8517,7 +8577,7 @@
        "bits": 270,
        "offset_um": 0.0,
        "span_um": 27.0,
-       "x": 14220.2,
+       "x": 15540.2,
        "y": 23448.2
       },
       {
@@ -8528,131 +8588,124 @@
        "bits": 64,
        "offset_um": 27.0,
        "span_um": 6.4,
-       "x": 14220.2,
+       "x": 15540.2,
        "y": 23464.9
-      }
-     ]
-    },
-    "W": {
-     "face_len_um": 6678.7,
-     "bits": 2184,
-     "utilisation": 0.033,
-     "pins": [
-      {
-       "link": "vmb_NW0>sm_NW6:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_NW0",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 0.0,
-       "span_um": 27.3,
-       "x": 12280.5,
-       "y": 23448.4
-      },
-      {
-       "link": "vmb_NW1>sm_NW6:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_NW1",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 27.3,
-       "span_um": 27.3,
-       "x": 12280.5,
-       "y": 23475.7
-      },
-      {
-       "link": "vmb_NW2>sm_NW6:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_NW2",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 54.6,
-       "span_um": 27.3,
-       "x": 12280.5,
-       "y": 23503.0
-      },
-      {
-       "link": "vmb_NW3>sm_NW6:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_NW3",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 81.9,
-       "span_um": 27.3,
-       "x": 12280.5,
-       "y": 23530.3
-      },
-      {
-       "link": "vmb_NW4>sm_NW6:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_NW4",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 109.2,
-       "span_um": 27.3,
-       "x": 12280.5,
-       "y": 23557.6
-      },
-      {
-       "link": "vmb_NW5>sm_NW6:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_NW5",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 136.5,
-       "span_um": 27.3,
-       "x": 12280.5,
-       "y": 23584.9
-      },
-      {
-       "link": "vmb_NW6>sm_NW6:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_NW6",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 163.8,
-       "span_um": 27.3,
-       "x": 12280.5,
-       "y": 23612.2
-      },
-      {
-       "link": "vmb_NW7>sm_NW6:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_NW7",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 191.1,
-       "span_um": 27.3,
-       "x": 12280.5,
-       "y": 23639.5
       }
      ]
     }
    }
   },
   "sm_NW7": {
-   "x": 14320.2,
+   "x": 16080.2,
    "y": 23434.7,
    "w": 1939.68,
    "h": 6678.72,
    "kind": "SM",
    "orient": "R0",
    "faces": {
-    "N": {
-     "face_len_um": 1939.7,
-     "bits": 1132,
-     "utilisation": 0.058,
+    "W": {
+     "face_len_um": 6678.7,
+     "bits": 3316,
+     "utilisation": 0.05,
      "pins": [
+      {
+       "link": "vmb_NW0>sm_NW7:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_NW0",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 0.0,
+       "span_um": 27.3,
+       "x": 16080.2,
+       "y": 23448.4
+      },
+      {
+       "link": "vmb_NW1>sm_NW7:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_NW1",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 27.3,
+       "span_um": 27.3,
+       "x": 16080.2,
+       "y": 23475.7
+      },
+      {
+       "link": "vmb_NW2>sm_NW7:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_NW2",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 54.6,
+       "span_um": 27.3,
+       "x": 16080.2,
+       "y": 23503.0
+      },
+      {
+       "link": "vmb_NW3>sm_NW7:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_NW3",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 81.9,
+       "span_um": 27.3,
+       "x": 16080.2,
+       "y": 23530.3
+      },
+      {
+       "link": "vmb_NW4>sm_NW7:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_NW4",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 109.2,
+       "span_um": 27.3,
+       "x": 16080.2,
+       "y": 23557.6
+      },
+      {
+       "link": "vmb_NW5>sm_NW7:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_NW5",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 136.5,
+       "span_um": 27.3,
+       "x": 16080.2,
+       "y": 23584.9
+      },
+      {
+       "link": "vmb_NW6>sm_NW7:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_NW6",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 163.8,
+       "span_um": 27.3,
+       "x": 16080.2,
+       "y": 23612.2
+      },
+      {
+       "link": "vmb_NW7>sm_NW7:SM_X",
+       "cls": "SM_X",
+       "peer": "vmb_NW7",
+       "dir": "in",
+       "bits": 273,
+       "offset_um": 191.1,
+       "span_um": 27.3,
+       "x": 16080.2,
+       "y": 23639.5
+      },
       {
        "link": "pc_NW7>sm_NW7:SM_HBM",
        "cls": "SM_HBM",
        "peer": "pc_NW7",
        "dir": "in",
        "bits": 1132,
-       "offset_um": 9.42,
+       "offset_um": 6565.52,
        "span_um": 113.2,
-       "x": 14386.2,
-       "y": 30113.4
+       "x": 16080.2,
+       "y": 30056.8
       }
      ]
     },
@@ -8669,7 +8722,7 @@
        "bits": 270,
        "offset_um": 0.0,
        "span_um": 27.0,
-       "x": 16259.8,
+       "x": 18019.8,
        "y": 23448.2
       },
       {
@@ -8680,103 +8733,8 @@
        "bits": 64,
        "offset_um": 27.0,
        "span_um": 6.4,
-       "x": 16259.8,
+       "x": 18019.8,
        "y": 23464.9
-      }
-     ]
-    },
-    "W": {
-     "face_len_um": 6678.7,
-     "bits": 2184,
-     "utilisation": 0.033,
-     "pins": [
-      {
-       "link": "vmb_NW0>sm_NW7:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_NW0",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 0.0,
-       "span_um": 27.3,
-       "x": 14320.2,
-       "y": 23448.4
-      },
-      {
-       "link": "vmb_NW1>sm_NW7:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_NW1",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 27.3,
-       "span_um": 27.3,
-       "x": 14320.2,
-       "y": 23475.7
-      },
-      {
-       "link": "vmb_NW2>sm_NW7:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_NW2",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 54.6,
-       "span_um": 27.3,
-       "x": 14320.2,
-       "y": 23503.0
-      },
-      {
-       "link": "vmb_NW3>sm_NW7:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_NW3",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 81.9,
-       "span_um": 27.3,
-       "x": 14320.2,
-       "y": 23530.3
-      },
-      {
-       "link": "vmb_NW4>sm_NW7:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_NW4",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 109.2,
-       "span_um": 27.3,
-       "x": 14320.2,
-       "y": 23557.6
-      },
-      {
-       "link": "vmb_NW5>sm_NW7:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_NW5",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 136.5,
-       "span_um": 27.3,
-       "x": 14320.2,
-       "y": 23584.9
-      },
-      {
-       "link": "vmb_NW6>sm_NW7:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_NW6",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 163.8,
-       "span_um": 27.3,
-       "x": 14320.2,
-       "y": 23612.2
-      },
-      {
-       "link": "vmb_NW7>sm_NW7:SM_X",
-       "cls": "SM_X",
-       "peer": "vmb_NW7",
-       "dir": "in",
-       "bits": 273,
-       "offset_um": 191.1,
-       "span_um": 27.3,
-       "x": 14320.2,
-       "y": 23639.5
       }
      ]
     }
@@ -8825,26 +8783,26 @@
        "y": 22918.5
       },
       {
-       "link": "vmb_NW0>coll_NW:COLL_VM",
-       "cls": "COLL_VM",
-       "peer": "coll_NW",
-       "dir": "out",
-       "bits": 555,
-       "offset_um": 45.74,
-       "span_um": 45.74,
-       "x": 891.9,
-       "y": 22964.2
-      },
-      {
        "link": "vmh_NW>vmb_NW0:VM_HUB",
        "cls": "VM_HUB",
        "peer": "vmh_NW",
        "dir": "in",
        "bits": 538,
-       "offset_um": 91.48,
+       "offset_um": 45.74,
        "span_um": 44.34,
        "x": 891.9,
-       "y": 23009.2
+       "y": 22963.5
+      },
+      {
+       "link": "vmb_NW0>coll_NW:COLL_VM",
+       "cls": "COLL_VM",
+       "peer": "coll_NW",
+       "dir": "out",
+       "bits": 555,
+       "offset_um": 90.07,
+       "span_um": 45.74,
+       "x": 891.9,
+       "y": 23008.5
       },
       {
        "link": "vmb_NW0>su_NW0:LG_SU",
@@ -8977,8 +8935,8 @@
    "faces": {
     "N": {
      "face_len_um": 849.5,
-     "bits": 546,
-     "utilisation": 0.064,
+     "bits": 273,
+     "utilisation": 0.032,
      "pins": [
       {
        "link": "vmb_NW1>sm_NW0:SM_X",
@@ -8990,24 +8948,13 @@
        "span_um": 27.3,
        "x": 467.2,
        "y": 22795.6
-      },
-      {
-       "link": "vmb_NW1>sm_NW1:SM_X",
-       "cls": "SM_X",
-       "peer": "sm_NW1",
-       "dir": "out",
-       "bits": 273,
-       "offset_um": 822.23,
-       "span_um": 27.3,
-       "x": 878.3,
-       "y": 22795.6
       }
      ]
     },
     "E": {
      "face_len_um": 339.1,
-     "bits": 3842,
-     "utilisation": 1.133,
+     "bits": 4115,
+     "utilisation": 1.213,
      "pins": [
       {
        "link": "vmh_NW>vmb_NW1:VM_HUB",
@@ -9016,9 +8963,9 @@
        "dir": "in",
        "bits": 538,
        "offset_um": 0.0,
-       "span_um": 47.49,
+       "span_um": 44.34,
        "x": 891.9,
-       "y": 22480.2
+       "y": 22478.6
       },
       {
        "link": "vmb_NW1>su_NW0:LG_SU",
@@ -9026,10 +8973,10 @@
        "peer": "su_NW0",
        "dir": "out",
        "bits": 556,
-       "offset_um": 47.49,
-       "span_um": 49.08,
+       "offset_um": 44.34,
+       "span_um": 45.82,
        "x": 891.9,
-       "y": 22528.5
+       "y": 22523.7
       },
       {
        "link": "vmb_NW1>coll_NW:COLL_VM",
@@ -9037,10 +8984,10 @@
        "peer": "coll_NW",
        "dir": "out",
        "bits": 555,
-       "offset_um": 96.56,
-       "span_um": 48.99,
+       "offset_um": 90.16,
+       "span_um": 45.74,
        "x": 891.9,
-       "y": 22577.5
+       "y": 22569.5
       },
       {
        "link": "vmb_NW1>quant_NW0:QUANT_VM",
@@ -9048,10 +8995,21 @@
        "peer": "quant_NW0",
        "dir": "out",
        "bits": 555,
-       "offset_um": 145.55,
-       "span_um": 48.99,
+       "offset_um": 135.9,
+       "span_um": 45.74,
        "x": 891.9,
-       "y": 22626.5
+       "y": 22615.2
+      },
+      {
+       "link": "vmb_NW1>sm_NW1:SM_X",
+       "cls": "SM_X",
+       "peer": "sm_NW1",
+       "dir": "out",
+       "bits": 273,
+       "offset_um": 181.63,
+       "span_um": 22.5,
+       "x": 891.9,
+       "y": 22649.4
       },
       {
        "link": "vmb_NW1>sm_NW2:SM_X",
@@ -9059,10 +9017,10 @@
        "peer": "sm_NW2",
        "dir": "out",
        "bits": 273,
-       "offset_um": 194.54,
-       "span_um": 24.1,
+       "offset_um": 204.13,
+       "span_um": 22.5,
        "x": 891.9,
-       "y": 22663.1
+       "y": 22671.9
       },
       {
        "link": "vmb_NW1>sm_NW3:SM_X",
@@ -9070,10 +9028,10 @@
        "peer": "sm_NW3",
        "dir": "out",
        "bits": 273,
-       "offset_um": 218.64,
-       "span_um": 24.1,
+       "offset_um": 226.63,
+       "span_um": 22.5,
        "x": 891.9,
-       "y": 22687.2
+       "y": 22694.4
       },
       {
        "link": "vmb_NW1>sm_NW4:SM_X",
@@ -9081,10 +9039,10 @@
        "peer": "sm_NW4",
        "dir": "out",
        "bits": 273,
-       "offset_um": 242.73,
-       "span_um": 24.1,
+       "offset_um": 249.13,
+       "span_um": 22.5,
        "x": 891.9,
-       "y": 22711.3
+       "y": 22716.9
       },
       {
        "link": "vmb_NW1>sm_NW5:SM_X",
@@ -9092,10 +9050,10 @@
        "peer": "sm_NW5",
        "dir": "out",
        "bits": 273,
-       "offset_um": 266.83,
-       "span_um": 24.1,
+       "offset_um": 271.63,
+       "span_um": 22.5,
        "x": 891.9,
-       "y": 22735.4
+       "y": 22739.4
       },
       {
        "link": "vmb_NW1>sm_NW6:SM_X",
@@ -9103,10 +9061,10 @@
        "peer": "sm_NW6",
        "dir": "out",
        "bits": 273,
-       "offset_um": 290.93,
-       "span_um": 24.1,
+       "offset_um": 294.12,
+       "span_um": 22.5,
        "x": 891.9,
-       "y": 22759.5
+       "y": 22761.9
       },
       {
        "link": "vmb_NW1>sm_NW7:SM_X",
@@ -9114,10 +9072,10 @@
        "peer": "sm_NW7",
        "dir": "out",
        "bits": 273,
-       "offset_um": 315.02,
-       "span_um": 24.1,
+       "offset_um": 316.62,
+       "span_um": 22.5,
        "x": 891.9,
-       "y": 22783.6
+       "y": 22784.4
       }
      ]
     },
@@ -9454,9 +9412,9 @@
        "peer": "sm_NW1",
        "dir": "out",
        "bits": 273,
-       "offset_um": 380.21,
+       "offset_um": 411.11,
        "span_um": 27.3,
-       "x": 3627.9,
+       "x": 3658.8,
        "y": 23234.7
       },
       {
@@ -9489,26 +9447,26 @@
        "y": 22922.0
       },
       {
-       "link": "vmb_NW2>coll_NW:COLL_VM",
-       "cls": "COLL_VM",
-       "peer": "coll_NW",
-       "dir": "out",
-       "bits": 555,
-       "offset_um": 52.74,
-       "span_um": 52.74,
-       "x": 4083.6,
-       "y": 22974.7
-      },
-      {
        "link": "vmh_NW>vmb_NW2:VM_HUB",
        "cls": "VM_HUB",
        "peer": "vmh_NW",
        "dir": "in",
        "bits": 538,
-       "offset_um": 105.47,
+       "offset_um": 52.74,
        "span_um": 51.12,
        "x": 4083.6,
-       "y": 23026.6
+       "y": 22973.9
+      },
+      {
+       "link": "vmb_NW2>coll_NW:COLL_VM",
+       "cls": "COLL_VM",
+       "peer": "coll_NW",
+       "dir": "out",
+       "bits": 555,
+       "offset_um": 103.85,
+       "span_um": 52.74,
+       "x": 4083.6,
+       "y": 23025.8
       },
       {
        "link": "vmb_NW2>su_NW1:LG_SU",
@@ -9639,9 +9597,9 @@
        "peer": "sm_NW1",
        "dir": "out",
        "bits": 273,
-       "offset_um": 380.21,
+       "offset_um": 411.11,
        "span_um": 27.3,
-       "x": 3627.9,
+       "x": 3658.8,
        "y": 22795.6
       },
       {
@@ -10076,8 +10034,8 @@
     },
     "N": {
      "face_len_um": 849.5,
-     "bits": 546,
-     "utilisation": 0.064,
+     "bits": 273,
+     "utilisation": 0.032,
      "pins": [
       {
        "link": "vmb_NW4>sm_NW3:SM_X",
@@ -10085,28 +10043,17 @@
        "peer": "sm_NW3",
        "dir": "out",
        "bits": 273,
-       "offset_um": 338.06,
+       "offset_um": 411.11,
        "span_um": 27.3,
-       "x": 7749.4,
-       "y": 23234.7
-      },
-      {
-       "link": "vmb_NW4>sm_NW4:SM_X",
-       "cls": "SM_X",
-       "peer": "sm_NW4",
-       "dir": "out",
-       "bits": 273,
-       "offset_um": 812.83,
-       "span_um": 27.3,
-       "x": 8224.2,
+       "x": 7822.5,
        "y": 23234.7
       }
      ]
     },
     "E": {
      "face_len_um": 339.1,
-     "bits": 3023,
-     "utilisation": 0.891,
+     "bits": 3296,
+     "utilisation": 0.972,
      "pins": [
       {
        "link": "vmb_NW4>quant_NW2:QUANT_VM",
@@ -10120,26 +10067,26 @@
        "y": 22931.8
       },
       {
-       "link": "vmb_NW4>coll_NW:COLL_VM",
-       "cls": "COLL_VM",
-       "peer": "coll_NW",
-       "dir": "out",
-       "bits": 555,
-       "offset_um": 91.81,
-       "span_um": 55.5,
-       "x": 8247.2,
-       "y": 23015.2
-      },
-      {
        "link": "vmh_NW>vmb_NW4:VM_HUB",
        "cls": "VM_HUB",
        "peer": "vmh_NW",
        "dir": "in",
        "bits": 538,
-       "offset_um": 147.31,
+       "offset_um": 65.02,
        "span_um": 53.8,
        "x": 8247.2,
-       "y": 23069.8
+       "y": 22987.5
+      },
+      {
+       "link": "vmb_NW4>coll_NW:COLL_VM",
+       "cls": "COLL_VM",
+       "peer": "coll_NW",
+       "dir": "out",
+       "bits": 555,
+       "offset_um": 118.82,
+       "span_um": 55.5,
+       "x": 8247.2,
+       "y": 23042.2
       },
       {
        "link": "vmb_NW4>su_NW2:LG_SU",
@@ -10147,10 +10094,21 @@
        "peer": "su_NW2",
        "dir": "out",
        "bits": 556,
-       "offset_um": 201.11,
+       "offset_um": 174.32,
        "span_um": 55.6,
        "x": 8247.2,
-       "y": 23124.5
+       "y": 23097.7
+      },
+      {
+       "link": "vmb_NW4>sm_NW4:SM_X",
+       "cls": "SM_X",
+       "peer": "sm_NW4",
+       "dir": "out",
+       "bits": 273,
+       "offset_um": 229.92,
+       "span_um": 27.3,
+       "x": 8247.2,
+       "y": 23139.2
       },
       {
        "link": "vmb_NW4>sm_NW5:SM_X",
@@ -10277,9 +10235,9 @@
        "peer": "sm_NW3",
        "dir": "out",
        "bits": 273,
-       "offset_um": 338.06,
+       "offset_um": 411.11,
        "span_um": 27.3,
-       "x": 7749.4,
+       "x": 7822.5,
        "y": 22795.6
       },
       {
@@ -10288,9 +10246,9 @@
        "peer": "sm_NW4",
        "dir": "out",
        "bits": 273,
-       "offset_um": 812.83,
+       "offset_um": 822.23,
        "span_um": 27.3,
-       "x": 8224.2,
+       "x": 8233.6,
        "y": 22795.6
       }
      ]
@@ -10694,9 +10652,9 @@
        "peer": "sm_NW4",
        "dir": "out",
        "bits": 273,
-       "offset_um": 0.0,
+       "offset_um": 202.08,
        "span_um": 27.3,
-       "x": 10603.0,
+       "x": 10805.1,
        "y": 23234.7
       },
       {
@@ -10705,9 +10663,9 @@
        "peer": "sm_NW5",
        "dir": "out",
        "bits": 273,
-       "offset_um": 411.11,
+       "offset_um": 822.23,
        "span_um": 27.3,
-       "x": 11014.1,
+       "x": 11425.2,
        "y": 23234.7
       }
      ]
@@ -10729,24 +10687,24 @@
        "y": 22931.8
       },
       {
-       "link": "vmb_NW6>coll_NW:COLL_VM",
-       "cls": "COLL_VM",
-       "peer": "coll_NW",
-       "dir": "out",
-       "bits": 555,
-       "offset_um": 91.81,
-       "span_um": 55.5,
-       "x": 11438.9,
-       "y": 23015.2
-      },
-      {
        "link": "vmh_NW>vmb_NW6:VM_HUB",
        "cls": "VM_HUB",
        "peer": "vmh_NW",
        "dir": "in",
        "bits": 538,
-       "offset_um": 147.31,
+       "offset_um": 92.66,
        "span_um": 53.8,
+       "x": 11438.9,
+       "y": 23015.2
+      },
+      {
+       "link": "vmb_NW6>coll_NW:COLL_VM",
+       "cls": "COLL_VM",
+       "peer": "coll_NW",
+       "dir": "out",
+       "bits": 555,
+       "offset_um": 146.46,
+       "span_um": 55.5,
        "x": 11438.9,
        "y": 23069.8
       },
@@ -10756,10 +10714,10 @@
        "peer": "su_NW3",
        "dir": "out",
        "bits": 556,
-       "offset_um": 201.11,
+       "offset_um": 201.96,
        "span_um": 55.6,
        "x": 11438.9,
-       "y": 23124.5
+       "y": 23125.4
       },
       {
        "link": "vmb_NW6>sm_NW6:SM_X",
@@ -10877,8 +10835,8 @@
     },
     "N": {
      "face_len_um": 849.5,
-     "bits": 819,
-     "utilisation": 0.096,
+     "bits": 546,
+     "utilisation": 0.064,
      "pins": [
       {
        "link": "vmb_NW7>sm_NW4:SM_X",
@@ -10886,26 +10844,15 @@
        "peer": "sm_NW4",
        "dir": "out",
        "bits": 273,
-       "offset_um": 0.0,
+       "offset_um": 202.08,
        "span_um": 27.3,
-       "x": 10603.0,
+       "x": 10805.1,
        "y": 22795.6
       },
       {
        "link": "vmb_NW7>sm_NW5:SM_X",
        "cls": "SM_X",
        "peer": "sm_NW5",
-       "dir": "out",
-       "bits": 273,
-       "offset_um": 411.11,
-       "span_um": 27.3,
-       "x": 11014.1,
-       "y": 22795.6
-      },
-      {
-       "link": "vmb_NW7>sm_NW6:SM_X",
-       "cls": "SM_X",
-       "peer": "sm_NW6",
        "dir": "out",
        "bits": 273,
        "offset_um": 822.23,
@@ -10917,8 +10864,8 @@
     },
     "E": {
      "face_len_um": 339.1,
-     "bits": 2477,
-     "utilisation": 0.73,
+     "bits": 2750,
+     "utilisation": 0.811,
      "pins": [
       {
        "link": "vmh_NW>vmb_NW7:VM_HUB",
@@ -10926,10 +10873,10 @@
        "peer": "vmh_NW",
        "dir": "in",
        "bits": 538,
-       "offset_um": 91.42,
+       "offset_um": 64.12,
        "span_um": 53.8,
        "x": 11438.9,
-       "y": 22574.8
+       "y": 22547.5
       },
       {
        "link": "vmb_NW7>su_NW3:LG_SU",
@@ -10937,10 +10884,10 @@
        "peer": "su_NW3",
        "dir": "out",
        "bits": 556,
-       "offset_um": 145.22,
+       "offset_um": 117.92,
        "span_um": 55.6,
        "x": 11438.9,
-       "y": 22629.5
+       "y": 22602.2
       },
       {
        "link": "vmb_NW7>coll_NW:COLL_VM",
@@ -10948,10 +10895,10 @@
        "peer": "coll_NW",
        "dir": "out",
        "bits": 555,
-       "offset_um": 200.82,
+       "offset_um": 173.52,
        "span_um": 55.5,
        "x": 11438.9,
-       "y": 22685.0
+       "y": 22657.8
       },
       {
        "link": "vmb_NW7>quant_NW3:QUANT_VM",
@@ -10959,10 +10906,21 @@
        "peer": "quant_NW3",
        "dir": "out",
        "bits": 555,
-       "offset_um": 256.32,
+       "offset_um": 229.02,
        "span_um": 55.5,
        "x": 11438.9,
-       "y": 22740.5
+       "y": 22713.2
+      },
+      {
+       "link": "vmb_NW7>sm_NW6:SM_X",
+       "cls": "SM_X",
+       "peer": "sm_NW6",
+       "dir": "out",
+       "bits": 273,
+       "offset_um": 284.52,
+       "span_um": 27.3,
+       "x": 11438.9,
+       "y": 22754.6
       },
       {
        "link": "vmb_NW7>sm_NW7:SM_X",
@@ -11223,7 +11181,7 @@
    }
   },
   "sucore_NW": {
-   "x": 13781.0,
+   "x": 16299.3,
    "y": 20409.4,
    "w": 330.48,
    "h": 330.48,
@@ -11232,8 +11190,8 @@
    "faces": {}
   },
   "cij_NW": {
-   "x": 14079.1,
-   "y": 22704.9,
+   "x": 16597.4,
+   "y": 22670.6,
    "w": 43.2,
    "h": 138.24,
    "kind": "COLL inject/IDX join leaf ot_hgi_coll_inj_idx_join (H-NETLIST)",
@@ -11241,17 +11199,17 @@
    "faces": {}
   },
   "coll_NW": {
-   "x": 14143.9,
-   "y": 22413.3,
-   "w": 963.36,
-   "h": 721.44,
+   "x": 16662.2,
+   "y": 22344.7,
+   "w": 1080.0,
+   "h": 790.0,
    "kind": "COLL",
    "orient": "R0",
    "faces": {
     "W": {
-     "face_len_um": 721.4,
+     "face_len_um": 790.0,
      "bits": 4440,
-     "utilisation": 0.615,
+     "utilisation": 0.562,
      "pins": [
       {
        "link": "vmb_NW1>coll_NW:COLL_VM",
@@ -11259,9 +11217,9 @@
        "peer": "vmb_NW1",
        "dir": "in",
        "bits": 555,
-       "offset_um": 185.01,
+       "offset_um": 253.57,
        "span_um": 55.5,
-       "x": 14143.9,
+       "x": 16662.2,
        "y": 22626.0
       },
       {
@@ -11270,9 +11228,9 @@
        "peer": "vmb_NW3",
        "dir": "in",
        "bits": 555,
-       "offset_um": 240.51,
+       "offset_um": 309.07,
        "span_um": 55.5,
-       "x": 14143.9,
+       "x": 16662.2,
        "y": 22681.5
       },
       {
@@ -11281,9 +11239,9 @@
        "peer": "vmb_NW5",
        "dir": "in",
        "bits": 555,
-       "offset_um": 296.01,
+       "offset_um": 364.57,
        "span_um": 55.5,
-       "x": 14143.9,
+       "x": 16662.2,
        "y": 22737.0
       },
       {
@@ -11292,9 +11250,9 @@
        "peer": "vmb_NW7",
        "dir": "in",
        "bits": 555,
-       "offset_um": 351.51,
+       "offset_um": 420.07,
        "span_um": 55.5,
-       "x": 14143.9,
+       "x": 16662.2,
        "y": 22792.5
       },
       {
@@ -11303,9 +11261,9 @@
        "peer": "vmb_NW0",
        "dir": "in",
        "bits": 555,
-       "offset_um": 499.44,
+       "offset_um": 568.0,
        "span_um": 55.5,
-       "x": 14143.9,
+       "x": 16662.2,
        "y": 22940.5
       },
       {
@@ -11314,9 +11272,9 @@
        "peer": "vmb_NW2",
        "dir": "in",
        "bits": 555,
-       "offset_um": 554.94,
+       "offset_um": 623.5,
        "span_um": 55.5,
-       "x": 14143.9,
+       "x": 16662.2,
        "y": 22996.0
       },
       {
@@ -11325,9 +11283,9 @@
        "peer": "vmb_NW4",
        "dir": "in",
        "bits": 555,
-       "offset_um": 610.44,
+       "offset_um": 679.0,
        "span_um": 55.5,
-       "x": 14143.9,
+       "x": 16662.2,
        "y": 23051.5
       },
       {
@@ -11336,17 +11294,17 @@
        "peer": "vmb_NW6",
        "dir": "in",
        "bits": 555,
-       "offset_um": 665.94,
+       "offset_um": 734.5,
        "span_um": 55.5,
-       "x": 14143.9,
+       "x": 16662.2,
        "y": 23107.0
       }
      ]
     },
     "S": {
-     "face_len_um": 963.4,
+     "face_len_um": 1080.0,
      "bits": 4528,
-     "utilisation": 0.47,
+     "utilisation": 0.419,
      "pins": [
       {
        "link": "coll_NE>coll_NW:COLL_RING",
@@ -11354,10 +11312,10 @@
        "peer": "coll_NE",
        "dir": "in",
        "bits": 826,
-       "offset_um": 251.32,
+       "offset_um": 498.7,
        "span_um": 82.6,
-       "x": 14436.5,
-       "y": 22413.3
+       "x": 17202.2,
+       "y": 22344.7
       },
       {
        "link": "coll_NW>coll_NE:COLL_RING",
@@ -11365,10 +11323,10 @@
        "peer": "coll_NE",
        "dir": "out",
        "bits": 826,
-       "offset_um": 333.92,
+       "offset_um": 581.3,
        "span_um": 82.6,
-       "x": 14519.1,
-       "y": 22413.3
+       "x": 17284.8,
+       "y": 22344.7
       },
       {
        "link": "coll_NW>coll_SW:COLL_RING",
@@ -11376,10 +11334,10 @@
        "peer": "coll_SW",
        "dir": "out",
        "bits": 826,
-       "offset_um": 416.52,
+       "offset_um": 663.9,
        "span_um": 82.6,
-       "x": 14601.7,
-       "y": 22413.3
+       "x": 17367.4,
+       "y": 22344.7
       },
       {
        "link": "coll_SW>coll_NW:COLL_RING",
@@ -11387,10 +11345,10 @@
        "peer": "coll_SW",
        "dir": "in",
        "bits": 826,
-       "offset_um": 499.12,
+       "offset_um": 746.5,
        "span_um": 82.6,
-       "x": 14684.3,
-       "y": 22413.3
+       "x": 17450.0,
+       "y": 22344.7
       },
       {
        "link": "coll_NW>ep_N0:COLL_EP",
@@ -11398,18 +11356,18 @@
        "peer": "ep_N0",
        "dir": "out",
        "bits": 1224,
-       "offset_um": 840.96,
+       "offset_um": 957.6,
        "span_um": 122.4,
-       "x": 15046.0,
-       "y": 22413.3
+       "x": 17681.0,
+       "y": 22344.7
       }
      ]
     }
    }
   },
   "sucx_NW": {
-   "x": 14079.1,
-   "y": 22121.7,
+   "x": 16305.8,
+   "y": 22864.7,
    "w": 270.0,
    "h": 270.0,
    "kind": "SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)",
@@ -11417,16 +11375,16 @@
    "faces": {}
   },
   "dbk_NW": {
-   "x": 14595.3,
-   "y": 22031.0,
-   "w": 511.92,
-   "h": 360.72,
+   "x": 15484.2,
+   "y": 22574.7,
+   "w": 800.0,
+   "h": 560.0,
    "kind": "DMA back (vp4 grant 2330 width when carried)",
    "orient": "R0",
    "faces": {}
   },
   "vmh_NW": {
-   "x": 16779.8,
+   "x": 18539.8,
    "y": 19934.7,
    "w": 480.0,
    "h": 3200.0,
@@ -11446,7 +11404,7 @@
        "bits": 538,
        "offset_um": 47.15,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 20008.8
       },
       {
@@ -11457,7 +11415,7 @@
        "bits": 538,
        "offset_um": 148.09,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 20109.7
       },
       {
@@ -11468,7 +11426,7 @@
        "bits": 538,
        "offset_um": 249.04,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 20210.7
       },
       {
@@ -11479,7 +11437,7 @@
        "bits": 538,
        "offset_um": 349.98,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 20311.6
       },
       {
@@ -11490,7 +11448,7 @@
        "bits": 538,
        "offset_um": 450.93,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 20412.5
       },
       {
@@ -11501,7 +11459,7 @@
        "bits": 538,
        "offset_um": 551.87,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 20513.5
       },
       {
@@ -11512,7 +11470,7 @@
        "bits": 538,
        "offset_um": 652.82,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 20614.4
       },
       {
@@ -11523,7 +11481,7 @@
        "bits": 538,
        "offset_um": 753.76,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 20715.4
       },
       {
@@ -11534,7 +11492,7 @@
        "bits": 270,
        "offset_um": 854.71,
        "span_um": 27.0,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 20802.9
       },
       {
@@ -11545,7 +11503,7 @@
        "bits": 256,
        "offset_um": 928.85,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 20876.4
       },
       {
@@ -11556,7 +11514,7 @@
        "bits": 256,
        "offset_um": 1001.6,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 20949.1
       },
       {
@@ -11567,7 +11525,7 @@
        "bits": 270,
        "offset_um": 1074.34,
        "span_um": 27.0,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 21022.6
       },
       {
@@ -11578,7 +11536,7 @@
        "bits": 256,
        "offset_um": 1148.49,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 21096.0
       },
       {
@@ -11589,7 +11547,7 @@
        "bits": 256,
        "offset_um": 1221.24,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 21168.8
       },
       {
@@ -11600,7 +11558,7 @@
        "bits": 270,
        "offset_um": 1293.98,
        "span_um": 27.0,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 21242.2
       },
       {
@@ -11611,7 +11569,7 @@
        "bits": 256,
        "offset_um": 1368.13,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 21315.6
       },
       {
@@ -11622,7 +11580,7 @@
        "bits": 256,
        "offset_um": 1440.87,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 21388.4
       },
       {
@@ -11633,7 +11591,7 @@
        "bits": 270,
        "offset_um": 1513.62,
        "span_um": 27.0,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 21461.8
       },
       {
@@ -11644,7 +11602,7 @@
        "bits": 256,
        "offset_um": 1587.76,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 21535.3
       },
       {
@@ -11655,7 +11613,7 @@
        "bits": 256,
        "offset_um": 1660.51,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 21608.0
       },
       {
@@ -11666,7 +11624,7 @@
        "bits": 270,
        "offset_um": 1893.09,
        "span_um": 27.0,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 21841.3
       },
       {
@@ -11677,7 +11635,7 @@
        "bits": 256,
        "offset_um": 1967.24,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 21914.8
       },
       {
@@ -11688,7 +11646,7 @@
        "bits": 256,
        "offset_um": 2039.98,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 21987.5
       },
       {
@@ -11699,7 +11657,7 @@
        "bits": 270,
        "offset_um": 2112.73,
        "span_um": 27.0,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 22060.9
       },
       {
@@ -11710,7 +11668,7 @@
        "bits": 256,
        "offset_um": 2186.87,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 22134.4
       },
       {
@@ -11721,7 +11679,7 @@
        "bits": 256,
        "offset_um": 2259.62,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 22207.1
       },
       {
@@ -11732,7 +11690,7 @@
        "bits": 270,
        "offset_um": 2332.36,
        "span_um": 27.0,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 22280.6
       },
       {
@@ -11743,7 +11701,7 @@
        "bits": 256,
        "offset_um": 2406.51,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 22354.0
       },
       {
@@ -11754,7 +11712,7 @@
        "bits": 256,
        "offset_um": 2479.26,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 22426.8
       },
       {
@@ -11765,7 +11723,7 @@
        "bits": 270,
        "offset_um": 2552.0,
        "span_um": 27.0,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 22500.2
       },
       {
@@ -11776,7 +11734,7 @@
        "bits": 256,
        "offset_um": 2626.15,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 22573.7
       },
       {
@@ -11787,7 +11745,7 @@
        "bits": 256,
        "offset_um": 2698.89,
        "span_um": 25.6,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 22646.4
       },
       {
@@ -11798,7 +11756,7 @@
        "bits": 64,
        "offset_um": 2771.64,
        "span_um": 6.4,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 22709.6
       },
       {
@@ -11809,7 +11767,7 @@
        "bits": 64,
        "offset_um": 2825.18,
        "span_um": 6.4,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 22763.1
       },
       {
@@ -11820,7 +11778,7 @@
        "bits": 64,
        "offset_um": 2878.73,
        "span_um": 6.4,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 22816.6
       },
       {
@@ -11831,7 +11789,7 @@
        "bits": 64,
        "offset_um": 2932.27,
        "span_um": 6.4,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 22870.2
       },
       {
@@ -11842,7 +11800,7 @@
        "bits": 64,
        "offset_um": 2985.82,
        "span_um": 6.4,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 22923.7
       },
       {
@@ -11853,7 +11811,7 @@
        "bits": 64,
        "offset_um": 3039.36,
        "span_um": 6.4,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 22977.3
       },
       {
@@ -11864,7 +11822,7 @@
        "bits": 64,
        "offset_um": 3092.91,
        "span_um": 6.4,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 23030.8
       },
       {
@@ -11875,7 +11833,7 @@
        "bits": 64,
        "offset_um": 3146.45,
        "span_um": 6.4,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 23084.4
       }
      ]
@@ -11893,7 +11851,7 @@
        "bits": 2224,
        "offset_um": 0.0,
        "span_um": 120.0,
-       "x": 16839.8,
+       "x": 18599.8,
        "y": 19934.7
       },
       {
@@ -11904,7 +11862,7 @@
        "bits": 2224,
        "offset_um": 120.0,
        "span_um": 120.0,
-       "x": 16959.8,
+       "x": 18719.8,
        "y": 19934.7
       },
       {
@@ -11915,7 +11873,7 @@
        "bits": 2224,
        "offset_um": 240.0,
        "span_um": 120.0,
-       "x": 17079.8,
+       "x": 18839.8,
        "y": 19934.7
       },
       {
@@ -11926,7 +11884,7 @@
        "bits": 2224,
        "offset_um": 360.0,
        "span_um": 120.0,
-       "x": 17199.8,
+       "x": 18959.8,
        "y": 19934.7
       }
      ]
@@ -11934,7 +11892,7 @@
    }
   },
   "hc_NW": {
-   "x": 16082.2,
+   "x": 17842.2,
    "y": 21238.2,
    "w": 432.0,
    "h": 432.0,
@@ -11954,7 +11912,7 @@
        "bits": 2100,
        "offset_um": 144.8,
        "span_um": 210.0,
-       "x": 16332.0,
+       "x": 18092.0,
        "y": 21238.2
       },
       {
@@ -11965,7 +11923,7 @@
        "bits": 772,
        "offset_um": 354.8,
        "span_um": 77.2,
-       "x": 16475.6,
+       "x": 18235.6,
        "y": 21238.2
       }
      ]
@@ -11983,7 +11941,7 @@
        "bits": 596,
        "offset_um": 0.0,
        "span_um": 57.88,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 21267.2
       },
       {
@@ -11994,7 +11952,7 @@
        "bits": 516,
        "offset_um": 57.88,
        "span_um": 50.12,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 21321.2
       },
       {
@@ -12005,7 +11963,7 @@
        "bits": 596,
        "offset_um": 108.0,
        "span_um": 57.88,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 21375.2
       },
       {
@@ -12016,7 +11974,7 @@
        "bits": 516,
        "offset_um": 165.88,
        "span_um": 50.12,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 21429.2
       },
       {
@@ -12027,7 +11985,7 @@
        "bits": 596,
        "offset_um": 216.0,
        "span_um": 57.88,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 21483.2
       },
       {
@@ -12038,7 +11996,7 @@
        "bits": 516,
        "offset_um": 273.88,
        "span_um": 50.12,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 21537.2
       },
       {
@@ -12049,7 +12007,7 @@
        "bits": 596,
        "offset_um": 324.0,
        "span_um": 57.88,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 21591.2
       },
       {
@@ -12060,7 +12018,7 @@
        "bits": 516,
        "offset_um": 381.88,
        "span_um": 50.12,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 21645.2
       }
      ]
@@ -12081,24 +12039,24 @@
      "utilisation": 0.486,
      "pins": [
       {
-       "link": "vmb_NE0>coll_NE:COLL_VM",
-       "cls": "COLL_VM",
-       "peer": "coll_NE",
-       "dir": "out",
-       "bits": 555,
-       "offset_um": 91.81,
-       "span_um": 55.5,
-       "x": 891.9,
-       "y": 19315.2
-      },
-      {
        "link": "vmh_NE>vmb_NE0:VM_HUB",
        "cls": "VM_HUB",
        "peer": "vmh_NE",
        "dir": "in",
        "bits": 538,
-       "offset_um": 147.31,
+       "offset_um": 92.66,
        "span_um": 53.8,
+       "x": 891.9,
+       "y": 19315.2
+      },
+      {
+       "link": "vmb_NE0>coll_NE:COLL_VM",
+       "cls": "COLL_VM",
+       "peer": "coll_NE",
+       "dir": "out",
+       "bits": 555,
+       "offset_um": 146.46,
+       "span_um": 55.5,
        "x": 891.9,
        "y": 19369.8
       },
@@ -12108,10 +12066,10 @@
        "peer": "su_NE0",
        "dir": "out",
        "bits": 556,
-       "offset_um": 201.11,
+       "offset_um": 201.96,
        "span_um": 55.6,
        "x": 891.9,
-       "y": 19424.5
+       "y": 19425.4
       }
      ]
     },
@@ -12465,24 +12423,24 @@
      "utilisation": 0.486,
      "pins": [
       {
-       "link": "vmb_NE2>coll_NE:COLL_VM",
-       "cls": "COLL_VM",
-       "peer": "coll_NE",
-       "dir": "out",
-       "bits": 555,
-       "offset_um": 91.81,
-       "span_um": 55.5,
-       "x": 3989.0,
-       "y": 19315.2
-      },
-      {
        "link": "vmh_NE>vmb_NE2:VM_HUB",
        "cls": "VM_HUB",
        "peer": "vmh_NE",
        "dir": "in",
        "bits": 538,
-       "offset_um": 147.31,
+       "offset_um": 92.66,
        "span_um": 53.8,
+       "x": 3989.0,
+       "y": 19315.2
+      },
+      {
+       "link": "vmb_NE2>coll_NE:COLL_VM",
+       "cls": "COLL_VM",
+       "peer": "coll_NE",
+       "dir": "out",
+       "bits": 555,
+       "offset_um": 146.46,
+       "span_um": 55.5,
        "x": 3989.0,
        "y": 19369.8
       },
@@ -12492,10 +12450,10 @@
        "peer": "su_NE1",
        "dir": "out",
        "bits": 556,
-       "offset_um": 201.11,
+       "offset_um": 201.96,
        "span_um": 55.6,
        "x": 3989.0,
-       "y": 19424.5
+       "y": 19425.4
       }
      ]
     },
@@ -12816,24 +12774,24 @@
      "utilisation": 0.486,
      "pins": [
       {
-       "link": "vmb_NE4>coll_NE:COLL_VM",
-       "cls": "COLL_VM",
-       "peer": "coll_NE",
-       "dir": "out",
-       "bits": 555,
-       "offset_um": 91.81,
-       "span_um": 55.5,
-       "x": 8058.2,
-       "y": 19315.2
-      },
-      {
        "link": "vmh_NE>vmb_NE4:VM_HUB",
        "cls": "VM_HUB",
        "peer": "vmh_NE",
        "dir": "in",
        "bits": 538,
-       "offset_um": 147.31,
+       "offset_um": 92.66,
        "span_um": 53.8,
+       "x": 8058.2,
+       "y": 19315.2
+      },
+      {
+       "link": "vmb_NE4>coll_NE:COLL_VM",
+       "cls": "COLL_VM",
+       "peer": "coll_NE",
+       "dir": "out",
+       "bits": 555,
+       "offset_um": 146.46,
+       "span_um": 55.5,
        "x": 8058.2,
        "y": 19369.8
       },
@@ -12843,10 +12801,10 @@
        "peer": "su_NE2",
        "dir": "out",
        "bits": 556,
-       "offset_um": 201.11,
+       "offset_um": 201.96,
        "span_um": 55.6,
        "x": 8058.2,
-       "y": 19424.5
+       "y": 19425.4
       }
      ]
     },
@@ -13149,24 +13107,24 @@
      "utilisation": 0.486,
      "pins": [
       {
-       "link": "vmb_NE6>coll_NE:COLL_VM",
-       "cls": "COLL_VM",
-       "peer": "coll_NE",
-       "dir": "out",
-       "bits": 555,
-       "offset_um": 91.81,
-       "span_um": 55.5,
-       "x": 11155.3,
-       "y": 19315.2
-      },
-      {
        "link": "vmh_NE>vmb_NE6:VM_HUB",
        "cls": "VM_HUB",
        "peer": "vmh_NE",
        "dir": "in",
        "bits": 538,
-       "offset_um": 147.31,
+       "offset_um": 92.66,
        "span_um": 53.8,
+       "x": 11155.3,
+       "y": 19315.2
+      },
+      {
+       "link": "vmb_NE6>coll_NE:COLL_VM",
+       "cls": "COLL_VM",
+       "peer": "coll_NE",
+       "dir": "out",
+       "bits": 555,
+       "offset_um": 146.46,
+       "span_um": 55.5,
        "x": 11155.3,
        "y": 19369.8
       },
@@ -13176,10 +13134,10 @@
        "peer": "su_NE3",
        "dir": "out",
        "bits": 556,
-       "offset_um": 201.11,
+       "offset_um": 201.96,
        "span_um": 55.6,
        "x": 11155.3,
-       "y": 19424.5
+       "y": 19425.4
       }
      ]
     },
@@ -13469,7 +13427,7 @@
    }
   },
   "sucore_NE": {
-   "x": 13402.9,
+   "x": 16299.3,
    "y": 16709.4,
    "w": 330.48,
    "h": 330.48,
@@ -13478,8 +13436,8 @@
    "faces": {}
   },
   "cij_NE": {
-   "x": 13701.0,
-   "y": 19004.9,
+   "x": 16597.4,
+   "y": 19039.2,
    "w": 43.2,
    "h": 138.24,
    "kind": "COLL inject/IDX join leaf ot_hgi_coll_inj_idx_join (H-NETLIST)",
@@ -13487,17 +13445,17 @@
    "faces": {}
   },
   "coll_NE": {
-   "x": 13765.8,
+   "x": 16662.2,
    "y": 18713.3,
-   "w": 963.36,
-   "h": 721.44,
+   "w": 1080.0,
+   "h": 790.0,
    "kind": "COLL",
    "orient": "R0",
    "faces": {
     "W": {
-     "face_len_um": 721.4,
+     "face_len_um": 790.0,
      "bits": 4440,
-     "utilisation": 0.615,
+     "utilisation": 0.562,
      "pins": [
       {
        "link": "vmb_NE1>coll_NE:COLL_VM",
@@ -13507,7 +13465,7 @@
        "bits": 555,
        "offset_um": 185.01,
        "span_um": 55.5,
-       "x": 13765.8,
+       "x": 16662.2,
        "y": 18926.0
       },
       {
@@ -13518,7 +13476,7 @@
        "bits": 555,
        "offset_um": 240.51,
        "span_um": 55.5,
-       "x": 13765.8,
+       "x": 16662.2,
        "y": 18981.5
       },
       {
@@ -13529,7 +13487,7 @@
        "bits": 555,
        "offset_um": 296.01,
        "span_um": 55.5,
-       "x": 13765.8,
+       "x": 16662.2,
        "y": 19037.0
       },
       {
@@ -13540,7 +13498,7 @@
        "bits": 555,
        "offset_um": 351.51,
        "span_um": 55.5,
-       "x": 13765.8,
+       "x": 16662.2,
        "y": 19092.5
       },
       {
@@ -13549,10 +13507,10 @@
        "peer": "vmb_NE0",
        "dir": "in",
        "bits": 555,
-       "offset_um": 499.44,
+       "offset_um": 568.0,
        "span_um": 55.5,
-       "x": 13765.8,
-       "y": 19240.5
+       "x": 16662.2,
+       "y": 19309.0
       },
       {
        "link": "vmb_NE2>coll_NE:COLL_VM",
@@ -13560,10 +13518,10 @@
        "peer": "vmb_NE2",
        "dir": "in",
        "bits": 555,
-       "offset_um": 554.94,
+       "offset_um": 623.5,
        "span_um": 55.5,
-       "x": 13765.8,
-       "y": 19296.0
+       "x": 16662.2,
+       "y": 19364.5
       },
       {
        "link": "vmb_NE4>coll_NE:COLL_VM",
@@ -13571,10 +13529,10 @@
        "peer": "vmb_NE4",
        "dir": "in",
        "bits": 555,
-       "offset_um": 610.44,
+       "offset_um": 679.0,
        "span_um": 55.5,
-       "x": 13765.8,
-       "y": 19351.5
+       "x": 16662.2,
+       "y": 19420.0
       },
       {
        "link": "vmb_NE6>coll_NE:COLL_VM",
@@ -13582,17 +13540,17 @@
        "peer": "vmb_NE6",
        "dir": "in",
        "bits": 555,
-       "offset_um": 665.94,
+       "offset_um": 734.5,
        "span_um": 55.5,
-       "x": 13765.8,
-       "y": 19407.0
+       "x": 16662.2,
+       "y": 19475.5
       }
      ]
     },
     "E": {
-     "face_len_um": 721.4,
+     "face_len_um": 790.0,
      "bits": 1224,
-     "utilisation": 0.17,
+     "utilisation": 0.155,
      "pins": [
       {
        "link": "coll_NE>ep_N2:COLL_EP",
@@ -13602,15 +13560,15 @@
        "bits": 1224,
        "offset_um": 0.0,
        "span_um": 122.4,
-       "x": 14729.1,
+       "x": 17742.2,
        "y": 18774.5
       }
      ]
     },
     "S": {
-     "face_len_um": 963.4,
+     "face_len_um": 1080.0,
      "bits": 1652,
-     "utilisation": 0.171,
+     "utilisation": 0.153,
      "pins": [
       {
        "link": "coll_SE>coll_NE:COLL_RING",
@@ -13618,9 +13576,9 @@
        "peer": "coll_SE",
        "dir": "in",
        "bits": 826,
-       "offset_um": 440.38,
+       "offset_um": 498.7,
        "span_um": 82.6,
-       "x": 14247.4,
+       "x": 17202.2,
        "y": 18713.3
       },
       {
@@ -13629,17 +13587,17 @@
        "peer": "coll_SE",
        "dir": "out",
        "bits": 826,
-       "offset_um": 522.98,
+       "offset_um": 581.3,
        "span_um": 82.6,
-       "x": 14330.0,
+       "x": 17284.8,
        "y": 18713.3
       }
      ]
     },
     "N": {
-     "face_len_um": 963.4,
+     "face_len_um": 1080.0,
      "bits": 1652,
-     "utilisation": 0.171,
+     "utilisation": 0.153,
      "pins": [
       {
        "link": "coll_NE>coll_NW:COLL_RING",
@@ -13647,10 +13605,10 @@
        "peer": "coll_NW",
        "dir": "out",
        "bits": 826,
-       "offset_um": 629.44,
+       "offset_um": 498.7,
        "span_um": 82.6,
-       "x": 14436.5,
-       "y": 19434.7
+       "x": 17202.2,
+       "y": 19503.3
       },
       {
        "link": "coll_NW>coll_NE:COLL_RING",
@@ -13658,18 +13616,18 @@
        "peer": "coll_NW",
        "dir": "in",
        "bits": 826,
-       "offset_um": 712.04,
+       "offset_um": 581.3,
        "span_um": 82.6,
-       "x": 14519.1,
-       "y": 19434.7
+       "x": 17284.8,
+       "y": 19503.3
       }
      ]
     }
    }
   },
   "sucx_NE": {
-   "x": 13701.0,
-   "y": 18421.7,
+   "x": 16305.8,
+   "y": 18713.3,
    "w": 270.0,
    "h": 270.0,
    "kind": "SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)",
@@ -13677,16 +13635,16 @@
    "faces": {}
   },
   "dbk_NE": {
-   "x": 14217.2,
-   "y": 18331.0,
-   "w": 511.92,
-   "h": 360.72,
+   "x": 15484.2,
+   "y": 18713.3,
+   "w": 800.0,
+   "h": 560.0,
    "kind": "DMA back (vp4 grant 2330 width when carried)",
    "orient": "R0",
    "faces": {}
   },
   "vmh_NE": {
-   "x": 16779.8,
+   "x": 18539.8,
    "y": 16234.7,
    "w": 480.0,
    "h": 3200.0,
@@ -13706,7 +13664,7 @@
        "bits": 538,
        "offset_um": 307.73,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 16569.4
       },
       {
@@ -13717,7 +13675,7 @@
        "bits": 538,
        "offset_um": 669.27,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 16930.9
       },
       {
@@ -13728,7 +13686,7 @@
        "bits": 538,
        "offset_um": 1030.8,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 17292.4
       },
       {
@@ -13739,7 +13697,7 @@
        "bits": 538,
        "offset_um": 1392.33,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 17654.0
       },
       {
@@ -13750,7 +13708,7 @@
        "bits": 538,
        "offset_um": 1753.87,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 18015.5
       },
       {
@@ -13761,7 +13719,7 @@
        "bits": 538,
        "offset_um": 2115.4,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 18377.0
       },
       {
@@ -13772,7 +13730,7 @@
        "bits": 538,
        "offset_um": 2476.93,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 18738.6
       },
       {
@@ -13783,7 +13741,7 @@
        "bits": 538,
        "offset_um": 2838.47,
        "span_um": 53.8,
-       "x": 16779.8,
+       "x": 18539.8,
        "y": 19100.1
       }
      ]
@@ -13801,7 +13759,7 @@
        "bits": 2224,
        "offset_um": 35.2,
        "span_um": 222.4,
-       "x": 16926.2,
+       "x": 18686.2,
        "y": 16234.7
       },
       {
@@ -13812,7 +13770,7 @@
        "bits": 2224,
        "offset_um": 257.6,
        "span_um": 222.4,
-       "x": 17148.6,
+       "x": 18908.6,
        "y": 16234.7
       }
      ]
@@ -13830,7 +13788,7 @@
        "bits": 2224,
        "offset_um": 35.2,
        "span_um": 222.4,
-       "x": 16926.2,
+       "x": 18686.2,
        "y": 19434.7
       },
       {
@@ -13841,7 +13799,7 @@
        "bits": 2224,
        "offset_um": 257.6,
        "span_um": 222.4,
-       "x": 17148.6,
+       "x": 18908.6,
        "y": 19434.7
       }
      ]
@@ -13849,7 +13807,7 @@
    }
   },
   "hc_NE": {
-   "x": 16082.2,
+   "x": 17842.2,
    "y": 17538.2,
    "w": 432.0,
    "h": 432.0,
@@ -13869,7 +13827,7 @@
        "bits": 2100,
        "offset_um": 0.0,
        "span_um": 210.0,
-       "x": 16514.2,
+       "x": 18274.2,
        "y": 17643.2
       },
       {
@@ -13880,7 +13838,7 @@
        "bits": 772,
        "offset_um": 210.0,
        "span_um": 77.2,
-       "x": 16514.2,
+       "x": 18274.2,
        "y": 17786.8
       }
      ]
@@ -13898,7 +13856,7 @@
        "bits": 596,
        "offset_um": 0.0,
        "span_um": 57.88,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 17567.2
       },
       {
@@ -13909,7 +13867,7 @@
        "bits": 516,
        "offset_um": 57.88,
        "span_um": 50.12,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 17621.2
       },
       {
@@ -13920,7 +13878,7 @@
        "bits": 596,
        "offset_um": 108.0,
        "span_um": 57.88,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 17675.2
       },
       {
@@ -13931,7 +13889,7 @@
        "bits": 516,
        "offset_um": 165.88,
        "span_um": 50.12,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 17729.2
       },
       {
@@ -13942,7 +13900,7 @@
        "bits": 596,
        "offset_um": 216.0,
        "span_um": 57.88,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 17783.2
       },
       {
@@ -13953,7 +13911,7 @@
        "bits": 516,
        "offset_um": 273.88,
        "span_um": 50.12,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 17837.2
       },
       {
@@ -13964,7 +13922,7 @@
        "bits": 596,
        "offset_um": 324.0,
        "span_um": 57.88,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 17891.2
       },
       {
@@ -13975,7 +13933,7 @@
        "bits": 516,
        "offset_um": 381.88,
        "span_um": 50.12,
-       "x": 16082.2,
+       "x": 17842.2,
        "y": 17945.2
       }
      ]
@@ -13983,7 +13941,7 @@
    }
   },
   "hc_eng": {
-   "x": 17859.8,
+   "x": 19619.8,
    "y": 14552.5,
    "w": 3100.0,
    "h": 3064.516,
@@ -14003,7 +13961,7 @@
        "bits": 2100,
        "offset_um": 0.0,
        "span_um": 210.0,
-       "x": 17964.8,
+       "x": 19724.8,
        "y": 14552.5
       },
       {
@@ -14014,7 +13972,7 @@
        "bits": 772,
        "offset_um": 210.0,
        "span_um": 77.2,
-       "x": 18108.4,
+       "x": 19868.4,
        "y": 14552.5
       }
      ]
@@ -14032,7 +13990,7 @@
        "bits": 2100,
        "offset_um": 0.0,
        "span_um": 210.0,
-       "x": 17859.8,
+       "x": 19619.8,
        "y": 14657.5
       },
       {
@@ -14043,7 +14001,7 @@
        "bits": 772,
        "offset_um": 210.0,
        "span_um": 77.2,
-       "x": 17859.8,
+       "x": 19619.8,
        "y": 14801.1
       },
       {
@@ -14054,7 +14012,7 @@
        "bits": 2100,
        "offset_um": 2777.32,
        "span_um": 210.0,
-       "x": 17859.8,
+       "x": 19619.8,
        "y": 17434.8
       },
       {
@@ -14065,7 +14023,7 @@
        "bits": 772,
        "offset_um": 2987.32,
        "span_um": 77.2,
-       "x": 17859.8,
+       "x": 19619.8,
        "y": 17578.4
       }
      ]
@@ -14083,7 +14041,7 @@
        "bits": 2100,
        "offset_um": 0.0,
        "span_um": 210.0,
-       "x": 17964.8,
+       "x": 19724.8,
        "y": 17617.0
       },
       {
@@ -14094,7 +14052,7 @@
        "bits": 772,
        "offset_um": 210.0,
        "span_um": 77.2,
-       "x": 18108.4,
+       "x": 19868.4,
        "y": 17617.0
       }
      ]
@@ -14102,7 +14060,7 @@
    }
   },
   "lk_S0": {
-   "x": 20359.8,
+   "x": 22119.8,
    "y": 13237.3,
    "w": 600.0,
    "h": 600.0,
@@ -14122,7 +14080,7 @@
        "bits": 1056,
        "offset_um": 329.84,
        "span_um": 105.6,
-       "x": 20742.5,
+       "x": 22502.5,
        "y": 13837.3
       }
      ]
@@ -14130,7 +14088,7 @@
    }
   },
   "lk_S1": {
-   "x": 19659.8,
+   "x": 21419.8,
    "y": 13237.3,
    "w": 600.0,
    "h": 600.0,
@@ -14150,7 +14108,7 @@
        "bits": 1056,
        "offset_um": 437.48,
        "span_um": 105.6,
-       "x": 20150.1,
+       "x": 21910.1,
        "y": 13837.3
       }
      ]
@@ -14158,7 +14116,7 @@
    }
   },
   "lk_S3": {
-   "x": 18959.8,
+   "x": 20719.8,
    "y": 13237.3,
    "w": 600.0,
    "h": 600.0,
@@ -14178,7 +14136,7 @@
        "bits": 1056,
        "offset_um": 494.4,
        "span_um": 105.6,
-       "x": 19507.0,
+       "x": 21267.0,
        "y": 13837.3
       }
      ]
@@ -14186,7 +14144,7 @@
    }
   },
   "ep_S0": {
-   "x": 20525.1,
+   "x": 22285.1,
    "y": 13937.3,
    "w": 434.72,
    "h": 515.2,
@@ -14206,7 +14164,7 @@
        "bits": 1224,
        "offset_um": 0.0,
        "span_um": 122.4,
-       "x": 20525.1,
+       "x": 22285.1,
        "y": 13998.5
       }
      ]
@@ -14224,7 +14182,7 @@
        "bits": 1056,
        "offset_um": 164.56,
        "span_um": 105.6,
-       "x": 20742.5,
+       "x": 22502.5,
        "y": 13937.3
       }
      ]
@@ -14232,7 +14190,7 @@
    }
   },
   "ep_S1": {
-   "x": 20040.4,
+   "x": 21800.4,
    "y": 13937.3,
    "w": 434.72,
    "h": 515.2,
@@ -14252,7 +14210,7 @@
        "bits": 1224,
        "offset_um": 0.0,
        "span_um": 122.4,
-       "x": 20040.4,
+       "x": 21800.4,
        "y": 13998.5
       }
      ]
@@ -14270,7 +14228,7 @@
        "bits": 1056,
        "offset_um": 56.92,
        "span_um": 105.6,
-       "x": 20150.1,
+       "x": 21910.1,
        "y": 13937.3
       }
      ]
@@ -14278,7 +14236,7 @@
    }
   },
   "ep_S3": {
-   "x": 19555.7,
+   "x": 21315.7,
    "y": 13937.3,
    "w": 434.72,
    "h": 515.2,
@@ -14298,7 +14256,7 @@
        "bits": 1224,
        "offset_um": 0.0,
        "span_um": 122.4,
-       "x": 19555.7,
+       "x": 21315.7,
        "y": 13998.5
       }
      ]
@@ -14316,7 +14274,7 @@
        "bits": 1056,
        "offset_um": 0.0,
        "span_um": 105.6,
-       "x": 19608.5,
+       "x": 21368.5,
        "y": 13937.3
       }
      ]
@@ -14324,7 +14282,7 @@
    }
   },
   "lk_N0": {
-   "x": 20359.8,
+   "x": 22119.8,
    "y": 18332.2,
    "w": 600.0,
    "h": 600.0,
@@ -14344,7 +14302,7 @@
        "bits": 1056,
        "offset_um": 329.84,
        "span_um": 105.6,
-       "x": 20742.5,
+       "x": 22502.5,
        "y": 18332.2
       }
      ]
@@ -14352,7 +14310,7 @@
    }
   },
   "lk_N2": {
-   "x": 19659.8,
+   "x": 21419.8,
    "y": 18332.2,
    "w": 600.0,
    "h": 600.0,
@@ -14372,7 +14330,7 @@
        "bits": 1056,
        "offset_um": 437.48,
        "span_um": 105.6,
-       "x": 20150.1,
+       "x": 21910.1,
        "y": 18332.2
       }
      ]
@@ -14380,7 +14338,7 @@
    }
   },
   "ep_N0": {
-   "x": 20525.1,
+   "x": 22285.1,
    "y": 17717.0,
    "w": 434.72,
    "h": 515.2,
@@ -14400,7 +14358,7 @@
        "bits": 1224,
        "offset_um": 392.8,
        "span_um": 122.4,
-       "x": 20525.1,
+       "x": 22285.1,
        "y": 18171.0
       }
      ]
@@ -14418,7 +14376,7 @@
        "bits": 1056,
        "offset_um": 164.56,
        "span_um": 105.6,
-       "x": 20742.5,
+       "x": 22502.5,
        "y": 18232.2
       }
      ]
@@ -14426,7 +14384,7 @@
    }
   },
   "ep_N2": {
-   "x": 20040.4,
+   "x": 21800.4,
    "y": 17717.0,
    "w": 434.72,
    "h": 515.2,
@@ -14446,7 +14404,7 @@
        "bits": 1224,
        "offset_um": 392.8,
        "span_um": 122.4,
-       "x": 20040.4,
+       "x": 21800.4,
        "y": 18171.0
       }
      ]
@@ -14464,15 +14422,24 @@
        "bits": 1056,
        "offset_um": 56.92,
        "span_um": 105.6,
-       "x": 20150.1,
+       "x": 21910.1,
        "y": 18232.2
       }
      ]
     }
    }
   },
+  "tkm_SW": {
+   "x": 16002.2,
+   "y": 10014.7,
+   "w": 1740.0,
+   "h": 1740.0,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
   "idx_sel": {
-   "x": 17859.8,
+   "x": 19619.8,
    "y": 12687.3,
    "w": 600.0,
    "h": 450.0,
@@ -14481,7 +14448,7 @@
    "faces": {}
   },
   "idx_link": {
-   "x": 18559.8,
+   "x": 20319.8,
    "y": 12637.3,
    "w": 650.0,
    "h": 500.0,
@@ -14490,16 +14457,16 @@
    "faces": {}
   },
   "idx_s0": {
-   "x": 17934.8,
-   "y": 9587.3,
-   "w": 2950.0,
-   "h": 2950.0,
+   "x": 19644.8,
+   "y": 9487.3,
+   "w": 3050.0,
+   "h": 3050.0,
    "kind": "GRANT",
    "orient": "R0",
    "faces": {}
   },
   "idx_ctl": {
-   "x": 17859.8,
+   "x": 19619.8,
    "y": 19032.2,
    "w": 300.0,
    "h": 260.0,
@@ -14508,7 +14475,7 @@
    "faces": {}
   },
   "idx_q": {
-   "x": 18259.8,
+   "x": 20019.8,
    "y": 19032.2,
    "w": 260.0,
    "h": 260.0,
@@ -14517,7 +14484,7 @@
    "faces": {}
   },
   "idx_op": {
-   "x": 18619.8,
+   "x": 20379.8,
    "y": 19032.2,
    "w": 216.0,
    "h": 108.0,
@@ -14526,12 +14493,444 @@
    "faces": {}
   },
   "idx_s1": {
-   "x": 17934.8,
+   "x": 19644.8,
    "y": 19392.2,
-   "w": 2950.0,
-   "h": 2950.0,
+   "w": 3050.0,
+   "h": 3050.0,
    "kind": "GRANT",
    "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p0_eg": {
+   "x": 2121.4,
+   "y": 8365.4,
+   "w": 369.36,
+   "h": 369.36,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p0_bd": {
+   "x": 2013.4,
+   "y": 8398.8,
+   "w": 86.4,
+   "h": 302.4,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p0_bfq0": {
+   "x": 2154.9,
+   "y": 8045.7,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p0_bfq1": {
+   "x": 2154.9,
+   "y": 7726.0,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p0_bfq2": {
+   "x": 2154.9,
+   "y": 7406.3,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p0_bfq3": {
+   "x": 2154.9,
+   "y": 7086.6,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p1_eg": {
+   "x": 6640.8,
+   "y": 8365.4,
+   "w": 369.36,
+   "h": 369.36,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p1_bd": {
+   "x": 6532.8,
+   "y": 8398.8,
+   "w": 86.4,
+   "h": 302.4,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p1_bfq0": {
+   "x": 6674.2,
+   "y": 8045.7,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p1_bfq1": {
+   "x": 6674.2,
+   "y": 7726.0,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p1_bfq2": {
+   "x": 6674.2,
+   "y": 7406.3,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p1_bfq3": {
+   "x": 6674.2,
+   "y": 7086.6,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p2_eg": {
+   "x": 11160.1,
+   "y": 8365.4,
+   "w": 369.36,
+   "h": 369.36,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p2_bd": {
+   "x": 11052.1,
+   "y": 8398.8,
+   "w": 86.4,
+   "h": 302.4,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p2_bfq0": {
+   "x": 11193.6,
+   "y": 8045.7,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p2_bfq1": {
+   "x": 11193.6,
+   "y": 7726.0,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p2_bfq2": {
+   "x": 11193.6,
+   "y": 7406.3,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p2_bfq3": {
+   "x": 11193.6,
+   "y": 7086.6,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p3_eg": {
+   "x": 15679.5,
+   "y": 8365.4,
+   "w": 369.36,
+   "h": 369.36,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p3_bd": {
+   "x": 15571.5,
+   "y": 8398.8,
+   "w": 86.4,
+   "h": 302.4,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p3_bfq0": {
+   "x": 15713.0,
+   "y": 8045.7,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p3_bfq1": {
+   "x": 15713.0,
+   "y": 7726.0,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p3_bfq2": {
+   "x": 15713.0,
+   "y": 7406.3,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_SW_p3_bfq3": {
+   "x": 15713.0,
+   "y": 7086.6,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "R0",
+   "faces": {}
+  },
+  "xq_NW_p0_eg": {
+   "x": 2121.4,
+   "y": 23434.7,
+   "w": 369.36,
+   "h": 369.36,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p0_bd": {
+   "x": 2013.4,
+   "y": 23468.2,
+   "w": 86.4,
+   "h": 302.4,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p0_bfq0": {
+   "x": 2154.9,
+   "y": 23825.7,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p0_bfq1": {
+   "x": 2154.9,
+   "y": 24145.4,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p0_bfq2": {
+   "x": 2154.9,
+   "y": 24465.0,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p0_bfq3": {
+   "x": 2154.9,
+   "y": 24784.7,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p1_eg": {
+   "x": 6640.8,
+   "y": 23434.7,
+   "w": 369.36,
+   "h": 369.36,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p1_bd": {
+   "x": 6532.8,
+   "y": 23468.2,
+   "w": 86.4,
+   "h": 302.4,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p1_bfq0": {
+   "x": 6674.2,
+   "y": 23825.7,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p1_bfq1": {
+   "x": 6674.2,
+   "y": 24145.4,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p1_bfq2": {
+   "x": 6674.2,
+   "y": 24465.0,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p1_bfq3": {
+   "x": 6674.2,
+   "y": 24784.7,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p2_eg": {
+   "x": 11160.1,
+   "y": 23434.7,
+   "w": 369.36,
+   "h": 369.36,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p2_bd": {
+   "x": 11052.1,
+   "y": 23468.2,
+   "w": 86.4,
+   "h": 302.4,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p2_bfq0": {
+   "x": 11193.6,
+   "y": 23825.7,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p2_bfq1": {
+   "x": 11193.6,
+   "y": 24145.4,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p2_bfq2": {
+   "x": 11193.6,
+   "y": 24465.0,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p2_bfq3": {
+   "x": 11193.6,
+   "y": 24784.7,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p3_eg": {
+   "x": 15679.5,
+   "y": 23434.7,
+   "w": 369.36,
+   "h": 369.36,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p3_bd": {
+   "x": 15571.5,
+   "y": 23468.2,
+   "w": 86.4,
+   "h": 302.4,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p3_bfq0": {
+   "x": 15713.0,
+   "y": 23825.7,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p3_bfq1": {
+   "x": 15713.0,
+   "y": 24145.4,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p3_bfq2": {
+   "x": 15713.0,
+   "y": 24465.0,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "MX",
+   "faces": {}
+  },
+  "xq_NW_p3_bfq3": {
+   "x": 15713.0,
+   "y": 24784.7,
+   "w": 302.4,
+   "h": 298.08,
+   "kind": "GRANT",
+   "orient": "MX",
    "faces": {}
   }
  },
@@ -14557,8 +14956,8 @@
   {
    "block": "vmb_NW1",
    "face": "E",
-   "utilisation": 1.133,
-   "bits": 3842
+   "utilisation": 1.213,
+   "bits": 4115
   },
   {
    "block": "vmb_NW2",

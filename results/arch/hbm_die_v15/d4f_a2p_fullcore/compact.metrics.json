@@ -1,26 +1,26 @@
 {
  "die_um": [
-  21002.24,
+  22762.24,
   32169.44
  ],
- "die_mm2": 675.63,
+ "die_mm2": 732.25,
  "placed_mm2": 381.35,
- "density": 0.564,
+ "density": 0.521,
  "unplaced": [],
  "overlaps": [],
  "n_overlaps": 0,
  "outside": [],
  "metrics": {
-  "sum_bits_mm": 1124025.9734559986,
-  "traffic_mm_qwen": 1899880621.2669046,
-  "traffic_mm_ds": 2063407886.8046224,
-  "relay_flops": 2131929.0,
-  "bits_over_500": 159355.0,
+  "sum_bits_mm": 1250567.1388479986,
+  "traffic_mm_qwen": 2722756526.942938,
+  "traffic_mm_ds": 2346301106.494349,
+  "relay_flops": 2381305.0,
+  "bits_over_500": 162711.0,
   "fixed_return_violation_bits": 17792,
   "fixed_return_violations": 32,
   "overlaps": 0,
   "outside": 0,
-  "J": 11.819036123373742,
-  "n_long_returns": 285
+  "J": 12.450823296548485,
+  "n_long_returns": 290
  }
 }

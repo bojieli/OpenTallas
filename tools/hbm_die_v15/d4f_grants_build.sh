@@ -15,5 +15,6 @@ python3 tools/hbm_die_v15/d4f_calendar_grant.py $OUT
 python3 tools/hbm_die_v15/reticle.py $OUT
 python3 tools/hbm_die_v15/d4f_coll_grant.py $OUT $N
 python3 tools/hbm_die_v15/d4f_idx_grant.py $OUT $N
+python3 tools/hbm_die_v15/d4f_xq_grant.py $OUT $N
 python3 tools/hbm_die_v15/d4f_fit_slots.py $OUT $N
 python3 tools/hbm_die_v15/grants_audit.py $OUT $N

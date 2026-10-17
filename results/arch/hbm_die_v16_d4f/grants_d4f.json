@@ -3,28 +3,28 @@
  "die": "hbm_v15",
  "version": 9,
  "owner": "H-DIE",
- "updated": "2026-10-17T01:35:12-07:00",
+ "updated": "2026-10-17T01:42:10-07:00",
  "clock_period_ps": 833.333,
  "floorplan": {
   "file": "results/arch/hbm_die_v15/d4f_a2p_fullcore/compact.P.json",
   "candidate": "d4f_a2p_fullcore",
   "adopted": "H-DIE d4f gate-2 (coordinator d4f; HBM-ARRAY TP-192), UNQUALIFIED until GEN+GRT",
   "die_um": [
-   21002.24,
+   22762.24,
    32169.44
   ],
   "metrics": {
-   "sum_bits_mm": 1124025.9734559986,
-   "traffic_mm_qwen": 1899880621.2669046,
-   "traffic_mm_ds": 2063407886.8046224,
-   "relay_flops": 2131929.0,
-   "bits_over_500": 159355.0,
+   "sum_bits_mm": 1250567.1388479986,
+   "traffic_mm_qwen": 2722756526.942938,
+   "traffic_mm_ds": 2346301106.494349,
+   "relay_flops": 2381305.0,
+   "bits_over_500": 162711.0,
    "fixed_return_violation_bits": 17792,
    "fixed_return_violations": 32,
    "overlaps": 0,
    "outside": 0,
-   "J": 11.819036123373742,
-   "n_long_returns": 285
+   "J": 12.450823296548485,
+   "n_long_returns": 290
   },
   "previous": {
    "file": "results/arch/hbm_die_v15/core4_sfu2_b3624/compact.P.json",
@@ -146,7 +146,7 @@
    "kind": "die",
    "parent": null,
    "outline": {
-    "w": 21002.24,
+    "w": 22762.24,
     "h": 32169.44
    },
    "origin": {
@@ -167,16 +167,16 @@
   },
   {
    "name": "coll_SW",
-   "cell": "ot_hfd_coll_q3_hard_v5",
+   "cell": "ot_hfd_coll_q3_hard_v7x",
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1080,
-    "h": 880
+    "w": 1080.0,
+    "h": 880.0
    },
    "origin": {
-    "x": 13765.76,
-    "y": 8874.72,
+    "x": 16662.16,
+    "y": 9034.72,
     "orient": "R0"
    },
    "io_budget": {
@@ -258,12 +258,12 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1080,
-    "h": 790
+    "w": 1080.0,
+    "h": 790.0
    },
    "origin": {
-    "x": 13765.76,
-    "y": 12664.72,
+    "x": 16662.16,
+    "y": 12734.72,
     "orient": "R0"
    },
    "io_budget": {
@@ -356,12 +356,12 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1080,
-    "h": 790
+    "w": 1080.0,
+    "h": 790.0
    },
    "origin": {
-    "x": 14153.872,
-    "y": 22413.28,
+    "x": 16662.16,
+    "y": 22344.72,
     "orient": "R0"
    },
    "io_budget": {
@@ -460,11 +460,11 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1080,
-    "h": 790
+    "w": 1080.0,
+    "h": 790.0
    },
    "origin": {
-    "x": 13765.76,
+    "x": 16662.16,
     "y": 18713.28,
     "orient": "R0"
    },
@@ -568,8 +568,8 @@
     "h": 560.0
    },
    "origin": {
-    "x": 14877.0,
-    "y": 8877.0,
+    "x": 15484.16,
+    "y": 9034.72,
     "orient": "MY"
    },
    "io_budget": {
@@ -1258,7 +1258,6 @@
    "identity_straps": {
     "stk": 0
    },
-   "home_rule": "d4f: E of coll_SW (tkm_SW takes the N face)",
    "fit_r2": {
     "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
     "moved_um": 0.0
@@ -1274,8 +1273,8 @@
     "h": 560.0
    },
    "origin": {
-    "x": 14595.312,
-    "y": 21830.96,
+    "x": 15484.16,
+    "y": 22574.72,
     "orient": "MY"
    },
    "io_budget": {
@@ -33131,7 +33130,7 @@
     "h": 3050.0
    },
    "origin": {
-    "x": 17884.84,
+    "x": 19644.84,
     "y": 9487.262,
     "orient": "R0"
    },
@@ -33218,7 +33217,7 @@
     "h": 3050.0
    },
    "origin": {
-    "x": 17884.84,
+    "x": 19644.84,
     "y": 19392.178,
     "orient": "R0"
    },
@@ -33305,7 +33304,7 @@
     "h": 450.0
    },
    "origin": {
-    "x": 17859.84,
+    "x": 19619.84,
     "y": 12687.262,
     "orient": "R0"
    },
@@ -33349,7 +33348,7 @@
     "h": 500.0
    },
    "origin": {
-    "x": 18559.84,
+    "x": 20319.84,
     "y": 12637.262,
     "orient": "R0"
    },
@@ -33393,7 +33392,7 @@
     "h": 260.0
    },
    "origin": {
-    "x": 18259.84,
+    "x": 20019.84,
     "y": 19032.178,
     "orient": "R0"
    },
@@ -33443,7 +33442,7 @@
     "h": 108.0
    },
    "origin": {
-    "x": 18619.84,
+    "x": 20379.84,
     "y": 19032.178,
     "orient": "R0"
    },
@@ -33496,7 +33495,7 @@
     "h": 19.44
    },
    "origin": {
-    "x": 17859.840000000004,
+    "x": 19619.840000000004,
     "y": 13937.262,
     "orient": "R0"
    },
@@ -34508,7 +34507,7 @@
     "h": 515.2
    },
    "origin": {
-    "x": 20525.12,
+    "x": 22285.12,
     "y": 17716.978,
     "orient": "R0"
    },
@@ -34564,7 +34563,7 @@
     "h": 515.2
    },
    "origin": {
-    "x": 20040.4,
+    "x": 21800.4,
     "y": 17716.978,
     "orient": "R0"
    },
@@ -34620,7 +34619,7 @@
     "h": 515.2
    },
    "origin": {
-    "x": 20525.12,
+    "x": 22285.12,
     "y": 13937.262,
     "orient": "R0"
    },
@@ -34676,7 +34675,7 @@
     "h": 515.2
    },
    "origin": {
-    "x": 20040.4,
+    "x": 21800.4,
     "y": 13937.262,
     "orient": "R0"
    },
@@ -34732,7 +34731,7 @@
     "h": 515.2
    },
    "origin": {
-    "x": 19555.68,
+    "x": 21315.68,
     "y": 13937.262,
     "orient": "R0"
    },
@@ -35988,7 +35987,7 @@
     "h": 3064.516
    },
    "origin": {
-    "x": 17859.84,
+    "x": 19619.84,
     "y": 14552.462,
     "orient": "R0"
    },
@@ -36105,7 +36104,7 @@
     "h": 600.0
    },
    "origin": {
-    "x": 20359.84,
+    "x": 22119.84,
     "y": 18332.178,
     "orient": "R0"
    },
@@ -36153,7 +36152,7 @@
     "h": 600.0
    },
    "origin": {
-    "x": 19659.84,
+    "x": 21419.84,
     "y": 18332.178,
     "orient": "R0"
    },
@@ -36201,7 +36200,7 @@
     "h": 600.0
    },
    "origin": {
-    "x": 20359.84,
+    "x": 22119.84,
     "y": 13237.262,
     "orient": "R0"
    },
@@ -36249,7 +36248,7 @@
     "h": 600.0
    },
    "origin": {
-    "x": 19659.84,
+    "x": 21419.84,
     "y": 13237.262,
     "orient": "R0"
    },
@@ -36297,7 +36296,7 @@
     "h": 600.0
    },
    "origin": {
-    "x": 18959.84,
+    "x": 20719.84,
     "y": 13237.262,
     "orient": "R0"
    },
@@ -76261,7 +76260,7 @@
     "h": 6678.72
    },
    "origin": {
-    "x": 2082.08,
+    "x": 2522.08,
     "y": 23434.72,
     "orient": "MX"
    },
@@ -76377,7 +76376,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 1532.17,
+     "offset": 1123.08,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW2",
@@ -76387,7 +76386,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 1559.47,
+     "offset": 1150.38,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW3",
@@ -76685,7 +76684,7 @@
     "h": 6678.72
    },
    "origin": {
-    "x": 4121.76,
+    "x": 4561.76,
     "y": 23434.72,
     "orient": "MX"
    },
@@ -76799,9 +76798,9 @@
      "link": "vmb_NW1>sm_NW2:SM_X"
     },
     {
-     "face": "S",
-     "layer": "M5",
-     "offset": 0.0,
+     "face": "W",
+     "layer": "M4",
+     "offset": 54.6,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW2",
@@ -76809,9 +76808,9 @@
      "link": "vmb_NW2>sm_NW2:SM_X"
     },
     {
-     "face": "S",
-     "layer": "M5",
-     "offset": 27.3,
+     "face": "W",
+     "layer": "M4",
+     "offset": 81.9,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW3",
@@ -77110,7 +77109,7 @@
     "h": 6678.72
    },
    "origin": {
-    "x": 6161.44,
+    "x": 7041.44,
     "y": 23434.72,
     "orient": "MX"
    },
@@ -77134,9 +77133,19 @@
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
     {
+     "face": "N",
+     "layer": "M5",
+     "offset": 1826.48,
+     "span_um": 113.2,
+     "bits": 1132,
+     "peer": "pc_NW3",
+     "cls": "SM_HBM",
+     "link": "pc_NW3>sm_NW3:SM_HBM"
+    },
+    {
      "face": "E",
      "layer": "M4",
-     "offset": -0.0,
+     "offset": 0.0,
      "span_um": 27.0,
      "bits": 270,
      "peer": "vmh_NW",
@@ -77172,16 +77181,6 @@
      "peer": "vmh_NW",
      "cls": "KV_DESC",
      "link": "vmh_NW>sm_NW3:KV_DESC"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 6565.52,
-     "span_um": 113.2,
-     "bits": 1132,
-     "peer": "pc_NW3",
-     "cls": "SM_HBM",
-     "link": "pc_NW3>sm_NW3:SM_HBM"
     },
     {
      "face": "W",
@@ -77226,7 +77225,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 1574.32,
+     "offset": 767.37,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW4",
@@ -77236,7 +77235,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 1601.62,
+     "offset": 794.67,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW5",
@@ -77535,7 +77534,7 @@
     "h": 6678.72
    },
    "origin": {
-    "x": 8201.12,
+    "x": 9081.12,
     "y": 23434.72,
     "orient": "MX"
    },
@@ -77561,7 +77560,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 1815.18,
+     "offset": 1375.18,
      "span_um": 113.2,
      "bits": 1132,
      "peer": "pc_NW4",
@@ -77582,26 +77581,6 @@
      "face": "E",
      "layer": "M4",
      "offset": 27.0,
-     "span_um": 27.3,
-     "bits": 273,
-     "peer": "vmb_NW6",
-     "cls": "SM_X",
-     "link": "vmb_NW6>sm_NW4:SM_X"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 54.3,
-     "span_um": 27.3,
-     "bits": 273,
-     "peer": "vmb_NW7",
-     "cls": "SM_X",
-     "link": "vmb_NW7>sm_NW4:SM_X"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 81.6,
      "span_um": 6.4,
      "bits": 64,
      "peer": "vmh_NW",
@@ -77649,9 +77628,9 @@
      "link": "vmb_NW3>sm_NW4:SM_X"
     },
     {
-     "face": "S",
-     "layer": "M5",
-     "offset": 9.4,
+     "face": "W",
+     "layer": "M4",
+     "offset": 109.2,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW4",
@@ -77659,14 +77638,34 @@
      "link": "vmb_NW4>sm_NW4:SM_X"
     },
     {
-     "face": "S",
-     "layer": "M5",
-     "offset": 36.7,
+     "face": "W",
+     "layer": "M4",
+     "offset": 136.5,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW5",
      "cls": "SM_X",
      "link": "vmb_NW5>sm_NW4:SM_X"
+    },
+    {
+     "face": "S",
+     "layer": "M5",
+     "offset": 1710.3,
+     "span_um": 27.3,
+     "bits": 273,
+     "peer": "vmb_NW6",
+     "cls": "SM_X",
+     "link": "vmb_NW6>sm_NW4:SM_X"
+    },
+    {
+     "face": "S",
+     "layer": "M5",
+     "offset": 1737.6,
+     "span_um": 27.3,
+     "bits": 273,
+     "peer": "vmb_NW7",
+     "cls": "SM_X",
+     "link": "vmb_NW7>sm_NW4:SM_X"
     }
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
@@ -77959,7 +77958,7 @@
     "h": 6678.72
    },
    "origin": {
-    "x": 10240.8,
+    "x": 11560.8,
     "y": 23434.72,
     "orient": "MX"
    },
@@ -77985,7 +77984,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 1362.8,
+     "offset": 252.3,
      "span_um": 113.2,
      "bits": 1132,
      "peer": "pc_NW5",
@@ -78073,9 +78072,9 @@
      "link": "vmb_NW5>sm_NW5:SM_X"
     },
     {
-     "face": "S",
-     "layer": "M5",
-     "offset": 759.66,
+     "face": "W",
+     "layer": "M4",
+     "offset": 163.8,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW6",
@@ -78085,7 +78084,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 786.96,
+     "offset": 0.0,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW7",
@@ -78382,7 +78381,7 @@
     "h": 6678.72
    },
    "origin": {
-    "x": 12280.48,
+    "x": 13600.48,
     "y": 23434.72,
     "orient": "MX"
    },
@@ -78405,36 +78404,6 @@
    "rtl_owner": "H-ELEM-A",
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
-    {
-     "face": "N",
-     "layer": "M5",
-     "offset": 460.86,
-     "span_um": 113.2,
-     "bits": 1132,
-     "peer": "pc_NW6",
-     "cls": "SM_HBM",
-     "link": "pc_NW6>sm_NW6:SM_HBM"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 0.0,
-     "span_um": 27.0,
-     "bits": 270,
-     "peer": "vmh_NW",
-     "cls": "SM_OUT",
-     "link": "sm_NW6>vmh_NW:SM_OUT"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 27.0,
-     "span_um": 6.4,
-     "bits": 64,
-     "peer": "vmh_NW",
-     "cls": "KV_DESC",
-     "link": "vmh_NW>sm_NW6:KV_DESC"
-    },
     {
      "face": "W",
      "layer": "M4",
@@ -78514,6 +78483,36 @@
      "peer": "vmb_NW7",
      "cls": "SM_X",
      "link": "vmb_NW7>sm_NW6:SM_X"
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "offset": 6565.52,
+     "span_um": 113.2,
+     "bits": 1132,
+     "peer": "pc_NW6",
+     "cls": "SM_HBM",
+     "link": "pc_NW6>sm_NW6:SM_HBM"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 0.0,
+     "span_um": 27.0,
+     "bits": 270,
+     "peer": "vmh_NW",
+     "cls": "SM_OUT",
+     "link": "sm_NW6>vmh_NW:SM_OUT"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 27.0,
+     "span_um": 6.4,
+     "bits": 64,
+     "peer": "vmh_NW",
+     "cls": "KV_DESC",
+     "link": "vmh_NW>sm_NW6:KV_DESC"
     }
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
@@ -78805,7 +78804,7 @@
     "h": 6678.72
    },
    "origin": {
-    "x": 14320.16,
+    "x": 16080.16,
     "y": 23434.72,
     "orient": "MX"
    },
@@ -78828,36 +78827,6 @@
    "rtl_owner": "H-ELEM-A",
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
-    {
-     "face": "N",
-     "layer": "M5",
-     "offset": 9.42,
-     "span_um": 113.2,
-     "bits": 1132,
-     "peer": "pc_NW7",
-     "cls": "SM_HBM",
-     "link": "pc_NW7>sm_NW7:SM_HBM"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 0.0,
-     "span_um": 27.0,
-     "bits": 270,
-     "peer": "vmh_NW",
-     "cls": "SM_OUT",
-     "link": "sm_NW7>vmh_NW:SM_OUT"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 27.0,
-     "span_um": 6.4,
-     "bits": 64,
-     "peer": "vmh_NW",
-     "cls": "KV_DESC",
-     "link": "vmh_NW>sm_NW7:KV_DESC"
-    },
     {
      "face": "W",
      "layer": "M4",
@@ -78937,6 +78906,36 @@
      "peer": "vmb_NW7",
      "cls": "SM_X",
      "link": "vmb_NW7>sm_NW7:SM_X"
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "offset": 6565.52,
+     "span_um": 113.2,
+     "bits": 1132,
+     "peer": "pc_NW7",
+     "cls": "SM_HBM",
+     "link": "pc_NW7>sm_NW7:SM_HBM"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 0.0,
+     "span_um": 27.0,
+     "bits": 270,
+     "peer": "vmh_NW",
+     "cls": "SM_OUT",
+     "link": "sm_NW7>vmh_NW:SM_OUT"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 27.0,
+     "span_um": 6.4,
+     "bits": 64,
+     "peer": "vmh_NW",
+     "cls": "KV_DESC",
+     "link": "vmh_NW>sm_NW7:KV_DESC"
     }
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
@@ -79652,7 +79651,7 @@
     "h": 6678.72
    },
    "origin": {
-    "x": 2082.08,
+    "x": 2522.08,
     "y": 2056.0,
     "orient": "R0"
    },
@@ -79768,7 +79767,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 1450.19,
+     "offset": 1010.19,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW2",
@@ -79778,7 +79777,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 1477.49,
+     "offset": 1037.49,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW3",
@@ -80076,7 +80075,7 @@
     "h": 6678.72
    },
    "origin": {
-    "x": 4121.76,
+    "x": 4561.76,
     "y": 2056.0,
     "orient": "R0"
    },
@@ -80172,7 +80171,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6596.82,
+     "offset": 6569.52,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW0",
@@ -80182,7 +80181,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6624.12,
+     "offset": 6596.82,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW1",
@@ -80192,7 +80191,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6651.42,
+     "offset": 6624.12,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW2",
@@ -80200,9 +80199,9 @@
      "link": "vmb_SW2>sm_SW2:SM_X"
     },
     {
-     "face": "N",
-     "layer": "M5",
-     "offset": 0.0,
+     "face": "W",
+     "layer": "M4",
+     "offset": 6651.42,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW3",
@@ -80501,7 +80500,7 @@
     "h": 6678.72
    },
    "origin": {
-    "x": 6161.44,
+    "x": 7041.44,
     "y": 2056.0,
     "orient": "R0"
    },
@@ -80525,9 +80524,9 @@
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
     {
-     "face": "E",
-     "layer": "M4",
-     "offset": 0.0,
+     "face": "S",
+     "layer": "M5",
+     "offset": 1826.48,
      "span_um": 113.2,
      "bits": 1132,
      "peer": "pc_SW3",
@@ -80617,7 +80616,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 1439.95,
+     "offset": 559.95,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW4",
@@ -80627,7 +80626,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 1467.25,
+     "offset": 587.25,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW5",
@@ -80926,7 +80925,7 @@
     "h": 6678.72
    },
    "origin": {
-    "x": 8201.12,
+    "x": 9081.12,
     "y": 2056.0,
     "orient": "R0"
    },
@@ -80952,7 +80951,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 1815.18,
+     "offset": 1375.18,
      "span_um": 113.2,
      "bits": 1132,
      "peer": "pc_SW4",
@@ -80962,22 +80961,12 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 6618.02,
+     "offset": 6645.32,
      "span_um": 27.0,
      "bits": 270,
      "peer": "vmh_SW",
      "cls": "SM_OUT",
      "link": "sm_SW4>vmh_SW:SM_OUT"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 6645.02,
-     "span_um": 27.3,
-     "bits": 273,
-     "peer": "vmb_SW6",
-     "cls": "SM_X",
-     "link": "vmb_SW6>sm_SW4:SM_X"
     },
     {
      "face": "E",
@@ -80992,7 +80981,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6542.22,
+     "offset": 6514.92,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW0",
@@ -81002,7 +80991,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6569.52,
+     "offset": 6542.22,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW1",
@@ -81012,7 +81001,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6596.82,
+     "offset": 6569.52,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW2",
@@ -81022,7 +81011,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6624.12,
+     "offset": 6596.82,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW3",
@@ -81032,7 +81021,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6651.42,
+     "offset": 6624.12,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW4",
@@ -81040,9 +81029,9 @@
      "link": "vmb_SW4>sm_SW4:SM_X"
     },
     {
-     "face": "N",
-     "layer": "M5",
-     "offset": 0.0,
+     "face": "W",
+     "layer": "M4",
+     "offset": 6651.42,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW5",
@@ -81052,7 +81041,17 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 1912.38,
+     "offset": 1568.51,
+     "span_um": 27.3,
+     "bits": 273,
+     "peer": "vmb_SW6",
+     "cls": "SM_X",
+     "link": "vmb_SW6>sm_SW4:SM_X"
+    },
+    {
+     "face": "N",
+     "layer": "M5",
+     "offset": 1595.81,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW7",
@@ -81350,7 +81349,7 @@
     "h": 6678.72
    },
    "origin": {
-    "x": 10240.8,
+    "x": 11560.8,
     "y": 2056.0,
     "orient": "R0"
    },
@@ -81376,7 +81375,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 1362.8,
+     "offset": 252.3,
      "span_um": 113.2,
      "bits": 1132,
      "peer": "pc_SW5",
@@ -81406,7 +81405,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6514.92,
+     "offset": 6460.32,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW0",
@@ -81416,7 +81415,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6542.22,
+     "offset": 6487.62,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW1",
@@ -81426,7 +81425,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6569.52,
+     "offset": 6514.92,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW2",
@@ -81436,7 +81435,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6596.82,
+     "offset": 6542.22,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW3",
@@ -81446,7 +81445,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6624.12,
+     "offset": 6569.52,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW4",
@@ -81456,7 +81455,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 6651.42,
+     "offset": 6596.82,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW5",
@@ -81464,9 +81463,9 @@
      "link": "vmb_SW5>sm_SW5:SM_X"
     },
     {
-     "face": "N",
-     "layer": "M5",
-     "offset": 457.71,
+     "face": "W",
+     "layer": "M4",
+     "offset": 6624.12,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW6",
@@ -81474,9 +81473,9 @@
      "link": "vmb_SW6>sm_SW5:SM_X"
     },
     {
-     "face": "N",
-     "layer": "M5",
-     "offset": 485.01,
+     "face": "W",
+     "layer": "M4",
+     "offset": 6651.42,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW7",
@@ -81773,7 +81772,7 @@
     "h": 6678.72
    },
    "origin": {
-    "x": 12280.48,
+    "x": 13600.48,
     "y": 2056.0,
     "orient": "R0"
    },
@@ -81797,34 +81796,14 @@
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
     {
-     "face": "S",
-     "layer": "M5",
-     "offset": 460.86,
+     "face": "W",
+     "layer": "M4",
+     "offset": 0.0,
      "span_um": 113.2,
      "bits": 1132,
      "peer": "pc_SW6",
      "cls": "SM_HBM",
      "link": "pc_SW6>sm_SW6:SM_HBM"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 6645.32,
-     "span_um": 27.0,
-     "bits": 270,
-     "peer": "vmh_SW",
-     "cls": "SM_OUT",
-     "link": "sm_SW6>vmh_SW:SM_OUT"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 6672.32,
-     "span_um": 6.4,
-     "bits": 64,
-     "peer": "vmh_SW",
-     "cls": "KV_DESC",
-     "link": "vmh_SW>sm_SW6:KV_DESC"
     },
     {
      "face": "W",
@@ -81905,6 +81884,26 @@
      "peer": "vmb_SW7",
      "cls": "SM_X",
      "link": "vmb_SW7>sm_SW6:SM_X"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 6645.32,
+     "span_um": 27.0,
+     "bits": 270,
+     "peer": "vmh_SW",
+     "cls": "SM_OUT",
+     "link": "sm_SW6>vmh_SW:SM_OUT"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 6672.32,
+     "span_um": 6.4,
+     "bits": 64,
+     "peer": "vmh_SW",
+     "cls": "KV_DESC",
+     "link": "vmh_SW>sm_SW6:KV_DESC"
     }
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
@@ -82196,7 +82195,7 @@
     "h": 6678.72
    },
    "origin": {
-    "x": 14320.16,
+    "x": 16080.16,
     "y": 2056.0,
     "orient": "R0"
    },
@@ -82220,34 +82219,14 @@
    "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
     {
-     "face": "S",
-     "layer": "M5",
-     "offset": 9.42,
+     "face": "W",
+     "layer": "M4",
+     "offset": 0.0,
      "span_um": 113.2,
      "bits": 1132,
      "peer": "pc_SW7",
      "cls": "SM_HBM",
      "link": "pc_SW7>sm_SW7:SM_HBM"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 6645.32,
-     "span_um": 27.0,
-     "bits": 270,
-     "peer": "vmh_SW",
-     "cls": "SM_OUT",
-     "link": "sm_SW7>vmh_SW:SM_OUT"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 6672.32,
-     "span_um": 6.4,
-     "bits": 64,
-     "peer": "vmh_SW",
-     "cls": "KV_DESC",
-     "link": "vmh_SW>sm_SW7:KV_DESC"
     },
     {
      "face": "W",
@@ -82328,6 +82307,26 @@
      "peer": "vmb_SW7",
      "cls": "SM_X",
      "link": "vmb_SW7>sm_SW7:SM_X"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 6645.32,
+     "span_um": 27.0,
+     "bits": 270,
+     "peer": "vmh_SW",
+     "cls": "SM_OUT",
+     "link": "sm_SW7>vmh_SW:SM_OUT"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 6672.32,
+     "span_um": 6.4,
+     "bits": 64,
+     "peer": "vmh_SW",
+     "cls": "KV_DESC",
+     "link": "vmh_SW>sm_SW7:KV_DESC"
     }
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
@@ -82695,7 +82694,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {
     "QID": 3,
     "G": 0,
@@ -83192,7 +83191,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {
     "QID": 3,
     "G": 1,
@@ -83689,7 +83688,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {
     "QID": 3,
     "G": 2,
@@ -84186,7 +84185,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {
     "QID": 3,
     "G": 3,
@@ -84703,7 +84702,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {
     "QID": 2,
     "G": 0,
@@ -85200,7 +85199,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {
     "QID": 2,
     "G": 1,
@@ -85697,7 +85696,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {
     "QID": 2,
     "G": 2,
@@ -86194,7 +86193,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {
     "QID": 2,
     "G": 3,
@@ -86711,7 +86710,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {
     "QID": 1,
     "G": 0,
@@ -87208,7 +87207,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {
     "QID": 1,
     "G": 1,
@@ -87705,7 +87704,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {
     "QID": 1,
     "G": 2,
@@ -88202,7 +88201,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {
     "QID": 1,
     "G": 3,
@@ -88719,7 +88718,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {
     "QID": 0,
     "G": 0,
@@ -89216,7 +89215,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {
     "QID": 0,
     "G": 1,
@@ -89713,7 +89712,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {
     "QID": 0,
     "G": 2,
@@ -90210,7 +90209,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {
     "QID": 0,
     "G": 3,
@@ -90651,7 +90650,7 @@
     "h": 330.48
    },
    "origin": {
-    "x": 13402.88,
+    "x": 16299.28,
     "y": 16709.44,
     "orient": "R0"
    },
@@ -90676,7 +90675,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -90952,7 +90951,7 @@
     "h": 330.48
    },
    "origin": {
-    "x": 13780.992,
+    "x": 16299.28,
     "y": 20409.44,
     "orient": "R0"
    },
@@ -90977,7 +90976,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -91253,7 +91252,7 @@
     "h": 330.48
    },
    "origin": {
-    "x": 13402.88,
+    "x": 16299.28,
     "y": 15129.52,
     "orient": "R0"
    },
@@ -91278,7 +91277,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -91554,7 +91553,7 @@
     "h": 330.48
    },
    "origin": {
-    "x": 13402.88,
+    "x": 15650.08,
     "y": 11429.52,
     "orient": "R0"
    },
@@ -91579,7 +91578,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "1b58c2825",
+   "source_prerequisite": "74517d9bd",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -91855,7 +91854,7 @@
     "h": 1652.424
    },
    "origin": {
-    "x": 17859.840000000004,
+    "x": 19619.840000000004,
     "y": 30497.016,
     "orient": "MX"
    },
@@ -91883,7 +91882,7 @@
     "h": 700.0
    },
    "origin": {
-    "x": 18219.84,
+    "x": 19979.84,
     "y": 31447.44,
     "orient": "R0"
    },
@@ -93219,7 +93218,7 @@
     "h": 220.32
    },
    "origin": {
-    "x": 17859.840000000004,
+    "x": 19619.840000000004,
     "y": 18332.178,
     "orient": "R0"
    },
@@ -94621,7 +94620,7 @@
    "version": 7,
    "grant": "universal_calendar_candidate_2330",
    "origin": {
-    "x": 16516.32,
+    "x": 18276.32,
     "y": 10501.36,
     "orient": "R0"
    },
@@ -94973,7 +94972,7 @@
    "version": 7,
    "grant": "universal_calendar_candidate_2330",
    "origin": {
-    "x": 16516.32,
+    "x": 18276.32,
     "y": 12734.72,
     "orient": "MY"
    },
@@ -95325,7 +95324,7 @@
    "version": 7,
    "grant": "universal_calendar_candidate_2330",
    "origin": {
-    "x": 16516.32,
+    "x": 18276.32,
     "y": 21709.12,
     "orient": "MX"
    },
@@ -95677,7 +95676,7 @@
    "version": 7,
    "grant": "universal_calendar_candidate_2330",
    "origin": {
-    "x": 16516.32,
+    "x": 18276.32,
     "y": 19315.92,
     "orient": "R180"
    },
@@ -96196,8 +96195,8 @@
     "h": 138.24
    },
    "origin": {
-    "x": 13700.96,
-    "y": 9326.32,
+    "x": 16597.36,
+    "y": 9405.6,
     "orient": "R0"
    },
    "clock_entry": {
@@ -96236,8 +96235,8 @@
     "h": 138.24
    },
    "origin": {
-    "x": 13700.96,
-    "y": 13026.32,
+    "x": 16597.36,
+    "y": 13060.6,
     "orient": "R0"
    },
    "clock_entry": {
@@ -96276,8 +96275,8 @@
     "h": 138.24
    },
    "origin": {
-    "x": 14079.072,
-    "y": 22704.88,
+    "x": 16597.36,
+    "y": 22670.6,
     "orient": "R0"
    },
    "clock_entry": {
@@ -96316,8 +96315,8 @@
     "h": 138.24
    },
    "origin": {
-    "x": 13700.96,
-    "y": 19004.88,
+    "x": 16597.36,
+    "y": 19039.16,
     "orient": "R0"
    },
    "clock_entry": {
@@ -96396,7 +96395,7 @@
     "h": 432.0
    },
    "origin": {
-    "x": 16082.16,
+    "x": 17842.16,
     "y": 10499.2,
     "orient": "R0"
    },
@@ -96472,7 +96471,7 @@
     "h": 432.0
    },
    "origin": {
-    "x": 16082.16,
+    "x": 17842.16,
     "y": 14199.2,
     "orient": "R0"
    },
@@ -96548,7 +96547,7 @@
     "h": 432.0
    },
    "origin": {
-    "x": 16082.16,
+    "x": 17842.16,
     "y": 21238.24,
     "orient": "R0"
    },
@@ -96624,7 +96623,7 @@
     "h": 432.0
    },
    "origin": {
-    "x": 16082.16,
+    "x": 17842.16,
     "y": 17538.24,
     "orient": "R0"
    },
@@ -96660,7 +96659,7 @@
     "h": 64.8
    },
    "origin": {
-    "x": 17859.840000000004,
+    "x": 19619.840000000004,
     "y": 17716.978,
     "orient": "R0"
    },
@@ -96697,7 +96696,7 @@
     "h": 64.8
    },
    "origin": {
-    "x": 18045.84,
+    "x": 19805.84,
     "y": 17716.978,
     "orient": "R0"
    },
@@ -96958,8 +96957,8 @@
     "h": 1740.0
    },
    "origin": {
-    "x": 14045.76,
-    "y": 9854.72,
+    "x": 16002.16,
+    "y": 10014.72,
     "orient": "R0"
    },
    "pins": [],
@@ -96986,7 +96985,7 @@
     "h": 260.0
    },
    "origin": {
-    "x": 17859.84,
+    "x": 19619.84,
     "y": 19032.178,
     "orient": "R0"
    },
@@ -96999,6 +96998,1246 @@
    "pg_layer": "M5",
    "strap_layer": "M6",
    "notes": "IDX soft-hierarchy child (contract 50de1fe73)"
+  },
+  {
+   "name": "xq_SW_p0_eg",
+   "cell": "ot_hgi_sm_xload_xq_pegress",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 369.36,
+    "h": 369.36
+   },
+   "origin": {
+    "x": 2121.4,
+    "y": 8365.36,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p0_eg",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "faces": {
+    "N": "xw 2,063 + status (to the SM 2p/2p+1 xw windows)",
+    "W": "bq_d 2,048 from bd",
+    "S": "rwq 1,024 from the bfq stack",
+    "E": "43 ctl"
+   },
+   "notes": "XQL pair store SW p0 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p0_bd",
+   "cell": "ot_hgi_sm_xload_cl2_bdring",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 86.4,
+    "h": 302.4
+   },
+   "origin": {
+    "x": 2013.4,
+    "y": 8398.84,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p0_bd",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p0 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p0_bfq0",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 2154.88,
+    "y": 8045.68,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p0_bfq0",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p0 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p0_bfq1",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 2154.88,
+    "y": 7726.0,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p0_bfq1",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p0 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p0_bfq2",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 2154.88,
+    "y": 7406.32,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p0_bfq2",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p0 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p0_bfq3",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 2154.88,
+    "y": 7086.64,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p0_bfq3",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p0 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p1_eg",
+   "cell": "ot_hgi_sm_xload_xq_pegress",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 369.36,
+    "h": 369.36
+   },
+   "origin": {
+    "x": 6640.76,
+    "y": 8365.36,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p1_eg",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "faces": {
+    "N": "xw 2,063 + status (to the SM 2p/2p+1 xw windows)",
+    "W": "bq_d 2,048 from bd",
+    "S": "rwq 1,024 from the bfq stack",
+    "E": "43 ctl"
+   },
+   "notes": "XQL pair store SW p1 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p1_bd",
+   "cell": "ot_hgi_sm_xload_cl2_bdring",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 86.4,
+    "h": 302.4
+   },
+   "origin": {
+    "x": 6532.76,
+    "y": 8398.84,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p1_bd",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p1 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p1_bfq0",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 6674.24,
+    "y": 8045.68,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p1_bfq0",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p1 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p1_bfq1",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 6674.24,
+    "y": 7726.0,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p1_bfq1",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p1 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p1_bfq2",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 6674.24,
+    "y": 7406.32,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p1_bfq2",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p1 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p1_bfq3",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 6674.24,
+    "y": 7086.64,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p1_bfq3",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p1 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p2_eg",
+   "cell": "ot_hgi_sm_xload_xq_pegress",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 369.36,
+    "h": 369.36
+   },
+   "origin": {
+    "x": 11160.12,
+    "y": 8365.36,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p2_eg",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "faces": {
+    "N": "xw 2,063 + status (to the SM 2p/2p+1 xw windows)",
+    "W": "bq_d 2,048 from bd",
+    "S": "rwq 1,024 from the bfq stack",
+    "E": "43 ctl"
+   },
+   "notes": "XQL pair store SW p2 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p2_bd",
+   "cell": "ot_hgi_sm_xload_cl2_bdring",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 86.4,
+    "h": 302.4
+   },
+   "origin": {
+    "x": 11052.12,
+    "y": 8398.84,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p2_bd",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p2 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p2_bfq0",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 11193.6,
+    "y": 8045.68,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p2_bfq0",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p2 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p2_bfq1",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 11193.6,
+    "y": 7726.0,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p2_bfq1",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p2 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p2_bfq2",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 11193.6,
+    "y": 7406.32,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p2_bfq2",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p2 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p2_bfq3",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 11193.6,
+    "y": 7086.64,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p2_bfq3",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p2 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p3_eg",
+   "cell": "ot_hgi_sm_xload_xq_pegress",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 369.36,
+    "h": 369.36
+   },
+   "origin": {
+    "x": 15679.48,
+    "y": 8365.36,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p3_eg",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "faces": {
+    "N": "xw 2,063 + status (to the SM 2p/2p+1 xw windows)",
+    "W": "bq_d 2,048 from bd",
+    "S": "rwq 1,024 from the bfq stack",
+    "E": "43 ctl"
+   },
+   "notes": "XQL pair store SW p3 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p3_bd",
+   "cell": "ot_hgi_sm_xload_cl2_bdring",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 86.4,
+    "h": 302.4
+   },
+   "origin": {
+    "x": 15571.48,
+    "y": 8398.84,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p3_bd",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p3 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p3_bfq0",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 15712.96,
+    "y": 8045.68,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p3_bfq0",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p3 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p3_bfq1",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 15712.96,
+    "y": 7726.0,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p3_bfq1",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p3 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p3_bfq2",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 15712.96,
+    "y": 7406.32,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p3_bfq2",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p3 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_SW_p3_bfq3",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 15712.96,
+    "y": 7086.64,
+    "orient": "R0"
+   },
+   "plan_block": "xq_SW_p3_bfq3",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store SW p3 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p0_eg",
+   "cell": "ot_hgi_sm_xload_xq_pegress",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 369.36,
+    "h": 369.36
+   },
+   "origin": {
+    "x": 2121.4,
+    "y": 23434.72,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p0_eg",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "faces": {
+    "N": "xw 2,063 + status (to the SM 2p/2p+1 xw windows)",
+    "W": "bq_d 2,048 from bd",
+    "S": "rwq 1,024 from the bfq stack",
+    "E": "43 ctl"
+   },
+   "notes": "XQL pair store NW p0 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p0_bd",
+   "cell": "ot_hgi_sm_xload_cl2_bdring",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 86.4,
+    "h": 302.4
+   },
+   "origin": {
+    "x": 2013.4,
+    "y": 23468.2,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p0_bd",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p0 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p0_bfq0",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 2154.88,
+    "y": 23825.68,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p0_bfq0",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p0 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p0_bfq1",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 2154.88,
+    "y": 24145.36,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p0_bfq1",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p0 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p0_bfq2",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 2154.88,
+    "y": 24465.04,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p0_bfq2",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p0 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p0_bfq3",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 2154.88,
+    "y": 24784.72,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p0_bfq3",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p0 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p1_eg",
+   "cell": "ot_hgi_sm_xload_xq_pegress",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 369.36,
+    "h": 369.36
+   },
+   "origin": {
+    "x": 6640.76,
+    "y": 23434.72,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p1_eg",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "faces": {
+    "N": "xw 2,063 + status (to the SM 2p/2p+1 xw windows)",
+    "W": "bq_d 2,048 from bd",
+    "S": "rwq 1,024 from the bfq stack",
+    "E": "43 ctl"
+   },
+   "notes": "XQL pair store NW p1 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p1_bd",
+   "cell": "ot_hgi_sm_xload_cl2_bdring",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 86.4,
+    "h": 302.4
+   },
+   "origin": {
+    "x": 6532.76,
+    "y": 23468.2,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p1_bd",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p1 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p1_bfq0",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 6674.24,
+    "y": 23825.68,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p1_bfq0",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p1 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p1_bfq1",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 6674.24,
+    "y": 24145.36,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p1_bfq1",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p1 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p1_bfq2",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 6674.24,
+    "y": 24465.04,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p1_bfq2",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p1 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p1_bfq3",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 6674.24,
+    "y": 24784.72,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p1_bfq3",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p1 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p2_eg",
+   "cell": "ot_hgi_sm_xload_xq_pegress",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 369.36,
+    "h": 369.36
+   },
+   "origin": {
+    "x": 11160.12,
+    "y": 23434.72,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p2_eg",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "faces": {
+    "N": "xw 2,063 + status (to the SM 2p/2p+1 xw windows)",
+    "W": "bq_d 2,048 from bd",
+    "S": "rwq 1,024 from the bfq stack",
+    "E": "43 ctl"
+   },
+   "notes": "XQL pair store NW p2 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p2_bd",
+   "cell": "ot_hgi_sm_xload_cl2_bdring",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 86.4,
+    "h": 302.4
+   },
+   "origin": {
+    "x": 11052.12,
+    "y": 23468.2,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p2_bd",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p2 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p2_bfq0",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 11193.6,
+    "y": 23825.68,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p2_bfq0",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p2 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p2_bfq1",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 11193.6,
+    "y": 24145.36,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p2_bfq1",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p2 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p2_bfq2",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 11193.6,
+    "y": 24465.04,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p2_bfq2",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p2 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p2_bfq3",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 11193.6,
+    "y": 24784.72,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p2_bfq3",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p2 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p3_eg",
+   "cell": "ot_hgi_sm_xload_xq_pegress",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 369.36,
+    "h": 369.36
+   },
+   "origin": {
+    "x": 15679.48,
+    "y": 23434.72,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p3_eg",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "faces": {
+    "N": "xw 2,063 + status (to the SM 2p/2p+1 xw windows)",
+    "W": "bq_d 2,048 from bd",
+    "S": "rwq 1,024 from the bfq stack",
+    "E": "43 ctl"
+   },
+   "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p3_bd",
+   "cell": "ot_hgi_sm_xload_cl2_bdring",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 86.4,
+    "h": 302.4
+   },
+   "origin": {
+    "x": 15571.48,
+    "y": 23468.2,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p3_bd",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p3_bfq0",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 15712.96,
+    "y": 23825.68,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p3_bfq0",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p3_bfq1",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 15712.96,
+    "y": 24145.36,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p3_bfq1",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p3_bfq2",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 15712.96,
+    "y": 24465.04,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p3_bfq2",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4)"
+  },
+  {
+   "name": "xq_NW_p3_bfq3",
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 302.4,
+    "h": 298.08
+   },
+   "origin": {
+    "x": 15712.96,
+    "y": 24784.72,
+    "orient": "MX"
+   },
+   "plan_block": "xq_NW_p3_bfq3",
+   "grant": "d4f_xq_pairgap_1017",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": [],
+   "pin_status": "MACRO_LEF_PINS",
+   "faces": null,
+   "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4)"
   }
  ],
  "sub_layouts": {
@@ -98560,7 +99799,7 @@
    "core": {
     "name": "sucore_SW",
     "origin": {
-     "x": 13402.88,
+     "x": 15650.08,
      "y": 11429.52
     },
     "outline": {
@@ -98729,7 +99968,7 @@
    "core": {
     "name": "sucore_SE",
     "origin": {
-     "x": 13402.88,
+     "x": 16299.28,
      "y": 15129.52
     },
     "outline": {
@@ -98898,7 +100137,7 @@
    "core": {
     "name": "sucore_NW",
     "origin": {
-     "x": 13780.992,
+     "x": 16299.28,
      "y": 20409.44
     },
     "outline": {
@@ -99067,7 +100306,7 @@
    "core": {
     "name": "sucore_NE",
     "origin": {
-     "x": 13402.88,
+     "x": 16299.28,
      "y": 16709.44
     },
     "outline": {
@@ -100189,147 +101428,147 @@
     "max_hop_um": 4.8,
     "homes": [
      [
-      13754.96,
+      16002.16,
       11738.4
      ],
      [
-      13754.96,
+      16002.16,
       11716.8
      ],
      [
-      13754.96,
+      16002.16,
       11695.2
      ],
      [
-      13754.96,
+      16002.16,
       11673.6
      ],
      [
-      13754.96,
+      16002.16,
       11652.0
      ],
      [
-      13754.96,
+      16002.16,
       11630.4
      ],
      [
-      13754.96,
+      16002.16,
       11608.8
      ],
      [
-      13754.96,
+      16002.16,
       11587.2
      ],
      [
-      13754.96,
+      16002.16,
       11565.6
      ],
      [
-      13754.96,
+      16002.16,
       11544.0
      ],
      [
-      13754.96,
+      16002.16,
       11522.4
      ],
      [
-      13754.96,
+      16002.16,
       11500.8
      ],
      [
-      13776.56,
+      16023.76,
       11500.8
      ],
      [
-      13776.56,
+      16023.76,
       11522.4
      ],
      [
-      13776.56,
+      16023.76,
       11544.0
      ],
      [
-      13776.56,
+      16023.76,
       11565.6
      ],
      [
-      13776.56,
+      16023.76,
       11587.2
      ],
      [
-      13776.56,
+      16023.76,
       11608.8
      ],
      [
-      13776.56,
+      16023.76,
       11630.4
      ],
      [
-      13776.56,
+      16023.76,
       11652.0
      ],
      [
-      13776.56,
+      16023.76,
       11673.6
      ],
      [
-      13776.56,
+      16023.76,
       11695.2
      ],
      [
-      13776.56,
+      16023.76,
       11716.8
      ],
      [
-      13776.56,
+      16023.76,
       11738.4
      ],
      [
-      13798.16,
+      16045.36,
       11738.4
      ],
      [
-      13798.16,
+      16045.36,
       11716.8
      ],
      [
-      13798.16,
+      16045.36,
       11695.2
      ],
      [
-      13798.16,
+      16045.36,
       11673.6
      ],
      [
-      13798.16,
+      16045.36,
       11652.0
      ],
      [
-      13798.16,
+      16045.36,
       11630.4
      ],
      [
-      13798.16,
+      16045.36,
       11608.8
      ],
      [
-      13798.16,
+      16045.36,
       11587.2
      ],
      [
-      13798.16,
+      16045.36,
       11565.6
      ],
      [
-      13798.16,
+      16045.36,
       11544.0
      ],
      [
-      13798.16,
+      16045.36,
       11522.4
      ],
      [
-      13798.16,
+      16045.36,
       11500.8
      ]
     ],
@@ -100638,697 +101877,697 @@
     "src": "SW",
     "dst": "SE",
     "bits": 41,
-    "length_um": 11352.96,
+    "length_um": 9729.36,
     "stages": 36,
-    "max_hop_um": 306.837,
+    "max_hop_um": 262.956,
     "homes": [
      [
-      14040.197,
+      16243.516,
       11594.76
      ],
      [
-      14347.034,
+      16506.471,
       11594.76
      ],
      [
-      14653.87,
+      16769.427,
       11594.76
      ],
      [
-      14960.707,
+      17032.383,
       11594.76
      ],
      [
-      15267.544,
+      17295.338,
       11594.76
      ],
      [
-      15574.381,
+      17558.294,
       11594.76
      ],
      [
-      15881.217,
+      17821.25,
       11594.76
      ],
      [
-      16188.054,
+      18084.205,
       11594.76
      ],
      [
-      16494.891,
+      18347.161,
       11594.76
      ],
      [
-      16801.728,
+      18610.117,
       11594.76
      ],
      [
-      17108.564,
+      18873.072,
       11594.76
      ],
      [
-      17415.401,
+      19136.028,
       11594.76
      ],
      [
-      17559.84,
-      11757.158
+      19319.84,
+      11673.904
      ],
      [
-      17559.84,
-      12063.995
+      19319.84,
+      11936.859
      ],
      [
-      17559.84,
-      12370.831
+      19319.84,
+      12199.815
      ],
      [
-      17559.84,
-      12677.668
+      19319.84,
+      12462.771
      ],
      [
-      17559.84,
-      12984.505
+      19319.84,
+      12725.726
      ],
      [
-      17559.84,
-      13291.342
+      19319.84,
+      12988.682
      ],
      [
-      17559.84,
-      13598.178
+      19319.84,
+      13251.638
      ],
      [
-      17559.84,
-      13905.015
+      19319.84,
+      13514.594
      ],
      [
-      17559.84,
-      14211.852
+      19319.84,
+      13777.549
      ],
      [
-      17559.84,
-      14518.689
+      19319.84,
+      14040.505
      ],
      [
-      17559.84,
-      14825.525
+      19319.84,
+      14303.461
      ],
      [
-      17559.84,
-      15132.362
+      19319.84,
+      14566.416
      ],
      [
-      17415.401,
+      19319.84,
+      14829.372
+     ],
+     [
+      19319.84,
+      15092.328
+     ],
+     [
+      19259.317,
       15294.76
      ],
      [
-      17108.564,
+      18996.361,
       15294.76
      ],
      [
-      16801.728,
+      18733.405,
       15294.76
      ],
      [
-      16494.891,
+      18470.45,
       15294.76
      ],
      [
-      16188.054,
+      18207.494,
       15294.76
      ],
      [
-      15881.217,
+      17944.538,
       15294.76
      ],
      [
-      15574.381,
+      17681.583,
       15294.76
      ],
      [
-      15267.544,
+      17418.627,
       15294.76
      ],
      [
-      14960.707,
+      17155.671,
       15294.76
      ],
      [
-      14653.87,
-      15294.76
-     ],
-     [
-      14347.034,
-      15294.76
-     ],
-     [
-      14040.197,
+      16892.716,
       15294.76
      ]
     ],
     "footprints": [],
     "path": [
      [
-      13733.359999999999,
+      15980.56,
       11594.76
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       11594.76
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       15294.76
      ],
      [
-      13733.359999999999,
+      16629.760000000002,
       15294.76
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 11353 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 9729 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "SW",
     "dst": "NW",
     "bits": 41,
-    "length_um": 16254.768,
+    "length_um": 15009.28,
     "stages": 36,
-    "max_hop_um": 439.318,
+    "max_hop_um": 405.656,
     "homes": [
      [
-      14172.678,
+      16386.216,
       11594.76
      ],
      [
-      14611.996,
+      16791.872,
       11594.76
      ],
      [
-      15051.314,
+      17197.529,
       11594.76
      ],
      [
-      15490.632,
+      17603.185,
       11594.76
      ],
      [
-      15929.95,
+      18008.841,
       11594.76
      ],
      [
-      16369.268,
+      18414.497,
       11594.76
      ],
      [
-      16808.586,
+      18820.154,
       11594.76
      ],
      [
-      17247.904,
+      19225.81,
       11594.76
      ],
      [
-      17559.84,
-      11722.142
+      19319.84,
+      11906.386
      ],
      [
-      17559.84,
-      12161.461
+      19319.84,
+      12312.042
      ],
      [
-      17559.84,
-      12600.779
+      19319.84,
+      12717.698
      ],
      [
-      17559.84,
-      13040.097
+      19319.84,
+      13123.355
      ],
      [
-      17559.84,
-      13479.415
+      19319.84,
+      13529.011
      ],
      [
-      17559.84,
-      13918.733
+      19319.84,
+      13934.667
      ],
      [
-      17559.84,
-      14358.051
+      19319.84,
+      14340.323
      ],
      [
-      17559.84,
-      14797.369
+      19319.84,
+      14745.979
      ],
      [
-      17559.84,
-      15236.687
+      19319.84,
+      15151.636
      ],
      [
-      17559.84,
-      15676.005
+      19319.84,
+      15557.292
      ],
      [
-      17559.84,
-      16115.323
+      19319.84,
+      15962.948
      ],
      [
-      17559.84,
-      16554.641
+      19319.84,
+      16368.604
      ],
      [
-      17559.84,
-      16993.959
+      19319.84,
+      16774.261
      ],
      [
-      17559.84,
-      17433.277
+      19319.84,
+      17179.917
      ],
      [
-      17559.84,
-      17872.595
+      19319.84,
+      17585.573
      ],
      [
-      17559.84,
-      18311.913
+      19319.84,
+      17991.229
      ],
      [
-      17559.84,
-      18751.231
+      19319.84,
+      18396.885
      ],
      [
-      17559.84,
-      19190.549
+      19319.84,
+      18802.542
      ],
      [
-      17559.84,
-      19629.867
+      19319.84,
+      19208.198
      ],
      [
-      17559.84,
-      20069.186
+      19319.84,
+      19613.854
      ],
      [
-      17559.84,
-      20508.504
+      19319.84,
+      20019.51
      ],
      [
-      17186.698,
+      19319.84,
+      20425.166
+     ],
+     [
+      19063.697,
       20574.68
      ],
      [
-      16747.38,
+      18658.041,
       20574.68
      ],
      [
-      16308.062,
+      18252.385,
       20574.68
      ],
      [
-      15868.744,
+      17846.729,
       20574.68
      ],
      [
-      15429.426,
+      17441.072,
       20574.68
      ],
      [
-      14990.108,
-      20574.68
-     ],
-     [
-      14550.79,
+      17035.416,
       20574.68
      ]
     ],
     "footprints": [],
     "path": [
      [
-      13733.359999999999,
+      15980.56,
       11594.76
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       11594.76
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       20574.68
      ],
      [
-      14111.472,
+      16629.760000000002,
       20574.68
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 16255 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 15009 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "SW",
     "dst": "NE",
     "bits": 41,
-    "length_um": 12932.88,
+    "length_um": 11309.28,
     "stages": 36,
-    "max_hop_um": 349.537,
+    "max_hop_um": 305.656,
     "homes": [
      [
-      14082.897,
+      16286.216,
       11594.76
      ],
      [
-      14432.435,
+      16591.872,
       11594.76
      ],
      [
-      14781.972,
+      16897.529,
       11594.76
      ],
      [
-      15131.509,
+      17203.185,
       11594.76
      ],
      [
-      15481.046,
+      17508.841,
       11594.76
      ],
      [
-      15830.584,
+      17814.497,
       11594.76
      ],
      [
-      16180.121,
+      18120.154,
       11594.76
      ],
      [
-      16529.658,
+      18425.81,
       11594.76
      ],
      [
-      16879.196,
+      18731.466,
       11594.76
      ],
      [
-      17228.733,
+      19037.122,
       11594.76
      ],
      [
-      17559.84,
-      11613.19
+      19319.84,
+      11617.698
      ],
      [
-      17559.84,
-      11962.728
+      19319.84,
+      11923.355
      ],
      [
-      17559.84,
-      12312.265
+      19319.84,
+      12229.011
      ],
      [
-      17559.84,
-      12661.802
+      19319.84,
+      12534.667
      ],
      [
-      17559.84,
-      13011.339
+      19319.84,
+      12840.323
      ],
      [
-      17559.84,
-      13360.877
+      19319.84,
+      13145.979
      ],
      [
-      17559.84,
-      13710.414
+      19319.84,
+      13451.636
      ],
      [
-      17559.84,
-      14059.951
+      19319.84,
+      13757.292
      ],
      [
-      17559.84,
-      14409.489
+      19319.84,
+      14062.948
      ],
      [
-      17559.84,
-      14759.026
+      19319.84,
+      14368.604
      ],
      [
-      17559.84,
-      15108.563
+      19319.84,
+      14674.261
      ],
      [
-      17559.84,
-      15458.101
+      19319.84,
+      14979.917
      ],
      [
-      17559.84,
-      15807.638
+      19319.84,
+      15285.573
      ],
      [
-      17559.84,
-      16157.175
+      19319.84,
+      15591.229
      ],
      [
-      17559.84,
-      16506.712
+      19319.84,
+      15896.885
      ],
      [
-      17559.84,
-      16856.25
+      19319.84,
+      16202.542
      ],
      [
-      17228.733,
+      19319.84,
+      16508.198
+     ],
+     [
+      19319.84,
+      16813.854
+     ],
+     [
+      19075.01,
       16874.68
      ],
      [
-      16879.196,
+      18769.354,
       16874.68
      ],
      [
-      16529.658,
+      18463.697,
       16874.68
      ],
      [
-      16180.121,
+      18158.041,
       16874.68
      ],
      [
-      15830.584,
+      17852.385,
       16874.68
      ],
      [
-      15481.046,
+      17546.729,
       16874.68
      ],
      [
-      15131.509,
+      17241.072,
       16874.68
      ],
      [
-      14781.972,
-      16874.68
-     ],
-     [
-      14432.435,
-      16874.68
-     ],
-     [
-      14082.897,
+      16935.416,
       16874.68
      ]
     ],
     "footprints": [],
     "path": [
      [
-      13733.359999999999,
+      15980.56,
       11594.76
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       11594.76
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       16874.68
      ],
      [
-      13733.359999999999,
+      16629.760000000002,
       16874.68
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 12933 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 11309 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "SE",
     "dst": "SW",
     "bits": 41,
-    "length_um": 11352.96,
+    "length_um": 9729.36,
     "stages": 36,
-    "max_hop_um": 306.837,
+    "max_hop_um": 262.956,
     "homes": [
      [
-      14040.197,
+      16892.716,
       15294.76
      ],
      [
-      14347.034,
+      17155.671,
       15294.76
      ],
      [
-      14653.87,
+      17418.627,
       15294.76
      ],
      [
-      14960.707,
+      17681.583,
       15294.76
      ],
      [
-      15267.544,
+      17944.538,
       15294.76
      ],
      [
-      15574.381,
+      18207.494,
       15294.76
      ],
      [
-      15881.217,
+      18470.45,
       15294.76
      ],
      [
-      16188.054,
+      18733.405,
       15294.76
      ],
      [
-      16494.891,
+      18996.361,
       15294.76
      ],
      [
-      16801.728,
+      19259.317,
       15294.76
      ],
      [
-      17108.564,
-      15294.76
+      19319.84,
+      15092.328
      ],
      [
-      17415.401,
-      15294.76
+      19319.84,
+      14829.372
      ],
      [
-      17559.84,
-      15132.362
+      19319.84,
+      14566.416
      ],
      [
-      17559.84,
-      14825.525
+      19319.84,
+      14303.461
      ],
      [
-      17559.84,
-      14518.689
+      19319.84,
+      14040.505
      ],
      [
-      17559.84,
-      14211.852
+      19319.84,
+      13777.549
      ],
      [
-      17559.84,
-      13905.015
+      19319.84,
+      13514.594
      ],
      [
-      17559.84,
-      13598.178
+      19319.84,
+      13251.638
      ],
      [
-      17559.84,
-      13291.342
+      19319.84,
+      12988.682
      ],
      [
-      17559.84,
-      12984.505
+      19319.84,
+      12725.726
      ],
      [
-      17559.84,
-      12677.668
+      19319.84,
+      12462.771
      ],
      [
-      17559.84,
-      12370.831
+      19319.84,
+      12199.815
      ],
      [
-      17559.84,
-      12063.995
+      19319.84,
+      11936.859
      ],
      [
-      17559.84,
-      11757.158
+      19319.84,
+      11673.904
      ],
      [
-      17415.401,
+      19136.028,
       11594.76
      ],
      [
-      17108.564,
+      18873.072,
       11594.76
      ],
      [
-      16801.728,
+      18610.117,
       11594.76
      ],
      [
-      16494.891,
+      18347.161,
       11594.76
      ],
      [
-      16188.054,
+      18084.205,
       11594.76
      ],
      [
-      15881.217,
+      17821.25,
       11594.76
      ],
      [
-      15574.381,
+      17558.294,
       11594.76
      ],
      [
-      15267.544,
+      17295.338,
       11594.76
      ],
      [
-      14960.707,
+      17032.383,
       11594.76
      ],
      [
-      14653.87,
+      16769.427,
       11594.76
      ],
      [
-      14347.034,
+      16506.471,
       11594.76
      ],
      [
-      14040.197,
+      16243.516,
       11594.76
      ]
     ],
     "footprints": [],
     "path": [
      [
-      13733.359999999999,
+      16629.760000000002,
       15294.76
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       15294.76
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       11594.76
      ],
      [
-      13733.359999999999,
+      15980.56,
       11594.76
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 11353 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 9729 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "SE",
@@ -101339,147 +102578,147 @@
     "max_hop_um": 4.8,
     "homes": [
      [
-      13381.28,
+      16277.68,
       15438.4
      ],
      [
-      13381.28,
+      16277.68,
       15416.8
      ],
      [
-      13381.28,
+      16277.68,
       15395.2
      ],
      [
-      13381.28,
+      16277.68,
       15373.6
      ],
      [
-      13381.28,
+      16277.68,
       15352.0
      ],
      [
-      13381.28,
+      16277.68,
       15330.4
      ],
      [
-      13381.28,
+      16277.68,
       15308.8
      ],
      [
-      13381.28,
+      16277.68,
       15287.2
      ],
      [
-      13381.28,
+      16277.68,
       15265.6
      ],
      [
-      13381.28,
+      16277.68,
       15244.0
      ],
      [
-      13381.28,
+      16277.68,
       15222.4
      ],
      [
-      13381.28,
+      16277.68,
       15200.8
      ],
      [
-      13359.68,
+      16256.08,
       15200.8
      ],
      [
-      13359.68,
+      16256.08,
       15222.4
      ],
      [
-      13359.68,
+      16256.08,
       15244.0
      ],
      [
-      13359.68,
+      16256.08,
       15265.6
      ],
      [
-      13359.68,
+      16256.08,
       15287.2
      ],
      [
-      13359.68,
+      16256.08,
       15308.8
      ],
      [
-      13359.68,
+      16256.08,
       15330.4
      ],
      [
-      13359.68,
+      16256.08,
       15352.0
      ],
      [
-      13359.68,
+      16256.08,
       15373.6
      ],
      [
-      13359.68,
+      16256.08,
       15395.2
      ],
      [
-      13359.68,
+      16256.08,
       15416.8
      ],
      [
-      13359.68,
+      16256.08,
       15438.4
      ],
      [
-      13338.08,
+      16234.48,
       15438.4
      ],
      [
-      13338.08,
+      16234.48,
       15416.8
      ],
      [
-      13338.08,
+      16234.48,
       15395.2
      ],
      [
-      13338.08,
+      16234.48,
       15373.6
      ],
      [
-      13338.08,
+      16234.48,
       15352.0
      ],
      [
-      13338.08,
+      16234.48,
       15330.4
      ],
      [
-      13338.08,
+      16234.48,
       15308.8
      ],
      [
-      13338.08,
+      16234.48,
       15287.2
      ],
      [
-      13338.08,
+      16234.48,
       15265.6
      ],
      [
-      13338.08,
+      16234.48,
       15244.0
      ],
      [
-      13338.08,
+      16234.48,
       15222.4
      ],
      [
-      13338.08,
+      16234.48,
       15200.8
      ]
     ],
@@ -101788,697 +103027,697 @@
     "src": "SE",
     "dst": "NW",
     "bits": 41,
-    "length_um": 12554.768,
+    "length_um": 10660.08,
     "stages": 36,
-    "max_hop_um": 339.318,
+    "max_hop_um": 288.11,
     "homes": [
      [
-      14072.678,
+      16917.87,
       15294.76
      ],
      [
-      14411.996,
+      17205.981,
       15294.76
      ],
      [
-      14751.314,
+      17494.091,
       15294.76
      ],
      [
-      15090.632,
+      17782.201,
       15294.76
      ],
      [
-      15429.95,
+      18070.311,
       15294.76
      ],
      [
-      15769.268,
+      18358.422,
       15294.76
      ],
      [
-      16108.586,
+      18646.532,
       15294.76
      ],
      [
-      16447.904,
+      18934.642,
       15294.76
      ],
      [
-      16787.222,
+      19222.752,
       15294.76
      ],
      [
-      17126.541,
-      15294.76
+      19319.84,
+      15485.783
      ],
      [
-      17465.859,
-      15294.76
+      19319.84,
+      15773.893
      ],
      [
-      17559.84,
-      15540.097
+      19319.84,
+      16062.003
      ],
      [
-      17559.84,
-      15879.415
+      19319.84,
+      16350.114
      ],
      [
-      17559.84,
-      16218.733
+      19319.84,
+      16638.224
      ],
      [
-      17559.84,
-      16558.051
+      19319.84,
+      16926.334
      ],
      [
-      17559.84,
-      16897.369
+      19319.84,
+      17214.444
      ],
      [
-      17559.84,
-      17236.687
+      19319.84,
+      17502.555
      ],
      [
-      17559.84,
-      17576.005
+      19319.84,
+      17790.665
      ],
      [
-      17559.84,
-      17915.323
+      19319.84,
+      18078.775
      ],
      [
-      17559.84,
-      18254.641
+      19319.84,
+      18366.885
      ],
      [
-      17559.84,
-      18593.959
+      19319.84,
+      18654.996
      ],
      [
-      17559.84,
-      18933.277
+      19319.84,
+      18943.106
      ],
      [
-      17559.84,
-      19272.595
+      19319.84,
+      19231.216
      ],
      [
-      17559.84,
-      19611.913
+      19319.84,
+      19519.326
      ],
      [
-      17559.84,
-      19951.231
+      19319.84,
+      19807.437
      ],
      [
-      17559.84,
-      20290.549
+      19319.84,
+      20095.547
      ],
      [
-      17504.653,
+      19319.84,
+      20383.657
+     ],
+     [
+      19222.752,
       20574.68
      ],
      [
-      17165.334,
+      18934.642,
       20574.68
      ],
      [
-      16826.016,
+      18646.532,
       20574.68
      ],
      [
-      16486.698,
+      18358.422,
       20574.68
      ],
      [
-      16147.38,
+      18070.311,
       20574.68
      ],
      [
-      15808.062,
+      17782.201,
       20574.68
      ],
      [
-      15468.744,
+      17494.091,
       20574.68
      ],
      [
-      15129.426,
+      17205.981,
       20574.68
      ],
      [
-      14790.108,
-      20574.68
-     ],
-     [
-      14450.79,
+      16917.87,
       20574.68
      ]
     ],
     "footprints": [],
     "path": [
      [
-      13733.359999999999,
+      16629.760000000002,
       15294.76
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       15294.76
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       20574.68
      ],
      [
-      14111.472,
+      16629.760000000002,
       20574.68
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 12555 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 10660 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "SE",
     "dst": "NE",
     "bits": 41,
-    "length_um": 9232.88,
+    "length_um": 6960.08,
     "stages": 36,
-    "max_hop_um": 249.537,
+    "max_hop_um": 188.11,
     "homes": [
      [
-      13982.897,
+      16817.87,
       15294.76
      ],
      [
-      14232.435,
+      17005.981,
       15294.76
      ],
      [
-      14481.972,
+      17194.091,
       15294.76
      ],
      [
-      14731.509,
+      17382.201,
       15294.76
      ],
      [
-      14981.046,
+      17570.311,
       15294.76
      ],
      [
-      15230.584,
+      17758.422,
       15294.76
      ],
      [
-      15480.121,
+      17946.532,
       15294.76
      ],
      [
-      15729.658,
+      18134.642,
       15294.76
      ],
      [
-      15979.196,
+      18322.752,
       15294.76
      ],
      [
-      16228.733,
+      18510.863,
       15294.76
      ],
      [
-      16478.27,
+      18698.973,
       15294.76
      ],
      [
-      16727.808,
+      18887.083,
       15294.76
      ],
      [
-      16977.345,
+      19075.194,
       15294.76
      ],
      [
-      17226.882,
+      19263.304,
       15294.76
      ],
      [
-      17476.419,
-      15294.76
+      19319.84,
+      15426.334
      ],
      [
-      17559.84,
-      15460.877
+      19319.84,
+      15614.444
      ],
      [
-      17559.84,
-      15710.414
+      19319.84,
+      15802.555
      ],
      [
-      17559.84,
-      15959.951
+      19319.84,
+      15990.665
      ],
      [
-      17559.84,
-      16209.489
+      19319.84,
+      16178.775
      ],
      [
-      17559.84,
-      16459.026
+      19319.84,
+      16366.885
      ],
      [
-      17559.84,
-      16708.563
+      19319.84,
+      16554.996
      ],
      [
-      17476.419,
+      19319.84,
+      16743.106
+     ],
+     [
+      19263.304,
       16874.68
      ],
      [
-      17226.882,
+      19075.194,
       16874.68
      ],
      [
-      16977.345,
+      18887.083,
       16874.68
      ],
      [
-      16727.808,
+      18698.973,
       16874.68
      ],
      [
-      16478.27,
+      18510.863,
       16874.68
      ],
      [
-      16228.733,
+      18322.752,
       16874.68
      ],
      [
-      15979.196,
+      18134.642,
       16874.68
      ],
      [
-      15729.658,
+      17946.532,
       16874.68
      ],
      [
-      15480.121,
+      17758.422,
       16874.68
      ],
      [
-      15230.584,
+      17570.311,
       16874.68
      ],
      [
-      14981.046,
+      17382.201,
       16874.68
      ],
      [
-      14731.509,
+      17194.091,
       16874.68
      ],
      [
-      14481.972,
+      17005.981,
       16874.68
      ],
      [
-      14232.435,
-      16874.68
-     ],
-     [
-      13982.897,
+      16817.87,
       16874.68
      ]
     ],
     "footprints": [],
     "path": [
      [
-      13733.359999999999,
+      16629.760000000002,
       15294.76
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       15294.76
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       16874.68
      ],
      [
-      13733.359999999999,
+      16629.760000000002,
       16874.68
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 9233 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 6960 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "NW",
     "dst": "SW",
     "bits": 41,
-    "length_um": 16254.768,
+    "length_um": 15009.28,
     "stages": 36,
-    "max_hop_um": 439.318,
+    "max_hop_um": 405.656,
     "homes": [
      [
-      14550.79,
+      17035.416,
       20574.68
      ],
      [
-      14990.108,
+      17441.072,
       20574.68
      ],
      [
-      15429.426,
+      17846.729,
       20574.68
      ],
      [
-      15868.744,
+      18252.385,
       20574.68
      ],
      [
-      16308.062,
+      18658.041,
       20574.68
      ],
      [
-      16747.38,
+      19063.697,
       20574.68
      ],
      [
-      17186.698,
-      20574.68
+      19319.84,
+      20425.166
      ],
      [
-      17559.84,
-      20508.504
+      19319.84,
+      20019.51
      ],
      [
-      17559.84,
-      20069.186
+      19319.84,
+      19613.854
      ],
      [
-      17559.84,
-      19629.867
+      19319.84,
+      19208.198
      ],
      [
-      17559.84,
-      19190.549
+      19319.84,
+      18802.542
      ],
      [
-      17559.84,
-      18751.231
+      19319.84,
+      18396.885
      ],
      [
-      17559.84,
-      18311.913
+      19319.84,
+      17991.229
      ],
      [
-      17559.84,
-      17872.595
+      19319.84,
+      17585.573
      ],
      [
-      17559.84,
-      17433.277
+      19319.84,
+      17179.917
      ],
      [
-      17559.84,
-      16993.959
+      19319.84,
+      16774.261
      ],
      [
-      17559.84,
-      16554.641
+      19319.84,
+      16368.604
      ],
      [
-      17559.84,
-      16115.323
+      19319.84,
+      15962.948
      ],
      [
-      17559.84,
-      15676.005
+      19319.84,
+      15557.292
      ],
      [
-      17559.84,
-      15236.687
+      19319.84,
+      15151.636
      ],
      [
-      17559.84,
-      14797.369
+      19319.84,
+      14745.979
      ],
      [
-      17559.84,
-      14358.051
+      19319.84,
+      14340.323
      ],
      [
-      17559.84,
-      13918.733
+      19319.84,
+      13934.667
      ],
      [
-      17559.84,
-      13479.415
+      19319.84,
+      13529.011
      ],
      [
-      17559.84,
-      13040.097
+      19319.84,
+      13123.355
      ],
      [
-      17559.84,
-      12600.779
+      19319.84,
+      12717.698
      ],
      [
-      17559.84,
-      12161.461
+      19319.84,
+      12312.042
      ],
      [
-      17559.84,
-      11722.142
+      19319.84,
+      11906.386
      ],
      [
-      17247.904,
+      19225.81,
       11594.76
      ],
      [
-      16808.586,
+      18820.154,
       11594.76
      ],
      [
-      16369.268,
+      18414.497,
       11594.76
      ],
      [
-      15929.95,
+      18008.841,
       11594.76
      ],
      [
-      15490.632,
+      17603.185,
       11594.76
      ],
      [
-      15051.314,
+      17197.529,
       11594.76
      ],
      [
-      14611.996,
+      16791.872,
       11594.76
      ],
      [
-      14172.678,
+      16386.216,
       11594.76
      ]
     ],
     "footprints": [],
     "path": [
      [
-      14111.472,
+      16629.760000000002,
       20574.68
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       20574.68
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       11594.76
      ],
      [
-      13733.359999999999,
+      15980.56,
       11594.76
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 16255 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 15009 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "NW",
     "dst": "SE",
     "bits": 41,
-    "length_um": 12554.768,
+    "length_um": 10660.08,
     "stages": 36,
-    "max_hop_um": 339.318,
+    "max_hop_um": 288.11,
     "homes": [
      [
-      14450.79,
+      16917.87,
       20574.68
      ],
      [
-      14790.108,
+      17205.981,
       20574.68
      ],
      [
-      15129.426,
+      17494.091,
       20574.68
      ],
      [
-      15468.744,
+      17782.201,
       20574.68
      ],
      [
-      15808.062,
+      18070.311,
       20574.68
      ],
      [
-      16147.38,
+      18358.422,
       20574.68
      ],
      [
-      16486.698,
+      18646.532,
       20574.68
      ],
      [
-      16826.016,
+      18934.642,
       20574.68
      ],
      [
-      17165.334,
+      19222.752,
       20574.68
      ],
      [
-      17504.653,
-      20574.68
+      19319.84,
+      20383.657
      ],
      [
-      17559.84,
-      20290.549
+      19319.84,
+      20095.547
      ],
      [
-      17559.84,
-      19951.231
+      19319.84,
+      19807.437
      ],
      [
-      17559.84,
-      19611.913
+      19319.84,
+      19519.326
      ],
      [
-      17559.84,
-      19272.595
+      19319.84,
+      19231.216
      ],
      [
-      17559.84,
-      18933.277
+      19319.84,
+      18943.106
      ],
      [
-      17559.84,
-      18593.959
+      19319.84,
+      18654.996
      ],
      [
-      17559.84,
-      18254.641
+      19319.84,
+      18366.885
      ],
      [
-      17559.84,
-      17915.323
+      19319.84,
+      18078.775
      ],
      [
-      17559.84,
-      17576.005
+      19319.84,
+      17790.665
      ],
      [
-      17559.84,
-      17236.687
+      19319.84,
+      17502.555
      ],
      [
-      17559.84,
-      16897.369
+      19319.84,
+      17214.444
      ],
      [
-      17559.84,
-      16558.051
+      19319.84,
+      16926.334
      ],
      [
-      17559.84,
-      16218.733
+      19319.84,
+      16638.224
      ],
      [
-      17559.84,
-      15879.415
+      19319.84,
+      16350.114
      ],
      [
-      17559.84,
-      15540.097
+      19319.84,
+      16062.003
      ],
      [
-      17465.859,
+      19319.84,
+      15773.893
+     ],
+     [
+      19319.84,
+      15485.783
+     ],
+     [
+      19222.752,
       15294.76
      ],
      [
-      17126.541,
+      18934.642,
       15294.76
      ],
      [
-      16787.222,
+      18646.532,
       15294.76
      ],
      [
-      16447.904,
+      18358.422,
       15294.76
      ],
      [
-      16108.586,
+      18070.311,
       15294.76
      ],
      [
-      15769.268,
+      17782.201,
       15294.76
      ],
      [
-      15429.95,
+      17494.091,
       15294.76
      ],
      [
-      15090.632,
+      17205.981,
       15294.76
      ],
      [
-      14751.314,
-      15294.76
-     ],
-     [
-      14411.996,
-      15294.76
-     ],
-     [
-      14072.678,
+      16917.87,
       15294.76
      ]
     ],
     "footprints": [],
     "path": [
      [
-      14111.472,
+      16629.760000000002,
       20574.68
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       20574.68
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       15294.76
      ],
      [
-      13733.359999999999,
+      16629.760000000002,
       15294.76
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 12555 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 10660 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "NW",
@@ -102489,147 +103728,147 @@
     "max_hop_um": 4.8,
     "homes": [
      [
-      14133.072,
+      16651.36,
       20431.04
      ],
      [
-      14133.072,
+      16651.36,
       20452.64
      ],
      [
-      14133.072,
+      16651.36,
       20474.24
      ],
      [
-      14133.072,
+      16651.36,
       20495.84
      ],
      [
-      14133.072,
+      16651.36,
       20517.44
      ],
      [
-      14133.072,
+      16651.36,
       20539.04
      ],
      [
-      14133.072,
+      16651.36,
       20560.64
      ],
      [
-      14133.072,
+      16651.36,
       20582.24
      ],
      [
-      14133.072,
+      16651.36,
       20603.84
      ],
      [
-      14133.072,
+      16651.36,
       20625.44
      ],
      [
-      14133.072,
+      16651.36,
       20647.04
      ],
      [
-      14133.072,
+      16651.36,
       20668.64
      ],
      [
-      14154.672,
+      16672.96,
       20668.64
      ],
      [
-      14154.672,
+      16672.96,
       20647.04
      ],
      [
-      14154.672,
+      16672.96,
       20625.44
      ],
      [
-      14154.672,
+      16672.96,
       20603.84
      ],
      [
-      14154.672,
+      16672.96,
       20582.24
      ],
      [
-      14154.672,
+      16672.96,
       20560.64
      ],
      [
-      14154.672,
+      16672.96,
       20539.04
      ],
      [
-      14154.672,
+      16672.96,
       20517.44
      ],
      [
-      14154.672,
+      16672.96,
       20495.84
      ],
      [
-      14154.672,
+      16672.96,
       20474.24
      ],
      [
-      14154.672,
+      16672.96,
       20452.64
      ],
      [
-      14154.672,
+      16672.96,
       20431.04
      ],
      [
-      14176.272,
+      16694.56,
       20431.04
      ],
      [
-      14176.272,
+      16694.56,
       20452.64
      ],
      [
-      14176.272,
+      16694.56,
       20474.24
      ],
      [
-      14176.272,
+      16694.56,
       20495.84
      ],
      [
-      14176.272,
+      16694.56,
       20517.44
      ],
      [
-      14176.272,
+      16694.56,
       20539.04
      ],
      [
-      14176.272,
+      16694.56,
       20560.64
      ],
      [
-      14176.272,
+      16694.56,
       20582.24
      ],
      [
-      14176.272,
+      16694.56,
       20603.84
      ],
      [
-      14176.272,
+      16694.56,
       20625.44
      ],
      [
-      14176.272,
+      16694.56,
       20647.04
      ],
      [
-      14176.272,
+      16694.56,
       20668.64
      ]
     ],
@@ -102938,697 +104177,697 @@
     "src": "NW",
     "dst": "NE",
     "bits": 41,
-    "length_um": 10974.848,
+    "length_um": 9080.16,
     "stages": 36,
-    "max_hop_um": 296.618,
+    "max_hop_um": 245.41,
     "homes": [
      [
-      14408.09,
+      16875.17,
       20574.68
      ],
      [
-      14704.707,
+      17120.579,
       20574.68
      ],
      [
-      15001.325,
+      17365.989,
       20574.68
      ],
      [
-      15297.942,
+      17611.399,
       20574.68
      ],
      [
-      15594.56,
+      17856.809,
       20574.68
      ],
      [
-      15891.177,
+      18102.218,
       20574.68
      ],
      [
-      16187.795,
+      18347.628,
       20574.68
      ],
      [
-      16484.412,
+      18593.038,
       20574.68
      ],
      [
-      16781.03,
+      18838.448,
       20574.68
      ],
      [
-      17077.647,
+      19083.857,
       20574.68
      ],
      [
-      17374.265,
-      20574.68
+      19319.84,
+      20565.253
      ],
      [
-      17559.84,
-      20463.638
+      19319.84,
+      20319.843
      ],
      [
-      17559.84,
-      20167.02
+      19319.84,
+      20074.434
      ],
      [
-      17559.84,
-      19870.403
+      19319.84,
+      19829.024
      ],
      [
-      17559.84,
-      19573.785
+      19319.84,
+      19583.614
      ],
      [
-      17559.84,
-      19277.168
+      19319.84,
+      19338.204
      ],
      [
-      17559.84,
-      18980.55
+      19319.84,
+      19092.795
      ],
      [
-      17559.84,
-      18683.933
+      19319.84,
+      18847.385
      ],
      [
-      17559.84,
-      18387.315
+      19319.84,
+      18601.975
      ],
      [
-      17559.84,
-      18090.698
+      19319.84,
+      18356.565
      ],
      [
-      17559.84,
-      17794.08
+      19319.84,
+      18111.156
      ],
      [
-      17559.84,
-      17497.463
+      19319.84,
+      17865.746
      ],
      [
-      17559.84,
-      17200.845
+      19319.84,
+      17620.336
      ],
      [
-      17559.84,
-      16904.228
+      19319.84,
+      17374.926
      ],
      [
-      17292.77,
+      19319.84,
+      17129.517
+     ],
+     [
+      19319.84,
+      16884.107
+     ],
+     [
+      19083.857,
       16874.68
      ],
      [
-      16996.153,
+      18838.448,
       16874.68
      ],
      [
-      16699.535,
+      18593.038,
       16874.68
      ],
      [
-      16402.918,
+      18347.628,
       16874.68
      ],
      [
-      16106.3,
+      18102.218,
       16874.68
      ],
      [
-      15809.683,
+      17856.809,
       16874.68
      ],
      [
-      15513.065,
+      17611.399,
       16874.68
      ],
      [
-      15216.448,
+      17365.989,
       16874.68
      ],
      [
-      14919.83,
+      17120.579,
       16874.68
      ],
      [
-      14623.213,
-      16874.68
-     ],
-     [
-      14326.595,
-      16874.68
-     ],
-     [
-      14029.978,
+      16875.17,
       16874.68
      ]
     ],
     "footprints": [],
     "path": [
      [
-      14111.472,
+      16629.760000000002,
       20574.68
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       20574.68
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       16874.68
      ],
      [
-      13733.359999999999,
+      16629.760000000002,
       16874.68
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 10975 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 9080 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "NE",
     "dst": "SW",
     "bits": 41,
-    "length_um": 12932.88,
+    "length_um": 11309.28,
     "stages": 36,
-    "max_hop_um": 349.537,
+    "max_hop_um": 305.656,
     "homes": [
      [
-      14082.897,
+      16935.416,
       16874.68
      ],
      [
-      14432.435,
+      17241.072,
       16874.68
      ],
      [
-      14781.972,
+      17546.729,
       16874.68
      ],
      [
-      15131.509,
+      17852.385,
       16874.68
      ],
      [
-      15481.046,
+      18158.041,
       16874.68
      ],
      [
-      15830.584,
+      18463.697,
       16874.68
      ],
      [
-      16180.121,
+      18769.354,
       16874.68
      ],
      [
-      16529.658,
+      19075.01,
       16874.68
      ],
      [
-      16879.196,
-      16874.68
+      19319.84,
+      16813.854
      ],
      [
-      17228.733,
-      16874.68
+      19319.84,
+      16508.198
      ],
      [
-      17559.84,
-      16856.25
+      19319.84,
+      16202.542
      ],
      [
-      17559.84,
-      16506.712
+      19319.84,
+      15896.885
      ],
      [
-      17559.84,
-      16157.175
+      19319.84,
+      15591.229
      ],
      [
-      17559.84,
-      15807.638
+      19319.84,
+      15285.573
      ],
      [
-      17559.84,
-      15458.101
+      19319.84,
+      14979.917
      ],
      [
-      17559.84,
-      15108.563
+      19319.84,
+      14674.261
      ],
      [
-      17559.84,
-      14759.026
+      19319.84,
+      14368.604
      ],
      [
-      17559.84,
-      14409.489
+      19319.84,
+      14062.948
      ],
      [
-      17559.84,
-      14059.951
+      19319.84,
+      13757.292
      ],
      [
-      17559.84,
-      13710.414
+      19319.84,
+      13451.636
      ],
      [
-      17559.84,
-      13360.877
+      19319.84,
+      13145.979
      ],
      [
-      17559.84,
-      13011.339
+      19319.84,
+      12840.323
      ],
      [
-      17559.84,
-      12661.802
+      19319.84,
+      12534.667
      ],
      [
-      17559.84,
-      12312.265
+      19319.84,
+      12229.011
      ],
      [
-      17559.84,
-      11962.728
+      19319.84,
+      11923.355
      ],
      [
-      17559.84,
-      11613.19
+      19319.84,
+      11617.698
      ],
      [
-      17228.733,
+      19037.122,
       11594.76
      ],
      [
-      16879.196,
+      18731.466,
       11594.76
      ],
      [
-      16529.658,
+      18425.81,
       11594.76
      ],
      [
-      16180.121,
+      18120.154,
       11594.76
      ],
      [
-      15830.584,
+      17814.497,
       11594.76
      ],
      [
-      15481.046,
+      17508.841,
       11594.76
      ],
      [
-      15131.509,
+      17203.185,
       11594.76
      ],
      [
-      14781.972,
+      16897.529,
       11594.76
      ],
      [
-      14432.435,
+      16591.872,
       11594.76
      ],
      [
-      14082.897,
+      16286.216,
       11594.76
      ]
     ],
     "footprints": [],
     "path": [
      [
-      13733.359999999999,
+      16629.760000000002,
       16874.68
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       16874.68
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       11594.76
      ],
      [
-      13733.359999999999,
+      15980.56,
       11594.76
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 12933 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 11309 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "NE",
     "dst": "SE",
     "bits": 41,
-    "length_um": 9232.88,
+    "length_um": 6960.08,
     "stages": 36,
-    "max_hop_um": 249.537,
+    "max_hop_um": 188.11,
     "homes": [
      [
-      13982.897,
+      16817.87,
       16874.68
      ],
      [
-      14232.435,
+      17005.981,
       16874.68
      ],
      [
-      14481.972,
+      17194.091,
       16874.68
      ],
      [
-      14731.509,
+      17382.201,
       16874.68
      ],
      [
-      14981.046,
+      17570.311,
       16874.68
      ],
      [
-      15230.584,
+      17758.422,
       16874.68
      ],
      [
-      15480.121,
+      17946.532,
       16874.68
      ],
      [
-      15729.658,
+      18134.642,
       16874.68
      ],
      [
-      15979.196,
+      18322.752,
       16874.68
      ],
      [
-      16228.733,
+      18510.863,
       16874.68
      ],
      [
-      16478.27,
+      18698.973,
       16874.68
      ],
      [
-      16727.808,
+      18887.083,
       16874.68
      ],
      [
-      16977.345,
+      19075.194,
       16874.68
      ],
      [
-      17226.882,
+      19263.304,
       16874.68
      ],
      [
-      17476.419,
-      16874.68
+      19319.84,
+      16743.106
      ],
      [
-      17559.84,
-      16708.563
+      19319.84,
+      16554.996
      ],
      [
-      17559.84,
-      16459.026
+      19319.84,
+      16366.885
      ],
      [
-      17559.84,
-      16209.489
+      19319.84,
+      16178.775
      ],
      [
-      17559.84,
-      15959.951
+      19319.84,
+      15990.665
      ],
      [
-      17559.84,
-      15710.414
+      19319.84,
+      15802.555
      ],
      [
-      17559.84,
-      15460.877
+      19319.84,
+      15614.444
      ],
      [
-      17476.419,
+      19319.84,
+      15426.334
+     ],
+     [
+      19263.304,
       15294.76
      ],
      [
-      17226.882,
+      19075.194,
       15294.76
      ],
      [
-      16977.345,
+      18887.083,
       15294.76
      ],
      [
-      16727.808,
+      18698.973,
       15294.76
      ],
      [
-      16478.27,
+      18510.863,
       15294.76
      ],
      [
-      16228.733,
+      18322.752,
       15294.76
      ],
      [
-      15979.196,
+      18134.642,
       15294.76
      ],
      [
-      15729.658,
+      17946.532,
       15294.76
      ],
      [
-      15480.121,
+      17758.422,
       15294.76
      ],
      [
-      15230.584,
+      17570.311,
       15294.76
      ],
      [
-      14981.046,
+      17382.201,
       15294.76
      ],
      [
-      14731.509,
+      17194.091,
       15294.76
      ],
      [
-      14481.972,
+      17005.981,
       15294.76
      ],
      [
-      14232.435,
-      15294.76
-     ],
-     [
-      13982.897,
+      16817.87,
       15294.76
      ]
     ],
     "footprints": [],
     "path": [
      [
-      13733.359999999999,
+      16629.760000000002,
       16874.68
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       16874.68
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       15294.76
      ],
      [
-      13733.359999999999,
+      16629.760000000002,
       15294.76
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 9233 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 6960 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "NE",
     "dst": "NW",
     "bits": 41,
-    "length_um": 10974.848,
+    "length_um": 9080.16,
     "stages": 36,
-    "max_hop_um": 296.618,
+    "max_hop_um": 245.41,
     "homes": [
      [
-      14029.978,
+      16875.17,
       16874.68
      ],
      [
-      14326.595,
+      17120.579,
       16874.68
      ],
      [
-      14623.213,
+      17365.989,
       16874.68
      ],
      [
-      14919.83,
+      17611.399,
       16874.68
      ],
      [
-      15216.448,
+      17856.809,
       16874.68
      ],
      [
-      15513.065,
+      18102.218,
       16874.68
      ],
      [
-      15809.683,
+      18347.628,
       16874.68
      ],
      [
-      16106.3,
+      18593.038,
       16874.68
      ],
      [
-      16402.918,
+      18838.448,
       16874.68
      ],
      [
-      16699.535,
+      19083.857,
       16874.68
      ],
      [
-      16996.153,
-      16874.68
+      19319.84,
+      16884.107
      ],
      [
-      17292.77,
-      16874.68
+      19319.84,
+      17129.517
      ],
      [
-      17559.84,
-      16904.228
+      19319.84,
+      17374.926
      ],
      [
-      17559.84,
-      17200.845
+      19319.84,
+      17620.336
      ],
      [
-      17559.84,
-      17497.463
+      19319.84,
+      17865.746
      ],
      [
-      17559.84,
-      17794.08
+      19319.84,
+      18111.156
      ],
      [
-      17559.84,
-      18090.698
+      19319.84,
+      18356.565
      ],
      [
-      17559.84,
-      18387.315
+      19319.84,
+      18601.975
      ],
      [
-      17559.84,
-      18683.933
+      19319.84,
+      18847.385
      ],
      [
-      17559.84,
-      18980.55
+      19319.84,
+      19092.795
      ],
      [
-      17559.84,
-      19277.168
+      19319.84,
+      19338.204
      ],
      [
-      17559.84,
-      19573.785
+      19319.84,
+      19583.614
      ],
      [
-      17559.84,
-      19870.403
+      19319.84,
+      19829.024
      ],
      [
-      17559.84,
-      20167.02
+      19319.84,
+      20074.434
      ],
      [
-      17559.84,
-      20463.638
+      19319.84,
+      20319.843
      ],
      [
-      17374.265,
+      19319.84,
+      20565.253
+     ],
+     [
+      19083.857,
       20574.68
      ],
      [
-      17077.647,
+      18838.448,
       20574.68
      ],
      [
-      16781.03,
+      18593.038,
       20574.68
      ],
      [
-      16484.412,
+      18347.628,
       20574.68
      ],
      [
-      16187.795,
+      18102.218,
       20574.68
      ],
      [
-      15891.177,
+      17856.809,
       20574.68
      ],
      [
-      15594.56,
+      17611.399,
       20574.68
      ],
      [
-      15297.942,
+      17365.989,
       20574.68
      ],
      [
-      15001.325,
+      17120.579,
       20574.68
      ],
      [
-      14704.707,
-      20574.68
-     ],
-     [
-      14408.09,
+      16875.17,
       20574.68
      ]
     ],
     "footprints": [],
     "path": [
      [
-      13733.359999999999,
+      16629.760000000002,
       16874.68
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       16874.68
      ],
      [
-      17559.840000000004,
+      19319.840000000004,
       20574.68
      ],
      [
-      14111.472,
+      16629.760000000002,
       20574.68
      ]
     ],
-    "note": "A2P half die: 36 equal-age stages kept on a 10975 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
+    "note": "A2P half die: 36 equal-age stages kept on a 9080 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
    },
    {
     "src": "NE",
@@ -103639,147 +104878,147 @@
     "max_hop_um": 4.8,
     "homes": [
      [
-      13381.28,
+      16277.68,
       16731.04
      ],
      [
-      13381.28,
+      16277.68,
       16752.64
      ],
      [
-      13381.28,
+      16277.68,
       16774.24
      ],
      [
-      13381.28,
+      16277.68,
       16795.84
      ],
      [
-      13381.28,
+      16277.68,
       16817.44
      ],
      [
-      13381.28,
+      16277.68,
       16839.04
      ],
      [
-      13381.28,
+      16277.68,
       16860.64
      ],
      [
-      13381.28,
+      16277.68,
       16882.24
      ],
      [
-      13381.28,
+      16277.68,
       16903.84
      ],
      [
-      13381.28,
+      16277.68,
       16925.44
      ],
      [
-      13381.28,
+      16277.68,
       16947.04
      ],
      [
-      13381.28,
+      16277.68,
       16968.64
      ],
      [
-      13359.68,
+      16256.08,
       16968.64
      ],
      [
-      13359.68,
+      16256.08,
       16947.04
      ],
      [
-      13359.68,
+      16256.08,
       16925.44
      ],
      [
-      13359.68,
+      16256.08,
       16903.84
      ],
      [
-      13359.68,
+      16256.08,
       16882.24
      ],
      [
-      13359.68,
+      16256.08,
       16860.64
      ],
      [
-      13359.68,
+      16256.08,
       16839.04
      ],
      [
-      13359.68,
+      16256.08,
       16817.44
      ],
      [
-      13359.68,
+      16256.08,
       16795.84
      ],
      [
-      13359.68,
+      16256.08,
       16774.24
      ],
      [
-      13359.68,
+      16256.08,
       16752.64
      ],
      [
-      13359.68,
+      16256.08,
       16731.04
      ],
      [
-      13338.08,
+      16234.48,
       16731.04
      ],
      [
-      13338.08,
+      16234.48,
       16752.64
      ],
      [
-      13338.08,
+      16234.48,
       16774.24
      ],
      [
-      13338.08,
+      16234.48,
       16795.84
      ],
      [
-      13338.08,
+      16234.48,
       16817.44
      ],
      [
-      13338.08,
+      16234.48,
       16839.04
      ],
      [
-      13338.08,
+      16234.48,
       16860.64
      ],
      [
-      13338.08,
+      16234.48,
       16882.24
      ],
      [
-      13338.08,
+      16234.48,
       16903.84
      ],
      [
-      13338.08,
+      16234.48,
       16925.44
      ],
      [
-      13338.08,
+      16234.48,
       16947.04
      ],
      [
-      13338.08,
+      16234.48,
       16968.64
      ]
     ],
@@ -104712,50 +105951,6 @@
      "w": 950.4,
      "h": 3132.0
     }
-   },
-   {
-    "slot": "sfus_SW",
-    "old": {
-     "w": 1020.0,
-     "h": 1412.0
-    },
-    "new": {
-     "w": 447.12,
-     "h": 1023.84
-    }
-   },
-   {
-    "slot": "sfus_SE",
-    "old": {
-     "w": 1020.0,
-     "h": 1412.0
-    },
-    "new": {
-     "w": 447.12,
-     "h": 1023.84
-    }
-   },
-   {
-    "slot": "sfus_NW",
-    "old": {
-     "w": 1020.0,
-     "h": 1412.0
-    },
-    "new": {
-     "w": 447.12,
-     "h": 1023.84
-    }
-   },
-   {
-    "slot": "sfus_NE",
-    "old": {
-     "w": 1020.0,
-     "h": 1412.0
-    },
-    "new": {
-     "w": 447.12,
-     "h": 1023.84
-    }
    }
   ],
   "new": [],
@@ -104763,13 +105958,13 @@
    {
     "slot": "vm_status4",
     "anchor": "idx_sel",
-    "dx": 1856.32,
+    "dx": 3616.32,
     "dy": -486.188
    },
    {
     "slot": "host_N",
     "anchor": "ep_N2",
-    "dx": 3990.176,
+    "dx": 5750.176,
     "dy": 7004.238,
     "edge_kept": [
      "N"
@@ -104778,7 +105973,7 @@
    {
     "slot": "host_cp",
     "anchor": "ep_N0",
-    "dx": 4474.896,
+    "dx": 6234.896,
     "dy": 7004.238,
     "edge_kept": [
      "N"
@@ -104787,7 +105982,7 @@
    {
     "slot": "hb_ckgen",
     "anchor": "idx_link",
-    "dx": 1841.12,
+    "dx": 3601.12,
     "dy": -486.188
    },
    {
@@ -104799,12 +105994,12 @@
    {
     "slot": "calendar_SW",
     "anchor": "vmh_SW",
-    "dx": 2739.84,
+    "dx": 4499.84,
     "dy": 3721.92,
     "rehomed": {
      "rule": "calendar beside hub",
      "origin": {
-      "x": 16537.92,
+      "x": 18297.92,
       "y": 10501.36,
       "orient": "R0"
      },
@@ -104815,12 +106010,12 @@
    {
     "slot": "calendar_SE",
     "anchor": "vmh_SE",
-    "dx": -1690.16,
+    "dx": 69.84,
     "dy": 7421.92,
     "rehomed": {
      "rule": "calendar beside hub",
      "origin": {
-      "x": 16537.92,
+      "x": 18297.92,
       "y": 12734.72,
       "orient": "MY"
      },
@@ -104831,12 +106026,12 @@
    {
     "slot": "calendar_NW",
     "anchor": "vmh_NW",
-    "dx": 2739.84,
+    "dx": 4499.84,
     "dy": 3282.318,
     "rehomed": {
      "rule": "calendar beside hub",
      "origin": {
-      "x": 16537.92,
+      "x": 18297.92,
       "y": 21709.12,
       "orient": "MX"
      },
@@ -104847,12 +106042,12 @@
    {
     "slot": "calendar_NE",
     "anchor": "vmh_NE",
-    "dx": -1690.16,
+    "dx": 69.84,
     "dy": -417.682,
     "rehomed": {
      "rule": "calendar beside hub",
      "origin": {
-      "x": 16537.92,
+      "x": 18297.92,
       "y": 19315.92,
       "orient": "R180"
      },
@@ -104939,11 +106134,11 @@
   "blockers": {
    "dropped": 64,
    "die": {
-    "w": 21002.24,
+    "w": 22762.24,
     "h": 32169.44
    },
    "mapped": 129,
-   "resized": 30,
+   "resized": 26,
    "new": [],
    "translated": 9,
    "regranted": 36,

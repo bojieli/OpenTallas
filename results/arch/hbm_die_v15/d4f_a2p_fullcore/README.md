@@ -33,3 +33,12 @@ E column back to 3.1 mm, now filled: idx_s0 / idx_s1 scorer clusters 2,950 x 2,9
 idx_sel 600x450 + idx_link 650x500 (S), idx_ctl 300x260 + idx_q 260x260 + idx_op 216x108 (N); hc_eng 3,100 x 3,065; lk 600 sq.
 21,002.24 x 32,169.44 um = 675.6 mm2, margins 0.83 / 5.00 mm. Grants: d4f_grants_build.sh (+ d4f_idx_plan.py on the plan,
 d4f_idx_grant.py): 150 slots, 0 outside / 0 overlaps. Root sites -> d4f_root_sites_r3.json (36, 0 failed, 0 collisions).
+
+## Revision r4 (H-DIE 10-17 ~05:00): XQL pair stores in the SM pair gaps + quarter core next to its hub
+--sm-pair-gap 440 (gap 540 um between SM 2p and 2p+1): pair store p stack = eg (pegress x6 369.36 sq, N face at the SM
+columns' band end -> both xw windows) | bd (86.4 x 302.4) W of eg | bfq0..3 (bfqg 302.4 x 298.08) stacked away from the band
+(tools/hbm_die_v15/d4f_xq_plan.py; 48 instance-named slots d4f_xq_grant.py). Core (d4f_core_shift.py): COLL hard_v7 1080 x 880/790
+100 um W of hc_<q>, tkm_SW 1740 sq on coll_SW's band-interior face (100 um), cij/sucx W of COLL, DMA back + wb_kport 800 x 560 W
+of sucx; the band slack moves W of the core. 22,762.24 x 32,169.44 um = 732.3 mm2, margins 0.83 / 3.24 mm; cuts 0.499 / 0.521,
+0 lines > 0.60 (the PHY-row lanes artefact is gone). Grants 198 slots, 0 outside / 0 overlaps; root sites d4f_root_sites_r4.json
+(36, 0 collisions). Plan: compact_plan <...> --sm-pair-gap 440 --qw-extra 4520; a2p_fix --lk-sq 600; d4f_core_shift; d4f_idx_plan; d4f_xq_plan.
