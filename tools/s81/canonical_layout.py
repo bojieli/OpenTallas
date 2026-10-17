@@ -92,10 +92,10 @@ class Roadmap:
   levels={i:set() for i in range(len(cols))};streets={i:[] for i in range(len(cols))}
   self.sx={i:c['x_um']+G.COL_W8-(15.12 if return_lanes else G.RSC_W/2) for i,c in enumerate(cols)}
   if getattr(G,'CLUSTER_MODE',None):
-   # H-C27 --cluster-mode: the column's vertical die-top lane is its transit channel (east of the cluster), never the
-   # RSC strip (that strip is inside the column cluster: its own return relays)
-   from s81.cluster_mode import lane_x
-   self.sx={i:lane_x(G,m,c,return_lanes) for i,c in enumerate(cols)}
+   # H-C27 --cluster-mode: STREET-ONLY die-top transport (no lane through a column cluster): s81/cluster_mode.py
+   from s81.cluster_mode import street_roadmap
+   street_roadmap(self,G,m,cols,nw,return_lanes)
+   return
   for r,f in m['frames'].items():
    a=f['street'][1];b=f['street'][3]
    # Broadcast and returns use separate rows inside the actual local street.

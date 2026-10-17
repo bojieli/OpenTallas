@@ -32,42 +32,28 @@ def snap(v, g):
 
 
 # ------------------------------------------------------------------------------------------------ layout
-def cluster_layout(d, pitch, y_snap, frame_w, seam=8.64):
-    """re-pitch the canonical columns (in place) and put every column's frames on the y_snap lattice; returns a receipt.
-    x: west columns keep the die-W anchor and move toward the hub by k x delta, east columns mirror that.
-    y: each column's stack shifts UNIFORMLY (streets keep their exact 259.2 / 388.8), by the smallest move that puts
-    its first frame on the lattice -- so all frames have the same lattice phase and identical frame-relative offsets."""
+def cluster_layout(d, y_snap):
+    """put every column's frames on the y_snap lattice (in place); returns a receipt.  Each column's stack shifts
+    UNIFORMLY (streets keep their exact 259.2 / 388.8) by the smallest move that puts its first frame on the lattice, so
+    all frames share one lattice phase and identical frame-relative offsets (the W columns 2-6 stack started at
+    3,061.256, the others at 20: two y-phases = two physical signatures per class).  x is unchanged."""
     cols = sorted(d['columns'], key=lambda c: c['x_um'])
-    xs = [c['x_um'] for c in cols]
-    gaps = [b - a for a, b in zip(xs, xs[1:])]
-    split = max(range(len(gaps)), key=gaps.__getitem__) + 1
-    old_pitch = min(gaps)
-    delta = pitch - old_pitch
-    assert delta >= -1e-6, ('cluster pitch below the canonical pitch', pitch, old_pitch)
-    assert abs(delta / 0.432 - round(delta / 0.432)) < 1e-6, ('pitch delta off the 0.432 x lattice', delta)
-    shift = {round(x, 4): (k * delta if k < split else -(len(xs) - k) * delta) for k, x in enumerate(xs)}
     dys = {}
     for c in cols:
-        x_old = round(c['x_um'], 4)
         fs = sorted((f for f in d['placements'] if abs(f['origin_um'][0] - c['x_um']) < 1e-6), key=lambda f: f['origin_um'][1])
         assert fs, ('column without frames', c)
         y_first = fs[0]['origin_um'][1]
         dy = round(snap(y_first, y_snap) - y_first, 4)
         for f in fs:
-            f['origin_um'] = [round(f['origin_um'][0] + shift[x_old], 4), round(f['origin_um'][1] + dy, 4)]
+            f['origin_um'] = [f['origin_um'][0], round(f['origin_um'][1] + dy, 4)]
             assert abs(f['origin_um'][1] / y_snap - round(f['origin_um'][1] / y_snap)) < 1e-6, ('y off lattice', f['root'])
         top = fs[-1]['origin_um'][1] + fs[-1]['height_um']
-        assert top <= d['die_outline_um'][1] - 10.0 and fs[0]['origin_um'][1] >= 200.0, ('column off the die', x_old, dy)
-        c['x_um'] = round(c['x_um'] + shift[x_old], 4)
+        assert top <= d['die_outline_um'][1] - 10.0 and fs[0]['origin_um'][1] >= 200.0, ('column off the die', c['x_um'], dy)
         c['y0_um'] = round(c['y0_um'] + dy, 4)
         c['y1_um'] = round(max(c['y1_um'], top + 4.32), 4)
-        dys[x_old] = dy
+        dys[round(c['x_um'], 3)] = dy
     d['frames'] = {f['root']: f for f in d['placements']}
-    channel = pitch - frame_w - seam
-    assert channel > 30.0, ('no transit channel at this pitch', pitch, channel)
-    return dict(pitch_um=pitch, old_pitch_um=round(old_pitch, 4), channel_um=round(channel, 4), seam_um=seam,
-                y_snap_um=y_snap, west_columns=split,
-                column_shift_um={str(x): [round(shift[x], 4), dys[x]] for x in sorted(shift)})
+    return dict(y_snap_um=y_snap, column_dy_um={str(k): v for k, v in dys.items()}, transport='street_only')
 
 
 def cluster_box(G, f):
@@ -78,34 +64,112 @@ def cluster_box(G, f):
     return (f['x'], y0, f['x'] + G.COL_W8, f['y'] + f['h'])
 
 
-def channel_x(G, f_or_x):
-    """x range of the die-top transit channel east of a column whose frame starts at x."""
-    x = f_or_x['x_um'] if isinstance(f_or_x, dict) else f_or_x
-    cm = G.CLUSTER_MODE
-    return (x + G.COL_W8 + 0.432, x + G.COL_W8 + cm['channel_um'] - 0.432)
+ROW_X, ROW_R = 64.8 + 15, 8.64 + 20      # the canonical street rows (broadcast / return) above the street bottom
+
+
+def street_bands(G, m):
+    """column index -> [(key, lo, hi)]: the die-top transit band of every street (below the cluster box) and the free
+    band above the column's top frame (key ('top', i)); lo = street bottom, hi = cluster box bottom / die top margin."""
+    d = m['canonical_layout']
+    cols = sorted(d['columns'], key=lambda c: c['x_um'])
+    out = {i: [] for i in range(len(cols))}
+    for r, f in m['frames'].items():
+        x, a, x1, b = f['street']
+        out[f['column_index']].append((r, a, cluster_box(G, f)[1]))
+    for i, c in enumerate(cols):
+        top = max(f['y'] + f['h'] for f in m['frames'].values() if f['column_index'] == i)
+        hi = G.DIE[1] - 20.432
+        if hi - top >= 120.0:
+            out[i].append((('top', i), top + 4.32, hi))
+    for i in out:
+        out[i].sort(key=lambda t: t[1])
+    return cols, out
 
 
 def patch_corridors(G, m, cor):
-    """cluster mode: rsclane{i} = the transit channel; cfstreet{r} = street band below the cluster; clusters reserved."""
-    d = m['canonical_layout']
-    for i, c in enumerate(d['columns']):
-        x0, x1 = channel_x(G, c)
-        cor[f'rsclane{i}'] = (x0, c['y0_um'] + .432, x1, c['y1_um'] - .432)
+    """street-only: no die-top station in a column (rsclane gone, cfstreet = band below the cluster, clusters reserved);
+    the free band above each column top and the die-W edge corridor are transit space."""
+    for k in [k for k in cor if k.startswith('rsclane')]:
+        del cor[k]
+    cols, bands = street_bands(G, m)
+    for i, rows in bands.items():
+        x = cols[i]['x_um']
+        for key, lo, hi in rows:
+            assert hi - lo >= 120.0, ('transit band too thin', key, round(hi - lo, 2))
+            name = f'cfstreet{key}' if not isinstance(key, tuple) else f'cfstreet_top{i}'
+            cor[name] = (x + .432, lo + .432, x + G.COL_W8 - .432, hi - .432)
+    if 'edgeW' in cor and cor['edgeW'][2] - cor['edgeW'][0] >= 40.0:
+        cor['cfstreet_edgeW'] = cor['edgeW']
     for r, f in m['frames'].items():
-        x, a, x1, b = f['street']
-        bx0, by0, bx1, by1 = cluster_box(G, f)
-        assert by0 - a >= 120.0, ('transit band below the cluster too thin', r, round(by0 - a, 2))
-        cor[f'cfstreet{r}'] = (x + .432, a + .432, x1 - .432, by0 - .432)
-        if (bx0, by0, bx1, by1, f'col_cluster:{r}') not in G.RSV_RECTS:
-            G.RSV_RECTS.append((bx0, by0, bx1, by1, f'col_cluster:{r}'))
+        bx = cluster_box(G, f)
+        if (*bx, f'col_cluster:{r}') not in G.RSV_RECTS:
+            G.RSV_RECTS.append((*bx, f'col_cluster:{r}'))
     m['cluster_boxes'] = {r: cluster_box(G, f) for r, f in m['frames'].items()}
 
 
-def lane_x(G, m, col, return_lanes):
-    """die-top vertical lane x of canonical column record col (its transit channel; return lanes on the E half)."""
-    x0, x1 = channel_x(G, col)
-    mid = (x0 + x1) / 2
-    return mid + (12.0 if return_lanes else -12.0)
+def street_roadmap(road, G, m, cols, nw, return_lanes):
+    """canonical Roadmap, street-only: rows only inside street transit bands; columns joined where their bands overlap
+    (>= 30 um after 10-um margins) by a horizontal crossing at the overlap middle; S14 entries on the hub-side columns;
+    the die-W edge corridor joins the outer W column's bands.  No vertical edge inside a column cluster."""
+    _, bands = street_bands(G, m)
+    off = 15.12 if return_lanes else G.RSC_W / 2
+    road.sx = {i: c['x_um'] + G.COL_W8 - off for i, c in enumerate(cols)}
+    rows_of = {}
+    for i, rows in bands.items():
+        for key, lo, hi in rows:
+            pts = []
+            for kind, o in (('x', ROW_X), ('r', ROW_R)):
+                y = lo + o
+                assert y < hi - 20.0, ('street row above the band', key, kind, round(y, 2), round(hi, 2))
+                node = (road.sx[i], y)
+                pts.append(node)
+                if not isinstance(key, tuple):
+                    road.rootnode[(key, kind)] = node
+            road.add(pts[0], pts[1])
+            rows_of[(i, key)] = pts
+    # crossings between neighbouring columns of one half
+    for i in range(len(cols) - 1):
+        j = i + 1
+        if i == nw - 1:
+            continue
+        for ki, lo_i, hi_i in bands[i]:
+            for kj, lo_j, hi_j in bands[j]:
+                lo, hi = max(lo_i, lo_j) + 10.0, min(hi_i, hi_j) - 10.0
+                if hi - lo < 30.0:
+                    continue
+                yc = round((lo + hi) / 2, 3)
+                A, B = (road.sx[i], yc), (road.sx[j], yc)
+                road.add(A, B)
+                for p in rows_of[(i, ki)]:
+                    if p != A:
+                        road.add(A, p)
+                for p in rows_of[(j, kj)]:
+                    if p != B:
+                        road.add(B, p)
+    # S14 entries
+    for i in (nw - 1, nw):
+        side = 'W' if i == nw - 1 else 'E'
+        sx = G.s14_x(m, side, 'xdn')
+        if side == 'W':
+            sx = max(sx, cols[i]['x_um'] + G.COL_W8 + G.stn_dims([1026], False)[0] / 2 + .864)
+        for key, lo, hi in bands[i]:
+            for p in rows_of[(i, key)]:
+                e = (sx, p[1])
+                road.add(e, p)
+                road.entry.setdefault(side, []).append(e)
+    # die-W edge corridor: a vertical road joining the outer W column's bands
+    ew = road.cor.get('cfstreet_edgeW')
+    if ew:
+        ex = round((ew[0] + ew[2]) / 2, 3)
+        nodes = []
+        for key, lo, hi in bands[0]:
+            for p in rows_of[(0, key)]:
+                e = (ex, p[1])
+                road.add(e, p)
+                nodes.append(e)
+        nodes.sort(key=lambda n: n[1])
+        for a, b in zip(nodes, nodes[1:]):
+            road.add(a, b)
 
 
 # ------------------------------------------------------------------------------------------------ collapse

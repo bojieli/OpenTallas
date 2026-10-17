@@ -3232,7 +3232,7 @@ BF_X2_PAIR = False              # --bf-x2-pair (S-BIND r6): the packed static x 
 # beside go (same class / relay cohort: the producer's DELTA 0 assumes equal go / f_prog ages, bench-measured).
 BF_STATIC_PROG = False
 BF_FRONT_ROOT_ABI = False       # opt-in S81H03 source candidate; no view/timing inheritance
-CLUSTER_MODE = None             # --cluster-mode (H-C27 c27): dict(pitch_um, channel_um, reach_um, ...) or None (s81/cluster_mode.py)
+CLUSTER_MODE = None             # --cluster-mode (H-C27 c27): dict(y_snap_um, column_dy_um, reach_um) or None (s81/cluster_mode.py)
 LEAF, NODEB, STB = 63, 66, 2
 CRET = NODEB + STB                  # column return payload: root word + {fault, busy}
 STEP8 = 400.0                       # nominal forwarded-stage spacing (<= LINK_STAGE_UM after placement)
@@ -11887,10 +11887,9 @@ def die_options(ap):
                     'frames of a height class pack identically (one column cluster master per class instead of 32 '
                     'BF-phase signatures). The remapped stage map is written to the work dir (compiler input).')
     ap.add_argument('--cluster-mode', action='store_true', help='H-C27 c27 (owner 10-16: hierarchical S81): column '
-                    'clusters (frame + cfifo, one master per height x pairs class) at a widened pitch with a die-top '
-                    'transit channel per column; die-top stations only in streets / channels / S14; the die top '
+                    'clusters (frame + cfifo, one master per height x pairs class) on one y lattice phase; STREET-ONLY die-top '
+                    'transport (street bands below the clusters, band above each column, S14, die-W edge); the die top '
                     'instantiates cluster masters (s81/cluster_mode.py). Needs --canonical-layout.')
-    ap.add_argument('--cluster-pitch', type=float, default=1210.464, help='--cluster-mode column pitch (um)')
     ap.add_argument('--cluster-reach', type=float, default=180.0, help='--cluster-mode die-top transport station spacing '
                     'cap (um; provisional, not a timing bound until the measured reach table)')
     ap.add_argument('--canonical-layout', help='Source-pinned full2417 capacity JSON; exact519 BF IDs and128 root bounds, irregular local streets/RSC transit and per-root actual flight calendar')
@@ -12694,18 +12693,7 @@ def apply_options(a):
             BF_EXPLICIT_IDS = frozenset(new_ids)
         if getattr(a, 'cluster_mode', False):
             from s81.cluster_mode import cluster_layout
-            rec_ = cluster_layout(CANONICAL_LAYOUT, a.cluster_pitch, GY, COL_W8)
-            CLUSTER_MODE = dict(rec_, reach_um=a.cluster_reach)
-            w_ = wide_hub()
-            if w_:
-                # the S14 roads keep only the real gap between the re-pitched field and the hub bodies
-                xs_ = sorted(c['x_um'] for c in CANONICAL_LAYOUT['columns'])
-                nw_ = rec_['west_columns']
-                w_['s14w'] = [max(w_['s14w'][0], xs_[nw_ - 1] + COL_W8 + rec_['channel_um'] + 4.32), w_['s14w'][1]]
-                w_['s14e'] = [w_['s14e'][0], min(w_['s14e'][1], xs_[nw_] - 4.32)]
-                assert w_['s14w'][1] - w_['s14w'][0] >= 100.0 and w_['s14e'][1] - w_['s14e'][0] >= 100.0, \
-                    ('--cluster-mode: S14 road closed by the re-pitched field', w_['s14w'], w_['s14e'])
-                CLUSTER_MODE.update(s14w=w_['s14w'], s14e=w_['s14e'])
+            CLUSTER_MODE = dict(cluster_layout(CANONICAL_LAYOUT, GY), reach_um=a.cluster_reach)
         else:
             CLUSTER_MODE = None
         slot_geometry()
