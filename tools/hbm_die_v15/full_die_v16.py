@@ -450,6 +450,8 @@ def a2p_remaster(insts, problems):
             rules[n] = {p: (w, kept, len(peers)) for p, w in
                         dict(phy_up=1, tx_pin_v=1, tx_pin_flit=612, rx_pin_v=1,
                              rx_pin_flit=612, retry_requested=1, clk_link=5).items()}
+        if i['master'] == 'ot_hbm_argmax_static_sw_vm' and DROP_SM_Q:
+            i['params'] = dict(i['params'], TP=192 if len(kept_sid)==2 else 96)
         if i['master'] == 'ot_hbm_idx_client_static_sw' and DROP_SM_Q:
             i['params'] = dict(i['params'], N_Q=len(kept_sid), TP=192 if len(kept_sid)==2 else 96)
             i['note'] = i.get('note', '') + f' | A2P: N_Q={len(kept_sid)} scorer slots = stacks {kept_sid}'
