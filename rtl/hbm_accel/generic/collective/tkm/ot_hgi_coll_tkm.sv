@@ -489,7 +489,7 @@ endmodule
 // must not sit in stage C while stage I conveys (the parent drains the chain before conv; checked in simulation).
 // The block pin flop is replicated per group of GP = 8 positions (no bit fans out to more than 8 positions x 4).
 module ot_hgi_coll_tkm_tile #(parameter integer EW = 85, parameter integer PT = 64, parameter integer TW = 6,
-                              parameter integer LW = 7) (
+                              parameter integer LW = 7, parameter integer CDUP = 0) (
     input  wire              clk,
     input  wire [TW-1:0]     tid,
     input  wire              clr, conv,
@@ -512,6 +512,11 @@ module ot_hgi_coll_tkm_tile #(parameter integer EW = 85, parameter integer PT = 
     (* keep *) reg p_vg [0:NGR-1];
     (* keep *) reg [4*EW-1:0] p_bg [0:NGR-1];
     reg q_clr, q_conv, q_v;
+    // CDUP=1 (TP192 e86 tile gate: q_conv 10,071 / q_clr 5,796 loads): the stage-C control flops are duplicated once per
+    // position group (same D, same edge; kept), so each copy drives one group's X / gt registers. No added stage.
+    (* keep *) reg q_clr_g [0:NGR-1];
+    (* keep *) reg q_conv_g [0:NGR-1];
+    (* keep *) reg q_v_g [0:NGR-1];
     (* keep *) reg q_vg [0:NGR-1];
     (* keep *) reg [4*EW-1:0] q_bg [0:NGR-1];
     reg [3:0] gt [0:NP-1];                                   // stage C -> I: block element j beats position q
@@ -519,6 +524,7 @@ module ot_hgi_coll_tkm_tile #(parameter integer EW = 85, parameter integer PT = 
         p_clr <= clr; p_conv <= conv; p_v <= ins_v; p_tid <= tid; p_tt <= tau_t; p_tl <= tau_l;
         for (integer g = 0; g < NGR; g = g + 1) begin p_vg[g] <= ins_v; p_bg[g] <= ins_b; end
         q_clr <= p_clr; q_conv <= p_conv; q_v <= p_v;
+        for (integer g = 0; g < NGR; g = g + 1) begin q_clr_g[g] <= p_clr; q_conv_g[g] <= p_conv; q_v_g[g] <= p_v; end
         for (integer g = 0; g < NGR; g = g + 1) begin q_vg[g] <= p_vg[g]; q_bg[g] <= p_bg[g]; end
     end
     reg [EW-1:0] X [0:PT-1];
@@ -573,24 +579,41 @@ module ot_hgi_coll_tkm_tile #(parameter integer EW = 85, parameter integer PT = 
     always @(posedge clk) begin : cmp
         for (integer q = 0; q < NP; q = q + 1)
             for (integer j = 0; j < 4; j = j + 1)
-                gt[q][j] <= q_clr ? p_bg[q / GP][EW*j + EW - 1] : gn[q][j];
+                gt[q][j] <= ((CDUP != 0) ? q_clr_g[q / GP] : q_clr) ? p_bg[q / GP][EW*j + EW - 1] : gn[q][j];
 `ifndef SYNTHESIS
         if (q_conv && p_v) $error("ot_hgi_coll_tkm_tile: a block entered stage C while the tile conveys");
 `endif
     end
     always @(posedge clk) begin : upd
-        if (q_clr) begin
-            for (integer p_ = 0; p_ < PT; p_ = p_ + 1) X[p_] <= {EW{1'b0}};
-            up_out <= '0; ovf_v <= 1'b0;
-        end else if (q_conv) begin
-            for (integer p_ = 0; p_ < PT - 4; p_ = p_ + 1) X[p_] <= X[p_ + 4];
-            for (integer s_ = 0; s_ < 4; s_ = s_ + 1) begin X[PT - 4 + s_] <= up_in[EW*s_ +: EW]; up_out[EW*s_ +: EW] <= X[4 + s_]; end
-            ovf_v <= 1'b0;
-        end else if (q_v) begin
-            for (integer p_ = 0; p_ < PT; p_ = p_ + 1) X[p_] <= ins[p_];
-            for (integer s_ = 0; s_ < 4; s_ = s_ + 1) begin ovf_b[EW*s_ +: EW] <= ins[PT + s_]; up_out[EW*s_ +: EW] <= ins[s_]; end
-            ovf_v <= ins[PT][EW-1] | ins[PT + 1][EW-1] | ins[PT + 2][EW-1] | ins[PT + 3][EW-1];
-        end else ovf_v <= 1'b0;
+        if (CDUP != 0) begin
+            // per position: the group's own control copy (identical sequence to the shared form below)
+            for (integer p_ = 0; p_ < PT; p_ = p_ + 1) begin
+                if (q_clr_g[p_ / GP]) X[p_] <= {EW{1'b0}};
+                else if (q_conv_g[p_ / GP]) X[p_] <= (p_ < PT - 4) ? X[(p_ < PT - 4) ? p_ + 4 : 0] : up_in[EW*((p_ >= PT - 4) ? p_ - (PT - 4) : 0) +: EW];
+                else if (q_v_g[p_ / GP]) X[p_] <= ins[p_];
+            end
+            if (q_clr_g[NGR - 1]) begin up_out <= '0; ovf_v <= 1'b0; end
+            else if (q_conv_g[NGR - 1]) begin
+                for (integer s_ = 0; s_ < 4; s_ = s_ + 1) up_out[EW*s_ +: EW] <= X[4 + s_];
+                ovf_v <= 1'b0;
+            end else if (q_v_g[NGR - 1]) begin
+                for (integer s_ = 0; s_ < 4; s_ = s_ + 1) begin ovf_b[EW*s_ +: EW] <= ins[PT + s_]; up_out[EW*s_ +: EW] <= ins[s_]; end
+                ovf_v <= ins[PT][EW-1] | ins[PT + 1][EW-1] | ins[PT + 2][EW-1] | ins[PT + 3][EW-1];
+            end else ovf_v <= 1'b0;
+        end else begin
+            if (q_clr) begin
+                for (integer p_ = 0; p_ < PT; p_ = p_ + 1) X[p_] <= {EW{1'b0}};
+                up_out <= '0; ovf_v <= 1'b0;
+            end else if (q_conv) begin
+                for (integer p_ = 0; p_ < PT - 4; p_ = p_ + 1) X[p_] <= X[p_ + 4];
+                for (integer s_ = 0; s_ < 4; s_ = s_ + 1) begin X[PT - 4 + s_] <= up_in[EW*s_ +: EW]; up_out[EW*s_ +: EW] <= X[4 + s_]; end
+                ovf_v <= 1'b0;
+            end else if (q_v) begin
+                for (integer p_ = 0; p_ < PT; p_ = p_ + 1) X[p_] <= ins[p_];
+                for (integer s_ = 0; s_ < 4; s_ = s_ + 1) begin ovf_b[EW*s_ +: EW] <= ins[PT + s_]; up_out[EW*s_ +: EW] <= ins[s_]; end
+                ovf_v <= ins[PT][EW-1] | ins[PT + 1][EW-1] | ins[PT + 2][EW-1] | ins[PT + 3][EW-1];
+            end else ovf_v <= 1'b0;
+        end
         busy <= p_v || q_v || ovf_v;
         tau_o <= (p_tid == p_tt) ? X[p_tl % PT][EW-1:1] : '0;
     end
