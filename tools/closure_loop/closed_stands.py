@@ -45,6 +45,46 @@ def _num(x):
 def _commit(j):
     return str(j.get("commit_full") or ((j.get("spec") or {}).get("source") or {}).get("commit") or "")
 
+def receipt_capture(src, cell, show, commit):
+    """worst capture_ps recorded for `cell` in a native audit receipt (JSON: native_pin_audit.py design file, an
+    audit_one record, or a {name: record} map); None when unreadable / absent.  Absolute paths are read from disk, else
+    the job's commit, then origin/main."""
+    import json as _json
+    text = None
+    if src.startswith("/"):
+        try:
+            text = Path(src).read_text()
+        except OSError:
+            text = None
+    else:
+        for ref in (commit, "origin/main"):
+            try:
+                text = show(ref, src) if ref else None
+            except Exception:  # noqa: BLE001
+                text = None
+            if text:
+                break
+    if not text:
+        return None
+    try:
+        doc = _json.loads(text)
+    except ValueError:
+        return None
+    best = []
+
+    def walk(x):
+        if isinstance(x, dict):
+            if cell in (x.get("cell"), x.get("lib_cell")) and _num(x.get("capture_ps")):
+                best.append(float(x["capture_ps"]))
+            for v in x.values():
+                walk(v)
+        elif isinstance(x, list):
+            for v in x:
+                walk(v)
+    walk(doc)
+    return max(best) if best else None
+
+
 
 def pin_wrapper_args(text):
     """Actual RTL-generation knobs, distinct from physical placement/hold knobs.
@@ -404,6 +444,39 @@ def check(spec, name, jobs, show, blob, closure_counts=None, bench_gap=None, exi
                               f"miss has another cause (pin_register with the measured fix)")
         return admit(f"{rr['cell']} TT launch {lw} ps > {TL.PIN_LAUNCH_MAX_PS} at phi - R ({rr['source']}); same RTL "
                      f"({rtl[last['name']][0]}), same outline / pins, kit re-generated with the recipe-2 output stage")
+    if kind == "native_capture":
+        # (coordinator 2026-10-16, S81 ctrnown_e a5/a6) a CLOSED view over the native CAPTURE budget (TT setup at the
+        # pin + R > 190 ps) with the same RTL / outline / pin faces.  native_launch covers launch only and pin_register
+        # needs a large o + s; this kind mirrors native_launch and reads the committed audit receipt itself.
+        if not txt("source", 3):
+            return refuse("native_capture needs \"source\": the committed native pin audit receipt the view failed in "
+                          "(tools/hier_contract/native_pin_audit.py output: a record with cell + capture_ps)")
+        if exists is not None and not exists(rr["source"].strip()):
+            return refuse(f"native_capture source file {rr['source']!r} does not exist (absolute path, or a path on the "
+                          f"job's commit / origin/main)")
+        if not txt("cell", 3):
+            return refuse("native_capture needs \"cell\": the audited cell (the view's lib cell)")
+        if not txt("fix", 20):
+            return refuse("native_capture needs \"fix\": what the new kit changes on the capture side (input pin flops "
+                          "at the pins, clock entry / insertion, input hold pad): a re-route of the same kit repeats it")
+        cap = receipt_capture(rr["source"].strip(), rr["cell"].strip(), show, new_commit)
+        if cap is None:
+            return refuse(f"native_capture: the receipt {rr['source']!r} has no record of cell {rr['cell']!r} with a "
+                          f"numeric capture_ps (read at the job's commit, then origin/main)")
+        if cap <= TL.PIN_CAPTURE_MAX_PS:
+            return refuse(f"native_capture: the receipt records capture {cap} ps for {rr['cell']}, within "
+                          f"{TL.PIN_CAPTURE_MAX_PS}: the closed view stands")
+        if rtl[last["name"]][0] == "differs":
+            return refuse("native_capture is a re-kit of the closed RTL, but " + rtl[last["name"]][1]
+                          + " (a changed block is rtl_change)")
+        g_new = (new_rec or {}).get("geom") or {}
+        g_old = (recs[last["name"]] or {}).get("geom") or {}
+        moved = sorted(k for k in ("FW", "FH", "PINS") if g_new.get(k) != g_old.get(k))
+        if g_new and g_old and moved:
+            return refuse(f"native_capture keeps the closed outline and pin faces, but {', '.join(moved)} differ from "
+                          f"closed {last['name']} (a moved outline / pin plan is slot_change)")
+        return admit(f"{rr['cell']} TT capture {cap} ps > {TL.PIN_CAPTURE_MAX_PS} at phi - R (receipt {rr['source']}); "
+                     f"same RTL ({rtl[last['name']][0]}), same outline / pins; fix: {rr['fix'].strip()[:200]}")
     # evidence_gap
     if not txt("why_route", 20):
         return refuse("evidence_gap needs \"why_route\": why a ROUTE is needed (a missing bench is bound to the closed "
