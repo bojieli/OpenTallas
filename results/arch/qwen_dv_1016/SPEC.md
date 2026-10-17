@@ -579,3 +579,8 @@ That way no FDI crosses another block. A first stack, with the D2D group between
 - Trial inputs: `dv2r8f5.json`, `relay_plan_dv2r8f5.json`, `contract_deltas_dv2r8f5.json` (with die_rules).
 - `dv2r8f5.png` viewed.
 - Explorer record `qwen_qdv_dv2r8f5`.
+
+**dv2r8f5 contract updates (Q-DIEPLAN3 GEN, launched on E4 as dv2f3; smoke cut 0.316):**
+- **PHY FDI.** The PHY variants put their FDI on the SHORT edge facing the collective. The PHYs below are R0 with FDI on N; io_ucie and io_serdes above are MX with FDI on S. The narrow collective takes the FDI windows on its S/N faces and its core pins on E. This gives straight FDI wires; there is no E-face FDI.
+- **Slice lateral faces.** Both lateral faces are symmetric, with an in and an out per kind. The E-row slices are MY.
+- **W0 | E0 seam: a 108-um seam channel** with a die-level in/out swap jog. MY keeps the y order, so out would otherwise meet out. This adds no cell and no stage. The fallback is a seam crossover relay tile (+1 cycle).

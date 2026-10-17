@@ -252,7 +252,8 @@
       "peer": "dvs_W3"
      }
     ]
-   }
+   },
+   "lateral_faces": "W and E faces symmetric: in + out per kind (st 1,136, ch 1,094, l9 514, hr 453, cmd 116); N/S pins mirror the cluster bc<lc> / rs / rs_o ranges; E-row slices MY"
   },
   "qfd_c_b16_dv": {
    "n": 48,
@@ -391,8 +392,14 @@
     1563.57,
     2320.056
    ],
-   "kind": "MODELED E/W-edge PHY abstract variant (coordinator decision 10-17): bump/beach face on the W die edge, FDI on the E face, no rotation of the licensed abstract",
-   "owner": "PHY/package (coordinator)"
+   "kind": "MODELED tall PHY abstract variant (Q-DIEPLAN3 views physical/qwen_missing_phy/nface_tall_1017 on claude/q3h3-1016): bump/beach face on the W die edge; FDI on the SHORT edge facing the collective (PHYs below the collective R0 with FDI on N, PHYs above MX with FDI on S) -> straight FDI wires",
+   "owner": "PHY/package (coordinator)",
+   "orientations": {
+    "io_serdes_1": "R0",
+    "io_serdes_2": "R0",
+    "io_ucie": "MX",
+    "io_serdes": "MX"
+   }
   },
   "qfd_collective_static_io_production_ns": {
    "n": 1,
@@ -400,7 +407,7 @@
     1563.816,
     4157.976
    ],
-   "kind": "re-kit of qfd_collective_static_io_production (our RTL, not closed) to the narrow N/S outline; PHY FDI faces W (toward the PHY column), slice face E (to dvs_W5)",
+   "kind": "re-kit of qfd_collective_static_io_production (our RTL, not closed) to 1,563.816 x 4,157.976: FDI windows on its S and N faces at each PHY x; core / AR pins on the E face toward dvs_W5",
    "owner": "Q-COLL"
   }
  },
@@ -421,5 +428,9 @@
   "no die link crosses a qfd_c_b16_dv outline (checked: 0)",
   "slices ABUT the band-1 / band-2 cluster faces: slice N/S pins mirror the cluster rs/rs_o/bc pin ranges exactly (aligned face-to-face, no die wire)",
   "die 30.1 x 23.99 mm: >= 2.9 mm under the 33-mm reticle width, >= 2.0 mm under 26"
- ]
+ ],
+ "seam": {
+  "issue": "W0 (R0) | E0 (MY) both present master E faces: out meets out (MY keeps y order)",
+  "fix": "108-um seam channel (full die height; clusters W0/E0 separate by it) with a die-level in/out swap jog of the lateral bundle (~3.3 kb each way; 108 um = ~2,250 tracks/layer on M5/M7) -- no cell, no added stage; fallback if GRT fails there: a seam crossover relay tile (+1 fixed cycle on the W<->E crossing)"
+ }
 }
