@@ -458,6 +458,54 @@ def a2p_remaster(insts, problems):
             rules[n] = {p: (w, tuple(kept_sid), 4) for p, w in IDX_SLOTS.items()}
 
 
+PORT_SPLIT = {}   # instance -> {old port: [(new port, lo, hi)]}  (layer key 'remaster', H-NETLIST 2100)
+
+
+def remaster_layers(insts, specs, problems):
+    """Layer key 'remaster' {instance: {master, source, rtl_deps?, params?, port_split?}}: a master swap whose ports
+    differ only by bus splits (old bus bits [lo:hi) become new port bits [0:hi-lo)); edges are re-cut in
+    port_split_edges().  New clock pins come in the layer's 'clocks'."""
+    for s_ in specs:
+        for n, r in s_.get('remaster', {}).items():
+            if n not in insts:
+                problems.append(f'remaster: {n} is not an instance'); continue
+            i = insts[n]
+            i.update(master=r['master'], source=r['source'],
+                     note=i.get('note', '') + f" | {s_['region']}: remastered {i['master']} -> {r['master']}")
+            if 'params' in r:
+                i['params'] = dict(r['params'])
+            if r.get('rtl_deps'):
+                i['rtl_deps'] = list(r['rtl_deps'])
+            if r.get('port_split'):
+                PORT_SPLIT[n] = {p: [tuple(x) for x in v] for p, v in r['port_split'].items()}
+
+
+def port_split_edges(edges, problems):
+    out = []
+    for e in edges:
+        parts = [e]
+        for side, oth in (('dst', 'src'), ('src', 'dst')):
+            nxt = []
+            for x in parts:
+                end = x[side]; segs = PORT_SPLIT.get(end[0], {}).get(end[1])
+                if not segs:
+                    nxt.append(x); continue
+                full = max(h for _, _, h in segs)
+                lo, hi = (end[2], end[3]) if len(end) >= 4 else (0, full)
+                o = list(x[oth]) if len(x[oth]) >= 4 else list(x[oth][:2]) + [0, hi - lo]
+                for np_, slo, shi in segs:
+                    a, b = max(lo, slo), min(hi, shi)
+                    if a >= b:
+                        continue
+                    y = dict(x, name=f"{x.get('name', 'e')}__{np_}")
+                    y[side] = [end[0], np_, a - slo, b - slo]
+                    y[oth] = o[:2] + [o[2] + a - lo, o[2] + b - lo]; y['bits'] = b - a
+                    nxt.append(y)
+            parts = nxt
+        out.extend(parts)
+    return out
+
+
 def a2p_edge_remap(edges, problems):
     rules = A2P_RULES
     out = []
@@ -720,6 +768,7 @@ def build(specs_dir, out, extra=()):
                 s_['clocks'].extend(dict(c_, inst=f"{c_['inst']}_b{k}", port=c_['port']) for k in range(flat[c_['inst']]['n']))
     # H-NETLIST 1815 (d4c revision layers): 'remove_instances' (with every spec edge / clock / strap touching them),
     # 'drop_edges' ([src_inst, src_port] or [src_inst, src_port, dst_inst]) and 'param_override' {inst: {param: value}}.
+    remaster_layers(insts, specs, problems)
     rm = {n for s_ in specs for n in s_.get('remove_instances', [])}
     if KEEP_Q or DROP_SM_Q or DROP_INST:
         rm |= a2p_drop(insts, specs, problems)
@@ -857,6 +906,8 @@ def build(specs_dir, out, extra=()):
     if KEEP_Q or DROP_SM_Q or DROP_INST:   # A2P: flattened / folded expansions of removed instances
         edges = [e for e in edges if e['src'][0] in insts and e['dst'][0] in insts]
         edges = a2p_edge_remap(edges, problems)
+    if PORT_SPLIT:
+        edges = port_split_edges(edges, problems)
     edges = apply_relay_splice(specs, edges, ports, problems)
     # ---------------- bit-level driver map
     drv = {}          # (inst, port, bit) -> (inst, port, bit) | ('PIN', name, bit)

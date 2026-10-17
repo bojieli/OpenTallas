@@ -1341,11 +1341,11 @@
    "unparsed_conn": [],
    "duplicate_port": []
   },
-  "ot_hgi_sfu_core_split": {
+  "ot_hgi_sfu_core_split2": {
    "verdict": "PASS",
    "fails": [],
    "instances": 4,
-   "rtl": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv",
+   "rtl": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split2.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -1632,7 +1632,7 @@
   "hbfd_rly_624_SN:i",
   "hbfd_rly_624_WE:i"
  ],
- "die_sha256": "66a720216d73712a35c2a8a7a8b17dd53beb646807195e9fa1fd511340f15441",
+ "die_sha256": "c4f2858f3305ff304e2ec8861e78a05c01c91baba9fbeaf80557d731312b0704",
  "straps_declared": [
   "hfd_hgi_vm_calendar_f20:tgt",
   "ot_hbm_hc_eng_static:tgt",
