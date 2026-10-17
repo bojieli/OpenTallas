@@ -1,0 +1,14 @@
+WBW_AGE kshare 6 at 200833000: got v=0 exp v=1
+WBW_AGE kshare 6 at 201667000: got v=1 exp v=0
+WBW_AGE kshare 6 at 298334000: got v=0 exp v=1
+WBW_AGE kshare 6 at 299167000: got v=1 exp v=0
+WB_BLOCK 0 sectors 640 fence_stream_edges 695 window_hbm_edges max 550 mean 519
+WB_BLOCK 1 sectors 1 fence_stream_edges 2123 window_hbm_edges max 387 mean 176
+WB_BLOCK 2 sectors 13 fence_stream_edges 2094 window_hbm_edges max 458 mean 292
+WB_BLOCK 3 sectors 2048 fence_stream_edges 3501 window_hbm_edges max 2397 mean 2193
+WB_BLOCK 4 sectors 640 fence_stream_edges 5699 window_hbm_edges max 2242 mean 885
+WB_BLOCK 5 sectors 300 fence_stream_edges 4935 window_hbm_edges max 740 mean 380
+WB_BLOCK 6 sectors 1 fence_stream_edges 3911 window_hbm_edges max 66 mean 12
+[13767094000] %Fatal: tb_hbm_svc_wb_kshare_q.sv:282: Assertion failed in tb_hbm_svc_wb_kshare_q: WBW_AGE FAIL tb_hbm_svc_wb_kshare_q WBWC=1 CMUT=1 age_errors=14 cmds=7
+%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_q.sv:282: Verilog $stop
+Aborting...

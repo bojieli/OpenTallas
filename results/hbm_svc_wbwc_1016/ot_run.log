@@ -1,0 +1,28 @@
+ot-run: ot-agidock128  admits    27 GB (avail 52, growth 6, headroom 24, waiters 0/0 GB) load 26/64 running 3 disk 229 GB 
+ot-run: ot-epyc4       admits    17 GB (avail 519, growth 454, headroom 48, waiters 0/0 GB) load 72/128 running 46 disk 479 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-201196-1792202027 after 0 s
+QUALIFIED baseline expected_exit=0
+QUALIFIED wbwc expected_exit=0
+QUALIFIED wbwc_skew expected_exit=1
+QUALIFIED wbwc_drop expected_exit=1
+QUALIFIED overlap expected_exit=1
+RC=0
+== baseline
+WBW_AGE ok WBWC=0 WLAT=0 cmds_checked=7
+PASS tb_hbm_svc_wb_kshare_q KSMUT=0 WBMUT=0 WOPEN=0 blocks=7 group_req=3840 vm_windows=4
+== wbwc
+WBW_AGE ok WBWC=1 WLAT=2 cmds_checked=7
+PASS tb_hbm_svc_wb_kshare_q KSMUT=0 WBMUT=0 WOPEN=0 blocks=7 group_req=3840 vm_windows=4
+== wbwc_skew
+WBW_AGE kshare 6 at 200833000: got v=0 exp v=1
+WBW_AGE kshare 6 at 201667000: got v=1 exp v=0
+WBW_AGE kshare 6 at 298334000: got v=0 exp v=1
+WBW_AGE kshare 6 at 299167000: got v=1 exp v=0
+== wbwc_drop
+WBW_AGE kshare 7 at 200833000: got v=0 exp v=1
+WBW_AGE kshare 7 at 296667000: got v=0 exp v=1
+[17153347000] %Fatal: tb_hbm_svc_wb_kshare_q.sv:106: Assertion failed in tb_hbm_svc_wb_kshare_q: WB_INTEGRITY errors=1 wb=0 kshare=00000000 controller=0
+== overlap
+[372500000] %Fatal: tb_hbm_svc_wb_kshare_q.sv:106: Assertion failed in tb_hbm_svc_wb_kshare_q: WB_INTEGRITY errors=0 wb=1 kshare=00000000 controller=0
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-201196-1792202027): exit 0

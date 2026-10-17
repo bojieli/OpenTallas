@@ -1,0 +1,6 @@
+WBW_AGE kshare 7 at 200833000: got v=0 exp v=1
+WBW_AGE kshare 7 at 296667000: got v=0 exp v=1
+VM window 0 timed out
+[17153347000] %Fatal: tb_hbm_svc_wb_kshare_q.sv:106: Assertion failed in tb_hbm_svc_wb_kshare_q: WB_INTEGRITY errors=1 wb=0 kshare=00000000 controller=0
+%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_q.sv:106: Verilog $stop
+Aborting...
