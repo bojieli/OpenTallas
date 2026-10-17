@@ -21,6 +21,12 @@ module qkd_rst_region #(parameter integer IGNORE=255, parameter integer HOLD=128
   input  wire       a,          // the relayed host reset level (die name a / b as a relay stage)
   input  wire [7:0] dly,
   output reg        b);
+  // KVE successor fq1 (10-17, native pin audit of ec1: capture 239.9 ps at dly[4], 8 dly pins over the 190 budget, R 48.5):
+  // the static strap dly is captured by one flop at its pin (no reset: tie cells, stable from power-up, settled long
+  // before the IGNORE window ends), so the calendar compare no longer hangs off the N-face pins.  dly is constant, so
+  // the release cycle (host + D + 2 + L) is unchanged: 0 cycles added on any path.
+  reg [7:0] dly_q;
+  always @(posedge ck) dly_q <= dly;
   reg [1:0] ps;
   always @(posedge ck or negedge por_n) if (!por_n) ps <= 2'b00; else ps <= {ps[0], 1'b1};
   wire pr_n = ps[1];
@@ -36,8 +42,8 @@ module qkd_rst_region #(parameter integer IGNORE=255, parameter integer HOLD=128
         if (b) hold <= HOLD[7:0] - 8'd1;
         b <= 1'b0; rel <= 1'b0; cnt <= 0;
       end else if (!rel) begin
-        if (cnt == ((MUT == 2) ? 8'd0 : dly) && hold == 0) begin b <= 1'b1; rel <= 1'b1; end
-        else if (cnt != dly) cnt <= cnt + 8'd1;
+        if (cnt == ((MUT == 2) ? 8'd0 : dly_q) && hold == 0) begin b <= 1'b1; rel <= 1'b1; end
+        else if (cnt != dly_q) cnt <= cnt + 8'd1;
       end
     end
   end

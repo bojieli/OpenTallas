@@ -46,14 +46,14 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "NEW leaf (ELEM-CENSUS 10-16, census class F, KV die lead go 10-16): v1.4.3 regional reset root qkd_rst_region (Q-KVSYS-DIE 5785c6cc2: POR-held local reset, relayed host level ignored for IGNORE=255 core cycles, release calendar strap dly = D - d_r, re-assert HOLD 128), ~30 flops, one ck root. Frame = the KV relay standard qkd_rlys_1 (12.96 x 12.96 um, the 1-b reset/boot tree hop frame under OT_KV_RLY_STD=1, kv_rly_std.STD[1]) that this root replaces as the last stage of each reset-region chain; a W / b E / ck S as qkd_rlys_1, straps dly + POR on N. 50 instances per KV die.",
+ "structural_change": "SUCCESSOR fq1 (KVE 10-17): flop-first strap pin. ec1 native audit FAILED capture 239.9 ps at dly[4] (8 of 8 dly bits over the 190 ps budget; the cnt == dly calendar compare fed the b/rel/cnt flops straight from the N-face pins). dly is now captured by one 8-b register at the pin (no reset, constant strap), so every input pin is a single flop D. Release cycle unchanged (dly constant): 0 cycles. Outline/pins/ports unchanged (same 12.96 x 12.96 relay frame). NEW leaf (ELEM-CENSUS 10-16, census class F, KV die lead go 10-16): v1.4.3 regional reset root qkd_rst_region (Q-KVSYS-DIE 5785c6cc2: POR-held local reset, relayed host level ignored for IGNORE=255 core cycles, release calendar strap dly = D - d_r, re-assert HOLD 128), ~30 flops, one ck root. Frame = the KV relay standard qkd_rlys_1 (12.96 x 12.96 um, the 1-b reset/boot tree hop frame under OT_KV_RLY_STD=1, kv_rly_std.STD[1]) that this root replaces as the last stage of each reset-region chain; a W / b E / ck S as qkd_rlys_1, straps dly + POR on N. 50 instances per KV die.",
  "slot_change_request": "takes the relay frame it replaces: kv_die.py 2044 (rly_<bid>_<n-1> -> master qkd_rst_region) with w,h of the tree-hop relay (OT_KV_RLY_STD=1: qkd_rlys_1 12.96 x 12.96 um). Ports a,b,ck,dly[7:0] bound by SPLIT_BINDINGS['qkd_rst_region'] (kv_die.py 358); por_n = package POR pad (by_design).",
  "job": {
-  "owner": "Claude:ELEM-CENSUS kit helper",
-  "branch": "claude/census-qkit-1016",
-  "tag": "ec1",
+  "owner": "Claude:KVE lane 10-17",
+  "branch": "claude/kve-1017",
+  "tag": "fq1",
   "cycles_added": 0,
-  "purpose": "KV die v1.4.3 regional reset root leaf (50 per die), never kitted before (census 10-16). Bench = Q-KVSYS-DIE tb_qkd_rst_region (3 chains 40/150/200, local trees 5/60/120, release exactly host + D + 2 + L, re-assert + HOLD) with its two RTL mutants.",
+  "purpose": "KVE successor fq1 of qkd_rst_region ec1 (CLOSED TT +277.01 / FF +30.02 but native FAIL: capture 239.9 ps at dly[4], 8 dly pins over 190, R 48.5): the static strap dly is registered at its pin (dly_q, no reset), 0 cycles. Same bench + 2 mutants.",
   "extra_paths": [
    "tools/qwen_kv_die/run_rst_region_bench.sh",
    "rtl/test/qwen_split/tb_qkd_rst_region.sv"
