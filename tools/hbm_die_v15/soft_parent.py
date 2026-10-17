@@ -153,6 +153,7 @@ def soft_flatten(parent, nm, insts, ports, drv, E, clocks, straps, rtl, problems
     def map_range(p, lo, hi):
         """hb_idx.p[lo:hi) -> [[child, port, lo, hi]] (inputs: every child load; outputs: the child driver)"""
         it = []
+        hi = min(hi, pports[p]['bits'])                       # gap ranges written for a wider (N_Q=4) port
         for k in range(lo, hi):
             if pports[p]['direction'] == 'input':
                 it += [((n, cp), cb, cb) for (n, cp, cb) in pin_loads.get((p, k), [])]
