@@ -1,5 +1,5 @@
 #!/bin/bash
-# Q-CTLM benches (Verilator): ABI (MUT 0 PASS; 4, 5 FAIL), calendar (MUT 0 PASS; 1, 2, 3 FAIL), and with --nsl12 the
+# Q-CTLM benches (Verilator): ABI (MUT 0 PASS; 4..8 FAIL), calendar (MUT 0 PASS; 1, 2, 3 FAIL), and with --nsl12 the
 # twelve-slice SETID enumeration (MUT 0 PASS; 3 FAIL).  usage: run_tt_ctlm_dv.sh [WORK] [--nsl12]
 set -u
 D=$(cd "$(dirname "$0")" && pwd); R=$(cd "$D/../../.." && pwd); W=${1:-/tmp/qctlm_bench}; mkdir -p "$W"; rc=0
@@ -10,7 +10,7 @@ abi() {
         $(sed "s#^#$R/#" $D/tt_ctlm_dv_sources.f) $D/tb_qfd_tt_ctlm_dv_abi.sv > $o.build.log 2>&1
     $o/Vtb | grep -E "CTLM_ABI_(PASS|FAIL)"
 }
-for m in 0 4 5; do L=$(abi $m); echo "$L"
+for m in 0 4 5 6 7 8; do L=$(abi $m); echo "$L"
     if [ $m = 0 ]; then case "$L" in *PASS*) ;; *) rc=1;; esac; else case "$L" in *FAIL*) ;; *) rc=1;; esac; fi; done
 for m in 0 1 2 3; do L=$(python3 $D/tt_ctlm_cal_bench.py --mut $m --work $W/cal | head -1); echo "$L"
     if [ $m = 0 ]; then case "$L" in *PASS*) ;; *) rc=1;; esac; else case "$L" in *FAIL*) ;; *) rc=1;; esac; fi; done

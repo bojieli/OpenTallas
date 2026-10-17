@@ -127,7 +127,8 @@ def run(work: Path, mut: int, nsl: int):
         starts.append((rc + 1, {0: 0, 37: 2}.get(stg, 1)))
     tok_c = boot_s + 4900
     ntok = 0x1F00D
-    ev.append((tok_c, 3, (1 << 24) | ntok))
+    nval = 0x3F8CAFE5                        # Q-DIEPLAN6: the merged value (ss5 tok_val [105:74]) -> dc nval [31:0]
+    ev.append((tok_c, 3, (nval << 74) | (1 << 24) | ntok))
     ncyc = tok_c + 20
     exp = model(seg, starts)
     # EMB carries the stage-0 token; SEG the base; the dc s_done / ntok two edges after the ss5 pulse
@@ -197,8 +198,8 @@ def run(work: Path, mut: int, nsl: int):
         errs.append("calendar image never ready")
     if fault is not None:
         errs.append(f"calendar fault at {fault}")
-    # dc: s_done (bit 50) and ntok ([49:32]) two edges after the ss5 tok_v edge
-    want = [cy for cy, v in dcs if (v >> 50) & 1 and ((v >> 32) & 0x3FFFF) == ntok]
+    # dc: s_done (bit 50), ntok ([49:32]) and nval ([31:0]) two edges after the ss5 tok_v edge
+    want = [cy for cy, v in dcs if (v >> 50) & 1 and ((v >> 32) & 0x3FFFF) == ntok and (v & 0xFFFFFFFF) == nval]
     n += 1
     if want and want[0] == tok_c + 2:
         ok += 1

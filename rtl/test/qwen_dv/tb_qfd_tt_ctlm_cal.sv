@@ -5,7 +5,7 @@
 //   0 PW  {addr 10, data 64}  -> tt pw and dh pw (both program copies, the same edge, as sys_face)
 //   1 DW  {addr 3, data 64}   -> dh dw
 //   2 RUN {h_start, stage 6, tok 18, pos 18} -> dh run levels (h_start only on this edge, levels held)
-//   3 SS  ss5 (one edge)
+//   3 SS  ss5 (one edge; 107 b, Q-DIEPLAN6: tok_val [105:74])
 //   4 BEGIN / 5 AUTH {digest 64}: the program record port's sink 1 (qkd_program_commit, as qfd_program_record_port wires
 //     the calendar copy: program_obs + descriptor_obs + cal_image_ready) -> "c COMMIT" when it commits, "c SINKF" on fault
 // Log (+LOG), label = the posedge just taken: "c CMD hex", "c EMB tok", "c SEG base", "c DC hex" (on change),
@@ -13,19 +13,19 @@
 module tb_qfd_tt_ctlm_cal (input wire ck);
     parameter integer MUT = 0, NSL = 0;
     reg rst_n = 1'b0;
-    reg [74:0] pw = 0; reg [186:0] dh = 0; reg [73:0] ss5 = 0;
+    reg [74:0] pw = 0; reg [186:0] dh = 0; reg [106:0] ss5 = 0;
     wire [452:0] hr; wire [115:0] cmd; wire emb_start; wire [17:0] emb_token; wire [55:0] dc; wire cf;
     wire [75:0] pobs, cobs; wire [68:0] dobs; wire csr, cir, lcv; wire [17:0] ntk, nps; wire [5:0] cst; wire [379:0] ncmd;
-    wire [8:0] ag5;
+    wire [9:0] ag5;
     qfd_tt_ctlm_dv #(.XPF_TRANSPORT_EDGES(1), .MUT(MUT)) dut (.ck(ck), .rst_n(rst_n), .pw(pw), .dh(dh), .kok(1'b0),
         .kwd(1'b1), .fab(1'b0), .program_obs(pobs), .control_stores_ready(csr), .layer_context_v(lcv), .native_tok(ntk),
         .native_pos(nps), .command_stage(cst), .cal_program_obs(cobs), .cal_descriptor_obs(dobs), .cal_image_ready(cir),
         .dc(dc), .native_cmd(ncmd), .native_ret(95'd0), .hr(hr), .cmd(cmd), .ss5(ss5), .ag5(ag5),
         .emb_start(emb_start), .emb_token(emb_token), .cf(cf));
     // ---------------- the slice row (cmd / hr chain; every other input is the idle word)
-    wire [115:0] cmdc [0:NSL]; wire [452:0] hrc [0:NSL]; wire [73:0] sst [0:NSL];
+    wire [115:0] cmdc [0:NSL]; wire [452:0] hrc [0:NSL]; wire [106:0] sst [0:NSL];
     assign cmdc[0] = cmd; assign hrc[0] = hr;
-    assign ag5 = 9'd0;
+    assign ag5 = 10'd0;
     genvar k;
     generate for (k = 0; k < NSL; k = k + 1) begin : g_s
         qfd_dv_slice2 u (.ck(ck), .rst_n(rst_n), .cmd_i(cmdc[k]), .cmd_o(cmdc[k+1]), .hr_i(hrc[k]), .hr_o(hrc[k+1]),
@@ -64,13 +64,13 @@ module tb_qfd_tt_ctlm_cal (input wire ck);
             sk_l = sk_ready; skf_l = sk_fault;
             dc_l = dc; rdy_l = cir; flt_l = dut.u_cal.fault;
             // inputs for the next posedge (cyc + 1)
-            pw[74] = 1'b0; dh[118] = 1'b0; dh[186] = 1'b0; dh[42] = 1'b0; ss5 = 74'd0; bg_v = 0; au_v = 0;
+            pw[74] = 1'b0; dh[118] = 1'b0; dh[186] = 1'b0; dh[42] = 1'b0; ss5 = 107'd0; bg_v = 0; au_v = 0;
             while (have && ec == cyc + 1) begin
                 case (ek)
                     0: begin pw = {1'b1, ev[73:0]}; dh[118:44] = {1'b1, ev[73:0]}; end
                     1: dh[186:119] = {1'b1, ev[66:0]};
                     2: dh[42:0] = ev[42:0];
-                    3: ss5 = ev[73:0];
+                    3: ss5 = ev[106:0];
                     4: bg_v = 1;
                     5: begin au_v = 1; au_d = ev[63:0]; end
                     default: $fatal(1, "bad kind %0d", ek);

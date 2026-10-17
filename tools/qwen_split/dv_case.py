@@ -53,6 +53,19 @@ W5_PEERS = [('dd_wo', 'native59', 'dd_i'), ('dr_wi', 'native59', 'dr_o'), ('hr_w
             ('cmd_wi', 'tt_ctlm', 'cmd'), ('ss_wo', 'tt_ctlm', 'ss5'), ('ag_wo', 'tt_ctlm', 'ag5')]
 CDV = 'qfd_c_b16_dv'
 WCOL = ('io_collective', 'native59', 'tt_ctlm', 'embed_prov', 'sys_face')
+# Q-DIEPLAN6 10-17 (face mode, OT_SPLIT_DV_WCOL_RTL != 0): the W-column masters re-ported to the DV slices, bound on
+# their REAL RTL port lists with top-down pins assigned from the dv positions (native_graph_bind.assign_pins: every port
+# on the face toward its die peers).  dv2f8 drew native59 / sys_face pins for their pre-dv q3h sites, so two W-column
+# hops u-turned past reach (ng_native_native_ret_0 773 um, sf_complete_slot 598 um).
+#   native59: qfd_native59_dv_service (Q-N59 dd73225e0), tt_ctlm: qfd_tt_ctlm_dv (Q-CTLM d8f159727 + Q-DIEPLAN6 status
+#   widening ss5 107 / ag5 10), sys_face: qfd_sys_face (Q-CTLM G8: crom_fault_code / res_issue_fault dropped)
+WCOL_RTL = {'native59': ('qfd_native59_dv_service', 'rtl/qwen_split/qfd_native59_dv_service.sv'),
+            'tt_ctlm': ('qfd_tt_ctlm_dv', 'rtl/qwen_dv/qfd_tt_ctlm_dv.sv'),
+            'sys_face': ('qfd_sys_face', 'rtl/qwen_split/qfd_sys_face.sv')}
+# the embedding provider is CLOSED (rr1, native audit PASS): its die master is drawn as the closed view (outline + pins)
+WCOL_VIEW = {'embed_prov': ('qfd_embedding_word_provider', 'rtl/qwen_split/qfd_embedding_word_provider.sv')}
+# one regional clock / reset per re-ported master (the pre-DV multi-root pins fold onto them)
+WCOL_REN = {'rsi': 'rst_n'}
 
 
 def _load(env):
@@ -85,6 +98,57 @@ def _place(q, ports, w, h, fixed=None):
             q.ports[p] = ('pins', b, f, 'M5' if f in 'NS' else 'M4', ps, 1)
             q.order.append(p)
             cur = ps[-1] + 4.0
+
+
+def _wcol_rebind(v, m, M, keep, out, wrtl):
+    """face mode: the re-ported W-column masters on their RTL ports.  Every die endpoint on a port the new RTL lacks is
+    folded onto the master's one regional clock / reset (ck*, rsi) or dropped (pre-DV faces whose peers left the die);
+    buses left with one endpoint go.  Then pins: assign_pins (face toward the peers, from the dv positions) for the
+    unclosed masters, the closed view (closed_view.install_master) for the embedding provider."""
+    from qwen_split.native_graph_bind import assign_pins
+    from qwen_split.direct_up4 import partition_master
+    from qwen_split import closed_view as CV
+    dropped, folded = [], []
+    for j, (bid, cl, bits, eps) in enumerate(out):
+        e2 = []
+        for i_, p_ in eps:
+            if i_ in wrtl:
+                rp = wrtl[i_][2]
+                al = m.get('port_join', {}).get(wrtl[i_][0], {})
+                if p_ not in rp and p_ not in al:
+                    q_ = 'ck' if p_.startswith('ck') and 'ck' in rp else WCOL_REN.get(p_, p_)
+                    if q_ in rp:
+                        folded.append(f'{i_}.{p_}->{q_}')
+                        p_ = q_
+                    else:
+                        dropped.append(f'{bid}:{i_}.{p_}')
+                        continue
+            if (i_, p_) not in e2:
+                e2.append((i_, p_))
+        out[j] = (bid, cl, bits, e2)
+    out[:] = [b for b in out if len(b[3]) > 1]
+    used = {(i_, p_) for b in out for i_, p_ in b[3]}
+    for inst, (mst, src, rp) in wrtl.items():
+        pj = m.get('port_join', {})
+        if mst in pj:      # aliases (port fragments) of ports the new RTL lacks / no die net uses any more go
+            pj[mst] = {a: rb for a, rb in pj[mst].items() if rb[0] in rp and (inst, a) in used}
+    byn = {i.name: i for i in keep}
+    peers = {}
+    for bid, cl, bits, eps in out:
+        if cl in ('clock_trunk', 'reset'):
+            continue
+        for i_, p_ in eps:
+            others = [byn[x] for x, _ in eps if x != i_]
+            if others:
+                peers.setdefault((i_, p_), []).extend(others)
+    rec = dict(masters={k: w[0] for k, w in wrtl.items()}, folded=folded, dropped=dropped, views={})
+    for inst, (mst, src, rp) in wrtl.items():
+        if inst in WCOL_VIEW:
+            rec['views'][inst] = CV.install_master(M, m, v.Master, byn[inst], mst, rp, partition_master)
+        else:
+            assign_pins(M, m, v.Master, byn[inst], mst, src, peers, partition_master)
+    m.setdefault('q3h', {})['dv_wcol_rebind'] = rec
+    return rec
 
 
 def apply_dv(v, m):
@@ -400,6 +464,24 @@ def apply_dv(v, m):
                         (bid + '_hr', 'tree_spine', 453, [lp(wst, 'E', 'hr', 'o'), lp(est, 'W', 'hr', 'i')]),
                         (bid + '_cmd', 'tree_spine', 116, [lp(wst, 'E', 'cmd', 'o'), lp(est, 'W', 'cmd', 'i')])]
         # dv_ar_W / dv_kv_* / dv_ib_W / dv_emb: the W-column re-partition is carried by the r_<bus> re-homes
+    wrtl = {}
+    if FX and os.environ.get('OT_SPLIT_DV_WCOL_RTL', '1') != '0':
+        from qwen_split.source_pin_plan import rtl_ports
+        root = Path(__file__).resolve().parents[2]
+        for inst, (mst, src) in list(WCOL_RTL.items()) + list(WCOL_VIEW.items()):
+            if inst not in names:
+                continue
+            rp = rtl_ports(root / src, mst)
+            wrtl[inst] = (mst, src, rp)
+            old = by[inst].master
+            by[inst].master = mst
+            q = v.Master(mst, by[inst].w, by[inst].h, 7, f'{mst} (re-ported W-column master; pins assigned below)')
+            for p_, (n_, _d) in rp.items():
+                q.ports[p_] = ('pins', n_, None, None, [], 1)
+                q.order.append(p_)
+            M[mst] = q
+            if old != mst and not any(i.master == old for i in keep):
+                M.pop(old, None)
     if FX:
         # W5 <-> W column on real ports (whole-port; a pair only when the peer master has the port)
         def has(inst, port):
@@ -428,12 +510,21 @@ def apply_dv(v, m):
                                  ('native59', 'emb_scale_re', 'embed_prov', 'embed_scale_re'),
                                  ('native59', 'emb_scale_addr', 'embed_prov', 'embed_scale_addr'),
                                  ('embed_prov', 'embed_code_q', 'native59', 'emb_code_q'),
-                                 ('embed_prov', 'embed_scale_q', 'native59', 'emb_scale_q')):
+                                 ('embed_prov', 'embed_scale_q', 'native59', 'emb_scale_q'),
+                                 # Q-CTLM: tt_ctlm took seq_su's sys_face faces (token / position levels, the program
+                                 # record port's calendar sink, the dc status word)
+                                 ('sys_face', 'seq_dh', 'tt_ctlm', 'dh'),
+                                 ('tt_ctlm', 'cal_program_obs', 'sys_face', 'seq_program_obs'),
+                                 ('tt_ctlm', 'cal_descriptor_obs', 'sys_face', 'seq_descriptor_obs'),
+                                 ('tt_ctlm', 'cal_image_ready', 'sys_face', 'seq_cfg_image_ready'),
+                                 ('tt_ctlm', 'dc', 'sys_face', 'seq_dc')):
             if has(si, sp_) and has(di, dp_):
                 out.append((f'dvw_{si}_{sp_}', 'spine_local', M[by[si].master].ports[sp_][1], [(si, sp_), (di, dp_)]))
             else:
                 miss.append(f'{si}.{sp_}->{di}.{dp_}')
         m.setdefault('q3h', {}).setdefault('dv_face_missing', miss)
+        if wrtl:
+            _wcol_rebind(v, m, M, keep, out, wrtl)
         # chain-end idle inputs (rule c): W5 st/sc up-travelling inputs from the W column side, E5 up-face inputs,
         # the l9_wi of an unpaired slice -- only where no bus lands
         conn = {e for b in out for e in b[3]}
@@ -461,6 +552,13 @@ def apply_dv(v, m):
     w0, e0 = DI['dvs_W0'], DI['dvs_E0']
     if e0['x'] - (w0['x'] + w0['w']) > 1.0:
         m['dv_seam'] = (round(w0['x'] + w0['w'], 3), round(e0['x'], 3))
+        # Q-DIEPLAN6 10-17 (OT_SPLIT_DV_SEAM_LANE=1): the outbound / return chain words of the W0 | E0 seam (ar, dd, rt,
+        # dr, ag: 2,143 b) leave the stream bundle's crossing and take their own registered seam lane: one relay
+        # station per word in the seam channel at the word's own face rows (dv2f8: all 4,985 seam bits in one 260-um
+        # window, cut 0.608).  +1 edge on each E-row chain crossing (relay_stages.json carries it to the calendar).
+        if FX and os.environ.get('OT_SPLIT_DV_SEAM_LANE') == '1':
+            m['dv_seam_lane'] = sorted(b[0] for b in out if b[0].startswith(tuple(f'dv_x0_{k}_' for k in
+                                                                                   ('ar', 'dd', 'rt', 'dr', 'ag'))))
     # ---- die / relay geometry
     W = max(i.x + i.w for i in keep) + 21.6
     H = max(d['y'] + d['h'] for d in D['insts']) + 21.6

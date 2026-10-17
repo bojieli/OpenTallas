@@ -3121,6 +3121,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     feedback = []        # it24: (bid, max hop before, after, accepted)
     plans = {}
     import os as _os
+    seam_lane = set(m.get('dv_seam_lane') or ()) if m.get('dv_seam') else set()
     _only = tuple(q for q in _os.environ.get('OT_RELAY_ONLY', '').split(',') if q)   # debug: relay only these buses
     _dbg = set(q for q in _os.environ.get('OT_RELAY_DBG', '').split(',') if q)
     for idx, (bid, cl, bits, eps) in buses:
@@ -3161,6 +3162,18 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 d = d + _direct_worst(P0, P1)
             else:
                 d = d + e0_[0] + e1_[0] + e0_[1] + e1_[1]
+        if bid in seam_lane:
+            # Q-DIEPLAN6 10-17 (dv_case OT_SPLIT_DV_SEAM_LANE): a W0 | E0 seam chain word takes its own registered lane
+            # station in the seam channel, on its own face rows (one relay, both hops ~ half the seam)
+            xs_, ys_ = (m['dv_seam'][0] + m['dv_seam'][1]) / 2, (P0[1] + P1[1]) / 2
+            w_, h_ = relay_frame(bits, cl)
+            sp_ = place(xs_, ys_, w_ + v.SHAVE, h_ + v.SHAVE, None, 400.0)
+            if sp_ is None:
+                raise ValueError(f'dv seam lane: no free station for {bid} near ({xs_:.0f}, {ys_:.0f})')
+            add_rect((sp_[0], sp_[1], sp_[0] + w_ + v.SHAVE, sp_[1] + h_ + v.SHAVE))
+            plans[idx] = dict(bid=bid, cl=cl, bits=bits, eps=eps, P0=P0, P1=P1, frames=[(sp_[0], sp_[1], w_, h_)], d=d,
+                              path=[P0, (xs_, P0[1]), (xs_, P1[1]), P1])
+            continue
         terminal = getattr(v, 'TERMINAL_TIGHT', {})
         direct_limit = min(terminal.get(tuple(eps[0]), float('inf')), terminal.get(tuple(eps[-1]), float('inf')))
         if _dbg and bid in _dbg:

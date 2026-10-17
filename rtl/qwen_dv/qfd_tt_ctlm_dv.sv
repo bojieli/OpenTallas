@@ -15,7 +15,11 @@
 //   hr[452:0]  -> W5 hr_wi   {ib 380, xpf 72, v}: one register (+1 edge on ib and xpf vs b2; the compiler's ib / XPF
 //                             calendars count it, XPF_TRANSPORT_EDGES included)
 //   cmd[115:0] -> W5 cmd_wi  the static command calendar qfd_dv_cmd_cal (SETID at boot, every slice / XC command)
-//   ss5[73:0] <- W5 ss_wo, ag5[8:0] <- W5 ag_wo (pin registers): the DV status that replaces seq_su's xs / dc sources
+//   ss5[106:0] <- W5 ss_wo, ag5[9:0] <- W5 ag_wo (pin registers): the DV status that replaces seq_su's xs / dc sources.
+//              Q-DIEPLAN6 10-17: widened to the Q-SLICE 2f8b7015b contract (ss 107 = {ar_land, tok_val 32, <74 b>},
+//              ag 10 = {stn_busy, <9 b>}) and closes the Q-CTLM gaps: G9b dc nval = ss tok_val latched with tok_v;
+//              G10 ME idle (rom_ret idle) = !ag stn_busy; coll_busy clears on an AR word landing with last
+//              (ar_land & ar_last), so a single-beat AR clears it.
 //   emb_start / emb_token[17:0] -> qfd_embedding_word_provider core_start / core_token (calendar LOCAL EMB entry)
 //   dh[186:0] <- qfd_sys_face seq_dh (the ds levels seq_su used to take): the token start / stage / token / position
 //              ({kwd, h_start [42], stage [41:36], token [35:18], pos [17:0]}) and the calendar's program copy
@@ -30,7 +34,9 @@
 // ready / idle / progress, so the head's ME availability checks have no DV producer (rule c).  The check moved into the
 // slices: a station word outside its STN window faults the station (ag5 stn bit), which this block returns as the ME
 // fault.  Gap G10 (contract change requested in lanes/Q-CTLM.md): ag += stn_busy restores a head-side idle check.
-// MUT (bench only): 1..3 -> qfd_dv_cmd_cal MUT; 4 = x_oprog / x_orows swapped; 5 = dc rom_fault from ag any (not vm).
+// MUT (bench only): 1..3 -> qfd_dv_cmd_cal MUT; 4 = x_oprog / x_orows swapped; 5 = dc rom_fault from ag any (not vm);
+//   6 = nval from the old (pre-widening) ss bits [73:42] instead of tok_val; 7 = ME idle ignores ag stn_busy;
+//   8 = coll_busy clears on the ar_last rise only (the pre-widening rule).
 // =====================================================================================================================
 module qfd_tt_ctlm_dv #(
     parameter integer XPF_TRANSPORT_EDGES = -1,
@@ -61,8 +67,8 @@ module qfd_tt_ctlm_dv #(
     // ---------------- W5 slice (qfd_dv_slice2_w dn face)
     output reg  [452:0]  hr,
     output wire [115:0]  cmd,
-    input  wire [73:0]   ss5,
-    input  wire [8:0]    ag5,
+    input  wire [106:0]  ss5,
+    input  wire [9:0]    ag5,
     // ---------------- embedding provider
     output reg           emb_start,
     output reg  [17:0]   emb_token,
@@ -70,20 +76,23 @@ module qfd_tt_ctlm_dv #(
 );
     // ------------------------------------------------------------------ pin registers (flop-first inputs)
     reg  [186:0] dh_q;
-    reg  [73:0]  ss_q;
-    reg  [8:0]   ag_q;
+    reg  [106:0] ss_q;
+    reg  [9:0]   ag_q;
     reg          fab_q;                   // kok / kwd / pw land in the head's own pin stations (AUD 4 / IS 1)
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin dh_q <= 187'd0; ss_q <= 74'd0; ag_q <= 9'd0; fab_q <= 1'b0; end
+        if (!rst_n) begin dh_q <= 187'd0; ss_q <= 107'd0; ag_q <= 10'd0; fab_q <= 1'b0; end
         else begin dh_q <= dh; ss_q <= ss5; ag_q <= ag5; fab_q <= fab; end
     wire        s_start = dh_q[42];
     wire [5:0]  s_stage = dh_q[41:36];
     wire [17:0] s_tok = dh_q[35:18], s_pos = dh_q[17:0];
-    // ss5 = {sid 4, any, su, vm, stn, sc, stm, port, su_idle, sc_busy, su_prog 16, su_rows 16, ar_rank 3, ar_last, tok_v,
-    //        tok_idx 24};  ag5 = {any, su, vm, stn, sc, stm, port, su_busy, root_busy}
+    // ss5 = {ar_land, tok_val 32, sid 4, any, su, vm, stn, sc, stm, port, su_idle, sc_busy, su_prog 16, su_rows 16,
+    //        ar_rank 3, ar_last, tok_v, tok_idx 24};  ag5 = {stn_busy, any, su, vm, stn, sc, stm, port, su_busy, root_busy}
     wire [15:0] ss_prog = ss_q[60:45], ss_rows = ss_q[44:29];
     wire        ss_arl = ss_q[25], ss_tokv = ss_q[24];
     wire [23:0] ss_tok = ss_q[23:0];
+    wire [31:0] ss_tval = (MUT == 6) ? ss_q[73:42] : ss_q[105:74];
+    wire        ss_arland = ss_q[106];
+    wire        ag_stn_busy = (MUT == 7) ? 1'b0 : ag_q[9];
     wire        ag_any = ag_q[8], ag_vm = ag_q[6], ag_stn = ag_q[5], ag_su_busy = ag_q[1];
 
     // ------------------------------------------------------------------ static command calendar
@@ -149,7 +158,7 @@ module qfd_tt_ctlm_dv #(
         .rom_cmd(local_rom_cmd), .native_cmd(native_cmd), .ret(ret));
     // ME status: see the header (ME STATUS); ret layout {fault, progress 16, am_any, am_val 32, am_idx 18, wrom_addr 24,
     // wrom_re, idle, ready}
-    assign rom_ret = {ag_stn, 16'd0, 1'b0, 32'd0, 18'd0, 24'd0, 1'b0, 1'b1, 1'b1};
+    assign rom_ret = {ag_stn, 16'd0, 1'b0, 32'd0, 18'd0, 24'd0, 1'b0, !ag_stn_busy, 1'b1};
     wire unused_me = &{1'b0, actual_me_observe[14:0]};
     qfd_tt_ctlm_head_static u_head (
         .me_observe(actual_me_observe), .cp_active(1'b0), .cp(cp),
@@ -214,15 +223,17 @@ module qfd_tt_ctlm_dv #(
     wire core_fault = head_fault | relocation_sticky | cp_fault | start_fault | xpf_loader_fault | xpf_schedule_fault;
     reg  tok_seen, xc_busy, arl_d;
     reg  [17:0] ntok;
+    reg  [31:0] nval;
+    wire        coll_done = (MUT == 8) ? (ss_arl && !arl_d) : (ss_arland && ss_arl);
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin tok_seen <= 1'b0; ntok <= 18'd0; xc_busy <= 1'b0; arl_d <= 1'b0; dc <= 56'd0; end
+        if (!rst_n) begin tok_seen <= 1'b0; ntok <= 18'd0; nval <= 32'd0; xc_busy <= 1'b0; arl_d <= 1'b0; dc <= 56'd0; end
         else begin
             arl_d <= ss_arl;
             if (s_start && s_stage == 6'd0) tok_seen <= 1'b0;           // token start
-            else if (ss_tokv) begin tok_seen <= 1'b1; ntok <= ss_tok[17:0]; end
-            if (c_xc) xc_busy <= 1'b1; else if (ss_arl && !arl_d) xc_busy <= 1'b0;
-            // nval: the merged argmax VALUE is not in ss (G9b, lanes/Q-CTLM.md: ss + tok_val 32); the field reads 0
-            dc <= {(MUT == 5) ? ag_any : ag_vm, !ag_su_busy, xc_busy, core_fault, c_fault | ag_any | fab_q, tok_seen, ntok, 32'd0};
+            else if (ss_tokv) begin tok_seen <= 1'b1; ntok <= ss_tok[17:0]; nval <= ss_tval; end
+            if (c_xc) xc_busy <= 1'b1; else if (coll_done) xc_busy <= 1'b0;
+            // nval: the merged argmax value of the status token (G9b closed by ss tok_val)
+            dc <= {(MUT == 5) ? ag_any : ag_vm, !ag_su_busy, xc_busy, core_fault, c_fault | ag_any | fab_q, tok_seen, ntok, nval};
         end
     assign cf = core_fault | c_fault;
     wire unused = &{1'b0, c_run, c_done, ss_q[73:61], ss_q[28:26], ss_tok[23:18], dh_q[43], unused_me};
