@@ -25,6 +25,20 @@ proc ot_ag_public_nets {cell} {
     if {[get_property $p direction] ne "output"} continue
     foreach net [get_nets -quiet -of_objects $p] {
       lappend result [string map {\\ {}} [get_full_name $net]]
+      # ASAP7 flops expose only QN (DFFHQNx*, DFFASRHQNx1): synthesis puts the register's public name on the output of
+      # the inverter that QN drives, not on QN itself.  Follow exactly that one inverter stage (HBMA-SVC 10-17: the
+      # first actual ORFS run of this profile, hdie_svc_stack_fault, refused u_ca.u_status.rd_gray[0] -> rd_gray_w1[0]
+      # because both public names sat behind the QN inverter).  No other cell type is traversed.
+      if {[lindex [split [get_full_name $p] /] end] ne "QN"} continue
+      foreach load [get_pins -quiet -of_objects $net] {
+        if {[get_property $load direction] ne "input"} continue
+        set lc [get_cells -quiet -of_objects $load]
+        if {![regexp {^INVx} [get_property $lc ref_name]]} continue
+        foreach q [get_pins -quiet -of_objects $lc] {
+          if {[get_property $q direction] ne "output"} continue
+          foreach n2 [get_nets -quiet -of_objects $q] {lappend result [string map {\\ {}} [get_full_name $n2]]}
+        }
+      }
     }
   }
   return $result
