@@ -70,8 +70,13 @@ class Rekit(unittest.TestCase):
         self.assertIsNotNone(NL.output_stage_ok(s))                          # the closed kit lacks the stage
         _, chk, _ = self.regen(s, 2)
         self.assertIsNone(NL.output_stage_ok(chk))
-        self.assertEqual(chk["hold_pad"]["cell"], RT.RECIPE_HOLD_PAD)
-        self.assertTrue(chk["pin_reg_split"] and chk["keep_pin_regs"])
+        if RT.RECIPE_LATEST >= 4:      # FLOW-HOLD recipe 4: flop-first pins, no pads
+            self.assertEqual(chk["hold_budget"], "die")
+            self.assertFalse(chk.get("inhold") or chk.get("outhold"))
+            self.assertTrue(chk["keep_pin_regs"])
+        else:
+            self.assertEqual(chk["hold_pad"]["cell"], RT.RECIPE_HOLD_PAD)
+            self.assertTrue(chk["pin_reg_split"] and chk["keep_pin_regs"])
 
     def test_job_tag_skips_used_names(self):
         (Path(self.td.name) / "nhb_pbst_ref-nl1-aaaaaaaaa.json").write_text("{}")

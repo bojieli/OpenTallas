@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/ot_hgi_sm_xload_xq_pegress.lef",
-    "sha256": "d0e6325feb33737b9462b83999a1990e9935b7de7633a2a59fdf777b70d5a6bc"
+    "sha256": "07174e37b21b5b939cab900b553f7914ca56440f3e319579f92f40a6adadc45d"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch/claude/closure-loop/hgi_sm_xq_pegress-x3-d67bfd40c/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/hgi_sm_xq_pegress-x5-813efc5c6/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch/claude/closure-loop/hgi_sm_xq_pegress-x3-d67bfd40c/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch/claude/closure-loop/hgi_sm_xq_pegress-x3-d67bfd40c/record/views/ot_hgi_sm_xload_xq_pegress/provenance/raw/ot_hgi_sm_xload_xq_pegress.lef",
-    "/srv/opentallas-scratch/claude/closure-loop/hgi_sm_xq_pegress-x3-d67bfd40c/record/views/ot_hgi_sm_xload_xq_pegress/provenance/ot_hgi_sm_xload_xq_pegress.candidate.lef"
+    "/srv/opentallas-scratch2/claude/closure-loop/hgi_sm_xq_pegress-x5-813efc5c6/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/hgi_sm_xq_pegress-x5-813efc5c6/record/views/ot_hgi_sm_xload_xq_pegress/provenance/raw/ot_hgi_sm_xload_xq_pegress.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/hgi_sm_xq_pegress-x5-813efc5c6/record/views/ot_hgi_sm_xload_xq_pegress/provenance/ot_hgi_sm_xload_xq_pegress.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 47 OBS rects moved into 47 pins: bq_addr[0], bq_addr[1], bq_addr[2], bq_addr[3], bq_addr[4], bq_addr[5], bq_addr[6], bq_b[0], bq_b[1], bq_b[2], bq_b[3], bq_b[4]; pockets: 1754 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 53 OBS rects moved into 53 pins: bq_addr[0], bq_addr[1], bq_addr[2], bq_addr[3], bq_addr[4], bq_addr[5], bq_addr[6], bq_b[0], bq_b[1], bq_b[2], bq_b[3], bq_b[4]; pockets: 1342 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch/claude/closure-loop/hgi_sm_xq_pegress-x3-d67bfd40c/record/views/ot_hgi_sm_xload_xq_pegress/provenance/ot_hgi_sm_xload_xq_pegress.candidate.lef",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/hgi_sm_xq_pegress-x5-813efc5c6/record/views/ot_hgi_sm_xload_xq_pegress/provenance/ot_hgi_sm_xload_xq_pegress.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "ot_hgi_sm_xload_xq_pegress 369.36 x 369.36: PG M5 VDD 68 stripes (98% spread, 100% cov) / VSS 68 stripes (98% spread, 100% cov); strap M6; face pins 5180 blocked-above 0 blocked-same 0; clock clk insertion 452 ps; pockets M5 0 (closed)",
+    "summary": "ot_hgi_sm_xload_xq_pegress 369.36 x 369.36: PG M5 VDD 68 stripes (98% spread, 100% cov) / VSS 68 stripes (98% spread, 100% cov); strap M6; face pins 5180 blocked-above 0 blocked-same 0; clock clk insertion 465 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "ot_hgi_sm_xload_xq_pegress",
       "W": 369.36,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 5180,
         "blocked_above": 0,
-        "covered_below": 5,
+        "covered_below": 13,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "clk": {
-          "max_ps": 452.22,
-          "min_ps": 345.06
+          "max_ps": 465.34,
+          "min_ps": 332.68
         }
       },
       "pockets": {
@@ -87,7 +87,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 1754
+          "added": 1342
         },
         "count": 0,
         "area_um2": 0,
@@ -97,6 +97,6 @@
   },
   "output": {
     "path": "ot_hgi_sm_xload_xq_pegress.lef",
-    "sha256": "f3aa1072202cb7a43fb49ac3ce003f2600e09a5a09bfaf2bfcc2db286e98284d"
+    "sha256": "318731a094c1e60200138e4b6d30ea414111960f79580bb4628a3783ba54805d"
   }
 }
