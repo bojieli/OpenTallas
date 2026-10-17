@@ -11,7 +11,7 @@ MASTER='qfd_static_command_fork42'
 SOURCE='rtl/qwen_split/qfd_static_command_fork42.sv'
 FIELDS=(('train_start',1),('train_count',4),('capture_stride',32),('payload_write',1),('slot_count',4))
 WH=(17.28,15.12)
-SHAPES={'qfd_static_command_fork42':WH,'qfd_static_selector_fork26':(15.12,12.96)}
+SHAPES={'qfd_static_command_fork42':WH,'qfd_static_selector_fork26':(15.12,12.96),'qfd_static_selector_fork4':(12.96,10.8)}
 
 def joins(fielddefs=FIELDS):
  out={};offset=0
