@@ -1,0 +1,30 @@
+{
+ "cell": "ot_qwen_tile_node",
+ "view": "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node",
+ "lib_cell": "ot_qwen_tile_node",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 245.9,
+ "spread_ps": 32.4,
+ "outputs": 1027,
+ "inputs": 1539,
+ "launch_ps": 206.2,
+ "launch_pin": "t_out[255]",
+ "capture_ps": 168.8,
+ "capture_pin": "t_d[432]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "closed_job": "ot_qwen_tile_node-nb1-7dd3b1974",
+ "record_commit": "f6e8b355e",
+ "main_merge": "dcd4b446d",
+ "route": "TT +99.02 / FF +18.06 ps DRC 0; SS sensitivity -204.68",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one",
+ "layout_inspected": "congestion 0 gcells, density even, pin-flop W column; floorplan/density/congestion PNGs viewed",
+ "supersedes_fail": "results/arch/qwen_node_native_1628/closed_node_native.json (r5 launch 233.3)"
+}
