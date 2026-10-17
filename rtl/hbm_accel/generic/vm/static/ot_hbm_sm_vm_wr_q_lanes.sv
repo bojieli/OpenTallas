@@ -61,24 +61,34 @@ module ot_hbm_sm_vm_wr_q_lanes #(
     genvar k;
     generate for (k = 0; k < 8; k = k + 1) begin : g_sm
         wire lclk = clk_l[k];
+        // regional SYNCHRONOUS reset (die standard item 2, coordinator 10-17): rst_n -> wrapper rst_q -> rst_q here is the
+        // 2-flop sync at the core; rl is this lane's ONE registered relay on its own root, and every lane flop clears
+        // synchronously from it (no async clear crosses into a lane root).  Lanes leave reset one edge after the core.
+        reg rl;
+        always @(posedge lclk) rl <= rst_q;
         // pin flops (lane root)
         reg rv_r, smf_r, sms_r; reg [11:0] rrow_r; reg [255:0] rdata_r;
         always @(posedge lclk) begin rrow_r <= rrow[12*k +: 12]; rdata_r <= rdata[256*k +: 256]; end
-        always @(posedge lclk or negedge rst_q)
-            if (!rst_q) begin rv_r <= 1'b0; smf_r <= 1'b0; sms_r <= 1'b0; end
+        always @(posedge lclk)
+            if (!rl) begin rv_r <= 1'b0; smf_r <= 1'b0; sms_r <= 1'b0; end
             else begin rv_r <= rv[k]; smf_r <= sm_fault[k]; sms_r <= sm_sched_fault[k]; end
         assign rv_q[k] = rv_r; assign smf_q[k] = smf_r; assign sms_q[k] = sms_r;
         // lane copy of the descriptor (identical update rule to the shared copy of ot_hbm_sm_vm_wr_q_faces4)
         reg d_v, d_fmt, d_mir; reg [3:0] d_p; reg [9:0] d_base, d_stride;
-        always @(posedge lclk or negedge rst_q)
-            if (!rst_q) begin d_v <= 1'b0; d_fmt <= 1'b0; d_mir <= 1'b0; d_p <= 4'd0; d_base <= 10'd0; d_stride <= 10'd0; end
+        always @(posedge lclk)
+            if (!rl) begin d_v <= 1'b0; d_fmt <= 1'b0; d_mir <= 1'b0; d_p <= 4'd0; d_base <= 10'd0; d_stride <= 10'd0; end
             else if (cv_q) begin
                 d_v <= 1'b1; d_base <= cmd_q[9:0]; d_stride <= cmd_q[19:10]; d_p <= cmd_q[23:20];
                 d_mir <= cmd_q[24]; d_fmt <= cmd_q[25];
             end
-        // serial server (unchanged logic)
-        reg [267:0] fq [0:DEPTH-1];                 // {rrow12, rdata256}
-        reg [AW-1:0] wp, rp; reg [AW:0] cnt;
+        // serial server.  Same cnt / ps / acc / flt / emission rule as ot_hbm_sm_vm_wr_q_faces4; the row FIFO is a
+        // SHIFT-REGISTER FIFO with a FIXED HEAD (entry 0) whose 256-bit word rotates right by one 32-bit slot on every
+        // emission that is not the row's last: the slot word is always fe[31:0] (no read pointer, no 4:1 x 268 read mux,
+        // no 8:1 slot mux before the BF16 round).  Rotation (not shift) keeps the old col = hd[32*ps[2:0]] wrap for
+        // P > 8 (descriptor fault case).  On pop the entries move down one; an accepted row lands at index cnt - pop.
+        // f4hc / r5-gate: rp -> fq[rp] -> slot mux -> rb -> o_w was the only intra-root class near 0 (-3.4 ps pre-route).
+        reg [268*DEPTH-1:0] fe;                     // entry i = fe[268*i +: 268] = {rrow12, rdata256}
+        reg [AW:0] cnt;
         reg [3:0] ps; reg [10:0] acc;
         reg flt;
         // wq launch flops: o_wr = 8 kept copies of the slot word, one launch flop per replicated wq data pin (recipe 4 has no
@@ -86,7 +96,7 @@ module ot_hbm_sm_vm_wr_q_lanes #(
         reg o_v; reg [15:0] o_sec; reg [7:0] o_m;
         (* keep *) reg [255:0] o_wr;
         reg l_v; reg [15:0] l_sec; reg [255:0] l_wr; reg [7:0] l_m;   // MUT 2 late copy
-        wire [267:0] hd = fq[rp];
+        wire [267:0] hd = fe[267:0];
         wire [11:0] hr = hd[267:256];
         wire [10:0] row = (ps == 4'd0 || MUT == 1) ? ({1'b0, d_base} + {2'b0, hr[11:3]}) : acc;
         wire push = rv_r;
@@ -94,25 +104,32 @@ module ot_hbm_sm_vm_wr_q_lanes #(
         wire emit = (cnt != 0);
         wire last = (ps + 4'd1 >= d_p);
         wire pop = emit && last;
-        wire [31:0] col = hd[32*ps[2:0] +: 32];
+        wire [31:0] col = hd[31:0];
+        wire acc_row = push && !(full && !pop);     // accepted row (write suppressed on overrun)
+        wire [AW:0] widx = cnt - {{AW{1'b0}}, pop};
         assign sm_busy[k] = emit || o_v;
         assign lane_fault[k] = flt;
-        always @(posedge lclk or negedge rst_q)
-            if (!rst_q) begin wp <= '0; rp <= '0; cnt <= '0; ps <= 4'd0; acc <= 11'd0; flt <= 1'b0; end
+        always @(posedge lclk)
+            if (!rl) begin cnt <= '0; ps <= 4'd0; acc <= 11'd0; flt <= 1'b0; end
             else begin
                 if (push && !d_v) flt <= 1'b1;
                 if (push && full && !pop) flt <= 1'b1;
-                else if (push) wp <= (wp == AW'(DEPTH-1)) ? '0 : wp + 1'b1;
-                if (pop) rp <= (rp == AW'(DEPTH-1)) ? '0 : rp + 1'b1;
-                cnt <= cnt + ((push && !(full && !pop)) ? 1'b1 : 1'b0) - (pop ? 1'b1 : 1'b0);
+                cnt <= cnt + (acc_row ? 1'b1 : 1'b0) - (pop ? 1'b1 : 1'b0);
                 if (emit) begin ps <= last ? 4'd0 : ps + 4'd1; acc <= row + {1'b0, d_stride}; end
                 if (emit && row[10]) flt <= 1'b1;
             end
-        always @(posedge lclk or negedge rst_q)
-            if (!rst_q) begin o_v <= 1'b0; l_v <= 1'b0; end
-            else begin o_v <= emit && !row[10]; l_v <= o_v; end
         always @(posedge lclk)
-            if (push && !(full && !pop)) fq[wp] <= {rrow_r, rdata_r};
+            if (!rl) begin o_v <= 1'b0; l_v <= 1'b0; end
+            else begin o_v <= emit && !row[10]; l_v <= o_v; end
+        for (genvar i = 0; i < DEPTH; i = i + 1) begin : g_e
+            always @(posedge lclk) begin
+                if (acc_row && widx == (AW+1)'(i)) fe[268*i +: 268] <= {rrow_r, rdata_r};
+                else if (pop) begin
+                    if (i < DEPTH - 1) fe[268*i +: 268] <= fe[268*((i < DEPTH - 1) ? i + 1 : i) +: 268];
+                end else if (i == 0 && emit)
+                    fe[255:0] <= {fe[31:0], fe[255:32]};
+            end
+        end
         always @(posedge lclk) begin
             o_sec <= {d_mir, d_mir ? 2'b00 : ((MUT == 3) ? 2'b00 : quad_q), row[9:0], 3'(k)};
             o_wr <= {8{rb(col, d_fmt)}};
