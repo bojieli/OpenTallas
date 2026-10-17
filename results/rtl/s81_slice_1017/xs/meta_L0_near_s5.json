@@ -1,0 +1,88 @@
+{
+ "stage_dir": "results/rtl/dsrom_recovery_20261004/immutable_fullcatalog/stage0",
+ "off": 37,
+ "off_load": 37,
+ "slice": 5,
+ "order": "near",
+ "seed": 1,
+ "cal_rows": 1289,
+ "end_iter": 1670,
+ "t_start": 60,
+ "phases": [
+  {
+   "ph": 0,
+   "tag": 0,
+   "np": 0,
+   "fam": 0,
+   "K": 5120,
+   "nb": 192,
+   "rows": 320,
+   "accept": 290,
+   "s0": 340,
+   "s1": 532
+  },
+  {
+   "ph": 1,
+   "tag": 1,
+   "np": 1,
+   "fam": 0,
+   "K": 5120,
+   "nb": 192,
+   "rows": 128,
+   "accept": 294,
+   "s0": 540,
+   "s1": 924
+  },
+  {
+   "ph": 10,
+   "tag": 2,
+   "np": 0,
+   "fam": 1,
+   "K": 5120,
+   "nb": 256,
+   "rows": 96,
+   "accept": 298,
+   "s0": 932,
+   "s1": 1188
+  },
+  {
+   "ph": 11,
+   "tag": 3,
+   "np": 0,
+   "fam": 0,
+   "K": 5120,
+   "nb": 192,
+   "rows": 576,
+   "accept": 302,
+   "s0": 1196,
+   "s1": 1388
+  }
+ ],
+ "gathers": {
+  "q0": {
+   "first": 424,
+   "last": 464,
+   "slack": 0,
+   "beats_read": 80
+  },
+  "b0": {
+   "first": 431,
+   "last": 504,
+   "slack": 540,
+   "beats_read": 80
+  },
+  "q1": {
+   "first": 467,
+   "last": 544,
+   "slack": 120,
+   "beats_read": 80
+  },
+  "q1b": {
+   "first": 847,
+   "last": 887,
+   "slack": 433,
+   "beats_read": 80
+  }
+ },
+ "expected_xs_minus_ref": 32
+}
