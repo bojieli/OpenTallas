@@ -470,6 +470,17 @@ module ot_hgi_coll_tkm_m #(parameter integer TP=96)(
   .busy(busy),.done(done),.fault(fault),.stat_cycles(stat_cycles));
 endmodule
 
+// d4f die-level TKM sub-cluster master (tkm_SW): ot_hgi_coll_tkm_m at TP 192 under its own name.
+module ot_hgi_coll_tkm_m_tp192(
+ input wire clk,rst_n,start,arg_mode,input wire [31:0] tile_clk,input wire buffer_clk,
+ input wire [11:0] cfg_n,input wire [12:0] cfg_k,cfg_nout,input wire [7:0] cfg_g,cfg_gbase,input wire [15:0] cfg_pf,
+ input wire [39:0] cfg_obase,cfg_rbase,input wire cfg_has_r,
+ input wire [3:0] del_slot,del_valid,input wire [2179:0] del_flit,
+ output wire w_v,output wire [39:0] w_addr,output wire [15:0] w_mask,output wire [511:0] w_data,
+ output wire busy,done,fault,output wire [31:0] stat_cycles);
+ ot_hgi_coll_tkm_m #(.TP(192)) u(.*);
+endmodule
+
 module ot_hgi_coll_ring_v5(
  input wire clk,rst_n,input wire [7:0] clk_state,clk_add,input wire [1:0] qid,
  input wire [279:0] cw_i,ccw_i,output wire [279:0] cw_o,ccw_o,
@@ -500,7 +511,6 @@ module ot_hfd_coll_q_hard_v5_body #(
  input wire [16:0] clk_ring,
  input wire [32:0] clk_reduce,
  input wire clk_arg,
- input wire [33:0] clk_tkm,
  input wire [15:0] clk_vmwrite,         // v6 writer: rgx_data0..3, rgx_ctrl, tkw, meta, body, bank0..7
  input wire [5*NPT-1:0] clk_link,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
@@ -516,6 +526,12 @@ module ot_hfd_coll_q_hard_v5_body #(
  input wire [NPT-1:0] rx_pin_v,input wire [NPT*612-1:0] rx_pin_flit,output wire [NPT-1:0] retry_requested,
  input wire [279:0] pr_cw_i,pr_ccw_i,output wire [279:0] pr_cw_o,pr_ccw_o,
  output wire [135:0] vm_rq,input wire [2055:0] vm_rr,output wire [2247:0] vm_kq,
+ // TKM interface (d4f H-DIE 10-17: TKM hoisted to its own die sub-cluster tkm_SW; q3_hard_v5 keeps it inside)
+ output wire tkx_start,tkx_arg_mode,output wire [11:0] tkx_cfg_n,output wire [12:0] tkx_cfg_k,tkx_cfg_nout,
+ output wire [7:0] tkx_cfg_g,tkx_cfg_gbase,output wire [15:0] tkx_cfg_pf,output wire [39:0] tkx_cfg_obase,tkx_cfg_rbase,
+ output wire tkx_cfg_has_r,output wire [3:0] tkx_del_slot,tkx_del_valid,output wire [2179:0] tkx_del_flit,
+ input wire tkx_w_v,input wire [39:0] tkx_w_addr,input wire [15:0] tkx_w_mask,input wire [511:0] tkx_w_data,
+ input wire tkx_busy,tkx_done,tkx_fault,
  output wire fault,output wire [15:0] fault_cause,output wire done,output wire [31:0] stat_cycles
 );
  localparam integer PWT=545,SELW=4;
@@ -646,13 +662,14 @@ if(TP==96)begin:t96
    .in_meta({dest_d[(NPT+11)*PWT+512+:33],dest_d[(NPT+10)*PWT+512+:33],dest_d[(NPT+9)*PWT+512+:33],dest_d[(NPT+8)*PWT+512+:33]}),
    .flush_slot(a_arg_flush),.publish_slot(a_arg_publish),.out_v(arg_out_v),.out_flit(arg_out_data),.fault(arg_fault));
   end
-  ot_hgi_coll_tkm_m #(.TP(TP)) u_tkm(.clk(clk_tkm[33]),.tile_clk(clk_tkm[31:0]),.buffer_clk(clk_tkm[32]),.rst_n(rst_n),
-   .start(p_tkm_start),.arg_mode(a_arg_mode),.cfg_n(p_tkm_cfg_n),.cfg_k(p_tkm_cfg_k),.cfg_nout(p_tkm_cfg_nout),
-   .cfg_g(p_tkm_cfg_g),.cfg_gbase(p_tkm_cfg_gbase),.cfg_pf(p_tkm_cfg_pf),.cfg_obase(p_tkm_cfg_obase),
-   .cfg_rbase(p_tkm_cfg_rbase),.cfg_has_r(p_tkm_cfg_has_r),
-   .del_slot(p_tkm_del_slot),.del_valid(dest_v[NPT+8+:4]),.del_flit(dest_d[(NPT+8)*PWT+:4*PWT]),
-   .w_v(tk_w_v),.w_addr(tk_w_addr),.w_mask(tk_w_mask),.w_data(tk_w_data),
-   .busy(tkm_busy),.done(tkm_done),.fault(tkm_fault),.stat_cycles(tk_cycles));
+  // TKM interface: wires only (the engine is outside the body: inside q3_hard_v5, or die instance tkm_SW for q3_hard_v7x)
+  assign tkx_start=p_tkm_start;assign tkx_arg_mode=a_arg_mode;assign tkx_cfg_n=p_tkm_cfg_n;assign tkx_cfg_k=p_tkm_cfg_k;
+  assign tkx_cfg_nout=p_tkm_cfg_nout;assign tkx_cfg_g=p_tkm_cfg_g;assign tkx_cfg_gbase=p_tkm_cfg_gbase;
+  assign tkx_cfg_pf=p_tkm_cfg_pf;assign tkx_cfg_obase=p_tkm_cfg_obase;assign tkx_cfg_rbase=p_tkm_cfg_rbase;
+  assign tkx_cfg_has_r=p_tkm_cfg_has_r;assign tkx_del_slot=p_tkm_del_slot;assign tkx_del_valid=dest_v[NPT+8+:4];
+  assign tkx_del_flit=dest_d[(NPT+8)*PWT+:4*PWT];
+  assign tk_w_v=tkx_w_v;assign tk_w_addr=tkx_w_addr;assign tk_w_mask=tkx_w_mask;assign tk_w_data=tkx_w_data;
+  assign tkm_busy=tkx_busy;assign tkm_done=tkx_done;assign tkm_fault=tkx_fault;assign tk_cycles=32'd0;
   if(NPT==3)begin:n_u_fj 
   ot_hgi_coll_fj_q3 u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
    .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),
@@ -680,6 +697,9 @@ if(TP==96)begin:t96
   // No arg/tkm engine in q2: their tkm sinks are unrouted switch outputs; illegal reservations fault in u_fj.
   assign tk_w_v=1'b0;assign tk_w_addr=40'd0;assign tk_w_mask=16'd0;assign tk_w_data=512'd0;
   assign tkm_done=1'b0;assign tkm_busy=1'b0;assign arg_fault=1'b0;assign tkm_fault=1'b0;assign tk_cycles=32'd0;
+  assign tkx_start=1'b0;assign tkx_arg_mode=1'b0;assign tkx_cfg_n=0;assign tkx_cfg_k=0;assign tkx_cfg_nout=0;
+  assign tkx_cfg_g=0;assign tkx_cfg_gbase=0;assign tkx_cfg_pf=0;assign tkx_cfg_obase=0;assign tkx_cfg_rbase=0;
+  assign tkx_cfg_has_r=1'b0;assign tkx_del_slot=0;assign tkx_del_valid=0;assign tkx_del_flit=0;
   if(NPT==2)begin:n_u_control 
   ot_hgi_coll_ctl_v5_q2 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
@@ -849,6 +869,46 @@ module ot_hfd_coll_q3_hard_v5 #(parameter integer NLINK=3,parameter integer TP=9
  output wire [135:0] vm_rq,input wire [2055:0] vm_rr,output wire [2247:0] vm_kq,
  output wire fault,output wire [15:0] fault_cause,output wire done,output wire [31:0] stat_cycles
 );
+ wire tkx_start,tkx_arg_mode,tkx_cfg_has_r,tkx_w_v,tkx_busy,tkx_done,tkx_fault;wire [11:0] tkx_cfg_n;
+ wire [12:0] tkx_cfg_k,tkx_cfg_nout;wire [7:0] tkx_cfg_g,tkx_cfg_gbase;wire [15:0] tkx_cfg_pf,tkx_w_mask;
+ wire [39:0] tkx_cfg_obase,tkx_cfg_rbase,tkx_w_addr;wire [3:0] tkx_del_slot,tkx_del_valid;wire [2179:0] tkx_del_flit;
+ wire [511:0] tkx_w_data;
+ ot_hfd_coll_q_hard_v5_body #(.NPT(NLINK),.TP(TP),.SOLO(1)) u_body(.*);
+ ot_hgi_coll_tkm_m #(.TP(TP)) u_tkm(.clk(clk_tkm[33]),.tile_clk(clk_tkm[31:0]),.buffer_clk(clk_tkm[32]),.rst_n(rst_n),
+  .start(tkx_start),.arg_mode(tkx_arg_mode),.cfg_n(tkx_cfg_n),.cfg_k(tkx_cfg_k),.cfg_nout(tkx_cfg_nout),
+  .cfg_g(tkx_cfg_g),.cfg_gbase(tkx_cfg_gbase),.cfg_pf(tkx_cfg_pf),.cfg_obase(tkx_cfg_obase),.cfg_rbase(tkx_cfg_rbase),
+  .cfg_has_r(tkx_cfg_has_r),.del_slot(tkx_del_slot),.del_valid(tkx_del_valid),.del_flit(tkx_del_flit),
+  .w_v(tkx_w_v),.w_addr(tkx_w_addr),.w_mask(tkx_w_mask),.w_data(tkx_w_data),
+  .busy(tkx_busy),.done(tkx_done),.fault(tkx_fault),.stat_cycles());
+endmodule
+
+// d4f (H-DIE 10-17): the q3 parent with TKM hoisted to a die-level sub-cluster (tkm_SW, ot_hgi_coll_tkm_m_tp192): same
+// body, the TKM interface on pins (zero-latency wires in the lockstep bench; die hop granted <= 450 um, no relay).
+module ot_hfd_coll_q3_hard_v7x #(parameter integer NLINK=3,parameter integer TP=96)(
+ input wire rst_n,input wire [1:0] qid,
+ input wire clk_program,clk_control,input wire [15:0] clk_vmasm,clk_upipe,input wire clk_issue,input wire [NLINK+8+18-1:0] clk_qslots,
+ input wire [16:0] clk_ring,input wire [32:0] clk_reduce,input wire clk_arg,
+ input wire [15:0] clk_vmwrite,input wire [5*NLINK-1:0] clk_link,
+ input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
+ input wire desc_v,input wire [11:0] desc_base,input wire [12:0] desc_limit,input wire [15:0] desc_loops,
+ input wire launch_v,
+ output wire program_configured,program_init_busy,program_fault,hgi_busy,hgi_done,hgi_fault,
+ output wire [1:0] inj_rd,output wire [31:0] inj_idx,output wire [159:0] hgi_inj_addr,input wire [1023:0] inj_d,
+ output wire [3:0] del_valid,output wire [2179:0] del_flit,output wire [159:0] hgi_del_obase,
+ input wire rc_v,input wire [2:0] rc_tag,input wire [255:0] rc_d,
+ output wire rr_v,output wire [2:0] rr_tag,output wire [255:0] rr_d,
+ input wire [NLINK-1:0] phy_up,output wire [NLINK-1:0] tx_pin_v,output wire [NLINK*612-1:0] tx_pin_flit,
+ input wire [NLINK-1:0] rx_pin_v,input wire [NLINK*612-1:0] rx_pin_flit,output wire [NLINK-1:0] retry_requested,
+ input wire [279:0] pr_cw_i,pr_ccw_i,output wire [279:0] pr_cw_o,pr_ccw_o,
+ output wire [135:0] vm_rq,input wire [2055:0] vm_rr,output wire [2247:0] vm_kq,
+ // TKM interface (d4f H-DIE 10-17: TKM hoisted to its own die sub-cluster tkm_SW; q3_hard_v5 keeps it inside)
+ output wire tkx_start,tkx_arg_mode,output wire [11:0] tkx_cfg_n,output wire [12:0] tkx_cfg_k,tkx_cfg_nout,
+ output wire [7:0] tkx_cfg_g,tkx_cfg_gbase,output wire [15:0] tkx_cfg_pf,output wire [39:0] tkx_cfg_obase,tkx_cfg_rbase,
+ output wire tkx_cfg_has_r,output wire [3:0] tkx_del_slot,tkx_del_valid,output wire [2179:0] tkx_del_flit,
+ input wire tkx_w_v,input wire [39:0] tkx_w_addr,input wire [15:0] tkx_w_mask,input wire [511:0] tkx_w_data,
+ input wire tkx_busy,tkx_done,tkx_fault,
+ output wire fault,output wire [15:0] fault_cause,output wire done,output wire [31:0] stat_cycles
+);
  ot_hfd_coll_q_hard_v5_body #(.NPT(NLINK),.TP(TP),.SOLO(1)) u_body(.*);
 endmodule
 
@@ -871,6 +931,9 @@ module ot_hfd_coll_q2_hard_v5 #(parameter integer NLINK=2,parameter integer TP=9
  output wire [135:0] vm_rq,input wire [2055:0] vm_rr,output wire [2247:0] vm_kq,
  output wire fault,output wire [15:0] fault_cause,output wire done,output wire [31:0] stat_cycles
 );
- ot_hfd_coll_q_hard_v5_body #(.NPT(NLINK),.TP(TP),.SOLO(0)) u_body(.*,.clk_arg(1'b0),.clk_tkm(34'd0));
+ ot_hfd_coll_q_hard_v5_body #(.NPT(NLINK),.TP(TP),.SOLO(0)) u_body(.*,.clk_arg(1'b0),
+  .tkx_start(),.tkx_arg_mode(),.tkx_cfg_n(),.tkx_cfg_k(),.tkx_cfg_nout(),.tkx_cfg_g(),.tkx_cfg_gbase(),.tkx_cfg_pf(),
+  .tkx_cfg_obase(),.tkx_cfg_rbase(),.tkx_cfg_has_r(),.tkx_del_slot(),.tkx_del_valid(),.tkx_del_flit(),
+  .tkx_w_v(1'b0),.tkx_w_addr(40'd0),.tkx_w_mask(16'd0),.tkx_w_data(512'd0),.tkx_busy(1'b0),.tkx_done(1'b0),.tkx_fault(1'b0));
 endmodule
 `default_nettype wire
