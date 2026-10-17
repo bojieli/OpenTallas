@@ -37,6 +37,10 @@ def main():
     pl = man['placement']
     x0, y0, x1, y1 = a.rect
     inside = {n for n, v in pl.items() if x0 <= v['x'] + v['w'] / 2 < x1 and y0 <= v['y'] + v['h'] / 2 < y1}
+    # an instance is inside by its centre; the cluster outline grows to hold every inside body (pilot SW 10-16: a relay
+    # straddling the rect edge put 1,024 pins outside the die -> GRT-0028)
+    x0 = min([x0] + [pl[n]['x'] for n in inside]); y0 = min([y0] + [pl[n]['y'] for n in inside])
+    x1 = max([x1] + [pl[n]['x'] + pl[n]['w'] for n in inside]); y1 = max([y1] + [pl[n]['y'] + pl[n]['h'] for n in inside])
     I = C['instances']
     # port widths from the contract
     width = {n: {p: d['bits'] for p, d in I[n]['ports'].items()} for n in inside}

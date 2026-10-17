@@ -3,28 +3,28 @@
  "die": "hbm_v15",
  "version": 9,
  "owner": "H-DIE",
- "updated": "2026-10-16T19:22:57-07:00",
+ "updated": "2026-10-16T19:26:09-07:00",
  "clock_period_ps": 833.333,
  "floorplan": {
   "file": "results/arch/hbm_die_v15/d4e_a2p/compact.P.json",
   "candidate": "d4e_a2p",
-  "adopted": "H-DIE gate-2 10-16 19:45: A2P half die (owner 16 SM + 2 stacks), UNQUALIFIED until GEN+GRT",
+  "adopted": "H-DIE gate-2 10-16 20:05: A2P half die F108 (owner 16 SM + 2 stacks; H-SM column 1939.68x6678.72 ab729be8a), UNQUALIFIED until GEN+GRT",
   "die_um": [
-   18896.48,
-   26248.48
+   19502.24,
+   24094.24
   ],
   "metrics": {
-   "sum_bits_mm": 664095.612992,
-   "traffic_mm_qwen": 1395047225.2297406,
-   "traffic_mm_ds": 1641964529.0341463,
-   "relay_flops": 1257976.0,
-   "bits_over_500": 105970.0,
+   "sum_bits_mm": 684667.3887199999,
+   "traffic_mm_qwen": 1809180455.2305095,
+   "traffic_mm_ds": 1755436386.272162,
+   "relay_flops": 1294462.0,
+   "bits_over_500": 106243.0,
    "fixed_return_violation_bits": 8896,
    "fixed_return_violations": 16,
    "overlaps": 0,
    "outside": 0,
-   "J": 11.454024721716088,
-   "n_long_returns": 210
+   "J": 11.516796578987373,
+   "n_long_returns": 211
   },
   "previous": {
    "file": "results/arch/hbm_die_v15/core4_sfu2_b3624/compact.P.json",
@@ -146,8 +146,8 @@
    "kind": "die",
    "parent": null,
    "outline": {
-    "w": 18896.48,
-    "h": 26248.48
+    "w": 19502.24,
+    "h": 24094.24
    },
    "origin": {
     "x": 0.0,
@@ -176,7 +176,7 @@
    },
    "origin": {
     "x": 13765.76,
-    "y": 9774.24,
+    "y": 8697.12,
     "orient": "R0"
    },
    "io_budget": {
@@ -739,7 +739,7 @@
    },
    "origin": {
     "x": 14143.872,
-    "y": 15752.8,
+    "y": 14675.68,
     "orient": "R180"
    },
    "io_budget": {
@@ -1308,7 +1308,7 @@
    },
    "origin": {
     "x": 14217.2,
-    "y": 10517.28,
+    "y": 9440.16,
     "orient": "MY"
    },
    "io_budget": {
@@ -2013,7 +2013,7 @@
    },
    "origin": {
     "x": 14595.312,
-    "y": 15370.48,
+    "y": 14293.36,
     "orient": "MY"
    },
    "io_budget": {
@@ -2717,7 +2717,7 @@
     "h": 399.6
    },
    "origin": {
-    "x": 6557.8,
+    "x": 5457.8,
     "y": 1218.8,
     "orient": "R0"
    },
@@ -4662,7 +4662,7 @@
     "h": 399.6
    },
    "origin": {
-    "x": 7694.6,
+    "x": 6594.6,
     "y": 1218.8,
     "orient": "R0"
    },
@@ -7073,7 +7073,7 @@
     "h": 399.6
    },
    "origin": {
-    "x": 8831.4,
+    "x": 7731.4,
     "y": 1218.8,
     "orient": "R0"
    },
@@ -9018,7 +9018,7 @@
     "h": 399.6
    },
    "origin": {
-    "x": 9968.2,
+    "x": 8868.2,
     "y": 1218.8,
     "orient": "R0"
    },
@@ -10963,7 +10963,7 @@
     "h": 399.6
    },
    "origin": {
-    "x": 11105.0,
+    "x": 10005.0,
     "y": 1218.8,
     "orient": "R0"
    },
@@ -12442,7 +12442,7 @@
     "h": 399.6
    },
    "origin": {
-    "x": 12241.8,
+    "x": 11141.8,
     "y": 1218.8,
     "orient": "R0"
    },
@@ -14387,7 +14387,7 @@
     "h": 399.6
    },
    "origin": {
-    "x": 13378.6,
+    "x": 12278.6,
     "y": 1218.8,
     "orient": "R0"
    },
@@ -16332,7 +16332,7 @@
     "h": 399.6
    },
    "origin": {
-    "x": 14515.4,
+    "x": 13415.4,
     "y": 1218.8,
     "orient": "R0"
    },
@@ -18277,8 +18277,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 6557.8,
-    "y": 24630.08,
+    "x": 5457.8,
+    "y": 22475.84,
     "orient": "MX"
    },
    "io_budget": {
@@ -20226,8 +20226,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 7694.6,
-    "y": 24630.08,
+    "x": 6594.6,
+    "y": 22475.84,
     "orient": "MX"
    },
    "io_budget": {
@@ -22641,8 +22641,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 8831.4,
-    "y": 24630.08,
+    "x": 7731.4,
+    "y": 22475.84,
     "orient": "MX"
    },
    "io_budget": {
@@ -24590,8 +24590,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 9968.2,
-    "y": 24630.08,
+    "x": 8868.2,
+    "y": 22475.84,
     "orient": "MX"
    },
    "io_budget": {
@@ -26539,8 +26539,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 11105.0,
-    "y": 24630.08,
+    "x": 10005.0,
+    "y": 22475.84,
     "orient": "MX"
    },
    "io_budget": {
@@ -28022,8 +28022,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 12241.8,
-    "y": 24630.08,
+    "x": 11141.8,
+    "y": 22475.84,
     "orient": "MX"
    },
    "io_budget": {
@@ -29971,8 +29971,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 13378.6,
-    "y": 24630.08,
+    "x": 12278.6,
+    "y": 22475.84,
     "orient": "MX"
    },
    "io_budget": {
@@ -31920,8 +31920,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 14515.4,
-    "y": 24630.08,
+    "x": 13415.4,
+    "y": 22475.84,
     "orient": "MX"
    },
    "io_budget": {
@@ -33872,8 +33872,8 @@
     "h": 19.44
    },
    "origin": {
-    "x": 15754.08,
-    "y": 10976.782,
+    "x": 16359.84,
+    "y": 9899.662,
     "orient": "R0"
    },
    "version": 2,
@@ -34872,7 +34872,7 @@
     "h": 19.44
    },
    "plan_block": null,
-   "home_rule": "A2P: E column next to both hubs below hc_eng"
+   "home_rule": "A2P: E column beside both hubs, below hc_eng"
   },
   {
    "name": "coll_SW_writer0",
@@ -35332,8 +35332,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 18419.36,
-    "y": 14756.498,
+    "x": 19025.12,
+    "y": 13679.378,
     "orient": "R0"
    },
    "clock_entry": {
@@ -35388,8 +35388,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 17934.64,
-    "y": 14756.498,
+    "x": 18540.4,
+    "y": 13679.378,
     "orient": "R0"
    },
    "clock_entry": {
@@ -35444,8 +35444,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 17449.92,
-    "y": 14756.498,
+    "x": 18055.68,
+    "y": 13679.378,
     "orient": "R0"
    },
    "clock_entry": {
@@ -35490,8 +35490,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 16965.2,
-    "y": 14756.498,
+    "x": 17570.96,
+    "y": 13679.378,
     "orient": "R0"
    },
    "clock_entry": {
@@ -35536,8 +35536,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 18419.36,
-    "y": 10976.782,
+    "x": 19025.12,
+    "y": 9899.662,
     "orient": "R0"
    },
    "clock_entry": {
@@ -35592,8 +35592,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 17934.64,
-    "y": 10976.782,
+    "x": 18540.4,
+    "y": 9899.662,
     "orient": "R0"
    },
    "clock_entry": {
@@ -35648,8 +35648,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 17449.92,
-    "y": 10976.782,
+    "x": 18055.68,
+    "y": 9899.662,
     "orient": "R0"
    },
    "clock_entry": {
@@ -35704,8 +35704,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 16965.2,
-    "y": 10976.782,
+    "x": 17570.96,
+    "y": 9899.662,
     "orient": "R0"
    },
    "clock_entry": {
@@ -35750,8 +35750,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 16480.48,
-    "y": 10976.782,
+    "x": 17086.24,
+    "y": 9899.662,
     "orient": "R0"
    },
    "clock_entry": {
@@ -35797,7 +35797,7 @@
    },
    "origin": {
     "x": 42.4,
-    "y": 15196.0,
+    "y": 14118.88,
     "orient": "R0"
    },
    "clock_entry": {
@@ -35872,7 +35872,7 @@
    },
    "origin": {
     "x": 3234.048,
-    "y": 15196.0,
+    "y": 14118.88,
     "orient": "R0"
    },
    "clock_entry": {
@@ -35947,7 +35947,7 @@
    },
    "origin": {
     "x": 7397.696,
-    "y": 15196.0,
+    "y": 14118.88,
     "orient": "R0"
    },
    "clock_entry": {
@@ -36022,7 +36022,7 @@
    },
    "origin": {
     "x": 10589.344,
-    "y": 15196.0,
+    "y": 14118.88,
     "orient": "R0"
    },
    "clock_entry": {
@@ -36097,7 +36097,7 @@
    },
    "origin": {
     "x": 42.4,
-    "y": 10604.32,
+    "y": 9527.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -36172,7 +36172,7 @@
    },
    "origin": {
     "x": 3139.52,
-    "y": 10604.32,
+    "y": 9527.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -36247,7 +36247,7 @@
    },
    "origin": {
     "x": 7208.64,
-    "y": 10604.32,
+    "y": 9527.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -36322,7 +36322,7 @@
    },
    "origin": {
     "x": 10305.76,
-    "y": 10604.32,
+    "y": 9527.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -36396,8 +36396,8 @@
     "h": 3064.516
    },
    "origin": {
-    "x": 15754.08,
-    "y": 11591.982,
+    "x": 16359.84,
+    "y": 10514.862,
     "orient": "R0"
    },
    "clock_entry": {
@@ -36473,8 +36473,8 @@
     "h": 2250.216
    },
    "origin": {
-    "x": 18604.024,
-    "y": 15371.698,
+    "x": 19209.784,
+    "y": 14294.578,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -36521,8 +36521,8 @@
     "h": 2250.216
    },
    "origin": {
-    "x": 18253.968,
-    "y": 15371.698,
+    "x": 18859.728,
+    "y": 14294.578,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -36569,8 +36569,8 @@
     "h": 2250.216
    },
    "origin": {
-    "x": 17903.912,
-    "y": 15371.698,
+    "x": 18509.672,
+    "y": 14294.578,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -36617,8 +36617,8 @@
     "h": 2250.216
    },
    "origin": {
-    "x": 17553.856,
-    "y": 15371.698,
+    "x": 18159.616,
+    "y": 14294.578,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -36665,8 +36665,8 @@
     "h": 2250.216
    },
    "origin": {
-    "x": 18604.024,
-    "y": 8626.566,
+    "x": 19209.784,
+    "y": 7549.446,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -36713,8 +36713,8 @@
     "h": 2250.216
    },
    "origin": {
-    "x": 18253.968,
-    "y": 8626.566,
+    "x": 18859.728,
+    "y": 7549.446,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -36761,8 +36761,8 @@
     "h": 2250.216
    },
    "origin": {
-    "x": 17903.912,
-    "y": 8626.566,
+    "x": 18509.672,
+    "y": 7549.446,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -36809,8 +36809,8 @@
     "h": 2250.216
    },
    "origin": {
-    "x": 17553.856,
-    "y": 8626.566,
+    "x": 18159.616,
+    "y": 7549.446,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -36857,8 +36857,8 @@
     "h": 2250.216
    },
    "origin": {
-    "x": 17203.8,
-    "y": 8626.566,
+    "x": 17809.56,
+    "y": 7549.446,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -36906,7 +36906,7 @@
    },
    "origin": {
     "x": 991.928,
-    "y": 16062.62,
+    "y": 14985.5,
     "orient": "R0"
    },
    "clock_entry": {
@@ -36963,7 +36963,7 @@
    },
    "origin": {
     "x": 4183.576,
-    "y": 16062.62,
+    "y": 14985.5,
     "orient": "R0"
    },
    "clock_entry": {
@@ -37020,7 +37020,7 @@
    },
    "origin": {
     "x": 8347.224,
-    "y": 16062.62,
+    "y": 14985.5,
     "orient": "R0"
    },
    "clock_entry": {
@@ -37077,7 +37077,7 @@
    },
    "origin": {
     "x": 11538.872,
-    "y": 16062.62,
+    "y": 14985.5,
     "orient": "R0"
    },
    "clock_entry": {
@@ -37134,7 +37134,7 @@
    },
    "origin": {
     "x": 642.4,
-    "y": 14896.0,
+    "y": 13818.88,
     "orient": "R0"
    },
    "clock_entry": {
@@ -39603,7 +39603,7 @@
    },
    "origin": {
     "x": 3834.048,
-    "y": 14896.0,
+    "y": 13818.88,
     "orient": "R0"
    },
    "clock_entry": {
@@ -42052,7 +42052,7 @@
    },
    "origin": {
     "x": 7997.696,
-    "y": 14896.0,
+    "y": 13818.88,
     "orient": "R0"
    },
    "clock_entry": {
@@ -44501,7 +44501,7 @@
    },
    "origin": {
     "x": 11189.344,
-    "y": 14896.0,
+    "y": 13818.88,
     "orient": "R0"
    },
    "clock_entry": {
@@ -46950,7 +46950,7 @@
    },
    "origin": {
     "x": 642.4,
-    "y": 10604.32,
+    "y": 9527.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -49419,7 +49419,7 @@
    },
    "origin": {
     "x": 3739.52,
-    "y": 10604.32,
+    "y": 9527.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -51868,7 +51868,7 @@
    },
    "origin": {
     "x": 7808.64,
-    "y": 10604.32,
+    "y": 9527.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -54317,7 +54317,7 @@
    },
    "origin": {
     "x": 10905.76,
-    "y": 10604.32,
+    "y": 9527.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -56761,12 +56761,12 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1807.2,
-    "h": 7755.84
+    "w": 1939.68,
+    "h": 6678.72
    },
    "origin": {
     "x": 42.4,
-    "y": 16674.24,
+    "y": 15597.12,
     "orient": "R0"
    },
    "clock_entry": {
@@ -56786,7 +56786,7 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1807.2 x 7755.84: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
     {
      "face": "E",
@@ -56871,7 +56871,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7642.64,
+     "offset": 6565.52,
      "span_um": 113.2,
      "bits": 1132,
      "peer": "pc_NW0",
@@ -56919,12 +56919,12 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1807.2,
-    "h": 7755.84
+    "w": 1939.68,
+    "h": 6678.72
    },
    "origin": {
-    "x": 1949.6,
-    "y": 16674.24,
+    "x": 2082.08,
+    "y": 15597.12,
     "orient": "R0"
    },
    "clock_entry": {
@@ -56944,7 +56944,7 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1807.2 x 7755.84: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
     {
      "face": "E",
@@ -57009,7 +57009,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7642.64,
+     "offset": 6565.52,
      "span_um": 113.2,
      "bits": 1132,
      "peer": "pc_NW1",
@@ -57077,12 +57077,12 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1807.2,
-    "h": 7755.84
+    "w": 1939.68,
+    "h": 6678.72
    },
    "origin": {
-    "x": 3856.8,
-    "y": 16674.24,
+    "x": 4121.76,
+    "y": 15597.12,
     "orient": "R0"
    },
    "clock_entry": {
@@ -57102,7 +57102,7 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1807.2 x 7755.84: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
     {
      "face": "E",
@@ -57167,7 +57167,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7642.64,
+     "offset": 6565.52,
      "span_um": 113.2,
      "bits": 1132,
      "peer": "pc_NW2",
@@ -57195,9 +57195,9 @@
      "link": "vmb_NW1>sm_NW2:SM_X"
     },
     {
-     "face": "S",
-     "layer": "M5",
-     "offset": 99.74,
+     "face": "W",
+     "layer": "M4",
+     "offset": 54.6,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW2",
@@ -57207,7 +57207,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 127.04,
+     "offset": 0.0,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW3",
@@ -57236,12 +57236,12 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1807.2,
-    "h": 7755.84
+    "w": 1939.68,
+    "h": 6678.72
    },
    "origin": {
-    "x": 5764.0,
-    "y": 16674.24,
+    "x": 6161.44,
+    "y": 15597.12,
     "orient": "R0"
    },
    "clock_entry": {
@@ -57261,7 +57261,7 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1807.2 x 7755.84: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
     {
      "face": "E",
@@ -57306,7 +57306,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7642.64,
+     "offset": 6565.52,
      "span_um": 113.2,
      "bits": 1132,
      "peer": "pc_NW3",
@@ -57356,7 +57356,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 1706.8,
+     "offset": 1574.32,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW4",
@@ -57366,7 +57366,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 1734.1,
+     "offset": 1601.62,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW5",
@@ -57395,12 +57395,12 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1807.2,
-    "h": 7755.84
+    "w": 1939.68,
+    "h": 6678.72
    },
    "origin": {
-    "x": 7671.2,
-    "y": 16674.24,
+    "x": 8201.12,
+    "y": 15597.12,
     "orient": "R0"
    },
    "clock_entry": {
@@ -57420,12 +57420,22 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1807.2 x 7755.84: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
+    {
+     "face": "N",
+     "layer": "M5",
+     "offset": 1815.18,
+     "span_um": 113.2,
+     "bits": 1132,
+     "peer": "pc_NW4",
+     "cls": "SM_HBM",
+     "link": "pc_NW4>sm_NW4:SM_HBM"
+    },
     {
      "face": "E",
      "layer": "M4",
-     "offset": -0.0,
+     "offset": 0.0,
      "span_um": 27.0,
      "bits": 270,
      "peer": "vmh_NW",
@@ -57461,16 +57471,6 @@
      "peer": "vmh_NW",
      "cls": "KV_DESC",
      "link": "vmh_NW>sm_NW4:KV_DESC"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 7642.64,
-     "span_um": 113.2,
-     "bits": 1132,
-     "peer": "pc_NW4",
-     "cls": "SM_HBM",
-     "link": "pc_NW4>sm_NW4:SM_HBM"
     },
     {
      "face": "W",
@@ -57515,7 +57515,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 274.36,
+     "offset": 9.4,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW4",
@@ -57525,7 +57525,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 301.66,
+     "offset": 36.7,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW5",
@@ -57553,12 +57553,12 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1807.2,
-    "h": 7755.84
+    "w": 1939.68,
+    "h": 6678.72
    },
    "origin": {
-    "x": 9578.4,
-    "y": 16674.24,
+    "x": 10240.8,
+    "y": 15597.12,
     "orient": "R0"
    },
    "clock_entry": {
@@ -57578,8 +57578,18 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1807.2 x 7755.84: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
+    {
+     "face": "N",
+     "layer": "M5",
+     "offset": 1362.8,
+     "span_um": 113.2,
+     "bits": 1132,
+     "peer": "pc_NW5",
+     "cls": "SM_HBM",
+     "link": "pc_NW5>sm_NW5:SM_HBM"
+    },
     {
      "face": "E",
      "layer": "M4",
@@ -57599,16 +57609,6 @@
      "peer": "vmh_NW",
      "cls": "KV_DESC",
      "link": "vmh_NW>sm_NW5:KV_DESC"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 7642.64,
-     "span_um": 113.2,
-     "bits": 1132,
-     "peer": "pc_NW5",
-     "cls": "SM_HBM",
-     "link": "pc_NW5>sm_NW5:SM_HBM"
     },
     {
      "face": "W",
@@ -57673,7 +57673,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 1395.42,
+     "offset": 759.66,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW6",
@@ -57683,7 +57683,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 1422.72,
+     "offset": 786.96,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW7",
@@ -57710,12 +57710,12 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1807.2,
-    "h": 7755.84
+    "w": 1939.68,
+    "h": 6678.72
    },
    "origin": {
-    "x": 11485.6,
-    "y": 16674.24,
+    "x": 12280.48,
+    "y": 15597.12,
     "orient": "R0"
    },
    "clock_entry": {
@@ -57735,8 +57735,18 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1807.2 x 7755.84: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
+    {
+     "face": "N",
+     "layer": "M5",
+     "offset": 460.86,
+     "span_um": 113.2,
+     "bits": 1132,
+     "peer": "pc_NW6",
+     "cls": "SM_HBM",
+     "link": "pc_NW6>sm_NW6:SM_HBM"
+    },
     {
      "face": "E",
      "layer": "M4",
@@ -57756,16 +57766,6 @@
      "peer": "vmh_NW",
      "cls": "KV_DESC",
      "link": "vmh_NW>sm_NW6:KV_DESC"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 7642.64,
-     "span_um": 113.2,
-     "bits": 1132,
-     "peer": "pc_NW6",
-     "cls": "SM_HBM",
-     "link": "pc_NW6>sm_NW6:SM_HBM"
     },
     {
      "face": "W",
@@ -57838,9 +57838,9 @@
      "link": "vmb_NW6>sm_NW6:SM_X"
     },
     {
-     "face": "S",
-     "layer": "M5",
-     "offset": 0.0,
+     "face": "W",
+     "layer": "M4",
+     "offset": 191.1,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_NW7",
@@ -57867,12 +57867,12 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1807.2,
-    "h": 7755.84
+    "w": 1939.68,
+    "h": 6678.72
    },
    "origin": {
-    "x": 13392.8,
-    "y": 16674.24,
+    "x": 14320.16,
+    "y": 15597.12,
     "orient": "R0"
    },
    "clock_entry": {
@@ -57892,12 +57892,12 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1807.2 x 7755.84: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
     {
      "face": "N",
      "layer": "M5",
-     "offset": 1408.3,
+     "offset": 9.42,
      "span_um": 113.2,
      "bits": 1132,
      "peer": "pc_NW7",
@@ -57907,7 +57907,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 1773.8,
+     "offset": 1686.18,
      "span_um": 27.0,
      "bits": 270,
      "peer": "vmh_NW",
@@ -57917,7 +57917,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 1800.8,
+     "offset": 1713.18,
      "span_um": 6.4,
      "bits": 64,
      "peer": "vmh_NW",
@@ -58024,8 +58024,8 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1807.2,
-    "h": 7755.84
+    "w": 1939.68,
+    "h": 6678.72
    },
    "origin": {
     "x": 42.4,
@@ -58049,7 +58049,7 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1807.2 x 7755.84: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
     {
      "face": "E",
@@ -58064,7 +58064,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7558.64,
+     "offset": 6481.52,
      "span_um": 27.0,
      "bits": 270,
      "peer": "vmh_SW",
@@ -58074,7 +58074,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7585.64,
+     "offset": 6508.52,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW2",
@@ -58084,7 +58084,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7612.94,
+     "offset": 6535.82,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW3",
@@ -58094,7 +58094,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7640.24,
+     "offset": 6563.12,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW4",
@@ -58104,7 +58104,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7667.54,
+     "offset": 6590.42,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW5",
@@ -58114,7 +58114,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7694.84,
+     "offset": 6617.72,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW6",
@@ -58124,7 +58124,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7722.14,
+     "offset": 6645.02,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW7",
@@ -58134,7 +58134,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7749.44,
+     "offset": 6672.32,
      "span_um": 6.4,
      "bits": 64,
      "peer": "vmh_SW",
@@ -58182,11 +58182,11 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1807.2,
-    "h": 7755.84
+    "w": 1939.68,
+    "h": 6678.72
    },
    "origin": {
-    "x": 1949.6,
+    "x": 2082.08,
     "y": 1818.4,
     "orient": "R0"
    },
@@ -58207,7 +58207,7 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1807.2 x 7755.84: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
     {
      "face": "E",
@@ -58222,7 +58222,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7613.24,
+     "offset": 6536.12,
      "span_um": 27.0,
      "bits": 270,
      "peer": "vmh_SW",
@@ -58232,7 +58232,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7640.24,
+     "offset": 6563.12,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW4",
@@ -58242,7 +58242,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7667.54,
+     "offset": 6590.42,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW5",
@@ -58252,7 +58252,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7694.84,
+     "offset": 6617.72,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW6",
@@ -58262,7 +58262,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7722.14,
+     "offset": 6645.02,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW7",
@@ -58272,7 +58272,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7749.44,
+     "offset": 6672.32,
      "span_um": 6.4,
      "bits": 64,
      "peer": "vmh_SW",
@@ -58282,7 +58282,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7701.24,
+     "offset": 6624.12,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW0",
@@ -58292,7 +58292,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7728.54,
+     "offset": 6651.42,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW1",
@@ -58302,7 +58302,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 1484.91,
+     "offset": 1450.19,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW2",
@@ -58312,7 +58312,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 1512.21,
+     "offset": 1477.49,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW3",
@@ -58340,11 +58340,11 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1807.2,
-    "h": 7755.84
+    "w": 1939.68,
+    "h": 6678.72
    },
    "origin": {
-    "x": 3856.8,
+    "x": 4121.76,
     "y": 1818.4,
     "orient": "R0"
    },
@@ -58365,7 +58365,7 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1807.2 x 7755.84: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
     {
      "face": "E",
@@ -58380,7 +58380,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7613.24,
+     "offset": 6536.12,
      "span_um": 27.0,
      "bits": 270,
      "peer": "vmh_SW",
@@ -58390,7 +58390,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7640.24,
+     "offset": 6563.12,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW4",
@@ -58400,7 +58400,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7667.54,
+     "offset": 6590.42,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW5",
@@ -58410,7 +58410,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7694.84,
+     "offset": 6617.72,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW6",
@@ -58420,7 +58420,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7722.14,
+     "offset": 6645.02,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW7",
@@ -58430,7 +58430,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7749.44,
+     "offset": 6672.32,
      "span_um": 6.4,
      "bits": 64,
      "peer": "vmh_SW",
@@ -58440,7 +58440,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7701.24,
+     "offset": 6569.52,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW0",
@@ -58450,7 +58450,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7728.54,
+     "offset": 6596.82,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW1",
@@ -58458,9 +58458,9 @@
      "link": "vmb_SW1>sm_SW2:SM_X"
     },
     {
-     "face": "N",
-     "layer": "M5",
-     "offset": 34.11,
+     "face": "W",
+     "layer": "M4",
+     "offset": 6624.12,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW2",
@@ -58468,9 +58468,9 @@
      "link": "vmb_SW2>sm_SW2:SM_X"
     },
     {
-     "face": "N",
-     "layer": "M5",
-     "offset": 61.41,
+     "face": "W",
+     "layer": "M4",
+     "offset": 6651.42,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW3",
@@ -58499,11 +58499,11 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1807.2,
-    "h": 7755.84
+    "w": 1939.68,
+    "h": 6678.72
    },
    "origin": {
-    "x": 5764.0,
+    "x": 6161.44,
     "y": 1818.4,
     "orient": "R0"
    },
@@ -58524,7 +58524,7 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1807.2 x 7755.84: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
     {
      "face": "E",
@@ -58539,7 +58539,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7667.84,
+     "offset": 6590.72,
      "span_um": 27.0,
      "bits": 270,
      "peer": "vmh_SW",
@@ -58549,7 +58549,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7694.84,
+     "offset": 6617.72,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW6",
@@ -58559,7 +58559,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7722.14,
+     "offset": 6645.02,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW7",
@@ -58569,7 +58569,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7749.44,
+     "offset": 6672.32,
      "span_um": 6.4,
      "bits": 64,
      "peer": "vmh_SW",
@@ -58579,7 +58579,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7646.64,
+     "offset": 6569.52,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW0",
@@ -58589,7 +58589,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7673.94,
+     "offset": 6596.82,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW1",
@@ -58599,7 +58599,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7701.24,
+     "offset": 6624.12,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW2",
@@ -58609,7 +58609,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7728.54,
+     "offset": 6651.42,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW3",
@@ -58619,7 +58619,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 1612.27,
+     "offset": 1439.95,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW4",
@@ -58629,7 +58629,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 1639.57,
+     "offset": 1467.25,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW5",
@@ -58658,11 +58658,11 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1807.2,
-    "h": 7755.84
+    "w": 1939.68,
+    "h": 6678.72
    },
    "origin": {
-    "x": 7671.2,
+    "x": 8201.12,
     "y": 1818.4,
     "orient": "R0"
    },
@@ -58683,12 +58683,12 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1807.2 x 7755.84: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
     {
-     "face": "E",
-     "layer": "M4",
-     "offset": 0.0,
+     "face": "S",
+     "layer": "M5",
+     "offset": 1815.18,
      "span_um": 113.2,
      "bits": 1132,
      "peer": "pc_SW4",
@@ -58698,7 +58698,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7667.84,
+     "offset": 6590.72,
      "span_um": 27.0,
      "bits": 270,
      "peer": "vmh_SW",
@@ -58708,7 +58708,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7694.84,
+     "offset": 6617.72,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW6",
@@ -58718,7 +58718,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7722.14,
+     "offset": 6645.02,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW7",
@@ -58728,7 +58728,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7749.44,
+     "offset": 6672.32,
      "span_um": 6.4,
      "bits": 64,
      "peer": "vmh_SW",
@@ -58738,7 +58738,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7646.64,
+     "offset": 6514.92,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW0",
@@ -58748,7 +58748,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7673.94,
+     "offset": 6542.22,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW1",
@@ -58758,7 +58758,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7701.24,
+     "offset": 6569.52,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW2",
@@ -58768,7 +58768,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7728.54,
+     "offset": 6596.82,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW3",
@@ -58776,9 +58776,9 @@
      "link": "vmb_SW3>sm_SW4:SM_X"
     },
     {
-     "face": "N",
-     "layer": "M5",
-     "offset": 161.47,
+     "face": "W",
+     "layer": "M4",
+     "offset": 6624.12,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW4",
@@ -58786,9 +58786,9 @@
      "link": "vmb_SW4>sm_SW4:SM_X"
     },
     {
-     "face": "N",
-     "layer": "M5",
-     "offset": 188.77,
+     "face": "W",
+     "layer": "M4",
+     "offset": 6651.42,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW5",
@@ -58816,11 +58816,11 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1807.2,
-    "h": 7755.84
+    "w": 1939.68,
+    "h": 6678.72
    },
    "origin": {
-    "x": 9578.4,
+    "x": 10240.8,
     "y": 1818.4,
     "orient": "R0"
    },
@@ -58841,12 +58841,12 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1807.2 x 7755.84: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
     {
-     "face": "E",
-     "layer": "M4",
-     "offset": 0.0,
+     "face": "S",
+     "layer": "M5",
+     "offset": 1362.8,
      "span_um": 113.2,
      "bits": 1132,
      "peer": "pc_SW5",
@@ -58856,7 +58856,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7722.44,
+     "offset": 6645.32,
      "span_um": 27.0,
      "bits": 270,
      "peer": "vmh_SW",
@@ -58866,7 +58866,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7749.44,
+     "offset": 6672.32,
      "span_um": 6.4,
      "bits": 64,
      "peer": "vmh_SW",
@@ -58876,7 +58876,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7592.04,
+     "offset": 6514.92,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW0",
@@ -58886,7 +58886,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7619.34,
+     "offset": 6542.22,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW1",
@@ -58896,7 +58896,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7646.64,
+     "offset": 6569.52,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW2",
@@ -58906,7 +58906,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7673.94,
+     "offset": 6596.82,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW3",
@@ -58916,7 +58916,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7701.24,
+     "offset": 6624.12,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW4",
@@ -58926,7 +58926,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7728.54,
+     "offset": 6651.42,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW5",
@@ -58936,7 +58936,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 1120.11,
+     "offset": 457.71,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW6",
@@ -58946,7 +58946,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 1147.41,
+     "offset": 485.01,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW7",
@@ -58973,11 +58973,11 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1807.2,
-    "h": 7755.84
+    "w": 1939.68,
+    "h": 6678.72
    },
    "origin": {
-    "x": 11485.6,
+    "x": 12280.48,
     "y": 1818.4,
     "orient": "R0"
    },
@@ -58998,12 +58998,12 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1807.2 x 7755.84: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
     {
-     "face": "E",
-     "layer": "M4",
-     "offset": 0.0,
+     "face": "S",
+     "layer": "M5",
+     "offset": 460.86,
      "span_um": 113.2,
      "bits": 1132,
      "peer": "pc_SW6",
@@ -59013,7 +59013,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7722.44,
+     "offset": 6645.32,
      "span_um": 27.0,
      "bits": 270,
      "peer": "vmh_SW",
@@ -59023,7 +59023,7 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 7749.44,
+     "offset": 6672.32,
      "span_um": 6.4,
      "bits": 64,
      "peer": "vmh_SW",
@@ -59033,7 +59033,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7537.44,
+     "offset": 6460.32,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW0",
@@ -59043,7 +59043,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7564.74,
+     "offset": 6487.62,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW1",
@@ -59053,7 +59053,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7592.04,
+     "offset": 6514.92,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW2",
@@ -59063,7 +59063,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7619.34,
+     "offset": 6542.22,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW3",
@@ -59073,7 +59073,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7646.64,
+     "offset": 6569.52,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW4",
@@ -59083,7 +59083,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7673.94,
+     "offset": 6596.82,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW5",
@@ -59093,7 +59093,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7701.24,
+     "offset": 6624.12,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW6",
@@ -59103,7 +59103,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7728.54,
+     "offset": 6651.42,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW7",
@@ -59130,11 +59130,11 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 1807.2,
-    "h": 7755.84
+    "w": 1939.68,
+    "h": 6678.72
    },
    "origin": {
-    "x": 13392.8,
+    "x": 14320.16,
     "y": 1818.4,
     "orient": "R0"
    },
@@ -59155,12 +59155,12 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1807.2 x 7755.84: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
    "pin_windows": [
     {
      "face": "S",
      "layer": "M5",
-     "offset": 1408.3,
+     "offset": 9.42,
      "span_um": 113.2,
      "bits": 1132,
      "peer": "pc_SW7",
@@ -59170,7 +59170,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 1773.8,
+     "offset": 1686.18,
      "span_um": 27.0,
      "bits": 270,
      "peer": "vmh_SW",
@@ -59180,7 +59180,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 1800.8,
+     "offset": 1713.18,
      "span_um": 6.4,
      "bits": 64,
      "peer": "vmh_SW",
@@ -59190,7 +59190,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7537.44,
+     "offset": 6460.32,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW0",
@@ -59200,7 +59200,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7564.74,
+     "offset": 6487.62,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW1",
@@ -59210,7 +59210,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7592.04,
+     "offset": 6514.92,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW2",
@@ -59220,7 +59220,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7619.34,
+     "offset": 6542.22,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW3",
@@ -59230,7 +59230,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7646.64,
+     "offset": 6569.52,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW4",
@@ -59240,7 +59240,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7673.94,
+     "offset": 6596.82,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW5",
@@ -59250,7 +59250,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7701.24,
+     "offset": 6624.12,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW6",
@@ -59260,7 +59260,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 7728.54,
+     "offset": 6651.42,
      "span_um": 27.3,
      "bits": 273,
      "peer": "vmb_SW7",
@@ -59292,7 +59292,7 @@
    },
    "origin": {
     "x": 1336.928,
-    "y": 13748.96,
+    "y": 12671.84,
     "orient": "R0"
    },
    "clock_entry": {
@@ -59367,7 +59367,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "3b08b472c",
+   "source_prerequisite": "822e369b7",
    "params": {
     "QID": 2,
     "G": 0,
@@ -59809,7 +59809,7 @@
    },
    "origin": {
     "x": 4528.576,
-    "y": 13748.96,
+    "y": 12671.84,
     "orient": "R0"
    },
    "clock_entry": {
@@ -59864,7 +59864,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "3b08b472c",
+   "source_prerequisite": "822e369b7",
    "params": {
     "QID": 2,
     "G": 1,
@@ -60306,7 +60306,7 @@
    },
    "origin": {
     "x": 8692.224,
-    "y": 13748.96,
+    "y": 12671.84,
     "orient": "R0"
    },
    "clock_entry": {
@@ -60361,7 +60361,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "3b08b472c",
+   "source_prerequisite": "822e369b7",
    "params": {
     "QID": 2,
     "G": 2,
@@ -60803,7 +60803,7 @@
    },
    "origin": {
     "x": 11883.872,
-    "y": 13748.96,
+    "y": 12671.84,
     "orient": "R0"
    },
    "clock_entry": {
@@ -60858,7 +60858,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "3b08b472c",
+   "source_prerequisite": "822e369b7",
    "params": {
     "QID": 2,
     "G": 3,
@@ -61300,7 +61300,7 @@
    },
    "origin": {
     "x": 1242.4,
-    "y": 9674.24,
+    "y": 8597.12,
     "orient": "R0"
    },
    "clock_entry": {
@@ -61375,7 +61375,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "3b08b472c",
+   "source_prerequisite": "822e369b7",
    "params": {
     "QID": 0,
     "G": 0,
@@ -61817,7 +61817,7 @@
    },
    "origin": {
     "x": 4339.52,
-    "y": 9674.24,
+    "y": 8597.12,
     "orient": "R0"
    },
    "clock_entry": {
@@ -61872,7 +61872,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "3b08b472c",
+   "source_prerequisite": "822e369b7",
    "params": {
     "QID": 0,
     "G": 1,
@@ -62314,7 +62314,7 @@
    },
    "origin": {
     "x": 8408.64,
-    "y": 9674.24,
+    "y": 8597.12,
     "orient": "R0"
    },
    "clock_entry": {
@@ -62369,7 +62369,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "3b08b472c",
+   "source_prerequisite": "822e369b7",
    "params": {
     "QID": 0,
     "G": 2,
@@ -62811,7 +62811,7 @@
    },
    "origin": {
     "x": 11505.76,
-    "y": 9674.24,
+    "y": 8597.12,
     "orient": "R0"
    },
    "clock_entry": {
@@ -62866,7 +62866,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "3b08b472c",
+   "source_prerequisite": "822e369b7",
    "params": {
     "QID": 0,
     "G": 3,
@@ -63308,7 +63308,7 @@
    },
    "origin": {
     "x": 13780.992,
-    "y": 13748.96,
+    "y": 12671.84,
     "orient": "R0"
    },
    "clock_entry": {
@@ -63332,7 +63332,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "3b08b472c",
+   "source_prerequisite": "822e369b7",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -63609,7 +63609,7 @@
    },
    "origin": {
     "x": 13402.88,
-    "y": 12169.04,
+    "y": 11091.92,
     "orient": "R0"
    },
    "clock_entry": {
@@ -63633,7 +63633,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "3b08b472c",
+   "source_prerequisite": "822e369b7",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -63909,8 +63909,8 @@
     "h": 1652.424
    },
    "origin": {
-    "x": 15754.08,
-    "y": 24576.056,
+    "x": 16359.84,
+    "y": 22421.816,
     "orient": "MX"
    },
    "version": 6,
@@ -63924,7 +63924,7 @@
    "view": "physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie",
    "rtl_pin_grant_1405": true,
    "pin_status": "MACRO_LEF_PINS (the macro abstract fixes its pins)",
-   "home_rule": "A2P: N die edge in the E column (UCIe shoreline), west of lk_N"
+   "home_rule": "A2P: N die edge in the E column (UCIe shoreline)"
   },
   {
    "name": "host_cp",
@@ -63937,8 +63937,8 @@
     "h": 432.0
    },
    "origin": {
-    "x": 16114.08,
-    "y": 25796.48,
+    "x": 16719.84,
+    "y": 23642.24,
     "orient": "R0"
    },
    "clock_entry": {
@@ -63976,8 +63976,8 @@
     "h": 1177.2
    },
    "origin": {
-    "x": 6555.84,
-    "y": 25049.68,
+    "x": 5455.84,
+    "y": 22895.44,
     "orient": "MX"
    },
    "version": 5,
@@ -63996,7 +63996,7 @@
     "h": 1177.2
    },
    "origin": {
-    "x": 6555.84,
+    "x": 5455.84,
     "y": 21.6,
     "orient": "R0"
    },
@@ -70397,8 +70397,8 @@
     "h": 220.32
    },
    "origin": {
-    "x": 15754.08,
-    "y": 15371.698,
+    "x": 16359.84,
+    "y": 14294.578,
     "orient": "R0"
    },
    "version": 7,
@@ -70714,7 +70714,7 @@
     },
     "clock_source": "clocks created at the PLL output pins; generated clocks (divide_by 1) at the four pll_* outputs = die clock-tree roots; por_* timed against their own forwarded clock"
    },
-   "home_rule": "A2P: E column centre above hc_eng/ep_N row (die clock root, centre of the 2 regional trees)"
+   "home_rule": "A2P: E column centre above the ep_N row (root of the 2 regional trees)"
   },
   {
    "name": "quant_NW0_lg",
@@ -71271,7 +71271,7 @@
    },
    "origin": {
     "x": 3699.02,
-    "y": 13868.96,
+    "y": 12791.84,
     "orient": "R0"
    },
    "layer_rule": "cluster",
@@ -71799,8 +71799,8 @@
    "version": 7,
    "grant": "universal_calendar_candidate_2330",
    "origin": {
-    "x": 14932.16,
-    "y": 11223.6,
+    "x": 15537.92,
+    "y": 10152.96,
     "orient": "R0"
    },
    "outline": {
@@ -72145,8 +72145,8 @@
    "version": 7,
    "grant": "universal_calendar_candidate_2330",
    "origin": {
-    "x": 14932.16,
-    "y": 15044.32,
+    "x": 15537.92,
+    "y": 13965.04,
     "orient": "MX"
    },
    "outline": {
@@ -72491,7 +72491,7 @@
    },
    "origin": {
     "x": 6236.64,
-    "y": 9696.01,
+    "y": 8618.89,
     "orient": "R0"
    },
    "clock_entry": {
@@ -72533,7 +72533,7 @@
    },
    "origin": {
     "x": 6425.696,
-    "y": 13420.47,
+    "y": 12343.35,
     "orient": "R0"
    },
    "clock_entry": {
@@ -72575,7 +72575,7 @@
    },
    "origin": {
     "x": 13700.96,
-    "y": 10065.84,
+    "y": 8988.72,
     "orient": "R0"
    },
    "clock_entry": {
@@ -72615,7 +72615,7 @@
    },
    "origin": {
     "x": 14079.072,
-    "y": 16044.4,
+    "y": 14967.28,
     "orient": "R0"
    },
    "clock_entry": {
@@ -72655,7 +72655,7 @@
    },
    "origin": {
     "x": 7208.64,
-    "y": 11540.24,
+    "y": 10463.12,
     "orient": "R0"
    },
    "clock_entry": {
@@ -72690,8 +72690,8 @@
     "h": 432.0
    },
    "origin": {
-    "x": 14476.4,
-    "y": 11238.72,
+    "x": 15082.16,
+    "y": 10161.6,
     "orient": "R0"
    },
    "clock_entry": {
@@ -72727,7 +72727,7 @@
    },
    "origin": {
     "x": 7397.696,
-    "y": 13296.24,
+    "y": 12219.12,
     "orient": "R0"
    },
    "clock_entry": {
@@ -72762,8 +72762,8 @@
     "h": 432.0
    },
    "origin": {
-    "x": 14476.4,
-    "y": 14577.76,
+    "x": 15082.16,
+    "y": 13500.64,
     "orient": "R0"
    },
    "clock_entry": {
@@ -72798,8 +72798,8 @@
     "h": 64.8
    },
    "origin": {
-    "x": 15754.08,
-    "y": 14756.498,
+    "x": 16359.84,
+    "y": 13679.378,
     "orient": "R0"
    },
    "clock_entry": {
@@ -72823,7 +72823,7 @@
    "notes": "PROG:ot_static_program_target collar (H-NETLIST hceng, TARGET 164/165); candidate outline, synth pending; candidate outline, pins FACES_ONLY",
    "pins": [],
    "pin_status": "FACES_ONLY",
-   "home_rule": "A2P: programme collar against hc_eng N face"
+   "home_rule": "A2P: programme collar on hc_eng N face"
   },
   {
    "name": "hc_tbl_tgt",
@@ -72835,8 +72835,8 @@
     "h": 64.8
    },
    "origin": {
-    "x": 15940.08,
-    "y": 14756.498,
+    "x": 16545.84,
+    "y": 13679.378,
     "orient": "R0"
    },
    "clock_entry": {
@@ -72860,7 +72860,7 @@
    "notes": "PROG:ot_static_program_target collar (H-NETLIST hceng, TARGET 164/165); candidate outline, synth pending; candidate outline, pins FACES_ONLY",
    "pins": [],
    "pin_status": "FACES_ONLY",
-   "home_rule": "A2P: programme collar against hc_eng N face"
+   "home_rule": "A2P: programme collar on hc_eng N face"
   }
  ],
  "sub_layouts": {
@@ -74271,7 +74271,7 @@
      "name": "su_SW0",
      "origin": {
       "x": 1242.4,
-      "y": 9674.24
+      "y": 8597.12
      },
      "outline": {
       "w": 1797.12,
@@ -74319,7 +74319,7 @@
      "name": "su_SW1",
      "origin": {
       "x": 4339.52,
-      "y": 9674.24
+      "y": 8597.12
      },
      "outline": {
       "w": 1797.12,
@@ -74353,7 +74353,7 @@
      "name": "su_SW2",
      "origin": {
       "x": 8408.64,
-      "y": 9674.24
+      "y": 8597.12
      },
      "outline": {
       "w": 1797.12,
@@ -74387,7 +74387,7 @@
      "name": "su_SW3",
      "origin": {
       "x": 11505.76,
-      "y": 9674.24
+      "y": 8597.12
      },
      "outline": {
       "w": 1797.12,
@@ -74423,7 +74423,7 @@
     "name": "sucore_SW",
     "origin": {
      "x": 13402.88,
-     "y": 12169.04
+     "y": 11091.92
     },
     "outline": {
      "w": 330.48,
@@ -74609,7 +74609,7 @@
      "name": "su_NW0",
      "origin": {
       "x": 1336.928,
-      "y": 13748.96
+      "y": 12671.84
      },
      "outline": {
       "w": 1797.12,
@@ -74657,7 +74657,7 @@
      "name": "su_NW1",
      "origin": {
       "x": 4528.576,
-      "y": 13748.96
+      "y": 12671.84
      },
      "outline": {
       "w": 1797.12,
@@ -74691,7 +74691,7 @@
      "name": "su_NW2",
      "origin": {
       "x": 8692.224,
-      "y": 13748.96
+      "y": 12671.84
      },
      "outline": {
       "w": 1797.12,
@@ -74725,7 +74725,7 @@
      "name": "su_NW3",
      "origin": {
       "x": 11883.872,
-      "y": 13748.96
+      "y": 12671.84
      },
      "outline": {
       "w": 1797.12,
@@ -74761,7 +74761,7 @@
     "name": "sucore_NW",
     "origin": {
      "x": 13780.992,
-     "y": 13748.96
+     "y": 12671.84
     },
     "outline": {
      "w": 330.48,
@@ -74947,7 +74947,7 @@
      "name": "sfu_SW0",
      "origin": {
       "x": 642.4,
-      "y": 10604.32
+      "y": 9527.2
      },
      "outline": {
       "w": 500.0,
@@ -74958,7 +74958,7 @@
      "name": "sfu_SW1",
      "origin": {
       "x": 3739.52,
-      "y": 10604.32
+      "y": 9527.2
      },
      "outline": {
       "w": 500.0,
@@ -74969,7 +74969,7 @@
      "name": "sfu_SW2",
      "origin": {
       "x": 7808.64,
-      "y": 10604.32
+      "y": 9527.2
      },
      "outline": {
       "w": 500.0,
@@ -74980,7 +74980,7 @@
      "name": "sfu_SW3",
      "origin": {
       "x": 10905.76,
-      "y": 10604.32
+      "y": 9527.2
      },
      "outline": {
       "w": 500.0,
@@ -75063,7 +75063,7 @@
      "name": "sfu_NW0",
      "origin": {
       "x": 642.4,
-      "y": 14896.0
+      "y": 13818.88
      },
      "outline": {
       "w": 500.0,
@@ -75074,7 +75074,7 @@
      "name": "sfu_NW1",
      "origin": {
       "x": 3834.048,
-      "y": 14896.0
+      "y": 13818.88
      },
      "outline": {
       "w": 500.0,
@@ -75085,7 +75085,7 @@
      "name": "sfu_NW2",
      "origin": {
       "x": 7997.696,
-      "y": 14896.0
+      "y": 13818.88
      },
      "outline": {
       "w": 500.0,
@@ -75096,7 +75096,7 @@
      "name": "sfu_NW3",
      "origin": {
       "x": 11189.344,
-      "y": 14896.0
+      "y": 13818.88
      },
      "outline": {
       "w": 500.0,
@@ -75495,385 +75495,385 @@
   "rule": "bands are SOFT die-level groups (wires only); every ot_hbm_svc_static_pc is placed directly over its own PHY channel pin window, 10.8 um from the PHY edge (die GRT+STA on real views, H-DIE r3: overflow 0, TT +167.29 ps, FF +57.25 ps, max PHY-PC hop 127 um); answers HBM-V15-HARDEN request (2) of 10:33",
   "homes": {
    "svc_NW_s0__u_pc0": {
-    "x": 6546.12,
-    "y": 24926.56,
+    "x": 5446.12,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s0"
    },
    "svc_NW_s0__u_pc1": {
-    "x": 6811.8,
-    "y": 24926.56,
+    "x": 5711.8,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s0"
    },
    "svc_NW_s0__u_pc2": {
-    "x": 7077.48,
-    "y": 24926.56,
+    "x": 5977.48,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s0"
    },
    "svc_NW_s0__u_pc3": {
-    "x": 7342.944,
-    "y": 24926.56,
+    "x": 6242.944,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s0"
    },
    "svc_NW_s1__u_pc4": {
-    "x": 7688.624,
-    "y": 24926.56,
+    "x": 6588.624,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s1"
    },
    "svc_NW_s1__u_pc5": {
-    "x": 7954.088,
-    "y": 24926.56,
+    "x": 6854.088,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s1"
    },
    "svc_NW_s1__u_pc6": {
-    "x": 8219.768,
-    "y": 24926.56,
+    "x": 7119.768,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s1"
    },
    "svc_NW_s1__u_pc7": {
-    "x": 8485.232,
-    "y": 24926.56,
+    "x": 7385.232,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s1"
    },
    "svc_NW_s1__u_pc8": {
-    "x": 8830.912,
-    "y": 24926.56,
+    "x": 7730.912,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s1"
    },
    "svc_NW_s2__u_pc10": {
-    "x": 9362.056,
-    "y": 24926.56,
+    "x": 8262.056,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s2"
    },
    "svc_NW_s2__u_pc11": {
-    "x": 9627.736,
-    "y": 24926.56,
+    "x": 8527.736,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s2"
    },
    "svc_NW_s2__u_pc12": {
-    "x": 9973.2,
-    "y": 24926.56,
+    "x": 8873.2,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s2"
    },
    "svc_NW_s2__u_pc9": {
-    "x": 9096.592,
-    "y": 24926.56,
+    "x": 7996.592,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s2"
    },
    "svc_NW_s3__u_pc13": {
-    "x": 10238.88,
-    "y": 24926.56,
+    "x": 9138.88,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s3"
    },
    "svc_NW_s3__u_pc14": {
-    "x": 10504.344,
-    "y": 24926.56,
+    "x": 9404.344,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s3"
    },
    "svc_NW_s3__u_pc15": {
-    "x": 10770.024,
-    "y": 24926.56,
+    "x": 9670.024,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s3"
    },
    "svc_NW_s3__u_pc16": {
-    "x": 11115.488,
-    "y": 24926.56,
+    "x": 10015.488,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s3"
    },
    "svc_NW_s4__u_pc17": {
-    "x": 11381.168,
-    "y": 24926.56,
+    "x": 10281.168,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s4"
    },
    "svc_NW_s4__u_pc18": {
-    "x": 11646.632,
-    "y": 24926.56,
+    "x": 10546.632,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s4"
    },
    "svc_NW_s4__u_pc19": {
-    "x": 11912.312,
-    "y": 24926.56,
+    "x": 10812.312,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s4"
    },
    "svc_NW_s5__u_pc20": {
-    "x": 12257.992,
-    "y": 24926.56,
+    "x": 11157.992,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s5"
    },
    "svc_NW_s5__u_pc21": {
-    "x": 12523.456,
-    "y": 24926.56,
+    "x": 11423.456,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s5"
    },
    "svc_NW_s5__u_pc22": {
-    "x": 12789.136,
-    "y": 24926.56,
+    "x": 11689.136,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s5"
    },
    "svc_NW_s5__u_pc23": {
-    "x": 13054.6,
-    "y": 24926.56,
+    "x": 11954.6,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s5"
    },
    "svc_NW_s6__u_pc24": {
-    "x": 13400.28,
-    "y": 24926.56,
+    "x": 12300.28,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s6"
    },
    "svc_NW_s6__u_pc25": {
-    "x": 13665.744,
-    "y": 24926.56,
+    "x": 12565.744,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s6"
    },
    "svc_NW_s6__u_pc26": {
-    "x": 13931.424,
-    "y": 24926.56,
+    "x": 12831.424,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s6"
    },
    "svc_NW_s6__u_pc27": {
-    "x": 14197.104,
-    "y": 24926.56,
+    "x": 13097.104,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s6"
    },
    "svc_NW_s7__u_pc28": {
-    "x": 14542.568,
-    "y": 24926.56,
+    "x": 13442.568,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s7"
    },
    "svc_NW_s7__u_pc29": {
-    "x": 14808.248,
-    "y": 24926.56,
+    "x": 13708.248,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s7"
    },
    "svc_NW_s7__u_pc30": {
-    "x": 15073.712,
-    "y": 24926.56,
+    "x": 13973.712,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s7"
    },
    "svc_NW_s7__u_pc31": {
-    "x": 15339.392,
-    "y": 24926.56,
+    "x": 14239.392,
+    "y": 22772.32,
     "orient": "MX",
     "band": "svc_NW_s7"
    },
    "svc_SW_s0__u_pc0": {
-    "x": 6546.12,
+    "x": 5446.12,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s0"
    },
    "svc_SW_s0__u_pc1": {
-    "x": 6811.8,
+    "x": 5711.8,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s0"
    },
    "svc_SW_s0__u_pc2": {
-    "x": 7077.48,
+    "x": 5977.48,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s0"
    },
    "svc_SW_s0__u_pc3": {
-    "x": 7342.944,
+    "x": 6242.944,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s0"
    },
    "svc_SW_s1__u_pc4": {
-    "x": 7608.624,
+    "x": 6508.624,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s1"
    },
    "svc_SW_s1__u_pc5": {
-    "x": 7954.088,
+    "x": 6854.088,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s1"
    },
    "svc_SW_s1__u_pc6": {
-    "x": 8219.768,
+    "x": 7119.768,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s1"
    },
    "svc_SW_s1__u_pc7": {
-    "x": 8485.232,
+    "x": 7385.232,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s1"
    },
    "svc_SW_s1__u_pc8": {
-    "x": 8830.912,
+    "x": 7730.912,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s1"
    },
    "svc_SW_s2__u_pc10": {
-    "x": 9362.056,
+    "x": 8262.056,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s2"
    },
    "svc_SW_s2__u_pc11": {
-    "x": 9627.736,
+    "x": 8527.736,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s2"
    },
    "svc_SW_s2__u_pc12": {
-    "x": 9973.2,
+    "x": 8873.2,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s2"
    },
    "svc_SW_s2__u_pc9": {
-    "x": 9096.592,
+    "x": 7996.592,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s2"
    },
    "svc_SW_s3__u_pc13": {
-    "x": 10238.88,
+    "x": 9138.88,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s3"
    },
    "svc_SW_s3__u_pc14": {
-    "x": 10504.344,
+    "x": 9404.344,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s3"
    },
    "svc_SW_s3__u_pc15": {
-    "x": 10770.024,
+    "x": 9670.024,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s3"
    },
    "svc_SW_s3__u_pc16": {
-    "x": 11115.488,
+    "x": 10015.488,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s3"
    },
    "svc_SW_s4__u_pc17": {
-    "x": 11381.168,
+    "x": 10281.168,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s4"
    },
    "svc_SW_s4__u_pc18": {
-    "x": 11646.632,
+    "x": 10546.632,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s4"
    },
    "svc_SW_s4__u_pc19": {
-    "x": 11912.312,
+    "x": 10812.312,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s4"
    },
    "svc_SW_s5__u_pc20": {
-    "x": 12257.992,
+    "x": 11157.992,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s5"
    },
    "svc_SW_s5__u_pc21": {
-    "x": 12523.456,
+    "x": 11423.456,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s5"
    },
    "svc_SW_s5__u_pc22": {
-    "x": 12789.136,
+    "x": 11689.136,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s5"
    },
    "svc_SW_s5__u_pc23": {
-    "x": 13054.6,
+    "x": 11954.6,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s5"
    },
    "svc_SW_s6__u_pc24": {
-    "x": 13400.28,
+    "x": 12300.28,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s6"
    },
    "svc_SW_s6__u_pc25": {
-    "x": 13665.744,
+    "x": 12565.744,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s6"
    },
    "svc_SW_s6__u_pc26": {
-    "x": 13931.424,
+    "x": 12831.424,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s6"
    },
    "svc_SW_s6__u_pc27": {
-    "x": 14197.104,
+    "x": 13097.104,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s6"
    },
    "svc_SW_s7__u_pc28": {
-    "x": 14542.568,
+    "x": 13442.568,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s7"
    },
    "svc_SW_s7__u_pc29": {
-    "x": 14808.248,
+    "x": 13708.248,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s7"
    },
    "svc_SW_s7__u_pc30": {
-    "x": 15073.712,
+    "x": 13973.712,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s7"
    },
    "svc_SW_s7__u_pc31": {
-    "x": 15339.392,
+    "x": 14239.392,
     "y": 1209.6,
     "orient": "R0",
     "band": "svc_SW_s7"
@@ -76052,147 +76052,147 @@
     "homes": [
      [
       13754.96,
-      12477.92
+      11400.8
      ],
      [
       13754.96,
-      12456.32
+      11379.2
      ],
      [
       13754.96,
-      12434.72
+      11357.6
      ],
      [
       13754.96,
-      12413.12
+      11336.0
      ],
      [
       13754.96,
-      12391.52
+      11314.4
      ],
      [
       13754.96,
-      12369.92
+      11292.8
      ],
      [
       13754.96,
-      12348.32
+      11271.2
      ],
      [
       13754.96,
-      12326.72
+      11249.6
      ],
      [
       13754.96,
-      12305.12
+      11228.0
      ],
      [
       13754.96,
-      12283.52
+      11206.4
      ],
      [
       13754.96,
-      12261.92
+      11184.8
      ],
      [
       13754.96,
-      12240.32
+      11163.2
      ],
      [
       13776.56,
-      12240.32
+      11163.2
      ],
      [
       13776.56,
-      12261.92
+      11184.8
      ],
      [
       13776.56,
-      12283.52
+      11206.4
      ],
      [
       13776.56,
-      12305.12
+      11228.0
      ],
      [
       13776.56,
-      12326.72
+      11249.6
      ],
      [
       13776.56,
-      12348.32
+      11271.2
      ],
      [
       13776.56,
-      12369.92
+      11292.8
      ],
      [
       13776.56,
-      12391.52
+      11314.4
      ],
      [
       13776.56,
-      12413.12
+      11336.0
      ],
      [
       13776.56,
-      12434.72
+      11357.6
      ],
      [
       13776.56,
-      12456.32
+      11379.2
      ],
      [
       13776.56,
-      12477.92
+      11400.8
      ],
      [
       13798.16,
-      12477.92
+      11400.8
      ],
      [
       13798.16,
-      12456.32
+      11379.2
      ],
      [
       13798.16,
-      12434.72
+      11357.6
      ],
      [
       13798.16,
-      12413.12
+      11336.0
      ],
      [
       13798.16,
-      12391.52
+      11314.4
      ],
      [
       13798.16,
-      12369.92
+      11292.8
      ],
      [
       13798.16,
-      12348.32
+      11271.2
      ],
      [
       13798.16,
-      12326.72
+      11249.6
      ],
      [
       13798.16,
-      12305.12
+      11228.0
      ],
      [
       13798.16,
-      12283.52
+      11206.4
      ],
      [
       13798.16,
-      12261.92
+      11184.8
      ],
      [
       13798.16,
-      12240.32
+      11163.2
      ]
     ],
     "footprints": [
@@ -76506,162 +76506,162 @@
     "homes": [
      [
       13568.12,
-      12543.508
+      11466.388
      ],
      [
       13568.12,
-      12587.496
+      11510.376
      ],
      [
       13568.12,
-      12631.484
+      11554.364
      ],
      [
       13568.12,
-      12675.472
+      11598.352
      ],
      [
       13568.12,
-      12719.459
+      11642.339
      ],
      [
       13568.12,
-      12763.447
+      11686.327
      ],
      [
       13568.12,
-      12807.435
+      11730.315
      ],
      [
       13568.12,
-      12851.423
+      11774.303
      ],
      [
       13568.12,
-      12895.411
+      11818.291
      ],
      [
       13568.12,
-      12939.399
+      11862.279
      ],
      [
       13568.12,
-      12983.387
+      11906.267
      ],
      [
       13568.12,
-      13027.375
+      11950.255
      ],
      [
       13568.12,
-      13071.363
+      11994.243
      ],
      [
       13568.12,
-      13115.35
+      12038.23
      ],
      [
       13568.12,
-      13159.338
+      12082.218
      ],
      [
       13568.12,
-      13203.326
+      12126.206
      ],
      [
       13568.12,
-      13247.314
+      12170.194
      ],
      [
       13568.12,
-      13291.302
+      12214.182
      ],
      [
       13568.12,
-      13335.29
+      12258.17
      ],
      [
       13568.12,
-      13379.278
+      12302.158
      ],
      [
       13568.12,
-      13423.266
+      12346.146
      ],
      [
       13568.12,
-      13467.254
+      12390.134
      ],
      [
       13568.12,
-      13511.242
+      12434.122
      ],
      [
       13568.12,
-      13555.229
+      12478.109
      ],
      [
       13568.12,
-      13599.217
+      12522.097
      ],
      [
       13568.12,
-      13643.205
+      12566.085
      ],
      [
       13568.12,
-      13687.193
+      12610.073
      ],
      [
       13568.12,
-      13731.181
+      12654.061
      ],
      [
       13594.329,
-      13748.96
+      12671.84
      ],
      [
       13638.317,
-      13748.96
+      12671.84
      ],
      [
       13682.305,
-      13748.96
+      12671.84
      ],
      [
       13726.293,
-      13748.96
+      12671.84
      ],
      [
       13770.28,
-      13748.96
+      12671.84
      ],
      [
       13814.268,
-      13748.96
+      12671.84
      ],
      [
       13858.256,
-      13748.96
+      12671.84
      ],
      [
       13902.244,
-      13748.96
+      12671.84
      ]
     ],
     "footprints": [],
     "path": [
      [
       13568.119999999999,
-      12499.52
+      11422.4
      ],
      [
       13568.119999999999,
-      13748.96
+      12671.84
      ],
      [
       13946.232,
-      13748.96
+      12671.84
      ]
     ],
     "note": "A2P half die: 36 equal-age stages kept on a 1628 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
@@ -76676,162 +76676,162 @@
     "homes": [
      [
       13946.232,
-      13704.972
+      12627.852
      ],
      [
       13946.232,
-      13660.984
+      12583.864
      ],
      [
       13946.232,
-      13616.996
+      12539.876
      ],
      [
       13946.232,
-      13573.008
+      12495.888
      ],
      [
       13946.232,
-      13529.021
+      12451.901
      ],
      [
       13946.232,
-      13485.033
+      12407.913
      ],
      [
       13946.232,
-      13441.045
+      12363.925
      ],
      [
       13946.232,
-      13397.057
+      12319.937
      ],
      [
       13946.232,
-      13353.069
+      12275.949
      ],
      [
       13946.232,
-      13309.081
+      12231.961
      ],
      [
       13946.232,
-      13265.093
+      12187.973
      ],
      [
       13946.232,
-      13221.105
+      12143.985
      ],
      [
       13946.232,
-      13177.117
+      12099.997
      ],
      [
       13946.232,
-      13133.13
+      12056.01
      ],
      [
       13946.232,
-      13089.142
+      12012.022
      ],
      [
       13946.232,
-      13045.154
+      11968.034
      ],
      [
       13946.232,
-      13001.166
+      11924.046
      ],
      [
       13946.232,
-      12957.178
+      11880.058
      ],
      [
       13946.232,
-      12913.19
+      11836.07
      ],
      [
       13946.232,
-      12869.202
+      11792.082
      ],
      [
       13946.232,
-      12825.214
+      11748.094
      ],
      [
       13946.232,
-      12781.226
+      11704.106
      ],
      [
       13946.232,
-      12737.238
+      11660.118
      ],
      [
       13946.232,
-      12693.251
+      11616.131
      ],
      [
       13946.232,
-      12649.263
+      11572.143
      ],
      [
       13946.232,
-      12605.275
+      11528.155
      ],
      [
       13946.232,
-      12561.287
+      11484.167
      ],
      [
       13946.232,
-      12517.299
+      11440.179
      ],
      [
       13920.023,
-      12499.52
+      11422.4
      ],
      [
       13876.035,
-      12499.52
+      11422.4
      ],
      [
       13832.047,
-      12499.52
+      11422.4
      ],
      [
       13788.059,
-      12499.52
+      11422.4
      ],
      [
       13744.072,
-      12499.52
+      11422.4
      ],
      [
       13700.084,
-      12499.52
+      11422.4
      ],
      [
       13656.096,
-      12499.52
+      11422.4
      ],
      [
       13612.108,
-      12499.52
+      11422.4
      ]
     ],
     "footprints": [],
     "path": [
      [
       13946.232,
-      13748.96
+      12671.84
      ],
      [
       13946.232,
-      12499.52
+      11422.4
      ],
      [
       13568.119999999999,
-      12499.52
+      11422.4
      ]
     ],
     "note": "A2P half die: 36 equal-age stages kept on a 1628 um core-to-core run (H-NETLIST may reduce the count; the compiler table must follow)"
@@ -76846,147 +76846,147 @@
     "homes": [
      [
       14133.072,
-      13770.56
+      12693.44
      ],
      [
       14133.072,
-      13792.16
+      12715.04
      ],
      [
       14133.072,
-      13813.76
+      12736.64
      ],
      [
       14133.072,
-      13835.36
+      12758.24
      ],
      [
       14133.072,
-      13856.96
+      12779.84
      ],
      [
       14133.072,
-      13878.56
+      12801.44
      ],
      [
       14133.072,
-      13900.16
+      12823.04
      ],
      [
       14133.072,
-      13921.76
+      12844.64
      ],
      [
       14133.072,
-      13943.36
+      12866.24
      ],
      [
       14133.072,
-      13964.96
+      12887.84
      ],
      [
       14133.072,
-      13986.56
+      12909.44
      ],
      [
       14133.072,
-      14008.16
+      12931.04
      ],
      [
       14154.672,
-      14008.16
+      12931.04
      ],
      [
       14154.672,
-      13986.56
+      12909.44
      ],
      [
       14154.672,
-      13964.96
+      12887.84
      ],
      [
       14154.672,
-      13943.36
+      12866.24
      ],
      [
       14154.672,
-      13921.76
+      12844.64
      ],
      [
       14154.672,
-      13900.16
+      12823.04
      ],
      [
       14154.672,
-      13878.56
+      12801.44
      ],
      [
       14154.672,
-      13856.96
+      12779.84
      ],
      [
       14154.672,
-      13835.36
+      12758.24
      ],
      [
       14154.672,
-      13813.76
+      12736.64
      ],
      [
       14154.672,
-      13792.16
+      12715.04
      ],
      [
       14154.672,
-      13770.56
+      12693.44
      ],
      [
       14176.272,
-      13770.56
+      12693.44
      ],
      [
       14176.272,
-      13792.16
+      12715.04
      ],
      [
       14176.272,
-      13813.76
+      12736.64
      ],
      [
       14176.272,
-      13835.36
+      12758.24
      ],
      [
       14176.272,
-      13856.96
+      12779.84
      ],
      [
       14176.272,
-      13878.56
+      12801.44
      ],
      [
       14176.272,
-      13900.16
+      12823.04
      ],
      [
       14176.272,
-      13921.76
+      12844.64
      ],
      [
       14176.272,
-      13943.36
+      12866.24
      ],
      [
       14176.272,
-      13964.96
+      12887.84
      ],
      [
       14176.272,
-      13986.56
+      12909.44
      ],
      [
       14176.272,
-      14008.16
+      12931.04
      ]
     ],
     "footprints": [
@@ -77707,8 +77707,8 @@
      "h": 1807.2
     },
     "new": {
-     "w": 1807.2,
-     "h": 7755.84
+     "w": 1939.68,
+     "h": 6678.72
     }
    },
    {
@@ -77718,8 +77718,8 @@
      "h": 1807.2
     },
     "new": {
-     "w": 1807.2,
-     "h": 7755.84
+     "w": 1939.68,
+     "h": 6678.72
     }
    },
    {
@@ -77729,8 +77729,8 @@
      "h": 1807.2
     },
     "new": {
-     "w": 1807.2,
-     "h": 7755.84
+     "w": 1939.68,
+     "h": 6678.72
     }
    },
    {
@@ -77740,8 +77740,8 @@
      "h": 1807.2
     },
     "new": {
-     "w": 1807.2,
-     "h": 7755.84
+     "w": 1939.68,
+     "h": 6678.72
     }
    },
    {
@@ -77751,8 +77751,8 @@
      "h": 1807.2
     },
     "new": {
-     "w": 1807.2,
-     "h": 7755.84
+     "w": 1939.68,
+     "h": 6678.72
     }
    },
    {
@@ -77762,8 +77762,8 @@
      "h": 1807.2
     },
     "new": {
-     "w": 1807.2,
-     "h": 7755.84
+     "w": 1939.68,
+     "h": 6678.72
     }
    },
    {
@@ -77773,8 +77773,8 @@
      "h": 1807.2
     },
     "new": {
-     "w": 1807.2,
-     "h": 7755.84
+     "w": 1939.68,
+     "h": 6678.72
     }
    },
    {
@@ -77784,8 +77784,8 @@
      "h": 1807.2
     },
     "new": {
-     "w": 1807.2,
-     "h": 7755.84
+     "w": 1939.68,
+     "h": 6678.72
     }
    },
    {
@@ -77795,8 +77795,8 @@
      "h": 1807.2
     },
     "new": {
-     "w": 1807.2,
-     "h": 7755.84
+     "w": 1939.68,
+     "h": 6678.72
     }
    },
    {
@@ -77806,8 +77806,8 @@
      "h": 1807.2
     },
     "new": {
-     "w": 1807.2,
-     "h": 7755.84
+     "w": 1939.68,
+     "h": 6678.72
     }
    },
    {
@@ -77817,8 +77817,8 @@
      "h": 1807.2
     },
     "new": {
-     "w": 1807.2,
-     "h": 7755.84
+     "w": 1939.68,
+     "h": 6678.72
     }
    },
    {
@@ -77828,8 +77828,8 @@
      "h": 1807.2
     },
     "new": {
-     "w": 1807.2,
-     "h": 7755.84
+     "w": 1939.68,
+     "h": 6678.72
     }
    },
    {
@@ -77839,8 +77839,8 @@
      "h": 1807.2
     },
     "new": {
-     "w": 1807.2,
-     "h": 7755.84
+     "w": 1939.68,
+     "h": 6678.72
     }
    },
    {
@@ -77850,8 +77850,8 @@
      "h": 1807.2
     },
     "new": {
-     "w": 1807.2,
-     "h": 7755.84
+     "w": 1939.68,
+     "h": 6678.72
     }
    },
    {
@@ -77861,8 +77861,8 @@
      "h": 1807.2
     },
     "new": {
-     "w": 1807.2,
-     "h": 7755.84
+     "w": 1939.68,
+     "h": 6678.72
     }
    },
    {
@@ -77872,8 +77872,8 @@
      "h": 1807.2
     },
     "new": {
-     "w": 1807.2,
-     "h": 7755.84
+     "w": 1939.68,
+     "h": 6678.72
     }
    },
    {
@@ -77904,14 +77904,14 @@
    {
     "slot": "vm_status4",
     "anchor": "hc_eng",
-    "dx": 784.08,
-    "dy": 1370.568
+    "dx": 1389.84,
+    "dy": 293.448
    },
    {
     "slot": "host_N",
     "anchor": "ep_N3",
-    "dx": 460.256,
-    "dy": 1083.278,
+    "dx": 1066.016,
+    "dy": -1070.962,
     "edge_kept": [
      "N"
     ]
@@ -77919,8 +77919,8 @@
    {
     "slot": "host_cp",
     "anchor": "ep_N1",
-    "dx": 1429.696,
-    "dy": 1083.278,
+    "dx": 2035.456,
+    "dy": -1070.962,
     "edge_kept": [
      "N"
     ]
@@ -77928,44 +77928,44 @@
    {
     "slot": "hb_ckgen",
     "anchor": "hc_eng",
-    "dx": 834.08,
-    "dy": 1370.568
+    "dx": 1439.84,
+    "dy": 293.448
    },
    {
     "slot": "quant_NW_xp",
     "anchor": "su_NW1",
     "dx": 400.0,
-    "dy": -3298.162
+    "dy": -4375.282
    },
    {
     "slot": "calendar_SW",
     "anchor": "vmh_SW",
-    "dx": 1134.08,
-    "dy": 4461.44,
+    "dx": 1739.84,
+    "dy": 3384.32,
     "rehomed": {
      "rule": "calendar beside hub",
      "origin": {
-      "x": 14932.16,
-      "y": 11223.6,
+      "x": 15537.92,
+      "y": 10152.96,
       "orient": "R0"
      },
-     "move_um": 153.36,
+     "move_um": 146.88,
      "hub_gap_um": 21.6
     }
    },
    {
     "slot": "calendar_NW",
     "anchor": "vmh_NW",
-    "dx": 1134.08,
-    "dy": -3378.162,
+    "dx": 1739.84,
+    "dy": -4455.282,
     "rehomed": {
      "rule": "calendar beside hub",
      "origin": {
-      "x": 14932.16,
-      "y": 15044.32,
+      "x": 15537.92,
+      "y": 13965.04,
       "orient": "MX"
      },
-     "move_um": 248.4,
+     "move_um": 246.24,
      "hub_gap_um": 21.6
     }
    }
@@ -78005,8 +78005,8 @@
   "blockers": {
    "dropped": 120,
    "die": {
-    "w": 18896.48,
-    "h": 26248.48
+    "w": 19502.24,
+    "h": 24094.24
    },
    "mapped": 95,
    "resized": 19,

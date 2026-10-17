@@ -1,34 +1,34 @@
 {
- "tag": "d4e_a2p",
+ "tag": "A2Pf_4000",
  "die_um": [
-  18896.48,
-  26248.48
+  19502.24,
+  24094.24
  ],
- "die_mm2": 496.0,
- "placed_mm2": 332.57,
+ "die_mm2": 469.89,
+ "placed_mm2": 315.58,
  "cut_lanes": {
   "worst_v": {
-   "ratio": 0.494,
-   "x": 13300.0,
+   "ratio": 0.506,
+   "x": 15800.0,
    "y": [
-    24600.0,
-    25600.0
+    9800.0,
+    10800.0
    ]
   },
   "worst_h": {
-   "ratio": 0.474,
-   "y": 11600.0,
+   "ratio": 0.542,
+   "y": 13600.0,
    "x": [
-    14200.0,
-    15200.0
+    14800.0,
+    15800.0
    ]
   },
   "lines_over_060": 0,
   "windows_over_060": 0
  },
- "cut_no_lanes": 1.016,
+ "cut_no_lanes": 1.087,
  "faces_over_1": 6,
- "stages_bw": 7.946,
+ "stages_bw": 8.149,
  "per_class": {
   "HBM_K": {
    "bits": 35392,
@@ -36,11 +36,11 @@
   },
   "SM_X": {
    "bits": 34944,
-   "stages_bw": 10.64
+   "stages_bw": 11.3
   },
   "SM_HBM": {
    "bits": 18112,
-   "stages_bw": 5.31
+   "stages_bw": 2.81
   },
   "EP_SERDES": {
    "bits": 9504,
@@ -48,7 +48,7 @@
   },
   "LG_SU": {
    "bits": 8896,
-   "stages_bw": 0.5
+   "stages_bw": 0.56
   },
   "LG_HC": {
    "bits": 8896,
@@ -60,23 +60,23 @@
   },
   "HC_CORE": {
    "bits": 8896,
-   "stages_bw": 20.12
+   "stages_bw": 22.12
   },
   "COLL_VM": {
    "bits": 8880,
-   "stages_bw": 19.12
+   "stages_bw": 19.06
   },
   "VM_HUB": {
    "bits": 8608,
-   "stages_bw": 25.44
+   "stages_bw": 27.0
   },
   "COLL_EP": {
    "bits": 6120,
-   "stages_bw": 8.0
+   "stages_bw": 10.6
   },
   "HC_ENG": {
    "bits": 5744,
-   "stages_bw": 2.5
+   "stages_bw": 2.0
   },
   "VM_RING": {
    "bits": 4448,
@@ -88,50 +88,50 @@
   },
   "SM_OUT": {
    "bits": 4320,
-   "stages_bw": 17.25
+   "stages_bw": 18.38
   },
   "HBM_VM": {
    "bits": 4096,
-   "stages_bw": 28.56
+   "stages_bw": 30.19
   },
   "VM_HBM": {
    "bits": 4096,
-   "stages_bw": 28.44
+   "stages_bw": 30.19
   },
   "COLL_RING": {
    "bits": 1652,
-   "stages_bw": 14.0
+   "stages_bw": 13.0
   },
   "SFU_CORE": {
    "bits": 1536,
-   "stages_bw": 16.17
+   "stages_bw": 16.33
   },
   "SU_CORE": {
    "bits": 1536,
-   "stages_bw": 14.0
+   "stages_bw": 13.67
   },
   "KV_DESC": {
    "bits": 1024,
-   "stages_bw": 18.62
+   "stages_bw": 18.19
   }
  },
- "relay_flops": 1161912.0,
+ "relay_flops": 1174750.0,
  "su_slice": [
   1797.12,
   2825.28
  ],
  "sm": [
-  1807.2,
-  7755.84
+  1939.68,
+  6678.72
  ],
  "fits_reticle": true,
  "reticle": {
   "die_um": [
-   18896.48,
-   26248.48
+   19502.24,
+   24094.24
   ],
-  "long_margin_um": 6751.52,
-  "short_margin_um": 7103.52,
+  "long_margin_um": 8905.76,
+  "short_margin_um": 6497.76,
   "margin_req_um": 500.0,
   "ok": true
  }
