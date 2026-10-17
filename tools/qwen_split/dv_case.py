@@ -68,6 +68,15 @@ def apply_dv(v, m):
     D = _load('OT_SPLIT_DV')
     C = _load('OT_SPLIT_Q3H_CONTRACT')
     CWN = float(D.get('cluster_w', 2285.28))
+    # W | E seam channel (Q-DV 2026-10-17, contract_deltas_dv2r8f5 afe950b84): MY keeps the y order, so the abutted
+    # dvs_W0 | dvs_E0 faces meet out-to-out; a full-height channel of OT_SPLIT_DV_SEAM_UM between the halves carries the
+    # die-level in / out swap of the lateral bundle as a jog (no cell, no stage). Everything from dvs_E0's x moves E.
+    seam = float(os.environ.get('OT_SPLIT_DV_SEAM_UM', '0') or 0)
+    if seam:
+        xs = next(i['x'] for i in D['insts'] if i['n'] == 'dvs_E0') - 1e-3
+        for d in D['insts']:
+            if d['x'] >= xs:
+                d['x'] = round(d['x'] + seam, 3)
     DI = {i['n']: i for i in D['insts'] if i['m'] != 'outline_marker'}
     by = {i.name: i for i in m['insts']}
     # retained instances take the dv model's places BEFORE the masters are drawn (the collective / PHY frames follow
