@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  432.0,
-  660.96
+  367.2,
+  345.6
  ],
  "core": [
   2.16,
   2.16,
-  429.84,
-  658.8000000000001
+  365.03999999999996,
+  343.44
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
@@ -31,9 +31,7 @@
  "pins": {
   "W": [
    "p_v",
-   "p_d",
-   "clk",
-   "rst_n"
+   "p_d"
   ],
   "E": [
    "q_v",
@@ -46,23 +44,50 @@
    "n_corr",
    "n_unc",
    "n_relock"
+  ],
+  "S": [
+   "clk",
+   "rst_n"
   ]
  },
  "clock_port": "clk",
- "blocks": [],
- "findings": [
-  [
-   "WARN",
-   "clock_span",
-   "432.0 x 660.96 um: one clock root over > 600 um",
-   "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
-  ]
+ "blocks": [
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "master": "ot_sram_1r1w2c_64x546_m1",
+   "inst": "*u_dmem",
+   "idx": 0,
+   "x": 86.4,
+   "y": 216.0,
+   "w": 178.632,
+   "h": 81.0,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1",
+   "master": "ot_sram_1r1w_32x546_m1",
+   "inst": "*u_cmem",
+   "idx": 0,
+   "x": 86.4,
+   "y": 86.4,
+   "w": 177.768,
+   "h": 81.0,
+   "orient": "R0",
+   "offtrack": 0
+  }
  ],
+ "findings": [],
  "referenced": [
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
   "physical/ref_tile/s81lk_kp4_dec/kit.env",
   "physical/ref_tile/s81lk_kp4_dec/clock.sdc",
   "physical/ref_tile/s81lk_kp4_dec/signoff.sdc",
+  "physical/ref_tile/s81lk_kp4_dec/signoff_ffrepair.sdc",
   "physical/ref_tile/s81lk_kp4_dec/pdn.tcl",
   "physical/ref_tile/s81lk_kp4_dec/pre_cts.tcl",
   "physical/ref_tile/s81lk_kp4_dec/post_cts.tcl",
@@ -81,14 +106,18 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/sram_edge_guard.tcl",
+  "physical/common_flow/macro_edge_via_guard.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
-  "physical/dsrom_window_source/leaf_iohold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/dsrom_window_source/leaf_inhold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/ref_tile/s81lk_kp4_dec/pre_gpl.tcl",
-  "physical/ref_tile/s81lk_kp4_dec/pre_dpl.tcl",
-  "physical/common_flow/pin_reg_split.tcl"
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+  "physical/ref_tile/s81lk_kp4_dec/place.tcl"
  ]
 }

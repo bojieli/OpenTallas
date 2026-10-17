@@ -1,19 +1,25 @@
 {
- "name": "s81lk_kp4_dec-ec1-COMMIT",
+ "name": "s81lk_kp4_dec-k4-COMMIT",
  "block": "ot_s81_kp4_dec",
  "ref_tile": true,
- "owner": "Claude:ELEM-CENSUS S81-LINK kit helper",
- "purpose": "S81 link KP4 decoder leaf (one per SerDes link macro), never kitted before (census 10-16). Bench = H-DIE KP4_GATE configuration base (119/137 frames exact, 17 beyond-t flagged, 0 miscorrected vs rs544.py) and its decoder mutant DMUT2 (Forney).",
+ "owner": "Claude:S81-KP4 helper (FILL 0cq)",
+ "purpose": "S81 link KP4 decoder leaf (one per SerDes link macro), streaming rewrite 10-17. Bench = KP4 base (140 frames out, 122 exact, 17 beyond-t flagged, 0 miscorrected vs rs544.py) and decoder mutant DMUT2 (Forney).",
  "threads": 8,
- "peak_ram_gb": 48,
+ "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/census-s81link-1016",
+  "branch": "claude/s81kp4-1017",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
-   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec_syn_lin.svh",
-   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_lin.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
    "rtl/dsrom_sys/s81_link/tb_s81_kp4.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
    "tools/s81_link/rs544.py",
    "tools/s81_link/run_kp4_leaf_bench.sh"
   ]
@@ -22,7 +28,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81_kp4_dec u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -Irtl/dsrom_sys/s81_link --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81_kp4_dec u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -Irtl/dsrom_sys/s81_link --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -35,7 +41,7 @@
     "cmd": "bash tools/s81_link/run_kp4_leaf_bench.sh base {RUN}/bench_base",
     "expect": "pass",
     "threads": 8,
-    "peak_ram_gb": 20,
+    "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
@@ -48,7 +54,7 @@
     "cmd": "bash tools/s81_link/run_kp4_leaf_bench.sh dmut {RUN}/bench_dmut",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 20,
+    "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
@@ -61,16 +67,16 @@
    "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
   },
   "route": {
-   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81lk_kp4_dec/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81lk_kp4_dec/kit.env {LABEL} {RUN}/routes",
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81lk_kp4_dec/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81lk_kp4_dec/kit.env {LABEL} {RUN}/routes",
    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
    "logs": [
     "{RUN}/routes/{LABEL}/flow.log"
    ],
    "threads": 8,
-   "peak_ram_gb": 48
+   "peak_ram_gb": 32
   },
   "collect": {
-   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81lk_kp4_dec --out {RUN}/record/views/ot_s81_kp4_dec  > {RUN}/record/route/export.log 2>&1"
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81lk_kp4_dec --out {RUN}/record/views/ot_s81_kp4_dec --macro-view physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1 > {RUN}/record/route/export.log 2>&1"
   }
  },
  "verdict": {
@@ -86,7 +92,10 @@
    "physical/ref_tile/s81lk_kp4_dec/signoff.sdc",
    "physical/common_flow/link_budget_consistent.sdc"
   ],
-  "macros": []
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1"
+  ]
  },
  "hold_eco": {
   "enabled": true,
@@ -104,7 +113,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81lk_kp4_dec/s81lk_kp4_dec-ec1-COMMIT"
+   "to": "results/rtl/ref_tile/s81lk_kp4_dec/s81lk_kp4_dec-k4-COMMIT"
   }
  ],
  "cycles_added": 2,
@@ -113,5 +122,5 @@
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
  "merge_target": null,
- "structural_change": "NEW leaf (ELEM-CENSUS 10-16, census class F, S-DIE ok 12:20): KP4 RS(544,514) FEC decoder (AM align, syndromes, 4 BM units, Chien/Forney, uncorrectable flag) of the S81 board/cable link, real on-die digital sublayer inside the ot_pdie_serdes blackbox (die_contracts.json leaf row, parent ot_pdie_serdes); clocked by the recovered clock pma_rck (tile port clk). RTL = H-DIE structural rewrite (main 7a8b12424). Outline re-sized (~160k um2 std est.: H-DIE SYNTH ~110k x ORFS/H-DIE 1.4 measured on the rate_match gate) at ~57% core util, aspect 1.5 (W/E data faces on the long side). S-DIE serdes/ucie macro boundary (physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes.lef, 250.056 x 2250.216 W/E link column, R0 = west column): PMA lanes / pads on the W (die-edge) face, the core-side beat bus on the E face (east column = MY mirror). p_v/p_d/clk/rst_n on W (from the PMA RX / CDR), every q_*/lock/counter output on E (to the rate matcher). NOTE S-DIE: 432 um wide > the 250.056 v2 macro placeholder width; the serdes column must widen (or dec sits beside the column). TIMING REWRITE (ELEM-CENSUS S81-LINK, exact): the per-cycle 55-step syndrome Horner chain of H-DIE 7a8b12424 (~165 XOR levels a cycle, not closable at 833 ps) is replaced by its GF(2)-linear lookahead matrix (ot_s81_kp4_dec_syn_lin.svh, generated by tools/s81_link/gen_kp4_linear.py from the exact former chain and self-checked vs rs544.py): one balanced XOR reduction per next-state bit. KP4 bench on the rewrite identical to the original (base 119/137 exact, 17 flagged, 0 miscorrected; EMUT1 parity_bad 16 FAIL; DMUT2 bad 113 FAIL)."
+ "structural_change": "S81-KP4 10-17 STREAMING REWRITE (replaces the 8cd04168b kit whose gate FAILED: 57,626 flops one root, CTS OOM, bsel/sc/AND4 fanouts 11-23.6k, 46-level Chien/Forney cycle): syndromes on the arriving stream (fixed-offset one-hot chunk select, window matrix registered a cycle ahead, loop <= 9 inputs); 3 RiBM key-equation units (one GF multiply + XOR a cycle, control copies per PE group); forward Chien/Forney in two registered stages; the received codeword waits in a 64x546 SRAM delay line (u_dmem) and the correction masks in a 32x546 SRAM delay (u_cmem) -- no codeword flop copies (6 x 5,440 before). Regional synchronous reset tree, no datapath reset, every wide select replicated (<= ~140 loads a copy). RTL latency p_d -> q_d 59 cycles (was ~81: -22 for the link latency model) + 2 pin registers (recipe 4). Outline 367.2 x 345.6 (aspect 1.06): both SRAMs (pins on their W / E edges only) on the 43.2 lattice in the upper middle, std cells in one band around them; p_d over the full W face (PMA side), q_* over the full E face (rate matcher side), clk / rst_n S centre. Exact vs rs544.py (KP4 bench base PASS: 140 out, 122 exact, 17 flagged, 0 miscorrected; DMUT2 FAIL)."
 }
