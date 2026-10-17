@@ -370,7 +370,7 @@ def universal_calendar_fields():
     return [(name, lo, b) for lo, name, b in f]
 
 
-def build(specs_dir, out, extra=()):
+def build(specs_dir, out, extra=(), soft_idx=None):
     v15 = json.loads((ROOT / V15).read_text())
     grants = json.loads((ROOT / GRANTS).read_text())
     plan = json.loads((ROOT / PLAN).read_text())
@@ -677,6 +677,16 @@ def build(specs_dir, out, extra=()):
             for b in range(lo, hi):
                 drv[(i, p, b)] = ('CONST', (int(st['value']) >> (b - lo)) & 1, 0)
             straps.append(dict(st, lo=lo, hi=hi, master=insts[i]['master']))
+    # ---------------- soft parents (H-NETLIST/IDX 2026-10-16, grant 6413258a6): hb_idx -> die-level children
+    soft_rec = None
+    if soft_idx:
+        import soft_parent
+        nm = json.loads(Path(soft_idx).read_text())
+        soft_rec = soft_parent.soft_flatten('hb_idx', nm, insts, ports, drv, E, clocks, straps, rtl, problems)
+        if soft_rec:
+            soft_rec['netmap'] = str(soft_idx)
+            soft_rec['netmap_sha256'] = sha(Path(soft_idx))
+            soft_rec['netmap_sources'] = nm.get('sources')
     # ---------------- die pins
     pins = []
     for i, pp in ports.items():
@@ -770,7 +780,7 @@ def build(specs_dir, out, extra=()):
                                   '(latency counted in the compiler stage counts); logical relays that the RTL '
                                   'semantics require (SU RF_RELAY) are instances of their region spec',
                              templates=grants.get('relay_templates'), su_rf=grants.get('su_rf_relays_v7', {}).get('RF_RELAY')),
-        notes={s['region']: s.get('notes') for s in specs})
+        notes={s['region']: s.get('notes') for s in specs}, soft_parents=[soft_rec] if soft_rec else [])
     out.mkdir(parents=True, exist_ok=True)
     (out / 'contract.json').write_text(json.dumps(contract, indent=1) + '\n')
     emit_die(out, insts, ports, drv, pins, straps)
@@ -890,8 +900,10 @@ def main():
     ap.add_argument('--specs', type=Path, default=ROOT / 'tools/hbm_die_v15/v16_specs')
     ap.add_argument('--extra-spec', action='append', default=[],
                     help='revision layer spec (e.g. tools/hbm_die_v15/v16_relays/relays_d4b.json.gz: d4b relay stations)')
+    ap.add_argument('--soft-idx', type=Path, help='net map of the soft hb_idx composition (idx_soft_netmap_1016.py): '
+                    'replace hb_idx by its children hb_idx__<child> (H-DIE grant 6413258a6)')
     a = ap.parse_args()
-    c = build(a.specs, a.out, a.extra_spec)
+    c = build(a.specs, a.out, a.extra_spec, a.soft_idx)
     print(json.dumps(c['summary'], indent=1))
     for p in c['problems'][:40]:
         print('PROBLEM', p)
