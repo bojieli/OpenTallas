@@ -374,7 +374,12 @@ module qkd_ctrl_pc_host_static_core #(
     // a stale zero summary cannot hide an intake captured on the previous edge.
     // Current activity remains an eager veto; only idle assertion may be later.
     wire core_drain_activity_q=es_v_q||completion_v||e_v||er_v||s_credit||er_cr;   // all but the raw es[0] pin
-    wire core_drain_activity=es[0]||core_drain_activity_q;
+    // KVCTRL core_s6 (2026-10-16): the raw es[0] pin no longer enters the quiet pipe. es_v_q <= es[0] on the same reset
+    // and every edge, and es_v_q is in core_drain_activity_q, so the edge after es[0] already vetoes every idle_core_r
+    // that the raw bit vetoed (core_quiet_q[0] is only read through &core_quiet_q one edge later, beside
+    // !core_drain_activity_q): cycle-identical. es[0] now loads ONLY pin flops (es_v_q, es0_idle_q), so the flow's input
+    // hold pad covers it (s5 route: ports with a combinational load get no pad and RSZ could not buffer them).
+    wire core_drain_activity=core_drain_activity_q;
     // KVCTRL core_s5 (2026-10-16): idle split, cycle-identical. idle_core_r registers the idle AND WITHOUT the raw es[0]
     // pin; es0_idle_q is a dedicated es[0] pin flop; idle_core = idle_core_r & !es0_idle_q is exactly the former
     // registered AND (both flops capture on the same edge). core_s4 gate: es[0] -> idle_core in->reg -34.9 ps.
@@ -424,8 +429,15 @@ module qkd_ctrl_pc_host_static_core #(
     // KV corrected returns include tag, PHY raw, pcport and landing ECC
     // pipelines. Static reads are covered above through their actual e_v.
     reg [15:0] drain_kv;
+    // KVCTRL core_s6 (2026-10-16): the raw e_l_v pin left the activity veto (structural fix of core_s5 EARLY_FAIL_HOLD:
+    // e_l_v -> l_v_q/D FF hold -17.17 ps was the ONE endpoint the CTS hold repair could not fix -- the port also fed this
+    // combinational OR, so the flow gave it no input hold pad, and the repair could not buffer it). A legal landing always
+    // has drain_kv >= 1 two edges before l_v (rd_kv precedes its landing by >= RL + PHY edges), so hbm_debt_zero_q already
+    // vetoes idle_hbm on every edge the raw bit did; l_v (= e_l_v one edge later) stays in the veto. Cycle-identical for
+    // all legal traffic; an unsolicited zero-debt landing still raises drain_fault_hbm and drops idle_hbm one edge later.
+    // e_l_v now loads only its pin flop.
     wire hbm_drain_activity=obs_commit_valid||rd_kv||tc_v||cmd_v||static_v_q||c_v||s_cr||wv_q||cv_q||hand_q||
-      wcon_q||row_v||col_v||po[0]||po[28]||rv_q||rawslot_q||kv_v||em_v||l_v||e_l_v||native_commit_valid;
+      wcon_q||row_v||col_v||po[0]||po[28]||rv_q||rawslot_q||kv_v||em_v||l_v||native_commit_valid;
     reg hbm_debt_zero_q;reg [1:0] hbm_quiet_q;
     always @(posedge hclk or negedge h_rn)
       if(!h_rn)begin hbm_debt_zero_q<=0;hbm_quiet_q<=0;end
