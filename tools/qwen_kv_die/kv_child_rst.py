@@ -67,6 +67,47 @@ def _d(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 
+def _bfs(name, cen, opn, ctr, goal, G=43.2):
+    """fewest-hop chain of free spots from any open node to within HOP of goal: one representative spot per G-um cell,
+    an edge = two representatives <= 0.97 HOP apart.  returns (parent node, [spot indices])"""
+    from collections import deque
+    cell = {}
+    for i, (x, y) in enumerate(cen):
+        k = (int(x // G), int(y // G))
+        if k not in cell:
+            cell[k] = i
+    R = int(0.97 * HOP // G)
+    offs = [(dx, dy) for dx in range(-R, R + 1) for dy in range(-R, R + 1) if 0 < abs(dx) + abs(dy) <= R]
+    prev, dq = {}, deque()
+    for n in opn:
+        c = ctr(n)
+        for k, i in cell.items():
+            if abs(cen[i][0] - c[0]) + abs(cen[i][1] - c[1]) <= 0.97 * HOP and k not in prev:
+                prev[k] = (None, n)
+                dq.append(k)
+    hit = None
+    while dq:
+        k = dq.popleft()
+        i = cell[k]
+        if abs(cen[i][0] - goal[0]) + abs(cen[i][1] - goal[1]) <= 0.97 * HOP:
+            hit = k
+            break
+        for dx, dy in offs:
+            q = (k[0] + dx, k[1] + dy)
+            if q in cell and q not in prev and abs(cen[cell[q]][0] - cen[i][0]) + abs(cen[cell[q]][1] - cen[i][1]) <= 0.97 * HOP:
+                prev[q] = (k, None)
+                dq.append(q)
+    if hit is None:
+        raise ValueError(f'{name}: no free-spot hop chain to ({goal[0]:.0f}, {goal[1]:.0f})')
+    path, k = [], hit
+    while True:
+        path.append(cell[k])
+        pk, n = prev[k]
+        if pk is None:
+            return n, path[::-1]
+        k = pk
+
+
 def plan(name, frame_rect, leaves, loads, driver, clock_of):
     """name: station name prefix; frame_rect (x0, y0, x1, y1) die um; leaves: [(x0, y0, x1, y1)] leaf outlines;
     loads: [(key, (x, y))] leaf reset pin bits; driver: (x, y) of the die net's driver; clock_of(pt) -> clock ref.
@@ -148,28 +189,33 @@ def plan(name, frame_rect, leaves, loads, driver, clock_of):
                     p['kids'] += 1
                 nodes.append(s)
                 break
-            # intermediate station: the free spot within HOP of the nearest node that is nearest to s
-            q = min(nodes, key=lambda n: _d(ctr(n), ctr(s)))
+            # intermediate stations: greedy toward s from the nearest open node; when the free space gives no progress
+            # (a pocket behind a wide block), a hop-graph BFS over the free spots finds the detour
+            opn = [n for n in nodes if n.get('root') or n['kids'] < SFAN]
+            q = min(opn, key=lambda n: _d(ctr(n), ctr(s)))
             qc = ctr(q)
             dq = np.abs(cen[:, 0] - qc[0]) + np.abs(cen[:, 1] - qc[1])
             ds = np.abs(cen[:, 0] - ctr(s)[0]) + np.abs(cen[:, 1] - ctr(s)[1])
             okm = dq <= HOP * 0.97
-            if not okm.any():
-                raise ValueError(f'{name}: no intermediate station spot within {HOP} um of ({qc[0]:.0f}, {qc[1]:.0f})')
-            j = int(np.argmin(np.where(okm, ds, np.inf)))
-            if ds[j] >= _d(qc, ctr(s)) - 1.0:
-                raise ValueError(f'{name}: intermediate station makes no progress toward ({ctr(s)[0]:.0f}, {ctr(s)[1]:.0f})')
-            x, y = cand[j]
-            fr.take(x, y)
+            j = int(np.argmin(np.where(okm, ds, np.inf))) if okm.any() else -1
+            if j >= 0 and ds[j] < _d(qc, ctr(s)) - 1.0:
+                path = [j]
+                par0 = q
+            else:
+                par0, path = _bfs(name, cen, [n for n in opn], ctr, ctr(s))
+            for j in path:
+                x, y = cand[j]
+                if fr.occ[int(round((x - HALO - fr.x0) / STEP)), int(round((y - HALO - fr.y0) / STEP))]:
+                    raise ValueError(f'{name}: hop-chain spot ({x:.0f}, {y:.0f}) taken by its own chain')
+                fr.take(x, y)
+                t = dict(name=None, x=float(x), y=float(y), members=[], parent=par0, depth=par0['depth'] + 1, kids=0)
+                if not par0.get('root'):
+                    par0['kids'] += 1
+                nodes.append(t)
+                extra.append(t)
+                par0 = t
             cand = fr.spots()
             cen = cand + STN / 2
-            p = min([n for n in nodes if _d(ctr(n), (x + STN / 2, y + STN / 2)) <= HOP and (n.get('root') or n['kids'] < SFAN)],
-                    key=lambda n: (n['depth'], _d(ctr(n), (x + STN / 2, y + STN / 2))))
-            t = dict(name=None, x=float(x), y=float(y), members=[], parent=p, depth=p['depth'] + 1, kids=0)
-            if not p.get('root'):
-                p['kids'] += 1
-            nodes.append(t)
-            extra.append(t)
     allst = [n for n in nodes if not n.get('root')]
     for k, n in enumerate(allst):
         n['name'] = f'{name}_s{k}'

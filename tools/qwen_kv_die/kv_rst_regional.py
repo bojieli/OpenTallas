@@ -168,6 +168,12 @@ def main(argv=None):
     add_lines, add_wires, add_place = [], [], []
     touched = set()
     gst = {}                                   # placed stations (keep-outs for later nets)
+    drv_of, relay_in, loc = {}, {}, {}
+    for nm, (li, mst, conns) in insts.items():
+        if RELAY.match(mst):
+            for p, refs in conns:
+                if p == 'a' and len(refs) == 1:
+                    relay_in[nm] = refs[0]
     for ref in sorted(bitpins):
         ends = bitpins[ref]
         drv, loads = None, []
@@ -180,6 +186,8 @@ def main(argv=None):
                 drv = (nm, ci, i, xy)
             else:
                 loads.append((nm, ci, i, xy, mst))
+        if drv is not None:
+            drv_of[ref] = drv[0]
         if drv is None or drv[3] is None:
             continue
         # every load counts: a chain's next relay ('a' pin) too -- a reset hop over HOP or an inner tree node whose
@@ -200,14 +208,23 @@ def main(argv=None):
             continue
         xs = [dxy[0]] + [L[3][0] for L in mov]
         ys = [dxy[1]] + [L[3][1] for L in mov]
-        win = (max(0.0, min(xs) - WIN), max(0.0, min(ys) - WIN), min(die_w, max(xs) + WIN), min(die_h, max(ys) + WIN))
-        obs = [r for n, r in rects.items() if r[0] < win[2] and r[2] > win[0] and r[1] < win[3] and r[3] > win[1]]
-        obs += [r for r in gst.values() if r[0] < win[2] and r[2] > win[0] and r[1] < win[3] and r[3] > win[1]]
         dnm = drv[0]
         ck = next((refs[0] for p, refs in insts[dnm][2] if p == 'ck'), None) or 'n_clk_core_c[0]'
         net = ref.rsplit('[', 1)[0]
         base = re.sub(r'[^A-Za-z0-9_]', '_', ref)
-        st, assign = CR.plan(f'rrs_{base}', win, obs, [((L[0], L[1], L[2]), L[3]) for L in mov], dxy, lambda pt: ck)
+        err = None
+        for win_m in (WIN, 800.0, 2000.0):      # a pocket behind a wide block: widen the free-space window
+            win = (max(0.0, min(xs) - win_m), max(0.0, min(ys) - win_m), min(die_w, max(xs) + win_m), min(die_h, max(ys) + win_m))
+            obs = [r for n, r in rects.items() if r[0] < win[2] and r[2] > win[0] and r[1] < win[3] and r[3] > win[1]]
+            obs += [r for r in gst.values() if r[0] < win[2] and r[2] > win[0] and r[1] < win[3] and r[3] > win[1]]
+            try:
+                st, assign = CR.plan(f'rrs_{base}', win, obs, [((L[0], L[1], L[2]), L[3]) for L in mov], dxy, lambda pt: ck)
+                err = None
+                break
+            except ValueError as e_:
+                err = e_
+        if err is not None:
+            raise err
         for s_ in st:
             wn = f'n_{s_["name"]}'
             add_wires.append(f'  wire [0:0] {wn};')
@@ -221,6 +238,7 @@ def main(argv=None):
         far_st = {s_['name'] for s_ in st if s_.get('far')}
         for (nm, ci, i), sname in assign.items():
             insts[nm][2][ci][1][i] = f'n_{sname}[0]'
+            loc[(nm, ci, i)] = depth[sname]
             touched.add(nm)
             L = next(L_ for L_ in mov if (L_[0], L_[1], L_[2]) == (nm, ci, i))
             dl_ = abs(L[3][0] - sxy[sname][0]) + abs(L[3][1] - sxy[sname][1])
@@ -271,12 +289,45 @@ def main(argv=None):
         ej = json.loads(ex.read_text()) if ex.exists() else dict(schema='opentallas.qwen_kvsys_expand.v1', frames={})
         ej.setdefault('leaves', {})[STATION] = dict(view=vd, rtl=RS.RTL)
         ex.write_text(json.dumps(ej, indent=1) + '\n')
+    # reset arrival depth per reset input pin: core cycles after its root (HOST pin or a qkd_rst_region, whose release
+    # calendar restarts the count) = relays + stations on the way; must stay < RELAY_FLUSH (kv_die / kv_relays)
+    memo = {}
+
+    def arrive(nm):
+        # cycles from the root to the reset value at relay nm's input
+        if nm in memo:
+            return memo[nm]
+        memo[nm] = 0
+        ref = relay_in.get(nm)
+        d = drv_of.get(ref) if ref else None
+        if d is None:
+            return 0
+        up = (arrive(d) + 1) if (RELAY.match(insts[d][1]) and insts[d][1] != 'qkd_rst_region') else 0
+        ci = next(k for k, (p, _) in enumerate(insts[nm][2]) if p == 'a')
+        memo[nm] = up + loc.get((nm, ci, 0), 0)
+        return memo[nm]
+    worst = (0, None)
+    for ref, ends in bitpins.items():
+        d = drv_of.get(ref)
+        if d is None:
+            continue
+        up = (arrive(d) + 1) if (RELAY.match(insts[d][1]) and insts[d][1] != 'qkd_rst_region') else 0
+        for nm, ci, i in ends:
+            if nm == d or RELAY.match(insts[nm][1]):
+                continue
+            t = up + loc.get((nm, ci, i), 0)
+            if t > worst[0]:
+                worst = (t, f'{nm}.{insts[nm][2][ci][0]}')
+    rep['max_total_depth'] = worst[0]
+    rep['max_total_depth_load'] = worst[1]
+    if worst[0] >= int(os.environ.get('OT_KV_RELAY_FLUSH', '128')):
+        raise ValueError(f'kv_rst_regional: reset depth {worst} >= RELAY_FLUSH')
     rep['excluded_loads'] = dict(rep['excluded_loads'])
     rep['max_depth'] = max((v['max_depth'] for v in rep['nets'].values()), default=0)
     rep['max_hop_um'] = max((v['max_hop_um'] for v in rep['nets'].values()), default=0)
     rep['max_leaf_um'] = max((v['max_leaf_um'] for v in rep['nets'].values()), default=0)
     (a.run / 'rst_regional.json').write_text(json.dumps(rep, indent=1) + '\n')
-    print(json.dumps(dict({k_: rep[k_] for k_ in ('stations', 'max_depth', 'max_hop_um', 'max_leaf_um', 'kept_nets', 'excluded_loads')},
+    print(json.dumps(dict({k_: rep[k_] for k_ in ('stations', 'max_depth', 'max_total_depth', 'max_total_depth_load', 'max_hop_um', 'max_leaf_um', 'kept_nets', 'excluded_loads')},
                           far_loads=len(rep['far_loads']), far_masters=sorted({f['master'] for f in rep['far_loads']}))))
     return 0
 
