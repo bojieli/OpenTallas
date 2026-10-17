@@ -1,19 +1,18 @@
 `timescale 1ns/1ps
 `default_nettype none
 // Physical native compaction, not a compiler alias: four padded16word TP4
-// records become24 contiguous FP32 words in two full512bit nativeVM rows.
+// records arrive on four actual parallel rank lanes, then become24 contiguous FP32 words in two full512bit nativeVM rows.
 // Clock: actual fast1.2GHz collective/VM port. The projection-to-fast bridge
 // precedes this leaf. All inputs, output writes and completion have fixed slots.
 // R_CYC counts edges after start; values include this leaf's input-pin register.
 module ot_s81_hcx_gatherpack #(
  parameter integer WL=4,
- parameter[63:0]R_CYC={16'd14,16'd10,16'd6,16'd2}
+ parameter[63:0]R_CYC={4{16'd2}}
 )(
  input wire clk,rst_n,start,
  input wire[13:0]raw_base_row,
- input wire i_v,
- input wire[1:0]i_rank,
- input wire[511:0]i_d,
+ input wire[3:0]i_v,
+ input wire[2047:0]i_d,
  output reg wq_v,
  output reg[13:0]wq_row,
  output wire[15:0]wq_mask,
@@ -26,7 +25,7 @@ module ot_s81_hcx_gatherpack #(
  endfunction
  localparam integer LAST=max_return(R_CYC), W0=LAST+1,W1=LAST+2,END_CYC=LAST+WL+4;
  reg busy;reg[15:0]age;reg[13:0]base;
- reg vq;reg[1:0]rankq;reg[511:0]dq;
+ reg[3:0]vq;reg[2047:0]dq;
  reg[191:0]words[0:3];
  reg[WL-1:0]commit_due;
  wire[3:0]due;
@@ -34,7 +33,7 @@ module ot_s81_hcx_gatherpack #(
   assign due[j]=busy && age+1'b1==R_CYC[16*j+:16];
  end endgenerate
  assign wq_mask=16'hffff;
- always @(posedge clk)begin dq<=i_d;rankq<=i_rank;end
+ always @(posedge clk)begin dq<=i_d;end
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin busy<=0;age<=0;vq<=0;wq_v<=0;done<=0;fault<=0;commit_due<=0;end
   else begin
@@ -46,11 +45,11 @@ module ot_s81_hcx_gatherpack #(
     if(busy||raw_base_row[3:0]!=0||(|commit_due))fault<=1;
     busy<=1;age<=0;base<=raw_base_row;
    end
-   if(vq!=(|due))fault<=1;
+   if(vq!=due)fault<=1;
    for(integer j=0;j<4;j=j+1)if(due[j])begin
     // Capture on the compiled edge even when the observed record is wrong.
     // A late valid never repairs or moves the write calendar.
-    words[j]<=dq[191:0];if(rankq!=j)fault<=1;
+    words[j]<=dq[512*j+:192];if(dq[512*j+192+:320]!=320'd0)fault<=1;
    end
    if(busy)begin
     age<=age+1'b1;

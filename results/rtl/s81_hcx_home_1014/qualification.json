@@ -33,7 +33,7 @@
     "Native VM8 calendar and real payload multicast/relay phases",
     "Actual four-rank raw24 allgather into native VM",
     "Intermediate post-attn HC H_STORE before FFN projection",
-    "Native op2 fixed540phasepadded repeated-job gate running; /7physicalclock obligation explicit",
+    "All43residentparameter-tail mapping, actualMUT_POST negative and /7physicalclock closure",
     "All43fullresidentimages row0boundarychecked only; 2640prior-content checks notfullnativefunctional token",
     "All leaf/controller physical synthesis CTS timing DRC and clock-root closure"
   ],
@@ -81,5 +81,23 @@
     "fixed_completion_test": 23,
     "census": "gatherpack_census.json",
     "production_R_CYC_WL": "unboundactualcollective/VMcalendar"
+  },
+  "native_tail": {
+    "scope": "actualot_hgi_hc_unit op2, isolated goldenrawmixinputs; notfullprojection/gather/token",
+    "exact_native_words": 64,
+    "jobs": [
+      "L00attn",
+      "L00FFN"
+    ],
+    "compiled_serial_budget": 540,
+    "observed_public_completion_cycles": 541,
+    "observed_actual_core_cycles": [
+      534,
+      531
+    ],
+    "positive": "post_native_L00_fixed540.log",
+    "phase": "sharedSinkhorn /7stepclock, fixedpadding coversphasewithoutwaiting",
+    "negative": "actualMUT_POST native tail stillpending",
+    "physical_clock": "additional /7root andCTS/SS/FF/DRCunqualified"
   }
 }

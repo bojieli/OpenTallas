@@ -1,0 +1,13 @@
+{
+  "scope": "actual Yosys proc/opt flop census, parallel rank ports, no physical timing qualification",
+  "clock": "clk fast1.2GHz",
+  "flopbits": {
+    "$adffe": 16,
+    "$dffe": 1052,
+    "$sdffce": 256,
+    "$adff": 12,
+    "$dff": 2048
+  },
+  "total": 3384,
+  "source_sha256": "3260fac18d865ef8d654de12a46318c01f513dd5281901246ed0f013dd113866"
+}

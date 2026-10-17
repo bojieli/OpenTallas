@@ -10,7 +10,7 @@ import numpy as np
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'tools'))
 import hdc_golden_v41 as G
 
-def build(src,out):
+def build(src,out,raw_native=None):
  G.set_arith('chunk8');out.mkdir(parents=True,exist_ok=True)
  vm={int(s[:8],16):int(s[8:],16) for s in (src/'hu_vmi.mem').read_text().splitlines()}
  rom={int(s[:10],16):int(s[10:],16) for s in (src/'hu_hbm.mem').read_text().splitlines()}
@@ -20,14 +20,22 @@ def build(src,out):
  for block,line in enumerate((src/'hu_case.mem').read_text().splitlines()):
   rec=int(line[56:],16);a=(rec>>128)&((1<<256)-1);b=(rec>>384)&((1<<256)-1)
   ab=(a>>8)&((1<<40)-1);bs=((b>>8)&((1<<40)-1))>>5
-  x=np.array([vm[ab+i] for i in range(20480)],np.uint32).view(np.float32)
-  fn=np.empty((24,20480),np.uint32)
-  for row in range(24):
-   for k in range(8):
-    for r in range(80):
-     for l in range(32):fn[row,8*(r*32+l)+k]=(rom[bs+4+(8*row+k)*320+r*4+l//8]>>(32*(l%8)))&0xffffffff
-  scale=G.rsqrt(G.add(G.div(G.split_sum(G.mul(x,x),G.HC_SS_SPLIT),np.float32(20480)),G.from_bits(eps)))
-  raw=np.asarray(G.mul(G.matvec_c(fn.view(np.float32),x,G.HC_SPLIT,cls='he'),scale),np.float32).view(np.uint32).tolist()
+  if raw_native is not None:
+   raw=[]
+   for row in range(24):
+    text=(raw_native/f'r{row:02d}'/'run.log').read_text()
+    match=re.search(rf'HCX PROJ block{block} result([0-9a-fA-F]{{8}}) exact1 native_cycles264',text)
+    if not match:raise ValueError(f'missing actual native projection row{row} block{block}')
+    raw.append(int(match.group(1),16))
+  else:
+   x=np.array([vm[ab+i] for i in range(20480)],np.uint32).view(np.float32)
+   fn=np.empty((24,20480),np.uint32)
+   for row in range(24):
+    for k in range(8):
+     for r in range(80):
+      for l in range(32):fn[row,8*(r*32+l)+k]=(rom[bs+4+(8*row+k)*320+r*4+l//8]>>(32*(l%8)))&0xffffffff
+   scale=G.rsqrt(G.add(G.div(G.split_sum(G.mul(x,x),G.HC_SS_SPLIT),np.float32(20480)),G.from_bits(eps)))
+   raw=np.asarray(G.mul(G.matvec_c(fn.view(np.float32),x,G.HC_SPLIT,cls='he'),scale),np.float32).view(np.uint32).tolist()
   def rows(words):return ''.join(f'{sum(int(w)<<(32*i) for i,w in enumerate(words[j:j+16])):0128x}\n' for j in range(0,len(words),16))
   (out/f'raw{block}.mem').write_text(rows(raw+[0]*8))
   want=ex[block*24:(block+1)*24]
@@ -40,6 +48,6 @@ def build(src,out):
      if payload>>bit&1:masks[m][addr//8]|=1<<(8*bit+addr%8)
  for m in range(4):(out/f'hcx_post_p{m}.viamap.hex').write_text(''.join(f'{r:0144x}\n' for r in masks[m]))
  (out/'eps.mem').write_text(f'{eps:08x}\n')
- (out/'metadata.json').write_text(json.dumps(dict(source=str(src),scope='isolated native tail, rawmix reference inputs; no die composition',macros=4),indent=2)+'\n')
+ (out/'metadata.json').write_text(json.dumps(dict(source=str(src),scope='isolated native tail, rawmix actual recordedHCP outputs' if raw_native else 'isolated native tail, rawmix reference inputs; no die composition',raw_native=str(raw_native) if raw_native else None,macros=4),indent=2)+'\n')
 if __name__=='__main__':
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--src',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args();build(a.src,a.out)
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--src',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--raw-native',type=Path);a=p.parse_args();build(a.src,a.out,a.raw_native)

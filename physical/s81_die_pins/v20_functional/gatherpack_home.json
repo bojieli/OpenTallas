@@ -1,0 +1,16 @@
+{
+ "name": "sp_hcx_gatherpack",
+ "master": "ot_s81_hcx_gatherpack",
+ "at_um": [
+  15600.0,
+  22770.0
+ ],
+ "outline": {
+  "w": 216.0,
+  "h": 216.0
+ },
+ "pin_file": "physical/s81_die_pins/v20_functional/ot_s81_hcx_gatherpack.tcl",
+ "clock": "stream_1p2",
+ "geometry": "full xsp7 instance rectangle0overlaps;21.6um east of controller; disjoint all six HCP/MIX/embedding reservations",
+ "qualification": "NEW actual compaction leaf; no collective/VM transport latency claim"
+}

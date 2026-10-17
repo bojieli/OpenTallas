@@ -1,0 +1,48 @@
+HCX_POST_STATE cycle1 st0 adapterbusy0 iss0 jobdone0 inflight0 flt0
+HCX_POST_START cycle3 ffn0 ready1 raw_v0 busy0 iss0
+HCX_POST_JOB cycle5 ready1 state0
+HCX_POST_STATE cycle6 st21 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle7 st22 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle8 st1 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle9 st23 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle20 st7 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle49 st8 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle78 st9 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle79 st10 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle100 st11 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle175 st12 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle188 st13 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle217 st14 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle230 st15 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle231 st16 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle522 st17 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle534 st19 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle535 st0 adapterbusy1 iss0 jobdone1 inflight0 flt0
+HCX_POST_ACTUAL_DONE cycle537 relative534
+HCX_POST block0 exact32words native_cycles541
+HCX_POST_START cycle552 ffn1 ready1 raw_v0 busy0 iss0
+HCX_POST_JOB cycle554 ready1 state0
+HCX_POST_STATE cycle555 st21 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle556 st22 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle557 st1 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle558 st23 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle569 st7 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle598 st8 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle627 st9 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle628 st10 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle649 st11 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle724 st12 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle737 st13 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle766 st14 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle779 st15 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle780 st16 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle1068 st17 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle1080 st19 adapterbusy1 iss0 jobdone0 inflight0 flt0
+HCX_POST_STATE cycle1081 st0 adapterbusy1 iss0 jobdone1 inflight0 flt0
+HCX_POST_ACTUAL_DONE cycle1083 relative531
+HCX_POST block1 exact32words native_cycles541
+HCX_POST_NATIVE PASS actual HBMHC op2 arithmetic +residentparameterROM+scheduledS81VM
+- rtl/dsrom_sys/s81_hcx/test/tb_s81_hcx_post_native.sv:55: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 0.295 s; speed 37.296 us/s
+- Verilator: cpu 0.295 s on 1 threads; allocated 20 MB

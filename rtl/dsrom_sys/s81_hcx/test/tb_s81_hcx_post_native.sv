@@ -2,7 +2,7 @@
 module tb_s81_hcx_post_native;
  localparam integer RL=4,WL=4;
  reg clk=0;always #5 clk=~clk;
- reg rn=0,start=0,ffn=0;reg[15:0]budget;wire done,f,rv,wv;wire[13:0]ra,wa;wire[15:0]wm;wire[511:0]wd;
+ reg rn=0,start=0,ffn=0;reg[5:0]layer=0;integer lidx,launch_phase=0;reg[15:0]budget;wire done,f,rv,wv;wire[13:0]ra,wa;wire[15:0]wm;wire[511:0]wd;
  reg[511:0]raw0[0:1],raw1[0:1],want0[0:1],want1[0:1],mem[0:1];reg[31:0]eps[0:0];
  reg[RL-1:0]readv=0;reg[511:0]readd[0:RL-1];
  reg[WL-1:0]writev=0;reg[13:0]writea[0:WL-1];reg[15:0]writem[0:WL-1];reg[511:0]writed[0:WL-1];
@@ -21,7 +21,7 @@ module tb_s81_hcx_post_native;
 `else
  localparam integer MUT=0;
 `endif
- ot_s81_hcx_post_native #(.RL(RL),.WL(WL),.MUT_POST(MUT))u(.clk(clk),.rst_n(rn),.start(start),.ffn(ffn),.layer_idx(6'd0),.raw_base_row(14'd2624),.coef_base_row(14'd2560),.norm_eps(eps[0]),.compiled_cycles(budget),.done(done),.rq_v(rv),.rq_row(ra),.rs_v(readv[RL-1]),.rs_d(readd[RL-1]),.wq_v(wv),.wq_row(wa),.wq_mask(wm),.wq_d(wd),.wq_commit(writev[WL-1]),.fault(f));
+ ot_s81_hcx_post_native #(.RL(RL),.WL(WL),.MUT_POST(MUT))u(.clk(clk),.rst_n(rn),.start(start),.ffn(ffn),.layer_idx(layer),.raw_base_row(14'd2624),.coef_base_row(14'd2560),.norm_eps(eps[0]),.compiled_cycles(budget),.done(done),.rq_v(rv),.rq_row(ra),.rs_v(readv[RL-1]),.rs_d(readd[RL-1]),.wq_v(wv),.wq_row(wa),.wq_mask(wm),.wq_d(wd),.wq_commit(writev[WL-1]),.fault(f));
  always @(posedge clk)begin
   cyc<=cyc+1;readv[0]<=rv;readd[0]<=ffn?raw1[ra-2624]:raw0[ra-2624];
   for(integer i=1;i<RL;i=i+1)begin readv[i]<=readv[i-1];readd[i]<=readd[i-1];end
@@ -32,9 +32,11 @@ module tb_s81_hcx_post_native;
  initial begin:run
   if(!$value$plusargs("DIR=%s",dir))$fatal(1,"DIR required");
   calibrate=$test$plusargs("CALIBRATE");
+  if($value$plusargs("LAYER=%d",lidx))layer=6'(lidx);
+  if($value$plusargs("PHASE=%d",launch_phase))begin end
   if(!$value$plusargs("COMPILED_CYC=%d",cost))cost=65535;budget=16'(cost);
   $readmemh({dir,"/raw0.mem"},raw0);$readmemh({dir,"/raw1.mem"},raw1);$readmemh({dir,"/coef0.mem"},want0);$readmemh({dir,"/coef1.mem"},want1);$readmemh({dir,"/eps.mem"},eps);
-  repeat(3)@(negedge clk);rn=1;
+  repeat(3)@(negedge clk);rn=1;repeat(launch_phase)@(negedge clk);
   for(integer block=0;block<(calibrate?1:2);block=block+1)begin
    mem[0]='1;mem[1]='1;ffn=block^$test$plusargs("SWAP");start=1;t0=cyc;@(negedge clk);start=0;
    if(calibrate)begin

@@ -1,0 +1,912 @@
+{
+ "name": "s81_hcx_projection_ref",
+ "top": "ot_s81_hcx_projection_leaf",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/dsrom_sys/s81_hcx/ot_s81_hcx_projection_leaf.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 1728,
+  "h": 864
+ },
+ "why_floorplan": "S-DIE f7cc8be24: six clear1728x864 full43set projection homes;64ROM4096x266+16SRAM, W32 retained",
+ "macros": [
+  {
+   "inst": "g_bank[0].g_rom[0].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    25.92,
+    38.88
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[0].g_rom[0].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    25.92,
+    101.80799999999999
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[0].g_rom[1].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    172.8,
+    38.88
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[0].g_rom[1].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    172.8,
+    101.80799999999999
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[0].g_rom[2].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    319.68,
+    38.88
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[0].g_rom[2].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    319.68,
+    101.80799999999999
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[0].g_rom[3].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    466.56,
+    38.88
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[0].g_rom[3].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    466.56,
+    101.80799999999999
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[0].g_x[0].ram",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    1339.2,
+    45.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[0].g_x[1].ram",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    1458.432,
+    45.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[1].g_rom[0].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    613.4399999999999,
+    38.88
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[1].g_rom[0].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    613.4399999999999,
+    101.80799999999999
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[1].g_rom[1].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    760.3199999999999,
+    38.88
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[1].g_rom[1].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    760.3199999999999,
+    101.80799999999999
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[1].g_rom[2].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    907.1999999999999,
+    38.88
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[1].g_rom[2].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    907.1999999999999,
+    101.80799999999999
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[1].g_rom[3].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    1054.08,
+    38.88
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[1].g_rom[3].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    1054.08,
+    101.80799999999999
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[1].g_x[0].ram",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    1339.2,
+    136.07999999999998
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[1].g_x[1].ram",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    1458.432,
+    136.07999999999998
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[2].g_rom[0].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    25.92,
+    164.736
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[2].g_rom[0].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    25.92,
+    227.664
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[2].g_rom[1].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    172.8,
+    164.736
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[2].g_rom[1].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    172.8,
+    227.664
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[2].g_rom[2].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    319.68,
+    164.736
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[2].g_rom[2].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    319.68,
+    227.664
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[2].g_rom[3].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    466.56,
+    164.736
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[2].g_rom[3].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    466.56,
+    227.664
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[2].g_x[0].ram",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    1339.2,
+    226.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[2].g_x[1].ram",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    1458.432,
+    226.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[3].g_rom[0].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    613.4399999999999,
+    164.736
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[3].g_rom[0].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    613.4399999999999,
+    227.664
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[3].g_rom[1].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    760.3199999999999,
+    164.736
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[3].g_rom[1].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    760.3199999999999,
+    227.664
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[3].g_rom[2].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    907.1999999999999,
+    164.736
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[3].g_rom[2].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    907.1999999999999,
+    227.664
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[3].g_rom[3].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    1054.08,
+    164.736
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[3].g_rom[3].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    1054.08,
+    227.664
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[3].g_x[0].ram",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    1339.2,
+    317.52
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[3].g_x[1].ram",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    1458.432,
+    317.52
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[4].g_rom[0].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    25.92,
+    290.592
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[4].g_rom[0].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    25.92,
+    353.52
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[4].g_rom[1].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    172.8,
+    290.592
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[4].g_rom[1].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    172.8,
+    353.52
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[4].g_rom[2].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    319.68,
+    290.592
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[4].g_rom[2].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    319.68,
+    353.52
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[4].g_rom[3].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    466.56,
+    290.592
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[4].g_rom[3].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    466.56,
+    353.52
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[4].g_x[0].ram",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    1339.2,
+    408.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[4].g_x[1].ram",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    1458.432,
+    408.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[5].g_rom[0].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    613.4399999999999,
+    290.592
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[5].g_rom[0].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    613.4399999999999,
+    353.52
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[5].g_rom[1].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    760.3199999999999,
+    290.592
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[5].g_rom[1].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    760.3199999999999,
+    353.52
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[5].g_rom[2].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    907.1999999999999,
+    290.592
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[5].g_rom[2].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    907.1999999999999,
+    353.52
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[5].g_rom[3].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    1054.08,
+    290.592
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[5].g_rom[3].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    1054.08,
+    353.52
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[5].g_x[0].ram",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    1339.2,
+    498.96000000000004
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[5].g_x[1].ram",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    1458.432,
+    498.96000000000004
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[6].g_rom[0].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    25.92,
+    416.448
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[6].g_rom[0].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    25.92,
+    479.376
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[6].g_rom[1].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    172.8,
+    416.448
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[6].g_rom[1].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    172.8,
+    479.376
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[6].g_rom[2].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    319.68,
+    416.448
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[6].g_rom[2].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    319.68,
+    479.376
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[6].g_rom[3].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    466.56,
+    416.448
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[6].g_rom[3].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    466.56,
+    479.376
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[6].g_x[0].ram",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    1339.2,
+    589.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[6].g_x[1].ram",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    1458.432,
+    589.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[7].g_rom[0].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    613.4399999999999,
+    416.448
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[7].g_rom[0].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    613.4399999999999,
+    479.376
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[7].g_rom[1].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    760.3199999999999,
+    416.448
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[7].g_rom[1].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    760.3199999999999,
+    479.376
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[7].g_rom[2].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    907.1999999999999,
+    416.448
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[7].g_rom[2].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    907.1999999999999,
+    479.376
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[7].g_rom[3].g_page[0].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    1054.08,
+    416.448
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[7].g_rom[3].g_page[1].rom",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "at": [
+    1054.08,
+    479.376
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[7].g_x[0].ram",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    1339.2,
+    680.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "g_bank[7].g_x[1].ram",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    1458.432,
+    680.4
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "N": [
+   "stage_begin",
+   "stage_v",
+   "stage_word",
+   "stage_d",
+   "cmd_v",
+   "cmd_ffn",
+   "norm_eps",
+   "cmd_layer"
+  ],
+  "S": [
+   "o_v",
+   "o_d",
+   "fault"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.55,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "period_ps": 1000,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:s_hc_home",
+  "branch": "codex/s81-hc-home-1014",
+  "tag": "native-w32-full43-r2",
+  "structural_change": "Resident-ROM native HC fn+RMS projection, real macros, pin-registered staged VM payload",
+  "purpose": "Single fullresident43layer-set exact W32 normalized projection master; no fullhomequalification",
+  "views_to": "physical/ref_tile/s81_hcx_projection_ref/views",
+  "record_to": "results/rtl/ref_tile/s81_hcx_projection_ref",
+  "benches": [
+   {
+    "name": "projection_exact",
+    "cmd": "bash tools/s81_ftok/hcx_projection_gate.sh {RUN}/bench/proj pass",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "projection_bank_mut",
+    "cmd": "bash tools/s81_ftok/hcx_projection_gate.sh {RUN}/bench/mut mut",
+    "expect": "fail",
+    "fail_regex": "HCX_PROJECTION FAIL",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "results/rtl/s81_hcx_home_1014/fixture_L00_row0.tar.gz"
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "io_tcl": "physical/s81_die_pins/v20_functional/ot_s81_hcx_projection_leaf.tcl",
+ "assigned_pins": {
+  "file": "physical/s81_die_pins/v20_functional/ot_s81_hcx_projection_leaf.json",
+  "source": "S-DIE f7cc8be24 exact fullresident slots and layerselector pins",
+  "layout": "physical/s81_die_pins/v20_functional/homes.json"
+ },
+ "sdc_extra": [
+  "physical/ref_tile/s81_hcx_projection_ref/serial_clock.sdc"
+ ],
+ "slot_change_request": {
+  "why": "S-DIE f7cc8be24 reserves six measured1728x864 fullresident projection slots; source model and exact pins bound"
+ }
+}
