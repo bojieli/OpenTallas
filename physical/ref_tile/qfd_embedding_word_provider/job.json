@@ -37,7 +37,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "pass_witness": "results/rtl/ref_tile/qfd_embedding_word_provider/bench_witness_1016/mut0.log"
    },
    {
     "name": "provider_incomplete_row_mutant",
@@ -48,7 +49,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/ref_tile/qfd_embedding_word_provider/bench_witness_1016/mut1.log"
    },
    {
     "name": "provider_sram_word_addr_mutant",
@@ -59,7 +61,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/ref_tile/qfd_embedding_word_provider/bench_witness_1016/mut2.log"
    },
    {
     "name": "provider_scale_half_mutant",
@@ -70,7 +73,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/ref_tile/qfd_embedding_word_provider/bench_witness_1016/mut3.log"
    }
   ],
   "calibrate": {
