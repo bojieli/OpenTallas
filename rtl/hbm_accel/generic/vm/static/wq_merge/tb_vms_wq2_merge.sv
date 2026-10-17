@@ -3,7 +3,7 @@
 // Equivalence bench: REF = the q2 bank master (hfd_vms_bank_native_q2_faces, WG=3, wq2 in the bank) vs
 // DUT = hfd_vms_wq2_merge + the exact q0 bank master (hfd_vms_bank_native_q0_faces, WG=2).
 // Same random static schedule (one write owner + one read owner per edge, real SRAM vehicle, sid=2).  DUT differences
-// by construction: wq1/wq2 are issued one edge earlier into the leaf (+1 edge), the q2 owner codes are remapped
+// by construction: wq1/wq2 are issued two edges earlier into the leaf (+2 edges), the q2 owner codes are remapped
 // (2 -> 1, k>=3 -> k-1, compiler table), wq_done1/wq_done2 arrive one edge later.  Every other bank output must be
 // identical on every edge: rr0..rr4, eg, pr, dq_done, kq/xq/xq2_done, wq_done0, status.
 module tb_vms_wq2_merge;
@@ -12,14 +12,14 @@ module tb_vms_wq2_merge;
     reg rst_n = 0;
     localparam integer SID = 2, BID = 5;
     // schedule entries (cycle-indexed)
-    reg [280:0] s_wq0 [0:N+4], s_wq1 [0:N+4], s_wq2 [0:N+4], s_dq [0:N+4];
-    reg [16:0]  s_rq  [0:N+4][0:4];
-    reg         s_wv  [0:N+4], s_rv [0:N+4];
-    reg [2:0]   s_ws  [0:N+4], s_rs [0:N+4];
+    reg [280:0] s_wq0 [0:N+6], s_wq1 [0:N+6], s_wq2 [0:N+6], s_dq [0:N+6];
+    reg [16:0]  s_rq  [0:N+6][0:4];
+    reg         s_wv  [0:N+6], s_rv [0:N+6];
+    reg [2:0]   s_ws  [0:N+6], s_rs [0:N+6];
     // REF drive
     reg [280:0] r_wq0 = 0, r_wq1 = 0, r_wq2 = 0, r_dq = 0; reg [16:0] r_rq [0:4];
     reg r_wv = 0, r_rv = 0; reg [2:0] r_ws = 0, r_rs = 0;
-    // DUT drive (bank gets remapped code; leaf gets wq1/wq2 one edge early)
+    // DUT drive (bank gets remapped code; leaf gets wq1/wq2 two edges early)
     reg [280:0] d_wq1 = 0, d_wq2 = 0; reg [2:0] d_ws = 0;
     wire [256:0] rr_r [0:4], rr_d [0:4];
     wire [275:0] eg_r, eg_d; wire [265:0] pr_r, pr_d; wire [17:0] st_r, st_d;
@@ -54,7 +54,7 @@ module tb_vms_wq2_merge;
     reg [280:0] p;
     initial begin
         for (k = 0; k < 4; k = k + 1) w_cnt[k] = 0;
-        for (t = 0; t <= N + 4; t = t + 1) begin
+        for (t = 0; t <= N + 6; t = t + 1) begin
             s_wq0[t] = 0; s_wq1[t] = 0; s_wq2[t] = 0; s_dq[t] = 0; s_wv[t] = 0; s_rv[t] = 0; s_ws[t] = 0; s_rs[t] = 0;
             for (k = 0; k < 5; k = k + 1) s_rq[t][k] = 0;
             if (t >= 20 && t < N) begin
@@ -82,7 +82,7 @@ module tb_vms_wq2_merge;
             for (k = 0; k < 5; k = k + 1) r_rq[k] = s_rq[t][k];
             r_wv = s_wv[t]; r_ws = s_ws[t]; r_rv = s_rv[t]; r_rs = s_rs[t];
             d_ws = (s_ws[t] >= 3) ? s_ws[t] - 1 : (s_ws[t] == 2 ? 3'd1 : s_ws[t]);
-            d_wq1 = s_wq1[t + 1]; d_wq2 = s_wq2[t + 1];
+            d_wq1 = s_wq1[t + 2]; d_wq2 = s_wq2[t + 2];
         end
         repeat (30) @(posedge clk);
         $display("WQ2_MERGE writes wq0=%0d wq1=%0d wq2=%0d dq=%0d reads=%0d done=%0d mismatches=%0d flt=%0d",

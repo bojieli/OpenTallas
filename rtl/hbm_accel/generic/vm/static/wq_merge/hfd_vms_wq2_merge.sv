@@ -7,7 +7,7 @@
 // presents wq1 (SM writer smw_NW) and wq2 (quantiser hb_quant_NW) on the bank's single wq1 port.
 // STATIC, fixed-cycle: the compiler's VM calendar already grants at most ONE write source per bank per edge (the bank
 // ORs valid-masked write leaves under that rule); here the two sources are merged by the same valid-masked OR, one
-// pin-to-flop edge (+1 edge on both write paths, compiler issues them one edge earlier).  The calendar addresses both as
+// two edges (pin flop + merge flop; +2 edges on both write paths, the compiler issues them two edges earlier).  The calendar addresses both as
 // bank write owner 1 (q2 owner codes: 2 -> 1, k >= 3 -> k - 1: a compiler table, no hardware remap).
 // Done: the bank's wq_done1 comes DONE_LAT edges after the merged write leaves this leaf; a fixed shift register of
 // the source id (no FIFO, no credit) steers it to wq_done1 / wq_done2 (+1 edge).
@@ -31,14 +31,25 @@ module hfd_vms_wq2_merge #(
     reg rn;  // relay: the only sync-reset driver of the leaf
     always @(posedge clk) begin rs1 <= rst_n; rs2 <= rs1; rn <= rs2; end
 
-    wire v1 = wq1[280], v2 = wq2[280];
-    wire [279:0] p2 = (MUT == 2) ? {wq2[279:1], 1'b0} : wq2[279:0];
+    // Stage A: every input pin is captured by exactly one flop (gate 2e16db389: the raw valid pins fanned out to 283
+    // mask loads each).  The valid is captured into REP replicas, one per 35-bit payload slice.
+    localparam integer REP = 8, SL = 35;  // 8 x 35 = 280 payload bits
+    reg [279:0] a_d, b_d;
+    reg [REP-1:0] a_v, b_v;
+    always @(posedge clk) begin a_d <= wq1[279:0]; b_d <= wq2[279:0]; end
+    always @(posedge clk)
+        if (!rn) begin a_v <= '0; b_v <= '0; end
+        else begin a_v <= {REP{wq1[280]}}; b_v <= {REP{wq2[280]}}; end
+    wire [279:0] p2 = (MUT == 2) ? {b_d[279:1], 1'b0} : b_d;
+    // Stage B: valid-masked OR into the output flops (each replica masks one slice).
     reg [279:0] m_d;
     reg m_v, m_src;
-    always @(posedge clk) m_d <= ({280{v1}} & wq1[279:0]) | ({280{v2}} & p2);
+    always @(posedge clk)
+        for (integer s = 0; s < REP; s = s + 1)
+            m_d[s*SL +: SL] <= ({SL{a_v[s]}} & a_d[s*SL +: SL]) | ({SL{b_v[s]}} & p2[s*SL +: SL]);
     always @(posedge clk)
         if (!rn) begin m_v <= 1'b0; m_src <= 1'b0; end
-        else begin m_v <= v1 | v2; m_src <= v2; end
+        else begin m_v <= a_v[0] | b_v[0]; m_src <= b_v[0]; end
     assign wq_m = {m_v, m_d};
 
     localparam integer DL = (MUT == 1) ? DONE_LAT + 1 : DONE_LAT;
@@ -51,7 +62,7 @@ module hfd_vms_wq2_merge #(
         else begin
             wq_done1 <= done_m && !sh[DL];
             wq_done2 <= done_m && sh[DL];
-            if (v1 && v2) flt <= 1'b1;
+            if (a_v[0] && b_v[0]) flt <= 1'b1;
         end
 endmodule
 `default_nettype wire
