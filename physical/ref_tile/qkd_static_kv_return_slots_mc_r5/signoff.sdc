@@ -149,7 +149,7 @@ if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
   puts "OT_IO_INTER [llength $ot_ii] inputs [llength $ot_io] outputs at $ot_ski ps"
 }
 if {[llength [get_ports -quiet tile_id*]]} { set_false_path -from [get_ports tile_id*] }
-# ---- sdc_extra physical/qwen_kv_die_native_static_pins/qkd_static_kv_return_slots_mc_r3.sdc
+# ---- sdc_extra physical/qwen_kv_die_native_static_pins/qkd_static_kv_return_slots_mc_r5.sdc
 # kvsys-elements r6 2026-10-15: HBM-controller clock (pll_hbm) of the static KV return ring qkd_static_kv_return_slots
 # for the REFERENCE TILE FLOW (spec sdc_extra, inlined at the end of clock.sdc and signoff.sdc; core_clk = ck is created
 # by ref_tile and is NOT relaxed here).  Same constraint form as the closed write-side CDC leaf
@@ -204,6 +204,19 @@ if {$ot_rs_prop} {
   set_input_delay  [expr {$ot_rs_lmin - $ot_rs_hki}]         -min -clock hclk $ot_rs_hi
   set_output_delay [expr {204.8 - $ot_rs_lmax + $ot_rs_sk}] -max -clock hclk $ot_rs_ho
   set_output_delay [expr {0.0 - $ot_rs_lmin - $ot_rs_hk}]    -min -clock hclk $ot_rs_ho
+  # mc_r5 (Q-KVELEM 10-17, FLOW-HOLD die budget on the hclk boundary): mc5-c6b8639eb EARLY_FAIL_HOLD at 4_1_cts
+  # (WNS -51.8 frozen on hr/D over 10.9k iterations, 327 violators = the input pin flops) because this block re-set
+  # the hclk ports with the legacy H1 hold form AFTER the OT_BH die budget, while recipe 4 forbids the input pads that
+  # form needs.  Under OT_IO_HOLD_BUDGET=die the hclk boundary takes the same T-IN / T-OUT form as core_clk
+  # (results/arch/boundary_hold_budget_1016/RULE.md section 3): the link's skew / U / shortfall are the die's.
+  if {[info exists ::env(OT_IO_HOLD_BUDGET)] && $::env(OT_IO_HOLD_BUDGET) eq "die"} {
+    set ot_rs_bhc [expr {[info exists ::env(OT_BH_LAUNCH_MIN_PS)] ? $::env(OT_BH_LAUNCH_MIN_PS) : 25}]
+    set ot_rs_bhu [expr {[info exists ::env(OT_BH_TILE_HOLD_UNC_PS)] ? $::env(OT_BH_TILE_HOLD_UNC_PS) : 25}]
+    set ot_rs_bhr [expr {[info exists ::env(OT_BH_ROUTE_RELIEF_PS)] ? $::env(OT_BH_ROUTE_RELIEF_PS) : 0}]
+    set_input_delay  [expr {$ot_rs_lmin + $ot_rs_bhc + $ot_rs_bhu + $ot_rs_bhr}] -min -clock hclk $ot_rs_hi
+    set_output_delay [expr {$ot_rs_bhu + $ot_rs_bhr - $ot_rs_lmin - $ot_rs_bhc}] -min -clock hclk $ot_rs_ho
+    puts "QKD_RETURN_SLOTS hclk OT_HOLD_BUDGET die: L_min $ot_rs_lmin C $ot_rs_bhc U $ot_rs_bhu relief $ot_rs_bhr"
+  }
 } else {
   set_input_delay  204.800 -clock hclk $ot_rs_hi
   set_output_delay 204.800 -clock hclk $ot_rs_ho
