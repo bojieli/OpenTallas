@@ -38,6 +38,11 @@ if [ "${RG_HR:-}" = k2 ]; then   # h10k: the two-root leaf (ck_hw tied to ck_hea
   grep -q 'ot_qfd_tt_ctlm_static_hr_k2 u_hr' /tmp/rg_k2_$$.sv || { echo "RG_HR k2 substitution failed"; exit 2; }
   NEW=/tmp/rg_k2_$$.sv
 fi
+if [ -n "${RG_CMDREG:-}" ]; then   # h12: the leaf with CMDREG=RG_CMDREG (the reference follows only via -DREF_CMDREG2)
+  sed "s#ot_qfd_tt_ctlm_static_hr u_hr (#ot_qfd_tt_ctlm_static_hr \#(.CMDREG(${RG_CMDREG})) u_hr (#" $NEW > /tmp/rg_cr_$$.sv
+  grep -q "CMDREG(${RG_CMDREG})) u_hr" /tmp/rg_cr_$$.sv || { echo "RG_CMDREG substitution failed"; exit 2; }
+  NEW=/tmp/rg_cr_$$.sv
+fi
 O=${RG_OBJ:-/tmp/rg_obj_${MUT}_$$}; mkdir -p "$(dirname "$O")"
 verilator --binary --timing --converge-limit 5000 -j 8 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DNCYC=$N -DCMD_A=$CA -DCMD_B=$CB -DRET_A=$RA -DRET_B=$RB -DMIN_PAIR=$MINP -DRUNS=${RUNS:-8} ${RG_DEFS:-} --top-module tb_tt_static_regroup -Mdir $O \
   $SR $HR $NEW $P/ot_qfd_tt_ctlm_static_parent_ref.sv $P/tb_tt_static_regroup.sv > $O.build.log 2>&1 || { tail -20 $O.build.log; exit 2; }

@@ -94,6 +94,8 @@ module ot_qfd_tt_ctlm_static_parent_ref (
       .in_cmd(local_rom_cmd),.in_stage(loaded_stage),.out_cmd(rom_cmd_c),.fault(relocation_fault));
 `ifdef REF_NO_CMDREG
     localparam integer REF_CMDREG = 0;   // cost probe only: the original (unregistered) command
+`elsif REF_CMDREG2
+    localparam integer REF_CMDREG = 2;   // h12: two command registers (TT.ROMCMD2, +1 edge on every ROM-tree command)
 `else
     localparam integer REF_CMDREG = 1;   // r2: the accepted +1 command edge, as the head leaf
 `endif
@@ -101,7 +103,14 @@ module ot_qfd_tt_ctlm_static_parent_ref (
       reg [379:0] rom_cmd_q;
       always @(posedge ck_head or negedge rsh)
         if (!rsh) rom_cmd_q <= 380'd0; else rom_cmd_q <= rom_cmd_c;
-      assign rom_cmd = rom_cmd_q;
+      if (REF_CMDREG >= 2) begin : g_cmdreg2
+        reg [379:0] rom_cmd_q2;
+        always @(posedge ck_head or negedge rsh)
+          if (!rsh) rom_cmd_q2 <= 380'd0; else rom_cmd_q2 <= rom_cmd_q;
+        assign rom_cmd = rom_cmd_q2;
+      end else begin : g_cmdreg1
+        assign rom_cmd = rom_cmd_q;
+      end
     end else begin : g_cmdwire
       assign rom_cmd = rom_cmd_c;
     end endgenerate

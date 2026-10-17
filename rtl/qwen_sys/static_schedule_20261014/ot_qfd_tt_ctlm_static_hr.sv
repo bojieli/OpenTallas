@@ -103,7 +103,20 @@ module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1, parameter intege
         if (!rsl_c0) rom_cmd_q[189:0] <= 190'd0; else rom_cmd_q[189:0] <= rom_cmd_c[189:0];
       always @(posedge ck_head or negedge rsl_c1)
         if (!rsl_c1) rom_cmd_q[379:190] <= 190'd0; else rom_cmd_q[379:190] <= rom_cmd_c[379:190];
-      assign rom_cmd = rom_cmd_q;
+      if (CMDREG >= 2) begin : g_cmdreg2
+        // h12 (Q-IO-1815 TTH 2026-10-17, CMDREG=2): a second command register. h11c gate: the relocation adder
+        // (kvd field -> code_sum) plus the E->W crossing to rom_cmd_q (237 ps of wire repeaters) is the worst path
+        // (-208.7 @770). rom_cmd_q now sits by the adder; rom_cmd_q2 is the W-face launch register. Exact function,
+        // +1 edge on every ROM-tree command (ledger TT.ROMCMD2, compiler-visible).
+        reg [379:0] rom_cmd_q2;
+        always @(posedge ck_head or negedge rsl_c0)
+          if (!rsl_c0) rom_cmd_q2[189:0] <= 190'd0; else rom_cmd_q2[189:0] <= rom_cmd_q[189:0];
+        always @(posedge ck_head or negedge rsl_c1)
+          if (!rsl_c1) rom_cmd_q2[379:190] <= 190'd0; else rom_cmd_q2[379:190] <= rom_cmd_q[379:190];
+        assign rom_cmd = rom_cmd_q2;
+      end else begin : g_cmdreg1
+        assign rom_cmd = rom_cmd_q;
+      end
     end else begin : g_cmdwire
       assign rom_cmd = rom_cmd_c;
     end endgenerate
