@@ -490,3 +490,21 @@ What is not yet measured:
 1. Slice RTL bit-exact against `hdc_golden_v41` (chunk8) on the S81 SU/HC cases, with a 16-slice exchange bench for the norm.
 2. Slice closure via submit_exact.
 3. Hierarchical die trial (die_cluster).
+
+### 0b-p4e: tall units as stacked leaves (coordinator 10-17, accepted with conditions)
+p4e units are 0.68 mm wide. Each one stacks near-square leaves, each leaf with its own regional root:
+
+| Unit | Leaves | Leaf size (µm) |
+|---|---|---|
+| coll_* | 2 | 680 × 600 |
+| bk_col | 6 | 680 × 697 |
+| mix4_w, mix4_e | 6 | 680 × 625 |
+| gunit | 6 | 680 × 673 |
+| bk_sel | 4 | 680 × 721 |
+| seqhost | 5 | 680 × 634 |
+
+Conditions for the unit leads:
+- **Leaf-to-leaf hops are registered at both ends.** Pins are flop-first, and abutting faces put each boundary wire at ≤50 µm, well under the 405-µm hop limit.
+- **Long paths are registered inside the leaf.** A path that crosses a 600-720 µm leaf is registered inside that leaf, and the leaf's own timing closure covers it.
+- **The tier/ring stop sits in the middle leaf.** For 4-6 leaves that is leaf 2 or 3, counted from the slice end. The tier lanes enter and leave that leaf's E/W edge strips.
+- **Not allowed:** a single long tile, like the old 1 × 9.5 mm hc_eng.
