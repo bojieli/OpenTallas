@@ -14,9 +14,9 @@ M=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256
 [ -f "$OUT/vec/prog.mem" ] || python3 tools/hbm_static/su_top_compile.py "$OUT/vec" > "$OUT/vec.log"
 python3 tools/hbm_static/su_programme_compile.py "$OUT/vec/prog.mem" "$OUT/mono" > "$OUT/mono.log"
 python3 tools/hbm_static/su_programme_compile.py "$OUT/vec/prog.mem" "$OUT" --partition "$PARTS" --start-depth "$DEPTH" --mut-pc-slice 3 > "$OUT/part.log"
-sha256sum "$s/ot_hbm_su_programme.sv" "$s/ot_hbm_su_programme_part.sv" "$s/tb_hbm_su_programme_part.sv" tools/hbm_static/su_programme_compile.py "$OUT/vec/prog.mem" > "$OUT/sources.sha256"
+sha256sum "$s/ot_hbm_su_programme.sv" "$s/ot_hbm_su_programme_root.sv" "$s/ot_hbm_su_programme_part.sv" "$s/tb_hbm_su_programme_part.sv" tools/hbm_static/su_programme_compile.py "$OUT/vec/prog.mem" > "$OUT/sources.sha256"
 build(){ "$vl" --binary --timing -O1 -j "${JOBS:-8}" -Wno-fatal -Wno-WIDTHTRUNC -Wno-WIDTHEXPAND --top-module tb_hbm_su_programme_part -I"$OUT" -GMUT="$1" \
-  --Mdir "$OUT/obj$1" "$s/ot_hbm_su_programme.sv" "$s/ot_hbm_su_programme_part.sv" "$s/tb_hbm_su_programme_part.sv" "$M" > "$OUT/build$1.log" 2>&1 || { tail -20 "$OUT/build$1.log"; echo "SU_PROGRAMME_PART BUILD_FAIL MUT=$1"; exit 2; }; }
+  --Mdir "$OUT/obj$1" "$s/ot_hbm_su_programme.sv" "$s/ot_hbm_su_programme_root.sv" "$s/ot_hbm_su_programme_part.sv" "$s/tb_hbm_su_programme_part.sv" "$M" > "$OUT/build$1.log" 2>&1 || { tail -20 "$OUT/build$1.log"; echo "SU_PROGRAMME_PART BUILD_FAIL MUT=$1"; exit 2; }; }
 run(){ set +e; "$OUT/obj$1/Vtb_hbm_su_programme_part" +DIR="$OUT" $2 > "$OUT/run_$3.log" 2>&1; local rc=$?; set -e
   grep -h "SU_PROGRAMME_PART" "$OUT/run_$3.log" | head -6 | sed "s/^/[$3] /"; echo "[$3] rc=$rc"; return $rc; }
 if [ -n "${ONLY:-}" ]; then

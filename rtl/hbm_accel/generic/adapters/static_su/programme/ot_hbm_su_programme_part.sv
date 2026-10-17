@@ -58,20 +58,10 @@ module ot_hbm_su_programme_part #(
   endfunction
   initial if(SB*PARTS!=LINE_BITS || MACROS!=mbase(PARTS) || DEPTH<2)
     $fatal(1,"programme partition: LINE_BITS/PARTS/MACROS/DEPTH mismatch (DEPTH >= 2: root + producer pin stage)");
-  // root: one register stage (start/length shared; configuration decoded per producer)
+  // root: one register stage (start/length shared; configuration decoded per producer) = ot_hbm_su_programme_root
+  // (H-NETLIST/SU-PART 2026-10-17: factored out unchanged so the die contract places it as its own instance su_pgr)
   logic r_start; logic [15:0] r_len; logic [PARTS-1:0] r_we; logic [16*PARTS-1:0] r_bank;
-  logic [6:0] r_row; logic [255:0] r_data; logic cfg_fault;
-  integer i;
-  always_ff @(posedge clk) begin
-    if(!rst_n) begin r_start<=0; r_len<=0; r_we<='0; cfg_fault<=0; end
-    else begin
-      r_start<=start; r_len<=length;
-      for(i=0;i<PARTS;i=i+1) r_we[i]<=cfg_we && cfg_bank>=mbase(i) && cfg_bank<mbase(i+1);
-      if(cfg_we && cfg_bank>=mbase(PARTS)) cfg_fault<=1;
-    end
-    for(i=0;i<PARTS;i=i+1) r_bank[16*i+:16]<=cfg_bank-16'(mbase(i));
-    r_row<=cfg_row; r_data<=cfg_data;
-  end
+  logic [6:0] r_row; logic [255:0] r_data;
   wire [PARTS-1:0] p_busy, p_valid, p_done, p_fault;
   wire [16*PARTS-1:0] p_edge;
   genvar k;
@@ -85,6 +75,9 @@ module ot_hbm_su_programme_part #(
       .busy(p_busy[k]),.valid(p_valid[k]),.done(p_done[k]),.fault(p_fault[k]),
       .edge_index(p_edge[16*k+:16]),.command(command[SB*k+:SB]));
   end endgenerate
+  ot_hbm_su_programme_root #(.PARTS(PARTS),.SMACROS(SMACROS)) u_root(
+    .clk(clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_bank(cfg_bank),.cfg_row(cfg_row),.cfg_data(cfg_data),
+    .start(start),.length(length),.p_fault(p_fault),
+    .r_start(r_start),.r_len(r_len),.r_we(r_we),.r_bank(r_bank),.r_row(r_row),.r_data(r_data),.fault(fault));
   assign busy=p_busy[0]; assign valid=p_valid[0]; assign done=p_done[0]; assign edge_index=p_edge[15:0];
-  assign fault=cfg_fault | (|p_fault);
 endmodule
