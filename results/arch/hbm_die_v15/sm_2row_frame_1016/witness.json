@@ -1,0 +1,283 @@
+{
+ "schema": "opentallas.hbm.sm_2row_frame.v1",
+ "qualification": "PLAN_WITNESS_NOT_BUILT",
+ "tile_source": "smh_tile_rp4e 66381a0f4 (claude/hsm-rp4-0030)",
+ "tile_um": [
+  457.92,
+  1529.28
+ ],
+ "outline_um": [
+  4052.16,
+  3339.36
+ ],
+ "area_mm2": 13.5316,
+ "aspect": "landscape",
+ "tile_area_mm2": 11.2046,
+ "assumed_portrait_um": [
+  2782.08,
+  3697.92
+ ],
+ "assumed_portrait_mm2": 10.2879,
+ "portrait_feasible": false,
+ "why_not_portrait": "16 rp4e tiles alone are 11.20 mm2 > 10.29 mm2; a row of 8 tiles is 3663.4 um wide; hard tiles cannot be R90",
+ "tiles": [
+  {
+   "name": "g_c[0].g_p[0].u_t",
+   "x": 0.0,
+   "y": 1788.48,
+   "w": 457.92,
+   "h": 1529.28,
+   "orient": "MY",
+   "row": 0
+  },
+  {
+   "name": "g_c[1].g_p[0].u_t",
+   "x": 457.92,
+   "y": 1788.48,
+   "w": 457.92,
+   "h": 1529.28,
+   "orient": "MY",
+   "row": 0
+  },
+  {
+   "name": "g_c[2].g_p[0].u_t",
+   "x": 915.84,
+   "y": 1788.48,
+   "w": 457.92,
+   "h": 1529.28,
+   "orient": "MY",
+   "row": 0
+  },
+  {
+   "name": "g_c[3].g_p[0].u_t",
+   "x": 1373.76,
+   "y": 1788.48,
+   "w": 457.92,
+   "h": 1529.28,
+   "orient": "MY",
+   "row": 0
+  },
+  {
+   "name": "g_c[4].g_p[0].u_t",
+   "x": 2220.48,
+   "y": 1788.48,
+   "w": 457.92,
+   "h": 1529.28,
+   "orient": "R0",
+   "row": 0
+  },
+  {
+   "name": "g_c[5].g_p[0].u_t",
+   "x": 2678.4,
+   "y": 1788.48,
+   "w": 457.92,
+   "h": 1529.28,
+   "orient": "R0",
+   "row": 0
+  },
+  {
+   "name": "g_c[6].g_p[0].u_t",
+   "x": 3136.32,
+   "y": 1788.48,
+   "w": 457.92,
+   "h": 1529.28,
+   "orient": "R0",
+   "row": 0
+  },
+  {
+   "name": "g_c[7].g_p[0].u_t",
+   "x": 3594.24,
+   "y": 1788.48,
+   "w": 457.92,
+   "h": 1529.28,
+   "orient": "R0",
+   "row": 0
+  },
+  {
+   "name": "g_c[0].g_p[1].u_t",
+   "x": 0.0,
+   "y": 259.2,
+   "w": 457.92,
+   "h": 1529.28,
+   "orient": "MY",
+   "row": 1
+  },
+  {
+   "name": "g_c[1].g_p[1].u_t",
+   "x": 457.92,
+   "y": 259.2,
+   "w": 457.92,
+   "h": 1529.28,
+   "orient": "MY",
+   "row": 1
+  },
+  {
+   "name": "g_c[2].g_p[1].u_t",
+   "x": 915.84,
+   "y": 259.2,
+   "w": 457.92,
+   "h": 1529.28,
+   "orient": "MY",
+   "row": 1
+  },
+  {
+   "name": "g_c[3].g_p[1].u_t",
+   "x": 1373.76,
+   "y": 259.2,
+   "w": 457.92,
+   "h": 1529.28,
+   "orient": "MY",
+   "row": 1
+  },
+  {
+   "name": "g_c[4].g_p[1].u_t",
+   "x": 2220.48,
+   "y": 259.2,
+   "w": 457.92,
+   "h": 1529.28,
+   "orient": "R0",
+   "row": 1
+  },
+  {
+   "name": "g_c[5].g_p[1].u_t",
+   "x": 2678.4,
+   "y": 259.2,
+   "w": 457.92,
+   "h": 1529.28,
+   "orient": "R0",
+   "row": 1
+  },
+  {
+   "name": "g_c[6].g_p[1].u_t",
+   "x": 3136.32,
+   "y": 259.2,
+   "w": 457.92,
+   "h": 1529.28,
+   "orient": "R0",
+   "row": 1
+  },
+  {
+   "name": "g_c[7].g_p[1].u_t",
+   "x": 3594.24,
+   "y": 259.2,
+   "w": 457.92,
+   "h": 1529.28,
+   "orient": "R0",
+   "row": 1
+  }
+ ],
+ "be": [
+  {
+   "name": "g_c[0].u_be",
+   "x": 0.0,
+   "y": 0.0,
+   "w": 457.92,
+   "h": 237.6
+  },
+  {
+   "name": "g_c[1].u_be",
+   "x": 457.92,
+   "y": 0.0,
+   "w": 457.92,
+   "h": 237.6
+  },
+  {
+   "name": "g_c[2].u_be",
+   "x": 915.84,
+   "y": 0.0,
+   "w": 457.92,
+   "h": 237.6
+  },
+  {
+   "name": "g_c[3].u_be",
+   "x": 1373.76,
+   "y": 0.0,
+   "w": 457.92,
+   "h": 237.6
+  },
+  {
+   "name": "g_c[4].u_be",
+   "x": 2220.48,
+   "y": 0.0,
+   "w": 457.92,
+   "h": 237.6
+  },
+  {
+   "name": "g_c[5].u_be",
+   "x": 2678.4,
+   "y": 0.0,
+   "w": 457.92,
+   "h": 237.6
+  },
+  {
+   "name": "g_c[6].u_be",
+   "x": 3136.32,
+   "y": 0.0,
+   "w": 457.92,
+   "h": 237.6
+  },
+  {
+   "name": "g_c[7].u_be",
+   "x": 3594.24,
+   "y": 0.0,
+   "w": 457.92,
+   "h": 237.6
+  }
+ ],
+ "front": {
+  "name": "u_front",
+  "x": 1853.28,
+  "y": 0.0,
+  "w": 345.6,
+  "h": 3339.36
+ },
+ "pins": {
+  "xw (xw_en/addr/grp/data)": {
+   "bits": 2063,
+   "face": "N",
+   "lo": 1845.72,
+   "hi": 2206.44,
+   "length_um": 360.72,
+   "pins_per_um": 5.719,
+   "cut": 0.549
+  },
+  "SM_HBM (command/kv_desc/packet/request)": {
+   "bits": 1398,
+   "face": "S",
+   "lo": 1833.84,
+   "hi": 2077.92,
+   "length_um": 244.08,
+   "pins_per_um": 5.728,
+   "cut": 0.5499
+  },
+  "result (rv/rrow/rdata/fault/schedule_fault)": {
+   "bits": 271,
+   "face": "S",
+   "lo": 2142.72,
+   "hi": 2190.24,
+   "length_um": 47.52,
+   "pins_per_um": 5.703,
+   "cut": 0.5475
+  },
+  "clk + rst_n (regional root entry, root site 60x60 at front centre)": {
+   "face": "N",
+   "lo": 2216.08,
+   "hi": 2221.08,
+   "bits": 2
+  }
+ },
+ "s_face_span": [
+  1833.84,
+  2190.24
+ ],
+ "we_faces": "no SM pins on W/E (tiles abut inside; neighbours keep the 20 um die gap)",
+ "links": {
+  "row_hop": "tile E face -> next tile W face, abutted (rp4e W y == E y)",
+  "gather": "p0 gout S -> p1 gin N abutted, same x",
+  "be": "p1 gout S -> BE directly below",
+  "be_cmd_reach_um": 1797.1,
+  "xw_to_front": "N window directly over the front column"
+ },
+ "clock": "one SM regional root (DIE-CLOCK METHOD 640fa898f): clk at the N face beside xw, root site at the front centre; SM-internal subtrees per quadrant (W-p0, W-p1, E-p0, E-p1, front+BE), neighbour budget 80 ps tile-to-tile; tile entry pins (clk_hard/pin/oper/region) driven inside the frame, not die pins",
+ "reset": "rst_n beside clk, registered at the front, regional sync reset tree (ot_hbm_accel_smh_rst_tree) per quadrant"
+}
