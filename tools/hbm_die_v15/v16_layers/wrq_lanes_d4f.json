@@ -1,7 +1,7 @@
 {
  "region": "wrq_lanes_d4f",
  "author": "Claude H-NETLIST 10-17",
- "basis_commit": "H-WRQ claude/hwrq-1017 1b7313d89 (ot_hbm_sm_vm_wr_q_t_lanes, kit physical/ref_tile/hsm_smvm_wrq_t_r5): one clock root per SM lane; logically identical to ot_hbm_sm_vm_wr_q_t",
+ "basis_commit": "H-WRQ claude/hwrq-1017 5bb0eb2c5 (final gate; 1b7313d89 + shift-register row FIFO, no port change) (ot_hbm_sm_vm_wr_q_t_lanes, kit physical/ref_tile/hsm_smvm_wrq_t_r5): one clock root per SM lane; logically identical to ot_hbm_sm_vm_wr_q_t",
  "instances": [],
  "edges": [],
  "clocks": [
