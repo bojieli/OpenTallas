@@ -1,0 +1,24 @@
+{
+ "cell": "ot_hgi_sm_xload_cl2_bfqg",
+ "view": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg",
+ "lib_cell": "ot_hgi_sm_xload_cl2_bfqg",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean",
+  "lib midrange"
+ ],
+ "R_ps": 111.2,
+ "spread_ps": 40.9,
+ "outputs": 256,
+ "inputs": 1064,
+ "launch_ps": 177.8,
+ "launch_pin": "rwq[89]",
+ "capture_ps": 153.8,
+ "capture_pin": "c_d[64]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": ""
+}
