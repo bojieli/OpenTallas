@@ -110219,6 +110219,230 @@
    "pins": [],
    "pin_status": "FACES_ONLY",
    "home_rule": "d4f: programme collar on hc_eng N face"
+  },
+  {
+   "name": "vmm_NW0",
+   "cell": "hfd_vms_wq2_merge",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 59.4,
+    "h": 59.4
+   },
+   "origin": {
+    "x": 913.528,
+    "y": 23097.86,
+    "orient": "R0"
+   },
+   "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
+   "pin_status": "MACRO_LEF_PINS",
+   "grant": "d4f_wq2_merge_1016",
+   "rtl_owner": "H-SM: hfd_vms_wq2_merge (NW q2 bank write merge)",
+   "native": {
+    "launch": 181.3,
+    "capture": 152.6,
+    "R": 96.1,
+    "spread": 19.5,
+    "closed": "TT +335.22 / FF +21.14 / DRC 0",
+    "main": "035a607b4"
+   },
+   "notes": "beside vmb_NW0 (east, 21.6 um channel); W face to the bank wq1/wq_done1"
+  },
+  {
+   "name": "vmm_NW1",
+   "cell": "hfd_vms_wq2_merge",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 59.4,
+    "h": 59.4
+   },
+   "origin": {
+    "x": 913.528,
+    "y": 22658.74,
+    "orient": "R0"
+   },
+   "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
+   "pin_status": "MACRO_LEF_PINS",
+   "grant": "d4f_wq2_merge_1016",
+   "rtl_owner": "H-SM: hfd_vms_wq2_merge (NW q2 bank write merge)",
+   "native": {
+    "launch": 181.3,
+    "capture": 152.6,
+    "R": 96.1,
+    "spread": 19.5,
+    "closed": "TT +335.22 / FF +21.14 / DRC 0",
+    "main": "035a607b4"
+   },
+   "notes": "beside vmb_NW1 (east, 21.6 um channel); W face to the bank wq1/wq_done1"
+  },
+  {
+   "name": "vmm_NW2",
+   "cell": "hfd_vms_wq2_merge",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 59.4,
+    "h": 59.4
+   },
+   "origin": {
+    "x": 4105.176,
+    "y": 23097.86,
+    "orient": "R0"
+   },
+   "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
+   "pin_status": "MACRO_LEF_PINS",
+   "grant": "d4f_wq2_merge_1016",
+   "rtl_owner": "H-SM: hfd_vms_wq2_merge (NW q2 bank write merge)",
+   "native": {
+    "launch": 181.3,
+    "capture": 152.6,
+    "R": 96.1,
+    "spread": 19.5,
+    "closed": "TT +335.22 / FF +21.14 / DRC 0",
+    "main": "035a607b4"
+   },
+   "notes": "beside vmb_NW2 (east, 21.6 um channel); W face to the bank wq1/wq_done1"
+  },
+  {
+   "name": "vmm_NW3",
+   "cell": "hfd_vms_wq2_merge",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 59.4,
+    "h": 59.4
+   },
+   "origin": {
+    "x": 4105.176,
+    "y": 22658.74,
+    "orient": "R0"
+   },
+   "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
+   "pin_status": "MACRO_LEF_PINS",
+   "grant": "d4f_wq2_merge_1016",
+   "rtl_owner": "H-SM: hfd_vms_wq2_merge (NW q2 bank write merge)",
+   "native": {
+    "launch": 181.3,
+    "capture": 152.6,
+    "R": 96.1,
+    "spread": 19.5,
+    "closed": "TT +335.22 / FF +21.14 / DRC 0",
+    "main": "035a607b4"
+   },
+   "notes": "beside vmb_NW3 (east, 21.6 um channel); W face to the bank wq1/wq_done1"
+  },
+  {
+   "name": "vmm_NW4",
+   "cell": "hfd_vms_wq2_merge",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 59.4,
+    "h": 59.4
+   },
+   "origin": {
+    "x": 8268.824,
+    "y": 23097.86,
+    "orient": "R0"
+   },
+   "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
+   "pin_status": "MACRO_LEF_PINS",
+   "grant": "d4f_wq2_merge_1016",
+   "rtl_owner": "H-SM: hfd_vms_wq2_merge (NW q2 bank write merge)",
+   "native": {
+    "launch": 181.3,
+    "capture": 152.6,
+    "R": 96.1,
+    "spread": 19.5,
+    "closed": "TT +335.22 / FF +21.14 / DRC 0",
+    "main": "035a607b4"
+   },
+   "notes": "beside vmb_NW4 (east, 21.6 um channel); W face to the bank wq1/wq_done1"
+  },
+  {
+   "name": "vmm_NW5",
+   "cell": "hfd_vms_wq2_merge",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 59.4,
+    "h": 59.4
+   },
+   "origin": {
+    "x": 8268.824,
+    "y": 22658.74,
+    "orient": "R0"
+   },
+   "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
+   "pin_status": "MACRO_LEF_PINS",
+   "grant": "d4f_wq2_merge_1016",
+   "rtl_owner": "H-SM: hfd_vms_wq2_merge (NW q2 bank write merge)",
+   "native": {
+    "launch": 181.3,
+    "capture": 152.6,
+    "R": 96.1,
+    "spread": 19.5,
+    "closed": "TT +335.22 / FF +21.14 / DRC 0",
+    "main": "035a607b4"
+   },
+   "notes": "beside vmb_NW5 (east, 21.6 um channel); W face to the bank wq1/wq_done1"
+  },
+  {
+   "name": "vmm_NW6",
+   "cell": "hfd_vms_wq2_merge",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 59.4,
+    "h": 59.4
+   },
+   "origin": {
+    "x": 11460.472,
+    "y": 23097.86,
+    "orient": "R0"
+   },
+   "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
+   "pin_status": "MACRO_LEF_PINS",
+   "grant": "d4f_wq2_merge_1016",
+   "rtl_owner": "H-SM: hfd_vms_wq2_merge (NW q2 bank write merge)",
+   "native": {
+    "launch": 181.3,
+    "capture": 152.6,
+    "R": 96.1,
+    "spread": 19.5,
+    "closed": "TT +335.22 / FF +21.14 / DRC 0",
+    "main": "035a607b4"
+   },
+   "notes": "beside vmb_NW6 (east, 21.6 um channel); W face to the bank wq1/wq_done1"
+  },
+  {
+   "name": "vmm_NW7",
+   "cell": "hfd_vms_wq2_merge",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 59.4,
+    "h": 59.4
+   },
+   "origin": {
+    "x": 11460.472,
+    "y": 22658.74,
+    "orient": "R0"
+   },
+   "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
+   "pin_status": "MACRO_LEF_PINS",
+   "grant": "d4f_wq2_merge_1016",
+   "rtl_owner": "H-SM: hfd_vms_wq2_merge (NW q2 bank write merge)",
+   "native": {
+    "launch": 181.3,
+    "capture": 152.6,
+    "R": 96.1,
+    "spread": 19.5,
+    "closed": "TT +335.22 / FF +21.14 / DRC 0",
+    "main": "035a607b4"
+   },
+   "notes": "beside vmb_NW7 (east, 21.6 um channel); W face to the bank wq1/wq_done1"
   }
  ],
  "sub_layouts": {

@@ -51,11 +51,16 @@
    "note": "NW (q2) VM banks use the exact q0C master; wq2/wq_done2 pins removed (H-SM 10-16)"
   },
   "hfd_vms_wq2_merge": {
-   "status": "ROUTE_SUBMITTED (hfd_vms_wq2_merge-m1-8500666e1), not closed",
+   "status": "REAL native PASS",
    "outline": "59.4 x 59.4 um, one per NW bank, beside the bank",
    "faces": "W wq_m/done_m -> bank wq1/wq_done1; E wq1 in (smw_NW)/wq_done1 out; N wq2 in (hb_quant_NW)/wq_done2 out; S clk/rst_n/flt",
    "cost": "+2 fixed edges NW wq1/wq2 (done +1); compiler NW calendar owner codes 2->1, k>=3 -> k-1; <=0.20% AR",
-   "die_home": "generated beside its bank (GEN rule 4, peers); needs H-NETLIST contract revision before it exists on the die"
+   "die_home": "grants_d4f vmm_NW0..7 east of vmb_NW<b>",
+   "route": "hfd_vms_wq2_merge-m1-8500666e1",
+   "closed": "TT +335.22 / FF +21.14 / DRC 0",
+   "main": "035a607b4",
+   "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
+   "native": "L181.3/C152.6/R96.1/sp19.5"
   },
   "ot_hgi_coll_ctl_v5_q3": {
    "kind": "REAL",
