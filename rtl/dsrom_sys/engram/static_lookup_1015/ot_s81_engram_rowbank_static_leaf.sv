@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // One real clock owner for one 9x256 Engram row payload buffer (static lookup, 2026-10-16).
-// write_en is one-hot per atom, a core-root NEGEDGE register of the lookup; we_q/wd_q capture it on this root's
-// posedge (half-cycle flop-to-flop root crossing, STATIC14 2026-10-16) and write one cycle later, so the per-atom
+// write_en is one-hot per atom, a core-root POSEDGE register of the lookup (st8; st6/st7 used a negedge copy, a
+// half-cycle crossing); we_q/wd_q capture it on this root's posedge (full-cycle flop-to-flop root crossing) and write one cycle later, so the per-atom
 // enable fanout (256 per atom) is a full cycle local to this root.
 module ot_s81_engram_rowbank_static_leaf #(parameter integer ATOMS=9)(
  input wire ck, input wire [ATOMS-1:0] write_en,

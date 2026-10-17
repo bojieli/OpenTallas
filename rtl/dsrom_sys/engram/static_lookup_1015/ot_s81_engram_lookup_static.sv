@@ -20,8 +20,11 @@
 //   seed -> core : removed (hdone = lastl[12]; the hash valid pipe was redundant with it);
 //   rows -> core : (st6) core negedge {hit, ek} per bank -> row posedge h_b -> row posedge atom select b* (full cycle in
 //                  the row root) -> core negedge c* -> OR of six banks into e1 on the core posedge; +1 read cycle;
-//   core -> rows : wen_q/wdata_q -> per-bank wx_en/wx_d (ck negedge) -> leaf we_q/wd_q (row posedge) -> payload,
-//                  +1 write cycle inside the fixed drain (payload visible at age <= RETURN_AGE+2, first read RETURN_AGE+2).
+//   core -> rows : (st8) wen_q/wdata_q -> per-bank wx_en/wx_d (ck POSEDGE, a full-cycle registered copy per bank) ->
+//                  leaf we_q/wd_q (row posedge, full-cycle root crossing) -> payload: no half-cycle on the write path
+//                  (st7 gate: core->rows was the binding class, -53.4 TT placement / -91.1 related, two tile-wide
+//                  half-cycles).  +1 write cycle: payload visible at age <= RETURN_AGE+3, emission from RETURN_AGE+2
+//                  (+1 on every output beat and status; the Engram lookup is lookahead, priced 0 like st6).
 // Requests keep their cycles; st6 adds +1 cycle to every row beat and status (row read hop).
 import ot_hdc_engram_tables_shipped_pkg::*;
 
@@ -230,10 +233,11 @@ module ot_s81_engram_lookup_static #(
         always @(posedge clk or negedge rst_n)
             if (!rst_n) wen_q <= {ATOMS{1'b0}};
             else        wen_q <= (response_ok && hr_tag == bank) ? ({{(ATOMS-1){1'b0}}, 1'b1} << hr_idx) : {ATOMS{1'b0}};
-        // core -> row hop: this bank's ck-negedge copy, captured by the leaf on the row posedge
+        // core -> row hop (st8): this bank's ck-POSEDGE copy (full core cycle from the shared wdata_q, so its tile-wide
+        // fanout wire has a whole cycle), captured by the leaf on the row posedge one cycle later (full-cycle crossing)
         reg  [ATOMS-1:0] wx_en;
         reg  [255:0]     wx_d;
-        always @(negedge clk) begin wx_en <= wen_q; wx_d <= wdata_q; end
+        always @(posedge clk) begin wx_en <= wen_q; wx_d <= wdata_q; end
         ot_s81_engram_rowbank_static_leaf #(.ATOMS(ATOMS)) storage (
             .ck(clk_rows[bank]), .write_en(wx_en), .write_data(wx_d), .rows(stored));
         for (atom=0; atom<ATOMS; atom=atom+1) begin : g_read
@@ -300,7 +304,7 @@ module ot_s81_engram_lookup_static #(
 
     wire      row_ok = (ej < CPR[2:0]);
     wire      room = 1'b1;
-    wire      e0_go = (st == S_EMIT) && active && age >= RETURN_AGE + 1 && !emit_done_r && row_ok && ek < 4'd8 && room;
+    wire      e0_go = (st == S_EMIT) && active && age >= RETURN_AGE + 2 && !emit_done_r && row_ok && ek < 4'd8 && room;
     reg [255:0] e1_lo, e1_hi, e1_a8;
     reg [1:0]   e1_off;
     reg [2:0]   e1_j, e1_k;
