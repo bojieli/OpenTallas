@@ -25,7 +25,7 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{v_s} {w_s} {x_s} {t_p} {ze_d}} outputs {{cv} {cf} {cfault} {cs_p} {ct_p}}} {lane1} {clock ot_io_lane1 io_budget_ps 166.667 inputs {} outputs {}} {lane2} {clock ot_io_lane2 io_budget_ps 166.667 inputs {} outputs {}} {lane3} {clock ot_io_lane3 io_budget_ps 166.667 inputs {} outputs {}}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{v_s} {w_s} {x_s} {t_p} {ze_d} {rst_pin}} outputs {{cv} {cf} {cfault} {cs_p} {ct_p}}} {lane1} {clock ot_io_lane1 io_budget_ps 166.667 inputs {} outputs {}} {lane2} {clock ot_io_lane2 io_budget_ps 166.667 inputs {} outputs {}} {lane3} {clock ot_io_lane3 io_budget_ps 166.667 inputs {} outputs {}}]
 set ::ot_ce_source_domains [dict create {leaf_clk[0]} {core} {leaf_clk[1]} {lane1} {leaf_clk[2]} {lane2} {leaf_clk[3]} {lane3}]
 set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{leaf_clk[0]} {leaf_clk[1]} {leaf_clk[2]} {leaf_clk[3]}}
