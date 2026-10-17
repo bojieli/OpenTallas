@@ -49,7 +49,8 @@ def main():
                     clocks.append(dict(c, inst=i['name']))
         tail_edges = [e for e in s['edges'] if e['src'][0] == last]
         assert tail_edges, g
-        drop.append([last, 'o'])
+        # drop only the tail edges (3-element form names the consumer): a [last, 'o'] drop would also remove this layer's last -> next edge
+        drop.extend(sorted({(last, 'o', e['dst'][0]) for e in tail_edges}))
         # stage-to-stage edges carry the full hbfd_rly_624 word (as the spec's own f03 -> f04), pads ride along
         width = next(e['bits'] for e in s['edges'] if e['src'][0] == f'{g}00' and RX.fullmatch(e['dst'][0]))
         chain = [last] + [f'{g}{n:02d}' for n in range(R0, a.r)]
