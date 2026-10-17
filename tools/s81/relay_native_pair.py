@@ -298,6 +298,36 @@ def cmd_stage(a):
     bnets = parse_spef(btxt)
     for k_, n_ in bnets.items():
         n_['_name'] = k_
+    pin2net, net_bufin = {}, collections.defaultdict(list)
+    bcell = {}
+    for nn, n_ in bnets.items():
+        for kind, node, d_, cell in n_['conn']:
+            if kind != '*I':
+                continue
+            inst, pin = node.rsplit(':', 1)
+            pin2net[(inst, pin)] = nn
+            if not re.match(r'^P\d+_[AB]$', inst):
+                bcell[inst] = cell
+                if d_ == 'I':
+                    net_bufin[nn].append(inst)
+
+    def chain(bA, op, bB, ip, start_name):
+        """bench nets and repeaters from bA.op to bB.ip (repair_design repeaters; one net when unbuffered)"""
+        net = pin2net.get((bA, op)) or (start_name if start_name in bnets else None)
+        if net is None:
+            raise ValueError(f'bench SPEF lacks the net of {bA}:{op}')
+        nets, bufs = [net], []
+        while (bB, ip) not in [tuple(c[1].rsplit(':', 1)) for c in bnets[net]['conn'] if c[0] == '*I']:
+            nxt = net_bufin.get(net, [])
+            if len(nxt) != 1:
+                raise ValueError(f'repeater chain {bA}:{op} -> {bB}:{ip} breaks at {net} ({nxt})')
+            b_ = nxt[0]
+            net = pin2net[(b_, 'Y')]
+            bufs.append(b_)
+            nets.append(net)
+            if len(nets) > 200:
+                raise ValueError('repeater chain loop')
+        return nets, bufs
     pairs = sorted((i for i in mp['insts'] if i['cls'] == a.cls), key=lambda i: i['d'])
     if a.d_max:
         pairs = [i for i in pairs if i['d'] <= a.d_max]
@@ -325,16 +355,19 @@ def cmd_stage(a):
                 src, dst = ('a', 'b') if p['dir'] == 'fwd' else ('b', 'a')
                 for bit, op in p['out_pins'].items():
                     ip = p['in_pins'][bit]
-                    jn = f'k{k}_w_{san(op)}'
-                    joins[(src, op)] = jn
-                    joins[(dst, ip)] = jn
                     bn = f'n{k}_{p["out"]}' + ('' if bit == 'None' or p['width'] == 1 else f'[{bit}]')
-                    jl.append((jn, bn, src, op, dst, ip))
+                    jl.append((f'k{k}_w_{san(op)}', bn, src, op, dst, ip))
             if fwd:
-                jn = f'k{k}_fck'
-                joins[('a', 'fo0[0]')] = jn
-                joins[('b', 'fi0[0]')] = jn
-                jl.append((jn, f'n{k}_fck[0]' if f'n{k}_fck[0]' in bnets else f'n{k}_fck', 'a', 'fo0[0]', 'b', 'fi0[0]'))
+                jl.append((f'k{k}_fck', f'n{k}_fck[0]' if f'n{k}_fck[0]' in bnets else f'n{k}_fck', 'a', 'fo0[0]', 'b', 'fi0[0]'))
+            chains = []
+            for jn, bn, src, op, dst, ip in jl:
+                bA = f'P{k}_A' if src == 'a' else f'P{k}_B'
+                bB = f'P{k}_B' if dst == 'b' else f'P{k}_A'
+                nets_, bufs_ = chain(bA, _bench_pin(op, bA, pin2net), bB, _bench_pin(ip, bB, pin2net), bn)
+                names = [jn] if len(nets_) == 1 else [jn] + [f'{jn}_r{i_}' for i_ in range(1, len(nets_) - 1)] + [f'{jn}_z']
+                joins[(src, op)] = names[0]
+                joins[(dst, ip)] = names[-1]
+                chains.append((names, nets_, bufs_, src, op, dst, ip, bA, bB))
             netname = {}
 
             def flat_net(side, x):
@@ -361,25 +394,27 @@ def cmd_stage(a):
                     cs = ', '.join('.%s(%s)' % (pn, flat_net(side, n) if n and not CONST_RE.match(n) else n)
                                    for pn, n in conns)
                     V.append(f' {cell} k{k}{side}_{san(inst)} ({cs});')
-            for jn, *_ in jl:
-                wires.add(jn)
+            nrep = 0
+            for names, nets_, bufs_, *_ in chains:
+                wires.update(names)
+                for i_, b_ in enumerate(bufs_):
+                    V.append(f' {bcell[b_]} k{k}_rb_{san(b_)} (.A({names[i_]}), .Y({names[i_ + 1]}));')
+                nrep += len(bufs_)
             # SPEF: every native net of both sides; port nets that join are merged with the bench wire
             merged = {}
-            for jn, bn, src, op, dst, ip in jl:
-                M = Merged(jn)
-                merged[jn] = M
-                if bn not in bnets:
-                    raise ValueError(f'bench SPEF lacks {bn}')
-                bA = f'P{k}_A' if src == 'a' else f'P{k}_B'
-                bB = f'P{k}_B' if dst == 'b' else f'P{k}_A'
-                M.add(bnets[bn], lambda i: i, lambda p: None, 'w')
-                # bench CONN pins are the two view instances' ports: re-key them as the junction nodes
-                for key in list(M.conn):
-                    if key.startswith(bA + ':') or key.startswith(bB + ':'):
-                        del M.conn[key]
-                ja, jb = M.node(('j', src, op)), M.node(('j', dst, ip))
-                _rekey(M, f'{bA}:{op}', ja)
-                _rekey(M, f'{bB}:{ip}', jb)
+            imap = lambda i: i if re.match(r'^P\d+_[AB]$', i) else f'k{k}_rb_{san(i)}'  # noqa: E731
+            for names, nets_, bufs_, src, op, dst, ip, bA, bB in chains:
+                for i_, (fn_, bn_) in enumerate(zip(names, nets_)):
+                    M = Merged(fn_)
+                    merged[fn_] = M
+                    M.add(bnets[bn_], imap, lambda p_: None, 'w')
+                    for key in list(M.conn):     # the view-instance pins become the native junction nodes
+                        if key.startswith(bA + ':') or key.startswith(bB + ':'):
+                            del M.conn[key]
+                    if i_ == 0:
+                        _rekey(M, f'{bA}:{_bench_pin(op, bA, pin2net)}', M.node(('j', src, op)))
+                    if i_ == len(nets_) - 1:
+                        _rekey(M, f'{bB}:{_bench_pin(ip, bB, pin2net)}', M.node(('j', dst, ip)))
             done = set()
             for side in ('a', 'b'):
                 for name, n in native.items():
@@ -404,7 +439,7 @@ def cmd_stage(a):
                           lambda p, f=fname: ('port', f) if f in top_ports else None, side)
                     S.append(M.text())
             S += [M.text() for M in merged.values()]
-            rec['points'][str(k)] = dict(d=pr['d'], bits=len(jl) - (1 if fwd else 0),
+            rec['points'][str(k)] = dict(d=pr['d'], bits=len(jl) - (1 if fwd else 0), repeaters=nrep,
                                          L_max=max((s['L'] for pin, s in mp['sinks'].items()
                                                     if pin.startswith(f'P{k}_')), default=None))
         hdr = ['*SPEF "ieee 1481-1999"', '*DESIGN "pair_top"', '*DATE "-"', '*VENDOR "OpenTallas"',
@@ -460,6 +495,14 @@ exit $rc
 """)
     (out / 'run.sh').chmod(0o755)
     print(f'{a.cls}: {len(pairs)} points, variants {list(variants)}, clock {rec["clock_mode"]} -> {out}')
+
+
+def _bench_pin(pin, inst, pin2net):
+    """bench pin name of a view pin: the bench may have scalarized a 1-bit bus (dq[0] -> dq)"""
+    if (inst, pin) in pin2net:
+        return pin
+    b = pin.split('[')[0]
+    return b if (inst, b) in pin2net else pin
 
 
 def _rekey(M, old, new):

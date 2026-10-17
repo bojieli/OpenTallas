@@ -57,6 +57,10 @@ LAYERS = {
     'die': ('M4-M9', ['set_global_routing_layer_adjustment M4-M5 0.30', 'set_global_routing_layer_adjustment M6-M9 0.146']),
     # die-top relay signals <= M5 (coordinator rule for die-top relays), same 30 % adjustment
     'm45': ('M4-M5', ['set_global_routing_layer_adjustment M4-M5 0.30']),
+    # structural sensitivity (2026-10-16): long die relay hops pushed to M8/M9 (M4-M7 capacity cut 85 %: pin access only)
+    # repeated die wire on M7 (M4-M6 capacity cut 85 %: pin access only)
+    'm7': ('M4-M7', ['set_global_routing_layer_adjustment M4-M6 0.85']),
+    'm89': ('M4-M9', ['set_global_routing_layer_adjustment M4-M7 0.85', 'set_global_routing_layer_adjustment M8-M9 0.146']),
 }
 
 
@@ -373,6 +377,33 @@ def cmd_plan(a):
           ', '.join(f"{b['dir']} {b['classes']} cls {b['nets']} nets" for b in index))
 
 
+NLDM = PLAT + '/lib/NLDM'
+STD_LIBS = ('asap7sc7p5t_AO_RVT_{C}_nldm_211120.lib.gz', 'asap7sc7p5t_INVBUF_RVT_{C}_nldm_220122.lib.gz',
+            'asap7sc7p5t_OA_RVT_{C}_nldm_211120.lib.gz', 'asap7sc7p5t_SEQ_RVT_{C}_nldm_220123.lib',
+            'asap7sc7p5t_SIMPLE_RVT_{C}_nldm_211120.lib.gz')
+REPEATERS = ('BUFx4_ASAP7_75t_R', 'BUFx4f_ASAP7_75t_R', 'BUFx5_ASAP7_75t_R', 'BUFx6f_ASAP7_75t_R', 'BUFx8_ASAP7_75t_R')
+MAX_TRANSITION = 260.0
+
+
+def std_libs(corner):
+    return '\n'.join(f'read_liberty {NLDM}/{f.format(C=corner.upper())}' for f in STD_LIBS)
+
+
+def repeater_tcl(layer):
+    """--repeaters: OpenROAD repair_design on every die wire (slew / cap driven at the closed views' 260 ps
+    max_transition, BUFx4..BUFx8 only), placement RC of LAYER, then legalise the repeaters"""
+    return f'''set_wire_rc -signal -layer {layer}
+set_max_transition {MAX_TRANSITION} [current_design]
+set_dont_use [get_lib_cells -quiet *_ASAP7_75t_R]
+unset_dont_use [get_lib_cells {{{' '.join(REPEATERS)}}}]
+estimate_parasitics -placement
+repair_design -slew_margin 0 -cap_margin 0
+puts "OT_REPAIR repeaters [llength [get_cells -quiet -filter {{ref_name =~ BUFx*}} *]]"
+detailed_placement
+check_placement -verbose
+mem repair'''
+
+
 def mem_gb_for_area(mm2):
     """honest ot-heavy declaration and docker --memory cap for one GRT batch: measured peak RSS 20-128 GB over
     5.6-36.2 mm2 dies (fwd_die b01-b07, fwd_die2, fwd_die3 2026-10-16) = 3.3-3.6 GB/mm2; 4 GB/mm2 + 8 GB"""
@@ -474,6 +505,7 @@ proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
 read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
 {lefs}
+{std_libs('tt') if getattr(a, 'repeaters', None) else ''}
 {libs('tt')}
 read_verilog /work/reach.v
 link_design reach_top
@@ -482,6 +514,7 @@ source {PLAT}/openRoad/make_tracks.tcl
 {chr(10).join(place)}
 mem placed
 source {PLAT}/setRC.tcl
+{repeater_tcl(a.repeaters) if getattr(a, 'repeaters', None) else ''}
 set_routing_layers -signal {lay}
 {chr(10).join(adj)}
 global_route -congestion_iterations 30 -allow_congestion -verbose -congestion_report_file /work/grt_congestion.rpt
@@ -498,6 +531,7 @@ puts OT_REACH_GRT_DONE
     for name, corner, per, chk in (('tt833', 'tt', T_STREAM, 'max'), ('tt1111', 'tt', T_SERIAL, 'max'),
                                    ('ff_hold', 'ff', T_STREAM, 'min'), ('ss833', 'ss', T_STREAM, 'max')):
         sta = f"""# {name}: {corner} {'setup' if chk == 'max' else 'hold'} at {per} ps, neighbour skew {SKEW} ps adverse
+{std_libs(corner) if getattr(a, 'repeaters', None) else ''}
 {libs(corner)}
 read_verilog /work/reach_grt.v
 link_design reach_top
@@ -773,6 +807,7 @@ def main(argv=None):
     p.add_argument('--d1', type=float, default=1000.0)
     p.add_argument('--step', type=float, default=25.0)
     p.add_argument('--net-budget', type=int, default=150000)
+    p.add_argument('--repeaters', choices=['M4', 'M5', 'M7'], help='repair_design repeaters on every die wire (RC of LAYER)')
     p.add_argument('--max-area-mm2', type=float, default=8.0, help='per-batch die area bound (GRT memory ~3.5 GB/mm2)')
     p.add_argument('--classes', nargs='*')
     p.add_argument('--fwd-clock', action='store_true', help='also route A.fo0 -> B.fi0 (forwarded clock) where both exist')
