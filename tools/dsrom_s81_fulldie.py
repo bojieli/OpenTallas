@@ -1440,7 +1440,7 @@ def port_widths(m, k):
     return w
 
 
-def pin_rects(mst, k, wmap):
+def pin_rects(mst, k, wmap, legalize=True):
     out = []
     for port, spec in mst.ports.items():
         if spec[0] == 'rects':
@@ -1496,7 +1496,7 @@ def pin_rects(mst, k, wmap):
             ins.append((nm, ly, (x0, y0, x1, y1)))
         rects = ins
     out = out + rects
-    if PIN_LATTICE and k == 1:
+    if PIN_LATTICE and k == 1 and legalize:
         # --pin-lattice (S-DIE 2026-10-15): one legal site-grid origin per axis for every generated master (die PLACE
         # snap.tcl ot_mts::rule); off-lattice assigned/generated pins move the least distance onto it, reported
         from s81.pin_lattice_legalize import legalize as _pl_legalize
@@ -1618,7 +1618,8 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
         sliced = defaultdict(list)
         for c in conns.get(it.name, []):
             if len(c) == 4:                      # a slice of a generated / bundled port
-                assert not (k == 1 and it.name in (m.get('pad') or {}) and c[0] in m['pad'][it.name]['ports']), (it.name, c[0], 'sliced DEDUPE padding unsupported')
+                # S-DIE 1815 10-16 (c26d3 GEN_FAIL f_KW1t_70.do0): a DEDUPE-padded port bound by slices is completed
+                # below to the standard width (spare inputs tied low + declared in pads.json, spare outputs no-load)
                 sliced[c[0]].append((c[3], c[1], c[2]))
                 continue
             if isinstance(c[0], list):
@@ -1653,6 +1654,11 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
             pcs.sort()
             assert all(pcs[i][0] + pcs[i][2] <= pcs[i + 1][0] for i in range(len(pcs) - 1)), (it.name, base, pcs)
             rw_ = rtl_port_width(it.master, base) if RTL_BIND else None
+            pad_ = (m.get('pad') or {}).get(it.name) if k == 1 else None
+            if pad_ and base in pad_['ports']:
+                L_ = pad_['ports'][base]
+                assert pcs[-1][0] + pcs[-1][2] <= L_, (it.name, base, pcs, L_, 'DEDUPE slice above the logical width')
+                rw_ = L_            # gaps inside the logical width keep the gap-net rule; the pad is appended below
             top_ = pcs[-1][0] + pcs[-1][2]
             if any(pcs[i][0] + pcs[i][2] < pcs[i + 1][0] for i in range(len(pcs) - 1)) or pcs[0][0] != 0 or \
                     (rw_ is not None and rw_ > top_):
@@ -1673,6 +1679,15 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
                     V.append(f'  wire [{rw_ - lo_ - 1}:0] {gn_};')
                     full_.append((lo_, gn_, rw_ - lo_))
                 pcs = full_
+            if pad_ and base in pad_['ports'] and pad_['std'] > pad_['ports'][base]:
+                L_, sp_ = pad_['ports'][base], pad_['std'] - pad_['ports'][base]
+                if m['pdir'][it.master][base][0] == 'input':
+                    pcs = list(pcs) + [(L_, f"{sp_}'b0", sp_)]
+                    pads_decl[it.name][base] = L_
+                else:
+                    nc_ = f'n_pad_{it.name}_{base}'
+                    V.append(f'  wire [{sp_ - 1}:0] {nc_};')
+                    pcs = list(pcs) + [(L_, nc_, sp_)]
             parts.append(f'.{base}({{' + ', '.join(net for _, net, _ in reversed(pcs)) + '})')
         for base, bits_ in bus_bits.items():
             hi = max(bits_)
@@ -3209,6 +3224,7 @@ BF_X2_PAIR = False              # --bf-x2-pair (S-BIND r6): the packed static x 
 # rd_out[71:48] columns of rows 0..3 of the phase's cfg block, so BF cfg ROM reads are 72 b).  f_prog travels seq -> front
 # beside go (same class / relay cohort: the producer's DELTA 0 assumes equal go / f_prog ages, bench-measured).
 BF_STATIC_PROG = False
+BF_FRONT_ROOT_ABI = False       # opt-in S81H03 source candidate; no view/timing inheritance
 LEAF, NODEB, STB = 63, 66, 2
 CRET = NODEB + STB                  # column return payload: root word + {fault, busy}
 STEP8 = 400.0                       # nominal forwarded-stage spacing (<= LINK_STAGE_UM after placement)
@@ -3378,6 +3394,7 @@ ECOL_W = 518.4
 CTRL_SVC_ALIGN = False         # --ctrl-svc-align (s81-die v14): stack client pins at their controller bits' x
 HOP_GATE_UM = None             # --hop-gate UM (s81-die v14): real mode fails when any data bit's pin-to-pin hop > UM
 RLY_REAL_DIMS = False          # reserve native wide relay envelopes before choosing their faces
+NATIVE_SLOT_ENVELOPES = False  # reserve source-pinned qbank / 536 relay view envelopes before placement
 RLY_FACE_REACH = 0.0           # --rly-face-reach UM (s81-die v16): last column relay's out face by its worst load
 HOP_EXTRA = 0                  # --hop-extra N: extra stations a hop may take when its planned count has no clean placement
 HOST_MM2 = 0.10
@@ -3885,6 +3902,12 @@ def relay_dims(bits, horiz):
     the exact real outline without growing a placed tile. Corner masters
     still require their own real view; this does not alias them to a stand.
     """
+    if NATIVE_SLOT_ENVELOPES and bits == 536:
+        matches = [v for name, v in bound_views().items() if name.startswith('dsfd_rly_536_')]
+        if not matches:
+            raise ValueError('native slot envelope requires source-pinned dsfd_rly_536 views')
+        a, b = stn_dims([bits], True), stn_dims([bits], False)
+        return max(a[0], b[0], *(v['w'] for v in matches)), max(a[1], b[1], *(v['h'] for v in matches))
     if RLY_REAL_DIMS and bits in (266, 283):
         return 34.56, 30.24
     # Faces are selected from the actual neighbours AFTER the site is reserved.
@@ -3904,6 +3927,24 @@ def relay_dims(bits, horiz):
     horizontal = stn_dims([bits], True)
     vertical = stn_dims([bits], False)
     return tuple(max(a, b) for a, b in zip(horizontal, vertical))
+
+
+def native_xstg_slot(w, h, requested_orientation):
+    """Reserve the literal crossing view and a proven transform before search.
+
+    The existing closed base R0 is preferred when a requested mirror is not
+    supported.  Its different absolute pin positions must pass subsequent
+    source-current join/reach checks; this does not waive those checks.
+    """
+    master = 'dsfd_xstg_515'
+    view = bound_views().get(master)
+    if view is None:
+        raise ValueError(f'native slot envelope requires source-pinned {master}')
+    orientation = bound_view_orientation_contract(view, master)
+    supported = orientation['supported']
+    if orientation['errors'] or 'R0' not in supported:
+        raise ValueError(f'{master}: invalid native orientation contract: {orientation}')
+    return max(w, view['w']), max(h, view['h']), (requested_orientation if requested_orientation in supported else 'R0')
 
 
 def stn70_across(lanes, horiz):
@@ -5555,6 +5596,9 @@ def buses_r8(m):
         bus(f'rs_col_{r}', 'col_reset', 1, col_rs)
     if BF_HIER:
         _bf_hier_nets(m)
+        if BF_FRONT_ROOT_ABI:
+            from s81.bf_root_die_abi import rewrite_front
+            rewrite_front(m)
     if REV == 'r9':
         _bank_nets(m)
         _col_relays(m, P)
@@ -6725,10 +6769,15 @@ def _q_banks(p, ex, ey, rq, region, mirror=False):
             xc = (min(xs_) + max(xs_)) / 2
         if mirror:
             xc = rq['w'] - xc
-        w = 60.48
+        w, h = 60.48, BANK_H
+        if NATIVE_SLOT_ENVELOPES:
+            native = bound_views().get(f'dsfd_qbank_{face}')
+            if native is None:
+                raise ValueError(f'native slot envelope requires source-pinned dsfd_qbank_{face}')
+            w, h = max(w, native['w']), max(h, native['h'])
         x = dn(ex + xc - w / 2, GX)
-        y = dn(ey - BANK_H - 2.0, GY) if face == 'S' else up(ey + rq['h'] + 1.08, GY)
-        out.append(Inst(f'{tag}{p}', f'dsfd_qbank_{face}', x, y, w - SHAVE, BANK_H - SHAVE, kind='qbank',
+        y = dn(ey - h - 2.0, GY) if face == 'S' else up(ey + rq['h'] + 1.08, GY)
+        out.append(Inst(f'{tag}{p}', f'dsfd_qbank_{face}', x, y, w - SHAVE, h - SHAVE, kind='qbank',
                         region=region, power_w=0.0))
         BANK_PORTS[out[-1].name] = (face, ports)
     return out
@@ -8986,12 +9035,17 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
         return P.add(Inst(name, master, pl[0], pl[1], w, h, 'R0', kind='hend', region='svc'))
 
     def beside_blk(name, master, w, h, blk, face, yfrac):
+        orient = 'R0' if face == 'E' else 'MY'
+        if NATIVE_SLOT_ENVELOPES and master == 'dsfd_xstg_515':
+            w, h, orient = native_xstg_slot(w, h, orient)
+            m.setdefault('native_slot_requests', {})[name] = dict(master=master, outline_um=[w,h],
+                orientation=orient, status='SOURCE_CURRENT_GEOMETRY_CANDIDATE_NOT_TIMING')
         y = blk.y + blk.h * yfrac
         x = blk.x - w / 2 - 6.0 if face == 'W' else blk.x + blk.w + w / 2 + 6.0
         gap = cor['gapS'] if blk.y < DIE[1] / 2 else cor['gapN']
         pl = P.near(x, y, w, h, [gap], horiz=False, span=300.0, rows=8)
         assert pl, name
-        return P.add(Inst(name, master, pl[0], pl[1], w, h, 'R0' if face == 'E' else 'MY', kind='hend', region='svc'))
+        return P.add(Inst(name, master, pl[0], pl[1], w, h, orient, kind='hend', region='svc'))
     for i, (st, sv) in enumerate(m['svcs'].items()):
         side = vm_side(st)
         sx = spine_x(side)
@@ -10537,7 +10591,10 @@ def _resolve_pin_collisions(Mx):
     fixed groups ('rects') are recorded, not moved (they are the record owner's defect)."""
     def rects_of():
         by = defaultdict(list)
-        for nm, ly, r in pin_rects(Mx, 1, {}):
+        # S-DIE 1815 10-16 (c26k4 GEN_FAIL dsfd_sp_pq_produced calendar_base[0]): collisions are found on the RAW
+        # rectangles; lattice legalization runs at LEF emission, after a colliding generated group has moved
+        # (legalizing first cannot place a generated group laid on top of 2,049 assigned f_vm pins)
+        for nm, ly, r in pin_rects(Mx, 1, {}, legalize=False):
             by[nm.rsplit('[', 1)[0]].append((ly, r))
         return by
     def hit(a, b):
@@ -10698,6 +10755,19 @@ def _faces_r8(m, Mx, it, ports):
     if it.kind in ('sstn_split_base', 'sstn_split_payload') and _LAY_K[0] == 1:
         from s81.sstn_split import populate
         populate(sys.modules[__name__], Mx, ports)
+        return
+    if BF_FRONT_ROOT_ABI and it.master == 'dsfd_bf_front_roots':
+        if _LAY_K[0] == 1:
+            from s81.bf_root_die_abi import populate_front
+            populate_front(Mx, ports)
+        else:
+            # Bundled figures are projections only. Native geometry is always
+            # the complete literal k1 request and later this leaf's own view.
+            for face, names_ in [('N',['xb_data','io_n']), ('W',['c0','io_w']),
+                                 ('E',['c1','io_e']),
+                                 ('S',['qy0','qy1','x0','x1','go','cfg','st','ck','rs','xb_meta','f_prog','io_clk'])]:
+                _lay(Mx,face,[(p,ports[p][1]) for p in names_ if p in ports],
+                     'M4' if face in 'EW' else 'M5')
         return
     if _LAY_K[0] == 1 and BF_HIER == 450.144 and BF_ROUTE_H == 198.72 and it.master in ('dsfd_bf_front', 'dsfd_bf_col',
                                                                                          'dsfd_bf_front_static'):
@@ -11847,6 +11917,8 @@ def die_options(ap):
                     'drives one reset pin register (async assert, release +1 edge) that resets every node flop')
     ap.add_argument('--qbank-s-rstreg', action='store_true', help='S-NET+FILL S81F-05: dsfd_qbank_S rs drives one reset '
                     'pin register (async assert, release +1 initialization edge); normal data remains one edge')
+    ap.add_argument('--native-slot-envelopes', action='store_true', help='Reserve source-pinned native qbank and all '
+                    '536-bit relay outlines before placement; geometry candidate only, no view qualification')
     ap.add_argument('--hend-static', action='store_true', help='S-NET (owner static rule 10-14): hub end/start blocks and '
                     'xstg cross on fixed calendars (ot_s81_static_lane_end, ot_s81_static_ratio_cross); no meso / ratio '
                     'FIFO, credits, ready or trained placement')
@@ -12068,6 +12140,10 @@ def die_options(ap):
                     'face-to-face wide group on the die span shared with its peers (both ends of an abutting pair line up)')
     ap.add_argument('--bf-static-prog', action='store_true', help='S-BIND 2026-10-15: BF pairs run their compiled '
                     'programme (dsfd_bf_front_static + ot_s81_cfg7_seq_bfp; descriptor in the cfg ROM spare columns)')
+    ap.add_argument('--bf-front-root-abi', action='store_true', help='S81H03 independent source candidate: five-root '
+                    'dsfd_bf_front_roots, literal N1024 data / S44 metadata ABI and initialization reset release+1. '
+                    'Requires --bf-static-prog --bf-x2-static --bf-hier-compact --bf-hier-height 198.72. '
+                    'Own physical/native view, per-root phi-R delivery and all incident proofs remain required.')
     ap.add_argument('--bf-x2-pair', action='store_true', help='S-BIND r6 (needs --bf-x2-static): the x tree carries the packed word as two equal-station forwarded lanes (566-b legacy + 538-b x2) with one static ingress each at the column')
     ap.add_argument('--hub-abut', action='store_true', help='S-DIE 2026-10-15: W-column centre-stack gaps 21.6 um (RTL_ABUT_GAP) instead of 172.8')
     ap.add_argument('--vm-span-vch', help='S-DIE 2026-10-15 (coordinator 18:40, A2 VM): VM reservation W,H um spanning the W column + VCH (overrides the contract VM outline)')
@@ -12152,8 +12228,13 @@ def apply_options(a):
     _RTL_CLOCK_CACHE.pop('dsfd_sp_vm', None)
     if WFC_RETURN256:
         wfc_return256_params()
-    global SUHC_STATIC_ISSUE, BF_X2_STATIC, LSW, BF_STATIC_PROG, BF_X2_PAIR
+    global SUHC_STATIC_ISSUE, BF_X2_STATIC, LSW, BF_STATIC_PROG, BF_X2_PAIR, BF_FRONT_ROOT_ABI
     BF_STATIC_PROG = bool(getattr(a, 'bf_static_prog', False))
+    BF_FRONT_ROOT_ABI = bool(getattr(a, 'bf_front_root_abi', False))
+    if BF_FRONT_ROOT_ABI:
+        assert BF_STATIC_PROG and getattr(a, 'bf_x2_static', False) and getattr(a, 'bf_hier_compact', False), \
+            '--bf-front-root-abi requires static programme, actual x2 transport and compact hierarchy'
+        assert abs(getattr(a, 'bf_hier_height', 0)-198.72)<1e-6, '--bf-front-root-abi requires exact H03 height'
     SUHC_STATIC_ISSUE = bool(getattr(a, 'suhc_static_issue', False))
     BF_X2_STATIC = bool(getattr(a, 'bf_x2_static', False))
     BF_X2_PAIR = bool(getattr(a, 'bf_x2_pair', False)) and BF_X2_STATIC
@@ -12253,6 +12334,8 @@ def apply_options(a):
     NODE_RSTREG = bool(getattr(a, 'node_rstreg', False))
     global QBANK_S_RSTREG
     QBANK_S_RSTREG = bool(getattr(a, 'qbank_s_rstreg', False))
+    global NATIVE_SLOT_ENVELOPES
+    NATIVE_SLOT_ENVELOPES = bool(getattr(a, 'native_slot_envelopes', False))
     HEND_STATIC = bool(getattr(a, 'hend_static', False))
     SSTN_CCPAD = bool(getattr(a, 'sstn_ccpad', False))
     HSTN_POSEDGE = bool(getattr(a, 'hstn_posedge', False))
@@ -12397,6 +12480,8 @@ def apply_options(a):
         BF_HIER, BF_FRONT_W, BF_ROUTE_H = 450.144, 100.224, a.bf_hier_height
     else:
         BF_FRONT_W, BF_ROUTE_H = 280.152, 190.08
+    if BF_FRONT_ROOT_ABI:
+        BF_FRONT_W = 116.64
     BF_SEAM_UM = 1.188 if getattr(a, 'bf_hier_compact', False) else 0.0
     BF_FRAME_EXTRA = up(max(0.0, 2 * BF_HIER + BF_FRONT_W + 2 * BF_SEAM_UM + 8.64 - 2 * LANE_W), GX) if BF_HIER else 0.0
     LANES_W = 2 * LANE_W + BF_FRAME_EXTRA
