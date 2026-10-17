@@ -1440,7 +1440,7 @@ def port_widths(m, k):
     return w
 
 
-def pin_rects(mst, k, wmap):
+def pin_rects(mst, k, wmap, legalize=True):
     out = []
     for port, spec in mst.ports.items():
         if spec[0] == 'rects':
@@ -1496,7 +1496,7 @@ def pin_rects(mst, k, wmap):
             ins.append((nm, ly, (x0, y0, x1, y1)))
         rects = ins
     out = out + rects
-    if PIN_LATTICE and k == 1:
+    if PIN_LATTICE and k == 1 and legalize:
         # --pin-lattice (S-DIE 2026-10-15): one legal site-grid origin per axis for every generated master (die PLACE
         # snap.tcl ot_mts::rule); off-lattice assigned/generated pins move the least distance onto it, reported
         from s81.pin_lattice_legalize import legalize as _pl_legalize
@@ -1618,7 +1618,8 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
         sliced = defaultdict(list)
         for c in conns.get(it.name, []):
             if len(c) == 4:                      # a slice of a generated / bundled port
-                assert not (k == 1 and it.name in (m.get('pad') or {}) and c[0] in m['pad'][it.name]['ports']), (it.name, c[0], 'sliced DEDUPE padding unsupported')
+                # S-DIE 1815 10-16 (c26d3 GEN_FAIL f_KW1t_70.do0): a DEDUPE-padded port bound by slices is completed
+                # below to the standard width (spare inputs tied low + declared in pads.json, spare outputs no-load)
                 sliced[c[0]].append((c[3], c[1], c[2]))
                 continue
             if isinstance(c[0], list):
@@ -1653,6 +1654,11 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
             pcs.sort()
             assert all(pcs[i][0] + pcs[i][2] <= pcs[i + 1][0] for i in range(len(pcs) - 1)), (it.name, base, pcs)
             rw_ = rtl_port_width(it.master, base) if RTL_BIND else None
+            pad_ = (m.get('pad') or {}).get(it.name) if k == 1 else None
+            if pad_ and base in pad_['ports']:
+                L_ = pad_['ports'][base]
+                assert pcs[-1][0] + pcs[-1][2] <= L_, (it.name, base, pcs, L_, 'DEDUPE slice above the logical width')
+                rw_ = L_            # gaps inside the logical width keep the gap-net rule; the pad is appended below
             top_ = pcs[-1][0] + pcs[-1][2]
             if any(pcs[i][0] + pcs[i][2] < pcs[i + 1][0] for i in range(len(pcs) - 1)) or pcs[0][0] != 0 or \
                     (rw_ is not None and rw_ > top_):
@@ -1673,6 +1679,15 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
                     V.append(f'  wire [{rw_ - lo_ - 1}:0] {gn_};')
                     full_.append((lo_, gn_, rw_ - lo_))
                 pcs = full_
+            if pad_ and base in pad_['ports'] and pad_['std'] > pad_['ports'][base]:
+                L_, sp_ = pad_['ports'][base], pad_['std'] - pad_['ports'][base]
+                if m['pdir'][it.master][base][0] == 'input':
+                    pcs = list(pcs) + [(L_, f"{sp_}'b0", sp_)]
+                    pads_decl[it.name][base] = L_
+                else:
+                    nc_ = f'n_pad_{it.name}_{base}'
+                    V.append(f'  wire [{sp_ - 1}:0] {nc_};')
+                    pcs = list(pcs) + [(L_, nc_, sp_)]
             parts.append(f'.{base}({{' + ', '.join(net for _, net, _ in reversed(pcs)) + '})')
         for base, bits_ in bus_bits.items():
             hi = max(bits_)
@@ -10537,7 +10552,10 @@ def _resolve_pin_collisions(Mx):
     fixed groups ('rects') are recorded, not moved (they are the record owner's defect)."""
     def rects_of():
         by = defaultdict(list)
-        for nm, ly, r in pin_rects(Mx, 1, {}):
+        # S-DIE 1815 10-16 (c26k4 GEN_FAIL dsfd_sp_pq_produced calendar_base[0]): collisions are found on the RAW
+        # rectangles; lattice legalization runs at LEF emission, after a colliding generated group has moved
+        # (legalizing first cannot place a generated group laid on top of 2,049 assigned f_vm pins)
+        for nm, ly, r in pin_rects(Mx, 1, {}, legalize=False):
             by[nm.rsplit('[', 1)[0]].append((ly, r))
         return by
     def hit(a, b):
