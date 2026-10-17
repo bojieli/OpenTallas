@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  69.12,
-  95.04
+  108.0,
+  64.8
  ],
  "core": [
   2.16,
   2.16,
-  66.96000000000001,
-  92.88000000000001
+  105.84,
+  62.64
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
@@ -29,7 +29,7 @@
   "cap_basis": "contract"
  },
  "pins": {
-  "W": [
+  "S": [
    "ze_d",
    "in_v",
    "in_tree",
@@ -39,7 +39,8 @@
    "in_err",
    "rows",
    "indices",
-   "counts"
+   "counts",
+   "rst_pin"
   ],
   "E": [
    "pv",
@@ -50,9 +51,6 @@
    "ppos",
    "perr",
    "fault"
-  ],
-  "S": [
-   "rst_pin"
   ],
   "N": [
    "fclk"

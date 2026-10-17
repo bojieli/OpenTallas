@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  95.04,
+  86.4,
   95.04
  ],
  "core": [
   2.16,
   2.16,
-  92.88000000000001,
+  84.24000000000001,
   92.88000000000001
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
@@ -44,8 +44,10 @@
    "ct_p"
   ],
   "S": [
-   "fclk",
    "rst_pin"
+  ],
+  "N": [
+   "fclk"
   ]
  },
  "clock_port": "fclk",
@@ -122,7 +124,6 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
-  "physical/ref_tile_specs/s81_bf_native_1015/lane4_boundary_r2/pins.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",

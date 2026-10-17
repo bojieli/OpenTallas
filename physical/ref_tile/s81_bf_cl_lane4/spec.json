@@ -87,7 +87,7 @@
   "rst_pin"
  ],
  "outline": {
-  "w": 95.04,
+  "w": 86.4,
   "h": 95.04,
   "exact": true
  },
@@ -107,14 +107,16 @@
    "ct_p"
   ],
   "S": [
-   "fclk",
    "rst_pin"
+  ],
+  "N": [
+   "fclk"
   ]
  },
  "macros": [],
  "children": [],
  "inter": [],
- "structural_change": "S-ELEM BF column hardened cluster. lane4 r2 CTS gate native FAIL launch 238.2 (cs_p of lane 3, 6 pins > 220; R 191.7): lane chain registers sit behind per-lane ICGs deep in the tile. ot_v41_bf_lane4_cl adds a pin-side output register on its own local gated clock: +1 edge on the BF16 path (column BF16 +3, FP4 +1).",
+ "structural_change": "S-ELEM BF column hardened cluster. lane4 r2 CTS gate native FAIL launch 238.2 (cs_p of lane 3, 6 pins > 220; R 191.7): lane chain registers sit behind per-lane ICGs deep in the tile. ot_v41_bf_lane4_cl adds a pin-side output register on its own local gated clock: +1 edge on the BF16 path (column BF16 +3, FP4 +1). r2 outline 86.4x95.04 (util ~0.56) for the 529.2-wide parent row; gate 80dc00520 at 95.04x95.04 native PASS L181.0/C160.7/sp8.1.",
  "pin_regs": {
   "enable": false,
   "reason": "RTL registers every child input at the pin (gen_bf_column_cluster.py); outputs come from arithmetic pipeline registers."
@@ -134,7 +136,8 @@
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 16,
-    "pass_regex": "PASS BF leaf full-shape actual RTL: 456 rows, 912 values, 448 configs"
+    "pass_regex": "PASS BF leaf full-shape actual RTL: 456 rows, 912 values, 448 configs",
+    "pass_witness": "results/physical/s81_bf_cl_1016/bench_27457f565/pos.log"
    },
    {
     "name": "cl_skew_mutant",
@@ -142,7 +145,8 @@
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
-    "fail_regex": "MUTANT BF leaf cl_skew FAIL: DIFF TXN from actual RTL"
+    "fail_regex": "MUTANT BF leaf cl_skew FAIL: DIFF TXN from actual RTL",
+    "fail_witness": "results/physical/s81_bf_cl_1016/bench_27457f565/skew.log"
    },
    {
     "name": "cl_root_stop_mutant",
@@ -150,7 +154,8 @@
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
-    "fail_regex": "MUTANT BF leaf root_stop FAIL: DIFF TXN from actual RTL"
+    "fail_regex": "MUTANT BF leaf root_stop FAIL: DIFF TXN from actual RTL",
+    "fail_witness": "results/physical/s81_bf_cl_1016/bench_27457f565/root.log"
    }
   ],
   "extra_paths": [
@@ -165,10 +170,10 @@
    "results/rtl/s81_bf_programme_1015",
    "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
    "physical/ref_tile_specs/s81_bf_native_1015/cl_lane4",
-   "physical/ref_tile_specs/s81_bf_native_1015/lane4_boundary_r2"
+   "physical/ref_tile_specs/s81_bf_native_1015/lane4_boundary_r2",
+   "results/physical/s81_bf_cl_1016/bench_27457f565"
   ],
   "views_to": "physical/s81_die_views/bf_cl_1016/cl_lane4",
   "record_to": "results/physical/s81_bf_cl_1016/cl_lane4"
- },
- "io_tcl": "physical/ref_tile_specs/s81_bf_native_1015/lane4_boundary_r2/pins.tcl"
+ }
 }

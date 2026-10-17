@@ -20,7 +20,8 @@
    "results/rtl/s81_bf_compact_20261010/bench_prep_1013",
    "results/rtl/s81_bf_programme_1015",
    "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
-   "physical/ref_tile_specs/s81_bf_native_1015/cl_fp"
+   "physical/ref_tile_specs/s81_bf_native_1015/cl_fp",
+   "results/physical/s81_bf_cl_1016/bench_27457f565"
   ]
  },
  "stages": {
@@ -41,7 +42,8 @@
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 16,
-    "pass_regex": "PASS BF leaf full-shape actual RTL: 456 rows, 912 values, 448 configs"
+    "pass_regex": "PASS BF leaf full-shape actual RTL: 456 rows, 912 values, 448 configs",
+    "pass_witness": "results/physical/s81_bf_cl_1016/bench_27457f565/pos.log"
    },
    {
     "name": "cl_skew_mutant",
@@ -49,7 +51,8 @@
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
-    "fail_regex": "MUTANT BF leaf cl_skew FAIL: DIFF TXN from actual RTL"
+    "fail_regex": "MUTANT BF leaf cl_skew FAIL: DIFF TXN from actual RTL",
+    "fail_witness": "results/physical/s81_bf_cl_1016/bench_27457f565/skew.log"
    },
    {
     "name": "cl_root_stop_mutant",
@@ -57,7 +60,8 @@
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
-    "fail_regex": "MUTANT BF leaf root_stop FAIL: DIFF TXN from actual RTL"
+    "fail_regex": "MUTANT BF leaf root_stop FAIL: DIFF TXN from actual RTL",
+    "fail_witness": "results/physical/s81_bf_cl_1016/bench_27457f565/root.log"
    }
   ],
   "calibrate": {

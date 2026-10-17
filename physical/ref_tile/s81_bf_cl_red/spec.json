@@ -79,7 +79,7 @@
   "rst_pin"
  ],
  "outline": {
-  "w": 86.4,
+  "w": 81.0,
   "h": 198.72,
   "exact": true
  },
@@ -107,7 +107,7 @@
  "macros": [],
  "children": [],
  "inter": [],
- "structural_change": "S-ELEM BF column hardened cluster (hybrid12 ten-root CTS failed: 710 ps insertion, 100-390 ps spread, FF -314). BF16 reduction low+high as one hardened single-root child with registered inputs (+1 cycle BF16).",
+ "structural_change": "S-ELEM BF column hardened cluster (hybrid12 ten-root CTS failed: 710 ps insertion, 100-390 ps spread, FF -314). BF16 reduction low+high as one hardened single-root child with registered inputs (+1 cycle BF16). r2 outline 81x198.72 to fit the 529.2-wide parent row (gate 7127751e2 native PASS at the old outline).",
  "pin_regs": {
   "enable": false,
   "reason": "RTL registers every child input at the pin (gen_bf_column_cluster.py); outputs come from arithmetic pipeline registers."
@@ -127,7 +127,8 @@
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 16,
-    "pass_regex": "PASS BF leaf full-shape actual RTL: 456 rows, 912 values, 448 configs"
+    "pass_regex": "PASS BF leaf full-shape actual RTL: 456 rows, 912 values, 448 configs",
+    "pass_witness": "results/physical/s81_bf_cl_1016/bench_27457f565/pos.log"
    },
    {
     "name": "cl_skew_mutant",
@@ -135,7 +136,8 @@
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
-    "fail_regex": "MUTANT BF leaf cl_skew FAIL: DIFF TXN from actual RTL"
+    "fail_regex": "MUTANT BF leaf cl_skew FAIL: DIFF TXN from actual RTL",
+    "fail_witness": "results/physical/s81_bf_cl_1016/bench_27457f565/skew.log"
    },
    {
     "name": "cl_root_stop_mutant",
@@ -143,7 +145,8 @@
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
-    "fail_regex": "MUTANT BF leaf root_stop FAIL: DIFF TXN from actual RTL"
+    "fail_regex": "MUTANT BF leaf root_stop FAIL: DIFF TXN from actual RTL",
+    "fail_witness": "results/physical/s81_bf_cl_1016/bench_27457f565/root.log"
    }
   ],
   "extra_paths": [
@@ -157,7 +160,8 @@
    "results/rtl/s81_bf_compact_20261010/bench_prep_1013",
    "results/rtl/s81_bf_programme_1015",
    "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
-   "physical/ref_tile_specs/s81_bf_native_1015/cl_red"
+   "physical/ref_tile_specs/s81_bf_native_1015/cl_red",
+   "results/physical/s81_bf_cl_1016/bench_27457f565"
   ],
   "views_to": "physical/s81_die_views/bf_cl_1016/cl_red",
   "record_to": "results/physical/s81_bf_cl_1016/cl_red"
