@@ -10,6 +10,8 @@ module tb_hbm_su_programme_part;
 `include "part_params.svh"
 localparam integer B=PROGRAMME_BITS, N=PART_EDGES, WM=PROGRAMME_WRITES, WP=PART_WRITES;
 parameter integer MUT=0;
+parameter integer PIPE=0;                    // HBM-SU 2026-10-17: producers PIPE 1 (+3 edges): start advance DEPTH+3
+localparam integer LEAD=PART_DEPTH+((PIPE!=0)?3:0);
 logic clk=0; always #5 clk=~clk;
 logic rst_n=0;
 logic m_we=0, p_we=0, m_start=0, p_start=0;
@@ -24,7 +26,7 @@ ot_hbm_su_programme #(.LINE_BITS(B),.COLS(PROGRAMME_COLS),.EDGES(N),.DICT_BANKS(
  .cfg_data(m_data),.start(m_start),.length(16'(N)),.busy(m_busy),.valid(m_valid),.done(m_done),.fault(m_fault),
  .edge_index(m_edge),.command(m_cmd));
 ot_hbm_su_programme_part #(.LINE_BITS(B),.EDGES(N),.PARTS(PART_N),.DEPTH(PART_DEPTH),.SCOLS(PART_COLS),
- .SMACROS(PART_SMACROS),.DICT_BANKS(PART_DICT_BANKS),.MACROS(PART_MACROS),.MUT(MUT),.MUT_SLICE(1)) u_part(
+ .SMACROS(PART_SMACROS),.DICT_BANKS(PART_DICT_BANKS),.MACROS(PART_MACROS),.MUT(MUT),.MUT_SLICE(1),.PIPE(PIPE)) u_part(
  .clk(clk),.clk_macro({PART_MACROS{clk}}),.rst_n(rst_n),.cfg_we(p_we),.cfg_bank(p_bank),.cfg_row(p_row),
  .cfg_data(p_data),.start(p_start),.length(16'(N)),.busy(p_busy),.valid(p_valid),.done(p_done),.fault(p_fault),
  .edge_index(p_edge),.command(p_cmd));
@@ -45,7 +47,7 @@ always @(posedge clk) if(rst_n && checked>=0) begin
 end
 task automatic execute;
  @(negedge clk); p_start=1; tick(); @(negedge clk); p_start=0;
- for(integer d=1;d<PART_DEPTH;d=d+1) begin tick(); @(negedge clk); end
+ for(integer d=1;d<LEAD;d=d+1) begin tick(); @(negedge clk); end
  m_start=1; tick(); @(negedge clk); m_start=0;
  for(integer e=0;e<N+8;e=e+1) tick();
 endtask
@@ -72,8 +74,8 @@ initial begin
  execute(); execute();
  if(m_fault || p_fault) begin mism=mism+1; $display("SU_PROGRAMME_PART fault m=%b p=%b",m_fault,p_fault); end
  if(mism!=0 || active!=2*N) $fatal(1,"SU_PROGRAMME_PART FAIL mismatches=%0d active=%0d of %0d checked=%0d",mism,active,2*N,checked);
- $display("SU_PROGRAMME_PART PASS edges=%0d active=%0d checked=%0d parts=%0d depth=%0d macros=%0d mono_macros=%0d",
-   N,active,checked,PART_N,PART_DEPTH,PART_MACROS,PROGRAMME_MACROS);
+ $display("SU_PROGRAMME_PART PASS edges=%0d active=%0d checked=%0d parts=%0d depth=%0d pipe=%0d lead=%0d macros=%0d mono_macros=%0d",
+   N,active,checked,PART_N,PART_DEPTH,PIPE,LEAD,PART_MACROS,PROGRAMME_MACROS);
  $finish;
 end
 endmodule
