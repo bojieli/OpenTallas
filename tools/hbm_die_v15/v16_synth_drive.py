@@ -21,7 +21,9 @@ PREFER = {'ot_hbm_lk_ep': ['rtl/hbm_accel/tu/lk_ep_20261010/ot_hbm_lk_ep.sv',
                            'rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv',
                            'rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv'],
           # ot_su12_lane binds SFUT: the c12 vector lane (rtl/hdc/v41x) is the variant with that parameter
-          'ot_hgi_sfu_scheduled_engine': ['rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv']}
+          'ot_hgi_sfu_scheduled_engine': ['rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv'],
+          # d4f split2 core (H-SU k8): same ot_su12_lane SFUT binding
+          'ot_hgi_sfu_core_split2': ['rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv']}
 MISSING = re.compile(r"Module `\\?(\w+)' referenced in module .* is not part of the design")
 NOPARAM = re.compile(r"Module `\\?(\w+)' referenced in module .* does not have a parameter named '(\w+)'")
 
