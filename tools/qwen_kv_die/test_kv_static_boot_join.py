@@ -65,7 +65,8 @@ class BootJoin(unittest.TestCase):
         self.assertEqual(ins['boot']['inputs']['execution_active'], [dict(instance='d2d', port='execution_active', lo=0, width=1)])
         self.assertEqual([x['instance'] for x in ins['boot']['inputs']['local_configured']], ['ownership', 'wprg', 'layer_programme'])
         self.assertEqual({j['consumer'] for j in joins if j['consumer'].startswith('boot.')},
-                         {f'boot.{p}' for p, v in ins['boot']['inputs'].items() if v is None and p not in ('ck', 'rst_n')})
+                         {f'boot.{p}' for p, v in ins['boot']['inputs'].items()
+                          if v is None and p not in ('ck', 'rst_n', 'diecfg_sealed', 'diecfg_fault')})   # KVJ-F die_cfg_join
         self.assertIn(dict(consumer='host.static_setup_ready', producer='boot.setup_ready', width=1,
                            host_master=B.HOST[0] + ':' + B.HOST[1]), joins)
 

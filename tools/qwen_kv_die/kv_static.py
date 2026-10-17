@@ -268,7 +268,9 @@ def compile_graph(graph, root=ROOT):
         terms=[];total=0
         for item in items:
             if 'strap' in item:
-                if p not in ('pc','cfg_stack','cfg_group') and not (p=='cfg' and ins[n]['role']=='ectla'):raise ValueError(f'nonidentity constant operand refused: {n}.{p}')
+                # KVJ-F 10-17 (coordinator 0da (d)): the ECTL cfg is a FUNCTIONAL config word, boot-loaded through
+                # qkd_kv_die_cfg (kv_static_kvjf_join.die_cfg_join), never a strap
+                if p not in ('pc','cfg_stack','cfg_group'):raise ValueError(f'nonidentity constant operand refused: {n}.{p}')
                 w=item['width'];val=item['strap']
                 if type(w) is not int or type(val) is not int or w<1 or not 0<=val<2**w:raise ValueError('invalid identity strap')
                 terms.append(f"{w}'d{val}");total+=w;continue
@@ -390,6 +392,8 @@ def template(root=ROOT):
             join(fc,'ctx_t',bridge,'ctx_t_h')
             for p,sp in [('kgo','kgo'),('vgo','vgo'),('ctx_t','ctx_t'),('epoch','epoch'),('layer','layer')]:join(lc,p,'layer_programme',sp)
             for p,sp in [('kgo','kgo'),('epoch','epoch'),('layer','layer')]:join(ki,p,'layer_programme',sp)
+            # ectla cfg: placeholder identity value, REPLACED by kv_static_kvjf_join.die_cfg_join (boot-loaded die cfg);
+            # compile_graph refuses it as a strap
             strap(land,'cfg_stack',stack,2);strap(land,'cfg_group',g,3);strap(a,'cfg',(g<<2)|stack,5)
             join(ki,'rq',a,'rq');join(a,'rs',ki,'rs')
             for p in ('req_valid','req_t','req_v','req_epoch','req_layer'):join(land,p,ki,p)
