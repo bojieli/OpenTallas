@@ -937,14 +937,14 @@
     "su_SW2"
    ],
    "param_sets": {
-    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"0\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
-    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"1\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
-    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"2\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
-    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"3\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
-    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"0\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"1\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
-    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"1\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"1\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
-    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"2\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"1\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
-    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"3\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"1\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1
+    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"0\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"RF_LOCAL\": \"1\", \"WRITE_RETURN\": \"7\"}": 1,
+    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"1\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"RF_LOCAL\": \"1\", \"WRITE_RETURN\": \"7\"}": 1,
+    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"2\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"RF_LOCAL\": \"1\", \"WRITE_RETURN\": \"7\"}": 1,
+    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"3\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"RF_LOCAL\": \"1\", \"WRITE_RETURN\": \"7\"}": 1,
+    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"0\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"1\", \"READ_RETURN\": \"10\", \"RF_LOCAL\": \"1\", \"WRITE_RETURN\": \"7\"}": 1,
+    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"1\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"1\", \"READ_RETURN\": \"10\", \"RF_LOCAL\": \"1\", \"WRITE_RETURN\": \"7\"}": 1,
+    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"2\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"1\", \"READ_RETURN\": \"10\", \"RF_LOCAL\": \"1\", \"WRITE_RETURN\": \"7\"}": 1,
+    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"3\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"1\", \"READ_RETURN\": \"10\", \"RF_LOCAL\": \"1\", \"WRITE_RETURN\": \"7\"}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -969,7 +969,7 @@
     "sucore_NW"
    ],
    "param_sets": {
-    "{\"COLLPORT\": \"1\", \"MUT\": \"0\"}": 4
+    "{\"COLLPORT\": \"1\", \"MUT\": \"0\", \"RF_LOCAL\": \"1\"}": 4
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -1740,7 +1740,7 @@
   "hbfd_rly_624_SN:i",
   "hbfd_rly_624_WE:i"
  ],
- "die_sha256": "d7ef66f24c9826520e5a28335637a0a9abe986ec92a2ba971f4df7e826525915",
+ "die_sha256": "8f85d8c11d56f4e7f827484076b2673d9f3fe18ad9a289bb59196bd175218e1c",
  "straps_declared": [
   "hfd_hgi_vm_calendar_f20:tgt",
   "hfd_vms_bank_native_q0:bid",
