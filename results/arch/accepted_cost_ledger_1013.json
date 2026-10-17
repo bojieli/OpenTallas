@@ -2173,23 +2173,23 @@
   },
   {
    "design": "r25gq",
-   "unit": "IDX.SCORE_CHAIN (scorer cluster: 16 chunk leaves 4x4, registered W->E key/query seam chain + 4-slot sum bus, +4 scorer edges a frame)",
+   "unit": "IDX.SCORE_CHAIN (scorer cluster: 16 chunk leaves 4x4, registered W->E key/query/aux seam chain + 4-slot sum bus, 2 registers a leaf hop for the 450 um reach: +8 scorer edges a frame)",
    "group": "IDX.SCORE_CHAIN",
-   "measured": 4.0,
+   "measured": 8.0,
    "price": 0.0,
    "unit_of_measure": "cycles (added edges per IDX.INDEX frame)",
    "unit_ratio": null,
-   "e2e_loss_pct": 0.0055,
+   "e2e_loss_pct": 0.0111,
    "binding_workload": "ds_ar",
    "per_workload": {
     "ds_ar": {
      "model": "S2 schedule, fixed cycles added to every record of the op (IDX.INDEX records 8, as the IDX.INDEX row)",
      "base_cycles": 576702.4,
-     "cycles": 576734.4,
-     "added_cycles": 32.0,
+     "cycles": 576766.4,
+     "added_cycles": 64.0,
      "program_records": 8,
-     "added_cycles_per_record": 4.0,
-     "e2e_loss_pct": 0.0055
+     "added_cycles_per_record": 8.0,
+     "e2e_loss_pct": 0.0111
     },
     "qwen_ar": {
      "model": "no IDX op in the Qwen programme",
@@ -2205,7 +2205,7 @@
    "evidence_grade": "model",
    "date": "2026-10-17",
    "status": "accepted",
-   "note": "seam chain: leaf j sees keys/query j edges late, its sum slot rides 3-j hops -> equal age at the E tail; scorer latency +4 edges (compiler constant). Bench proof pending the chained-leaf RTL (scheduled N_Q2/TP192 bench + seam/leaf-swap mutants)."
+   "note": "leaf hop = W pin reg + E pin reg (reach 450 um, leaf 561.6 um); every slot and the aux word (keep, meta, W fault) arrive at the E glue +8; compiler hbm_idx_static_calendar.py --score-chain 8 (claude/hnl-idxscore-rtl). Bench: run_scheduled_nq2_cl.sh."
   }
  ],
  "totals": {
