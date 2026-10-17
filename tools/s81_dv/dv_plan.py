@@ -419,7 +419,7 @@ def record(P, facts, args):
                 provenance=dict(tool='tools/s81_dv/dv_plan.py', inputs=[]))
 
 
-def draw(P, facts, out):
+def draw(P, facts, out, tag=None):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
@@ -441,7 +441,7 @@ def draw(P, facts, out):
         ax.plot([], [], color=v, lw=2, label=k)
     ax.legend(loc='upper right', fontsize=7, ncol=7)
     ax.set_xlim(0, DIE_W / 1000); ax.set_ylim(0, DIE_H / 1000); ax.set_aspect('equal')
-    ax.set_title(f"S81-DV p1: 16 slices x 8 frames, slice ring (hop <= {HOP_UM:.0f} um). "
+    ax.set_title(f"S81-DV {tag or LAYOUT}: 16 slices x 8 frames, slice ring (hop <= {HOP_UM:.0f} um), {facts['die_um'][0]/1000:.2f} x {facts['die_um'][1]/1000:.2f} mm. "
                  f"worst cut {facts.get('worst_cut', '?')}, over-reach {facts.get('over_reach_bits', '?')} b, "
                  f"{facts.get('bit_mm', '?')} bit-mm", fontsize=9)
     ax.set_xlabel('mm'); ax.set_ylabel('mm')
@@ -498,7 +498,7 @@ def main():
                  slice_area_mm2=SLICE_W * SLICE_H / 1e6, n_frames=sum(b['kind'] == 'frame' for b in P.blocks))
     (out / 'plan.json').write_text(json.dumps(dict(facts=facts, blocks=P.blocks, links=P.links), indent=0))
     (out / 'dv_links_record.json').write_text(json.dumps(record(P, facts, a)))
-    draw(P, facts, out / 'dv_flow.png')
+    draw(P, facts, out / 'dv_flow.png', a.revision.replace('dv-', ''))
     print(json.dumps(facts, indent=1))
 
 
