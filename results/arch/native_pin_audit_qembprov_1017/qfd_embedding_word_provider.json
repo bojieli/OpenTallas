@@ -1,23 +1,41 @@
 {
- "cell": "qfd_embedding_word_provider",
- "view": "physical/ref_tile/qfd_embedding_word_provider/views/qfd_embedding_word_provider",
- "lib_cell": "qfd_embedding_word_provider",
- "insertion": true,
- "ref_src": [
-  "insertion.json boundary mean"
- ],
- "R_ps": 298.6,
- "spread_ps": 37.8,
- "outputs": 529,
- "inputs": 711,
- "launch_ps": 179.8,
- "launch_pin": "embed_code_q[389]",
- "capture_ps": 251.7,
- "capture_pin": "rst_n",
- "launch_over": 0,
- "capture_over": 1,
- "comb_pins": 0,
- "comb_first": [],
- "pass": false,
- "fail_why": "capture 251.66049 > 190 (1 pins)"
+ "schema": "opentallas.native_pin_audit.one.v1",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one",
+ "rows": [
+  {
+   "cell": "qfd_embedding_word_provider",
+   "view": "physical/ref_tile/qfd_embedding_word_provider/views/qfd_embedding_word_provider",
+   "lib_cell": "qfd_embedding_word_provider",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 276.3,
+   "spread_ps": 30.3,
+   "outputs": 529,
+   "inputs": 711,
+   "launch_ps": 99.7,
+   "launch_pin": "embed_code_q[10]",
+   "capture_ps": 88.0,
+   "capture_pin": "rst_n",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 41.9,
+   "ff_hold_need_ps": -3.5,
+   "pass": true,
+   "fail_why": "",
+   "job": "qfd_embedding_word_provider-rr1-ebd3f200b",
+   "closed_by": "loop",
+   "design": "qwen",
+   "audited_commit": "5b151b9eba3591ebd4bff59e17bf9e37cb336f87",
+   "limits": {
+    "launch_ps": 220.0,
+    "capture_ps": 190.0,
+    "spread_ps": 80.0
+   },
+   "note": "rr1 regional reset relay fixed ec1 FAIL (rst_n capture 251.7 -> 88.0). Routed TT CLOSED +104.72 / FF +14.66. Routed spread 30.3 (gate CTS-stage 117.0). BINDABLE."
+  }
+ ]
 }
