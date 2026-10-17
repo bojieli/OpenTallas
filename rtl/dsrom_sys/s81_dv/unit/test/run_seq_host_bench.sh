@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # S81U-SEQ: dsdv_seq_host exact bench (lock-step vs the reused dsfd_host_c STATIC + ot_s81_fixed_issue goldens, SEEDS
 # seeds), the illegal-collision run (must fault), 4 mutants that must FAIL, verilator lint.  Prints SEQHOST_GATE PASS/FAIL.
-# Usage: run_seq_host_bench.sh [outdir] [seeds]
+# Usage: run_seq_host_bench.sh [outdir] [seeds] [mutant 1..4: build + run that mutant only]
 set -u
 R=$(cd "$(dirname "$0")/../../../../.." && pwd)
 O=${1:-$(mktemp -d)}; SEEDS=${2:-"1 2 3 4"}; mkdir -p "$O"
@@ -19,6 +19,10 @@ build() { l=$1; shift
     || { echo "BUILD_FAIL $l (see $O/build_$l.log)"; return 2; }
 }
 bad=0
+if [ -n "${3:-}" ]; then   # single-mutant mode for closure-loop benches: run_seq_host_bench.sh OUT SEED <1..4>; prints the SEQHOST lines
+  m=$3; build mut$m +define+MUT=$m || exit 2
+  "$O/mut$m/tb" +seed=${SEEDS%% *} > "$O/run_mut$m.log" 2>&1; grep '^SEQHOST' "$O/run_mut$m.log"; exit 0
+fi
 build base || exit 2
 for s in $SEEDS; do
   "$O/base/tb" +seed=$s > "$O/run_s$s.log" 2>&1
