@@ -59,7 +59,12 @@ sed -e "s/--name s81_grt_/--name dieit_grt_/" -e "s/--name s81_sta_/--name dieit
 # r5 2026-10-14: die GRT reserves M8/M9 for the die PDN at the recipe's field coverage (--pdn-field-cov c: 0.146 + 2 (c - 0.0439))
 CF=$(echo "$A" | grep -o -- '--pdn-field-cov [0-9.]*' | awk '{print $2}')
 [ -n "$CF" ] && export OT_M89_ADJ=$(python3 -c "print(round(max(0.146, 0.146 + 2 * ($CF - 0.0439)), 4))")
+# H-REACH 2026-10-16 (owner ruling HANDOFF 0cl): OT_DIE_REPAIR=1 inserts native-aware repeaters on the die nets before
+# GRT (physical/s81_die_views/dietop/die_repair.tcl; OT_DIE_REPAIR_MAX_WIRE default 175 um, 260 ps); the env passes
+# through admit.sh (exec) into dietop_grt_sta.sh.  Recorded in STATUS either way.
+st "DIE_REPAIR ${OT_DIE_REPAIR:-0} max_wire ${OT_DIE_REPAIR_MAX_WIRE:-175}"
 cd $M && /srv/opentallas-scratch/admit.sh 120 -- $M/dietop_grt_sta.sh a_real grt kit 48 ${OT_GRT_DOCKER_GB:-400} 9.6 ${OT_GRT_ITERS:-30} || { st GRT_STA_FAIL; exit 1; }
+[ "${OT_DIE_REPAIR:-0}" = 1 ] && st "DIE_REPAIR_DONE $(cat $M/grt/die_repair.json 2>/dev/null)"
 grep -q OT_SPEF $M/grt/sta_tt.log || { st STA_NO_SPEF; exit 1; }
 for c in tt ff ss; do echo "$c $(grep -E "^(worst slack|tns)" $M/grt/sta_$c.log | tr "\n" " ")"; done > $M/grt/summary.txt
 st "CHAIN_DONE $(tr '\n' ' ' < $M/grt/summary.txt)"

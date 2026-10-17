@@ -2252,6 +2252,8 @@ def case_real(m, work):
                 '%s %.1f' % (h_['dst'], h_['hold_ps']) for h_ in hf_)), file=sys.stderr)
         elif hg['verdict'] != 'PASS':
             raise SystemExit(f'hop gate FAIL: {hg["bits_over_limit"]} bits over {HOP_GATE_UM} um (see {work}/hop_gate.json)')
+    if REACH_TABLE:
+        reach_gate_run(m, work, bnd)
     W, H = DIE
     # ot_mts::place rescans every placed macro per call (O(n^2): 8k of 24k instances in 31 min); the floorplan is
     # built on the snap lattice, so snap each origin (snap_origin, no neighbour scan) and let the one sweep-line
@@ -2354,6 +2356,26 @@ def _export_relay_stages(m, work):
         return dict(file='relay_stages.json', digest=doc['digest'], buses=doc['bus_count'])
     except Exception as e_:                      # noqa: BLE001 -- the export never changes the case
         return dict(error=repr(e_)[:500])
+
+
+def reach_gate_run(m, work, bnd):
+    """--reach-table (H-REACH 2026-10-16, opt-in): every data bit judged against min(measured reach of its two classes);
+    any over-reach, under-hold-floor or unmeasured relay-class hop stops the generator (reach_gate.json in --work)"""
+    sys.path.insert(0, str(ROOT / 'tools' / 's81'))
+    import die_reach_gate as DRG
+    lefs = [(work / f).read_text() for f in ('elements.lef', 'q_elem.lef', 'cfg.lef', 'phy.lef', 'serdes.lef',
+                                             'ucie.lef', 'head_a.lef', 'head_b.lef') + (('bound_views.lef',) if bnd else ())
+            if (work / f).exists()]
+    rg = DRG.gate(m['insts'], m['buses'], lefs, pslice, DRG.load_table(REACH_TABLE))
+    rg['table'] = str(REACH_TABLE)
+    (work / 'reach_gate.json').write_text(json.dumps(rg, indent=1) + '\n')
+    print('OT_REACH_GATE %s judged %d over %d under_floor %d unmeasured %d (table %s)' % (
+        rg['verdict'], rg['bits_judged'], rg['bits_over_reach'], rg['bits_under_hold_floor'], rg['bits_unmeasured'],
+        REACH_TABLE), file=sys.stderr)
+    if rg['verdict'] != 'PASS':
+        raise SystemExit(f'reach gate FAIL: {rg["bits_over_reach"]} bits over measured reach, {rg["bits_under_hold_floor"]} '
+                         f'under hold floor, {rg["bits_unmeasured"]} on unmeasured relay classes (see {work}/reach_gate.json)')
+    return rg
 
 
 # ------------------------------------------------------------------------------------------------ case (b): GRT
@@ -3413,6 +3435,7 @@ ECOL_SLABS = ()               # --ecol-slabs (ds-1010/s81die): W-column centre s
 ECOL_W = 518.4
 CTRL_SVC_ALIGN = False         # --ctrl-svc-align (s81-die v14): stack client pins at their controller bits' x
 HOP_GATE_UM = None             # --hop-gate UM (s81-die v14): real mode fails when any data bit's pin-to-pin hop > UM
+REACH_TABLE = None             # --reach-table FILE (H-REACH 2026-10-16, opt-in): hop > min(measured reach of its two classes) = hard error
 RLY_REAL_DIMS = False          # reserve native wide relay envelopes before choosing their faces
 NATIVE_SLOT_ENVELOPES = False  # reserve source-pinned qbank / 536 relay view envelopes before placement
 RLY_FACE_REACH = 0.0           # --rly-face-reach UM (s81-die v16): last column relay's out face by its worst load
@@ -12086,6 +12109,9 @@ def die_options(ap):
                     'controller-facing pins take the x of the controller bits they connect to (straight M5 abut crossing)')
     ap.add_argument('--hop-gate', type=float, help='s81-die v14: real mode hard gate: every data bit pin-to-pin '
                     'hop <= UM (tools/s81/die_hop_gate.py; hop_gate.json in --work)')
+    ap.add_argument('--reach-table', help='H-REACH 2026-10-16 (opt-in, default off): real mode hard gate: every data bit '
+                    'pin-to-pin hop <= min(MEASURED reach of its two relay/station classes) and >= their hold floor; a relay '
+                    'class without a usable measured entry fails closed (tools/s81/die_reach_gate.py; reach_gate.json in --work)')
     ap.add_argument('--hop-extra', type=int, default=0, help='s81-gen 2026-10-09: a hop whose stations cannot all place '
                     'within both reaches may take up to N extra stations (+1 cycle each on that hop; dry-run chosen); default 0')
     ap.add_argument('--fwd-iface', action='store_true', help='s81-gen 2026-10-09: host-write (with --ctrl-rq) and layer1e '
@@ -12543,7 +12569,7 @@ def apply_options(a):
         if COLL_P2_LANE and getattr(a, 'draft', None) != 'A':
             raise SystemExit('--coll-p2-lane: MD-2 P2 draft die A (--draft A)')
         COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3cr_%s.json' % ('mtpl' if COLL_MTP_LANE else 'p2l')
-    global CTRL_RQ, FWD_IFACE, HOP_EXTRA, HOP_GATE_UM, CTRL_SVC_ALIGN, BF_HIER, BF_FRAME_EXTRA, BF_FRONT_W, BF_ROUTE_H, BF_SEAM_UM, LANES_W, COL_W8, COL_PITCH8, DIE
+    global CTRL_RQ, FWD_IFACE, HOP_EXTRA, HOP_GATE_UM, REACH_TABLE, CTRL_SVC_ALIGN, BF_HIER, BF_FRAME_EXTRA, BF_FRONT_W, BF_ROUTE_H, BF_SEAM_UM, LANES_W, COL_W8, COL_PITCH8, DIE
     global NODE_FRAME, NS_W, COL_W, COL_PITCH
     if getattr(a, 'node_strip', None):   # S-NET+FILL (tile fill audit 354b5bb2e): narrower return-node strip
         NODE_FRAME = (float(a.node_strip), NODE_FRAME[1])
@@ -12643,6 +12669,7 @@ def apply_options(a):
         raise ValueError('--col-reset-strict requires --col-reset-tree > 0 and 0 < --col-reset-span <= 500')
     LEF_PIN_DIR = bool(getattr(a, 'lef_pin_dir', True))
     HOP_GATE_UM = getattr(a, 'hop_gate', None)
+    REACH_TABLE = getattr(a, 'reach_table', None)
     CTRL_SVC_ALIGN = bool(getattr(a, 'ctrl_svc_align', False))
     FWD_IFACE = bool(getattr(a, 'fwd_iface', False))
     CTRL_RQ = bool(getattr(a, 'ctrl_rq', False)) or a.die == 'layer1e'
