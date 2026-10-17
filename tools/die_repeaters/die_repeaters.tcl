@@ -22,12 +22,12 @@
 #     put on its own free slot (rows x sites, never on a macro, a pre-existing cell or another repeater) of the nearest
 #     density bin (bin_um, default 8.64 um) that is under the utilisation cap (spread_util, default 0.30) -- repeaters
 #     spread over the channel instead of stacking at their ideal points (S81-DV p4e: 2.42M stacked repeaters -> GRT
-#     overflow 5.96M M2/M3); then repair passes (repair_passes, default 3) re-run repair_design on the legal positions
+#     overflow 5.96M M2/M3); then repair passes (repair_passes, default 1: a pass k>1 re-buffers data bits only and breaks forwarded-clock matching) re-run repair_design on the legal positions
 #     and spread the new buffers again, so the displacement leaves no slew violator.  'dpl' (detailed_placement; small
 #     dies only), or 'none' (caller legalises).
 #   * post-GRT: ot_die_rep_post_grt_audit (called by every die flow after estimate_parasitics -global_routing) first
-#     re-buffers the post-GRT slew / cap violators in the same session (repair_design on GRT parasitics, spread,
-#     incremental GRT; post_grt_rounds, default 2), then audits.
+#     upsizes, in place, the repeaters driving post-GRT slew / cap violators (BUFx8 -> BUFx12f -> BUFx16f where the
+#     footprint is free; post_grt_rounds, default 2; stage counts unchanged), then audits.
 # Output: the JSON report (schema opentallas.die_repeaters.v1).  Returns the number of violations.
 
 proc ot_die_rep_log {msg} { puts "OT_DIE_REP $msg"; flush stdout }
@@ -81,6 +81,7 @@ proc ot_die_rep_spread {insts report {util 0.30} {bin_um 8.64} {util_hard 0.60} 
   set maxw 0; set mine [dict create]
   foreach inst $insts { set w [[$inst getMaster] getWidth]; if {$w > $maxw} { set maxw $w }; dict set mine [$inst getName] 1 }
   set slw [expr {(($maxw + $sw - 1) / $sw) * $sw}]
+  if {[info exists ::ot_die_rep_slw]} { set slw $::ot_die_rep_slw } else { set ::ot_die_rep_slw $slw }
   set BR [expr {max(1, int(round($bin_um * $dbu / double($rh))))}]
   set BS [expr {max(1, int(round($bin_um * $dbu / double($slw))))}]
   # obstacles: every placed instance that is not one of ours (macros + pre-existing cells), coarse 200-um buckets
@@ -96,6 +97,8 @@ proc ot_die_rep_spread {insts report {util 0.30} {bin_um 8.64} {util_hard 0.60} 
       for {set j [expr {[lindex $m 1] / $cb}]} {$j <= [lindex $m 3] / $cb} {incr j} { lappend ob($i,$j) $k }
     }
   }
+  if {![info exists ::ot_die_rep_obs]} { set ::ot_die_rep_obs $obs; array set ::ot_die_rep_ob [array get ob] }
+  if {![info exists ::ot_die_rep_occ]} { set ::ot_die_rep_occ [dict create] }
   array set cap {}; array set hcap {}; array set used {}; array set fl {}; array set memoS {}; array set memoH {}; set nhard 0; set onobs 0
   set nbins 0; set placed 0; set unplaced 0; set dsum 0.0; set dmax 0.0; set ringmax 0; set full 0
   set maxring [expr {int(4000.0 / $bin_um) + 1}]
@@ -184,10 +187,13 @@ proc ot_die_rep_spread {insts report {util 0.30} {bin_um 8.64} {util_hard 0.60} 
     $inst setOrient [expr {$odd ? $ro1 : $ro0}]
     $inst setLocation $x $y
     $inst setPlacementStatus PLACED
+    dict set ::ot_die_rep_occ "$x,$y" 1
     incr placed
     set dm [expr {(abs($x + $w / 2 - $ix) + abs($y + $h / 2 - $iy)) / double($dbu)}]
     set dsum [expr {$dsum + $dm}]; if {$dm > $dmax} { set dmax $dm }
   }
+  if {![info exists ::ot_die_rep_onobs]} { set ::ot_die_rep_onobs 0 }
+  incr ::ot_die_rep_onobs $onobs
   set f [open $report w]
   puts $f "{\"schema\": \"opentallas.die_repeaters.spread.v1\", \"placed\": $placed, \"unplaced\": $unplaced, \"util\": $util, \"util_hard\": $util_hard, \"soft_rings\": $soft_rings, \"placed_at_hard_cap\": $nhard, \"ideal_on_obstacle\": $onobs, \"bin_um\": $bin_um, \"slot_width_um\": [expr {$slw / double($dbu)}], \"bins_initialised\": $nbins, \"bins_full\": $full, \"max_ring\": $ringmax, \"mean_disp_um\": [format %.2f [expr {$placed ? $dsum / $placed : 0}]], \"max_disp_um\": [format %.2f $dmax], \"seconds\": [expr {[clock seconds] - $t0}]}"
   close $f
@@ -221,7 +227,7 @@ proc ot_die_rep_restore_use {flagged} { foreach lc $flagged { unset_dont_use $lc
 # buffers {BUFx4_ASAP7_75t_R ...}, skip_nets {} (globs), repeat_nets {} (globs: forwarded-clock nets repeated WITH their
 # data bits -- DIE-CLOCK accepts fclk repeaters matched to the data to +-1 stage; they override the clock skips), skip_sigtypes {CLOCK POWER GROUND}, skip_clock_pins 1,
 # reach_um 0, over_reach report|fail, long_wire_scan 5000, rc_layer M4 ("" = keep caller's), repair_args "",
-# legalize spread|snap(=spread)|dpl|none, spread_util 0.30, spread_util_hard 0.60, soft_rings 3, bin_um 8.64, repair_passes 2, slew_margin 0 (%; post-GRT re-buffer covers detours), post_grt_rounds 2,
+# legalize spread|snap(=spread)|dpl|none, spread_util 0.30, spread_util_hard 0.60, soft_rings 3, bin_um 8.64, repair_passes 1, slew_margin 0 (%), post_grt_rounds 2 (post-GRT upsizing), resize_cells {BUFx8 BUFx12f BUFx16f},
 # bounds_tcl /work/cluster_bounds.tcl, libs {} (liberty files to read first), std_corner ""
 # (TT|FF|SS: read the ASAP7 RVT std libs of that corner), design ""
 proc ot_die_repeaters {cfg} {
@@ -230,7 +236,8 @@ proc ot_die_repeaters {cfg} {
            buffers {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_75t_R BUFx5_ASAP7_75t_R BUFx6f_ASAP7_75t_R BUFx8_ASAP7_75t_R} \
            skip_nets {} repeat_nets {} skip_sigtypes {CLOCK POWER GROUND} skip_clock_pins 1 reach_um 0 over_reach report \
            long_wire_scan 5000 post_drv report rc_layer M4 repair_args "" legalize spread bounds_tcl /work/cluster_bounds.tcl \
-           libs {} std_corner "" design "" spread_util 0.30 spread_util_hard 0.60 soft_rings 3 bin_um 8.64 repair_passes 2 slew_margin 0 post_grt_rounds 2]
+           libs {} std_corner "" design "" spread_util 0.30 spread_util_hard 0.60 soft_rings 3 bin_um 8.64 repair_passes 1 slew_margin 0 post_grt_rounds 2 \
+           resize_cells {BUFx8_ASAP7_75t_R BUFx12f_ASAP7_75t_R BUFx16f_ASAP7_75t_R}]
   set d [dict merge $d $cfg]
   dict with d {}
   if {![info exists report]} { error "ot_die_repeaters: cfg has no report path" }
@@ -361,7 +368,7 @@ proc ot_die_repeaters {cfg} {
   set repair_s [expr {[clock seconds] - $r0}]
 
   # ---- legalise the new buffers
-  set legal "none"; set passes {}
+  set legal "none"; set passes {}; set ::ot_die_rep_onobs 0
   if {$legalize eq "snap" || $legalize eq "spread"} {
     # spread (snap is an alias since DIE-FLOW2: the plain snap stacked every repeater at its ideal point).  Pass k > 1
     # re-runs repair_design on the legal positions (the spread displacement can leave long segments) and spreads again.
@@ -385,7 +392,7 @@ proc ot_die_repeaters {cfg} {
   }
   ot_die_rep_restore_use $flagged
   set ::ot_die_rep_cfg [dict create buffers $buffers max_wire_um $max_wire_um slew_margin $slew_margin repair_args $repair_args \
-                          spread_util $spread_util spread_util_hard $spread_util_hard soft_rings $soft_rings bin_um $bin_um post_grt_rounds $post_grt_rounds report $report]
+                          spread_util $spread_util spread_util_hard $spread_util_hard soft_rings $soft_rings bin_um $bin_um post_grt_rounds $post_grt_rounds resize_cells $resize_cells report $report]
   set ::ot_die_rep_pre $pre
 
   # ---- residual electrical audit on placement parasitics after repair + legalisation (every die net, not only the
@@ -438,7 +445,7 @@ proc ot_die_repeaters {cfg} {
   puts $f "{\"schema\": \"opentallas.die_repeaters.v1\", \"design\": [ot_die_rep_json_str $design], \"verdict\": \"$verdict\", \"violations\": $viol,"
   puts $f " \"rule\": \"repair_design on die nets only, buffers only, between relay registers; one repeater from ~175 um then every ~160 um (owner 0cl, H-REACH)\","
   puts $f " \"max_wire_um\": $max_wire_um, \"max_transition_ps\": $slew, \"max_transition_source\": [ot_die_rep_json_str $slew_src], \"rc_layer\": [ot_die_rep_json_str $rc_layer],"
-  puts $f " \"repair_args\": [ot_die_rep_json_str $repair_args], \"legalize\": [ot_die_rep_json_str $legal],"
+  puts $f " \"repair_args\": [ot_die_rep_json_str $repair_args], \"legalize\": [ot_die_rep_json_str $legal], \"repeaters_ideal_on_obstacle\": $::ot_die_rep_onobs, \"on_obstacle_note\": \"repair_design put these on a macro / relay body: the net crosses a block (plan path over a block, routed on M7+ or detoured) -- a planning defect, the spread moves them to the nearest free channel\","
   puts $f " \"instances_pre\": [dict size $pre], \"instances_post\": [dict size $post], \"repeaters\": $repeaters, \"repeaters_by_master\": {[join $bm {, }]},"
   puts $f " \"removed\": $removed, \"resized\": $changed, \"non_buffer_inserted\": $bad_new, \"skip_nets\": [llength $skip_names], \"skip_nets_modified\": $skip_changed,"
   puts $f " \"skip_by\": {\"sigtype\": $n_sig, \"clock_pin\": $n_ck, \"glob\": [expr {[llength $skip_names] - $n_sig - $n_ck + $n_rep}]}, \"repeated_clock_nets\": $n_rep, \"masters_without_liberty\": [llength $nolib],"
@@ -455,25 +462,54 @@ proc ot_die_repeaters {cfg} {
 # detours at dense relay pin faces left 4,754 slew violators).  Call after estimate_parasitics -global_routing (same
 # session as the step, or a later STA session with skip_file = <report>.skip_nets.txt).  Writes REPORT (JSON) and
 # returns the number of violators on repeated die nets (pins on untouched clock/reset nets are counted apart).
-# Post-GRT re-buffer (same session as the step, after global_route + estimate_parasitics -global_routing): the
-# violators the GRT detours leave get repair_design on GRT parasitics (buffers only), the new buffers are spread, and
-# GRT routes them incrementally (the ORFS post-GRT repair order).  Returns the buffers added.
-proc ot_die_rep_post_grt_repair {round} {
+# Post-GRT upsizing (same session as the step, after global_route + estimate_parasitics -global_routing).  The
+# driver of every residual slew / cap violator that is a step repeater is swapped in place to the next cell of the
+# resize ladder (resize_cells, default BUFx12f, BUFx16f) when the wider footprint lands on free slots (no other
+# repeater, macro or pre-existing cell): stage counts are unchanged (forwarded-clock matching holds), routes stay.
+# (repair_design under GRT parasitics -- the ORFS post-GRT re-buffer -- ran past 64 GB on a 94-mm2 die-top pilot
+# that otherwise peaks at 4.4 GB, so the step does not re-buffer after GRT.)  Returns the cells resized.
+proc ot_die_rep_post_grt_resize {pins} {
   set c $::ot_die_rep_cfg
-  set blk [ord::get_db_block]
-  set known [dict create]; foreach inst [$blk getInsts] { dict set known [$inst getName] 1 }
-  set flagged [ot_die_rep_buffers_only [dict get $c buffers]]
-  set rc [catch {eval repair_design -max_wire_length [dict get $c max_wire_um] -slew_margin [dict get $c slew_margin] \
-                   -cap_margin [dict get $c slew_margin] [dict get $c repair_args]} err]
-  ot_die_rep_restore_use $flagged
-  if {$rc} { ot_die_rep_log "post-GRT repair_design FAIL: $err"; return -1 }
-  set new [ot_die_rep_new_insts $blk $known]
-  global_route -start_incremental
-  set left [ot_die_rep_spread $new [file rootname [dict get $c report]].post_grt_spread$round.json [dict get $c spread_util] [dict get $c bin_um] [dict get $c spread_util_hard] [dict get $c soft_rings]]
-  global_route -end_incremental
+  set blk [ord::get_db_block]; set db [ord::get_db]
+  set core [$blk getCoreArea]; set cx1 [$core xMax]
+  set slw $::ot_die_rep_slw; set cb 200000
+  set ladder [dict get $c resize_cells]
+  set done [dict create]; set n 0; set blocked 0; set notrep 0; set top 0
+  foreach pin $pins {
+    set net [ot_die_rep_pin_net $blk $pin]
+    if {$net eq ""} { continue }
+    set drv ""
+    foreach it [[$blk findNet $net] getITerms] { if {[$it isOutputSignal]} { set drv [$it getInst]; break } }
+    if {$drv eq "" || [dict exists $::ot_die_rep_pre [$drv getName]]} { incr notrep; continue }
+    if {[dict exists $done [$drv getName]]} { continue }
+    dict set done [$drv getName] 1
+    set cur [[$drv getMaster] getName]
+    set k [lsearch -exact $ladder $cur]
+    set nxt [lindex $ladder [expr {$k + 1}]]
+    if {$nxt eq ""} { incr top; continue }
+    set m [$db findMaster $nxt]
+    if {$m eq "NULL" || $m eq ""} { incr top; continue }
+    lassign [$drv getLocation] x y
+    set x1 [expr {$x + [$m getWidth]}]; set y1 [expr {$y + [$m getHeight]}]
+    set ok [expr {$x1 <= $cx1}]
+    for {set sx [expr {$x + $slw}]} {$ok && $sx < $x1} {incr sx $slw} { if {[dict exists $::ot_die_rep_occ "$sx,$y"]} { set ok 0 } }
+    for {set i [expr {$x / $cb}]} {$ok && $i <= $x1 / $cb} {incr i} {
+      for {set j [expr {$y / $cb}]} {$ok && $j <= $y1 / $cb} {incr j} {
+        if {![info exists ::ot_die_rep_ob($i,$j)]} { continue }
+        foreach q $::ot_die_rep_ob($i,$j) {
+          lassign [lindex $::ot_die_rep_obs $q] ox0 oy0 ox1 oy1
+          if {$x < $ox1 && $x1 > $ox0 && $y < $oy1 && $y1 > $oy0} { set ok 0; break }
+        }
+      }
+    }
+    if {!$ok} { incr blocked; continue }
+    replace_cell [get_cells [string map {\[ \\[ \] \\]} [$drv getName]]] $nxt
+    for {set sx [expr {$x + $slw}]} {$sx < $x1} {incr sx $slw} { dict set ::ot_die_rep_occ "$sx,$y" 1 }
+    incr n
+  }
   estimate_parasitics -global_routing
-  ot_die_rep_log "post-GRT round $round re-buffer added=[llength $new] unplaced=$left"
-  return [llength $new]
+  ot_die_rep_log "post-GRT resize: resized=$n blocked=$blocked driver_not_a_repeater=$notrep at_ladder_top=$top"
+  return [list $n $blocked $notrep $top]
 }
 
 proc ot_die_rep_post_grt_audit {report {skip_file ""}} {
@@ -484,17 +520,22 @@ proc ot_die_rep_post_grt_audit {report {skip_file ""}} {
     for {set k 1} {$k <= [dict get $::ot_die_rep_cfg post_grt_rounds]} {incr k} {
       report_check_types -max_slew -max_capacitance -violators > $pre_rpt
       set fh [open $pre_rpt]; set txt [read $fh]; close $fh
-      set nv 0
+      set vp {}
       foreach line [split $txt "\n"] {
         if {[regexp {^(\S+)\s+(-?[0-9.]+)\s+(-?[0-9.]+)\s+(-?[0-9.]+)\s+\(VIOLATED\)} $line -> pin]} {
-          if {![dict exists $::ot_die_rep_skip [ot_die_rep_pin_net $blk $pin]]} { incr nv }
+          if {![dict exists $::ot_die_rep_skip [ot_die_rep_pin_net $blk $pin]]} { lappend vp $pin }
         }
       }
-      if {$nv == 0} { break }
-      set added [ot_die_rep_post_grt_repair $k]
-      lappend rounds "\{\"round\": $k, \"violators_before\": $nv, \"buffers_added\": $added\}"
+      if {![llength $vp]} { break }
+      lassign [ot_die_rep_post_grt_resize $vp] added blocked notrep top
+      lappend rounds "\{\"round\": $k, \"violators_before\": [llength $vp], \"resized\": $added, \"blocked\": $blocked, \"driver_not_a_repeater\": $notrep, \"at_ladder_top\": $top\}"
       if {$added <= 0} { break }
     }
+  }
+  # resizing keeps stage counts; re-audit anyway when cells changed (forwarded clocks matched to their data (DIE-CLOCK +-1 stage): re-audit when it added cells
+  set fclk_post -1
+  if {[llength $rounds] && [info exists ::ot_die_rep_fclk_args] && [llength [info procs ot_die_rep_fclk_audit]]} {
+    set fclk_post [ot_die_rep_fclk_audit {*}$::ot_die_rep_fclk_args]
   }
   # pre-existing instances (registers / relay stages) must survive the re-buffer unchanged
   set pg_bad 0
@@ -519,8 +560,8 @@ proc ot_die_rep_post_grt_audit {report {skip_file ""}} {
     }
   }
   set f [open $report w]
-  puts $f "{\"schema\": \"opentallas.die_repeaters.post_grt.v1\", \"verdict\": \"[expr {$sl + $cp + $pg_bad == 0 ? "PASS" : "FAIL"}]\", \"rebuffer_rounds\": \[[join $rounds {, }]\], \"pre_existing_changed\": $pg_bad, \"slew_violators\": $sl, \"cap_violators\": $cp, \"worst_slew_ps\": $worst, \"on_skip_nets\": $sk, \"top\": \[[join $top {, }]\]}"
+  puts $f "{\"schema\": \"opentallas.die_repeaters.post_grt.v1\", \"verdict\": \"[expr {$sl + $cp + $pg_bad + max($fclk_post, 0) == 0 ? "PASS" : "FAIL"}]\", \"rebuffer_rounds\": \[[join $rounds {, }]\], \"fclk_mismatch_after_rebuffer\": $fclk_post, \"pre_existing_changed\": $pg_bad, \"slew_violators\": $sl, \"cap_violators\": $cp, \"worst_slew_ps\": $worst, \"on_skip_nets\": $sk, \"top\": \[[join $top {, }]\]}"
   close $f
   ot_die_rep_log "post-GRT violators slew=$sl cap=$cp worst_slew=$worst (on untouched clock/reset/skip nets: $sk)"
-  return [expr {$sl + $cp + $pg_bad}]
+  return [expr {$sl + $cp + $pg_bad + max($fclk_post, 0)}]
 }
