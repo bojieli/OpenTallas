@@ -143,6 +143,18 @@ for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
   elif [ "$DCC" = 1 ]; then say "DIE CLOCK CHECK $c: no dump ($(grep -m1 OT_DCC_FAIL $D/grt_$c.log))"; fi
 done
 [ "$sta_failed" = 0 ] || { say "chain FAIL: one or more STA corners did not complete"; exit 1; }
+# DIE-FLOW 2026-10-17 (FLOW-HOLD D1-D3, OT_HOLD_BUDGET=die: die_sta_libs.py U 25 + sta_tcl.py FF hold dump): per-link
+# classifier -- launch-min from the bound ETMs, delta <= 80, ASSUMED single-flop masters = hold DIAGNOSTIC links
+if [ "${OT_HOLD_BUDGET:-tile}" = die ]; then
+  HD=$R/sta_${DIE}_ff
+  if [ -s $HD/hold_links_ff.rpt ] && [ -f "$SRC/tools/die_hold_budget.py" ]; then
+    QV=; [ -f $R/libs/views.json ] && QV="--qwen-views $R/libs/views.json"
+    say "HOLD BUDGET: $(python3 "$SRC/tools/die_hold_budget.py" classify --report $HD/hold_links_ff.rpt $QV \
+        --paths-cap ${OT_HOLD_DUMP_PATHS:-200000} --design qwen_$DIE --out $R/hold_budget.json 2>&1 | tail -1)"
+  else
+    say "HOLD BUDGET: no FF hold dump or no tools/die_hold_budget.py in $SRC -- not classified"
+  fi
+fi
 # Every completed KV die trial carries its endpoint cause table and actual GRT
 # congestion/pin/channel readout. The enclosing ot-run scope admits this work;
 # standalone callers retain the normal stage admission rather than running a
