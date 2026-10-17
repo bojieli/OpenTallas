@@ -3394,6 +3394,7 @@ ECOL_W = 518.4
 CTRL_SVC_ALIGN = False         # --ctrl-svc-align (s81-die v14): stack client pins at their controller bits' x
 HOP_GATE_UM = None             # --hop-gate UM (s81-die v14): real mode fails when any data bit's pin-to-pin hop > UM
 RLY_REAL_DIMS = False          # reserve native wide relay envelopes before choosing their faces
+NATIVE_SLOT_ENVELOPES = False  # reserve source-pinned qbank / 536 relay view envelopes before placement
 RLY_FACE_REACH = 0.0           # --rly-face-reach UM (s81-die v16): last column relay's out face by its worst load
 HOP_EXTRA = 0                  # --hop-extra N: extra stations a hop may take when its planned count has no clean placement
 HOST_MM2 = 0.10
@@ -3901,6 +3902,12 @@ def relay_dims(bits, horiz):
     the exact real outline without growing a placed tile. Corner masters
     still require their own real view; this does not alias them to a stand.
     """
+    if NATIVE_SLOT_ENVELOPES and bits == 536:
+        matches = [v for name, v in bound_views().items() if name.startswith('dsfd_rly_536_')]
+        if not matches:
+            raise ValueError('native slot envelope requires source-pinned dsfd_rly_536 views')
+        a, b = stn_dims([bits], True), stn_dims([bits], False)
+        return max(a[0], b[0], *(v['w'] for v in matches)), max(a[1], b[1], *(v['h'] for v in matches))
     if RLY_REAL_DIMS and bits in (266, 283):
         return 34.56, 30.24
     # Faces are selected from the actual neighbours AFTER the site is reserved.
@@ -6744,10 +6751,15 @@ def _q_banks(p, ex, ey, rq, region, mirror=False):
             xc = (min(xs_) + max(xs_)) / 2
         if mirror:
             xc = rq['w'] - xc
-        w = 60.48
+        w, h = 60.48, BANK_H
+        if NATIVE_SLOT_ENVELOPES:
+            native = bound_views().get(f'dsfd_qbank_{face}')
+            if native is None:
+                raise ValueError(f'native slot envelope requires source-pinned dsfd_qbank_{face}')
+            w, h = max(w, native['w']), max(h, native['h'])
         x = dn(ex + xc - w / 2, GX)
-        y = dn(ey - BANK_H - 2.0, GY) if face == 'S' else up(ey + rq['h'] + 1.08, GY)
-        out.append(Inst(f'{tag}{p}', f'dsfd_qbank_{face}', x, y, w - SHAVE, BANK_H - SHAVE, kind='qbank',
+        y = dn(ey - h - 2.0, GY) if face == 'S' else up(ey + rq['h'] + 1.08, GY)
+        out.append(Inst(f'{tag}{p}', f'dsfd_qbank_{face}', x, y, w - SHAVE, h - SHAVE, kind='qbank',
                         region=region, power_w=0.0))
         BANK_PORTS[out[-1].name] = (face, ports)
     return out
@@ -11882,6 +11894,8 @@ def die_options(ap):
                     'drives one reset pin register (async assert, release +1 edge) that resets every node flop')
     ap.add_argument('--qbank-s-rstreg', action='store_true', help='S-NET+FILL S81F-05: dsfd_qbank_S rs drives one reset '
                     'pin register (async assert, release +1 initialization edge); normal data remains one edge')
+    ap.add_argument('--native-slot-envelopes', action='store_true', help='Reserve source-pinned native qbank and all '
+                    '536-bit relay outlines before placement; geometry candidate only, no view qualification')
     ap.add_argument('--hend-static', action='store_true', help='S-NET (owner static rule 10-14): hub end/start blocks and '
                     'xstg cross on fixed calendars (ot_s81_static_lane_end, ot_s81_static_ratio_cross); no meso / ratio '
                     'FIFO, credits, ready or trained placement')
@@ -12297,6 +12311,8 @@ def apply_options(a):
     NODE_RSTREG = bool(getattr(a, 'node_rstreg', False))
     global QBANK_S_RSTREG
     QBANK_S_RSTREG = bool(getattr(a, 'qbank_s_rstreg', False))
+    global NATIVE_SLOT_ENVELOPES
+    NATIVE_SLOT_ENVELOPES = bool(getattr(a, 'native_slot_envelopes', False))
     HEND_STATIC = bool(getattr(a, 'hend_static', False))
     SSTN_CCPAD = bool(getattr(a, 'sstn_ccpad', False))
     HSTN_POSEDGE = bool(getattr(a, 'hstn_posedge', False))
