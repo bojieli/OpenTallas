@@ -610,3 +610,31 @@ The GEN + chain is running on E4.
 - native59 sits on the d2d -> W5 path, so moving it only moves the long hop onto more bits.
 - tt -> W5 is static and pre-issued.
 - Revisit only if die STA or the clock check flags that chain.
+
+## dv2r8f7: 43.2-um cluster lattice + 16-edge feedthrough (Q-CLUSTER 0fd5cb773) -- CURRENT
+
+**Q-CLUSTER changes:**
+- rs_i is on N at 488.893-660.227, straight above rs.
+- The feedthrough is rs_i -> N strip -> T -> rs_o on S (1,093.7-1,265.0): 16 edges (5,746 um).
+- Far positions use ONE master. In bands 0/3, rs_i is a declared-idle terminus on the instance tie_lo, and rs_o is unconnected.
+- A0 origins sit on the **43.2-um lattice**.
+
+**Pitch.** The outline width 2,358.72 is 54.6 x 43.2, so abutting clusters cannot all sit on the lattice.
+- dv2r8f7 uses a cluster pitch of 2,376.0 (55 x 43.2), with 17.28-um gaps.
+- The slices (our master) are one full pitch wide (2,376.0 x 2,592.0) and abut laterally.
+- With 2,358.72-wide slices, the lateral bundles crossed 17.28-um gaps and gave cut 0.600.
+- Band origins are snapped up to the lattice.
+- Q-CLUSTER is asked to grow the outline to 2,376.0 instead, which would remove the 17.28 slivers.
+
+**Result:**
+
+| | value |
+|---|---:|
+| off-lattice clusters / overlaps / cluster crossings | 0 / 0 / 0 |
+| worst cut | 0.409 (W-column top group) |
+| stages @405 / @200 | 3,318 / 6,877 |
+| bit-mm | 0.802 M |
+| die | 30.69 x 24.03 = 737.6 mm² |
+| top margin | 96.8 um |
+| cycles / layer vs q3h, @405 | **-56** with the 16-edge feed and the pipelined root |
+| cycles / layer vs q3h, @200 | -222 |
