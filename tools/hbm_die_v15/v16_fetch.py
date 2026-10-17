@@ -176,7 +176,12 @@ def main():
          f'{a.commit}:results/arch/hbm_die_v16/contract.json']))
     contract = json.loads(contract_bytes)
     found = {}
-    for h in HOSTS:
+    hosts = set(HOSTS)
+    for receipt in (Path(a.views) / 'drive').glob('*.json'):
+        record = json.loads(receipt.read_text())
+        if record.get('ok') and record.get('host'):
+            hosts.add(record['host'])
+    for h in sorted(hosts):
         out = subprocess.run(['ssh', h, f'cd {a.remote_root}/syn 2>/dev/null && ls -d */ | tr -d /'], capture_output=True,
                              text=True).stdout.split()
         for c in out:
