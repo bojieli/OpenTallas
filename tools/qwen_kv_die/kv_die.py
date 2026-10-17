@@ -357,6 +357,13 @@ def _pv_ctl_view_age():
                 status='OK' if age == PV_AGE else 'VIEW_PARAM_MISMATCH: diagnostic only until a closed ctl view at the die age')
 
 
+# KVJ-F 2026-10-17 (rtl/test/qwen_static_kv/tb_static_landing_vport.sv, tools/qwen_static_kv/run_landing_vport.sh): the
+# MEASURED RT of the static landing segment (qkd_static_kv_landing_seg / _seg_h) joined to qkd_pv16_vport with no relay is 9
+# = the seg's vreq pin capture (1) + its VREQ latency 8; the r5/r6 contract's 'landing 8 + relays' is one edge short (RT 8
+# faults every slot).  With r relay stages on the V get + rsp words: RT = VPORT_RT_SEG + r.
+VPORT_RT_SEG = 9
+
+
 def pv_vport_timing(m):
     """measured relay edges of every V port's die words (Q-VMWB r5 contract: WP = pair req pin -> vport pr, RT = vport vq
     register -> rsp at its in pins = landing 8 + request + return relays, O = vport out pins -> pair vin pins; the pair sees its
@@ -369,12 +376,12 @@ def pv_vport_timing(m):
             vp = f'vport_{st}_{k}'
             r_ = dict(WP=st_.get(f'pvrq_{st}_{k}'), O=st_.get(f'pvin_{st}_{k}'))
             if f'slg_{st}_{2 * k}' in names:
-                r_['RT'] = 8 + max(st_.get(f'pvvq_{st}_{k}_{g}', 0) + st_.get(f'pvrs_{st}_{k}_{g}', 0) for g in (0, 1))
+                r_['RT'] = VPORT_RT_SEG + max(st_.get(f'pvvq_{st}_{k}_{g}', 0) + st_.get(f'pvrs_{st}_{k}_{g}', 0) for g in (0, 1))
             rows[vp] = r_
     wp_ = [r_['WP'] for r_ in rows.values() if r_['WP'] is not None]
     o_ = [r_['O'] for r_ in rows.values() if r_['O'] is not None]
-    rt_ = [r_['RT'] for r_ in rows.values() if r_.get('RT') is not None] or [8]
-    worst = max((r_['WP'] or 0) + (r_['O'] or 0) + r_.get('RT', 8) for r_ in rows.values())
+    rt_ = [r_['RT'] for r_ in rows.values() if r_.get('RT') is not None] or [VPORT_RT_SEG]
+    worst = max((r_['WP'] or 0) + (r_['O'] or 0) + r_.get('RT', VPORT_RT_SEG) for r_ in rows.values())
     return dict(ports=rows, WP_range=[min(wp_), max(wp_)] if wp_ else None, O_range=[min(o_), max(o_)] if o_ else None,
                 RT_range=[min(rt_), max(rt_)], RT_assumed_landing_only=not any('RT' in r_ for r_ in rows.values()),
                 worst_WP_plus_O_plus_RT=worst, RL_needed_DQ0=4 + worst, kit=dict(RL=19, WP=2, RT=8),
@@ -382,8 +389,8 @@ def pv_vport_timing(m):
                      'the r5 kit DQ formula omits O (vport -> pair relays)',
                 **(dict(r6=dict(W_target=PV_W, W=sorted({(r_['WP'] or 0) + (r_['O'] or 0) for r_ in rows.values()}),
                                 W_equal=len({(r_['WP'] or 0) + (r_['O'] or 0) for r_ in rows.values()}) == 1,
-                                RL=4 + PV_W + 0 + 8, age_needed=4 + PV_W + 0 + 8 + 1, age_bound=PV_AGE,
-                                age_ok=PV_AGE == 4 + PV_W + 0 + 8 + 1, ctl_view=_pv_ctl_view_age())) if V144_R6 else {}))
+                                RL=4 + PV_W + 0 + VPORT_RT_SEG, age_needed=4 + PV_W + 0 + VPORT_RT_SEG + 1, age_bound=PV_AGE,
+                                age_ok=PV_AGE == 4 + PV_W + 0 + VPORT_RT_SEG + 1, ctl_view=_pv_ctl_view_age())) if V144_R6 else {}))
 
 
 HEAD_CLK = ([f'ck_f{q}' for q in range(4)] + ['ck_k', 'ck_s'] +

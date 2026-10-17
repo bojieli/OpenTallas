@@ -40,6 +40,7 @@ OBS = ('rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv', 'qkd_static_
 # KVJ-A 10-17 item 3: the die's HOST root is qkd_host_root_admission (kv_die.HOST_RT_FILE); it is a kv_die master, not a
 # static-graph instance, so its edges to the static subsystem are recorded as die joins (wired by kv_die --split, item 10)
 HOST = ('rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv', 'qkd_host_root_admission')
+DIE_CFG_NRST = 43     # KVJ-F: regional reset roots of the KV die (stub audit K-12: 344 dly bits / 8); kv_die must match
 HOST_DIE_JOINS = [   # (consumer instance, port, producer instance, port); 'host' = the die HOST root master
     ('boot', 'boot_pr', 'host', 'boot_pr'), ('boot', 'boot_image_target', 'host', 'boot_image_target'),
     ('boot', 'boot_image_ready', 'host', 'boot_image_ready'), ('boot', 'boot_image_fault', 'host', 'boot_image_fault'),
@@ -58,7 +59,9 @@ CORE_CFG = {   # sink instance -> (we source, we bit or None, addr source, data 
 def boot_join(graph, root=K.ROOT, name='boot'):
     """Add the actual boot dispatcher (role 'producer') and bind every width-exact core-domain cfg input."""
     spec = K.source(*BOOT, root)
-    params = dict(MUT=0)
+    # KVJ-F 10-17: DIECFG=1 (pre-boot target 10 -> qkd_kv_die_cfg: ECTL cfg + regional reset delays, coordinator 0da (d));
+    # its diecfg_* faces are joined by kv_static_kvjf_join.die_cfg_join
+    params = dict(MUT=0, DIECFG=1, NRST=DIE_CFG_NRST)
     pp = K.ports(spec, params)
     ins = {i['name']: i for i in graph['instances']}
     if name in ins:
