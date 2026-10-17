@@ -75,11 +75,17 @@ module ot_s81_static_lane_cross_hr #(
     wire go = (warm >= OFFSET-1);
     reg [DEPTH-1:0] sel;
     integer k;
-    always @(negedge r_ck) for (k=0;k<DEPTH;k=k+1) sel[k] <= go && (nxt[AW-1:0] == k);
+    // r5d (S-ELEM CFIFO 1815): sel and h are clocked on negedge o_ck (the consumer root, same PLL phase 0 as r_ck),
+    // not negedge r_ck. Routed r5c (s81coll_cfifo_crs-r5cgb-e89a6bd7e) missed TT by -24.5 ps on 9 h(negedge cr_s) ->
+    // o(posedge cr) endpoints: a half-cycle CROSS-ROOT hop pays the 150 ps inter-root setup reserve (266 ps left for
+    // clk->q + wire). With h on o_ck that hop is intra-root (60 ps uncertainty, +90 ps). sel moves with h so that the
+    // 1101-bit select fanout sel->mux->h stays an intra-root full-cycle path (no cross-root hold reserve on 2.2k D pins);
+    // the only cross-root hops left are bank(w_ck)->h and rc/warm(r_ck)->sel, both half-cycle. Same edges: 0 cycles.
+    always @(negedge o_ck) for (k=0;k<DEPTH;k=k+1) sel[k] <= go && (nxt[AW-1:0] == k);
     reg [W-1:0] rd_;
     always @* begin rd_ = {W{1'b0}}; for (k=0;k<DEPTH;k=k+1) rd_ = rd_ | (bank[k] & {W{sel[k]}}); end
     reg [W-1:0] h;
-    always @(negedge r_ck) h <= rd_;
+    always @(negedge o_ck) h <= rd_;
 `ifdef OT_S81_HR_MUT_NOSTAGE
     always @* o = h;
 `else
