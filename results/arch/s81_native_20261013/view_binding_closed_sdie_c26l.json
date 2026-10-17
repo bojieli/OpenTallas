@@ -11968,6 +11968,33 @@
    "lineage": "EXACT_EXPORT",
    "native": "native PASS (results/rtl/s81_rly_c26l_1016/native_audit.json)",
    "gate": "S-DIE 1815 explicit native-PASS row"
+  },
+  "dsfd_cfifo_crs": {
+   "verdict": "DIAGNOSTIC_CLOSED",
+   "export_dir": "physical/ref_tile/s81coll_cfifo_crs/views/dsfd_cfifo_crs",
+   "job": "s81coll_cfifo_crs-r5f-507e1b0c3",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81coll_cfifo_crs/views/dsfd_cfifo_crs/dsfd_cfifo_crs.lef",
+     "sha256": "9cf8d114a23d671c0786c279ea64d0c5d2152388837959aac90392a706e86675"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81coll_cfifo_crs/views/dsfd_cfifo_crs/dsfd_cfifo_crs_tt.lib",
+     "sha256": "5f4ed1e3104772bf1a0ecf2a3af21b1a5e2da843db5620bbfe13dc938b012e44"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81coll_cfifo_crs/views/dsfd_cfifo_crs/dsfd_cfifo_crs_ff.lib",
+     "sha256": "f08181de5aa1be669ad7212ebaa0f0f0dd5b638f53359660b7b1e3825997fcaa"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81coll_cfifo_crs/views/dsfd_cfifo_crs/dsfd_cfifo_crs_ss.lib",
+     "sha256": "50514952b9e96227266fd4cfeb8329c0e8644cbe118d755cef482165bae4480a"
+    }
+   },
+   "closure": "TT +71.04 / FF +17.32 ps DRC 0; SS sensitivity -95.13 ps",
+   "lineage": "EXACT_EXPORT",
+   "native": "native PASS launch185.7/capture142.1/R187.6/spread31.9 (results/rtl/s81_cfifo_crs_1016/r5f/routed_507e1b0c3/receipt.json)",
+   "gate": "S-DIE 1815 explicit native-PASS row; die master only with --cfifo-crsplit"
   }
  },
  "superseded": {
@@ -13551,6 +13578,10 @@
    },
    "dsfd_rly_66_EN": {
     "job": "s81_rly_66_en-c26l-82d8ea5b4",
+    "replaced": null
+   },
+   "dsfd_cfifo_crs": {
+    "job": "s81coll_cfifo_crs-r5f-507e1b0c3",
     "replaced": null
    }
   },
