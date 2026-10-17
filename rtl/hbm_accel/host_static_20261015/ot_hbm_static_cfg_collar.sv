@@ -117,12 +117,14 @@ module ot_hbm_static_cfg_collar #(
         //           the same stream edge t0; h_* then stays unchanged until the next event (>= 4 stream edges later).
         //   serial: x1 <- h_seq is the synchroniser stage 1 (the only flop that may sample h_seq mid-change; Gray: one
         //           bit changes per event, so x1 resolves to the old or the new code, never a third), x2, x3 follow.
-        //           sh_* (payload shadows) capture h_* on every serial edge; the edge that clocks x2 <- new code is >= one
-        //           full serial period after x1 first saw it, so the shadow taken there is >= 1111 ps - skew after t0 and
-        //           >= 2222 ps before the next possible change: ev = x2 != x3 consumes exactly that shadow.
-        //   CDC constraints (physical/ref_tile/hdie_col_su_r1/xser_cdc.sdc, house idiom of the TA15 clock-boundary
-        //   synchronisers): h_seq -> x1 and rc[1] -> rs[0] bounded 250 / 0 ps, h_* -> sh_* bounded 833 / 0 ps
-        //   (-ignore_clock_latency). Only these three cell groups; every other arc keeps full synchronous timing.
+        //           ev = x2 != x3 (synchronised count only, never x1). The capture registers ct/ca/cd/cv/dv/lv load h_*
+        //           ONLY when ev (gated capture, COLSU-2 2026-10-17; replaces the free-running sh_* shadows, -279 flops,
+        //           same latency): the capture edge is >= 2 serial periods after the edge on which x1 could first see the
+        //           code, so h_* has been stable >= 2222 ps - skew and stays so >= 2 more serial edges (events >= 4 stream
+        //           edges apart).
+        //   CDC constraints: ref_tile cdc_synchronizers (spec; tools/ref_tile/cdc_sync_constraints.py lints the Gray
+        //   source, the chain and the gated capture on the elaborated RTL): h_seq -> x1 and rc[1] -> rs[0] bounded
+        //   250 / 0 ps, h_* -> capture bounded 833 / 0 ps (-ignore_clock_latency); every other arc fully timed.
         // Latency: +1 serial edge over r2 (x1 -> x2 -> x3). It is fixed for every event whose publish edge t0 is >= 2 VCO
         // ticks (555 ps) before the next serial edge (2 of the 4 stream phases of the common epoch: 250 ps bound + skew +
         // setup fit); the compiler issues F30 on such a phase. Config frames (cfg/desc) tolerate the +-1 serial edge of
@@ -146,21 +148,20 @@ module ot_hbm_static_cfg_collar #(
         // OT_MULTI_ROOT). pv_* are cleared by the stream reset, so the enable is low under reset exactly as before: bit-identical.
         always @(posedge clk_in)
             if (pv_cv || pv_dv || pv_lv) begin h_ct <= p_ct; h_ca <= p_ca; h_cd <= p_cd; end
-        reg [1:0] x1_seq, x2_seq, x3_seq; reg sh_cv, sh_dv, sh_lv; reg [7:0] sh_ct; reg [11:0] sh_ca; reg [255:0] sh_cd;
-        always @(posedge clk) begin sh_ct <= h_ct; sh_ca <= h_ca; sh_cd <= h_cd; end
+        reg [1:0] x1_seq, x2_seq, x3_seq;
         always @(posedge clk or negedge rst_c_n)
-            if (!rst_c_n) begin x1_seq <= 0; x2_seq <= 0; x3_seq <= 0; sh_cv <= 0; sh_dv <= 0; sh_lv <= 0; end
-            else begin x1_seq <= h_seq; x2_seq <= x1_seq; x3_seq <= x2_seq; sh_cv <= h_cv; sh_dv <= h_dv; sh_lv <= h_lv; end
-        // MUT 7: one synchroniser stage short (r2 timing): consumes the shadow taken on the edge x1 first saw the code
+            if (!rst_c_n) begin x1_seq <= 0; x2_seq <= 0; x3_seq <= 0; end
+            else begin x1_seq <= h_seq; x2_seq <= x1_seq; x3_seq <= x2_seq; end
+        // MUT 7: one synchroniser stage short: captures on the edge after x1 first saw the code
         wire [1:0] q_new = (MUT == 7) ? x1_seq : x2_seq;
         wire [1:0] q_old = (MUT == 7) ? x2_seq : x3_seq;
         wire ev = q_new != q_old;
         wire [1:0] b_new = {q_new[1], q_new[1] ^ q_new[0]}, b_old = {q_old[1], q_old[1] ^ q_old[0]};
-        always @(posedge clk) begin ct <= sh_ct; ca <= sh_ca; cd <= sh_cd; end
+        always @(posedge clk) if (ev) begin ct <= h_ct; ca <= h_ca; cd <= h_cd; end
         always @(posedge clk or negedge rst_c_n)
             if (!rst_c_n) begin cv <= 0; dv <= 0; lv <= 0; xfault <= 0; end
             else begin
-                cv <= ev && sh_cv; dv <= ev && sh_dv; lv <= ev && sh_lv;
+                cv <= ev && h_cv; dv <= ev && h_dv; lv <= ev && h_lv;
                 xfault <= ev && (b_new - b_old) != 2'd1 && MUT != 4;
             end
     end endgenerate

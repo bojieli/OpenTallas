@@ -54,8 +54,9 @@ always @(posedge sclk) begin
  d_done<=0; if(d_start) dbusy<=10; else if(dbusy>0) begin dbusy<=dbusy-1; if(dbusy==1) d_done<=1; end
  d_busy<={1'b0,dbusy>0};
 end
-// CDC monitor (HBM-COLSU 2026-10-17): collar D consumes (ev) the payload shadow sh_* taken one serial edge earlier (e2).
-// The held payload h_* must not change within one stream period (6 ns, the 833 ps bound of xser_cdc.sdc) before e2 or at e2.
+// CDC monitor (HBM-COLSU 2026-10-17; COLSU-2: gated capture): collar D captures h_* on the serial edge where ev is high.
+// The held payload h_* must have been stable for one serial plus one stream period (8 + 6 ns: the bounded crossing window
+// before the stage that observed the code) up to and including that capture edge.
 // Also pins the launch latency: start_v rises a fixed number of serial edges after the first serial edge that follows the
 // stream edge publishing the launch (h_lv).
 wire [278:0] dh = {cd_.g_xser.h_cv, cd_.g_xser.h_dv, cd_.g_xser.h_lv, cd_.g_xser.h_ct, cd_.g_xser.h_ca, cd_.g_xser.h_cd};
@@ -64,7 +65,7 @@ always @(dh) begin dh_t0 = dh_t1; dh_t1 = $realtime; if (cd_.g_xser.h_lv) t_lpub
 always @(posedge sclk) begin
  if (rst_n && cd_.g_xser.ev) begin
   cdc_ev = cdc_ev + 1;
-  if ((dh_t1 >= $realtime-8-6 && dh_t1 <= $realtime-8) || (dh_t0 >= $realtime-8-6 && dh_t0 <= $realtime-8)) cdc_err = cdc_err + 1;
+  if (dh_t1 >= $realtime-8-6) cdc_err = cdc_err + 1;
  end
  if (d_start && t_dstart < 0) t_dstart = $realtime;
 end
@@ -174,7 +175,7 @@ initial begin
  repeat(60) @(posedge clk);
  chk(d_starts==1 && !d_active && !program_active && irq,"serial start exactly once, completes");
  chk(d_prm[15:0]==16'd7116,"serial operand row (SU length)");
- chk(cdc_ev>=300 && cdc_err==0,"crossing payload stable >= one stream period before and at the shadow edge");
+ chk(cdc_ev>=300 && cdc_err==0,"crossing payload stable >= serial+stream period up to the gated capture edge");
  // serial edges at 4+8k. e1 = first serial edge strictly after the publish edge (x1); x2, x3 (lv), lv -> start_v: start_v Q
  // changes at e1+3 serial edges and the monitor (posedge sclk) first sees it one edge later: e1 + 4 serial edges.
  chk(t_lpub>0 && t_dstart == 4 + 8*(($rtoi(t_lpub)-4)/8 + 1) + 4*8,"serial launch latency: publish -> start_v = next serial edge + 3");
