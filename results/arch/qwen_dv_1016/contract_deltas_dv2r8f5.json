@@ -263,13 +263,13 @@
      "port": "rs_i",
      "dir": "input",
      "bits": 514,
-     "face": "master N (band-gap side, beside bc_o)"
+     "face": "master N face straight above rs (x 488.9-660.2, Q-DIEPLAN3 5e5ad02d9): far rs -> near rs_i jog 0 across the 129.8 band gap"
     },
     {
      "port": "rs_o",
      "dir": "output",
      "bits": 514,
-     "face": "master S (beside rs)"
+     "face": "master S face beside rs"
     }
    ],
    "feedthrough": "registered rs_i -> rs_o in corridor T, 14 edges (Q-CLUSTER measured)",
@@ -431,6 +431,8 @@
  ],
  "seam": {
   "issue": "W0 (R0) | E0 (MY) both present master E faces: out meets out (MY keeps y order)",
-  "fix": "108-um seam channel (full die height; clusters W0/E0 separate by it) with a die-level in/out swap jog of the lateral bundle (~3.3 kb each way; 108 um = ~2,250 tracks/layer on M5/M7) -- no cell, no added stage; fallback if GRT fails there: a seam crossover relay tile (+1 fixed cycle on the W<->E crossing)"
- }
+  "fix": "108-um seam channel (full die height; clusters W0/E0 separate by it) with a die-level in/out swap jog of the lateral bundle (~3.3 kb each way; 108 um = ~2,250 tracks/layer on M5/M7) -- no cell, no added stage; fallback if GRT fails there: a seam crossover relay tile (+1 fixed cycle on the W<->E crossing)",
+  "implemented": "Q-DIEPLAN3 OT_SPLIT_DV_SEAM_UM=108: jog cut 0.33, die 30.21 mm, worst 0.347"
+ },
+ "open_w_column": "Q-DIEPLAN3 WCOL2 (side-by-side PHY pairs, 3.2-mm column, collective 3235 x ~2010) puts 2 PHYs off the die edge -> needs coordinator/package acceptance; edge-keeping alternative: single-file 1.56 column, io_ucie to the N edge beside ucie_kv, one far SerDes FDI relayed in a ~432-um channel"
 }
