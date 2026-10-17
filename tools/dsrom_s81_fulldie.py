@@ -12731,7 +12731,9 @@ def apply_options(a):
             from s81.cluster_mode import cluster_layout
             CLUSTER_MODE = dict(cluster_layout(CANONICAL_LAYOUT, GY), reach_um=a.cluster_reach)
             w_ = wide_hub()
-            if w_ and os.environ.get('OT_C27_EXP_NOS14CLIP') != '1':
+            if w_ and os.environ.get('OT_C27_S14CLIP') == '1':
+                # (off by default: clipping the S14W road re-spread the hub-side lanes and starved the SU|VM street,
+                # hb_su_s_wq_d_6144_8191_vm; the column cluster boxes are reserved anyway, so no station lands in them)
                 # the W seam roads move the W hub-side column E: the S14W road keeps only the real gap to the hub
                 xs_ = sorted(c['x_um'] for c in CANONICAL_LAYOUT['columns'])
                 e_ = xs_[CLUSTER_MODE['west_columns'] - 1] + COL_W8 + 4.32
