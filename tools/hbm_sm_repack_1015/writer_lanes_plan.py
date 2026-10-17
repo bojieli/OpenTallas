@@ -55,7 +55,10 @@ s['purpose'] = ('H-WRQ 2026-10-17: hardened SM result -> VM writer smw_<q> (one 
 s['structural_change'] = ('Clock partition by SM lane instead of by face (results/rtl/hsm_wrq_1017/DESIGN_NOTE.md): '
                           'clk_l0..7 + clk + clk_cal replace clk/clk_in_lo/hi/clk_out_lo/hi/clk_hcfg/clk_cal; per-SM ports '
                           '(rv_s/rrow_s/rdata_s/smf_s/sms_s/wq_s<k>); recipe 4 hold_budget die. Outline unchanged '
-                          '(pin-cut rule: W >= 344 um, E >= 360 um).')
+                          '(pin-cut rule: W >= 344 um, E >= 360 um). Row FIFO = shift register with a fixed, rotating head (slot word '
+                          'always fe[31:0]; removes the rp -> 4:1 x 268 -> 8:1 -> rb cone, r5 gate -3.4 ps pre-route). Regional '
+                          'synchronous reset: 2-flop sync at the core, one registered relay per lane, synchronous clears in '
+                          'the lane (lanes leave reset one edge after the core).')
 s['job'] = {
     'owner': 'Claude H-WRQ 1017', 'branch': 'claude/hwrq-1017', 'tag': 'lanes',
     'purpose': s['purpose'],
