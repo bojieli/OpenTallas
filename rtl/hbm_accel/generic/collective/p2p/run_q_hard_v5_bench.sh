@@ -36,6 +36,9 @@ if [ "$Q" = q3 ] && [ "${HCOLL_Q3_FULL_TKM:-0}" != 1 ]; then
  grep -q 'parameter integer KMAX=64' "$OUT/ot_hgi_coll_tkm_static_k64.sv" || { echo "KMAX64 copy failed"; exit 2; }
  for i in "${!src[@]}"; do [ "${src[$i]}" = "$t/ot_hgi_coll_tkm_static.sv" ] && src[$i]="$OUT/ot_hgi_coll_tkm_static_k64.sv"; done
  echo "HCOLL_Q3_TKM_KMAX64 (bench copy; production TKM unchanged)"
+ # flat build (no --hierarchical): the KMAX-64 parents elaborate in ~4 GB, and the hierarchical -j build raced
+ # (truncated pring_captured hier header, 926beab87 q3 droplink build)
+ QD=(-DQ3)
  JOBS=${JOBS_Q3:-8}
 fi
 sha256sum "${src[@]}" > "$OUT/sources.sha256"
