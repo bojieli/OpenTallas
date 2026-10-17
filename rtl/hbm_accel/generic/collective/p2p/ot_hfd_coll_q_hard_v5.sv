@@ -424,10 +424,14 @@ endmodule
 // (flit[63:0], ot_hgi_coll_amerge stage 1) and the 33b meta (flit[544:512], argmax_static source/order checks).
 // flit[511:64] has no load in either module (amerge runs with en=1, so its pass-through o_f never reaches out_flit);
 // dropping those 1,792 pins changes no edge or value (lockstep bench) and removes a pin-bound 2,180-bit face.
-module ot_hgi_coll_argmax_m #(parameter integer TP=96)(
+module ot_hgi_coll_argmax_m #(parameter integer TP=96,START_REG=0)(
  input wire clk,rst_n,start,mode,input wire [7:0] cfg_g,cfg_gbase,cfg_rank,
  input wire [3:0] in_slot,in_v,input wire [255:0] in_key,input wire [131:0] in_meta,input wire flush_slot,publish_slot,
  output wire out_v,output wire [544:0] out_flit,output wire fault);
+ // d4f native (argmax_m_tp192 1b968ff4b: capture 448.7 on rst_n, 1,149 async loads): rst_n loads ONE synchroniser flop
+ // (async assert, release one edge later); rst_l resets the leaf.
+ reg rst_l;
+ always @(posedge clk or negedge rst_n) if(!rst_n)rst_l<=1'b0;else rst_l<=1'b1;
  // u_data: live inputs, data/valid edges exact (its check logic has no load and is removed by synthesis).
  // u_chk : the same actual module on pin-captured inputs; only its sticky fault is used (arg fault ABI +1 edge;
  //         the 15-level input-check cone becomes reg->reg).
@@ -435,16 +439,32 @@ module ot_hgi_coll_argmax_m #(parameter integer TP=96)(
  for(genvar l=0;l<4;l=l+1)begin:g_lane
   assign in_flit[l*545+:545]={in_meta[l*33+:33],448'd0,in_key[l*64+:64]};
  end
- ot_hgi_coll_argmax_static #(.MAX_GROUP(TP)) u_data(.clk(clk),.rst_n(rst_n),.start(start),.cfg_g(cfg_g),.cfg_gbase(cfg_gbase),
-  .cfg_rank(cfg_rank),.in_slot(in_slot & {4{mode}}),.in_v(in_v & {4{mode}}),.in_flit(in_flit),
+ // START_REG=1 (argmax_m_tp192 d4f2 2390e32f8 native FAIL capture 278.1 on start: start fanned live into the 192-bit
+ // seen clear): start and its cfg_g/gbase/rank are pin-registered; ARGMAX start edge +1 (compiler offset: the first lane
+ // input stays >= start+2 raw edges, as every compiled programme already schedules; DESIGN_NOTE in the kit spec).
+ reg start_r;reg [7:0] g_r,gb_r,rk_r;
+ always @(posedge clk)begin g_r<=cfg_g;gb_r<=cfg_gbase;rk_r<=cfg_rank;end
+`ifdef OT_ARGMAX_MUT_START_LATE
+ reg start_r0;always @(posedge clk or negedge rst_l) if(!rst_l)begin start_r0<=0;start_r<=0;end else begin start_r0<=start;start_r<=start_r0;end
+`else
+ always @(posedge clk or negedge rst_l) if(!rst_l)start_r<=0;else start_r<=start;
+`endif
+ wire start_d=(START_REG!=0)?start_r:start;
+ wire [7:0] g_d=(START_REG!=0)?g_r:cfg_g,gb_d=(START_REG!=0)?gb_r:cfg_gbase,rk_d=(START_REG!=0)?rk_r:cfg_rank;
+ ot_hgi_coll_argmax_static #(.MAX_GROUP(TP)) u_data(.clk(clk),.rst_n(rst_l),.start(start_d),.cfg_g(g_d),.cfg_gbase(gb_d),
+  .cfg_rank(rk_d),.in_slot(in_slot & {4{mode}}),.in_v(in_v & {4{mode}}),.in_flit(in_flit),
   .flush_slot(flush_slot),.publish_slot(publish_slot),.out_v(out_v),.out_flit(out_flit),.fault());
  reg start_q,flush_q,pub_q;reg [7:0] g_q,gb_q,rk_q;reg [3:0] slot_q,v_q;reg [2179:0] flit_q;
  always @(posedge clk)begin g_q<=cfg_g;gb_q<=cfg_gbase;rk_q<=cfg_rank;flit_q<=in_flit;end
- always @(posedge clk or negedge rst_n)
-  if(!rst_n)begin start_q<=0;flush_q<=0;pub_q<=0;slot_q<=0;v_q<=0;end
+ always @(posedge clk or negedge rst_l)
+  if(!rst_l)begin start_q<=0;flush_q<=0;pub_q<=0;slot_q<=0;v_q<=0;end
   else begin start_q<=start;flush_q<=flush_slot;pub_q<=publish_slot;slot_q<=in_slot & {4{mode}};v_q<=in_v & {4{mode}};end
- ot_hgi_coll_argmax_static #(.MAX_GROUP(TP)) u_chk(.clk(clk),.rst_n(rst_n),.start(start_q),.cfg_g(g_q),.cfg_gbase(gb_q),
-  .cfg_rank(rk_q),.in_slot(slot_q),.in_v(v_q),.in_flit(flit_q),
+ // u_chk keeps u_data's relative alignment: its inputs are +1, so its start/cfg are start_d/cfg_d +1.
+ reg start_qq;reg [7:0] g_qq,gb_qq,rk_qq;
+ always @(posedge clk)begin g_qq<=g_r;gb_qq<=gb_r;rk_qq<=rk_r;end
+ always @(posedge clk or negedge rst_l) if(!rst_l)start_qq<=0;else start_qq<=start_r;
+ ot_hgi_coll_argmax_static #(.MAX_GROUP(TP)) u_chk(.clk(clk),.rst_n(rst_l),.start((START_REG!=0)?start_qq:start_q),
+  .cfg_g((START_REG!=0)?g_qq:g_q),.cfg_gbase((START_REG!=0)?gb_qq:gb_q),.cfg_rank((START_REG!=0)?rk_qq:rk_q),.in_slot(slot_q),.in_v(v_q),.in_flit(flit_q),
   .flush_slot(flush_q),.publish_slot(pub_q),.out_v(),.out_flit(),.fault(fault));
 endmodule
 // d4f TP=192 shape (A2P 2-stack groups: 192-rank seen state), hardened under its own name.
@@ -452,7 +472,7 @@ module ot_hgi_coll_argmax_m_tp192(
  input wire clk,rst_n,start,mode,input wire [7:0] cfg_g,cfg_gbase,cfg_rank,
  input wire [3:0] in_slot,in_v,input wire [255:0] in_key,input wire [131:0] in_meta,input wire flush_slot,publish_slot,
  output wire out_v,output wire [544:0] out_flit,output wire fault);
- ot_hgi_coll_argmax_m #(.TP(192)) u(.*);
+ ot_hgi_coll_argmax_m #(.TP(192),.START_REG(1)) u(.*);
 endmodule
 
 module ot_hgi_coll_tkm_m #(parameter integer TP=96)(
