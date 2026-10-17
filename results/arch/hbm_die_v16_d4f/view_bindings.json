@@ -42,6 +42,20 @@
     "rly48": 56,
     "rly624": 94
    }
+  },
+  "hfd_vms_bank_native_q0_faces": {
+   "kind": "REAL",
+   "route": "vm_native_q0_faces_g313c-mclkC-1ad8c4984",
+   "record": "c1ea52116 (main 90c32a755)",
+   "native": "L193.2/C186.1/sp43.0 PASS",
+   "note": "NW (q2) VM banks use the exact q0C master; wq2/wq_done2 pins removed (H-SM 10-16)"
+  },
+  "hfd_vms_wq2_merge": {
+   "status": "ROUTE_SUBMITTED (hfd_vms_wq2_merge-m1-8500666e1), not closed",
+   "outline": "59.4 x 59.4 um, one per NW bank, beside the bank",
+   "faces": "W wq_m/done_m -> bank wq1/wq_done1; E wq1 in (smw_NW)/wq_done1 out; N wq2 in (hb_quant_NW)/wq_done2 out; S clk/rst_n/flt",
+   "cost": "+2 fixed edges NW wq1/wq2 (done +1); compiler NW calendar owner codes 2->1, k>=3 -> k-1; <=0.20% AR",
+   "die_home": "generated beside its bank (GEN rule 4, peers); needs H-NETLIST contract revision before it exists on the die"
   }
  }
 }
