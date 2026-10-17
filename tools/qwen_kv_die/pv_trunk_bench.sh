@@ -5,7 +5,7 @@
 set -u
 O=$1;TM=${2:-0};FA=${3:-0};CTXS=${4:-"1 100 300 1000 4097 8192"}
 mkdir -p "$O";VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
-$VL --binary --timing -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-WIDTH --build-jobs 16 \
+$VL --binary --timing -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-WIDTH --build-jobs ${JOBS:-16} \
  --hierarchical --top-module tb_qkd_pvw_die_t -GTRUNK_MUT=$TM -GFLAG_D_ADJ=$FA --Mdir "$O/obj_m${TM}_f${FA}" -Irtl/test/nearhbm \
  tools/qwen_attention_native/rate_1015/pv_pair_bench.vlt rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_t.sv \
  rtl/hdc/nearhbm/ot_qwen_tp8_pv16_slice_gen.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv \

@@ -128,7 +128,15 @@ def main():
         xs = [q[0][0] for q in pts]
         ys = [q[0][1] for q in pts]
         bbox = max(xs) - min(xs) + max(ys) - min(ys)
-        drv = [q for q in pts if dirs.get(inst[q[1]], {}).get(q[2], dirs.get(inst[q[1]], {}).get(q[2].split('[')[0])) == 'OUTPUT']
+        dd_ = [dirs.get(inst[q[1]], {}).get(q[2], dirs.get(inst[q[1]], {}).get(q[2].split('[')[0])) for q in pts]
+        drv = [q for q, d_ in zip(pts, dd_) if d_ == 'OUTPUT']
+        if not drv:
+            # frame / relay abstracts draw INOUT pins: a relay's b pin drives; else the one non-INPUT pin of a net
+            # whose other pins are all INPUT is its driver
+            drv = [q for q in pts if RELAY.match(inst[q[1]]) and q[2].split('[')[0] == 'b']
+            if not drv:
+                ni = [q for q, d_ in zip(pts, dd_) if d_ != 'INPUT']
+                drv = ni if len(ni) == 1 else []
         if len(drv) == 1:
             d0 = drv[0][0]
             rad = max(abs(q[0][0] - d0[0]) + abs(q[0][1] - d0[1]) for q in pts)
