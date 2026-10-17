@@ -6,7 +6,7 @@
 //                    control registers synchronously.  No asynchronous reset fanout; datapath registers carry no reset.
 //   ot_s81_kp4_cmul  a * alpha^E (constant GF(2^10) multiplier, p = x^10 + x^3 + 1)
 //   ot_s81_kp4_vmul  a * b
-//   ot_s81_kp4_inv   a^-1 (0 -> 0)
+//   ot_s81_kp4_inv   a^-1 (0 -> 0); kept hierarchy: yosys must not merge the driving register into an inferred ROM
 // ---------------------------------------------------------------------------------------------------------------
 module ot_s81_kp4_rst #(parameter integer NL = 4) (
     input  wire          clk,
@@ -27,6 +27,7 @@ module ot_s81_kp4_vmul (input wire [9:0] a, input wire [9:0] b, output wire [9:0
 `include "ot_s81_gf1024.svh"
     assign y = gf_mul(a, b);
 endmodule
+(* keep_hierarchy *)
 module ot_s81_kp4_inv (input wire [9:0] a, output reg [9:0] y);
 `include "ot_s81_gf1024.svh"
     always @* y = gf_inv(a);

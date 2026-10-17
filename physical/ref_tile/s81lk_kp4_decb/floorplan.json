@@ -1,19 +1,19 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
- "name": "s81lk_kp4_dec",
- "top": "ot_s81_kp4_dec",
+ "name": "s81lk_kp4_decb",
+ "top": "ot_s81_kp4_dec_b",
  "kind": "tile",
  "die": [
   0,
   0,
-  367.2,
-  345.6
+  259.2,
+  259.2
  ],
  "core": [
   2.16,
   2.16,
-  365.03999999999996,
-  343.44
+  257.03999999999996,
+  257.03999999999996
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
@@ -30,8 +30,11 @@
  },
  "pins": {
   "W": [
-   "p_v",
-   "p_d"
+   "d_q",
+   "k_lo",
+   "k_v",
+   "k_L",
+   "k_any"
   ],
   "E": [
    "q_v",
@@ -39,40 +42,25 @@
    "q_first",
    "q_unc",
    "q_nerr",
-   "q_seq",
-   "lock",
-   "n_corr",
-   "n_unc",
-   "n_relock"
+   "q_seq"
   ],
   "S": [
    "clk",
-   "rst_n"
+   "rst_n",
+   "n_corr",
+   "n_unc"
   ]
  },
  "clock_port": "clk",
  "blocks": [
   {
    "kind": "macro",
-   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
-   "master": "ot_sram_1r1w2c_64x546_m1",
-   "inst": "*u_dmem",
-   "idx": 0,
-   "x": 86.4,
-   "y": 216.0,
-   "w": 178.632,
-   "h": 81.0,
-   "orient": "R0",
-   "offtrack": 0
-  },
-  {
-   "kind": "macro",
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1",
    "master": "ot_sram_1r1w_32x546_m1",
    "inst": "*u_cmem",
    "idx": 0,
-   "x": 86.4,
-   "y": 86.4,
+   "x": 43.2,
+   "y": 129.6,
    "w": 177.768,
    "h": 81.0,
    "orient": "R0",
@@ -82,21 +70,20 @@
  "findings": [],
  "referenced": [
   "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
-  "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
-  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
-  "physical/ref_tile/s81lk_kp4_dec/kit.env",
-  "physical/ref_tile/s81lk_kp4_dec/clock.sdc",
-  "physical/ref_tile/s81lk_kp4_dec/signoff.sdc",
-  "physical/ref_tile/s81lk_kp4_dec/signoff_ffrepair.sdc",
-  "physical/ref_tile/s81lk_kp4_dec/pdn.tcl",
-  "physical/ref_tile/s81lk_kp4_dec/pre_cts.tcl",
-  "physical/ref_tile/s81lk_kp4_dec/post_cts.tcl",
-  "physical/ref_tile/s81lk_kp4_dec/post_grt.tcl",
-  "physical/ref_tile/s81lk_kp4_dec/pre_drt.tcl",
-  "physical/ref_tile/s81lk_kp4_dec/pre_fill.tcl",
-  "physical/ref_tile/s81lk_kp4_dec/post_fill.tcl",
-  "physical/ref_tile/s81lk_kp4_dec/pre_grt.tcl",
-  "physical/ref_tile/s81lk_kp4_dec/post_drt.tcl",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec_b.sv",
+  "physical/ref_tile/s81lk_kp4_decb/kit.env",
+  "physical/ref_tile/s81lk_kp4_decb/clock.sdc",
+  "physical/ref_tile/s81lk_kp4_decb/signoff.sdc",
+  "physical/ref_tile/s81lk_kp4_decb/signoff_ffrepair.sdc",
+  "physical/ref_tile/s81lk_kp4_decb/pdn.tcl",
+  "physical/ref_tile/s81lk_kp4_decb/pre_cts.tcl",
+  "physical/ref_tile/s81lk_kp4_decb/post_cts.tcl",
+  "physical/ref_tile/s81lk_kp4_decb/post_grt.tcl",
+  "physical/ref_tile/s81lk_kp4_decb/pre_drt.tcl",
+  "physical/ref_tile/s81lk_kp4_decb/pre_fill.tcl",
+  "physical/ref_tile/s81lk_kp4_decb/post_fill.tcl",
+  "physical/ref_tile/s81lk_kp4_decb/pre_grt.tcl",
+  "physical/ref_tile/s81lk_kp4_decb/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
   "physical/qwen_die_masters/io_ref_skew.sdc",
   "physical/qwen_die_masters/io_plain.sdc",
@@ -110,14 +97,10 @@
   "physical/common_flow/macro_edge_via_guard.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
-  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
-  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_ss.lib",
-  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_ff.lib",
-  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_ss.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_ff.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
-  "physical/ref_tile/s81lk_kp4_dec/place.tcl"
+  "physical/ref_tile/s81lk_kp4_decb/place.tcl"
  ]
 }
