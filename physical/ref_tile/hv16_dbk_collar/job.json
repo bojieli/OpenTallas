@@ -1,5 +1,5 @@
 {
- "name": "hv16_dbk_collar-c1-COMMIT",
+ "name": "hv16_dbk_collar-c1-fd71f73ca",
  "block": "ot_hgi_dma_back_cp_collar",
  "ref_tile": true,
  "owner": "Claude:HBM-HCDMA/HCDMA-DBK",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/hcdma-dbk-1017",
-  "commit": "COMMIT",
+  "commit": "fd71f73ca",
   "extra_paths": [
    "rtl/hbm_accel/generic/peers/static",
    "rtl/hbm_accel/host_static_20261015",
@@ -103,7 +103,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hv16_dbk_collar/hv16_dbk_collar-c1-COMMIT"
+   "to": "results/rtl/ref_tile/hv16_dbk_collar/hv16_dbk_collar-c1-fd71f73ca"
   }
  ],
  "cycles_added": 0,
