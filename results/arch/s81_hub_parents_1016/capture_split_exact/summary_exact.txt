@@ -1,0 +1,10 @@
+exact mix: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=57 timeouts=0 mismatching_roots=0 RESULT PASS CAPC_EQ mismatches=0 tcd_toggles=9 vm_active_cycles=2058 EQ_PASS
+exact mix11: SUMMARY phases=9 writes=18016 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=59 timeouts=0 mismatching_roots=0 RESULT PASS CAPC_EQ mismatches=0 tcd_toggles=9 vm_active_cycles=1476 EQ_PASS
+exact mix12: SUMMARY phases=9 writes=15796 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=56 timeouts=0 mismatching_roots=0 RESULT PASS CAPC_EQ mismatches=0 tcd_toggles=9 vm_active_cycles=1362 EQ_PASS
+exact mix13: SUMMARY phases=9 writes=9340 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=56 timeouts=0 mismatching_roots=0 RESULT PASS CAPC_EQ mismatches=0 tcd_toggles=9 vm_active_cycles=1275 EQ_PASS
+exact trace: SUMMARY phases=2 writes=7744 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=38 timeouts=0 mismatching_roots=0 RESULT PASS CAPC_EQ mismatches=0 tcd_toggles=2 vm_active_cycles=270 EQ_PASS
+exact err: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=24 timeouts=0 mismatching_roots=0 RESULT PASS CAPC_EQ mismatches=0 tcd_toggles=0 vm_active_cycles=15 EQ_PASS
+exact over: SUMMARY phases=1 writes=165 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=31 timeouts=0 mismatching_roots=0 RESULT PASS CAPC_EQ mismatches=0 tcd_toggles=0 vm_active_cycles=20 EQ_PASS
+exact range: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=22 timeouts=0 mismatching_roots=0 RESULT PASS CAPC_EQ mismatches=0 tcd_toggles=0 vm_active_cycles=159 EQ_PASS
+exact rreq: SUMMARY phases=1 writes=256 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=42 timeouts=0 mismatching_roots=0 RESULT PASS CAPC_EQ mismatches=0 tcd_toggles=1 vm_active_cycles=23 EQ_PASS
+CAPC_BENCH PASS cases=9

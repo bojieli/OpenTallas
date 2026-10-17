@@ -1,0 +1,16 @@
+test_all_105_multicast_branches_survive_clique_limit (test_die_case_v16_clock_pairs.CommunicatingPairs) ... ok
+test_missing_physical_clock_pin_is_rejected (test_die_case_v16_clock_pairs.CommunicatingPairs) ... ok
+test_multiple_literal_entries_keep_geometry_and_all_pairs (test_die_case_v16_clock_pairs.CommunicatingPairs) ... ok
+test_small_clique_and_unrelated_domains (test_die_case_v16_clock_pairs.CommunicatingPairs) ... ok
+test_different_master_refused (test_die_case_v16_view_coverage.ViewCoverageTest) ... ok
+test_duplicate_membership_refused (test_die_case_v16_view_coverage.ViewCoverageTest) ... ok
+test_missing_representative_refused (test_die_case_v16_view_coverage.ViewCoverageTest) ... ok
+test_missing_synth_receipt_stays_separate_from_membership (test_die_case_v16_view_coverage.ViewCoverageTest) ... ok
+test_new_relay_instance_requires_current_view_plan (test_die_case_v16_view_coverage.ViewCoverageTest) ... ok
+test_same_ports_different_parameters_refused (test_die_case_v16_view_coverage.ViewCoverageTest) ... ok
+test_same_width_wrong_direction_refused (test_die_case_v16_view_coverage.ViewCoverageTest) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.001s
+
+OK

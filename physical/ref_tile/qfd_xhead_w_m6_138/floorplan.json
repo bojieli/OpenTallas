@@ -30,10 +30,10 @@
   "m6_pin_grant": {
    "schema": "opentallas.m6_pin_grant.v1",
    "master": "qfd_xhead_w",
-   "granted_by": "Q-COMPUTE-DIE Codex coordinator 2026-10-16",
+   "granted_by": "Q-COMPUTE-DIE Codex coordinator 2026-10-16; refreshed by Q-DVM+LINK 2026-10-16 for the m6r/m6s/m6t source changes (LOCAL_RST/ONWARD_REG/LEAF_FILL_PIPE params, ot_rst_pipe source; port list, faces, spans and contacts identical)",
    "reason": "Source-bound local M6 PORT-only contacts split actual1170-bit seam pressure across faces; M5 signal/PG interior cap stands. Candidate leaf local64.8x138.24; heads64.8x345.6 R0 only. No parent M7/M9 reservation or whole-die geometry/timing qualification; actual routed DEF/vias/LEF/native220/190/80 gates required.",
-   "source_commit": "49d5729c880ce7f68ab76fd5e949eb1bce34dba3",
-   "source_spec_sha256": "d894d19d33a17f5ef6a3fc89c74389a4b922818ff0dd1cc1b5c068fd3ed737da",
+   "source_commit": "d6045728670853894a797619f43fae4e3757a89a",
+   "source_spec_sha256": "f69df06c30111e2a6acbaa8ca0cd6e4eddfee5feedd34338f0d36bcff5eec69b",
    "ports": [
     {
      "name": "cs_wv",
@@ -14514,9 +14514,11 @@
  "blocks": [],
  "findings": [],
  "referenced": [
+  "rtl/lib/ot_rst_pipe.sv",
   "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv",
   "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
   "rtl/hdc/ot_hdc_delay.sv",
+  "physical/ref_tile/qfd_xhead_w_m6_138/local_reset_capture.tcl",
   "physical/ref_tile/qfd_xhead_w_m6_138/kit.env",
   "physical/ref_tile/qfd_xhead_w_m6_138/clock.sdc",
   "physical/ref_tile/qfd_xhead_w_m6_138/signoff.sdc",

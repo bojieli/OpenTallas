@@ -1,0 +1,27 @@
+{
+ "collected": "2026-10-16T16:07:18.578101-07:00",
+ "source_commit": "e65c3259e3d2cf427f77abb123fd36c2d1eaebea",
+ "command": [
+  "python",
+  "tools/hbm_die_v15/exact_view_plan.py",
+  "--contract",
+  "/home/ubuntu/artifacts/hdie-d4/d4b_gen1552_inputs/contract.json",
+  "--views",
+  "/home/ubuntu/artifacts/hdie-d4/views_d4b_1552/views.json",
+  "--root",
+  "/home/ubuntu/wt/hbm-view-binding-1606",
+  "--receipt-root",
+  "/home/ubuntu/artifacts/hdie-d4/views",
+  "--out",
+  "/home/ubuntu/wt/hbm-view-binding-1606/results/arch/hbm_die_v16/exact_binding_1606/plan.json"
+ ],
+ "tests": "python -m unittest discover -s tools/hbm_die_v15 -p test_exact_view_plan.py -v",
+ "tests_passed": 4,
+ "hashes": {
+  "pc_cfg_proposal.json": "7e7f86fdab3d99fcad83d82808de33c32d322c3f29937c3303d534ffecf86775",
+  "classification.txt": "779502c6490d3208d43e4f0df63325b544c6d86b2839dc78ec73d505ce11880c",
+  "plan.json": "d5627e0f564cf00490ab02981f10824e933c066c2c6777f1bb05f4350f213f34",
+  "tests.txt": "db3c167bdd92851b966275f453958385627b58ac6abdd2b816bcc0e2543380a2"
+ },
+ "policy": "No existing timing receipt copied; no fleet jobs submitted or stopped; proposal is not production binding"
+}

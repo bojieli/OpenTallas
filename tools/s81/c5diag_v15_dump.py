@@ -78,6 +78,10 @@ def main():
         hub_chain_record=m.get('hub_stations'), hop_fix=m.get('hop_fix'), col_relays=m.get('col_relays'),
         lane_pins=m.get('lane_pins'), field_round_trip_cycles=frt, relay_masters=dict(sorted(rm_.items()))),
         indent=1, default=str) + '\n')
+    # ROOT RELAY-SCHEMA 10-16: the full per-bus stage table (opentallas.die_relay_stages.v1) next to stage_counts.json
+    import relay_stages_export as RSX
+    import die_relay_stages as DRS
+    DRS.write(work / 'relay_stages.json', RSX.export_model(m, f's81:{work.name}', sources=['tools/s81/c5diag_v15_dump.py']))
     pins = HG.read_pins(texts)
     by = {it.name: it for it in m['insts']}
     hops = []

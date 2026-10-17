@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.s81.cfifo_hold_fix.v1",
+ "element": "dsfd_cfifo_crs (S81 collective CFIFO, isolated additive master)",
+ "revision": "r5 half-cycle column read",
+ "failed_job": "s81coll_cfifo_crs-crs2isolated-COMMIT (src 4706a3994): EARLY_FAIL_HOLD 4_1_cts, 21,739 hold buffers > 20,000 cap, FF hold WNS -78.42 -> -56.42 stalled (xa[139]), 12,709 endpoints in 30 ps margin, 2,925 violating",
+ "route_vs_gate": "Route 4_1_cts CTS is identical to the gate's (same R per root: TT cr 104.2 / cr_s 211.5 / xf 171.5 / xf2 148.5; FF cr 85.6 / cr_s 175.9 / xf 137.8 / xf2 121.9; same start FF hold -78.42, tns -96,466, 2,925 viol). The gate's +44..+50 ps hold is AFTER 38,574 hold buffers (3 chunks, 2,040 s); the gate has no buffer cap, the route's early-fail cap is 20k. No insertion difference.",
+ "hold_endpoints_pre_repair_FF_signoff_sdc_margin30": {
+  "xf->cr_s  bank->u_x.u_cross.o": {"n": 565, "viol": 562, "worst_ps": -69.0},
+  "xf2->cr_s bank->u_x2.u_cross.o": {"n": 537, "viol": 534, "worst_ps": -70.3},
+  "cr_s->cr  o->xa": {"n": 283, "viol": 281, "worst_ps": -76.7},
+  "cr_s->cr  o->xb": {"n": 251, "viol": 134, "worst_ps": -73.0},
+  "cr_s->cr  o->x2": {"n": 127, "viol": 27, "worst_ps": -60.3},
+  "cr_s->cr  o->cc": {"n": 15, "viol": 15, "worst_ps": -48.9},
+  "cr->port  xa/xb/x2/cc/rs outputs (output min delay)": {"n": 1101, "viol": 1100, "worst_ps": -37.8},
+  "cr_s->port rd": {"n": 70, "viol": 70, "worst_ps": -36.9},
+  "xf/xf2 intra bank self-loop (enable recirculation)": {"n": 8805, "viol": 0, "worst_ps": 10.7},
+  "xf->cr_s wc->wg1 / identity->fault / pin->epoch_reset": {"n": 14, "viol": 14, "worst_ps": -44.6},
+  "rst->reset sync (input)": {"n": 3, "viol": 3, "worst_ps": -44.1}
+ },
+ "hold_buffers_by_sink_family_gate_repair": {
+  "bank->o (xf/xf2->cr_s), incl. bank-Q buffers shared with the self-loop": 26990,
+  "o->xa/xb/x2/cc regs (cr_s->cr)": 5195,
+  "output ports": 5585,
+  "other": 804,
+  "total": 38574
+ },
+ "cross_root_hold_reserve": "signoff.sdc set_clock_uncertainty -hold 100 between different ot_entry roots (die skew 50 + hold 50); 25 within a root; route hold_margin 30",
+ "fix": "bank (posedge xf) -> h (negedge cr_s, one-hot select registered on negedge one cycle ahead from rc+1) -> o (posedge cr). Both cross-root hops half-cycle: hold check half a period away; the select fanout stays a full-cycle intra-root path. o on cr equals the r4 o edge for edge.",
+ "cycles": 0,
+ "flops_per_instance": "+1102 (h) +16 (one-hot select); o moves from cr_s (async reset) to cr (no reset); 1102 fewer async-reset loads on epoch_reset[1]",
+ "bench": "bench.log: pass + warm 5 phase pairs with offsets identical to r4 (197000/187000 cold, 4397000/4387000 warm); 8 mutants FAIL incl. new mut_hstage (no cr stage, one edge early) and mut_hsel (select not advanced)",
+ "reset_note": "o has no async reset: after an asynchronous reset assertion the delivered word is zero within two edges (r4: one). Reset is held for the full trunk calendar; every word after release is identical."
+}

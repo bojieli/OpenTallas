@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_capt_cd",
+ "enable": false,
+ "reason": "RTL pin registers (PINREG=1): every used f_st bit is registered in the source (fs_q); outputs are already registers (recipe2 output flops). Blanket recipe3 registers would add a second unpriced stage."
+}

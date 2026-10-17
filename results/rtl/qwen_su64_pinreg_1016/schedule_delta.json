@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.qwen.schedule-delta.v1",
+ "master": "qfd_sp_su64_sfu",
+ "parameter": "PINREG=1 (the hardened view physical/ref_tile/qfd_sp_su64_sfu_pr; die instance must set PINREG=1)",
+ "owner": "Q-ELEM-SUC 2026-10-16 (Q-COMPUTE-DIE calls (c)/(2)/(3)a, 2026-10-16)",
+ "edges_are": "integer clock edges at the qfd_sp_su64_sfu die pins, PINREG=1 minus PINREG=0, same stimulus; + = later",
+ "su_op_latency_delta": 0,
+ "su_op_latency_note": "Q-COMPUTE-DIE accepted +1 SU edge; the measured cost is 0: the va / ca pin registers are paid by taking the lane request-side output relays at RD-1 (ot_hdc_vstream_static_entries ORS) and re-aligning the embedding answer / VM read masks +1 (ot_qfd_su_align_group4 EML); ML=15 of the hard lane head is unchanged.",
+ "contracts": [
+  {"contract": "SU -> VM requests and lane writes (va: operand descriptors, sw_*)", "peer": "qfd_sp_vector_memory_par.sa", "old_edge": 0, "new_edge": 0, "delta": 0},
+  {"contract": "SU reducer write (va: red_we/addr/data)", "peer": "qfd_sp_vector_memory_par.sa", "old_edge": 0, "new_edge": 0, "delta": 0},
+  {"contract": "VM answers (vq) relative to the va strobe", "peer": "qfd_sp_vector_memory_par.sq", "old_edge": 15, "new_edge": 15, "delta": 0},
+  {"contract": "constant-ROM request + cb_stage (ca0..7)", "peer": "qfd_su_cbuf_g", "old_edge": 0, "new_edge": 0, "delta": 0, "stage_field_delta": 1, "note": "ca is now a pin register. crom_re/crom_addr 0 edges (lane request relays RD-1); the cb_stage field ca[205:200] is the si[481:476] feed-through and leaves the pin register 1 edge after si (stage +1 at the cbuf stage/crom_stage inputs). Every request edge carries the same stage as before (seq_su holds si for the op; first constant-ROM request >= 4 edges after go): bench request/stage pairing check. cbuf prefetch trigger +1 edge inside a ~5,500-cycle stage."},
+  {"contract": "embedding requests (external_a_re/addr)", "peer": "qfd_seq_su_static.su_va_re/su_va_addr", "old_edge": 0, "new_edge": -1, "delta": -1, "note": "seq_su answers (external_a_q) and its mask (external_vm_a_*) keep their latency relative to the request; first request still >= 4 edges after the SU go, so embed_active (set at go) classification is unchanged"},
+  {"contract": "status sd (fault, rows, progress, kv_we copy, idle, ready, inflight, active)", "peer": "qfd_seq_su_static.sd", "old_edge": 0, "new_edge": 1, "delta": 1, "note": "idle may also move by one edge where it mixes the lane write strobes (status only)"},
+  {"contract": "copy command cp -> copy start", "peer": "qfd_tt_ctlm_static_s.cp", "old_edge": 0, "new_edge": 1, "delta": 1},
+  {"contract": "copy VM read beats at va (from cp)", "peer": "qfd_sp_vector_memory_par.sa", "old_edge": 0, "new_edge": 2, "delta": 2},
+  {"contract": "copy VM write beats at va / xsw copy beats (from cp)", "peer": "qfd_sp_vector_memory_par.sa / qfd_xs_tap.sw", "old_edge": 0, "new_edge": 3, "delta": 3},
+  {"contract": "cp_done (from cp)", "peer": "(die: unconnected)", "old_edge": 0, "new_edge": 2, "delta": 2},
+  {"contract": "cp_active", "peer": "qfd_tt_ctlm_static_s.cp_active", "old_edge": 0, "new_edge": 1, "delta": 1, "note": "rises +1, falls +2 (one edge longer copy pipe)"},
+  {"contract": "SU writes on xsw (SU branch)", "peer": "qfd_xs_tap.sw", "old_edge": 0, "new_edge": 0, "delta": 0},
+  {"contract": "KV writes (kv_we/waddr/wdata), acc, native_issue", "peer": "qfd_native59_compute_service / qfd_seq_su_static", "old_edge": 0, "new_edge": 0, "delta": 0}
+ ],
+ "benches": {
+  "script": "tools/qwen_split/run_su64_pinreg_bench.sh OUTDIR MODE PRMUT",
+  "bench": "rtl/test/qwen_split/tb_qfd_su64_pinreg.sv (PINREG=1 vs PINREG=0, 64 lanes, each DUT on its own fixed-latency VM / embedding models)",
+  "pass": ["MODE 0 PRMUT 0 (SU ops)", "MODE 1 PRMUT 0 (copy)"],
+  "mutants_at_old_edge_must_fail": {"PRMUT 1": "va/ca registered without the relay compensation (old VM/cb edge)", "PRMUT 2": "copy read latency 15 (old)", "PRMUT 3": "sd unregistered (old status edge)", "PRMUT 4": "cp unregistered (old copy-start edge)"}
+ },
+ "ledger": "cycles/token: 0 on the SU op path; copy ops +3 edges per copy (compiler reservation window), status +1 edge"
+}

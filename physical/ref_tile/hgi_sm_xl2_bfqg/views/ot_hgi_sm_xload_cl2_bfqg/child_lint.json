@@ -1,0 +1,143 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/hgi_sm_xl2_bfqg-local1r-a327f9402/record/views/ot_hgi_sm_xload_cl2_bfqg/provenance/ot_hgi_sm_xload_cl2_bfqg.candidate.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "ot_hgi_sm_xload_cl2_bfqg 302.4 x 298.08: PG M5 VDD 56 stripes (98% spread, 100% cov) / VSS 56 stripes (98% spread, 100% cov); strap M6; face pins 1340 blocked-above 0 blocked-same 0; clock clk insertion 243 ps; clock clk_ctrl insertion 62 ps; clock clk_l0 insertion 48 ps; clock clk_l1 insertion 48 ps; clock clk_l2 insertion 48 ps; clock clk_l3 insertion 48 ps; clock clk_l4 insertion 48 ps; clock clk_l5 insertion 48 ps; clock clk_l6 insertion 48 ps; clock clk_l7 insertion 48 ps; clock clk_m0 insertion 29 ps; clock clk_m1 insertion 41 ps; clock clk_m2 insertion 40 ps; clock clk_m3 insertion 41 ps; clock clk_m4 insertion 41 ps; clock clk_m5 insertion 39 ps; clock clk_m6 insertion 22 ps; clock clk_m7 insertion 25 ps; clock clk_n insertion 192 ps; clock clk_s insertion 138 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "ot_hgi_sm_xload_cl2_bfqg",
+  "W": 302.4,
+  "H": 298.08,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 56,
+     "dir": "V",
+     "spread": 0.982,
+     "coverage": 1.0,
+     "shapes_on_top": 56
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 56,
+     "dir": "V",
+     "spread": 0.982,
+     "coverage": 1.0,
+     "shapes_on_top": 56
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 1340,
+   "blocked_above": 0,
+   "covered_below": 3,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 242.85,
+    "min_ps": 192.62
+   },
+   "clk_ctrl": {
+    "max_ps": 62.14,
+    "min_ps": 52.51
+   },
+   "clk_l0": {
+    "max_ps": 47.65,
+    "min_ps": 41.48
+   },
+   "clk_l1": {
+    "max_ps": 47.91,
+    "min_ps": 41.77
+   },
+   "clk_l2": {
+    "max_ps": 48.03,
+    "min_ps": 41.85
+   },
+   "clk_l3": {
+    "max_ps": 47.95,
+    "min_ps": 41.69
+   },
+   "clk_l4": {
+    "max_ps": 48.08,
+    "min_ps": 41.9
+   },
+   "clk_l5": {
+    "max_ps": 47.74,
+    "min_ps": 41.47
+   },
+   "clk_l6": {
+    "max_ps": 47.91,
+    "min_ps": 41.76
+   },
+   "clk_l7": {
+    "max_ps": 48.08,
+    "min_ps": 41.92
+   },
+   "clk_m0": {
+    "max_ps": 29.24,
+    "min_ps": 29.24
+   },
+   "clk_m1": {
+    "max_ps": 40.81,
+    "min_ps": 40.81
+   },
+   "clk_m2": {
+    "max_ps": 39.79,
+    "min_ps": 39.79
+   },
+   "clk_m3": {
+    "max_ps": 41.01,
+    "min_ps": 41.01
+   },
+   "clk_m4": {
+    "max_ps": 40.92,
+    "min_ps": 40.92
+   },
+   "clk_m5": {
+    "max_ps": 38.55,
+    "min_ps": 38.55
+   },
+   "clk_m6": {
+    "max_ps": 22.25,
+    "min_ps": 22.25
+   },
+   "clk_m7": {
+    "max_ps": 25.12,
+    "min_ps": 25.12
+   },
+   "clk_n": {
+    "max_ps": 192.43,
+    "min_ps": 150.59
+   },
+   "clk_s": {
+    "max_ps": 138.25,
+    "min_ps": 84.13
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 1009
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

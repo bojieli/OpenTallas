@@ -1,5 +1,20 @@
 """Pre-RTL H-COLL host transport and native issuer composition model."""
-def model():
+def model(parent='host_v4'):
+ m = _model_v4()
+ if parent != 'host_v4':
+  import sys
+  from pathlib import Path
+  sys.path.insert(0, str(Path(__file__).resolve().parent / 'hbm_coll_static'))
+  import parent_timing as PT
+  c = PT.constants(parent)
+  m.update({k: c[k] for k in ('host_last_frame_to_first_cfg_edges', 'host_last_frame_to_row_complete_edges',
+   'host_launch_to_issuer_start_edges', 'host_launch_to_first_uop_edges', 'host_next_row_frame_gap_edges',
+   'host_descriptor_to_launch_gap_edges')})
+  m['parent_timing'] = c
+ return m
+
+
+def _model_v4():
  return {
   'host_target': '52+qid', 'instruction_bits':1536, 'metadata_bits':64,
   'frames_per_row':7, 'frame_bits':256, 'rows':64,

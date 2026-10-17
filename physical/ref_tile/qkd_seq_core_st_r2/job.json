@@ -1,0 +1,144 @@
+{
+ "name": "qkd_seq_core_st_r2-r2-COMMIT",
+ "block": "qkd_seq_core_static",
+ "ref_tile": true,
+ "owner": "Codex:Q-KV-1552",
+ "purpose": "Q-KVSYS PVJOIN 10-16 (lead-approved qkd_seq retirement): static control leaf of qkd_seq_static. Every store pop / aq start / Q beat / posted row / stream descriptor at a fixed edge after the compiled CMD slot of the static D2D end (link compiler), arrivals off-slot fault, landing row credits only checked. Bench: qkd_seq_static (this leaf + closed qkd_seq_xs_tp8 x4 + qkd_seq_fan x4) vs legacy qkd_seq on 36 link-slotted layers: aq 1188 / kvn 72 / kc 72 words per quadrant bit-identical, aq start at the compiled CMD+47 every layer (legacy +1 edge earlier, rows equal); mutants Q-beat swap / row t / start late / KVN push early FAIL.",
+ "threads": 4,
+ "peak_ram_gb": 8,
+ "source": {
+  "branch": "codex/qwen-kv-1552",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl",
+   "tools",
+   "results/arch/token_path_20261009/qwen_rom.json",
+   "results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json",
+   "results/arch/qwen_split_1014/kvsys_v1_4_3_design/hbm_refresh_calendar.json",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_seq_core_static #(.MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_20261014/qkd_seq_static.sv rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv rtl/lib/ot_rst_relay.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "seq_static_pass",
+    "cmd": "bash tools/qwen_static_kv/seq_static_bench.sh {RUN}/bench/m0 0 36",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SEQ_STATIC PASS layers=36 aq=1188 kvn=72 kc=72 errors=0 mut=0 aq_start_from_cmd=47",
+    "min_count_regex": "aq=(\\d+)"
+   },
+   {
+    "name": "seq_static_mut_qswap",
+    "cmd": "bash tools/qwen_static_kv/seq_static_bench.sh {RUN}/bench/m1 1 36",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SEQ_STATIC PASS",
+    "fail_regex": "^SEQ_STATIC FAIL layers=36 aq=1188 kvn=72 kc=72 errors=288 mut=1"
+   },
+   {
+    "name": "seq_static_mut_late",
+    "cmd": "bash tools/qwen_static_kv/seq_static_bench.sh {RUN}/bench/m3 3 36",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SEQ_STATIC PASS",
+    "fail_regex": "^SEQ_STATIC FAIL layers=36 aq=1188 kvn=72 kc=72 errors=1 mut=3 aq_start_from_cmd=48"
+   },
+   {
+    "name": "seq_static_offslot_q",
+    "cmd": "bash tools/qwen_static_kv/seq_static_bench.sh {RUN}/bench/offslot 0 36 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^SEQ_STATIC FAIL layers=36 aq=1188 kvn=72 kc=72 errors=[1-9][0-9]* mut=0 aq_start_from_cmd=47"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_seq_core_st_r2/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_seq_core_st_r2/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 4,
+   "peak_ram_gb": 8
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_seq_core_st_r2 --out {RUN}/record/views/qkd_seq_core_static  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_seq_core_st_r2/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_seq_core_st_r2/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_seq_core_st_r2/qkd_seq_core_st_r2-r2-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Native capture defect repair: all att_rx inputs end at existing pin registers. Q pushes issue from cmd || (act && a<31), checking registered qev against act && a<32. Removes the raw att_rx_v/kind decode into x_v/x_cls (capture 207.57 ps, budget190). No state bits or production edges added; existing a comparator supplies 31/32-edge slot windows. Closed r1 view preserved.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "results/arch/qwen_split_1014/kvsys_1552/native_audit.json",
+  "fix": "Replace raw Q-kind-driven store pushes with CMD-compiled Q slots; registered events are checked against slots. No payload, issue or output edge changes."
+ }
+}

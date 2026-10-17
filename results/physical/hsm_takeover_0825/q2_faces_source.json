@@ -1,0 +1,44 @@
+{
+  "status": "SOURCE_CANDIDATE_ONLY",
+  "quadrant": 2,
+  "RG": 5,
+  "WG": 3,
+  "normal_edges_added": 0,
+  "return_edges": 7,
+  "write_done_edges": 4,
+  "input_face_ownership": {
+    "w": [
+      "rq0",
+      "rq4",
+      "wq0",
+      "xq"
+    ],
+    "e": [
+      "rq1",
+      "wq1",
+      "xq2"
+    ],
+    "s": [
+      "rq3",
+      "dq",
+      "pq"
+    ],
+    "n": [
+      "rq2",
+      "kq",
+      "wq2",
+      "bid",
+      "sid",
+      "rslot_v",
+      "rslot",
+      "wslot_v",
+      "wslot"
+    ]
+  },
+  "files": {
+    "rtl/hbm_accel/generic/vm/static/faces_q2/ot_vms_bank_q2_faces_core.sv": "a222f63d4ee5df00960087a72a33b318b48fb1907b9c7632227ad13655bf8955",
+    "rtl/hbm_accel/generic/vm/static/faces_q2/ot_vms_bank_q2_faces_body.sv": "3e9689b99ff6a542afb44a5dbacd567b231d9557e696a1a64f0bc14d5819d400",
+    "rtl/hbm_accel/generic/vm/static/faces_q2/hfd_vms_bank_native_q2_faces.sv": "f3be44a74f86cf76a48ffc51ea4a1ebceebd3a32ea57f1ed5b1a91b69a9db38b",
+    "rtl/hbm_accel/generic/vm/static/faces_q2/tb_hbm_vm_q2_faces.sv": "8ae5d0bc860238eaa5297553732ffd9bdab30acaffb09d2f103050f889830563"
+  }
+}

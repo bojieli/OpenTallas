@@ -1,0 +1,59 @@
+{
+ "schema": "opentallas.native_pin_audit.view.v1",
+ "date": "2026-10-16",
+ "by": "Q-ELEM (Claude)",
+ "adopted": "f",
+ "jobs": {
+  "f": "qfd_su_lane_h_native_crom5_f-native45f-b1c92b37a CLOSED TT +67.26 / FF +4.92 / DRC 0",
+  "g": "qfd_su_lane_h_native_crom5_g-native45g-b1c92b37a CLOSED TT +57.94 / FF +10.95 / DRC 0"
+ },
+ "views": {
+  "f": {
+   "cell": "qfd_su_lane_h_native_crom5",
+   "view": "physical/ref_tile/qfd_su_lane_h_native_crom5_f/views/qfd_su_lane_h_native_crom5",
+   "lib_cell": "qfd_su_lane_h_native_crom5",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 332.8,
+   "spread_ps": 28.7,
+   "outputs": 377,
+   "inputs": 765,
+   "launch_ps": 189.6,
+   "launch_pin": "sx_exp_x[4]",
+   "capture_ps": 160.6,
+   "capture_pin": "crom_q[6]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  },
+  "g": {
+   "cell": "qfd_su_lane_h_native_crom5",
+   "view": "physical/ref_tile/qfd_su_lane_h_native_crom5_g/views/qfd_su_lane_h_native_crom5",
+   "lib_cell": "qfd_su_lane_h_native_crom5",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 351.7,
+   "spread_ps": 52.4,
+   "outputs": 377,
+   "inputs": 765,
+   "launch_ps": 196.3,
+   "launch_pin": "sx_exp_x[4]",
+   "capture_ps": 165.3,
+   "capture_pin": "va_q[20]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  }
+ },
+ "note": "e (6a8658bf3) native FAIL launch 243.6/capture 197.3 superseded by f: spine tol 25->8 ps, bins 30 um removed in-flow IO hold cells; 0 cycles, same RTL/pins/outline. Layout PNGs read (placement/clocks): same geometry as e, distributed clock, empty strip E of macro remains."
+}

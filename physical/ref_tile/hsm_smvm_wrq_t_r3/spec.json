@@ -1,0 +1,341 @@
+{
+ "name": "hsm_smvm_wrq_t_r3",
+ "top": "ot_hbm_sm_vm_wr_q_t_faces",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_faces.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_faces.sv",
+  "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {
+  "DEPTH": 4,
+  "MUT": 0
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 142.56,
+  "h": 241.92
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    23.328,
+    155.52
+   ],
+   "inst": "u_tab",
+   "clock_entry": {
+    "port": "clk_cal",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  }
+ ],
+ "pins": {
+  "W": [
+   "rv",
+   "rrow",
+   "rdata_lo",
+   "clk_in",
+   "clk_cal",
+   "sm_fault",
+   "sm_sched_fault",
+   "rdata_hi"
+  ],
+  "E": [
+   "wq_lo",
+   "clk_out",
+   "wq_hi"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "tgt",
+   "quad",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "configured",
+   "fault",
+   "active"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 30,
+   "extra": "-balance_levels"
+  }
+ },
+ "recipe": 3,
+ "purpose": "H-SM 2026-10-16: hardened SM result -> VM writer smw_<q>, ONE master for the 4 instances (option A wrapper: folded ot_static_cmd_target MODE 1 command calendar CW 26 + 128x256 table, tgt strap; quad strap replaces parameter QUAD). Pin-bound: W rv/rrow/rdata 2,152, E wq 2,248 at ~6 pins/um -> 388.8 um faces; width 142.56 for the 94.8 um table macro with >= 20 um channels; N F20 bus + straps + status. ~11.3k writer flops + collar. The RTL registers every input at its pin and every output is a flop; pin_reg_split gives each replicated wq data pin its own launch flop: 0 added edges (calendar fire edge unchanged; rv(t) -> wq slot0 at t+3). rst_n lands on one local reset-release flop.",
+ "job": {
+  "owner": "Codex H-SM physical",
+  "branch": "codex/hsm-physical-0825",
+  "tag": "faces3",
+  "purpose": "Candidate face-local writer tile; zero data cycles added, four instances; adoption requires explicit die binding to new ports and three related same-frequency clock entries.",
+  "benches": [
+   {
+    "name": "wrq_t_bench",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/run_sm_vm_wr_q_t_faces.sh {RUN}/bench/wrqt",
+    "expect": "pass",
+    "pass_regex": "SM_VM_WR_Q_T BENCH PASS",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/hbm_accel/host_static_20261015",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "views_to": "physical/ref_tile/hsm_smvm_wrq_t_r3/views",
+  "record_to": "results/rtl/ref_tile/hsm_smvm_wrq_t_r3"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every input lands in a source pin flop (F20 bus in the folded collar pin rung, tgt/quad strap flops, rv/rrow/rdata/sm_fault/sm_sched_fault pin flops, rst_n local reset-release flop) and every output is a source flop (wq o_*, collar configured/fault/active); pin_reg_split duplicates the launch flop per replicated wq data pin"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "pin_ranges": {
+  "rv": [
+   3,
+   5
+  ],
+  "rrow": [
+   7,
+   20
+  ],
+  "cfg_data": [
+   4,
+   52
+  ],
+  "tgt": [
+   54,
+   62
+  ],
+  "rst_n": [
+   64,
+   65
+  ],
+  "clk": [
+   70,
+   71
+  ],
+  "quad": [
+   74,
+   75
+  ],
+  "cfg_v": [
+   77,
+   78
+  ],
+  "cfg_target": [
+   79,
+   86
+  ],
+  "cfg_addr": [
+   87,
+   96
+  ],
+  "desc_v": [
+   97,
+   98
+  ],
+  "desc_base": [
+   99,
+   108
+  ],
+  "desc_limit": [
+   109,
+   119
+  ],
+  "desc_loops": [
+   120,
+   132
+  ],
+  "launch_v": [
+   133,
+   134
+  ],
+  "configured": [
+   136,
+   136.6
+  ],
+  "fault": [
+   137.5,
+   138.1
+  ],
+  "active": [
+   139,
+   139.6
+  ],
+  "rdata_lo": [
+   22,
+   117
+  ],
+  "clk_in": [
+   119,
+   120
+  ],
+  "sm_fault": [
+   123,
+   124
+  ],
+  "sm_sched_fault": [
+   125,
+   126
+  ],
+  "rdata_hi": [
+   128,
+   239
+  ],
+  "wq_lo": [
+   3,
+   118
+  ],
+  "clk_out": [
+   120,
+   121
+  ],
+  "wq_hi": [
+   123,
+   239
+  ],
+  "clk_cal": [
+   121,
+   122
+  ]
+ },
+ "structural_change": "Measured r2 CTS refused soft clk reaching actual command-table hard SRAM. r3 exposes raw hard clk_cal to that ONE SRAM, core/face CTS roots only standard cells. Compact height388.8->241.92 within same W/E pin capacity: min local data interval95um for1024bits =>0.518 track use; maximum whole-face cut0.46 at48nm. Raw clock W121.5 to SRAM W156.3 x23.328:58.1um Manhattan. No arithmetic/data/calendar edge change; 4 instances save0.083756mm2 rectangle vsr2; mapped TT/FF/native proof pending.",
+ "clock": "hybrid_entries",
+ "clock_ports": [
+  "clk",
+  "clk_in",
+  "clk_out",
+  "clk_cal"
+ ],
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_n",
+    "tgt",
+    "quad",
+    "cfg_v",
+    "cfg_target",
+    "cfg_addr",
+    "cfg_data",
+    "desc_v",
+    "desc_base",
+    "desc_limit",
+    "desc_loops",
+    "launch_v"
+   ],
+   "outputs": [
+    "configured",
+    "fault",
+    "active"
+   ]
+  },
+  "inp": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_in"
+   ],
+   "inputs": [
+    "rv",
+    "rrow",
+    "rdata_lo",
+    "rdata_hi",
+    "sm_fault",
+    "sm_sched_fault"
+   ],
+   "outputs": []
+  },
+  "outp": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_out"
+   ],
+   "inputs": [],
+   "outputs": [
+    "wq_lo",
+    "wq_hi"
+   ]
+  },
+  "cal": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_cal"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "clock_cts_roots": [
+  "clk",
+  "clk_in",
+  "clk_out"
+ ]
+}

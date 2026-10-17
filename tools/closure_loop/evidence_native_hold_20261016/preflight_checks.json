@@ -1,0 +1,27 @@
+[
+  {
+    "case": "wrong_block",
+    "exit": 2,
+    "output": "unsupported native normalization block: other"
+  },
+  {
+    "case": "wrong_vt",
+    "exit": 2,
+    "output": "unsupported native normalization VT: FAST"
+  },
+  {
+    "case": "wrong_hash",
+    "exit": 2,
+    "output": "native normalization hash mismatch"
+  },
+  {
+    "case": "kept_wires",
+    "exit": 2,
+    "output": "native normalization rejects KEEPWIRES (OT_KEEP_UNTOUCHED)"
+  },
+  {
+    "case": "frozen_wires",
+    "exit": 2,
+    "output": "native normalization rejects FREEZE (OT_FREEZE_MACRO_NETS)"
+  }
+]

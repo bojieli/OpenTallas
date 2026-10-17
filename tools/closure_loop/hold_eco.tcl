@@ -33,6 +33,17 @@ proc ot_libc {c} {   ;# OWNER OPTION B: the setup scene ("ss") reads OT_SETUP_LI
   return [string toupper $c]
 }
 proc envd {n d} { expr {[info exists ::env($n)] && $::env($n) ne "" ? $::env($n) : $d} }
+# read_db replaces LEF libraries with the ODB's inventory. Add any declared
+# new VT AFTER read_db, as vtswap_eco.tcl does, before swapping a master.
+proc ot_load_extra_vt_lefs {} {
+  foreach vt [envd OT_VT RVT] {
+    if {$vt eq "RVT"} continue
+    set tag [string map {SLVT SL LVT L} $vt]
+    if {[[ord::get_db] findMaster BUFx2_ASAP7_75t_$tag] eq "NULL"} {
+      read_lef -library $::P/lef/asap7sc7p5t_28_${tag}_1x_220121a.lef
+    }
+  }
+}
 proc ot_vt_libs {C} {
   set r {}
   foreach vt [envd OT_VT RVT] {
@@ -64,6 +75,7 @@ if {$session eq "mm"} {
     foreach m [envd OT_MACROS ""] { read_liberty $m/[file tail $m]_[string tolower [ot_libc $c]].lib; lappend L($c) $m/[file tail $m]_[string tolower [ot_libc $c]].lib }
   }
   read_db $::env(OT_DB)
+  ot_load_extra_vt_lefs
   read_sdc -mode ss $::env(OT_SDC_SS)
   read_sdc -mode ff $::env(OT_SDC_FF)
   define_scene ss -mode ss -liberty $L(ss)
@@ -86,6 +98,7 @@ foreach c $corners {
   foreach m [envd OT_MACROS ""] { read_liberty -corner $c $m/[file tail $m]_[string tolower [ot_libc $c]].lib }
 }
 read_db $::env(OT_DB)
+ot_load_extra_vt_lefs
 read_sdc $::env(OT_SDC)
 }
 # no set_propagated_clock here: the effective SDC carries each clock's sign-off propagation state (write_sdc)
@@ -219,17 +232,33 @@ proc ot_meg_apply {mode} { set ::env(OT_MEG_LAYER) $::hi; set ::env(OT_MEG_MODE)
 set ot_eco_meg [envd OT_ECO_MEG 0]
 if {$ot_eco_meg && ![file exists $ot_meg_tcl]} { error "OT_ECO macro-edge guard requested but $ot_meg_tcl is missing" }
 if {$ot_eco_meg} { puts "OT_ECO macro-edge via guard: add"; ot_meg_apply add }
+# The route removes its temporary M6 interior obstruction before writing ODB.
+# Reinstate it for every ECO reroute and remove explicitly before export.
+set ot_m6_stub [envd OT_ECO_M6_STUB_UM ""]
+set ot_m6_hook [envd OT_CL /cl]/m6_pin_access.tcl
+proc ot_m6_apply {mode} {
+  set ::ot_m6_stub_um $::ot_m6_stub
+  set ::ot_m6_pin_access_mode $mode
+  source $::ot_m6_hook
+}
+if {$ot_m6_stub ne ""} {
+  if {$hi ne "M6" || ![file exists $ot_m6_hook]} {error "OT_ECO M6 stub policy cannot be applied"}
+  ot_m6_apply add
+}
 set guides [expr {[envd OT_GUIDES 1] && [grt::have_routes]}]
 set allow_fresh [envd OT_ALLOW_FRESH_GRT 0]
 puts "OT_ECO route guides from the db: $guides"
 set snap [dict create]
 foreach i [$block getInsts] { dict set snap [$i getName] [list {*}[$i getLocation] [$i getOrient] [[$i getMaster] getName]] }
-# Source-pinned opt-in for the diagnosed A input overpadding only. It changes
+# Source-pinned opt-in for diagnosed input overpadding. It changes
 # physical buffers, not constraints or RTL stages. Normal repair follows; the
 # resulting netlist must be rerouted/extracted and judged by unchanged signoff.
 set ot_native [envd OT_ECO_NATIVE_NORMALIZE ""]
 if {$ot_native ne ""} {
-  if {[$block getName] ne "qkd_ectl_a_tp8_epoch_direct"} {error "native normalization is A-scoped"}
+  set ot_native_block [envd OT_ECO_NATIVE_NORMALIZE_BLOCK qkd_ectl_a_tp8_epoch_direct]
+  if {$ot_native_block ni {qkd_ectl_a_tp8_epoch_direct hfd_ep_static} || [$block getName] ne $ot_native_block} {
+    error "native normalization block mismatch or unsupported block"
+  }
   if {![file isfile $ot_native]} {error "native normalization source missing"}
   set ot_native_sha [envd OT_ECO_NATIVE_NORMALIZE_SHA256 ""]
   if {![regexp {^[0-9a-f]{64}$} $ot_native_sha] || [lindex [exec sha256sum $ot_native] 0] ne $ot_native_sha} {
@@ -398,6 +427,7 @@ if {$drt_err} {
   global_route -allow_congestion -congestion_iterations 30 {*}$ra
   detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1
 }
+if {$ot_m6_stub ne ""} { ot_m6_apply remove }
 if {$ot_eco_pk} { puts "OT_ECO face-pin keepout: remove"; ot_pk_toggle }
 if {$ot_eco_meg} { puts "OT_ECO macro-edge via guard: remove"; ot_meg_apply remove }
 # MULTI-VT: one filler pair per VT present (OT_VT); RVT-only fillers leave LVTN/SLVTN implant gaps -> DPL-0050
@@ -411,6 +441,7 @@ write_spef $::env(OT_OUT)/6_final.spef
 foreach c $corners { read_spef -corner $c $::env(OT_OUT)/6_final.spef }
 rep post
 puts "OT_ECO post_ws ss [expr {$session in {two mm} ? [ws max ss] : "n/a"}] ff [ws min ff]"
+write_def $::env(OT_OUT)/6_final.def
 write_db $::env(OT_OUT)/6_final.odb
 write_verilog $::env(OT_OUT)/6_final.v
 puts "OT_ECO done"

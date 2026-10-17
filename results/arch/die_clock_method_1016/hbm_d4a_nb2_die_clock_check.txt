@@ -1,0 +1,101 @@
+die clock check: 1521 tiles / 13079 clock entries, 88571 die clock cells, 0 die flops, roots hb_ckgen/pll_serial, hb_ckgen/pll_stream, hb_ckgen/pll_hbm
+insertion model ps : min 8313.1 / med 14412.7 / p90 14767.4 / max 15518.7 (spread 7205.6)
+insertion STA ps   : min 8116.2 / med 12599.0 / p90 12666.5 / max 12736.5 (spread 4620.2)  [late]; min 6500.2 / med 10126.4 / p90 10161.5 / max 10290.3 (spread 3790.1) [early]
+tree levels        : min 172 / med 347 / p90 367 / max 437 (spread 265)
+non-common pairs 2772 (no common root 528, unmatched 0)
+non-common model ps: min 25.4 / med 1601.2 / p90 13654.1 / max 14386.7 (spread 14361.3)
+non-common STA ps  : min 4.3 / med 1436.2 / p90 12163.4 / max 12263.9 (spread 12259.6)
+pair skew STA ps   : min 0.0 / med 18.3 / p90 3351.7 / max 4608.5 (spread 4608.5)
+per region (29): entries | insertion STA late | flop arrival spread | intra pairs NCP / skew
+  core_c1r3_pll_stream             26 |   12247.5..12687.5 |     14.7 |      7 1487.9 / 268.8
+  core_c2r3_pll_stream            146 |   12266.7..12664.2 |     64.6 |     44 6025.6 / 244.7
+  core_c0r3_pll_stream            149 |   12267.3..12659.3 |     65.9 |     32 5229.4 / 237.8
+  core_c2r0_pll_stream            249 |   12205.6..12596.0 |     59.4 |     95 4891.2 / 254.1
+  core_c0r0_pll_stream            281 |   12201.9..12589.3 |     52.5 |     94 4839.6 / 268.9
+  core_c0r1_pll_stream            143 |   12315.0..12629.4 |     32.0 |    106 4899.0 / 286.6
+  core_c0r2_pll_stream            238 |   12340.9..12650.0 |     23.3 |    172 3996.1 / 291.4
+  core_c1r2_pll_stream             46 |   12431.2..12736.5 |     18.5 |     46 1866.6 / 305.2
+  core_c1r1_pll_stream             14 |   12368.3..12671.0 |     16.0 |     28 1009.9 / 11.6
+  core_c2r1_pll_stream            120 |   12370.7..12636.4 |     26.3 |     59 3516.5 / 249.0
+  core_c2r2_pll_stream            211 |   12398.6..12645.1 |     21.9 |    119 3853.9 / 240.8
+  core_c0r2_pll_serial           2660 |   12593.2..12673.0 |     22.6 |    127 3414.3 / 61.9
+  core_c2r2_pll_serial           2598 |   12579.6..12656.1 |     24.9 |     69 3529.4 / 74.8
+  core_c2r0_pll_serial           2501 |   12520.9..12596.9 |     20.1 |     22 908.1 / 74.8
+  core_c0r0_pll_serial           2540 |   12517.6..12592.7 |     18.8 |     38 1890.6 / 11.3
+inter-region pairs: 1176
+NEIGHBOUR CHECK budget 80.0 ps (TT + FF): FAIL  judged 2367 pairs, over 326
+  async:core|hbm                           pairs    405 (async family crossing: CDC / FIFO, not judged)
+  intra:core_c0r0                          pairs    138 over     0  TT max 47.9  FF max 48.5
+  intra:core_c0r1                          pairs    183 over     0  TT max 45.3  FF max 65.6
+  intra:core_c0r2                          pairs    319 over     0  TT max 37.7  FF max 49.4
+  intra:core_c0r3                          pairs     32 over     0  TT max 48.8  FF max 48.8
+  intra:core_c1r0                          pairs     50 over     0  TT max 13.9  FF max 12.7
+  intra:core_c1r1                          pairs     84 over     0  TT max 11.8  FF max 9.7
+  intra:core_c1r2                          pairs    113 over     0  TT max 18.5  FF max 13.2
+  intra:core_c1r3                          pairs      8 over     0  TT max 10.7  FF max 7.6
+  intra:core_c2r0                          pairs    137 over     0  TT max 45.1  FF max 61.1
+  intra:core_c2r1                          pairs     90 over     0  TT max 15.0  FF max 15.3
+  intra:core_c2r2                          pairs    208 over     0  TT max 19.8  FF max 22.1
+  intra:core_c2r3                          pairs     44 over     0  TT max 46.7  FF max 68.0
+  intra:hbm_c0r0                           pairs     50 over     0  TT max 10.0  FF max 16.3
+  intra:hbm_c0r3                           pairs     50 over     0  TT max 18.3  FF max 9.4
+  intra:hbm_c2r0                           pairs     79 over     0  TT max 21.5  FF max 26.7
+  intra:hbm_c2r3                           pairs     79 over     0  TT max 11.0  FF max 14.2
+  neighbour:core_c0r0|core_c0r1            pairs    190 over    37  TT max 122.4  FF max 74.9
+  neighbour:core_c0r0|core_c0r3            pairs      1 over     1  TT max 57.8  FF max 116.4
+  neighbour:core_c0r0|core_c1r0            pairs      7 over     4  TT max 48.9  FF max 85.6
+  neighbour:core_c0r0|core_c1r2            pairs     19 over    19  TT max 199.0  FF max 28.8
+  neighbour:core_c0r0|core_c1r3            pairs      4 over     4  TT max 148.5  FF max 35.5
+  neighbour:core_c0r0|core_c2r0            pairs      1 over     0  TT max 9.7  FF max 15.7
+  neighbour:core_c0r1|core_c0r2            pairs      6 over     0  TT max 53.7  FF max 40.2
+  neighbour:core_c0r1|core_c1r1            pairs      1 over     1  TT max 51.0  FF max 105.1
+  neighbour:core_c0r1|core_c1r2            pairs     12 over    12  TT max 127.6  FF max 62.2
+  neighbour:core_c0r1|core_c1r3            pairs      4 over     2  TT max 81.5  FF max 70.0
+  neighbour:core_c0r1|core_c2r1            pairs      2 over     1  TT max 54.2  FF max 108.2
+  neighbour:core_c0r1|core_c2r2            pairs      1 over     0  TT max 35.1  FF max 65.4
+  neighbour:core_c0r2|core_c0r3            pairs    110 over    59  TT max 42.5  FF max 112.2
+  neighbour:core_c0r2|core_c1r1            pairs      1 over     1  TT max 35.4  FF max 94.0
+  neighbour:core_c0r2|core_c1r2            pairs     17 over    17  TT max 109.0  FF max 57.7
+  neighbour:core_c0r2|core_c1r3            pairs      8 over     0  TT max 61.0  FF max 72.6
+  neighbour:core_c0r2|core_c2r1            pairs      1 over     1  TT max 34.8  FF max 110.9
+  neighbour:core_c0r2|core_c2r2            pairs      1 over     0  TT max 15.7  FF max 68.0
+  neighbour:core_c0r3|core_c1r2            pairs     19 over    19  TT max 142.4  FF max 151.0
+  neighbour:core_c0r3|core_c1r3            pairs      2 over     2  TT max 62.0  FF max 152.8
+  neighbour:core_c0r3|core_c2r3            pairs      1 over     0  TT max 13.2  FF max 71.3
+  neighbour:core_c1r0|core_c1r1            pairs      4 over     0  TT max 59.4  FF max 39.7
+  neighbour:core_c1r0|core_c1r2            pairs     10 over    10  TT max 150.8  FF max 82.6
+  neighbour:core_c1r0|core_c2r0            pairs      8 over     0  TT max 41.9  FF max 75.9
+  neighbour:core_c1r1|core_c1r2            pairs      7 over     2  TT max 83.8  FF max 48.0
+  neighbour:core_c1r1|core_c2r0            pairs      4 over     4  TT max 122.7  FF max 43.6
+  neighbour:core_c1r1|core_c2r1            pairs     14 over     0  TT max 51.9  FF max 57.8
+  neighbour:core_c1r1|core_c2r2            pairs      1 over     0  TT max 37.6  FF max 44.4
+  neighbour:core_c1r2|core_c1r3            pairs     14 over     0  TT max 62.9  FF max 24.3
+  neighbour:core_c1r2|core_c2r0            pairs     20 over    20  TT max 190.1  FF max 42.7
+  neighbour:core_c1r2|core_c2r1            pairs      7 over     7  TT max 120.7  FF max 9.1
+  neighbour:core_c1r2|core_c2r2            pairs     23 over    23  TT max 111.1  FF max 19.2
+  neighbour:core_c1r2|core_c2r3            pairs     28 over    26  TT max 135.7  FF max 94.2
+  neighbour:core_c1r3|core_c2r0            pairs      5 over     5  TT max 101.6  FF max 21.8
+  neighbour:core_c1r3|core_c2r1            pairs      3 over     0  TT max 19.0  FF max 51.2
+  neighbour:core_c1r3|core_c2r2            pairs      8 over     0  TT max 44.0  FF max 16.2
+  neighbour:core_c1r3|core_c2r3            pairs      2 over     0  TT max 46.7  FF max 79.6
+  neighbour:core_c2r0|core_c2r1            pairs     87 over    20  TT max 119.8  FF max 70.3
+  neighbour:core_c2r0|core_c2r3            pairs      1 over     0  TT max 77.0  FF max 65.3
+  neighbour:core_c2r1|core_c2r2            pairs      1 over     0  TT max 32.5  FF max 55.8
+  neighbour:core_c2r2|core_c2r3            pairs     48 over    29  TT max 39.3  FF max 108.8
+worst 15 pairs (non-common = max side from the branch point):
+  tile A                             tile B                                model      STA     skew  branch
+  cp_svg_NW3                         svg_NW3                                   -        -   3347.9  NO COMMON ROOT
+  hb_coll_NE                         su_NE0                                    -        -     29.0  NO COMMON ROOT
+  hb_coll_NE                         su_NE1                                    -        -     23.9  NO COMMON ROOT
+  hb_coll_NE                         su_NE2                                    -        -     26.6  NO COMMON ROOT
+  hb_coll_NE                         su_NE3                                    -        -     35.1  NO COMMON ROOT
+  su_NE0                             su_NE1                                    -        -      4.2  NO COMMON ROOT
+  su_NE0                             su_NE2                                    -        -      8.4  NO COMMON ROOT
+  su_NE0                             su_NE3                                    -        -      9.5  NO COMMON ROOT
+  su_NE0                             sucx_NE                                   -        -      3.1  NO COMMON ROOT
+  su_NE1                             su_NE2                                    -        -      3.2  NO COMMON ROOT
+  su_NE1                             su_NE3                                    -        -      4.4  NO COMMON ROOT
+  su_NE1                             sucx_NE                                   -        -      2.0  NO COMMON ROOT
+  su_NE2                             su_NE3                                    -        -      7.1  NO COMMON ROOT
+  su_NE2                             sucx_NE                                   -        -      0.7  NO COMMON ROOT
+  su_NE3                             sucx_NE                                   -        -      9.2  NO COMMON ROOT

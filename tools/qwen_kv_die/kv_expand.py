@@ -59,6 +59,11 @@ VIEWS = dict(
     # v1.4.3 near-head feed-through leaves (the far head's T1 / S2)
     qkh_head_gather_stage=f'{RT}/qkh_head_gather_stage/views/qkh_head_gather_stage',
     qkh_head_sstage=f'{RT}/qkh_head_sstage/views/qkh_head_sstage',
+    # v1.4.4 PV16 wide pair leaves (CLOSED, all reset-pin r5: RESET_PIN 1 = the pair's LEAF_RESET_PIN / CTL_RESET_PIN 1)
+    ot_qwen_tp8_pv_slice_t=f'{RT}/qkd_pv_slice_rstpin_r5/views/ot_qwen_tp8_pv_slice_t',
+    ot_qwen_tp8_pv_join_t=f'{RT}/qkd_pv_join_rstpin_r5/views/ot_qwen_tp8_pv_join_t',
+    # kvs13d: OT_KV_PV_CTL_KIT names the closed ctl kit whose FIRST_INPUT_AGE equals the die's (r5 = 20)
+    ot_qwen_tp8_pv_wide_ctl=f"{RT}/{__import__('os').environ.get('OT_KV_PV_CTL_KIT', 'qkd_pv_ctl_rstpin_r5')}/views/ot_qwen_tp8_pv_wide_ctl",
 )
 SR = 'rtl/qwen_sys/split_20261014'
 RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_head_score4_native=f'{SR}/ot_qkh_head_native_r4.sv',
@@ -68,7 +73,22 @@ RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_he
            **{f'qkd_ectl_{x}_tp8_direct': f'{SR}/qkd_ectl_native_direct_tp8.sv' for x in 'abc'},
            qkd_ectl_a_tp8_epoch_direct=f'{SR}/qkd_ectl_a_tp8_epoch_direct.sv',
            qkd_ctrl_pc='rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv', qkd_ctrl_kc='rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv',
-           qkh_head_gather_stage=f'{SR}/qkh_head_gather_stage.sv', qkh_head_sstage=f'{SR}/qkh_head_stages.sv')
+           qkh_head_gather_stage=f'{SR}/qkh_head_gather_stage.sv', qkh_head_sstage=f'{SR}/qkh_head_stages.sv',
+           **{m_: 'rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv' for m_ in
+              ('ot_qwen_tp8_pv_slice_t', 'ot_qwen_tp8_pv_join_t', 'ot_qwen_tp8_pv_wide_ctl')})
+# v1.4.4: wires-only sub-levels of an expanded parent (flattened with the parent; never a die instance)
+SUBLEVELS = dict(qkd_pvw_die=(('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv', 'ot_qwen_tp8_pv_wide_pair'),
+                             ('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv', 'ot_qwen_tp8_pv_col')))
+SUBLEVELS['qkd_pvw_die_e'] = SUBLEVELS['qkd_pvw_die']     # kvs13d (OT_KV_V144_R6): the epoch-carrying face, same pair
+
+# v1.4.4: parent inputs with NO producer RTL on the die yet: left UNCONNECTED (never tied; strict port bind MISMATCH),
+# each with the element that owes the producer.  Only these ports may stay unbound; any other unbound input still refuses.
+PV_OPEN = dict(
+    start='Q-ATTN-RATE / Q-KVSYS-DIE: PV start slot from the static attention calendar (hub / ECTL issue word)',
+    context_len='Q-ATTN-RATE: per-layer context word of the static calendar (seq / ahub)',
+    epoch='Q-ATTN-RATE: layer epoch word (seq / ahub)',
+    in_epoch='Q-VMWB: V arrival epoch per port (the r5 vport carries none; landing rsp_epoch not on its vo word)',
+    in_e='Q-ATTN-RATE (ASTK): qkd_astk_native_er_service_w 4-wide e read face (not in the die ASTK strip qkd_astk_strip_s)')
 FLIP = dict(R0=(0, 0), MX=(0, 1), MY=(1, 0), R180=(1, 1))
 ORIENT = {v: k for k, v in FLIP.items()}
 
@@ -107,6 +127,12 @@ def _ctrl_plan(rev):
     return f
 
 
+def _pv_plan():
+    pl = K.pv_plan()       # cells under the die face qkd_pvw_die flatten as 'u_pair.<pair cell>'
+    return lambda cell, fw, fh: (pl[cell.split('u_pair.', 1)[-1]][0], pl[cell.split('u_pair.', 1)[-1]][1],
+                                 pl[cell.split('u_pair.', 1)[-1]][4])
+
+
 def frames():
     return dict(
         qkd_rhead=dict(plan=_head_plan(), straps=lambda inst: dict(hid=int(inst.rsplit('_', 1)[1]))),
@@ -115,6 +141,8 @@ def frames():
                       straps=lambda inst: dict(cfg=(int(inst.split('_')[2]) << 2) | K.STACKS.index(inst.split('_')[1]))),
         qkd_ctrl=dict(plan=_ctrl_plan(True), straps=lambda inst: {}),
         qkd_ctrl_n=dict(plan=_ctrl_plan(False), straps=lambda inst: {}),
+        qkd_pvw_s=dict(plan=_pv_plan(), straps=lambda inst: {}, open_inputs=PV_OPEN),
+        qkd_pvw_n=dict(plan=_pv_plan(), straps=lambda inst: {}, open_inputs=PV_OPEN),
     )
 
 
@@ -161,19 +189,30 @@ def module_text(path, mod):
     return pre + body + '\n'
 
 
-def elaborate(mod, file, leaf):
-    """yosys JSON of the parent module with every leaf module a black box."""
+def elaborate(mod, file, leaf, parameters=None):
+    """yosys JSON of the parent module with every leaf module a black box.  v1.4.4: wires-only SUBLEVELS of the parent
+    ((file, module) pairs) are read and flattened into it (cell names 'g_col[s].u_col.u_join'); parent parameters (BINDINGS
+    'parameters') are set with chparam."""
     txt = module_text(ROOT / file, mod)
+    subs = SUBLEVELS.get(mod, ())
+    for sf, sm in subs:
+        txt += module_text(ROOT / sf, sm).replace('`timescale 1ns/1ps\n', '')
     params = defaultdict(set)
     for cm in re.finditer(r'\b(\w+)\s*#\s*\((.*?)\)\s*(\w+)\s*\(', txt, re.S):
         if cm.group(1) in leaf:
             params[cm.group(1)] |= set(re.findall(r'\.(\w+)\s*\(', cm.group(2)))
+    if subs:      # nested parameter lists '#(.A(x),.B(y))': the lazy match above stops at the first ')'
+        for cm in re.finditer(r'\b(\w+)\s*#\s*\(((?:[^()]|\([^()]*\))*)\)\s*(\w+)\s*\(', txt, re.S):
+            if cm.group(1) in leaf:
+                params[cm.group(1)] |= set(re.findall(r'\.(\w+)\s*\(', cm.group(2)))
+    chp = ''.join(f'chparam -set {k_} {int(v_)} {mod}\n' for k_, v_ in sorted((parameters or {}).items())) if subs else ''
     with tempfile.TemporaryDirectory() as td:
         td = Path(td)
         (td / 'stubs.v').write_text('\n'.join(stub_text(m_, leaf[m_]['ports'], params[m_]) for m_ in leaf))
         (td / 'parent.sv').write_text(txt)
-        (td / 'run.ys').write_text(f'read_verilog -sv {td}/stubs.v\nread_verilog -sv {td}/parent.sv\n'
-                                   f'hierarchy -top {mod}\nproc\nopt_clean\nwrite_json {td}/out.json\n')
+        (td / 'run.ys').write_text(f'read_verilog -sv {td}/stubs.v\nread_verilog -sv {td}/parent.sv\n{chp}'
+                                   f'hierarchy -top {mod}\nproc\n' + ('flatten\ndelete t:$scopeinfo\nopt_expr\n' if subs else '') +
+                                   f'opt_clean\nwrite_json {td}/out.json\n')
         r = subprocess.run(['yosys', '-q', '-s', str(td / 'run.ys')], capture_output=True, text=True)
         if r.returncode:
             raise RuntimeError(f'yosys {mod}: {r.stderr[-2000:]}')
@@ -253,6 +292,8 @@ def main(argv=None):
     ap.add_argument('--run', type=Path, required=True)
     ap.add_argument('--only', default='')
     a = ap.parse_args(argv)
+    if __import__('os').environ.get('OT_KV_STATIC', '0') == '1' or (a.run / 'static_bind.json').exists():
+        ap.error('static source graph cannot inherit legacy frame/leaf views; actual static physical bindings/clock homes remain required')
     K._set_geometry(True)
     case, libs = a.run / 'case_kv', a.run / 'libs'
     FR = frames()
@@ -300,7 +341,7 @@ def main(argv=None):
         spec = FR[mst]
         b = K.BINDINGS[mst]
         if mst not in jcache:
-            jcache[mst] = elaborate(b['module'], b['file'], leaf)
+            jcache[mst] = elaborate(b['module'], b['file'], leaf, b.get('parameters'))
         J = jcache[mst]
         rtl_w = {p: len(v['bits']) for p, v in J['ports'].items()}
         conns = parse_conns(body)
@@ -323,6 +364,8 @@ def main(argv=None):
                     strap_bits[bid] = '1' if (val >> i) & 1 else '0'
         unbound_ports = sorted(p for p in J['ports'] if p not in {rp for v in mp.values() for rp, _ in v} and p not in straps)
         unbound_inputs = [p for p in unbound_ports if J['ports'][p]['direction'] == 'input']
+        open_inputs = sorted(p for p in unbound_inputs if p in spec.get('open_inputs', {}))
+        unbound_inputs = [p for p in unbound_inputs if p not in spec.get('open_inputs', {})]
         if unbound_inputs:
             raise ValueError(f'{inst}: functional parent inputs without die bindings {unbound_inputs}')
         # internal (leaf-to-leaf) wire names from the parent's netnames
@@ -418,7 +461,9 @@ def main(argv=None):
         fr = rep['frames'].setdefault(mst, dict(module=b['module'], instances=0, leaves_per_instance=nleaf,
                                                  internal_wires_per_instance=len(iw), straps=sorted(straps),
                                                  rtl_ports_without_die_port=unbound_ports, leaf_pin_bits=conn_bits,
-                                                 tie_pin_bits=tie_bits, connectivity_checks=dict(undriven_inputs=0, multiple_drivers=0,
+                                                 tie_pin_bits=tie_bits,
+                                                 open_parent_inputs={p: spec['open_inputs'][p] for p in open_inputs},
+                                                 connectivity_checks=dict(undriven_inputs=0, multiple_drivers=0,
                                                  unbound_parent_inputs=0, overlaps=0, outside_slot=0)))
         fr['instances'] += 1
     if not drop_inst:

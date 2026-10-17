@@ -1,0 +1,101 @@
+{
+ "name": "qfd_b2_word_status_1016",
+ "top": "qfd_b2_word_status",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/qfd_b2_word_status.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 43.2,
+  "h": 43.2,
+  "exact": true
+ },
+ "pg_layer": "M5",
+ "pins": {
+  "W": [
+   "word_v",
+   "word_fault",
+   "result_v"
+  ],
+  "N": [
+   "ck",
+   "rst_n"
+  ],
+  "E": [
+   "fault"
+  ]
+ },
+ "inter": [
+  "*"
+ ],
+ "refglob": "*",
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "claude:Q-B2r",
+  "branch": "claude/q-b2-integ-1016",
+  "tag": "ws1",
+  "hold_merge": true,
+  "purpose": "NEW b2 six-half native word/result status checker (die master qfd_b2_word_status, frame 43.2x43.2 from tools/qwen_split/b2_graph.py); source-exact, pure checker, no schedule effect.",
+  "extra_paths": [
+   "tools/qwen_b2_join/tb_b2_word_status.sv",
+   "tools/qwen_b2_join/run_word_status_bench.sh"
+  ],
+  "benches": [
+   {
+    "name": "word_status_exact",
+    "cmd": "bash tools/qwen_b2_join/run_word_status_bench.sh {RUN}/bench/ws0 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^PASS b2 word status exact",
+    "min_count_regex": "checks=([0-9]+)"
+   },
+   {
+    "name": "word_status_late_valid_mutant",
+    "cmd": "bash tools/qwen_b2_join/run_word_status_bench.sh {RUN}/bench/ws1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^FAIL b2 word status errors=[1-9]"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_b2_word_status_1016/views",
+  "record_to": "results/rtl/ref_tile/qfd_b2_word_status_1016"
+ },
+ "macros": [],
+ "children": [],
+ "recipe": 3,
+ "layer_cap": "M5",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source registers every data input once (vq/fq/rq) and fault is a flop output; a generated pin stage would add an unpriced edge to an exact checker contract."
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 2,
+  "allow_none": false
+ },
+ "inhold": true,
+ "outhold": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

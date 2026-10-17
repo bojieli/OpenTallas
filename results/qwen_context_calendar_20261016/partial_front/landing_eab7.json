@@ -1,0 +1,1451 @@
+{
+  "passed": true,
+  "cases": 288,
+  "results": [
+    {
+      "case": "c_1_0_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e0 T1 nk1 nv1 ph0 373 xu 747 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2293500 (1ps)\n"
+    },
+    {
+      "case": "c_1_0_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e1 T1 nk0 nv0 ph0 658 xu 675 h0 75 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2227614 (1ps)\n"
+    },
+    {
+      "case": "c_1_0_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e2 T1 nk0 nv0 ph0 479 xu 538 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1981584 (1ps)\n"
+    },
+    {
+      "case": "c_1_0_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e3 T1 nk0 nv0 ph0 511 xu 184 h0 68 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2114190 (1ps)\n"
+    },
+    {
+      "case": "c_1_0_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e4 T1 nk0 nv0 ph0 375 xu 340 h0 70 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2348544 (1ps)\n"
+    },
+    {
+      "case": "c_1_0_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e5 T1 nk0 nv0 ph0 286 xu 760 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1990758 (1ps)\n"
+    },
+    {
+      "case": "c_1_0_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e6 T1 nk0 nv0 ph0 267 xu 594 h0 70 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2250132 (1ps)\n"
+    },
+    {
+      "case": "c_1_0_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e7 T1 nk0 nv0 ph0 314 xu 343 h0 70 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1996596 (1ps)\n"
+    },
+    {
+      "case": "c_1_1_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e0 T1 nk0 nv0 ph0 448 xu 598 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2100012 (1ps)\n"
+    },
+    {
+      "case": "c_1_1_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e1 T1 nk0 nv0 ph0 304 xu 93 h0 68 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2143380 (1ps)\n"
+    },
+    {
+      "case": "c_1_1_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e2 T1 nk0 nv0 ph0 452 xu 446 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2214270 (1ps)\n"
+    },
+    {
+      "case": "c_1_1_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e3 T1 nk0 nv0 ph0 674 xu 764 h0 70 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2425272 (1ps)\n"
+    },
+    {
+      "case": "c_1_1_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e4 T1 nk0 nv0 ph0 225 xu 225 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2235954 (1ps)\n"
+    },
+    {
+      "case": "c_1_1_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e5 T1 nk0 nv0 ph0 406 xu 485 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2090004 (1ps)\n"
+    },
+    {
+      "case": "c_1_1_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e6 T1 nk0 nv0 ph0 447 xu 723 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2237622 (1ps)\n"
+    },
+    {
+      "case": "c_1_1_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e7 T1 nk0 nv0 ph0 217 xu 732 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1870662 (1ps)\n"
+    },
+    {
+      "case": "c_1_2_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e0 T1 nk0 nv0 ph0 639 xu 477 h0 68 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2274318 (1ps)\n"
+    },
+    {
+      "case": "c_1_2_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e1 T1 nk0 nv0 ph0 595 xu 669 h0 70 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2285160 (1ps)\n"
+    },
+    {
+      "case": "c_1_2_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e2 T1 nk0 nv0 ph0 82 xu 102 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2255970 (1ps)\n"
+    },
+    {
+      "case": "c_1_2_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e3 T1 nk0 nv0 ph0 658 xu 63 h0 68 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2366892 (1ps)\n"
+    },
+    {
+      "case": "c_1_2_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e4 T1 nk0 nv0 ph0 511 xu 131 h0 70 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2110020 (1ps)\n"
+    },
+    {
+      "case": "c_1_2_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e5 T1 nk0 nv0 ph0 527 xu 354 h0 68 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2341872 (1ps)\n"
+    },
+    {
+      "case": "c_1_2_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e6 T1 nk0 nv0 ph0 248 xu 56 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2155890 (1ps)\n"
+    },
+    {
+      "case": "c_1_2_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e7 T1 nk0 nv0 ph0 531 xu 544 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2328528 (1ps)\n"
+    },
+    {
+      "case": "c_1_3_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e0 T1 nk0 nv0 ph0 70 xu 354 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1818120 (1ps)\n"
+    },
+    {
+      "case": "c_1_3_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e1 T1 nk0 nv0 ph0 759 xu 54 h0 68 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1869828 (1ps)\n"
+    },
+    {
+      "case": "c_1_3_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e2 T1 nk0 nv0 ph0 370 xu 450 h0 75 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2009940 (1ps)\n"
+    },
+    {
+      "case": "c_1_3_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e3 T1 nk0 nv0 ph0 1 xu 651 h0 68 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1938216 (1ps)\n"
+    },
+    {
+      "case": "c_1_3_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e4 T1 nk0 nv0 ph0 567 xu 586 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1978248 (1ps)\n"
+    },
+    {
+      "case": "c_1_3_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e5 T1 nk0 nv0 ph0 18 xu 462 h0 70 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2320188 (1ps)\n"
+    },
+    {
+      "case": "c_1_3_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e6 T1 nk0 nv0 ph0 32 xu 673 h0 70 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2166732 (1ps)\n"
+    },
+    {
+      "case": "c_1_3_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e7 T1 nk0 nv0 ph0 523 xu 412 h0 75 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2215938 (1ps)\n"
+    },
+    {
+      "case": "c_2048_0_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e0 T2048 nk64 nv64 ph0 107 xu 1 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2572890 (1ps)\n"
+    },
+    {
+      "case": "c_2048_0_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e1 T2048 nk64 nv64 ph0 592 xu 490 h0 70 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1945722 (1ps)\n"
+    },
+    {
+      "case": "c_2048_0_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e2 T2048 nk64 nv64 ph0 442 xu 322 h0 70 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2476146 (1ps)\n"
+    },
+    {
+      "case": "c_2048_0_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e3 T2048 nk64 nv64 ph0 24 xu 709 h0 75 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2537862 (1ps)\n"
+    },
+    {
+      "case": "c_2048_0_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e4 T2048 nk64 nv64 ph0 472 xu 42 h0 68 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2552874 (1ps)\n"
+    },
+    {
+      "case": "c_2048_0_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e5 T2048 nk64 nv64 ph0 385 xu 419 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2393580 (1ps)\n"
+    },
+    {
+      "case": "c_2048_0_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e6 T2048 nk64 nv64 ph0 152 xu 51 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2129202 (1ps)\n"
+    },
+    {
+      "case": "c_2048_0_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e7 T2048 nk64 nv64 ph0 89 xu 479 h0 68 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2260140 (1ps)\n"
+    },
+    {
+      "case": "c_2048_1_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e0 T2048 nk64 nv64 ph0 16 xu 94 h0 68 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1984920 (1ps)\n"
+    },
+    {
+      "case": "c_2048_1_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e1 T2048 nk64 nv64 ph0 722 xu 70 h0 75 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2158392 (1ps)\n"
+    },
+    {
+      "case": "c_2048_1_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e2 T2048 nk64 nv64 ph0 583 xu 314 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2380236 (1ps)\n"
+    },
+    {
+      "case": "c_2048_1_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e3 T2048 nk64 nv64 ph0 342 xu 568 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1992426 (1ps)\n"
+    },
+    {
+      "case": "c_2048_1_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e4 T2048 nk64 nv64 ph0 180 xu 64 h0 75 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2215104 (1ps)\n"
+    },
+    {
+      "case": "c_2048_1_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e5 T2048 nk64 nv64 ph0 102 xu 338 h0 68 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2506170 (1ps)\n"
+    },
+    {
+      "case": "c_2048_1_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e6 T2048 nk64 nv64 ph0 514 xu 154 h0 70 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2133372 (1ps)\n"
+    },
+    {
+      "case": "c_2048_1_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e7 T2048 nk64 nv64 ph0 560 xu 394 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2301006 (1ps)\n"
+    },
+    {
+      "case": "c_2048_2_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e0 T2048 nk64 nv64 ph0 304 xu 594 h0 75 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2070822 (1ps)\n"
+    },
+    {
+      "case": "c_2048_2_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e1 T2048 nk64 nv64 ph0 119 xu 476 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1978248 (1ps)\n"
+    },
+    {
+      "case": "c_2048_2_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e2 T2048 nk64 nv64 ph0 759 xu 697 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2198424 (1ps)\n"
+    },
+    {
+      "case": "c_2048_2_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e3 T2048 nk64 nv64 ph0 338 xu 392 h0 75 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2552874 (1ps)\n"
+    },
+    {
+      "case": "c_2048_2_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e4 T2048 nk64 nv64 ph0 603 xu 344 h0 75 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2100846 (1ps)\n"
+    },
+    {
+      "case": "c_2048_2_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e5 T2048 nk64 nv64 ph0 453 xu 216 h0 68 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2476146 (1ps)\n"
+    },
+    {
+      "case": "c_2048_2_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e6 T2048 nk64 nv64 ph0 1 xu 460 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2308512 (1ps)\n"
+    },
+    {
+      "case": "c_2048_2_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e7 T2048 nk64 nv64 ph0 4 xu 188 h0 70 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2044134 (1ps)\n"
+    },
+    {
+      "case": "c_2048_3_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e0 T2048 nk64 nv64 ph0 141 xu 59 h0 75 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1985754 (1ps)\n"
+    },
+    {
+      "case": "c_2048_3_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e1 T2048 nk64 nv64 ph0 636 xu 745 h0 68 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2192586 (1ps)\n"
+    },
+    {
+      "case": "c_2048_3_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e2 T2048 nk64 nv64 ph0 669 xu 375 h0 68 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2538696 (1ps)\n"
+    },
+    {
+      "case": "c_2048_3_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e3 T2048 nk64 nv64 ph0 122 xu 38 h0 75 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2444454 (1ps)\n"
+    },
+    {
+      "case": "c_2048_3_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e4 T2048 nk64 nv64 ph0 668 xu 669 h0 68 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2151720 (1ps)\n"
+    },
+    {
+      "case": "c_2048_3_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e5 T2048 nk64 nv64 ph0 63 xu 17 h0 68 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2468640 (1ps)\n"
+    },
+    {
+      "case": "c_2048_3_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e6 T2048 nk64 nv64 ph0 662 xu 329 h0 68 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2354382 (1ps)\n"
+    },
+    {
+      "case": "c_2048_3_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e7 T2048 nk64 nv64 ph0 176 xu 631 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2387742 (1ps)\n"
+    },
+    {
+      "case": "c_4097_0_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e0 T4097 nk129 nv129 ph0 162 xu 491 h0 75 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2666298 (1ps)\n"
+    },
+    {
+      "case": "c_4097_0_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e1 T4097 nk128 nv128 ph0 529 xu 202 h0 75 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2510340 (1ps)\n"
+    },
+    {
+      "case": "c_4097_0_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e2 T4097 nk128 nv128 ph0 260 xu 408 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2396082 (1ps)\n"
+    },
+    {
+      "case": "c_4097_0_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e3 T4097 nk128 nv128 ph0 281 xu 714 h0 68 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2585400 (1ps)\n"
+    },
+    {
+      "case": "c_4097_0_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e4 T4097 nk128 nv128 ph0 606 xu 325 h0 70 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2575392 (1ps)\n"
+    },
+    {
+      "case": "c_4097_0_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e5 T4097 nk128 nv128 ph0 54 xu 114 h0 70 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2645448 (1ps)\n"
+    },
+    {
+      "case": "c_4097_0_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e6 T4097 nk128 nv128 ph0 543 xu 420 h0 68 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2496162 (1ps)\n"
+    },
+    {
+      "case": "c_4097_0_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e7 T4097 nk128 nv128 ph0 325 xu 377 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2127534 (1ps)\n"
+    },
+    {
+      "case": "c_4097_1_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e0 T4097 nk128 nv128 ph0 546 xu 557 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2472810 (1ps)\n"
+    },
+    {
+      "case": "c_4097_1_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e1 T4097 nk128 nv128 ph0 471 xu 303 h0 75 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2477814 (1ps)\n"
+    },
+    {
+      "case": "c_4097_1_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e2 T4097 nk128 nv128 ph0 456 xu 611 h0 75 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2557878 (1ps)\n"
+    },
+    {
+      "case": "c_4097_1_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e3 T4097 nk128 nv128 ph0 4 xu 441 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2362722 (1ps)\n"
+    },
+    {
+      "case": "c_4097_1_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e4 T4097 nk128 nv128 ph0 311 xu 211 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2174238 (1ps)\n"
+    },
+    {
+      "case": "c_4097_1_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e5 T4097 nk128 nv128 ph0 266 xu 422 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2624598 (1ps)\n"
+    },
+    {
+      "case": "c_4097_1_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e6 T4097 nk128 nv128 ph0 319 xu 121 h0 75 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2642112 (1ps)\n"
+    },
+    {
+      "case": "c_4097_1_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e7 T4097 nk128 nv128 ph0 403 xu 706 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2041632 (1ps)\n"
+    },
+    {
+      "case": "c_4097_2_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e0 T4097 nk128 nv128 ph0 4 xu 48 h0 75 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2144214 (1ps)\n"
+    },
+    {
+      "case": "c_4097_2_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e1 T4097 nk128 nv128 ph0 709 xu 530 h0 68 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2460300 (1ps)\n"
+    },
+    {
+      "case": "c_4097_2_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e2 T4097 nk128 nv128 ph0 161 xu 259 h0 75 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2361888 (1ps)\n"
+    },
+    {
+      "case": "c_4097_2_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e3 T4097 nk128 nv128 ph0 478 xu 155 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2208432 (1ps)\n"
+    },
+    {
+      "case": "c_4097_2_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e4 T4097 nk128 nv128 ph0 169 xu 533 h0 75 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2311848 (1ps)\n"
+    },
+    {
+      "case": "c_4097_2_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e5 T4097 nk128 nv128 ph0 710 xu 234 h0 75 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2181744 (1ps)\n"
+    },
+    {
+      "case": "c_4097_2_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e6 T4097 nk128 nv128 ph0 623 xu 127 h0 75 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2133372 (1ps)\n"
+    },
+    {
+      "case": "c_4097_2_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e7 T4097 nk128 nv128 ph0 356 xu 516 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2403588 (1ps)\n"
+    },
+    {
+      "case": "c_4097_3_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e0 T4097 nk128 nv128 ph0 242 xu 101 h0 75 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2612088 (1ps)\n"
+    },
+    {
+      "case": "c_4097_3_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e1 T4097 nk128 nv128 ph0 411 xu 624 h0 70 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2476980 (1ps)\n"
+    },
+    {
+      "case": "c_4097_3_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e2 T4097 nk128 nv128 ph0 656 xu 675 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2124198 (1ps)\n"
+    },
+    {
+      "case": "c_4097_3_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e3 T4097 nk128 nv128 ph0 82 xu 677 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2215104 (1ps)\n"
+    },
+    {
+      "case": "c_4097_3_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e4 T4097 nk128 nv128 ph0 309 xu 394 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2382738 (1ps)\n"
+    },
+    {
+      "case": "c_4097_3_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e5 T4097 nk128 nv128 ph0 226 xu 191 h0 68 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2614590 (1ps)\n"
+    },
+    {
+      "case": "c_4097_3_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e6 T4097 nk128 nv128 ph0 665 xu 489 h0 75 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2428608 (1ps)\n"
+    },
+    {
+      "case": "c_4097_3_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e7 T4097 nk128 nv128 ph0 753 xu 612 h0 68 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2664630 (1ps)\n"
+    },
+    {
+      "case": "c_4300_0_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e0 T4300 nk144 nv144 ph0 576 xu 288 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2461968 (1ps)\n"
+    },
+    {
+      "case": "c_4300_0_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e1 T4300 nk144 nv144 ph0 425 xu 10 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2637108 (1ps)\n"
+    },
+    {
+      "case": "c_4300_0_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e2 T4300 nk144 nv144 ph0 53 xu 574 h0 75 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2358552 (1ps)\n"
+    },
+    {
+      "case": "c_4300_0_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e3 T4300 nk144 nv144 ph0 393 xu 291 h0 75 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2328528 (1ps)\n"
+    },
+    {
+      "case": "c_4300_0_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e4 T4300 nk144 nv144 ph0 763 xu 261 h0 75 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2185914 (1ps)\n"
+    },
+    {
+      "case": "c_4300_0_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e5 T4300 nk144 nv144 ph0 611 xu 575 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2517012 (1ps)\n"
+    },
+    {
+      "case": "c_4300_0_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e6 T4300 nk144 nv144 ph0 351 xu 718 h0 75 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2357718 (1ps)\n"
+    },
+    {
+      "case": "c_4300_0_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e7 T4300 nk144 nv144 ph0 420 xu 208 h0 75 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2515344 (1ps)\n"
+    },
+    {
+      "case": "c_4300_1_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e0 T4300 nk138 nv142 ph0 443 xu 715 h0 75 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2083332 (1ps)\n"
+    },
+    {
+      "case": "c_4300_1_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e1 T4300 nk138 nv142 ph0 519 xu 190 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2514510 (1ps)\n"
+    },
+    {
+      "case": "c_4300_1_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e2 T4300 nk138 nv136 ph0 736 xu 152 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2563716 (1ps)\n"
+    },
+    {
+      "case": "c_4300_1_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e3 T4300 nk138 nv136 ph0 29 xu 304 h0 75 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2290998 (1ps)\n"
+    },
+    {
+      "case": "c_4300_1_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e4 T4300 nk137 nv136 ph0 319 xu 553 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2068320 (1ps)\n"
+    },
+    {
+      "case": "c_4300_1_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e5 T4300 nk137 nv136 ph0 198 xu 338 h0 68 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2488656 (1ps)\n"
+    },
+    {
+      "case": "c_4300_1_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e6 T4300 nk137 nv136 ph0 645 xu 190 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2286828 (1ps)\n"
+    },
+    {
+      "case": "c_4300_1_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e7 T4300 nk137 nv136 ph0 646 xu 418 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2617092 (1ps)\n"
+    },
+    {
+      "case": "c_4300_2_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e0 T4300 nk128 nv128 ph0 690 xu 51 h0 75 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2286828 (1ps)\n"
+    },
+    {
+      "case": "c_4300_2_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e1 T4300 nk128 nv128 ph0 622 xu 226 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2311014 (1ps)\n"
+    },
+    {
+      "case": "c_4300_2_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e2 T4300 nk128 nv128 ph0 700 xu 739 h0 75 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2210100 (1ps)\n"
+    },
+    {
+      "case": "c_4300_2_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e3 T4300 nk128 nv128 ph0 444 xu 381 h0 68 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2545368 (1ps)\n"
+    },
+    {
+      "case": "c_4300_2_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e4 T4300 nk128 nv128 ph0 319 xu 609 h0 68 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2051640 (1ps)\n"
+    },
+    {
+      "case": "c_4300_2_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e5 T4300 nk128 nv128 ph0 101 xu 562 h0 68 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2057478 (1ps)\n"
+    },
+    {
+      "case": "c_4300_2_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e6 T4300 nk128 nv128 ph0 635 xu 513 h0 70 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2216772 (1ps)\n"
+    },
+    {
+      "case": "c_4300_2_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e7 T4300 nk128 nv128 ph0 130 xu 335 h0 68 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2637942 (1ps)\n"
+    },
+    {
+      "case": "c_4300_3_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e0 T4300 nk128 nv128 ph0 747 xu 333 h0 75 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2317686 (1ps)\n"
+    },
+    {
+      "case": "c_4300_3_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e1 T4300 nk128 nv128 ph0 741 xu 651 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2326860 (1ps)\n"
+    },
+    {
+      "case": "c_4300_3_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e2 T4300 nk128 nv128 ph0 19 xu 644 h0 68 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2240124 (1ps)\n"
+    },
+    {
+      "case": "c_4300_3_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e3 T4300 nk128 nv128 ph0 536 xu 88 h0 75 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2497830 (1ps)\n"
+    },
+    {
+      "case": "c_4300_3_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e4 T4300 nk128 nv128 ph0 468 xu 132 h0 75 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2065818 (1ps)\n"
+    },
+    {
+      "case": "c_4300_3_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e5 T4300 nk128 nv128 ph0 684 xu 191 h0 75 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2039964 (1ps)\n"
+    },
+    {
+      "case": "c_4300_3_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e6 T4300 nk128 nv128 ph0 432 xu 528 h0 68 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2471142 (1ps)\n"
+    },
+    {
+      "case": "c_4300_3_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e7 T4300 nk128 nv128 ph0 2 xu 121 h0 68 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2335200 (1ps)\n"
+    },
+    {
+      "case": "c_4500_0_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e0 T4500 nk144 nv144 ph0 26 xu 655 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2215104 (1ps)\n"
+    },
+    {
+      "case": "c_4500_0_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e1 T4500 nk144 nv144 ph0 595 xu 589 h0 75 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2110854 (1ps)\n"
+    },
+    {
+      "case": "c_4500_0_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e2 T4500 nk144 nv144 ph0 187 xu 503 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2472810 (1ps)\n"
+    },
+    {
+      "case": "c_4500_0_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e3 T4500 nk144 nv144 ph0 471 xu 652 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2065818 (1ps)\n"
+    },
+    {
+      "case": "c_4500_0_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e4 T4500 nk144 nv144 ph0 467 xu 366 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2089170 (1ps)\n"
+    },
+    {
+      "case": "c_4500_0_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e5 T4500 nk144 nv144 ph0 157 xu 471 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2089170 (1ps)\n"
+    },
+    {
+      "case": "c_4500_0_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e6 T4500 nk144 nv144 ph0 292 xu 560 h0 68 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2225112 (1ps)\n"
+    },
+    {
+      "case": "c_4500_0_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e7 T4500 nk144 nv144 ph0 415 xu 61 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2376066 (1ps)\n"
+    },
+    {
+      "case": "c_4500_1_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e0 T4500 nk144 nv144 ph0 442 xu 107 h0 75 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2587068 (1ps)\n"
+    },
+    {
+      "case": "c_4500_1_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e1 T4500 nk144 nv144 ph0 299 xu 537 h0 68 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2095842 (1ps)\n"
+    },
+    {
+      "case": "c_4500_1_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e2 T4500 nk144 nv144 ph0 120 xu 2 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2315184 (1ps)\n"
+    },
+    {
+      "case": "c_4500_1_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e3 T4500 nk144 nv144 ph0 594 xu 501 h0 70 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2471142 (1ps)\n"
+    },
+    {
+      "case": "c_4500_1_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e4 T4500 nk144 nv144 ph0 122 xu 655 h0 68 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2613756 (1ps)\n"
+    },
+    {
+      "case": "c_4500_1_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e5 T4500 nk144 nv144 ph0 472 xu 521 h0 75 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2612922 (1ps)\n"
+    },
+    {
+      "case": "c_4500_1_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e6 T4500 nk144 nv144 ph0 416 xu 571 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2569554 (1ps)\n"
+    },
+    {
+      "case": "c_4500_1_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e7 T4500 nk144 nv144 ph0 272 xu 158 h0 75 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2235954 (1ps)\n"
+    },
+    {
+      "case": "c_4500_2_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e0 T4500 nk144 nv144 ph0 475 xu 352 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2129202 (1ps)\n"
+    },
+    {
+      "case": "c_4500_2_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e1 T4500 nk144 nv144 ph0 735 xu 621 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2175072 (1ps)\n"
+    },
+    {
+      "case": "c_4500_2_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e2 T4500 nk144 nv144 ph0 560 xu 737 h0 68 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2269314 (1ps)\n"
+    },
+    {
+      "case": "c_4500_2_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e3 T4500 nk144 nv144 ph0 248 xu 282 h0 68 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2102514 (1ps)\n"
+    },
+    {
+      "case": "c_4500_2_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e4 T4500 nk144 nv144 ph0 10 xu 726 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2244294 (1ps)\n"
+    },
+    {
+      "case": "c_4500_2_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e5 T4500 nk144 nv144 ph0 249 xu 740 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2619594 (1ps)\n"
+    },
+    {
+      "case": "c_4500_2_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e6 T4500 nk144 nv144 ph0 521 xu 166 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2437782 (1ps)\n"
+    },
+    {
+      "case": "c_4500_2_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e7 T4500 nk144 nv144 ph0 613 xu 270 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2674638 (1ps)\n"
+    },
+    {
+      "case": "c_4500_3_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e0 T4500 nk131 nv136 ph0 242 xu 479 h0 70 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2383572 (1ps)\n"
+    },
+    {
+      "case": "c_4500_3_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e1 T4500 nk131 nv136 ph0 606 xu 618 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2666298 (1ps)\n"
+    },
+    {
+      "case": "c_4500_3_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e2 T4500 nk131 nv130 ph0 284 xu 645 h0 68 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2084166 (1ps)\n"
+    },
+    {
+      "case": "c_4500_3_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e3 T4500 nk131 nv130 ph0 325 xu 317 h0 70 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2200926 (1ps)\n"
+    },
+    {
+      "case": "c_4500_3_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e4 T4500 nk130 nv128 ph0 251 xu 540 h0 70 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2424438 (1ps)\n"
+    },
+    {
+      "case": "c_4500_3_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e5 T4500 nk130 nv128 ph0 394 xu 203 h0 68 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2145882 (1ps)\n"
+    },
+    {
+      "case": "c_4500_3_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e6 T4500 nk130 nv128 ph0 534 xu 224 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2237622 (1ps)\n"
+    },
+    {
+      "case": "c_4500_3_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e7 T4500 nk130 nv128 ph0 21 xu 158 h0 68 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2267646 (1ps)\n"
+    },
+    {
+      "case": "c_6000_0_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e0 T6000 nk192 nv192 ph0 357 xu 242 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2439450 (1ps)\n"
+    },
+    {
+      "case": "c_6000_0_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e1 T6000 nk192 nv192 ph0 691 xu 405 h0 68 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2648784 (1ps)\n"
+    },
+    {
+      "case": "c_6000_0_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e2 T6000 nk192 nv192 ph0 5 xu 204 h0 75 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2720508 (1ps)\n"
+    },
+    {
+      "case": "c_6000_0_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e3 T6000 nk192 nv192 ph0 413 xu 567 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2641278 (1ps)\n"
+    },
+    {
+      "case": "c_6000_0_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e4 T6000 nk192 nv192 ph0 111 xu 670 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2502834 (1ps)\n"
+    },
+    {
+      "case": "c_6000_0_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e5 T6000 nk192 nv192 ph0 133 xu 273 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2246796 (1ps)\n"
+    },
+    {
+      "case": "c_6000_0_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e6 T6000 nk192 nv192 ph0 608 xu 613 h0 70 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2323524 (1ps)\n"
+    },
+    {
+      "case": "c_6000_0_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e7 T6000 nk192 nv192 ph0 25 xu 165 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2353548 (1ps)\n"
+    },
+    {
+      "case": "c_6000_1_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e0 T6000 nk192 nv192 ph0 652 xu 440 h0 68 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2171736 (1ps)\n"
+    },
+    {
+      "case": "c_6000_1_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e1 T6000 nk192 nv192 ph0 754 xu 525 h0 75 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2773884 (1ps)\n"
+    },
+    {
+      "case": "c_6000_1_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e2 T6000 nk192 nv192 ph0 419 xu 549 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2762208 (1ps)\n"
+    },
+    {
+      "case": "c_6000_1_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e3 T6000 nk192 nv192 ph0 625 xu 469 h0 68 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2456964 (1ps)\n"
+    },
+    {
+      "case": "c_6000_1_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e4 T6000 nk192 nv192 ph0 334 xu 184 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2495328 (1ps)\n"
+    },
+    {
+      "case": "c_6000_1_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e5 T6000 nk192 nv192 ph0 296 xu 447 h0 68 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2702994 (1ps)\n"
+    },
+    {
+      "case": "c_6000_1_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e6 T6000 nk192 nv192 ph0 343 xu 253 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2773050 (1ps)\n"
+    },
+    {
+      "case": "c_6000_1_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e7 T6000 nk192 nv192 ph0 563 xu 638 h0 75 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2392746 (1ps)\n"
+    },
+    {
+      "case": "c_6000_2_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e0 T6000 nk190 nv192 ph0 629 xu 226 h0 68 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2492826 (1ps)\n"
+    },
+    {
+      "case": "c_6000_2_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e1 T6000 nk190 nv192 ph0 70 xu 63 h0 70 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2431944 (1ps)\n"
+    },
+    {
+      "case": "c_6000_2_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e2 T6000 nk190 nv192 ph0 290 xu 203 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2476146 (1ps)\n"
+    },
+    {
+      "case": "c_6000_2_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e3 T6000 nk190 nv192 ph0 412 xu 622 h0 75 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2414430 (1ps)\n"
+    },
+    {
+      "case": "c_6000_2_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e4 T6000 nk190 nv192 ph0 679 xu 492 h0 75 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2657124 (1ps)\n"
+    },
+    {
+      "case": "c_6000_2_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e5 T6000 nk190 nv192 ph0 555 xu 645 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2299338 (1ps)\n"
+    },
+    {
+      "case": "c_6000_2_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e6 T6000 nk190 nv184 ph0 676 xu 279 h0 68 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2223444 (1ps)\n"
+    },
+    {
+      "case": "c_6000_2_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e7 T6000 nk190 nv184 ph0 461 xu 727 h0 75 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2279322 (1ps)\n"
+    },
+    {
+      "case": "c_6000_3_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e0 T6000 nk176 nv176 ph0 745 xu 485 h0 75 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2131704 (1ps)\n"
+    },
+    {
+      "case": "c_6000_3_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e1 T6000 nk176 nv176 ph0 90 xu 638 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2472810 (1ps)\n"
+    },
+    {
+      "case": "c_6000_3_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e2 T6000 nk176 nv176 ph0 87 xu 558 h0 70 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2370228 (1ps)\n"
+    },
+    {
+      "case": "c_6000_3_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e3 T6000 nk176 nv176 ph0 401 xu 487 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2758872 (1ps)\n"
+    },
+    {
+      "case": "c_6000_3_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e4 T6000 nk176 nv176 ph0 742 xu 142 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2327694 (1ps)\n"
+    },
+    {
+      "case": "c_6000_3_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e5 T6000 nk176 nv176 ph0 731 xu 293 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2737188 (1ps)\n"
+    },
+    {
+      "case": "c_6000_3_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e6 T6000 nk176 nv176 ph0 747 xu 240 h0 75 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2442786 (1ps)\n"
+    },
+    {
+      "case": "c_6000_3_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e7 T6000 nk176 nv176 ph0 64 xu 387 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2225946 (1ps)\n"
+    },
+    {
+      "case": "c_700_0_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e0 T700 nk32 nv32 ph0 665 xu 258 h0 75 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2305176 (1ps)\n"
+    },
+    {
+      "case": "c_700_0_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e1 T700 nk32 nv32 ph0 567 xu 290 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2375232 (1ps)\n"
+    },
+    {
+      "case": "c_700_0_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e2 T700 nk32 nv32 ph0 104 xu 144 h0 68 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2141712 (1ps)\n"
+    },
+    {
+      "case": "c_700_0_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e3 T700 nk32 nv32 ph0 635 xu 127 h0 68 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1964904 (1ps)\n"
+    },
+    {
+      "case": "c_700_0_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e4 T700 nk32 nv32 ph0 701 xu 677 h0 70 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2250132 (1ps)\n"
+    },
+    {
+      "case": "c_700_0_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e5 T700 nk32 nv32 ph0 479 xu 306 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1995762 (1ps)\n"
+    },
+    {
+      "case": "c_700_0_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e6 T700 nk32 nv32 ph0 219 xu 204 h0 75 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2020782 (1ps)\n"
+    },
+    {
+      "case": "c_700_0_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e7 T700 nk32 nv32 ph0 710 xu 452 h0 75 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2003268 (1ps)\n"
+    },
+    {
+      "case": "c_700_1_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e0 T700 nk24 nv24 ph0 128 xu 85 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1914864 (1ps)\n"
+    },
+    {
+      "case": "c_700_1_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e1 T700 nk24 nv24 ph0 692 xu 666 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2484486 (1ps)\n"
+    },
+    {
+      "case": "c_700_1_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e2 T700 nk24 nv24 ph0 566 xu 376 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2089170 (1ps)\n"
+    },
+    {
+      "case": "c_700_1_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e3 T700 nk24 nv24 ph0 152 xu 673 h0 70 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2494494 (1ps)\n"
+    },
+    {
+      "case": "c_700_1_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e4 T700 nk23 nv24 ph0 601 xu 476 h0 75 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2266812 (1ps)\n"
+    },
+    {
+      "case": "c_700_1_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e5 T700 nk23 nv24 ph0 228 xu 354 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1979916 (1ps)\n"
+    },
+    {
+      "case": "c_700_1_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e6 T700 nk23 nv22 ph0 232 xu 595 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1924872 (1ps)\n"
+    },
+    {
+      "case": "c_700_1_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e7 T700 nk23 nv22 ph0 688 xu 591 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2260974 (1ps)\n"
+    },
+    {
+      "case": "c_700_2_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e0 T700 nk16 nv16 ph0 267 xu 555 h0 75 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2251800 (1ps)\n"
+    },
+    {
+      "case": "c_700_2_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e1 T700 nk16 nv16 ph0 561 xu 628 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2366058 (1ps)\n"
+    },
+    {
+      "case": "c_700_2_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e2 T700 nk16 nv16 ph0 280 xu 270 h0 70 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2365224 (1ps)\n"
+    },
+    {
+      "case": "c_700_2_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e3 T700 nk16 nv16 ph0 591 xu 736 h0 75 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1936548 (1ps)\n"
+    },
+    {
+      "case": "c_700_2_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e4 T700 nk16 nv16 ph0 699 xu 712 h0 70 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1875666 (1ps)\n"
+    },
+    {
+      "case": "c_700_2_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e5 T700 nk16 nv16 ph0 141 xu 516 h0 68 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1961568 (1ps)\n"
+    },
+    {
+      "case": "c_700_2_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e6 T700 nk16 nv16 ph0 417 xu 295 h0 75 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1974078 (1ps)\n"
+    },
+    {
+      "case": "c_700_2_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e7 T700 nk16 nv16 ph0 298 xu 28 h0 68 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2382738 (1ps)\n"
+    },
+    {
+      "case": "c_700_3_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e0 T700 nk16 nv16 ph0 324 xu 23 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1904022 (1ps)\n"
+    },
+    {
+      "case": "c_700_3_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e1 T700 nk16 nv16 ph0 585 xu 106 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2293500 (1ps)\n"
+    },
+    {
+      "case": "c_700_3_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e2 T700 nk16 nv16 ph0 158 xu 517 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2059980 (1ps)\n"
+    },
+    {
+      "case": "c_700_3_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e3 T700 nk16 nv16 ph0 647 xu 38 h0 68 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2266812 (1ps)\n"
+    },
+    {
+      "case": "c_700_3_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e4 T700 nk16 nv16 ph0 729 xu 317 h0 75 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2105850 (1ps)\n"
+    },
+    {
+      "case": "c_700_3_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e5 T700 nk16 nv16 ph0 763 xu 184 h0 75 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1999098 (1ps)\n"
+    },
+    {
+      "case": "c_700_3_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e6 T700 nk16 nv16 ph0 424 xu 181 h0 75 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1941552 (1ps)\n"
+    },
+    {
+      "case": "c_700_3_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e7 T700 nk16 nv16 ph0 763 xu 735 h0 68 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1898184 (1ps)\n"
+    },
+    {
+      "case": "c_77_0_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e0 T77 nk10 nv15 ph0 592 xu 100 h0 75 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2016612 (1ps)\n"
+    },
+    {
+      "case": "c_77_0_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e1 T77 nk10 nv14 ph0 485 xu 68 h0 68 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2336868 (1ps)\n"
+    },
+    {
+      "case": "c_77_0_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e2 T77 nk10 nv8 ph0 313 xu 689 h0 68 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2220108 (1ps)\n"
+    },
+    {
+      "case": "c_77_0_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e3 T77 nk10 nv8 ph0 153 xu 300 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1984920 (1ps)\n"
+    },
+    {
+      "case": "c_77_0_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e4 T77 nk10 nv8 ph0 212 xu 501 h0 75 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2437782 (1ps)\n"
+    },
+    {
+      "case": "c_77_0_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e5 T77 nk9 nv8 ph0 342 xu 382 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1889844 (1ps)\n"
+    },
+    {
+      "case": "c_77_0_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e6 T77 nk9 nv8 ph0 28 xu 121 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2381070 (1ps)\n"
+    },
+    {
+      "case": "c_77_0_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e7 T77 nk9 nv8 ph0 392 xu 150 h0 75 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1922370 (1ps)\n"
+    },
+    {
+      "case": "c_77_1_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e0 T77 nk0 nv0 ph0 276 xu 19 h0 68 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2270148 (1ps)\n"
+    },
+    {
+      "case": "c_77_1_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e1 T77 nk0 nv0 ph0 110 xu 614 h0 68 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2129202 (1ps)\n"
+    },
+    {
+      "case": "c_77_1_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e2 T77 nk0 nv0 ph0 631 xu 677 h0 75 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2455296 (1ps)\n"
+    },
+    {
+      "case": "c_77_1_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e3 T77 nk0 nv0 ph0 62 xu 464 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2439450 (1ps)\n"
+    },
+    {
+      "case": "c_77_1_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e4 T77 nk0 nv0 ph0 602 xu 282 h0 75 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2085834 (1ps)\n"
+    },
+    {
+      "case": "c_77_1_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e5 T77 nk0 nv0 ph0 692 xu 581 h0 68 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2351880 (1ps)\n"
+    },
+    {
+      "case": "c_77_1_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e6 T77 nk0 nv0 ph0 240 xu 59 h0 68 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2326026 (1ps)\n"
+    },
+    {
+      "case": "c_77_1_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e7 T77 nk0 nv0 ph0 124 xu 528 h0 70 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1933212 (1ps)\n"
+    },
+    {
+      "case": "c_77_2_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e0 T77 nk0 nv0 ph0 220 xu 368 h0 70 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2039964 (1ps)\n"
+    },
+    {
+      "case": "c_77_2_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e1 T77 nk0 nv0 ph0 247 xu 154 h0 75 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2339370 (1ps)\n"
+    },
+    {
+      "case": "c_77_2_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e2 T77 nk0 nv0 ph0 202 xu 47 h0 75 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2168400 (1ps)\n"
+    },
+    {
+      "case": "c_77_2_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e3 T77 nk0 nv0 ph0 201 xu 9 h0 68 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2337702 (1ps)\n"
+    },
+    {
+      "case": "c_77_2_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e4 T77 nk0 nv0 ph0 723 xu 344 h0 75 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2427774 (1ps)\n"
+    },
+    {
+      "case": "c_77_2_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e5 T77 nk0 nv0 ph0 522 xu 532 h0 75 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1853148 (1ps)\n"
+    },
+    {
+      "case": "c_77_2_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e6 T77 nk0 nv0 ph0 83 xu 316 h0 70 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2077494 (1ps)\n"
+    },
+    {
+      "case": "c_77_2_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e7 T77 nk0 nv0 ph0 265 xu 451 h0 68 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1824792 (1ps)\n"
+    },
+    {
+      "case": "c_77_3_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e0 T77 nk0 nv0 ph0 410 xu 580 h0 68 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2162562 (1ps)\n"
+    },
+    {
+      "case": "c_77_3_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e1 T77 nk0 nv0 ph0 656 xu 81 h0 75 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2087502 (1ps)\n"
+    },
+    {
+      "case": "c_77_3_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e2 T77 nk0 nv0 ph0 551 xu 718 h0 68 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2245962 (1ps)\n"
+    },
+    {
+      "case": "c_77_3_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e3 T77 nk0 nv0 ph0 71 xu 579 h0 75 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2364390 (1ps)\n"
+    },
+    {
+      "case": "c_77_3_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e4 T77 nk0 nv0 ph0 42 xu 704 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 1853982 (1ps)\n"
+    },
+    {
+      "case": "c_77_3_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e5 T77 nk0 nv0 ph0 113 xu 401 h0 75 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2160894 (1ps)\n"
+    },
+    {
+      "case": "c_77_3_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e6 T77 nk0 nv0 ph0 730 xu 463 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2405256 (1ps)\n"
+    },
+    {
+      "case": "c_77_3_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e7 T77 nk0 nv0 ph0 12 xu 625 h0 68 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2285994 (1ps)\n"
+    },
+    {
+      "case": "c_8192_0_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e0 T8192 nk256 nv256 ph0 486 xu 278 h0 70 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2433612 (1ps)\n"
+    },
+    {
+      "case": "c_8192_0_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e1 T8192 nk256 nv256 ph0 274 xu 140 h0 68 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2490324 (1ps)\n"
+    },
+    {
+      "case": "c_8192_0_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e2 T8192 nk256 nv256 ph0 720 xu 265 h0 70 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2646282 (1ps)\n"
+    },
+    {
+      "case": "c_8192_0_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e3 T8192 nk256 nv256 ph0 332 xu 693 h0 68 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2447790 (1ps)\n"
+    },
+    {
+      "case": "c_8192_0_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e4 T8192 nk256 nv256 ph0 594 xu 428 h0 68 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2336034 (1ps)\n"
+    },
+    {
+      "case": "c_8192_0_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e5 T8192 nk256 nv256 ph0 466 xu 586 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2602914 (1ps)\n"
+    },
+    {
+      "case": "c_8192_0_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e6 T8192 nk256 nv256 ph0 279 xu 46 h0 68 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2279322 (1ps)\n"
+    },
+    {
+      "case": "c_8192_0_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s0 e7 T8192 nk256 nv256 ph0 293 xu 420 h0 75 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2684646 (1ps)\n"
+    },
+    {
+      "case": "c_8192_1_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e0 T8192 nk256 nv256 ph0 183 xu 551 h0 68 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2483652 (1ps)\n"
+    },
+    {
+      "case": "c_8192_1_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e1 T8192 nk256 nv256 ph0 420 xu 93 h0 68 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2841438 (1ps)\n"
+    },
+    {
+      "case": "c_8192_1_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e2 T8192 nk256 nv256 ph0 550 xu 420 h0 75 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2754702 (1ps)\n"
+    },
+    {
+      "case": "c_8192_1_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e3 T8192 nk256 nv256 ph0 496 xu 270 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2587068 (1ps)\n"
+    },
+    {
+      "case": "c_8192_1_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e4 T8192 nk256 nv256 ph0 106 xu 508 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2841438 (1ps)\n"
+    },
+    {
+      "case": "c_8192_1_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e5 T8192 nk256 nv256 ph0 547 xu 206 h0 75 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2693820 (1ps)\n"
+    },
+    {
+      "case": "c_8192_1_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e6 T8192 nk256 nv256 ph0 329 xu 381 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2658792 (1ps)\n"
+    },
+    {
+      "case": "c_8192_1_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s1 e7 T8192 nk256 nv256 ph0 466 xu 626 h0 70 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2787228 (1ps)\n"
+    },
+    {
+      "case": "c_8192_2_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e0 T8192 nk256 nv256 ph0 105 xu 301 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2787228 (1ps)\n"
+    },
+    {
+      "case": "c_8192_2_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e1 T8192 nk256 nv256 ph0 727 xu 132 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2623764 (1ps)\n"
+    },
+    {
+      "case": "c_8192_2_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e2 T8192 nk256 nv256 ph0 666 xu 374 h0 68 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2645448 (1ps)\n"
+    },
+    {
+      "case": "c_8192_2_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e3 T8192 nk256 nv256 ph0 754 xu 176 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2282658 (1ps)\n"
+    },
+    {
+      "case": "c_8192_2_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e4 T8192 nk256 nv256 ph0 743 xu 383 h0 75 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2886474 (1ps)\n"
+    },
+    {
+      "case": "c_8192_2_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e5 T8192 nk256 nv256 ph0 514 xu 641 h0 75 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2393580 (1ps)\n"
+    },
+    {
+      "case": "c_8192_2_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e6 T8192 nk256 nv256 ph0 75 xu 310 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2441952 (1ps)\n"
+    },
+    {
+      "case": "c_8192_2_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s2 e7 T8192 nk256 nv256 ph0 644 xu 525 h0 68 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2324358 (1ps)\n"
+    },
+    {
+      "case": "c_8192_3_0.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e0 T8192 nk256 nv256 ph0 206 xu 483 h0 75 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2472810 (1ps)\n"
+    },
+    {
+      "case": "c_8192_3_1.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e1 T8192 nk256 nv256 ph0 146 xu 621 h0 68 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2489490 (1ps)\n"
+    },
+    {
+      "case": "c_8192_3_2.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e2 T8192 nk256 nv256 ph0 249 xu 26 h0 70 rc 4 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2736354 (1ps)\n"
+    },
+    {
+      "case": "c_8192_3_3.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e3 T8192 nk256 nv256 ph0 665 xu 5 h0 70 rc 3 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2700492 (1ps)\n"
+    },
+    {
+      "case": "c_8192_3_4.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e4 T8192 nk256 nv256 ph0 271 xu 551 h0 70 rc 4 ld 5 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2534526 (1ps)\n"
+    },
+    {
+      "case": "c_8192_3_5.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e5 T8192 nk256 nv256 ph0 219 xu 222 h0 70 rc 3 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2552040 (1ps)\n"
+    },
+    {
+      "case": "c_8192_3_6.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e6 T8192 nk256 nv256 ph0 139 xu 605 h0 70 rc 3 ld 2 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2557044 (1ps)\n"
+    },
+    {
+      "case": "c_8192_3_7.txt",
+      "exit": 0,
+      "output": "PASS landing_cal s3 e7 T8192 nk256 nv256 ph0 0 xu 555 h0 68 rc 4 ld 3 errors 0\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv:67: $finish called at 2575392 (1ps)\n"
+    }
+  ],
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_landing_cal.sv": "39e7a3c43d55baee26dc650e8c1205511bf8755427617f0a3d926dcef8beb0ad",
+    "rtl/test/qwen_static_kv/tb_qkd_kv_context_landing_cal.sv": "59d231787e8f2318575db4acefa984155517ff8371dcacdf0b177783da1e7395"
+  },
+  "scope": "actual landing calendar and registered idle; source golden consumer schedule, not physical/native-die qualification"
+}

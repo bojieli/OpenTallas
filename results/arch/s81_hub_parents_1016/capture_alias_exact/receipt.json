@@ -1,0 +1,34 @@
+{
+  "adopted": false,
+  "physical_qualified": false,
+  "alias_method": "Literal same-cone module bodies with east/west R0 physical identities; module-name-only equivalence asserted",
+  "alias_cone_sha256": "f8ad617cafabc6ed28de6fdb5c93ff0cabe689aba4367a40db8b5d3c193e98bc",
+  "base_unit": "oth-ubuntu-35087-1792167479",
+  "exact_cases": 9,
+  "exact_mismatches": 0,
+  "exact_timeouts": 0,
+  "children": 53,
+  "masters": 14,
+  "clock_entries": 70,
+  "normal_edges_added": 0,
+  "mutants": {
+    "status": {
+      "caught": true,
+      "eq_mismatches": 2121,
+      "dut_fault": 1,
+      "timeouts": 0,
+      "unit": "oth-ubuntu-52119-1792167622"
+    },
+    "kswap": {
+      "caught": true,
+      "eq_mismatches": 121697,
+      "mismatching_roots": 128,
+      "timeouts": 0,
+      "unit": "oth-ubuntu-52169-1792167623"
+    }
+  },
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv": "77e04c6df1dcc9802f52c1530441c3fcee92e47b906a5e2c6b330d9d1e326997",
+    "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_split_candidate.sv": "5eb59d47f4379cbf01d98e24c9517fb69fabf2b6e99700ebc3e6196b86dc62c6"
+  }
+}

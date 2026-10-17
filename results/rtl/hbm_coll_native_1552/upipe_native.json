@@ -1,0 +1,37 @@
+{
+  "cell": "ot_hgi_coll_uop_pipe",
+  "view": "physical/ref_tile/hcoll_v6_upipe/views/ot_hgi_coll_uop_pipe",
+  "lib_cell": "ot_hgi_coll_uop_pipe",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 243.6,
+  "spread_ps": 65.5,
+  "outputs": 3072,
+  "inputs": 1536,
+  "launch_ps": 303.8,
+  "launch_pin": "uop_d2[619]",
+  "capture_ps": 372.4,
+  "capture_pin": "uop_d1[1400]",
+  "launch_over": 52,
+  "capture_over": 1458,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 303.84244 > 220 (52 pins); capture 372.43177 > 190 (1458 pins)",
+  "audited_at": "2026-10-16T15:54:53.278062-07:00",
+  "source_commit": "8c87a8df6b6baf2db29abd44c67dd5a23233a2a2",
+  "job": "hcoll_v6_upipe-c1045-1a3b52793",
+  "thresholds_ps": {
+    "launch": 220,
+    "capture": 190,
+    "spread": 80
+  },
+  "spread_pass": true,
+  "binding_qualified": false,
+  "sha256": {
+    "ot_hgi_coll_uop_pipe_tt.lib": "c3851ef6b506d7404648864c183409efd89d43fe16ea76e85609675f502b8644",
+    "insertion.json": "65103a65cc93a450d0c72237c21ac977da0bc76b508e8d32b6939714445ef506"
+  }
+}

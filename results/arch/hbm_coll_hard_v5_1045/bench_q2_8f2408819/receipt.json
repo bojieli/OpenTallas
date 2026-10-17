@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.hbm.coll_hard_v5_bench_receipt.v1",
+ "status": "GATE_PASS",
+ "shape": "q2 (ot_hfd_coll_q2_hard_v5 qid=1 vs production ot_hfd_coll_q2_static_host_v4 QID=1, HOST target 53)",
+ "source_commit": "8f2408819",
+ "sources_sha256_verified_against_commit": true,
+ "tool": "Verilator 5.050 (--binary --timing -O1)",
+ "host": "ot-agidock128 unit oth-ubuntu-2778055-1792173063, ot-run exit 0",
+ "remote_dir": "/srv/opentallas-scratch/claude/hnl-coll-1045/out_q2_8f2408819",
+ "programme": "actual HOST F20 frames (36 rows x 7 frames, 55-edge drain reservations, 64-row descriptor scan) of the host_v4 native reduction programme + foreign-target malformed frames (identity strap) + halt-row delivery base",
+ "lockstep": "every cycle from reset release (2,411 cycles) all non-fault outputs identical: configured/init_busy/program_fault/busy/done, inj rd/idx/addr, del valid/flit/obase, rr, tx valid/flit, retry, ring cw/ccw, vm_rq, vm_kq, done, stat_cycles",
+ "scenarios": {
+  "0": "normal: no fault either side; reduce publication at host-launch 36 with exact FP32 sums, halt 40",
+  "1": "unexpected RX rail0: ref 2367 hard 2367 (delta 0), cause 0x0040 link0",
+  "2": "unexpected rc_v: 2366/2366 (0), cause 0x0004 protocol",
+  "3": "q2 illegal tkm start: 2371/2371 (0), first cause 0x2000 tkm, then protocol",
+  "4": "capture reservation without source (VM0): 2372/2373 (+1 pin_v2), cause 0x0008 qslots capture",
+  "5": "q2 arg capture reservation: 2372/2371 (-1), first cause 0x1000 arg, then protocol",
+  "6": "own-target frame with illegal segment 7: 2347/2347 (0), cause 0x0001 programme"
+ },
+ "mutants_rejected": {
+  "OT_COLL_V5_MUT_DROP_LINK (scen1)": "fault missing",
+  "OT_COLL_V5_MUT_NOMASK (scen0)": "lockstep: hgi_del_obase 0 vs 0x12345 after halt (unmasked issuer republishes the last row)",
+  "OT_COLL_V5_MUT_CAUSE_SWAP (scen4)": "visibility: first cause 0x0010 lacks bit3",
+  "OT_COLL_V5_MUT_DROP_TKM (scen3)": "fault edge 2372 vs 2371 (only the later protocol path remained)"
+ },
+ "scope": "RTL composition + exceptional fault ABI of the hard-hierarchy parent at q2 shape. Not physical: no child view/pin/clock qualification; hard children are simulated from their RTL."
+}

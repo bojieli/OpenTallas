@@ -1,0 +1,37 @@
+{
+  "cell": "ot_hgi_coll_ctl_v5_q2",
+  "view": "physical/ref_tile/hcoll_v5_ctl2/views/ot_hgi_coll_ctl_v5_q2",
+  "lib_cell": "ot_hgi_coll_ctl_v5_q2",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 221.4,
+  "spread_ps": 44.4,
+  "outputs": 1023,
+  "inputs": 1161,
+  "launch_ps": 194.8,
+  "launch_pin": "protocol_fault",
+  "capture_ps": 503.6,
+  "capture_pin": "vm_rv[2]",
+  "launch_over": 0,
+  "capture_over": 44,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "capture 503.64017 > 190 (44 pins)",
+  "audited_at": "2026-10-16T15:54:53.325630-07:00",
+  "source_commit": "8c87a8df6b6baf2db29abd44c67dd5a23233a2a2",
+  "job": "hcoll_v5_ctl2-c1045-1ae51f9c3",
+  "thresholds_ps": {
+    "launch": 220,
+    "capture": 190,
+    "spread": 80
+  },
+  "spread_pass": true,
+  "binding_qualified": false,
+  "sha256": {
+    "ot_hgi_coll_ctl_v5_q2_tt.lib": "d516fa858be33dcf52bea3183190c2fd077eb9dde36b547bcb02d727f5212cf8",
+    "insertion.json": "b9fdc7f4deb4fcb82f33b3c15f8d41c930543372cad9004d83512e9c78e2deb6"
+  }
+}

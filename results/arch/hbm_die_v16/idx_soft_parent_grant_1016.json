@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.hbm.die_grant.v1",
+  "issued_by": "H-DIE (Claude) 2026-10-16 ~11:55 PT",
+  "requested_by": "H-NETLIST/IDXP helper a274dbff814460195",
+  "plan": "results/arch/hbm_die_v15/core4_sfu2_b3624 (830.2 mm2), grants results/arch/hier_contract_1015/hbm_v15.json v8",
+  "decisions": {
+    "hb_idx_hierarchy": {
+      "verdict": "ACCEPTED: hb_idx is a SOFT die-level hierarchy with no view of its own; its hard children bind at their existing v8 slots",
+      "children": {
+        "idx_s0..idx_s3": "ONE hardened ot_hbm_idx_score_static cluster view, placed 4x with the v8 slot orients (MYR90/R270/R90/MXR90)",
+        "idx_q / idx_sel / idx_link / idx_op": "their tile views at the v8 slots",
+        "idx_ctl": "NEW pin-registered tile: calendar 1x256x256 SRAM, topk 8 tk2 lanes, vm_share 4 leaves, parent fault/calendar_fault glue"
+      },
+      "required_form": "die_case_v16 binds only top-level instances of the v16 source contract and does not descend a hierarchy. Deliver a v16 contract revision in which hb_idx is replaced by its children as die-level instances (names hb_idx__<child>), with the nets taken bit-exact from the hb_idx parent RTL, the same die-level hb_idx ports, and a strict port-bind PASS with 0 unconnected. The flattening must change no RTL. The next die case after it uses that contract."
+    },
+    "idx_ctl_slot": {
+      "verdict": "GRANTED",
+      "origin_um": [12813.552, 6462.18],
+      "outline_um": [345.6, 432.0],
+      "orient": "R0",
+      "check": "the slot plus a 21.6 um halo overlaps no v8 slot or plan block (scripted check). It sits 62 um west of idx_op (13221.56, 6438.16). The outline is an estimate: send the measured outline and pin plan before the kit, and the cut must be <= 0.60.",
+      "area_mm2": 0.1493
+    },
+    "idx_sel_pins": {
+      "verdict": "GRANTED",
+      "detail": "clk_ctl, clk_q and rst_n move to the W face mid. clk_mem[i] moves to the W face at the y of SRAM i's clk pin (macro y 25.92+97.2*i+0.78), on M4. Every centre snaps to the ACTUAL ODB track grid (M4 phase 0.012, pitch 0.048), verified by readback before CTS. Data pins are unchanged."
+    },
+    "idx_link_pins": {
+      "verdict": "GRANTED (also covers the dense link)",
+      "detail": "clk and rst_n move to the W face mid. clk_mem[i] moves to the W face at y 32.4/110.2/209.5/287.3/386.6/464.4/563.8/641.6 +0.78, on M4, on the actual grid with readback. Data pins are unchanged."
+    },
+    "idx_q_pins": {"verdict": "GRANTED", "detail": "Clock entries move to the W face, at the SRAM clk-pin y where SRAMs exist, on the actual grid."},
+    "idx_op_outline": {"verdict": "APPROVED IN PRINCIPLE", "detail": "Shrink to the pin-bound size inside the current v8 slot origin. The exact outline is granted once the successor's gate reports it."}
+  },
+  "unchanged": "hb_idx ports, RTL, and every other slot"
+}

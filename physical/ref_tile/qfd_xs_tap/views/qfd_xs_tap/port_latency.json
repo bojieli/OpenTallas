@@ -14,7 +14,7 @@
     "ot_pin_regs.tsv": "b3d56cc024d03f80c9d448c1f9efdeafc59057b4039e1f988699adc493da5c8b",
     "ot_pin_regs_wrapper.v": "5ce9a0946a30ae43f7ed2c368cfca3d3e8665438c2b0357b6518a05fb3b774ef"
   },
-  "job": "qfd_xs_tap-xt11-90b1a75f7",
+  "job": "qfd_xs_tap-xt12-952eba3a5",
   "ports": {
     "aw": {
       "dir": "input",
@@ -85,6 +85,6 @@
   },
   "schema": "opentallas.ref_tile.port_latency.v1",
   "scope": "Additional generic wrapper edges only; core RTL stages remain in measured core duration; no physical qualification",
-  "source_commit": "90b1a75f7a54c1351557bb0eabfd9e591f5c82f8",
+  "source_commit": "952eba3a5a67054778d81c838a3509c14979ade3",
   "top": "qfd_xs_tap"
 }

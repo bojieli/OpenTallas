@@ -1,0 +1,343 @@
+{
+ "schema": "opentallas.hbm.die_grant.v1",
+ "issued_by": "H-DIE (Claude) 2026-10-16 ~17:10 PT",
+ "requested_by": "H-SM XQL helper aeff7691c7aa2270f / H-ELEM; coordinator: band-edge stores, no die growth (700 um channel would exceed the 858 mm2 reticle)",
+ "plan": "d4b frozen placement results/arch/hbm_die_v16/d4b_frozen_placement.json (845.88 mm2); slots are for d4c",
+ "pair_store_slots": {
+  "status": "PROVISIONAL (free in the d4b occupancy + 10.8 um halo; several sit 2-5 mm from their pair -- re-home after the kit outline lands)",
+  "outline_um": [
+   950.4,
+   600.48
+  ],
+  "rotated_allowed": true,
+  "slots": {
+   "xq_SW01": {
+    "origin": [
+     6609.6,
+     5535.0
+    ],
+    "outline": [
+     950.4,
+     600.48
+    ],
+    "pair": [
+     "sm_SW0",
+     "sm_SW1"
+    ],
+    "pair_boundary_x": 7281.2,
+    "pair_row_y": [
+     1876.0,
+     3683.9
+    ],
+    "dist_um": 2348
+   },
+   "xq_SW23": {
+    "origin": [
+     9401.4,
+     5535.0
+    ],
+    "outline": [
+     950.4,
+     600.48
+    ],
+    "pair": [
+     "sm_SW2",
+     "sm_SW3"
+    ],
+    "pair_boundary_x": 7281.2,
+    "pair_row_y": [
+     3703.2,
+     5511.1
+    ],
+    "dist_um": 2919
+   },
+   "xq_SW45": {
+    "origin": [
+     8661.6,
+     8548.2
+    ],
+    "outline": [
+     950.4,
+     600.48
+    ],
+    "pair": [
+     "sm_SW4",
+     "sm_SW5"
+    ],
+    "pair_boundary_x": 7281.2,
+    "pair_row_y": [
+     9174.9,
+     10982.8
+    ],
+    "dist_um": 2182
+   },
+   "xq_SW67": {
+    "origin": [
+     4784.4,
+     8548.2
+    ],
+    "outline": [
+     950.4,
+     600.48
+    ],
+    "pair": [
+     "sm_SW6",
+     "sm_SW7"
+    ],
+    "pair_boundary_x": 7281.2,
+    "pair_row_y": [
+     11002.1,
+     12810.0
+    ],
+    "dist_um": 4175
+   },
+   "xq_SE01": {
+    "origin": [
+     25434.0,
+     5535.0
+    ],
+    "outline": [
+     950.4,
+     600.48
+    ],
+    "pair": [
+     "sm_SE0",
+     "sm_SE1"
+    ],
+    "pair_boundary_x": 25708.8,
+    "pair_row_y": [
+     1876.0,
+     3683.9
+    ],
+    "dist_um": 2352
+   },
+   "xq_SE23": {
+    "origin": [
+     22636.8,
+     5535.0
+    ],
+    "outline": [
+     950.4,
+     600.48
+    ],
+    "pair": [
+     "sm_SE2",
+     "sm_SE3"
+    ],
+    "pair_boundary_x": 25708.8,
+    "pair_row_y": [
+     3703.2,
+     5511.1
+    ],
+    "dist_um": 2921
+   },
+   "xq_SE45": {
+    "origin": [
+     23371.2,
+     8548.2
+    ],
+    "outline": [
+     950.4,
+     600.48
+    ],
+    "pair": [
+     "sm_SE4",
+     "sm_SE5"
+    ],
+    "pair_boundary_x": 25708.8,
+    "pair_row_y": [
+     9174.9,
+     10982.8
+    ],
+    "dist_um": 2189
+   },
+   "xq_SE67": {
+    "origin": [
+     27259.2,
+     8548.2
+    ],
+    "outline": [
+     950.4,
+     600.48
+    ],
+    "pair": [
+     "sm_SE6",
+     "sm_SE7"
+    ],
+    "pair_boundary_x": 25708.8,
+    "pair_row_y": [
+     11002.1,
+     12810.0
+    ],
+    "dist_um": 4179
+   },
+   "xq_NW01": {
+    "origin": [
+     9979.2,
+     23787.0
+    ],
+    "outline": [
+     600.48,
+     950.4
+    ],
+    "pair": [
+     "sm_NW0",
+     "sm_NW1"
+    ],
+    "pair_boundary_x": 7281.2,
+    "pair_row_y": [
+     21957.2,
+     23765.1
+    ],
+    "dist_um": 3495
+   },
+   "xq_NW23": {
+    "origin": [
+     9687.6,
+     19153.8
+    ],
+    "outline": [
+     600.48,
+     950.4
+    ],
+    "pair": [
+     "sm_NW2",
+     "sm_NW3"
+    ],
+    "pair_boundary_x": 7281.2,
+    "pair_row_y": [
+     20130.0,
+     21937.9
+    ],
+    "dist_um": 3208
+   },
+   "xq_NW45": {
+    "origin": [
+     4973.4,
+     16491.6
+    ],
+    "outline": [
+     950.4,
+     600.48
+    ],
+    "pair": [
+     "sm_NW4",
+     "sm_NW5"
+    ],
+    "pair_boundary_x": 7281.2,
+    "pair_row_y": [
+     14658.3,
+     16466.2
+    ],
+    "dist_um": 2158
+   },
+   "xq_NW67": {
+    "origin": [
+     3996.0,
+     16491.6
+    ],
+    "outline": [
+     950.4,
+     600.48
+    ],
+    "pair": [
+     "sm_NW6",
+     "sm_NW7"
+    ],
+    "pair_boundary_x": 7281.2,
+    "pair_row_y": [
+     12831.1,
+     14639.0
+    ],
+    "dist_um": 4963
+   },
+   "xq_NE01": {
+    "origin": [
+     22404.6,
+     23787.0
+    ],
+    "outline": [
+     600.48,
+     950.4
+    ],
+    "pair": [
+     "sm_NE0",
+     "sm_NE1"
+    ],
+    "pair_boundary_x": 25708.8,
+    "pair_row_y": [
+     21957.2,
+     23765.1
+    ],
+    "dist_um": 3501
+   },
+   "xq_NE23": {
+    "origin": [
+     22636.8,
+     19499.4
+    ],
+    "outline": [
+     950.4,
+     600.48
+    ],
+    "pair": [
+     "sm_NE2",
+     "sm_NE3"
+    ],
+    "pair_boundary_x": 25708.8,
+    "pair_row_y": [
+     20130.0,
+     21937.9
+    ],
+    "dist_um": 2927
+   },
+   "xq_NE45": {
+    "origin": [
+     23371.2,
+     16524.0
+    ],
+    "outline": [
+     950.4,
+     600.48
+    ],
+    "pair": [
+     "sm_NE4",
+     "sm_NE5"
+    ],
+    "pair_boundary_x": 25708.8,
+    "pair_row_y": [
+     14658.3,
+     16466.2
+    ],
+    "dist_um": 2220
+   },
+   "xq_NE67": {
+    "origin": [
+     27259.2,
+     16491.6
+    ],
+    "outline": [
+     950.4,
+     600.48
+    ],
+    "pair": [
+     "sm_NE6",
+     "sm_NE7"
+    ],
+    "pair_boundary_x": 25708.8,
+    "pair_row_y": [
+     12831.1,
+     14639.0
+    ],
+    "dist_um": 4178
+   }
+  }
+ },
+ "sm_xw_window": {
+  "verdict": "GRANTED: pair-facing end, mirrored E column",
+  "tile_frame": "S face, M5, x 6833.9..7178.9 (345 um, 2048 pins at 0.096 -> cut 0.57), W-column SM R0/MX as placed, E-column SM gets MY so its window sits at its W end (pair boundary)",
+  "why": "measured on d4b geometry: store->window stages 13 (pair end, MY) vs 21-23 (centred 3536-3881); SM_X estimate SW/SE 26 vs 34, NW/NE 36-38 vs 44-46",
+  "supersedes": "H-ELEM centred 3536-3881 proposal"
+ },
+ "estimate_note": "H-DIE geometry estimate (ctl at its d4b home, 450 um reach, Manhattan): SM_X = 3 (vms->ctl) + tree(ctl->stores) + 1 + store->window. Above H-SM 12: the provisional slots are far from rows 0/1 / 6/7 and the NW/NE free fits land at the PC-band edge. Price the outer-pair +1.8 mm into d4c (coordinator)."
+}

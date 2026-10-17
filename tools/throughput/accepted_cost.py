@@ -39,6 +39,7 @@ from __future__ import annotations
 import argparse
 import collections
 import datetime
+import fnmatch
 import json
 import re
 import sys
@@ -166,6 +167,12 @@ def load_path(name):
 
 # ---------------------------------------------------------------------------------------------------------------
 # HBM die: the S2 schedule of the exact per-die program
+def op_match(name, op):
+    """UNIT.OP of a record against --op: the exact name, or an fnmatch pattern (e.g. COLL.* for a latency every
+    record of a unit pays, such as the hard_v5 COLL quadrant's +3 issue edges)"""
+    return name == op or (any(ch in op for ch in "*?[") and fnmatch.fnmatchcase(name, op))
+
+
 def hbm_schedule(model):
     """-> (schedule_with(op or None, factor) -> token cycles, records per op)"""
     sys.path.insert(0, str(TOOLS))
@@ -191,7 +198,7 @@ def hbm_schedule(model):
     def run(op=None, f=1.0, delta=0.0):
         def g(r, dyn, L):
             c = cf(r, dyn, L)
-            return (c[0] * f + delta if f"{r.unit}.{r.op}" == op else c[0]), c[1], c[2]
+            return (c[0] * f + delta if op is not None and op_match(f"{r.unit}.{r.op}", op) else c[0]), c[1], c[2]
         return T.schedule(recs, pos, "S2", cost_fn=g)["total_cycles"]
     return run, count
 
@@ -199,17 +206,18 @@ def hbm_schedule(model):
 def hbm_loss(run, count, op, ratio, base=None, delta=None):
     """delta: a FIXED number of cycles added to every record of the op (a latency the op pays once a record whatever
     its length, e.g. the VM8 x-load start-to-dispatch edges before every SM.MATVEC); the op's own cycles stay at price"""
-    if not count.get(op):
+    n_rec = sum(v for k, v in count.items() if op_match(k, op))
+    if not n_rec:
         return None                 # the workload's program never issues this op
     base = run() if base is None else base
     if delta is not None:
         new = run(op, 1.0, delta)
         return dict(model="S2 schedule, fixed cycles added to every record of the op", base_cycles=round(base, 1),
-                    cycles=round(new, 1), added_cycles=round(new - base, 1), program_records=count[op],
+                    cycles=round(new, 1), added_cycles=round(new - base, 1), program_records=n_rec,
                     added_cycles_per_record=delta, e2e_loss_pct=round(loss_pct(base, new), 3))
     new = run(op, ratio)
     return dict(model="S2 schedule, op re-scheduled at its measured ratio", base_cycles=round(base, 1),
-                cycles=round(new, 1), added_cycles=round(new - base, 1), program_records=count[op],
+                cycles=round(new, 1), added_cycles=round(new - base, 1), program_records=n_rec,
                 e2e_loss_pct=round(loss_pct(base, new), 3))
 
 

@@ -1,0 +1,83 @@
+{
+  "status": "SOURCE_CONNECTIVITY_DIAGNOSTIC_ONLY",
+  "baseline_commit": "12397e026",
+  "full_graph_buses": 3780,
+  "unrelated_data_buses_preserved": 3328,
+  "changed_rtl_instances_width_bound": 44,
+  "tested_selector": "26-bit actual source output",
+  "open_input_bits": {
+    "sp_halfband_0": {
+      "lnk": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "sp_halfband_1": {
+      "lnk": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "sp_halfband_2": {
+      "lnk": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "sp_halfband_3": {
+      "lnk": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "sp_halfband_4": {
+      "lnk": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "sp_halfband_5": {
+      "lnk": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  },
+  "diagnostic_only_zero_lnk": true,
+  "production_zero_lnk_allowed": false,
+  "diagnostic_netlist_sha256": "967e688f65d97fb9128c0603292118da2f15147ce67e9d74371c7742180bad5b",
+  "compact_selector_result": "REFUSED by existing writer: tt_ctlm.sel sparse numeric join bits10,11,23,24 is incomplete; requires actual compact source-output wrapper or validated sparse output join",
+  "production_emission": "REFUSED while actual allocator/controller/issuer/selector temporal phase manifest OPEN",
+  "proof_scope": "Actual source top-level numeric port/width binding; not physical closure, actual compiled timing, hierarchy elaboration or native full-die qualification",
+  "dependencies": {
+    "phase_validator": "92c74c234",
+    "compact_fork4": "98714bf2f",
+    "compact_upper_source": "264a2d5cf",
+    "current_native_join": "f57ae9bbe"
+  },
+  "artifacts": "/home/ubuntu/artifacts/qwen-b2-die-emission-1016"
+}

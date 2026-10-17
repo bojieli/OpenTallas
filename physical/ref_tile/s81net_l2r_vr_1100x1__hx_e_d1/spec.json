@@ -1,0 +1,121 @@
+{
+ "name": "s81net_l2r_vr_1100x1__hx_e_d1",
+ "top": "dsfd_l2r_vr_1100x1__hx_E",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_static_lane_end.sv",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_static_ratio_cross.sv",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_l2r_vr_1100x1__hx_E.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs",
+  "rss"
+ ],
+ "outline": {
+  "w": 144.72,
+  "h": 187.92,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "S": [
+   "ck",
+   "cks",
+   "fo",
+   "fo2",
+   "oa",
+   "ob",
+   "rs",
+   "rss"
+  ],
+  "W": [
+   "i",
+   "st"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/snet_c26b/dsfd_l2r_vr_1100x1__hx_E_d1.tcl",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S-NET dsfd_l2r_vr_1100x1__hx_E (1 die instance(s)): the ot_meso_fifo (trained placement + CREDITS) / ot_ratio_cdc_fifo (ready + DOWN/WAIT/RUN handshake) crossing is replaced by a same-clock pin pipeline (ck and cks are one die net), owner static-schedule rule 10-14 18:59; same ports and lane formats, {fault, live} folded as before; RTL = the case glue module rendered by the generator (module sha256 716ca32114bb0277, glue 888e4fbc51ab7ed6); pins at the generator centres (c26b). | n3 sizing: std 1350 um2 -> util <= 0.55, faces at cut <= 0.6 (outline 142.56 x 185.76 vs generator slot 120.072 x 120.936); pins spread evenly per face (spread_face_pins.py, clock at face centre), no output hold pads (die receivers carry input hold stages) | S-NET-RESID structural variant d1: one 2.16-um lattice step on both faces (S output face 142.56 -> 144.72, W input face 185.76 -> 187.92): pin pitch +1.5 %, more room between the input band and the output band",
+ "reroute_reason": {
+  "kind": "rtl_change"
+ },
+ "job": {
+  "owner": "Claude:s81-net-resid",
+  "branch": "claude/snf-resid-1016",
+  "tag": "r1d1",
+  "purpose": "S81 S-NET static-schedule redesign: dsfd_l2r_vr_1100x1__hx_E (1 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, generator pins",
+  "views_to": "physical/ref_tile/s81net_l2r_vr_1100x1__hx_e_d1/views",
+  "record_to": "results/rtl/ref_tile/s81net_l2r_vr_1100x1__hx_e_d1",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_static_net/gen",
+   "physical/s81_die_pins/snet_c26b/dsfd_l2r_vr_1100x1__hx_E_d1.tcl",
+   "rtl/dsrom_sys/s81_die_bind",
+   "rtl/dsrom_sys/s81_static_net",
+   "tools/s81_static_net",
+   "physical/s81_static_net/hend"
+  ],
+  "benches": [
+   {
+    "name": "hend_exact",
+    "cmd": "bash tools/s81_static_net/bench_hend_master.sh pass dsfd_l2r_vr_1100x1__hx_E rtl/dsrom_sys/s81_static_net/gen/dsfd_l2r_vr_1100x1__hx_E.sv {RUN}/hend_pass",
+    "expect": "pass",
+    "pass_regex": "HEND_STATIC_GATE PASS",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "hend_offset_mutant",
+    "cmd": "bash tools/s81_static_net/bench_hend_master.sh mut_offset dsfd_l2r_vr_1100x1__hx_E rtl/dsrom_sys/s81_static_net/gen/dsfd_l2r_vr_1100x1__hx_E.sv {RUN}/hend_mut",
+    "expect": "fail",
+    "fail_regex": "GATE MUTANT .*REJECTED",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ]
+ },
+ "sdc_extra": [
+  "physical/s81_static_net/hend/dsfd_l2r_vr_1100x1__hx_E.sdc"
+ ],
+ "boundary_tcl": [
+  "physical/s81_static_net/hend/dsfd_l2r_vr_1100x1__hx_E_boundary.tcl"
+ ],
+ "inhold": true,
+ "outhold": false,
+ "slot_change_request": {
+  "reason": "S-NET-RESID variant d1: one 2.16-um lattice step on both faces (S output face 142.56 -> 144.72, W input face 185.76 -> 187.92): pin pitch +1.5 %, more room between the input band and the output band",
+  "outline": [
+   144.72,
+   187.92
+  ],
+  "generator_slot": [
+   120.072,
+   120.936
+  ],
+  "pins": "physical/s81_die_pins/snet_c26b/dsfd_l2r_vr_1100x1__hx_E_d1.tcl"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

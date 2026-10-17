@@ -576,7 +576,13 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
     # OT_SPINE_MACRO_LEAF=1 (el1011-q-coll): a hard-macro clock pin is its own leaf, so a child-insertion target never
     # skews the flops that would otherwise share its bin
     if {[ot_sp_env OT_SPINE_MACRO_LEAF 0] eq "1" && [[[$it getInst] getMaster] isBlock]} {
-      dict lappend bins "M[[$it getInst] getName]" [list $it $x $y]
+      # OT_SPINE_MACRO_PIN_LEAF=1 (Q-CLUSTER 2026-10-17): every hard-child clock PIN is its own leaf (a cluster child with
+      # 39 entry pins on two faces 458 um apart would otherwise hang them all on one leaf net at their centroid)
+      if {[ot_sp_env OT_SPINE_MACRO_PIN_LEAF 0] eq "1"} {
+        dict lappend bins "M[[$it getInst] getName]/[[$it getMTerm] getName]" [list $it $x $y]
+      } else {
+        dict lappend bins "M[[$it getInst] getName]" [list $it $x $y]
+      }
     } else {
       dict lappend bins "[expr {int($x / $bin)}],[expr {int($y / $bin)}]" [list $it $x $y]
     }
@@ -599,7 +605,10 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
         if {![info exists $v]} continue
         foreach it $its {
           set mn [[[$it getInst] getMaster] getName]
-          if {[dict exists [set $v] $mn] && (![dict exists $lins $id] || [dict get [set $v] $mn] > [dict get $lins $id])} { dict set lins $id [dict get [set $v] $mn] }
+          # per-pin target "master/pin" (Q-CLUSTER: a cluster child's entries carry their own insertion) before "master"
+          set key "$mn/[[$it getMTerm] getName]"
+          if {![dict exists [set $v] $key]} { set key $mn }
+          if {[dict exists [set $v] $key] && (![dict exists $lins $id] || [dict get [set $v] $key] > [dict get $lins $id])} { dict set lins $id [dict get [set $v] $key] }
         }
       }
     }

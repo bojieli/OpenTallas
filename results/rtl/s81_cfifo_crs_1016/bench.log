@@ -1,0 +1,29 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/cfifo-crs-isolated-1308
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/cfifo-crs-isolated-1308
+ot-run: ot-agidock128  admits    40 GB (avail 69, growth 26, headroom 24, waiters 0/0 GB) load 27/64 running 9 disk 199 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3502422-1792181349 after 0 s
+CFIFO_X2 PASS pha=2 phb=2 words=390 first=1 offset=197000 warm=0 cold_words=0
+CFIFO_X2 PASS pha=0 phb=0 words=390 first=1 offset=197000 warm=0 cold_words=0
+CFIFO_X2 PASS pha=3 phb=4 words=391 first=1 offset=187000 warm=0 cold_words=0
+CFIFO_X2 PASS pha=7 phb=7 words=391 first=1 offset=187000 warm=0 cold_words=0
+CFIFO_X2 PASS pha=9 phb=8 words=391 first=1 offset=187000 warm=0 cold_words=0
+CFIFO_X2_GATE PASS 5 phase pairs
+CFIFO_X2 PASS pha=2 phb=2 words=390 first=1 offset=4397000 warm=1 cold_words=390
+CFIFO_X2 PASS pha=0 phb=0 words=390 first=1 offset=4397000 warm=1 cold_words=390
+CFIFO_X2 PASS pha=3 phb=4 words=391 first=1 offset=4387000 warm=1 cold_words=391
+CFIFO_X2 PASS pha=7 phb=7 words=391 first=1 offset=4387000 warm=1 cold_words=391
+CFIFO_X2 PASS pha=9 phb=8 words=391 first=1 offset=4387000 warm=1 cold_words=391
+CFIFO_X2_GATE PASS 5 phase pairs
+CFIFO_X2 FAIL unrecognised first record t=207000
+CFIFO_X2_GATE FAIL
+CFIFO_X2 FAIL bad=220 words=390
+CFIFO_X2_GATE FAIL
+CFIFO_X2 FAIL unrecognised first record t=197000
+CFIFO_X2_GATE FAIL
+CFIFO_X2 FAIL bad=390 words=390
+CFIFO_X2_GATE FAIL
+CFIFO_X2 FAIL bad=756 words=390
+CFIFO_X2_GATE FAIL
+RESET_FRONTIER_GATE_PASS
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3502422-1792181349): exit 0

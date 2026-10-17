@@ -3397,8 +3397,11 @@
    "images_committed": [
     "img_r3/D_s81_c26b_r_floorplan.png",
     "img_r3/D_s81_c26b_r_buses.png",
-    "img_r3/D_s81_hub_candidate_c74342891.png"
-   ]
+    "img_r3/D_s81_hub_candidate_c74342891.png",
+    "img_r3/D_s81_hub_v3i_screen.png"
+   ],
+   "owner_ack": "S-DIE 10:20: c26b_r hub replaced by hub v3i (trial c26i queued E4); Codex c74342891 rejected (cut 1.226). v3i screen vs c26b: max cut 0.587 vs 0.647, edges >0.60 0 vs 25, p2p 264k vs 301k bit-mm, field trees 2.92M vs 3.29M, stages 368 vs 434; collector/selector 0.1 mm apart (was 22). VIS-ROM looked at screen_v3i.png: compact, no red edges; hottest edges (0.5-0.59) are the VM|SU 432-um street and the VM E face at x~15.5 mm, so the max-cut margin is only 0.013. ~35-40 mm2 stays white (x 15.7-18 / y 3-12.5 and under HC_T) as routing slack by S-DIE decision. Score from c26i GRT: overflow in the street / VM E face.",
+   "state": "fix-in-gate (hub v3i, c26i)"
   },
   {
    "id": "D-QC-03",

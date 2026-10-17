@@ -71,6 +71,11 @@
   "physical/ref_tile/ot_qwen_tile_node/signoff.sdc",
   "physical/ref_tile/ot_qwen_tile_node/pdn.tcl",
   "physical/ref_tile/ot_qwen_tile_node/pre_cts.tcl",
+  "physical/ref_tile/ot_qwen_tile_node/post_cts.tcl",
+  "physical/ref_tile/ot_qwen_tile_node/post_grt.tcl",
+  "physical/ref_tile/ot_qwen_tile_node/pre_drt.tcl",
+  "physical/ref_tile/ot_qwen_tile_node/pre_fill.tcl",
+  "physical/ref_tile/ot_qwen_tile_node/post_fill.tcl",
   "physical/ref_tile/ot_qwen_tile_node/pre_grt.tcl",
   "physical/ref_tile/ot_qwen_tile_node/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
@@ -89,6 +94,7 @@
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/ot_qwen_tile_node/pre_gpl.tcl",
-  "physical/ref_tile/ot_qwen_tile_node/pre_dpl.tcl"
+  "physical/ref_tile/ot_qwen_tile_node/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }

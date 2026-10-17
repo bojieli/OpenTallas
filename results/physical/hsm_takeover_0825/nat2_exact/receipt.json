@@ -1,0 +1,57 @@
+{
+  "scope": "Actual consumed recipe3 generated wrappers plus exact source cores (module declaration rename only) using physical SRAM functional models. Four actual8bank/24SRAM shapes exercise allcurrentSID. This closes functional latency gap in earlier core-only return6 jobbench; physical/native ETM qualification remains separate.",
+  "jobs": {
+    "q0": "vm_native_q0_ref-nat2-f084d0a8b",
+    "q1": "vm_native_q1_ref-nat2-f084d0a8b",
+    "q2": "vm_native_q2_ref-nat2-ee83da123"
+  },
+  "SID_master": {
+    "0": "q0 RG5WG2",
+    "1": "q1 RG4WG2",
+    "2": "q2 RG5WG3",
+    "3": "q1 RG4WG2"
+  },
+  "result": "PASS4positive13negative",
+  "per_positive": {
+    "banks": 8,
+    "actual_srams": 24,
+    "wide_writes": 1024,
+    "reads_per_group": 1024,
+    "packet_reads": 8,
+    "return_edges": 7,
+    "write_done_edges": 4,
+    "eight_sectors_per_cycle": true,
+    "unselected_secondgroup_fault_no_arbitration": true
+  },
+  "negative_controls": [
+    "expected core6 timeline must fail for all4SID",
+    "wrong bank identity must fail for all4SID",
+    "dropped bank7 clock must fail for all4SID",
+    "generated wrapper rslot bypass while otherinputsremainregistered must fail"
+  ],
+  "shared_backend_source_hash_verified_against_live_q0_src": {
+    "ot_vms_bank_static_strap.sv": "d7be771c4e37556d6130efd99c15a19f61b97642bb5cc5d39d5d38fa3f1bb7bc",
+    "ot_vms_ce_counter_pipe.sv": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa"
+  },
+  "source_hashes": {
+    "hfd_vms_bank_native_q0.sv": "b7d2b5a296fda302b8d53b5ef069e977b1e6387eeb6a9dc6291c8d5a323d9dce",
+    "source_manifest.json": "194b8632d8da5124e65b050e0b61a95e52e785cf5b134754c811442c1f3269e3",
+    "hfd_vms_bank_native_q1.sv": "69d4754e503d06fbf27646aacd133f8d55f9f3eea161cac1e71682cf8b296dd5",
+    "q1_wrapper_slot_mut.v": "dd75dac9e9e78ee3b7280f6ec27c58c2ce0e333af464dc1da67127a9bd7cc2c2",
+    "q0_wrapper.v": "c0717dbce416bd6604bca8517a242af03563523dfd9f48146fe8c3ac133a561a",
+    "ot_sram_1r1w_1024x256_m2_r2c2.v": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e",
+    "q2_wrapper.v": "f5cdf77e6b3cd323b7c8f560a6f56c9d5a1df211c0c8a91bfd1ae89fad72014b",
+    "ot_vms_bank_native_physical.sv": "87f310693884b68babba03161ede45f5405f31ba700bc1765b76246f43acd7fa",
+    "q1_wrapper.v": "52cdf21ac15d7931e1a875c8f84ba87e96e3d59cf70d923a6e720930a86e4897",
+    "ot_vms_ce_counter_pipe.sv": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa",
+    "tb_hbm_vm_native_nat2_exact.sv": "f8a6996ef7d93612efdb8b48ba8900a001cb6e1ab6c93846e194a43df1bc493d",
+    "bench.log": "ed5548c2ce31c3194b80c1a3aaa3d273625dbfe02575f4e0220186880693e4ba",
+    "q2_core_renamed.sv": "ac0d081a9aa512e6bf975d200c296916b41e592ad77a7f740f74c86f11c8695a",
+    "ot_vms_bank_static_strap.sv": "d7be771c4e37556d6130efd99c15a19f61b97642bb5cc5d39d5d38fa3f1bb7bc",
+    "q1_core_renamed.sv": "01e21d21ff33a6d7de6d54cc2625d7045805672d32bafa47332620f41f2f6845",
+    "tb_hbm_vm_native_abi.sv": "20e90a2bb9ca22caab78c78063a7904087c7eeea2a32aeaa689ae4a520011cc7",
+    "hfd_vms_bank_native_q2.sv": "2ff868cce88afbac970067d615f144f3b38c5f361829ede891cfc6ff9307c504",
+    "q0_core_renamed.sv": "418a33e6a8b9db915269f081505d0eeb6e3bb7a22747a816090d85dc0362f171",
+    "run.sh": "3969d8757b90af4e729d1d020e38b93a82199152447d36901438edbd354afa06"
+  }
+}

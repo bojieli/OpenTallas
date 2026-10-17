@@ -1,0 +1,560 @@
+{
+  "checked_at": "2026-10-16T15:56:47.601581-07:00",
+  "host": "ot-pve1",
+  "source_commit": "9b338b3c2",
+  "files": [
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+      "actual_sha256": "5689f7f3baad5435b2bac95cb31d908600a5434d2768a145fb5fe93276ba8bd2",
+      "expected_sha256": "5689f7f3baad5435b2bac95cb31d908600a5434d2768a145fb5fe93276ba8bd2",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+      "actual_sha256": "24fb5a39f64796a9471f50973d0b2436d9561ce27df0e19d0061157d03bde53d",
+      "expected_sha256": "24fb5a39f64796a9471f50973d0b2436d9561ce27df0e19d0061157d03bde53d",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv",
+      "actual_sha256": "00d43c502abb3d308c359c1d82bf053233113c62a83562e8adbf9efb7a9aa6ea",
+      "expected_sha256": "00d43c502abb3d308c359c1d82bf053233113c62a83562e8adbf9efb7a9aa6ea",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv",
+      "actual_sha256": "2e6c4f37354ca789ae7178eac57dc6b5c1abdf7a12858812200e10fb93f04a44",
+      "expected_sha256": "2e6c4f37354ca789ae7178eac57dc6b5c1abdf7a12858812200e10fb93f04a44",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+      "actual_sha256": "2c061c815a470df94e21b149fc02e9e352be722f31cb28e51440ced123f88219",
+      "expected_sha256": "2c061c815a470df94e21b149fc02e9e352be722f31cb28e51440ced123f88219",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+      "actual_sha256": "d2a4968e067d60f16349357bfbe0aadc58edd22d8b7cb89f1142a9f62ad7982a",
+      "expected_sha256": "d2a4968e067d60f16349357bfbe0aadc58edd22d8b7cb89f1142a9f62ad7982a",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/register_file/ot_hbm_su_static_rf.sv",
+      "actual_sha256": "9689c5640d72f23d411171e58b17680d1ee6a59e893271c8b0bf121fc98d2ca9",
+      "expected_sha256": "9689c5640d72f23d411171e58b17680d1ee6a59e893271c8b0bf121fc98d2ca9",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
+      "actual_sha256": "75b38ab7103ca40f4784e47559f70e659851f7184a18a05e43653336b03d0a32",
+      "expected_sha256": "75b38ab7103ca40f4784e47559f70e659851f7184a18a05e43653336b03d0a32",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+      "actual_sha256": "00eb5cdc33808a02dbb7a1c9ea272ff6a266521117851ee8ab598581902200ff",
+      "expected_sha256": "00eb5cdc33808a02dbb7a1c9ea272ff6a266521117851ee8ab598581902200ff",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "actual_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
+      "expected_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
+      "actual_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
+      "expected_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_quarter.sv",
+      "actual_sha256": "2d3550900d6305edc00fd04a440f6a07fea19035a3fcbfa2f6b3de984e2e0810",
+      "expected_sha256": "2d3550900d6305edc00fd04a440f6a07fea19035a3fcbfa2f6b3de984e2e0810",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_top.sv",
+      "actual_sha256": "e18e3d0f3e55210dbafc61da6b6d07e91f025e5a015a9575461ac583e42178a9",
+      "expected_sha256": "e18e3d0f3e55210dbafc61da6b6d07e91f025e5a015a9575461ac583e42178a9",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/native_vm/ot_hbm_su_native_vm.sv",
+      "actual_sha256": "8254e7f0194c13e0398b01c2a448d5e97c1a8484275127b2d5457646bd9136fd",
+      "expected_sha256": "8254e7f0194c13e0398b01c2a448d5e97c1a8484275127b2d5457646bd9136fd",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv",
+      "actual_sha256": "7489a32c3acbe12fca52b1db7a3bceae72ecd2ea1302aa5c1d26407e07ffff05",
+      "expected_sha256": "7489a32c3acbe12fca52b1db7a3bceae72ecd2ea1302aa5c1d26407e07ffff05",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge.sv",
+      "actual_sha256": "79e03d216d906acc6c7e3867ae53f8a463562822af24f546e4c220a7faaba8f6",
+      "expected_sha256": "79e03d216d906acc6c7e3867ae53f8a463562822af24f546e4c220a7faaba8f6",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_bridge_release.sv",
+      "actual_sha256": "b12ad3b864a3b2693862c442d4032877bde10ad2247bb02090bf8dd54ae5fa27",
+      "expected_sha256": "b12ad3b864a3b2693862c442d4032877bde10ad2247bb02090bf8dd54ae5fa27",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/programme/tb_hbm_su_native_collective_top.sv",
+      "actual_sha256": "7d3b6db16fd6e67d18300a1d0f91802716783c629812959410a6e60c074579c0",
+      "expected_sha256": "7d3b6db16fd6e67d18300a1d0f91802716783c629812959410a6e60c074579c0",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv",
+      "actual_sha256": "4f6087fb92df129fd5462561111155cbcf2fe3c088e56e2eb1407428f002ef3d",
+      "expected_sha256": "4f6087fb92df129fd5462561111155cbcf2fe3c088e56e2eb1407428f002ef3d",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_collective_red_join.sv",
+      "actual_sha256": "96989ce3ee80e06b919d4071d5090f808a414a55e25b924b16cb16c2c2c76751",
+      "expected_sha256": "96989ce3ee80e06b919d4071d5090f808a414a55e25b924b16cb16c2c2c76751",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_captured_static.sv",
+      "actual_sha256": "8a983e6b99f5abbbfd532844f653015370f6d1cafe212094cf42c036ad69241f",
+      "expected_sha256": "8a983e6b99f5abbbfd532844f653015370f6d1cafe212094cf42c036ad69241f",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+      "actual_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
+      "expected_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+      "actual_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+      "expected_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+      "actual_sha256": "7530908d1cccb63586654d293cf5e073995ed2e31b70f8ae89173d0b371e7123",
+      "expected_sha256": "7530908d1cccb63586654d293cf5e073995ed2e31b70f8ae89173d0b371e7123",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
+      "actual_sha256": "8d2fd258929e0cb4e59ec46ff1c2679d756ea9b2fa86569d92f023dfdb42558a",
+      "expected_sha256": "8d2fd258929e0cb4e59ec46ff1c2679d756ea9b2fa86569d92f023dfdb42558a",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+      "actual_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+      "expected_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+      "match": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+      "actual_sha256": "e494c109a829a081eae4d4f96a0e1e1ee68f08e87f9ac977f3460250ef77db85",
+      "expected_sha256": "e494c109a829a081eae4d4f96a0e1e1ee68f08e87f9ac977f3460250ef77db85",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+      "actual_sha256": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+      "expected_sha256": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "actual_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "expected_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fpu.sv",
+      "actual_sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "expected_sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "actual_sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "expected_sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "match": true
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "actual_sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "expected_sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_sfu.sv",
+      "actual_sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "expected_sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "actual_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+      "expected_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "actual_sha256": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+      "expected_sha256": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "actual_sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+      "expected_sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "actual_sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+      "expected_sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "actual_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "expected_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+      "actual_sha256": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+      "expected_sha256": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_fdiv.sv",
+      "actual_sha256": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+      "expected_sha256": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+      "match": true
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_softplus.sv",
+      "actual_sha256": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+      "expected_sha256": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+      "match": true
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "actual_sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+      "expected_sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+      "match": true
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "actual_sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "expected_sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_programme_compile.py",
+      "actual_sha256": "a61ea5698bcae083520f52c72addbc47b2fe27a852296d691c0936c826efe08d",
+      "expected_sha256": "a61ea5698bcae083520f52c72addbc47b2fe27a852296d691c0936c826efe08d",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/vm_abi_remap_0600.py",
+      "actual_sha256": "776231c7d6fbb70b8fcff2d255cc7a4be20152a01a10bb5965557702047a6014",
+      "expected_sha256": "776231c7d6fbb70b8fcff2d255cc7a4be20152a01a10bb5965557702047a6014",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_red_carry_calendar.py",
+      "actual_sha256": "51a93ae656aaba7ebaea7965232870e3cf4b1005a1cb109464210b0cf86453ec",
+      "expected_sha256": "51a93ae656aaba7ebaea7965232870e3cf4b1005a1cb109464210b0cf86453ec",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/run_su_red_native_join.py",
+      "actual_sha256": "7729b088b047ca9bbb38eca277ec6b6759db42dea2fca978c0eda997bc6a5bd4",
+      "expected_sha256": "7729b088b047ca9bbb38eca277ec6b6759db42dea2fca978c0eda997bc6a5bd4",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_tensor_plan.py",
+      "actual_sha256": "322902cc7a0456a36155b06b8817a8cbfca96e817caaf3456e4c7d7fd109f39c",
+      "expected_sha256": "322902cc7a0456a36155b06b8817a8cbfca96e817caaf3456e4c7d7fd109f39c",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_program_inventory.py",
+      "actual_sha256": "50d0b2004a424cbe4d8a31c5378ac82f460b02a3f7a20116e9546dffde727ca9",
+      "expected_sha256": "50d0b2004a424cbe4d8a31c5378ac82f460b02a3f7a20116e9546dffde727ca9",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_f2_placement_bound.py",
+      "actual_sha256": "a25dc4d97dba3160ba04ac1d0056f833f6079d8fed63e57bbf8755f7235569aa",
+      "expected_sha256": "a25dc4d97dba3160ba04ac1d0056f833f6079d8fed63e57bbf8755f7235569aa",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_f2_spread.py",
+      "actual_sha256": "a42c84a32da55fa7c64a0b1d4d71436aef483cfef86ff3dbae340821e55f319f",
+      "expected_sha256": "a42c84a32da55fa7c64a0b1d4d71436aef483cfef86ff3dbae340821e55f319f",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_attention_sm_interface.py",
+      "actual_sha256": "2af32c95b17dbae53d8ca45c21871800a1366480ea6b6a88561adf0322ce96dd",
+      "expected_sha256": "2af32c95b17dbae53d8ca45c21871800a1366480ea6b6a88561adf0322ce96dd",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_slice_band_v6.py",
+      "actual_sha256": "8c222ff500cb22eb77b6e3d0af1d4d24c22deb8406b2fd47866ee527f699fc22",
+      "expected_sha256": "8c222ff500cb22eb77b6e3d0af1d4d24c22deb8406b2fd47866ee527f699fc22",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/sfu_lg_port_inventory.py",
+      "actual_sha256": "7155377bb27888552510bff7e92b8e030a68675891f37ad659aa7cb553d0bc80",
+      "expected_sha256": "7155377bb27888552510bff7e92b8e030a68675891f37ad659aa7cb553d0bc80",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/sfucore_fit_0600.py",
+      "actual_sha256": "1276b1b989fd21dba10d873336f3ac3a6beb5dcc69fabdcedfca148953ad7204",
+      "expected_sha256": "1276b1b989fd21dba10d873336f3ac3a6beb5dcc69fabdcedfca148953ad7204",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/sfu_vector_calendar.py",
+      "actual_sha256": "261f7d1ccb8e60be082b4fab8c4a6344f14c0677e6a5bfca6d4f1e6e77c3f0c7",
+      "expected_sha256": "261f7d1ccb8e60be082b4fab8c4a6344f14c0677e6a5bfca6d4f1e6e77c3f0c7",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_multirate_compile.py",
+      "actual_sha256": "90a305fab556d0199393c0ec58cafd4762d18ceb5fe1e614111b1b43d9e84fae",
+      "expected_sha256": "90a305fab556d0199393c0ec58cafd4762d18ceb5fe1e614111b1b43d9e84fae",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_arith_memory_demand.py",
+      "actual_sha256": "447eacd874472f973669210fdfef690a09161d47a7e20df79ddf76ccfbaea380",
+      "expected_sha256": "447eacd874472f973669210fdfef690a09161d47a7e20df79ddf76ccfbaea380",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_arith_compile.py",
+      "actual_sha256": "38aefcc25822364df2a1777c41f577d6a8de00d6541777e552fafca91dba592b",
+      "expected_sha256": "38aefcc25822364df2a1777c41f577d6a8de00d6541777e552fafca91dba592b",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/programme_packed_gate.py",
+      "actual_sha256": "c3cebd779a9318a72b81e5785098adac3233a3fee904a3fa021eb838e18f250e",
+      "expected_sha256": "c3cebd779a9318a72b81e5785098adac3233a3fee904a3fa021eb838e18f250e",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_fit_map_2330.py",
+      "actual_sha256": "5591b1b7713f04f71011607fccdc7b0aafca43957516d1e8e293ec8be4cc82ca",
+      "expected_sha256": "5591b1b7713f04f71011607fccdc7b0aafca43957516d1e8e293ec8be4cc82ca",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_lifetime_calendar.py",
+      "actual_sha256": "19b42d5a7f4e62889d3f4f4428f33104c6f0d98ad13f2899730ac180ac0cc675",
+      "expected_sha256": "19b42d5a7f4e62889d3f4f4428f33104c6f0d98ad13f2899730ac180ac0cc675",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/test_su_red_carry_calendar.py",
+      "actual_sha256": "008f069cbc8c09a2cac8bfb168fdcf8e5ccf7d8ef9c61ccdc43a609ce0f235a4",
+      "expected_sha256": "008f069cbc8c09a2cac8bfb168fdcf8e5ccf7d8ef9c61ccdc43a609ce0f235a4",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_arith_census.py",
+      "actual_sha256": "1c3a356d4a6b5df174f168d98a1865eb3bc0c21ab46e912e1758f2b3a76703b5",
+      "expected_sha256": "1c3a356d4a6b5df174f168d98a1865eb3bc0c21ab46e912e1758f2b3a76703b5",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/test_sfu_vector_calendar.py",
+      "actual_sha256": "a2dcb5df66a736da41480c77d2b1203579b69d01414ec59beab9e370c10c1c01",
+      "expected_sha256": "a2dcb5df66a736da41480c77d2b1203579b69d01414ec59beab9e370c10c1c01",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_arith_lower.py",
+      "actual_sha256": "e05c86ae280467b7247922a78e6f6fde5f54683ea00a2c9ecea43a7f6ff7734e",
+      "expected_sha256": "e05c86ae280467b7247922a78e6f6fde5f54683ea00a2c9ecea43a7f6ff7734e",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/f2_csum_frontier.py",
+      "actual_sha256": "9dda8aa25bde73d32c90ccea97d794ff3dc3fb0c0c481b996a10977fac0bf2ee",
+      "expected_sha256": "9dda8aa25bde73d32c90ccea97d794ff3dc3fb0c0c481b996a10977fac0bf2ee",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/test_su_collective_compile.py",
+      "actual_sha256": "707b8c550f47ede41be1a2b12b4dab6259bc3371730b9606e8a2e614fe12b089",
+      "expected_sha256": "707b8c550f47ede41be1a2b12b4dab6259bc3371730b9606e8a2e614fe12b089",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_arith_generate.py",
+      "actual_sha256": "6c6b7e222c386c07e41f63c0bd3bd023341fd82d98274692d8ee8f9add563b1c",
+      "expected_sha256": "6c6b7e222c386c07e41f63c0bd3bd023341fd82d98274692d8ee8f9add563b1c",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/test_vm_abi_remap_0600.py",
+      "actual_sha256": "6c1312ef580c4385c81ffdaa5448b8cf9397d256f855dd46e8f58ff3380c98c6",
+      "expected_sha256": "6c1312ef580c4385c81ffdaa5448b8cf9397d256f855dd46e8f58ff3380c98c6",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/make_qswiglu_io_calendar.py",
+      "actual_sha256": "21b1715ef14762f4f574db1b29a580c600226c75be374dc8a6f41c1254936c1c",
+      "expected_sha256": "21b1715ef14762f4f574db1b29a580c600226c75be374dc8a6f41c1254936c1c",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_arith_physical_prepare.py",
+      "actual_sha256": "03756d63bb794be4d1e4bbe07b6d3ad669890902d04f097765992e3bca085528",
+      "expected_sha256": "03756d63bb794be4d1e4bbe07b6d3ad669890902d04f097765992e3bca085528",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/vm_abi_remap_0253.py",
+      "actual_sha256": "e733f1eab13ad3af1cb9a5d883a8a6555f0e4dd6c76957cca941f8d9cbc0c875",
+      "expected_sha256": "e733f1eab13ad3af1cb9a5d883a8a6555f0e4dd6c76957cca941f8d9cbc0c875",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/test_vm_abi_remap_0253.py",
+      "actual_sha256": "5f0b29cc6dc2d7ffec8e25a88447e42c3baa68adba03eaee7e7b4183cc06e441",
+      "expected_sha256": "5f0b29cc6dc2d7ffec8e25a88447e42c3baa68adba03eaee7e7b4183cc06e441",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/sfu_control_image.py",
+      "actual_sha256": "b9a1c3b0b4f378b6492b76752610b5986eafc2e4ac3e45ec33dffb60bab53984",
+      "expected_sha256": "b9a1c3b0b4f378b6492b76752610b5986eafc2e4ac3e45ec33dffb60bab53984",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/test_sfu_program_pages.py",
+      "actual_sha256": "6e916261277d4232c69497385a74d20ac6dc4e806ba0b74a9144a04e2d28ad7f",
+      "expected_sha256": "6e916261277d4232c69497385a74d20ac6dc4e806ba0b74a9144a04e2d28ad7f",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_top_compile.py",
+      "actual_sha256": "cc1c7fbce318c3f3fa1c5cc3400f55b08d9b3562e6c45ce423d8b8d824fd3fd0",
+      "expected_sha256": "cc1c7fbce318c3f3fa1c5cc3400f55b08d9b3562e6c45ce423d8b8d824fd3fd0",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_joint_geometry_2330.py",
+      "actual_sha256": "3227569de7f444be21de8faada2ab288a340a69c3081ec3ee6b699ae9d23a502",
+      "expected_sha256": "3227569de7f444be21de8faada2ab288a340a69c3081ec3ee6b699ae9d23a502",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/sfu_program_pages.py",
+      "actual_sha256": "f60796250eb57c9f780bf8e4888c9cbc1ebfa9d1eca78e3978ec258a851e0ea4",
+      "expected_sha256": "f60796250eb57c9f780bf8e4888c9cbc1ebfa9d1eca78e3978ec258a851e0ea4",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_arith_io_domains.py",
+      "actual_sha256": "3934c6c0966ab214219eca34c39c25745692270b466a808081a68bbd9483190a",
+      "expected_sha256": "3934c6c0966ab214219eca34c39c25745692270b466a808081a68bbd9483190a",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/make_sfu_vector_gate_images.py",
+      "actual_sha256": "e6dfe2a93dbc56ce639f93eed3d85249b29fc1e5775fdb8e1c385400b6fba79d",
+      "expected_sha256": "e6dfe2a93dbc56ce639f93eed3d85249b29fc1e5775fdb8e1c385400b6fba79d",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/run_su_sequential_collective_join.py",
+      "actual_sha256": "fdea298601bcd38a3e1ec00fc98fb9b305e92343e23d0886134aba069b53ca3b",
+      "expected_sha256": "fdea298601bcd38a3e1ec00fc98fb9b305e92343e23d0886134aba069b53ca3b",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_native_vm_calendar.py",
+      "actual_sha256": "85841977d640e7b31f67a0e35745c2858f63e2a10a424794f00fce6661ad82ab",
+      "expected_sha256": "85841977d640e7b31f67a0e35745c2858f63e2a10a424794f00fce6661ad82ab",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/lg_parent_escape.py",
+      "actual_sha256": "3b1751479b028e75b10979acfaabd5fde83be7a0c6a3d1022301ca66f52dcd6f",
+      "expected_sha256": "3b1751479b028e75b10979acfaabd5fde83be7a0c6a3d1022301ca66f52dcd6f",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_collective_compile.py",
+      "actual_sha256": "b4a7eda957e233bcbe5d55c52abc12a82544c1e9ca555eb8ec798a8daef26f2c",
+      "expected_sha256": "b4a7eda957e233bcbe5d55c52abc12a82544c1e9ca555eb8ec798a8daef26f2c",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/test_sfu_control_image.py",
+      "actual_sha256": "58fa2690ab1befd3860258ab219155c424366084a83c3cd23d6edb3cc18e1016",
+      "expected_sha256": "58fa2690ab1befd3860258ab219155c424366084a83c3cd23d6edb3cc18e1016",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/make_qswiglu_gate.py",
+      "actual_sha256": "7b36c6dab7e372d225663bd553cac4235ccbf63a5a497025f1d8cf8aeb643960",
+      "expected_sha256": "7b36c6dab7e372d225663bd553cac4235ccbf63a5a497025f1d8cf8aeb643960",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_arith_physical_map.py",
+      "actual_sha256": "d553a7e9c936586a5c583a9b49eee2413d916576c28f397c542d91b98c6b6540",
+      "expected_sha256": "d553a7e9c936586a5c583a9b49eee2413d916576c28f397c542d91b98c6b6540",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_arith_sfu_compile.py",
+      "actual_sha256": "c63197541054fe3a1364950ae989035ac5c850a59c62fea5850cc16fcd1021ef",
+      "expected_sha256": "c63197541054fe3a1364950ae989035ac5c850a59c62fea5850cc16fcd1021ef",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_reduce_compile.py",
+      "actual_sha256": "8870316a3556c43404b3104f33ebdb91c05683f02cd53144b726c73547b33a5e",
+      "expected_sha256": "8870316a3556c43404b3104f33ebdb91c05683f02cd53144b726c73547b33a5e",
+      "match": true
+    },
+    {
+      "path": "tools/hbm_static/su_collective_native_run.sh",
+      "actual_sha256": "26afbf4115e2b2a90e5a3c3cc893ddd14721b4d2c6e2eb3fdfb95b57f244b626",
+      "expected_sha256": "26afbf4115e2b2a90e5a3c3cc893ddd14721b4d2c6e2eb3fdfb95b57f244b626",
+      "match": true
+    },
+    {
+      "path": "tools/hdc_golden.py",
+      "actual_sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "expected_sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "match": true
+    }
+  ],
+  "all_match": true
+}

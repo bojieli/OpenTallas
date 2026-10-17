@@ -1,0 +1,172 @@
+{
+ "status": "PASS_REDUCED_TREE_BOUNDARY_ONLY",
+ "host": "ot-agidock128",
+ "unit": "oth-ubuntu-3480319-1792180751",
+ "remote_dir": "/srv/opentallas-scratch/codex/qwen-selector-boundary-1246/out_pulse",
+ "ot_run_terminal": "RAN on ot-agidock128: exit 0",
+ "memory_cap_gb": 8,
+ "threads": 4,
+ "observed_at": "2026-10-16T13:02:00-07:00",
+ "hardware": "seven actual qfd_static_selector_fork4 nodes, three registered levels, eight actual qfd_band_upper_b2_l2_s4 leaves, plus independent reference upper leaves with three source-defined reference registers",
+ "stimulus": "native reduced-tree boundary, sixteen frames, finite positive FP32 unique per frame/bank/word; each level valid then its sum-select seven edges later, next level valid eight edges after the first; pw one edge after first valid",
+ "coverage": [
+  {
+   "bank": 0,
+   "valid": 16,
+   "nonzero": 16,
+   "distinct": 15
+  },
+  {
+   "bank": 1,
+   "valid": 16,
+   "nonzero": 16,
+   "distinct": 15
+  },
+  {
+   "bank": 2,
+   "valid": 16,
+   "nonzero": 16,
+   "distinct": 15
+  },
+  {
+   "bank": 3,
+   "valid": 16,
+   "nonzero": 16,
+   "distinct": 15
+  },
+  {
+   "bank": 4,
+   "valid": 16,
+   "nonzero": 16,
+   "distinct": 15
+  },
+  {
+   "bank": 5,
+   "valid": 16,
+   "nonzero": 16,
+   "distinct": 15
+  },
+  {
+   "bank": 6,
+   "valid": 16,
+   "nonzero": 16,
+   "distinct": 15
+  },
+  {
+   "bank": 7,
+   "valid": 16,
+   "nonzero": 16,
+   "distinct": 15
+  }
+ ],
+ "checks": 4864,
+ "mutants": [
+  {
+   "bank": 0,
+   "kind": "mut",
+   "observed": "REJECTED",
+   "log": "mut1.log"
+  },
+  {
+   "bank": 0,
+   "kind": "selmut",
+   "observed": "REJECTED",
+   "log": "selmut1.log"
+  },
+  {
+   "bank": 1,
+   "kind": "mut",
+   "observed": "REJECTED",
+   "log": "mut2.log"
+  },
+  {
+   "bank": 1,
+   "kind": "selmut",
+   "observed": "REJECTED",
+   "log": "selmut2.log"
+  },
+  {
+   "bank": 2,
+   "kind": "mut",
+   "observed": "REJECTED",
+   "log": "mut3.log"
+  },
+  {
+   "bank": 2,
+   "kind": "selmut",
+   "observed": "REJECTED",
+   "log": "selmut3.log"
+  },
+  {
+   "bank": 3,
+   "kind": "mut",
+   "observed": "REJECTED",
+   "log": "mut4.log"
+  },
+  {
+   "bank": 3,
+   "kind": "selmut",
+   "observed": "REJECTED",
+   "log": "selmut4.log"
+  },
+  {
+   "bank": 4,
+   "kind": "mut",
+   "observed": "REJECTED",
+   "log": "mut5.log"
+  },
+  {
+   "bank": 4,
+   "kind": "selmut",
+   "observed": "REJECTED",
+   "log": "selmut5.log"
+  },
+  {
+   "bank": 5,
+   "kind": "mut",
+   "observed": "REJECTED",
+   "log": "mut6.log"
+  },
+  {
+   "bank": 5,
+   "kind": "selmut",
+   "observed": "REJECTED",
+   "log": "selmut6.log"
+  },
+  {
+   "bank": 6,
+   "kind": "mut",
+   "observed": "REJECTED",
+   "log": "mut7.log"
+  },
+  {
+   "bank": 6,
+   "kind": "selmut",
+   "observed": "REJECTED",
+   "log": "selmut7.log"
+  },
+  {
+   "bank": 7,
+   "kind": "mut",
+   "observed": "REJECTED",
+   "log": "mut8.log"
+  },
+  {
+   "bank": 7,
+   "kind": "selmut",
+   "observed": "REJECTED",
+   "log": "selmut8.log"
+  }
+ ],
+ "negative_control": "mut delays the complete four-bit selector/valid bus by one real register at one leaf; selmut delays only the two selects and keeps both valids at their original ages. Each bank separately rejects. selmut mismatch at valid edge62 has REF/DUT valid both1, faults both0: actual selected outputs differ.",
+ "build_log_sha256": "0b3407bbe5c9477e81e25fa71f589a28e518d1d2d010703f11e22e92adf8f5b3",
+ "source_evidence": "source.sha256 hashes every compiled dependency; no DUT-generated oracle or output-derived stimulus",
+ "not_qualified": [
+  "actual allocator-age calibration",
+  "controller/issuer/E3/RQ/AM/VM temporal integration",
+  "mx writes (separate coverage fixture queued)",
+  "physical die timing",
+  "native full layer/token"
+ ],
+ "lane_fixture": "make_lane_route_bench.py now observes the current command ready-low before ready-high, retains actual back-to-back/scalar-event checks, adds ordinary output operations, per-upper valid/nonzero/used and nonzero mx requirements. Current-source zero-route baseline queued separately; OPEN until real run passes."
+}

@@ -1,0 +1,10 @@
+ERR row 0 scale 0000 != d609
+ERR row 1 scale 0000 != be45
+ERR row 2 scale 0000 != 4bc8
+ERR row 3 scale 0000 != 7420
+ERR row 4 scale 0000 != adfe
+ERR row 5 scale 0000 != a78e
+EMB_PROVIDER_FAIL errors=6 compared=390 checks=4
+FATAL: /srv/opentallas-scratch/claude/census-qkit-1016/src2/rtl/test/qwen_split/tb_qfd_embedding_word_provider.sv:134: 
+       Time: 1386000  Scope: tb_qfd_embedding_word_provider
+rc=1

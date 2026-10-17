@@ -40,7 +40,26 @@ def test_detour_around_blocks():
 
 
 def test_mirrored_face():
-    rec = {'ports': {'f_lid': {'face': 'E', 'bits': 10, 'at': [0, 100.0]}}}
+    rec = {'ports': {'f_lid': {'face': 'E', 'bits': 10, 'uniform': True, 'at': [0, 10.0]}}}
     w = I('wfc', 17190, 19300, 1728, 328, 'MY')
     f, _ = HR.endpoint(w, 'f_lid', rec, VM)
     assert f == 'W'
+
+
+def test_assigned_slices_use_the_selected_physical_contacts():
+    rec = {'ports': {'d': {'bits': 4, 'per_bit': [
+        ['N', 'M5', 2.0, .192], ['N', 'M5', 20.0, .192],
+        ['S', 'M5', 80.0, .192], ['S', 'M5', 100.0, .192]]}}}
+    assert HR.assigned_face(rec, 'd[0:1]') == ('N', 11.0)
+    assert HR.assigned_face(rec, 'd[3:2]') == ('S', 90.0)
+    it = I('tile', 100, 200, 120, 80, 'R180')
+    assert HR.endpoint(it, 'd[0]', rec, VM) == ('S', (218.0, 200))
+
+
+def test_uniform_and_explicit_positions_preserve_pitch_and_corners():
+    uniform = {'ports': {'d': {'face': 'N', 'bits': 4, 'uniform': True, 'at': [0, .192]}}}
+    f, c = HR.assigned_face(uniform, 'd[2:3]')
+    assert f == 'N' and abs(c - .48) < 1e-12
+    assert HR.endpoint(I('tile', 10, 20, 100, 80), 'd[0]', uniform, VM) == ('N', (10, 100))
+    explicit = {'ports': {'d': {'face': 'W', 'bits': 3, 'uniform': False, 'at': [1., 40., 75.]}}}
+    assert HR.assigned_face(explicit, 'd[1:2]') == ('W', 57.5)

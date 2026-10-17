@@ -1,0 +1,24 @@
+{
+ "cell": "dsfd_capt_cd",
+ "view": "physical/ref_tile/dsfd_capt_cd/views/dsfd_capt_cd",
+ "lib_cell": "dsfd_capt_cd",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 43.1,
+ "spread_ps": 1.0,
+ "outputs": 12,
+ "inputs": 14,
+ "launch_ps": 203.9,
+ "launch_pin": "t_cd[7]",
+ "capture_ps": 207.7,
+ "capture_pin": "f_st[2]",
+ "launch_over": 0,
+ "capture_over": 1,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 207.66995 > 190 (1 pins)",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one on origin/main view"
+}

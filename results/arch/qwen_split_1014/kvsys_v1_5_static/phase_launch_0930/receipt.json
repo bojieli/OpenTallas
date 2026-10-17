@@ -1,0 +1,54 @@
+{
+  "schema": "opentallas.qwen_kv_static.phase_launch_component.v1",
+  "status": "COMPONENT_PASS_WITH_FAILING_MUTANTS",
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_phase_launch.sv": "f4785327056c4586f8719a144859961cb98c4286a72e640a7c81664b7b91f6c3",
+    "rtl/test/qwen_static_kv/tb_static_phase_launch.sv": "0f3b0eee505cffcde9b47fb036d96e9415e9a4baf0f985b4710951f0370ed46d"
+  },
+  "results": [
+    {
+      "mutant": 0,
+      "exit": 0,
+      "expected_result": true,
+      "output": "PASS fixed-phase real transport36 packets, all3 lanes, held metadata, unsafe phase abort MUT=0"
+    },
+    {
+      "mutant": 1,
+      "exit": 1,
+      "expected_result": true,
+      "output": "FATAL: /home/ubuntu/wt/qkv-static-join-1016/rtl/test/qwen_static_kv/tb_static_phase_launch.sv:21: fixed HBM edge differs index8 actual1 expected0\n       Time: 10895000 Scope: tb_static_phase_launch"
+    },
+    {
+      "mutant": 2,
+      "exit": 1,
+      "expected_result": true,
+      "output": "FATAL: /home/ubuntu/wt/qkv-static-join-1016/rtl/test/qwen_static_kv/tb_static_phase_launch.sv:21: fixed HBM edge differs index439 actual1 expected0\n       Time: 341903000 Scope: tb_static_phase_launch"
+    },
+    {
+      "mutant": 3,
+      "exit": 1,
+      "expected_result": true,
+      "output": "FATAL: /home/ubuntu/wt/qkv-static-join-1016/rtl/test/qwen_static_kv/tb_static_phase_launch.sv:23: actual held metadata changed\n       Time: 11663000 Scope: tb_static_phase_launch"
+    }
+  ],
+  "actual_component": {
+    "packets": 36,
+    "lanes": 3,
+    "core_period_u": 625,
+    "hbm_period_u": 768,
+    "component_safe_window_u": [
+      200,
+      600
+    ],
+    "held_core_edges": 8,
+    "guard": "unsafe phase or metadata overwrite faults; event never waits or reschedules"
+  },
+  "scope": "Actual three-lane toggle transport and held metadata under explicitly declared component clocks; independent edge-index scoreboard.",
+  "native_full_layer": false,
+  "physical_qualified": false,
+  "gaps": [
+    "actual reset/PLL phase origin and measured source/pin/relay setup/hold aperture",
+    "actual programme/controller/front/landing source composition",
+    "native and physical clock-domain crossing qualification"
+  ]
+}

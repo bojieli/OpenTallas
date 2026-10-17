@@ -1,0 +1,64 @@
+{
+  "at": "2026-10-16T16:05:10.556872-07:00",
+  "source_job": "qfd_xs_leaf_w130-w2-b426cff27",
+  "native_openroad": "26Q3-1510-g6cb3f2b704",
+  "fleet_unit": "oth-ubuntu-4151412-1792191884",
+  "fixture_kind": "Read-only actual final ODB, private native encoded positive/interior counterexample; no route or timing claim for fixtures",
+  "real_route": {
+    "tt_setup_ps": 77.72,
+    "ff_hold_ps": 16.41,
+    "drc": 0,
+    "m6_wire_outside_terminal": 6,
+    "m6_via_outside_terminal": 12,
+    "above_cap_blockage_records": 2,
+    "m6_interior_centerline_report": 0,
+    "verdict": "FAIL PORT-only native audit"
+  },
+  "idempotence_obstruction_deltas": [
+    794,
+    794,
+    0,
+    0
+  ],
+  "positive_failures": 0,
+  "interior_mutant_additional_failure": "NETS wo_d[0]: M6 wire outside granted PORT",
+  "closed_views": {
+    "explicit_grant_closed_jobs_in_current_state": 0,
+    "required_readonly_followup": [
+      "qfd_xhead_w_w130-w3-64ae90680 final route/view on completion",
+      "Any future M6 PORT-granted ECO result must audit its final DEF, never pre-ECO DEF"
+    ],
+    "conclusion": "No historical CLOSED view invalidated without actual audit evidence"
+  },
+  "artifact_root": "/home/ubuntu/artifacts/codex-m6-flow-1557",
+  "files": {
+    "actual.def": "552b3f05c8409ac56fc8f4e8cca65a8b292b2a23c01e6269876320825e4405b2",
+    "actual.lef": "a045c0827540ce9607069de86b2a9b6d5c3c24f5a6d13b9529371252ef42f15d",
+    "interior.def": "c3c1702eed6af2911b91cb14a456034d694b596869fb3ec6b0b42c095b5ad277",
+    "positive.def": "77ec00e3c7267a703fa00c4445541de4440843ed99ee071b6cc41c77a97f8d93",
+    "tech.lef": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+    "floorplan.json": "4eef39cc6e97453072afeab98c3573d7cfe1c4d7f0043adad9fd8e2e3baa6299"
+  },
+  "tests": {
+    "hier_contract_grant": 16,
+    "ref_tile_m6": 5,
+    "eco_policy": 2,
+    "eco_reference": 7,
+    "eco_export": 1,
+    "macro_views": 14
+  },
+  "complement_witness": {
+    "outside_terminal_point": [
+      60,
+      68560
+    ],
+    "outside_terminal_blocked": true,
+    "legal_terminal_point": [
+      192,
+      41936
+    ],
+    "legal_terminal_blocked": false
+  },
+  "limitation": "Native guard geometry and audit fixtures pass. No canonical DRT rerun under the new complement guard was performed; Qwen IO owner owns the justified successor after shared-flow merge.",
+  "m7_blockage_cause": "Qwen IO owner traced stn_pin_keepout add before M6 pin deepening, remove after: recomputed toggle geometry differs. Generator now deepens M6 pins before keepout add, preserving matching removal geometry."
+}

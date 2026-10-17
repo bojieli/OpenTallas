@@ -1,0 +1,32 @@
+{
+ "tool": "tools/hier_contract/native_pin_audit.audit_one (TT; launch<=220 capture<=190)",
+ "date": "2026-10-16T13:45-07:00",
+ "stream": "S-VM",
+ "records": [
+  {
+   "cell": "dsfd_capt_cd",
+   "view": "physical/ref_tile/dsfd_capt_cd_split1016p/views/dsfd_capt_cd",
+   "lib_cell": "dsfd_capt_cd",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 83.9,
+   "spread_ps": 15.0,
+   "outputs": 12,
+   "inputs": 14,
+   "launch_ps": 170.1,
+   "launch_pin": "t_cd[9]",
+   "capture_ps": 123.9,
+   "capture_pin": "f_st[11]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "record_commit": "9f2e4ae9d",
+   "job": "dsfd_capt_cd_split1016p-split1p-4d451d0fb"
+  }
+ ]
+}

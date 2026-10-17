@@ -1,0 +1,23 @@
+{
+  "cell": "hfd_vms_bank_native_q2",
+  "view": "/home/ubuntu/artifacts/hsm-0825/nat2_q2",
+  "lib_cell": "hfd_vms_bank_native_q2",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 704.0,
+  "spread_ps": 46.9,
+  "outputs": 1852,
+  "inputs": 2341,
+  "launch_ps": 250.8,
+  "launch_pin": "rr0[12]",
+  "capture_ps": 194.4,
+  "capture_pin": "wq1[269]",
+  "launch_over": 370,
+  "capture_over": 26,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 250.81976 > 220 (370 pins); capture 194.43881 > 190 (26 pins)"
+}

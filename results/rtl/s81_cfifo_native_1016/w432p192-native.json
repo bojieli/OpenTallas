@@ -1,0 +1,24 @@
+{
+ "cell": "dsfd_cfifo",
+ "view": "physical/ref_tile/s81coll_cfifo_x2_w432p192/views/dsfd_cfifo",
+ "lib_cell": "dsfd_cfifo",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 220.4,
+ "spread_ps": 43.6,
+ "outputs": 1171,
+ "inputs": 1173,
+ "launch_ps": 257.8,
+ "launch_pin": "x2[291]",
+ "capture_ps": 316.6,
+ "capture_pin": "ri[59]",
+ "launch_over": 9,
+ "capture_over": 67,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 257.83523 > 220 (9 pins); capture 316.61535 > 190 (67 pins)",
+ "job": "s81coll_cfifo_x2_w432p192-w432p192-e1d2c142c"
+}

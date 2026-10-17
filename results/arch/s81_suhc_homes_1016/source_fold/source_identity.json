@@ -1,0 +1,216 @@
+{
+ "scope": "INTERFACE GRAPH CENSUS ONLY, never functional qualification",
+ "top": {
+  "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_static.sv",
+  "sha256": "59b0d29a8ebf20049a9e92fdca1a2e60063ee8c7fc2622ec767ca92b56a26efd",
+  "params": {
+   "RXH": 2
+  }
+ },
+ "native_interfaces": {
+  "ot_s81_su_calendar_ctl": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_ctl.sv",
+   "sha256": "ee79596b363a1d757689ba2806dfe7085c331d83591905a8c124bc388c4b96c0"
+  },
+  "ot_s81_su_calendar_store": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_store.sv",
+   "sha256": "5a461f769106ca90365395a1fa2ac7a2dc21854cd8cd62914a7601d8516a103b"
+  },
+  "ot_s81_su_cn_ik": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv",
+   "sha256": "e13011d0e89dd9b558ec376605b35bc497c36413f1a5c0d090aa560c0ef85f63"
+  },
+  "ot_s81_su_cn_align": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv",
+   "sha256": "e13011d0e89dd9b558ec376605b35bc497c36413f1a5c0d090aa560c0ef85f63"
+  },
+  "ot_s81_su_cn_quant": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv",
+   "sha256": "e13011d0e89dd9b558ec376605b35bc497c36413f1a5c0d090aa560c0ef85f63"
+  },
+  "ot_s81_su_ik_reduce": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv",
+   "sha256": "e13011d0e89dd9b558ec376605b35bc497c36413f1a5c0d090aa560c0ef85f63"
+  },
+  "ot_s81_su_cn_write": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv",
+   "sha256": "e13011d0e89dd9b558ec376605b35bc497c36413f1a5c0d090aa560c0ef85f63"
+  },
+  "ot_s81_su_cn_norm_write": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv",
+   "sha256": "e13011d0e89dd9b558ec376605b35bc497c36413f1a5c0d090aa560c0ef85f63"
+  },
+  "ot_s81_su_pin": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_ctl.sv",
+   "sha256": "05704171f0698698cb9caf52a2da70feaa2315047185141c59793f7781254279"
+  },
+  "ot_s81_su_ctl": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_ctl.sv",
+   "sha256": "05704171f0698698cb9caf52a2da70feaa2315047185141c59793f7781254279"
+  },
+  "ot_s81_su_hctl": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_hctl.sv",
+   "sha256": "cd568b2f3868d1a76b2e8bf5dfcab2c5b5afeec5cdd51cc1bcf047a7bfa9d683"
+  },
+  "ot_s81_su_kvt": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv",
+   "sha256": "50b6dc804cc1e8d84725d937374d704f17cc0747afc7a13886e33acd305f76e2"
+  },
+  "ot_s81_su_kve": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv",
+   "sha256": "50b6dc804cc1e8d84725d937374d704f17cc0747afc7a13886e33acd305f76e2"
+  },
+  "ot_s81_su_kvq": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv",
+   "sha256": "50b6dc804cc1e8d84725d937374d704f17cc0747afc7a13886e33acd305f76e2"
+  },
+  "ot_s81_su_moe_add_leaf": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_moe_sum_static.sv",
+   "sha256": "74a67398a8ba0e988e5d014084ee96e9ecaae410f2abb55343be530d4fdfc425"
+  },
+  "ot_s81_su_moe_sum_static": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_moe_sum_static.sv",
+   "sha256": "74a67398a8ba0e988e5d014084ee96e9ecaae410f2abb55343be530d4fdfc425"
+  },
+  "ot_s81_su_norm_lg": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_norm_lg.sv",
+   "sha256": "eac8375b873aacaef2886066ff57ca388f5643ee8e4aca38bea168c6e6532b94"
+  },
+  "ot_s81_su_qbt": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qb.sv",
+   "sha256": "1ff3518791a1d63f0fc31b225bdc69da973f224f936f875afeb973037d97a73f"
+  },
+  "ot_s81_su_qbtl": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qb.sv",
+   "sha256": "1ff3518791a1d63f0fc31b225bdc69da973f224f936f875afeb973037d97a73f"
+  },
+  "ot_s81_su_qbe": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qb.sv",
+   "sha256": "1ff3518791a1d63f0fc31b225bdc69da973f224f936f875afeb973037d97a73f"
+  },
+  "ot_s81_su_qnt": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+   "sha256": "23d35291efaea6fda0c0acaf58acf3b7c80c7a6bb0bf9f6f3259c2d92d5a2dd1"
+  },
+  "ot_s81_su_qn_keep_ff": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+   "sha256": "23d35291efaea6fda0c0acaf58acf3b7c80c7a6bb0bf9f6f3259c2d92d5a2dd1"
+  },
+  "ot_s81_su_qne": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+   "sha256": "23d35291efaea6fda0c0acaf58acf3b7c80c7a6bb0bf9f6f3259c2d92d5a2dd1"
+  },
+  "ot_s81_su_qnr": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+   "sha256": "23d35291efaea6fda0c0acaf58acf3b7c80c7a6bb0bf9f6f3259c2d92d5a2dd1"
+  },
+  "ot_s81_su_qnh": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+   "sha256": "23d35291efaea6fda0c0acaf58acf3b7c80c7a6bb0bf9f6f3259c2d92d5a2dd1"
+  },
+  "ot_s81_su_qnq": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+   "sha256": "23d35291efaea6fda0c0acaf58acf3b7c80c7a6bb0bf9f6f3259c2d92d5a2dd1"
+  },
+  "ot_s81_su_rxc": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+   "sha256": "22033667f1b92cc1fea05008b983842c9c1fe44661561bc13206a78b1bd5ae6d"
+  },
+  "ot_s81_su_rxsf": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+   "sha256": "22033667f1b92cc1fea05008b983842c9c1fe44661561bc13206a78b1bd5ae6d"
+  },
+  "ot_s81_su_rxsb": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+   "sha256": "22033667f1b92cc1fea05008b983842c9c1fe44661561bc13206a78b1bd5ae6d"
+  },
+  "ot_s81_su_rxqr": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+   "sha256": "22033667f1b92cc1fea05008b983842c9c1fe44661561bc13206a78b1bd5ae6d"
+  },
+  "ot_s81_su_rxrb": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+   "sha256": "22033667f1b92cc1fea05008b983842c9c1fe44661561bc13206a78b1bd5ae6d"
+  },
+  "ot_s81_su_rxh": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+   "sha256": "22033667f1b92cc1fea05008b983842c9c1fe44661561bc13206a78b1bd5ae6d"
+  },
+  "ot_s81_su_rxt": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxt.sv",
+   "sha256": "508643dcf063cc738f0b38c2cfa487335077950002d5886f88049be52c801a57"
+  },
+  "ot_s81_su_smt": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+   "sha256": "2d8e98a3f25eea07416ac5a408a58e9fb21e302bc08532bbb345ac184dbe3b96"
+  },
+  "ot_s81_su_sm_keep_ff": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+   "sha256": "2d8e98a3f25eea07416ac5a408a58e9fb21e302bc08532bbb345ac184dbe3b96"
+  },
+  "ot_s81_su_sml": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+   "sha256": "2d8e98a3f25eea07416ac5a408a58e9fb21e302bc08532bbb345ac184dbe3b96"
+  },
+  "ot_s81_su_smc": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+   "sha256": "2d8e98a3f25eea07416ac5a408a58e9fb21e302bc08532bbb345ac184dbe3b96"
+  },
+  "ot_s81_su_smr": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+   "sha256": "2d8e98a3f25eea07416ac5a408a58e9fb21e302bc08532bbb345ac184dbe3b96"
+  },
+  "ot_s81_su_smd": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+   "sha256": "2d8e98a3f25eea07416ac5a408a58e9fb21e302bc08532bbb345ac184dbe3b96"
+  },
+  "ot_s81_su_dl128": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv",
+   "sha256": "6ce300eb50ee9c39fb46c6d10987045c09b1d17f476c9c9328b3ab199a33c531"
+  },
+  "ot_s81_su_swl": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv",
+   "sha256": "6ce300eb50ee9c39fb46c6d10987045c09b1d17f476c9c9328b3ab199a33c531"
+  },
+  "ot_s81_su_swe": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv",
+   "sha256": "6ce300eb50ee9c39fb46c6d10987045c09b1d17f476c9c9328b3ab199a33c531"
+  },
+  "ot_s81_su_swt": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv",
+   "sha256": "6ce300eb50ee9c39fb46c6d10987045c09b1d17f476c9c9328b3ab199a33c531"
+  },
+  "ot_s81_su_swtl": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv",
+   "sha256": "6ce300eb50ee9c39fb46c6d10987045c09b1d17f476c9c9328b3ab199a33c531"
+  },
+  "ot_s81_su_swth": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv",
+   "sha256": "6ce300eb50ee9c39fb46c6d10987045c09b1d17f476c9c9328b3ab199a33c531"
+  },
+  "ot_s81_su_tile": {
+   "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_tile.sv",
+   "sha256": "1ff6bac5dc190bc285d2337925f65af4b33dc16376e712fc73c5d3cc2ad5b57e"
+  },
+  "ot_s81_su_core": {
+   "path": "rtl/dsrom_sys/s81_suhc/ot_s81_su_core.sv",
+   "sha256": "4becec96c1d40d80bafa532ee8f4f3c201d7418c80bbd40d963273a2a1e88de4"
+  },
+  "ot_s81_su_rw": {
+   "path": "rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv",
+   "sha256": "b5340082cf91c28bcd88cf61b7eb49723ae7a39ea6d4d75939db323d8f3ae5cc"
+  },
+  "ot_s81_su_rxe": {
+   "path": "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv",
+   "sha256": "eb940d1da87c783432778e360dc3310be78157707da45c97630a67375cbdd9cd"
+  },
+  "ot_s81_su_rx": {
+   "path": "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv",
+   "sha256": "eb940d1da87c783432778e360dc3310be78157707da45c97630a67375cbdd9cd"
+  },
+  "ot_hdc_delay": {
+   "path": "rtl/hdc/ot_hdc_delay.sv",
+   "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+  }
+ }
+}

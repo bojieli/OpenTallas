@@ -1,0 +1,7 @@
+ot-run: ot-epyc4       admits     6 GB (avail 285, growth 231, headroom 48, waiters 32/2093 GB) load 72/128 running 42 disk 1729 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/routes/hbfd_rly_48_we_fc_fc2_f87700624/work/orfs
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/routes/hbfd_rly_48_we_fc_fc2_f87700624/work/orfs
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-275860-1792206707 after 0 s
+{"name": "hbfd_rly_48_WE_fc", "ok": true, "checked": true, "files": {"hbfd_rly_48_WE_fc.lef": "5c7a3be379272948aa1d9eca6a82618e5c790087213b3ee01d37a146ac1824b3", "hbfd_rly_48_WE_fc_ff.lib": "c4b204a2014d0e7bb5c600da87dae2aee1b4de66dd406b6a8c3dcd64a146b5cd", "hbfd_rly_48_WE_fc_ss.lib": "18015e703b4eddecb205f1018f7fd34c366f66ae06e155130497050e0410ad0c", "hbfd_rly_48_WE_fc_tt.lib": "d4c53b281c0bb1df36da4b6461a1937643b92508f564fb920313231b35411427"}}
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-275860-1792206707): exit 0

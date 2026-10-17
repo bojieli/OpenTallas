@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_d2d_static",
+ "enable": false,
+ "reason": "Production PR=1 wrapper already has one register per functional port; no extra port edges."
+}

@@ -1,0 +1,34 @@
+{
+  "source_commit": "f084d0a8b",
+  "q2_commit": "ee83da123",
+  "files": {
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_strap.sv": "d7be771c4e37556d6130efd99c15a19f61b97642bb5cc5d39d5d38fa3f1bb7bc",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_native_physical.sv": "87f310693884b68babba03161ede45f5405f31ba700bc1765b76246f43acd7fa",
+    "rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_abi.sv": "20e90a2bb9ca22caab78c78063a7904087c7eeea2a32aeaa689ae4a520011cc7",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv": "b7d2b5a296fda302b8d53b5ef069e977b1e6387eeb6a9dc6291c8d5a323d9dce",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv": "69d4754e503d06fbf27646aacd133f8d55f9f3eea161cac1e71682cf8b296dd5",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q2.sv": "2ff868cce88afbac970067d615f144f3b38c5f361829ede891cfc6ff9307c504",
+    "q0_wrapper.v": "c0717dbce416bd6604bca8517a242af03563523dfd9f48146fe8c3ac133a561a",
+    "q1_wrapper.v": "52cdf21ac15d7931e1a875c8f84ba87e96e3d59cf70d923a6e720930a86e4897",
+    "q2_wrapper.v": "f5cdf77e6b3cd323b7c8f560a6f56c9d5a1df211c0c8a91bfd1ae89fad72014b"
+  },
+  "core_rename": {
+    "0": {
+      "original_sha256": "b7d2b5a296fda302b8d53b5ef069e977b1e6387eeb6a9dc6291c8d5a323d9dce",
+      "renamed_sha256": "418a33e6a8b9db915269f081505d0eeb6e3bb7a22747a816090d85dc0362f171",
+      "transformation": "module declaration only renamed to consumed generated-wrapper core symbol; no RTL semantic change"
+    },
+    "1": {
+      "original_sha256": "69d4754e503d06fbf27646aacd133f8d55f9f3eea161cac1e71682cf8b296dd5",
+      "renamed_sha256": "01e21d21ff33a6d7de6d54cc2625d7045805672d32bafa47332620f41f2f6845",
+      "transformation": "module declaration only renamed to consumed generated-wrapper core symbol; no RTL semantic change"
+    },
+    "2": {
+      "original_sha256": "2ff868cce88afbac970067d615f144f3b38c5f361829ede891cfc6ff9307c504",
+      "renamed_sha256": "ac0d081a9aa512e6bf975d200c296916b41e592ad77a7f740f74c86f11c8695a",
+      "transformation": "module declaration only renamed to consumed generated-wrapper core symbol; no RTL semantic change"
+    }
+  }
+}

@@ -1,0 +1,5818 @@
+{
+ "schema": "opentallas.s81.hub_compact_screen.v1",
+ "scope": "PLANNING SCREEN (not GEN/GRT)",
+ "model": "/tmp/sdiehub/model.json.gz",
+ "coverage": {
+  "source_buses": 146146,
+  "excluded_nondatapath_buses": 24916,
+  "missing_endpoint_buses": [
+   {
+    "bus": "refclk",
+    "bits": 1,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "por_n",
+    "bits": 1,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "rank",
+    "bits": 2,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_W0_tx",
+    "bits": 513,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_W0_tck",
+    "bits": 1,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_W0_rx",
+    "bits": 513,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_W0_rck",
+    "bits": 1,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_W1_tx",
+    "bits": 544,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_W1_tck",
+    "bits": 1,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_W1_rx",
+    "bits": 544,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_W1_rck",
+    "bits": 1,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_W2_tx",
+    "bits": 544,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_W2_tck",
+    "bits": 1,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_W2_rx",
+    "bits": 544,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_W2_rck",
+    "bits": 1,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_W3_tx",
+    "bits": 544,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_W3_tck",
+    "bits": 1,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_W3_rx",
+    "bits": 544,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_W3_rck",
+    "bits": 1,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_E0_tx",
+    "bits": 513,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_E0_tck",
+    "bits": 1,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_E0_rx",
+    "bits": 513,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_E0_rck",
+    "bits": 1,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_E1_tx",
+    "bits": 544,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_E1_tck",
+    "bits": 1,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_E1_rx",
+    "bits": 544,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_E1_rck",
+    "bits": 1,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_E2_tx",
+    "bits": 544,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_E2_tck",
+    "bits": 1,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_E2_rx",
+    "bits": 544,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_E2_rck",
+    "bits": 1,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_E3_tx",
+    "bits": 544,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_E3_tck",
+    "bits": 1,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_E3_rx",
+    "bits": 544,
+    "missing": [
+     "TOP"
+    ]
+   },
+   {
+    "bus": "pad_lk_E3_rck",
+    "bits": 1,
+    "missing": [
+     "TOP"
+    ]
+   }
+  ],
+  "eligible_buses": 121195,
+  "direct_other_buses": 103149,
+  "transport_buses": 17764,
+  "direct_hub_buses": 282,
+  "unsupported_hub_components": [
+   {
+    "component": "g_he_s4_svcj_o_sp_sseq_0",
+    "hubs": [
+     "sp_host",
+     "sp_sseq",
+     "svc_SW",
+     "svcj"
+    ],
+    "fields": {},
+    "width": 293,
+    "reason": "multiterminal component only sequencer pairs projected"
+   },
+   {
+    "component": "g_hb_gather_capture_t6944_pq_cnt_11_2",
+    "hubs": [
+     "pq_cnt",
+     "sp_capture",
+     "sp_gather"
+    ],
+    "fields": {},
+    "width": 1,
+    "reason": "multiterminal component only sequencer pairs projected"
+   },
+   {
+    "component": "g_pqra_2_pqrom2d_1",
+    "hubs": [
+     "sp_pq"
+    ],
+    "fields": {},
+    "width": 12,
+    "reason": "no unique hub/field-tree or p2p projection"
+   },
+   {
+    "component": "g_pqrc_2b_pqrom2b_0",
+    "hubs": [
+     "sp_pq"
+    ],
+    "fields": {},
+    "width": 1,
+    "reason": "no unique hub/field-tree or p2p projection"
+   },
+   {
+    "component": "g_pqrq_2b_sp_pq_0",
+    "hubs": [
+     "sp_pq"
+    ],
+    "fields": {},
+    "width": 48,
+    "reason": "no unique hub/field-tree or p2p projection"
+   },
+   {
+    "component": "g_pqrc_2c_pqrom2c_1",
+    "hubs": [
+     "sp_pq"
+    ],
+    "fields": {},
+    "width": 1,
+    "reason": "no unique hub/field-tree or p2p projection"
+   },
+   {
+    "component": "g_pqrq_2c_sp_pq_1",
+    "hubs": [
+     "sp_pq"
+    ],
+    "fields": {},
+    "width": 48,
+    "reason": "no unique hub/field-tree or p2p projection"
+   },
+   {
+    "component": "g_pqrc_2d_pqrom2d_1",
+    "hubs": [
+     "sp_pq"
+    ],
+    "fields": {},
+    "width": 1,
+    "reason": "no unique hub/field-tree or p2p projection"
+   },
+   {
+    "component": "g_pqrq_2d_sp_pq_1",
+    "hubs": [
+     "sp_pq"
+    ],
+    "fields": {},
+    "width": 48,
+    "reason": "no unique hub/field-tree or p2p projection"
+   }
+  ],
+  "transport_components": 149,
+  "p2p_demand_pairs": 41,
+  "p2p_demand_bits": 130705,
+  "field_tree_groups": 14
+ },
+ "hop_um": 500.0,
+ "gcell_um": 86.4,
+ "results": {
+  "v3j": {
+   "layout": "/tmp/sdie-v3/lay/v3j.json",
+   "p2p": [
+    {
+     "a": "ctrl_SW",
+     "b": "phy_SW",
+     "bits": 22238,
+     "faces": [
+      "S",
+      "N"
+     ],
+     "len_um": 8.6,
+     "bit_mm": 192.1,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       7134.9,
+       1207.4
+      ],
+      [
+       7134.9,
+       1198.8
+      ]
+     ]
+    },
+    {
+     "a": "ctrl_SW",
+     "b": "svc_SW",
+     "bits": 19874,
+     "faces": [
+      "N",
+      "N"
+     ],
+     "len_um": 1585.4,
+     "bit_mm": 31509.0,
+     "stages": 3,
+     "obstacle_free": true,
+     "path": [
+      [
+       7134.9,
+       1455.8
+      ],
+      [
+       7134.9,
+       3041.3
+      ]
+     ]
+    },
+    {
+     "a": "sp_su_s",
+     "b": "sp_vm",
+     "bits": 17136,
+     "faces": [
+      "N",
+      "S"
+     ],
+     "len_um": 432.0,
+     "bit_mm": 7402.8,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       12818.5,
+       12500.0
+      ],
+      [
+       12818.5,
+       12932
+      ]
+     ]
+    },
+    {
+     "a": "sp_hc_s",
+     "b": "sp_hc_t",
+     "bits": 15660,
+     "faces": [
+      "S",
+      "N"
+     ],
+     "len_um": 432.0,
+     "bit_mm": 6765.1,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       19788.2,
+       12932
+      ],
+      [
+       19788.2,
+       12500.0
+      ]
+     ]
+    },
+    {
+     "a": "sp_capture",
+     "b": "sp_vm",
+     "bits": 13376,
+     "faces": [
+      "S",
+      "N"
+     ],
+     "len_um": 21.6,
+     "bit_mm": 288.9,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       12818.5,
+       17554.4
+      ],
+      [
+       12818.5,
+       17532.8
+      ]
+     ]
+    },
+    {
+     "a": "sp_collective",
+     "b": "sp_hc_s",
+     "bits": 8193,
+     "faces": [
+      "E",
+      "W"
+     ],
+     "len_um": 522.0,
+     "bit_mm": 4276.9,
+     "stages": 1,
+     "obstacle_free": true,
+     "path": [
+      [
+       17428.0,
+       15120.0
+      ],
+      [
+       17950,
+       15120.0
+      ]
+     ]
+    },
+    {
+     "a": "sp_capture",
+     "b": "sp_gather",
+     "bits": 6446,
+     "faces": [
+      "N",
+      "S"
+     ],
+     "len_um": 43.2,
+     "bit_mm": 278.6,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       12818.5,
+       18116.0
+      ],
+      [
+       12818.5,
+       18159.2
+      ]
+     ]
+    },
+    {
+     "a": "sp_hc_s",
+     "b": "sp_vm",
+     "bits": 5400,
+     "faces": [
+      "W",
+      "E"
+     ],
+     "len_um": 2753.5,
+     "bit_mm": 14869.0,
+     "stages": 5,
+     "obstacle_free": true,
+     "path": [
+      [
+       17950,
+       15662.0
+      ],
+      [
+       17920.0,
+       15662.0
+      ],
+      [
+       17920.0,
+       15802.5
+      ],
+      [
+       15337.0,
+       15802.5
+      ]
+     ]
+    },
+    {
+     "a": "sp_collective",
+     "b": "sp_vm",
+     "bits": 2732,
+     "faces": [
+      "W",
+      "E"
+     ],
+     "len_um": 363.0,
+     "bit_mm": 991.7,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       15700,
+       15232.4
+      ],
+      [
+       15337.0,
+       15232.4
+      ]
+     ]
+    },
+    {
+     "a": "sp_pq",
+     "b": "sp_vm",
+     "bits": 2069,
+     "faces": [
+      "E",
+      "N"
+     ],
+     "len_um": 2280.6,
+     "bit_mm": 4718.6,
+     "stages": 4,
+     "obstacle_free": true,
+     "path": [
+      [
+       13626.8,
+       19656.6
+      ],
+      [
+       13656.8,
+       19656.6
+      ],
+      [
+       13656.8,
+       19651.6
+      ],
+      [
+       13705.2,
+       19651.6
+      ],
+      [
+       13705.2,
+       17534.8
+      ],
+      [
+       13626.8,
+       17534.8
+      ],
+      [
+       13626.8,
+       17532.8
+      ]
+     ]
+    },
+    {
+     "a": "sp_vm",
+     "b": "sp_wfc",
+     "bits": 1589,
+     "faces": [
+      "E",
+      "E"
+     ],
+     "len_um": 4341.0,
+     "bit_mm": 6897.8,
+     "stages": 8,
+     "obstacle_free": true,
+     "path": [
+      [
+       15337.0,
+       17501.2
+      ],
+      [
+       19678.0,
+       17501.2
+      ]
+     ]
+    },
+    {
+     "a": "sp_vm",
+     "b": "svc_SW",
+     "bits": 1542,
+     "faces": [
+      "W",
+      "N"
+     ],
+     "len_um": 11605.8,
+     "bit_mm": 17896.1,
+     "stages": 23,
+     "obstacle_free": true,
+     "path": [
+      [
+       10300,
+       13522.1
+      ],
+      [
+       10270.0,
+       13522.1
+      ],
+      [
+       10270.0,
+       3071.3
+      ],
+      [
+       11364.9,
+       3071.3
+      ],
+      [
+       11364.9,
+       3041.3
+      ]
+     ]
+    },
+    {
+     "a": "sp_collective",
+     "b": "sp_wfc",
+     "bits": 1028,
+     "faces": [
+      "N",
+      "E"
+     ],
+     "len_um": 4117.6,
+     "bit_mm": 4232.9,
+     "stages": 8,
+     "obstacle_free": true,
+     "path": [
+      [
+       17408.0,
+       15653.6
+      ],
+      [
+       17408.0,
+       17501.2
+      ],
+      [
+       19678.0,
+       17501.2
+      ]
+     ]
+    },
+    {
+     "a": "lk_W0",
+     "b": "sp_collective",
+     "bits": 1027,
+     "faces": [
+      "E",
+      "W"
+     ],
+     "len_um": 18060.0,
+     "bit_mm": 18547.7,
+     "stages": 36,
+     "obstacle_free": true,
+     "path": [
+      [
+       281.1,
+       10367.5
+      ],
+      [
+       311.1,
+       10367.5
+      ],
+      [
+       311.1,
+       10359.5
+      ],
+      [
+       302.4,
+       10359.5
+      ],
+      [
+       302.4,
+       12908.3
+      ],
+      [
+       15681.6,
+       12908.3
+      ],
+      [
+       15681.6,
+       12951.5
+      ],
+      [
+       15670.0,
+       12951.5
+      ],
+      [
+       15670.0,
+       12952.0
+      ],
+      [
+       15700,
+       12952.0
+      ]
+     ]
+    },
+    {
+     "a": "lk_W1",
+     "b": "sp_collective",
+     "bits": 1027,
+     "faces": [
+      "E",
+      "W"
+     ],
+     "len_um": 15707.4,
+     "bit_mm": 16131.5,
+     "stages": 31,
+     "obstacle_free": true,
+     "path": [
+      [
+       281.6,
+       12663.0
+      ],
+      [
+       15670.0,
+       12663.0
+      ],
+      [
+       15670.0,
+       12952.0
+      ],
+      [
+       15700,
+       12952.0
+      ]
+     ]
+    },
+    {
+     "a": "lk_W2",
+     "b": "sp_collective",
+     "bits": 1027,
+     "faces": [
+      "E",
+      "S"
+     ],
+     "len_um": 15800.4,
+     "bit_mm": 16227.0,
+     "stages": 31,
+     "obstacle_free": true,
+     "path": [
+      [
+       281.6,
+       13023.0
+      ],
+      [
+       311.6,
+       13023.0
+      ],
+      [
+       311.6,
+       12902.0
+      ],
+      [
+       15931.0,
+       12902.0
+      ],
+      [
+       15931.0,
+       12932
+      ]
+     ]
+    },
+    {
+     "a": "lk_W3",
+     "b": "sp_collective",
+     "bits": 1027,
+     "faces": [
+      "S",
+      "W"
+     ],
+     "len_um": 18014.9,
+     "bit_mm": 18501.3,
+     "stages": 36,
+     "obstacle_free": true,
+     "path": [
+      [
+       235.3,
+       15020.6
+      ],
+      [
+       235.3,
+       15007.2
+      ],
+      [
+       10281.6,
+       15007.2
+      ],
+      [
+       10281.6,
+       12890.4
+      ],
+      [
+       15681.6,
+       12890.4
+      ],
+      [
+       15681.6,
+       13279.2
+      ],
+      [
+       15670.0,
+       13279.2
+      ],
+      [
+       15670.0,
+       13287.2
+      ],
+      [
+       15700,
+       13287.2
+      ]
+     ]
+    },
+    {
+     "a": "lk_E0",
+     "b": "sp_collective",
+     "bits": 1027,
+     "faces": [
+      "W",
+      "E"
+     ],
+     "len_um": 17928.5,
+     "bit_mm": 18412.5,
+     "stages": 35,
+     "obstacle_free": true,
+     "path": [
+      [
+       32719.2,
+       10367.5
+      ],
+      [
+       32689.2,
+       10367.5
+      ],
+      [
+       32689.2,
+       10359.5
+      ],
+      [
+       32699.6,
+       10359.5
+      ],
+      [
+       32699.6,
+       12908.3
+      ],
+      [
+       17450.0,
+       12908.3
+      ],
+      [
+       17450.0,
+       12951.5
+      ],
+      [
+       17458.0,
+       12951.5
+      ],
+      [
+       17458.0,
+       12952.0
+      ],
+      [
+       17428.0,
+       12952.0
+      ]
+     ]
+    },
+    {
+     "a": "lk_E1",
+     "b": "sp_collective",
+     "bits": 1027,
+     "faces": [
+      "W",
+      "E"
+     ],
+     "len_um": 15579.4,
+     "bit_mm": 16000.0,
+     "stages": 31,
+     "obstacle_free": true,
+     "path": [
+      [
+       32718.4,
+       12663.0
+      ],
+      [
+       17458.0,
+       12663.0
+      ],
+      [
+       17458.0,
+       12952.0
+      ],
+      [
+       17428.0,
+       12952.0
+      ]
+     ]
+    },
+    {
+     "a": "lk_E2",
+     "b": "sp_collective",
+     "bits": 1027,
+     "faces": [
+      "W",
+      "S"
+     ],
+     "len_um": 15672.4,
+     "bit_mm": 16095.6,
+     "stages": 31,
+     "obstacle_free": true,
+     "path": [
+      [
+       32718.4,
+       13023.0
+      ],
+      [
+       32688.4,
+       13023.0
+      ],
+      [
+       32688.4,
+       12902.0
+      ],
+      [
+       17197.0,
+       12902.0
+      ],
+      [
+       17197.0,
+       12932
+      ]
+     ]
+    },
+    {
+     "a": "lk_E3",
+     "b": "sp_collective",
+     "bits": 1027,
+     "faces": [
+      "S",
+      "E"
+     ],
+     "len_um": 17879.7,
+     "bit_mm": 18362.5,
+     "stages": 35,
+     "obstacle_free": true,
+     "path": [
+      [
+       32764.6,
+       15020.6
+      ],
+      [
+       32764.6,
+       15007.2
+      ],
+      [
+       21640.4,
+       15007.2
+      ],
+      [
+       21640.4,
+       12890.4
+      ],
+      [
+       17450.0,
+       12890.4
+      ],
+      [
+       17450.0,
+       13279.2
+      ],
+      [
+       17458.0,
+       13279.2
+      ],
+      [
+       17458.0,
+       13287.2
+      ],
+      [
+       17428.0,
+       13287.2
+      ]
+     ]
+    },
+    {
+     "a": "sp_collective",
+     "b": "sp_host",
+     "bits": 592,
+     "faces": [
+      "N",
+      "E"
+     ],
+     "len_um": 3966.4,
+     "bit_mm": 2348.1,
+     "stages": 7,
+     "obstacle_free": true,
+     "path": [
+      [
+       17408.0,
+       15653.6
+      ],
+      [
+       17408.0,
+       17350.0
+      ],
+      [
+       19678.0,
+       17350.0
+      ]
+     ]
+    },
+    {
+     "a": "sp_gather",
+     "b": "sp_vm",
+     "bits": 523,
+     "faces": [
+      "E",
+      "N"
+     ],
+     "len_um": 646.4,
+     "bit_mm": 338.1,
+     "stages": 1,
+     "obstacle_free": true,
+     "path": [
+      [
+       13682.5,
+       18179.2
+      ],
+      [
+       13682.5,
+       17532.8
+      ]
+     ]
+    },
+    {
+     "a": "bk_selector",
+     "b": "svc_SW",
+     "bits": 515,
+     "faces": [
+      "W",
+      "N"
+     ],
+     "len_um": 178.7,
+     "bit_mm": 92.1,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       10600,
+       3220.0
+      ],
+      [
+       10600.0,
+       3041.3
+      ]
+     ]
+    },
+    {
+     "a": "bk_collector",
+     "b": "svc_SW",
+     "bits": 515,
+     "faces": [
+      "W",
+      "N"
+     ],
+     "len_um": 522.1,
+     "bit_mm": 268.9,
+     "stages": 1,
+     "obstacle_free": true,
+     "path": [
+      [
+       10600,
+       3563.4
+      ],
+      [
+       10600.0,
+       3041.3
+      ]
+     ]
+    },
+    {
+     "a": "bk_selector",
+     "b": "sp_vm",
+     "bits": 515,
+     "faces": [
+      "N",
+      "S"
+     ],
+     "len_um": 12596.1,
+     "bit_mm": 6487.0,
+     "stages": 25,
+     "obstacle_free": true,
+     "path": [
+      [
+       12818.5,
+       3521.8
+      ],
+      [
+       12818.5,
+       3523.8
+      ],
+      [
+       10288.6,
+       3523.8
+      ],
+      [
+       10288.6,
+       12898.2
+      ],
+      [
+       10944.6,
+       12898.2
+      ],
+      [
+       10944.6,
+       12932
+      ]
+     ]
+    },
+    {
+     "a": "bk_collector",
+     "b": "sp_vm",
+     "bits": 515,
+     "faces": [
+      "N",
+      "S"
+     ],
+     "len_um": 11693.2,
+     "bit_mm": 6022.0,
+     "stages": 23,
+     "obstacle_free": true,
+     "path": [
+      [
+       12818.5,
+       4424.7
+      ],
+      [
+       12818.5,
+       4446.7
+      ],
+      [
+       10288.6,
+       4446.7
+      ],
+      [
+       10288.6,
+       12913.9
+      ],
+      [
+       10944.6,
+       12913.9
+      ],
+      [
+       10944.6,
+       12932
+      ]
+     ]
+    },
+    {
+     "a": "sp_host",
+     "b": "sp_sseq",
+     "bits": 343,
+     "faces": [
+      "E",
+      "E"
+     ],
+     "len_um": 410.4,
+     "bit_mm": 140.8,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       19678.0,
+       17439.6
+      ],
+      [
+       19678.0,
+       17850.0
+      ]
+     ]
+    },
+    {
+     "a": "sp_sseq",
+     "b": "svc_SW",
+     "bits": 293,
+     "faces": [
+      "E",
+      "N"
+     ],
+     "len_um": 23181.8,
+     "bit_mm": 6792.3,
+     "stages": 46,
+     "obstacle_free": true,
+     "path": [
+      [
+       19678.0,
+       17850.0
+      ],
+      [
+       19708.0,
+       17850.0
+      ],
+      [
+       19708.0,
+       17837.7
+      ],
+      [
+       17448.1,
+       17837.7
+      ],
+      [
+       17448.1,
+       3063.3
+      ],
+      [
+       11364.9,
+       3063.3
+      ],
+      [
+       11364.9,
+       3041.3
+      ]
+     ]
+    },
+    {
+     "a": "sp_sseq",
+     "b": "svcj",
+     "bits": 293,
+     "faces": [
+      "E",
+      "N"
+     ],
+     "len_um": 25402.2,
+     "bit_mm": 7442.9,
+     "stages": 50,
+     "obstacle_free": true,
+     "path": [
+      [
+       19678.0,
+       17850.0
+      ],
+      [
+       19708.0,
+       17850.0
+      ],
+      [
+       19708.0,
+       17842.0
+      ],
+      [
+       17469.7,
+       17842.0
+      ],
+      [
+       17469.7,
+       3110.8
+      ],
+      [
+       9096.9,
+       3110.8
+      ],
+      [
+       9096.9,
+       3088.8
+      ]
+     ]
+    },
+    {
+     "a": "pq_cnt",
+     "b": "sp_pq",
+     "bits": 208,
+     "faces": [
+      "W",
+      "S"
+     ],
+     "len_um": 2405.0,
+     "bit_mm": 500.2,
+     "stages": 4,
+     "obstacle_free": true,
+     "path": [
+      [
+       11954.6,
+       18155.0
+      ],
+      [
+       11924.6,
+       18155.0
+      ],
+      [
+       11924.6,
+       19606.6
+      ],
+      [
+       12817.9,
+       19606.6
+      ],
+      [
+       12817.9,
+       19636.6
+      ]
+     ]
+    },
+    {
+     "a": "sp_sseq",
+     "b": "sp_wfc",
+     "bits": 203,
+     "faces": [
+      "E",
+      "E"
+     ],
+     "len_um": 60.5,
+     "bit_mm": 12.3,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       19678.0,
+       17850.0
+      ],
+      [
+       19678.0,
+       17789.5
+      ]
+     ]
+    },
+    {
+     "a": "sp_gather",
+     "b": "sp_sseq",
+     "bits": 96,
+     "faces": [
+      "E",
+      "E"
+     ],
+     "len_um": 6276.1,
+     "bit_mm": 602.5,
+     "stages": 12,
+     "obstacle_free": true,
+     "path": [
+      [
+       13682.5,
+       18179.2
+      ],
+      [
+       13712.5,
+       18179.2
+      ],
+      [
+       13712.5,
+       17898.5
+      ],
+      [
+       19678.0,
+       17898.5
+      ]
+     ]
+    },
+    {
+     "a": "sp_sseq",
+     "b": "sp_su_s",
+     "bits": 96,
+     "faces": [
+      "E",
+      "N"
+     ],
+     "len_um": 9564.0,
+     "bit_mm": 918.1,
+     "stages": 19,
+     "obstacle_free": true,
+     "path": [
+      [
+       19678.0,
+       17850.0
+      ],
+      [
+       15464.0,
+       17850.0
+      ],
+      [
+       15464.0,
+       12500.0
+      ]
+     ]
+    },
+    {
+     "a": "sp_hc_s",
+     "b": "sp_sseq",
+     "bits": 96,
+     "faces": [
+      "N",
+      "E"
+     ],
+     "len_um": 542.0,
+     "bit_mm": 52.0,
+     "stages": 1,
+     "obstacle_free": true,
+     "path": [
+      [
+       19678.0,
+       17308.0
+      ],
+      [
+       19678.0,
+       17850.0
+      ]
+     ]
+    },
+    {
+     "a": "sp_collective",
+     "b": "sp_sseq",
+     "bits": 96,
+     "faces": [
+      "N",
+      "E"
+     ],
+     "len_um": 4466.4,
+     "bit_mm": 428.8,
+     "stages": 8,
+     "obstacle_free": true,
+     "path": [
+      [
+       17408.0,
+       15653.6
+      ],
+      [
+       17408.0,
+       17850.0
+      ],
+      [
+       19678.0,
+       17850.0
+      ]
+     ]
+    },
+    {
+     "a": "sp_sseq",
+     "b": "sp_vm",
+     "bits": 96,
+     "faces": [
+      "E",
+      "E"
+     ],
+     "len_um": 4678.2,
+     "bit_mm": 449.1,
+     "stages": 9,
+     "obstacle_free": true,
+     "path": [
+      [
+       19678.0,
+       17850.0
+      ],
+      [
+       15367.0,
+       17850.0
+      ],
+      [
+       15367.0,
+       17512.8
+      ],
+      [
+       15337.0,
+       17512.8
+      ]
+     ]
+    },
+    {
+     "a": "bk_selector",
+     "b": "sp_sseq",
+     "bits": 86,
+     "faces": [
+      "N",
+      "E"
+     ],
+     "len_um": 18248.2,
+     "bit_mm": 1569.3,
+     "stages": 36,
+     "obstacle_free": true,
+     "path": [
+      [
+       15850.4,
+       3521.8
+      ],
+      [
+       15850.4,
+       3523.8
+      ],
+      [
+       17916.0,
+       3523.8
+      ],
+      [
+       17916.0,
+       17866.2
+      ],
+      [
+       19708.0,
+       17866.2
+      ],
+      [
+       19708.0,
+       17850.0
+      ],
+      [
+       19678.0,
+       17850.0
+      ]
+     ]
+    },
+    {
+     "a": "bk_collector",
+     "b": "sp_sseq",
+     "bits": 86,
+     "faces": [
+      "N",
+      "E"
+     ],
+     "len_um": 17312.9,
+     "bit_mm": 1488.9,
+     "stages": 34,
+     "obstacle_free": true,
+     "path": [
+      [
+       15850.4,
+       4424.7
+      ],
+      [
+       15850.4,
+       4446.7
+      ],
+      [
+       17916.0,
+       4446.7
+      ],
+      [
+       17916.0,
+       17838.7
+      ],
+      [
+       19708.0,
+       17838.7
+      ],
+      [
+       19708.0,
+       17850.0
+      ],
+      [
+       19678.0,
+       17850.0
+      ]
+     ]
+    },
+    {
+     "a": "svc_SW",
+     "b": "svcj",
+     "bits": 35,
+     "faces": [
+      "N",
+      "S"
+     ],
+     "len_um": 4.3,
+     "bit_mm": 0.2,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       9084.5,
+       3041.3
+      ],
+      [
+       9084.5,
+       3045.6
+      ]
+     ]
+    },
+    {
+     "a": "sp_host",
+     "b": "sp_wfc",
+     "bits": 4,
+     "faces": [
+      "E",
+      "E"
+     ],
+     "len_um": 61.6,
+     "bit_mm": 0.2,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       19678.0,
+       17439.6
+      ],
+      [
+       19678.0,
+       17501.2
+      ]
+     ]
+    }
+   ],
+   "trees": [
+    {
+     "root": "sp_pq",
+     "side": "W",
+     "leaves": 56,
+     "width": 1101,
+     "worst_um": 30512.5,
+     "worst_stages": 61,
+     "mean_um": 15221.6,
+     "bit_mm": 941060.1,
+     "root_point": [
+      11954.6,
+      19656.6
+     ],
+     "entry_y": 13100.9
+    },
+    {
+     "root": "sp_pq",
+     "side": "E",
+     "leaves": 72,
+     "width": 1101,
+     "worst_um": 37863.4,
+     "worst_stages": 75,
+     "mean_um": 22792.6,
+     "bit_mm": 1811740.2,
+     "root_point": [
+      13626.8,
+      19656.6
+     ],
+     "entry_y": 13159.3
+    },
+    {
+     "root": "sp_gather",
+     "side": "W",
+     "leaves": 10,
+     "width": 692,
+     "worst_um": 31168.6,
+     "worst_stages": 62,
+     "mean_um": 25968.5,
+     "bit_mm": 18178.0,
+     "root_point": [
+      11954.6,
+      18179.2
+     ],
+     "entry_y": 3268.6
+    },
+    {
+     "root": "sp_gather",
+     "side": "E",
+     "leaves": 11,
+     "width": 759,
+     "worst_um": 36330.2,
+     "worst_stages": 72,
+     "mean_um": 29215.7,
+     "bit_mm": 22496.1,
+     "root_point": [
+      13682.5,
+      18179.2
+     ],
+     "entry_y": 227.3
+    },
+    {
+     "root": "sp_gather",
+     "side": "E",
+     "leaves": 11,
+     "width": 759,
+     "worst_um": 28652.7,
+     "worst_stages": 57,
+     "mean_um": 22629.3,
+     "bit_mm": 17424.6,
+     "root_point": [
+      13682.5,
+      18179.2
+     ],
+     "entry_y": 6642.5
+    },
+    {
+     "root": "sp_gather",
+     "side": "E",
+     "leaves": 11,
+     "width": 761,
+     "worst_um": 30949.2,
+     "worst_stages": 61,
+     "mean_um": 23332.9,
+     "bit_mm": 17966.3,
+     "root_point": [
+      13682.5,
+      18179.2
+     ],
+     "entry_y": 6700.9
+    },
+    {
+     "root": "sp_gather",
+     "side": "E",
+     "leaves": 11,
+     "width": 759,
+     "worst_um": 33245.7,
+     "worst_stages": 66,
+     "mean_um": 24966.6,
+     "bit_mm": 19224.2,
+     "root_point": [
+      13682.5,
+      18179.2
+     ],
+     "entry_y": 9727.0
+    },
+    {
+     "root": "sp_gather",
+     "side": "W",
+     "leaves": 10,
+     "width": 690,
+     "worst_um": 28210.7,
+     "worst_stages": 56,
+     "mean_um": 15089.0,
+     "bit_mm": 10562.3,
+     "root_point": [
+      11954.6,
+      18179.2
+     ],
+     "entry_y": 13100.9
+    },
+    {
+     "root": "sp_gather",
+     "side": "W",
+     "leaves": 10,
+     "width": 692,
+     "worst_um": 19187.6,
+     "worst_stages": 38,
+     "mean_um": 11761.3,
+     "bit_mm": 8232.9,
+     "root_point": [
+      11954.6,
+      18179.2
+     ],
+     "entry_y": 13159.3
+    },
+    {
+     "root": "sp_gather",
+     "side": "E",
+     "leaves": 11,
+     "width": 759,
+     "worst_um": 18805.2,
+     "worst_stages": 37,
+     "mean_um": 14548.3,
+     "bit_mm": 11202.2,
+     "root_point": [
+      13682.5,
+      18179.2
+     ],
+     "entry_y": 16243.7
+    },
+    {
+     "root": "sp_gather",
+     "side": "E",
+     "leaves": 11,
+     "width": 759,
+     "worst_um": 23398.3,
+     "worst_stages": 46,
+     "mean_um": 16619.8,
+     "bit_mm": 12797.3,
+     "root_point": [
+      13682.5,
+      18179.2
+     ],
+     "entry_y": 16243.7
+    },
+    {
+     "root": "sp_gather",
+     "side": "E",
+     "leaves": 11,
+     "width": 761,
+     "worst_um": 21319.2,
+     "worst_stages": 42,
+     "mean_um": 12623.3,
+     "bit_mm": 9719.9,
+     "root_point": [
+      13682.5,
+      19184.6
+     ],
+     "entry_y": 19574.4
+    },
+    {
+     "root": "sp_gather",
+     "side": "E",
+     "leaves": 11,
+     "width": 759,
+     "worst_um": 17607.4,
+     "worst_stages": 35,
+     "mean_um": 14767.6,
+     "bit_mm": 11371.0,
+     "root_point": [
+      13682.5,
+      19184.6
+     ],
+     "entry_y": 23006.7
+    },
+    {
+     "root": "sp_gather",
+     "side": "E",
+     "leaves": 10,
+     "width": 690,
+     "worst_um": 22200.4,
+     "worst_stages": 44,
+     "mean_um": 15678.2,
+     "bit_mm": 10974.7,
+     "root_point": [
+      13682.5,
+      19184.6
+     ],
+     "entry_y": 22658.9
+    }
+   ],
+   "congestion": {
+    "max_util": 0.698,
+    "edges_over_060": 23,
+    "edges_over_100": 0,
+    "unrouted_bundles": 0,
+    "unrouted_bits": 0,
+    "unrouted": [],
+    "routing_complete": true,
+    "hot_edges": [
+     {
+      "grid": [
+       114,
+       200,
+       "h"
+      ],
+      "center_um": [
+       18797.232,
+       17323.2
+      ],
+      "utilisation": 0.697613,
+      "bits": 1977.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       115,
+       200,
+       "h"
+      ],
+      "center_um": [
+       18883.632,
+       17323.2
+      ],
+      "utilisation": 0.697613,
+      "bits": 1977.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       116,
+       200,
+       "h"
+      ],
+      "center_um": [
+       18970.032,
+       17323.2
+      ],
+      "utilisation": 0.697613,
+      "bits": 1977.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       117,
+       200,
+       "h"
+      ],
+      "center_um": [
+       19056.432,
+       17323.2
+      ],
+      "utilisation": 0.697613,
+      "bits": 1977.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       118,
+       200,
+       "h"
+      ],
+      "center_um": [
+       19142.832,
+       17323.2
+      ],
+      "utilisation": 0.697613,
+      "bits": 1977.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       119,
+       200,
+       "h"
+      ],
+      "center_um": [
+       19229.232,
+       17323.2
+      ],
+      "utilisation": 0.697613,
+      "bits": 1977.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       120,
+       200,
+       "h"
+      ],
+      "center_um": [
+       19315.632,
+       17323.2
+      ],
+      "utilisation": 0.697613,
+      "bits": 1977.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       121,
+       200,
+       "h"
+      ],
+      "center_um": [
+       19402.032,
+       17323.2
+      ],
+      "utilisation": 0.697613,
+      "bits": 1977.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       122,
+       200,
+       "h"
+      ],
+      "center_um": [
+       19488.432,
+       17323.2
+      ],
+      "utilisation": 0.697613,
+      "bits": 1977.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       123,
+       200,
+       "h"
+      ],
+      "center_um": [
+       19574.832,
+       17323.2
+      ],
+      "utilisation": 0.697613,
+      "bits": 1977.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       124,
+       200,
+       "h"
+      ],
+      "center_um": [
+       19661.232,
+       17323.2
+      ],
+      "utilisation": 0.697613,
+      "bits": 1977.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       125,
+       205,
+       "v"
+      ],
+      "center_um": [
+       19747.632,
+       17755.2
+      ],
+      "utilisation": 0.689453,
+      "bits": 2606.133,
+      "contributors": [
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 1135.0
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 616.8
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       104,
+       200,
+       "h"
+      ],
+      "center_um": [
+       17933.232,
+       17323.2
+      ],
+      "utilisation": 0.663751,
+      "bits": 1881.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       105,
+       200,
+       "h"
+      ],
+      "center_um": [
+       18019.632,
+       17323.2
+      ],
+      "utilisation": 0.663751,
+      "bits": 1881.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       106,
+       200,
+       "h"
+      ],
+      "center_um": [
+       18106.032,
+       17323.2
+      ],
+      "utilisation": 0.663751,
+      "bits": 1881.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       107,
+       200,
+       "h"
+      ],
+      "center_um": [
+       18192.432,
+       17323.2
+      ],
+      "utilisation": 0.663751,
+      "bits": 1881.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       108,
+       200,
+       "h"
+      ],
+      "center_um": [
+       18278.832,
+       17323.2
+      ],
+      "utilisation": 0.663751,
+      "bits": 1881.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       109,
+       200,
+       "h"
+      ],
+      "center_um": [
+       18365.232,
+       17323.2
+      ],
+      "utilisation": 0.663751,
+      "bits": 1881.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       110,
+       200,
+       "h"
+      ],
+      "center_um": [
+       18451.632,
+       17323.2
+      ],
+      "utilisation": 0.663751,
+      "bits": 1881.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       111,
+       200,
+       "h"
+      ],
+      "center_um": [
+       18538.032,
+       17323.2
+      ],
+      "utilisation": 0.663751,
+      "bits": 1881.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       112,
+       200,
+       "h"
+      ],
+      "center_um": [
+       18624.432,
+       17323.2
+      ],
+      "utilisation": 0.663751,
+      "bits": 1881.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       113,
+       200,
+       "h"
+      ],
+      "center_um": [
+       18710.832,
+       17323.2
+      ],
+      "utilisation": 0.663751,
+      "bits": 1881.733,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 616.2
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       125,
+       204,
+       "v"
+      ],
+      "center_um": [
+       19747.632,
+       17668.8
+      ],
+      "utilisation": 0.635062,
+      "bits": 2400.533,
+      "contributors": [
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 1135.0
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       125,
+       202,
+       "v"
+      ],
+      "center_um": [
+       19747.632,
+       17496.0
+      ],
+      "utilisation": 0.58067,
+      "bits": 2194.933,
+      "contributors": [
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 1135.0
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       125,
+       206,
+       "v"
+      ],
+      "center_um": [
+       19747.632,
+       17841.6
+      ],
+      "utilisation": 0.566437,
+      "bits": 2141.133,
+      "contributors": [
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 1135.0
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 616.8
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_gather->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_collective->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       99,
+       149,
+       "v"
+      ],
+      "center_um": [
+       17501.232,
+       12916.8
+      ],
+      "utilisation": 0.553983,
+      "bits": 2094.055,
+      "contributors": [
+       {
+        "flow": "lk_E0->sp_collective",
+        "bits": 1027.0
+       },
+       {
+        "flow": "lk_E1->sp_collective",
+        "bits": 821.6
+       },
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 245.455
+       }
+      ]
+     },
+     {
+      "grid": [
+       55,
+       226,
+       "v"
+      ],
+      "center_um": [
+       13699.632,
+       19569.6
+      ],
+      "utilisation": 0.547354,
+      "bits": 2069.0,
+      "contributors": [
+       {
+        "flow": "sp_pq->sp_vm",
+        "bits": 2069.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       104,
+       207,
+       "h"
+      ],
+      "center_um": [
+       17933.232,
+       17928.0
+      ],
+      "utilisation": 0.538319,
+      "bits": 1526.133,
+      "contributors": [
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 616.8
+       },
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 227.0
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_gather->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_collective->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       105,
+       207,
+       "h"
+      ],
+      "center_um": [
+       18019.632,
+       17928.0
+      ],
+      "utilisation": 0.538319,
+      "bits": 1526.133,
+      "contributors": [
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 616.8
+       },
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 227.0
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_gather->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_collective->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       106,
+       207,
+       "h"
+      ],
+      "center_um": [
+       18106.032,
+       17928.0
+      ],
+      "utilisation": 0.538319,
+      "bits": 1526.133,
+      "contributors": [
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 616.8
+       },
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 227.0
+       },
+       {
+        "flow": "sp_collective->sp_host",
+        "bits": 197.333
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 146.5
+       },
+       {
+        "flow": "sp_gather->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_collective->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     }
+    ],
+    "channels": {
+     "S14W": 0.507,
+     "S14E": 0.489,
+     "SU|VM": 0.507,
+     "VM|HC": 0.664,
+     "HC corridor": 0.0
+    }
+   },
+   "p2p_input_pairs": 41,
+   "p2p_emitted_pairs": 41,
+   "p2p_unplaced": [],
+   "totals": {
+    "p2p_obstacle_failures": 0,
+    "p2p_bit_mm": 274551,
+    "tree_bit_mm": 2922950,
+    "big_pair_stages": 375,
+    "big_pair_bit_stages": 462577,
+    "worst_tree_stages": 75
+   }
+  },
+  "v3k": {
+   "layout": "/tmp/sdie-v3/lay/v3k.json",
+   "p2p": [
+    {
+     "a": "ctrl_SW",
+     "b": "phy_SW",
+     "bits": 22238,
+     "faces": [
+      "S",
+      "N"
+     ],
+     "len_um": 8.6,
+     "bit_mm": 192.1,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       7134.9,
+       1207.4
+      ],
+      [
+       7134.9,
+       1198.8
+      ]
+     ]
+    },
+    {
+     "a": "ctrl_SW",
+     "b": "svc_SW",
+     "bits": 19874,
+     "faces": [
+      "N",
+      "N"
+     ],
+     "len_um": 1585.4,
+     "bit_mm": 31509.0,
+     "stages": 3,
+     "obstacle_free": true,
+     "path": [
+      [
+       7134.9,
+       1455.8
+      ],
+      [
+       7134.9,
+       3041.3
+      ]
+     ]
+    },
+    {
+     "a": "sp_su_s",
+     "b": "sp_vm",
+     "bits": 17136,
+     "faces": [
+      "N",
+      "S"
+     ],
+     "len_um": 432.0,
+     "bit_mm": 7402.8,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       12818.5,
+       12500.0
+      ],
+      [
+       12818.5,
+       12932
+      ]
+     ]
+    },
+    {
+     "a": "sp_hc_s",
+     "b": "sp_hc_t",
+     "bits": 15660,
+     "faces": [
+      "S",
+      "N"
+     ],
+     "len_um": 432.0,
+     "bit_mm": 6765.1,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       19788.2,
+       12932
+      ],
+      [
+       19788.2,
+       12500.0
+      ]
+     ]
+    },
+    {
+     "a": "sp_capture",
+     "b": "sp_vm",
+     "bits": 13376,
+     "faces": [
+      "S",
+      "N"
+     ],
+     "len_um": 21.6,
+     "bit_mm": 288.9,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       12818.5,
+       17554.4
+      ],
+      [
+       12818.5,
+       17532.8
+      ]
+     ]
+    },
+    {
+     "a": "sp_collective",
+     "b": "sp_hc_s",
+     "bits": 8193,
+     "faces": [
+      "E",
+      "W"
+     ],
+     "len_um": 522.0,
+     "bit_mm": 4276.9,
+     "stages": 1,
+     "obstacle_free": true,
+     "path": [
+      [
+       17428.0,
+       15120.0
+      ],
+      [
+       17950,
+       15120.0
+      ]
+     ]
+    },
+    {
+     "a": "sp_capture",
+     "b": "sp_gather",
+     "bits": 6446,
+     "faces": [
+      "N",
+      "S"
+     ],
+     "len_um": 43.2,
+     "bit_mm": 278.6,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       12818.5,
+       18116.0
+      ],
+      [
+       12818.5,
+       18159.2
+      ]
+     ]
+    },
+    {
+     "a": "sp_hc_s",
+     "b": "sp_vm",
+     "bits": 5400,
+     "faces": [
+      "W",
+      "E"
+     ],
+     "len_um": 2809.7,
+     "bit_mm": 15172.6,
+     "stages": 5,
+     "obstacle_free": true,
+     "path": [
+      [
+       17950,
+       16746.0
+      ],
+      [
+       17920.0,
+       16746.0
+      ],
+      [
+       17920.0,
+       16942.7
+      ],
+      [
+       15337.0,
+       16942.7
+      ]
+     ]
+    },
+    {
+     "a": "sp_collective",
+     "b": "sp_vm",
+     "bits": 2732,
+     "faces": [
+      "W",
+      "E"
+     ],
+     "len_um": 363.0,
+     "bit_mm": 991.7,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       15700,
+       15232.4
+      ],
+      [
+       15337.0,
+       15232.4
+      ]
+     ]
+    },
+    {
+     "a": "sp_pq",
+     "b": "sp_vm",
+     "bits": 2069,
+     "faces": [
+      "E",
+      "N"
+     ],
+     "len_um": 2280.6,
+     "bit_mm": 4718.6,
+     "stages": 4,
+     "obstacle_free": true,
+     "path": [
+      [
+       13626.8,
+       19656.6
+      ],
+      [
+       13656.8,
+       19656.6
+      ],
+      [
+       13656.8,
+       19651.6
+      ],
+      [
+       13705.2,
+       19651.6
+      ],
+      [
+       13705.2,
+       17534.8
+      ],
+      [
+       13626.8,
+       17534.8
+      ],
+      [
+       13626.8,
+       17532.8
+      ]
+     ]
+    },
+    {
+     "a": "sp_vm",
+     "b": "sp_wfc",
+     "bits": 1589,
+     "faces": [
+      "E",
+      "E"
+     ],
+     "len_um": 2091.0,
+     "bit_mm": 3322.6,
+     "stages": 4,
+     "obstacle_free": true,
+     "path": [
+      [
+       15337.0,
+       15821.2
+      ],
+      [
+       17428.0,
+       15821.2
+      ]
+     ]
+    },
+    {
+     "a": "sp_vm",
+     "b": "svc_SW",
+     "bits": 1542,
+     "faces": [
+      "W",
+      "N"
+     ],
+     "len_um": 11605.8,
+     "bit_mm": 17896.1,
+     "stages": 23,
+     "obstacle_free": true,
+     "path": [
+      [
+       10300,
+       13522.1
+      ],
+      [
+       10270.0,
+       13522.1
+      ],
+      [
+       10270.0,
+       3071.3
+      ],
+      [
+       11364.9,
+       3071.3
+      ],
+      [
+       11364.9,
+       3041.3
+      ]
+     ]
+    },
+    {
+     "a": "sp_collective",
+     "b": "sp_wfc",
+     "bits": 1028,
+     "faces": [
+      "N",
+      "E"
+     ],
+     "len_um": 187.6,
+     "bit_mm": 192.9,
+     "stages": 0,
+     "obstacle_free": false,
+     "path": [
+      [
+       17408.0,
+       15653.6
+      ],
+      [
+       17408.0,
+       15821.2
+      ],
+      [
+       17428.0,
+       15821.2
+      ]
+     ]
+    },
+    {
+     "a": "lk_W0",
+     "b": "sp_collective",
+     "bits": 1027,
+     "faces": [
+      "E",
+      "W"
+     ],
+     "len_um": 18060.0,
+     "bit_mm": 18547.7,
+     "stages": 36,
+     "obstacle_free": true,
+     "path": [
+      [
+       281.1,
+       10367.5
+      ],
+      [
+       311.1,
+       10367.5
+      ],
+      [
+       311.1,
+       10359.5
+      ],
+      [
+       302.4,
+       10359.5
+      ],
+      [
+       302.4,
+       12908.3
+      ],
+      [
+       15681.6,
+       12908.3
+      ],
+      [
+       15681.6,
+       12951.5
+      ],
+      [
+       15670.0,
+       12951.5
+      ],
+      [
+       15670.0,
+       12952.0
+      ],
+      [
+       15700,
+       12952.0
+      ]
+     ]
+    },
+    {
+     "a": "lk_W1",
+     "b": "sp_collective",
+     "bits": 1027,
+     "faces": [
+      "E",
+      "W"
+     ],
+     "len_um": 15707.4,
+     "bit_mm": 16131.5,
+     "stages": 31,
+     "obstacle_free": true,
+     "path": [
+      [
+       281.6,
+       12663.0
+      ],
+      [
+       15670.0,
+       12663.0
+      ],
+      [
+       15670.0,
+       12952.0
+      ],
+      [
+       15700,
+       12952.0
+      ]
+     ]
+    },
+    {
+     "a": "lk_W2",
+     "b": "sp_collective",
+     "bits": 1027,
+     "faces": [
+      "E",
+      "S"
+     ],
+     "len_um": 15800.4,
+     "bit_mm": 16227.0,
+     "stages": 31,
+     "obstacle_free": true,
+     "path": [
+      [
+       281.6,
+       13023.0
+      ],
+      [
+       311.6,
+       13023.0
+      ],
+      [
+       311.6,
+       12902.0
+      ],
+      [
+       15931.0,
+       12902.0
+      ],
+      [
+       15931.0,
+       12932
+      ]
+     ]
+    },
+    {
+     "a": "lk_W3",
+     "b": "sp_collective",
+     "bits": 1027,
+     "faces": [
+      "S",
+      "W"
+     ],
+     "len_um": 18014.9,
+     "bit_mm": 18501.3,
+     "stages": 36,
+     "obstacle_free": true,
+     "path": [
+      [
+       235.3,
+       15020.6
+      ],
+      [
+       235.3,
+       15007.2
+      ],
+      [
+       10281.6,
+       15007.2
+      ],
+      [
+       10281.6,
+       12890.4
+      ],
+      [
+       15681.6,
+       12890.4
+      ],
+      [
+       15681.6,
+       13279.2
+      ],
+      [
+       15670.0,
+       13279.2
+      ],
+      [
+       15670.0,
+       13287.2
+      ],
+      [
+       15700,
+       13287.2
+      ]
+     ]
+    },
+    {
+     "a": "lk_E0",
+     "b": "sp_collective",
+     "bits": 1027,
+     "faces": [
+      "W",
+      "E"
+     ],
+     "len_um": 17928.5,
+     "bit_mm": 18412.5,
+     "stages": 35,
+     "obstacle_free": true,
+     "path": [
+      [
+       32719.2,
+       10367.5
+      ],
+      [
+       32689.2,
+       10367.5
+      ],
+      [
+       32689.2,
+       10359.5
+      ],
+      [
+       32699.6,
+       10359.5
+      ],
+      [
+       32699.6,
+       12908.3
+      ],
+      [
+       17450.0,
+       12908.3
+      ],
+      [
+       17450.0,
+       12951.5
+      ],
+      [
+       17458.0,
+       12951.5
+      ],
+      [
+       17458.0,
+       12952.0
+      ],
+      [
+       17428.0,
+       12952.0
+      ]
+     ]
+    },
+    {
+     "a": "lk_E1",
+     "b": "sp_collective",
+     "bits": 1027,
+     "faces": [
+      "W",
+      "E"
+     ],
+     "len_um": 15579.4,
+     "bit_mm": 16000.0,
+     "stages": 31,
+     "obstacle_free": true,
+     "path": [
+      [
+       32718.4,
+       12663.0
+      ],
+      [
+       17458.0,
+       12663.0
+      ],
+      [
+       17458.0,
+       12952.0
+      ],
+      [
+       17428.0,
+       12952.0
+      ]
+     ]
+    },
+    {
+     "a": "lk_E2",
+     "b": "sp_collective",
+     "bits": 1027,
+     "faces": [
+      "W",
+      "S"
+     ],
+     "len_um": 15672.4,
+     "bit_mm": 16095.6,
+     "stages": 31,
+     "obstacle_free": true,
+     "path": [
+      [
+       32718.4,
+       13023.0
+      ],
+      [
+       32688.4,
+       13023.0
+      ],
+      [
+       32688.4,
+       12902.0
+      ],
+      [
+       17197.0,
+       12902.0
+      ],
+      [
+       17197.0,
+       12932
+      ]
+     ]
+    },
+    {
+     "a": "lk_E3",
+     "b": "sp_collective",
+     "bits": 1027,
+     "faces": [
+      "W",
+      "E"
+     ],
+     "len_um": 17713.4,
+     "bit_mm": 18191.7,
+     "stages": 35,
+     "obstacle_free": true,
+     "path": [
+      [
+       32718.4,
+       16974.6
+      ],
+      [
+       32688.4,
+       16974.6
+      ],
+      [
+       32688.4,
+       16975.2
+      ],
+      [
+       32699.6,
+       16975.2
+      ],
+      [
+       32699.6,
+       17320.8
+      ],
+      [
+       17450.0,
+       17320.8
+      ],
+      [
+       17450.0,
+       15290.4
+      ],
+      [
+       17458.0,
+       15290.4
+      ],
+      [
+       17458.0,
+       15298.4
+      ],
+      [
+       17428.0,
+       15298.4
+      ]
+     ]
+    },
+    {
+     "a": "sp_collective",
+     "b": "sp_host",
+     "bits": 592,
+     "faces": [
+      "N",
+      "E"
+     ],
+     "len_um": 36.4,
+     "bit_mm": 21.6,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       17408.0,
+       15653.6
+      ],
+      [
+       17408.0,
+       15670.0
+      ],
+      [
+       17428.0,
+       15670.0
+      ]
+     ]
+    },
+    {
+     "a": "sp_gather",
+     "b": "sp_vm",
+     "bits": 523,
+     "faces": [
+      "E",
+      "N"
+     ],
+     "len_um": 646.4,
+     "bit_mm": 338.1,
+     "stages": 1,
+     "obstacle_free": true,
+     "path": [
+      [
+       13682.5,
+       18179.2
+      ],
+      [
+       13682.5,
+       17532.8
+      ]
+     ]
+    },
+    {
+     "a": "bk_selector",
+     "b": "svc_SW",
+     "bits": 515,
+     "faces": [
+      "W",
+      "N"
+     ],
+     "len_um": 178.7,
+     "bit_mm": 92.1,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       10600,
+       3220.0
+      ],
+      [
+       10600.0,
+       3041.3
+      ]
+     ]
+    },
+    {
+     "a": "bk_collector",
+     "b": "svc_SW",
+     "bits": 515,
+     "faces": [
+      "W",
+      "N"
+     ],
+     "len_um": 522.1,
+     "bit_mm": 268.9,
+     "stages": 1,
+     "obstacle_free": true,
+     "path": [
+      [
+       10600,
+       3563.4
+      ],
+      [
+       10600.0,
+       3041.3
+      ]
+     ]
+    },
+    {
+     "a": "bk_selector",
+     "b": "sp_vm",
+     "bits": 515,
+     "faces": [
+      "N",
+      "S"
+     ],
+     "len_um": 12596.1,
+     "bit_mm": 6487.0,
+     "stages": 25,
+     "obstacle_free": true,
+     "path": [
+      [
+       12818.5,
+       3521.8
+      ],
+      [
+       12818.5,
+       3523.8
+      ],
+      [
+       10288.6,
+       3523.8
+      ],
+      [
+       10288.6,
+       12898.2
+      ],
+      [
+       10944.6,
+       12898.2
+      ],
+      [
+       10944.6,
+       12932
+      ]
+     ]
+    },
+    {
+     "a": "bk_collector",
+     "b": "sp_vm",
+     "bits": 515,
+     "faces": [
+      "N",
+      "S"
+     ],
+     "len_um": 11693.2,
+     "bit_mm": 6022.0,
+     "stages": 23,
+     "obstacle_free": true,
+     "path": [
+      [
+       12818.5,
+       4424.7
+      ],
+      [
+       12818.5,
+       4446.7
+      ],
+      [
+       10288.6,
+       4446.7
+      ],
+      [
+       10288.6,
+       12913.9
+      ],
+      [
+       10944.6,
+       12913.9
+      ],
+      [
+       10944.6,
+       12932
+      ]
+     ]
+    },
+    {
+     "a": "sp_host",
+     "b": "sp_sseq",
+     "bits": 343,
+     "faces": [
+      "E",
+      "E"
+     ],
+     "len_um": 410.4,
+     "bit_mm": 140.8,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       17428.0,
+       15759.6
+      ],
+      [
+       17428.0,
+       16170.0
+      ]
+     ]
+    },
+    {
+     "a": "sp_sseq",
+     "b": "svc_SW",
+     "bits": 293,
+     "faces": [
+      "E",
+      "N"
+     ],
+     "len_um": 19251.8,
+     "bit_mm": 5640.8,
+     "stages": 38,
+     "obstacle_free": true,
+     "path": [
+      [
+       17428.0,
+       16170.0
+      ],
+      [
+       17458.0,
+       16170.0
+      ],
+      [
+       17458.0,
+       3071.3
+      ],
+      [
+       11364.9,
+       3071.3
+      ],
+      [
+       11364.9,
+       3041.3
+      ]
+     ]
+    },
+    {
+     "a": "sp_sseq",
+     "b": "svcj",
+     "bits": 293,
+     "faces": [
+      "E",
+      "N"
+     ],
+     "len_um": 21472.2,
+     "bit_mm": 6291.4,
+     "stages": 42,
+     "obstacle_free": true,
+     "path": [
+      [
+       17428.0,
+       16170.0
+      ],
+      [
+       17458.0,
+       16170.0
+      ],
+      [
+       17458.0,
+       3118.8
+      ],
+      [
+       9096.9,
+       3118.8
+      ],
+      [
+       9096.9,
+       3088.8
+      ]
+     ]
+    },
+    {
+     "a": "pq_cnt",
+     "b": "sp_pq",
+     "bits": 208,
+     "faces": [
+      "W",
+      "S"
+     ],
+     "len_um": 2405.0,
+     "bit_mm": 500.2,
+     "stages": 4,
+     "obstacle_free": true,
+     "path": [
+      [
+       11954.6,
+       18155.0
+      ],
+      [
+       11924.6,
+       18155.0
+      ],
+      [
+       11924.6,
+       19606.6
+      ],
+      [
+       12817.9,
+       19606.6
+      ],
+      [
+       12817.9,
+       19636.6
+      ]
+     ]
+    },
+    {
+     "a": "sp_sseq",
+     "b": "sp_wfc",
+     "bits": 203,
+     "faces": [
+      "E",
+      "E"
+     ],
+     "len_um": 60.5,
+     "bit_mm": 12.3,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       17428.0,
+       16170.0
+      ],
+      [
+       17428.0,
+       16109.5
+      ]
+     ]
+    },
+    {
+     "a": "sp_gather",
+     "b": "sp_sseq",
+     "bits": 96,
+     "faces": [
+      "S",
+      "E"
+     ],
+     "len_um": 5766.1,
+     "bit_mm": 553.5,
+     "stages": 11,
+     "obstacle_free": true,
+     "path": [
+      [
+       13662.5,
+       18159.2
+      ],
+      [
+       13662.5,
+       18129.2
+      ],
+      [
+       17458.0,
+       18129.2
+      ],
+      [
+       17458.0,
+       16218.5
+      ],
+      [
+       17428.0,
+       16218.5
+      ]
+     ]
+    },
+    {
+     "a": "sp_sseq",
+     "b": "sp_su_s",
+     "bits": 96,
+     "faces": [
+      "E",
+      "N"
+     ],
+     "len_um": 5694.0,
+     "bit_mm": 546.6,
+     "stages": 11,
+     "obstacle_free": true,
+     "path": [
+      [
+       17428.0,
+       16170.0
+      ],
+      [
+       17458.0,
+       16170.0
+      ],
+      [
+       17458.0,
+       12530.0
+      ],
+      [
+       15464.0,
+       12530.0
+      ],
+      [
+       15464.0,
+       12500.0
+      ]
+     ]
+    },
+    {
+     "a": "sp_hc_s",
+     "b": "sp_sseq",
+     "bits": 96,
+     "faces": [
+      "W",
+      "E"
+     ],
+     "len_um": 522.0,
+     "bit_mm": 50.1,
+     "stages": 1,
+     "obstacle_free": true,
+     "path": [
+      [
+       17950,
+       16170.0
+      ],
+      [
+       17428.0,
+       16170.0
+      ]
+     ]
+    },
+    {
+     "a": "sp_collective",
+     "b": "sp_sseq",
+     "bits": 96,
+     "faces": [
+      "N",
+      "E"
+     ],
+     "len_um": 536.4,
+     "bit_mm": 51.5,
+     "stages": 1,
+     "obstacle_free": false,
+     "path": [
+      [
+       17408.0,
+       15653.6
+      ],
+      [
+       17408.0,
+       16170.0
+      ],
+      [
+       17428.0,
+       16170.0
+      ]
+     ]
+    },
+    {
+     "a": "sp_sseq",
+     "b": "sp_vm",
+     "bits": 96,
+     "faces": [
+      "E",
+      "E"
+     ],
+     "len_um": 2091.0,
+     "bit_mm": 200.7,
+     "stages": 4,
+     "obstacle_free": true,
+     "path": [
+      [
+       17428.0,
+       16170.0
+      ],
+      [
+       15337.0,
+       16170.0
+      ]
+     ]
+    },
+    {
+     "a": "bk_selector",
+     "b": "sp_sseq",
+     "bits": 86,
+     "faces": [
+      "N",
+      "E"
+     ],
+     "len_um": 14285.8,
+     "bit_mm": 1228.6,
+     "stages": 28,
+     "obstacle_free": true,
+     "path": [
+      [
+       15850.4,
+       3521.8
+      ],
+      [
+       15850.4,
+       3531.8
+      ],
+      [
+       17458.0,
+       3531.8
+      ],
+      [
+       17458.0,
+       16170.0
+      ],
+      [
+       17428.0,
+       16170.0
+      ]
+     ]
+    },
+    {
+     "a": "bk_collector",
+     "b": "sp_sseq",
+     "bits": 86,
+     "faces": [
+      "N",
+      "E"
+     ],
+     "len_um": 13382.9,
+     "bit_mm": 1150.9,
+     "stages": 26,
+     "obstacle_free": true,
+     "path": [
+      [
+       15850.4,
+       4424.7
+      ],
+      [
+       15850.4,
+       4454.7
+      ],
+      [
+       17458.0,
+       4454.7
+      ],
+      [
+       17458.0,
+       16170.0
+      ],
+      [
+       17428.0,
+       16170.0
+      ]
+     ]
+    },
+    {
+     "a": "svc_SW",
+     "b": "svcj",
+     "bits": 35,
+     "faces": [
+      "N",
+      "S"
+     ],
+     "len_um": 4.3,
+     "bit_mm": 0.2,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       9084.5,
+       3041.3
+      ],
+      [
+       9084.5,
+       3045.6
+      ]
+     ]
+    },
+    {
+     "a": "sp_host",
+     "b": "sp_wfc",
+     "bits": 4,
+     "faces": [
+      "E",
+      "E"
+     ],
+     "len_um": 61.6,
+     "bit_mm": 0.2,
+     "stages": 0,
+     "obstacle_free": true,
+     "path": [
+      [
+       17428.0,
+       15759.6
+      ],
+      [
+       17428.0,
+       15821.2
+      ]
+     ]
+    }
+   ],
+   "trees": [
+    {
+     "root": "sp_pq",
+     "side": "W",
+     "leaves": 56,
+     "width": 1101,
+     "worst_um": 30512.5,
+     "worst_stages": 61,
+     "mean_um": 15221.6,
+     "bit_mm": 941060.1,
+     "root_point": [
+      11954.6,
+      19656.6
+     ],
+     "entry_y": 13100.9
+    },
+    {
+     "root": "sp_pq",
+     "side": "E",
+     "leaves": 72,
+     "width": 1101,
+     "worst_um": 37863.4,
+     "worst_stages": 75,
+     "mean_um": 22792.6,
+     "bit_mm": 1811740.2,
+     "root_point": [
+      13626.8,
+      19656.6
+     ],
+     "entry_y": 13159.3
+    },
+    {
+     "root": "sp_gather",
+     "side": "W",
+     "leaves": 10,
+     "width": 692,
+     "worst_um": 31168.6,
+     "worst_stages": 62,
+     "mean_um": 25968.5,
+     "bit_mm": 18178.0,
+     "root_point": [
+      11954.6,
+      18179.2
+     ],
+     "entry_y": 3268.6
+    },
+    {
+     "root": "sp_gather",
+     "side": "E",
+     "leaves": 11,
+     "width": 759,
+     "worst_um": 36330.2,
+     "worst_stages": 72,
+     "mean_um": 29215.7,
+     "bit_mm": 22496.1,
+     "root_point": [
+      13682.5,
+      18179.2
+     ],
+     "entry_y": 227.3
+    },
+    {
+     "root": "sp_gather",
+     "side": "E",
+     "leaves": 11,
+     "width": 759,
+     "worst_um": 28652.7,
+     "worst_stages": 57,
+     "mean_um": 22629.3,
+     "bit_mm": 17424.6,
+     "root_point": [
+      13682.5,
+      18179.2
+     ],
+     "entry_y": 6642.5
+    },
+    {
+     "root": "sp_gather",
+     "side": "E",
+     "leaves": 11,
+     "width": 761,
+     "worst_um": 30949.2,
+     "worst_stages": 61,
+     "mean_um": 23332.9,
+     "bit_mm": 17966.3,
+     "root_point": [
+      13682.5,
+      18179.2
+     ],
+     "entry_y": 6700.9
+    },
+    {
+     "root": "sp_gather",
+     "side": "E",
+     "leaves": 11,
+     "width": 759,
+     "worst_um": 33245.7,
+     "worst_stages": 66,
+     "mean_um": 24966.6,
+     "bit_mm": 19224.2,
+     "root_point": [
+      13682.5,
+      18179.2
+     ],
+     "entry_y": 9727.0
+    },
+    {
+     "root": "sp_gather",
+     "side": "W",
+     "leaves": 10,
+     "width": 690,
+     "worst_um": 28210.7,
+     "worst_stages": 56,
+     "mean_um": 15089.0,
+     "bit_mm": 10562.3,
+     "root_point": [
+      11954.6,
+      18179.2
+     ],
+     "entry_y": 13100.9
+    },
+    {
+     "root": "sp_gather",
+     "side": "W",
+     "leaves": 10,
+     "width": 692,
+     "worst_um": 19187.6,
+     "worst_stages": 38,
+     "mean_um": 11761.3,
+     "bit_mm": 8232.9,
+     "root_point": [
+      11954.6,
+      18179.2
+     ],
+     "entry_y": 13159.3
+    },
+    {
+     "root": "sp_gather",
+     "side": "E",
+     "leaves": 11,
+     "width": 759,
+     "worst_um": 18805.2,
+     "worst_stages": 37,
+     "mean_um": 14548.3,
+     "bit_mm": 11202.2,
+     "root_point": [
+      13682.5,
+      18179.2
+     ],
+     "entry_y": 16243.7
+    },
+    {
+     "root": "sp_gather",
+     "side": "E",
+     "leaves": 11,
+     "width": 759,
+     "worst_um": 23398.3,
+     "worst_stages": 46,
+     "mean_um": 16619.8,
+     "bit_mm": 12797.3,
+     "root_point": [
+      13682.5,
+      18179.2
+     ],
+     "entry_y": 16243.7
+    },
+    {
+     "root": "sp_gather",
+     "side": "E",
+     "leaves": 11,
+     "width": 761,
+     "worst_um": 21319.2,
+     "worst_stages": 42,
+     "mean_um": 12623.3,
+     "bit_mm": 9719.9,
+     "root_point": [
+      13682.5,
+      19184.6
+     ],
+     "entry_y": 19574.4
+    },
+    {
+     "root": "sp_gather",
+     "side": "E",
+     "leaves": 11,
+     "width": 759,
+     "worst_um": 17607.4,
+     "worst_stages": 35,
+     "mean_um": 14767.6,
+     "bit_mm": 11371.0,
+     "root_point": [
+      13682.5,
+      19184.6
+     ],
+     "entry_y": 23006.7
+    },
+    {
+     "root": "sp_gather",
+     "side": "E",
+     "leaves": 10,
+     "width": 690,
+     "worst_um": 22200.4,
+     "worst_stages": 44,
+     "mean_um": 15678.2,
+     "bit_mm": 10974.7,
+     "root_point": [
+      13682.5,
+      19184.6
+     ],
+     "entry_y": 22658.9
+    }
+   ],
+   "congestion": {
+    "max_util": 0.877,
+    "edges_over_060": 19,
+    "edges_over_100": 0,
+    "unrouted_bundles": 0,
+    "unrouted_bits": 0,
+    "unrouted": [],
+    "routing_complete": true,
+    "hot_edges": [
+     {
+      "grid": [
+       99,
+       187,
+       "v"
+      ],
+      "center_um": [
+       17501.232,
+       16200.0
+      ],
+      "utilisation": 0.876883,
+      "bits": 3314.618,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 981.818
+       },
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 908.0
+       },
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 821.6
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_collective->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       99,
+       186,
+       "v"
+      ],
+      "center_um": [
+       17501.232,
+       16113.6
+      ],
+      "utilisation": 0.863042,
+      "bits": 3262.3,
+      "contributors": [
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 908.0
+       },
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 821.6
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 293.0
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 293.0
+       },
+       {
+        "flow": "sp_host->sp_sseq",
+        "bits": 171.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_gather->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       98,
+       188,
+       "h"
+      ],
+      "center_um": [
+       17414.832,
+       16286.4
+      ],
+      "utilisation": 0.85098,
+      "bits": 2412.527,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1472.727
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 616.8
+       },
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 227.0
+       },
+       {
+        "flow": "sp_collective->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       99,
+       185,
+       "v"
+      ],
+      "center_um": [
+       17501.232,
+       16027.2
+      ],
+      "utilisation": 0.808651,
+      "bits": 3056.7,
+      "contributors": [
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 908.0
+       },
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 821.6
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 293.0
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 293.0
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       },
+       {
+        "flow": "sp_host->sp_sseq",
+        "bits": 171.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_gather->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       96,
+       188,
+       "h"
+      ],
+      "center_um": [
+       17242.032,
+       16286.4
+      ],
+      "utilisation": 0.770909,
+      "bits": 2185.527,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1472.727
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 616.8
+       },
+       {
+        "flow": "sp_collective->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       97,
+       188,
+       "h"
+      ],
+      "center_um": [
+       17328.432,
+       16286.4
+      ],
+      "utilisation": 0.770909,
+      "bits": 2185.527,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1472.727
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 616.8
+       },
+       {
+        "flow": "sp_collective->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       92,
+       188,
+       "h"
+      ],
+      "center_um": [
+       16896.432,
+       16286.4
+      ],
+      "utilisation": 0.698387,
+      "bits": 1979.927,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1472.727
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       93,
+       188,
+       "h"
+      ],
+      "center_um": [
+       16982.832,
+       16286.4
+      ],
+      "utilisation": 0.698387,
+      "bits": 1979.927,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1472.727
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       94,
+       188,
+       "h"
+      ],
+      "center_um": [
+       17069.232,
+       16286.4
+      ],
+      "utilisation": 0.698387,
+      "bits": 1979.927,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1472.727
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       95,
+       188,
+       "h"
+      ],
+      "center_um": [
+       17155.632,
+       16286.4
+      ],
+      "utilisation": 0.698387,
+      "bits": 1979.927,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1472.727
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 411.2
+       },
+       {
+        "flow": "sp_collective->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       99,
+       184,
+       "v"
+      ],
+      "center_um": [
+       17501.232,
+       15940.8
+      ],
+      "utilisation": 0.694206,
+      "bits": 2624.1,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 821.6
+       },
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 681.0
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 293.0
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 293.0
+       },
+       {
+        "flow": "sp_host->sp_sseq",
+        "bits": 171.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_gather->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       100,
+       186,
+       "v"
+      ],
+      "center_um": [
+       17587.632,
+       16113.6
+      ],
+      "utilisation": 0.689096,
+      "bits": 2604.782,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1718.182
+       },
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 681.0
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       }
+      ]
+     },
+     {
+      "grid": [
+       99,
+       183,
+       "v"
+      ],
+      "center_um": [
+       17501.232,
+       15854.4
+      ],
+      "utilisation": 0.634153,
+      "bits": 2397.1,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 821.6
+       },
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 454.0
+       },
+       {
+        "flow": "sp_sseq->svc_SW",
+        "bits": 293.0
+       },
+       {
+        "flow": "sp_sseq->svcj",
+        "bits": 293.0
+       },
+       {
+        "flow": "sp_host->sp_sseq",
+        "bits": 171.5
+       },
+       {
+        "flow": "sp_sseq->sp_su_s",
+        "bits": 96.0
+       },
+       {
+        "flow": "sp_gather->sp_sseq",
+        "bits": 96.0
+       },
+       {
+        "flow": "bk_selector->sp_sseq",
+        "bits": 86.0
+       },
+       {
+        "flow": "bk_collector->sp_sseq",
+        "bits": 86.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       100,
+       185,
+       "v"
+      ],
+      "center_um": [
+       17587.632,
+       16027.2
+      ],
+      "utilisation": 0.629043,
+      "bits": 2377.782,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1718.182
+       },
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 454.0
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       }
+      ]
+     },
+     {
+      "grid": [
+       88,
+       188,
+       "h"
+      ],
+      "center_um": [
+       16550.832,
+       16286.4
+      ],
+      "utilisation": 0.625865,
+      "bits": 1774.327,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1472.727
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       },
+       {
+        "flow": "sp_collective->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       89,
+       188,
+       "h"
+      ],
+      "center_um": [
+       16637.232,
+       16286.4
+      ],
+      "utilisation": 0.625865,
+      "bits": 1774.327,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1472.727
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       },
+       {
+        "flow": "sp_collective->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       90,
+       188,
+       "h"
+      ],
+      "center_um": [
+       16723.632,
+       16286.4
+      ],
+      "utilisation": 0.625865,
+      "bits": 1774.327,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1472.727
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       },
+       {
+        "flow": "sp_collective->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       91,
+       188,
+       "h"
+      ],
+      "center_um": [
+       16810.032,
+       16286.4
+      ],
+      "utilisation": 0.625865,
+      "bits": 1774.327,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1472.727
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       },
+       {
+        "flow": "sp_collective->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       99,
+       188,
+       "v"
+      ],
+      "center_um": [
+       17501.232,
+       16286.4
+      ],
+      "utilisation": 0.617715,
+      "bits": 2334.964,
+      "contributors": [
+       {
+        "flow": "lk_E3->sp_collective",
+        "bits": 821.6
+       },
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 736.364
+       },
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 681.0
+       },
+       {
+        "flow": "sp_sseq->sp_vm",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       84,
+       188,
+       "h"
+      ],
+      "center_um": [
+       16205.232,
+       16286.4
+      ],
+      "utilisation": 0.592003,
+      "bits": 1678.327,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1472.727
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       }
+      ]
+     },
+     {
+      "grid": [
+       85,
+       188,
+       "h"
+      ],
+      "center_um": [
+       16291.632,
+       16286.4
+      ],
+      "utilisation": 0.592003,
+      "bits": 1678.327,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1472.727
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       }
+      ]
+     },
+     {
+      "grid": [
+       86,
+       188,
+       "h"
+      ],
+      "center_um": [
+       16378.032,
+       16286.4
+      ],
+      "utilisation": 0.592003,
+      "bits": 1678.327,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1472.727
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       }
+      ]
+     },
+     {
+      "grid": [
+       87,
+       188,
+       "h"
+      ],
+      "center_um": [
+       16464.432,
+       16286.4
+      ],
+      "utilisation": 0.592003,
+      "bits": 1678.327,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1472.727
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       }
+      ]
+     },
+     {
+      "grid": [
+       88,
+       189,
+       "h"
+      ],
+      "center_um": [
+       16550.832,
+       16372.8
+      ],
+      "utilisation": 0.578983,
+      "bits": 1641.418,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 981.818
+       },
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 454.0
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       }
+      ]
+     },
+     {
+      "grid": [
+       89,
+       189,
+       "h"
+      ],
+      "center_um": [
+       16637.232,
+       16372.8
+      ],
+      "utilisation": 0.578983,
+      "bits": 1641.418,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 981.818
+       },
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 454.0
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       }
+      ]
+     },
+     {
+      "grid": [
+       90,
+       189,
+       "h"
+      ],
+      "center_um": [
+       16723.632,
+       16372.8
+      ],
+      "utilisation": 0.578983,
+      "bits": 1641.418,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 981.818
+       },
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 454.0
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       }
+      ]
+     },
+     {
+      "grid": [
+       91,
+       189,
+       "h"
+      ],
+      "center_um": [
+       16810.032,
+       16372.8
+      ],
+      "utilisation": 0.578983,
+      "bits": 1641.418,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 981.818
+       },
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 454.0
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       }
+      ]
+     },
+     {
+      "grid": [
+       92,
+       189,
+       "h"
+      ],
+      "center_um": [
+       16896.432,
+       16372.8
+      ],
+      "utilisation": 0.578983,
+      "bits": 1641.418,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 981.818
+       },
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 454.0
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       }
+      ]
+     },
+     {
+      "grid": [
+       93,
+       189,
+       "h"
+      ],
+      "center_um": [
+       16982.832,
+       16372.8
+      ],
+      "utilisation": 0.578983,
+      "bits": 1641.418,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 981.818
+       },
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 454.0
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       }
+      ]
+     },
+     {
+      "grid": [
+       94,
+       189,
+       "h"
+      ],
+      "center_um": [
+       17069.232,
+       16372.8
+      ],
+      "utilisation": 0.578983,
+      "bits": 1641.418,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 981.818
+       },
+       {
+        "flow": "sp_vm->sp_wfc",
+        "bits": 454.0
+       },
+       {
+        "flow": "sp_collective->sp_wfc",
+        "bits": 205.6
+       }
+      ]
+     }
+    ],
+    "channels": {
+     "S14W": 0.497,
+     "S14E": 0.489,
+     "SU|VM": 0.507,
+     "VM|HC": 0.877,
+     "HC corridor": 0.0
+    }
+   },
+   "p2p_input_pairs": 41,
+   "p2p_emitted_pairs": 41,
+   "p2p_unplaced": [],
+   "totals": {
+    "p2p_obstacle_failures": 2,
+    "p2p_bit_mm": 260713,
+    "tree_bit_mm": 2922950,
+    "big_pair_stages": 356,
+    "big_pair_bit_stages": 443853,
+    "worst_tree_stages": 75
+   }
+  }
+ }
+}

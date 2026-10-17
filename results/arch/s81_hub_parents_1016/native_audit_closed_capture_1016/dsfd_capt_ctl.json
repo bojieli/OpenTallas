@@ -1,0 +1,24 @@
+{
+ "cell": "dsfd_capt_ctl",
+ "view": "physical/s81_ph_views/closed/dsfd_capt_ctl",
+ "lib_cell": "dsfd_capt_ctl",
+ "insertion": false,
+ "ref_src": [
+  "lib midrange"
+ ],
+ "R_ps": 107.9,
+ "spread_ps": 23.4,
+ "outputs": 855,
+ "inputs": 180,
+ "launch_ps": 221.5,
+ "launch_pin": "t_k[722]",
+ "capture_ps": 108.9,
+ "capture_pin": "f_ctl[53]",
+ "launch_over": 3,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 221.462315 > 220 (3 pins)",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one on origin/main view"
+}

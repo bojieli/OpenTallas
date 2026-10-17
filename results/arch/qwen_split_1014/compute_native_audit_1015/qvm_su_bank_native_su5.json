@@ -1,0 +1,13 @@
+{
+ "job": "qvm_su_bank_native-su5-d625218dc",
+ "main_merge": "9c3395b49",
+ "physical": {"tt_setup_ps": 8.59, "ff_hold_ps": 12.09, "drc": 0, "ss_sensitivity_ps": -243.95},
+ "audit_one": {"view": "physical/ref_tile/qvm_su_bank_native/views/qvm_su_bank_native", "R_ps": 130.8, "spread_ps": 5.8,
+   "outputs": 512, "inputs": 551, "launch_ps": 182.5, "launch_pin": "q[286]", "capture_ps": 130.2, "capture_pin": "wd[251]",
+   "launch_over": 0, "capture_over": 0, "comb_pins": 0, "pass": true},
+ "per_bus_tt_raw": {"q": 182.5, "wd": 130.2, "ra": 119.0, "re": 121.1, "wm": 120.0, "wl": 116.7, "we": 104.6, "rst_n": 111.3},
+ "per_bus_ff_raw": {"q": 130.7, "wd": 97.0, "ra": 88.0, "re": 89.9, "wm": 90.2, "wl": 86.3, "we": 78.6, "rst_n": 81.4},
+ "composed_child_R_note": "wd is captured inside the u_in_lo/u_in_hi qvm_data256_native children through raw entries ck_in_lo/hi (parent ref R 1.2). Composing the child insertion (TT 69.3 / FF 54.7, qvm_data256_native insertion.json) as for ne5 gives wd TT ~199.5 / FF ~151.7: TT 9.5 ps over the 190 capture budget ON THAT METHOD. ne5's wd composed was 187.7. All other buses are parent-root pins (no nesting).",
+ "recommendation": "Bind su5 now: raw native PASS and it removes su3's q launch 300.1 FAIL. If die STA names wd, the successor su6 (0 edges) ranges wd on the W face in front of u_in_lo/u_in_hi (children at y 25.92-77.76 / 116.64-168.48; the wd pins are now spread over 162 um).",
+ "cycles_added": 0
+}

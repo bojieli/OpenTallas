@@ -123,10 +123,10 @@
  },
  "std_area_um2_measured": 8875,
  "job": {
-  "owner": "Claude:q14-node",
-  "branch": "claude/q14-tile-parent",
-  "tag": "r5",
-  "purpose": "q-tile spec r5 leaf 2 (r5-fp1): ot_qwen_tile_node = the W12 ROM tile's upper tree node (a/b/va pin flops -> 16 FP32 pair adders LAT 7 -> y/vy pin registers, fault pin register) + the tile's t_out/t_vout TOREG pin registers as a registered feed-through (t_d/t_vd on the E seam -> W pins) + ot_rst_relay (4 regions). W-edge strip 47.52 x 432 placed at tile (22.464, 345.6): its W pins sit at the tile's W-face pin offsets (n_a 356.4-455.9, n_b 457-556.5, t_out 557.5-657, n_y 658-757.5), M4. Own short clock root (~12.1k sinks); removes the node + t_out flop->port classes from the flat 34-48k-sink tile root.",
+  "owner": "Codex:qwen-node-native-1628",
+  "branch": "codex/qwen-node-native-1628",
+  "tag": "nb1",
+  "purpose": "Native boundary stage correction: old HB4 output pads consume 69 ps TT after input-anchored TOREG flops and 36 um E-to-W wire. Dedicated output pin-flop split/retention plus output-only HB2 pad; input HB4 and 30 ps route hold margin unchanged. Arithmetic, register stages, outline/pins and production schedule unchanged. Remeasurement is diagnostic only; actual CTS/route/native audit required.",
   "benches": [
    {
     "name": "tile_r5_node_exact",
@@ -137,7 +137,9 @@
     "peak_ram_gb": 24,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "^FAIL tile_r5_node errors=[1-9][0-9]*",
+    "pass_regex": "^PASS tile_r5_node cycles="
    },
    {
     "name": "tile_r5_node_bmut2",
@@ -148,7 +150,8 @@
     "peak_ram_gb": 24,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "^FAIL tile_r5_node errors=[1-9][0-9]*"
    },
    {
     "name": "tile_r5_node_bmut3",
@@ -159,7 +162,8 @@
     "peak_ram_gb": 24,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "^FAIL tile_r5_node errors=[1-9][0-9]*"
    }
   ],
   "views_to": "physical/ref_tile/ot_qwen_tile_node/views",
@@ -174,5 +178,24 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true
+ "outhold": true,
+ "hold_pad": {
+  "cell": "HB4xp67_ASAP7_75t_R",
+  "out_cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_reg_split": true,
+ "keep_pin_regs": true,
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/arch/qwen_node_native_1628/closed_node_native.json",
+  "cell": "ot_qwen_tile_node",
+  "launch_ps": 233.3,
+  "capture_ps": 170.7,
+  "fix": "Replace the pre-2026-10-14 output boundary stage with HB2 output pads plus dedicated pin-flop split/retention; keep input HB4 pads, all RTL module edge contracts, 47.52 x 432 outline and exact pins. Preserved routed TT/FF parasitic remeasurement isolates 1027 HB4 output pads as the cause and predicts >30 ps launch recovery with FF output hold still positive."
+ },
+ "structural_change": "Native boundary stage correction: old HB4 output pads consume 69 ps TT after input-anchored TOREG flops and 36 um E-to-W wire. Dedicated output pin-flop split/retention plus output-only HB2 pad; input HB4 and 30 ps route hold margin unchanged. Arithmetic, register stages, outline/pins and production schedule unchanged. Remeasurement is diagnostic only; actual CTS/route/native audit required.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Re-kit of existing registered node ABI: RTL already has one capture stage on a/b/va/t_d/t_vd and one launch stage on y/vy/fault/t_out/t_vout. No extra pipeline stage is introduced; the measured defect is output HB4 pad delay in the old physical stage. Existing exact edge contracts are retained and native capture/launch are measured."
+ }
 }

@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/dsfd_capt_g2_dualho.lef",
+    "sha256": "e917f14acad53da45efe20f05522b0fe8c357eaa7cb025df91f478a546468c2f"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/dsfd_capt_g2_dualho_split1016-split1-00e50305e/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch/claude/closure-loop/dsfd_capt_g2_dualho_split1016-split1-00e50305e/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/dsfd_capt_g2_dualho_split1016-split1-00e50305e/record/views/dsfd_capt_g2_dualho/provenance/raw/dsfd_capt_g2_dualho.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/dsfd_capt_g2_dualho_split1016-split1-00e50305e/record/views/dsfd_capt_g2_dualho/provenance/dsfd_capt_g2_dualho.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 8 OBS rects moved into 8 pins: ck[0], f_ho[0], f_ho[1], f_row[655], f_row[817], rst[0], t_sb[0], t_sb[1]; pockets: 1070 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/dsfd_capt_g2_dualho_split1016-split1-00e50305e/record/views/dsfd_capt_g2_dualho/provenance/dsfd_capt_g2_dualho.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsfd_capt_g2_dualho 118.8 x 162.0: PG M5 VDD 22 stripes (96% spread, 100% cov) / VSS 22 stripes (96% spread, 100% cov); strap M6; face pins 1785 blocked-above 0 blocked-same 0; clock ck[0] insertion 277 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "dsfd_capt_g2_dualho",
+      "W": 118.8,
+      "H": 162.0,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 22,
+            "dir": "V",
+            "spread": 0.955,
+            "coverage": 1.0,
+            "shapes_on_top": 22
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 22,
+            "dir": "V",
+            "spread": 0.955,
+            "coverage": 1.0,
+            "shapes_on_top": 22
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 1785,
+        "blocked_above": 0,
+        "covered_below": 4,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "ck[0]": {
+          "max_ps": 277.43,
+          "min_ps": 205.09
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 1070
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "dsfd_capt_g2_dualho.lef",
+    "sha256": "dc29c3e57ff2b7671e31359933d5aa8d18ba4edb415286a801b49029357b3e22"
+  }
+}

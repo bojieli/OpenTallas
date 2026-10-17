@@ -1,0 +1,73 @@
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:112:188: Instance has missing pin: 'begin_v'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv:26:14: ... Location of port declaration
+   26 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |              ^~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:112:188: Instance has missing pin: 'begin_epoch'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv:26:39: ... Location of port declaration
+   26 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                       ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:112:188: Instance has missing pin: 'begin_cr'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv:26:63: ... Location of port declaration
+   26 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                               ^~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:112:188: Instance has missing pin: 'begin_available'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv:26:72: ... Location of port declaration
+   26 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                                        ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:112:188: Instance has missing pin: 'epoch_busy'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv:30:26: ... Location of port declaration
+   30 |  output wire begin_fault,epoch_busy,startup_allowed,
+      |                          ^~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:112:188: Instance has missing pin: 'startup_allowed'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv:30:37: ... Location of port declaration
+   30 |  output wire begin_fault,epoch_busy,startup_allowed,
+      |                                     ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:169:25: Instance has missing pin: 'groups'
+  169 |  qkd_host_service_guard u_guard(.ck_guard(ck_guard),.rst_n(host_rst_n),.raw_faults(service_faults),
+      |                         ^~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv:14:40: ... Location of port declaration
+   14 |  output reg[31:0]status,output reg[3:0]groups,
+      |                                        ^~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:129:187: Instance has missing pin: 'begin_v'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:24:14: ... Location of port declaration
+   24 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |              ^~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:129:187: Instance has missing pin: 'begin_epoch'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:24:39: ... Location of port declaration
+   24 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                       ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:129:187: Instance has missing pin: 'begin_cr'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:24:63: ... Location of port declaration
+   24 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                               ^~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:129:187: Instance has missing pin: 'begin_available'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:24:72: ... Location of port declaration
+   24 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                                        ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:129:187: Instance has missing pin: 'epoch_busy'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:28:26: ... Location of port declaration
+   28 |  output wire begin_fault,epoch_busy,startup_allowed,
+      |                          ^~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:129:187: Instance has missing pin: 'startup_allowed'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:28:37: ... Location of port declaration
+   28 |  output wire begin_fault,epoch_busy,startup_allowed,
+      |                                     ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:186:25: Instance has missing pin: 'groups'
+  186 |  qkd_host_service_guard u_guard(.ck_guard(ck_guard),.rst_n(host_rst_n),.raw_faults(service_faults),
+      |                         ^~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv:14:40: ... Location of port declaration
+   14 |  output reg[31:0]status,output reg[3:0]groups,
+      |                                        ^~~~~~
+%Warning-TIMESCALEMOD: rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv:2:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    2 | module qkd_host_rst_role_pins #(parameter NL=6,ND=8,T_LINK=200000,T_HBM=200000)(
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       physical/asap7_memory_macros/ot_sram_1r1w2c_128x516_m1/ot_sram_1r1w2c_128x516_m1.v:6:8: ... Location of module with timescale
+    6 | module ot_sram_1r1w2c_128x516_m1 (
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.050
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 24.433 MB sources in 104 modules, into 0.071 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 0.482 s (elab=0.140, cvt=0.045, bld=0.000); cpu 0.481 s on 1 threads; allocated 65.148 MB

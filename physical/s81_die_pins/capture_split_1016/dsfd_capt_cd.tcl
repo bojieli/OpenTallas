@@ -1,0 +1,30 @@
+# Candidate-only explicit R0 variant pin assignment.
+# Actual exported contacts, PG access, all incident paths, native clocks and calendars require qualification.
+place_pin -pin_name {ckv} -layer M5 -location {3.996000 0.000000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {f_st[0]} -layer M4 -location {15.120000 1.452000} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {f_st[10]} -layer M4 -location {15.120000 10.092000} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {f_st[11]} -layer M4 -location {15.120000 10.956000} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {f_st[12]} -layer M4 -location {15.120000 11.820000} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {f_st[13]} -layer M4 -location {15.120000 12.684000} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {f_st[1]} -layer M4 -location {15.120000 2.316000} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {f_st[2]} -layer M4 -location {15.120000 3.180000} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {f_st[3]} -layer M4 -location {15.120000 4.044000} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {f_st[4]} -layer M4 -location {15.120000 4.908000} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {f_st[5]} -layer M4 -location {15.120000 5.772000} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {f_st[6]} -layer M4 -location {15.120000 6.636000} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {f_st[7]} -layer M4 -location {15.120000 7.500000} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {f_st[8]} -layer M4 -location {15.120000 8.364000} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {f_st[9]} -layer M4 -location {15.120000 9.228000} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {rsv} -layer M5 -location {7.980000 0.000000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {t_cd[0]} -layer M5 -location {1.452000 15.120000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {t_cd[10]} -layer M5 -location {11.052000 15.120000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {t_cd[11]} -layer M5 -location {12.012000 15.120000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {t_cd[1]} -layer M5 -location {2.412000 15.120000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {t_cd[2]} -layer M5 -location {3.372000 15.120000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {t_cd[3]} -layer M5 -location {4.332000 15.120000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {t_cd[4]} -layer M5 -location {5.292000 15.120000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {t_cd[5]} -layer M5 -location {6.252000 15.120000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {t_cd[6]} -layer M5 -location {7.212000 15.120000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {t_cd[7]} -layer M5 -location {8.172000 15.120000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {t_cd[8]} -layer M5 -location {9.132000 15.120000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {t_cd[9]} -layer M5 -location {10.092000 15.120000} -pin_size {0.024 0.192} -force_to_die_boundary

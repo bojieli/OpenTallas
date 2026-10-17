@@ -1,0 +1,15 @@
+{
+  "mutant": 0,
+  "exit": 1,
+  "output": "DETAIL sf1 ref0 legal1 open000000ff stale00000000 blk00000000 rcdffffffff ccde running1 k1 last1\nFATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_context_controller.sv:42: FAIL context controller fault layer29 edge385 j129 ordinal67\n       Time: 74874369000 Scope: tb_context_controller\n",
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "afda39aa18608adcf7005aeb3d57249aa659367ee7089c7994ec6b540fff9b4e",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "e6ec28defe1b1123a7c72997e691e79da81abce9f1547773bfd6d5982db3d815",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "ad0ef9f905b50d2d74c8089f77cca46f505e32110d004344a7790a7897e6ea1b",
+    "rtl/test/qwen_static_kv/tb_context_controller.sv": "8b727352ae9315e49ea9d1b4dd1aa1ca2f3168de7a85a83734b5ad7b7e22926e"
+  },
+  "compiler_sha256": "1aff6b67fd5bcc0111ef52fa9717dbe659c0736beda4a8f0248ee6249dd9a23e",
+  "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+}

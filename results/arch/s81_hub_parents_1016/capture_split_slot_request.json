@@ -1,0 +1,170 @@
+{
+  "schema": "opentallas.s81.capture_split_slot_request.v1",
+  "candidate": true,
+  "adopted": false,
+  "request_to": "S-DIE current reviewed hub candidate",
+  "parent": "dsfd_sp_capture_split_candidate",
+  "normal_edges_added": 0,
+  "clock_entry_bits": 70,
+  "parent_logic_cells": 0,
+  "masters": {
+    "dsfd_capt_g2_dualho": {
+      "count": 8,
+      "requested_outline_um": [
+        118.8,
+        162
+      ],
+      "outline_status": "candidate, actual synth/CTS/physical gate required",
+      "clocks": [
+        "ck"
+      ],
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+      "source_sha256": "77e04c6df1dcc9802f52c1530441c3fcee92e47b906a5e2c6b330d9d1e326997",
+      "pin_proposal": "Proposed geometry --wide: t_w halves W/E toward respective data leaf; one f_ho bit each side, f_row N/M3+M5; exact bit identity preserved. Actual pin access required."
+    },
+    "dsfd_capt_status_dual": {
+      "count": 1,
+      "requested_outline_um": [
+        43.2,
+        86.4
+      ],
+      "outline_status": "candidate, actual synth/CTS/physical gate required",
+      "clocks": [
+        "ck",
+        "ckv"
+      ],
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+      "source_sha256": "77e04c6df1dcc9802f52c1530441c3fcee92e47b906a5e2c6b330d9d1e326997",
+      "pin_proposal": "Proposed geometry --wide: f_sn E/M4,t_st W/M4, ck/rst N,ckv/rsv S. Exact status pipeline unchanged. Actual pin access required."
+    },
+    "dsfd_capt_rly_31_EW": {
+      "count": 4,
+      "requested_outline_um": [
+        15.12,
+        17.28
+      ],
+      "outline_status": "candidate, actual synth/CTS/physical gate required",
+      "clocks": [
+        "ck"
+      ],
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+      "source_sha256": "77e04c6df1dcc9802f52c1530441c3fcee92e47b906a5e2c6b330d9d1e326997"
+    },
+    "dsfd_capt_rly_36_WE": {
+      "count": 4,
+      "requested_outline_um": [
+        15.12,
+        17.28
+      ],
+      "outline_status": "candidate, actual synth/CTS/physical gate required",
+      "clocks": [
+        "ck"
+      ],
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+      "source_sha256": "77e04c6df1dcc9802f52c1530441c3fcee92e47b906a5e2c6b330d9d1e326997"
+    },
+    "dsfd_capt_rly_64_EW": {
+      "count": 1,
+      "requested_outline_um": [
+        17.28,
+        19.44
+      ],
+      "outline_status": "candidate, actual synth/CTS/physical gate required",
+      "clocks": [
+        "ck"
+      ],
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+      "source_sha256": "77e04c6df1dcc9802f52c1530441c3fcee92e47b906a5e2c6b330d9d1e326997"
+    },
+    "dsfd_capt_rly_12_SN": {
+      "count": 1,
+      "requested_outline_um": [
+        12.96,
+        12.96
+      ],
+      "outline_status": "candidate, actual synth/CTS/physical gate required",
+      "clocks": [
+        "ck"
+      ],
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+      "source_sha256": "77e04c6df1dcc9802f52c1530441c3fcee92e47b906a5e2c6b330d9d1e326997"
+    },
+    "dsfd_capt_x8_data_e": {
+      "count": 8,
+      "requested_outline_um": [
+        108,
+        162
+      ],
+      "outline_status": "candidate, actual synth/CTS/physical gate required",
+      "clocks": [
+        "ck",
+        "ckv"
+      ],
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+      "source_sha256": "77e04c6df1dcc9802f52c1530441c3fcee92e47b906a5e2c6b330d9d1e326997",
+      "pin_proposal": "Explicit same-RTL R0 physical alias: f_w/t_ho E/M4; t_vm S/M3+M5; canonical per-master pins enforced by capture_split_geometry.py --wide. Actual assigned track/PG check required.",
+      "outline_cost": "+4.4% area versus123.12x136.08; zero normal or initialization edges; actual mapped utilization/CTS/route required"
+    },
+    "dsfd_capt_x8_data_w": {
+      "count": 8,
+      "requested_outline_um": [
+        108,
+        162
+      ],
+      "outline_status": "candidate, actual synth/CTS/physical gate required",
+      "clocks": [
+        "ck",
+        "ckv"
+      ],
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+      "source_sha256": "77e04c6df1dcc9802f52c1530441c3fcee92e47b906a5e2c6b330d9d1e326997",
+      "pin_proposal": "Explicit same-RTL R0 physical alias: f_w/t_ho W/M4; t_vm S/M3+M5; canonical per-master pins enforced by capture_split_geometry.py --wide. Actual assigned track/PG check required.",
+      "outline_cost": "+4.4% area versus123.12x136.08; zero normal or initialization edges; actual mapped utilization/CTS/route required"
+    }
+  },
+  "clock_change": {
+    "add": [
+      "ck_status",
+      "ckv_status"
+    ],
+    "old_entries_preserved": 68,
+    "delivery": "actual measured per-leaf per-clock phi-R; no inherited insertion"
+  },
+  "current_native_gaps": [
+    "x8_dual historical status outputs q269.7>220 (status cone extracted)",
+    "g2/ctl M5 views recovered from archive lineage but pre-corrected export; cannot bind until reexport/native audit",
+    "cd reset capture207.2>190 needs native repair"
+  ],
+  "no_adoption_note": "Existing die/place topology retained until owner reviews new hub candidate. No parent hardened against old geometry.",
+  "additional_requested_rebuilds": {
+    "dsfd_capt_ctl": {
+      "count": 1,
+      "requested_outline_um": [
+        324,
+        86.4
+      ],
+      "why": "Existing86.4x324controlcannotfit86.4Hband; source-identicalcompactrehardeningandactualpins/nativeproofrequired",
+      "native_state": "old M5 export provisional; L-H94.6beforecorrectedexport"
+    },
+    "dsfd_capt_cd": {
+      "count": 1,
+      "requested_outline_um": [
+        15.12,
+        15.12
+      ],
+      "why": "Actualclosedviewresetcapture207.2>190; nativepin/resetrepairrequiredwithoutnormaledgechange"
+    }
+  },
+  "proposed_group_home": {
+    "group_column": "g//2",
+    "group_row": "g%2",
+    "x_um": "15.108+439.92*(g//2)",
+    "y_um": "129.6+183.6*(g%2)",
+    "within_group": "data0 x108wide, g2 x+129.6 width118.8, data1 x+270 width108; allR0",
+    "why": "Keeps8literalgatherbundlesneartheiroriginalhorizontalorder",
+    "inter_group_road_um": 61.92,
+    "group_width_um": 378
+  },
+  "grant": "S-DIE message2026-10-16:108x162 data-only candidate +61.92um roads inside unchanged1697.76/1727.976 width; compactctl/status/cd leafonly grant. Parent not adopted.",
+  "pin_plan_source": "tools/s81_ph/capture_split_geometry.py --wide; capture_split_geometry_alias.json; S-DIE snapping/PG validation pending"
+}

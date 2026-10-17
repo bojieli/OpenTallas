@@ -1,0 +1,24 @@
+{
+ "cell": "hfd_ep_static",
+ "view": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static",
+ "lib_cell": "hfd_ep_static",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 388.2,
+ "spread_ps": 52.2,
+ "outputs": 1138,
+ "inputs": 1147,
+ "launch_ps": 195.2,
+ "launch_pin": "sd_tx[19]",
+ "capture_ps": 213.6,
+ "capture_pin": "rst_n",
+ "launch_over": 0,
+ "capture_over": 517,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 213.59258 > 190 (517 pins)",
+ "note": "route 5b view hep_static_w5b_1016-w5b-ec8a8d6f7 (CLOSED TT +241.27 / FF +16.08 / DRC 0; outline 434.72 x 371.52; record 5c6a82c4c wrote it into physical/ref_tile/hep_static_ref_1015/views), audited 2026-10-16 by H-LKEP. Launch FIXED (259.7 -> 195.2, 0 pins over), spread 100.8 -> 52.2, R 388.2. Capture FAIL on 517 inputs: tx_frame 424 (max 212.4), sd_rx 76 (201.5), rx_slot_*/rx_release_*/rx_block_words 15, rst_n 213.6."
+}

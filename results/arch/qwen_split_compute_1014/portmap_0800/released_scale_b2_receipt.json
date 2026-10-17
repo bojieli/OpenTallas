@@ -1,0 +1,75 @@
+{
+  "schema": "opentallas.qwen-tp8-native-scale-rom.b2-reframe.v1",
+  "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "checkpoint_lock_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+  "checkpoint_index_sha256": "f9fdbcb91c23971c13ec5d5f2573d2349e8f61f2f049371ec699281748fdb1bc",
+  "source_manifest_sha256": "b581088d61219585cb1d8c7d5d410fc79dd994afaf54c3cbdc39309903d670ce",
+  "source_mask_root": "/srv/opentallas-scratch/codex/qwen-scale-native-1014/released_masks_v2",
+  "source_payload_changed": false,
+  "program_bytes_changed": false,
+  "qualification": "Released payload SHA verification + physical active-slot permutation; no native token or controller schedule qualification",
+  "reframe_source_sha256": {
+    "tools/qwen_scale_rom/reframe_b2.py": "f4f5eede1a5df59bd37544141c0dd4c7e0319ebcc9acfce8757958c0f0bc6538",
+    "tools/qwen_split/b2_frame.py": "fe637d24761da3e371b8163d5b64fa0cbe51f1448b387c0dfd2af2661826acdb"
+  },
+  "verified_instances": 3072,
+  "reframed_program_operations": 1184,
+  "native_layer_qualified": false,
+  "remaining": [
+    "actual producer must use emitted resident bases",
+    "native frame/controller and physical views must bind these masks"
+  ],
+  "manifest_sha256": "c68b3f56641add21e4d151f1975f1f18780b3d873a7b193d0d7698aa3442a0f5",
+  "manifest_path": "/srv/opentallas-scratch/codex/q-portmap-b2/released_masks_b2/manifest.json",
+  "unit": "E4 process4169438, admitted ot-run, exit0",
+  "ranks": [
+    {
+      "rank": 0,
+      "resident_words": 30576,
+      "expected_words_sha256": "8ab839a50909a95275e1c8d33f85f0583e47328dfa431cd0168fd33f6239002f",
+      "instances": 384
+    },
+    {
+      "rank": 1,
+      "resident_words": 30576,
+      "expected_words_sha256": "7735c06b290b6068c42ff21c8a7343797f4f34b03628be5ae0137a7ad24df716",
+      "instances": 384
+    },
+    {
+      "rank": 2,
+      "resident_words": 30576,
+      "expected_words_sha256": "56c304ad01b9d63936f49b2d9b70f2e07fb003a7a3aabeea66c75b93b4884305",
+      "instances": 384
+    },
+    {
+      "rank": 3,
+      "resident_words": 30576,
+      "expected_words_sha256": "b791217a674ae152a5ae1c6c269c055d6ea6e597b7d0d443477c5df6ee36db3b",
+      "instances": 384
+    },
+    {
+      "rank": 4,
+      "resident_words": 30576,
+      "expected_words_sha256": "86f4ab71d8997fcf158010c7fcce53e76e61621d198e762c4ba5107443f8b011",
+      "instances": 384
+    },
+    {
+      "rank": 5,
+      "resident_words": 30576,
+      "expected_words_sha256": "473cd91cd7a21d645db8de176ff9447edb9c16ba93c179fb19827662d58e7fb3",
+      "instances": 384
+    },
+    {
+      "rank": 6,
+      "resident_words": 30576,
+      "expected_words_sha256": "b876339ef7467831c9a0018e6728dfe5db605755bf25785fbed9d2856a303777",
+      "instances": 384
+    },
+    {
+      "rank": 7,
+      "resident_words": 30576,
+      "expected_words_sha256": "6db1467f20eb32c0ea2292e3879b70be017e2227debae416d6942ec1a54a6e85",
+      "instances": 384
+    }
+  ]
+}

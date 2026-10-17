@@ -3,7 +3,7 @@
 // One physical master x4; GROUP affects only the simulation negative control.
 // No added stage or arithmetic change. Physical/native gates remain pending.
 module ot_v41_bf_lane4 #(
-    parameter integer NCHB=8,TRW=7,GRADUAL_RNE=1,RC=1,GROUP=0,
+    parameter integer NCHB=8,TRW=7,GRADUAL_RNE=1,RC=1,GROUP=0,BOUNDARY_STAGE=1,
     parameter [8:0] CUT=9'b1_0111_1011
 )(input wire fclk,rst_pin,ze_d,v_s,
   input wire [63:0] w_s,x_s,
@@ -26,6 +26,20 @@ module ot_v41_bf_lane4 #(
 `else
     wire lane_fclk=fclk;
 `endif
+    // Relocated final parent XST stage: no end-to-end cycle is added.
+    initial if (BOUNDARY_STAGE<0 || BOUNDARY_STAGE>1)
+        $fatal(1,"BOUNDARY_STAGE must be zero or one");
+    wire v_d;wire[63:0]w_d,x_d;wire[TW-1:0]t_d;
+    if (BOUNDARY_STAGE!=0) begin:g_boundary
+        wire bclk,brst;
+        ot_v41_tile_clk u_boundary(.fclk(lane_fclk),.rst_pin(rst_pin),.ze_d(ze_d),.gclk(bclk),.rst_n(brst));
+        reg v_q;reg[63:0]w_q,x_q;reg[TW-1:0]t_q;
+        always @(posedge bclk or negedge brst)if(!brst)v_q<=1'b0;else v_q<=v_s;
+        always @(posedge bclk)begin w_q<=w_s;x_q<=x_s;t_q<=t_p;end
+        assign v_d=v_q;assign w_d=w_q;assign x_d=x_q;assign t_d=t_q;
+    end else begin:g_no_boundary
+        assign v_d=v_s;assign w_d=w_s;assign x_d=x_s;assign t_d=t_p;
+    end
     genvar l;
     generate for (l = 0; l < 4; l = l + 1) begin : g_l
         // lane tile: local gated clock lclk / reset lrst; the lane's own boundary registers (16-bit word and x slices,
@@ -39,8 +53,8 @@ module ot_v41_bf_lane4 #(
 `endif
         reg [15:0] w_r, x_r;
         reg        v_r;
-        always @(posedge lclk or negedge lrst) if (!lrst) v_r <= 1'b0; else v_r <= v_s;
-        always @(posedge lclk) begin w_r <= w_s[16*l +: 16]; x_r <= x_s[16*l +: 16]; end
+        always @(posedge lclk or negedge lrst) if (!lrst) v_r <= 1'b0; else v_r <= v_d;
+        always @(posedge lclk) begin w_r <= w_d[16*l +: 16]; x_r <= x_d[16*l +: 16]; end
         ot_v41_bmul2_rne_prepare #(.GRADUAL_RNE(GRADUAL_RNE), .XS(RC != 0 ? 1 : 0)) u_m (.clk(lclk), .rst_n(lrst), .v(v_r), .a({w_r, 16'd0}), .b({x_r, 16'd0}),
                          .y(prod[l]), .fault(pf[l]));
         reg [PL-1:0] vp;
@@ -48,16 +62,16 @@ module ot_v41_bf_lane4 #(
         assign pv[l] = vp[PL-1];
         if (RC >= 2) begin : g_cu
         ot_v41_chain2u2 #(.NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_n(lrst), .v(pv[l]),
-            .slot(t_p[TW-1 -: HW]), .first(t_p[TRW+2]), .last(t_p[TRW+1]), .term(prod[l]), .term_f(pf[l]),
-            .tag(t_p[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
+            .slot(t_d[TW-1 -: HW]), .first(t_d[TRW+2]), .last(t_d[TRW+1]), .term(prod[l]), .term_f(pf[l]),
+            .tag(t_d[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
         end else if (RC != 0) begin : g_c4
         ot_v41_chain4 #(.PD(1), .ND(4), .NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_n(lrst), .v(pv[l]),
-            .slot(t_p[TW-1 -: HW]), .first(t_p[TRW+2]), .last(t_p[TRW+1]), .term(prod[l]), .term_f(pf[l]),
-            .tag(t_p[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
+            .slot(t_d[TW-1 -: HW]), .first(t_d[TRW+2]), .last(t_d[TRW+1]), .term(prod[l]), .term_f(pf[l]),
+            .tag(t_d[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
         end else begin : g_c2
         ot_v41_chain2 #(.NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_n(lrst), .v(pv[l]),
-            .slot(t_p[TW-1 -: HW]), .first(t_p[TRW+2]), .last(t_p[TRW+1]), .term(prod[l]), .term_f(pf[l]),
-            .tag(t_p[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
+            .slot(t_d[TW-1 -: HW]), .first(t_d[TRW+2]), .last(t_d[TRW+1]), .term(prod[l]), .term_f(pf[l]),
+            .tag(t_d[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
         end
     end endgenerate
 endmodule

@@ -1,0 +1,17 @@
+{
+ "status": "PASS",
+ "proof": "all native/state/comb data connections + exact fixed delay stage chain identity; functional common epoch only",
+ "native_owners": 750,
+ "delay_chains": 1294,
+ "delay_stage_owners": 4124,
+ "state_owners": 483,
+ "state_bits": 324344,
+ "comb_copies_checked": 1322,
+ "clock_entries": 5401,
+ "scope": "structural composition identity, not numerical fullshape/native physical/fulltoken qualification",
+ "input_sha256": {
+  "census": "ebb24311c737f6b293658c117c1f42755cdd6086e3a97af41116c36701ef7de3",
+  "design": "1889cbd3ef87e4a48f04e4817da6fc6b9c2b3e6f1b6c3f520ca6db05f3bb3cc3",
+  "manifest": "f34407d6274f6302559e34374f459193896ac8b07b1576b5801385c9ea93025c"
+ }
+}

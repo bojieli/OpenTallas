@@ -1,0 +1,25 @@
+{
+ "cell": "dsfd_selt_xq",
+ "view": "physical/ref_tile/s81sel_xq/views/dsfd_selt_xq",
+ "lib_cell": "dsfd_selt_xq",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 243.1,
+ "spread_ps": 80.2,
+ "outputs": 590,
+ "inputs": 516,
+ "launch_ps": 228.7,
+ "launch_pin": "o_lanes[2049]",
+ "capture_ps": 152.4,
+ "capture_pin": "i_sw[160]",
+ "launch_over": 14,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 228.68644 > 220 (14 pins)",
+ "job": "s81sel_xq-x3-b05435af8",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one"
+}

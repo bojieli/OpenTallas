@@ -1,0 +1,18 @@
+{
+ "cell": "qfd_b2_word_status",
+ "job": "qfd_b2_word_status_1016-ws1-df173b497",
+ "source": "df173b497 (kit 2bdb2096b; exact six-half word/result status checker)",
+ "routed": {"TT_ps": 300.68, "FF_ps": 27.48, "DRC": 0, "SS_sensitivity_ps": 219.99},
+ "record": "87ebc3680 (origin/codex/closure-record-qfd_b2_word_status_1016-ws1-df173b497), fast-forwarded into claude/q-b2-integ-1016",
+ "view": "physical/ref_tile/qfd_b2_word_status_1016/views/qfd_b2_word_status",
+ "native": {"R_ps": 48.0, "spread_ps": 1.1, "outputs": 1, "inputs": 19,
+  "launch_ps": 158.5, "launch_pin": "fault", "capture_ps": 101.3, "capture_pin": "word_v[0]",
+  "launch_over": 0, "capture_over": 0, "comb_pins": 0},
+ "budgets": {"launch_ps": 220, "capture_ps": 190, "spread_ps": 80},
+ "pass": true,
+ "benches": "word_status_exact PASS (checks=4900 rises=36) + word_status_late_valid_mutant FAIL as expected",
+ "method": "tools/hier_contract/native_pin_audit.py audit_one on the recorded view lib + insertion.json (TT)",
+ "images_looked": ["word_status_ws1_density.png (43.2x43.2, fill 0.007: cells clustered at the W input pins, fault flop at E, clock N)",
+                   "word_status_ws1_floorplan.png (W inputs mid-face, N clock, E fault)"],
+ "die_frame": "tools/qwen_split/b2_graph.py now draws qfd_b2_word_status from this closed view (closed_view.install_master), as the upper"
+}

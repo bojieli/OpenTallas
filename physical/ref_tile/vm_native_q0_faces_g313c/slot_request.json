@@ -1,0 +1,378 @@
+{
+ "schema": "opentallas.slot_request.v1",
+ "from": "Claude H-SM 1315 (H-ELEM)",
+ "to": "H-DIE",
+ "date": "2026-10-16",
+ "kind": "slot_change + pin change (new master replaces nat2 q0 master)",
+ "replaces": {
+  "master": "hfd_vms_bank_native_q0",
+  "view": "nat2 vm_native_q0_ref-nat2-f084d0a8b (270x270, native FAIL L258.5/C207.5/sp88.3)"
+ },
+ "master": "hfd_vms_bank_native_q0_faces",
+ "view": "physical/ref_tile/vm_native_q0_faces_g313c/views/hfd_vms_bank_native_q0_faces",
+ "closed_job": "vm_native_q0_faces_g313c-mclkC-1ad8c4984",
+ "record_commit": "c1ea52116",
+ "main_merge": "90c32a755",
+ "closure": "TT +17.45 / FF +8.62 / DRC 0",
+ "native_audit": {
+  "pass": true,
+  "launch_ps": 193.2,
+  "launch_pin": "rr4[32]",
+  "capture_ps": 186.1,
+  "capture_pin": "rq3[9]",
+  "R_ps": 141.8,
+  "spread_ps": 43.0,
+  "comb_pins": 0,
+  "receipt": "results/hbm_sm_attention_1015/hsm_1315/vm_native_q0_faces_g313c_native_audit.json"
+ },
+ "outline_um": {
+  "w": 270.0,
+  "h": 313.2
+ },
+ "outline_growth": "270x270 -> 270x313.2 (+43.2 um in y, +16% area): 20.136 um macro channels between the 3 SRAMs",
+ "layers": {
+  "pin_layers": "W/E M4, N/S M5",
+  "layer_cap": "M6"
+ },
+ "new_clock_ports": {
+  "clk": {
+   "face": "N",
+   "layer": "M5",
+   "position_um": 134.988
+  },
+  "clk_n": {
+   "face": "N",
+   "layer": "M5",
+   "position_um": 137.964
+  },
+  "clk_s": {
+   "face": "S",
+   "layer": "M5",
+   "position_um": 134.988
+  },
+  "clk_e": {
+   "face": "E",
+   "layer": "M4",
+   "position_um": 156.588
+  },
+  "clk_w": {
+   "face": "W",
+   "layer": "M4",
+   "position_um": 156.588
+  },
+  "clk_macro0": {
+   "face": "W",
+   "layer": "M4",
+   "position_um": 31.452
+  },
+  "clk_macro1": {
+   "face": "W",
+   "layer": "M4",
+   "position_um": 122.076
+  },
+  "clk_macro2": {
+   "face": "W",
+   "layer": "M4",
+   "position_um": 212.7
+  }
+ },
+ "clock_delivery": "die delivers the SAME core clock (one domain, ratio 1:1) to 8 entry pins: clk (core CTS root), clk_n/clk_s/clk_e/clk_w (face-local CTS roots for the face pin flops), clk_macro0..2 (direct SRAM clock pins, W face at each SRAM clk pin y). Static fixed-cycle: no new data edges, return 7 / writeDone 4 unchanged.",
+ "faces": {
+  "N": {
+   "bid": {
+    "bits": 3,
+    "range_um": [
+     5.868,
+     6.732
+    ]
+   },
+   "clk": {
+    "bits": 1,
+    "range_um": [
+     134.988,
+     134.988
+    ]
+   },
+   "clk_n": {
+    "bits": 1,
+    "range_um": [
+     137.964,
+     137.964
+    ]
+   },
+   "kq": {
+    "bits": 281,
+    "range_um": [
+     130.908,
+     256.764
+    ]
+   },
+   "kq_done": {
+    "bits": 1,
+    "range_um": [
+     130.476,
+     130.476
+    ]
+   },
+   "rq2": {
+    "bits": 17,
+    "range_um": [
+     11.532,
+     18.444
+    ]
+   },
+   "rr2": {
+    "bits": 257,
+    "range_um": [
+     18.876,
+     130.044
+    ]
+   },
+   "rslot": {
+    "bits": 3,
+    "range_um": [
+     8.46,
+     9.324
+    ]
+   },
+   "rslot_v": {
+    "bits": 1,
+    "range_um": [
+     8.028,
+     8.028
+    ]
+   },
+   "rst_n": {
+    "bits": 1,
+    "range_um": [
+     5.436,
+     5.436
+    ]
+   },
+   "sid": {
+    "bits": 2,
+    "range_um": [
+     7.164,
+     7.596
+    ]
+   },
+   "status": {
+    "bits": 18,
+    "range_um": [
+     257.196,
+     264.588
+    ]
+   },
+   "wslot": {
+    "bits": 3,
+    "range_um": [
+     10.188,
+     11.1
+    ]
+   },
+   "wslot_v": {
+    "bits": 1,
+    "range_um": [
+     9.756,
+     9.756
+    ]
+   }
+  },
+  "S": {
+   "clk_s": {
+    "bits": 1,
+    "range_um": [
+     134.988,
+     134.988
+    ]
+   },
+   "dq": {
+    "bits": 281,
+    "range_um": [
+     69.084,
+     136.332
+    ]
+   },
+   "dq_done": {
+    "bits": 1,
+    "range_um": [
+     136.572,
+     136.572
+    ]
+   },
+   "pq": {
+    "bits": 285,
+    "range_um": [
+     136.812,
+     202.764
+    ]
+   },
+   "pr": {
+    "bits": 266,
+    "range_um": [
+     203.004,
+     264.588
+    ]
+   },
+   "rq3": {
+    "bits": 17,
+    "range_um": [
+     5.436,
+     9.132
+    ]
+   },
+   "rr3": {
+    "bits": 257,
+    "range_um": [
+     9.372,
+     68.892
+    ]
+   }
+  },
+  "E": {
+   "clk_e": {
+    "bits": 1,
+    "range_um": [
+     156.588,
+     156.588
+    ]
+   },
+   "eg": {
+    "bits": 276,
+    "range_um": [
+     233.292,
+     307.788
+    ]
+   },
+   "rq1": {
+    "bits": 17,
+    "range_um": [
+     5.436,
+     9.756
+    ]
+   },
+   "rr1": {
+    "bits": 257,
+    "range_um": [
+     10.044,
+     79.404
+    ]
+   },
+   "wq1": {
+    "bits": 281,
+    "range_um": [
+     79.692,
+     157.692
+    ]
+   },
+   "wq_done1": {
+    "bits": 1,
+    "range_um": [
+     157.98,
+     157.98
+    ]
+   },
+   "xq2": {
+    "bits": 276,
+    "range_um": [
+     158.22,
+     232.716
+    ]
+   },
+   "xq2_done": {
+    "bits": 1,
+    "range_um": [
+     233.004,
+     233.004
+    ]
+   }
+  },
+  "W": {
+   "clk_macro0": {
+    "bits": 1,
+    "range_um": [
+     31.452,
+     31.452
+    ]
+   },
+   "clk_macro1": {
+    "bits": 1,
+    "range_um": [
+     122.076,
+     122.076
+    ]
+   },
+   "clk_macro2": {
+    "bits": 1,
+    "range_um": [
+     212.7,
+     212.7
+    ]
+   },
+   "clk_w": {
+    "bits": 1,
+    "range_um": [
+     156.588,
+     156.588
+    ]
+   },
+   "rq0": {
+    "bits": 17,
+    "range_um": [
+     5.436,
+     9.708
+    ]
+   },
+   "rq4": {
+    "bits": 17,
+    "range_um": [
+     80.364,
+     84.588
+    ]
+   },
+   "rr0": {
+    "bits": 257,
+    "range_um": [
+     9.948,
+     80.076
+    ]
+   },
+   "rr4": {
+    "bits": 257,
+    "range_um": [
+     84.876,
+     155.004
+    ]
+   },
+   "wq0": {
+    "bits": 281,
+    "range_um": [
+     155.292,
+     233.964
+    ]
+   },
+   "wq_done0": {
+    "bits": 1,
+    "range_um": [
+     234.204,
+     234.204
+    ]
+   },
+   "xq": {
+    "bits": 276,
+    "range_um": [
+     234.492,
+     307.5
+    ]
+   },
+   "xq_done": {
+    "bits": 1,
+    "range_um": [
+     307.788,
+     307.788
+    ]
+   }
+  }
+ },
+ "functional": "bench exact_real_memory PASS (10 cases incl mirror half), mutant drop clk_macro1 FAIL"
+}

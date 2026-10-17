@@ -1,0 +1,31 @@
+{
+ "status": "PASS_RUNNER_RETURN_STATUS_ONLY",
+ "runner_sha256": "817fd3b9c8b8f1c61e13ab2ae46c60bf4bfd3c9417c0eabeaf37d01345eec5df",
+ "cases": [
+  {
+   "case": "pass",
+   "expected": 0,
+   "observed": 0,
+   "stdout": "pass PASS\nPASS"
+  },
+  {
+   "case": "negative",
+   "expected": 42,
+   "observed": 42,
+   "stdout": "negative FAIL rc=42\nFAIL"
+  },
+  {
+   "case": "timeout",
+   "expected": 124,
+   "observed": 124,
+   "stdout": "timeout FAIL rc=124\nFAIL timeout"
+  },
+  {
+   "case": "terminated",
+   "expected": 143,
+   "observed": 143,
+   "stdout": "terminated FAIL rc=143"
+  }
+ ],
+ "scope": "Small fake executable verifies shell status propagation on success, DUT rejection, timeout status and actual termination; actual RTL selector proof is separate."
+}

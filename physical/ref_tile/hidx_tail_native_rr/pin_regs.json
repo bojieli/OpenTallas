@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_idx_tail_native",
+ "enable": false,
+ "reason": "Existing target RTL owns captured operand ports and registered result ports; preserve exact native16edge tail timing and measure valid/reset boundary gating. No synthesized shell or hidden latency."
+}

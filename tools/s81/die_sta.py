@@ -21,6 +21,8 @@ ROOT = Path(__file__).resolve().parents[2]
 _g = next((sys.argv[i + 1] for i, x in enumerate(sys.argv[:-1]) if x == '--gen-root'), None)
 sys.path.insert(0, str(Path(_g) / 'tools' if _g else ROOT / 'tools'))
 import dsrom_s81_fulldie as S  # noqa: E402
+sys.path.append(str(ROOT / 'tools'))   # die_hold_budget (after --gen-root: never shadows the generator source)
+import die_hold_budget as DHB  # noqa: E402
 
 CLK_NAMES = ('ck', 'clk', 'sk', 'cks', 'ckh', 'cw', 'wclk', 'fi0', 'fi', 'xf', 'ck_in')
 # s81-die 2026-10-13 (c6p STA by path class, results/physical/die_iter_1012/s81/c6p_sta_classes_1013): FF cq 32 ps against
@@ -29,6 +31,13 @@ CLK_NAMES = ('ck', 'clk', 'sk', 'cks', 'ckh', 'cw', 'wclk', 'fi0', 'fi', 'xf', '
 # BUF-HB4-BUF); the placeholder carries that minimum, so a hop between placeholders is neutral (0 at zero wire) and a
 # placeholder launching into a REAL pin is judged against the real pin's hold with the contract launch.
 K = dict(ss=dict(cq=90.0, su=30.0, ho=15.0), tt=dict(cq=55.0, su=18.0, ho=15.0), ff=dict(cq=65.0, su=10.0, ho=15.0))
+# FLOW-HOLD (owner-approved die-wide boundary hold budget 2026-10-16, results/arch/boundary_hold_budget_1016/RULE.md,
+# opt-in --hold-budget die): boundary hold belongs to the die STA.  A recipe-4 (flop-first) tile guarantees only
+# C = 25 ps FF launch after L_min, so an unbuilt placeholder launches at 25 (not the 65 of the old BUF-HB4-BUF relay
+# kits); BOUND tiles time with their own ETM (clk->out min and hold arc H(i)); hold uncertainty 25 once per link (no
+# +50 / +25 plan term: the skew is the measured/propagated clock difference); planning hold pads refused.
+HOLD_BUDGET_C_PS = 25.0
+HOLD_BUDGET_U_PS = 25.0
 # s81-die-iter 2026-10-12 (FF hold, r4f SPEF: hco_SW -> xsco_SW -103.7, hr_W<n> -> f_hr_W<n>_o_1 -77.9, hl_W<n> ->
 # g_hl_W<n>_o_sp_collective_0 -77.6 ps): a closed end block (m2l / r2l / l2r, kind 'hend') is balanced on its MEAN clock
 # insertion, but its boundary output flops ride a shorter branch (~80 vs 152 ps), so its outputs launch ~70 ps early
@@ -49,6 +58,106 @@ REL_CLK = {'dsfd_xstg': {'i': 'cw'}}
 # endpoints at -519..-577 ps (xa / xb / cc launched 548 ps before the column relays' clock).  Inputs AND outputs of a
 # multi-clock glue master are related to the clock that captures / launches them (REL_CLK_COLCK applies with --cfifo-colck).
 REL_CLK_COLCK = {'dsfd_cfifo': dict(xd='xf', st='cr', ri='cr', xa='cr', xb='cr', cc='cr', rs='cr', rd='cr', rf='cr')}
+# DIE-CLOCK 2026-10-16 (coordinator: fixed 3:4 seams): stream 833.333 / serial 1111.111 share the 3.333 ns epoch (4:3
+# edges, 12 VCO ticks of 277.8 ps).  The fixed-bank seams -- VM x34 / x43 (ot_s81_vm_x34_[ts], ot_s81_vm_x43_[ts]),
+# capture x8x and status x43 (dsfd_capt_x8x_[ts]_*, dsfd_capt_status_x43_[ts]) -- move each word on a compiled edge pair
+# whose window is >= 1.389 ns setup (5 ticks) with the bank's next write >= 1.111 ns (4 ticks) after the read edge
+# (rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_x8_x43.sv bank table).  The die STA therefore relates serial and stream (no
+# set_clock_groups -asynchronous between them) and times every cross-root path INTO a seam leaf against that compiled
+# window: set_max_delay SEAM_SETUP_PS / set_min_delay -SEAM_HOLD_PS, clock latencies included (the physical tree's skew
+# counts).  Any OTHER serial <-> stream path keeps the default (tightest-edge, 277.8 ps) relationship and shows up as a
+# failure: only a scheduled seam may cross.  The seam leaves' reset nets are NOT false-pathed (both capture resets must
+# release on the common epoch edge): they are timed like data into the seam leaf (same-root single cycle, cross-root
+# the seam window); every other endpoint of a shared reset net stays false-pathed.  _t = stream root, _s = serial root.
+SEAM_RE = re.compile(r'(?:^|_)x(?:34|43|8x)_([ts])(?=_|$)')
+SEAM_SETUP_PS, SEAM_HOLD_PS = 1388.889, 1111.111
+RESET_NET_GLOBS = ('n_rst_*', 'n_rs_col_*', 'por_n')
+
+
+def literal_clock_pin(pin):
+    """Canonical LEF/Liberty spelling for a generator's one-bit Verilog slice."""
+    return re.sub(r'\[(\d+):\1\]', r'[\1]', pin)
+
+
+def clock_sink_key(inst, port, master, real_ports):
+    port = literal_clock_pin(port)
+    mapped = real_ports.get(master, {}).get(port, [port])[0]
+    return f'{inst}/{literal_clock_pin(mapped)}'
+
+
+def capture_physical_insertions(model, masters):
+    """Bind exact imported native clocks to physical phi-R means, independently of ETM reference extrema."""
+    packet = model.get('capture_import')
+    if not packet:
+        return {}
+    by = {it.name: it.master for it in model['insts']}
+    rows = packet.get('clock_entries', [])
+    expected = packet.get('counts', {}).get('literal_clock_contacts')
+    if expected is None or expected != len(rows):
+        raise ValueError('capture physical clocks require complete literal contact records')
+    per_entry, per_master = {}, {}
+    for row in rows:
+        child, pin = row['child'], literal_clock_pin(row['pin'])
+        if child not in by or by[child] not in masters:
+            raise ValueError(f'capture physical clock has no actual child/master: {child}/{pin}')
+        raw = row.get('R_ps', {})
+        values = [raw.get(c) for c in ('ss', 'ff', 'tt')]
+        if any(not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v) for v in values):
+            raise ValueError(f'capture physical clock missing measured boundary mean R: {child}/{pin}')
+        key, mk = f'{child}/{pin}', (by[child], pin)
+        if key in per_entry:
+            raise ValueError(f'duplicate capture physical clock contact: {key}')
+        if mk in per_master and per_master[mk] != values:
+            raise ValueError(f'inconsistent capture physical clock mean: {mk}')
+        per_entry[key], per_master[mk] = values, values
+    children = set(packet.get('children', {}).values())
+    for _, cls, _, endpoints in model['buses']:
+        if cls in ('clock', 'col_clock'):
+            for child, pin in endpoints[1:]:
+                if child in children and f'{child}/{literal_clock_pin(pin)}' not in per_entry:
+                    raise ValueError(f'capture clock graph contact lacks physical R: {child}/{pin}')
+    for (master, pin), values in sorted(per_master.items()):
+        masters[master].setdefault('physical_insertion_per_clock_pin_ps', {})[pin] = values
+    return dict(entries=len(per_entry), reference='source-qualified insertion.json per-clock boundary mean',
+                per_entry=per_entry)
+
+
+def seam_constraints(m):
+    """-> (sdc lines replacing the serial|stream async group and the blanket reset false path, record)"""
+    import fnmatch
+    side = {'t': set(), 's': set()}
+    for it in m['insts']:
+        mm = SEAM_RE.search(it.master)
+        if mm:
+            side[mm.group(1)].add(it.name)
+    seam = side['t'] | side['s']
+    plain, seam_rst = [], {}
+    for bid, cls, bits, eps in m['buses']:
+        net = bid if cls in ('top_in', 'top_out') else f'n_{bid}'
+        if not any(fnmatch.fnmatchcase(net, g) for g in RESET_NET_GLOBS):
+            continue
+        loads = [(i, p) for i, p in eps[1:]]
+        if any(i in seam for i, _ in loads):
+            seam_rst[net] = [f'{i}/{p}' for i, p in loads if i not in seam]
+        else:
+            plain.append(net)
+    if not seam:   # a die without fixed-ratio seam leaves (c26b and earlier): unchanged, serial asynchronous to stream
+        return (['set_clock_groups -asynchronous -group {clk_serial} -group {clk_hbm} -group [get_clocks -quiet {clk_stream ck_col_*}]',
+                 'set_false_path -through [get_nets -quiet {%s}]' % ' '.join(RESET_NET_GLOBS)], dict(seam_instances=0))
+    L = ['set_clock_groups -asynchronous -group {clk_hbm} -group [get_clocks -quiet {clk_serial clk_stream ck_col_*}]']
+    for cap, src in (('s', 'clk_stream'), ('t', 'clk_serial')):
+        if not side[cap]:
+            continue
+        pins = ' '.join(f'{i}/*' for i in sorted(side[cap]))
+        L += [f'set_max_delay {SEAM_SETUP_PS} -from [get_clocks {src}] -to [get_pins -quiet {{{pins}}}]',
+              f'set_min_delay {-SEAM_HOLD_PS} -from [get_clocks {src}] -to [get_pins -quiet {{{pins}}}]']
+    if plain:
+        L.append('set_false_path -through [get_nets -quiet {%s}]' % ' '.join(sorted(plain)))
+    for net, other in sorted(seam_rst.items()):
+        if other:
+            L.append('set_false_path -through [get_nets {%s}] -to [get_pins -quiet {%s}]' % (net, ' '.join(sorted(other))))
+    return L, dict(seam_instances=len(seam), stream_side=sorted(side['t']), serial_side=sorted(side['s']),
+                   timed_reset_nets=sorted(seam_rst), setup_window_ps=SEAM_SETUP_PS, hold_window_ps=SEAM_HOLD_PS)
 
 
 def hold_pad_sites(m):
@@ -736,6 +845,12 @@ def main():
     ap.add_argument('--bf-compose', type=Path, help='composed BF pair record (bf_hier_compose_sta.py compose.json) of the '
                     'die\'s BF blocks: the front clock tap; default the col600 record')
     ap.add_argument('--index-out', type=Path, help='also write the master -> view index (JSON) here')
+    ap.add_argument('--hold-budget', choices=['tile', 'die'], default='tile',
+                    help='FLOW-HOLD 2026-10-16: die = boundary hold owned by the die STA (placeholder FF launch-min 25 ps, '
+                         'hold uncertainty 25 once per link, bound tiles by their ETM, no planning hold pads); '
+                         'tile = legacy (placeholder 65 ps, hold 25 + plan tolerance)')
+    ap.add_argument('--hold-dump-paths', type=int, default=200000,
+                    help='--hold-budget die: FF min paths (one per endpoint) dumped for tools/die_hold_budget.py')
     ap.add_argument('--legacy-unqualified-libs', action='store_true',
                     help='S81 DIE 2026-10-13: keep the tree-scan binding of routed-view ETMs (closed / assembled) of masters '
                          'that are NOT in the view-binding table (not QUALIFIED by tools/s81/native_view_qualify.py). '
@@ -744,6 +859,10 @@ def main():
     a = ap.parse_args()
     if a.require_real_views and (a.legacy_unqualified_libs or a.planning_hold_pads):
         ap.error('--require-real-views is incompatible with legacy unqualified libraries or planning hold pads')
+    if a.hold_budget == 'die':
+        if a.planning_hold_pads:
+            ap.error('--hold-budget die: hold shortfalls are fixed in relay stations / die HOLD_PAD cells, not planning pads')
+        K['ff'] = dict(K['ff'], cq=HOLD_BUDGET_C_PS)
     S.apply_options(S.die_options(argparse.ArgumentParser()).parse_args(shlex.split(a.s81_opts) + ['--die', a.die]))
     m = S.build()
     pdir = S.finalize_r8(m)
@@ -900,20 +1019,26 @@ def main():
             rec['masters'][mst] = r_
         (a.out / f'interim_{corner}.lib').write_text(interim_lib(cells, corner, pads))
         (a.out / f'libs_{corner}.txt').write_text('\n'.join(sorted(libs) + [f'/kit/interim_{corner}.lib']) + '\n')
+    rec['capture_physical_insertions'] = capture_physical_insertions(m, rec['masters'])
     # clocks: die domain sources (collective PLL pins) and the column roots (cfifo co)
     srcs = []
     for bid, cls, bits, eps in m['buses']:
         if cls == 'clock':
-            srcs.append((bid, f'{eps[0][0]}/{eps[0][1]}', dict(clk_stream=833.333, clk_serial=1111.111,
+            srcs.append((literal_clock_pin(bid), f'{eps[0][0]}/{literal_clock_pin(eps[0][1])}', dict(clk_stream=833.333, clk_serial=1111.111,
                                                                 clk_hbm=1023.96).get(bid, 833.333)))
         elif cls == 'col_clock':
-            srcs.append((bid, f'{eps[0][0]}/{eps[0][1]}', 833.333))
+            srcs.append((literal_clock_pin(bid), f'{eps[0][0]}/{literal_clock_pin(eps[0][1])}', 833.333))
     rec['clocks'] = srcs
     lat = {}
     if a.clock_plan:
         import gzip, math
         cp = json.load(gzip.open(a.clock_plan))
-        si = cp['sink_insertion']
+        si = {}
+        for key, value in cp['sink_insertion'].items():
+            key = literal_clock_pin(key)
+            if key in si and si[key] != value:
+                raise ValueError(f'inconsistent clock-plan scalar aliases: {key}')
+            si[key] = value
         by = {it.name: it for it in m['insts']}
         cen = lambda n: (by[n].x + by[n].w / 2, by[n].y + by[n].h / 2)
         known = defaultdict(list)          # clock bus -> [(x, y, ss, ff)]
@@ -924,13 +1049,13 @@ def main():
             for inst, p_ in eps[1:]:
                 if inst not in by:
                     continue
-                k_ = f'{inst}/{p_}'
+                k_ = f'{inst}/{literal_clock_pin(p_)}'
                 sinks.append((bid, inst, p_))
                 if k_ in si:
                     known[bid].append(cen(inst) + tuple(si[k_]))
         for bid, inst, p_ in sinks:
-            k_ = f'{inst}/{p_}'
-            pk = f'{inst}/' + rp.get(by[inst].master, {}).get(p_, [p_])[0]   # real macros: the pin of the die port
+            k_ = f'{inst}/{literal_clock_pin(p_)}'
+            pk = clock_sink_key(inst, p_, by[inst].master, rp)   # real macros: the pin of the die port
             if k_ in si:
                 lat[pk] = si[k_]
             elif known[bid]:
@@ -947,7 +1072,7 @@ def main():
         mi = measured_insertion(a.measured)
         grp = {}
         for bid, inst, p_ in sinks:
-            pk = f'{inst}/' + rp.get(by[inst].master, {}).get(p_, [p_])[0]
+            pk = clock_sink_key(inst, p_, by[inst].master, rp)
             grp[pk] = bid if bid.startswith('ck_col_') else 'trunk'
         bal = balance_latency(lat, {k_: by[k_.split('/')[0]].master for k_ in lat}, rec['masters'], mi, cls_, grp, parts)
         rec['routed_insertion'] = dict(file=str(a.measured), **bal)
@@ -965,12 +1090,21 @@ def main():
         tap = bf_front_tap(rec['masters'], lat, by, a.views_root.resolve(), a.bf_compose)
         if tap:
             rec['bf_front_tap'] = tap
-        rec['clock_plan'] = dict(file=str(a.clock_plan), sinks=len(sinks), planned=sum(1 for s in sinks if f'{s[1]}/{s[2]}' in si),
-                                 nearest=len(lat) - sum(1 for s in sinks if f'{s[1]}/{s[2]}' in si))
+        rec['clock_plan'] = dict(file=str(a.clock_plan), sinks=len(sinks), planned=sum(1 for s in sinks if f'{s[1]}/{literal_clock_pin(s[2])}' in si),
+                                 nearest=len(lat) - sum(1 for s in sinks if f'{s[1]}/{literal_clock_pin(s[2])}' in si))
     # with the CTS plan: setup 60 + 25 plan tolerance, hold 25 + 25 plan tolerance (rule H1: the die-link hold term
     # (+50) is not counted at the die, the receiver block signs off its input min at L; was 75)
-    for corner, (us, uh) in ((('ss', (85.0, 50.0)), ('tt', (85.0, 50.0)), ('ff', (85.0, 50.0))) if lat else
-                             (('ss', (210.0, 75.0)), ('tt', (210.0, 75.0)), ('ff', (210.0, 75.0)))):
+    seam_lines, rec['ratio_seams'] = seam_constraints(m)
+    corners_u = ((('ss', (85.0, 50.0)), ('tt', (85.0, 50.0)), ('ff', (85.0, 50.0))) if lat else
+                 (('ss', (210.0, 75.0)), ('tt', (210.0, 75.0)), ('ff', (210.0, 75.0))))
+    if a.hold_budget == 'die':
+        # FLOW-HOLD: U applied once per link; setup terms unchanged
+        corners_u = tuple((c_, (u_[0], HOLD_BUDGET_U_PS)) for c_, u_ in corners_u)
+    rec['hold_budget'] = dict(mode=a.hold_budget, placeholder_ff_launch_ps=K['ff']['cq'],
+                              hold_uncertainty_ps=corners_u[2][1][1],
+                              clock_source='plan latency (CTS-validated arrivals)' if lat else 'ideal (SYNTH_IDEAL_R0: hold DIAGNOSTIC ONLY)',
+                              rule='results/arch/boundary_hold_budget_1016/RULE.md')
+    for corner, (us, uh) in corners_u:
         T = ['set libs [split [string trim [read [open /kit/libs_%s.txt]]] "\\n"]' % corner,
              'foreach l $libs { read_liberty $l }', 'read_verilog /kit/die.v', 'link_design dsfd_die',
              'if {[file exists /kit/die.spef]} { read_spef /kit/die.spef; puts OT_SPEF }']
@@ -991,8 +1125,7 @@ def main():
                         T.append(f'set_clock_latency -source {lat[root][ci] + cod:.1f} [get_clocks {n_}]')
         T += [f'set_clock_uncertainty -setup {us} [all_clocks]', f'set_clock_uncertainty -hold {uh} [all_clocks]',
               'if {[file exists /kit/deep_uncertainty.tcl]} { source /kit/deep_uncertainty.tcl }' if lat else '',
-              'set_clock_groups -asynchronous -group {clk_serial} -group {clk_hbm} -group [get_clocks -quiet {clk_stream ck_col_*}]',
-              'set_false_path -through [get_nets -quiet {n_rst_* n_rs_col_* por_n}]',
+              *seam_lines,
               f'report_checks -path_delay {"min" if corner == "ff" else "max"} -group_path_count 200 -endpoint_path_count 1 '
               f'-fields {{fanout}} -digits 1 > /kit/paths_{corner}.rpt',
               f'report_checks -path_delay {"min" if corner == "ff" else "max"} -group_path_count 100000 '
@@ -1000,7 +1133,19 @@ def main():
               f'report_worst_slack -{"min" if corner == "ff" else "max"} -digits 1',
               f'report_tns -{"min" if corner == "ff" else "max"} -digits 1',
               f'report_check_types -violators -max_slew -max_capacitance > /kit/drv_{corner}.rpt']
+        if a.hold_budget == 'die' and corner == 'ff':
+            # DIE-FLOW 2026-10-17: per-link FF hold dump for tools/die_hold_budget.py (launch-min / delta / H / U per path)
+            T.append(DHB.tcl_dump('/kit/hold_links_ff.rpt', a.hold_dump_paths))
         (a.out / f'sta_{corner}.tcl').write_text('\n'.join(t for t in T if t) + '\n')
+    if a.hold_budget == 'die':
+        # DIE-FLOW 2026-10-17 (FLOW-HOLD D1/D2/D3): who launches from a bound ETM and who from the C = 25 ps placeholder
+        diag = sorted(m_ for m_, v in rec['masters'].items() if v['view'] in ('interim', 'partitioned'))
+        (a.out / 'hold_budget_masters.json').write_text(json.dumps(dict(
+            schema='opentallas.die_hold_budget.masters.v1', design='s81', paths_cap=a.hold_dump_paths,
+            diagnostic=diag, real=sorted(m_ for m_ in rec['masters'] if m_ not in diag),
+            launch_source={m_: ('placeholder C=%.0f ps (hold DIAGNOSTIC)' % HOLD_BUDGET_C_PS if m_ in diag else 'bound ETM clk->out min')
+                           for m_ in sorted(rec['masters'])},
+            diagnostic_all=None if lat else 'ideal clocks (SYNTH_IDEAL_R0): hold DIAGNOSTIC ONLY'), indent=1) + '\n')
     n = defaultdict(int)
     for v in rec['masters'].values():
         n[v['view']] += 1

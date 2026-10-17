@@ -1,0 +1,66 @@
+{
+ "schema": "opentallas.hbm.xs_w_clock_grant.v1",
+ "status": "APPROVED_REPIN_CANDIDATE_REQUIRES_REAL_REROUTE",
+ "reroute_reason": "die_window",
+ "measured_cause": "149um raw clock stub; TT slew269.9ps against120ps gate",
+ "source_parent": "e15f1ee76",
+ "source_view": "physical/ref_tile/smh_xs_ref_p45m/views/ot_hbm_accel_smh_xs/ot_hbm_accel_smh_xs.lef",
+ "source_view_sha256": "5d49d927f64e2d0a54c5bd6d1a24823218b3c194a5d85cf3a50e7c6dab3af2ef",
+ "parent_pin_file": "physical/ref_tile_specs/smh/smh_tile_rp4c_pins.tcl",
+ "parent_pin_file_sha256": "6618236aa29e6f6ad74bf10484ce43e3bffd7834c355d4f0cf5f04acbcfbce43",
+ "outline_um": [
+  302.4,
+  157.68
+ ],
+ "clock_grant": {
+  "port": "clk",
+  "face": "W",
+  "layer": "M4",
+  "centre_um": 77.772,
+  "span_um": [
+   77.76,
+   77.784
+  ],
+  "x_span_um": [
+   0,
+   0.084
+  ]
+ },
+ "nearest_other_child_W_pin_um": 10.512,
+ "children": [
+  {
+   "instance": "u.g_lf[0].u_lh.u_xs",
+   "origin": [
+    25.92,
+    1071.36
+   ],
+   "orient": "R0",
+   "parent_clock": "clk_hard[0]",
+   "parent_old_y": 1229.004,
+   "parent_new_y": 1149.132,
+   "parent_clock_delta_y": -79.872,
+   "unchanged_signal_pins_checked": 4542,
+   "parent_nearest_other_W_pin_um": 108.86400000000003,
+   "boundary_stub_um": 25.92,
+   "conservative_pin_center_stub_um": 25.962
+  },
+  {
+   "instance": "u.g_lf[1].u_lh.u_xs",
+   "origin": [
+    25.92,
+    298.104
+   ],
+   "orient": "MX",
+   "parent_clock": "clk_hard[5]",
+   "parent_old_y": 298.14,
+   "parent_new_y": 378.012,
+   "parent_clock_delta_y": 79.872,
+   "unchanged_signal_pins_checked": 4542,
+   "parent_nearest_other_W_pin_um": 106.75200000000001,
+   "boundary_stub_um": 25.92,
+   "conservative_pin_center_stub_um": 25.962
+  }
+ ],
+ "preserved": "RTL, actual outline, child origins/orientations and every non-clock signal pin. PG unchanged.",
+ "qualification": "GEOMETRY_ONLY. Parent clocks move atomically with actual rerouted XS. Require native slew, TT, FF, DRC0; no inherited-view alias. Frozen d4 unchanged."
+}

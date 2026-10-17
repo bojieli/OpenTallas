@@ -1,0 +1,140 @@
+{
+ "name": "s81lk_rate_match",
+ "top": "ot_s81_rate_match",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv"
+ ],
+ "params": {},
+ "clock": "multiple_cts_roots",
+ "clock_port": "rclk",
+ "clock_ports": [
+  "rclk",
+  "wclk"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "rclk"
+   ],
+   "inputs": [
+    "rrst_n"
+   ],
+   "outputs": [
+    "r_d",
+    "fault"
+   ]
+  },
+  "lane": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "wclk"
+   ],
+   "inputs": [
+    "wrst_n",
+    "w_v",
+    "w_d"
+   ],
+   "outputs": []
+  }
+ },
+ "reset_ports": [
+  "wrst_n",
+  "rrst_n"
+ ],
+ "outline": {
+  "w": 69.12,
+  "h": 95.04,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "w_v",
+   "w_d",
+   "wclk",
+   "wrst_n"
+  ],
+  "E": [
+   "r_d",
+   "fault",
+   "rclk",
+   "rrst_n"
+  ]
+ },
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "two-clock CDC leaf: the recipe-3 pin register is single-clock (one data clock) and cannot serve both domains; the RTL already captures at the face in its own domain -- w_v/w_d are written straight into the 8x512 FIFO flops (wclk; the only logic before them is the IDLE/fill push decode), r_d is a flop output (rclk) and fault leaves the f1/f2 synchroniser flop. A pin register on the wclk side would add one recovered-clock edge only; on the rclk side it would delay the local beat by a cycle -- neither buys timing on a 43 um leaf."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 12
+ },
+ "structural_change": "NEW leaf (ELEM-CENSUS 10-16, census class F, S-DIE ok 12:20): S81 link rate matcher ot_s81_rate_match (8-deep gray-pointer FIFO, recovered clock -> local clock, IDLE-beat drop at fill >= 6 / IDLE insert on empty, sticky fault on a lost data beat), real on-die digital sublayer inside BOTH ot_pdie_serdes and ot_pdie_ucie blackboxes (die_contracts.json two leaf rows, one master). Clocks: wclk = pma_rck (far die), rclk = local ck; plesiochronous (+-300 ppm, same nominal 833.333 ps). Timed as related_same_frequency (same_pll_fixed_phase 1/1 phase 0): every crossing (gray pointers, FIFO word -> r_d) gets ordinary one-cycle setup + hold, which bounds each crossing tighter than the gray FIFO needs; the async_gray_fifo admission is source-fingerprinted to the HBM FIFO only, and no false path / clock group is used. Outline from gate 1 (182141: ORFS synth 2,895 um2, placed std 3,324 um2 -> GPL util 104.9% in 43.2 x 86.4) re-sized to ~57% core util. S-DIE serdes/ucie macro boundary (physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes.lef, 250.056 x 2250.216 W/E link column, R0 = west column): PMA lanes / pads on the W (die-edge) face, the core-side beat bus on the E face (east column = MY mirror). w_v/w_d/wclk/wrst_n on W (from the KP4 decoder / UCIe PMA RX), r_d/fault/rclk/rrst_n on E (core-side rx bus).",
+ "job": {
+  "owner": "Claude:ELEM-CENSUS S81-LINK kit helper",
+  "branch": "claude/census-s81link-1016",
+  "tag": "ec1",
+  "cycles_added": 0,
+  "purpose": "S81 link rate-match leaf (one per SerDes and per UCIe link macro), never kitted before (census 10-16). Bench = standalone tb_s81_rate_match at +-1100 ppm both directions (24,000 data beats exact in order, no fault, 26 IDLE slips absorbed) + 2 source-copy mutants (data-beat drop, no IDLE insert).",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_link/tb_s81_rate_match.sv",
+   "tools/s81_link/run_rate_match_bench.sh"
+  ],
+  "benches": [
+   {
+    "name": "rate_match_both_slips_exact",
+    "cmd": "bash tools/s81_link/run_rate_match_bench.sh base {RUN}/bench_base",
+    "expect": "pass",
+    "pass_regex": "^RATE_MATCH_BENCH PASS dirs=2$",
+    "min_count_regex": "^TB_S81_RATE_MATCH FAST=\\d+ sent=\\d+ got=(\\d+) bad=0 ",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "rate_match_drop_data_mutant",
+    "cmd": "bash tools/s81_link/run_rate_match_bench.sh mut_drop {RUN}/bench_drop",
+    "expect": "fail",
+    "fail_regex": "^RATE_MATCH_BENCH FAIL mode=mut_drop dirs_failed=[1-9]",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "rate_match_no_idle_insert_mutant",
+    "cmd": "bash tools/s81_link/run_rate_match_bench.sh mut_noidle {RUN}/bench_noidle",
+    "expect": "fail",
+    "fail_regex": "^RATE_MATCH_BENCH FAIL mode=mut_noidle dirs_failed=[1-9]",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ }
+}

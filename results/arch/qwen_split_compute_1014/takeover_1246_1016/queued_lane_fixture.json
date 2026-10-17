@@ -1,0 +1,39 @@
+{
+ "status": "QUEUED_NOT_STARTED_NO_COVERAGE_VERDICT",
+ "observed_at": "2026-10-16T13:06:23.768875-07:00",
+ "base_commit": "fd519d1ecaecb2de349da2cffd8574fb1652be41",
+ "source_updates": [
+  "c7497b259",
+  "d5ba253f0",
+  "e493ed643"
+ ],
+ "published_main_integration": "e62e9954c",
+ "snapshot_file": "queued_lane_source.sha256",
+ "snapshot_sha256": "fcf3b4161cd97ebfdbef3c8a60c7b1697377ac2e49c797b107261a41ed8a4518",
+ "source_archive_sha256": "633ec140c9b0259377f55a86413c91091fccb97b503865497756cd05e0f9e5f9",
+ "remote_dir": "/srv/opentallas-scratch/codex/qwen-lane-coverage-1246",
+ "remote_verification": "sha256sum -c queued_source_snapshot.sha256: rc0 all159files",
+ "important_sources": {
+  "tb.sv": "9fb0d3310c90a214fbf18d416feac4995e60c4487421b6b308950408754a4360",
+  "run.sh": "d2fe0fe92e85c0759b82dcef368b987193566afffcfd66a332f28c3b99279bac",
+  "tools/qwen_b2_join/make_lane_route_bench.py": "17a161d91e6cbe4e43bf31d9fc1e4717b0529c70fabb0b1e4f6a105f0df39954",
+  "tools/qwen_b2_join/run_lane_route_bench.sh": "817fd3b9c8b8f1c61e13ab2ae46c60bf4bfd3c9417c0eabeaf37d01345eec5df",
+  "tools/qwen_b2_join/rom_e3_sources.f": "8c622da599e83f4ae35cc07b85ea5b729f453cc382d7f07eb3585e957eff08a8"
+ },
+ "live": {
+  "local_ot_run_pid": 2549179,
+  "ot_run_tag": "otrun-ubuntu-2549179-180637088",
+  "host": "ot-epyc4",
+  "remote_waiter_pid": 1786101,
+  "remote_parent_pid": 1786094,
+  "requested_gb": 110,
+  "threads": 16,
+  "priority": "die"
+ },
+ "scope": "current-source generic REF/DUT zero-route law/coverage baseline only; full idle drain and current-command busy->ready observed; per-upper payload/used and mx output required; production calibration remains OPEN",
+ "next_if": [
+  "On admission read out/build.log then out/coverage.log. run.sh and runner propagate failure. SourceSHA before actualcompile is the compiled dependency truth.",
+  "If PASS, perform selector+1/TC/AM/HL negative controls with this corrected current driver, then actual allocator-age temporal gate.",
+  "If hung draining, classify actual land/result/argmax counts against independent source stimulus. Do not remove idle or change RTL to permit early next command."
+ ]
+}

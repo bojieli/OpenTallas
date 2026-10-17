@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       admits    53 GB (avail 280, growth 121, headroom 48, waiters 0/0 GB) load 58/128 running 27 disk 1720 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2888301-1792189427 after 0 s
+SFU_SPLIT_EQUIV_MISMATCH edge=6410 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=6411 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=6412 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=6413 out=0 lg_ro=1 status=0
+[5604000] %Fatal: tb_hgi_sfu_split_equiv.sv:217: Assertion failed in tb_hgi_sfu_split_equiv: SFU_SPLIT_EQUIV FAIL mismatching_edges=192 of 6683
+SFU_SPLIT_EQUIV_MISMATCH edge=6413 out=0 lg_ro=1 status=0
+[5604000] %Fatal: tb_hgi_sfu_split_equiv.sv:217: Assertion failed in tb_hgi_sfu_split_equiv: SFU_SPLIT_EQUIV FAIL mismatching_edges=192 of 6683
+%Error: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:217: Verilog $stop
+Aborting...
+SFU_SPLIT_GATE MUTANT flip REJECTED (expected)
+script_rc=0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2888301-1792189427): exit 0
+rc=0

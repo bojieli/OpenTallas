@@ -1,0 +1,10 @@
+{
+ "unit": "HC.HC_MIX static engine ot_hbm_hc_eng_static (die master hc_eng)",
+ "sources": "898518a02 (24-file manifest results/rtl/hbm_hc_eng_static_1016/objv_h5/source_manifest.json)",
+ "functional": "P1 968 / P2 1218 / P8 2718 / G22 530 cycles, bit-exact mixes + tail (718 + 250 P); P1 = 0.834x the 1,160-cycle price",
+ "negatives": {"RS103": "FAIL as expected", "RAW0-1": "FAIL as expected", "data_mutant": "FAIL as expected"},
+ "rtl_mutants": {"MUT1 bank3 weight rotate": "p1 FAIL as expected", "MUT2 tail pre-sigmoid eps dropped": "p1 FAIL as expected; g22 alone does not expose it (eps absorbed at that stimulus' magnitudes) -- the suite kills it via p1", "MUT3 x landing one run off": "p1 FAIL as expected"},
+ "verdict": "QUALIFIED (arithmetic + schedule); physical hardening NOT started (wrapper ETM only)",
+ "ledger": "no cost row: measured < price; H-MTP2 sets CURRENT_MEASURED HC.HC_MIX = 0.834",
+ "by": "Claude H-NETLIST 1315, 2026-10-16"
+}

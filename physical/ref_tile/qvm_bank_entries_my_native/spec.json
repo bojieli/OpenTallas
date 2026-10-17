@@ -4,9 +4,9 @@
  },
  "job": {
   "owner": "Claude:q15_compute_elem",
-  "branch": "claude/qvm-ne2r-1015",
-  "tag": "ne3",
-  "purpose": "ne3 native pin-geometry successor of ne2r (same RTL/children/macros/edges).",
+  "branch": "claude/qvm-ne5-1016",
+  "tag": "ne5",
+  "purpose": "ne5 native pin-register successor of ne3 (same ports/edges/contents; ctrl + output stages as parent pin registers on CTS roots).",
   "views_to": "physical/ref_tile/qvm_bank_entries_my_native/views",
   "record_to": "results/rtl/ref_tile/qvm_bank_entries_my_native",
   "cycles_added": 0,
@@ -16,13 +16,12 @@
    "rtl/qwen_sys/vm_me_20261008",
    "rtl/qwen_sys/rtl_finish_20261007",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
-   "physical/ref_tile/qvm_data256_native/views",
-   "physical/ref_tile/qvm_bank_ctrl_native/views"
+   "physical/ref_tile/qvm_data256_native/views"
   ],
   "benches": [
    {
     "name": "bank_m0",
-    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_bank_banked_native -GMUT=0 -j 2 --Mdir {RUN}/bench/m0 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v > {RUN}/bench/m0.build.log 2>&1 && {RUN}/bench/m0/Vtb_qvm_bank_banked_native",
+    "cmd": "mkdir -p {RUN}/bench/m0 && awk '/^module qvm_data256_native/,/^endmodule/' rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv > {RUN}/bench/m0/kids.sv && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_bank_banked_native -GMUT=0 -j 2 --Mdir {RUN}/bench/m0 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_hard_pr_native.sv {RUN}/bench/m0/kids.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v > {RUN}/bench/m0.build.log 2>&1 && {RUN}/bench/m0/Vtb_qvm_bank_banked_native",
     "expect": "pass",
     "pass_regex": "PASS qvm_bank_banked_native",
     "threads": 2,
@@ -33,7 +32,7 @@
    },
    {
     "name": "bank_m1",
-    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_bank_banked_native -GMUT=1 -j 2 --Mdir {RUN}/bench/m1 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v > {RUN}/bench/m1.build.log 2>&1 && {RUN}/bench/m1/Vtb_qvm_bank_banked_native",
+    "cmd": "mkdir -p {RUN}/bench/m1 && awk '/^module qvm_data256_native/,/^endmodule/' rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv > {RUN}/bench/m1/kids.sv && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_bank_banked_native -GMUT=1 -j 2 --Mdir {RUN}/bench/m1 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_hard_pr_native.sv {RUN}/bench/m1/kids.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v > {RUN}/bench/m1.build.log 2>&1 && {RUN}/bench/m1/Vtb_qvm_bank_banked_native",
     "expect": "fail",
     "pass_regex": "PASS qvm_bank_banked_native",
     "threads": 2,
@@ -44,7 +43,40 @@
    },
    {
     "name": "bank_m2",
-    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_bank_banked_native -GMUT=2 -j 2 --Mdir {RUN}/bench/m2 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v > {RUN}/bench/m2.build.log 2>&1 && {RUN}/bench/m2/Vtb_qvm_bank_banked_native",
+    "cmd": "mkdir -p {RUN}/bench/m2 && awk '/^module qvm_data256_native/,/^endmodule/' rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv > {RUN}/bench/m2/kids.sv && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_bank_banked_native -GMUT=2 -j 2 --Mdir {RUN}/bench/m2 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_hard_pr_native.sv {RUN}/bench/m2/kids.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v > {RUN}/bench/m2.build.log 2>&1 && {RUN}/bench/m2/Vtb_qvm_bank_banked_native",
+    "expect": "fail",
+    "pass_regex": "PASS qvm_bank_banked_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bank_m3",
+    "cmd": "mkdir -p {RUN}/bench/m3 && awk '/^module qvm_data256_native/,/^endmodule/' rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv > {RUN}/bench/m3/kids.sv && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_bank_banked_native -GMUT=3 -j 2 --Mdir {RUN}/bench/m3 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_hard_pr_native.sv {RUN}/bench/m3/kids.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v > {RUN}/bench/m3.build.log 2>&1 && {RUN}/bench/m3/Vtb_qvm_bank_banked_native",
+    "expect": "fail",
+    "pass_regex": "PASS qvm_bank_banked_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bank_m4",
+    "cmd": "mkdir -p {RUN}/bench/m4 && awk '/^module qvm_data256_native/,/^endmodule/' rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv > {RUN}/bench/m4/kids.sv && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_bank_banked_native -GMUT=4 -j 2 --Mdir {RUN}/bench/m4 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_hard_pr_native.sv {RUN}/bench/m4/kids.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v > {RUN}/bench/m4.build.log 2>&1 && {RUN}/bench/m4/Vtb_qvm_bank_banked_native",
+    "expect": "fail",
+    "pass_regex": "PASS qvm_bank_banked_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bank_m5",
+    "cmd": "mkdir -p {RUN}/bench/m5 && awk '/^module qvm_data256_native/,/^endmodule/' rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv > {RUN}/bench/m5/kids.sv && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_bank_banked_native -GMUT=5 -j 2 --Mdir {RUN}/bench/m5 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_hard_pr_native.sv {RUN}/bench/m5/kids.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v > {RUN}/bench/m5.build.log 2>&1 && {RUN}/bench/m5/Vtb_qvm_bank_banked_native",
     "expect": "fail",
     "pass_regex": "PASS qvm_bank_banked_native",
     "threads": 2,
@@ -54,16 +86,16 @@
     ]
    }
   ],
-  "structural_change": "ne3 NATIVE successor of ne2r-d73debae3 (CLOSED TT +140.37/FF +26.15/DRC0 but native audit FAIL: q launch 297.5 ps on all 512 pins, rst_n capture 220.3). Measured cause (ne2r insertion.json/ETM): all 9 clock entries + rst_n sat on the S face while u_ctrl sits top-left (ck_ctrl raw entry wire 130.9 ps, slew 415 ps; rst_n to u_ctrl the same run) and u_in_hi/lo are mid/low-left (ck_in_hi 153.4 ps, ck_in_lo 82.0 ps); q spread over the full 220 um E face while u_out_lo/hi q pins span y 25.9-77.8 / 99.4-151.2 (+26.6 ps wire after the child's 201.6 ps native launch). Fix (geometry only, wires-only parent): ck_ctrl/rst_n moved to the W face at u_ctrl's clk/rst pin height (y 181.4/182.4), ck_in_lo/hi to the W face at the u_in clk pin heights (48.6/122.1), q ranged to y 24-153 facing u_out; ck_mem/cap/out stay S (6.8-29.8 ps). RTL, children, macros, outline, clock entries, data edges and capacity unchanged; cycles_added 0."
+  "structural_change": "ne5 NATIVE successor of ne3-4ad880d2b (CLOSED TT +138.43/FF +23.35/DRC0, native FAIL: q launch 298.1 raw / 228.8 child-R corrected on 512 pins from the hard u_out_lo/hi data256 leaves; re/ra capture 198.6/194.4 corrected inside the hard u_ctrl leaf). Fix: the control stage (exact qvm_bank_ctrl_native body) and the output stage (exact qvm_data256_native body) become parent pin registers on CTS roots ck_ctrl/ck_out_lo/ck_out_hi (hybrid_entries); u_in_lo/hi, u_cap_lo/hi hard leaves and both SRAMs keep direct clock entries (wd capture 185.2 corrected passes). Ports, outline, pin faces, data edges and contents unchanged; cycles_added 0."
  },
  "name": "qvm_bank_entries_my_native",
  "top": "qvm_bank_banked_native",
  "kind": "cluster",
  "sources": [
-  "rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_hard_native.sv",
+  "rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_hard_pr_native.sv",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
  ],
- "clock": "entries",
+ "clock": "hybrid_entries",
  "clock_port": "ck_ctrl",
  "clock_ports": [
   "ck_ctrl",
@@ -119,15 +151,6 @@
  "slot_change_request": "Actual mirrored SRAM bank parent variant, same9clock/body andcandidateoutline as R0; true pin/Liberty screen before physical gate. No globaladoption/reticlearea inherited.",
  "children": [
   {
-   "view": "physical/ref_tile/qvm_bank_ctrl_native/views/qvm_bank_ctrl_native",
-   "count": 1,
-   "inst": "u_ctrl",
-   "at": [
-    25.92,
-    172.8
-   ]
-  },
-  {
    "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
    "count": 1,
    "inst": "u_in_lo",
@@ -160,24 +183,6 @@
    "inst": "u_cap_hi",
    "at": [
     267.84,
-    99.36
-   ]
-  },
-  {
-   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
-   "count": 1,
-   "inst": "u_out_lo",
-   "at": [
-    315.36,
-    25.92
-   ]
-  },
-  {
-   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
-   "count": 1,
-   "inst": "u_out_hi",
-   "at": [
-    315.36,
     99.36
    ]
   }
@@ -251,8 +256,15 @@
   ]
  },
  "reroute_reason": {
-  "kind": "slot_change",
-  "slot_change_request": "el1014-qwen-split-compute.log QVM PIN SLOT CHANGE REQUEST qvm_bank_banked_native (Q-COMPUTE-ELEM r2 10-15)",
-  "why": "native_launch: ne2r audit launch 297.5 > 220 (512 q pins), rst_n capture 220.3 > 190; results/arch/qwen_split_1014/compute_native_audit_1015/qvm_bank_banked_native_ne2r.json"
+  "kind": "rtl_change",
+  "why": "native-fail: ne3 native audit launch 298.1 (q, 512 pins) / child-R corrected 228.8 / capture 198.6 (re); results/arch/qwen_split_1014/tt_functional_partition_1417/qvm_ne3_native_audit.json (f600e1cd5)"
+ },
+ "clock_cts_roots": [
+  "ck_ctrl",
+  "ck_out_lo",
+  "ck_out_hi"
+ ],
+ "fill_reason": {
+  "pin_bound": "Die-assigned QVM row-bank slot 371.52x224.64 (ne3 outline and pin faces, bound by Q-VMWB qfd_sp_vector_memory_par NATIVE_BANKS=1 as the 64 row banks) is set by the 1,136-pin interface, not area: W 571 pins over 145.7/224.6 um (65%), E 532 q pins over 102.3/224.6 um (46%); 2x 256x256 SRAM + 4 data256 leaves. ne5 removes 3 hard leaves (u_ctrl, u_out_lo/hi) into 548 parent pin flops (512 q + 36 control), so fill drops 0.29->0.24 at the unchanged slot; trial GRT overflow 0."
  }
 }

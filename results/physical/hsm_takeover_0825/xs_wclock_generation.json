@@ -1,0 +1,25 @@
+{
+  "source_lef_sha256": "5d49d927f64e2d0a54c5bd6d1a24823218b3c194a5d85cf3a50e7c6dab3af2ef",
+  "boundary_pins_preserved": 4542,
+  "nonplacement_export_stub_rectangles": 25,
+  "pinfile_sha256": "b5abcaa435e5139fb56680d6ed16d833670701f64a0b905caf2a69f24807ef3e",
+  "actual_outline_um": [
+    302.4,
+    157.68
+  ],
+  "clock_only_change": {
+    "port": "clk",
+    "face": "W",
+    "layer": "M4",
+    "centre_um": 77.772,
+    "span_um": [
+      77.76,
+      77.784
+    ],
+    "x_span_um": [
+      0,
+      0.084
+    ]
+  },
+  "scope": "candidate input geometry only, no route/native qualification"
+}

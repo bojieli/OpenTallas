@@ -1,0 +1,107 @@
+{
+ "tool": "tools/hier_contract/native_pin_audit.audit_one (TT; launch<=220 capture<=190)",
+ "date": "2026-10-16T13:45-07:00",
+ "stream": "S-VM",
+ "records": [
+  {
+   "cell": "dsfd_capt_x8x_s_e",
+   "view": "physical/ref_tile/dsfd_capt_x8x_s_e_split1016x/views/dsfd_capt_x8x_s_e",
+   "lib_cell": "dsfd_capt_x8x_s_e",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 158.8,
+   "spread_ps": 47.4,
+   "outputs": 848,
+   "inputs": 1665,
+   "launch_ps": 177.6,
+   "launch_pin": "t_vm[677]",
+   "capture_ps": 211.4,
+   "capture_pin": "b[188]",
+   "launch_over": 0,
+   "capture_over": 12,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 211.42462 > 190 (12 pins)",
+   "record_commit": "15df4a1b0",
+   "job": "dsfd_capt_x8x_s_e_split1016x-x43-32b87a1a9"
+  },
+  {
+   "cell": "dsfd_capt_x8x_t_e",
+   "view": "physical/ref_tile/dsfd_capt_x8x_t_e_split1016x/views/dsfd_capt_x8x_t_e",
+   "lib_cell": "dsfd_capt_x8x_t_e",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 156.7,
+   "spread_ps": 28.0,
+   "outputs": 1665,
+   "inputs": 433,
+   "launch_ps": 210.4,
+   "launch_pin": "b[1207]",
+   "capture_ps": 169.3,
+   "capture_pin": "f_w[364]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "record_commit": "4504850cf",
+   "job": "dsfd_capt_x8x_t_e_split1016x-x43-32b87a1a9"
+  },
+  {
+   "cell": "dsfd_capt_x8x_s_w",
+   "view": "physical/ref_tile/dsfd_capt_x8x_s_w_split1016x/views/dsfd_capt_x8x_s_w",
+   "lib_cell": "dsfd_capt_x8x_s_w",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 160.1,
+   "spread_ps": 41.1,
+   "outputs": 848,
+   "inputs": 1665,
+   "launch_ps": 168.0,
+   "launch_pin": "t_vm[517]",
+   "capture_ps": 200.4,
+   "capture_pin": "b[3]",
+   "launch_over": 0,
+   "capture_over": 4,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 200.41237 > 190 (4 pins)",
+   "record_commit": "4523b7d50",
+   "job": "dsfd_capt_x8x_s_w_split1016x-x43-32b87a1a9"
+  },
+  {
+   "cell": "dsfd_capt_x8x_t_w",
+   "view": "physical/ref_tile/dsfd_capt_x8x_t_w_split1016x/views/dsfd_capt_x8x_t_w",
+   "lib_cell": "dsfd_capt_x8x_t_w",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 166.7,
+   "spread_ps": 21.2,
+   "outputs": 1665,
+   "inputs": 433,
+   "launch_ps": 217.6,
+   "launch_pin": "b[1081]",
+   "capture_ps": 183.3,
+   "capture_pin": "f_w[10]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "record_commit": "68cc5f4c8",
+   "job": "dsfd_capt_x8x_t_w_split1016x-x43-32b87a1a9"
+  }
+ ]
+}

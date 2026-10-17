@@ -16,6 +16,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
 import hdc_isa as ISA
+from qwen_split.b2_frame import group_at
 
 TP, GROUPS, LANES, DEPTH, BANKS = 8, 3072, 16, 4096, 16
 REVISION = 'b968826d9c46dd6066d109eabc6255188de91218'
@@ -45,42 +46,37 @@ def checked_image(path, expected_sha, expected_words):
     return words
 
 
-def matrix_requests(fields, count):
-    """Actual BANDF1 scale-address semantics; no per-slot remapping."""
+def matrix_requests(fields, count, bandf=1):
+    """Native frame address semantics; BANDF2 moves positions, preserving group addresses."""
     split = fields['me_split']
     ports = GROUPS >> split
+    if bandf == 2 and fields['me_nout'] and not 7 <= split <= 11:
+        raise ValueError('b2 production output requires nonempty TP8 split7..11')
     if not fields['me_nout'] or not ports:
         return []
     result = []
     for tile in range(fields['me_tiles']):
         for interleave in range(8):
             nb = tile * ports * LANES * 8 + interleave * LANES
-            for band in range(3):
-                for slot in range(8):
-                    if split <= 10:
-                        per_band = 1 << (10-split)
-                        if slot >= per_band:
-                            continue
-                        group = band * per_band + slot
-                    else:
-                        if band:
-                            continue
-                        group = slot
-                    if group >= ports or nb + group * LANES * 8 >= fields['me_nout']:
-                        continue
-                    address = fields['me_wcs'] + nb // LANES + group * 8
-                    if not 0 <= address < count:
-                        raise ValueError(f'active native scale request outside actual image: {address}/{count}')
-                    result.append((8*band+slot, address))
+            for position in range(24):
+                group = group_at(split, position, bandf)
+                if group is None:
+                    continue
+                if group >= ports or nb + group * LANES * 8 >= fields['me_nout']:
+                    continue
+                address = fields['me_wcs'] + nb // LANES + group * 8
+                if not 0 <= address < count:
+                    raise ValueError(f'active native scale request outside actual image: {address}/{count}')
+                result.append((position, address))
     return result
 
 
-def program_record(path, count, expected_scale_bases=None):
+def program_record(path, count, expected_scale_bases=None, bandf=1):
     result = []
     for pc, line in enumerate(path.read_text().splitlines()):
         f = ISA.decode(int(line, 16))
         if f['unit'] == 1 and not f['me_wsrc'] and f['me_nout']:
-            requests = matrix_requests(f, count)
+            requests = matrix_requests(f, count, bandf)
             result.append(dict(pc=pc, local_scale_base=f['me_wcs'], nout=f['me_nout'],
                                split_log2=f['me_split'], tiles=f['me_tiles'],
                                request_count=len(requests),
@@ -114,14 +110,14 @@ def check_mask(rows, words):
             raise ValueError(f'physical via-map readback mismatch: word {address}')
 
 
-def build(banks_root, output, ranks):
+def build(banks_root, output, ranks, bandf=1):
     output.mkdir(parents=True, exist_ok=False)
     lock = ROOT / 'compiler/models/qwen3-8b/checkpoint_source.json'
     if sha(lock) != LOCK_SHA:
         raise ValueError('repository released-checkpoint lock differs')
     record = dict(schema='opentallas.qwen-tp8-native-scale-rom.v1', checkpoint_revision=REVISION,
                   checkpoint_lock_sha256=LOCK_SHA, checkpoint_index_sha256=INDEX_SHA,
-                  tp=TP, groups=GROUPS, macro='ot_rom_4096x266_m8', banks_per_port=16,
+                  tp=TP, groups=GROUPS, result_frame=bandf, macro='ot_rom_4096x266_m8', banks_per_port=16,
                   source_bytes_requantized=False, instances_per_rank=384,
                   address_contract='resident_base+actual emitted me_wcs+nb/16+group*8',
                   sources={}, ranks=[], native_layer_qualified=False,
@@ -143,7 +139,7 @@ def build(banks_root, output, ranks):
             path = directory / 'matrix_scale_bf16.hex'
             words = checked_image(path, meta['image_sha256']['matrix_scale_bf16.hex'], count)
             program = banks_root / (f'token_source_plan/head_program_rank{rank}.hex' if layer == 'head' else f'fused_images/layer{layer}/die{rank}/program.hex')
-            pr = program_record(program, count, [0,384,768,1152] if layer == 'head' else [0,48,336,528])
+            pr = program_record(program, count, [0,384,768,1152] if layer == 'head' else [0,48,336,528], bandf=bandf)
             entry = dict(stage=layer, base=len(resident), words=len(words), image_path=str(path), image_sha256=sha(path),
                          metadata_path=str(mp), metadata_sha256=sha(mp), program=pr)
             stages.append(entry)
@@ -178,7 +174,7 @@ def build(banks_root, output, ranks):
         (destination/'manifest.json').write_text(json.dumps(rr,indent=2)+'\n')
         record['ranks'].append(rr)
         print(f'PASS rank{rank}: exact released30576words,384native macro IDs,37stage programs',flush=True)
-    for path in [Path(__file__),ROOT/'tools/hdc_isa.py',lock]:
+    for path in [Path(__file__), ROOT/'tools/qwen_split/b2_frame.py', ROOT/'tools/hdc_isa.py', lock]:
         record['sources'][str(path.relative_to(ROOT))]=sha(path)
     (output/'manifest.json').write_text(json.dumps(record,indent=2)+'\n')
 
@@ -187,4 +183,5 @@ if __name__ == '__main__':
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--banks',type=Path,required=True);ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--ranks',default='0,1,2,3,4,5,6,7')
-    a=ap.parse_args();build(a.banks,a.out,[int(rank) for rank in a.ranks.split(',')])
+    ap.add_argument('--bandf',type=int,choices=(1,2),default=1)
+    a=ap.parse_args();build(a.banks,a.out,[int(rank) for rank in a.ranks.split(',')],a.bandf)

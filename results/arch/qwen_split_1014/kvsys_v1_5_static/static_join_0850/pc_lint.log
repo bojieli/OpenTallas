@@ -1,0 +1,194 @@
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 1.336 MB sources in 21 modules, into 2.181 MB in 4 C++ files needing 0.000 MB
+- Verilator: Walltime 0.390 s (elab=0.024, cvt=0.331, bld=0.000); cpu 0.390 s on 1 threads; allocated 57.148 MB
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv:7:57: Operator VAR 'STRICT' expects 32 bits on the Initial value, but Initial value's CONST '1'h1' generates 1 bits.
+    7 | module qkd_static_kv_write_observer #(parameter integer STRICT=1)(
+      |                                                         ^~~~~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front_mc.sv:62:23: Operator VAR 'C_BLK' expects 6 bits on the Initial value, but Initial value's VARREF 'BLK' generates 32 bits.
+                                                                                         : ... note: In instance 'qkd_static_kv_pc_path.u_front'
+   62 |     localparam [AW:0] C_BLK = BLK, C_BLK1 = BLK - 1, C_DEPTH = DEPTH;
+      |                       ^~~~~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front_mc.sv:62:36: Operator VAR 'C_BLK1' expects 6 bits on the Initial value, but Initial value's SUB generates 32 bits.
+                                                                                         : ... note: In instance 'qkd_static_kv_pc_path.u_front'
+   62 |     localparam [AW:0] C_BLK = BLK, C_BLK1 = BLK - 1, C_DEPTH = DEPTH;
+      |                                    ^~~~~~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front_mc.sv:62:54: Operator VAR 'C_DEPTH' expects 6 bits on the Initial value, but Initial value's VARREF 'DEPTH' generates 32 bits.
+                                                                                         : ... note: In instance 'qkd_static_kv_pc_path.u_front'
+   62 |     localparam [AW:0] C_BLK = BLK, C_BLK1 = BLK - 1, C_DEPTH = DEPTH;
+      |                                                      ^~~~~~~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front_mc.sv:63:25: Operator VAR 'C_S1' expects 1 bits on the Initial value, but Initial value's SUB generates 32 bits.
+                                                                                         : ... note: In instance 'qkd_static_kv_pc_path.u_front'
+   63 |     localparam [SW-1:0] C_S1 = STRIDE - 1, C_S0 = 0;
+      |                         ^~~~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front_mc.sv:64:25: Operator VAR 'C_B1' expects 3 bits on the Initial value, but Initial value's SUB generates 32 bits.
+                                                                                         : ... note: In instance 'qkd_static_kv_pc_path.u_front'
+   64 |     localparam [BW-1:0] C_B1 = BLK - 1;
+      |                         ^~~~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front_mc.sv:65:25: Operator VAR 'C_NBLK' expects 4 bits on the Initial value, but Initial value's VARREF 'NBLK' generates 32 bits.
+                                                                                         : ... note: In instance 'qkd_static_kv_pc_path.u_front'
+   65 |     localparam [PW-1:0] C_NBLK = NBLK, C_P1 = 1, C_P0 = 0;
+      |                         ^~~~~~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front_mc.sv:156:25: Operator VAR 'C_INIT' expects 5 bits on the Initial value, but Initial value's VARREF 'INIT' generates 32 bits.
+                                                                                          : ... note: In instance 'qkd_static_kv_pc_path.u_front.g_ra[15].u_rp'
+  156 |     localparam [AW-1:0] C_INIT = INIT;
+      |                         ^~~~~~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots_mc.sv:122:22: Operator VAR 'C_INIT' expects 3 bits on the Initial value, but Initial value's VARREF 'INIT' generates 32 bits.
+                                                                                            : ... note: In instance 'qkd_static_kv_pc_path.u_return.g_storage[3].g_rq[3].u_rq'
+  122 |  localparam [AW-1:0] C_INIT=INIT;
+      |                      ^~~~~~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:59:16: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                     : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+   59 |   generate if (!ENABLE) begin : off
+      |                ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:67:42: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REF_MODE' generates 32 bits.
+                                                                                     : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+   67 |     localparam integer PERIOD = REF_MODE ? T_REFIPB : T_REFI;
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:161:41: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'READY_CUT' generates 32 bits.
+                                                                                      : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  161 |     localparam READY_ACTIVE = READY_CUT && PULLIN == 0 && AQ_RD == 0;
+      |                                         ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:143:31: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REF_MODE' generates 32 bits.
+                                                                                      : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  143 |     wire act_block = REF_MODE ? (ref_n != 0 && ref_n < RW'(T_RREFD))
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:145:31: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REF_MODE' generates 32 bits.
+                                                                                      : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  145 |     wire rd_block  = REF_MODE ? 1'b0 : (ref_c <= RW'(T_RP + T_RTP + 2));
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:146:22: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                      : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  146 |     wire preall_ok = !REF_MODE && ref_n <= RW'(T_RP + 2) && ref_n >= RW'(T_RP) && (|open);
+      |                      ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:168:17: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                      : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  168 |       (REF_MODE && ref_c == RW'(LEAD)) ? (32'b1 << bsel) : blk;
+      |                 ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:202:16: Operator LTE expects 32 bits on the LHS, but LHS's VARREF 'rcd' generates 5 bits.
+                                                                                       : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  202 |           (rcd <= T_RCD-T_RCDW+1);
+      |                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:278:57: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 2 bits.
+                                                                                       : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  278 |           s2k[q] <= m2[q*9 + 2 +: 7]; s2i[q] <= s1i[4*q + m2[q*9 +: 2]];
+      |                                                         ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:357:32: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                      : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  357 |     wire forced_pre = REF_MODE && ref_pend && |(blk & open & ras_z & rtp_z);
+      |                                ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:371:37: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                      : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  371 |                          !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && bq == bsel);
+      |                                     ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:389:31: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                      : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  389 |                    !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && wab == bsel) &&
+      |                               ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:411:30: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                      : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  411 |     wire s_refsel = REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1));    
+      |                              ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:428:64: Operator FUNCREF 'act_bank' expects 32 bits on the Function Argument, but Function Argument's VARREF 'act_sel' generates 3 bits.
+                                                                                       : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  428 |       else if (act_ok_any) begin r_v = 1; r_op = ACT; r_bank = act_bank(act_sel, k); r_oh = act_oh; end
+      |                                                                ^~~~~~~~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:421:16: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                      : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  421 |       else if (!REF_MODE && ref_due_n) begin r_v = 1; r_prio = 1; r_op = REFAB; end
+      |                ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:420:20: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                      : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  420 |       if (REF_MODE && ref_due_n && ref_pend) begin r_v = 1; r_prio = 1; r_op = REFPB; r_bank = rb; r_oh = blk; end
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:464:40: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                       : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  464 |           wq_n <= wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:464:40: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                       : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  464 |           wq_n <= wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:464:64: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                       : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  464 |           wq_n <= wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
+      |                                                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:464:64: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                       : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  464 |           wq_n <= wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
+      |                                                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:470:31: Operator COND expects 32 or 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                       : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  470 |             if (wq_n - (wr_ok ? 1'b1 : 1'b0) != 0) begin nb = wq_bank[rpn]; nc = wq_col[rpn]; nr = AQ && wq_rd[rpn]; end
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:470:31: Operator COND expects 32 or 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                       : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  470 |             if (wq_n - (wr_ok ? 1'b1 : 1'b0) != 0) begin nb = wq_bank[rpn]; nc = wq_col[rpn]; nr = AQ && wq_rd[rpn]; end
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:500:40: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                       : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  500 |           sq_n <= sq_n + ((s_v && s_r) ? 1'b1 : 1'b0) - (s_go ? 1'b1 : 1'b0);
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:500:40: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                       : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  500 |           sq_n <= sq_n + ((s_v && s_r) ? 1'b1 : 1'b0) - (s_go ? 1'b1 : 1'b0);
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:500:63: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                       : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  500 |           sq_n <= sq_n + ((s_v && s_r) ? 1'b1 : 1'b0) - (s_go ? 1'b1 : 1'b0);
+      |                                                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:500:63: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                       : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  500 |           sq_n <= sq_n + ((s_v && s_r) ? 1'b1 : 1'b0) - (s_go ? 1'b1 : 1'b0);
+      |                                                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:505:30: Operator COND expects 32 or 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                       : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  505 |             if (sq_n - (s_go ? 1'b1 : 1'b0) != 0) begin
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:505:30: Operator COND expects 32 or 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                       : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  505 |             if (sq_n - (s_go ? 1'b1 : 1'b0) != 0) begin
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:521:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                      : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  521 |           if (REF_MODE && ref_c == RW'(LEAD)) begin ref_pend <= 1; rb <= bsel; blk <= 32'b1 << bsel; end
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:534:35: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                      : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  534 |                         (REF_MODE && (|(blk & open) || |(blk & ~aok_z))) || (!REF_MODE && |open))) fault_r <= 1;
+      |                                   ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:534:78: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                      : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  534 |                         (REF_MODE && (|(blk & open) || |(blk & ~aok_z))) || (!REF_MODE && |open))) fault_r <= 1;
+      |                                                                              ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv:33:48: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 's' generates 7 bits.
+                                                                                   : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ecc'
+   33 |     if(ov&&s<=71)begin for(p=1;p<=71;p=p+1)if(s==p)c[p-1]=~c[p-1];co=1;end
+      |                                                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv:39:73: Operator GTE expects 11 bits on the LHS, but LHS's VARREF 'head_first' generates 10 bits.
+                                                                                        : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl'
+   39 |     (head[31:30]==0 && (head[29:19]==0 || head[29:19]>1024 || head_first>=head[29:19]));
+      |                                                                         ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv:117:34: Operator ASSIGNDLY expects 7 bits on the Assign RHS, but Assign RHS's CONST '6'h0' generates 6 bits.
+                                                                                       : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl'
+  117 |         if (!h_rn) begin raw_out <= 6'd0; raw_age <= 9'd0; f_raw <= 1'b0; end
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_kv_20261014/qkd_controller_hbm_calendar.sv:67:35: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                                          : ... note: In instance 'qkd_static_kv_pc_path.u_calendar'
+   67 |  if(sealed || |live || addr_q[3:0]>=N)fault<=1;
+      |                                   ^~
+%Warning-UNSIGNED: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:215:33: Comparison is constant due to unsigned arithmetic
+                                                                                    : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  215 |       wire ahead = (S >= k && S <= last) || next_posted;
+      |                                 ^~
+                   ... For warning description see https://verilator.org/warn/UNSIGNED?v=5.050
+                   ... Use "/* verilator lint_off UNSIGNED */" and lint_on around source to disable this message.
+%Warning-CMPCONST: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:215:23: Comparison is constant due to limited range
+                                                                                    : ... note: In instance 'qkd_static_kv_pc_path.u_ctrl.u_ctl.core'
+  215 |       wire ahead = (S >= k && S <= last) || next_posted;
+      |                       ^~
+                   ... For warning description see https://verilator.org/warn/CMPCONST?v=5.050
+                   ... Use "/* verilator lint_off CMPCONST */" and lint_on around source to disable this message.

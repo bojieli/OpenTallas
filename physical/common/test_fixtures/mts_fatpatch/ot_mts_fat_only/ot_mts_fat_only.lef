@@ -1,0 +1,35 @@
+VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+
+MACRO ot_mts_fat_only
+  CLASS BLOCK ;
+  FOREIGN ot_mts_fat_only 0 0 ;
+  ORIGIN 0 0 ;
+  SIZE 4.32 BY 2.16 ;
+  PIN a
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 1.056 0.084 1.080 ;
+    END
+  END a
+  PIN b
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  0.648 0.031 0.702 0.523 ;
+    END
+  END b
+  PIN c
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  1.692 0 1.710 0.192 ;
+    END
+  END c
+END ot_mts_fat_only
+END LIBRARY

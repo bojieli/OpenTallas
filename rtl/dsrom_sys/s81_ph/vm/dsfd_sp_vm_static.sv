@@ -27,7 +27,8 @@
 // +define+DSFD_SP_VM_MIX4 once the die wires the MIX4 slot (no die net today: without the define the core's MIX
 // inputs are held idle and its outputs unread, the MIX function is absent from this die revision, not stubbed).
 // ---------------------------------------------------------------------------------------------------------------
-module dsfd_sp_vm #(parameter integer CAP_PIPE=0, parameter integer READ_PIPE=0, parameter integer WSCATTER_PIPE=0) (
+module dsfd_sp_vm #(parameter integer CAP_PIPE=0, parameter integer READ_PIPE=0, parameter integer WSCATTER_PIPE=0,
+    parameter integer WFC_RETURN256=0) (
     input  wire          ck_core_t, ck_rsched_t, ck_seq_t, ck_landing_t,
     input  wire [15:0]   ck_mem_fsr_t,
     input  wire [15:0]   ck_mem_return_t,
@@ -53,10 +54,14 @@ module dsfd_sp_vm #(parameter integer CAP_PIPE=0, parameter integer READ_PIPE=0,
     input  wire          ck_cap_control_s, rst_cap_control_s,
     input  wire [15:0]   ck_cap_lane_s, ck_cap_x34_s, ck_cap_x34_t,
     input  wire [15:0]   rst_cap_x34_s, rss_cap_x34_t,
-    input  wire          ck_wfc_control_s, ck_wfc_control_t, ck_wfc_fault_s, ck_wfc_fault_t, ck_wfc_return_t,
-                         ck_wfc_fault_x34_s,ck_wfc_fault_x34_t,ck_wfc_fault_x43_t,ck_wfc_fault_x43_s, ck_wfc_x34_s, ck_wfc_x34_t, ck_wfc_x43_s, ck_wfc_x43_t,
-    input  wire          rst_wfc_control_s, rss_wfc_control_t, rst_wfc_fault_s, rss_wfc_fault_t, rss_wfc_return_t,
-                         rst_wfc_fault_x34_s,rss_wfc_fault_x34_t,rss_wfc_fault_x43_t,rst_wfc_fault_x43_s, rst_wfc_x34_s, rss_wfc_x34_t, rst_wfc_x43_s, rss_wfc_x43_t,
+    // S-DIE-WFC 2026-10-16 (opt-in, S-VM 6136ed704): WFC_RETURN256 1 splits u_wfc.u_ret into two return256 slices + the
+    // native valid diag (dsfd_vm_wfc_return_split256), each on its own return root: [0] lo, [1] hi, [2] diag.  Port order kept.
+    input  wire          ck_wfc_control_s, ck_wfc_control_t, ck_wfc_fault_s, ck_wfc_fault_t,
+    input  wire [(WFC_RETURN256?3:1)-1:0] ck_wfc_return_t,
+    input  wire          ck_wfc_fault_x34_s,ck_wfc_fault_x34_t,ck_wfc_fault_x43_t,ck_wfc_fault_x43_s, ck_wfc_x34_s, ck_wfc_x34_t, ck_wfc_x43_s, ck_wfc_x43_t,
+    input  wire          rst_wfc_control_s, rss_wfc_control_t, rst_wfc_fault_s, rss_wfc_fault_t,
+    input  wire [(WFC_RETURN256?3:1)-1:0] rss_wfc_return_t,
+    input  wire          rst_wfc_fault_x34_s,rss_wfc_fault_x34_t,rss_wfc_fault_x43_t,rst_wfc_fault_x43_s, rst_wfc_x34_s, rss_wfc_x34_t, rst_wfc_x43_s, rss_wfc_x43_t,
     input  wire          ck_xio_control_s, ck_xio_control_t, rst_xio_control_s, rss_xio_control_t,
     input  wire          ck_xio_return_t, rss_xio_return_t, ck_xio_fault_t, ck_xio_fault_s,
                          rss_xio_fault_t, rst_xio_fault_s, ck_xio_fault_join_t, rss_xio_fault_join_t,
@@ -106,7 +111,7 @@ module dsfd_sp_vm #(parameter integer CAP_PIPE=0, parameter integer READ_PIPE=0,
     wire [7:0] x_rv; wire [4095:0] x_rd; wire [3:0] xa_v; wire [55:0] xa_row; wire xio_f; wire vm_fault;
     wire n_v; wire [83:0] n_d;
     wire [3:0] cl_v; wire [55:0] cl_row; wire [2047:0] cl_d; wire [63:0] cl_m; wire [31:0] cl_t;
-    dsfd_vm_static_wfc #(.RLAT(13+READ_PIPE), .RESPONSE_PAD((4-READ_PIPE%4)%4)) u_wfc (
+    dsfd_vm_static_wfc_select256 #(.RLAT(13+READ_PIPE), .RESPONSE_PAD((4-READ_PIPE%4)%4), .RETURN256(WFC_RETURN256)) u_wfc (
         .ck_control_s(ck_wfc_control_s), .ck_control_t(ck_wfc_control_t),
         .ck_fault_s(ck_wfc_fault_s), .ck_fault_t(ck_wfc_fault_t),
         .ck_return_t(ck_wfc_return_t),.rss_return_t(rss_wfc_return_t),

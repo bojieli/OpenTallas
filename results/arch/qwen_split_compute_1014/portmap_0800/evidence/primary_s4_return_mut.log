@@ -1,0 +1,5 @@
+SEED=1
+FAIL qfd_halfband finite-phase fault lane 0 today 0 b2 1
+[16230000] %Fatal: tb_qfd_halfband.sv:254: Assertion failed in tb_qfd_halfband
+%Error: rtl/test/qwen_lane_band/tb_qfd_halfband.sv:254: Verilog $stop
+Aborting...

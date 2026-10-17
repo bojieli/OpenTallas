@@ -1,0 +1,16 @@
+{
+  "source_commit": "a87f66d6d",
+  "result": "PASS expected all three cases",
+  "scope": "Actual 8 SM/32 PC WB source/controller/SRAM with external command/DRAM fixture; source graph seven audited FIFOs; no physical/CTS/native/timing admission",
+  "normal_edges_added": 0,
+  "positive": "baseline PASS expected_exit0",
+  "mutants": [
+    "MUT6 stream strap ignored expected_exit1 WB_INTEGRITY",
+    "MUT7 HBM strap ignored expected_exit1 WB_INTEGRITY"
+  ],
+  "clock_period_ps": {
+    "stream": 833.334,
+    "hbm": 1024
+  },
+  "physical_admitted": false
+}

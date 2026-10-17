@@ -242,6 +242,7 @@ module ot_qwen_me_spctl_w12 #(
     //   RXA   the argmax-accumulator clear's delay (default RX): the result shift relative to the op's ISSUE, which is
     //         RX minus any reduction of XD (a caller that makes the tree selects early by lowering XD passes RXA itself)
     parameter integer RXA = RX,
+    // BANDF2: four-position halfbands, TB=TCUT+2; same group arithmetic/order.
     parameter integer BANDF = 0,
     // AMR = 1 (safe-qwen S-D1, 2026-10-08; 0 = unchanged): the argmax tree's top word {top_v, key, idx} and its valid /
     // rmax tag are registered AT the accumulator, and the accumulator clear moves with them, so the top-vs-best compare
@@ -827,13 +828,14 @@ end endgenerate
             pre_rmax, pre_j, pre_opend, pre_mbase, pre_sbase} = pre_tag;
     wire [GOUT-1:0] pre_scale_active;
     //: BANDF: the group each result-port position holds at the op's split (ot_qfd_band_lanes frame)
-    localparam integer TB = TCUT + 3;
+    localparam integer BITS_PER_BAND = (BANDF == 2) ? 2 : 3;
+    localparam integer TB = TCUT + BITS_PER_BAND;
     function automatic [16:0] bframe(input [3:0] sp, input integer p);   // {in range, group}
         integer bb, kk, gg;
         reg ok;
         reg [15:0] g16;
         begin
-            bb = p >> 3; kk = p & 7;
+            bb = p >> BITS_PER_BAND; kk = p & ((1 << BITS_PER_BAND) - 1);
             if (sp <= TB) begin ok = ((kk >> (TB - sp)) == 0); gg = (bb << (TB - sp)) + kk; end
             else          begin ok = (bb == 0) && (kk < (GT >> sp)); gg = kk; end
             g16 = gg;
@@ -1427,6 +1429,7 @@ module ot_qwen_me_spport_w12 #(
     // qwen-band-integrate 2026-10-08: BANDF 1 = the positions are band-local (ot_qfd_band_lanes frame, see
     // ot_qwen_me_spctl_w12 BANDF): position p holds group g(split, p), so the in-range test, row base, lane-vector
     // base and (g * ots) take g instead of p.  Default 0 = base.
+    // BANDF2: four-position halfbands, TB=TCUT+2; same group arithmetic/order.
     parameter integer BANDF = 0,
     parameter integer TCUT = 7,
     parameter integer HARD_MUL = 0,
@@ -1479,13 +1482,14 @@ module ot_qwen_me_spport_w12 #(
     wire [PQ*4-1:0]   e_dlo;
     wire [PQ*BW-1:0]  e_rowb;
     wire [PQ*AW-1:0]  e_qots;
-    localparam integer TB = TCUT + 3;
+    localparam integer BITS_PER_BAND = (BANDF == 2) ? 2 : 3;
+    localparam integer TB = TCUT + BITS_PER_BAND;
     function automatic [16:0] bframe(input [3:0] sp, input [31:0] p);   // {in range, group}
         reg [31:0] bb, kk, gg;
         reg ok;
         reg [15:0] g16;
         begin
-            bb = p >> 3; kk = p & 7;
+            bb = p >> BITS_PER_BAND; kk = p & ((1 << BITS_PER_BAND) - 1);
             if (sp <= TB) begin ok = ((kk >> (TB - sp)) == 0); gg = (bb << (TB - sp)) + kk; end
             else          begin ok = (bb == 0) && (kk < (GT >> sp)); gg = kk; end
             g16 = gg[15:0];
@@ -1517,8 +1521,8 @@ module ot_qwen_me_spport_w12 #(
             assign qrows[b*AW +: AW] = qg[b] ? (e_ots << b) : {AW{1'b0}};
         end
         if (QOTS_SMALL != 0 && BANDF != 0) begin : g_qsmall
-            wire [AW-1:0] p_b = e_ots * qp[4:3];
-            wire [AW-1:0] p_k = e_ots * qp[2:0];
+            wire [AW-1:0] p_b = e_ots * qp[4:BITS_PER_BAND];
+            wire [AW-1:0] p_k = e_ots * qp[BITS_PER_BAND-1:0];
             wire [AW-1:0] p_bs = (e_split <= TB) ? (p_b << (TB - e_split)) : {AW{1'b0}};
             assign e_qots[g*AW +: AW] = p_bs + p_k;
         end else begin : g_qfull

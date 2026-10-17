@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_capt_status_x43_t",
+ "enable": false,
+ "reason": "Every output (b0/b2/b3, bpar, t_mark) is a dedicated flop and every data input f_sn lands directly in the bank flops (one phase hold-mux): the banks ARE the pin registers. A generic recipe-3 input/output register would shift the fixed 3:4 sample indices by one stream cycle (unpriced against the epoch schedule and the S leaf's fixed read edges)."
+}

@@ -1,0 +1,48 @@
+MISMATCH rq h0 beat0 dut3d86d602bdf4d75c refb9bdab9ebdd17346
+MISMATCH rq h1 beat0 dutbd257b9d3b2726f3 ref3aab2311bddb9284
+MISMATCH rq h2 beat0 dutbcb5677abe9c891f ref3e260161be86a653
+MISMATCH rq h3 beat0 dut3a0297cbbd685d41 refb821950ab91b9e55
+MISMATCH rq h4 beat0 dut3fe00af83da83f43 ref3e4dee8bbc0bca82
+MISMATCH rq h5 beat0 dutb663922d382b50aa ref3ad0068435f1a292
+MISMATCH rq h0 beat1 dut3f0e7e523e6423ba ref3dff7a8bbe39ca93
+MISMATCH rq h1 beat1 dut3dcbcf52be00b3c0 refbd0ffabd3a81b3e8
+OP pc1 split9 tiles1 rq_ref8 rq_dut8 am432 mx0 errors100
+OP pc2 split10 tiles1 rq_ref16 rq_dut16 am1968 mx0 errors122
+OP pc12 split8 tiles3 rq_ref40 rq_dut40 am2500 mx0 errors385
+OP pc3 split11 tiles1 rq_ref48 rq_dut48 am3548 mx0 errors405
+OP pc16 split7 tiles1 rq_ref56 rq_dut56 am5376 mx0 errors507
+OP pc20 split8 tiles3 rq_ref80 rq_dut80 am7640 mx0 errors769
+OP pc4 split10 tiles2 rq_ref96 rq_dut96 am8680 mx0 errors791
+OP pc103 split9 tiles8 rq_ref160 rq_dut160 am11800 mx0 errors1564
+OP pc1 split9 tiles1 rq_ref168 rq_dut168 am13696 mx0 errors1665
+OP pc2 split10 tiles1 rq_ref176 rq_dut176 am15232 mx0 errors1686
+OP pc12 split8 tiles3 rq_ref200 rq_dut200 am15764 mx0 errors1948
+OP pc3 split11 tiles1 rq_ref208 rq_dut208 am16812 mx0 errors1968
+OP pc16 split7 tiles1 rq_ref216 rq_dut216 am18640 mx0 errors2070
+OP pc20 split8 tiles3 rq_ref240 rq_dut240 am20904 mx0 errors2331
+OP pc4 split10 tiles2 rq_ref256 rq_dut256 am21944 mx0 errors2351
+OP pc103 split9 tiles8 rq_ref320 rq_dut320 am25064 mx0 errors3125
+OP pc201 split9 tiles1 rq_ref328 rq_dut328 am26960 mx0 errors3221
+OP pc202 split10 tiles1 rq_ref336 rq_dut336 am28496 mx0 errors3237
+OP pc203 split11 tiles1 rq_ref344 rq_dut344 am28812 mx0 errors3253
+OP pc211 split9 tiles1 rq_ref352 rq_dut352 am29488 mx1 errors3350
+OP pc212 split10 tiles1 rq_ref360 rq_dut360 am31024 mx2 errors3367
+OP pc213 split11 tiles1 rq_ref368 rq_dut368 am31340 mx3 errors3384
+OP pc214 split8 tiles3 rq_ref392 rq_dut392 am31872 mx4 errors3641
+MISMATCH stream length h0 rq ref392 dut392 am ref8312 dut8311
+MISMATCH stream length h1 rq ref392 dut392 am ref5656 dut5655
+MISMATCH stream length h2 rq ref392 dut392 am ref5656 dut5655
+MISMATCH stream length h3 rq ref392 dut392 am ref5656 dut5655
+MISMATCH scalar stream ref86 dut85
+COVER upper0 ref_valid768 dut_valid768 nonzero768 used768
+COVER upper1 ref_valid768 dut_valid768 nonzero768 used768
+COVER upper2 ref_valid768 dut_valid768 nonzero768 used768
+COVER upper3 ref_valid768 dut_valid768 nonzero768 used768
+COVER upper4 ref_valid768 dut_valid768 nonzero768 used768
+COVER upper5 ref_valid768 dut_valid768 nonzero768 used768
+COVER upper6 ref_valid768 dut_valid768 nonzero768 used768
+COVER upper7 ref_valid768 dut_valid768 nonzero768 used768
+FAIL b2 lane route equivalence errors3646
+[18472000] %Fatal: tb.sv:237: Assertion failed in tb_b2_lane_route
+%Error: /srv/opentallas-scratch/claude/q-b2-integ-1016/lane_cov2/tb.sv:237: Verilog $stop
+Aborting...

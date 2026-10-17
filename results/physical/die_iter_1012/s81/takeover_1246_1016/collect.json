@@ -1,0 +1,86 @@
+{
+  "collected_at": "2026-10-16T12:54:03.747902-07:00",
+  "scope": "S81 full-die actual state and source endpoint repairs; diagnostic only",
+  "worktree": "/home/ubuntu/wt/codex-sdie-1246",
+  "ready_commits": [
+    "6fdf90836",
+    "57658111a"
+  ],
+  "tests": "10 targeted tests pass (hub_router, station guard, actual RTL physical ports)",
+  "c26b_r": {
+    "status": "GRT_INCOMPLETE",
+    "exit": 137,
+    "ended": "2026-10-16T10:27:34-07:00",
+    "last_progress": "extra iteration 6/12",
+    "spef": false,
+    "die_tt_ff_ss": null,
+    "placed_odb_preserved": true
+  },
+  "c26i": {
+    "status": "GEN_FAIL",
+    "cause": "c5_bk_selector vmc reroute through relocated HC"
+  },
+  "v3i5": {
+    "status": "GEN_INCOMPLETE",
+    "gen_exit": 143,
+    "shell_otrun_exit": 0,
+    "cause": "repeated hb_su_s_wq_d_4096_6143_vm fallback at s777.6; 3.3-3.8mm displaced",
+    "adopted": false
+  },
+  "c26d3": {
+    "status": "LIVE_GEN",
+    "pid": 608051,
+    "host": "ot-epyc4",
+    "rss_kb": 1159896,
+    "source": "954b89dd5",
+    "caution": "source lacks station fallback progress guard; preserved"
+  },
+  "c26c_c26d2": {
+    "status": "OLD_PIDS_ABSENT_NO_TERMINAL_STATUS",
+    "c26c_last_log": "10:24PT",
+    "c26d2_last_log": "10:26PT"
+  },
+  "wfc_netlist_probes": {
+    "status": "FAIL_BEFORE_PORT_BIND",
+    "cases": [
+      "nl_n_c26j",
+      "nl_n912_base",
+      "nl_n912_flag",
+      "nl_d3_base",
+      "nl_d3_flag"
+    ],
+    "cause": "dsfd_ctrl physical master omitted actual source port st[1:0]",
+    "other_failures": {
+      "nl_i_flag": "selector reroute",
+      "nl_n_base_and_flag": "node_LLd stale LEF checksum"
+    },
+    "legacy_parent": true,
+    "vm_leaf_binding_inert": true
+  },
+  "queued": [
+    {
+      "name": "v3i5_guard21",
+      "local_session": 8653,
+      "runner": "/srv/opentallas-scratch/codex/sdie-1246/run_guard.sh",
+      "memory_gb": 2,
+      "threads": 1,
+      "purpose": "bound replay preserves exact generator exit and reports blocking instance geometry",
+      "source": "a2c30e999 plus actual21c0d733b guard only"
+    },
+    {
+      "name": "c26j_control_nl",
+      "local_session": 82549,
+      "runner": "/srv/opentallas-scratch/codex/sdie-1246/run_c26j_nl.sh",
+      "memory_gb": 3,
+      "threads": 1,
+      "purpose": "actual WFC256 + PQ contacts port-bind replay after controller port repair",
+      "source": "79ab53db9 plus21c0d733b,57658111a,6fdf90836"
+    }
+  ],
+  "next_if": [
+    "Guard fails: reserve actual SU/VM pin-relay landing sites or spread real assigned bus contacts; widening street alone failed three times. Owner reviews Explorer before adoption.",
+    "c26j GEN advances: collect strict port_bind; address next actual source omission without bypassing the completeness gate.",
+    "Current full GRT still requires a source-current coherent complete GEN; TT setup>=0 / FF hold>=0 / DRC0; SS sensitivity only."
+  ],
+  "preserved": "All live jobs and original hardlinked source files unchanged; new snapshots replace modified links before writing. Root alone pushes main."
+}

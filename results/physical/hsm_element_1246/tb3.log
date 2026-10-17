@@ -1,0 +1,22 @@
+schedule: last SM-writer emission at cycle 529
+MISMATCH bank 0 row 0 word 0: got 00000000 want 00076200
+MISMATCH bank 0 row 0 word 1: got 00000000 want 51d788a3
+MISMATCH bank 0 row 0 word 2: got 00000000 want 4f07f89e
+MISMATCH bank 0 row 0 word 3: got 00000000 want 7f800001
+MISMATCH bank 0 row 0 word 4: got 00000000 want c2a33d85
+MISMATCH bank 0 row 0 word 5: got 00000000 want 8b78ff16
+MISMATCH bank 0 row 0 word 6: got 00000000 want 57d14eaf
+MISMATCH bank 0 row 0 word 7: got 00000000 want 9e280f3c
+MISMATCH bank 1 row 0 word 0: got 00000000 want 90d78121
+MISMATCH bank 1 row 0 word 1: got 00000000 want 3d97fa7b
+bank 0 FAULT (schedule/decode)
+bank 1 FAULT (schedule/decode)
+bank 2 FAULT (schedule/decode)
+bank 3 FAULT (schedule/decode)
+bank 4 FAULT (schedule/decode)
+bank 5 FAULT (schedule/decode)
+bank 6 FAULT (schedule/decode)
+bank 7 FAULT (schedule/decode)
+SM writes 2368, LG writes 605, rows checked 650
+TB_HBM_SM_VM_WR_Q_T FAIL MUT=3 mismatches+faults=2120
+rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv:237: $finish called at 16704000 (1ps)

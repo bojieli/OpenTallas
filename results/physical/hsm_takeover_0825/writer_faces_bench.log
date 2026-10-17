@@ -1,0 +1,22 @@
+rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv:255: warning: Port 10 (rr_addr) of ot_sram_1r1w_128x256_m1_r2c2 expects 14 bits, got 12.
+rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv:255:        : Padding 2 high bits of the port.
+TB_HBM_SM_VM_WR_Q_T PASS MUT=0
+rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv:255: warning: Port 10 (rr_addr) of ot_sram_1r1w_128x256_m1_r2c2 expects 14 bits, got 12.
+rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv:255:        : Padding 2 high bits of the port.
+TB_HBM_SM_VM_WR_Q_T FAIL MUT=1 mismatches+faults=2176
+rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv:255: warning: Port 10 (rr_addr) of ot_sram_1r1w_128x256_m1_r2c2 expects 14 bits, got 12.
+rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv:255:        : Padding 2 high bits of the port.
+TB_HBM_SM_VM_WR_Q_T FAIL MUT=2 mismatches+faults=184
+rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv:255: warning: Port 10 (rr_addr) of ot_sram_1r1w_128x256_m1_r2c2 expects 14 bits, got 12.
+rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv:255:        : Padding 2 high bits of the port.
+TB_HBM_SM_VM_WR_Q_T FAIL MUT=3 mismatches+faults=2120
+rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv:255: warning: Port 10 (rr_addr) of ot_sram_1r1w_128x256_m1_r2c2 expects 14 bits, got 12.
+rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv:255:        : Padding 2 high bits of the port.
+TB_HBM_SM_VM_WR_Q_T FAIL MUT=4 mismatches+faults=1
+rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv:255: warning: Port 10 (rr_addr) of ot_sram_1r1w_128x256_m1_r2c2 expects 14 bits, got 12.
+rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv:255:        : Padding 2 high bits of the port.
+VM_LAT=1 NAT2_MUT=0 TB_HBM_SM_VM_WR_Q_T PASS MUT=0
+rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv:255: warning: Port 10 (rr_addr) of ot_sram_1r1w_128x256_m1_r2c2 expects 14 bits, got 12.
+rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv:255:        : Padding 2 high bits of the port.
+VM_LAT=1 NAT2_MUT=1 TB_HBM_SM_VM_WR_Q_T FAIL MUT=0 mismatches+faults=184
+SM_VM_WR_Q_T BENCH PASS (positive PASS, mutants 1/2/3/4 FAIL)

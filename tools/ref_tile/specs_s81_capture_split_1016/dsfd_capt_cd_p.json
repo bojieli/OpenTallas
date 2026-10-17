@@ -1,0 +1,84 @@
+{
+ "name": "dsfd_capt_cd_split1016p",
+ "top": "dsfd_capt_cd",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_cd.sv"
+ ],
+ "params": {
+  "PINREG": 1
+ },
+ "clock_port": "ckv",
+ "reset_ports": [
+  "rsv"
+ ],
+ "outline": {
+  "w": 15.12,
+  "h": 15.12
+ },
+ "macros": [],
+ "pins": {
+  "ANY": [
+   "ckv",
+   "f_st",
+   "rsv",
+   "t_cd"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "m5_pg_pitch": 2.7
+ },
+ "recipe": 2,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL pin registers (PINREG=1): every used f_st bit is registered in the source (fs_q); outputs are already registers (recipe2 output flops). Blanket recipe3 registers would add a second unpriced stage."
+ },
+ "clock": "cts",
+ "io_tcl": "physical/s81_die_pins/capture_split_1016/dsfd_capt_cd.tcl",
+ "structural_change": "Successor of CLOSED split1016n (dsfd_capt_cd_split1016n-split1n-deaed7cee, record 0c30c32f2, TT +319.07/FF +30.18) that still fails the native pin audit: f_st[2] capture 203.7 ps > 190 (launch 177.3, R 90.0, spread 9.2): the ICG ENA is captured on the un-inserted clock at the ICG, so no input->ENA path meets 190.  PINREG=1: every used f_st bit ([0],[2],[3],[13:4]) lands on a pin-register D pin; the ok_q/armed/ICG-gated t_cd bank runs on the registered copy.  Exactly the split1016n function with f_st delayed one ckv edge (capcd_eq with CAPCD_PINREG: reference fed f_st delayed 1 edge, every t_cd bit every edge).  COST: capture DONE toggle +1 ckv (f_st -> t_cd 1 -> 2 serial edges), reported to S-FUNC.  Pins and outline unchanged.",
+ "job": {
+  "owner": "claude:S-VM-CAPT-CD2",
+  "branch": "claude/svm-capt-cd2-1016",
+  "tag": "split1p",
+  "purpose": "Native-capture successor of split1016n dsfd_capt_cd: pin-registered f_st (PINREG=1, +1 ckv on f_st->t_cd). Tile-local benches: capcd_eq vs the frozen 2314b2b4d form at +1 ckv alignment; NOTOG mutant must fail.",
+  "extra_paths": [
+   "physical/s81_die_pins/capture_split_1016/dsfd_capt_cd.tcl",
+   "results/arch/s81_hub_parents_1016/native_audit_closed_capture_1016/dsfd_capt_cd_split1016n.json",
+   "rtl/dsrom_sys/s81_ph/test/dsfd_capt_cd_ref1013.sv",
+   "rtl/dsrom_sys/s81_ph/test/tb_dsfd_capt_cd_eq.sv",
+   "tools/s81_ph/capcd_eq_bench.sh"
+  ],
+  "benches": [
+   {
+    "name": "capcd_eq",
+    "cmd": "bash tools/s81_ph/capcd_eq_bench.sh {RUN}/capcd '1 2 3 4 5 6 7 8' CAPCD_PINREG",
+    "expect": "pass",
+    "pass_regex": "^CAPCD_BENCH PASS runs=16$",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "capcd_notog_mutant",
+    "cmd": "bash tools/s81_ph/capcd_eq_bench.sh {RUN}/capcd_mut '1' CAPCD_PINREG S81PH_CAPCD_MUT_NOTOG",
+    "expect": "fail",
+    "fail_regex": "CAPCD_EQ .*mismatches=[1-9][0-9]* EQ_FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ]
+ },
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/arch/s81_hub_parents_1016/native_audit_closed_capture_1016/dsfd_capt_cd_split1016n.json",
+  "cell": "dsfd_capt_cd",
+  "capture_ps": 203.7,
+  "launch_ps": 177.3,
+  "fix": "RTL pin flops: dsfd_capt_cd #(.PINREG(1)) registers every used f_st bit at the pin (fs_q, direct D), the ICG ENA and t_cd bank are fed from fs_q (no input reaches an ENA/mux select); +1 ckv on f_st->t_cd",
+  "native_audit": "/home/ubuntu/artifacts/s81-vm-1316/native/native_audit_1316.json"
+ }
+}

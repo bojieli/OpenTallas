@@ -1,0 +1,112 @@
+{
+ "name": "hbfd_rly_624_ew_fc",
+ "top": "hbfd_rly_624_EW_fc",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+  "rtl/hbm_accel/die_glue/ot_hbm_rly_fc.sv",
+  "rtl/hbm_accel/die_glue/hbfd_rly_fc_masters.sv"
+ ],
+ "params": {},
+ "clock_port": "clk_in",
+ "reset_ports": [
+  "rs"
+ ],
+ "boundary_tcl": [
+  "physical/hbm_rly_fc/fc_clock.tcl"
+ ],
+ "sdc_extra": [
+  "physical/hbm_rly_fc/fc_clock.tcl"
+ ],
+ "pre_cts_extra": [
+  "physical/hbm_rly_fc/fc_pre_cts.tcl"
+ ],
+ "outline": {
+  "w": 21.6,
+  "h": 114.48,
+  "exact": true
+ },
+ "macros": [],
+ "layer_cap": "M5",
+ "pins": {
+  "E": [
+   "i",
+   "clk_in"
+  ],
+  "W": [
+   "o",
+   "clk_out"
+  ],
+  "S": [
+   "rs"
+  ]
+ },
+ "io_tcl": "physical/hbm_rly_fc/pins/hbfd_rly_624_EW_fc.tcl",
+ "recipe": 3,
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "F1 relay = ONE register stage at the pins by definition: i is captured by the stage register, o leaves it through the matched forwarding buffer; a pin register would add a cycle per hop and break the clk_out / o driver match (DIE-CLOCK F1)"
+ },
+ "orfs_vars": {
+  "PRE_FLOORPLAN_TCL": "/src/physical/hbm_rly_fc/fc_dont_touch.tcl"
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7
+ },
+ "structural_change": "F1 forwarded-clock variant of hbfd_rly_624_EW (owner neighbour-relative clocking; DIE-CLOCK form F1): same ot_hbm_rly stage on clk_in, clk_out + every o through one kept BUFx12f each, data face 114.48 um (<= 6 pins/um; was 64.8), outline 21.6 x 114.48. fc2: the clk_out buffer input is held off the clk_in net through CTS and reconnected to the root (fc1: TritonCTS made it a tree sink, clk_in->clk_out 58 ps through CTS buffers); forwarded-hop min separation 85 / 55 ps (fc1 50 ps padded the 624 inputs: native capture 193.5)",
+ "job": {
+  "owner": "Claude:H-NETLIST/F1",
+  "branch": "claude/hnl-f1rly-1815",
+  "tag": "fc2",
+  "purpose": "HBM die F1 forwarded-clock relay hbfd_rly_624_EW_fc: register on clk_in, clk_out = kept BUFx12f, o through the same cell on the downstream face beside clk_out; i/clk_in upstream (E), o/clk_out downstream (W), rs S; 21.6 x 114.48 um, M5 cap",
+  "extra_paths": [
+   "physical/hbm_rly_fc",
+   "rtl/hbm_accel/die_glue/test/bench_rly_fc.sh",
+   "rtl/hbm_accel/die_glue/test/bench_rly.sh"
+  ],
+  "benches": [
+   {
+    "name": "fc_words",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_fc.sh pass 624 EW {RUN}/bench_p",
+    "expect": "pass",
+    "pass_regex": "RLY_FC_BENCH PASS 0 errors 0 clock_errors 0 chain_errors in 20000 words",
+    "min_count_regex": "RLY_FC_BENCH PASS 0 errors 0 clock_errors 0 chain_errors in (\\d+) words",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "neg_bit0_mutant",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_fc.sh mut 624 EW {RUN}/bench_m",
+    "expect": "fail",
+    "fail_regex": "RLY_FC_BENCH FAIL [1-9]",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "neg_clkout_mutant",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_fc.sh ckmut 624 EW {RUN}/bench_c",
+    "expect": "fail",
+    "fail_regex": "RLY_FC_BENCH FAIL \\d+ errors [1-9]\\d* clock_errors",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hbfd_rly_624_ew_fc/views",
+  "record_to": "results/rtl/ref_tile/hbfd_rly_624_ew_fc"
+ }
+}

@@ -1,5 +1,15 @@
 `timescale 1ns/1ps
 `default_nettype none
+// OT_SFU_SYNC_RST (H-SU k8, 2026-10-16 owner standard: regional SYNC reset trees, no async-clear fanout): when defined,
+// every reset in this file is synchronous to its own clock (the regional rst_n comes registered from ot_rst_relay /
+// the die's regional relays); undefined = the previous asynchronous form, bit-identical behaviour after release.
+`ifndef OT_SFU_ARST
+`ifdef OT_SFU_SYNC_RST
+`define OT_SFU_ARST(r)
+`else
+`define OT_SFU_ARST(r) or negedge r
+`endif
+`endif
 // Actual sixteen-lane arithmetic joined to its mapped operand/output store.
 // VM sector arrivals and drains are compiler slots; preload completes BEFORE
 // arithmetic launch. The compiler prices the VM tap's14 edges separately from
@@ -55,7 +65,7 @@ module ot_hgi_sfu_static_engine #(parameter integer LWB=15)(
   .scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_addr(scalar_addr),.scalar_data(scalar_data),
   .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),
   .drain_v(drain_v),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_result_v),.fault(store_fault));
- always @(posedge clk or negedge rst_n)
+ always @(posedge clk `OT_SFU_ARST(rst_n))
   if(!rst_n)fault<=0;
   else if(store_fault || |lane_fault || |lane_coll ||
    (compiler_control[77:75]!=0 && compiler_control[77:75]!=1 && compiler_control[77:75]!=4 && compiler_control[77:75]!=5) ||

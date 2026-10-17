@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "scope": "actual exceptional HOST component only; no full native ownership or physical qualification",
+  "pc_debt": {
+    "requests": 6,
+    "wdone": 6,
+    "write_ack": 5,
+    "payload": 1,
+    "mutants": [
+      "owner debt omitted",
+      "read payload debt omitted"
+    ]
+  },
+  "rx_admission": {
+    "HOST": 4,
+    "ING": 16,
+    "CTRL_live": true,
+    "mutant": "reservation bypass"
+  },
+  "qm_debt": {
+    "partial_descriptor_nonquiet": true,
+    "exact_RAW_sectors": 2,
+    "mutant": "engine busy omitted"
+  },
+  "lint": {
+    "sources": 92,
+    "tops": [
+      "qkd_host_pc_slice_debt",
+      "qkd_host_root_admission",
+      "qkd_host_native_quiet"
+    ]
+  }
+}

@@ -1,0 +1,66 @@
+{
+ "dsfd_vm_seq_tile_hf4_native_1016_r1-hf4-14ada64ce": {
+  "cell": "dsfd_vm_seq_tile",
+  "view": "physical/ref_tile/dsfd_vm_seq_tile_hf4_native_1016_r1/views/dsfd_vm_seq_tile",
+  "lib_cell": "dsfd_vm_seq_tile",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 278.5,
+  "spread_ps": 33.1,
+  "outputs": 118,
+  "inputs": 2435,
+  "launch_ps": 165.4,
+  "launch_pin": "larm_v",
+  "capture_ps": 166.5,
+  "capture_pin": "o_ca[53]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "job": "dsfd_vm_seq_tile_hf4_native_1016_r1-hf4-14ada64ce",
+  "view_source": "main abadd6005 / record e1c4cedd8",
+  "tool": "tools/hier_contract/native_pin_audit.py audit_one",
+  "limits": {
+   "launch": 220,
+   "capture": 190
+  },
+  "audited": "2026-10-16 18:15 PDT S-ELEM 1815",
+  "images_viewed": true
+ },
+ "s81hc_ccrh2_ref-pr6spr-b056d6776": {
+  "cell": "ot_s81_hc_ccr",
+  "view": "physical/ref_tile/s81hc_ccrh2_ref/views/ot_s81_hc_ccr",
+  "lib_cell": "ot_s81_hc_ccr",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 214.3,
+  "spread_ps": 31.8,
+  "outputs": 2684,
+  "inputs": 2165,
+  "launch_ps": 188.6,
+  "launch_pin": "crd_o[1361]",
+  "capture_ps": 129.6,
+  "capture_pin": "ch_rd[375]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "job": "s81hc_ccrh2_ref-pr6spr-b056d6776",
+  "view_source": "record 658651ef3",
+  "tool": "tools/hier_contract/native_pin_audit.py audit_one",
+  "limits": {
+   "launch": 220,
+   "capture": 190
+  },
+  "audited": "2026-10-16 18:15 PDT S-ELEM 1815",
+  "images_viewed": true
+ }
+}

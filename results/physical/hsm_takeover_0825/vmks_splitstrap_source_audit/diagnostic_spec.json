@@ -1,0 +1,104 @@
+{
+  "clock": "multiple_cts_roots",
+  "kind": "tile",
+  "top": "ot_hbm_svc_vm_kshare_splitstrap",
+  "clock_port": "stream_clk",
+  "clock_ports": [
+    "stream_clk",
+    "hbm_clk"
+  ],
+  "sources": [
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+    "rtl/lib/ot_reset_sync.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv"
+  ],
+  "params": {
+    "MUT": 0
+  },
+  "clock_data_paths": "async_gray_fifo",
+  "clock_relationship": {
+    "kind": "hbm_phy_async_gray_fifo",
+    "stream_period_ps": 833.333,
+    "hbm_period_ps": 1024.0
+  },
+  "clock_entry_domains": {
+    "core": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "stream_clk"
+      ],
+      "inputs": [
+        "stream_rst_n",
+        "sm_stream",
+        "vm_v",
+        "vm_bank",
+        "vm_epoch",
+        "vm_row",
+        "vm_col",
+        "wbw_v",
+        "wbw_base",
+        "wbw_total"
+      ],
+      "outputs": [
+        "fill_v",
+        "fill_bank",
+        "fill_slot",
+        "fill_epoch",
+        "fill_data",
+        "fault"
+      ]
+    },
+    "hbm": {
+      "ratio": [
+        3072000,
+        2499999
+      ],
+      "ports": [
+        "hbm_clk"
+      ],
+      "inputs": [
+        "hbm_rst_n",
+        "sm_hbm",
+        "g_k_v",
+        "g_k_addr",
+        "g_k_len",
+        "g_k_tag",
+        "g_k_we",
+        "g_k_wdata",
+        "g_k_wstrb",
+        "g_kr_rdy",
+        "c_k_rdy",
+        "c_k_wr_done",
+        "c_kr_v",
+        "c_kr_tag",
+        "c_kr_beat",
+        "c_kr_data",
+        "w_k_v",
+        "w_k_addr",
+        "w_k_wdata"
+      ],
+      "outputs": [
+        "g_k_rdy",
+        "g_k_wr_done",
+        "g_kr_v",
+        "g_kr_tag",
+        "g_kr_beat",
+        "g_kr_data",
+        "c_k_v",
+        "c_k_addr",
+        "c_k_len",
+        "c_k_tag",
+        "c_k_we",
+        "c_k_wdata",
+        "c_k_wstrb",
+        "c_kr_rdy",
+        "w_k_rdy",
+        "w_k_wr_done"
+      ]
+    }
+  }
+}

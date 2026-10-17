@@ -27,26 +27,72 @@ import kv_die as K  # noqa: E402
 
 BLOCK_TPU = 0.75 / 0.080                     # die layer over a block
 CHAN_TPU = 0.75 / 0.080 + 0.75 / 0.064 + 0.5 / 0.048
+# Q-KV 2026-10-16 (coordinator: the plan model over-counts crossings over blocks): a block whose real content tops out at
+# M5 (every closed tile under the owner's M5 default, and every frame kv_expand flattens into M5 leaves) leaves M6 (H) /
+# M7 (V) free above it as well as the die layers M8 / M9; M6-topped blocks leave M7 / M8 / M9.  With --lef (the case's
+# elements.lef, which after kv_expand also holds the leaf LEFs) + --expand (expand.json) the capacity over a block is
+# the sum of the free layers above ITS top layer; blocks without a known top (ASSUMED frames, PHYs) keep the old
+# die-layer-only capacity.  Layer tracks: M4/M5 0.5/0.048, M6/M7 0.75/0.064, M8/M9 0.75/0.080 (as CHAN_TPU).
+TPU_H = {4: 0.5 / 0.048, 6: 0.75 / 0.064, 8: 0.75 / 0.080}
+TPU_V = {5: 0.5 / 0.048, 7: 0.75 / 0.064, 9: 0.75 / 0.080}
 
 
-def scan(m, M, win, per_bit=True):
+def free_tpu(top, tpu):
+    """tracks/um above a block whose content tops out at layer `top` (None = unknown: the die layer only)"""
+    if top is None or top >= 7:
+        return BLOCK_TPU
+    return sum(v for k, v in tpu.items() if k > top)
+
+
+def block_tops(lef, expand):
+    """master -> top routing layer index from LEF PIN / OBS layers; flattened frames take their leaves' max top"""
+    import re as _re
+    top, cur = {}, None
+    for ln in Path(lef).read_text().split('\n'):
+        s = ln.split()
+        if s[:1] == ['MACRO']:
+            cur = s[1]; top[cur] = 0
+        elif s[:1] == ['END'] and len(s) > 1 and s[1] == cur:
+            cur = None
+        elif cur and s[:1] == ['LAYER'] and _re.fullmatch(r'M[1-9]', s[1]):
+            top[cur] = max(top[cur], int(s[1][1]))
+    if expand:
+        ex = json.loads(Path(expand).read_text())
+        lt = [top[l] for l in ex.get('leaves', {}) if l in top]
+        if lt:
+            for f in ex.get('frames', {}):
+                top[f] = max(lt)
+    # frames that are placeholders (no real content) report their pin layer (M8): unknown -> die layer only
+    return {k: (v if v and v <= 6 else None) for k, v in top.items()}
+
+
+def scan(m, M, win, per_bit=True, tops=None):
     W, H = m['die']['w'], m['die']['h']
     nx, ny = int(np.ceil(W / win)), int(np.ceil(H / win))
     by = {i.name: i for i in m['insts']}
     # block coverage per window (relays excluded: they are die-top logic in the channels)
     cov = np.zeros((nx, ny))
+    capb_h, capb_v = np.zeros((nx, ny)), np.zeros((nx, ny))     # covered fraction x free tracks/um above the block
+    tops = tops or {}
     sub = 8
     for it in m['insts']:
         if it.master.startswith('qkd_rly') or it.w * it.h < 0.04e6 * 0 + 1.0:
             continue
+        th_, tv_ = free_tpu(tops.get(it.master), TPU_H), free_tpu(tops.get(it.master), TPU_V)
         x0, x1, y0, y1 = it.x, it.x + it.w, it.y, it.y + it.h
         for gx in range(max(0, int(x0 // win)), min(nx, int(x1 // win) + 1)):
             for gy in range(max(0, int(y0 // win)), min(ny, int(y1 // win) + 1)):
                 ox = max(0.0, min(x1, (gx + 1) * win) - max(x0, gx * win))
                 oy = max(0.0, min(y1, (gy + 1) * win) - max(y0, gy * win))
                 cov[gx, gy] += ox * oy / (win * win)
+                capb_h[gx, gy] += th_ * ox * oy / (win * win)
+                capb_v[gx, gy] += tv_ * ox * oy / (win * win)
+    over = np.maximum(cov, 1.0)                     # overlapping frames: scale the block share back to <= 1
+    capb_h, capb_v = capb_h / over, capb_v / over
     cov = np.clip(cov, 0.0, 1.0)
     cap = win * (cov * BLOCK_TPU + (1.0 - cov) * CHAN_TPU)
+    cap_h = win * (capb_h + (1.0 - cov) * CHAN_TPU) if tops else cap
+    cap_v = win * (capb_v + (1.0 - cov) * CHAN_TPU) if tops else cap
     dh, dv = np.zeros((nx, ny)), np.zeros((nx, ny))
     who_h, who_v = defaultdict(Counter), defaultdict(Counter)
 
@@ -141,11 +187,11 @@ def scan(m, M, win, per_bit=True):
                 h1, h2 = cb / 2.0, cb - cb / 2.0
                 hseg(a[0], b[0], a[1], h1, base); vseg(a[1], b[1], b[0], h1, base)      # H then V
                 vseg(a[1], b[1], a[0], h2, base); hseg(a[0], b[0], b[1], h2, base)      # V then H
-    uh, uv = dh / cap, dv / cap
+    uh, uv = dh / cap_h, dv / cap_v
     rows = []
     for (u, d, who, dirn) in ((uh, dh, who_h, 'H'), (uv, dv, who_v, 'V')):
         for gx, gy in zip(*np.unravel_index(np.argsort(-u, axis=None)[:12], u.shape)):
-            rows.append(dict(dir=dirn, util=round(float(u[gx, gy]), 3), bits=round(float(d[gx, gy])), cap=round(float(cap[gx, gy])),
+            rows.append(dict(dir=dirn, util=round(float(u[gx, gy]), 3), bits=round(float(d[gx, gy])), cap=round(float((cap_h if dirn == 'H' else cap_v)[gx, gy])),
                              window_um=[round(gx * win, 1), round(gy * win, 1), round((gx + 1) * win, 1), round((gy + 1) * win, 1)],
                              block_cover=round(float(cov[gx, gy]), 2), top=who[(gx, gy)].most_common(4)))
     rows.sort(key=lambda r: -r['util'])
@@ -165,13 +211,17 @@ def main(argv=None):
     ap.add_argument('--coarse', type=float, default=1040.0)
     ap.add_argument('--bundle-centre', action='store_true', help='the old screen: every bus from one bundle-centre point')
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--lef', type=Path, help='case elements.lef (post kv_expand): per-block top layer -> free tracks above it')
+    ap.add_argument('--expand', type=Path, help='expand.json: flattened frames take their leaves\' top layer')
     a = ap.parse_args(argv)
     m = K.build(kv_wq_leaves=True, kv_wq_binary=True, kv_wq_leaf_s=True, kv_wq_wide=True, kv_wq_mirror=True, split=a.split, host_v14=a.host_v14, host_north=getattr(a, 'host_north', False) or None,
                 host_trees=getattr(a, 'host_trees', False) or None, v143=getattr(a, 'v143', False) or None)
     M = K.masters(m, 1)
+    tops = block_tops(a.lef, a.expand) if a.lef else None
     rec = dict(schema='opentallas.qwen_kvsys_window.v1', split=a.split, die_um=[m['die']['w'], m['die']['h']],
                rule='L-routes between drawn pins, 50/50 H-V / V-H; capacity 9.375 tr/um over blocks, 31.5 in channels',
-               fine=scan(m, M, a.fine, not a.bundle_centre), coarse=scan(m, M, a.coarse, not a.bundle_centre),
+               fine=scan(m, M, a.fine, not a.bundle_centre, tops), coarse=scan(m, M, a.coarse, not a.bundle_centre, tops),
+               block_capacity='per-block free layers above its top layer (--lef)' if tops else 'die layer only over blocks',
                per_bit=not a.bundle_centre)
     a.out.write_text(json.dumps(rec, indent=1, default=str) + '\n')
     print(json.dumps({k: (dict(max_h=v['max_util_h'], max_v=v['max_util_v'], over_055=v['over_055'], over_060=v['over_060'])

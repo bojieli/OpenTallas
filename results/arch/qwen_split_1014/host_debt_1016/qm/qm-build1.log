@@ -1,0 +1,313 @@
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:112:188: Instance has missing pin: 'begin_v'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv:26:14: ... Location of port declaration
+   26 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |              ^~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:112:188: Instance has missing pin: 'begin_epoch'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv:26:39: ... Location of port declaration
+   26 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                       ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:112:188: Instance has missing pin: 'begin_cr'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv:26:63: ... Location of port declaration
+   26 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                               ^~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:112:188: Instance has missing pin: 'begin_available'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv:26:72: ... Location of port declaration
+   26 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                                        ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:112:188: Instance has missing pin: 'epoch_busy'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv:30:26: ... Location of port declaration
+   30 |  output wire begin_fault,epoch_busy,startup_allowed,
+      |                          ^~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:112:188: Instance has missing pin: 'startup_allowed'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv:30:37: ... Location of port declaration
+   30 |  output wire begin_fault,epoch_busy,startup_allowed,
+      |                                     ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:169:25: Instance has missing pin: 'groups'
+  169 |  qkd_host_service_guard u_guard(.ck_guard(ck_guard),.rst_n(host_rst_n),.raw_faults(service_faults),
+      |                         ^~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv:14:40: ... Location of port declaration
+   14 |  output reg[31:0]status,output reg[3:0]groups,
+      |                                        ^~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:129:187: Instance has missing pin: 'begin_v'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:24:14: ... Location of port declaration
+   24 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |              ^~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:129:187: Instance has missing pin: 'begin_epoch'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:24:39: ... Location of port declaration
+   24 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                       ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:129:187: Instance has missing pin: 'begin_cr'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:24:63: ... Location of port declaration
+   24 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                               ^~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:129:187: Instance has missing pin: 'begin_available'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:24:72: ... Location of port declaration
+   24 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                                        ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:129:187: Instance has missing pin: 'epoch_busy'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:28:26: ... Location of port declaration
+   28 |  output wire begin_fault,epoch_busy,startup_allowed,
+      |                          ^~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:129:187: Instance has missing pin: 'startup_allowed'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:28:37: ... Location of port declaration
+   28 |  output wire begin_fault,epoch_busy,startup_allowed,
+      |                                     ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:186:25: Instance has missing pin: 'groups'
+  186 |  qkd_host_service_guard u_guard(.ck_guard(ck_guard),.rst_n(host_rst_n),.raw_faults(service_faults),
+      |                         ^~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv:14:40: ... Location of port declaration
+   14 |  output reg[31:0]status,output reg[3:0]groups,
+      |                                        ^~~~~~
+%Warning-TIMESCALEMOD: rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv:2:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    2 | module qkd_host_rst_role_pins #(parameter NL=6,ND=8,T_LINK=200000,T_HBM=200000)(
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       physical/asap7_memory_macros/ot_sram_1r1w2c_128x516_m1/ot_sram_1r1w2c_128x516_m1.v:6:8: ... Location of module with timescale
+    6 | module ot_sram_1r1w2c_128x516_m1 (
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.050
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:132:27: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                                : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  132 |     initial if(NATIVE_ROWS&&(QPIPE<2||HDMAX!=128||KVHMAX!=2))
+      |                           ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:144:25: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'dq_n' generates 3 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  144 |     assign d_rdy = dq_n < DQ;
+      |                         ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:155:43: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'lane' generates 4 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  155 |         bw_idx = ((slot ? 32'd16 : 32'd0) + lane) * WPL + (word & (WPL - 1));
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:155:65: Operator AND expects 32 bits on the LHS, but LHS's VARREF 'word' generates 16 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  155 |         bw_idx = ((slot ? 32'd16 : 32'd0) + lane) * WPL + (word & (WPL - 1));
+      |                                                                 ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:270:43: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 16 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  270 |                 o_by = {qo_s[10:0], 5'd0} + oh * 16;
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:270:22: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  270 |                 o_by = {qo_s[10:0], 5'd0} + oh * 16;
+      |                      ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:271:21: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's SHIFTR generates 16 bits.
+                                                                                : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  271 |                 o_t = o_by >> o_lhd;
+      |                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:299:27: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'pr_s' generates 16 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  299 |     assign r_addr = pr_hb + pr_s;
+      |                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:372:37: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'st_sec' generates 5 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  372 |                     st_wa = u_raddr + st_sec;
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:377:109: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'st_ph' generates 3 bits.
+                                                                                  : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  377 |                             st_pop = 6'd32; st_adv = 1'b1; st_wv = u_mine; st_wd = ra_head; st_wa = u_kcode + st_ph;
+      |                                                                                                             ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:404:60: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'qo_s' generates 16 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  404 |     assign w_addr = qk_wv ? ((QPIPE != 0) ? qp_wa : (qo_hb + qo_s)) : st_wa;
+      |                                                            ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:534:51: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 16 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  534 |                         r_by = {pt_s[10:0], 5'd0} + bi * 16;
+      |                                                   ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:534:30: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  534 |                         r_by = {pt_s[10:0], 5'd0} + bi * 16;
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:536:32: Operator FUNCREF 'bw_idx' expects 4 bits on the Function Argument, but Function Argument's SHIFTR generates 16 bits.
+                                                                                : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  536 |                             bv[bw_idx(pr_slot, r_by >> p_lhd, hw_word(pt_g, p_lhd, r_by & ((16'd1 << p_lhd) - 16'd1)))]
+      |                                ^~~~~~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:535:45: Operator LT expects 16 bits on the RHS, but RHS's VARREF 'p_tlo' generates 5 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  535 |                         if ((r_by >> p_lhd) < p_tlo)
+      |                                             ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:768:79: Operator SUB expects 16 bits on the LHS, but LHS's VARREF 'o_thi' generates 5 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  768 |         wire native_last=qo_v&&(qo_g+8'd1>=o_kvh)&&(qo_s[1:0]==3)&&(t0w==o_thi-1'b1);
+      |                                                                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:824:41: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                                : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  824 |                 wire[3:0]rkl=NATIVE_ROWS?rvl:4'd9*(GB-rkw);
+      |                                         ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:846:46: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                                : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  846 |                 else begin s1_v_r <= q_iss&&(!NATIVE_ROWS||o_lane[t0w[3:0]]); s2_v_r <= s1_v_r; s3_v_r<=s2_v_r; e1_v <= (QMUT==3)?s2_v_r:s3_v_r; fset_r <= i1_v && i1_last; end
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:849:56: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                                : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  849 |                 s1_isv <= qo_v; s1_last <= (NATIVE_ROWS?native_last:q_wlast)&&od[7]; s1_tag <= od[15:8]; s1_a <= NATIVE_ROWS?native_addr:qo_hb+qo_s;
+      |                                                        ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:849:125: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  849 |                 s1_isv <= qo_v; s1_last <= (NATIVE_ROWS?native_last:q_wlast)&&od[7]; s1_tag <= od[15:8]; s1_a <= NATIVE_ROWS?native_addr:qo_hb+qo_s;
+      |                                                                                                                             ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:849:143: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'qo_s' generates 16 bits.
+                                                                                  : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  849 |                 s1_isv <= qo_v; s1_last <= (NATIVE_ROWS?native_last:q_wlast)&&od[7]; s1_tag <= od[15:8]; s1_a <= NATIVE_ROWS?native_addr:qo_hb+qo_s;
+      |                                                                                                                                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:864:36: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 's3_kw' generates 4 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  864 |                     kb = 4'd9 * lq + s3_kw;
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:864:24: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  864 |                     kb = 4'd9 * lq + s3_kw;
+      |                        ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:867:41: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                                : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  867 |                 e1_vs0_r <= (NATIVE_ROWS&&!s3_isv)?ck_q[s3_b0]:cv_q[s3_b0]; e1_vs1_r <= (NATIVE_ROWS&&!s3_isv)?ck_q[s3_b1]:cv_q[s3_b1];
+      |                                         ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:867:101: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  867 |                 e1_vs0_r <= (NATIVE_ROWS&&!s3_isv)?ck_q[s3_b0]:cv_q[s3_b0]; e1_vs1_r <= (NATIVE_ROWS&&!s3_isv)?ck_q[s3_b1]:cv_q[s3_b1];
+      |                                                                                                     ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:868:38: Logical operator LOGOR expects 1 bit on the LHS, but LHS's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                                : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  868 |                 e1_isv <= NATIVE_ROWS||s3_isv; e1_last <= s3_last; e1_tag <= s3_tag; e1_a <= s3_a;
+      |                                      ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:927:40: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 6 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  927 |         assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0) + (s3_v ? 5'd1 : 5'd0)) < FQD;
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:927:48: Operator COND expects 32 bits on the Conditional True, but Conditional True's CONST '5'h1' generates 5 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  927 |         assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0) + (s3_v ? 5'd1 : 5'd0)) < FQD;
+      |                                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:927:48: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '5'h0' generates 5 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  927 |         assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0) + (s3_v ? 5'd1 : 5'd0)) < FQD;
+      |                                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:927:71: Operator COND expects 32 bits on the Conditional True, but Conditional True's CONST '5'h1' generates 5 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  927 |         assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0) + (s3_v ? 5'd1 : 5'd0)) < FQD;
+      |                                                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:927:71: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '5'h0' generates 5 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  927 |         assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0) + (s3_v ? 5'd1 : 5'd0)) < FQD;
+      |                                                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:927:94: Operator COND expects 32 bits on the Conditional True, but Conditional True's CONST '5'h1' generates 5 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  927 |         assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0) + (s3_v ? 5'd1 : 5'd0)) < FQD;
+      |                                                                                              ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:927:94: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '5'h0' generates 5 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  927 |         assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0) + (s3_v ? 5'd1 : 5'd0)) < FQD;
+      |                                                                                              ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:927:117: Operator COND expects 32 bits on the Conditional True, but Conditional True's CONST '5'h1' generates 5 bits.
+                                                                                  : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  927 |         assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0) + (s3_v ? 5'd1 : 5'd0)) < FQD;
+      |                                                                                                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:927:117: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '5'h0' generates 5 bits.
+                                                                                  : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  927 |         assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0) + (s3_v ? 5'd1 : 5'd0)) < FQD;
+      |                                                                                                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:934:38: Operator COND expects 4 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  934 |                 fq_n <= fq_n + (e1_v ? 1'b1 : 1'b0) - (fq_pop ? 1'b1 : 1'b0);
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:934:38: Operator COND expects 4 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  934 |                 fq_n <= fq_n + (e1_v ? 1'b1 : 1'b0) - (fq_pop ? 1'b1 : 1'b0);
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:934:63: Operator COND expects 4 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  934 |                 fq_n <= fq_n + (e1_v ? 1'b1 : 1'b0) - (fq_pop ? 1'b1 : 1'b0);
+      |                                                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:934:63: Operator COND expects 4 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut.u_eng'
+  934 |                 fq_n <= fq_n + (e1_v ? 1'b1 : 1'b0) - (fq_pop ? 1'b1 : 1'b0);
+      |                                                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv:94:65: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'tcr' generates 8 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut'
+   94 |      else quiet_h<=!h_v&&!hv_q&&hx_freed==0&&!t_v&&cx_empty&&tcr==TCRED&&!t_cr&&!tcr_q&&!fault;
+      |                                                                 ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv:101:48: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ocr' generates 8 bits.
+                                                                                  : ... note: In instance 'tb_host_qm_debt.dut'
+  101 |      else quiet_c<=ox_empty&&!ox_pop&&!o_v&&ocr==OCRED&&!o_cr&&!ocr_q&&!i_rv&&!irv_q&&!fault;
+      |                                                ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv:141:32: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut'
+  141 |     wire bad_native=NATIVE_ROWS&&dq_qkv&&(
+      |                                ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv:273:53: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'TCRED' generates 32 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut'
+  273 |         if (!rn_h) begin t_v <= 1'b0; t_d <= 0; tcr <= TCRED; tcr_q <= 1'b0; end
+      |                                                     ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv:301:67: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'OCRED' generates 32 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut'
+  301 |             o_v <= 1'b0; o_we <= 1'b0; o_addr <= 0; o_d <= 0; ocr <= OCRED; ocr_q <= 1'b0; tok <= 0;
+      |                                                                   ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv:306:31: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'tok' generates 14 bits.
+                                                                                  : ... note: In instance 'tb_host_qm_debt.dut'
+  306 |             else tok <= ((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0);
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv:306:31: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'share_c' generates 9 bits.
+                                                                                  : ... note: In instance 'tb_host_qm_debt.dut'
+  306 |             else tok <= ((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0);
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv:306:74: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'tok' generates 14 bits.
+                                                                                  : ... note: In instance 'tb_host_qm_debt.dut'
+  306 |             else tok <= ((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0);
+      |                                                                          ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv:306:74: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'share_c' generates 9 bits.
+                                                                                  : ... note: In instance 'tb_host_qm_debt.dut'
+  306 |             else tok <= ((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0);
+      |                                                                          ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv:306:22: Operator ASSIGNDLY expects 14 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                 : ... note: In instance 'tb_host_qm_debt.dut'
+  306 |             else tok <= ((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0);
+      |                      ^~
+%Warning-MULTIDRIVEN: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:798:26: Signal has multiple driving blocks with different clocking: 'tb_host_qm_debt.dut.u_eng.g_qp.g_bm.ck_q'
+                      rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:835:56: ... Location of first driving block
+  835 |                 always @(posedge clk_bank[gb/8]) begin ck_q[gb] <= mko[gb]; cv_q[gb] <= mvo[gb]; end    
+      |                                                        ^~~~
+                      rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:835:56: ... Location of other driving block
+  835 |                 always @(posedge clk_bank[gb/8]) begin ck_q[gb] <= mko[gb]; cv_q[gb] <= mvo[gb]; end    
+      |                                                        ^~~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:799:26: Signal has multiple driving blocks with different clocking: 'tb_host_qm_debt.dut.u_eng.g_qp.g_bm.cv_q'
+                      rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:835:77: ... Location of first driving block
+  835 |                 always @(posedge clk_bank[gb/8]) begin ck_q[gb] <= mko[gb]; cv_q[gb] <= mvo[gb]; end    
+      |                                                                             ^~~~
+                      rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:835:77: ... Location of other driving block
+  835 |                 always @(posedge clk_bank[gb/8]) begin ck_q[gb] <= mko[gb]; cv_q[gb] <= mvo[gb]; end    
+      |                                                                             ^~~~
+make: Entering directory '/srv/opentallas-scratch/codex/host-debt-lint-0917/obj_qm1'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_host_qm_debt__pch.h -o Vtb_host_qm_debt__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_host_qm_debt__pch.h -o Vtb_host_qm_debt__pch.h.slow.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_qm_debt__pch.h.fast -c Vtb_host_qm_debt.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_qm_debt__pch.h.fast -c Vtb_host_qm_debt___024root__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_qm_debt__pch.h.fast -c Vtb_host_qm_debt___024root__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_qm_debt__pch.h.fast -c Vtb_host_qm_debt_ot_sram_1r1w_32x128_m1__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_qm_debt__pch.h.fast -c Vtb_host_qm_debt_ot_sram_1r1w_32x128_m1__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_qm_debt__pch.h.fast -c Vtb_host_qm_debt_ot_hdc_ingest_fp8q__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_qm_debt__pch.h.fast -c Vtb_host_qm_debt__main.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_qm_debt__pch.h.slow -c Vtb_host_qm_debt__ConstPool__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_qm_debt__pch.h.slow -c Vtb_host_qm_debt___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_qm_debt__pch.h.slow -c Vtb_host_qm_debt___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_qm_debt__pch.h.slow -c Vtb_host_qm_debt_ot_sram_1r1w_32x128_m1__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_qm_debt__pch.h.slow -c Vtb_host_qm_debt_ot_sram_1r1w_32x128_m1__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_qm_debt__pch.h.slow -c Vtb_host_qm_debt_ot_hdc_ingest_fp8q__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_qm_debt__pch.h.slow -c Vtb_host_qm_debt_ot_hdc_ingest_fp8q__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_qm_debt__pch.h.slow -c Vtb_host_qm_debt__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_host_qm_debt__ALL.a    -pthread -lpthread -latomic   -o Vtb_host_qm_debt
+rm Vtb_host_qm_debt__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/codex/host-debt-lint-0917/obj_qm1'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 25.016 MB sources in 105 modules, into 2.577 MB in 15 C++ files needing 0.028 MB
+- Verilator: Walltime 24.557 s (elab=0.224, cvt=1.805, bld=22.147); cpu 2.506 s on 2 threads; allocated 85.191 MB

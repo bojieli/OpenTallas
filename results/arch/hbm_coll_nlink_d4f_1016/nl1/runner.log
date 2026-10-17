@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits    47 GB (avail 375, growth 280, headroom 48, waiters 31/1281 GB) load 106/128 running 51 disk 381 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnl-d4f-colllink-1950/src
+ot-run: ot-agidock128  admits    42 GB (avail 71, growth 15, headroom 24, waiters 2/144 GB) load 29/64 running 4 disk 173 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-499927-1792205897 after 0 s
+NL1 MUT0 PASS 
+NL1 MUT1 FAIL Fatal: tb_hgi_coll_q_static_host_v4_reduce_nl.sv:94: Assertion failed in tb_hgi_coll_q_static_host_v4_reduce_nl.unnamedblk7: native reduce metadata
+NL1 MUT2 FAIL Fatal: tb_hgi_coll_q_static_host_v4_reduce_nl.sv:91: Assertion failed in tb_hgi_coll_q_static_host_v4_reduce_nl.unnamedblk7: native host V4 parent fault at compiled cycle24
+NL1 MUT3 FAIL Fatal: tb_hgi_coll_q_static_host_v4_reduce_nl.sv:95: Assertion failed in tb_hgi_coll_q_static_host_v4_reduce_nl.unnamedblk7.unnamedblk8: native FP32 sum lane0
+NL1 MUT4 FAIL Fatal: tb_hgi_coll_q_static_host_v4_reduce_nl.sv:91: Assertion failed in tb_hgi_coll_q_static_host_v4_reduce_nl.unnamedblk7: native host V4 parent fault at compiled cycle27
+NL1 MUT5 FAIL Fatal: tb_hgi_coll_q_static_host_v4_reduce_nl.sv:91: Assertion failed in tb_hgi_coll_q_static_host_v4_reduce_nl.unnamedblk7: native host V4 parent fault at compiled cycle20
+HCOLL_REDUCE_NL_GATE PASS NL1
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-499927-1792205897): exit 0

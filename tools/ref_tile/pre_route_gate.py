@@ -596,6 +596,27 @@ def check_port_latency(g: Gate, kd: Path, spec: dict, out: str, commit=None, now
           f"{sum(1 for p in rep['ports'].values() if not p['register_edges'])} ports pass through (clock/reset/excluded/inout)")
 
 
+def check_memory_ff(g: Gate, out: str):
+    """MEMORY-FF LINT (ROOT 2026-10-17, coordinator from S-ELEM): yosys memory inference folded a register into an
+    inferred ROM/memory read port (MEMORY_DFF after PROC_ROM / MEMORY_BMUX2ROM).  The named RTL register disappears, and the
+    table decode can land in a half-cycle or un-pipelined hop (S81 dsfd_engram_lkp_static14 st6: roll_h absorbed, TT
+    -57.9 ps on 2,355 endpoints).  Reported before routing so the lead confirms or rewrites the table."""
+    merges = re.findall(r"^GATE_MEMFF Checking read port `([^']+)'\[(\d+)\] in module `\\?([^']+)': (merg\w+ [\w ]*FF to cell)",
+                        out, re.M)
+    roms = sum(int(n) for n in re.findall(r"^GATE_MEMFF Converted (\d+) switch", out, re.M))
+    if not merges:
+        if roms:
+            g.add("INFO", "memory_ff", f"yosys converted {roms} case table(s) to ROM; no register was folded into a read port")
+        return
+    where = sorted({f"{mod}:{port}[{i}] ({how})" for port, i, mod, how in merges})
+    g.add("WARN", "memory_ff",
+          f"yosys MEMORY_DFF folded {len(merges)} register(s) into inferred memory/ROM read ports "
+          f"({roms} case table(s) became ROMs): " + "; ".join(where[:8]) + (f" (+{len(where) - 8} more)" if len(where) > 8 else "")
+          + " -- the RTL register is gone from the netlist and its table decode may sit in a half-cycle / un-pipelined hop",
+          "write the table as a one-hot AND-OR select (static14 st7) or keep the register out of the inferred memory "
+          "(e.g. (* rom_style = \"logic\" *) on the table / (* keep *) on the register) and re-gate")
+
+
 def check_kit_shell(g: Gate, kd: Path):
     syntax = subprocess.run(["bash", "-n", str(kd / "kit.env")], capture_output=True, text=True)
     if syntax.returncode or syntax.stderr.strip():
@@ -671,8 +692,11 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
             g.add("FAIL", "layer", f"pin layers {over} above the tile cap {rl.group(1)}: the parent strap layer would "
                   "carry pins", "pins on M4/M5 (route.pin_h / pin_v / pin_balance)")
     elif rl is not None and spec["kind"] == "cluster":
-        cap, grant = RT.cluster_signal_cap(spec, RT.contract_slot(spec))
-        if rl.group(1) != cap or lc.get("pg_layer") != "M7":
+        if RT.cluster_level(spec) == 2:      # two-level cluster (Q-CLUSTER 2026-10-17): signals M7, PG M8
+            cap, grant, want_pg = "M7", None, "M8"
+        else:
+            (cap, grant), want_pg = RT.cluster_signal_cap(spec, RT.contract_slot(spec)), "M7"
+        if rl.group(1) != cap or lc.get("pg_layer") != want_pg:
             g.add("FAIL", "layer", "cluster kit signals/PG differ from its audited layer contract", "re-run ref_tile.py gen")
         if grant:
             g.add("INFO", "layer_grant", f"digest-bound {cap} grant {grant['source']}; no die signals through rectangle; phase-aligned die PG required")
@@ -809,6 +833,9 @@ print("GATE_PORTS "+json.dumps(ports))
 print("GATE_PORT_RANGES "+json.dumps(ranges))
 EOP
 grep -h "Chip area\|chip area" $C/reports/asap7/*/base/synth_stat.txt 2>/dev/null | tail -1 | sed 's/^/GATE_AREA /'
+# MEMORY-FF LINT (ROOT 2026-10-17, S-ELEM static14 TT -57.9): yosys PROC_ROM / MEMORY_BMUX2ROM turn a case table into a
+# $mem ROM and MEMORY_DFF then folds the neighbouring register into its read port; the register vanishes from the netlist
+grep -h "merging output FF to cell\|merged .*FF to cell\|merging .*FF to cell\|^Converted [0-9]* switch" $C/logs/asap7/*/base/1_*yosys*.log 2>/dev/null | head -60 | sed 's/^/GATE_MEMFF /'
 # PORT-LATENCY (ROOT 2215): the elaborated pin-register table + wrapper of this synthesis (ot_pin_regs.tcl) come back for
 # tools/ref_tile/port_latency.py; the closure loop records the same export from the route at CLOSE for the compilers
 [ -s $B/ot_pin_regs.tsv ] && [ -s $B/ot_pin_regs_wrapper.v ] && python3 -c "import zlib,base64,sys;print('GATE_PIN_REGS_B64 '+' '.join(base64.b64encode(zlib.compress(open(f,'rb').read(),9)).decode() for f in sys.argv[1:]))" $B/ot_pin_regs.tsv $B/ot_pin_regs_wrapper.v
@@ -1334,14 +1361,18 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
         area = float(am.group(1))
         W, H = fp["die"][2], fp["die"][3]
         core = (W - 2 * RT.CORE_MARGIN) * (H - 2 * RT.CORE_MARGIN)
-        mac = sum(b["w"] * b["h"] for b in fp["blocks"])
         area = synthesis_std_area(area, fp["blocks"])
-        u = (area + mac) / core
+        halo = float(spec["route"].get("macro_halo_um", RT.HALO_UM)) if spec.get("recipe", 1) >= 2 else RT.HALO_UM
+        um = RT.util_metrics(area, fp["blocks"], core, halo)
         # high util is a closure risk (FAIL > 70%); low util only costs wire / area (closed blocks sit at 6-22%): WARN
-        sev = "INFO" if RT.UTIL_LO <= u <= RT.UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN")
-        g.add(sev, "util", f"synthesized std area {area:.0f} um2 + macros {mac:.0f} in core {core:.0f}: util {u:.0%}",
+        sev, _ok = RT.util_severity(um)
+        mac = um["macro_um2"]
+        g.add(sev, "util", f"synthesized std area {area:.0f} um2 + macros {mac:.0f} in core {core:.0f}: util {um['util']:.0%}"
+              + (f" (std-cell density {um['density']:.1%} of placeable {um['placeable_um2']:.0f} um2; total fill "
+                 f"{um['total_fill']:.1%})" if mac else ""),
               f"set \"std_area_um2\": {area:.0f} and drop 'outline' (gen sizes to util 0.52)" if sev != "INFO" else "")
     check_port_latency(g, kd, spec, out, binding.get("commit"), binding=binding)
+    check_memory_ff(g, out)
     for line in re.findall(r"^GATE_TB (.*)$", out, re.M):
         if line.startswith("TEXTBOOK_LINT:"):
             continue
@@ -1658,7 +1689,10 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
             return
         a = subprocess.run(["git", "-C", repo, "archive", commit, *paths], capture_output=True, timeout=120)
         subprocess.run(["tar", "-x", "-C", str(dst)], input=a.stdout, check=True)
-    arch([kit, "physical/qwen_die_masters/io_ref_skew.sdc", OFLOP_TCL])
+    # canonical common_flow helpers ref_tile reads at ROOT (Q-XSLEAF 10-16: qfd_xs_leaf_w130-w1 gate went SKIP "literal pin
+    # canonical placement helper is missing from the source archive"); filtered by existence at the commit, so harmless
+    arch([kit, "physical/qwen_die_masters/io_ref_skew.sdc", OFLOP_TCL, RT.ASSIGNED_PIN_EXACT_TCL,
+          getattr(RT, "M6_PIN_ACCESS_TCL", "physical/common_flow/m6_pin_access.tcl")])
     sp = json.loads((dst / kit / "spec.json").read_text())
     # sdc_extra too: without it RT.gen raised FileNotFoundError and the whole gate went SKIP for every kit that has one
     arch(list(sp.get("sources", [])) + list(sp.get("sdc_extra", []))

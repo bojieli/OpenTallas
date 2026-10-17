@@ -37,6 +37,7 @@ V1_CATALOG = "physical/asap7_memory_macros"
 IMAGE = "openroad/orfs:latest"
 DEFECTIVE_V1 = {"ot_hbm3e_phy_v41x", "ot_hbm3e_phy_v41x_aw30"}
 WRONGWAY_SET = "physical/common/test_fixtures/mts_wrongway"
+FATPATCH_SET = "physical/common/test_fixtures/mts_fatpatch"
 
 
 def lefs(d: str) -> list[str]:
@@ -226,6 +227,23 @@ class SnapLibraryInOpenROAD(unittest.TestCase):
             self.assertEqual(int(m.group(3)), 0, r)
         self.assertEqual(negs(out)[("ot_mts_ww_stub", "shift6nm")], 1)
         self.assertIn("wrongway_stubs_exempt=2", out)
+
+    def test_widened_patch_does_not_block_origin(self):
+        """Q-DIEPLAN2r 10-16 (r2h5 PLACE 'qfd_d2d_static MX x has no legal origin'): a routed view's pin may carry
+        a widened preferred-direction patch (M3 0.054 wide, centre off track) beside its min-width on-track
+        access shape; the narrow shape decides the origin.  A pin whose only shape is the wide patch still
+        constrains (fail closed), and a 6-nm shift still trips."""
+        out = harness((FATPATCH_SET,))
+        cs = cases(out)
+        self.assertEqual(cs[("ot_mts_fat_only", "R0")], ["NO_LEGAL_ORIGIN"])
+        got = [(o, r) for (n, o), rs in cs.items() if n == "ot_mts_fat_patch" for r in rs]
+        self.assertTrue(got, out[-2000:])
+        for o, r in got:
+            if True:
+                m = re.match(r"placed (\d+) (\d+) offtrack (\d+)", r)
+                self.assertIsNotNone(m, r)
+                self.assertEqual(int(m.group(3)), 0, r)
+        self.assertEqual(negs(out)[("ot_mts_fat_patch", "shift6nm")], 1)
 
 
 if __name__ == "__main__":

@@ -32,3 +32,24 @@ def test_split_fifo_keeps_second_clock_and_all_second_payload_bits(monkeypatch):
         saved=master.ports.pop(missing)
         with pytest.raises(ValueError,match=missing):G._require_physical_source_ports(master,ports)
         master.ports[missing]=saved
+
+
+def test_controller_actual_rtl_status_has_distinct_contacts(monkeypatch):
+    import die_port_bind as DPB
+    path = G.ROOT / 'rtl/dsrom_sys/s81_ph/dsfd_ctrl.sv'
+    md, = DPB.parse_modules(path.read_text(), str(path))
+    ports = {name: (spec[0], md.width(name, md.env({}))) for name, spec in md.ports.items()}
+    assert ports['st'] == ('output', 2)
+    # The PHY contact list is unrelated to the missing controller status port.
+    monkeypatch.setattr(G, 'real_lef', lambda _: {'name': 'test_phy', 'pins': {}})
+    monkeypatch.setattr(G, 'real_ports_r8', lambda: {'test_phy': {'dfi': []}})
+    monkeypatch.setattr(G, '_peer_pos', lambda *args: 0)
+    monkeypatch.setattr(G, '_LAY_K', [1])
+    master = G.Q.Master('dsfd_ctrl', 8400, 200, 7, 'test actual RTL ports')
+    G._faces_r8({}, master, SimpleNamespace(kind='ctrl'), ports)
+    G._require_physical_source_ports(master, ports)
+    assert master.ports['st'][1:4] == (2, 'N', 'M5')
+    assert master.ports['st'] != master.ports['ckh']
+    del master.ports['st']
+    with pytest.raises(ValueError, match='st'):
+        G._require_physical_source_ports(master, ports)

@@ -1,0 +1,150 @@
+{
+  "schema": "opentallas.qwen.kvsys.takeover-classification.v1",
+  "collected_at": "2026-10-16T16:02:24.964200-07:00",
+  "native_qualified": false,
+  "physical_qualified": false,
+  "source": "6b42bd40d",
+  "closures": [
+    {
+      "name": "qkd_ctrl_pc_core_s4-s4-ddcddb0a2",
+      "status": "ECO",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qkd_ctrl_pc_core_s4-s4-ddcddb0a2",
+      "stage": "hold_eco.a1",
+      "updated": "2026-10-16T16:01:57-07:00",
+      "source": "ddcddb0a2f17ef1b530ef9195fc1f9acee5133bc",
+      "state_sha256": "ff6cd2c447d41b6ce768382c4b26e84304c77f4a47459b5ce87697e02b4bfe77",
+      "measured": {
+        "ss_ps": -11.22,
+        "ff_ps": -7.51,
+        "drc": 0,
+        "ss_sensitivity_ps": -437.97
+      },
+      "reason": null
+    },
+    {
+      "name": "qkd_ctrl_pc_core_s5-s5-3807d0d61",
+      "status": "RUNNING",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qkd_ctrl_pc_core_s5-s5-3807d0d61",
+      "stage": "route.a1",
+      "updated": "2026-10-16T16:01:56-07:00",
+      "source": "3807d0d61782802eaad2c2bd220ec816f2602c63",
+      "state_sha256": "61739f4d37c0aff8e0e48f85dbff5ad049a4cb6b80a5e1173edf5e68ad7fc5bf",
+      "measured": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null,
+        "ss_sensitivity_ps": null
+      },
+      "reason": null
+    },
+    {
+      "name": "qkd_static_kv_landing_seg-ls5-400ae2986",
+      "status": "RUNNING",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qkd_static_kv_landing_seg-ls5-400ae2986",
+      "stage": "route.a2",
+      "updated": "2026-10-16T16:01:56-07:00",
+      "source": "400ae2986dbeb3f09e2290f5f78598d25ecddd4c",
+      "state_sha256": "88c790ee641ef805089b92b6d4492b51a5448c7b33dca9459b0bf1b174d0d30b",
+      "measured": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null,
+        "ss_sensitivity_ps": null
+      },
+      "reason": null
+    },
+    {
+      "name": "qkd_static_kv_return_slots_mc_r3-mc3c-b1633f90c",
+      "status": "ECO",
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qkd_static_kv_return_slots_mc_r3-mc3c-b1633f90c",
+      "stage": "hold_eco.a1",
+      "updated": "2026-10-16T16:01:56-07:00",
+      "source": "b1633f90c1de2be66ddf3f3e9daf77bc2d9de985",
+      "state_sha256": "ae31dfd0db6f69233f747fc5d73c6c41214c4db260614961a0aa2ecf36cae5a6",
+      "measured": {
+        "ss_ps": 63.68,
+        "ff_ps": -4.03,
+        "drc": 0,
+        "ss_sensitivity_ps": -235.21
+      },
+      "reason": null
+    },
+    {
+      "name": "qkd_seq_core_st_r1-r1-29f8e4774",
+      "status": "CLOSED",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qkd_seq_core_st_r1-r1-29f8e4774",
+      "stage": "collect.a1",
+      "updated": "2026-10-16T15:58:58-07:00",
+      "source": "29f8e4774c3560729a357f38042a55d59eaf1607",
+      "state_sha256": "9567252f71ed6979dccd60c276f29a605112a5cef87a9925ffb155b5256cf26a",
+      "measured": {
+        "ss_ps": 204.2,
+        "ff_ps": 18.81,
+        "drc": 0,
+        "ss_sensitivity_ps": -77.41
+      },
+      "reason": "CLOSED TT +204.20 / FF +18.81 ps DRC 0; SS sensitivity -77.41 ps | record claude/pvjoin-cal-1016 9dd96467f (22 files) | AUTO-MERGED into main 2e99dc8d9"
+    },
+    {
+      "name": "qkd_layer_prog_img_r2-r2-f46684611",
+      "status": "REFUSED",
+      "host": null,
+      "run": null,
+      "stage": null,
+      "updated": "2026-10-16T15:09:55-07:00",
+      "source": null,
+      "state_sha256": "a3e3f4981ccbc3a563c2c4ebde009dd759173470f544ef6a530ef7eb2e9435d6",
+      "measured": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null,
+        "ss_sensitivity_ps": null
+      },
+      "reason": "SUBMIT_LINT CLOSED_STANDS: qkd_static_kv_layer_programme_img is CLOSED with a published view (qkd_layer_prog_img_r1-r1-888aa6083 @ 888aa6083): the spec carries no \"reroute_reason\"; measured: RTL vs the closed commit differs (1 of 1 RTL source file(s) differ from 888aa6083: rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme_rom.sv); closed evidence complete (bench + mutant, routed verdict). a CLOSED tile stands (owner 10-12): do not route it again. Instead: bind the missing bench + mutant to the closed job (job \"benches_from\" / tools/ref_tile/composition_gates.json \"benched_by\"), re-export its view from the closed run (tools/ref_tile/ref_tile.py export), or wrap the closed view under the contract slot name. M5 is the default for NEW tiles only. A route that IS needed states it in the spec: \"reroute_reason\": {\"kind\": \"die_window\" (+ \"slot\", \"cut\" > 0.6 or \"grt_overflow\" > 0, \"source\" file) | \"slot_change\" (+ \"contract\" or \"slot_change_request\") | \"param_change\" (+ \"params\") | \"rtl_change\" (verified against the closed commit) | \"evidence_gap\" (+ \"why_route\") | \"pin_register\" (+ \"source\" audit JSON, \"cell\", \"pair_cost_ps\" > 683.3, \"fix\") | \"native_launch\" (+ \"source\" audit JSON, \"cell\", \"launch_ps\" > 220; tools/ref_tile/rekit_native_launch.py)}"
+    }
+  ],
+  "seq_repair": {
+    "source": "6b42bd40d",
+    "added_state_bits": 0,
+    "production_edges_added": 0,
+    "aq_start_from_cmd": 47,
+    "aq_legacy_delta": 1,
+    "row_legacy_delta": 0,
+    "positive": {
+      "layers": 36,
+      "aq_words_per_quadrant": 1188,
+      "kvn_rows_per_quadrant": 72,
+      "kc_words_per_quadrant": 72,
+      "errors": 0
+    },
+    "negative": {
+      "q_swap_errors": 288,
+      "late_q_arrival_fault_samples": 1000
+    },
+    "physical_gate": "RUNNING; not a routed or native closure"
+  },
+  "remaining_production_requirements": [
+    "Actual bounded maximum PHY service receipt; tested jitter is not authority (0az).",
+    "Measured core/HBM launch aperture, reset epoch and metadata hold profile.",
+    "All32 deterministic refresh roots and negative controls on current actual calendar+PROFILE0 controller (running).",
+    "Actual front/return ring capacity and release margins; native rate screen needs64 rather than current8 entries.",
+    "Actual K/V write visibility and controller/HOST outstanding-read/write debt/drain/fault joins.",
+    "Complete native attention result/embedding link calendar and all actual on-chip producers.",
+    "Real leaf native launch/capture/spread plus literal die pins, per-entry phi-R and incident pairs.",
+    "Full-token cycle, storage, area and bandwidth cost with actual profiles."
+  ],
+  "orphan_fallbacks": {
+    "PVJOIN layer image r2": "REFUSED closed-stands and superseded by source40e1bc6f6 r3. Do not resubmit unchanged. Recover live r3 remote gate if its original timeout parent ends; /srv/opentallas-scratch/claude/ref_gate/qkd_layer_prog_img_r3-20261016-153414 on ot-pve1.",
+    "seq static r1": "CLOSED route stands, but native capture207.57 fails; use separate r2 source repair. Do not bind r1 as native qualified.",
+    "controller parent c1": "Wait for core_s4 or s5 CLOSED then audit native; use per-child ck/pll_hbm/pll_hbm_port/pll_hbm_ecc entry clocks. Both fail => diagnose actual terminal paths before structural core change.",
+    "landing ls5": "Preserve live route. If actual rsp_data/hop hold stalls, split north/south segments with separate rowctl and clock entries; checker fix already tested.",
+    "return mc3c": "Preserve ECO; component physical closure cannot establish 0az boundary.",
+    "kvs13c2": "Preserve live PDN2173775; all final timing remains unmeasured.",
+    "kvs13h": "Preserve original3792518 chain; prep admitted15:58; no duplicate."
+  }
+}

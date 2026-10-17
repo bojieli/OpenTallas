@@ -1,0 +1,30 @@
+{
+ "cell": "hfd_vms_bank_native_q0_faces",
+ "view": "physical/ref_tile/vm_native_q0_faces_g313c/views/hfd_vms_bank_native_q0_faces",
+ "lib_cell": "hfd_vms_bank_native_q0_faces",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean",
+  "lib midrange"
+ ],
+ "R_ps": 141.8,
+ "spread_ps": 43.0,
+ "outputs": 1851,
+ "inputs": 2060,
+ "launch_ps": 193.2,
+ "launch_pin": "rr4[32]",
+ "capture_ps": 186.1,
+ "capture_pin": "rq3[9]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "job": "vm_native_q0_faces_g313c-mclkC-1ad8c4984",
+ "record_commit": "c1ea52116",
+ "closed": "TT +17.45 / FF +8.62 / DRC 0",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (launch<=220, capture<=190)",
+ "audited_by": "Claude H-SM 1315",
+ "at": "2026-10-16"
+}

@@ -1,0 +1,88 @@
+{
+  "schema": "opentallas.qwen_kv_static.boot_dispatch_component.v1",
+  "status": "COMPONENT_PASS_WITH_FAILING_MUTANTS",
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv": "0177f5cf98bef2590a8484a77dac8685f0efa50c0dd0a0ab16d708433c5c7d24",
+    "rtl/test/qwen_static_kv/tb_static_boot_dispatch.sv": "3b19b94aba87e7930f18aa48e7368446de9df6e2260653ebe62a8197a4f135ec"
+  },
+  "results": [
+    {
+      "mutant": 0,
+      "negative": 0,
+      "exit": 0,
+      "expected_result": true,
+      "output": "PASS actual boot dispatch nine configuration images 4992 writes, all128PC/32group targets, actual application guard"
+    },
+    {
+      "mutant": 0,
+      "negative": 1,
+      "exit": 0,
+      "expected_result": true,
+      "output": "PASS boot dispatcher rejected invalid replay NEG=1"
+    },
+    {
+      "mutant": 0,
+      "negative": 2,
+      "exit": 0,
+      "expected_result": true,
+      "output": "PASS boot dispatcher rejected invalid replay NEG=2"
+    },
+    {
+      "mutant": 0,
+      "negative": 3,
+      "exit": 0,
+      "expected_result": true,
+      "output": "PASS boot dispatcher rejected invalid replay NEG=3"
+    },
+    {
+      "mutant": 0,
+      "negative": 4,
+      "exit": 0,
+      "expected_result": true,
+      "output": "PASS boot dispatcher rejected invalid replay NEG=4"
+    },
+    {
+      "mutant": 0,
+      "negative": 5,
+      "exit": 0,
+      "expected_result": true,
+      "output": "PASS boot dispatcher rejected invalid replay NEG=5"
+    },
+    {
+      "mutant": 1,
+      "negative": 1,
+      "exit": 1,
+      "expected_result": true,
+      "output": "FATAL: /home/ubuntu/wt/qkv-static-join-1016/rtl/test/qwen_static_kv/tb_static_boot_dispatch.sv:32: forbidden configuration escaped rejected replay\n       Time: 46000 Scope: tb_static_boot_dispatch"
+    },
+    {
+      "mutant": 2,
+      "negative": 0,
+      "exit": 1,
+      "expected_result": true,
+      "output": "FATAL: /home/ubuntu/wt/qkv-static-join-1016/rtl/test/qwen_static_kv/tb_static_boot_dispatch.sv:18: actual PC/local address/seal differs\n       Time: 9156000 Scope: tb_static_boot_dispatch.check_word"
+    },
+    {
+      "mutant": 3,
+      "negative": 0,
+      "exit": 1,
+      "expected_result": true,
+      "output": "FATAL: /home/ubuntu/wt/qkv-static-join-1016/rtl/test/qwen_static_kv/tb_static_boot_dispatch.sv:45: claimed setup before actual HBM applications\n       Time: 50256000 Scope: tb_static_boot_dispatch"
+    }
+  ],
+  "actual_component": {
+    "config_images": 9,
+    "exact_writes": 4992,
+    "pc_destinations": 128,
+    "group_destinations": 32,
+    "guard": "actual HOST image order/epoch/fault and terminal sink application; final ISA digest is real HOST output"
+  },
+  "scope": "Actual dispatcher with explicit authorized HOST replay boundary stimuli and independent destination/data scoreboard; no child or memory results supplied or claimed.",
+  "native_full_layer": false,
+  "physical_qualified": false,
+  "gaps": [
+    "actual target-aware HOST source+dispatcher native replay join",
+    "actual boot CDC queues and child application acknowledgements",
+    "actual child configuration/fault source wiring and physical qualification"
+  ]
+}

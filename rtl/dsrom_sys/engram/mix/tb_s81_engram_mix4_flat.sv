@@ -8,12 +8,13 @@
 // Checks: exact BF16 output of all four copies, 640 writes, tag, no repeat,
 // no unrequested return, every request answered at exactly the fixed latency,
 // four writes per beat to distinct rows, and the cycle count.
-module tb_s81_engram_mix4_flat #(parameter MUT=0, HLAYOUT=1, BANKED=0, DU=1, DD=6, DW=7, DC=8, DQ=1, DR=1, DS=6);
+// VML (default 1 = historical bench) = MIX4 VM_LAT (production RL16 -> 17): VML-1 extra return pipeline stages; WCL = WRITE_COMMIT_LAT.
+module tb_s81_engram_mix4_flat #(parameter MUT=0, HLAYOUT=1, BANKED=0, DU=1, DD=6, DW=7, DC=8, DQ=1, DR=1, DS=6, VML=1, WCL=1);
  localparam integer NST=4*DU+20*DD+6*DD+16*DD+4*DW+16*DW+4*DC+DQ+DR+4*DS, NCK=208+20+4+16+1+4+NST;
  reg clk=0;always #1 clk=~clk;
  reg [63:0] cfg[0:0];reg rst=0;reg [84:0] cmd=0;wire [8:0] done;wire [1:0] st;wire [19:0] rq;wire [279:0] addr;
- reg [19:0] rv=0;reg [10239:0] rd=0;wire [3:0] wv;wire [55:0] wa;wire [63:0] mask;wire [2047:0] wd;
- dsfd_engram_mix4_flat #(.MUT(MUT),.HLAYOUT(HLAYOUT),.DU(DU),.DD(DD),.DW(DW),.DC(DC),.DQ(DQ),.DR(DR),.DS(DS)) dut({NCK{clk}},rst,cmd,done,st,
+ reg [19:0] rv0=0;reg [10239:0] rd0=0;wire [19:0] rv;wire [10239:0] rd;wire [3:0] wv;wire [55:0] wa;wire [63:0] mask;wire [2047:0] wd;
+ dsfd_engram_mix4_flat #(.MUT(MUT),.HLAYOUT(HLAYOUT),.VM_LAT(VML),.WRITE_COMMIT_LAT(WCL),.DU(DU),.DD(DD),.DW(DW),.DC(DC),.DQ(DQ),.DR(DR),.DS(DS)) dut({NCK{clk}},rst,cmd,done,st,
  rq,addr,rv,rd,wv,wa,mask,wd);
  reg [1023:0] hm[0:639],km[0:639],wm[0:639],vm[0:159],ym[0:639];reg [511:0] mem[0:16383];
  function automatic [13:0] bankrow(input integer base,b,lane,vs);
@@ -24,8 +25,8 @@ module tb_s81_engram_mix4_flat #(parameter MUT=0, HLAYOUT=1, BANKED=0, DU=1, DD=
  endfunction
  string dir;integer cyc=0,i,j,l,m,bad=0,writes=0,reads=0,start,measured,first_w=-1,last_w=-1;
  always @(posedge clk)begin
-  cyc<=cyc+1;rv<=rq;
-  for(l=0;l<20;l=l+1)if(rq[l])begin rd[512*l+:512]<=mem[addr[14*l+:14]];reads=reads+1;end
+  cyc<=cyc+1;rv0<=rq;
+  for(l=0;l<20;l=l+1)if(rq[l])begin rd0[512*l+:512]<=mem[addr[14*l+:14]];reads=reads+1;end
   for(l=0;l<4;l=l+1)if(wv[l])begin
    if(mask[16*l+:16]!=16'hffff)$fatal(1,"bad write mask");
    for(m=0;m<l;m=m+1)if(wv[m]&&wa[14*m+:14]==wa[14*l+:14])$fatal(1,"two writes one row");
@@ -35,6 +36,12 @@ module tb_s81_engram_mix4_flat #(parameter MUT=0, HLAYOUT=1, BANKED=0, DU=1, DD=
   if(st[0])$fatal(1,"endpoint fault cyc=%0d cluster_faults=%b ep=%b top=%b",cyc,dut.c_fault_q,dut.ctl.epf,dut.ctl.fault);
   if(cyc>10000)$fatal(1,"timeout");
  end
+ generate if(VML<=1)begin:g_vm1 assign rv=rv0;assign rd=rd0;end else begin:g_vmp
+  reg [19:0] pv[1:VML-1];reg [10239:0] pd[1:VML-1];integer t;
+  always @(posedge clk)begin pv[1]<=rv0;pd[1]<=rd0;for(t=2;t<VML;t=t+1)begin pv[t]<=pv[t-1];pd[t]<=pd[t-1];end end
+  initial for(t=1;t<VML;t=t+1)pv[t]=0;
+  assign rv=pv[VML-1];assign rd=pd[VML-1];
+ end endgenerate
  initial begin
   if(!$value$plusargs("dir=%s",dir))$fatal(1,"dir required");
   $readmemh({dir,"/cfg.mem"},cfg);$readmemh({dir,"/h.mem"},hm);$readmemh({dir,"/k.mem"},km);$readmemh({dir,"/w.mem"},wm);$readmemh({dir,"/v.mem"},vm);$readmemh({dir,"/y.mem"},ym);

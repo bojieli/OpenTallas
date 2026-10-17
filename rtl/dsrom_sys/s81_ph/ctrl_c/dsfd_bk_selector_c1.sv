@@ -20,8 +20,14 @@
 module dsfd_selt_xq #(parameter integer MUT = 0) (
     input  wire [0:0]       ck, rst,
     input  wire [514:0]     i_sw,           // die lane {fault, live, data 512, valid}
-    output reg  [4*515-1:0] o_lanes         // {NE, NW, SE, SW} as dsfd_bk_selector
+    output wire [514:0]     o_sw,           // lane SW (pin flop, passed on)            = old o_lanes[0 +: 515]
+    output wire [3*515-1:0] o_x             // synthesised {NE, NW, SE} empty quarters = old o_lanes[515 +: 1545]
 );
+    // r2 (S-ELEM-PQ 2026-10-16, closure-first after s81sel_xq x3 native launch / x4 congestion): SAME cycle behaviour as r1;
+    // (a) the output is split in two ports so the pin plan can give the SW pass-through its own wide face range;
+    // (b) only the control bits {fault, live, valid} take the (local) reset, data bits are plain flops (no 598-load reset
+    //     net; data is don't-care while valid = 0, as before); (c) the synthesised quarters keep flops only on the bits
+    //     that ever change (valid, k, qslot, beat flag, tag, type, live): every other bit is the constant it always was.
     reg [1:0] rs_q;
     always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rs_q <= 2'b00; else rs_q <= {rs_q[0], 1'b1};
     wire rn = rs_q[1];
@@ -31,24 +37,44 @@ module dsfd_selt_xq #(parameter integer MUT = 0) (
     wire [7:0]  tag = p[508:501];                            // data[507:500]
     wire [9:0]  k   = p[30:21];                              // data[29:20]
     wire [1:0]  r   = p[32:31];                              // data[31:30]
+    // SW lane: data flops without reset, control flops with reset
+    reg [511:0] sw_d; reg sw_v, sw_l, sw_f;
+    always @(posedge ck[0]) sw_d <= p[512:1];
+    always @(posedge ck[0] or negedge rn)
+        if (!rn) begin sw_v <= 1'b0; sw_l <= 1'b0; sw_f <= 1'b0; end
+        else begin sw_v <= p[0]; sw_l <= p[513]; sw_f <= p[514]; end
+    assign o_sw = {sw_f, sw_l, sw_d, sw_v};
+    // synthesised quarters: one state machine, per-lane qslot only
     reg  [1:0]  ph;                                          // 1: header sent, beat next
-    reg  [7:0]  tg_q; reg [9:0] k_q; reg [1:0] r_q;
+    reg  [7:0]  tg_q;
+    reg         x_v, x_l, x_bt;                              // valid, live, beat flag (data bit 272 of a type-2 word)
+    reg  [3:0]  x_ty; reg [7:0] x_tg; reg [9:0] x_k; reg [1:0] x_r [1:3];
     integer j;
     always @(posedge ck[0] or negedge rn)
-        if (!rn) begin o_lanes <= {4{515'd0}}; ph <= 2'd0; tg_q <= 0; k_q <= 0; r_q <= 0; end
+        if (!rn) begin ph <= 2'd0; x_v <= 1'b0; x_l <= 1'b0; end
         else begin
-            o_lanes[0 +: 515] <= p;                          // SW
-            for (j = 1; j < 4; j = j + 1) o_lanes[515 * j +: 515] <= {1'b0, 1'b1, 512'd0, 1'b0};   // live, idle
-            if (hv) begin
-                tg_q <= tag; k_q <= k; r_q <= r; ph <= 2'd1;
-                for (j = 1; j < 4; j = j + 1)
-                    o_lanes[515 * j +: 515] <= {1'b0, 1'b1, 4'd1, tag, 468'd0, 2'(MUT == 1 ? r : (r + j)), k, 20'd0, 1'b1};
-            end else if (ph == 2'd1) begin
-                ph <= 2'd0;
-                for (j = 1; j < 4; j = j + 1)
-                    o_lanes[515 * j +: 515] <= {1'b0, 1'b1, 4'd2, tg_q, 227'd0, 1'b1, 16'd0, 256'd0, 1'b1};
-            end
+            x_l <= 1'b1;
+            if (hv) begin ph <= 2'd1; x_v <= 1'b1; end
+            else if (ph == 2'd1) begin ph <= 2'd0; x_v <= 1'b1; end
+            else x_v <= 1'b0;
         end
+    always @(posedge ck[0]) begin                            // data: no reset (don't-care while x_v = 0)
+        if (hv) begin
+            tg_q <= tag; x_ty <= 4'd1; x_tg <= tag; x_k <= k; x_bt <= 1'b0;
+            for (j = 1; j < 4; j = j + 1) x_r[j] <= 2'(MUT == 1 ? r : (r + j));
+        end else if (ph == 2'd1) begin
+            x_ty <= 4'd2; x_tg <= tg_q; x_k <= 10'd0; x_bt <= 1'b1;
+            for (j = 1; j < 4; j = j + 1) x_r[j] <= 2'd0;
+        end else begin
+            x_ty <= 4'd0; x_tg <= 8'd0; x_k <= 10'd0; x_bt <= 1'b0;
+            for (j = 1; j < 4; j = j + 1) x_r[j] <= 2'd0;
+        end
+    end
+    genvar g;
+    generate for (g = 1; g < 4; g = g + 1) begin : g_x
+        // {fault 0 [514], live [513], type [512:509], tag [508:501], 227'0, beat flag [273], 240'0, qslot [32:31], k [30:21], 20'0, valid [0]} (r1 positions)
+        assign o_x[515 * (g - 1) +: 515] = {1'b0, x_l, x_ty, x_tg, 227'd0, x_bt, 240'd0, x_r[g], x_k, 20'd0, x_v};
+    end endgenerate
 endmodule
 
 module dsfd_bk_selector_c1 #(parameter integer MUT = 0) (
@@ -60,7 +86,7 @@ module dsfd_bk_selector_c1 #(parameter integer MUT = 0) (
     input wire [84:0] c_cmd, output wire [8:0] c_done, output wire [1:0] c_st
 );
     wire [4*515-1:0] ln;
-    dsfd_selt_xq #(.MUT(MUT)) u_xq (.ck(ck), .rst(rst), .i_sw(iSW), .o_lanes(ln));
+    dsfd_selt_xq #(.MUT(MUT)) u_xq (.ck(ck), .rst(rst), .i_sw(iSW), .o_sw(ln[0 +: 515]), .o_x(ln[515 +: 1545]));
     dsfd_bk_selector u_s (.ck(ck), .iNE(ln[3*515 +: 515]), .iNW(ln[2*515 +: 515]), .iSE(ln[515 +: 515]), .iSW(ln[0 +: 515]),
         .rst(rst), .vd(vd), .vf(vf));
     dsfd_dw_ep_s u_dw (.ck(ck), .rst(rst), .vh({vd[513:502], vd[493:482], vd[1], vd[0]}), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st));

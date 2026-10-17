@@ -1,0 +1,31 @@
+{
+  "cell": "hfd_vms_bank_native_q0",
+  "view": "/home/ubuntu/artifacts/hsm-0825/nat2_q0",
+  "lib_cell": "hfd_vms_bank_native_q0",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 672.0,
+  "spread_ps": 88.3,
+  "outputs": 1851,
+  "inputs": 2060,
+  "launch_ps": 258.5,
+  "launch_pin": "rr0[13]",
+  "capture_ps": 207.5,
+  "capture_pin": "rq0[5]",
+  "launch_over": 711,
+  "capture_over": 42,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 258.46094 > 220 (711 pins); capture 207.45874 > 190 (42 pins)",
+  "status": "NATIVE_FAIL_UNADOPTED",
+  "route_tt_ps": 50.28,
+  "route_ff_ps": 10.06,
+  "route_drc": 0,
+  "images_reviewed": [
+    "/home/ubuntu/artifacts/hsm-0825/nat2_q0_images/density.png"
+  ],
+  "structural_next": "new master with four face-local related raw clock entries plus core/SRAM; move existing capture/response flops, no extra data edges; typed source/pin grant and complete native proof required"
+}

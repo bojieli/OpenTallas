@@ -1,0 +1,332 @@
+{
+ "case": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs13i-seqst/case_kv",
+ "insts": 23153,
+ "nets": 64677,
+ "nopin_nets": 1,
+ "pin_overlaps": 8,
+ "pin_overlap_examples": [
+  [
+   "qkd_astk",
+   "M8",
+   "ck_c[0]",
+   "ck_z0[0]"
+  ],
+  [
+   "qkd_astk",
+   "M8",
+   "ck_c[0]",
+   "ck_z2[0]"
+  ],
+  [
+   "qkd_astk",
+   "M8",
+   "ck_z0[0]",
+   "ck_z2[0]"
+  ],
+  [
+   "qkd_astk",
+   "M8",
+   "ck_z1[0]",
+   "ck_z3[0]"
+  ],
+  [
+   "qkd_astk_n",
+   "M8",
+   "ck_c[0]",
+   "ck_z0[0]"
+  ],
+  [
+   "qkd_astk_n",
+   "M8",
+   "ck_c[0]",
+   "ck_z2[0]"
+  ],
+  [
+   "qkd_astk_n",
+   "M8",
+   "ck_z0[0]",
+   "ck_z2[0]"
+  ],
+  [
+   "qkd_astk_n",
+   "M8",
+   "ck_z1[0]",
+   "ck_z3[0]"
+  ]
+ ],
+ "pin_overlaps_by_master": {
+  "qkd_astk": 4,
+  "qkd_astk_n": 4
+ },
+ "util": 0.566,
+ "placed_mm2": 154.24,
+ "max_fanout_nonclk": {
+  "net": "n_rst_die_t8_1_2__r2[0]",
+  "pins": 290
+ },
+ "hops_over_reach": {
+  "reach_um": 401.0,
+  "nets": 7225,
+  "bits": 43494,
+  "worst": [
+   {
+    "um": 12304.9,
+    "net": "n_rst_hbm_t3_2_0[0]",
+    "bits": 1,
+    "pins": 42
+   },
+   {
+    "um": 12281.6,
+    "net": "n_rst_hbm_t1_0_0[0]",
+    "bits": 1,
+    "pins": 42
+   },
+   {
+    "um": 12244.4,
+    "net": "n_rst_die_t1_0_0[0]",
+    "bits": 1,
+    "pins": 41
+   },
+   {
+    "um": 12224.5,
+    "net": "n_rst_die_t3_2_0[0]",
+    "bits": 1,
+    "pins": 40
+   },
+   {
+    "um": 12077.0,
+    "net": "n_rst_hbm_t13_0_0[0]",
+    "bits": 1,
+    "pins": 34
+   },
+   {
+    "um": 11947.9,
+    "net": "n_rst_hbm_t12_0_0[0]",
+    "bits": 1,
+    "pins": 34
+   },
+   {
+    "um": 11917.7,
+    "net": "n_rst_die_t13_0_0[0]",
+    "bits": 1,
+    "pins": 33
+   },
+   {
+    "um": 11894.3,
+    "net": "n_rst_die_t12_0_0[0]",
+    "bits": 1,
+    "pins": 33
+   },
+   {
+    "um": 10461.6,
+    "net": "n_rst_die_t8_1_0__r1[0]",
+    "bits": 1,
+    "pins": 290
+   },
+   {
+    "um": 10448.6,
+    "net": "n_rst_die_t8_1_2__r2[0]",
+    "bits": 1,
+    "pins": 290
+   },
+   {
+    "um": 9331.2,
+    "net": "n_pvw_1__u_pair_cmd[31]",
+    "bits": 1,
+    "pins": 32
+   },
+   {
+    "um": 9331.2,
+    "net": "n_pvw_0__u_pair_cmd[31]",
+    "bits": 1,
+    "pins": 32
+   },
+   {
+    "um": 2502.5,
+    "net": "n_rst_die_t7_1_0__m[0]",
+    "bits": 1,
+    "pins": 112
+   },
+   {
+    "um": 2417.2,
+    "net": "n_rst_die_t6_1_0[0]",
+    "bits": 1,
+    "pins": 112
+   },
+   {
+    "um": 2396.2,
+    "net": "n_rst_die_t1_7_0[0]",
+    "bits": 1,
+    "pins": 113
+   },
+   {
+    "um": 2119.4,
+    "net": "n_rst_die_t3_5_0[0]",
+    "bits": 1,
+    "pins": 78
+   },
+   {
+    "um": 2052.4,
+    "net": "n_rst_die_t2_0[0]",
+    "bits": 1,
+    "pins": 45
+   },
+   {
+    "um": 2021.2,
+    "net": "n_rst_die_t1_0[0]",
+    "bits": 1,
+    "pins": 47
+   },
+   {
+    "um": 1963.7,
+    "net": "n_rst_die_t1_6_0[0]",
+    "bits": 1,
+    "pins": 76
+   },
+   {
+    "um": 1944.4,
+    "net": "n_rst_die_t3_3_0[0]",
+    "bits": 1,
+    "pins": 77
+   },
+   {
+    "um": 1925.0,
+    "net": "n_rst_die_t2_5_0[0]",
+    "bits": 1,
+    "pins": 77
+   },
+   {
+    "um": 1922.8,
+    "net": "n_rst_die_t4_3_0[0]",
+    "bits": 1,
+    "pins": 78
+   },
+   {
+    "um": 1916.3,
+    "net": "n_rst_die_t0_5_2__m[0]",
+    "bits": 1,
+    "pins": 75
+   },
+   {
+    "um": 1915.0,
+    "net": "n_rst_die_t10_0_0[0]",
+    "bits": 1,
+    "pins": 77
+   },
+   {
+    "um": 1897.4,
+    "net": "n_rst_die_t2_8_0[0]",
+    "bits": 1,
+    "pins": 76
+   },
+   {
+    "um": 1887.9,
+    "net": "n_rst_die_t7_2_0[0]",
+    "bits": 1,
+    "pins": 76
+   },
+   {
+    "um": 1868.0,
+    "net": "n_rst_die_t0_7_2__m[0]",
+    "bits": 1,
+    "pins": 75
+   },
+   {
+    "um": 1858.4,
+    "net": "n_rst_die_t4_6_0[0]",
+    "bits": 1,
+    "pins": 77
+   },
+   {
+    "um": 1850.2,
+    "net": "n_rst_die_t9_2_0[0]",
+    "bits": 1,
+    "pins": 76
+   },
+   {
+    "um": 1846.4,
+    "net": "n_rst_die_t1_8_2__m[0]",
+    "bits": 1,
+    "pins": 75
+   }
+  ]
+ },
+ "region_nets": 0,
+ "region_over_max": 0,
+ "region_worst": [],
+ "region_trunk_max_um": 0,
+ "clock_worst": [
+  {
+   "net": "n_clk_core_c",
+   "bbox_um": [
+    9374,
+    25034
+   ],
+   "sinks": 7427,
+   "trunk_um": 11000
+  },
+  {
+   "net": "n_clk_core_ES",
+   "bbox_um": [
+    4139,
+    23544
+   ],
+   "sinks": 1423,
+   "trunk_um": 17624
+  },
+  {
+   "net": "n_clk_core_WS",
+   "bbox_um": [
+    4366,
+    23436
+   ],
+   "sinks": 1419,
+   "trunk_um": 18564
+  },
+  {
+   "net": "n_clk_core_c[0]",
+   "bbox_um": [
+    972,
+    19466
+   ],
+   "sinks": 578,
+   "trunk_um": 0
+  },
+  {
+   "net": "n_clk_core_EN",
+   "bbox_um": [
+    4074,
+    12139
+   ],
+   "sinks": 994,
+   "trunk_um": 8689
+  },
+  {
+   "net": "n_clk_core_WN",
+   "bbox_um": [
+    4366,
+    12118
+   ],
+   "sinks": 967,
+   "trunk_um": 9752
+  },
+  {
+   "net": "n_clk_core_WN[0]",
+   "bbox_um": [
+    3491,
+    11871
+   ],
+   "sinks": 2841,
+   "trunk_um": 0
+  },
+  {
+   "net": "n_clk_core_EN[0]",
+   "bbox_um": [
+    3491,
+    11871
+   ],
+   "sinks": 2841,
+   "trunk_um": 0
+  }
+ ]
+}

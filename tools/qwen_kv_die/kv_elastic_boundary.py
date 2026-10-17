@@ -37,7 +37,12 @@ MISSING_PRODUCERS = {
 WRITER_LINK_MAP = {
     "word_valid": "kvn_word_valid", "word_tag": "kvn_word_tag", "word_data": "kvn_word_data",
     "word_identity": "kvn_word_identity", "word_generation": "kvn_word_generation",
-    "compiled_word_slot": "kvn_word_slot", "compiled_word_index": "kvn_word_index",
+}
+# v1.5: independently timed expectations are never the link's observed slot
+# echo. The same programme may supply the receiver identity expectations.
+WRITER_PROGRAMME_MAP = {
+    "compiled_word_slot": "compiled_word_slot", "compiled_word_index": "compiled_word_index",
+    "compiled_identity": "compiled_identity", "compiled_generation": "compiled_generation",
 }
 OPEN_JOINS = [
     "Bind cfg_stack to the actual two-bit package stack strap; retain the physical PC strap and logical landing PC mapping.",
@@ -101,6 +106,7 @@ def inventory(root, model, bindings):
         selected_modules=dict(sorted(counts.items())), required_module_deficits=deficits,
         missing_production_producers=MISSING_PRODUCERS,
         available_writer_link_map=WRITER_LINK_MAP,
+        independent_writer_programme_map=WRITER_PROGRAMME_MAP,
         program_loader_limit="Existing loader exports pr143, program_ready, fault, digest64, program_epoch16, authorized_footer_valid/footer64; no KV reservation or D2D calendar-image output. Native pr is a distinct program interface.",
         nominal_calendar_limit="Produces raw/nominal corrected slots from reservations; does not issue reservations or the elastic block/core programme.",
         required_parameters=dict(controller=dict(ELASTIC=1, RAW_WD=256, TQD=64),

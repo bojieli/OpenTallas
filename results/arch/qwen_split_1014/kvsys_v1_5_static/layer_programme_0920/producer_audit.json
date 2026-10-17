@@ -1,0 +1,69 @@
+{
+  "schema": "opentallas.qwen_kv_static.control_producer_audit.v1",
+  "status": "ACTUAL_CONTROL_COMPONENT_NOT_FULL_NATIVE_DIE",
+  "real_reusable_sources": [
+    {
+      "path": "rtl/qwen_sys/host_20261013/qkd_host_program_loader.sv",
+      "interface": "Actual mapped-SRAM authorized replay pr143; program_ready/digest/epoch/footer. No KV image-target output today."
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv",
+      "interface": "Actual authoritative HOST/native token context and program identity. Interface idle alone is not queued HOST quiet."
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv",
+      "interface": "Actual native59 descriptor+guard+record controller. Requires independent issue/run, context and calendar176; link actual payload is data only."
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv",
+      "interface": "New actual all36 fixed-root source; captures independent program digest/epoch and authoritative token metadata; no ready/data schedules events."
+    },
+    {
+      "path": "tools/qwen_static_kv/layer_programme.py",
+      "interface": "327-word assembler plus actual ISA/sourceplan/profile pin gate. Component or even source/path-bound image remains noninstallable until native composition witness."
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv",
+      "interface": "Actual fixed enter/leave ownership and 32 local drain guards; all HOST and upstream actual quiet inputs remain mandatory."
+    }
+  ],
+  "legacy_rejected": {
+    "path": "rtl/physical/ot_qwen_kv_centre_slots.sv",
+    "reason": "qkd_seq_core/ot_qkvd_seq_m_ctl is credit-era; cannot be silently reused as production static-control producer."
+  },
+  "latest_candidate_dependencies": {
+    "writer_ingress": "af848e3a5 (source9d4b7505b), actualVMAP1 independent programme and +3 local native edges, no physical grant",
+    "context_calendar": "f93d4f3ea+18fd3280f, actual varying T counts/ordinals; protected partial-context idle-refresh and K orderB padding defects remain explicit",
+    "controller_drain": "98851baa5, plus latest STRAP_CDC/DRAIN source chosen by Q-KVSYS"
+  },
+  "source_template": {
+    "instances": 342,
+    "unbound_inputs": 4613,
+    "unpriced_parameters": 96,
+    "source_parameter_gaps": {
+      "wprg": {
+        "required": [
+          "MUT",
+          "VMAP"
+        ],
+        "supported": [
+          "MUT"
+        ]
+      }
+    }
+  },
+  "actual_missing_producers": [
+    "HOST image-target decoder/root routing for the new real boot config streams",
+    "actual fixed-phase core-to-HBM ctrl/k/v launches with held metadata, safe sampling phases, measured pin/relay ages; async variable-delay issue is not a production substitute",
+    "native attention calendar176 and rx/tx/end configuration from actual context-parametric compiler/hardware",
+    "upstream QM/bridge/dispatch quiet/fault and full actual HOST queued-debt admission isolation",
+    "full static native controller/landing/writer/link/ECTL/head/PV/collective composition and physical qualification"
+  ],
+  "qualification": {
+    "graph_tests": 17,
+    "compiler_assembler_tests": 9,
+    "actual_RTL_control_bench": "72 stage frames/504 control events across2 persistent tokens PASS;3 true mutants FAIL; Verilator5.050 lint clean",
+    "native_full_layer": false,
+    "physical_qualified": false
+  }
+}

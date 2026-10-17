@@ -1,0 +1,151 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hcoll_v5_issuer",
+ "top": "ot_hgi_coll_issuer_m",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  315.36,
+  324.0
+ ],
+ "core": [
+  2.16,
+  2.16,
+  313.2,
+  321.84
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "uop_d1",
+   "busy_d3",
+   "done_d3",
+   "start_d3",
+   "tap_iteration",
+   "tap_steps"
+  ],
+  "N": [
+   "clk_control",
+   "rst_n",
+   "cfg",
+   "start",
+   "start_pc",
+   "busy",
+   "done",
+   "fault",
+   "uop_v",
+   "uop_pc"
+  ],
+  "S": [
+   "busy_d2",
+   "start_d2"
+  ]
+ },
+ "clock_port": "clk_control",
+ "blocks": [
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "u_issuer.g_mem[0].u_bank.u_sram",
+   "idx": 0,
+   "x": 81.216,
+   "y": 23.76,
+   "w": 171.288,
+   "h": 77.784,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "u_issuer.g_mem[1].u_bank.u_sram",
+   "idx": 0,
+   "x": 81.216,
+   "y": 123.12,
+   "w": 171.288,
+   "h": 77.784,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "u_issuer.g_mem[2].u_bank.u_sram",
+   "idx": 0,
+   "x": 81.216,
+   "y": 222.48,
+   "w": 171.288,
+   "h": 77.784,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [],
+ "referenced": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v6.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "physical/ref_tile/hcoll_v5_issuer/kit.env",
+  "physical/ref_tile/hcoll_v5_issuer/clock.sdc",
+  "physical/ref_tile/hcoll_v5_issuer/signoff.sdc",
+  "physical/ref_tile/hcoll_v5_issuer/pdn.tcl",
+  "physical/ref_tile/hcoll_v5_issuer/pre_cts.tcl",
+  "physical/ref_tile/hcoll_v5_issuer/post_cts.tcl",
+  "physical/ref_tile/hcoll_v5_issuer/post_grt.tcl",
+  "physical/ref_tile/hcoll_v5_issuer/pre_drt.tcl",
+  "physical/ref_tile/hcoll_v5_issuer/pre_fill.tcl",
+  "physical/ref_tile/hcoll_v5_issuer/post_fill.tcl",
+  "physical/ref_tile/hcoll_v5_issuer/pre_grt.tcl",
+  "physical/ref_tile/hcoll_v5_issuer/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/sram_edge_guard.tcl",
+  "physical/common_flow/macro_edge_via_guard.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/hcoll_v5_issuer/pre_gpl.tcl",
+  "physical/ref_tile/hcoll_v5_issuer/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ss.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ss.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ss.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+  "physical/ref_tile/hcoll_v5_issuer/place.tcl"
+ ]
+}

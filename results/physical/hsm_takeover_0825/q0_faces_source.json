@@ -1,0 +1,46 @@
+{
+  "status": "SOURCE_CANDIDATE_ONLY",
+  "normal_edges_added": 0,
+  "return_edges": 7,
+  "write_done_edges": 4,
+  "clock_ports": [
+    "clk",
+    "clk_n",
+    "clk_s",
+    "clk_e",
+    "clk_w"
+  ],
+  "input_face_ownership": {
+    "w": [
+      "rq0",
+      "rq4",
+      "wq0",
+      "xq"
+    ],
+    "e": [
+      "rq1",
+      "wq1",
+      "xq2"
+    ],
+    "s": [
+      "rq3",
+      "dq",
+      "pq"
+    ],
+    "n": [
+      "rq2",
+      "kq",
+      "bid",
+      "sid",
+      "rslot_v",
+      "rslot",
+      "wslot_v",
+      "wslot"
+    ]
+  },
+  "files": {
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv": "7cc36b7bdf52ad1c4647589acede3efd20cf4ee996a429319f0e807165d4aa97",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv": "d8ca47c2235396be839cdc99b9a9f8341254de670b81892755814dff4cfbe0c4",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv": "8a37dc1eb1e2bcf8a799eec37301ffe913f76e58ec9bd70cce12d6efa1ed361d"
+  }
+}

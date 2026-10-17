@@ -1,0 +1,27 @@
+{
+  "source_commit": "c5fca83c5",
+  "exact_cases": 9,
+  "exact_mismatches": 0,
+  "exact_timeouts": 0,
+  "actual_roots": 128,
+  "status_fault_mutant": {
+    "eq_mismatches": 2121,
+    "dut_fault": 1,
+    "caught": true,
+    "unit": "oth-ubuntu-3990973-1792165107"
+  },
+  "kswap_mutant": {
+    "eq_mismatches": 121697,
+    "mismatching_roots": 128,
+    "caught": true,
+    "unit": "oth-ubuntu-3990984-1792165107"
+  },
+  "base_unit": "oth-ubuntu-3931275-1792164831",
+  "normal_edges_added": 0,
+  "initialization_edges_added": 0,
+  "source_files_verified": 30,
+  "source_hash_mismatches": 0,
+  "physical_qualified": false,
+  "canonical_full_token_qualified": false,
+  "note": "Full-shape capture-only comparison against original rd64/gather capture reference; no native parent qualification."
+}

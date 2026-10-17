@@ -1,0 +1,226 @@
+{
+  "scope": "Every declared leaf synthesis source; differences in unused front definitions explicitly retained, no whole-tree rebinding",
+  "sources": {
+    "rtl/s81/ot_s81_bf_seam.sv": {
+      "gate_sha256": "cc40967fc956cbd25a09d2b320aa8f75e4786d97a85aaee5f2620e9e58ab08ff",
+      "review_sha256": "786c8542f81371e3a7a63962ff0ce83136f3c6873641d89c8d49b48ded5d2fc0",
+      "equal": false
+    },
+    "rtl/s81/ot_s81_bf_native.sv": {
+      "gate_sha256": "0e56508af5ee6827bc9b512591a1698ba7a8196666823c235e099968df1c94b8",
+      "review_sha256": "0e56508af5ee6827bc9b512591a1698ba7a8196666823c235e099968df1c94b8",
+      "equal": true
+    },
+    "rtl/common/ot_prefix.sv": {
+      "gate_sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+      "review_sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+      "equal": true
+    },
+    "rtl/hdc/ot_hdc_cg.sv": {
+      "gate_sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+      "review_sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+      "equal": true
+    },
+    "rtl/hdc/ot_hdc_delay.sv": {
+      "gate_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "review_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "equal": true
+    },
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+      "gate_sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "review_sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "equal": true
+    },
+    "rtl/hdc/ot_hdc_fpu.sv": {
+      "gate_sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "review_sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "equal": true
+    },
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": {
+      "gate_sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "review_sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_bf16_lanes.sv": {
+      "gate_sha256": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+      "review_sha256": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv": {
+      "gate_sha256": "81e512dd86ba0b58c1ea35ffa20346d4aa691bee8bbb1e87dd49a4183ea1ad48",
+      "review_sha256": "81e512dd86ba0b58c1ea35ffa20346d4aa691bee8bbb1e87dd49a4183ea1ad48",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_bmul2.sv": {
+      "gate_sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+      "review_sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_bterm.sv": {
+      "gate_sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+      "review_sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_bterm2_w10.sv": {
+      "gate_sha256": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+      "review_sha256": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_chain.sv": {
+      "gate_sha256": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+      "review_sha256": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_chain2.sv": {
+      "gate_sha256": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+      "review_sha256": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_fadd.sv": {
+      "gate_sha256": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
+      "review_sha256": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv": {
+      "gate_sha256": "5c46883af2f50721c5d2e4cd30913e03ccb9a2d67800ab88c18af7c282344179",
+      "review_sha256": "5c46883af2f50721c5d2e4cd30913e03ccb9a2d67800ab88c18af7c282344179",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_segtree.sv": {
+      "gate_sha256": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+      "review_sha256": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_segtree2.sv": {
+      "gate_sha256": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+      "review_sha256": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_bmul2_rne_prepare.sv": {
+      "gate_sha256": "5cedb6188e1925ad3389fd22e219d35a9b42d04c2bbd9c5101e14d1b0ef1d0de",
+      "review_sha256": "5cedb6188e1925ad3389fd22e219d35a9b42d04c2bbd9c5101e14d1b0ef1d0de",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv": {
+      "gate_sha256": "2bf1f96455fe42b6b14bd9c1ffa3f79da3021ff0ca9f975644b3d5b555da8cf6",
+      "review_sha256": "2bf1f96455fe42b6b14bd9c1ffa3f79da3021ff0ca9f975644b3d5b555da8cf6",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv": {
+      "gate_sha256": "cce28349aa1403737d2bf38a1da7f0c19472040772fdde0f29ff07a8ae10b9db",
+      "review_sha256": "cce28349aa1403737d2bf38a1da7f0c19472040772fdde0f29ff07a8ae10b9db",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_chain2u2.sv": {
+      "gate_sha256": "c265da065d16babaa1eb5ad557faefd8b42b57da51e0075dd93b814a09e40020",
+      "review_sha256": "c265da065d16babaa1eb5ad557faefd8b42b57da51e0075dd93b814a09e40020",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_kreg.sv": {
+      "gate_sha256": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+      "review_sha256": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_chain3.sv": {
+      "gate_sha256": "4fa02ebdfe2753b5c46516673fb0989c4261e92a8b41f3902d5a6479dd512c35",
+      "review_sha256": "4fa02ebdfe2753b5c46516673fb0989c4261e92a8b41f3902d5a6479dd512c35",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_chain4.sv": {
+      "gate_sha256": "6481fc8830e6d5d8ce433b9e52472260eeff8ed94f3f609e15b49263b77759f3",
+      "review_sha256": "6481fc8830e6d5d8ce433b9e52472260eeff8ed94f3f609e15b49263b77759f3",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_fadd2.sv": {
+      "gate_sha256": "aa07f55d6b16fea496670efed1168f986a4505608b05da092f379d94a18775fb",
+      "review_sha256": "aa07f55d6b16fea496670efed1168f986a4505608b05da092f379d94a18775fb",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_bterm3_w10.sv": {
+      "gate_sha256": "5108a707a3d042619a43dd1800e5c49478c48ece028b2f039107ca04730a2266",
+      "review_sha256": "5108a707a3d042619a43dd1800e5c49478c48ece028b2f039107ca04730a2266",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_bterm4_w10.sv": {
+      "gate_sha256": "a5764f8816a6ef1df3cfc5532d4e936abe71999a1cfc9f5a3f206b9ea7929f28",
+      "review_sha256": "a5764f8816a6ef1df3cfc5532d4e936abe71999a1cfc9f5a3f206b9ea7929f28",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_bterm5_w10.sv": {
+      "gate_sha256": "25911e00e68af26db3717374baa5672d06c7a898fa27ee0ad38baa4ae99d33f5",
+      "review_sha256": "25911e00e68af26db3717374baa5672d06c7a898fa27ee0ad38baa4ae99d33f5",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_bf16_lanes3.sv": {
+      "gate_sha256": "7c86e27d32bc247cf14f26a1616be2cecd214732cabcca10313f0a7c02aa21fb",
+      "review_sha256": "7c86e27d32bc247cf14f26a1616be2cecd214732cabcca10313f0a7c02aa21fb",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_tile_clk.sv": {
+      "gate_sha256": "ba4c5d41484f6b37839d24b2aaa02190210f69a75b3f6a8f8fa62673a4bcd4fd",
+      "review_sha256": "ba4c5d41484f6b37839d24b2aaa02190210f69a75b3f6a8f8fa62673a4bcd4fd",
+      "equal": true
+    },
+    "rtl/v41rom/ot_bf_hdly.sv": {
+      "gate_sha256": "4869bc5fa88d37110380ef79cdb805c771c9b51e93e4beb36ab89657ba134271",
+      "review_sha256": "4869bc5fa88d37110380ef79cdb805c771c9b51e93e4beb36ab89657ba134271",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_bf_col.sv": {
+      "gate_sha256": "0364d57adda8738f4aec1437a710dcd079ea0ee81dcbb3e341076ba717673f3a",
+      "review_sha256": "0364d57adda8738f4aec1437a710dcd079ea0ee81dcbb3e341076ba717673f3a",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_bf_front_core.sv": {
+      "gate_sha256": "183443f37e6eb80305a3d4897a0af6866ce17199ed2e21f5561ed0590bd0154a",
+      "review_sha256": "2c1107487bfbc4d161514aea8adf4e35c3acc9634467ab778ac9603e7e936af5",
+      "equal": false
+    },
+    "rtl/v41rom/ot_v41_segtree3.sv": {
+      "gate_sha256": "7a7f3eb49ef245225d0b55303791c60bf96665f6978dd03cb06b0a75821cd565",
+      "review_sha256": "7a7f3eb49ef245225d0b55303791c60bf96665f6978dd03cb06b0a75821cd565",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_segtree4.sv": {
+      "gate_sha256": "5a7f7acfc21ed32b7f80bc1d251d822a88e22991ef28574246a48e372e726073",
+      "review_sha256": "5a7f7acfc21ed32b7f80bc1d251d822a88e22991ef28574246a48e372e726073",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_segtree5.sv": {
+      "gate_sha256": "7b7c4fe4af2a5cab45678789372c1e34a55dfbd2d9bafd2243b3f752ca5a6d74",
+      "review_sha256": "7b7c4fe4af2a5cab45678789372c1e34a55dfbd2d9bafd2243b3f752ca5a6d74",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_segtree6.sv": {
+      "gate_sha256": "fe4b720228ab4730a7c2fef32943980d12b16b57432616b1f333c9e4bd623dfb",
+      "review_sha256": "fe4b720228ab4730a7c2fef32943980d12b16b57432616b1f333c9e4bd623dfb",
+      "equal": true
+    },
+    "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v": {
+      "gate_sha256": "51204e69cef7398a0f30a125d53bef197696a51cb587cf499e1d41845226e669",
+      "review_sha256": "51204e69cef7398a0f30a125d53bef197696a51cb587cf499e1d41845226e669",
+      "equal": true
+    },
+    "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v": {
+      "gate_sha256": "2c4a7a0c5ce804648a3830d33ec8cba1097e438a2966997d8c07fcd9b1a3d40f",
+      "review_sha256": "2c4a7a0c5ce804648a3830d33ec8cba1097e438a2966997d8c07fcd9b1a3d40f",
+      "equal": true
+    },
+    "rtl/s81/ot_s81_bf_front.sv": {
+      "gate_sha256": "514ef6c3d2570eece1f5df5cf42a1612d765e71e7945562eb76ebe75046d9856",
+      "review_sha256": "01b0163a974fe2583e86d23160c6dadf7d24aa3154dc9cf28900657a7924a17e",
+      "equal": false
+    },
+    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv": {
+      "gate_sha256": "75b505b94b3295c731daa543a778776647b281a117599525bda7c2166bf072e5",
+      "review_sha256": "75b505b94b3295c731daa543a778776647b281a117599525bda7c2166bf072e5",
+      "equal": true
+    },
+    "rtl/v41rom/ot_v41_bf_lane4.sv": {
+      "gate_sha256": "fbd93077394044fb2e459b536f8579cd0119dc3468da1dff2397b9e0e3e25981",
+      "review_sha256": "fbd93077394044fb2e459b536f8579cd0119dc3468da1dff2397b9e0e3e25981",
+      "equal": true
+    }
+  },
+  "actual_leaf_source_identical": true
+}

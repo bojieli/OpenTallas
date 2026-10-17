@@ -1,0 +1,118 @@
+{
+ "name": "qfd_upper_b2_l2_1016",
+ "top": "qfd_band_upper_b2_l2",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+  "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_qwen_w12_arith.sv",
+  "rtl/hdc/ot_qwen_w12_matvec.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/qwen_split/qfd_band_upper_b2_l2.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 86.4,
+  "h": 205.2,
+  "exact": true
+ },
+ "pg_layer": "M5",
+ "pins": {
+  "W": [
+   "pw",
+   "pw_v",
+   "lf"
+  ],
+  "E": [
+   "sel_e",
+   "tv_e",
+   "tt_ty",
+   "tt_use",
+   "tt_v",
+   "fault"
+  ],
+  "N": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "inter": [
+  "*"
+ ],
+ "refglob": "*",
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "codex:Q-PORTMAP-b2",
+  "branch": "codex/q-portmap-b2-0812",
+  "tag": "l2r1",
+  "hold_merge": true,
+  "purpose": "NEW eight two-lane b2 upper roots; candidate exact source-bound pins, synth/CTS qualification before route. No inherited closed view.",
+  "benches": [
+   {
+    "name": "b2_primary_exact",
+    "cmd": "bash rtl/test/qwen_lane_band/qualify_b2_primary.sh {RUN}/bench/b2_primary",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS primary8xNL2",
+    "min_count_regex": "words=330800"
+   },
+   {
+    "name": "b2_return_mutant",
+    "cmd": "bash rtl/test/qwen_lane_band/run_halfband.sh {RUN}/bench/b2_return_mut -GNL=16 -GNOPS=3000 -GSLOT=2 -GRDMEM=1 -GLNK=2 && {RUN}/bench/b2_return_mut/obj/Vtb_qfd_halfband +BREAK_RETURN",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL qfd_halfband finite-phase fault"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_upper_b2_l2_1016/views",
+  "record_to": "results/rtl/ref_tile/qfd_upper_b2_l2_1016"
+ },
+ "macros": [],
+ "children": [],
+ "recipe": 3,
+ "layer_cap": "M5",
+ "io_tcl": "physical/ref_tile/qfd_upper_b2_l2_1016/assigned_pins.tcl",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source has native input pw/pw_v/lf and selector DLY1 stations, registered tt_ty/use/v/fault outputs and RPIN1 reset entry. Preserve exact composition-proven pipeline, no second generated input/output stages. Actual physical pin station packing is pending this gate."
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "inhold": true,
+ "outhold": true,
+ "slot_change_request": "New source-bound candidate assignment Q-COMPUTE-DIE 09:25 artifact copied as assigned_slot.json; any measured area or pin station failure requires a new grant.",
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

@@ -1,0 +1,166 @@
+{
+ "schema": "opentallas.s81.native_forwarded_clock_characterization.v1",
+ "scope": "NATIVE_FIXED_PROFILE_FORWARDED_CLOCK_POLARITY_AND_LATENCY_ONLY",
+ "native_die_clock_qualified": false,
+ "new_tile_closure_claim": false,
+ "source_job": "s81fill_stnv_566x1-f11-15cedae84",
+ "source_commit": "15cedae84afdebfee12a36b59a6b238ef13e1ffa",
+ "immutable_inputs_and_measurement_sha256": {
+  "/srv/opentallas-scratch/claude/closure-loop/s81fill_stnv_566x1-f11-15cedae84/routes/s81fill_stnv_566x1_f11_15cedae84/work/orfs/results/asap7/opentallas_dsfd_stnv_566x1_asap7_ref_s81fill_stnv_566x1_f11_15cedae84/base/6_final.odb": "3cef096cedd488f866ce7fdde8a56910b6642f0d581f1ccb29057a1ca3974d4f",
+  "/srv/opentallas-scratch/claude/closure-loop/s81fill_stnv_566x1-f11-15cedae84/routes/s81fill_stnv_566x1_f11_15cedae84/work/orfs/results/asap7/opentallas_dsfd_stnv_566x1_asap7_ref_s81fill_stnv_566x1_f11_15cedae84/base/6_final.sdc": "1e0a8d2384a07a92ea1a08b3b58eeedb2da83cf76d70ca3fada8939e0903b3df",
+  "/srv/opentallas-scratch/claude/closure-loop/s81fill_stnv_566x1-f11-15cedae84/routes/s81fill_stnv_566x1_f11_15cedae84/work/orfs/results/asap7/opentallas_dsfd_stnv_566x1_asap7_ref_s81fill_stnv_566x1_f11_15cedae84/base/6_final.spef": "b81567eda765a6cfdd6f9281a5b3af8ee6c71dbd9b06939f3feea441f2a4b067",
+  "/srv/opentallas-scratch/claude/closure-loop/s81fill_stnv_566x1-f11-15cedae84/routes/s81fill_stnv_566x1_f11_15cedae84/work/orfs/results/asap7/opentallas_dsfd_stnv_566x1_asap7_ref_s81fill_stnv_566x1_f11_15cedae84/base/6_final.v": "d071b35a33ea18ed8540e1627498339ac2366ae891a3c11e13f28813bd580003",
+  "/srv/opentallas-scratch/codex/s81-forwarded-clock-native-0926/characterize.tcl": "b836482b9f03107655685095e5245c06c1d738af96dbbaded4ecf0157c10198e",
+  "/srv/opentallas-scratch/codex/s81-forwarded-clock-native-0926/run.sh": "e23f1fabef90c8664c55d53d420d373bb879506f4e8863f10266afd9ab033bd0",
+  "/srv/opentallas-scratch/codex/s81-forwarded-clock-native-0926/clock_TT.log": "3ee05cfa831b47b9223e7caa691277d062a9c140b85ba99e5616249ac031be4f",
+  "/srv/opentallas-scratch/codex/s81-forwarded-clock-native-0926/clock_FF.log": "49264247ddd4b544d55ef336a8c94c28e45021e32e4b1c7fbc724e78616d93ff"
+ },
+ "image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+ "physical_basis": "actual CLOSED native final ODB, unchanged retained SDC, real final SPEF, actual TT/FF RVT standard-cell libraries inside the pinned image",
+ "source_clock": {
+  "port": "fi0[0]",
+  "period_ps": 770.0,
+  "setup_uncertainty_ps": 60.0,
+  "hold_uncertainty_ps": 25.0,
+  "constraints": "unchanged",
+  "input_clock_transition": "not explicitly constrained in retained SDC"
+ },
+ "external_clock_output_load": "not explicitly constrained: no set_load on fn0/fo0 in retained SDC; native internal SPEF remains present",
+ "generated_clocks": {
+  "fn0": "native create_generated_clock source fi0 divide_by1, noninverted",
+  "fo0": "native create_generated_clock source fi0 divide_by1 invert; rise385/fall770ps"
+ },
+ "actual_native_gate_cones": {
+  "shared_prefix_backtrace": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx16f_ASAP7_75t_R"
+  ],
+  "fn0": [
+   "output BUFx2_ASAP7_75t_R",
+   "u_fn0b INVx3_ASAP7_75t_R",
+   "u_fn0a INVx3_ASAP7_75t_R",
+   "shared CTS prefix"
+  ],
+  "fo0": [
+   "output BUFx2_ASAP7_75t_R",
+   "u_0_0.active.u_fwd_inv INVx3_ASAP7_75t_R",
+   "shared CTS prefix"
+  ]
+ },
+ "measurements": {
+  "tt": {
+   "fn0": {
+    "rise": {
+     "raw_early_late_ps": [
+      103.459053,
+      112.660278
+     ],
+     "native_generated_edge_ps": 0.0,
+     "intrinsic_early_late_ps": [
+      103.459053,
+      112.660278
+     ]
+    },
+    "fall": {
+     "raw_early_late_ps": [
+      495.047882,
+      503.931793
+     ],
+     "native_generated_edge_ps": 385.0,
+     "intrinsic_early_late_ps": [
+      110.04788200000002,
+      118.93179300000003
+     ]
+    }
+   },
+   "fo0": {
+    "rise": {
+     "raw_early_late_ps": [
+      488.128998,
+      495.815613
+     ],
+     "native_generated_edge_ps": 385.0,
+     "intrinsic_early_late_ps": [
+      103.12899800000002,
+      110.81561299999998
+     ]
+    },
+    "fall": {
+     "raw_early_late_ps": [
+      869.082336,
+      876.746277
+     ],
+     "native_generated_edge_ps": 770.0,
+     "intrinsic_early_late_ps": [
+      99.08233600000005,
+      106.74627699999996
+     ]
+    }
+   }
+  },
+  "ff": {
+   "fn0": {
+    "rise": {
+     "raw_early_late_ps": [
+      80.650528,
+      87.305527
+     ],
+     "native_generated_edge_ps": 0.0,
+     "intrinsic_early_late_ps": [
+      80.650528,
+      87.305527
+     ]
+    },
+    "fall": {
+     "raw_early_late_ps": [
+      468.528992,
+      475.20932
+     ],
+     "native_generated_edge_ps": 385.0,
+     "intrinsic_early_late_ps": [
+      83.52899200000002,
+      90.20931999999999
+     ]
+    }
+   },
+   "fo0": {
+    "rise": {
+     "raw_early_late_ps": [
+      463.83136,
+      469.528687
+     ],
+     "native_generated_edge_ps": 385.0,
+     "intrinsic_early_late_ps": [
+      78.83136000000002,
+      84.52868699999999
+     ]
+    },
+    "fall": {
+     "raw_early_late_ps": [
+      846.69397,
+      852.299316
+     ],
+     "native_generated_edge_ps": 770.0,
+     "intrinsic_early_late_ps": [
+      76.69397000000004,
+      82.29931599999998
+     ]
+    }
+   }
+  }
+ },
+ "load_slew_grid": {
+  "status": "REJECTED_NOT_A_LOADED_CLOCK_MODEL",
+  "remote": "/srv/opentallas-scratch/codex/s81-forwarded-clock-native-profiles-0931",
+  "reason": "All35 requested profiles per corner had identical clock-tag arrivals despite requested input transitions0..150ps and output loads0..50fF. The harness did not establish load/slew sensitivity; these outputs must not become a characterized timing surface.",
+  "next": "Use a fresh native timing context or correctly invalidate/recompute generated-clock source paths and prove sensitivity, then characterize the actual die load/slew envelope. Preserve original native timing/DRC constraints."
+ },
+ "limitations": [
+  "The fixed original native profile proves mapped path/polarity and its original arrival, not arbitrary loaded die-clock delay.",
+  "Exported self-related fn0/fo0 Liberty clock arcs still do not establish fi0-to-forwarded-output propagation in a parent.",
+  "No independent ideal clock may replace the native generated-clock relationship; no fo0/fn0 alias.",
+  "CFIFO successor drops ck/co/rf: real PLL-driven die column branches must feed cr/column/return clocks, while fn0-to-xf/xf2 remains literal.",
+  "Actual complete hard-leaf clocks/R, PG, routed RC, TT/FF and unchanged uncertainties remain required for die clock qualification."
+ ]
+}

@@ -1,0 +1,228 @@
+{
+  "schema": "opentallas.hbm_native_collect.v1",
+  "at": "2026-10-16T16:23:48.729092-07:00",
+  "jobs": {
+    "hep_static_w5e_1016-w5e-314f4f068": {
+      "status": "CLOSED",
+      "reason": "CLOSED TT +207.73 / FF +15.60 ps DRC 0; SS sensitivity -23.12 ps | record claude/h-lkep-1015 ce865dbe7 (22 files) | AUTO-MERGED into main 2e7896ded",
+      "stage_tag": "collect.a1",
+      "source": {
+        "branch": "claude/h-lkep-1015",
+        "commit": "314f4f068",
+        "extra_paths": [
+          "rtl/hbm_accel/tu/ep_static_20261015",
+          "rtl/dsrom_sys/s81_link",
+          "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+          "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+        ]
+      },
+      "metrics": {
+        "ss_ps": 207.73,
+        "ff_ps": 15.6,
+        "drc": 0,
+        "ss_sensitivity_ps": -23.12
+      },
+      "eco_result": {
+        "ss_ps": 207.73,
+        "tt_ps": 207.73,
+        "ff_ps": 15.6,
+        "drc": 0,
+        "sdc_name": "6_final.sdc",
+        "setup_post_sdc": [],
+        "setup_corner": "tt",
+        "ss_sensitivity_ps": -23.12,
+        "cells_added": 5912,
+        "errors": [],
+        "pass": 2,
+        "session": "mm",
+        "window": "endpoints_below_hm 5478 fixable 5478 tight 0 infeasible 0 nodata 0 (hm 35.1 filt 40 accept_ss 0.0 accept_ff 0.0 r 2.4)",
+        "route_strategy": [
+          "incremental_original_guides"
+        ],
+        "score": 15.6,
+        "rank": 15.6
+      }
+    },
+    "hsm_smvm_wrq_t_r4-faces4-c8e94d78d": {
+      "status": "CLOSED",
+      "reason": "CLOSED TT +12.00 / FF +1.16 ps DRC 0; SS sensitivity -307.13 ps | record codex/hbm-element-1246 ac5dd2fae (22 files) | AUTO-MERGED into main b659934a1",
+      "stage_tag": "collect.a1",
+      "source": {
+        "branch": "codex/hbm-element-1246",
+        "commit": "c8e94d78d",
+        "extra_paths": [
+          "rtl/hbm_accel/generic/vm/static",
+          "rtl/hbm_accel/host_static_20261015",
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+          "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+        ]
+      },
+      "metrics": {
+        "ss_ps": 12.0,
+        "ff_ps": 1.16,
+        "drc": 0,
+        "ss_sensitivity_ps": -307.13
+      },
+      "eco_result": {
+        "ss_ps": 12.0,
+        "tt_ps": 12.0,
+        "ff_ps": 1.16,
+        "drc": 0,
+        "sdc_name": "6_final.sdc",
+        "setup_post_sdc": [],
+        "setup_corner": "tt",
+        "ss_sensitivity_ps": -307.13,
+        "cells_added": 268,
+        "errors": [],
+        "pass": 1,
+        "session": "mm",
+        "window": "endpoints_below_hm 361 fixable 314 tight 47 infeasible 0 nodata 0 (hm 24.0 filt 40 accept_ss 0 accept_ff 0 r 2.4)",
+        "route_strategy": [
+          "incremental_original_guides"
+        ],
+        "score": 1.16,
+        "rank": 1.16
+      }
+    },
+    "hgi_sm_xl2_bfqf-cl2f-e44e5aab3": {
+      "status": "NEEDS_RTL",
+      "reason": "TT -9.3 / FF -3.74 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0); hold ECO missed (rc=9): least-bad pass 1 TT -4.04 / FF 13.43 ps / DRC 0",
+      "stage_tag": "summary.a1",
+      "source": {
+        "branch": "claude/hsm-xl2-0230",
+        "commit": "e44e5aab3",
+        "extra_paths": [
+          "physical/asap7_memory_macros",
+          "physical/hbm_xp_aq_tree13_1014",
+          "rtl/hbm_accel/generic/adapters/tb",
+          "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv",
+          "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static.sv",
+          "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl.sv",
+          "rtl/hbm_accel/generic/vm",
+          "rtl/hdc",
+          "rtl/lib/ot_rst_relay.sv",
+          "rtl/link/ot_fifo_sram_fwft.sv",
+          "tools/hbm_sm_xload_static_timing.py"
+        ]
+      },
+      "metrics": {
+        "ss_ps": -9.3,
+        "ff_ps": -3.74,
+        "drc": 0,
+        "ss_sensitivity_ps": -166.87
+      },
+      "eco_result": {
+        "ss_ps": -4.04,
+        "tt_ps": -4.04,
+        "ff_ps": 13.43,
+        "drc": 0,
+        "sdc_name": "6_final.sdc",
+        "setup_post_sdc": [],
+        "setup_corner": "tt",
+        "ss_sensitivity_ps": -166.65,
+        "cells_added": 92,
+        "errors": [],
+        "pass": 1,
+        "session": "mm",
+        "window": "endpoints_below_hm 94 fixable 94 tight 0 infeasible 0 nodata 0 (hm 24.0 filt 40 accept_ss 0 accept_ff 0 r 2.4)",
+        "route_strategy": [
+          "incremental_original_guides"
+        ],
+        "score": -4.04,
+        "rank": -4.04,
+        "chosen": "least_bad"
+      }
+    },
+    "vm_native_q2_faces_g313e-mclkE-68aad3fec": {
+      "status": "RUNNING",
+      "reason": null,
+      "stage_tag": "route.a1",
+      "source": {
+        "branch": "claude/hsm-faces-mclk-1016",
+        "commit": "68aad3fec",
+        "extra_paths": [
+          "rtl/hbm_accel/generic/vm/static",
+          "physical/hbm_vm_native_1016/q2",
+          "results/arch/hbm_die_v16/vm_native_bank_grants_0600.json",
+          "physical/common_flow/assigned_pin_exact.tcl",
+          "physical/common_flow/macro_channel_block.tcl",
+          "physical/common_flow/clock_entries.tcl"
+        ]
+      },
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null,
+        "ss_sensitivity_ps": null
+      },
+      "eco_result": null
+    },
+    "hgi_sm_xq_pegress-x1-ee1d52825": {
+      "status": "RUNNING",
+      "reason": null,
+      "stage_tag": "route.a1",
+      "source": {
+        "branch": "codex/hbm-native-collect-1618",
+        "commit": "ee1d52825",
+        "extra_paths": [
+          "physical/asap7_memory_macros",
+          "physical/hbm_xp_aq_tree13_1014",
+          "rtl/hbm_accel/generic/adapters/tb",
+          "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv",
+          "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static.sv",
+          "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl.sv",
+          "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+          "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+          "rtl/hbm_accel/generic/vm",
+          "rtl/hbm_accel/host_static_20261015",
+          "rtl/hdc",
+          "rtl/lib/ot_rst_relay.sv",
+          "rtl/link/ot_fifo_sram_fwft.sv",
+          "tools/hbm_sm_xload_static_timing.py",
+          "results/hbm_sm_attention_1015/hsm_1552/xql"
+        ]
+      },
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null,
+        "ss_sensitivity_ps": null
+      },
+      "eco_result": null
+    }
+  },
+  "hep5e_cause": {
+    "verdict": "native_capture_fail",
+    "tt_data_ps": 213.039978,
+    "tt_wire_ps_approx": 1.2,
+    "tt_capture_clock_ps": 388.55542,
+    "tt_boundary_mean_ps": 390.4,
+    "ff_data_ps": 135.960053,
+    "ff_external_min_ps": 288.787231,
+    "ff_capture_clock_ps": 337.240906,
+    "ff_uncertainty_ps": 25,
+    "ff_hold_ps": 1.012099,
+    "ff_hold_slack_ps": 61.494282,
+    "existing_eco_hold_margin_ps": 35.1,
+    "ff_removable_padding_first_order_ps": 26.394282,
+    "candidate_last_two_BUFx2": {
+      "names": [
+        "hold21303",
+        "hold17507"
+      ],
+      "tt_delay_ps": 37.432501,
+      "ff_delay_ps": 24.946989,
+      "predicted_capture_ps": 178.327149,
+      "predicted_ff_slack_ps": 36.547293,
+      "status": "first_order_only_REQUIRES_changed_ODB_SPEF_all_corner_all_port_validation"
+    },
+    "next_owner": "native_hold_flow_1627",
+    "clock_warning": "Uniform absolute R reduction alone does not prove improvement: I/O min references move with the boundary clock mean."
+  },
+  "images_viewed": {
+    "hep5e": "No congested gcells. Four north SRAMs; input/pin logic along west and south; no long-wire cause on probed tx_frame path.",
+    "writer": "No congested gcells. Logic west third plus north band; dense west/east pin strips; SRAM north. Native failing inputs are core cfg/desc controls, data face roots themselves are localized.",
+    "pegress": "Fresh floorplan and post-place density viewed. Dense N/S output strips, W capture strip, central selector ring, otherwise sparse. Source-exact preflight passed."
+  },
+  "no_qualified_adoption": true
+}

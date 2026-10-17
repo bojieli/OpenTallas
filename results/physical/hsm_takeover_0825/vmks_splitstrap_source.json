@@ -1,0 +1,17 @@
+{
+  "status": "SOURCE_CANDIDATE_ONLY",
+  "baseline_sha256": "bdf6711507a24564d4a3daaeca27c9b763435b8d94bf3d44f1b8c43d6538b3d6",
+  "source_sha256": "f3df3ba22c862056f02cf0fda1dc5340da73da1e8c6c3688307604e431fd50a6",
+  "port_delta": {
+    "remove": [
+      "sm[2:0]"
+    ],
+    "add": [
+      "sm_stream[2:0]",
+      "sm_hbm[2:0]"
+    ]
+  },
+  "normal_edges_added": 0,
+  "shared_normal_input_waiver": false,
+  "physical_adoption": false
+}

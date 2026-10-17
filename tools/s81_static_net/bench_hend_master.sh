@@ -17,6 +17,8 @@ if [ $mode = mut_offset ]; then
   grep -q "same-clock\|ot_s81_static" "$out/master.sv" || true
   if ! grep -qE "OFFSET\(3\)|MUT\(1\)" "$out/master.sv"; then  # same-clock start: shift the pin pipeline by one stage
     sed -i 's/od_q <= {w_\[/od_q <= {i[/; s/w_\[0\] \& rsl/i[0] \& rsl/' "$out/master.sv"
+    # S-NET-RESID 10-16: input-pin-flop form (i_q) -> bypass the input pin flop (one stage early)
+    sed -i 's/od_q <= {i_q\[\([0-9]*\):1\], i_q\[0\] \& rsl/od_q <= {i[\1:1], i[0] \& rsl/' "$out/master.sv"
   fi
 fi
 defs="-DDUT=$mst"; nl=1; pw=0
@@ -28,7 +30,11 @@ case $mst in
   dsfd_r2l_*) defs="$defs -DR2L"; dw=$(grep -o "input wire \[[0-9]*:0\] di0" "$out/master.sv" | grep -o "[0-9]*" | head -1); pw=$((dw+1-2)); ports=", .di0(di[DW-1:0]), .fi0(fi[0])";;
   dsfd_l2r_*) defs="$defs -DL2R"; w=$(grep -o "input wire \[[0-9]*:0\] i," "$out/master.sv" | grep -o "[0-9]*" | head -1); pw=$w; ports=""
      grep -q "ot_s81_static_ratio_cross" "$out/master.sv" && defs="$defs -DRATIO"
-     grep -q "output wire \[2:0\] st" "$out/master.sv" && defs="$defs -DHAS_ST";;
+     grep -q "output wire \[2:0\] st" "$out/master.sv" && defs="$defs -DHAS_ST"
+     # S-NET-RESID 10-16: split output (oa = od[OA-1:0], ob = {od[top:OA], od[1:0]}) + second forwarded clock fo2
+     if grep -q "output wire \[[0-9]*:0\] oa" "$out/master.sv"; then
+       oa=$(grep -o "output wire \[[0-9]*:0\] oa" "$out/master.sv" | grep -o "[0-9]*" | head -1); defs="$defs -DSPLIT_OAB -DOAW=$((oa+1))"
+     fi;;
 esac
 src=(rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv rtl/dsrom_sys/s81_static_net/ot_s81_static_lane_end.sv
      rtl/dsrom_sys/s81_static_net/ot_s81_static_ratio_cross.sv "$out/master.sv" rtl/dsrom_sys/s81_static_net/test/tb_dsfd_hend_static.sv)

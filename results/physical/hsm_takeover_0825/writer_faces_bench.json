@@ -1,0 +1,17 @@
+{
+  "source_commit": "a77034b47d5fb35cf2d50864f10d9768cede00c0",
+  "scope": "component writer/calendar/real memory positive and semantic negative controls; no physical or die qualification",
+  "cycles_added": 0,
+  "cases": [
+    "baseline PASS",
+    "MUT1 wrong row FAIL2176",
+    "MUT2 wrong phase FAIL184",
+    "MUT3 quad strap ignored FAIL2120",
+    "MUT4 late calendar FAIL",
+    "VM_LAT1 both slot/data delayed PASS",
+    "VM_LAT1 NAT2_MUT1 only data delayed FAIL184"
+  ],
+  "local_log_sha256": "544281a42b8677176f68037b6a52ca8c9c0971b55af5188493c499ce2c738a32",
+  "original_wip_worktree": "/home/ubuntu/wt/hsm-svc-0630",
+  "port_change": "additive *_faces modules preserve existing die ABI; clk_in/W clk_out/E + core/N clock; split data ports at centres"
+}

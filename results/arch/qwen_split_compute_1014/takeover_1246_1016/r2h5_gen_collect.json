@@ -1,0 +1,1259 @@
+{
+ "status": "FULL_GEN_DIAGNOSTIC_GRT_STA_PENDING",
+ "source_commit": "219e84606",
+ "source_host": "ot-epyc4",
+ "source_dir": "/srv/opentallas-scratch/claude/qwen-split-compute/r2h5",
+ "observed_at": "2026-10-16T12:52:00-07:00",
+ "artifact_sha256": {
+  "r2h5_relay_run.json": "e088b55daf11de1a48c19931ce7aba136f33eba7eab35480ea70bb5e42b0cbb7",
+  "r2h5_rom_tp8b.json": "9d731dc0756848093cebfc5a19c0839e9c2226be34f6eb5a2963da6abb27035c",
+  "r2h5_manifest.json": "708ec29a60290761fce9961f11a992a61a419988aaa962d3f9c77e0d6a7944db"
+ },
+ "actual_final_geometry": {
+  "die_um": [
+   32996.16,
+   15815.52
+  ],
+  "area_mm2": 521.851,
+  "instances": 20091,
+  "outside": 0,
+  "SU": {
+   "n": "sp_su64_sfu",
+   "m": "qfd_sp_su64_sfu",
+   "x": 16211.232,
+   "y": 8320.32,
+   "w": 3239.976,
+   "h": 3671.976
+  }
+ },
+ "stale_pre_homes_metadata": {
+  "reported_area_mm2": 840.715,
+  "split_compute_die": [
+   32413.392,
+   25937.28
+  ],
+  "SU": [
+   13856.832,
+   20856.96,
+   3239.976,
+   3671.976
+  ],
+  "interpretation": "These are stale report fields. Actual final rom_tp8b instances and case run.tcl agree; no queued chain was cancelled."
+ },
+ "relays": {
+  "relays": 8686,
+  "masters": 262,
+  "relay_flop_bits": 3479319,
+  "relay_area_mm2": 17.467,
+  "clock_nets_missing": [
+   "clk_serial"
+  ],
+  "max_pin_to_pin_um": 14207.5,
+  "classes": {
+   "corridor": {
+    "buses": 672,
+    "relays": 672,
+    "relay_bits": 346752,
+    "max_hop_um": 426.0,
+    "max_stages": 1
+   },
+   "head_chain": {
+    "buses": 4,
+    "relays": 57,
+    "relay_bits": 89319,
+    "max_hop_um": 6087.4,
+    "max_stages": 33
+   },
+   "tree_block": {
+    "buses": 1232,
+    "relays": 3665,
+    "relay_bits": 1883810,
+    "max_hop_um": 1431.2,
+    "max_stages": 18
+   },
+   "tree_spine": {
+    "buses": 128,
+    "relays": 2572,
+    "relay_bits": 1100458,
+    "max_hop_um": 4437.5,
+    "max_stages": 55
+   },
+   "crom": {
+    "buses": 18,
+    "relays": 48,
+    "relay_bits": 17860,
+    "max_hop_um": 693.7,
+    "max_stages": 9
+   },
+   "sequencer": {
+    "buses": 17,
+    "relays": 300,
+    "relay_bits": 5404,
+    "max_hop_um": 5616.8,
+    "max_stages": 32
+   },
+   "spine_local": {
+    "buses": 148,
+    "relays": 1338,
+    "relay_bits": 27042,
+    "max_hop_um": 10162.2,
+    "max_stages": 73
+   },
+   "coll_fdi": {
+    "buses": 15,
+    "relays": 34,
+    "relay_bits": 8674,
+    "max_hop_um": 1550.9,
+    "max_stages": 6
+   }
+  }
+ },
+ "over_reach": {
+  "count": 247,
+  "by_class": {
+   "spine_local": 70,
+   "head_chain": 3,
+   "sequencer": 6,
+   "tree_spine": 99,
+   "coll_fdi": 5,
+   "tree_block": 63,
+   "crom": 1
+  },
+  "worst": [
+   [
+    "rsi_capture_stride",
+    "spine_local",
+    32,
+    14207.5
+   ],
+   [
+    "rsi_payload_write",
+    "spine_local",
+    1,
+    14203.8
+   ],
+   [
+    "rsi_slot_count",
+    "spine_local",
+    4,
+    14202.6
+   ],
+   [
+    "rsi_train_count",
+    "spine_local",
+    4,
+    14201.1
+   ],
+   [
+    "rsi_train_start",
+    "spine_local",
+    1,
+    14199.9
+   ],
+   [
+    "ng_io_cmd_free_0",
+    "spine_local",
+    1,
+    12169.8
+   ],
+   [
+    "ng_tt_native_tok_0",
+    "spine_local",
+    18,
+    10558.2
+   ],
+   [
+    "ng_tt_native_pos_0",
+    "spine_local",
+    18,
+    10523.5
+   ],
+   [
+    "ng_tt_layer_context_v_0",
+    "spine_local",
+    1,
+    10498.7
+   ],
+   [
+    "ng_tt_command_stage_0",
+    "spine_local",
+    6,
+    10319.5
+   ],
+   [
+    "lnk_kv_x3_slot",
+    "spine_local",
+    1,
+    10146.9
+   ],
+   [
+    "lnk_x3",
+    "spine_local",
+    524,
+    10104.2
+   ],
+   [
+    "lnk_x3_identity",
+    "spine_local",
+    59,
+    10022.2
+   ],
+   [
+    "lnk_x3_generation",
+    "spine_local",
+    2,
+    10008.9
+   ],
+   [
+    "lnk_native_tx_slot_beat",
+    "spine_local",
+    5,
+    9895.1
+   ],
+   [
+    "lnk_rx_payload",
+    "spine_local",
+    548,
+    9895.0
+   ],
+   [
+    "lnk_native_tx_payload",
+    "spine_local",
+    548,
+    9801.6
+   ],
+   [
+    "lnk_native_rx_slot_kind",
+    "spine_local",
+    4,
+    9594.1
+   ],
+   [
+    "lnk_native_rx_slot",
+    "spine_local",
+    1,
+    9593.0
+   ],
+   [
+    "lnk_native_rx_slot_beat",
+    "spine_local",
+    5,
+    9591.0
+   ]
+  ]
+ },
+ "unrepaired": {
+  "count": 67,
+  "by_prefix": {
+   "bword": 2,
+   "head": 1,
+   "o4": 7,
+   "xs": 1,
+   "xfault": 2,
+   "serdes1": 5,
+   "ng": 30,
+   "lnk": 9,
+   "sf": 10
+  },
+  "chains": [
+   "bword_25 (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 0 / free 0 / reached 0, P0 (20429, 4236) P1 (15185, 2671))",
+   "bword_38 (span 0-34 of 34, start 14, visited 201130, sites 246752, D 555, De 398, corridor None, load None, end sites 155 / free 1 / reached 0, P0 (26702, 9679) P1 (15185, 8198))",
+   "head_24 (span 0-24 of 24, start 7, visited 50, sites 184337, D 570, De 390, corridor None, load None, end sites 454 / free 414 / reached 0, P0 (16151, 8446) P1 (20887, 7910))",
+   "o4_cb_ctl_5 (span 0-0 of 0, start 55, visited 141, sites 246752, D 555, De 398, corridor None, load None, end sites 316 / free 103 / reached 0, P0 (15725, 8694) P1 (20126, 9910))",
+   "o4_cb_rdy_5 (span 0-0 of 0, start 103, visited 178663, sites 246752, D 555, De 398, corridor None, load None, end sites 300 / free 60 / reached 0, P0 (20121, 9910) P1 (15725, 8706))",
+   "o4_cf_q_6 (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 127 / free 54 / reached 0, P0 (19629, 9755) P1 (19653, 9085))",
+   "o4_cb_ctl_6 (span 0-0 of 0, start 47, visited 141, sites 246752, D 555, De 398, corridor None, load None, end sites 163 / free 70 / reached 0, P0 (15725, 8677) P1 (19729, 9085))",
+   "o4_cb_rdy_6 (span 0-0 of 0, start 70, visited 181728, sites 246752, D 555, De 398, corridor None, load None, end sites 305 / free 55 / reached 0, P0 (19724, 9085) P1 (15725, 8679))",
+   "o4_cb_ctl_7 (span 0-0 of 0, start 53, visited 141, sites 246752, D 555, De 398, corridor None, load None, end sites 253 / free 121 / reached 0, P0 (15725, 8696) P1 (19927, 9128))",
+   "o4_cb_rdy_7 (span 0-0 of 0, start 121, visited 182496, sites 246752, D 555, De 398, corridor None, load None, end sites 300 / free 60 / reached 0, P0 (19922, 9128) P1 (15725, 8707))",
+   "xs_aw (span 0-0 of 0, start 0, visited 0, sites 227153, D 555, De 398, corridor None, load None, end sites 269 / free 48 / reached 0, P0 (15347, 7266) P1 (16043, 8554))",
+   "xfault_w (span 0-0 of 0, start 14, visited 205359, sites 246752, D 555, De 398, corridor None, load None, end sites 193 / free 52 / reached 0, P0 (12567, 7195) P1 (16151, 8548))",
+   "xfault_e (span 0-0 of 0, start 13, visited 159548, sites 246752, D 555, De 398, corridor None, load None, end sites 193 / free 52 / reached 0, P0 (20887, 7195) P1 (16151, 8546))",
+   "serdes1_tx (span 0-0 of 0, start 0, visited 0, sites 227153, D 555, De 398, corridor None, load None, end sites 0 / free 0 / reached 0, P0 (15206, 2221) P1 (16064, 1585))",
+   "serdes1_txv (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 0 / free 0 / reached 0, P0 (15206, 2207) P1 (16049, 1585))",
+   "serdes1_rx (span 0-0 of 0, start 0, visited 0, sites 227153, D 555, De 398, corridor None, load None, end sites 75 / free 48 / reached 0, P0 (16092, 1585) P1 (15206, 2250))",
+   "serdes1_rxv (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 109 / free 71 / reached 0, P0 (16078, 1585) P1 (15206, 2236))",
+   "serdes1_up (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 126 / free 79 / reached 0, P0 (16049, 1585) P1 (15206, 2207))",
+   "ng_tt_xm_0 (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 139 / free 43 / reached 0, P0 (16194, 9962) P1 (15710, 8999))",
+   "ng_su_va_0 (span 0-0 of 0, start 0, visited 0, sites 141868, D 609, De 371, corridor None, load None, end sites 0 / free 0 / reached 0, P0 (17783, 8320) P1 (17783, 7284))",
+   "ng_vm_sq_2048 (span 0-0 of 0, start 0, visited 0, sites 106683, D 691, De 330, corridor None, load None, end sites 0 / free 0 / reached 0, P0 (20056, 7181) P1 (18094, 8320))",
+   "ng_tt_mx_0 (span 0-0 of 0, start 0, visited 0, sites 227153, D 555, De 398, corridor None, load None, end sites 140 / free 0 / reached 0, P0 (15825, 9012) P1 (15347, 7236))",
+   "ng_vm_mo_0 (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 0 / free 0 / reached 0, P0 (15347, 7128) P1 (16194, 9947))",
+   "ng_tt_mee_0 (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 145 / free 0 / reached 0, P0 (16194, 9944) P1 (15347, 7125))",
+   "ng_seq_vrd_0 (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 140 / free 0 / reached 0, P0 (15725, 8586) P1 (15347, 7135))",
+   "ng_vm_svq_0 (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 295 / free 29 / reached 0, P0 (15347, 7150) P1 (15725, 8600))",
+   "ng_vm_svq_v_0 (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 286 / free 24 / reached 0, P0 (15347, 7121) P1 (15725, 8585))",
+   "ng_seq_vwr_0 (span 0-0 of 0, start 0, visited 0, sites 227153, D 555, De 398, corridor None, load None, end sites 145 / free 0 / reached 0, P0 (15725, 8626) P1 (15347, 7178))",
+   "ng_tt_native_cmd_0 (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 28 / free 0 / reached 0, P0 (16194, 9909) P1 (19463, 5059))",
+   "ng_native_native_ret_0 (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 0 / free 0 / reached 0, P0 (19481, 5059) P1 (16194, 9934))",
+   "ng_su_native_issue_0 (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 21 / free 0 / reached 0, P0 (19444, 8320) P1 (19475, 5059))",
+   "ng_su_kv_we_0 (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 36 / free 0 / reached 0, P0 (19437, 8320) P1 (19448, 5059))",
+   "ng_su_kv_waddr_0 (span 0-0 of 0, start 0, visited 0, sites 184801, D 568, De 391, corridor None, load None, end sites 78 / free 0 / reached 0, P0 (19162, 8320) P1 (19309, 5059))",
+   "ng_su_kv_wdata_0 (span 0-0 of 0, start 0, visited 0, sites 162473, D 594, De 378, corridor None, load None, end sites 28 / free 0 / reached 0, P0 (19335, 8320) P1 (19396, 5059))",
+   "ng_seq_cd_d_0 (span 0-0 of 0, start 16, visited 141, sites 246752, D 555, De 398, corridor None, load None, end sites 306 / free 217 / reached 0, P0 (15680, 8480) P1 (17259, 3170))",
+   "ng_seq_cd_d_512 (span 0-0 of 0, start 16, visited 141, sites 246752, D 555, De 398, corridor None, load None, end sites 324 / free 241 / reached 0, P0 (15706, 8480) P1 (17285, 3170))",
+   "ng_seq_cd_d_513 (span 0-0 of 0, start 16, visited 141, sites 246752, D 555, De 398, corridor None, load None, end sites 324 / free 241 / reached 0, P0 (15707, 8480) P1 (17287, 3170))",
+   "ng_seq_cd_d_514 (span 0-0 of 0, start 18, visited 141, sites 246752, D 555, De 398, corridor None, load None, end sites 324 / free 241 / reached 0, P0 (15709, 8480) P1 (17291, 3170))",
+   "ng_seq_cd_d_546 (span 0-0 of 0, start 18, visited 141, sites 246752, D 555, De 398, corridor None, load None, end sites 324 / free 224 / reached 0, P0 (15712, 8480) P1 (17232, 3170))",
+   "ng_seq_coll_cmd_0 (span 0-0 of 0, start 18, visited 141, sites 246752, D 555, De 398, corridor None, load None, end sites 324 / free 224 / reached 0, P0 (15714, 8480) P1 (17224, 3170))",
+   "ng_seq_coll_cmd_16 (span 0-0 of 0, start 18, visited 141, sites 246752, D 555, De 398, corridor None, load None, end sites 324 / free 224 / reached 0, P0 (15716, 8480) P1 (17221, 3170))",
+   "ng_seq_coll_cmd_17 (span 0-0 of 0, start 18, visited 141, sites 246752, D 555, De 398, corridor None, load None, end sites 324 / free 224 / reached 0, P0 (15718, 8480) P1 (17228, 3170))",
+   "ng_seq_coll_cmd_49 (span 0-0 of 0, start 18, visited 141, sites 246752, D 555, De 398, corridor None, load None, end sites 324 / free 224 / reached 0, P0 (15721, 8480) P1 (17219, 3170))",
+   "ng_io_out_valid_0 (span 0-0 of 0, start 241, visited 205359, sites 246752, D 555, De 398, corridor None, load None, end sites 237 / free 16 / reached 0, P0 (17294, 3170) P1 (15654, 8480))",
+   "ng_io_out_err_0 (span 0-0 of 0, start 261, visited 205359, sites 246752, D 555, De 398, corridor None, load None, end sites 237 / free 16 / reached 0, P0 (17352, 3170) P1 (15653, 8480))",
+   "ng_io_out_rank_0 (span 0-0 of 0, start 261, visited 205359, sites 246752, D 555, De 398, corridor None, load None, end sites 237 / free 16 / reached 0, P0 (17350, 3170) P1 (15652, 8480))",
+   "ng_io_out_last_0 (span 0-0 of 0, start 261, visited 205359, sites 246752, D 555, De 398, corridor None, load None, end sites 237 / free 16 / reached 0, P0 (17348, 3170) P1 (15651, 8480))",
+   "ng_io_out_data_0 (span 0-0 of 0, start 248, visited 205359, sites 246752, D 555, De 398, corridor None, load None, end sites 235 / free 16 / reached 0, P0 (17321, 3170) P1 (15625, 8480))",
+   "lnk_native_tx_slot_beat (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 0 / free 0 / reached 0, P0 (19175, 14489) P1 (19658, 5059))",
+   "lnk_native_tx_payload (span 0-0 of 0, start 0, visited 0, sites 227153, D 555, De 398, corridor None, load None, end sites 430 / free 170 / reached 0, P0 (19638, 5059) P1 (19250, 14489))",
+   "lnk_native_rx_slot (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 0 / free 0 / reached 0, P0 (19473, 14489) P1 (19654, 5059))",
+   "lnk_native_rx_slot_kind (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 0 / free 0 / reached 0, P0 (19475, 14489) P1 (19656, 5059))",
+   "lnk_native_rx_slot_beat (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 0 / free 0 / reached 0, P0 (19476, 14489) P1 (19655, 5059))",
+   "lnk_kv_x3_slot (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 0 / free 0 / reached 0, P0 (19164, 14762) P1 (19623, 5059))",
+   "lnk_x3 (span 0-0 of 0, start 0, visited 0, sites 227153, D 555, De 398, corridor None, load None, end sites 425 / free 200 / reached 0, P0 (19673, 5059) P1 (19164, 14674))",
+   "lnk_x3_identity (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 460 / free 205 / reached 0, P0 (19689, 5059) P1 (19164, 14576))",
+   "lnk_x3_generation (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 469 / free 203 / reached 0, P0 (19687, 5059) P1 (19164, 14565))",
+   "sf_tt_program_obs (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 495 / free 257 / reached 0, P0 (16194, 9875) P1 (18749, 12325))",
+   "sf_tt_control_stores_ready (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 509 / free 263 / reached 0, P0 (16194, 9870) P1 (18749, 12317))",
+   "sf_tt_pw (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 0 / free 0 / reached 0, P0 (18749, 12333) P1 (16194, 9952))",
+   "sf_tt_kok (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 0 / free 0 / reached 0, P0 (18749, 12319) P1 (16194, 9969))",
+   "sf_tt_kwd (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 0 / free 0 / reached 0, P0 (18749, 12320) P1 (16194, 9971))",
+   "sf_tt_fab (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 0 / free 0 / reached 0, P0 (18749, 12318) P1 (16194, 9973))",
+   "sf_visibility_slot (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 6 / free 0 / reached 0, P0 (19047, 12312) P1 (19544, 5059))",
+   "sf_res_issue_fault (span 0-0 of 0, start 83, visited 141, sites 246752, D 555, De 398, corridor None, load None, end sites 491 / free 252 / reached 0, P0 (15988, 8628) P1 (18756, 12312))",
+   "sf_crom_fc_3 (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 476 / free 265 / reached 0, P0 (19802, 9543) P1 (18973, 12312))",
+   "sf_crom_fc_6 (span 0-0 of 0, start 0, visited 0, sites 246752, D 555, De 398, corridor None, load None, end sites 491 / free 273 / reached 0, P0 (19586, 9755) P1 (18968, 12312))"
+  ]
+ },
+ "cuts": {
+  "tool": "results/arch/qwen_tp8_1012/cuts.py",
+  "cap_mode": "v3",
+  "cluster_plan": "M6",
+  "rule": "bits / usable tracks <= 0.60",
+  "worst": 1.823,
+  "fine_top": [
+   {
+    "ax": "x",
+    "pos": 13150.0,
+    "win": [
+     8840.0,
+     9100.0
+    ],
+    "bits": 10821.0,
+    "usable": 5934.0,
+    "util": 1.823,
+    "fam": {
+     "tree_spine": 10762.0,
+     "spine_local": 59.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 13150.0,
+    "win": [
+     11180.0,
+     11440.0
+    ],
+    "bits": 8706.0,
+    "usable": 5934.0,
+    "util": 1.467,
+    "fam": {
+     "tree_spine": 8706.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 11400.0,
+    "win": [
+     13000.0,
+     13260.0
+    ],
+    "bits": 8192.0,
+    "usable": 8193.0,
+    "util": 1.0,
+    "fam": {
+     "tree_spine": 8192.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 9000.0,
+    "win": [
+     13000.0,
+     13260.0
+    ],
+    "bits": 8192.0,
+    "usable": 8193.0,
+    "util": 1.0,
+    "fam": {
+     "tree_spine": 8192.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 4700.0,
+    "win": [
+     13000.0,
+     13260.0
+    ],
+    "bits": 8192.0,
+    "usable": 8193.0,
+    "util": 1.0,
+    "fam": {
+     "tree_spine": 8192.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 5600.0,
+    "win": [
+     19240.0,
+     19500.0
+    ],
+    "bits": 5409.0,
+    "usable": 5484.0,
+    "util": 0.986,
+    "fam": {
+     "spine_local": 5409.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 5200.0,
+    "win": [
+     19240.0,
+     19500.0
+    ],
+    "bits": 5409.0,
+    "usable": 5484.0,
+    "util": 0.986,
+    "fam": {
+     "spine_local": 5409.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 8300.0,
+    "win": [
+     19240.0,
+     19500.0
+    ],
+    "bits": 5408.0,
+    "usable": 5484.0,
+    "util": 0.986,
+    "fam": {
+     "spine_local": 5408.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 7900.0,
+    "win": [
+     19240.0,
+     19500.0
+    ],
+    "bits": 5408.0,
+    "usable": 5484.0,
+    "util": 0.986,
+    "fam": {
+     "spine_local": 5408.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 7500.0,
+    "win": [
+     19240.0,
+     19500.0
+    ],
+    "bits": 5408.0,
+    "usable": 5484.0,
+    "util": 0.986,
+    "fam": {
+     "spine_local": 5408.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 7100.0,
+    "win": [
+     19240.0,
+     19500.0
+    ],
+    "bits": 5408.0,
+    "usable": 5484.0,
+    "util": 0.986,
+    "fam": {
+     "spine_local": 5408.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 6700.0,
+    "win": [
+     19240.0,
+     19500.0
+    ],
+    "bits": 5408.0,
+    "usable": 5484.0,
+    "util": 0.986,
+    "fam": {
+     "spine_local": 5408.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 6300.0,
+    "win": [
+     19240.0,
+     19500.0
+    ],
+    "bits": 5408.0,
+    "usable": 5484.0,
+    "util": 0.986,
+    "fam": {
+     "spine_local": 5408.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 15500.0,
+    "win": [
+     8320.0,
+     8580.0
+    ],
+    "bits": 6361.0,
+    "usable": 7151.0,
+    "util": 0.89,
+    "fam": {
+     "spine_local": 3131.0,
+     "head_chain": 1568.0,
+     "tree_spine": 1542.0,
+     "sequencer": 115.0,
+     "reset": 5.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 6900.0,
+    "win": [
+     15080.0,
+     15340.0
+    ],
+    "bits": 5891.0,
+    "usable": 7101.0,
+    "util": 0.83,
+    "fam": {
+     "tree_spine": 4138.0,
+     "head_chain": 1567.0,
+     "sequencer": 140.0,
+     "spine_local": 42.0,
+     "reset": 4.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 7450.0,
+    "win": [
+     15080.0,
+     15340.0
+    ],
+    "bits": 5882.0,
+    "usable": 7101.0,
+    "util": 0.828,
+    "fam": {
+     "tree_spine": 4138.0,
+     "head_chain": 1567.0,
+     "sequencer": 155.0,
+     "spine_local": 16.0,
+     "reset": 6.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 16050.0,
+    "win": [
+     8580.0,
+     8840.0
+    ],
+    "bits": 6564.0,
+    "usable": 8193.0,
+    "util": 0.801,
+    "fam": {
+     "tree_spine": 3274.0,
+     "spine_local": 3218.0,
+     "sequencer": 72.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 5900.0,
+    "win": [
+     21320.0,
+     21580.0
+    ],
+    "bits": 3088.0,
+    "usable": 3872.0,
+    "util": 0.798,
+    "fam": {
+     "tree_block": 2056.0,
+     "corridor": 516.0,
+     "tree_spine": 514.0,
+     "spine_local": 1.0,
+     "reset": 1.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 6500.0,
+    "win": [
+     15080.0,
+     15340.0
+    ],
+    "bits": 5952.0,
+    "usable": 8193.0,
+    "util": 0.726,
+    "fam": {
+     "tree_spine": 4175.0,
+     "head_chain": 1567.0,
+     "sequencer": 165.0,
+     "spine_local": 42.0,
+     "reset": 3.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 19600.0,
+    "win": [
+     4420.0,
+     4680.0
+    ],
+    "bits": 4783.0,
+    "usable": 6744.0,
+    "util": 0.709,
+    "fam": {
+     "tree_spine": 3084.0,
+     "head_chain": 1567.0,
+     "sequencer": 130.0,
+     "spine_local": 2.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 8650.0,
+    "win": [
+     15860.0,
+     16120.0
+    ],
+    "bits": 5701.0,
+    "usable": 8193.0,
+    "util": 0.696,
+    "fam": {
+     "spine_local": 4110.0,
+     "tree_spine": 1590.0,
+     "reset": 1.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 19450.0,
+    "win": [
+     8060.0,
+     8320.0
+    ],
+    "bits": 3711.0,
+    "usable": 5484.0,
+    "util": 0.677,
+    "fam": {
+     "spine_local": 3711.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 19400.0,
+    "win": [
+     7280.0,
+     7540.0
+    ],
+    "bits": 3711.0,
+    "usable": 5484.0,
+    "util": 0.677,
+    "fam": {
+     "spine_local": 3711.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 19350.0,
+    "win": [
+     6500.0,
+     6760.0
+    ],
+    "bits": 3711.0,
+    "usable": 5484.0,
+    "util": 0.677,
+    "fam": {
+     "spine_local": 3711.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 19300.0,
+    "win": [
+     5720.0,
+     5980.0
+    ],
+    "bits": 3711.0,
+    "usable": 5484.0,
+    "util": 0.677,
+    "fam": {
+     "spine_local": 3711.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 13800.0,
+    "win": [
+     12480.0,
+     12740.0
+    ],
+    "bits": 4140.0,
+    "usable": 6126.0,
+    "util": 0.676,
+    "fam": {
+     "head_chain": 1567.0,
+     "tree_spine": 1542.0,
+     "corridor": 516.0,
+     "tree_block": 514.0,
+     "reset": 1.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 13400.0,
+    "win": [
+     12480.0,
+     12740.0
+    ],
+    "bits": 4140.0,
+    "usable": 6126.0,
+    "util": 0.676,
+    "fam": {
+     "head_chain": 1567.0,
+     "tree_block": 1028.0,
+     "tree_spine": 1028.0,
+     "corridor": 516.0,
+     "reset": 1.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 7750.0,
+    "win": [
+     13780.0,
+     14040.0
+    ],
+    "bits": 5533.0,
+    "usable": 8193.0,
+    "util": 0.675,
+    "fam": {
+     "tree_spine": 5532.0,
+     "reset": 1.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 4550.0,
+    "win": [
+     19760.0,
+     20020.0
+    ],
+    "bits": 3698.0,
+    "usable": 5484.0,
+    "util": 0.674,
+    "fam": {
+     "tree_spine": 2056.0,
+     "head_chain": 1567.0,
+     "sequencer": 75.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 8200.0,
+    "win": [
+     15080.0,
+     15340.0
+    ],
+    "bits": 4785.0,
+    "usable": 7101.0,
+    "util": 0.674,
+    "fam": {
+     "tree_spine": 3084.0,
+     "head_chain": 1567.0,
+     "sequencer": 115.0,
+     "spine_local": 16.0,
+     "reset": 3.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 5500.0,
+    "win": [
+     20800.0,
+     21060.0
+    ],
+    "bits": 2578.0,
+    "usable": 3872.0,
+    "util": 0.666,
+    "fam": {
+     "tree_block": 1542.0,
+     "corridor": 516.0,
+     "tree_spine": 514.0,
+     "spine_local": 5.0,
+     "reset": 1.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 12900.0,
+    "win": [
+     21840.0,
+     22100.0
+    ],
+    "bits": 2573.0,
+    "usable": 3872.0,
+    "util": 0.665,
+    "fam": {
+     "tree_block": 1542.0,
+     "corridor": 516.0,
+     "tree_spine": 514.0,
+     "reset": 1.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 12900.0,
+    "win": [
+     11960.0,
+     12220.0
+    ],
+    "bits": 2573.0,
+    "usable": 3872.0,
+    "util": 0.665,
+    "fam": {
+     "tree_spine": 2056.0,
+     "corridor": 516.0,
+     "reset": 1.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 2650.0,
+    "win": [
+     21840.0,
+     22100.0
+    ],
+    "bits": 2573.0,
+    "usable": 3872.0,
+    "util": 0.665,
+    "fam": {
+     "tree_block": 1028.0,
+     "tree_spine": 1028.0,
+     "corridor": 516.0,
+     "reset": 1.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 13700.0,
+    "win": [
+     22360.0,
+     22620.0
+    ],
+    "bits": 2573.0,
+    "usable": 3872.0,
+    "util": 0.665,
+    "fam": {
+     "tree_block": 2056.0,
+     "corridor": 516.0,
+     "reset": 1.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 12150.0,
+    "win": [
+     26000.0,
+     26260.0
+    ],
+    "bits": 2573.0,
+    "usable": 3872.0,
+    "util": 0.665,
+    "fam": {
+     "tree_block": 2056.0,
+     "corridor": 516.0,
+     "reset": 1.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 4000.0,
+    "win": [
+     21320.0,
+     21580.0
+    ],
+    "bits": 2573.0,
+    "usable": 3872.0,
+    "util": 0.665,
+    "fam": {
+     "tree_block": 1542.0,
+     "corridor": 516.0,
+     "tree_spine": 514.0,
+     "reset": 1.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 3850.0,
+    "win": [
+     12220.0,
+     12480.0
+    ],
+    "bits": 1542.0,
+    "usable": 2438.0,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 6550.0,
+    "win": [
+     12480.0,
+     12740.0
+    ],
+    "bits": 4116.0,
+    "usable": 6614.0,
+    "util": 0.622,
+    "fam": {
+     "tree_spine": 2570.0,
+     "tree_block": 1028.0,
+     "corridor": 516.0,
+     "spine_local": 1.0,
+     "reset": 1.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 11350.0,
+    "win": [
+     3640.0,
+     3900.0
+    ],
+    "bits": 2058.0,
+    "usable": 3337.0,
+    "util": 0.617,
+    "fam": {
+     "tree_block": 1542.0,
+     "corridor": 516.0
+    }
+   }
+  ]
+ },
+ "reset": {
+  "reset_tree": {
+   "reach_um": 500.0,
+   "long_reset_nets": 6,
+   "repeaters": 4514,
+   "pad_cells": 0,
+   "nets": 9953,
+   "max_net_um": 457.5,
+   "errors": [
+    {
+     "net": "rst_spine",
+     "kind": "sink_unreachable",
+     "pin": "sp_vector_memory.rst_n",
+     "at": [
+      17708.0,
+      6269.6
+     ]
+    }
+   ],
+   "per_net": {
+    "rst_fwd_s": {
+     "dom": "rst_fwd_s",
+     "sinks": 1,
+     "repeaters": 64,
+     "pad_rep": 0,
+     "pad_p8": 0,
+     "nets": 65,
+     "max_net_um": 429.8,
+     "levels": 64,
+     "depth_cycles": [
+      128
+     ]
+    },
+    "rst_seq": {
+     "dom": "rst_seq",
+     "sinks": 3,
+     "repeaters": 74,
+     "pad_rep": 4,
+     "pad_p8": 7,
+     "nets": 86,
+     "max_net_um": 456.2,
+     "levels": 46,
+     "depth_cycles": [
+      92
+     ]
+    },
+    "rst_seq_ctlm": {
+     "dom": "rst_seq_ctlm",
+     "sinks": 2,
+     "repeaters": 34,
+     "pad_rep": 4,
+     "pad_p8": 1,
+     "nets": 40,
+     "max_net_um": 432.9,
+     "levels": 30,
+     "depth_cycles": [
+      60
+     ]
+    },
+    "rst_field": {
+     "dom": "rst_field",
+     "sinks": 1584,
+     "repeaters": 4256,
+     "pad_rep": 2236,
+     "pad_p8": 2975,
+     "nets": 9652,
+     "max_net_um": 457.1,
+     "levels": 130,
+     "depth_cycles": [
+      260
+     ]
+    },
+    "rst_io": {
+     "dom": "rst_io",
+     "sinks": 5,
+     "repeaters": 86,
+     "pad_rep": 13,
+     "pad_p8": 9,
+     "nets": 110,
+     "max_net_um": 436.8,
+     "levels": 45,
+     "depth_cycles": [
+      90
+     ]
+    }
+   },
+   "partial_unbuilt_nets": [
+    "rst_spine"
+   ],
+   "pad_rep": 2257,
+   "pad_p8": 2992,
+   "cells": 9763,
+   "depth_cycles": {
+    "rst_fwd_s": [
+     128
+    ],
+    "rst_seq": [
+     92
+    ],
+    "rst_seq_ctlm": [
+     60
+    ],
+    "rst_field": [
+     260
+    ],
+    "rst_io": [
+     90
+    ]
+   },
+   "max_depth_cycles": 260,
+   "pads": "pad chains beside the child of each slack edge: qfd_rst_rep_p8 (10 cycles) + qfd_rst_rep (2 cycles)",
+   "masters": [
+    "qfd_rst_rep",
+    "qfd_rst_rep_p8"
+   ],
+   "frame_um": [
+    5.184,
+    2.16
+   ],
+   "gap_um": 2.16,
+   "lattice_um": 220.0,
+   "clock_of": {
+    "rst_field": "clk_r1",
+    "rst_fwd_s": "clk_r79",
+    "rst_io": "clk_ucie",
+    "rst_seq": "clk_r49",
+    "rst_seq_ctlm": "clk_r49"
+   },
+   "over": [
+    [
+     "rst_spine",
+     19642.3
+    ]
+   ],
+   "legalised": {
+    "sites": 9763,
+    "moved_over_1um": 6394,
+    "median_um": 6.48,
+    "p90_um": 27.22,
+    "max_um": 105.9
+   },
+   "cycles_per_token": 0
+  },
+  "reset_named_nets": 9956,
+  "reset_named_over_500": [
+   [
+    19642.3,
+    "rst_spine",
+    "reset",
+    36
+   ],
+   [
+    3214.0,
+    "rst_d2d",
+    "spine_local",
+    4
+   ]
+  ],
+  "reset_named_worst": [
+   [
+    19642.3,
+    "rst_spine",
+    "reset",
+    36
+   ],
+   [
+    3214.0,
+    "rst_d2d",
+    "spine_local",
+    4
+   ],
+   [
+    457.5,
+    "rst_field__t6550",
+    "reset",
+    3
+   ],
+   [
+    456.4,
+    "rst_field__t3692",
+    "reset",
+    3
+   ],
+   [
+    456.2,
+    "rst_seq__t8",
+    "reset",
+    3
+   ],
+   [
+    456.0,
+    "rst_field__t1887",
+    "reset",
+    3
+   ],
+   [
+    453.9,
+    "rst_field__t1856",
+    "reset",
+    3
+   ],
+   [
+    452.1,
+    "rst_field__t768",
+    "reset",
+    3
+   ],
+   [
+    452.1,
+    "rst_field__t7083",
+    "reset",
+    3
+   ],
+   [
+    452.1,
+    "rst_field__t521",
+    "reset",
+    3
+   ],
+   [
+    452.1,
+    "rst_field__t171",
+    "reset",
+    3
+   ],
+   [
+    452.1,
+    "rst_field__t1120",
+    "reset",
+    3
+   ]
+  ]
+ },
+ "pin_align": {
+  "verdict": "FAIL",
+  "bundles": 11981,
+  "by_verdict": {
+   "OK": 8660,
+   "WARN": 2923,
+   "FAIL": 398
+  },
+  "by_kind": {
+   "straight": 9115,
+   "uturn": 1144,
+   "corner": 1722
+  },
+  "jog_over_warn": {
+   "bundles": 2006,
+   "bits": 622333
+  },
+  "order_not_preserved": {
+   "bundles": 51,
+   "bits": 25712
+  },
+  "line": "OT_PIN_ALIGN FAIL bundles 11981 bits 5115812: FAIL 398 (jog spills past the channel) WARN 2923 (jog > 20 um: 2006 bundles / 622333 bits, max 2492.6 um; order not preserved: 51 bundles; u-turn 1144); bits without pin 0"
+ },
+ "relay_token_cost": {
+  "schema": "opentallas.qwen-rom-relay-token-cost.v1",
+  "stages_r21": {
+   "bd": 73,
+   "tree": 33,
+   "tws": 58,
+   "ord": 1,
+   "link": 0
+  },
+  "stages_rtl": {
+   "bd": 41,
+   "tree": 20,
+   "tws": 38,
+   "ord": 7,
+   "link": 46
+  },
+  "bd_worst_tile": {
+   "col": 0,
+   "row": 0,
+   "head_stages": 57,
+   "head_roots": {
+    "head_23": 34,
+    "head_24": 25
+   }
+  },
+  "me_ops_per_ar_token": 217,
+  "me_ops_source": "217 = results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json (latency() unavailable: ModuleNotFoundError)",
+  "delta_per_me_op": 59,
+  "delta_link_per_traversal": -46,
+  "cycles_per_ar_token": 9491,
+  "basis": "one register boundary per die hop (element ports registered); r21 relays add hops; the measured token RTL carries the base stages (k_AR0 wire_stages bd / nws x 4 levels / tws / ord, r2 link)"
+ },
+ "image_looked": "r2h5_actual_final_layout.png: all field tiles and large centre blocks inside final outline; broad centre whitespace and scattered relays remain.",
+ "next_if": [
+  "Preserve r2h5 chain waiter1639390(parent143008), mem300, no chain dir at12:52. Collect actual GRT/TT/FF/SS and die readout when admitted; classify physical paths, not GEN rc alone.",
+  "Preserve q2o1 full GEN398143 and b2 fullgraph allocator739418. No duplicate.",
+  "Worst rsi_* fanout14.2mm needs registered command-fork b2 graph. Other non-pair reset/link/control/relay failures need actual chain classification; b2 does not automatically close them.",
+  "Q2o2 waits q2o1 GRT and b2 trial. Consume final SU346interior clock pin plan, PINREG=1, SU8.64lattice; crom5_f child."
+ ]
+}

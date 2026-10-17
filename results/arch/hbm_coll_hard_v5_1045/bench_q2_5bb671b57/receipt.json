@@ -1,0 +1,6 @@
+{"schema":"opentallas.hbm.coll_hard_v5_bench_receipt.v1","status":"GATE_PASS","shape":"q2 hard_v5 qid1 vs host_v4 QID1","source_commit":"5bb671b57","sources_sha256_verified_against_commit":true,
+ "tool":"Verilator 5.050","host":"ot-agidock128 unit oth-ubuntu-3209607-1792176949 exit 0",
+ "alignment":"programme-target outputs +1 (fj HOST frame capture); issue path +3 (frame +1, uop delay +2); per-DUT SU boundary; stimuli +3",
+ "fault_edges_ref_vs_hard":{"1 link0 rx":"2367/2371 (+4 = 3 issue + 1 fj pin)","2 rc_v":"2366/2370 (+4)","3 q2 tkm":"2371/2375 (+4)","4 qslots capture":"2372/2377 (+5, pin_v2 +1)","5 q2 arg reservation":"2372/2375 (+3)","6 programme frame":"2347/2348 (+1)"},
+ "mutants_rejected":["DROP_LINK scen1 fault missing","NOMASK scen0 lockstep obase","CAUSE_SWAP scen4 visibility","DROP_TKM scen3 edge +5 vs +4"],
+ "scope":"RTL composition + fault ABI; not physical"}

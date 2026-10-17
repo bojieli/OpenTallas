@@ -1,0 +1,24 @@
+GATE INFO pin_regs: pin registers opted out: the RTL registers its boundary itself (OREG: every PHY command output from a flop; KREG: K request in a 2-entry pin skid, k_rdy from a register; KRREG: K response from a 2-entry skid; RREG: PHY return valid+data captured at the pin; pc_id/refresh_reload straps captured in pc_id_q/refresh_reload_q). 
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: N face 10.5 pins/um (k_v, k_rdy, k_we): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns (derived in the flow)
+GATE INFO oflop: S face 10.5 pins/um (row_v, row_op, row_bank): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-pve1 for 16 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hdie_pc_ctrl_faults_h7_20261016-092850.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hdie_pc_ctrl_faults_h7_20261016-092850.log; host dir ot-pve1:/srv/opentallas-scratch/claude/ref_gate/hdie_pc_ctrl_faults_h7-20261016-092850
+GATE INFO remote: synth + floorplan + PDN OK on ot-pve1 in 642 s (gate total 4882 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 1229, 'pin_rectangles': 1229, 'pin_track_checked': 1229, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 99596574409622a3ae48d7830d436dcf333f72f90b5598b980c10733b7ca3767
+GATE INFO util: synthesized std area 6565 um2 + macros 7788 in core 29001: util 49%
+GATE INFO textbook: WARN ot_hbm_svc_pc_ctrl_leaf_cfg_faults cells 46,492 flops 9,539 depth 521.8 ps util 0.4986 reach 48.6 um (4.8 s)
+GATE WARN textbook.high_fanout: reset u_rst.rst_n$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 2,350 loads (1,863 flops, e.g. active_row[0]$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.boundary: 894 input->register endpoint(s) > 3 levels (worst kr_rdy->g_krreg.u_skid.tail_data[9]$_DFFE_PP_/D 4 lv, kr_rdy->g_krreg.u_skid.tail_data[99]$_DFFE_PP_/D 4 lv, kr_rdy->g_krreg.u_skid.tail_data[98]$_DFFE_PP_/D 4 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE INFO cts_calibration: ss insertion all 483.6..538.0 ps (spread 54.4), boundary mean 518.5; tt insertion all 368.2..398.3 ps (spread 30.1), boundary mean 386.1; ff insertion all 293.7..320.0 ps (spread 26.3), boundary mean 306.4; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO clock_spine: OT_SPINE iter 0 (coarse) leaves 1235 sinks 9827 cells 2469 leaf arrival 333.2..397.3 ps (spread 64.2) pad 60.0 / 14.0 ps
+GATE INFO clock_spine: OT_SPINE iter 1 (fine) leaves 1235 sinks 9827 cells 4780 leaf arrival 369.3..398.2 ps (spread 28.9) pad 60.0 / 18.7 ps
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hdie_pc_ctrl_faults_h7/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      600 paths, worst slack -26.9 ps (e.g. pending_identity[30][16]$_DFFE_PP_/D)
+GATE INFO path_classes: setup WNS -2.6912694295333495e-11 hold WNS 3.831235328988214e-11
+GATE INFO clock_rule: root port:clk: 9,541 sinks on the largest root <= 15,000; measured TT insertion 398.3 ps, leaf spread 30.1 ps
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/hbm-h7-fault-0920/physical/ref_tile/hdie_pc_ctrl_faults_h7/gate_layout/floorplan.png; density /home/ubuntu/wt/hbm-h7-fault-0920/physical/ref_tile/hdie_pc_ctrl_faults_h7/gate_layout/density.png
+PRE_ROUTE_GATE: WARN (0 fail, 2 warn)
+GATE: hdie_pc_ctrl_faults_h7/gate_result.json written (exact staged source binding; commit it with the kit)

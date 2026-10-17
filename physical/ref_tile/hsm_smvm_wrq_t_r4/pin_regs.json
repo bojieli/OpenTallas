@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_sm_vm_wr_q_t_faces4",
+ "enable": false,
+ "reason": "every input lands in a source pin flop (F20 bus in the folded collar pin rung, tgt/quad strap flops, rv/rrow/rdata/sm_fault/sm_sched_fault pin flops, rst_n local reset-release flop) and every output is a source flop (wq o_*, collar configured/fault/active); pin_reg_split duplicates the launch flop per replicated wq data pin"
+}

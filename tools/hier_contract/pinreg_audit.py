@@ -187,6 +187,14 @@ def pin_metrics(lib, refs):
         if p['dir'] == 'output' and any((r_, 'rising_edge') in edges and (r_, 'falling_edge') in edges for r_, _ in edges):
             res[name] = dict(dir='clock_out', out=None, lmin=None, inp=None, hold=None, comb=[], clk=sorted({r_ for r_, _ in edges}))
             continue          # both edges of one clock reach the pin: a forwarded / through clock, not a data launch
+        # A native combinational clock model is an explicit clock output when
+        # every arc starts at a measured clock entry. It is not a data bypass.
+        # F1 exported models use this form instead of generated-clock self arcs.
+        if p['dir'] == 'output' and p['arcs'] and all(
+                typ == 'combinational' and rel in refs for typ, rel, _ in p['arcs']):
+            res[name] = dict(dir='clock_out', out=None, lmin=None, inp=None, hold=None,
+                             comb=[], clk=sorted({rel for _, rel, _ in p['arcs']}))
+            continue
         for typ, rel, v in p['arcs']:
             typ = typ or ''
             r = refs.get(rel, {})

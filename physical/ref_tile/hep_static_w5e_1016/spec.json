@@ -1,0 +1,296 @@
+{
+ "name": "hep_static_w5e_1016",
+ "top": "hfd_ep_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+  "rtl/hbm_accel/tu/ep_static_20261015/ot_hep_rx_store.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "params": {
+  "IDLE_K": 204,
+  "MUT": 0
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 434.72,
+  "h": 371.52,
+  "exact": true
+ },
+ "pg_layer": "M5",
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_rxb.g_block[0].u_block.g_mem[0].u_mem.u_sram",
+   "at": [
+    22.464,
+    170.64
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_rxb.g_block[1].u_block.g_mem[0].u_mem.u_sram",
+   "at": [
+    22.464,
+    270.0
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_rxb.g_block[0].u_block.g_mem[1].u_mem.u_sram",
+   "at": [
+    241.056,
+    170.64
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_rxb.g_block[1].u_block.g_mem[1].u_mem.u_sram",
+   "at": [
+    241.056,
+    270.0
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "S": [
+   "clk",
+   "rst_n",
+   "tx_v",
+   "tx_frame",
+   "rx_arm_v",
+   "rx_arm_bank",
+   "rx_block_words",
+   "rx_release_v",
+   "rx_release_bank",
+   "rx_slot_v",
+   "rx_slot_bank",
+   "rx_slot_index",
+   "rx_pin_v",
+   "rx_pin_flit",
+   "rx_block_ready",
+   "phy_up",
+   "fault",
+   "fault_cause"
+  ],
+  "W": [
+   "sd_tx",
+   "sd_rx",
+   "sd_st"
+  ],
+  "N": [],
+  "E": []
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "period_ps": 833.333333,
+  "hold_margin_ns": 0.01,
+  "pin_min_tracks": 2,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "structural_change": "v15 successor of the retired flat hfd_lk_ep (13 failed routes): one ~8k-flop master for all 9 ep windows, lane gearbox 613b->512b fixed 4-in-5 format + off-die elastic RX pingpong (0az boundary), every port pin-registered, one clock root. Route-2 fix of route-1 EARLY_FAIL_HOLD (setup/hold conflict at enable-mux D pins with one 612-load select): selects replicated per 64-b slice, bypass-free SRAM leaf, macro columns facing one centre datapath channel, logic band at the COLL/SerDes faces. Route-3 fix of route-2 EARLY_FAIL_CONGESTION (12 zero-capacity M2/M4 gcells on 3 nets at the inward SRAM faces of the 47 um centre channel; abutted N-S macro pairs left no horizontal corridor): the two macro rows are separated by a 21.6 um horizontal channel (outline 434.72 x 315.36 inside the 434.72 x 515.2 window), giving the face escapes and the band->channel nets a crossing corridor. Route-4 native fix (route 3 CLOSED TT +128.49 / FF +7.69 but native launch 223.2 ps on 3 sd_tx pins, capture 212.7 ps on sd_rx[1]): sd_rx[1] (SerDes IDLE bit) loads ONE pin flop (it fed 9), the per-slice data copies and the RX gearbox beat move one edge later (+1 RX cycle at the off-die boundary, +520 flops); clk entry moved west on the S face to x 151.2-153.36 um (between tx_frame and the controls) to cut the late W-face boundary arrival. Route-5 fix of route-4 native FAIL (launch 259.7 on 25 sd_tx pins at W y 2-8, capture 221.3 on tx_frame S x 16-19; R 429.6 spread 100.8): SW corner pin-flop crowding where the W SerDes and S COLL pin-flop fields meet -> 19.44 um corner keep-out on both faces, sd_tx 512 pins over 77.8 um (6.6/um, was 7.5), S pins shifted +19.44 um (rx_pin unchanged); same RTL, same outline. Route-5b (parallel to route 5 bc6c91699): route-5 gate showed the sd_rx pin flops squeezed into the 17 um W channel beside the lower-left macro (red strip); both macro rows move N by 56.16 um (outline 434.72 x 371.52, inside the 434.72 x 515.2 window) so the whole W SerDes pin field (y 21.6-172.8) faces the logic band, not a macro. Route-5d (5b outline/pins/RTL): route 5b native capture FAIL 213.6 on 517 inputs; each input path carries the kit pad (HB2+BUFx4f) plus 2-4 route hold buffers (netlist: tx_frame[47] -> HB2 -> BUFx4f -> HB2 -> 3x BUFx2 -> p_tx_f D), and FF input->reg hold slack is +35.6 ps (pre-ECO +20.1): the inputs are over-padded for hold. Fix: route hold margin 30 -> 10 ps and no kit input hold pad (repair sizes input hold itself). | 5e (H-LKEP 1315, 10-16): 5d kit + output hold pad HB1xp67 (was HB2) on the leaf_iohold output stage; target native launch <= 215 with capture <= 190 (5d 186.8, no input pad). Same RTL, outline 434.72 x 371.52, pins.",
+ "job": {
+  "owner": "Claude:H-LKEP",
+  "branch": "claude/h-lkep-1015",
+  "tag": "w5e",
+  "purpose": "HBM v15 link endpoint master (ep_N0..N3/ep_S0..S4): static lane gearbox + 0az off-die elastic RX boundary; replaces hfd_lk_ep v14",
+  "benches": [
+   {
+    "name": "ep_exact_2dies_fec",
+    "cmd": "bash rtl/hbm_accel/tu/ep_static_20261015/run_hfd_ep_static_bench.sh . {RUN}/bench 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$",
+    "min_count_regex": "got=(768) bad=0"
+   },
+   {
+    "name": "ep_mut_tx_tail",
+    "cmd": "bash rtl/hbm_accel/tu/ep_static_20261015/run_hfd_ep_static_bench.sh . {RUN}/bench 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$",
+    "fail_regex": "^TB_HFD_EP_STATIC MUT=[1-4] .*\\| FAIL$"
+   },
+   {
+    "name": "ep_mut_rx_noidle",
+    "cmd": "bash rtl/hbm_accel/tu/ep_static_20261015/run_hfd_ep_static_bench.sh . {RUN}/bench 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$",
+    "fail_regex": "^TB_HFD_EP_STATIC MUT=[1-4] .*\\| FAIL$"
+   },
+   {
+    "name": "ep_mut_rx_swap",
+    "cmd": "bash rtl/hbm_accel/tu/ep_static_20261015/run_hfd_ep_static_bench.sh . {RUN}/bench 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$",
+    "fail_regex": "^TB_HFD_EP_STATIC MUT=[1-4] .*\\| FAIL$"
+   },
+   {
+    "name": "ep_mut_rxblock_bank",
+    "cmd": "bash rtl/hbm_accel/tu/ep_static_20261015/run_hfd_ep_static_bench.sh . {RUN}/bench 4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$",
+    "fail_regex": "^TB_HFD_EP_STATIC MUT=[1-4] .*\\| FAIL$"
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/tu/ep_static_20261015",
+   "rtl/dsrom_sys/s81_link",
+   "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "views_to": "physical/ref_tile/hep_static_ref_1015/views",
+  "record_to": "results/rtl/ref_tile/hep_static_ref_1015"
+ },
+ "slot_change_request": {
+  "reason": "route 1 (b58969306) EARLY_FAIL_HOLD at FF -79 ps on u_block.pin_flit[484]/D: setup/hold conflict at a 2:1 enable-mux D pin (select vp[2] = one flop fanning out to 612 flops, SS setup +62 ps; data leg dout->pin_flit needs >= +109 ps FF). Route 2: (RTL) every wide select replicated per 64-b slice (block pin_flit, pingpong merge, TX beat idle), SRAM leaf without the never-firing write->read bypass; (floorplan) two abutted N-S macro columns in the upper part, left column MY / right R0 so all rd_out / wd_in[265:0] / clk faces face one 47.3 um centre channel (M3+M5 2,300 vertical tracks for 1,224 crossing bits = 0.53) (bits 0..305 left half, 306..611 right half), outer 20.3 um edge channels for wd_in[305:266] + ties, lower 114 um band for the gearboxes and pin registers (SerDes W pins 2..140 um, COLL S face, clk S centre). Outline 434.72 x 293.76 inside the 434.72 x 515.2 ep window.",
+  "prior_slot": "ep_N0..ep_S4 434.72 x 515.2",
+  "requested_leaf": "hfd_ep_static 434.72 x 315.36",
+  "request_file": "results/arch/hep_static_1015/slot_request.json"
+ },
+ "pin_ranges": {
+  "tx_v": [
+   23.76,
+   24.84
+  ],
+  "tx_frame": [
+   25.92,
+   169.56
+  ],
+  "clk": [
+   170.64,
+   172.8
+  ],
+  "rx_pin_v": [
+   232.2,
+   233.28
+  ],
+  "rx_pin_flit": [
+   234.36,
+   430.2
+  ],
+  "sd_tx": [
+   21.6,
+   99.36
+  ],
+  "sd_rx": [
+   101.52,
+   169.56
+  ],
+  "sd_st": [
+   170.64,
+   172.8
+  ],
+  "rst_n": [
+   174.96,
+   176.04
+  ],
+  "rx_arm_v": [
+   177.12,
+   178.2
+  ],
+  "rx_arm_bank": [
+   179.28,
+   180.36
+  ],
+  "rx_block_words": [
+   181.44,
+   185.22
+  ],
+  "rx_release_v": [
+   186.3,
+   187.38
+  ],
+  "rx_release_bank": [
+   188.46,
+   189.54
+  ],
+  "rx_slot_v": [
+   190.62,
+   191.7
+  ],
+  "rx_slot_bank": [
+   192.78,
+   193.86
+  ],
+  "rx_slot_index": [
+   194.94,
+   198.18
+  ],
+  "rx_block_ready": [
+   199.26,
+   200.34
+  ],
+  "phy_up": [
+   201.42,
+   202.5
+  ],
+  "fault": [
+   203.58,
+   204.66
+  ],
+  "fault_cause": [
+   205.74,
+   211.68
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "hfd_ep_static registers every input and every output at its pin in RTL (hfd_ep_static.sv: p_* input pin registers for tx_v/tx_frame/rx_* controls/sd_rx/sd_st; sd_tx = the TX beat register; rx_pin_v/rx_pin_flit = the pingpong merge registers; rx_block_ready/phy_up/fault/fault_cause output registers); a recipe-3 wrapper would add a second +1-cycle stage on 2,450 pins"
+ },
+ "reroute_reason": {
+  "kind": "pin_register",
+  "cell": "hfd_ep_static",
+  "source": "results/arch/hep_static_1015/native_audit_route5d.json",
+  "launch_ps": 221.1,
+  "capture_ps": 186.8,
+  "fix": "route-5d native launch 221.1 on 2 rx_pin_flit pins (1.1 ps over). Probe of the 5d routed ODB: every rx_pin_flit launch flop is already at its S pin (mean |dx| 0.3 um, y 4 um) and their clock arrivals are uniform (512-524 ps), so placement/pin moves cannot help; the fixed ~105 ps output stage QN->INV->BUFx4f->HB2xp67 (36.5 ps)->BUFx4f->BUFx2 dominates. 5e = 5d kit unchanged except the OUTPUT hold pad HB2 -> HB1 (hold_pad.out_cell, ~-15 ps launch on every output); input pad stays off (capture 186.8 kept)."
+ }
+}

@@ -1,0 +1,36 @@
+{
+ "schema": "kvctrl.native_pin_audit_one.v1",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one",
+ "limits": {
+  "launch_ps": 220.0,
+  "capture_ps": 190.0
+ },
+ "job": "qkd_ctrl_pc_port_s3-s3-48c782c2a",
+ "source_commit": "536d1bb6147cbdd996b2db2211104ea3c11eda90",
+ "views": {
+  "qkd_ctrl_pc_port_child": {
+   "cell": "qkd_ctrl_pc_port_child",
+   "view": "physical/ref_tile/qkd_ctrl_pc_port_s3/views/qkd_ctrl_pc_port_child",
+   "lib_cell": "qkd_ctrl_pc_port_child",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 147.1,
+   "spread_ps": 20.7,
+   "outputs": 837,
+   "inputs": 807,
+   "launch_ps": 195.5,
+   "launch_pin": "wd[283]",
+   "capture_ps": 140.4,
+   "capture_pin": "kw_di[31]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  }
+ },
+ "verdict": "PASS"
+}

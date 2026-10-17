@@ -17,6 +17,7 @@ Pure geometry: no RTL, no pins written.  The caller keeps station placement, rea
 from __future__ import annotations
 
 import heapq
+import re
 from collections import Counter
 
 PITCH = 43.2
@@ -43,14 +44,28 @@ def assigned_face(rec, port):
     spec = rec.get('ports', {}).get(base)
     if not spec:
         return None
+    n = spec.get('bits', len(spec.get('per_bit', [])) or 1)
+    sel = re.fullmatch(r'[^\[]+\[(\d+)(?::(\d+))?\]', port)
+    lo, hi = (sorted((int(sel[1]), int(sel[2] or sel[1]))) if sel else (0, n - 1))
+    if not 0 <= lo <= hi < n:
+        raise ValueError(f'assigned port slice {port} outside {n} bits')
     if spec.get('per_bit'):
-        faces = Counter(r[0] for r in spec['per_bit'])
+        selected = spec['per_bit'][lo:hi + 1]
+        faces = Counter(r[0] for r in selected)
         f = faces.most_common(1)[0][0]
-        pos = [r[2] for r in spec['per_bit'] if r[0] == f]
+        pos = [r[2] for r in selected if r[0] == f]
         return f, (min(pos) + max(pos)) / 2
     if 'face' in spec:
-        at = spec.get('at') or [None]
-        return spec['face'], (at[0] + spec.get('bits', 1) * PIN_PITCH / 2) if at[0] is not None else None
+        at = spec.get('at')
+        if not at:
+            return spec['face'], None
+        if spec.get('uniform'):
+            pos = [at[0] + lo * at[1], at[0] + hi * at[1]]
+        else:
+            pos = at[lo:hi + 1]
+        if len(pos) != hi - lo + 1 and not spec.get('uniform'):
+            raise ValueError(f'assigned port {port} has incomplete positions')
+        return spec['face'], (min(pos) + max(pos)) / 2
     return None
 
 
@@ -92,7 +107,16 @@ def endpoint(it, port, rec, other):
                 along = it.w - along
             if f in 'EW' and it.orient in ('MX', 'R180'):
                 along = it.h - along
-        return f, face_point(it, f, along, other)
+        if along is not None:
+            span = it.w if f in 'NS' else it.h
+            if not 0 <= along <= span:
+                raise ValueError(f'assigned port {it.name}.{port} outside face {f}: {along} / {span}')
+            # Assigned contacts are physical evidence, including contacts at corners.
+            # The 20-um free-face routing margin must not relocate them.
+            point = ((it.x + along, it.y + it.h if f == 'N' else it.y) if f in 'NS'
+                     else (it.x + it.w if f == 'E' else it.x, it.y + along))
+            return f, point
+        return f, face_point(it, f, None, other)
     f = face_toward(it, other)
     return f, face_point(it, f, None, other)
 

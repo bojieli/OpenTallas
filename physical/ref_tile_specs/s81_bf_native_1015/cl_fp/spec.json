@@ -1,0 +1,179 @@
+{
+ "kind": "tile",
+ "sources": [
+  "rtl/s81/ot_s81_bf_seam.sv",
+  "rtl/s81/ot_s81_bf_native.sv",
+  "rtl/common/ot_prefix.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_bmul2.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2_w10.sv",
+  "rtl/v41rom/ot_v41_chain.sv",
+  "rtl/v41rom/ot_v41_chain2.sv",
+  "rtl/v41rom/ot_v41_fadd.sv",
+  "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+  "rtl/v41rom/ot_v41_segtree.sv",
+  "rtl/v41rom/ot_v41_segtree2.sv",
+  "rtl/v41rom/ot_v41_bmul2_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv",
+  "rtl/v41rom/ot_v41_chain2u2.sv",
+  "rtl/v41rom/ot_v41_kreg.sv",
+  "rtl/v41rom/ot_v41_chain3.sv",
+  "rtl/v41rom/ot_v41_chain4.sv",
+  "rtl/v41rom/ot_v41_fadd2.sv",
+  "rtl/v41rom/ot_v41_bterm3_w10.sv",
+  "rtl/v41rom/ot_v41_bterm4_w10.sv",
+  "rtl/v41rom/ot_v41_bterm5_w10.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes3.sv",
+  "rtl/v41rom/ot_v41_tile_clk.sv",
+  "rtl/v41rom/ot_bf_hdly.sv",
+  "rtl/v41rom/ot_v41_bf_col.sv",
+  "rtl/v41rom/ot_v41_bf_front_core.sv",
+  "rtl/v41rom/ot_v41_segtree3.sv",
+  "rtl/v41rom/ot_v41_segtree4.sv",
+  "rtl/v41rom/ot_v41_segtree5.sv",
+  "rtl/v41rom/ot_v41_segtree6.sv",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+  "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v",
+  "rtl/s81/ot_s81_bf_front.sv",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv",
+  "rtl/v41rom/ot_v41_bf_lane4.sv",
+  "rtl/v41rom/ot_v41_bf_reduce.sv",
+  "rtl/v41rom/ot_v41_bf_segment_leaf.sv",
+  "rtl/v41rom/ot_v41_bf_fp4_leaves.sv",
+  "rtl/v41rom/ot_v41_bf_cl_leaves.sv"
+ ],
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.6,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "name": "s81_bf_cl_fp",
+ "top": "ot_v41_bf_fp_cl",
+ "params": {},
+ "clock": "cts",
+ "clock_port": "fclk",
+ "reset_ports": [
+  "rst_pin"
+ ],
+ "outline": {
+  "w": 108.0,
+  "h": 129.6,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "ze_d",
+   "v0",
+   "v1",
+   "tag",
+   "xq0",
+   "xe0",
+   "wq0",
+   "we0"
+  ],
+  "S": [
+   "xq1",
+   "xe1",
+   "wq1",
+   "we1",
+   "rst_pin"
+  ],
+  "E": [
+   "q_v",
+   "q_val",
+   "q_err",
+   "q_tag",
+   "fault0",
+   "fault1"
+  ],
+  "N": [
+   "fclk"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "structural_change": "S-ELEM BF column hardened cluster (hybrid12 ten-root CTS failed: 710 ps insertion, 100-390 ps spread, FF -314). FP4 chunk pair (fp0 pair leaf + fp1 chain) as one hardened single-root child; input register = last FXST relay stage moved from the parent (+0 cycles). r2: gate 7127751e2 native FAIL (R 257.2 on the 64.8x198.72 strip, launch 308.5 q_val mux, rst capture 204.3; std 7911 um2): compact 108x129.6 outline (util ~0.57) and a pin-side output register on a local gated clock (+1 FP4; column FP4 +2).",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every child input at the pin (gen_bf_column_cluster.py); outputs come from arithmetic pipeline registers."
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "hybrid12 flat ten-root column CTS topology failure",
+  "fix": "S-ELEM BF column hardened cluster (hybrid12 ten-root CTS failed: 710 ps insertion, 100-390 ps spread, FF -314). FP4 chunk pair (fp0 pair leaf + fp1 chain) as one hardened single-root child; input register = last FXST relay stage moved from the parent (+0 cycles)."
+ },
+ "job": {
+  "owner": "Claude:S-ELEM-BFCOL-2020",
+  "purpose": "BF column cluster child cl_fp; no die adoption until parent cluster closes",
+  "benches": [
+   {
+    "name": "cl_positive",
+    "cmd": "python3 tools/s81/bf_leaf_physical_bench.py --cluster --programme-delta 0 --work {RUN}/cl_positive",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "PASS BF leaf full-shape actual RTL: 456 rows, 912 values, 448 configs",
+    "pass_witness": "results/physical/s81_bf_cl_1016/bench_27457f565/pos.log"
+   },
+   {
+    "name": "cl_skew_mutant",
+    "cmd": "python3 tools/s81/bf_leaf_physical_bench.py --cluster --programme-delta 0 --work {RUN}/cl_skew_mutant --skew-mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "MUTANT BF leaf cl_skew FAIL: DIFF TXN from actual RTL",
+    "fail_witness": "results/physical/s81_bf_cl_1016/bench_27457f565/skew.log"
+   },
+   {
+    "name": "cl_root_stop_mutant",
+    "cmd": "python3 tools/s81/bf_leaf_physical_bench.py --cluster --programme-delta 0 --work {RUN}/cl_root_stop_mutant --mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "MUTANT BF leaf root_stop FAIL: DIFF TXN from actual RTL",
+    "fail_witness": "results/physical/s81_bf_cl_1016/bench_27457f565/root.log"
+   }
+  ],
+  "extra_paths": [
+   "tools/s81",
+   "rtl/s81",
+   "rtl/v41rom",
+   "rtl/dsrom_sys/s81_die_bind",
+   "rtl/hdc",
+   "rtl/common",
+   "rtl/proto",
+   "results/rtl/s81_bf_compact_20261010/bench_prep_1013",
+   "results/rtl/s81_bf_programme_1015",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "physical/ref_tile_specs/s81_bf_native_1015/cl_fp",
+   "results/physical/s81_bf_cl_1016/bench_27457f565"
+  ],
+  "views_to": "physical/s81_die_views/bf_cl_1016/cl_fp",
+  "record_to": "results/physical/s81_bf_cl_1016/cl_fp",
+  "branch": "claude/selem-bfcol-2020"
+ }
+}

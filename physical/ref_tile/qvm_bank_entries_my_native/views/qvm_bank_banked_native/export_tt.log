@@ -5,8 +5,7 @@ Components of this program may be licensed under more restrictive licenses which
 [INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
 [INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
 [INFO ODB-0227] LEF file: /mv0/ot_sram_1r1w_256x256_m2_r2c2.lef, created 1 library cells
-[INFO ODB-0227] LEF file: /mv1/qvm_bank_ctrl_native.lef, created 1 library cells
-[INFO ODB-0227] LEF file: /mv2/qvm_data256_native.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /mv1/qvm_data256_native.lef, created 1 library cells
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
@@ -38,28 +37,31 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-0450] virtual clock ot_lb_v_ot_entry_7 can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_ot_entry_8 can not be propagated.
 OT_DIRECT_MACRO ACCESSOR source_sha256=61aaf3f8c874867d13acbca9ef2f8d861a8217793d5b3605318886f8fd9f5777 executable_sha256=21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846 module_sha256=b3221367ae6d71774163a505c69426a7ccd4b817b5c989460e5860b145a6dfe9 compiler=g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
-OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_mem_lo -> u_lo/clk wire=6.215858148191356 library=ot_sram_1r1w_256x256_m2_r2c2_tt/ot_sram_1r1w_256x256_m2_r2c2 (internal arcs retained)
-OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_mem_hi -> u_hi/clk wire=20.859869470731528 library=ot_sram_1r1w_256x256_m2_r2c2_tt/ot_sram_1r1w_256x256_m2_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_mem_lo -> u_lo/clk wire=6.216388539896255 library=ot_sram_1r1w_256x256_m2_r2c2_tt/ot_sram_1r1w_256x256_m2_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_mem_hi -> u_hi/clk wire=20.976335335927033 library=ot_sram_1r1w_256x256_m2_r2c2_tt/ot_sram_1r1w_256x256_m2_r2c2 (internal arcs retained)
+OT_HYBRID CTS_MEASURE tt ck_ctrl sinks=35 reference_scope=boundary boundary_sinks=35 min=63.06995229076741 mean=64.03817759615774 max=64.98625275007882 all_mean=64.03817759615774
+OT_HYBRID CTS_MEASURE tt ck_out_lo sinks=256 reference_scope=boundary boundary_sinks=256 min=105.36747905212974 mean=108.17797243784595 max=111.10776926269482 all_mean=108.17797243784598
+OT_HYBRID CTS_MEASURE tt ck_out_hi sinks=256 reference_scope=boundary boundary_sinks=256 min=134.25535736821632 mean=137.42900654988222 max=139.6786442095147 all_mean=137.4290065498821
 OT_ENTRIES LEVEL ck_cap_hi deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_cap_hi -> u_cap_hi/clk wire=16.754053072997596 R=69.3 latency=4.793821608843274 phi=90.84787468184086
+OT_ENTRIES COMP tt ck_cap_hi -> u_cap_hi/clk wire=16.50779172736392 R=69.3 latency=51.6212148225183 phi=137.42900654988222
 OT_ENTRIES LEVEL ck_cap_lo deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_cap_lo -> u_cap_lo/clk wire=4.866265396213012 R=69.3 latency=16.681609285627857 phi=90.84787468184086
-OT_ENTRIES LEVEL ck_ctrl deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_ctrl -> u_ctrl/clk wire=1.7810542608495028 R=54.8 latency=34.266820420991365 phi=90.84787468184086
+OT_ENTRIES COMP tt ck_cap_lo -> u_cap_lo/clk wire=4.872426700343432 R=69.3 latency=63.256579849538795 phi=137.42900654988222
 OT_ENTRIES LEVEL ck_in_hi deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_in_hi -> u_in_hi/clk wire=1.2344098232186667 R=69.3 latency=20.313464858622197 phi=90.84787468184086
+OT_ENTRIES COMP tt ck_in_hi -> u_in_hi/clk wire=1.238941029376241 R=69.3 latency=66.89006552050598 phi=137.42900654988222
 OT_ENTRIES LEVEL ck_in_lo deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_in_lo -> u_in_lo/clk wire=1.700304183762728 R=69.3 latency=19.84757049807814 phi=90.84787468184086
-OT_ENTRIES LEVEL ck_out_hi deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_out_hi -> u_out_hi/clk wire=21.54787468184087 R=69.3 latency=0.0 phi=90.84787468184086
-OT_ENTRIES LEVEL ck_out_lo deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_out_lo -> u_out_lo/clk wire=8.162258228335581 R=69.3 latency=13.385616453505278 phi=90.84787468184086
+OT_ENTRIES COMP tt ck_in_lo -> u_in_lo/clk wire=1.710223115797563 R=69.3 latency=66.41878343408466 phi=137.42900654988222
 OT_ENTRIES LEVEL ck_mem_lo deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_mem_lo -> u_lo/clk wire=6.215858148191356 R=0 latency=84.6320165336495 phi=90.84787468184086
+OT_ENTRIES COMP tt ck_mem_lo -> u_lo/clk wire=6.216388539896255 R=0 latency=131.21261800998596 phi=137.42900654988222
 OT_ENTRIES LEVEL ck_mem_hi deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_mem_hi -> u_hi/clk wire=20.859869470731528 R=0 latency=69.98800521110934 phi=90.84787468184086
-OT_ENTRIES DOMAIN core 833.333008ps IO547/512 boundary=88.74787468184088..93.44787468184087
-OT_ENTRIES COMP DONE tt 9 entries phi=90.84787468184086 boundary=88.74787468184088..93.44787468184087
+OT_ENTRIES COMP tt ck_mem_hi -> u_hi/clk wire=20.976335335927033 R=0 latency=116.45267121395518 phi=137.42900654988222
+OT_ENTRIES LEVEL ck_ctrl deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_ctrl -> pra[0]$_DFF_P_/CLK wire=0 R=64.03817759615774 latency=73.39082895372448 phi=137.42900654988222
+OT_ENTRIES LEVEL ck_out_lo deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_out_lo -> q[0]$_DFF_P_/CLK wire=0 R=108.17797243784595 latency=29.251034112036265 phi=137.42900654988222
+OT_ENTRIES LEVEL ck_out_hi deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_out_hi -> q[256]$_DFF_P_/CLK wire=0 R=137.42900654988222 latency=0.0 phi=137.42900654988222
+OT_ENTRIES DOMAIN core 833.333008ps IO547/512 boundary=134.25535736821632..140.3588033747311
+OT_ENTRIES COMP DONE tt 9 entries phi=137.42900654988222 boundary=134.25535736821632..140.3588033747311
 [WARNING STA-0450] virtual clock core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_ot_entry_0 can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_ot_entry_1 can not be propagated.
@@ -79,24 +81,24 @@ OT_IOREF clock-port ck_cap_lo (ot_entry_5): data input delays dropped
 OT_IOREF clock-port ck_cap_hi (ot_entry_6): data input delays dropped
 OT_IOREF clock-port ck_out_lo (ot_entry_7): data input delays dropped
 OT_IOREF clock-port ck_out_hi (ot_entry_8): data input delays dropped
-OT_IOREF_EDGE ot_entry_0 boundary 1 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_0 boundary 35 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ot_entry_1 boundary 1 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ot_entry_2 boundary 1 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ot_entry_3 boundary 0 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ot_entry_4 boundary 0 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ot_entry_5 boundary 0 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ot_entry_6 boundary 0 negedge 0 noarc 0 inverted 0
-OT_IOREF_EDGE ot_entry_7 boundary 1 negedge 0 noarc 0 inverted 0
-OT_IOREF_EDGE ot_entry_8 boundary 1 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_7 boundary 256 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_8 boundary 256 negedge 0 noarc 0 inverted 0
 OT_IOREF keep core_clk (not an insertion-reference clock)
-OT_IOREF ot_lb_v_ot_entry_0 ot_entry_0 mean 36.0 min 36.0 max 36.0 n 1 boundary
-OT_IOREF ot_lb_v_ot_entry_1 ot_entry_1 mean 21.5 min 21.5 max 21.5 n 1 boundary
-OT_IOREF ot_lb_v_ot_entry_2 ot_entry_2 mean 21.5 min 21.5 max 21.5 n 1 boundary
-OT_IOREF ot_lb_v_ot_entry_3 ot_entry_3 mean 90.8 min 90.8 max 90.8 n 1 all
-OT_IOREF ot_lb_v_ot_entry_4 ot_entry_4 mean 90.8 min 90.8 max 90.8 n 1 all
-OT_IOREF ot_lb_v_ot_entry_5 ot_entry_5 mean 21.5 min 21.5 max 21.5 n 1 all
-OT_IOREF ot_lb_v_ot_entry_6 ot_entry_6 mean 21.5 min 21.5 max 21.5 n 1 all
-OT_IOREF ot_lb_v_ot_entry_7 ot_entry_7 mean 21.5 min 21.5 max 21.5 n 1 boundary
-OT_IOREF ot_lb_v_ot_entry_8 ot_entry_8 mean 21.5 min 21.5 max 21.5 n 1 boundary
-OT_WS max 1.3843243218403245e-10 min 7.611714036848127e-11
+OT_IOREF ot_lb_v_ot_entry_0 ot_entry_0 mean 137.4 min 136.5 max 138.4 n 35 boundary
+OT_IOREF ot_lb_v_ot_entry_1 ot_entry_1 mean 68.1 min 68.1 max 68.1 n 1 boundary
+OT_IOREF ot_lb_v_ot_entry_2 ot_entry_2 mean 68.1 min 68.1 max 68.1 n 1 boundary
+OT_IOREF ot_lb_v_ot_entry_3 ot_entry_3 mean 137.4 min 137.4 max 137.4 n 1 all
+OT_IOREF ot_lb_v_ot_entry_4 ot_entry_4 mean 137.4 min 137.4 max 137.4 n 1 all
+OT_IOREF ot_lb_v_ot_entry_5 ot_entry_5 mean 68.1 min 68.1 max 68.1 n 1 all
+OT_IOREF ot_lb_v_ot_entry_6 ot_entry_6 mean 68.1 min 68.1 max 68.1 n 1 all
+OT_IOREF ot_lb_v_ot_entry_7 ot_entry_7 mean 137.4 min 134.6 max 140.4 n 256 boundary
+OT_IOREF ot_lb_v_ot_entry_8 ot_entry_8 mean 137.4 min 134.3 max 139.7 n 256 boundary
+OT_WS max 1.3933049158865174e-10 min 4.629932548461113e-11
 OT_EXPORT_DONE

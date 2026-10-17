@@ -1,0 +1,46 @@
+{
+  "name": "dsfd_capt_x8x_t_w_split1016x-x43-6e71a3585",
+  "status": "NEEDS_RTL",
+  "reason": "bench_capture_split_mutant_drop1 expected FAIL but rc=1",
+  "commit_full": "6e71a35853ad7101b42e20d118430c0afcaff83f",
+  "benches": {
+    "bench_lint": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.058 MB sources in 10 modules, into 0.013 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.012 s (elab=0.001, cvt=0.007, bld=0.000); cpu 0.012 s on 1 threads; allocated 34.383 MB\nlint-ok\n",
+      "track": "parallel"
+    },
+    "bench_x8_x43_unit": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "LAT n=0 new 3475..3475 ps  old 4587..5699 ps\nLAT n=1 new 2641..2641 ps  old 3753..4865 ps\nLAT n=2 new 2919..2919 ps  old 4031..5143 ps\nLAT n=3 new 3197..3197 ps  old 4309..5421 ps\nTB_CAPX43 RESULT mode 0 words 21237 bad 0 old_hovf 0\nTB_CAPX43 PASS mode 0\nTB_CAPX43 PASS mode 1 (t_ho 1)\nTB_CAPX43 PASS mode 2 (t_ho 1)\nTB_CAPX43 PASS mode 3 (t_ho 1)\nCAPX43_BENCH PASS\n",
+      "track": "parallel"
+    },
+    "bench_capture_split_exact": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "les=197 EQ_PASS\neq range: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=19 timeouts=0 mismatching_roots=0 RESULT PASS CAPC_EQ mismatches=0 status_mm=0 tcd_toggles=0 cd_events=0/0 cd_seq_mm=0 cd_dut_minus_ref_ns=0..0 vm_active_cycles=191 EQ_PASS\neq rreq: SUMMARY phases=1 writes=256 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=41 timeouts=0 mismatching_roots=0 RESULT PASS CAPC_EQ mismatches=0 status_mm=0 tcd_toggles=1 cd_events=1/1 cd_seq_mm=0 cd_dut_minus_ref_ns=-8..-8 vm_active_cycles=243 EQ_PASS\nCAPC_BENCH PASS cases=9\n",
+      "track": "parallel"
+    },
+    "bench_capture_split_mutant_drop1": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": false,
+      "tail": "mut mix: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=56 timeouts=0 mismatching_roots=128 RESULT FAIL CAPC_EQ mismatches=128 status_mm=0 tcd_toggles=9 cd_events=9/9 cd_seq_mm=0 cd_dut_minus_ref_ns=-8..8 vm_active_cycles=2076 EQ_FAIL\nCAPC_BENCH FAIL\n",
+      "track": "parallel"
+    }
+  },
+  "helper_overlay_verification": {
+    "status": "verified_original",
+    "origin_main": "820be9f5267ad8659eb3fbafb551e35b6cc8c26a",
+    "content_sha256": "5975c48644ea3435844d20c54d827bec648f042242b0bd37117f06cb2b3fb31d",
+    "files": 46,
+    "verified_at": "2026-10-16T12:18:41-07:00",
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8x_t_w_split1016x-x43-6e71a3585",
+    "mutation": false
+  }
+}

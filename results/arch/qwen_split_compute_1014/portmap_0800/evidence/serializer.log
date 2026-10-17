@@ -1,0 +1,5 @@
+PASS b2 serializer exact old calendar, 64 bursts, 1044 beats, 64 ends, six sources disjoint
+- rtl/test/qwen_lane_band/tb_qfd_b2_serializer.sv:42: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16us; walltime 0.002 s; speed 8.337 ms/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB

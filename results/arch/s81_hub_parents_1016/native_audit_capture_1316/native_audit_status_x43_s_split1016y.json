@@ -1,0 +1,32 @@
+{
+ "tool": "tools/hier_contract/native_pin_audit.audit_one (TT; launch<=220 capture<=190)",
+ "date": "2026-10-16",
+ "stream": "S-VM",
+ "records": [
+  {
+   "cell": "dsfd_capt_status_x43_s",
+   "view": "physical/ref_tile/dsfd_capt_status_x43_s_split1016y/views/dsfd_capt_status_x43_s",
+   "lib_cell": "dsfd_capt_status_x43_s",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 78.8,
+   "spread_ps": 6.6,
+   "outputs": 64,
+   "inputs": 197,
+   "launch_ps": 171.7,
+   "launch_pin": "t_st[53]",
+   "capture_ps": 123.1,
+   "capture_pin": "b0[2]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "record_commit": "b825f663e",
+   "job": "dsfd_capt_status_x43_s_split1016y-rst-8a2ccd132"
+  }
+ ]
+}

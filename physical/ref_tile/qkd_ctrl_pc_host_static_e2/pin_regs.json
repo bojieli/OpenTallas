@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_ctrl_pc_host_static",
+ "enable": false,
+ "reason": "Existing controller explicit boundary pin FFs; no extra wrapper edges permitted without compiler ABI update. Actual pre-route/native pin audit must reject remaining raw combinational input or output cones."
+}

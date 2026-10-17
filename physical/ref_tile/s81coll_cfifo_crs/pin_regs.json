@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_cfifo_crs",
+ "enable": false,
+ "reason": "OWNER RULE 19:50: the RTL already registers every data pin -- xd on xf and xd2 on xf2 (ot_s81_static_column_ingress pin register), ri/st on cr (rr/sti), every output from a flop (xa/xb/cc/x2 *_r, rd = rr/rsync, rs = rsync); no clock feed-throughs. A flow pin register would add an edge the die calendar does not price."
+}

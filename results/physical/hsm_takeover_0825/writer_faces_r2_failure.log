@@ -1,0 +1,17 @@
+GATE INFO pin_regs: pin registers opted out: every input lands in a source pin flop (F20 bus in the folded collar pin rung, tgt/quad strap flops, rv/rrow/rdata/sm_fault/sm_sched_fault pin flops, rst_n local reset-release flop) and every output is a source flop (wq o_*, collar configured/fault/active); pin_reg_split duplicates the launch flop p
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 6.0 pins/um (wq_lo): recipe-2 hold stages take 2.01 um behind the face, the pin flops need gap 2.6 um and 4 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc4 for 16 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hsm_smvm_wrq_t_r2_20261016-082532.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hsm_smvm_wrq_t_r2_20261016-082532.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/hsm_smvm_wrq_t_r2-20261016-082532
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 116 s (gate total 455 s)
+GATE WARN util: synthesized std area 7728 um2 + macros 3892 in core 53151: util 22%  -> FIX: set "std_area_um2": 7728 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_hbm_sm_vm_wr_q_t_faces cells 57,719 flops 12,365 depth 553.4 ps util 0.2192 reach 167.4 um (1.8 s)
+GATE WARN textbook.util_channel: utilisation 21.9% outside 45%-65% (std 7758 + macro 3892 um2 in 53151 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE FAIL cts_run: placement / CTS of the kit failed:   -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=1
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE FAIL clock_rule: actual per-root clock measurement coverage differs from clock_ports (declared clock 'multiple_cts_roots' does not waive it)  -> FIX: hardened leaves with their own clock roots (kind cluster: each leaf <= 15,000 sinks, registered seams); a larger root needs `pre_route_gate.py <kit> --remote <host> --cts` evidence committed as <kit>/gate_result.json
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-hsm-physical-0825/physical/ref_tile/hsm_smvm_wrq_t_r2/gate_layout/floorplan.png
+PRE_ROUTE_GATE: FAIL (2 fail, 3 warn)
+GATE: hsm_smvm_wrq_t_r2/gate_result.json written (exact staged source binding; commit it with the kit)

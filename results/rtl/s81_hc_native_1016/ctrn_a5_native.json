@@ -1,0 +1,83 @@
+{
+ "schema": "s81_hc_native_receipt.v1",
+ "by": "S-ELEM HC-COL 1815",
+ "rule": "launch<=220 capture<=190 spread<=80 comb 0 (native_pin_audit.audit_one on routed tt lib)",
+ "layout": "routed GRT congestion PNGs viewed (0 congested gcells)",
+ "results": [
+  {
+   "cell": "ot_s81_hc_ctrn_own_w",
+   "view": "physical/ref_tile/s81hc_ctrnown_w_ref/views/ot_s81_hc_ctrn_own_w",
+   "lib_cell": "ot_s81_hc_ctrn_own_w",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 107.0,
+   "spread_ps": 20.1,
+   "outputs": 628,
+   "inputs": 637,
+   "launch_ps": 193.9,
+   "launch_pin": "rv_out[5]",
+   "capture_ps": 175.7,
+   "capture_pin": "rv_c[6]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "s81hc_ctrnown_w_ref-a5-f068a2c9c",
+   "commit": "b6be274791ab37acbd5f5b02d2f22476a7a1bd2b"
+  },
+  {
+   "cell": "ot_s81_hc_ctrn_par_w",
+   "view": "physical/ref_tile/s81hc_ctrnpar_w_ref/views/ot_s81_hc_ctrn_par_w",
+   "lib_cell": "ot_s81_hc_ctrn_par_w",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 108.1,
+   "spread_ps": 9.9,
+   "outputs": 512,
+   "inputs": 512,
+   "launch_ps": 195.9,
+   "launch_pin": "b_par_out[142]",
+   "capture_ps": 127.6,
+   "capture_pin": "a_par[192]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "s81hc_ctrnpar_w_ref-a5-f068a2c9c",
+   "commit": "e5747021f918584876d7bbd5b1ef7cdf2279a9af"
+  },
+  {
+   "cell": "ot_s81_hc_ctrn_par_e",
+   "view": "physical/ref_tile/s81hc_ctrnpar_e_ref/views/ot_s81_hc_ctrn_par_e",
+   "lib_cell": "ot_s81_hc_ctrn_par_e",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 106.2,
+   "spread_ps": 14.7,
+   "outputs": 512,
+   "inputs": 512,
+   "launch_ps": 193.1,
+   "launch_pin": "b_par_out[255]",
+   "capture_ps": 127.5,
+   "capture_pin": "b_par[87]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "s81hc_ctrnpar_e_ref-a5-f068a2c9c",
+   "commit": "82a8fe4701902eb58ce2322d893ded723418f2f8"
+  }
+ ]
+}

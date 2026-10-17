@@ -1,0 +1,38 @@
+{
+  "status": "ACTUAL_RELEASED_ROM_COMPONENT_PASS_DIE_PHASE_OPEN",
+  "source_revision": "fbeda6a53",
+  "evidence": "native_rom_port/run.log",
+  "raw_controller_tag_to_port_rq_edges": 14,
+  "registered_train_tag_copy_edges": 1,
+  "no_wire_issuer_train_edges": 13,
+  "rq_to_partial_am_edges": 5,
+  "controller_scale_advance_edges": 6,
+  "controller_scale_lat": 10,
+  "band": 2,
+  "tcut": 7,
+  "pcs": [
+    1,
+    12,
+    16,
+    20,
+    103
+  ],
+  "all_six_result_ages_equal": true,
+  "cycle_convention": "Signals sampled after each rising edge at following negedge. Issuer train_start and rq.ov observed same cycle; capturebanks consume both next rising edge. Actual sourcecopy is +1 and issuer TE13 spans copied tag to start.",
+  "die_formula": "TRAIN_EDGES = actual(raw_tag->RQ_at_train) - actual(raw_tag->copied_tag_at_issuer) - actual(issuer_start->train_start_face). All6 must match after explicit padding. Includes real TC/RQ relays, source/tag copies, balanced commandfork3+wire, clock phases.",
+  "die_edges_assigned": false,
+  "physical_qualified": false,
+  "native_full_layer_qualified": false,
+  "boundary": "Already-reduced tree words all FP32 ones;384actualscaleROMs+hardmul own all postscale data. No upstream ME/tree arithmetic proof here.",
+  "source_sha256": {
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_me_spctl_b2.sv": "10cb2818e973a29b876460fffbc2b0e6496635d4dcc4c98d6768d49c864851f7",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_b2.sv": "f92862cf9b314dd6a04fd584f06fe11e9f891d3cda7d5c0d72fc2a509cbfafaf",
+    "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_tree_b2.sv": "53c4337096e03859c301da48946404bb0cc8b771606f856770c7e0cb60cba474",
+    "rtl/qwen_split/qfd_port_half_b2.sv": "f99637b915adec4ae716c22e3d7b3482b82d6d9162df2acf8e44dc7c806c3e2f",
+    "rtl/qwen_split/qfd_b2_train_source.sv": "bdc6548ab2ba729ecf2d4ee15e43f13e9fd9a9472ffd9ee26d76553c3b8e5804",
+    "rtl/qwen_split/qfd_res_train_issue_b2.sv": "d658c2363cc0c51f3ae836adcdf217e587f0786c0a69001f2af63bcaea3f52e2"
+  },
+  "actual_composed_e3_gate": "native_rom_e3/run.log",
+  "no_wire_issuer_train_edges_verified": true,
+  "allocator_stage_convention": "Directwire S1 adds0externalFF beyondsource/DUTbenchmark; each ordinaryrelaypathdelta=S-1. 3fork commandtree fourpathlegs extra=sum(levelS)-1. TE_die=13+deltaTC+deltaRQ-deltaTag-extraCommand."
+}

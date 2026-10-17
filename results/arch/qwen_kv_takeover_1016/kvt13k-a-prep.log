@@ -1,0 +1,15 @@
+ot-heavy: waiting for memory on regular-crane: need 48 GB, admissible -22 GB: available 329 GB, growth charged 302 GB, young 56 GB, headroom 48 GB, real floor 227 GB
+ot-heavy: admitted on regular-crane as oth-ubuntu-4027727-1792204675 after 60 s
+kv die: plan pass pin-hop violations 99
+kv die: v1.4.3 narrow re-plan (685 hinted pins on 47 instances) after: kv die relays: no spot for emr_WS stage 0 after path index 0 at (1630.8000000000002, 12279.6) (ends land_WS.emr -> embgw.emr_WS; path 837 cells, remaining 13536 um, wide True, src (1655, 151, 173, 12141, (1827.4560000000001, 12274.508)) dst (5313, 22311, 173, 216, (5327.24, 22310.64)))
+kv die: re-plan pass stopped: kv die relays: no spot for emf_WN stage 15 after path index 222 at (1846.8000000000002, 23209.2) (ends embgw.emf_WN -> land_WN.emf; path 223 cells, remaining 539 um, wide True, src (5313, 22311, 173, 216, None) dst (1655, 12295, 173, 12141, (1827.4560000000001, 22734.0)))
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvplan-dev/tools/qwen_kv_die/kv_die.py", line 3961, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvplan-dev/tools/qwen_kv_die/kv_die.py", line 3923, in main
+    m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s, kv_wq_head=a.kv_wq_head, kv_wq_wide=a.kv_wq_wide, kv_wq_mirror=a.kv_wq_mirror, split=a.split, reserve_static_memory=a.reserve_static_memory, reserve_native_astk=a.reserve_native_astk)
+  File "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvplan-dev/tools/qwen_kv_die/kv_die.py", line 1271, in build
+    raise ValueError(f"split KV die has {failures['violations']} unrepaired pin hops: {failures['worst'][:3]}")
+ValueError: split KV die has 1 unrepaired pin hops: [{'bus': 'pvin_WN_2__r9', 'cls': 'kv_oneway', 'bits': 1055, 'um': 1239.8, 'a': 'rly_pvin_WN_2_8.b', 'b': 'pvw_1.vin2'}]
+PREP_EXIT 1

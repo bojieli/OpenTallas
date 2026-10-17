@@ -1,0 +1,7 @@
+ot-run: ot-epyc4       admits   107 GB (avail 404, growth 249, headroom 48, waiters 0/0 GB) load 73/128 running 42 disk 876 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-92478-1792168124 after 0 s
+QUALIFIED baseline expected_exit=0
+QUALIFIED streamstrap expected_exit=1
+QUALIFIED hbmstrap expected_exit=1
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-92478-1792168124): exit 0

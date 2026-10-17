@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.hbm.collect.v1",
+  "collected": "2026-10-16T15:56:29-07:00",
+  "d4a": {
+    "status": "LIVE_DIAGNOSTIC",
+    "remote": "ot-epyc4:/srv/opentallas-scratch/claude/hdie-d4/case_d4a",
+    "unit": "oth-ubuntu-1311986-1792176261",
+    "local_pid": 2221624,
+    "docker": "hdie-v16case-1311986",
+    "memory_gib": 144.2,
+    "cap_gib": 192,
+    "grt": "extra1/30",
+    "repair_buffers": 24832873,
+    "TT_setup": "UNMEASURED",
+    "FF_hold": "UNMEASURED",
+    "SS_sensitivity": "UNMEASURED",
+    "DRC": "UNMEASURED",
+    "classification": "Long raw die nets and graph-clock skew; no final congestion map or endpoint reports yet"
+  },
+  "d4b": {
+    "status": "LIVE_GEN_DIAGNOSTIC",
+    "pid": 3150581,
+    "contract": "57bfb3f03",
+    "strict_bind_instances": 36379,
+    "geometry_mm2": 845.88,
+    "clock_mode": "retired graph default in existing process; preserve and use place.odb with corrected physical clock successor",
+    "initial_hbm_max_noncommon_ps": 1659.2,
+    "qualification": "No GRT launch until coherent actual clock delivery and literal pair checks ready"
+  },
+  "t8": {
+    "reported_by": "die_clock_1552",
+    "status": "TERMINAL_EXIT0_BUT_CLOCK_FAIL",
+    "remote": "ot-epyc4:/srv/opentallas-scratch/claude/die-clock-1016/hbm/t8",
+    "unit": "2794458",
+    "core_TT_spread_ps": 115.5,
+    "core_FF_spread_ps": 97.3,
+    "HBM_TT_spread_ps": 214.6,
+    "HBM_FF_spread_ps": 180.5,
+    "limit_ps": 80
+  },
+  "native_scope": "Mixed actual routed views/SYNTH estimates, not native die qualification; conservative1955.7 remains model only"
+}

@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.s81.capture_split_obstacle_screen.v1",
+  "adopted": false,
+  "physical_qualified": false,
+  "note": "All child bodies opaque. New pins are proposed; 2.16um planning clearance. Trunk+endpoint offset is conservative, not individual detailed routes. Actual track/PG/cut capacity, clock delivery, source binding and TT/FF/DRC remain required.",
+  "summary": {
+    "actual_internal_bit_paths": 8442,
+    "bundles": 84,
+    "unrouted_bits": 0,
+    "bit_bounds_over500": 0,
+    "max_bit_length_bound_um": 482.884,
+    "total_bit_mm_bound": 1143.461
+  },
+  "geometry_summary": {
+    "children": 53,
+    "hard_child_gaps_below20": 0,
+    "internal_bit_paths": 8442,
+    "max_internal_manhattan_um": 471.364,
+    "internal_paths_over500": 0
+  },
+  "outline_um": [
+    1727.976,
+    561.576
+  ],
+  "geometry_sha256": "04ecd69043c37cc29bc6ce51c8b114a650ada6dee1931be2c11ddd6260432dd4",
+  "screen_sha256": "672413fbb40fd6d0e7c614515da5fe2ab625066a349dab8ec113b548a1b852fe",
+  "artifact_directory": "/home/ubuntu/artifacts/s81-hub-parents-0811",
+  "job": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-4183641-1792166974",
+    "exit": 0
+  },
+  "source_sha256": {
+    "tools/s81_ph/capture_split_geometry.py": "5e1671938fd6e4cb9d043cf1fd0afc3f32fd5c48b1f1da7badec239dbf277bdb",
+    "tools/s81_ph/capture_split_route_screen.py": "cd82c06423432eb762b82adff16812df09fb92c1a665fccf649160a1c0d30e76",
+    "tools/s81_ph/capture_split_census.py": "f54db5625775d5a0a0afa194fd61c9f8556e367006b87878c183527a09af5cd0"
+  }
+}

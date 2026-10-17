@@ -1,0 +1,23 @@
+{
+  "status": "COMPONENT_EXACT_ONLY_NOT_NATIVE",
+  "production_shape": {
+    "pairs_per_quadrant": 4,
+    "SMs_per_pair": 2,
+    "PMAX": 8,
+    "cycles_compared_per_run": 228286,
+    "pair_beats": 13440
+  },
+  "actual_positive_T": [
+    0,
+    2
+  ],
+  "actual_mutant_differences": {
+    "pair1_write_drop": 1464,
+    "pair2_skew": 3812,
+    "pair3_quarter_swap": 1080
+  },
+  "preserved_runs": "ot-agidock128:/srv/opentallas-scratch/claude/hsm-1315/xql-bench",
+  "RTL_source": "787b1f017",
+  "keep_replica_successor": "96aea8147",
+  "adoption": "HOLD: physical routes/native pin clocks; literal slot-derived tree stations and compiler pricing unavailable. T2 is a functional bench parameter, not granted physical calendar. ~5.3mm2/5.72%MTP are projections only."
+}
