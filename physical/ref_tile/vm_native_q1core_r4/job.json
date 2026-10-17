@@ -1,0 +1,121 @@
+{
+ "name": "vm_native_q1core_r4-r4-COMMIT",
+ "block": "hfd_vms_bank_native_q1_core",
+ "ref_tile": true,
+ "owner": "Claude H-SM 2200",
+ "purpose": "SE/NE core-only VM bank (H-NETLIST d4f 1b42352f8: q1 master with dq, rq1/rq2, wq1 absent) native closure for the vmb_SE/NE0..7 hoist.",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/hsm-q1core-2200",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+   "tools/hbm_die_v16/gen_vms_hoist.py",
+   "tools/hbm_die_v16/vms_hoist_equiv.py",
+   "tools/hbm_die_v16/run_vms_hoist_equiv_q.sh",
+   "tools/hbm_die_v15/v16_layers/vm_hoist_d4f.json",
+   "physical/common_flow/macro_channel_block.tcl",
+   "physical/ref_tile_specs/smh/vm_q1core_post_iop.tcl"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; hfd_vms_bank_native_q1_core u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_strap.sv rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hoist_equiv_SE",
+    "cmd": "bash tools/hbm_die_v16/run_vms_hoist_equiv_q.sh SE pos {RUN}/bench/SE",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "min_count_regex": "VMS_HOIST_EQUIV SE PASS checks=(\\d+) errors=0"
+   },
+   {
+    "name": "hoist_equiv_NE",
+    "cmd": "bash tools/hbm_die_v16/run_vms_hoist_equiv_q.sh NE pos {RUN}/bench/NE",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "min_count_regex": "VMS_HOIST_EQUIV NE PASS checks=(\\d+) errors=0"
+   },
+   {
+    "name": "mutant_bank_swap_SE",
+    "cmd": "bash tools/hbm_die_v16/run_vms_hoist_equiv_q.sh SE mut {RUN}/bench/SEm",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "fail_regex": "VMS_HOIST_EQUIV SE FAIL checks=[0-9]+ errors=[1-9]"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/vm_native_q1core_r4/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/vm_native_q1core_r4/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/vm_native_q1core_r4 --out {RUN}/record/views/hfd_vms_bank_native_q1_core --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/vm_native_q1core_r4/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/vm_native_q1core_r4/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/vm_native_q1core_r4/vm_native_q1core_r4-r4-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "q1_core (H-NETLIST d4f bdd023804 contract; RTL identical to 1b42352f8) on RECIPE 4 (die boundary hold budget, flop-first pins, no inhold/outhold pads) and the nat2 geometry (270x270 abutted SRAM stack, spine clock). Every data pin registered: inputs +1 edge (as nat2), outputs +1 edge (NEW vs nat2: read return / egress / done one edge later)."
+}
