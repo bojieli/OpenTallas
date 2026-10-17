@@ -79,6 +79,7 @@ def main():
     ap.add_argument('--route-grid', type=float, default=0.0,
                     help='>0: obstacle-aware routed stations on this grid (relay_router.py, d4b-r); 0: legacy L-route points')
     ap.add_argument('--jobs', type=int, default=1)
+    ap.add_argument('--root-keepouts', help='DIE-CLOCK regional root sites (opentallas.die_clock.root_sites.v1): keepout boxes are station-free')
     a = ap.parse_args()
     c = Path(a.case); R = a.reach
     contract = json.loads(Path(a.contract).read_text())
@@ -110,7 +111,8 @@ def main():
     routed = {}
     if a.route_grid > 0:
         import relay_router as RR
-        _ROUTER = RR.Router(man['placement'], man['die_um'], R, G=a.route_grid, carved=man.get('carved_feedthrough'))
+        _ROUTER = RR.Router(man['placement'], man['die_um'], R, G=a.route_grid, carved=man.get('carved_feedthrough'),
+                            keepouts=[s_['keepout'] for s_ in json.load(open(a.root_keepouts))['sites']] if getattr(a, 'root_keepouts', None) else None)
         jobs = []
         for (di, sk), b in buses.items():
             if pl[di]['master'] == 'ot_hbm_su_programme' or any(re.match(r'(por_|rst|reset)', p_) for p_ in b['ports']):

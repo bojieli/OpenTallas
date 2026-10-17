@@ -25,7 +25,7 @@ from scipy.sparse.csgraph import dijkstra
 
 
 class Router:
-    def __init__(self, placement, die_um, R, G=50.0, macro_cost=4.0, carved=None):
+    def __init__(self, placement, die_um, R, G=50.0, macro_cost=4.0, carved=None, keepouts=None):
         self.R, self.G = float(R), float(G)
         W, H = die_um
         self.nx, self.ny = int(math.ceil(W / G)), int(math.ceil(H / G))
@@ -58,6 +58,13 @@ class Router:
         self.free = ~occ
         depth = ndimage.distance_transform_cdt(occ, metric='taxicab') * G
         self.passable = self.free | (depth <= R / 2 - G)
+        # DIE-CLOCK regional root sites (opentallas.die_clock.root_sites.v1 keepout boxes): station-free, wires pass
+        self.keepout_cells = 0
+        for x0, y0, x1, y1 in (keepouts or []):
+            cx0, cy0 = max(0, int(x0 // G)), max(0, int(y0 // G))
+            cx1, cy1 = min(self.nx, int(math.ceil(x1 / G))), min(self.ny, int(math.ceil(y1 / G)))
+            self.keepout_cells += int(self.free[cx0:cx1, cy0:cy1].sum())
+            self.free[cx0:cx1, cy0:cy1] = False
         idx = -np.ones((self.nx, self.ny), np.int64)
         pc = np.flatnonzero(self.passable.ravel())
         idx.ravel()[pc] = np.arange(len(pc))
