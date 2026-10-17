@@ -1,5 +1,5 @@
 {
- "name": "qkd_static_kv_landing_relay_h2-h2-COMMIT",
+ "name": "qkd_static_kv_landing_relay_h2-h2-d602e2d58",
  "block": "qkd_static_kv_landing_relay",
  "ref_tile": true,
  "owner": "Claude:Q-KV KVCTRL-1815",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/kvctrl-lseg-1816",
-  "commit": "COMMIT",
+  "commit": "d602e2d58",
   "extra_paths": [
    "rtl/qwen_sys/static_kv_20261014",
    "rtl/test/qwen_static_kv",
@@ -101,7 +101,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_static_kv_landing_relay_h2/qkd_static_kv_landing_relay_h2-h2-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_static_kv_landing_relay_h2/qkd_static_kv_landing_relay_h2-h2-d602e2d58"
   }
  ],
  "cycles_added": 0,
