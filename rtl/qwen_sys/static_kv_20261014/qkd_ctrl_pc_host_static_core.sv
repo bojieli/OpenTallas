@@ -797,13 +797,19 @@ module qkd_ctrl_pc_sched #(
         e_sec_r <= kv_v ? e_sec_c1 : e_sec_c0; e_row_r <= kv_v ? h_c1[17:10] : h_c0[17:10];
         es0 <= e_sec_c0; es1 <= e_sec_c1; er0 <= h_c0[17:10]; er1 <= h_c1[17:10];
     end
+    // s9 gate f8ca7be68 probe: with ONE pin flop (kvc_q also drives trv = the 64-entry tag-queue read address) the
+    // output select launched at 251.7 ps on e_sec / e_row.  Two dedicated p_kv_v pin-flop copies (kept) drive only
+    // the e_sec (17) and e_row (8) selects; kvc_q keeps the read pointer / tag check / idle veto.  p_kv_v: 3 flop loads.
+    (* keep *) reg kvse_q, kvsr_q;
+    always @(posedge hclk or negedge h_rn) if (!h_rn) begin kvse_q <= 1'b0; kvsr_q <= 1'b0; end
+                                           else begin kvse_q <= kv_v; kvsr_q <= kv_v; end
 `ifdef OT_SCHED_ESEC_MUT
-    wire         esel = 1'b0;                      // mutant: drops the late p_kv_v select (always the tq[tr] head)
+    wire         esel = 1'b0, rsel = 1'b0;         // mutant: drops the late p_kv_v select (always the tq[tr] head)
 `else
-    wire         esel = kvs;
+    wire         esel = kvse_q, rsel = kvsr_q;
 `endif
     assign e_sec = (PINREG != 0) ? (esel ? es1 : es0) : e_sec_r;
-    assign e_row = (PINREG != 0) ? (esel ? er1 : er0) : e_row_r;
+    assign e_row = (PINREG != 0) ? (rsel ? er1 : er0) : e_row_r;
     reg [15:0] ep0,ep1,ep2;
     always @(posedge hclk)begin ep0<=t_head[33:18];ep1<=ep0;ep2<=ep1;end
     assign corrected_epoch=ep2;
