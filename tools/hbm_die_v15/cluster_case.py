@@ -292,8 +292,7 @@ foreach {{c k}} {{tt max ff min}} {{
   report_wns -corner $c > /work/out/wns_${{c}}_${{k}}.rpt
   report_tns -corner $c >> /work/out/wns_${{c}}_${{k}}.rpt
 }}
-report_clock_skew -setup > /work/out/clock_skew.rpt
-report_clock_skew -hold >> /work/out/clock_skew.rpt
+{'report_clock_skew -setup > /work/out/clock_skew.rpt' + chr(10) + 'report_clock_skew -hold >> /work/out/clock_skew.rpt' if a.cts != 'none' else '# --cts none: no clock tree, no skew report (STA-0562 on ideal clocks)'}
 puts OT_DONE
 '''
     (out / 'run.tcl').write_text(tcl)
