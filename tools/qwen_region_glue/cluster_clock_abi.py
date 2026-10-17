@@ -25,7 +25,7 @@ def main():
         assert ports and len(set(ports))==len(ports)
         for port in ports:
             add(f'ck_t{c}_{r}_{port}',f"{child['inst']}.{port}",'hard_tile_clock',None,
-                [round(child['at'][0]+457.92/2,3),round(child['at'][1]+1166.4/2,3)])
+                None)
     # Every actual fabric clocked instance is a sink owner. A run of D stages is
     # D owners: no 5-mm run is treated as a local root merely because it has one clk.
     consumed=set()
