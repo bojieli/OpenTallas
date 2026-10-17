@@ -1,0 +1,651 @@
+{
+ "region": "wrq_lanes_d4f",
+ "author": "Claude H-NETLIST 10-17",
+ "basis_commit": "H-WRQ claude/hwrq-1017 1b7313d89 (ot_hbm_sm_vm_wr_q_t_lanes, kit physical/ref_tile/hsm_smvm_wrq_t_r5): one clock root per SM lane; logically identical to ot_hbm_sm_vm_wr_q_t",
+ "instances": [],
+ "edges": [],
+ "clocks": [
+  {
+   "inst": "smw_SW",
+   "port": "clk_cal",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "smw_SW",
+   "port": "clk_l0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "smw_SW",
+   "port": "clk_l1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "smw_SW",
+   "port": "clk_l2",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "smw_SW",
+   "port": "clk_l3",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "smw_SW",
+   "port": "clk_l4",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "smw_SW",
+   "port": "clk_l5",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "smw_SW",
+   "port": "clk_l6",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "smw_SW",
+   "port": "clk_l7",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "smw_NW",
+   "port": "clk_cal",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "smw_NW",
+   "port": "clk_l0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "smw_NW",
+   "port": "clk_l1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "smw_NW",
+   "port": "clk_l2",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "smw_NW",
+   "port": "clk_l3",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "smw_NW",
+   "port": "clk_l4",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "smw_NW",
+   "port": "clk_l5",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "smw_NW",
+   "port": "clk_l6",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "smw_NW",
+   "port": "clk_l7",
+   "domain": "stream",
+   "kind": "clock"
+  }
+ ],
+ "straps": [],
+ "gaps": [],
+ "remaster": {
+  "smw_SW": {
+   "master": "ot_hbm_sm_vm_wr_q_t_lanes",
+   "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_lanes.sv",
+   "params": {
+    "DEPTH": 4
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_lanes.sv",
+    "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv"
+   ],
+   "port_split": {
+    "rv": [
+     [
+      "rv_s0",
+      0,
+      1
+     ],
+     [
+      "rv_s1",
+      1,
+      2
+     ],
+     [
+      "rv_s2",
+      2,
+      3
+     ],
+     [
+      "rv_s3",
+      3,
+      4
+     ],
+     [
+      "rv_s4",
+      4,
+      5
+     ],
+     [
+      "rv_s5",
+      5,
+      6
+     ],
+     [
+      "rv_s6",
+      6,
+      7
+     ],
+     [
+      "rv_s7",
+      7,
+      8
+     ]
+    ],
+    "rrow": [
+     [
+      "rrow_s0",
+      0,
+      12
+     ],
+     [
+      "rrow_s1",
+      12,
+      24
+     ],
+     [
+      "rrow_s2",
+      24,
+      36
+     ],
+     [
+      "rrow_s3",
+      36,
+      48
+     ],
+     [
+      "rrow_s4",
+      48,
+      60
+     ],
+     [
+      "rrow_s5",
+      60,
+      72
+     ],
+     [
+      "rrow_s6",
+      72,
+      84
+     ],
+     [
+      "rrow_s7",
+      84,
+      96
+     ]
+    ],
+    "rdata": [
+     [
+      "rdata_s0",
+      0,
+      256
+     ],
+     [
+      "rdata_s1",
+      256,
+      512
+     ],
+     [
+      "rdata_s2",
+      512,
+      768
+     ],
+     [
+      "rdata_s3",
+      768,
+      1024
+     ],
+     [
+      "rdata_s4",
+      1024,
+      1280
+     ],
+     [
+      "rdata_s5",
+      1280,
+      1536
+     ],
+     [
+      "rdata_s6",
+      1536,
+      1792
+     ],
+     [
+      "rdata_s7",
+      1792,
+      2048
+     ]
+    ],
+    "sm_fault": [
+     [
+      "smf_s0",
+      0,
+      1
+     ],
+     [
+      "smf_s1",
+      1,
+      2
+     ],
+     [
+      "smf_s2",
+      2,
+      3
+     ],
+     [
+      "smf_s3",
+      3,
+      4
+     ],
+     [
+      "smf_s4",
+      4,
+      5
+     ],
+     [
+      "smf_s5",
+      5,
+      6
+     ],
+     [
+      "smf_s6",
+      6,
+      7
+     ],
+     [
+      "smf_s7",
+      7,
+      8
+     ]
+    ],
+    "sm_sched_fault": [
+     [
+      "sms_s0",
+      0,
+      1
+     ],
+     [
+      "sms_s1",
+      1,
+      2
+     ],
+     [
+      "sms_s2",
+      2,
+      3
+     ],
+     [
+      "sms_s3",
+      3,
+      4
+     ],
+     [
+      "sms_s4",
+      4,
+      5
+     ],
+     [
+      "sms_s5",
+      5,
+      6
+     ],
+     [
+      "sms_s6",
+      6,
+      7
+     ],
+     [
+      "sms_s7",
+      7,
+      8
+     ]
+    ],
+    "wq": [
+     [
+      "wq_s0",
+      0,
+      281
+     ],
+     [
+      "wq_s1",
+      281,
+      562
+     ],
+     [
+      "wq_s2",
+      562,
+      843
+     ],
+     [
+      "wq_s3",
+      843,
+      1124
+     ],
+     [
+      "wq_s4",
+      1124,
+      1405
+     ],
+     [
+      "wq_s5",
+      1405,
+      1686
+     ],
+     [
+      "wq_s6",
+      1686,
+      1967
+     ],
+     [
+      "wq_s7",
+      1967,
+      2248
+     ]
+    ]
+   }
+  },
+  "smw_NW": {
+   "master": "ot_hbm_sm_vm_wr_q_t_lanes",
+   "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_lanes.sv",
+   "params": {
+    "DEPTH": 4
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_lanes.sv",
+    "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv"
+   ],
+   "port_split": {
+    "rv": [
+     [
+      "rv_s0",
+      0,
+      1
+     ],
+     [
+      "rv_s1",
+      1,
+      2
+     ],
+     [
+      "rv_s2",
+      2,
+      3
+     ],
+     [
+      "rv_s3",
+      3,
+      4
+     ],
+     [
+      "rv_s4",
+      4,
+      5
+     ],
+     [
+      "rv_s5",
+      5,
+      6
+     ],
+     [
+      "rv_s6",
+      6,
+      7
+     ],
+     [
+      "rv_s7",
+      7,
+      8
+     ]
+    ],
+    "rrow": [
+     [
+      "rrow_s0",
+      0,
+      12
+     ],
+     [
+      "rrow_s1",
+      12,
+      24
+     ],
+     [
+      "rrow_s2",
+      24,
+      36
+     ],
+     [
+      "rrow_s3",
+      36,
+      48
+     ],
+     [
+      "rrow_s4",
+      48,
+      60
+     ],
+     [
+      "rrow_s5",
+      60,
+      72
+     ],
+     [
+      "rrow_s6",
+      72,
+      84
+     ],
+     [
+      "rrow_s7",
+      84,
+      96
+     ]
+    ],
+    "rdata": [
+     [
+      "rdata_s0",
+      0,
+      256
+     ],
+     [
+      "rdata_s1",
+      256,
+      512
+     ],
+     [
+      "rdata_s2",
+      512,
+      768
+     ],
+     [
+      "rdata_s3",
+      768,
+      1024
+     ],
+     [
+      "rdata_s4",
+      1024,
+      1280
+     ],
+     [
+      "rdata_s5",
+      1280,
+      1536
+     ],
+     [
+      "rdata_s6",
+      1536,
+      1792
+     ],
+     [
+      "rdata_s7",
+      1792,
+      2048
+     ]
+    ],
+    "sm_fault": [
+     [
+      "smf_s0",
+      0,
+      1
+     ],
+     [
+      "smf_s1",
+      1,
+      2
+     ],
+     [
+      "smf_s2",
+      2,
+      3
+     ],
+     [
+      "smf_s3",
+      3,
+      4
+     ],
+     [
+      "smf_s4",
+      4,
+      5
+     ],
+     [
+      "smf_s5",
+      5,
+      6
+     ],
+     [
+      "smf_s6",
+      6,
+      7
+     ],
+     [
+      "smf_s7",
+      7,
+      8
+     ]
+    ],
+    "sm_sched_fault": [
+     [
+      "sms_s0",
+      0,
+      1
+     ],
+     [
+      "sms_s1",
+      1,
+      2
+     ],
+     [
+      "sms_s2",
+      2,
+      3
+     ],
+     [
+      "sms_s3",
+      3,
+      4
+     ],
+     [
+      "sms_s4",
+      4,
+      5
+     ],
+     [
+      "sms_s5",
+      5,
+      6
+     ],
+     [
+      "sms_s6",
+      6,
+      7
+     ],
+     [
+      "sms_s7",
+      7,
+      8
+     ]
+    ],
+    "wq": [
+     [
+      "wq_s0",
+      0,
+      281
+     ],
+     [
+      "wq_s1",
+      281,
+      562
+     ],
+     [
+      "wq_s2",
+      562,
+      843
+     ],
+     [
+      "wq_s3",
+      843,
+      1124
+     ],
+     [
+      "wq_s4",
+      1124,
+      1405
+     ],
+     [
+      "wq_s5",
+      1405,
+      1686
+     ],
+     [
+      "wq_s6",
+      1686,
+      1967
+     ],
+     [
+      "wq_s7",
+      1967,
+      2248
+     ]
+    ]
+   }
+  }
+ }
+}
