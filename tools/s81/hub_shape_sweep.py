@@ -56,8 +56,8 @@ BOX = {f[0]: f[1:] for f in FIXED}
 HCP_ROW = [(f"hcp{i}", 9417.6 + 1814.4 * i, 24624.0, 1728.0, 1296.0) for i in range(6)]
 GR = json.loads(GRAPH.read_text())
 
-# hub blocks (w, h): A2-F VM (S-VM 19:34), SU closure (a), a2_fit capture group / collective, HC v19 slots
-B = dict(su=(1935.36, 10463.04), vm=(4104.0, 4115.0), mix4=(3229.2, 1321.92), capg=(1728.0, 3207.6),
+# hub blocks (w, h): VM 4,104 x 4,644 (field4 parent, Codex S81 VM 21:43; A2-F was 4,115 tall), SU closure (a), a2_fit capture group / collective, HC v19 slots
+B = dict(su=(1935.36, 10463.04), vm=(4104.0, 4644.0), mix4=(3229.2, 1321.92), capg=(1728.0, 3207.6),
          coll=(1728.0, 2894.4), host=(1728.0, 129.6), hc_t=(1816.56, 9849.6), hc_corr=(1816.56, 799.2),
          hc_s=(1816.56, 9324.7), bk=(5270.376, 1203.072), hcp=(6 * 1728.0 + 5 * 86.4, 1296.0))
 STATIONS_IN_HUB_MM2 = 1.3
