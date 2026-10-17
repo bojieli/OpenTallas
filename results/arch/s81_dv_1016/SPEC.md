@@ -5,7 +5,13 @@ Stream S81-DV (owner decision 0cj, 2026-10-16 ~22:00). Plan level: nothing in th
 **Status: COMPOSED_NOT_NATIVE.** Every rate below is composed from the token-path DAG and plan geometry. It becomes a
 measured rate only once the slice benches and the die trial report their latencies.
 
-**Current candidate: p1**, revised after the coordinator review of 10-16:
+**Current die-trial base: p1b** (10-17). It is p1's geometry plus two changes:
+- the row-0 frames are placed MX, so their cfifo x tap faces the slice;
+- each shared unit sits against the slice it talks to.
+
+p2's fill was dropped and p3's compaction was cancelled; see "White space" below.
+
+p1 was the revision after the coordinator review of 10-16:
 - reticle margin;
 - slice-column white space.
 
@@ -68,7 +74,34 @@ Why the column can be narrow:
 - The +63 cycles are priced as the rule `norm_finish_seq` on every full-h norm: −0.55% MTP (4,248 → 4,226).
 - A 2–4 adder finish on independent subtrees, same operands and order, so still exact, could recover at most that 0.55%. It is not pursued (owner: only significant gains). The single-adder leaf keeps the flop count near the 15 k root guideline.
 
-### White space (owner rule no-empty-regions-1017): p2 = p1 + fill
+### Decision 10-17: p1b is the die-trial base; p2 fill dropped; p3 cancelled
+
+The rule (coordinator, from the owner's intent of easier routing): **no empty area on the path of a link** between communicating blocks. Empty area off the link paths is acceptable.
+
+| | p1 | **p1b** |
+|---|---|---|
+| Row-0 frames | R0: cfifo tap away from the slice, lanes 3.8 mm down an empty column | **MX: tap toward the slice, lanes ≤ 1.9 mm** |
+| Shared units | Centred in the inter-tier void | **Against the slice they talk to** |
+| Cut / windows > 0.55 | 0.427 / 0 | **0.415 / 0** |
+| Relays | 2,018 | **1,586** |
+| bit·mm | 0.47 M | **0.34 M** |
+| Phase path | 117 stages | **112 stages** |
+| Worst local return | 3.8 mm | **1.9 mm** |
+| MTP (DV base) | 4,225.5 | **4,243.5 (+28.0%)**; worst stacked 3,788 (+14.3%) |
+
+Links that still pass more than 450 µm of empty area are inherent:
+- the two ring end-column links (N↔S tier, 5.4–7.9 mm);
+- the four q/P·V links between the band and the S slices of columns 1/6 (~4.8 mm);
+- the G-unit ctl bundle in column 3.
+
+Each is a single registered, repeated link along its slice column.
+
+The cancelled alternatives:
+- **p2** (`dv_plan.py --fill`): 43 decap / repeater-site blocks, 93.9 mm². Dropped: repeater sites fit in the channels (≈ 0.001 mm² per mm of link), and decap needs a PDN estimate, not area filling.
+- **p3** (`--layout p3`): 0.95-mm columns with 0.9 × 4.9 slices. It gave 26.57 × 25.0 = 664 mm², but the worst cut rose to 0.604 (4 windows > 0.55), white space was still 17%, and the slice broke the aspect rule while concentrating pins. Cancelled; the image is kept in `p3_cancelled/`.
+- **ROM frames in the slice-column ends** (+12.5% ROM, ~+1.2% tok/s): deferred. The gain is under the significant-gain bar and it reworks the frames.
+
+### White space (history) (owner rule no-empty-regions-1017): p2 = p1 + fill
 
 Measured with `tools/s81_dv/whitespace.py`: a 50-µm raster; an empty rectangle wider and taller than 450 µm counts as over channel.
 

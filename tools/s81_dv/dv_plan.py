@@ -31,6 +31,9 @@ H9, H10A, H10B = 2695.68, 2985.12, 3000.24   # c26l frame heights (9-slot, 10-sl
 BAND = 1700.0                     # south band: HBM PHY + ctrl + service strip (svc 1.58 mm)
 STREET = 380.0                    # horizontal ring street at each tier middle
 SLICE_W, SLICE_H = 1250.0, 3500.0   # 2.8:1, 4.375 mm2
+LAYOUT = 'p1'                     # p1/p2: 1.30-mm columns; p3 (cancelled 10-17): 0.95-mm columns
+ROW0_MX = False                   # p1b: row-0 frames placed MX so their cfifo x tap faces their slice
+SVC_W = 4250.0
 HOP_UM = 405.0                    # plan hop (0.9 x measured S81 reach 455 um, rounded down to the 405 plan rule)
 XB = 1104                         # x stream beat: 64 FP8 codes + 2 exps (566 b) + second lane (538 b), as c26l cx+x2
 RET = 68                          # frame return lane (dsfd_m2l_vr_68x1x)
@@ -91,6 +94,44 @@ def column_heights():
 SLOTS = lambda h: 9 if h == H9 else 10
 
 
+def place_units_p3(P, facts, colx, streets):
+    """p3: shared units 0.9 mm wide in the slice columns, one per column segment side, each linked to the nearest
+    slice of its column (lower unit -> S slice, upper unit -> N slice); x-chain lanes end within ~1.1 mm of a slice."""
+    U = 900.0
+    segs = {}
+    for c in range(NCOL):
+        S, N = P.blocks[P.idx[f's_{c}S']], P.blocks[P.idx[f's_{c}N']]
+        segs[c] = dict(bot=(BAND + 120, S['y'] - 1100), void=(S['y'] + S['h'] + 1100, N['y'] - 1100),
+                       top=(N['y'] + N['h'] + 1100, DIE_H - 250))
+    # (name, master, area mm2, column, segment, link-to tier, width)
+    # bk (index select / collect: HBM-side) in the bottom ends next to the PHY; G-unit, seq/host, collective edge
+    # engines and Engram mix in the inter-tier voids (central / edge-adjacent); collector split in three <=3:1 pieces
+    plan = [('coll_WS', 'dsdv_coll_edge', 0.84, 0, 'void', 'S', 560), ('coll_WN', 'dsdv_coll_edge', 0.84, 0, 'void', 'N', 560),
+            ('coll_ES', 'dsdv_coll_edge', 0.84, 7, 'void', 'S', 560), ('coll_EN', 'dsdv_coll_edge', 0.84, 7, 'void', 'N', 560),
+            ('gunit_r', 'dsdv_gunit_router', 1.40, 3, 'void', 'S', U), ('gunit_h', 'dsdv_gunit_hc', 1.35, 3, 'void', 'N', U),
+            ('seqhost', 'dsdv_seq_host', 2.20, 4, 'void', 'S', U),
+            ('mix4_w0', 'dsfd_engram_mix4_quarter', 1.30, 2, 'void', 'S', U), ('mix4_w1', 'dsfd_engram_mix4_quarter', 1.30, 2, 'void', 'N', U),
+            ('mix4_e0', 'dsfd_engram_mix4_quarter', 1.30, 5, 'void', 'S', U), ('mix4_e1', 'dsfd_engram_mix4_quarter', 1.30, 5, 'void', 'N', U),
+            ('bk_sel', 'dsfd_bk_selector', 1.70, 3, 'bot', 'S', U), ('bk_col0', 'dsfd_bk_collector_third', 1.55, 2, 'bot', 'S', U),
+            ('bk_col1', 'dsfd_bk_collector_third', 1.55, 4, 'bot', 'S', U), ('bk_col2', 'dsfd_bk_collector_third', 1.55, 5, 'bot', 'S', U)]
+    used = {}
+    vpair = {}
+    for nm, master, a, c, sg, t, w in plan:
+        h = a * 1e6 / w
+        lo, hi = segs[c][sg]
+        k = used.get((c, sg), [])
+        y = (lo if t == 'S' else hi - h) if sg == 'void' else hi - h    # ends: hug the slice side of the segment
+        for (ya, yb) in k:
+            assert y + h <= ya - 100 or y >= yb + 100, (nm, c, sg)
+        assert lo <= y and y + h <= hi, (nm, c, sg, lo, hi, h)
+        assert max(w, h) / min(w, h) <= 3.05 or nm.startswith('coll'), (nm, w, h)
+        P.block(nm, master, 'unit', 'void', colx(c) + 25, y, w, h)
+        k.append((y, y + h)); used[(c, sg)] = k
+        vpair[nm] = (f's_{c}{t}', t)
+    facts['_vpair'] = vpair
+    facts['p3_segments_um'] = {c: {k: round(v[1] - v[0]) for k, v in sg.items()} for c, sg in segs.items()}
+
+
 def build():
     P = Plan()
     pitch, scol_w = PITCH, SCOL_W
@@ -116,7 +157,8 @@ def build():
                     if r == 2:
                         y = streets[t] + STREET
                     h = hs[4 * t + r]
-                    P.block(f'f_{c}{side}{t}{r}', 'col_h9' if h == H9 else 'col_h10', 'frame', f'cl{c}{"SN"[t]}', fx, y, FRAME_W, h)
+                    mst = ('col_h9' if h == H9 else 'col_h10') + ('_MX' if (ROW0_MX or LAYOUT == 'p3') and r == 0 else '')
+                    P.block(f'f_{c}{side}{t}{r}', mst, 'frame', f'cl{c}{"SN"[t]}', fx, y, FRAME_W, h)
                     y += h
                 ymax = max(ymax, y)
     facts['frame_top_um'] = ymax
@@ -135,11 +177,13 @@ def build():
     phy_x = DIE_W / 2 - 4250
     P.block('phy_hbm', 'ot_hbm3e_phy_v41x_aw30_e8p5', 'phy', 'south', phy_x, 20, 8500, 1177)
     P.block('hbm_ctrl', 'dsfd_ctrl', 'ctrl', 'south', phy_x, 1210, 8500, 250)
-    P.block('svc_W', 'dsfd_svc_half', 'svc', 'south', phy_x - 4260, 20, 4250, 1580)
-    P.block('svc_E', 'dsfd_svc_half', 'svc', 'south', phy_x + 8510, 20, 4250, 1580)
+    svh = 13430000.0 / 2 / SVC_W        # service half area kept (13.43 mm2 total), height follows the width
+    P.block('svc_W', 'dsfd_svc_half', 'svc', 'south', phy_x - SVC_W - 10, 20, SVC_W, svh)
+    P.block('svc_E', 'dsfd_svc_half', 'svc', 'south', phy_x + 8510, 20, SVC_W, svh)
+    assert svh <= BAND - 20, svh
     for k in range(4):
-        P.block(f'sm_W{k}', 'ot_s81_su_sm', 'unit', 'south', phy_x - 4270 - (k + 1) * 1235, 20, 1231, 1058)
-        P.block(f'sm_E{k}', 'ot_s81_su_sm', 'unit', 'south', phy_x + 12770 + k * 1235, 20, 1231, 1058)
+        P.block(f'sm_W{k}', 'ot_s81_su_sm', 'unit', 'south', phy_x - SVC_W - 20 - (k + 1) * 1235, 20, 1231, 1058)
+        P.block(f'sm_E{k}', 'ot_s81_su_sm', 'unit', 'south', phy_x + 8520 + SVC_W + k * 1235, 20, 1231, 1058)
     assert P.blocks[P.idx['sm_W3']]['x'] >= 0 and P.blocks[P.idx['sm_E3']]['x'] + 1231 <= DIE_W
     # ---------------------------------------------------------------- inter-tier void: global / edge units
     # the S tier's x chains use the void's lower part and the N tier's its upper part; the middle holds the small
@@ -149,22 +193,36 @@ def build():
         return P.blocks[P.idx[f's_{c}S']]['y'] + SLICE_H + 150
     def chain_bot_N(c):
         return P.blocks[P.idx[f's_{c}N']]['y'] - 150
-    units = {0: [('coll_WS', 'dsdv_coll_edge', 1200), ('coll_WN', 'dsdv_coll_edge', 1200)],
+    if LAYOUT == 'p3':
+        place_units_p3(P, facts, colx, streets)
+    else:
+      units = {0: [('coll_WS', 'dsdv_coll_edge', 1200), ('coll_WN', 'dsdv_coll_edge', 1200)],
              7: [('coll_ES', 'dsdv_coll_edge', 1200), ('coll_EN', 'dsdv_coll_edge', 1200)],
              1: [('bk_sel', 'dsfd_bk_selector', 2000)], 6: [('bk_col', 'dsfd_bk_collector', 2900)],
              2: [('mix4_w', 'dsfd_engram_mix4_half', 2600)], 5: [('mix4_e', 'dsfd_engram_mix4_half', 2600)],
              3: [('gunit', 'dsdv_gunit', 2800)], 4: [('seqhost', 'dsdv_seq_host', 2200)]}
-    facts['void_free_um'] = {}
-    for c, us in units.items():
-        lo_, hi_ = chain_top_S(c), chain_bot_N(c)
-        facts['void_free_um'][c] = round(hi_ - lo_)
-        need = sum(h for _, _, h in us) + 100 * (len(us) - 1)
-        assert need <= hi_ - lo_, (c, need, hi_ - lo_)
-        y = (lo_ + hi_ - need) / 2
-        for nm, master, h in us:
-            wu = 680 if c in (0, NCOL - 1) else 980          # end columns leave window 3 to the ring end link
-            P.block(nm, master, 'unit', 'void', colx(c) + 160, y, wu, h)
-            y += h + 100
+      facts['void_free_um'] = {}
+      for c, us in units.items():
+          lo_, hi_ = chain_top_S(c), chain_bot_N(c)
+          facts['void_free_um'][c] = round(hi_ - lo_)
+          need = sum(h for _, _, h in us) + 100 * (len(us) - 1)
+          assert need <= hi_ - lo_, (c, need, hi_ - lo_)
+          # each unit hugs the slice it talks to (no empty area on a link path); the G-unit (ctl to both tiers) and
+          # stacked pairs keep the centre / their ends
+          tier = {'coll_WS': 'S', 'coll_ES': 'S', 'bk_sel': 'S', 'bk_col': 'S', 'coll_WN': 'N', 'coll_EN': 'N',
+                  'mix4_w': 'N', 'mix4_e': 'N', 'seqhost': 'N'}
+          if len(us) == 1 and us[0][0] in tier:
+              y = lo_ if tier[us[0][0]] == 'S' else hi_ - us[0][2]
+          elif len(us) == 2:
+              y = None
+          else:
+              y = (lo_ + hi_ - need) / 2
+          for j, (nm, master, h) in enumerate(us):
+              wu = 680 if c in (0, NCOL - 1) else 980          # end columns leave window 3 to the ring end link
+              yy = y if y is not None else (lo_ if j == 0 else hi_ - h)
+              P.block(nm, master, 'unit', 'void', colx(c) + 160, yy, wu, h)
+              if y is not None:
+                  y += h + 100
     ys, yn = streets[0] + STREET / 2, streets[1] + STREET / 2
     for side, xl in (('W', 0.0), ('E', DIE_W - 260)):
         for t, yc in (('S', ys), ('N', yn)):
@@ -185,7 +243,7 @@ def build():
                        [(p0[0], p0[1] + off), (p1[0], p1[1] + off)], 'x all-gather / collective / scalar exchange (TDM)')
     for c in (0, NCOL - 1):
         a, b = f's_{c}S', f's_{c}N'
-        xr = colx(c) + 900
+        xr = colx(c) + (900 if LAYOUT != 'p3' else 690)
         for d, (u, v, dx) in (('N', (a, b, -30)), ('S', (b, a, 30))):
             p0, p1 = pin(u, 'N' if d == 'N' else 'S'), pin(v, 'S' if d == 'N' else 'N')
             P.link(f'xv{d}_{c}', 'xring', XB, (u, 'xv' + d, (xr + dx, p0[1])), (v, 'xv' + d, (xr + dx, p1[1])),
@@ -201,9 +259,10 @@ def build():
                     fn = f'f_{c}{side}{t}{r}'
                     F = P.blocks[P.idx[fn]]
                     fx = F['x'] + F['w'] if side == 'L' else F['x']
-                    fy = F['y'] + 400
+                    fy = F['y'] + F['h'] - 400 if ((LAYOUT == 'p3' or ROW0_MX) and r == 0) else F['y'] + 400   # p3: row 0 MX
                     sxp = S['x'] if side == 'L' else S['x'] + S['w']
-                    vx = colx(c) + (20 + 15 * r if side == 'L' else SCOL_W - 125 + 15 * r)
+                    vx = colx(c) + ((20 + 15 * r if side == 'L' else SCOL_W - 125 + 15 * r) if LAYOUT != 'p3'
+                                    else (8 + 9 * r if side == 'L' else SCOL_W - 78 + 9 * r))
                     sy = S['y'] if fy < S['y'] else S['y'] + S['h']
                     if r in (1, 2):
                         if S['y'] + 100 <= fy <= S['y'] + S['h'] - 100:
@@ -215,31 +274,36 @@ def build():
                         pn = f'f_{c}{side}{t}{1 if r == 0 else 2}'
                         PF = P.blocks[P.idx[pn]]
                         pfx, pfy = (PF['x'] + PF['w'] if side == 'L' else PF['x']), PF['y'] + 400 + 120
+                        if (LAYOUT == 'p3' or ROW0_MX) and r == 0:
+                            pfy = PF['y'] + 400 - 120   # chain forward leaves row 1 toward row 0's MX tap
                         P.link(f'x_{fn}', 'x_frame', XB, (pn, 'xo', (pfx, pfy)), (fn, 'x', (fx, fy)), [(pfx, pfy), (vx, pfy), (vx, fy), (fx, fy)], 'x chain forward (frame -> next frame)')
                     P.link(f'r_{fn}', 'ret', RET, (fn, 'ret', (fx, fy + 60)), (sn, 'ret', (vx + 30, sy)), [(fx, fy + 60), (vx + 30, fy + 60), (vx + 30, sy)], 'finished rows')
     # void units <-> their column's slices (vertical in the column's right-hand lanes, offsets 900-1100)
-    vpair = {'coll_WS': ('s_0S', 'S'), 'coll_WN': ('s_0N', 'N'), 'coll_ES': ('s_7S', 'S'), 'coll_EN': ('s_7N', 'N'),
+    vpair = facts.pop('_vpair', None) or {'coll_WS': ('s_0S', 'S'), 'coll_WN': ('s_0N', 'N'), 'coll_ES': ('s_7S', 'S'), 'coll_EN': ('s_7N', 'N'),
              'bk_sel': ('s_1S', 'S'), 'bk_col': ('s_6S', 'S'), 'mix4_w': ('s_2N', 'N'), 'mix4_e': ('s_5N', 'N'),
              'seqhost': ('s_4N', 'N')}
     for u, (sn, t) in vpair.items():
         U, S = P.blocks[P.idx[u]], P.blocks[P.idx[sn]]
         c = int(sn[2]); xa = colx(c) + 640 if c not in (0, NCOL - 1) else colx(c) + 520
+        if LAYOUT == 'p3':
+            xa = colx(c) + (300 if c in (0, NCOL - 1) else 420)
         uy = U['y'] if t == 'S' else U['y'] + U['h']
         sy = S['y'] + S['h'] if t == 'S' else S['y']
         bits = 2 * COLL_LANE if u.startswith('coll') else XB
         P.link(f'u_{u}', 'coll' if u.startswith('coll') else 'unit', bits, (u, 'o', (xa, uy)), (sn, 'i', (xa, sy)), [(xa, uy), (xa, sy)], 'unit -> slice ring stop')
         P.link(f'v_{u}', 'coll' if u.startswith('coll') else 'unit', bits, (sn, 'o', (xa + 60, sy)), (u, 'i', (xa + 60, uy)), [(xa + 60, sy), (xa + 60, uy)], 'slice ring stop -> unit')
     # G-unit: commands, expert ids, HC coefficients to s_3S / s_3N, then along the streets through the ring stops
-    G = P.blocks[P.idx['gunit']]
+    gname = 'gunit' if 'gunit' in P.idx else 'gunit_r'
+    G = P.blocks[P.idx[gname]]
     for c in range(NCOL):
         for t in 'SN':
             sn = f's_{c}{t}'
             S = P.blocks[P.idx[sn]]
-            gx = colx(3) + 470 + 10 * c
+            gx = colx(3) + (470 if LAYOUT != 'p3' else 250) + 10 * c
             g = (gx, G['y'] if t == 'S' else G['y'] + G['h'])
             st_y = S['y'] + SLICE_H / 2 + (150 if t == 'S' else -150)
             p = (S['x'] + S['w'] / 2, st_y)
-            P.link(f'ctl_{sn}', 'ctl', CTL, ('gunit', 'ctl', g), (sn, 'ctl', p), [g, (gx, st_y), p], 'ctl tree (column + street, via ring stops)')
+            P.link(f'ctl_{sn}', 'ctl', CTL, (gname, 'ctl', g), (sn, 'ctl', p), [g, (gx, st_y), p], 'ctl tree (column + street, via ring stops)')
     # attention: q from s_1S / s_6S down the column to the service half; P.V rows back up; abutted faces as lanes
     src_of, dst_of = {}, {}
     def face(nm, a, b, bits, lanes, cls, note):
@@ -263,7 +327,7 @@ def build():
             face(f'smc{side}{k}', (A['x'] if side == 'W' else A['x'] + A['w'], 60), (A['x'] if side == 'W' else A['x'] + A['w'], 1000), 4096, 8, 'attn', 'SM chain (abutted)')
         sn = f's_{c}S'; Sl = P.blocks[P.idx[sn]]
         top = S['y'] + S['h']
-        qx, px = colx(c) + 620, colx(c) + 690
+        qx, px = (colx(c) + 620, colx(c) + 690) if LAYOUT != 'p3' else (colx(c) + 400, colx(c) + 470)
         sxq = min(max(qx, S['x'] + 50), S['x'] + S['w'] - 150)
         P.link(f'q_{side}', 'attn', XB, (sn, 'q', (qx, Sl['y'])), (svc, 'q', (sxq, top)), [(qx, Sl['y']), (qx, top + 100), (sxq, top + 100), (sxq, top)], 'q heads from the ring')
         P.link(f'pv_{side}', 'attn', XB, (svc, 'pv', (sxq + 70, top)), (sn, 'pv', (px, Sl['y'])), [(sxq + 70, top), (sxq + 70, top + 170), (px, top + 170), (px, Sl['y'])], 'P.V rows into the all-gather')
@@ -386,8 +450,17 @@ def main():
     ap.add_argument('--revision', default='dv-p1')
     ap.add_argument('--hop-um', type=float, default=HOP_UM, help='plan hop (sensitivity: H-REACH unbuffered 200 um)')
     ap.add_argument('--fill', action='store_true', help='owner rule no-empty-regions-1017: fill slice-column stretches')
+    ap.add_argument('--layout', default='p1', choices=('p1', 'p3'))
+    ap.add_argument('--row0-mx', action='store_true', help='p1b: row-0 frames MX (tap toward the slice)')
     a = ap.parse_args()
     HOP_UM = a.hop_um
+    global ROW0_MX
+    ROW0_MX = a.row0_mx
+    if a.layout == 'p3':
+        global LAYOUT, SCOL_W, SLICE_W, SLICE_H, PITCH, DIE_W, SVC_W
+        LAYOUT, SCOL_W, SLICE_W, SLICE_H, SVC_W = 'p3', 950.0, 900.0, 4900.0, 4000.0
+        PITCH = 2 * FRAME_PITCH + SCOL_W
+        DIE_W = 2 * EDGE + NCOL * PITCH
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     P, facts = build()
     geometry_facts(P, facts)
