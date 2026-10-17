@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  345.6,
-  516.24
+  432.0,
+  660.96
  ],
  "core": [
   2.16,
   2.16,
-  343.44,
-  514.08
+  429.84,
+  658.8000000000001
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
@@ -50,7 +50,14 @@
  },
  "clock_port": "clk",
  "blocks": [],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "clock_span",
+   "432.0 x 660.96 um: one clock root over > 600 um",
+   "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  ]
+ ],
  "referenced": [
   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
   "physical/ref_tile/s81lk_kp4_dec/kit.env",
