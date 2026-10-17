@@ -1,5 +1,5 @@
 {
- "name": "s81sl_vq-s81sl_vq-COMMIT",
+ "name": "s81sl_vq-s81sl_vq-2296e5935",
  "block": "ot_s81sl_vq",
  "ref_tile": true,
  "owner": "Claude:S81-SLICE",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/s81slice-1017",
-  "commit": "COMMIT",
+  "commit": "2296e5935",
   "extra_paths": [
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
@@ -113,7 +113,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81sl_vq/s81sl_vq-s81sl_vq-COMMIT"
+   "to": "results/rtl/ref_tile/s81sl_vq/s81sl_vq-s81sl_vq-2296e5935"
   }
  ],
  "cycles_added": 0,
