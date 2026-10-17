@@ -832,7 +832,7 @@ module qkd_ctrl_pc_cdc_child #(
     input wire es_expected_valid,input wire [60:0] es_expected_identity,
     input wire [28:0] es_expected_address,input wire [4:0] es_expected_pc,input wire [1:0] es_expected_stack,
     output wire completion_v,completion_we,completion_fault,
-    output wire idle_core,output reg drain_fault_core,
+    output reg idle_core,output reg drain_fault_core,
     input  wire         s_cr,                          // sched u_ctl credit register
     input  wire         p_em_v,                        // port child embedding return
     input  wire [257:0] p_em_d,
@@ -912,10 +912,18 @@ module qkd_ctrl_pc_cdc_child #(
     wire dq_push=es_v_q,dq_pop=s_credit;
     wire core_drain_activity_q=es_v_q||completion_v||e_v||er_v||s_credit||er_cr;   // all but the raw es[0] pin
     wire core_drain_activity=core_drain_activity_q;
-    reg idle_core_r;
-    (* keep *) reg es0_idle_q;
-    always @(posedge ck or negedge rs_q) if(!rs_q) es0_idle_q<=1'b0; else es0_idle_q<=es[0];
-    assign idle_core=idle_core_r&&!es0_idle_q;
+    // cdc_s7c (Q-KVELEM2 2026-10-17): idle_core is ONE export flop. cdc_s7b exported idle_core_r && !es0_idle_q (an AND
+    // after two flops, both async-cleared by rs_q and loaded on the same ck edge): native launch 225.1 > 220 on that pin.
+    // The flop now registers the same AND of the two next states, idle_next && !es[0], so on every edge
+    //   idle_core(t+1) = idle_next(t) && !es[0](t) = idle_core_r(t+1) && !es0_idle_q(t+1)   (both reset to 0)
+    // i.e. 0 cycles, bit-identical at the pin (bench tb_cdc_idle_export_equiv vs the s7b reference). The raw es[0] pin
+    // passes one gate (the keep boundary below) before the flop; es[0] still loads the es_v_q pin flop.
+    (* keep *) wire idle_next;
+`ifdef OT_CDC_IDLE_EXPORT_MUT
+    wire es0_veto = 1'b0;           // mutant: the es[0] same-edge veto is dropped (s7b would drop idle_core here)
+`else
+    wire es0_veto = es[0];
+`endif
     reg core_debt_zero_q;reg [1:0] core_quiet_q;
     always @(posedge ck or negedge rs_q)
       if(!rs_q)begin core_debt_zero_q<=0;core_quiet_q<=0;end
@@ -926,7 +934,7 @@ module qkd_ctrl_pc_cdc_child #(
     always @(posedge ck or negedge rs_q)
       if(!rs_q)begin
         drain_desc<=0;drain_reads<=0;drain_credits<=0;
-        drain_fault_core<=0;idle_core_r<=0;
+        drain_fault_core<=0;idle_core<=0;
       end else begin
         case({dc_push,dc_pop})
           2'b10:drain_desc<=drain_desc+16'd1;
@@ -949,12 +957,14 @@ module qkd_ctrl_pc_cdc_child #(
            (dc_push&&!dc_pop&&drain_desc==16'hffff)||
            (dr_push&&!dr_pop&&drain_reads==16'hffff)||
            (dq_push&&!dq_pop&&drain_credits==16'hffff))drain_fault_core<=1;
-        if(DRAIN_PIPE!=0)idle_core_r<=core_debt_zero_q&&(&core_quiet_q)&&!core_drain_activity_q&&
-          !drain_fault_core&&!completion_fault&&!f_core&&!native_intake_fault;
-        else idle_core_r<=drain_desc==0&&drain_reads==0&&drain_credits==0&&
-          !es_v_q&&!completion_v&&!e_v&&!er_v&&!s_credit&&!er_cr&&
-          !drain_fault_core&&!completion_fault&&!f_core&&!native_intake_fault;
+        idle_core<=idle_next&&!es0_veto;
       end
+    assign idle_next=(DRAIN_PIPE!=0)?
+        (core_debt_zero_q&&(&core_quiet_q)&&!core_drain_activity_q&&
+         !drain_fault_core&&!completion_fault&&!f_core&&!native_intake_fault):
+        (drain_desc==0&&drain_reads==0&&drain_credits==0&&
+         !es_v_q&&!completion_v&&!e_v&&!er_v&&!s_credit&&!er_cr&&
+         !drain_fault_core&&!completion_fault&&!f_core&&!native_intake_fault);
 endmodule
 
 // KVCTRL core_s7: observer child -- the native write observer behind input pin registers (po / context / static column /
