@@ -36,7 +36,9 @@
     "peak_ram_gb": 4,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "pass_witness": "results/rtl/ref_tile/qkd_hslice/bench_witness_1016/mut0.log",
+    "min_count_regex": "^PASS slice die wrapper: \\d+ slots physical order, (\\d+) cycles"
    },
    {
     "name": "host_slice_lpc_mutant",
@@ -47,7 +49,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/ref_tile/qkd_hslice/bench_witness_1016/mut1.log"
    },
    {
     "name": "host_slice_missing_boot_capture_mutant",
@@ -58,7 +61,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "results/rtl/ref_tile/qkd_hslice/bench_witness_1016/mut2.log"
    }
   ],
   "calibrate": {

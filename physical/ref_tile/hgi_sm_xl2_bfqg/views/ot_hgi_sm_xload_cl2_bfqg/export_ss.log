@@ -1,0 +1,350 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /mv0/ot_sram_1r1w_128x256_m1_r2c2.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_n can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_s can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro3 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro4 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro5 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro6 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro7 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_control can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local3 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local4 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local5 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local6 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local7 can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_n can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_s can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro3 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro4 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro5 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro6 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro7 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_control can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local3 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local4 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local5 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local6 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local7 can not be propagated.
+OT_DIRECT_MACRO ACCESSOR source_sha256=61aaf3f8c874867d13acbca9ef2f8d861a8217793d5b3605318886f8fd9f5777 executable_sha256=21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846 module_sha256=b3221367ae6d71774163a505c69426a7ccd4b817b5c989460e5860b145a6dfe9 compiler=g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ss clk_m0 -> g_t[0].u_m/clk wire=28.089678265172434 library=ot_sram_1r1w_128x256_m1_r2c2_ss/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ss clk_m1 -> g_t[1].u_m/clk wire=39.64216470939262 library=ot_sram_1r1w_128x256_m1_r2c2_ss/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ss clk_m2 -> g_t[2].u_m/clk wire=38.641479059935996 library=ot_sram_1r1w_128x256_m1_r2c2_ss/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ss clk_m3 -> g_t[3].u_m/clk wire=39.85540732825262 library=ot_sram_1r1w_128x256_m1_r2c2_ss/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ss clk_m4 -> g_t[4].u_m/clk wire=39.77269571258754 library=ot_sram_1r1w_128x256_m1_r2c2_ss/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ss clk_m5 -> g_t[5].u_m/clk wire=37.38833216311778 library=ot_sram_1r1w_128x256_m1_r2c2_ss/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ss clk_m6 -> g_t[6].u_m/clk wire=21.22947312544696 library=ot_sram_1r1w_128x256_m1_r2c2_ss/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ss clk_m7 -> g_t[7].u_m/clk wire=23.960467386548 library=ot_sram_1r1w_128x256_m1_r2c2_ss/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_HYBRID CTS_MEASURE ss clk sinks=2568 reference_scope=all_internal_only boundary_sinks=2568 min=266.49060842390395 mean=277.58194916889136 max=293.85460848808873 all_mean=277.58194916889136
+OT_HYBRID CTS_MEASURE ss clk_n sinks=1024 reference_scope=boundary boundary_sinks=1024 min=211.93819006758048 mean=219.88590814454815 max=235.06008344887314 all_mean=219.88590814454827
+OT_HYBRID CTS_MEASURE ss clk_s sinks=256 reference_scope=boundary boundary_sinks=256 min=120.496821336058 mean=145.0526315104714 max=164.60614881412135 all_mean=145.05263151047149
+OT_HYBRID CTS_MEASURE ss clk_ctrl sinks=26 reference_scope=boundary boundary_sinks=26 min=72.6035345858326 mean=74.07770286848871 max=74.70329940069641 all_mean=74.07770286848871
+OT_HYBRID CTS_MEASURE ss clk_l0 sinks=2 reference_scope=boundary boundary_sinks=2 min=58.471408504395136 mean=58.531641573168685 max=58.59187464194223 all_mean=58.531641573168685
+OT_HYBRID CTS_MEASURE ss clk_l1 sinks=2 reference_scope=boundary boundary_sinks=2 min=58.83059340987222 mean=58.843777308342325 max=58.856961206812436 all_mean=58.843777308342325
+OT_HYBRID CTS_MEASURE ss clk_l2 sinks=2 reference_scope=boundary boundary_sinks=2 min=58.922887638056885 mean=58.94261491350452 max=58.96234218895216 all_mean=58.94261491350452
+OT_HYBRID CTS_MEASURE ss clk_l3 sinks=2 reference_scope=boundary boundary_sinks=2 min=58.738673881959876 mean=58.8149149790337 max=58.89115607610752 all_mean=58.8149149790337
+OT_HYBRID CTS_MEASURE ss clk_l4 sinks=2 reference_scope=boundary boundary_sinks=2 min=58.99242229414578 mean=59.00682049905392 max=59.02121870396206 all_mean=59.00682049905392
+OT_HYBRID CTS_MEASURE ss clk_l5 sinks=2 reference_scope=boundary boundary_sinks=2 min=58.45875196186384 mean=58.5665650263266 max=58.674378090789354 all_mean=58.5665650263266
+OT_HYBRID CTS_MEASURE ss clk_l6 sinks=2 reference_scope=boundary boundary_sinks=2 min=58.804336635234925 mean=58.82813357197347 max=58.851930508712 all_mean=58.82813357197347
+OT_HYBRID CTS_MEASURE ss clk_l7 sinks=2 reference_scope=boundary boundary_sinks=2 min=59.0156120776653 mean=59.01913703578258 max=59.022661993899845 all_mean=59.01913703578258
+OT_ENTRIES LEVEL clk_m0 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_m0 -> g_t[0].u_m/clk wire=28.089678265172434 R=0 latency=249.49227090371892 phi=277.58194916889136
+OT_ENTRIES LEVEL clk_m1 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_m1 -> g_t[1].u_m/clk wire=39.64216470939262 R=0 latency=237.93978445949875 phi=277.58194916889136
+OT_ENTRIES LEVEL clk_m2 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_m2 -> g_t[2].u_m/clk wire=38.641479059935996 R=0 latency=238.94047010895537 phi=277.58194916889136
+OT_ENTRIES LEVEL clk_m3 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_m3 -> g_t[3].u_m/clk wire=39.85540732825262 R=0 latency=237.72654184063873 phi=277.58194916889136
+OT_ENTRIES LEVEL clk_m4 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_m4 -> g_t[4].u_m/clk wire=39.77269571258754 R=0 latency=237.80925345630382 phi=277.58194916889136
+OT_ENTRIES LEVEL clk_m5 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_m5 -> g_t[5].u_m/clk wire=37.38833216311778 R=0 latency=240.19361700577358 phi=277.58194916889136
+OT_ENTRIES LEVEL clk_m6 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_m6 -> g_t[6].u_m/clk wire=21.22947312544696 R=0 latency=256.35247604344437 phi=277.58194916889136
+OT_ENTRIES LEVEL clk_m7 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_m7 -> g_t[7].u_m/clk wire=23.960467386548 R=0 latency=253.62148178234335 phi=277.58194916889136
+OT_ENTRIES LEVEL clk deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk -> cap[0][0]$_DFF_P_/CLK wire=0 R=277.58194916889136 latency=0.0 phi=277.58194916889136
+OT_ENTRIES LEVEL clk_n deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_n -> cdq[0]$_DFF_P_/CLK wire=0 R=219.88590814454815 latency=57.6960410243432 phi=277.58194916889136
+OT_ENTRIES LEVEL clk_s deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_s -> rwq[0]$_DFF_P_/CLK wire=0 R=145.0526315104714 latency=132.52931765841996 phi=277.58194916889136
+OT_ENTRIES LEVEL clk_ctrl deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_ctrl -> g_t[0].rp_ce$_SDFF_PN0_/CLK wire=0 R=74.07770286848871 latency=203.50424630040266 phi=277.58194916889136
+OT_ENTRIES LEVEL clk_l0 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_l0 -> g_t[0].mask_hi$_DFF_P_/CLK wire=0 R=58.531641573168685 latency=219.05030759572267 phi=277.58194916889136
+OT_ENTRIES LEVEL clk_l1 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_l1 -> g_t[1].mask_hi$_DFF_P_/CLK wire=0 R=58.843777308342325 latency=218.73817186054902 phi=277.58194916889136
+OT_ENTRIES LEVEL clk_l2 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_l2 -> g_t[2].mask_hi$_DFF_P_/CLK wire=0 R=58.94261491350452 latency=218.63933425538684 phi=277.58194916889136
+OT_ENTRIES LEVEL clk_l3 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_l3 -> g_t[3].mask_hi$_DFF_P_/CLK wire=0 R=58.8149149790337 latency=218.76703418985767 phi=277.58194916889136
+OT_ENTRIES LEVEL clk_l4 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_l4 -> g_t[4].mask_hi$_DFF_P_/CLK wire=0 R=59.00682049905392 latency=218.57512866983743 phi=277.58194916889136
+OT_ENTRIES LEVEL clk_l5 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_l5 -> g_t[5].mask_hi$_DFF_P_/CLK wire=0 R=58.5665650263266 latency=219.01538414256476 phi=277.58194916889136
+OT_ENTRIES LEVEL clk_l6 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_l6 -> g_t[6].mask_hi$_DFF_P_/CLK wire=0 R=58.82813357197347 latency=218.7538155969179 phi=277.58194916889136
+OT_ENTRIES LEVEL clk_l7 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_l7 -> g_t[7].mask_hi$_DFF_P_/CLK wire=0 R=59.01913703578258 latency=218.56281213310876 phi=277.58194916889136
+OT_ENTRIES DOMAIN core 833.333008ps IO0/0 boundary=266.49060842390395..293.85460848808873
+OT_ENTRIES DOMAIN n 833.333008ps IO1024/0 boundary=269.63423109192365..292.75612447321635
+OT_ENTRIES DOMAIN s 833.333008ps IO0/256 boundary=253.02613899447798..297.13546647254134
+OT_ENTRIES DOMAIN macro0 833.333008ps IO0/0 boundary=277.58194916889136..277.58194916889136
+OT_ENTRIES DOMAIN macro1 833.333008ps IO0/0 boundary=277.58194916889136..277.58194916889136
+OT_ENTRIES DOMAIN macro2 833.333008ps IO0/0 boundary=277.58194916889136..277.58194916889136
+OT_ENTRIES DOMAIN macro3 833.333008ps IO0/0 boundary=277.58194916889136..277.58194916889136
+OT_ENTRIES DOMAIN macro4 833.333008ps IO0/0 boundary=277.58194916889136..277.58194916889136
+OT_ENTRIES DOMAIN macro5 833.333008ps IO0/0 boundary=277.58194916889136..277.58194916889136
+OT_ENTRIES DOMAIN macro6 833.333008ps IO0/0 boundary=277.58194916889136..277.58194916889136
+OT_ENTRIES DOMAIN macro7 833.333008ps IO0/0 boundary=277.58194916889136..277.58194916889136
+OT_ENTRIES DOMAIN control 833.333008ps IO24/0 boundary=276.1077808862353..278.2075457010991
+OT_ENTRIES DOMAIN local0 833.333008ps IO2/0 boundary=277.5217161001178..277.6421822376649
+OT_ENTRIES DOMAIN local1 833.333008ps IO2/0 boundary=277.56876527042124..277.5951330673615
+OT_ENTRIES DOMAIN local2 833.333008ps IO2/0 boundary=277.5622218934437..277.601676444339
+OT_ENTRIES DOMAIN local3 833.333008ps IO2/0 boundary=277.50570807181754..277.6581902659652
+OT_ENTRIES DOMAIN local4 833.333008ps IO2/0 boundary=277.56755096398325..277.5963473737995
+OT_ENTRIES DOMAIN local5 833.333008ps IO2/0 boundary=277.4741361044286..277.6897622333541
+OT_ENTRIES DOMAIN local6 833.333008ps IO2/0 boundary=277.5581522321528..277.6057461056299
+OT_ENTRIES DOMAIN local7 833.333008ps IO2/0 boundary=277.5784242107741..277.58547412700864
+OT_MULTI_ROOT RELATED_PATH macro0 -> core max slack=65.329132 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro0 -> core min slack=376.336700 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro1 -> core max slack=56.638416 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro1 -> core min slack=393.595093 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro2 -> core max slack=50.237537 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro2 -> core min slack=386.759308 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro3 -> core max slack=58.083817 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro3 -> core min slack=388.143494 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro4 -> core max slack=50.238480 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro4 -> core min slack=379.452942 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro5 -> core max slack=56.144367 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro5 -> core min slack=389.430725 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro6 -> core max slack=71.976204 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro6 -> core min slack=365.040710 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro7 -> core max slack=58.599293 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro7 -> core min slack=379.001465 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH control -> core max slack=196.983765 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH control -> core min slack=181.164810 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH control -> macro0 max slack=92.320038 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH control -> macro0 min slack=212.943085 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH n -> macro0 max slack=-16.984581 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH n -> macro0 min slack=118.281860 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH local0 -> macro0 max slack=-143.036087 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH local0 -> macro0 min slack=200.084671 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH control -> macro1 max slack=80.650879 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH control -> macro1 min slack=235.024612 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH n -> macro1 max slack=-126.364975 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH n -> macro1 min slack=205.846313 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH local1 -> macro1 max slack=-170.712555 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH local1 -> macro1 min slack=201.175720 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH control -> macro2 max slack=173.447586 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH control -> macro2 min slack=160.120560 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH n -> macro2 max slack=-71.053383 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH n -> macro2 min slack=130.317001 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH local2 -> macro2 max slack=-138.855820 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH local2 -> macro2 min slack=196.362900 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH control -> macro3 max slack=175.457977 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH control -> macro3 min slack=173.499222 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH n -> macro3 max slack=-57.666428 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH n -> macro3 min slack=148.596024 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH local3 -> macro3 max slack=-147.499619 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH local3 -> macro3 min slack=197.810715 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH control -> macro4 max slack=177.062027 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH control -> macro4 min slack=147.292648 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH n -> macro4 max slack=-37.129631 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH n -> macro4 min slack=168.323441 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH local4 -> macro4 max slack=-176.185287 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH local4 -> macro4 min slack=204.676086 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH control -> macro5 max slack=161.863861 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH control -> macro5 min slack=161.464920 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH n -> macro5 max slack=123.189568 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH n -> macro5 min slack=168.637054 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH local5 -> macro5 max slack=-176.815903 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH local5 -> macro5 min slack=202.264511 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH control -> macro6 max slack=86.050171 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH control -> macro6 min slack=187.495514 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH n -> macro6 max slack=61.004757 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH n -> macro6 min slack=156.822937 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH local6 -> macro6 max slack=-146.852478 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH local6 -> macro6 min slack=201.844437 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH control -> macro7 max slack=81.082085 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH control -> macro7 min slack=196.946991 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH n -> macro7 max slack=23.633095 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH n -> macro7 min slack=175.869232 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH local7 -> macro7 max slack=-153.609177 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH local7 -> macro7 min slack=204.034897 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> s max slack=104.696976 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> s min slack=155.508530 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=12 registers=3898 inputs=1064 outputs=256 async_control_pins=6
+OT_ENTRIES COMP DONE ss 20 entries phi=277.58194916889136 boundary=253.02613899447798..297.13546647254134
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_n can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_s can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro3 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro4 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro5 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro6 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_macro7 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_control can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local3 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local4 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local5 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local6 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_local7 can not be propagated.
+OT_IOREF clock-port clk (ot_entry_0): data input delays dropped
+OT_IOREF clock-port clk_n (ot_entry_1): data input delays dropped
+OT_IOREF clock-port clk_s (ot_entry_2): data input delays dropped
+OT_IOREF clock-port clk_m0 (ot_entry_3): data input delays dropped
+OT_IOREF clock-port clk_m1 (ot_entry_4): data input delays dropped
+OT_IOREF clock-port clk_m2 (ot_entry_5): data input delays dropped
+OT_IOREF clock-port clk_m3 (ot_entry_6): data input delays dropped
+OT_IOREF clock-port clk_m4 (ot_entry_7): data input delays dropped
+OT_IOREF clock-port clk_m5 (ot_entry_8): data input delays dropped
+OT_IOREF clock-port clk_m6 (ot_entry_9): data input delays dropped
+OT_IOREF clock-port clk_m7 (ot_entry_10): data input delays dropped
+OT_IOREF clock-port clk_ctrl (ot_entry_11): data input delays dropped
+OT_IOREF clock-port clk_l0 (ot_entry_12): data input delays dropped
+OT_IOREF clock-port clk_l1 (ot_entry_13): data input delays dropped
+OT_IOREF clock-port clk_l2 (ot_entry_14): data input delays dropped
+OT_IOREF clock-port clk_l3 (ot_entry_15): data input delays dropped
+OT_IOREF clock-port clk_l4 (ot_entry_16): data input delays dropped
+OT_IOREF clock-port clk_l5 (ot_entry_17): data input delays dropped
+OT_IOREF clock-port clk_l6 (ot_entry_18): data input delays dropped
+OT_IOREF clock-port clk_l7 (ot_entry_19): data input delays dropped
+OT_IOREF_EDGE ot_entry_0 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 1024 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_2 boundary 256 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_3 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_4 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_5 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_6 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_7 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_8 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_9 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_10 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_11 boundary 26 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_12 boundary 2 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_13 boundary 2 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_14 boundary 2 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_15 boundary 2 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_16 boundary 2 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_17 boundary 2 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_18 boundary 2 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_19 boundary 2 negedge 0 noarc 0 inverted 0
+OT_IOREF keep core_clk (not an insertion-reference clock)
+OT_IOREF keep ot_io_n (not an insertion-reference clock)
+OT_IOREF keep ot_io_s (not an insertion-reference clock)
+OT_IOREF keep ot_io_macro0 (not an insertion-reference clock)
+OT_IOREF keep ot_io_macro1 (not an insertion-reference clock)
+OT_IOREF keep ot_io_macro2 (not an insertion-reference clock)
+OT_IOREF keep ot_io_macro3 (not an insertion-reference clock)
+OT_IOREF keep ot_io_macro4 (not an insertion-reference clock)
+OT_IOREF keep ot_io_macro5 (not an insertion-reference clock)
+OT_IOREF keep ot_io_macro6 (not an insertion-reference clock)
+OT_IOREF keep ot_io_macro7 (not an insertion-reference clock)
+OT_IOREF keep ot_io_control (not an insertion-reference clock)
+OT_IOREF keep ot_io_local0 (not an insertion-reference clock)
+OT_IOREF keep ot_io_local1 (not an insertion-reference clock)
+OT_IOREF keep ot_io_local2 (not an insertion-reference clock)
+OT_IOREF keep ot_io_local3 (not an insertion-reference clock)
+OT_IOREF keep ot_io_local4 (not an insertion-reference clock)
+OT_IOREF keep ot_io_local5 (not an insertion-reference clock)
+OT_IOREF keep ot_io_local6 (not an insertion-reference clock)
+OT_IOREF keep ot_io_local7 (not an insertion-reference clock)
+OT_IOREF clock-port clk (ot_entry_0): data input delays dropped
+OT_IOREF clock-port clk_n (ot_entry_1): data input delays dropped
+OT_IOREF clock-port clk_s (ot_entry_2): data input delays dropped
+OT_IOREF clock-port clk_m0 (ot_entry_3): data input delays dropped
+OT_IOREF clock-port clk_m1 (ot_entry_4): data input delays dropped
+OT_IOREF clock-port clk_m2 (ot_entry_5): data input delays dropped
+OT_IOREF clock-port clk_m3 (ot_entry_6): data input delays dropped
+OT_IOREF clock-port clk_m4 (ot_entry_7): data input delays dropped
+OT_IOREF clock-port clk_m5 (ot_entry_8): data input delays dropped
+OT_IOREF clock-port clk_m6 (ot_entry_9): data input delays dropped
+OT_IOREF clock-port clk_m7 (ot_entry_10): data input delays dropped
+OT_IOREF clock-port clk_ctrl (ot_entry_11): data input delays dropped
+OT_IOREF clock-port clk_l0 (ot_entry_12): data input delays dropped
+OT_IOREF clock-port clk_l1 (ot_entry_13): data input delays dropped
+OT_IOREF clock-port clk_l2 (ot_entry_14): data input delays dropped
+OT_IOREF clock-port clk_l3 (ot_entry_15): data input delays dropped
+OT_IOREF clock-port clk_l4 (ot_entry_16): data input delays dropped
+OT_IOREF clock-port clk_l5 (ot_entry_17): data input delays dropped
+OT_IOREF clock-port clk_l6 (ot_entry_18): data input delays dropped
+OT_IOREF clock-port clk_l7 (ot_entry_19): data input delays dropped
+OT_IOREF_EDGE ot_entry_0 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 1024 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_2 boundary 256 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_3 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_4 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_5 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_6 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_7 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_8 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_9 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_10 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_11 boundary 26 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_12 boundary 2 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_13 boundary 2 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_14 boundary 2 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_15 boundary 2 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_16 boundary 2 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_17 boundary 2 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_18 boundary 2 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_19 boundary 2 negedge 0 noarc 0 inverted 0
+OT_IOREF keep core_clk (not an insertion-reference clock)
+OT_IOREF keep ot_io_n (not an insertion-reference clock)
+OT_IOREF keep ot_io_s (not an insertion-reference clock)
+OT_IOREF keep ot_io_macro0 (not an insertion-reference clock)
+OT_IOREF keep ot_io_macro1 (not an insertion-reference clock)
+OT_IOREF keep ot_io_macro2 (not an insertion-reference clock)
+OT_IOREF keep ot_io_macro3 (not an insertion-reference clock)
+OT_IOREF keep ot_io_macro4 (not an insertion-reference clock)
+OT_IOREF keep ot_io_macro5 (not an insertion-reference clock)
+OT_IOREF keep ot_io_macro6 (not an insertion-reference clock)
+OT_IOREF keep ot_io_macro7 (not an insertion-reference clock)
+OT_IOREF keep ot_io_control (not an insertion-reference clock)
+OT_IOREF keep ot_io_local0 (not an insertion-reference clock)
+OT_IOREF keep ot_io_local1 (not an insertion-reference clock)
+OT_IOREF keep ot_io_local2 (not an insertion-reference clock)
+OT_IOREF keep ot_io_local3 (not an insertion-reference clock)
+OT_IOREF keep ot_io_local4 (not an insertion-reference clock)
+OT_IOREF keep ot_io_local5 (not an insertion-reference clock)
+OT_IOREF keep ot_io_local6 (not an insertion-reference clock)
+OT_IOREF keep ot_io_local7 (not an insertion-reference clock)
+OT_WS max -1.7681589525864183e-10 min 7.342290664347217e-11
+OT_EXPORT_DONE

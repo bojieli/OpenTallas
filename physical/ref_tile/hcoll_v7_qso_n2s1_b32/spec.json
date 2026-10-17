@@ -1,0 +1,177 @@
+{
+ "name": "hcoll_v7_qso_n2s1_b32",
+ "top": "ot_hgi_coll_qso_n2s1_b32",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv",
+  "rtl/hdc/ot_hdc_prefix.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 25.92,
+  "h": 105.84
+ },
+ "pins": {
+  "W": [
+   "captured",
+   "captured_slot"
+  ],
+  "E": [
+   "dst_v",
+   "dst_d"
+  ],
+  "N": [
+   "sink_slot",
+   "sink_select",
+   "clk",
+   "rst_n",
+   "select_fault",
+   "unavailable_fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 833.333333,
+  "hold_margin_ns": 0.01,
+  "pin_min_tracks": 2,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
+ },
+ "fill_reason": {
+  "pin_bound": "975 pin bits: E 528 out / W 363 in on M4 at 2 tracks over 105.84 um = 48%/33% of slots; N 84 on M5 over 25.92 = 34%; outline from measured-util resize (FLOORPLAN_MARGIN 67.3% at 23.76x95.04)."
+ },
+ "job": {
+  "owner": "Claude H-NETLIST/COLL 1815",
+  "branch": "claude/hnl-coll-d4f-2130",
+  "tag": "d4f",
+  "purpose": "COLL hard_v7 d4f shape ot_hgi_coll_qso_n2s1_b32 (NLINK 2, TP192 die): same leaf RTL as the closed qso3w shape at the d4f link count",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc",
+   "rtl/qwen_sys/split_20261014",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "benches": [
+   {
+    "name": "hard_v7_q3_nl2_pos",
+    "cmd": "HCOLL_NLINK=2 HCOLL_TP=192 bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/pos q3 pos",
+    "expect": "pass",
+    "pass_regex": "HCOLL_Q_HARD_V5_POS_PASS",
+    "min_count_regex": "PASS q3 scen0 checks(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hard_v7_q3_nl2_mut_rcdrop",
+    "cmd": "HCOLL_NLINK=2 HCOLL_TP=192 bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/mut_rcdrop q3 rcdrop",
+    "expect": "fail",
+    "fail_regex": "HCOLL_Q_HARD_V5_MUTANT_REJECTED rcdrop",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hard_v7_q3_nl2_mut_droplink",
+    "cmd": "HCOLL_NLINK=2 HCOLL_TP=192 bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/mut_droplink q3 droplink",
+    "expect": "fail",
+    "fail_regex": "HCOLL_Q_HARD_V5_MUTANT_REJECTED droplink",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hcoll_v5_qso3w/views",
+  "record_to": "results/rtl/ref_tile/hcoll_v5_qso3w",
+  "hold_eco": {
+   "hold_margin_ps": 5.0,
+   "reason": "HEP w5f recipe (H-ELEM): no input hold pad, HB1 output pad, route hold margin 10 ps, post-route hold ECO goal 5 ps -- ctl2 V7 e11086804 native capture 197.3 was input hold padding"
+  }
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual RTL already registers every port at the face: qslots_output captures captured/captured_slot/sink_slot/sink_select into _p flops before any logic; dst_v/dst_d/select_fault/unavailable_fault are flop Q. Recipe-2 output stage on: io_flop_at_pins anchors only the OUTPUT launch flops at their pins (OT_OFLOP_PORT_RE), pin_reg_split + keep_pin_regs give one launch flop per output pin; inputs keep their inhold pad."
+ },
+ "structural_change": "Loop verdict hcoll_v5_qso3w-qs1045-92800f413 FLOORPLAN_MARGIN: flow std 1187 um2 = util 67.3% in 23.76x95.04 (gate synth 939 under-estimated by 1.27x); area x1.22 at the same aspect -> 25.92x105.84, core 2193 um2 = 54% at the measured std; same RTL, pin faces, recipe. Plus the recipe-2 output stage (io_flop_at_pins on outputs only, pin_reg_split, keep_pin_regs, balanced pins) so dst launch meets the native 220-ps budget (qcap twin failed launch 240.4 without it).",
+ "orfs_vars": {
+  "OT_OFLOP_PORT_RE": "^(dst_|select_fault|unavailable_fault)"
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "pin_ranges": {
+  "captured": [
+   2.5,
+   100.19
+  ],
+  "captured_slot": [
+   100.39,
+   103.14
+  ],
+  "dst_d": [
+   2.5,
+   98.94
+  ],
+  "dst_v": [
+   99.14,
+   103.14
+  ],
+  "sink_slot": [
+   2.5,
+   6.5
+  ],
+  "sink_select": [
+   6.7,
+   21.22
+  ],
+  "clk": [
+   21.42,
+   21.72
+  ],
+  "rst_n": [
+   21.92,
+   22.22
+  ],
+  "select_fault": [
+   22.42,
+   22.72
+  ],
+  "unavailable_fault": [
+   22.92,
+   23.22
+  ]
+ },
+ "inhold": false,
+ "outhold": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ }
+}

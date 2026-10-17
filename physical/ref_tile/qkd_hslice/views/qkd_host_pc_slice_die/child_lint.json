@@ -1,0 +1,79 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_hslice-ec1-75cbc9b99/record/views/qkd_host_pc_slice_die/provenance/qkd_host_pc_slice_die.candidate.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "qkd_host_pc_slice_die 129.576 x 345.576: PG M5 VDD 24 stripes (96% spread, 100% cov) / VSS 24 stripes (96% spread, 100% cov); strap M6; face pins 2081 blocked-above 0 blocked-same 0; clock ck_boot insertion 241 ps; clock ck_boot_test insertion 75 ps; clock ck_static insertion 271 ps; clock ck_station insertion 244 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "qkd_host_pc_slice_die",
+  "W": 129.576,
+  "H": 345.576,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 24,
+     "dir": "V",
+     "spread": 0.959,
+     "coverage": 1.0,
+     "shapes_on_top": 24
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 24,
+     "dir": "V",
+     "spread": 0.959,
+     "coverage": 1.0,
+     "shapes_on_top": 24
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 2081,
+   "blocked_above": 0,
+   "covered_below": 283,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {
+   "ck_boot": {
+    "max_ps": 240.96,
+    "min_ps": 165.46
+   },
+   "ck_boot_test": {
+    "max_ps": 74.56,
+    "min_ps": 63.4
+   },
+   "ck_static": {
+    "max_ps": 271.38,
+    "min_ps": 185.9
+   },
+   "ck_station": {
+    "max_ps": 244.38,
+    "min_ps": 171.66
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 889
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}
