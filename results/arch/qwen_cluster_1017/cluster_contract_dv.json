@@ -1,0 +1,498 @@
+{
+ "schema": "opentallas.qwen.qcluster.contract.v1",
+ "master": "qfd_c_b16_dv",
+ "provisional": true,
+ "generator": "tools/qwen_cluster/qc_gen.py",
+ "base": "tools/qwen_cluster/cb_base.py (claude/q3h-cb-1016 e7e22d5b6)",
+ "spec": "results/arch/qwen_cluster_1017/SPEC.md",
+ "outline_um": {
+  "w": 2285.28,
+  "h": 5184.0
+ },
+ "corridors": {
+  "L": [
+   0.0,
+   32.4
+  ],
+  "A": [
+   490.32,
+   619.92
+  ],
+  "T": [
+   1077.84,
+   1207.44
+  ],
+  "B": [
+   1665.36,
+   1794.96
+  ],
+  "R": [
+   2252.88,
+   2285.28
+  ]
+ },
+ "quadrant_seams": {
+  "x": 1142.6399999999999,
+  "y": 2592.0
+ },
+ "clocks": {
+  "sw": {
+   "pin": "ck_sw",
+   "fabric_flops": 23712,
+   "tiles": [
+    "0_0",
+    "0_1",
+    "1_0",
+    "1_1"
+   ],
+   "tile_entry_pins": 156
+  },
+  "se": {
+   "pin": "ck_se",
+   "fabric_flops": 17577,
+   "tiles": [
+    "2_0",
+    "2_1",
+    "3_0",
+    "3_1"
+   ],
+   "tile_entry_pins": 152
+  },
+  "nw": {
+   "pin": "ck_nw",
+   "fabric_flops": 20602,
+   "tiles": [
+    "0_2",
+    "0_3",
+    "1_2",
+    "1_3"
+   ],
+   "tile_entry_pins": 156
+  },
+  "ne": {
+   "pin": "ck_ne",
+   "fabric_flops": 14450,
+   "tiles": [
+    "2_2",
+    "2_3",
+    "3_2",
+    "3_3"
+   ],
+   "tile_entry_pins": 156
+  }
+ },
+ "fabric_flops": 76341,
+ "latency_edges": {
+  "tap": {
+   "0": 3,
+   "1": 7,
+   "2": 11,
+   "3": 15
+  },
+  "bco": 17,
+  "rs_fabric": 35,
+  "rs_i_to_rs_o": 14,
+  "reset": 18
+ },
+ "hop_um": {
+  "limit": 405.0,
+  "plan": 390.0,
+  "max": 396.6
+ },
+ "tree": {
+  "hosts": {
+   "1_0": [
+    1,
+    0
+   ],
+   "1_1": [
+    0,
+    1
+   ],
+   "1_2": [
+    2,
+    0
+   ],
+   "1_3": [
+    3,
+    1
+   ],
+   "1_4": [
+    0,
+    2
+   ],
+   "1_5": [
+    0,
+    3
+   ],
+   "1_6": [
+    3,
+    2
+   ],
+   "1_7": [
+    3,
+    3
+   ],
+   "2_0": [
+    1,
+    1
+   ],
+   "2_1": [
+    2,
+    1
+   ],
+   "2_2": [
+    1,
+    3
+   ],
+   "2_3": [
+    2,
+    3
+   ],
+   "3_0": [
+    2,
+    2
+   ],
+   "3_1": [
+    1,
+    2
+   ],
+   "4_0": [
+    0,
+    0
+   ]
+  },
+  "nl_slot": [
+   3,
+   0
+  ]
+ },
+ "ports": [
+  {
+   "port": "bc0",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    4.32,
+    176.32
+   ],
+   "pins_per_um": 3.0,
+   "note": "column word of local column 0 (corridor L)"
+  },
+  {
+   "port": "bco0",
+   "bits": 516,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    4.32,
+    176.32
+   ],
+   "pins_per_um": 3.0,
+   "note": "registered feed-through of column 0 to the far cluster"
+  },
+  {
+   "port": "bc1",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    917.44,
+    1089.44
+   ],
+   "pins_per_um": 3.0,
+   "note": "column word of local column 1 (corridor T)"
+  },
+  {
+   "port": "bco1",
+   "bits": 516,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    917.44,
+    1089.44
+   ],
+   "pins_per_um": 3.0,
+   "note": "registered feed-through of column 1 to the far cluster"
+  },
+  {
+   "port": "bc2",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1195.84,
+    1367.84
+   ],
+   "pins_per_um": 3.0,
+   "note": "column word of local column 2 (corridor T)"
+  },
+  {
+   "port": "bco2",
+   "bits": 516,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    1195.84,
+    1367.84
+   ],
+   "pins_per_um": 3.0,
+   "note": "registered feed-through of column 2 to the far cluster"
+  },
+  {
+   "port": "bc3",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    2108.96,
+    2280.96
+   ],
+   "pins_per_um": 3.0,
+   "note": "column word of local column 3 (corridor R)"
+  },
+  {
+   "port": "bco3",
+   "bits": 516,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    2108.96,
+    2280.96
+   ],
+   "pins_per_um": 3.0,
+   "note": "registered feed-through of column 3 to the far cluster"
+  },
+  {
+   "port": "rs",
+   "bits": 514,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    469.453,
+    640.787
+   ],
+   "pins_per_um": 3.0,
+   "note": "block word {fault, valid, 512}"
+  },
+  {
+   "port": "rs_i",
+   "bits": 514,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    1093.392,
+    1191.888
+   ],
+   "pins_per_um": 5.218,
+   "note": "DV: far-band rs word in (T centre lane)"
+  },
+  {
+   "port": "rs_o",
+   "bits": 514,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1093.392,
+    1191.888
+   ],
+   "pins_per_um": 5.218,
+   "note": "DV: far-band rs word out, 14 edges after rs_i"
+  },
+  {
+   "port": "ck_sw",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    778.964,
+    779.264
+   ],
+   "pins_per_um": 3.333,
+   "note": "quadrant root SW"
+  },
+  {
+   "port": "ck_nw",
+   "bits": 1,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    778.964,
+    779.264
+   ],
+   "pins_per_um": 3.333,
+   "note": "quadrant root NW"
+  },
+  {
+   "port": "ck_se",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1506.017,
+    1506.317
+   ],
+   "pins_per_um": 3.333,
+   "note": "quadrant root SE"
+  },
+  {
+   "port": "ck_ne",
+   "bits": 1,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    1506.017,
+    1506.317
+   ],
+   "pins_per_um": 3.333,
+   "note": "quadrant root NE"
+  },
+  {
+   "port": "rst_n",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    783.114,
+    783.413
+   ],
+   "pins_per_um": 3.333,
+   "note": ""
+  },
+  {
+   "port": "far",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    784.114,
+    784.413
+   ],
+   "pins_per_um": 3.333,
+   "note": "strap: 1 = far band"
+  },
+  {
+   "port": "cid",
+   "bits": 12,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    785.114,
+    791.114
+   ],
+   "pins_per_um": 2.0,
+   "note": "strap: block index"
+  },
+  {
+   "port": "tie_hi",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    792.114,
+    792.413
+   ],
+   "pins_per_um": 3.333,
+   "note": ""
+  },
+  {
+   "port": "tie_lo",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    793.114,
+    793.413
+   ],
+   "pins_per_um": 3.333,
+   "note": ""
+  }
+ ],
+ "a0": {
+  "ref": "origin/codex/romleaf-native-1621",
+  "nk": "qfd_tile_nk_rp2_romleaf_rr",
+  "nl": "qfd_tile_nl_rp2_romleaf_rr",
+  "nk_clocks": [
+   "ck",
+   "ck_rp0",
+   "ck_rp1",
+   "ck_rp2",
+   "ck_rp3",
+   "ck_rp4",
+   "ck_rp5",
+   "ck_rp6",
+   "ck_rp7",
+   "ck_rp8",
+   "ck_rp9",
+   "ck_tx0",
+   "ck_tx1",
+   "ck_tx2",
+   "ck_tx3",
+   "ck_tx4",
+   "ck_tx5",
+   "ck_tx6",
+   "ck_tx7",
+   "ck_rsw",
+   "ck_rnw",
+   "ck_dw",
+   "ck_de",
+   "ck_rs",
+   "ck_rn",
+   "ck_fa0",
+   "ck_fa1",
+   "ck_fa2",
+   "ck_fa3",
+   "ck_fa4",
+   "ck_lsl0",
+   "ck_lsl1",
+   "ck_lsl2",
+   "ck_lsl3",
+   "ck_lsl4",
+   "ck_lsl5",
+   "ck_lsl6",
+   "ck_lsl7",
+   "ck_node"
+  ],
+  "nl_clocks": [
+   "ck",
+   "ck_rp0",
+   "ck_rp1",
+   "ck_rp2",
+   "ck_rp3",
+   "ck_rp4",
+   "ck_rp5",
+   "ck_rp6",
+   "ck_rp7",
+   "ck_rp8",
+   "ck_rp9",
+   "ck_tx0",
+   "ck_tx1",
+   "ck_tx2",
+   "ck_tx3",
+   "ck_tx4",
+   "ck_tx5",
+   "ck_tx6",
+   "ck_tx7",
+   "ck_rsw",
+   "ck_rnw",
+   "ck_dw",
+   "ck_de",
+   "ck_rs",
+   "ck_rn",
+   "ck_fa2",
+   "ck_fa4",
+   "ck_lsl0",
+   "ck_lsl1",
+   "ck_lsl2",
+   "ck_lsl3",
+   "ck_lsl4",
+   "ck_lsl5",
+   "ck_lsl6",
+   "ck_lsl7"
+  ]
+ },
+ "gating": [
+  "A0 views qfd_tile_nk_romleaf_a0 / nl twin not CLOSED (Q-ROMPARENT-2): diagnostics only, no binding"
+ ]
+}

@@ -1,0 +1,34 @@
+FAIL go tile (2,1): op 0 at cycle 98, expected 97
+FAIL go tile (2,2): op 0 at cycle 102, expected 101
+FAIL go tile (2,3): op 0 at cycle 106, expected 105
+NOTE node fault / leg misalignment at tile (3,1) cycle 107 (nf 0 mis 1)
+FAIL bco2 go at cycle 108
+FAIL go tile (2,1): op 1 at cycle 146, expected 145
+FAIL go tile (2,2): op 1 at cycle 150, expected 149
+FAIL go tile (2,3): op 1 at cycle 154, expected 153
+FAIL bco2 go at cycle 156
+RS op 0 cycle 173 latency 83 (compiled 83) fault 1 match 0
+FAIL rs fault bit
+FAIL rs data op 0: 43d01138c33dd8a840e5ede041ca23da42c3df7ec36f22224187eb8e4219680ec35eeaeec21ec2d741d92d36c244f5ccc45e081d406e30283730000041300000 expected 43ccc6b7c380da8a4114a0db41ca0d32441fcfa9c3097576417e91ccc18188bec36a14d8c221821dc2f06928c229b1d1c48a38cac3514e203760000041600000
+FAIL go tile (2,1): op 2 at cycle 194, expected 193
+FAIL go tile (2,2): op 2 at cycle 198, expected 197
+FAIL go tile (2,3): op 2 at cycle 202, expected 201
+FAIL bco2 go at cycle 204
+RS op 1 cycle 221 latency 83 (compiled 83) fault 1 match 0
+FAIL rs fault bit
+FAIL rs data op 1: c34a9bf543d99a24c23ab1c8c37bf05642c2b6ff43c56149c2b4e50b425ff0a0c1c90cbfc2fd2ff6c29586e343269eb4c20be39bc2c13fe93730000041300000 expected c31143ae43d501eac0f8e2a0c36b225342c5ca9543a632afc3334e4943694f93c0a301d8c2ec0c48c28becec43278888c20a68cb43b713463760000041600000
+FAIL go tile (2,1): op 3 at cycle 242, expected 241
+FAIL go tile (2,2): op 3 at cycle 246, expected 245
+FAIL go tile (2,3): op 3 at cycle 250, expected 249
+FAIL bco2 go at cycle 252
+RS op 2 cycle 269 latency 83 (compiled 83) fault 1 match 0
+FAIL rs fault bit
+FAIL rs data op 2: c248824d4329b4fcc223371942b68c80c398d823427bd8d342b3521042cb91e443041dfe42693d34c18942364406b447c3abf3b94334842a3730000041300000 expected c2b59ed04335f300419056e442b61bbdc398d05a432d759e42bf01b242d038e042bcf82ec219a9c0c331fe01440665d5c3d0e36143344ba53760000041600000
+RS op 3 cycle 317 latency 83 (compiled 83) fault 1 match 0
+FAIL rs fault bit
+FAIL rs data op 3: c2c6871ac385d3ff43bb12e942bb7d98c29c4198421fc8f142d3826943150640c26acc4bc2e3aebf43e4e314c2827d53431b62c4c0f3514e3730000041300000 expected c359efd5c3ad24bf43baa9684412ef52c28a16b8c2d633f4429ada34c396b7e4c420785dc33ccafe43e4168ec2fb0743431bddd6c036198a3760000041600000
+QCLUSTER_FAIL MUT 3 FAR 0 errors 24
+- rtl/test/tb_qcluster_fabric.sv:239: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 378ns; walltime 0.470 s; speed 798.239 ns/s
+- Verilator: cpu 0.473 s on 1 threads; alloced 512 MB
