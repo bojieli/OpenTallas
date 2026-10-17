@@ -34,7 +34,7 @@
 // ot_hgi_coll_static_program_target #(TARGET 52); the identity strap compares the raw HOST target with 52+qid
 // before the target's own input capture, so the captured target equals 52 exactly when the original TARGET
 // 52+QID instance would have matched.
-module ot_hgi_coll_fj_core #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18)(
+module ot_hgi_coll_fj_core #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18,PT_LOOKAHEAD=0)(
  input wire clk,rst_n,
  input wire [1:0] qid,
  input wire cfg_v,
@@ -90,7 +90,7 @@ module ot_hgi_coll_fj_core #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18)(
    sel_q<=select_fault;unav_q<=unavailable_fault;lk_q<=link_abort;tdel_q<=tkm_del_slot;tdest_q<=tkm_dest_v;
   end
  wire [7:0] target_eff=(tgt_q==(8'd52+{6'd0,qid_q}))?8'd52:8'd0;
- ot_hgi_coll_static_program_target #(.TARGET(8'd52)) u_program(
+ ot_hgi_coll_static_program_target #(.TARGET(8'd52),.LOOKAHEAD(PT_LOOKAHEAD)) u_program(
   .clk(clk),.rst_n(rst_q),.cfg_v(cv_q),.cfg_target(target_eff),
   .cfg_addr(addr_q),.cfg_data(data_q),.desc_v(dv_q),.desc_base(base_q),
   .desc_limit(limit_q),.desc_loops(loops_q),.launch_v(lv_q),
@@ -189,7 +189,7 @@ module ot_hgi_coll_fj_n1s0(
  input wire [0:0] link_abort,input wire ring_fault,writer_fault,reduce_fault,
  input wire arg_capture_slot,tkm_start,input wire [3:0] tkm_del_slot,tkm_dest_v,
  output wire fault,output wire [15:0] fault_cause);
- ot_hgi_coll_fj_core #(.NPT(1),.SOLO(0),.NS(8),.NSL(18)) u(.*,.arg_fault(1'b0),.tkm_fault(1'b0));
+ ot_hgi_coll_fj_core #(.NPT(1),.SOLO(0),.NS(8),.NSL(18),.PT_LOOKAHEAD(1)) u(.*,.arg_fault(1'b0),.tkm_fault(1'b0));
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------
