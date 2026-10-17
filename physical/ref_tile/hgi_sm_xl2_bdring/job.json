@@ -1,13 +1,13 @@
 {
- "name": "hgi_sm_xl2_bdring-cl2f-COMMIT",
+ "name": "hgi_sm_xl2_bdring-cl2i-COMMIT",
  "block": "ot_hgi_sm_xload_cl2_bdring",
  "ref_tile": true,
- "owner": "Claude H-SM",
+ "owner": "Claude H-SM 1815 (pd6 fork)",
  "purpose": "x-load cl2 leaf (H-SM 2026-10-15): the flat clock-leaf cl failed its --cts gate (multiple_cts_roots source on 32 SRAMs; bs_a 8,642 / md 5,635 / bq_v 4,125-load nets; bw->rq 21 levels). cl2 = cluster of hardened leaves (ctl, 4 x BF quarter of one master, 2 x the CLOSED tree13 quantiser tile, BD ring), one clock root each < 15k sinks, every leaf pin registered (owner 19:50), running issue-word registers (no multiply), replicated selects; +2 fixed edges on every xw beat (lock bench vs cl shifted 2).",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/hbm-sm-attention-1015",
+  "branch": "claude/hsm-pd6-1900",
   "commit": "COMMIT",
   "extra_paths": [
    "physical/asap7_memory_macros",
@@ -40,35 +40,41 @@
     "cmd": "XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/cl2_lock_exact",
     "expect": "pass",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "pass_regex": "XLOAD_STATIC_LOCK PASS",
+    "min_count_regex": "(\\d+) cycles compared, 0 differ"
    },
    {
     "name": "cl2_lock_rotation_mutant",
     "cmd": "XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/cl2_lock_rotation_mutant MUT1",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "fail_regex": "XLOAD_STATIC_LOCK FAIL [1-9]"
    },
    {
     "name": "cl2_lock_bd_early_mutant",
     "cmd": "XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/cl2_lock_bd_early_mutant MUT2",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "fail_regex": "XLOAD_STATIC_LOCK FAIL [1-9]"
    },
    {
     "name": "cl2_lock_bd_lane_mutant",
     "cmd": "XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/cl2_lock_bd_lane_mutant MUT3",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "fail_regex": "XLOAD_STATIC_LOCK FAIL [1-9]"
    },
    {
     "name": "cl2_lock_halfmask_mutant",
     "cmd": "XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/cl2_lock_halfmask_mutant MUT4",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "fail_regex": "XLOAD_STATIC_LOCK FAIL [1-9]"
    }
   ],
   "calibrate": {
@@ -119,7 +125,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_sm_xl2_bdring/hgi_sm_xl2_bdring-cl2f-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_sm_xl2_bdring/hgi_sm_xl2_bdring-cl2i-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -130,14 +136,7 @@
  "merge_target": null,
  "structural_change": "cl2f (geometry; gate of cl2e 51d82d7d5 looked at: std 9,724 um2 in 172.8 x 302.4 = 19% fill, all logic + the 2,048 bq_d pin flops in the E 55%, W 45% empty, clock pin at W mid ~110 um from the logic): outline 86.4 x 302.4 (E face kept: 2,048 bq_d pins 6.8/um, N face 532 qq/qe pins 6.2/um, W 109 pins), fill 37%, area 26.1k vs 52.3k um2; clock stays W mid, now on the logic's own edge (<= 43 um to the centroid); RTL = cl2e unchanged.",
  "reroute_reason": {
-  "kind": "rtl_change",
-  "source": "results/hbm_sm_attention_1015/takeover_2330/bdring_cl2d/native_audit.json",
-  "source_commit": "233bf1342 (origin/codex/hbm-sm-2330)",
-  "cell": "ot_hgi_sm_xload_cl2_bdring",
-  "launch_ps": 489.6,
-  "launch_pin": "bq_d[420]",
-  "launch_over": 25,
-  "closed": "hgi_sm_xl2_bdring-cl2d-COMMIT-b0d45974d (TT +13.68 / FF +9.06 / DRC 0, native FAIL)",
-  "why": "native launch 489.6 ps > 220 on 25 bq_d pins: output-polarity INVs placed ~300 um from their pin flops. cl2e RTL (6478a5906) stores the inverted beat so the QN-only pin flop drives bq_d with no INV (an RTL change, so kind rtl_change, not native_launch, which requires unchanged RTL); with it the outline narrows 172.8 -> 86.4 (cl2e gate: 19% fill, W 45% empty, VIS-HBM T2)"
+  "kind": "slot_change",
+  "slot_change_request": "H-ELEM die audit 10-16 ~19:10 (coordinator, owner pin rule <= 6 pins/um per face): bdring 86.4 x 302.4 -> 99.36 x 369.36; E 2,048 bq_d spread over 360.7 um = 5.68/um (matches XQL pegress x3 W face, 369.36 tall, claude/hsm-xqb-1830 325202058); N 532 qq/qe over 90.7 um = 5.86/um; W 109 (clk W-mid). Was E 10.05/um peak, N 9.98/um (cl2f LEF)."
  }
 }

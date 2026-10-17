@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  86.4,
-  302.4
+  99.36,
+  369.36
  ],
  "core": [
   2.16,
   2.16,
-  84.24000000000001,
-  300.23999999999995
+  97.2,
+  367.2
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -73,6 +73,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/ref_tile/hgi_sm_xl2_bdring/spread_pins.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",
