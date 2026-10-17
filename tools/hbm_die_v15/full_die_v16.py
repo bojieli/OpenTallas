@@ -703,7 +703,15 @@ def build(specs_dir, out, extra=(), soft_idx=None):
         for g in s.get('gaps', []):
             g = dict(g, region=s['region'])
             aff = []
+            affects = []
             for a in g.get('affects', []):
+                if soft_rec and a[0] == soft_rec['parent']:      # soft parent: account on its children
+                    pp_ = soft_rec['_parent_ports'][a[1]]
+                    lo, hi = (int(a[2]), int(a[3])) if len(a) >= 4 and a[2] is not None else (0, pp_['bits'])
+                    affects += soft_rec['_map_range'](a[1], lo, hi)
+                else:
+                    affects.append(a)
+            for a in affects:
                 i, p = a[0], a[1]
                 if i in flat:
                     continue        # accounting range on a flattened array wrapper (its leaves carry the bits)
@@ -780,7 +788,8 @@ def build(specs_dir, out, extra=(), soft_idx=None):
                                   '(latency counted in the compiler stage counts); logical relays that the RTL '
                                   'semantics require (SU RF_RELAY) are instances of their region spec',
                              templates=grants.get('relay_templates'), su_rf=grants.get('su_rf_relays_v7', {}).get('RF_RELAY')),
-        notes={s['region']: s.get('notes') for s in specs}, soft_parents=[soft_rec] if soft_rec else [])
+        notes={s['region']: s.get('notes') for s in specs},
+        soft_parents=[{k: v for k, v in soft_rec.items() if not k.startswith('_')}] if soft_rec else [])
     out.mkdir(parents=True, exist_ok=True)
     (out / 'contract.json').write_text(json.dumps(contract, indent=1) + '\n')
     emit_die(out, insts, ports, drv, pins, straps)

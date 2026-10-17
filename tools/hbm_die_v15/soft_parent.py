@@ -145,5 +145,18 @@ def soft_flatten(parent, nm, insts, ports, drv, E, clocks, straps, rtl, problems
                          ready_or_credit=False, allowed_exception=None,
                          basis=f'internal net of {nm["top"]} (idx_soft_netmap_1016.py)', region='idx_soft'))
     E[:] = newE
+    def map_range(p, lo, hi):
+        """hb_idx.p[lo:hi) -> [[child, port, lo, hi]] (inputs: every child load; outputs: the child driver)"""
+        it = []
+        for k in range(lo, hi):
+            if pports[p]['direction'] == 'input':
+                it += [((n, cp), cb, cb) for (n, cp, cb) in pin_loads.get((p, k), [])]
+            else:
+                s = out_src(p, k)
+                if s is not None and s[0] not in ('CONST', 'PIN') and s[0] in ports:
+                    it.append(((s[0], s[1]), s[2], s[2]))
+        it.sort()
+        return [[key[0], key[1], s0, s1] for key, s0, s1, _, _ in _runs(it)]
     return dict(parent=parent, master=pi['master'], children={cname[c]: x['master'] for c, x in nm['children'].items()},
-                internal_nets=len(net_drv), composition_constants=len(soft_straps))
+                internal_nets=len(net_drv), composition_constants=len(soft_straps), _map_range=map_range,
+                _parent_ports=pports)
