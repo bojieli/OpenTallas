@@ -1,0 +1,7 @@
+{"source":"74b8161e5","gate":"PRE_ROUTE_GATE WARN 0 fail/2 warn (util 28%)","remote":"ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/s81coll_cfifo_crs-20261016-181800",
+ "cells":24890,"cells_hr6":44683,"flops":13505,
+ "cts_hold":{"start_ws_ps":-27.61,"start_viol":1087,"chunk1":{"buffers":5474,"s":114,"ws_ps":-6.12},"chunk2":{"buffers":2260,"ws_ps":30.0},"total_buffers":7734,"hr6_total_buffers":22540,"r4_total_buffers":38574},
+ "path_classes_tt_signoff":{"reg_reg_ps":32.5,"reg_reg_endpoint":"u_x2.u_cross.h[406] (bank->h half cycle)","reg_out_ps":341.7,"in_reg_ps":358.1},
+ "clock_rule":"xf 5,125 sinks, TT insertion 244.2 ps (ICG adds bank insertion), leaf spread 26.6",
+ "native_cts":{"pass":true,"launch_ps":179.3,"launch_pin":"rd[5]","capture_ps":137.5,"capture_pin":"ri[9]","R_ps":151.2,"spread_ps":58.7,"comb":0,"rst_recovery_ps":358.1,"rst_removal_ps":54.8},
+ "images_viewed":"floorplan: N face xa/xb/x2/cr/cc/st/ri/rs pins, S face xd/xf/xd2/xf2/rd/cr_s, four clock roots; density: NW dense band under N pin face + S strip under xd/xd2 (same as crs1/hr6), east third empty, fill 0.258 -> route congestion watch, not blocking"}
