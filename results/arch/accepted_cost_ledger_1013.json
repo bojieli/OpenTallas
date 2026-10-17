@@ -170,6 +170,40 @@
   },
   {
    "design": "qwen_rom",
+   "unit": "PV16.TRUNK qkd_pvw_die_t trunked PV pair (registered command trunk + chunk taps, every hop <= 400 um; +TRUNK_D 54 edges a PV pass)",
+   "group": "PV16.TRUNK",
+   "measured": 1870.0,
+   "price": 1816.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.0297,
+   "e2e_loss_pct": 0.773,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 251375.0,
+     "added_cycles": 1944.0,
+     "runs_per_token": 36,
+     "critical_runs": 36,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 1944.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.773
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/qwen_kv_die/pv_trunk_t/bench_r6.json (branch claude/kvplan-1815 692bed2d0)",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-17",
+   "status": "proposed",
+   "note": "KVPLAN3 0230: the PV16 pair's in-array command/start/reset is a registered trunk (kvs13h/kvs13k die STA: the old pair's one-edge broadcasts failed -296 ns); TRUNK_D 54 edges are added to every PV pass, 36 a token. Bench tb_qkd_pvw_die_t PASS T=100/1000/8192 (512 words x 32 cols exact), TRUNK_MUT / FLAG_D_ADJ FAIL. Die-level header/chunk relays are inside DELTA (no extra).   | Q-KV lead 2026-10-16 ~21:30 PT ACCEPTED the +54 edges/PV pass (0.773 % AR); within 1.10x of the attention price so the row QUALIFIES without an acceptance (tool refuses accept by rule).",
+   "share_basis": "measured"
+  },
+  {
+   "design": "qwen_rom",
    "unit": "SU.COPY_PINREG",
    "group": "SU.COPY_PINREG",
    "measured": 9.0,
@@ -2208,11 +2242,11 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 1.065,
-   "proposed_pct": 5.78,
-   "accepted_plus_proposed_pct": 6.845,
+   "proposed_pct": 6.553,
+   "accepted_plus_proposed_pct": 7.618,
    "limit_pct": 15.0,
    "accepted_rows": 4,
-   "proposed_rows": 9,
+   "proposed_rows": 10,
    "headroom_pct": 13.935,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
