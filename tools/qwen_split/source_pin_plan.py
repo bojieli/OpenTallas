@@ -284,6 +284,8 @@ def apply(M):
     apply_slabs(M)
     apply_dvm_clocks(M)
     if 'qfd_sp_band_lanes' in M:apply_band(M['qfd_sp_band_lanes'])
+    from qwen_split.band_word_alignment import apply_pins as align_band_word_pins
+    align_band_word_pins(M)
 
 
 def export(q, out):

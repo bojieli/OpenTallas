@@ -684,6 +684,8 @@ def place(v, m, G):
         if 'sys_face_bind' in m:
             from qwen_split.sys_face_bind import place as sys_face_place
             rec['sys_face_place'] = sys_face_place(m, rec['gfp_homes'].get('named_new', ()))
+        from qwen_split.band_word_alignment import apply_homes as align_band_word_homes
+        rec['band_word_alignment'] = align_band_word_homes(m, rec['gfp_homes'].get('reserve', {}))
         if rec['gfp_homes'].get('schema') == 'opentallas.qwen.globalfp-q-homes.2210.v1':
             from qwen_split.relay_geometry import rebuild as rebuild_relay_geometry
             rec['relay_geometry'] = rebuild_relay_geometry(v, m)
