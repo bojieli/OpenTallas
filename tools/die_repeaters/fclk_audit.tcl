@@ -12,7 +12,7 @@
 #     * at each such t, walk BACK from every other input pin through new repeaters to its source; the bits whose source
 #       is src are that hop's data bits; data depth = repeaters on their path;
 #     * a hop (src, t) is a mismatch when |fclk depth - data depth| > 1 for any of its data bits.
-#   Writes PREFIX.tsv (one line per hop) and PREFIX.json (counts, worst examples); returns the number of mismatching
+#   (v2: structural pairing + broadcast flag + vacuous = FAIL; see the proc.)  Writes PREFIX.tsv / PREFIX.json; returns mismatching
 #   hops (0 = within budget).  Hops with no data bit from the same source are listed (data_bits 0) but not judged.
 
 proc ot_die_rep_fclk_snapshot {} {
@@ -64,6 +64,18 @@ proc ot_die_rep_fclk_back {iterm bufs} {
 }
 
 proc ot_die_rep_fclk_audit {prefix globs {bufs {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_75t_R BUFx5_ASAP7_75t_R BUFx6f_ASAP7_75t_R BUFx8_ASAP7_75t_R}}} {
+  # Structural pairing (2026-10-17, DIE-CLOCK on S81-DV p4c: names never matter):
+  #   for every fclk net F and every capture instance t reached by F (forward through new repeaters, fclk depth f):
+  #     the data bits of the hop into t are t's other input pins; each is walked back through new repeaters to its
+  #     source instance s (data depth d).  Bits whose source is F's own driver are preferred (macro stations: fo0 and
+  #     do0 leave the same instance); otherwise every traced data input of t is taken (std-cell DFF relays: the clock
+  #     arrives from a forwarding cell, the data from the previous stage's flops).  Inputs on special nets or with no
+  #     driver are ignored.
+  #   BROADCAST: F is a broadcast (one fclk net per chain, not per hop) when a data source of one of its capture
+  #     instances is itself a capture instance of F; its hops are flagged and NOT judged (fclk depth vs data depth has
+  #     no per-hop meaning there).
+  #   FAIL CLOSED: fclk nets present but zero judged hops (all broadcast or no data pairs) -> the return value counts
+  #     it as a violation (vacuous = fail), as do mismatches (|f - d| > 1) and broadcasts.
   global ot_die_rep_fclk_old
   if {![array exists ot_die_rep_fclk_old]} { error "ot_die_rep_fclk_audit: call ot_die_rep_fclk_snapshot before the repair" }
   set blk [ord::get_db_block]
@@ -73,45 +85,57 @@ proc ot_die_rep_fclk_audit {prefix globs {bufs {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_7
     foreach g $globs { if {[string match $g $nm]} { lappend nets $n; break } }
   }
   set f [open $prefix.tsv w]
-  puts $f "fclk_net\tsrc\tload\tfclk_repeaters\tdata_min\tdata_max\tdata_bits\tmismatch"
-  set hops 0; set judged 0; set bad 0; set examples {}
-  set seen_src {}
+  puts $f "fclk_net\tfclk_src\tcapture\tfclk_repeaters\tdata_min\tdata_max\tdata_bits\tpairing\tbroadcast\tmismatch"
+  set hops 0; set judged 0; set bad 0; set bcast_nets 0; set bcast_hops 0; set fnets 0; set examples {}
   foreach n $nets {
     set drv {}
     foreach x [$n getITerms] { if {[$x getIoType] eq "OUTPUT"} { set drv $x; break } }
     if {$drv eq ""} continue
-    set src [[$drv getInst] getName]
     if {[ot_die_rep_fclk_is_rep [$drv getInst] $bufs]} continue       ;# a repeater-side segment of an fclk net
+    incr fnets
+    set src [[$drv getInst] getName]
     set acc [dict create]
     ot_die_rep_fclk_fwd $n $bufs 0 acc
+    # per capture: traced data inputs {source depth}
+    set rows {}
+    set is_bcast 0
     dict for {load v} $acc {
       lassign $v fdepth fmterm
       set li [$blk findInst $load]
-      set dmin 1000000; set dmax -1; set nb 0
+      set same {}; set any {}
       foreach it [$li getITerms] {
         if {[$it getIoType] ne "INPUT" || [$it getNet] eq "NULL" || [[$it getNet] isSpecial]} continue
         if {[$it getMTerm] eq $fmterm} continue
         lassign [ot_die_rep_fclk_back $it $bufs] s d
-        if {$s ne $src} continue
-        incr nb
-        if {$d < $dmin} { set dmin $d }
-        if {$d > $dmax} { set dmax $d }
+        if {$s eq ""} continue
+        if {[dict exists $acc $s]} { set is_bcast 1 }
+        if {$s eq $src} { lappend same $d } else { lappend any $d }
       }
+      if {[llength $same]} { set ds $same; set how same_source } elseif {[llength $any]} { set ds $any; set how capture_inputs } else { set ds {}; set how none }
+      lappend rows [list $load $fdepth $ds $how]
+    }
+    if {$is_bcast} { incr bcast_nets }
+    foreach r $rows {
+      lassign $r load fdepth ds how
       incr hops
-      set mm 0
-      if {$nb} {
+      set dmin -1; set dmax -1; set mm 0
+      if {[llength $ds]} { set dmin [tcl::mathfunc::min {*}$ds]; set dmax [tcl::mathfunc::max {*}$ds] }
+      if {$is_bcast} {
+        incr bcast_hops
+      } elseif {[llength $ds]} {
         incr judged
         set mm [expr {abs($fdepth - $dmin) > 1 || abs($fdepth - $dmax) > 1}]
         if {$mm} { incr bad; if {[llength $examples] < 20} { lappend examples "[$n getName] $src->$load fclk=$fdepth data=$dmin..$dmax" } }
-      } else { set dmin -1 }
-      puts $f "[$n getName]\t$src\t$load\t$fdepth\t$dmin\t$dmax\t$nb\t$mm"
+      }
+      puts $f "[$n getName]\t$src\t$load\t$fdepth\t$dmin\t$dmax\t[llength $ds]\t$how\t$is_bcast\t$mm"
     }
   }
   close $f
+  set vacuous [expr {$fnets > 0 && $judged == 0}]
   set ex {}; foreach e $examples { lappend ex "\"[string map {\\ \\\\ \" \\\"} $e]\"" }
   set j [open $prefix.json w]
-  puts $j "{\"schema\": \"opentallas.die_repeaters.fclk_audit.v1\", \"rule\": \"DIE-CLOCK: |fclk repeaters - data repeaters| <= 1 per hop\", \"fclk_nets\": [llength $nets], \"hops\": $hops, \"hops_with_data\": $judged, \"mismatch_over_1\": $bad, \"examples\": \[[join $ex {, }]\], \"tsv\": \"[file tail $prefix].tsv\"}"
+  puts $j "{\"schema\": \"opentallas.die_repeaters.fclk_audit.v2\", \"rule\": \"DIE-CLOCK: per hop |fclk repeaters - data repeaters| <= 1; pairing structural (capture instance inputs, same-source preferred); broadcast fclk nets flagged, not judged; fclk present with zero judged hops = vacuous = FAIL\", \"fclk_nets\": $fnets, \"broadcast_fclk_nets\": $bcast_nets, \"hops\": $hops, \"broadcast_hops\": $bcast_hops, \"hops_judged\": $judged, \"mismatch_over_1\": $bad, \"vacuous\": $vacuous, \"verdict\": \"[expr {($bad || $vacuous || $bcast_nets) ? {FAIL} : {PASS}}]\", \"examples\": \[[join $ex {, }]\], \"tsv\": \"[file tail $prefix].tsv\"}"
   close $j
-  puts "OT_DIE_REP_FCLK fclk_nets=[llength $nets] hops=$hops judged=$judged mismatch_over_1=$bad"; flush stdout
-  return $bad
+  puts "OT_DIE_REP_FCLK fclk_nets=$fnets broadcast_nets=$bcast_nets hops=$hops judged=$judged mismatch_over_1=$bad vacuous=$vacuous"; flush stdout
+  return [expr {$bad + $vacuous + $bcast_nets}]
 }
