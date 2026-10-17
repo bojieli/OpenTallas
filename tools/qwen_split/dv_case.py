@@ -86,9 +86,9 @@ def apply_dv(v, m):
         sp[f'rs_s{k}'] = (514, 'S')
     sp.update({'ck': (1, 'N'), 'rst_n': (1, 'N'),
                'st_dn_o': (1136, 'W'), 'st_up_i': (1136, 'W'), 'ch_dn_o': (1094, 'W'), 'ch_dn_i': (1038, 'W'),
-               'l9_w_o': (514, 'W'), 'l9_w_i': (514, 'W'), 'hr_i': (453, 'W'),
+               'l9_w_o': (514, 'W'), 'l9_w_i': (514, 'W'), 'hr_i': (453, 'W'), 'cmd_i': (116, 'W'),
                'st_dn_i': (1136, 'E'), 'st_up_o': (1136, 'E'), 'ch_up_i': (1094, 'E'), 'ch_up_o': (1038, 'E'),
-               'l9_e_o': (514, 'E'), 'l9_e_i': (514, 'E'), 'hr_o': (453, 'E')})
+               'l9_e_o': (514, 'E'), 'l9_e_i': (514, 'E'), 'hr_o': (453, 'E'), 'cmd_o': (116, 'E')})
     # W5 re-home ports (one per re-homed q3h bus, same width) go on the W face too
     removed = {n for n in by if n not in DI}
     rehome = []
@@ -99,11 +99,11 @@ def apply_dv(v, m):
         if ins & removed and ins & set(WCOL) and not ins - removed - set(WCOL):
             rehome.append((bid, cl, bits, eps))
     # Q-DV role table: only the W5 chain ends are re-homed, at their bit widths (W5 ch_dn_o AR 546 -> collective,
-    # collective 518 -> W5; W5 D2D 548 -> native59, native59 520 -> W5; tt_ctlm hr 453 -> W5); every other q3h port of a
+    # collective 518 -> W5; W5 D2D 548 -> native59, native59 520 -> W5; tt_ctlm hr 453 + cmd 116 = 569 -> W5); every other q3h port of a
     # retained W-column master whose peer was removed stays OPEN (the re-partition is not in RTL yet).  Budgets are
     # filled with the largest q3h buses of that master and direction (diagnostic stand-ins for the role words).
     budget = {('io_collective', 'in'): 546, ('io_collective', 'out'): 518, ('native59', 'in'): 548,
-              ('native59', 'out'): 520, ('tt_ctlm', 'out'): 453}
+              ('native59', 'out'): 520, ('tt_ctlm', 'out'): 569}
     pick = []
     for bid, cl, bits, eps in sorted(rehome, key=lambda t: -t[2]):
         drv = eps[0][0]
@@ -202,7 +202,8 @@ def apply_dv(v, m):
             wst, est = sorted(eps, key=lambda n: x_of[n])
             out += [(bid + '_dn', 'tree_spine', 1136, [(est, 'st_dn_o'), (wst, 'st_dn_i')]),
                     (bid + '_up', 'tree_spine', 1136, [(wst, 'st_up_o'), (est, 'st_up_i')]),
-                    (bid + '_hr', 'tree_spine', 453, [(wst, 'hr_o'), (est, 'hr_i')])]
+                    (bid + '_hr', 'tree_spine', 453, [(wst, 'hr_o'), (est, 'hr_i')]),
+                    (bid + '_cmd', 'tree_spine', 116, [(wst, 'cmd_o'), (est, 'cmd_i')])]   # Q-DV 665fce7f9 slice command chain
         elif bid.startswith('dv_ch_'):
             wst, est = sorted(eps, key=lambda n: x_of[n])
             out += [(bid + '_dn', 'tree_spine', 1094, [(est, 'ch_dn_o'), (wst, 'ch_up_i')]),
