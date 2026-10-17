@@ -14,9 +14,9 @@ set qrl_groups [list \
   [dict create name rne type INCLUSIVE regex {g_rqr\.gn_q\[} boxes {{407.5 780.0 452.5 960.0}} min 512 max 512] \
   [dict create name dw type INCLUSIVE regex {(u_me\.mq_wrom\[([0-9]|[1-9][0-9]|[1-4][0-9][0-9]|50[0-9]|51[01])\]|g_hd\.g_tx\.tc\[(12[89]|1[3-9][0-9]|2[0-4][0-9]|25[0-5])\])} boxes {{3.0 505.0 50.0 590.0}} min 1024 max 1024] \
   [dict create name de type INCLUSIVE regex {(u_me\.mq_wrom\[|g_hd\.g_tx\.tc\[(25[6-9]|2[6-9][0-9]|3[0-7][0-9]|38[0-3])\])} boxes {{407.5 505.0 452.5 590.0}} min 1024 max 1024] \
-  [dict create name hub type INCLUSIVE regex {^u_g\.u_tile\.} boxes {{325.0 335.0 443.0 505.0}} min 4207 max 4207] \
+  [dict create name hub type INCLUSIVE regex {^u_g\.u_tile\.} boxes {{325.0 335.0 443.0 505.0}} min 2861 max 2861] \
 ]
 # s2_w: Yosys names the REGROOT weight-operand flops after the TX wire they drive (g_sl[g].g_hd.g_tx.tc[b]):
 # b in [128,256) = lanes of groups 0,1 = west ROM column, [256,384) = east (tx_d = {v,first,split,w_in,x}).
 source /src/tools/qwen_romleaf/parent_regions.tcl
-# hub = every remaining u_g.u_tile flop on root ck (ME control + kv_addr_prep + u_xm x-line 1024): measured from the c1 synth netlist, matches the gate clock_rule count of port:ck
+# hub = every sequential cell on root ck in the odb (NK 2348 / NL 2861, measured at GPL in gate c1r; the gate clock_rule count 3694/4207 includes non-flop clock pins)
