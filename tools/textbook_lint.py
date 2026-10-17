@@ -124,10 +124,11 @@ HARD_CHECKS = ("clock_sinks",)     # refused in every mode, never waivable by sp
 #                 PIN_LAUNCH_MAX_PS at phi - R) only because its kit predates the recipe-2 output stage (main 36de4b87f):
 #                 the same RTL and outline / pin faces re-kitted with that stage ("source" audit JSON, "cell",
 #                 "launch_ps"); written by tools/ref_tile/rekit_native_launch.py
-#   native_capture (coordinator 2026-10-16, S81 ctrnown_e) a CLOSED view fails the native CAPTURE budget (TT setup at the
-#                 pin + R > PIN_CAPTURE_MAX_PS) with unchanged RTL / outline / pin faces: "source" (a COMMITTED native
-#                 audit receipt that the gate reads: a record of "cell" with capture_ps > PIN_CAPTURE_MAX_PS), "cell",
-#                 and "fix" (what the new kit changes on the capture side: input pin flops / clock entry / insertion)
+#   native_capture (coordinator 2026-10-16, S81 ctrnown_e; widened 22:30) a CLOSED view FAILS its native audit (TT capture at
+#                 the pin + R > PIN_CAPTURE_MAX_PS, launch at phi - R > PIN_LAUNCH_MAX_PS, or boundary clock spread >
+#                 CLK_SPREAD_MAX_PS) with unchanged RTL / outline / pin faces (pin positions may move along the same
+#                 faces): "source" (a COMMITTED native audit receipt that the gate reads: a record of "cell"), "cell",
+#                 and "fix" (what the new kit changes: input pin flops / clock entry / insertion / boundary registers)
 CLOSED_STANDS_KINDS = ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap", "pin_register",
                        "native_launch", "native_capture")
 DIE_WINDOW_CUT_MIN = 0.6

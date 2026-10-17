@@ -102,12 +102,32 @@ reg io_cfg_we=0,io_start_v=0;
  wire [15:0] c_vire,c_rov,c_kvwe;
  wire [383:0] c_viaddr,c_kvwaddr;
  wire [511:0] c_rox,c_kvwdata;
+`ifdef SFU_CORE_SPLIT2
+ // k7 (H-SU 10-16): ot_hgi_sfu_core_split2 -- W/E lane port split (lanes 0..7 = low half = _w), regional clock roots
+ // clk_pw/clk_pe tied to the same clock, reset relay. OT_SFU_CORE2_MUT_CLKPW (negative control): W pin-register
+ // clock root left undriven -> local_* never update -> must mismatch.
+`ifdef OT_SFU_CORE2_MUT_CLKPW
+ wire eq_clk_pw=1'b0;
+`else
+ wire eq_clk_pw=clk;
+`endif
+ ot_hgi_sfu_core_split2 #(.LG_PATH(EQ_LG)) eq_core(.clk(clk),.clk_pw(eq_clk_pw),.clk_pe(clk),.rst_n(rst_n),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),
+  .clk_lane({16{clk}}),.clk_map({16{clk}}),.rst_lane_n({16{rst_n}}),.rst_map_n({16{rst_n}}),
+  .io_word(s_io),.compiler_control(s_ctl),
+  .local_rq(c_rq),.local_rr(rr_d[D-2]),.local_wq(c_wq),.local_w_done(wd_d[D-2]),
+  .vi_re_w(c_vire[7:0]),.vi_re_e(c_vire[15:8]),.vi_addr_w(c_viaddr[191:0]),.vi_addr_e(c_viaddr[383:192]),
+  .vi_q_w(vq_d[D-1][255:0]),.vi_q_e(vq_d[D-1][511:256]),.ro_v_w(c_rov[7:0]),.ro_v_e(c_rov[15:8]),
+  .kv_we_w(c_kvwe[7:0]),.kv_we_e(c_kvwe[15:8]),.ro_x_w(c_rox[255:0]),.ro_x_e(c_rox[511:256]),
+  .kv_wdata_w(c_kvwdata[255:0]),.kv_wdata_e(c_kvwdata[511:256]),.kv_waddr_w(c_kvwaddr[191:0]),.kv_waddr_e(c_kvwaddr[383:192]),
+  .fault(s_cfault));
+`else
  ot_hgi_sfu_core_split #(.LG_PATH(EQ_LG)) eq_core(.clk(clk),.rst_n(rst_n),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),
   .clk_lane({16{clk}}),.clk_map({16{clk}}),.rst_lane_n({16{rst_n}}),.rst_map_n({16{rst_n}}),
   .io_word(s_io),.compiler_control(s_ctl),
   .local_rq(c_rq),.local_rr(rr_d[D-2]),.local_wq(c_wq),.local_w_done(wd_d[D-2]),
   .vi_re(c_vire),.vi_addr(c_viaddr),.vi_q(vq_d[D-1]),.ro_v(c_rov),.kv_we(c_kvwe),.ro_x(c_rox),.kv_wdata(c_kvwdata),
   .kv_waddr(c_kvwaddr),.fault(s_cfault));
+`endif
  localparam integer LW=136+2248+16+512;
  wire [LW-1:0] ref_l={`SREF.local_rq,`SREF.local_wq,`SREF.ro_v,`SREF.ro_x};
  wire [LW-1:0] cut_l={c_rq,c_wq,c_rov,c_rox};

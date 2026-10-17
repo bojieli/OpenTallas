@@ -1,5 +1,15 @@
 `timescale 1ns/1ps
 `default_nettype none
+// OT_SFU_SYNC_RST (H-SU k8, 2026-10-16 owner standard: regional SYNC reset trees, no async-clear fanout): when defined,
+// every reset in this file is synchronous to its own clock (the regional rst_n comes registered from ot_rst_relay /
+// the die's regional relays); undefined = the previous asynchronous form, bit-identical behaviour after release.
+`ifndef OT_SFU_ARST
+`ifdef OT_SFU_SYNC_RST
+`define OT_SFU_ARST(r)
+`else
+`define OT_SFU_ARST(r) or negedge r
+`endif
+`endif
 // Fixed-cycle SFU VM prefetch/drain bridge. Requests and selectors come from
 // an actual compiler programme. No request FIFO, credits, leases or retries.
 // Mid-tap READ_RETURN14 is measured at response pins after edge n+14 for a
@@ -106,7 +116,7 @@ module ot_hgi_sfu_vm_static_bridge #(
      write_q[281*drain_sector_q[16*s]+:281]<=
       {1'b1,drain_sector_q[16*s+:16],round_sector(drain_data[256*s+:256],drain_round_q[s]),8'hff};
   end
-  always @(posedge clk_lg[g] or negedge rst_lg_n[g])begin
+  always @(posedge clk_lg[g] `OT_SFU_ARST(rst_lg_n[g]))begin
    if(!rst_lg_n[g])begin
     fault_q<=0;drain_expected<=0;
     for(integer i=0;i<=WRITE_RETURN+1;i=i+1)write_expected[i]<=0;
@@ -127,7 +137,7 @@ module ot_hgi_sfu_vm_static_bridge #(
    end
   end
  end
- always @(posedge clk or negedge rst_n)begin
+ always @(posedge clk `OT_SFU_ARST(rst_n))begin
   if(!rst_n)begin
    fault<=0;
    for(integer i=0;i<=READ_RETURN;i=i+1)scalar_addr_pipe[i]<=0;

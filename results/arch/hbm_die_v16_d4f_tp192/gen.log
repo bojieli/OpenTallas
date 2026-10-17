@@ -1,0 +1,22 @@
+{
+ "instances": 1424,
+ "masters": 67,
+ "edges": 8645,
+ "edge_bits": 982634,
+ "clock_reset_ports": 3242,
+ "straps": 507,
+ "die_pins": 27,
+ "exposed_input_ports": 0,
+ "exposed_input_bits": 0,
+ "exposed_unassigned_ports": 0,
+ "gaps": 30,
+ "open_output_ports": 700,
+ "problems": 0,
+ "before_v15": {
+  "instances": 83,
+  "exposed_input_ports": 1070,
+  "exposed_input_bits": 177247,
+  "unresolved_source_ports": 1660,
+  "source": "results/arch/hbm_die_v15/views_v5/exposed_inputs_by_owner_1705.json"
+ }
+}
