@@ -1,0 +1,3 @@
+root_stop ok ['[9383000] %Fatal: cand_ot_v41_pair_w17w10.sv:193: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=16 ref=32ffffff00400010 shadow=3520ce35c0400010']
+MUTANT BF leaf root_stop FAIL: DIFF TXN from actual RTL
+RC root 1
