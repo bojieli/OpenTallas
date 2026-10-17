@@ -17,6 +17,10 @@
 // Params: KSMUT (kshare MUT), WBMUT (wb_kport MUT), WOPEN.  Exit: "PASS" line, else "FAIL".
 module tb_hbm_svc_wb_kshare_q;
  parameter integer KSMUT=0, WBMUT=0, WOPEN=0;
+ // WBWC=1: the d4c PC-band local copy (2 x ot_hbm_svc_wbw_copy, kshare 0..3 / 4..7) between wbk and the kshares;
+ // CMUT = its bench mutant.  Equal-age monitor: every kshare sees wbk's command exactly WLAT stream edges later.
+ parameter integer WBWC=0, CMUT=0;
+ localparam integer WLAT = WBWC ? 2 : 0;
  localparam [31:0] K_BASE=32'h28800000;localparam integer K_MEM=65536;localparam [1:0] STK=2'd2;
  reg hbm=0,stream=0,hrst=0,srst=0;
  always #512 hbm=~hbm;
@@ -39,6 +43,30 @@ module tb_hbm_svc_wb_kshare_q;
  wire[8191:0]c_k_wdata,c_kr_data;wire[1023:0]c_k_wstrb;
  reg vm_v=0,vm_bank=0;reg[15:0]vm_epoch=0;reg[14:0]vm_row=0;reg[3:0]vm_col=0;
  wire[31:0]fill_v,fill_bank;wire[191:0]fill_slot;wire[511:0]fill_epoch;wire[8191:0]fill_data;wire[7:0]ks_fault;
+ wire[7:0]kw_v;wire[239:0]kw_base;wire[95:0]kw_total;
+ generate if(WBWC)begin:g_wc
+  ot_hbm_svc_wbw_copy #(.NS(4),.MUT(0)) u_wc0(.stream_clk(stream),.stream_rst_n(srst),.wbw_v(wbw_v),.wbw_base(wbw_base),
+   .wbw_total(wbw_total),.o_wbw_v(kw_v[3:0]),.o_wbw_base(kw_base[119:0]),.o_wbw_total(kw_total[47:0]));
+  ot_hbm_svc_wbw_copy #(.NS(4),.MUT(CMUT)) u_wc1(.stream_clk(stream),.stream_rst_n(srst),.wbw_v(wbw_v),.wbw_base(wbw_base),
+   .wbw_total(wbw_total),.o_wbw_v(kw_v[7:4]),.o_wbw_base(kw_base[239:120]),.o_wbw_total(kw_total[95:48]));
+ end else begin:g_bc
+  assign kw_v={8{wbw_v}};assign kw_base={8{wbw_base}};assign kw_total={8{wbw_total}};
+ end endgenerate
+ // equal-age monitor (stream edges): history of the wbk command, compared per kshare at WLAT
+ reg[42:0]wh[0:3];integer wa_err=0,wa_cmds=0,hi;
+ always @(posedge stream)begin
+  for(hi=3;hi>0;hi=hi-1)wh[hi]<=wh[hi-1];wh[0]<={wbw_v,wbw_base,wbw_total};
+ end
+ always @(negedge stream)if(srst)begin:mon
+  integer kk;reg[42:0]ref_c;
+  ref_c=(WLAT==0)?{wbw_v,wbw_base,wbw_total}:wh[WLAT-1];
+  if(ref_c[42])wa_cmds=wa_cmds+1;
+  for(kk=0;kk<8;kk=kk+1)
+   if(kw_v[kk]!==ref_c[42]||(ref_c[42]&&({kw_base[30*kk+:30],kw_total[12*kk+:12]}!==ref_c[41:0])))begin
+    wa_err=wa_err+1;
+    if(wa_err<5)$display("WBW_AGE kshare %0d at %0t: got v=%b exp v=%b",kk,$time,kw_v[kk],ref_c[42]);
+   end
+ end
  genvar k;
  generate for(k=0;k<8;k=k+1)begin:gks
   ot_hbm_svc_vm_kshare #(.MUT(KSMUT)) u(.sm(3'(k)),.hbm_clk(hbm),.hbm_rst_n(hrst),.stream_clk(stream),.stream_rst_n(srst),
@@ -49,7 +77,7 @@ module tb_hbm_svc_wb_kshare_q;
    .c_k_we(c_k_we[4*k+:4]),.c_k_wdata(c_k_wdata[1024*k+:1024]),.c_k_wstrb(c_k_wstrb[128*k+:128]),.c_k_wr_done(c_k_wr_done[4*k+:4]),
    .c_kr_v(c_kr_v[4*k+:4]),.c_kr_rdy(c_kr_rdy[4*k+:4]),.c_kr_tag(c_kr_tag[68*k+:68]),.c_kr_beat(c_kr_beat[16*k+:16]),.c_kr_data(c_kr_data[1024*k+:1024]),
    .vm_v(vm_v),.vm_bank(vm_bank),.vm_epoch(vm_epoch),.vm_row(vm_row),.vm_col(vm_col),
-   .wbw_v(wbw_v),.wbw_base(wbw_base),.wbw_total(wbw_total),
+   .wbw_v(kw_v[k]),.wbw_base(kw_base[30*k+:30]),.wbw_total(kw_total[12*k+:12]),
    .w_k_v(w_k_v[4*k+:4]),.w_k_rdy(w_k_rdy[4*k+:4]),.w_k_addr(w_k_addr[120*k+:120]),.w_k_wdata(w_k_wdata[1024*k+:1024]),.w_k_wr_done(w_k_wr_done[4*k+:4]),
    .fill_v(fill_v[4*k+:4]),.fill_bank(fill_bank[4*k+:4]),.fill_slot(fill_slot[24*k+:24]),.fill_epoch(fill_epoch[64*k+:64]),.fill_data(fill_data[1024*k+:1024]),
    .fault(ks_fault[k]));
@@ -251,6 +279,8 @@ module tb_hbm_svc_wb_kshare_q;
   if(fault_wb||(|ks_fault)||ctl_fault)begin errors=errors+1;$display("fault: wb_kport %b kshare %b controller %b",fault_wb,ks_fault,ctl_fault);end
   for(b=0;b<blk_done;b=b+1)$display("WB_BLOCK %0d sectors %0d fence_stream_edges %0d window_hbm_edges max %0d mean %0d",
    b,btot[b],fence[b],winmax[b],winsum[b]/32);
+  if(wa_err!=0)$fatal(1,"WBW_AGE FAIL tb_hbm_svc_wb_kshare_q WBWC=%0d CMUT=%0d age_errors=%0d cmds=%0d",WBWC,CMUT,wa_err,wa_cmds);
+  $display("WBW_AGE ok WBWC=%0d WLAT=%0d cmds_checked=%0d",WBWC,WLAT,wa_cmds);
   if(errors==0)$display("PASS tb_hbm_svc_wb_kshare_q KSMUT=%0d WBMUT=%0d WOPEN=%0d blocks=%0d group_req=%0d vm_windows=4",KSMUT,WBMUT,WOPEN,NB,32*GN);
   else $fatal(1,"FAIL tb_hbm_svc_wb_kshare_q KSMUT=%0d WBMUT=%0d WOPEN=%0d errors=%0d",KSMUT,WBMUT,WOPEN,errors);
   $finish;
