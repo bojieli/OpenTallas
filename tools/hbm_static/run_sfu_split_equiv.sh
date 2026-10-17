@@ -40,6 +40,8 @@ if [ "${STORE6:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r6.sv rtl
 # STORE7=1 (r7): ot_hgi_sfu_programme_store_r7 (synchronous regional reset tree, release 4 edges; D=4). EQ_MUT=early: config 1 edge early
 if [ "${STORE7:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r7.sv $P/ot_hgi_sfu_program_stripe_sreset.sv $P/ot_hgi_sfu_calendar_paged_sreset.sv $P/ot_hgi_sfu_io_calendar_sreset.sv); defs+=(-DSFU_PSTORE_R7); fi
 if [ "${SFU_LOCAL_KEEP:-0}" = 1 ];then defs+=(-DOT_SFU_LOCAL_KEEP);fi
+# STORE7B=1 (r7b): ot_hgi_sfu_programme_store_r7b (r7 reset tree + SRAM pipelining; D=10, status 8)
+if [ "${STORE7B:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r7b.sv $P/ot_hgi_sfu_program_stripe_pipe.sv $P/ot_hgi_sfu_calendar_paged_pipe.sv $P/ot_hgi_sfu_io_calendar_pipe.sv); defs+=(-DSFU_PSTORE_R7B); fi
 case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; early) defs+=(-DSFU_PSTORE_R7_EARLY);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
 rows=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['rows'])" "$OUT/data/io_manifest.json")
 sedge=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['scalar_prefetch_edge'])" "$OUT/data/io_manifest.json")
@@ -56,6 +58,6 @@ if [ -z "${EQ_MUT:-}" ];then
  [ "$rc" = 0 ] && grep -q 'SFU_SPLIT_EQUIV PASS' "$OUT/run.log" && grep -q '^PASS canonical' "$OUT/run.log" && echo "SFU_SPLIT_GATE POSITIVE PASS" && exit 0
  echo "SFU_SPLIT_GATE POSITIVE FAIL rc=$rc";exit 1
 else
- [ "$rc" != 0 ] && grep -q 'SFU_SPLIT_EQUIV FAIL\|SFU_SPLIT_EQUIV_MISMATCH' "$OUT/run.log" && echo "SFU_SPLIT_GATE MUTANT ${EQ_MUT} REJECTED (expected)" && exit 0
+ [ "$rc" != 0 ] && grep -q 'SFU_SPLIT_EQUIV FAIL\|SFU_SPLIT_EQUIV_MISMATCH\|SFU_SPLIT_FAULT' "$OUT/run.log" && echo "SFU_SPLIT_GATE MUTANT ${EQ_MUT} REJECTED (expected)" && exit 0
  echo "SFU_SPLIT_GATE MUTANT ${EQ_MUT} ESCAPED rc=$rc";exit 1
 fi
