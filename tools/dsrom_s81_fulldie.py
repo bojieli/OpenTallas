@@ -2168,7 +2168,14 @@ def bundle_bound_lefs(texts):
 def emit_case_glue(m, work):
     """Keep RTL glue and import provenance from the exact model that emitted die.v."""
     import gzip
-    (work / 'die_glue.sv').write_text(glue_rtl(m))
+    if m.get('cluster_modules') is not None:
+        # --cluster-mode: the flat model's glue (cluster children) + the cluster master modules (die-top port-bind RTL)
+        (work / 'die_glue.sv').write_text(m['_flat_glue'] + '\n// --cluster-mode column cluster masters (s81/cluster_mode.py)\n'
+                                          + m['cluster_modules'] + '\n')
+        (work / 'die_clusters.v').write_text(m['cluster_modules'] + '\n')
+        (work / 'cluster_mode.json').write_text(json.dumps(m['cluster_report'], indent=1, default=str) + '\n')
+    else:
+        (work / 'die_glue.sv').write_text(glue_rtl(m))
     reset_path = work / 'die_glue.reset_contract.json'
     if RLY536_RSTREG:
         reset_path.write_text(json.dumps(rly536_reset_contract(m), indent=1) + '\n')
@@ -3225,6 +3232,7 @@ BF_X2_PAIR = False              # --bf-x2-pair (S-BIND r6): the packed static x 
 # beside go (same class / relay cohort: the producer's DELTA 0 assumes equal go / f_prog ages, bench-measured).
 BF_STATIC_PROG = False
 BF_FRONT_ROOT_ABI = False       # opt-in S81H03 source candidate; no view/timing inheritance
+CLUSTER_MODE = None             # --cluster-mode (H-C27 c27): dict(pitch_um, channel_um, reach_um, ...) or None (s81/cluster_mode.py)
 LEAF, NODEB, STB = 63, 66, 2
 CRET = NODEB + STB                  # column return payload: root word + {fault, busy}
 STEP8 = 400.0                       # nominal forwarded-stage spacing (<= LINK_STAGE_UM after placement)
@@ -5218,6 +5226,8 @@ def build_r8(variant=None):
     if CANONICAL_LAYOUT is not None:
         m['canonical_layout'] = CANONICAL_LAYOUT
         variant['canonical_layout'] = dict(path=CANONICAL_LAYOUT['path'], sha256=CANONICAL_LAYOUT['sha256'], pair_count=PAIRS, bf_pairs=BF_PAIRS, root_count=128, wide_hub=CANONICAL_LAYOUT.get('wide_hub'), phase_width_by_stage=CANONICAL_LAYOUT['stages'], supplemental_homes_status='unbound reservations, not substituted native masters')
+        if CLUSTER_MODE:
+            variant['cluster_mode'] = dict(CLUSTER_MODE)
         if CANONICAL_LAYOUT.get('bf_phase_fixed'):
             variant['canonical_layout']['bf_phase_fixed'] = {k: v for k, v in CANONICAL_LAYOUT['bf_phase_fixed'].items()
                                                              if k != 'moved_ids'}
@@ -10785,6 +10795,10 @@ def _faces_r8(m, Mx, it, ports):
         if rest_(['f_prog', 'io_clk']):
             _lay(Mx, 'S', rest_(['f_prog', 'io_clk']), 'M5')
         return
+    if it.kind == 'col_cluster':
+        from s81.cluster_mode import faces as cluster_faces
+        cluster_faces(sys.modules[__name__], Mx, ports)
+        return
     P_ = lambda names: [(n, ports[n][1]) for n in names if n in ports]
     kind, mst = it.kind, Mx.name
     if kind == 'stn':
@@ -11864,6 +11878,13 @@ def die_options(ap):
                     'in-root position pattern per (pairs, BF) class (s81/cluster_extract.py bf_phase_pattern), so all '
                     'frames of a height class pack identically (one column cluster master per class instead of 32 '
                     'BF-phase signatures). The remapped stage map is written to the work dir (compiler input).')
+    ap.add_argument('--cluster-mode', action='store_true', help='H-C27 c27 (owner 10-16: hierarchical S81): column '
+                    'clusters (frame + cfifo, one master per height x pairs class) at a widened pitch with a die-top '
+                    'transit channel per column; die-top stations only in streets / channels / S14; the die top '
+                    'instantiates cluster masters (s81/cluster_mode.py). Needs --canonical-layout.')
+    ap.add_argument('--cluster-pitch', type=float, default=1210.464, help='--cluster-mode column pitch (um)')
+    ap.add_argument('--cluster-reach', type=float, default=180.0, help='--cluster-mode die-top transport station spacing '
+                    'cap (um; provisional, not a timing bound until the measured reach table)')
     ap.add_argument('--canonical-layout', help='Source-pinned full2417 capacity JSON; exact519 BF IDs and128 root bounds, irregular local streets/RSC transit and per-root actual flight calendar')
     ap.add_argument('--die', default='layer', choices=['layer', 'layer1', 'layer1e', 'head'])
     ap.add_argument('--ctrl-rq', action='store_true', help='s81-gen 2026-10-09: every stack controller\'s request '
@@ -12207,7 +12228,7 @@ def die_options(ap):
 def apply_options(a):
     """configure the module globals for the die variant in `a` (die_options)"""
     global CTRL_SLAB, CTRL_ROLE, CTRL_BINDINGS, VIEW_BINDING, ORIENT_QUAL
-    global CANONICAL_LAYOUT, PAIRS, BF_PAIRS, NV_PAIRS
+    global CANONICAL_LAYOUT, PAIRS, BF_PAIRS, NV_PAIRS, CLUSTER_MODE
     if getattr(a, 'view_binding', None):
         VIEW_BINDING = a.view_binding
     if getattr(a, 'orientation_qualification', None):
@@ -12663,6 +12684,22 @@ def apply_options(a):
             CANONICAL_LAYOUT['bf_ids'] = set(new_ids)
             CANONICAL_LAYOUT['bf_phase_fixed'] = receipt
             BF_EXPLICIT_IDS = frozenset(new_ids)
+        if getattr(a, 'cluster_mode', False):
+            from s81.cluster_mode import cluster_layout
+            rec_ = cluster_layout(CANONICAL_LAYOUT, a.cluster_pitch, GY, COL_W8)
+            CLUSTER_MODE = dict(rec_, reach_um=a.cluster_reach)
+            w_ = wide_hub()
+            if w_:
+                # the S14 roads keep only the real gap between the re-pitched field and the hub bodies
+                xs_ = sorted(c['x_um'] for c in CANONICAL_LAYOUT['columns'])
+                nw_ = rec_['west_columns']
+                w_['s14w'] = [max(w_['s14w'][0], xs_[nw_ - 1] + COL_W8 + rec_['channel_um'] + 4.32), w_['s14w'][1]]
+                w_['s14e'] = [w_['s14e'][0], min(w_['s14e'][1], xs_[nw_] - 4.32)]
+                assert w_['s14w'][1] - w_['s14w'][0] >= 100.0 and w_['s14e'][1] - w_['s14e'][0] >= 100.0, \
+                    ('--cluster-mode: S14 road closed by the re-pitched field', w_['s14w'], w_['s14e'])
+                CLUSTER_MODE.update(s14w=w_['s14w'], s14e=w_['s14e'])
+        else:
+            CLUSTER_MODE = None
         slot_geometry()
 
 
@@ -12712,6 +12749,15 @@ def main(argv=None):
                     print('WARNING ' + msg_, file=sys.stderr)
                 else:
                     raise SystemExit(msg_)
+    if CLUSTER_MODE and a.gen == 'r8' and a.mode in ('real', 'netlist'):
+        # H-C27 --cluster-mode: the glue of the FLAT model (cluster children included), then the die top collapses to
+        # cluster masters + inter-cluster transport (s81/cluster_mode.py)
+        from s81.cluster_mode import collapse as cluster_collapse
+        m['_flat_glue'] = glue_rtl(m)
+        crep_ = cluster_collapse(sys.modules[__name__], m)
+        print('OT_CLUSTER_MODE masters %d top_instances %d member_instances %d removed_buses %d roots_with_deltas %d' % (
+            len(crep_['masters']), crep_['top_instances'], crep_['member_instances'], crep_['removed_internal_buses'],
+            len(crep_['deltas_vs_representative'])), flush=True)
     cov = dict(COV)
     for kv in filter(None, a.cov.split(',')):
         k_, v = kv.split('=')

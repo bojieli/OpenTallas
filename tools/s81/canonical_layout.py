@@ -78,6 +78,10 @@ def corridors(G,m,cor):
  for access in d.get('service_access_corridors',[]):
   rect=tuple(access['rect_um']);assert len(rect)==4 and rect[0]<rect[2] and rect[1]<rect[3]
   cor['svc_access_'+access['name']]=rect
+ if getattr(G,'CLUSTER_MODE',None):
+  # H-C27 --cluster-mode: rsclane = the die-top transit channel, cfstreet = the band below the cluster, clusters reserved
+  from s81.cluster_mode import patch_corridors
+  patch_corridors(G,m,cor)
  return cor
 
 class Roadmap:
@@ -87,6 +91,11 @@ class Roadmap:
   self.cols=cols;nw=m['canonical_layout']['west_columns'];self.nw=nw
   levels={i:set() for i in range(len(cols))};streets={i:[] for i in range(len(cols))}
   self.sx={i:c['x_um']+G.COL_W8-(15.12 if return_lanes else G.RSC_W/2) for i,c in enumerate(cols)}
+  if getattr(G,'CLUSTER_MODE',None):
+   # H-C27 --cluster-mode: the column's vertical die-top lane is its transit channel (east of the cluster), never the
+   # RSC strip (that strip is inside the column cluster: its own return relays)
+   from s81.cluster_mode import lane_x
+   self.sx={i:lane_x(G,m,c,return_lanes) for i,c in enumerate(cols)}
   for r,f in m['frames'].items():
    a=f['street'][1];b=f['street'][3]
    # Broadcast and returns use separate rows inside the actual local street.
@@ -209,6 +218,11 @@ def compact_return_relays(G,m,CH):
  CH.P.occ=occ
  m['canonical_rsc_repack']=dict(return_bundle_lanes=4,station_width_um=G.stn_dims([G.CRET+2]*4,False)[0],moves=receipt,physical_qualified=False)
 
+def _cm_reach(G):
+ """--cluster-mode die-top transport station spacing cap (provisional; None = the chain default)"""
+ cm=getattr(G,'CLUSTER_MODE',None)
+ return cm['reach_um'] if cm else None
+
 def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
  """Actual per-root chains, preserving immutable logical gather lane ordering.
  Geometry-independent equal-delay assertions are deliberately absent: actual
@@ -274,11 +288,11 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
     path=G._vmc_reroute(m,path,ends,name)
     actual=G._poly_len(path)
     forced=[s*actual/length if length else s for s in forced]
-   sa=CH.run(name,LA,path,allowed,src,forced=forced)
+   sa=CH.run(name,LA,path,allowed,src,forced=forced,reach=_cm_reach(G))
    G.chain_nets(CH,name,srcA,[i for i,_,_ in sa],LA)
    tA=(sa[-1][0].name,'fo0','do0') if sa else srcA
    if not pair:return sa,tA,None
-   sb=CH.run(name+'_x2',LB,path,allowed,src,forced=sorted(set([round(s_,3) for _,s_,_ in sa]+list(forced))))
+   sb=CH.run(name+'_x2',LB,path,allowed,src,forced=sorted(set([round(s_,3) for _,s_,_ in sa]+list(forced))),reach=_cm_reach(G))
    assert len(sb)==len(sa),('--bf-x2-pair: unequal station counts',name,len(sa),len(sb))
    G.chain_nets(CH,name+'_x2',srcB,[i for i,_,_ in sb],LB)
    return sa,tA,(sb[-1][0].name,'fo0','do0') if sb else srcB
@@ -344,7 +358,7 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
       ordered=sorted(active);positions=[byname[active[j][0]] for j in ordered]
       src=(sum(i.x+i.w/2 for i in positions)/len(positions),sum(i.y+i.h/2 for i in positions)/len(positions))
       path=G._dedup([src,(path[0][0],src[1])]+path)
-      stages=CH.run(name,[G.CRET+2]*len(ordered),path,allowed,src,forced=[G._poly_len(path)])
+      stages=CH.run(name,[G.CRET+2]*len(ordered),path,allowed,src,forced=[G._poly_len(path)],reach=_cm_reach(G))
       for k,(obj,_s,_hop) in enumerate(stages):
        byname[obj.name]=obj
        for j,lane in enumerate(ordered):
