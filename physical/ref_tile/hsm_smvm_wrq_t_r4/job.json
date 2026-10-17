@@ -34,7 +34,8 @@
     "expect": "pass",
     "pass_regex": "SM_VM_WR_Q_T BENCH PASS",
     "threads": 1,
-    "peak_ram_gb": 4
+    "peak_ram_gb": 4,
+    "pass_witness": "physical/ref_tile/hsm_smvm_wrq_t_r4/witness/c8e94d78d_wrq_t_bench.log"
    },
    {
     "name": "mut_face_clock_drop",
@@ -42,7 +43,8 @@
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 4,
-    "fail_regex": "^TB_HBM_SM_VM_WR_Q_T FAIL MUT=0 mismatches[+]faults=[1-9][0-9]*$"
+    "fail_regex": "^TB_HBM_SM_VM_WR_Q_T FAIL MUT=0 mismatches[+]faults=[1-9][0-9]*$",
+    "fail_witness": "physical/ref_tile/hsm_smvm_wrq_t_r4/witness/c8e94d78d_mut_face_clock_drop.log"
    }
   ],
   "calibrate": {
