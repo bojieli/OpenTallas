@@ -77,6 +77,11 @@ STATIC_OWNERS = {
     ('ectla', 'x_i'): ('DIE_JOIN', 'ECTL B/C ring x face (ectla_kiss tile, KVJ-D merged)', 'KVJ-D'),
     ('pc_path', 'es'): ('NEW_RTL', 'writer es lane -> PC fan-out + es merge (qkd_static_kv_pc_path_emb, KVJ-C merged; '
                         'ROLES still name qkd_static_kv_pc_path)', 'KVJ-C2'),
+    # KVJ-C3 10-17: the PC chain root + join4_cal calendar constants (kvjc3_pc_chain.py boot_words, one shared boot bus)
+    ('es_fan_root', 'cfg_'): ('COMPILER', 'boot dispatcher embedding-calendar target (kvjc3_pc_chain boot_words, '
+                              'target 0 = PC player constants)', 'KVJ-A successor + KVJ-E image'),
+    ('emb_join', 'cfg_'): ('COMPILER', 'the same boot bus as es_fan_root (target 1 = join beat calendar)',
+                           'KVJ-A successor + KVJ-E image'),
     ('pc_path', 'front_hbm_data'): ('PHY', 'HBM3E PHY pi (qkd_hbm3e_phy_pc)', 'KVJ-G2'),
     ('pc_path', 'return_hbm_data'): ('PHY', 'HBM3E PHY pi (qkd_hbm3e_phy_pc)', 'KVJ-G2'),
     ('pc_path', ''): ('DIE_JOIN', 'pc_path chain neighbours rsi/ci/pi/ki/fi (host PC slice / ctrl chain)', 'KVJ-G2'),

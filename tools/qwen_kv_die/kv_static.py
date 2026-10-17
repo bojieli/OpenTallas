@@ -22,13 +22,15 @@ S = 'rtl/qwen_sys/static_kv_20261014/'
 E = 'rtl/qwen_sys/static_embedding_20261014/'
 # KVJ-C2 2026-10-17: the per-PC parent is the embedding successor qkd_static_kv_pc_path_emb (unchanged pc_path + the
 # es merge child qkd_static_kv_pc_es_merge); its extra RTL dependencies
-PC_EMB_EXTRA = [E + 'qkd_embedding_static_map.sv', E + 'qkd_static_kv_pc_es_merge.sv', E + 'qkd_static_kv_pc_path_emb.sv']
+PC_EMB_EXTRA = [E + 'qkd_embedding_static_map.sv', E + 'qkd_static_kv_pc_es_merge.sv', E + 'qkd_static_kv_pc_path_emb.sv',
+                # KVJ-C3 2026-10-17: the per-PC parent successor qkd_static_kv_pc_path_fan adds the chain station
+                E + 'qkd_kv_pc_chain_station.sv', E + 'qkd_static_kv_pc_path_fan.sv']
 
 
 def pc_emb_sources():
     return list(PC_SOURCES) + (PC_EMB_EXTRA if ROLES.get('pc_path', ('',))[0].startswith(E) else [])
 # the embedding token path's RTL dependencies beyond the instance sources (join4 instantiates the unchanged join)
-EMB_SOURCES = [E + 'qkd_embedding_static_join.sv']
+EMB_SOURCES = [E + 'qkd_embedding_static_join.sv', E + 'qkd_embedding_static_join4.sv']   # join4_cal -> join4 -> join
 STACK_NAMES = ('WS', 'WN', 'ES', 'EN')
 # Name, actual source/module, exact required full-die population. The pc parent
 # elaborates into four real masters; it is not an inherited physical frame.
@@ -38,7 +40,8 @@ ROLES = {
     'attention_programme': ('rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv', 'qkd_native_attention_programme', 1),
     'ownership': (S+'qkd_static_kv_ownership.sv', 'qkd_static_kv_ownership_calendar', 1),
     'drain_guard': (S+'qkd_static_kv_ownership.sv', 'qkd_static_kv_drain_guard4', 32),
-    'pc_path': (E+'qkd_static_kv_pc_path_emb.sv', 'qkd_static_kv_pc_path_emb', 128),
+    # KVJ-C3 2026-10-17: pc_path_emb + the static PC chain station (writer lane -> PC fan-out tap, embedding slot player)
+    'pc_path': (E+'qkd_static_kv_pc_path_fan.sv', 'qkd_static_kv_pc_path_fan', 128),
     'landing': (S+'qkd_static_kv_landing_seg.sv', 'qkd_static_kv_landing_seg', 32),
     'landing_calendar': (S+'qkd_kv_landing_cal.sv', 'qkd_kv_landing_cal', 32),
     'front_calendar': (S+'qkd_kv_front_cal.sv', 'qkd_kv_front_cal', 32),
@@ -53,8 +56,11 @@ ROLES = {
     'embgw': (E+'qkd_embgw_boot.sv', 'qkd_embgw_boot', 1),
     'emb_return_head': (E+'qkd_embedding_static_return_head.sv', 'qkd_embedding_static_return_head', 4),
     'emb_return_hop': (E+'qkd_embedding_static_return_hop.sv', 'qkd_embedding_static_return_hop', 124),
-    'emb_join': (E+'qkd_embedding_static_join4.sv', 'qkd_embedding_static_join4', 1),
+    # KVJ-C3: join4 + its compiled beat_slot calendar (qkd_embedding_static_join4_cal)
+    'emb_join': (E+'qkd_embedding_static_join4_cal.sv', 'qkd_embedding_static_join4_cal', 1),
     'row_tx': (E+'qkd_embedding_row_tx.sv', 'qkd_embedding_row_tx', 1),
+    # KVJ-C3 2026-10-17: root of the four per-stack static PC chains, beside the writer and the d2d KV end
+    'es_fan_root': (S+'qkd_kv_es_fan_root.sv', 'qkd_kv_es_fan_root', 1),
 }
 # return-train beat record (qkd_embedding_static_return_head / _hop capture_record, unpacked by join4), MSB first
 EMB_RECORD = (('emb_beat_epoch', 16), ('emb_beat_scale', 1), ('emb_beat_half', 1), ('emb_beat_word', 6),
@@ -261,7 +267,7 @@ def compile_graph(graph, root=ROOT):
         if role=='k_issuer' and (i['parameters']['RESPONSE_LAT']<1 or i['parameters']['MUT']!=0):
             raise ValueError(f'{n}: actual positive response latency and production MUT0 required')
         if role in ('landing','front_calendar','landing_calendar','writer','writer_programme','ownership','drain_guard','layer_programme','attention_programme','phase_launch',
-                    'embgw','emb_return_head','emb_join','row_tx') and i['parameters'].get('MUT')!=0:
+                    'embgw','emb_return_head','emb_join','row_tx','es_fan_root') and i['parameters'].get('MUT')!=0:
             raise ValueError(f'{n}: production MUT0 required')
     if counts!=Counter({k:v[2] for k,v in ROLES.items()}):raise ValueError(f'full die actual source census mismatch: {dict(counts)}')
     validate_native_edges(ins)
@@ -379,6 +385,7 @@ def template(root=ROOT):
         'writer':dict(MUT=0,VMAP=1),'writer_programme':dict(MUT=0,VMAP=1),
         'link':dict(MUT=0,NL=2,PR=1),
         'embgw':dict(MUT=0),'emb_return_head':dict(MUT=0),'emb_return_hop':{},'emb_join':dict(MUT=0),'row_tx':dict(MUT=0),
+        'es_fan_root':dict(MUT=0),
     }
     instances=[];lookup={};specs={}
     def add(name,role):
@@ -449,21 +456,34 @@ def template(root=ROOT):
     # physical slot of the stack's return train (slot 0 = the train head at the far strip end, slot 31 = the root);
     # the four roots meet in join4 beside the d2d KV end, whose word face feeds the row transmitter on d2d port 2.
     # The token start is the d2d end's kind-15 RESULT: fill_begin / fill_token / fill_epoch and the 128 PCs' token /
-    # epoch.  emb_boot_ready = the boot-only gateway's emb_ready (est[0]).  Compiled slots (per-PC issue / word / half /
-    # scale / return slot, 128 station capture / transfer slots, the join beat slot) stay null: the embedding token-run
-    # calendar has no producer yet (KVJ-E compiler + its player).
+    # epoch (KVJ-C3: the PCs' token / epoch ride the static PC chain).  emb_boot_ready = the boot-only gateway's emb_ready
+    # (est[0]).  KVJ-C3: the compiled slots (per-PC issue / word / half / scale / return slot, the 128 station capture /
+    # transfer slots, the join beat slot) are played by the PC chain stations and join4_cal (kvjc3_pc_chain.py calendar).
     add('embgw','embgw');add('emb_join','emb_join');add('emb_tx','row_tx')
     join('emb_tx','fill_begin','d2d','engine_result_v');join('emb_tx','fill_token','d2d','engine_result_token')
     join('emb_tx','fill_epoch','d2d','engine_result_tag',TAG59_EPOCH_LO,16)
     for p in ('word_v','word_data','word_token','word_index','word_scale','word_epoch'):join('emb_tx',p,'emb_join',p)
     join('emb_tx','emb_tx_slot','d2d','emb_tx_slot')
     join('d2d','emb_tx_v','emb_tx','emb_tx_v');join('d2d','emb_tx_payload','emb_tx','emb_tx_payload')
+    # KVJ-C3: the root of the four static PC chains (tools/qwen_kv_die/kvjc3_pc_chain.py ages).  Writer lane words and
+    # the independent expected descriptor ride the chain to each PC's station (the writer's es / dest / expected faces);
+    # the token-run start (the d2d kind-15 RESULT) rides it to every PC's embedding slot player; join4_cal plays the
+    # join beat_slot from the same start.  Boot cfg of the root and join4_cal (the calendar constants, kvjc3 boot_words)
+    # stay null: no dispatcher target yet (KVJ-A successor + KVJ-E image).
+    add('fanr','es_fan_root')
+    for p in ('es','dest_pc','dest_stack','identity','generation','expected_valid','expected_pc','expected_stack',
+              'expected_identity','expected_generation','expected_address'):join('fanr',p,'wrn',p)
+    join('fanr','emb_start','d2d','engine_result_v');join('fanr','emb_token','d2d','engine_result_token')
+    join('fanr','emb_epoch','d2d','engine_result_tag',TAG59_EPOCH_LO,16)
+    join('emb_join','start','d2d','engine_result_v')
     for s,st in enumerate(STACK_NAMES):
         prev=None
+        join(f'pc_{st}_31','chain_i','fanr',f'd{s}')
+        for slot in range(31):join(f'pc_{st}_{slot}','chain_i',f'pc_{st}_{slot+1}','chain_o')
         for slot in range(32):
             n=f'embr_{st}_{slot}';add(n,'emb_return_head' if slot==0 else 'emb_return_hop');pc=f'pc_{st}_{slot}'
-            join(pc,'emb_boot_ready','embgw','est',0,1);join(pc,'emb_token','d2d','engine_result_token')
-            join(pc,'emb_epoch','d2d','engine_result_tag',TAG59_EPOCH_LO,16)
+            join(pc,'emb_boot_ready','embgw','est',0,1)
+            join(n,'capture_slot',pc,'emb_capture_slot');join(n,'transfer_slot',pc,'emb_transfer_slot')
             join(n,'capture_v',pc,'emb_beat_v')
             lookup[n]['inputs']['capture_record']=[ep(pc,p_) for p_,_ in EMB_RECORD]
             if prev:join(n,'upi',prev,'upo')
@@ -482,7 +502,7 @@ def template(root=ROOT):
         instance_count=len(instances),unbound_inputs={i['name']:[p for p,v in i['inputs'].items() if v is None] for i in instances if any(v is None for v in i['inputs'].values())},
         source_parameter_gaps={i['name']:dict(required=sorted(i['parameters']),supported=specs[i['name']]['parameters']) for i in instances if set(i['parameters'])!=set(specs[i['name']]['parameters'])},
         unpriced_parameters={i['name']:[p for p,v in i['parameters'].items() if v is None] for i in instances if any(v is None for v in i['parameters'].values())},
-        missing=['embedding token-run calendar (KVJ-C2): per-PC emb_issue_v/word_index/half/scale/return_slot, 128 return-station capture/transfer slots, join4 beat_slot -- no producer RTL',
+        missing=['embedding token-run calendar boot image (KVJ-C3 RTL + kvjc3_pc_chain.py constants): no boot dispatcher target for the root / join4_cal cfg',
                  'actual sequencer/boot/config/metadata producers and reset/clock source graph',
                  'actual writer delivery/expectation/context routing and HOST/embedding interfaces',
                  'actual ECTL B/C/native head/PV/collective and producer/result graph',
