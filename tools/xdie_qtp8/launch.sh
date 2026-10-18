@@ -17,7 +17,7 @@ CASES=${*:-$(python3 "$W/tools/xdie_qtp8/cases.py" list)}
 pids=()
 for c in $CASES; do
   args=$(python3 "$W/tools/xdie_qtp8/cases.py" args "$c")
-  ( /home/ubuntu/bin/ot-run --mem 16 --threads 16 --dir "$RD" -- \
+  ( /home/ubuntu/bin/ot-run --mem 32 --threads 16 --dir "$RD" -- \
       bash -lc "export OT_VERILATOR=\$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator; python3 tools/qwen_coll_tp8_static_links_bench.py --out results/rtl/xdie_qtp8_1018/$c $args; rc=\$?; rm -rf results/rtl/xdie_qtp8_1018/$c/obj_*; exit \$rc" \
       > "$LOG/$c.log" 2>&1
     h=$(grep -o 'RAN on [^:]*' "$LOG/$c.log" | tail -1 | awk '{print $3}')
