@@ -7,7 +7,7 @@ x 259.2 | C qkd_ectl_c_st (138.24 x 129.6) at x 561.6.  Every frame pin is the s
 feeds (same layer, same track: the 43.2 lattice is a multiple of every track pitch), so the frame wires are straight
 stubs.  Where a child face is denser than the 6-pins/um face rule (C's t0_q / t1_q 8.7/um, C's si / so 9/um) the run is
 spread in bit order to <= 5.2/um with the least squared displacement (isotonic regression).  Faces (die contract
-kv_static_die._ECTL_FACE): S t0 e0 e1 s0 s1, N t1 e2 e3 s2 s3, E si so, W the rest; the three clock ENTRIES ck[0..2] sit on
+kv_static_die._ECTL_FACE): S t0 e0 e1 s0 s1, N t1 e2 e3 s2 s3, E si so, W the rest except rst_n / cfg (S, under B: they reach A, B and C); the three clock ENTRIES ck[0..2] sit on
 the N face straight above each child's ck pin (entry wire ~44 / 108 / 108 um).
 Usage: ectl3_kiss_st_pins.py OUT.tcl [OUT_ranges.json]"""
 import json
@@ -110,7 +110,12 @@ for n, (lay, x, y) in P['A'].items():
     base = re.sub(r'\[\d+\]$', '', n)
     if base.startswith(('req_', 'rsp_')):
         put(n, lay, 'W', y + ORG['A'][1])
-ctl = ['rst_n'] + bits('cfg', 5) + ['kgo'] + bits('epoch', 16) + bits('layer', 6) + ['fault']
+# rst_n / cfg feed A, B AND C: on the S face straight under B's own rst_n / cfg pins (frame x ~380), so every leg is
+# <= ~380 um (gate 1 f1, W-face pins: cfg -> C 688 um > 500 um reach)
+for n in ['rst_n'] + bits('cfg', 5):
+    lay, x, _ = child('B', n)
+    put(n, lay, 'S', x)
+ctl = ['kgo'] + bits('epoch', 16) + bits('layer', 6) + ['fault']
 for i, n in enumerate(ctl):
     put(n, 'M4', 'W', 8.0 + 0.96 * i)          # y 8 .. 36 (1 pin / 0.96 um), under A's landing face
 
