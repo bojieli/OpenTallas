@@ -1,0 +1,7 @@
+SU_PROGRAMME_ROOT5 reset release root=1 edges (expected 3) cluster_bad=0
+SU_PROGRAMME_ROOT5 reset release root=1 edges (expected 3) cluster_bad=0
+SU_PROGRAMME_ROOT5 reset release root=1 edges (expected 3) cluster_bad=0
+SU_PROGRAMME_ROOT5 reset release root=1 edges (expected 3) cluster_bad=0
+[1092066000] %Fatal: tb_hbm_su_programme_root5.sv:153: Assertion failed in tb_hbm_su_programme_root5: SU_PROGRAMME_ROOT5 FAIL mismatches=4 active=28444 checked=28693
+%Error: rtl/hbm_accel/generic/adapters/static_su/programme/tb_hbm_su_programme_root5.sv:153: Verilog $stop
+Aborting...

@@ -1,0 +1,94 @@
+{
+  "schema": "opentallas.hbm.su_programme.root5.v1",
+  "qualified": false,
+  "source": "/srv/opentallas-scratch/claude/pg5/bench/vec/prog.mem",
+  "source_sha256": "ee3905bff558ff32e8424e7552c4b6c2197b8c2a671dd3a3a7a550cd9bbb248a",
+  "edges": 7111,
+  "line_bits": 9688,
+  "parts": 4,
+  "slice_bits": 2422,
+  "columns": 10,
+  "part_banks": 320,
+  "bank_numbering": "320 x part + 32 x column + local bank",
+  "leaves": [
+    "ot_hbm_su_programme_pgcol_s",
+    "ot_hbm_su_programme_pgcol_l",
+    "ot_hbm_su_programme_pgcol_l",
+    "ot_hbm_su_programme_pgcol_l",
+    "ot_hbm_su_programme_pgcol_s",
+    "ot_hbm_su_programme_pgcol_s",
+    "ot_hbm_su_programme_pgcol_s",
+    "ot_hbm_su_programme_pgcol_s",
+    "ot_hbm_su_programme_pgcol_s",
+    "ot_hbm_su_programme_pgcol_s"
+  ],
+  "dictionary_caps_per_quarter": [
+    [
+      3,
+      10,
+      9,
+      13,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      3,
+      10,
+      9,
+      13,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      3,
+      10,
+      9,
+      13,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      3,
+      10,
+      9,
+      13,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1
+    ]
+  ],
+  "config_transactions": 34905,
+  "reference": {
+    "parts": 4,
+    "slice_macros": [
+      98,
+      98,
+      98,
+      98
+    ],
+    "config_transactions": 45549
+  },
+  "mut_q": 2,
+  "timing": {
+    "root_sdly": 3,
+    "root_cpin": 1,
+    "start_issue_advance_edges": 9,
+    "output_shift_vs_r4_edges": 3,
+    "reset_wait_edges": 3
+  }
+}

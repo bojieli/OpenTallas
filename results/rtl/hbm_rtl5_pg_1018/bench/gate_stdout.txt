@@ -1,0 +1,61 @@
+ot-run: ot-epyc4       admits   110 GB (avail 229, growth 153, headroom 0, waiters 0/0 GB) load 55/128 running 27 disk 155 GB 
+ot-run: ot-epyc5       admits   627 GB (avail 553, growth 114, headroom 0, waiters 0/0 GB) load 36/128 running 17 disk 2658 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/pg5/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/pg5/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-76937-1792327620 after 0 s
+[positive] SU_PROGRAMME_ROOT5 PASS edges=7111 active=28444 checked=28693 parts=4 cols=10 ref_writes=45549 dut_writes=34905 shift=3 fault_cases=4
+[positive] rc=0
+[cfg] SU_PROGRAMME_ROOT5_MISMATCH t=804877000 valid=1/1 edge=0/0 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[cfg] SU_PROGRAMME_ROOT5_MISMATCH t=815267000 valid=1/1 edge=1039/1039 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[cfg] SU_PROGRAMME_ROOT5_MISMATCH t=815357000 valid=1/1 edge=1048/1048 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[cfg] SU_PROGRAMME_ROOT5_MISMATCH t=815367000 valid=1/1 edge=1049/1049 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[cfg] [1092066000] %Fatal: tb_hbm_su_programme_root5.sv:153: Assertion failed in tb_hbm_su_programme_root5: SU_PROGRAMME_ROOT5 FAIL mismatches=8457 active=28444 checked=28693
+[cfg] rc=1
+SU_PROGRAMME_ROOT5 MUTANT cfg REJECTED (expected)
+[sdly0] SU_PROGRAMME_ROOT5_MISMATCH t=804817000 valid=0/0 edge=0/0 done=0/0 busy=1/0 fault=0/0 cmd_eq=1
+[sdly0] SU_PROGRAMME_ROOT5_MISMATCH t=804827000 valid=0/0 edge=0/0 done=0/0 busy=1/0 fault=0/0 cmd_eq=1
+[sdly0] SU_PROGRAMME_ROOT5_MISMATCH t=804837000 valid=0/0 edge=0/0 done=0/0 busy=1/0 fault=0/0 cmd_eq=1
+[sdly0] SU_PROGRAMME_ROOT5_MISMATCH t=804847000 valid=1/0 edge=0/0 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[sdly0] SU_PROGRAMME_ROOT5 case a: busy
+[sdly0] [1092066000] %Fatal: tb_hbm_su_programme_root5.sv:153: Assertion failed in tb_hbm_su_programme_root5: SU_PROGRAMME_ROOT5 FAIL mismatches=28506 active=28444 checked=28693
+[sdly0] rc=1
+SU_PROGRAMME_ROOT5 MUTANT sdly0 REJECTED (expected)
+[decode98] SU_PROGRAMME_ROOT5_MISMATCH t=804777000 valid=0/0 edge=0/0 done=0/0 busy=0/0 fault=1/0 cmd_eq=1
+[decode98] SU_PROGRAMME_ROOT5_MISMATCH t=804787000 valid=0/0 edge=0/0 done=0/0 busy=0/0 fault=1/0 cmd_eq=1
+[decode98] SU_PROGRAMME_ROOT5_MISMATCH t=804797000 valid=0/0 edge=0/0 done=0/0 busy=0/0 fault=1/0 cmd_eq=1
+[decode98] SU_PROGRAMME_ROOT5_MISMATCH t=804807000 valid=0/0 edge=0/0 done=0/0 busy=0/0 fault=1/0 cmd_eq=1
+[decode98] SU_PROGRAMME_ROOT5 unexpected fault m=0 p=1
+[decode98] [1092066000] %Fatal: tb_hbm_su_programme_root5.sv:153: Assertion failed in tb_hbm_su_programme_root5: SU_PROGRAMME_ROOT5 FAIL mismatches=28470 active=28444 checked=28693
+[decode98] rc=1
+SU_PROGRAMME_ROOT5 MUTANT decode98 REJECTED (expected)
+[rrly0] SU_PROGRAMME_ROOT5 reset release root=1 edges (expected 3) cluster_bad=0
+[rrly0] SU_PROGRAMME_ROOT5 reset release root=1 edges (expected 3) cluster_bad=0
+[rrly0] SU_PROGRAMME_ROOT5 reset release root=1 edges (expected 3) cluster_bad=0
+[rrly0] SU_PROGRAMME_ROOT5 reset release root=1 edges (expected 3) cluster_bad=0
+[rrly0] [1092066000] %Fatal: tb_hbm_su_programme_root5.sv:153: Assertion failed in tb_hbm_su_programme_root5: SU_PROGRAMME_ROOT5 FAIL mismatches=4 active=28444 checked=28693
+[rrly0] rc=1
+SU_PROGRAMME_ROOT5 MUTANT rrly0 REJECTED (expected)
+[oorfd0] SU_PROGRAMME_ROOT5_MISMATCH t=1091687000 valid=0/0 edge=0/0 done=0/0 busy=0/0 fault=1/0 cmd_eq=1
+[oorfd0] SU_PROGRAMME_ROOT5_MISMATCH t=1091697000 valid=0/0 edge=0/0 done=0/0 busy=0/0 fault=1/0 cmd_eq=1
+[oorfd0] [1092066000] %Fatal: tb_hbm_su_programme_root5.sv:153: Assertion failed in tb_hbm_su_programme_root5: SU_PROGRAMME_ROOT5 FAIL mismatches=2 active=28444 checked=28693
+[oorfd0] rc=1
+SU_PROGRAMME_ROOT5 MUTANT oorfd0 REJECTED (expected)
+[oldleaf] SU_PROGRAMME_ROOT5_MISMATCH t=806147000 valid=1/1 edge=127/127 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[oldleaf] SU_PROGRAMME_ROOT5_MISMATCH t=807427000 valid=1/1 edge=255/255 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[oldleaf] SU_PROGRAMME_ROOT5_MISMATCH t=808707000 valid=1/1 edge=383/383 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[oldleaf] SU_PROGRAMME_ROOT5_MISMATCH t=809987000 valid=1/1 edge=511/511 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[oldleaf] SU_PROGRAMME_ROOT5 case a: busy
+[oldleaf] [1092066000] %Fatal: tb_hbm_su_programme_root5.sv:153: Assertion failed in tb_hbm_su_programme_root5: SU_PROGRAMME_ROOT5 FAIL mismatches=23335 active=28444 checked=28693
+[oldleaf] rc=1
+SU_PROGRAMME_ROOT5 MUTANT oldleaf REJECTED (expected)
+[cpin0] SU_PROGRAMME_ROOT5_MISMATCH t=948297000 valid=1/1 edge=98/98 done=0/0 busy=1/1 fault=1/0 cmd_eq=1
+[cpin0] SU_PROGRAMME_ROOT5_MISMATCH t=1020027000 valid=1/1 edge=48/48 done=0/0 busy=1/1 fault=1/0 cmd_eq=1
+[cpin0] SU_PROGRAMME_ROOT5_MISMATCH t=1091247000 valid=0/0 edge=0/0 done=0/0 busy=1/0 fault=0/0 cmd_eq=1
+[cpin0] SU_PROGRAMME_ROOT5_MISMATCH t=1091257000 valid=0/0 edge=0/0 done=0/0 busy=1/0 fault=0/1 cmd_eq=1
+[cpin0] SU_PROGRAMME_ROOT5 case a: busy
+[cpin0] [1092066000] %Fatal: tb_hbm_su_programme_root5.sv:153: Assertion failed in tb_hbm_su_programme_root5: SU_PROGRAMME_ROOT5 FAIL mismatches=35 active=28444 checked=28693
+[cpin0] rc=1
+SU_PROGRAMME_ROOT5 MUTANT cpin0 REJECTED (expected)
+SU_PROGRAMME_ROOT5_GATE PASS
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-76937-1792327620): exit 0

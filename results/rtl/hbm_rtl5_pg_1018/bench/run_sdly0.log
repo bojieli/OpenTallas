@@ -1,0 +1,8 @@
+SU_PROGRAMME_ROOT5_MISMATCH t=804817000 valid=0/0 edge=0/0 done=0/0 busy=1/0 fault=0/0 cmd_eq=1
+SU_PROGRAMME_ROOT5_MISMATCH t=804827000 valid=0/0 edge=0/0 done=0/0 busy=1/0 fault=0/0 cmd_eq=1
+SU_PROGRAMME_ROOT5_MISMATCH t=804837000 valid=0/0 edge=0/0 done=0/0 busy=1/0 fault=0/0 cmd_eq=1
+SU_PROGRAMME_ROOT5_MISMATCH t=804847000 valid=1/0 edge=0/0 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+SU_PROGRAMME_ROOT5 case a: busy
+[1092066000] %Fatal: tb_hbm_su_programme_root5.sv:153: Assertion failed in tb_hbm_su_programme_root5: SU_PROGRAMME_ROOT5 FAIL mismatches=28506 active=28444 checked=28693
+%Error: rtl/hbm_accel/generic/adapters/static_su/programme/tb_hbm_su_programme_root5.sv:153: Verilog $stop
+Aborting...
