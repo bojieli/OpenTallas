@@ -170,6 +170,22 @@ RULE_COMMITS = {
         kind="neutral", rule="kv-die-opt-in", paths=("tools/qwen_kv_die/kv_die.py",),
         what="KV-RTRUNK: PV_RS = OT_KV_PV_T=1 (default 0) AND a pv_trunk_t plan carrying result_trunk; only then the "
              "qkd_pvw_* masters gain port bundle pr and its strip-face pin (the plan.json is its own bound input)"),
+    # ROOT-0630 10-18 (0gi): the three older kv_die.py commits without a trailer (kv_die.py only, paths=).
+    "283be4b3ab79bd9bfe26093d72e1c826c8748cea": dict(
+        kind="neutral", rule="kv-die-opt-in", paths=("tools/qwen_kv_die/kv_die.py",),
+        what="KV-PLAN2: OT_KV_SN_LIFT (default 0; band_shift['N'] += 0, Hk + 0, geo.sn_lift only when set) -> every "
+             "plan built without the switch is byte-identical"),
+    "482e947cb6ca1f3577a511962446e8e593e9b8d6": dict(
+        kind="tightening", rule="kv-ahub-one-clock", paths=("tools/qwen_kv_die/kv_die.py",),
+        applies_to=("qkd_ahub", "ot_qkd_ahub", "qkd_die", "qwen_kv_die"),
+        what="KV-AHUB hp4: AHUB_CLK 14 per-child entries -> one entry ck (SPLIT_BINDINGS ahub ck_c=['ck']); changes only "
+             "the attention-hub block's clock pins / binding and the die nets to it -> ahub kits and the KV die top"),
+    "50747106abfceb433fb03d3e3fdf96846bba6f41": dict(
+        kind="tightening", rule="kv-host-clock-family", paths=("tools/qwen_kv_die/kv_die.py",),
+        applies_to=("qkd_host", "qkd_hr", "qkd_die", "qwen_kv_die"),
+        what="KVJ-A3 D2: HOST_CLK_INFERRED ck_peer / ck_root_mux host -> core family (die clk_core_c / clk_host nets to "
+             "the host block); changes only the HOST block's clock trunks -> host / host-root-cluster kits and the KV "
+             "die top"),
     # ROOT-0615 10-18: dcd8111e5 (SM-RP4 CHILD-FLOP, coordinator 0gd) had no trailer.  ck_insertion now adds a per-corner
     # child_flop {boundary, all} record (a block-master clock pin counted at arrival + R, R = that view's insertion.json
     # boundary mean, else its lib max_clock_tree_path, else 0) and pre_route_gate.corner_spreads judges it.  Verdict-
