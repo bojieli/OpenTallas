@@ -2,7 +2,10 @@
 // ---------------------------------------------------------------------------------------------------------------------
 // S81-SLICE (stream 0cm, 2026-10-17): the slice ring stop, data plane (centre leaf, gather sub-leaf, with the x streamer).
 // Topology p4c (S81-DV SPEC 0b): each tier is an 8-slice bidirectional LINE on the 1,104-b E/W ports; the per-column V
-// rung (276 b) is the only tier crossing.  Straps (captured pins, never parameters): sid = {tier, col}.
+// rung (276 b) is the only tier crossing.  Straps (captured pins, never parameters): sid = 2 * col + tier (tier 0 = S,
+// 1 = N), the die-wide slice id (die.v straps u_s_<c><S|N> = 2c + r; svc_rs_embed.py sid(rc); ot_s81sl_xr's slice mask
+// bit; dv_layer_compile.py).  S81-LBGAP G2 (10-18): this stop decoded {tier, col} (col = sid[2:0]) until 10-18, so in the
+// die u_s_4S (sid 8) took column 0 / tier N (W line default 0 hops) and the NX snake ends (map_e / map_w) were wrong.
 //
 //   line deliver  every valid line beat is delivered by kind: XQ / XB -> x streamer gather (1 = from W, 2 = from E);
 //                 NX -> xfin's W / E inputs (xfin forwards NX itself); CTL / RD / SC / CL -> control plane (dl_e / dl_w).
@@ -30,7 +33,7 @@ module ot_s81sl_rstop #(
 ) (
     input  wire            clk,
     input  wire            rst_n,
-    input  wire [3:0]      sid,          // {tier, col}
+    input  wire [3:0]      sid,          // 2 * col + tier
     input  wire [W-1:0]    ri_w,         // E-bound beats from the W neighbour
     input  wire [W-1:0]    ri_e,         // W-bound beats from the E neighbour
     output reg  [W-1:0]    ro_e,
@@ -61,7 +64,12 @@ module ot_s81sl_rstop #(
     always @(posedge clk) begin
         iw <= ri_w; ie <= ri_e; iv <= vi; xfs_q <= xf_s; xf_q <= xf; neo_q <= nx_eo; nwo_q <= nx_wo; ci_q <= ci_b; cid_q <= ci_dir; sid_c <= sid;
     end
-    wire [2:0] col = sid_c[2:0]; wire tier = sid_c[3];          // tier 0 = S, 1 = N
+`ifdef OT_S81SL_RSTOP_MUT_TIERCOL
+    // NEGATIVE CONTROL (S81-LBGAP G2): the pre-10-18 {tier, col} decode
+    wire [2:0] col = sid_c[2:0]; wire tier = sid_c[3];
+`else
+    wire [2:0] col = sid_c[3:1]; wire tier = sid_c[0];          // sid = 2 * col + tier; tier 0 = S, 1 = N
+`endif
     wire map_e = tier ? col == 3'd0 : col == 3'd7;              // xfin side carried by V (snake end columns)
     wire map_w = tier ? col == 3'd7 : col == 3'd0;
     wire [4:0] h_e = 5'd7 - {2'd0, col}, h_w = {2'd0, col};
