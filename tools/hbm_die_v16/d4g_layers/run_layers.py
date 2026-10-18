@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+"""H-D4G3b 10-18: GEN1 pre-relay netlist = GEN0 contract -> l1 (host / x-load / stack services) -> l2 (SU / SFU) ->
+l3 (VM / HC / COLL), in this order (each layer is a contract post-layer IN OUT --report R).  Fails on the first layer
+that fails.  The relay layer is spliced after this (d4g_relay_splice.py), on the GEN0 case pins.
+    run_layers.py GEN0_contract.json.gz OUT.json.gz --report-dir DIR"""
+import argparse, gzip, json, shutil, subprocess, sys, tempfile
+from pathlib import Path
+
+H = Path(__file__).resolve().parent
+LAYERS = ['l3_vm_hc_coll.py', 'l1_host_xload_stack.py', 'l2_su_sfu.py']  # l1 reads the q0 SE/NE banks + vmdel_<E> that l3 makes
+ap = argparse.ArgumentParser(); ap.add_argument('inp'); ap.add_argument('out'); ap.add_argument('--report-dir', required=True)
+a = ap.parse_args()
+R = Path(a.report_dir); R.mkdir(parents=True, exist_ok=True)
+T = Path(tempfile.mkdtemp(prefix='d4g_layers_'))
+cur = T / 'c0.json'
+cur.write_bytes(gzip.open(a.inp).read() if a.inp.endswith('.gz') else Path(a.inp).read_bytes())
+for k, l in enumerate(LAYERS, 1):
+    nxt = T / f'c{k}.json'
+    r = subprocess.run([sys.executable, str(H / l), str(cur), str(nxt), '--report', str(R / (Path(l).stem + '.json'))])
+    if r.returncode or not nxt.exists():
+        print('LAYER FAIL', l, r.returncode); sys.exit(1)
+    print('LAYER OK', l)
+    cur = nxt
+with open(cur, 'rb') as f, gzip.open(a.out, 'wb') as g:
+    shutil.copyfileobj(f, g)
+c = json.load(open(cur)); print('PRE_RELAY instances', len(c['instances']), 'edges', len(c['edges']))
+shutil.rmtree(T)
