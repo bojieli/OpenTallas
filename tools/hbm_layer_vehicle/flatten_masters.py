@@ -4,7 +4,7 @@
 The die's masters are hardened separately, each with its own preprocessor defines (views.json env DEFINES=..., the die
 SYNTH flow's) and its own module variants, so one flat compile of all RTL is not the die.  For every master M this
 preprocesses M's subtree (master_files.json) with M's defines (`verilator -E -P`), renames every module it defines
-X -> X__m<k> (M itself keeps its name: die.v instantiates it) and writes masters/<M>.sv.  Run inside a bundle:
+X -> X_m<k> (M itself keeps its name: die.v instantiates it) and writes masters/<M>.sv.  Run inside a bundle:
     flatten_masters.py --bundle . --views views.json [--verilator BIN]
 """
 import argparse, json, os, re, subprocess, sys
@@ -56,7 +56,10 @@ def main():
             return 1
         t = p.stdout
         names = sorted(set(re.findall(r"\bmodule\s+([A-Za-z_]\w*)", t)) - {m}, key=len, reverse=True)
-        tag = f"__m{k}"
+        # single underscore: Verilator 5.050 encodes "__" in a hier-block name as "___05F" and then does NOT substitute the
+        # block in its parent (X__m82 nested hier blocks were silently flattened: tkm_m_tp192's 32 e86 tile bodies -> sw2
+        # memcg OOM at 240 GB, 10-18 09:51; with _m82 the parent pass is 207 MB, probe6 10-18 12:40).
+        tag = f"_m{k}"
         if names:
             alt = "|".join(re.escape(n) for n in names)
             t = re.sub(r"\b(module\s+)(" + alt + r")\b", lambda x: x.group(1) + x.group(2) + tag, t)
@@ -66,6 +69,8 @@ def main():
             # Verilator hierarchical verilation: every hard master is verilated on its own (memory bounded per master,
             # as the die is hardened per master); the whole-die flat elaboration exceeded 380 GB (10-18)
             mm = re.search(r"\bmodule\s+" + re.escape(m) + r"\b", t)
+            if "__" in m:
+                print(f"HIER_NAME_WARN {m}: '__' in a hier-block name (Verilator 5.050 will not substitute it)")
             t = mark_hier(t, mm.end())
         if a.hier:
             for im in [x for x in a.inner_hier.split(",") if x]:
