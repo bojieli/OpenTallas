@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  388.8,
-  388.8
+  432.0,
+  518.4
  ],
  "core": [
   2.16,
   2.16,
-  386.64,
-  386.64
+  429.84,
+  516.24
  ],
  "why": "spec outline",
  "std_area_um2": 12000,
@@ -52,7 +52,13 @@
    "sw_v",
    "sw_a",
    "sw_m",
-   "sw_d"
+   "sw_d",
+   "e_v",
+   "e_c",
+   "e_d",
+   "g_v",
+   "g_c",
+   "g_d"
   ],
   "S": [
    "clk",
@@ -70,7 +76,12 @@
    "x_s",
    "x_rbv",
    "x_rbd",
-   "fault"
+   "fault",
+   "x_mode",
+   "x_scale",
+   "eg_v",
+   "eg_c",
+   "eg_d"
   ]
  },
  "clock_port": "clk",
@@ -79,7 +90,7 @@
   [
    "WARN",
    "util",
-   "utilisation 8% outside 45%-60% (std 12000 + macro 0 in core 147825 um2)",
+   "utilisation 5% outside 45%-60% (std 12000 + macro 0 in core 219862 um2)",
    "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   ]
  ],

@@ -36,7 +36,13 @@
    "sw_v",
    "sw_a",
    "sw_m",
-   "sw_d"
+   "sw_d",
+   "e_v",
+   "e_c",
+   "e_d",
+   "g_v",
+   "g_c",
+   "g_d"
   ],
   "S": [
    "clk",
@@ -54,7 +60,12 @@
    "x_s",
    "x_rbv",
    "x_rbd",
-   "fault"
+   "fault",
+   "x_mode",
+   "x_scale",
+   "eg_v",
+   "eg_c",
+   "eg_d"
   ]
  },
  "recipe": 4,
@@ -76,16 +87,16 @@
   "io_hold_margin_ns": 0.0,
   "macro_halo_um": 5.4
  },
- "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new control-plane sub-leaf (centre leaf, C1 master, 14 per die) of the distributed-vector slice; flop-first pins, die hold budget; pin-bound square outline (7.8k pins, <= 6/um on full faces). XR2 (10-17, after EARLY_FAIL_SETUP -611 ps / 9.3k endpoints of 1dd564c6f): classify stage (+1 cycle on CTL / RD / lo / V / SC) registers the source select, CTL payload, RD row pairs and decoded per-target / per-leaf enables before any wide write (was one cycle E/N pin flop -> 1.1k-bit select -> 5x1024 unpacker enables); keep port registers for c_d / is_d / cfg_d / rb_d (synthesis had folded 960 + 160 pins onto 160 + 32 flops driving W and N faces); fixed-index pk pair writes.",
+ "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new control-plane sub-leaf (centre leaf, C1 master, 14 per die) of the distributed-vector slice; flop-first pins, die hold budget; pin-bound square outline (7.8k pins, <= 6/um on full faces). XR2 (10-17, after EARLY_FAIL_SETUP -611 ps / 9.3k endpoints of 1dd564c6f): classify stage (+1 cycle on CTL / RD / lo / V / SC) registers the source select, CTL payload, RD row pairs and decoded per-target / per-leaf enables before any wide write (was one cycle E/N pin flop -> 1.1k-bit select -> 5x1024 unpacker enables); keep port registers for c_d / is_d / cfg_d / rb_d (synthesis had folded 960 + 160 pins onto 160 + 32 flops driving W and N faces); fixed-index pk pair writes. OWNERS-S81/XR (10-18): ported onto RTL-BUILD-S81's xr (ENG collector e_*/eg_* -> xfin s, g_* gate fan-out, CTL target 1 x_mode/x_scale; +738 pins -> 8.6k) -- outline 432 x 518.4 (W face c/sw/e/g 2,850 pins on 505 um = 5.6/um, S + x_mode/x_scale/eg).",
  "job": {
-  "owner": "Claude:S81U-XR",
-  "branch": "claude/s81u2-xr-1017",
+  "owner": "Claude:OWNERS-S81/XR",
+  "branch": "claude/owners-s81-xr-1018",
   "tag": "s81sl_xr1",
   "purpose": "S81-SLICE control-plane sub-leaf ot_s81sl_xr1 to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/slice",
    "tools/s81_slice",
-   "results/rtl/s81_slice_1017/xr2"
+   "results/rtl/s81_slice_1018/xr3"
   ],
   "benches": [
    {
@@ -101,7 +112,7 @@
     "cmd": "bash tools/s81_slice/xr_bench.sh {RUN}/slxr_muthops hops 1 0 6000 raw",
     "expect": "fail",
     "fail_regex": "^XRB hb=0 .* err=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/s81_slice_1017/xr2/m_hops/run.log",
+    "fail_witness": "results/rtl/s81_slice_1018/xr3/m_hops/run.log",
     "threads": 4,
     "peak_ram_gb": 4
    },
@@ -110,7 +121,7 @@
     "cmd": "bash tools/s81_slice/xr_bench.sh {RUN}/slxr_mutrow row 1 0 6000 raw",
     "expect": "fail",
     "fail_regex": "^XRB hb=0 .* err=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/s81_slice_1017/xr2/m_row/run.log",
+    "fail_witness": "results/rtl/s81_slice_1018/xr3/m_row/run.log",
     "threads": 4,
     "peak_ram_gb": 4
    },
@@ -119,7 +130,7 @@
     "cmd": "bash tools/s81_slice/xr_bench.sh {RUN}/slxr_mutporder porder 1 0 6000 raw",
     "expect": "fail",
     "fail_regex": "^XRB hb=0 .* err=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/s81_slice_1017/xr2/m_porder/run.log",
+    "fail_witness": "results/rtl/s81_slice_1018/xr3/m_porder/run.log",
     "threads": 4,
     "peak_ram_gb": 4
    },
@@ -128,7 +139,7 @@
     "cmd": "bash tools/s81_slice/xr_bench.sh {RUN}/slxr_mutnocol nocol 1 0 6000 raw",
     "expect": "fail",
     "fail_regex": "^XRILL missed=[1-9][0-9]* of 13$",
-    "fail_witness": "results/rtl/s81_slice_1017/xr2/m_nocol/run.log",
+    "fail_witness": "results/rtl/s81_slice_1018/xr3/m_nocol/run.log",
     "threads": 4,
     "peak_ram_gb": 4
    }
@@ -141,8 +152,8 @@
   "reason": "Source-registered (S81-SLICE): every input lands in a flop at the pin and every output is a flop (ot_s81sl_xr header); recipe-3 pin_regs would add a second unpriced stage on every slice seam."
  },
  "outline": {
-  "w": 388.8,
-  "h": 388.8
+  "w": 432.0,
+  "h": 518.4
  },
  "std_area_um2": 12000,
  "io_flop_at_pins": {
@@ -153,135 +164,179 @@
  "pin_ranges": {
   "dl_ev": [
    6.48,
-   8.806
+   8.865
   ],
   "dl_e": [
-   8.806,
-   194.234
+   8.865,
+   258.975
   ],
   "ci_dir": [
-   194.234,
-   196.892
+   258.975,
+   261.809
   ],
   "ci_b": [
-   196.892,
-   382.32
+   261.809,
+   511.92
   ],
   "sid": [
    6.48,
-   9.475
+   9.576
   ],
   "dl_wv": [
-   9.475,
-   11.843
+   9.576,
+   11.97
   ],
   "dl_w": [
-   11.843,
-   244.37
+   11.97,
+   272.419
   ],
   "dl_vv": [
-   244.37,
-   246.738
+   272.419,
+   274.813
   ],
   "dl_vb": [
-   246.738,
-   306.49
+   274.813,
+   341.546
   ],
   "is_v": [
-   306.49,
-   308.859
+   341.546,
+   343.94
   ],
   "is_d": [
-   308.859,
-   344.405
+   343.94,
+   383.533
   ],
   "cfg_v": [
-   344.405,
-   346.774
+   383.533,
+   385.927
   ],
   "cfg_d": [
-   346.774,
-   382.32
+   385.927,
+   425.52
   ],
   "c_v": [
    6.48,
-   9.472
+   9.481
   ],
   "c_d": [
-   9.472,
-   144.799
+   9.481,
+   146.243
   ],
   "sw_v": [
-   144.799,
-   147.792
+   146.243,
+   149.245
   ],
   "sw_a": [
-   147.792,
-   158.274
+   149.245,
+   159.817
   ],
   "sw_m": [
-   158.274,
-   167.093
+   159.817,
+   168.707
   ],
   "sw_d": [
-   167.093,
-   382.32
+   168.707,
+   386.231
+  ],
+  "e_v": [
+   386.231,
+   389.232
+  ],
+  "e_c": [
+   389.232,
+   393.075
+  ],
+  "e_d": [
+   393.075,
+   475.996
+  ],
+  "g_v": [
+   475.996,
+   478.997
+  ],
+  "g_c": [
+   478.997,
+   482.84
+  ],
+  "g_d": [
+   482.84,
+   511.92
   ],
   "lo_v": [
    6.48,
-   9.643
+   9.695
   ],
   "lo_d": [
-   9.643,
-   268.546
+   9.695,
+   282.006
   ],
   "p_v": [
-   268.546,
-   271.709
+   282.006,
+   285.221
   ],
   "p_d": [
-   271.709,
-   305.962
+   285.221,
+   321.15
   ],
   "rb_v": [
-   305.962,
-   309.124
+   321.15,
+   324.365
   ],
   "rb_d": [
-   309.124,
-   343.377
+   324.365,
+   360.294
   ],
   "x_go": [
-   343.377,
-   345.738
+   360.294,
+   362.665
   ],
   "x_eps": [
-   345.738,
-   354.316
+   362.665,
+   371.579
   ],
   "x_sv": [
-   354.316,
-   356.677
+   371.579,
+   373.95
   ],
   "x_si": [
-   356.677,
-   360.442
+   373.95,
+   377.799
   ],
   "x_s": [
-   360.442,
-   369.02
+   377.799,
+   386.712
   ],
   "x_rbv": [
-   369.02,
-   371.381
+   386.712,
+   389.083
   ],
   "x_rbd": [
-   371.381,
-   379.959
+   389.083,
+   397.997
   ],
   "fault": [
-   379.959,
-   382.32
+   397.997,
+   400.368
+  ],
+  "x_mode": [
+   400.368,
+   402.739
+  ],
+  "x_scale": [
+   402.739,
+   411.653
+  ],
+  "eg_v": [
+   411.653,
+   414.024
+  ],
+  "eg_c": [
+   414.024,
+   416.606
+  ],
+  "eg_d": [
+   416.606,
+   425.52
   ]
  },
  "children": [],
