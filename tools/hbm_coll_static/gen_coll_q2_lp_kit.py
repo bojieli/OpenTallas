@@ -7,7 +7,7 @@ slices x18, issuer, upipe, vmasm, links, reduce) / wr (VM writer, W face beside 
 switch register mass), ck_wr on W beside the writer, ck_rg on N beside the ring.
 Hard children = the CLOSED views (fj_q2, ctl_v5_q2, qcap, qso_q2_b32 / b1, vmwrite roots v6, ring_ag ctl, state-capture
 ) on the 43.2-um lattice, grouped by region.  Soft (no closed view yet, or pure register slices): issuer_m
-(+ its 3 SRAM macros, kit hcoll_v5_issuer still gating), link_e x2 (no view), reduce_static (hybrid, no view), the 16+16
+(+ its 3 SRAM macros, kit hcoll_v5_issuer still gating), link_e x2 (no view; 4 SRAM banks each, placed), reduce_static (hybrid, no view), the 16+16
 upipe / vmasm register slices, the 8 ring add lanes, the landing rings / reads and reset runs.  Outline 1296 x 1036.8 (exact): the 1080 x 880
 d4g slot cannot hold these children with 20-um channels on the 43.2 lattice (lattice footprint ~0.65 mm2 hard + soft).
 
@@ -87,6 +87,11 @@ def spec():
     }
     macros = [{"view": SRAM, "count": 1, "inst": f"u_issuer.u_issuer.g_mem[{i}].u_bank.u_sram",
                "at": [1080.0, round(43.2 + i * 77.808, 3)], "at_exact": True} for i in range(3)]
+    # link_e x2 (soft) each keep 4 retry-store SRAM banks (g_bank[0..3].u_store.u_native.u_sram): two stacked columns
+    # beside the S link pins (tx/rx), between qo17 (x <= 537.8) and the issuer column (x >= 1080); top 354.4 < qc row 388.8
+    for l, x in ((0, 561.6), (1, 777.6)):
+        macros += [{"view": SRAM, "count": 1, "inst": f"u_link{l}.g_bank[{b}].u_store.u_native.u_sram",
+                    "at": [x, round(43.2 + b * 77.808, 3)], "at_exact": True} for b in range(4)]
     w = "results/rtl/landed_parent_1018/collq/bench_witness"
     bench = "bash rtl/hbm_accel/generic/collective/p2p/landed/run_q2_lp_all.sh {RUN}/bench/q2lp"
     return {
