@@ -56,7 +56,7 @@ module tb_qkd_pv_fin_s;
     P0D[32*b+:32]=rnd_fp($random(seed)&255);
     P1D[32*b+:32]=(($random(seed)&7)==0)?{~P0D[32*b+31],P0D[32*b+:31]}:rnd_fp($random(seed)&255);   // exact cancellations
    end
-   for(k=0;k<4;k=k+1)rz[32*k+:32]={1'b0,8'd120+{5'd0,k[2:0]},$random(seed)} ;
+   for(k=0;k<4;k=k+1)rz[32*k+:32]={1'b0,8'd120+{5'd0,k[2:0]},23'($random(seed))};   // finite, normal
    KA=c%32;KB=(7*c+13)%32;
    // start on one edge for both; slot X = sampled at the X-th edge after the start edge
    @(negedge ck);start=1;epoch=e;cal={16'(ar),16'(a1),16'(a0)};
