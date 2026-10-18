@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_gunit_lp",
+ "enable": false,
+ "reason": "every gunit leaf is flop-first / flop-last at its pins and every parent port goes straight to one leaf's pin flop (vi_n/vo_n L5, vi_s/vo_s L3, cw/sid/fault L2); the landing halves are flops on both sides: a recipe pin register would add an unpriced rung stage"
+}
