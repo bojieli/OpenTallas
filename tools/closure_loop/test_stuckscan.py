@@ -210,12 +210,56 @@ class ProbeAndGates(unittest.TestCase):
                          f"{-30000 + 700 * k:10.3f} | u.x$_DFF_P_/D" for k in range(40))
         d = self.hold_diag("OT_HOLD_GUARD start: x\n[INFO RSZ-0046] Found 49272 endpoints with hold violations.\n" + rows)
         self.assertEqual(d["action"], "let_run")
-        # WNS and TNS both flat: stall
+        # WNS and TNS both flat over two consecutive repair calls: stall
         rows = "\n".join(f"{100 * k:9d} |       0 | {200 * k:7d} |            0 |    +6.1% | {-18.6:7.3f} | "
                          f"{-3000 + k * 0.1:10.3f} | u.x$_DFF_P_/D" for k in range(40))
-        d = self.hold_diag("OT_HOLD_GUARD start: x\n[INFO RSZ-0046] Found 49272 endpoints with hold violations.\n" + rows)
+        hdr = "[INFO RSZ-0046] Found 49272 endpoints with hold violations.\n"
+        d = self.hold_diag("OT_HOLD_GUARD start: x\n" + hdr + rows + "\n" + hdr + rows)
         self.assertEqual(d["verdict"], "EARLY_FAIL_HOLD")
         self.assertIn("TNS", d["why"][0])
+
+    def h16b_rows(self, n0=0, rows=292, ws=-56.836, tns=-433.73, buf0=0, dbuf=14):
+        return "\n".join(f"{n0 + 10 * k:9d} |       0 | {buf0 + dbuf * k:7d} |            0 |    +6.1% | {ws:7.3f} | "
+                          f"{tns:10.3f} | u.x$_DFF_P_/D" for k in range(rows))
+
+    def test_first_call_margin_padding_is_not_a_stall(self):
+        # Q-TTH18 (10-18): qfd_tt_head h16b a3ca3975a was EARLY_FAIL_HOLD at 2910 it / 4189 buffers of its FIRST
+        # repair_timing call, WNS -56.8 / TNS -433.7 flat while the 4815 margin endpoints were padded; the replay's next
+        # call converged to +30.0.  A guarded first call still inserting buffers is padding, not a stall.
+        hdr = "OT_HOLD_GUARD start: x\n[INFO RSZ-0046] Found 4815 endpoints with hold violations.\n"
+        o = self.probe_text(hdr + self.h16b_rows())
+        self.assertEqual(o["bases"][0]["hold"]["series"][-1][4], 0)
+        self.assertEqual(self.hold_diag(hdr + self.h16b_rows())["action"], "let_run")
+        # the same flat call without the flow guard (old flow, one unbounded call): plain rule, stall
+        self.assertEqual(self.hold_diag(hdr.split("\n", 1)[1] + self.h16b_rows())["verdict"], "EARLY_FAIL_HOLD")
+        # buffers no longer going in during the first call: a real stall
+        self.assertEqual(self.hold_diag(hdr + self.h16b_rows(dbuf=0, buf0=4189))["verdict"], "EARLY_FAIL_HOLD")
+        # the flow's own guard reported OT_HOLD_STALL: stall
+        self.assertEqual(self.hold_diag(hdr + self.h16b_rows() + "\nOT_HOLD_STALL NEEDS_RTL (x): y")["verdict"],
+                         "EARLY_FAIL_HOLD")
+
+    def test_second_call_gets_its_own_window(self):
+        hdr = "OT_HOLD_GUARD start: x\n[INFO RSZ-0046] Found 4815 endpoints with hold violations.\n"
+        # call 2 just started (still at call 1's flat WNS): not yet judged
+        txt = hdr + self.h16b_rows() + "\n[INFO RSZ-0046] Found 503 endpoints with hold violations.\n" + \
+            self.h16b_rows(rows=20)
+        self.assertEqual(self.hold_diag(txt)["action"], "let_run")
+        # call 2 converging: never a stall
+        conv = "\n".join(f"{10 * k:9d} |       0 | {15 * k:7d} |            0 |    +6.1% | {-56.8 + 2 * k:7.3f} | "
+                          f"{-433.0 + 20 * k:10.3f} | u.x$_DFF_P_/D" for k in range(20))
+        self.assertEqual(self.hold_diag(hdr + self.h16b_rows() + "\n" + conv)["action"], "let_run")
+        # call 2 flat for 2910 iterations as well: two consecutive stalled calls -> stall
+        txt = hdr + self.h16b_rows() + "\n[INFO RSZ-0046] Found 503 endpoints with hold violations.\n" + \
+            self.h16b_rows(buf0=0)
+        d = self.hold_diag(txt)
+        self.assertEqual(d["verdict"], "EARLY_FAIL_HOLD")
+        self.assertIn("not converging", d["why"][0])
+
+    def test_first_call_padding_is_bounded_in_time(self):
+        hd = dict(series=[[0, 0, -56.8, -433.0, 0], [2910, 4189, -56.8, -433.0, 0]], guard=True)
+        with patch.object(ss, "place_instances", return_value=None):
+            self.assertIsNone(ss.hold_verdict(hd, {}, 600))
+            self.assertIn("not converging", ss.hold_verdict(hd, {}, ss.GATES["hold_pad_s"] + 1))
 
     def test_hold_buffer_cap_rises_while_improving(self):
         # 192k instances: plain cap 57.6k; real WNS < 0 but gaining >= 5 ps / 2000 it -> cap 100k (0.6 x 192k > 100k)

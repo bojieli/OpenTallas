@@ -3306,6 +3306,21 @@ def launch_stage(j, st, cmd):
         # writes atomically now: the exported LEF is root-owned) and add the pre-lint call to a stale ref_tile.py export.
         env += (f"cp -f {j['run']}/cl/abstract_pin_stub.py {_src}/tools/hier_contract/abstract_pin_stub.py; "
                 f"python3 - {_src}/tools/ref_tile/ref_tile.py <<'OT_PINSTUB_PATCH' || true\n{PINSTUB_PATCH}OT_PINSTUB_PATCH\n")
+        # LOOP-SCALAR-LINT (AHUB-COLLECT 2026-10-18): ref_tile.py export runs scalar_pin_lint from the job's synced
+        # tools/ref_tile/scalar_pin_view.py.  Its port parser is the loop's publish gate, not the design: a job synced
+        # before 9ac83ae74 ((* keep *) attribute hid a port's range) kept refusing bus bits as RTL-scalar at every collect
+        # (qkd_ahub_core-hd4-ed40aa340: TT +219.7 / FF +20.2 route, collect crashed 4x on pb_ra[0]/pl_rz[0]/pl_v[0]).
+        # Every ref_tile collect / re-export runs the loop's copy (resolved against origin/main, as the helper overlay).
+        _spv_rel = "tools/ref_tile/scalar_pin_view.py"
+        try:
+            _spv, _ = HO.resolve_bytes(HERE.parents[1], REPO, _spv_rel, _ovl_head(), cache=_OVL["hist"])
+        except (OSError, subprocess.SubprocessError):
+            _spv = None
+        if _spv:
+            import base64 as _b64
+            env += (f"if [ -f {_src}/{_spv_rel} ]; then [ -f {_src}/{_spv_rel}.job ] || cp {_src}/{_spv_rel} "
+                    f"{_src}/{_spv_rel}.job; base64 -d > {_src}/{_spv_rel}.loop <<'OT_SPV_B64' && "
+                    f"mv -f {_src}/{_spv_rel}.loop {_src}/{_spv_rel}\n{_b64.b64encode(_spv).decode()}\nOT_SPV_B64\nfi\n")
         # EXPORT-SDC (2026-10-13): the view export replays the VERDICT's constraint sequence (routed 6_final.sdc, SPEF,
         # post-SDCs, io_ref_routed.sdc) and fails on a slack that differs from the verdict; a job's synced view_export.py
         # read the kit signoff.sdc INSTEAD of the routed SDC (s81su SMT: FF -19.69 exported vs +3.66 verdict).  The
