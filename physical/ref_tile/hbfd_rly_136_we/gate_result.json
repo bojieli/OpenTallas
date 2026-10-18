@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hbfd_rly_136_we",
  "verdict": "WARN",
- "generated": "2026-10-18T06:06:35-0700",
- "host": "ot-pve1",
+ "generated": "2026-10-18T06:16:02-0700",
+ "host": "ot-epyc5",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "69eb814754ff19cf6a02935f010a4f0dab60c4ad",
+  "start_commit": "e3a2d89645af3a55d013024adf8ae03f797839a2",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "a40d69fd0dd94f0cd934b26e6c262a00e43c1152f51bdb10d29ff00657f16d4e",
-  "manifest_sha256": "168f23ca08ec565612fd9e3fe8dd0b54a338155eed4edb18f3bd84a713a6319b",
+  "archive_sha256": "68261c0f94bb7e5c5a31c7232a6fe170732181736edc6ad6360389160130522a",
+  "manifest_sha256": "22178fd6e63f22195626424c0e5c3f869f2e71bc00b4056c11576687dc873be0",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -17259,8 +17259,8 @@
    {
     "path": "physical/ref_tile/hbfd_rly_136_we/job.json",
     "kind": "file",
-    "sha256": "49bda24a1c11e11ecc82d76e53afcb5a4a998b487a6aa82cd5d16b18681ec106",
-    "git_blob": "265226e4645092b7475bc204da5dbe462d324767",
+    "sha256": "448d53f1e126d931b881d4d12e10f8557cef9271b35d11d016e9245de9bb7c01",
+    "git_blob": "04ec1dfcffc68778252a3ea2d030165ece97a592",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17379,8 +17379,8 @@
    {
     "path": "physical/ref_tile/hbfd_rly_136_we/spec.json",
     "kind": "file",
-    "sha256": "cb793c09308965a9ca1edc79913455aa195f053bcc4daad26f6495563b4a7149",
-    "git_blob": "ecb3e00e31320e5fd1a0810de468d8a74e563ec2",
+    "sha256": "57112514561014a0c0c51d43a8c0c29a2b406b11b4fe26998e97762e783fe580",
+    "git_blob": "e25ea1aaedea172602a3e1a346c69382c6450b65",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17611,8 +17611,8 @@
    {
     "path": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
     "kind": "file",
-    "sha256": "48039849f1a006ea363330e220c053c6f731e498e50dd6a1771760db838c4f2e",
-    "git_blob": "d0b3d9256c14c898dd5bd42d92dfb30c451e3a85",
+    "sha256": "c181eaddb3787a958397b9e4a58246779d1db921c29ee7b6d1c1d87f31abc86d",
+    "git_blob": "66b47fc7ed8fb1680f6066e71ed4006db8687c60",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -36707,8 +36707,8 @@
    {
     "path": "tools/hbm_die_rly_kits.py",
     "kind": "file",
-    "sha256": "d9d6ed618a4c734d881f84c3903ddabefdbcbadff096fc80fc2864f1260cb387",
-    "git_blob": "e0af031048dca7602c4b561857b1368ab4a0cc5b",
+    "sha256": "3e742aba1dd00f56c3f528a6aef92569da79470472d7a2744ebd3bad5421f4cc",
+    "git_blob": "f63ae981e85dd2f13705cd458ef081c1c0c0e205",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -102667,14 +102667,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 120348409,
+   "archive_bytes": 120348514,
    "unpacked_bytes": 681136128,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "3830217f0e9e99e7651410fdd22a10c5763aaa3a",
+   "origin_main": "a83e29ec611e328cdf98f9311d056309a5fafd88",
    "content_sha256": "cc26d386bd2fc93f470d125fdf43502b12c8dc6c0e31f1ea88db6c68a2795397",
    "files": [
     {
@@ -103181,7 +103181,7 @@
     "physical/ref_tile/hbfd_rly_136_we/pre_gpl.tcl": "868665071710eb4ce5d4af172b346032f605b49500c67093b5f6f3229928b739",
     "physical/ref_tile/hbfd_rly_136_we/pre_grt.tcl": "7a4a8cb6aef83160c9b8e910ab2c5b5d2d00ccdbd315290c0b54bc0723fdd169",
     "physical/ref_tile/hbfd_rly_136_we/signoff.sdc": "7f4df9b509a3c2721299f1432d69fd93110b8f3aa456af255924691936e4b940",
-    "physical/ref_tile/hbfd_rly_136_we/spec.json": "cb793c09308965a9ca1edc79913455aa195f053bcc4daad26f6495563b4a7149",
+    "physical/ref_tile/hbfd_rly_136_we/spec.json": "57112514561014a0c0c51d43a8c0c29a2b406b11b4fe26998e97762e783fe580",
     "physical/ref_tile/hbfd_rly_136_we/views/hbfd_rly_136_WE/abstract.json": "c0bfc79f4a3dcee676b968d1c20c2166937f81960ae4cba8827804be6491dec4",
     "physical/ref_tile/hbfd_rly_136_we/views/hbfd_rly_136_WE/child_lint.json": "d6e5eb2f886c2a3e96d7bb2e3c329c4ca663f52e309beaeecdfd27482eaa8708",
     "physical/ref_tile/hbfd_rly_136_we/views/hbfd_rly_136_WE/export_ff.log": "2847193c24cd5580eb4d142fb40331369dfa201d9c8204f84d7a124e91cc21fd",
@@ -103195,7 +103195,7 @@
     "physical/ref_tile/hbfd_rly_136_we/views/hbfd_rly_136_WE/hbfd_rly_136_WE_ss.lib": "071375945491a6c521c8c89a4b2133772cf96e94f1d79dd8fb3378e008fea968",
     "physical/ref_tile/hbfd_rly_136_we/views/hbfd_rly_136_WE/hbfd_rly_136_WE_tt.lib": "d37ef693c23fb0aa117b29ac5a6c30b96eb8b769f57b07196ee0c8e61db67353",
     "physical/ref_tile/hbfd_rly_136_we/views/hbfd_rly_136_WE/insertion.json": "0ba6f8edbca884e8463777bc11d11753dbe979b46224ba47fbcda9bc9573f28d",
-    "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv": "48039849f1a006ea363330e220c053c6f731e498e50dd6a1771760db838c4f2e",
+    "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv": "c181eaddb3787a958397b9e4a58246779d1db921c29ee7b6d1c1d87f31abc86d",
     "rtl/hbm_accel/die_glue/ot_hbm_rly.sv": "6885ac1a168df5f58537cad363cf59ccde05bfcd253046080fe425b0ac3e63aa",
     "rtl/hbm_accel/die_glue/test/bench_rly.sh": "a353552be3e8545d00ce2756a6e94bdf4b980bfbc8e4a610702c8d7e0760bd43",
     "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
@@ -103223,16 +103223,16 @@
    },
    "digest": "ad993e33eafaf97758a56e46ddf3913b78bf4aa4b510a484e400a12dd024eb46"
   },
-  "captured": "2026-10-18T06:03:46-0700",
+  "captured": "2026-10-18T06:14:53-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/hbfd_rly_136_we/signoff.sdc"
   },
-  "remote_script_sha256": "a5c5e64adebf6af212f14773ce88b71c6438eb8079a6ae466fc828d32d0f99c5",
+  "remote_script_sha256": "985258132f739fd79935be41cd963eb825541345e3f83e964200b6bdbea653cd",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-pve1",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbfd_rly_136_we-20261018-060311",
+  "remote_host": "ot-epyc5",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbfd_rly_136_we-20261018-061416",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -103240,15 +103240,15 @@
   ]
  },
  "clock": {
-  "max_root_sinks": 136,
+  "max_root_sinks": 139,
   "root": "port:ck",
   "cts": true,
-  "tt_insertion_ps": 91.9,
-  "tt_spread_ps": 4.0,
-  "tt_pin_spread_ps": 4.0,
-  "ff_insertion_ps": 67.7,
-  "ff_spread_ps": 2.8,
-  "ff_pin_spread_ps": 2.8,
+  "tt_insertion_ps": 83.6,
+  "tt_spread_ps": 1.2,
+  "tt_pin_spread_ps": 1.2,
+  "ff_insertion_ps": 61.3,
+  "ff_spread_ps": 1.1,
+  "ff_pin_spread_ps": 1.1,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -103261,16 +103261,16 @@
     "clock": "core_clk",
     "tt": {
      "boundary": {
-      "n": 136,
-      "mean": 89.9,
-      "min": 87.9,
-      "max": 91.9
+      "n": 139,
+      "mean": 83.0,
+      "min": 82.4,
+      "max": 83.6
      },
      "all": {
-      "n": 136,
-      "mean": 89.9,
-      "min": 87.9,
-      "max": 91.9
+      "n": 139,
+      "mean": 83.0,
+      "min": 82.4,
+      "max": 83.6
      },
      "errors": [],
      "macros": null,
@@ -103278,16 +103278,16 @@
     },
     "ff": {
      "boundary": {
-      "n": 136,
-      "mean": 66.4,
-      "min": 64.9,
-      "max": 67.7
+      "n": 139,
+      "mean": 60.7,
+      "min": 60.2,
+      "max": 61.3
      },
      "all": {
-      "n": 136,
-      "mean": 66.4,
-      "min": 64.9,
-      "max": 67.7
+      "n": 139,
+      "mean": 60.7,
+      "min": 60.2,
+      "max": 61.3
      },
      "child_flop": null,
      "macros": null
@@ -103296,7 +103296,7 @@
   ],
   "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "136 sinks on the largest root; measured TT insertion 91.9 ps, FF insertion 67.7 ps, TT pin-flop spread 4.0 ps, FF pin-flop spread 2.8 ps (spread <= 80 ps)"
+  "text": "139 sinks on the largest root; measured TT insertion 83.6 ps, FF insertion 61.3 ps, TT pin-flop spread 1.2 ps, FF pin-flop spread 1.1 ps (spread <= 80 ps)"
  },
  "items": [
   {
@@ -103314,13 +103314,13 @@
   {
    "severity": "WARN",
    "check": "util",
-   "message": "synthesized std area 62 um2 + macros 0 in core 299: util 21%",
-   "fix": "set \"std_area_um2\": 62 and drop 'outline' (gen sizes to util 0.52)"
+   "message": "synthesized std area 63 um2 + macros 0 in core 299: util 21%",
+   "fix": "set \"std_area_um2\": 63 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
    "severity": "WARN",
    "check": "textbook.util_channel",
-   "message": "utilisation 22.6% outside 45%-65% (std 67 + macro 0 um2 in 299 um2): shrink the outline (long wires / sparse placement)",
+   "message": "utilisation 23.1% outside 45%-65% (std 69 + macro 0 um2 in 299 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ],
@@ -103329,7 +103329,7 @@
   "overflow": 0,
   "kind": "tile",
   "rc": "0",
-  "grt_s": 25,
+  "grt_s": 7,
   "layers": [
    {
     "layer": "M1",
@@ -103340,36 +103340,36 @@
    },
    {
     "layer": "M2",
-    "capacity": 12976,
-    "usage": 4064,
-    "pct": 31.32,
+    "capacity": 12963,
+    "usage": 3827,
+    "pct": 29.52,
     "overflow": 0
    },
    {
     "layer": "M3",
     "capacity": 15064,
-    "usage": 2315,
-    "pct": 15.37,
+    "usage": 2593,
+    "pct": 17.21,
     "overflow": 0
    },
    {
     "layer": "M4",
     "capacity": 11758,
-    "usage": 1875,
-    "pct": 15.95,
+    "usage": 2021,
+    "pct": 17.19,
     "overflow": 0
    },
    {
     "layer": "M5",
     "capacity": 11025,
-    "usage": 292,
-    "pct": 2.65,
+    "usage": 266,
+    "pct": 2.41,
     "overflow": 0
    }
   ],
   "worst_layer_usage": [
    "M2",
-   31.32
+   29.52
   ],
   "hotspot": null,
   "congestion_png": null
