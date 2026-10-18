@@ -42,7 +42,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(ROOT / 'tools/s81_dv'))
 
-DIE_REF = 'origin/claude/s81-die6-1018'
+DIE_REF = 'origin/main'   # p4l bind9 / plan / land plan / unit RTL of record (main 711fb3da3+ = die7 77083deda; byte-identical to die6 3923ae6de)
 DIE_PATHS = ['results/arch/s81_dv_1016/bind9', 'results/arch/s81_dv_1016/p4l', 'results/arch/s81_dv_1016/landing/p4l',
              'tools/s81_dv', 'rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv', 'rtl/dsrom_sys/s81_dv/unit/ot_dsdv_fixed_issue.sv',
              'rtl/dsrom_sys/s81_dv/slice', 'rtl/dsrom_sys/s81_dv/unit/dsdv_gunit.sv']
@@ -387,6 +387,39 @@ OPMAP = [
 ]
 
 
+# ================================================================================================= family lowerings
+# LB2-S81/CC (10-18): each unit family lowers its ops in tools/s81_dv/layer_prog/lower_<family>.py:
+#   OPS = [regex ...];  lower(die, op, ctx) -> dict(status, unit, insts, gap, rows, templates, gunit_rows, svc_jobs,
+#   files, events, bench).  A family result replaces the OPMAP row for the ops it claims; it may report LOWERED only
+#   with a committed unit / slice bench (bench = its results dir, check.json PASS + a mutant fail witness).
+def family_lowerings():
+    import importlib.util
+    out = []
+    for f in sorted((ROOT / 'tools/s81_dv/layer_prog').glob('lower_*.py')):
+        spec = importlib.util.spec_from_file_location(f.stem, f)
+        m = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(m)
+        out.append((f.stem[len('lower_'):], m))
+    return out
+
+
+def bench_ok(rel):
+    """a family's LOWERED claim needs its committed bench: check.json with pass true and >= 1 failing mutant witness"""
+    if not rel:
+        return False, 'no bench'
+    d = ROOT / rel
+    c = d / 'check.json'
+    if not c.exists():
+        return False, f'{rel}/check.json missing'
+    j = json.loads(c.read_text())
+    if not j.get('pass'):
+        return False, f'{rel}/check.json pass != true'
+    muts = j.get('mutants') or []
+    if not any(m.get('failed') and m.get('witness') and (ROOT / m['witness']).exists() for m in muts):
+        return False, f'{rel}: no failing mutant with a committed witness'
+    return True, rel
+
+
 def op_unit(op):
     for rx, unit, st, gap in OPMAP:
         if re.search(rx, op):
@@ -405,6 +438,7 @@ class Prog:
         self.gunit_rows = []
         self.svc = []
         self.notes = []
+        self.files = {}
 
     def template(self, name, payload):
         if payload in self.templates:
@@ -413,6 +447,22 @@ class Prog:
         self.templates.append(payload)
         self.tnames.append(name)
         return len(self.templates) - 1
+
+    def absorb(self, fam, op, r):
+        """merge one family lowering into the die programme: CTL templates are re-indexed into the shared table and
+        V-row args re-pointed (arg[6:0] = the family's template index), gunit job args likewise (arg[6:0])"""
+        remap = {i: self.template(f'{fam}.{n}', p) for i, (n, p) in enumerate(r.get('templates', []))}
+        for row in r.get('rows', []):
+            row = dict(row)
+            if row['eng'] in (ENG['VN'], ENG['VS'], ENG['GUNIT']) and remap and not row.get('raw_arg'):
+                row['arg'] = (row['arg'] & ~0x7F) | remap[row['arg'] & 0x7F]
+            row.setdefault('done', row['issue'] + SEQ['done_v'])
+            row['what'] = f"{op['id']}: {row.get('what', '')}"
+            self.rows.append(row)
+        self.gunit_rows += [tuple(x) for x in r.get('gunit_rows', [])]
+        self.svc += r.get('svc_jobs', [])
+        self.events += r.get('events', [])
+        self.files.update(r.get('files', {}))
 
     def vrow(self, eng, issue, tix, ctx=0, what=''):
         assert eng in (ENG['VN'], ENG['VS'])
@@ -510,6 +560,26 @@ def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which=
                 end=xq, templates=[th, tg] + tn + [tx])
 
 
+class CalendarFull(Exception):
+    pass
+
+
+def split_jobs(prog, cap=NOPS - 2):
+    """a layer whose calendar exceeds one ot_dsdv_fixed_issue job (NOPS rows incl. KIT / END) runs as consecutive jobs:
+    rows cut in issue order, each job's issue / done rebased to its first issue (the host re-boots the next calendar
+    after END: the reload is a host-lane cost the price must carry, reported in calendar.json)"""
+    rows = sorted(prog.rows, key=lambda r: (r['issue'], r['eng']))
+    jobs = []
+    for k in range(0, len(rows), cap):
+        ch = rows[k:k + cap]
+        t0 = ch[0]['issue']
+        jp = Prog(prog.die)
+        jp.templates, jp.tnames, jp.gunit_rows = prog.templates, prog.tnames, (prog.gunit_rows if k == 0 else [])
+        jp.rows = [dict(r, issue=r['issue'] - t0, done=(r['done'] - t0) if r['done'] else 0) for r in ch]
+        jobs.append((t0, jp))
+    return jobs
+
+
 def finish(prog, stage=0, kit_lead=20):
     """KIT / END rows + the host boot stream (length, BEGIN, rows, SEAL, templates, gunit rows)"""
     rows = sorted(prog.rows, key=lambda r: (r['issue'], r['eng']))
@@ -522,7 +592,7 @@ def finish(prog, stage=0, kit_lead=20):
     rows.append(dict(eng=ENG['KIT'], issue=max(0, endage - kit_lead), done=0, arg=0, what='KIT'))
     rows.append(dict(eng=ENG['END'], issue=endage, done=0, arg=0, what='END'))
     if len(rows) > NOPS:
-        raise SystemExit(f'calendar {len(rows)} rows > NOPS {NOPS}: split the layer into jobs')
+        raise CalendarFull(len(rows))
     hs = [csr_len(len(rows)), csr_pw(0, pw_header(len(rows), stage))]
     for i, r in enumerate(rows):
         r['row76'] = pack_row(r['done'], r['issue'], r['eng'], r['arg'])
@@ -533,7 +603,7 @@ def finish(prog, stage=0, kit_lead=20):
     return rows, hs, endage
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None):
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None):
     out = Path(out)
     (out / 'prog' / 'frame_cfg7').mkdir(parents=True, exist_ok=True)
     die = Die(tree)
@@ -542,12 +612,28 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None):
     sl = sl if sl.startswith('u_') else f'u_{sl}'
     prog = Prog(die)
     low = []
+    fams = family_lowerings()
+    ctx = dict(layer=layer, slice=sl, sched=sched, fixtures=Path(fixtures) if fixtures else None)
     for o in sched['ops']:
         unit, st, gap = op_unit(o['op'])
-        low.append(dict(id=o['id'], op=o['op'], start=o['start'], end=o['end'], unit=unit, status=st,
-                        gap=dict(module=gap[0], port=gap[1], missing=gap[2]) if gap and st != 'LOWERED' else None))
+        rec = dict(id=o['id'], op=o['op'], start=o['start'], end=o['end'], unit=unit, status=st,
+                   gap=dict(module=gap[0], port=gap[1], missing=gap[2]) if gap and st != 'LOWERED' else None)
+        for fam, m in fams:
+            if not any(re.search(rx, o['op']) for rx in m.OPS):
+                continue
+            r = m.lower(die, o, dict(ctx, t_issue=int(math.floor(o['start']))))
+            st = r.get('status', 'GAP')
+            if st == 'LOWERED':
+                ok, why = bench_ok(r.get('bench'))
+                if not ok:
+                    st, r['gap'] = 'PARTIAL', dict(module=f'lower_{fam}', port='bench', missing=why)
+            rec.update(unit=r.get('unit', unit), status=st, family=fam, insts=r.get('insts', []), bench=r.get('bench'),
+                       gap=r.get('gap') if st != 'LOWERED' else None)
+            prog.absorb(fam, o, r)
+            break
+        low.append(rec)
     sub = None
-    if layer != 'head':
+    if layer != 'head' and not any(x.get('family') for x in low if x['op'].endswith('attn.quant')):
         qop = next((o for o in sched['ops'] if o['op'] in ('attn.quant', 'mtp.attn.quant') or o['op'].endswith('attn.quant')), None)
         if qop is not None:
             sub = lower_norm_smoke(die, prog, sl, t0=int(qop['start']), which=qop['op'].rsplit('.', 1)[0] or 'attn')
@@ -563,21 +649,36 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None):
                                         dict(zip(('module', 'port', 'missing'), GAP_XS_ROM))])
         (out / 'prog/frame_cfg7' / f'{f}.json').write_text(json.dumps(rec, indent=1) + '\n')
     files = {}
+    for rel, text in prog.files.items():
+        (out / rel).parent.mkdir(parents=True, exist_ok=True)
+        (out / rel).write_text(text)
     if prog.rows:
-        rows, hs, endage = finish(prog)
-        (out / 'prog/host_boot.memh').write_text(memh(hs, 515))
-        files['prog/host_boot.memh'] = len(hs)
+        try:
+            jobs = [(0, prog, finish(prog))]
+        except CalendarFull:
+            jobs = [(t0, jp, finish(jp)) for t0, jp in split_jobs(prog)]
+        cal = []
+        for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
+            sub = '' if len(jobs) == 1 else f'job{k}/'
+            (out / 'prog' / sub).mkdir(parents=True, exist_ok=True)
+            (out / f'prog/{sub}host_boot.memh').write_text(memh(hs, 515))
+            files[f'prog/{sub}host_boot.memh'] = len(hs)
+            cal.append(dict(job=k, layer_issue0=t0, nops=len(rows), end_age=endage, host_words=len(hs),
+                            reload_edges=len(hs) * HOST_SLOT,
+                            rows=[dict(i=i, issue=r['issue'], done=r['done'], engine=r['eng'], arg=r['arg'],
+                                       row76=f"{r['row76']:019x}", what=r['what']) for i, r in enumerate(rows)]))
         (out / 'prog/calendar.json').write_text(json.dumps(dict(
-            schema='opentallas.s81_dv.calendar.v1', nops=len(rows), stage=0, end_age=endage,
-            rows=[dict(i=i, issue=r['issue'], done=r['done'], engine=r['eng'], arg=r['arg'], row76=f"{r['row76']:019x}",
-                       what=r['what']) for i, r in enumerate(rows)]), indent=1) + '\n')
+            schema='opentallas.s81_dv.calendar.v2', jobs=len(cal), stage=0, rows_total=len(prog.rows),
+            note='one ot_dsdv_fixed_issue job holds NOPS = 128 rows incl. KIT / END; more rows = consecutive jobs, '
+                 'each re-booted over the host lane after the previous END (reload_edges = host words x HOST_SLOT)',
+            nops=cal[0]['nops'], end_age=cal[0]['end_age'], rows=cal[0]['rows'], job=cal), indent=1) + '\n')
     (out / 'prog/ctl_templates.json').write_text(json.dumps(dict(
         schema='opentallas.s81_dv.ctl_templates.v1', n=len(prog.templates),
         templates=[dict(i=i, name=n, payload186=f'{p:047x}', beat=f'{ctl_line_beat(p):053x}')
                    for i, (n, p) in enumerate(zip(prog.tnames, prog.templates))]), indent=1) + '\n')
     (out / 'prog/gunit_rows.json').write_text(json.dumps(dict(rows=[dict(a=a, d=f'{d:064x}') for a, d in prog.gunit_rows],
-                                                             note='none lowered (HC / router GAP)'), indent=1) + '\n')
-    (out / 'prog/svc_jobs.json').write_text(json.dumps(dict(jobs=prog.svc, note='none lowered (attention / HBM GAP)'),
+                                                             note=f'{len(prog.gunit_rows)} rows'), indent=1) + '\n')
+    (out / 'prog/svc_jobs.json').write_text(json.dumps(dict(jobs=prog.svc, note=f'{len(prog.svc)} jobs'),
                                                        indent=1) + '\n')
     stat = {}
     for x in low:
@@ -623,9 +724,10 @@ def main(argv=None):
     ap.add_argument('--die-ref', default=DIE_REF)
     ap.add_argument('--die-src', default=None, help='an extracted die-ref tree (else git archive of --die-ref)')
     ap.add_argument('--workload', default=None, choices=('ar', 'mtp'))
+    ap.add_argument('--fixtures', default=None, help='the layer fixture dir (dv_layer_fixtures.py output)')
     a = ap.parse_args(argv)
     tree = die_tree(a.die_ref, a.die_src)
-    r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload)
+    r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures)
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']
