@@ -99,6 +99,13 @@ def main():
         if clocks:
             bits = [b for b in bits if b not in clocks]
             mid = len(bits) // 2
+            # spec "clock_pin_at" {face: um along the face} (opt-in, S81U-SEQ5 dsdv_sh_vc): the clock enters beside a
+            # macro column / register mass that is not at the face centre; the other pins stay evenly spread.
+            at = (spec.get("clock_pin_at") or {}).get(face)
+            if at is not None:
+                n = len(bits) + len(clocks)
+                st = ((W if face in ("N", "S") else H) - 2 * a.margin) / n
+                mid = max(0, min(len(bits), round((float(at) - a.margin) / st - 0.5 - (len(clocks) - 1) / 2)))
             bits[mid:mid] = clocks
         horiz = face in ("N", "S")
         span = (W if horiz else H) - 2 * a.margin

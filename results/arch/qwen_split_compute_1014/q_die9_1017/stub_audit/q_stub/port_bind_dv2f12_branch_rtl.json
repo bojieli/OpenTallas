@@ -1,0 +1,2922 @@
+{
+ "schema": "opentallas.die_port_bind.v2",
+ "die_v": "/tmp/qstub/die.v",
+ "top": null,
+ "verdict": "FAIL",
+ "failing": [
+  "input_unconnected"
+ ],
+ "summary": {
+  "masters": 116,
+  "instances": 2446,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 1,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "duplicate_port_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 16,
+  "pad_bits": 0,
+  "unresolved_children": 0
+ },
+ "masters": {
+  "ot_qfd_serdes_112g_x12_phy_s597": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "io_serdes",
+    "io_serdes_1",
+    "io_serdes_2"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_qfd_ucie_x64_phy": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "io_ucie"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_qkvd_ucie_x64_phy": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "ucie_kv"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_c_b16_dv": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 48,
+   "rtl": "rtl/physical/qcluster/qfd_c_b16_dv.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "c16_W0_0",
+    "c16_W0_1",
+    "c16_W0_2"
+   ],
+   "param_sets": {
+    "{}": 48
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "cid",
+    "far",
+    "rs_i"
+   ],
+   "pad_bits": {},
+   "output_open": [
+    "bco0",
+    "bco1",
+    "bco2",
+    "bco3",
+    "rs_o",
+    "tie_hi",
+    "tie_lo"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_ckbump": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "ckb_rom"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_clkrx": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "clk_rx"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_collective_static_io_production": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/physical/ot_qfd_collective_static_io_production.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "io_collective"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "fault_code",
+    "transport_abort",
+    "transport_cdc_fault",
+    "transport_fault_cause"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_d2d_static": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "d2d_rom"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "transport_fault"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_dv_slice2_e": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 6,
+   "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "dvs_E0",
+    "dvs_E1",
+    "dvs_E2"
+   ],
+   "param_sets": {
+    "{}": 6
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "ag_wi",
+    "ard_wi",
+    "arl_wi",
+    "arm_wi",
+    "art_wi",
+    "arv_wi",
+    "dd_wi",
+    "l9_wi",
+    "sc_wi",
+    "st_wi"
+   ],
+   "pad_bits": {},
+   "output_open": [
+    "ccm_eo",
+    "cct_eo",
+    "ccv_eo",
+    "ccw_eo",
+    "cmd_wo",
+    "dr_wo",
+    "hr_wo",
+    "l9_eo",
+    "rd_wo",
+    "re_wo",
+    "rl_wo",
+    "rr_wo",
+    "rv_wo",
+    "sc_wo",
+    "ss_eo",
+    "st_wo"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_dv_slice2_w": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 6,
+   "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "dvs_W0",
+    "dvs_W1",
+    "dvs_W2"
+   ],
+   "param_sets": {
+    "{}": 6
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "l9_wi",
+    "sc_wi",
+    "st_wi"
+   ],
+   "pad_bits": {},
+   "output_open": [
+    "ccm_wo",
+    "cct_wo",
+    "ccv_wo",
+    "ccw_wo",
+    "l9_eo",
+    "sc_wo",
+    "ss_wo",
+    "st_wo"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_embedding_word_provider": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_embedding_word_provider.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "embed_prov"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "fault"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_native59_dv_service": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_native59_dv_service.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "native59"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "completed"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_107_EN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_ss_wo_0",
+    "rly_dvw_ss_wo_21"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_107_EW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_ss_wo_20"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_107_SN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 18,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_ss_wo_1",
+    "rly_dvw_ss_wo_2",
+    "rly_dvw_ss_wo_3"
+   ],
+   "param_sets": {
+    "{}": 18
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_107_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_ss_wo_19",
+    "rly_dvw_ss_wo_22"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_10_EN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_ag_wo_21"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_10_EW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dv_x0_ag_ag_0",
+    "rly_dvw_ag_wo_19",
+    "rly_dvw_ag_wo_20"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_10_SN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 18,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_ag_wo_0",
+    "rly_dvw_ag_wo_1",
+    "rly_dvw_ag_wo_2"
+   ],
+   "param_sets": {
+    "{}": 18
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_10_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_ag_wo_18"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_116_NE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_cmd_wi_0",
+    "rly_dvw_cmd_wi_6",
+    "rly_dvw_cmd_wi_23"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_116_NS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 19,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_cmd_wi_2",
+    "rly_dvw_cmd_wi_3",
+    "rly_dvw_cmd_wi_4"
+   ],
+   "param_sets": {
+    "{}": 19
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_116_WS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_cmd_wi_1",
+    "rly_dvw_cmd_wi_7",
+    "rly_dvw_cmd_wi_24"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_16_EW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_status_epoch16_0",
+    "rly_sf_status_epoch16_1",
+    "rly_dvw_ccw_wo_0"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_16_NS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 6,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_emb_word_epoch_0",
+    "rly_sf_emb_expected_epoch_0",
+    "rly_sf_emb_fill_epoch_0"
+   ],
+   "param_sets": {
+    "{}": 6
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_16_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_embed_prov_embed_scale_q_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_187_ES_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_sys_face_seq_dh_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_187_NS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_sys_face_seq_dh_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_18_ES_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_token_3"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_18_EW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_token_2"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_18_NE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_native59_emb_scale_addr_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_18_NS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_emb_word_token_0",
+    "rly_sf_emb_expected_token_0",
+    "rly_sf_emb_fill_token_0"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_18_SN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ng_tt_native_tok_0__fo1_0",
+    "rly_ng_tt_native_pos_0__fo1_0",
+    "rly_sf_result_token_0"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_18_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_token_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_EN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 8,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_cfg_tx_we_0",
+    "rly_sf_crom_fault_2",
+    "rly_sf_result_v_0"
+   ],
+   "param_sets": {
+    "{}": 8
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_ES_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 8,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes2_txv_7",
+    "rly_lnk_fwd_epoch_2",
+    "rly_lnk_fwd_lrst_3"
+   ],
+   "param_sets": {
+    "{}": 8
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_EW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 30,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_rst_d2d_3",
+    "rly_rst_d2d__fo1_2",
+    "rly_serdes2_txv_6"
+   ],
+   "param_sets": {
+    "{}": 30
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_NE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 8,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_rst_d2d__fo2_3",
+    "rly_lnk_native_tx_slot_0",
+    "rly_lnk_kv_x3_slot_0"
+   ],
+   "param_sets": {
+    "{}": 8
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_NS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 29,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_rst_d2d_0",
+    "rly_rst_d2d_1",
+    "rly_rst_d2d__fo1_0"
+   ],
+   "param_sets": {
+    "{}": 29
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_NW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 10,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_rst_d2d_2",
+    "rly_rst_d2d__fo1_1",
+    "rly_serdes2_txv_5"
+   ],
+   "param_sets": {
+    "{}": 10
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_SE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_prog_context_slot_1",
+    "rly_sf_d2d_epoch_abort_0",
+    "rly_dv_x0_rt_rl_0"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_SN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 103,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes0_txv_0",
+    "rly_serdes0_txv_1",
+    "rly_serdes2_rxv_2"
+   ],
+   "param_sets": {
+    "{}": 103
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 16,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_cfg_tx_we_1",
+    "rly_sf_cfg_rx_we_0",
+    "rly_sf_cal_start_0"
+   ],
+   "param_sets": {
+    "{}": 16
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_WE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 13,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes2_rxv_0",
+    "rly_serdes2_up_0",
+    "rly_sf_prog_rx_v_0"
+   ],
+   "param_sets": {
+    "{}": 13
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_WN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes2_rxv_1",
+    "rly_serdes2_up_1",
+    "rly_ng_tt_layer_context_v_0__fo1_0"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_1_WS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 8,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_prog_witness_slot_1",
+    "rly_sf_prog_auth_slot_2",
+    "rly_sf_prog_context_slot_3"
+   ],
+   "param_sets": {
+    "{}": 8
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_24_NS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_native59_emb_code_addr_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_2_EN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_gen_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_2_ES_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_gen_3"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_2_EW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_lnk_x3_generation_0",
+    "rly_sf_result_gen_2"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_2_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_gen_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_32_EN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_value_0",
+    "rly_sf_result_cycles_0"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_32_ES_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_value_3",
+    "rly_sf_result_cycles_3"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_32_EW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 5,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_cfg_data_0",
+    "rly_sf_result_value_2",
+    "rly_sf_result_cycles_2"
+   ],
+   "param_sets": {
+    "{}": 5
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_32_SN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_art_wo_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_32_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_value_1",
+    "rly_sf_result_cycles_1",
+    "rly_dvw_art_wo_1"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_3_NE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_rr_wi_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_3_WE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dv_x0_rt_rr_0",
+    "rly_dvw_rr_wi_1"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_453_NE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_hr_wi_0",
+    "rly_dvw_hr_wi_6",
+    "rly_dvw_hr_wi_24"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_453_NS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 19,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_hr_wi_2",
+    "rly_dvw_hr_wi_3",
+    "rly_dvw_hr_wi_4"
+   ],
+   "param_sets": {
+    "{}": 19
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_453_WE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_hr_wi_7"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_453_WS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_hr_wi_1",
+    "rly_dvw_hr_wi_8"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_4_EN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_cause_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_4_ES_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_cause_3"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_4_NE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_lnk_native_tx_slot_kind_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_4_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_cause_0",
+    "rly_sf_result_cause_2"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_512_EN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_ard_wo_0",
+    "rly_dvw_embed_prov_embed_code_q_0"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_512_EW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dv_x0_ar_ard_0",
+    "rly_dvw_ard_wo_2"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_512_NE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_rd_wi_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_512_NS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_emb_word_data_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_512_SE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_embed_prov_embed_code_q_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_512_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_ard_wo_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_512_WE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dv_x0_rt_rd_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_520_NE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_dr_wi_0",
+    "rly_dvw_dr_wi_25"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_520_NS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 22,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_dr_wi_3",
+    "rly_dvw_dr_wi_4",
+    "rly_dvw_dr_wi_5"
+   ],
+   "param_sets": {
+    "{}": 22
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_520_WE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dv_x0_dr_dr_0",
+    "rly_dvw_dr_wi_1"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_520_WS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_dr_wi_2",
+    "rly_dvw_dr_wi_26"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_524_EN_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_lnk_x3_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_548_EN_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_dd_wo_0",
+    "rly_dvw_dd_wo_25"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_548_EW_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_prog_tx_record_1",
+    "rly_dv_x0_dd_dd_0",
+    "rly_dvw_dd_wo_24"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_548_NE_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_lnk_rx_payload__fo1_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_548_SN_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 22,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_dd_wo_1",
+    "rly_dvw_dd_wo_2",
+    "rly_dvw_dd_wo_3"
+   ],
+   "param_sets": {
+    "{}": 22
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_548_SW_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_prog_tx_record_0",
+    "rly_dvw_dd_wo_23"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_548_WE_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_lnk_rx_payload_0",
+    "rly_lnk_rx_payload__fo1_1"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_548_WS_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_lnk_rx_payload__fo1_2"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_56_NE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_tt_ctlm_dc_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_56_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_tt_ctlm_dc_2"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_56_WN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_tt_ctlm_dc_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_597_ES_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes2_tx_7"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_597_EW_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes2_tx_6"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_597_NS_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 8,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes0_rx_0",
+    "rly_serdes0_rx_1",
+    "rly_serdes0_rx_2"
+   ],
+   "param_sets": {
+    "{}": 8
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_597_NW_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes2_tx_5"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_597_SN_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 9,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes0_tx_0",
+    "rly_serdes0_tx_1",
+    "rly_serdes0_tx_2"
+   ],
+   "param_sets": {
+    "{}": 9
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_597_WE_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes2_rx_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_597_WN_65x60": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_serdes2_rx_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_59_EN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_lnk_x3_identity_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_59_ES_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_tag_3"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_59_EW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_tag_1",
+    "rly_sf_result_tag_2"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_59_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_result_tag_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_5_NE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_lnk_native_tx_slot_beat_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_69_WN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_dvw_tt_ctlm_cal_descriptor_obs_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_6_EW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_cfg_addr_1"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_6_NE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_emb_expected_word_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_6_NS_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_emb_word_index_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_6_SW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_cfg_addr_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_6_WN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ng_tt_command_stage_0__fo1_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_75_NW_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_tt_pw_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_76_SE_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_tt_program_obs_1",
+    "rly_dvw_tt_ctlm_cal_program_obs_0"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rly_76_SN_65x30": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_sf_tt_program_obs_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rst_rep": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1270,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rstt_rst_fwd_s_0",
+    "rstt_rst_fwd_s_1",
+    "rstt_rst_fwd_s_4"
+   ],
+   "param_sets": {
+    "{}": 1270
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "q1"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rst_rep_p8": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 600,
+   "rtl": "/tmp/qstub/pb_rs2/die_glue.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rstt_rst_field_1085",
+    "rstt_rst_field_1086",
+    "rstt_rst_field_1087"
+   ],
+   "param_sets": {
+    "{}": 600
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "q1"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rstseq": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rstseq_rom"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "rso_s"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_rstsync": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rs_bump"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_sigbump": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 5,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "bump_fwd_epoch",
+    "bump_fwd_lrst",
+    "bump_pkg_s0"
+   ],
+   "param_sets": {
+    "{}": 5
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_sys_face": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_sys_face.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sys_face"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "emb_prov_fault"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "fault"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qfd_tt_ctlm_dv": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_dv/qfd_tt_ctlm_dv.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "tt_ctlm"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "cf"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  }
+ },
+ "undriven_nets": {},
+ "undriven_classes": {},
+ "multi_driven_classes": {},
+ "multi_driven_nets": {},
+ "top_assigns": [],
+ "params_not_in_rtl": [],
+ "child_closure": {
+  "modules": 245,
+  "unresolved_children": {},
+  "model_children": {
+   "ot_qkvd_ucie_x64_phy_model": [
+    "ot_qkvd_ucie_x64_phy"
+   ]
+  }
+ },
+ "pads_declared": [],
+ "die_sha256": "edb105c8dd2234dfaa826c219fa249c528416c72db43424e11f7b49ddebe2fe9",
+ "straps_declared": [
+  "qfd_c_b16_dv:cid",
+  "qfd_c_b16_dv:far",
+  "qfd_c_b16_dv:rs_i",
+  "qfd_dv_slice2_e:ag_wi",
+  "qfd_dv_slice2_e:ard_wi",
+  "qfd_dv_slice2_e:arl_wi",
+  "qfd_dv_slice2_e:arm_wi",
+  "qfd_dv_slice2_e:art_wi",
+  "qfd_dv_slice2_e:arv_wi",
+  "qfd_dv_slice2_e:dd_wi",
+  "qfd_dv_slice2_e:l9_wi",
+  "qfd_dv_slice2_e:sc_wi",
+  "qfd_dv_slice2_e:st_wi",
+  "qfd_dv_slice2_w:l9_wi",
+  "qfd_dv_slice2_w:sc_wi",
+  "qfd_dv_slice2_w:st_wi"
+ ],
+ "params_file": null,
+ "rtl_roots": [
+  "rtl",
+  "/home/ubuntu/wt/q-stub-1017/physical/asap7_memory_macros"
+ ],
+ "rtl_files": [
+  "/tmp/qstub/pb_rs2/die_glue.sv",
+  "/home/ubuntu/wt/q-stub-1017/rtl/qwen_split/qfd_link_slots.sv",
+  "/home/ubuntu/wt/q-stub-1017/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+  "/home/ubuntu/wt/q-stub-1017/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv",
+  "/home/ubuntu/wt/q-stub-1017/physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v",
+  "/home/ubuntu/wt/q-stub-1017/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v"
+ ],
+ "defines": [
+  "OT_QFD_UP4_CK_ENTRIES"
+ ]
+}

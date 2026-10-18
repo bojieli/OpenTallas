@@ -25,8 +25,11 @@ bench: tools/hbm_die_v16/bench_fault_tree_1017.sh (full tree, random registered 
 """
 import gzip
 import json
+import os
 import re
 import sys
+
+LGFOLD = os.environ.get('LGFOLD') == '1'   # H-DIE-R8b: run on a contract with the r8b LG tap fold (v16_layers/r8b_d4f.json)
 
 REGION = 'hbm_fault_1017'
 LEAF = 'ot_hbm_fault_leaf'
@@ -43,7 +46,10 @@ def tree():
     T = {}
     for q in QS:
         for k in range(4):
-            ins = [(f'lg_{q}_{g}_b{2 * k + j}', 'fault', 0, 1, 'L') for g in range(3) for j in range(2)]
+            if LGFOLD:   # H-DIE-R8b: the LG taps live in their consumer folds (one OR'd fault per pair and level)
+                ins = [(f'su_{q}{k}', 'lg_fault', 0, 1, 'L'), (f'sfu_{q}{k}', 'fault', 0, 1, 'L'), (f'hc_{q}{k}', 'fault', 0, 1, 'L')]
+            else:
+                ins = [(f'lg_{q}_{g}_b{2 * k + j}', 'fault', 0, 1, 'L') for g in range(3) for j in range(2)]
             ins.append((f'su_{q}{k}', 'fault', 0, 1, 'S'))
             if k:
                 ins.append((f'fl_{q}{k - 1}', 'fault', 0, 1, 'C'))

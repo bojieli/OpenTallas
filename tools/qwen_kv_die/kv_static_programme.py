@@ -480,7 +480,9 @@ def pacing_of(put):
 
 
 # ---- the compile -------------------------------------------------------------------------------------------------------
-def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None):
+def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_words=None):
+    # die_cfg_words: the pre-boot target-10 image (kv_static_kvjf_join.die_cfg_image from a die plan's ECTL cfg + reset
+    # delays); without it the bundle carries targets 0..9, 11..13 and the die plan supplies target 10
     sfi = _sfi()
     prog = program_words or sfi.bench_program()
     if len(prog) != sfi.PW + sfi.DW:
@@ -680,6 +682,10 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None):
               dict(target=3, program=own, descriptors=[]), dict(target=4, program=landing_words, descriptors=[]),
               dict(target=5, program=front_words, descriptors=[])] + \
              [dict(target=t_, program=ctrl_targets[t_], descriptors=[]) for t_ in (6, 7, 8, 9)] + \
+             [dict(target=LINK_CFG_TARGET, program=link_words, descriptors=[]),        # KVJ-G2b: the HOST loader +
+              dict(target=ES_CFG_TARGETS[0], program=es_pc, descriptors=[]),          # bundle encoder accept 10..13
+              dict(target=ES_CFG_TARGETS[1], program=es_beat, descriptors=[])] + \
+             ([dict(target=10, program=list(die_cfg_words), descriptors=[])] if die_cfg_words else []) + \
              [dict(target=0, program=prog[:sfi_pw], descriptors=prog[sfi_pw:])]
     bundle = PTF.encode_boot_bundle(epoch, images)
     if int(bundle['images'][-1]['digest'], 16) != digest:
@@ -693,8 +699,8 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None):
                 writer=dict(slots=t, stop=stop, words=writer_words), ownership=dict(words=own, go='token start (assumed)'),
                 groups=group, landing_words=landing_words, front_words=front_words, controller=ctrl, controller_targets=ctrl_targets,
                 attention=att, phase=phase, images=images, bundle=bundle,
-                # dispatcher target 11 (LINKCFG=1, order 1..9, 11, 0); not in the HOST class-8 bundle yet: the HOST
-                # loader / program_target_frames accept targets 0..9 only (same as the DIECFG target 10)
+                # dispatcher target 11 (LINKCFG=1, order 1..9, 11, 0); in the HOST class-8 bundle (KVJ-G2b: the HOST
+                # loader / program_target_frames accept targets 0..13; target 10 = pass 1 from the die plan)
                 link_cfg=dict(target=LINK_CFG_TARGET, program=link_words),
                 # dispatcher targets 12 / 13 (ESCFG=1, order 1..9, 11, 12, 13, 0): the KVJ-C3 PC chain root + join4_cal
                 # calendar constants (kvjc3_pc_chain.boot_words at ctrl_lat ES_CFG_CTRL_LAT, relays 0); same HOST note

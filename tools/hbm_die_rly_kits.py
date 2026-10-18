@@ -150,10 +150,18 @@ def write_family(owner: str, branch: str, flows=FLOWS) -> list:
 # o bit (rtl/hbm_accel/die_glue/ot_hbm_rly_fc.sv).  Pins: i + clk_in on the upstream face, o + clk_out on the
 # downstream face (o[k] opposite i[k]; the clock pin at the face centre, between the data pins), rs on the side face.
 # Face rule <= 6 pins/um (coordinator HBM die audit: rly_624 at 10.1/um -> face >= 104 um).
-FC_CLASSES = (48, 624)
+FC_CLASSES = (48, 136, 624)   # H-RELAY 10-17: + 136 (wide fork lanes of the lane model)
 FC_PINS_PER_UM = 6.0
 FC_DIR = "physical/hbm_rly_fc"
 FC_SPECS = "tools/ref_tile/specs_hbmrly_fc"
+# NATIVE-FIX3 2026-10-18: masters whose rs pin goes through the registered reset relay (ot_hbm_rly RS_RELAY=1) although
+# W <= 256: the routed 136 NS/SN views failed native capture on rs (194-211 ps, NATIVE-3: rs drove all 136 stage clears)
+RS_RELAY_MASTERS = {"hbfd_rly_136_NS_fc", "hbfd_rly_136_SN_fc", "hbfd_rly_136_NS_fc_f2", "hbfd_rly_136_NS_fc_f3",
+                    "hbfd_rly_136_SN_fc_f2", "hbfd_rly_136_SN_fc_f4"}
+
+
+def rs_relay_param(m: str) -> str:
+    return ", .RS_RELAY(1)" if m in RS_RELAY_MASTERS else ""
 
 
 def fc_face_len(w: int) -> float:
@@ -259,7 +267,7 @@ def write_fc_family(owner: str, branch: str, classes=FC_CLASSES, flows=FLOWS) ->
         for fl in FLOWS:
             v.append(f"module {fc_master(w, fl)} (input wire clk_in, input wire rs, input wire [{w - 1}:0] i, "
                      f"output wire [{w - 1}:0] o, output wire clk_out);")
-            v.append(f"    ot_hbm_rly_fc #(.W({w})) u (.clk_in(clk_in), .rs(rs), .i(i), .o(o), .clk_out(clk_out));")
+            v.append(f"    ot_hbm_rly_fc #(.W({w}){rs_relay_param(fc_master(w, fl))}) u (.clk_in(clk_in), .rs(rs), .i(i), .o(o), .clk_out(clk_out));")
             v.append("endmodule")
     v.append("`default_nettype wire")
     (ROOT / RTL / "hbfd_rly_fc_masters.sv").write_text("\n".join(v) + "\n")
@@ -420,7 +428,7 @@ def write_fcf_family(owner: str, branch: str, classes=FC_CLASSES, flows=FLOWS, n
                 tv.append(f"module {fcf_master(w, fl, n)} (input wire clk_in, input wire rs, input wire [{w - 1}:0] i, "
                          f"{outs}, {cks});")
                 tv.append(f"    wire [{n * w - 1}:0] o; wire [{n - 1}:0] ck;")
-                tv.append(f"    ot_hbm_rly_fcf #(.W({w}), .N({n})) u (.clk_in(clk_in), .rs(rs), .i(i), .o(o), .clk_out(ck));")
+                tv.append(f"    ot_hbm_rly_fcf #(.W({w}), .N({n}){rs_relay_param(fcf_master(w, fl, n))}) u (.clk_in(clk_in), .rs(rs), .i(i), .o(o), .clk_out(ck));")
                 tv.append("    assign {" + ", ".join(f"o{k}" for k in reversed(range(n))) + "} = o;")
                 tv.append("    assign {" + ", ".join(f"clk_out{k}" for k in reversed(range(n))) + "} = ck;")
                 tv.append("endmodule")

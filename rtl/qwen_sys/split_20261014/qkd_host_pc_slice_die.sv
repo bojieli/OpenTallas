@@ -21,9 +21,23 @@
 //   bgi: bgi_q is the only load; bgo = bgi_q registered (boot chain 2 edges a slot: slot k boots 2k + 1 edges after
 //     slot-0 bgi, was k + 1).
 // ctrl_es[0] / [286] pin flops drive only their pins (in-tile observers use launch_v / launch_we copies, 0 edges).
+// KVE-2 es1 (2026-10-17, native launch 241.7 ps on ctrl_es[0], pc1 route classified): synthesis folded the launch_v copy
+// into the ctrl_es[0] flop (same D; a keep on the reg does not stop opt_merge), so that pin flop drove 20 in-tile loads
+// (BUFx3 fanout 20 -> INV -> wire buffer -> pin, 184 ps flop->pin).  ESPIN=1 (default): a dedicated pin register stage
+// on all 288 ctrl_es bits (unique D = the slice's internal ctrl_es register, Q -> pin only): +1 ck_boot edge on the
+// command path to the HBM controller (the elastic off-die HBM boundary, owner 10-14; priced as +1 cycle of HBM command
+// latency, no throughput change; the completion observer still sees launch_v at the internal edge, the controller's
+// response is consequently one edge later on the elastic return).  ESPIN=0 = pc1 (history).  MUT=4 bypasses the stage.
 // MUT=3 drops the ctrl_er pin capture (bench mutant).  PINCAP=0 = the pre-0130 wrapper (history; not die-bindable).
-module qkd_host_pc_slice_die #(parameter integer MUT=0,parameter integer PINCAP=1)(
- input wire ck_station,ck_static,ck_boot,ck_boot_test,
+// KV-FIX3 es2 (2026-10-17, es1 qkd_hslice / qkd_hslice_dn EARLY_FAIL_HOLD FF -110 ps, repair stalled): ONE clock entry ck.
+// The die drives ck_station / ck_static / ck_boot / ck_boot_test from the SAME die net clk_core_<stack> (kv_die.py), but
+// as four tile pins = four CTS roots, so every internal cross-root hop (boot->static ctrl_er -> u_static.er, static<->core,
+// static->boot, test->boot: 5,695 hold endpoints) paid the 100 ps die-skew hold reserve (pc1 closed only after ~15k hold
+// buffers).  One regional root (6,999 sinks < 15k) makes those hops ordinary same-tree paths; the neighbour skew budget
+// stays where it belongs, at the registered face pins (PINCAP captures / ESPIN launches) against the die's neighbours.
+// Inner modules keep their own clock names, all driven by ck: same cycles, bit-identical (benches already drove one ck).
+module qkd_host_pc_slice_die #(parameter integer MUT=0,parameter integer PINCAP=1,parameter integer ESPIN=1)(
+ input wire ck,
  input wire host_rst_n,hbm_rst_n,
  input wire[4:0]lpc,
  input wire bgi,output reg bgo,
@@ -37,6 +51,7 @@ module qkd_host_pc_slice_die #(parameter integer MUT=0,parameter integer PINCAP=
  input wire[31:0]ski,sdi,soi,sfi,
  output reg[31:0]sko,sdo,soo,sfo
 );
+ wire ck_station=ck, ck_static=ck, ck_boot=ck, ck_boot_test=ck;   // one root (KV-FIX3 es2)
  // ---- pin captures (PINCAP) ----
  (* keep = "true" *) reg host_rn,hbm_rn;
  always @(posedge ck_station) host_rn<=host_rst_n;
@@ -57,9 +72,14 @@ module qkd_host_pc_slice_die #(parameter integer MUT=0,parameter integer PINCAP=
  always @(posedge ck_boot or negedge hbm_r)
   if(!hbm_r)bgi_q<=0;else bgi_q<=bgi;
  wire all_ack,boot_done,boot_ok,boot_fault;
+ wire[287:0]es_i;
+ (* keep = "true" *) reg[287:0]es_pin;
+ always @(posedge ck_boot or negedge hbm_r)
+  if(!hbm_r)es_pin<=288'b0;else es_pin<=es_i;
+ assign ctrl_es=(ESPIN&&MUT!=4)?es_pin:es_i;
  qkd_host_pc_slice u_slice(.ck_station(ck_station),.ck_static(ck_static),.ck_boot(ck_boot),.ck_boot_test(ck_boot_test),
   .host_rst_n(host_r),.hbm_rst_n(hbm_r),.boot_go((MUT==2)?bgi:bgi_q),.lpc(lpc),.fi(fi),.fo(fo),.ci(ci),.co(co),.ai(ai),.ao(ao),
-  .fault_i(fault_i),.fault_o(fault_o),.land_es(land_es),.land_er(land_er),.ctrl_es(ctrl_es),.ctrl_er(er_s),
+  .fault_i(fault_i),.fault_o(fault_o),.land_es(land_es),.land_er(land_er),.ctrl_es(es_i),.ctrl_er(er_s),
   .ctrl_completion_v(cv_s),.ctrl_completion_we(cw_s),
   .all_ack(all_ack),.boot_done(boot_done),.boot_ok(boot_ok),.boot_fault(boot_fault));
  // The physical strap belongs to ck_station at the input face. Capture it

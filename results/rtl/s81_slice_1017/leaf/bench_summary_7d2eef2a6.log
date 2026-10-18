@@ -1,0 +1,44 @@
+ot-run: ot-agidock128  admits   111 GB (avail 107, growth 29, headroom 0, waiters 0/0 GB) load 18/64 running 8 disk 389 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-2824084-1792284085 after 0 s
+== out_m0_L0.txt
+VSOP op=13 cmd=2404 cycles_cmd_to_last_result=75
+SLVS mut=0 err SW=0 QB=0 RA=0 RB=0 QR=0 MOE=0 checked_pairs SW=29 RA=1 RB=48 QR=8 MOE=8 xq=2 fault=vp0/vs0/vq0
+PASS leaf MUT=0 L0 XMEM=2
+EXIT 0
+== out_m0_L2.txt
+VSOP op=13 cmd=2404 cycles_cmd_to_last_result=75
+SLVS mut=0 err SW=0 QB=0 RA=0 RB=0 QR=0 MOE=0 checked_pairs SW=29 RA=1 RB=48 QR=8 MOE=8 xq=2 fault=vp0/vs0/vq0
+PASS leaf MUT=0 L2 XMEM=2
+EXIT 0
+== out_m1_L0.txt
+VSOP op=13 cmd=2404 cycles_cmd_to_last_result=75
+SLVS mut=1 err SW=209 QB=0 RA=0 RB=0 QR=0 MOE=0 checked_pairs SW=29 RA=1 RB=48 QR=8 MOE=8 xq=2 fault=vp0/vs0/vq0
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=1 L0
+EXIT 0
+== out_m2_L0.txt
+VSOP op=13 cmd=2404 cycles_cmd_to_last_result=75
+SLVS mut=2 err SW=0 QB=0 RA=0 RB=384 QR=0 MOE=0 checked_pairs SW=29 RA=1 RB=48 QR=8 MOE=8 xq=2 fault=vp0/vs0/vq0
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=2 L0
+EXIT 0
+== out_m3_L0.txt
+VSOP op=13 cmd=2404 cycles_cmd_to_last_result=75
+SLVS mut=3 err SW=0 QB=0 RA=0 RB=0 QR=64 MOE=0 checked_pairs SW=29 RA=1 RB=48 QR=8 MOE=8 xq=2 fault=vp0/vs0/vq0
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=3 L0
+EXIT 0
+== out_m4_L0.txt
+MISMATCH op 13 pair 2 word 2 got bdfa0000 want bdfb0000
+SLVS mut=4 err SW=0 QB=0 RA=0 RB=0 QR=0 MOE=22 checked_pairs SW=29 RA=1 RB=48 QR=8 MOE=8 xq=2 fault=vp0/vs0/vq0
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=4 L0
+EXIT 0
+== out_m5_L0.txt
+VSOP op=13 cmd=2404 cycles_cmd_to_last_result=75
+SLVS mut=5 err SW=0 QB=1 RA=0 RB=0 QR=0 MOE=0 checked_pairs SW=29 RA=1 RB=48 QR=8 MOE=8 xq=2 fault=vp0/vs0/vq0
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=5 L0
+EXIT 0
+== out_m6_L0.txt
+VSOP op=13 cmd=2404 cycles_cmd_to_last_result=75
+SLVS mut=6 err SW=0 QB=0 RA=4 RB=0 QR=0 MOE=0 checked_pairs SW=29 RA=1 RB=48 QR=8 MOE=8 xq=2 fault=vp0/vs0/vq0
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=6 L0
+EXIT 0
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-2824084-1792284085): exit 0

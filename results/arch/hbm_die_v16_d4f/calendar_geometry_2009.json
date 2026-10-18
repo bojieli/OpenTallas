@@ -1,0 +1,43 @@
+{
+ "actual_lef": "physical/ref_tile/hv16_vm_cal_f20_ww/views/hfd_hgi_vm_calendar_f20/hfd_hgi_vm_calendar_f20.lef",
+ "sha256": "e7d59e1cc4ab0eaec95fc211ea78f2a05c532641973911633c6a25cc21997964",
+ "native_status": "UNBOUND; no source/clock-entry proof inherited",
+ "expanded": [
+  {
+   "instance": "calendar_SW",
+   "previous_w_um": 220.32,
+   "new_w_um": 241.92,
+   "other_die_slot_collisions": [],
+   "root_keepout_collisions": [],
+   "actual_pin_bounds": "PASS",
+   "signal_pin_count": 558
+  },
+  {
+   "instance": "calendar_SE",
+   "previous_w_um": 220.32,
+   "new_w_um": 241.92,
+   "other_die_slot_collisions": [],
+   "root_keepout_collisions": [],
+   "actual_pin_bounds": "PASS",
+   "signal_pin_count": 558
+  },
+  {
+   "instance": "calendar_NW",
+   "previous_w_um": 220.32,
+   "new_w_um": 241.92,
+   "other_die_slot_collisions": [],
+   "root_keepout_collisions": [],
+   "actual_pin_bounds": "PASS",
+   "signal_pin_count": 558
+  },
+  {
+   "instance": "calendar_NE",
+   "previous_w_um": 220.32,
+   "new_w_um": 241.92,
+   "other_die_slot_collisions": [],
+   "root_keepout_collisions": [],
+   "actual_pin_bounds": "PASS",
+   "signal_pin_count": 558
+  }
+ ]
+}

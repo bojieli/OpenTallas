@@ -1,0 +1,252 @@
+{
+ "name": "hv17_vmdel_lane",
+ "top": "ot_hbm_svc_vmdel_lane",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_static_vm_delivery_split.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "S": [
+   "fill_v_i",
+   "fill_bank_i",
+   "fill_slot_i",
+   "fill_epoch_i",
+   "fill_data_i"
+  ],
+  "N": [
+   "dq"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "bank_id",
+   "begin_v_i",
+   "begin_bank_i",
+   "begin_epoch_i",
+   "start_i",
+   "start_bank_i",
+   "start_epoch_i",
+   "start_base_sector_i",
+   "full0_all",
+   "full1_all",
+   "pcbad_all"
+  ],
+  "E": [
+   "full0",
+   "full1",
+   "pcbad",
+   "block_ready",
+   "busy",
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 4
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1
+  },
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 30,
+   "extra": "-no_obstruction_aware"
+  }
+ },
+ "job": {
+  "owner": "Claude:HBM-A/HBMA-VMDEL",
+  "branch": "claude/hbma-vmdel-v6-1017",
+  "tag": "hv17",
+  "purpose": "v6 successor of the vmdel lane (d4f die: vmdel_<Q><b> x32, slot 257.04x151.2 in region vmh_<Q>). v5b hv15_vmdel_lane-hv15-20b84db92 CLOSED TT +49.22 / FF +10.13 but NATIVE FAIL (results/rtl/hbm_lane_a_1017/native_1017.json): launch 346.6 > 220 on dq[264..266] (= bank_id strap: in -> dq flop -> N pin, one flop between a W pin and an N pin), capture 274.2 on rst_n (async clears of 18 flops) + fill_data_i 42 pins 190-198 + full*/pcbad_all 21 pins to 227 (8-lane AND/OR in front of the pin flop), R 286.7 / spread 96.4 > 80 (clk pin at W y~40 beside SRAM 0). Structural fix v6: (1) every input pin -> D of one plain pin flop, incl. rst_n (rst_s) and bank_id (bank_q), so dq[266:264] are plain N-face output flops; (2) synchronous body reset from rst_s (no async clear anywhere, release timing unchanged; a status_live flop flushes stale captured cross-lane status on release; the 512 seen bits are unreset: cleared by the bank's accepted begin before any fill can be accepted); (3) the 24 cross-lane status bits captured raw at the W pins, AND/OR after the flop (STATUS_LAT=2 unchanged); (4) one clock root, clk pin moved to W y=75.6 on the horizontal channel between the 2x2 SRAM grid, so the trunk enters the centre cross and branches symmetrically to the S fill band and the N dq band; W ports ranged so the clk slot is exclusive. RTL body = Codex candidate 25a390064 with its second (clk_cap) root removed: port list unchanged, die binding unchanged. Cycles: interface LAT=2, STATUS_LAT=2, II=1: +0 cycles (compiler offsets owner H-NETLIST: no change). Bench: tools/hbm_v15_harden/bench_delivery_v6.sh (production delivery + typed protocol lockstep vs monolithic #(STATUS_LAT=2) + per-lane clock ownership + invalid-payload consumer non-interference); mutants group select, SRAM slot, late reset release, status pin flops bypassed, collapsed lane clocks FAIL (Icarus 11 and 12). The every-bit comparator differs only in valid=0 payload after a reset asserted mid-read (synchronous reset), typed-protocol policy of main 782dca30d.",
+  "extra_paths": [
+   "tools/hbm_v15_harden",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "rtl/hbm_accel/generic/vm/static"
+  ],
+  "record_to": "results/rtl/ref_tile/hv17_vmdel_lane",
+  "benches": [
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_delivery_v6.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "DELIVERY_V6_BENCH PASS",
+    "min_count_regex": "V6_PROTOCOL PASS .*checks=(\\d+)"
+   },
+   {
+    "name": "mutant1",
+    "cmd": "bash tools/hbm_v15_harden/bench_delivery_v6.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant2",
+    "cmd": "bash tools/hbm_v15_harden/bench_delivery_v6.sh {RUN}/bench/mut2 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant3",
+    "cmd": "bash tools/hbm_v15_harden/bench_delivery_v6.sh {RUN}/bench/mut3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant4",
+    "cmd": "bash tools/hbm_v15_harden/bench_delivery_v6.sh {RUN}/bench/mut4 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant5",
+    "cmd": "bash tools/hbm_v15_harden/bench_delivery_v6.sh {RUN}/bench/mut5 5",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "structural_change": "v5b native FAIL (launch 346.6 dq bank strap, capture 274.2 rst_n async + status OR before pin flop, spread 96.4): v6 plain pin flop on every input incl. rst_n/bank_id/24 status bits, synchronous body reset, status reduced after capture, one clock root entering at W y=75.6 on the macro cross channel; same ports, LAT=2/STATUS_LAT=2, +0 cycles."
+ },
+ "outline": {
+  "w": 257.04,
+  "h": 151.2
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin (v6): every input incl. rst_n, the bank_id strap and the 24 cross-lane status bits lands on the D pin of one plain flop (no logic, no async clear); dq/block_ready/busy/fault and full0/full1/pcbad leave from flops. Synthesis pin registers would add a second, unpriced stage."
+ },
+ "pin_ranges": {
+  "fill_v_i": [
+   8.64,
+   12.96
+  ],
+  "fill_bank_i": [
+   12.96,
+   17.28
+  ],
+  "fill_slot_i": [
+   17.28,
+   28.08
+  ],
+  "fill_epoch_i": [
+   28.08,
+   49.68
+  ],
+  "fill_data_i": [
+   49.68,
+   248.4
+  ],
+  "dq": [
+   12.96,
+   244.08
+  ],
+  "full0_all": [
+   8.64,
+   21.6
+  ],
+  "full1_all": [
+   21.6,
+   34.56
+  ],
+  "pcbad_all": [
+   34.56,
+   47.52
+  ],
+  "begin_v_i": [
+   47.52,
+   49.68
+  ],
+  "begin_bank_i": [
+   49.68,
+   51.84
+  ],
+  "begin_epoch_i": [
+   51.84,
+   71.28
+  ],
+  "clk": [
+   73.44,
+   77.76
+  ],
+  "rst_n": [
+   79.92,
+   82.08
+  ],
+  "bank_id": [
+   82.08,
+   86.4
+  ],
+  "start_i": [
+   86.4,
+   88.56
+  ],
+  "start_bank_i": [
+   88.56,
+   90.72
+  ],
+  "start_epoch_i": [
+   90.72,
+   112.32
+  ],
+  "start_base_sector_i": [
+   112.32,
+   133.92
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

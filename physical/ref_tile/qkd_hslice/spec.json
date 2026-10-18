@@ -13,102 +13,7 @@
   "rtl/qwen_sys/host_20261013/qkd_host_static_pc_emback.sv"
  ],
  "params": {},
- "clock": "multiple_cts_roots",
- "clock_port": "ck_station",
- "clock_ports": [
-  "ck_station",
-  "ck_static",
-  "ck_boot",
-  "ck_boot_test"
- ],
- "clock_data_paths": "related_same_frequency",
- "clock_relationship": {
-  "kind": "same_pll_fixed_phase",
-  "ratio": [
-   1,
-   1
-  ],
-  "phase_ps": 0
- },
- "clock_entry_domains": {
-  "core": {
-   "ratio": [
-    1,
-    1
-   ],
-   "ports": [
-    "ck_station"
-   ],
-   "inputs": [
-    "host_rst_n",
-    "lpc",
-    "fi",
-    "ci",
-    "ai",
-    "fault_i",
-    "ski"
-   ],
-   "outputs": [
-    "fo",
-    "co",
-    "ao",
-    "fault_o",
-    "sko"
-   ]
-  },
-  "static": {
-   "ratio": [
-    1,
-    1
-   ],
-   "ports": [
-    "ck_static"
-   ],
-   "inputs": [
-    "land_es"
-   ],
-   "outputs": [
-    "land_er"
-   ]
-  },
-  "boot": {
-   "ratio": [
-    1,
-    1
-   ],
-   "ports": [
-    "ck_boot"
-   ],
-   "inputs": [
-    "hbm_rst_n",
-    "bgi",
-    "ctrl_er",
-    "ctrl_completion_v",
-    "ctrl_completion_we",
-    "sdi",
-    "soi",
-    "sfi"
-   ],
-   "outputs": [
-    "bgo",
-    "ctrl_es",
-    "sdo",
-    "soo",
-    "sfo"
-   ]
-  },
-  "test": {
-   "ratio": [
-    1,
-    1
-   ],
-   "ports": [
-    "ck_boot_test"
-   ],
-   "inputs": [],
-   "outputs": []
-  }
- },
+ "clock_port": "ck",
  "reset_ports": [
   "host_rst_n",
   "hbm_rst_n"
@@ -144,16 +49,13 @@
   "E": [
    "land_es",
    "land_er",
-   "ck_boot",
-   "ck_boot_test",
    "ctrl_completion_v",
    "ctrl_completion_we"
   ],
   "W": [
    "ctrl_es",
    "ctrl_er",
-   "ck_static",
-   "ck_station",
+   "ck",
    "hbm_rst_n",
    "host_rst_n",
    "lpc"
@@ -166,32 +68,30 @@
   "threads": 8,
   "peak_ram_gb": 24,
   "period_ps": 833.334,
-  "signoff_period_ps": 833.334,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0
  },
- "recipe": 2,
+ "recipe": 4,
  "keep_pin_regs": true,
  "pin_reg_split": true,
- "inhold": true,
- "outhold": true,
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": false
  },
- "structural_change": "Q-KVFIX 0130 PINCAP (native FAIL of ec1-75cbc9b99: capture 435.7 host_rst_n, 218 inputs > 190 [ctrl_er 119, ski/sdi/soi/sfi 94, host/hbm_rst_n, ctrl_completion_v/we, bgi]; launch 232.5 ctrl_es[0]): every input pin lands on its own flop at the face: host_rst_n/hbm_rst_n synchronous capture (rn <= rst_n, regional sync reset), ctrl_er 261 b + ctrl_completion_v/we captured on ck_boot, ski on ck_station and sdi/soi/sfi on ck_boot, bgi_q is bgi's only load (bgo <= bgi_q); ctrl_es[0]/[286] pin flops drive only their pins (launch_v/launch_we copies feed the completion observer). Same outline, faces and v1.4.2 pin positions. Exact v1.4.2 per-bit reach-safe pitch6 W/E grant (all571596 stack-local bits <=498.696um), M5 pitch4 chain pins. Capture static lpc at station entry before boot status consumers: one strap initialization edge, no normal data/control latency. Four synchronous CORE833.334 roots; no clock exceptions. Boot pin captured once before related test-root consumers; uniform+1 boot-start edge accepted, existing1edge bgo chain unchanged.",
+ "structural_change": "KV-FIX3 es2: ONE clock entry ck (was 4 CTS roots ck_station/ck_static/ck_boot/ck_boot_test, all tapped from the same die net clk_core_<stack>); es1 EARLY_FAIL_HOLD FF -110 ps = cross-root internal hops paying the 100 ps die-skew hold reserve (boot->static ctrl_er->u_static.er -131.9, static->core -119, core->static -96, static->boot -95, test->boot -53; 5,695 endpoints; pc1 needed ~15k hold buffers). 6,999 sinks on one root (<15k). 0 cycles, bit-identical. | KV-TILES-C es2 (10-17): recipe 2 -> 4 with hold_budget die (FLOW-HOLD): the RTL is flop-first at every pin (PINCAP + ESPIN), so the inhold / outhold HB2 pin pads (pc1: ctrl_es[1] launch 411.7 ps through the outhold pad) are dropped and boundary hold is the die's; io_flop_at_pins keeps each pin flop at its face. | KVE-2 es1: dedicated ctrl_es pin register stage (ESPIN=1; pc1's launch_v copy was merged into the ctrl_es[0] pin flop by synthesis, fanout 20 at the pin). Q-KVFIX 0130 PINCAP (native FAIL of ec1-75cbc9b99: capture 435.7 host_rst_n, 218 inputs > 190 [ctrl_er 119, ski/sdi/soi/sfi 94, host/hbm_rst_n, ctrl_completion_v/we, bgi]; launch 232.5 ctrl_es[0]): every input pin lands on its own flop at the face: host_rst_n/hbm_rst_n synchronous capture (rn <= rst_n, regional sync reset), ctrl_er 261 b + ctrl_completion_v/we captured on ck_boot, ski on ck_station and sdi/soi/sfi on ck_boot, bgi_q is bgi's only load (bgo <= bgi_q); ctrl_es[0]/[286] pin flops drive only their pins (launch_v/launch_we copies feed the completion observer). Same outline, faces and v1.4.2 pin positions. Exact v1.4.2 per-bit reach-safe pitch6 W/E grant (all571596 stack-local bits <=498.696um), M5 pitch4 chain pins. Capture static lpc at station entry before boot status consumers: one strap initialization edge, no normal data/control latency. Four synchronous CORE833.334 roots; no clock exceptions. Boot pin captured once before related test-root consumers; uniform+1 boot-start edge accepted, existing1edge bgo chain unchanged.",
  "slot_change_request": "results/arch/qwen_split_1014/kvsys_v1_4_2/pins/qkd_hslice.json",
  "job": {
-  "owner": "Claude:Q-KVFIX-0130 (Q-KV helper)",
-  "branch": "claude/qkvfix-0130",
-  "tag": "pc1",
-  "cycles_added": 1,
-  "purpose": "Q-KVFIX 0130: native-PASS successor of qkd_hslice ec1 (CLOSED TT +62.22/FF +27.90, native FAIL capture 435.7 host_rst_n / launch 232.5 ctrl_es[0]): RTL pin capture of every input + dedicated ctrl_es launch flops; same outline/pins.",
+  "owner": "Claude:KV-TILES-C lane 10-17",
+  "branch": "claude/kvtc-1017",
+  "tag": "es2",
+  "cycles_added": 2,
+  "purpose": "KV-FIX3/KV-TILES-C es2: es1 + ONE clock entry ck + recipe 4 hold_budget die (no pin hold pads) (es1 EARLY_FAIL_HOLD FF -110 ps from 4 CTS roots of one die net paying the 100 ps cross-root hold reserve on internal hops). | KVE-2 es1: native-PASS successor of qkd_hslice pc1 (CLOSED TT +97.54 / FF +3.92, native FAIL launch 241.7 ps on ctrl_es[0], 1 pin): the pc1 route shows yosys folded the launch_v copy into the ctrl_es[0] pin flop (BUFx3 fanout 20 -> INV -> wire buffer -> pin); ESPIN=1 adds a dedicated pin register stage on all 288 ctrl_es bits (+1 ck_boot edge on the command path to the elastic HBM-controller boundary); same outline/pins/recipe.",
   "extra_paths": [
    "tools/qwen_kv_die/run_host_slice_pinreg_bench.sh",
    "rtl/test/qwen_split/tb_host_pc_slice_die_pinreg.sv",
    "results/arch/qwen_split_1014/kvsys_v1_4_2/pins",
-   "results/rtl/ref_tile/qkd_hslice/bench_witness_0130/"
+   "results/rtl/ref_tile/qkd_hslice/bench_witness_es2/"
   ],
   "benches": [
    {
@@ -205,7 +105,7 @@
     "needs": [
      "iverilog"
     ],
-    "pass_witness": "results/rtl/ref_tile/qkd_hslice/bench_witness_0130/mut0.log"
+    "pass_witness": "results/rtl/ref_tile/qkd_hslice/bench_witness_es2/mut0.log"
    },
    {
     "name": "host_slice_lpc_mutant",
@@ -217,7 +117,7 @@
     "needs": [
      "iverilog"
     ],
-    "fail_witness": "results/rtl/ref_tile/qkd_hslice/bench_witness_0130/mut1.log"
+    "fail_witness": "results/rtl/ref_tile/qkd_hslice/bench_witness_es2/mut1.log"
    },
    {
     "name": "host_slice_missing_boot_capture_mutant",
@@ -229,7 +129,7 @@
     "needs": [
      "iverilog"
     ],
-    "fail_witness": "results/rtl/ref_tile/qkd_hslice/bench_witness_0130/mut2.log"
+    "fail_witness": "results/rtl/ref_tile/qkd_hslice/bench_witness_es2/mut2.log"
    },
    {
     "name": "host_slice_er_capture_dropped_mutant",
@@ -241,27 +141,38 @@
     "needs": [
      "iverilog"
     ],
-    "fail_witness": "results/rtl/ref_tile/qkd_hslice/bench_witness_0130/mut3.log"
+    "fail_witness": "results/rtl/ref_tile/qkd_hslice/bench_witness_es2/mut3.log"
+   },
+   {
+    "name": "host_slice_es_pin_bypass_mutant",
+    "cmd": "bash tools/qwen_kv_die/run_host_slice_pinreg_bench.sh {RUN}/bench/es_pin_bypass 4",
+    "expect": "fail",
+    "fail_regex": "FAIL slice die wrapper: \\d+ mismatches",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_witness": "results/rtl/ref_tile/qkd_hslice/bench_witness_es2/mut4.log"
    }
   ]
  },
  "macros": [],
  "children": [],
  "inter": [],
- "hold_pad": {
-  "cell": "HB2xp67_ASAP7_75t_R"
- },
  "pin_regs": {
   "enable": false,
-  "reason": "Q-KVFIX 0130: the RTL (PINCAP=1) captures every input at its own flop and drives every output from a flop (station fdq/fvq/cq/aq/ffq, lpc_status, bgi_q, host_rn/hbm_rn, ctrl_er_q, cmp_v_q/cmp_we_q, ski_q/sdi_q/soi_q/sfi_q; outputs fod/fov, co, ao, fault_o, sko/sdo/soo/sfo, bgo, ctrl_es, land_er); recipe-2 io_flop_at_pins allow_none=false anchors each pin's own flop at the face. No recipe-3 wrapper registers."
+  "reason": "Q-KVFIX 0130: the RTL (PINCAP=1) captures every input at its own flop and drives every output from a flop (station fdq/fvq/cq/aq/ffq, lpc_status, bgi_q, host_rn/hbm_rn, ctrl_er_q, cmp_v_q/cmp_we_q, ski_q/sdi_q/soi_q/sfi_q; outputs fod/fov, co, ao, fault_o, sko/sdo/soo/sfo, bgo, ctrl_es, land_er); io_flop_at_pins allow_none=false anchors each pin's own flop at the face. No recipe-3 wrapper registers. KVE-2 es1: ctrl_es comes from the es_pin stage (unique D, Q -> pin only)."
  },
- "cycle_cost": "+1 edge controller->landing response (ctrl_er -> land_er, credit return er259) and completion observer (elastic HBM-controller boundary, owner 10-14); +1 edge reset assertion/release; status chain sk/sd/so/sf 2 edges a slot (head sees slot k at 2k+1, was k+1; boot/ack status only); boot chain 2 edges a slot (slot k boots 2k+1 after slot-0 bgi, was k+1). Command path (land_es -> ctrl_es) and station chain fi/fo/ci/ai unchanged.",
+ "cycle_cost": "+1 edge controller->landing response (ctrl_er -> land_er, credit return er259) and completion observer (elastic HBM-controller boundary, owner 10-14); +1 edge reset assertion/release; status chain sk/sd/so/sf 2 edges a slot (head sees slot k at 2k+1, was k+1; boot/ack status only); boot chain 2 edges a slot (slot k boots 2k+1 after slot-0 bgi, was k+1). Command path (land_es -> ctrl_es) and station chain fi/fo/ci/ai unchanged. KVE-2 es1: +1 ck_boot edge on the command path land_es -> ctrl_es (dedicated ctrl_es pin register stage; HBM command latency +1 cycle at the elastic controller boundary, no throughput change).",
  "reroute_reason": {
   "kind": "rtl_change",
   "source": "physical/ref_tile/qkd_hslice/native_audit.json",
   "cell": "qkd_host_pc_slice_die",
-  "capture_ps": 435.7,
-  "launch_ps": 232.5,
-  "fix": "pin capture flops on every unregistered input (resets sync, ctrl_er, completion, status chain, bgi) + dedicated ctrl_es[0]/[286] pin flops (RTL qkd_host_pc_slice_die PINCAP=1, qkd_hbm_boot_static launch_v/we copies)"
- }
+  "launch_ps": 241.7,
+  "fix": "es1 (qkd_hslice-es1-b9d1bfc48 / qkd_hslice_dn-es1-b9d1bfc48) EARLY_FAIL_HOLD FF -110 ps: 4 CTS roots of one die clock net charged 100 ps cross-root hold reserve on internal hops; RTL es2 = single clock port ck (one root); keeps es1 ESPIN/PINCAP pin stages (native launch fix of pc1 241.7 ps) ; recipe 4 hold_budget die (flop-first pins, no inhold/outhold pads)"
+ },
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false
 }
