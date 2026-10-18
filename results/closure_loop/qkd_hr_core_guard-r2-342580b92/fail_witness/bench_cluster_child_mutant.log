@@ -1,0 +1,11 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_hr_core_guard-r2-342580b92 bench bench_cluster_child_mutant host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/qkd_hr_core_guard-r2-342580b92 log cl/bench_cluster_child_mutant.a1b1.log captured 2026-10-18T06:07:37-07:00
+# fail_regex 'CLUSTER_GATE FAIL mutant'
+mutant: u_core_guard.host_rst_n inverted at the parent
+seed=1 mode=0: MISMATCH service_status t=553667 fs core=0 flat=0 clu=1
+seed=1 mode=1: MISMATCH service_status t=553667 fs core=0 flat=0 clu=1
+seed=2 mode=0: MISMATCH service_status t=553667 fs core=0 flat=0 clu=1
+seed=2 mode=1: MISMATCH service_status t=553667 fs core=0 flat=0 clu=1
+seed=3 mode=0: MISMATCH service_status t=553667 fs core=0 flat=0 clu=1
+seed=3 mode=1: MISMATCH service_status t=553667 fs core=0 flat=0 clu=1
+CLUSTER_GATE FAIL mutant child=core_guard runs_pass=0/6 core_cycles=20000
