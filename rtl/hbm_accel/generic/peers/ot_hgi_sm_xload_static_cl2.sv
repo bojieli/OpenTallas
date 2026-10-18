@@ -36,7 +36,10 @@ module ot_hgi_sm_xload_cl2_ctl #(
     parameter integer RD_LAT = 6,
     parameter integer MUT    = 0,
     parameter integer NR     = 32,       // select replicas (each drives 2048 / NR data bits)
-    parameter integer EGRESS_SPLIT = 0   // XQL (H-SM 10-16): 1 = export the egress controls (eg_*) to pair-egress leaves
+    parameter integer EGRESS_SPLIT = 0,  // XQL (H-SM 10-16): 1 = export the egress controls (eg_*) to pair-egress leaves
+    // SEL_KEEP=1 (HBM-B 10-17, ctlx): the NR rotation-select replicas are (* keep *) flops, so synthesis keeps NR copies
+    // (ctlw f20a: opt_merge folded them, u_ctl.s0r[26][*] drove 5,045 loads).  Same function, same edges.
+    parameter integer SEL_KEEP = 0
 ) (
     input  wire               clk,
     input  wire               clk_eg,    // egress root (rw / BD-beat pin capture, beat select, xw pins): related phase 0
@@ -224,10 +227,22 @@ module ot_hgi_sm_xload_cl2_ctl #(
     // and the BD tag line follow L1); rq unchanged.
     reg l0_v; reg [3:0] l0_g; reg [2:0] l0_p, l0_wq; reg [6:0] l0_rem; reg [8*256-1:0] l0_d;
     reg l_v; reg [3:0] l_g; reg [2:0] l_p, l_wq; reg [6:0] l_rem; reg [8*256-1:0] l_d;
-    reg [2:0] s0r [0:NR-1];
-    always @(posedge clk or negedge rn)
-        if (!rn) for (integer k = 0; k < NR; k = k + 1) s0r[k] <= 3'd0;
-        else for (integer k = 0; k < NR; k = k + 1) s0r[k] <= md[RD_LAT][9:7];
+    wire [2:0] s0r [0:NR-1];
+    generate if (SEL_KEEP != 0) begin : g_s0k
+        for (genvar k = 0; k < NR; k = k + 1) begin : g_r
+            (* keep = 1 *) reg [2:0] q;
+            always @(posedge clk or negedge rn) if (!rn) q <= 3'd0; else q <= md[RD_LAT][9:7];
+            assign s0r[k] = q;
+        end
+    end else begin : g_s0
+        reg [2:0] s0q [0:NR-1];
+        always @(posedge clk or negedge rn)
+            if (!rn) for (integer k = 0; k < NR; k = k + 1) s0q[k] <= 3'd0;
+            else for (integer k = 0; k < NR; k = k + 1) s0q[k] <= md[RD_LAT][9:7];
+        for (genvar k = 0; k < NR; k = k + 1) begin : g_a
+            assign s0r[k] = s0q[k];
+        end
+    end endgenerate
     always @(posedge clk or negedge rn) if (!rn) begin l0_v <= 1'b0; l_v <= 1'b0; end else begin l0_v <= m_v; l_v <= l0_v; end
     always @(posedge clk) begin
         {l0_g, l0_p, l0_wq} <= mr[MW-2 -: 10]; l0_rem <= mr[6:0];
@@ -533,7 +548,8 @@ module ot_hgi_sm_xload_cl2_ctlw #(
     parameter integer MUT    = 0,
     parameter integer NR     = 32,
     parameter integer LEAD   = 8,
-    parameter integer EGRESS_SPLIT = 0   // XQL: export the egress controls (eg_*), see ot_hgi_sm_xload_static_xql
+    parameter integer EGRESS_SPLIT = 0,  // XQL: export the egress controls (eg_*), see ot_hgi_sm_xload_static_xql
+    parameter integer SEL_KEEP = 0       // kept rotation-select replicas (ot_hgi_sm_xload_cl2_ctl SEL_KEEP)
 ) (
     input  wire               clk,
     input  wire               clk_eg,
@@ -597,7 +613,7 @@ module ot_hgi_sm_xload_cl2_ctlw #(
         .w_ce_in(t_wce[0]), .w_addr_in(t_waddr), .wd_in(t_wdata), .w_mask_in({256{1'b1}}),
         .rr_en(2'b0), .rr_addr(12'b0), .cr_en(2'b0), .cr_sel(16'b0));
     // cmd = {x_xb7, x_fmt2, x_space2, x_stride32, x_p4, x_n21, x_base40} (die contract v16 cp1_194..201)
-    ot_hgi_sm_xload_cl2_ctl #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT((MUT <= 5) ? MUT : 0), .NR(NR), .EGRESS_SPLIT(EGRESS_SPLIT)) u_ctl (
+    ot_hgi_sm_xload_cl2_ctl #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT((MUT <= 5) ? MUT : 0), .NR(NR), .EGRESS_SPLIT(EGRESS_SPLIT), .SEL_KEEP(SEL_KEEP)) u_ctl (
         .clk(clk), .clk_eg(clk_eg), .rst_n(rst_n), .x_v(x_v), .x_base(xc[39:0]), .x_n(xc[60:40]), .x_p(xc[64:61]),
         .x_stride(xc[96:65]), .x_space(xc[98:97]), .x_fmt(xc[100:99]), .x_xb(xc[107:101]),
         .x_busy(x_busy), .x_done(x_done), .x_fault(x_fault), .xw_en(xw_en), .xw_last(xw_last), .xw_addr(xw_addr),
@@ -606,6 +622,71 @@ module ot_hgi_sm_xload_cl2_ctlw #(
         .qo_lo(qo_lo), .qo_hi(qo_hi), .qf_lo(qf_lo), .qf_hi(qf_hi), .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .bsel(bsel),
         .lane_en(lane_en), .bq_d(bq_d), .eg_ed5(eg_ed5), .eg_ede(eg_ede), .eg_bqv(eg_bqv), .eg_bqlast(eg_bqlast),
         .eg_bqaddr(eg_bqaddr), .eg_bqb(eg_bqb));
+endmodule
+
+// =====================================================================================================================
+// ot_hgi_sm_xload_cl2_ctlx (HBM-B 10-17): the d4f die master of the x-load control leaf under XQL.  The d4f contract binds
+// ctlw with EGRESS_SPLIT 1: the x egress (xw_*, x_done) leaves through the pair-egress leaves, so xw_* / x_done are open
+// on the die and rwq / bq_d are undriven -- 5,121 of ctlw's 10,920 pin bits carry nothing, yet a ctlw hard tile keeps the
+// whole xw egress datapath and its pins (f20a route: 11,007 pins, ~8-9 pins/um on W/E, util 0.14, TT -58.79).
+// ctlx = ctlw EGRESS_SPLIT 1 with exactly the ports the die connects, rwq / bq_d = 0 and xw_* / x_done unconnected
+// (the binding ot_hgi_sm_xload_static_xql already uses for ctlw), clk_eg = clk (its remaining sinks are the egress
+// stage, phase 0 of clk, as in the XQL binding), and kept rotation-select replicas (SEL_KEEP 1).
+// Every connected port has ctlw's function and edges; the XQL lock bench (XLOAD_XQL) runs through this module.
+// =====================================================================================================================
+module ot_hgi_sm_xload_cl2_ctlx #(
+    parameter integer PMAX   = 8,
+    parameter integer RD_LAT = 6,
+    parameter integer MUT    = 0,
+    parameter integer NR     = 32,
+    parameter integer LEAD   = 8
+) (
+    input  wire               clk,
+    input  wire               clk_cal,
+    input  wire               rst_n,
+    input  wire [7:0]         tgt,
+    input  wire               cfg_v,
+    input  wire [7:0]         cfg_target,
+    input  wire [11:0]        cfg_addr,
+    input  wire [255:0]       cfg_data,
+    input  wire               desc_v,
+    input  wire [11:0]        desc_base,
+    input  wire [12:0]        desc_limit,
+    input  wire [15:0]        desc_loops,
+    input  wire               launch_v,
+    output wire               configured,
+    output wire               fault,
+    output wire               active,
+    output wire [8*17-1:0]    rq,
+    input  wire [8*257-1:0]   rr,
+    output wire               rn_o,
+    output wire [1023:0]      c_d,
+    output wire [3:0]         c_wce,
+    output wire               c_mhi, c_mlo,
+    output wire [6:0]         c_wa,
+    output wire [7:0]         r_ce,
+    output wire [6:0]         r_a,
+    output wire [2047:0]      l_d_o,
+    output wire               qv_lo, qv_hi,
+    input  wire               qo_lo, qo_hi, qf_lo, qf_hi,
+    output wire [15:0]        r_wsel,
+    output wire               zlo, zhi,
+    output wire [2*((PMAX*3152+2047)/2048)-1:0] bsel,
+    output wire [PMAX*8-1:0]  lane_en,
+    output wire [7:0]         eg_ed5,
+    output wire [16:0]        eg_ede,
+    output wire               eg_bqv, eg_bqlast,
+    output wire [6:0]         eg_bqaddr, eg_bqb
+);
+    ot_hgi_sm_xload_cl2_ctlw #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT(MUT), .NR(NR), .LEAD(LEAD), .EGRESS_SPLIT(1), .SEL_KEEP(1)) u_w (
+        .clk(clk), .clk_eg(clk), .clk_cal(clk_cal), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target),
+        .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit),
+        .desc_loops(desc_loops), .launch_v(launch_v), .configured(configured), .fault(fault), .active(active),
+        .x_done(), .xw_en(), .xw_last(), .xw_addr(), .xw_grp(), .xw_data(), .rq(rq), .rr(rr), .rn_o(rn_o),
+        .c_d(c_d), .c_wce(c_wce), .c_mhi(c_mhi), .c_mlo(c_mlo), .c_wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(1024'd0),
+        .l_d_o(l_d_o), .qv_lo(qv_lo), .qv_hi(qv_hi), .qo_lo(qo_lo), .qo_hi(qo_hi), .qf_lo(qf_lo), .qf_hi(qf_hi),
+        .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .bsel(bsel), .lane_en(lane_en), .bq_d(2048'd0),
+        .eg_ed5(eg_ed5), .eg_ede(eg_ede), .eg_bqv(eg_bqv), .eg_bqlast(eg_bqlast), .eg_bqaddr(eg_bqaddr), .eg_bqb(eg_bqb));
 endmodule
 
 module ot_hgi_sm_xload_cl2_bfq (

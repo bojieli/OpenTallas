@@ -37,17 +37,56 @@ def lef_ports(lef):
     return dict(out)
 
 
-def real_view(m):
+# routed views that must not bind (native qualification FAIL): H-DIE-R8 10-17 h9b view fails native capture 213.7 ->
+# the CLOSED successor hdie_pc_ctrl_cfg_h9c (same master, RTL unchanged, 155.52^2) binds instead
+NOT_BINDABLE = ('physical/ref_tile/hdie_pc_ctrl_cfg_h9b/',)
+
+
+def real_views(m):
+    """every routed library candidate of master m: (dir, lef, tt, ff)."""
+    out = []
     for lef in sorted(glob.glob(str(ROOT / f'physical/**/views/{m}/{m}.lef'), recursive=True)) + \
             sorted(glob.glob(str(ROOT / f'physical/asap7*/{m}/{m}.lef'))):
+        if '/provenance/' in lef or any(x in lef for x in NOT_BINDABLE):
+            continue
         d = Path(lef).parent
         tt = [x for x in d.glob(f'{m}*tt*.lib')]
         ff = [x for x in d.glob(f'{m}*ff*.lib')]
         if tt and ff:
-            return d, lef, tt[0], ff[0]
-        if tt and '/asap7' in str(d):   # modelled off-die PHY macro with a TT-only abstract (SerDes/UCIe): FF uses TT
-            return d, lef, tt[0], tt[0]
-    return None
+            out.append((d, lef, tt[0], ff[0]))
+        elif tt and '/asap7' in str(d):   # modelled off-die PHY macro with a TT-only abstract (SerDes/UCIe): FF uses TT
+            out.append((d, lef, tt[0], tt[0]))
+    return out
+
+
+def spec_params(view_dir):
+    """the hardened tile's parameters (physical/ref_tile/<tile>/spec.json 'params'), None if unknown."""
+    sp = Path(view_dir).parent.parent / 'spec.json'
+    if not sp.is_file():
+        return None
+    try:
+        return json.loads(sp.read_text()).get('params')
+    except ValueError:
+        return None
+
+
+def real_view(m, ports=None, params=None):
+    """H-DIE-R8b 10-17: a master with several hardened parameter variants (ot_hbm_static_cfg_collar = col_sfu / col_su /
+    col_idx) has one routed view per variant tile; pick the candidate whose LEF pins equal this variant's ports and whose
+    tile spec params (when recorded) agree with the instance's.  The first sorted candidate used to win for every
+    variant (col_su and col_sfu were planned against col_idx's view and fell back to SYNTH)."""
+    cands = real_views(m)
+    if not cands or ports is None:
+        return cands[0] if cands else None
+    for rv in cands:
+        lp = lef_ports(rv[1])
+        if any(lp.get(p) != w for p, w in ports.items()):
+            continue
+        sp = spec_params(rv[0])
+        if sp and params is not None and any(str(params.get(k, v)) != str(v) for k, v in sp.items()):
+            continue
+        return rv
+    return cands[0]
 
 
 def sv_val(v):
@@ -78,7 +117,7 @@ def main():
         k = k_of[m]; k_of[m] += 1
         cell = m if nvar[m] == 1 else f'{m}__pv{k}'
         ports = {p: v['bits'] for p, v in rep['ports'].items()}
-        rv = real_view(m)
+        rv = real_view(m, ports, rep['params'])
         ent = dict(master=m, cell=cell, instances=insts, representative=insts[0], params=rep['params'],
                    source=rep['source'], ports=len(ports), port_bits=sum(ports.values()))
         if rv:

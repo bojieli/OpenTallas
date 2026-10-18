@@ -13,7 +13,8 @@
 // Configuration: global bank b in [BASE_k, BASE_k + SMACROS_k) is producer k's local bank b - BASE_k; a bank outside
 // every range sets the sticky fault (as the monolithic producer does for b >= its capacity).
 // MUT (bench only): 1 = producer MUT_SLICE gets one extra start stage (phase), 0 = none; 2/3 = every producer's
-// programme MUT 1/2 (PIPE stale pair select / busy not rise-delayed).
+// programme MUT 1/2 (PIPE stale pair select / busy not rise-delayed); 4 = programme MUT 3 (PIPE 2: last config copy's
+// row one edge late). PIPE 2 (HBM-SU r4): producers ot_hbm_su_programme PIPE 2 (+4 edges; start advance DEPTH+4).
 // PIPE (HBM-SU 2026-10-17, default 0 = unchanged): every producer is the pipelined ot_hbm_su_programme PIPE 1
 // (+3 edges start -> command; the compiler issues start DEPTH+3 edges early) and the root registers its fault output
 // (FREG: no input -> output combinational path through the root; fault reported one edge later).
@@ -73,7 +74,7 @@ module ot_hbm_su_programme_part #(
   generate for(k=0;k<PARTS;k=k+1) begin:g_part
     ot_hbm_su_programme_pslice #(.SB(SB),.EDGES(EDGES),.SCOLS(SCOLS),
       .DICT_BANKS(DICT_BANKS[32*SCOLS*k+:32*SCOLS]),.MACROS(SMACROS[32*k+:32]),
-      .STAGES(DEPTH-1+((MUT==1 && k==MUT_SLICE)?1:0)),.PIPE(PIPE),.MUT((MUT==2)?1:(MUT==3)?2:0)) u_ps(
+      .STAGES(DEPTH-1+((MUT==1 && k==MUT_SLICE)?1:0)),.PIPE(PIPE),.MUT((MUT==2)?1:(MUT==3)?2:(MUT==4)?3:0)) u_ps(
       .clk(clk),.rst_n(rst_n),.clk_macro(clk_macro[mbase(k)+:SMACROS[32*k+:32]]),
       .cfg_we(r_we[k]),.cfg_bank(r_bank[16*k+:16]),.cfg_row(r_row),.cfg_data(r_data),
       .start(r_start),.length(r_len),

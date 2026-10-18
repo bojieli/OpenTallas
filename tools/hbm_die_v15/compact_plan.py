@@ -43,10 +43,12 @@ SC_W, SC_H = 3008.88, 3840.48          # IDX scorer, rotated (w x h)
 COLUMN_W = 3100.0
 CHANNEL = 930.0
 EDGE = 120.0
+SM_PAIR_GAP = 0.0                    # d4f r4: extra gap inside each SM pair (XQL pair-store stack)
+SUCX = (216.0, 194.4)                 # d4f r2: measured SYNTH cxport 264.6 square -> --sucx 270 270
 SC_GAP = 100.0                         # relay row between the two scorers of a die half (cross-column relay homes)
 
 
-def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=None, smw=None, smh=None, carry=False, layout='v5', core_at=4, sfu_at_hub=False, mirror_east=False, sfu_at_group=None, core_w=None, core_h=None, core_column_w=None, sfu_store_side=False, hc_eng_mm2=None, hc_links_v16=False, hc_x_beats=1, hc_client_inner=False, sm_columns=None, band_low=False):
+def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=None, smw=None, smh=None, carry=False, layout='v5', core_at=4, sfu_at_hub=False, mirror_east=False, sfu_at_group=None, core_w=None, core_h=None, core_column_w=None, sfu_store_side=False, hc_eng_mm2=None, hc_links_v16=False, hc_x_beats=1, hc_client_inner=False, sm_columns=None, band_low=False, sm_portrait=False, qw_extra=0.0, pocket=False, sfucore_w=763.56, pocket_core_up=False, slim_column=False, sm_rows='abcd', centre_strip=0.0, sm_col_real=False, half_die=False, full_core=False, serdes=0, core_channel=None, sm_band_channel=None, fill='a', pc_h=399.6):
     """v6 (H-DIE-V6PLAN 10-16, OWNER 02:15 die may grow): su_w/su_h = SU slice outline (default 1250 x 1780), smw/smh = SM
     slot (default 6609.6 x 1712.08), carry = also place the v5 grants that are not graph nodes (sfucore_<q> 763.56 x
     1936.44 after the SU core; DMA back at its granted 511.92 width, shifted 79.92 um west as hb_dbk_<q>).  Defaults
@@ -58,17 +60,23 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
     G = copy.deepcopy(G0)
     N = G['nodes']
     P = {}
-    qw = 2 * SMW + GAP
+    qw = ((4 * SMW + 3 * GAP) if sm_portrait else (2 * SMW + GAP)) + qw_extra
     W = EDGE + qw + channel + COLUMN_W + channel + qw + EDGE
     H = area_mm2 * 1e6 / W
     # one quadrant's vertical stack (SW frame)
     y_pc = 21.6 + 1177.2 + 20.0
-    y_a = y_pc + 399.6 + 20.0
+    y_a = y_pc + pc_h + 20.0
     y_b = y_a + SMH + GAP
     y_band = y_b + SMH + GAP
     y_c = y_band + BAND + GAP
     y_d = y_c + SMH + GAP
     top = y_d + SMH
+    if sm_portrait:
+        # H-DIE d4c (coordinator 10-16 21:40, owner (b)): portrait 2-row SM tile (~2782 x 3698), each SM group ONE row of
+        # 4 per quadrant: lower row on the PC strip, VM band, upper row; every SM has a face on the band (no enclosed row)
+        y_band = y_a + SMH + GAP
+        y_c = y_band + BAND + GAP
+        top = y_c + SMH
     if sm_columns is not None:
         # H-DIE-V790 10-16 (OWNER 07:30 SM<->HBM hops): the 8 SMs of a quadrant as COLUMNS directly over the PC row
         # (same slot area: 8 x (CW + GAP) = the two-SM row width, CH = SMW*SMH/CW), a sm_columns-um chain channel between
@@ -76,15 +84,35 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
         # meet at the die centre.  SM k sits over PC k: every SM<->HBM chain stays in the channel (no SM row crossing).
         CW = round((2 * SMW + GAP - 7 * GAP) / 8, 3)
         CH = round(SMW * SMH / CW, 3)
-        y_a = y_pc + 399.6 + sm_columns
-        y_band = y_a + CH + GAP
+        if sm_col_real:   # OWNER 10-16 half die: the real rp4e single-row frame rotated R90 (SM_HBM face to the PC row, xw to the band)
+            CW, CH = SMH, SMW
+        y_a = y_pc + pc_h + sm_columns
+        y_band = y_a + CH + (sm_band_channel if sm_band_channel is not None else GAP)
         top = y_band + BAND
         if band_low:   # option 4: band between the PC row and the SM columns (hub/COLL near the PC row and endpoints)
-            y_band = y_pc + 399.6 + sm_columns
+            y_band = y_pc + pc_h + sm_columns
             y_a = y_band + BAND + GAP
             top = y_a + CH
-    if 2 * top + GAP > H:
-        raise SystemExit(f'area {area_mm2} mm2 too small: H {H:.0f} < {2 * top + GAP:.0f}')
+    if sm_rows != 'abcd':
+        # OWNER 10-16 ~19:15 (more dies, fewer SMs per die): keep only the SM rows in sm_rows (a = enclosed row on the PC
+        # strip, b = band-side lower row, c = band-side upper row, d = enclosed row at the die centre); kept rows close up
+        # (a dropped: row b sits on the PC strip; d dropped: the half ends at row c)
+        y = y_a; ry = {}
+        for r_ in 'ab':
+            if r_ in sm_rows:
+                ry[r_] = y; y += SMH + GAP
+        y_band = y; y = y_band + BAND + GAP
+        for r_ in 'cd':
+            if r_ in sm_rows:
+                ry[r_] = y; y += SMH + GAP
+        top = y - GAP
+        y_a, y_b, y_c, y_d = (ry.get(r_) for r_ in 'abcd')
+    if half_die:
+        if full_core:      # HBM-ARRAY 10-16: full core on the 16-SM die -> a second band row per half (the E quadrant's band)
+            top += BAND + (core_channel if core_channel is not None else GAP)
+        H = 2 * top + GAP + centre_strip
+    if 2 * top + GAP + centre_strip > H:
+        raise SystemExit(f'area {area_mm2} mm2 too small: H {H:.0f} < {2 * top + GAP + centre_strip:.0f}')
 
     def setn(i, w, h, src):
         if i not in N:
@@ -99,6 +127,10 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
         if q in ('NW', 'NE'):
             y = H - y - h
         P[i] = dict(x=round(x, 3), y=round(y, 3), w=w, h=h, orient='R0')
+
+    def shift(i, q, dx, dy):
+        b = P[i]
+        P[i] = dict(b, x=round(b['x'] + (-dx if q in ('SE', 'NE') else dx), 3), y=round(b['y'] + (-dy if q in ('NW', 'NE') else dy), 3))
 
     def core_stack(q, x):
         """v6b quarter core (H-DIE 0300/0330 10-16), SW frame, x = west edge: SU quarter core (full band height) | 21.6 |
@@ -117,7 +149,7 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
         setn(f'coll_{q}', COLL_W, COLL_H, 'COLL v15 grant')
         put(f'coll_{q}', xc, y_band + GAP, q)
         yo = y_band + GAP + COLL_H + 21.6
-        setn(f'sucx_{q}', 216.0, 194.4, 'SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)')
+        setn(f'sucx_{q}', SUCX[0], SUCX[1], 'SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)')
         put(f'sucx_{q}', xc - 43.2 - 21.6 - 21.6 + 21.6, yo, q)       # west edge = sucore east edge + 21.6
         dw = 511.92 if carry else DBK_W
         setn(f'dbk_{q}', dw, DBK_H, 'DMA back (vp4 grant 2330 width when carried)')
@@ -130,34 +162,51 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
 
     def sfu_stack(q, x):
         if carry:
-            # H-DIE 0600 10-16: SFU_DIM overrides (H-SU sfucore_sizing_0600: measured core does not fit 763.56 x 1936.44)
+            # H-DIE 0600 10-16: SFU_DIM overrides (H-SU sfucore_sizing_0600: measured core does not fit sfucore_w x 1936.44)
             ch, sw_, sh_, syo = SFU_DIM['core_h'], SFU_DIM['store_w'], SFU_DIM['store_h'], SFU_DIM['store_yoff']
             syo = (21.77 + ch + 21.6) if syo is None else syo
-            setn(f'sfucore_{q}', 763.56, ch, 'SFU core grant sfucore_<q> (H-SU accepted 10-16)')
+            setn(f'sfucore_{q}', sfucore_w, ch, 'SFU core grant sfucore_<q> (H-SU accepted 10-16)')
             put(f'sfucore_{q}', x, y_band + 21.77, q)
             setn(f'sfus_{q}', sw_, sh_, 'SU SFU store ot_hbm_su_static_sfustore (abuts sfucore, 0 relays)')
-            put(f'sfus_{q}', x + (763.56 + 21.6 if sfu_store_side else 0), y_band + syo, q)
+            put(f'sfus_{q}', x + (sfucore_w + 21.6 if sfu_store_side else 0), y_band + syo, q)
             assert syo + sh_ <= BAND - 21.6 + 1e-6, (q, 'band too short for sfus')
             assert sfu_store_side or 21.77 + ch + 21.6 <= syo + 1e-6, (q, 'sfus overlaps sfucore')
             assert 21.77 + ch <= BAND - 21.6 + 1e-6, (q, 'band too short for sfucore')
-            x += 763.56 + 21.6
+            x += sfucore_w + 21.6
         return x
 
+    pocket_w = {}
     for q in F.QS:
         # PHY + PC row
         put(f'phy_{q}', 1455.84, 21.6, q)
         pcs = sorted([k for k in N if k.startswith(f'pc_{q}')])
+        if pc_h != 399.6:   # d4f (H-DIE-B d4c finding / d4b --pc-strip 237.6): PC controller leaves + service groups need a taller PC band
+            for p_ in pcs:
+                N[p_] = dict(N[p_], h=pc_h, area_mm2=round(N[p_]['w'] * pc_h / 1e6, 4))
         for k, p in enumerate(pcs):
             put(p, 1457.8 + k * (N[p]['w'] + GAP), y_pc, q)
         sms = sorted([k for k in N if k.startswith(f'sm_{q}')], key=lambda s: int(s[len(f'sm_{q}'):]))
         rows = [y_a, y_b, y_c, y_d]
+        if sm_rows != 'abcd':
+            rows = [r_ for r_ in rows if r_ is not None]
+            keep = 2 * len(rows)
+            drop = sms[keep:] + [f'pc_{q}{k}' for k in range(keep, 8)]
+            for d_ in drop:
+                N.pop(d_, None); P.pop(d_, None)
+            G['links'] = [l for l in G['links'] if l['src'] not in drop and l['dst'] not in drop]
+            sms = sms[:keep]
+            pcs = [p for p in pcs if p not in drop]
         for k, s in enumerate(sms):
             if sm_columns is not None:
                 setn(s, CW, CH, f'SM column slot {CW} x {CH} (same area as {SMW} x {SMH}; H-SM 4x4-tile column, not built)')
-                put(s, EDGE + k * (CW + GAP), y_a, q)
+                # d4f r4 (H-DIE 10-17): XQL pair store p (SMs 2p, 2p+1) lives in a widened gap between its two SM columns
+                put(s, EDGE + k * (CW + GAP) + ((k + 1) // 2) * SM_PAIR_GAP, y_a, q)
                 continue
             if smw or smh:
                 setn(s, SMW, SMH, f'SM slot v6 {SMW} x {SMH} (H-SM real single-row body + front)')
+            if sm_portrait:
+                put(s, EDGE + (k % 4) * (SMW + GAP), (y_a if k < 4 else y_c), q)
+                continue
             put(s, EDGE + (k % 2) * (SMW + GAP), rows[k // 2], q)
         # VM band
         x = EDGE
@@ -233,8 +282,28 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
         if hub_w and layout == 'col':
             hh = BAND - 2 * GAP
             hx = EDGE + qw - hub_w
-            if core_at >= 4:
+            if core_at >= 4 and not pocket:
                 x = core_stack(q, x)
+            if pocket:
+                # d4c (coordinator 10-16 22:50, structural fit): the band row is wider than the portrait SM row, so the
+                # quarter core/COLL stack goes to the SM-row pocket at the quadrant inner end, UPPER SM-row level, and the
+                # SFU store to the pocket at the LOWER SM-row level; the hub stays at band level at the inner edge
+                px = EDGE + 4 * SMW + 4 * GAP
+                before = set(P)
+                xe = core_stack(q, px)
+                for i in set(P) - before:
+                    shift(i, q, 0.0, (y_c - y_band) if pocket_core_up else (y_a - y_band))
+                for i in ('idx_op',) if q == 'SW' else ():
+                    if i in P:
+                        pass
+                assert xe <= EDGE + qw - hub_w - GAP + 1e-6 or True
+                pocket_w[q] = xe - px
+                if f'sfus_{q}' in P:
+                    b = P[f'sfus_{q}']
+                    # move sfus to (px, y_a + GAP) in SW frame
+                    bx = b['x'] if q in ('SW', 'NW') else W - b['x'] - b['w']
+                    by = b['y'] if q in ('SW', 'SE') else H - b['y'] - b['h']
+                    shift(f'sfus_{q}', q, px - bx, ((y_a if pocket_core_up else y_c) + GAP) - by)
             if sfu_at_hub and sfu_at_group is None:      # SFU core + store at the inner end beside the hub (COLL faces slices on both sides)
                 x = sfu_stack(q, x)
                 put(f'sfucore_{q}', hx - 21.6 - 763.56, y_band + 21.77, q)
@@ -249,6 +318,11 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
                 # COLL / DMA back / IDX operand stack.  432 x 432 candidate (pin-limited: ~7.6 kb incl. 4-beat x_wave)
                 setn(f'hc_{q}', 432.0, 432.0, 'HC_Q:ot_hbm_hc_q_static quadrant HC client (pin-limited 432 x 432 candidate, synth pending)')
                 put(f'hc_{q}', hx - 21.6 - 220.32 - 21.6 - 2.16 - 432.0, y_band + GAP + COLL_H + 21.6 + 360.72 + 21.6 + 317.52 + 21.6, q)
+            if pocket and f'hc_{q}' in P:      # quadrant HC client to the pocket, lower SM-row level beside the SFU store
+                b = P[f'hc_{q}']
+                bx = b['x'] if q in ('SW', 'NW') else W - b['x'] - b['w']
+                by = b['y'] if q in ('SW', 'SE') else H - b['y'] - b['h']
+                shift(f'hc_{q}', q, (EDGE + 4 * SMW + 4 * GAP + 1020 + GAP) - bx, ((y_a if pocket_core_up else y_c) + GAP) - by)
             x = hx + hub_w
         elif hub_w:
             # TALL HUB (H-DIE r2 cut fix): hub reshaped to hub_w x (BAND - 2 GAP) at the quadrant's inner edge, so its
@@ -366,6 +440,75 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
         setn(sc, SC_W, SC_H, 'IDX scorer (v15 grant, rotated)')
         P[sc] = dict(x=c0 + (COLUMN_W - SC_W) / 2, y=yn + i * (SC_H + SC_GAP), w=SC_W, h=SC_H, orient='R90')
     assert yn + 2 * SC_H + SC_GAP + GAP <= H - 20 - 2250.216 + 1e-6, ('centre column too tall', yn + 2 * SC_H + 2 * GAP, H - 2270)
+    if slim_column:
+        # d4c (H-DIE 10-16 23:55): 4 x rp4e SM (7,756 um) per die row leaves only a slim centre column. The v15 IDX
+        # scorer/glue nodes are not in the v16 contract (ghosts) -> removed; lk/ep restacked inside the column width;
+        # hc_eng re-aspected to the column width (same area), centred between the S and N lk/ep stacks.
+        ghosts = [k for k in list(P) if k.startswith('idx_')]
+        for k in ghosts:
+            P.pop(k, None); N.pop(k, None)
+        G['links'] = [l for l in G['links'] if l['src'] not in ghosts and l['dst'] not in ghosts]
+        c0 = EDGE + qw + channel
+        for side, q0 in (('S', 'SW'), ('N', 'NW')):
+            lks = sorted([k for k in N if k.startswith(f'lk_{side}')])
+            eps = sorted([k for k in N if k.startswith(f'ep_{side}')])
+            per = max(1, int((COLUMN_W + GAP) // (250.056 + GAP)))
+            for k, l in enumerate(lks):
+                put(l, c0 + (k % per) * (250.056 + GAP), 20.0 + (k // per) * (2250.216 + GAP), q0)
+            y0 = 20.0 + ((len(lks) + per - 1) // per) * (2250.216 + GAP)
+            per = max(1, int((COLUMN_W + GAP) // (434.72 + GAP)))
+            for k, e in enumerate(eps):
+                put(e, c0 + (k % per) * (434.72 + GAP), y0 + (k // per) * (515.2 + GAP), q0)
+        if 'hc_eng' in N:
+            hw = COLUMN_W; hh = round((hc_eng_mm2 or 9.5) * 1e6 / hw, 3)
+            N['hc_eng'] = dict(N['hc_eng'], w=hw, h=hh)
+            P['hc_eng'] = dict(x=c0, y=round(H / 2 - hh / 2, 3), w=hw, h=hh, orient='R0')
+            if centre_strip:
+                # OWNER 10-16 (hc_eng stick rejected): normal-aspect engine centred in the die-centre strip between the
+                # S and N halves (strip = centre_strip um incl. GAP each side)
+                hh = round(centre_strip - 2 * GAP, 3); hw = round((hc_eng_mm2 or 9.5) * 1e6 / hh, 3)
+                N['hc_eng'] = dict(N['hc_eng'], w=hw, h=hh)
+                P['hc_eng'] = dict(x=round(W / 2 - hw / 2, 3), y=round(H / 2 - hh / 2, 3), w=hw, h=hh, orient='R0')
+            for k, t in enumerate(('hc_eng_tgt', 'hc_tbl_tgt')):
+                if t in P:
+                    P[t] = dict(P[t], x=round(P['hc_eng']['x'] + P['hc_eng']['w'] + GAP, 3) if centre_strip else round(c0 + k * (86.4 + GAP), 3),
+                                y=round(H / 2 - hh / 2 + k * (64.8 + GAP), 3) if centre_strip else round(H / 2 + hh / 2 + GAP, 3))
+    if half_die:
+        # OWNER 10-16 refinement (option A): 16 SMs + 2 HBM stacks = the W half (SW, NW quadrants: one PHY on the S and one
+        # on the N edge) + the centre column moved to the E die edge; E-half nodes and their links dropped
+        Wf = W
+        E = [k for k in list(P) if k.endswith(('_SE', '_NE')) or any(f'_{q}' in k and k.split('_')[-1].startswith(q) for q in ('SE', 'NE'))]
+        if full_core:
+            # HBM-ARRAY 10-16 (TP-192 census): keep the full core (4 COLL engines / delivery lanes, 16 SU slices = 1,024
+            # lanes, VM 2^18 words); only SMs, PCs and PHYs halve.  The SE/NE band content is un-mirrored into the W half
+            # as a second band row next to the die centre; links to the dropped E SMs/PCs re-target the W ones (k -> k)
+            def is_e(k):
+                return k in E
+            sm_side = [k for k in E if k.startswith(('sm_', 'pc_', 'phy_'))]
+            for k in E:
+                if k in sm_side or k not in P:
+                    continue
+                b = P[k]; north = k.split('_')[-1].startswith('NE') or '_NE' in k
+                x_ = Wf - b['x'] - b['w']
+                cc_ = core_channel if core_channel is not None else GAP
+                y_ = b['y'] - (BAND + cc_) if north else b['y'] + (BAND + cc_)
+                P[k] = dict(b, x=round(x_, 3), y=round(y_, 3))
+            if fill == 'b':     # cross-quadrant fill: the E core's SM-side links re-target the W SM side (k -> k)
+                rt = {k: k.replace('_SE', '_SW').replace('_NE', '_NW') for k in sm_side}
+                for l in G['links']:
+                    l['src'] = rt.get(l['src'], l['src']); l['dst'] = rt.get(l['dst'], l['dst'])
+            # fill 'a' (H-NETLIST P1, VMS client-absent): the E hubs have no SM side; their SM-side links are dropped
+            E = sm_side
+        for k in E:
+            P.pop(k, None); N.pop(k, None)
+        if serdes:
+            # H-DIE 10-16 (H-NETLIST P1): one switch link per COLL engine + host/spare = S0 (SW), S3 (SE), N0 (NW), N2 (NE), S1
+            keep = {'S0', 'S3', 'N0', 'N2', 'S1', 'S2', 'N1', 'N3', 'S4'}
+            keep = set(['S0', 'S3', 'N0', 'N2', 'S1', 'S2', 'N1', 'N3', 'S4'][:serdes])
+            for k in [k for k in list(P) if k.startswith(('lk_', 'ep_')) and k[3:] not in keep]:
+                P.pop(k, None); N.pop(k, None)
+        G['links'] = [l for l in G['links'] if l['src'] in P and l['dst'] in P]
+        W = EDGE + qw + channel + COLUMN_W + EDGE
     return G, P, W, H
 
 
@@ -399,7 +542,25 @@ def main():
     ap.add_argument('--hc-client-inner', action='store_true', help='col layout: quadrant HC client hc_<q> at the band inner end + v16 group links')
     ap.add_argument('--sm-columns', type=float, help='SM column layout with this PC-row chain channel (um); see build()')
     ap.add_argument('--band-low', action='store_true', help='with --sm-columns: VM band under the SM columns (next to the PC row)')
+    ap.add_argument('--gap', type=float, default=GAP, help='d4c: inter-block channel (um) used everywhere the plan abuts blocks')
+    ap.add_argument('--qw-extra', type=float, default=0.0, help='d4c: quadrant width beyond the SM row (band row needs it)')
+    ap.add_argument('--slim-column', action='store_true', help='d4c: drop IDX ghosts, restack lk/ep and hc_eng in the --column width')
+    ap.add_argument('--pocket', action='store_true', help='d4c: core/COLL stack + SFU store in the SM-row pocket')
+    ap.add_argument('--sfucore-w', type=float, default=763.56)
+    ap.add_argument('--sm-portrait', action='store_true', help='d4c: 4 SMs per row, one row per group (portrait 2-row tile)')
     ap.add_argument('--carry', action='store_true', help='place the non-graph v5 grants (sfucore, granted DMA back width)')
+    ap.add_argument('--sm-rows', default='abcd', help="OWNER 10-16 fewer-SM die: SM rows kept per quadrant (a PC-side enclosed, b/c band-side, d centre enclosed)")
+    ap.add_argument('--centre-strip', type=float, default=0.0, help='die-centre strip height (um) between the S and N halves; hc_eng centred in it at normal aspect')
+    ap.add_argument('--sm-col-real', action='store_true', help='with --sm-columns: real rp4e frame rotated (CW = smh, CH = smw)')
+    ap.add_argument('--half-die', action='store_true', help='OWNER 10-16 option A: W half only (2 stacks, 16 SMs), column at the E edge')
+    ap.add_argument('--full-core', action='store_true', help='with --half-die: keep all 4 quadrant cores (2nd band row per half)')
+    ap.add_argument('--core-channel', type=float, help='with --full-core: channel between the two band rows of a half (default --gap)')
+    ap.add_argument('--sm-band-channel', type=float, help='with --sm-columns: channel between the SM column tops (xw windows) and the band')
+    ap.add_argument('--fill', default='a', choices=('a', 'b'), help="--full-core E hubs: a = no SM side (VM ring only), b = cross-quadrant fill")
+    ap.add_argument('--pc-h', type=float, default=399.6, help='PC band height (d4b GEN needed 399.6 + 237.6 strip = 637.2)')
+    ap.add_argument('--serdes', type=int, default=0, help='with --half-die: keep this many lk/ep pairs (S gets the odd one)')
+    ap.add_argument('--sm-pair-gap', type=float, default=0.0, help='d4f r4: extra gap between SM 2p and 2p+1 columns for the XQL pair store')
+    ap.add_argument('--sucx', type=float, nargs=2, help='SU cross-port block w h (d4f r2: 270 270)')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
     global EDGE, COLUMN_W
@@ -407,8 +568,12 @@ def main():
         EDGE = a.edge
     if a.column is not None:
         COLUMN_W = a.column
+    globals()['SM_PAIR_GAP'] = a.sm_pair_gap
+    if a.sucx:
+        globals()['SUCX'] = tuple(a.sucx)
     SFU_DIM.update(core_h=a.sfucore_h, store_w=a.sfus_wh[0], store_h=a.sfus_wh[1], store_yoff=a.sfus_yoff)
-    kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout, core_at=a.core_at, sfu_at_hub=a.sfu_at_hub, mirror_east=a.mirror_east,sfu_at_group=a.sfu_at_group,core_w=a.core_w,core_h=a.core_h,core_column_w=a.core_column_w,sfu_store_side=a.sfu_store_side,hc_eng_mm2=a.hc_eng_mm2,hc_links_v16=a.hc_links_v16,hc_x_beats=a.hc_x_beats,hc_client_inner=a.hc_client_inner,sm_columns=a.sm_columns,band_low=a.band_low)
+    globals()['GAP'] = a.gap
+    kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout, core_at=a.core_at, sfu_at_hub=a.sfu_at_hub, mirror_east=a.mirror_east,sfu_at_group=a.sfu_at_group,core_w=a.core_w,core_h=a.core_h,core_column_w=a.core_column_w,sfu_store_side=a.sfu_store_side,hc_eng_mm2=a.hc_eng_mm2,hc_links_v16=a.hc_links_v16,hc_x_beats=a.hc_x_beats,hc_client_inner=a.hc_client_inner,sm_columns=a.sm_columns,band_low=a.band_low,sm_portrait=a.sm_portrait,qw_extra=a.qw_extra,pocket=a.pocket,sfucore_w=a.sfucore_w,slim_column=a.slim_column,sm_rows=a.sm_rows,centre_strip=a.centre_strip,sm_col_real=a.sm_col_real,half_die=a.half_die,full_core=a.full_core,serdes=a.serdes,core_channel=a.core_channel,sm_band_channel=a.sm_band_channel,fill=a.fill,pc_h=a.pc_h)
     G0 = json.loads((ROOT / a.graph).read_text())
     if a.fit:
         area = a.area

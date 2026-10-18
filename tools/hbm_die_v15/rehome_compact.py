@@ -35,6 +35,7 @@ def main():
     die = slots[0]
     assert die['kind'] == 'die'
     die['outline'] = dict(w=round(W, 3), h=round(H, 3))
+    import reticle; reticle.require_die(W, H, 'rehome_compact.py')   # OWNER 10-16: >= 0.5 mm in W AND H
     die['notes'] = 'compact die (owner 2026-10-15 12:05, 660 mm2); grow only on measured GRT congestion / area misfit'
     mapping, placed, moved, requests = {}, {}, [], []
     keep = []
