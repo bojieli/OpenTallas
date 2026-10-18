@@ -1,0 +1,93 @@
+{
+ "name": "s81su_smhr",
+ "top": "dsfd_su_t_smhr",
+ "kind": "cluster",
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_in"
+ ],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/su_sm/dsfd_su_t_smhr.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "outline": {
+  "w": 345.6,
+  "h": 244.08
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/s81su_smc_ref/views/dsfd_su_t_smc",
+   "count": 1,
+   "inst": "*u_smc",
+   "at": [
+    43.2,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_smr_ref/views/dsfd_su_t_smr",
+   "count": 1,
+   "inst": "*u_smr",
+   "at": [
+    216.0,
+    86.4
+   ]
+  }
+ ],
+ "pins": {
+  "S": [
+   "clk",
+   "rst_in",
+   "c_v",
+   "c_lt",
+   "q_mxv",
+   "q_ev",
+   "q_el",
+   "q_skv",
+   "q_mx",
+   "q_e",
+   "m_v",
+   "m_nmb",
+   "dn_v",
+   "dn",
+   "den_v"
+  ]
+ },
+ "structural_change": "S81U-SMH2 (10-17): root regional cluster (x1 per head) of the split per-head SM subtree (see s81su_smhq): row sum smc + max/den root smr with their SRL link, own clock pin + registered reset relay; quad links arrive registered (station 1 in the quad), max/den broadcast leaves registered.",
+ "why_floorplan": "smc + smr side by side on the 43.2 lattice over an 86-um S band for the 1,028-b quad input stations; ~1.1k pins on the S face (3.2 pins/um) toward the slice's central band; 346 x 244 um.",
+ "job": {
+  "owner": "Claude:S81U-2",
+  "branch": "claude/s81u2-1017",
+  "tag": "s81su_smhr",
+  "purpose": "S81U-SMH2: root regional cluster (x1 per head) of the S81-DV per-head SM subtree (bench: tools/s81_su_sm/sms_bench.sh SMT=1).",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/su_sm",
+   "physical/ref_tile/s81su_smc_ref/views",
+   "physical/ref_tile/s81su_smr_ref/views"
+  ],
+  "views_to": "physical/ref_tile/s81su_smhr/views",
+  "record_to": "results/rtl/ref_tile/s81su_smhr"
+ },
+ "macros": [],
+ "inter": [],
+ "recipe": 4,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

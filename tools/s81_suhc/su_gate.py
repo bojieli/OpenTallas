@@ -67,6 +67,10 @@ HIER = ["rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_hctl.sv", "rtl/dsrom_sys/s81_suhc
 # S81U-2 (2026-10-17): --smu builds the hierarchical slab with every SM head subtree as the per-head master
 # ot_s81_su_smh (S81-DV p4h regional service slice share), -DSU_SMU in dsfd_sp_su_h
 SMU = ["rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smh.sv"]
+# S81U-SMH2: with OT_SU_VDEFS=-DSU_SMU_T the heads are the hardened regional-cluster composition dsfd_su_t_smh
+# (4 lane quads + root over the hard leaf tops)
+SMU_T = ["rtl/dsrom_sys/s81_dv/su_sm/dsfd_su_t_smh.sv", "rtl/dsrom_sys/s81_dv/su_sm/dsfd_su_t_smhq.sv",
+         "rtl/dsrom_sys/s81_dv/su_sm/dsfd_su_t_smhr.sv", "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv"]
 u32, f32, pack, bf16bits = H.u32, H.f32, H.pack, H.bf16bits
 
 
@@ -474,6 +478,9 @@ def cmd_run(a):
     out = Path(a.out)
     tag = f"{a.shape}_{a.fp}_m{a.mut}_a{a.amut}" + (f"_x{a.xmut}" if a.xmut else "") + ("_h" if a.hier else "") + ("_t" if a.tiles else "") + (f"_lvm{a.lvm}" if a.lvm else "") + ("_smu" if a.smu else "")
     rtl = RTL + (HIER if a.hier else []) + (SMU if a.smu else [])
+    if a.smu and "-DSU_SMU_T" in os.environ.get("OT_SU_VDEFS", "").split():
+        rtl += SMU_T
+        tag += "_smht"
     if a.smu and not a.hier:
         sys.exit("--smu needs --hier (it replaces the hierarchical slab's SM head subtrees)")
     gen = []
