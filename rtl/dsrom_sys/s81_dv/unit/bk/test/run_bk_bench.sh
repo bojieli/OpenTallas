@@ -29,6 +29,7 @@ if [ "$U" = sel ]; then
     rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv \
     rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv \
     rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv \
+    rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv \
     $DV $B/bk/dsdv_bk_g.sv $B/bk/dsdv_bkcol_leaves.sv $B/bk/dsdv_bksel_c.sv $B/bk/dsdv_bk_sel.sv $B/bk/dsdv_bk_col.sv rtl/dsrom_sys/s81_ph/ot_s81ph_col.sv rtl/dsrom_sys/s81_ph/ot_s81ph_col_tile.sv \
     rtl/link/ot_fifo_sram_fwft.sv rtl/dsrom_sys/s81_ph/test/tb_s81ph_sel.sv > "$OUT/build_sel_m$MUT.log" 2>&1 \
     || { echo "DSDV_BK_SEL FAIL mut=$MUT (build, $OUT/build_sel_m$MUT.log)"; exit 1; }
