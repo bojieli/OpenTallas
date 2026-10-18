@@ -12,7 +12,7 @@ set ::env(OT_IO_HOLD_BUDGET) die
 set ::env(OT_BH_LAUNCH_MIN_PS) 25
 set ::env(OT_BH_TILE_HOLD_UNC_PS) 25
 set ::env(OT_BH_ROUTE_RELIEF_PS) 0
-set ::env(OT_REF_GLOB) {*}
+set ::env(OT_REF_GLOB) {u_land.o*}
 set ::env(OT_IO_INTER) {*}
 set ::env(OT_IO_SKEW_INTER) 150
 # Die-context boundary (post-CTS only; OpenROAD 26Q3 crashes on -reference_pin, so it is applied numerically):

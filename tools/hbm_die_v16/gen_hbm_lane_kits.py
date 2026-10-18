@@ -71,7 +71,9 @@ def spec(m, a):
         name=name, top=m, kind='tile', sources=SRC, params={}, clock_port=ck,
         reset_ports=['rs'] if fam.startswith('land') else [],
         outline=dict(w=round(w, 3), h=round(h, 3), exact=True), layer_cap='M5', pins=pins, macros=[], children=[],
-        inter=['*'], refglob='*', io_budget={'in': 0.2, 'out': 0.2},
+        # landing: the die-context IO reference = its block-root registers (the registered output o on ck); the PINFLOP
+        # default picked the ring write pointer on the lane clock (gate 10-18: reference arrival 693 ps -> rs recovery -196)
+        inter=['*'], refglob='u_land.o*' if fam.startswith('land') else '*', io_budget={'in': 0.2, 'out': 0.2},
         recipe=4, hold_budget='die', inhold=False, outhold=False, io_flop_at_pins={'cols': 4, 'allow_none': True},
         keep_pin_regs=True, forwarded_clock=not fam.startswith('land'),
         pin_regs=dict(enable=False, reason='OWNER RULE 19:50 opt-out (as the coordinator-approved S81 relays and Qwen qfwd frames): '
