@@ -464,10 +464,10 @@ module ot_qkd_ahub_die #(
 `ifdef QKD_AHUB_ONE_CK
     wire ck_core = ck;  wire [3:0] ck_zh = {4{ck}};  wire ck_recip = ck;  wire [3:0] ck_pbst = {4{ck}};  wire [3:0] ck_pvlg = {4{ck}};
     wire [3:0] ck_srr = {4{ck}};  wire ck_rxr = ck;  wire ck_ryr = ck;  wire ck_sir = ck;  wire [3:0] ck_pir = {4{ck}};
-    // regional reset: pin synchroniser + 2-stage chain per hard child (core 0, zh 1-4, recip 5, pbst 6-9, pvlg 10-13); every
-    // child releases on the same edge (rst_n + 4), so no child is timed from the port (hp3: rst_n port -> pbst -845 ps)
+    // regional reset: pin synchroniser + 3-stage chain per hard child (core 0, zh 1-4, recip 5, pbst 6-9, pvlg 10-13); every
+    // child releases on the same edge (rst_n + 5), so no child is timed from the port (hp3: rst_n port -> pbst -845 ps)
     wire [13:0] rr;
-    ot_rst_pipe #(.REGIONS(14), .STAGES(2)) u_rp (.clk(ck), .rst_n_in(rst_n), .rst_n(rr));
+    ot_rst_pipe #(.REGIONS(14), .STAGES(3)) u_rp (.clk(ck), .rst_n_in(rst_n), .rst_n(rr));
 `elsif QKD_AHUB_RLY_CLK
     wire [3:0] ck_srr = ck_sr;  wire ck_rxr = ck_rx;  wire ck_ryr = ck_ry;  wire ck_sir = ck_si;  wire [3:0] ck_pir = {4{ck_si}};
 `else
