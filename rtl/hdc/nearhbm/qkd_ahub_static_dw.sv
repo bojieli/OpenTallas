@@ -264,7 +264,8 @@ endmodule
 // nblk(T) is registered (nblk_q) from that held T.  Two documented differences, both calendar violations that now FAULT:
 //   * a start while an LMAX result is leaving (mo_v): the sealed core drops that am word (am valid = mo_v && !start, a
 //     u_io.start -> am pin path across the cluster); here the word leaves and the core faults at the start edge;
-//   * zh_err arrives one edge later (registered at the Z tree outputs in the dw, the child -> fault path was -273 ps).
+//   * zh_err arrives one edge later (registered at the Z tree outputs in the dw, the child -> fault path was -273 ps);
+//   * fault itself is the sealed core's fault one edge later (terms registered per stack first, gate a2b -77 ps).
 // No other latency changes: am / rz / rc / zh issue on the same edges as the sealed core (tb_qkd_ahub_static_dw).
 // ---------------------------------------------------------------------------------------------------------------------
 module qkd_ahub_static_dec #(
@@ -483,24 +484,33 @@ module qkd_ahub_static_core_la #(
         rz_head<=return_head;rz_data<=rc_y;
         if(recip_return)rz[return_head]<=rc_y;
     end
+    // KV-AHUBDW2 10-18 (gate a2b: u_core.fault D -77 ps, the stack checks of the W (ap0/1) and E (ap2/3) faces into one
+    // flop): the fault terms are registered first -- one flop per stack (tq, beside that stack's ap pin flops), one for the
+    // global terms (gq), the start-edge value (sq) -- and fault replays the sealed core's fault update one edge later
+    // (fault here == the sealed core's fault delayed by exactly one edge; hf +1 edge, fault reporting only).
+    reg [3:0] tq;reg gq,sq,start_q,act_q;
     always @(posedge clk or negedge rn[3])
-        if(!rn[3])fault<=0;
-        else if(start)fault<=(T==0)||(T>8192)||(active_layer_parity!=active_layer[0])||mo_v;
-        else if(active)begin
-            if(active_layer_parity!=parity || active_layer!=layer || request_epoch!=epoch || |zh_err || rc_fault || (rc_vo!=recip_return) ||
+        if(!rn[3])begin tq<=0;gq<=0;sq<=0;start_q<=0;act_q<=0;end
+        else begin
+            start_q<=start;act_q<=active;
+            sq<=(T==0)||(T>8192)||(active_layer_parity!=active_layer[0])||mo_v;
+            gq<=active_layer_parity!=parity || active_layer!=layer || request_epoch!=epoch || |zh_err || rc_fault || (rc_vo!=recip_return) ||
                 (m_issue && lm_seen!=16'hffff) ||
                 ((|issue) && (done_seen!=4'hf || zseen[0][63:0]!=zmask || zseen[1][63:0]!=zmask ||
                     zseen[2][63:0]!=zmask || zseen[3][63:0]!=zmask)) ||
                 (first_q && (LMAX_IN_AGE==0 || Z_IN_AGE==0 || LMAX_ISSUE_AGE<1 || Z_START_AGE<1 ||
                     RECIP_ISSUE_AGE<=Z_START_AGE+77 || RECIP_RETURN_AGE<=RECIP_ISSUE_AGE || RZ_PUBLISH_AGE<RECIP_RETURN_AGE+4)) ||
-                (pub_hit && rz_seen!=4'hf))fault<=1;
-            for(integer a=0;a<4;a=a+1)begin
-                if(si_valid[a]!=(lm_slot[a]||z_slot[a]||done_slot[a]))fault<=1;
-                if(si_valid[a] && (si_epoch[16*a+:16]!=epoch || si_layer[6*a+:6]!=layer || si_g[a] ||
+                (pub_hit && rz_seen!=4'hf);
+            for(integer a=0;a<4;a=a+1)
+                tq[a]<=(si_valid[a]!=(lm_slot[a]||z_slot[a]||done_slot[a])) ||
+                    (si_valid[a] && (si_epoch[16*a+:16]!=epoch || si_layer[6*a+:6]!=layer || si_g[a] ||
                     si_type[2*a+:2]!=(lm_slot[a]?0:z_slot[a]?1:2) ||
                     ((lm_slot[a]||z_slot[a]) && si_hh[2*a+:2]!=slot_h[2*a+:2]) ||
-                    (z_slot[a] && si_k[4*a+:4]!=slot_k[4*a+:4])))fault<=1;
-            end
+                    (z_slot[a] && si_k[4*a+:4]!=slot_k[4*a+:4])));
         end
+    always @(posedge clk or negedge rn[3])
+        if(!rn[3])fault<=0;
+        else if(start_q)fault<=sq;
+        else if(act_q && (gq || |tq))fault<=1;
     initial if(Z_LEVEL_GAP<10 || Z_IN_STRIDE<4)$fatal(1,"invalid static AHUB geometry");
 endmodule
