@@ -3966,6 +3966,31 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         tpads=equal_age_pads(S_,m.get('relay_equal_groups',{}),tpads)
         m['tp8_inline_pads'] = dict(irep, pads=len(tpads), pad_relays=sum(tpads.values()),
                                   equal_age_groups=len(m.get('relay_equal_groups',{})))
+    # Q-DIE12 10-18 (landed-regions standard): OT_SPLIT_LAND_CROSS=inst[,inst...] -- every zero-stage 2-endpoint data
+    # bus between a named instance (a hard tile with a deep internal clock tree: d2d_rom 343 / sys_face 220 ps FF) and a
+    # block on a DIFFERENT regional clock root gets one station at its sink end; with OT_SPLIT_FWD_LANES it is a
+    # one-frame forwarded lane = a LANDING (landh0: ring written on the source root, read on the sink root at E), so the
+    # two roots need no phase relation (no die-level re-balancing).  Same-root neighbours stay direct (region-local).
+    _lc = {s_ for s_ in _os.environ.get('OT_SPLIT_LAND_CROSS', '').split(',') if s_}
+    if _lc:
+        _ck_of = {}
+        for _b in m['buses']:
+            if _b[1] == 'clock_trunk':
+                for _e in _b[3][1:]:
+                    _ck_of.setdefault(_e[0], _b[0])
+        _lcx = []
+        for idx, (bid, cl, bits, eps) in buses:
+            if len(eps) != 2 or cl in ('clock_trunk', 'constant', 'reset', 'link_spine', 'link_channel') or bid.endswith('_rdy'):
+                continue
+            (s_, _), (d_, _) = eps
+            if not ({s_, d_} & _lc) or (idx in plans and plans[idx]['frames']) or bid in tpads:
+                continue
+            if _ck_of.get(s_) is None or _ck_of.get(d_) is None or _ck_of.get(s_) == _ck_of.get(d_):
+                continue
+            tpads[bid] = 1
+            _lcx.append(dict(bid=bid, cl=cl, bits=bits, src=s_, dst=d_, src_ck=_ck_of[s_], dst_ck=_ck_of[d_]))
+        m['land_cross'] = dict(insts=sorted(_lc), buses=len(_lcx), bits=sum(r_['bits'] for r_ in _lcx), rows=_lcx)
+        print(f'LAND_CROSS {sorted(_lc)}: {len(_lcx)} cross-root buses / {sum(r_["bits"] for r_ in _lcx)} bits get a landing station', flush=True)
     # Reconcile the allocator's mutable occupancy with the exact frames that
     # will be emitted after repair/rip-up/jog/pre-pad trimming. Every inline
     # arrival pad must see ALL surviving frames, not a stale search grid.
