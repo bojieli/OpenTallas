@@ -978,6 +978,24 @@ RTL.update(qkd_hslice_dn=SLICE_DIE_FILE)
 # composition qkd_ectl3_kiss_s (master qkd_ectlk), the D2D end's static faces as identity die ports, the V port's
 # measured RT 9 (KVJ-F, abutted landing seg); the credit write / landing elements are removed by kv_static_die.inject
 import kv_static_die as KSD  # noqa: E402
+
+
+def _astk_engine(f):
+    """KV-PLAN-ECTL: logical engine (astk port index) run by ECTL frame f; identity unless OT_KV_ECTL_PAIR=1, which needs
+    the static die (the legacy landing strip's rq<e> / rs<e> pins are engine-indexed hard faces)"""
+    if not KSD.ectl_pair():
+        return f
+    if not KSD.ON:
+        raise SystemExit('OT_KV_ECTL_PAIR=1 needs OT_KV_STATIC_DIE=1 (the K links are the static landing groups)')
+    return KSD.frame_engine(f)
+
+
+def _astk_frame(e):
+    """the ECTL frame that runs logical engine e (inverse of _astk_engine)"""
+    if not KSD.ectl_pair():
+        return e
+    _astk_engine(0)
+    return KSD.ectl_frame(e)
 KSD.D2D_LISTS = (D2DS_SVC, SEQST_RX)
 if KSD.ON:
     SPLIT_BINDINGS.update(KSD.bindings())
@@ -1988,8 +2006,9 @@ def _buses(m, T, r):
         add((f'am_{st}', 'spine_local', 36, [('ahub', f'am_{st}'), (f'astk_{st}', 'am')]))
         for e in range(r):
             c_ = f'ectl_{st}_{e}'
-            add((f'eq_{st}_{e}', 'stack_local', ENG_IN, [(f'astk_{st}', f'e{e}o'), (c_, 'si')]))
-            add((f'el_{st}_{e}', 'stack_local', ENG_OUT, [(c_, 'so'), (f'astk_{st}', f'e{e}i')]))
+            ae = _astk_engine(e)          # OT_KV_ECTL_PAIR: frame e runs logical engine ae (astk port ae, strap sq = ae)
+            add((f'eq_{st}_{e}', 'stack_local', ENG_IN, [(f'astk_{st}', f'e{ae}o'), (c_, 'si')]))
+            add((f'el_{st}_{e}', 'stack_local', ENG_OUT, [(c_, 'so'), (f'astk_{st}', f'e{ae}i')]))
             if m['geo'].get('split') and V143['on']:
                 _v143_buses(add, st, e, c_)
             else:
@@ -2001,7 +2020,7 @@ def _buses(m, T, r):
                 if not (m['geo'].get('split') and V143['on']):
                     add((f'te_{st}_{e}_{h}', 'stack_local', T_E, [(c_, f'e{h}'), (hd_, 'e')]))
                     add((f'ts_{st}_{e}_{h}', 'stack_local', T_RET, [(hd_, 's'), (c_, f's{h}')]))
-                add((f'nb_{st}_{e}_{h}', 'stack_local', HEAD_NB, [(hd_, 'nb'), (f'astk_{st}', f'f{e}{h}')]))
+                add((f'nb_{st}_{e}_{h}', 'stack_local', HEAD_NB, [(hd_, 'nb'), (f'astk_{st}', f'f{ae}{h}')]))
             add((f'krq_{st}_{e}', 'spine_local', KS.W_RQ if split else 16, [(c_, 'rq'), (f'land_{st}', f'rq{e}')]))
             add((f'krs_{st}_{e}', 'spine_local', 1 + 1024, [(f'land_{st}', f'rs{e}'), (c_, 'rs')]))
         add((f'kvn_{st}', 'kvn', 1024 + 2 + 14 + 6 + 1 + 1, [('seq', f'kvn_{st}'), (f'land_{st}', 'kvn')]))
@@ -3355,7 +3374,7 @@ def masters(m, k=1, port_bits=None):
                 # overlapping pin shapes, PA DRT-0073); every word leaves on the long face toward its peer
                 face = 'E' if dxp > 0 else 'W'
             if mst in ('qkd_astk', 'qkd_astk_n') and p[0] in 'ef' and p[1].isdigit():
-                face = 'W' if int(p[1]) < 4 else 'E'
+                face = 'W' if _astk_frame(int(p[1])) < 4 else 'E'     # the face toward the frame running engine p[1]
             layer = 'M4' if face in ('E', 'W') else 'M5'
             # the control tile's horizontal pins all on M4: with M4 + M6 its legal origins sit on an 8.64-um lattice
             # (lcm 48 / 64 / 270 nm) that the 2.16-um tile gaps cannot absorb (die_kv10: no legal origin for ectl_WS_3)
@@ -3382,7 +3401,7 @@ def masters(m, k=1, port_bits=None):
                 sp = list(mm.ports[p])
                 sp[4] = pos + span / 2
                 if mst in ('qkd_astk', 'qkd_astk_n') and p[0] in 'ef' and p[1].isdigit():
-                    e = int(p[1])
+                    e = _astk_frame(int(p[1]))       # level with the frame that runs this engine (OT_KV_ECTL_PAIR)
                     t_ = 'c' if p[0] == 'e' else f'h{p[2]}'
                     sp[4] = (e % 4) * (RENG[1] + GY) + TILE_Y[t_] + (ECTL[1] if t_ == 'c' else HEAD[1]) / 2   # level with its tile
                     if t_ == 'c':            # facing the control tile's si (below) / so (above)
