@@ -390,7 +390,7 @@ def main():
             out = result.stdout
             if result.returncode:
                 raise SystemExit(f"{corner}: clock insertion replay failed ({result.returncode})\n{out[-1500:]}\n{result.stderr[-1500:]}")
-        b, al, cb, cal, craw = [], [], [], [], {}
+        b, al, cb, cal, craw, sb, sal = [], [], [], [], {}, [], []
         refs = child_refs(sroot, mlibs, corner) if sroot else {}
         for m in re.finditer(r"^OT_CK (\d) (\S+)(?: (\S+))?[ \t]*$", out, re.M):
             x = float(m[2])
@@ -401,6 +401,10 @@ def main():
                 r = refs.get(m[3])
                 craw.setdefault(m[3], [r[1] if r else "no reference: raw pin arrival", r[0] if r else 0.0, 0])[2] += 1
                 x = x + (r[0] if r else 0.0)
+            else:                            # a soft (glue) register of this root
+                sal.append(x)
+                if m[1] == "1":
+                    sb.append(x)
             cal.append(x)
             if m[1] == "1":
                 cb.append(x)
@@ -412,7 +416,8 @@ def main():
         if craw:
             rec[corner]["child_flop"] = dict(boundary=stats(cb), all=stats(cal),
                                              refs={k: dict(basis=v[0], ref_ps=round(v[1], 1), pins=v[2])
-                                                   for k, v in sorted(craw.items())})
+                                                   for k, v in sorted(craw.items())},
+                                             soft=dict(boundary=stats(sb), all=stats(sal)))   # PL-GATE: per-root glue
         if not al and corner == "tt" and not need_tt:
             continue                     # TT is informational for an SS-corner route
         if not al:
