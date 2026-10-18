@@ -40,7 +40,19 @@ SPEC (JSON; paths relative to the repo root):
   static         [ports / nets] identity straps: never landed (case-analysed), constant in the bench (tb_static {p: v})
   D, E           ring depth / read offset (default 4 / 2: as Q-CLUSTER-LANDALL)
   reach_um       reset-run hop reach (default 405)         residual_ps: inter-region die residual on the 1-bit reset hops (60)
-  bench          {cycles, reset_cycles, sim: iverilog|verilator}
+  bench          {cycles, reset_cycles, sim: iverilog|verilator, drive: {port: verilog expr}}   drive: the lockstep
+                 stimulus of that input each cycle (default $urandom; the expr may use the tb's `cyc`): a valid
+                 configuration so the mutants are observable.  LP_VFLAGS (env) adds verilator flags in the bench.
+
+PRE-SCHEDULED CROSSINGS (ot_pl_hop, PL-TP192 10-18).  A flat parent whose children talk BOTH ways across a seam (a
+systolic chain: insertion down, readout up) is a cross-region loop: no offset solution.  Its own static calendar can
+instead carry the crossing latency: the flat parent puts an ot_pl_hop #(.W, .N(E+1)) (a plain N-stage delay, single net
+in / single net out) on every seam net and its calendar is designed with those edges.  lp.py resolves each hop's
+regions (source = the region driving its input, destination = the region of the non-hop readers of its output, through
+assigns and further hops): a hop whose two sides differ is ABSORBED -- removed and replaced by the landing of its input
+into the destination region (+ max(0, N - (E+1)) pad stages; N < E+1 leaves the rest as an offset) -- so the landed
+parent equals the flat parent edge for edge and the loop needs no offsets.  A hop with both sides in one region stays a
+plain child.  Hops need no region pattern.  The record lists them under "prescheduled_hops".
 """
 from __future__ import annotations
 
@@ -60,7 +72,9 @@ LIB_RTL = "rtl/common/landed_parent/ot_pl_land.sv"
 KW = {"module", "endmodule", "input", "output", "inout", "wire", "reg", "logic", "assign", "always", "always_ff",
       "always_comb", "initial", "generate", "endgenerate", "parameter", "localparam", "if", "else", "for", "begin", "end",
       "case", "endcase", "function", "endfunction", "genvar", "integer", "signed", "unsigned", "default_nettype"}
+HOP = "ot_pl_hop"
 LIB_PORTS = {"ot_pl_land_w": {"ck": "in", "rsi": "in", "i": "in", "bank": "out", "epo": "out", "vld": "out"},
+             HOP: {"ck": "in", "i": "in", "o": "out"},
              "ot_pl_land_r": {"ck": "in", "rsi": "in", "bank": "in", "epo": "in", "vld": "in", "o": "out"},
              "ot_pl_pad": {"ck": "in", "d": "in", "q": "out"}}
 
@@ -265,7 +279,9 @@ class Parent:
         self.cports = {}
         for ins in self.insts:
             m = ins["module"]
-            if m not in self.cports:
+            if m == HOP:
+                self.cports[m] = dict(LIB_PORTS[HOP])
+            elif m not in self.cports:
                 cm = parse_module(csrc, m)
                 self.cports[m] = {p["name"]: p["dir"] for p in cm["ports"]}
         self.ports = {p["name"]: p for p in self.mod["ports"]}
@@ -276,6 +292,9 @@ class Parent:
         self.region = {}
         for ins in self.insts:
             hit = [r["name"] for r in spec["regions"] if any(fnmatch.fnmatchcase(ins["inst"], p) for p in r["insts"])]
+            if ins["module"] == HOP and not hit:
+                self.region[ins["inst"]] = None          # resolved in plan() (resolve_hops)
+                continue
             if len(hit) != 1:
                 raise SystemExit(f"instance {ins['inst']} matches regions {hit}: every child needs exactly one region")
             self.region[ins["inst"]] = hit[0]
@@ -319,6 +338,8 @@ class Parent:
                     continue
                 if pin in (self.S.get("clock_pins") or []) or pin in (self.S.get("reset_pins") or []):
                     continue
+                if ins["module"] == HOP and pin == "ck":
+                    continue
                 for n in idents(ex) - excl:
                     if n in self.env:
                         continue
@@ -343,8 +364,62 @@ class Parent:
             raise SystemExit(f"output port {p} is driven from regions {sorted(regs)}: split the port")
         return regs.pop() if regs else self.regions[0]
 
+    def hop_n(self, ins):
+        m = re.search(r"\.N\s*\(\s*(\d+)\s*\)", ins["params"] or "")
+        return int(m.group(1)) if m else self.A
+
+    def resolve_hops(self, drv, rd):
+        """region of every ot_pl_hop; self.absorbed {inst: dict(src, dst, net_in, net_out, N)}"""
+        hops = {i["inst"]: i for i in self.insts if i["module"] == HOP}
+        self.absorbed = {}
+        if not hops:
+            return
+        for h, ins in hops.items():
+            for pin in ("i", "o"):
+                if not re.fullmatch(r"\w+", ins["conns"].get(pin, "").strip()):
+                    raise SystemExit(f"hop {h}: .{pin} must be one plain net (declare a wire and assign it)")
+        derived = {}                                   # net -> nets assigned from it (transitively)
+        for _ in range(len(self.assigns) + 1):
+            for lhs, rhs in self.assigns:
+                for n in rhs:
+                    derived.setdefault(n, set()).update(lhs)
+                    for m in list(derived.get(n, ())):
+                        derived[n] |= derived.get(m, set())
+        def readers(net):
+            nets = {net} | derived.get(net, set())
+            return {i for n, i, _ in rd if n in nets}
+        for _ in range(len(hops) + 2):
+            for h, ins in hops.items():
+                if self.region[h] is not None and h in self.absorbed:
+                    continue
+                ni, no = ins["conns"]["i"].strip(), ins["conns"]["o"].strip()
+                ds = drv.get(ni, set())
+                sr = {self.region[d] if not d.startswith("port:") else self.node_region(d, drv, rd, {}) for d in ds}
+                if None in sr or not ds:
+                    continue
+                if len(sr) > 1:
+                    raise SystemExit(f"hop {h}: input {ni} driven from regions {sorted(sr)}")
+                rs = readers(no)
+                plain = {self.region[i] for i in rs if hops.get(i) is None}
+                via = {self.region[i] for i in rs if i in hops}
+                if len(plain) > 1:
+                    raise SystemExit(f"hop {h}: output {no} read in regions {sorted(plain)}: one hop per destination")
+                if not plain and (not via or None in via):
+                    continue
+                dst = plain.pop() if plain else via.pop()
+                src = sr.pop()
+                self.region[h] = dst
+                if src != dst:
+                    self.absorbed[h] = dict(src=src, dst=dst, net_in=ni, net_out=no, N=self.hop_n(ins))
+                else:
+                    self.absorbed.pop(h, None)
+        miss = [h for h in hops if self.region[h] is None]
+        if miss:
+            raise SystemExit(f"hops with unresolved regions: {miss}")
+
     def plan(self, mut_unland=False):
         drv, rd, out_drv = self.graph()
+        self.resolve_hops(drv, rd)
         nreg = {}
         for n, ds in drv.items():
             for d in ds:
@@ -367,8 +442,11 @@ class Parent:
                                      src_nodes=sorted(ds), width=eval_width(self.rng(n), self.env), readers=[])
             if landed:
                 lands[(n, r)]["readers"].append(f"{inst}.{pin}")
+            add = self.A if landed else 0
+            if landed and inst in self.absorbed:
+                add = max(0, self.A - self.absorbed[inst]["N"])
             for d in ds:
-                edges.append((d, inst, n, self.A if landed else 0, landed, pin))
+                edges.append((d, inst, n, add, landed, pin))
         for p, ds in out_drv.items():
             for d in ds:
                 edges.append((d, f"port:{p}", p, 0, False, None))
@@ -407,7 +485,8 @@ class Parent:
         lst = sorted(lands.values(), key=lambda L: int(L["name"]))
         if mut_unland and lst:
             lst[0]["unlanded_mutant"] = True
-        return dict(t=t, edges=edges, lands=lst, landkey=lands, pads=pads, nreg=nreg, drv=drv, rd=rd, out_drv=out_drv)
+        return dict(t=t, edges=edges, lands=lst, landkey=lands, pads=pads, nreg=nreg, drv=drv, rd=rd, out_drv=out_drv,
+                    absorbed=dict(self.absorbed))
 
     # ---------------------------------------------------------------------------------------------------- emitters
     def reset_tree(self):
@@ -493,6 +572,16 @@ class Parent:
             w(f"    wire {rng or ''} {q};  ot_pl_pad #(.W({width_text(rng)}), .N({kk})) u_lpp_{j} (.ck(ck_{self.region[inst]}), "
               f".d({src}), .q({q}));   // align {inst}: +{k}")
             sub[(inst, net)] = q
+        # absorbed pre-scheduled hops: the landing (+ any surplus stages) replaces the flat parent's N-edge delay
+        for h, a in sorted(P["absorbed"].items()):
+            src = sub.get((h, a["net_in"]), a["net_in"])
+            k = a["N"] - self.A
+            if k > 0:
+                rng = self.rng(a["net_in"])
+                w(f"    ot_pl_pad #(.W({width_text(rng)}), .N({k})) u_lph_{h} (.ck(ck_{a['dst']}), .d({src}), .q({a['net_out']}));"
+                  f"   // hop {h}: N {a['N']} = landing {self.A} + {k}")
+            else:
+                w(f"    assign {a['net_out']} = {src};   // hop {h} ({a['src']} -> {a['dst']}, N {a['N']}) = its landing")
         # child resets
         mc = self.mut_child(P)
         rsub = {}
@@ -508,9 +597,11 @@ class Parent:
         w("    // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)")
         for ins in self.insts:
             i, r = ins["inst"], self.region[ins["inst"]]
+            if i in P["absorbed"]:
+                continue
             cs = []
             for pin, ex in ins["conns"].items():
-                if pin in (S.get("clock_pins") or []) and idents(ex) & self.ck:
+                if (pin in (S.get("clock_pins") or []) or (ins["module"] == HOP and pin == "ck")) and idents(ex) & self.ck:
                     ex = f"ck_{r}"
                 elif i in rsub and pin in (S.get("reset_pins") or []) and ex.strip() == self.rst:
                     ex = rsub[i]
@@ -602,6 +693,10 @@ class Parent:
                            sdc=f"set_multicycle_path -setup {self.E} / -hold {self.D - 1} -from u_lpl_{L['name']}_w.* -to u_lpl_{L['name']}_r.*")
                       for L in P["lands"]],
             pads=[dict(net=n, reader=i, stages=k) for (n, i), k in sorted(P["pads"].items())],
+            prescheduled_hops=[dict(inst=h, **a, landing=next((L["name"] for L in P["lands"] if L["net"] == a["net_in"]
+                                                               and L["dst_region"] == a["dst"]), None),
+                                    note="the flat parent's calendar already carries these N edges")
+                               for h, a in sorted(P["absorbed"].items())],
             reset=dict(port=self.rst, root_region=rt["reset_region"], depth=rt["RB"], hops=rt["hops"],
                        note="flat reference == landed parent with its reset delayed by depth; child c's reset run is "
                             "depth + t(c)"),
@@ -635,6 +730,7 @@ class Parent:
         maxoff = max([0] + [t.get(f"port:{p['name']}", 0) for p in outs] + [t.get(f"port:{p['name']}", 0) for p in ins])
         warm = rcy + RB + maxoff + self.A + 8
         tbs = S.get("tb_static") or {}
+        drive = (S.get("bench") or {}).get("drive") or {}
         L = ["`timescale 1ns/1ps", f"// GENERATED by tools/landed_parent/lp.py: lockstep {S['top']} (flat, reset delayed {RB}) vs "
              f"{top_lp}; every input presented off_in edges later, every output compared off_out edges later.",
              f"module tb_{top_lp};", "    parameter integer MUT = 0;", "    reg clk = 1'b0;  always #0.5 clk = ~clk;",
@@ -659,7 +755,7 @@ class Parent:
             L.append(f"    always @(posedge clk) begin : g_dlo_{n} integer j; dlo_{n}[0] <= fo_{n}; "
                      f"for (j = 1; j <= {off}; j = j + 1) dlo_{n}[j] <= dlo_{n}[j - 1]; end")
         ck = sorted(self.ck)
-        fc = [f".{c}(clk)" for c in ck] + [f".{self.rst}(rst_f)"] + [f".{p['name']}(fi_{p['name']})" for p in ins] + \
+        fc = [(f".{c}({{{W[c]}{{clk}}}})" if W.get(c, 1) > 1 else f".{c}(clk)") for c in ck] + [f".{self.rst}(rst_f)"] + [f".{p['name']}(fi_{p['name']})" for p in ins] + \
              [f".{p['name']}(fo_{p['name']})" for p in outs]
         lc = [f".ck_{r}(clk)" for r in self.regions] + [f".{self.rst}(rst)"] + [f".{p['name']}(li_{p['name']})" for p in ins] + \
              [f".{p['name']}(lo_{p['name']})" for p in outs]
@@ -673,13 +769,17 @@ class Parent:
         for p in ins:
             n = p["name"]
             v = tbs.get(n)
+            if v is None and n in drive:
+                v = "0"
             L.append(f"        fi_{n} = {v if v is not None else '{' + ','.join(['$urandom'] * ((W[n] + 31) // 32)) + '}'};")
         L.append(f"        for (cyc = 0; cyc < {cyc}; cyc = cyc + 1) begin")
         L.append("            @(negedge clk);")
         L.append(f"            if (cyc == {rcy}) rst = {'1' if act_low else '0'};")
         for p in ins:
             n = p["name"]
-            if n not in self.static:
+            if n in drive:
+                L.append(f"            fi_{n} = {drive[n]};")
+            elif n not in self.static:
                 L.append(f"            fi_{n} = {{{','.join(['$urandom'] * ((W[n] + 31) // 32))}}};")
         L.append(f"            if (cyc > {warm}) begin")
         for p in outs:
@@ -715,7 +815,7 @@ python3 tools/landed_parent/lp.py audit {self.S['_spec_path']} --rtl "$OUT/unlan
   && {{ echo "AUDIT-UNLAND PASSED (should FAIL)"; rc=1; }} || echo "AUDIT-UNLAND FAIL (expected)"
 for m in {" ".join(map(str, muts))}; do
   if [ "$SIM" = verilator ]; then
-    verilator --binary -j 8 -Wno-fatal --top-module tb_{top_lp} -GMUT=$m {defs} $SRCS -Mdir "$OUT/obj$m" > "$OUT/build_$m.log" 2>&1 \\
+    verilator --binary -j 8 -Wno-fatal ${{LP_VFLAGS:-}} --top-module tb_{top_lp} -GMUT=$m {defs} $SRCS -Mdir "$OUT/obj$m" > "$OUT/build_$m.log" 2>&1 \\
       && "$OUT/obj$m/Vtb_{top_lp}" > "$OUT/mut$m.log" 2>&1
   else
     iverilog -g2012 -o "$OUT/sim$m" -s tb_{top_lp} -Ptb_{top_lp}.MUT=$m {defs} $SRCS > "$OUT/build_$m.log" 2>&1 \\
@@ -836,6 +936,18 @@ endmodule
 """
 
 
+SELFTEST_HOP_TOP = """module lph_top #(parameter integer W = 8) (input wire clk, input wire rst_n, input wire [W-1:0] x,
+    output wire [W-1:0] z);
+    wire [W-1:0] y0, y1, h0, h1;
+    lpt_leaf #(.W(W)) u0 (.clk(clk), .rst_n(rst_n), .a(x), .b(h1), .y(y0));
+    ot_pl_hop #(.W(W), .N(3)) u_h0 (.ck(clk), .i(y0), .o(h0));
+    lpt_leaf #(.W(W)) u1 (.clk(clk), .rst_n(rst_n), .a(h0), .b(h0), .y(y1));
+    ot_pl_hop #(.W(W), .N(4)) u_h1 (.ck(clk), .i(y1), .o(h1));
+    assign z = y0;
+endmodule
+"""
+
+
 def selftest():
     d = Path(tempfile.mkdtemp(prefix="lp_selftest_", dir=ROOT / "tools/landed_parent"))
     try:
@@ -858,6 +970,18 @@ def selftest():
         gen(S, mut_unland=True, rtl_out=d / "unland.sv")
         A = audit(S, (d / "unland.sv").read_text())
         assert not A["ok"] and any("UNLANDED" in f for f in A["fails"]), A
+        # pre-scheduled crossings: a two-region LOOP through ot_pl_hop (N 3 = landing, N 4 = landing + 1 pad stage)
+        (d / "hop.sv").write_text(SELFTEST_HOP_TOP)
+        S2 = dict(S, top="lph_top", sources=[f"{rel}/hop.sv"], child_sources=[f"{rel}/child.sv", LIB_RTL],
+                  regions=[dict(name="ra", insts=["u0"], centre=[0, 0]), dict(name="rb", insts=["u1"], centre=[900, 0])],
+                  _spec_path=f"{rel}/spec2.json")
+        (d / "spec2.json").write_text(json.dumps(S2))
+        P2 = gen(S2)
+        assert set(P2["absorbed"]) == {"u_h0", "u_h1"} and all(v == 0 for v in P2["t"].values()), (P2["absorbed"], P2["t"])
+        r2 = json.loads((d / "lph_top_lp_record.json").read_text())
+        assert r2["audit"]["ok"] and len(r2["prescheduled_hops"]) == 2, r2["audit"]
+        txt = (d / "lph_top_lp.sv").read_text()
+        assert "ot_pl_hop" not in txt and "u_lph_u_h1" in txt
         print("SELFTEST PASS (offsets", {k: v for k, v in t.items() if not k.startswith("port:")}, "; unland mutant audit FAIL:",
               A["fails"][0], ")")
     finally:

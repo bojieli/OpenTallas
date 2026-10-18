@@ -113,3 +113,22 @@ module ot_pl_pad #(
     end endgenerate
 endmodule
 `default_nettype wire
+
+`default_nettype none
+// ot_pl_hop (PL-TP192 10-18): a PRE-SCHEDULED crossing in a FLAT parent -- an N-stage plain delay (N = E + 1 = 3 by
+// default) on a net that will cross a region seam.  The flat parent's static calendar is designed with these N edges
+// (a systolic chain talking both ways across a seam is a loop: lp.py cannot offset it).  tools/landed_parent/lp.py
+// removes every hop whose input and output regions differ and puts the landing (ot_pl_land_w -> ot_pl_land_r, +E+1
+// edges; + N-E-1 ot_pl_pad stages) in its place, so the landed parent equals the flat parent edge for edge.  A hop
+// with both sides in one region stays as this plain delay.  Never instantiated in a landed (generated) parent.
+module ot_pl_hop #(
+    parameter integer W = 1,
+    parameter integer N = 3
+) (
+    input  wire         ck,
+    input  wire [W-1:0] i,
+    output wire [W-1:0] o
+);
+    ot_pl_pad #(.W(W), .N(N)) u_d (.ck(ck), .d(i), .q(o));
+endmodule
+`default_nettype wire
