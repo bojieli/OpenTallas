@@ -1,0 +1,27 @@
+{
+ "cell": "ot_qkh_lane8",
+ "view": "physical/ref_tile/ot_qkh_lane8_m5/views/ot_qkh_lane8",
+ "lib_cell": "ot_qkh_lane8",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 180.9,
+ "spread_ps": 15.1,
+ "outputs": 98,
+ "inputs": 236,
+ "launch_ps": 168.5,
+ "launch_pin": "kp[31]",
+ "capture_ps": 140.8,
+ "capture_pin": "rst_n",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 14.7,
+ "ff_launch_min_ps": 81.6,
+ "ff_hold_need_ps": -44.8,
+ "pass": true,
+ "fail_why": "",
+ "_audit_tool_commit": "1384dced3"
+}
