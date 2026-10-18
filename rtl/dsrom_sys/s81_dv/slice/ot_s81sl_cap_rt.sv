@@ -26,7 +26,7 @@
 //     copies per slot group (la_* / lb_*: slot[2:0] + h for ev + h for es, (* keep *), <= ~128 loads a copy) loaded at
 //     the same edge as the word they decode -- n6's output register stage moves here (u_n6 RST 0 + n6_* flops = RST 1)
 //     so the A copies load from n6's calendar read like n6_t; the B copies load from norm(st_q) like re_t.  The store
-//     (cnt / ev / key / es) lives in the 8 slot groups; a lookup is a group-local 8:1 (x 32:1 for ev / es) on the
+//     (cnt / ev / key / es) lives in the 8 slot groups (ot_s81sl_cap_grp, keep_hierarchy); a lookup is a group-local 8:1 (x 32:1 for ev / es) on the
 //     group's copies and an 8:1 across groups.  Both adders (u_add, u_n6) are ot_s81_fadd_pipe (bit-identical,
 //     valid-only reset, one add in stage 3).  Same values at the same edges: cap_model.py unchanged.
 // MUT (bench mutants only): 1 wrong sibling association (h = parent of the parent), 3 leaf mapping off by one.
@@ -211,49 +211,17 @@ module ot_s81sl_cap_rt #(
         fa_es <= (do_ins && a_ss && s_h == na_h) ? s_side : ga_es[la_gs];
         fb_es <= (do_ins && b_ss && s_h == nb_h) ? s_side : gb_es[lb_gs];
     end
+    wire [4:0]  na_hn = hof(n6r_t), nb_hn = hof(re_tn);
+    wire        rs_same = r_slot == s_slot;
     genvar gs;
     generate for (gs = 0; gs < 8; gs = gs + 1) begin : g_st
-        reg [5:0]  cnt_g [0:7];
-        reg [31:0] ev_g [0:7];
-        reg [23:0] key_g [0:7];
-        reg [31:0] es_g [0:7];
-        reg        any_q;
-        integer q;
-        wire s_in = s_slot[5:3] == gs, r_in = r_slot[5:3] == gs;
-        // this group's copies of the incoming words' slot[2:0] / h (one for ev, one for es), loaded with na_* / nb_*
-        (* keep = "true" *) reg [2:0] la_sl, lb_sl;
-        (* keep = "true" *) reg [4:0] la_hv, la_hs, lb_hv, lb_hs;
-        always @(posedge clk) begin
-            la_sl <= na_sln[2:0]; la_hv <= hof(n6r_t); la_hs <= hof(n6r_t);
-            lb_sl <= nb_sln[2:0]; lb_hv <= hof(re_tn); lb_hs <= hof(re_tn);
-        end
-        assign ga_cn[gs] = cnt_g[la_sl]; assign ga_key[gs] = key_g[la_sl];
-        assign ga_ev[gs] = ev_g[la_sl][la_hv]; assign ga_es[gs] = es_g[la_sl][la_hs];
-        assign gb_cn[gs] = cnt_g[lb_sl]; assign gb_key[gs] = key_g[lb_sl];
-        assign gb_ev[gs] = ev_g[lb_sl][lb_hv]; assign gb_es[gs] = es_g[lb_sl][lb_hs];
-        always @(posedge clk)
-            if (do_ins && s_in) begin
-                es_g[s_slot[2:0]][s_h] <= s_side;
-                if (!slot_busy) key_g[s_slot[2:0]] <= s_key;
-            end
-        always @(posedge clk or negedge rs_s[2 * gs + 1])
-            if (!rs_s[2 * gs + 1]) begin
-                for (q = 0; q < 8; q = q + 1) ev_g[q] <= 32'd0;
-            end else begin
-                if (do_ins && s_in) ev_g[s_slot[2:0]][s_h] <= 1'b1;
-                if (do_mrg && s_in) ev_g[s_slot[2:0]][s_h] <= 1'b0;
-            end
-        always @(posedge clk or negedge rs_s[2 * gs])
-            if (!rs_s[2 * gs]) begin
-                for (q = 0; q < 8; q = q + 1) cnt_g[q] <= 6'd0;
-                any_q <= 1'b0;
-            end else begin
-                if (do_rel && r_in && !((do_ins || do_mrg) && r_slot == s_slot)) cnt_g[r_slot[2:0]] <= cnt_r;
-                if ((do_ins || do_mrg) && s_in) cnt_g[s_slot[2:0]] <= cnt_s;   // (B complete on the same slot folded in)
-                any_q <= 1'b0;
-                for (q = 0; q < 8; q = q + 1) if (cnt_g[q] != 6'd0) any_q <= 1'b1;
-            end
-        assign any_g[gs] = any_q;
+        ot_s81sl_cap_grp u_g (.clk(clk), .rs_e(rs_s[2 * gs + 1]), .rs_c(rs_s[2 * gs]),
+            .la_d(na_sln[2:0]), .ha_d(na_hn), .lb_d(nb_sln[2:0]), .hb_d(nb_hn),
+            .s_in(s_slot[5:3] == gs), .r_in(r_slot[5:3] == gs), .do_ins(do_ins), .do_mrg(do_mrg), .do_rel(do_rel),
+            .rs_same(rs_same), .s_sl(s_slot[2:0]), .r_sl(r_slot[2:0]), .s_h(s_h), .s_side(s_side), .s_key(s_key),
+            .slot_busy(slot_busy), .cnt_s(cnt_s), .cnt_r(cnt_r),
+            .a_cn(ga_cn[gs]), .a_key(ga_key[gs]), .a_ev(ga_ev[gs]), .a_es(ga_es[gs]),
+            .b_cn(gb_cn[gs]), .b_key(gb_key[gs]), .b_ev(gb_ev[gs]), .b_es(gb_es[gs]), .any_o(any_g[gs]));
     end endgenerate
     // SRAM: pins driven by flops; insert writes at the next edge, a merge reads at the next edge (read-old; an entry
     // inserted at decision c is read at the earliest by decision c + 1, i.e. after its write: no bypass)
@@ -380,5 +348,85 @@ module ot_s81sl_cap_rt #(
         if (!rs_c) fcause <= 16'd0;
         else fcause <= fcause | {5'd0, f11, f10, |f9, f8, f7, f6, f5, n6_f, 1'b0, lf_q, 1'b0};
 `endif
+endmodule
+// ---------------------------------------------------------------------------------------------------------------------
+// ot_s81sl_cap_grp (S81U-CAP5): one slot group (8 slots) of the cap_rt pairing store -- cnt / ev (reset) + key / es --
+// with its OWN registered copies of the incoming words' slot[2:0] / h (A from n6, B from the re-entry) and its local
+// lookups.  keep_hierarchy: the CAP5 first gate showed yosys (share / opt) re-pointing all 8 groups' read muxes onto
+// ONE group's copy (g_st[7].la_sl[0] 3,803 loads) when the groups were a flat generate; a hard module boundary keeps
+// each group's selects local (<= ~130 loads a copy).
+// ---------------------------------------------------------------------------------------------------------------------
+(* keep_hierarchy *)
+module ot_s81sl_cap_grp (
+    input  wire        clk,
+    input  wire        rs_e,
+    input  wire        rs_c,
+    input  wire [2:0]  la_d,
+    input  wire [4:0]  ha_d,
+    input  wire [2:0]  lb_d,
+    input  wire [4:0]  hb_d,
+    input  wire        s_in,
+    input  wire        r_in,
+    input  wire        do_ins,
+    input  wire        do_mrg,
+    input  wire        do_rel,
+    input  wire        rs_same,
+    input  wire [2:0]  s_sl,
+    input  wire [2:0]  r_sl,
+    input  wire [4:0]  s_h,
+    input  wire        s_side,
+    input  wire [23:0] s_key,
+    input  wire        slot_busy,
+    input  wire [5:0]  cnt_s,
+    input  wire [5:0]  cnt_r,
+    output wire [5:0]  a_cn,
+    output wire [23:0] a_key,
+    output wire        a_ev,
+    output wire        a_es,
+    output wire [5:0]  b_cn,
+    output wire [23:0] b_key,
+    output wire        b_ev,
+    output wire        b_es,
+    output wire        any_o
+);
+    reg [5:0]  cnt_g [0:7];
+    reg [31:0] ev_g [0:7];
+    reg [23:0] key_g [0:7];
+    reg [31:0] es_g [0:7];
+    reg        any_q;
+    integer q;
+    (* keep = "true" *) reg [2:0] la_sl, lb_sl;
+    (* keep = "true" *) reg [4:0] la_hv, la_hs, lb_hv, lb_hs;
+    always @(posedge clk) begin
+        la_sl <= la_d; la_hv <= ha_d; la_hs <= ha_d;
+        lb_sl <= lb_d; lb_hv <= hb_d; lb_hs <= hb_d;
+    end
+    assign a_cn = cnt_g[la_sl]; assign a_key = key_g[la_sl];
+    assign a_ev = ev_g[la_sl][la_hv]; assign a_es = es_g[la_sl][la_hs];
+    assign b_cn = cnt_g[lb_sl]; assign b_key = key_g[lb_sl];
+    assign b_ev = ev_g[lb_sl][lb_hv]; assign b_es = es_g[lb_sl][lb_hs];
+    always @(posedge clk)
+        if (do_ins && s_in) begin
+            es_g[s_sl][s_h] <= s_side;
+            if (!slot_busy) key_g[s_sl] <= s_key;
+        end
+    always @(posedge clk or negedge rs_e)
+        if (!rs_e) begin
+            for (q = 0; q < 8; q = q + 1) ev_g[q] <= 32'd0;
+        end else begin
+            if (do_ins && s_in) ev_g[s_sl][s_h] <= 1'b1;
+            if (do_mrg && s_in) ev_g[s_sl][s_h] <= 1'b0;
+        end
+    always @(posedge clk or negedge rs_c)
+        if (!rs_c) begin
+            for (q = 0; q < 8; q = q + 1) cnt_g[q] <= 6'd0;
+            any_q <= 1'b0;
+        end else begin
+            if (do_rel && r_in && !((do_ins || do_mrg) && rs_same)) cnt_g[r_sl] <= cnt_r;
+            if ((do_ins || do_mrg) && s_in) cnt_g[s_sl] <= cnt_s;   // (B complete on the same slot folded in)
+            any_q <= 1'b0;
+            for (q = 0; q < 8; q = q + 1) if (cnt_g[q] != 6'd0) any_q <= 1'b1;
+        end
+    assign any_o = any_q;
 endmodule
 `default_nettype wire
