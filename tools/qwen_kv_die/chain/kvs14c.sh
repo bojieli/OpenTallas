@@ -27,7 +27,10 @@ cd $W
 say "prep start $(git rev-parse HEAD)"
 export OT_KV_PV_CTL_KIT=qkd_pv_ctl_rstpin_a72 OT_KV_HOST_V14=1 OT_KV_HOST_NORTH=1 OT_KV_TREES=1 OT_KV_V143=1 OT_KV_V143C=1 OT_KV_ECTL_H13=1 OT_KV_RLY_STD=1 OT_KV_DCAL=1 OT_KV_HOP=1 OT_KV_V144=1 OT_KV_V144_R6=1 OT_KV_PV_W=82 OT_KV_PV_AGE=96 OT_KV_SERDES_N=1 OT_KV_PV_PINY=1 OT_KV_KVNC=1 OT_KV_SEQ_STATIC=1 OT_KV_REACH=400 OT_KV_RST_REGIONAL=1 OT_KV_PHY_REG=1 OT_KV_REACH_W=36:400,296:370,100000:340 OT_KV_PV_T=1 OT_KV_PV_T_CTL_STANDIN=1 OT_KV_REACH_FIX=1 OT_KV_PVT_PINS=1 OT_KV_PVT_HDR_CTL=1 OT_KV_PVT_SOFT_SLACK=0 OT_KV_SEAM=1 OT_KV_STATIC_DIE=1
 export OT_KV_HROOT=1 OT_KV_FANFOLD=1 OT_KV_V144_DW=2462.4 OT_KV_SN_LIFT=432 OT_KV_CTL_BAND=302.4 OT_KV_PVT_HUB_CLEAR=172.8 OT_KV_KV_CHAN_EXTRA=86.4 OT_KV_V144_RLY_FIRST=pvin_,krs_,kvn_,ap_,aq_,am_,ks_acal_,pve_
-export OT_KV_STATIC_DIE_DIAGNOSTIC=1 OT_KV_TILE_KITS=1 OT_KV_AHUB_SDW=1 OT_KV_PVFORK_GAP=86.4
+# kvs14c try 1 @4aafe91ff (kv-case AHUB_SDW 363.5 mm2 + PVFORK_GAP 86.4 with the kv-wire buses): 4 unrepaired pin hops
+# (pve_WS/ES/EN astk erd -> first relay ~10.1 mm).  The KV die may grow (owner 10-18 02:15): take kv-wire's placing kit
+# point (plan k2, 377.6 mm2: kits + static hub, legacy hub frame, PVFORK_GAP 64.8); OT_KV_AHUB_SDW waits for a re-plan.
+export OT_KV_STATIC_DIE_DIAGNOSTIC=1 OT_KV_TILE_KITS=1 OT_KV_PVFORK_GAP=64.8 ${KVS14C_EXTRA:-}
 export OT_KV_EXPAND=qkd_rhead,qkd_rhead_ft,qkd_ectl,qkd_ctrl,qkd_ctrl_n,qkd_pvfork,qkd_pvtap2,qkd_pvtap3,qkd_pvtap4
 export OT_KV_RST_PER_TREE=1 OT_KV_FWD=1 OT_KV_FWD_NETLIST_ONLY=1
 bash tools/qwen_kv_die/chain/kvsys_prep.sh $R > $R/prep.log 2>&1 || { say "PREP FAIL (prep.log)"; exit 1; }
