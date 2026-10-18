@@ -19,10 +19,12 @@ D=$1; STEP=$2
 SRC=$D/src; FX=$D/fx; LOG=$D/STATUS.log
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
 ENVTP="QWEN_O4_TP=4 QWEN_O4_GROUPS=6144 HDC_SU_WIDTH=1024 HDC_KV_FMT=fp8"
-V=$D/venv; PYV=$V/bin/python   # venv (system site + torch CPU + safetensors): the fleet python lacks both
+PYV=$D/py   # python3 + PYTHONPATH=$D/pylib (torch CPU + safetensors via pip --target: no python3-venv on the fleet)
 mkvenv() { [ -x "$PYV" ] && "$PYV" -c "import torch, safetensors" 2>/dev/null && return 0
-  { python3 -m venv --system-site-packages "$V" && "$V/bin/pip" install -q torch --index-url https://download.pytorch.org/whl/cpu \
-    && "$V/bin/pip" install -q safetensors; } >> "$D/venv.log" 2>&1; }
+  { python3 -m pip install -q --target "$D/pylib" torch --index-url https://download.pytorch.org/whl/cpu && \
+    python3 -m pip install -q --target "$D/pylib" safetensors && \
+    printf '#!/bin/sh\nPYTHONPATH=%s/pylib${PYTHONPATH:+:$PYTHONPATH} exec python3 "$@"\n' "$D" > "$PYV" && chmod +x "$PYV" && \
+    "$PYV" -c "import torch, safetensors; print(torch.__version__)"; } >> "$D/venv.log" 2>&1; }
 now() { TZ=America/Los_Angeles date '+%F %H:%M:%S'; }
 log() { echo "$(now) $*" >> "$LOG"; }
 T0=$(date +%s)
