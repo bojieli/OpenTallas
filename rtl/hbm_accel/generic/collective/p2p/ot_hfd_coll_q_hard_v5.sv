@@ -222,7 +222,11 @@ module ot_hgi_coll_issuer_m(
  output wire [87:0] tap_steps                // {lk8, rgx16, del16, iaddr16, vm16, idx16}
 );
  wire [1535:0] raw,uop;wire [31:0] iteration;
- ot_hgi_coll_static_issuer_v6 u_issuer(.clk_control(clk_control),.clk_mem({3{clk_control}}),.rst_n(rst_n),
+ // COLL-ISS 10-18 (die standard: regional reset regs; gate rst_n 492 loads): rst_n loads ONE flop (async assert,
+ // synchronous release one edge later, as the ctl_v5 leaf V7); rst_l resets the leaf.
+ reg rst_l;
+ always @(posedge clk_control or negedge rst_n) if(!rst_n)rst_l<=1'b0;else rst_l<=1'b1;
+ ot_hgi_coll_static_issuer_v6 u_issuer(.clk_control(clk_control),.clk_mem({3{clk_control}}),.rst_n(rst_l),
   .cfg(cfg),.start(start),.start_pc(start_pc),.busy(busy),.done(done),.fault(fault),
   .uop_v(uop_v),.uop(raw),.iteration(iteration),.uop_pc(uop_pc));
 `ifdef OT_COLL_V5_MUT_NOMASK
@@ -234,8 +238,8 @@ module ot_hgi_coll_issuer_m(
  assign tap_steps={uop[1407+:8],uop[1318+:16],uop[1350+:16],uop[1366+:16],uop[1302+:16],uop[1334+:16]};
  reg busy_d1,done_d1,done_d2,start_d1;
  always @(posedge clk_control)uop_d1<=uop;
- always @(posedge clk_control or negedge rst_n)
-  if(!rst_n)begin busy_d1<=0;busy_d2<=0;busy_d3<=0;done_d1<=0;done_d2<=0;done_d3<=0;start_d1<=0;start_d2<=0;start_d3<=0;end
+ always @(posedge clk_control or negedge rst_l)
+  if(!rst_l)begin busy_d1<=0;busy_d2<=0;busy_d3<=0;done_d1<=0;done_d2<=0;done_d3<=0;start_d1<=0;start_d2<=0;start_d3<=0;end
   else begin busy_d1<=busy;busy_d2<=busy_d1;busy_d3<=busy_d2;done_d1<=done;done_d2<=done_d1;done_d3<=done_d2;
    start_d1<=start;start_d2<=start_d1;start_d3<=start_d2;end
 endmodule

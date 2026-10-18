@@ -2,5 +2,5 @@
  "schema": "opentallas.ref_tile.pin_regs.v1",
  "top": "ot_hgi_coll_issuer_m",
  "enable": false,
- "reason": "V6: raw busy/done/fault/uop_v/uop_pc and tap_iteration are flop Q (programme-target feedback at host_v4 edges); uop_d1 (to the uop pipe leaf) and busy_d2/start_d2 (protocol leaf) / busy_d3/done_d3/start_d3 (others) are the leaf's own delay flops; tap_steps is the bank face flop AND uop_v captured by the protocol leaf's pin flops; cfg/start/start_pc land in control flops. A synthesis pin stage would add edges the V6 schedule and bench do not carry."
+ "reason": "V6: raw busy/done/fault/uop_v/uop_pc and tap_iteration are flop Q (programme-target feedback at host_v4 edges); uop_d1 (to the uop pipe leaf) and busy_d2/start_d2 (protocol leaf) / busy_d3/done_d3/start_d3 (others) are the leaf's own delay flops; tap_steps is the bank face flop AND uop_v captured by the protocol leaf's pin flops; cfg/start/start_pc land in control flops. A synthesis pin stage would add edges the V6 schedule and bench do not carry. COLL-ISS 10-18: inputs cfg/start/start_pc are flop Q of the adjacent fj leaf's ot_hgi_coll_static_program_target (every exported signal is flop Q); a pin stage here = +1 issue edge (schedule change) -> not added. rst_n now loads ONE synchroniser flop (rst_l)."
 }
