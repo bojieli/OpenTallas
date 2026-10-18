@@ -97,6 +97,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     open_bind = {}
     ckin = collections.defaultdict(dict)   # inst -> {rtl clock-in port: {lane: link}}
     abut_rows, abut_links = [], set()
+    same_as, lane_spare = {}, {}           # S81-DIE5: broadcast lanes (link -> link whose source it shares); lane payload width
     for bl in blocks:   # plan lanes realised by an abutted face (both ends skip them)
         ab = M[bl['master']].get('abut')
         if ab and M[bl['master']].get('module'):
@@ -134,6 +135,43 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                         link_dst[e[3]] = None
                 continue
             es = order(es, rule.get('order', 'link'), bl)
+            if rule.get('lanes'):
+                # S81-DIE5: per-lane RTL bit maps (one plan lane realised by RTL port slices; spare lane bits at the end).
+                # lanes[i] = {"split": [[rtl port, rtl lo, lane lo, bits], ...]} | {"same_as": j} (output only: lane i
+                # carries lane j's bits -- one RTL source broadcast to several lanes, e.g. seqhost job -> both entries)
+                if rule.get('hb'):
+                    hb = 1
+                for i, e in enumerate(es):
+                    lr = rule['lanes'][i] if i < len(rule['lanes']) else None
+                    b = e[2]
+                    if lr is None:
+                        plan_not_in_rtl.append(dict(inst=n, module=mod, plan_port=p, dir=d, bits=b, link=e[3],
+                                                    note=f'lane {i} has no RTL bit map'))
+                        if d == 'o':
+                            link_src[e[3]] = (None, None)
+                        else:
+                            link_dst[e[3]] = None
+                        continue
+                    if d == 'o':
+                        if 'same_as' in lr:
+                            same_as[e[3]] = es[lr['same_as']][3]
+                            continue
+                        w = f'w_{e[3]}_src'
+                        for rport, rlo, plo, nb in lr['split']:
+                            c[rport].append((rlo, rlo + nb - 1, f'{w}[{plo + nb - 1}:{plo}]', nb))
+                        link_src[e[3]] = (w, None)
+                    else:
+                        w = dname(e[3])
+                        if rule.get('land') and chains_pts[e[3]] and b in LAND_W:
+                            landings.append((n, e[3], b)); w = f'w_{e[3]}_lnd'
+                        for rport, rlo, plo, nb in lr['split']:
+                            c[rport].append((rlo, rlo + nb - 1, f'{w}[{plo + nb - 1}:{plo}]', nb))
+                        link_dst[e[3]] = w
+                    cov = max(plo + nb for _, _, plo, nb in lr['split'])
+                    assert cov <= b, (n, p, i, cov, b)
+                    if cov < b:
+                        lane_spare[e[3]] = cov
+                continue
             if rule.get('split'):
                 # S81-BIND3: one plan lane realised by SEVERAL RTL ports: split = [[rtl port, rtl lo, plan lo, bits]]
                 # (e.g. ctrl_rg2 rd 562 -> svc_rs r_data / r_tag / r_beat / rv / rk / wd / hs per its packing)
@@ -164,6 +202,14 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                         c[ck[0]]  # make sure the clock output is connected
                 else:
                     w = dname(e[3])
+                    if rule.get('adapter') and chains_pts[e[3]]:
+                        # S81-DIE5: a landing with a static fixed-latency format adapter (e.g. dsfd_dvland_pvrd: P.V word
+                        # -> slice band RD beat); its o is the full RTL port
+                        landings.append((n, e[3], b, rule['adapter'], rule['out_w'], rule.get('adapter_straps', {})))
+                        w = f'w_{e[3]}_lnd'
+                        c[rport].append((0, rule['out_w'] - 1, w, rule['out_w']))
+                        link_dst[e[3]] = w
+                        continue
                     if rule.get('land') and chains_pts[e[3]] and b in LAND_W:
                         landings.append((n, e[3], b))
                         w = f'w_{e[3]}_lnd'          # the landing's o, abutted to the block input
@@ -304,6 +350,26 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                     pad_rows.append(dict(inst=n, master=mod, port=mu['port'], bits=wd_ - 1 - top_, lo=top_ + 1, hi=wd_ - 1,
                                          lanes=(wd_ - 1 - top_) // mu['lane'], reason=mu['reason']))
                 continue
+            if w_ == 'unlinked_bits':
+                # S81-DIE5: bit ranges of a multi-face port that no plan lane reaches (svc_rs faces the role ROM never
+                # selects: a stream valid / P.V word / score on a face that is not a tree edge is a sticky fault, so the
+                # face is tied 0 and declared as a pad with the reason)
+                wd_ = widths[mu['port']]
+                segs_ = conn[n].setdefault(mu['port'], [])
+                got = sorted((lo, hi) for lo, hi, _w, _b in segs_)
+                gaps, pos_ = [], 0
+                for lo, hi in got:
+                    if lo > pos_:
+                        gaps.append((pos_, lo - 1))
+                    pos_ = max(pos_, hi + 1)
+                if pos_ < wd_:
+                    gaps.append((pos_, wd_ - 1))
+                for lo, hi in gaps:
+                    segs_.append((lo, hi, None, hi - lo + 1))
+                    pads.setdefault(f'u_{n}', dict(master=mod, reason=mu['reason'], ports={}))['ports'].setdefault(
+                        mu['port'], []).append([lo, hi])
+                    pad_rows.append(dict(inst=n, master=mod, port=mu['port'], bits=hi - lo + 1, lo=lo, hi=hi, reason=mu['reason']))
+                continue
             hit = (w_ == 'always' or (w_ == 'hb0' and not (params.get(n) or {}).get(m.get('hb_param', 'HB'))) or
                    (w_ == 'col0' and col_ == 0) or (w_ == 'col7' and col_ == 7))
             if hit and not conn[n].get(mu['port']):
@@ -339,18 +405,23 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     # landings (S81-LAND2): K = E of the link's die STA window (land plan), assuming the hop-0 gate opens at the
     # receiver's reset release (G = R0); E > 7 needs G - R0 = E - 7 in the reset calendar (recorded per row)
     land_rows = []
-    for j, (n, nm, b) in enumerate(landings):
+    for j, (n, nm, b, *ad) in enumerate(landings):
         st = len(chains_pts[nm])
         e_ = land_e.get(nm)
         k_ = min(max(e_ or 1, 1), 7)
-        v.append(f'  wire [{b - 1}:0] w_{nm}_lnd;')
-        v.append(f'  dsfd_dvland_{b} ld_{nm} (.ck_f(n{nm}_fck[{st}]), .i(w_{nm}_dst), .ck(ck_{reg[n]}), .rs({rst["block_leaf"][n]}), '
-                 f".k(3'd{k_}), .o(w_{nm}_lnd), .fault(land_fault[{j}]));")
-        land_rows.append(dict(link=nm, inst=n, master=f'dsfd_dvland_{b}', bits=b, stages=st, E=e_, K=k_,
+        lm, ow, ast = (ad[0], ad[1], ad[2]) if ad else (f'dsfd_dvland_{b}', b, {})
+        v.append(f'  wire [{ow - 1}:0] w_{nm}_lnd;')
+        xs_ = ''.join(f', .{sp}({sv})' for sp, sv in ast.items())
+        v.append(f'  {lm} ld_{nm} (.ck_f(n{nm}_fck[{st}]), .i(w_{nm}_dst), .ck(ck_{reg[n]}), .rs({rst["block_leaf"][n]}), '
+                 f".k(3'd{k_}){xs_}, .o(w_{nm}_lnd), .fault(land_fault[{j}]));")
+        for sp in ast:
+            if [lm, sp] not in straps:
+                straps.append([lm, sp])
+        land_rows.append(dict(link=nm, inst=n, master=lm, bits=b, stages=st, E=e_, K=k_,
                               K_source='land_plan E (G = R0)' if e_ else 'NO die STA E: K 1 placeholder (re-derive)',
                               calendar_G_minus_R0=max(0, (e_ or 1) - 7), fault_bit=j))
-    for b in sorted({b for _, _, b in landings}):
-        straps.append([f'dsfd_dvland_{b}', 'k'])
+    for lm in sorted({(x[3] if len(x) > 3 else f'dsfd_dvland_{x[2]}') for x in landings}):
+        straps.append([lm, 'k'])
     # relay chains (F1)
     nst = collections.Counter(); fwd_cells = 0
     for l in plan['links']:
@@ -359,10 +430,21 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         pts = chains_pts[nm]
         if nm in abut_links:
             continue
-        src, ck = link_src.get(nm, (f'w_{nm}_src', None))
-        src = f'w_{nm}_src'
+        root_nm = same_as.get(nm, nm)                     # S81-DIE5: a broadcast lane reads its source lane's wire
+        src, ck = link_src.get(root_nm, (f'w_{root_nm}_src', None))
+        src = f'w_{root_nm}_src'
         if not pts:
             continue
+        if root_nm in lane_spare:
+            # lane quantised onto a relay master wider than its RTL payload: the spare top bits enter hop 0 as declared
+            # pads (tied 0 at the station input, never read by the receiver)
+            cov = lane_spare[root_nm]
+            src = f"{{{b - cov}'d0, {src}[{cov - 1}:0]}}"
+            pads.setdefault(f'st_{nm}_0', dict(master=rly_master(b, sdir[(nm, 0)], T.get('relay_prefix', 'dsfd_dvrly')),
+                                               reason=f'lane quantisation: {cov}-b RTL payload on a {b}-b relay master (spare top bits)',
+                                               ports={}))['ports']['i'] = [[cov, b - 1]]
+            pad_rows.append(dict(inst=f'st_{nm}_0', master=rly_master(b, sdir[(nm, 0)], T.get('relay_prefix', 'dsfd_dvrly')),
+                                 port='i', bits=b - cov, lo=cov, hi=b - 1, reason='lane quantisation spare bits'))
         st = len(pts)
         if ck:
             v.append(f'  // hop 0: the source master forwards its root (F1): {ck}')
@@ -489,7 +571,7 @@ def place_lane(rule, e, es, bl):
         ch = 2 * up + side
         idx = ch * 4 + lane_in
         return idx, rule['port'], lw, (rule['ck'], idx) if rule.get('ck') else None
-    i = es.index(e)
+    i = rule['index'] if 'index' in rule else es.index(e)     # S81-DIE5: fixed lane index (svc_rs face N/E/S/W)
     ck = None
     if rule.get('ck'):
         ck = (rule['ck'], rule.get('ck_base', 0) + i)
@@ -499,47 +581,42 @@ def place_lane(rule, e, es, bl):
 RESET_REACH_UM = 405.0             # measured repeated reach (plan 405 um, memory reach-405-repeaters-1016)
 
 
-def reset_reach_gate(blocks, par, free, nx, ny, block_pin, station_pts, reach=RESET_REACH_UM, mode=None):
+def reset_reach_gate(blocks, nodes, sinks, edges, reach=RESET_REACH_UM, mode=None):
     """Die standard (regional reset; as the Qwen generator 27309ba59 and HBM die_case_v16 reset_reach_gate): every reset
     sink must be reachable by the regional reset tree.  Errors (FAIL, ValueError) -- 'warn' does NOT bypass them, only
     OT_RESET_GATE=diag continues (rec reach_gate FAIL_DIAG):
-      sink_unreachable    a block reset pin / relay station rs whose own grid cell is not on the BFS street tree and whose
-                          nearest tree station is more than `reach` away (cell_of() would silently stretch the hop);
+      sink_unreachable    a block reset pin / relay station rs with no reset station of the tree within `reach`
+                          (tree stations = the street-cell stations AND, S81-DIE5, the reset bit carried in the relay
+                          stations of the lanes: one dsfd_rly_1 companion per lane station on the tree);
       sink_buried         a block reset pin strictly inside ANOTHER block's outline (no street can reach it);
       driver_unreachable  no block-free cell for the root synchroniser.
+    nodes: {node: (x, y)} of the tree (connected to the root); sinks: [(pin, (x, y), own block or None, serving node or
+    None)]; edges: [(node, parent)] of the tree.
     over_reach (recorded, not a FAIL): a station -> parent hop longer than `reach` (relay timing judges it)."""
     mode = os.environ.get('OT_RESET_GATE') if mode is None else mode
     errors, over = [], 0
-    if not par:
+    if not nodes:
         errors.append(dict(kind='driver_unreachable', pin='rst_n', why='no block-free reset street cell'))
-
-    def raw(x, y):
-        return (min(max(int(x // GRID), 0), nx - 1), min(max(int(y // GRID), 0), ny - 1))
-
-    def nearest(x, y):
-        return min(par, key=lambda k: abs(free[k][0] - x) + abs(free[k][1] - y))
 
     def buried(x, y, own):
         for b in blocks:
             if b['name'] != own and b['x'] + 0.5 < x < b['x'] + b['w'] - 0.5 and b['y'] + 0.5 < y < b['y'] + b['h'] - 0.5:
                 return b['name']
         return None
-    sinks = [(f"{n}.rst", xy, n) for n, xy in block_pin.items()] + \
-            [(f"{nm}[{k}].rs", xy, None) for (nm, k), xy in station_pts.items()]
-    for pin, (x, y), own in sinks if par else ():
+    for pin, (x, y), own, srv in sinks if nodes else ():
         if own is not None:
             b = buried(x, y, own)
             if b:
                 errors.append(dict(kind='sink_buried', pin=pin, under=b))
                 continue
-        if raw(x, y) in par:
+        if srv is None or srv not in nodes:
+            errors.append(dict(kind='sink_unreachable', pin=pin, station=None, um=None))
             continue
-        c = nearest(x, y)
-        um = abs(free[c][0] - x) + abs(free[c][1] - y)
+        um = abs(nodes[srv][0] - x) + abs(nodes[srv][1] - y)
         if um > reach:
-            errors.append(dict(kind='sink_unreachable', pin=pin, station=c, um=round(um, 1)))
-    for c, p in par.items():
-        if p is not None and abs(free[c][0] - free[p][0]) + abs(free[c][1] - free[p][1]) > reach:
+            errors.append(dict(kind='sink_unreachable', pin=pin, station=str(srv), um=round(um, 1)))
+    for c, p in edges:
+        if p is not None and abs(nodes[c][0] - nodes[p][0]) + abs(nodes[c][1] - nodes[p][1]) > reach:
             over += 1
     kinds = dict(collections.Counter(e['kind'] for e in errors))
     rec = dict(reach_um=reach, sinks=len(sinks), errors=len(errors), kinds=kinds, first=errors[:20], over_reach_hops=over,
@@ -552,7 +629,17 @@ def reset_reach_gate(blocks, par, free, nx, ny, block_pin, station_pts, reach=RE
     return rec
 
 
-def reset_tree(plan, reg, chains_pts, sdir, master=None):
+def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
+    """Regional synchronous-release reset tree (die standard item 2).
+    Nodes: one reset station per 400-um block-free street cell (as before) PLUS, S81-DIE5 (coordinator 0dt+ / ROOT
+    4f7440ccf), the RESET BIT CARRIED IN THE LANE STATIONS: every relay station of a planned lane may hold a 1-b
+    reset relay (dsfd_rly_1 companion at the station point, async assert, release one regional edge a hop) whose input
+    is the previous / next station of the same lane or any tree node within `reach`.  The tree is the BFS (fewest
+    release edges) from the root synchroniser over cell<->cell grid steps and node<->node hops <= `reach`.  A lane
+    station's rs reads its own cell station when that is on the tree and within reach (unchanged p4j wiring), else its
+    own companion.  A block reset pin sits on the block perimeter point nearest a tree node (the S-face centre when
+    that is reachable; top-down pin assignment for the unclosed blocks) and reads that node.  The release depth of
+    every sink (edges after rst_n release) is recorded for the reset calendar."""
     rr = {d: master for d in RST_RLY} if master else RST_RLY
     W, H = plan['facts']['die_um']
     blocks = plan['blocks']
@@ -564,89 +651,192 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None):
                 return True
         return False
     free = {}
+    cellb = collections.defaultdict(list)          # blocks (inflated 5 um) touching each grid cell
+    for b in blocks:
+        for i in range(max(0, int((b['x'] - 5) // GRID)), min(nx, int((b['x'] + b['w'] + 5) // GRID) + 1)):
+            for j in range(max(0, int((b['y'] - 5) // GRID)), min(ny, int((b['y'] + b['h'] + 5) // GRID) + 1)):
+                cellb[(i, j)].append(b)
+
+    def inside_c(x, y, bl):
+        return any(b['x'] - 5 <= x <= b['x'] + b['w'] + 5 and b['y'] - 5 <= y <= b['y'] + b['h'] + 5 for b in bl)
     for i in range(nx):
         for j in range(ny):
-            # a cell is usable if some point of a coarse 5x5 sample inside it is block-free; the station sits there
-            for fx in (0.5, 0.3, 0.7, 0.1, 0.9):
-                hit = None
-                for fy in (0.5, 0.3, 0.7, 0.1, 0.9):
-                    x, y = (i + fx) * GRID, (j + fy) * GRID
-                    if x < W and y < H and not inside(x, y):
-                        hit = (x, y); break
-                if hit:
-                    free[(i, j)] = hit; break
-    # root: the die reset pad at the south edge centre street
+            bl = cellb.get((i, j), [])
+            # the reset station of a cell sits at the block-free point nearest the cell centre: a coarse 5 x 5 sample, plus
+            # (S81-DIE5) the coordinates just outside every block edge in the cell, so the narrow block-free strips (the
+            # 15-25 um slice-column margins, street edges) hold a 1-b reset station too
+            x0, y0 = i * GRID, j * GRID
+            xs = {x0 + f * GRID for f in (0.1, 0.3, 0.5, 0.7, 0.9)} | {v for b in bl for v in (b['x'] - 6, b['x'] + b['w'] + 6)
+                                                                    if x0 <= v < x0 + GRID}
+            ys = {y0 + f * GRID for f in (0.1, 0.3, 0.5, 0.7, 0.9)} | {v for b in bl for v in (b['y'] - 6, b['y'] + b['h'] + 6)
+                                                                    if y0 <= v < y0 + GRID}
+            cx, cy = x0 + GRID / 2, y0 + GRID / 2
+            got = []
+            for x, y in sorted(((x, y) for x in xs for y in ys if x < W and y < H),
+                               key=lambda p: (abs(p[0] - cx) + abs(p[1] - cy), p)):
+                # up to 4 points a cell, >= 150 um apart: one per block-free piece of the cell (a strip under the PHY and
+                # the band beside it are different pieces; one point a cell disconnected them)
+                if not inside_c(x, y, bl) and all(abs(x - u) + abs(y - w) >= 150 for u, w in got):
+                    got.append((x, y))
+                    if len(got) == 4:
+                        break
+            for m, xy in enumerate(got):
+                free[(i, j, m)] = xy
     if not free:
-        reset_reach_gate(blocks, {}, free, nx, ny, {}, {})
-    root = min(free, key=lambda c: abs(free[c][0] - W / 2) + free[c][1])
+        reset_reach_gate(blocks, {}, [], [])
+    # ---- graph: street cells ('c', i, j) + lane stations ('s', link, k)
+    pos = {('c',) + c: xy for c, xy in free.items()}
+    for nm, pts in chains_pts.items():
+        for k, xy in enumerate(pts):
+            pos[('s', nm, k)] = tuple(xy)
+    B = reach
+    buck = collections.defaultdict(list)
+    for n, (x, y) in pos.items():
+        buck[(int(x // B), int(y // B))].append(n)
+
+    def near(x, y, r=reach):
+        bx, by = int(x // B), int(y // B)
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                for n in buck.get((bx + dx, by + dy), ()):
+                    d = abs(pos[n][0] - x) + abs(pos[n][1] - y)
+                    if d <= r:
+                        yield d, n
+
+    def nbrs(n):
+        if n[0] == 's':
+            nm, k = n[1], n[2]
+            for kk in (k - 1, k + 1):
+                m = ('s', nm, kk)
+                if m in pos and abs(pos[m][0] - pos[n][0]) + abs(pos[m][1] - pos[n][1]) <= reach:
+                    yield m
+        x, y = pos[n]
+        for _, m in sorted(near(x, y), key=lambda t: (t[0], str(t[1]))):
+            if m != n:
+                yield m
+    # root: the die reset pad at the south edge centre street
+    comp = {}
+    for n0 in pos:
+        if n0 in comp:
+            continue
+        comp[n0] = n0; q = collections.deque([n0])
+        while q:
+            c = q.popleft()
+            for m in nbrs(c):
+                if m not in comp:
+                    comp[m] = n0; q.append(m)
+    big = collections.Counter(comp[n] for n in pos if n[0] == 'c').most_common(1)[0][0]
+    root = min((n for n in pos if n[0] == 'c' and comp[n] == big), key=lambda n: (abs(pos[n][0] - W / 2) + pos[n][1], n))
     par = {root: None}
     q = collections.deque([root])
     while q:
         c = q.popleft()
-        for d in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-            nb = (c[0] + d[0], c[1] + d[1])
-            if nb in free and nb not in par:
-                par[nb] = c; q.append(nb)
-
-    def cell_of(x, y):
-        c = (min(int(x // GRID), nx - 1), min(int(y // GRID), ny - 1))
-        if c in par:
-            return c
-        return min(par, key=lambda k: abs(free[k][0] - x) + abs(free[k][1] - y))
-    gate = reset_reach_gate(blocks, par, free, nx, ny,
-                            {b['name']: (b['x'] + b['w'] / 2, b['y']) for b in blocks},
-                            {(nm, k): xy for nm, pts in chains_pts.items() for k, xy in enumerate(pts)})
-    need = set()
-    station_cell = {}
-    for nm, pts in chains_pts.items():
-        for k, (x, y) in enumerate(pts):
-            c = cell_of(x, y); station_cell[(nm, k)] = c; need.add(c)
-    block_cell = {}
-    for b in blocks:
-        c = cell_of(b['x'] + b['w'] / 2, b['y'])   # reset pin on the S face centre
-        block_cell[b['name']] = c; need.add(c)
-    tree = set()
-    for c in need:
-        while c is not None and c not in tree:
-            tree.add(c); c = par[c]
+        for m in nbrs(c):
+            if m not in par:
+                par[m] = c; q.append(m)
     depth = {}
 
     def dep(c):
         if c not in depth:
             depth[c] = 0 if par[c] is None else dep(par[c]) + 1
         return depth[c]
-    # nearest block region for each tree cell (station clock = that region's root)
+
+    def serve(x, y, own_station=None):
+        """tree node serving a sink at (x, y): its own street cell when on the tree and within reach (p4j wiring),
+        else the own lane station's companion, else the nearest tree node within reach (fewest edges, then distance)"""
+        ci, cj = min(int(x // GRID), nx - 1), min(int(y // GRID), ny - 1)
+        own = [('c', ci, cj, m) for m in range(4) if ('c', ci, cj, m) in par]
+        own = [c for c in own if abs(pos[c][0] - x) + abs(pos[c][1] - y) <= reach]
+        if own:
+            return min(own, key=lambda c: (abs(pos[c][0] - x) + abs(pos[c][1] - y), c))
+        if own_station is not None and own_station in par:
+            return own_station
+        best = None
+        for d, n in near(x, y):
+            if n in par and (best is None or (dep(n), d) < best[0]):
+                best = ((dep(n), d), n)
+        return best[1] if best else None
+    sinks = []
+    station_srv = {}
+    for nm, pts in chains_pts.items():
+        for k, (x, y) in enumerate(pts):
+            s = serve(x, y, ('s', nm, k))
+            station_srv[(nm, k)] = s
+            sinks.append((f'{nm}[{k}].rs', (x, y), None, s))
+
+    def buried(x, y, own):
+        return any(b['name'] != own and b['x'] + 0.5 < x < b['x'] + b['w'] - 0.5 and b['y'] + 0.5 < y < b['y'] + b['h'] - 0.5
+                   for b in blocks)
+    block_srv, block_pin = {}, {}
+    for b in blocks:
+        cands = [(b['x'] + b['w'] / 2, b['y'])]          # default: S face centre
+        for f in range(1, 40):
+            t = f / 40.0
+            cands += [(b['x'] + b['w'] * t, b['y']), (b['x'] + b['w'] * t, b['y'] + b['h']),
+                      (b['x'], b['y'] + b['h'] * t), (b['x'] + b['w'], b['y'] + b['h'] * t)]
+        best = None
+        for j_, (x, y) in enumerate(cands):
+            if buried(x, y, b['name']):
+                continue
+            s = serve(x, y)
+            if s is None:
+                continue
+            key = (0 if j_ == 0 else 1, abs(pos[s][0] - x) + abs(pos[s][1] - y))
+            if abs(pos[s][0] - x) + abs(pos[s][1] - y) <= reach and (best is None or key < best[0]):
+                best = (key, (x, y), s)
+        if best is None:
+            xy = cands[0]; s = serve(*xy)
+        else:
+            _, xy, s = best
+        block_pin[b['name']] = xy; block_srv[b['name']] = s
+        sinks.append((f"{b['name']}.rst", xy, b['name'], s))
+    tree = set()
+    for s in list(station_srv.values()) + list(block_srv.values()):
+        while s is not None and s not in tree:
+            tree.add(s); s = par[s]
+    gate = reset_reach_gate(blocks, {n: pos[n] for n in par}, sinks, [(c, par[c]) for c in tree], reach=reach)
+    # nearest block region for each tree node (station clock = that region's root)
     cen = [(b['x'] + b['w'] / 2, b['y'] + b['h'] / 2, reg[b['name']]) for b in blocks]
 
     def creg(c):
-        x, y = free[c]
+        x, y = pos[c]
         return min(cen, key=lambda t: abs(t[0] - x) + abs(t[1] - y))[2]
-    v = ['  // ---- regional synchronous-release reset relay tree (one dsfd_rly_1 station per 400-um street cell)',
+    v = ['  // ---- regional synchronous-release reset relay tree: one dsfd_rly_1 station per 400-um street cell + the reset',
+         '  //      bit carried in the lane stations (dsfd_rly_1 companion at the station point, S81-DIE5)',
          '  wire rst_sync0, rst_sync1;',
          f'  {rr["EW"]} rst_root0 (.ck(ck_{creg(root)}), .rs(rst_n), .i(rst_n), .o(rst_sync0));',
          f'  {rr["EW"]} rst_root1 (.ck(ck_{creg(root)}), .rs(rst_sync0), .i(rst_sync0), .o(rst_sync1));']
     name = {}
-    for c in sorted(tree, key=dep):
-        name[c] = f'rs_{c[0]}_{c[1]}'
+    for c in sorted(tree, key=lambda n: (dep(n), str(n))):
+        name[c] = (f'rs_{c[1]}_{c[2]}' + (f'_{c[3]}' if c[3] else '')) if c[0] == 'c' else f'rsl_{c[1]}_{c[2]}'
     place = []
-    for c in sorted(tree, key=dep):
+    for c in sorted(tree, key=lambda n: (dep(n), str(n))):
         p = par[c]
         up = 'rst_sync1' if p is None else name[p]
         if p is None:
             d = 'EW'
         else:
-            dx, dy = c[0] - p[0], c[1] - p[1]
-            d = 'WE' if dx > 0 else 'EW' if dx < 0 else 'SN' if dy > 0 else 'NS'
+            dx, dy = pos[c][0] - pos[p][0], pos[c][1] - pos[p][1]
+            d = ('WE' if dx > 0 else 'EW') if abs(dx) >= abs(dy) else ('SN' if dy > 0 else 'NS')
         v.append(f'  wire {name[c]};')
         v.append(f'  {rr[d]} st_{name[c]} (.ck(ck_{creg(c)}), .rs({up}), .i({up}), .o({name[c]}));')
-        place.append(dict(inst=f'st_{name[c]}', master=rr[d], orient=ORIENT[d] if master else ('MX' if d == 'SN' else 'R0'), xy=free[c]))
-    leaves = collections.Counter(station_cell.values())
+        place.append(dict(inst=f'st_{name[c]}', master=rr[d], orient=ORIENT[d] if master else ('MX' if d == 'SN' else 'R0'),
+                          xy=pos[c], kind='street' if c[0] == 'c' else 'lane'))
+    leaves = collections.Counter(list(station_srv.values()) + list(block_srv.values()))
     depths = [dep(c) + 2 for c in tree]
-    summary = dict(grid_um=GRID, root_cell=root, root_xy=free[root], stations=len(tree) + 2, max_release_depth=max(depths),
+    ncomp = sum(1 for c in tree if c[0] == 's')
+    summary = dict(grid_um=GRID, root_cell=list(root[1:]), root_xy=pos[root], stations=len(tree) + 2,
+                   street_stations=len(tree) - ncomp, lane_reset_bits=ncomp, max_release_depth=max(depths),
                    min_release_depth=min(depths), max_relay_fanout=max(leaves.values()),
                    region_release_depth={r: max(dep(c) + 2 for c in tree if creg(c) == r) for r in set(map(creg, tree))},
-                   unreachable_cells=nx * ny - len(par), reach_gate=gate)
-    return dict(verilog=v, station_leaf={k: name[c] for k, c in station_cell.items()},
-                block_leaf={b: name[c] for b, c in block_cell.items()},
-                block_parent={b: (name[par[c]] if par[c] is not None else 'rst_sync1') for b, c in block_cell.items()},
-                summary=summary, place=place)
+                   block_release_depth={b: dep(s) + 3 for b, s in block_srv.items() if s is not None},
+                   block_pin_moved={b: [round(xy[0], 1), round(xy[1], 1)] for b, xy in block_pin.items()
+                                    if xy != (next(bb for bb in blocks if bb['name'] == b)['x'] + next(bb for bb in blocks if bb['name'] == b)['w'] / 2,
+                                              next(bb for bb in blocks if bb['name'] == b)['y'])},
+                   unreachable_cells=sum(1 for c in free if ('c',) + c not in par), components=len(set(comp.values())),
+                   reach_gate=gate)
+    nm_ = lambda s: name.get(s, 'rst_sync1') if s is not None else 'rst_sync1'
+    return dict(verilog=v, station_leaf={k: nm_(s) for k, s in station_srv.items()},
+                block_leaf={b: nm_(s) for b, s in block_srv.items()},
+                block_parent={b: (name[par[s]] if s is not None and par[s] is not None else 'rst_sync1') for b, s in block_srv.items()},
+                block_pin=block_pin, summary=summary, place=place)
