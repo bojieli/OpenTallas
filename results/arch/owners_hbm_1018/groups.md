@@ -1,0 +1,51 @@
+### pin->flop wire: 18
+- hfd_lk_ep_face (lkep_face_ref, lkep_face_ref-face2dir-ce9d51d9f; GEN0, closed, not die-bindable (native)): f_lk_rx[547..566] capture 195-205 on one face segment (spread 23.8): far pin flops
+- hbfd_rly_136_EW (hbfd_rly_136_ew, hbfd_rly_136_ew-v1-212c3439c; GEN1, superseded): o[*] launch 221.6-223.5 x7: last-stage flops off the out face
+- hbfd_rly_136_WE (hbfd_rly_136_we, hbfd_rly_136_we-v1-2d0c1a8ac; GEN1, superseded): o[*] launch 221.2-221.6 x3
+- ot_hgi_sfu_store_stripe_leaf_r10 (hbm_sfu_store_stripe_r10_1017, hbm_sfu_store_stripe_r10_1017-r10n-a0bcf7b7a; GEN1, closed, not die-bindable (native)): in_data 236 x93: in->out traverse moved to capture (KH-NATIVE3 r10n2 gated, CRITICAL, not submitted)
+- kit:hbm_su_pg_lgtap_1017 (hbm_su_pg_lgtap_1017, hbm_su_pg_lgtap_1017-r1-139da60d3; GEN1, closed, not die-bindable (native)): local_rr launch 319 x154 + local_rq/wq capture 236 (NF3 lgtap sub-lane)
+- ot_hgi_sfu_lane_map (sfu_lane_map_ref, sfu_lane_map_ref-m1-b622c064c; child/family, superseded): o_pass launch 229 x29, i_pass 191.9
+- ot_hgi_qw_dxl (qw_dxl_ref, qw_dxl_ref-b2-0224a39c3; child/family, superseded): xs launch 241.6 x25
+- ot_hgi_qw_dbq (qw_dbq_ref, qw_dbq_ref-b3-93f14f333; child/family, superseded): byo launch 255 x78
+- ot_lkep_rp (lkep_rp_ref, lkep_rp_ref-s1-e4598e48e; child/family, superseded): m_rx_w/st_rep/o_d launch 290 x345 (+ rx_v/session capture 254 logic)
+- ot_hbm_accel_smh_fc_t (smh_fct_ref_p45, smh_fct_ref_p45-r1-a9afd2404-lf; child/family, superseded): r0a launch 313 x413
+- ot_hbm_accel_smh_fc_b (27742d3f8_fc_b, 460adb821; child/family, superseded): xi capture 241 x155, bout launch 257 x13 (no insertion.json; lib clock ref)
+- ot_hbm_accel_smh_fc_xl (smh_fcxl_ref_p40, smh_fcxl_ref_p40-r1-9214bae8b; child/family, superseded): xw_w launch 261 x11
+- ot_hbm_accel_smh_fc_xr (smh_fcxr_ref_p35, smh_fcxr_ref_p35-r1-a9afd2404-lf; child/family, superseded): xo launch 414 x344 (+ xi 235 x27)
+- hfd_vms_bank_identity_q1_b0 (vm_identity_q1_b0_ref, vm_identity_q1_b0_ref-identity2-746ff872c; child/family, superseded): xq/wq0/kq capture 218 x728 (spread 68.6)
+- hfd_vms_bank_identity_q3_b0 (vm_identity_q3_b0_ref, vm_identity_q3_b0_ref-identity2; child/family, superseded): pq/xq capture 223 x198
+- ot_hgi_coll_control256_capture (hcoll_control256_capture_native, hcoll_control256_capture_native-native1-459078da2; child/family, superseded): pin_data launch 279 x254
+- ot_hgi_coll_park_q1 (hgi_coll_park_q1_wg_ref, hgi_coll_park_q1_wg_ref-pstage4-5f0dd8dc1; child/family, superseded): pop capture 192.1 (2 ps over)
+- ot_hgi_coll_static_vmwrite (hcoll_vmwrite_static_v4, hcoll_vmwrite_static_v4_spread-spread2330-d5f938aea; child/family, superseded): tkw_d capture 204 x92
+### logic (unregistered/decoded pin, raw reset, macro pin): 21
+- ot_hbm_su_programme_root_h (hbm_su_pgroot_1017, hbm_su_pgroot_1017-g2-5c926051a; GEN0, closed, not die-bindable (native)): cfg_bank[*] 262 x15 + rst_n: cfg pins decode before the flops (same class as NF3 pgcol CPIN/RRLY fix)
+- hbfd_rly_136_NS (hbfd_rly_136_ns, hbfd_rly_136_ns-v1-212c3439c; GEN1, superseded): rs 195.9: raw reset into 136 stage clears (RS_RELAY=1 of NF3 rly not applied to the base master)
+- hbfd_rly_136_SN (hbfd_rly_136_sn, hbfd_rly_136_sn-v1-2d0c1a8ac; GEN1, superseded): rs 224.4: same as NS
+- ot_hgi_qdq_transport_ctl (hgi_qdq_tsplit_ctl, hgi_qdq_tsplit_ctl-hgiqdqtsplitctl-01dba637f; child/family, superseded): cmd_src/block/op/dst capture 304 x33 + rst_n: command decode before the flops
+- ot_hgi_coll_tkm_tile (coll_tkm_tile_cx, coll_tkm_tile_cx-r1-5ab85cbc7; child/family, superseded): ins_b capture 416 x378, up_out launch 324 x177: logic both sides of the pin flops
+- ot_hgi_coll_static_capture_ctl (hcoll_capture_ctl, hcoll_capture_ctl-tc-f5034d006-src2; child/family, superseded): rst_n 345.3: raw reset fanout, no pin reset sync
+- ot_qkvd_llr_replay_sram_leaf (qfd_coll_bank137, qfd_coll_bank137-b1-533c4162e; child/family, superseded): ra/wa/we capture 218 x9: SRAM address/we pins go to the macro (no pin flop)
+- ot_lkep_status_shared (lkep_status_shared_ref, lkep_status_shared_ref-statuscut3-1fbe64bd5; child/family, superseded): rp_flat capture 407.7 x96 (>350 on one bus: logic before the flop)
+- ot_lkep_rx_shared (lkep_rx_shared_ref, lkep_rx_shared_ref-rxsplit1-ee8c826c0; child/family, superseded): oh_vt capture 434 x3: valid/handshake fan-in logic
+- ot_lkep_tx_shared (lkep_tx_shared_ref, lkep_tx_shared_ref-txsplit1-7a34d98ba; child/family, superseded): th_vt capture 434 x3, b_v launch 290
+- ot_lkep_ti (lkep_ti_ref, lkep_ti_ref-s1-e4598e48e; child/family, superseded): session capture 272 x24 (+ m_in_d launch 224 x8 wire)
+- ot_hbm_link_retry_pipeline (hbm_retry545_ref, hbm_retry545_ref-r1-9357f2d4b; child/family, superseded): in_valid 428 / in_ready 409: ready/valid handshake through logic (legacy backpressure tile), 405+454 pins
+- ot_hbm_host_packet_static (hdie_host_packet_r1, hdie_host_packet_r1-r1-dcfed59ab; child/family, closed, not die-bindable (native)): rst_n 392: raw reset fanout (same fix as cp_svg/col RSYNC)
+- ot_hgi_argmax18_m (argmax_hgi, 1e4d4233e; child/family, superseded): in_bias/in_vals capture 398 x496: compare logic before the flops (no insertion.json; lib clock ref)
+- hfd_vms_bank_ft_rg4wg1 (vms_bank_ft_rg4wg1_1015, vms_bank_ft_rg4wg1_1015-v15a-5c1e17498; child/family, superseded): wslot/wslot_v capture 310: slot select decode before flops (+ wq0/pq 37/25 pins)
+- hfd_vms_bank_ft_rg5wg1 (vms_bank_ft_rg5wg1_1015, vms_bank_ft_rg5wg1_1015-sp2-a3813e240; child/family, superseded): wslot capture 286 x30
+- hfd_vms_bank_strap_q2 (vm_strap_q2_ref, vm_strap_q2_ref-strap5-2c0df5054; child/family, superseded): dq/pq/wq0 capture 493 x818 (>350: logic before flops)
+- hfd_vms_bank_strap_q3 (vm_strap_q3_ref, vm_strap_q3_ref-strap5-2c0df5054; child/family, superseded): same view numbers as strap_q2 (dq 493 x818)
+- ot_hgi_coll_rx_native (hgi_coll_tkw_rx_r2, hgi_coll_tkw_rx_r2-r2-51de2332d; child/family, superseded): rst_n 249: raw reset fanout
+- ot_hgi_coll_uop_pipe (hcoll_v6_upipe, hcoll_v6_upipe-c1045-1a3b52793; child/family, superseded): uop_d1 capture 372 x1458, uop_d2 launch 304 x52
+- ot_hgi_sfu_programme_store_r7c (hbm_sfu_programme_store_1016, hbm_sfu_programme_store_r7c4_1016-r7c4-a686d9aa7; child/family, closed, not die-bindable (native)): cfg_we 222: write-enable decode/fanout before the flops
+### insertion/spread (TT/FF pin-flop spread > 80): 9
+- ot_hbm_svc_sm_xcal_t (hsm_xcal_t224_r1, hsm_xcal_t224_r1-r1-c3e947611; GEN0, -): r1 spread 109/98.5; superseded by the bound r2 view (BINDABLE)
+- ot_hbm_accel_smh_xs (smh_xs_ref_p45, smh_xs_ref_p45-r1-0fbf9bc20; child/family, superseded): TT/FF spread 99.9/94.6 + bk1/rl1 capture 280 x1645
+- ot_hbm_accel_smh_xs (smh_xs_ref_p45m, smh_xs_ref_p45m-r3-29a3f8638; child/family, superseded): TT/FF spread 106/102 + capture 255 x981
+- ot_hbm_accel_smh_xs (smh_xs_ref_p50, smh_xs_ref_p50-r1-0fbf9bc20; child/family, superseded): TT/FF spread 136/123 + capture 356 x1638
+- hfd_vms_bank_native_q1_core (vm_native_q1core_c, vm_native_q1core_c-c-263e4d840; child/family, superseded): spread 133/128 + capture 266 x1041 (superseded by bound pr4, BINDABLE)
+- hfd_vms_bank_ft_rg6wg3 (vms_bank_ft_rg6wg3_1015, vms_bank_ft_rg6wg3_1015-v15a-367d6d1f4; child/family, superseded): spread 116/117 + capture 320 x1526
+- hfd_vms_bank_identity_q0_b0 (vm_identity_q0_b0_ref, vm_identity_q0_b0_ref-identity2-COMMIT-0958b1cf1; child/family, superseded): spread 83.3/80.5 + capture 242 x1718
+- hfd_vms_bank_strap_q1 (vm_strap_q1_ref, vm_strap_q1_ref-strap4hookfix-a900c2792; child/family, superseded): TT spread 100.4 + rr launch 278 x486
+- ot_hgi_sm_xload_cl2_bfq (hgi_sm_xl2_bfq, hgi_sm_xl2_bfq-cl2dh-4ccbe3242; child/family, superseded): TT/FF spread 95.3/91.0 + c_d capture 222 x612, rwq launch 263 x75
