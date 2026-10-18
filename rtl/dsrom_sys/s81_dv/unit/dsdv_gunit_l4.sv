@@ -22,6 +22,10 @@
 // registers, r / its valid / L4r's fault come back into input flops (+3 edges on the r chain; the mix phase waits for
 // r_ok as before, so only the HC latency moves).  The 24 mixes leave one a cycle as they are made (mx_v / mx_i / mx_y,
 // 38 pins, not a 768-bit register + bus): L5 assembles them; launch leaves with the last one as before.
+// S81U-GUNIT6 (10-17, native pin rules, NATIVE-2 lessons): cw is captured ONCE (wv / wa / wd are both the eps-table
+// input flops and the first stage of the cw feedthrough; cwo_* = their output flops, still 2 edges), so no cw pin feeds
+// two captures; the N launch output flop has a kept internal twin (launch_k) that feeds launch_s, so each output flop
+// drives only its own pin.  0 edges.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_l4 #(
     parameter integer MUT = 0
@@ -40,7 +44,7 @@ module dsdv_gunit_l4 #(
     output wire [275:0]  rn_o,  input wire [275:0] rn_i,
     output reg           launch, output reg mx_v, output reg [4:0] mx_i, output reg [31:0] mx_y, output reg t_set, output reg t_w, output reg [9:0] t_row,
     output reg  [4:0]    t_lm, output reg [15:0] t_sm,
-    output wire          cwo_v, output wire [9:0] cwo_a, output wire [255:0] cwo_d, output wire [3:0] sid_o,
+    output reg           cwo_v, output reg [9:0] cwo_a, output reg [255:0] cwo_d, output wire [3:0] sid_o,
     input  wire          hct5_v, input wire [275:0] hct5_b, input wire f5,
     // E face (L4r: the r chain)
     output reg           ss_v, output reg [31:0] ss, output reg [31:0] eps_c,
@@ -55,7 +59,6 @@ module dsdv_gunit_l4 #(
     dsdv_gunit_pass #(.W(V)) u_up (.clk(clk), .rst_n(rq[0]), .d(rs_i), .q(rn_o));
     dsdv_gunit_pass #(.W(V)) u_dn (.clk(clk), .rst_n(rq[0]), .d(rn_i), .q(rs_o));
     dsdv_gunit_pass #(.W(277)) u_ct (.clk(clk), .rst_n(rq[0]), .d({hct5_b, hct5_v}), .q({hct_b, hct_v}));
-    dsdv_gunit_pass #(.W(271)) u_cw (.clk(clk), .rst_n(rq[0]), .d({cw_d, cw_a, cw_v}), .q({cwo_d, cwo_a, cwo_v}));
     dsdv_gunit_pass #(.W(4)) u_sid (.clk(clk), .rst_n(rq[0]), .d(sid_i), .q(sid_o));
     // ---------------------------------------------------------------- input flops
     reg o_v, wv, f5_q; reg [3:0] o_i; reg [4:0] o_acc; reg [31:0] A32, A8, B8, B16a, B16b, C16a, C16b, C8, D8, D32;
@@ -68,6 +71,8 @@ module dsdv_gunit_l4 #(
         {D32, D8, C8, C16b, C16a, B16b, B16a, B8, A8, A32} <= g_d;
         aj_set <= j_set; aj_w <= j_w; aj_row <= j_row; aj_lm <= j_lm; aj_sm <= j_sm; wa <= cw_a; wd <= cw_d;
     end
+    always @(posedge clk or negedge rq[0]) if (!rq[0]) cwo_v <= 1'b0; else cwo_v <= wv;   // cw feedthrough stage 2
+    always @(posedge clk) begin cwo_a <= wa; cwo_d <= wd; end
     reg [31:0] eps_t [0:NSET-1];
     always @(posedge clk) if (wv && !wa[9] && wa[5:0] == 6'd62) eps_t[wa[8]] <= wd[255:224];
     // ---------------------------------------------------------------- A: level 1 / level 2 adders
@@ -155,13 +160,14 @@ module dsdv_gunit_l4 #(
     reg r_ok; reg [31:0] r;
     // ---------------------------------------------------------------- mix phase: 24 multiplies, then the tail launch
     reg m_on; reg [4:0] m_i; reg mm_v; reg [4:0] mm_i; reg [31:0] mm_a; reg mix_go;
+    (* keep = "true" *) reg launch_k;                   // internal twin of the launch output flop (-> launch_s)
     wire [31:0] my; wire f_mul; wire [LM:0] vm; wire [4:0] mi;
     always @(posedge clk or negedge rq[3])
         if (!rq[3]) begin
             rdone <= 25'd0; r_ok <= 1'b0; m_on <= 1'b0; mm_v <= 1'b0; mix_go <= 1'b0; mix_go_s <= 1'b0;
-            launch <= 1'b0; launch_s <= 1'b0; fault <= 1'b0;
+            launch <= 1'b0; launch_k <= 1'b0; launch_s <= 1'b0; fault <= 1'b0;
         end else begin
-            mix_go <= 1'b0; launch <= 1'b0;
+            mix_go <= 1'b0; launch <= 1'b0; launch_k <= 1'b0;
             if (root_v) rdone <= rdone | (25'd1 << root_acc);
             if (rr_v) begin r_ok <= 1'b1; r <= rr; end
             if (!m_on && rdone == {NACC{1'b1}} && r_ok) begin
@@ -170,8 +176,8 @@ module dsdv_gunit_l4 #(
             end
             if (m_on) begin m_i <= m_i + 5'd1; if (m_i == 5'd23) m_on <= 1'b0; end
             mm_v <= m_on; mm_i <= m_i;
-            if (vm[LM] && mi == 5'd23) launch <= 1'b1;
-            mix_go_s <= mix_go; launch_s <= launch;
+            if (vm[LM] && mi == 5'd23) begin launch <= 1'b1; launch_k <= 1'b1; end
+            mix_go_s <= mix_go; launch_s <= launch_k;
             if (f1 | f2 | f3 | f4 | f5a | f6 | f7 | f8 | (|t_f) | f_r | f_mul | f5_q
                 | (root_v && rdone[root_acc]) | (mix_go && !aj_v) | (qs[DQ - 2] && q_on && q_i != 5'd19)) fault <= 1'b1;
         end

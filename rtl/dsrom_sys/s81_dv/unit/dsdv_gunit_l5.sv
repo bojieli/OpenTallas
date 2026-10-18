@@ -13,6 +13,9 @@
 // operand registers leave as x?_v / x?_*, the results come back into this leaf's input flops (XS = 3 in the tail).
 // The mixes arrive one a cycle (mx_v / mx_i / mx_y) into input flops and are assembled here; launch is held one more
 // edge (ln0 -> ln) so the last mix is in mx when the tail takes them.
+// S81U-GUNIT6 (10-17, native pin rules, NATIVE-2 lessons): rst_n drives only ot_rst_relay (4 kept region copies:
+// feedthroughs, input flops, the tail, the CTL rows); release +3 edges after the port (transaction-level exact; the
+// tail's Sinkhorn gate counter is phase-free: result latency is independent of the divider phase).  0 data edges.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_l5 #(
     parameter integer MUT = 0
@@ -33,13 +36,15 @@ module dsdv_gunit_l5 #(
 );
     localparam integer V = 276, NSET = 2;
     integer j;
-    dsdv_gunit_pass #(.W(V)) u_up (.clk(clk), .rst_n(rst_n), .d(rs_i), .q(vo_n));
-    dsdv_gunit_pass #(.W(V)) u_dn (.clk(clk), .rst_n(rst_n), .d(vi_n), .q(rs_o));
+    wire [3:0] rq;
+    ot_rst_relay #(.REGIONS(4)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rq));
+    dsdv_gunit_pass #(.W(V)) u_up (.clk(clk), .rst_n(rq[0]), .d(rs_i), .q(vo_n));
+    dsdv_gunit_pass #(.W(V)) u_dn (.clk(clk), .rst_n(rq[0]), .d(vi_n), .q(rs_o));
     // ---------------------------------------------------------------- input flops
     reg ln0, ln, wv, qm_v; reg [4:0] qm_i; reg [31:0] qm_y; reg [767:0] mx; reg tj_set, tj_w; reg [9:0] tj_row; reg [4:0] tj_lm; reg [15:0] tj_sm;
     reg [9:0] wa; reg [255:0] wd; reg [3:0] sid_c; reg [9:0] rj_row; reg [4:0] rj_lm; reg [15:0] rj_sm;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin ln0 <= 1'b0; ln <= 1'b0; wv <= 1'b0; qm_v <= 1'b0; end
+    always @(posedge clk or negedge rq[1])
+        if (!rq[1]) begin ln0 <= 1'b0; ln <= 1'b0; wv <= 1'b0; qm_v <= 1'b0; end
         else begin ln0 <= launch; ln <= ln0; wv <= cw_v; qm_v <= mx_v; end
     always @(posedge clk) begin
         qm_i <= mx_i; qm_y <= mx_y; if (qm_v) mx[32 * qm_i +: 32] <= qm_y;   // the 24 mixes, one a cycle
@@ -63,10 +68,10 @@ module dsdv_gunit_l5 #(
     // ---------------------------------------------------------------- the tail
     wire tl_v, tl_f; wire [767:0] coef;
     reg qe_v, qe_f, qd_v, qd_f; reg [31:0] qe_y, qd_y;   // L5f results: input flops
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin qe_v <= 1'b0; qd_v <= 1'b0; end else begin qe_v <= ye_v; qd_v <= yd_v; end
+    always @(posedge clk or negedge rq[1])
+        if (!rq[1]) begin qe_v <= 1'b0; qd_v <= 1'b0; end else begin qe_v <= ye_v; qd_v <= yd_v; end
     always @(posedge clk) begin qe_y <= ye_y; qe_f <= ye_f; qd_y <= yd_y; qd_f <= yd_f; end
-    dsdv_gunit_tail #(.MUT_PRE(MUT == 8 ? 1 : 0)) u_tail (.clk(clk), .rst_n(rst_n), .launch(ln), .mixes(mx), .bases(bases), .scales(scales),
+    dsdv_gunit_tail #(.MUT_PRE(MUT == 8 ? 1 : 0)) u_tail (.clk(clk), .rst_n(rq[2]), .launch(ln), .mixes(mx), .bases(bases), .scales(scales),
         .result_v(tl_v), .result(coef), .fault(tl_f),
         .xe_v(xe_v), .xe_x(xe_x), .xe_vo(qe_v), .xe_y(qe_y), .xe_f(qe_f),
         .xd_v(xd_v), .xd_b(xd_b), .xd_vo(qd_v), .xd_y(qd_y), .xd_f(qd_f));
@@ -80,8 +85,8 @@ module dsdv_gunit_l5 #(
         end
     endfunction
     reg c_on; reg [2:0] c_i;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin c_on <= 1'b0; c_i <= 3'd0; ct_v <= 1'b0; fault <= 1'b0; end
+    always @(posedge clk or negedge rq[3])
+        if (!rq[3]) begin c_on <= 1'b0; c_i <= 3'd0; ct_v <= 1'b0; fault <= 1'b0; end
         else begin
             if (tl_v) begin c_on <= 1'b1; c_i <= 3'd0; end
             else if (c_on) begin c_i <= c_i + 3'd1; if (c_i == 3'd5) c_on <= 1'b0; end

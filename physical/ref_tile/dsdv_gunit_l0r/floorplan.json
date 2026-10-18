@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  129.6,
+  172.8,
   172.8
  ],
  "core": [
   2.16,
   2.16,
-  127.44,
+  170.64000000000001,
   170.64000000000001
  ],
  "why": "spec outline",
@@ -53,6 +53,7 @@
  "blocks": [],
  "findings": [],
  "referenced": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0r.sv",
   "physical/ref_tile/dsdv_gunit_l0r/kit.env",
   "physical/ref_tile/dsdv_gunit_l0r/clock.sdc",

@@ -13,6 +13,8 @@
 // so a window's last write is in the store before the stream's first read (the same order as the one-leaf form).
 // The read select is replicated per output byte (40 copies, keep; S81U-GUNIT4: the per-word copy drove 3,059 loads,
 // the leaf's worst reg->reg path): one copy drives 8 bits of a 32:1 word mux.
+// S81U-GUNIT6 (10-17, native pin rules): rst_n drives only ot_rst_relay (2 kept region copies: input flops, stream);
+// release +3 edges after the port (transaction-level exact).  0 data edges.
 // r_f (sticky): a go while the previous stream still runs.  MUT (bench only): 6 = roots 1 / 2 of g = 1 mod 4 swapped.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_l0r #(
@@ -26,10 +28,12 @@ module dsdv_gunit_l0r #(
     output reg           r_v, output reg [3:0] r_i, output reg [4:0] r_acc, output reg [319:0] r_d, output reg r_f
 );
     integer j;
+    wire [1:0] rq;
+    ot_rst_relay #(.REGIONS(2)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rq));
     // ---------------------------------------------------------------- input flops
     reg av, bv, wb, ga; reg [4:0] agh, bgh, gacc; reg [191:0] ad, bd; reg gb;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin av <= 1'b0; bv <= 1'b0; ga <= 1'b0; end
+    always @(posedge clk or negedge rq[0])
+        if (!rq[0]) begin av <= 1'b0; bv <= 1'b0; ga <= 1'b0; end
         else begin av <= wr_av; bv <= wr_bv; ga <= go_a; end
     always @(posedge clk) begin agh <= wr_agh; ad <= wr_ad; bgh <= wr_bgh; bd <= wr_bd; wb <= wr_b; gacc <= go_acc; gb <= go_b; end
     // ---------------------------------------------------------------- root store (2 window buffers)
@@ -47,8 +51,8 @@ module dsdv_gunit_l0r #(
         always @(posedge clk) q <= ga ? {gb, 4'd0} : {q[4], q[3:0] + 4'd1};
         assign sel[5 * c +: 5] = q;
     end endgenerate
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin a_on <= 1'b0; a_i <= 4'd0; r_v <= 1'b0; r_f <= 1'b0; end
+    always @(posedge clk or negedge rq[1])
+        if (!rq[1]) begin a_on <= 1'b0; a_i <= 4'd0; r_v <= 1'b0; r_f <= 1'b0; end
         else begin
             if (ga) begin a_on <= 1'b1; a_i <= 4'd0; a_acc <= gacc; if (a_on && a_i != 4'd15) r_f <= 1'b1; end
             else if (a_on) begin a_i <= a_i + 4'd1; if (a_i == 4'd15) a_on <= 1'b0; end

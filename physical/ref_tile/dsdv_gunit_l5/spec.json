@@ -3,6 +3,7 @@
  "top": "dsdv_gunit_l5",
  "kind": "tile",
  "sources": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/hdc/ot_hdc_fastfp.sv",
@@ -85,7 +86,7 @@
   "macro_halo_um": 5.4,
   "pin_min_tracks": 4
  },
- "structural_change": "S81U-GUNIT3 (10-17): dsdv_gunit_l5 successor: the tail's exp / fdiv units (11.5k flops) moved to the E-side leaf dsdv_gunit_l5f (GUNIT2 L5: 23,268 sinks, TT insertion 563 ps / spread 109 ps, clock-rule FAIL); the row max is a 2-stage tree (one-cycle 3-deep scan was TT -970 ps); the Sinkhorn ICG enable is a flop, not the rst_n port (in->ICG -345 ps). Tail calendar re-derived (XS 3, MAX +1): bit-exact bench. The mixes arrive one a cycle and are assembled here (launch +1 edge).",
+ "structural_change": "S81U-GUNIT6 (10-17): native pin rules -- rst_n drives only ot_rst_relay (0 data edges). S81U-GUNIT3 (10-17): dsdv_gunit_l5 successor: the tail's exp / fdiv units (11.5k flops) moved to the E-side leaf dsdv_gunit_l5f (GUNIT2 L5: 23,268 sinks, TT insertion 563 ps / spread 109 ps, clock-rule FAIL); the row max is a 2-stage tree (one-cycle 3-deep scan was TT -970 ps); the Sinkhorn ICG enable is a flop, not the rst_n port (in->ICG -345 ps). Tail calendar re-derived (XS 3, MAX +1): bit-exact bench. The mixes arrive one a cycle and are assembled here (launch +1 edge).",
  "job": {
   "owner": "Claude:S81U-GUNIT3",
   "branch": "claude/s81u-gunit3-1017",
