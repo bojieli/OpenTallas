@@ -1,0 +1,7 @@
+qkd_d2d_static_r7t-r7t-53d2981a7 went NEEDS_RTL at 07:44 on "bench_d2d_dies_exact expected PASS but rc=1".
+The daemon bench log (ot-epyc5 .../cl/bench_d2d_dies_exact.a1b1.log, run.log) stops at "layer 5 start cyc 917" with neither
+D2D_DIES_PASS nor the tb's "D2D_DIES_FAIL timeout" line: vvp was killed mid-run (ot-epyc5 over-committed: admits -194 GB, 8 waiters).
+Rerun of the SAME daemon bench_src_a1 (source 53d2981a7) via ot-run on ot-epyc5, 07:52:
+  frames C->S 198 S->C 198 kvn 24 results 6 host-checks 6 normal-epoch faults 0 errors 0
+  D2D_DIES_PASS   (16 s, max RSS 15.6 MB, rc=0)
+=> infrastructure kill, not an RTL failure; resubmitted on this commit (one route per block+source commit). ELEM-GAPS/KV.
