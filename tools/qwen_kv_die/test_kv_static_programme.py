@@ -133,7 +133,9 @@ class Programme(unittest.TestCase):
     def test_token_period_is_padded_and_every_launch_is_legal(self):
         ph = self.die['phase']
         self.assertEqual(ph['token_period_core'] % 768, 0)
-        self.assertEqual(ph['token_period_core'] - self.die['link']['token_period_unpadded'], 169)
+        # ROOT-QLINE 10-18: production calendar (die stages + LAYERBENCH compiled token path) = unpadded 249,389 -> 249,600
+        self.assertEqual(ph['token_period_core'], 249600)
+        self.assertEqual(ph['token_period_core'] - self.die['link']['token_period_unpadded'], 211)
         self.assertEqual((ph['token_phases'], ph['launches'], ph['outside_window'], ph['hold_conflicts']), (1, 108, [], []))
         # the unpadded period visits all 768 phases: no compiled launch holds at every one of them
         self.assertEqual(ph['unpadded_counterfactual']['token_phases'], 768)
