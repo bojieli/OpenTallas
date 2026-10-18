@@ -18,6 +18,25 @@ import re
 from kv_elastic_boundary import _source, WRITER_LINK_MAP, WRITER_PROGRAMME_MAP
 from static_pc_path_sources import SOURCES as PC_SOURCES
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def d2d_txdp_k():
+    """QLB-KV 10-18 (QXF-LINK 6ef1a097f F4): qkd_d2d_static TXDP is a REQUIRED parameter (no default; a zero byte does not
+    elaborate).  The KV die's vector = D2D_TXDP_K of the committed calendar image; OT_KV_D2D_TXDP_K=0x... overrides it with the
+    vector layer_compile.py derives for THIS die (kv_relay_check.sh gates bound == compiled)."""
+    import os
+    ov = os.environ.get('OT_KV_D2D_TXDP_K')
+    if ov:
+        v = int(ov, 0)
+    else:
+        img = 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
+        mm = re.search(r"localparam\s*\[31:0\]\s*D2D_TXDP_K\s*=\s*32'h([0-9a-fA-F_]+)\s*;", (ROOT / img).read_text())
+        if not mm:
+            raise SystemExit(f'kv_static: D2D_TXDP_K not found in {img} (QXF-LINK: TXDP is required, no default)')
+        v = int(mm.group(1).replace('_', ''), 16)
+    if any(((v >> (8 * k)) & 0xff) == 0 for k in range(4)):
+        raise SystemExit(f'kv_static: D2D_TXDP_K {v:#010x} has a zero port byte (D2D_TXDP_NOT_COMPILED)')
+    return v
 S = 'rtl/qwen_sys/static_kv_20261014/'
 E = 'rtl/qwen_sys/static_embedding_20261014/'
 # KVJ-C2 2026-10-17: the per-PC parent is the embedding successor qkd_static_kv_pc_path_emb (unchanged pc_path + the
@@ -387,7 +406,7 @@ def template(root=ROOT):
         'vport':dict(MUT=0,DQ=None,RT=None),
         'ectla':dict(STATIC_QK=1,QK_ISSUE_AGE=34,ROW_RETURN_LAT=None,HXK=13),
         'writer':dict(MUT=0,VMAP=1),'writer_programme':dict(MUT=0,VMAP=1),
-        'link':dict(MUT=0,NL=2,PR=1),
+        'link':dict(MUT=0,NL=2,PR=1,TXDP=d2d_txdp_k()),
         'embgw':dict(MUT=0),'emb_return_head':dict(MUT=0),'emb_return_hop':{},'emb_join':dict(MUT=0),'row_tx':dict(MUT=0),
         'es_fan_root':dict(MUT=0),
     }

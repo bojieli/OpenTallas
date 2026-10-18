@@ -891,17 +891,8 @@ D2D_CAL_IMAGE = 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
 
 
 def d2d_txdp_k():
-    ov = os.environ.get('OT_KV_D2D_TXDP_K')
-    if ov:
-        return int(ov, 0)
-    t = (ROOT / D2D_CAL_IMAGE).read_text()
-    mm = re.search(r"localparam\s*\[31:0\]\s*D2D_TXDP_K\s*=\s*32'h([0-9a-fA-F_]+)\s*;", t)
-    if not mm:
-        raise SystemExit(f'kv_die: D2D_TXDP_K not found in {D2D_CAL_IMAGE} (QXF-LINK: TXDP is required, no default)')
-    v = int(mm.group(1).replace('_', ''), 16)
-    if any(((v >> (8 * k)) & 0xff) == 0 for k in range(4)):
-        raise SystemExit(f'kv_die: D2D_TXDP_K {v:#010x} has a zero port byte (D2D_TXDP_NOT_COMPILED)')
-    return v
+    import kv_static as _ks          # one source of the vector (kv_static.d2d_txdp_k)
+    return _ks.d2d_txdp_k()
 
 
 def d2ds_binding():
