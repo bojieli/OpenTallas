@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  432.0,
-  518.4
+  345.6,
+  432.0
  ],
  "core": [
   2.16,
   2.16,
-  429.84,
-  516.24
+  343.44,
+  429.84
  ],
  "why": "spec outline",
  "std_area_um2": 12000,
@@ -32,6 +32,8 @@
   "E": [
    "dl_ev",
    "dl_e",
+   "clk",
+   "rst_n",
    "ci_dir",
    "ci_b"
   ],
@@ -61,8 +63,6 @@
    "g_d"
   ],
   "S": [
-   "clk",
-   "rst_n",
    "lo_v",
    "lo_d",
    "p_v",
@@ -90,7 +90,7 @@
   [
    "WARN",
    "util",
-   "utilisation 5% outside 45%-60% (std 12000 + macro 0 in core 219862 um2)",
+   "utilisation 8% outside 45%-60% (std 12000 + macro 0 in core 145959 um2)",
    "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   ]
  ],

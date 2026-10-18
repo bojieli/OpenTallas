@@ -50,7 +50,7 @@ module ot_s81sl_xr #(
     output wire [W-1:0]    bo,
     // beat leaves
     output reg  [4:0]      c_v,
-    (* keep *) output reg [5*160-1:0] c_d,
+    (* keep *) output reg [159:0] c_d,       // XR3 (10-18): one copy; the slice glue fans it to the 5 leaves
     output reg  [4:0]      sw_v,
     output reg  [5*10-1:0] sw_a,
     output reg  [5*8-1:0]  sw_m,
@@ -59,8 +59,8 @@ module ot_s81sl_xr #(
     input  wire [5*256-1:0] lo_d,
     input  wire [4:0]      p_v,
     input  wire [5*32-1:0] p_d,
-    (* keep *) output reg [4:0] rb_v,
-    (* keep *) output reg [5*32-1:0] rb_d,
+    output reg             rb_v,              // XR3: one copy each (slice glue fan-out)
+    output reg  [31:0]     rb_d,
     // Engram: leaf partial triples in, eg gates out to the leaves
     input  wire [4:0]      e_v,
     input  wire [5*2-1:0]  e_c,
@@ -68,9 +68,9 @@ module ot_s81sl_xr #(
     input  wire            eg_v,
     input  wire [1:0]      eg_c,
     input  wire [31:0]     eg_d,
-    output reg  [4:0]      g_v,
-    output reg  [5*2-1:0]  g_c,
-    output reg  [5*32-1:0] g_d,
+    output reg             g_v,               // XR3: one copy each (slice glue fan-out)
+    output reg  [1:0]      g_c,
+    output reg  [31:0]     g_d,
     // xfin
     output reg             x_go,
     output reg             x_mode,
@@ -251,8 +251,9 @@ module ot_s81sl_xr #(
         end
 
     // ---------------------------------------------------------------- command fan-out, xfin, streamer, capture
-    // c_d / is_d / cfg_d / rb_d are (* keep *) port registers: one flop per pin (synthesis otherwise folds the equal-D
-    // copies into one flop that drives pins on two faces).
+    // c_d / is_d / cfg_d are (* keep *) port registers: one flop per pin (synthesis otherwise folds the equal-D copies into
+    // one flop that drives pins on two faces).  XR3 (10-18): c_d / rb_* / g_* leave as ONE copy; ot_s81sl_slice fans them
+    // out to the 5 leaves in its glue (the leaf relays), so the tile no longer carries 5 equal 160 / 32 / 35-b pin copies.
     always @(posedge clk or negedge rs_o)
         if (!rs_o) begin c_v <= 5'd0; x_go <= 1'b0; is_v <= 1'b0; cfg_v <= 1'b0; x_mode <= 1'b0; end
         else begin
@@ -263,7 +264,7 @@ module ot_s81sl_xr #(
             cfg_v <= tg[3];
         end
     always @(posedge clk) begin
-        for (k = 0; k < 5; k = k + 1) c_d[160 * k +: 160] <= body;
+        c_d <= body;
         if (tg[1]) begin x_eps <= body[31:0]; x_scale <= body[95:64]; end
         is_d <= body; cfg_d <= body;
     end
@@ -276,8 +277,8 @@ module ot_s81sl_xr #(
         for (k = 1; k < 5; k = k + 1) if (ev_c[k] && ec_c[2 * k +: 2] != ec_c[1:0]) ebad = 1'b1;
     end
     always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin prun <= 1'b0; pi <= 3'd0; x_sv <= 1'b0; rb_v <= 5'd0; erun <= 1'b0; et <= 4'd0; el <= 3'd0;
-                         ekd <= 2'd0; g_v <= 5'd0; end
+        if (!rs_o) begin prun <= 1'b0; pi <= 3'd0; x_sv <= 1'b0; rb_v <= 1'b0; erun <= 1'b0; et <= 4'd0; el <= 3'd0;
+                         ekd <= 2'd0; g_v <= 1'b0; end
         else begin
             x_sv <= prun || erun;
             if (|pv) begin prun <= 1'b1; pi <= 3'd0; end
@@ -288,8 +289,8 @@ module ot_s81sl_xr #(
                 if (el == 3'd4) begin el <= 3'd0; ekd <= ekd + 2'd1; end else el <= el + 3'd1;
                 if (et == 4'd14) erun <= 1'b0;
             end
-            rb_v <= {5{rbv}};
-            g_v <= {5{egv_c}};
+            rb_v <= rbv;
+            g_v <= egv_c;
         end
     always @(posedge clk) begin
         for (k = 0; k < 5; k = k + 1) if (pv[k]) pq[k] <= pd[32 * k +: 32];
@@ -301,8 +302,8 @@ module ot_s81sl_xr #(
 `else
         else begin x_si <= {5'd0, pi}; x_s <= pq[pi]; end
 `endif
-        rb_d <= {5{rbd}};
-        g_c <= {5{egc_c}}; g_d <= {5{egd_c}};
+        rb_d <= rbd;
+        g_c <= egc_c; g_d <= egd_c;
     end
     // ---------------------------------------------------------------- faults
     always @(posedge clk or negedge rs_o)
@@ -317,11 +318,11 @@ module ot_s81sl_xr1 (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
     input  wire dl_ev, input wire [1103:0] dl_e, input wire dl_wv, input wire [1103:0] dl_w,
     input  wire dl_vv, input wire [275:0] dl_vb, output wire [2:0] ci_dir, output wire [1103:0] ci_b,
-    output wire [4:0] c_v, output wire [799:0] c_d, output wire [4:0] sw_v, output wire [49:0] sw_a, output wire [39:0] sw_m,
+    output wire [4:0] c_v, output wire [159:0] c_d, output wire [4:0] sw_v, output wire [49:0] sw_a, output wire [39:0] sw_m,
     output wire [1279:0] sw_d, input wire [4:0] lo_v, input wire [1279:0] lo_d, input wire [4:0] p_v, input wire [159:0] p_d,
-    output wire [4:0] rb_v, output wire [159:0] rb_d,
+    output wire rb_v, output wire [31:0] rb_d,
     input  wire [4:0] e_v, input wire [9:0] e_c, input wire [479:0] e_d, input wire eg_v, input wire [1:0] eg_c,
-    input  wire [31:0] eg_d, output wire [4:0] g_v, output wire [9:0] g_c, output wire [159:0] g_d,
+    input  wire [31:0] eg_d, output wire g_v, output wire [1:0] g_c, output wire [31:0] g_d,
     output wire x_go, output wire x_mode, output wire [31:0] x_eps, output wire [31:0] x_scale, output wire x_sv,
     output wire [7:0] x_si, output wire [31:0] x_s, input wire x_rbv, input wire [31:0] x_rbd,
     output wire is_v, output wire [159:0] is_d, output wire cfg_v, output wire [159:0] cfg_d, output wire fault
@@ -340,11 +341,11 @@ module ot_s81sl_xr3 (
     input  wire dl_ev, input wire [1103:0] dl_e, input wire dl_wv, input wire [1103:0] dl_w,
     input  wire dl_vv, input wire [275:0] dl_vb, output wire [2:0] ci_dir, output wire [1103:0] ci_b,
     input  wire [1103:0] bi, output wire [1103:0] bo,
-    output wire [4:0] c_v, output wire [799:0] c_d, output wire [4:0] sw_v, output wire [49:0] sw_a, output wire [39:0] sw_m,
+    output wire [4:0] c_v, output wire [159:0] c_d, output wire [4:0] sw_v, output wire [49:0] sw_a, output wire [39:0] sw_m,
     output wire [1279:0] sw_d, input wire [4:0] lo_v, input wire [1279:0] lo_d, input wire [4:0] p_v, input wire [159:0] p_d,
-    output wire [4:0] rb_v, output wire [159:0] rb_d,
+    output wire rb_v, output wire [31:0] rb_d,
     input  wire [4:0] e_v, input wire [9:0] e_c, input wire [479:0] e_d, input wire eg_v, input wire [1:0] eg_c,
-    input  wire [31:0] eg_d, output wire [4:0] g_v, output wire [9:0] g_c, output wire [159:0] g_d,
+    input  wire [31:0] eg_d, output wire g_v, output wire [1:0] g_c, output wire [31:0] g_d,
     output wire x_go, output wire x_mode, output wire [31:0] x_eps, output wire [31:0] x_scale, output wire x_sv,
     output wire [7:0] x_si, output wire [31:0] x_s, input wire x_rbv, input wire [31:0] x_rbd,
     output wire is_v, output wire [159:0] is_d, output wire cfg_v, output wire [159:0] cfg_d, output wire fault

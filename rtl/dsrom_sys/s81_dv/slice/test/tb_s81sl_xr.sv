@@ -25,13 +25,13 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
     reg rst_n = 1'b0; reg [3:0] sid = 4'd0;
     reg dl_ev = 0, dl_wv = 0, dl_vv = 0; reg [W-1:0] dl_e = 0, dl_w = 0, bi = 0; reg [V-1:0] dl_vb = 0;
     reg [4:0] lo_v = 0, p_v = 0; reg [1279:0] lo_d = 0; reg [159:0] p_d = 0; reg x_rbv = 0; reg [31:0] x_rbd = 0;
-    wire [2:0] ci_dir; wire [W-1:0] ci_b, bo; wire [4:0] c_v, sw_v, rb_v; wire [799:0] c_d; wire [49:0] sw_a;
-    wire [39:0] sw_m; wire [1279:0] sw_d; wire [159:0] rb_d, is_d, cfg_d; wire x_go, x_sv, is_v, cfg_v, fault;
+    wire [2:0] ci_dir; wire [W-1:0] ci_b, bo; wire [4:0] c_v, sw_v; wire rb_v; wire [159:0] c_d; wire [49:0] sw_a;
+    wire [39:0] sw_m; wire [1279:0] sw_d; wire [31:0] rb_d; wire [159:0] is_d, cfg_d; wire x_go, x_sv, is_v, cfg_v, fault;
     wire [31:0] x_eps, x_s; wire [7:0] x_si;
     // ENG ports (RTL-BUILD-S81 10-18): idle here (the ENG collector is covered by tb_s81sl_slice_eng); x_mode / x_scale are
     // checked on every x_go; g_v must stay 0.
     reg [4:0] e_v = 0; reg [9:0] e_c = 0; reg [479:0] e_d = 0; reg eg_v = 0; reg [1:0] eg_c = 0; reg [31:0] eg_d = 0;
-    wire [4:0] g_v; wire [9:0] g_c; wire [159:0] g_d; wire x_mode; wire [31:0] x_scale;
+    wire g_v; wire [1:0] g_c; wire [31:0] g_d;   // XR3: one copy (slice glue fan-out) wire x_mode; wire [31:0] x_scale;
     generate if (HB != 0) begin : g3
         ot_s81sl_xr3 u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
             .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi(bi), .bo(bo), .c_v(c_v), .c_d(c_d),
@@ -67,7 +67,7 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
     reg [39:0] x_swm [0:NS-1]; reg [1279:0] x_swd [0:NS-1]; reg x_go_e [0:NS-1]; reg [31:0] x_eps_e [0:NS-1];
     reg x_mode_e [0:NS-1]; reg [31:0] x_scale_e [0:NS-1];
     reg x_isv [0:NS-1]; reg [159:0] x_isd [0:NS-1]; reg x_cfgv [0:NS-1]; reg [159:0] x_cfgd [0:NS-1];
-    reg x_xsv [0:NS-1]; reg [7:0] x_xsi [0:NS-1]; reg [31:0] x_xs [0:NS-1]; reg x_rbv_e [0:NS-1]; reg [159:0] x_rbd_e [0:NS-1];
+    reg x_xsv [0:NS-1]; reg [7:0] x_xsi [0:NS-1]; reg [31:0] x_xs [0:NS-1]; reg x_rbv_e [0:NS-1]; reg [31:0] x_rbd_e [0:NS-1];
     reg r_ci [0:NS-1]; reg [4:0] r_sw [0:NS-1];
     // beats
     function automatic [W-1:0] ctl_beat(input [15:0] mask, input [4:0] tgt, input [4:0] lm, input [159:0] body);
@@ -238,7 +238,7 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
                 end
                 // ---- xfin rstd -> the 5 vn
                 if (ru(100) < 10) begin
-                    i_rbv[n] = 1; x_rbv_e[n + 1] = 1; x_rbd_e[n + 1] = {5{i_rbd[n]}};
+                    i_rbv[n] = 1; x_rbv_e[n + 1] = 1; x_rbd_e[n + 1] = i_rbd[n];
                 end
             end
         end
@@ -268,17 +268,17 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
             if (x_civ[d] && ((ci_b ^ x_cib[d]) & x_cim[d]) != 0) bad("ci_b", d);
             if (((bo ^ x_bo[d]) & x_bom[d]) != 0) bad("bo", d);
             if (c_v !== x_cv[d]) bad("c_v", d);
-            for (k = 0; k < 5; k = k + 1) if (x_cv[d][k] && c_d[160 * k +: 160] !== x_cd[d]) bad("c_d", d);
+            for (k = 0; k < 5; k = k + 1) if (x_cv[d][k] && c_d !== x_cd[d]) bad("c_d", d);
             if (sw_v !== x_swv[d]) bad("sw_v", d);
             for (k = 0; k < 5; k = k + 1) if (x_swv[d][k] && (sw_a[10 * k +: 10] !== x_swa[d][10 * k +: 10] ||
                 sw_m[8 * k +: 8] !== x_swm[d][8 * k +: 8] || sw_d[256 * k +: 256] !== x_swd[d][256 * k +: 256])) bad("sw", d);
             if (x_go !== x_go_e[d] || (x_go_e[d] && x_eps !== x_eps_e[d])) bad("x_go", d);
             if (x_go_e[d] && (x_mode !== x_mode_e[d] || x_scale !== x_scale_e[d])) bad("x_mode", d);
-            if (g_v !== 5'd0) bad("g_v", s);
+            if (g_v !== 1'b0) bad("g_v", s);
             if (is_v !== x_isv[d] || (x_isv[d] && is_d !== x_isd[d])) bad("is", d);
             if (cfg_v !== x_cfgv[d] || (x_cfgv[d] && cfg_d !== x_cfgd[d])) bad("cfg", d);
             if (x_sv !== x_xsv[s] || (x_xsv[s] && (x_si !== x_xsi[s] || x_s !== x_xs[s]))) bad("x_s", s);
-            if (rb_v !== {5{x_rbv_e[s]}} || (x_rbv_e[s] && rb_d !== x_rbd_e[s])) bad("rb", s);
+            if (rb_v !== x_rbv_e[s] || (x_rbv_e[s] && rb_d !== x_rbd_e[s])) bad("rb", s);
             if (fault !== 1'b0) bad("fault", s);
         end
     endtask
