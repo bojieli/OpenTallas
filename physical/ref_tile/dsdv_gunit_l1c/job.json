@@ -1,5 +1,5 @@
 {
- "name": "dsdv_gunit_l1c-gl1-COMMIT",
+ "name": "dsdv_gunit_l1c-gl1-d4d681306",
  "block": "dsdv_gunit_l1c",
  "ref_tile": true,
  "owner": "Claude:S81U-GUNIT-L1",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/s81u-gunit-l1-1017",
-  "commit": "COMMIT",
+  "commit": "d4d681306",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/unit",
    "rtl/lib",
@@ -45,6 +45,7 @@
     "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut 4 10",
     "expect": "fail",
     "fail_regex": "^MUT=10: GUNIT FAIL ",
+    "fail_witness": "results/rtl/s81_dv_units_1017/gunit_l1b/mut10_witness.log",
     "threads": 6,
     "peak_ram_gb": 24
    }
@@ -97,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsdv_gunit_l1c/dsdv_gunit_l1c-gl1-COMMIT"
+   "to": "results/rtl/ref_tile/dsdv_gunit_l1c/dsdv_gunit_l1c-gl1-d4d681306"
   }
  ],
  "cycles_added": 0,
