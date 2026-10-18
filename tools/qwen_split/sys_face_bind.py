@@ -63,12 +63,20 @@ EDGES = [
     ('emb_expected_scale', 'embed_prov', 'expected_scale'), ('emb_expected_epoch', 'embed_prov', 'expected_epoch'),
     ('emb_fill_begin', 'embed_prov', 'fill_begin'), ('emb_fill_token', 'embed_prov', 'fill_token'),
     ('emb_fill_epoch', 'embed_prov', 'fill_epoch'), ('emb_core_epoch', 'embed_prov', 'core_epoch'),
+    ('emb_prov_fault', 'embed_prov', 'fault'),
     # fault / status sources
     ('io_cmd_free', 'io_collective', 'cmd_free'), ('io_fault', 'io_collective', 'fault'),
     ('io_shared_fault', 'io_collective', 'shared_fault'), ('res_issue_fault', 'res_train_issue', 'fault'),
     # run anchor: the forwarded epoch strobe bump (static_link_bind's bump_fwd_epoch, net lnk_fwd_epoch)
     ('fwd_epoch', 'bump_fwd_epoch', 'o'),
 ]
+
+
+# Q-CTLM G8 (claude/qctlm-1017 d8f159727): the DV sys_face drops these inputs (their producers, the qfd_crom_g groups and
+# the res trains, left the die); with that RTL their edges are skipped (Q-DIEPLAN6 10-17), with the older RTL they bind
+G8_DROPPED = ('crom_fault_code', 'res_issue_fault')
+# Q-STUB 10-17: inputs added after a closed view was cut; with an older RTL (no such port) their edges are skipped
+ADDED_LATER = ('emb_prov_fault',)
 
 
 def _bus_of(model, by, inst, port):
@@ -107,6 +115,8 @@ def apply(model):
     peer_ports = {}
     added, appended = [], []
     for sp, inst, pp in EDGES:
+        if (sp in G8_DROPPED or sp in ADDED_LATER) and sp not in sf:
+            continue
         if sp not in sf:
             raise ValueError(f'sys face bind: {sp} not a qfd_sys_face port')
         pm = by[inst].master
@@ -129,7 +139,7 @@ def apply(model):
         peer_ports[sp] = inst
     # constant-ROM group fault codes -> crom_fault_code[2g+1:2g]
     alias = model.setdefault('port_join', {}).setdefault(MASTER, {})
-    for g in range(8):
+    for g in (range(8) if 'crom_fault_code' in sf else ()):
         a = f'crom_fault_code__{2 * g}_{2 * g + 1}'
         alias[a] = ('crom_fault_code', [2 * g, 2 * g + 1])
         model['buses'].append((f'sf_crom_fc_{g}', 'spine_local', 2, [(f'crom_g_{g}', 'fault_code'), (INST, a)]))

@@ -2,6 +2,8 @@
 // REF slices see the pin-captured copies: host/hbm resets, ctrl_er, completion v/we delayed one edge; slot k boot_go =
 // boot_go delayed 2k edges (bgd[2k]); head status = REF slot-k bit delayed 2k + 1.  Mutants: OT_SLICE_DIE_MUT (lpc^1),
 // OT_SLICE_BOOT_MUT (boot capture skipped), OT_SLICE_ER_MUT (ctrl_er pin capture dropped: response one edge early).
+// KVE-2 es1: ESPIN=1 ctrl_es pin register stage -> DUT ctrl_es = REF ctrl_es one edge later; OT_SLICE_ES_MUT (MUT=4:
+// stage bypassed, ctrl_es one edge early) must FAIL.
 `timescale 1ns/1ps
 // qwen-split/kvsys die lead r7 2026-10-15: bench of the die-v1.4 slice wrapper qkd_host_pc_slice_die (one stack, 32 slots
 // in PHYSICAL slot order, lpc = the landing strip's logical PC of each slot, kv_strips: lpc = 8 q + G(i)).
@@ -25,7 +27,8 @@ module tb_host_pc_slice_die_pinreg;
  // ---------------- REF
  wire [(N+1)*291-1:0] rf; wire [(N+1)*32-1:0] rc, ra; wire [N:0] rfl;
  assign rf[0+:291]=f0; assign rc[N*32+:32]=0; assign ra[N*32+:32]=0; assign rfl[N]=0;
- wire [N*261-1:0] r_land_er; wire [N*288-1:0] r_ctrl_es; wire [N-1:0] r_ack, r_bd, r_bo, r_bf;
+ wire [N*261-1:0] r_land_er; wire [N*288-1:0] r_ctrl_es; reg [N*288-1:0] r_ctrl_es_d;
+ always @(posedge ck) r_ctrl_es_d <= r_ctrl_es; wire [N-1:0] r_ack, r_bd, r_bo, r_bf; // ESPIN pin register: +1 edge
  // ---------------- DUT
  wire [(N+1)*291-1:0] df; wire [(N+1)*32-1:0] dc, da; wire [N:0] dfl, dbg;
  wire [(N+1)*32-1:0] sk, sd, so, sf;
@@ -39,7 +42,7 @@ module tb_host_pc_slice_die_pinreg;
    .boot_go(bg_k),.lpc(lpc_of(k)),.fi(rf[k*291+:291]),.fo(rf[(k+1)*291+:291]),.ci(rc[(k+1)*32+:32]),.co(rc[k*32+:32]),.ai(ra[(k+1)*32+:32]),.ao(ra[k*32+:32]),.fault_i(rfl[k+1]),.fault_o(rfl[k]),
    .land_es(land_es[k*288+:288]),.land_er(r_land_er[k*261+:261]),.ctrl_es(r_ctrl_es[k*288+:288]),.ctrl_er(ctrl_er_d[k*261+:261]),
    .ctrl_completion_v(cmp_v_d[k]),.ctrl_completion_we(cmp_we_d[k]),.all_ack(r_ack[k]),.boot_done(r_bd[k]),.boot_ok(r_bo[k]),.boot_fault(r_bf[k]));
-  qkd_host_pc_slice_die #(.PINCAP(1),.MUT(`ifdef OT_SLICE_BOOT_MUT 2 `elsif OT_SLICE_DIE_MUT 1 `elsif OT_SLICE_ER_MUT 3 `else 0 `endif)) u_dut(.ck_station(ck),.ck_static(ck),.ck_boot(ck),.ck_boot_test(ck),
+  qkd_host_pc_slice_die #(.PINCAP(1),.MUT(`ifdef OT_SLICE_BOOT_MUT 2 `elsif OT_SLICE_DIE_MUT 1 `elsif OT_SLICE_ER_MUT 3 `elsif OT_SLICE_ES_MUT 4 `else 0 `endif)) u_dut(.ck(ck),
    .host_rst_n(rst_n),.hbm_rst_n(hbm_rst_n),.lpc(lpc_of(k)),.bgi(dbg[k]),.bgo(dbg[k+1]),
    .fi(df[k*291+:291]),.fo(df[(k+1)*291+:291]),.ci(dc[(k+1)*32+:32]),.co(dc[k*32+:32]),.ai(da[(k+1)*32+:32]),.ao(da[k*32+:32]),.fault_i(dfl[k+1]),.fault_o(dfl[k]),
    .land_es(land_es[k*288+:288]),.land_er(d_land_er[k*261+:261]),.ctrl_es(d_ctrl_es[k*288+:288]),.ctrl_er(ctrl_er[k*261+:261]),
@@ -76,7 +79,7 @@ module tb_host_pc_slice_die_pinreg;
    cmp_v=$urandom; cmp_we=$urandom;
    @(negedge ck);
    if(cyc>D+20) begin
-    if(r_ctrl_es!==d_ctrl_es) err("ctrl_es"); if(r_land_er!==d_land_er) err("land_er");
+    if(r_ctrl_es_d!==d_ctrl_es) err("ctrl_es"); if(r_land_er!==d_land_er) err("land_er");
     if(rf[N*291+:291]!==df[N*291+:291]) err("fo tail"); if(rc[0+:32]!==dc[0+:32]) err("co head"); if(ra[0+:32]!==da[0+:32]) err("ao head"); if(rfl[0]!==dfl[0]) err("fault head");
     if(sk[0+:32]!==expect_head(0)) err("status ack"); if(sd[0+:32]!==expect_head(1)) err("status boot_done");
     if(so[0+:32]!==expect_head(2)) err("status boot_ok"); if(sf[0+:32]!==expect_head(3)) err("status boot_fault");

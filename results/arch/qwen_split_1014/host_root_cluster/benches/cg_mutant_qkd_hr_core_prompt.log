@@ -1,0 +1,8 @@
+mutant: u_core_prompt.u_rank__u_control__por_n inverted at the parent
+seed=1 mode=0: MISMATCH host_rst_n t=2220335 fs core=2 flat=0 clu=1
+seed=1 mode=1: MISMATCH host_rst_n t=2220335 fs core=2 flat=0 clu=1
+seed=2 mode=0: MISMATCH host_rst_n t=2220335 fs core=2 flat=0 clu=1
+seed=2 mode=1: MISMATCH host_rst_n t=2220335 fs core=2 flat=0 clu=1
+seed=3 mode=0: MISMATCH host_rst_n t=2220335 fs core=2 flat=0 clu=1
+seed=3 mode=1: MISMATCH host_rst_n t=2220335 fs core=2 flat=0 clu=1
+CLUSTER_GATE FAIL mutant child=core_prompt runs_pass=0/6 core_cycles=20000

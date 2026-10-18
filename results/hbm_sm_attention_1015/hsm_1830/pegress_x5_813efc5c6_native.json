@@ -1,0 +1,32 @@
+{
+ "cell": "ot_hgi_sm_xload_xq_pegress",
+ "view": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress",
+ "lib_cell": "ot_hgi_sm_xload_xq_pegress",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 371.0,
+ "spread_ps": 83.0,
+ "outputs": 2065,
+ "inputs": 3113,
+ "launch_ps": 195.9,
+ "launch_pin": "xw_data[887]",
+ "capture_ps": 337.5,
+ "capture_pin": "ed5[7]",
+ "launch_over": 0,
+ "capture_over": 2,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 337.53105 > 190 (2 pins)",
+ "job": "hgi_sm_xq_pegress-x5-813efc5c6",
+ "main_merge": "c249f21f9",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one",
+ "limits": {
+  "launch": 220,
+  "capture": 190,
+  "spread": 80
+ },
+ "verdict": "NATIVE FAIL"
+}

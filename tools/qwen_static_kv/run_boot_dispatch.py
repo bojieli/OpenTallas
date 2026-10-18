@@ -12,7 +12,7 @@ SOURCES=['rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv',
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=True)
     runs=[]
-    for m,neg in [(0,0),(0,1),(0,2),(0,3),(0,4),(0,5),(1,1),(2,0),(3,0)]:
+    for m,neg in [(0,0),(0,1),(0,2),(0,3),(0,4),(0,5),(1,1),(2,0),(3,0),(4,0)]:
         binary=(a.out/f'm{m}_n{neg}.vvp').resolve()
         p=subprocess.run(['iverilog','-g2012','-s','tb_static_boot_dispatch',f'-Ptb_static_boot_dispatch.MUT={m}',f'-Ptb_static_boot_dispatch.NEG={neg}','-o',str(binary)]+[str(ROOT/f) for f in SOURCES],capture_output=True,text=True)
         (a.out/f'm{m}_n{neg}.build.log').write_text(p.stdout+p.stderr)

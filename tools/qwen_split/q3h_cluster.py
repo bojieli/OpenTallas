@@ -492,6 +492,8 @@ def apply_grid(v, m):
         c0 = 4 * (5 - g) if side == 'W' else 24 + 4 * g
         m['ties'].append((n, 'cid', 12, (c0 // 4) * 4 + band))
         m['ties'].append((n, 'far', 1, 1 if band in (0, 3) else 0))
+    # q3h5: grid keep-outs (DIE-CLOCK regional root sites / reserved lanes) reach the relay planner's occupancy
+    m['relay_keepouts'] = [dict(name=k_['n'], rect=list(k_['rect'])) for k_ in G.get('keepouts', [])]
     m['buses'] = keep
     # the relay planner's vertical corridors: relay_geometry derived them from the (retired) tile grid, i.e. inside the
     # clusters now. The only vertical array channels are the array-edge channels beside the port columns: W lanes

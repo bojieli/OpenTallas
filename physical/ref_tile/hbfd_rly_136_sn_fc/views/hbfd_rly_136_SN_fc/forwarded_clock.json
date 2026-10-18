@@ -1,0 +1,126 @@
+{
+  "schema": "opentallas.forwarded_clock.routed.v1",
+  "corners": {
+    "ss": {
+      "corner": "ss",
+      "input_pin": "clk_in",
+      "output_pin": "clk_out",
+      "driver_cell": "BUFx12f_ASAP7_75t_R",
+      "driver_instance": "u.u_fcb_ck.u_cell",
+      "direct_root_buffer": true,
+      "units": "ps",
+      "clk_in_to_clk_out_ps": {
+        "arrival_max_rise": 17.630846,
+        "arrival_min_rise": 17.32848,
+        "arrival_max_fall": 20.793116482290884,
+        "arrival_min_fall": 20.486628482290882,
+        "slew_max_rise": 8.627093,
+        "slew_max_fall": 8.871198
+      },
+      "driver_y_ps": {
+        "arrival_max_rise": 17.333895,
+        "arrival_min_rise": 17.031527,
+        "arrival_max_fall": 20.49611948229085,
+        "arrival_min_fall": 20.189662482290885,
+        "slew_max_rise": 8.618011,
+        "slew_max_fall": 8.862817
+      },
+      "output_net_delta_ps": {
+        "arrival_max_rise": 0.29695099999999996,
+        "arrival_min_rise": 0.29695299999999847,
+        "arrival_max_fall": 0.29699700000003304,
+        "arrival_min_fall": 0.2969659999999976,
+        "slew_max_rise": 0.009082000000001145,
+        "slew_max_fall": 0.008380999999999972
+      },
+      "measured_at": "physical clk_out STA terminal including output-net routed SPEF; propagated primary clock",
+      "odb_sha256": "463d969b3cffe709c8b9b982db2addb0a9a0ebed61d0458ffe79caa9475d8d6c",
+      "spef_sha256": "2c93f77bafd65e7da6cf79f50641d66c4cf0ebfb0ce7117480441a049b1b6c5f",
+      "native_combinational_lib_sha256": "4e5c3ce882427021577f61544edee213f3627ff43e51820e77a28edd48c86423",
+      "sequential_etm_before_merge_sha256": "887f2f198287daa463d1a87c71dcec707eae2876f07c5d681b7859fb32bbc5f5",
+      "exported_etm_sha256": "1ed6cc05457ee19de2295e69d95527d2229ea857b4114e63e42a24a99e836b8e",
+      "extraction_tcl_sha256": "a6e279339ee3567bd328b5bec8a7ad826c8efc63e1324de237eb21cca41c9004"
+    },
+    "ff": {
+      "corner": "ff",
+      "input_pin": "clk_in",
+      "output_pin": "clk_out",
+      "driver_cell": "BUFx12f_ASAP7_75t_R",
+      "driver_instance": "u.u_fcb_ck.u_cell",
+      "direct_root_buffer": true,
+      "units": "ps",
+      "clk_in_to_clk_out_ps": {
+        "arrival_max_rise": 10.483785,
+        "arrival_min_rise": 10.228884,
+        "arrival_max_fall": 11.005427482290884,
+        "arrival_min_fall": 10.728938482290857,
+        "slew_max_rise": 4.485665,
+        "slew_max_fall": 4.28771
+      },
+      "driver_y_ps": {
+        "arrival_max_rise": 10.187072,
+        "arrival_min_rise": 9.932172,
+        "arrival_max_fall": 10.708735482290876,
+        "arrival_min_fall": 10.432276482290888,
+        "slew_max_rise": 4.462309,
+        "slew_max_fall": 4.262586
+      },
+      "output_net_delta_ps": {
+        "arrival_max_rise": 0.2967129999999987,
+        "arrival_min_rise": 0.2967120000000012,
+        "arrival_max_fall": 0.2966920000000073,
+        "arrival_min_fall": 0.29666199999996934,
+        "slew_max_rise": 0.02335599999999971,
+        "slew_max_fall": 0.025123999999999924
+      },
+      "measured_at": "physical clk_out STA terminal including output-net routed SPEF; propagated primary clock",
+      "odb_sha256": "463d969b3cffe709c8b9b982db2addb0a9a0ebed61d0458ffe79caa9475d8d6c",
+      "spef_sha256": "2c93f77bafd65e7da6cf79f50641d66c4cf0ebfb0ce7117480441a049b1b6c5f",
+      "native_combinational_lib_sha256": "0567b28686d1b7d471a1201987c182ceddb96fe0356fad5f380b80cf463c80b4",
+      "sequential_etm_before_merge_sha256": "ed4d426ed15ce6b673b5d0b3848e3ba8072f503d726039a553bd6bc5177d5e50",
+      "exported_etm_sha256": "9e4c3e739031768f748bb6500601edcdfa45f7325309d4877e92101d1b8c6815",
+      "extraction_tcl_sha256": "663367dd9feb021d22dd094717327b19f91a1b53ec83d2ca40f3430108426cf3"
+    },
+    "tt": {
+      "corner": "tt",
+      "input_pin": "clk_in",
+      "output_pin": "clk_out",
+      "driver_cell": "BUFx12f_ASAP7_75t_R",
+      "driver_instance": "u.u_fcb_ck.u_cell",
+      "direct_root_buffer": true,
+      "units": "ps",
+      "clk_in_to_clk_out_ps": {
+        "arrival_max_rise": 13.077561,
+        "arrival_min_rise": 12.793112,
+        "arrival_max_fall": 14.26543748229085,
+        "arrival_min_fall": 13.963679482290843,
+        "slew_max_rise": 5.886367,
+        "slew_max_fall": 5.769207
+      },
+      "driver_y_ps": {
+        "arrival_max_rise": 12.7807,
+        "arrival_min_rise": 12.49625,
+        "arrival_max_fall": 13.96856248229085,
+        "arrival_min_fall": 13.666804482290843,
+        "slew_max_rise": 5.871231,
+        "slew_max_fall": 5.753835
+      },
+      "output_net_delta_ps": {
+        "arrival_max_rise": 0.2968609999999998,
+        "arrival_min_rise": 0.29686200000000085,
+        "arrival_max_fall": 0.296875,
+        "arrival_min_fall": 0.296875,
+        "slew_max_rise": 0.015136000000000038,
+        "slew_max_fall": 0.015372000000000163
+      },
+      "measured_at": "physical clk_out STA terminal including output-net routed SPEF; propagated primary clock",
+      "odb_sha256": "463d969b3cffe709c8b9b982db2addb0a9a0ebed61d0458ffe79caa9475d8d6c",
+      "spef_sha256": "2c93f77bafd65e7da6cf79f50641d66c4cf0ebfb0ce7117480441a049b1b6c5f",
+      "native_combinational_lib_sha256": "918b323b65f1b5a6458a847ef16e53410cbea6618229c10f80caaf4d0dc731a2",
+      "sequential_etm_before_merge_sha256": "a94fc5f7d952a9fd05aabdcee8e1b64a9d7f77cfc0fbd428da7d728163963f23",
+      "exported_etm_sha256": "fe7ea518225a048bdba76e5dcf5c6c0b0b28d18b0d36794efa185c3504d1720a",
+      "extraction_tcl_sha256": "3ba5b68ead8ede1dc40aefe6e0f32d297446ab93ad528b623ef2f1578a5291ff"
+    }
+  },
+  "scope": "clock arc only; actual communicating-pair setup/hold remains a die check"
+}

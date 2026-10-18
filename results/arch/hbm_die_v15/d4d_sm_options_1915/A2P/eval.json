@@ -1,0 +1,138 @@
+{
+ "tag": "A2P",
+ "die_um": [
+  18896.48,
+  26248.48
+ ],
+ "die_mm2": 496.0,
+ "placed_mm2": 332.57,
+ "cut_lanes": {
+  "worst_v": {
+   "ratio": 0.49,
+   "x": 13300.0,
+   "y": [
+    10400.0,
+    11400.0
+   ]
+  },
+  "worst_h": {
+   "ratio": 0.499,
+   "y": 14600.0,
+   "x": [
+    14200.0,
+    15200.0
+   ]
+  },
+  "lines_over_060": 0,
+  "windows_over_060": 0
+ },
+ "cut_no_lanes": 1.016,
+ "faces_over_1": 6,
+ "stages_bw": 8.385,
+ "per_class": {
+  "HBM_K": {
+   "bits": 35392,
+   "stages_bw": 0.0
+  },
+  "SM_X": {
+   "bits": 34944,
+   "stages_bw": 10.46
+  },
+  "SM_HBM": {
+   "bits": 18112,
+   "stages_bw": 2.75
+  },
+  "EP_SERDES": {
+   "bits": 9504,
+   "stages_bw": 0.33
+  },
+  "LG_SU": {
+   "bits": 8896,
+   "stages_bw": 0.5
+  },
+  "LG_HC": {
+   "bits": 8896,
+   "stages_bw": 0.5
+  },
+  "LG_SFU": {
+   "bits": 8896,
+   "stages_bw": 0.5
+  },
+  "HC_CORE": {
+   "bits": 8896,
+   "stages_bw": 20.49
+  },
+  "COLL_VM": {
+   "bits": 8880,
+   "stages_bw": 19.44
+  },
+  "VM_HUB": {
+   "bits": 8608,
+   "stages_bw": 24.56
+  },
+  "COLL_EP": {
+   "bits": 6120,
+   "stages_bw": 17.4
+  },
+  "HC_ENG": {
+   "bits": 5744,
+   "stages_bw": 2.0
+  },
+  "VM_RING": {
+   "bits": 4448,
+   "stages_bw": 0.0
+  },
+  "QUANT_VM": {
+   "bits": 4440,
+   "stages_bw": 0.0
+  },
+  "SM_OUT": {
+   "bits": 4320,
+   "stages_bw": 17.5
+  },
+  "HBM_VM": {
+   "bits": 4096,
+   "stages_bw": 38.38
+  },
+  "VM_HBM": {
+   "bits": 4096,
+   "stages_bw": 38.5
+  },
+  "COLL_RING": {
+   "bits": 1652,
+   "stages_bw": 13.0
+  },
+  "SFU_CORE": {
+   "bits": 1536,
+   "stages_bw": 16.33
+  },
+  "SU_CORE": {
+   "bits": 1536,
+   "stages_bw": 13.67
+  },
+  "KV_DESC": {
+   "bits": 1024,
+   "stages_bw": 18.75
+  }
+ },
+ "relay_flops": 1257976.0,
+ "su_slice": [
+  1797.12,
+  2825.28
+ ],
+ "sm": [
+  1807.2,
+  7755.84
+ ],
+ "fits_reticle": true,
+ "reticle": {
+  "die_um": [
+   18896.48,
+   26248.48
+  ],
+  "long_margin_um": 6751.52,
+  "short_margin_um": 7103.52,
+  "margin_req_um": 500.0,
+  "ok": true
+ }
+}

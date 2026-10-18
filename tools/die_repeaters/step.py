@@ -183,6 +183,8 @@ def check(report):
          f"resized={r.get('resized')} non_buffer={r.get('non_buffer_inserted')} skip_nets={r.get('skip_nets')} "
          f"longest={r.get('longest_um')} over_reach({r.get('reach_um')})={r.get('over_reach_nets')} "
          f"post_slew={r.get('post_slew_violators')} post_cap={r.get('post_cap_violators')} legalize={r.get('legalize')!r}")
+    if r.get('warnings'):     # warn, never fail (e.g. spread displacement > max_wire/2: a lane over a block)
+        s += f" WARN({len(r['warnings'])}) max_disp={r.get('spread_max_disp_um')}: " + '; '.join(r['warnings'])
     return ok, s
 
 

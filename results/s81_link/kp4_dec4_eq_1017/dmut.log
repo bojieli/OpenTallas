@@ -1,0 +1,9 @@
+# tools/s81_link/run_kp4_eq_bench.sh dmut (sources at 4757cba8a, verilator 5.050, seed 11)
+ERR rtl mismatch cycle 87
+ERR rtl mismatch cycle 93
+ERR hw mismatch cycle 93
+TB_S81_KP4_EQ cycles=1476 ref_beats=1395 rtl_mismatch=557 hw_mismatch=554 SEAMMUT=0
+TB_S81_KP4 frames_out=140 exact=8 beyond_t_flagged=17 bad=116 miscorrected=0 nerr_bad=0 parity_checked=16 parity_bad=0 lock=1 relocks=1 n_corr=855 n_unc=17 EMUT=0 DMUT=2 FAIL
+TB_S81_KP4_EQ FAIL
+rc=1
+run.log lines: 15

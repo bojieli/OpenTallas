@@ -1,5 +1,5 @@
 # ref_tile PRE_CTS: io_ref boundary switch after the tree (qwen_die_masters/pre_cts_skew.tcl); clock entries: no tree, one port per child clock pin (sourced FIRST)
-set ::ot_ce_cts_roots {ck_sr[0] ck_sr[1] ck_sr[2] ck_sr[3] ck_rx ck_ry}
+set ::ot_ce_cts_roots {ck_sr[0] ck_sr[1] ck_sr[2] ck_sr[3] ck_rx ck_ry ck_si}
 source /src/physical/common_flow/clock_entries.tcl
 source /src/physical/qwen_die_masters/pre_cts_skew.tcl
 rename clock_tree_synthesis ::ot_ref_cts_boundary_orig
