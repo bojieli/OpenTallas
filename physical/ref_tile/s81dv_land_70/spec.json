@@ -58,8 +58,8 @@
   "rs"
  ],
  "outline": {
-  "w": 21.6,
-  "h": 21.6,
+  "w": 24.84,
+  "h": 24.84,
   "exact": true
  },
  "layer_cap": "M5",
@@ -104,7 +104,7 @@
   "io_hold_margin_ns": 0.0,
   "macro_halo_um": 5.4
  },
- "structural_change": "S81-DIE7/LAND 10-18: first hardened view of the S81 p4l lane-tail LANDING dsfd_dvland_70 (ot_s81_land W=70 D=4 KW=3; LANDING-CONTRACT L1-L7): ring of 4 slots written on the lane's forwarded clock ck_f (the slots ARE the capture flops, flop-first), read on the block root ck at slot (rc - K) mod 4 into the registered o (flop-last); k[2:0] = the per-lane identity strap K tied by the die binder; no ready / credit / occupancy (static calendar).  bind9 (claude/s81-die7-1018 3923ae6de, STRICT PASS): 66 inst: last station dsfd_dvrlyh_70_NS 24 / _SN 42 (vertical lanes; SN = MX).  Faces: lane i + ck_f on N (from the last relay station), o + ck + fault on S (abutted to the receiving block), rs / k strap on E; one master per width, the die mirrors it (MY / MX) for the opposite lane direction.  Outline 21.6 x 21.6 um: data faces N/S sized from 71 pins at <= 6 pins/um (3.29/um on 21.6 um), depth from the estimated std area (~372 flops + read mux) at util ~0.45.  Two CTS roots (multiple_cts_roots): ck_f (lane domain: i, ring slots, wc, epochs) and ck (core: rs, k, rc / warm / fault / o), related same frequency (one PLL, fixed-phase; the lane phase dL is the die's, checked by the die STA as the landing window MCP -setup E -hold D-1).  Slot write enables stay enable muxes as the RTL (the contract's per-slot ICG note is not adopted: no RTL change under the closed bind9; the Qwen qfd_landh kits do the same).  Recipe 4 flop-first, hold_budget die, M5 cap.",
+ "structural_change": "S81-DIE7/LAND 10-18: first hardened view of the S81 p4l lane-tail LANDING dsfd_dvland_70 (ot_s81_land W=70 D=4 KW=3; LANDING-CONTRACT L1-L7): ring of 4 slots written on the lane's forwarded clock ck_f (the slots ARE the capture flops, flop-first), read on the block root ck at slot (rc - K) mod 4 into the registered o (flop-last); k[2:0] = the per-lane identity strap K tied by the die binder; no ready / credit / occupancy (static calendar).  bind9 (claude/s81-die7-1018 3923ae6de, STRICT PASS): 66 inst: last station dsfd_dvrlyh_70_NS 24 / _SN 42 (vertical lanes; SN = MX).  Faces: lane i + ck_f on N (from the last relay station), o + ck + fault on S (abutted to the receiving block), rs / k strap on E; one master per width, the die mirrors it (MY / MX) for the opposite lane direction.  Outline 24.84 x 24.84 um: data faces N/S sized from 71 pins at <= 6 pins/um (2.86/um on 24.84 um), depth from the gate-measured synthesized std area 212 um2 at util ~0.5 (first gate at 21.6 x 21.6: util 71%, DPL-0038).  Two CTS roots (multiple_cts_roots): ck_f (lane domain: i, ring slots, wc, epochs) and ck (core: rs, k, rc / warm / fault / o), related same frequency (one PLL, fixed-phase; the lane phase dL is the die's, checked by the die STA as the landing window MCP -setup E -hold D-1).  Slot write enables stay enable muxes as the RTL (the contract's per-slot ICG note is not adopted: no RTL change under the closed bind9; the Qwen qfd_landh kits do the same).  Recipe 4 flop-first, hold_budget die, M5 cap.",
  "job": {
   "owner": "Claude:S81-DIE7/LAND",
   "branch": "claude/s81-die7-land-1018",
