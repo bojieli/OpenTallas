@@ -29,7 +29,8 @@
 // AP_OFS[16 s +: 16] (two's complement): hub input age of stack s = root age + AP_OFS - 2 relative to the native
 // service (= 2 there: start skew + ap pin flop).  On the die: AP_OFS_s = 2 + L_s + D(ap_s) - D(hs) - 1, L_s = the
 // stack's start lag behind the attention root's start_qk (compiler).
-// MUT (bench negative controls only): 1 = export one edge late, 2 = heads 0 / 1 swapped, 3 = previous pass's epoch.
+// MUT (bench negative controls only): 1 = export one edge late, 2 = heads 0 / 1 swapped, 3 = previous pass's epoch,
+// 4 = the core's calendar decodes registered one edge late (not ahead; KV-AHUBDW2 look-ahead negative control).
 // ---------------------------------------------------------------------------------------------------------------------
 module qkd_ahub_static_io #(
     parameter [63:0] AP_OFS = {4{16'd2}},
@@ -85,13 +86,18 @@ module qkd_ahub_static_io #(
     // pin stage (every input registered; start / held words ride together, so the hub samples one coherent command)
     always @(posedge ck or negedge rst_n)
         if (!rst_n) start <= 1'b0; else start <= hs_start;
+    // KV-AHUBDW2 10-18: T is HELD with the command (captured with hs_start, as the core holds epoch / layer) so the core
+    // can register nblk(T) and its calendar decodes one edge ahead (qkd_ahub_static_core_la).
+    // T_p is the pin flop; T_h holds the start cycle's T; T = start ? T_p : T_h (flops first, then the mux).
+    reg  [13:0] T_p, T_h;
     always @(posedge ck) begin
-        epoch <= hs_ep; layer <= hs_layer; T <= hs_ctx;
+        epoch <= hs_ep; layer <= hs_layer; T_p <= hs_ctx;
+        if (start) T_h <= T_p;
     end
+    always @* T = start ? T_p : T_h;
     assign hub_cal = cal_n;
     reg signed [18:0] tgt_q;
     always @(posedge ck) if (start) tgt_q <= tgt_n;
-    wire signed [18:0] tgt = start ? tgt_n : tgt_q;                 // this command's target from its start cycle on
     // held si identity (the native service's held_epoch / held_layer, captured on start)
     always @(posedge ck) if (start) begin si_epoch <= {4{epoch}}; si_layer <= {4{layer}}; end
     // ---- reciprocal export: one registered word at io age tgt ---------------------------------------------------------
@@ -99,14 +105,21 @@ module qkd_ahub_static_io #(
     reg  [15:0] age;
     reg  [15:0] prev_ep;
     wire [16:0] age_nx = start ? 17'd1 : {1'b0, age} + 17'd1;     // io age of the NEXT cycle
-    wire        live   = start || active;
-    wire        emit   = live && $signed({2'b0, age_nx}) == tgt;
-    wire        bad_t  = start && (tgt < 19'sd1 || tgt > 19'sd65535);
+    // KV-AHUBDW2 10-18 (route a1: u_io.cal_r_q -> PV_START + R adder -> age compare -> 145 export enables at the W face,
+    // -412 ps): the export edge is decided ONE EDGE AHEAD into em_q from the latched target tgt_q (a 19-bit equality of
+    // flops), so the export flops' enable is one flop.  Same export edge as before for every meetable slot; a slot < 3
+    // (export on the start edge or the one after, never a compiled slot: PV_START + R is hundreds of cycles) is now an
+    // unmeetable-slot fault, and a start on a pending export edge (the next command colliding with the export) faults.
+    reg         em_q;
+    wire        emit   = em_q;
+    wire        bad_t  = start && (tgt_n < 19'sd3 || tgt_n > 19'sd65535);
+    wire        em_d   = !start && active && !em_q && ($signed({3'b0, 16'(age + 16'd1)}) + 19'sd1 == tgt_q);
     always @(posedge ck or negedge rst_n) begin
-        if (!rst_n) begin active <= 1'b0; published <= 1'b0; age <= 16'd0; fr_valid <= 1'b0; xf <= 1'b0; end
+        if (!rst_n) begin active <= 1'b0; published <= 1'b0; age <= 16'd0; fr_valid <= 1'b0; xf <= 1'b0; em_q <= 1'b0; end
         else begin
             fr_valid <= emit;
-            if (start) begin active <= !bad_t; age <= 16'd1; published <= 1'b0; xf <= bad_t; end
+            em_q <= em_d;
+            if (start) begin active <= !bad_t; age <= 16'd1; published <= 1'b0; xf <= bad_t || em_q; end
             else begin
                 if (active) age <= age_nx[15:0];
                 if (active && rz_publish) published <= 1'b1;
@@ -204,16 +217,21 @@ module qkd_ahub_static_dw #(
     // LMAX_IN x4}; RECIP_RETURN is the leaf + relay geometry) ----
     wire [3:0] zh_start, zh_g;  wire [511:0] zh_we, zh_sid;  wire [15:0] zh_iv, zh_err;
     wire [23:0] zh_p;  wire [255:0] zh_root;
+    // KV-AHUBDW2 10-18: the Z trees' zerr outputs are registered beside each tree (zh_err_q, +1 edge on that fault input
+    // only; the child zerr -> core fault OR tree was -273 ps across the cluster)
+    reg  [15:0] zh_err_q;
+    always @(posedge ck) zh_err_q <= zh_err;
     wire rc_v, rc_vo, rc_fault;  wire [31:0] rc_x, rc_y;
     wire [15:0] recip_return = hub_cal[175:160] + 16'(67 + RX_RLY + RY_RLY);
-    qkd_ahub_static_core_cal #(.Z_IN_STRIDE(Z_IN_STRIDE), .Z_LEVEL_GAP(10)) u_core (
+    // KV-AHUBDW2 10-18: the look-ahead core (decodes registered one edge ahead, edge-exact; see below)
+    qkd_ahub_static_core_la #(.Z_IN_STRIDE(Z_IN_STRIDE), .Z_LEVEL_GAP(10), .MUT(MUT)) u_core (
         .cal({hub_cal[191:176], recip_return, hub_cal[175:0]}),
         .clk(ck), .rst_n(rr[1]), .start(start), .active_layer_parity(layer[0]), .request_epoch(epoch),
         .active_layer(layer), .T(T),
         .si_valid(si_valid), .si_type(si_type), .si_g(si_g), .si_hh(si_hh), .si_k(si_k), .si_any(si_any),
         .si_epoch(si_epoch), .si_layer(si_layer), .si_data(si_data),
         .am(am), .zh_start(zh_start), .zh_we(zh_we), .zh_sid(zh_sid), .zh_iv(zh_iv), .zh_g(zh_g), .zh_p(zh_p),
-        .zh_root(zh_root), .zh_err(zh_err), .rc_v(rc_v), .rc_x(rc_x), .rc_y(rc_y), .rc_vo(rc_vo), .rc_fault(rc_fault),
+        .zh_root(zh_root), .zh_err(zh_err_q), .rc_v(rc_v), .rc_x(rc_x), .rc_y(rc_y), .rc_vo(rc_vo), .rc_fault(rc_fault),
         .rz_valid(rz_valid), .rz_head(rz_head), .rz_data(rz_data), .rz_epoch(rz_epoch), .rz_publish(rz_publish),
         .rz4(rz_vector), .fault(hub_fault));
     genvar a;
@@ -232,4 +250,257 @@ module qkd_ahub_static_dw #(
                                .fault(ryt[33]));
     ot_qkd_drly #(.W(34), .N(RY_RLY)) u_ry (.clk(ck), .d(ryt), .q(ry));
     assign rc_y = ry[31:0];  assign rc_vo = ry[32];  assign rc_fault = ry[33];
+endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
+// KV-AHUBDW2 10-18: qkd_ahub_static_core_la = qkd_ahub_static_core_cal (generated, sealed) with every calendar decode
+// REGISTERED one edge ahead (route a1 EARLY_FAIL_SETUP -412 ps: u_core.age -> rz / rc_x / zh_p / zh_iv / ma_x and
+// T -> hh_b / k_b / z_b were 19-24 levels of age-window adders + compares + the 4:1 head muxes + the 128-flop enables).
+// The decodes are a function of (edge age, active, the calendar latched at start, nblk(T)).  For cycle c they are
+// computed at c-1 from the NEXT edge age (age's D input + 1) and registered (u_dn -> dq); the one cycle whose calendar
+// is not yet latched at c-1 is the first cycle after a start / reset (age == 0, edge age 1), which uses the same decode
+// at the constant edge age 1 (u_d1: compares of latched registers against constants, shallow).  first_q == (age == 0).
+// Edge-exact with the sealed core when T is held for the pass (u_io holds T with the command, as epoch / layer);
+// nblk(T) is registered (nblk_q) from that held T.  Two documented differences, both calendar violations that now FAULT:
+//   * a start while an LMAX result is leaving (mo_v): the sealed core drops that am word (am valid = mo_v && !start, a
+//     u_io.start -> am pin path across the cluster); here the word leaves and the core faults at the start edge;
+//   * zh_err arrives one edge later (registered at the Z tree outputs in the dw, the child -> fault path was -273 ps).
+// No other latency changes: am / rz / rc / zh issue on the same edges as the sealed core (tb_qkd_ahub_static_dw).
+// ---------------------------------------------------------------------------------------------------------------------
+module qkd_ahub_static_dec #(
+    parameter integer Z_IN_STRIDE=16,
+    parameter integer Z_LEVEL_GAP=10
+)(
+    input wire [16:0] edge_age,
+    input wire active,
+    input wire [63:0] LMAX_IN_AGE,Z_IN_AGE,
+    input wire [15:0] LMAX_ISSUE_AGE,Z_START_AGE,RECIP_ISSUE_AGE,RECIP_RETURN_AGE,RZ_PUBLISH_AGE,
+    input wire [19:0] nblk_v,
+    output reg [3:0] lm_slot,z_slot,done_slot,
+    output reg [7:0] slot_h,
+    output reg [15:0] slot_k,
+    output wire m_issue,
+    output wire [1:0] mh,
+    output reg [3:0] issue,
+    output reg [5:0] pair_base,
+    output wire recip_issue,recip_return,
+    output wire [1:0] recip_head,return_head,
+    output wire pub_hit
+);
+    wire [4:0] nblk[0:3];
+    for(genvar s=0;s<4;s=s+1)assign nblk[s]=nblk_v[5*s+:5];
+    integer base,np,burst;
+    always @* begin
+        lm_slot=0;z_slot=0;done_slot=0;slot_h=0;slot_k=0;
+        for(integer s=0;s<4;s=s+1)begin
+            if(active && edge_age>=LMAX_IN_AGE[16*s+:16] && edge_age<LMAX_IN_AGE[16*s+:16]+4)begin
+                lm_slot[s]=1;slot_h[2*s+:2]=2'(edge_age-LMAX_IN_AGE[16*s+:16]);
+            end
+            if(active && edge_age>=Z_IN_AGE[16*s+:16] && edge_age<Z_IN_AGE[16*s+:16]+nblk[s]*Z_IN_STRIDE)begin
+                if((edge_age-Z_IN_AGE[16*s+:16])%Z_IN_STRIDE<4)begin
+                    z_slot[s]=1;slot_h[2*s+:2]=2'((edge_age-Z_IN_AGE[16*s+:16])%Z_IN_STRIDE);
+                    slot_k[4*s+:4]=4'((edge_age-Z_IN_AGE[16*s+:16])/Z_IN_STRIDE);
+                end
+            end
+            done_slot[s]=active && edge_age==Z_IN_AGE[16*s+:16]+nblk[s]*Z_IN_STRIDE;
+        end
+    end
+    assign m_issue=active && edge_age>=LMAX_ISSUE_AGE && edge_age<LMAX_ISSUE_AGE+4;
+    assign mh=2'(edge_age-LMAX_ISSUE_AGE);
+    always @*begin
+        issue=0;pair_base=0;base=Z_START_AGE;
+        for(integer l=1;l<=6;l=l+1)begin
+            np=64>>l;burst=(np+3)/4;
+            if(active && edge_age>=base && edge_age<base+burst)begin
+                pair_base=6'((edge_age-base)*4);
+                for(integer a=0;a<4;a=a+1)issue[a]=((edge_age-base)*4+a)<np;
+            end
+            base=base+burst+Z_LEVEL_GAP;
+        end
+    end
+    assign recip_issue=active && edge_age>=RECIP_ISSUE_AGE && edge_age<RECIP_ISSUE_AGE+4;
+    assign recip_return=active && edge_age>=RECIP_RETURN_AGE && edge_age<RECIP_RETURN_AGE+4;
+    assign recip_head=2'(edge_age-RECIP_ISSUE_AGE);
+    assign return_head=2'(edge_age-RECIP_RETURN_AGE);
+    assign pub_hit=edge_age==RZ_PUBLISH_AGE;
+endmodule
+
+module qkd_ahub_static_core_la #(
+    parameter integer Z_IN_STRIDE=16,
+    parameter integer Z_LEVEL_GAP=10,
+    parameter integer MUT=0                             // 4 (bench negative control): decodes registered NOT ahead
+)(
+    input wire [207:0] cal,
+    input wire clk,rst_n,start,active_layer_parity,
+    input wire [15:0] request_epoch,input wire [5:0] active_layer,
+    input wire [13:0] T,
+    input wire [3:0] si_valid,si_g,si_any,input wire [63:0] si_epoch,input wire [23:0] si_layer,
+    input wire [7:0] si_type,si_hh,
+    input wire [15:0] si_k,
+    input wire [127:0] si_data,
+    output reg [143:0] am,
+    output reg [3:0] zh_start,
+    output reg [511:0] zh_we,zh_sid,
+    output reg [15:0] zh_iv,
+    output reg [3:0] zh_g,
+    output reg [23:0] zh_p,
+    input wire [255:0] zh_root,
+    input wire [15:0] zh_err,
+    output reg rc_v,
+    output reg [31:0] rc_x,
+    input wire [31:0] rc_y,
+    input wire rc_vo,rc_fault,
+    output reg rz_valid,
+    output reg [1:0] rz_head,
+    output reg [31:0] rz_data,
+    output reg [15:0] rz_epoch,output reg rz_publish,
+    output wire [127:0] rz4,
+    output reg fault
+);
+    wire [3:0] rn;
+    ot_rst_pipe #(.REGIONS(4),.STAGES(2)) u_rr (.clk(clk),.rst_n_in(rst_n),.rst_n(rn));
+    reg active,parity;reg [15:0] epoch;reg [5:0] layer;
+    reg [63:0] LMAX_IN_AGE,Z_IN_AGE;reg [15:0] LMAX_ISSUE_AGE,Z_START_AGE,RECIP_ISSUE_AGE,RECIP_RETURN_AGE,RZ_PUBLISH_AGE;
+    always @(posedge clk)if(start)
+        {RZ_PUBLISH_AGE,RECIP_RETURN_AGE,RECIP_ISSUE_AGE,Z_START_AGE,LMAX_ISSUE_AGE,Z_IN_AGE,LMAX_IN_AGE}<=cal;
+    // nblk(T) registered from the held command T (u_io); zmask from it
+    reg [19:0] nblk_q;
+    always @(posedge clk)
+        for(integer s=0;s<4;s=s+1)
+            nblk_q[5*s+:5]<=(T>14'(128*s))?5'(((T-14'(128*s)-14'd1)>>9)+14'd1):5'd0;
+    reg [63:0] zmask;
+    always @*begin
+        zmask=0;
+        for(integer s=0;s<4;s=s+1)for(integer k=0;k<16;k=k+1)if(k<nblk_q[5*s+:5])zmask[4*k+s]=1'b1;
+    end
+    reg [15:0] age;
+    reg first_q;                                        // == (age == 0): edge age 1 this cycle
+    // ---- decodes: registered look-ahead (dq, from the next edge age) or, on the first cycle, at edge age 1 (d1) ----
+    wire [16:0] e_next=(MUT==4)?{1'b0,age}+17'd1:(active && age!=16'hffff)?{1'b0,age}+17'd2:{1'b0,age}+17'd1;
+    wire [3:0] n_lm,n_z,n_dn,n_is,o_lm,o_z,o_dn,o_is;wire [7:0] n_sh,o_sh;wire [15:0] n_sk,o_sk;
+    wire n_mi,n_ri,n_rr,n_pb,o_mi,o_ri,o_rr,o_pb;wire [1:0] n_mh,n_rh,n_th,o_mh,o_rh,o_th;wire [5:0] n_pa,o_pa;
+    qkd_ahub_static_dec #(.Z_IN_STRIDE(Z_IN_STRIDE),.Z_LEVEL_GAP(Z_LEVEL_GAP)) u_dn (.edge_age(e_next),.active(active),
+        .LMAX_IN_AGE(LMAX_IN_AGE),.Z_IN_AGE(Z_IN_AGE),.LMAX_ISSUE_AGE(LMAX_ISSUE_AGE),.Z_START_AGE(Z_START_AGE),
+        .RECIP_ISSUE_AGE(RECIP_ISSUE_AGE),.RECIP_RETURN_AGE(RECIP_RETURN_AGE),.RZ_PUBLISH_AGE(RZ_PUBLISH_AGE),.nblk_v(nblk_q),
+        .lm_slot(n_lm),.z_slot(n_z),.done_slot(n_dn),.slot_h(n_sh),.slot_k(n_sk),.m_issue(n_mi),.mh(n_mh),.issue(n_is),
+        .pair_base(n_pa),.recip_issue(n_ri),.recip_return(n_rr),.recip_head(n_rh),.return_head(n_th),.pub_hit(n_pb));
+    qkd_ahub_static_dec #(.Z_IN_STRIDE(Z_IN_STRIDE),.Z_LEVEL_GAP(Z_LEVEL_GAP)) u_d1 (.edge_age(17'd1),.active(active),
+        .LMAX_IN_AGE(LMAX_IN_AGE),.Z_IN_AGE(Z_IN_AGE),.LMAX_ISSUE_AGE(LMAX_ISSUE_AGE),.Z_START_AGE(Z_START_AGE),
+        .RECIP_ISSUE_AGE(RECIP_ISSUE_AGE),.RECIP_RETURN_AGE(RECIP_RETURN_AGE),.RZ_PUBLISH_AGE(RZ_PUBLISH_AGE),.nblk_v(nblk_q),
+        .lm_slot(o_lm),.z_slot(o_z),.done_slot(o_dn),.slot_h(o_sh),.slot_k(o_sk),.m_issue(o_mi),.mh(o_mh),.issue(o_is),
+        .pair_base(o_pa),.recip_issue(o_ri),.recip_return(o_rr),.recip_head(o_rh),.return_head(o_th),.pub_hit(o_pb));
+    reg [3:0] q_lm,q_z,q_dn,q_is;reg [7:0] q_sh;reg [15:0] q_sk;reg q_mi,q_ri,q_rr,q_pb;reg [1:0] q_mh,q_rh,q_th;
+    reg [5:0] q_pa;
+    always @(posedge clk)begin
+        q_lm<=n_lm;q_z<=n_z;q_dn<=n_dn;q_sh<=n_sh;q_sk<=n_sk;q_mi<=n_mi;q_mh<=n_mh;q_is<=n_is;q_pa<=n_pa;
+        q_ri<=n_ri;q_rr<=n_rr;q_rh<=n_rh;q_th<=n_th;q_pb<=n_pb;
+    end
+    wire [3:0] lm_slot=first_q?o_lm:q_lm, z_slot=first_q?o_z:q_z, done_slot=first_q?o_dn:q_dn, issue=first_q?o_is:q_is;
+    wire [7:0] slot_h=first_q?o_sh:q_sh;
+    wire [15:0] slot_k=first_q?o_sk:q_sk;
+    wire m_issue=first_q?o_mi:q_mi, recip_issue=first_q?o_ri:q_ri, recip_return=first_q?o_rr:q_rr, pub_hit=first_q?o_pb:q_pb;
+    wire [1:0] mh=first_q?o_mh:q_mh, recip_head=first_q?o_rh:q_rh, return_head=first_q?o_th:q_th;
+    wire [5:0] pair_base=first_q?o_pa:q_pa;
+    reg [3:0] lm_b,z_b,any_b;
+    reg [7:0] hh_b;
+    reg [15:0] k_b;
+    reg [127:0] data_b;
+    reg start_b;
+    always @(posedge clk or negedge rn[0])
+        if(!rn[0])begin active<=0;age<=0;first_q<=1;epoch<=0;parity<=0;layer<=0;start_b<=0;lm_b<=0;z_b<=0;end
+        else begin
+            start_b<=start;lm_b<=lm_slot;z_b<=z_slot;
+            first_q<=start || (first_q && !active);
+            if(start)begin active<=1;age<=0;epoch<=request_epoch;parity<=active_layer_parity;layer<=active_layer;lm_b<=0;z_b<=0;end
+            else if(active && age!=16'hffff)age<=age+1'b1;
+        end
+    always @(posedge clk)begin any_b<=si_any;hh_b<=slot_h;k_b<=slot_k;data_b<=si_data;end
+    reg [31:0] lm[0:15];
+    reg [15:0] lany;
+    reg [127:0] zseen[0:3];
+    reg [15:0] lm_seen;
+    reg [3:0] done_seen;
+    always @(posedge clk or negedge rn[1])
+        if(!rn[1])begin lany<=0;lm_seen<=0;done_seen<=0;for(integer a=0;a<4;a=a+1)zseen[a]<=0;end
+        else if(start_b)begin lany<=0;lm_seen<=0;done_seen<=0;for(integer a=0;a<4;a=a+1)zseen[a]<=0;end
+        else begin
+            for(integer a=0;a<4;a=a+1)begin
+                if(lm_b[a])begin lany[4*a+hh_b[2*a+:2]]<=any_b[a];lm_seen[4*a+hh_b[2*a+:2]]<=1;end
+                if(done_slot[a])done_seen[a]<=1;
+                if(z_b[a])zseen[hh_b[2*a+:2]][{1'b0,k_b[4*a+:4],2'(a)}]<=1;
+            end
+        end
+    always @(posedge clk)for(integer a=0;a<4;a=a+1)if(lm_b[a])lm[4*a+hh_b[2*a+:2]]<=data_b[32*a+:32];
+    always @(posedge clk or negedge rn[0])if(!rn[0])zh_start<=0;else zh_start<={4{start_b}};
+    always @(posedge clk)begin
+        zh_we<=0;zh_sid<={4{data_b}};
+        for(integer a=0;a<4;a=a+1)if(z_b[a])zh_we[128*hh_b[2*a+:2]+{1'b0,k_b[4*a+:4],2'(a)}]<=1;
+    end
+    function automatic fgt(input [31:0] a,input [31:0] b);
+        fgt=(a[31]!=b[31])?!a[31]:(!a[31]?(a[30:0]>b[30:0]):(a[30:0]<b[30:0]));
+    endfunction
+    function automatic [32:0] fmax2(input [31:0] x,input ax,input [31:0] y,input ay);
+        fmax2=!ax?{ay,y}:(!ay?{1'b1,x}:{1'b1,(fgt(y,x)?y:x)});
+    endfunction
+    reg ma_v,mb_v,mo_v;
+    reg [1:0] ma_h,mb_h,mo_h;
+    reg [127:0] ma_x;
+    reg [3:0] ma_a;
+    reg [63:0] mb_x;
+    reg [1:0] mb_a;
+    reg [31:0] mo_data;
+    wire [32:0] m01=fmax2(ma_x[31:0],ma_a[0],ma_x[63:32],ma_a[1]);
+    wire [32:0] m23=fmax2(ma_x[95:64],ma_a[2],ma_x[127:96],ma_a[3]);
+    wire [32:0] mfin=fmax2(mb_x[31:0],mb_a[0],mb_x[63:32],mb_a[1]);
+    // am valid leaves on mo_v (no u_io.start term on the am pin flops: a start on that edge is a calendar fault below)
+    always @(posedge clk or negedge rn[1])
+        if(!rn[1])begin ma_v<=0;mb_v<=0;mo_v<=0;for(integer a=0;a<4;a=a+1)am[36*a+35]<=0;end
+        else begin ma_v<=m_issue&&!start;mb_v<=ma_v&&!start;mo_v<=mb_v&&!start;
+            for(integer a=0;a<4;a=a+1)am[36*a+35]<=mo_v;end
+    always @(posedge clk)begin
+        ma_h<=mh;mb_h<=ma_h;mo_h<=mb_h;
+        for(integer a=0;a<4;a=a+1)begin ma_x[32*a+:32]<=lm[4*a+mh];ma_a[a]<=lany[4*a+mh];end
+        mb_x<={m23[31:0],m01[31:0]};mb_a<={m23[32],m01[32]};mo_data<=mfin[31:0];
+        for(integer a=0;a<4;a=a+1)am[36*a+:35]<={1'b0,mo_h,mo_data};
+    end
+    always @(posedge clk or negedge rn[2])if(!rn[2])zh_iv<=0;else zh_iv<=start?16'd0:{4{issue}};
+    always @(posedge clk)begin zh_g<=0;zh_p<={4{pair_base}};end
+    reg [255:0] zroot_q;
+    always @(posedge clk)zroot_q<=zh_root;
+    reg [31:0] rz[0:3];
+    reg [3:0] rz_seen;
+    for(genvar a=0;a<4;a=a+1)assign rz4[32*a+:32]=rz[a];
+    always @(posedge clk or negedge rn[3])
+        if(!rn[3])begin rc_v<=0;rz_valid<=0;rz_publish<=0;rz_seen<=0;rz_epoch<=0;end
+        else begin
+            rc_v<=recip_issue&&!start;rz_valid<=recip_return&&!start;
+            rz_publish<=active && pub_hit && !start;
+            rz_epoch<=epoch;
+            if(start)rz_seen<=0;else if(recip_return)rz_seen[return_head]<=1;
+        end
+    always @(posedge clk)begin
+        rc_x<=zroot_q[64*recip_head+:32];
+        rz_head<=return_head;rz_data<=rc_y;
+        if(recip_return)rz[return_head]<=rc_y;
+    end
+    always @(posedge clk or negedge rn[3])
+        if(!rn[3])fault<=0;
+        else if(start)fault<=(T==0)||(T>8192)||(active_layer_parity!=active_layer[0])||mo_v;
+        else if(active)begin
+            if(active_layer_parity!=parity || active_layer!=layer || request_epoch!=epoch || |zh_err || rc_fault || (rc_vo!=recip_return) ||
+                (m_issue && lm_seen!=16'hffff) ||
+                ((|issue) && (done_seen!=4'hf || zseen[0][63:0]!=zmask || zseen[1][63:0]!=zmask ||
+                    zseen[2][63:0]!=zmask || zseen[3][63:0]!=zmask)) ||
+                (first_q && (LMAX_IN_AGE==0 || Z_IN_AGE==0 || LMAX_ISSUE_AGE<1 || Z_START_AGE<1 ||
+                    RECIP_ISSUE_AGE<=Z_START_AGE+77 || RECIP_RETURN_AGE<=RECIP_ISSUE_AGE || RZ_PUBLISH_AGE<RECIP_RETURN_AGE+4)) ||
+                (pub_hit && rz_seen!=4'hf))fault<=1;
+            for(integer a=0;a<4;a=a+1)begin
+                if(si_valid[a]!=(lm_slot[a]||z_slot[a]||done_slot[a]))fault<=1;
+                if(si_valid[a] && (si_epoch[16*a+:16]!=epoch || si_layer[6*a+:6]!=layer || si_g[a] ||
+                    si_type[2*a+:2]!=(lm_slot[a]?0:z_slot[a]?1:2) ||
+                    ((lm_slot[a]||z_slot[a]) && si_hh[2*a+:2]!=slot_h[2*a+:2]) ||
+                    (z_slot[a] && si_k[4*a+:4]!=slot_k[4*a+:4])))fault<=1;
+            end
+        end
+    initial if(Z_LEVEL_GAP<10 || Z_IN_STRIDE<4)$fatal(1,"invalid static AHUB geometry");
 endmodule

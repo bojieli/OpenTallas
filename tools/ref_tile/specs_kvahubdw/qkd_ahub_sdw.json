@@ -216,12 +216,12 @@
   "pin_min_tracks": 3
  },
  "floorplan_note": "KV-AHUBDW 10-18: static hub cluster, 734.4 x 561.6 (die frame was the legacy hub 1175.04 x 760.32: -54% area).  Faces from the planned m1 KV die: ASTK WS/WN on W, ES/EN on E (ap/am), pvfin W (fr), kvs_attn + seq N (hs, hf), clock trunk + reset N.  Rows: Z trees zh0/zh1 MX at y 43.2 and zh2/zh3 R0 at y 345.6 with their S (input, 268 b) faces toward the 151.2-um logic band y 194.4-345.6 (core calendar / Z-load / LMAX / reciprocal issue, io leaf, ap pin flops) that spans W->E between the stack faces; reciprocal leaf R0 at 475.2,302.4 (inputs N, outputs S into the band, RX/RY relays 1).  64.8-um channels between tiles carry the zh root returns.  One clock entry ck (N centre) -> balanced spine to the 5 child clock pins (child-insertion leaf targets) + the band flops.",
- "structural_change": "NEW kit (KV-AHUBDW 10-18): the KV die hub element qkd_ahub_static_dw (static six-root hub) as a cluster of 5 CLOSED children (4 ot_nhb_zh m5 views, ot_qkh_recip_leaf np1 view) + flat core / io logic; the closed qkd_ahub_core belongs to the legacy hub and is not used.  RTL pin rules in 02f980add (flop-first pins, ot_rst_pipe regional resets).",
- "cycle_cost": "+1 edge on the stack inputs ap_s (pin flops; AP_OFS_s += 1 in kv_static_die.ahub_ages); hs / outputs unchanged; reset release +4 edges",
+ "structural_change": "NEW kit (KV-AHUBDW 10-18): the KV die hub element qkd_ahub_static_dw (static six-root hub) as a cluster of 5 CLOSED children (4 ot_nhb_zh m5 views, ot_qkh_recip_leaf np1 view) + flat core / io logic; the closed qkd_ahub_core belongs to the legacy hub and is not used.  RTL pin rules in 02f980add (flop-first pins, ot_rst_pipe regional resets). || KV-AHUBDW2 10-18 (a1 EARLY_FAIL_SETUP -412 ps, classified: core logic depth + cross-cluster wire, NOT child insertion -- macro class +178 ps, spine leaf spread 29 ps): (1) u_io export decided one edge ahead (em_q from latched tgt_q; was cal_r_q -> PV_START+R adder -> compare -> 145 W-face enables, 289 endpoints); (2) qkd_ahub_static_core_la: every calendar decode registered one edge ahead (u_dn) with an edge-age-1 decode for the first cycle (u_d1), nblk(T) registered from the held command T (u_io T_p/T_h) (age -> rz/rc_x/zh_p/zh_iv/ma_x, T -> hh_b/k_b/z_b); (3) zh_err registered at the Z tree outputs (child zerr -> fault -273 ps); (4) am valid without the u_io.start term (start -> E-face am flops -109 ps; a start on an am edge now faults).",
+ "cycle_cost": "+1 edge on the stack inputs ap_s (pin flops; AP_OFS_s += 1 in kv_static_die.ahub_ages); hs / outputs unchanged; reset release +4 edges || KV-AHUBDW2: no schedule change (am/fr/rz/zh edges identical to the sealed core, bench edge-exact); zh_err fault +1 edge; slots <3 and start-on-export/am edges fault.",
  "job": {
   "owner": "Claude:KV-AHUBDW 10-18",
   "branch": "claude/kv-ahubdw-1018",
-  "tag": "a1",
+  "tag": "a2",
   "purpose": "KV-AHUBDW: harden the KV die static attention hub qkd_ahub_static_dw (cluster: 4 Z trees + reciprocal leaf + core logic) to the die slot",
   "benches": [
    {
@@ -274,6 +274,19 @@
     "pass_regex": "^AHUB_DW PASS",
     "fail_regex": "^AHUB_DW FAIL mut=3 errors=",
     "fail_witness": "results/rtl/qwen_kv_ahubdw_1018/mut3.log"
+   },
+   {
+    "name": "ahub_dw_mut4",
+    "cmd": "bash tools/qwen_kv_die/ahub_static_dw_bench.sh {RUN}/bench/m4 4",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "fail_regex": "^AHUB_DW FAIL mut=4 errors=",
+    "fail_witness": "results/rtl/qwen_kv_ahubdw_1018/mut4.log"
    }
   ],
   "extra_paths": [

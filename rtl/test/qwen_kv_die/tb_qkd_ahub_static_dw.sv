@@ -12,7 +12,8 @@
 //   * pvfin consumes them: 32 beats a pass, out = (1.0 + 0.0) x rz[head b / 8] bit-exact, pvfin fault 0;
 //   * am x4 at the ASTK pins == the reference am (ASTK bit order) delayed by the hub's die lag (D_HS + 1);
 //   * hub fault 0, reference fault 0.
-// MUT (DUT only): 1 export one edge late, 2 heads 0 / 1 swapped, 3 stale epoch -> each must print AHUB_DW FAIL.
+// MUT (DUT only): 1 export one edge late, 2 heads 0 / 1 swapped, 3 stale epoch, 4 core decodes one edge late (not
+// ahead, KV-AHUBDW2) -> each must print AHUB_DW FAIL.
 module tb_qkd_ahub_static_dw;
     parameter integer MUT = 0;
     localparam integer D_HS = 2, D_PVFST = 3, D_FR = 2, PVL = 2;
