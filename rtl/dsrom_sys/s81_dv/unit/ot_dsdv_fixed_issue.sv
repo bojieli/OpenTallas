@@ -20,6 +20,10 @@
 //     land one edge later (status only: no issue / KIT / END / command edge depends on run_fault).  Same-edge code
 //     priority 6 > 10 > 9 > 8 > 7 (the original's last-statement order, rows folded); duplicate issue per engine
 //     (code 9) by a two-hot tree over the engine's row matches instead of the seen_cmd row chain.
+//   * gate5 7b7028b78 (TT -77 ps at cmd_d: age compare -> 128-row AND-OR in one stage): the ISSUE compare registered
+//     one edge ahead too: im_q[s][i] = (row i's issue cycle (+MUT adj) == age[s] at the next edge), from the next age
+//     (accept: 0, active: age + 1) and the next row value (a PW word written on this edge, the only way a row can
+//     change while a job can start); command / KIT / END / pending use im_q && i < length_q && active[s].
 // Native S81 command ABI: {slot,user10,pos21,tok21,arg24,op7}.
 // Each calendar row is {done24,issue24,engine4,arg24}. Engine14=KIT,
 // engine15=END. Three26-bit PW payloads load one actual76-bit storage row.
@@ -65,7 +69,7 @@ module ot_dsdv_fixed_issue #(
  reg[NENG-1:0]legit_done;
  reg sc_v,sc_last,sc_in,sc_fin;reg[75:0]sc_row;reg[2:0]sc_ld;reg[8:0]dsel_r;
  reg[NOPS-1:0]sc_oh;reg[75:0]rd_row;reg[2:0]rd_ld;
- reg[NOPS-1:0]dm_q[0:1];reg[4:0]rf_q;reg f6,f7,f8,f9,f10;wire[NENG-1:0]dup;
+ reg[NOPS-1:0]dm_q[0:1],im_q[0:1];reg[4:0]rf_q;reg f6,f7,f8,f9,f10;wire[NENG-1:0]dup;
  function automatic two_hot(input [255:0] v);
   reg[255:0]a,t;integer w,k;begin a=v;t=0;
    for(w=256;w>1;w=w/2)for(k=0;k<w/2;k=k+1)begin t[k]=t[2*k]|t[2*k+1]|(a[2*k]&a[2*k+1]);a[k]=a[2*k]|a[2*k+1];end
@@ -162,7 +166,7 @@ module ot_dsdv_fixed_issue #(
       dsel_r=dsel(eng,dv_q,dt_q);if(!dsel_r[8]||dsel_r[7:0]!={1'(s),7'(i+OP_BASE)}||!pending[s][i])f8=1;
       else legit_done[eng]=1;
      end
-     if(i<length_q&&age[s]==mem[i][51:28]+((MUT==1&&eng<14)?24'd1:24'd0))begin
+     if(i<length_q&&im_q[s][i])begin
       if(eng==15)begin active[s]<=0;job_done<=1;done_slot<=1'(s);if(!has_kit)begin job_kdone<=1;kit_tok<=tokens[s];end end
       else if(eng==14)begin job_kdone<=1;kit_tok<=tokens[s];end
       else if(eng<NENG&&ENG_PRESENT[eng])begin if(!engine_available[eng])f9=1;end
@@ -188,7 +192,7 @@ module ot_dsdv_fixed_issue #(
  integer i3;
  always @*begin rd_row=0;rd_ld=0;for(i3=0;i3<NOPS;i3=i3+1)begin rd_row=rd_row|({76{sc_oh[i3]}}&mem[i3]);rd_ld=rd_ld|({3{sc_oh[i3]}}&loaded[i3]);end end
  wire do_accept=job_v&&!(!sealed||cfg_fault||active[next_slot]||prog_len!=length_q||((phase_q+2'd1)!=start_phase_q));
- integer i2,s2;reg[3:0]eng2;reg[8:0]d2;
+ integer i2,s2;reg[3:0]eng2;reg[8:0]d2;reg[75:0]rn;reg[23:0]an;
  always @(posedge clk)begin
   if(do_begin)for(i2=0;i2<NOPS;i2=i2+1)loaded[i2]<=0;
   if(do_write)begin
@@ -202,6 +206,12 @@ module ot_dsdv_fixed_issue #(
   end
   if(do_seal)sc_oh<={{(NOPS-1){1'b0}},1'b1};else if(validating)sc_oh<=sc_oh<<1;
   if(validating)begin sc_row<=rd_row;sc_ld<=rd_ld;end
+  for(s2=0;s2<2;s2=s2+1)for(i2=0;i2<NOPS;i2=i2+1)begin
+   rn=mem[i2];
+   if(do_write&&pw_a==7'(i2))case(pw_d[27:26])0:rn[25:0]=pw_d[25:0];1:rn[51:26]=pw_d[25:0];2:rn[75:52]=pw_d[23:0];default:;endcase
+   an=active[s2]?age[s2]+1'b1:24'd0;
+   im_q[s2][i2]<=an==rn[51:28]+((MUT==1&&rn[27:24]<14)?24'd1:24'd0);
+  end
   for(s2=0;s2<2;s2=s2+1)for(i2=0;i2<NOPS;i2=i2+1)
    dm_q[s2][i2]<=active[s2]&&age[s2]!=24'hffffff&&i2<length_q&&mem[i2][27:24]<14&&mem[i2][75:52]==age[s2];
   if(do_accept)begin
@@ -216,7 +226,7 @@ module ot_dsdv_fixed_issue #(
      d2=dsel(eng2,dv_q,dt_q);
      if(d2[8]&&d2[7:0]=={1'(s2),7'(i2+OP_BASE)}&&pending[s2][i2])pending[s2][i2]<=0;
     end
-    if(age[s2]==mem[i2][51:28]+((MUT==1&&eng2<14)?24'd1:24'd0)&&eng2<14&&eng2<NENG&&ENG_PRESENT[eng2])pending[s2][i2]<=1;
+    if(i2<length_q&&im_q[s2][i2]&&eng2<14&&eng2<NENG&&ENG_PRESENT[eng2])pending[s2][i2]<=1;
    end
   end
  end
@@ -231,8 +241,8 @@ module ot_dsdv_fixed_issue #(
    a0=0;a1=0;h0=0;h1=0;
    m0=0;m1=0;mv=0;
    for(j=0;j<NOPS;j=j+1)begin
-    m0=j<length_q&&mem[j][27:24]==ge&&ENG_PRESENT[ge]&&active[0]&&age[0]==mem[j][51:28]+(MUT==1?24'd1:24'd0);
-    m1=j<length_q&&mem[j][27:24]==ge&&ENG_PRESENT[ge]&&active[1]&&age[1]==mem[j][51:28]+(MUT==1?24'd1:24'd0);
+    m0=j<length_q&&mem[j][27:24]==ge&&ENG_PRESENT[ge]&&active[0]&&im_q[0][j];
+    m1=j<length_q&&mem[j][27:24]==ge&&ENG_PRESENT[ge]&&active[1]&&im_q[1][j];
     h0=h0|m0;h1=h1|m1;mv[j]=m0;mv[NOPS+j]=m1;
     a0=a0|({31{m0}}&{mem[j][23:0],7'(j+OP_BASE)});a1=a1|({31{m1}}&{mem[j][23:0],7'(j+OP_BASE)});
    end
