@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.s81_dv.bind_table.v2",
- "note": "S81-DV p4i REAL-RTL bind table (S81-DIE 10-17, from S81-BIND v1). module null = OPEN BINDING (no RTL; never stubbed), listed with its owner. Port map key = <plan endpoint port>.<o|i>; lane = RTL lane width; ck = the RTL forwarded-clock output used as hop-0 source. view = the CLOSED view the die binds (null = none yet). mode_unused = ports tied 0 because the mode is provably unused at that position (coordinator 0da (c)); each is declared to the strict check as a pad. | S81-DIE2 10-17: frames + ctrl_rg2 bound, all relay views closed, PHY face abutted.",
+ "note": "S81-DV p4i REAL-RTL bind table (S81-DIE 10-17, from S81-BIND v1). module null = OPEN BINDING (no RTL; never stubbed), listed with its owner. Port map key = <plan endpoint port>.<o|i>; lane = RTL lane width; ck = the RTL forwarded-clock output used as hop-0 source. view = the CLOSED view the die binds (null = none yet). mode_unused = ports tied 0 because the mode is provably unused at that position (coordinator 0da (c)); each is declared to the strict check as a pad. | S81-DIE2 10-17: frames + ctrl_rg2 bound, all relay views closed, PHY face abutted. | S81-DIE4 10-17: 70-b relays + kp4 ddly/dout bound (native PASS); slice rt lanes without producer tied per 0cj (b).",
  "rtl_refs": {
   "57bc4ad63f81e29f35a758ec36e4827265047874": [
    "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
@@ -313,6 +313,12 @@
      "port": "ri_e",
      "when": "col7",
      "reason": "tier line E end (column 7): no east neighbour; the snake end carries xfin on V"
+    },
+    {
+     "port": "rt",
+     "when": "lanes_without_producer",
+     "lane": 70,
+     "reason": "0cj (b) PROVABLY UNUSED: the plan has no ret link for these trailing rt lanes -- the p4h/p4j row-0 S frames of columns 2..5 (f_2R00, f_3L00/f_3R00, f_4L00/f_4R00, f_5L00) gave way to the regional service slices, so s_2S/s_5S carry 7 frame returns and s_3S/s_4S 6; dv_bind packs ret lanes in L00..R03 order, so the missing ones are always the top lanes; the static return calendar (frame_return_plan) never schedules a beat on a lane with no frame. Tied 0, declared as pads (no new slice variant)."
     }
    ]
   },
@@ -679,6 +685,12 @@
      "port": "ri_e",
      "when": "col7",
      "reason": "tier line E end (column 7): no east neighbour; the snake end carries xfin on V"
+    },
+    {
+     "port": "rt",
+     "when": "lanes_without_producer",
+     "lane": 70,
+     "reason": "0cj (b) PROVABLY UNUSED: the plan has no ret link for these trailing rt lanes -- the p4h/p4j row-0 S frames of columns 2..5 (f_2R00, f_3L00/f_3R00, f_4L00/f_4R00, f_5L00) gave way to the regional service slices, so s_2S/s_5S carry 7 frame returns and s_3S/s_4S 6; dv_bind packs ret lanes in L00..R03 order, so the missing ones are always the top lanes; the static return calendar (frame_return_plan) never schedules a beat on a lane with no frame. Tied 0, declared as pads (no new slice variant)."
     }
    ],
    "plan_only_ports": {
@@ -712,9 +724,10 @@
   "dsfd_dvrly_562_SN": "s81dv_rly_562_sn-w2-6e188c155 (CLOSED TT +370.44 / FF +26.10; native PASS L 149.2 / C 74.4 / R 90.1 / sp 13.4)",
   "dsfd_dvrly_682_EW": "s81dv_rly_682_ew-w1-c5a69dc05 (CLOSED TT +276.73 / FF +20.83; native PASS L 112.2 / C 72.0 / R 89.1 / sp 11.1)",
   "dsfd_dvrly_682_WE": "s81dv_rly_682_we-w1-c5a69dc05 (CLOSED TT +278.14 / FF +25.92; native PASS L 107.7 / C 68.0 / R 87.3 / sp 6.3)",
-  "dsfd_dvrly_682_NS": "s81dv_rly_682_ns-w2-6e188c155 (CLOSED TT +390.83 / FF +27.96; native PASS L 128.8 / C 72.5 / R 93.6 / sp 9.2)"
+  "dsfd_dvrly_682_NS": "s81dv_rly_682_ns-w2-6e188c155 (CLOSED TT +390.83 / FF +27.96; native PASS L 128.8 / C 72.5 / R 93.6 / sp 9.2)",
+  "dsfd_dvrly_70_NS": "s81dv_rly_70_ns-w1-1e6f9a9d6 (CLOSED TT +409.29 / FF +29.49; native PASS L 110.2 / C 63.1 / R 61.8 / sp 1.5)",
+  "dsfd_dvrly_70_SN": "s81dv_rly_70_sn-w1-1e6f9a9d6 (CLOSED TT +409.20 / FF +29.16; native PASS L 110.3 / C 63.4 / R 62.4 / sp 1.8)"
  },
- "relay_views_owed": "dsfd_dvrly_70_NS / dsfd_dvrly_70_SN (kits physical/ref_tile/s81dv_rly_70_{ns,sn}, S81-DIE3 10-17: gated + submitted; RTL dsfd_rly_masters_dvw.sv); every other p4j station master has a CLOSED, native-PASS view",
  "reset_master": "dsfd_rly_1_WN",
  "frame_wrapper": {
   "masters": [
@@ -864,6 +877,14 @@
   "dsfd_rly_38_WN": {
    "view": "s81_rly_38_wn-x1-e3cbf17fa (CLOSED TT +410.65 / FF +26.70; native PASS L 108.4 / C 60.0 / R 52.8 / sp 0.8)",
    "parent": "col_h9 / col_h10 (exact-width f_prog relay, 3 per frame)"
+  },
+  "ot_s81_kp4_ddly": {
+   "view": "s81lk_kp4_ddly-t2-5f0b4a343 (CLOSED TT +213.65 / FF +7.87; native PASS L 114.3 / C 81.6 / R 167.7 / sp 53.5)",
+   "parent": "ot_s81_kp4_dec (2x2 parent cluster kit owed: dsyn/dchn views pending) -> ot_pdie_serdes (u_dec)"
+  },
+  "ot_s81_kp4_dout": {
+   "view": "s81lk_kp4_dout-t2-cef44c405 (CLOSED TT +307.17 / FF +7.32; native PASS L 89.6 / C 73.5 / R 247.4 / sp 45.5)",
+   "parent": "ot_s81_kp4_dec (2x2 parent cluster kit owed: dsyn/dchn views pending) -> ot_pdie_serdes (u_dec)"
   }
  },
  "relay_views_retired": {
@@ -875,5 +896,11 @@
    "view": "s81dv_rly_68_sn-w1-c5a69dc05 (CLOSED TT +407.94 / FF +28.49; native PASS L 110.6 / C 62.7 / R 63.3 / sp 1.4)",
    "reason": "RETIRED p4j (S81-DIE3 10-17): the plan RET lane was 68 b but the frame ret port (col_h9/h10 cfifo_crs rd) and the slice rt port are 70 b -- p4j plans RET 70 and binds dsfd_dvrly_70_NS/SN; the 68-b views stay archived (closed evidence), unused by any die revision"
   }
+ },
+ "child_views_owed": {
+  "ot_s81_kp4_dsyn": "s81lk_kp4_dsyn-t2-5f0b4a343 EARLY_FAIL_CONGESTION (GRT-0116) -> S81-TILES owner",
+  "ot_s81_kp4_dchn": "s81lk_kp4_dchn-t2-5f0b4a343 RUNNING",
+  "ot_s81sl_vq": "s81sl_vq-s81sl_vq-b6d9d4515 RUNNING (bind when CLOSED + native PASS)",
+  "dsfd_ctrl_rg2": "s81ctrl_rg2-c1-6e188c155 READY at verdict/benches, NOT CLOSED: RTL bound, view not yet"
  }
 }

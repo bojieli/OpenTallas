@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_port_bind.v2",
- "die_v": "/home/ubuntu/scratch/s81die3/p4j_real/bind/die.v",
+ "die_v": "/home/ubuntu/scratch/s81die4/p4j_real/bind/die.v",
  "top": "dv_die",
  "verdict": "FAIL",
  "failing": [
@@ -20,19 +20,19 @@
   "input_tied": 0,
   "unparsed_connections": 0,
   "duplicate_port_connections": 0,
-  "undriven_net_bits": 20948,
+  "undriven_net_bits": 20528,
   "multi_driven_net_bits": 0,
   "top_assigns": 0,
   "params_not_in_rtl": 0,
   "strap_ports": 1,
-  "pad_bits": 19921
+  "pad_bits": 20341
  },
  "masters": {
   "BUFx8_ASAP7_75t_R": {
    "verdict": "PASS",
    "fails": [],
    "instances": 139,
-   "rtl": "/home/ubuntu/scratch/s81die3/p4j_real/bind/cells_used.v",
+   "rtl": "/home/ubuntu/scratch/s81die4/p4j_real/bind/cells_used.v",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -57,7 +57,7 @@
    "verdict": "PASS",
    "fails": [],
    "instances": 32,
-   "rtl": "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/col_h10.sv",
+   "rtl": "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/col_h10.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -85,7 +85,7 @@
    "verdict": "PASS",
    "fails": [],
    "instances": 58,
-   "rtl": "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/col_h9.sv",
+   "rtl": "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/col_h9.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -113,7 +113,7 @@
    "verdict": "PASS",
    "fails": [],
    "instances": 32,
-   "rtl": "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/col_h9_MX.sv",
+   "rtl": "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/col_h9_MX.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -300,7 +300,7 @@
    "verdict": "PASS",
    "fails": [],
    "instances": 392,
-   "rtl": "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+   "rtl": "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -325,7 +325,7 @@
    "verdict": "PASS",
    "fails": [],
    "instances": 869,
-   "rtl": "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+   "rtl": "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -350,7 +350,7 @@
    "verdict": "PASS",
    "fails": [],
    "instances": 315,
-   "rtl": "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+   "rtl": "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -375,7 +375,7 @@
    "verdict": "PASS",
    "fails": [],
    "instances": 392,
-   "rtl": "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+   "rtl": "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -792,7 +792,7 @@
    "verdict": "PASS",
    "fails": [],
    "instances": 16,
-   "rtl": "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+   "rtl": "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -813,7 +813,8 @@
    "pad_bits": {
     "bi": 15456,
     "ri_e": 2208,
-    "ri_w": 2208
+    "ri_w": 2208,
+    "rt": 420
    },
    "output_open": [
     "bo",
@@ -871,11 +872,7 @@
   "w_pv_E_l0_src": 276,
   "w_pv_E_l1_src": 276,
   "w_pv_E_l2_src": 276,
-  "w_pv_E_l3_src": 276,
-  "u_s_3S_rt_nc420": 140,
-  "u_s_4S_rt_nc420": 140,
-  "u_s_2S_rt_nc490": 70,
-  "u_s_5S_rt_nc490": 70
+  "w_pv_E_l3_src": 276
  },
  "undriven_classes": {
   "w_hrq_N_src": {
@@ -912,11 +909,6 @@
    "bits": 1024,
    "nets": 2,
    "example": "w_lt_lk_EN0_src"
-  },
-  "u_s_NS_rt_ncN": {
-   "bits": 420,
-   "nets": 4,
-   "example": "u_s_2S_rt_nc490"
   },
   "w_tvS_bk_col_src": {
    "bits": 276,
@@ -1006,9 +998,13 @@
   "ot_s81sl_slice:ri_e:u_s_7N",
   "ot_s81sl_slice:ri_e:u_s_7S",
   "ot_s81sl_slice:ri_w:u_s_0N",
-  "ot_s81sl_slice:ri_w:u_s_0S"
+  "ot_s81sl_slice:ri_w:u_s_0S",
+  "ot_s81sl_slice:rt:u_s_2S",
+  "ot_s81sl_slice:rt:u_s_3S",
+  "ot_s81sl_slice:rt:u_s_4S",
+  "ot_s81sl_slice:rt:u_s_5S"
  ],
- "die_sha256": "8b9528fa4d1f668c1768de8924022a109f9f28dbf76aa21cdc8c2ddcf12f2632",
+ "die_sha256": "c515ce31879c88e965e3736ad9d70bbc953080883f96e86bcb3fb5e47373b4d2",
  "straps_declared": [
   "ot_s81sl_slice:sid"
  ],
@@ -1017,20 +1013,20 @@
   "/home/ubuntu/wt/s81dv-p4i-1017/rtl"
  ],
  "rtl_files": [
-  "/home/ubuntu/scratch/s81die3/p4j_real/bind/cells_used.v",
-  "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
-  "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv",
-  "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
-  "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv",
-  "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv",
-  "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
-  "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv",
-  "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv",
-  "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
-  "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/col_h9.sv",
-  "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/col_h10.sv",
-  "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/col_h9_MX.sv",
-  "/home/ubuntu/scratch/s81die3/p4j_real/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv",
+  "/home/ubuntu/scratch/s81die4/p4j_real/bind/cells_used.v",
+  "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
+  "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv",
+  "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+  "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv",
+  "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv",
+  "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
+  "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv",
+  "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv",
+  "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+  "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/col_h9.sv",
+  "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/col_h10.sv",
+  "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/col_h9_MX.sv",
+  "/home/ubuntu/scratch/s81die4/p4j_real/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv",
   "/home/ubuntu/wt/s81dv-p4i-1017/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v"
  ],
  "defines": []

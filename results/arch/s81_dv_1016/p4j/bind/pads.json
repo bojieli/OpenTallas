@@ -70,6 +70,12 @@
       0,
       1103
      ]
+    ],
+    "rt": [
+     [
+      490,
+      559
+     ]
     ]
    }
   },
@@ -85,6 +91,18 @@
     ]
    }
   },
+  "u_s_3S": {
+   "master": "ot_s81sl_slice",
+   "reason": "0cj (b) PROVABLY UNUSED: the plan has no ret link for these trailing rt lanes -- the p4h/p4j row-0 S frames of columns 2..5 (f_2R00, f_3L00/f_3R00, f_4L00/f_4R00, f_5L00) gave way to the regional service slices, so s_2S/s_5S carry 7 frame returns and s_3S/s_4S 6; dv_bind packs ret lanes in L00..R03 order, so the missing ones are always the top lanes; the static return calendar (frame_return_plan) never schedules a beat on a lane with no frame. Tied 0, declared as pads (no new slice variant).",
+   "ports": {
+    "rt": [
+     [
+      420,
+      559
+     ]
+    ]
+   }
+  },
   "u_s_3N": {
    "master": "ot_s81sl_slice",
    "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)",
@@ -93,6 +111,18 @@
      [
       0,
       1103
+     ]
+    ]
+   }
+  },
+  "u_s_4S": {
+   "master": "ot_s81sl_slice",
+   "reason": "0cj (b) PROVABLY UNUSED: the plan has no ret link for these trailing rt lanes -- the p4h/p4j row-0 S frames of columns 2..5 (f_2R00, f_3L00/f_3R00, f_4L00/f_4R00, f_5L00) gave way to the regional service slices, so s_2S/s_5S carry 7 frame returns and s_3S/s_4S 6; dv_bind packs ret lanes in L00..R03 order, so the missing ones are always the top lanes; the static return calendar (frame_return_plan) never schedules a beat on a lane with no frame. Tied 0, declared as pads (no new slice variant).",
+   "ports": {
+    "rt": [
+     [
+      420,
+      559
      ]
     ]
    }
@@ -117,6 +147,12 @@
      [
       0,
       1103
+     ]
+    ],
+    "rt": [
+     [
+      490,
+      559
      ]
     ]
    }
