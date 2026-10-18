@@ -847,15 +847,18 @@ if [ "{CTS}" = 1 ]; then
   grep -h "^global_placement -density\|Placement target density" $R/cts.log | head -2 | sed 's/^/GATE_GPLD /'
   python3 tools/closure_loop/ck_insertion.py --base $B --all-clocks --raw-source --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
-  python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt'),'ff':{{k:(r.get('ff') or {{}}).get(k) for k in ('boundary','all')}}}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
+  python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt'),'ff':{{k:(r.get('ff') or {{}}).get(k) for k in ('boundary','all','macros')}}}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
   docker run --rm -e OT_GATE_SIGNOFF_SDC=/src/{KIT}/signoff.sdc -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
   grep "^GATE_PC" $R/pc.log
   ot_layout $NB/4_1_cts.odb placed
 fi
-# TRIAL ROUTE (owner rule 20:45 10-15): parent / cluster kits (hardened children or >= 4 macros) place + global-route
-# here (no detailed route): overflow, per-layer usage and the congestion hotspots come back; overflow > 0 refuses the kit
+# TRIAL ROUTE (owner rule 20:45 10-15; every kit since ROOT-0330-GRT 10-18, was parent / cluster kits only): place +
+# global-route here (no detailed route): overflow, per-layer usage and the congestion hotspots come back; overflow > 0
+# refuses the kit.  Single tiles (HBM qcore r5, S81 bk g2, KV landh0_548, Qwen h16b) passed the gate and failed GRT hours
+# into the route; the trial costs minutes.
 if [ "{TRIAL}" = 1 ]; then
-  ot_capped gate_grt_${{R##*/}} docker run --rm --name gate_grt_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt" > $R/grt.log 2>&1; echo "GATE_GRT_RC=$?"
+  GT0=$(date +%s)
+  ot_capped gate_grt_${{R##*/}} docker run --rm --name gate_grt_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt" > $R/grt.log 2>&1; echo "GATE_GRT_RC=$? GATE_GRT_S=$(( $(date +%s) - GT0 ))"
   GL=$(ls $C/logs/asap7/*/base/5_1_grt.log 2>/dev/null | head -1)
   [ -n "$GL" ] && grep -E "^(M[0-9]+|Total) +[0-9]+ +[0-9]+ +[0-9.]+%" $GL | tail -12 | sed 's/^/GATE_GRT_LAYER /'
   [ -n "$GL" ] && grep -hE "GRT-0116|Total overflow|overflow" $GL | tail -3 | sed 's/^/GATE_GRT_NOTE /'
@@ -1089,7 +1092,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     commit = binding["commit"] or "snapshot-sha256:" + binding["manifest_sha256"]
     sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=(cap if cap > 0 else "unlimited"), KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
-                          TRIAL=1 if is_parent_kit(spec) else 0, CLKS=",".join(RT.declared_clock_ports(spec)),
+                          TRIAL=1, CLKS=",".join(RT.declared_clock_ports(spec)),
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"], STEP_CAP=GATE_STEP_CAP_S)   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
     if textbook_reset_args(spec):
         tb = f"--refuse-checks {','.join(GATE_REFUSE)} | sed 's/^/GATE_TB /'"
@@ -1220,9 +1223,15 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
         imgs["density"] = LP.render_grid(pl, "density", od / "density.png", f"{title} post-place density (gate)",
                                          "std-cell area / bin area: blue 0, green 0.5, red 1.0+ ; grey = macros")
     m = re.search(r"^GATE_CONG_B64 (\S+)$", out, re.M)
-    if m and pl:
+    rpt = None
+    if m:
         try:
-            pl = dict(pl, congestion=LP.congestion_grid(pl, zlib.decompress(base64.b64decode(m.group(1))).decode(errors="replace")))
+            rpt = zlib.decompress(base64.b64decode(m.group(1))).decode(errors="replace")
+        except Exception as ex:  # noqa: BLE001
+            g.add("WARN", "layout_images", f"congestion report unreadable: {type(ex).__name__}")
+    if rpt is not None and pl:
+        try:
+            pl = dict(pl, congestion=LP.congestion_grid(pl, rpt))
             imgs["congestion"] = LP.render_grid(pl, "congestion", od / "congestion.png", f"{title} GRT congestion (gate trial)",
                                                 f"{pl['congestion']['markers']} congested gcells (red = most)")
         except Exception as ex:  # noqa: BLE001
@@ -1250,14 +1259,34 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
             g.add("WARN", "fill", msg + (f" (pin-bound: {reason})" if reason else f" (< {FILL_WARN:.0%})"))
         else:
             g.add("INFO", "fill", msg)
-    if parent and "GATE_GRT_RC=" in out:
+    if "GATE_GRT_RC=" in out:
+        # TRIAL ROUTE for EVERY kit (ROOT-0330-GRT 10-18; parent / cluster kits since 10-15): overflow > 0 FAILs with the
+        # hotspot (worst gcell / layer / bbox from the congestion report) and the congestion PNG
         rows = re.findall(r"^GATE_GRT_LAYER (\S+) +(\d+) +(\d+) +([\d.]+)%\s+(\d+) */ *(\d+) */ *(\d+)", out, re.M)
         tot = [r for r in rows if r[0] == "Total"]
-        lay = [r for r in rows if r[0] != "Total"]
+        # 5_1_grt.log prints the table after the first route AND after the incremental re-route: judge the LAST one
+        ends = [i for i, r in enumerate(rows) if r[0] == "Total"]
+        lay = [r for r in rows[(ends[-2] + 1 if len(ends) > 1 else 0):(ends[-1] if ends else len(rows))] if r[0] != "Total"]
         worst = max(lay, key=lambda r: float(r[3]), default=None)
         ovf = int(tot[-1][6]) if tot else None
+        hot = LP.congestion_hotspots(rpt) if rpt is not None else None
+        wovf = max(lay, key=lambda r: int(r[6]), default=None)
+        if hot and hot.get("markers") and wovf is not None and int(wovf[6]) > 0:
+            # the congestion report is 2D ("on Layer -"): the layer comes from the per-layer overflow table
+            hot["worst_overflow_layer"] = [wovf[0], int(wovf[6])]
+        secs = re.search(r"GATE_GRT_S=(\d+)", out)
+        g.trial_route = dict(schema="opentallas.ref_tile.trial_route.v1", overflow=ovf, kind="parent" if parent else "tile",
+                             rc=re.search(r"GATE_GRT_RC=(\S+)", out).group(1), grt_s=int(secs.group(1)) if secs else None,
+                             layers=[dict(layer=r[0], capacity=int(r[1]), usage=int(r[2]), pct=float(r[3]),
+                                          overflow=int(r[6])) for r in lay],
+                             worst_layer_usage=worst and [worst[0], float(worst[3])], hotspot=hot,
+                             congestion_png=imgs.get("congestion"))
         note = (f"trial GRT: total overflow {ovf}" + (f"; worst layer {worst[0]} {worst[3]}% used" if worst else "")
-                + (f"; congestion map {imgs.get('congestion')}" if imgs.get("congestion") else ""))
+                + (f"; worst-overflow layer {wovf[0]} ({wovf[6]})" if ovf and wovf is not None else "")
+                + (f"; {LP.hotspot_text(hot)}" if ovf and hot is not None else
+                   "; no congestion report came back" if ovf else "")
+                + (f"; congestion map {imgs.get('congestion')}" if imgs.get("congestion") else "")
+                + (f"; GRT {secs.group(1)} s" if secs else ""))
         if ovf is None:
             g.add("FAIL", "trial_route", "trial global route produced no congestion table (GATE_GRT_RC="
                   + re.search(r"GATE_GRT_RC=(\S+)", out).group(1) + ")", "read the remote grt.log")
@@ -1450,7 +1479,9 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
         root = (rec["root"] or "").removeprefix("port:")
         matched = [d for d in domains if d.get("source") == root or d.get("clock") == root]
         if cts and len(matched) == 1:
+            matched[0] = with_child_flops(matched[0], spec)
             corner_spreads(rec, matched[0])
+            child_pair_spreads(rec, matched[0], spec)
             if rec["tt_insertion_ps"] is not None:
                 rec["measured_clock"] = matched[0].get("clock")
     else:
@@ -1509,6 +1540,162 @@ def upgrade_clock_record(ev: dict | None) -> dict | None:
     return dict(ev, **add, pin_spread_from_gate_report=True) if add else ev
 
 
+def with_child_flops(domain: dict, spec: dict | None) -> dict:
+    """S81-DEC2 2026-10-18 (owner 10-17 0dq: "spread at the CHILD flops for a cluster"): for a cluster whose every
+    boundary register clock pin is a hard child's clock pin (a wires-only parent), the pin-flop arrival is the child's
+    clock-pin arrival PLUS that child's own boundary-register insertion (views/<child>/insertion.json <corner>.boundary
+    min..max).  The raw child clock-pin spread is the parent compensation, not skew: s81lk_kp4_dec taps ddly 144 ps
+    later than dsyn because ddly's own tree is 107 ps shorter.  Adds domain[c]["child_flop"] {n, min, max, pins};
+    unchanged when the spec has no children, a child pin has no record, or glue registers share the boundary."""
+    import fnmatch
+    kids = [ch for ch in (spec or {}).get("children") or [] if isinstance(ch, dict) and ch.get("view") and ch.get("inst")]
+    if (spec or {}).get("kind") != "cluster" or not kids:
+        return domain
+    out = dict(domain)
+    for c in ("tt", "ff"):
+        cr = domain.get(c) or {}
+        pins = ((cr.get("macros") or {}).get("pins")) or []
+        bd = cr.get("boundary") or {}
+        if not pins or bd.get("n") != len(pins):
+            continue                                    # glue registers on the boundary too: keep the measured record
+        rows = []
+        for x in pins:
+            inst = str(x.get("pin", "")).rsplit("/", 1)[0]
+            kid = next((ch for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))
+                        or fnmatch.fnmatchcase(inst, ch["inst"])), None)
+            ij = ROOT / kid["view"] / "insertion.json" if kid else None
+            try:
+                b = json.loads(ij.read_text())[c]["boundary"]
+                lo, hi = float(x["arr"]) + float(b["min"]), float(x["arr"]) + float(b["max"])
+            except (AttributeError, OSError, ValueError, KeyError, TypeError):
+                rows = None
+                break
+            rows.append(dict(pin=x["pin"], arr=x["arr"], child_min=round(lo, 1), child_max=round(hi, 1)))
+        if rows:
+            out[c] = dict(cr, child_flop=dict(n=len(rows), min=min(r["child_min"] for r in rows),
+                                              max=max(r["child_max"] for r in rows), pins=rows))
+    return out
+
+
+def _vlog_preprocess(text: str, defines) -> str:
+    """comments stripped, `ifdef / `ifndef / `elsif / `else / `endif resolved against defines (other directives dropped)"""
+    text = re.sub(r"/\*.*?\*/", " ", text, flags=re.S)
+    text = re.sub(r"//[^\n]*", "", text)
+    defs = {str(d).split("=", 1)[0].lstrip("-D") for d in defines or []}
+    out, stack = [], []                     # stack of [this branch live, some branch taken]
+    for line in text.splitlines():
+        m = re.match(r"\s*`(ifdef|ifndef|elsif|else|endif)\b\s*(\w*)", line)
+        live = all(x[0] for x in stack)
+        if not m:
+            if live and not re.match(r"\s*`", line):
+                out.append(line)
+            continue
+        kw, name = m.groups()
+        if kw in ("ifdef", "ifndef"):
+            on = (name in defs) == (kw == "ifdef")
+            stack.append([on, on])
+        elif kw == "elsif" and stack:
+            on = not stack[-1][1] and name in defs
+            stack[-1] = [on, stack[-1][1] or on]
+        elif kw == "else" and stack:
+            stack[-1] = [not stack[-1][1], True]
+        elif kw == "endif" and stack:
+            stack.pop()
+    return "\n".join(out)
+
+
+VLOG_KEYWORDS = {"module", "endmodule", "input", "output", "inout", "wire", "reg", "logic", "assign", "always",
+                 "always_ff", "always_comb", "initial", "generate", "endgenerate", "parameter", "localparam", "if",
+                 "else", "for", "begin", "end", "case", "endcase", "function", "endfunction", "genvar", "integer"}
+
+
+def linked_child_pairs(spec: dict | None) -> list | None:
+    """HANDOFF 0fz 2026-10-18 (owner 0dq "boundary matched to the NEIGHBOURS"): the communicating hard-child pairs of a
+    wires-only parent, from its top module's RTL: two child instances are linked when one net (not a parent port)
+    connects to both, i.e. one child's output feeds the other's input.  Returns sorted [(inst_a, inst_b)] by child
+    spec inst pattern, or None when the RTL cannot be read or a child instance is not found (caller keeps the
+    all-children spread)."""
+    import fnmatch
+    spec = spec or {}
+    kids = [ch for ch in spec.get("children") or [] if isinstance(ch, dict) and ch.get("inst")]
+    top = spec.get("top")
+    if not kids or not top:
+        return None
+    body = None
+    for src in spec.get("sources") or []:
+        try:
+            text = _vlog_preprocess((ROOT / src).read_text(errors="replace"), spec.get("defines"))
+        except OSError:
+            return None
+        m = re.search(rf"\bmodule\s+{re.escape(top)}\b(.*?)\bendmodule\b", text, re.S)
+        if m:
+            body = m.group(1)
+            break
+    if body is None:
+        return None
+    hdr = re.match(r"\s*(#\s*\((?:[^()]|\([^()]*\))*\))?\s*\((.*?)\)\s*;", body, re.S)
+    ports = set(re.findall(r"\b([A-Za-z_]\w*)\b", hdr.group(2))) - VLOG_KEYWORDS if hdr else set()
+    for decl in re.findall(r"\b(?:input|output|inout)\b([^;]*);", body):
+        ports |= set(re.findall(r"\b([A-Za-z_]\w*)\b", decl)) - VLOG_KEYWORDS
+    nets: dict = {}
+    seen = set()
+    inst_re = re.compile(r"\b([A-Za-z_]\w*)\s*(?:#\s*\((?:[^()]|\([^()]*\))*\))?\s*([A-Za-z_]\w*)\s*\(((?:[^()]|\([^()]*\))*)\)\s*;", re.S)
+    for mod, inst, conns in inst_re.findall(body):
+        if mod in VLOG_KEYWORDS:
+            continue
+        kid = next((ch for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))
+                    or fnmatch.fnmatchcase(inst, ch["inst"])), None)
+        if kid is None:
+            continue
+        seen.add(kid["inst"])
+        for expr in re.findall(r"\.\s*\w+\s*\(((?:[^()]|\([^()]*\))*)\)", conns):
+            for n in set(re.findall(r"(?<![\w'])([A-Za-z_]\w*)\b", expr)) - ports - VLOG_KEYWORDS:
+                nets.setdefault(n, set()).add(kid["inst"])
+    if seen != {ch["inst"] for ch in kids}:
+        return None
+    return sorted({tuple(sorted((a, b))) for ks in nets.values() for a in ks for b in ks if a < b})
+
+
+def child_pair_spreads(rec: dict, domain: dict, spec: dict | None) -> dict:
+    """HANDOFF 0fz 2026-10-18: a wires-only parent (pin-flop spread on the "child_flop" basis) is judged per LINKED
+    child pair, not across all children: for each pair (A, B) the boundary-flop arrival difference at that corner is
+    max(A.max - B.min, B.max - A.min) over the two children's boundary flops (child clock-pin arrival + the child's own
+    boundary insertion), and "<c>_pin_spread_ps" becomes the worst linked pair (basis "child_pair").  Per-pair numbers
+    go to rec["child_pairs"].  Unchanged when there is no child_flop record or no linked pair can be derived."""
+    import fnmatch
+    if not any(rec.get(f"{c}_pin_spread_basis") == "child_flop" for c in ("tt", "ff")):
+        return rec
+    pairs = linked_child_pairs(spec)
+    if not pairs:
+        return rec
+    kids = [ch["inst"] for ch in (spec or {}).get("children") or [] if isinstance(ch, dict) and ch.get("inst")]
+    table = []
+    for c in ("tt", "ff"):
+        if rec.get(f"{c}_pin_spread_basis") != "child_flop":
+            continue
+        span: dict = {}
+        for r in ((domain.get(c) or {}).get("child_flop") or {}).get("pins") or []:
+            inst = str(r.get("pin", "")).rsplit("/", 1)[0]
+            k = next((p for p in kids if fnmatch.fnmatchcase(inst, p.lstrip("*")) or fnmatch.fnmatchcase(inst, p)), None)
+            if k is None:
+                return rec
+            lo, hi = span.get(k, (math.inf, -math.inf))
+            span[k] = (min(lo, float(r["child_min"])), max(hi, float(r["child_max"])))
+        if any(a not in span or b not in span for a, b in pairs):
+            return rec
+        worst = None
+        for a, b in pairs:
+            (alo, ahi), (blo, bhi) = span[a], span[b]
+            d = round(max(ahi - blo, bhi - alo), 1)
+            table.append(dict(corner=c, a=a.lstrip("*"), b=b.lstrip("*"), ps=d,
+                              a_range=[round(alo, 1), round(ahi, 1)], b_range=[round(blo, 1), round(bhi, 1)]))
+            worst = d if worst is None else max(worst, d)
+        rec[f"{c}_child_flop_spread_ps"] = rec[f"{c}_pin_spread_ps"]
+        rec[f"{c}_pin_spread_ps"], rec[f"{c}_pin_spread_basis"] = worst, "child_pair"
+    rec["child_pairs"] = table
+    return rec
+
+
 def corner_spreads(rec: dict, domain: dict) -> dict:
     """TT and FF insertion (latest register arrival), all-register leaf spread and pin-flop (boundary register) spread
     of one ck_insertion clock record (owner 10-17 0dq: the rule is the pin-flop spread at TT AND FF)."""
@@ -1518,7 +1705,11 @@ def corner_spreads(rec: dict, domain: dict) -> dict:
         if al.get("min") is not None and al.get("max") is not None:
             lo, hi = float(al["min"]), float(al["max"])
             rec[f"{c}_insertion_ps"], rec[f"{c}_spread_ps"] = hi, round(hi - lo, 1)
-        if bd.get("min") is not None and bd.get("max") is not None:
+        cf = cr.get("child_flop") or {}
+        if cf.get("min") is not None and cf.get("max") is not None:   # wires-only cluster: the child pin flops
+            rec[f"{c}_pin_spread_ps"] = round(float(cf["max"]) - float(cf["min"]), 1)
+            rec[f"{c}_pin_spread_basis"] = "child_flop"
+        elif bd.get("min") is not None and bd.get("max") is not None:
             rec[f"{c}_pin_spread_ps"] = round(float(bd["max"]) - float(bd["min"]), 1)
     return rec
 
@@ -1526,6 +1717,10 @@ def corner_spreads(rec: dict, domain: dict) -> dict:
 def clock_item(g: Gate, rec: dict) -> None:
     """measured clock rule (owner 2026-10-13, constants in textbook_lint.py): reported for every kit."""
     g.clock = rec
+    for row in rec.get("child_pairs") or []:
+        g.add("INFO", "clock_child_pair", f"{row['corner'].upper()} linked children {row['a']}-{row['b']}: boundary-flop "
+              f"arrival difference {row['ps']} ps ({row['a']} {row['a_range'][0]}..{row['a_range'][1]}, "
+              f"{row['b']} {row['b_range'][0]}..{row['b_range'][1]}; limit {TL.CLK_SPREAD_MAX_PS:g})")
     if rec["verdict"] == "REFUSE":
         g.add("FAIL", "clock_rule", rec["text"] + ("" if rec["cts"] else " -- this gate ran without --cts")
               + (f" (declared clock '{rec['declared_clock']}' does not waive it)" if rec.get("declared_clock") else ""),
@@ -1572,9 +1767,13 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
             pass
         try:
             ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit, clock=d.get("clock"),
-                                     tile=[t for t in tile if t])
-        except TypeError:                                    # an older source_binding without the tile scope
-            ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit, clock=d.get("clock"))
+                                     tile=[t for t in tile if t], gate=d)
+        except TypeError:                                    # an older source_binding without the gate / tile scope
+            try:
+                ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit, clock=d.get("clock"),
+                                         tile=[t for t in tile if t])
+            except TypeError:
+                ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit, clock=d.get("clock"))
         if not ok:
             return no(reason)
         if note is not None:
@@ -1731,6 +1930,8 @@ def write_gate_result(g: Gate, kd: Path, cts: bool, host: str):
            "generated": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "host": getattr(g, "remote_host", host), "cts": bool(cts),
            "commit": g.source_binding.get("commit"), "source_binding": g.source_binding,
            "clock": g.clock, "items": [i for i in g.items if i["severity"] != "INFO"][:40]}
+    if getattr(g, "trial_route", None):
+        out["trial_route"] = g.trial_route      # a gate without this record predates the every-kit trial GRT
     if getattr(g, "port_latency", None):
         out["port_latency"] = g.port_latency
     previous = kd / CLOCK_RESULT
@@ -1819,6 +2020,60 @@ def check_slot_fit(g: Gate, kd: Path, job: dict, repo: str, commit: str = "") ->
     return res
 
 
+CLOCK_WAIVER_MAX_PS = 2.0
+
+
+def apply_clock_rule_waiver(g: Gate, spec: dict) -> None:
+    """HANDOFF 0ga 2026-10-18 (s81lk_kp4_dec syn-dly 80.5 FF vs 80): a coordinator-recorded per-pair excess.  The job
+    spec's "clock_rule_waiver" {"pair": "a-b", "ff_ps"|"tt_ps": measured, "limit_ps", "by"} turns the clock_rule FAIL
+    into a WARN that prints the waiver, only when every over-limit corner spread of the gate evidence is <= limit + 2 ps,
+    <= the recorded value, and (child-pair basis) comes from that pair alone.  Anything else stays a FAIL."""
+    w = spec.get("clock_rule_waiver")
+    items = [i for i in g.items if i["check"] == "clock_rule" and i["severity"] == "FAIL"]
+    if not isinstance(w, dict) or not items:
+        return
+    ev = (getattr(g, "clock", None) or {}).get("evidence") or {}
+    lim = TL.CLK_SPREAD_MAX_PS
+    pair = {x.strip().removeprefix("u_") for x in str(w.get("pair", "")).split("-") if x.strip()}
+    why = []
+    if not str(w.get("by", "")).strip():
+        why.append("no 'by'")
+    _num = TL._num
+    if not _num(w.get("limit_ps")) or float(w["limit_ps"]) != lim:
+        why.append(f"limit_ps must be {lim:.0f}")
+    over = 0
+    for c, (v, basis) in TL.clock_spreads(ev).items():
+        if v <= lim:
+            continue
+        over += 1
+        rec_ps = w.get(f"{c}_ps")
+        if not _num(rec_ps) or v > float(rec_ps) + 1e-6:
+            why.append(f"{c.upper()} {v:.1f} ps not recorded in the waiver ({c}_ps={rec_ps})")
+        if v > lim + CLOCK_WAIVER_MAX_PS:
+            why.append(f"{c.upper()} {v:.1f} ps exceeds limit + {CLOCK_WAIVER_MAX_PS:.0f}")
+        if basis == "pin-flop" and ev.get(f"{c}_pin_spread_basis") == "child_pair":
+            # waiver tokens name the child instance (u_dly / dly) or its block suffix (s81lk_kp4_ddly / ddly)
+            def named(p):
+                inst = [str(p.get(k, "")).removeprefix("u_") for k in ("a", "b")]
+                return len(pair) == 2 and all(any(t.endswith(x) for t in pair) for x in inst) \
+                    and all(any(t.endswith(x) for x in inst) for t in pair)
+            bad = [p for p in ev.get("child_pairs") or () if p.get("corner") == c and float(p.get("ps", 0)) > lim
+                   and not named(p)]
+            if bad:
+                why.append(f"{c.upper()} pair(s) {', '.join(b['a'] + '-' + b['b'] for b in bad)} over {lim:.0f} too")
+    if not over:
+        why.append("no over-limit spread in the evidence")
+    if why:
+        for i in items:
+            i["message"] += f" (clock_rule_waiver NOT applied: {'; '.join(why)})"
+        return
+    note = (f"clock_rule_waiver by {w['by']}: pair {w.get('pair')} "
+            + ", ".join(f"{c}_ps {w[c + '_ps']}" for c in ("tt", "ff") if f"{c}_ps" in w) + f" vs limit {lim:.0f}")
+    print(f"pre_route_gate: WAIVER {note}", file=sys.stderr)
+    for i in items:
+        i["severity"], i["message"] = "WARN", i["message"] + f" -- WAIVED: {note}"
+
+
 def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = None,
                  closed_stands: bool = False, clock_mode: str = "refuse") -> dict:
     """closure-loop submit hook: the LOCAL gate on a job spec AT ITS SOURCE COMMIT (kit / pins / RTL / children /
@@ -1858,6 +2113,7 @@ def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = 
                         check_slot_fit(g, Path(td) / kit, spec, repo, commit)
                         if clock_mode != "off":
                             check_clock_evidence(g, Path(td) / kit, known_sinks, closed_stands, commit)
+                            apply_clock_rule_waiver(g, spec)
                             if clock_mode != "refuse":
                                 for i in g.items:
                                     if i["check"] == "clock_rule" and i["severity"] == "FAIL":
