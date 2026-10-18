@@ -14,7 +14,13 @@
 //     the n6 output flop and the re-entry register, into F1 side registers (fa_* / fb_*): the flat form's 21-level
 //     fb_t -> slot add -> ev[slot][h] stage (~874 ps) loses the slot adder, the h decode and complete()/norm.
 //   * the pairing-store state (cnt / ev, 2,432 reset flops) is 8 slot groups, each reset by its own relay copy
-//     (ot_rst_relay REGIONS 12: <= ~310 loads a copy; the flat form had 2 copies x 2.8k loads).
+//     (ot_rst_relay REGIONS 20: two copies per group, <= ~180 loads a copy; the flat form had 2 copies x 2.8k loads).
+//   * S81U-CAP3 (10-17): the pairing-store LOOKUP of each F1 word (cnt / key hit / ev bit / es bit of its slot) is read
+//     one register EARLIER, at the edge that loads the F1 word, from the store's next state (the array read, with the
+//     update the decision of that same edge makes forwarded: slot / h compare + mux).  The decision then starts from
+//     registered lookups (fa_cn / fa_kh / fa_ev / fa_es and fb_*), so the gate's 18-level fb_t -> s_key -> key[s_slot]
+//     compare -> do_ins -> cnt_s -> cnt stage (~795 ps) loses the 64:1 / 2048:1 muxes and the 24-bit compare.
+//     Exact same state at every decision: no edge moves (cap_model.py unchanged, cap_bench cycle-exact).
 // MUT (bench mutants only): 1 wrong sibling association (h = parent of the parent), 3 leaf mapping off by one.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_cap_rt #(
@@ -47,10 +53,10 @@ module ot_s81sl_cap_rt #(
     assign cw_s_v = cw_v[5:0];   assign cw_s_a = cw_a[71:0];   assign cw_s_d = cw_d[191:0];
     assign cw_n_v = cw_v[9:6];   assign cw_n_a = cw_a[119:72]; assign cw_n_d = cw_d[319:192];
     integer i, j;
-    wire [11:0] rsv;
-    ot_rst_relay #(.REGIONS(12), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
+    wire [19:0] rsv;
+    ot_rst_relay #(.REGIONS(20), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
     wire rs_n = rsv[0], rs_f = rsv[1], rs_o = rsv[2], rs_c = rsv[3];
-    wire [7:0] rs_s = rsv[11:4];
+    wire [15:0] rs_s = rsv[19:4];                     // 2 per slot group
 
     // ------------------------------------------------------------ ot_v41_ret_pkg (copied: no package import in ORFS)
     function automatic [31:0] norm(input [31:0] t);
@@ -145,20 +151,41 @@ module ot_s81sl_cap_rt #(
     wire [31:0] ev [0:63];                                // entry valid, bit h
     wire [7:0]  any_g;                                    // registered OR of cnt != 0 per slot group (F11)
     wire        any_open = |any_g;
-    wire        slot_busy = cnt[s_slot] != 6'd0;
-    wire        key_hit = key[s_slot] == s_key;
+    // registered look-ahead lookups of the F1 words' slots (loaded with fa_* / fb_*, see below)
+    reg  [5:0]  fa_cn, fb_cn; reg fa_kh, fb_kh, fa_ev, fb_ev, fa_es, fb_es;
+    wire [5:0]  s_cn = sb ? fb_cn : fa_cn;                // = cnt[s_slot]
+    wire        slot_busy = s_cn != 6'd0;
+    wire        key_hit = sb ? fb_kh : fa_kh;             // = key[s_slot] == s_key
     wire        f6 = s_v && slot_busy && !key_hit;
-    wire        e_wait = slot_busy && key_hit && ev[s_slot][s_h];
-    wire        f7 = s_v && (s_bad || (e_wait && es[s_slot][s_h] == s_side));
+    wire        e_wait = slot_busy && key_hit && (sb ? fb_ev : fa_ev);   // ev[s_slot][s_h]
+    wire        f7 = s_v && (s_bad || (e_wait && (sb ? fb_es : fa_es) == s_side));
     wire        do_ins = s_v && !f6 && !f7 && !e_wait;
     wire        do_mrg = s_v && !f6 && !f7 && e_wait;
     wire        do_rel = fb_v && cb;                      // a complete re-entry leaves its slot
     wire [5:0]  r_slot = fb_sl;
     reg  [5:0]  cnt_s, cnt_r;
     always @* begin
-        cnt_s = cnt[s_slot] + ((do_ins && !sb) ? 6'd1 : 6'd0) - ((do_mrg && sb) ? 6'd1 : 6'd0)
-                            - ((do_rel && r_slot == s_slot) ? 6'd1 : 6'd0);
-        cnt_r = cnt[r_slot] - 6'd1;
+        cnt_s = s_cn + ((do_ins && !sb) ? 6'd1 : 6'd0) - ((do_mrg && sb) ? 6'd1 : 6'd0)
+                     - ((do_rel && r_slot == s_slot) ? 6'd1 : 6'd0);
+        cnt_r = fb_cn - 6'd1;                             // cnt[r_slot], r_slot = fb_sl
+    end
+    // ---- look-ahead lookups (S81U-CAP3): the slot state the NEXT decision sees = this edge's update forwarded over
+    //      the array read, for the word now entering F1 on each side (A from the n6 output flop, B from the re-entry)
+    wire [5:0]  na_sl = slotof(n6_t), nb_sl = slotof(re_t);
+    wire [4:0]  na_h = hof(n6_t), nb_h = hof(re_t);
+    wire [23:0] na_key = {n6_t[31:13], n6_t[4:0]}, nb_key = {re_t[31:13], re_t[4:0]};
+    wire        upd = do_ins || do_mrg;
+    wire        kwr = do_ins && !slot_busy;               // key[s_slot] <= s_key at this edge
+    wire        a_ss = s_slot == na_sl, b_ss = s_slot == nb_sl;
+    always @(posedge clk) begin
+        fa_cn <= (upd && a_ss) ? cnt_s : (do_rel && r_slot == na_sl) ? cnt_r : cnt[na_sl];
+        fb_cn <= (upd && b_ss) ? cnt_s : (do_rel && r_slot == nb_sl) ? cnt_r : cnt[nb_sl];
+        fa_kh <= (kwr && a_ss) ? (s_key == na_key) : (key[na_sl] == na_key);
+        fb_kh <= (kwr && b_ss) ? (s_key == nb_key) : (key[nb_sl] == nb_key);
+        fa_ev <= (upd && a_ss && s_h == na_h) ? do_ins : ev[na_sl][na_h];
+        fb_ev <= (upd && b_ss && s_h == nb_h) ? do_ins : ev[nb_sl][nb_h];
+        fa_es <= (do_ins && a_ss && s_h == na_h) ? s_side : es[na_sl][na_h];
+        fb_es <= (do_ins && b_ss && s_h == nb_h) ? s_side : es[nb_sl][nb_h];
     end
     genvar gs, ge;
     generate for (gs = 0; gs < 8; gs = gs + 1) begin : g_st
@@ -167,13 +194,18 @@ module ot_s81sl_cap_rt #(
         reg        any_q;
         integer q;
         wire s_in = s_slot[5:3] == gs, r_in = r_slot[5:3] == gs;
-        always @(posedge clk or negedge rs_s[gs])
-            if (!rs_s[gs]) begin
-                for (q = 0; q < 8; q = q + 1) begin cnt_g[q] <= 6'd0; ev_g[q] <= 32'd0; end
-                any_q <= 1'b0;
+        always @(posedge clk or negedge rs_s[2 * gs + 1])
+            if (!rs_s[2 * gs + 1]) begin
+                for (q = 0; q < 8; q = q + 1) ev_g[q] <= 32'd0;
             end else begin
                 if (do_ins && s_in) ev_g[s_slot[2:0]][s_h] <= 1'b1;
                 if (do_mrg && s_in) ev_g[s_slot[2:0]][s_h] <= 1'b0;
+            end
+        always @(posedge clk or negedge rs_s[2 * gs])
+            if (!rs_s[2 * gs]) begin
+                for (q = 0; q < 8; q = q + 1) cnt_g[q] <= 6'd0;
+                any_q <= 1'b0;
+            end else begin
                 if (do_rel && r_in && !((do_ins || do_mrg) && r_slot == s_slot)) cnt_g[r_slot[2:0]] <= cnt_r;
                 if ((do_ins || do_mrg) && s_in) cnt_g[s_slot[2:0]] <= cnt_s;   // (B complete on the same slot folded in)
                 any_q <= 1'b0;

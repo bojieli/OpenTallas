@@ -77,7 +77,7 @@
     "hold_margin_ns": 0.03
   },
   "structural_change": "S81U-CAP2: the flat s81sl_cap (22,261 sinks / one root, TT insertion 368.5 ps > 300) as a wires-only cluster of 3 hardened leaves with own roots: root leaf s81sl_cap_rt (S), tree leaf s81sl_cap_tr x2 (N; E instance MY). Seams registered both sides (nc RST flop -> n6 P1 flop), no added edge.",
-  "why_floorplan": "square 311.04 x 302.4: u_rt 220.32 x 108 at (43.2, 43.2) (SRAM-width set), u_tw / u_te 90.72 x 86.4 at (43.2, 172.8) / (172.8, 172.8 MY) above it (21.6-um seam channel; 38.9-um channel between the trees carries the clock spine and cfg / cw_n down to u_rt's N face, M6/M7 over the trees). rt_w / rt_e enter the trees' outer faces; cw_s leaves u_rt's S face. All origins on the 43.2 lattice.",
+  "why_floorplan": "square 311.04 x 302.4: u_rt 259.2 x 108 at (43.2, 43.2) (SRAM + side columns, S81U-CAP3), u_tw / u_te 90.72 x 86.4 at (43.2, 172.8) / (172.8, 172.8 MY) above it (21.6-um seam channel; 38.9-um channel between the trees carries the clock spine and cfg / cw_n down to u_rt's N face, M6/M7 over the trees). rt_w / rt_e enter the trees' outer faces; cw_s leaves u_rt's S face. All origins on the 43.2 lattice.",
   "job": {
     "owner": "Claude:S81U-CAP2",
     "branch": "claude/s81u3-1017",

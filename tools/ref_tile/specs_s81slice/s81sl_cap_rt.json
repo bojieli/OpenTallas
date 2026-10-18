@@ -20,8 +20,8 @@
       "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
       "count": 1,
       "at": [
-        23.04,
-        23.76
+        43.2,
+        43.2
       ]
     }
   ],
@@ -69,7 +69,7 @@
       "v": "M3 M5"
     }
   },
-  "structural_change": "S81U-CAP2: the flat s81sl_cap failed the clock rule (22,261 sinks / one root, TT insertion 368.5 ps > 300, physical/ref_tile/s81sl_cap/gate_result.json); split into 2 x tree leaf (s81sl_cap_tr, one master, E instance MY) + root leaf (s81sl_cap_rt) with own clock roots and registered seams (nc RST flop -> n6 P1 flop, no added edge), parent s81sl_capc = instances + wiring.",
+  "structural_change": "S81U-CAP2: the flat s81sl_cap failed the clock rule (22,261 sinks / one root, TT insertion 368.5 ps > 300, physical/ref_tile/s81sl_cap/gate_result.json); split into 2 x tree leaf (s81sl_cap_tr, one master, E instance MY) + root leaf (s81sl_cap_rt) with own clock roots and registered seams (nc RST flop -> n6 P1 flop, no added edge), parent s81sl_capc = instances + wiring. S81U-CAP3: pairing-store lookups read one register early with forwarding (gate's 18-level fb_t -> cnt stage, ~795 ps), reset relay 20 copies, SRAM on the lattice; 0 edges moved (cap_bench identical).",
   "job": {
     "owner": "Claude:S81U-CAP2",
     "branch": "claude/s81u3-1017",
@@ -124,7 +124,7 @@
   },
   "util": 0.52,
   "outline": {
-    "w": 220.32,
+    "w": 259.2,
     "h": 108.0
   },
   "keep_pin_regs": true,
@@ -214,7 +214,7 @@
       213.84
     ]
   },
-  "why_floorplan": "220.32 x 108: width set by the 174.12-um SRAM + 20-um channels; SRAM along the S face, one std-cell band above it (register mass), clk/rst_n mid N face beside it; N face = W-tree word (under u_tw), cfg + cw_n (middle, routed over the trees by the parent on M6/M7), E-tree word (under u_te MY); S face cw_s + fault; ~10k flops, one root.",
+  "why_floorplan": "259.2 x 108 (S81U-CAP3): SRAM at (43.2, 43.2) on the 43.2 lattice (CAP2 had it off-lattice at 23.04 / 23.76); its rd_out pins sit on its W edge and wd_in on its E edge, so the outline is 6 lattice steps wide to leave a ~42-um std-cell column on each side; one contiguous ring band (S 41 um: DEC + cw outputs to the S face; N 33 um: n6 / FIN under the N pins; W/E 41-42 um: pairing store, beside the macro's ports). clk/rst_n mid N face between the trees (cluster spine channel); N face = W-tree word (under u_tw), cfg + cw_n (middle), E-tree word (under u_te MY); S face cw_s + fault; ~10k flops, one root.",
   "io_flop_at_pins": {
     "cols": 4,
     "allow_none": true
