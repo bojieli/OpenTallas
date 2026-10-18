@@ -1,5 +1,5 @@
 {
- "name": "hbfd_lh_136_sn-l1-COMMIT",
+ "name": "hbfd_lh_136_sn-l1-90e58220d",
  "block": "hbfd_lh_136_SN",
  "ref_tile": true,
  "owner": "Claude:HBM-LANDING",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 6,
  "source": {
   "branch": "claude/hland-rtl-1018",
-  "commit": "COMMIT",
+  "commit": "90e58220d",
   "extra_paths": [
    "physical/qwen_fwd_lane",
    "physical/hbm_lane",
@@ -103,7 +103,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbfd_lh_136_sn/hbfd_lh_136_sn-l1-COMMIT"
+   "to": "results/rtl/ref_tile/hbfd_lh_136_sn/hbfd_lh_136_sn-l1-90e58220d"
   }
  ],
  "cycles_added": 0,
