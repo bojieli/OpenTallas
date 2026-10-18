@@ -34,7 +34,12 @@ module tb_coll_tp8_static_links #(
     parameter integer PU = 14, PS = 339,         // PHY latencies the calendar compiles
     parameter integer KC = 4, KW = 2,
     parameter integer RU=0,RS0=0,RS1=0,RS2=0,SHARED=0,SIXFIVE=0,
-    parameter integer XU = 0, XS = 0             // extra PHY cycles vs compiled (negative control)
+    parameter integer XU = 0, XS = 0,            // extra PHY cycles vs compiled (negative control)
+    // TOKEN-XDIE-QTP8 10-18: die-level lanes between io_collective and io_serdes_j (dv2f14 fwd_lanes E, core cycles):
+    // ETj on port j's TX frame, ERj on port j's RX frame, EV2 = extra cycles of port 2's TX VALID lane only (the die
+    // gave serdes2_txv E 6 vs serdes2_tx E 5); LXj = the calendar's absorbed lane cycles (parent opt-in); TOKREG = face form
+    parameter integer ET0 = 0, ET1 = 0, ET2 = 0, ER0 = 0, ER1 = 0, ER2 = 0, EV2 = 0,
+    parameter integer TOKREG = 0, LX0 = 0, LX1 = 0, LX2 = 0
 ) (input wire clk, input wire lck,input wire fdi_ck,input wire blk_ck);
     localparam integer ND = 8, LANES = 16, FW = 512, TAGW = 32, PW = FW + 2 + TAGW, RW = FW + 2, MAXW = 1 << 16;
     localparam integer FP = 546 + 19 + 32, FR = 514 + 19 + 32;       // codec frames 597 / 565
@@ -132,9 +137,9 @@ module tb_coll_tp8_static_links #(
 `ifdef OT_TP8S_PRODUCTION_WRAPPER
             assign ptv[1:0]=u_parent.u_io.phy_tx_valid[1:0];
             assign ptpack[0+:1194]=u_parent.u_io.phy_tx[0+:1194];
-            qfd_collective_static_io_production #(.PU(PU),.PS(PS),.LU(LATU),.LS(LATS),.RU(RU),.RS0(RS0),.RS1(RS1),.RS2(RS2))u_parent(
+            qfd_collective_static_io_production #(.PU(PU),.PS(PS),.LU(LATU),.LS(LATS),.RU(RU),.RS0(RS0),.RS1(RS1),.RS2(RS2),.TOK_REG(TOKREG),.LX0(LX0),.LX1(LX1),.LX2(LX2))u_parent(
 `else
-            qfd_collective_static_io #(.PU(PU),.PS(PS),.LU(LATU),.LS(LATS),.RU(RU),.RS0(RS0),.RS1(RS1),.RS2(RS2),.SHARED_UCIE(SHARED),.SIX_FIVE(SIXFIVE))u_parent(
+            qfd_collective_static_io #(.PU(PU),.PS(PS),.LU(LATU),.LS(LATS),.RU(RU),.RS0(RS0),.RS1(RS1),.RS2(RS2),.SHARED_UCIE(SHARED),.SIX_FIVE(SIXFIVE),.TOK_REG(TOKREG),.LX0(LX0),.LX1(LX1),.LX2(LX2))u_parent(
 `endif
               .clk(clk),.clk_pfold0(clk),.clk_pfold1(clk),.clk_pfold2(clk),.clk_pfold3(clk),
               .clk_xfold0(clk),.clk_xfold1(clk),.clk_xfold2(clk),.clk_xfold3(clk),
@@ -243,7 +248,9 @@ module tb_coll_tp8_static_links #(
                 // CORRUPT: flip one bit of die 6's port-0 frame number CORRUPT (a CRC must catch it)
                 integer nf = 0;
                 always @(posedge lck) if (stxv[g*3 + j]) nf <= nf + 1;
-                tb_phy_pipe #(.W(FP), .L(PS + XS)) u_sp (.clk(lck), .rst_n(rst_n), .v_in(stxv[g*3 + j]),
+                localparam integer ETJ = (j == 0) ? ET0 : (j == 1) ? ET1 : ET2;
+                localparam integer ERJ = (J2 == 0) ? ER0 : (J2 == 1) ? ER1 : ER2;
+                tb_phy_pipe #(.W(FP), .L(PS + XS + ETJ + ERJ), .LV((j == 2) ? EV2 : 0)) u_sp (.clk(lck), .rst_n(rst_n), .v_in(stxv[g*3 + j]),
                     .d_in(stx[(g*3 + j)*FP +: FP]), .flip(g == 6 && j == 0 && CORRUPT >= 0 && nf == CORRUPT),
                     .v_out(srxv[R2*3 + J2]), .d_out(srx[(R2*3 + J2)*FP +: FP]));
             end
@@ -371,17 +378,17 @@ module tb_coll_tp8_static_links #(
 endmodule
 
 // PHY model: fixed-latency register pipe of the codec frame, reset like the endpoints (off-chip, modelled)
-module tb_phy_pipe #(parameter integer W = 597, parameter integer L = 14) (
+module tb_phy_pipe #(parameter integer W = 597, parameter integer L = 14, parameter integer LV = 0) (
     input wire clk, input wire rst_n, input wire v_in, input wire [W-1:0] d_in, input wire flip,
     output wire v_out, output wire [W-1:0] d_out);
-    reg [L-1:0] vp;
+    reg [L+LV-1:0] vp;
     reg [W-1:0] dm [0:L-1];          // ring: entry wp was written L edges ago
     integer wp = 0;
     always @(posedge clk) begin
-        if (!rst_n) vp <= 0; else vp <= {vp[L-2:0], v_in};
+        if (!rst_n) vp <= 0; else vp <= {vp[L+LV-2:0], v_in};
         dm[wp] <= d_in ^ (flip ? {{(W-1){1'b0}}, 1'b1} : {W{1'b0}});
         wp <= (wp == L - 1) ? 0 : wp + 1;
     end
-    assign v_out = vp[L-1];
+    assign v_out = vp[L+LV-1];   // LV > 0: the valid lane lands LV cycles after its data (die lane skew)
     assign d_out = dm[wp];
 endmodule
