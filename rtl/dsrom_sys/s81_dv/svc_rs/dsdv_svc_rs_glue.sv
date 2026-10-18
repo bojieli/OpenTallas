@@ -19,11 +19,13 @@ module dsdv_svc_rs_rl #(parameter integer ST = 0) (
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
-// dn stream tree node (non-entry: the centre register takes the parent face only; hst = 0)
+// dn stream tree node (the centre register takes the parent face, or at the entry (parent 0) the host stream hst;
+// non-entry slices tie hst to 0 as dsdv_svc_rs_c's g_nohost)
 module dsdv_svc_rs_dn #(parameter integer ST = 0) (
     input  wire             ck,
     input  wire             rst,
     input  wire [3:0]       sid,
+    input  wire [804:0]     hst,
     input  wire [4*805-1:0] dn_i,
     output wire [4*805-1:0] dn_o,
     output reg  [804:0]     cs,
@@ -44,7 +46,6 @@ module dsdv_svc_rs_dn #(parameter integer ST = 0) (
                                    p1[512:1] <= p0[512:1]; p1[DW-1:514] <= p0[DW-1:514]; end
         assign dfi[f] = p1;
     end endgenerate
-    wire [DW-1:0] hst = '0;
     wire [DW-1:0] cin = (par == 3'd0) ? hst : dfi[par - 3'd1];
     always @(posedge ck or negedge rn) if (!rn) begin cs[0] <= 1'b0; cs[513] <= 1'b0; end
         else begin cs[0] <= cin[0]; cs[513] <= cin[513]; end
@@ -62,9 +63,9 @@ module dsdv_svc_rs_dn #(parameter integer ST = 0) (
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
-// attention share + its role inputs (root = ENTRY = 0)
+// attention share + its role inputs (root = ENTRY: ROOT 1 on the entry slices)
 module dsdv_svc_rs_attw #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-                          parameter integer SRAM_MACRO = 0) (
+                          parameter integer SRAM_MACRO = 0, parameter integer ROOT = 0) (
     input  wire             ck,
     input  wire             rst,
     input  wire [3:0]       sid,
@@ -105,7 +106,7 @@ module dsdv_svc_rs_attw #(parameter integer MUT = 0, parameter integer DIE_ID = 
 `endif
     wire [31:0] a_fc;
     dsdv_svc_att #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO != 0)) u_att (
-        .clk(ck), .rst_n(rn), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(1'b0),
+        .clk(ck), .rst_n(rn), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(ROOT != 0),
         .q_v(cs[0]), .q_d(cs[512:1]), .hw_v(cs[513]), .hw_d(cs[804:514]),
         .qrq(qrq), .qrk(qrk), .qwd(qwd), .qrv(qrv), .qr_data(qr_data), .qr_tag(qr_tag), .qr_beat(qr_beat),
         .l_v(l_v), .l_d(l_d), .pv_ov(pv_ov), .pv_od(pv_od),
@@ -195,8 +196,8 @@ module dsdv_svc_rs_smw (
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
-// P.V return tree node (non-entry: pv_v / pv_d are not ports)
-module dsdv_svc_rs_pv #(parameter integer ST = 0) (
+// P.V return tree node (ENTRY 1: the half's return tree root word pv_v / pv_d; non-entry leaves them open)
+module dsdv_svc_rs_pv #(parameter integer ST = 0, parameter integer ENTRY = 0) (
     input  wire             ck,
     input  wire             rst,
     input  wire [3:0]       sid,
@@ -204,7 +205,9 @@ module dsdv_svc_rs_pv #(parameter integer ST = 0) (
     output wire [4*514-1:0] ro,
     input  wire             a_pv_v,
     input  wire [512:0]     a_pv_d,
-    output reg              r_f
+    output reg              r_f,
+    output reg              pv_v,
+    output reg  [512:0]     pv_d
 );
     localparam integer RW = 514;
     wire rn; wire [21:0] role; wire [7:0] pvs;
@@ -248,28 +251,77 @@ module dsdv_svc_rs_pv #(parameter integer ST = 0) (
 `endif
         assign ro[RW*f +: RW] = {o1d, o1v};
     end endgenerate
+    always @(posedge ck or negedge rn) if (!rn) pv_v <= 1'b0; else pv_v <= (ENTRY != 0) && rm_v && par == 3'd0;
+    always @(posedge ck) pv_d <= rm_d;
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
-// local fault + ctrl_rg2 hs status + up tree node (non-entry: uc feeds no entry logic)
-module dsdv_svc_rs_ug #(parameter integer ST = 0) (
+// up tree, split in two lanes (PL-SVC 10-18, coordinator decision PARENTS-LANDED option (a)) so that the job END / done
+// reduce never sees the SM head's fault o_fo (which lives in clock region sm and is LANDED into region c):
+//   up_d = {done, cr 6, ack 6}   (dsdv_svc_rs_up bits [13], [11:0]) : dsdv_svc_rs_ud, offset 0 in the landed slice
+//   up_f = {rg fault, rg live, fault} (bits [15], [14], [12])         : dsdv_svc_rs_uf, behind the o_fo landing
+// Same fold (done = AND, fault = OR, credits / acks = sum, rg fault = OR, rg live = AND over the child faces) and the
+// same 5-cycle hop (face in: pin flop + relay; centre register; face out: register + pin flop) as dsdv_svc_rs_up.
+module dsdv_svc_rs_ud #(parameter integer ST = 0) (
+    input  wire            ck,
+    input  wire            rst,
+    input  wire [3:0]      sid,
+    input  wire            done,
+    input  wire [1:0]      hcr,
+    input  wire [1:0]      hack,
+    input  wire [4*13-1:0] up_d_i,
+    output wire [4*13-1:0] up_d_o,
+    output reg  [12:0]     ucd             // {done, cr 6, ack 6} of the subtree (the entry's job gate / host credits)
+);
+    localparam integer UW = 13;
+    wire rn; wire [21:0] role; wire [7:0] pvs;
+    dsdv_svc_rs_rl #(.ST(ST)) u_rl (.ck(ck), .rst(rst), .sid(sid), .rn(rn), .role(role), .pvs(pvs));
+    wire [3:0] chm = role[7:4];
+    wire [2:0] par = role[10:8];
+    genvar f;
+    wire [UW-1:0] ufi [0:3];
+    generate for (f = 0; f < 4; f = f + 1) begin : g_ui
+        reg [UW-1:0] p0, p1;
+        always @(posedge ck or negedge rn) if (!rn) begin p0 <= '0; p1 <= '0; end
+            else begin p0 <= up_d_i[UW*f +: UW]; p1 <= p0; end
+        assign ufi[f] = p1;
+    end endgenerate
+    always @(posedge ck or negedge rn)
+        if (!rn) ucd <= '0;
+        else begin
+            reg dn_all; reg [5:0] c6, a6;
+            dn_all = done; c6 = 6'(hcr); a6 = 6'(hack);
+            for (int i = 0; i < 4; i++) if (chm[i]) begin
+                dn_all = dn_all & ufi[i][12]; c6 = c6 + ufi[i][11:6]; a6 = a6 + ufi[i][5:0];
+            end
+            ucd <= {dn_all, c6, a6};
+        end
+    generate for (f = 0; f < 4; f = f + 1) begin : g_uo
+        reg [UW-1:0] o0, o1;
+        always @(posedge ck or negedge rn) if (!rn) begin o0 <= '0; o1 <= '0; end
+            else begin o0 <= (par == 3'(f + 1)) ? ucd : '0; o1 <= o0; end
+        assign up_d_o[UW*f +: UW] = o1;
+    end endgenerate
+endmodule
+
+// local fault OR + ctrl_rg2 hs status synchroniser + the up_f lane node {rg fault, rg live, fault}
+module dsdv_svc_rs_uf #(parameter integer ST = 0) (
     input  wire            ck,
     input  wire            rst,
     input  wire [3:0]      sid,
     input  wire [1:0]      hs,
-    input  wire            done,
-    input  wire [1:0]      hcr,
-    input  wire [1:0]      hack,
     input  wire            a_f,
     input  wire            x_f,
     input  wire            rcol,
     input  wire            o_fo,
     input  wire            dstray,
     input  wire            r_f,
-    input  wire [4*16-1:0] up_i,
-    output wire [4*16-1:0] up_o
+    input  wire [4*3-1:0]  up_f_i,
+    output wire [4*3-1:0]  up_f_o,
+    output reg  [2:0]      ucf,            // {rg fault, rg live, fault} of the subtree (entry: fault / st_rg)
+    output wire            hl              // this slice's synchronised hs live (RS_MUT_ST negative control only)
 );
-    localparam integer UW = 16;
+    localparam integer UW = 3;
     wire rn; wire [21:0] role; wire [7:0] pvs;
     dsdv_svc_rs_rl #(.ST(ST)) u_rl (.ck(ck), .rst(rst), .sid(sid), .rn(rn), .role(role), .pvs(pvs));
     wire [3:0] chm = role[7:4];
@@ -285,7 +337,101 @@ module dsdv_svc_rs_ug #(parameter integer ST = 0) (
             if (hs1[1] || (hs_up && !hs1[0])) hs_hf <= 1'b1;
             hs_f <= lf | hs_hf;
         end
-    wire [UW-1:0] uc;
-    dsdv_svc_rs_up #(.UW(UW)) u_up (.ck(ck), .rn(rn), .chm(chm), .par(par), .done(done), .fl(hs_f), .hcr(hcr), .hack(hack),
-        .hs_s(hs1), .up_i(up_i), .up_o(up_o), .uc(uc));
+    assign hl = hs1[0];
+    genvar f;
+    wire [UW-1:0] ufi [0:3];
+    generate for (f = 0; f < 4; f = f + 1) begin : g_ui
+        reg [UW-1:0] p0, p1;
+        always @(posedge ck or negedge rn) if (!rn) begin p0 <= '0; p1 <= '0; end
+            else begin p0 <= up_f_i[UW*f +: UW]; p1 <= p0; end
+        assign ufi[f] = p1;
+    end endgenerate
+    always @(posedge ck or negedge rn)
+        if (!rn) ucf <= '0;
+        else begin
+            reg fl_, rgf, rgl;
+            fl_ = hs_f; rgf = hs1[1]; rgl = hs1[0];
+            for (int i = 0; i < 4; i++) if (chm[i]) begin
+                fl_ = fl_ | ufi[i][0]; rgf = rgf | ufi[i][2]; rgl = rgl & ufi[i][1];
+            end
+            ucf <= {rgf, rgl, fl_};
+        end
+    generate for (f = 0; f < 4; f = f + 1) begin : g_uo
+        reg [UW-1:0] o0, o1;
+        always @(posedge ck or negedge rn) if (!rn) begin o0 <= '0; o1 <= '0; end
+            else begin o0 <= (par == 3'(f + 1)) ? ucf : '0; o1 <= o0; end
+        assign up_f_o[UW*f +: UW] = o1;
+    end endgenerate
+endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
+// ENTRY host endpoint (dsdv_svc_rs_c g_host + the done / credit half of g_rt, unchanged): host pins (pin flop) -> job
+// gate ot_s81_svc_job (same cycle) -> relay = the dn centre input hst; the synthetic END result word rad from the up_d
+// done edge; host credits hc from the up_d credit / ack sums.  Region c: the END loop job -> dn -> att -> done -> up_d
+// -> rad -> job stays inside one clock region (it never sees the SM head).
+module dsdv_svc_rs_eh (
+    input  wire         ck,
+    input  wire         rst,
+    input  wire [32:0]  j,
+    input  wire [514:0] q,
+    input  wire [291:0] hw,
+    input  wire [12:0]  ucd,
+    input  wire [7:0]   tagj,
+    output wire [804:0] hst,
+    output wire [1:0]   jdc,
+    output reg  [8:0]   hc
+);
+    localparam integer DW = 805;
+    reg [1:0] rs;
+    always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
+    wire rn = rs[1];
+    reg [513:0] rad;
+    reg [514:0] qp; reg [291:0] hp;
+    always @(posedge ck or negedge rn) if (!rn) begin qp[0] <= 1'b0; hp[0] <= 1'b0; end
+        else begin qp[0] <= q[0]; hp[0] <= hw[0]; end
+    always @(posedge ck) begin qp[514:1] <= q[514:1]; hp[291:1] <= hw[291:1]; end
+    wire [514:0] cq;
+    ot_s81_svc_job #(.MUT(0)) u_job (.ck(ck), .rs_n(rn), .j_cmd(j), .j_dn(jdc), .q(qp), .core_q(cq),
+        .ad({513'd0, rad[512:0]}), .xd({512'd0, 1'b0, 1'b1}), .od({512'd0, 1'b0, 1'b1}));
+    reg [DW-1:0] r1;
+    always @(posedge ck or negedge rn) if (!rn) begin r1[0] <= 1'b0; r1[513] <= 1'b0; end
+        else begin r1[0] <= cq[0]; r1[513] <= hp[0]; end
+    always @(posedge ck) begin r1[512:1] <= cq[512:1]; r1[DW-1:514] <= hp[291:1]; end
+    assign hst = r1;
+    reg dprev; reg [7:0] crc;
+    always @(posedge ck or negedge rn)
+        if (!rn) begin dprev <= 1'b0; rad <= '0; crc <= 0; hc <= 0; end
+        else begin
+            dprev <= ucd[12];
+            rad[0] <= ucd[12] && !dprev;
+            rad[512:1] <= {4'd8, 1'b1, 4'd0, tagj, 3'd0, 12'd0, 480'd0};
+            crc <= crc + 8'(ucd[11:6]) - 8'(crc != 0);
+            hc <= {2'b00, ucd[5:0], crc != 0};
+        end
+endmodule
+
+// ENTRY fault / region status (the fault half of dsdv_svc_rs_c g_rt, unchanged): the half's sticky fault from the up_f
+// fold, folded into the job-done fault bit; st_rg = the up_f region status {fault OR, live AND}
+module dsdv_svc_rs_ef (
+    input  wire        ck,
+    input  wire        rst,
+    input  wire [1:0]  jdc,
+    input  wire [2:0]  ucf,
+    input  wire        hl,
+    output wire [1:0]  jd,
+    output wire        fault,
+    output reg  [1:0]  st_rg
+);
+    reg [1:0] rs;
+    always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
+    wire rn = rs[1];
+    reg flt;
+    always @(posedge ck or negedge rn) if (!rn) flt <= 1'b0; else if (ucf[0]) flt <= 1'b1;
+    assign jd = {jdc[1] | flt, jdc[0]};
+    assign fault = flt;
+`ifdef RS_MUT_ST
+    always @(posedge ck or negedge rn) if (!rn) st_rg <= 2'b00; else st_rg <= {ucf[2], hl};   // NEG CTRL (as dsdv_svc_rs_c)
+`else
+    always @(posedge ck or negedge rn) if (!rn) st_rg <= 2'b00; else st_rg <= ucf[2:1];
+`endif
 endmodule

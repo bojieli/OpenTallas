@@ -1,5 +1,5 @@
 {
- "lane": "PL-SVC (PARENTS-LANDED 10-18): dsdv_svc_rs (14 non-entry slices) as a landed parent",
+ "lane": "PL-SVC (PARENTS-LANDED 10-18): dsdv_svc_rs (14 non-entry slices) as a landed parent; up face split up_d / up_f (option a)",
  "top": "dsdv_svc_rs_f",
  "top_lp": "dsdv_svc_rs_lp",
  "sources": [
@@ -81,7 +81,8 @@
     "u_sx",
     "u_se",
     "u_pv",
-    "u_ug"
+    "u_ud",
+    "u_uf"
    ],
    "centre": [
     626,

@@ -1,0 +1,124 @@
+{
+ "lane": "PL-SVC (PARENTS-LANDED 10-18): dsdv_svc_rs_entry (entry slices rsv_05 / rsv_11) as a landed parent; up face split up_d / up_f (option a)",
+ "top": "dsdv_svc_rs_entry_f",
+ "top_lp": "dsdv_svc_rs_entry_lp",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_entry_f.sv"
+ ],
+ "child_sources": [
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_kreg.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv",
+  "rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv",
+  "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+  "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_sms.sv",
+  "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smq.sv",
+  "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smh.sv",
+  "rtl/dsrom_sys/s81_dv/su_sm/dsfd_su_t_smh.sv",
+  "rtl/dsrom_sys/s81_dv/su_sm/dsfd_su_t_smhq.sv",
+  "rtl/dsrom_sys/s81_dv/su_sm/dsfd_su_t_smhr.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv",
+  "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
+  "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv",
+  "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv",
+  "rtl/dsrom_sys/s81_ph/svc/dsfd_svc_c.sv",
+  "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_glue.sv"
+ ],
+ "defines": [
+  "SU_SMU_T",
+  "SVCQ_ENG_FG3"
+ ],
+ "include_dirs": [
+  "rtl/dsrom_sys/s81_dv/svc_rs"
+ ],
+ "out_dir": "rtl/dsrom_sys/s81_dv/svc_rs/lp",
+ "record_dir": "results/arch/s81_dv_1016/svc_rs/lp",
+ "clock_ports": [
+  "ck"
+ ],
+ "clock_pins": [
+  "ck"
+ ],
+ "reset_port": "rst",
+ "reset_pins": [
+  "rst"
+ ],
+ "reset_active_low": true,
+ "regions": [
+  {
+   "name": "c",
+   "insts": [
+    "u_dn",
+    "u_pc0",
+    "u_pc1",
+    "u_att",
+    "u_sx",
+    "u_se",
+    "u_pv",
+    "u_ud",
+    "u_uf",
+    "u_eh",
+    "u_ef"
+   ],
+   "centre": [
+    626,
+    430
+   ],
+   "why": "the tree region: the score exchange (8 x sx_hrow, insertion ~207-261 ps, + its 144 face relay stations), the dn / up / P.V tree nodes, the attention share and the 2 PC faces; every neighbour-slice lane lands in one region so no tree hop gains cycles (score hop stays 5, t_root 51); ENTRY: the host endpoint u_eh (job gate, END word, host credits) and the fault / status glue u_ef: the END loop job -> dn -> att -> done -> up_d -> job stays in this region"
+  },
+  {
+   "name": "sm",
+   "insts": [
+    "u_sm"
+   ],
+   "centre": [
+    626,
+    1000
+   ],
+   "why": "the SM head (smq ~107 ps, 4 x smhq ~28 ps, smhr ~31-41 ps: >100 ps below the hrow region), ~1.03 x 0.77 mm + smq, N half of the slice"
+  }
+ ],
+ "static": [
+  "sid"
+ ],
+ "tb_static": {
+  "sid": "4'd5"
+ },
+ "D": 4,
+ "E": 2,
+ "reach_um": 405,
+ "residual_ps": 60,
+ "bench": {
+  "cycles": 3000,
+  "reset_cycles": 16,
+  "sim": "verilator",
+  "jobs": 8,
+  "verilator_flags": "-Wno-WIDTH -Wno-TIMESCALEMOD --unroll-count 16 --unroll-limit 131072 --output-split 20000 --output-split-cfuncs 2000 -fno-inline -MAKEFLAGS OPT_SLOW=-O0 -CFLAGS -O1"
+ }
+}

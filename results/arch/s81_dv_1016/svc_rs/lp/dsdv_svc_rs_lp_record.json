@@ -15,7 +15,8 @@
     "u_pv",
     "u_se",
     "u_sx",
-    "u_ug"
+    "u_ud",
+    "u_uf"
    ]
   },
   "sm": {
@@ -160,7 +161,7 @@
    ],
    "width": 1,
    "readers": [
-    "u_ug.o_fo"
+    "u_uf.o_fo"
    ],
    "ring": "u_lpl_7_w (ck_sm)",
    "read": "u_lpl_7_r (ck_c)",
@@ -171,42 +172,27 @@
  "pads": [
   {
    "net": "a_f",
-   "reader": "u_ug",
-   "stages": 6
-  },
-  {
-   "net": "done",
-   "reader": "u_ug",
+   "reader": "u_uf",
    "stages": 6
   },
   {
    "net": "dstray",
-   "reader": "u_ug",
-   "stages": 6
-  },
-  {
-   "net": "hack",
-   "reader": "u_ug",
-   "stages": 6
-  },
-  {
-   "net": "hcr",
-   "reader": "u_ug",
+   "reader": "u_uf",
    "stages": 6
   },
   {
    "net": "r_f",
-   "reader": "u_ug",
+   "reader": "u_uf",
    "stages": 6
   },
   {
    "net": "rcol",
-   "reader": "u_ug",
+   "reader": "u_uf",
    "stages": 6
   },
   {
    "net": "x_f",
-   "reader": "u_ug",
+   "reader": "u_uf",
    "stages": 6
   }
  ],
@@ -222,7 +208,7 @@
  },
  "flops": {
   "landing": 2759,
-  "pads": 60,
+  "pads": 30,
   "reset": 14
  },
  "communicating_region_pairs": {
@@ -244,11 +230,13 @@
    "u_se": 0,
    "u_sm": 3,
    "u_pv": 0,
-   "u_ug": 6
+   "u_ud": 0,
+   "u_uf": 6
   },
   "input_port_offset_edges": {
    "dn_i": 0,
-   "up_i": 6,
+   "up_d_i": 0,
+   "up_f_i": 6,
    "ri": 0,
    "gi_v": 0,
    "gi_d": 0,
@@ -264,7 +252,8 @@
   },
   "output_port_offset_edges": {
    "dn_o": 0,
-   "up_o": 6,
+   "up_d_o": 0,
+   "up_f_o": 6,
    "ro": 0,
    "go_v": 0,
    "go_d": 0,

@@ -2,14 +2,20 @@
 // ---------------------------------------------------------------------------------------------------------------------
 // PL-SVC (PARENTS-LANDED, 10-18): dsdv_svc_rs_f, the WIRES-ONLY flat form of the regional service slice dsdv_svc_rs
 // (the 14 non-entry slices; ENTRY = 0 of dsdv_svc_rs_c), the input of tools/landed_parent/lp.py.
-// Same ports and the same cycle behaviour as dsdv_svc_rs (proved by tb_dsdv_svc_rs_feq: lockstep against the original).
+// Same ports and the same cycle behaviour as dsdv_svc_rs (proved by tb_dsdv_svc_rs_feq: lockstep against the original),
+// except that the up tree face up_i / up_o [16 a face] is split into two lanes (coordinator 10-18, option (a)):
+//   up_d_i / up_d_o [13 a face] = {done, cr 6, ack 6}       = up bits {[13], [11:0]}
+//   up_f_i / up_f_o [3 a face]  = {rg fault, rg live, fault} = up bits {[15], [14], [12]}
+// so that the job END / done reduce never depends on the SM head's fault o_fo (clock region sm): in the landed slice
+// up_d keeps offset 0 and only up_f sits behind the o_fo landing.  The entry variant is dsdv_svc_rs_entry_f.
 // The glue of dsdv_svc_rs_c is moved, unchanged, into small children, one per function, so that each child can sit in the
 // clock region of its neighbours:
 //   dsdv_svc_rs_dn    dn stream tree: face in flops + relay, centre register cs, face out relay + pin flop, stray check
 //   dsdv_svc_rs_attw  dsdv_svc_att + its role inputs (tile, gd, pvs; root = 0)
 //   dsdv_svc_rs_se    SE row assembler (tap -> 16-score rows) + the SM row mux + its collision fault
 //   dsdv_svc_rs_pv    P.V return tree (child faces -> parent face, compiled windows, collision / stray fault)
-//   dsdv_svc_rs_ug    local fault OR, ctrl_rg2 hs status synchroniser, up tree node (dsdv_svc_rs_up)
+//   dsdv_svc_rs_ud    up_d lane node (done AND, credit / ack sums)
+//   dsdv_svc_rs_uf    local fault OR, ctrl_rg2 hs status synchroniser, up_f lane node (fault OR, rg fault OR, rg live AND)
 //   dsdv_svc_rs_smw   ot_s81_su_sms + its head strap (cfg_g = tile)
 // plus the unchanged children 2 x dsfd_svc_pc and dsdv_svc_sx.  Every glue child re-derives the slice's reset
 // synchroniser (2 flops) and role register from rst / sid exactly as dsdv_svc_rs_c did once (dsdv_svc_rs_rl), so each
@@ -26,8 +32,10 @@ module dsdv_svc_rs_f #(
     input  wire [3:0]        sid,
     input  wire [4*805-1:0]  dn_i,
     output wire [4*805-1:0]  dn_o,
-    input  wire [4*16-1:0]   up_i,
-    output wire [4*16-1:0]   up_o,
+    input  wire [4*13-1:0]   up_d_i,
+    output wire [4*13-1:0]   up_d_o,
+    input  wire [4*3-1:0]    up_f_i,
+    output wire [4*3-1:0]    up_f_o,
     input  wire [4*514-1:0]  ri,
     output wire [4*514-1:0]  ro,
     input  wire [3:0]        gi_v,
@@ -62,7 +70,7 @@ module dsdv_svc_rs_f #(
     wire r_v, r_p, rcol; wire [2:0] r_j; wire [511:0] r_d;
     wire o_fo, r_f;
 
-    dsdv_svc_rs_dn #(.ST(ST)) u_dn (.ck(ck), .rst(rst), .sid(sid), .dn_i(dn_i), .dn_o(dn_o), .cs(cs), .dstray(dstray));
+    dsdv_svc_rs_dn #(.ST(ST)) u_dn (.ck(ck), .rst(rst), .sid(sid), .hst(805'd0), .dn_i(dn_i), .dn_o(dn_o), .cs(cs), .dstray(dstray));
 
     dsfd_svc_pc u_pc0 (.ck(ck), .rst(rst), .qrq(qrq[340:0]), .rq(rq[340:0]), .rk(rk[0]), .qrk(qrk[0]),
         .wd(wd[0]), .qwd(qwd[0]), .rv(rv[0]), .r_data(r_data[255:0]), .r_tag(r_tag[16:0]),
@@ -90,9 +98,12 @@ module dsdv_svc_rs_f #(
         .r_v(r_v), .r_p(r_p), .r_j(r_j), .r_d(r_d), .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st), .o_fo(o_fo));
 
     dsdv_svc_rs_pv #(.ST(ST)) u_pv (.ck(ck), .rst(rst), .sid(sid), .ri(ri), .ro(ro), .a_pv_v(a_pv_v), .a_pv_d(a_pv_d),
-        .r_f(r_f));
+        .r_f(r_f), .pv_v(), .pv_d());
 
-    dsdv_svc_rs_ug #(.ST(ST)) u_ug (.ck(ck), .rst(rst), .sid(sid), .hs(hs), .done(done), .hcr(hcr), .hack(hack),
-        .a_f(a_f), .x_f(x_f), .rcol(rcol), .o_fo(o_fo), .dstray(dstray), .r_f(r_f), .up_i(up_i), .up_o(up_o));
+    dsdv_svc_rs_ud #(.ST(ST)) u_ud (.ck(ck), .rst(rst), .sid(sid), .done(done), .hcr(hcr), .hack(hack),
+        .up_d_i(up_d_i), .up_d_o(up_d_o), .ucd());
+
+    dsdv_svc_rs_uf #(.ST(ST)) u_uf (.ck(ck), .rst(rst), .sid(sid), .hs(hs), .a_f(a_f), .x_f(x_f), .rcol(rcol), .o_fo(o_fo),
+        .dstray(dstray), .r_f(r_f), .up_f_i(up_f_i), .up_f_o(up_f_o), .ucf(), .hl());
 endmodule
 
