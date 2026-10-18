@@ -1,6 +1,6 @@
-MISMATCH t=14101 ij 1 rc 0 dw 0/0/0 rr 0 sfu 1 fault 0/0
-MISMATCH t=15901 ij 1 rc 0 dw 0/0/0 rr 0 sfu 1 fault 0/0
-MISMATCH t=16201 ij 1 rc 0 dw 0/0/0 rr 0 sfu 1 fault 0/0
 MISMATCH t=19501 ij 1 rc 0 dw 0/0/0 rr 0 sfu 1 fault 0/0
 MISMATCH t=19801 ij 1 rc 0 dw 0/0/0 rr 0 sfu 1 fault 0/0
-CXPORT_SPLIT FAIL legal_phase_faults=0 errors=18727 checks=24183 dw=22532 inj=14888 rc=1009 rr=588 fault_edges=16106
+MISMATCH t=20401 ij 1 rc 0 dw 0/0/0 rr 0 sfu 1 fault 0/0
+MISMATCH t=21001 ij 1 rc 0 dw 0/0/0 rr 0 sfu 1 fault 0/0
+MISMATCH t=21301 ij 1 rc 0 dw 0/0/0 rr 0 sfu 1 fault 0/0
+CXPORT_SPLIT FAIL legal_phase_faults=0 errors=18765 checks=24183 dw=22440 inj=14866 rc=995 rr=596 fault_edges=16104

@@ -45,22 +45,38 @@ module ot_hbm_su_static_cxport_dl #(parameter integer QID=0, G=0, MUT=0)(
 );
  wire [1:0] sp, sq, rslot, oslot_i; wire s_ev;
  ot_hbm_su_cx_epoch #(.MUT(MUT)) u_ep(.clk_s(clk_s),.clk_q(clk_q),.rst_s_n(rst_s_n),.rst_q_n(rst_q_n),.sp(sp),.sq(sq),.rslot(rslot),.s_ev(s_ev),.oslot_i(oslot_i));
- // MUX-ONLY CROSSING: the stream side decodes the lane (valid / half / row / data / aperture check) BEFORE the slot, so
- // the serial capture is a pure 4:1 slot mux (STA times stream->serial at the 1-quantum edge pair, 278 ps).
+ // PIN-FIRST SLOTS (HBM-SU6 10-17; gate bf7c343cb: del_valid / del_obase each drove ~1,048 decode gates straight from
+ // the pin). The four phase slots ARE the pin registers: each holds the RAW lane {aperture partials, row, flit} plus R
+ // kept copies of the 2-bit lane code {hi&v, !hi&v}; every pin feeds only its slot bits (<= 2 gate levels + the slot
+ // enable). Half placement and valid zeroing moved to the serial side behind the 4:1 slot mux, one AND per bit, gated
+ // by copy r of the lane code (<= ~131 loads per copy); the aperture check finishes there too (it feeds only FAULT).
+ // Same edges as the hub (no added cycle): dw_* / fault at the same serial edge as before.
+ localparam integer R=4;
  wire [39:0] ob_s = del_obase;
  wire hi_s = (MUT==2) ? 1'b0 : ob_s[6];
- wire [1044:0] dl_dec = {del_valid && (ob_s[3:0]!=4'd0 || ob_s[17:16]!=2'(QID) || ob_s[39:18]!=22'd0 || !del_flit[544] || ob_s[5:4]!=2'(G)),
-                         del_valid ? (hi_s ? 2'b10 : 2'b01) : 2'b00,
-                         del_valid ? (hi_s ? {ob_s[15:7], 9'd0} : {9'd0, ob_s[15:7]}) : 18'd0,
-                         del_valid ? (hi_s ? {del_flit[511:0], 512'd0} : {512'd0, del_flit[511:0]}) : 1024'd0};
- reg [1044:0] dl_slot [0:3];
- always @(posedge clk_s) dl_slot[sp] <= dl_dec;
+ wire vh_s = del_valid && hi_s, vl_s = del_valid && !hi_s;
+ wire [2:0] nz_s = {|{ob_s[3:0], ob_s[17:16]^2'(QID), !del_flit[544], ob_s[5:4]^2'(G)}, |ob_s[28:18], |ob_s[39:29]};
+ reg [523:0] dl_slot [0:3];                     // {nz 3, row 9, flit 512}
+ (* keep = "true" *) reg [8*R-1:0] dv_slot;     // slot s: dv_slot[2R*s +: 2R] = {vh x R, vl x R}
+ always @(posedge clk_s) begin
+  dl_slot[sp] <= {nz_s, ob_s[15:7], del_flit[511:0]};
+  for(integer s=0;s<4;s=s+1) if(sp==2'(s)) dv_slot[2*R*s +: 2*R] <= {{R{vh_s}}, {R{vl_s}}};
+ end
  reg sfault_s;
  always @(posedge clk_s or negedge rst_s_n) if(!rst_s_n) sfault_s<=1'b0; else if(sp==2'd2 && del_valid) sfault_s<=1'b1;
- wire [1044:0] dl = dl_slot[rslot];
- wire dbad = dl[1044];
- always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) dw_v<=2'd0; else dw_v <= dl[1043:1042];
- always @(posedge clk_q) begin dw_row <= dl[1041:1024]; dw_d <= dl[1023:0]; end
+ wire [523:0] dl = dl_slot[rslot];
+ reg [2*R-1:0] dv;
+ always @* case(rslot) 2'd0: dv=dv_slot[0+:2*R]; 2'd1: dv=dv_slot[2*R+:2*R]; 2'd2: dv=dv_slot[4*R+:2*R]; default: dv=dv_slot[6*R+:2*R]; endcase
+ wire vh = dv[R], vl = dv[0];
+ wire dbad = (vh || vl) && (|dl[523:521]);
+ always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) dw_v<=2'd0; else dw_v <= {vh, vl};
+ always @(posedge clk_q) begin
+  dw_row <= {dl[520:512] & {9{vh}}, dl[520:512] & {9{vl}}};
+  for(integer r=0;r<R;r=r+1) begin
+   dw_d[512+128*r +: 128] <= dl[128*r +: 128] & {128{dv[R+r]}};
+   dw_d[128*r +: 128]     <= dl[128*r +: 128] & {128{dv[r]}};
+  end
+ end
  reg sf_q;
  always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) sf_q<=1'b0; else sf_q<=sfault_s;
  always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) fault<=1'b0; else if(dbad||sf_q) fault<=1'b1;
@@ -98,13 +114,15 @@ module ot_hbm_su_static_cxport_ij #(
   for(integer t=1;t<=RQ-RQC;t=t+1) rqd[t] <= rqd[t-1];
  end
  wire [161:0] rq_al = (RQ==RQC) ? {inj_rd, inj_addr} : rqd[(RQ>RQC)?RQ-RQC-1:0];
- // MUX-ONLY CROSSING: the request is decoded on the stream side; the slot holds {ibad, iv4, ig8, ib8}
+ // MUX-ONLY CROSSING: the request is decoded on the stream side; the slot holds {nz12, iv4, ig8, ib8} (HBM-SU6: the
+ // aperture check is stored as three <=11-bit OR partials per request (<= 2 levels from inj_addr) and finished on the
+ // serial side, where it feeds only FAULT -- same edge)
  always @(posedge clk_s or negedge rst_s_n)
   if(!rst_s_n) sfault_s<=1'b0; else if(sp==2'd2 && (|rq_al[161:160])) sfault_s<=1'b1;
- reg [3:0] iv_s; reg [7:0] ig_s; reg [7:0] ib_s; reg ibad_s;
+ reg [3:0] iv_s; reg [7:0] ig_s; reg [7:0] ib_s; reg [11:0] nz_s;
  integer k;
  always @* begin
-  iv_s=0; ig_s=0; ib_s=0; ibad_s=0;
+  iv_s=0; ig_s=0; ib_s=0; nz_s=0;
   for(k=0;k<4;k=k+1) begin : dec
    reg [39:0] a; reg [39:0] lo; reg v;
    a  = rq_al[40*k+:40];
@@ -113,28 +131,38 @@ module ot_hbm_su_static_cxport_ij #(
    iv_s[k] = v;
    ig_s[2*k+:2] = a[5:4];
    ib_s[2*k+:2] = {a[6],a[3]};
-   if(v && (a[2:0]!=3'd0 || a[17:16]!=2'(QID) || a[38:18]!=21'd0 || a[39])) ibad_s=1'b1;
+   nz_s[3*k+:3] = {|{a[2:0], a[17:16]^2'(QID), a[39]}, |a[28:18], |a[38:29]};
   end
  end
- reg [20:0] ijd_slot [0:3];
- always @(posedge clk_s) ijd_slot[sp] <= {ibad_s, iv_s, ig_s, ib_s};
- wire [20:0] ijd = ijd_slot[rslot];
- wire ibad = ijd[20]; wire [3:0] iv = ijd[19:16]; wire [7:0] ig = ijd[15:8]; wire [7:0] ib = ijd[7:0];
- reg [19:0] ip [0:3+SD];
+ reg [31:0] ijd_slot [0:3];
+ always @(posedge clk_s) ijd_slot[sp] <= {nz_s, iv_s, ig_s, ib_s};
+ wire [31:0] ijd = ijd_slot[rslot];
+ wire [3:0] iv = ijd[19:16]; wire [7:0] ig = ijd[15:8]; wire [7:0] ib = ijd[7:0];
+ wire ibad = |{iv[3] && (|ijd[31:29]), iv[2] && (|ijd[28:26]), iv[1] && (|ijd[25:23]), iv[0] && (|ijd[22:20])};
+ // inject pipe (HBM-SU6): only the 4 valid bits are reset; the g/b fields are datapath (no reset). The select is
+ // registered ONE-HOT (64 b = lane k x source 4g+b) one edge ahead, from the pipe word it will equal: each one-hot bit
+ // gates 256 data bits (the gate saw ip[3] g/b bits driving 4,096 mux loads and a runtime 1,024-b part-select).
+ reg [3:0] ipv [0:3+SD]; reg [15:0] ipgb [0:3+SD];
  always @(posedge clk_q or negedge rst_q_n)
-  if(!rst_q_n) begin for(integer t=0;t<=3+SD;t=t+1) ip[t]<=20'd0; end
-  else begin ip[0]<={iv,ig,ib}; for(integer t=1;t<=3+SD;t=t+1) ip[t]<=ip[t-1]; end
+  if(!rst_q_n) begin for(integer t=0;t<=3+SD;t=t+1) ipv[t]<=4'd0; end
+  else begin ipv[0]<=iv; for(integer t=1;t<=3+SD;t=t+1) ipv[t]<=ipv[t-1]; end
+ always @(posedge clk_q) begin ipgb[0]<={ig,ib}; for(integer t=1;t<=3+SD;t=t+1) ipgb[t]<=ipgb[t-1]; end
+ function automatic [63:0] ohdec(input [3:0] v, input [15:0] gb);
+  integer kk; begin ohdec=64'd0;
+   for(kk=0;kk<4;kk=kk+1) if(v[kk]) ohdec[16*kk + 4*gb[8+2*kk+:2] + gb[2*kk+:2]] = 1'b1; end
+ endfunction
+ reg [63:0] ioh;                                  // = ohdec(isel) of the hub's isel (ip[3+SD]; MUT 1: ip[2+SD])
+ always @(posedge clk_q or negedge rst_q_n)
+  if(!rst_q_n) ioh<=64'd0;
+  else ioh <= (MUT==1) ? ohdec(ipv[1+SD], ipgb[1+SD]) : ohdec(ipv[2+SD], ipgb[2+SD]);
  reg [4*1024-1:0] iq;
  always @(posedge clk_q) iq <= inj_q;
- wire [19:0] isel = (MUT==1) ? ip[2+SD] : ip[3+SD];
  wire [4*1024-1:0] isrc = (MUT==1) ? inj_q : iq;
  reg [1023:0] iword;
  always @* begin
-  for(k=0;k<4;k=k+1) begin : sel
-   reg [1:0] g; reg [1:0] b;
-   g = isel[8+2*k+:2]; b = isel[2*k+:2];
-   iword[256*k+:256] = isel[16+k] ? isrc[1024*g + 256*b +: 256] : 256'd0;
-  end
+  iword = 1024'd0;
+  for(k=0;k<4;k=k+1)
+   for(integer j=0;j<16;j=j+1) iword[256*k+:256] = iword[256*k+:256] | (isrc[256*j+:256] & {256{ioh[16*k+j]}});
  end
  reg [1023:0] io_slot [0:2];
  always @(posedge clk_q) io_slot[sq] <= iword;
@@ -205,8 +233,14 @@ module ot_hbm_su_static_cxport_rc #(parameter integer MUT=0)(
  reg [255:0] carry;
  reg [255:0] cvec;
  always @* begin cvec=carry; if(cw) cvec[32*r_tag[12:10]+:32]=r_x; end
- always @(posedge clk_q or negedge rst_q_n)
-  if(!rst_q_n) carry<=256'd0; else carry <= emit ? 256'd0 : cvec;
+ // carry reset (HBM-SU6: rst_q_n drove 271 flops): two kept regional copies released one serial edge after the port.
+ // Exact: at that first edge r_sv is still 0 (it is reset by the port), so carry would have reloaded 0 anyway.
+ (* keep = "true" *) reg [1:0] crst_n;
+ always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) crst_n<=2'b00; else crst_n<=2'b11;
+ for(genvar h=0;h<2;h=h+1) begin : g_carry
+  always @(posedge clk_q or negedge crst_n[h])
+   if(!crst_n[h]) carry[128*h+:128]<=128'd0; else carry[128*h+:128] <= emit ? 128'd0 : cvec[128*h+:128];
+ end
  reg [260:0] rc_slot [0:2];
  always @(posedge clk_q) rc_slot[sq] <= {emit, r_tag[17]&&(MUT!=3), r_tag[16:14], cvec};
  reg [7:0] tv; reg [4:0] tdst [0:7];
@@ -230,10 +264,12 @@ module ot_hbm_su_static_cxport_rc #(parameter integer MUT=0)(
  end
  reg [260:0] pend; reg rc_coll;
  wire [260:0] ev = s_ev ? rc_slot[oslot_i] : 261'd0;
+ // HBM-SU6: only pend's valid bit is reset (rst_s_n drove 265 flops); its payload is read only under pend[260]
+ always @(posedge clk_s) pend[259:0] <= ev[259:0];
  always @(posedge clk_s or negedge rst_s_n)
-  if(!rst_s_n) begin rc_v<=1'b0; pend<=261'd0; rc_coll<=1'b0; end
+  if(!rst_s_n) begin rc_v<=1'b0; pend[260]<=1'b0; rc_coll<=1'b0; end
   else begin
-   pend <= (ev[260] && ev[259]) ? ev : 261'd0;
+   pend[260] <= ev[260] && ev[259];
    rc_v <= (ev[260] && !ev[259]) || pend[260];
    if(ev[260] && !ev[259] && pend[260]) rc_coll<=1'b1;
   end
@@ -242,10 +278,16 @@ module ot_hbm_su_static_cxport_rc #(parameter integer MUT=0)(
   else if(pend[260]) begin rc_tag<=pend[258:256]; rc_d<=pend[255:0]; end
  reg [527:0] ro;
  always @(posedge clk_q) ro <= ro_slot[rslot];          // mux-only crossing; lane select next serial edge
+ // HBM-SU6: red_sel[3:0] (528 / 264 loads, a runtime 32-b part-select) is decoded once into a 16-b one-hot (each bit
+ // gates 33 loads); the select stays combinational from the pin because sfu_x at this edge is the contract (a pin flop
+ // would move the SFU operand to E+2: reducer timeline change, not taken here).
+ wire [15:0] ro_oh = 16'd1 << red_sel[3:0];
  wire ro_mine = red_sel[11] && red_sel[7] && red_sel[6];
  wire ro_ext  = red_sel[10:8]==3'd0 || red_sel[10:8]==3'd1 || red_sel[10:8]==3'd3;
- wire ro_bad  = ro_mine && ro_ext && !ro[512+red_sel[3:0]];
- always @(posedge clk_q) sfu_x <= ro[32*red_sel[3:0]+:32];
+ wire ro_bad  = ro_mine && ro_ext && !(|(ro_oh & ro[527:512]));
+ reg [31:0] sfu_n;
+ always @* begin sfu_n = 32'd0; for(integer l=0;l<16;l=l+1) sfu_n = sfu_n | (ro[32*l+:32] & {32{ro_oh[l]}}); end
+ always @(posedge clk_q) sfu_x <= sfu_n;
  reg sf_q;
  always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) sf_q<=1'b0; else sf_q<=sfault_s||rc_coll;
  always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) fault<=1'b0; else if(rbad||ro_bad||sf_q) fault<=1'b1;
