@@ -1,0 +1,106 @@
+{
+ "schema": "opentallas.qcluster.kit_identity.v1",
+ "base": "ac70ed19a",
+ "change": "child_clock_ref pin + SPINE_PIN_LOOKUP (ref_tile.py) + OT_SPINE_MACRO_PIN_LEAF / master/pin lookup (clock_spine.tcl)",
+ "method": "ref_tile.py gen of 24 random specs (seed 11: 16 spine-clock kits + 8 others) with base vs changed ref_tile.py/clock_spine.tcl; diff -r per kit",
+ "specs": [
+  {
+   "spec": "tools/ref_tile/specs_qtile/qfd_tile_h3c.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_s81hc/s81hc_ccfbp_bank256_ref.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_qtile/qfd_tile_nk_h4.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_s81su/s81su_swe_u65_ref.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_qttsplit/qfd_tt_ctlm_head.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_s81pq/dsfd_sp_pq_c.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_hbmb2dma/b2_dma_rq_quarter_ref.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_hbmb2dma/b2_dma_rq_q5_ref.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_s81su/s81su_qnq_sp8_ref.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_qtile_r5/qfd_tile_nk_r5.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_s81su/s81su_kvq_ref.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_hbm_park_al_1014/hgi_coll_park_q3_al_ref.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_s81su/s81su_qnq_spx_ref.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_hbmsfu_native/sfu_ctl60lo_ref.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_hbmb2dma/b2_dma_mv_dp7_ref.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_hbm_park_al_1014/hgi_coll_park_q2_wg_ref.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_s81vm_scatter_cb/dsfd_vm_direct_scatter_b8_native_cb4.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_compute_die/qfd_vm_qcommit.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_s81_station_gen18r/s81fill_stnh_10x1.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_s81pq/s81pq_ix_ba_native.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_kvnative/qkd_ctrl_pc_ecc_s2.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs/s81_rly_1_nw.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_s81vm_read_pinreg_1015/dsfd_vm_static_read_q6_p.json",
+   "rc": 0
+  },
+  {
+   "spec": "tools/ref_tile/specs_hbm_front_leaves_1013/hgi_dfe7b_ctrl.json",
+   "rc": 0
+  }
+ ],
+ "identical": 24,
+ "differ": 0
+}

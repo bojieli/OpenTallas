@@ -1,0 +1,9 @@
+legal traffic flagged status 0000001
+source 1: fault 1 status 0000011
+source 2: fault 1 status 0000101
+source 3: fault 1 status 0001001
+source 4: fault 1 status 0010001
+source 5: fault 1 status 0100001
+source 6: fault 1 status 1000001
+FAIL tb_hbm_svc_stack_fault MUT=1 OWN_W=6 errors=7 checks=8
+EXIT 1
