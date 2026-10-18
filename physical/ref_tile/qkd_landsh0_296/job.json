@@ -1,5 +1,5 @@
 {
- "name": "qkd_landsh0_296-f1-COMMIT",
+ "name": "qkd_landsh0_296-f1-e38214cb0",
  "block": "qkd_landsh0_296",
  "ref_tile": true,
  "owner": "Claude:KV-CLOCK/LANEKITS",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 6,
  "source": {
   "branch": "claude/kv-lanekits-1018",
-  "commit": "COMMIT",
+  "commit": "e38214cb0",
   "extra_paths": [
    "physical/qwen_kv_fwd_lane",
    "rtl/qwen_split/qfd_fwd_lane.sv",
@@ -115,7 +115,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_landsh0_296/qkd_landsh0_296-f1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_landsh0_296/qkd_landsh0_296-f1-e38214cb0"
   }
  ],
  "cycles_added": 0,
