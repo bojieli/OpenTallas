@@ -1869,6 +1869,47 @@
   },
   {
    "design": "r25gq",
+   "unit": "HBM d4g plan (b) as built (two rings + QBG + RTL1/2 ledger latencies) vs plan (b) model",
+   "group": "HBM.D4G_PLAN_B",
+   "measured": 1905.4,
+   "price": 1978.4,
+   "unit_of_measure": "tok/s (DS AR)",
+   "unit_ratio": 1.0383,
+   "e2e_loss_pct": 3.69,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "d4g_2ring_qbg priced vs plan (b) model (tools/hgi_sim price_rtl3c)",
+     "base_tok_s": 1978.4,
+     "tok_s": 1905.4,
+     "e2e_loss_pct": 3.69,
+     "blocking": true
+    },
+    "qwen_ar": {
+     "model": "d4g_2ring_qbg priced vs plan (b) model",
+     "base_tok_s": 955.2,
+     "tok_s": 946.2,
+     "e2e_loss_pct": 0.94,
+     "blocking": true
+    },
+    "ds_mtp": {
+     "model": "d4g_2ring_qbg priced vs plan (b) model",
+     "base_tok_s": 3370.7,
+     "tok_s": 3258.7,
+     "e2e_loss_pct": 3.32,
+     "blocking": false,
+     "rule": "owner: MTP is recorded, not blocking"
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/hbm_d4g_price_1017/price5/summary.json",
+   "evidence_grade": "interim_log",
+   "date": "2026-10-18",
+   "status": "proposed",
+   "note": "d4g_2ring_qbg (price_rtl3c, claude/hbm-price5-1018 b98e4492e; results/arch/hbm_d4g_price_1017/price.json) vs b_plan (plan (b) model without d4g adders): DS AR 1905.4 vs 1978.4 (-3.69 %), DS MTP 3258.7 vs 3370.7 (-3.32 %), Qwen 946.2 vs 955.2 (-0.94 %). Owner rule: MTP is recorded but not blocking (binding = DS AR). Priced model, not a bench: interim grade until die runs measure it. ROOT-0510 2026-10-18."
+  },
+  {
+   "design": "r25gq",
    "unit": "HC.HC_MIX_POST",
    "group": "HC.HC_MIX_POST",
    "measured": 692.3,
@@ -2325,11 +2366,11 @@
   },
   "r25gq": {
    "accepted_pct": 0.895,
-   "proposed_pct": 114.037,
-   "accepted_plus_proposed_pct": 114.932,
+   "proposed_pct": 117.727,
+   "accepted_plus_proposed_pct": 118.622,
    "limit_pct": 15.0,
    "accepted_rows": 1,
-   "proposed_rows": 22,
+   "proposed_rows": 23,
    "headroom_pct": 14.105,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false

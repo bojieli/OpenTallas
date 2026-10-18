@@ -1033,11 +1033,56 @@ def lef_text(mst, k, wmap):
             lv = int(layer[1:])
             for i in range(lv, mst.obs_top + 1):
                 holes.setdefault(i, []).append((a - 0.3, b - 0.3, c_ + 0.3, d + 0.3))
+    # Q-DIE11 10-18 (coordinator 0ea item 2; dv2f12 GRT overflow 72,022, all in capacity-0 GCells under the slice S
+    # face): an abstract with pin_window > 0 keeps a pin-access WINDOW free of OBS along every face that carries pins:
+    # a strip `pin_window` um deep from the face, spanning the face's pin clusters (+ pin_window at each end), on the
+    # die signal layers M4..obs_top.  M1-M3 stay obstructed (the block's cells and pin registers sit under the window);
+    # the hardened block must keep the window free on M4..obs_top (recorded with the die case).  Default 0: unchanged.
+    for i, r in pin_windows(mst, pins):
+        holes.setdefault(i, []).append(r)
     for i in range(1, mst.obs_top + 1):
         L += [f'    LAYER M{i} ;']
         L += [f'      RECT {a:.3f} {b:.3f} {c_:.3f} {d:.3f} ;' for a, b, c_, d in _minus(mst.w, mst.h, holes.get(i, []))]
     L += ['  END', f'END {mst.name}', '']
     return '\n'.join(L), len(pins)
+
+
+def pin_windows(mst, pins):
+    """[(layer index, rect)] pin-access windows of a master with pin_window > 0 (see lef_text).  Pins of one face
+    closer than 2 x pin_window share one window."""
+    win = float(getattr(mst, 'pin_window', 0.0) or 0.0)
+    if win <= 0:
+        return []
+    faces = {}
+    for nm, layer, (a, b, c_, d) in pins:
+        if b < 0.5:
+            f, lo, hi = 'S', a, c_
+        elif d > mst.h - 0.5:
+            f, lo, hi = 'N', a, c_
+        elif a < 0.5:
+            f, lo, hi = 'W', b, d
+        elif c_ > mst.w - 0.5:
+            f, lo, hi = 'E', b, d
+        else:
+            continue
+        faces.setdefault(f, []).append((lo, hi))
+    out = []
+    lo_layer = int(getattr(mst, 'pin_window_layer_lo', 4))
+    for f, iv in sorted(faces.items()):
+        iv.sort()
+        spans = [list(iv[0])]
+        for lo, hi in iv[1:]:
+            if lo - spans[-1][1] <= 2 * win:
+                spans[-1][1] = max(spans[-1][1], hi)
+            else:
+                spans.append([lo, hi])
+        along = mst.w if f in 'NS' else mst.h
+        for lo, hi in spans:
+            lo, hi = max(0.0, lo - win), min(along, hi + win)
+            r = {'S': (lo, 0.0, hi, win), 'N': (lo, mst.h - win, hi, mst.h),
+                 'W': (0.0, lo, win, hi), 'E': (mst.w - win, lo, mst.w, hi)}[f]
+            out += [(i, r) for i in range(lo_layer, mst.obs_top + 1)]
+    return out
 
 
 def _minus(w, h, holes):

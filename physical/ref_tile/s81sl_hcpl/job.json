@@ -7,7 +7,7 @@
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/s81slice-1017",
+  "branch": "claude/owners-s81-vp-1018",
   "commit": "d183dc879",
   "extra_paths": [
    "results/rtl/s81_slice_1017/hcpl/mut.log",
@@ -112,6 +112,6 @@
  "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new beat sub-leaf of the distributed-vector slice; flop-first pins, die hold budget.",
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "S81-A 10-17: the route builds the current RTL; the daemon's own CLOSED_STANDS check measured 1 of 7 RTL sources differing from the closed commit 79315a431 (rtl/hdc/ot_hdc_fastfp.sv). The closed lane_pr view is also legacy-flow (no TT lib, no insertion.json, so not native-auditable; M6/M7; 85.32 x 115.02) and cannot be the vp cluster's hard child; new 114.48 x 114.48 outline, recipe 4, hold_budget die, full-face pins (16 per vp leaf)."
+  "why": "OWNERS-S81/VP 10-18: rtl_change -- the route builds the current RTL; rtl/hdc/ot_hdc_fastfp.sv differs from the closed commit 79315a431 (1 of 7 RTL sources, measured by the daemon's CLOSED_STANDS check). The only closed view, legacy SS-era hbm_hcp_lane_pr_79315a431-tc, has no TT liberty and no insertion.json, so it cannot be native-audited (pin-flop spread at TT/FF) and cannot be the vp cluster's hard child; new 114.48 x 114.48 outline, recipe 4, hold_budget die, full-face pins (16 per vp leaf)."
  }
 }
