@@ -53,7 +53,9 @@ SPECIAL = ('mtp_draft', 'head')
 # dsdv_seq_host header (asserted by tb_dsdv_seq_host): f_ks captured at t -> issuer samples job_v at t + 3 -> command of
 # calendar age a leaves the issuer register at t + 4 + a; V command register -> vo pin + 7; svc command -> s_j + 2;
 # gunit job -> cw pin + 3; issuer KIT -> t_kd pin + 3.  Calendar done rows: V / gunit = issue + 5 (posted).
-SEQ = dict(fks_to_job=3, job_to_age0=4, v_cmd_to_vo=7, svc_to_sj=2, gunit_to_cw=3, kit_to_tkd=3, done_v=5)
+SEQ = dict(fks_to_job=3, job_to_age0=4, v_cmd_to_vo=7, svc_to_sj=2, gunit_to_cw=3, kit_to_tkd=3, done_v=5, vo_s_land=1)
+# vo_s_land (S81-SHLK2 10-18): dsdv_sh_lk RL 1 lands the rung at both faces of the L0 leaf (+1 edge each way of the rung);
+# a V SOUTH command leaves vo_s at v_cmd_to_vo + vo_s_land (V north on vo_n unchanged).
 # ot_s81sl_rstop: line in pin -> line out pin 2 edges a stop.
 RSTOP_HOP = 2
 # tb_s81sl_beat (results/rtl/s81_slice_1017/beat/bt_base: SLBEAT go_to_partial=111 rstd_to_y0=18 rstd_to_xq=47, PASS);
@@ -436,7 +438,7 @@ def ctl_path(die, sl):
         hops.append(('u_seqhost.vo_s', 'tvS_seqhost'))
         hops.append(('u_bk_sel', 'tvS_bk_sel'))
         entry = 'u_s_4S'
-    t = SEQ['v_cmd_to_vo']
+    t = SEQ['v_cmd_to_vo'] + (SEQ['vo_s_land'] if tier == 'S' else 0)
     path = [dict(at='u_seqhost.vo', edge=t)]
     for where, lk in hops:
         L = die.links.get(lk)

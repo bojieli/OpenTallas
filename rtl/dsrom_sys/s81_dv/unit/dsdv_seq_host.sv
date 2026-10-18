@@ -62,9 +62,7 @@ endmodule
 
 // ---------------------------------------------------------------- L0: link leaf
 module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0, parameter integer RL = 1) (
-    input  wire          ck,
-    input  wire          ck_ih,           // host ingest RX root (ingest clk_h), same stream clock as ck, own CTS root
-    input  wire          ck_ic,           // host ingest core root (ingest clk_i), same stream clock as ck, own CTS root
+    input  wire          ck,              // ONE CTS root for the whole leaf (S81-SHLK2 10-18; ingest clk_h = clk_i = ck)
     input  wire          rst_n,
     // unit pins
     input  wire [514:0]  f_host,          // {h_cls 2, h_d 512, h_v}
@@ -151,8 +149,11 @@ module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0, parame
     // ---- host ingest (clk_h = clk_i = ck, as dsfd_host_c on a layer die) and per-stack decode (NS 1, STATIC)
     wire t_v, ov, owe, ocr, hf, sf; wire [63:0] t_d; wire [31:0] oa; wire [255:0] od; wire [7:0] ack; wire [4:0] crn;
     reg tcr_l;
-    // three CTS roots (as dsfd_host_c DSFD_HOST_PQ_BOOT ck_ingest): the ingest's own Gray-FIFO domains clk_h / clk_i
-    // get the leaf roots ck_ih / ck_ic (S81U-SEQ3: 24,085 sinks on one root at gate 8940e10e9); APIPE 4 registers the
+    // ONE CTS root (S81-SHLK2 10-18; S81U-SEQ3..S81-SHLK had three, ck / ck_ih / ck_ic, split only for the retired 15k
+    // sinks-per-root cap): the three related entries cost a 100-ps hold / 150..210-ps setup die-skew reserve on every
+    // ck <-> ingest crossing (APIPE-7 gate: 20,461 FF hold endpoints, ~20k hold buffers; APIPE-6 route: pin-flop spread
+    // TT 94.0 / FF 88.3).  Re-CTS on the APIPE-7 gate placement, one root over all 25,456 sinks: boundary spread TT
+    // 17.5..23.4 ps (three roots: ck boundary 45.7 ps).  APIPE 4 registers the
     // engine's row pitch product (26-level ap1_local -> ap_raddr stage), same values as APIPE 3; APIPE 5 (S81U-SEQ4)
     // also forms the stack x stride partial products in stage A0 (ap1_rbase TT -70 ps at gate4), same values again;
     // APIPE 6 (S81U-SEQ6, gate5 st_sec -> u_ox.mem TT -127.7 ps) registers the request-FIFO write in ot_rom_host_ingest
@@ -161,8 +162,8 @@ module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0, parame
     // mux -> dq paths start at a ck_ic flop; every host word +1 ck_ic edge, rate unchanged) + 8 kept realigner pointer
     // copies in the engine (ra_rp -> 512-b shift fanout; no cycle change).  Host path f_host -> s_hw / t_host = +2 edges
     // vs the dsfd_host_c golden (tb HSH 2).
-    dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(7)) u_h (.rst_n(rn), .clk_h(ck_ih), .h_v(to_ing), .h_cls(hcl),
-        .h_d(hd), .h_crn(crn), .t_v(t_v), .t_d(t_d), .t_cr(tcr_l), .clk_i(ck_ic), .ck(ck), .o_v(ov), .o_we(owe), .o_addr(oa),
+    dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(7)) u_h (.rst_n(rn), .clk_h(ck), .h_v(to_ing), .h_cls(hcl),
+        .h_d(hd), .h_crn(crn), .t_v(t_v), .t_d(t_d), .t_cr(tcr_l), .clk_i(ck), .ck(ck), .o_v(ov), .o_we(owe), .o_addr(oa),
         .o_d(od), .o_cr(ocr), .i_rv(1'b0), .i_rd(256'd0), .host_ack_n(ack), .fault(hf));
     // two host-write stacks = the two svc halves (dsdv_sh_sd = dsfd_host_sd fork, HALF 1: route by the PC owner half; markers to both; MUT 6 = HALF 2)
     dsdv_sh_sd #(.NS(2), .KVS(2'b11), .ENG(-1), .STATIC(1), .HALF((MUT == 6) ? 2 : 1)) u_sd (.ck(ck), .rst_n(rn), .o_v(ov),
@@ -383,7 +384,7 @@ module dsdv_seq_host #(parameter integer V = 276, parameter integer STAGE = 0, p
     wire [V-1:0] n01, s10, n12, s21, n23, s32, n34, s43;
     wire [35:0] pw01; wire [8:0] pl01; wire [193:0] tw01, tw12; wire [52:0] ks01; wire [53:0] kd10; wire [32:0] j10;
     wire [1:0] jd01; wire [5:0] sq10; wire vf10, vf21; wire [84:0] cn12, cs12, cg12; wire [26:0] dn21; wire [266:0] cf01, cf12;
-    dsdv_sh_lk #(.V(V), .MUT(MUT), .RL(RL)) u_l0 (.ck(ck), .ck_ih(ck), .ck_ic(ck), .rst_n(rst_n), .f_host(f_host), .t_host(t_host), .f_lf(f_lf), .f_ks(f_ks), .t_kd(t_kd),
+    dsdv_sh_lk #(.V(V), .MUT(MUT), .RL(RL)) u_l0 (.ck(ck), .rst_n(rst_n), .f_host(f_host), .t_host(t_host), .f_lf(f_lf), .f_ks(f_ks), .t_kd(t_kd),
         .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w), .s_hw_e(s_hw_e), .s_hc_w(s_hc_w),
         .s_hc_e(s_hc_e), .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .vi_s(vi_s), .vo_s(vo_s),
         .rn_o(n01), .rs_i(s10), .pw_o(pw01), .pl_o(pl01), .tw_o(tw01), .cf_o(cf01), .ks_o(ks01), .kd_i(kd10), .j_i(j10), .jd_o(jd01),
