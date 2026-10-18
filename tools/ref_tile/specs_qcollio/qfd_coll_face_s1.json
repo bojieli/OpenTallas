@@ -199,7 +199,7 @@
  },
  "outline": {
   "w": 950.4,
-  "h": 388.8
+  "h": 475.2
  },
  "recipe": 2,
  "macros": [],
@@ -257,11 +257,11 @@
   "enable": false,
   "reason": "TOK_REG=1: every face input has exactly one pin register in its owning root (tx_slot/tx_valid/tx_data on tx_wck, peer_slot on cal_ck; calendar crossing delays shortened by the same edge, bench latency still exactly L=376), phy_rx/phy_rx_valid/phy_up are captured by the codec pin registers (codec_ck[0]); every output is a register (rx_* CDC o_* on rx_rck, phy_tx* codec on codec_ck[0], phy_*_slot calendar on cal_lck, cdc_fault cal_ck, epoch_abort/fault_cause codec). A synthesized second register would change the compiled latency."
  },
- "structural_change": "NEW face cluster (Q-DIE11-COLL 10-18, HANDOFF 0ea item 3; DRAFT until child qfd_coll_bank137 closes): first hardened face of the compute-die io_collective (qfd_collective_static_io_production -> qfd_collective_static_io -> 5 x qfd_coll_static_face). SerDes1 profile FW546 PHY339 L376 R0 PEER_R0, TOK_REG=1 (opt-in core-side face pin registers on cal_ck, compensated calendar; default 0 keeps the production face byte-identical). Hard children: 2 x closed qfd_static_ch546 (TX/RX static CDC), 4 x qfd_coll_bank137 (codec banks). Own CTS roots cal_ck (core calendar + pin regs), cal_lck and codec_ck[0] (link calendar, codec control = the SerDes PHY FDI clock on the die, trunk clk_serdes<s>); entries tx_wck/rx_rck (core) and tx_rck/rx_wck/codec_ck[1..4] (link) clock only their children. A multiple_cts_roots leaf (gate a3b6f888e) is impossible: CTS roots must reach only standard-cell clock pins and every CDC/bank root also clocks a macro.",
+ "structural_change": "NEW face cluster (Q-DIE11-COLL 10-18, HANDOFF 0ea item 3; bank137 CLOSED b1-533c4162e): first hardened face of the compute-die io_collective (qfd_collective_static_io_production -> qfd_collective_static_io -> 5 x qfd_coll_static_face). SerDes1 profile FW546 PHY339 L376 R0 PEER_R0, TOK_REG=1 (opt-in core-side face pin registers on cal_ck, compensated calendar; default 0 keeps the production face byte-identical). Hard children: 2 x closed qfd_static_ch546 (TX/RX static CDC), 4 x qfd_coll_bank137 (codec banks). Own CTS roots cal_ck (core calendar + pin regs), cal_lck and codec_ck[0] (link calendar, codec control = the SerDes PHY FDI clock on the die, trunk clk_serdes<s>); entries tx_wck/rx_rck (core) and tx_rck/rx_wck/codec_ck[1..4] (link) clock only their children. A multiple_cts_roots leaf (gate a3b6f888e) is impossible: CTS roots must reach only standard-cell clock pins and every CDC/bank root also clocks a macro.",
  "slot_change_request": "NEW leaf inside the io_collective column next to its SerDes PHY FDI window; outline provisional (this gate sizes it); Q-DIE11 die lead grants the slot.",
  "job": {
   "owner": "Claude:Q-DIE11-COLL",
-  "branch": "claude/q-die11-coll-1018",
+  "branch": "claude/q-die11b-coll-1018",
   "tag": "c1",
   "purpose": "Harden the SerDes1 collective face as a cluster of the closed static CDC channel and codec bank leaves, link roots on the PHY FDI clock (HANDOFF 0ea item 3); submit after qfd_coll_bank137 closes",
   "benches": [
@@ -449,7 +449,7 @@
    "count": 1,
    "inst": "*u_tx",
    "at": [
-    129.6,
+    86.4,
     43.2
    ],
    "orient": "R0"
@@ -459,8 +459,8 @@
    "count": 1,
    "inst": "*u_rx",
    "at": [
-    129.6,
-    172.8
+    86.4,
+    259.2
    ],
    "orient": "R0"
   },
@@ -470,7 +470,7 @@
    "inst": "*g_bank?0?*u_store",
    "at": [
     388.8,
-    0.0
+    43.2
    ],
    "orient": "R0"
   },
@@ -480,7 +480,7 @@
    "inst": "*g_bank?1?*u_store",
    "at": [
     388.8,
-    172.8
+    259.2
    ],
    "orient": "R0"
   },
@@ -490,7 +490,7 @@
    "inst": "*g_bank?2?*u_store",
    "at": [
     648.0,
-    0.0
+    43.2
    ],
    "orient": "R0"
   },
@@ -500,10 +500,11 @@
    "inst": "*g_bank?3?*u_store",
    "at": [
     648.0,
-    172.8
+    259.2
    ],
    "orient": "R0"
   }
  ],
- "pg_layer": "M7"
+ "pg_layer": "M7",
+ "floorplan_note": "10-18 Q-DIE11b: placed with the closed child sizes (ch546 233.28x151.2, bank137 216x172.8): ch546 tx/rx column at x 86.4 (W core-side pins), banks 2x2 at x 388.8/648 (E PHY side), all on the 43.2 lattice, 43.2 channels, outline 950.4 x 475.2"
 }
