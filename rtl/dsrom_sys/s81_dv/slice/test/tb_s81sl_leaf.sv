@@ -24,7 +24,8 @@ module tb_s81sl_leaf #(parameter integer MUT = 0, parameter integer BEAT = 37, p
     ot_s81sl_leaf #(.AQ_XMEM(XMEM), .VS_MUT(MUT)) u_lf (.clk(clk), .rst_n(rst_n), .sid(SID), .k(KL),
         .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
         .cw_v(2'b00), .cw_a(24'd0), .cw_d(64'd0), .lo_v(lo_v), .lo_d(lo_d), .rb_v(1'b0), .rb_d(32'd0),
-        .p_v(p_v), .p_d(p_d), .xf_v(xf_v), .xf_s(xf_s), .xf(xf), .fault(f_lf));
+        .p_v(p_v), .p_d(p_d), .xf_v(xf_v), .xf_s(xf_s), .xf(xf),
+        .e_v(), .e_c(), .e_d(), .g_v(1'b0), .g_c(2'd0), .g_d(32'd0), .fault(f_lf));   // ENG ports: idle in this SU bench
     wire u_v = u_lf.u_v, x_wv = u_lf.x_wv;
     assign fp = u_lf.f_vp; assign fs = u_lf.f_vs; assign fq = u_lf.f_vq;
 
