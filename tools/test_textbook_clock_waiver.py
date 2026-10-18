@@ -47,3 +47,12 @@ def test_waiver_wrong_pair_or_too_big():
     assert lint(ev, dict(WV, ff_ps=82.5))["verdict"] == "REFUSE"
     r = lint(waiver=dict(WV, by=""))
     assert r["verdict"] == "REFUSE" and "NOT applied" in r["clock_rule"]["text"]
+
+
+def test_relaxing_rule_requirement_honours_waiver():
+    sys.path.insert(0, str(Path(__file__).resolve().parent / "ref_tile"))
+    import source_binding as SB
+    assert not SB.relaxed_rule_requirement(["clock_pin_spread"], EV)[0]
+    ok, rows = SB.relaxed_rule_requirement(["clock_pin_spread"], dict(EV, clock_rule_waiver=WV))
+    assert ok and "WAIVED" in rows[0]["text"]
+    assert not SB.relaxed_rule_requirement(["clock_pin_spread"], dict(EV, clock_rule_waiver=dict(WV, pair="dchn-dsyn")))[0]

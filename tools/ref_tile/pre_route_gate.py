@@ -1766,6 +1766,12 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
                 binding = {**binding, "consumed": rec}
                 d["source_binding"] = binding
         tile = [kd.name, d.get("kit")]
+        try:     # S81-DEC5 10-18: the kit job's recorded clock_rule_waiver also judges the relaxing-rule requirement
+            w = json.loads((kd / "job.json").read_text()).get("clock_rule_waiver")
+            if isinstance(w, dict) and isinstance(d.get("clock"), dict):
+                d = {**d, "clock": {**d["clock"], "clock_rule_waiver": w}}
+        except (OSError, ValueError, AttributeError):
+            pass
         try:
             ks = json.loads((kd / "spec.json").read_text())
             tile += [ks.get("name"), ks.get("top")]
