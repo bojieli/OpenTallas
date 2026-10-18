@@ -61,6 +61,32 @@ class CdcError(ValueError):
     pass
 
 
+# Asynchronous stream/HBM pair (RBH-STK 2026-10-18): the same HBM PHY periods as async_gray_fifo, but the crossings are
+# the linted synchroniser structure below instead of the reviewed FIFO primitive. No other crossing is admitted.
+ASYNC_POLICY = 'cdc_synchronizers_async'
+ASYNC_RELATIONSHIP = dict(kind='hbm_phy_async_synchronizers', stream_period_ps=833.333, hbm_period_ps=1024.0)
+ASYNC_RATIO = [3072000, 2499999]
+
+
+def async_relationship(spec):
+    """clock_data_paths cdc_synchronizers_async: core = stream 833.333, every other domain = HBM 1024, one root each."""
+    if spec.get(KEY) is None:
+        raise CdcError(f'{ASYNC_POLICY} requires cdc_synchronizers (the only admitted crossings)')
+    if spec.get('clock') != 'multiple_cts_roots' or spec.get('kind') != 'tile':
+        raise CdcError(f'{ASYNC_POLICY} requires a multiple_cts_roots leaf tile')
+    if spec.get('clock_relationship') != ASYNC_RELATIONSHIP:
+        raise CdcError(f'{ASYNC_POLICY} requires clock_relationship ' + json.dumps(ASYNC_RELATIONSHIP, sort_keys=True))
+    if float(spec.get('route', {}).get('signoff_period_ps', 833.333)) != 833.333:
+        raise CdcError(f'{ASYNC_POLICY} must retain the actual stream833.333 primary period')
+    declared = spec.get('clock_entry_domains')
+    if not isinstance(declared, dict) or set(declared) != {'core', 'hbm'}:
+        raise CdcError(f'{ASYNC_POLICY} requires exactly core (stream) and hbm domains')
+    for name, d in declared.items():
+        want = [1, 1] if name == 'core' else ASYNC_RATIO
+        if not isinstance(d, dict) or d.get('ratio') != want or len(d.get('ports', [])) != 1:
+            raise CdcError(f'{ASYNC_POLICY} {name}: ratio must be {want} with exactly one actual root port')
+
+
 def periods(spec):
     import clock_entry_constraints as C
     base = C.signoff_period(spec)
@@ -325,8 +351,9 @@ def lint(spec, root):
             for q in bits:
                 role[q] = (n, 'payload', 0)
         # Gray: at most one source bit changes per source edge, over every assignment of the next-state cone.
-        vars_ = sorted(set(src).union(*(net.cone(net.flops[q]['d']) for q in src)))
-        for env in _assignments(vars_):
+        # A 1-bit level is trivially Gray (no enumeration, so its next-state cone may be any size).
+        vars_ = [] if len(src) == 1 else sorted(set(src).union(*(net.cone(net.flops[q]['d']) for q in src)))
+        for env in (_assignments(vars_) if vars_ else ()):
             memo = {}
             if sum(net.evaluate(net.flops[q]['d'], env, memo) != env[q] for q in src) > 1:
                 raise CdcError(f'{n}: source {g["source"]} is not a Gray counter (more than one bit changes per edge)')

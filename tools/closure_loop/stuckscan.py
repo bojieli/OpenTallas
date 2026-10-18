@@ -96,6 +96,11 @@ GATES = dict(
                                  # buffers went in; the next call took -56.8 -> +30.0 in 17 s).  Rule (2) waits while
                                  # that call still inserts buffers, for up to this long; the flow's OT_HOLD_STALL guard
                                  # (ot_hold_stall_<stage>.rpt) judges the chunk, and rules (1)/(3) still apply
+    hold_pad_proj_x=1.5,         # PAD-SCALE (S81-VNHOLD, 10-18): past hold_pad_s the first call still counts as padding
+    hold_pad_max_s=3 * 3600,     # while its buffers stay < this x the flow's OT_HM_GUARD projection (~N buffers) and
+                                 # elapsed < hold_pad_max_s (= the flow's OT_HOLD_MAX_HOURS 3 h): s81sl_vn c084e259a,
+                                 # 25.4k endpoints in the 30-ps margin, ~42.3k projected, was killed at 1.2 h / 24.2k
+                                 # buffers still going in at ~2/it with the call unfinished
     hold_call_min_it=500,        # ... and in a LATER call, rule (2) also needs this many iterations of that call with
                                  # < hold_stall_dwns / hold_stall_tns_pct gain (two consecutive stalled calls)
     hold_real_ws_ps=-150.0,      # real hold WNS still below this ...
@@ -222,6 +227,7 @@ def probe_base(b, live):
         rows = HOLD_ROW.findall(t)
         hold = dict(found=[int(x) for x in re.findall(r"Found (\d+) endpoints with hold violations", t)][-3:],
                     guard=("OT_HOLD_GUARD start" in t), hm_auto=re.findall(r"OT_HM_AUTO.*", t)[-1:],
+                    hm_proj=[int(x) for x in re.findall(r"OT_HM_(?:GUARD: margin \S+ kept|AUTO HM auto-reduced)[^~\n]*~(\d+) buffers", t)][-1:],
                     sync=re.findall(r"OT_HOLD_MM sync: SS setup ws ([-\d.]+) / FF hold ws ([-\d.]+)", t)[-1:],
                     stall=("OT_HOLD_STALL" in t))
         if rows:
@@ -707,7 +713,9 @@ def hold_padding(hd, elapsed):
     WNS/TNS columns stay flat while the endpoints inside the hold margin are padded; the gain shows only when the next
     call starts (qfd_tt_head h16b: -73.9 -> -56.8 flat over call 1 with 5.9k buffers, call 2 -> +30.0).  With the flow's
     chunked guard present and no OT_HOLD_STALL from it:
-      - first call (index 0): padding while buffers still go in over the stall window and elapsed < hold_pad_s;
+      - first call (index 0): padding while buffers still go in over the stall window and elapsed < hold_pad_s, or
+        (PAD-SCALE) while those buffers are < hold_pad_proj_x x the flow's OT_HM_GUARD projection and elapsed <
+        hold_pad_max_s;
       - later call: padding until that call has run hold_call_min_it iterations without its own gain (so rule (2) needs
         two consecutive stalled calls).
     Old flows without the guard (one unbounded call), a flow-reported stall and a near miss (WNS >= hold_nearmiss_ps,
@@ -721,7 +729,12 @@ def hold_padding(hd, elapsed):
     call = last[4] if len(last) > 4 else 0
     if call == 0:
         back = [p for p in ser if p[0] <= last[0] - GATES["hold_stall_it"]]
-        return bool(back) and last[1] > back[-1][1] and elapsed < GATES["hold_pad_s"]
+        if not (back and last[1] > back[-1][1]):
+            return False
+        if elapsed < GATES["hold_pad_s"]:
+            return True
+        proj = (hd.get("hm_proj") or [0])[-1]     # PAD-SCALE: a margin flood's pad takes longer than hold_pad_s
+        return bool(proj) and last[1] < GATES["hold_pad_proj_x"] * proj and elapsed < GATES["hold_pad_max_s"]
     cur = [p for p in ser if len(p) > 4 and p[4] == call]
     if not cur or last[0] - cur[0][0] < GATES["hold_call_min_it"]:
         return True
