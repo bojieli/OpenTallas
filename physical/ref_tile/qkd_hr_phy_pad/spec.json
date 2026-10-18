@@ -60,10 +60,10 @@
   "enable": true
  },
  "job": {
-  "owner": "Claude:KV-TILES-B/HOSTCL",
-  "branch": "claude/kvj-a3-1017",
-  "tag": "c1",
-  "purpose": "HOST root cluster child qkd_hr_phy_pad (pre-route gate only; qkd_host_root CRITICAL: no REVIEW / no submit)",
+  "owner": "Claude:KV-HOSTCL-A8",
+  "branch": "claude/kvj-a8-1017",
+  "tag": "a8",
+  "purpose": "HOST root cluster child qkd_hr_phy_pad route (unchanged member; re-gated on the KVJ-A8 branch commit)",
   "no_bench_reason": "gate-only kit; the cluster composition lock-step bench (A1-A6) gates adoption"
  },
  "pin_ranges": {
