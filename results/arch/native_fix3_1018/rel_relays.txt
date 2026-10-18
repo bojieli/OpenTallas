@@ -1,0 +1,15 @@
+== hbfd_rly_136_NS_fc_f2 hbfd_rly_136_ns_fc_f2 own R 65.6 L 162.5 o0[128] C 211.1 rs False
+   vs hbfd_rly_136_ns_fc C tt 77.2 ff 58.3 L 150.9 o0[128] 0 Cap 222.7 rs 1 FAIL: capture 222.69203 > 190 (1 pins)
+   vs hbfd_rly_136_ns_fc_f4 C tt 74.3 ff 58.7 L 153.8 o0[128] 0 Cap 219.8 rs 1 FAIL: capture 219.79203 > 190 (1 pins)
+   vs hbfd_rly_136_we_fc_f3 C tt 65.0 ff 51.1 L 163.1 o0[128] 0 Cap 210.5 rs 1 FAIL: capture 210.49203 > 190 (1 pins)
+== hbfd_rly_136_SN_fc hbfd_rly_136_sn_fc own R 77.0 L 140.0 o[51] C 198.8 rs False
+   vs hbfd_rly_136_sn_fc_f3 C tt 65.5 ff 51.6 L 151.5 o[51] 0 Cap 187.3 rs 0 PASS
+   vs hbfd_rly_136_ew_fc C tt 76.2 ff 57.7 L 140.8 o[51] 0 Cap 198.0 rs 1 FAIL: capture 197.9578 > 190 (1 pins)
+== hbfd_rly_136_NS_fc_f3 hbfd_rly_136_ns_fc_f3 own R 67.6 L 175.7 o1[61] C 193.7 rs False
+   vs hbfd_rly_136_ns_fc_f2 C tt 65.6 ff 52.0 L 177.7 o1[61] 0 Cap 191.7 rs 1 FAIL: capture 191.68691 > 190 (1 pins)
+== hbfd_rly_136_SN_fc_f2 hbfd_rly_136_sn_fc_f2 own R 65.2 L 164.8 o0[133] C 195.2 rs False
+   vs hbfd_rly_136_sn_fc_f3 C tt 65.5 ff 51.6 L 164.5 o0[133] 0 Cap 195.5 rs 1 FAIL: capture 195.54204 > 190 (1 pins)
+== hbfd_rly_136_SN_fc_f4 hbfd_rly_136_sn_fc_f4 own R 74.1 L 195.9 o3[28] C 194.1 rs False
+   vs hbfd_rly_136_sn_fc_f3 C tt 65.5 ff 51.6 L 204.5 o3[28] 0 Cap 185.5 rs 0 PASS
+== hbfd_rly_136_NS_fc hbfd_rly_136_ns_fc own R 77.2 L 141.0 o[14] C 193.9 rs False
+   vs hbfd_rly_136_ns_fc_f3 C tt 67.6 ff 53.7 L 150.6 o[14] 0 Cap 184.3 rs 0 PASS

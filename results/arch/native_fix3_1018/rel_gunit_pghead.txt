@@ -1,0 +1,7 @@
+== dsdv_gunit_l4 dsdv_gunit_l4 own R 295.7 L 236.3 rn_o[122] C 197.8 rn_i[215] False
+   vs dsdv_gunit_l3 C tt 257.6 ff 212.6 L 274.4 rn_o[122] 3 Cap 159.7 rn_i[215] 0 FAIL: launch 274.43534 > 220 (3 pins)
+   vs dsdv_gunit_l4r C tt 190.6 ff 157.0 L 341.4 rn_o[122] 4 Cap 92.7 rn_i[215] 0 FAIL: launch 341.43534 > 220 (4 pins); TT boundary vs neighbour 136.4 > 80 (pin flops 79.6..136.4 ps from C 190.6); FF boundary vs neighbour 119.8 > 80 (pin flops 64.3..119.8 ps from C 157)
+   vs dsdv_gunit_l5f C tt 205.4 ff 167.6 L 326.6 rn_o[122] 3 Cap 107.5 rn_i[215] 0 FAIL: launch 326.63534 > 220 (3 pins); TT boundary vs neighbour 121.6 > 80 (pin flops 64.8..121.6 ps from C 205.4); FF boundary vs neighbour 109.2 > 80 (pin flops 53.7..109.2 ps from C 167.6)
+== ot_hbm_su_programme_pghead hbm_su_pghead_r5 own R 101.8 L 225.6 o_we[7] C 204.5 l_fault[1] False
+   vs hbm_su_pgcol_s_r5 C tt 271.4 ff 222.8 L 56.0 o_we[7] 0 Cap 374.1 l_fault[1] 301 FAIL: capture 374.07265 > 190 (301 pins); TT boundary vs neighbour 176.7 > 80 (pin flops -176.7..-165.3 ps from C 271.4); FF boundary vs neighbour 144.4 > 80 (pin flops -144.4..-133.2 ps from C 222.8)
+   vs hbm_su_pg_lgtap_1017 C tt 222.2 ff 185.1 L 105.2 o_we[7] 0 Cap 324.9 l_fault[1] 22 FAIL: capture 324.87265 > 190 (22 pins); TT boundary vs neighbour 127.5 > 80 (pin flops -127.5..-116.1 ps from C 222.2); FF boundary vs neighbour 106.7 > 80 (pin flops -106.7..-95.5 ps from C 185.1)
