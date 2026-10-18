@@ -230,7 +230,8 @@ foreach ep {{{' '.join(a.hop_endpoints)}}} {{
 puts OT_STA_DONE''')
         t = t.replace('/pilot/libs/', '/libs/')
         if a.standin_libs:
-            t = t.replace('[glob $C/views/dv_*.lib]', '[glob /libs/dv_*.lib]')
+            # S81-BIND3: per-corner stand-in libs (dv_<inst>_<corner>.lib, leaf-pin arcs differ by corner) when present
+            t = t.replace('[glob $C/views/dv_*.lib]', f'[concat [glob -nocomplain /libs/dv_*_{c}.lib] [glob -nocomplain /libs/dv_*standin*.lib]]')
         if a.extra_tcl:
             t = t.replace(f'source {P.PLAT}/setRC.tcl', a.extra_tcl.read_text() + f'source {P.PLAT}/setRC.tcl', 1)
         (a.plan / f'sta_land_{c}.tcl').write_text(t)
