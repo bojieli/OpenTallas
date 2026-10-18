@@ -847,7 +847,7 @@ if [ "{CTS}" = 1 ]; then
   grep -h "^global_placement -density\|Placement target density" $R/cts.log | head -2 | sed 's/^/GATE_GPLD /'
   python3 tools/closure_loop/ck_insertion.py --base $B --all-clocks --raw-source --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
-  python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt'),'ff':{{k:(r.get('ff') or {{}}).get(k) for k in ('boundary','all','macros')}}}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
+  python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt'),'ff':{{k:(r.get('ff') or {{}}).get(k) for k in ('boundary','all','child_flop','macros')}}}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
   docker run --rm -e OT_GATE_SIGNOFF_SDC=/src/{KIT}/signoff.sdc -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
   grep "^GATE_PC" $R/pc.log
   ot_layout $NB/4_1_cts.odb placed
@@ -855,10 +855,12 @@ fi
 # TRIAL ROUTE (owner rule 20:45 10-15; every kit since ROOT-0330-GRT 10-18, was parent / cluster kits only): place +
 # global-route here (no detailed route): overflow, per-layer usage and the congestion hotspots come back; overflow > 0
 # refuses the kit.  Single tiles (HBM qcore r5, S81 bk g2, KV landh0_548, Qwen h16b) passed the gate and failed GRT hours
-# into the route; the trial costs minutes.
+# into the route; the trial costs minutes.  ROOT-0630 (coordinator HANDOFF 0gi, 10-18): a SINGLE-tile kit's trial is a
+# congestion screen and runs SKIP_INCREMENTAL_REPAIR=1 (first GRT only, no post-GRT repair_design / repair_timing /
+# incremental re-route: ~2 min instead of ~25); parent / cluster kits keep the full trial.
 if [ "{TRIAL}" = 1 ]; then
   GT0=$(date +%s)
-  ot_capped gate_grt_${{R##*/}} docker run --rm --name gate_grt_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt" > $R/grt.log 2>&1; echo "GATE_GRT_RC=$? GATE_GRT_S=$(( $(date +%s) - GT0 ))"
+  ot_capped gate_grt_${{R##*/}} docker run --rm --name gate_grt_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 {GRTX}grt" > $R/grt.log 2>&1; echo "GATE_GRT_RC=$? GATE_GRT_S=$(( $(date +%s) - GT0 ))"
   GL=$(ls $C/logs/asap7/*/base/5_1_grt.log 2>/dev/null | head -1)
   [ -n "$GL" ] && grep -E "^(M[0-9]+|Total) +[0-9]+ +[0-9]+ +[0-9.]+%" $GL | tail -12 | sed 's/^/GATE_GRT_LAYER /'
   [ -n "$GL" ] && grep -hE "GRT-0116|Total overflow|overflow" $GL | tail -3 | sed 's/^/GATE_GRT_NOTE /'
@@ -1092,7 +1094,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     commit = binding["commit"] or "snapshot-sha256:" + binding["manifest_sha256"]
     sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=(cap if cap > 0 else "unlimited"), KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
-                          TRIAL=1, CLKS=",".join(RT.declared_clock_ports(spec)),
+                          TRIAL=1, GRTX=trial_grt_make_args(spec), CLKS=",".join(RT.declared_clock_ports(spec)),
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"], STEP_CAP=GATE_STEP_CAP_S)   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
     if textbook_reset_args(spec):
         tb = f"--refuse-checks {','.join(GATE_REFUSE)} | sed 's/^/GATE_TB /'"
@@ -1179,6 +1181,12 @@ FILL_WARN, FILL_FAIL = 0.50, 0.35       # OWNER RULE 20:45 PT 10-15 (parent / cl
 def is_parent_kit(spec: dict) -> bool:
     """a parent / cluster kit: kind cluster, hardened children, or >= 4 hard macros"""
     return spec.get("kind") == "cluster" or bool(spec.get("children")) or len(spec.get("macros") or []) >= 4
+
+
+def trial_grt_make_args(spec: dict) -> str:
+    """extra ORFS make variables of the gate's trial GRT (ROOT-0630, HANDOFF 0gi): a single tile skips the post-GRT
+    incremental repair (a congestion screen; overflow > 0 still FAILs); a parent / cluster kit runs the full trial"""
+    return "" if is_parent_kit(spec) else "SKIP_INCREMENTAL_REPAIR=1 "
 
 
 def pin_demand(d: dict) -> list:
@@ -1276,6 +1284,7 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
             hot["worst_overflow_layer"] = [wovf[0], int(wovf[6])]
         secs = re.search(r"GATE_GRT_S=(\d+)", out)
         g.trial_route = dict(schema="opentallas.ref_tile.trial_route.v1", overflow=ovf, kind="parent" if parent else "tile",
+                             skip_incremental_repair=not parent,
                              rc=re.search(r"GATE_GRT_RC=(\S+)", out).group(1), grt_s=int(secs.group(1)) if secs else None,
                              layers=[dict(layer=r[0], capacity=int(r[1]), usage=int(r[2]), pct=float(r[3]),
                                           overflow=int(r[6])) for r in lay],
@@ -1702,6 +1711,12 @@ def corner_spreads(rec: dict, domain: dict) -> dict:
     for c in ("tt", "ff"):
         cr = domain.get(c) or {}
         al, bd = cr.get("all") or {}, cr.get("boundary") or {}
+        cf = cr.get("child_flop") or {}
+        if cf.get("boundary") and cf.get("all"):
+            # CHILD-FLOP (SM-RP4 2026-10-18): a cluster's hard-child clock pins enter all_registers at their RAW arrival,
+            # which the spine sets EARLY by the child's own insertion R; the rule judges the child FLOPS (pin + R)
+            bd, al = cf["boundary"], cf["all"]
+            rec[f"{c}_child_flop_refs"] = cf.get("refs")
         if al.get("min") is not None and al.get("max") is not None:
             lo, hi = float(al["min"]), float(al["max"])
             rec[f"{c}_insertion_ps"], rec[f"{c}_spread_ps"] = hi, round(hi - lo, 1)
@@ -1760,6 +1775,12 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
                 binding = {**binding, "consumed": rec}
                 d["source_binding"] = binding
         tile = [kd.name, d.get("kit")]
+        try:     # S81-DEC5 10-18: the kit job's recorded clock_rule_waiver also judges the relaxing-rule requirement
+            w = json.loads((kd / "job.json").read_text()).get("clock_rule_waiver")
+            if isinstance(w, dict) and isinstance(d.get("clock"), dict):
+                d = {**d, "clock": {**d["clock"], "clock_rule_waiver": w}}
+        except (OSError, ValueError, AttributeError):
+            pass
         try:
             ks = json.loads((kd / "spec.json").read_text())
             tile += [ks.get("name"), ks.get("top")]
@@ -2020,55 +2041,21 @@ def check_slot_fit(g: Gate, kd: Path, job: dict, repo: str, commit: str = "") ->
     return res
 
 
-CLOCK_WAIVER_MAX_PS = 2.0
+CLOCK_WAIVER_MAX_PS = TL.CLOCK_WAIVER_MAX_PS
 
 
 def apply_clock_rule_waiver(g: Gate, spec: dict) -> None:
-    """HANDOFF 0ga 2026-10-18 (s81lk_kp4_dec syn-dly 80.5 FF vs 80): a coordinator-recorded per-pair excess.  The job
-    spec's "clock_rule_waiver" {"pair": "a-b", "ff_ps"|"tt_ps": measured, "limit_ps", "by"} turns the clock_rule FAIL
-    into a WARN that prints the waiver, only when every over-limit corner spread of the gate evidence is <= limit + 2 ps,
-    <= the recorded value, and (child-pair basis) comes from that pair alone.  Anything else stays a FAIL."""
+    """HANDOFF 0ga 2026-10-18: the job spec's "clock_rule_waiver" turns the clock_rule FAIL into a WARN that prints the
+    waiver when textbook_lint.clock_waiver_eval accepts it (per-pair excess <= 2 ps, recorded, named pair alone)."""
     w = spec.get("clock_rule_waiver")
     items = [i for i in g.items if i["check"] == "clock_rule" and i["severity"] == "FAIL"]
     if not isinstance(w, dict) or not items:
         return
-    ev = (getattr(g, "clock", None) or {}).get("evidence") or {}
-    lim = TL.CLK_SPREAD_MAX_PS
-    pair = {x.strip().removeprefix("u_") for x in str(w.get("pair", "")).split("-") if x.strip()}
-    why = []
-    if not str(w.get("by", "")).strip():
-        why.append("no 'by'")
-    _num = TL._num
-    if not _num(w.get("limit_ps")) or float(w["limit_ps"]) != lim:
-        why.append(f"limit_ps must be {lim:.0f}")
-    over = 0
-    for c, (v, basis) in TL.clock_spreads(ev).items():
-        if v <= lim:
-            continue
-        over += 1
-        rec_ps = w.get(f"{c}_ps")
-        if not _num(rec_ps) or v > float(rec_ps) + 1e-6:
-            why.append(f"{c.upper()} {v:.1f} ps not recorded in the waiver ({c}_ps={rec_ps})")
-        if v > lim + CLOCK_WAIVER_MAX_PS:
-            why.append(f"{c.upper()} {v:.1f} ps exceeds limit + {CLOCK_WAIVER_MAX_PS:.0f}")
-        if basis == "pin-flop" and ev.get(f"{c}_pin_spread_basis") == "child_pair":
-            # waiver tokens name the child instance (u_dly / dly) or its block suffix (s81lk_kp4_ddly / ddly)
-            def named(p):
-                inst = [str(p.get(k, "")).removeprefix("u_") for k in ("a", "b")]
-                return len(pair) == 2 and all(any(t.endswith(x) for t in pair) for x in inst) \
-                    and all(any(t.endswith(x) for x in inst) for t in pair)
-            bad = [p for p in ev.get("child_pairs") or () if p.get("corner") == c and float(p.get("ps", 0)) > lim
-                   and not named(p)]
-            if bad:
-                why.append(f"{c.upper()} pair(s) {', '.join(b['a'] + '-' + b['b'] for b in bad)} over {lim:.0f} too")
-    if not over:
-        why.append("no over-limit spread in the evidence")
-    if why:
+    applied, note, why = TL.clock_waiver_eval((getattr(g, "clock", None) or {}).get("evidence") or {}, w)
+    if not applied:
         for i in items:
             i["message"] += f" (clock_rule_waiver NOT applied: {'; '.join(why)})"
         return
-    note = (f"clock_rule_waiver by {w['by']}: pair {w.get('pair')} "
-            + ", ".join(f"{c}_ps {w[c + '_ps']}" for c in ("tt", "ff") if f"{c}_ps" in w) + f" vs limit {lim:.0f}")
     print(f"pre_route_gate: WAIVER {note}", file=sys.stderr)
     for i in items:
         i["severity"], i["message"] = "WARN", i["message"] + f" -- WAIVED: {note}"
