@@ -1,0 +1,118 @@
+{
+ "why": "PL-PSLICE 10-18: HBM SU programme per-quarter cluster pslice_c5 (pgp_<q>) as a LANDED parent. Its S leaves (TT boundary insertion 309.5 / FF 252.6) and L leaves (483.1 / 394.7) are 174 ps apart, and the cluster is 1.73 x 0.95 mm: one balanced tree cannot hold <= 80 ps at both corners (c_b16 lesson), so the leaves sit in their own clock regions and every head <-> leaf / port -> leaf net is landed.",
+ "top": "ot_hbm_su_programme_pslice_c5_flat",
+ "top_lp": "ot_hbm_su_programme_pslice_c5_lp",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pslice_c5_flat.sv"
+ ],
+ "child_sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_part.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+ ],
+ "out_dir": "rtl/hbm_accel/generic/adapters/static_su/programme/landed",
+ "record_dir": "results/arch/landed_parent_1018/pslice_c5",
+ "clock_ports": [
+  "clk"
+ ],
+ "clock_pins": [
+  "clk"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n"
+ ],
+ "regions": [
+  {
+   "name": "h",
+   "insts": [
+    "u_h"
+   ],
+   "centre": [
+    864.0,
+    572.4
+   ],
+   "why": "head (configuration pin stage + column decode + fault OR) alone in the central channel: every leaf region is then landed from it alike (no alignment pads)"
+  },
+  {
+   "name": "l",
+   "insts": [
+    "u_c1",
+    "u_c2",
+    "u_c3"
+   ],
+   "centre": [
+    561.6,
+    270.0
+   ],
+   "why": "the three L leaves (13 dictionary banks, boundary insertion TT 483 / FF 395), bottom-left row"
+  },
+  {
+   "name": "sw",
+   "insts": [
+    "u_c5",
+    "u_c6",
+    "u_c7"
+   ],
+   "centre": [
+    583.2,
+    777.6
+   ],
+   "why": "three S leaves (TT 310 / FF 253), top-left row (MX)"
+  },
+  {
+   "name": "se",
+   "insts": [
+    "u_c0",
+    "u_c4",
+    "u_c8",
+    "u_c9"
+   ],
+   "centre": [
+    1360.8,
+    475.2
+   ],
+   "why": "four S leaves on the E side (bottom c0 c4 R0, top c8 c9 MX); column 0 drives busy / valid / done / edge_index"
+  }
+ ],
+ "port_regions": {
+  "start": "h",
+  "length": "h",
+  "command": "se",
+  "busy": "se",
+  "valid": "se",
+  "done": "se",
+  "edge_index": "se",
+  "fault": "h"
+ },
+ "lag_pins": [
+  {
+   "inst": "u_h",
+   "pins": [
+    "l_fault",
+    "l_valid"
+   ],
+   "why": "status return: the head configures every leaf (cfg landed +3 into each leaf region) and ORs their sticky faults / checks their valid lockstep; that is a cross-region loop, so the status inputs are landed back and read at one common lag (all leaves alike: no false lockstep fault)"
+  }
+ ],
+ "D": 4,
+ "E": 2,
+ "bench": {
+  "cycles": 20000,
+  "reset_cycles": 16,
+  "sim": "verilator",
+  "why": "load phase (cycles < 8000: a configuration write on half the edges, every row / local bank) then run phase (starts 1 in 40, rare writes 1 in 100 so the write-on-start leaf fault rises late and is compared through the lagged status path)",
+  "expr": {
+   "cfg_we": "(cyc < 8000) ? (($urandom % 2) == 0) : (($urandom % 100) == 0)",
+   "cfg_bank": "{11'($urandom % 10), 5'($urandom % 7)}",
+   "cfg_row": "7'($urandom)",
+   "start": "(cyc >= 8000) && (($urandom % 40) == 0)",
+   "length": "16'(1 + $urandom % 120)"
+  },
+  "mut_waivers": {
+   "4": "PL-PSLICE bench 10-18 (ot-epyc5): MUT 4 (u_c0 reset run one stage long) PASSES lockstep over 20,000 edges because every child of this parent is reset-phase-insensitive: no free-running state (the producer is idle until a start; SRAM is not reset), so one more reset edge is invisible unless a write lands on exactly that edge. The reset offsets themselves are proven by MUT 0 (every child reset delayed t(child) + RB) and the flat-eq bench."
+  }
+ }
+}
