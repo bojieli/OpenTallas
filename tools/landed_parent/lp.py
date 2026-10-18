@@ -41,6 +41,8 @@ SPEC (JSON; paths relative to the repo root):
   D, E           ring depth / read offset (default 4 / 2: as Q-CLUSTER-LANDALL)
   reach_um       reset-run hop reach (default 405)         residual_ps: inter-region die residual on the 1-bit reset hops (60)
   bench          {cycles, reset_cycles, sim: iverilog|verilator}
+  mut_child      child whose reset run MUT 4 lengthens (default: the first child with a reset pin); pick one whose state
+                 outlives the reset (a sticky flag / counter): a pure pipeline register forgets a late reset in one edge
 """
 from __future__ import annotations
 
@@ -526,6 +528,11 @@ class Parent:
     def mut_child(self, P):
         kids = [ins["inst"] for ins in self.insts
                 if any(pin in (self.S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in ins["conns"].items())]
+        want = self.S.get("mut_child")       # a child whose late reset is observable after warm-up (state that outlives
+        if want:                             # the reset, e.g. a sticky flag); a pure pipeline child forgets it in 1 edge
+            if want not in kids:
+                raise SystemExit(f"mut_child {want} is not a child with a reset pin on {self.rst}: {kids}")
+            return want
         return kids[0] if kids else None
 
     def sdc(self, P, top_lp):
