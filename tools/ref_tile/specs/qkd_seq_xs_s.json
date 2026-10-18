@@ -15,10 +15,6 @@
  "reset_ports": [
   "rst_n"
  ],
- "outline": {
-  "w": 64.8,
-  "h": 64.8
- },
  "pins": {
   "N": [
    "x_v",
@@ -66,7 +62,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "Successor of qkd_seq_xs_tp8 (x4): Q FIFO 40 x 128 + two registered copies only; KVN FIFO (8 x 128), eight KVN word registers and the 2 x 256-b row copies deleted (kvn face has no consumer). 131 N / 128 W / 128 E pins.",
+ "structural_change": "Successor of qkd_seq_xs_tp8 (x4): Q FIFO 40 x 128 + two registered copies only; KVN FIFO (8 x 128), eight KVN word registers and the 2 x 256-b row copies deleted (kvn face has no consumer). 131 N / 128 W / 128 E pins. Outline sized to util 0.52 from the gate-measured std area (~4,310 um2: the 40 x 128 Q FIFO is flops + read mux; 64.8 x 64.8 gave GPL-0301 117.7 %).",
  "job": {
   "owner": "Claude:RTL-BUILD-KV-SEQ",
   "branch": "claude/rtl-build-kv-seq-1018",
@@ -111,5 +107,6 @@
   ],
   "views_to": "physical/ref_tile/qkd_seq_xs_s/views",
   "record_to": "results/rtl/ref_tile/qkd_seq_xs_s"
- }
+ },
+ "std_area_um2": 4310
 }
