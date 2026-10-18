@@ -1,26 +1,72 @@
 {
- "name": "hdie_fault_leaf_n8_s0_r1-ref-COMMIT",
+ "name": "hdie_fault_leaf_n8_s0_r1-hfl-n8_s0-COMMIT",
  "block": "ot_hbm_fault_leaf",
  "ref_tile": true,
- "owner": "Claude:ref-flow",
- "purpose": "reference tile flow (tile) kit physical/ref_tile/hdie_fault_leaf_n8_s0_r1",
+ "owner": "Claude:OWNERS-HBM/SVC-SMALL",
+ "purpose": "HBM d4g fault-aggregation leaf ot_hbm_fault_leaf N=8 SYNC_MASK=0x0 (d4g GEN0 views_plan cell ot_hbm_fault_leaf__pv*: instances fs_SW, fs_NW; every input bit driven by a real block fault net in d4g die.v, none tied; d4g grant 'H-DIE-R8 fault-tree leaf slot' 21.6 x 21.6)",
  "threads": 2,
  "peak_ram_gb": 4,
  "source": {
-  "branch": "main",
-  "commit": "COMMIT"
+  "branch": "claude/svc-small-1018",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/die_glue/tb_hbm_fault_leaf.sv",
+   "rtl/hbm_accel/die_glue/run_fault_leaf_bench.sh",
+   "results/rtl/ref_tile/svc_small_witness_1018/"
+  ]
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_fault_leaf #(.N(8), .SYNC_MASK(64'h0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_fault_leaf #(.N(8), .SYNC_MASK(64'\"'\"'h0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "fault_leaf_exact",
+    "cmd": "bash rtl/hbm_accel/die_glue/run_fault_leaf_bench.sh {RUN}/bench/fl 8 0 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^FAULT_LEAF_BENCH PASS n8_s0_m0",
+    "min_count_regex": "PASS tb_hbm_fault_leaf .*checks=(\\d+)",
+    "pass_witness": "results/rtl/ref_tile/svc_small_witness_1018/fl_n8_s0_m0.log"
+   },
+   {
+    "name": "fault_leaf_mut1",
+    "cmd": "bash rtl/hbm_accel/die_glue/run_fault_leaf_bench.sh {RUN}/bench/m1 8 0 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^FAULT_LEAF_BENCH PASS",
+    "fail_regex": "^FAULT_LEAF_BENCH FAIL n8_s0_m1",
+    "note": "MUT=1: drops in[N-1]",
+    "fail_witness": "results/rtl/ref_tile/svc_small_witness_1018/fl_n8_s0_m1.log"
+   },
+   {
+    "name": "fault_leaf_mut2",
+    "cmd": "bash rtl/hbm_accel/die_glue/run_fault_leaf_bench.sh {RUN}/bench/m2 8 0 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^FAULT_LEAF_BENCH PASS",
+    "fail_regex": "^FAULT_LEAF_BENCH FAIL n8_s0_m2",
+    "note": "MUT=2: output not registered (one edge early)",
+    "fail_witness": "results/rtl/ref_tile/svc_small_witness_1018/fl_n8_s0_m2.log"
    }
   ],
   "calibrate": {
@@ -71,7 +117,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hdie_fault_leaf_n8_s0_r1/hdie_fault_leaf_n8_s0_r1-ref-COMMIT"
+   "to": "results/rtl/ref_tile/hdie_fault_leaf_n8_s0_r1/hdie_fault_leaf_n8_s0_r1-hfl-n8_s0-COMMIT"
   }
  ],
  "cycles_added": 0,

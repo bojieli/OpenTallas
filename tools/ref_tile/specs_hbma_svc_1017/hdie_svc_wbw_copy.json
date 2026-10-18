@@ -49,10 +49,10 @@
   "peak_ram_gb": 8
  },
  "job": {
-  "owner": "Claude:HBMA-SVC",
-  "branch": "claude/hbma-svc-1017",
+  "owner": "Claude:OWNERS-HBM/SVC-SMALL",
+  "branch": "claude/svc-small-1018",
   "tag": "hbmasvc-wbwc",
-  "purpose": "HBM d4f PC-band WB window command local copy wbc_<q><n> (x4, die slot 21.6 x 21.6, d4f run6 placement): first kit of ot_hbm_svc_wbw_copy (H-SM c529a2fdc, LAT +2 stream edges equal-age on 4 sinks). Inputs from wbk_<q> on E, sink copies to the vmks leaves on W/N, clock S.",
+  "purpose": "HBM d4g PC-band WB window command local copy ot_hbm_svc_wbw_copy NS=4 (d4g GEN0 cell ot_hbm_svc_wbw_copy x4: wbc_SW0, wbc_SW1, wbc_NW0, wbc_NW1; die.v inputs from wbk_<q>, outputs to 4 vmks leaves each; none tied): LAT +2 stream edges, equal age on 4 sinks. Inputs E, sink copies W/N, clock S. 21.6 x 21.6.",
   "record_to": "results/rtl/ref_tile/hdie_svc_wbw_copy",
   "benches": [
    {
