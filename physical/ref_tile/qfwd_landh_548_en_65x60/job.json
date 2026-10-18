@@ -1,5 +1,5 @@
 {
- "name": "qfwd_landh_548_en_65x60-f1-COMMIT",
+ "name": "qfwd_landh_548_en_65x60-f1-371fe519b",
  "block": "qfd_landh_548_EN_65x60",
  "ref_tile": true,
  "owner": "Claude:Q-DIE11-RLY",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 6,
  "source": {
   "branch": "claude/q-die11-rly-1018",
-  "commit": "COMMIT",
+  "commit": "371fe519b",
   "extra_paths": [
    "physical/qwen_fwd_lane",
    "rtl/qwen_split/qfd_fwd_lane.sv",
@@ -113,7 +113,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfwd_landh_548_en_65x60/qfwd_landh_548_en_65x60-f1-COMMIT"
+   "to": "results/rtl/ref_tile/qfwd_landh_548_en_65x60/qfwd_landh_548_en_65x60-f1-371fe519b"
   }
  ],
  "cycles_added": 0,
