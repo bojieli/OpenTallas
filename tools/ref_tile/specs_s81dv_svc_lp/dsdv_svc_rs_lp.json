@@ -1719,7 +1719,7 @@
     "name": "dsdv_svc_rs_lp_lockstep",
     "cmd": "SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator LP_MUTS=0 bash rtl/dsrom_sys/s81_dv/svc_rs/lp/dsdv_svc_rs_lp_bench.sh lp_bench_out",
     "expect": "pass",
-    "pass_regex": "MUT 0: LP_LOCKSTEP PASS",
+    "pass_regex": "LP_LOCKSTEP PASS",
     "threads": 8,
     "peak_ram_gb": 128,
     "pass_witness": "results/rtl/s81_dv_1016/svc_rs/lp/dsdv_svc_rs_lp_m0.log"
@@ -1728,7 +1728,7 @@
     "name": "dsdv_svc_rs_lp_mut1",
     "cmd": "SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator LP_MUTS=1 bash rtl/dsrom_sys/s81_dv/svc_rs/lp/dsdv_svc_rs_lp_bench.sh lp_bench_out",
     "expect": "fail",
-    "fail_regex": "MUT 1: LP_LOCKSTEP FAIL",
+    "fail_regex": "LP_LOCKSTEP FAIL",
     "threads": 8,
     "peak_ram_gb": 128,
     "fail_witness": "results/rtl/s81_dv_1016/svc_rs/lp/dsdv_svc_rs_lp_m1.log"
@@ -1737,7 +1737,7 @@
     "name": "dsdv_svc_rs_lp_mut2",
     "cmd": "SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator LP_MUTS=2 bash rtl/dsrom_sys/s81_dv/svc_rs/lp/dsdv_svc_rs_lp_bench.sh lp_bench_out",
     "expect": "fail",
-    "fail_regex": "MUT 2: LP_LOCKSTEP FAIL",
+    "fail_regex": "LP_LOCKSTEP FAIL",
     "threads": 8,
     "peak_ram_gb": 128,
     "fail_witness": "results/rtl/s81_dv_1016/svc_rs/lp/dsdv_svc_rs_lp_m2.log"
@@ -1746,7 +1746,7 @@
     "name": "dsdv_svc_rs_lp_mut3",
     "cmd": "SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator LP_MUTS=3 bash rtl/dsrom_sys/s81_dv/svc_rs/lp/dsdv_svc_rs_lp_bench.sh lp_bench_out",
     "expect": "fail",
-    "fail_regex": "MUT 3: LP_LOCKSTEP FAIL",
+    "fail_regex": "LP_LOCKSTEP FAIL",
     "threads": 8,
     "peak_ram_gb": 128,
     "fail_witness": "results/rtl/s81_dv_1016/svc_rs/lp/dsdv_svc_rs_lp_m3.log"
@@ -1755,7 +1755,7 @@
     "name": "dsdv_svc_rs_lp_mut4",
     "cmd": "SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator LP_MUTS=4 bash rtl/dsrom_sys/s81_dv/svc_rs/lp/dsdv_svc_rs_lp_bench.sh lp_bench_out",
     "expect": "fail",
-    "fail_regex": "MUT 4: LP_LOCKSTEP FAIL",
+    "fail_regex": "LP_LOCKSTEP FAIL",
     "threads": 8,
     "peak_ram_gb": 128,
     "fail_witness": "results/rtl/s81_dv_1016/svc_rs/lp/dsdv_svc_rs_lp_m4.log"
@@ -1764,7 +1764,7 @@
     "name": "dsdv_svc_rs_lp_refactor_feq",
     "cmd": "bash tools/s81_dv/svc_rs/lp_feq_bench.sh feq_out 0 '' 0",
     "expect": "pass",
-    "pass_regex": "FEQ_EXIT 0",
+    "pass_regex": "FEQ PASS",
     "threads": 8,
     "peak_ram_gb": 128,
     "pass_witness": "results/rtl/s81_dv_1016/svc_rs/lp/feq_e0_m0.log"

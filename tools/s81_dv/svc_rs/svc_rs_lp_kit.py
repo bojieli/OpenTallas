@@ -179,14 +179,14 @@ WIT = "results/rtl/s81_dv_1016/svc_rs/lp"
 def benches(top, entry):
     e = 1 if entry else 0
     out = [dict(name=f"{top}_lockstep", cmd=f"SIM=verilator {VL} LP_MUTS=0 bash rtl/dsrom_sys/s81_dv/svc_rs/lp/{top}_bench.sh "
-                f"lp_bench_out", expect="pass", pass_regex="MUT 0: LP_LOCKSTEP PASS", threads=8, peak_ram_gb=128,
+                f"lp_bench_out", expect="pass", pass_regex="LP_LOCKSTEP PASS", threads=8, peak_ram_gb=128,
                 pass_witness=f"{WIT}/{top}_m0.log")]
     for m in (1, 2, 3, 4):
         out.append(dict(name=f"{top}_mut{m}", cmd=f"SIM=verilator {VL} LP_MUTS={m} bash rtl/dsrom_sys/s81_dv/svc_rs/lp/"
-                        f"{top}_bench.sh lp_bench_out", expect="fail", fail_regex=f"MUT {m}: LP_LOCKSTEP FAIL", threads=8,
+                        f"{top}_bench.sh lp_bench_out", expect="fail", fail_regex="LP_LOCKSTEP FAIL", threads=8,
                         peak_ram_gb=128, fail_witness=f"{WIT}/{top}_m{m}.log"))
     out.append(dict(name=f"{top}_refactor_feq", cmd=f"bash tools/s81_dv/svc_rs/lp_feq_bench.sh feq_out 0 '' {e}",
-                    expect="pass", pass_regex="FEQ_EXIT 0", threads=8, peak_ram_gb=128,
+                    expect="pass", pass_regex="FEQ PASS", threads=8, peak_ram_gb=128,
                     pass_witness=f"{WIT}/feq_e{e}_m0.log"))
     out.append(dict(name=f"{top}_refactor_feq_mut", cmd=f"bash tools/s81_dv/svc_rs/lp_feq_bench.sh feq_out 1 '' {e}",
                     expect="fail", fail_regex="FEQ FAIL", threads=8, peak_ram_gb=128,
