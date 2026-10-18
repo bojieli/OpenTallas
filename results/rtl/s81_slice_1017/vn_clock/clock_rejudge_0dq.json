@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.clock_rejudge.v1",
+  "lane": "S81-TILES6-VN",
+  "date": "2026-10-17",
+  "kit": "physical/ref_tile/s81sl_vn",
+  "gate_commit": "cbf57ebd1",
+  "gate_result_commit": "3f4c5c0e4",
+  "gate_host_dir": "ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/s81sl_vn-20261017-174336 (ck.json)",
+  "rule": "owner 0dq 10-17 ~22:10: pin-flop spread <=80 ps at TT and FF plus a neighbour-matched boundary (parent insertion compensation or landed link); insertion >300 ps / >15k sinks are guidance only",
+  "old_verdict": "FAIL clock_rule (50,607 sinks; TT insertion 551.0 ps; all-sink spread 134.3 ps)",
+  "pin_flop_population": "boundary registers (input-capture + output-launch flops, same population as the insertion exporter), n=1117",
+  "pin_flop_arrival_ps": {
+    "ss": {"min": 583.5, "max": 632.2, "mean": 613.3, "spread": 48.7},
+    "tt": {"min": 449.2, "max": 489.2, "mean": 474.9, "spread": 40.0},
+    "ff": {"min": 366.4, "max": 403.4, "mean": 389.6, "spread": 37.0}
+  },
+  "all_sink_spread_ps": {"ss": 132.1, "tt": 134.3, "ff": 130.5},
+  "internal_timing_placement_tt": {"setup_wns_ps": 153.4, "hold_wns_ps": 26.6},
+  "compensation": {
+    "supported": true,
+    "mechanism": "tools/ref_tile/ref_tile.py child_insertions() + SPINE_INS: the cluster parent's clock spine targets each hard child's clock pin at arrival + child insertion; spec child_clock_ref 'boundary' uses views/<child>/insertion.json tt.boundary.mean (the routed pin-flop mean), i.e. the parent taps vn's clk ~475 ps (TT, gate estimate) earlier",
+    "parent_requirement": "the beat-leaf parent (ot_s81sl_leaf) kit must set kind cluster, clock spine, child_clock_ref 'boundary'; vn's routed insertion.json supplies the target"
+  },
+  "verdict_0dq": "PASS: pin-flop spread 40.0 (TT) / 37.0 (FF) <= 80; boundary matchable by parent compensation. No split.",
+  "blocker": "tools/ref_tile clock_rule on origin/main still FAILs on insertion/sinks (0dq tool change by ROOT-2345 not landed); submit_exact refuses a FAIL gate, so vn is resubmitted with --regate once it lands",
+  "visual_checklist": {
+    "shape": "356.4 x 356.4 um square, OK",
+    "std_cell_band": "one contiguous band around a centred 2x2 SRAM block, fill 0.44-0.49, OK",
+    "lattice": "SRAMs track-aligned (offtrack 0) at x 73.44/188.35, y 125.28: not on 43.2-um multiples (in-tile SRAMs, not hard children); minor",
+    "pin_spread": "W face full height, N face full width, E face y 6.48-73.44 (~4.2/um, vq seam), S clk/rst/fault only; OK",
+    "clock_entry": "clk on S face x~85 um; register mass spread over the whole square (single root, 475 ps pin-flop insertion); acceptable under 0dq",
+    "other": "4 reset fanout WARNs (u_g.rs[17/19/21/23] 299 loads > 256): fix with an extra ot_rst_relay copy per lane at the next RTL touch"
+  },
+  "review_json": "not written: not on critical_tiles.txt, <2 failed routes (review not required); REVIEW.json reviewer must be the coordinator"
+}
