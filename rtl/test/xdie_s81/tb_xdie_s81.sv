@@ -33,6 +33,7 @@ module tb_xdie_s81 #(
     parameter integer LSRAM = 1,
     parameter integer DMUT = 0,
     parameter integer LATE_MUT = 0,     // bench schedule mutant: extra channel cycles on die 1 ES lane 1 (late landing)
+    parameter integer ERRP = 0,         // pad bit errors on every SerDes lane: one bit every ERRP cycles (0 = none)
     parameter integer FORCE_UCIE = 0,   // diagnostic only: every lane ot_pdie_ucie (no KP4)
     parameter integer NSMAX = 16384,
     parameter integer MAXCYC = 400000
@@ -73,9 +74,21 @@ module tb_xdie_s81 #(
             .clk(clk), .rst_n(rst_n), .sid({P >= 2 ? 1'b1 : 1'b0, P % 2 ? 3'd7 : 3'd0}), .ch_b(CHB[0]),
             .ri_n(ri[ge]), .ro_n(ro[ge]), .pma_tx0(ptx0[ge]), .pma_tx1(ptx1[ge]), .pma_rx0(prx0[ge]), .pma_rx1(prx1[ge]),
             .fault(flt[ge]), .live(lv[2*ge +: 2]));
+        // link-layer statistics (hierarchical reads of ot_s81ph_link_ep's counters; no logic is added to the DUT)
+        wire [31:0] to0, to1, rt0, rt1;
+        if (LOVR != 0) begin : g_sl
+            assign to0 = u_ep.g_lo.u_ln0.u_ep.st_timeouts; assign to1 = u_ep.g_lo.u_ln1.u_ep.st_timeouts;
+            assign rt0 = u_ep.g_lo.u_ln0.u_ep.st_retx_flits; assign rt1 = u_ep.g_lo.u_ln1.u_ep.st_retx_flits;
+        end else if (P % 2 == 0) begin : g_sw
+            assign to0 = u_ep.g_lw.u_ln0.u.u_ep.st_timeouts; assign to1 = u_ep.g_lw.u_ln1.u.u_ep.st_timeouts;
+            assign rt0 = u_ep.g_lw.u_ln0.u.u_ep.st_retx_flits; assign rt1 = u_ep.g_lw.u_ln1.u.u_ep.st_retx_flits;
+        end else begin : g_se
+            assign to0 = u_ep.g_le.u_ln0.u.u_ep.st_timeouts; assign to1 = u_ep.g_le.u_ln1.u.u_ep.st_timeouts;
+            assign rt0 = u_ep.g_le.u_ln0.u.u_ep.st_retx_flits; assign rt1 = u_ep.g_le.u_ln1.u.u_ep.st_retx_flits;
+        end
         // receive channels: from the circuit peer's pads (lane k -> lane k)
-        xdie_s81_chan #(.W(544), .D(D_CH)) u_c0 (.clk(clk), .d(ptx0[PR]), .q(prx0[ge]));
-        xdie_s81_chan #(.W(544), .D(D_CH + ((LATE_MUT != 0 && PR == 1 * NP + 1) ? LATE_MUT : 0))) u_c1 (.clk(clk), .d(ptx1[PR]), .q(prx1[ge]));
+        xdie_s81_chan #(.W(544), .D(D_CH), .ERRP((P >= 2 && FORCE_UCIE == 0) ? ERRP : 0)) u_c0 (.clk(clk), .d(ptx0[PR]), .q(prx0[ge]));
+        xdie_s81_chan #(.W(544), .D(D_CH + ((LATE_MUT != 0 && PR == 1 * NP + 1) ? LATE_MUT : 0)), .ERRP(FORCE_UCIE == 0 ? ERRP : 0)) u_c1 (.clk(clk), .d(ptx1[PR]), .q(prx1[ge]));
     end endgenerate
 
     // ---- static calendar
@@ -144,6 +157,11 @@ module tb_xdie_s81 #(
         while (nland < ns && cyc < MAXCYC) @(posedge clk);
         repeat (2000) @(posedge clk);
         lvc = 0; for (e2 = 0; e2 < 2 * NE; e2 = e2 + 1) lvc = lvc + lv[e2];
+        $display("XDIE_LINK timeouts %0d retx_flits %0d (all 32 lanes; go-back-N ACK timeouts and replayed flits)",
+            g_e[0].to0+g_e[0].to1+g_e[1].to0+g_e[1].to1+g_e[2].to0+g_e[2].to1+g_e[3].to0+g_e[3].to1+g_e[4].to0+g_e[4].to1+g_e[5].to0+g_e[5].to1+g_e[6].to0+g_e[6].to1+g_e[7].to0+g_e[7].to1
+           +g_e[8].to0+g_e[8].to1+g_e[9].to0+g_e[9].to1+g_e[10].to0+g_e[10].to1+g_e[11].to0+g_e[11].to1+g_e[12].to0+g_e[12].to1+g_e[13].to0+g_e[13].to1+g_e[14].to0+g_e[14].to1+g_e[15].to0+g_e[15].to1,
+            g_e[0].rt0+g_e[0].rt1+g_e[1].rt0+g_e[1].rt1+g_e[2].rt0+g_e[2].rt1+g_e[3].rt0+g_e[3].rt1+g_e[4].rt0+g_e[4].rt1+g_e[5].rt0+g_e[5].rt1+g_e[6].rt0+g_e[6].rt1+g_e[7].rt0+g_e[7].rt1
+           +g_e[8].rt0+g_e[8].rt1+g_e[9].rt0+g_e[9].rt1+g_e[10].rt0+g_e[10].rt1+g_e[11].rt0+g_e[11].rt1+g_e[12].rt0+g_e[12].rt1+g_e[13].rt0+g_e[13].rt1+g_e[14].rt0+g_e[14].rt1+g_e[15].rt0+g_e[15].rt1);
         $display("XDIE_STATS beats %0d landed %0d mismatches %0d late %0d maxlate %0d extra %0d faults %b live %0d/%0d last_cycle %0d",
             ns, nland, bad, late, maxlate, extra, fseen, lvc, 2 * NE, cyc);
         if (ns > 0 && nland == ns && bad == 0 && late == 0 && extra == 0 && fseen == 0 && lvc == 2 * NE)

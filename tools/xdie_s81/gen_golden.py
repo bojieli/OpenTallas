@@ -23,7 +23,8 @@ per-rank vector):
 A beat carries 128 B (the line beat payload, 1,024 b: the XQ / RD payload width of ot_s81sl_rstop / ot_s81sl_xr).
 Calendar: every sender port issues one beat a cycle from the instance's start cycle (the line rate; the lep TX landing
 SRAM absorbs bursts <= 2,170 beats, off-die rate <= lane rate is a compiler rule the bursts here respect).
-Deadlines (static-schedule check): deadline(k) = start + LAT[class] + ceil(k * PER[class]) with class S (s_0S / s_7S
+Deadlines (static-schedule check): deadline(k) = max(start + LAT[class] + ceil(k * PER[class]), the same port's previous
+beat deadline + ceil(PER)) (a port drains in order at PER: a burst issued before the previous one drained queues) with class S (s_0S / s_7S
 ports: UCIe lane 0 + SerDes lane 1) or N (s_0N / s_7N: 2 x SerDes); 0 = no deadline (calibration run).  The AR
 all-gather phase starts at the RS phase's last deadline + 1 + FOLD (static: issued whatever the link did).
 """
@@ -91,14 +92,24 @@ def main():
     ap.add_argument("--fold", type=int, default=0, help="owner fold cycles between the AR phases (die-internal)")
     ap.add_argument("--reps", type=int, default=2)
     ap.add_argument("--only", default="", help="comma list of collective names (default all)")
+    ap.add_argument("--gap", type=int, default=GAP, help="cycles from an instance's last issue to the next start")
     a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     lat = parse_cls(a.lat, {}); per = parse_cls(a.per, {})
     gate = bool(lat) and bool(per)
     only = set(a.only.split(",")) if a.only else None
 
-    def deadline(start, k, cls):
-        return start + int(lat[cls]) + math.ceil(k * per[cls]) if gate else 0
+    port_busy = {}   # sender port -> last compiled landing deadline (the port drains its queue in order at PER)
+
+    def deadline(start, k, cls, dp=None):
+        if not gate:
+            return 0
+        d = start + int(lat[cls]) + math.ceil(k * per[cls])
+        if dp is not None and dp in port_busy:          # queued behind the previous burst on the same port
+            d = max(d, port_busy[dp] + math.ceil(per[cls]))
+        if dp is not None:
+            port_busy[dp] = d
+        return d
 
     lines = []      # (issue, dp, beat, deadline)
     insts = []
@@ -118,7 +129,7 @@ def main():
                     rec["src_sha"][d] = hashlib.sha256(data).hexdigest()
                     for p in PORT_TO:
                         for k, c in enumerate(chunks(data)):
-                            lines.append((t + k, d * NP + p, beat_word(c, inst, k, d * NP + p), deadline(t, k, CLASS[p])))
+                            lines.append((t + k, d * NP + p, beat_word(c, inst, k, d * NP + p), deadline(t, k, CLASS[p], d * NP + p)))
                 end = t + rec["beats_per_peer"]
             elif kind == "AR":
                 n = pb // 4
@@ -137,7 +148,7 @@ def main():
                         data = parts[d][o * q:(o + 1) * q].tobytes()
                         cs = chunks(data)
                         for k, c in enumerate(cs):
-                            dl = deadline(t, k, CLASS[p])
+                            dl = deadline(t, k, CLASS[p], d * NP + p)
                             rs_dead = max(rs_dead, dl)
                             lines.append((t + k, d * NP + p, beat_word(c, inst, k, d * NP + p), dl))
                 # phase 2 all-gather of the folded quarter (owner o = d) at its compiled cycle
@@ -147,7 +158,7 @@ def main():
                     data = fold[d * q:(d + 1) * q].tobytes()
                     for p in PORT_TO:
                         for k, c in enumerate(chunks(data)):
-                            lines.append((t2 + k, d * NP + p, beat_word(c, inst + 1, k, d * NP + p), deadline(t2, k, CLASS[p])))
+                            lines.append((t2 + k, d * NP + p, beat_word(c, inst + 1, k, d * NP + p), deadline(t2, k, CLASS[p], d * NP + p)))
                 rec["inst_ag"] = inst + 1
                 inst += 1
                 end = t2 + rec["beats_per_peer"]
@@ -157,11 +168,11 @@ def main():
                     data = rng.integers(0, 256, pb, dtype=np.uint8).tobytes()
                     rec["src_sha"][d] = hashlib.sha256(data).hexdigest()
                     for k, c in enumerate(chunks(data)):
-                        lines.append((t + k, d * NP + 1, beat_word(c, inst, k, d * NP + 1), deadline(t, k, "S")))
+                        lines.append((t + k, d * NP + 1, beat_word(c, inst, k, d * NP + 1), deadline(t, k, "S", d * NP + 1)))
                 end = t + rec["beats"]
             insts.append(rec)
             inst += 1
-            t = end + GAP
+            t = end + a.gap
     lines.sort(key=lambda x: (x[0], x[1]))
     seen = set()
     for iss, dp, _, _ in lines:
@@ -171,7 +182,7 @@ def main():
         for iss, dp, w, dl in lines:
             f.write(f"{dl:08x}{iss:08x}{dp:02x}{w:0276x}\n")
     (out / "NS").write_text(f"{len(lines)}\n")
-    g = dict(schema="opentallas.xdie_s81.golden.v1", beats=len(lines), beat_B=BEAT_B, warm=WARM, gap=GAP, reps=a.reps,
+    g = dict(schema="opentallas.xdie_s81.golden.v1", beats=len(lines), beat_B=BEAT_B, warm=WARM, gap=a.gap, reps=a.reps,
              gate=gate, lat=lat, per=per, fold=a.fold, instances=insts, port_to=PORT_TO, cls=CLASS,
              last_issue=max(x[0] for x in lines))
     (out / "golden.json").write_text(json.dumps(g, indent=1))

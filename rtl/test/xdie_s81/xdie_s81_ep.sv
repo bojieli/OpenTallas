@@ -127,7 +127,9 @@ endmodule
 // a fixed D-cycle delay of the PMA word (one-tier multi-plane fabric: one switch chip per crossing, static circuits, so
 // no contention model).  D = round(377.6 ns x 1.2 GHz) - 2 x the PHY macro's own PMA model latency.
 // MUT_EXTRA adds cycles (bench schedule mutant: a late lane must trip the static-schedule deadline check).
-module xdie_s81_chan #(parameter integer W = 544, parameter integer D = 445) (
+// ERRP > 0 (SerDes lanes only): pad bit errors, one flipped bit every ERRP cycles at a rotating position (exercises the
+// KP4 decoder's correction path; RS(544,514) corrects t = 15 symbols a codeword).
+module xdie_s81_chan #(parameter integer W = 544, parameter integer D = 445, parameter integer ERRP = 0) (
     input wire clk, input wire [W-1:0] d, output wire [W-1:0] q
 );
     localparam integer N = (D < 1) ? 1 : D;
@@ -137,8 +139,15 @@ module xdie_s81_chan #(parameter integer W = 544, parameter integer D = 445) (
     reg [W-1:0] q_r = 0;
     integer i;
     initial for (i = 0; i < N; i = i + 1) m[i] = 0;
+    integer ec = 0;
+    reg [W-1:0] em;
     always @(posedge clk) begin
-        q_r <= m[p];                   // written D cycles ago (q is registered: total D cycles from d)
+        em = {W{1'b0}};
+        if (ERRP > 0) begin
+            ec <= (ec == ERRP - 1) ? 0 : ec + 1;
+            if (ec == 0) em[(p * 37) % W] = 1'b1;
+        end
+        q_r <= m[p] ^ em;              // written D cycles ago (q is registered: total D cycles from d)
         m[p] <= d;
         p <= (p == N - 1) ? 0 : p + 1;
     end

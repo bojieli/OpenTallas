@@ -45,6 +45,10 @@ DAG_MAP = {
 }
 F_CLK = 1.2e9
 OFFCHIP = 453            # modelled cycles per crossing (2 x PMA model + channel = 377.5 ns at 1.2 GHz)
+# on-die leg (PRICED, p4l plan; outside the vehicle, whose boundary is the end slice's inward port): the farthest
+# slice -> end slice and end slice -> owning slice, each worst_slice_to_edge 11,673 um = 29 stations of 405 um on
+# half-cycle relays (14.5 cyc) + 7 landed ring links (1 + E 4.5 each: 38.5) + 7 ring stops x 2 edges (14) = 67 cycles
+ONDIE = 134              # per crossing (both ends)
 CROSSINGS = {"allreduce_20480": 2}   # RS + AG; every other exchange is one crossing
 MTP_EXTRA = {"hop_in": "stage_hop", "wave.hop": "stage_hop"}
 
@@ -71,13 +75,16 @@ def token_compose_terms(coll, dags, commit_note):
                 f"L{nd['layer']}" if isinstance(nd.get("layer"), int) and nd["layer"] >= 0 else (k or "other"))
             E = mult * coll[x]["E_meas"]
             mod = mult * OFFCHIP * CROSSINGS.get(x, 1)
+            ond = mult * ONDIE * CROSSINGS.get(x, 1)
             crit = bool(nd.get("critical"))
             terms.append(dict(design="ds_rom", workload=wl, slot=f"{L}.xdie.{nd['id']}",
                               E=[dict(grade="measured-current-RTL", E=float(E - mod),
                                       note=f"{x}: p4l lep + lane tiles + PHY digital (KP4) co-sim, tb_xdie_s81 {commit_note}"),
                                  dict(grade="modelled-PHY", E=float(mod),
-                                      note="PMA + Tomahawk-Ultra + 2 x 3 m twinax: 377.6 ns budget a crossing")],
-                              O=0.0 if crit else float(E),
+                                      note="PMA + Tomahawk-Ultra + 2 x 3 m twinax: 377.6 ns budget a crossing"),
+                                 dict(grade="priced", E=float(ond),
+                                      note="on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)")],
+                              O=0.0 if crit else float(E + ond),
                               O_source="token-path DAG solve: critical -> O 0; off the critical path (slack %.1f) -> O = E"
                                        % float(nd.get("slack") or 0.0),
                               pointer=f"collectives.{x}.E_meas" + (f" x {mult}" if mult > 1 else "")))
@@ -167,7 +174,7 @@ def main():
             x = DAG_MAP.get(nd["op"])
             if not x or x not in coll or coll[x]["E_meas"] is None:
                 continue
-            E = coll[x]["E_meas"]
+            E = coll[x]["E_meas"] + ONDIE * CROSSINGS.get(x, 1)
             O = 0.0 if nd.get("critical") else nd["cycles"] + (nd.get("slack") or 0.0)
             old_exp = nd["cycles"] if nd.get("critical") else 0.0
             new_exp = max(0.0, E - O)
@@ -183,14 +190,15 @@ def main():
             per_old = 1006.0
             comp["unplaced_hops (62 stage hops)"] = dict(coll="stage_hop", n=n_un, n_critical=n_un,
                 E_meas=coll["stage_hop"]["E_meas"], dag_cycles_each=per_old,
-                exposed_new=n_un * coll["stage_hop"]["E_meas"], exposed_dag=n_un * per_old,
+                exposed_new=n_un * (coll["stage_hop"]["E_meas"] + ONDIE), exposed_dag=n_un * per_old,
                 note="DAG node 'unplaced_hops' = 27 S81 frame hops + 35 HALF-mapping hops at 0.8425 us; priced here as "
                      "62 hops at the DAG's placed-hop 1,006 cycles for the delta")
-            tot_new += n_un * coll["stage_hop"]["E_meas"]; tot_old += n_un * per_old
+            tot_new += n_un * (coll["stage_hop"]["E_meas"] + ONDIE); tot_old += n_un * per_old
         T = dag["totals"]["cycles"]
         out["composition"] = dict(
             dag=a.dag, dag_total_cycles=T, dag_tok_s=dag["totals"]["tok_s"],
-            rule="T_xdie = sum_x n_x * max(0, E_meas(x) - O(x)); O = 0 on the DAG critical path, cycles + slack off it",
+            rule="T_xdie = sum_x n_x * max(0, E(x) - O(x)), E = E_meas (vehicle, incl. 453 modelled a crossing) + 134 "
+                 "priced on-die cycles a crossing; O = 0 on the DAG critical path, cycles + slack off it",
             terms=comp, T_xdie_new=round(tot_new, 1), T_xdie_dag=round(tot_old, 1), delta_cycles=round(tot_new - tot_old, 1),
             tok_s_dag_basis=round(F_CLK / T, 2), tok_s_with_measured_xdie=round(F_CLK / (T + tot_new - tot_old), 2),
             pct_change=round(100.0 * (T / (T + tot_new - tot_old) - 1.0), 3))
