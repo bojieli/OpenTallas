@@ -1,5 +1,5 @@
 {
- "name": "qkd_hslice_dn-es2-COMMIT",
+ "name": "qkd_hslice_dn-es2-b8b495805",
  "block": "qkd_host_pc_slice_die",
  "ref_tile": true,
  "owner": "Claude:KV-TILES-C lane 10-17",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/kvtc-1017",
-  "commit": "COMMIT",
+  "commit": "b8b495805",
   "extra_paths": [
    "tools/qwen_kv_die/run_host_slice_pinreg_bench.sh",
    "rtl/test/qwen_split/tb_host_pc_slice_die_pinreg.sv",
@@ -138,7 +138,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_hslice_dn/qkd_hslice_dn-es2-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_hslice_dn/qkd_hslice_dn-es2-b8b495805"
   }
  ],
  "cycles_added": 2,
