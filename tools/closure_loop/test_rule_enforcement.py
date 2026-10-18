@@ -1,6 +1,7 @@
 """RULE ENFORCEMENT (owner 2026-10-13, el1013-rule-enforcement).
-1. Measured clock rule: > 15,000 sinks on one clock root is REFUSED unless the kit's --cts gate measured TT insertion
-   <= 300 ps and leaf spread <= 80 ps; a declared spine or a spec waiver does not waive it; CLOSED tiles stand.
+1. Clock rule (owner 2026-10-17 0dq, supersedes the 10-13 hard form): FAIL only on a measured pin-flop spread > 80 ps
+   at TT or FF; > 15,000 sinks on one root or insertion > 300 ps is a WARN; a declared spine or a spec waiver does not
+   waive a spread FAIL; CLOSED tiles stand.
 2. Structure-repeat limit: >= 2 terminal failed routes of a block since its last CLOSED need "structural_change"."""
 import json
 import os
@@ -24,11 +25,12 @@ def lint_res(n):
     return {"findings": {}, "refuse": {}, "metrics": {"clock_max_root_sinks": n, "clock_max_root": "port:ck"}}
 
 
-def gate_out(n, lo=None, hi=None):
+def gate_out(n, lo=None, hi=None, ff=(90.0, 120.0)):
     s = f"GATE_TB textbook_lint: INFO clock_roots max_root_sinks={n} root=port:ck rule=FAIL: x\nGATE_CTS_RC=0\n"
     if hi is not None:
         s += (f"GATE_CK ss insertion all 300.0..420.0 ps (spread 120.0), boundary mean 350; tt insertion all "
-              f"{lo}..{hi} ps (spread {round(hi - lo, 1)}), boundary mean 200; macro_clk flag None\n")
+              f"{lo}..{hi} ps (spread {round(hi - lo, 1)}), boundary mean 200; ff insertion all {ff[0]}..{ff[1]} ps "
+              f"(spread {round(ff[1] - ff[0], 1)}), boundary mean 100; macro_clk flag None\n")
     return s
 
 
@@ -37,29 +39,44 @@ class ClockRule(unittest.TestCase):
         self.assertEqual((TL.CLK_ROOT_SINKS_MAX, TL.CLK_INSERTION_MAX_PS, TL.CLK_SPREAD_MAX_PS), (15000, 300.0, 80.0))
 
     def test_rule(self):
-        self.assertTrue(TL.clock_rule(15000)[0])
-        self.assertFalse(TL.clock_rule(15001)[0])                                   # no evidence
-        self.assertTrue(TL.clock_rule(48000, GOOD)[0])
-        self.assertTrue(TL.clock_rule(48000, dict(GOOD, tt_insertion_ps=300.0, tt_spread_ps=80.0))[0])
-        self.assertFalse(TL.clock_rule(48000, dict(GOOD, tt_insertion_ps=300.1))[0])
-        self.assertFalse(TL.clock_rule(48000, dict(GOOD, tt_spread_ps=80.1))[0])
-        self.assertFalse(TL.clock_rule(48000, dict(GOOD, tt_spread_ps=None))[0])    # one number missing
-        self.assertFalse(TL.clock_rule(48000, dict(GOOD, max_root_sinks=20000))[0])  # evidence of another netlist
+        E = TL.clock_rule_eval
+        self.assertEqual(E(15000)[0], "PASS")
+        self.assertEqual(E(15001)[0], "WARN")                                       # sinks alone: guidance
+        self.assertTrue(TL.clock_rule(15001)[0])
+        self.assertEqual(E(48000, GOOD)[0], "WARN")
+        self.assertEqual(E(9000, dict(GOOD, max_root_sinks=9000, ff_spread_ps=40.0))[0], "PASS")
+        self.assertEqual(E(48000, dict(GOOD, tt_insertion_ps=900.0))[0], "WARN")    # insertion alone: guidance
+        self.assertEqual(E(48000, dict(GOOD, tt_spread_ps=80.0))[0], "WARN")
+        self.assertEqual(E(9000, dict(GOOD, tt_spread_ps=80.1))[0], "FAIL")
+        self.assertFalse(TL.clock_rule(9000, dict(GOOD, tt_spread_ps=80.1))[0])
+        self.assertEqual(E(9000, dict(GOOD, ff_spread_ps=80.1))[0], "FAIL")         # FF spread counts too
+        self.assertEqual(E(9000, dict(GOOD, ff_pin_spread_ps=85.0, ff_spread_ps=40.0))[0], "FAIL")
+        # the pin-flop spread outranks the all-register leaf spread
+        self.assertEqual(E(9000, dict(GOOD, tt_spread_ps=140.0, tt_pin_spread_ps=50.0))[0], "PASS")
+        self.assertIn("FF spread not measured", E(9000, GOOD)[1])
+        self.assertEqual(E(48000, dict(GOOD, tt_spread_ps=None))[0], "WARN")         # no spread measured
+        self.assertIn("not this netlist", E(48000, dict(GOOD, max_root_sinks=20000))[1])
         self.assertIn("250.0 ps", TL.clock_rule(48000, GOOD)[1])
         self.assertIn("60.0 ps", TL.clock_rule(100, GOOD)[1])                       # measured numbers always reported
 
-    def test_lint_refuses_in_every_mode_and_ignores_waivers(self):
+    def test_lint_refuses_spread_in_every_mode_and_ignores_waivers(self):
+        bad = dict(GOOD, ff_pin_spread_ps=95.0)
         for mode in ("warn", "refuse"):
             r = TL.verdict(lint_res(48000), mode, waive=("clock_sinks", "clock_domain"), refuse_checks=(),
-                           clock={"enforce": True})
+                           clock={"enforce": True, "evidence": bad})
             self.assertEqual((r["verdict"], r["refusing_checks"]), ("REFUSE", ["clock_sinks"]), mode)
-            self.assertIn("hardened leaves", r["refuse"]["clock_sinks"][0])
+            self.assertIn("pin-flop spread", r["refuse"]["clock_sinks"][0])
+            r = TL.verdict(lint_res(48000), mode, refuse_checks=(), clock={"enforce": True})
+            self.assertEqual((r["verdict"], r["refusing_checks"]), ("WARN", []), mode)   # sinks alone: WARN
+            self.assertIn("clock_guidance", r["findings"])
 
     def test_lint_evidence_closed_and_small(self):
-        self.assertEqual(TL.verdict(lint_res(48000), "refuse", clock={"enforce": True, "evidence": GOOD})["verdict"], "PASS")
-        bad = dict(GOOD, tt_insertion_ps=410.0)
+        self.assertEqual(TL.verdict(lint_res(48000), "refuse", clock={"enforce": True, "evidence": GOOD})["verdict"], "WARN")
+        ins = dict(GOOD, tt_insertion_ps=410.0)
+        self.assertEqual(TL.verdict(lint_res(48000), "refuse", clock={"enforce": True, "evidence": ins})["verdict"], "WARN")
+        bad = dict(GOOD, tt_spread_ps=95.0)
         self.assertEqual(TL.verdict(lint_res(48000), "refuse", clock={"enforce": True, "evidence": bad})["verdict"], "REFUSE")
-        r = TL.verdict(lint_res(48000), "refuse", clock={"enforce": True, "closed_stands": True})
+        r = TL.verdict(lint_res(48000), "refuse", clock={"enforce": True, "evidence": bad, "closed_stands": True})
         self.assertEqual(r["verdict"], "PASS")                                      # CLOSED tiles are not re-judged
         self.assertEqual(TL.verdict(lint_res(15000), "refuse", clock={"enforce": True})["verdict"], "PASS")
         r = TL.verdict(lint_res(48000), "refuse")                                   # gate's own run: WARN, gate judges
@@ -91,25 +108,34 @@ class GateClock(unittest.TestCase):
     def test_small_root_passes_and_reports_measurement(self):
         g, it = self.item(gate_out(9000, 150.0, 190.0), True)
         self.assertEqual(it["severity"], "INFO")
-        self.assertIn("insertion 190.0 ps, leaf spread 40.0 ps", it["message"])
+        self.assertIn("TT insertion 190.0 ps", it["message"])
+        self.assertIn("TT leaf spread 40.0 ps", it["message"])
+        self.assertIn("FF leaf spread 30.0 ps", it["message"])                       # the FF spread report
+        self.assertEqual((g.clock["ff_insertion_ps"], g.clock["ff_spread_ps"]), (120.0, 30.0))
 
-    def test_big_root_without_cts_fails(self):
-        g, it = self.item(gate_out(48000), False)
+    def test_ff_spread_fails(self):
+        g, it = self.item(gate_out(9000, 150.0, 190.0, ff=(60.0, 150.0)), True)
         self.assertEqual((g.verdict, it["severity"]), ("FAIL", "FAIL"))
-        self.assertIn("without --cts", it["message"])
+        self.assertIn("FF leaf spread 90.0 ps > 80", it["message"])
+
+    def test_big_root_without_cts_warns(self):
+        g, it = self.item(gate_out(48000), False)
+        self.assertEqual(it["severity"], "WARN")
+        self.assertIn("guidance", it["message"])
 
     def test_declared_spine_does_not_waive(self):
-        g, it = self.item(gate_out(48000), True, {"clock": "spine"})
+        g, it = self.item(gate_out(48000, 190.0, 290.0), True, {"clock": "spine"})
         self.assertEqual(it["severity"], "FAIL")
         self.assertIn("does not waive", it["message"])
 
-    def test_big_root_passes_only_on_measured_numbers(self):
+    def test_big_root_fails_only_on_spread(self):
         g, it = self.item(gate_out(48000, 210.0, 280.0), True, {"clock": "spine"})
-        self.assertEqual(it["severity"], "INFO")
-        self.assertEqual((g.clock["tt_insertion_ps"], g.clock["tt_spread_ps"], g.clock["verdict"]), (280.0, 70.0, "PASS"))
-        for lo, hi in ((250.0, 320.0), (190.0, 290.0)):               # insertion miss; spread miss
-            g, it = self.item(gate_out(48000, lo, hi), True)
-            self.assertEqual(it["severity"], "FAIL", (lo, hi))
+        self.assertEqual(it["severity"], "WARN")
+        self.assertEqual((g.clock["tt_insertion_ps"], g.clock["tt_spread_ps"], g.clock["verdict"]), (280.0, 70.0, "WARN"))
+        g, it = self.item(gate_out(9000, 250.0, 320.0), True)               # insertion > 300 alone: WARN
+        self.assertEqual(it["severity"], "WARN")
+        g, it = self.item(gate_out(48000, 190.0, 290.0), True)              # spread miss: FAIL
+        self.assertEqual(it["severity"], "FAIL")
 
     def kit(self, td, clock=None, hold_context=True):
         kd = Path(td) / "kit"
@@ -132,13 +158,16 @@ class GateClock(unittest.TestCase):
             PG.ROOT = Path(td)
             sev = lambda kd, **kw: (lambda g: (PG.check_clock_evidence(g, kd, **kw), g.verdict)[1])(PG.Gate())  # noqa: E731
             self.assertEqual(sev(self.kit(td)), "PASS")                            # nothing known: in-flow lint judges
-            self.assertEqual(sev(self.kit(td), known_sinks=48000), "FAIL")         # history says big, no evidence
+            self.assertEqual(sev(self.kit(td), known_sinks=48000), "WARN")         # history says big: guidance
             self.assertEqual(sev(self.kit(td), known_sinks=48000, closed_stands=True), "PASS")
             self.assertEqual(sev(self.kit(td), known_sinks=9000), "PASS")
-            self.assertEqual(sev(self.kit(td, GOOD), known_sinks=48000), "PASS")   # measured evidence in the kit
+            self.assertEqual(sev(self.kit(td, GOOD), known_sinks=48000), "WARN")   # measured, sinks > 15k: guidance
+            good9 = dict(GOOD, max_root_sinks=9000, ff_spread_ps=50.0)
+            self.assertEqual(sev(self.kit(td, good9), known_sinks=48000), "PASS")
             self.assertEqual(sev(self.kit(td, GOOD, hold_context=False), known_sinks=48000), "WARN")  # historical gate
             self.assertEqual(sev(self.kit(td, dict(GOOD, tt_spread_ps=95.0))), "FAIL")
-            self.assertEqual(sev(self.kit(td, dict(GOOD, tt_insertion_ps=None, tt_spread_ps=None))), "FAIL")
+            self.assertEqual(sev(self.kit(td, dict(GOOD, ff_pin_spread_ps=81.0))), "FAIL")
+            self.assertEqual(sev(self.kit(td, dict(GOOD, tt_insertion_ps=None, tt_spread_ps=None))), "WARN")
             small = {"max_root_sinks": 9000, "tt_insertion_ps": None, "tt_spread_ps": None}
             self.assertEqual(sev(self.kit(td, small), known_sinks=48000), "PASS")  # rebuilt tile proved itself
 
@@ -322,10 +351,19 @@ class MultiDomainClockEvidence(unittest.TestCase):
         r = PG.clock_record(self.output(), True)
         self.assertEqual(r["measured_clock"], "str_clk")
         self.assertEqual((r["tt_insertion_ps"], r["tt_spread_ps"]), (250, 60))
-        self.assertEqual(r["verdict"], "PASS")
+        self.assertEqual(r["verdict"], "WARN")                     # 17,460 sinks > 15k: guidance only
+
+    def test_ff_pin_flop_spread_from_domain(self):
+        rows = [{"source": "cks[0]", "clock": "str_clk", "tt": {"all": {"min": 190, "max": 250}, "boundary": {"min": 200, "max": 240}},
+                 "ff": {"all": {"min": 100, "max": 150}, "boundary": {"min": 100, "max": 190}}}]
+        out = ("GATE_TB textbook_lint: INFO clock_roots max_root_sinks=9000 root=port:cks[0]\n" +
+               "\n".join("GATE_CK_DOMAIN " + json.dumps(r) for r in rows))
+        r = PG.clock_record(out, True)
+        self.assertEqual((r["tt_pin_spread_ps"], r["ff_spread_ps"], r["ff_pin_spread_ps"]), (40.0, 50.0, 90.0))
+        self.assertEqual(r["verdict"], "REFUSE")
 
     def test_secondary_domain_cannot_borrow_primary_domain_exception(self):
         self.assertEqual(PG.clock_record(self.output(hi=301), True)["verdict"], "REFUSE")
         r = PG.clock_record(self.output(source="other"), True)
         self.assertIsNone(r["tt_insertion_ps"])
-        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertEqual(r["verdict"], "WARN")                     # no own measurement: guidance, not a borrowed PASS

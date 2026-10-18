@@ -12,7 +12,7 @@
    "count": 1,
    "inst": "*u_dmem",
    "at": [
-    43.2,
+    29.376,
     43.2
    ],
    "orient": "MY"
@@ -41,7 +41,7 @@
   ],
   "r_d": [
    127.44,
-   244.08
+   233.28
   ]
  },
  "params": {},
@@ -53,7 +53,7 @@
   "rst_n"
  ],
  "outline": {
-  "w": 248.4,
+  "w": 237.6,
   "h": 146.88,
   "exact": true
  },
@@ -69,7 +69,7 @@
    "v": "M5"
   }
  },
- "structural_change": "S81-TILES2 10-17: four-tile re-split of the KP4 decoder cluster ot_s81_kp4_dec (replaces s81lk_kp4_deca / decb, REJECTED at their CTS gates: 259.2 um tiles, SRAM in the middle, clock on the S face; TT insertion 307-455 / 295-417 ps, spread 148 / 122 ps).  Cluster 2 x 2: dsyn SW (PMA in W), ddly NW, dchn SE, dout NE (beats out E); every seam registered at both pins.  Bit-exact vs the 33a35eb7d two-tile decoder on every output and cycle (tb_s81_kp4_eq: RTL same cycle, hardware view with all tile pin registers = reference + 2 cycles; mutants DMUT 2 / 3 and a one-short word seam FAIL).  ddly: the 64 x 546 received-word SRAM delay (DD = 55, free-running pointer) alone; macro at (43.2, 43.2) MY on the 43.2 lattice against the N face (20.5 um channel), one std-cell band S (41 um) holding every register (all pins on the S face: gate 1 with r_d on the E face and clk at the W end measured 1,097 sinks TT 208-310 ps, spread 102 -- a register L around the macro); MY puts the read port and half the write port on the macro's E edge above the r_d pins.  S face: w_d W half (from dsyn), clk / rst_n centre, r_d E half (to dout), 4.6/um.  ~1.1k sinks.  Aspect 1.69 is the macro's (178.6 x 81) plus the 20 um channels; a single-macro delay tile.",
+ "structural_change": "S81-TILES2 10-17: four-tile re-split of the KP4 decoder cluster ot_s81_kp4_dec (replaces s81lk_kp4_deca / decb, REJECTED at their CTS gates: 259.2 um tiles, SRAM in the middle, clock on the S face; TT insertion 307-455 / 295-417 ps, spread 148 / 122 ps).  Cluster 2 x 2: dsyn SW (PMA in W), ddly NW, dchn SE, dout NE (beats out E); every seam registered at both pins.  Bit-exact vs the 33a35eb7d two-tile decoder on every output and cycle (tb_s81_kp4_eq: RTL same cycle, hardware view with all tile pin registers = reference + 2 cycles; mutants DMUT 2 / 3 and a one-short word seam FAIL).  ddly: the 64 x 546 received-word SRAM delay (DD = 55, free-running pointer) alone; macro at (43.2, 43.2) MY on the 43.2 lattice against the N face (20.5 um channel), one std-cell band S (41 um) holding every register (all pins on the S face: gate 1 with r_d on the E face and clk at the W end measured 1,097 sinks TT 208-310 ps, spread 102 -- a register L around the macro); MY puts the read port and half the write port on the macro's E edge above the r_d pins.  S face: w_d W half (from dsyn), clk / rst_n centre, r_d E half (to dout), 4.6/um.  ~1.1k sinks.  Aspect 1.69 is the macro's (178.6 x 81) plus the 20 um channels; a single-macro delay tile. S81-TILES3 10-17 PARENT PITCH (coordinator 0co: 2x2 parent with aligned pitch, no gaps on link paths): hard children sit on the 43.2-um child lattice with >= 20-um channels, so every seam tile edge is a lattice multiple minus 21.6 um. ddly 248.4 -> 237.6 wide (5.5 x 43.2): 248.4 = 5.75 lattice left a 54-um channel to dout; now 21.6. Macro centred at x 29.376 MY (>= 27 um from W/E core edges), band S unchanged; w_d 4.32-118.8 (= dsyn x_q), r_d 127.44-233.28 (5.1/um), clk/rst_n unchanged. RTL unchanged.",
  "job": {
   "owner": "Claude:S81-TILES2",
   "branch": "claude/s81kp4-1017",
