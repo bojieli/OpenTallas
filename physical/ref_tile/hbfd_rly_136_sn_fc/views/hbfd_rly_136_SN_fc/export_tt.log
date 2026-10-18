@@ -16,28 +16,28 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
-QDM reference pin u.u_stage.o[0]$_DFF_PN0_/CLK clock arrival max 77.933212 min 68.506058 skew 90 hold 50
+QDM reference pin u.u_stage.g_rr.u_rst.rst_n$_DFF_PN0_/CLK clock arrival max 86.340546 min 79.235901 skew 90 hold 50
 OT_IO_INTER 0 inputs 0 outputs at 150 ps
 OT_FC_CLOCK: clk_out = clk_out_fwd (clk_in, divide 1); 136 o vs clk_out_fwd (max 166.667 / min -55), 136 i vs clk_in (max 166.667 / min 55)
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 OT_IOREF clock-port clk_in (core_clk): data input delays dropped
 OT_IOREF clock-port clk_out (clk_out_fwd): data input delays dropped
-OT_IOREF_EDGE core_clk boundary 136 negedge 0 noarc 0 inverted 0
-OT_IOREF ot_lb_v_core_clk core_clk mean 77.0 min 74.4 max 79.1 n 136 boundary
-OT_WS max 3.1697500180172256e-10 min 3.780831203670232e-11
+OT_IOREF_EDGE core_clk boundary 139 negedge 0 noarc 0 inverted 0
+OT_IOREF ot_lb_v_core_clk core_clk mean 84.6 min 82.9 max 86.4 n 139 boundary
+OT_WS max 3.957038863244833e-10 min 3.607017462492479e-11
 OT_FC_DRIVER BUFx12f_ASAP7_75t_R u.u_fcb_ck.u_cell
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
-OT_FC_METRIC arrival_max_rise 13.077561
-OT_FC_DRIVER_METRIC arrival_max_rise 12.7807
-OT_FC_METRIC arrival_min_rise 12.793112
-OT_FC_DRIVER_METRIC arrival_min_rise 12.49625
-OT_FC_METRIC arrival_max_fall 14.26543748229085
-OT_FC_DRIVER_METRIC arrival_max_fall 13.96856248229085
-OT_FC_METRIC arrival_min_fall 13.963679482290843
-OT_FC_DRIVER_METRIC arrival_min_fall 13.666804482290843
-OT_FC_METRIC slew_max_rise 5.886367
-OT_FC_DRIVER_METRIC slew_max_rise 5.871231
-OT_FC_METRIC slew_max_fall 5.769207
-OT_FC_DRIVER_METRIC slew_max_fall 5.753835
+OT_FC_METRIC arrival_max_rise 13.701458
+OT_FC_DRIVER_METRIC arrival_max_rise 13.670719
+OT_FC_METRIC arrival_min_rise 13.246469
+OT_FC_DRIVER_METRIC arrival_min_rise 13.215731
+OT_FC_METRIC arrival_max_fall 14.96789048229084
+OT_FC_DRIVER_METRIC arrival_max_fall 14.937129482290857
+OT_FC_METRIC arrival_min_fall 14.484736482290884
+OT_FC_DRIVER_METRIC arrival_min_fall 14.454005482290881
+OT_FC_METRIC slew_max_rise 4.989975
+OT_FC_DRIVER_METRIC slew_max_rise 4.989966
+OT_FC_METRIC slew_max_fall 5.040277
+OT_FC_DRIVER_METRIC slew_max_fall 5.040272
 OT_FC_ROOT clk_in
 OT_EXPORT_DONE
