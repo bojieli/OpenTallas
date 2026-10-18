@@ -63,7 +63,12 @@ module tb_s81_land;
     always @(posedge ck) begin m = m + 1; if (m == R0 - 1) rs <= #10 1'b1; end
     wire [W-1:0] o; wire fault;
     wire [`TB_KW-1:0] kk = K;
+`ifdef TB_TOP
+    // S81-DIE7/LAND (10-18): the hardened tile's own top (dsfd_dvland_<W>[l] wrapper, the kit top) instead of the core
+    `TB_TOP dut (.ck_f(ck_f), .i(li), .ck(ck), .rs(rs), .k(kk), .o(o), .fault(fault));
+`else
     ot_s81_land #(.W(W), .D(`TB_D), .KW(`TB_KW)) dut (.ck_f(ck_f), .i(li), .ck(ck), .rs(rs), .k(kk), .o(o), .fault(fault));
+`endif
     // ---------------------------------------------------------------- checker (samples o half a period after each ck edge)
     integer pred, mism, chk, L, best, okL;
     reg [W-1:0] hist [0:4095];
