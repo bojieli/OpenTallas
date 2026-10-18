@@ -94,21 +94,15 @@
   "host_rst_n"
  ],
  "outline": {
-  "w": 108.0,
-  "h": 108.0
+  "w": 129.6,
+  "h": 129.6
  },
  "macros": [],
  "pins": {
   "N": [
    "service_status",
    "service_diag_raw",
-   "native_request_pos",
-   "native_request_token",
-   "native_result_token",
-   "token_epoch",
    "local_service_epoch",
-   "u_rank__ing_d",
-   "u_rank__pending_epoch",
    "u_rank__service_begin_epoch",
    "u_rank__guarded_physical",
    "u_rank__guarded_transport",
@@ -158,8 +152,6 @@
    "u_rank__service_begin_v"
   ],
   "S": [
-   "service_faults",
-   "die_id",
    "host_rst_n",
    "service_faults_o",
    "u_rank__done_v"
@@ -180,13 +172,21 @@
    "u_rank__done_d",
    "cancel_release_tag",
    "native_request_tag",
-   "ck_core",
    "native_result_tag",
    "certificate_prefix",
    "native_request_trace",
    "native_result_cycles",
+   "ck_core",
    "native_result_value",
-   "native_result_cause"
+   "service_faults",
+   "native_request_pos",
+   "native_request_token",
+   "native_result_token",
+   "token_epoch",
+   "u_rank__ing_d",
+   "u_rank__pending_epoch",
+   "native_result_cause",
+   "die_id"
   ]
  },
  "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_guard (core family, one ck_core entry): members u_guard, u_native + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json",
@@ -211,7 +211,9 @@
   }
  },
  "pin_regs": {
-  "enable": true
+  "enable": true,
+  "reset": "^(por_n|host_rst_n)$",
+  "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)"
  },
  "job": {
   "owner": "Claude:KV-HOSTCL",

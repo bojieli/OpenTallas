@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  86.4,
-  86.4
+  108.0,
+  108.0
  ],
  "core": [
   2.16,
   2.16,
-  84.24000000000001,
-  84.24000000000001
+  105.84,
+  105.84
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -30,30 +30,29 @@
  },
  "pins": {
   "N": [
-   "ck_core",
-   "u_rank__tx_d"
+   "u_rank__u_control__u_packet__htd",
+   "u_rank__done_d",
+   "irq",
+   "u_rank__done_cr",
+   "u_rank__done_v"
   ],
   "S": [
-   "u_rank__u_control__u_packet__ctd",
+   "u_rank__u_control__u_packet__ctd"
+  ],
+  "E": [],
+  "W": [
+   "u_rank__tx_d",
+   "u_rank__u_control__u_packet__credit_return",
+   "u_rank__u_control__u_packet__peer_credit",
+   "host_rst_n",
+   "service_faults",
+   "ck_core",
+   "u_rank__u_control__u_packet__htc",
+   "u_rank__u_control__u_packet__ht",
    "u_rank__u_control__u_packet__ctc",
    "u_rank__u_control__u_packet__ct",
    "u_rank__tx_cr",
    "u_rank__tx_v"
-  ],
-  "E": [
-   "u_rank__done_d",
-   "u_rank__u_control__u_packet__credit_return",
-   "u_rank__u_control__u_packet__peer_credit",
-   "irq"
-  ],
-  "W": [
-   "u_rank__u_control__u_packet__htd",
-   "host_rst_n",
-   "service_faults",
-   "u_rank__done_cr",
-   "u_rank__done_v",
-   "u_rank__u_control__u_packet__htc",
-   "u_rank__u_control__u_packet__ht"
   ]
  },
  "clock_port": "ck_core",

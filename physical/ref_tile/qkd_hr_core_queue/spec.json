@@ -93,8 +93,8 @@
   "host_rst_n"
  ],
  "outline": {
-  "w": 108.0,
-  "h": 108.0
+  "w": 129.6,
+  "h": 129.6
  },
  "macros": [],
  "pins": {
@@ -157,7 +157,9 @@
   "io_hold_margin_ns": 0.0
  },
  "pin_regs": {
-  "enable": true
+  "enable": true,
+  "reset": "^(host_rst_n)$",
+  "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)"
  },
  "job": {
   "owner": "Claude:KV-HOSTCL",

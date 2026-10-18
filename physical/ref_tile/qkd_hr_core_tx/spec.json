@@ -93,36 +93,35 @@
   "host_rst_n"
  ],
  "outline": {
-  "w": 86.4,
-  "h": 86.4
+  "w": 108.0,
+  "h": 108.0
  },
  "macros": [],
  "pins": {
   "N": [
-   "ck_core",
-   "u_rank__tx_d"
+   "u_rank__u_control__u_packet__htd",
+   "u_rank__done_d",
+   "irq",
+   "u_rank__done_cr",
+   "u_rank__done_v"
   ],
   "S": [
-   "u_rank__u_control__u_packet__ctd",
+   "u_rank__u_control__u_packet__ctd"
+  ],
+  "E": [],
+  "W": [
+   "u_rank__tx_d",
+   "u_rank__u_control__u_packet__credit_return",
+   "u_rank__u_control__u_packet__peer_credit",
+   "host_rst_n",
+   "service_faults",
+   "ck_core",
+   "u_rank__u_control__u_packet__htc",
+   "u_rank__u_control__u_packet__ht",
    "u_rank__u_control__u_packet__ctc",
    "u_rank__u_control__u_packet__ct",
    "u_rank__tx_cr",
    "u_rank__tx_v"
-  ],
-  "E": [
-   "u_rank__done_d",
-   "u_rank__u_control__u_packet__credit_return",
-   "u_rank__u_control__u_packet__peer_credit",
-   "irq"
-  ],
-  "W": [
-   "u_rank__u_control__u_packet__htd",
-   "host_rst_n",
-   "service_faults",
-   "u_rank__done_cr",
-   "u_rank__done_v",
-   "u_rank__u_control__u_packet__htc",
-   "u_rank__u_control__u_packet__ht"
   ]
  },
  "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_tx (core family, one ck_core entry): members u_tx + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json",
@@ -148,7 +147,9 @@
   "io_hold_margin_ns": 0.0
  },
  "pin_regs": {
-  "enable": true
+  "enable": true,
+  "reset": "^(host_rst_n)$",
+  "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)"
  },
  "job": {
   "owner": "Claude:KV-HOSTCL",

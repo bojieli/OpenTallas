@@ -27,7 +27,8 @@ CENTROIDS = dict(qkd_hr_phy_adp=(475, 86), qkd_hr_phy_pad=(300, 230), qkd_hr_cdc
                  qkd_hr_core_order=(110, 600), qkd_hr_cdc_host=(560, 590), qkd_hr_ingest_qm=(800, 560))
 UTIL, PIN_PER_UM = 0.45, 6.0
 MACROS = {'ot_sram_1r1w_1024x256_m2_r2c2': (174.744, 70.470), 'ot_sram_1rw_256x64_m4_r2c2': (66.312, 17.820)}
-FLAT = 0.75                                              # flat / hierarchical synthesis area (census)
+FLAT = 1.0                                               # hier census area ~ the route synthesis (queue gate: 7,286 vs 5,415 hier)
+PINFLOP_UM2 = 0.45                                       # one pin register + its anchoring per pin bit
 DIRECT_TOP = {}
 
 
@@ -91,7 +92,7 @@ def main():
         clk = [r['port'] for r in rows if re.match(r'^(ck|clk)', r['port'])]
         rst = [r['port'] for r in rows if r['dir'] == 'input' and re.search(r'(rst_n|^por_n$|^rst$)', r['port'])]
         mac_area = sum(MACROS[k][0] * MACROS[k][1] * n for k, n in macros.items())
-        need_area = area / UTIL + mac_area * 1.3
+        need_area = (area + bits * PINFLOP_UM2) / UTIL + mac_area * 1.3
         # square-ish outline whose perimeter carries every pin at PIN_PER_UM (15 % slack), macros permitting
         side = max(math.sqrt(need_area), bits * 1.15 / PIN_PER_UM / 4, 64.8)
         w = max(side, max([MACROS[k][0] + 30 for k in macros] + [0]))
@@ -122,7 +123,8 @@ def main():
                     kind='tile', recipe=4, hold_budget='die', inhold=False, outhold=False, layer_cap='M5',
                     route=dict(pd=0.5, threads=8, peak_ram_gb=24, pin_h='M4', pin_v='M5', hold_margin_ns=0.03,
                                macro_halo_um=5.4, pin_balance=dict(group_max=1, h='M4', v='M5')),
-                    pin_regs=dict(enable=True))
+                    pin_regs=dict(enable=True, reset='^(' + '|'.join(rst) + ')$',
+                                  reason='literal async reset roles only (data levels such as native_link_reset_seen are registered)'))
         cg = 'python3 tools/qwen_kv_die/host_cluster/bench/cluster_gate.py'
         mut = f'--inst {inst_of(direct, child)}' if direct else f'--child {child[len("qkd_hr_"):]}'
         spec['job'] = dict(owner='Claude:KV-HOSTCL', branch='claude/kvj-a3-1017', tag='r2',

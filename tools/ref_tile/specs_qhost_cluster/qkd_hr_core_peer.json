@@ -265,7 +265,9 @@
   }
  },
  "pin_regs": {
-  "enable": true
+  "enable": true,
+  "reset": "^(por_n|host_rst_n)$",
+  "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)"
  },
  "job": {
   "owner": "Claude:KV-HOSTCL",

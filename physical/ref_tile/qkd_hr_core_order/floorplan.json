@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  151.2,
-  151.2
+  172.8,
+  172.8
  ],
  "core": [
   2.16,
   2.16,
-  149.04,
-  149.04
+  170.64000000000001,
+  170.64000000000001
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -37,7 +37,6 @@
    "landed",
    "u_rank__oa",
    "host_upstream_quiet",
-   "host_rst_n",
    "u_rank__dispatch_fault",
    "u_rank__local_marker_cr",
    "u_rank__local_marker_v",
@@ -52,13 +51,14 @@
    "u_rank__od",
    "chain_c",
    "chain_a",
+   "slice_ack",
    "u_rank__local_marker",
    "issued",
    "physical_ack_n",
-   "service_faults"
+   "service_faults",
+   "host_rst_n"
   ],
   "W": [
-   "slice_ack",
    "chain_fault_i",
    "hb_cr"
   ]

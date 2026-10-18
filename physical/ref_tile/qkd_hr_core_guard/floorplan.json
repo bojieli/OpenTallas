@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  108.0,
-  108.0
+  129.6,
+  129.6
  ],
  "core": [
   2.16,
   2.16,
-  105.84,
-  105.84
+  127.44,
+  127.44
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -32,13 +32,7 @@
   "N": [
    "service_status",
    "service_diag_raw",
-   "native_request_pos",
-   "native_request_token",
-   "native_result_token",
-   "token_epoch",
    "local_service_epoch",
-   "u_rank__ing_d",
-   "u_rank__pending_epoch",
    "u_rank__service_begin_epoch",
    "u_rank__guarded_physical",
    "u_rank__guarded_transport",
@@ -88,8 +82,6 @@
    "u_rank__service_begin_v"
   ],
   "S": [
-   "service_faults",
-   "die_id",
    "host_rst_n",
    "service_faults_o",
    "u_rank__done_v"
@@ -110,13 +102,21 @@
    "u_rank__done_d",
    "cancel_release_tag",
    "native_request_tag",
-   "ck_core",
    "native_result_tag",
    "certificate_prefix",
    "native_request_trace",
    "native_result_cycles",
+   "ck_core",
    "native_result_value",
-   "native_result_cause"
+   "service_faults",
+   "native_request_pos",
+   "native_request_token",
+   "native_result_token",
+   "token_epoch",
+   "u_rank__ing_d",
+   "u_rank__pending_epoch",
+   "native_result_cause",
+   "die_id"
   ]
  },
  "clock_port": "ck_core",

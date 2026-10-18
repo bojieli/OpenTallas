@@ -10,8 +10,8 @@
   "host_rst_n"
  ],
  "exclude": "",
- "reset": "",
- "reason": "",
+ "reset": "^(host_rst_n)$",
+ "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)",
  "latency_cycles": {
   "input": 1,
   "output": 1

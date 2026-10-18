@@ -93,8 +93,8 @@
   "host_rst_n"
  ],
  "outline": {
-  "w": 151.2,
-  "h": 151.2
+  "w": 172.8,
+  "h": 172.8
  },
  "macros": [],
  "pins": {
@@ -106,7 +106,6 @@
    "landed",
    "u_rank__oa",
    "host_upstream_quiet",
-   "host_rst_n",
    "u_rank__dispatch_fault",
    "u_rank__local_marker_cr",
    "u_rank__local_marker_v",
@@ -121,13 +120,14 @@
    "u_rank__od",
    "chain_c",
    "chain_a",
+   "slice_ack",
    "u_rank__local_marker",
    "issued",
    "physical_ack_n",
-   "service_faults"
+   "service_faults",
+   "host_rst_n"
   ],
   "W": [
-   "slice_ack",
    "chain_fault_i",
    "hb_cr"
   ]
@@ -155,7 +155,9 @@
   "io_hold_margin_ns": 0.0
  },
  "pin_regs": {
-  "enable": true
+  "enable": true,
+  "reset": "^(host_rst_n)$",
+  "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)"
  },
  "job": {
   "owner": "Claude:KV-HOSTCL",
