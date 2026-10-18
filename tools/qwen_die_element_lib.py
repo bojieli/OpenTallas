@@ -42,6 +42,8 @@ class _Clocks(tuple):
                             'front_hck', 'return_hck', 'return_ck'))
 
     def __contains__(self, p):
+        if str(p) == 'hck':                 # OT_KV_TILE_KITS: a kit tile's one HBM-domain clock port
+            return True
         if '__' in str(p):
             b_ = str(p).rsplit('__', 1)[1]
             if b_ and (b_ in self.STATIC_SUB or self.__contains__(b_)):
