@@ -4,7 +4,7 @@
   "kind": "tile",
   "sources": [
     "rtl/lib/ot_rst_relay.sv",
-    "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv",
+    "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_fixed_issue.sv",
     "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv"
   ],
   "params": {},
@@ -56,7 +56,7 @@
     "peak_ram_gb": 24,
     "hold_margin_ns": 0.03
   },
-  "structural_change": "S81U-SEQ (S81-DV p4f..p4i, owner-approved DV plan): L1 sequencer leaf of dsdv_seq_host: ot_s81_fixed_issue (unchanged compiled calendar) + svc completion tag queue + one rung hop each way; flop-first / flop-last pins, die hold budget.",
+  "structural_change": "S81U-SEQ (S81-DV p4f..p4i, owner-approved DV plan): L1 sequencer leaf of dsdv_seq_host: ot_dsdv_fixed_issue (= ot_s81_fixed_issue compiled calendar, edge-identical issue / completion checks) + svc completion tag queue + one rung hop each way; flop-first / flop-last pins, die hold budget. S81U-SEQ3 (gate 10607befb: 37-level scan_index -> fault_code, 2,048-b runtime part-select dt_q[8*eng+:8], 1,871 reset loads): seal scan in three registered stages (row read / accumulate / closing check, seal +2 boot edges), completion tag select decoded (one-hot AND-OR), calendar rows / loaded bits / context fields / age / pending / command payloads off the reset net, pin-flop payloads ungated.",
   "job": {
     "owner": "Claude:S81U-SEQ",
     "branch": "claude/s81u-seq-1017",
@@ -122,8 +122,8 @@
     "reason": "Source-registered (dsdv_seq_host header): every leaf input lands in a flop at the pin and every output is a flop; recipe pin_regs would add a second unpriced stage on every leaf seam."
   },
   "outline": {
-    "w": 226.8,
-    "h": 151.2
+    "w": 254.88,
+    "h": 120.96
   },
   "io_flop_at_pins": {
     "cols": 4,
@@ -133,6 +133,6 @@
   "io_tcl": "physical/dsdv_seq_host_pins/dsdv_sh_sq.tcl",
   "std_area_um2": 14796,
   "fill_reason": {
-    "pin_bound": "N face 1,296 pin bits (rung 552 + tw 194 + cf 267 + cn/cs/cg 255 + dn 27 + vf 1) and S face 1,207 at <= 6/um need W >= 216 um; W 226.8 = common width of the 3 stacked leaves (seam pins aligned) = 5.7 / 5.3 per um. Std 14,796 um2 (gate 10607befb) -> util 45%."
+    "pin_bound": "S81U-SEQ3: common leaf width 254.88 (seam pins aligned with lk / vc); N face 1,296 pin bits = 5.1/um, S 1,207 = 4.7/um. Std 14,796 um2 (gate 10607befb) -> H 120.96, util 51%."
   }
 }

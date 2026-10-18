@@ -77,6 +77,10 @@ module ot_hdc_kv_ingest #(
     //   APIPE = 3 (sys-takeover 2026-10-10, hing_pipec_a TT -114: st_d -> s_stk * stride -> ap1_rbase 31 levels): one
     //           more stage in front (ap0_*: group / die / stack / local decomposition and the descriptor fields), then
     //           ap1_rbase = base + stack * stride, then the pitch product / IKEY sums: three bubble edges a row.
+    //   APIPE = 4 (S81U-SEQ3 2026-10-17, dsdv_sh_lk gate 8940e10e9: ap1_local -> ap1_local * ap1_pitch -> ap_raddr 26
+    //           levels ~922 ps): as 3, with the local * pitch product registered in stage A1 (ap1_lp, captured with
+    //           ap1_local / ap1_pitch under the same enable, so ap1_lp == ap1_local * ap1_pitch whenever read) and stage B
+    //           = ap1_rbase + ap1_lp.  Same three bubble edges a row and the same values as APIPE 3, edge for edge.
     parameter integer QKV    = 1,
     parameter integer APIPE  = 0,
     // QPIPE = 1 (qwen-1010/c 2026-10-10; 0 = unchanged): qfd_io_host preroute -1.2 .. -2.3 ns at clk_i (135 k of 139 k
@@ -632,7 +636,8 @@ module ot_hdc_kv_ingest #(
     wire [31:0] a2_sb    = ap1_gs >> 6;
     wire [5:0]  a2_q     = ap1_gs[5:0];
     wire [31:0] a2_blk   = ap1_rbase + (a2_sb << 11) + (a2_sb << 7);
-    wire [31:0] a2_raddr = ap1_rbase + ap1_local * ap1_pitch;
+    reg  [31:0] ap1_lp;
+    wire [31:0] a2_raddr = (APIPE >= 4) ? ap1_rbase + ap1_lp : ap1_rbase + ap1_local * ap1_pitch;
     wire [31:0] a2_kcode = a2_blk + ((32'd1 + {28'd0, a2_q[5:2]}) << 7) + ({30'd0, a2_q[1:0]} << 5) + ((ap1_row & 32'd15) << 1);
     wire [31:0] a2_kscal = a2_blk + ({26'd0, a2_q} << 1);
     // APIPE 3: stage A0 (ap0_*) = the decomposition and descriptor fields; ap1_rbase = base + stack * stride from it
@@ -663,6 +668,7 @@ module ot_hdc_kv_ingest #(
         if (APIPE >= 3) begin
             ap1_rbase <= ap0_base + (ap0_ringz ? ap0_stk * ap0_stride : 32'd0); ap1_local <= ap0_local; ap1_gs <= ap0_gs;
             ap1_row <= ap0_row; ap1_pitch <= ap0_pitch; ap1_mine <= ap0_mine;
+            if (APIPE >= 4) ap1_lp <= ap0_local * ap0_pitch;
         end else begin
             ap1_rbase <= s_rbase; ap1_local <= s_local; ap1_gs <= s_gs; ap1_row <= st_row; ap1_pitch <= s_pitch; ap1_mine <= s_mine;
         end

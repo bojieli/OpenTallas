@@ -7,7 +7,7 @@
 //                                write decode (dsfd_host_sd STATIC = 1, unchanged), svc job / host-write port to the 16
 //                                regional service slices, kit (stage start / done) port, regional controller status
 //                                fold (the dsfd_ctrl_ctr status merge), the host status / completion word.
-//   L1 dsdv_sh_sq  sequencer     ot_s81_fixed_issue (unchanged: the compiled calendar {done, issue, engine, arg}, two
+//   L1 dsdv_sh_sq  sequencer     ot_dsdv_fixed_issue (= ot_s81_fixed_issue, pipelined seal scan; the compiled calendar {done, issue, engine, arg}, two
 //                                job contexts, KIT / END rows, boot seal scan) + the svc completion tag queue.
 //   L2 dsdv_sh_vc  middle leaf   ot_dsdv_vstop (the shared V-rung stop, unchanged) + the CTL packer: the calendar's V
 //                                commands become CTL beats (template table, 128 x 186 b, boot-loaded) injected N / S;
@@ -58,6 +58,8 @@ endmodule
 // ---------------------------------------------------------------- L0: link leaf
 module dsdv_sh_lk #(parameter integer V = 276) (
     input  wire          ck,
+    input  wire          ck_ih,           // host ingest RX root (ingest clk_h), same stream clock as ck, own CTS root
+    input  wire          ck_ic,           // host ingest core root (ingest clk_i), same stream clock as ck, own CTS root
     input  wire          rst_n,
     // unit pins
     input  wire [514:0]  f_host,          // {h_cls 2, h_d 512, h_v}
@@ -90,10 +92,11 @@ module dsdv_sh_lk #(parameter integer V = 276) (
     // ---- pin flops
     reg [514:0] fi; reg [52:0] ks_q; reg [1:0] jd_q, rg_q; reg [3:0] lf_q; reg [53:0] kd_q; reg [32:0] j_q;
     reg [5:0] sq_q; reg vf_q;
+    // valid / event bits gated by the relayed reset, payload bits not (S81U-SEQ3: 891 reset loads at gate 8940e10e9)
     always @(posedge ck) begin
-        fi <= rn ? f_host : 515'd0;
-        ks_q <= rn ? f_ks : 53'd0; jd_q <= rn ? s_jd : 2'd0; rg_q <= rn ? st_rg : 2'd0; lf_q <= f_lf;
-        kd_q <= rn ? kd_i : 54'd0; j_q <= rn ? j_i : 33'd0; sq_q <= sq_i; vf_q <= vf_i;
+        fi <= {f_host[514:1], rn & f_host[0]};
+        ks_q <= {rn & f_ks[52], f_ks[51:0]}; jd_q <= {2{rn}} & s_jd; rg_q <= {2{rn}} & st_rg; lf_q <= f_lf;
+        kd_q <= {rn & kd_i[53], kd_i[52:0]}; j_q <= {rn & j_i[32], j_i[31:0]}; sq_q <= sq_i; vf_q <= vf_i;
     end
     // ---- to / from L1 and the unit pins (flop-last)
     always @(posedge ck) begin ks_o <= ks_q; jd_o <= jd_q; t_kd <= kd_q; s_j <= j_q; end
@@ -113,8 +116,11 @@ module dsdv_sh_lk #(parameter integer V = 276) (
     // ---- host ingest (clk_h = clk_i = ck, as dsfd_host_c on a layer die) and per-stack decode (NS 1, STATIC)
     wire t_v, ov, owe, ocr, hf, sf; wire [63:0] t_d; wire [31:0] oa; wire [255:0] od; wire [7:0] ack; wire [4:0] crn;
     reg tcr_l;
-    dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(2)) u_h (.rst_n(rn), .clk_h(ck), .h_v(to_ing), .h_cls(hcl),
-        .h_d(hd), .h_crn(crn), .t_v(t_v), .t_d(t_d), .t_cr(tcr_l), .clk_i(ck), .ck(ck), .o_v(ov), .o_we(owe), .o_addr(oa),
+    // three CTS roots (as dsfd_host_c DSFD_HOST_PQ_BOOT ck_ingest): the ingest's own Gray-FIFO domains clk_h / clk_i
+    // get the leaf roots ck_ih / ck_ic (S81U-SEQ3: 24,085 sinks on one root at gate 8940e10e9); APIPE 4 registers the
+    // engine's row pitch product (26-level ap1_local -> ap_raddr stage), same values as APIPE 3.
+    dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(4)) u_h (.rst_n(rn), .clk_h(ck_ih), .h_v(to_ing), .h_cls(hcl),
+        .h_d(hd), .h_crn(crn), .t_v(t_v), .t_d(t_d), .t_cr(tcr_l), .clk_i(ck_ic), .ck(ck), .o_v(ov), .o_we(owe), .o_addr(oa),
         .o_d(od), .o_cr(ocr), .i_rv(1'b0), .i_rd(256'd0), .host_ack_n(ack), .fault(hf));
     dsfd_host_sd #(.NS(1), .KVS(1), .ENG(-1), .STATIC(1)) u_sd (.ck(ck), .rst_n(rn), .o_v(ov), .o_we(owe), .o_addr(oa),
         .o_d(od), .o_cr(ocr), .hw(s_hw), .hc(s_hc), .host_ack_n(ack), .fault(sf));
@@ -165,8 +171,9 @@ module dsdv_sh_sq #(parameter integer V = 276, parameter integer STAGE = 0, para
     // ---- pin flops
     reg [35:0] pw_q; reg [8:0] pl_q; reg [193:0] tw_q; reg [52:0] ks_q; reg [1:0] jd_q; reg [26:0] dn_q; reg vf_q; reg [266:0] cf_q;
     always @(posedge ck) begin
-        pw_q <= rn ? pw_i : 36'd0; pl_q <= rn ? pl_i : 9'd0; tw_q <= rn ? tw_i : 194'd0; ks_q <= rn ? ks_i : 53'd0;
-        jd_q <= rn ? jd_i : 2'd0; dn_q <= rn ? dn_i : 27'd0; vf_q <= vf_i; cf_q <= rn ? cf_i : 267'd0;
+        pw_q <= {rn & pw_i[35], pw_i[34:0]}; pl_q <= {rn & pl_i[8], pl_i[7:0]}; tw_q <= {rn & tw_i[193], tw_i[192:0]};
+        ks_q <= {rn & ks_i[52], ks_i[51:0]}; jd_q <= {2{rn}} & jd_i; vf_q <= vf_i; cf_q <= {rn & cf_i[266], cf_i[265:0]};
+        dn_q <= {rn & dn_i[26], dn_i[25:18], rn & dn_i[17], dn_i[16:9], rn & dn_i[8], dn_i[7:0]};
     end
     reg [7:0] plen;
     always @(posedge ck or negedge rn) if (!rn) plen <= 8'd0; else if (pl_q[8]) plen <= pl_q[7:0];
@@ -174,7 +181,7 @@ module dsdv_sh_sq #(parameter integer V = 276, parameter integer STAGE = 0, para
     localparam integer NE = 5;
     wire [NE-1:0] cv; wire [NE*84-1:0] cd; wire done, kdone, dslot, busy, fault; wire [3:0] code; wire [20:0] ktok;
     reg [NE-1:0] dv; reg [NE*8-1:0] dt;
-    ot_s81_fixed_issue #(.NOPS(128), .NENG(NE), .STAGE(STAGE), .ENG_PRESENT(5'b10111)) u_iss (.clk(ck), .rst_n(rn),
+    ot_dsdv_fixed_issue #(.NOPS(128), .NENG(NE), .STAGE(STAGE), .ENG_PRESENT(5'b10111)) u_iss (.clk(ck), .rst_n(rn),
         .pw_v(pw_q[35]), .pw_a(pw_q[34:28]), .pw_d(pw_q[27:0]), .prog_len(plen),
         .job_v(ks_q[52]), .job_user(ks_q[51:42]), .job_pos(ks_q[20:0]), .job_tok(ks_q[41:21]), .job_rdy(), .busy(busy),
         .job_done(done), .job_kdone(kdone), .done_slot(dslot), .kit_tok(ktok),
@@ -242,8 +249,8 @@ module dsdv_sh_vc #(parameter integer V = 276, parameter integer MUT = 0) (
     // ---- pin flops
     reg [193:0] tw_q; reg [84:0] cn_q, cs_q;
     reg [266:0] cf_q; reg [84:0] cg_q;
-    always @(posedge ck) begin tw_q <= rn ? tw_i : 194'd0; cn_q <= rn ? cn_i : 85'd0; cs_q <= rn ? cs_i : 85'd0;
-        cf_q <= rn ? cf_i : 267'd0; cg_q <= rn ? cg_i : 85'd0; end
+    always @(posedge ck) begin tw_q <= {rn & tw_i[193], tw_i[192:0]}; cn_q <= {rn & cn_i[84], cn_i[83:0]};
+        cs_q <= {rn & cs_i[84], cs_i[83:0]}; cf_q <= {rn & cf_i[266], cf_i[265:0]}; cg_q <= {rn & cg_i[84], cg_i[83:0]}; end
     // ---- template table (boot written; registered read): three 1R1W 128 x 256 SRAM macros, one per read port
     //      (N beat, S beat, gunit job), all written by the same boot word.  Same read timing as the former flop
     //      table (address from the pin flop, data after one edge), so cycle-exact; the 23.8k-flop clock root is gone.
@@ -332,7 +339,7 @@ module dsdv_seq_host #(parameter integer V = 276, parameter integer STAGE = 0, p
     wire [V-1:0] n01, s10, n12, s21, n23, s32, n34, s43;
     wire [35:0] pw01; wire [8:0] pl01; wire [193:0] tw01, tw12; wire [52:0] ks01; wire [53:0] kd10; wire [32:0] j10;
     wire [1:0] jd01; wire [5:0] sq10; wire vf10, vf21; wire [84:0] cn12, cs12, cg12; wire [26:0] dn21; wire [266:0] cf01, cf12;
-    dsdv_sh_lk #(.V(V)) u_l0 (.ck(ck), .rst_n(rst_n), .f_host(f_host), .t_host(t_host), .f_lf(f_lf), .f_ks(f_ks), .t_kd(t_kd),
+    dsdv_sh_lk #(.V(V)) u_l0 (.ck(ck), .ck_ih(ck), .ck_ic(ck), .rst_n(rst_n), .f_host(f_host), .t_host(t_host), .f_lf(f_lf), .f_ks(f_ks), .t_kd(t_kd),
         .s_j(s_j), .s_jd(s_jd), .s_hw(s_hw), .s_hc(s_hc), .st_rg(st_rg), .vi_s(vi_s), .vo_s(vo_s),
         .rn_o(n01), .rs_i(s10), .pw_o(pw01), .pl_o(pl01), .tw_o(tw01), .cf_o(cf01), .ks_o(ks01), .kd_i(kd10), .j_i(j10), .jd_o(jd01),
         .sq_i(sq10), .vf_i(vf10));

@@ -49,6 +49,8 @@
     ],
     "E": [
       "ck",
+      "ck_ih",
+      "ck_ic",
       "rst_n",
       "f_ks",
       "t_kd",
@@ -63,7 +65,7 @@
   "hold_budget": "die",
   "inhold": false,
   "outhold": false,
-  "clock": "cts",
+  "clock": "multiple_cts_roots",
   "layer_cap": "M5",
   "route": {
     "pd": 0.5,
@@ -71,7 +73,7 @@
     "peak_ram_gb": 24,
     "hold_margin_ns": 0.03
   },
-  "structural_change": "S81U-SEQ (S81-DV p4f..p4i, owner-approved DV plan): L0 link leaf of dsdv_seq_host: host lane port + host ingest (dsfd_host_native, unchanged) + host write decode (dsfd_host_sd STATIC) + svc / kit ports + regional status fold + one rung hop each way; flop-first / flop-last pins, die hold budget.",
+  "structural_change": "S81U-SEQ (S81-DV p4f..p4i, owner-approved DV plan): L0 link leaf of dsdv_seq_host: host lane port + host ingest (dsfd_host_native, unchanged) + host write decode (dsfd_host_sd STATIC) + svc / kit ports + regional status fold + one rung hop each way; flop-first / flop-last pins, die hold budget. S81U-SEQ3 (gate 8940e10e9 clock_rule FAIL: 24,085 sinks on one root, TT ins 306.7): the host ingest's own Gray-FIFO clock domains (dsfd_host_native clk_h / clk_i, ot_link_afifo crossings) get their own CTS roots ck_ih / ck_ic (same stream clock, related phase-0 roots, ordinary STA across them), as the S81 host tile dsfd_host_c DSFD_HOST_PQ_BOOT (ck_ingest roots); estimated roots ~8.8k / ~10.3k / ~5.5k sinks, each < 15k. A two-leaf split cannot reach < 15k: dsfd_host_native alone is ~19.2k flops (u_hx 16 x 514 + u_ox 16 x 289 + engine). Ingest engine APIPE 2 -> 4 (26-level ap1_local -> ap_raddr stage registered; ROWS / IKEY +1 bubble edge a row, RAW unchanged); pin-flop payloads off the reset net (891 loads).",
   "job": {
     "owner": "Claude:S81U-SEQ",
     "branch": "claude/s81u-seq-1017",
@@ -137,8 +139,8 @@
     "reason": "Source-registered (dsdv_seq_host header): every leaf input lands in a flop at the pin and every output is a flop; recipe pin_regs would add a second unpriced stage on every leaf seam."
   },
   "outline": {
-    "w": 226.8,
-    "h": 172.8
+    "w": 254.88,
+    "h": 136.08
   },
   "io_flop_at_pins": {
     "cols": 4,
@@ -147,7 +149,83 @@
   "keep_pin_regs": true,
   "std_area_um2": 16781,
   "fill_reason": {
-    "pin_bound": "N face 1,207 pin bits (rung hop 552 + L1 seam pw 36 / pl 9 / tw 194 / cf 267 / ks 53 / kd 54 / j 33 / jd 2 / sq 6 / vf 1) at <= 6/um needs W >= 201 um; W 226.8 = 5.3/um (common width of the 3 stacked leaves: seam pins aligned) (S 552 = 2.6/um, W 596 / H 172.8 = 3.4/um, E 447 = 2.6/um). Std 16,781 um2 (gate 10607befb) -> util 45%."
+    "pin_bound": "S81U-SEQ3: common leaf width 254.88 (vc needs 2 SRAMs side by side with 20 um channels: 3 x 20 + 2 x 94.824 + core margins); N face 1,207 pin bits = 4.7/um, W 596 / H 136.08 = 4.4/um, E 449 = 3.3/um. Std 16,781 um2 (gate 8940e10e9) -> H 136.08, util 51%."
   },
-  "io_tcl": "physical/dsdv_seq_host_pins/dsdv_sh_lk.tcl"
+  "io_tcl": "physical/dsdv_seq_host_pins/dsdv_sh_lk.tcl",
+  "clock_ports": [
+    "ck",
+    "ck_ih",
+    "ck_ic"
+  ],
+  "clock_data_paths": "related_same_frequency",
+  "clock_relationship": {
+    "kind": "same_pll_fixed_phase",
+    "ratio": [
+      1,
+      1
+    ],
+    "phase_ps": 0
+  },
+  "clock_entry_domains": {
+    "core": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "ck"
+      ],
+      "inputs": [
+        "rst_n",
+        "f_host",
+        "f_lf",
+        "f_ks",
+        "s_jd",
+        "s_hc",
+        "st_rg",
+        "vi_s",
+        "rs_i",
+        "kd_i",
+        "j_i",
+        "sq_i",
+        "vf_i"
+      ],
+      "outputs": [
+        "t_host",
+        "t_kd",
+        "s_j",
+        "s_hw",
+        "vo_s",
+        "rn_o",
+        "pw_o",
+        "pl_o",
+        "tw_o",
+        "cf_o",
+        "ks_o",
+        "jd_o"
+      ]
+    },
+    "ingest_host": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "ck_ih"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "ingest_core": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "ck_ic"
+      ],
+      "inputs": [],
+      "outputs": []
+    }
+  }
 }

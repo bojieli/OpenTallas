@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  226.8,
-  172.8
+  254.88,
+  136.08
  ],
  "core": [
   2.16,
   2.16,
-  224.64000000000001,
-  170.64000000000001
+  252.72,
+  133.92000000000002
  ],
  "why": "spec outline",
  "std_area_um2": 16781,
@@ -54,6 +54,8 @@
   ],
   "E": [
    "ck",
+   "ck_ih",
+   "ck_ic",
    "rst_n",
    "f_ks",
    "t_kd",
@@ -65,15 +67,13 @@
   ]
  },
  "clock_port": "ck",
- "blocks": [],
- "findings": [
-  [
-   "WARN",
-   "util",
-   "utilisation 45% outside 45%-60% (std 16781 + macro 0 in core 37483 um2)",
-   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
-  ]
+ "clock_ports": [
+  "ck",
+  "ck_ih",
+  "ck_ic"
  ],
+ "blocks": [],
+ "findings": [],
  "referenced": [
   "rtl/lib/ot_rst_relay.sv",
   "rtl/lib/ot_async_fifo.sv",
@@ -91,7 +91,6 @@
   "physical/ref_tile/dsdv_sh_lk/kit.env",
   "physical/ref_tile/dsdv_sh_lk/clock.sdc",
   "physical/ref_tile/dsdv_sh_lk/signoff.sdc",
-  "physical/ref_tile/dsdv_sh_lk/signoff_ffrepair.sdc",
   "physical/ref_tile/dsdv_sh_lk/pdn.tcl",
   "physical/ref_tile/dsdv_sh_lk/pre_cts.tcl",
   "physical/ref_tile/dsdv_sh_lk/post_cts.tcl",
@@ -112,6 +111,8 @@
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/dsdv_seq_host_pins/dsdv_sh_lk.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl"
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/dsdv_sh_lk/clock_entry.sdc"
  ]
 }
