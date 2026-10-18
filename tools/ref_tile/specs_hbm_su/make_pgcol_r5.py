@@ -69,7 +69,7 @@ def ranges(face_len, groups, margin=4.0):
     return out
 
 
-def leaf(s4, name, top, w, h, macros, why):
+def leaf(s4, name, top, w, h, macros, why, ch=(138.0, 172.8)):
     s = json.loads(json.dumps(s4))
     s["name"] = name
     s["top"] = top
@@ -84,8 +84,12 @@ def leaf(s4, name, top, w, h, macros, why):
                     ("start", 1), ("length", 16)])
     # S: command W of the macro channel (1.8 pins/um), clk in the channel (x 138.0..172.8, beside the register mass),
     # status bits E of it
-    pr.update({"command": [4.0, 148.0], "clk": [150.8, 151.4], "busy": [154.0, 156.0], "valid": [156.5, 158.5],
-               "done": [159.0, 161.0], "fault": [161.5, 163.5], "edge_index": [164.0, round(w - 4.0, 3)]})
+    # ch = the macro channel (x0, x1); clk at its centre, command W of it, status bits + edge_index E of it
+    c = round((ch[0] + ch[1]) / 2 - 4.6, 3)
+    pr.update({"command": [4.0, c - 2.8], "clk": [c, c + 0.6], "busy": [c + 3.2, c + 5.2],
+               "valid": [c + 5.7, c + 7.7], "done": [c + 8.2, c + 10.2], "fault": [c + 10.7, c + 12.7],
+               "edge_index": [c + 13.2, w - 4.0]})
+    pr.update({k: [round(a, 3), round(b, 3)] for k, (a, b) in pr.items()})
     s["pin_ranges"] = pr
     # gate e8c5e2cf6: PPL packed each port into a fraction of its range (S 293 pins on 38 um, head cfg_data on ~25 um):
     # the balanced placer spreads every port uniformly over its own range
@@ -141,12 +145,20 @@ def main():
                 "scheduled); head export stage +1, row/data +1 more (DLAT 1)")}
     (OUT / "hbm_su_pgcol_s_r5.json").write_text(json.dumps(s, indent=1) + "\n")
     ml = (stack("dt", range(5), LAT, "MY") + stack("ix", range(4), LAT, "MY", LAT + 5 * MH)
-          + stack("dt", range(5, 13), 4 * LAT, "R0"))
-    s = leaf(s4, "hbm_su_pgcol_l_r5", "ot_hbm_su_programme_pgcol_l", 302.4, 453.6, ml, WHY + (
-        "THIS leaf: L master (3 per quarter): 4 index + 13 dictionary SRAMs, 302.4 x 453.6, MY stack dictionary 0..4 + "
-        "index 0..3, R0 stack dictionary 5..12, one 34.8 um channel, N cfg band 41 um, S band = 256 command flops, ~3.3k flops one root.") + NF3)
+          + stack("dt", range(5, 13), 5 * LAT, "R0"))
+    s = leaf(s4, "hbm_su_pgcol_l_r5", "ot_hbm_su_programme_pgcol_l", 345.6, 453.6, ml, WHY + (
+        "THIS leaf: L master (3 per quarter): 4 index + 13 dictionary SRAMs, 345.6 x 453.6, MY stack dictionary 0..4 + "
+        "index 0..3, R0 stack dictionary 5..12 at x 216, one 78 um channel, N cfg band 41 um, S band = 256 command flops, ~3.3k flops one root. "
+        "SU-PG 10-18: channel widened 34.8 -> 78 um (outline 302.4 -> 345.6): gate 10-17 21:50 trial GRT overflow 15,836 "
+        "(M4 12,063) all in the 34.8 um channel where the 17 SRAM rd_out/wd_in faces + all logic meet, 88 min GRT then "
+        "incremental GRT stall > 4 h (rc 137); the S leaf (7 SRAM, same channel) routes at overflow 0.") + NF3,
+             ch=(LAT + 94.824, 5 * LAT))
     # gate e8c5e2cf6: GPL-0305 RePlAce diverged (3.2k flops in 41k um2 placeable at PD 0.5) -> lower target density
     s["route"]["pd"] = 0.3
+    s["job"] = dict(s["job"], branch="claude/su-pg-1018", owner="Claude:OWNERS-HBM/SU-PG")
+    # SU-PG g3 (305519145, 78 um channel): GPL routability mode hit 50 reverts (RUDY 1.25 at the SRAM pin faces) then
+    # GPL-0305 NaN at PD 0.3 -> plain wirelength/timing GPL; the trial GRT is the congestion judge
+    s["orfs_vars"] = dict(s.get("orfs_vars") or {}, GPL_ROUTABILITY_DRIVEN="0")
     (OUT / "hbm_su_pgcol_l_r5.json").write_text(json.dumps(s, indent=1) + "\n")
     h = leaf(s4, "hbm_su_pghead_r5", "ot_hbm_su_programme_pghead", 86.4, 86.4, [], WHY + (
         "THIS leaf: head (1 per quarter): cfg pin stage + column decode (bank[15:5] = column) + sticky fault OR of the "
