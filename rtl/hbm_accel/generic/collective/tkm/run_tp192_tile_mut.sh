@@ -7,8 +7,14 @@ OUT=$(realpath -m "${1:?out}");mkdir -p "$OUT"
 OPENBLAS_NUM_THREADS=1 python3 tools/hgi_coll_tkm_tp192_vectors.py --out "$OUT/vec" > "$OUT/vectors.log" || exit 2
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 C=rtl/hbm_accel/generic/collective
+# TKM-3 10-18: hierarchical verilation is run as two make steps.  Verilator's _hier.mk has an explicit two-target rule
+# (<blk>.sv <blk>.mk) that make -j runs TWICE in parallel; with the e86 hier block both copies wrote the same dir and
+# the e86 lib failed 'PCH invalid / __pch.h.fast missing' (2 of 2 runs).  Step 1 verilates without --build (Verilator runs the hier verilation serially; the -j1 make is a no-op check),
+# step 2 builds -j8.  Checked KMAX=128 on ot-epyc5 (2 e86 stubs, binary built).
+vbuild(){ local obj=$1;shift;"$V" --cc --exe --main --timing --hierarchical -O2 "$@" -Mdir "$obj" &&
+ make -C "$obj" -f Vtb_hgi_coll_tkm_static_hier.mk -j1 hier_verilation && make -C "$obj" -f Vtb_hgi_coll_tkm_static_hier.mk -j8 hier_build; }
 src=("$C/tkm/tkm_tp192_hier.vlt" "$C/tkm/tb_hgi_coll_tkm_static.sv" "$C/tkm/ot_hgi_coll_tkm_static.sv" "$C/tkm/ot_hgi_coll_tkm.sv" "$C/tkm/ot_hgi_coll_tkm_buffer.sv" rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v)
-"$V" --binary --timing --hierarchical --verilate-jobs 2 --build-jobs 8 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT --top-module tb_hgi_coll_tkm_static -Mdir "$OUT/obj1" -GTP=192 -GKMAX=2048 -GTIE_W_MUT=1 "${src[@]}" > "$OUT/build1.log" 2>&1 || { tail -20 "$OUT/build1.log"; exit 2; }
+vbuild "$OUT/obj1" -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT --top-module tb_hgi_coll_tkm_static -GTP=192 -GKMAX=2048 -GTIE_W_MUT=1 "${src[@]}" > "$OUT/build1.log" 2>&1 || { tail -20 "$OUT/build1.log"; exit 2; }
 "$OUT/obj1/Vtb_hgi_coll_tkm_static" +DIR="$OUT/vec/rank128_zeros" +ROTATE=128 > "$OUT/mut.log" 2>&1; rc=$?
 grep -E 'MISMATCH R|TKM_STATIC' "$OUT/mut.log" | head -5
 exit $rc
