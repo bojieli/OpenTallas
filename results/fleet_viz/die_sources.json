@@ -78,9 +78,18 @@
    "label": "HBM accelerator die",
    "target": "HBM accelerator",
    "lead": "H-D4G",
-   "revision": "d4g GEN1 (pre-relay compose: 88 masters / 1,149 instances, strict bind PASS)",
+   "revision": "GEN2 d4g (strict die port-bind PASS: 97 masters / 1,198 instances, d4g_gen2/pb0)",
    "ref": "origin/claude/hd4g-1017",
    "sources": [
+    {
+     "kind": "port_bind",
+     "any": [
+      {
+       "file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2/pb0/port_bind.json"
+      }
+     ],
+     "note": "GEN2 S1 strict bind (HBM-CHAIN 10-18); GEN0+GEN1 retired 0ha"
+    },
     {
      "kind": "hbm_contract",
      "any": [
@@ -90,20 +99,13 @@
       {
        "path": "results/arch/hbm_die_d4g/gen0/contract.json.gz"
       }
-     ]
+     ],
+     "use": "previous"
     },
     {
      "kind": "view_bindings",
      "path": "results/arch/hbm_die_d4g/gen0/view_bindings.json",
      "use": "annotate"
-    },
-    {
-     "kind": "binding_replace",
-     "path": "results/arch/hbm_die_d4g/gen1/pg_r5_binding.json"
-    },
-    {
-     "kind": "gen1_plan",
-     "path": "results/arch/hbm_die_d4g/gen1_bindings_plan.json"
     }
    ]
   }
