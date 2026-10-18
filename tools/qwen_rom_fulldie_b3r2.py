@@ -2879,9 +2879,15 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         # >= bits / 6 um (<= 6 pins/um) and the area >= the landing's std-cell area / 0.55.  Default off (FWD off).
         if (_os_r.environ.get('OT_SPLIT_FWD_LANES', '0') == '1' and _os_r.environ.get('OT_SPLIT_FWD_LAND_SIZE', '1') == '1'
                 and bits > int(_os_r.environ.get('OT_SPLIT_FWD_LAND_BITS', '136'))):
+            # dv2f14 GEN try 1 (square bits/6 frames) left 3 sys_face / d2d nets without relay sites (over reach 622-666 um):
+            # widen only the N/S face (the corridor flow is vertical), keep the plain frame height, area from the width
             face = bits / 6.0 + 4.0
-            side = max(face, math.sqrt(2.8 * bits / 0.55))
-            return max(v.up(side, v.GX), v.CORR) - v.SHAVE, max(v.up(side, v.GY), RELAY_V_H) - v.SHAVE
+            w0, h0 = ((v.CORR - v.SHAVE, RELAY_V_H - v.SHAVE) if bits <= RELAY_STD_BITS else
+                      (max(v.up(span1, v.GX), v.CORR) - v.SHAVE,
+                       (RELAY_V_H if cl == 'link_spine' and span1 > BWP_H else max(v.up(span1, v.GY), BWP_H)) - v.SHAVE))
+            w = max(v.up(face, v.GX) - v.SHAVE, w0)
+            h = max(v.up(2.8 * bits / 0.55 / w, v.GY) - v.SHAVE, h0)
+            return w, h
         if bits <= RELAY_STD_BITS:
             return v.CORR - v.SHAVE, RELAY_V_H - v.SHAVE
         w = max(v.up(span1, v.GX), v.CORR) - v.SHAVE
