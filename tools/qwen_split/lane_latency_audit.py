@@ -94,7 +94,10 @@ def main():
         else:
             bus.append(dict(bid=bid, src=rows.get(bid, {}).get('src'), dst=rows.get(bid, {}).get('dst'), n=L['n'],
                             E=None, kind='plain'))
-    # (a) one latency per bus group
+    # (a) one latency per bus group (QXF-SEAMC: record bundles by the GEN's 'bundle' field or the bus name)
+    import record_bundles as RB
+    for b in bus:
+        b['bundle'] = rows.get(b['bid'], {}).get('bundle') or RB.bundle_of_bid(b['bid'], b.get('src'), b.get('dst'))
     gid = LG.group_of(bus)
     groups = {}
     for b in bus:

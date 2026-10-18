@@ -29,5 +29,12 @@ if [ "${OT_LANE_AUDIT:-1}" = 1 ]; then
   python3 $R/tools/qwen_split/lane_latency_audit.py $D --out $O/lane_latency_audit.json > $O/lane_latency_audit.txt 2>&1; la=$?
   tail -1 $O/lane_latency_audit.txt
   [ $la -ne 0 ] && [ $rc -eq 0 ] && rc=4
+  # QXF-SEAMC 10-18: record-bundle audit (TOKEN-XDIE-QWEN F5 / LAYERBENCH G-C2): every record bundle of the d2d_rom /
+  # native59 / sys_face seams (valid + all fields of one record, selected by endpoint pins) arrives on ONE edge --
+  # direct wires included (the lane audit above only sees relay chains, so a direct rx_v beside a landed rx_payload
+  # passed it).  tools/qwen_split/record_bundles.py audit.
+  python3 $R/tools/qwen_split/record_bundles.py audit $D --out $O/record_bundle_audit.json > $O/record_bundle_audit.txt 2>&1; ra=$?
+  tail -1 $O/record_bundle_audit.txt
+  [ $ra -ne 0 ] && [ $rc -eq 0 ] && rc=5
 fi
 exit $rc

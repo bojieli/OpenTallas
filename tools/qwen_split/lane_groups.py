@@ -74,6 +74,12 @@ def group_of(rows):
                 gid = f"{m.group('stem')}*{m.group('suf') or ''}:{s}->{d}"
                 for x in [b] + mem:
                     g[x] = gid
+    # QXF-SEAMC 10-18 (TOKEN-XDIE-QWEN F5, LAYERBENCH G-C2): a RECORD BUNDLE (tools/qwen_split/record_bundles.py: valid +
+    # slots + kind / beat + payload of one static record, selected by endpoint pins as the compiler does) is ONE group
+    # whatever its bus names: lnk_rx_payload rides with lnk_native_rx_*, sf_prog_auth_slot with sf_prog_rx_v
+    for r in rows:
+        if r.get('bundle'):
+            g[r['bid']] = f"record:{r['bundle']}"
     return g
 
 
