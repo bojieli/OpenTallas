@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.tile_visual_review.v1",
+  "tile": "dsdv_sh_sq",
+  "reviewer": "PL-SEQ (PARENTS-LANDED sub-lane; seq_host core child), 2026-10-18 ~07:55; not a critical tile",
+  "time": "2026-10-18T07:55:00-07:00",
+  "gate_commit": "8a7a6ed408b23a257b9056a1f527c16315e01030",
+  "gate_generated": "2026-10-18T01:44:55-0700",
+  "verdict": "APPROVED",
+  "gate": "PASS 0 fail / 0 warn; reg->reg +36.7 ps (setup WNS +36.7, hold +33.3, placement RC); 13,476 sinks TT 263.5..291.4 (spread 27.9), FF 215.1..241.3 (26.2); util 48%",
+  "native_probe": {
+    "tool": "tools/ref_tile/cts_native_probe.py (origin/main; CTS placement RC, TT)",
+    "launch_ps": 183.9, "launch_pin": "rs_o[224]",
+    "capture_ps": 125.1, "capture_pin": "ks_i[52]",
+    "launch_over_220": 0, "capture_over_190": 0, "comb_pins": 0,
+    "spread_ps": 25.3, "ff_spread_ps": 24.4,
+    "diagnostic_pass": true,
+    "file": "physical/ref_tile/dsdv_sh_sq/gate_layout/native_probe.json"
+  },
+  "checklist": {
+    "lattice": "n/a (no macros)",
+    "std_cell_band": "one std-cell region over the whole core, fill 0.46-0.48; denser W half (the issuer / calendar), no slivers",
+    "pin_spread": "2,599 pins on the full N and S faces (vc above / lk below, pin-abutted stack), ~5.1/um <= 6",
+    "clock_entry": "ck on the E face lower half; measured spread 27.9 TT / 26.2 FF, insertion 291 ps -- accepted on measured facts",
+    "shape": "254.88 x 120.96 (2.1:1) set by the abutted lk/sq/vc stack (same 255-um width as lk and vc)"
+  },
+  "spec_checks": "pass bench SEQHOST_GATE; mutants 1-4 expect=fail with committed fail witnesses results/rtl/s81_dv_unit_1017/seqhost/run_mut{1..4}.log",
+  "notes": "Leaf of the PL-SEQ option-B core parent dsdv_seq_host_c (lk + sq + vc). sq RTL (module dsdv_sh_sq) is byte-identical at 8a7a6ed40, ef442ffba and origin/main."
+}
