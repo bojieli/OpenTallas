@@ -157,6 +157,19 @@ RULE_COMMITS = {
     "2c5779073788dca0d09b65bc8150f0006d9326c6": dict(
         kind="neutral", rule="closed-stands-native-capture",
         what="CLOSED_STANDS reroute kind native_capture: submit-time lint only"),
+    # ROOT-0330 10-18: KV die planner changes without a trailer (inputs of ~180 gates).  Only kv_die.py and
+    # kv_pin_repair.py are classified (paths=): the same commits' pv_trunk_gen.py / kv_static_die.py / kv_expand.py
+    # changes are not.  With every new switch at its default the plan is byte-identical for every kit that built before.
+    "76f68cefa8ae97296b8c1f07eab9801c47aaac70": dict(
+        kind="neutral", rule="kv-die-opt-in", paths=("tools/qwen_kv_die/kv_die.py", "tools/qwen_kv_die/kv_pin_repair.py"),
+        what="KV-PLAN3: OT_KV_CTL_BAND (default 0 = old sy), OT_KV_FAIL_JSON (dump on the raise path only), "
+             "KSD.face_order only under OT_KV_STATIC_DIE=1, pin_reach report gains an 'all' list (report text); "
+             "kv_pin_repair attempt 0 = the old loop verbatim, attempt 1 runs only for a hop the old code left "
+             "unresolved, which made the old build raise (default OT_KV_HOP=0) -> every previously built plan unchanged"),
+    "8a83ec822056192aa6c6c49940974ebe062e734b": dict(
+        kind="neutral", rule="kv-die-opt-in", paths=("tools/qwen_kv_die/kv_die.py",),
+        what="KV-RTRUNK: PV_RS = OT_KV_PV_T=1 (default 0) AND a pv_trunk_t plan carrying result_trunk; only then the "
+             "qkd_pvw_* masters gain port bundle pr and its strip-face pin (the plan.json is its own bound input)"),
     "3dd60bc0f0617cfaae3db5f77870c267195e76a8": dict(
         kind="tightening", rule="pin-geometry",
         what="fp_margin_lint: actual pin rectangles inside the die with track data (new FAIL)"),
@@ -241,7 +254,8 @@ def classify_commit(repo, commit, rel, pre, post, registry=None, cache=None):
         reg = {**{c: dict(e, kind=e.get("kind", "relaxing")) for c, e in RELAXING_RULE_COMMITS.items()}, **RULE_COMMITS}
     else:
         reg = registry
-    if commit in reg:
+    if commit in reg and (not reg[commit].get("paths") or rel in reg[commit]["paths"]):
+        # optional "paths": the entry classifies only those files of the commit (its other files fall through)
         return dict(reg[commit], commit=commit, source="registry")
     cache = {} if cache is None else cache
     if ("msg", commit) not in cache:
@@ -262,11 +276,45 @@ def classify_commit(repo, commit, rel, pre, post, registry=None, cache=None):
                 what="no RULE_COMMITS entry, no 'Gate-Rule:' trailer, not comment-only")
 
 
+def _merge_is_clean(repo, rel, parents, result_blob, cache):
+    """(ok, parent_blobs, base_blob): a two-parent merge whose rel is exactly git merge-file's conflict-free merge of
+    the parents' blobs over their merge base's blob -- the merge adds nothing beyond its parents' commits."""
+    if len(parents) != 2:
+        return False, [], None
+    def rp(rev):
+        q = subprocess.run(["git", "-C", str(repo), "rev-parse", "--verify", "-q", f"{rev}:{rel}"], capture_output=True,
+                           text=True, timeout=60)
+        return q.stdout.strip() if not q.returncode else None
+    mb = subprocess.run(["git", "-C", str(repo), "merge-base", *parents], capture_output=True, text=True, timeout=120)
+    if mb.returncode:
+        return False, [], None
+    pb, base = [rp(x) for x in parents], rp(mb.stdout.split()[0])
+    if None in pb or base is None:
+        return False, pb, base
+    datas = [_blob(repo, b) for b in (pb[0], base, pb[1])]
+    if any(d is None for d in datas):
+        return False, pb, base
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        fs = []
+        for k, d in zip(("ours", "base", "theirs"), datas):
+            f = Path(td) / k
+            f.write_bytes(d)
+            fs.append(str(f))
+        q = subprocess.run(["git", "merge-file", "-p", "-q", *fs], capture_output=True, timeout=120)
+    return (q.returncode == 0 and q.stdout == _blob(repo, result_blob)), pb, base
+
+
 def rule_span(repo, rel, old_blob, new_blob, heads, tile=None, registry=None, max_steps=64):
-    """(ok, rows, why): classify every commit on rel's blob chain from new_blob back to old_blob (commits reachable
-    from heads: origin/main plus the route commit).  ok when the chain exists and no commit is stricter for the tile:
-    every row is relaxing / neutral, or a tightening outside the tile's scope, or a tightening whose "requires" the
-    caller then judges.  rows newest first, each with "applies" (bool).  why: the first blocking commit, else None."""
+    """(ok, rows, why): classify every commit that changed rel between the gate's revision (the commits whose rel blob
+    is old_blob) and the current one (commits whose rel blob is new_blob), all reachable from heads (origin/main plus the
+    route commit).  ok when no commit is stricter for the tile: every row is relaxing / neutral, or a tightening outside
+    the tile's scope, or a tightening whose "requires" the caller then judges.  rows newest first, each with "applies"
+    (bool).  why: the first blocking commit, else None.
+    ROOT-0330 10-18: commit-set walk (git rev-list NEW ^OLD -- rel), not a single blob chain, so a file changed on two
+    branches and merged (kv_die.py 76f68cefa || 8a83ec822 -> bb834a0fb) is classified: every non-merge commit on either
+    side is classified, and a merge that changed rel against EVERY parent must be clean (git merge-file of its parents
+    over their merge base reproduces it byte-exactly), i.e. it adds nothing of its own."""
     if not old_blob or not new_blob:
         return False, [], "blob unknown"
     if old_blob == new_blob:
@@ -274,28 +322,51 @@ def rule_span(repo, rel, old_blob, new_blob, heads, tile=None, registry=None, ma
     heads = [h for h in heads if h]
     if not heads:
         return False, [], "no history head"
-    p = subprocess.run(["git", "-C", str(repo), "log", "--format=C %H", "--raw", "--no-abbrev", "--no-renames", *heads,
-                        "--", rel], capture_output=True, text=True, timeout=180)
+    p = subprocess.run(["git", "-C", str(repo), "log", "-m", "--format=C %H %P", "--raw", "--no-abbrev", "--no-renames",
+                        *heads, "--", rel], capture_output=True, text=True, timeout=180)
     if p.returncode:
         return False, [], "git log failed"
-    trans, cur = [], None          # (commit, pre_blob, post_blob), newest first
+    info, cur = {}, None            # commit -> dict(parents, pre=[blobs], post)
     for ln in p.stdout.splitlines():
         if ln.startswith("C "):
-            cur = ln[2:].strip()
+            f = ln[2:].split()
+            cur = f[0] if f else None
+            if cur:
+                info.setdefault(cur, dict(parents=f[1:], pre=[], post=None))
         elif ln.startswith(":") and cur:
             f = ln.split()
             if len(f) >= 5:
-                trans.append((cur, f[2], f[3]))
-    rows, blob, seen, cache = [], new_blob, set(), {}
-    for _ in range(max_steps):
-        if blob == old_blob:
-            return True, rows, None
-        step = next((t for t in trans if t[2] == blob and t[0] not in seen), None)
-        if step is None:
-            return False, rows, f"{rel}: gate blob {old_blob[:9]} is not an ancestor revision of {new_blob[:9]} on main"
-        c, pre, post = step
-        seen.add(c)
-        r = classify_commit(repo, c, rel, pre, post, registry, cache)
+                info[cur]["pre"].append(f[2])
+                info[cur]["post"] = f[3]
+    olds = [c for c, e in info.items() if e["post"] == old_blob]
+    news = [c for c, e in info.items() if e["post"] == new_blob]
+    gate_ref = f"{rel}: gate blob {old_blob[:9]} is not an ancestor revision of {new_blob[:9]} on main"
+    if not olds or not news:
+        return False, [], gate_ref
+    if not any(subprocess.run(["git", "-C", str(repo), "merge-base", "--is-ancestor", o, n], capture_output=True,
+                              timeout=60).returncode == 0 for o in olds for n in news):
+        return False, [], gate_ref
+    q = subprocess.run(["git", "-C", str(repo), "rev-list", "--full-history", *news, *[f"^{o}" for o in olds], "--", rel],
+                       capture_output=True, text=True, timeout=180)
+    if q.returncode:
+        return False, [], "git rev-list failed"
+    span = [c for c in q.stdout.split() if c in info]
+    rows, cache = [], {}
+    for c in span:
+        e = info[c]
+        if len(e["parents"]) > 1:
+            if len(e["pre"]) < len(e["parents"]):
+                continue                 # rel equals one parent's: the merge adds nothing to that parent's commits
+            clean, _, _ = _merge_is_clean(repo, rel, e["parents"], e["post"], cache)
+            if not clean:
+                rows.append(dict(kind="unclassified", commit=c, source="none", applies=False,
+                                 what="merge with its own changes to the file (not a clean merge of its parents)"))
+                return False, rows, (f"{rel}: merge {c[:9]} is not a clean merge of its parents (classify it with a "
+                                     f"helper_overlay.RULE_COMMITS entry)")
+            continue                     # clean merges are not listed: their parents' commits are
+        if len(rows) >= max_steps:
+            return False, rows, f"{rel}: blob chain longer than {max_steps} commits"
+        r = classify_commit(repo, c, rel, e["pre"][0] if e["pre"] else None, e["post"], registry, cache)
         r["applies"] = r["kind"] == "tightening" and tile_matches(r.get("applies_to"), tile)
         rows.append(r)
         if r["kind"] == "unclassified":
@@ -303,8 +374,7 @@ def rule_span(repo, rel, old_blob, new_blob, heads, tile=None, registry=None, ma
                                  f"'Gate-Rule: relaxing|neutral|tightening' trailer or a helper_overlay.RULE_COMMITS entry)")
         if r["applies"] and not r.get("requires"):
             return False, rows, f"{rel}: commit {c[:9]} TIGHTENS rule {r.get('rule')} for this tile ({r.get('what', '')[:120]})"
-        blob = pre
-    return False, rows, f"{rel}: blob chain longer than {max_steps} commits"
+    return True, rows, None
 
 
 def relaxing_only_span(repo, rel, old_blob, new_blob, heads, allow=None, max_steps=64):
