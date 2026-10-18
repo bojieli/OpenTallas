@@ -14,7 +14,10 @@
    "rtl/test/hbm_idx_static",
    "tools/hbm_idx_static_parent_vectors.py",
    "tools/hbm_idx_static_query_vectors.py",
-   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1"
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "rtl/hbm_accel/index/ot_hbm_idx_query_owned_native.sv",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py"
   ]
  },
  "stages": {
