@@ -7,18 +7,20 @@
 // 4 DUT FMUT 1 (cause not sticky): must FAIL.
 module tb_hbm_status_join_fa_relay;
 parameter integer MUT=0;
-localparam integer NT=67, NF=105, NH=6;
-localparam [NT*8-1:0] TGTS=536'hd7d6d5d4d3d2d1d0c7c6c5c4c3c2c1c0a5a4a2a0878685846f6e6d6c6a68666463626160575655545352515047464544434241403b3a39387877767574703736353430;
+// NT/NF/NH/TGTS: r3 module defaults; STATFA4 10-17: run_status_join_fa_relay.sh OUT MUT d4f sets the d4f die instance's
+// NT 69 / NF 107 / 552-bit TGTS (hdie_host_status_fa_r4).
+parameter integer NT=67, NF=105, NH=6;
+parameter [NT*8-1:0] TGTS=536'hd7d6d5d4d3d2d1d0c7c6c5c4c3c2c1c0a5a4a2a0878685846f6e6d6c6a68666463626160575655545352515047464544434241403b3a39387877767574703736353430;
 reg clk=0,rst_n=0; always #1 clk=~clk;
 reg cv=0,dv=0,lv=0; reg [7:0] ct=0; reg [NT-1:0] rdy=0,act=0; reg [NF-1:0] tf=0; reg [NH-1:0] hf=0;
 reg [3:0] af=0; wire [3:0] d_ac, r_ac;
 wire d_br,d_pa,d_pf,d_df,d_irq, r_br,r_pa,r_pf,r_df,r_irq;
-ot_hbm_status_join_fa #(.MUT(MUT==1?1:0),.RRELAY(MUT==3?0:1),.FMUT(MUT==4?1:0)) dut(.clk(clk),.rst_n(rst_n),.cfg_v(cv),.desc_v(dv),.launch_v(lv),
+ot_hbm_status_join_fa #(.NT(NT),.NF(NF),.NH(NH),.TGTS(TGTS),.MUT(MUT==1?1:0),.RRELAY(MUT==3?0:1),.FMUT(MUT==4?1:0)) dut(.clk(clk),.rst_n(rst_n),.cfg_v(cv),.desc_v(dv),.launch_v(lv),
  .cfg_target(ct),.t_ready(rdy),.t_active(act),.t_fault(tf),.h_fault(hf),.a_fault(af),
  .block_ready(d_br),.program_active(d_pa),.program_fault(d_pf),.die_fault(d_df),.irq(d_irq),.a_cause(d_ac));
 wire [0:0] r_rst;
 ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) r_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(r_rst));
-ot_hbm_status_join_fa ref0(.clk(clk),.rst_n(r_rst[0]),.cfg_v(cv),.desc_v(dv),.launch_v(lv),
+ot_hbm_status_join_fa #(.NT(NT),.NF(NF),.NH(NH),.TGTS(TGTS)) ref0(.clk(clk),.rst_n(r_rst[0]),.cfg_v(cv),.desc_v(dv),.launch_v(lv),
  .cfg_target(ct),.t_ready(rdy),.t_active(act),.t_fault(tf),.h_fault(hf),.a_fault(af),
  .block_ready(r_br),.program_active(r_pa),.program_fault(r_pf),.die_fault(r_df),.irq(r_irq),.a_cause(r_ac));
 integer edges=0,mism=0,nbr=0,nirq=0,npf=0,nac=0,nclr=0,started=0;

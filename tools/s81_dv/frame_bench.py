@@ -83,9 +83,27 @@ def cmd_gen(a):
     else:
         qa = q
     field = I.Field(16, 1, 0, depth=8192, active=len(qa), pp=True, fast=True)
+    plan = None
+    if a.plan:                     # D2: the frame return legaliser places the K-split rows (one hw slot per element)
+        assert a.only is None
+        nsr, rem = divmod(len(qa), a.nseg)
+        assert rem == 0, ('q pairs must be a multiple of nseg', len(qa), a.nseg)
+        a.rows, a.mats = 2 * nsr, 1
     mats = [SynMat(rng, f'syn{i}', a.rows, a.K) for i in range(a.mats)]
-    ph = I.add_phase(field, mats)
     x = (rng.standard_normal(a.K) * np.exp2(rng.integers(-3, 4, size=a.K))).astype(np.float32)
+    if a.plan:
+        import frame_return_plan as P
+        plan = P.plan_phase(a.master, qa, mats[0], x, a.nseg, seed=a.seed, iters=a.iters)
+        orig = I._place
+        I._place = P.place_fn(plan['assign_slots'], a.nseg)
+        try:
+            ph = I.add_phase(field, mats)
+        finally:
+            I._place = orig
+        assert field.stream[ph['sbase']:ph['sbase'] + ph['nbeat']] == plan['stream'], 'stream differs from the plan'
+        plan.pop('stream')
+    else:
+        ph = I.add_phase(field, mats)
     gold = I.golden_phase(mats, x)
     # ---- element ROM images (frame INSTANCE "f": element f_e<k>, macros f_e<k>{,b}_<parity>)
     tmp = out / 'field'
@@ -128,7 +146,11 @@ def cmd_gen(a):
     meta = dict(master=a.master, seed=a.seed, only=a.only, K=a.K, rows_per_mat=a.rows, mats=a.mats, q_pairs=q, bf_pairs=bf,
                 phase=dict((k, v) for k, v in ph.items() if k != 'matrices'), matrices=ph['matrices'],
                 nrows=off, ops=off, rows={str(k): v for k, v in rows.items()},
-                cycles=a.cycles)
+                cycles=a.cycles, plan=plan)
+    if plan:
+        for r, v in rows.items():          # the plan's leaf values are the same golden segment sums
+            assert plan['rows_vals'][str(r)] == v['vals'], r
+        (out / 'return_plan.json').write_text(json.dumps(plan, indent=1) + '\n')
     (out / 'meta.json').write_text(json.dumps(meta, indent=1) + '\n')
     (out / 'T').write_text(f'{a.cycles}\n')
     (out / 'ARGS').write_text(f'+OT_ROM_DIR={out.resolve()} +T={a.cycles} +K={a.K} +OPS={off}\n')
@@ -191,6 +213,15 @@ def cmd_check(a):
             errs.append(f'COVERAGE row {r} segments {c} of {len(v["vals"])}')
     if len(tags) > 1:
         errs.append(f'OP_TAGS {sorted(tags)} (one op: one tag)')
+    plan = meta.get('plan')
+    if plan:                       # cycle-exact against the compiler's return calendar (tools/s81_dv/frame_return_plan.py)
+        if plan['faults']:
+            errs.append(f'PLAN_FAULTS {plan["faults"]} (the legaliser found no fault-free placement)')
+        want = [(e, _f(norm(t))[0] & 0x3FFF, _f(norm(t))[1:], d, er) for e, t, d, er in plan['ret']]
+        got = [(e, _f(norm(t))[0] & 0x3FFF, _f(norm(t))[1:], d, er) for e, t, d, er in words]
+        if want != got:
+            errs.append(f'PLAN_MISMATCH predicted {len(want)} ret words, got {len(got)}; first diff '
+                        f'{next(((w, g) for w, g in zip(want, got) if w != g), (want[len(got):len(got) + 1], got[len(want):len(want) + 1]))}')
     xo_bad = re.findall(r'^XO_MISMATCH .*$', log, re.M)
     errs += xo_bad[:4]
     flt = re.findall(r'^FAULT .*$', log, re.M)
@@ -199,7 +230,8 @@ def cmd_check(a):
     if not done:
         errs.append('NO_END')
     complete = sum(1 for _, t_, _, _ in words if (_f(norm(t_))[1] == 0 and (1 << _f(norm(t_))[2]) >= _f(norm(t_))[3]))
-    summ = dict(words=len(words), rows=len(rows), complete_rows_at_root=complete,
+    summ = dict(words=len(words), rows=len(rows), complete_rows_at_root=complete, plan_exact=bool(plan) and not
+                any(e.startswith('PLAN_') for e in errs),
                 partial_words=len(words) - complete, errors=len(errs),
                 end=done.group(0) if done else None)
     (d / 'check.json').write_text(json.dumps(dict(summary=summ, errors=errs[:200]), indent=1) + '\n')
@@ -225,6 +257,11 @@ def main(argv=None):
     g.add_argument('--K', type=int, default=2048)
     g.add_argument('--cycles', type=int, default=3000)
     g.add_argument('--only', type=int, help='frame pair index of the one active q element (else all 12 share the phase)')
+    g.add_argument('--plan', action='store_true', help='all q elements, one K-split phase placed by the frame return '
+                   'legaliser (tools/s81_dv/frame_return_plan.py): rows = 2 x pairs / nseg, one segment per element; '
+                   'check then requires the ret words to equal the predicted calendar cycle for cycle')
+    g.add_argument('--nseg', type=int, default=4)
+    g.add_argument('--iters', type=int, default=4000)
     c = sp.add_parser('check')
     c.add_argument('--dir', required=True)
     c.add_argument('--log', required=True)

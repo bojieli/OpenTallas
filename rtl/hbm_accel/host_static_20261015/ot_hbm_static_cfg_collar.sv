@@ -41,7 +41,7 @@ module ot_hbm_static_cfg_collar #(
     parameter integer XSER=0,      // 1: core clk is the 3:4 serial domain, broadcast pins on clk_in (stream)
     parameter integer MUT=0,       // bench: 1 skip sequential check, 2 ready ignores need, 3 go one edge early, 4 no event seq check,
                                    //        5 (XSER=1) stream domain left without its reset, 6 (XSER=1) binary event sequence (not Gray),
-                                   //        7 (XSER=1) one synchroniser stage short
+                                   //        7 (XSER=1) one synchroniser stage short, 8 (XSER=0) core state without the synchronised reset
     parameter integer AW=PAGE_W+11
 )(
     input  wire clk, clk_in, rst_n,
@@ -78,10 +78,25 @@ module ot_hbm_static_cfg_collar #(
     // xser_cdc.sdc like the event sequence) and that Q (rst_s_n) clears the clk_in flops. Before this, the raw serial rst_n async-cleared
     // the clk_in flops directly (pin -> RESETN at the tightest 3:4 edge pair: recovery -129 ps, removal -50 ps).
     // Release: core +2 serial edges, stream +2 stream edges after that; no datapath latency changes (configuration
-    // events arrive from the elastic host ingress long after power-on reset). XSER=0: unchanged (rst_n direct).
+    // events arrive from the elastic host ingress long after power-on reset).
+    // XSER=0 (HBM-NATIVE 2026-10-17): the same 2-flop pin synchroniser as the XSER=1 core path. The native pin audit of
+    // the closed r1 views (col_sfu capture 455.7 ps, col_idx 499.0 ps > 190) found the raw rst_n pin async-clearing every
+    // collar flop; now the pin drives ONE plain clk flop, whose stage-2 Q is the reset of every flop (single domain:
+    // rst_s_n = rst_c_n). Assert and release both take +2 clk edges; no datapath / event latency changes (cycles 0).
+    // MUT 8 (bench): a mid-run reset does not reach the core state (configuration, armed, hwm, records).
+    // XSER=1 elaboration is unchanged (g_rst_sync below, byte-identical text; col_su r3 closed view).
     wire rst_c_n, rst_s_n;
     generate if (XSER == 0) begin : g_rst_same
-        assign rst_c_n = rst_n; assign rst_s_n = rst_n;
+        reg [1:0] rc;
+        always @(posedge clk) rc <= {rc[0], rst_n};
+        if (MUT == 8) begin : g_mut8   // bench mutant: only the power-on reset reaches the core state
+            reg por_done = 1'b0;
+            always @(posedge clk) if (rc[1] === 1'b1) por_done <= 1'b1;
+            assign rst_c_n = rc[1] | por_done;
+        end else begin : g_rc
+            assign rst_c_n = rc[1];
+        end
+        assign rst_s_n = rc[1];
     end else begin : g_rst_sync
         reg [1:0] rc, rs;
         always @(posedge clk)    rc <= {rc[0], rst_n};
@@ -103,8 +118,8 @@ module ot_hbm_static_cfg_collar #(
     generate if (XSER == 0) begin : g_same
         // broadcast pins in the core clock (clk_in is the same root)
         always @(posedge clk) begin ct <= cfg_target; ca <= cfg_addr; cd <= cfg_data; end
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin cv <= 0; dv <= 0; lv <= 0; xfault <= 0; end
+        always @(posedge clk or negedge rst_s_n)
+            if (!rst_s_n) begin cv <= 0; dv <= 0; lv <= 0; xfault <= 0; end
             else begin cv <= cfg_v; dv <= desc_v; lv <= launch_v; xfault <= 0; end
     end else begin : g_xser
         // 3:4 crossing as a SYNCHRONISED boundary (HBM-COLSU 2026-10-17; replaces the flop-to-flop crossing timed at the

@@ -64,3 +64,37 @@ module qkd_ctrl_pc_ecc_child (
         .hclk(hclk), .h_rst_n(hr_q), .i_v(i_v), .i_code(i_code), .i_sec(i_sec), .i_row(i_row),
         .o_v(o_v), .o_data(o_data), .o_sec(o_sec), .o_row(o_row), .ce(), .ue(), .fault(fault), .ce_count());
 endmodule
+
+// KV-NATIVE 2026-10-17: ECC child paired with qkd_ctrl_pc_sched PINREG 2 (sched_s10), whose e_sec / e_row arrive ONE hclk
+// after the beat (i_v / i_code) they belong to.  ot_qfd_kv_landing_ecc (unchanged, PIPE 2) carries section / row through
+// P0 -> P1 -> the output register untouched by the decode; here they enter at P1 instead: s1 / r1 capture the late i_sec /
+// i_row on the edge the P1 registers capture the beat, and o_sec / o_row load from them under the same f_v (= i_v two
+// edges late, own reset copy).  o_v / o_data / fault and o_sec / o_row are cycle-identical to qkd_ctrl_pc_ecc_child fed
+// i_sec / i_row on the beat's own edge (tb_sched_esecreg_equiv).  MUT 1 (bench only): o_sec / o_row skip s1 / r1.
+module qkd_ctrl_pc_ecc_child_sl #(parameter integer MUT = 0) (
+    input  wire         hclk,
+    input  wire         hrst,
+    input  wire         i_v,
+    input  wire [287:0] i_code,
+    input  wire [16:0]  i_sec,
+    input  wire [7:0]   i_row,
+    output wire         o_v,
+    output wire [255:0] o_data,
+    output reg  [16:0]  o_sec,
+    output reg  [7:0]   o_row,
+    output wire         fault
+);
+    (* keep *) reg hr_q;
+    always @(posedge hclk) hr_q <= hrst;
+    ot_qfd_kv_landing_ecc #(.ENABLE(1), .INTERLEAVED(1)) u_ecc (
+        .hclk(hclk), .h_rst_n(hr_q), .i_v(i_v), .i_code(i_code), .i_sec(17'd0), .i_row(8'd0),
+        .o_v(o_v), .o_data(o_data), .o_sec(), .o_row(), .ce(), .ue(), .fault(fault), .ce_count());
+    reg v1, v2;
+    reg [16:0] s1;
+    reg [7:0]  r1;
+    always @(posedge hclk or negedge hr_q) if (!hr_q) begin v1 <= 1'b0; v2 <= 1'b0; end else begin v1 <= i_v; v2 <= v1; end
+    always @(posedge hclk) begin
+        s1 <= i_sec; r1 <= i_row;
+        if (v2) begin o_sec <= (MUT == 1) ? i_sec : s1; o_row <= (MUT == 1) ? i_row : r1; end
+    end
+endmodule

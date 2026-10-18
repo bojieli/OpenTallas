@@ -147,6 +147,13 @@
     {
      "kind": "x_forward",
      "note": "4 x dsfd_dvrly_276_NS (one flop-first stage, own lane forwarded clock in / ck_o out); +1 edge per frame on the x chain"
+    },
+    {
+     "kind": "return_r1_skew",
+     "counts": {
+      "dsfd_rly_63_NS": 12
+     },
+     "note": "one relay stage at every q leaf node b (r1) input: r1 reaches the leaf one edge after r0 (D2, ot_s81_retn_static F1); compiler calendar tools/s81_dv/frame_return_plan.py"
     }
    ],
    "params": {
@@ -215,7 +222,7 @@
     "dsfd_rly_54_WN": 3,
     "dsfd_rly_63_ES": 1,
     "dsfd_rly_63_NE": 9,
-    "dsfd_rly_63_NS": 17,
+    "dsfd_rly_63_NS": 29,
     "dsfd_rly_63_SE": 5,
     "dsfd_rly_63_WE": 46,
     "dsfd_rly_63_WN": 5,
@@ -236,7 +243,7 @@
    },
    "rtl": {
     "path": "rtl/dsrom_sys/s81_dv/frame/col_h9.sv",
-    "sha256": "cb9334add0b0539f7fa0a188ded4c5ebe648b2a74deeb17877128739d31fc15b"
+    "sha256": "89ee9d7eea2f769256db3e1511e52065072f69d76acfe10f84a4b636ebd6a3f1"
    }
   },
   "col_h10": {
@@ -283,6 +290,14 @@
     {
      "kind": "x_forward",
      "note": "4 x dsfd_dvrly_276_NS (one flop-first stage, own lane forwarded clock in / ck_o out); +1 edge per frame on the x chain"
+    },
+    {
+     "kind": "return_r1_skew",
+     "counts": {
+      "dsfd_rly_63_WE": 2,
+      "dsfd_rly_63_NS": 10
+     },
+     "note": "one relay stage at every q leaf node b (r1) input: r1 reaches the leaf one edge after r0 (D2, ot_s81_retn_static F1); compiler calendar tools/s81_dv/frame_return_plan.py"
     }
    ],
    "params": {
@@ -350,10 +365,10 @@
     "dsfd_rly_536_SW": 4,
     "dsfd_rly_54_WN": 4,
     "dsfd_rly_63_NE": 8,
-    "dsfd_rly_63_NS": 40,
+    "dsfd_rly_63_NS": 50,
     "dsfd_rly_63_SE": 8,
     "dsfd_rly_63_SN": 1,
-    "dsfd_rly_63_WE": 47,
+    "dsfd_rly_63_WE": 49,
     "dsfd_rly_63_WN": 5,
     "dsfd_rly_63_WS": 32,
     "dsfd_rly_66_ES": 1,
@@ -370,7 +385,7 @@
    },
    "rtl": {
     "path": "rtl/dsrom_sys/s81_dv/frame/col_h10.sv",
-    "sha256": "7c1dd03d4012a6d517d57a56cd9f357f53e62e78f682f34ceb6f32e628d7885e"
+    "sha256": "578bb949520d91568eeffdddaed7a5fb418001811ceb7396f2ba90c60e7229f8"
    }
   },
   "col_h9_MX": {
