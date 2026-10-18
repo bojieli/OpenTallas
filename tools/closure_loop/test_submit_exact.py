@@ -51,8 +51,15 @@ def test_origin_problems_unpushed_source_and_grant(tmp_path):
     (wt / "k" / "grant.json").write_text('{"m6_pin_grant": {"source_commit": "%s"}}' % c1)
     g(wt, "add", "k"); g(wt, "commit", "-qm", "b")
     c2 = g(wt, "rev-parse", "HEAD")
-    bad = S.origin_problems(wt, c2, spec, "k")
+    bad = S.origin_problems(wt, c2, spec, "k", push=False)
     assert len(bad) == 1 and "not on origin/br" in bad[0]
+    assert S.origin_problems(wt, c2, spec, "k", dry=True) == []       # fast-forward possible: dry run would push
+    assert S.origin_problems(wt, c2, spec, "k") == []                 # GATE-FRICTION: fast-forward pushed
+    assert g(wt, "rev-parse", "origin/br") == c2
+    g(wt, "checkout", "-q", "--detach", c1); g(wt, "commit", "-q", "--allow-empty", "-m", "diverged")
+    bad = S.origin_problems(wt, g(wt, "rev-parse", "HEAD"), spec, "k")
+    assert len(bad) == 1 and "no fast-forward" in bad[0]              # never forced
+    g(wt, "checkout", "-q", c2)
     g(wt, "commit", "-q", "--allow-empty", "-m", "local only")
     c3 = g(wt, "rev-parse", "HEAD")
     (wt / "k" / "grant.json").write_text('{"m6_pin_grant": {"source_commit": "%s"}}' % c3)
@@ -105,6 +112,32 @@ class VisualReview(unittest.TestCase):
         del files["k/gate_layout/REVIEW.json"]
         self.assertIn("REVIEW_REQUIRED: no", SE.review_check(self.t, "c" * 40, "k", show=files.get))
 
+    def test_geometry_bound_receipt(self):
+        fp = {"die": [0, 0, 100, 50], "core": [1, 1, 99, 49], "pins": {"W": ["a"], "E": ["b"]}, "clock_port": "ck",
+              "blocks": [{"inst": "u", "master": "m", "x": 43.2, "y": 0, "w": 10, "h": 10, "orient": "R0"}]}
+        files = {"k/gate_result.json": json.dumps({"commit": "new1234", "generated": "t2"}),
+                 "k/floorplan.json": json.dumps(fp), "k/spec.json": json.dumps({"outline": {"w": 100, "h": 50}})}
+        geo = SE.geometry_record(files.get, "k")
+        good = {"reviewer": "coordinator (Claude)", "time": "now", "gate_commit": "abc0001", "verdict": "APPROVED",
+                "checklist": {k: "ok" for k in SE.REVIEW_CHECKLIST}, "geometry_sha256": geo["sha256"], "geometry": geo}
+        files["k/gate_layout/REVIEW.json"] = json.dumps(good)
+        self.assertIsNone(SE.review_check(self.t, "c" * 40, "k", show=files.get))     # re-gated, same geometry
+        moved = dict(fp, blocks=[dict(fp["blocks"][0], x=86.4)])
+        files["k/floorplan.json"] = json.dumps(moved)
+        r = SE.review_check(self.t, "c" * 40, "k", show=files.get)
+        self.assertIn("geometry changed", r)
+        self.assertIn("changed: macros", r)
+        # legacy receipt (no geometry hash): the geometry at its gate_commit decides
+        legacy = {k: v for k, v in good.items() if not k.startswith("geometry")}
+        files["k/gate_layout/REVIEW.json"] = json.dumps(legacy)
+        old = {"k/floorplan.json": json.dumps(fp), "k/spec.json": files["k/spec.json"]}
+        self.assertIn("geometry changed since the review",
+                      SE.review_check(self.t, "c" * 40, "k", show=files.get, show_at=lambda c, p: old.get(p)))
+        files["k/floorplan.json"] = json.dumps(fp)
+        self.assertIsNone(SE.review_check(self.t, "c" * 40, "k", show=files.get, show_at=lambda c, p: old.get(p)))
+        self.assertIn("REVIEW_REQUIRED", SE.review_check(self.t, "c" * 40, "k", show=files.get,
+                                                         show_at=lambda c, p: None))
+
 
     def test_reviewer_must_be_lock_holder(self):
         self.assertIsNone(SE.reviewer_allowed("coordinator (Claude 10-17)"))
@@ -113,3 +146,46 @@ class VisualReview(unittest.TestCase):
         self.lock.write_text('{"owner": "codex"}')
         self.assertIsNone(SE.reviewer_allowed("Codex coordinator"))
         self.assertIsNotNone(SE.reviewer_allowed("coordinator (Claude)"))
+
+
+def test_bench_evidence_refusals():
+    P = {"name": "pos", "cmd": "x", "expect": "pass"}
+    F = {"name": "mut", "cmd": "y", "expect": "fail", "fail_regex": "MISMATCH", "fail_witness": "results/w.log"}
+    st = lambda *b: dict(SPEC, stages={"bench": list(b)})  # noqa: E731
+    assert S.bench_evidence_problems(st(P, F)) == ([], [])
+    e, _ = S.bench_evidence_problems(dict(SPEC))
+    assert e and "no benches" in e[0]
+    e, _ = S.bench_evidence_problems(st(P))
+    assert any("expect=fail mutant" in x for x in e)
+    e, _ = S.bench_evidence_problems(st({"name": "lint", "cmd": "z", "expect": "pass"}, F))
+    assert any("behavioural" in x for x in e)
+    # GATE-FRICTION: a missing committed witness only WARNs (the loop captures it); a missing fail_regex still refuses
+    nowit = dict(F, fail_witness=None)
+    e, w = S.bench_evidence_problems(st(P, nowit))
+    assert not e and w and "captures the real mutant log" in w[0]
+    norx = dict(F, fail_regex=None, fail_witness=None)
+    e, _ = S.bench_evidence_problems(st(P, norx))
+    assert e and "fail_regex" in e[0]
+    e, w = S.bench_evidence_problems(dict(st(P, norx), fail_witness_waiver="mutant log captured after the route"))
+    assert not e and w and "[waived]" in w[0]
+    e, w = S.bench_evidence_problems(st(P, norx), allow_missing_witness=True)
+    assert not e and w
+    assert S.bench_evidence_problems(dict(SPEC, hold_merge="never merges"))[0] == []
+
+
+def test_housekeeping_generated_files(tmp_path):
+    assert S.generated_only(["physical/ref_tile/k/gate_result.json", "physical/ref_tile/k/source_binding_history/a.json",
+                             "physical/ref_tile/k/gate_layout/floorplan.png"])
+    assert not S.generated_only(["physical/ref_tile/k/spec.json", "physical/ref_tile/k/gate_result.json"])
+    assert not S.generated_only([])
+    (tmp_path / "gate_result.json").write_text('{"verdict": "FAIL"}')
+    assert not S.gate_file_ok(tmp_path, "gate_result.json")          # a FAIL gate is never auto-committed
+    (tmp_path / "gate_result.json").write_text('{"verdict": "WARN"}')
+    assert S.gate_file_ok(tmp_path, "gate_result.json")
+
+
+def test_main_tools_reexec_skips_when_flagged(monkeypatch):
+    monkeypatch.setenv("OT_SUBMIT_EXACT_MAIN", "x")
+    assert S.main_tools_reexec(["spec.json"]) is None
+    monkeypatch.delenv("OT_SUBMIT_EXACT_MAIN")
+    assert S.main_tools_reexec(["spec.json", "--local-tools"]) is None
