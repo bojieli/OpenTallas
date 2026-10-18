@@ -55,7 +55,10 @@ D4G GEOMETRY (results/arch/hbm_plan_study_1017/plan_b_inner/compact.P.json):
        upper ("plan_b_bd" stages): the per-class table is overridden, SM_X = (mean + 48.2) / 2 (2 crossings:
        request + data), HBM_VM = max(mean, 53.0), on the ds_relay_latency absolute-leg rule (no first access).
   RTL1/RTL2 latencies (SU scalar tree, HC partial tree, IDX quarters, VM client side) enter through LEDGER entries
-  (results/arch/hbm_d4g_price_1017/latency_ledger.json); until those lanes report, XQT uses the plan estimate above.
+  (results/arch/hbm_d4g_price_1017/latency_ledger.json): a 'measured' entry sets knob = cycles (bench-measured edges)
+  + xq_crossings x COLL_RING (die relay stages the bench did not have).  10-17 23:59 measured: su_tree 28 (RTL1
+  RF_TREE_UP/DN 14+14), hc_tree 28 + 2 XQ (RTL2 HC split RAW0 165 vs 137 + XRD + XRU), idx_merge 8 + 1 XQ (RTL2 IDX
+  quad: first TX / every TX flit +8 incl. the +2 calendar start).
 
     PYTHONPATH=tools python3 -m hgi_sim.d4g_quadrant_1017 --out results/arch/hbm_d4g_price_1017/price.json
 """
@@ -286,7 +289,8 @@ def knob(on, st, plan="plan_b", nominal=True, ledger=None):
              stages=st[plan])
     for e in (ledger or {}).get("entries", []):
         if e.get("status") == "measured" and e.get("knob"):
-            k[e["knob"]] = e["cycles"]
+            # measured RTL edges + die relay crossings of this plan (xq_crossings x COLL_RING stages; 0 in the benches)
+            k[e["knob"]] = e["cycles"] + e.get("xq_crossings", 0) * k["xq"]
     return k
 
 
@@ -326,6 +330,29 @@ def _census(_):
     S.set_variant(PS.VARIANTS["b"], json.loads((ROOT / "results/arch/hbm_plan_study_1017/stages.json").read_text()))
     prog = RL.compile_case("AR")
     return place_programme(prog)
+
+
+def static_schedule(kn):
+    """the fixed static-schedule constants the d4g compiler emits per record class (cycles at 1.2 GHz; the
+    programme generators use the same numbers: hbm_idx_static_calendar --score-chain, HC_MIX RAW0, SU UP/DN)"""
+    xq = 1 + kn["xq"]
+    hop = 2 + kn["r_hop"]
+    return {
+        "AG_C1_ring_allgather": dict(rule="min(ceil(1.5 F) + 3 hop, 2 F + 2 hop) with cut-through min(.., 3 D multicast)",
+                                     hop_edges=hop, F="ceil(B / 4 quadrants / 32 B)",
+                                     example_F224=ag_cycles(224 * 4 * 32, kn["r_hop"], 0.0, False)[0]),
+        "SU_VOP_reduction_scalar_tree": kn.get("su_tree", 2 * xq),
+        "HC_MIX_partial_sum_tree": kn.get("hc_tree", 2 * xq),
+        "HC_ingest_event_advance": 2 + kn["xq"],
+        "IDX_quarter_merge": kn.get("idx_merge", xq),
+        "IDX_score_chain": 14,
+        "ARGMAX_LOCAL": 2 * xq, "COLL_TOPK_ARGMAX_MERGE_C4": xq,
+        "SU_start_advance": kn.get("su_start", 4), "SFU_store_D": kn.get("sfu_d", 1), "SFU_chain_LG": kn.get("sfu_chain", 6),
+        "D2_replicated_table_stream_factor": NQ,
+        "placement": "W1/W2 rows dealt in R=ceil(m/16) blocks, SM j in quadrant j//4 on its own 4 PCs (QPCS); "
+                     "D1 quadrant-sliced loads split 4 ways; D2 tables replicated x4; C2/C3 slice-addressed, no ring",
+        "quadrant_pcs": QPCS,
+    }
 
 
 ADDERS = ["AG", "XQT", "D2", "SU", "SFUD", "SFUC", "BD"]
@@ -380,7 +407,7 @@ def main():
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                rule=__doc__, stages_plan_b=st["plan_b"], stages_plan_b_bd=st["plan_b_bd"], ledger=led,
                knob_nominal={k: (sorted(v) if isinstance(v, set) else v) for k, v in variants["d4g_nominal"][1].items()},
-               placement=census, table=table,
+               placement=census, table=table, static_schedule=static_schedule(variants["d4g_nominal"][1]),
                d4f_reference=dict(plan_a_ar=1763.0, plan_a_mtp=3022.3, plan_a_qwen=933.6,
                                   note="plan-study (a) d4f price, no d4g adders (results/arch/hbm_plan_study_1017/price.json)"))
     print(json.dumps(dict(table=table, placement=census), indent=1, default=str))
