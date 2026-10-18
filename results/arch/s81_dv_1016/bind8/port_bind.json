@@ -1,11 +1,11 @@
 {
  "schema": "opentallas.die_port_bind.v2",
- "die_v": "/home/ubuntu/scratch/landfix-s/bind_p4l/bind/die.v",
+ "die_v": "/home/ubuntu/scratch/landfix-f/bind8/bind/die.v",
  "top": "dv_die",
  "verdict": "PASS",
  "failing": [],
  "summary": {
-  "masters": 40,
+  "masters": 39,
   "instances": 7489,
   "unbound_masters": 0,
   "stub_masters": 0,
@@ -20,7 +20,7 @@
   "multi_driven_net_bits": 0,
   "top_assigns": 0,
   "params_not_in_rtl": 0,
-  "strap_ports": 32,
+  "strap_ports": 34,
   "pad_bits": 209817,
   "unresolved_children": 0
  },
@@ -29,7 +29,7 @@
    "verdict": "PASS",
    "fails": [],
    "instances": 140,
-   "rtl": "/home/ubuntu/scratch/landfix-s/bind_p4l/bind/cells_used.v",
+   "rtl": "/home/ubuntu/scratch/landfix-f/bind8/bind/cells_used.v",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -54,7 +54,7 @@
    "verdict": "PASS",
    "fails": [],
    "instances": 16,
-   "rtl": "/home/ubuntu/scratch/landfix-s/bind_p4l/bind/cells_used.v",
+   "rtl": "/home/ubuntu/scratch/landfix-f/bind8/bind/cells_used.v",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -75,11 +75,11 @@
    "unparsed_conn": [],
    "duplicate_port": []
   },
-  "col_h10": {
+  "col_h10_l4": {
    "verdict": "PASS",
    "fails": [],
    "instances": 32,
-   "rtl": "/home/ubuntu/scratch/landfix-s/bind_p4l/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/col_h10.sv",
+   "rtl": "rtl/dsrom_sys/s81_dv/frame_l4/col_h10_l4.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -93,7 +93,9 @@
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
    "input_tied": [],
-   "straps": [],
+   "straps": [
+    "lk"
+   ],
    "pad_bits": {},
    "output_open": [
     "xo",
@@ -103,39 +105,11 @@
    "unparsed_conn": [],
    "duplicate_port": []
   },
-  "col_h9": {
-   "verdict": "PASS",
-   "fails": [],
-   "instances": 58,
-   "rtl": "/home/ubuntu/scratch/landfix-s/bind_p4l/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/col_h9.sv",
-   "kind": "real",
-   "ambiguous_defs": null,
-   "examples": [
-    "u_f_0L00",
-    "u_f_0L03",
-    "u_f_0L10"
-   ],
-   "param_sets": {
-    "{}": 58
-   },
-   "die_port_not_in_rtl": [],
-   "input_unconnected": [],
-   "input_tied": [],
-   "straps": [],
-   "pad_bits": {},
-   "output_open": [
-    "xo",
-    "xok"
-   ],
-   "width_mismatch": {},
-   "unparsed_conn": [],
-   "duplicate_port": []
-  },
-  "col_h9_MX": {
+  "col_h9_MX_l4": {
    "verdict": "PASS",
    "fails": [],
    "instances": 32,
-   "rtl": "/home/ubuntu/scratch/landfix-s/bind_p4l/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/col_h9_MX.sv",
+   "rtl": "rtl/dsrom_sys/s81_dv/frame_l4/col_h9_MX_l4.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -149,9 +123,41 @@
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
    "input_tied": [],
-   "straps": [],
+   "straps": [
+    "lk"
+   ],
    "pad_bits": {},
    "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "col_h9_l4": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 58,
+   "rtl": "rtl/dsrom_sys/s81_dv/frame_l4/col_h9_l4.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_f_0L00",
+    "u_f_0L03",
+    "u_f_0L10"
+   ],
+   "param_sets": {
+    "{}": 58
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "lk"
+   ],
+   "pad_bits": {},
+   "output_open": [
+    "xo",
+    "xok"
+   ],
    "width_mismatch": {},
    "unparsed_conn": [],
    "duplicate_port": []
@@ -389,7 +395,7 @@
   "dsfd_dvland_276": {
    "verdict": "PASS",
    "fails": [],
-   "instances": 108,
+   "instances": 125,
    "rtl": "rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv",
    "kind": "real",
    "ambiguous_defs": null,
@@ -399,34 +405,7 @@
     "ld_xrE_0S_l2"
    ],
    "param_sets": {
-    "{}": 108
-   },
-   "die_port_not_in_rtl": [],
-   "input_unconnected": [],
-   "input_tied": [],
-   "straps": [
-    "k"
-   ],
-   "pad_bits": {},
-   "output_open": [],
-   "width_mismatch": {},
-   "unparsed_conn": [],
-   "duplicate_port": []
-  },
-  "dsfd_dvland_276l": {
-   "verdict": "PASS",
-   "fails": [],
-   "instances": 17,
-   "rtl": "rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv",
-   "kind": "real",
-   "ambiguous_defs": null,
-   "examples": [
-    "ld_tvS_s_2N",
-    "ld_tvN_s_2S",
-    "ld_tvS_s_5N"
-   ],
-   "param_sets": {
-    "{}": 17
+    "{}": 125
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -1166,7 +1145,7 @@
  "top_assigns": [],
  "params_not_in_rtl": [],
  "child_closure": {
-  "modules": 250,
+  "modules": 247,
   "unresolved_children": {},
   "model_children": {
    "ot_s81_hbm3e_dev_bm": [
@@ -1336,8 +1315,11 @@
   "ot_s81sl_slice_lepw:bi:u_s_0N",
   "ot_s81sl_slice_lepw:bi:u_s_0S"
  ],
- "die_sha256": "0177c0de86ab8c0a17ff30a7be8e16ffa0884f5b23d6f30274f9521f289a533f",
+ "die_sha256": "800d48df22d3feb8af48cce1948c9ee72fc16b01e36da7df4f809c6d4f51901d",
  "straps_declared": [
+  "col_h10_l4:lk",
+  "col_h9_MX_l4:lk",
+  "col_h9_l4:lk",
   "dsdv_bk_col:eg_n",
   "dsdv_bk_col:ek",
   "dsdv_bk_col:ik",
@@ -1356,7 +1338,6 @@
   "dsdv_svc_rs:sid",
   "dsdv_svc_rs_entry:sid",
   "dsfd_dvland_276:k",
-  "dsfd_dvland_276l:k",
   "dsfd_dvland_562:k",
   "dsfd_dvland_682:k",
   "dsfd_dvland_70:k",
@@ -1373,24 +1354,21 @@
  ],
  "params_file": null,
  "rtl_roots": [
-  "/home/ubuntu/wt/landfix-s/rtl"
+  "/home/ubuntu/wt/landfix-f/rtl"
  ],
  "rtl_files": [
-  "/home/ubuntu/scratch/landfix-s/bind_p4l/bind/cells_used.v",
-  "/home/ubuntu/scratch/landfix-s/bind_p4l/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
-  "/home/ubuntu/scratch/landfix-s/bind_p4l/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/col_h9.sv",
-  "/home/ubuntu/scratch/landfix-s/bind_p4l/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/col_h10.sv",
-  "/home/ubuntu/scratch/landfix-s/bind_p4l/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/col_h9_MX.sv",
-  "/home/ubuntu/scratch/landfix-s/bind_p4l/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv",
-  "/home/ubuntu/wt/landfix-s/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
-  "/home/ubuntu/wt/landfix-s/rtl/dsrom_sys/s81_dv/land/dsfd_dvland_pvrd.sv",
-  "/home/ubuntu/wt/landfix-s/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
-  "/home/ubuntu/wt/landfix-s/physical/asap7_memory_macros_v2/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v",
-  "/home/ubuntu/wt/landfix-s/physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
-  "/home/ubuntu/wt/landfix-s/physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
-  "/home/ubuntu/wt/landfix-s/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
-  "/home/ubuntu/wt/landfix-s/physical/rom_host_ingest/rtl/dsfd_host.sv",
-  "/home/ubuntu/wt/landfix-s/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v"
+  "/home/ubuntu/scratch/landfix-f/bind8/bind/cells_used.v",
+  "/home/ubuntu/scratch/landfix-f/bind8/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+  "/home/ubuntu/scratch/landfix-f/bind8/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv",
+  "/home/ubuntu/wt/landfix-f/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+  "/home/ubuntu/wt/landfix-f/rtl/dsrom_sys/s81_dv/land/dsfd_dvland_pvrd.sv",
+  "/home/ubuntu/wt/landfix-f/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
+  "/home/ubuntu/wt/landfix-f/physical/asap7_memory_macros_v2/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v",
+  "/home/ubuntu/wt/landfix-f/physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+  "/home/ubuntu/wt/landfix-f/physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+  "/home/ubuntu/wt/landfix-f/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+  "/home/ubuntu/wt/landfix-f/physical/rom_host_ingest/rtl/dsfd_host.sv",
+  "/home/ubuntu/wt/landfix-f/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v"
  ],
  "defines": [
   "DSFD_PQ_STATIC_X2"

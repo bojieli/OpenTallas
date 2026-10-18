@@ -2,12 +2,12 @@
  "schema": "opentallas.s81_dv.frame_contract.v1",
  "wrapper": {
   "masters": [
-   "col_h9",
-   "col_h10",
-   "col_h9_MX"
+   "col_h9_l4",
+   "col_h10_l4",
+   "col_h9_MX_l4"
   ],
   "owner": "S81U-3",
-  "note": "BOUND (S81-DIE2 10-17): col_h9 / col_h10 / col_h9_MX RTL from claude/s81u3-frame-1017 99991b051 (D2 r1 skew); the member contract below is still checked against the members' RTL"
+  "note": "LANDFIX-SQ/F 10-18: frames bind the _l4 successors (dsfd_cfifo_crs4); BOUND (S81-DIE2 10-17): col_h9 / col_h10 / col_h9_MX RTL from claude/s81u3-frame-1017 99991b051 (D2 r1 skew); the member contract below is still checked against the members' RTL"
  },
  "members": [
   {
@@ -27,11 +27,11 @@
    "reset": null
   },
   {
-   "master": "dsfd_cfifo_crs",
-   "ref": "origin/main",
-   "path": "rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_crs.sv",
-   "view": "r5f-507e1b0c3 (CLOSED TT +71.04 / FF +17.32; native PASS)",
-   "ref_sha": "78dd81cae6099bad880c1f5b4729955a2393dcde",
+   "master": "dsfd_cfifo_crs4",
+   "ref": "HEAD",
+   "path": "rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv",
+   "view": null,
+   "ref_sha": "8120c066885579c89c34f82cbf5b51d757fccdc5",
    "kind": "real",
    "ports_missing": [],
    "params_missing": [],
