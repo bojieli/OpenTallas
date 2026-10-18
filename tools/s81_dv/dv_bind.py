@@ -52,8 +52,8 @@ def region_of(bl, pitch):
     return f'{g}{col}'
 
 
-def rly_master(b, d):
-    return f'dsfd_dvrly_{b}_{d}'
+def rly_master(b, d, prefix='dsfd_dvrly'):
+    return f'{prefix}_{b}_{d}'
 
 
 def git_show(ref, path):
@@ -107,7 +107,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                                           peer=e[6], realised_by=f"abutted face to {ab['peer']} ({', '.join(ab['map'])})"))
     for bl in blocks:
         n = bl['name']; m = M[bl['master']]
-        mod = m.get('module')
+        mod = m.get('inst_module', {}).get(n, m.get('module'))   # S81-BIND3: per-instance port variant (svc_rs entry)
         if not mod:
             open_bind[n] = dict(master=bl['master'], owner=m.get('owner'), reason=m.get('reason'))
             continue
@@ -134,6 +134,23 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                         link_dst[e[3]] = None
                 continue
             es = order(es, rule.get('order', 'link'), bl)
+            if rule.get('split'):
+                # S81-BIND3: one plan lane realised by SEVERAL RTL ports: split = [[rtl port, rtl lo, plan lo, bits]]
+                # (e.g. ctrl_rg2 rd 562 -> svc_rs r_data / r_tag / r_beat / rv / rk / wd / hs per its packing)
+                for e in es:
+                    b = e[2]
+                    assert d == 'i' and len(es) == 1, (n, p, d)
+                    w = dname(e[3])
+                    if rule.get('land') and chains_pts[e[3]] and b in LAND_W:
+                        landings.append((n, e[3], b)); w = f'w_{e[3]}_lnd'
+                    for rport, rlo, plo, nb in rule['split']:
+                        c[rport].append((rlo, rlo + nb - 1, f'{w}[{plo + nb - 1}:{plo}]', nb))
+                    link_dst[e[3]] = w
+                    tot = sum(x[3] for x in rule['split'])
+                    if tot != b:
+                        plan_not_in_rtl.append(dict(inst=n, module=mod, plan_port=p, dir=d, bits=b, link=e[3],
+                                                    note=f'split covers {tot} of {b} plan bits'))
+                continue
             for e in es:
                 lane, rport, lw, ck = place_lane(rule, e, es, bl)
                 b = e[2]
@@ -233,7 +250,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                 cs.append(f'.{p}_{lnm}({f"w_{lnm}_src" if d == "o" else dname(lnm)})')
             v.append(f'  {bl["master"]} u_{n} ({", ".join(cs)});')
             continue
-        mod = m['module']
+        mod = m.get('inst_module', {}).get(n, m['module'])
         cs = [f'.{m["clk"]}(ck_{r})'] + [f'.{x}(ck_{r})' for x in m.get('clk_extra', [])]
         for cp in m.get('clk_peer', []):     # a port clocked by a peer block's root (e.g. ckh = the PHY clock)
             pb_ = [b for b in blocks if b['master'] == cp['master']]
@@ -308,7 +325,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                 if lo > pos:
                     parts.append(f'u_{n}_{rp}_nc{pos}[{lo - pos - 1}:0]')
                     v.append(f'  wire [{lo - pos - 1}:0] u_{n}_{rp}_nc{pos};')
-                parts.append(f"{hi - lo + 1}'d0" if w is None else f'{w}[{hi - lo}:0]')
+                parts.append(f"{hi - lo + 1}'d0" if w is None else (w if '[' in w else f'{w}[{hi - lo}:0]'))
                 pos = hi + 1
             if wd and pos < wd:
                 parts.append(f'u_{n}_{rp}_nc{pos}[{wd - pos - 1}:0]')
@@ -359,9 +376,9 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             if k < st - 1:
                 v.append(f'  wire [{b - 1}:0] {wn};')
             cki = ck if (k == 0 and ck) else f'n{nm}_fck[{k}]'
-            v.append(f'  {rly_master(b, d)} st_{nm}_{k} (.i({prev}), .o({wn}), .ck({cki}), .ck_o(n{nm}_fck[{k + 1}]), '
+            v.append(f'  {rly_master(b, d, T.get("relay_prefix", "dsfd_dvrly"))} st_{nm}_{k} (.i({prev}), .o({wn}), .ck({cki}), .ck_o(n{nm}_fck[{k + 1}]), '
                      f'.rs({rst["station_leaf"][(nm, k)]}));')
-            nst[rly_master(b, d)] += 1
+            nst[rly_master(b, d, T.get('relay_prefix', 'dsfd_dvrly'))] += 1
             prev = wn
     v += rst['verilog']
     v.append('endmodule')
