@@ -494,6 +494,25 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None):
                                                               "unchanged" if not refs else
                                                               f"{len(refs)} referenced macro(s) {refs[:3]}: re-gate")))
             continue
+        if n == "landed_cluster_roots":
+            # PL-GATE 10-18: per-root child-flop judgement + the unlanded cross-region FAIL apply only to a cluster kit
+            # with children and clock "multiple_cts_roots"; every other gate is unchanged by that commit
+            ck = clock if isinstance(clock, dict) else {}
+            if ck.get("declared_clock") != "multiple_cts_roots" or "landed_child_links" in ck:
+                rows.append(dict(requires=n, ok=True, text="landed_cluster_roots: not a multi-root cluster gate, or "
+                                                          "already judged per root: unchanged"))
+                continue
+            kit = (gate or {}).get("kit") if isinstance(gate, dict) else None
+            try:
+                sp = json.loads((Path(root or Path(__file__).resolve().parents[2]) / "physical" / "ref_tile" / str(kit)
+                                 / "spec.json").read_text())
+                ok = not (sp.get("kind") == "cluster" and sp.get("children"))
+            except (OSError, ValueError, AttributeError):
+                ok = False
+            rows.append(dict(requires=n, ok=ok, text="landed_cluster_roots: " + (
+                "multi-root kit without hard children: unchanged" if ok else
+                "multi-root cluster gated before the per-root child-flop rule (or spec unreadable): re-gate")))
+            continue
         if n == "clock_pin_spread":
             sp = gate_pin_spreads(clock if isinstance(clock, dict) else {})
             tt, ff = sp.get("tt"), sp.get("ff")
