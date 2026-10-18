@@ -17,6 +17,7 @@ for p in tools compiler/models docs/HBM_GENERIC_INTERFACE.md results/abi3/deepse
   results/abi3/qwen3_reduced_reference_oracle.json results/rtl/v41_program_constants.json results/rtl/w17_v41_1m_reference_token.json \
   results/rtl/hdc_v41x_fullshape_layers.json $(git -C "$WT" ls-tree --name-only "$SHA" results/rtl/ | grep -E '^results/rtl/w19_[^/]*\.json$') \
   results/rtl/dshbm_baseline_measured_20261004 results/rtl/dshbm_1m_allmeasured_20261004 results/rtl/hbm_su_c12_20261005 \
+  results/rtl/dshbm_local_chains_20261004 results/rtl/dsrom_1m_allmeasured_20261004 results/rtl/hdc_v41x_hcp_campaign.json \
   results/arch/hbm_generic_iface_20261009 results/arch/hgi_sim_20261009 results/arch/hgi_sim_20261010 results/arch/hgi_perf_20261009 \
   results/arch/hgi_programs_20261010 results/arch/hbm_d4g_price_1017 results/arch/hbm_mtp_1015 results/arch/hbm_plan_study_1017 \
   results/arch/hbm_die_v15/core4_sfu2_su2825/eval.json results/arch/hbm_die_v15/v6_plan_1016/v5carry/eval.json \
