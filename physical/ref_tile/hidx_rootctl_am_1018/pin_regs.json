@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_idx_rootctl_static_am",
+ "enable": false,
+ "reason": "RTL as ot_hbm_idx_rootctl_static: programme bus/start/length/qfault land in keep pin flops, sel/link/done leave flops, argmax_m leaves the merge-chain flop; the INDEX/TOPK/VM share faces are the zero-latency static share (requests pass to the bank, responses steered by the n+7 owner flop) and ingest_v/fault are the verbatim rootctl glue: pin registers there would shift the IDX operand timeline (IDX owner item, not this binding)."
+}
