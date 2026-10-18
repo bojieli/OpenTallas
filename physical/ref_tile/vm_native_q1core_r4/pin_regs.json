@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hfd_vms_bank_native_q1_core",
+ "enable": true,
+ "clock": "clk",
+ "clock_ports": [
+  "clk"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "exclude": "",
+ "reset": "",
+ "reason": "recipe 4 (FLOW-HOLD, H-DIE 10-16): every data pin registered by ot_pin_regs; outputs were already RTL registers, so rr*/eg/pr/status/*_done carry +1 edge vs q1 nat2 (inputs +1 as nat2)",
+ "latency_cycles": {
+  "input": 1,
+  "output": 1
+ },
+ "rule": "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin",
+ "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"
+}

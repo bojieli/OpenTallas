@@ -63,3 +63,74 @@ def test_origin_problems_unpushed_source_and_grant(tmp_path):
     g(wt, "add", "k"); g(wt, "commit", "-qm", "d"); g(wt, "push", "-q", "origin", "HEAD:refs/heads/br")
     bad = S.origin_problems(wt, g(wt, "rev-parse", "HEAD"), spec, "k")
     assert len(bad) == 1 and "does not exist" in bad[0]
+
+
+import json as _json_vr
+import unittest
+SE = S
+json = _json_vr
+
+
+class VisualReview(unittest.TestCase):
+    """PRE-ROUTE VISUAL REVIEW (owner 2026-10-17)"""
+    def setUp(self):
+        import tempfile
+        self.t = Path(tempfile.mkdtemp())
+        self.crit = self.t / "critical.txt"; self.crit.write_text("ot_hot  # coordinator\n")
+        self.jobs = self.t / "jobs"; self.jobs.mkdir()
+        SE.CRITICAL_TILES = self.crit
+        self.lock = self.t / "COORDINATOR.lock"; self.lock.write_text('{"owner": "claude"}')
+        SE.COORD_LOCK = self.lock
+
+    def test_required_by_list_or_failed_routes(self):
+        self.assertIn("critical", SE.review_required({"block": "ot_hot"}, "physical/ref_tile/k", self.jobs))
+        self.assertIsNone(SE.review_required({"block": "ot_cold"}, "physical/ref_tile/k", self.jobs))
+        self.assertIn("matches 'ot_hot'", SE.review_required({"block": "ot_hot_v2"}, "physical/ref_tile/k", self.jobs))
+        self.assertIn("coordinator", "coordinator (msg 2026-10-17 07:05)")
+        self.assertIsNone(SE.reviewer_allowed("coordinator (msg 2026-10-17 07:05)"))
+        for i, st in enumerate(("EARLY_FAIL_HOLD", "NEEDS_RTL", "CLOSED")):
+            (self.jobs / f"j{i}.json").write_text(json.dumps({"name": f"j{i}", "status": st, "spec": {"block": "ot_cold"}}))
+        self.assertIn("2 earlier", SE.review_required({"block": "ot_cold"}, "physical/ref_tile/k", self.jobs))
+
+    def test_receipt_binding(self):
+        gate = {"commit": "abc1234def", "generated": "t"}
+        good = {"reviewer": "coordinator (Claude)", "time": "now", "gate_commit": "abc1234", "verdict": "APPROVED",
+                "checklist": {k: "ok" for k in SE.REVIEW_CHECKLIST}}
+        files = {"k/gate_result.json": json.dumps(gate), "k/gate_layout/REVIEW.json": json.dumps(good)}
+        self.assertIsNone(SE.review_check(self.t, "c" * 40, "k", show=files.get))
+        for bad in (dict(good, gate_commit="fff9999"), dict(good, verdict="CHANGES"),
+                    dict(good, checklist={"lattice": 1})):
+            files["k/gate_layout/REVIEW.json"] = json.dumps(bad)
+            self.assertIn("REVIEW_REQUIRED", SE.review_check(self.t, "c" * 40, "k", show=files.get))
+        del files["k/gate_layout/REVIEW.json"]
+        self.assertIn("REVIEW_REQUIRED: no", SE.review_check(self.t, "c" * 40, "k", show=files.get))
+
+
+    def test_reviewer_must_be_lock_holder(self):
+        self.assertIsNone(SE.reviewer_allowed("coordinator (Claude 10-17)"))
+        for bad in ("ROOT (Claude)", "Q-KV lead", "codex"):
+            self.assertIsNotNone(SE.reviewer_allowed(bad), bad)
+        self.lock.write_text('{"owner": "codex"}')
+        self.assertIsNone(SE.reviewer_allowed("Codex coordinator"))
+        self.assertIsNotNone(SE.reviewer_allowed("coordinator (Claude)"))
+
+
+def test_bench_evidence_refusals():
+    P = {"name": "pos", "cmd": "x", "expect": "pass"}
+    F = {"name": "mut", "cmd": "y", "expect": "fail", "fail_regex": "MISMATCH", "fail_witness": "results/w.log"}
+    st = lambda *b: dict(SPEC, stages={"bench": list(b)})  # noqa: E731
+    assert S.bench_evidence_problems(st(P, F)) == ([], [])
+    e, _ = S.bench_evidence_problems(dict(SPEC))
+    assert e and "no benches" in e[0]
+    e, _ = S.bench_evidence_problems(st(P))
+    assert any("expect=fail mutant" in x for x in e)
+    e, _ = S.bench_evidence_problems(st({"name": "lint", "cmd": "z", "expect": "pass"}, F))
+    assert any("behavioural" in x for x in e)
+    nowit = dict(F, fail_witness=None)
+    e, _ = S.bench_evidence_problems(st(P, nowit))
+    assert e and "fail_witness" in e[0]
+    e, w = S.bench_evidence_problems(dict(st(P, nowit), fail_witness_waiver="mutant log captured after the route"))
+    assert not e and w and "[waived]" in w[0]
+    e, w = S.bench_evidence_problems(st(P, nowit), allow_missing_witness=True)
+    assert not e and w
+    assert S.bench_evidence_problems(dict(SPEC, hold_merge="never merges"))[0] == []

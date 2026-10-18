@@ -1,0 +1,26 @@
+{
+ "cell": "dsfd_dvrly_68_NS",
+ "view": "physical/ref_tile/s81dv_rly_68_ns/views/dsfd_dvrly_68_NS",
+ "lib_cell": "dsfd_dvrly_68_NS",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 62.3,
+ "spread_ps": 2.1,
+ "outputs": 68,
+ "inputs": 69,
+ "launch_ps": 114.4,
+ "launch_pin": "o[37]",
+ "capture_ps": 63.4,
+ "capture_pin": "i[64]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_launch_min_ps": 65.6,
+ "ff_hold_need_ps": -7.5,
+ "pass": true,
+ "fail_why": "",
+ "audited_by": "LANE S81-DIE2 2026-10-17 tools/hier_contract/native_pin_audit.py audit_one @ origin/main 708fc1938 (merged into claude/s81dv-p4i-1017 f4bb39520)"
+}

@@ -72,6 +72,26 @@ try:
 except Exception as e:   # noqa: BLE001
     import traceback
     rec['pin_align'] = dict(error=repr(e), trace=traceback.format_exc()[-1200:])
+# Q-DIEPLAN3 2026-10-16 (Codex 20:18 audit: 25 q3h data hops passed the centroid relay gate with worst-bit lengths
+# 422-444 um > the measured 414-um reach): OT_PIN_BIT_REACH_UM = the hard per-BIT reach of every data hop of the FINAL
+# (relayed) netlist, judged on the emitted pin rows (len_max = the longest bit of the bundle). Every row over it is
+# written to pin_bit_reach.json first; then the build fails (OT_PIN_BIT_REACH_GATE=warn records only). Relay-skip
+# smokes judge the unrelayed graph and only report.
+_lim = os.environ.get('OT_PIN_BIT_REACH_UM')
+if _lim and 'pin_align' in rec and not rec['pin_align'].get('error'):
+    _lim = float(_lim)
+    _over = sorted(({k: r_.get(k) for k in ('bus', 'cls', 'bits', 'drv', 'drv_port', 'load', 'load_port', 'kind',
+                                            'len_mean', 'len_max', 'jog_max', 'at')}
+                    for r_ in rows if r_.get('cls') not in ('clock_trunk', 'reset', 'constant')
+                    and float(r_.get('len_max') or 0) > _lim), key=lambda r_: -float(r_['len_max']))
+    _skip = os.environ.get('OT_RELAY_SKIP') == '1'
+    (out / 'pin_bit_reach.json').write_text(json.dumps(dict(limit_um=_lim, relay_skip=_skip, over=len(_over),
+                                                            rows=_over), indent=1, default=str) + '\n')
+    rec['pin_bit_reach'] = dict(limit_um=_lim, over=len(_over), worst=_over[:5], relay_skip=_skip)
+    if _over and not _skip and os.environ.get('OT_PIN_BIT_REACH_GATE', 'fail') != 'warn':
+        (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
+        raise SystemExit(f'pin bit reach: {len(_over)} data hops over {_lim} um (worst-bit), worst '
+                         f"{[(r_['bus'], r_['len_max']) for r_ in _over[:6]]}; see {out / 'pin_bit_reach.json'}")
 (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
 if '--case' in sys.argv:
     # r9: the chain-ready die case (real case + power abstracts + PDN r5, as `qwen_rom_fulldie_b3r2.py pdn --pdn-rev r5`)

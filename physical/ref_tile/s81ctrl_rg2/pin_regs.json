@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_ctrl_rg2",
+ "enable": false,
+ "reason": "RTL registers every die-face pin already (ot_s81ph_ctrl_pc: rq pin register, rd/rk/wd/status output flops; PHY kr_*/k_wr_done pin flops, k_* output flops); the one unregistered PHY-face input k_rdy is the PHY valid/ready on the abutted face. A flow pin register would add a cycle on the elastic HBM boundary and break the PHY valid/ready."
+}

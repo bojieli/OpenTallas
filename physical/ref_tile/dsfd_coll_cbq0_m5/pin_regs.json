@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_coll_cbq0",
+ "enable": false,
+ "reason": "FLOW-HOLD 2026-10-16: the RTL already registers the data pins (closed dsfd_coll_cbq0_m5-m5-e5e8e058b: input pin -> D paths carry only buffers, no logic; results/arch/boundary_hold_budget_1016/IMPACT.md); a synthesis pin stage would add schedule cycles. Flop-first via io_flop_at_pins."
+}

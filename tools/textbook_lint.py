@@ -79,25 +79,25 @@ THRESHOLDS = {
     "reach_min_count": 1,
     # util / channels: WARN only (closed blocks at 6-58% util and 0.07 / 17 um channels)
     "util_min": 0.45,
-    "util_max": 0.65,
+    "util_max": 0.65,              # std-cell density over the placeable area (core - macros - halos) when macros exist
+    "fill_max": 0.90,              # total (std + macro) / core sanity bound, macros only
+    "macro_halo_um": 2.16,
     "channel_um": 20.0,
 }
-# MEASURED CLOCK RULE (owner decision 2026-10-13, stream el1013-rule-enforcement; supersedes the WARN-only 15k line and
-# the declared-spine waiver).  One place for the three numbers; pre_route_gate.py, the in-flow hook and the closure
-# loop all read them from here.
-#   <= CLK_ROOT_SINKS_MAX sinks on one clock root: pass.
-#   more: allowed ONLY with pre-route clock-tree evidence measured by `pre_route_gate.py <kit> --remote H --cts` on that
-#   kit (TT corner, recorded in <kit>/gate_result.json): insertion delay <= CLK_INSERTION_MAX_PS AND leaf arrival spread
-#   <= CLK_SPREAD_MAX_PS.  No evidence, or either number missed: REFUSED; the fix is hardened leaves with their own
-#   roots.  A declared spine passes only through the measured numbers.  CLOSED tiles are not re-judged.
+# CLOCK RULE (owner 2026-10-17 0dq, memory clock-rule-boundary-match-1017; supersedes the 10-13 measured hard form).
+# One place for the three numbers; pre_route_gate.py, the in-flow hook and the closure loop all read them from here.
+#   FAIL only on a measured pin-flop spread (child flops for a cluster) > CLK_SPREAD_MAX_PS at TT OR FF (ck_insertion
+#   boundary registers; the all-register leaf spread stands in for records without a pin-flop number).
+#   > CLK_ROOT_SINKS_MAX sinks on one root, or TT insertion > CLK_INSERTION_MAX_PS: WARN (guidance).  Large insertion is
+#   matched at the boundary by parent compensation or a landed link (native_pin_audit --relative-to).
 # Sinks of a root = flops + hard-child / macro clock pins (a hard child with its own clock pin is ONE sink, never its
 # internal flops); ICGs are tree cells, the flops behind them count on the ICG's root.
 CLK_ROOT_SINKS_MAX = 15000
 CLK_INSERTION_MAX_PS = 300.0
 CLK_SPREAD_MAX_PS = 80.0
-CLOCK_RULE_FIX = ("hardened leaves with their own clock roots (kind cluster: each leaf <= 15,000 sinks, registered "
-                  "seams); a larger root needs `pre_route_gate.py <kit> --remote <host> --cts` evidence committed as "
-                  "<kit>/gate_result.json")
+CLOCK_RULE_FIX = ("pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops "
+                  "(clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with "
+                  "their own roots; insertion and sink count alone never split a tile")
 HARD_CHECKS = ("clock_sinks",)     # refused in every mode, never waivable by spec
 
 # CLOSED STANDS (owner decision 2026-10-12 19:00 "M5 cap narrowed", made a submit gate 2026-10-13; logic in
@@ -148,30 +148,68 @@ CLOSED_STANDS_INSTEAD = ("a CLOSED tile stands (owner 10-12): do not route it ag
                          "tools/ref_tile/rekit_native_launch.py)}")
 
 
-def clock_rule(max_sinks, evidence=None):
-    """The measured clock rule.  evidence: the kit gate result's "clock" record ({"max_root_sinks", "tt_insertion_ps",
-    "tt_spread_ps"}) or None.  Returns (ok, text); text always carries the measured numbers when they exist."""
+def _num(x):
+    return isinstance(x, (int, float)) and not isinstance(x, bool)
+
+
+def clock_spreads(ev):
+    """{corner: (spread_ps, basis)} for TT and FF from a clock record: the pin-flop (boundary register) spread
+    "<c>_pin_spread_ps" when measured, else the all-register leaf spread "<c>_spread_ps" (older records, conservative)."""
+    out = {}
+    for c in ("tt", "ff"):
+        if _num(ev.get(f"{c}_pin_spread_ps")):
+            out[c] = (float(ev[f"{c}_pin_spread_ps"]), "pin-flop")
+        elif _num(ev.get(f"{c}_spread_ps")):
+            out[c] = (float(ev[f"{c}_spread_ps"]), "leaf")
+    return out
+
+
+def clock_rule_eval(max_sinks, evidence=None):
+    """The clock rule (owner 2026-10-17 0dq, supersedes the 10-13 hard form): FAIL only on a measured pin-flop (child-flop
+    for a cluster) spread > CLK_SPREAD_MAX_PS at TT or FF.  Insertion > CLK_INSERTION_MAX_PS and > CLK_ROOT_SINKS_MAX
+    sinks on one root are guidance: WARN.  The neighbour-matched boundary (parent compensation or a landed link) is
+    judged by the native pin audit (tools/hier_contract/native_pin_audit.py --relative-to).  evidence: the kit gate
+    result's "clock" record ({"max_root_sinks", "tt_insertion_ps", "tt_spread_ps", "tt_pin_spread_ps",
+    "ff_insertion_ps", "ff_spread_ps", "ff_pin_spread_ps"}) or None.  Returns (level, text), level PASS / WARN / FAIL;
+    text always carries the measured numbers when they exist."""
     ev = evidence if isinstance(evidence, dict) else {}
-    ins, spr, evn = ev.get("tt_insertion_ps"), ev.get("tt_spread_ps"), ev.get("max_root_sinks")
-    num = lambda x: isinstance(x, (int, float)) and not isinstance(x, bool)  # noqa: E731
-    meas = (f"measured TT insertion {ins:.1f} ps, leaf spread {spr:.1f} ps" if num(ins) and num(spr)
-            else "no measured clock tree (no --cts gate evidence)")
-    if max_sinks is None:
-        return True, f"clock sinks unknown; {meas}"
-    if max_sinks <= CLK_ROOT_SINKS_MAX:
-        return True, f"{max_sinks:,} sinks on the largest root <= {CLK_ROOT_SINKS_MAX:,}; {meas}"
-    head = f"{max_sinks:,} sinks on one clock root > {CLK_ROOT_SINKS_MAX:,}"
-    if not (num(ins) and num(spr)):
-        return False, f"{head}: {meas}"
-    if num(evn) and evn < 0.9 * max_sinks:
-        return False, (f"{head}: the kit's gate evidence was measured on a root of {evn:,} sinks, not this netlist "
-                       f"({meas}); re-run the --cts gate")
-    miss = ([f"insertion {ins:.1f} ps > {CLK_INSERTION_MAX_PS:.0f}"] if ins > CLK_INSERTION_MAX_PS else []) + \
-           ([f"spread {spr:.1f} ps > {CLK_SPREAD_MAX_PS:.0f}"] if spr > CLK_SPREAD_MAX_PS else [])
-    if miss:
-        return False, f"{head}: {meas}; " + " and ".join(miss)
-    return True, (f"{head}, allowed by evidence: {meas} (<= {CLK_INSERTION_MAX_PS:.0f} ps / "
-                  f"<= {CLK_SPREAD_MAX_PS:.0f} ps)")
+    ins, evn = ev.get("tt_insertion_ps"), ev.get("max_root_sinks")
+    sp = clock_spreads(ev)
+    parts = []
+    if _num(ins):
+        parts.append(f"measured TT insertion {ins:.1f} ps")
+    if _num(ev.get("ff_insertion_ps")):
+        parts.append(f"FF insertion {ev['ff_insertion_ps']:.1f} ps")
+    for c, (v, basis) in sp.items():
+        parts.append(f"{c.upper()} {basis} spread {v:.1f} ps")
+    if "tt" in sp and "ff" not in sp:
+        parts.append("FF spread not measured")
+    meas = ", ".join(parts) if parts else "no measured clock tree (no --cts gate evidence)"
+    fail = [f"{c.upper()} {basis} spread {v:.1f} ps > {CLK_SPREAD_MAX_PS:.0f}" for c, (v, basis) in sp.items()
+            if v > CLK_SPREAD_MAX_PS]
+    warn = []
+    if max_sinks is not None and max_sinks > CLK_ROOT_SINKS_MAX:
+        warn.append(f"{max_sinks:,} sinks on one clock root > {CLK_ROOT_SINKS_MAX:,} (guidance)")
+        if not sp:
+            warn.append("no measured spread: run the --cts gate")
+        elif _num(evn) and evn < 0.9 * max_sinks:
+            warn.append(f"the gate evidence was measured on a root of {evn:,} sinks, not this netlist: re-run --cts")
+    if _num(ins) and ins > CLK_INSERTION_MAX_PS:
+        warn.append(f"insertion {ins:.1f} ps > {CLK_INSERTION_MAX_PS:.0f} (guidance; boundary matched by parent "
+                    "compensation / landing)")
+    head = ("clock sinks unknown" if max_sinks is None else
+            f"{max_sinks:,} sinks on the largest root") + f"; {meas}"
+    if fail:
+        return "FAIL", f"{head}; " + " and ".join(fail)
+    if warn:
+        return "WARN", f"{head}; WARN: " + "; ".join(warn)
+    return "PASS", head + (f" (spread <= {CLK_SPREAD_MAX_PS:.0f} ps)" if sp else "")
+
+
+def clock_rule(max_sinks, evidence=None):
+    """(ok, text): ok is False only on the FAIL of clock_rule_eval (spread > 80 ps at TT or FF); WARN is ok."""
+    level, text = clock_rule_eval(max_sinks, evidence)
+    return level != "FAIL", text
 
 
 # checks whose refuse tier REFUSES in refuse mode; util_channel stays WARN (false positives on closed blocks)
@@ -1073,7 +1111,26 @@ def util_findings(dump, T, F, M):
     util = (std + mac) / core_area if core_area else 0.0
     M["util"] = round(util, 4)
     bad = []
-    if util < T["util_min"] or util > T["util_max"]:
+    if mac > 0:
+        # macro-dominated tile: gate the std-cell density over the placeable area, bound the total fill
+        halo = float(dump.get("macro_halo_um", T["macro_halo_um"]))
+        keep = 0.0
+        for m in dump.get("macros", []):
+            b = m["bbox"]
+            ox = max(0.0, min(b[2] + halo, core[2]) - max(b[0] - halo, core[0]))
+            oy = max(0.0, min(b[3] + halo, core[3]) - max(b[1] - halo, core[1]))
+            keep += ox * oy
+        placeable = max(core_area - min(keep, core_area), 1e-9)
+        dens = std / placeable
+        M["std_density"] = round(dens, 4)
+        M["total_fill"] = round(util, 4)
+        if dens > T["util_max"]:
+            bad.append(f"std-cell density {dens:.1%} > {T['util_max']:.0%} (std {std:.0f} um2 in placeable {placeable:.0f} um2 = "
+                       f"core {core_area:.0f} - macros/halos; total fill {util:.1%}): grow the outline")
+        if util > T["fill_max"]:
+            bad.append(f"total fill {util:.1%} > {T['fill_max']:.0%} (std {std:.0f} + macro {mac:.0f} um2 in {core_area:.0f} um2): "
+                       "grow the outline")
+    elif util < T["util_min"] or util > T["util_max"]:
         bad.append(f"utilisation {util:.1%} outside {T['util_min']:.0%}-{T['util_max']:.0%} (std {std:.0f} + macro "
                    f"{mac:.0f} um2 in {core_area:.0f} um2): " + ("shrink the outline (long wires / sparse placement)"
                                                                 if util < T["util_min"] else "grow the outline"))
@@ -1119,6 +1176,8 @@ def verdict(res, mode="warn", waive=(), refuse_checks=REFUSE_CHECKS, clock=None)
                              limits=dict(sinks=CLK_ROOT_SINKS_MAX, insertion_ps=CLK_INSERTION_MAX_PS,
                                          spread_ps=CLK_SPREAD_MAX_PS))
     hard = []
+    if ok and "WARN:" in text and not clock.get("closed_stands"):
+        res["findings"]["clock_guidance"] = [f"clock root {res['clock_rule']['root']}: {text}"]
     if not ok and not clock.get("closed_stands"):
         res["findings"]["clock_sinks"] = [f"clock root {res['clock_rule']['root']}: {text}: {CLOCK_RULE_FIX}"]
         if clock.get("enforce"):

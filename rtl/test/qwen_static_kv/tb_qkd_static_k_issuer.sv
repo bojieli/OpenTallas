@@ -15,6 +15,20 @@ module tb_qkd_static_k_issuer;
     reg [5:0] layer_cur=0;
     reg rsp_valid=0;reg [1023:0] rsp_data=0;reg [13:0] rsp_t=0;
     reg rsp_v=0;reg [15:0] rsp_epoch=0;reg [5:0] rsp_layer=0;
+`ifdef OT_KISS
+    // KVJ-D 2026-10-17: the fused ECTL A + K issuer tile (qkd_static_ectla_kiss) inside its A|B|C parent.
+    wire [424:0] so;
+    wire [16:0] rq=dut.u_a.rq;
+    wire [1558:0] t0,t1;
+    qkd_ectl3_kiss_s #(.RESPONSE_LAT(2),.QK_ISSUE_AGE(34),.MUT(MUT==4?2:(MUT==5?1:0))) dut (
+        .ck({3{ck}}),.rst_n(rst_n),.cfg(cfg),.e0(),.e1(),.e2(),.e3(),
+        .s0(34'd0),.s1(34'd0),.s2(34'd0),.s3(34'd0),.t0(t0),.t1(t1),
+        .kgo(si[0]),.epoch(16'h1234),.layer(layer_cur),
+        .req_valid(req_valid),.req_t(req_t),.req_v(req_v),.req_epoch(req_epoch),.req_layer(req_layer),
+        .rsp_valid(rsp_valid),.rsp_data(rsp_data),.rsp_t(rsp_t),.rsp_v(rsp_v),.rsp_epoch(rsp_epoch),.rsp_layer(rsp_layer),
+        .fault(bridge_fault),.si(si),.so(so));
+    assign rs=dut.u_a.rs;
+`else
     qkd_static_k_issuer #(.RESPONSE_LAT(2),.MUT(MUT==4?2:(MUT==5?1:0))) bridge(
       .ck(ck),.rst_n(rst_n),.kgo(si[0]),.epoch(16'h1234),.layer(layer_cur),.rq(rq),
       .req_valid(req_valid),.req_t(req_t),.req_v(req_v),.req_epoch(req_epoch),.req_layer(req_layer),
@@ -26,6 +40,7 @@ module tb_qkd_static_k_issuer;
     qkd_ectl3_epoch_direct_s #(.STATIC_QK(1),.QK_ISSUE_AGE(34),.ROW_RETURN_LAT(9)) dut (
         .ck({3{ck}}),.rst_n(rst_n),.cfg(cfg),.e0(),.e1(),.e2(),.e3(),
         .s0(34'd0),.s1(34'd0),.s2(34'd0),.s3(34'd0),.t0(t0),.t1(t1),.rq(rq),.rs(rs),.si(si),.so(so));
+`endif
     function automatic [1023:0] rowf(input integer n);
         for(integer j=0;j<32;j=j+1) rowf[j*32+:32]=32'h42000000 ^ (n*32'h10203) ^ j;
     endfunction

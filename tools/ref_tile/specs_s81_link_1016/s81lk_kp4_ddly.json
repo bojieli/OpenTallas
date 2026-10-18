@@ -1,0 +1,128 @@
+{
+ "name": "s81lk_kp4_ddly",
+ "top": "ot_s81_kp4_ddly",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv"
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "count": 1,
+   "inst": "*u_dmem",
+   "at": [
+    29.376,
+    43.2
+   ],
+   "orient": "MY"
+  }
+ ],
+ "pins": {
+  "S": [
+   "w_d",
+   "rst_n",
+   "clk",
+   "r_d"
+  ]
+ },
+ "pin_ranges": {
+  "w_d": [
+   4.32,
+   118.8
+  ],
+  "rst_n": [
+   120.96,
+   122.04
+  ],
+  "clk": [
+   124.2,
+   125.28
+  ],
+  "r_d": [
+   127.44,
+   233.28
+  ]
+ },
+ "params": {},
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/dsrom_sys/s81_link"
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 237.6,
+  "h": 146.88,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "structural_change": "S81-TILES2 10-17: four-tile re-split of the KP4 decoder cluster ot_s81_kp4_dec (replaces s81lk_kp4_deca / decb, REJECTED at their CTS gates: 259.2 um tiles, SRAM in the middle, clock on the S face; TT insertion 307-455 / 295-417 ps, spread 148 / 122 ps).  Cluster 2 x 2: dsyn SW (PMA in W), ddly NW, dchn SE, dout NE (beats out E); every seam registered at both pins.  Bit-exact vs the 33a35eb7d two-tile decoder on every output and cycle (tb_s81_kp4_eq: RTL same cycle, hardware view with all tile pin registers = reference + 2 cycles; mutants DMUT 2 / 3 and a one-short word seam FAIL).  ddly: the 64 x 546 received-word SRAM delay (DD = 55, free-running pointer) alone; macro at (43.2, 43.2) MY on the 43.2 lattice against the N face (20.5 um channel), one std-cell band S (41 um) holding every register (all pins on the S face: gate 1 with r_d on the E face and clk at the W end measured 1,097 sinks TT 208-310 ps, spread 102 -- a register L around the macro); MY puts the read port and half the write port on the macro's E edge above the r_d pins.  S face: w_d W half (from dsyn), clk / rst_n centre, r_d E half (to dout), 4.6/um.  ~1.1k sinks.  Aspect 1.69 is the macro's (178.6 x 81) plus the 20 um channels; a single-macro delay tile. S81-TILES3 10-17 PARENT PITCH (coordinator 0co: 2x2 parent with aligned pitch, no gaps on link paths): hard children sit on the 43.2-um child lattice with >= 20-um channels, so every seam tile edge is a lattice multiple minus 21.6 um. ddly 248.4 -> 237.6 wide (5.5 x 43.2): 248.4 = 5.75 lattice left a 54-um channel to dout; now 21.6. Macro centred at x 29.376 MY (>= 27 um from W/E core edges), band S unchanged; w_d 4.32-118.8 (= dsyn x_q), r_d 127.44-233.28 (5.1/um), clk/rst_n unchanged. RTL unchanged.",
+ "job": {
+  "owner": "Claude:S81-TILES2",
+  "branch": "claude/s81kp4-1017",
+  "tag": "t2",
+  "cycles_added": 2,
+  "purpose": "S81 link KP4 decoder tile ddly (received-word SRAM delay) of the 4-tile cluster ot_s81_kp4_dec, 10-17. Bench = cluster equivalence vs 33a35eb7d and the one-short word-seam mutant.",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+   "rtl/dsrom_sys/s81_link/ref/ot_s81_kp4_dec_r33.sv",
+   "rtl/dsrom_sys/s81_link/tb_s81_kp4.sv",
+   "rtl/dsrom_sys/s81_link/tb_s81_kp4_eq.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+   "tools/s81_link/rs544.py",
+   "tools/s81_link/run_kp4_leaf_bench.sh",
+   "tools/s81_link/run_kp4_eq_bench.sh"
+  ],
+  "benches": [
+   {
+    "name": "kp4_dec4_eq_base",
+    "cmd": "bash tools/s81_link/run_kp4_eq_bench.sh base {RUN}/bench_base",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 3600,
+    "pass_regex": "^TB_S81_KP4_EQ PASS$",
+    "min_count_regex": "^TB_S81_KP4_EQ cycles=\\d+ ref_beats=(\\d+) rtl_mismatch=0 hw_mismatch=0 "
+   },
+   {
+    "name": "kp4_dec4_eq_seam",
+    "cmd": "bash tools/s81_link/run_kp4_eq_bench.sh seam {RUN}/bench_seam",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 3600,
+    "fail_regex": "^TB_S81_KP4_EQ FAIL$"
+   }
+  ]
+ }
+}

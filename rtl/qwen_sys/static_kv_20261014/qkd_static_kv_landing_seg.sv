@@ -35,24 +35,33 @@ module qkd_static_kv_landing_seg #(
     wire [23:0] gl_d,ol_d;
     wire [1023:0] od_d;
     for(genvar branch=0;branch<4;branch=branch+1)begin:g_hop
+      // ls3 (KVELEM 2026-10-16): ls2 EARLY_FAIL_HOLD stalled at -44.7 ps on the FF removal check rst_n port -> hop rn
+      // RESETN (async capture straight from the pin; hold repair cannot pad a removal arc). The branch's hop reset is now
+      // a synchronous D capture of rst_n (a data path, as the landing PCs/rowctl already do: rn <= rst_n), one per branch
+      // beside its hops. Cost: hop reset deassertion +1 edge (reset guard only; no traffic cycle changes).
+      (* keep *) reg hrn;
+      always @(posedge ck) hrn <= rst_n;
       qkd_static_kv_hop38 #(.MUT(HOP_MUT==2 && branch==0))u_req(
-        .ck(ck),.rst_n(rst_n),
+        .ck(ck),.rst_n(hrn),
         .a({gl[6*branch+:6],ge[16*branch+:16],gv[branch],gt[14*branch+:14],get[branch]}),
         .b({gl_d[6*branch+:6],ge_d[16*branch+:16],gv_d[branch],gt_d[14*branch+:14],get_d[branch]}));
       qkd_static_kv_hop295 #(.MUT(HOP_MUT==1 && branch==0))u_rsp(
-        .ck(ck),.rst_n(rst_n),
+        .ck(ck),.rst_n(hrn),
         .a({pf[branch],ol[6*branch+:6],oe[16*branch+:16],vv[branch],ot[14*branch+:14],od[256*branch+:256],ov[branch]}),
         .b({pf_d[branch],ol_d[6*branch+:6],oe_d[16*branch+:16],vv_d[branch],ot_d[14*branch+:14],od_d[256*branch+:256],ov_d[branch]}));
     end
     qkd_static_kv_rowctl #(.VREQ(1)) u_rowctl(
       .ck(ck),.rst_n(rst_n),.req_valid(req_valid),.req_t(req_t),.req_v(req_v),.req_epoch(req_epoch),.req_layer(req_layer),
-      .vreq_valid(vreq_valid),.vreq_t(vreq_t),
+      .vreq_valid(vreq_valid),.vreq_t(vreq_t),.arm(arm),.epoch(epoch),.layer(layer),
       .pc_get(get),.pc_get_t(gt),.pc_get_v(gv),.pc_get_epoch(ge),.pc_get_layer(gl),
       .pc_valid(ov_d),.pc_data(od_d),.pc_t(ot_d),.pc_v(vv_d),.pc_epoch(oe_d),.pc_layer(ol_d),.pc_fault(pf_d),
       .rsp_valid(rsp_valid),.rsp_data(rsp_data),.rsp_t(rsp_t),.rsp_v(rsp_v),.rsp_epoch(rsp_epoch),.rsp_layer(rsp_layer),.fault(fault));
     genvar q;
     generate for(q=0;q<4;q=q+1)begin:g_pc
-      qkd_static_kv_landing_pc #(.MUT(MUT),.VMAP(1))u_pc(
+      // ls5 (KVELEM 2026-10-16): CHECK_PIPE 1 = the put/get checker one edge behind the data path on relay registers
+      // (ls4 gate: every failing endpoint was checker logic fed by ps_q over ~400 ps of wire); FAULT_PIPE kept; WRITE_PIPE 0
+      // (SRAM write / read edges, the landing latency 8 and the calendar are unchanged).
+      qkd_static_kv_landing_pc #(.MUT(MUT),.VMAP(1),.FAULT_PIPE(1),.WRITE_PIPE(0),.CHECK_PIPE(1))u_pc(
        .ck(ck),.rst_n(rst_n),.cfg_stack(cfg_stack),.cfg_group(cfg_group),.arm(arm),.epoch(epoch),.layer(layer),
        .expected_put(expected_put[q]),.expected_sector(expected_sector[10*q+:10]),
        .actual_valid(actual_valid[q]),.actual_sector(actual_sector[10*q+:10]),

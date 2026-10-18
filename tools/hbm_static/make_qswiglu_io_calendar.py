@@ -47,6 +47,17 @@ for t in range(length):
   word|=value<<offset;offset+=w
  rows.append(word)
 (out/'io.hex').write_text(''.join(f'{word:0118x}\n' for word in rows))
+# SFU programme store r10, decision B (SFU-PS-3 10-17, coordinator sign-off for the compiler owner): the r10 head
+# REGISTERS the programme start (io_word[470] -> +1 edge -> programme calendar), so the compile schedule places
+# arith_start ARITH_START_ADVANCE_R10=1 IO row EARLIER for that store; compiler_control then reaches the core on the
+# same edge as with r7c. Every other IO field is unchanged (the core ignores bit 470). io.hex stays the reference image.
+ARITH_START_ADVANCE_R10=1
+assert arith_edge-ARITH_START_ADVANCE_R10>=0
+bit=470
+rows_r10=[(w&~(1<<bit)) for w in rows]
+rows_r10[arith_edge-ARITH_START_ADVANCE_R10]|=1<<bit
+(out/'io_store_r10.hex').write_text(''.join(f'{word:0118x}\n' for word in rows_r10))
 (out/'io_manifest.json').write_text(json.dumps(dict(width=471,rows=length,prefetch_edges=192,scalar_prefetch_edge=scalar_edge,
  arith_start_edge=arith_edge,drain_edges=[drain_edge,drain_edge+192],overlap=overlap,real_programme_SRAMs=6,VM_map='diagnostic SID0 G0/U1026/route2052/O4096',
+ arith_start_edge_store_r10=arith_edge-ARITH_START_ADVANCE_R10,arith_start_advance_store_r10=ARITH_START_ADVANCE_R10,
  full_4x7168_IO_schedule=False,lg_path=lg_path,latency_shift_edges=shift,native_die_qualified=False),indent=2)+'\n')

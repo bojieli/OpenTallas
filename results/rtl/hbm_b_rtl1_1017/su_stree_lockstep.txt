@@ -1,0 +1,10 @@
+# HBM-B-RTL1/SU scalar tree lockstep (tb_hbm_su_stree, iverilog 12, local 10-17 ~21:20; source = this commit's parent tree)
+# run: rtl/hbm_accel/generic/adapters/static_su/top/run_stree_lockstep.sh <out> MUT NCYC UP DN
+STREE PASS UP=14 DN=14 L_TREE=32 d4f=36 delta=-4 edges words=32232 all4_edges=284 errors=0 MUT=0
+STREE FAIL UP=14 DN=14 L_TREE=32 d4f=36 delta=-4 edges words=16072 all4_edges=148 errors=15937 MUT=1
+STREE FAIL UP=14 DN=14 L_TREE=32 d4f=36 delta=-4 edges words=16072 all4_edges=148 errors=8232 MUT=2
+STREE FAIL UP=14 DN=14 L_TREE=32 d4f=36 delta=-4 edges words=16072 all4_edges=148 errors=4000 MUT=3
+STREE FAIL UP=14 DN=14 L_TREE=32 d4f=36 delta=-4 edges words=16072 all4_edges=148 errors=3904 MUT=4
+STREE PASS UP=14 DN=14 L_TREE=32 d4f=36 delta=-4 edges words=32320 all4_edges=295 errors=0 MUT=0
+STREE PASS UP=0 DN=0 L_TREE=4 d4f=36 delta=-32 edges words=24512 all4_edges=218 errors=0 MUT=0
+STREE PASS UP=9 DN=7 L_TREE=20 d4f=36 delta=-16 edges words=24380 all4_edges=218 errors=0 MUT=0

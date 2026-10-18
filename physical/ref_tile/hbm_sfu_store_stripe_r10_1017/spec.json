@@ -1,0 +1,342 @@
+{
+ "name": "hbm_sfu_store_stripe_r10_1017",
+ "top": "ot_hgi_sfu_store_stripe_leaf_r10",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_store_stripe_leaf_r10.sv",
+  "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [],
+ "params": {},
+ "outline": {
+  "w": 285.12,
+  "h": 194.4,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_page?0?.u_program",
+   "at": [
+    23.76,
+    28.08
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_page?1?.u_program",
+   "at": [
+    164.592,
+    28.08
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_page?2?.u_program",
+   "at": [
+    23.76,
+    97.776
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_page?3?.u_program",
+   "at": [
+    164.592,
+    97.776
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "N": [
+   "out_addr",
+   "out_data",
+   "in_we",
+   "in_addr",
+   "in_start_v",
+   "in_start_base",
+   "in_legal",
+   "in_span",
+   "in_loops",
+   "in_loops_one",
+   "in_cv",
+   "rst_a",
+   "in_data"
+  ],
+  "S": [
+   "out_cal",
+   "clk",
+   "out_v",
+   "out_active",
+   "out_done",
+   "out_fault",
+   "out_ord",
+   "out_hz",
+   "out_b26"
+  ]
+ },
+ "pin_ranges": {
+  "out_addr": [
+   3.0,
+   8.251
+  ],
+  "out_data": [
+   8.251,
+   130.452
+  ],
+  "in_we": [
+   130.452,
+   131.452
+  ],
+  "in_addr": [
+   131.452,
+   135.852
+  ],
+  "in_start_v": [
+   135.852,
+   136.852
+  ],
+  "in_start_base": [
+   136.852,
+   141.252
+  ],
+  "in_legal": [
+   141.252,
+   142.252
+  ],
+  "in_span": [
+   142.252,
+   147.052
+  ],
+  "in_loops": [
+   147.052,
+   153.452
+  ],
+  "in_loops_one": [
+   153.452,
+   154.452
+  ],
+  "in_cv": [
+   154.452,
+   155.452
+  ],
+  "rst_a": [
+   155.452,
+   156.452
+  ],
+  "in_data": [
+   156.452,
+   282.12
+  ],
+  "out_cal": [
+   3.0,
+   140.452
+  ],
+  "clk": [
+   141.952,
+   142.952
+  ],
+  "out_v": [
+   145.452,
+   146.452
+  ],
+  "out_active": [
+   146.452,
+   147.452
+  ],
+  "out_done": [
+   147.452,
+   148.452
+  ],
+  "out_fault": [
+   148.452,
+   149.452
+  ],
+  "out_ord": [
+   149.452,
+   219.728
+  ],
+  "out_hz": [
+   219.728,
+   224.12
+  ],
+  "out_b26": [
+   224.12,
+   225.12
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.0
+ },
+ "io_flop_at_pins": {
+  "cols": 8,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "the r10 leaf RTL registers every input at the pin (pure flops: rb/we_q/addr_q/data_q/start_*_q/cv_q) and every output is a register (out_cal relay+gate, calendar_v/active/done/fault/ordinal, out_hz, calendar[26], chain out = the dedicated fwd_addr_q/fwd_data_q export flops (r10n)); a kit flop stage would add an edge to the priced r7c schedule (D=4)"
+ },
+ "children": [],
+ "inter": [],
+ "structural_change": "r10n (HBM-NATIVE 10-17): out_data/out_addr driven by dedicated chain-forward export flops instead of the macro-feeding data_q/addr_q (native launch 276.8 -> anchored at the out pins); same outline/pins/macros, 0 cycles. Base: r10 (SFU-PS-FUND 10-17, design decision lanes/SFU-PS-FUND.md): ONE stripe per leaf, 11 identical leaves (replaces r9 leaf2/leaf3 and every stacked-SRAM store). Root cause of r7c4..r9d: 1024x256 macros carry ~416 pins on each 70 um short edge, so stacks put the register mass, the pins and the clock on one face and the far edge needs sinks reached round the stack (insertion 408-617, spread 131-261, M4 overflow under the M5 cap). r10 uses four narrow 512x256 macros as two mirrored pairs (MY | spine | R0): every A edge (read data, address, clock, low write data) faces ONE centre spine that holds the read path; B edges (high write data + ties) face outer bands with no clock sinks; inputs + config chain-out on the N face (N band pin flops), outputs on the S face (S band relay + gated output registers), clk at the S-face spine foot (outputs launch early, inputs capture late). Outline 285.12 x 194.4 (1.47:1), ~1.7k sinks, cycles identical to r7c (lockstep).",
+ "job": {
+  "owner": "Claude:HBM-NATIVE",
+  "branch": "claude/hbm-native-1017",
+  "tag": "r10n",
+  "purpose": "SFU programme store r10 one-stripe spine leaf (x11 in ot_hgi_sfu_programme_store_r10), native-launch successor of the CLOSED r10-947bd4836 view: dedicated chain-forward export flops. CRITICAL (hbm_sfu_programme_store family): coordinator reviews the gate PNG before submit.",
+  "views_to": "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views",
+  "record_to": "results/rtl/ref_tile/hbm_sfu_store_stripe_r10_1017",
+  "extra_paths": [
+   "physical/asap7_memory_macros",
+   "physical/hbm_accel_macros",
+   "physical/ref_tile/sfu_lane_ring3_rt/src",
+   "results/arch/hbm_native_1013/sfu_native_quarter",
+   "results/rtl/hbm_hc_sfu_static_1015/qswiglu",
+   "rtl/hbm_accel/generic/peers",
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/test/hbm_accel/generic",
+   "tools/hbm_static"
+  ],
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_hgi_sfu_programme_store_r10 rtl/hbm_accel/generic/peers/ot_hgi_sfu_store_stripe_leaf_r10.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r10.sv physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "leaf_fwd_lockstep_ref0",
+    "cmd": "OUT={RUN}/bench/lf SEED=12345 N=60000 bash tools/hbm_static/run_sfu_leaf_r10_fwd_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "^SFU_LEAF_FWD_GATE POSITIVE PASS$",
+    "pass_witness": "results/rtl/hbm_native_1017/sfu_leaf_fwd_pos.log",
+    "min_count_regex": "^SFU_LEAF_FWD_LOCKSTEP PASS edges=(\\d+) ",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "leaf_fwd_mutant_late",
+    "cmd": "OUT={RUN}/bench/lfm SEED=12345 N=60000 EQ_MUT=fwd bash tools/hbm_static/run_sfu_leaf_r10_fwd_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "^SFU_LEAF_FWD_GATE MUTANT fwd REJECTED \\(expected\\)$",
+    "pass_witness": "results/rtl/hbm_native_1017/sfu_leaf_fwd_mut.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "store_lockstep_r7c",
+    "cmd": "OUT={RUN}/bench/ls MODE=0 SEED=12345 bash tools/hbm_static/run_sfu_store_r10_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R10_GATE POSITIVE PASS",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_mutant_chain",
+    "cmd": "OUT={RUN}/bench/lsc EQ_MUT=chain bash tools/hbm_static/run_sfu_store_r10_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R10_GATE MUTANT chain REJECTED",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_equiv_exact",
+    "cmd": "OUT={RUN}/bench/pos SFU_LG_R=23 STORE10=1 bash tools/hbm_static/run_sfu_split_equiv.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_SPLIT_GATE POSITIVE PASS",
+    "min_count_regex": "SFU_SPLIT_EQUIV PASS edges=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_flip",
+    "cmd": "OUT={RUN}/bench/flip SFU_LG_R=23 STORE10=1 EQ_MUT=flip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/flip/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_early",
+    "cmd": "OUT={RUN}/bench/early SFU_LG_R=23 STORE10=1 EQ_MUT=early bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/early/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_chain",
+    "cmd": "OUT={RUN}/bench/chain SFU_LG_R=23 STORE10=1 EQ_MUT=chain bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/chain/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "vs": "hbm_sfu_store_stripe_r10_1017-r10-947bd4836",
+   "why": "native pin audit (lanes/NATIVE-BATCH.md, claude/native-batch-1017 029f539c5): launch up to 276.8 ps on 73 out_data pins (budget 220): out_data/out_addr = data_q/addr_q, the keep registers that also drive the 4 macros' wd_in/w_addr, so io_flop_at_pins left them unanchored (269 ports not single-flop) at the in_data face segment ~150 um from the chain-out pins. Fix: dedicated keep chain-forward flops fwd_data_q/fwd_addr_q (D = the same in pins, Q drives only out_data/out_addr), anchored at the out pins; 0 cycles, bit-identical at every pin (leaf lockstep vs the closed RTL ref0, store lockstep vs r7c). Outline, pins, faces unchanged."
+  }
+ },
+ "orfs_vars": {},
+ "hold_budget": "die"
+}

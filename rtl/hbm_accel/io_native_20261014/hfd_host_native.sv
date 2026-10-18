@@ -28,7 +28,7 @@ module hfd_host_native #(parameter integer MUT=0)(
  hfd_lk_ep #(.HARD_CLOCKS(1))u_endpoint(.clk(clk_ep),.clk_face(clk_face),.clk_sub(clk_sub),
  .clk_tx_shared(clk_tx_shared),.clk_rx_shared(clk_rx_shared),.clk_status_shared(clk_status_shared),
  .rst_n(rst_n),.f_lk(f_lk),.phy(phy));
- ot_hbm_host_landing256 u_landing(.clk(clk_landing),.rst_n(rst_n),.in_v(f_lk[547]),.in_data(f_lk[1092:548]),
+ ot_hbm_host_landing256 #(.PINREG(0)) u_landing(.clk(clk_landing),.rst_n(rst_n),.in_v(f_lk[547]),.in_data(f_lk[1092:548]),
  .out_v(lv),.out_data(ld),.out_ready(lr),.pop(pop),.fault(landing_fault));
  wire[511:0]phy_rx;
  ot_pdie_ucie u_phy(.clk(clk_phy),.rst(rst_n),.tx({25'd0,phy[486:0]}),.rx(phy_rx),.st(phy_status),

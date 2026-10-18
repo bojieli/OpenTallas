@@ -1,0 +1,179 @@
+{
+ "name": "s81lk_kp4_deca",
+ "top": "ot_s81_kp4_dec_a",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec_a.sv"
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "count": 1,
+   "inst": "*u_dmem",
+   "at": [
+    43.2,
+    129.6
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "p_v",
+   "p_d"
+  ],
+  "E": [
+   "d_q",
+   "k_lo",
+   "k_v",
+   "k_L",
+   "k_any"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "lock",
+   "n_relock"
+  ]
+ },
+ "pin_ranges": {
+  "p_d": [
+   4.32,
+   250.56
+  ],
+  "p_v": [
+   252.72,
+   253.8
+  ],
+  "clk": [
+   128.52,
+   129.6
+  ],
+  "rst_n": [
+   132.84,
+   133.92
+  ],
+  "lock": [
+   150.12,
+   151.2
+  ],
+  "n_relock": [
+   153.36,
+   190.08
+  ],
+  "d_q": [
+   4.32,
+   155.52
+  ],
+  "k_lo": [
+   157.68,
+   246.24
+  ],
+  "k_v": [
+   248.4,
+   249.48
+  ],
+  "k_L": [
+   250.56,
+   252.72
+  ],
+  "k_any": [
+   253.8,
+   254.88
+  ]
+ },
+ "params": {},
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/dsrom_sys/s81_link"
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 259.2,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.0,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S81-KP4 10-17: FRONT hard sub-tile of the KP4 decoder cluster ot_s81_kp4_dec (the one-tile streaming decoder s81lk_kp4_dec measured at its CTS gate 11,098 sinks in 367.2 x 345.6 um: TT insertion 383-513 ps, spread 130 ps, setup -121 ps (align popcount -> FSM -> 32-bit counter from the pin) -- split into two ~260 um tiles with their own roots, registered seam). Alignment FSM on registered am_ok / p_v; syndromes on the arriving stream (fixed-offset one-hot select x4 copies, window matrix registered a cycle ahead); 3 RiBM key-equation units (one GF multiply + XOR a cycle, PE-group control copies); 64 x 546 received-word SRAM delay line u_dmem on the 43.2 lattice (pins on its W / E edges; std cells in one band around it). West face = PMA side (p_d full face); east face = the seam to s81lk_kp4_decb (d_q 544 + k_* 320, pin positions identical to decb's west face); clk / rst_n S centre. Regional synchronous reset, no datapath reset. Exact vs rs544.py through the cluster (KP4 bench base PASS 140 out / 122 exact / 17 flagged / 0 miscorrected; front mutant MUT 3 FAIL).",
+ "job": {
+  "owner": "Claude:S81-KP4 helper (FILL 0cq)",
+  "branch": "claude/s81kp4-1017",
+  "tag": "k4",
+  "cycles_added": 2,
+  "purpose": "S81 link KP4 decoder FRONT sub-tile (align, syndromes, 3 RiBM, received-word SRAM delay) of the cluster ot_s81_kp4_dec, 10-17. Bench = KP4 base through the cluster (exact vs rs544.py) and the front-tile mutant MUT 3.",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec_a.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec_b.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+   "rtl/dsrom_sys/s81_link/tb_s81_kp4.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+   "tools/s81_link/rs544.py",
+   "tools/s81_link/run_kp4_leaf_bench.sh"
+  ],
+  "benches": [
+   {
+    "name": "kp4_enc_dec_exact_vs_rs544",
+    "cmd": "bash tools/s81_link/run_kp4_leaf_bench.sh base {RUN}/bench_base",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 3600,
+    "pass_regex": "^TB_S81_KP4 .* EMUT=0 DMUT=0 PASS$",
+    "min_count_regex": "^TB_S81_KP4 frames_out=\\d+ exact=(\\d+) "
+   },
+   {
+    "name": "kp4_dec_front_syndrome_mutant",
+    "cmd": "bash tools/s81_link/run_kp4_leaf_bench.sh amut {RUN}/bench_amut",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 3600,
+    "fail_regex": "^TB_S81_KP4 .* EMUT=0 DMUT=3 FAIL$"
+   }
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": true
+ },
+ "keep_pin_regs": true
+}

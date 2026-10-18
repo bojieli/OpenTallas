@@ -170,6 +170,74 @@
   },
   {
    "design": "qwen_rom",
+   "unit": "PV16.TRUNK qkd_pvw_die_t trunked PV pair (registered command trunk + chunk taps, every hop <= 400 um; +TRUNK_D 54 edges a PV pass)",
+   "group": "PV16.TRUNK",
+   "measured": 1870.0,
+   "price": 1816.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.0297,
+   "e2e_loss_pct": 0.773,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 251375.0,
+     "added_cycles": 1944.0,
+     "runs_per_token": 36,
+     "critical_runs": 36,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 1944.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.773
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/qwen_kv_die/pv_trunk_t/bench_r6.json (branch claude/kvplan-1815 692bed2d0)",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-17",
+   "status": "proposed",
+   "note": "KVPLAN3 0230: the PV16 pair's in-array command/start/reset is a registered trunk (kvs13h/kvs13k die STA: the old pair's one-edge broadcasts failed -296 ns); TRUNK_D 54 edges are added to every PV pass, 36 a token. Bench tb_qkd_pvw_die_t PASS T=100/1000/8192 (512 words x 32 cols exact), TRUNK_MUT / FLAG_D_ADJ FAIL. Die-level header/chunk relays are inside DELTA (no extra).   | Q-KV lead 2026-10-16 ~21:30 PT ACCEPTED the +54 edges/PV pass (0.773 % AR); within 1.10x of the attention price so the row QUALIFIES without an acceptance (tool refuses accept by rule).",
+   "share_basis": "measured"
+  },
+  {
+   "design": "qwen_rom",
+   "unit": "PV16.VPORT_W82 V port request + V word equalised to PV_W 82 (was 59): ctl FIRST_INPUT_AGE 72 -> 95, RL 71 -> 94 (+23 edges a PV pass)",
+   "group": "PV16.TRUNK",
+   "measured": 1839.0,
+   "price": 1816.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.0127,
+   "e2e_loss_pct": 0.331,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 250259.0,
+     "added_cycles": 828.0,
+     "runs_per_token": 36,
+     "critical_runs": 36,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 828.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.331
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "kvs13l4 plan (branch claude/kvplan-1815 6949bdd68, flags OT_KV_PVT_PINS/HDR_CTL/SEAM, PV_W 82): pvt_verify W = 82 on all 16 ports; far ports need pvin 12.9 mm (38 stages) + pvrq 14.1 mm (38)",
+   "evidence_grade": "interim_log",
+   "date": "2026-10-17",
+   "status": "proposed",
+   "note": "KVPLAN3 0230: on the kvs13l geometry (DW 950.4) the natural WP + O of the far V ports is 77..81 die relay edges; PV_W 59 was met only by pin repair that broke the static schedule (kvs13l2/l3 PV-inexact). Equalised to 82 with exact per-port padding; ctl kit qkd_pv_ctl_t_d54f58a95 (param-only). Q-KV lead 2026-10-17 accepted. Option for later: re-home the 16 V ports nearer the pair.   | Q-KV lead 2026-10-17 ~07:40 PT ACCEPTED (+23 edges a PV pass; PV successor total with PV16.TRUNK ~1.1 % AR).",
+   "share_basis": "measured"
+  },
+  {
+   "design": "qwen_rom",
    "unit": "SU.COPY_PINREG",
    "group": "SU.COPY_PINREG",
    "measured": 9.0,
@@ -578,6 +646,39 @@
    "date": "2026-10-16",
    "status": "proposed",
    "note": "S-ELEM COMB+ENGRAM 1315 13:35, claude/s81-static14-0600 5fb84abb0 (exact PASS 157, 7 mutants rejected). Engram lookup is lookahead (E# nodes off the token critical path): +1 on E#.rows_allgather costs 0 cycles in AR (no E nodes in the MTP path). Not yet routed. Priced by S81-PRICE helper."
+  },
+  {
+   "design": "s81",
+   "unit": "ENGRAM.LKP_WRITE_POSEDGE (dsfd_engram_lkp_static14 st8: table-write path all posedge, per-bank wx copy on the core posedge, full-cycle crossing to the row leaf; +1 on every row beat and status; element 157 -> 158, engine 155 -> 156)",
+   "group": "ENGRAM.LKP_WRITE_POSEDGE",
+   "measured": 2.0,
+   "price": 1.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 2.0,
+   "e2e_loss_pct": 0.0,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 828866.4,
+     "added_cycles": 0.0,
+     "runs_per_token": 2,
+     "critical_runs": 0,
+     "overlapped_runs": 2,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 2.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.0
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/s81_engram_static14_st8",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-17",
+   "status": "proposed",
+   "note": "S-ELEM ENGRAM-LKP 10-17, claude/s81-static14-0600 0b8eab454 (benches committed on that branch). Coordinator-preferred all-posedge write: removes the half-cycle core->rows class (st7 gate binding: -53.4 TT placement / -91.1 related). Engram lookup is lookahead (E# nodes off the token critical path, 2 runs overlapped): 0 cycles AR; no E nodes in the MTP path."
   },
   {
    "design": "s81",
@@ -2175,11 +2276,11 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 1.065,
-   "proposed_pct": 5.78,
-   "accepted_plus_proposed_pct": 6.845,
+   "proposed_pct": 6.553,
+   "accepted_plus_proposed_pct": 7.618,
    "limit_pct": 15.0,
    "accepted_rows": 4,
-   "proposed_rows": 9,
+   "proposed_rows": 11,
    "headroom_pct": 13.935,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
@@ -2190,7 +2291,7 @@
    "accepted_plus_proposed_pct": 25.465,
    "limit_pct": 15.0,
    "accepted_rows": 11,
-   "proposed_rows": 11,
+   "proposed_rows": 12,
    "headroom_pct": -8.391,
    "owner_exception_rows": 2,
    "over_limit_by_owner_exception": true

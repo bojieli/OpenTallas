@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_su_programme_pslice_q",
+ "enable": false,
+ "reason": "ot_hbm_su_programme_pslice registers every input at its pin (start/length STAGES=1 pin stage, c_we/c_bank/c_row/c_data configuration stage) and ot_hbm_su_programme registers every output (command, busy, valid, done, fault, edge_index); a kit flop stage would add an edge the start-advance contract (DEPTH 2) does not price"
+}

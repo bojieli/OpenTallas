@@ -40,7 +40,7 @@ class Admit(unittest.TestCase):
                      age=200.0 + 400 * i, cls="?") for i in range(26)]
         b = R.books(rows, 1133, 600, {})
         self.assertLessEqual(b["grow"], 0.15 * 1133)
-        self.assertGreaterEqual(R.admissible(1133, 600, b, 64, 226.6), 300)
+        self.assertGreaterEqual(R.admissible(1133, 600, b, 56.65, 0.7), 300)
 
 
 if __name__ == "__main__":
@@ -52,11 +52,11 @@ class DieFirst(unittest.TestCase):
     def test_hold_only_for_a_die_trial_that_fits_the_host(self):
         from unittest.mock import patch
         with patch.object(R, "prio_waiters", return_value=[(10, 400), (20, 100)]):
-            self.assertEqual(R.die_hold(1024, 300, 32, 205, {}), 400)        # oldest waiter, fits 1024-205-32
-        with patch.object(R, "prio_waiters", return_value=[(10, 900), (20, 100)]):
-            self.assertEqual(R.die_hold(1024, 300, 32, 205, {}), 100)        # 900 can never start here: skipped
+            self.assertEqual(R.die_hold(1024, 300, 51, {}, 0.7), 400)        # oldest waiter, 0.7 x 400 fits 1024-51
+        with patch.object(R, "prio_waiters", return_value=[(10, 1400), (20, 100)]):
+            self.assertEqual(R.die_hold(1024, 300, 51, {}, 0.7), 100)        # 0.7 x 1400 can never start here: skipped
         with patch.object(R, "prio_waiters", return_value=[]):
-            self.assertEqual(R.die_hold(1024, 300, 32, 205, {}), 0)
+            self.assertEqual(R.die_hold(1024, 300, 51, {}, 0.7), 0)
 
     def test_prio_waiters_reads_environ(self):
         import os

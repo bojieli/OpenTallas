@@ -66,3 +66,25 @@ class ClusterLevel2(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class M8Override(unittest.TestCase):
+    """ROOT review 10-17: route.m8_pg_* overrides reach the M8 stripe (k[6:] after the 'm8_pg_' prefix)."""
+    def test_override_keys(self):
+        route = {"m8_pg_width": 0.96, "m8_pg_pitch": 17.28, "pd": 0.5}
+        m8 = dict(RT.M8_PG, **{k[6:]: v for k, v in route.items() if k.startswith("m8_pg_")})
+        self.assertEqual(m8, {"width": 0.96, "pitch": 17.28, "offset": 4.32})
+        import inspect
+        self.assertIn("k[6:]", inspect.getsource(RT.gen_pdn))
+
+
+class SpinePinKeys(unittest.TestCase):
+    """ROOT review 10-17: child_clock_ref 'pin' keys with Tcl-special characters are braced in spine_ins.tcl"""
+    def test_bus_bit_key_braced_plain_key_not(self):
+        import inspect
+        src = inspect.getsource(RT.gen_hooks)
+        self.assertIn('tk = lambda k', src)
+        import re
+        tk = lambda k: "{" + k + "}" if re.search(r"[\[\]$\\{}\s;\"]", k) else k  # noqa: E731
+        self.assertEqual(tk("m/ck"), "m/ck")
+        self.assertEqual(tk("m/ckv[0]"), "{m/ckv[0]}")

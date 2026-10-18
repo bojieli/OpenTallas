@@ -156,7 +156,7 @@ def ckgen_pin_xy(slot, pin):
 
 
 def build(W, H, obstacles, root_xy, sinks, quadrant_of, leaf_pads=None, quad_pads=None, root_search_um=3000.0,
-          mode='htree', bin_um=1600.0, pairs=None):
+          mode='htree', bin_um=1600.0, pairs=None, region_of=None, near_um=405.0):
     """sinks: [(inst, pin, x, y)]; quadrant_of(inst) -> 'SW'|'SE'|'NW'|'NE'.
     pairs (mode 'graph'): [(inst_a, inst_b)] tile pairs that exchange data in this domain (the clock follows them).
     leaf_pads {inst: n} / quad_pads {quadrant: n}: measured skew corrections (STA feedback), outside the model."""
@@ -247,6 +247,8 @@ def build(W, H, obstacles, root_xy, sinks, quadrant_of, leaf_pads=None, quad_pad
                 out[inst] = dl + v + n * PAD_PS
         return out
 
+    if mode == 'regional':
+        return _regional(g, root_xy, sinks, region_of or (lambda n: 'all'), pairs or [], near_um)
     if mode == 'graph':
         return _graph(W, H, g, root_xy, sinks, bufs, nets, newbuf, chain, pairs or [])
     if mode == 'lane':
@@ -561,6 +563,68 @@ def _graph(W, H, g, root_xy, sinks, bufs, nets, newbuf, chain, pairs, fanout=4):
                  tree_hop_ps=dict(median=round(hops[len(hops) // 2], 1), max=round(hops[-1], 1)) if hops else None,
                  grid_um=GRID, span_um=SPAN, max_run_over_blocks_um=MAX_RUN, free_cells_frac=round(1 - sum(g.blk) / len(g.blk), 4))
     return dict(buffers=bufs, nets=merged, model=model)
+
+
+def _regional(g, root_xy, sinks, region_of, pairs, near_um):
+    """H-DIE-R8 10-17 (OWNER 10-16 neighbour-relative clocking, coordinator 0dg (2)): one REGIONAL tree per clock region,
+    regions fed from the ckgen pin by a zero-skew-merged trunk.
+      region_of(entry alias) -> region name: DIE-CLOCK region map, refined so that communicating entries within near_um
+      (the measured reach) share a region where the merged region stays compact (die_case_v16 regional_regions()).
+      Each region: DIE-CLOCK regtree leaves (<= 12 pins per 60 um cell, one BUFx24) merged bottom-up by recursive
+      median bisection with the merge point ON the routed path where the two model delays meet (balance from wire,
+      pads only for the residual) -- two tiles adjacent in the region share the clock down to a low branch point.
+      Trunk: region tops merged the same way (spatial bisection), so neighbour regions meet low in the trunk too;
+      then one buffered route from the ckgen pin to the trunk top.  No die-wide target is claimed: the gate is the
+      MEASURED neighbour skew (die STA dump -> tools/hbm_die_v15/neighbour_skew_gate.py), not this model."""
+    import os as _os, sys as _sys
+    _sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', 'die_clock'))
+    import regtree as _rt
+    B = _rt.Builder(g, 'dck')
+    pin_of = {s[0]: s[1] for s in sinks}
+    by_reg = defaultdict(list)
+    for s in sinks:
+        by_reg[region_of(s[0])].append((s[0], s[1], s[2], s[3], ''))
+    tops = []
+    for r in sorted(by_reg):
+        t = B.subtree(_rt.cluster(by_reg[r]))
+        t['region'] = r
+        tops.append(t)
+
+    def trunk(items):
+        if len(items) == 1:
+            return items[0]
+        cen = [g.xy(t['cell']) for t in items]
+        xs = [c[0] for c in cen]; ys = [c[1] for c in cen]
+        ax = 0 if (max(xs) - min(xs)) >= (max(ys) - min(ys)) else 1
+        order = sorted(range(len(items)), key=lambda i: (cen[i][ax], cen[i][1 - ax]))
+        h = len(order) // 2
+        return B.merge(trunk([items[i] for i in order[:h]]), trunk([items[i] for i in order[h:]]))
+    top = trunk(tops)
+    rc = g.nearest_free(*root_xy)
+    path = g.route(rc, top['cell'])
+    drv, d0 = B.chain(('port', 'clk'), path, 'T') if len(path) > 1 else (('port', 'clk'), 0.0)
+    B.nets.append([f'n_{top["buf"]}_i', drv, [('buf', top['buf'])]])
+    by = {}
+    for n_, d_, loads in B.nets:
+        d_ = tuple(d_)
+        L = [('pin', ld[1], pin_of[ld[1]]) if ld[0] == 'pin' else tuple(ld) for ld in loads]
+        if d_ in by:
+            by[d_][2].extend(L)
+        else:
+            by[d_] = [n_, d_, L]
+    nets = [tuple(v) for v in by.values()]
+    bufs = [(b[0], b[1], round(b[2], 3), round(b[3], 3)) for b in B.bufs]
+    reg = {s[0]: region_of(s[0]) for s in sinks}
+    pos = {s[0]: (s[2], s[3]) for s in sinks}
+    near = [(a, b) for a, b in pairs if a in pos and b in pos and a.split('__ckp')[0] != b.split('__ckp')[0]
+            and abs(pos[a][0] - pos[b][0]) + abs(pos[a][1] - pos[b][1]) <= near_um]
+    model = dict(mode='regional', sinks=len(sinks), regions=len(by_reg), leaves=len(B.leaves), buffers=len(bufs),
+                 pads=sum(1 for b in bufs if b[1] == _rt.PAD), trunk_root_model_ps=round(d0, 1),
+                 model_insertion_ps=round(d0 + top['d'], 1),
+                 region_sinks={r: len(v) for r, v in sorted(by_reg.items())},
+                 near_pairs=dict(um=near_um, tile_pairs=len(near), cross_region=sum(1 for a, b in near if reg[a] != reg[b])),
+                 grid_um=GRID, span_um=SPAN, max_run_over_blocks_um=MAX_RUN, free_cells_frac=round(1 - sum(g.blk) / len(g.blk), 4))
+    return dict(buffers=bufs, nets=nets, model=model)
 
 
 def clock_check(tree, pairs, port_xy=None):

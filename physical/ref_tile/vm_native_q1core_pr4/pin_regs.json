@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hfd_vms_bank_native_q1_core_pr",
+ "enable": false,
+ "reason": "the RTL registers every pin: hfd_vms_bank_native_q1_core_pr has a literal flop on every data input (q0_faces convention) and every output is a bank-body register; view == RTL (H-NETLIST source binding)"
+}

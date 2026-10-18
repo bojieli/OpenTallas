@@ -62,6 +62,7 @@ CHANNEL_UM = 20.0       # macro-macro and macro-core-edge channel
 PIN_EDGE_UM = 20.0      # no macro within this distance of a face that carries pins
 HALO_UM = 2.16          # placement halo around every macro (hard blockage)
 UTIL_LO, UTIL_HI = 0.45, 0.60
+FILL_MAX = 0.90         # sanity bound on total (cells + macros) / core of a kit with macros
 UTIL_TARGET = 0.52
 FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
 # Kit recipe = the generator DEFAULTS (owner 10-13 finishing recipe, el1013-finishing-recipe part B).
@@ -350,11 +351,46 @@ def macro_edge_guard(s: dict) -> bool:
 
 
 def pin_hook_wrapper(s: dict) -> bool:
-    """recipe 2: pin flops AND pin hold stages -> one kit-local PRE_GLOBAL_PLACE / PRE_DETAIL_PLACE hook"""
-    return bool(s.get("io_flop_at_pins") and (s.get("inhold") or s.get("outhold")) and s.get("recipe", 1) >= 2)
+    """recipe 2: pin flops AND pin hold stages -> one kit-local PRE_GLOBAL_PLACE / PRE_DETAIL_PLACE hook.
+    Q-LINK2 2026-10-17: a recipe-4 flop-first kit (hold_budget die: no inhold / outhold) that still needs pin_reg_split
+    or a pin_hook_before_flops (qfd_d2d_static r8c: reset-capture anchors) uses the same wrapper without the hold stage;
+    kits that were valid before regenerate byte-identically (the new cases used to raise SpecError)."""
+    if not (s.get("io_flop_at_pins") and s.get("recipe", 1) >= 2):
+        return False
+    return bool(s.get("inhold") or s.get("outhold") or s.get("pin_reg_split") or s.get("pin_hook_before_flops"))
+
+
+def pin_hook_flops_only(s: dict) -> bool:
+    """opt-in (S-ELEM BF lane16 2026-10-17): pin flops WITHOUT hold stages plus "pin_hook_before_flops" repo hooks (e.g.
+    per-root placement regions) -> the same kit-local pre_gpl.tcl / pre_dpl.tcl, minus the hold-stage scripts"""
+    return bool(s.get("io_flop_at_pins") and not pin_hook_wrapper(s) and s.get("pin_hook_before_flops")
+                and s.get("recipe", 1) >= 2)
+
+
+def kit_pin_hooks(s: dict) -> bool:
+    return pin_hook_wrapper(s) or pin_hook_flops_only(s)
 
 
 def gen_pin_hooks(s: dict) -> dict:
+    if pin_hook_flops_only(s):
+        pre_gpl = ["# ref_tile PRE_GLOBAL_PLACE (pin flops, no hold stages): the spec's pin_hook_before_flops repo hooks, then",
+                   "# every port's single launch / capture flop is fixed at its pin.  ORFS takes one hook per step."]
+        for rel in s["pin_hook_before_flops"]:
+            if not isinstance(rel, str) or rel.startswith("/") or ".." in Path(rel).parts or not re.fullmatch(r"[A-Za-z0-9_./-]+", rel):
+                raise SpecError("pin_hook_before_flops must name safe relative repo Tcl files")
+            if not (ROOT / rel).is_file():
+                raise SpecError(f"missing pin hook: {rel}")
+            pre_gpl.append(f"source /src/{rel}")
+        pre_gpl.append(f"source /src/{QDM}/io_flop_at_pins.tcl")
+        pre_dpl = ["# ref_tile PRE_DETAIL_PLACE (pin flops, no hold stages): release the pin flops for DPL",
+                   f"source /src/{QDM}/out_flop_release.tcl"]
+        for rel in s.get("pre_dpl_extra", []):
+            if not isinstance(rel, str) or rel.startswith("/") or ".." in Path(rel).parts or not re.fullmatch(r"[A-Za-z0-9_./-]+", rel):
+                raise SpecError("pre_dpl_extra must name safe relative repo Tcl files")
+            if not (ROOT / rel).is_file():
+                raise SpecError(f"missing pre-DPL hook: {rel}")
+            pre_dpl.append(f"source /src/{rel}")
+        return {"pre_gpl.tcl": "\n".join(pre_gpl) + "\n", "pre_dpl.tcl": "\n".join(pre_dpl) + "\n"}
     if not pin_hook_wrapper(s):
         if s.get("pre_dpl_extra"):
             raise SpecError("pre_dpl_extra needs the recipe-2 pin-hook wrapper")
@@ -367,6 +403,11 @@ def gen_pin_hooks(s: dict) -> dict:
                "# one hook per step, so the two repo hooks are sourced from this kit file.",
                f"source /src/physical/dsrom_window_source/{hold}",
                f"source /src/{QDM}/io_flop_at_pins.tcl"]
+    if not (s.get("inhold") or s.get("outhold")):
+        # flop-first (hold_budget die): no pin hold stage, the wrapper only orders split / anchors / pin flops
+        pre_gpl[0:4] = ["# ref_tile PRE_GLOBAL_PLACE (flop-first, hold_budget die): no pin hold stages; every port's single",
+                        "# launch / capture flop is fixed at its pin.  ORFS takes one hook per step, so the repo hooks are",
+                        "# sourced from this kit file."]
     if s.get("pin_reg_split"):
         # one dedicated launch flop per output pin BEFORE the hold stages walk flop -> port (el1014-root-recipe2)
         pre_gpl.insert(3, f"source /src/{PIN_REG_SPLIT_TCL}")
@@ -420,6 +461,8 @@ def load_spec(path: str) -> dict:
     # child gets its clock from its OWN port on the cluster face ("clock_ports": one scalar port per child clock pin, the
     # RTL wires port -> child clock pin).  The die delivers phi - R_i at each entry (R_i = entry wire + the child's routed
     # boundary insertion).  "clock_port" stays the first entry (kit CLKPORT, legacy readers).
+    if s.get("cdc_synchronizers") is not None and (s.get("clock") != "multiple_cts_roots" or s["kind"] != "tile"):
+        raise SpecError("cdc_synchronizers (reviewed CDC mode, cdc_sync_constraints.py) requires a multiple_cts_roots leaf tile")
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
         cps = s.get("clock_ports")
         if (s.get("clock") == "multiple_cts_roots" and s["kind"] != "tile" or s.get("clock") == "entries" and s["kind"] != "cluster") or not isinstance(cps, list) or not cps or s["clock_port"] != cps[0]:
@@ -971,6 +1014,32 @@ def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) ->
     return snap_up(w, og), snap_up(h, og), f"util {util} of std {area:.0f} + macros {mac:.0f} um2"
 
 
+def util_metrics(std_area, blocks, core, halo=HALO_UM):
+    """Utilisation of a kit.  Without macros: (std / core), exactly the old (std + 0) / core.  With macros the
+    gated number is the standard-cell DENSITY over the placeable area, std / (core - macro footprints - halos), because
+    macros never take standard cells; total fill (std + macros) / core is reported and bounded by FILL_MAX."""
+    mac = sum(b["w"] * b["h"] for b in blocks)
+    total = (std_area + mac) / core
+    if not blocks:
+        return {"util": total, "density": total, "total_fill": total, "macro_um2": 0.0, "placeable_um2": core}
+    keep = min(core, sum((b["w"] + 2 * halo) * (b["h"] + 2 * halo) for b in blocks))
+    placeable = max(core - keep, 1e-9)
+    dens = std_area / placeable
+    return {"util": dens, "density": dens, "total_fill": total, "macro_um2": mac, "placeable_um2": placeable}
+
+
+def util_severity(m):
+    """-> (severity, in_band).  Density gate: old band UTIL_LO..UTIL_HI+0.05, FAIL above 0.70 (kits without macros
+    unchanged); with macros only the upper side applies (a macro-dominated tile is placed sparsely by construction) plus
+    the total-fill sanity bound."""
+    u = m["density"]
+    if m["macro_um2"] > 0:
+        if m["total_fill"] > FILL_MAX:
+            return "FAIL", False
+        return ("INFO", True) if u <= UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN", False)
+    return ("INFO", True) if UTIL_LO <= u <= UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN", False)
+
+
 PG_MIN_STRIPES, PG_MIN_SPREAD = 2, 0.50     # child_lint (b): MIN_STRIPES per net, first..last stripe >= MIN_SPREAD of the span
 # PG-MARGIN (ROOT 2026-10-16, qkd_rlys_1 10.8 um at m5_pg_pitch 2.7): the model predicted exactly 0.500 and the routed
 # view measured just under it (stripe snapping / width), so the export failed after a clean route.  gen and the gate
@@ -1082,6 +1151,35 @@ def abutted_stack(a: dict, b: dict, gx: float, gy: float) -> bool:
                 on_w_e = x0 <= 200 or x1 >= tm["W"] - 200          # nm: a W / E face pin reaches the side edge
                 if (y1 >= tm["H"] - 200 if edge == "top" else y0 <= 200) and not on_w_e:
                     return False
+    return True
+
+
+def bare_face(b: dict, face: str) -> bool:
+    """True when the hard MACRO's face that ends up toward tile face `face` carries no pin of any use (signal, clock,
+    power, ground) within 200 nm (as abutted_row).  Such a face next to a core edge whose tile face has no pins needs
+    no channel: nothing to reach, no strap to land, no glue to place, and a 20-um gutter there only fills with a
+    second std-cell band (S81-TILES5 10-17, s81sl_vq review).  Hard children and rotated blocks keep the rule."""
+    flip_x = {"R0": False, "MX": False, "MY": True, "R180": True}
+    flip_y = {"R0": False, "MX": True, "MY": False, "R180": True}
+    o = b.get("orient", "R0")
+    if b.get("kind") == "child" or o not in flip_x:
+        return False
+    try:
+        if b.get("_tm") is None:
+            b["_tm"] = track_macro(b["view"])
+    except Exception:  # noqa: BLE001
+        return False
+    tm = b["_tm"]
+    lf = face
+    if face in "WE" and flip_x[o]:
+        lf = "W" if face == "E" else "E"
+    if face in "SN" and flip_y[o]:
+        lf = "S" if face == "N" else "N"
+    for pin in tm["pins"]:
+        for _layer, (x0, y0, x1, y1) in pin["rects"]:
+            if ((lf == "W" and x0 <= 200) or (lf == "E" and x1 >= tm["W"] - 200)
+                    or (lf == "S" and y0 <= 200) or (lf == "N" and y1 >= tm["H"] - 200)):
+                return False
     return True
 
 
@@ -1214,6 +1312,8 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
             out.append(("FAIL", "macro_outside", f"{nm} at ({bx0},{by0}) leaves the core", "enlarge the outline"))
         for f, d in (("W", bx0 - x0c), ("E", x1c - bx1), ("S", by0 - y0c), ("N", y1c - by1)):
             need = PIN_EDGE_UM if f in pin_faces else CHANNEL_UM
+            if f not in pin_faces and bare_face(b, f):
+                need = 0.0      # bare macro face on a pin-free tile face: the macro sits on the core edge, no sliver
             if edge_min is not None and edge_min - 1e-6 <= d < need - 1e-6:
                 ab_n["macro_edge"] += 1
                 continue
@@ -1248,13 +1348,17 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
                     f"{ab_n['macro_edge']} tile-edge distances >= {edge_min:g} um admitted by abut_plan ({ab['why'][:160]})",
                     "the route measures the channel; a block that merges obeys the 20-um rule"))
     core = (x1c - x0c) * (y1c - y0c)
-    mac = sum(b["w"] * b["h"] for b in blocks)
     if std_area:
-        u = (std_area + mac) / core
-        if not (UTIL_LO <= u <= UTIL_HI + 0.05):
-            out.append(("FAIL" if u > 0.70 else "WARN", "util",
-                        f"utilisation {u:.0%} outside {UTIL_LO:.0%}-{UTIL_HI:.0%} (std {std_area:.0f} + macro {mac:.0f} "
-                        f"in core {core:.0f} um2)", "resize the outline to util 0.50-0.55 (drop 'outline', set util)"))
+        halo = float(s["route"].get("macro_halo_um", HALO_UM)) if s.get("recipe", 1) >= 2 else HALO_UM
+        um = util_metrics(std_area, blocks, core, halo)
+        sev, ok = util_severity(um)
+        if not ok:
+            msg = (f"utilisation: std-cell density {um['density']:.0%} of placeable {um['placeable_um2']:.0f} um2, total fill "
+                   f"{um['total_fill']:.0%} (limits {UTIL_HI + 0.05:.0%} density, {FILL_MAX:.0%} fill; std {std_area:.0f} + "
+                   f"macro {um['macro_um2']:.0f} in core {core:.0f} um2)") if um["macro_um2"] else \
+                (f"utilisation {um['util']:.0%} outside {UTIL_LO:.0%}-{UTIL_HI:.0%} (std {std_area:.0f} + macro 0 "
+                 f"in core {core:.0f} um2)")
+            out.append((sev, "util", msg, "resize the outline to util 0.50-0.55 (drop 'outline', set util)"))
     long_side = max(W, H)
     if long_side > 600 and s["kind"] == "tile":
         out.append(("WARN", "clock_span", f"{W} x {H} um: one clock root over > 600 um",
@@ -1631,7 +1735,8 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     r = s["route"]
     ph, pv = pin_layers(s, lc)
     srcs = " ".join(s["sources"])
-    params = " ".join(f"--param {k}={v}" for k, v in s["params"].items())
+    # shlex.quote: a sized literal (TGTS=552'h..) carries a quote; safe NAME=INT words stay unquoted (kit.env unchanged)
+    params = " ".join(f"--param {shlex.quote(f'{k}={v}')}" for k, v in s["params"].items())
     # optional "pin_ranges" {port: [lo_um, hi_um]} (along the face, from its left / bottom end): one region per ranged port so
     # a face tile's bus pins sit at the end facing their die neighbour and >= the given margin off the tile corners
     # ([vm8cp] corner-pin DRT-0255 class); ports without a range keep the whole face.
@@ -1681,7 +1786,9 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     for k, v in sorted(s.get("orfs_vars", {}).items()):
         if not re.fullmatch(r"[A-Z][A-Z0-9_]*", k) or re.search(r"\s", str(v)):
             raise SpecError(f"spec: orfs_vars {k}={v!r}: NAME=[A-Z0-9_]+, value without whitespace")
-        vv = f"/src/{v}" if (not str(v).startswith("/") and os.path.isfile(str(v))) else v
+        # ROOT 2026-10-17 (S-ELEM static14): resolve a repo path against ROOT, not the caller's cwd -- `ref_tile.py gen`
+        # run outside the repo root wrote POST_IO_PLACEMENT_TCL as a bare relative path and dropped it from the sources
+        vv = f"/src/{v}" if (not str(v).startswith("/") and (ROOT / str(v)).is_file()) else v
         if k == "POST_TAPCELL_TCL" and s.get("io_tcl"):
             # io_tcl + a POST_TAPCELL pin-flop hook: ORFS sources IO_CONSTRAINTS only at 3_2_place_iop, so the hook saw
             # unplaced ports and FIRM-placed every boundary flop on the W face (smh_pt_e_ref_p40-lf: W 7410 / E 0, both
@@ -1712,7 +1819,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra.append("--orfs-var PLACE_DENSITY_LB_ADDON=")
     else:
         extra.append(f"--orfs-var PLACE_DENSITY_LB_ADDON={float(s['route']['lb_addon'])}")
-    wrap = pin_hook_wrapper(s)
+    wrap = kit_pin_hooks(s)
     if s.get("io_flop_at_pins"):
         # spec "io_flop_at_pins" {"cols": N} (el1011-q-kvd 2026-10-12): every port's single launch / capture flop FIRM at its
         # own pin (qwen_die_masters/io_flop_at_pins.tcl, N staggered rows per face), released to DPL before detailed placement.
@@ -1726,7 +1833,8 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             extra.append(f"--step-tcl PRE_DETAIL_PLACE={kd}/pre_dpl.tcl")
             # opt-in knobs of io_flop_at_pins.tcl: walk flop <-> port through the inserted BUF / HB4 / BUF stage on top of
             # the <= 3 synthesis INV / BUF (default 4 hops stops inside the stage)
-            extra.append("--orfs-var OT_OFLOP_HOPS=8")
+            if pin_hook_wrapper(s):
+                extra.append("--orfs-var OT_OFLOP_HOPS=8")
         else:
             extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl")
             extra.append("--step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl")
@@ -1779,7 +1887,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     if s.get("keep_pin_regs"):
         extra.append("--orfs-var OT_KEEP_PIN_REGS=1")
     if s.get("pin_reg_split") and not wrap:
-        raise SpecError("spec: pin_reg_split runs inside the recipe-2 pin hook (io_flop_at_pins + inhold/outhold, recipe >= 2)")
+        raise SpecError("spec: pin_reg_split runs inside the recipe-2 pin hook (io_flop_at_pins, recipe >= 2)")
     refglob = s.get("refglob", "*")
     inter = ",".join(s["inter"]) or "none_*"
     return "\n".join([
@@ -1892,7 +2000,7 @@ def referenced_paths(s: dict, kd: str) -> list:
         out.append(s["io_tcl"])
     if literal_pin_bits(s):
         out.append(ASSIGNED_PIN_EXACT_TCL)
-    out += sorted(str(v) for v in s.get("orfs_vars", {}).values() if not str(v).startswith("/") and os.path.isfile(str(v)))
+    out += sorted(str(v) for v in s.get("orfs_vars", {}).values() if not str(v).startswith("/") and (ROOT / str(v)).is_file())
     if s.get("io_flop_at_pins"):
         out += ["physical/qwen_die_masters/io_flop_at_pins.tcl", "physical/qwen_die_masters/out_flop_release.tcl"]
     if s.get("outhold"):
@@ -1901,7 +2009,7 @@ def referenced_paths(s: dict, kd: str) -> list:
         out.append("physical/dsrom_window_source/leaf_inhold.tcl")
         if s.get("inhold_drv", "BUFx4f_ASAP7_75t_R") or pin_hook_wrapper(s):
             out.append("physical/dsrom_window_source/leaf_inhold_release.tcl")
-    if pin_hook_wrapper(s):
+    if kit_pin_hooks(s):
         out += [f"{kd}/pre_gpl.tcl", f"{kd}/pre_dpl.tcl"]
         if s.get("pin_reg_split"):
             out.append(PIN_REG_SPLIT_TCL)
@@ -1963,7 +2071,8 @@ def lint_cmd(s: dict) -> str:
     # become instance overrides (-G only reaches the top level); unconnected wrapper ports are lint warnings only
     pv = ", ".join(f".{k}({v})" for k, v in s.get("params", {}).items())
     inst = f"{s['top']} #({pv}) u_top ();" if pv else f"{s['top']} u_top ();"
-    wrap = (f"mkdir -p {{RUN}} && printf '%s\\n' 'module ot_lint_top; {inst} endmodule' > {{RUN}}/ot_lint_top.sv && ")
+    # shq: a sized-literal param (552'h..) carries a quote; shq of a quote-free text is the old '...' word byte for byte
+    wrap = (f"mkdir -p {{RUN}} && printf '%s\\n' {shq(f'module ot_lint_top; {inst} endmodule')} > {{RUN}}/ot_lint_top.sv && ")
     return wrap + " ".join(["verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING",
                      *defs, *inc, "--top-module", "ot_lint_top", "{RUN}/ot_lint_top.sv", *s["sources"]]) + " && echo lint-ok"
 

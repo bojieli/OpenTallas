@@ -20,6 +20,12 @@ die_real_census.py, plus the recorded die-case censuses), "cell" when the contra
 (or none: outline differs), "no" otherwise.
 
     native_pin_audit.py [--root REPO] [--jobs N] --out DIR
+    native_pin_audit.py --view DIR [--cell C] --relative-to (PS | tt=PS,ff=PS | NEIGHBOUR_VIEW_DIR | insertion.json)
+
+RELATIVE MODE (owner 2026-10-17 0dq, memory clock-rule-boundary-match-1017): with --relative-to the reference is the
+parent's compensation C (or the neighbour's boundary mean for a landed link) instead of the view's own R: launch O - C,
+capture S + C, and the boundary match max |pin-flop arrival - C| <= 80 ps at TT and FF.  Every record also reports the
+pin-flop spread at TT and FF; spread > 80 ps at either corner is a FAIL (insertion alone never is).
 """
 from __future__ import annotations
 
@@ -115,7 +121,9 @@ def job_status(name: str | None, cache={}) -> str | None:
 
 
 def audit_one(arg):
-    root, cell, view = arg
+    """arg = (root, cell, view) or (root, cell, view, comp): comp = pinreg_audit.compensation() dict (relative mode)."""
+    root, cell, view = arg[:3]
+    comp = arg[3] if len(arg) > 3 else None
     root = Path(root)
     lib_path = root / view / f"{cell}_tt.lib"
     if not lib_path.exists():
@@ -135,6 +143,11 @@ def audit_one(arg):
     if refs:
         ck = max(refs.values(), key=lambda v: v["bmax"] - v["bmin"])
         rec.update(R_ps=round(ck["rise"], 1), spread_ps=round(ck["bmax"] - ck["bmin"], 1))
+    rel = {}
+    if comp is not None and refs and comp.get("tt") is not None:
+        rel["tt"] = PA.boundary_match(refs, comp["tt"])
+        refs = PA.relative_refs(refs, comp["tt"])
+        rec.update(relative_to=comp.get("src"), ref_src=sorted({v["src"] for v in refs.values()}))
     wl = wc = None
     nl = nc = nout = nin = 0
     comb = []
@@ -164,7 +177,14 @@ def audit_one(arg):
     if ff_path.exists():
         try:
             flib = PA.parse_lib(ff_path)
-            fm = PA.pin_metrics(flib, PA.clock_refs(flib, ins, "ff"))
+            frefs = PA.clock_refs(flib, ins, "ff")
+            if frefs:
+                fck = max(frefs.values(), key=lambda v: v["bmax"] - v["bmin"])
+                rec["ff_spread_ps"] = round(fck["bmax"] - fck["bmin"], 1)
+            if comp is not None and frefs and comp.get("ff") is not None:
+                rel["ff"] = PA.boundary_match(frefs, comp["ff"])
+                frefs = PA.relative_refs(frefs, comp["ff"])
+            fm = PA.pin_metrics(flib, frefs)
             lm = [m["lmin"] for m in fm.values() if m["dir"] == "output" and m["lmin"] is not None]
             hn = [m["hold"] for m in fm.values() if m["dir"] == "input" and m["hold"] is not None]
             rec.update(ff_launch_min_ps=round(min(lm), 1) if lm else None, ff_hold_need_ps=round(max(hn), 1) if hn else None)
@@ -177,6 +197,21 @@ def audit_one(arg):
         why.append(f"capture {wc[1]:.9g} > {CAPTURE_PS:.0f} ({nc} pins)")
     if comb:
         why.append(f"{len(comb)} combinational pins")
+    if "ff_spread_ps" not in rec and isinstance(((ins or {}).get("ff") or {}).get("boundary"), dict):
+        b = ins["ff"]["boundary"]           # no FF Liberty: the measured FF pin-flop range of insertion.json
+        if b.get("min") is not None and b.get("max") is not None:
+            rec["ff_spread_ps"] = round(float(b["max"]) - float(b["min"]), 1)
+    for c, k in (("TT", "spread_ps"), ("FF", "ff_spread_ps")):     # owner 10-17 0dq: pin-flop spread at TT AND FF
+        if (rec.get(k) or 0) > PA.NEIGHBOUR_SKEW_PS and any("insertion.json" in x for x in rec["ref_src"]):
+            why.append(f"{c} pin-flop spread {rec[k]} > {PA.NEIGHBOUR_SKEW_PS:.0f}")
+    if comp is not None:
+        rec["relative"] = rel
+        for c, m in rel.items():
+            if m and m["mismatch_ps"] > PA.NEIGHBOUR_SKEW_PS:
+                why.append(f"{c.upper()} boundary vs neighbour {m['mismatch_ps']} > {PA.NEIGHBOUR_SKEW_PS:.0f} "
+                           f"(pin flops {m['rel_min_ps']}..{m['rel_max_ps']} ps from C {m['comp_ps']:g})")
+        if not rel:
+            why.append("relative mode: no clock reference to compensate against")
     rec["pass"] = not why
     rec["fail_why"] = "; ".join(why)
     return rec
@@ -214,9 +249,22 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--root", default=str(HERE.parents[1]))
     ap.add_argument("--jobs", type=int, default=8)
-    ap.add_argument("--out", required=True)
+    ap.add_argument("--out", help="output dir (full audit of every CLOSED view)")
+    ap.add_argument("--view", help="audit this one view dir (relative to --root) and print the record")
+    ap.add_argument("--cell", help="cell of --view (default: the only <cell>_tt.lib in it)")
+    ap.add_argument("--relative-to", help="parent compensation C: ps, tt=PS,ff=PS, a neighbour view dir or its "
+                                          "insertion.json (boundary mean); launch O - C, capture S + C, boundary match")
     a = ap.parse_args(argv)
     root = Path(a.root).resolve()
+    comp = PA.compensation(a.relative_to) if a.relative_to else None
+    if a.view:
+        vd = root / a.view
+        cell = a.cell or next(p.name[:-7] for p in sorted(vd.glob("*_tt.lib")))
+        r = audit_one((str(root), cell, a.view, comp))
+        print(json.dumps(r, indent=1))
+        return 0 if r.get("pass") else 1
+    if not a.out:
+        ap.error("--out or --view is required")
     t0 = time.time()
     views = find_views(root)
     head = git(root, "rev-parse", "HEAD").strip()
@@ -229,7 +277,7 @@ def main(argv=None) -> int:
             continue
         keep.append((cell, view, job, "loop" if st == "CLOSED" else ("loop job not in state" if job else "store")))
     with mp.Pool(a.jobs) as pool:
-        recs = pool.map(audit_one, [(str(root), c, v) for c, v, _, _ in keep], chunksize=4)
+        recs = pool.map(audit_one, [(str(root), c, v, comp) for c, v, _, _ in keep], chunksize=4)
     db = die_bindings(root)
     rows = []
     for (cell, view, job, how), r in zip(keep, recs):

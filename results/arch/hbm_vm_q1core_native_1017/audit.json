@@ -1,0 +1,84 @@
+{
+ "rule": "native launch<=220/capture<=190/spread<=80 ps (TT, insertion boundary mean)",
+ "views": {
+  "vm_native_q1core_n2": {
+   "cell": "hfd_vms_bank_native_q1_core",
+   "view": "physical/ref_tile/vm_native_q1core_n2/views/hfd_vms_bank_native_q1_core",
+   "lib_cell": "hfd_vms_bank_native_q1_core",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 562.1,
+   "spread_ps": 81.9,
+   "outputs": 1078,
+   "inputs": 1447,
+   "launch_ps": 215.3,
+   "launch_pin": "rr0[105]",
+   "capture_ps": 224.0,
+   "capture_pin": "pq[262]",
+   "launch_over": 0,
+   "capture_over": 320,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 109.9,
+   "ff_hold_need_ps": -69.4,
+   "pass": false,
+   "fail_why": "capture 224.00723 > 190 (320 pins)",
+   "record_commit": "b853de8dd"
+  },
+  "vm_native_q1core_c": {
+   "cell": "hfd_vms_bank_native_q1_core",
+   "view": "physical/ref_tile/vm_native_q1core_c/views/hfd_vms_bank_native_q1_core",
+   "lib_cell": "hfd_vms_bank_native_q1_core",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 398.7,
+   "spread_ps": 132.8,
+   "outputs": 1078,
+   "inputs": 1447,
+   "launch_ps": 243.8,
+   "launch_pin": "rr0[0]",
+   "capture_ps": 266.2,
+   "capture_pin": "pq[15]",
+   "launch_over": 17,
+   "capture_over": 1041,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 83.5,
+   "ff_hold_need_ps": -95.6,
+   "pass": false,
+   "fail_why": "launch 243.84761 > 220 (17 pins); capture 266.22541 > 190 (1041 pins)",
+   "record_commit": "810902287"
+  },
+  "vm_native_q1core_r4": {
+   "cell": "hfd_vms_bank_native_q1_core",
+   "view": "physical/ref_tile/vm_native_q1core_r4/views/hfd_vms_bank_native_q1_core",
+   "lib_cell": "hfd_vms_bank_native_q1_core",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 604.3,
+   "spread_ps": 71.1,
+   "outputs": 1078,
+   "inputs": 1447,
+   "launch_ps": 127.8,
+   "launch_pin": "rr0[182]",
+   "capture_ps": 94.8,
+   "capture_pin": "xq2[33]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 37.8,
+   "ff_hold_need_ps": -3.0,
+   "pass": true,
+   "fail_why": "",
+   "record_commit": "10f9578ac"
+  }
+ },
+ "verdict": "bind vm_native_q1core_r4 (recipe 4); n2/c FAIL capture (recipe-2 pin hold pads)"
+}

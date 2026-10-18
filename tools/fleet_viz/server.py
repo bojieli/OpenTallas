@@ -790,6 +790,12 @@ class H(BaseHTTPRequestHandler):
             return self.send(200, json.dumps(stamp(dict(v=ver, verdicts=rows), safe), separators=(',', ':')).encode(), 'application/json')
         if u.path == '/api/elements':
             return self.send(200, json.dumps(stamp(ELEMENTS.snapshot(safe), safe), separators=(',', ':')).encode(), 'application/json')
+        if u.path == '/api/die_elements':
+            # authoritative per-die element table (gaps/die_element_table.py, re-run every drive); served as written
+            f = pathlib.Path(os.environ.get('OT_DIE_ELEMENT_TABLE', str(pathlib.Path.home() / 'claude-takeover-20261007/gaps/die_element_table.json')))
+            try: body = f.read_bytes()
+            except OSError as e: return self.send(404, json.dumps(dict(error=str(e))).encode(), 'application/json')
+            return self.send(200, body, 'application/json')
         if u.path == '/api/native/coverage':
             if safe: return self.send(403, b'{"safe":true,"error":"native provenance is private"}', 'application/json')
             o = NATIVE.api(q.get('design', [''])[0])

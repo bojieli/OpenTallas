@@ -64,6 +64,7 @@ from postroute_recovery import remote_command as postroute_probe_command
 import submit_lint
 import bench_count
 import macro_clk
+import retired_hosts
 import helper_overlay as HO
 import status_report
 
@@ -269,6 +270,13 @@ def disk_roots(cfg):
     """{path: min free GB} for every filesystem a host's jobs write besides the run root (hosts.json disk_roots;
     fleet disk guard 2026-10-07: the run-root floor alone let / fill on AGIdock and localhost)"""
     return dict(cfg.get("disk_roots", {}))
+
+
+def drop_retired_hosts(spec):
+    """RETIRED-HOST (HOSTFIX 2026-10-17): (spec', warnings) with retired fleet hosts removed from hosts / host_require
+    (retired_hosts.py; an emptied list falls back to admission) instead of an INVALID 'unknown host' verdict."""
+    doc = json.loads((HERE / "hosts.json").read_text())
+    return retired_hosts.drop_retired_hosts(spec, {h["name"] for h in doc["hosts"]}, retired_hosts.retired_names(doc))
 
 
 def host_cfg(name):
@@ -1255,6 +1263,12 @@ def ref_gate_at_submit(j, jobs=None):
         return
     if isinstance(res.get("route_overlay_plan"), dict) and j.get("freeze_helper_overlay"):
         j["route_overlay_plan"] = res["route_overlay_plan"]
+    if isinstance(res.get("relaxing_rule_allowlist"), dict):
+        # RELAXING-RULE ALLOWLIST (ROOT-0040 2026-10-18): the gate stood across relaxing-only rule commits; record it
+        j["relaxing_rule_allowlist"] = dict(res["relaxing_rule_allowlist"], at=now_iso())
+        event(j, "RELAXING-RULE ALLOWLIST: gate kept across " + ", ".join(
+            c[:9] for c in res["relaxing_rule_allowlist"].get("commits") or []) + "; " + "; ".join(
+            x.get("text", "") for x in res["relaxing_rule_allowlist"].get("requirements") or [])[:300])
     if isinstance(res.get("clock"), dict):
         j["clock_rule"] = dict(res["clock"], mode=kw.get("clock_mode"))      # textbook_cfg() hands it to the in-flow lint
         event(j, f"CLOCK-RULE at submit: {res['clock'].get('text', '')[:300]}"
@@ -1453,14 +1467,17 @@ def ingest():
                 bad.write_text(spec["_parse_error"])
                 log(f"INVALID job file {origin}: {spec['_parse_error']}")
             continue
-        errs = validate(spec)
         submitted = spec
+        spec, host_warns = drop_retired_hosts(spec)
+        errs = validate(spec)
         if not errs and spec.get("benched_by") is not None:
             spec, _ = expand_benched_by(spec)
         j = dict(name=name, spec=spec, origin=origin, created=now_iso(), status="QUEUED", stage_idx=0, attempt=1,
                  retries_used=0, benches={}, hosts_tried=[], events=[], freeze_helper_overlay=True)
         if spec is not submitted:
             j["spec_submitted"] = submitted          # the frozen-spec comparison and successors use the file as written
+        for w in host_warns:
+            event(j, w)
         if errs:
             j["status"] = "INVALID"
             j["reason"] = "; ".join(errs)
@@ -8266,7 +8283,7 @@ def ready_next_files():
             for s in specs:
                 if not isinstance(s, dict) or not isinstance(s.get("after"), str) or not s["after"].strip():
                     raise ValueError("every spec needs a non-empty \"after\" (block or job-name prefix)")
-                errs = validate({k: v for k, v in s.items() if k != "after"})
+                errs = validate(drop_retired_hosts({k: v for k, v in s.items() if k != "after"})[0])
                 if errs:
                     raise ValueError(f"{s.get('name')}: " + "; ".join(errs)[:400])
         except (ValueError, TypeError) as ex:
@@ -8708,6 +8725,9 @@ def cmd_status(a):
 
 def cmd_validate(a):
     spec = json.loads(Path(a.file).read_text())
+    spec, host_warns = drop_retired_hosts(spec)
+    for w in host_warns:
+        print(w)
     errs = validate(spec)
     if not errs:
         spec, _ = expand_benched_by(spec)
