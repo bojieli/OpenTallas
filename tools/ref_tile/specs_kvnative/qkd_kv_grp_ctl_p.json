@@ -138,11 +138,11 @@
  "purpose": "KVJ-D 2026-10-17 (kv_static_join_plan item 7): per-group control tile x32, hardened once: qkd_static_kv_phase_launch + qkd_static_kv_drain_guard4 + 5 qkd_static_kv_boot_cdc (cdc0 front calendar HAS_SEAL0, cdc1..4 pc_path calendars HAS_SEAL1): every core->HBM crossing of one landing group, beside its landing seg / front calendar. Wires-only wrapper of unchanged ROLES RTL, 0 added edges. Two CTS roots: ck (W, beside the core-domain FIFO storage + phase/drain capture) and hck (E, beside the HBM read side / sink registers); CDC constraint form = CLOSED KVCTRL CDC child (datapath budget T-60 both ways, hold>=0, no groups/false paths) + phase toggle budget 206.7 ps.",
  "structural_change": "KV-NATIVE 10-17 successor of qkd_kv_grp_ctl (routed native audit FAIL, claude/native-batch-1017 029f539c5, results/arch/native_batch_1017/native_batch_audit.json, view qkd_kv_grp_ctl-g2-95edd890c: capture cfg_we[0..4] 335.6-349.4, rst_n 214.9, ctrl_go 192.9 > 190). Every core-domain input lands in one pin flop (cfg_we/addr/data/last, ctrl_go/kgo/vgo/ctx_t/epoch/layer, the drain observations, rst_n -> rst_q whose Q is the core-side reset) ahead of the unchanged qkd_kv_grp_ctl (inside, u_g). Contract: == qkd_kv_grp_ctl with every core-domain input delayed one ck edge; the compiler launches phase and boot cfg one edge earlier (HBM launch edges unchanged), core reset release +1 edge vs the pin. Same 97.2 x 97.2 slot, same pin faces.",
  "job": {
-  "owner": "Claude:KV-NATIVE",
+  "owner": "Claude:KH-NATIVE3",
   "branch": "claude/kv-native-1017",
-  "tag": "p1",
+  "tag": "p2",
   "purpose": "KV-NATIVE 10-17: pin-registered successor of the per-group control tile qkd_kv_grp_ctl (x32). Bench tb_kv_grp_ctl_p: cycle-exact vs qkd_kv_grp_ctl fed the same stimulus one ck edge later (all tb_kv_grp_ctl scoreboards on the reference); mutants cdc2 addr, phase meta, cfg_we bypassing its pin flop FAIL.",
-  "structural_change": "KV-NATIVE 10-17 successor of qkd_kv_grp_ctl (routed native audit FAIL, claude/native-batch-1017 029f539c5, results/arch/native_batch_1017/native_batch_audit.json, view qkd_kv_grp_ctl-g2-95edd890c: capture cfg_we[0..4] 335.6-349.4, rst_n 214.9, ctrl_go 192.9 > 190). Every core-domain input lands in one pin flop (cfg_we/addr/data/last, ctrl_go/kgo/vgo/ctx_t/epoch/layer, the drain observations, rst_n -> rst_q whose Q is the core-side reset) ahead of the unchanged qkd_kv_grp_ctl (inside, u_g). Contract: == qkd_kv_grp_ctl with every core-domain input delayed one ck edge; the compiler launches phase and boot cfg one edge earlier (HBM launch edges unchanged), core reset release +1 edge vs the pin. Same 97.2 x 97.2 slot, same pin faces.",
+  "structural_change": "KH-NATIVE3 10-17: native_capture re-kit of CLOSED qkd_kv_grp_ctl_p-p1-a76a05b96 (routed native audit FAIL, lanes/NATIVE-2.md, claude/native-2-1017 3fd032e8e, results/arch/native_2_1017/native_2_audit.json: capture 449 of 476 ck inputs 190.5-220.2 ps, ck R 160.0 for 6,691 sinks in 97.2 um): boundary clock branch (physical/ref_tile/qkd_kv_grp_ctl_p/bnd_branch.tcl, PRE_CTS): after CTS the 485 core_clk boundary registers (pin flops + output flops) move off the 4-buffer register-mass H-tree onto a dedicated 2-buffer branch (BUFx24 trunk beside the ck pin on the port net + local BUFx24 leaves, <=60 sinks / 40-um bin), so the TT boundary insertion R drops 160 -> ~95 ps (placement-RC probe on the p1 placement: 149.2 -> 85.0, spread 42.8) and the input hold pad that grows with R shrinks with it; same RTL, outline, pins and SDC.",
   "benches": [
    {
     "name": "grp_ctl_p_exact_vs_grp_ctl",
@@ -200,13 +200,15 @@
   "views_to": "physical/ref_tile/qkd_kv_grp_ctl/views",
   "record_to": "results/rtl/ref_tile/qkd_kv_grp_ctl",
   "reroute_reason": {
-   "kind": "rtl_change",
-   "source": "results/arch/native_batch_1017/native_batch_audit.json",
-   "cell": "qkd_kv_grp_ctl",
-   "capture_ps": 349.4,
-   "fix": "qkd_kv_grp_ctl_p: one kept pin flop on every core-domain input (cfg_*, phase inputs, drain observations) and rst_n -> rst_q (core-side reset) ahead of the unchanged qkd_kv_grp_ctl; +1 ck edge on every core input, cycle-exact vs the old fed one edge later (tb_kv_grp_ctl_p).",
-   "why_route": "CLOSED qkd_kv_grp_ctl (qkd_kv_grp_ctl-g2-95edd890c, record 7feb50b22) FAILS the routed native pin audit (native_pin_audit.audit_one at origin/main 708fc1938; receipt claude/native-batch-1017 029f539c5): capture 7 pins cfg_we[4] 349.4 ... rst_n 214.9, ctrl_go 192.9 > 190; launch 194.4, spread 38.6. New top qkd_kv_grp_ctl_p."
+   "kind": "native_capture",
+   "source": "results/arch/native_2_1017/native_2_audit.json",
+   "cell": "qkd_kv_grp_ctl_p",
+   "capture_ps": 220.2,
+   "fix": "boundary clock branch (physical/ref_tile/qkd_kv_grp_ctl_p/bnd_branch.tcl, PRE_CTS): after CTS the 485 core_clk boundary registers (pin flops + output flops) move off the 4-buffer register-mass H-tree onto a dedicated 2-buffer branch (BUFx24 trunk beside the ck pin on the port net + local BUFx24 leaves, <=60 sinks / 40-um bin), so the TT boundary insertion R drops 160 -> ~95 ps (placement-RC probe on the p1 placement: 149.2 -> 85.0, spread 42.8) and the input hold pad that grows with R shrinks with it; same RTL, outline, pins and SDC"
   }
  },
- "slot_change_request": "KV-NATIVE 10-17: qkd_kv_grp_ctl_p takes the SAME 97.2 x 97.2 per-group slot and pin faces as qkd_kv_grp_ctl (KVJ-D 2026-10-17: new per-group control tile 97.2 x 97.2 (GRPCTL-2: grown from 86.4 after daemon FLOORPLAN_MARGIN util 65.8% > 60%; std 4430 um2 -> ~47%) (x32, one per landing group) beside the group')"
+ "slot_change_request": "KV-NATIVE 10-17: qkd_kv_grp_ctl_p takes the SAME 97.2 x 97.2 per-group slot and pin faces as qkd_kv_grp_ctl (KVJ-D 2026-10-17: new per-group control tile 97.2 x 97.2 (GRPCTL-2: grown from 86.4 after daemon FLOORPLAN_MARGIN util 65.8% > 60%; std 4430 um2 -> ~47%) (x32, one per landing group) beside the group')",
+ "pre_cts_extra": [
+  "physical/ref_tile/qkd_kv_grp_ctl_p/bnd_branch.tcl"
+ ]
 }
