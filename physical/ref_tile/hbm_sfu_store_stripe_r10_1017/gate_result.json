@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hbm_sfu_store_stripe_r10_1017",
  "verdict": "WARN",
- "generated": "2026-10-17T20:29:23-0700",
- "host": "ot-epyc4",
+ "generated": "2026-10-18T01:29:38-0700",
+ "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "4f618ee93e761f9710ca0a2cca0cc1f8a3f850cd",
+  "start_commit": "4cbcea584b6b500f8963d6cc9def0dcd9c277da6",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "6dbebe7c407c360702ece9d85e530a8aa1cc2e850047a09ef48e2d9fafe51fb9",
-  "manifest_sha256": "8825ed93b561683bd5f578996bb90498a790ad4fb3be9a1701e7bcb5af8ad9ea",
+  "archive_sha256": "070a794f21c866749e50eb7c945f6bb0e33906686c7b632afac030a41b9bcdd3",
+  "manifest_sha256": "611418c6ce1a31a75e1b4dc75db3030214616ba249c91d8b6bc09ca76f5ccd84",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -17115,8 +17115,8 @@
    {
     "path": "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/job.json",
     "kind": "file",
-    "sha256": "114ce39bba27e59a457e89f134efddf14e416a5019fa8f061678df3799bec166",
-    "git_blob": "e28724d51d684c8ffe678c1051432217beb43d24",
+    "sha256": "9c5d48ff5c793c9bf190311e4c1a3955615048d3b12f0669a6cf81142451b552",
+    "git_blob": "07a9824c1bd1bdc5bc79f7aad53c728a286718fb",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17235,8 +17235,8 @@
    {
     "path": "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/spec.json",
     "kind": "file",
-    "sha256": "a633659f5ed99accc84b7d5a3e061fd714d4b9747fa28a0718ae88d6eee9295b",
-    "git_blob": "d92cdc51746d0f1963192e4b25111f6beb1331b9",
+    "sha256": "d333a8290327fce0483477af5d07282af283807b97926a5ad1c1968504d4f24d",
+    "git_blob": "c0a9f3527e5ec81de75bafaffab5bd0b9aa74ff7",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -39211,8 +39211,8 @@
    {
     "path": "rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv",
     "kind": "file",
-    "sha256": "ab6655b0a703259aae3de638da109d9210ab91f7de85da5cac367e6ec78fd49f",
-    "git_blob": "4bdcc645e3a0f57a99b067fffc102760a9f3c832",
+    "sha256": "fb5b1108f9dae4d613b6d264543b8ad5ca27b7017e9843bcd3745b965bd4f9f8",
+    "git_blob": "4963e014ba986313c8dc2b8765063d3cc3ae361b",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -42755,8 +42755,8 @@
    {
     "path": "tools/closure_loop/closure_loop.py",
     "kind": "file",
-    "sha256": "3bfd3369f1375649c8ea8cb38458529eed33d9f765fd80929e29deb23768922d",
-    "git_blob": "e50ff6ee5b04e77cd0d545645d9941f84652b776",
+    "sha256": "531b5cf016df20fbe75749ec9fd024e769a5ddf24cd107dbd3b04969ca4b839d",
+    "git_blob": "d9f01c09b88ada125995dbce27b781c332c71a7f",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -43211,8 +43211,8 @@
    {
     "path": "tools/closure_loop/helper_overlay.py",
     "kind": "file",
-    "sha256": "9f63e50d85e26a2e79e2bb035c6de54ff205c4fee6887dc5ffa3785ebde750ec",
-    "git_blob": "790e17f76a5f81ece73eccfc72d2fd6a7b616823",
+    "sha256": "3879906172018659f8e67feb2d268a68aa418c4da5fb06309997644b067f98b7",
+    "git_blob": "14b6bfee9e6ec721b8a8f6748f2b8cd4fe2e549b",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -45411,16 +45411,16 @@
    {
     "path": "tools/closure_loop/stuckscan.py",
     "kind": "file",
-    "sha256": "09e113fe33fe1cc74322cbfcda9995a2913df176e021eb834726afcf199694b9",
-    "git_blob": "c7be8beb5a2daaeba860c50d20316b54c7f35cc6",
+    "sha256": "9c071709f5b88830d99bfcd107915d3a87dda79c5607248bd4b14613876a582d",
+    "git_blob": "8e99c68e4fe4f005852b9934f0e0d943774c0b61",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "tools/closure_loop/submit_exact.py",
     "kind": "file",
-    "sha256": "6ac6d889711bc1a1efcfaedbd7ca0ebc95d416dfb96b91d9119b70c214962a81",
-    "git_blob": "8f08a5920239eb4a6a0008e62014eae8ea0682c2",
+    "sha256": "935630e69f67e1366a4a62889b74c5a7f1623d8ee61dfa4d2afd149bc0b8953a",
+    "git_blob": "594a85a47dd1cef9f345e7491c2101f238d43a49",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -45705,6 +45705,14 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "tools/closure_loop/test_fail_witness_capture.py",
+    "kind": "file",
+    "sha256": "0a56a3686c415b8c7398c3be707936f00003fa6a6353b1c4ee70093d75101ce1",
+    "git_blob": "252b499a72d096057766917a260af7c214379cc3",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "tools/closure_loop/test_failure_scan.py",
     "kind": "file",
     "sha256": "aecd162f6086987804131c1a3dcc7fc711f8c9ee7244f242357c3a685d80e685",
@@ -45787,8 +45795,8 @@
    {
     "path": "tools/closure_loop/test_helper_overlay.py",
     "kind": "file",
-    "sha256": "93cd9a498faeef3d90bd5a0531cb62eed6274d498ceffa8fad94ae8a5a13013b",
-    "git_blob": "f8edc4a940e5684f6065bf032c5cdf3edded7584",
+    "sha256": "b522f04fd59b5c923042058432fa631be4d07a46d38418853d3b887b6cf3d496",
+    "git_blob": "55c026aba5953c1316d776ac2c5351147aa8ddaf",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -45835,8 +45843,8 @@
    {
     "path": "tools/closure_loop/test_hold_stop.py",
     "kind": "file",
-    "sha256": "bc360568cf9723006e58a81a167aecbaf2c72b28451f543c4fa54ef49821f6b4",
-    "git_blob": "0e017998f54de3dd47d5e2a731148947a0eaa9c5",
+    "sha256": "f50b6b927e33960089e27553e1d1ef5542c90c0a757638918557c103b04c4059",
+    "git_blob": "1b0270c76214438c3790aeb7e96aa63ac5b6a60b",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -46195,8 +46203,8 @@
    {
     "path": "tools/closure_loop/test_rule_enforcement.py",
     "kind": "file",
-    "sha256": "ee0687d5e4d43b16ec03a18c56fa2b1af00635637ed45ef63f39aca5d264a15a",
-    "git_blob": "ded877b4af24b2c5153948127c4c200be8218297",
+    "sha256": "4f1dbfd06dd56164ebfa1de8944ff78b2d273e1e40940b26dfd15bd4388b629b",
+    "git_blob": "3d94c9e9071436b453ca858dfde6f46273c6ebdc",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -46323,8 +46331,8 @@
    {
     "path": "tools/closure_loop/test_stuckscan.py",
     "kind": "file",
-    "sha256": "dfab8b56608437d617249cdc63335e93790c27af70b9c5b761ecd7a6591b148a",
-    "git_blob": "a8ff5df0fc5d27163a1beea984be0091b8eb9619",
+    "sha256": "f9bef3a029cbbdf1f9a9eb92e9e20284af99015ba472f525d6d4110ca81b20fb",
+    "git_blob": "77502cd1ac3a96aff0134225198e4e566fb554e2",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -46347,8 +46355,8 @@
    {
     "path": "tools/closure_loop/test_submit_exact.py",
     "kind": "file",
-    "sha256": "35d93892b57e1178b57ff5ad7d64ca2eead19e19d75c5d5ec72c69fe7c48cb13",
-    "git_blob": "96cbb34eee080c0727df983e7273b810dc7111e0",
+    "sha256": "a46e3a15d296c4b9679b97617fe58d38a704be729a00d6fa31d34c8c88c74f5c",
+    "git_blob": "7d5890e78b4a62c7393976f49386d6f5b804cf8a",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -113763,8 +113771,8 @@
    {
     "path": "tools/textbook_lint.py",
     "kind": "file",
-    "sha256": "0fda292bb25637f2ddf9a0db09e964b794fdce006a45bcc6dd79a6be8e1adbbb",
-    "git_blob": "6f2c3d2f1864646f9feee7c4c334687d06ed23cb",
+    "sha256": "2e34893190fa913bbacee2c8e3404b6b7489783f8871486e6eb8688110d1ac06",
+    "git_blob": "180a51a11b76fe6b884fe340fc89179f7531b4ac",
     "source": "daemon_overlay",
     "matches_provenance_commit": false
    },
@@ -122787,15 +122795,15 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 123896535,
-   "unpacked_bytes": 726188032,
+   "archive_bytes": 123910397,
+   "unpacked_bytes": 726249472,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "7fe3e06676901563b154a454434c16c7de7a817d",
-   "content_sha256": "46212c4a006d162487f2749d8e6001edbd7428d03a257e125b6e20e6b3202016",
+   "origin_main": "3c8384df94943337f863428c56c3e65fe7ae482b",
+   "content_sha256": "4a87d0632ec1f2ae9df4e44b49335baa06539d6aedc31a9b632b931564df58c7",
    "files": [
     {
      "path": "physical/common_flow/cg_pushdown.tcl",
@@ -123159,11 +123167,11 @@
     },
     {
      "path": "tools/textbook_lint.py",
-     "sha256": "0fda292bb25637f2ddf9a0db09e964b794fdce006a45bcc6dd79a6be8e1adbbb",
-     "git_blob": "6f2c3d2f1864646f9feee7c4c334687d06ed23cb",
+     "sha256": "2e34893190fa913bbacee2c8e3404b6b7489783f8871486e6eb8688110d1ac06",
+     "git_blob": "180a51a11b76fe6b884fe340fc89179f7531b4ac",
      "mode": 436,
-     "resolution": "stale",
-     "literal_git_blob": "65426dd2f5cdd4a5e39de56a9e840d910e7082d2"
+     "resolution": "same",
+     "literal_git_blob": "180a51a11b76fe6b884fe340fc89179f7531b4ac"
     },
     {
      "path": "tools/tt_views/view_export.py",
@@ -124323,7 +124331,7 @@
     "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/pre_grt.tcl": "96bd1f80dfc8803a9d6e392004ae8a911f97bc7c1639ec5dac57ef1ee0c3c469",
     "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/signoff.sdc": "cfe319ca6d2cd2effc08df1bee844416797eea5c78332b53c3b7f18d1386f1cf",
     "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/signoff_ffrepair.sdc": "61d54801dcd8e2d23f49db3580195c9b2a861400196a34026b60870b76191b0b",
-    "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/spec.json": "a633659f5ed99accc84b7d5a3e061fd714d4b9747fa28a0718ae88d6eee9295b",
+    "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/spec.json": "d333a8290327fce0483477af5d07282af283807b97926a5ad1c1968504d4f24d",
     "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10/abstract.json": "075b265dd0b78c92aac8a066c85d8b14b6d5b9770ede0437879644105d930823",
     "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10/child_lint.json": "b30371b2381a7cad5560619c266f2bceee5fc13cb4d42f41b2df0636b2784ae4",
     "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10/export_ff.log": "03abb75ca58213bc9fb741bdf371a5853d1af9709eaac1708ad69782e69f5e73",
@@ -125048,7 +125056,7 @@
     "rtl/test/hbm_accel/generic/tb_hgi_sfu_qswiglu_static.sv": "cef8f84ef6a9ab8c124b9f3459a10d0086ae5d873e39fd631bfedd3d6ecf1b38",
     "rtl/test/hbm_accel/generic/tb_hgi_sfu_qswiglu_vm_static.sv": "299ac5e4bede4898b05b342310981df63cb8e610e5435c8c9163d81e0c64136d",
     "rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv": "c115b57d2f10b892f31ddb268f1071ab3681caee49729b188b7805ac52d21741",
-    "rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv": "ab6655b0a703259aae3de638da109d9210ab91f7de85da5cac367e6ec78fd49f",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv": "fb5b1108f9dae4d613b6d264543b8ad5ca27b7017e9843bcd3745b965bd4f9f8",
     "rtl/test/hbm_accel/generic/tb_hgi_sfu_static_calendar.sv": "5e79822e796a38cbda49dfa01dcb17f50031e48300834bab3ab01104464be6a7",
     "rtl/test/hbm_accel/generic/tb_hgi_sfu_static_engine.sv": "c7cfd6ec42880b8cde34e1e2cc53dfc2bc0faa080b12513ac99c1741e2c1ab07",
     "rtl/test/hbm_accel/generic/tb_hgi_sfu_static_operand_store.sv": "82369bf1da5993746da9f4d8c69b7e42189c174887c8ff9372643129d6503167",
@@ -125317,7 +125325,7 @@
     "tools/s81_vm/static_face_model.py": "530c0da15a6b082fad82b03884e6b2c7b554f82396c862fa35dad295a4ccbf8b",
     "tools/s81_vm/static_transport_model.py": "2b86ebff12d5331a996d2e420ce0bf221d3f069ffbe7b26f018d8b60855cda5c",
     "tools/s81_vm/static_vm_engine.py": "c51e7408b47a337d64b67ba3b41b8cae66cbc96a4155023539d172262cf0285b",
-    "tools/textbook_lint.py": "0fda292bb25637f2ddf9a0db09e964b794fdce006a45bcc6dd79a6be8e1adbbb",
+    "tools/textbook_lint.py": "2e34893190fa913bbacee2c8e3404b6b7489783f8871486e6eb8688110d1ac06",
     "tools/third_party_tau.py": "7d873798f6b9d98167422f3eeea4e4eb6d8eaec9a93181562c5e5063d5836259",
     "tools/uarch_model.py": "74f1e5f03f419501500ce80a95a3b79d056d32810edc709b6b614b2c653dcd85",
     "tools/uarch_model_hcoll_capture.py": "f4e5ec56d8b197dd12215a5d19a95ca117eebbdcef2c928ab984f2b9127b2169",
@@ -125377,16 +125385,16 @@
    },
    "digest": "7419285b5e4e0e71104b57f3b535af0decae92234e1bf676a1103ddc0212d94a"
   },
-  "captured": "2026-10-17T20:16:31-0700",
+  "captured": "2026-10-18T01:24:30-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/signoff_ffrepair.sdc"
   },
-  "remote_script_sha256": "a0f586becb4165d1e77b982dcfcc7e904f492f01f0143c5ac586bd0b2b6bb86d",
+  "remote_script_sha256": "c743bf44ee8326b53fc16b8724a3a1440ceac6b0e01cea23021f32c56d6ee766",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_sfu_store_stripe_r10_1017-20261017-201419",
+  "remote_host": "ot-agidock128",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_sfu_store_stripe_r10_1017-20261018-012353",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
