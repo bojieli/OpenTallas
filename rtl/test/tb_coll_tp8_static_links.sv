@@ -89,6 +89,10 @@ module tb_coll_tp8_static_links #(
     wire [ND-1:0] ptxv, rtxv; wire [ND*FP-1:0] ptx; wire [ND*FR-1:0] rtx;
     wire [ND-1:0] prxv, rrxv; wire [ND*FP-1:0] prx; wire [ND*FR-1:0] rrx;
     wire [ND*3-1:0] stxv, srxv; wire [ND*3*FP-1:0] stx, srx;
+    wire [ND*12-1:0] lflt;          // Q-COLLCAL real die lanes: landing faults, die*12 + port*4 + {tx, txv, rx, rxv}
+`ifndef OT_TP8S_REAL_LANES
+    assign lflt = 0;
+`endif
     wire[ND-1:0]shareflt;wire[ND-1:0]sharetxv,sharerxv;wire[ND*1043-1:0]sharetx,sharerx;
     wire [ND*20-1:0] xflt;            // 10 CDC channels x {w, r}
     wire [ND*5-1:0]  cabort;          // codec aborts: P, R, S0, S1, S2
@@ -253,6 +257,7 @@ module tb_coll_tp8_static_links #(
                 tb_phy_pipe #(.W(FP), .L(PS + XS + ETJ + ERJ), .LV((j == 2) ? EV2 : 0)) u_sp (.clk(lck), .rst_n(rst_n), .v_in(stxv[g*3 + j]),
                     .d_in(stx[(g*3 + j)*FP +: FP]), .flip(g == 6 && j == 0 && CORRUPT >= 0 && nf == CORRUPT),
                     .v_out(srxv[R2*3 + J2]), .d_out(srx[(R2*3 + J2)*FP +: FP]));
+`endif
             end
             always @(posedge lck) if (ptxv[g] && rtxv[g]) pr_overlap = pr_overlap + 1;
             // ---------------- producer at its compiled slots ----------------
@@ -350,7 +355,7 @@ module tb_coll_tp8_static_links #(
     always @(posedge clk) begin
         if (rst_n && cyc == endc) begin
             for (t = 0; t < ND; t = t + 1)
-                dief[t] = (SHARED && shareflt[t]) | flt[t] | ifl[t] | (|xflt[t*20 +: 20]) | (|cabort[t*5 +: 5]);
+                dief[t] = (SHARED && shareflt[t]) | flt[t] | ifl[t] | (|xflt[t*20 +: 20]) | (|cabort[t*5 +: 5]) | (|lflt[t*12 +: 12]);
             $display("TP8SL dies=8 latu=%0d lats=%0d pu=%0d ps=%0d xu=%0d xs=%0d msgs=%0d drop=%0d corrupt=%0d mismatches=%0d extra=%0d out_err=%0d cmd_bad=%0d coll_fault=%b issuer_fault=%b die_fault=%b words_out=%0d meas_lu=%0d meas_ls=%0d pr_overlap=%0d issuer_done=%b",
                      LATU, LATS, PU, PS, XU, XS, NMSG, DROP, CORRUPT, bad, extra, errs, cmd_bad, flt, ifl, dief, words_out,
                      first_dp - first_up, first_sr - first_sx, pr_overlap, idone);
@@ -391,4 +396,26 @@ module tb_phy_pipe #(parameter integer W = 597, parameter integer L = 14, parame
     end
     assign v_out = vp[L+LV-1];   // LV > 0: the valid lane lands LV cycles after its data (die lane skew)
     assign d_out = dm[wp];
+endmodule
+
+// Q-COLLCAL 10-18: one die lane exactly as the GEN builds it (OT_SPLIT_FWD_LANES=1, gen_relay_rtl wrappers of the same
+// modules): N = 0 a wire; N = 1 the landing carries the hop-0 gate; N >= 2 hop-0 station on the source root, N - 2
+// half-cycle stations on the forwarded clock, the landing (ring D 4, read on the receiving root at rc - K).  ens = the
+// source's released reset (gate enable + lane epoch), rsd = the receiver's regional reset.  Zero wire delay (the window
+// is the die STA's job, LANDING-CONTRACT L5); the latency is K + 1 + (R0 - G) whatever the delay inside the window.
+module tb_fwd_lane #(parameter integer W = 1, parameter integer N = 0, parameter integer K = 0) (
+    input wire cks, input wire ens, input wire ckd, input wire rsd, input wire [W-1:0] i, output wire [W-1:0] o, output wire fault);
+    generate if (N == 0) begin : g_wire
+        assign o = i; assign fault = 1'b0;
+    end else if (N == 1) begin : g_one
+        ot_qfd_land #(.W(W), .D(4), .FIRST(1)) u_land (.ckf(cks), .ea(ens), .i(i), .ck(ckd), .rs(rsd), .k(K[2:0]), .o(o), .fault(fault));
+    end else begin : g_lane
+        wire [W-1:0] b [0:N-2]; wire e [0:N-2]; wire c [0:N-2];
+        ot_qfd_lane_st #(.W(W), .FIRST(1)) u_s0 (.ck(cks), .en(ens), .a(i), .b(b[0]), .eb(e[0]), .ck_o(c[0]));
+        genvar s;
+        for (s = 1; s < N - 1; s = s + 1) begin : g_st
+            ot_qfd_lane_st #(.W(W), .FIRST(0)) u_s (.ck(c[s-1]), .en(e[s-1]), .a(b[s-1]), .b(b[s]), .eb(e[s]), .ck_o(c[s]));
+        end
+        ot_qfd_land #(.W(W), .D(4), .FIRST(0)) u_land (.ckf(c[N-2]), .ea(e[N-2]), .i(b[N-2]), .ck(ckd), .rs(rsd), .k(K[2:0]), .o(o), .fault(fault));
+    end endgenerate
 endmodule

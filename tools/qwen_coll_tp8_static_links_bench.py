@@ -50,6 +50,7 @@ SRC = [ROOT / p for p in (
     "rtl/rom/ot_coll_tp8_static.sv", "rtl/physical/ot_qfd_io_collective_static.sv",
     "rtl/rom/ot_coll_static_linkcal.sv", "rtl/rom/ot_coll_cmd_issue.sv",
     "rtl/qwen_split/qfd_seq_su_collective_calendar.sv",
+    "rtl/hdc/ot_hdc_cg.sv", "rtl/qwen_split/qfd_fwd_lane.sv",
     "rtl/test/tb_coll_tp8_static_links.sv")]
 RES = re.compile(r"TP8SL dies=8 .* mismatches=(\d+) extra=(\d+) out_err=(\d+) cmd_bad=(\d+) coll_fault=([01]+) "
                  r"issuer_fault=([01]+) die_fault=([01]+) words_out=(\d+) meas_lu=(-?\d+) meas_ls=(-?\d+) "
@@ -192,7 +193,7 @@ def main():
     if a.seqsu:
         assert a.production, "the sequencer face admits tags 0..2: production programs (<= 3 messages) only"
     exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.phi, a.mutant_define, a.qfd, a.parent, a.relays, a.shared_ucie, a.six_five, a.seqsu)
-    bad, records = [], []
+    bad, records, lane_meas = [], [], {}
     for i, (name, nmsg, words, mk, kind, extra) in enumerate(cases):
         rng = np.random.default_rng(100 + i)
         if mk == "rrg1":
@@ -211,6 +212,7 @@ def main():
         txt = run.stdout
         (a.out / f"{name}.log").write_text(txt + run.stderr)
         m = RES.search(txt)
+        lane_meas[name] = re.findall(r"^TP8SL_LANE .*$", txt, re.M)
         passed = run.returncode == 0 and bool(m) and any(l.strip() == "PASS" for l in txt.splitlines())
         ok = (not passed) if a.expect_fail else passed
         g = m.groups() if m else None
