@@ -1571,40 +1571,52 @@ def gen_signoff_ffrepair(s: dict, refglob: str, inter: str) -> str | None:
 
 
 def child_insertions(s: dict) -> dict:
-    """{child master: clock-pin insertion ps} from each hard child's TT lib (max_clock_tree_path), 0 when absent"""
+    """{child master: clock-pin insertion ps} from each hard child's TT lib (max_clock_tree_path), 0 when absent.
+    A child's "clock_tap_ps" (S81-DEC3 2026-10-18, HANDOFF 0fz) taps that child's clock pin that much LATER at TT
+    (spine target lowered by it) to match its LINKED neighbours at both corners; absent = 0 (kits byte-identical)."""
     out = {}
     for ch in s["children"]:
-        v = ch["view"]
-        if s.get("child_clock_ref") == "pin":
-            # Q-CLUSTER 2026-10-17 (cluster of clusters): every clock entry pin of a multi-entry child is its own spine
-            # target: insertion.json clock_measurements[pin].tt.boundary.mean, else that pin's TT-lib clock-tree max
-            name = view_name(v)
-            ij = ROOT / v / "insertion.json"
-            cm = (json.loads(ij.read_text()).get("clock_measurements") or {}) if ij.exists() else {}
-            p = ROOT / v / f"{name}_tt.lib"
-            ins = child_lint.clock_insertion(p.read_text(errors="replace")) if p.exists() else {}
-            for pin in sorted(set(cm) | set(ins)):
-                b = (cm.get(pin) or {}).get("tt", {}).get("boundary", {})
-                if b.get("n") and b.get("mean") is not None:
-                    out[f"{name}/{pin}"] = round(float(b["mean"]), 1)
-                elif ins.get(pin):
-                    out[f"{name}/{pin}"] = round(float(ins[pin]["max_ps"]), 1)
-            continue
-        # spec "child_clock_ref": "boundary" (s81 parents 2026-10-13, die clock delivery rule): the target is the child's
-        # ROUTED boundary-register insertion R (views/<child>/insertion.json tt.boundary.mean, the sign-off reference of
-        # every hop), not the lib's max_clock_tree_path (latest sink of the whole tree: dsfd_coll_cesc0 415 vs R 322 ps,
-        # which would hand the core its clock ~90 ps early against the leaves it talks to).  Lib max when no record exists.
-        ij = ROOT / v / "insertion.json"
-        if s.get("child_clock_ref") == "boundary" and ij.exists():
-            b = json.loads(ij.read_text()).get("tt", {}).get("boundary", {})
-            if b.get("n") and b.get("mean") is not None:
-                out[view_name(v)] = round(float(b["mean"]), 1)
-                continue
-        p = ROOT / v / f"{view_name(v)}_tt.lib"
-        ins = child_lint.clock_insertion(p.read_text(errors="replace")) if p.exists() else {}
-        vals = [x["max_ps"] for x in ins.values() if x]
-        out[view_name(v)] = round(max(vals), 1) if vals else 0.0
+        before = dict(out)
+        _child_insertion(s, ch, out)
+        tap = ch.get("clock_tap_ps")
+        if tap:
+            for k in set(out) - set(before) or {view_name(ch["view"])}:
+                out[k] = round(out[k] - float(tap), 1)
     return out
+
+
+def _child_insertion(s: dict, ch: dict, out: dict) -> None:
+    """one child's spine target(s) into out (see child_insertions)"""
+    v = ch["view"]
+    if s.get("child_clock_ref") == "pin":
+        # Q-CLUSTER 2026-10-17 (cluster of clusters): every clock entry pin of a multi-entry child is its own spine
+        # target: insertion.json clock_measurements[pin].tt.boundary.mean, else that pin's TT-lib clock-tree max
+        name = view_name(v)
+        ij = ROOT / v / "insertion.json"
+        cm = (json.loads(ij.read_text()).get("clock_measurements") or {}) if ij.exists() else {}
+        p = ROOT / v / f"{name}_tt.lib"
+        ins = child_lint.clock_insertion(p.read_text(errors="replace")) if p.exists() else {}
+        for pin in sorted(set(cm) | set(ins)):
+            b = (cm.get(pin) or {}).get("tt", {}).get("boundary", {})
+            if b.get("n") and b.get("mean") is not None:
+                out[f"{name}/{pin}"] = round(float(b["mean"]), 1)
+            elif ins.get(pin):
+                out[f"{name}/{pin}"] = round(float(ins[pin]["max_ps"]), 1)
+        return
+    # spec "child_clock_ref": "boundary" (s81 parents 2026-10-13, die clock delivery rule): the target is the child's
+    # ROUTED boundary-register insertion R (views/<child>/insertion.json tt.boundary.mean, the sign-off reference of
+    # every hop), not the lib's max_clock_tree_path (latest sink of the whole tree: dsfd_coll_cesc0 415 vs R 322 ps,
+    # which would hand the core its clock ~90 ps early against the leaves it talks to).  Lib max when no record exists.
+    ij = ROOT / v / "insertion.json"
+    if s.get("child_clock_ref") == "boundary" and ij.exists():
+        b = json.loads(ij.read_text()).get("tt", {}).get("boundary", {})
+        if b.get("n") and b.get("mean") is not None:
+            out[view_name(v)] = round(float(b["mean"]), 1)
+            return
+    p = ROOT / v / f"{view_name(v)}_tt.lib"
+    ins = child_lint.clock_insertion(p.read_text(errors="replace")) if p.exists() else {}
+    vals = [x["max_ps"] for x in ins.values() if x]
+    out[view_name(v)] = round(max(vals), 1) if vals else 0.0
 
 
 SPINE_INS = """# ref_tile cluster clock: the pre-placed balanced clock SPINE (physical/common_flow/clock_spine.tcl, el1011-hbm-attn
