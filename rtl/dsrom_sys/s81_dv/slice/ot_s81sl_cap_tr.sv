@@ -15,6 +15,8 @@
 // The output word o_* is nc's RST output flop and lands, at the root leaf, directly in n6's P1 port flop: the seam is
 // registered on both sides and adds NO edge (the cycle model tools/s81_slice/cap_model.py is unchanged).
 // fault: sticky (lane err/fault bits as old F10, node F1..F4), a flop; the root re-registers it.
+// DLR (S81U-CAP4): the 3 nodes run their AL-deep side-band lanes as register-file delay lines (ot_hdc_delay_rf, cycle-exact,
+// same flops) -- route 9df7f8153 FF hold -6.37 ps was all flop -> INV -> flop pass hops, half of them in those lanes.
 // MUT (bench mutants only): 2 ri bit order t <-> d; 4 drops local lane 1's 3rd word (the old lane 5: E instance only).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_cap_tr #(
@@ -66,12 +68,12 @@ module ot_s81sl_cap_tr #(
 
     wire [2:0] n_v, n_e, n_f; wire [31:0] n_t [0:2], n_d [0:2];
     generate for (gl = 0; gl < 2; gl = gl + 1) begin : g_l1
-        ot_s81_retn_static #(.WIN(WIN), .RST(1)) u_n (.clk(clk), .rst_n(rsv[1 + gl]),
+        ot_s81_retn_static #(.WIN(WIN), .RST(1), .DLR(1)) u_n (.clk(clk), .rst_n(rsv[1 + gl]),
             .a_v(l_v[2*gl]), .a_t(l_t[2*gl]), .a_d(l_d[2*gl]), .a_e(l_e[2*gl]),
             .b_v(l_v[2*gl+1]), .b_t(l_t[2*gl+1]), .b_d(l_d[2*gl+1]), .b_e(l_e[2*gl+1]),
             .o_v(n_v[gl]), .o_t(n_t[gl]), .o_d(n_d[gl]), .o_e(n_e[gl]), .fault(n_f[gl]));
     end endgenerate
-    ot_s81_retn_static #(.WIN(WIN), .RST(1)) u_nc (.clk(clk), .rst_n(rsv[3]),
+    ot_s81_retn_static #(.WIN(WIN), .RST(1), .DLR(1)) u_nc (.clk(clk), .rst_n(rsv[3]),
         .a_v(n_v[0]), .a_t(n_t[0]), .a_d(n_d[0]), .a_e(n_e[0]),
         .b_v(n_v[1]), .b_t(n_t[1]), .b_d(n_d[1]), .b_e(n_e[1]),
         .o_v(o_v), .o_t(o_t), .o_d(o_d), .o_e(o_e), .fault(n_f[2]));
