@@ -34,7 +34,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 GRID = 400.0                      # reset station grid (<= measured reach 405 um per hop)
 FWD = 'BUFx8_ASAP7_75t_R'          # clock-forward cell (hop 0 source)
-INV = 'INVx2_ASAP7_75t_R'          # reset polarity (active-high block reset pins)
+INV = 'INVx2_ASAP7_75t_R'
+LAND_W = (70, 276, 512, 562, 682)  # dsfd_dvland_<W> tiles (rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv)          # reset polarity (active-high block reset pins)
 RST_RLY = {'EW': 'dsfd_rly_1_EW', 'WE': 'dsfd_rly_1_WE', 'NS': 'dsfd_rly_1_NS', 'SN': 'dsfd_rly_1_NS'}   # SN = NS mirrored (MX)
 ORIENT = {'WE': 'R0', 'EW': 'MY', 'NS': 'R90', 'SN': 'R270'}     # dsfd_rly_1_WN (in W, out N) turned to the tree edge
 CELL_MODELS = f'''// ASAP7 standard cells used by the S81-DV bound die top (functional models of library cells, not stand-ins)
@@ -59,9 +60,16 @@ def git_show(ref, path):
     return subprocess.run(['git', '-C', os.environ.get('OT_GIT_DIR', str(ROOT)), 'show', f'{ref}:{path}'], capture_output=True, check=True).stdout
 
 
-def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, extra_rtl=()):
-    """plan: loaded plan; sdir[(link_nm, k)] = station direction; chains_pts[link_nm] = station points (die coords)."""
+def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, extra_rtl=(), land_plan=None):
+    """plan: loaded plan; sdir[(link_nm, k)] = station direction; chains_pts[link_nm] = station points (die coords).
+    land_plan: S81-LAND pilot land_plan.json (per link E) -> landing K straps (else the table's land_plan, else K 1)."""
     T = json.load(open(table_path))
+    # S81-LAND2 (LANDING-CONTRACT L1-L7): port rules with "land": true get a dsfd_dvland_<W> tile between the last relay
+    # station and the block input (ring on the lane's forwarded clock, read on the block root from its regional reset,
+    # K strap, fault -> die status port land_fault).  0-stage links (neighbour root -> root) need none.
+    lp = land_plan or (ROOT / T['land_plan'] if T.get('land_plan') else None)
+    land_e = {r['link']: r['E'] for r in json.load(open(lp))['links']} if lp else {}
+    landings = []                 # (inst, link, bits)
     out.mkdir(parents=True, exist_ok=True)
     W, H = plan['facts']['die_um']
     pitch = plan['facts']['cluster_pitch_um']
@@ -139,6 +147,12 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                         c[ck[0]]  # make sure the clock output is connected
                 else:
                     w = dname(e[3])
+                    if rule.get('land') and chains_pts[e[3]] and b in LAND_W:
+                        landings.append((n, e[3], b))
+                        w = f'w_{e[3]}_lnd'          # the landing's o, abutted to the block input
+                    elif rule.get('land') and chains_pts[e[3]]:
+                        plan_not_in_rtl.append(dict(inst=n, module=mod, plan_port=p, dir=d, bits=b, link=e[3],
+                                                    note=f'no dsfd_dvland_{b} tile: lane NOT landed'))
                     c[rport].append((lane * lw, lane * lw + min(b, lw) - 1, w, b))
                     link_dst[e[3]] = w
                     if rule.get('ck_in'):   # the lane's forwarded clock (last station ck_o) into the receiver
@@ -167,6 +181,9 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             nm_ = f'{bl["name"]}_{tp["port"]}'
             io.append(f'  {tp["dir"]} wire [{tp["bits"] - 1}:0] {nm_}')
             top_ports.append(nm_)
+    if landings:
+        io.append(f'  output wire [{len(landings) - 1}:0] land_fault')
+        top_ports.append('land_fault')
     # non-ANSI header (the strict checker reads port widths from body declarations)
     names = [x.split()[-1] for x in io]
     v[-1] = f'module dv_die ({", ".join(names)});'
@@ -302,6 +319,21 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         pv = params.get(n) or {}
         ps = f' #({", ".join(f".{k}({vv})" for k, vv in pv.items())})' if pv else ''
         v.append(f'  {mod}{ps} u_{n} ({", ".join(cs)});')
+    # landings (S81-LAND2): K = E of the link's die STA window (land plan), assuming the hop-0 gate opens at the
+    # receiver's reset release (G = R0); E > 7 needs G - R0 = E - 7 in the reset calendar (recorded per row)
+    land_rows = []
+    for j, (n, nm, b) in enumerate(landings):
+        st = len(chains_pts[nm])
+        e_ = land_e.get(nm)
+        k_ = min(max(e_ or 1, 1), 7)
+        v.append(f'  wire [{b - 1}:0] w_{nm}_lnd;')
+        v.append(f'  dsfd_dvland_{b} ld_{nm} (.ck_f(n{nm}_fck[{st}]), .i(w_{nm}_dst), .ck(ck_{reg[n]}), .rs({rst["block_leaf"][n]}), '
+                 f".k(3'd{k_}), .o(w_{nm}_lnd), .fault(land_fault[{j}]));")
+        land_rows.append(dict(link=nm, inst=n, master=f'dsfd_dvland_{b}', bits=b, stages=st, E=e_, K=k_,
+                              K_source='land_plan E (G = R0)' if e_ else 'NO die STA E: K 1 placeholder (re-derive)',
+                              calendar_G_minus_R0=max(0, (e_ or 1) - 7), fault_bit=j))
+    for b in sorted({b for _, _, b in landings}):
+        straps.append([f'dsfd_dvland_{b}', 'k'])
     # relay chains (F1)
     nst = collections.Counter(); fwd_cells = 0
     for l in plan['links']:
@@ -360,7 +392,12 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     rec = dict(schema='opentallas.s81_dv.bind_case.v1', regions=regions, open_bindings=open_bind,
                plan_port_not_in_rtl=plan_not_in_rtl, relay_masters=dict(nst), clock_forward_cells=fwd_cells,
                abutted_plan_lanes=abut_rows, reset=rst['summary'], straps=straps, mode_unused_pads=pad_rows, views=dict(views),
-               frame_contract=dict(verdict=frame_rec['verdict'], members=len(frame_rec['members']), problems=frame_rec['problems']), rtl_extra=extra, top_offchip_ports=top_ports)
+               frame_contract=dict(verdict=frame_rec['verdict'], members=len(frame_rec['members']), problems=frame_rec['problems']), rtl_extra=extra, top_offchip_ports=top_ports,
+               landings=dict(count=len(land_rows), land_plan=str(lp) if lp else None,
+                             by_master=dict(collections.Counter(r['master'] for r in land_rows)),
+                             by_inst_kind=dict(collections.Counter(r['inst'].split('_')[0] for r in land_rows)),
+                             no_E=[r['link'] for r in land_rows if r['E'] is None],
+                             calendar_needs=[r for r in land_rows if r['calendar_G_minus_R0']], rows=land_rows))
     if run_bind:
         cmd = ['python3', str(ROOT / 'tools/die_port_bind.py'), str(out / 'die.v'), '--top', 'dv_die', '--rtl-root', str(ROOT / 'rtl'),
                '--rtl-file', str(out / 'cells_used.v'), '--strap-file', str(out / 'straps.json'), '--pad-file', str(out / 'pads.json'), '--out', str(out / 'port_bind.json')]
