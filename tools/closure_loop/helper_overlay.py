@@ -318,6 +318,26 @@ def _merge_is_clean(repo, rel, parents, result_blob, cache):
     return (q.returncode == 0 and q.stdout == _blob(repo, result_blob)), pb, base
 
 
+def _copy_of_main(repo, c, e, info, span, main):
+    """main commit M (in span, on main) whose post blob equals c's post, when c is NOT on main and c's pre blob is the
+    post of a main commit that is an ancestor of M (or the gate side); else None."""
+    def on_main(x):
+        return subprocess.run(["git", "-C", str(repo), "merge-base", "--is-ancestor", x, main], capture_output=True,
+                              timeout=60).returncode == 0
+    if not main or len(e["parents"]) != 1 or not e["pre"] or on_main(c):
+        return None
+    pre = e["pre"][0]
+    for m in span:
+        if m == c or info[m]["post"] != e["post"] or not on_main(m):
+            continue
+        for a, ea in info.items():
+            if ea["post"] == pre and on_main(a) and subprocess.run(
+                    ["git", "-C", str(repo), "merge-base", "--is-ancestor", a, m], capture_output=True,
+                    timeout=60).returncode == 0:
+                return m
+    return None
+
+
 def rule_span(repo, rel, old_blob, new_blob, heads, tile=None, registry=None, max_steps=64):
     """(ok, rows, why): classify every commit that changed rel between the gate's revision (the commits whose rel blob
     is old_blob) and the current one (commits whose rel blob is new_blob), all reachable from heads (origin/main plus the
@@ -379,6 +399,14 @@ def rule_span(repo, rel, old_blob, new_blob, heads, tile=None, registry=None, ma
             continue                     # clean merges are not listed: their parents' commits are
         if len(rows) >= max_steps:
             return False, rows, f"{rel}: blob chain longer than {max_steps} commits"
+        cp = _copy_of_main(repo, c, e, info, span, heads[0])
+        if cp:
+            # ROOT-0615 10-18: a branch commit that took the file from main ("git checkout origin/main -- tools/..."):
+            # its pre and post blobs are both revisions on main, and main's own commits between them are in this span
+            # and classified here; the copy adds nothing of its own
+            rows.append(dict(kind="neutral", rule="copy-of-main", commit=c, source="auto", applies=False,
+                             what=f"blob {e['post'][:9]} copied from main {cp[:9]}"))
+            continue
         r = classify_commit(repo, c, rel, e["pre"][0] if e["pre"] else None, e["post"], registry, cache)
         r["applies"] = r["kind"] == "tightening" and tile_matches(r.get("applies_to"), tile)
         rows.append(r)
