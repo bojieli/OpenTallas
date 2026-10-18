@@ -20,7 +20,12 @@ PATHS="tools compiler/models docs/HBM_GENERIC_INTERFACE.md results/abi3/deepseek
 for p in $PATHS; do [ -n "$(git -C "$WT" ls-tree -r --name-only "$SHA" -- "$p" | head -1)" ] || { echo "MISSING_AT_REV $p"; exit 2; }; done
 # plus every top-level file of results/rtl, results/abi3, results/arch (~66 MB): ds_native reads several (w19_sm_real_ops.json ...)
 TOP=$(git -C "$WT" ls-tree --name-only "$SHA" results/rtl/ results/abi3/ results/arch/ | while read -r f; do [ "$(git -C "$WT" cat-file -t "$SHA:$f")" = blob ] && echo "$f"; done)
-git -C "$WT" archive "$SHA" $PATHS $TOP | ssh "$HOST" "tar -x -C $ROOT/src" || { echo "ARCHIVE_FAIL"; exit 2; }
+# plus every results/<a>/<b> entry named in ds_native's cost-model sources (dshbm_1m_allmeasured.su_tables reads
+# results/rtl/dshbm_local_chains_20261004/su/..., 10-18 11:55 L0 rc=1); "<dir>/<prefix>_" names expand to the matching dirs.
+REFD=$(for f in $(git -C "$WT" ls-tree --name-only "$SHA" tools/dshbm_1m_allmeasured.py tools/hgi_sim/ | grep '\.py$'); do
+  git -C "$WT" show "$SHA:$f"; done | grep -oE 'results/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+' | sort -u)
+EXTRA=$(for d in $REFD; do git -C "$WT" ls-tree --name-only "$SHA" "$(dirname "$d")/" | grep -F "$d"; done | sort -u)
+git -C "$WT" archive "$SHA" $PATHS $TOP $EXTRA | ssh "$HOST" "tar -x -C $ROOT/src" || { echo "ARCHIVE_FAIL"; exit 2; }
 ssh "$HOST" "test -f $ROOT/src/tools/hbm_layer_vehicle/ds_layer_fixtures.py && test -d $ROOT/refs && test -d $ROOT/ckpt" || { echo "SRC_OR_INPUTS_MISSING on $HOST"; exit 2; }
 echo "$SHA" | ssh "$HOST" "cat > $ROOT/src/REV"
 NOAVX="AVX512F AVX512CD AVX512_KNL AVX512_KNM AVX512_SKX AVX512_CLX AVX512_CNL AVX512_ICL AVX512_SPR AVX512_SPR"
