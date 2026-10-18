@@ -1,0 +1,8 @@
+`verilator_config
+// TKM-3 10-18: the TP192 static gates (run_tp192_static.sh / run_tp192_tile_mut.sh) instantiate the e86 tile shape.
+// ot_hgi_coll_tkm_tile_e86 is parameterless; make IT the hier block so the top pass sees 32 stubs.  Through the e86
+// wrapper (rg #(.EW(86),.PT(64))) Verilator 5.050 did not substitute the rg hier block, flattened all 32 rg bodies and
+// the top verilation hit the 209 GB memcg OOM (hcoll_v7_tkm_tile_e86-d4f-19e134f32, rc=2).  qtkm_hier.vlt is kept
+// byte-identical (pinned by other gate records).
+hier_block -module "ot_hgi_coll_tkm_tile"
+hier_block -module "ot_hgi_coll_tkm_tile_e86"

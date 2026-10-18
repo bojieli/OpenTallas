@@ -3,14 +3,14 @@
 #   flat reference ot_hgi_coll_tkm_m_tp192_seg MUT 0: syn_sel, syn_cand, rank128_zeros PASS
 #   flat CTL_MUT 3 (segment conv strobes not compensated for the up seams): syn_sel FAIL (MISMATCH O)
 #   landed ot_hgi_coll_tkm_m_tp192_lp (lp.py output, all region clocks = clk) MUT 0: syn_sel PASS
-# Fleet only (ot-run), Verilator 5.050 --hierarchical (qtkm_hier.vlt: the e86 tile is compiled once).
+# Fleet only (ot-run), Verilator 5.050 --hierarchical (tkm_tp192_hier.vlt, TKM-3 c739456f5: hier_block e86 itself; through qtkm_hier.vlt the 32 rg bodies were flattened and the top verilation OOMed at 160 GB).
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/../../../../.." && pwd);cd "$ROOT"
 OUT=$(realpath -m "${1:?out}");mkdir -p "$OUT"
 OPENBLAS_NUM_THREADS=1 python3 tools/hgi_coll_tkm_tp192_vectors.py --out "$OUT/vec" > "$OUT/vectors.log"
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 C=rtl/hbm_accel/generic/collective
-common=("$C/p2p/qtkm_hier.vlt" "$C/tkm/tb_hgi_coll_tkm_m_tp192_seg.sv" "$C/tkm/ot_hgi_coll_tkm_ctl.sv" "$C/tkm/ot_hgi_coll_tkm_static.sv" "$C/tkm/ot_hgi_coll_tkm.sv" "$C/tkm/ot_hgi_coll_tkm_buffer.sv" rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v rtl/common/landed_parent/ot_pl_land.sv)
+common=("$C/tkm/tkm_tp192_hier.vlt" "$C/tkm/tb_hgi_coll_tkm_m_tp192_seg.sv" "$C/tkm/ot_hgi_coll_tkm_ctl.sv" "$C/tkm/ot_hgi_coll_tkm_static.sv" "$C/tkm/ot_hgi_coll_tkm.sv" "$C/tkm/ot_hgi_coll_tkm_buffer.sv" rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v rtl/common/landed_parent/ot_pl_land.sv)
 flat=("$C/tkm/ot_hgi_coll_tkm_m_tp192_seg.sv")
 lp=("$C/tkm/lp/ot_hgi_coll_tkm_m_tp192_lp.sv")
 sha256sum "${common[@]}" "${flat[@]}" "${lp[@]}" tools/hgi_coll_tkm_tp192_vectors.py tools/hgi_coll_tkm_vectors.py > "$OUT/sources.sha256"
