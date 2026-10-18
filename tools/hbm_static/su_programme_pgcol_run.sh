@@ -3,8 +3,8 @@
 # producer (pslice PIPE 2), lockstep with the SAME start edge, on every quarter of the current 7111-edge su_top_compile
 # image, + 4 mutants that must FAIL (cfg: column index PC offset + dictionary word; phase; cfgany; stale).
 # NATIVE-FIX3/pgs 10-18: + 4 pin-stage mutants (rstrelay: leaf reset relay bypassed; cpin: leaf cfg pin stage dropped;
-# oreg: head export registers dropped; freg: head l_fault pin registers dropped).
-# Usage (from the repo root or an export): OUT=dir [QUARTERS="0 1 2 3"] [ONLY=cfg|phase|cfgany|stale|rstrelay|cpin|oreg|freg] $0
+# oreg: head export registers dropped; freg: head l_fault pin registers dropped; hrelay: head reset relay bypassed).
+# Usage (from the repo root or an export): OUT=dir [QUARTERS="0 1 2 3"] [ONLY=cfg|phase|cfgany|stale|rstrelay|cpin|oreg|freg|hrelay] $0
 set -euo pipefail
 ulimit -c 0
 OUT=$(mkdir -p "${OUT:?OUT required}" && realpath "$OUT")
@@ -37,16 +37,16 @@ for k in ${QUARTERS:-0 1 2 3}; do cmp -s <(head -2 "$OUT/q0/cols_params.svh" | s
   <(head -2 "$OUT/q$k/cols_params.svh" | sed 's/CL_WRITES=[0-9]*//') || { echo "quarter $k capacity layout differs"; exit 2; }; done
 if [ -n "${ONLY:-}" ]; then   # closure-loop expect=fail bench: one mutant on quarter 0, exits 1 after its verdict
   case "$ONLY" in cfg) m=0; a=+MUT_CFG;; phase) m=1; a="";; cfgany) m=2; a="";; stale) m=3; a="";;
-    rstrelay) m=4; a="";; cpin) m=5; a="";; oreg) m=6; a="";; freg) m=7; a="";; *) echo "bad ONLY"; exit 2;; esac
+    rstrelay) m=4; a="";; cpin) m=5; a="";; oreg) m=6; a="";; freg) m=7; a="";; hrelay) m=8; a="";; *) echo "bad ONLY"; exit 2;; esac
   build $m; run $m "$a" "$ONLY" 0 || true; exit 1
 fi
-for m in 0 1 2 3 4 5 6 7; do build $m; done
+for m in 0 1 2 3 4 5 6 7 8; do build $m; done
 ok=1
 for k in ${QUARTERS:-0 1 2 3}; do
   run 0 "" positive $k || ok=0
   grep -q "SU_PROGRAMME_PGCOL PASS" "$OUT/run_positive_q$k.log" || ok=0
 done
-for c in "0 +MUT_CFG cfg" "1 _ phase" "2 _ cfgany" "3 _ stale" "4 _ rstrelay" "5 _ cpin" "6 _ oreg" "7 _ freg"; do
+for c in "0 +MUT_CFG cfg" "1 _ phase" "2 _ cfgany" "3 _ stale" "4 _ rstrelay" "5 _ cpin" "6 _ oreg" "7 _ freg" "8 _ hrelay"; do
   set -- $c; a=$2; [ "$a" = _ ] && a=""
   if run "$1" "$a" "$3" 0; then ok=0; echo "SU_PROGRAMME_PGCOL MUTANT $3 ESCAPED"
   elif grep -q "SU_PROGRAMME_PGCOL FAIL" "$OUT/run_$3_q0.log"; then echo "SU_PROGRAMME_PGCOL MUTANT $3 REJECTED (expected)"

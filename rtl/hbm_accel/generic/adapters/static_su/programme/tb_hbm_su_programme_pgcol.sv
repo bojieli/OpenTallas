@@ -14,7 +14,7 @@
 // issues configuration 2 edges earlier); the leaves' reset is released RREL=3 edges after the port (ot_rst_relay), checked
 // on every reset; do_reset waits 8 edges. New mutants: -GMUT=4 (leaf reset relay bypassed: release check), -GMUT=5 (leaf
 // cfg pin stage dropped), -GMUT=6 (head export registers dropped), -GMUT=7 (head l_fault pin registers dropped): the
-// fault cases land 1 edge early -> lockstep mismatch.
+// fault cases land 1 edge early -> lockstep mismatch; -GMUT=8 (head reset relay bypassed: release check).
 module tb_hbm_su_programme_pgcol;
 `include "ref/programme_params.svh"
 `include "cols_params.svh"
@@ -59,15 +59,16 @@ task automatic execute;
 endtask
 // leaf reset release: edges from the port release until column 0 / MUT_COL column leave reset (region 0 and 1)
 task automatic rel_check;
- integer r0, r1;
- r0=-1; r1=-1;
+ integer r0, r1, rh;
+ r0=-1; r1=-1; rh=-1;
  for(integer k=1;k<=8;k=k+1) begin
    tick();
    if(r0<0 && u_cl.g_c[0].u_c.rl===2'b11) r0=k;
    if(r1<0 && u_cl.g_c[1].u_c.rl===2'b11) r1=k;
+   if(rh<0 && u_cl.u_h.hr===1'b1) rh=k;
  end
- if(r0!=RREL || r1!=RREL) begin mism=mism+1;
-   $display("SU_PROGRAMME_PGCOL reset release col0=%0d col1=%0d edges (expected %0d)",r0,r1,RREL); end
+ if(r0!=RREL || r1!=RREL || rh!=RREL) begin mism=mism+1;
+   $display("SU_PROGRAMME_PGCOL reset release col0=%0d col1=%0d head=%0d edges (expected %0d)",r0,r1,rh,RREL); end
 endtask
 task automatic do_reset;
  @(negedge clk); rst_n=0; tick(); tick(); @(negedge clk); rst_n=1; rel_check();
