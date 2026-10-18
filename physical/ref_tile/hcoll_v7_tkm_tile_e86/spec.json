@@ -33,12 +33,8 @@
    "up_in"
   ],
   "W": [
-   "tid",
    "clr",
    "conv",
-   "tau_t",
-   "tau_l",
-   "tau_o",
    "busy"
   ]
  },
@@ -51,8 +47,8 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude TKM-2 1017",
-  "branch": "claude/tkm2-1017",
+  "owner": "Claude OWNERS-HBM/TKM 1018",
+  "branch": "claude/tkm-1018",
   "tag": "d4f",
   "purpose": "TKM tile at d4f TP=192 (EW 86, PT 64) x32 per SW tkm_m; TKM-2 successor: ot_hgi_coll_tkm_tile_rg (live-node compares: no yosys insbuf storm; clock split by row group into clk + clk_r0..r3 related roots; N-face clock entries; N/S pins spread over full faces); 259.2 sq",
   "benches": [
@@ -136,16 +132,12 @@
     "clk"
    ],
    "inputs": [
-    "tid",
     "clr",
     "conv",
-    "tau_t",
-    "tau_l",
     "ins_v",
     "ins_b"
    ],
    "outputs": [
-    "tau_o",
     "busy"
    ]
   },
@@ -202,5 +194,5 @@
   }
  },
  "io_tcl": "physical/ref_tile/hcoll_v7_tkm_tile_e86/io_spread.tcl",
- "structural_change": "fab3f5eba gate: 756,805 insbuf BUFx2 (55.2k um2) from ot_tkm_lt kept padding (1,711 BUF per 85-b compare, yosys measured; 9 with ot_tkm_lt_live) -> util read 97% vs placed 32%; single root TT 373.1 ps / 12,792 sinks -> five related roots (pin stage + four row groups) meeting register to register; coordinator review item 3 (pins N/S right halves, clock W) -> io_tcl spreads N/S/W faces, clocks centred on N beside ins_b and the pin-stage mass"
+ "structural_change": "fab3f5eba gate: 756,805 insbuf BUFx2 (55.2k um2) from ot_tkm_lt kept padding (1,711 BUF per 85-b compare, yosys measured; 9 with ot_tkm_lt_live) -> util read 97% vs placed 32%; single root TT 373.1 ps / 12,792 sinks -> five related roots (pin stage + four row groups) meeting register to register; coordinator review item 3 (pins N/S right halves, clock W) -> io_tcl spreads N/S/W faces, clocks centred on N beside ins_b and the pin-stage mass; TKM 10-18: e86 shape drops the unused tau probe and tid (tau_t/tau_l tied 0, tau_o open in tkm_static) -- removes the 85-b 64:1 tau_o select across all row groups (rg gate worst reg->reg -141.5 ps at u.tau_o[71]); outline kept 259.2 sq (rg synth std 33,791 um2 = util 0.52: the 84,572 um2 / 130% FAIL was the pre-rg insbuf build)"
 }
