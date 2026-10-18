@@ -1747,7 +1747,11 @@ def place(m, K, geo, F):
 # the same row (its embedding row word becomes a 1-2 stage hop, once a token).  kvs14c pin geometry -> rx_record 1,
 # tx_slot 0, tx_record 0 stages
 # (test_kv_bundle_eq.test_attn_at_d2d_pin_hops); the S-going kvs_attn words (ahs / pvst / pvfst / fin / acal) grow by
-# ~1.5-2 mm.  The KV die lead adopts it in a GEN (lanes/KV-LANDSLOT.md, KV-PLAN4.md).
+# ~1.5-2 mm.  MEASURED (planner dry runs, results/rtl/xdie_qwen_1018/qxf_seamk/planner_dryrun.log): the seam drops to
+# rx 1 / tx slot 1 / tx 0 (31 -> 2 stages, vehicle roundtrip 1835 -> 1814) but the S-going words detour around the HOST /
+# kvs_ctl / seq column: ahs 46 -> 60, pvst 37 -> 85, pvfst 40 -> 65, fin 45 -> 51, acal +2..+10.  The start / result legs
+# sit inside the KV service window, so the net is NOT a gain on this floorplan: default OFF, not proposed for adoption
+# until the start words get a direct channel S (KV-PLAN4 floorplan item).
 ATTN_AT_D2D = os.environ.get('OT_KV_ATTN_AT_D2D', '0') == '1'
 ATTN_D2D_TOP = float(os.environ.get('OT_KV_ATTN_D2D_TOP', '0.0'))
 

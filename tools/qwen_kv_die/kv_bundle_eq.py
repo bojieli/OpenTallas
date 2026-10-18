@@ -112,7 +112,7 @@ def _is_relay(by, inst):
     return it is not None and it.kind == 'relay' and it.master.startswith('qkd_rly_')
 
 
-def _walk(m, by, src):
+def _walk(m, by, src, with_path=False):
     """every non-relay load reached from source pin src through qkd_rly_* chains:
        {(inst, port): (stages, bus index, load index)} (the bus whose load it is = its last hop)"""
     drv = {}
@@ -121,9 +121,9 @@ def _walk(m, by, src):
             continue
         eps = b[3]
         drv.setdefault(_norm(eps[0]), []).append(i)
-    out, stack = {}, [(src, 0, frozenset())]
+    out, stack = {}, [(src, 0, frozenset(), ())]
     while stack:
-        ep, n, seen = stack.pop()
+        ep, n, seen, path = stack.pop()
         for i in drv.get(ep, ()):
             eps = m['buses'][i][3]
             for j, ld in enumerate(eps[1:], 1):
@@ -131,11 +131,11 @@ def _walk(m, by, src):
                 if _is_relay(by, inst) and port == 'a':
                     if inst in seen:
                         raise ValueError(f'kv_bundle_eq: relay loop at {inst}')
-                    stack.append(((inst, 'b'), n + 1, seen | {inst}))
+                    stack.append(((inst, 'b'), n + 1, seen | {inst}, path + ((i, j),)))
                 elif (inst, port) in out and out[(inst, port)][0] != n:
                     raise ValueError(f'kv_bundle_eq: {inst}.{port} reached at two depths from {src}')
                 else:
-                    out[(inst, port)] = (n, i, j)
+                    out[(inst, port)] = (n, i, j) if not with_path else (n, i, j, path + ((i, j),))
     return out
 
 
@@ -229,13 +229,27 @@ def equalize(K, m, bundles=None):
             rows[f'{si}.{port}->{di}'] = dict(stages=n, pads=k)
             if not k:
                 continue
-            _, bi, li = _walk(m, by, (si, port))[(dinst, dport)]       # fresh: an earlier member may have split a net
-            bid, cl, bits, eps = m['buses'][bi]
-            prev = _norm(eps[0])
-            prev_pt, sink_pt = pin(*prev), pin(dinst, dport)
-            w, h = _frame(K, bid, bits)
-            cap = _reach(K, bits)
-            pads = _place_pads(K, m, staged, prev_pt, sink_pt, k, w, h, cap)
+            path = _walk(m, by, (si, port), with_path=True)[(dinst, dport)][3]   # fresh: a member may have split a net
+            # the pads wait at the sink end when there is room, else on the nearest earlier hop that only this member's
+            # record uses (padding a hop shared with another load would delay that load too)
+            pads, why = None, []
+            for bi, li in reversed(path):
+                bid, cl, bits, eps = m['buses'][bi]
+                nxt = _norm(eps[li])
+                if nxt != (dinst, dport):
+                    down = {kk for kk in _walk(m, by, (nxt[0], 'b'))}
+                    if down != {(dinst, dport)}:
+                        why.append(f'{bid}: shared downstream')
+                        continue
+                w, h = _frame(K, bid, bits)
+                cap = _reach(K, bits)
+                try:
+                    pads = _place_pads(K, m, staged, pin(*_norm(eps[0])), pin(*nxt), k, w, h, cap)
+                    break
+                except ValueError as e_:
+                    why.append(f'{bid}: {e_}')
+            if pads is None:
+                raise ValueError(f'kv_bundle_eq: {name}: {k} pads for {si}.{port} -> {di}: no hop has room: ' + ' | '.join(why[-4:]))
             base = bid
             while re.search(r'__(r\d+|pinfix\d+|beq\d+)$', base):     # the chain's origin bus (kv_die relay_stages key)
                 base = re.sub(r'__(r\d+|pinfix\d+|beq\d+)$', '', base)
