@@ -274,6 +274,13 @@ def apply_dv(v, m):
         ch = 5184.0
     M[CDV] = Q._master(v, CWN - Q.SHAVE, ch - Q.SHAVE, ports)
     M[CDV].name = CDV
+    # Q-DIEPLAN8 10-17: dv2f10 PDN-0006 (die VDD M8 blocked by the abstract's M9 OBS on c16_E0_0).  The two-level
+    # cluster contract (cluster_level 2: PG M8, signals M2-M7) leaves M9 to the die; the synthetic cluster and slice
+    # abstracts obstructed M1-M9.  OT_SPLIT_DV_OBS_TOP=8 obstructs M1-M8 only (default 9 = the dv2f10 abstracts).
+    obs_top = int(os.environ.get('OT_SPLIT_DV_OBS_TOP', '9'))
+    if obs_top not in (8, 9):
+        raise ValueError(f'OT_SPLIT_DV_OBS_TOP must be 8 or 9, got {obs_top}')
+    M[CDV].obs_top = obs_top
     # ---- slice master (synthetic role ports)
     sw, sh = DI['dvs_W0']['w'], DI['dvs_W0']['h']
     # slice ports (SYNTHETIC, Q-DV roles): N / S faces MIRROR the abutting clusters' S-face pins (bc<lc> -> cw_*<lc>,
@@ -355,11 +362,11 @@ def apply_dv(v, m):
             bad = sorted(set(sp2) ^ set(rtl)) + sorted(k for k in sp2 if k in rtl and rtl[k] != sp2[k][0])
             if bad:
                 raise ValueError(f'dv face mode: {mn} frame vs RTL face map mismatch {bad[:12]}')
-            qs = v.Master(mn, sw - Q.SHAVE, sh - Q.SHAVE, 9, f'Q-DV slice2 face variant {mn} (RTL ports, dn = {dn})')
+            qs = v.Master(mn, sw - Q.SHAVE, sh - Q.SHAVE, obs_top, f'Q-DV slice2 face variant {mn} (RTL ports, dn = {dn})')
             _place(qs, sp2, sw - Q.SHAVE, sh - Q.SHAVE, fixed_rng)
             M[mn] = qs
     else:
-        qs = v.Master(SLICE, sw - Q.SHAVE, sh - Q.SHAVE, 9, 'Q-DV slice2 (SYNTHETIC role ports, RTL step 2 pending)')
+        qs = v.Master(SLICE, sw - Q.SHAVE, sh - Q.SHAVE, obs_top, 'Q-DV slice2 (SYNTHETIC role ports, RTL step 2 pending)')
         _place(qs, sp, sw - Q.SHAVE, sh - Q.SHAVE, fixed_rng)
         M[SLICE] = qs
     # ---- instances: retained / clusters / slices at the dv model's positions
