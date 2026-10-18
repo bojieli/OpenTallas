@@ -112,6 +112,9 @@ SUPERSEDED = ('ctrl_', 'cdc_', 'land_', 'wctl_', 'wleaf_', 'kvnc', 'lprg')
 # column ages + 2 x 16 kb star).
 import kv_static_attn_join as _AJ   # noqa: E402
 PVFIN = ON and _AJ.STREAM
+# KV-RTRUNK 10-17: the PV pairs carry the result trunks (kv_die.PV_RS: pair port bundle pr) -> pvfin.p0 / p1 are wired
+RS_PAIRS = PVFIN and os.environ.get('OT_KV_PV_T', '0') == '1' and 'result_trunk' in json.loads(
+    (Path(__file__).resolve().parents[2] / 'results/arch/qwen_kv_die/pv_trunk_t/plan.json').read_text())
 PVFIN_FILE = 'rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv'
 PVFIN_FRAME = (259.2, 259.2)            # kit qkd_pv_fin_s outline (gate pending)
 FIN = [('out_valid', 1), ('out_beat', 5), ('out_epoch', 16), ('out_data', 512)]    # pvfin fo = kvs_attn fin (LSB first)
@@ -1146,6 +1149,11 @@ def _die_joins(m, K, B, add, fk, rec):
     if PVFIN and 'pvfin' in by:
         bus('ks_pvfst', 'kv_oneway', 65, [('kvs_attn', 'pvfst'), ('pvfin', 'fs')])
         bus('ks_pvfin', 'kv_oneway', 534, [('pvfin', 'fo'), ('kvs_attn', 'fin')])
+        # KV-RTRUNK 10-17: each PV pair's 534-b result beat stream (qkd_pvw_die_t rs_*: two result trunks -> header in the
+        # strip; beat b at pair age out_age + RS_D + b, results/arch/qwen_kv_die/pv_trunk_t/plan.json result_trunk)
+        if RS_PAIRS:
+            bus('ks_pvp0', 'kv_oneway', 534, [('pvw_0', 'pr'), ('pvfin', 'p0')])
+            bus('ks_pvp1', 'kv_oneway', 534, [('pvw_1', 'pr'), ('pvfin', 'p1')])
     # HOST <-> boot / ownership / ownership observer (kv_static_boot_join.HOST_DIE_JOINS + kvjf own_obs quiet)
     hostw = {'boot_pr': 143, 'boot_image_target': 4, 'boot_image_ready': 1, 'boot_image_fault': 1, 'boot_image_epoch': 16,
              'boot_image_digest': 64, 'host_launch_quiet': 1, 'host_upstream_quiet': 6}
@@ -1208,10 +1216,11 @@ def _die_joins(m, K, B, add, fk, rec):
         dict(where='embgw.emr_<q> (x4, 521 b)', owner='KVJ-C3 / Q-KV (static emr source for the boot-only gateway)'),
         dict(where='host.ctrl_completion_fault', owner='KVJ-SMALL (OR of the 128 pc_path completion_fault)'),
         dict(where='pvw_<p>.ie (1,024 b)', owner='KVE-2 / KVJ-D (ASTK e-read qkd_astk_er_tap in the strip successor)'),
-        *([dict(where='pvfin.p0 / pvfin.p1 (534 b each: valid, beat, epoch, 512-b data)', owner='PV pair successor: '
-                'the 512-b registered RESULT TRUNK in qkd_pvw_die_t (pv_trunk_gen: the 32 column joins inject their held y '
-                'at compiled slots, beat order 0..31, exit at the strip corner facing pvfin); the current po is 16,384 b '
-                'at 32 staggered column ages (COL_D) and cannot feed one capture slot (results/arch/qwen_kv_pvfin_1017)'),
+        *(([] if RS_PAIRS else
+            [dict(where='pvfin.p0 / pvfin.p1 (534 b each: valid, beat, epoch, 512-b data)', owner='PV pair successor: '
+                  'the 512-b registered RESULT TRUNK in qkd_pvw_die_t (pv_trunk_gen: the 32 column joins inject their held y '
+                  'at compiled slots, beat order 0..31, exit at the strip corner facing pvfin); the current po is 16,384 b '
+                  'at 32 staggered column ages (COL_D) and cannot feed one capture slot (results/arch/qwen_kv_pvfin_1017)')]) + [
            dict(where='pvfin.fr (145 b: rz_valid, rz_epoch, 4 x 32-b head reciprocals)', owner='KVE: static hub '
                 'ot_qkd_ahub_static_die_cal rz_vector / rz_epoch + the R_AGE slot (the die hub qkd_ahub = legacy '
                 'ot_qwen_nearhbm_attn_hub_p has only the debug native_reciprocal, no slot / epoch)'),
@@ -1300,12 +1309,15 @@ def place(m, K, geo, F):
         vps = [by[f'vport_{st}_{k}'] for k in range(4)]
         ects = [by[f'ectl_{st}_{e}'] for e in range(8)]
         # inner edge = the old landing strip's inner edge: the landing <-> V port / engine relay channel stays as planned
+        # KV-PLAN3 10-18 OT_KV_KV_CHAN_EXTRA (um): the group tile gives that much width to the K / V channel on its
+        # engine side (h3: the 190-um channel beside slg_WS_7 held ~250 small relays and no 1,056-b pvrs relay fitted)
+        kx_ = float(os.environ.get('OT_KV_KV_CHAN_EXTRA', '0'))
         if west:
             x_g = up(max(x_hs + hs[0].w + gap, lx + lw - 369.0), GX)    # W of the groups: a control channel
-            gw = round(lx + lw - 60.0 - x_g, 4)                       # E of them: the K / V channel widened by 60 um
+            gw = round(lx + lw - 60.0 - kx_ - x_g, 4)                 # E of them: the K / V channel widened by 60 um
         else:
-            x_g = lx + 60.0
-            gw = round(min(x_hs - gap - x_g, 309.0), 4)
+            x_g = lx + 60.0 + kx_
+            gw = round(min(x_hs - gap - x_g, 309.0 - kx_), 4)
         GH = 1188.0                 # group tile height: 324-um gaps between groups (relay spots + the stack fan slot)
         for g in range(8):
             idx = ORDER.index(g)
@@ -1403,13 +1415,47 @@ def pin_face(master, port):
     if master in ('qkd_kvs_grp', 'qkd_kvs_grp_h'):
         if port in ('krsp', 'kreq', 'rsp', 'vreq'):
             return 'E'
+        if FANFOLD and port in ('i_ctl', 'o_ctl', 'o_dn', 'i_up'):
+            # KV-PLAN3: the folded fan chain runs slot 7 (top, the root's end) -> slot 0 down the stack: the down word
+            # enters N / leaves S, the up gather enters S / leaves N (on the W face they were 2,327 um per hop: the
+            # ends of a 1,188-um face, ks_slg_WN_7__o_dn in v_432)
+            return 'N' if port in ('i_ctl', 'o_ctl') else 'S'
         if port.startswith(('i_', 'o_')):
             return 'W'
     if master == 'qkd_kvs_fan':
         return 'W'
+    if master in ('qkd_kvs_pc', 'qkd_kvs_pc_h'):
+        # KV-PLAN3 10-17: the PC chain words between vertically stacked neighbours (pitch 378 um, PC k+1 above PC k) on
+        # the facing N / S faces: auto-placed on a side face they were 515.7 um per hop (> reach) once the pin-hinted
+        # re-plan stopped, 114 of the 127 unrepaired hops (t_302).  N: i_next 779 + o_next 299 + pc__ki 33, S: the
+        # mirror set = 1,111 b on a 270-um face (4.1 /um)
+        f_ = dict(i_next='N', o_next='N', pc__ki='N', o_prev='S', i_prev='S', pc__ko='S', i_grp='N', o_grp='N').get(port)
+        if f_:
+            return f_
     if master == 'qkd_pvfin':          # kit qkd_pv_fin_s faces
         return dict(p0='S', p1='N', fo='W', ff='W').get(port, 'E')
     return None
+
+
+
+def face_order(master, face, ports):
+    """KV-PLAN3: along-face order (from the face origin) of a static tile's pins, or the given order.  The group's W face
+    carries its four PCs' words: interleave i_pc<j> / o_pc<j> bottom-up so pair j sits level with PC j (PC k of the
+    slot = 4 slot + j, bottom-up; the even spread puts pair j's centre within ~125 um of PC j's centre)"""
+    if master in ('qkd_kvs_grp', 'qkd_kvs_grp_h') and face == 'W':
+        def key(p):
+            if p[:4] in ('i_pc', 'o_pc') and p[4:].isdigit():
+                return (int(p[4:]), p[0] == 'o', p)
+            return (99, False, p)
+        return sorted(ports, key=key)
+    if master in ('qkd_kvs_pc', 'qkd_kvs_pc_h') and face == 'N':
+        # the group words at the N face's E end (canonical E = toward the group column, through the slice gap):
+        # k2 left ks_kvpc_EN_29__o_grp at 633 um with o_grp mid-face
+        return sorted(ports, key=lambda p: (p in ('i_grp', 'o_grp'), p == 'o_grp', p))
+    if master in ('qkd_kvs_grp', 'qkd_kvs_grp_h') and face == 'E' and os.environ.get('OT_KV_GRP_RSP_LOW', '0') == '1':
+        # variant: the V response word rsp on the lower half (odd groups: their V port sits just below the group)
+        return sorted(ports, key=lambda p: (p != 'rsp', p))
+    return ports
 
 
 def waypoints(m, a, pa, b, pb):

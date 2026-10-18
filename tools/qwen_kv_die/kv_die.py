@@ -327,6 +327,9 @@ V144_MODE = __import__('os').environ.get('OT_KV_V144_MODE', 'ahub')
 # chains, S-stack af / mf / aq / kc / emf / emr, ares / hs / hf, the SerDes FDI) moves into the two side channels
 V144_DW = float(__import__('os').environ.get('OT_KV_V144_DW', '0'))
 SN_LIFT = float(__import__('os').environ.get('OT_KV_SN_LIFT', '0'))
+CTL_BAND = float(__import__('os').environ.get('OT_KV_CTL_BAND', '0'))
+if CTL_BAND and abs(CTL_BAND / 43.2 - round(CTL_BAND / 43.2)) > 1e-6:
+    raise ValueError(f'OT_KV_CTL_BAND={CTL_BAND}: must be a multiple of 43.2 um')
 if SN_LIFT and abs(SN_LIFT / 43.2 - round(SN_LIFT / 43.2)) > 1e-6:
     raise ValueError(f'OT_KV_SN_LIFT={SN_LIFT}: must be a multiple of 43.2 um (band lattice)')
 # free relay apron between the north envelope's top and the gateway / sequencer / HOST band (the chains leaving the
@@ -460,6 +463,8 @@ def pvt_plan():
 
 if PV_T:
     PVW = tuple(pvt_plan()['frame_um'])
+# KV-RTRUNK 10-17: the trunked pair's plan carries the 512-b result trunks (pv_trunk_gen default): port bundle pr (534 b)
+PV_RS = PV_T and 'result_trunk' in pvt_plan()
 PV_CLEAR = 21.6                                   # envelope <-> hub / gateway / SerDes clearance (sliver rule >= 20 um)
 PV_GRANT_Y0 = 1844.346                            # pv_wide_grant.json pvw_0 (kept when the full height fits under the hub)
 # element owner screen (results/arch/qwen_attention_rate_1015/pv_parent_2330/screen.json, gap 21.6): bank l -> (x, y, orient)
@@ -716,7 +721,9 @@ for _mn, _pair in (('qkd_pvw_s', 0), ('qkd_pvw_n', 1)):
             ports=dict(ck_c0=['col_clk'], rst_n=['rst_n'], st=['start', 'context_len', 'epoch'], ie=['in_e'],
                        **{f'vh{k}': [f'vh{k}'] for k in range(8)}, **{f'vrq{k}': [f'vrq{k}'] for k in range(8)},
                        **{f'vc{k}_{g}': [f'vc{k}_{g}'] for k in range(8) for g in range(8)},
-                       po=['out_valid', 'out_leaf', 'out_epoch'], pf=['fault', 'busy', 'out_age']),
+                       po=['out_valid', 'out_leaf', 'out_epoch'], pf=['fault', 'busy', 'out_age'],
+                       # KV-RTRUNK 10-17: the pair's 534-b result beat stream (two result trunks -> header) -> pvfin.p0 / p1
+                       **(dict(pr=['rs_valid', 'rs_beat', 'rs_epoch', 'rs_data']) if PV_RS else {})),
             sliced={f'ck_c{s}': 'ck_c0' for s in range(1, 33)}, classed={})
 # v1.4.4 PV16 V ports (Q-VMWB r5 = the V ISSUER, kit physical/ref_tile/qkd_pv16_vport_r5): pr = the pair's request for this
 # port, vq0 / vq1 = V gets to static landing groups {k, 0} / {k, 1}, i0 / i1 = those groups' rsp words, vo -> the pair.
@@ -1525,6 +1532,9 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq
                 if not f_['violations']:
                     return r_
         if failures['violations']:
+            if __import__('os').environ.get('OT_KV_FAIL_JSON'):     # KV-PLAN3: per-hop dump for classification
+                json.dump(failures, open(__import__('os').environ['OT_KV_FAIL_JSON'], 'w'), indent=1, default=str)
+                __import__('pickle').dump(repaired, open(__import__('os').environ['OT_KV_FAIL_JSON'] + '.pkl', 'wb'))
             raise ValueError(f"split KV die has {failures['violations']} unrepaired pin hops: {failures['worst'][:3]}")
         return repaired
     return best[1]
@@ -1675,7 +1685,10 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         th_ = FRAMES['qkd_host'][1]
         hy_north = up(uy - GY - dh, GY) - CHAN - th_
         hy_north -= hy_north % GY
-        sy = min(sy, hy_north - 2 * CHAN - sh)
+        # KV-PLAN3 10-17: OT_KV_CTL_BAND um (multiple of 43.2) widens the sequencer <-> HOST-root gap that holds the static
+        # control tile kvs_ctl: with 2 CHAN the tile left ~43-um slots either side and the stack roots' 299-b embedding
+        # returns (hroot.o_emb -> kvs_emb) found no relay spot crossing it (q1814_432: (6512, 25801))
+        sy = min(sy, hy_north - 2 * CHAN - CTL_BAND - sh)
         sy -= sy % GY
     add('seq', 'qkd_seq', xc - sw / 2, sy, sw - SHAVE, sh - SHAVE, 'R0', 'seq', 'ctl')
     gw_, gh_ = FRAMES['qkd_embgw']
@@ -3406,6 +3419,8 @@ def masters(m, k=1, port_bits=None):
             fl = face_load.get((mst, face), [])
             if not fl:
                 continue
+            if KSD.ON:
+                fl = KSD.face_order(mst, face, fl)     # KV-PLAN3: static tiles' along-face order
             L = mm.h if face in ('E', 'W') else mm.w
             tot = sum(mm.ports[p][1] for p in fl)
             pos = 2.0
@@ -3618,6 +3633,8 @@ def _split_pins(M, m=None):
             for p_, dx_ in top.items():
                 if p_ in hm.ports:
                     hm.ports[p_] = ('face', hm.ports[p_][1], 'N', 'M5', round(ctx_ + dx_, 3), 1)
+            if 'pr' in hm.ports and 'result_trunk' in P_:      # KV-RTRUNK: over the trunks' header in the strip
+                hm.ports['pr'] = ('face', hm.ports['pr'][1], 'N', 'M5', P_['result_trunk']['face_pin']['x'], 1)
             for k_ in range(8):          # header / request: strip N face over the control tile (PVT_HDR_CTL) / side face
                 hx_ = pvt_hdr_pin(k_)[0]
                 yh_ = fh_ - PVT_HDR_Y0 - PVT_PIN_DY * (k_ % 4)
@@ -4059,7 +4076,7 @@ def pin_reach(m, M, reach=500.0, skip=('clock_trunk', 'reset', 'constant')):
         if d > reach:
             bad.append(dict(bus=bid, cls=cl, bits=bits, um=round(d, 1), a=f'{a}.{pa}', b=f'{b}.{pb}'))
     bad.sort(key=lambda r: -r['um'])
-    return dict(hops=n, reach_um=reach, violations=len(bad), worst=bad[:40])
+    return dict(hops=n, reach_um=reach, violations=len(bad), worst=bad[:40], all=bad)
 
 
 def assigned_pin_reach(m, M, reach=500.0, classes=('stack_local',)):
