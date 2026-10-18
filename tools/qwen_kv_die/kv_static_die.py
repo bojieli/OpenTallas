@@ -1403,13 +1403,43 @@ def pin_face(master, port):
     if master in ('qkd_kvs_grp', 'qkd_kvs_grp_h'):
         if port in ('krsp', 'kreq', 'rsp', 'vreq'):
             return 'E'
+        if FANFOLD and port in ('i_ctl', 'o_ctl', 'o_dn', 'i_up'):
+            # KV-PLAN3: the folded fan chain runs slot 7 (top, the root's end) -> slot 0 down the stack: the down word
+            # enters N / leaves S, the up gather enters S / leaves N (on the W face they were 2,327 um per hop: the
+            # ends of a 1,188-um face, ks_slg_WN_7__o_dn in v_432)
+            return 'N' if port in ('i_ctl', 'o_ctl') else 'S'
         if port.startswith(('i_', 'o_')):
             return 'W'
     if master == 'qkd_kvs_fan':
         return 'W'
+    if master in ('qkd_kvs_pc', 'qkd_kvs_pc_h'):
+        # KV-PLAN3 10-17: the PC chain words between vertically stacked neighbours (pitch 378 um, PC k+1 above PC k) on
+        # the facing N / S faces: auto-placed on a side face they were 515.7 um per hop (> reach) once the pin-hinted
+        # re-plan stopped, 114 of the 127 unrepaired hops (t_302).  N: i_next 779 + o_next 299 + pc__ki 33, S: the
+        # mirror set = 1,111 b on a 270-um face (4.1 /um)
+        f_ = dict(i_next='N', o_next='N', pc__ki='N', o_prev='S', i_prev='S', pc__ko='S').get(port)
+        if f_:
+            return f_
     if master == 'qkd_pvfin':          # kit qkd_pv_fin_s faces
         return dict(p0='S', p1='N', fo='W', ff='W').get(port, 'E')
     return None
+
+
+
+def face_order(master, face, ports):
+    """KV-PLAN3: along-face order (from the face origin) of a static tile's pins, or the given order.  The group's W face
+    carries its four PCs' words: interleave i_pc<j> / o_pc<j> bottom-up so pair j sits level with PC j (PC k of the
+    slot = 4 slot + j, bottom-up; the even spread puts pair j's centre within ~125 um of PC j's centre)"""
+    if master in ('qkd_kvs_grp', 'qkd_kvs_grp_h') and face == 'W':
+        def key(p):
+            if p[:4] in ('i_pc', 'o_pc') and p[4:].isdigit():
+                return (int(p[4:]), p[0] == 'o', p)
+            return (99, False, p)
+        return sorted(ports, key=key)
+    if master in ('qkd_kvs_grp', 'qkd_kvs_grp_h') and face == 'E' and os.environ.get('OT_KV_GRP_RSP_LOW', '0') == '1':
+        # variant: the V response word rsp on the lower half (odd groups: their V port sits just below the group)
+        return sorted(ports, key=lambda p: (p != 'rsp', p))
+    return ports
 
 
 def waypoints(m, a, pa, b, pb):
