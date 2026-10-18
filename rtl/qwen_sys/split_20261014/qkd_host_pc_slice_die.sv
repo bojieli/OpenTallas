@@ -29,8 +29,15 @@
 // latency, no throughput change; the completion observer still sees launch_v at the internal edge, the controller's
 // response is consequently one edge later on the elastic return).  ESPIN=0 = pc1 (history).  MUT=4 bypasses the stage.
 // MUT=3 drops the ctrl_er pin capture (bench mutant).  PINCAP=0 = the pre-0130 wrapper (history; not die-bindable).
+// KV-FIX3 es2 (2026-10-17, es1 qkd_hslice / qkd_hslice_dn EARLY_FAIL_HOLD FF -110 ps, repair stalled): ONE clock entry ck.
+// The die drives ck_station / ck_static / ck_boot / ck_boot_test from the SAME die net clk_core_<stack> (kv_die.py), but
+// as four tile pins = four CTS roots, so every internal cross-root hop (boot->static ctrl_er -> u_static.er, static<->core,
+// static->boot, test->boot: 5,695 hold endpoints) paid the 100 ps die-skew hold reserve (pc1 closed only after ~15k hold
+// buffers).  One regional root (6,999 sinks < 15k) makes those hops ordinary same-tree paths; the neighbour skew budget
+// stays where it belongs, at the registered face pins (PINCAP captures / ESPIN launches) against the die's neighbours.
+// Inner modules keep their own clock names, all driven by ck: same cycles, bit-identical (benches already drove one ck).
 module qkd_host_pc_slice_die #(parameter integer MUT=0,parameter integer PINCAP=1,parameter integer ESPIN=1)(
- input wire ck_station,ck_static,ck_boot,ck_boot_test,
+ input wire ck,
  input wire host_rst_n,hbm_rst_n,
  input wire[4:0]lpc,
  input wire bgi,output reg bgo,
@@ -44,6 +51,7 @@ module qkd_host_pc_slice_die #(parameter integer MUT=0,parameter integer PINCAP=
  input wire[31:0]ski,sdi,soi,sfi,
  output reg[31:0]sko,sdo,soo,sfo
 );
+ wire ck_station=ck, ck_static=ck, ck_boot=ck, ck_boot_test=ck;   // one root (KV-FIX3 es2)
  // ---- pin captures (PINCAP) ----
  (* keep = "true" *) reg host_rn,hbm_rn;
  always @(posedge ck_station) host_rn<=host_rst_n;
