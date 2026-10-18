@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/ot_hbm_su_static_pg_lg_tap.lef",
-    "sha256": "6758cb53f9f92795c9c9ada6b55227b5c6935230e765a97578939ae98cdafd4d"
+    "sha256": "eae3bdf8d089feb7f56b4cb942d4d671f988195390a38a224078476c63a26d0b"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pg_lgtap_1017-r1-139da60d3/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_pg_lgtap_1017-r2-66c59361e/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pg_lgtap_1017-r1-139da60d3/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pg_lgtap_1017-r1-139da60d3/record/views/ot_hbm_su_static_pg_lg_tap/provenance/raw/ot_hbm_su_static_pg_lg_tap.lef",
-    "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pg_lgtap_1017-r1-139da60d3/record/views/ot_hbm_su_static_pg_lg_tap/provenance/ot_hbm_su_static_pg_lg_tap.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_su_pg_lgtap_1017-r2-66c59361e/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_su_pg_lgtap_1017-r2-66c59361e/record/views/ot_hbm_su_static_pg_lg_tap/provenance/raw/ot_hbm_su_static_pg_lg_tap.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_su_pg_lgtap_1017-r2-66c59361e/record/views/ot_hbm_su_static_pg_lg_tap/provenance/ot_hbm_su_static_pg_lg_tap.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 12 OBS rects moved into 10 pins: clk_ctl, fault, local_read[0], local_read[1], local_w_done[0], local_w_done[1], local_write[0], local_write[1], pg_clk, rst_n; pockets: 395 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 10 OBS rects moved into 10 pins: clk_ctl, fault, local_read[0], local_read[1], local_w_done[0], local_w_done[1], local_write[0], local_write[1], pg_clk, rst_n; pockets: 370 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pg_lgtap_1017-r1-139da60d3/record/views/ot_hbm_su_static_pg_lg_tap/provenance/ot_hbm_su_static_pg_lg_tap.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_pg_lgtap_1017-r2-66c59361e/record/views/ot_hbm_su_static_pg_lg_tap/provenance/ot_hbm_su_static_pg_lg_tap.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "ot_hbm_su_static_pg_lg_tap 216.0 x 216.0: PG M5 VDD 40 stripes (98% spread, 100% cov) / VSS 40 stripes (98% spread, 100% cov); strap M6; face pins 3344 blocked-above 0 blocked-same 0; clock clk_ctl insertion 0 ps; clock pg_clk insertion 287 ps; pockets M5 0 (closed)",
+    "summary": "ot_hbm_su_static_pg_lg_tap 216.0 x 216.0: PG M5 VDD 40 stripes (98% spread, 100% cov) / VSS 40 stripes (98% spread, 100% cov); strap M6; face pins 3344 blocked-above 0 blocked-same 0; clock clk_ctl insertion 0 ps; clock pg_clk insertion 269 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "ot_hbm_su_static_pg_lg_tap",
       "W": 216.0,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 3344,
         "blocked_above": 0,
-        "covered_below": 234,
+        "covered_below": 63,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,12 +77,12 @@
       },
       "clock_insertion": {
         "clk_ctl": {
-          "max_ps": 0.08,
+          "max_ps": 0.09,
           "min_ps": 0.07
         },
         "pg_clk": {
-          "max_ps": 287.21,
-          "min_ps": 188.1
+          "max_ps": 269.35,
+          "min_ps": 203.82
         }
       },
       "pockets": {
@@ -91,7 +91,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 395
+          "added": 370
         },
         "count": 0,
         "area_um2": 0,
@@ -101,6 +101,6 @@
   },
   "output": {
     "path": "ot_hbm_su_static_pg_lg_tap.lef",
-    "sha256": "0109fd6037fd7242bc00d15d46357c75a6bf1b1532093a843c201474e33e3a8d"
+    "sha256": "783c51adc54355fac24f547bb5607147cf4f7a968c327ec8095f6e72c52bf05d"
   }
 }
