@@ -1,0 +1,208 @@
+{
+ "name": "hdie_host_cprx_r1",
+ "top": "ot_hbm_host_cp_rx",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_host_cp_rx.sv",
+  "rtl/hbm_accel/io_native_20261014/ot_hbm_host_landing256.sv",
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_host_packet_static.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 246.24,
+  "h": 194.4,
+  "exact": true
+ },
+ "pins": {
+  "E": [
+   "clk",
+   "rst_n",
+   "in_v",
+   "in_data",
+   "pop",
+   "f_send",
+   "f_flit",
+   "t_cr"
+  ],
+  "S": [
+   "s_awvalid",
+   "s_awready",
+   "s_awaddr",
+   "s_wvalid",
+   "s_wready",
+   "s_wdata",
+   "s_wstrb",
+   "s_bvalid",
+   "s_bresp",
+   "s_bready",
+   "s_arvalid",
+   "s_arready",
+   "s_araddr",
+   "s_rvalid",
+   "s_rready",
+   "s_rdata",
+   "irq",
+   "fault",
+   "land_fault",
+   "protocol_fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    84.288
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin: landing256 PINREG=1 (in_v/in_data pin flops, pop flop Q) and packet_static (AXI/status/t_cr pin flops, every output a flop Q; f_flit three reset-region data registers); the folded landing->packet word is internal (packet RXREG=0 reads the landing out_data flop Q); a kit flop stage would add a redundant edge"
+ },
+ "params": {},
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0,
+  "pin_min_tracks": 3
+ },
+ "job": {
+  "owner": "Claude:HBMA-HOST2",
+  "branch": "claude/hbma-host2-1017",
+  "tag": "r1",
+  "purpose": "HBM die d4f host_cp receive tile (HBMA-HOST2 2026-10-17, coordinator 0dc+ (b)+(d)): host landing FIFO (2 real 256x256 SRAMs, abutted MY stack as landing r1) FOLDED with the static host packet controller; removes the 512-b landing->packet bus and the separate host_cp_packet tile. Packet RXREG=0 (no 512-b rx pin stage), regional reset relays (landing 1, packet 5 regions, +3 edges release). Lockstep-exact vs the separate closed pair (landing r1 + packet r1). Outline 246.24x194.4 = landing r1 slot.",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv",
+   "rtl/hbm_accel/host_static_20261015/run_cp2_one.sh",
+   "rtl/hbm_accel/host_static_20261015/run_host_cp_rx.sh",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_host_cp_rx_lockstep.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_host_packet_static.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_host_phy_adapt.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_static_cfg_collar.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_static_cmd_target.sv",
+   "rtl/hbm_accel/io_native_20261014/run_host_landing.sh",
+   "rtl/hbm_accel/io_native_20261014/tb_hbm_host_landing256.sv",
+   "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv"
+  ],
+  "benches": [
+   {
+    "name": "cprx_lockstep",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_host_cp_rx.sh {RUN}/bench/cprx_lockstep 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_CP_RX_LOCKSTEP_PASS"
+   },
+   {
+    "name": "cprx_mut_rxbit",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_host_cp_rx.sh {RUN}/bench/cprx_mut_rxbit 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_CP_RX_LOCKSTEP_PASS",
+    "fail_regex": "HOST_CP_RX_LOCKSTEP_FAIL mism=[1-9]",
+    "note": "rx word bit 40 flipped inside the fold"
+   },
+   {
+    "name": "cprx_mut_norelay",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_host_cp_rx.sh {RUN}/bench/cprx_mut_norelay 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_CP_RX_LOCKSTEP_PASS",
+    "fail_regex": "HOST_CP_RX_LOCKSTEP_FAIL mism=[1-9]",
+    "note": "packet without its reset relay"
+   },
+   {
+    "name": "landing_pinreg",
+    "cmd": "bash rtl/hbm_accel/io_native_20261014/run_host_landing.sh {RUN}/bench/landing 0 1",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^HBM_HOST_LANDING_PASS words512",
+    "min_count_regex": "^HBM_HOST_LANDING_PASS words(\\d+)"
+   },
+   {
+    "name": "landing_mut_addr",
+    "cmd": "bash rtl/hbm_accel/io_native_20261014/run_host_landing.sh {RUN}/bench/landing_m1 1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^HBM_HOST_LANDING_PASS",
+    "fail_regex": "^HBM_HOST_LANDING_FAIL bad\\d+",
+    "note": "SRAM read address off by one"
+   },
+   {
+    "name": "landing_mut_nomirror",
+    "cmd": "bash rtl/hbm_accel/io_native_20261014/run_host_landing.sh {RUN}/bench/landing_m2 2 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^HBM_HOST_LANDING_PASS",
+    "fail_regex": "^HBM_HOST_LANDING_FAIL bad\\d+",
+    "note": "registered out_ready pop ignores the out_v mirror (a word is lost)"
+   }
+  ],
+  "views_to": "physical/ref_tile/hdie_host_cprx_r1/views",
+  "record_to": "results/rtl/ref_tile/hdie_host_cprx_r1"
+ },
+ "slot_change_request": "HBMA-HOST2 10-17 -> H-DIE (coordinator 0dc+ (b)/(c)): host_cp_landing slot 246.24x194.4 now holds the folded landing+packet tile ot_hbm_host_cp_rx; the host_cp_packet slot (97.2 sq) and the 512-b landing->packet bus are retired. E face = endpoint face (in_v/in_data/pop + f_send/f_flit/t_cr, ~1095 pins, 5.6/um), S face = AXI-lite master to host_cp_ingress + irq/fault in + land_fault/protocol_fault out.",
+ "structural_change": "HBMA-HOST2 10-17: fold of closed landing r1 (f69e97ca0) + packet r1 (00f931598); packet RXREG=0 RRELAY=1, landing behind a 1-region relay"
+}

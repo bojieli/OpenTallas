@@ -40,6 +40,7 @@ OBS = ('rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv', 'qkd_static_
 # KVJ-A 10-17 item 3: the die's HOST root is qkd_host_root_admission (kv_die.HOST_RT_FILE); it is a kv_die master, not a
 # static-graph instance, so its edges to the static subsystem are recorded as die joins (wired by kv_die --split, item 10)
 HOST = ('rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv', 'qkd_host_root_admission')
+DIE_CFG_NRST = 43     # KVJ-F: regional reset roots of the KV die (stub audit K-12: 344 dly bits / 8); kv_die must match
 HOST_DIE_JOINS = [   # (consumer instance, port, producer instance, port); 'host' = the die HOST root master
     ('boot', 'boot_pr', 'host', 'boot_pr'), ('boot', 'boot_image_target', 'host', 'boot_image_target'),
     ('boot', 'boot_image_ready', 'host', 'boot_image_ready'), ('boot', 'boot_image_fault', 'host', 'boot_image_fault'),
@@ -48,6 +49,9 @@ HOST_DIE_JOINS = [   # (consumer instance, port, producer instance, port); 'host
     ('host', 'native_reserved', 'ownership', 'native_reserved'), ('host', 'ownership_valid', 'ownership', 'ownership_valid'),
 ]
 STACKS = ('WS', 'WN', 'ES', 'EN')
+ES_CFG = {'cfg_we': 'es_cfg_we', 'cfg_addr': 'es_cfg_addr', 'cfg_data': 'es_cfg_data'}
+ES_CFG_SINKS = ('fanr', 'emb_join')    # KVJ-C3 PC chain root + join4_cal: one shared boot bus (ESCFG targets 12 / 13)
+LINK_CFG = {'cfg_tx_we': 'link_cfg_tx_we', 'cfg_rx_we': 'link_cfg_rx_we', 'cfg_addr': 'link_cfg_addr', 'cfg_data': 'link_cfg_data'}
 CORE_CFG = {   # sink instance -> (we source, we bit or None, addr source, data source)
     'layer_programme': ('layer_we', None, 'layer_addr', 'layer_data'),
     'wprg': ('writer_we', None, 'writer_addr', 'writer_data'),
@@ -58,7 +62,13 @@ CORE_CFG = {   # sink instance -> (we source, we bit or None, addr source, data 
 def boot_join(graph, root=K.ROOT, name='boot'):
     """Add the actual boot dispatcher (role 'producer') and bind every width-exact core-domain cfg input."""
     spec = K.source(*BOOT, root)
-    params = dict(MUT=0)
+    # KVJ-F 10-17: DIECFG=1 (pre-boot target 10 -> qkd_kv_die_cfg: ECTL cfg + regional reset delays, coordinator 0da (d));
+    # its diecfg_* faces are joined by kv_static_kvjf_join.die_cfg_join
+    # KVJ-SMALL 10-17 (KV-INT gap item 12): LINKCFG=1 adds image target 11 (order 1..9, 11, 0) -> the static D2D link end's
+    # calendar cfg port (66 words, kv_static_programme.link_cfg_words; bench tools/qwen_static_kv/run_link_cfg_boot.sh)
+    # KVJ-SMALL b2 10-17 (KVJ-C3 open): ESCFG=1 adds targets 12 / 13 (order 1..9, 11, 12, 13, 0) -> the shared boot bus of
+    # the PC chain root (fanr) and join4_cal (emb_join) (kv_static_programme.es_cfg_words; bench run_es_cfg_boot.sh)
+    params = dict(MUT=0, DIECFG=1, NRST=DIE_CFG_NRST, LINKCFG=1, ESCFG=1)
     pp = K.ports(spec, params)
     ins = {i['name']: i for i in graph['instances']}
     if name in ins:
@@ -86,6 +96,30 @@ def boot_join(graph, root=K.ROOT, name='boot'):
                 raise ValueError(f'{sink}.{port} already bound')
             i['inputs'][port] = [dict(instance=name, port=src, lo=lo, width=w)]
             bound.append(f'{sink}.{port}')
+    links = [i for i in graph['instances'] if i['role'] == 'link']
+    for li in links:                                     # the link end's calendar cfg port (core domain, pin-registered)
+        ls = K.source(li['source'], li['module'], root)
+        lp = K.ports(ls, {k: v for k, v in li['parameters'].items() if k in ls['parameters']})
+        for port, src in LINK_CFG.items():
+            if lp[port]['width'] != pp[src]['width'] or pp[src]['direction'] != 'output':
+                raise ValueError(f'{li["name"]}.{port}: dispatcher {src} width {pp[src]["width"]} != {lp[port]["width"]}')
+            if li['inputs'].get(port) is not None:
+                raise ValueError(f'{li["name"]}.{port} already bound')
+            li['inputs'][port] = [dict(instance=name, port=src, lo=0, width=lp[port]['width'])]
+            bound.append(f'{li["name"]}.{port}')
+    for sn in ES_CFG_SINKS:                              # one registered bus fanned to both (each pin-registers it)
+        if sn not in ins:
+            continue
+        si = ins[sn]
+        ss = K.source(si['source'], si['module'], root)
+        sp = K.ports(ss, {k: v for k, v in si['parameters'].items() if k in ss['parameters']})
+        for port, src in ES_CFG.items():
+            if sp[port]['width'] != pp[src]['width'] or pp[src]['direction'] != 'output':
+                raise ValueError(f'{sn}.{port}: dispatcher {src} width {pp[src]["width"]} != {sp[port]["width"]}')
+            if si['inputs'].get(port) is not None:
+                raise ValueError(f'{sn}.{port} already bound')
+            si['inputs'][port] = [dict(instance=name, port=src, lo=0, width=sp[port]['width'])]
+            bound.append(f'{sn}.{port}')
     graph.setdefault('joins_added', []).append(dict(producer=f'{name}:{BOOT[1]}', bound_inputs=len(bound),
         open_producer_inputs=sorted(inputs), owner_note='Q-KVJOIN 10-17: core-domain cfg only; HBM-domain cfg needs a '
         'boot_cdc-compatible dispatcher successor; dispatcher inputs need qkd_host_root_admission + boot_observe'))

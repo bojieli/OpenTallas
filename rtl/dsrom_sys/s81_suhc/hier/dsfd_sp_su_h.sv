@@ -579,6 +579,32 @@ module dsfd_sp_su_h #(
                 .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
                 .o_rdy(o_rdy), .o_rjid(o_rjid));
             assign f_any = |hf;
+            wire [1:0] he_v; wire [1:0] ho_v;
+`ifdef SU_SMU
+            // S81U-2 (2026-10-17): the per-head lane subtree ot_s81_su_smh (S81-DV p4h: one head per regional service
+            // slice), two per stop; leaf for leaf and station for station the g_h body below (DOP = SRL + 2: the spine row)
+            genvar hu;
+            for (hu = 0; hu < 2; hu = hu + 1) begin : g_hu
+                wire hev, hov, hdv; wire [511:0] hed; wire [255:0] hod; wire [7:0] hff;
+                wire [511:0] hdd;
+`ifdef SU_SMU_T
+                // the hardened cluster is built for the smq tap (DOP = SRL); the spine row needs the 2 stations of the
+                // smt tap's pin + valid registers in front of it
+                ot_hdc_delay #(.W(512), .D(2)) u_hdd (.clk(sk), .rst_n(rst[t]), .d(dd[t][1024 * TI + 512 * hu +: 512]),
+                    .q(hdd));
+                dsfd_su_t_smh #(.SRL(SRL)) u_smh (
+`else
+                assign hdd = dd[t][1024 * TI + 512 * hu +: 512];
+                ot_s81_su_smh #(.SM_NVMAX(SM_NVMAX), .LM(LM), .LA(LA), .SRL(SRL), .MUT(MUT)) u_smh (
+`endif
+                    .clk(sk), .rst_in(rst[t]), .s_v(s_v), .p_v(p_v), .c_v(c_v), .c_nv(c_nv), .c_lt(c_lt), .c_scale(c_scale),
+                    .c_sink(c_sink[32 * hu +: 32]), .cs_v(cs_v), .cs_i(cs_i), .cs_d(cs_d),
+                    .d(hdd),
+                    .e_v(hev), .e_d(hed), .o_v(hov), .o_d(hod), .den_v(hdv), .f(hff));
+                assign e_d[512 * hu +: 512] = hed; assign o_dd[256 * hu +: 256] = hod;
+                assign he_v[hu] = hev; assign ho_v[hu] = hov; assign hden_v[hu] = hdv; assign hf[8 * hu +: 8] = hff;
+            end
+`else
             // relayed copies (SRL stations) of the tap's outputs: one copy per destination group
             wire rs_v, rp_v, rc_v, rcs_v; wire [1023:0] rd_d; wire [6:0] rc_nv; wire [2:0] rc_lt; wire [31:0] rc_scale;
             wire [63:0] rc_sink; wire [4:0] rcs_i; wire [63:0] rcs_d;
@@ -589,7 +615,6 @@ module dsfd_sp_su_h #(
             // the stop's operand rows (spine slots 2 TI, 2 TI + 1) straight to the engines: SRL + 2 stations (the tap's
             // pin + valid registers), so they meet their valids at the engines' pin flops
             ot_hdc_delay #(.W(1024), .D(SRL + 2)) u_tdd (.clk(sk), .rst_n(rst[t]), .d(dd[t][1024 * TI +: 1024]), .q(rd_d));
-            wire [1:0] he_v; wire [1:0] ho_v;
             genvar h, ln, pp;
             for (h = 0; h < 2; h = h + 1) begin : g_h
                 wire [15:0] l_mxv, l_ev, l_es, l_el; wire [511:0] l_mx, l_e;
@@ -639,6 +664,7 @@ module dsfd_sp_su_h #(
                 assign he_v[h] = rl_ev;
                 assign ho_v[h] = rd_ov;
             end
+`endif
             assign e_v = he_v[0];
             assign o_vv = ho_v[0];
             assign den_v = hden_v[0];
