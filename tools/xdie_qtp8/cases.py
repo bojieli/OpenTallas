@@ -13,6 +13,7 @@ Die lanes (dv2f14bf GEN fwd_lanes.json, results/arch/qwen_split_compute_1014/lan
   relays), so the as-built die is expected to FAIL its static schedule; the opt-in parent LX0..2 absorbs them.
 Each case = one bench invocation (one Verilator build).  `cases.py list` prints names, `cases.py args NAME` the bench args.
 """
+import shlex
 import sys
 
 BASE = ["--production", "--six-five", "--relays", "5", "0", "0", "5", "--latu", "53"]
@@ -43,8 +44,19 @@ CASES.update({
     "lx_fdiphase3": BASE + ["--lats", "LSX", "--tok-reg", "1", "--fdi-phase", "3"] + DIE + LX,
 })
 
+# batch 2 (10-18 08:40, after batch 1: LS 380..390 all PASS -> sweep lower; FDI phase 3 FAILED with lanes+LX+TOK_REG=1 while
+# 10-15 phases 0..5 passed at LS 376 without them -> isolate; unit fault cases; RANK re-run with a quoted --only)
+for ls in range(370, 380):
+    CASES[f"lx_ls{ls}"] = BASE + ["--lats", str(ls), "--tok-reg", "1"] + DIE + LX
+for ph in (1, 2, 3, 4, 5):
+    CASES[f"base_phase{ph}"] = BASE + ["--lats", "376", "--fdi-phase", str(ph)]
+    CASES[f"base_tok_phase{ph}"] = BASE + ["--lats", "376", "--tok-reg", "1", "--fdi-phase", str(ph)]
+    CASES[f"lx_tok0_phase{ph}"] = BASE + ["--lats", "LSX"] + DIE + LX + ["--fdi-phase", str(ph)]
+CASES["lx_unit"] = ["--six-five", "--relays", "5", "0", "0", "5", "--latu", "53", "--lats", "LSX", "--tok-reg", "1"] + DIE + LX
+CASES["base_unit"] = ["--six-five", "--relays", "5", "0", "0", "5", "--latu", "53", "--lats", "376"]
+
 if __name__ == "__main__":
     if sys.argv[1] == "list":
         print("\n".join(CASES))
     else:
-        print(" ".join(LSX if x == "LSX" else x for x in CASES[sys.argv[2]]))
+        print(shlex.join(LSX if x == "LSX" else x for x in CASES[sys.argv[2]]))   # quoted: --only regexes carry '|' / '$'
