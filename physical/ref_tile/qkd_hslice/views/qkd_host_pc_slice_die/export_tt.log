@@ -14,61 +14,18 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
-[WARNING STA-0450] virtual clock core_clk can not be propagated.
-[WARNING STA-0450] virtual clock ot_io_static can not be propagated.
-[WARNING STA-0450] virtual clock ot_io_boot can not be propagated.
-[WARNING STA-0450] virtual clock ot_io_test can not be propagated.
-[WARNING STA-0450] virtual clock core_clk can not be propagated.
-[WARNING STA-0450] virtual clock ot_io_static can not be propagated.
-[WARNING STA-0450] virtual clock ot_io_boot can not be propagated.
-[WARNING STA-0450] virtual clock ot_io_test can not be propagated.
-OT_HYBRID CTS_MEASURE tt ck_station sinks=1072 reference_scope=boundary boundary_sinks=782 min=177.99325973190716 mean=191.7447635588695 max=207.13410236516538 all_mean=192.71634311020688
-OT_HYBRID CTS_MEASURE tt ck_static sinks=4137 reference_scope=boundary boundary_sinks=549 min=199.1117279016828 mean=213.27574908304518 max=229.13812605628397 all_mean=218.8366002008568
-OT_HYBRID CTS_MEASURE tt ck_boot sinks=1459 reference_scope=boundary boundary_sinks=746 min=215.3125186753825 mean=222.60422822176088 max=244.47241551137697 all_mean=222.57036389359604
-OT_HYBRID CTS_MEASURE tt ck_boot_test sinks=44 reference_scope=all_internal_only boundary_sinks=44 min=64.23246682449759 mean=64.76866165255355 max=65.30835620638526 all_mean=64.76866165255355
-OT_ENTRIES LEVEL ck_station deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_station -> ot_prs_00002_ff/CLK wire=0 R=191.7447635588695 latency=30.859464662891384 phi=222.60422822176088
-OT_ENTRIES LEVEL ck_static deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_static -> u_slice.u_static.a[0]$_DFF_PN0_/CLK wire=0 R=213.27574908304518 latency=9.328479138715693 phi=222.60422822176088
-OT_ENTRIES LEVEL ck_boot deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_boot -> bgi_q$_DFF_PN0_/CLK wire=0 R=222.60422822176088 latency=0.0 phi=222.60422822176088
-OT_ENTRIES LEVEL ck_boot_test deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt ck_boot_test -> u_slice.u_boot.u_boot.u_test.col_q[1]$_DFFE_PN0P_/CLK wire=0 R=64.76866165255355 latency=157.83556656920734 phi=222.60422822176088
-OT_ENTRIES DOMAIN core 833.334045ps IO394/388 boundary=208.85272439479857..237.9935670280568
-OT_ENTRIES DOMAIN static 833.334045ps IO288/261 boundary=208.4402070403985..238.46660519499966
-OT_ENTRIES DOMAIN boot 833.334045ps IO361/385 boundary=215.31251867538253..244.472415511377
-OT_ENTRIES DOMAIN test 833.334045ps IO0/0 boundary=222.06803339370492..223.1439227755926
-OT_MULTI_ROOT RELATED_PATH core -> boot max slack=238.128738 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH core -> boot min slack=148.350464 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH test -> boot max slack=97.540863 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH test -> boot min slack=83.724030 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH static -> core max slack=372.615173 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH static -> core min slack=70.135872 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH static -> boot max slack=384.866241 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH static -> boot min slack=83.278023 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH boot -> test max slack=193.125854 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH boot -> test min slack=88.890648 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH core -> static max slack=412.031403 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH core -> static min slack=44.002941 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH boot -> static max slack=155.938538 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH boot -> static min slack=80.360687 (ordinary synchronous timing retained)
-OT_MULTI_ROOT OWNERSHIP PASS roots=4 registers=6712 inputs=1043 outputs=1034 async_control_pins=4394
-OT_ENTRIES COMP DONE tt 4 entries phi=222.60422822176088 boundary=208.4402070403985..244.472415511377
-[WARNING STA-0450] virtual clock core_clk can not be propagated.
-[WARNING STA-0450] virtual clock ot_io_static can not be propagated.
-[WARNING STA-0450] virtual clock ot_io_boot can not be propagated.
-[WARNING STA-0450] virtual clock ot_io_test can not be propagated.
-OT_IOREF clock-port ck_station (ot_entry_0): data input delays dropped
-OT_IOREF clock-port ck_static (ot_entry_1): data input delays dropped
-OT_IOREF clock-port ck_boot (ot_entry_2): data input delays dropped
-OT_IOREF clock-port ck_boot_test (ot_entry_3): data input delays dropped
-OT_IOREF_EDGE ot_entry_0 boundary 782 negedge 0 noarc 0 inverted 0
-OT_IOREF_EDGE ot_entry_1 boundary 549 negedge 0 noarc 0 inverted 0
-OT_IOREF_EDGE ot_entry_2 boundary 746 negedge 0 noarc 0 inverted 0
-OT_IOREF_EDGE ot_entry_3 boundary 0 negedge 0 noarc 0 inverted 0
-OT_IOREF keep core_clk (not an insertion-reference clock)
-OT_IOREF keep ot_io_static (not an insertion-reference clock)
-OT_IOREF keep ot_io_boot (not an insertion-reference clock)
-OT_IOREF keep ot_io_test (not an insertion-reference clock)
-OT_WS max 9.754086427449238e-11 min 3.908501300387002e-11
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 1043 input pin flops, median arrival 234.123337 (range 219.419312 .. 258.095184)
+QDM reference pin u_slice.u_station.fdq[259]$_DFF_P_/CLK clock arrival max 234.123337 min 220.851135 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 220.851135 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_IOREF clock-port ck (core_clk): data input delays dropped
+OT_IOREF_EDGE core_clk boundary 2077 negedge 0 noarc 0 inverted 0
+OT_IOREF ot_lb_v_core_clk core_clk mean 235.7 min 219.4 max 261.3 n 2077 boundary
+OT_IOREF clock-port ck (core_clk): data input delays dropped
+OT_IOREF_EDGE core_clk boundary 2077 negedge 0 noarc 0 inverted 0
+OT_IOREF ot_lb_v_core_clk core_clk mean 235.7 min 219.4 max 261.3 n 2077 boundary
+OT_WS max 1.2440004582003894e-10 min 3.445438379046095e-11
 OT_EXPORT_DONE

@@ -107,7 +107,7 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0, TP=96, RANK_
  for(genvar t=0;t<NT;t=t+1)begin:g_tiles
   // TP=192 (RANK_W 8, EW 86) PT64 tiles use their own hardened shape name (die view per shape, no parameter alias).
   if(EW==86 && KMAX>=64)begin:e86
-  ot_hgi_coll_tkm_tile_e86 u_tile(.clk(tile_clk[t]),.tid(6'(t)),.clr(clr),.conv(conv1||conv2),
+  ot_hgi_coll_tkm_tile_e86 u_tile(.clk(tile_clk[t]),.clk_r0(tile_clk[t]),.clk_r1(tile_clk[t]),.clk_r2(tile_clk[t]),.clk_r3(tile_clk[t]),.tid(6'(t)),.clr(clr),.conv(conv1||conv2),
    .tau_t(6'd0),.tau_l(7'd0),.ins_v(dv[t]),.ins_b(down[t]),.ovf_v(dv[t+1]),.ovf_b(down[t+1]),
    .up_in(up[t+1]),.up_out(up[t]),.tau_o(),.busy());
   end else begin:gen
@@ -196,9 +196,11 @@ endmodule
 
 // TP=192 TKM tile shape (H-NETLIST/COLL d4f): ot_hgi_coll_tkm_tile at EW 86 (RANK_W 8: 192-rank tie id, Codex
 // 5e1383c3f) and PT 64, hardened under its own name so the die binds one view per shape (no parameter alias).
+// TKM-2 2026-10-17: ot_hgi_coll_tkm_tile_rg (live-node compares, no insbuf storm; clock split by row group into clk +
+// four related regional roots clk_r0..clk_r3, all delivered from the tile's one source clock by the parent).
 module ot_hgi_coll_tkm_tile_e86(
- input wire clk,input wire [5:0] tid,input wire clr,conv,input wire [5:0] tau_t,input wire [6:0] tau_l,
+ input wire clk,clk_r0,clk_r1,clk_r2,clk_r3,input wire [5:0] tid,input wire clr,conv,input wire [5:0] tau_t,input wire [6:0] tau_l,
  input wire ins_v,input wire [343:0] ins_b,output wire ovf_v,output wire [343:0] ovf_b,
  input wire [343:0] up_in,output wire [343:0] up_out,output wire [84:0] tau_o,output wire busy);
- ot_hgi_coll_tkm_tile #(.EW(86),.PT(64)) u(.*);
+ ot_hgi_coll_tkm_tile_rg #(.EW(86),.PT(64)) u(.*);
 endmodule

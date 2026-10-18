@@ -1,0 +1,5 @@
+FAULT_CAUSE cycle=24 bad=1 decode=0 qfault=0 vo=0 expected=0 rr_mask=00001111
+FAULT_CAUSE cycle=25 bad=1 decode=0 qfault=0 vo=0 expected=0 rr_mask=11110000
+[104440000] %Fatal: tb_hgi_qdq_compact_host_pin_boundary.sv:143: Assertion failed in tb_hgi_qdq_compact_host_pin_boundary: unexpected static fault at cycle 26 vo=0 expected=0
+%Error: rtl/test/hbm_accel/generic/tb_hgi_qdq_compact_host_pin_boundary.sv:143: Verilog $stop
+Aborting...

@@ -1,0 +1,485 @@
+{
+ "schema": "opentallas.s81_dv.frame_bind.v1",
+ "plan": "S81-DV p4g",
+ "decision": "coordinator 0cw+ (4) 10-17: rebind cfg7_seq_bf (x519) to its closed native-PASS flop-first successor ot_s81_cfg7_seq_bfp PINREG=1",
+ "source": {
+  "frame_family": "origin/main:results/arch/s81_canonical_bind_1015/sbind_static_1015/bind7_bfprog/port_bind.json",
+  "previous": "origin/main:results/arch/s81_canonical_bind_1015/sbind_static_1015/bind5/port_bind.json",
+  "origin_main": "60058075ae3e2a60c4bbda35c687fcd224d76337",
+  "filter": "ELEMENT_REUSE class A frame contents (gaps/die_element_table.py S81_FRAME_RE) + dsfd_bf_front_static (the static front; the filter regex anchors dsfd_bf_front)"
+ },
+ "rebind": {
+  "removed": [
+   "dsfd_bf_front",
+   "dsfd_rly_66_WS",
+   "ot_s81_cfg7_seq_bf"
+  ],
+  "added": [
+   "dsfd_bf_front_static",
+   "dsfd_rly_66_WE",
+   "ot_s81_cfg7_seq_bfp"
+  ],
+  "pair": "the BF pair moves together: ot_s81_cfg7_seq_bf + dsfd_bf_front -> ot_s81_cfg7_seq_bfp (f_prog 38 b) + dsfd_bf_front_static (its f_prog consumer); bfp without the static front would leave f_prog open",
+  "incidental": "dsfd_rly_66_WS -> dsfd_rly_66_WE comes with the bind7 frame GEN (not part of this decision)"
+ },
+ "price": "FIELD.CFG7_SEQ_PINREG ledger row (+4 lc->go_e per FIELD matrix job, 0.14 % AR / 0.119 % MTP) kept in p4g/price.json; scenario cfg7_pinreg0_binding shows the PINREG-0 price",
+ "open": [
+  "dsfd_bf_front_static x519: bind7 INPUT_UNCONNECTED xb (no-stubs rule: its producer must be wired before the frame family passes port-bind; owner = S81-B lane / S-BIND regen with --bf-x2-static)",
+  "frame family port_bind regen at PINREG 1 (die.v.params.json PINREG/LAYOUT for ot_s81_cfg7_seq_bfp) owed by the frame GEN (dsrom_s81_fulldie.py --bf-static-prog)"
+ ],
+ "masters": {
+  "dsfd_bf_col": {
+   "instances": 1038,
+   "rtl": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_bf_front_static": {
+   "instances": 519,
+   "rtl": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv",
+   "bind7_verdict": "FAIL",
+   "params": {},
+   "input_unconnected": [
+    "xb"
+   ]
+  },
+  "dsfd_cfifo": {
+   "instances": 128,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_node_LLd": {
+   "instances": 128,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_node_LLfd": {
+   "instances": 1265,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_node_LLfu": {
+   "instances": 1024,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_node_NNfd": {
+   "instances": 1024,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_node_NNfu": {
+   "instances": 1265,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_qbank_N": {
+   "instances": 1898,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_qbank_S": {
+   "instances": 1898,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_15_NS": {
+   "instances": 36,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_15_SN": {
+   "instances": 1346,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_15_SW": {
+   "instances": 11,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_1_EW": {
+   "instances": 384,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_1_WN": {
+   "instances": 519,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_266_EW": {
+   "instances": 1491,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_283_EW": {
+   "instances": 1491,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_2_ES": {
+   "instances": 849,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_2_NE": {
+   "instances": 1176,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_2_NS": {
+   "instances": 1266,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_2_NW": {
+   "instances": 182,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_2_WE": {
+   "instances": 714,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_2_WS": {
+   "instances": 1002,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_54_WN": {
+   "instances": 519,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_63_ES": {
+   "instances": 173,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_63_NE": {
+   "instances": 1374,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_63_NS": {
+   "instances": 5060,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_63_NW": {
+   "instances": 29,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_63_SE": {
+   "instances": 217,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_63_SN": {
+   "instances": 31,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_63_WE": {
+   "instances": 9540,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_63_WN": {
+   "instances": 297,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_63_WS": {
+   "instances": 5137,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_66_ES": {
+   "instances": 90,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_66_EW": {
+   "instances": 232,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_66_NE": {
+   "instances": 5,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_66_NS": {
+   "instances": 1299,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_66_NW": {
+   "instances": 69,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_66_SN": {
+   "instances": 625,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rly_66_WE": {
+   "instances": 67,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_rstg": {
+   "instances": 497,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_sstn_e0c0": {
+   "instances": 30,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_sstn_e0c0_cp1": {
+   "instances": 90,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_sstn_e0c0si": {
+   "instances": 476,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_sstn_e0c0sinf": {
+   "instances": 29,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_sstn_e0e1c0c1_cp1": {
+   "instances": 8,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_sstn_e0e1c0c1si": {
+   "instances": 789,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_sstn_e0e1c0c1sinf": {
+   "instances": 99,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnh_1026x1": {
+   "instances": 7,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnh_10x1": {
+   "instances": 41,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnh_293x1": {
+   "instances": 10,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnh_3x1": {
+   "instances": 30,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnh_70x1": {
+   "instances": 2493,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnh_70x2": {
+   "instances": 208,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnh_70x3": {
+   "instances": 11,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnh_70x4": {
+   "instances": 131,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnh_86x1": {
+   "instances": 23,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnv_1026x1": {
+   "instances": 26,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnv_10x1": {
+   "instances": 138,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnv_256x1": {
+   "instances": 24,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnv_293x1": {
+   "instances": 47,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnv_3x1": {
+   "instances": 90,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnv_70x1": {
+   "instances": 1340,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnv_70x2": {
+   "instances": 578,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnv_70x3": {
+   "instances": 243,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnv_70x4": {
+   "instances": 329,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "dsfd_stnv_86x1": {
+   "instances": 95,
+   "rtl": "/srv/opentallas-scratch/claude/s81-bind-1015/bind7_bfprog/gen/construction_pass0_die_glue.sv",
+   "bind7_verdict": "PASS",
+   "params": {}
+  },
+  "ot_s81_cfg7_seq": {
+   "instances": 1898,
+   "rtl": "rtl/v41die/ot_s81_cfg7_seq.sv",
+   "bind7_verdict": "PASS",
+   "params": {
+    "PQ": 1
+   }
+  },
+  "ot_s81_cfg7_seq_bfp": {
+   "instances": 519,
+   "rtl": "rtl/v41die/ot_s81_cfg7_seq_bfp.sv",
+   "bind7_verdict": "PASS",
+   "params": {
+    "LAYOUT": 1,
+    "PINREG": 1
+   },
+   "view": "s81coll_cfg7_seq_bfp_pr-pr1-ef2866774",
+   "view_state": "CLOSED TT +244.3 / FF +23.9; native audit PASS launch 191.9 / capture 137.1 / spread 14.4 (lanes/S81-A_logs/native_audit_s81a_1017.json)",
+   "spec": "tools/ref_tile/specs_s81_coll/s81coll_cfg7_seq_bfp_pr.json (30.24 x 60.48, M5)",
+   "note": "bind7_bfprog elaborated it with PINREG 0 (param set {}); p4g binds the closed PINREG 1 / LAYOUT 1 view"
+  },
+  "ot_v41_rom_elem_q_qxpq_w10": {
+   "instances": 1898,
+   "rtl": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+   "bind7_verdict": "PASS",
+   "params": {
+    "EARLY": 1,
+    "FAST": 1,
+    "MTP": 1,
+    "NB": 2,
+    "PP": 1,
+    "PQ": 1,
+    "QM": 5,
+    "QPIPE": 1,
+    "QP_CAP": 0,
+    "QP_CSAM": 10,
+    "QP_P1": 1,
+    "QP_XS": 1,
+    "QS": 5,
+    "QTIMING_FIX": 1,
+    "QW": 0,
+    "QX": 10,
+    "QY": 1,
+    "QZ": 1,
+    "QZ_NE": 4,
+    "QZ_NS": 8
+   }
+  }
+ }
+}

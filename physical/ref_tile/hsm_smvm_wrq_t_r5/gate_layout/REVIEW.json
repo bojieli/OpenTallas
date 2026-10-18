@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "hsm_smvm_wrq_t_r5",
+ "block": "ot_hbm_sm_vm_wr_q_t_lanes",
+ "reviewer": "coordinator (2026-10-17 ~09:25)",
+ "verdict": "APPROVED",
+ "gate_commit": "925ca2d26",
+ "checklist": {
+  "lattice": "PASS: single SRAM in the N strip, on lattice",
+  "std_cell_band": "PASS: one W band of 8 lane groups; thin E launch strip of pin flops; the empty middle is crossed only by short lane W->E paths inside each band",
+  "pins": "PASS: W and E full faces (pin-bound outline, pass-through capacity rule)",
+  "clock_entry": "PASS: one root per lane, 98-137 ps raw, <=14 ps intra-root; core 129-137 ps",
+  "shape": "EXCEPTION ACCEPTED: 142.56x388.8 (2.7:1) is pin-bound; a 237.6 square fails W/E pin capacity"
+ },
+ "notes": "pre-route TT +97.6, hold positive before repair. Watch: lane-2/6 boundary flops 191-195 ps at placement RC; the routed native audit decides.",
+ "images": ["gate_layout/floorplan.png", "gate_layout/density.png", "gate_layout/cts.png"]
+}

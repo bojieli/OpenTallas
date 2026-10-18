@@ -1,0 +1,43 @@
+{
+ "case": "real",
+ "seed": 7,
+ "edges": 737,
+ "words": 353,
+ "rows_written": 64,
+ "phases": [
+  {
+   "rows": 64,
+   "np": 0,
+   "words": 353,
+   "slots": 614,
+   "cfg": {
+    "obase": 0,
+    "ops": 64,
+    "np": 0,
+    "fmt": 1,
+    "rbase": 1600,
+    "rcnt": 64,
+    "rsplit": 1641,
+    "lo32": 1,
+    "hi32": 0
+   },
+   "first_arr": 134,
+   "last_arr": 608,
+   "last_write": 677,
+   "merges_tree": null
+  }
+ ],
+ "lat_last_arr_to_write": {
+  "min": 43,
+  "max": 84,
+  "mean": 58.25
+ },
+ "constants": {
+  "WIN": 2,
+  "RST": 1,
+  "C_NODE": 13,
+  "RE": 10,
+  "WR": 4,
+  "LL": 16
+ }
+}

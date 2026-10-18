@@ -1,0 +1,8 @@
+mutant: u_core_guard.host_rst_n inverted at the parent
+seed=1 mode=0: MISMATCH service_status t=553667 fs core=0 flat=0 clu=1
+seed=1 mode=1: MISMATCH service_status t=553667 fs core=0 flat=0 clu=1
+seed=2 mode=0: MISMATCH service_status t=553667 fs core=0 flat=0 clu=1
+seed=2 mode=1: MISMATCH service_status t=553667 fs core=0 flat=0 clu=1
+seed=3 mode=0: MISMATCH service_status t=553667 fs core=0 flat=0 clu=1
+seed=3 mode=1: MISMATCH service_status t=553667 fs core=0 flat=0 clu=1
+CLUSTER_GATE FAIL mutant child=core_guard runs_pass=0/6 core_cycles=20000

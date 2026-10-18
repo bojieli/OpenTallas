@@ -40,7 +40,7 @@ module ot_qwen_d2d_cal_seq #(
     parameter integer ADM_LEN = 1100,   // admission run length (every calendar idle after it)
     parameter integer AUTO = 0,         // 1: token starts from the anchor (FIRST_OFS, then every PERIOD)
     parameter integer FIRST_OFS = 1176, // first token cal_start, edges after the anchored epoch strobe
-    parameter integer PERIOD = 249431,  // compiled token period
+    parameter integer PERIOD = 249600,  // compiled token period (d2d_cal_image.svh D2D_TOKEN_PERIOD, a 768-edge multiple)
     parameter integer EP_SKEW = 0       // edges from this die's epoch_go to the common anchor edge
 ) (
     input  wire        ck,

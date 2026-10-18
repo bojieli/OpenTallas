@@ -2067,10 +2067,7 @@ place_pin -pin_name {sfi[29]} -layer M5 -location {116.604000 345.480000} -pin_s
 place_pin -pin_name {sfi[30]} -layer M5 -location {116.796000 345.480000} -pin_size {0.024000 0.192000}
 place_pin -pin_name {sfi[31]} -layer M5 -location {116.988000 345.480000} -pin_size {0.024000 0.192000}
 place_pin -pin_name {bgo} -layer M5 -location {119.196000 345.480000} -pin_size {0.024000 0.192000}
-place_pin -pin_name {ck_boot} -layer M4 -location {129.480000 167.724000} -pin_size {0.192000 0.024000}
-place_pin -pin_name {ck_boot_test} -layer M4 -location {129.480000 177.708000} -pin_size {0.192000 0.024000}
-place_pin -pin_name {ck_static} -layer M4 -location {0.096000 177.708000} -pin_size {0.192000 0.024000}
-place_pin -pin_name {ck_station} -layer M4 -location {0.096000 167.724000} -pin_size {0.192000 0.024000}
+place_pin -pin_name {ck} -layer M4 -location {0.096000 167.724000} -pin_size {0.192000 0.024000}
 place_pin -pin_name {ctrl_completion_v} -layer M4 -location {129.480000 157.692000} -pin_size {0.192000 0.024000}
 place_pin -pin_name {ctrl_completion_we} -layer M4 -location {129.480000 187.692000} -pin_size {0.192000 0.024000}
 place_pin -pin_name {hbm_rst_n} -layer M4 -location {0.096000 187.692000} -pin_size {0.192000 0.024000}

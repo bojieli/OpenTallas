@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  108.0,
-  129.6
+  126.36,
+  108.0
  ],
  "core": [
   2.16,
   2.16,
-  105.84,
-  127.44
+  124.2,
+  105.84
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
@@ -30,9 +30,9 @@
  },
  "pins": {
   "W": [
+   "fclk",
    "ze_d",
    "v0",
-   "v1",
    "tag",
    "xq0",
    "xe0",
@@ -40,22 +40,18 @@
    "we0"
   ],
   "S": [
+   "v1",
    "xq1",
    "xe1",
    "wq1",
    "we1",
-   "rst_pin"
-  ],
-  "E": [
+   "rst_pin",
    "q_v",
    "q_val",
    "q_err",
    "q_tag",
    "fault0",
    "fault1"
-  ],
-  "N": [
-   "fclk"
   ]
  },
  "clock_port": "fclk",
@@ -113,6 +109,7 @@
   "physical/ref_tile/s81_bf_cl_fp/kit.env",
   "physical/ref_tile/s81_bf_cl_fp/clock.sdc",
   "physical/ref_tile/s81_bf_cl_fp/signoff.sdc",
+  "physical/ref_tile/s81_bf_cl_fp/signoff_ffrepair.sdc",
   "physical/ref_tile/s81_bf_cl_fp/pdn.tcl",
   "physical/ref_tile/s81_bf_cl_fp/pre_cts.tcl",
   "physical/ref_tile/s81_bf_cl_fp/post_cts.tcl",
@@ -131,14 +128,8 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/ref_tile_specs/s81_bf_native_1015/cl_fp/pins.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl",
-  "physical/dsrom_window_source/leaf_iohold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/dsrom_window_source/leaf_inhold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/ref_tile/s81_bf_cl_fp/pre_gpl.tcl",
-  "physical/ref_tile/s81_bf_cl_fp/pre_dpl.tcl",
-  "physical/common_flow/pin_reg_split.tcl"
+  "physical/qwen_die_masters/out_flop_release.tcl"
  ]
 }

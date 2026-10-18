@@ -36,7 +36,10 @@ module qkd_ctrl_pc_host_static #(
     parameter integer DRAIN_PIPE = 0, // 1: conservative two-edge drain summary; no traffic latency change
     parameter integer TQD = (ELASTIC != 0) ? 64 : 32,
     parameter integer CONTEXT_DESC = 0,
-    parameter integer STATIC_REFRESH = 0
+    parameter integer STATIC_REFRESH = 0,
+    // KV-SCHED8 2026-10-17: 1 binds the flop-first sched_s8 (po / p_w / physical / expected_sr / idle_hbm / fo / ko one hclk
+    // later than s7b; see qkd_ctrl_pc_sched PINREG). Opt-in until the die adopts the s8 view and its schedule shifts.
+    parameter integer SCHED_PINREG = 0
 ) (
     input  wire         pll_hbm,
     // Clock entries (lead 2026-10-16 option A, wires-only cluster rule: one top clock port per hard-child clock pin):
@@ -93,7 +96,7 @@ module qkd_ctrl_pc_host_static #(
     wire [286:0] c_d;
     wire [61:0]  c_context;
     wire [346:0] physical_context;
-    qkd_ctrl_pc_sched #(.ROW0(ROW0),.CVL(CVL),.HOFF(HOFF),.WDONE(WDONE),.LATE(LATE),.PROFILE(PROFILE),.EVMUT(EVMUT),.MUT(MUT),.ELASTIC(ELASTIC),.RAW_WD(RAW_WD),.STRAP_CDC(STRAP_CDC),.DRAIN_PIPE(DRAIN_PIPE),.TQD(TQD),.CONTEXT_DESC(CONTEXT_DESC),.STATIC_REFRESH(STATIC_REFRESH)) u_sched (
+    qkd_ctrl_pc_sched #(.ROW0(ROW0),.CVL(CVL),.HOFF(HOFF),.WDONE(WDONE),.LATE(LATE),.PROFILE(PROFILE),.EVMUT(EVMUT),.MUT(MUT),.ELASTIC(ELASTIC),.RAW_WD(RAW_WD),.STRAP_CDC(STRAP_CDC),.DRAIN_PIPE(DRAIN_PIPE),.TQD(TQD),.CONTEXT_DESC(CONTEXT_DESC),.STATIC_REFRESH(STATIC_REFRESH),.PINREG(SCHED_PINREG)) u_sched (
         .pll_hbm(pll_hbm), .hrst(hrst), .pc(pc), .ci_c({ci[318:309], ci[52:0]}), .co_c(co_c),
         .po(po), .pi_v(pi[0]), .ki(ki), .ko(ko), .fi(fi), .fo(fo),
         .static_cmd_owner(static_cmd_owner), .static_cmd(static_cmd), .reserved_rd(reserved_rd),

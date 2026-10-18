@@ -63,10 +63,12 @@ module qkd_static_kv_return_slots_mc #(parameter integer DEPTH=8)(
   if(!hr)idle_hbm_pre<=0;
   else idle_hbm_pre<=(published==done_sync2) && !observed && !write_slot;
  always @(posedge pll_hbm)idle_hbm<=hr && idle_hbm_pre && !observed && !write_slot;
- (* keep *)reg idle_core_pre;
+ // mc_r5 (10-17, recipe 4 / no pin_reg_split): slot_d is the internal copy of actual_valid (both <= slot), so the
+ // actual_valid export flop drives its port only
+ (* keep *)reg idle_core_pre,slot_d;
  always @(posedge ck or negedge rs_c)
   if(!rs_c)idle_core_pre<=0;
-  else idle_core_pre<=(pub_sync2==consumed) && !slot && !actual_valid;
+  else idle_core_pre<=(pub_sync2==consumed) && !slot && !slot_d;
  always @(posedge ck)idle_core<=rs_c && idle_core_pre && !slot;
  reg [AW:0] wp,rp;
  wire [AW-1:0] wa=wp[AW-1:0];
@@ -116,9 +118,9 @@ module qkd_static_kv_return_slots_mc #(parameter integer DEPTH=8)(
   if(!rs_b)begin pub_sync1<=0;pub_sync2<=0;end
   else begin pub_sync1<=published;pub_sync2<=pub_sync1;end
  always @(posedge ck or negedge rs_a)
-  if(!rs_a)begin rp<=0;consumed<=0;actual_valid<=0;fault_core_s<=0;end
+  if(!rs_a)begin rp<=0;consumed<=0;actual_valid<=0;slot_d<=0;fault_core_s<=0;end
   else begin
-   actual_valid<=slot;
+   actual_valid<=slot;slot_d<=slot;
    if(fault_core_set)fault_core_s<=1;
    if(slot)begin
     actual_data<=read_data[255:0];actual_sector<=read_data[265:256];

@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  300.24,
-  300.24
+  259.2,
+  259.2
  ],
  "core": [
   2.16,
   2.16,
-  298.08,
-  298.08
+  257.03999999999996,
+  257.03999999999996
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -32,6 +32,11 @@
   "N": [
    "ins_v",
    "ins_b",
+   "clk",
+   "clk_r0",
+   "clk_r1",
+   "clk_r2",
+   "clk_r3",
    "up_out"
   ],
   "S": [
@@ -40,7 +45,6 @@
    "up_in"
   ],
   "W": [
-   "clk",
    "tid",
    "clr",
    "conv",
@@ -51,6 +55,13 @@
   ]
  },
  "clock_port": "clk",
+ "clock_ports": [
+  "clk",
+  "clk_r0",
+  "clk_r1",
+  "clk_r2",
+  "clk_r3"
+ ],
  "blocks": [],
  "findings": [],
  "referenced": [
@@ -59,7 +70,6 @@
   "physical/ref_tile/hcoll_v7_tkm_tile_e86/kit.env",
   "physical/ref_tile/hcoll_v7_tkm_tile_e86/clock.sdc",
   "physical/ref_tile/hcoll_v7_tkm_tile_e86/signoff.sdc",
-  "physical/ref_tile/hcoll_v7_tkm_tile_e86/signoff_ffrepair.sdc",
   "physical/ref_tile/hcoll_v7_tkm_tile_e86/pdn.tcl",
   "physical/ref_tile/hcoll_v7_tkm_tile_e86/pre_cts.tcl",
   "physical/ref_tile/hcoll_v7_tkm_tile_e86/post_cts.tcl",
@@ -78,7 +88,10 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/ref_tile/hcoll_v7_tkm_tile_e86/io_spread.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl"
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/hcoll_v7_tkm_tile_e86/clock_entry.sdc"
  ]
 }

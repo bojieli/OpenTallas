@@ -1,0 +1,7 @@
+{"schema": "opentallas.s81_dv.frame_emission.v1",
+ "provenance": "measured 2026-10-17 (lane S81U-3F2) with the frame bench -DTB_PVTRACE (tb_s81dv_pvtrace bound to ot_v41_rom_elem_q_qxpq_w10, PV <edge> = the RET edge numbering): off from the SET=each runs (one element, 4 one-row K-1024 matrices, first PV edge per pair; both masters, r1 skew RTL); e0_bench from the col_h9 SET=all run (K 2048, 4 segments of one unit: PV edge = e0 + last beat of the segment class + off, 16/16 words fitted exactly)",
+ "rule": "E(pair, seg) = e0_bench + last_beat(seg class in the phase stream) + off[pair]; one hw slot per element per phase",
+ "e0_bench": 213,
+ "masters": {
+  "col_h9": {"off": {"0": 0, "1": 0, "2": 2, "3": 2, "5": 6, "6": 6, "7": 8, "9": 8, "10": 12, "11": 12, "12": 14, "14": 14}},
+  "col_h10": {"off": {"0": 0, "2": 0, "3": 4, "4": 4, "6": 8, "7": 8, "8": 10, "9": 10, "11": 14, "12": 14, "13": 16, "14": 16}}}}

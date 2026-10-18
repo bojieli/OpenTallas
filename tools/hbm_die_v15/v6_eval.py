@@ -165,7 +165,7 @@ def main():
     rec = dict(tag=tag, die_um=[W, H], die_mm2=round(W * H / 1e6, 2), placed_mm2=met['placed_mm2'], cut_lanes=cut,
                cut_no_lanes=cut0['worst_v']['ratio'], faces_over_1=len(doc['faces_over_1']), stages_bw=bw, per_class=per,
                relay_flops=m.get('relay_flops'), su_slice=[P['su_SW0']['w'], P['su_SW0']['h']], sm=[P['sm_SW0']['w'], P['sm_SW0']['h']],
-               fits_reticle=bool(W <= 33000 and H <= 26000))
+               fits_reticle=__import__('reticle').check_die(W, H)['ok'], reticle=__import__('reticle').check_die(W, H))
     (d / 'eval.json').write_text(json.dumps(rec, indent=1))
     print(json.dumps({k: rec[k] for k in ('tag', 'die_um', 'die_mm2', 'placed_mm2', 'cut_lanes', 'stages_bw', 'faces_over_1', 'su_slice', 'sm', 'fits_reticle')}))
     print(json.dumps({k: v['stages_bw'] for k, v in per.items()}))

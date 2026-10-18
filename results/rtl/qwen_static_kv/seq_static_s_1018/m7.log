@@ -1,0 +1,10 @@
+SEQ_GOLD G_CMD=617 G_Q0=618 G_KV0=652 G_LPRUN=1 G_AQ=47
+ERR tk cyc 13 succ 0c00ff0e10fc2ffe091aa610 ref 0e00ff0e10fc2ffe091aa610
+ERR tk cyc 14 succ 080a6627b6b67f07af50f6e9 ref 0a0a6627b6b67f07af50f6e9
+ERR tk cyc 15 succ 080e6627b6b67f07af50f6e9 ref 0a0e6627b6b67f07af50f6e9
+ERR tk cyc 16 succ 080c03122ffb3ce1361db50f ref 0a0c03122ffb3ce1361db50f
+ERR tk cyc 17 succ 140f70c1f30fc668eae94f86 ref 160f70c1f30fc668eae94f86
+ERR tk cyc 18 succ 140770c1f30fc668eae94f86 ref 160770c1f30fc668eae94f86
+ERR tk cyc 19 succ 140370c1f30fc668eae94f86 ref 160370c1f30fc668eae94f86
+DIE_CR0 qkd_seq_static_p with kvn_<q>_cr=0: first fault cyc 16334 = layer 2 rel 662 kst 1000100000
+SEQ_S FAIL layers=36 aq=4752 kc=288 hs=36 drn_toggles=72 errors=248684 mut=7 lockstep_vs_p=every_edge

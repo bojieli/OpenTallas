@@ -3,20 +3,20 @@
 // the actual native physical writer. The programme never supplies its payload
 // driver, identity oracle, or expected event times. No hierarchical accesses.
 module tb_qkd_kv_native_programme;
- parameter integer MUT=0,BAD=0;
+ parameter integer MUT=0,BAD=0,VMAP=0,WVMAP=VMAP; // WVMAP: writer map (WVMAP!=VMAP = map-mismatch negative)
  reg ck=0;always #1 ck=~ck;
  reg rst_n=0,cfg_we=0,start=0;reg[7:0]cfg_addr=0;reg[5:0]stage=1;reg[63:0]cfg_data=0;
  reg[15:0]epoch=0;reg[17:0]token=0;reg[12:0]position=0;reg[1:0]generation=0;
  wire slot,kvslot,configured,active,done,pfault;wire[1:0]ix,cgen;wire[58:0]cid;wire[31:0]cycle;
  wire[3:0]pev;wire[19:0]ppc;wire[1:0]pst,pg;wire[58:0]pi;wire[28:0]pa;
- qkd_kv_native_programme #(.MUT(MUT))p(.ck(ck),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
+ qkd_kv_native_programme #(.MUT(MUT),.VMAP(VMAP))p(.ck(ck),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
  .start(start),.stage(stage),.epoch(epoch),.token(token),.position(position),.generation(generation),
  .compiled_word_slot(slot),.compiled_word_index(ix),.compiled_identity(cid),.compiled_generation(cgen),.kvn_word_slot(kvslot),
  .configured(configured),.active(active),.done(done),.fault(pfault),.cycle(cycle),
  .expected_valid(pev),.expected_pc(ppc),.expected_stack(pst),.expected_identity(pi),.expected_generation(pg),.expected_address(pa));
  reg wv=0;reg[10:0]wt=0;reg[511:0]wd=0;reg[58:0]wi=0;reg[1:0]wg=0;
  wire[1151:0]es;wire[19:0]pc,epc;wire[1:0]stack,estack,og,eg;wire[58:0]oi,ei;wire[3:0]ev;wire[28:0]ea;wire wf;wire[7:0]fc;
- qkd_kv_static_writer_native w(.ck(ck),.rst_n(rst_n),.word_valid(wv),.word_tag(wt),.word_data(wd),.word_identity(wi),.word_generation(wg),
+ qkd_kv_static_writer_native #(.VMAP(WVMAP)) w(.ck(ck),.rst_n(rst_n),.word_valid(wv),.word_tag(wt),.word_data(wd),.word_identity(wi),.word_generation(wg),
  .compiled_word_slot(slot),.compiled_word_index(ix),.compiled_identity(cid),.compiled_generation(cgen),
  .es(es),.dest_pc(pc),.dest_stack(stack),.identity(oi),.generation(og),.expected_valid(ev),.expected_pc(epc),.expected_stack(estack),
  .expected_identity(ei),.expected_generation(eg),.expected_address(ea),.fault(wf),.fault_code(fc));
@@ -45,7 +45,10 @@ module tb_qkd_kv_native_programme;
      row=es[j*288+257+:19];col=es[j*288+276+:5];bank=es[j*288+281+:5];
      sector=(bank>>2)*128+col*4+(bank&3);kind=sector>>9;
      logical_group=ungroup(pc[j*5+:5]>>2);
-     recovered_pos=(((sector>>3)&15)<<9)|(stack<<7)|(((sector>>7)&1)<<6)|((sector&7)<<3)|logical_group;
+     if(WVMAP!=0&&kind==1) // PV16 V layout: sector low3 = pos[3:1], group = {pos[5:4],pos[0]}
+      recovered_pos=(((sector>>3)&15)<<9)|(stack<<7)|(((sector>>7)&1)<<6)|((logical_group>>1)<<4)|((sector&7)<<1)|(logical_group&1);
+     else
+      recovered_pos=(((sector>>3)&15)<<9)|(stack<<7)|(((sector>>7)&1)<<6)|((sector&7)<<3)|logical_group;
      if(recovered_pos!==root_id[18:6]||row!==64+root_id[42:37]-1||oi!==root_id||og!==root_gen)errors=errors+1;
      for(b=0;b<32;b=b+1)begin
       dim=(pc[j*5+:5]&3)*32+b;
@@ -118,10 +121,14 @@ module tb_qkd_kv_native_programme;
      if(errors==0&&!wf&&!pfault)$fatal(1,"negative control escaped");
      $display("PASS observed negative MUT%0d BAD%0d errors%0d writer_fault%0d",MUT,BAD,errors,wf);$finish;
     end
+    if(WVMAP!=VMAP&&(errors||wf||pfault))begin
+     $display("PASS observed negative map_mismatch VMAP%0d WVMAP%0d errors%0d at layer%0d pos%0d",VMAP,WVMAP,errors,l,pos);$finish;
+    end
     if(errors||wf||pfault)$fatal(1,"FAIL layer%0d pos%0d errors%0d wf%0d fc%h pf%0d",l,pos,errors,wf,fc,pfault);
    end
   end
+  if(WVMAP!=VMAP)$fatal(1,"map-mismatch negative control escaped");
   if(sectors!=9216||slots!=4608)$fatal(1,"wrong production counts sectors%0d slots%0d",sectors,slots);
-  $display("PASS programme+native_writer all36 two_tokens boundary_positions single_boot_noreset_no_reconfigure cases%0d slots%0d sectors%0d noreset_roots TAG59 generation2 inverse_address raw_data",cases,slots,sectors);$finish;
+  $display("PASS VMAP%0d programme+native_writer all36 two_tokens boundary_positions single_boot_noreset_no_reconfigure cases%0d slots%0d sectors%0d noreset_roots TAG59 generation2 inverse_address raw_data",VMAP,cases,slots,sectors);$finish;
  end
 endmodule
