@@ -1,5 +1,5 @@
 {
- "name": "s81dvbk_cm-m1-COMMIT",
+ "name": "s81dvbk_cm-m1-befd7da46",
  "block": "dsdv_bkcol_m",
  "ref_tile": true,
  "owner": "Claude:S81U-BK3",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/s81u2-bk-1017",
-  "commit": "COMMIT",
+  "commit": "befd7da46",
   "extra_paths": [
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
@@ -106,7 +106,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81dvbk_cm/s81dvbk_cm-m1-COMMIT"
+   "to": "results/rtl/ref_tile/s81dvbk_cm/s81dvbk_cm-m1-befd7da46"
   }
  ],
  "cycles_added": 0,
