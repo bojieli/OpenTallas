@@ -64,6 +64,7 @@ from postroute_recovery import remote_command as postroute_probe_command
 import submit_lint
 import bench_count
 import macro_clk
+import retired_hosts
 import helper_overlay as HO
 import status_report
 
@@ -269,6 +270,13 @@ def disk_roots(cfg):
     """{path: min free GB} for every filesystem a host's jobs write besides the run root (hosts.json disk_roots;
     fleet disk guard 2026-10-07: the run-root floor alone let / fill on AGIdock and localhost)"""
     return dict(cfg.get("disk_roots", {}))
+
+
+def drop_retired_hosts(spec):
+    """RETIRED-HOST (HOSTFIX 2026-10-17): (spec', warnings) with retired fleet hosts removed from hosts / host_require
+    (retired_hosts.py; an emptied list falls back to admission) instead of an INVALID 'unknown host' verdict."""
+    doc = json.loads((HERE / "hosts.json").read_text())
+    return retired_hosts.drop_retired_hosts(spec, {h["name"] for h in doc["hosts"]}, retired_hosts.retired_names(doc))
 
 
 def host_cfg(name):
@@ -1255,6 +1263,12 @@ def ref_gate_at_submit(j, jobs=None):
         return
     if isinstance(res.get("route_overlay_plan"), dict) and j.get("freeze_helper_overlay"):
         j["route_overlay_plan"] = res["route_overlay_plan"]
+    if isinstance(res.get("relaxing_rule_allowlist"), dict):
+        # RELAXING-RULE ALLOWLIST (ROOT-0040 2026-10-18): the gate stood across relaxing-only rule commits; record it
+        j["relaxing_rule_allowlist"] = dict(res["relaxing_rule_allowlist"], at=now_iso())
+        event(j, "RELAXING-RULE ALLOWLIST: gate kept across " + ", ".join(
+            c[:9] for c in res["relaxing_rule_allowlist"].get("commits") or []) + "; " + "; ".join(
+            x.get("text", "") for x in res["relaxing_rule_allowlist"].get("requirements") or [])[:300])
     if isinstance(res.get("clock"), dict):
         j["clock_rule"] = dict(res["clock"], mode=kw.get("clock_mode"))      # textbook_cfg() hands it to the in-flow lint
         event(j, f"CLOCK-RULE at submit: {res['clock'].get('text', '')[:300]}"
@@ -1453,14 +1467,17 @@ def ingest():
                 bad.write_text(spec["_parse_error"])
                 log(f"INVALID job file {origin}: {spec['_parse_error']}")
             continue
-        errs = validate(spec)
         submitted = spec
+        spec, host_warns = drop_retired_hosts(spec)
+        errs = validate(spec)
         if not errs and spec.get("benched_by") is not None:
             spec, _ = expand_benched_by(spec)
         j = dict(name=name, spec=spec, origin=origin, created=now_iso(), status="QUEUED", stage_idx=0, attempt=1,
                  retries_used=0, benches={}, hosts_tried=[], events=[], freeze_helper_overlay=True)
         if spec is not submitted:
             j["spec_submitted"] = submitted          # the frozen-spec comparison and successors use the file as written
+        for w in host_warns:
+            event(j, w)
         if errs:
             j["status"] = "INVALID"
             j["reason"] = "; ".join(errs)
@@ -3111,6 +3128,22 @@ def textbook_cfg(j):
     if isinstance(cr, dict):     # measured clock rule: only jobs ingested under it (never an older in-flight job)
         cfg["clock"] = {"enforce": cr.get("mode") == "refuse" and bool(j["spec"].get("ref_tile")),
                         "evidence": cr.get("evidence"), "closed_stands": bool(cr.get("closed_stands"))}
+        if isinstance(j["spec"].get("clock_rule_waiver"), dict):   # HANDOFF 0ga: the gate's recorded per-pair waiver
+            cfg["clock"]["waiver"] = j["spec"]["clock_rule_waiver"]
+    # GATE-FRICTION 2026-10-18: the kit's declared reset_ports are resets for the in-flow lint too (por_n on KV core_peer)
+    rsts = j.get("kit_reset_ports")
+    if rsts is None and j["spec"].get("ref_tile") and j.get("commit_full"):
+        m = PORT_LATENCY_RE.search(((j["spec"].get("stages") or {}).get("route") or {}).get("cmd") or "")
+        rsts = []
+        if m:
+            try:
+                ks = json.loads(git("show", f"{j['commit_full']}:{m.group(1)}/spec.json", check=False).stdout or "{}")
+                rsts = [x for x in ks.get("reset_ports") or [] if isinstance(x, str)]
+            except (ValueError, AttributeError):
+                rsts = []
+        j["kit_reset_ports"] = rsts
+    if rsts and not (cfg.get("set") or {}).get("reset_ports"):
+        cfg["set"] = dict(cfg.get("set") or {}, reset_ports=",".join(rsts))
     return cfg
 
 
@@ -3275,6 +3308,21 @@ def launch_stage(j, st, cmd):
         # writes atomically now: the exported LEF is root-owned) and add the pre-lint call to a stale ref_tile.py export.
         env += (f"cp -f {j['run']}/cl/abstract_pin_stub.py {_src}/tools/hier_contract/abstract_pin_stub.py; "
                 f"python3 - {_src}/tools/ref_tile/ref_tile.py <<'OT_PINSTUB_PATCH' || true\n{PINSTUB_PATCH}OT_PINSTUB_PATCH\n")
+        # LOOP-SCALAR-LINT (AHUB-COLLECT 2026-10-18): ref_tile.py export runs scalar_pin_lint from the job's synced
+        # tools/ref_tile/scalar_pin_view.py.  Its port parser is the loop's publish gate, not the design: a job synced
+        # before 9ac83ae74 ((* keep *) attribute hid a port's range) kept refusing bus bits as RTL-scalar at every collect
+        # (qkd_ahub_core-hd4-ed40aa340: TT +219.7 / FF +20.2 route, collect crashed 4x on pb_ra[0]/pl_rz[0]/pl_v[0]).
+        # Every ref_tile collect / re-export runs the loop's copy (resolved against origin/main, as the helper overlay).
+        _spv_rel = "tools/ref_tile/scalar_pin_view.py"
+        try:
+            _spv, _ = HO.resolve_bytes(HERE.parents[1], REPO, _spv_rel, _ovl_head(), cache=_OVL["hist"])
+        except (OSError, subprocess.SubprocessError):
+            _spv = None
+        if _spv:
+            import base64 as _b64
+            env += (f"if [ -f {_src}/{_spv_rel} ]; then [ -f {_src}/{_spv_rel}.job ] || cp {_src}/{_spv_rel} "
+                    f"{_src}/{_spv_rel}.job; base64 -d > {_src}/{_spv_rel}.loop <<'OT_SPV_B64' && "
+                    f"mv -f {_src}/{_spv_rel}.loop {_src}/{_spv_rel}\n{_b64.b64encode(_spv).decode()}\nOT_SPV_B64\nfi\n")
         # EXPORT-SDC (2026-10-13): the view export replays the VERDICT's constraint sequence (routed 6_final.sdc, SPEF,
         # post-SDCs, io_ref_routed.sdc) and fails on a slack that differs from the verdict; a job's synced view_export.py
         # read the kit signoff.sdc INSTEAD of the routed SDC (s81su SMT: FF -19.69 exported vs +3.66 verdict).  The
@@ -3539,7 +3587,74 @@ def bench_outcome(j, st, rc, ok_extra=True):
             if work is False:
                 return False
         return ok
-    return expected_fail_seen(st, rc, full)
+    seen = expected_fail_seen(st, rc, full)
+    if seen and st.get("fail_regex"):
+        try:
+            capture_fail_witness(j, st, full)
+        except Exception:  # noqa: BLE001 -- the verdict stands; a lost witness is only a missing archive
+            log(f"[{j.get('name')}] fail-witness capture error:\n{traceback.format_exc()}")
+    return seen
+
+
+# FAIL-WITNESS AUTO-CAPTURE (GATE-FRICTION 2026-10-18, owner 0eg: checks must never delay closure).  submit_exact WARNs
+# (no longer refuses) when an expect=fail bench has no committed fail_witness log; the loop captures the REAL mutant
+# output here instead: when the mutant failed as expected and its fail_regex matched, the matching part of the stage log
+# is archived under STATE/fail_witnesses/<job>/<bench>.log (verified to match the regex again) and recorded in
+# j["fail_witnesses"]; publish() commits it with the CLOSED record (results/closure_loop/<job>/fail_witness/).  A mutant
+# that does not fail is still NEEDS_RTL (bench_outcome above), witness or not.
+WITNESS_DIR = STATE / "fail_witnesses"
+WITNESS_CONTEXT = 40           # lines kept around each fail_regex match
+WITNESS_TAIL = 200             # last lines of the log kept as well
+WITNESS_MAX_BYTES = 256 << 10
+
+
+def witness_text(full, rx):
+    """the part of a mutant log that proves the verdict: every fail_regex match with context, plus the tail.  Returns
+    None when the regex does not match the kept text (the caller then keeps nothing)."""
+    lines = full.splitlines()
+    keep = set(range(max(0, len(lines) - WITNESS_TAIL), len(lines)))
+    starts, pos = [], 0
+    for n, ln in enumerate(lines):
+        starts.append(pos)
+        pos += len(ln) + 1
+    for m in list(re.finditer(rx, full, re.M))[:8]:
+        n = max(0, sum(1 for s in starts if s <= m.start()) - 1)
+        last = n + m.group(0).count("\n")
+        keep.update(range(max(0, n - WITNESS_CONTEXT), min(len(lines), last + WITNESS_CONTEXT + 1)))
+    out, prev = [], -1
+    for n in sorted(keep):
+        if n != prev + 1:
+            out.append(f"... [{n - prev - 1} line(s) omitted by the fail-witness capture] ...")
+        out.append(lines[n])
+        prev = n
+    text = "\n".join(out) + "\n"
+    if len(text.encode()) > WITNESS_MAX_BYTES:
+        text = text.encode()[-WITNESS_MAX_BYTES:].decode(errors="ignore")
+    return text if re.search(rx, text, re.M) else None
+
+
+def capture_fail_witness(j, st, full):
+    rx, key = st["fail_regex"], st["key"]
+    body = witness_text(full, rx)
+    if body is None:
+        event(j, f"fail-witness: {key} fail_regex matched the log but not the kept excerpt; nothing archived")
+        return None
+    head = (f"# fail witness captured by the closure loop (GATE-FRICTION auto-capture)\n# job {j.get('name')} bench {key} "
+            f"host {j.get('host')} run {j.get('run')} log cl/{j.get('stage_tag')}.log captured {now_iso()}\n"
+            f"# fail_regex {rx!r}\n")
+    data = (head + body).encode()
+    d = WITNESS_DIR / label(j.get("name") or "job")
+    d.mkdir(parents=True, exist_ok=True)
+    f = d / f"{label(key)}.log"
+    tmp = f.with_suffix(f".{os.getpid()}.{threading.get_ident()}.tmp")
+    tmp.write_bytes(data)
+    os.replace(tmp, f)
+    m = re.search(rx, body, re.M)
+    rec = dict(path=str(f), sha256=hashlib.sha256(data).hexdigest(), fail_regex=rx, matched=m.group(0)[:200],
+               captured_at=now_iso(), declared=st.get("fail_witness"))
+    j.setdefault("fail_witnesses", {})[key] = rec
+    event(j, f"fail-witness: {key} captured ({len(data)} B, matched {rec['matched'][:80]!r}) -> {f}")
+    return rec
 
 
 def bench_why(j, st, rc, ok_extra=True):
@@ -4047,6 +4162,14 @@ def publish(j, metrics):
                     plat_paths.append(str((vd / "port_latency.json").relative_to(cwt)))
             (cwt / rec_dir / "port_latency.json").write_text(txt)
             plat_paths.append(f"{rec_dir}/port_latency.json")
+        for wk, w in sorted((j.get("fail_witnesses") or {}).items()):
+            try:
+                data = Path(w["path"]).read_bytes()
+            except OSError:
+                continue
+            if hashlib.sha256(data).hexdigest() == w.get("sha256"):
+                (cwt / rec_dir / "fail_witness").mkdir(parents=True, exist_ok=True)
+                (cwt / rec_dir / "fail_witness" / f"{label(wk)}.log").write_bytes(data)
         if big:
             (cwt / rec_dir / "LARGE_FILES_EXCLUDED.txt").write_text("\n".join(big) + "\n")
             log(f"[{j['name']}] record: {len(big)} file(s) > {RECORD_MAX_FILE_BYTES >> 20} MB left out of git")
@@ -4057,7 +4180,9 @@ def publish(j, metrics):
                             "agreed die-clock IO budgets, DRC 0"),
                        metrics={k: metrics.get(k) for k in ("ss_ps", "ff_ps", "drc", "ss_tns_ps", "clock_periods_ps", "setup_corner", "ss_sensitivity_ps", "ss_sensitivity_tns_ps", "corner_sta_tt", "post_sdc", "corner_sta",
                                                             "drc_metrics", "drc_skipped")},
-                       benches=j.get("benches", {}), no_bench_reason=spec.get("no_bench_reason"),
+                       benches=j.get("benches", {}), fail_witnesses={k: dict(w, path=f"{rec_dir}/fail_witness/{label(k)}.log")
+                                                                     for k, w in (j.get("fail_witnesses") or {}).items()},
+                       no_bench_reason=spec.get("no_bench_reason"),
                        checks=j.get("checks", {}), submit_checks=j.get("submit_checks"), calibration=j.get("calibration"), route_overlay_plan=j.get("route_overlay_plan"), cycles_added=spec.get("cycles_added"), status="CLOSED",
                        closed_at=now_iso(), job_spec=spec, io_budget=(j.get("rebudget") or {}).get("rb") or "link_budget_consistent (fixed split)",
                        rebudget=j.get("rebudget"))
@@ -4931,6 +5056,8 @@ def bench_track(j, fleet, stl):
             return False
         passed = bench_outcome(v, st, rc, ok_extra)
         j.setdefault("bench_work", {}).update(v.get("bench_work") or {})
+        if v.get("fail_witnesses") is not j.get("fail_witnesses"):
+            j.setdefault("fail_witnesses", {}).update(v.get("fail_witnesses") or {})
         e["state"] = "done"
         j["benches"][k] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:], track="parallel")
         if not passed:
@@ -8266,7 +8393,7 @@ def ready_next_files():
             for s in specs:
                 if not isinstance(s, dict) or not isinstance(s.get("after"), str) or not s["after"].strip():
                     raise ValueError("every spec needs a non-empty \"after\" (block or job-name prefix)")
-                errs = validate({k: v for k, v in s.items() if k != "after"})
+                errs = validate(drop_retired_hosts({k: v for k, v in s.items() if k != "after"})[0])
                 if errs:
                     raise ValueError(f"{s.get('name')}: " + "; ".join(errs)[:400])
         except (ValueError, TypeError) as ex:
@@ -8708,6 +8835,9 @@ def cmd_status(a):
 
 def cmd_validate(a):
     spec = json.loads(Path(a.file).read_text())
+    spec, host_warns = drop_retired_hosts(spec)
+    for w in host_warns:
+        print(w)
     errs = validate(spec)
     if not errs:
         spec, _ = expand_benched_by(spec)
