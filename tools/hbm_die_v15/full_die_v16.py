@@ -536,7 +536,8 @@ IDENTITY_MASTERS = {
     'ot_hbm_svc_sm_group': dict(
         master='ot_hbm_svc_sm_group_id', source=_SVC + 'ot_hbm_svc_sm_group_id.sv',
         deps=[_SVC + 'ot_hbm_svc_sm_feed_programmed_id.sv', _SVC + 'ot_hbm_svc_sm4pc_cdc_id.sv',
-              _SVC + 'ot_hbm_svc_prefetch_overlap_owner_id.sv'],
+              _SVC + 'ot_hbm_svc_prefetch_overlap_owner_id.sv', _SVC + 'ot_hbm_svc_fault_cdc_rs.sv',
+              _SVC + 'ot_hbm_svc_pc_ctrl_leaf.sv'],   # ot_hbm_svc_pin_skid2 (K pin skids)
         keep=dict(LBANKS=4, FIXED_GO=0),
         straps=[('id_stack', lambda p: int(p.get('STACK', 0))), ('id_sm', lambda p: int(p.get('SM', 0)))]),
 }

@@ -20,12 +20,26 @@ images=$(realpath "$images"); (cd "$images" && sha256sum sm*/records.hex sm*/bac
 d=rtl/hbm_accel/loader/service_native
 common=(rtl/lib/ot_reset_sync.sv rtl/lib/ot_rst_relay.sv "$d/ot_hbm_svc_async_fifo.sv" "$d/ot_hbm_svc_sm8_landing_bank.sv" "$d/ot_hbm_svc_static_sm_packed136.sv" "$d/ot_hbm_svc_sm_issuer.sv" rtl/hbm_accel/sm/static/ot_smh_static_feed.sv rtl/hbm_accel/sm/static/ot_smh_calendar_static.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv "$d/ot_hbm_svc_pc_ctrl_leaf.sv" "$d/ot_hbm_svc_pc_ctrl_leaf_cfg.sv" rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv "$d/ot_hbm_svc_native_sector_pipeline_leaves.sv" "$d/tb_hbm_svc_command_dram_pipeline_fixture.sv")
 par=("$d/ot_hbm_svc_prefetch_mapped4_owner.sv" "$d/ot_hbm_svc_prefetch_overlap_owner.sv" "$d/ot_hbm_svc_sm4pc_cdc.sv" "$d/ot_hbm_svc_sm_feed_programmed.sv" "$d/ot_hbm_svc_sm_group.sv")
-gid=("$d/ot_hbm_svc_prefetch_overlap_owner_id.sv" "$d/ot_hbm_svc_sm4pc_cdc_id.sv" "$d/ot_hbm_svc_sm_feed_programmed_id.sv" "$d/ot_hbm_svc_sm_group_id.sv")
+gid=("$d/ot_hbm_svc_fault_cdc_rs.sv" "$d/ot_hbm_svc_prefetch_overlap_owner_id.sv" "$d/ot_hbm_svc_sm4pc_cdc_id.sv" "$d/ot_hbm_svc_sm_feed_programmed_id.sv" "$d/ot_hbm_svc_sm_group_id.sv")
 tb=$d/tb_hbm_svc_sm_group_id_fg1.sv
 sha256sum "${common[@]}" "${par[@]}" "${gid[@]}" "$tb" "$0" > "$out/sources.sha256"
 build(){ local n=$1 kind=$2; shift 2; local s=("${common[@]}" "${gid[@]}" "$tb"); [ "$kind" = par ] && s=("${common[@]}" "${par[@]}" "$tb")
  "$vl" --binary --timing -j 4 -Wno-fatal "$@" --top-module tb_hbm_svc_sm_group_id_fg1 -GSTACK="$stack" -GROWS="$rows" -GEPOCHS="$epochs" \
   --Mdir "$out/$n" -o sim "${s[@]}" > "$out/$n.build.log" 2>&1 || { tail -20 "$out/$n.build.log"; echo "SVG_FG1 BUILD_FAIL $n"; exit 2; }; }
+# ONLY=<msm1|msm4|mst|skew|earlygo>: one mutant alone (closure-loop expect-fail bench, GOGAP=${GOGAP:-100}); prints
+# 'SVG_FG1_MUT <m> FAIL: <message>' and exits 1 when the mutant is rejected with its own message, else exits 0.
+if [ -n "${ONLY:-}" ]; then
+ g=${GOGAP:-100}; extra=(); re='SM_STACK (actualPC mapping|DUT fault|timeout|counts)'
+ case "$ONLY" in msm1) def=-DOT_SVG_ID_MUT_SM=1;; msm4) def=-DOT_SVG_ID_MUT_SM=4;; mst) def=-DOT_SVG_ID_MUT_STACK=1;;
+  skew) def=-DOT_SVG_FG_MUT_SKEW=1; re='SM_STACK go skew';; earlygo) def=; extra=(+EARLYGO); re='SM_STACK DUT fault';;
+  *) echo "SVG_FG1 unknown ONLY=$ONLY"; exit 2;; esac
+ build obj_$ONLY id $def
+ "$out/obj_$ONLY/sim" +IMAGES="$images" +GOGAP=$g "${extra[@]}" > "$out/mut_$ONLY.log" 2>&1 || true
+ rm -rf "$out/obj_$ONLY"/*.o "$out/obj_$ONLY"/*.cpp
+ if grep -q '^SM_GROUPS_ISSUED PASS' "$out/mut_$ONLY.log"; then echo "SVG_FG1_MUT $ONLY PASS (survived)"; exit 0; fi
+ if grep -Eq "$re" "$out/mut_$ONLY.log"; then echo "SVG_FG1_MUT $ONLY FAIL: $(grep -Eo -m1 "$re[^\"]*" "$out/mut_$ONLY.log")"; exit 1; fi
+ echo "SVG_FG1_MUT $ONLY NO_WITNESS"; tail -3 "$out/mut_$ONLY.log"; exit 0
+fi
 build obj_par par -DOT_SVG_PAR &
 build obj_id id &
 build obj_msm1 id -DOT_SVG_ID_MUT_SM=1 &

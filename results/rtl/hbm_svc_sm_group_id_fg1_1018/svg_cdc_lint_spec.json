@@ -1,0 +1,150 @@
+{
+ "_note": "ELEM-GAPS/HBMB 2026-10-18: reviewed_gray_fifos (+extensions) clock keys of the ot_hbm_svc_sm_group_id #(LBANKS 4, FIXED_GO 1) kit (d4g svg_SW0..7/NW0..7). Lint: gray_fifo_cdc_constraints.lint(spec, repo root) on the fleet.",
+ "name": "svg_cdc_lint",
+ "top": "ot_hbm_svc_sm_group_id",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_fault_cdc_rs.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer.sv",
+  "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv",
+  "rtl/hbm_accel/sm/static/ot_smh_calendar_static.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_id.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_id.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_id.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_id.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "params": {
+  "LBANKS": 4,
+  "FIXED_GO": 1
+ },
+ "clock": "multiple_cts_roots",
+ "clock_port": "stream_clk",
+ "clock_ports": [
+  "stream_clk",
+  "stream_bank_clk[0]",
+  "stream_bank_clk[1]",
+  "hbm_clk",
+  "hbm_fifo_clk[0]",
+  "hbm_fifo_clk[1]",
+  "hbm_pc_clk[0]",
+  "hbm_pc_clk[1]",
+  "hbm_pc_clk[2]",
+  "hbm_pc_clk[3]"
+ ],
+ "reset_ports": [
+  "stream_rst_n",
+  "hbm_rst_n"
+ ],
+ "clock_data_paths": "reviewed_gray_fifos",
+ "clock_relationship": {
+  "kind": "independent_clock_families",
+  "periods_ps": {
+   "core": 833.333,
+   "hbm": 1024.0
+  }
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "stream_clk",
+    "stream_bank_clk[0]",
+    "stream_bank_clk[1]"
+   ],
+   "inputs": [
+    "stream_rst_n",
+    "id_stack",
+    "id_sm",
+    "program_cfg_we",
+    "program_cfg_addr",
+    "program_cfg_data",
+    "desc_we",
+    "desc_addr",
+    "desc_data",
+    "run_v",
+    "run_base",
+    "run_count"
+   ],
+   "outputs": [
+    "running",
+    "run_done",
+    "program_active",
+    "fault",
+    "sm_packet",
+    "sm_command",
+    "expected_request",
+    "lt0",
+    "lt1",
+    "lb0",
+    "lb1",
+    "fm"
+   ]
+  },
+  "hbm": {
+   "ratio": [
+    1024000,
+    833333
+   ],
+   "ports": [
+    "hbm_clk",
+    "hbm_fifo_clk[0]",
+    "hbm_fifo_clk[1]",
+    "hbm_pc_clk[0]",
+    "hbm_pc_clk[1]",
+    "hbm_pc_clk[2]",
+    "hbm_pc_clk[3]"
+   ],
+   "inputs": [
+    "hbm_rst_n",
+    "k_rdy",
+    "k_wr_done",
+    "kr_v",
+    "kr_tag",
+    "kr_beat",
+    "kr_data"
+   ],
+   "outputs": [
+    "k_v",
+    "k_addr",
+    "k_len",
+    "k_tag",
+    "k_we",
+    "k_wdata",
+    "k_wstrb",
+    "kr_rdy"
+   ]
+  }
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 6
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 8
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1
+  }
+ ],
+ "reviewed_gray_fifo_extensions": {
+  "die_constant_inputs": [
+   "id_stack",
+   "id_sm"
+  ],
+  "why": "id_stack / id_sm are the die strap identity (2'd/3'd constants per instance); gen_svc_sm_group_id.py registers them in each using family (stack_s/sm_s stream, stack_h hbm, pc_q per hbm_pc_clk owner)"
+ }
+}
