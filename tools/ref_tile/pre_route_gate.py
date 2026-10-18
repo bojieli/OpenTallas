@@ -2020,6 +2020,26 @@ def check_slot_fit(g: Gate, kd: Path, job: dict, repo: str, commit: str = "") ->
     return res
 
 
+CLOCK_WAIVER_MAX_PS = TL.CLOCK_WAIVER_MAX_PS
+
+
+def apply_clock_rule_waiver(g: Gate, spec: dict) -> None:
+    """HANDOFF 0ga 2026-10-18: the job spec's "clock_rule_waiver" turns the clock_rule FAIL into a WARN that prints the
+    waiver when textbook_lint.clock_waiver_eval accepts it (per-pair excess <= 2 ps, recorded, named pair alone)."""
+    w = spec.get("clock_rule_waiver")
+    items = [i for i in g.items if i["check"] == "clock_rule" and i["severity"] == "FAIL"]
+    if not isinstance(w, dict) or not items:
+        return
+    applied, note, why = TL.clock_waiver_eval((getattr(g, "clock", None) or {}).get("evidence") or {}, w)
+    if not applied:
+        for i in items:
+            i["message"] += f" (clock_rule_waiver NOT applied: {'; '.join(why)})"
+        return
+    print(f"pre_route_gate: WAIVER {note}", file=sys.stderr)
+    for i in items:
+        i["severity"], i["message"] = "WARN", i["message"] + f" -- WAIVED: {note}"
+
+
 def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = None,
                  closed_stands: bool = False, clock_mode: str = "refuse") -> dict:
     """closure-loop submit hook: the LOCAL gate on a job spec AT ITS SOURCE COMMIT (kit / pins / RTL / children /
@@ -2059,6 +2079,7 @@ def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = 
                         check_slot_fit(g, Path(td) / kit, spec, repo, commit)
                         if clock_mode != "off":
                             check_clock_evidence(g, Path(td) / kit, known_sinks, closed_stands, commit)
+                            apply_clock_rule_waiver(g, spec)
                             if clock_mode != "refuse":
                                 for i in g.items:
                                     if i["check"] == "clock_rule" and i["severity"] == "FAIL":
