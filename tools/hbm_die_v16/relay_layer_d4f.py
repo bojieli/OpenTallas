@@ -45,6 +45,13 @@ def main():
     for k in ('--stations', '--contract', '--manifest', '--root-sites', '--out', '--report'):
         ap.add_argument(k, required=True)
     ap.add_argument('--region-map')
+    ap.add_argument('--fork-lane-width', type=int, default=48,
+                    help='H-RELAY 10-17 lane model: lane width of a FORKING inter-region bus (48 = the r8b form; 136 = '
+                         'wide fork lanes, ceil(bits/136) lanes each with its own forwarded clock, hbfd_rly_136_*_fc[_f<N>])')
+    ap.add_argument('--lane-rows', action='store_true',
+                    help="H-RELAY 10-17: each station = ONE row of its T lane tiles at a fixed site (note 'lane row <id> "
+                         "<t>/<T> <flow>; site (x, y) um', placed as a unit by die_case_v16); sink-root stages sit at the "
+                         "sink PIN centroid (row 'pins', relay_lanes_d4f.py), not the sink instance centre")
     ap.add_argument('--exclude-re', help='rows whose driver or any sink instance matches are left to another layer '
                     '(e.g. ^(rfr|sfr)_: the fixed-depth SU RF / SFU chains, su_chain_rehome_d4f.py)')
     a = ap.parse_args()
@@ -207,7 +214,8 @@ def main():
             stages = {s_: pads_list.get(s_, 0) for s_ in sinks}
         depth_eff = {s_: sdep[s_] + stages[s_] for s_ in sinks}
         if lane48:
-            W, T, kind = 48, math.ceil(n / 48), 'fc48lane'
+            WF = a.fork_lane_width
+            W, T, kind = WF, math.ceil(n / WF), ('fc48lane' if WF == 48 else f'fc{WF}lane')
         else:
             W = 48 if n <= 48 else 624
             T = math.ceil(n / W); kind = 'fc' if inter else 'old'
@@ -225,9 +233,9 @@ def main():
                     problems.append(f'{r["driver"]}: fc single-branch bus with a {ncons}-consumer station')
             else:
                 if ncons <= 1:
-                    m, src, deps = f'hbfd_rly_48_{dr}_fc', SRC_FC, DEPS_FC; outs = ['o']
+                    m, src, deps = f'hbfd_rly_{W}_{dr}_fc', SRC_FC, DEPS_FC; outs = ['o']
                 elif ncons <= 4:
-                    m, src, deps = f'hbfd_rly_48_{dr}_fc_f{ncons}', SRC_FCF, DEPS_FCF; outs = [f'o{k}' for k in range(ncons)]
+                    m, src, deps = f'hbfd_rly_{W}_{dr}_fc_f{ncons}', SRC_FCF, DEPS_FCF; outs = [f'o{k}' for k in range(ncons)]
                 else:
                     problems.append(f'{r["driver"]}: station {i} has {ncons} consumers (> 4)'); m, src, deps, outs = None, None, None, []
             names = [f'{tag}_s{i:03d}_l{t}' for t in range(T)]
@@ -236,9 +244,11 @@ def main():
                 pb = cons[s['parent']].index(('s', i))
             nodes[i] = dict(id=i, parent=s['parent'], pbranch=pb, names=names, outs=outs)
             for t in range(T if m else 0):
+                site = (f'lane row {tag}_s{i:03d} {t}/{T} {dr}; site ({s["x"]}, {s["y"]}) um' if a.lane_rows
+                        else f'home ({s["x"]}, {s["y"]}) um')
                 insts.append(dict(name=names[t], master=m, source=src, rtl_deps=deps, params={}, slot=f'd4f_relay:{r["driver"]}',
                                   owner='H-DIE relay route / H-NETLIST',
-                                  note=f'{kind} station depth {s["depth"]} lane/tile {t}/{T} toward {s["toward"]}; home ({s["x"]}, {s["y"]}) um'))
+                                  note=f'{kind} station depth {s["depth"]} lane/tile {t}/{T} toward {s["toward"]}; {site}'))
                 tiles[m] += 1
                 clocks.append(dict(inst=names[t], port='rs', domain=dom, kind='reset'))
                 if kind == 'old':
@@ -258,17 +268,23 @@ def main():
             br = None if src is None else cons[src].index(('k', s_))
             chain = []
             xy = cen(s_) or (0, 0)
+            pin_ = (r.get('pins') or {}).get('sinks', {}).get(s_) if a.lane_rows else None
+            if pin_:
+                xy = tuple(pin_)
             for k in range(stages[s_]):
                 names = [f'{tag}_k{sinks.index(s_):02d}_{k:02d}_l{t}' for t in range(T)]
                 chain.append(names)
                 for t in range(T):
+                    rdr = 'WE'
                     if kind == 'old':
                         m, src_f, deps = f'hbfd_rly_{W}_WE', SRC_OLD, DEPS_OLD
                     else:
                         m, src_f, deps = f'hbfd_rly_{W}_WE_fc', SRC_FC, DEPS_FC
                     insts.append(dict(name=names[t], master=m, source=src_f, rtl_deps=deps, params={}, slot=f'd4f_relay_sink:{r["driver"]}->{s_}',
                                       owner='H-DIE relay route / H-NETLIST',
-                                      note=f'{"sink-root stage" if kind != "old" else "equal-age pad"} {k + 1}/{stages[s_]} at {s_} lane/tile {t}/{T}; home ({round(xy[0], 1)}, {round(xy[1], 1)}) um'))
+                                      note=f'{"sink-root stage" if kind != "old" else "equal-age pad"} {k + 1}/{stages[s_]} at {s_} lane/tile {t}/{T}; '
+                                           + (f'lane row {tag}_k{sinks.index(s_):02d}_{k:02d} {t}/{T} {rdr}; site ({round(xy[0], 1)}, {round(xy[1], 1)}) um'
+                                              if a.lane_rows else f'home ({round(xy[0], 1)}, {round(xy[1], 1)}) um')))
                     tiles[m] += 1
                     clocks.append(dict(inst=names[t], port='rs', domain=dom, kind='reset'))
                     if kind == 'old':

@@ -581,6 +581,62 @@ def main():
         else:
             continue
         put_near(n, (reg[0] + reg[2]) / 2, (reg[1] + reg[3]) / 2, f'region {s}', region=reg, halo=0.0)
+    # 3a H-RELAY 10-17 (S81-DV lane model): LANE ROWS.  A relay station = one row of T lane tiles abutted ACROSS the
+    # travel direction at a FIXED site (relay layer note 'lane row <id> <t>/<T> <flow>; site (x, y) um' = row centre).
+    # The row is placed as a unit: exact site, else slid along the travel axis (the hop slack, <= LANE_SLIDE um), else
+    # across it, else the nearest free area for the WHOLE row -- never tile by tile (run8: T tiles on one home point
+    # scattered median 279 um / p90 1.9 mm).  Widest rows first.
+    LANE_SLIDE = 150.0
+    lane_re = re.compile(r'lane row (\S+) (\d+)/(\d+) (EW|WE|NS|SN); site \(([-\d.]+), ([-\d.]+)\) um')
+    rows_ = defaultdict(dict)
+    for n in inst:
+        if n in pl:
+            continue
+        m = lane_re.search(I[n].get('note', ''))
+        if m:
+            rows_[m.group(1)][int(m.group(2))] = (n, m.group(4), float(m.group(5)), float(m.group(6)))
+
+    def rect_free(x, y, w, h):
+        if x < 0 or y < 0 or x + w > W or y + h > H:
+            return False
+        ii = occ.ii()
+        i0, j0 = int(x / CELL), int(y / CELL); i1, j1 = int(math.ceil((x + w) / CELL)), int(math.ceil((y + h) / CELL))
+        i1 = min(i1, occ.nx); j1 = min(j1, occ.ny)
+        return ii[j1, i1] - ii[j0, i1] - ii[j1, i0] + ii[j0, i0] == 0
+    lane_stats = collections.Counter()
+    order_ = sorted(rows_, key=lambda k: -sum(size[cell_of[v[0]]][0] * size[cell_of[v[0]]][1] for v in rows_[k].values()))
+    for rid in order_:
+        tl = [rows_[rid][t] for t in sorted(rows_[rid])]
+        fl = tl[0][1]; cx, cy = tl[0][2], tl[0][3]
+        along_x = fl in ('WE', 'EW')                      # travel along x -> lane tiles stacked along y
+        dims = [size[cell_of[n]] for n, *_ in tl]
+        rw = max(d[0] for d in dims) if along_x else sum(d[0] for d in dims)
+        rh = sum(d[1] for d in dims) if along_x else max(d[1] for d in dims)
+        x0, y0 = cx - rw / 2, cy - rh / 2
+        got, how = None, None
+        steps = [0.0] + [s * k for k in range(1, int(LANE_SLIDE / CELL) + 1) for s in (CELL, -CELL)]
+        for ax, tag in ((along_x, 'slid along'), (not along_x, 'slid across')):
+            for d in steps:
+                x, y = (x0 + d, y0) if ax else (x0, y0 + d)
+                if rect_free(x, y, rw, rh):
+                    got, how = (x, y), ('exact site' if d == 0 else f'{tag} {abs(d):.1f} um'); break
+            if got:
+                break
+        if got is None:
+            r_ = occ.find(cx, cy, rw, rh, 0.0)
+            if r_ is None:
+                raise SystemExit(f'no free area for lane row {rid} ({rw}x{rh})')
+            got, how = r_, 'row nearest free area'
+        lane_stats[how.split(' ')[0] + ' ' + how.split(' ')[1]] += 1
+        off = 0.0
+        for (n, *_), (w_, h_) in zip(tl, dims):
+            x, y = (got[0], got[1] + off) if along_x else (got[0] + off, got[1])
+            off += h_ if along_x else w_
+            put(n, x, y, 'R0', f'lane row {rid} ({len(tl)} lanes, {fl}): {how}', 0.0)
+            homes[n] = dict(rule=f'lane row {how}', target=[round(cx, 1), round(cy, 1)], at=[round(x, 3), round(y, 3)],
+                            dist_um=round(abs(got[0] + rw / 2 - cx) + abs(got[1] + rh / 2 - cy), 1))
+    if rows_:
+        print('lane rows', len(rows_), 'tiles', sum(len(v) for v in rows_.values()), dict(lane_stats), flush=True)
     # 3 relays with planned homes
     for n in inst:
         if n in pl:
