@@ -129,7 +129,7 @@ module ot_s81sl_vs #(
     wire [3:0] rsv;
     ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
     wire rs_c = rsv[0], rs_r = rsv[1], rs_x = rsv[2], rs_o = rsv[3];
-    integer i;
+    integer i, k, e2;
     function automatic [31:0] bf16(input [31:0] x);
         reg [32:0] s;
         begin s = {1'b0, x} + 33'h7FFF + {32'd0, x[16]}; bf16 = {s[31:16], 16'd0}; end
@@ -357,9 +357,13 @@ module ot_s81sl_vs #(
         ve_aval <= xq_c;
         ve_ag <= gsel;
         // ADD results: copy j's slots of half rows 2 s, 2 s + 1
+        // (decoded constant-index slices: one-hot row pair x copy, no runtime part-select)
         if (vov_c && op == OP_ENG && ph)
-            for (i = 0; i < 8; i = i + 1)
-                hst[{ko_e[2:0], (i >= 4) ? 1'b1 : 1'b0}][(4 * voc_c + (i % 4)) * 16 +: 16] <= voy_c[32 * i + 16 +: 16];
+            for (i = 0; i < 16; i = i + 1)
+                for (k = 0; k < 4; k = k + 1)
+                    if ((i >> 1) == ko_e[2:0] && k == voc_c)
+                        for (e2 = 0; e2 < 4; e2 = e2 + 1)
+                            hst[i][(4 * k + e2) * 16 +: 16] <= voy_c[32 * (4 * (i & 1) + e2) + 16 +: 16];
     end
     // partial triples out; result / flush counters
     always @(posedge clk or negedge rs_o)
