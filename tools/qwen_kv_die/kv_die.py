@@ -1018,6 +1018,9 @@ if KSD.ON:
     RTL.update({k_: KSD.RTL_FILE for k_ in KSD.KIND_MASTER.values()}, qkd_ectlk=KSD.bindings()['qkd_ectlk']['file'])
     if KSD.PVFIN:      # KV-PLAN-FIN: the stream PV final join element pvfin
         RTL.update(qkd_pvfin=KSD.PVFIN_FILE)
+    if KSD.AHUB_STATIC:    # KV-INTEG/AHUB: the static hub element (one clock entry; kv_static_die AHUB binding)
+        AHUB_CLK[:] = ['ck_c']
+        RTL.update(qkd_ahub=f'{KSD.AHUB_FILE} qkd_ahub_static_dw')
     if KSD.AFAULT:     # RTL-BUILD-KV/FAULT P7: the pair fault rides its own 1-b die word to the attention fault root
         for _mn in ('qkd_pvw_s', 'qkd_pvw_n'):
             _pp = SPLIT_BINDINGS[_mn]['ports']

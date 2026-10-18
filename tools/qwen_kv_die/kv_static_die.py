@@ -137,6 +137,19 @@ AFAULT_D = [('ufs_WS', ('astk_WS', 'af')), ('ufs_WN', ('astk_WN', 'af')), ('ufs_
 AFAULT_C = [f'ufk_{st}' for st in ('WS', 'WN', 'ES', 'EN')]
 PVFIN_FILE = 'rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv'
 PVFIN_FRAME = (259.2, 259.2)            # kit qkd_pv_fin_s outline (gate pending)
+# KV-INTEG/AHUB 10-18 (RTL-BUILD-KV M2 + P6; OT_KV_AHUB_STATIC, default ON with PVFIN): the die hub `ahub` (master
+# qkd_ahub) binds the STATIC six-root hub element qkd_ahub_static_dw (rtl/hdc/nearhbm/qkd_ahub_static_dw.sv = the sealed
+# ot_qkd_ahub_static_die_cal of the qualified native service + the registered leaf qkd_ahub_static_io), NOT the legacy
+# hub_p / ot_qkd_ahub_die (whose P.V half needs pi_* = 2,084 input bits no static producer drives, and whose reciprocals
+# leave only through pl_rz per P.V beat).  Die buses: ks_ahs kvs_attn ahs -> ahub hs (attention root {start_qk, ep,
+# layer, ctx, cal[127:16], cal[175:160]}), ap_<st> 43 b (the static ASTK hub word, strip_er_st ap[42:0]), am_<st> 36 b,
+# ks_ahfr ahub fr -> pvfin fr (145 b {rz 4 x 32, rz_epoch, rz_valid}, one edge a pass on pvfin's R slot), hf; ONE clock
+# entry ck_c.  Removed: hs (seq -> hub: the hub starts on the attention command) and ares (hub ao -> seq ar: the static
+# hub has no result face; results leave pvfin -> kvs_attn fin).  Plan-priced parameters: ahub_ages() (record).
+AHUB_STATIC = PVFIN and os.environ.get('OT_KV_AHUB_STATIC', '1') == '1'
+AHUB_FILE = 'rtl/hdc/nearhbm/qkd_ahub_static_dw.sv'
+AHS = ['start_qk', 'ep', 'layer', 'ctx', 'cal[127:16]', 'cal[175:160]']      # kvs_attn ahs = ahub hs (165 b, LSB first)
+AHS_W, AHUB_AP_W, AHUB_FR_W = 165, 43, 145
 FIN = [('out_valid', 1), ('out_beat', 5), ('out_epoch', 16), ('out_data', 512)]    # pvfin fo = kvs_attn fin (LSB first)
 PVFST = ['start_pv', 'ep', 'cal[175:128]']                                        # kvs_attn pvfst = pvfin fs (65 b)
 # per-tile frames (um, ASSUMED until kits close): see place()
@@ -581,6 +594,8 @@ DIE_EXPORTS = dict(
 )
 if PVFIN:   # KV-PLAN-FIN: the final join's command word {start_pv, ep, cal R/P1/P0} (LSB first)
     DIE_EXPORTS['attn'][('attn_root', tuple(PVFST))] = ('pvfst', 65)
+if AHUB_STATIC:   # KV-INTEG/AHUB: the attention command word of the static hub
+    DIE_EXPORTS['attn'][('attn_root', tuple(AHS))] = ('ahs', AHS_W)
 DIE_EXPORTS['pc_h'] = DIE_EXPORTS['pc']
 if AFAULT:   # P7: each group's chain node -> the next slot's group (or, slot 7, the attention control tile)
     DIE_EXPORTS['grp'] = {('af', 'fault'): ('af__fault', 1)}
@@ -1017,6 +1032,13 @@ def bindings():
                        p0=['p0_valid', 'p0_beat', 'p0_epoch', 'p0_data'], p1=['p1_valid', 'p1_beat', 'p1_epoch', 'p1_data'],
                        fr=['rz_valid', 'rz_epoch', 'rz'], fo=[f for f, _ in FIN], ff=['fault']),
             sliced={}, classed={})
+    if AHUB_STATIC:
+        out['qkd_ahub'] = dict(module='qkd_ahub_static_dw', file=AHUB_FILE,
+            ports=dict(hs=['hs_start', 'hs_ep', 'hs_layer', 'hs_ctx', 'hs_cal_lo', 'hs_cal_r'],
+                       **{f'ap_{st}': [f'ap{k}'] for k, st in enumerate(STACKS)},
+                       **{f'am_{st}': [f'am{k}'] for k, st in enumerate(STACKS)},
+                       fr=['fr_valid', 'fr_epoch', 'fr_rz'], hf=['hf'], ck_c=['ck'], rst_n=['rst_n']),
+            sliced={}, classed={})
     return out
 
 
@@ -1232,6 +1254,24 @@ def _die_joins(m, K, B, add, fk, rec):
         if RS_PAIRS:
             bus('ks_pvp0', 'kv_oneway', 534, [('pvw_0', 'pr'), ('pvfin', 'p0')])
             bus('ks_pvp1', 'kv_oneway', 534, [('pvw_1', 'pr'), ('pvfin', 'p1')])
+    # KV-INTEG/AHUB: the static hub's faces (the legacy hub buses hs / ares go; ap narrows to the static 43-b word)
+    if AHUB_STATIC and 'ahub' in by:
+        for i_ in reversed(range(len(B))):
+            bid_, cl_, bits_, eps_ = B[i_]
+            if bid_ in ('hs', 'ares'):
+                del B[i_]
+                seen.discard(bid_)
+                rec['dropped_buses'].append(bid_)
+            elif re.fullmatch(r'ap_(WS|WN|ES|EN)', bid_):
+                B[i_] = (bid_, cl_, AHUB_AP_W, eps_)
+        bus('ks_ahs', 'kv_oneway', AHS_W, [('kvs_attn', 'ahs'), ('ahub', 'hs')])
+        if PVFIN and 'pvfin' in by:
+            bus('ks_ahfr', 'kv_oneway', AHUB_FR_W, [('ahub', 'fr'), ('pvfin', 'fr')])
+        rec['opens'].append(dict(where='seq.ar (520 b; qkd_seq_static_s ar_h 8 b)', owner='KV-PLAN3 SEQ swap: the result '
+                                 'header {valid, g 0, beat} = the pvfin fo header (out_valid, out_beat), a fork of ks_pvfin; '
+                                 'the legacy hub ao that fed it never fires on the static die (no pi_*)'))
+        rec['notes'].append('ahub = qkd_ahub_static_dw (KV-INTEG/AHUB): ap_<st> 43 b needs the ASTK strip_er_st binding '
+                            '(RTL-BUILD-KV ASTK (a)); seq.hs output unread (the hub starts on kvs_attn ahs)')
     # P7 (AFAULT): the attention unit-fault tree (see AFAULT): group chain + local K / V faults, chain ends and the direct
     # lanes into kvs_attn (afr).  pvw pf = the pair fault only (kv_die splits busy / out_age into pa under AFAULT)
     if AFAULT:
@@ -1323,9 +1363,9 @@ def _die_joins(m, K, B, add, fk, rec):
                   'the 512-b registered RESULT TRUNK in qkd_pvw_die_t (pv_trunk_gen: the 32 column joins inject their held y '
                   'at compiled slots, beat order 0..31, exit at the strip corner facing pvfin); the current po is 16,384 b '
                   'at 32 staggered column ages (COL_D) and cannot feed one capture slot (results/arch/qwen_kv_pvfin_1017)')]) + [
-           dict(where='pvfin.fr (145 b: rz_valid, rz_epoch, 4 x 32-b head reciprocals)', owner='KVE: static hub '
-                'ot_qkd_ahub_static_die_cal rz_vector / rz_epoch + the R_AGE slot (the die hub qkd_ahub = legacy '
-                'ot_qwen_nearhbm_attn_hub_p has only the debug native_reciprocal, no slot / epoch)'),
+           *([] if AHUB_STATIC else [dict(where='pvfin.fr (145 b: rz_valid, rz_epoch, 4 x 32-b head reciprocals)',
+                owner='KVE: static hub ot_qkd_ahub_static_die_cal rz_vector / rz_epoch + the R_AGE slot (the die hub '
+                'qkd_ahub = legacy ot_qwen_nearhbm_attn_hub_p has only the debug native_reciprocal, no slot / epoch)')]),
            *([] if AFAULT else [dict(where='pvfin.ff (fault, output)', owner='KVE-2: the attention unit-fault OR tree '
                                      '(attn_face unit_fault)')])]
           if PVFIN else
@@ -1657,8 +1697,33 @@ def record(m):
                 join_instances=len(ins()), unpriced=_G.get('unpriced'),
                 static_buses=len(ks), static_relay_stages_max=max(ks.values()) if ks else 0,
                 open_tile_inputs=sorted(opens.values(), key=lambda r: (r['owner'] or '', r['master'], r['port'])),
+                **({'ahub_ages': ahub_ages(m)} if AHUB_STATIC and 'ks_ahs' in m.get('relay_stages', {}) else {}),
                 attn_fault=afault_latency(m),
                 **{k: v for k, v in m.get('static_die', {}).items()})
+
+
+def ahub_ages(m, pv_lead=0, stack_start_lag=None):
+    """KV-INTEG/AHUB: qkd_ahub_static_dw parameters from the plan's relay stages (D = registered die relay stages,
+    pin registers excluded; bench tb_qkd_ahub_static_dw proves both formulas edge-exact):
+      FR_OFS   = D(ks_pvfst) - PV_LEAD - D(ks_ahfr) - D(ks_ahs) - 1   -> fr lands on pvfin's R slot (cal R after start_pv)
+      AP_OFS_s = 2 + L_s + D(ap_s) - D(ks_ahs) - 1                     -> hub input ages of stack s = the native
+                                                                          service's LMAX / Z input ages
+    L_s = the stack's start lag behind the attention root's start_qk (compiler; 0 if not given).  The hub's am word
+    reaches astk_s L_h + D(am_s) - L_s edges after the service's (L_h = D(ks_ahs) + 1): the compiler's EXP_START must
+    cover it (am_lag_edges)."""
+    st = m.get('relay_stages', {})
+    lag = stack_start_lag or {}
+    dh, df, dp = st.get('ks_ahs', 0), st.get('ks_ahfr', 0), st.get('ks_pvfst', 0)
+    lh = dh + 1
+    ap = {s: 2 + lag.get(s, 0) + st.get(f'ap_{s}', 0) - lh for s in STACKS}
+    return dict(schema='opentallas.qwen_kv.ahub_ages.v1', module='qkd_ahub_static_dw', file=AHUB_FILE,
+                relays=dict(ks_ahs=dh, ks_ahfr=df, ks_pvfst=dp, **{f'ap_{s}': st.get(f'ap_{s}', 0) for s in STACKS},
+                            **{f'am_{s}': st.get(f'am_{s}', 0) for s in STACKS}),
+                PV_LEAD=pv_lead, FR_OFS=dp - pv_lead - df - dh - 1,
+                AP_OFS=[ap[s] for s in STACKS], AP_OFS_hex='{' + ', '.join(f"16'h{ap[s] & 0xffff:04x}" for s in reversed(STACKS)) + '}',
+                am_lag_edges={s: lh + st.get(f'am_{s}', 0) - lag.get(s, 0) for s in STACKS},
+                stack_start_lag={s: lag.get(s, 0) for s in STACKS},
+                bench='tools/qwen_kv_die/ahub_static_dw_bench.sh (results/rtl/qwen_kv_static_ahub_1018)')
 
 
 def afault_latency(m):
