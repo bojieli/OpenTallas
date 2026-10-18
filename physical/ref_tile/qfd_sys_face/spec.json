@@ -7,7 +7,7 @@
   "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv",
   "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv",
   "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies.sv",
-  "rtl/qwen_sys/context_transport_20261014/qfd_program_record_port.sv",
+  "rtl/qwen_split/qfd_sys_face_record_port.sv",
   "rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv",
   "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
   "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v"
@@ -40,97 +40,97 @@
  "pins": {
   "N": [
    "fwd_epoch",
-   "admit_ready",
-   "cal_seg",
-   "cal_start",
+   "d2d_fault",
+   "d2d_epoch_abort",
+   "cfg_tx_we",
+   "cfg_rx_we",
    "cfg_addr",
    "cfg_data",
-   "cfg_rx_we",
-   "cfg_tx_we",
-   "collective_busy",
-   "collective_drained",
-   "crom_fault",
-   "d2d_epoch_abort",
-   "d2d_fault",
-   "emb_rx_slot",
-   "emb_rx_v",
-   "execution_active",
+   "cal_start",
+   "cal_seg",
+   "prog_rx_v",
+   "prog_witness_slot",
    "prog_auth_slot",
    "prog_context_slot",
-   "prog_rx_v",
    "prog_tx_observed_v",
    "prog_tx_record",
-   "prog_witness_slot",
-   "result_cause",
-   "result_cycles",
-   "result_done",
-   "result_fault",
-   "result_gen",
-   "result_tag",
    "ck",
    "rst_n",
-   "result_token",
-   "result_v",
-   "result_value",
+   "rx_payload",
+   "emb_rx_v",
+   "emb_rx_slot",
    "status_epoch16",
    "vm_drained",
-   "rx_payload"
+   "collective_drained",
+   "collective_busy",
+   "crom_fault",
+   "execution_active",
+   "admit_ready",
+   "result_v",
+   "result_done",
+   "result_fault",
+   "result_cause",
+   "result_tag",
+   "result_gen",
+   "result_token",
+   "result_value",
+   "result_cycles"
   ],
-  "S": [
-   "io_cmd_free",
-   "io_fault",
-   "io_shared_fault",
-   "seq_cfg_image_ready",
-   "seq_dc",
-   "seq_descriptor_obs",
-   "seq_dh",
-   "seq_program_obs",
-   "tt_command_stage",
+  "W": [
+   "tt_pw",
+   "tt_program_obs",
+   "tt_control_stores_ready",
+   "tt_kok",
+   "tt_kwd",
+   "tt_fab",
    "tt_layer_context_v",
-   "tt_native_pos",
+   "tt_command_stage",
    "tt_native_tok",
-   "complete_slot",
-   "crom_fault_code",
-   "host_epoch",
-   "host_epoch_valid",
-   "host_fused_capability",
-   "host_generation",
-   "host_tag",
-   "kv_word_index",
-   "kv_word_slot",
+   "tt_native_pos",
    "native_fault",
    "q_slot",
    "q_slot_beat",
+   "kv_word_slot",
+   "kv_word_index",
    "visibility_slot",
-   "fault"
+   "complete_slot",
+   "host_epoch_valid",
+   "host_fused_capability",
+   "host_epoch",
+   "host_tag",
+   "host_generation"
   ],
-  "W": [
-   "res_issue_fault",
-   "tt_control_stores_ready",
-   "tt_fab",
-   "tt_kok",
-   "tt_kwd",
-   "tt_program_obs",
-   "tt_pw",
-   "emb_core_epoch",
-   "emb_expected_epoch",
-   "emb_expected_scale",
+  "S": [
+   "emb_word_v",
+   "emb_word_data",
+   "emb_word_token",
+   "emb_word_index",
+   "emb_word_scale",
+   "emb_word_epoch",
    "emb_expected_slot",
    "emb_expected_token",
    "emb_expected_word",
+   "emb_expected_scale",
+   "emb_expected_epoch",
    "emb_fill_begin",
-   "emb_fill_epoch",
    "emb_fill_token",
-   "emb_word_data",
-   "emb_word_epoch",
-   "emb_word_index",
-   "emb_word_scale",
-   "emb_word_token",
-   "emb_word_v"
+   "emb_fill_epoch",
+   "emb_core_epoch",
+   "emb_prov_fault",
+   "io_cmd_free",
+   "io_fault",
+   "io_shared_fault",
+   "fault"
   ],
-  "E": []
+  "E": [
+   "seq_cfg_image_ready",
+   "seq_dc",
+   "seq_program_obs",
+   "seq_descriptor_obs",
+   "seq_dh"
+  ]
  },
- "recipe": 3,
+ "recipe": 4,
  "route": {
   "pd": 0.5,
   "threads": 8,
@@ -144,14 +144,15 @@
    "sink_clustering": false
   },
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0
  },
- "structural_change": "NEW leaf (ELEM-CENSUS 10-16, census class F, Q-COMPUTE-DIE go 10-16): compute-die system face qfd_sys_face (Q-NETLIST ab5f73bcc/c9415e73d/3effaa228: config ROM ot_rom_4096x72_m8 boot + program replay, static T/L/E calendars, qfd_d2d_cal_seq, record port, embedding row RX, STATUS/RESULT, fab), CONTRACT v1.4 frame 302.4 x 216 um, one ck root. Recipe 3: every data input and output registered at its pin (+1 edge in, +1 edge out, pin_regs.json; the compiled calendar offsets absorb it). Synthesis-only RTL guard: the ROM instance drops its VIAMAP/INSTANCE parameters under SYNTHESIS (OpenROAD's netlist reader rejects instance parameters; the hard macro is content-independent), simulation unchanged. Pin FACES = the die tool's top-down q2o1 assignment (N D2D/record/STATUS face, S sequencer/TT/native59 face, W embedding-provider + TT pw face); 'fault' (absent from the die file: unloaded at die level, folded into fab inside) on S. Ports spread over each face; q2o2 face moves are a re-kit only.",
- "slot_change_request": "none: CONTRACT.md v1.4 frame 302.4 x 216 (results/arch/qwen_split_compute_1014/CONTRACT.md:39); config ROM beside the N-face clock entry, over the boot/replay logic (gate 1: ROM at the E edge -> macro->reg -50 ps diagnostic).",
+ "structural_change": "SUCCESSOR rs2 (Q-STUB 10-17) = rs1 + the Q-CTLM G8 DV re-port (crom_fault_code / res_issue_fault inputs dropped: their producers left the die) + emb_prov_fault input (qfd_embedding_word_provider.fault was an open output on dv2f11; registered, sticky, joins face_fault in the rst_emb region). pin_reg_split off (current ref_tile gen rejects it without the recipe-2 pin hook; rs1's kit.env never carried it). Re-close needed because the bound view @4458091af carries the 2 dropped pins. rs1 text follows: SUCCESSOR rs1 of qfd_sys_face rr1 (7473dff29, EARLY_FAIL_HOLD at 4_1_cts: FF hold -40.35 -> -28.5 after 10.5k hold buffers, every worst endpoint an N-face input pin flop rx_payload__ot_q[*] behind the recipe-3 input hold pad; CTS 8 bufs / 10 levels, pin-flop arrival 313-404 ps) and of rq1 (CLOSED, native pin audit FAIL rst_n capture 461.9 > 190). STRUCTURAL: (1) recipe 4 / hold_budget die (owner-approved FLOW-HOLD 10-16): flop-first pins, NO input/output hold pads, boundary hold is the die budget at the relay stations; every data pin lands in / launches from a pin register (recipe-3 pin_regs). (2) RTL regional reset rs1: 14 relay flops, each <= 256 loads (rr1 lint: rst_rec 1,153 / rst_out 303 / rst_boot 278); record port reset per sub-block (rtl/qwen_split/qfd_sys_face_record_port.sv, logic identical to qfd_program_record_port), boot control vs PW/DW payload, outputs split events / emb RX / STATUS; same release edge, bench bit-exact (MUT0 1,512 events, MUT1-4 FAIL). (3) Pins re-faced to the die neighbours of Qwen dv2r8f7 (sys_face x 1101.6-1404.0, y 22496.0-22712.0): N = D2D (d2d_rom NW, rs_bump/fwd_epoch bumps N), W = native59 (directly W, full height) + tt_ctlm (SW): host context / native slots / TT faces, S = embed_prov (directly S) + io_collective (far S): embedding provider + io faults, E (was empty) = SU / sequencer observer faces seq_* (no dv2r8f7 bus; E is the compute columns and DV lane relays). Each face spread end to end by bit count. (4) ck at the N-face centre between the two 548-bit record buses (prog_tx_record W of it, rx_payload E of it) = the register mass (~1,300 N pin flops + the record port they feed).",
+ "slot_change_request": "none: CONTRACT.md v1.4 frame 302.4 x 216 (die dv2r8f7 slot unchanged); pin faces re-assigned to die neighbours (die pin plan update owed: W<->S swap, seq_* to E).",
  "job": {
-  "owner": "Claude:ELEM-CENSUS kit helper",
-  "branch": "claude/census-qkit-1016",
-  "tag": "ec1",
+  "owner": "Claude:Q-STUB",
+  "branch": "claude/q-stub-1017",
+  "tag": "rs2",
   "cycles_added": 2,
   "purpose": "Compute-die system face leaf, never kitted before (census 10-16). Bench = Q-NETLIST tb_qfd_sys_face on the production 36-layer START table (boot 54 records, PW 1024 / DW 8, 1,512 events exact, embedding row 64 + scale exact) with mutants 1-4 (T events late / embedding word index / PW replay skip / ...) that must FAIL.",
   "extra_paths": [
@@ -202,340 +203,336 @@
  },
  "pin_ranges": {
   "fwd_epoch": [
-   4.324,
-   5.404
-  ],
-  "admit_ready": [
-   6.276,
-   7.356
-  ],
-  "cal_seg": [
-   8.228,
-   9.308
-  ],
-  "cal_start": [
-   10.181,
-   11.261
-  ],
-  "cfg_addr": [
-   12.129,
-   13.217
-  ],
-  "cfg_data": [
-   14.081,
-   19.884
-  ],
-  "cfg_rx_we": [
-   20.753,
-   21.833
-  ],
-  "cfg_tx_we": [
-   22.705,
-   23.785
-  ],
-  "collective_busy": [
-   24.657,
-   25.737
-  ],
-  "collective_drained": [
-   26.609,
-   27.689
-  ],
-  "crom_fault": [
-   28.561,
-   29.641
-  ],
-  "d2d_epoch_abort": [
-   30.513,
-   31.593
+   4.32,
+   5.4
   ],
   "d2d_fault": [
-   32.466,
-   33.546
+   6.26,
+   7.34
   ],
-  "emb_rx_slot": [
-   34.418,
-   35.498
+  "d2d_epoch_abort": [
+   8.2,
+   9.28
   ],
-  "emb_rx_v": [
-   36.37,
-   37.45
+  "cfg_tx_we": [
+   10.14,
+   11.22
   ],
-  "execution_active": [
-   38.322,
-   39.402
+  "cfg_rx_we": [
+   12.08,
+   13.16
   ],
-  "prog_auth_slot": [
-   40.274,
-   41.354
+  "cfg_addr": [
+   14.02,
+   15.115
   ],
-  "prog_context_slot": [
-   42.227,
-   43.307
+  "cfg_data": [
+   15.975,
+   21.814
+  ],
+  "cal_start": [
+   22.674,
+   23.754
+  ],
+  "cal_seg": [
+   24.614,
+   25.694
   ],
   "prog_rx_v": [
-   44.179,
-   45.259
-  ],
-  "prog_tx_observed_v": [
-   46.131,
-   47.211
-  ],
-  "prog_tx_record": [
-   48.079,
-   147.466
+   26.554,
+   27.634
   ],
   "prog_witness_slot": [
-   148.334,
-   149.414
+   28.494,
+   29.574
   ],
-  "result_cause": [
-   150.282,
-   151.37
+  "prog_auth_slot": [
+   30.434,
+   31.514
   ],
-  "result_cycles": [
-   152.234,
-   158.038
+  "prog_context_slot": [
+   32.374,
+   33.454
   ],
-  "result_done": [
-   158.906,
-   159.986
+  "prog_tx_observed_v": [
+   34.314,
+   35.394
   ],
-  "result_fault": [
-   160.858,
-   161.938
-  ],
-  "result_gen": [
-   162.806,
-   163.894
-  ],
-  "result_tag": [
-   164.758,
-   175.459
+  "prog_tx_record": [
+   36.254,
+   136.246
   ],
   "ck": [
-   176.327,
-   177.407
+   137.106,
+   138.186
   ],
   "rst_n": [
-   178.279,
-   179.359
-  ],
-  "result_token": [
-   180.227,
-   183.491
-  ],
-  "result_v": [
-   184.36,
-   185.44
-  ],
-  "result_value": [
-   186.308,
-   192.111
-  ],
-  "status_epoch16": [
-   192.975,
-   195.877
-  ],
-  "vm_drained": [
-   196.745,
-   197.825
+   139.046,
+   140.126
   ],
   "rx_payload": [
-   198.693,
+   140.986,
+   240.978
+  ],
+  "emb_rx_v": [
+   241.838,
+   242.918
+  ],
+  "emb_rx_slot": [
+   243.778,
+   244.858
+  ],
+  "status_epoch16": [
+   245.718,
+   248.637
+  ],
+  "vm_drained": [
+   249.497,
+   250.577
+  ],
+  "collective_drained": [
+   251.437,
+   252.517
+  ],
+  "collective_busy": [
+   253.377,
+   254.457
+  ],
+  "crom_fault": [
+   255.317,
+   256.397
+  ],
+  "execution_active": [
+   257.257,
+   258.337
+  ],
+  "admit_ready": [
+   259.197,
+   260.277
+  ],
+  "result_v": [
+   261.137,
+   262.217
+  ],
+  "result_done": [
+   263.077,
+   264.157
+  ],
+  "result_fault": [
+   265.017,
+   266.097
+  ],
+  "result_cause": [
+   266.957,
+   267.687
+  ],
+  "result_tag": [
+   268.547,
+   279.313
+  ],
+  "result_gen": [
+   280.173,
+   280.538
+  ],
+  "result_token": [
+   281.398,
+   284.682
+  ],
+  "result_value": [
+   285.542,
+   291.381
+  ],
+  "result_cycles": [
+   292.241,
    298.08
   ],
-  "io_cmd_free": [
-   5.103,
-   6.183
-  ],
-  "io_fault": [
-   8.614,
-   9.694
-  ],
-  "io_shared_fault": [
-   12.125,
-   13.205
-  ],
-  "seq_cfg_image_ready": [
-   15.635,
-   16.715
-  ],
-  "seq_dc": [
-   18.362,
-   43.064
-  ],
-  "seq_descriptor_obs": [
-   43.928,
-   74.364
-  ],
-  "seq_dh": [
-   75.228,
-   157.714
-  ],
-  "seq_program_obs": [
-   158.578,
-   192.102
-  ],
-  "tt_command_stage": [
-   192.966,
-   195.613
-  ],
-  "tt_layer_context_v": [
-   197.26,
-   198.34
-  ],
-  "tt_native_pos": [
-   199.987,
-   207.927
-  ],
-  "tt_native_tok": [
-   208.791,
-   216.731
-  ],
-  "complete_slot": [
-   218.378,
-   219.458
-  ],
-  "crom_fault_code": [
-   221.106,
-   228.163
-  ],
-  "host_epoch": [
-   229.027,
-   236.085
-  ],
-  "host_epoch_valid": [
-   237.732,
-   238.812
-  ],
-  "host_fused_capability": [
-   241.243,
-   242.323
-  ],
-  "host_generation": [
-   243.97,
-   246.617
-  ],
-  "host_tag": [
-   247.481,
-   273.506
-  ],
-  "kv_word_index": [
-   274.37,
-   277.016
-  ],
-  "kv_word_slot": [
-   278.664,
-   279.744
-  ],
-  "native_fault": [
-   282.174,
-   283.254
-  ],
-  "q_slot": [
-   285.685,
-   286.765
-  ],
-  "q_slot_beat": [
-   288.412,
-   291.059
-  ],
-  "visibility_slot": [
-   292.706,
-   293.786
-  ],
-  "fault": [
-   296.217,
-   297.297
-  ],
-  "res_issue_fault": [
-   4.445,
-   5.525
-  ],
-  "tt_control_stores_ready": [
-   6.64,
-   7.72
-  ],
-  "tt_fab": [
-   8.835,
-   9.915
-  ],
-  "tt_kok": [
-   11.03,
-   12.11
-  ],
-  "tt_kwd": [
-   13.225,
-   14.305
+  "tt_pw": [
+   4.32,
+   51.54
   ],
   "tt_program_obs": [
-   15.295,
-   32.153
+   52.4,
+   100.25
   ],
-  "tt_pw": [
-   33.017,
-   49.654
+  "tt_control_stores_ready": [
+   101.11,
+   102.19
   ],
-  "emb_core_epoch": [
-   50.518,
-   54.067
+  "tt_kok": [
+   103.05,
+   104.13
   ],
-  "emb_expected_epoch": [
-   54.931,
-   58.481
+  "tt_kwd": [
+   104.99,
+   106.07
   ],
-  "emb_expected_scale": [
-   59.47,
-   60.55
+  "tt_fab": [
+   106.93,
+   108.01
   ],
-  "emb_expected_slot": [
-   61.665,
-   62.745
+  "tt_layer_context_v": [
+   108.87,
+   109.95
   ],
-  "emb_expected_token": [
-   63.734,
-   67.727
+  "tt_command_stage": [
+   110.81,
+   114.588
   ],
-  "emb_expected_word": [
-   68.591,
-   69.922
+  "tt_native_tok": [
+   115.448,
+   126.781
   ],
-  "emb_fill_begin": [
-   70.912,
-   71.992
+  "tt_native_pos": [
+   127.641,
+   138.973
   ],
-  "emb_fill_epoch": [
-   72.981,
-   76.53
+  "native_fault": [
+   141.773,
+   142.853
   ],
-  "emb_fill_token": [
-   77.394,
-   81.387
+  "q_slot": [
+   143.713,
+   144.793
   ],
-  "emb_word_data": [
-   82.251,
-   195.825
+  "q_slot_beat": [
+   145.653,
+   148.801
   ],
-  "emb_word_epoch": [
-   196.689,
-   200.238
+  "kv_word_slot": [
+   149.661,
+   150.741
   ],
-  "emb_word_index": [
-   201.102,
-   202.433
+  "kv_word_index": [
+   151.601,
+   152.861
   ],
-  "emb_word_scale": [
-   203.423,
-   204.503
+  "visibility_slot": [
+   153.721,
+   154.801
   ],
-  "emb_word_token": [
-   205.492,
-   209.485
+  "complete_slot": [
+   155.661,
+   156.741
+  ],
+  "host_epoch_valid": [
+   157.601,
+   158.681
+  ],
+  "host_fused_capability": [
+   159.541,
+   160.621
+  ],
+  "host_epoch": [
+   161.481,
+   171.554
+  ],
+  "host_tag": [
+   172.414,
+   209.561
+  ],
+  "host_generation": [
+   210.421,
+   211.68
   ],
   "emb_word_v": [
-   210.475,
-   211.555
+   4.32,
+   5.4
+  ],
+  "emb_word_data": [
+   6.26,
+   214.562
+  ],
+  "emb_word_token": [
+   215.422,
+   222.745
+  ],
+  "emb_word_index": [
+   223.605,
+   226.046
+  ],
+  "emb_word_scale": [
+   226.906,
+   227.986
+  ],
+  "emb_word_epoch": [
+   228.846,
+   235.355
+  ],
+  "emb_expected_slot": [
+   236.215,
+   237.295
+  ],
+  "emb_expected_token": [
+   238.155,
+   245.478
+  ],
+  "emb_expected_word": [
+   246.338,
+   248.779
+  ],
+  "emb_expected_scale": [
+   249.639,
+   250.719
+  ],
+  "emb_expected_epoch": [
+   251.579,
+   258.089
+  ],
+  "emb_fill_begin": [
+   258.949,
+   260.029
+  ],
+  "emb_fill_token": [
+   260.889,
+   268.212
+  ],
+  "emb_fill_epoch": [
+   269.072,
+   275.581
+  ],
+  "emb_core_epoch": [
+   276.441,
+   282.951
+  ],
+  "emb_prov_fault": [
+   283.811,
+   284.891
+  ],
+  "io_cmd_free": [
+   291.18,
+   292.26
+  ],
+  "io_fault": [
+   293.12,
+   294.2
+  ],
+  "io_shared_fault": [
+   295.06,
+   296.14
+  ],
+  "fault": [
+   297.0,
+   298.08
+  ],
+  "seq_cfg_image_ready": [
+   4.32,
+   5.4
+  ],
+  "seq_dc": [
+   6.26,
+   35.536
+  ],
+  "seq_program_obs": [
+   36.396,
+   76.127
+  ],
+  "seq_descriptor_obs": [
+   76.987,
+   113.059
+  ],
+  "seq_dh": [
+   113.919,
+   211.68
   ]
  },
  "children": [],
@@ -544,14 +541,12 @@
   "cols": 4,
   "allow_none": true
  },
- "inhold": true,
- "outhold": true,
+ "inhold": false,
+ "outhold": false,
  "pin_regs": {
   "enable": true
  },
  "keep_pin_regs": true,
- "pin_reg_split": true,
- "hold_pad": {
-  "cell": "HB2xp67_ASAP7_75t_R"
- }
+ "pin_reg_split": false,
+ "hold_budget": "die"
 }

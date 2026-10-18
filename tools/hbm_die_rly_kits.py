@@ -150,7 +150,7 @@ def write_family(owner: str, branch: str, flows=FLOWS) -> list:
 # o bit (rtl/hbm_accel/die_glue/ot_hbm_rly_fc.sv).  Pins: i + clk_in on the upstream face, o + clk_out on the
 # downstream face (o[k] opposite i[k]; the clock pin at the face centre, between the data pins), rs on the side face.
 # Face rule <= 6 pins/um (coordinator HBM die audit: rly_624 at 10.1/um -> face >= 104 um).
-FC_CLASSES = (48, 624)
+FC_CLASSES = (48, 136, 624)   # H-RELAY 10-17: + 136 (wide fork lanes of the lane model)
 FC_PINS_PER_UM = 6.0
 FC_DIR = "physical/hbm_rly_fc"
 FC_SPECS = "tools/ref_tile/specs_hbmrly_fc"

@@ -33,6 +33,31 @@ def main():
         r = N.audit_one((str(root), "t", "physical/ref_tile/k/views/t"))
         assert (r["launch_ps"], r["capture_ps"], r["R_ps"], r["spread_ps"]) == (240.0, 310.0, 160.0, 20.0), r
         assert r["insertion"] and "insertion.json boundary mean" in r["ref_src"]
+        # owner 10-17 0dq: FF pin-flop spread reported; > 80 at FF fails even when TT is tight
+        (v / "insertion.json").write_text(json.dumps({"tt": {"boundary": {"mean": 160.0, "min": 150.0, "max": 170.0, "n": 4}},
+                                                      "ff": {"boundary": {"mean": 120.0, "min": 70.0, "max": 160.0, "n": 4}}}))
+        r = N.audit_one((str(root), "t", "physical/ref_tile/k/views/t"))
+        assert r["ff_spread_ps"] == 90.0 and "FF pin-flop spread 90.0 > 80" in r["fail_why"], r
+        (v / "insertion.json").write_text(json.dumps({"tt": {"boundary": {"mean": 160.0, "min": 150.0, "max": 170.0, "n": 4}}}))
+        # RELATIVE MODE: the parent compensates C = 100 (not R = 160): launch O - C = 300, capture S + C = 250, and
+        # the pin flops arrive 50..70 ps after C (mismatch 70 <= 80: matched)
+        comp = N.PA.compensation("100")
+        r = N.audit_one((str(root), "t", "physical/ref_tile/k/views/t", comp))
+        assert (r["launch_ps"], r["capture_ps"]) == (300.0, 250.0), r
+        m = r["relative"]["tt"]
+        assert (m["rel_min_ps"], m["rel_max_ps"], m["mismatch_ps"], m["offset_ps"]) == (50.0, 70.0, 70.0, 60.0), m
+        assert "boundary vs neighbour" not in r["fail_why"], r
+        # a neighbour whose boundary mean is 60: pin flops 90..110 ps late -> boundary FAIL
+        nb = root / "nb"
+        nb.mkdir()
+        (nb / "insertion.json").write_text(json.dumps({"tt": {"boundary": {"mean": 60.0}}}))
+        comp = N.PA.compensation(str(nb))
+        assert comp["tt"] == 60.0 and "ff" not in comp, comp
+        r = N.audit_one((str(root), "t", "physical/ref_tile/k/views/t", comp))
+        assert "TT boundary vs neighbour 110.0 > 80" in r["fail_why"], r
+        assert N.PA.compensation("tt=160,ff=120") == {"tt": 160.0, "ff": 120.0, "src": "given tt=160,ff=120"}
+        # the CLI single-view form
+        assert N.main(["--root", str(root), "--view", "physical/ref_tile/k/views/t", "--relative-to", "160"]) == 1
     assert N.family("qfd_cst_n", "") == "qwen" and N.family("dsfd_coll_ct", "") == "s81" and N.family("ot_hgi_seq_fe", "") == "hbm"
     print("PASS test_native_pin_audit")
 

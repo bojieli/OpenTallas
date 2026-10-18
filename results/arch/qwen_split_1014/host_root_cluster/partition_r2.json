@@ -1,0 +1,93 @@
+{
+ "schema": "opentallas.qkd_host_root.partition.v2",
+ "supersedes": "partition_plan.json children (r1)",
+ "root": "qkd_host_root_admission",
+ "children": {
+  "qkd_hr_phy_pad": {
+   "members": [
+    "top/u_rank/u_phy/u_pad"
+   ],
+   "direct": "hardened as the member module itself (kit top = member); no wrapper"
+  },
+  "qkd_hr_cdc_pc": {
+   "members": [
+    "top/u_rank/u_phy/u_rx",
+    "top/u_rank/u_phy/u_tx"
+   ]
+  },
+  "qkd_hr_core_rx": {
+   "members": [
+    "top/u_rank/u_control/u_packet/u_rx"
+   ],
+   "direct": "hardened as the member module itself (kit top = member); no wrapper"
+  },
+  "qkd_hr_core_tx": {
+   "members": [
+    "top/u_rank/u_control/u_packet/u_tx"
+   ]
+  },
+  "qkd_hr_core_prompt": {
+   "members": [
+    "top/u_rank/u_control/u_control",
+    "top/u_rank/u_control/u_hc",
+    "top/u_rank/u_control/u_packet/u_axi",
+    "top/u_rank/u_program",
+    "top/u_rank/u_program_rx",
+    "top/u_records"
+   ]
+  },
+  "qkd_hr_core_peer": {
+   "members": [
+    "top/u_rank/u_peer",
+    "top/u_peer_codec",
+    "top/u_root_mux",
+    "top/u_coordinator",
+    "top/u_rank/u_control/u_packet/u_ctrl"
+   ]
+  },
+  "qkd_hr_core_guard": {
+   "members": [
+    "top/u_rank/u_guard",
+    "top/u_rank/u_native"
+   ]
+  },
+  "qkd_hr_core_queue": {
+   "members": [
+    "top/u_rank/u_bridge/u_queue",
+    "top/u_rank/u_marker_consumer",
+    "top/u_rank/u_bootbarrier"
+   ]
+  },
+  "qkd_hr_core_order": {
+   "members": [
+    "top/u_rank/u_chain",
+    "top/u_rank/u_dispatch"
+   ]
+  },
+  "qkd_hr_cdc_host": {
+   "members": [
+    "top/u_rank/u_bridge/u_ing",
+    "top/u_rank/u_bridge/u_done",
+    "top/u_rank/u_bridge/u_pacer",
+    "top/u_rank/u_fence"
+   ]
+  },
+  "qkd_hr_ingest_qm": {
+   "members": [
+    "top/u_rank/u_qm"
+   ]
+  },
+  "qkd_hr_phy_adp": {
+   "members": [
+    "top/u_rank/u_adapter/g_slice[0].u_slice",
+    "top/u_rank/u_adapter/g_slice[1].u_slice",
+    "top/u_rank/u_adapter/g_slice[2].u_slice",
+    "top/u_rank/u_adapter/g_slice[3].u_slice",
+    "top/u_rank/u_adapter/g_slice[4].u_slice",
+    "top/u_rank/u_adapter/g_slice[5].u_slice",
+    "top/u_rank/u_adapter/g_slice[6].u_slice",
+    "top/u_rank/u_adapter/g_slice[7].u_slice"
+   ]
+  }
+ }
+}
