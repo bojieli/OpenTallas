@@ -50,7 +50,15 @@ module ot_dsdv_vstop #(
     input  wire [V-1:0]  in_n,
     input  wire          in_sv,        // inject southbound (onto vo_s)
     input  wire [V-1:0]  in_s,
-    output reg           fault
+    output reg           fault,
+    // second consumer taps (S81-NATIVE3 10-17, gunit L2's HP copy; unconnected elsewhere, so synthesis drops them):
+    // ra_s / ra_n = the rung input flops (northbound / southbound arrivals, one edge after the pin), dk_n / dk_s = a
+    // separate registered "tapped single-beat kind == k7" flag on the dl_*v edge, so a consumer on the far face does not
+    // load the dl_* output flops that sit at their own pins
+    output wire [V-1:0]  ra_s,
+    output wire [V-1:0]  ra_n,
+    output reg           dk_n,
+    output reg           dk_s
 );
     localparam [2:0] K_XQ = 3'd1, K_XB = 3'd2;
     // ---------------------------------------------------------------- input flops
@@ -96,4 +104,6 @@ module ot_dsdv_vstop #(
             dl_nv <= tn; dl_sv <= ts;
         end
     always @(posedge clk) begin dl_n <= is_; dl_s <= in_; end
+    assign ra_s = is_; assign ra_n = in_;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin dk_n <= 1'b0; dk_s <= 1'b0; end else begin dk_n <= tn && kn == 3'd7; dk_s <= ts && ks == 3'd7; end
 endmodule
