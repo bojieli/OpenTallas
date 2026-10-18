@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
-"""PL-SVC (PARENTS-LANDED, 10-18): ref_tile spec + exact pin plan for the landed service slice dsdv_svc_rs_lp.
+"""PL-SVC (PARENTS-LANDED, 10-18): ref_tile specs + exact pin plans for the landed service slices
+dsdv_svc_rs_lp (the 14 non-entry slices) and dsdv_svc_rs_entry_lp (the entry slices rsv_05 / rsv_11).
 
-    python3 tools/s81_dv/svc_rs/svc_rs_lp_kit.py        -> tools/ref_tile/specs_s81dv_svc_lp/dsdv_svc_rs_lp.json
-                                                           physical/dsdv_svc_rs_lp_pins/dsdv_svc_rs_lp.tcl
-then  python3 tools/ref_tile/ref_tile.py gen tools/ref_tile/specs_s81dv_svc_lp/dsdv_svc_rs_lp.json
+    python3 tools/s81_dv/svc_rs/svc_rs_lp_kit.py        -> tools/ref_tile/specs_s81dv_svc_lp/<top>.json
+                                                           physical/dsdv_svc_rs_lp_pins/<top>.tcl
+then  python3 tools/ref_tile/ref_tile.py gen tools/ref_tile/specs_s81dv_svc_lp/<top>.json
+The up face is split (coordinator 10-18 option (a)): up_d {done, cr, ack} 13 b + up_f {rg fault, rg live, fault} 3 b a
+face.  The entry adds the half's host endpoint (j 33 / jd 2 / q 515 / hw 292 / hc 9 / fault / st_rg 2 / pv_v + pv_d 514,
+1,368 b): q / j / jd / hc / fault / st_rg on N beside the SM face (an entry slice has no N-face tree child: role children
+E / S / W), hw on W, the P.V root word on E (N stays <= 6 pins/um).
 
 Floorplan (origin SW, all hard children on the 43.2 lattice; W 1728 x H 2073.6):
   region c  (ck_c, core): the 8 dsdv_svc_sx_hrow leaves as a 4 x 2 array (column = score row r, row = half b) at
@@ -21,7 +26,6 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
-NAME = TOP = "dsdv_svc_rs_lp"
 L = 43.2
 W, H = 1728.0, 2073.6
 D = "rtl/dsrom_sys/s81_dv/svc_rs"
@@ -99,10 +103,18 @@ def macros():
     return out
 
 
-def face_bits():
+HOST_N = ("j", "jd", "q", "hc", "fault", "st_rg")
+HOST = [("j", 33), ("jd", 2), ("q", 515), ("hw", 292), ("hc", 9), ("fault", 1), ("st_rg", 2), ("pv_v", 1), ("pv_d", 513)]
+
+
+def bits(p, w):
+    return [p] if w == 1 and p in ("fault", "pv_v", "w_v") else [f"{p}[{i}]" for i in range(w)]
+
+
+def face_bits(entry=False):
     """{face: [bit names in order]} for the exact io plan"""
     F = {0: "N", 1: "E", 2: "S", 3: "W"}
-    lanes = [("dn_i", 805), ("dn_o", 805), ("up_i", 16), ("up_o", 16), ("ri", 514), ("ro", 514),
+    lanes = [("dn_i", 805), ("dn_o", 805), ("up_d_i", 13), ("up_d_o", 13), ("up_f_i", 3), ("up_f_o", 3), ("ri", 514), ("ro", 514),
              ("gi_v", 1), ("gi_d", 2132), ("go_v", 1), ("go_d", 2132), ("si_v", 1), ("si_d", 1076), ("so_v", 1), ("so_d", 1076)]
     faces = {f: [] for f in "NESW"}
     for f, fn in F.items():
@@ -114,6 +126,13 @@ def face_bits():
     faces["S"] = s[:len(s) // 2] + hb[:len(hb) // 2] + ["ck_c"] + hb[len(hb) // 2:] + s[len(s) // 2:]
     smf = ["w_v"] + [f"w_a[{i}]" for i in range(14)] + [f"w_m[{i}]" for i in range(16)] + \
           [f"w_d[{i}]" for i in range(512)] + [f"w_st[{i}]" for i in range(12)]
+    if entry:      # N <= 6 pins/um: q + job / credit / status pins on N beside the SM face, hw on W, P.V out on E
+        hb = [b for p, w in HOST if p in HOST_N for b in bits(p, w)]
+        smf = hb[:len(hb) // 2] + smf + hb[len(hb) // 2:]
+        for fc, names in (("W", ("hw",)), ("E", ("pv_v", "pv_d"))):
+            xb = [b for p, w in HOST if p in names for b in bits(p, w)]
+            fb = faces[fc]
+            faces[fc] = fb[:len(fb) // 2] + xb + fb[len(fb) // 2:]
     n = faces["N"]
     faces["N"] = n[:len(n) // 2] + smf[:len(smf) // 2] + ["ck_sm"] + smf[len(smf) // 2:] + n[len(n) // 2:]
     return faces
@@ -148,7 +167,40 @@ def io_tcl(faces, margin=4.32):
     return "\n".join(lines) + "\n", dens
 
 
+VARIANTS = {
+    "dsdv_svc_rs_lp": dict(entry=False, flat="dsdv_svc_rs_f", what="dsdv_svc_rs (14 non-entry slices)"),
+    "dsdv_svc_rs_entry_lp": dict(entry=True, flat="dsdv_svc_rs_entry_f",
+                                 what="dsdv_svc_rs_entry (entry slices rsv_05 W / rsv_11 E: the half's host endpoint)"),
+}
+VL = "VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator"
+WIT = "results/rtl/s81_dv_1016/svc_rs/lp"
+
+
+def benches(top, entry):
+    e = 1 if entry else 0
+    out = [dict(name=f"{top}_lockstep", cmd=f"SIM=verilator {VL} LP_MUTS=0 bash rtl/dsrom_sys/s81_dv/svc_rs/lp/{top}_bench.sh "
+                f"lp_bench_out", expect="pass", pass_regex="MUT 0: LP_LOCKSTEP PASS", threads=8, peak_ram_gb=128,
+                pass_witness=f"{WIT}/{top}_m0.log")]
+    for m in (1, 2, 3, 4):
+        out.append(dict(name=f"{top}_mut{m}", cmd=f"SIM=verilator {VL} LP_MUTS={m} bash rtl/dsrom_sys/s81_dv/svc_rs/lp/"
+                        f"{top}_bench.sh lp_bench_out", expect="fail", fail_regex=f"MUT {m}: LP_LOCKSTEP FAIL", threads=8,
+                        peak_ram_gb=128, fail_witness=f"{WIT}/{top}_m{m}.log"))
+    out.append(dict(name=f"{top}_refactor_feq", cmd=f"bash tools/s81_dv/svc_rs/lp_feq_bench.sh feq_out 0 '' {e}",
+                    expect="pass", pass_regex="FEQ_EXIT 0", threads=8, peak_ram_gb=128,
+                    pass_witness=f"{WIT}/feq_e{e}_m0.log"))
+    out.append(dict(name=f"{top}_refactor_feq_mut", cmd=f"bash tools/s81_dv/svc_rs/lp_feq_bench.sh feq_out 1 '' {e}",
+                    expect="fail", fail_regex="FEQ FAIL", threads=8, peak_ram_gb=128,
+                    fail_witness=f"{WIT}/feq_e{e}_m1.log"))
+    return out
+
+
 def main():
+    for top, v in VARIANTS.items():
+        kit(top, **v)
+
+
+def kit(TOP, entry, flat, what):
+    NAME = TOP
     src = (ROOT / "tools/s81_dv/svc_rs/rs_files.sh").read_text()
     import re
     m = re.search(r"RS_SRC=\((.*?)\)", src, re.S).group(1)
@@ -158,15 +210,16 @@ def main():
             "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv"}
     files = [f for f in files if f not in hard]
     files = [f.replace("ot_sram_1r1w_256x256_m2_r2c2.v", "ot_sram_1r1w_256x256_m2_r2c2_bb.v") for f in files]
-    # dsdv_svc_rs.sv stays: it holds dsdv_svc_rs_up (the up tree node of dsdv_svc_rs_ug)
+    # dsdv_svc_rs.sv stays (the original slice; the flat parents' children live in dsdv_svc_rs_glue.sv)
     files += ["rtl/dsrom_sys/s81_ph/svc/dsfd_svc_c.sv", f"{D}/dsdv_svc_rs_glue.sv",
-              f"{D}/dsdv_svc_rs_f.sv", "rtl/common/landed_parent/ot_pl_land.sv", f"{D}/lp/dsdv_svc_rs_lp.sv"]
-    faces = face_bits()
+              f"{D}/{flat}.sv", "rtl/common/landed_parent/ot_pl_land.sv", f"{D}/lp/{TOP}.sv"]
+    faces = face_bits(entry)
     tcl, dens = io_tcl(faces)
     pins_dir = ROOT / "physical/dsdv_svc_rs_lp_pins"
     pins_dir.mkdir(parents=True, exist_ok=True)
-    (pins_dir / "dsdv_svc_rs_lp.tcl").write_text(tcl)
-    ports = ["ck_c", "ck_sm", "rst", "sid", "dn_i", "dn_o", "up_i", "up_o", "ri", "ro", "gi_v", "gi_d", "go_v", "go_d",
+    (pins_dir / f"{TOP}.tcl").write_text(tcl)
+    ports = ["ck_c", "ck_sm", "rst", "sid"] + ([p for p, _ in HOST] if entry else []) + \
+            ["dn_i", "dn_o", "up_d_i", "up_d_o", "up_f_i", "up_f_o", "ri", "ro", "gi_v", "gi_d", "go_v", "go_d",
              "si_v", "si_d", "so_v", "so_d", "rq", "rk", "wd", "rv", "r_data", "r_tag", "r_beat", "hs",
              "w_v", "w_a", "w_m", "w_d", "w_st"]
     spec = dict(
@@ -178,31 +231,32 @@ def main():
         # Q-CLUSTER form (qc_kit.py): clock cts, one TritonCTS tree per region clock port, the lp.py SDC creates ck_<r>
         clock="cts", clock_port="ck_c", clock_ports=["ck_c", "ck_sm"],
         reset_ports=["rst"],
-        sdc_extra=[f"{D}/lp/dsdv_svc_rs_lp.sdc"],
+        sdc_extra=[f"{D}/lp/{TOP}.sdc"],
         outline=dict(w=W, h=H), cluster_level=2,
         children=children(), macros=macros(),
-        pins={"ANY": ports}, io_tcl="physical/dsdv_svc_rs_lp_pins/dsdv_svc_rs_lp.tcl",
+        pins={"ANY": ports}, io_tcl=f"physical/dsdv_svc_rs_lp_pins/{TOP}.tcl",
         recipe=4, hold_budget="die", inhold=False, outhold=False,
         route=dict(pd=0.5, threads=16, peak_ram_gb=256, hold_margin_ns=0.03, macro_halo_um=5.4),
         pin_regs=dict(enable=False, reason="source-registered: every lane pin lands in a pin flop / closed relay station "
                       "(dn / up / ri / ro face flops, dsfd_dvrly_276 stations), HBM pins are the dsfd_svc_pc registers, "
                       "the SM face is the smq tap's output registers; sid is a static strap"),
         fill_reason=dict(pin_bound=f"4-face neighbour lanes: ~9.1k pin bits a face (+1.2k HBM on S, +0.6k SM on N); "
+                         + ("; entry: + the half's host endpoint 1,368 b on N; " if entry else "; ") +
                          f"pin density {dens} pins/um at W {W} x H {H}"),
-        structural_change=("PL-SVC (PARENTS-LANDED 10-18, landed-regions-standard-1018): dsdv_svc_rs (14 non-entry slices) "
+        structural_change=(f"PL-SVC (PARENTS-LANDED 10-18, landed-regions-standard-1018): {what} "
                            "hardened as a LANDED PARENT generated by tools/landed_parent/lp.py from the wires-only refactor "
-                           "dsdv_svc_rs_f: 2 clock regions (c = tree region: 8 sx_hrow + 144 relay stations + tree nodes + "
+                           f"{flat}: 2 clock regions (c = tree region: 8 sx_hrow + 144 relay stations + tree nodes + "
                            "attention share + PCs; sm = SM head: 4 smhq + smhr + smq), 8 landed crossings (532 b: SE / SM rows "
-                           "c -> sm, SM fault sm -> c), record results/arch/s81_dv_1016/svc_rs/lp/dsdv_svc_rs_lp_record.json. "
-                           "Score tree / dn / P.V / HBM ports unchanged; SM face +3, up tree / hs +6, reset +3 (compiler record)."),
-        job=dict(owner="Claude:PL-SVC", branch="claude/pl-svc-1018", tag="dsdv_svc_rs_lp",
-                 purpose="S81-DV regional service slice dsdv_svc_rs as a landed parent (2 regions)",
+                           f"c -> sm, SM fault sm -> c), record results/arch/s81_dv_1016/svc_rs/lp/{TOP}_record.json. "
+                           "Up face split up_d (done / credits / acks) + up_f (fault / rg status) so the END / done path never "
+                           "sees the SM fault.  Score tree / dn / up_d / P.V / HBM ports unchanged; SM face +3, up_f / hs +6, "
+                           + ("host jd / fault / st_rg +6 (hc, q, hw, j, pv 0), " if entry else "") +
+                           "reset +3 (compiler record)."),
+        job=dict(owner="Claude:PL-SVC", branch="claude/pl-svc-1018", tag=TOP,
+                 purpose=f"S81-DV regional service slice {what} as a landed parent (2 regions)",
                  extra_paths=["rtl/dsrom_sys/s81_dv", "rtl/common/landed_parent", "physical/dsdv_svc_rs_lp_pins",
                               "results/arch/s81_dv_1016/svc_rs/lp"],
-                 benches=[dict(name="svc_rs_lp_lockstep",
-                               cmd="SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator LP_MUTS=0 "
-                                   "bash rtl/dsrom_sys/s81_dv/svc_rs/lp/dsdv_svc_rs_lp_bench.sh lp_bench_out",
-                               expect="pass", pass_regex="BENCH_EXIT 0", threads=8, peak_ram_gb=64)]),
+                 benches=benches(TOP, entry)),
     )
     out = ROOT / "tools/ref_tile/specs_s81dv_svc_lp" / f"{NAME}.json"
     out.parent.mkdir(parents=True, exist_ok=True)

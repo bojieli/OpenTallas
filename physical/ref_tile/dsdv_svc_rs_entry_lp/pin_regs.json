@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_svc_rs_entry_lp",
+ "enable": false,
+ "reason": "source-registered: every lane pin lands in a pin flop / closed relay station (dn / up / ri / ro face flops, dsfd_dvrly_276 stations), HBM pins are the dsfd_svc_pc registers, the SM face is the smq tap's output registers; sid is a static strap"
+}
