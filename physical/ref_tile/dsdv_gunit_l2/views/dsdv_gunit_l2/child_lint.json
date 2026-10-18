@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/dsdv_gunit_l2-g1-99ffdc846/record/views/dsdv_gunit_l2/provenance/dsdv_gunit_l2.candidate.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/dsdv_gunit_l2-n3-4ad138b2f/record/views/dsdv_gunit_l2/provenance/dsdv_gunit_l2.candidate.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [],
- "summary": "dsdv_gunit_l2 345.6 x 172.8: PG M5 VDD 64 stripes (98% spread, 100% cov) / VSS 64 stripes (98% spread, 100% cov); strap M6; face pins 3584 blocked-above 0 blocked-same 0; clock clk insertion 277 ps; pockets M5 0 (closed)",
+ "summary": "dsdv_gunit_l2 345.6 x 172.8: PG M5 VDD 64 stripes (98% spread, 100% cov) / VSS 64 stripes (98% spread, 100% cov); strap M6; face pins 3584 blocked-above 0 blocked-same 0; clock clk insertion 328 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "dsdv_gunit_l2",
   "W": 345.6,
@@ -38,7 +38,7 @@
   "face": {
    "face_pins": 3584,
    "blocked_above": 0,
-   "covered_below": 556,
+   "covered_below": 49,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
@@ -47,8 +47,8 @@
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 276.86,
-    "min_ps": 208.63
+    "max_ps": 327.9,
+    "min_ps": 244.81
    }
   },
   "pockets": {
@@ -57,7 +57,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 435
+    "added": 439
    },
    "count": 0,
    "area_um2": 0,

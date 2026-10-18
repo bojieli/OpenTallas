@@ -62,17 +62,29 @@ def main():
         r['pads'] = [dict(p, sink=tap.get(p['sink'], p['sink'])) for p in row.get('pads', []) if tap.get(p['sink'], p['sink']) != nd]
         return r
     B = ld(a.base); N = ld(a.new)
-    out, seen = [], set()
+    out, seen = [], {}
+
+    def merge_into(r):
+        """one row per (driver instance, sink set): the two banks of a folded tap pair (their own rows before the fold)
+        become one bus; their driver ports are unioned into the kept row (else two layer buses drive the same bits)."""
+        key = (r['driver'].split('.')[0], frozenset(r['sinks']))
+        k = seen.get(key)
+        if k is None:
+            seen[key] = len(out); return False
+        o = out[k]
+        di, dp = o['driver'].split('.', 1)
+        o['driver'] = di + '.' + '+'.join(dict.fromkeys(dp.split('+') + r['driver'].split('.', 1)[1].split('+')))
+        stats['merged'] = stats.get('merged', 0) + 1
+        return True
     for row in B['rows']:
         stats['base'] += 1
         r = remap(row)
         if r is None:
             continue
-        key = (r['driver'].split('.')[0], frozenset(r['sinks']), r['driver'])
-        if key in seen:
+        if merge_into(r):
             continue
-        seen.add(key); out.append(r); stats['kept_base'] += 1
-    base_keys = {(k[0], k[1]) for k in seen}
+        out.append(r); stats['kept_base'] += 1
+    base_keys = set(seen)
     for row in N['rows']:
         stats['new'] += 1
         ms = [row.get('driver_master', '')]
@@ -84,10 +96,9 @@ def main():
             continue
         if (r['driver'].split('.')[0], frozenset(r['sinks'])) in base_keys:
             continue
-        key = (r['driver'].split('.')[0], frozenset(r['sinks']), r['driver'])
-        if key in seen:
+        if merge_into(r):
             continue
-        seen.add(key); out.append(dict(r, source_list='run8')); stats['added_new'] += 1
+        out.append(dict(r, source_list='run8')); stats['added_new'] += 1
     res = dict(B, rows=out, buses=len(out), merged_by='tools/hbm_die_v16/stations_merge_r8b.py', merge_stats=stats,
                sources=dict(base=a.base, new=a.new))
     json.dump(res, open(a.out, 'w'))

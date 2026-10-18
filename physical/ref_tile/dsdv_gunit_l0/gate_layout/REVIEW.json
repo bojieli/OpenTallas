@@ -1,0 +1,14 @@
+{
+ "reviewer": "S81U-GUNIT4 (lane review; non-critical kit, not a coordinator approval)",
+ "time": "2026-10-17T19:50:00-07:00",
+ "gate_commit": "39fb77eac",
+ "verdict": "APPROVED",
+ "checklist": {
+  "lattice": "no macros",
+  "std_cell_band": "pin-flop leaf: 3,824 flops / 1,356 um2 std sit in the N / S pin rows (density.png); util 2.4% is inherent: width fixed by the 345.6 stack column, height by the 785-pin E seam to L0r (4.5 pins/um at 172.8)",
+  "pin_spread": "N / S faces ~90% of the width, E face full height; 3,987 pins, <= ~5 pins/um",
+  "clock_entry": "W face (free); sinks 3,824 << 15k, TT insertion 338 ps / spread 54.6 ps (insertion limit binds above 15k); boundary mean 304.5 vs L0r 246.3 (58 ps)",
+  "shape": "345.6 x 172.8 (2:1, stack slice)",
+  "timing": "TT in->reg +76.0, reg->reg +198.0, reg->out +316.7 ps; hold +16.1 ps"
+ }
+}

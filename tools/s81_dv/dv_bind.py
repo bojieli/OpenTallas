@@ -257,6 +257,19 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         col_ = int(n[2]) if n.startswith('s_') else None
         for mu in m.get('mode_unused', []):
             w_ = mu['when']
+            if w_ == 'lanes_without_producer':
+                # trailing lanes of a lane-packed port that no plan link reaches (e.g. slice rt lanes of row-0 frames
+                # the plan dropped): tie 0 and declare the exact bit range as a pad; internal gaps stay undriven (fail)
+                segs_ = conn[n].get(mu['port'])
+                wd_ = widths[mu['port']]
+                top_ = max((hi for lo, hi, _w, _b in segs_), default=-1) if segs_ else -1
+                if segs_ is not None and top_ + 1 < wd_ and (top_ + 1) % mu['lane'] == 0:
+                    segs_.append((top_ + 1, wd_ - 1, None, wd_ - 1 - top_))
+                    pads.setdefault(f'u_{n}', dict(master=mod, reason=mu['reason'], ports={}))['ports'].setdefault(
+                        mu['port'], []).append([top_ + 1, wd_ - 1])
+                    pad_rows.append(dict(inst=n, master=mod, port=mu['port'], bits=wd_ - 1 - top_, lo=top_ + 1, hi=wd_ - 1,
+                                         lanes=(wd_ - 1 - top_) // mu['lane'], reason=mu['reason']))
+                continue
             hit = (w_ == 'always' or (w_ == 'hb0' and not (params.get(n) or {}).get(m.get('hb_param', 'HB'))) or
                    (w_ == 'col0' and col_ == 0) or (w_ == 'col7' and col_ == 7))
             if hit and not conn[n].get(mu['port']):
@@ -278,7 +291,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                 if lo > pos:
                     parts.append(f'u_{n}_{rp}_nc{pos}[{lo - pos - 1}:0]')
                     v.append(f'  wire [{lo - pos - 1}:0] u_{n}_{rp}_nc{pos};')
-                parts.append(f'{w}[{hi - lo}:0]')
+                parts.append(f"{hi - lo + 1}'d0" if w is None else f'{w}[{hi - lo}:0]')
                 pos = hi + 1
             if wd and pos < wd:
                 parts.append(f'u_{n}_{rp}_nc{pos}[{wd - pos - 1}:0]')
