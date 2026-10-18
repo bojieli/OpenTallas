@@ -1481,6 +1481,7 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
         if cts and len(matched) == 1:
             matched[0] = with_child_flops(matched[0], spec)
             corner_spreads(rec, matched[0])
+            child_pair_spreads(rec, matched[0], spec)
             if rec["tt_insertion_ps"] is not None:
                 rec["measured_clock"] = matched[0].get("clock")
     else:
@@ -1576,6 +1577,125 @@ def with_child_flops(domain: dict, spec: dict | None) -> dict:
     return out
 
 
+def _vlog_preprocess(text: str, defines) -> str:
+    """comments stripped, `ifdef / `ifndef / `elsif / `else / `endif resolved against defines (other directives dropped)"""
+    text = re.sub(r"/\*.*?\*/", " ", text, flags=re.S)
+    text = re.sub(r"//[^\n]*", "", text)
+    defs = {str(d).split("=", 1)[0].lstrip("-D") for d in defines or []}
+    out, stack = [], []                     # stack of [this branch live, some branch taken]
+    for line in text.splitlines():
+        m = re.match(r"\s*`(ifdef|ifndef|elsif|else|endif)\b\s*(\w*)", line)
+        live = all(x[0] for x in stack)
+        if not m:
+            if live and not re.match(r"\s*`", line):
+                out.append(line)
+            continue
+        kw, name = m.groups()
+        if kw in ("ifdef", "ifndef"):
+            on = (name in defs) == (kw == "ifdef")
+            stack.append([on, on])
+        elif kw == "elsif" and stack:
+            on = not stack[-1][1] and name in defs
+            stack[-1] = [on, stack[-1][1] or on]
+        elif kw == "else" and stack:
+            stack[-1] = [not stack[-1][1], True]
+        elif kw == "endif" and stack:
+            stack.pop()
+    return "\n".join(out)
+
+
+VLOG_KEYWORDS = {"module", "endmodule", "input", "output", "inout", "wire", "reg", "logic", "assign", "always",
+                 "always_ff", "always_comb", "initial", "generate", "endgenerate", "parameter", "localparam", "if",
+                 "else", "for", "begin", "end", "case", "endcase", "function", "endfunction", "genvar", "integer"}
+
+
+def linked_child_pairs(spec: dict | None) -> list | None:
+    """HANDOFF 0fz 2026-10-18 (owner 0dq "boundary matched to the NEIGHBOURS"): the communicating hard-child pairs of a
+    wires-only parent, from its top module's RTL: two child instances are linked when one net (not a parent port)
+    connects to both, i.e. one child's output feeds the other's input.  Returns sorted [(inst_a, inst_b)] by child
+    spec inst pattern, or None when the RTL cannot be read or a child instance is not found (caller keeps the
+    all-children spread)."""
+    import fnmatch
+    spec = spec or {}
+    kids = [ch for ch in spec.get("children") or [] if isinstance(ch, dict) and ch.get("inst")]
+    top = spec.get("top")
+    if not kids or not top:
+        return None
+    body = None
+    for src in spec.get("sources") or []:
+        try:
+            text = _vlog_preprocess((ROOT / src).read_text(errors="replace"), spec.get("defines"))
+        except OSError:
+            return None
+        m = re.search(rf"\bmodule\s+{re.escape(top)}\b(.*?)\bendmodule\b", text, re.S)
+        if m:
+            body = m.group(1)
+            break
+    if body is None:
+        return None
+    hdr = re.match(r"\s*(#\s*\((?:[^()]|\([^()]*\))*\))?\s*\((.*?)\)\s*;", body, re.S)
+    ports = set(re.findall(r"\b([A-Za-z_]\w*)\b", hdr.group(2))) - VLOG_KEYWORDS if hdr else set()
+    for decl in re.findall(r"\b(?:input|output|inout)\b([^;]*);", body):
+        ports |= set(re.findall(r"\b([A-Za-z_]\w*)\b", decl)) - VLOG_KEYWORDS
+    nets: dict = {}
+    seen = set()
+    inst_re = re.compile(r"\b([A-Za-z_]\w*)\s*(?:#\s*\((?:[^()]|\([^()]*\))*\))?\s*([A-Za-z_]\w*)\s*\(((?:[^()]|\([^()]*\))*)\)\s*;", re.S)
+    for mod, inst, conns in inst_re.findall(body):
+        if mod in VLOG_KEYWORDS:
+            continue
+        kid = next((ch for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))
+                    or fnmatch.fnmatchcase(inst, ch["inst"])), None)
+        if kid is None:
+            continue
+        seen.add(kid["inst"])
+        for expr in re.findall(r"\.\s*\w+\s*\(((?:[^()]|\([^()]*\))*)\)", conns):
+            for n in set(re.findall(r"(?<![\w'])([A-Za-z_]\w*)\b", expr)) - ports - VLOG_KEYWORDS:
+                nets.setdefault(n, set()).add(kid["inst"])
+    if seen != {ch["inst"] for ch in kids}:
+        return None
+    return sorted({tuple(sorted((a, b))) for ks in nets.values() for a in ks for b in ks if a < b})
+
+
+def child_pair_spreads(rec: dict, domain: dict, spec: dict | None) -> dict:
+    """HANDOFF 0fz 2026-10-18: a wires-only parent (pin-flop spread on the "child_flop" basis) is judged per LINKED
+    child pair, not across all children: for each pair (A, B) the boundary-flop arrival difference at that corner is
+    max(A.max - B.min, B.max - A.min) over the two children's boundary flops (child clock-pin arrival + the child's own
+    boundary insertion), and "<c>_pin_spread_ps" becomes the worst linked pair (basis "child_pair").  Per-pair numbers
+    go to rec["child_pairs"].  Unchanged when there is no child_flop record or no linked pair can be derived."""
+    import fnmatch
+    if not any(rec.get(f"{c}_pin_spread_basis") == "child_flop" for c in ("tt", "ff")):
+        return rec
+    pairs = linked_child_pairs(spec)
+    if not pairs:
+        return rec
+    kids = [ch["inst"] for ch in (spec or {}).get("children") or [] if isinstance(ch, dict) and ch.get("inst")]
+    table = []
+    for c in ("tt", "ff"):
+        if rec.get(f"{c}_pin_spread_basis") != "child_flop":
+            continue
+        span: dict = {}
+        for r in ((domain.get(c) or {}).get("child_flop") or {}).get("pins") or []:
+            inst = str(r.get("pin", "")).rsplit("/", 1)[0]
+            k = next((p for p in kids if fnmatch.fnmatchcase(inst, p.lstrip("*")) or fnmatch.fnmatchcase(inst, p)), None)
+            if k is None:
+                return rec
+            lo, hi = span.get(k, (math.inf, -math.inf))
+            span[k] = (min(lo, float(r["child_min"])), max(hi, float(r["child_max"])))
+        if any(a not in span or b not in span for a, b in pairs):
+            return rec
+        worst = None
+        for a, b in pairs:
+            (alo, ahi), (blo, bhi) = span[a], span[b]
+            d = round(max(ahi - blo, bhi - alo), 1)
+            table.append(dict(corner=c, a=a.lstrip("*"), b=b.lstrip("*"), ps=d,
+                              a_range=[round(alo, 1), round(ahi, 1)], b_range=[round(blo, 1), round(bhi, 1)]))
+            worst = d if worst is None else max(worst, d)
+        rec[f"{c}_child_flop_spread_ps"] = rec[f"{c}_pin_spread_ps"]
+        rec[f"{c}_pin_spread_ps"], rec[f"{c}_pin_spread_basis"] = worst, "child_pair"
+    rec["child_pairs"] = table
+    return rec
+
+
 def corner_spreads(rec: dict, domain: dict) -> dict:
     """TT and FF insertion (latest register arrival), all-register leaf spread and pin-flop (boundary register) spread
     of one ck_insertion clock record (owner 10-17 0dq: the rule is the pin-flop spread at TT AND FF)."""
@@ -1597,6 +1717,10 @@ def corner_spreads(rec: dict, domain: dict) -> dict:
 def clock_item(g: Gate, rec: dict) -> None:
     """measured clock rule (owner 2026-10-13, constants in textbook_lint.py): reported for every kit."""
     g.clock = rec
+    for row in rec.get("child_pairs") or []:
+        g.add("INFO", "clock_child_pair", f"{row['corner'].upper()} linked children {row['a']}-{row['b']}: boundary-flop "
+              f"arrival difference {row['ps']} ps ({row['a']} {row['a_range'][0]}..{row['a_range'][1]}, "
+              f"{row['b']} {row['b_range'][0]}..{row['b_range'][1]}; limit {TL.CLK_SPREAD_MAX_PS:g})")
     if rec["verdict"] == "REFUSE":
         g.add("FAIL", "clock_rule", rec["text"] + ("" if rec["cts"] else " -- this gate ran without --cts")
               + (f" (declared clock '{rec['declared_clock']}' does not waive it)" if rec.get("declared_clock") else ""),
