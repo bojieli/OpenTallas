@@ -69,7 +69,7 @@ host fi chain -------------------------------------------------> HOST slice inge
   register). Ownership is by phase: `own = !emb_boot_ready`, from the `est[0]` every PC already receives.
   * When `own` is set, the controller's er, credits and completions go to the slice (`her` / `hcv` / `hcw`, output
     registers), and the embedding endpoint sees er = 0.
-  * When `own` is clear, behaviour is exactly the old merge, and her / hcv / hcw are 0.
+  * When `own` is clear, behaviour is exactly the old merge; her valid / credit / fault and hcv / hcw are 0 (her data bits are ungated, qualified by valid).
   * Faults: two sources on one edge, a slice word in the run phase, or a writer word in the boot window.
 
   emb_ready rises only after the HOST ledger has retired every boot write's real completion, because BOOT_END waits

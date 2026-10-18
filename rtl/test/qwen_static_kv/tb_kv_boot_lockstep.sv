@@ -97,7 +97,7 @@ module tb_kv_boot_lockstep;
                     ts_d !== ts_r || sf_d !== sf_r || les !== 288'd0) begin
                     errors = errors + 1; if (errors < 10) $display("FAIL station %0d/%0d differs at %0d", s, p, cyc); end
                 if (es_d !== es_r || bv_d !== bv_r || bd_d !== bd_r || bt_d !== bt_r || bw_d !== bw_r || bh_d !== bh_r ||
-                    bs_d !== bs_r || be_d !== be_r || co_d !== co_r || eo_d !== eo_r || mf_d !== mf_r || her !== 261'd0 ||
+                    bs_d !== bs_r || be_d !== be_r || co_d !== co_r || eo_d !== eo_r || mf_d !== mf_r || her[0] || her[259] || her[260] ||
                     hcv !== 1'b0 || hcw !== 1'b0) begin
                     errors = errors + 1; if (errors < 10) $display("FAIL merge %0d/%0d differs at %0d", s, p, cyc); end
                 if (wes_r[0]) nwr = nwr + 1;

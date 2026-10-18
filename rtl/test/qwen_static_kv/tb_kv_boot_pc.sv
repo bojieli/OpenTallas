@@ -158,10 +158,11 @@ module tb_kv_boot_pc;
     reg [24:0] el [0:1023]; integer ne;
     reg [17:0] toks [0:5];
     integer ack_cnt [0:31], ao_cnt [0:31], co_cnt [0:31], kvn [0:31];
-    always @(negedge ck) if (rst_n) for (j = 0; j < 32; j = j + 1) begin
-        if (sk[0][j]) ack_cnt[j] = ack_cnt[j] + 1;
-        if (a[0][j]) ao_cnt[j] = ao_cnt[j] + 1;
-        if (c[0][j]) co_cnt[j] = co_cnt[j] + 1;
+    integer jj;
+    always @(negedge ck) if (rst_n) for (jj = 0; jj < 32; jj = jj + 1) begin
+        if (sk[0][jj]) ack_cnt[jj] = ack_cnt[jj] + 1;
+        if (a[0][jj]) ao_cnt[jj] = ao_cnt[jj] + 1;
+        if (c[0][jj]) co_cnt[jj] = co_cnt[jj] + 1;
     end
     // hb sender with the gateway's BD = 4 credits
     always @(posedge ck) if (hb_cr) hcred = hcred + 1;
@@ -220,8 +221,8 @@ module tb_kv_boot_pc;
         hcred = 4;
         for (j = 0; j < 32; j = j + 1) begin ack_cnt[j] = 0; ao_cnt[j] = 0; co_cnt[j] = 0; kvn[j] = 0; mwn[j] = 0; end
         // tokens: scale homes on stack SM and elsewhere; the last token id
-        toks[0] = 18'd2037; toks[1] = 18'(1024 * 5 + (SM << 9) + (7 << 4) + 3); toks[2] = 18'd151935;
-        toks[3] = 18'd77777; toks[4] = 18'(1024 * 77 + (SM << 9) + (31 << 4)); toks[5] = 18'd123;
+        toks[0] = 18'd2037; toks[1] = 18'(2048 * 5 + (SM << 9) + (7 << 4) + 3); toks[2] = 18'd151935;
+        toks[3] = 18'd77777; toks[4] = 18'(2048 * 37 + (SM << 9) + (31 << 4)); toks[5] = 18'd123;
         repeat (4) @(negedge ck); rst_n = 1; repeat (8) @(negedge ck);
         // ---- P1 cold boot ----
         bgi0 = 1; @(negedge ck); bgi0 = 0;
@@ -295,7 +296,7 @@ module tb_kv_boot_pc;
         if (root_fault || |stf || fl[0] || sf[0] != 0) begin
             errors = errors + 1; $display("FAIL faults root %0d station %h slice chain %0d slice boot %h", root_fault, stf, fl[0], sf[0]); end
         if (errors) $display("FAIL MUT %0d errors %0d (beats %0d)", MUT, errors, nbeat);
-        else $display("PASS KV_BOOT_PC cold boot 32/32 via merge_b; %0d HOST KV writes; image %0d sectors (%0d on stack %0d via the real slices, %0d elsewhere), est ready after HOLD; %0d run-phase beats == boot data; re-load + REOPEN; run-phase host word and wrong checksum fault", 24, cnt - 128, sm_words(), SM, nobs, nbeat);
+        else $display("PASS KV_BOOT_PC cold boot 32/32 via merge_b; %0d HOST KV writes; image %0d sectors (%0d on stack %0d via the real slices, %0d boot words elsewhere incl. the re-load), est ready after HOLD; %0d run-phase beats == boot data; re-load + REOPEN; run-phase host word and wrong checksum fault", 24, cnt - 128, sm_words(), SM, nobs, nbeat);
         $finish;
     end
 endmodule

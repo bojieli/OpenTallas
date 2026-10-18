@@ -27,9 +27,11 @@ run(){ # name top mut sources...
    --Mdir "$out/$n$m-obj" "$@" > "$out/$n$m-build.log" 2>&1 || { echo "BUILD FAIL $n$m" > "$out/$n$m.log"; return; }
  "$out/$n$m-obj/V$top" > "$out/$n$m.log" 2>&1 || true
  rm -rf "$out/$n$m-obj"; }
-for m in 0 7 1 6;do run lock tb_kv_boot_lockstep $m "${lock[@]}" & done
-for m in 0 11 12 13 14 15 16 17;do run pc tb_kv_boot_pc $m "${pcb[@]}" & done
+LM=${LM:-0 7 1 6};PM=${PM:-0 11 12 13 14 15 16 17}
+for m in $LM;do run lock tb_kv_boot_lockstep $m "${lock[@]}" & done
+for m in $PM;do run pc tb_kv_boot_pc $m "${pcb[@]}" & done
 wait
+[[ -n ${SMOKE:-} ]]&&{ for f in "$out"/*.log;do echo "== $f: $(grep -E '^(PASS|FAIL|BUILD)' $f|tail -1)";done;exit 0;}
 ok=1
 for n in lock0 pc0;do echo "== $n: $(grep -E '^(PASS|FAIL|BUILD)' "$out/$n.log" | tail -1)";grep -q '^PASS' "$out/$n.log"&&! grep -q '^FAIL' "$out/$n.log"||ok=0;done
 for n in lock7 lock1 lock6 pc11 pc12 pc13 pc14 pc15 pc16 pc17;do echo "== $n: $(grep -E '^(FAIL|PASS|BUILD)' "$out/$n.log" | tail -1)";grep -q '^FAIL' "$out/$n.log"||ok=0;done
