@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# LB2-HBM-NAT16 (10-18): run the NATIVE TP-192 (16-SM d4g die) DeepSeek-V4.1 programme bit-exact on the fleet.
+# LB2-HBM-NAT16 (10-18): run the NATIVE TP-192 (16-SM d4g die) DeepSeek-V4.1 programme bit-exact on the fleet. [MUTANT=]
 #   run_native16.sh [REV=HEAD] [LAYERS="0"] [TP=192] [TAG=tp192] [MEM=96] [ROOT=/srv/opentallas-scratch/claude/layerbench-hbm/dsfix]
 # Each LAYER entry is one fleet job: "N" = layer N entered from the W17 reference shards; "head" = layer 39 + the LM head.
 # Runs tools/hgi_sim/ds_native.py with OT_DS_TP=$TP (w19 compiler head_of placement) on the released-checkpoint subset
@@ -40,7 +40,7 @@ RC=0
 for L in $LAYERS; do
   if [ "$L" = head ]; then ARGS="--layers 39 --head"; else ARGS="--layers $L"; fi
   /home/ubuntu/bin/ot-run --mem "$MEM" --threads 2 --dir "$ROOT" -- bash -c "cd $SRC/tools && \
-    OT_DS_TP=$TP HDC_V41_ARITH=chunk8 NPY_DISABLE_CPU_FEATURES='$NOAVX' OT_V41_FLASH_SNAPSHOT=$ROOT/ckpt \
+    OT_DS_TP=$TP OT_NAT16_MUTANT=${MUTANT:-} HDC_V41_ARITH=chunk8 NPY_DISABLE_CPU_FEATURES='$NOAVX' OT_V41_FLASH_SNAPSHOT=$ROOT/ckpt \
     HGI_SCHED_CACHE=$ROOT/nat16/sched /usr/bin/time -v python3 -m hgi_sim.ds_native $ARGS --refs $ROOT/refs \
       --out $OUT/$L.json --program-out $OUT/$L.prog.json > $OUT/$L.log 2>&1; rc=\$?; grep -E '^(L[0-9]+|head) ' $OUT/$L.log | tail -3; \
     grep -E 'Maximum resident|Elapsed' $OUT/$L.log; exit \$rc" &

@@ -84,8 +84,15 @@ HEAD_RANKS = HEAD_DIES * HEAD_REPL
 ZROWS = 1024 // HEAD_REPL          # wo_a rows of one o-group a replica computes
 
 
+# Mutant (fail-witness bench only): OT_NAT16_MUTANT=rot1 rotates the heads inside every sub-group of 8 (rank j runs head
+# j + 1 mod 8).  Every head still runs exactly once a replica, so only the o-group reduction's association changes
+# ((p1 + p2) + (p3 + p4)) + ... -- the run must then FAIL bit-exactness (the golden head order is load-bearing).
+MUTANT = os.environ.get("OT_NAT16_MUTANT", "")
+assert MUTANT in ("", "rot1"), MUTANT
+
+
 def head_of(rank: int) -> int:
-    return ((rank // 8) // HEAD_REPL) * 8 + rank % 8
+    return ((rank // 8) // HEAD_REPL) * 8 + (rank + (MUTANT == "rot1")) % 8
 
 
 def head_part(rank: int) -> int:
