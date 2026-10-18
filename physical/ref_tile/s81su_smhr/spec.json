@@ -11,6 +11,11 @@
   "pd": 0.4,
   "threads": 8,
   "peak_ram_gb": 16,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
@@ -97,7 +102,8 @@
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 24,
-    "fail_regex": "^SMS FAIL MUT=6 errors=[1-9]"
+    "fail_regex": "^SMS FAIL MUT=6 errors=[1-9]",
+    "fail_witness": "results/rtl/s81_dv_1016/su_sm/smh1018_smt_m6/run.log"
    },
    {
     "name": "sms_smt_mut_staleden",
@@ -105,12 +111,76 @@
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 24,
-    "fail_regex": "^SMS FAIL MUT=5 errors=[1-9]"
+    "fail_regex": "^SMS FAIL MUT=5 errors=[1-9]",
+    "fail_witness": "results/rtl/s81_dv_1016/su_sm/smh1018_smt_m5/run.log"
    }
   ]
  },
  "child_clock_ref": "boundary",
  "why_clock": "SMH 10-18: clock = balanced spine with child-insertion leaf targets from each child's ROUTED boundary-register insertion (child_clock_ref boundary), so the glue pin flops and the children's pin flops tick together. The 10-17 g3 TritonCTS trial (insertion-cap driven) gave pin-flop spread 144 ps; the g2 spine gave 24.8 ps (insertion > 300 ps is guidance under 0dq).",
+ "pin_ranges": {
+  "q_e": [
+   7.2,
+   172.0
+  ],
+  "clk": [
+   173.5,
+   174.5
+  ],
+  "rst_in": [
+   176.0,
+   177.0
+  ],
+  "c_v": [
+   178.5,
+   179.5
+  ],
+  "c_lt": [
+   181.0,
+   183.0
+  ],
+  "q_mxv": [
+   184.5,
+   185.5
+  ],
+  "q_ev": [
+   187.0,
+   188.0
+  ],
+  "q_el": [
+   189.5,
+   190.5
+  ],
+  "q_skv": [
+   192.0,
+   193.0
+  ],
+  "m_v": [
+   194.5,
+   195.5
+  ],
+  "dn_v": [
+   197.0,
+   198.0
+  ],
+  "den_v": [
+   199.5,
+   200.5
+  ],
+  "m_nmb": [
+   203.0,
+   268.0
+  ],
+  "dn": [
+   271.0,
+   338.4
+  ],
+  "q_mx": [
+   7.2,
+   338.4
+  ]
+ },
+ "why_pins": "SMH 10-18: the cts gate of cf471b3c2 put q_mx's 512 N pins on 61 um (8.4/um, PPL min-wirelength) and its native probe measured capture 205 > 190 ps on 32 inputs (19 q_mx, 13 q_e): every bus is now spread uniformly over its own range (balanced placer): q_mx over the full N face (1.5/um) above both children, q_e over the W half of S (3.1/um) above smc (its consumer), the clock entry mid-face beside the q_e / control register band, m_nmb / dn on the E part of S.",
  "macros": [],
  "inter": [],
  "recipe": 4,
