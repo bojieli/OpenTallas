@@ -1,0 +1,131 @@
+{
+ "schema": "s81dv_engram_mix_verdict_v1",
+ "lane": "S81U-MIX",
+ "date": "2026-10-17",
+ "question": "0cj (c): is the Engram mix (H/K/W/V reads, W=q_weight*k_weight, hh/kk/dd sums, rstd, gate, h+gate*v) of p4j plan instances mix4_w / mix4_e (dsfd_engram_mix4_half) covered elsewhere in p4j by REAL bound RTL?",
+ "verdict": "NOT_COVERED",
+ "deletion": "NOT deleted: no bound or in-flight DV RTL computes the Engram mix. mix4_w / mix4_e stay in the plan as OPEN units until the slice op below is bound; then delete them with this record as the reason.",
+ "golden": "tools/hdc_golden_v41.py Model.engram_layer: per copy j: rstd = rsqrt(csum(h*h)/D+eps)*rsqrt(csum(k*k)/D+eps); dot = (csum((h*w)*k)*rstd)*scale; gate = sigmoid(sign*sqrt(max(|dot|,1e-6))); out = bf16(h + gate*v); w = q_weight*k_weight",
+ "checked_rtl": [
+  {
+   "unit": "dsdv_slice / dsdv_slice_lep = ot_s81sl_slice",
+   "ref": "57bc4ad63 (bind_table_p4j rtl_refs; = origin/claude/s81slice-1017 head)",
+   "files": [
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+    "ot_s81sl_vn.sv",
+    "ot_s81sl_vp.sv",
+    "ot_s81sl_vq.sv",
+    "ot_s81sl_xr.sv",
+    "ot_s81sl_xg.sv",
+    "ot_s81sl_rstop.sv",
+    "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv"
+   ],
+   "ops": "vn: h store + ONE ot_hbm_norm_grp (hc_pre mix of the 4 copies, square, chunk-8) + beat tree -> ONE norm partial per go; vp commands 1 GAIN 2 POST(hc_post) 3 HLOAD 4 HSTORE 5 NORM 6 RDOUT, 8..15 -> vs; vq: act-quant aq12 XQ/XB; xr: CTL decode targets 0 vp cmd 1 xfin go 2 streamer 3 capture cfg 4 send cfg 5 row write; ot_s81dv_norm (xfin): one D-vector's beat partials -> finish tree -> /D +eps rsqrt",
+   "engram_mix": "ABSENT: no per-copy h*h, no k*k, no (h*w)*k product or sum, no 12-sum exchange (xfin carries ONE vector per go), no rstd product / scale, no signed sqrt / sigmoid, no h + gate*v"
+  },
+  {
+   "unit": "ot_s81sl_vs (SU lane engine)",
+   "ref": "origin/claude/s81sl-su-1017 dd0d065b8 rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv",
+   "ops": "8 SW, 9 QB, 10 RA (sqrt softplus), 11 RB, 12 QR (rope), 13 MOE; 14/15 = sticky fault",
+   "engram_mix": "ABSENT"
+  },
+  {
+   "unit": "dsdv_gunit",
+   "ref": "origin/claude/s81u-gunit3-1017 d65d0d4a9 rtl/dsrom_sys/s81_dv/unit/dsdv_gunit*.sv",
+   "ops": "router / HC jobs; dsdv_gunit_tail sigmoid/exp/Sinkhorn = the HC tail only",
+   "engram_mix": "ABSENT"
+  },
+  {
+   "unit": "dsdv_seq_host",
+   "ref": "origin/claude/s81u-seq-1017 7b7028b78 rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv",
+   "ops": "calendar engines 0 V-N CTL, 1 V-S CTL, 2 gunit job, 4 svc job (ENG_PRESENT 5'b10111)",
+   "engram_mix": "ABSENT (no Engram engine in the calendar)"
+  },
+  {
+   "unit": "dsdv_svc_rs",
+   "ref": "origin/claude/s81u-svc-1017 241a21f58 / s81u-svcx4-1017 c5a8d5b10 rtl/dsrom_sys/s81_dv/svc_rs/*",
+   "ops": "attention service (svc 2-PC share + SM 1/16)",
+   "engram_mix": "ABSENT"
+  },
+  {
+   "unit": "p4j plan mix4_w / mix4_e",
+   "ref": "results/arch/s81_dv_1016/p4j/plan.json",
+   "ops": "only links tvN_s_2S/tvS_mix4_w/tvN_mix4_w/tvS_s_2N (and _5_/mix4_e): 276-b column V rung; no HBM, svc or VM operand path",
+   "engram_mix": "unit has no RTL (bind_table_p4j masters.dsfd_engram_mix4_half module null)"
+  }
+ ],
+ "price_finding": "tools/s81_dv/dv_price.py already prices eng.gate as a slice norm-tree op (rules norm_tree_full, norm_finish_seq, leaf_measured, intra_slice_leaf, tier_cross) and keeps the MIX4.* ledger rows (0.0 %); eng.hh (239.9) / eng.add (106.9) stay at hub prices and eng.dot (269.6) is a field node. The model therefore points at a slice-resident Engram op that has no RTL. Re-point after the ve/eg/xfin-ENG build is measured (below).",
+ "other_gap": "p4j has no Engram lookup block either (dsfd_engram_lkp / static14: hash + HBM row read + rows all-gather feeding engram.wkv); ELEMENT_REUSE.md marks it 'A keep' but dv_plan.py places none. Owner: S81-DIE / coordinator (only on dies hosting L1/L14).",
+ "build_plan": {
+  "design": "Engram mix as a DV slice op (S81U-3 section 3 recommendation; principle 1 co-locate vector with matrix): beat-local products and sums, golden-subtree exchange of 12 scalars, replicated scalar finish, beat-local h + gate*v.",
+  "units": [
+   {
+    "name": "ot_s81sl_ve",
+    "where": "sub-leaf of every beat leaf (x5 per slice, 80 per die), own clock root",
+    "content": "ot_s81_engram_mul4 x1, ot_s81_engram_chunk8 x3, beat tree (one ot_dsrom_qadd per sum, 4 copy slots), ot_s81_engram_add8 x1 -- all arithmetic leaves unchanged from the gated hub mix",
+    "status": "RTL + bench PASS (this branch)"
+   },
+   {
+    "name": "vs op 14 ENG (feeder)",
+    "where": "ot_s81sl_vs (S81-SLICE files)",
+    "content": "reduce: K and W row pairs from vp's extension port (1 read a cycle), h half rows from vn, staged into ve quads (1 quad a cycle = GAP 0); add: h half rows + V row pairs (V read once per sub-beat, shared by the 4 copies), results -> vn h store (hc_post write-back path)",
+    "status": "OWED (S81-SLICE)"
+   },
+   {
+    "name": "xfin ENG mode",
+    "where": "ot_s81dv_xfin / ot_s81dv_norm (slice centre)",
+    "content": "12 vectors a go (3 sums x 4 copies; 12 flits a slice instead of 1), 4 finish adders (one per copy, hh/kk/dd interleaved; same golden heap tree as ot_s81dv_norm_finish)",
+    "status": "OWED (S81-DV/S81-SLICE)"
+   },
+   {
+    "name": "ot_s81sl_eg (scalar finish)",
+    "where": "slice centre, x16 (replicated: same operands, same order, same bits)",
+    "content": "2 x ot_s81_engram_norm (/D, +eps, rsqrt), 3 x ot_hdc_qmul_lat (rstd_h*rstd_k, dd*rstd, *scale), ot_s81_engram_gate (signed sqrt + sigmoid); copies pipelined; gate -> the 5 ve a_g ports",
+    "status": "OWED (leaves exist, wrapper + bench vs engram_layer)"
+   },
+   {
+    "name": "xr CTL target",
+    "where": "ot_s81sl_xr",
+    "content": "xfin go with mode ENG + eps/scale body",
+    "status": "OWED (S81-SLICE)"
+   }
+  ],
+  "throughput_budget_cyc_per_engram_layer": 871,
+  "cycle_estimate": {
+   "reduce (measured ve, GAP 0, first quad -> last partial)": 129,
+   "partial -> xfin (DL 4 + collector 5)": 9,
+   "exchange (norm worst slice->slice 100 stages + 11 flit serialisation)": 111,
+   "finish (4 adders x 3 x 79 nodes, est.)": 270,
+   "scalar chain (norm/rsqrt ~40, 3 mul 15, signed sqrt + sigmoid ~115, 4 copies +3, est.)": 175,
+   "gate -> leaves": 8,
+   "add (measured ve 44) + write-back": 55,
+   "total": 757,
+   "margin_vs_871": "13 %; the finish is the soft term (12 finish adders -> ~90 if needed)"
+  },
+  "links": "no new die links: exchange flits ride the existing tier line / V rung as the norm flits; CTL on the existing tree; K/V arrive as field results via the capture root (compiler row map: K copy j element e and V element e land in slice e // 320, leaf (e % 320) // 64). Deleting mix4_w/mix4_e removes 2 void units (680 x 3747 um each) and their 8 tv links; the s_2S<->s_2N and s_5S<->s_5N V rungs then join directly (S81-DIE).",
+  "area_estimate": "ve ~0.10-0.12 mm2 (about 1/6 of a hub mix4 cluster: 16+8 FP32 mul, 24+8+3 FP32 add, ~6 kb tree flops) x 80 = ~8-10 mm2; eg ~0.05 mm2 x 16; minus 2 x 2.55 mm2 mix4 voids. Net ~+4 mm2 (area is cheaper than closure). W rows 1 KiB per leaf per Engram layer in the 16 KiB vp leaf store.",
+  "slot": "ve inside each beat leaf (0.95 x 0.92 mm grows ~12 %, or its own ~330 x 330 um sub-leaf on the leaf's clock root beside vs); eg + xfin ENG in the slice centre leaf"
+ },
+ "bench": {
+  "top": "tb_s81sl_ve",
+  "sim": "Verilator 5.032 (ot-epyc4)",
+  "fixtures": "tools/s81_dv/ve_golden.py (hdc_golden_v41 ARITH chunk8; seeds 1, 7; signed zeros included)",
+  "results": [
+   "PASS seed 1 GAP 1: 12 partials + 256 outputs bit exact; reduce 192 cyc, add 44 cyc",
+   "PASS seed 7 GAP 0: bit exact; reduce 129 cyc, add 44 cyc",
+   "MUT 1 (key -> 1.0 in mul4) REJECTED 4 mismatches",
+   "MUT 2 (beat-tree association s0+s2) REJECTED 2 mismatches"
+  ],
+  "log": "results/arch/s81_dv_1016/eng/ve_bench_1017.txt",
+  "limits": "beat-leaf component bench only; feeder (vs op 14), xfin ENG, eg and the slice-level / 16-slice composition are not built; no gate run"
+ },
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve.sv": "1c2dfd2a710898354d322c5b82d933ff31acddb42a15475cd3e2aece9c1e21d1",
+  "rtl/dsrom_sys/s81_dv/eng/test/tb_s81sl_ve.sv": "f7170e3a1de91437995cae881a3e8687e4bdf94cf7ea4c7d180a3f6707104c40",
+  "rtl/dsrom_sys/s81_dv/eng/test/ve.f": "b03da0acba573e181301c34bd1c1791acca5f49845f5da4578edb5dd36e831aa",
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv": "893b7f7aedb186ccb2fb9a1b215fc128b1ebb601943b7e24aaec68745d40a17e",
+  "tools/s81_dv/ve_golden.py": "5980bc5cb191a580e864dcc12f11e6a819ed9428e9b92d73d16962910b459574",
+  "tools/hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4",
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+ }
+}
