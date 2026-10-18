@@ -847,15 +847,18 @@ if [ "{CTS}" = 1 ]; then
   grep -h "^global_placement -density\|Placement target density" $R/cts.log | head -2 | sed 's/^/GATE_GPLD /'
   python3 tools/closure_loop/ck_insertion.py --base $B --all-clocks --raw-source --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
-  python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt'),'ff':{{k:(r.get('ff') or {{}}).get(k) for k in ('boundary','all')}}}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
+  python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt'),'ff':{{k:(r.get('ff') or {{}}).get(k) for k in ('boundary','all','macros')}}}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
   docker run --rm -e OT_GATE_SIGNOFF_SDC=/src/{KIT}/signoff.sdc -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
   grep "^GATE_PC" $R/pc.log
   ot_layout $NB/4_1_cts.odb placed
 fi
-# TRIAL ROUTE (owner rule 20:45 10-15): parent / cluster kits (hardened children or >= 4 macros) place + global-route
-# here (no detailed route): overflow, per-layer usage and the congestion hotspots come back; overflow > 0 refuses the kit
+# TRIAL ROUTE (owner rule 20:45 10-15; every kit since ROOT-0330-GRT 10-18, was parent / cluster kits only): place +
+# global-route here (no detailed route): overflow, per-layer usage and the congestion hotspots come back; overflow > 0
+# refuses the kit.  Single tiles (HBM qcore r5, S81 bk g2, KV landh0_548, Qwen h16b) passed the gate and failed GRT hours
+# into the route; the trial costs minutes.
 if [ "{TRIAL}" = 1 ]; then
-  ot_capped gate_grt_${{R##*/}} docker run --rm --name gate_grt_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt" > $R/grt.log 2>&1; echo "GATE_GRT_RC=$?"
+  GT0=$(date +%s)
+  ot_capped gate_grt_${{R##*/}} docker run --rm --name gate_grt_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt" > $R/grt.log 2>&1; echo "GATE_GRT_RC=$? GATE_GRT_S=$(( $(date +%s) - GT0 ))"
   GL=$(ls $C/logs/asap7/*/base/5_1_grt.log 2>/dev/null | head -1)
   [ -n "$GL" ] && grep -E "^(M[0-9]+|Total) +[0-9]+ +[0-9]+ +[0-9.]+%" $GL | tail -12 | sed 's/^/GATE_GRT_LAYER /'
   [ -n "$GL" ] && grep -hE "GRT-0116|Total overflow|overflow" $GL | tail -3 | sed 's/^/GATE_GRT_NOTE /'
@@ -1089,7 +1092,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     commit = binding["commit"] or "snapshot-sha256:" + binding["manifest_sha256"]
     sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=(cap if cap > 0 else "unlimited"), KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
-                          TRIAL=1 if is_parent_kit(spec) else 0, CLKS=",".join(RT.declared_clock_ports(spec)),
+                          TRIAL=1, CLKS=",".join(RT.declared_clock_ports(spec)),
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"], STEP_CAP=GATE_STEP_CAP_S)   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
     if textbook_reset_args(spec):
         tb = f"--refuse-checks {','.join(GATE_REFUSE)} | sed 's/^/GATE_TB /'"
@@ -1220,9 +1223,15 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
         imgs["density"] = LP.render_grid(pl, "density", od / "density.png", f"{title} post-place density (gate)",
                                          "std-cell area / bin area: blue 0, green 0.5, red 1.0+ ; grey = macros")
     m = re.search(r"^GATE_CONG_B64 (\S+)$", out, re.M)
-    if m and pl:
+    rpt = None
+    if m:
         try:
-            pl = dict(pl, congestion=LP.congestion_grid(pl, zlib.decompress(base64.b64decode(m.group(1))).decode(errors="replace")))
+            rpt = zlib.decompress(base64.b64decode(m.group(1))).decode(errors="replace")
+        except Exception as ex:  # noqa: BLE001
+            g.add("WARN", "layout_images", f"congestion report unreadable: {type(ex).__name__}")
+    if rpt is not None and pl:
+        try:
+            pl = dict(pl, congestion=LP.congestion_grid(pl, rpt))
             imgs["congestion"] = LP.render_grid(pl, "congestion", od / "congestion.png", f"{title} GRT congestion (gate trial)",
                                                 f"{pl['congestion']['markers']} congested gcells (red = most)")
         except Exception as ex:  # noqa: BLE001
@@ -1250,14 +1259,34 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
             g.add("WARN", "fill", msg + (f" (pin-bound: {reason})" if reason else f" (< {FILL_WARN:.0%})"))
         else:
             g.add("INFO", "fill", msg)
-    if parent and "GATE_GRT_RC=" in out:
+    if "GATE_GRT_RC=" in out:
+        # TRIAL ROUTE for EVERY kit (ROOT-0330-GRT 10-18; parent / cluster kits since 10-15): overflow > 0 FAILs with the
+        # hotspot (worst gcell / layer / bbox from the congestion report) and the congestion PNG
         rows = re.findall(r"^GATE_GRT_LAYER (\S+) +(\d+) +(\d+) +([\d.]+)%\s+(\d+) */ *(\d+) */ *(\d+)", out, re.M)
         tot = [r for r in rows if r[0] == "Total"]
-        lay = [r for r in rows if r[0] != "Total"]
+        # 5_1_grt.log prints the table after the first route AND after the incremental re-route: judge the LAST one
+        ends = [i for i, r in enumerate(rows) if r[0] == "Total"]
+        lay = [r for r in rows[(ends[-2] + 1 if len(ends) > 1 else 0):(ends[-1] if ends else len(rows))] if r[0] != "Total"]
         worst = max(lay, key=lambda r: float(r[3]), default=None)
         ovf = int(tot[-1][6]) if tot else None
+        hot = LP.congestion_hotspots(rpt) if rpt is not None else None
+        wovf = max(lay, key=lambda r: int(r[6]), default=None)
+        if hot and hot.get("markers") and wovf is not None and int(wovf[6]) > 0:
+            # the congestion report is 2D ("on Layer -"): the layer comes from the per-layer overflow table
+            hot["worst_overflow_layer"] = [wovf[0], int(wovf[6])]
+        secs = re.search(r"GATE_GRT_S=(\d+)", out)
+        g.trial_route = dict(schema="opentallas.ref_tile.trial_route.v1", overflow=ovf, kind="parent" if parent else "tile",
+                             rc=re.search(r"GATE_GRT_RC=(\S+)", out).group(1), grt_s=int(secs.group(1)) if secs else None,
+                             layers=[dict(layer=r[0], capacity=int(r[1]), usage=int(r[2]), pct=float(r[3]),
+                                          overflow=int(r[6])) for r in lay],
+                             worst_layer_usage=worst and [worst[0], float(worst[3])], hotspot=hot,
+                             congestion_png=imgs.get("congestion"))
         note = (f"trial GRT: total overflow {ovf}" + (f"; worst layer {worst[0]} {worst[3]}% used" if worst else "")
-                + (f"; congestion map {imgs.get('congestion')}" if imgs.get("congestion") else ""))
+                + (f"; worst-overflow layer {wovf[0]} ({wovf[6]})" if ovf and wovf is not None else "")
+                + (f"; {LP.hotspot_text(hot)}" if ovf and hot is not None else
+                   "; no congestion report came back" if ovf else "")
+                + (f"; congestion map {imgs.get('congestion')}" if imgs.get("congestion") else "")
+                + (f"; GRT {secs.group(1)} s" if secs else ""))
         if ovf is None:
             g.add("FAIL", "trial_route", "trial global route produced no congestion table (GATE_GRT_RC="
                   + re.search(r"GATE_GRT_RC=(\S+)", out).group(1) + ")", "read the remote grt.log")
@@ -1450,6 +1479,7 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
         root = (rec["root"] or "").removeprefix("port:")
         matched = [d for d in domains if d.get("source") == root or d.get("clock") == root]
         if cts and len(matched) == 1:
+            matched[0] = with_child_flops(matched[0], spec)
             corner_spreads(rec, matched[0])
             if rec["tt_insertion_ps"] is not None:
                 rec["measured_clock"] = matched[0].get("clock")
@@ -1509,6 +1539,43 @@ def upgrade_clock_record(ev: dict | None) -> dict | None:
     return dict(ev, **add, pin_spread_from_gate_report=True) if add else ev
 
 
+def with_child_flops(domain: dict, spec: dict | None) -> dict:
+    """S81-DEC2 2026-10-18 (owner 10-17 0dq: "spread at the CHILD flops for a cluster"): for a cluster whose every
+    boundary register clock pin is a hard child's clock pin (a wires-only parent), the pin-flop arrival is the child's
+    clock-pin arrival PLUS that child's own boundary-register insertion (views/<child>/insertion.json <corner>.boundary
+    min..max).  The raw child clock-pin spread is the parent compensation, not skew: s81lk_kp4_dec taps ddly 144 ps
+    later than dsyn because ddly's own tree is 107 ps shorter.  Adds domain[c]["child_flop"] {n, min, max, pins};
+    unchanged when the spec has no children, a child pin has no record, or glue registers share the boundary."""
+    import fnmatch
+    kids = [ch for ch in (spec or {}).get("children") or [] if isinstance(ch, dict) and ch.get("view") and ch.get("inst")]
+    if (spec or {}).get("kind") != "cluster" or not kids:
+        return domain
+    out = dict(domain)
+    for c in ("tt", "ff"):
+        cr = domain.get(c) or {}
+        pins = ((cr.get("macros") or {}).get("pins")) or []
+        bd = cr.get("boundary") or {}
+        if not pins or bd.get("n") != len(pins):
+            continue                                    # glue registers on the boundary too: keep the measured record
+        rows = []
+        for x in pins:
+            inst = str(x.get("pin", "")).rsplit("/", 1)[0]
+            kid = next((ch for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))
+                        or fnmatch.fnmatchcase(inst, ch["inst"])), None)
+            ij = ROOT / kid["view"] / "insertion.json" if kid else None
+            try:
+                b = json.loads(ij.read_text())[c]["boundary"]
+                lo, hi = float(x["arr"]) + float(b["min"]), float(x["arr"]) + float(b["max"])
+            except (AttributeError, OSError, ValueError, KeyError, TypeError):
+                rows = None
+                break
+            rows.append(dict(pin=x["pin"], arr=x["arr"], child_min=round(lo, 1), child_max=round(hi, 1)))
+        if rows:
+            out[c] = dict(cr, child_flop=dict(n=len(rows), min=min(r["child_min"] for r in rows),
+                                              max=max(r["child_max"] for r in rows), pins=rows))
+    return out
+
+
 def corner_spreads(rec: dict, domain: dict) -> dict:
     """TT and FF insertion (latest register arrival), all-register leaf spread and pin-flop (boundary register) spread
     of one ck_insertion clock record (owner 10-17 0dq: the rule is the pin-flop spread at TT AND FF)."""
@@ -1518,7 +1585,11 @@ def corner_spreads(rec: dict, domain: dict) -> dict:
         if al.get("min") is not None and al.get("max") is not None:
             lo, hi = float(al["min"]), float(al["max"])
             rec[f"{c}_insertion_ps"], rec[f"{c}_spread_ps"] = hi, round(hi - lo, 1)
-        if bd.get("min") is not None and bd.get("max") is not None:
+        cf = cr.get("child_flop") or {}
+        if cf.get("min") is not None and cf.get("max") is not None:   # wires-only cluster: the child pin flops
+            rec[f"{c}_pin_spread_ps"] = round(float(cf["max"]) - float(cf["min"]), 1)
+            rec[f"{c}_pin_spread_basis"] = "child_flop"
+        elif bd.get("min") is not None and bd.get("max") is not None:
             rec[f"{c}_pin_spread_ps"] = round(float(bd["max"]) - float(bd["min"]), 1)
     return rec
 
@@ -1572,9 +1643,13 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
             pass
         try:
             ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit, clock=d.get("clock"),
-                                     tile=[t for t in tile if t])
-        except TypeError:                                    # an older source_binding without the tile scope
-            ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit, clock=d.get("clock"))
+                                     tile=[t for t in tile if t], gate=d)
+        except TypeError:                                    # an older source_binding without the gate / tile scope
+            try:
+                ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit, clock=d.get("clock"),
+                                         tile=[t for t in tile if t])
+            except TypeError:
+                ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit, clock=d.get("clock"))
         if not ok:
             return no(reason)
         if note is not None:
@@ -1731,6 +1806,8 @@ def write_gate_result(g: Gate, kd: Path, cts: bool, host: str):
            "generated": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "host": getattr(g, "remote_host", host), "cts": bool(cts),
            "commit": g.source_binding.get("commit"), "source_binding": g.source_binding,
            "clock": g.clock, "items": [i for i in g.items if i["severity"] != "INFO"][:40]}
+    if getattr(g, "trial_route", None):
+        out["trial_route"] = g.trial_route      # a gate without this record predates the every-kit trial GRT
     if getattr(g, "port_latency", None):
         out["port_latency"] = g.port_latency
     previous = kd / CLOCK_RESULT
