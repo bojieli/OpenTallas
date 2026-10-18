@@ -51,17 +51,27 @@ module dsdv_gunit_l2 #(
     // rung: vi_s = northbound arrivals (from L1), vo_n = toward L0; vi_n = southbound arrivals (from L0), vo_s = toward L1
     ot_dsdv_vstop #(.V(276), .JREG(0)) u_vs (.clk(clk), .rst_n(rs_v), .tap_k(KSC | KHP), .sink_k(KSC | KHP),
         .vi_s(rs_i), .vo_n(rn_o), .vi_n(rn_i), .vo_s(rs_o), .dl_nv(dl_av), .dl_n(dl_a), .dl_sv(dl_bv), .dl_s(dl_b),
-        .in_nv(in_v), .in_n(in_b), .in_sv(MUT == 9 ? 1'b0 : in_v), .in_s(MUT == 9 ? 276'd0 : MUT == 10 ? (rct_bq | hct_b) : in_b), .fault(f_vs));
-    // HP copy for L0 (kind 7)
+        .in_nv(in_v), .in_n(in_b), .in_sv(MUT == 9 ? 1'b0 : in_v), .in_s(MUT == 9 ? 276'd0 : MUT == 10 ? (rct_bq | hct_b) : in_b), .fault(f_vs),
+        .ra_s(ra_s), .ra_n(ra_n), .dk_n(dk_n), .dk_s(dk_s));
+    // HP copy for L0 (kind 7).  S81-NATIVE3: taken from the rung input flops through its own stage (hc_*) and the vstop's
+    // separate kind-7 flag, never from the dl_* output flops (those sit at the S pins; the NATIVE-2 CTS probe put
+    // dl_a/dl_b[3:1] at 226-227 ps launch with this second load).  hp(t + 1) = dl(t) = arrival flop(t - 1): unchanged.
+    wire [275:0] ra_s, ra_n; wire dk_n, dk_s; reg [275:0] hc_a, hc_b;
     always @(posedge clk or negedge rs_n)
         if (!rs_n) begin hp_av <= 1'b0; hp_bv <= 1'b0; end
-        else begin hp_av <= dl_av && dl_a[3:1] == 3'd7; hp_bv <= dl_bv && dl_b[3:1] == 3'd7; end
-    always @(posedge clk) begin hp_a <= dl_a; hp_b <= dl_b; end
+        else begin hp_av <= dk_n; hp_bv <= dk_s; end
+    always @(posedge clk) begin hc_a <= ra_s; hc_b <= ra_n; hp_a <= hc_a; hp_b <= hc_b; end
     // cw / sid: E input flop, then one output flop per face
     wire [270:0] cw_q;
     dsdv_gunit_pass #(.W(271), .N(1)) u_cwi (.clk(clk), .rst_n(rs_v), .d({cw_d, cw_a, cw_v}), .q(cw_q));
-    dsdv_gunit_pass #(.W(271), .N(1)) u_cwn (.clk(clk), .rst_n(rs_n), .d(cw_q), .q({cwn_d, cwn_a, cwn_v}));
-    dsdv_gunit_pass #(.W(271), .N(1)) u_cws (.clk(clk), .rst_n(rs_s), .d(cw_q), .q({cws_d, cws_a, cws_v}));
+    // S81-NATIVE3: the two output copies are TOP-module registers (not dsdv_gunit_pass instances): ot_keep_regs.tcl
+    // (OT_KEEP_PIN_REGS) keeps only top-level pin registers apart, so the submodule copies with equal D were folded into
+    // one flop that io_flop_at_pins seated at the N pins, and cws_* crossed the tile (CTS probe cws_d mean 182 ps).
+    reg cwn_vq, cws_vq; reg [265:0] cwn_q, cws_q;
+    always @(posedge clk or negedge rs_n) if (!rs_n) cwn_vq <= 1'b0; else cwn_vq <= cw_q[0];
+    always @(posedge clk or negedge rs_s) if (!rs_s) cws_vq <= 1'b0; else cws_vq <= cw_q[0];
+    always @(posedge clk) begin cwn_q <= cw_q[270:1]; cws_q <= cw_q[270:1]; end
+    assign {cwn_d, cwn_a} = cwn_q; assign cwn_v = cwn_vq; assign {cws_d, cws_a} = cws_q; assign cws_v = cws_vq;
     reg [3:0] sid_q, sn_q, ss_q;
     always @(posedge clk) begin sid_q <= sid; sn_q <= sid_q; ss_q <= sid_q; end
     assign sidn = sn_q; assign sids = ss_q;
