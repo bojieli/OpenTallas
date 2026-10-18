@@ -96,5 +96,9 @@
   "launch_ps": 223.5,
   "fix": "kit re-generated with the recipe-2 output stage: hold_pad HB2xp67 (was implicit HB4xp67 on every o pin: lead BUF + HB4 + BUF ~ +120 ps TT per the recipe-2 note), pin_reg_split one launch flop per o pin FIRM at the o face (io_flop_at_pins), OT_KEEP_PIN_REGS=1; same outline / pin faces",
   "why_route": "owners HBM native audit (claude/owners-hbm-native-1018 61ccb4897): hbfd_rly_136_EW TT launch 223.5 ps > 220 on 7 o pins in CLOSED hbfd_rly_136_ew-v1-212c3439c; relative re-audit against the neighbour views of the GEN1 lane chains still FAIL; native_launch kind is refused only because the shared RTL source files changed blob (NS/SN RS_RELAY)."
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "relay = ONE register stage at the pins by definition: i is captured by the stage register (FIRM at the i face, io_flop_at_pins), o is launched by it (one launch flop per o pin FIRM at the o face, pin_reg_split); a pin register would add a cycle per hop of the lane chain (as the F1 _fc relays, DIE-CLOCK F1)"
  }
 }

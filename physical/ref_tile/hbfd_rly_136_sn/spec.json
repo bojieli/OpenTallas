@@ -109,5 +109,9 @@
   "capture_ps": 224.4,
   "fix": "ot_hbm_rly RS_RELAY=1 in hbfd_rly_136_SN (generator RS_RELAY_MASTERS; every other master byte-identical): rs drives the 3-flop registered reset relay, the relay drives the 136 stage clears; release +3 edges (bench_rly.sh REL 3 expected-o model; reset-relay-bypass mutant FAILs)",
   "why_route": "owners HBM native audit (claude/owners-hbm-native-1018 61ccb4897, results/arch/owners_hbm_1018/owners_hbm_native_audit.json): hbfd_rly_136_SN rs capture 224.4 ps > 190 (rs = async clear of all 136 stage flops) in CLOSED hbfd_rly_136_sn-v1-2d0c1a8ac; bound in the d4g GEN1 plan (lane relays). kind rtl_change: the master's RTL changes (RS_RELAY=1)."
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "relay = ONE register stage at the pins by definition: i is captured by the stage register (FIRM at the i face, io_flop_at_pins), o is launched by it (one launch flop per o pin FIRM at the o face, pin_reg_split); a pin register would add a cycle per hop of the lane chain (as the F1 _fc relays, DIE-CLOCK F1)"
  }
 }
