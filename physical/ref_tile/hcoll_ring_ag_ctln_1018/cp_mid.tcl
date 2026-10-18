@@ -6,6 +6,8 @@
 # r3: the same midpoint for u_core.rr_d[b] (acc_rr[b] N face -> 4 mux levels -> rr_d[b] S face; r2 anchored at the
 # S face as an output flop: capture 212 pins over 190) and for carry_write0/1 (cw_i/ccw_i kind bit 274 -> carry pin at
 # the N corner; r2 capture cw_i[274] 228).
+# r4: rr_d / carry_write sit at 0.35 of the way from the input pin (r3 probe: capture acc_rr ~200 / cw_i[274] 206 with
+# 4 logic levels on the capture side, launch rr_d <= 163): the logic side gets the shorter wire.
 # Placement only, 0 cycles.
 set cm_blk [ord::get_db_block]
 set cm_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
@@ -24,17 +26,17 @@ foreach inst [$cm_blk getInsts] {
   set nm [$inst getName]
   if {![string match *DFF* [[$inst getMaster] getName]]} continue
   if {[regexp {g_cp\\?\[([0-9]+)\\?\][./]u_p([01])[./]} $nm -> b side]} {
-    set cls cp
+    set cls cp; set wt 0.5
     if {$side eq "0"} { set ip "cw_i\[$b\]"; set op "pin0_q\[$b\]" } else { set ip "ccw_i\[$b\]"; set op "pin1_q\[$b\]" }
   } elseif {[regexp {^u_core[./]rr_d\\?\[([0-9]+)\\?\]} $nm -> b]} {
-    set cls rr; set ip "acc_rr\[$b\]"; set op "rr_d\[$b\]"
+    set cls rr; set wt 0.35; set ip "acc_rr\[$b\]"; set op "rr_d\[$b\]"
   } elseif {[regexp {^carry_write([01])($|[^0-9])} $nm -> d]} {
-    set cls cw; set ip [expr {$d eq "0" ? "cw_i\[274\]" : "ccw_i\[274\]"}]; set op "carry_write$d"
+    set cls cw; set wt 0.35; set ip [expr {$d eq "0" ? "cw_i\[274\]" : "ccw_i\[274\]"}]; set op "carry_write$d"
   } else { continue }
   set bi [$cm_blk findBTerm $ip]; set bo [$cm_blk findBTerm $op]
   if {$bi eq "NULL" || $bo eq "NULL"} { error "CP_MID: missing port $ip / $op for $nm" }
   lassign [cm_center $bi] x0 y0; lassign [cm_center $bo] x1 y1
-  set mx [expr {($x0 + $x1) / 2.0}]; set my [expr {($y0 + $y1) / 2.0}]
+  set mx [expr {$x0 + $wt * ($x1 - $x0)}]; set my [expr {$y0 + $wt * ($y1 - $y0)}]
   set h [[$inst getMaster] getHeight]; set w [[$inst getMaster] getWidth]
   set best {}; set bd Inf
   foreach r $cm_rows {
