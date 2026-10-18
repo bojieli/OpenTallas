@@ -15,7 +15,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / "results/rtl/xdie_qtp8_1018"
+import os
+OUT = ROOT / os.environ.get("QTP8_OUT", "results/rtl/xdie_qtp8_1018")
 LAYERS = 36
 
 

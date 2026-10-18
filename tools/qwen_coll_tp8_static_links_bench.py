@@ -32,6 +32,9 @@ from qwen_coll_tp8_static_bench import schedule, vectors, ND, GC  # noqa: E402
 KC, KW, PU, PS = 4, 2, 14, 339
 # TOKEN-XDIE-QTP8 10-18: die-lane / face-form options (all default 0 = the r5..s4 benches unchanged)
 XD = dict(lanes=(0, 0, 0, 0, 0, 0), ev2=0, tok_reg=0, lx=(0, 0, 0))
+# Q-COLLCAL 10-18 --real-lanes coll_lane_latency.json: the REAL forwarded lanes (+define+OT_TP8S_REAL_LANES), N / K per
+# SerDes port and direction (tx, txv, rx, rxv) from the die GEN; RL = {param: value} (empty = fixed-delay lanes as before)
+RL = dict(params={}, src=None)
 D50 = dict(on=False)   # --duty50: six_five harness with 50 %-duty clocks (half-tick resolution)
 VERILATOR = os.environ.get("OT_VERILATOR") or next((v for v in (os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"),) if os.path.exists(v)), None) or shutil.which("verilator")
 DEPTH, START = 8, 40
@@ -50,6 +53,7 @@ SRC = [ROOT / p for p in (
     "rtl/rom/ot_coll_tp8_static.sv", "rtl/physical/ot_qfd_io_collective_static.sv",
     "rtl/rom/ot_coll_static_linkcal.sv", "rtl/rom/ot_coll_cmd_issue.sv",
     "rtl/qwen_split/qfd_seq_su_collective_calendar.sv",
+    "rtl/hdc/ot_hdc_cg.sv", "rtl/qwen_split/qfd_fwd_lane.sv",
     "rtl/test/tb_coll_tp8_static_links.sv")]
 RES = re.compile(r"TP8SL dies=8 .* mismatches=(\d+) extra=(\d+) out_err=(\d+) cmd_bad=(\d+) coll_fault=([01]+) "
                  r"issuer_fault=([01]+) die_fault=([01]+) words_out=(\d+) meas_lu=(-?\d+) meas_ls=(-?\d+) "
@@ -92,7 +96,7 @@ def program_words(prog, nwords, cmd_pin_stages=0):
 
 
 def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, relays=(0,0,0,0), shared=False, six_five=False, seqsu=False):
-    xdtag = ("_d50" if D50["on"] else "") + ("" if XD == dict(lanes=(0, 0, 0, 0, 0, 0), ev2=0, tok_reg=0, lx=(0, 0, 0)) else \
+    xdtag = ("_d50" if D50["on"] else "") + ("_rl" + hashlib.sha256(json.dumps(RL["params"], sort_keys=True).encode()).hexdigest()[:8] if RL["params"] else "") + ("" if XD == dict(lanes=(0, 0, 0, 0, 0, 0), ev2=0, tok_reg=0, lx=(0, 0, 0)) else \
         "_e" + "-".join(map(str, XD["lanes"])) + f"_v{XD['ev2']}_t{XD['tok_reg']}_x" + "-".join(map(str, XD["lx"])))
     obj = out / f"obj_u{lu}_s{ls}_xu{xu}_xs{xs}_phi{phi}{'_qfd' if qfd else ''}{'_seqsu' if seqsu else ''}{('_' + define) if define else ''}{xdtag}"
     h = out / f"harness_phi{phi}{'_d50' if D50['on'] else ''}.cpp"
@@ -120,6 +124,8 @@ def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, 
     if six_five:cmd += ["+define+OT_TP8S_PRODUCTION_WRAPPER"]
     cmd += [f"-G{k}={v}" for k, v in zip(("ET0", "ET1", "ET2", "ER0", "ER1", "ER2"), XD["lanes"])] + \
            [f"-GEV2={XD['ev2']}", f"-GTOKREG={XD['tok_reg']}"] + [f"-GLX{j}={v}" for j, v in enumerate(XD["lx"])]
+    if RL["params"]:
+        cmd += ["+define+OT_TP8S_REAL_LANES"] + [f"-G{k}={v}" for k, v in sorted(RL["params"].items())]
     if seqsu:cmd += ["+define+OT_TP8S_SEQSU"]
     if parent:
         cmd += [f"-GSHARED={int(shared)}",f"-GSIXFIVE={int(six_five)}", "+define+OT_TP8S_PARENT"] + [f"-G{p}={v}" for p,v in zip(("RU","RS0","RS1","RS2"),relays)]
@@ -137,7 +143,7 @@ def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, 
             all(prior.get(k)==v for k,v in dict(latu=lu,lats=ls,xu=xu,xs=xs,phi=phi,
               phy_ucie=PU,phy_serdes=PS,die_name_master=qfd,production_parent=parent,
               relays=list(relays),shared_ucie=shared,six_five=six_five,mutant=define,sequencer_face=seqsu,
-              die_lanes=list(XD['lanes']),valid_skew_port2=XD['ev2'],tok_reg=XD['tok_reg'],calendar_lane_cycles=list(XD['lx']),duty50=D50['on']).items())):
+              die_lanes=list(XD['lanes']),valid_skew_port2=XD['ev2'],tok_reg=XD['tok_reg'],calendar_lane_cycles=list(XD['lx']),duty50=D50['on'],real_lanes=RL['params']).items())):
             return exe
     r = subprocess.run(cmd, capture_output=True, text=True)
     if r.returncode:
@@ -170,10 +176,30 @@ def main():
                     help="die-level lane cycles io_collective<->io_serdes_j (TX ETj, RX ERj), from the die GEN fwd_lanes.json")
     ap.add_argument("--valid-skew", type=int, default=0, help="extra cycles of port 2 TX valid lane vs its data lane")
     ap.add_argument("--tok-reg", type=int, default=0, choices=(0, 1), help="hardened face form (TOK_REG pin registers)")
-    ap.add_argument("--lx", type=int, nargs=3, default=[0] * 3, help="lane cycles the SerDes face calendars absorb (parent LX0..2)")
+    ap.add_argument("--lx", type=int, nargs=3, default=None, help="lane cycles the SerDes face calendars absorb (parent LX0..2); "
+                    "default 0 0 0, or the GEN's LX with --real-lanes")
+    ap.add_argument("--real-lanes", type=Path, help="die GEN case/coll_lane_latency.json: real forwarded lanes (N, K per port) "
+                    "in place of the fixed lane delays; LX defaults to its LX (the calendar the GEN emits)")
+    ap.add_argument("--real-lanes-override", nargs="*", default=[], metavar="PARAM=V",
+                    help="negative controls: override single lane parameters (e.g. KTV2=6: the as-built valid K)")
     ap.add_argument("--duty50", action="store_true", help="six_five harness with 50%%-duty clocks (needed by the negedge gearbox)")
     ap.add_argument("--plusarg",action="append",default=[],help="extra +K=V for every case (negative controls TAGBAD=1 / TOKMUT=1)")
     a = ap.parse_args()
+    if a.real_lanes:
+        cll = json.loads(a.real_lanes.read_text())
+        for j in range(3):
+            pj = cll["ports"][str(j)] if str(j) in cll["ports"] else cll["ports"][j]
+            for d, pn in (("tx", "T"), ("txv", "TV"), ("rx", "R"), ("rxv", "RV")):
+                RL["params"][f"N{pn}{j}"] = int(pj[d]["n"] or 0)
+                RL["params"][f"K{pn}{j}"] = int(pj[d]["K"] or 0)
+        for kv in a.real_lanes_override:
+            k_, v_ = kv.split("=")
+            RL["params"][k_] = int(v_)
+        RL["src"] = str(a.real_lanes)
+        if a.lx is None:
+            a.lx = list(cll["LX"])
+    if a.lx is None:
+        a.lx = [0, 0, 0]
     XD.update(lanes=tuple(a.lanes), ev2=a.valid_skew, tok_reg=a.tok_reg, lx=tuple(a.lx))
     D50["on"] = a.duty50
     if a.six_five:
@@ -192,7 +218,7 @@ def main():
     if a.seqsu:
         assert a.production, "the sequencer face admits tags 0..2: production programs (<= 3 messages) only"
     exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.phi, a.mutant_define, a.qfd, a.parent, a.relays, a.shared_ucie, a.six_five, a.seqsu)
-    bad, records = [], []
+    bad, records, lane_meas = [], [], {}
     for i, (name, nmsg, words, mk, kind, extra) in enumerate(cases):
         rng = np.random.default_rng(100 + i)
         if mk == "rrg1":
@@ -211,6 +237,7 @@ def main():
         txt = run.stdout
         (a.out / f"{name}.log").write_text(txt + run.stderr)
         m = RES.search(txt)
+        lane_meas[name] = re.findall(r"^TP8SL_LANE .*$", txt, re.M)
         passed = run.returncode == 0 and bool(m) and any(l.strip() == "PASS" for l in txt.splitlines())
         ok = (not passed) if a.expect_fail else passed
         g = m.groups() if m else None
@@ -232,6 +259,7 @@ def main():
     (a.out / "record.json").write_text(json.dumps(dict(
         schema="opentallas.qwen.tp8.collective.static_links.v1", ranks=ND, latu=a.latu, lats=a.lats, kc=KC, kw=KW,
         phy_ucie=PU, phy_serdes=PS, xu=a.xu, xs=a.xs, phi=a.phi, die_name_master=a.qfd, production_parent=a.parent, relays=a.relays, shared_ucie=a.shared_ucie, six_five=a.six_five, FDI_phase_ticks=a.fdi_phase, unsafe_shared_calendar=a.unsafe_shared_calendar, mutant=a.mutant_define, sequencer_face=a.seqsu, plusargs=a.plusarg,
+        real_lanes=RL['params'], real_lanes_source=RL['src'], lane_meas=lane_meas,
         die_lanes=list(XD['lanes']), valid_skew_port2=XD['ev2'], tok_reg=XD['tok_reg'], calendar_lane_cycles=list(XD['lx']), duty50=D50['on'],
         verilator=VERILATOR, verilator_version=subprocess.run([VERILATOR, '--version'], capture_output=True, text=True).stdout.strip(),
         expect_fail=a.expect_fail, production=a.production, issuer_depth=DEPTH, stage_start=START, cmd_pin_stages=int(a.qfd),

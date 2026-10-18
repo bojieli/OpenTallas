@@ -114,6 +114,20 @@ if '--case' in sys.argv:
             sdc += [f"set_multicycle_path -setup {r_.get('E_sta', r_['E'])} -to [get_pins {{{pins}}}]",
                     f"set_multicycle_path -hold {fl['D'] - 1} -to [get_pins {{{pins}}}]"]
         (out / 'case' / 'landing.sdc').write_text('\n'.join(sdc) + '\n')
+        if m.get('coll_lane_latency'):
+            # Q-COLLCAL 10-18: the SerDes lane cycles of THIS build and the collective calendar that absorbs them
+            (out / 'case' / 'coll_lane_latency.json').write_text(json.dumps(m['coll_lane_latency'], indent=1) + '\n')
+            rec['coll_lane_latency'] = {k_: m['coll_lane_latency'][k_] for k_ in ('LX', 'verdict', 'fails')}
+    if m.get('die_master_params'):
+        # Q-COLLCAL 10-18: the elaboration parameters of the die's masters (tools/die_port_bind.py reads DIE_V.params.json:
+        # the strict bind elaborates io_collective with the GEN's LX0..2); merged over any sidecar the writer left
+        pj = out / 'case' / 'die.v.params.json'
+        cur = json.loads(pj.read_text()) if pj.exists() else dict(schema='opentallas.die_params.v1', netlist='die.v', masters={})
+        for mst_, prm_ in m['die_master_params'].items():
+            cur.setdefault('masters', {}).setdefault(mst_, {}).update(prm_)
+        pj.write_text(json.dumps(cur, indent=1, sort_keys=True) + '\n')
+        rec['die_master_params'] = m['die_master_params']
+        (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
         rec['fwd_lanes'] = {k_: fl[k_] for k_ in ('lanes', 'stations', 'landings', 'masters', 'plain_relays_left',
                                                   'reclassed_reset_hops')} | dict(lanes=len(fl['lanes']), skipped=len(fl['skipped']))
         (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
