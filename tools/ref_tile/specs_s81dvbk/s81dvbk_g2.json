@@ -160,7 +160,8 @@
      "verilator"
     ],
     "expect": "pass",
-    "pass_regex": "^DSDV_BK_COL PASS mut=0$"
+    "pass_regex": "^DSDV_BK_COL PASS mut=0$",
+    "min_count_regex": "egress words (\\d+)"
    },
    {
     "name": "dsdv_bk_col_mut_lateodd",
@@ -183,7 +184,8 @@
      "verilator"
     ],
     "expect": "pass",
-    "pass_regex": "^DSDV_BK_SEL PASS mut=0$"
+    "pass_regex": "^DSDV_BK_SEL PASS mut=0$",
+    "min_count_regex": "egress words (\\d+)"
    },
    {
     "name": "dsdv_bk_sel_mut_lateodd",
