@@ -1,0 +1,79 @@
+{
+ "stage": "L0",
+ "ranks": [
+  0,
+  5
+ ],
+ "executed": 34,
+ "integrity": {
+  "token": 0,
+  "expected_found": 40,
+  "expected_missing": [],
+  "expected_checked": 40,
+  "found_as": {
+   "d0.prenorm.attn": "vm",
+   "d0.qkv+row_scale_qkv.qkv": "vm",
+   "d0.qknorm.q": "vm",
+   "d0.qknorm.k": "vm",
+   "d0.rope.q": "vm",
+   "d0.round_q.q_bf16": "vm",
+   "d0.kv_append.K0": "hbm_kv_e4m3",
+   "d0.kv_append.V0": "hbm_kv_e4m3",
+   "d0.attention_qk.scores*scale": "vm_sc_times_attn_scale",
+   "d0.softmax.Z": "vm",
+   "d0.attention_pv.pv": "vm",
+   "d0.pv_normalize.attn": "vm",
+   "d0.o.partial8": "vm",
+   "d0.all_reduce_o+row_scale_o+residual.x_mid": "vm",
+   "d0.prenorm.ffn": "vm",
+   "d0.gu+row_scale_gu.gu": "vm",
+   "d0.swiglu.act": "vm",
+   "d0.act_all_gather.act_all": "vm",
+   "d0.down.partial_tp4_rowhalf": "vm",
+   "d0.all_reduce_down+row_scale_down+residual.x_out": "vm",
+   "d5.prenorm.attn": "vm",
+   "d5.qkv+row_scale_qkv.qkv": "vm",
+   "d5.qknorm.q": "vm",
+   "d5.qknorm.k": "vm",
+   "d5.rope.q": "vm",
+   "d5.round_q.q_bf16": "vm",
+   "d5.kv_append.K0": "hbm_kv_e4m3",
+   "d5.kv_append.V0": "hbm_kv_e4m3",
+   "d5.attention_qk.scores*scale": "vm_sc_times_attn_scale",
+   "d5.softmax.Z": "vm",
+   "d5.attention_pv.pv": "vm",
+   "d5.pv_normalize.attn": "vm",
+   "d5.o.partial8": "vm",
+   "d5.all_reduce_o+row_scale_o+residual.x_mid": "vm",
+   "d5.prenorm.ffn": "vm",
+   "d5.gu+row_scale_gu.gu": "vm",
+   "d5.swiglu.act": "vm",
+   "d5.act_all_gather.act_all": "vm",
+   "d5.down.partial_tp4_rowhalf": "vm",
+   "d5.all_reduce_down+row_scale_down+residual.x_out": "vm"
+  }
+ },
+ "ranks_out": {
+  "0": {
+   "counts": {
+    "emitted": 6,
+    "format_open": 24,
+    "unsupported_lowering": 2,
+    "v1_unsupported": 2
+   },
+   "events": 9492,
+   "replay_sha256": "a3f70a7b2ddd6222f61d216356744c1415e911a91f2e03c2ce5352b5b21636e4"
+  },
+  "5": {
+   "counts": {
+    "emitted": 6,
+    "format_open": 24,
+    "unsupported_lowering": 2,
+    "v1_unsupported": 2
+   },
+   "events": 9492,
+   "replay_sha256": "ab764e896348891764ffe56336b23cf9090cabe602426c14f6b2393b0cdb6fd8"
+  }
+ },
+ "operands_sha256": "075855527dc26477ef1758d2327132f988a5d861df36ac9334dae8af314a8b4f"
+}

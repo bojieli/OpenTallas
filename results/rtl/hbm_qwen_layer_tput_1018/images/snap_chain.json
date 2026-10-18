@@ -1,0 +1,81 @@
+{
+ "stage": "chain",
+ "ranks": [
+  0,
+  5
+ ],
+ "executed": 65,
+ "integrity": {
+  "token": 0,
+  "expected_found": 40,
+  "expected_missing": [],
+  "expected_checked": 40,
+  "found_as": {
+   "d0.prenorm.attn": "vm",
+   "d0.qkv+row_scale_qkv.qkv": "vm",
+   "d0.qknorm.q": "vm",
+   "d0.qknorm.k": "vm",
+   "d0.rope.q": "vm",
+   "d0.round_q.q_bf16": "vm",
+   "d0.kv_append.K0": "hbm_kv_e4m3",
+   "d0.kv_append.V0": "hbm_kv_e4m3",
+   "d0.attention_qk.scores*scale": "vm_sc_times_attn_scale",
+   "d0.softmax.Z": "vm",
+   "d0.attention_pv.pv": "vm",
+   "d0.pv_normalize.attn": "vm",
+   "d0.o.partial8": "vm",
+   "d0.all_reduce_o+row_scale_o+residual.x_mid": "vm",
+   "d0.prenorm.ffn": "vm",
+   "d0.gu+row_scale_gu.gu": "vm",
+   "d0.swiglu.act": "vm",
+   "d0.act_all_gather.act_all": "vm",
+   "d0.down.partial_tp4_rowhalf": "vm",
+   "d0.all_reduce_down+row_scale_down+residual.x_out": "vm",
+   "d5.prenorm.attn": "vm",
+   "d5.qkv+row_scale_qkv.qkv": "vm",
+   "d5.qknorm.q": "vm",
+   "d5.qknorm.k": "vm",
+   "d5.rope.q": "vm",
+   "d5.round_q.q_bf16": "vm",
+   "d5.kv_append.K0": "hbm_kv_e4m3",
+   "d5.kv_append.V0": "hbm_kv_e4m3",
+   "d5.attention_qk.scores*scale": "vm_sc_times_attn_scale",
+   "d5.softmax.Z": "vm",
+   "d5.attention_pv.pv": "vm",
+   "d5.pv_normalize.attn": "vm",
+   "d5.o.partial8": "vm",
+   "d5.all_reduce_o+row_scale_o+residual.x_mid": "vm",
+   "d5.prenorm.ffn": "vm",
+   "d5.gu+row_scale_gu.gu": "vm",
+   "d5.swiglu.act": "vm",
+   "d5.act_all_gather.act_all": "vm",
+   "d5.down.partial_tp4_rowhalf": "vm",
+   "d5.all_reduce_down+row_scale_down+residual.x_out": "vm"
+  }
+ },
+ "ranks_out": {
+  "0": {
+   "counts": {
+    "chain_stale": 1,
+    "emitted": 11,
+    "format_open": 45,
+    "unsupported_lowering": 4,
+    "v1_unsupported": 4
+   },
+   "events": 14088,
+   "replay_sha256": "55aa019db2e859e33a237c85286c2c92be03d8da0cee29373fc3c9e1d4b36a00"
+  },
+  "5": {
+   "counts": {
+    "chain_stale": 1,
+    "emitted": 11,
+    "format_open": 45,
+    "unsupported_lowering": 4,
+    "v1_unsupported": 4
+   },
+   "events": 14088,
+   "replay_sha256": "b42d3054f17046b0b0e1bb7b02b9f9b91c81111bede4008fb532c8c95216dc71"
+  }
+ },
+ "operands_sha256": "dc5f4b4ed692c1d1776d330838ab6b72563e298ca99cd2c8f0733d79e513551c"
+}

@@ -1,0 +1,145 @@
+{
+ "schema": "opentallas.hbm_layer_images.v1",
+ "design": "qwen",
+ "mapping": "D4G8 (qwen_compiler Geometry tp=8)",
+ "stage": "head",
+ "rank": 0,
+ "schedule_variant": "landed",
+ "programme": "/srv/opentallas-scratch/claude/layerbench-hbm/qfix_archive/fix/head/program.hgi1",
+ "programme_sha256": "a0ce1c154cc2e8b8fed96c4e056315b9a7add357a3c0134528dee62877a4d5d8",
+ "boundary": "results/rtl/hbm_ds_layer_tput_1018/slice_sw/boundary.json",
+ "records": [
+  {
+   "i": 0,
+   "j": 0,
+   "rec": 0,
+   "L": 0,
+   "unit": "FUSED",
+   "op": "FUSED.ROW_NORM",
+   "tag": "prenorm.final",
+   "start": 182,
+   "end": 346.2,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [
+    "FUSED programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 1,
+   "j": 1,
+   "rec": 1,
+   "L": 0,
+   "unit": "DMA",
+   "op": "DMA.LOAD",
+   "tag": "head_scale.load",
+   "start": 185,
+   "end": 337.1,
+   "cls": "D1",
+   "blocked_by": [],
+   "reasons": [
+    "DMA programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 2,
+   "j": 2,
+   "rec": 2,
+   "L": 0,
+   "unit": "SM",
+   "op": "SM.MATVEC",
+   "tag": "head",
+   "start": 370.2,
+   "end": 76686.8,
+   "cls": "W1",
+   "blocked_by": [],
+   "reasons": [
+    "SM programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 3,
+   "j": 3,
+   "rec": 3,
+   "L": 0,
+   "unit": "SU",
+   "op": "SU.VOP",
+   "tag": "head_scale",
+   "start": 371.2,
+   "end": 76746.8,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [
+    "su_program_inventory.decode: record refused by adapter contract"
+   ],
+   "target_ports": [
+    "su_prog__r_we",
+    "su_prog__r_bank",
+    "su_prog__r_row",
+    "su_prog__r_data",
+    "su_prog__r_start",
+    "su_prog__r_len"
+   ],
+   "status": "adapter_refused"
+  },
+  {
+   "i": 4,
+   "j": 4,
+   "rec": 4,
+   "L": 0,
+   "unit": "ARGMAX",
+   "op": "ARGMAX.LOCAL",
+   "tag": "argmax_local",
+   "start": 371.2,
+   "end": 76766.8,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [
+    "ARGMAX programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 5,
+   "j": 5,
+   "rec": 5,
+   "L": 0,
+   "unit": "COLL",
+   "op": "COLL.ARGMAX_MERGE",
+   "tag": "argmax_merge",
+   "start": 76775.8,
+   "end": 77355.0,
+   "cls": "C4",
+   "blocked_by": [],
+   "reasons": [
+    "COLL programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [
+    "host_cp_ingress__cfg_v",
+    "host_cp_ingress__cfg_data",
+    "host_cp_ingress__desc_v",
+    "host_cp_ingress__launch_v",
+    "ep_S0__rx_pin_flit",
+    "ep_S1__rx_pin_flit"
+   ],
+   "status": "format_open"
+  }
+ ],
+ "placement_conflicts": [],
+ "preload_conflicts": [],
+ "placed_sectors": 0,
+ "su_programmes": [],
+ "t0_serial": 26,
+ "priced_layer_cycles": 77372.0,
+ "counts": {
+  "adapter_refused": 1,
+  "format_open": 5
+ }
+}
