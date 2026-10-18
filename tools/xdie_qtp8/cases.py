@@ -55,6 +55,31 @@ for ph in (1, 2, 3, 4, 5):
 CASES["lx_unit"] = ["--six-five", "--relays", "5", "0", "0", "5", "--latu", "53", "--lats", "LSX", "--tok-reg", "1"] + DIE + LX
 CASES["base_unit"] = ["--six-five", "--relays", "5", "0", "0", "5", "--latu", "53", "--lats", "376"]
 
+# batch 3 (10-18 08:45): FDI phases 1..5 FAILED even on the baseline (no lanes, TOK_REG 0) on the current RTL, while the 10-15
+# r10-gearbox runs passed: the r11..r15 gearbox adds NEGEDGE half-cycle registers and the 1-tick pulse harness is not a clock
+# for them.  d50_* = the same cases on 50 %-duty clocks (--duty50).  REC = configuration of record: dv2f14 lanes + LX 7/0/7 +
+# hardened face (TOK_REG 1) at the production calendar LS 376.
+D50 = ["--duty50"]
+REC = BASE + D50 + ["--tok-reg", "1"] + DIE + LX
+CASES.update({
+    "d50_base_ls376": BASE + D50 + ["--lats", "376"],
+    "d50_asbuilt_ls376": BASE + D50 + ["--lats", "376", "--expect-fail"] + DIE,
+    "d50_rec_ls376": REC + ["--lats", "376"],
+    "d50_rec_ls374": REC + ["--lats", "374"],
+    "d50_rec_ls373": REC + ["--lats", "373"],
+    "d50_rec_skew": REC + ["--lats", "376", "--valid-skew", "1", "--expect-fail"],
+    "d50_rec_seqsu": REC + ["--lats", "376", "--seqsu"],
+    "d50_rec_seqsu_tokmut": REC + ["--lats", "376", "--seqsu", "--plusarg", "TOKMUT=1", "--expect-fail"],
+    "d50_rec_mut_rank": REC + ["--lats", "376", "--mutant-define", "OT_TP8S_MUT_RANK", "--only", "qwen_ar_256w|qwen_layer_2x256w$", "--expect-fail"],
+    "d50_rec_mut_gather": REC + ["--lats", "376", "--mutant-define", "OT_TP8S_MUT_GATHER", "--only", "argmax", "--expect-fail"],
+    "d50_rec_mut_rxearly": REC + ["--lats", "376", "--mutant-define", "OT_LCAL_MUT_RX_EARLY", "--expect-fail"],
+    "d50_rec_mut_peerage": REC + ["--lats", "376", "--mutant-define", "OT_LCAL_MUT_PEER_AGE", "--expect-fail"],
+    "d50_rec_unit": ["--six-five", "--relays", "5", "0", "0", "5", "--latu", "53", "--lats", "376", "--tok-reg", "1"] + D50 + DIE + LX,
+})
+for ph in (1, 2, 3, 4, 5):
+    CASES[f"d50_base_phase{ph}"] = BASE + D50 + ["--lats", "376", "--fdi-phase", str(ph)]
+    CASES[f"d50_rec_phase{ph}"] = REC + ["--lats", "376", "--fdi-phase", str(ph)]
+
 if __name__ == "__main__":
     if sys.argv[1] == "list":
         print("\n".join(CASES))

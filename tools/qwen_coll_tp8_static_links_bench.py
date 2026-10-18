@@ -32,6 +32,7 @@ from qwen_coll_tp8_static_bench import schedule, vectors, ND, GC  # noqa: E402
 KC, KW, PU, PS = 4, 2, 14, 339
 # TOKEN-XDIE-QTP8 10-18: die-lane / face-form options (all default 0 = the r5..s4 benches unchanged)
 XD = dict(lanes=(0, 0, 0, 0, 0, 0), ev2=0, tok_reg=0, lx=(0, 0, 0))
+D50 = dict(on=False)   # --duty50: six_five harness with 50 %-duty clocks (half-tick resolution)
 VERILATOR = os.environ.get("OT_VERILATOR") or next((v for v in (os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"),) if os.path.exists(v)), None) or shutil.which("verilator")
 DEPTH, START = 8, 40
 SRC = [ROOT / p for p in (
@@ -91,13 +92,18 @@ def program_words(prog, nwords, cmd_pin_stages=0):
 
 
 def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, relays=(0,0,0,0), shared=False, six_five=False, seqsu=False):
-    xdtag = "" if XD == dict(lanes=(0, 0, 0, 0, 0, 0), ev2=0, tok_reg=0, lx=(0, 0, 0)) else \
-        "_e" + "-".join(map(str, XD["lanes"])) + f"_v{XD['ev2']}_t{XD['tok_reg']}_x" + "-".join(map(str, XD["lx"]))
+    xdtag = ("_d50" if D50["on"] else "") + ("" if XD == dict(lanes=(0, 0, 0, 0, 0, 0), ev2=0, tok_reg=0, lx=(0, 0, 0)) else \
+        "_e" + "-".join(map(str, XD["lanes"])) + f"_v{XD['ev2']}_t{XD['tok_reg']}_x" + "-".join(map(str, XD["lx"])))
     obj = out / f"obj_u{lu}_s{ls}_xu{xu}_xs{xs}_phi{phi}{'_qfd' if qfd else ''}{'_seqsu' if seqsu else ''}{('_' + define) if define else ''}{xdtag}"
-    h = out / f"harness_phi{phi}.cpp"
+    h = out / f"harness_phi{phi}{'_d50' if D50['on'] else ''}.cpp"
     step = ("t->clk = 1; t->lck = 1; t->eval(); t->clk = 0; t->lck = 0; t->eval();" if phi == 0 else
             "t->clk = 1; t->eval(); t->lck = 1; t->eval(); t->clk = 0; t->eval(); t->lck = 0; t->eval();")
-    if six_five:
+    if six_five and D50["on"]:
+        # TOKEN-XDIE-QTP8 10-18: the r11..r15 gearbox (ot_qfd_ucie_six_five) has NEGEDGE half-cycle registers; the 1-tick
+        # pulse harness below puts every negedge in the same tick as its posedge, which is not a clock.  Here every root
+        # is a 50 %-duty clock at half-tick resolution: core 10, FDI 12 (rising edge offset 2*FDIPHI), block 60 half-ticks.
+        step="bool ce=(tick%10)<5,fe=((tick+120-2*fphi)%12)<6,be=(tick%60)<30;t->clk=ce;t->lck=ce;t->fdi_ck=fe;t->blk_ck=be;t->eval();tick++;"
+    elif six_five:
         step="bool ce=(tick%5==0),fe=(tick%6==fphi),be=(tick%30==0);t->clk=ce;t->lck=ce;t->fdi_ck=fe;t->blk_ck=be;t->eval();t->clk=0;t->lck=0;t->fdi_ck=0;t->blk_ck=0;t->eval();tick++;"
     old_h = h.read_text() if h.exists() else None
     h.write_text('#include "Vtb_coll_tp8_static_links.h"\n#include "verilated.h"\n'
@@ -131,7 +137,7 @@ def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, 
             all(prior.get(k)==v for k,v in dict(latu=lu,lats=ls,xu=xu,xs=xs,phi=phi,
               phy_ucie=PU,phy_serdes=PS,die_name_master=qfd,production_parent=parent,
               relays=list(relays),shared_ucie=shared,six_five=six_five,mutant=define,sequencer_face=seqsu,
-              die_lanes=list(XD['lanes']),valid_skew_port2=XD['ev2'],tok_reg=XD['tok_reg'],calendar_lane_cycles=list(XD['lx'])).items())):
+              die_lanes=list(XD['lanes']),valid_skew_port2=XD['ev2'],tok_reg=XD['tok_reg'],calendar_lane_cycles=list(XD['lx']),duty50=D50['on']).items())):
             return exe
     r = subprocess.run(cmd, capture_output=True, text=True)
     if r.returncode:
@@ -165,9 +171,11 @@ def main():
     ap.add_argument("--valid-skew", type=int, default=0, help="extra cycles of port 2 TX valid lane vs its data lane")
     ap.add_argument("--tok-reg", type=int, default=0, choices=(0, 1), help="hardened face form (TOK_REG pin registers)")
     ap.add_argument("--lx", type=int, nargs=3, default=[0] * 3, help="lane cycles the SerDes face calendars absorb (parent LX0..2)")
+    ap.add_argument("--duty50", action="store_true", help="six_five harness with 50%%-duty clocks (needed by the negedge gearbox)")
     ap.add_argument("--plusarg",action="append",default=[],help="extra +K=V for every case (negative controls TAGBAD=1 / TOKMUT=1)")
     a = ap.parse_args()
     XD.update(lanes=tuple(a.lanes), ev2=a.valid_skew, tok_reg=a.tok_reg, lx=tuple(a.lx))
+    D50["on"] = a.duty50
     if a.six_five:
         a.parent=True;a.shared_ucie=True
         PU=20  # r10 200 MHz block-stage gearbox: 19 core edges + registered codec pin
@@ -224,7 +232,7 @@ def main():
     (a.out / "record.json").write_text(json.dumps(dict(
         schema="opentallas.qwen.tp8.collective.static_links.v1", ranks=ND, latu=a.latu, lats=a.lats, kc=KC, kw=KW,
         phy_ucie=PU, phy_serdes=PS, xu=a.xu, xs=a.xs, phi=a.phi, die_name_master=a.qfd, production_parent=a.parent, relays=a.relays, shared_ucie=a.shared_ucie, six_five=a.six_five, FDI_phase_ticks=a.fdi_phase, unsafe_shared_calendar=a.unsafe_shared_calendar, mutant=a.mutant_define, sequencer_face=a.seqsu, plusargs=a.plusarg,
-        die_lanes=list(XD['lanes']), valid_skew_port2=XD['ev2'], tok_reg=XD['tok_reg'], calendar_lane_cycles=list(XD['lx']),
+        die_lanes=list(XD['lanes']), valid_skew_port2=XD['ev2'], tok_reg=XD['tok_reg'], calendar_lane_cycles=list(XD['lx']), duty50=D50['on'],
         verilator=VERILATOR, verilator_version=subprocess.run([VERILATOR, '--version'], capture_output=True, text=True).stdout.strip(),
         expect_fail=a.expect_fail, production=a.production, issuer_depth=DEPTH, stage_start=START, cmd_pin_stages=int(a.qfd),
         modelled="PHY frame pipes only (fixed latency); all on-chip blocks are the real RTL masters",
