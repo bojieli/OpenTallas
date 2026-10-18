@@ -582,6 +582,14 @@ ECTL_CLK = ['ck_a', 'ck_b', 'ck_c']
 # entry (die port -> RTL ck_core / ck_zh[i] / ck_recip / ck_pbst[i] / ck_pvlg[i]); am[143:0] = 4 registered per-stack copies
 AHUB_CLK = ['ck_c'] + [f'ck_z{i}' for i in range(4)] + ['ck_r'] + [f'ck_p{i}' for i in range(4)] + [f'ck_v{i}' for i in range(4)]
 SPLIT_FRAMES = dict(qkd_seq=(604.8, 475.2), qkd_lnk=(777.6, 129.6), qkd_embgw=(172.8, 216.0), qkd_ahub=(1175.04, 760.32))
+# KV-CASE2 10-18 (OT_KV_AHUB_SDW=1, coordinator): the static hub qkd_ahub_static_dw hardened as kit qkd_ahub_sdw
+# (claude/kv-ahubdw-1018 22f997d7d): die frame = the kit outline 734.4 x 561.6 (legacy hub kit 1175.04 x 760.32), its die
+# pins on the kit's faces / ranges (tools/ref_tile/specs_kvahubdw/qkd_ahub_sdw.json, faces from plan m1); the freed centre
+# width closes (centre_w = max(UCIE, hub, d2d) + 4 CHAN).  Open master until the kit's view exists.
+AHUB_SDW = __import__('os').environ.get('OT_KV_AHUB_SDW', '0') == '1'
+AHUB_SDW_SPEC = 'tools/ref_tile/specs_kvahubdw/qkd_ahub_sdw.json'
+if AHUB_SDW:
+    SPLIT_FRAMES['qkd_ahub'] = tuple(float(v_) for v_ in __import__('os').environ.get('OT_KV_AHUB_SDW_WH', '734.4,561.6').split(','))
 # KVJ-C2 2026-10-17 (D2): the bridge successor ot_qkvd_split_kvlink_se has NO embedding gateway SU face (the boot-only
 # gateway qkd_embgw_boot removed r_ea / t_ecr / t_eq): ea_* / eq_* ports, the EMBQ FIFO and the EMBD slot count are gone,
 # so the gq / gr die bundles no longer exist (an EMBQ word on the KV end's r[3] class is a sticky fault)
@@ -3633,6 +3641,28 @@ def _split_pins(M, m=None):
         for j_, p_ in enumerate(AHUB_CLK):
             if p_ in hm.ports:
                 hm.ports[p_] = ('area', 1, round(hm.w * (j_ + 1) / (len(AHUB_CLK) + 1), 3), hm.h / 2, 1)
+    if AHUB_SDW and 'qkd_ahub' in M and __import__('os').environ.get('OT_KV_AHUB_SDW_PINS', '1') == '1':
+        # OT_KV_AHUB_SDW: die port -> the kit pins it binds (kv_static_die qkd_ahub binding); each die word on the kit's
+        # face at the centre of the kit pins' range union
+        hm, sp_ = M['qkd_ahub'], json.loads((ROOT / AHUB_SDW_SPEC).read_text())
+        face_ = {k_: f_ for f_, ks_ in sp_['pins'].items() for k_ in ks_}
+        rg_ = sp_['pin_ranges']
+        die_ = dict(hs=['hs_start', 'hs_ep', 'hs_layer', 'hs_ctx', 'hs_cal_lo', 'hs_cal_r'], fr=['fr_valid', 'fr_epoch', 'fr_rz'],
+                    hf=['hf'], ck_c=['ck'], rst_n=['rst_n'],
+                    **{f'ap_{st}': [f'ap{k_}'] for k_, st in enumerate(KSD.STACKS)},
+                    **{f'am_{st}': [f'am{k_}'] for k_, st in enumerate(KSD.STACKS)})
+        for dp_, ks_ in die_.items():
+            if dp_ not in hm.ports:
+                continue
+            fs_ = {face_[k_] for k_ in ks_}
+            if len(fs_) != 1:
+                raise ValueError(f'OT_KV_AHUB_SDW: die port {dp_} spans kit faces {fs_}')
+            f_ = fs_.pop()
+            lo_, hi_ = min(rg_[k_][0] for k_ in ks_), max(rg_[k_][1] for k_ in ks_)
+            if dp_ == 'hs':                      # hs_cal_lo / hs_cal_r sit apart (410-475): the word's main range
+                lo_, hi_ = rg_['hs_start']
+            hm.ports[dp_] = ('face', hm.ports[dp_][1], f_, 'M5' if f_ in 'NS' else 'M4', round((lo_ + hi_) / 2, 3),
+                             1 if dp_ in ('ck_c', 'rst_n') else 2)
     # v1.4.4: the PV pair's 33 clock entries sit on their children (ck_c<s>: column s's join centre, ck_c32: the control
     # tile), rst_n on the control tile (canonical R0 frame, strip at the top; the die places pvw_1 MX)
     for mn in ('qkd_pvw_s', 'qkd_pvw_n'):
