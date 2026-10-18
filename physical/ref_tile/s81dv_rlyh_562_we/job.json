@@ -33,7 +33,8 @@
     "expect": "pass",
     "pass_regex": "RLY_BENCH PASS 0 errors in 20000 words",
     "threads": 2,
-    "peak_ram_gb": 4
+    "peak_ram_gb": 4,
+    "pass_witness": "results/rtl/s81dv_rlyh_1017/dsfd_dvrlyh_562_WE_pass.log"
    },
    {
     "name": "neg_bit0_mutant",
@@ -41,7 +42,8 @@
     "expect": "fail",
     "fail_regex": "RLY_BENCH FAIL",
     "threads": 2,
-    "peak_ram_gb": 4
+    "peak_ram_gb": 4,
+    "fail_witness": "results/rtl/s81dv_rlyh_1017/dsfd_dvrlyh_562_WE_mut.log"
    },
    {
     "name": "reset_register_bypass_mutant",
@@ -49,7 +51,8 @@
     "expect": "fail",
     "fail_regex": "RLY_BENCH FAIL",
     "threads": 2,
-    "peak_ram_gb": 4
+    "peak_ram_gb": 4,
+    "fail_witness": "results/rtl/s81dv_rlyh_1017/dsfd_dvrlyh_562_WE_rsmut.log"
    },
    {
     "name": "half_cycle_chain",
@@ -57,7 +60,8 @@
     "expect": "pass",
     "pass_regex": "RLYH_BENCH PASS 0 errors in 60000 checks",
     "threads": 2,
-    "peak_ram_gb": 4
+    "peak_ram_gb": 4,
+    "pass_witness": "results/rtl/s81dv_rlyh_1017/dsfd_dvrlyh_562_WE_chain_pass.log"
    },
    {
     "name": "full_cycle_ck_o_mutant",
@@ -65,7 +69,8 @@
     "expect": "fail",
     "fail_regex": "RLYH_BENCH FAIL",
     "threads": 2,
-    "peak_ram_gb": 4
+    "peak_ram_gb": 4,
+    "fail_witness": "results/rtl/s81dv_rlyh_1017/dsfd_dvrlyh_562_WE_chain_mut.log"
    }
   ],
   "calibrate": {
