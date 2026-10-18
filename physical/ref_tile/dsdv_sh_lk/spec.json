@@ -77,20 +77,21 @@
   "threads": 8,
   "peak_ram_gb": 24,
   "hold_margin_ns": 0.03,
-  "io_hold_margin_ns": 0.0,
+  "io_hold_margin_ns": 0.025,
   "macro_halo_um": 5.4
  },
- "structural_change": "S81U-SEQ (S81-DV p4f..p4i, owner-approved DV plan): L0 link leaf of dsdv_seq_host: host lane port + host ingest (dsfd_host_native, unchanged) + host write decode (dsfd_host_sd STATIC) + svc / kit ports + regional status fold + one rung hop each way; flop-first / flop-last pins, die hold budget. S81U-SEQ3 (gate 8940e10e9 clock_rule FAIL: 24,085 sinks on one root, TT ins 306.7): the host ingest's own Gray-FIFO clock domains (dsfd_host_native clk_h / clk_i, ot_link_afifo crossings) get their own CTS roots ck_ih / ck_ic (same stream clock, related phase-0 roots, ordinary STA across them), as the S81 host tile dsfd_host_c DSFD_HOST_PQ_BOOT (ck_ingest roots); estimated roots ~8.8k / ~10.3k / ~5.5k sinks, each < 15k. A two-leaf split cannot reach < 15k: dsfd_host_native alone is ~19.2k flops (u_hx 16 x 514 + u_ox 16 x 289 + engine). Ingest engine APIPE 2 -> 4 (26-level ap1_local -> ap_raddr stage registered; ROWS / IKEY +1 bubble edge a row, RAW unchanged); pin-flop payloads off the reset net (891 loads). S81U-SEQ4 (gate4 df8031f2c WARN: 3 roots max 9,551 sinks, TT ins 239.9 / sp 33.2; reg->reg -69.7 ps at u_eng.ap1_rbase = base + stk * stride in one stage): ingest APIPE 5 (stack x stride partial products formed in stage A0, stage A1 a four-operand add; same values / bubble edges as APIPE 4). Reset WARNs u_hi.u_rsc / u_rsi reset_pipe 472 / 438 loads are inside the reused ot_rom_host_ingest (shared with closed dsfd_host views; not edited): below the 8,000 refuse bound, reset in->reg slack +409 ps. RTL-BUILD-S81 10-18 (bind5 residual (b)/(c)): two svc halves -- s_jd/s_hc/st_rg/s_hw become per-half s_jd_w/_e (merged in-leaf: done when both halves reported, same pin->jd_o edges), s_hw_w/_e + s_hc_w/_e (dsfd_host_sd NS 2 HALF 1: sector -> PC-owner half, markers to both), st_rg_w/_e (fault OR, live AND); _w set on the E face, _e set on the S face (E 449 -> 454 bits, S 552 -> 857 bits = 3.4/um).",
+ "structural_change": "S81U-SEQ (S81-DV p4f..p4i, owner-approved DV plan): L0 link leaf of dsdv_seq_host: host lane port + host ingest (dsfd_host_native, unchanged) + host write decode (dsfd_host_sd STATIC) + svc / kit ports + regional status fold + one rung hop each way; flop-first / flop-last pins, die hold budget. S81U-SEQ3 (gate 8940e10e9 clock_rule FAIL: 24,085 sinks on one root, TT ins 306.7): the host ingest's own Gray-FIFO clock domains (dsfd_host_native clk_h / clk_i, ot_link_afifo crossings) get their own CTS roots ck_ih / ck_ic (same stream clock, related phase-0 roots, ordinary STA across them), as the S81 host tile dsfd_host_c DSFD_HOST_PQ_BOOT (ck_ingest roots); estimated roots ~8.8k / ~10.3k / ~5.5k sinks, each < 15k. A two-leaf split cannot reach < 15k: dsfd_host_native alone is ~19.2k flops (u_hx 16 x 514 + u_ox 16 x 289 + engine). Ingest engine APIPE 2 -> 4 (26-level ap1_local -> ap_raddr stage registered; ROWS / IKEY +1 bubble edge a row, RAW unchanged); pin-flop payloads off the reset net (891 loads). S81U-SEQ4 (gate4 df8031f2c WARN: 3 roots max 9,551 sinks, TT ins 239.9 / sp 33.2; reg->reg -69.7 ps at u_eng.ap1_rbase = base + stk * stride in one stage): ingest APIPE 5 (stack x stride partial products formed in stage A0, stage A1 a four-operand add; same values / bubble edges as APIPE 4). Reset WARNs u_hi.u_rsc / u_rsi reset_pipe 472 / 438 loads are inside the reused ot_rom_host_ingest (shared with closed dsfd_host views; not edited): below the 8,000 refuse bound, reset in->reg slack +409 ps. RTL-BUILD-S81 10-18 (bind5 residual (b)/(c)): two svc halves -- s_jd/s_hc/st_rg/s_hw become per-half s_jd_w/_e (merged in-leaf: done when both halves reported, same pin->jd_o edges), s_hw_w/_e + s_hc_w/_e (dsfd_host_sd NS 2 HALF 1: sector -> PC-owner half, markers to both), st_rg_w/_e (fault OR, live AND); _w set on the E face, _e set on the S face (E 449 -> 454 bits, S 552 -> 857 bits = 3.4/um). S81-SHLK 10-18 (route dsdv_sh_lk-ef442ffba NEEDS_RTL TT -36.2 / FF +8.14 / DRC 0, 173 endpoints: 86 u_hx.mem (ck_ih) -> head decode -> hx_pop -> rbin_c / ofree (ck_ic, 150-ps root-pair uncertainty), 73 u_hx.rbin_c -> 16:1 x 514-b read mux -> u_eng.dq, 11 u_eng.ra_rp[5] -> 512-b realigner select/shift -> ox_w_q / sc_acc): ingest APIPE 7 = registered FWFT host-FIFO head in clk_i (every head decode and the descriptor queue start at a ck_ic flop; host words +1 ck_ic edge, rate unchanged: host_native_pipe pos7 ck 1068/8473/532/633/1353 vs APIPE 6 1068/8472/532/630/1353) + 8 kept copies of the realigner pointer ra_rp (one per 32-b head slice; no cycle change). Host path f_host -> s_hw / t_host = golden + 2 edges (tb HSH 2); token path and every other port unchanged.",
  "job": {
-  "owner": "Claude:RTL-BUILD-S81",
-  "branch": "claude/rtl-build-s81-1018-seq",
+  "owner": "Claude:S81-SHLK",
+  "branch": "claude/s81-shlk-1018",
   "tag": "dsdv_sh_lk",
   "purpose": "S81-DV seq_host leaf dsdv_sh_lk to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
-   "rtl/dsrom_sys/s81_dv/unit",
-   "results/rtl/s81_dv_unit_1017/seqhost",
    "physical/dsdv_seq_host_pins",
-   "results/rtl/rtl_build_s81_1018/seq"
+   "results/rtl/rtl_build_s81_1018/seq",
+   "results/rtl/s81_dv_unit_1017/seqhost",
+   "results/rtl/s81_shlk_1018",
+   "rtl/dsrom_sys/s81_dv/unit"
   ],
   "benches": [
    {
@@ -107,7 +108,7 @@
     "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut1 1 1",
     "expect": "fail",
     "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/rtl_build_s81_1018/seq/run_mut1.log",
+    "fail_witness": "results/rtl/s81_shlk_1018/run_mut1.log",
     "threads": 8,
     "peak_ram_gb": 8
    },
@@ -116,7 +117,7 @@
     "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut2 1 2",
     "expect": "fail",
     "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/rtl_build_s81_1018/seq/run_mut2.log",
+    "fail_witness": "results/rtl/s81_shlk_1018/run_mut2.log",
     "threads": 8,
     "peak_ram_gb": 8
    },
@@ -125,7 +126,7 @@
     "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut3 1 3",
     "expect": "fail",
     "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/rtl_build_s81_1018/seq/run_mut3.log",
+    "fail_witness": "results/rtl/s81_shlk_1018/run_mut3.log",
     "threads": 8,
     "peak_ram_gb": 8
    },
@@ -134,7 +135,7 @@
     "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut4 1 4",
     "expect": "fail",
     "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/rtl_build_s81_1018/seq/run_mut4.log",
+    "fail_witness": "results/rtl/s81_shlk_1018/run_mut4.log",
     "threads": 8,
     "peak_ram_gb": 8
    },
@@ -143,7 +144,7 @@
     "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut5 1 5",
     "expect": "fail",
     "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/rtl_build_s81_1018/seq/run_mut5.log",
+    "fail_witness": "results/rtl/s81_shlk_1018/run_mut5.log",
     "threads": 8,
     "peak_ram_gb": 8
    },
@@ -152,7 +153,25 @@
     "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut6 1 6",
     "expect": "fail",
     "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/rtl_build_s81_1018/seq/run_mut6.log",
+    "fail_witness": "results/rtl/s81_shlk_1018/run_mut6.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_muthregv",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut7 1 7",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_1018/run_mut7.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutrac",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut8 1 8",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_1018/run_mut8.log",
     "threads": 8,
     "peak_ram_gb": 8
    }

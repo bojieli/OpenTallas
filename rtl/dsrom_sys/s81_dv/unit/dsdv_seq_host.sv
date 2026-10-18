@@ -144,7 +144,11 @@ module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0) (
     // also forms the stack x stride partial products in stage A0 (ap1_rbase TT -70 ps at gate4), same values again;
     // APIPE 6 (S81U-SEQ6, gate5 st_sec -> u_ox.mem TT -127.7 ps) registers the request-FIFO write in ot_rom_host_ingest
     // (each host sector enters u_ox one ck_ic edge later; registered free count instead of wfull).
-    dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(6)) u_h (.rst_n(rn), .clk_h(ck_ih), .h_v(to_ing), .h_cls(hcl),
+    // APIPE 7 (S81-SHLK 10-18, route ef442ffba TT -36.2): registered host-FIFO head in ck_ic (u_hx.mem -> hx_pop / read
+    // mux -> dq paths start at a ck_ic flop; every host word +1 ck_ic edge, rate unchanged) + 8 kept realigner pointer
+    // copies in the engine (ra_rp -> 512-b shift fanout; no cycle change).  Host path f_host -> s_hw / t_host = +2 edges
+    // vs the dsfd_host_c golden (tb HSH 2).
+    dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(7)) u_h (.rst_n(rn), .clk_h(ck_ih), .h_v(to_ing), .h_cls(hcl),
         .h_d(hd), .h_crn(crn), .t_v(t_v), .t_d(t_d), .t_cr(tcr_l), .clk_i(ck_ic), .ck(ck), .o_v(ov), .o_we(owe), .o_addr(oa),
         .o_d(od), .o_cr(ocr), .i_rv(1'b0), .i_rd(256'd0), .host_ack_n(ack), .fault(hf));
     // two host-write stacks = the two svc halves (dsdv_sh_sd = dsfd_host_sd fork, HALF 1: route by the PC owner half; markers to both; MUT 6 = HALF 2)

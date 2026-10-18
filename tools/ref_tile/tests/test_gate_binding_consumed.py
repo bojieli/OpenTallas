@@ -150,7 +150,7 @@ class ConsumedSourceBinding(unittest.TestCase):
         self.assert_refused(INC, b'`define W 16\n')
 
     def test_kit_hook_dependency_change_refuses(self):
-        self.assert_refused(HOOK, b'# split pin regs v2\n')
+        self.assert_refused(HOOK, b'set ot_split_v 2 ;# split pin regs v2\n')
 
     def test_kit_spec_change_refuses(self):
         self.assert_refused(f'{KIT}/spec.json', json.dumps({**self.spec, 'top': 'ot_slab2'}).encode())

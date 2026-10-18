@@ -316,9 +316,27 @@ module ot_hdc_kv_ingest #(
     wire [2:0]  ra_w0 = ra_rp[7:5];
     wire [2:0]  ra_w1 = ra_w0 + 3'd1;          // mod 8 (a named 3-b net: some simulators widen an index sum)
     wire [2:0]  ra_wq = ra_wp + 3'd1;
-    wire [511:0] ra_pair = {ra[ra_w1], ra[ra_w0]};
-    wire [511:0] ra_sh = ra_pair >> {ra_rp[4:0], 3'b000};
-    wire [255:0] ra_head = ra_sh[255:0];      // the next 32 bytes
+    wire [255:0] ra_head;                      // the next 32 bytes
+    // APIPE >= 7 (S81-SHLK 2026-10-18, dsdv_sh_lk route ef442ffba: u_eng.ra_rp[5] -> word select + byte shift of all 512
+    // bits -> ox_w_q / sc_acc TT -22.4, 11 endpoints): RAC = 8 kept copies of ra_rp, loaded with it on every edge; copy
+    // s drives the select / shift of head bits [32 s +: 32] only.  Same value, same edge: no cycle or value change.
+    localparam integer RAC = (APIPE >= 7) ? 8 : 1;
+    (* keep *) reg [8*RAC-1:0] ra_rpc;           // RAC = 1: unused (the original single-pointer realigner below)
+    if (RAC > 1) begin : g_rac
+        genvar ras;
+        for (ras = 0; ras < 8; ras = ras + 1) begin : g_rah
+            wire [7:0]   rp = ra_rpc[8 * ras +: 8];
+            wire [2:0]   w0 = rp[7:5];
+            wire [2:0]   w1 = w0 + 3'd1;
+            wire [511:0] pr = {ra[w1], ra[w0]};
+            wire [511:0] sh = pr >> {rp[4:0], 3'b000};
+            assign ra_head[32 * ras +: 32] = sh[32 * ras +: 32];
+        end
+    end else begin : g_ra1
+        wire [511:0] ra_pair = {ra[ra_w1], ra[ra_w0]};
+        wire [511:0] ra_sh = ra_pair >> {ra_rp[4:0], 3'b000};
+        assign ra_head = ra_sh[255:0];
+    end
     reg         st_act, st_pad;
     reg  [3:0]  st_mode;
     reg  [255:0] st_d;
@@ -456,7 +474,7 @@ module ot_hdc_kv_ingest #(
         if (!rst_n) begin
             dq_n <= 0; dq_rd <= 0; dq_wr <= 0;
             s_full <= 2'b00; s_pre <= 2'b00; s_fill <= 2'b00; qi_act <= 1'b0; qi_slot <= 1'b0; qo_act <= 1'b0; qo_slot <= 1'b0;
-            pr_act <= 1'b0; pr_out <= 0; st_act <= 1'b0; st_pad <= 1'b0; ra_n <= 0; ra_rp <= 0; ra_wp <= 0;
+            pr_act <= 1'b0; pr_out <= 0; st_act <= 1'b0; st_pad <= 1'b0; ra_n <= 0; ra_rp <= 0; if (RAC > 1) ra_rpc <= 0; ra_wp <= 0;
             done_r <= 1'b0; dtag_r <= 0; nsec_r <= 0; n_beats <= 0;
             qi_t <= 0; qi_g <= 0; qi_d <= 0; qi_v <= 1'b0; qo_v <= 1'b0; qo_g <= 0; qo_s <= 0; qo_hb <= 0;
             pr_v <= 1'b0; pr_g <= 0; pr_s <= 0; pr_hb <= 0; pr_slot <= 1'b0;
@@ -580,7 +598,7 @@ module ot_hdc_kv_ingest #(
             if (ra_push || pad_take) st_beats <= st_beats - 16'd1;
             if (st_pad) begin
                 // the segment's last-beat padding (and any extra padding beats) is dropped
-                ra_n <= 0; ra_rp <= 0; ra_wp <= 0;
+                ra_n <= 0; ra_rp <= 0; if (RAC > 1) ra_rpc <= 0; ra_wp <= 0;
                 if (st_beats == 0 || (pad_take && st_beats == 16'd1)) begin
                     st_act <= 1'b0; st_pad <= 1'b0;
                     if (st_d[7]) begin done_r <= 1'b1; dtag_r <= st_d[15:8]; end
@@ -588,6 +606,11 @@ module ot_hdc_kv_ingest #(
             end else begin
                 ra_n <= ra_n + (ra_push ? 9'd64 : 9'd0) - (st_go ? {3'd0, st_pop} : 9'd0);
                 if (st_go) ra_rp <= ra_rp + {2'd0, st_pop};
+`ifdef OT_ING_MUT_RAC
+                if (st_go && RAC > 1) for (int k = 1; k < RAC; k++) ra_rpc[8 * k +: 8] <= ra_rp + {2'd0, st_pop};   // mutant: copy 0 stalls
+`else
+                if (st_go && RAC > 1) for (int k = 0; k < RAC; k++) ra_rpc[8 * k +: 8] <= ra_rp + {2'd0, st_pop};
+`endif
             end
             if (st_go) begin
                 case (st_mode)

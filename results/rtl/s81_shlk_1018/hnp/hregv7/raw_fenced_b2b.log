@@ -1,0 +1,14 @@
+WARNING: /srv/opentallas-scratch/claude/s81-shlk/hnp_hregv7/tb.sv:48: $readmemh(desc.mem): Not enough words in the file for the requested range [0:15].
+WARNING: /srv/opentallas-scratch/claude/s81-shlk/hnp_hregv7/tb.sv:49: $readmemh(pay.mem): Not enough words in the file for the requested range [0:15].
+WARNING: /srv/opentallas-scratch/claude/s81-shlk/hnp_hregv7/tb.sv:50: $readmemh(nb.mem): Not enough words in the file for the requested range [0:15].
+DONEW cnt=1
+DONEW cnt=3
+DONEW cnt=4
+DONEW cnt=7
+DONEW cnt=8
+DONEW cnt=9
+DONEW cnt=11
+DONEW cnt=12
+VIS errors=0
+HING descs=8 beats=9/9 sectors=12 reads=0 errors=0 oob=0 dones=8/8 tag_err=0 fault_words=0 fault=0 ck_cycles=532 timeout=0 share=0 first_o=56 last_o=120 marks=0 mark_bad=0
+/srv/opentallas-scratch/claude/s81-shlk/hnp_hregv7/tb.sv:169: $finish called at 443040 (1ps)

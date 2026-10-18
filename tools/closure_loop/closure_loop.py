@@ -500,6 +500,10 @@ def stage_list(spec):
             out.append(dict(key=k, kind=k, cmd=st[k]["cmd"], ok=st[k].get("ok"),
                             threads=st[k].get("threads", t), ram=st[k].get("peak_ram_gb", r), logs=st[k].get("logs", [])))
     out.append(dict(key="commit", kind="commit"))
+    for x in out:
+        if x.get("ram"):
+            x["declared_ram"] = x["ram"]
+            x["ram"] = learned_ram(spec.get("block"), x["key"], x["ram"])
     return out
 
 
@@ -1263,6 +1267,12 @@ def ref_gate_at_submit(j, jobs=None):
         return
     if isinstance(res.get("route_overlay_plan"), dict) and j.get("freeze_helper_overlay"):
         j["route_overlay_plan"] = res["route_overlay_plan"]
+    if isinstance(res.get("relaxing_rule_allowlist"), dict):
+        # RELAXING-RULE ALLOWLIST (ROOT-0040 2026-10-18): the gate stood across relaxing-only rule commits; record it
+        j["relaxing_rule_allowlist"] = dict(res["relaxing_rule_allowlist"], at=now_iso())
+        event(j, "RELAXING-RULE ALLOWLIST: gate kept across " + ", ".join(
+            c[:9] for c in res["relaxing_rule_allowlist"].get("commits") or []) + "; " + "; ".join(
+            x.get("text", "") for x in res["relaxing_rule_allowlist"].get("requirements") or [])[:300])
     if isinstance(res.get("clock"), dict):
         j["clock_rule"] = dict(res["clock"], mode=kw.get("clock_mode"))      # textbook_cfg() hands it to the in-flow lint
         event(j, f"CLOCK-RULE at submit: {res['clock'].get('text', '')[:300]}"
@@ -1947,13 +1957,44 @@ def job_tools(spec):
 
 
 # ------------------------------------------------------------------------------------------------ remote ops
+# FLEET-OOM (2026-10-18): the runner also (a) samples the stage's process-group RSS every 15 s -> <tag>.peak_kb (the
+# stage's measured peak; stage_peaks.json re-admits repeats of the same block + stage at it, learned_ram()), (b) when
+# that RSS passes the stage's declared GB (<tag>.decl) raises the build processes in it (cc1plus / verilator_bin /
+# yosys / ld ...) to oom_score_adj 900, so earlyoom takes the over-declared build, not a 9 MiB vvp of another job, and
+# (c) after the stage exits writes every earlyoom / kernel OOM kill of one of its pids (sampled into <tag>.pids) or of a
+# process whose command line names this run dir into <tag>.oomkill -- the daemon then retries the stage as a FLOW
+# failure (crash(), never NEEDS_RTL).  Before, earlyoom SIGTERMed tiny oom_score_adj-500 benches first and the bench
+# verdict read the truncated log as an RTL result (34 kills on 10-18, lanes/FLEET-OOM.md).
 RUNNER = r"""#!/bin/bash
-# closure-loop stage runner: <stage tag>.  pid/start/log/rc files next to this script.
+# closure-loop stage runner: <stage tag>.  pid/start/log/rc (+ peak_kb/pids/oomkill) files next to this script.
 st=$1; d=$(cd "$(dirname "$0")" && pwd)
 echo $$ > $d/$st.pid; date +%s > $d/$st.start
+rm -f $d/$st.oomkill $d/$st.peak_kb $d/$st.pids $d/$st.oomprefer
 cd "$(cat $d/SRC_DIR)"
+( decl=$(cat $d/$st.decl 2>/dev/null); case "$decl" in ''|*[!0-9]*) decl=0;; esac; pk=0; g=$(ps -o pgid= -p $$ | tr -d ' ')
+  while kill -0 $$ 2>/dev/null; do
+    snap=$(ps -eo pid=,pgid=,rss=,comm= 2>/dev/null | awk -v g=$g '$2==g')
+    s=$(echo "$snap" | awk '{s+=$3} END{print s+0}')
+    [ "$s" -gt "$pk" ] && { pk=$s; echo $pk > $d/$st.peak_kb; }
+    echo "$snap" | awk '{print $1}' >> $d/$st.pids; sort -u -o $d/$st.pids $d/$st.pids 2>/dev/null
+    if [ "$decl" -gt 0 ] && [ "$s" -gt $((decl * 1048576)) ]; then
+      for p in $(echo "$snap" | awk '$4 ~ /^(cc1plus|cc1|verilator_bin|verilator_bin_dbg|yosys|yosys-abc|ld|g\+\+|c\+\+|clang\+\+|openroad)$/ {print $1}'); do
+        [ "$(cat /proc/$p/oom_score_adj 2>/dev/null)" = 900 ] && continue
+        echo 900 > /proc/$p/oom_score_adj 2>/dev/null && echo "$(date -Is) stage RSS $((s / 1048576)) GB > declared $decl GB: pid $p oom_score_adj 900" >> $d/$st.oomprefer
+      done
+    fi
+    sleep 15
+  done ) > /dev/null 2>&1 &
 bash $d/$st.sh > $d/$st.log 2>&1
 rc=$?
+t0=$(cat $d/$st.start); run=$(dirname "$d")
+{ sudo -n journalctl -u earlyoom --since @$t0 --no-pager -q 2>/dev/null | grep -E 'sending SIG(TERM|KILL) to process'
+  sudo -n journalctl -k --since @$t0 --no-pager -q 2>/dev/null | grep -E 'Killed process [0-9]+'; } | while IFS= read -r ln; do
+  p=$(echo "$ln" | sed -nE 's/.*(to process|Killed process) ([0-9]+).*/\2/p')
+  { [ -n "$p" ] && grep -qx "$p" $d/$st.pids 2>/dev/null; } || case "$ln" in *"$run/"*) ;; *) continue;; esac
+  echo "$ln"
+done > $d/$st.oomkill.tmp 2>/dev/null
+[ -s $d/$st.oomkill.tmp ] && mv $d/$st.oomkill.tmp $d/$st.oomkill || rm -f $d/$st.oomkill.tmp
 echo $rc > $d/$st.rc.tmp && mv $d/$st.rc.tmp $d/$st.rc
 """
 
@@ -2419,7 +2460,8 @@ def sync_source(j):
     ship_helpers(host, run, j)
     corner_sta_compat(j, host, run, full)
     ssh(host, f"echo {full} > {run}/src/SOURCE_COMMIT && echo {run}/src > {run}/cl/SRC_DIR", timeout=60, check=True)
-    ssh(host, f"cat > {run}/cl/run.sh && chmod +x {run}/cl/run.sh", input=RUNNER, timeout=60, check=True)
+    ssh(host, f"cat > {run}/cl/run.sh.tmp && chmod +x {run}/cl/run.sh.tmp && mv {run}/cl/run.sh.tmp {run}/cl/run.sh",
+        input=RUNNER, timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/job.json", input=json.dumps(spec, indent=1), timeout=60, check=True)
     if active_budget(spec):
         files = budget_files(spec["budget"])
@@ -3122,6 +3164,22 @@ def textbook_cfg(j):
     if isinstance(cr, dict):     # measured clock rule: only jobs ingested under it (never an older in-flight job)
         cfg["clock"] = {"enforce": cr.get("mode") == "refuse" and bool(j["spec"].get("ref_tile")),
                         "evidence": cr.get("evidence"), "closed_stands": bool(cr.get("closed_stands"))}
+        if isinstance(j["spec"].get("clock_rule_waiver"), dict):   # HANDOFF 0ga: the gate's recorded per-pair waiver
+            cfg["clock"]["waiver"] = j["spec"]["clock_rule_waiver"]
+    # GATE-FRICTION 2026-10-18: the kit's declared reset_ports are resets for the in-flow lint too (por_n on KV core_peer)
+    rsts = j.get("kit_reset_ports")
+    if rsts is None and j["spec"].get("ref_tile") and j.get("commit_full"):
+        m = PORT_LATENCY_RE.search(((j["spec"].get("stages") or {}).get("route") or {}).get("cmd") or "")
+        rsts = []
+        if m:
+            try:
+                ks = json.loads(git("show", f"{j['commit_full']}:{m.group(1)}/spec.json", check=False).stdout or "{}")
+                rsts = [x for x in ks.get("reset_ports") or [] if isinstance(x, str)]
+            except (ValueError, AttributeError):
+                rsts = []
+        j["kit_reset_ports"] = rsts
+    if rsts and not (cfg.get("set") or {}).get("reset_ports"):
+        cfg["set"] = dict(cfg.get("set") or {}, reset_ports=",".join(rsts))
     return cfg
 
 
@@ -3207,6 +3265,15 @@ def fp_lint_finish(j, tag, text):
 # (the loop sees a flow error / crash retry), never a neighbour.  Spec "mem_cap_gb" overrides (0 = no cap).
 MEM_CAP_FACTOR = 4
 STAGE_OOM_SCORE_ADJ = 500
+# FLEET-OOM (2026-10-18): bench and route stages run at oom_score_adj 0.  At 500 (plus earlyoom's --prefer vvp|python3)
+# a 9 MiB bench vvp or a route's python3 scored 1300 against 1024 for a 112 GB cc1plus at 3 % free, so earlyoom killed
+# 34 small loop stages on 10-18 and the over-declared build kept growing.  Over-declared builds are raised by the runner
+# instead (RUNNER (b)); the other stage kinds keep 500.
+STAGE_OOM_SCORE_ADJ_KIND = {"bench": 0, "route": 0}
+
+
+def stage_oom_score_adj(kind):
+    return STAGE_OOM_SCORE_ADJ_KIND.get(kind, STAGE_OOM_SCORE_ADJ)
 MEM_CAP_SLACK_GB = 96
 
 
@@ -3261,7 +3328,7 @@ def launch_stage(j, st, cmd):
     # OOM-FIRST (drive-0849 2026-10-09): synth runs NATIVELY (host yosys, outside any container cgroup) -- the 208 GB
     # yosys that took the EPYC1 die GRT was one.  Every loop stage raises its own oom_score_adj (inherited by its
     # children; non-root may raise it) so a host OOM picks a loop stage, never a die run (-900) or an interactive job.
-    env += f"echo {STAGE_OOM_SCORE_ADJ} > /proc/self/oom_score_adj 2>/dev/null || true\n"
+    env += f"echo {stage_oom_score_adj(st['kind'])} > /proc/self/oom_score_adj 2>/dev/null || true\n"
     if st["kind"] == "bench":
         # Benches use the fleet's pinned tools (Verilator 5.050, yosys 0.68), the same ones every agent gate runs
         # under. The non-login ssh PATH picked Debian /usr/bin/verilator 5.032, so loop benches disagreed with the
@@ -3286,6 +3353,21 @@ def launch_stage(j, st, cmd):
         # writes atomically now: the exported LEF is root-owned) and add the pre-lint call to a stale ref_tile.py export.
         env += (f"cp -f {j['run']}/cl/abstract_pin_stub.py {_src}/tools/hier_contract/abstract_pin_stub.py; "
                 f"python3 - {_src}/tools/ref_tile/ref_tile.py <<'OT_PINSTUB_PATCH' || true\n{PINSTUB_PATCH}OT_PINSTUB_PATCH\n")
+        # LOOP-SCALAR-LINT (AHUB-COLLECT 2026-10-18): ref_tile.py export runs scalar_pin_lint from the job's synced
+        # tools/ref_tile/scalar_pin_view.py.  Its port parser is the loop's publish gate, not the design: a job synced
+        # before 9ac83ae74 ((* keep *) attribute hid a port's range) kept refusing bus bits as RTL-scalar at every collect
+        # (qkd_ahub_core-hd4-ed40aa340: TT +219.7 / FF +20.2 route, collect crashed 4x on pb_ra[0]/pl_rz[0]/pl_v[0]).
+        # Every ref_tile collect / re-export runs the loop's copy (resolved against origin/main, as the helper overlay).
+        _spv_rel = "tools/ref_tile/scalar_pin_view.py"
+        try:
+            _spv, _ = HO.resolve_bytes(HERE.parents[1], REPO, _spv_rel, _ovl_head(), cache=_OVL["hist"])
+        except (OSError, subprocess.SubprocessError):
+            _spv = None
+        if _spv:
+            import base64 as _b64
+            env += (f"if [ -f {_src}/{_spv_rel} ]; then [ -f {_src}/{_spv_rel}.job ] || cp {_src}/{_spv_rel} "
+                    f"{_src}/{_spv_rel}.job; base64 -d > {_src}/{_spv_rel}.loop <<'OT_SPV_B64' && "
+                    f"mv -f {_src}/{_spv_rel}.loop {_src}/{_spv_rel}\n{_b64.b64encode(_spv).decode()}\nOT_SPV_B64\nfi\n")
         # EXPORT-SDC (2026-10-13): the view export replays the VERDICT's constraint sequence (routed 6_final.sdc, SPEF,
         # post-SDCs, io_ref_routed.sdc) and fails on a slack that differs from the verdict; a job's synced view_export.py
         # read the kit signoff.sdc INSTEAD of the routed SDC (s81su SMT: FF -19.69 exported vs +3.66 verdict).  The
@@ -3470,11 +3552,93 @@ def launch_stage(j, st, cmd):
     if "ALIVE" in alive.stdout:
         log(f"[{j['name']}] {t} already running on {j['host']}: adopted, not relaunched")
     else:
-        ssh(j["host"], f"cat > {run}/cl/{t}.sh && rm -f {run}/cl/{t}.rc", input=body, timeout=60, check=True)
+        ssh(j["host"], f"cat > {run}/cl/{t}.sh && rm -f {run}/cl/{t}.rc && echo {int(st.get('ram') or 0)} > {run}/cl/{t}.decl",
+            input=body, timeout=60, check=True)
+        # FLEET-OOM: every launch ships the current runner (atomic: a running stage keeps its old inode), so a retry in
+        # an existing run dir gets the RSS sampler and the OOM-kill check
+        ssh(j["host"], f"cat > {run}/cl/run.sh.tmp && chmod +x {run}/cl/run.sh.tmp && mv {run}/cl/run.sh.tmp {run}/cl/run.sh",
+            input=RUNNER, timeout=60, check=True)
         ssh(j["host"], f"nohup setsid bash {run}/cl/run.sh {t} > /dev/null 2>&1 < /dev/null & echo launched", timeout=60,
             check=True)
     j["stage_tag"] = t
     j["stage_started"] = now_iso()
+
+
+STAGE_PEAKS = STATE / "stage_peaks.json"
+PEAK_MARGIN = 1.15
+_peaks_cache = [None, {}]
+
+
+def stage_peaks():
+    """FLEET-OOM (2026-10-18): block|stage key -> measured stage peak (process-group RSS, RUNNER (a)), all hosts"""
+    try:
+        m = STAGE_PEAKS.stat().st_mtime
+    except OSError:
+        return {}
+    if _peaks_cache[0] != m:
+        try:
+            _peaks_cache[:] = [m, json.loads(STAGE_PEAKS.read_text())]
+        except (OSError, ValueError):
+            return _peaks_cache[1]
+    return _peaks_cache[1]
+
+
+def learned_ram(block, key, ram):
+    """FLEET-OOM (4): a repeat of the same block + stage is admitted at max(declared, PEAK_MARGIN x its measured peak)
+    (hcoll_v7_tkm_tile_e86 declared 160 GB, its Verilator build reached 298 GB and earlyoom took the host's benches)"""
+    e = stage_peaks().get(f"{block}|{key}") if block else None
+    if e and e.get("peak_gb", 0) * PEAK_MARGIN > (ram or 0):
+        return int(math.ceil(e["peak_gb"] * PEAK_MARGIN))
+    return ram
+
+
+def record_stage_peak(j, st, kb):
+    gb = round(kb / 1048576, 1)
+    if gb < 1:
+        return
+    k = f"{j['spec'].get('block')}|{st['key']}"
+    t = dict(stage_peaks())
+    e = dict(t.get(k) or dict(peak_gb=0.0, n=0))
+    e.update(n=e.get("n", 0) + 1, last_gb=gb, last_job=j["name"], last_host=j.get("host"), declared_gb=st.get("ram"),
+             peak_gb=max(e.get("peak_gb", 0.0), gb), at=now_iso())
+    t[k] = e
+    tmp = STAGE_PEAKS.with_suffix(".tmp")
+    tmp.write_text(json.dumps(t, indent=0, sort_keys=True))
+    os.replace(tmp, STAGE_PEAKS)
+    if st.get("ram") and gb > st["ram"]:
+        event(j, f"{st['key']} measured peak {gb} GB > declared {st['ram']} GB: repeats of {k} admit at "
+                 f"{learned_ram(j['spec'].get('block'), st['key'], st['ram'])} GB")
+
+
+def stage_oom_kills(j, st):
+    """FLEET-OOM (2): the runner's <tag>.oomkill (earlyoom / kernel OOM kills of the stage's pids); records the peak"""
+    t, run = j.get("stage_tag"), j.get("run")
+    if not t or not run or not j.get("host"):
+        return ""
+    r = ssh(j["host"], f"head -c 1500 {run}/cl/{t}.oomkill 2>/dev/null; echo; echo OT_PEAK_KB $(cat {run}/cl/{t}.peak_kb "
+                       f"2>/dev/null)", timeout=40)
+    out = r.stdout if not r.returncode else ""
+    m = re.search(r"OT_PEAK_KB (\d+)", out)
+    if m:
+        try:
+            record_stage_peak(j, st, int(m.group(1)))
+        except (OSError, ValueError) as ex:
+            log(f"[{j['name']}] stage peak not recorded: {ex}")
+    return out.split("OT_PEAK_KB")[0].strip()
+
+
+def oom_retry(j, st, fleet, kills):
+    """an earlyoom / kernel OOM kill of a stage process is a FLOW failure: retry the stage once, never NEEDS_RTL"""
+    first = kills.splitlines()[0][:300]
+    why = f"OOM-KILL: {len(kills.splitlines())} kill(s) of this stage's processes (flow failure, reroute_reason flow_failure): {first}"
+    if j["retries_used"] >= 1:
+        return crash(j, st, fleet, why)
+    j.setdefault("crashes", []).append(dict(stage=st["key"], host=j["host"], attempt=j["attempt"], why=why, resource=True,
+                                            cls="oom_kill", tail=kills[-1500:]))
+    j["retries_used"] = 1
+    j["attempt"] += 1
+    j["status"] = "READY"
+    event(j, f"{st['key']} {why[:400]} -> retry once (flow failure)")
 
 
 def poll_stage(j):
@@ -3550,7 +3714,74 @@ def bench_outcome(j, st, rc, ok_extra=True):
             if work is False:
                 return False
         return ok
-    return expected_fail_seen(st, rc, full)
+    seen = expected_fail_seen(st, rc, full)
+    if seen and st.get("fail_regex"):
+        try:
+            capture_fail_witness(j, st, full)
+        except Exception:  # noqa: BLE001 -- the verdict stands; a lost witness is only a missing archive
+            log(f"[{j.get('name')}] fail-witness capture error:\n{traceback.format_exc()}")
+    return seen
+
+
+# FAIL-WITNESS AUTO-CAPTURE (GATE-FRICTION 2026-10-18, owner 0eg: checks must never delay closure).  submit_exact WARNs
+# (no longer refuses) when an expect=fail bench has no committed fail_witness log; the loop captures the REAL mutant
+# output here instead: when the mutant failed as expected and its fail_regex matched, the matching part of the stage log
+# is archived under STATE/fail_witnesses/<job>/<bench>.log (verified to match the regex again) and recorded in
+# j["fail_witnesses"]; publish() commits it with the CLOSED record (results/closure_loop/<job>/fail_witness/).  A mutant
+# that does not fail is still NEEDS_RTL (bench_outcome above), witness or not.
+WITNESS_DIR = STATE / "fail_witnesses"
+WITNESS_CONTEXT = 40           # lines kept around each fail_regex match
+WITNESS_TAIL = 200             # last lines of the log kept as well
+WITNESS_MAX_BYTES = 256 << 10
+
+
+def witness_text(full, rx):
+    """the part of a mutant log that proves the verdict: every fail_regex match with context, plus the tail.  Returns
+    None when the regex does not match the kept text (the caller then keeps nothing)."""
+    lines = full.splitlines()
+    keep = set(range(max(0, len(lines) - WITNESS_TAIL), len(lines)))
+    starts, pos = [], 0
+    for n, ln in enumerate(lines):
+        starts.append(pos)
+        pos += len(ln) + 1
+    for m in list(re.finditer(rx, full, re.M))[:8]:
+        n = max(0, sum(1 for s in starts if s <= m.start()) - 1)
+        last = n + m.group(0).count("\n")
+        keep.update(range(max(0, n - WITNESS_CONTEXT), min(len(lines), last + WITNESS_CONTEXT + 1)))
+    out, prev = [], -1
+    for n in sorted(keep):
+        if n != prev + 1:
+            out.append(f"... [{n - prev - 1} line(s) omitted by the fail-witness capture] ...")
+        out.append(lines[n])
+        prev = n
+    text = "\n".join(out) + "\n"
+    if len(text.encode()) > WITNESS_MAX_BYTES:
+        text = text.encode()[-WITNESS_MAX_BYTES:].decode(errors="ignore")
+    return text if re.search(rx, text, re.M) else None
+
+
+def capture_fail_witness(j, st, full):
+    rx, key = st["fail_regex"], st["key"]
+    body = witness_text(full, rx)
+    if body is None:
+        event(j, f"fail-witness: {key} fail_regex matched the log but not the kept excerpt; nothing archived")
+        return None
+    head = (f"# fail witness captured by the closure loop (GATE-FRICTION auto-capture)\n# job {j.get('name')} bench {key} "
+            f"host {j.get('host')} run {j.get('run')} log cl/{j.get('stage_tag')}.log captured {now_iso()}\n"
+            f"# fail_regex {rx!r}\n")
+    data = (head + body).encode()
+    d = WITNESS_DIR / label(j.get("name") or "job")
+    d.mkdir(parents=True, exist_ok=True)
+    f = d / f"{label(key)}.log"
+    tmp = f.with_suffix(f".{os.getpid()}.{threading.get_ident()}.tmp")
+    tmp.write_bytes(data)
+    os.replace(tmp, f)
+    m = re.search(rx, body, re.M)
+    rec = dict(path=str(f), sha256=hashlib.sha256(data).hexdigest(), fail_regex=rx, matched=m.group(0)[:200],
+               captured_at=now_iso(), declared=st.get("fail_witness"))
+    j.setdefault("fail_witnesses", {})[key] = rec
+    event(j, f"fail-witness: {key} captured ({len(data)} B, matched {rec['matched'][:80]!r}) -> {f}")
+    return rec
 
 
 def bench_why(j, st, rc, ok_extra=True):
@@ -4058,6 +4289,14 @@ def publish(j, metrics):
                     plat_paths.append(str((vd / "port_latency.json").relative_to(cwt)))
             (cwt / rec_dir / "port_latency.json").write_text(txt)
             plat_paths.append(f"{rec_dir}/port_latency.json")
+        for wk, w in sorted((j.get("fail_witnesses") or {}).items()):
+            try:
+                data = Path(w["path"]).read_bytes()
+            except OSError:
+                continue
+            if hashlib.sha256(data).hexdigest() == w.get("sha256"):
+                (cwt / rec_dir / "fail_witness").mkdir(parents=True, exist_ok=True)
+                (cwt / rec_dir / "fail_witness" / f"{label(wk)}.log").write_bytes(data)
         if big:
             (cwt / rec_dir / "LARGE_FILES_EXCLUDED.txt").write_text("\n".join(big) + "\n")
             log(f"[{j['name']}] record: {len(big)} file(s) > {RECORD_MAX_FILE_BYTES >> 20} MB left out of git")
@@ -4068,7 +4307,9 @@ def publish(j, metrics):
                             "agreed die-clock IO budgets, DRC 0"),
                        metrics={k: metrics.get(k) for k in ("ss_ps", "ff_ps", "drc", "ss_tns_ps", "clock_periods_ps", "setup_corner", "ss_sensitivity_ps", "ss_sensitivity_tns_ps", "corner_sta_tt", "post_sdc", "corner_sta",
                                                             "drc_metrics", "drc_skipped")},
-                       benches=j.get("benches", {}), no_bench_reason=spec.get("no_bench_reason"),
+                       benches=j.get("benches", {}), fail_witnesses={k: dict(w, path=f"{rec_dir}/fail_witness/{label(k)}.log")
+                                                                     for k, w in (j.get("fail_witnesses") or {}).items()},
+                       no_bench_reason=spec.get("no_bench_reason"),
                        checks=j.get("checks", {}), submit_checks=j.get("submit_checks"), calibration=j.get("calibration"), route_overlay_plan=j.get("route_overlay_plan"), cycles_added=spec.get("cycles_added"), status="CLOSED",
                        closed_at=now_iso(), job_spec=spec, io_budget=(j.get("rebudget") or {}).get("rb") or "link_budget_consistent (fixed split)",
                        rebudget=j.get("rebudget"))
@@ -4930,11 +5171,13 @@ def bench_track(j, fleet, stl):
             return True
         ok_extra, _ = remote_ok(v, st.get("ok"))
         tail = stage_tail(v, st, 40)
-        crashed = state == "LOST" or bench_crashed(st, rc, tail)
+        kills = stage_oom_kills(v, st) if state == "RC" else ""
+        crashed = state == "LOST" or bool(kills) or bench_crashed(st, rc, tail)
         if crashed:
             if e["n"] < 2:
                 e["state"] = "retry"
-                event(j, f"bench track: {k} crashed (state {state}, rc={rc}); retry once")
+                event(j, f"bench track: {k} crashed (state {state}, rc={rc}"
+                         + (f"; OOM-KILL flow failure: {kills.splitlines()[0][:300]}" if kills else "") + "); retry once")
                 return True
             stop_main_for_bench(j)
             finish(j, "NEEDS_HUMAN", f"{k} crashed twice in the bench track (rc={rc})",
@@ -4942,6 +5185,8 @@ def bench_track(j, fleet, stl):
             return False
         passed = bench_outcome(v, st, rc, ok_extra)
         j.setdefault("bench_work", {}).update(v.get("bench_work") or {})
+        if v.get("fail_witnesses") is not j.get("fail_witnesses"):
+            j.setdefault("fail_witnesses", {}).update(v.get("fail_witnesses") or {})
         e["state"] = "done"
         j["benches"][k] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:], track="parallel")
         if not passed:
@@ -5576,6 +5821,9 @@ def step(j, fleet):
         j["unreachable"] = 0
         if state == "LOST":
             return crash(j, st, fleet, "LOST: stage wrapper gone without an rc file")
+        kills = stage_oom_kills(j, st)
+        if kills:
+            return oom_retry(j, st, fleet, kills)
         ok_extra, okout = remote_ok(j, st.get("ok"))
         if st["kind"] == "bench":
             tail = stage_tail(j, st, 40)
