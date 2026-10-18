@@ -285,7 +285,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "REGROUP_FAIL"
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_regroup_m1.log"
    },
    {
     "name": "bench_tt_regroup_m2",
@@ -296,7 +297,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "REGROUP_FAIL"
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_regroup_m2.log"
    },
    {
     "name": "bench_tt_regroup_rawrst",
@@ -307,7 +309,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "REGROUP_FAIL"
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_regroup_rawrst.log"
    },
    {
     "name": "bench_tt_dpre_mut",
@@ -318,7 +321,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "REGROUP_FAIL"
+    "fail_regex": "REGROUP_FAIL|Assertion failed in tb_tt_static_regroup\\S*: DTIL me_tiles [0-9a-f]+ != [0-9a-f]+",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_dpre_mut.log"
    },
    {
     "name": "bench_tt_dsel_mut",
@@ -329,7 +333,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "REGROUP_FAIL"
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_dsel_mut.log"
    },
    {
     "name": "bench_tt_h15_pwcp_mut",
@@ -340,7 +345,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "REGROUP_FAIL"
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_pwcp_mut.log"
    },
    {
     "name": "bench_tt_h15_prec_mut",
@@ -351,7 +357,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "REGROUP_FAIL"
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_prec_mut.log"
    },
    {
     "name": "bench_tt_h15_slate_mut",
@@ -362,7 +369,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "REGROUP_FAIL"
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_slate_mut.log"
    },
    {
     "name": "bench_tt_h15_ctrl_m0",
@@ -384,7 +392,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "H15CTRL_FAIL"
+    "fail_regex": "H15CTRL_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_ctrl_fqwe_mut.log"
    },
    {
     "name": "bench_tt_h15_ctrl_oinc_mut",
@@ -395,7 +404,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "H15CTRL_FAIL"
+    "fail_regex": "H15CTRL_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_ctrl_oinc_mut.log"
    },
    {
     "name": "bench_tt_h15_ctrl_dtil_mut",
@@ -406,7 +416,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "H15CTRL_FAIL"
+    "fail_regex": "H15CTRL_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_ctrl_dtil_mut.log"
    },
    {
     "name": "bench_tt_h15_ctrl_amwc_mut",
@@ -417,7 +428,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "H15CTRL_FAIL"
+    "fail_regex": "H15CTRL_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_ctrl_amwc_mut.log"
    }
   ],
   "structural_change": "h14 (Q-TTH14 2026-10-17) after the h13 REJECT on current main: (1) path class of the h13 gate worst (po_me_i_obase -64.8): NOT memory inference / fanout / an RTL depth increase -- the h13 synthesized netlist is identical before and after the main merge (45,451 cells, 32,466.2046 um2; BAND=1 keeps BITS_PER_BAND 3, matvec_part not in this tile); it is placement wire: dyn[2] -> ~400 ps of repeaters across the ring -> 8:1 dyn select -> KS add. RTL DSEL=1: the DPRE adds' DYN operand is registered per head word (dq0/dq1) on the hq/hq1 fill edge by a kept fill slice (dyn fixed in S_RUN): exact, 0 edges (m0 REGROUP_PASS 65120; OT_DSEL_MUT REGROUP_FAIL 390702). (2) floorplan: SRAM stack on the 43.2 lattice at (43.2, 86.4 / 164.208 abutted), N edge; ONE std-cell band S (233 x 79 um) beside the S clock entry with the macro read face (W) on a 41-um leg, write face (E) on a 21-um leg; W/E pins over t",

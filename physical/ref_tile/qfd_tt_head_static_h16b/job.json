@@ -46,7 +46,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "REGROUP_FAIL"
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_regroup_m1.log"
    },
    {
     "name": "bench_tt_regroup_m2",
@@ -57,7 +58,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "REGROUP_FAIL"
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_regroup_m2.log"
    },
    {
     "name": "bench_tt_regroup_rawrst",
@@ -68,7 +70,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "REGROUP_FAIL"
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_regroup_rawrst.log"
    },
    {
     "name": "bench_tt_dpre_mut",
@@ -79,7 +82,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "REGROUP_FAIL"
+    "fail_regex": "REGROUP_FAIL|Assertion failed in tb_tt_static_regroup\\S*: DTIL me_tiles [0-9a-f]+ != [0-9a-f]+",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_dpre_mut.log"
    },
    {
     "name": "bench_tt_dsel_mut",
@@ -90,7 +94,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "REGROUP_FAIL"
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_dsel_mut.log"
    },
    {
     "name": "bench_tt_h15_pwcp_mut",
@@ -101,7 +106,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "REGROUP_FAIL"
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_pwcp_mut.log"
    },
    {
     "name": "bench_tt_h15_prec_mut",
@@ -112,7 +118,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "REGROUP_FAIL"
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_prec_mut.log"
    },
    {
     "name": "bench_tt_h15_slate_mut",
@@ -123,7 +130,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "REGROUP_FAIL"
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_slate_mut.log"
    },
    {
     "name": "bench_tt_h15_ctrl_m0",
@@ -145,7 +153,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "H15CTRL_FAIL"
+    "fail_regex": "H15CTRL_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_ctrl_fqwe_mut.log"
    },
    {
     "name": "bench_tt_h15_ctrl_oinc_mut",
@@ -156,7 +165,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "H15CTRL_FAIL"
+    "fail_regex": "H15CTRL_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_ctrl_oinc_mut.log"
    },
    {
     "name": "bench_tt_h15_ctrl_dtil_mut",
@@ -167,7 +177,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "H15CTRL_FAIL"
+    "fail_regex": "H15CTRL_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_ctrl_dtil_mut.log"
    },
    {
     "name": "bench_tt_h15_ctrl_amwc_mut",
@@ -178,7 +189,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "H15CTRL_FAIL"
+    "fail_regex": "H15CTRL_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_ctrl_amwc_mut.log"
    }
   ],
   "calibrate": {
