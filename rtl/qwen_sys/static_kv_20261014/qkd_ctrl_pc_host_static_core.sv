@@ -501,7 +501,8 @@ module qkd_ctrl_pc_sched #(
     // whose s7b register sat at the far face is re-registered at its own pin.  Exact contract: the outputs po, p_w_v,
     // p_w_d, physical_context, physical_col_sr, expected_sr, idle_hbm, fo and ko are the s7b outputs ONE hclk later
     // (bit-identical, every cycle, any input sequence); every other output is the s7b output on the same cycle.
-    // 0 = s7b (byte-identical logic).
+    // 0 = s7b (byte-identical logic).  2 (KV-NATIVE sched_s10) = 1 plus e_sec / e_row registered at the pin (one hclk
+    // later than s7b; pair with qkd_ctrl_pc_ecc_child_sl, which takes section / row one edge after the beat).
     parameter integer PINREG = 0
 ) (
     input  wire         pll_hbm,
@@ -808,8 +809,17 @@ module qkd_ctrl_pc_sched #(
 `else
     wire         esel = kvse_q, rsel = kvsr_q;
 `endif
-    assign e_sec = (PINREG != 0) ? (esel ? es1 : es0) : e_sec_r;
-    assign e_row = (PINREG != 0) ? (rsel ? er1 : er0) : e_row_r;
+    // KV-NATIVE sched_s10 (PINREG 2; routed native audit of s9 qkd_ctrl_pc_sched_s9-s9-623df1d3e, receipt
+    // claude/native-batch-1017 029f539c5: launch e_sec[0..10] 243.1-245.8 > 220 = the 2:1 select AFTER the es0/es1
+    // registers drove the pins): the select result is registered at the pin (e_sec_p / e_row_p) -> e_sec / e_row are the
+    // s9 (= s7b) values exactly ONE hclk later.  The cycle is absorbed in the ECC child (qkd_ctrl_pc_ecc_child_sl), whose
+    // section / row enter at its P1 stage instead of the P0 pin flops: the landed o_sec / o_row / o_v / o_data are
+    // unchanged on every edge (0 cycles end to end).
+    reg  [16:0]  e_sec_p;
+    reg  [7:0]   e_row_p;
+    always @(posedge hclk) begin e_sec_p <= esel ? es1 : es0; e_row_p <= rsel ? er1 : er0; end
+    assign e_sec = (PINREG >= 2) ? e_sec_p : (PINREG != 0) ? (esel ? es1 : es0) : e_sec_r;
+    assign e_row = (PINREG >= 2) ? e_row_p : (PINREG != 0) ? (rsel ? er1 : er0) : e_row_r;
     reg [15:0] ep0,ep1,ep2;
     always @(posedge hclk)begin ep0<=t_head[33:18];ep1<=ep0;ep2<=ep1;end
     assign corrected_epoch=ep2;
