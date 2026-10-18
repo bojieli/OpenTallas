@@ -177,7 +177,8 @@ def consumed_record(paths, entries, basis):
             "digest": canonical_digest(paths)}
 
 
-def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_recovery=False, clock=None, tile=None):
+def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_recovery=False, clock=None, tile=None,
+             gate=None):
     """Match immutable staged contents against the requested route source and current tool overlay.
 
     clock: the gate result's "clock" record.  With it, drift made only by RELAXING-ONLY rule commits
@@ -185,7 +186,9 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
     use is recorded in binding["relaxing_rule_allowlist"] (the caller copies it into the job).
     GATE-FRICTION 2026-10-18: every commit on the chain is classified (helper_overlay.rule_span: relaxing / neutral /
     tightening / unclassified); only a tightening that applies to `tile` (kit / top / block names), or an unclassified
-    change, keeps the strict refusal."""
+    change, keeps the strict refusal.
+    gate: the whole gate result (gate_result.json), for requirements judged from more than its clock record
+    (trial_grt: the every-kit trial global route)."""
     if not isinstance(binding, dict) or binding.get("schema") != SCHEMA:
         return False, "missing immutable source snapshot; legacy result is unqualified"
     if frozen_recovery and not route_overlay:
@@ -352,7 +355,7 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
                                                and (r["kind"] == "relaxing" or r.get("applies"))})))
             if rows:
                 needs = sorted({n for r in rows for n in r.pop("needs")})
-                req_ok, req = relaxed_rule_requirement(needs, clock)
+                req_ok, req = relaxed_rule_requirement(needs, clock, gate)
                 if req_ok:
                     relaxed = rows
                     binding["relaxing_rule_allowlist"] = dict(
@@ -434,12 +437,27 @@ def gate_pin_spreads(clock):
     return out
 
 
-def relaxed_rule_requirement(needs, clock):
+def relaxed_rule_requirement(needs, clock, gate=None):
     """(ok, [{"requires", "ok", "text", ...}]): the relaxed rules' own conditions, judged from the existing gate report.
     clock_pin_spread (0dq): pin-flop spread <= 80 ps at TT (required); FF too when reported, else left to the routed
-    native audit."""
+    native audit.
+    trial_grt (ROOT-0330-GRT 10-18, the gate runs a trial global route for EVERY kit): a gate result without a
+    "trial_route" record predates the rule and stays valid (its verdict already holds the parent / cluster trial, which
+    is unchanged); a gate that ran it must show overflow 0.  Without the gate result the strict refusal stands."""
     rows = []
     for n in needs:
+        if n == "trial_grt":
+            tr = gate.get("trial_route") if isinstance(gate, dict) else None
+            if not isinstance(gate, dict):
+                rows.append(dict(requires=n, ok=False, text="trial_grt: no gate result to judge"))
+            elif tr is None:
+                rows.append(dict(requires=n, ok=True, predates=True,
+                                 text="trial_grt: gate predates the every-kit trial GRT (no trial_route record): kept"))
+            else:
+                ovf = tr.get("overflow") if isinstance(tr, dict) else None
+                rows.append(dict(requires=n, ok=ovf == 0, overflow=ovf,
+                                 text=f"trial_grt: gate trial GRT overflow {ovf}" + ("" if ovf == 0 else " (FAIL)")))
+            continue
         if n == "clock_pin_spread":
             sp = gate_pin_spreads(clock if isinstance(clock, dict) else {})
             tt, ff = sp.get("tt"), sp.get("ff")
