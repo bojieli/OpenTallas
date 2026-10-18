@@ -64,7 +64,8 @@
     "purpose": "S81-DV seq_host leaf dsdv_sh_sq to closure (TT setup / FF hold / DRC 0 + native audit).",
     "extra_paths": [
       "rtl/dsrom_sys/s81_dv/unit",
-      "results/rtl/s81_dv_unit_1017/seqhost"
+      "results/rtl/s81_dv_unit_1017/seqhost",
+      "physical/dsdv_seq_host_pins"
     ],
     "benches": [
       {
@@ -121,12 +122,17 @@
     "reason": "Source-registered (dsdv_seq_host header): every leaf input lands in a flop at the pin and every output is a flop; recipe pin_regs would add a second unpriced stage on every leaf seam."
   },
   "outline": {
-    "w": 345.6,
-    "h": 345.6
+    "w": 226.8,
+    "h": 151.2
   },
   "io_flop_at_pins": {
     "cols": 4,
     "allow_none": true
   },
-  "keep_pin_regs": true
+  "keep_pin_regs": true,
+  "io_tcl": "physical/dsdv_seq_host_pins/dsdv_sh_sq.tcl",
+  "std_area_um2": 14796,
+  "fill_reason": {
+    "pin_bound": "N face 1,296 pin bits (rung 552 + tw 194 + cf 267 + cn/cs/cg 255 + dn 27 + vf 1) and S face 1,207 at <= 6/um need W >= 216 um; W 226.8 = common width of the 3 stacked leaves (seam pins aligned) = 5.7 / 5.3 per um. Std 14,796 um2 (gate 10607befb) -> util 45%."
+  }
 }

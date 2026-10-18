@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  216.0,
+  226.8,
   172.8
  ],
  "core": [
   2.16,
   2.16,
-  213.84,
+  224.64000000000001,
   170.64000000000001
  ],
  "why": "spec outline",
@@ -66,7 +66,14 @@
  },
  "clock_port": "ck",
  "blocks": [],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 45% outside 45%-60% (std 16781 + macro 0 in core 37483 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
  "referenced": [
   "rtl/lib/ot_rst_relay.sv",
   "rtl/lib/ot_async_fifo.sv",
@@ -103,6 +110,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/dsdv_seq_host_pins/dsdv_sh_lk.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl"
  ]

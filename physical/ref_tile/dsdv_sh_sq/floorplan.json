@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  345.6,
-  345.6
+  226.8,
+  151.2
  ],
  "core": [
   2.16,
   2.16,
-  343.44,
-  343.44
+  224.64000000000001,
+  149.04
  ],
  "why": "spec outline",
- "std_area_um2": null,
+ "std_area_um2": 14796,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -88,6 +88,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/dsdv_seq_host_pins/dsdv_sh_sq.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl"
  ]
