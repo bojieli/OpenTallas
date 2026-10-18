@@ -138,6 +138,6 @@
   "source": "results/arch/native_2_1017/native_2_audit.json",
   "cell": "qkd_kv_grp_ctl_p",
   "capture_ps": 220.2,
-  "fix": "boundary clock branch (physical/ref_tile/qkd_kv_grp_ctl_p/bnd_branch.tcl, PRE_CTS): after CTS the 485 core_clk boundary registers (pin flops + output flops) move off the 4-buffer register-mass H-tree onto a dedicated 2-buffer branch (BUFx24 trunk beside the ck pin on the port net + local BUFx24 leaves, <=60 sinks / 40-um bin), so the TT boundary insertion R drops 160 -> ~95 ps (placement-RC probe on the p1 placement: 149.2 -> 85.0, spread 42.8) and the input hold pad that grows with R shrinks with it; same RTL, outline, pins and SDC"
+  "fix": "boundary clock branch (physical/ref_tile/qkd_kv_grp_ctl_p/bnd_branch.tcl, PRE_CTS): after CTS the 485 core_clk boundary registers (pin flops + output flops) move off the 4-buffer register-mass H-tree onto a dedicated 2-buffer branch (BUFx24 trunks beside the ck pin on the port net + local BUFx24 leaves, <=60 sinks / 40-um bin, far leaves on their own trunk), so the TT boundary insertion R drops 160 -> ~80 ps (placement-RC probe on the p1 placement: 149.2 -> 70.5, spread 35.3) and the input hold pad that grows with R shrinks with it; same RTL, outline, pins and SDC"
  }
 }

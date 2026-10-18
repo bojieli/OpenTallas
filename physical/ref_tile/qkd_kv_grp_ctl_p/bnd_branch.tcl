@@ -9,15 +9,20 @@
 #
 # What: after TritonCTS builds the register-mass tree, every core_clk BOUNDARY register (D fed from an input port, or Q
 # driving an output port: the same set closure_loop/ck_insertion.py calls "boundary") is moved off its H-tree leaf onto
-# a short dedicated branch: one BUFx24 trunk beside the ck pin, driven by the ck port net in parallel to the H-tree
-# root buffer, feeding local BUFx24 leaves (square bins of OT_KH_BIN_UM, at most OT_KH_LEAF_MAX sinks per leaf, leaf at
+# a short dedicated branch: BUFx24 trunk(s) beside the ck pin, driven by the ck port net in parallel to the H-tree
+# root buffer (one trunk for the near leaves, one per leaf farther than 40 um), feeding local BUFx24 leaves (square bins of OT_KH_BIN_UM, at most OT_KH_LEAF_MAX sinks per leaf, leaf at
 # the sinks' centroid).  Two buffers port -> pin flop.  The register mass keeps its balanced tree; the pin-flop ->
 # mass skew (~+55 ps, useful for setup) is closed by the normal CTS-stage hold repair inside the tile.  No RTL, SDC,
-# pin or outline change.  Measured on the p1 placement (placement RC, TT): boundary R 149.2 -> 85.0 ps (spread 42.8),
-# mass 144.4 -> 140.0 ps.
+# pin or outline change.  Measured on the p1 placement (placement RC, TT): boundary R 149.2 -> 70.5 ps (spread 35.3;
+# one shared trunk: 85.0 / 42.8, p2 gate 12e4e7939: 85.8 / 43.4, probe capture 134.9, launch 203.3 at drained on the
+# far SE leaf), mass 144.4 -> 140.3 ps.
 if {![info exists ::ot_kh_bin_um]}     { set ::ot_kh_bin_um 40 }
 if {![info exists ::ot_kh_leaf_max]}   { set ::ot_kh_leaf_max 60 }
 if {![info exists ::ot_kh_leaf_master]} { set ::ot_kh_leaf_master BUFx24_ASAP7_75t_R }
+# leaves farther than ot_kh_far_um (Manhattan, from the ck pin) hang on their own trunk(s) beside the pin, at most
+# ot_kh_far_leaves per trunk, so the long return wires do not load the near trunk (p2 gate: SE leaves 61 vs 32 ps)
+if {![info exists ::ot_kh_far_um]}     { set ::ot_kh_far_um 40 }
+if {![info exists ::ot_kh_far_leaves]} { set ::ot_kh_far_leaves 1 }
 
 proc ot_kh_bnd_regs {clk} {
   set regs {}
@@ -57,11 +62,8 @@ proc ot_kh_bnd_branch {port clkname} {
     dict lappend groups "[expr {$x / $bin}]_[expr {$y / $bin}]" [list $ck $x $y]
   }
   if {![dict size $groups]} { error "OT_KH_BRANCH: no $clkname boundary registers found" }
-  set tb [odb::dbInst_create $block $trunk_m "clkbuf_bndtrunk_${port}"]
-  $tb setLocation $tx $ty; $tb setPlacementStatus PLACED
-  set tnet [odb::dbNet_create $block "clknet_bndtrunk_${port}"]; $tnet setSigType CLOCK
-  [$tb findITerm A] connect $pnet; [$tb findITerm Y] connect $tnet
-  set nb 0; set ns 0
+  # leaves first (centroids), then trunks: near leaves on trunk 0, far leaves grouped on their own trunks
+  set leaves {}
   foreach key [lsort [dict keys $groups]] {
     set mem [dict get $groups $key]
     set k [expr {int(ceil([llength $mem] / double($::ot_kh_leaf_max)))}]
@@ -69,16 +71,36 @@ proc ot_kh_bnd_branch {port clkname} {
       set part [lrange $mem [expr {$g * [llength $mem] / $k}] [expr {($g + 1) * [llength $mem] / $k - 1}]]
       set sx 0; set sy 0
       foreach m $part { incr sx [lindex $m 1]; incr sy [lindex $m 2] }
+      lappend leaves [list [expr {$sx / [llength $part]}] [expr {$sy / [llength $part]}] $part]
+    }
+  }
+  set far_dbu [expr {$::ot_kh_far_um * [$block getDefUnits]}]
+  set near {}; set far {}
+  foreach l $leaves {
+    if {abs([lindex $l 0] - $tx) + abs([lindex $l 1] - $ty) > $far_dbu} { lappend far $l } else { lappend near $l }
+  }
+  set far [lsort -real -index 1 $far]
+  set tgroups [list $near]
+  for {set i 0} {$i < [llength $far]} {incr i $::ot_kh_far_leaves} { lappend tgroups [lrange $far $i [expr {$i + $::ot_kh_far_leaves - 1}]] }
+  set nb 0; set ns 0; set nt 0
+  foreach tg $tgroups {
+    if {![llength $tg]} continue
+    set tb [odb::dbInst_create $block $trunk_m "clkbuf_bndtrunk_${nt}_${port}"]
+    $tb setLocation $tx $ty; $tb setPlacementStatus PLACED
+    set tnet [odb::dbNet_create $block "clknet_bndtrunk_${nt}_${port}"]; $tnet setSigType CLOCK
+    [$tb findITerm A] connect $pnet; [$tb findITerm Y] connect $tnet
+    incr nt
+    foreach l $tg {
       set b [odb::dbInst_create $block $leaf_m "clkbuf_bnd_${nb}_${port}"]
-      $b setLocation [expr {$sx / [llength $part]}] [expr {$sy / [llength $part]}]; $b setPlacementStatus PLACED
+      $b setLocation [lindex $l 0] [lindex $l 1]; $b setPlacementStatus PLACED
       set net [odb::dbNet_create $block "clknet_bnd_${nb}_${port}"]; $net setSigType CLOCK
       [$b findITerm A] connect $tnet; [$b findITerm Y] connect $net
-      foreach m $part { set it [lindex $m 0]; $it disconnect; $it connect $net; incr ns }
+      foreach m [lindex $l 2] { set it [lindex $m 0]; $it disconnect; $it connect $net; incr ns }
       incr nb
     }
   }
   puts "OT_KH_BRANCH $port: $ns $clkname boundary sinks onto $nb leaf buffers ($::ot_kh_leaf_master, bins $::ot_kh_bin_um um,\
-        max $::ot_kh_leaf_max) under trunk clkbuf_bndtrunk_${port} at [expr {$tx / 1000.0}] [expr {$ty / 1000.0}] um"
+        max $::ot_kh_leaf_max) under $nt trunk(s) (far > $::ot_kh_far_um um, $::ot_kh_far_leaves leaves each) at [expr {$tx / 1000.0}] [expr {$ty / 1000.0}] um"
 }
 
 rename clock_tree_synthesis ::ot_kh_bnd_cts_orig
