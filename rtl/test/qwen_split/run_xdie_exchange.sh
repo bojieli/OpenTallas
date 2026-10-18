@@ -17,6 +17,10 @@ NET_K='9,11,9,8,9,6,11'        # kvs14c as netlisted: srx 9, rx_payload 11, att_
 PLAN='2,2,2,2,0,2/11,11,9,9,9,11,11'
 PLAN_R3='2,2,2,2,2,2/11,11,9,9,9,11,11'
 ZERO='0,0,0,0,0,0/0,0,0,0,0,0,0'
+# QXF-SEAMK 10-18 (F6): kvs14c after the generator's bundle pads (tools/qwen_kv_die/kv_bundle_eq.py: srx +2, kind +1, tx_v +5)
+# and the OT_KV_ATTN_AT_D2D placement (kvs_attn beside the D2D end: rx 1/1, tx slot 0/0/0, tx 0/0, pin geometry of kvs14c)
+BEQ_K='11,11,9,9,9,11,11'
+AT_D2D_K='1,1,0,0,0,0,0'   # kvs_attn W of the HOST root, N face at the D2D end's bottom (OT_KV_ATTN_D2D_TOP 0)
 OLDTXDP='3,3,1,4/3,4,3,3'      # the r4..r9 masters' hard-wired PR TXDP (component-bench codecs)
 PAIR_TXDP_OFF1='7,3,1,9/23,4,3,3'   # QXF-PAIR mutant: compute CMD/Q port TXDP one edge over the compiled C [6,3,1,9]
 # name | expect (PASS | FAIL | BUILD_FAIL) | calendar flags | bench -G flags [| source mod: face4 = vendored kvs_attn face MUT 4]
@@ -41,6 +45,9 @@ CONFIGS=(
  "face_asbuilt|FAIL|--c-real 0 --k-real 2 --stages $PLAN|-GC_REAL=0 -GK_REAL=2"
  "netlist_c|FAIL|--c-real 1 --k-real 0 --stages $NET_C/0,0,0,0,0,0,0|-GC_REAL=1 -GK_REAL=0"
  "netlist_k|FAIL|--c-real 0 --k-real 1 --stages 0,0,0,0,0,0/$NET_K|-GC_REAL=0 -GK_REAL=1"
+ "netlist_k_beq|PASS|--c-real 0 --k-real 1 --stages 0,0,0,0,0,0/$BEQ_K|-GC_REAL=0 -GK_REAL=1"
+ "vk_attn_d2d|PASS|--c-real 0 --k-real 1 --stages 2,2,2,2,2,2/$AT_D2D_K|-GC_REAL=0 -GK_REAL=1"
+ "mut_attn_d2d_torn|FAIL|--c-real 0 --k-real 1 --stages 2,2,2,2,2,2/0,1,0,0,0,0,0|-GC_REAL=0 -GK_REAL=1"
  "mut1_kv_run_late|FAIL|--c-real 1 --k-real 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=1 -GMUT=1"
  "mut2_phy_bit|FAIL|--c-real 1 --k-real 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=1 -GMUT=2"
  "mut3_result_word|FAIL|--c-real 1 --k-real 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=1 -GMUT=3"
