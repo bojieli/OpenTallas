@@ -1309,12 +1309,15 @@ def place(m, K, geo, F):
         vps = [by[f'vport_{st}_{k}'] for k in range(4)]
         ects = [by[f'ectl_{st}_{e}'] for e in range(8)]
         # inner edge = the old landing strip's inner edge: the landing <-> V port / engine relay channel stays as planned
+        # KV-PLAN3 10-18 OT_KV_KV_CHAN_EXTRA (um): the group tile gives that much width to the K / V channel on its
+        # engine side (h3: the 190-um channel beside slg_WS_7 held ~250 small relays and no 1,056-b pvrs relay fitted)
+        kx_ = float(os.environ.get('OT_KV_KV_CHAN_EXTRA', '0'))
         if west:
             x_g = up(max(x_hs + hs[0].w + gap, lx + lw - 369.0), GX)    # W of the groups: a control channel
-            gw = round(lx + lw - 60.0 - x_g, 4)                       # E of them: the K / V channel widened by 60 um
+            gw = round(lx + lw - 60.0 - kx_ - x_g, 4)                 # E of them: the K / V channel widened by 60 um
         else:
-            x_g = lx + 60.0
-            gw = round(min(x_hs - gap - x_g, 309.0), 4)
+            x_g = lx + 60.0 + kx_
+            gw = round(min(x_hs - gap - x_g, 309.0 - kx_), 4)
         GH = 1188.0                 # group tile height: 324-um gaps between groups (relay spots + the stack fan slot)
         for g in range(8):
             idx = ORDER.index(g)
@@ -1426,7 +1429,7 @@ def pin_face(master, port):
         # the facing N / S faces: auto-placed on a side face they were 515.7 um per hop (> reach) once the pin-hinted
         # re-plan stopped, 114 of the 127 unrepaired hops (t_302).  N: i_next 779 + o_next 299 + pc__ki 33, S: the
         # mirror set = 1,111 b on a 270-um face (4.1 /um)
-        f_ = dict(i_next='N', o_next='N', pc__ki='N', o_prev='S', i_prev='S', pc__ko='S').get(port)
+        f_ = dict(i_next='N', o_next='N', pc__ki='N', o_prev='S', i_prev='S', pc__ko='S', i_grp='N', o_grp='N').get(port)
         if f_:
             return f_
     if master == 'qkd_pvfin':          # kit qkd_pv_fin_s faces
@@ -1445,6 +1448,10 @@ def face_order(master, face, ports):
                 return (int(p[4:]), p[0] == 'o', p)
             return (99, False, p)
         return sorted(ports, key=key)
+    if master in ('qkd_kvs_pc', 'qkd_kvs_pc_h') and face == 'N':
+        # the group words at the N face's E end (canonical E = toward the group column, through the slice gap):
+        # k2 left ks_kvpc_EN_29__o_grp at 633 um with o_grp mid-face
+        return sorted(ports, key=lambda p: (p in ('i_grp', 'o_grp'), p == 'o_grp', p))
     if master in ('qkd_kvs_grp', 'qkd_kvs_grp_h') and face == 'E' and os.environ.get('OT_KV_GRP_RSP_LOW', '0') == '1':
         # variant: the V response word rsp on the lower half (odd groups: their V port sits just below the group)
         return sorted(ports, key=lambda p: (p != 'rsp', p))
