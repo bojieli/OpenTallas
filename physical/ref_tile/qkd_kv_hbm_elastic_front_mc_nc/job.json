@@ -44,6 +44,19 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "kvplan_ci_nc_mutant2",
+    "cmd": "VERILATOR=verilator bash tools/qwen_kv_die/kvplan_ci_nc_mutant.sh {RUN}/bench/mut2 2",
+    "expect": "fail",
+    "fail_regex": "^FAIL LOCKSTEP",
+    "fail_witness": "results/rtl/kvnc_kits_1017/mutant2.log",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "why": "front word shifted"
    }
   ],
   "calibrate": {

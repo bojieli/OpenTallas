@@ -128,6 +128,19 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "kvplan_ci_nc_mutant1",
+    "cmd": "VERILATOR=verilator bash tools/qwen_kv_die/kvplan_ci_nc_mutant.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "fail_regex": "^FAIL LOCKSTEP",
+    "fail_witness": "results/rtl/kvnc_kits_1017/mutant1.log",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "why": "sched owner-mode kc command check dropped"
    }
   ],
   "peak_ram_gb": 16

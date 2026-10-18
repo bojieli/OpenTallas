@@ -44,6 +44,19 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "kvplan_ci_nc_mutant4",
+    "cmd": "VERILATOR=verilator bash tools/qwen_kv_die/kvplan_ci_nc_mutant.sh {RUN}/bench/mut4 4",
+    "expect": "fail",
+    "fail_regex": "^FAIL LOCKSTEP",
+    "fail_witness": "results/rtl/kvnc_kits_1017/mutant4.log",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "why": "port PHY read data captured one bit low"
    }
   ],
   "calibrate": {
