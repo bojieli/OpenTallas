@@ -37,7 +37,6 @@
    "rq"
   ],
   "N": [
-   "wd",
    "wb_reserve_v",
    "wb_reserve_bank",
    "wb_fill_bank",
@@ -75,7 +74,8 @@
    "busy"
   ],
   "ANY": [
-   "clk_bank"
+   "clk_bank",
+   "wd"
   ]
  },
  "clock_port": "clk",

@@ -86,11 +86,16 @@ def main():
     ctl = [f'rr[{b*257+256}]' for b in range(8)] + [f'rq[{i}]' for i in range(136)]
     for n, v in zip(ctl, grid(250.0, 294.0, len(ctl), avoid['W'])): pins[n] = ('W', v)
     # N face: wd per bank column, wb/wa between col1 and col2
-    colbanks = {c: [b for b, (cc, r) in sorted(HOME.items(), key=lambda t: -t[1][1]) if cc == c] for c in range(3)}
-    nseg = {0: (2.4, 262.0), 1: (264.0, 398.0), 2: (432.0, 602.4)}
-    for c, banks in colbanks.items():
-        names = [f'wd[{b*289+i}]' for b in banks for i in range(289)]
-        for n, v in zip(names, grid(*nseg[c], len(names), avoid['N'])): pins[n] = ('N', v)
+    # OWNERS-HBM/STK 10-18: wd leaves through the NEAREST N/S face (rows 2-3 N, rows 0-1 S).  All-N (HCDMA-DBK 10-17)
+    # failed the gate wire_reach: row-0 banks' unregistered wd ran 654 um to the N face (bank -> pin, > 500 um/stage) and
+    # macro->out wd[839] -149.5 ps.  wd stays wires-only (no parent flop, no added cycle); the die takes wd from both faces.
+    nseg = {0: (2.4, 262.0), 1: (264.0, 398.0), 2: (432.0, W - 2.4)}
+    for face, rows in (('N', (3, 2)), ('S', (1, 0))):
+        for c in range(3):
+            banks = [b for r in rows for b, (cc, rr) in HOME.items() if cc == c and rr == r]
+            names = [f'wd[{b*289+i}]' for b in banks for i in range(289)]
+            avoid.setdefault(face, [])
+            for n, v in zip(names, grid(*nseg[c], len(names), avoid[face])): pins[n] = ('N' if face == 'N' else 'S', v)
     wb = (['wb_reserve_v', 'wb_reserve_bank', 'wb_fill_bank'] + [f'wb_reserve_epoch[{i}]' for i in range(16)] +
           [f'wb_fill_epoch[{i}]' for i in range(16)] + [f'wb_reserve_sectors[{i}]' for i in range(12)] +
           [f'wb_reserve_base[{i}]' for i in range(32)] + ['wb_fill_start', 'wb_ready'] + [f'wa[{i}]' for i in range(12)])
@@ -141,7 +146,7 @@ def main():
         slot_change_request=(f'hb_dbk_<q> (d4f slot 560.0 x 400.0) -> {W} x {H} (1.12:1): 8 banks + controller + collar leaf '
             'on the 43.2 lattice cannot fit 560 x 400 (see make_dbk_cpl_parent.py); master ports: clk_tab[1:0] removed, '
             'clk_rst added (reset relay root, same die clock); rr/rq W, wd/wb/wa N, F20 host bus/status/straps E, '
-            'clk_bank on the nearest face (W x3, N x3, S x1, E x1).'),
+            'clk_bank on the nearest face (W x3, N x3, S x1, E x1); OWNERS-HBM/STK 10-18: 606.96 x 542.16 (macro_edge 20 um), wd of bank rows 0-1 on the S face, rows 2-3 on N (wire_reach), F20 host bus over the full E face.'),
         structural_change=why,
         reroute_reason=dict(kind='slot_change', source='physical/ref_tile/hv15_dbk_cp (gate 1f18141cb, structural FAIL)', why=why))
     spec['job'] = dict(owner='Claude:OWNERS-HBM/STK', branch='claude/owners-hbm-1018-stk', tag='q1', record_to=f'results/rtl/ref_tile/{NAME}',
