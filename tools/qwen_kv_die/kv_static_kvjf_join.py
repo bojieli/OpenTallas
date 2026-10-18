@@ -38,6 +38,7 @@ from pathlib import Path
 
 import kv_static as K
 import kv_static_boot_join as B
+import kv_static_cfault_join as C
 
 OBS = ('rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv', 'qkd_kv_ownership_obs')
 DCFG = ('rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv', 'qkd_kv_die_cfg')
@@ -214,6 +215,7 @@ def build(root=K.ROOT):
     bound += B.host_admission_join(graph, root)[0]
     bound += ownership_join(graph, root)[0]
     bound += die_cfg_join(graph, root)[0]
+    bound += C.cfault_join(graph, root)[0]       # KVJ-SMALL (c): completion-fault OR tree -> HOST
     vport_join_check(graph)
     return graph, bound
 

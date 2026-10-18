@@ -76,6 +76,32 @@ class Programme(unittest.TestCase):
                 self.assertEqual(im['program_words'], want[im['target']])
             self.assertEqual(int(b['images'][-1]['digest'], 16), r['layer']['digest'])
 
+    def test_link_cfg_target_is_the_kv_sequencer_init_image(self):
+        # KVJ-SMALL 10-17: target 11 (dispatcher LINKCFG=1) = the qkd_d2d_cal_seq init stream from d2d_cal_image.svh
+        import re
+        svh = (ROOT / 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh').read_text()
+        val = lambda n: int(re.search(rf"{n} = \d+'h([0-9a-f]+);", svh).group(1), 16)
+        tx, rx = val('D2D_CAL_K_TX_IMG'), val('D2D_CAL_K_RX_IMG')
+        want = [w for i in range(32) for w in ((tx >> 32 * i) & 0xffffffff, (rx >> 32 * i) & 0xffffffff)]
+        want += [val('D2D_CAL_K_TX_SEG2'), val('D2D_CAL_K_RX_SEG2')]
+        for r in (self.comp, self.die):
+            self.assertEqual(r['link_cfg']['target'], 11)
+            self.assertEqual(r['link_cfg']['program'], want)
+
+    def test_es_cfg_targets_are_the_kvjc3_boot_words(self):
+        # KVJ-SMALL b2 10-17: targets 12 / 13 (dispatcher ESCFG=1) replay kvjc3_pc_chain.boot_words on the shared bus
+        import kvjc3_pc_chain as C3
+        bw = C3.boot_words(C3.emb_calendar(C.ES_CFG_CTRL_LAT, [0, 0, 0, 0]))
+        for r in (self.comp, self.die):
+            e = r['es_cfg']
+            self.assertEqual(e['targets'], [12, 13])
+            self.assertEqual((len(e['pc']), len(e['beat'])), (1024, 8))
+            got = [(a & 0xff, d) for a, d in enumerate(e['pc'])] + [(a, d) for a, d in enumerate(e['beat'])]
+            want = sorted(w for w in bw if w[1] >> 62 == 0) == sorted(got[:1024])
+            self.assertTrue(want)
+            self.assertEqual(got[1024:1024 + 2], [w for w in bw if w[1] >> 62 == 1])
+            self.assertTrue(all(d == 1 << 62 for d in e['beat'][2:]))     # unused segments: len 0 = never a slot
+
     def test_writer_and_ownership_follow_their_boot_checks(self):
         for r in (self.comp, self.die):
             w = r['writer']['words']

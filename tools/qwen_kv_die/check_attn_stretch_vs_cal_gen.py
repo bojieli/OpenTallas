@@ -14,7 +14,12 @@ Law checked (decision 4: the service ends on the link's fixed RESULT slot; R str
   die profile (die ages):  LMAX..HUB_PUB = generator + (QK_ISSUE_AGE - 34); P0 / P1 = generator + (RL - 19);
                            PV_START = the minimal start of those fields (attn_calendar law); R stretched as above.
 The generator emits the minimal R and a per-T tx_first / end; the production N1 needs R = service_end - 49 - PV_START
-and the fixed words (reported under rtl_delta)."""
+and the fixed words (reported under rtl_delta).
+
+KVJ-SMALL 10-17: the generator now has STRETCH=1 (D_QK, D_RL, SERVICE_END).  With --stretch-gold (the bench's
+gold_s_<profile>.hex tables) and --bench-receipt (run_cal_gen_bench.sh receipt.json), the check also requires every
+stretched row == attention_calendar(T, profile, service_end) with the fixed link words, and the bench's STRETCH runs
+(mut 0) CALGEN PASS: then RTL == compiler for every T and rtl_delta is closed."""
 import argparse
 import json
 import sys
@@ -44,6 +49,8 @@ def main():
     ap.add_argument('--report', type=Path, required=True)
     ap.add_argument('--ages', type=Path, default=C.ROOT / C.AGES)
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--stretch-gold', type=Path, nargs='*', default=[], help='gold_s_<profile>.hex (profile from the name)')
+    ap.add_argument('--bench-receipt', type=Path)
     a = ap.parse_args()
     rep = json.loads(a.report.read_text())
     att = rep['attention']
@@ -84,12 +91,41 @@ def main():
             sl = se - AC.service_cycles(m)
             st['gen_slack_min'] = sl if st['gen_slack_min'] is None else min(st['gen_slack_min'], sl)
         stats[name] = st
+    stretch = None
+    if a.stretch_gold:
+        stretch = dict(tables={}, bench=None)
+        for p in a.stretch_gold:
+            name = p.stem.split('gold_s_')[-1]
+            rows, nbad = gold_rows(p), 0
+            if sorted(rows) != list(range(1, 8193)):
+                raise SystemExit(f'{p}: stretch gold must hold T = 1..8192')
+            for T, g in rows.items():
+                if g['cal'] != C.attention_calendar(T, prs[name], se) or g['tx_first'] != tx or g['end'] != en:
+                    nbad += 1
+                    bad.append(dict(profile=name, T=T, why='stretch gold row differs from the compiler'))
+            stretch['tables'][name] = dict(contexts=len(rows), mismatches=nbad)
+        if a.bench_receipt:
+            br = json.loads(a.bench_receipt.read_text())
+            sr = [r for r in br['runs'] if r.get('stretch')]
+            ok = [r for r in sr if r['mut'] == 0 and r['result'].startswith('CALGEN PASS')]
+            caught = [r for r in sr if r['mut'] != 0 and r['result'].startswith('CALGEN FAIL')]
+            stretch['bench'] = dict(verdict=br['verdict'], commit=br['commit'], dirty=br['dirty'], runs=sr)
+            for name in stretch['tables']:
+                if not any(r['stretch'] == name for r in ok):
+                    bad.append(dict(profile=name, why='no STRETCH CALGEN PASS run for this profile'))
+            if len(caught) != len([r for r in sr if r['mut'] != 0]):
+                bad.append(dict(why='a STRETCH mutant was not caught'))
+        else:
+            bad.append(dict(why='--stretch-gold without --bench-receipt'))
     rec = dict(schema='opentallas.qwen_kv_static.attn_stretch_vs_cal_gen.v1', verdict='PASS' if not bad else 'FAIL',
                generator='rtl/qwen_sys/split_20261014/qkd_attn_cal_gen.sv (claude/kvj-b-1017 58f9ebdbb), exhaustive bench '
                          'gold (CALGEN PASS) G3S2=1 RX_CMD=2',
                link_words=dict(compiled_rx_cmd=rx, compiled_tx_first=tx, compiled_end=en, service_end=se),
                checked=dict(contexts=8192, profiles=list(prs)), stats=stats, mismatches=bad[:50], mismatch_count=len(bad),
-               rtl_delta='qkd_attn_cal_gen emits the minimal R (= P0) and tx_first / end per T.  For the static link it must '
+               stretch_rtl=stretch,
+               rtl_delta=('CLOSED: qkd_attn_cal_gen STRETCH=1 (D_QK, D_RL, SERVICE_END) == attention_calendar(T, profile, '
+                          'service_end) and the fixed link words for every T (stretch_rtl)') if stretch and stretch['bench'] else
+                         'qkd_attn_cal_gen emits the minimal R (= P0) and tx_first / end per T.  For the static link it must '
                          'emit R = SERVICE_END - 49 - PV_START and the constant tx_first / end; with the die ages it also '
                          'needs LMAX..HUB_PUB + (QK_ISSUE_AGE - 34) and P0 / P1 + (RL - 19) before the PV_START max '
                          '(parameters D_QK, D_RL, SERVICE_END): owner KVJ-B successor.')
