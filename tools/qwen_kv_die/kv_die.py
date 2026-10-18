@@ -1018,11 +1018,12 @@ if KSD.SEQ_S:
     RTL.update(qkd_seq_st=KSD.SEQ_S_FILE)
 KSD.D2D_LISTS = (D2DS_SVC, SEQST_RX, SEQST_KW)
 # KV-WIRE2 ASTK (KSD.ASTK_ST): engine faces 413 / 633 b (qkd_ectl3_kiss_st), heads without the node beat (r4_s / r4_ft_s:
-# no nb, no ck_a* / ck_b* entries), the strip die face qkd_astk_strip_er_die (clock entry ck_er, no ck_v*)
+# no nb, no ck_a* / ck_b* entries), the strip die face qkd_astk_strip_er_die (clock entry ck_d = RTL ck_er: the element
+# libs know ck_<letter><n> entries; no ck_v*)
 if KSD.ASTK_ST:
     ENG_IN, ENG_OUT = 633, 413
     HEAD_CLK[:] = [c_ for c_ in HEAD_CLK if not c_.startswith(('ck_a', 'ck_b'))]
-    KS.ASTK_CLK[:] = [c_ for c_ in KS.ASTK_CLK if not c_.startswith('ck_v')] + ['ck_er']
+    KS.ASTK_CLK[:] = [c_ for c_ in KS.ASTK_CLK if not c_.startswith('ck_v')] + ['ck_d']
     for _mn, _mod in (('qkd_rhead', 'ot_qkh_head_native_r4_s'), ('qkd_rhead_ft', 'ot_qkh_head_native_r4_ft_s')):
         _hb = SPLIT_BINDINGS[_mn]
         SPLIT_BINDINGS[_mn] = dict(_hb, module=_mod, file='rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv',
@@ -3656,7 +3657,7 @@ def _split_pins(M, m=None):
                     key = 'ck_c'
                 pos[key] = (x_, min(hm.h - 2.0, y_ + h_ / 2))
             pos['ck_r'] = (hm.w / 2, hm.h / 2 + 3.2)
-            pos['ck_er'] = (hm.w / 2, hm.h / 2 - 3.2)     # KV-WIRE2 ASTK: the e-read tap (strip middle)
+            pos['ck_d'] = (hm.w / 2, hm.h / 2 - 3.2)     # KV-WIRE2 ASTK: the e-read tap (strip middle)
             for p_, (x_, y_) in pos.items():
                 if p_ in hm.ports:
                     hm.ports[p_] = ('area', 1, round(x_, 3), round(y_, 3), 1)

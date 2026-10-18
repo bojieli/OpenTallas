@@ -1193,7 +1193,7 @@ def bindings():
                 ports=dict(st=['st'], aq=['aq'], am=['am'], ap=['ap'], af=['af'], lt=['lt'], cal=['cal'], erd=['erd'],
                            **{f'e{e}i': [f'so{e}'] for e in range(8)}, **{f'e{e}o': [f'si{e}'] for e in range(8)},
                            **{f'vh{k}': [f'vh{k}'] for k in range(4)},
-                           ck_c=['ck_c'], ck_z0=['ck_z'], ck_x0=['ck_x'], ck_e0=['ck_e'], ck_r=['ck_r'], ck_er=['ck_er'],
+                           ck_c=['ck_c'], ck_z0=['ck_z'], ck_x0=['ck_x'], ck_e0=['ck_e'], ck_r=['ck_r'], ck_d=['ck_er'],
                            rst_n=['rst_n']),
                 sliced={**{f'ck_z{j}': 'ck_z0' for j in range(1, 4)}, **{f'ck_x{j}': 'ck_x0' for j in range(1, 32)},
                         **{f'ck_e{j}': 'ck_e0' for j in range(1, 8)}}, classed={})
