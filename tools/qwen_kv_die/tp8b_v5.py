@@ -781,6 +781,12 @@ def apply(v, m, G):
                 ov.append((p.name, q.name))
     W, H = m['die']['w'], m['die']['h']
     out = [i.name for i in ins if i.x < -1e-3 or i.y < -1e-3 or i.x + i.w > W + 1e-3 or i.y + i.h > H + 1e-3]
+    if _os.environ.get('OT_SPLIT_PHY_TALL') == '1' and _os.environ.get('OT_SPLIT_DV', '').strip():
+        # Q-DIEPLAN3 10-17: the tall IO kit sits at its base home only until the dv die re-places the whole IO column
+        # (tools/qwen_split/dv_case.py, which re-checks the final placement); IO-vs-IO pairs are deferred to it
+        io_ = ('io_serdes', 'io_collective', 'io_ucie')
+        rec['deferred_io_overlaps'] = [o for o in ov if o[0].startswith(io_) and o[1].startswith(io_)]
+        ov = [o for o in ov if o not in rec['deferred_io_overlaps']]
     rec.update(n_overlaps=len(ov), overlaps=ov[:20], outside=out[:20])
     if ov or out:
         raise SystemExit(f'tp8b v5: {len(ov)} overlaps {ov[:8]}, {len(out)} outside {out[:6]}')
@@ -2203,6 +2209,15 @@ def _wrap(v, m, G, peers):
                     V.append(f'  wire [{len(spare) - 1}:0] {onet};')
                     for j, bit in enumerate(spare):
                         vals[bit] = f'{onet}[{j}]'
+            if _os.environ.get('OT_SPLIT_DV', '').strip() and set(vals) != set(range(max(vals) + 1)):
+                # Q-DIEPLAN3 dv2r8f2 DIAGNOSTIC: a retained master's port whose q3h peer was removed is only partly
+                # re-homed (the re-partition is open in RTL): the missing bits go to one declared open net per port
+                # (undriven inputs / unloaded outputs, reported by the strict bind; the chain is DIAGNOSTIC_ONLY)
+                miss = [b for b in range(max(vals) + 1) if b not in vals]
+                onet = f'n_dvopen_{inst}_{real}'
+                V.append(f'  wire [{len(miss) - 1}:0] {onet};')
+                for j, bit in enumerate(miss):
+                    vals[bit] = f'{onet}[{j}]'
             assert set(vals) == set(range(max(vals) + 1)), (inst, real, 'incomplete join')
             conns[inst].append(f'.{real}({joined_expr(vals)})')
         tie_self = set(model.get('tie_self', []))
