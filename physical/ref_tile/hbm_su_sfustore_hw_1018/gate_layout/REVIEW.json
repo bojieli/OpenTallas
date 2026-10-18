@@ -1,0 +1,14 @@
+{
+ "reviewer": "RTL-BUILD-HBM/sfus (non-critical self-review: not on critical_tiles.txt, first route)",
+ "time": "2026-10-18T02:10-07:00",
+ "gate_commit": "working-tree gate of 2026-10-18 00:35 (source binding in gate_result.json)",
+ "verdict": "APPROVED",
+ "checklist": {
+  "lattice": "4 abutted columns x 4 SRAMs (128x256 v2 view), column origins x 43.2/172.8/302.4/432.0 (43.2 lattice), y 86.4 (+41.088 abut pitch, all pins on track)",
+  "std_cell_band": "one S band (pin flops, word mux, check) + the 34.8 um column channels for the SRAM W/E pins; 12.2k cells / 1.9k flops, std 1.4k um2 (fill 41% incl. macros)",
+  "pin_spread": "all 1,933 signal pins on S over 540 um (3.6/um), lane n's 114 pins above its own SRAM column; N/W/E pin-free",
+  "clock_entry": "ONE root clk at S centre (x 280-281.6) beside the S register band; 1,898 sinks, TT pin-flop spread 41.6 / FF 40.0 ps (<= 80), TT insertion 420 (guidance >300: parent compensation)",
+  "shape": "561.6 x 276.48 (2.0:1, long face toward sfucore_<q> N face)",
+  "timing": "gate placement STA: reg->reg +30.0, macro->reg +51.4, in->reg +393, hold WNS +17.3"
+ }
+}
