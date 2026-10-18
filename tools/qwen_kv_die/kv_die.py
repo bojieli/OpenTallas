@@ -4704,9 +4704,14 @@ def main(argv=None):
         return 0
     if a.static_graph:
         ap.error('--static-graph requires explicit OT_KV_STATIC=1')
-    if KSD.ON and a.mode == 'case' and os.environ.get('OT_KV_STATIC_DIE_DIAGNOSTIC', '0') != '1':
+    if (KSD.ON and a.mode == 'case' and os.environ.get('OT_KV_STATIC_DIE_DIAGNOSTIC', '0') != '1'
+            and os.environ.get('OT_KV_STATIC_DIE_STRICT', '0') != '1'):
         # KVJ-G2 10-17: the static-die case stays HELD until the strict port bind is clean (0 unconnected functional inputs,
-        # 0 undriven, 0 functional ties); a diagnostic GEN (routing evidence of the static floorplan) must say so
+        # 0 undriven, 0 functional ties); a diagnostic GEN (routing evidence of the static floorplan) must say so.
+        # KV-PLAN4 10-18: OT_KV_STATIC_DIE_STRICT=1 lifts the hold for a REAL (non-diagnostic) GEN whose die chain runs the
+        # strict bind as a gate (die_chain.sh without OT_BIND_DIAGNOSTIC: bind_launch --strict + port_bind_v2 fail the run).
+        # KV-WIRE2 strict bind kvw2-6ad1dbb84/port_bind_v2_b PASS 0/0/0.  The record's open_tile_inputs (pc__*, ctl boot__* /
+        # oobs__*) are tile ports joined at die level (plan static_die.die_joins), not die opens.
         ap.error('static die case held: strict port bind not clean (kv_static_die record open_tile_inputs); set '
                  'OT_KV_STATIC_DIE_DIAGNOSTIC=1 for a DIAGNOSTIC (not a die result) GEN')
     if a.host_v14:
