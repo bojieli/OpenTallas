@@ -41,6 +41,12 @@ SPEC (JSON; paths relative to the repo root):
   D, E           ring depth / read offset (default 4 / 2: as Q-CLUSTER-LANDALL)
   reach_um       reset-run hop reach (default 405)         residual_ps: inter-region die residual on the 1-bit reset hops (60)
   bench          {cycles, reset_cycles, sim: iverilog|verilator}
+  mut_reset_child  inst whose reset run MUT 4 lengthens (default: the first child with a reset pin)
+  split_nodes    {inst: {group: [pins]}}  (PL-SEQ 10-18) time a RESET-FREE pure-pipeline child per pin group: each group's
+                 outputs depend only on that group's inputs (e.g. a bidirectional registered rung hop: N-bound and S-bound
+                 registers), so the two directions get their own offsets and a bidirectional neighbour pair is not a
+                 cross-region loop.  Every pin of the child (clock pins excepted) must be in exactly one group; a child with
+                 a reset pin on reset_port is refused (one reset delay cannot serve two offsets).
 """
 from __future__ import annotations
 
@@ -279,6 +285,24 @@ class Parent:
             if len(hit) != 1:
                 raise SystemExit(f"instance {ins['inst']} matches regions {hit}: every child needs exactly one region")
             self.region[ins["inst"]] = hit[0]
+        self.node_of = {}       # (inst, pin) -> timing node (split_nodes groups; default the instance)
+        for i, groups in (spec.get("split_nodes") or {}).items():
+            ins = next((x for x in self.insts if x["inst"] == i), None)
+            if ins is None:
+                raise SystemExit(f"split_nodes: no instance {i}")
+            if any(pin in (spec.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in ins["conns"].items()):
+                raise SystemExit(f"split_nodes: {i} has a reset pin on {self.rst}: only reset-free pipelines can be split")
+            seen = {}
+            for g, pins in groups.items():
+                for pin in pins:
+                    if pin in seen:
+                        raise SystemExit(f"split_nodes: {i}.{pin} in groups {seen[pin]} and {g}")
+                    seen[pin] = g
+                    self.node_of[(i, pin)] = f"{i}#{g}"
+                self.region[f"{i}#{g}"] = self.region[i]
+            miss = [pin for pin in ins["conns"] if pin not in seen and pin not in (spec.get("clock_pins") or [])]
+            if miss:
+                raise SystemExit(f"split_nodes: {i} pins {miss} are in no group")
         self.D, self.E = int(spec.get("D", 4)), int(spec.get("E", 2))
         self.K = self.E
         self.A = self.E + 1
@@ -302,7 +326,7 @@ class Parent:
                     raise SystemExit(f"{ins['inst']}: pin {pin} not in module {ins['module']}")
                 if d == "out":
                     for n in idents(ex):
-                        drv.setdefault(n, set()).add(ins["inst"])
+                        drv.setdefault(n, set()).add(self.node_of.get((ins["inst"], pin), ins["inst"]))
         for p in self.mod["ports"]:
             if p["dir"] == "in" and p["name"] not in excl:
                 drv.setdefault(p["name"], set()).add(f"port:{p['name']}")
@@ -368,7 +392,7 @@ class Parent:
             if landed:
                 lands[(n, r)]["readers"].append(f"{inst}.{pin}")
             for d in ds:
-                edges.append((d, inst, n, self.A if landed else 0, landed, pin))
+                edges.append((d, self.node_of.get((inst, pin), inst), n, self.A if landed else 0, landed, pin))
         for p, ds in out_drv.items():
             for d in ds:
                 edges.append((d, f"port:{p}", p, 0, False, None))
@@ -400,6 +424,7 @@ class Parent:
             if b.startswith("port:"):
                 continue
             k = t[b] - t[a] - add
+            b = b.split("#")[0]                 # a split node's pad sits in front of its instance pin
             if k > 0:
                 pads[(n, b)] = max(pads.get((n, b), 0), k)
             if k < 0:
@@ -526,6 +551,11 @@ class Parent:
     def mut_child(self, P):
         kids = [ins["inst"] for ins in self.insts
                 if any(pin in (self.S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in ins["conns"].items())]
+        want = self.S.get("mut_reset_child")    # MUT 4 target (default: the first reset child); pick one whose state
+        if want:                                # outlives the warm-up under random stimulus (PL-SEQ 10-18)
+            if want not in kids:
+                raise SystemExit(f"mut_reset_child {want} is not a child with a reset pin on {self.rst}: {kids}")
+            return want
         return kids[0] if kids else None
 
     def sdc(self, P, top_lp):
@@ -610,7 +640,9 @@ class Parent:
             compiler=dict(
                 note="every latency change vs the flat parent; the compiler schedule takes these (static calendar, no "
                      "runtime flow control)",
-                child_offset_edges={i["inst"]: t.get(i["inst"], 0) for i in self.insts},
+                child_offset_edges={**{i["inst"]: t.get(i["inst"], 0) for i in self.insts
+                                       if i["inst"] not in (S.get("split_nodes") or {})},
+                                    **{v: t.get(v, 0) for v in sorted(set(self.node_of.values()))}},
                 input_port_offset_edges=port_in, output_port_offset_edges=port_out,
                 reset_release_added_edges=rt["RB"],
                 max_added_edges=max([0] + list(port_out.values()))),
