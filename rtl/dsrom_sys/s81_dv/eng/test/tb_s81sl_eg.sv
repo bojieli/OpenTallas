@@ -42,10 +42,10 @@ module tb_s81sl_eg #(parameter integer MUT = 0, GAP = 3);
         if (MUT != 0) begin
             if (bad == 0) $fatal(1, "MUTANT %0d NOT DETECTED", MUT);
             $display("FAIL MUTANT %0d REJECTED mismatches=%0d of %0d", MUT, bad, n);
-            $finish;
+        end else begin
+            if (bad != 0 || latbad != 0) $fatal(1, "FAIL mismatches=%0d latency_var=%0d", bad, latbad);
+            $display("PASS ot_s81sl_eg %0d copies bit exact (GAP %0d), fixed latency i_v -> g_v %0d cycles", n, GAP, lat);
         end
-        if (bad != 0 || latbad != 0) $fatal(1, "FAIL mismatches=%0d latency_var=%0d", bad, latbad);
-        $display("PASS ot_s81sl_eg %0d copies bit exact (GAP %0d), fixed latency i_v -> g_v %0d cycles", n, GAP, lat);
         $finish;
     end
 endmodule
