@@ -350,6 +350,13 @@ module tb;
         .trst_3_3(trst_3_3_r),
         .n_a_3_3(n_a_3_3_r),
         .n_b_3_3(n_b_3_3_r));
+    reg  [513:0] n_a_0_0_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_a_0_0_rd[1] <= n_a_0_0_r; n_a_0_0_rd[2] <= n_a_0_0_rd[1]; n_a_0_0_rd[3] <= n_a_0_0_rd[2]; end
+    reg  [513:0] n_a_1_2_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_a_1_2_rd[1] <= n_a_1_2_r; n_a_1_2_rd[2] <= n_a_1_2_rd[1]; n_a_1_2_rd[3] <= n_a_1_2_rd[2]; end
+    reg  [513:0] n_b_1_2_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_b_1_2_rd[1] <= n_b_1_2_r; n_b_1_2_rd[2] <= n_b_1_2_rd[1]; n_b_1_2_rd[3] <= n_b_1_2_rd[2]; end
+    wire land_mask = (cyc < 24 + 52) || (cyc >= 2500 && cyc < 2530 + 52);
     function automatic [1023:0] rnd1024(input integer dummy);
         integer k; begin for (k = 0; k < 32; k = k + 1) rnd1024[32*k +: 32] = $urandom; end
     endfunction
@@ -433,7 +440,7 @@ module tb;
         n_y_3_2 <= rnd1024(0);
         t_out_3_3 <= rnd1024(0);
         n_y_3_3 <= rnd1024(0);
-        if (cyc > 2 && ((bco0_h !== bco0_r) ||
+        if (cyc > 2 + 3 && ((bco0_h !== bco0_r) ||
             (bco1_h !== bco1_r) ||
             (bco2_h !== bco2_r) ||
             (bco3_h !== bco3_r) ||
@@ -441,7 +448,7 @@ module tb;
             (rs_o_h !== rs_o_r) ||
             (tap_0_0_h !== tap_0_0_r) ||
             (trst_0_0_h !== trst_0_0_r) ||
-            (n_a_0_0_h !== n_a_0_0_r) ||
+            (n_a_0_0_h !== n_a_0_0_rd[3]) ||
             (n_b_0_0_h !== n_b_0_0_r) ||
             (tap_0_1_h !== tap_0_1_r) ||
             (trst_0_1_h !== trst_0_1_r) ||
@@ -465,8 +472,8 @@ module tb;
             (n_b_1_1_h !== n_b_1_1_r) ||
             (tap_1_2_h !== tap_1_2_r) ||
             (trst_1_2_h !== trst_1_2_r) ||
-            (n_a_1_2_h !== n_a_1_2_r) ||
-            (n_b_1_2_h !== n_b_1_2_r) ||
+            (n_a_1_2_h !== n_a_1_2_rd[3]) ||
+            (!land_mask && (n_b_1_2_h !== n_b_1_2_rd[3])) ||
             (tap_1_3_h !== tap_1_3_r) ||
             (trst_1_3_h !== trst_1_3_r) ||
             (n_a_1_3_h !== n_a_1_3_r) ||

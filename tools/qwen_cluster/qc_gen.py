@@ -55,6 +55,19 @@ BW, DW = g.BW, g.DW
 # neighbouring regions (region_audit.py), each a fixed one-edge link: no added latency, no flow control.
 QUADS = tuple(f"c{c}r{r}" for c in range(4) for r in range(4))   # regional clock roots (name kept: was the four quadrants)
 REF_QUADS = ("w0", "w1", "w2", "w3", "e0", "e1", "e2", "e3")      # the c392aa534 reference fabric's eight roots
+# Q-CL16-LAND (10-18): LANDED seam crossings (LANDING-CONTRACT L1-L7; rtl/physical/qcluster/qfd_c_land.sv).  One entry per
+# crossing whose in-cluster skew does not fit a single registered hop (Q-CL16-EARLY die-clock check).  The crossing
+# "leg_<l>_<i><side>_<after>" -> "_<after+1>" becomes: source station -> RING (qfd_c_land_w on ck_<src>, beside the source
+# station, flop-first) -> READ (qfd_c_land_r on ck_<dst>, slot (rc - K) mod D -> registered o, beside the destination
+# station) -> destination station.  Added latency E + 1 edges (K = E: both epochs from one shared reset run, G == R0);
+# the tree evaluation (evaluate below) re-aligns the node's other leg and every node above by the same E + 1 with real
+# relay stations.  ring_off / read_off: soft-site offsets (um) from the source / destination station's planned site;
+# rst_tap / rst_join: the reset-tree node the landing's reset run starts from and the run's last stage (both halves
+# re-register it once on their own root).  E from the die-clock check: E = 1 + ceil(-S1 / T) (S1 = -16.0 ps TT at 833).
+LANDINGS = [dict(leg=(3, 1, "b"), after=0, src="c3r3", dst="c2r2", E=2, D=4, ring_off=(6.0, -47.6), read_off=(46.6, -10.0),
+                 rst_tap="rst_R_48", rst_join=(1800.0, 3870.0),
+                 why="Q-CL16-EARLY diag16ct 4_1_cts: TT setup +44.0 ps aligned drops, -16.0 with the 60 ps die residual; "
+                     "in-cluster skew -422.7 ps TT / -325.2 FF (launch leaf late); 356.7-um diagonal hop")]
 
 
 def setup():
@@ -136,6 +149,44 @@ def ft_chain(rs_x):
     return [g.along(P, i / (k + 1)) for i in range(k + 2)]
 
 
+def lname(L):
+    l, i, side = L["leg"]
+    return f"leg_{l}_{i}{side}_{L['after']}"
+
+
+def evaluate(host, landings=()):
+    """cb_base.evaluate with landed legs: a landed leg arrives E + 1 edges later than its relay count says, so its node
+    (and every node above it) is re-aligned with real relay stations on the other legs.  landings=() == cb_base.evaluate."""
+    ext = {L["leg"]: L["E"] + 1 for L in landings}
+    t, legs = {}, []
+    for (l, i) in g.NODES:
+        hc, hr = host[(l, i)]
+        arr = []
+        for side, (kind, ref) in zip("ab", g.children(l, i)):
+            if kind == "leaf":
+                c, r = ref
+                ts, src, sname = g.tap_time(r), g.pin(c, r, "t_out"), ("t_out", (c, r))
+            else:
+                c, r = host[ref]
+                ts, src, sname = t[ref], g.pin(c, r, "n_y"), ("n_y", (c, r))
+            dst = g.pin(hc, hr, "n_a" if side == "a" else "n_b")
+            p = g.poly(src, g.W_FACE_CORR[c], dst, g.W_FACE_CORR[hc])
+            d = g.plen(p)
+            arr.append(dict(side=side, src=sname, ts=ts, d=d, kmin=g.relays(d), poly=p, land=ext.get((l, i, side), 0)))
+        a = max(x["ts"] + 1 + x["kmin"] + x["land"] for x in arr)
+        for x in arr:
+            x["k"] = a - x["ts"] - 1 - x["land"]
+            assert x["k"] >= x["kmin"]
+            legs.append(dict(node=(l, i), host=(hc, hr), **x))
+        t[(l, i)] = a
+    root = host[(4, 0)]
+    p, rz = g.rs_route(root)
+    k = g.relays(g.plen(p))
+    rs_t = t[(4, 0)] + 1 + k
+    bits = sum(x["k"] for x in legs) * BW + (k + 1) * BW
+    return rs_t, bits, legs, dict(root=root, d=g.plen(p), k=k, poly=p, corridor=rz), t
+
+
 class Emit:
     def __init__(self):
         self.L, self.sites, self.regions = [], [], {q: 0 for q in QUADS}
@@ -143,12 +194,13 @@ class Emit:
     def w(self, s):
         self.L.append(s)
 
-    def stage(self, name, width, d, q, x, y, note=""):
+    def stage(self, name, width, d, q, x, y, note="", soft=False):
         r = quad(x, y)
         self.regions[r] += width
         # Q-CLUSTER3: every wide stage is a hard station tile (qfd_c_stn516 / qfd_c_stn514, own clock pin + local tree);
-        # only the 1-bit reset stages stay soft flops of the cluster
-        hard = width > 1
+        # only the 1-bit reset stages stay soft flops of the cluster.  Q-CL16-LAND: soft=True = a soft wide stage (the
+        # leg re-alignment pads at a leg's destination end, beside the station lane)
+        hard = width > 1 and not soft
         self.sites.append(dict(inst=f"u_fab.{name}", at=[round(x, 3), round(y, 3)], region=r, bits=width,
                                master=f"qfd_c_stn{width}" if hard else None, d=d, q=q))
         cell = f"qfd_c_stn{width}" if hard else f"qfd_q3h_stn #(.W({width}), .N(1))"
@@ -156,7 +208,7 @@ class Emit:
                f"   // ({x:.2f}, {y:.2f}) {r}{(' ' + note) if note else ''}")
 
 
-def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap):
+def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, landings=()):
     E = Emit()
     w = E.w
     w("`timescale 1ns/1ps")
@@ -167,7 +219,8 @@ def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap):
     w("// are crossed only by registered hops <= 405 um.  Static schedule: no ready / credit / backpressure.")
     w("// MUT (bench only, default 0 = the design): 1 = one extra relay on leg a of node (2,0); 2 = leaves of nodes (1,0).a")
     w("//   and (1,2).a exchanged; 3 = one extra relay on column 2's run before its row-1 station; 4 = one extra relay on")
-    w("//   the rs_i -> rs_o feedthrough; 5 = feedthrough bits 0 / 1 exchanged.")
+    w("//   the rs_i -> rs_o feedthrough; 5 = feedthrough bits 0 / 1 exchanged; Q-CL16-LAND landing mutants: 6 = read slot")
+    w("//   K = E + 1 (wrong read slot), 7 = read-side epoch one edge late (released reset re-registered twice).")
     w(f"module {FABRIC} #(parameter integer MUT = 0) (")
     ports = [f"    input  wire ck_{q}" for q in QUADS] + ["    input  wire rst_n", "    input  wire far"]
     for c in range(4):
@@ -235,15 +288,31 @@ def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap):
         src = f"{kind}_{g.sname(sc, sr)}"
         if (l, i, side) in mut_swap:
             src = f"(MUT == 2 ? {mut_swap[(l, i, side)]} : {src})"
-        k = x["k"]
+        pad = x.get("pad", 0)
+        k = x["k"] - pad         # Q-CL16-LAND: the unlanded relay count stays on the leg (same stations, same sites)
         dst = f"n_{side}_{g.sname(hc, hr)}"
-        w(f"    // node ({l},{i}).{side} on tile ({hc},{hr}) <- {kind}({sc},{sr}): {x['d']:.1f} um, {k} relays, hop <= {x['d'] / (k + 1):.1f} um")
+        w(f"    // node ({l},{i}).{side} on tile ({hc},{hr}) <- {kind}({sc},{sr}): {x['d']:.1f} um, {k} relays, hop <= {x['d'] / (k + 1):.1f} um"
+          + (f" + {pad} re-alignment pad stages" if pad else ""))
         prev = src
+        lnd = {L["after"]: L for L in landings if L["leg"] == (l, i, side)}
         for j in range(k):
             px, py = g.along(x["poly"], (j + 1) / (k + 1))
             nm = f"u_leg_{l}_{i}{side}_{j}"
             E.stage(nm, BW, prev, f"leg_{l}_{i}{side}_{j}", px, py)
             prev = f"leg_{l}_{i}{side}_{j}"
+            if j in lnd:
+                prev = emit_landing(E, lnd[j], prev, (px, py), g.along(x["poly"], (j + 2) / (k + 1)), pos, rdepth)
+        if pad:
+            # re-alignment pad (a leg whose node waits for a landed leg): pad soft stages at the destination pin, in the
+            # corridor strip east of the station lane (>= 21.6 um from the A0 pin faces, 5.2 um from the station boxes)
+            ex, ey = x["poly"][-1]
+            cor = next(v for v in g.CORR.values() if v[0] - 1e-6 <= ex <= v[1] + 1e-6)
+            sx = round(cor[1] - 21.6 - 13.0, 3)
+            w(f"    // re-alignment pad: {pad} soft stages (= the landed sibling / descendant leg's added E + 1 edges)")
+            for j in range(pad):
+                sy = round(ey + (j - (pad - 1) / 2) * 9.0, 3)
+                E.stage(f"u_pad_{l}_{i}{side}_{j}", BW, prev, f"pad_{l}_{i}{side}_{j}", sx, sy, "re-alignment pad", soft=True)
+                prev = f"pad_{l}_{i}{side}_{j}"
         if (l, i, side) == (2, 0, "a"):
             px, py = g.along(x["poly"], 1.0)
             w(f"    qfd_q3h_run #(.W({BW}), .D(MUT == 1 ? 1 : 0)) u_m1 (.ck(ck_{quad(px, py)}), .d({prev}), .q({dst}));")
@@ -277,6 +346,55 @@ def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap):
     w(f"    assign rs_o = {prev};")
     w("endmodule")
     return "\n".join(E.L) + "\n", E, len(ch)
+
+
+def emit_landing(E, L, src_q, src_at, dst_at, rpos, rdepth):
+    """One landed crossing (LANDINGS entry L) after the source station whose q is src_q (planned site src_at); dst_at =
+    the destination station's planned site.  Emits the shared reset run, the ring and the read half; returns o."""
+    w = E.w
+    n, D, Ke = lname(L), L["D"], L["E"]
+    AW = max(1, (D - 1).bit_length())
+    ring = (round(src_at[0] + L["ring_off"][0], 3), round(src_at[1] + L["ring_off"][1], 3))
+    rd = (round(dst_at[0] + L["read_off"][0], 3), round(dst_at[1] + L["read_off"][1], 3))
+    if quad(*ring) != L["src"] or quad(*rd) != L["dst"] or quad(*src_at) != L["src"] or quad(*dst_at) != L["dst"]:
+        raise SystemExit(f"landing {n}: ring {ring} {quad(*ring)} / read {rd} {quad(*rd)} / stations "
+                         f"{quad(*src_at)} -> {quad(*dst_at)} do not match the declared {L['src']} -> {L['dst']}")
+    # shared reset run: tap node -> relays -> join stage; both halves re-register the join stage (G == R0 => E = K)
+    tx, ty = rpos[L["rst_tap"]]
+    jx, jy = L["rst_join"]
+    P = [(tx, ty), (tx, jy), (jx, jy)]
+    kr = g.relays(g.plen(P))
+    w(f"    // ---- LANDING {n} (Q-CL16-LAND, LANDING-CONTRACT L1-L7): {L['src']} -> {L['dst']}, D {D}, E = K = {Ke}, "
+      f"added latency {Ke + 1} edges; {L['why']}")
+    w(f"    //      reset run {L['rst_tap']} (depth {rdepth[L['rst_tap']]}) -> {kr + 1} stages -> both halves (depth "
+      f"{rdepth[L['rst_tap']] + kr + 2}): write epoch G == read epoch R0")
+    prev = f"{L['rst_tap']}_q"
+    for j in range(kr + 1):
+        px, py = g.along(P, (j + 1) / (kr + 1))
+        E.stage(f"u_lrs_{n}_{j}", 1, prev, f"lrs_{n}_{j}_q", px, py, "landing reset run")
+        prev = f"lrs_{n}_{j}_q"
+    hops = [abs(ring[0] - jx) + abs(ring[1] - jy), abs(rd[0] - jx) + abs(rd[1] - jy),
+            abs(ring[0] - src_at[0]) + abs(ring[1] - src_at[1]), abs(rd[0] - dst_at[0]) + abs(rd[1] - dst_at[1]),
+            abs(ring[0] - rd[0]) + abs(ring[1] - rd[1])]
+    if max(hops) > LIMIT:
+        raise SystemExit(f"landing {n}: hop over reach {hops}")
+    fl_w = D * BW + D * (AW + 1) + D + AW + 2
+    fl_r = BW + AW + 3
+    E.regions[L["src"]] += fl_w
+    E.regions[L["dst"]] += fl_r
+    E.sites.append(dict(inst=f"u_fab.u_land_{n}_w", at=list(ring), region=L["src"], bits=fl_w, master=None, d=src_q,
+                        q=f"land_{n}_bank", landing=n, half="ring"))
+    E.sites.append(dict(inst=f"u_fab.u_land_{n}_r", at=list(rd), region=L["dst"], bits=fl_r, master=None,
+                        d=f"land_{n}_bank", q=f"land_{n}", landing=n, half="read"))
+    w(f"    wire [{D * BW - 1}:0] land_{n}_bank;  wire [{D * (AW + 1) - 1}:0] land_{n}_epo;  wire [{D - 1}:0] land_{n}_vld;"
+      f"  wire [{BW - 1}:0] land_{n};  wire land_{n}_rsr;")
+    w(f"    qfd_c_land_w #(.W({BW}), .D({D})) u_land_{n}_w (.ck(ck_{L['src']}), .rsi({prev}), .i({src_q}), "
+      f".bank(land_{n}_bank), .epo(land_{n}_epo), .vld(land_{n}_vld));   // ({ring[0]:.2f}, {ring[1]:.2f}) {L['src']} ring")
+    w(f"    qfd_q3h_run #(.W(1), .D(MUT == 7 ? 1 : 0)) u_m7_{n} (.ck(ck_{L['dst']}), .d({prev}), .q(land_{n}_rsr));")
+    w(f"    qfd_c_land_r #(.W({BW}), .D({D}), .K(MUT == 6 ? {Ke + 1} : {Ke})) u_land_{n}_r (.ck(ck_{L['dst']}), "
+      f".rsi(land_{n}_rsr), .bank(land_{n}_bank), .epo(land_{n}_epo), .vld(land_{n}_vld), .o(land_{n}));"
+      f"   // ({rd[0]:.2f}, {rd[1]:.2f}) {L['dst']} read")
+    return f"land_{n}"
 
 
 def gen_cluster(spare):
@@ -505,11 +623,16 @@ def place_stations(E, fabric_rtl, spare):
     return placed, dict(max_um=round(hmax[0], 1), pair=hmax[1:], n=len(hops), max_site_displacement_um=round(disp, 1))
 
 
-def gen_lockstep_tb(spare):
+def gen_lockstep_tb(spare, delay=None, masked=(), mask_edges=0):
     """Q-CLUSTER16 lockstep bench: the 16-region fabric (this generator, MUT) against the 8-region fabric it replaces
     (rtl/test/qcluster_ref_8r_be7b9ff15.sv, MUT 0; the c392aa534 soft reference differs by design since Q-CLUSTER4:
     rs_i -> rs_o 16 -> 17 and reset 18 -> 19 edges), every input random every cycle (+ reset pulses), every output compared
-    every cycle.  +FAR selects the far-band strap."""
+    every cycle.  +FAR selects the far-band strap.
+    Q-CL16-LAND: delay = {output port: added edges} (landed legs and the legs re-aligned to them): those DUT ports are
+    compared against the reference delayed by exactly that many edges.  masked = ports fed through a landing: not compared
+    while the landing is in reset / warm-up (mask_edges edges after each bench reset pulse starts and ends; the landing
+    carries bubbles there by contract L3).  Every other cycle of every port is compared."""
+    delay = delay or {}
     ins = [("rst_n", 1), ("far", 1)] + [(f"bc{c}", DW) for c in range(4)] + [("rs_i", BW)]
     outs = [(f"bco{c}", DW) for c in range(4)] + [("rs", BW), ("rs_o", BW)]
     for c in range(4):
@@ -537,6 +660,12 @@ def gen_lockstep_tb(spare):
         return ",\n        ".join(c_)
     L.append(f"    {FABRIC} #(.MUT(MUT)) u_h (\n        {conn('h')});")
     L.append(f"    {FABRIC}_ref8 #(.MUT(0)) u_r (\n        {conn('r', REF_QUADS)});")
+    for n, w_ in outs:
+        if delay.get(n):
+            L.append(f"    reg  [{w_ - 1}:0] {n}_rd [1:{delay[n]}];   // Q-CL16-LAND: reference delayed {delay[n]} edges")
+            L.append(f"    always @(posedge ck) begin {n}_rd[1] <= {n}_r;" +
+                     "".join(f" {n}_rd[{j}] <= {n}_rd[{j - 1}];" for j in range(2, delay[n] + 1)) + " end")
+    L.append(f"    wire land_mask = (cyc < 24 + {mask_edges}) || (cyc >= 2500 && cyc < 2530 + {mask_edges});")
     L.append("    function automatic [1023:0] rnd1024(input integer dummy);")
     L.append("        integer k; begin for (k = 0; k < 32; k = k + 1) rnd1024[32*k +: 32] = $urandom; end")
     L.append("    endfunction")
@@ -552,8 +681,11 @@ def gen_lockstep_tb(spare):
     L.append("        rst_n <= !((cyc < 24) || (cyc >= 2500 && cyc < 2530));")
     for n, w_ in ins[2:]:
         L.append(f"        {n} <= rnd1024(0);")
-    cmp_ = " ||\n            ".join(f"({n}_h !== {n}_r)" for n, _ in outs)
-    L.append("        if (cyc > 2 && (" + cmp_ + ")) begin")
+    def ref(n):
+        return f"{n}_rd[{delay[n]}]" if delay.get(n) else f"{n}_r"
+    cmp_ = " ||\n            ".join((f"(!land_mask && ({n}_h !== {ref(n)}))" if n in masked else f"({n}_h !== {ref(n)})")
+                                    for n, _ in outs)
+    L.append("        if (cyc > 2 + " + str(max(list(delay.values()) + [0])) + " && (" + cmp_ + ")) begin")
     L.append("            bad = bad + 1;")
     L.append("            if (bad <= 5) $display(\"MISMATCH cycle %0d\", cyc);")
     L.append("        end")
@@ -565,6 +697,49 @@ def gen_lockstep_tb(spare):
     L.append("    end")
     L.append("endmodule")
     return "\n".join(L) + "\n"
+
+
+def landing_check(E, stations, landings, legs, leg_add, port_add, landed_ports, rdepth):
+    """Q-CL16-LAND: the landing's soft blocks (fabric_sites_place.tcl: 24-um-wide FIRM block of 1.08-um flops, 0.27-um
+    rows, centred on the site) and its reset-run flops clear every hard station and A0 tile; returns the contract record."""
+    tiles = [(g.COLX[c][0], g.ROWY[r], g.TW, g.TH) for c in range(4) for r in range(4)]
+    boxes = [(p_["x"], p_["y"], p_["w"], p_["h"]) for p_ in stations]
+    rec = []
+    for L in landings:
+        n = lname(L)
+        for st in E.sites:
+            if st.get("landing") == n or st["inst"].startswith((f"u_fab.u_lrs_{n}_", "u_fab.u_pad_")):
+                per = 22
+                bw = min(24.0, per * 1.08) if st["bits"] > 1 else 1.08
+                bh = math.ceil(st["bits"] / per) * 0.27 if st["bits"] > 1 else 0.27
+                b = (st["at"][0] - bw / 2, st["at"][1] - bh / 2, bw, bh)
+                for o in boxes + tiles:
+                    if not (b[0] + b[2] + 4.32 <= o[0] or o[0] + o[2] + 4.32 <= b[0] or
+                            b[1] + b[3] + 4.32 <= o[1] or o[1] + o[3] + 4.32 <= b[1]):
+                        raise SystemExit(f"landing {n}: soft site {st['inst']} block {b} overlaps {o}")
+        ring = next(st for st in E.sites if st.get("landing") == n and st["half"] == "ring")
+        rd = next(st for st in E.sites if st.get("landing") == n and st["half"] == "read")
+        l, i, side = L["leg"]
+        rec.append(dict(
+            name=n, crossing=f"u_fab.u_leg_{l}_{i}{side}_{L['after']} ({L['src']}) -> u_fab.u_leg_{l}_{i}{side}_{L['after'] + 1} ({L['dst']})",
+            src_region=L["src"], dst_region=L["dst"], bits=BW, D=L["D"], E=L["E"], K=L["E"],
+            added_edges=L["E"] + 1, why=L["why"],
+            ring=dict(inst=ring["inst"], master="qfd_c_land_w", clock=f"ck_{L['src']}", site=ring["at"], flops=ring["bits"],
+                      note="flop-first beside the source station: slots = the capture flops of the source word"),
+            read=dict(inst=rd["inst"], master="qfd_c_land_r", clock=f"ck_{L['dst']}", site=rd["at"], flops=rd["bits"],
+                      note="slot (rc - K) mod D -> registered o (flop-last) -> the destination station"),
+            epochs=f"released-reset (L3): reset run from {L['rst_tap']} (depth {rdepth[L['rst_tap']]}) re-registered once by "
+                   "each half on its own root: G == R0, E = K",
+            sdc=f"set_multicycle_path -setup {L['E']} / -hold {L['D'] - 1} -from ck_{L['src']} -to ck_{L['dst']} "
+                "(the landing's bank -> o paths are the only paths of that ordered pair; region_audit R5)",
+            window_ps=f"({L['E']} - {L['D']}) T + t_hold < dL < {L['E']} T - t_cq - t_setup (T = 833.3)",
+            fault="assertion only ($error LAND_FAULT in simulation; synthesis drops the epoch tags)",
+            rtl="rtl/physical/qcluster/qfd_c_land.sv"))
+    return dict(list=rec,
+                realigned_legs={f"{x['node'][0]}_{x['node'][1]}{x['side']}": dict(added_edges=leg_add[(x["node"], x["side"])],
+                                relay_stations=x["k"] - x.get("pad", 0), soft_pad_stages=x.get("pad", 0),
+                                landed=bool(x["land"])) for x in legs if leg_add[(x["node"], x["side"])]},
+                port_added_edges=port_add, landed_ports=landed_ports) if landings else dict(list=[])
 
 
 def pin_plan(rsx, E):
@@ -703,20 +878,37 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("cmd", choices=["gen"])
     ap.add_argument("--hosts", default=str(Path(__file__).with_name("cb16_hosts.json")))
+    # Q-CL16-LAND: the LANDINGS list (default ON for this master); 'off' regenerates the unlanded Q-CLUSTER16 fabric
+    ap.add_argument("--landings", choices=["on", "off"], default="on")
     a = ap.parse_args()
+    landings = LANDINGS if a.landings == "on" else []
     host, spare = g.load_hosts(a.hosts)
     assert len(set(host.values())) == 15 and spare not in host.values()
-    rs_t, bits, legs, rsx, t = g.evaluate(host, True)
+    rs_t, bits, legs, rsx, t = evaluate(host, landings)
+    rs_t0, _, legs0, _, t0 = evaluate(host, ())
+    assert g.evaluate(host, True)[0] == rs_t0          # landings=() is exactly cb_base.evaluate
+    # added edges per tree leg (landing E + 1 on the landed leg, re-alignment relays on the others) -> per output port
+    k0 = {(x["node"], x["side"]): x["k"] for x in legs0}
+    leg_add = {(x["node"], x["side"]): x["k"] + x["land"] - k0[(x["node"], x["side"])] for x in legs}
+    port_add = {f"n_{s_}_{g.sname(*x['host'])}": leg_add[(x["node"], s_)] for x in legs for s_ in [x["side"]]
+                if leg_add[(x["node"], x["side"])]}
+    landed_ports = [f"n_{L['leg'][2]}_{g.sname(*host[L['leg'][:2]])}" for L in landings]
+    for x in legs:
+        x["pad"] = 0 if x["land"] else leg_add[(x["node"], x["side"])]
+        assert x["k"] - x["pad"] == k0[(x["node"], x["side"])]
     la = next(x for x in legs if x["node"] == (1, 0) and x["side"] == "a")
     lb = next(x for x in legs if x["node"] == (1, 2) and x["side"] == "a")
     mut_swap = {(1, 0, "a"): "t_out_%s" % g.sname(*lb["src"][1]), (1, 2, "a"): "t_out_%s" % g.sname(*la["src"][1])}
     rnodes, rleaves, rdepth, RD = g.reset_tree()
-    fab, E, nft = gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap)
+    fab, E, nft = gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, landings)
     OUT_RTL.mkdir(parents=True, exist_ok=True)
     (OUT_RTL / f"{FABRIC}.sv").write_text(fab)
     (OUT_RTL / f"{MASTER}.sv").write_text(gen_cluster(spare))
     (ROOT / "rtl/test/tb_qcluster_fabric.sv").write_text(gen_tb(spare))
-    (ROOT / "rtl/test/tb_qcluster_lockstep.sv").write_text(gen_lockstep_tb(spare))
+    # mask: the bench's reset pulse reaches the landing after its reset run (<= RD + 1 + its stages), the read side
+    # carries bubbles until warm (E edges), then the word walks the leg's remaining stations: generous fixed bound
+    mask = RD + 2 + max([L["E"] + 2 + max(x["k"] for x in legs) for L in landings] + [0]) + 8 if landings else 0
+    (ROOT / "rtl/test/tb_qcluster_lockstep.sv").write_text(gen_lockstep_tb(spare, port_add, landed_ports, mask))
     hdr = ["// GENERATED by tools/qwen_cluster/qc_gen.py: compiled fixed latencies of qfd_c_b16_dv_fabric (edges)"] + \
           [f"localparam integer Q3H_LAT_TAP{r} = {g.tap_time(r)};" for r in range(4)] + \
           [f"localparam integer Q3H_LAT_BCO = {g.STAGE['exit']};",
@@ -726,11 +918,12 @@ def main():
     (ROOT / "rtl/test/qcluster_lat.svh").write_text("\n".join(hdr) + "\n")
     pins, cen, ceny = pin_plan(rsx, E)
     stations, st_hops = place_stations(E, fab, spare)
+    land_rec = landing_check(E, stations, landings, legs, leg_add, port_add, landed_ports, rdepth)
     # hop audit (pin to pin, Manhattan between consecutive registers of each run)
     by = {}
     for s in E.sites:
         by[s["inst"]] = s["at"]
-    hops = [x["d"] / (x["k"] + 1) for x in legs] + [rsx["d"] / (rsx["k"] + 1)]
+    hops = [x["d"] / (x["k"] - x.get("pad", 0) + 1) for x in legs] + [rsx["d"] / (rsx["k"] + 1)]
     for c in range(4):
         ch = g.chain_for(c)
         hops += [b[1] - a[1] for a, b in zip(ch, ch[1:])]
@@ -775,7 +968,8 @@ def main():
             registered_feedthroughs={"bc0..3->bco0..3": g.STAGE["exit"], "rs_i->rs_o": nft}),
         far_position="ONE master: in the far bands (0 / 3) rs_i is a declared-idle terminus tied to the instance's own "
                      "tie_lo by the die (valid bit 0 every cycle) and rs_o is left unconnected (output only)",
-        gating=["A0 views qfd_tile_nk_romleaf_a0 / nl twin not CLOSED (Q-ROMPARENT-2): diagnostics only, no binding"])
+        gating=["A0 views qfd_tile_nk_romleaf_a0 / nl twin not CLOSED (Q-ROMPARENT-2): diagnostics only, no binding"],
+        landings=land_rec)
     OUT_ARCH.mkdir(parents=True, exist_ok=True)
     (OUT_ARCH / "cluster_contract_dv.json").write_text(json.dumps(contract, indent=1) + "\n")
     tsv = ["# prefix\tx\ty\txlo\txhi  (qc_gen.py; fabric_sites_place.tcl)"]

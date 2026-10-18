@@ -6,7 +6,8 @@
 // are crossed only by registered hops <= 405 um.  Static schedule: no ready / credit / backpressure.
 // MUT (bench only, default 0 = the design): 1 = one extra relay on leg a of node (2,0); 2 = leaves of nodes (1,0).a
 //   and (1,2).a exchanged; 3 = one extra relay on column 2's run before its row-1 station; 4 = one extra relay on
-//   the rs_i -> rs_o feedthrough; 5 = feedthrough bits 0 / 1 exchanged.
+//   the rs_i -> rs_o feedthrough; 5 = feedthrough bits 0 / 1 exchanged; Q-CL16-LAND landing mutants: 6 = read slot
+//   K = E + 1 (wrong read slot), 7 = read-side epoch one edge late (released reset re-registered twice).
 module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     input  wire ck_c0r0,
     input  wire ck_c0r1,
@@ -471,7 +472,7 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     wire [513:0] leg_3_0b_4;  qfd_c_stn514 u_leg_3_0b_4 (.ck(ck_c3r1), .d(leg_3_0b_3), .q(leg_3_0b_4));   // (1827.36, 2608.52) c3r1
     wire [513:0] leg_3_0b_5;  qfd_c_stn514 u_leg_3_0b_5 (.ck(ck_c3r2), .d(leg_3_0b_4), .q(leg_3_0b_5));   // (1827.36, 2785.93) c3r2
     assign n_b_2_2 = leg_3_0b_5;
-    // node (3,1).a on tile (1,2) <- n_y(1,3): 1744.5 um, 7 relays, hop <= 218.1 um
+    // node (3,1).a on tile (1,2) <- n_y(1,3): 1744.5 um, 7 relays, hop <= 218.1 um + 3 re-alignment pad stages
     wire [513:0] leg_3_1a_0;  qfd_c_stn514 u_leg_3_1a_0 (.ck(ck_c1r3), .d(n_y_1_3), .q(leg_3_1a_0));   // (617.76, 4242.30) c1r3
     wire [513:0] leg_3_1a_1;  qfd_c_stn514 u_leg_3_1a_1 (.ck(ck_c1r3), .d(leg_3_1a_0), .q(leg_3_1a_1));   // (617.76, 4024.24) c1r3
     wire [513:0] leg_3_1a_2;  qfd_c_stn514 u_leg_3_1a_2 (.ck(ck_c1r2), .d(leg_3_1a_1), .q(leg_3_1a_2));   // (617.76, 3806.17) c1r2
@@ -479,17 +480,29 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     wire [513:0] leg_3_1a_4;  qfd_c_stn514 u_leg_3_1a_4 (.ck(ck_c1r2), .d(leg_3_1a_3), .q(leg_3_1a_4));   // (617.76, 3370.04) c1r2
     wire [513:0] leg_3_1a_5;  qfd_c_stn514 u_leg_3_1a_5 (.ck(ck_c1r2), .d(leg_3_1a_4), .q(leg_3_1a_5));   // (617.76, 3151.98) c1r2
     wire [513:0] leg_3_1a_6;  qfd_c_stn514 u_leg_3_1a_6 (.ck(ck_c1r2), .d(leg_3_1a_5), .q(leg_3_1a_6));   // (617.76, 2933.92) c1r2
-    assign n_a_1_2 = leg_3_1a_6;
+    // re-alignment pad: 3 soft stages (= the landed sibling / descendant leg's added E + 1 edges)
+    wire [513:0] pad_3_1a_0;  qfd_q3h_stn #(.W(514), .N(1)) u_pad_3_1a_0 (.ck(ck_c1r2), .d(leg_3_1a_6), .q(pad_3_1a_0));   // (656.60, 2780.29) c1r2 re-alignment pad
+    wire [513:0] pad_3_1a_1;  qfd_q3h_stn #(.W(514), .N(1)) u_pad_3_1a_1 (.ck(ck_c1r2), .d(pad_3_1a_0), .q(pad_3_1a_1));   // (656.60, 2789.29) c1r2 re-alignment pad
+    wire [513:0] pad_3_1a_2;  qfd_q3h_stn #(.W(514), .N(1)) u_pad_3_1a_2 (.ck(ck_c1r2), .d(pad_3_1a_1), .q(pad_3_1a_2));   // (656.60, 2798.29) c1r2 re-alignment pad
+    assign n_a_1_2 = pad_3_1a_2;
     // node (3,1).b on tile (1,2) <- n_y(2,3): 2853.5 um, 7 relays, hop <= 356.7 um
     wire [513:0] leg_3_1b_0;  qfd_c_stn514 u_leg_3_1b_0 (.ck(ck_c3r3), .d(n_y_2_3), .q(leg_3_1b_0));   // (1827.36, 4103.68) c3r3
-    wire [513:0] leg_3_1b_1;  qfd_c_stn514 u_leg_3_1b_1 (.ck(ck_c2r2), .d(leg_3_1b_0), .q(leg_3_1b_1));   // (1664.75, 3909.60) c2r2
+    // ---- LANDING leg_3_1b_0 (Q-CL16-LAND, LANDING-CONTRACT L1-L7): c3r3 -> c2r2, D 4, E = K = 2, added latency 3 edges; Q-CL16-EARLY diag16ct 4_1_cts: TT setup +44.0 ps aligned drops, -16.0 with the 60 ps die residual; in-cluster skew -422.7 ps TT / -325.2 FF (launch leaf late); 356.7-um diagonal hop
+    //      reset run rst_R_48 (depth 17) -> 2 stages -> both halves (depth 20): write epoch G == read epoch R0
+    wire [0:0] lrs_leg_3_1b_0_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_1b_0_0 (.ck(ck_c3r2), .d(rst_R_48_q), .q(lrs_leg_3_1b_0_0_q));   // (2154.91, 3870.00) c3r2 landing reset run
+    wire [0:0] lrs_leg_3_1b_0_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_1b_0_1 (.ck(ck_c2r2), .d(lrs_leg_3_1b_0_0_q), .q(lrs_leg_3_1b_0_1_q));   // (1800.00, 3870.00) c2r2 landing reset run
+    wire [2055:0] land_leg_3_1b_0_bank;  wire [11:0] land_leg_3_1b_0_epo;  wire [3:0] land_leg_3_1b_0_vld;  wire [513:0] land_leg_3_1b_0;  wire land_leg_3_1b_0_rsr;
+    qfd_c_land_w #(.W(514), .D(4)) u_land_leg_3_1b_0_w (.ck(ck_c3r3), .rsi(lrs_leg_3_1b_0_1_q), .i(leg_3_1b_0), .bank(land_leg_3_1b_0_bank), .epo(land_leg_3_1b_0_epo), .vld(land_leg_3_1b_0_vld));   // (1833.36, 4056.08) c3r3 ring
+    qfd_q3h_run #(.W(1), .D(MUT == 7 ? 1 : 0)) u_m7_leg_3_1b_0 (.ck(ck_c2r2), .d(lrs_leg_3_1b_0_1_q), .q(land_leg_3_1b_0_rsr));
+    qfd_c_land_r #(.W(514), .D(4), .K(MUT == 6 ? 3 : 2)) u_land_leg_3_1b_0_r (.ck(ck_c2r2), .rsi(land_leg_3_1b_0_rsr), .bank(land_leg_3_1b_0_bank), .epo(land_leg_3_1b_0_epo), .vld(land_leg_3_1b_0_vld), .o(land_leg_3_1b_0));   // (1711.35, 3899.60) c2r2 read
+    wire [513:0] leg_3_1b_1;  qfd_c_stn514 u_leg_3_1b_1 (.ck(ck_c2r2), .d(land_leg_3_1b_0), .q(leg_3_1b_1));   // (1664.75, 3909.60) c2r2
     wire [513:0] leg_3_1b_2;  qfd_c_stn514 u_leg_3_1b_2 (.ck(ck_c2r2), .d(leg_3_1b_1), .q(leg_3_1b_2));   // (1308.06, 3909.60) c2r2
     wire [513:0] leg_3_1b_3;  qfd_c_stn514 u_leg_3_1b_3 (.ck(ck_c1r2), .d(leg_3_1b_2), .q(leg_3_1b_3));   // (951.37, 3909.60) c1r2
     wire [513:0] leg_3_1b_4;  qfd_c_stn514 u_leg_3_1b_4 (.ck(ck_c1r2), .d(leg_3_1b_3), .q(leg_3_1b_4));   // (617.76, 3886.52) c1r2
     wire [513:0] leg_3_1b_5;  qfd_c_stn514 u_leg_3_1b_5 (.ck(ck_c1r2), .d(leg_3_1b_4), .q(leg_3_1b_5));   // (617.76, 3529.84) c1r2
     wire [513:0] leg_3_1b_6;  qfd_c_stn514 u_leg_3_1b_6 (.ck(ck_c1r2), .d(leg_3_1b_5), .q(leg_3_1b_6));   // (617.76, 3173.15) c1r2
     assign n_b_1_2 = leg_3_1b_6;
-    // node (4,0).a on tile (0,0) <- n_y(2,2): 4250.1 um, 16 relays, hop <= 250.0 um
+    // node (4,0).a on tile (0,0) <- n_y(2,2): 4250.1 um, 16 relays, hop <= 250.0 um + 3 re-alignment pad stages
     wire [513:0] leg_4_0a_0;  qfd_c_stn514 u_leg_4_0a_0 (.ck(ck_c3r2), .d(n_y_2_2), .q(leg_4_0a_0));   // (1827.36, 2914.36) c3r2
     wire [513:0] leg_4_0a_1;  qfd_c_stn514 u_leg_4_0a_1 (.ck(ck_c3r2), .d(leg_4_0a_0), .q(leg_4_0a_1));   // (1827.36, 2664.35) c3r2
     wire [513:0] leg_4_0a_2;  qfd_c_stn514 u_leg_4_0a_2 (.ck(ck_c3r1), .d(leg_4_0a_1), .q(leg_4_0a_2));   // (1827.36, 2414.34) c3r1
@@ -506,7 +519,11 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     wire [513:0] leg_4_0a_13;  qfd_c_stn514 u_leg_4_0a_13 (.ck(ck_c1r0), .d(leg_4_0a_12), .q(leg_4_0a_13));   // (617.76, 873.87) c1r0
     wire [513:0] leg_4_0a_14;  qfd_c_stn514 u_leg_4_0a_14 (.ck(ck_c1r0), .d(leg_4_0a_13), .q(leg_4_0a_14));   // (617.76, 623.87) c1r0
     wire [513:0] leg_4_0a_15;  qfd_c_stn514 u_leg_4_0a_15 (.ck(ck_c1r0), .d(leg_4_0a_14), .q(leg_4_0a_15));   // (617.76, 373.86) c1r0
-    assign n_a_0_0 = leg_4_0a_15;
+    // re-alignment pad: 3 soft stages (= the landed sibling / descendant leg's added E + 1 edges)
+    wire [513:0] pad_4_0a_0;  qfd_q3h_stn #(.W(514), .N(1)) u_pad_4_0a_0 (.ck(ck_c1r0), .d(leg_4_0a_15), .q(pad_4_0a_0));   // (656.60, 188.29) c1r0 re-alignment pad
+    wire [513:0] pad_4_0a_1;  qfd_q3h_stn #(.W(514), .N(1)) u_pad_4_0a_1 (.ck(ck_c1r0), .d(pad_4_0a_0), .q(pad_4_0a_1));   // (656.60, 197.29) c1r0 re-alignment pad
+    wire [513:0] pad_4_0a_2;  qfd_q3h_stn #(.W(514), .N(1)) u_pad_4_0a_2 (.ck(ck_c1r0), .d(pad_4_0a_1), .q(pad_4_0a_2));   // (656.60, 206.29) c1r0 re-alignment pad
+    assign n_a_0_0 = pad_4_0a_2;
     // node (4,0).b on tile (0,0) <- n_y(1,2): 2939.9 um, 7 relays, hop <= 367.5 um
     wire [513:0] leg_4_0b_0;  qfd_c_stn514 u_leg_4_0b_0 (.ck(ck_c1r2), .d(n_y_1_2), .q(leg_4_0b_0));   // (617.76, 2796.88) c1r2
     wire [513:0] leg_4_0b_1;  qfd_c_stn514 u_leg_4_0b_1 (.ck(ck_c1r1), .d(leg_4_0b_0), .q(leg_4_0b_1));   // (617.76, 2429.39) c1r1

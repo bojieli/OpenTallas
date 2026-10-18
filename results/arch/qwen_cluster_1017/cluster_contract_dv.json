@@ -66,16 +66,16 @@
    4635.1
   ],
   "c1r0": [
-   812.8,
-   749.9
+   791.5,
+   674.6
   ],
   "c1r1": [
    832.8,
    2025.2
   ],
   "c1r2": [
-   768.5,
-   3385.3
+   751.8,
+   3295.9
   ],
   "c1r3": [
    905.2,
@@ -90,8 +90,8 @@
    2153.7
   ],
   "c2r2": [
-   1302.7,
-   3452.0
+   1343.8,
+   3497.1
   ],
   "c2r3": [
    1247.1,
@@ -107,11 +107,11 @@
   ],
   "c3r2": [
    2058.3,
-   3199.6
+   3199.7
   ],
   "c3r3": [
-   2211.0,
-   4429.7
+   2059.4,
+   4279.7
   ]
  },
  "tiles": [
@@ -279,7 +279,7 @@
   },
   "c1r0": {
    "pin": "ck_c1r0",
-   "fabric_flops": 9778,
+   "fabric_flops": 11320,
    "tiles": [
     "1_0"
    ],
@@ -295,7 +295,7 @@
   },
   "c1r2": {
    "pin": "ck_c1r2",
-   "fabric_flops": 8746,
+   "fabric_flops": 10288,
    "tiles": [
     "1_2"
    ],
@@ -327,7 +327,7 @@
   },
   "c2r2": {
    "pin": "ck_c2r2",
-   "fabric_flops": 4646,
+   "fabric_flops": 5166,
    "tiles": [
     "2_2"
    ],
@@ -359,7 +359,7 @@
   },
   "c3r2": {
    "pin": "ck_c3r2",
-   "fabric_flops": 5156,
+   "fabric_flops": 5157,
    "tiles": [
     "3_2"
    ],
@@ -367,14 +367,14 @@
   },
   "c3r3": {
    "pin": "ck_c3r3",
-   "fabric_flops": 3094,
+   "fabric_flops": 5170,
    "tiles": [
     "3_3"
    ],
    "tile_entry_pins": 39
   }
  },
- "fabric_flops": 78403,
+ "fabric_flops": 84084,
  "latency_edges": {
   "tap": {
    "0": 3,
@@ -383,7 +383,7 @@
    "3": 15
   },
   "bco": 17,
-  "rs_fabric": 35,
+  "rs_fabric": 38,
   "rs_i_to_rs_o": 17,
   "reset": 19
  },
@@ -617,11 +617,11 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    812.258,
-    812.558
+    790.987,
+    791.287
    ],
    "pins_per_um": null,
-   "note": "region c1r0 entry island (register centroid x 813, y 750)"
+   "note": "region c1r0 entry island (register centroid x 791, y 675)"
   },
   {
    "port": "ck_c2r0",
@@ -754,11 +754,11 @@
    "face": "N",
    "layer": "M5",
    "range_um": [
-    2210.519,
-    2210.819
+    2058.871,
+    2059.171
    ],
    "pins_per_um": null,
-   "note": "region c3r3 entry island (register centroid x 2211, y 4430)"
+   "note": "region c3r3 entry island (register centroid x 2059, y 4280)"
   },
   {
    "port": "ck_c0r1",
@@ -826,11 +826,11 @@
    "face": "W",
    "layer": "M4",
    "range_um": [
-    3388.277,
-    3388.577
+    3298.949,
+    3299.249
    ],
    "pins_per_um": null,
-   "note": "region c1r2 entry (register centroid y 3385, x 769)"
+   "note": "region c1r2 entry (register centroid y 3296, x 752)"
   },
   {
    "port": "ck_c2r2",
@@ -838,11 +838,11 @@
    "face": "E",
    "layer": "M4",
    "range_um": [
-    3455.015,
-    3455.315
+    3500.062,
+    3500.362
    ],
    "pins_per_um": null,
-   "note": "region c2r2 entry (register centroid y 3452, x 1303)"
+   "note": "region c2r2 entry (register centroid y 3497, x 1344)"
   },
   {
    "port": "ck_c3r2",
@@ -850,8 +850,8 @@
    "face": "E",
    "layer": "M4",
    "range_um": [
-    3199.584,
-    3199.884
+    3199.714,
+    3200.014
    ],
    "pins_per_um": null,
    "note": "region c3r2 entry (register centroid y 3200, x 2058)"
@@ -865,14 +865,14 @@
    "qfd_c_xstn": 8,
    "qfd_c_xstnw": 8
   },
-  "soft_reset_flops": 139,
+  "soft_reset_flops": 149,
   "hop_pin_to_pin": {
    "max_um": 388.8,
    "pair": [
     "u_fab.u_leg_4_0b_2",
     "u_fab.u_leg_4_0b_3"
    ],
-   "n": 136,
+   "n": 135,
    "max_site_displacement_um": 213.1
   },
   "children": [
@@ -2491,5 +2491,76 @@
  "far_position": "ONE master: in the far bands (0 / 3) rs_i is a declared-idle terminus tied to the instance's own tie_lo by the die (valid bit 0 every cycle) and rs_o is left unconnected (output only)",
  "gating": [
   "A0 views qfd_tile_nk_romleaf_a0 / nl twin not CLOSED (Q-ROMPARENT-2): diagnostics only, no binding"
- ]
+ ],
+ "landings": {
+  "list": [
+   {
+    "name": "leg_3_1b_0",
+    "crossing": "u_fab.u_leg_3_1b_0 (c3r3) -> u_fab.u_leg_3_1b_1 (c2r2)",
+    "src_region": "c3r3",
+    "dst_region": "c2r2",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "why": "Q-CL16-EARLY diag16ct 4_1_cts: TT setup +44.0 ps aligned drops, -16.0 with the 60 ps die residual; in-cluster skew -422.7 ps TT / -325.2 FF (launch leaf late); 356.7-um diagonal hop",
+    "ring": {
+     "inst": "u_fab.u_land_leg_3_1b_0_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c3r3",
+     "site": [
+      1833.36,
+      4056.076
+     ],
+     "flops": 2076,
+     "note": "flop-first beside the source station: slots = the capture flops of the source word"
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_3_1b_0_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c2r2",
+     "site": [
+      1711.348,
+      3899.6
+     ],
+     "flops": 519,
+     "note": "slot (rc - K) mod D -> registered o (flop-last) -> the destination station"
+    },
+    "epochs": "released-reset (L3): reset run from rst_R_48 (depth 17) re-registered once by each half on its own root: G == R0, E = K",
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from ck_c3r3 -to ck_c2r2 (the landing's bank -> o paths are the only paths of that ordered pair; region_audit R5)",
+    "window_ps": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup (T = 833.3)",
+    "fault": "assertion only ($error LAND_FAULT in simulation; synthesis drops the epoch tags)",
+    "rtl": "rtl/physical/qcluster/qfd_c_land.sv"
+   }
+  ],
+  "realigned_legs": {
+   "3_1a": {
+    "added_edges": 3,
+    "relay_stations": 7,
+    "soft_pad_stages": 3,
+    "landed": false
+   },
+   "3_1b": {
+    "added_edges": 3,
+    "relay_stations": 7,
+    "soft_pad_stages": 0,
+    "landed": true
+   },
+   "4_0a": {
+    "added_edges": 3,
+    "relay_stations": 16,
+    "soft_pad_stages": 3,
+    "landed": false
+   }
+  },
+  "port_added_edges": {
+   "n_a_1_2": 3,
+   "n_b_1_2": 3,
+   "n_a_0_0": 3
+  },
+  "landed_ports": [
+   "n_b_1_2"
+  ]
+ }
 }

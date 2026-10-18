@@ -1,19 +1,35 @@
 {
  "schema": "opentallas.qcluster.die_clock16.v1",
  "lane": "Q-CLUSTER16",
- "branch": "claude/qcluster16-1018",
+ "branch": "claude/q-cl16-land-1018",
  "master": "qfd_c_b16_dv",
  "owner_decision": "0ei 10-18: 16-region clock split of c_b16 (one region per A0 ROM-leaf tile)",
  "die_obligations": [
   "drop 16 regional clocks per cluster instance (dv2r8f: 48 instances -> 768 regional clock drops), each at its centre area pin (M7, cluster coordinates below; the face pins in the contract only seed the cluster IO placer)",
   "PHASE-ALIGNED delivery (Q-CL16-EARLY 10-18, replaces 'compensate each drop by insertion_ps'): for every communicating region pair below the die delivers the two centre-pin drops within +/-60 ps of each other at TT AND at FF (die tree budget, METHOD.md s2). The die does NOT compensate by the cluster's region insertion: the cluster closes every crossing in its own STA with the measured in-cluster skew (gate SDC: drops at 0 + set_clock_uncertainty 60 ps setup and hold between communicating region clocks). Measured on diag16ct 4_1_cts: compensating by insertion makes FF hold worse (-316.5 vs -231.1 ps pre-repair) and no choice of 16 drop offsets brings the crossing pins within 80 ps (LP minimax 301.5-308.7 ps; 62-65 of 73 crossings over 80): the in-region child-flop spread (690-927 ps per root at TT) is inside the cluster and only the cluster's own timing can absorb it.",
   "boundary ports are timed against the region that holds their pin register (port_domains); the die's neighbour links into / out of the cluster land or match against THAT region's clock (LANDING-CONTRACT)",
-  "regional reset: unchanged (rst_n pin register in c0r0, equal-depth tree, 19 edges)"
+  "regional reset: unchanged (rst_n pin register in c0r0, equal-depth tree, 19 edges)",
+  "Q-CL16-LAND: the cluster SDC carries the 60 ps residual as inter-clock uncertainty (setup 120 / hold 85 = 60/25 + 60) on every communicating region pair, both directions (qc_kit.py -> physical/qcluster/qfd_c_b16_dv_quadrants.sdc); the one crossing that does not fit (leg_3_1b_0, c3r3 -> c2r2) is LANDED inside the cluster (multicycle -setup 2 -hold 3 on its ring -> o paths, window -1666 + t_hold < dL < 1666 - t_cq - t_setup ps): the die owes nothing extra"
  ],
  "compiler": {
-  "added_edges_per_link": 0,
-  "note": "the split re-binds clocks only: every seam crossing is the same single registered hop as in the 8-region fabric (lockstep vs be7b9ff15 bit- and cycle-exact on every port)",
+  "added_edges_per_link": {
+   "leg_3_1b_0": 3,
+   "other": 0
+  },
+  "note": "Q-CL16-LAND: every plain seam crossing is the same single registered hop as in the 8-region fabric (0 added edges); the landed crossing leg_3_1b_0 adds E + 1 = 3 edges (ring write + E = K = 2 read edges); node (3,1) re-aligns its other leg (3,1).a by +3 (soft pad stages) and node (4,0) its leg (4,0).a by +3, so rs_fabric 35 -> 38. Lockstep vs the 8-region fabric: every port bit-exact, n_a_1_2 / n_b_1_2 / n_a_0_0 exactly 3 edges later (bench_land/).",
   "latency_edges": {
+   "tap": {
+    "0": 3,
+    "1": 7,
+    "2": 11,
+    "3": 15
+   },
+   "bco": 17,
+   "rs_fabric": 38,
+   "rs_i_to_rs_o": 17,
+   "reset": 19
+  },
+  "latency_edges_before_landing": {
    "tap": {
     "0": 3,
     "1": 7,
@@ -24,7 +40,33 @@
    "rs_fabric": 35,
    "rs_i_to_rs_o": 17,
    "reset": 19
-  }
+  },
+  "port_added_edges": {
+   "n_a_1_2": 3,
+   "n_b_1_2": 3,
+   "n_a_0_0": 3
+  },
+  "realigned_legs": {
+   "3_1a": {
+    "added_edges": 3,
+    "relay_stations": 7,
+    "soft_pad_stages": 3,
+    "landed": false
+   },
+   "3_1b": {
+    "added_edges": 3,
+    "relay_stations": 7,
+    "soft_pad_stages": 0,
+    "landed": true
+   },
+   "4_0a": {
+    "added_edges": 3,
+    "relay_stations": 16,
+    "soft_pad_stages": 3,
+    "landed": false
+   }
+  },
+  "taps_unchanged": "tap 0..3 (3/7/11/15), bco 17, rs_i->rs_o 17, reset 19: no tap / feedthrough path crosses leg_3_1b"
  },
  "clocks": {
   "c0r0": {
@@ -402,13 +444,13 @@
    "diagonal": false
   },
   "c2r2-c3r2": {
-   "links": 3,
-   "bits": 1542,
+   "links": 4,
+   "bits": 1543,
    "diagonal": false
   },
   "c2r2-c3r3": {
-   "links": 1,
-   "bits": 514,
+   "links": 2,
+   "bits": 515,
    "diagonal": true
   },
   "c2r3-c3r3": {
@@ -432,8 +474,8 @@
    "diagonal": false
   }
  },
- "seam_crossings": 74,
- "seam_crossing_bits": 27800,
+ "seam_crossings": 76,
+ "seam_crossing_bits": 27802,
  "port_domains": {
   "bco0": "ck_c0r3",
   "bc1": "ck_c1r0",
@@ -458,5 +500,47 @@
    "region_audit.py misses u_t_0_0.t_out -> u_t_1_0.n_a (c0r0 -> c1r0, 514 b; window OK: TT setup +368.8 at 833, FF hold +272.2): crossings = 74 / 27,800 b",
    "audit names the 4 rpad crossings' sink pin 'trst'; the A0 pin is rst_n"
   ]
- }
+ },
+ "seam_crossings_note": "Q-CL16-LAND region_audit.py: 74 data crossings (the 73 of Q-CLUSTER16 + u_t_0_0.t_out -> u_t_1_0.n_a, missed before) of which 1 LANDED (leg_3_1b_0, the ring -> read link), + 2 one-bit crossings of the landing's own reset run",
+ "landings": [
+  {
+   "name": "leg_3_1b_0",
+   "crossing": "u_fab.u_leg_3_1b_0 (c3r3) -> u_fab.u_leg_3_1b_1 (c2r2)",
+   "src_region": "c3r3",
+   "dst_region": "c2r2",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3,
+   "why": "Q-CL16-EARLY diag16ct 4_1_cts: TT setup +44.0 ps aligned drops, -16.0 with the 60 ps die residual; in-cluster skew -422.7 ps TT / -325.2 FF (launch leaf late); 356.7-um diagonal hop",
+   "ring": {
+    "inst": "u_fab.u_land_leg_3_1b_0_w",
+    "master": "qfd_c_land_w",
+    "clock": "ck_c3r3",
+    "site": [
+     1833.36,
+     4056.076
+    ],
+    "flops": 2076,
+    "note": "flop-first beside the source station: slots = the capture flops of the source word"
+   },
+   "read": {
+    "inst": "u_fab.u_land_leg_3_1b_0_r",
+    "master": "qfd_c_land_r",
+    "clock": "ck_c2r2",
+    "site": [
+     1711.348,
+     3899.6
+    ],
+    "flops": 519,
+    "note": "slot (rc - K) mod D -> registered o (flop-last) -> the destination station"
+   },
+   "epochs": "released-reset (L3): reset run from rst_R_48 (depth 17) re-registered once by each half on its own root: G == R0, E = K",
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from ck_c3r3 -to ck_c2r2 (the landing's bank -> o paths are the only paths of that ordered pair; region_audit R5)",
+   "window_ps": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup (T = 833.3)",
+   "fault": "assertion only ($error LAND_FAULT in simulation; synthesis drops the epoch tags)",
+   "rtl": "rtl/physical/qcluster/qfd_c_land.sv"
+  }
+ ]
 }

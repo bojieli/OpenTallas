@@ -22,8 +22,14 @@ ARCH = ROOT / "results/arch/qwen_cluster_1017"
 STANDIN = "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin"
 STN_STANDIN = "physical/ref_tile/qfd_c_b16_dv_diag/stn_standin"
 # Q-CLUSTER3: the stations are hard children (blackboxes here); only the 1-bit reset stages (qfd_q3h_stn W=1) stay soft
-FABRIC_SRC = ["rtl/physical/qcluster/qfd_q3h_stn.sv", "rtl/physical/qcluster/qfd_c_b16_dv_fabric.sv",
-              "rtl/physical/qcluster/qfd_c_b16_dv.sv"]
+FABRIC_SRC = ["rtl/physical/qcluster/qfd_q3h_stn.sv", "rtl/physical/qcluster/qfd_c_land.sv",
+              "rtl/physical/qcluster/qfd_c_b16_dv_fabric.sv", "rtl/physical/qcluster/qfd_c_b16_dv.sv"]
+# Q-CL16-LAND (10-18): die delivery residual between communicating region clocks (die_clock_contract.json obligation 2,
+# as rewritten by Q-CL16-EARLY cc6c1f3ae: drops phase-aligned within +/-60 ps at TT and FF), ON TOP of the per-clock
+# 60 setup / 25 hold uncertainty: inter-clock uncertainty overrides the per-clock value, so the pair gets 120 / 85.
+DIE_RESIDUAL_PS = 60
+BASE_UNC_PS = dict(setup=60, hold=25)
+DIE_CLOCK = ARCH / "q_cluster16/die_clock_contract.json"
 
 
 def main():
@@ -120,6 +126,25 @@ def main():
     sdc += [f"create_clock -name ck_{q} -period $ot_q_per [get_ports ck_{q}]" for q in rest]
     lst = " ".join(f"ck_{q}" for q in rest)
     sdc += [f"set_clock_uncertainty -setup 60 [get_clocks {{{lst}}}]", f"set_clock_uncertainty -hold 25 [get_clocks {{{lst}}}]"]
+    if sixteen:
+        # communicating region pairs (both directions) from the die-clock contract; core region = core_clk
+        clk = {q: ("core_clk" if q == core else f"ck_{q}") for q in regions}
+        pairs = json.loads(DIE_CLOCK.read_text())["communicating_pairs"]
+        sdc.append(f"# Q-CL16-LAND: die delivery residual {DIE_RESIDUAL_PS} ps between the {len(pairs)} communicating region "
+                   "pairs (both directions), setup and hold, on top of 60 / 25 (die_clock_contract.json obligation 2)")
+        for k in sorted(pairs):
+            a_, b_ = k.split("-")
+            for f_, t_ in ((a_, b_), (b_, a_)):
+                for kind in ("setup", "hold"):
+                    sdc.append(f"set_clock_uncertainty -{kind} {BASE_UNC_PS[kind] + DIE_RESIDUAL_PS} "
+                               f"-from [get_clocks {clk[f_]}] -to [get_clocks {clk[t_]}]")
+        # landed crossings: the ring -> o paths are the ONLY paths of each landed ordered region pair (region_audit R5)
+        for L in C.get("landings", {}).get("list", []):
+            f_, t_ = clk[L["src_region"]], clk[L["dst_region"]]
+            sdc.append(f"# Q-CL16-LAND landing {L['name']} ({L['crossing']}): ring {L['ring']['inst']} -> read "
+                       f"{L['read']['inst']} o, E {L['E']}, D {L['D']} (LANDING-CONTRACT L5)")
+            sdc.append(f"set_multicycle_path -setup {L['E']} -from [get_clocks {f_}] -to [get_clocks {t_}]")
+            sdc.append(f"set_multicycle_path -hold {L['D'] - 1} -from [get_clocks {f_}] -to [get_clocks {t_}]")
     for q in rest:
         for n in sorted(dom[q]["inputs"]):
             sdc.append(f"set_input_delay [expr {{0.2 * $ot_q_per}}] -clock ck_{q} [get_ports {{{n}[*]}}]")
