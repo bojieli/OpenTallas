@@ -179,7 +179,7 @@ def fwd_cell(master, ports, c, pb, cq, trn):
     return L
 
 
-def write_lib(corner, lef, stubs, path, clock_ports=None):
+def write_lib(corner, lef, stubs, path, clock_ports=None, related_pins=None):
     c = CORNERS[corner]
     L = [f'library (qfd_elements_{corner}) {{',
          '  delay_model : table_lookup; time_unit : "1ps"; capacitive_load_unit (1, ff); voltage_unit : "1V";',
@@ -217,6 +217,13 @@ def write_lib(corner, lef, stubs, path, clock_ports=None):
                     L.append(f'    pin ({p}) {{ direction : input; clock : true; capacitance : 2.0; }}')
                 continue
             rel = rel or ('ck' if 'ck' in clocks else (clocks[0] if clocks else None))
+            # Q-DIE11-COLL 10-18: source-declared per-bit capture/launch clocks (clock contract related_pins), e.g.
+            # the production collective's SerDes words on their face codec root and the UCIe words on fdi(_rx)_ck
+            bit_rel = (related_pins or {}).get(master, {}).get(p)
+            if bit_rel is not None:
+                if len(bit_rel) != n:
+                    raise ValueError(f'{master}.{p}: related_pins has {len(bit_rel)} bits, LEF has {n}')
+                bit_rel = [r_ if '[' in r_ or (master, r_) not in IDX else r_ + '[0]' for r_ in bit_rel]
             if master in ('qkd_ctrl', 'qkd_ctrl_n') and 'hk_k' in clocks:
                 # qwen-split kvsys v1.2: the HBM controller strip has two domains: its CDC / PHY words run on the HBM
                 # clock (hk_*), the landing / stream-command words on the core clock (ck_*)
@@ -225,7 +232,7 @@ def write_lib(corner, lef, stubs, path, clock_ports=None):
                 rel = rel + '[0]'
             arcs = rel is not None and not p.startswith(('fck_', 'pll_'))
 
-            def pin_body(d):
+            def pin_body(d, rel=rel):
                 if d == 'output':
                     b = ['direction : output; max_capacitance : 5000;']
                     if arcs:
@@ -242,6 +249,18 @@ def write_lib(corner, lef, stubs, path, clock_ports=None):
                                  f'rise_constraint (cons2) {{ {table(f, SLEWS, SLEWS)} }} '
                                  f'fall_constraint (cons2) {{ {table(f, SLEWS, SLEWS)} }} }}')
                 return ' '.join(b)
+            if bit_rel is not None and arcs:
+                if n == 1 and (master, p) not in IDX:
+                    L.append(f'    pin ({p}) {{ {pin_body(dirs[0], bit_rel[0])} }}')
+                    continue
+                L.append(f'    bus ({p}) {{ bus_type : b{n}; direction : {"inout" if len(set(dirs)) > 1 else dirs[0]};')
+                if len(set(bit_rel)) == 1:
+                    L.append(f'      {pin_body(dirs[0], bit_rel[0]).replace("direction : " + dirs[0] + ";", "")}')
+                else:
+                    for i, d in enumerate(dirs):
+                        L.append(f'      pin ({p}[{i}]) {{ {pin_body(d, bit_rel[i])} }}')
+                L.append('    }')
+                continue
             if n == 1 and (master, p) not in IDX:
                 L.append(f'    pin ({p}) {{ {pin_body(dirs[0])} }}')
             else:
