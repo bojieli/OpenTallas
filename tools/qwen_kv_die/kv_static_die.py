@@ -164,6 +164,49 @@ AHUB_STATIC = PVFIN and os.environ.get('OT_KV_AHUB_STATIC', '1') == '1'
 AHUB_FILE = 'rtl/hdc/nearhbm/qkd_ahub_static_dw.sv'
 AHS = ['start_qk', 'ep', 'layer', 'ctx', 'cal[127:16]', 'cal[175:160]']      # kvs_attn ahs = ahub hs (165 b, LSB first)
 AHS_W, AHUB_AP_W, AHUB_FR_W = 165, 43, 145
+# KV-WIRE2 10-18 (RTL-BUILD-KV/BOOT, results/arch/qwen_kv_boot_path_1018/note.md s5; OT_KV_BOOT, default ON with the
+# static die + HROOT): the HOST slice runs IN PARALLEL as the boot owner.  Gateway embgw -> qkd_embgw_boot_s (emf / emr gone;
+# new boot word bw 293 b -> kvs_ctl fan root qkd_kv_es_fan_root2_b), es edge word h 783 -> 784 (stack roots
+# qkd_kv_es_fan_stack_b), PC chain 779 -> 780, pc_path -> qkd_static_kv_pc_path_fan_nc_b (es merge _b: third source = the
+# slice ctrl_es in the boot window; chain station _b: boot word -> slice land_es).  Per PC die words to its HOST slice:
+# les (pc land_es -> hsl land_es), hler (hsl land_er -> pc land_er), hes (hsl ctrl_es -> pc hes), ler (pc her -> hsl
+# ctrl_er), hcv / hcw (pc hcompletion_* -> hsl ctrl_completion_*); slice lpc strap = k (the kvpc pc strap, note s5.7).
+# Runtime paths unchanged (0 edges); boot-path ages = record (note s3 pricing, compiler).
+BOOT = ON and HROOT and os.environ.get('OT_KV_BOOT', '1') == '1'
+BOOT_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv'
+_E = 'rtl/qwen_sys/static_embedding_20261014/'
+BOOT_GW = (_E + 'qkd_embgw_boot_s.sv', 'qkd_embgw_boot_s', dict(BD=4, GAP=1, HOLD=64, ROW0=24427, MUT=0))
+BOOT_PC = (_E + 'qkd_static_kv_pc_path_fan_nc_b.sv', 'qkd_static_kv_pc_path_fan_nc_b')
+BOOT_PC_DEPS = [_E + 'qkd_static_kv_pc_es_merge_b.sv', _E + 'qkd_kv_pc_chain_station_b.sv']
+BOOT_HW, BOOT_CW, BOOT_BW = 784, 780, 293
+# (pc tile port, hsl port, width, direction pc -> hsl?) of the per-PC boot-owner words (note s5.6)
+BOOT_HSL = [('les', 'pc__land_es', 'land_es', 288, True), ('hler', 'pc__land_er', 'land_er', 261, False),
+            ('hes', 'pc__hes', 'ctrl_es', 288, False), ('ler', 'pc__her', 'ctrl_er', 261, True),
+            ('hcv', 'pc__hcompletion_v', 'ctrl_completion_v', 1, True),
+            ('hcw', 'pc__hcompletion_we', 'ctrl_completion_we', 1, True)]
+# KV-WIRE2 10-18 (RTL-BUILD-KV/SEQ, lanes/RTL-BUILD-KV.md SEQ; OT_KV_SEQ_S, default ON with the static hub + OT_KV_SEQ_STATIC):
+# the die slot `seq` binds qkd_seq_static_s (closed leaves qkd_seq_core_st_s / qkd_seq_xs_s / qkd_seq_fan_s): no kvn_<q>
+# rows, no kvn_<q>_cr / mf_<q> (their die edges go with the landing strips), no att_rx / kvn_word_data.  New inputs:
+#   prg (537 b) = kvs_attn's attention programme {request_valid, request_position, q_valid, q_beat, q_data} (LSB first),
+#   ar  (8 b)   = ar_h {valid, g, beat 6} = the pvfin result stream header (kvs_attn fin: out_valid, out_beat; g = 0 and
+#                 beat[5] = 0: one result stream of 32 beats on the static die), exported by kvs_attn,
+#   skw (12 b)  = the d2d end's {kvn_word_valid, kvn_word_tag} (its own bundle; srx keeps att_rx_* for kvs_attn).
+SEQ_S = AHUB_STATIC and os.environ.get('OT_KV_SEQ_STATIC', '0') == '1' and os.environ.get('OT_KV_SEQ_S', '1') == '1'
+SEQ_S_FILE = 'rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv'
+PRG = ['request_valid', 'request_position', 'q_valid', 'q_beat', 'q_data']        # kvs_attn prg = seq prg_* (537 b)
+PRG_W, ARH_W = 537, 8
+# KV-WIRE2 10-18 (RTL-BUILD-KV/ASTK (a)-(d), lanes/RTL-BUILD-KV.md ASTK; OT_KV_ASTK_ST, default ON with the static hub): the
+# static ASTK strip with its inline e-read (die face qkd_astk_strip_er_die = qkd_astk_strip_er_st + the vh -> read request
+# slicing + af | er_fault), the ECTL frames on qkd_ectl3_kiss_st (C = qkd_ectl_c_st: so 413 b, si 633 b, no nb_cr), heads
+# ot_qkh_head_native_r4_s / _ft_s (no node beat nb_d: the 32 x 4 nb_<st>_<e>_<h> die words and the ck_a* / ck_b* clock
+# entries go).  New die words: ks_acal_<st> (kvs_attn acal = attn_root cal {EXP, Z, LMAX} 48 b -> astk_<st>.cal, one word a
+# stack), the e-read requests = relayed fork branches of pvh_<st>_<k> -> astk_<st>.vh<k>, pve_<st> (astk erd 256 b -> the
+# stack's PV pair in_e lanes: W stacks pvw_<p>.ie = in_e[255:0], E stacks .iee = in_e[511:256]).  ASTK_W re-cut: not done
+# (the frame keeps 220.32 um; the P.V tree columns are gone, so the strip has slack -- follow-up with its kit).
+ASTK_ST = AHUB_STATIC and os.environ.get('OT_KV_ASTK_ST', '1') == '1'
+ASTK_FILE = 'rtl/qwen_sys/split_20261014/qkd_astk_strip_er_die.sv'
+ACAL = ['cal[31:16]', 'cal[47:32]', 'cal[15:0]']            # astk cal = {EXP base, Z start, LMAX start} (LSB first: LMAX)
+ECTL_ST_FILE = 'rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv'
 FIN = [('out_valid', 1), ('out_beat', 5), ('out_epoch', 16), ('out_data', 512)]    # pvfin fo = kvs_attn fin (LSB first)
 PVFST = ['start_pv', 'ep', 'cal[175:128]']                                        # kvs_attn pvfst = pvfin fs (65 b)
 # per-tile frames (um, ASSUMED until kits close): see place()
@@ -176,7 +219,7 @@ KRSP = ['rsp_valid', 'rsp_data', 'rsp_t', 'rsp_v', 'rsp_epoch', 'rsp_layer']    
 KG = ['kgo', 'epoch', 'layer']                                                     # qkd_ectlk kg (from the layer programme)
 LP = ['attention_run', 'layer', 'ctx_t']                                           # qkd_seq_static lp
 KVI = ['compiled_identity', 'compiled_generation']                                  # qkd_d2d_static kvi
-D2D_LISTS = None                     # (D2DS_SVC, SEQST_RX), set by kv_die before bindings()
+D2D_LISTS = None                     # (D2DS_SVC, SEQST_RX, SEQST_KW), set by kv_die before bindings()
 
 _G = {}
 
@@ -191,6 +234,8 @@ def graph():
         left = A.apply(g, ages)
         if HROOT:
             _hroot_join(g)
+        if BOOT:
+            _boot_join(g)
         if AFAULT:
             _afault_join(g)
         _G['g'], _G['unpriced'] = g, left
@@ -214,6 +259,46 @@ def _hroot_join(g):
         if it != [{'instance': 'fanr', 'port': f'd{k}', 'lo': 0, 'width': 779}]:
             raise ValueError(f'kv_static_die HROOT: pc_{st}_31.chain_i is not fanr.d{k}: {it}')
         by[f'pc_{st}_31']['inputs']['chain_i'] = [{'instance': f'esh_{st}', 'port': 'd', 'lo': 0, 'width': 779}]
+
+
+def _boot_join(g):
+    """BOOT (note s5): successor modules of the gateway, the fan root, the stack roots and the 128 pc_paths; boot word
+    embgw.bw -> fanr.bw; h 784, chain 780.  The pc_path's new slice-facing inputs (land_er, hes) are die joins."""
+    by = {i['name']: i for i in g['instances']}
+    f = by['fanr']
+    if f['module'] != 'qkd_kv_es_fan_root2' or 'bw' in f['inputs']:
+        raise ValueError(f'kv_static_die BOOT: fanr is {f["module"]}')
+    f.update(module='qkd_kv_es_fan_root2_b', source=BOOT_RTL, sha256=None)
+    f['inputs']['bw'] = [dict(instance='embgw', port='bw', lo=0, width=BOOT_BW)]
+    gw = by['embgw']
+    gw.update(source=BOOT_GW[0], module=BOOT_GW[1], sha256=None, parameters=dict(BOOT_GW[2]))
+    for st in STACKS:
+        e = by[f'esh_{st}']
+        if e['inputs']['h'] != [{'instance': 'fanr', 'port': 'h', 'lo': 0, 'width': 783}]:
+            raise ValueError(f'kv_static_die BOOT: esh_{st}.h is {e["inputs"]["h"]}')
+        e.update(module='qkd_kv_es_fan_stack_b', source=BOOT_RTL, sha256=None)
+        e['inputs']['h'] = [dict(instance='fanr', port='h', lo=0, width=BOOT_HW)]
+    n = 0
+    for i in g['instances']:
+        if i['role'] != 'pc_path':
+            continue
+        ci = i['inputs']['chain_i']
+        if len(ci) != 1 or ci[0]['width'] != 779 or ci[0]['lo'] != 0:
+            raise ValueError(f'kv_static_die BOOT: {i["name"]}.chain_i is {ci}')
+        i.update(source=BOOT_PC[0], module=BOOT_PC[1], sha256=None)
+        i['inputs']['chain_i'] = [dict(ci[0], width=BOOT_CW)]
+        for p in ('land_er', 'hes'):
+            i['inputs'].setdefault(p, None)
+        n += 1
+    if n != 128:
+        raise ValueError(f'kv_static_die BOOT: {n} pc_path instances')
+    for path in [BOOT_RTL, BOOT_GW[0], BOOT_PC[0]] + BOOT_PC_DEPS:
+        if not any(d['path'] == path for d in g['source_files']):
+            g['source_files'].append(dict(path=path, sha256=hashlib.sha256((ROOT / path).read_bytes()).hexdigest()))
+    g['source_files'].sort(key=lambda d: d['path'])
+    g.setdefault('joins_added', []).append(dict(producer='embgw.bw (qkd_embgw_boot_s) -> fanr.bw (qkd_kv_es_fan_root2_b)',
+        bound_inputs=1, owner_note='RTL-BUILD-KV/BOOT 10-18 (note s5): boot owner = HOST slice in parallel; pc_path '
+        'land_er / hes are die joins from the slice (kv_static_die._die_joins)'))
 
 
 def _afault_join(g):
@@ -352,11 +437,11 @@ def _d2d_bundles():
     w = K.ports(s, {k: v for k, v in dict(MUT=0, NL=2, PR=1).items() if k in s['parameters']})
     if D2D_LISTS is None:                # standalone (--rtl): kv_die defines the bundles (it does not import us back ON)
         import kv_die as _kd
-        D2DS_SVC, SEQST_RX = _kd.D2DS_SVC, _kd.SEQST_RX
+        D2DS_SVC, SEQST_RX, SEQST_KW = _kd.D2DS_SVC, _kd.SEQST_RX, _kd.SEQST_KW
     else:
-        D2DS_SVC, SEQST_RX = D2D_LISTS
+        D2DS_SVC, SEQST_RX, SEQST_KW = D2D_LISTS
     out = {}
-    for b, lst in (('svc', D2DS_SVC), ('srx', SEQST_RX)):
+    for b, lst in (('svc', D2DS_SVC), ('srx', SEQST_RX), ('skw', SEQST_KW)):
         lo = 0
         for p in lst:
             out[p] = (b, lo, w[p]['width'])
@@ -413,7 +498,8 @@ def tile(die_inst):
             pn = add_port(f'd2d__{sp}', dir='input', width=d2db['_widths'][sp], cls='sig', src=('d2d_kv', sp))
             return f'{pn}[{lo + w - 1}:{lo}]'
         if skind == 'embgw':
-            pn = add_port(f'embgw__{it["port"]}', dir='input', width=13, cls='sig', src=('embgw', it['port']))
+            pn = add_port(f'embgw__{it["port"]}', dir='input', width=spec('embgw')[it['port']]['width'], cls='sig',
+                          src=('embgw', it['port']))
             return f'{pn}[{lo + w - 1}:{lo}]'
         if skind == 'vport':                     # landing vreq_* <- V port vq<parity>_* (qkd_pv16_vport vq bundle)
             off = dict(vreq_valid=0, vreq_t=1)[p]
@@ -537,6 +623,16 @@ def tile(die_inst):
         expr = rsp_expr(lp, p) if isinstance(p, (list, tuple)) else f'w_{lp}__{p}'
         outs.setdefault(pn, (expr, w, []))
         die_x.add(pn)
+    if kind == 'attn' and ASTK_ST:
+        # KV-WIRE2 ASTK: the held attention calendar slice {EXP, Z, LMAX}, one tile pin a stack (a pin faces its strip)
+        for st in STACKS:
+            outs[f'acal_{st}'] = (rsp_expr('attn_root', ACAL), 48, [])
+            die_x.add(f'acal_{st}')
+    if kind == 'attn' and SEQ_S and 'fin' in ports:
+        # KV-WIRE2 SEQ: the sequencer's result header ar_h {valid, g, beat[5:0]} = the final join's stream header (pure
+        # wires from the fin input; g = 0 and beat[5] = 0: the static die has ONE 32-beat result stream)
+        outs['arh'] = ("{fin[0], 2'b00, fin[5:1]}", ARH_W, [])
+        die_x.add('arh')
     if kind == 'emb':                      # the D2D RESULT proxy for the PCs (via their groups)
         for key in PASSES:
             nm, up_, uw, ilo, iw, expr = pc_pass(*key)
@@ -615,6 +711,10 @@ if PVFIN:   # KV-PLAN-FIN: the final join's command word {start_pv, ep, cal R/P1
     DIE_EXPORTS['attn'][('attn_root', tuple(PVFST))] = ('pvfst', 65)
 if AHUB_STATIC:   # KV-INTEG/AHUB: the attention command word of the static hub
     DIE_EXPORTS['attn'][('attn_root', tuple(AHS))] = ('ahs', AHS_W)
+if SEQ_S:         # KV-WIRE2 SEQ: the attention programme's request / Q beat face -> the static sequencer
+    DIE_EXPORTS['attn'][('attn', tuple(PRG))] = ('prg', PRG_W)
+if BOOT:    # the pc_path's slice-facing outputs (note s5.5)
+    DIE_EXPORTS['pc'].update({('pc', p[4:]): (p, w) for _b, p, _s, w, out in BOOT_HSL if out})
 DIE_EXPORTS['pc_h'] = DIE_EXPORTS['pc']
 if AFAULT:   # P7: each group's chain node -> the next slot's group (or, slot 7, the attention control tile)
     DIE_EXPORTS['grp'] = {('af', 'fault'): ('af__fault', 1)}
@@ -1054,6 +1154,8 @@ def sources():
         for n in t['members']:
             s.add(ins()[n]['source'])
     s.update(K.pc_emb_sources())
+    if BOOT:
+        s.update(BOOT_PC_DEPS)
     s.update(K.EMB_SOURCES)
     return sorted(s)
 
@@ -1072,7 +1174,8 @@ def bindings():
         cls = {'por_n': 'by_design: package POR pad (off-chip signal)'} if 'por_n' in t['ports'] else {}
         out[mst] = dict(module=mst, file=RTL_FILE, ports=ports, sliced={}, classed=cls)
     # ECTL frame re-bound to the fused A + K issuer composition (qkd_ectl3_kiss_s)
-    out['qkd_ectlk'] = dict(module='qkd_ectl3_kiss_s', file='rtl/qwen_sys/static_kv_20261014/qkd_static_ectla_kiss.sv',
+    out['qkd_ectlk'] = dict(module='qkd_ectl3_kiss_st' if ASTK_ST else 'qkd_ectl3_kiss_s',
+        file=ECTL_ST_FILE if ASTK_ST else 'rtl/qwen_sys/static_kv_20261014/qkd_static_ectla_kiss.sv',
         parameters=dict(RESPONSE_LAT=14, QK_ISSUE_AGE=62, HXK=13, MUT=0),
         ports=dict(si=['si'], so=['so'], t0=['t0'], t1=['t1'], e0=['e0'], e1=['e1'], e2=['e2'], e3=['e3'], s0=['s0'],
                    s1=['s1'], s2=['s2'], s3=['s3'], rq=[f for f, _ in KREQ], rs=list(KRSP), kg=list(KG), cfg=['cfg'],
@@ -1084,6 +1187,24 @@ def bindings():
                        p0=['p0_valid', 'p0_beat', 'p0_epoch', 'p0_data'], p1=['p1_valid', 'p1_beat', 'p1_epoch', 'p1_data'],
                        fr=['rz_valid', 'rz_epoch', 'rz'], fo=[f for f, _ in FIN], ff=['fault']),
             sliced={}, classed={})
+    if ASTK_ST:
+        for mn in ('qkd_astk', 'qkd_astk_n'):
+            out[mn] = dict(module='qkd_astk_strip_er_die', file=ASTK_FILE,
+                ports=dict(st=['st'], aq=['aq'], am=['am'], ap=['ap'], af=['af'], lt=['lt'], cal=['cal'], erd=['erd'],
+                           **{f'e{e}i': [f'so{e}'] for e in range(8)}, **{f'e{e}o': [f'si{e}'] for e in range(8)},
+                           **{f'vh{k}': [f'vh{k}'] for k in range(4)},
+                           ck_c=['ck_c'], ck_z0=['ck_z'], ck_x0=['ck_x'], ck_e0=['ck_e'], ck_r=['ck_r'], ck_d=['ck_er'],
+                           rst_n=['rst_n']),
+                sliced={**{f'ck_z{j}': 'ck_z0' for j in range(1, 4)}, **{f'ck_x{j}': 'ck_x0' for j in range(1, 32)},
+                        **{f'ck_e{j}': 'ck_e0' for j in range(1, 8)}}, classed={})
+    if SEQ_S:
+        out['qkd_seq_st'] = dict(module='qkd_seq_static_s', file=SEQ_S_FILE, parameters=dict(MUT=0),
+            ports=dict(skw=['kvn_word_valid', 'kvn_word_tag'],
+                       prg=['prg_req_v', 'prg_req_pos', 'prg_q_v', 'prg_q_beat', 'prg_q_data'],
+                       lp=['lp_run', 'lp_layer', 'lp_ctx_t'], svc=['svc'],
+                       **{f'aq_{q}': [f'aq_{q}'] for q in STACKS}, **{f'kc_{q}': [f'kc_{q}'] for q in STACKS},
+                       **{f'af_{q}': [f'af_{q}'] for q in STACKS}, ar=['ar_h'], hf=['hf'], hs=['hs'], tk=['tk'],
+                       kst=['kst'], ck=['ck'], rst_n=['rst_n']), sliced={}, classed={})
     if AHUB_STATIC:
         out['qkd_ahub'] = dict(module='qkd_ahub_static_dw', file=AHUB_FILE,
             ports=dict(hs=['hs_start', 'hs_ep', 'hs_layer', 'hs_ctx', 'hs_cal_lo', 'hs_cal_r'],
@@ -1217,9 +1338,13 @@ def inject(m, K):
                 add((f'krs_{st_}_{frame_engine(f_)}', 'kv_oneway', 1062, [(dinst, 'krsp'), (cd, 'rs')]))
             continue
         bits = widths.get((dinst, dport))
-        if dinst == 'd2d_kv' and dport in ('svc', 'srx'):
-            # existing bundle buses: the static loads are relayed fork branches of hsvc / seqst_rx
-            trunk = 'hsvc' if dport == 'svc' else 'seqst_rx'
+        if dinst == 'd2d_kv' and dport in ('svc', 'srx', 'skw'):
+            # existing bundle buses: the static loads are relayed fork branches of hsvc / seqst_rx / seqst_kw
+            trunk = dict(svc='hsvc', srx='seqst_rx', skw='seqst_kw')[dport]
+            if trunk not in seen_buses:          # SEQ_S: srx has no sequencer load; its first static load is the trunk's
+                seen_buses.add(trunk)
+                add((trunk, 'kv_oneway', widths[(dinst, dport)], [(dinst, dport), loads[0]]))
+                loads = loads[1:]
             fk.setdefault(trunk, [])
             fk[trunk] += [l_ for l_ in loads if l_ not in fk[trunk]]
             continue
@@ -1324,6 +1449,34 @@ def _die_joins(m, K, B, add, fk, rec):
                                  'the legacy hub ao that fed it never fires on the static die (no pi_*)'))
         rec['notes'].append('ahub = qkd_ahub_static_dw (KV-INTEG/AHUB): ap_<st> 43 b needs the ASTK strip_er_st binding '
                             '(RTL-BUILD-KV ASTK (a)); seq.hs output unread (the hub starts on kvs_attn ahs)')
+    # KV-WIRE2 ASTK: the strips' calendar, e-read requests (vh forks) and e quads -> the PV pairs' in_e
+    if ASTK_ST and all(f'astk_{st}' in by for st in STACKS):
+        # one held word a stack (point-to-point: the strip's cal pin faces kvs_attn; as w1 forks, the ES branch had no
+        # peer face and ran 10 mm round the stack bottom, no relay spot)
+        for st in STACKS:
+            bus(f'ks_acal_{st}', 'kv_oneway', 48, [('kvs_attn', f'acal_{st}'), (f'astk_{st}', 'cal')])
+        names_ = {b_[0] for b_ in B}
+        for st in STACKS:
+            p_ = STACKS.index(st) % 2
+            for k in range(4):
+                if f'pvh_{st}_{k}' not in names_:
+                    raise ValueError(f'kv_static_die ASTK_ST: no V header word pvh_{st}_{k} (needs OT_KV_PV_T)')
+                fk.setdefault(f'pvh_{st}_{k}', []).append((f'astk_{st}', f'vh{k}'))
+            bus(f'pve_{st}', 'kv_oneway', 256, [(f'astk_{st}', 'erd'), (f'pvw_{p_}', 'ie' if st[0] == 'W' else 'iee')])
+        rec['notes'].append('astk = qkd_astk_strip_er_die (KV-WIRE2 ASTK): e-read request = fork of pvh_<st>_<k> (V header), '
+                            'e quad -> pvw in_e at ERL 3 after the fork; record astk_eread: fork + 3 + pve stages vs the '
+                            'pair header path (compiler: the pair takes in_e that many edges after vh, or pad)')
+    # KV-WIRE2 SEQ: the static sequencer qkd_seq_static_s reads the attention programme and the result stream header
+    if SEQ_S and 'seq' in by:
+        if any(b_[0] == 'ares' or (b_[1] not in ('clock_trunk', 'reset') and ('seq', 'ar') in b_[3]) for b_ in B):
+            raise ValueError('kv_static_die SEQ_S: seq.ar is still driven (ares)')
+        bus('ks_prg', 'kv_oneway', PRG_W, [('kvs_attn', 'prg'), ('seq', 'prg')])
+        bus('ks_arh', 'kv_oneway', ARH_W, [('kvs_attn', 'arh'), ('seq', 'ar')])
+        rec['opens'][:] = [o for o in rec['opens'] if not o['where'].startswith('seq.ar ')]
+        rec['notes'].append('seq = qkd_seq_static_s (KV-WIRE2 SEQ): kvn_<q> / kvn_<q>_cr / mf_<q> die edges removed with the '
+                            'landing strips; prg <- kvs_attn attention programme, ar_h <- kvs_attn arh (pvfin fin header), '
+                            'skw <- d2d {kvn_word_valid, kvn_word_tag}; ages: relay stages of ks_prg / ks_arh / seqst_kw '
+                            '(compiler: Q push / KVN arrival / result beat slots of the core)')
     # P7 (AFAULT): the attention unit-fault tree (see AFAULT): group chain + local K / V faults, chain ends and the direct
     # lanes into kvs_attn (afr).  pvw pf = the pair fault only (kv_die splits busy / out_age into pa under AFAULT)
     if AFAULT:
@@ -1382,6 +1535,10 @@ def _die_joins(m, K, B, add, fk, rec):
             bus(f'dpo_{st}_{k}', 'phy_dfi', 328, [(pc, 'pc__po'), (f'phy_{st}', f'po{k}')])
             bus(f'dfh_{st}_{k}', 'phy_dfi', 4, [(f'phy_{st}', f'fh{k}'), (pc, 'pc__front_hbm_data')])
             bus(f'drh_{st}_{k}', 'phy_dfi', 4, [(f'phy_{st}', f'rh{k}'), (pc, 'pc__return_hbm_data')])
+            if BOOT:      # note s5.6: the slice is the boot owner beside its PC (registered pins at both ends)
+                for b_, pp, sp, w_, out in BOOT_HSL:
+                    bus(f'{b_}_{st}_{k}', 'kv_oneway', w_, [(pc, pp), (s, sp)] if out else [(s, sp), (pc, pp)])
+                continue
             bus(f'hes_{st}_{k}', 'kv_oneway', 288, [(s, 'ctrl_es'), (pc, 'pc__wes')])
             bus(f'ler_{st}_{k}', 'kv_oneway', 261, [(pc, 'pc__er'), (s, 'ctrl_er')])
             bus(f'hcv_{st}_{k}', 'kv_oneway', 1, [(pc, 'pc__completion_v'), (s, 'ctrl_completion_v')])
@@ -1404,12 +1561,16 @@ def _die_joins(m, K, B, add, fk, rec):
     for st in STACKS:
         bus(f'kc_{st}', 'kv_oneway', 33, [('seq', f'kc_{st}'), (f'kc_{st}', 'kc')])
     rec['opens'] += [
-        dict(where='hsl_<st>_<k>.land_es (x128, 288 b)', owner='KVJ-C3 (writer 4-lane -> PC fan-out feeds the HOST slice)'),
-        dict(where='seq.mf_<q> (x4) / seq.kvn_<q>_cr (x4)', owner='Q-KV decision: qkd_seq_static legacy landing faces '
-             '(merge fault, KVN credit) have no static producer; seq successor without them or a static source'),
-        dict(where='embgw.emr_<q> (x4, 521 b)', owner='KVJ-C3 / Q-KV (static emr source for the boot-only gateway)'),
+        *([] if BOOT else [dict(where='hsl_<st>_<k>.land_es (x128, 288 b)', owner='KVJ-C3 (writer 4-lane -> PC fan-out feeds '
+                                'the HOST slice)')]),
+        *([] if SEQ_S else [dict(where='seq.mf_<q> (x4) / seq.kvn_<q>_cr (x4)', owner='Q-KV decision: qkd_seq_static '
+             'legacy landing faces (merge fault, KVN credit) have no static producer; seq successor without them or a '
+             'static source')]),
+        *([] if BOOT else [dict(where='embgw.emr_<q> (x4, 521 b)', owner='KVJ-C3 / Q-KV (static emr source for the boot-only '
+                                'gateway)')]),
         dict(where='host.ctrl_completion_fault', owner='KVJ-SMALL (OR of the 128 pc_path completion_fault)'),
-        dict(where='pvw_<p>.ie (1,024 b)', owner='KVE-2 / KVJ-D (ASTK e-read qkd_astk_er_tap in the strip successor)'),
+        *([] if ASTK_ST else [dict(where='pvw_<p>.ie (1,024 b)', owner='KVE-2 / KVJ-D (ASTK e-read qkd_astk_er_tap in the '
+                                   'strip successor)')]),
         *(([] if RS_PAIRS else
             [dict(where='pvfin.p0 / pvfin.p1 (534 b each: valid, beat, epoch, 512-b data)', owner='PV pair successor: '
                   'the 512-b registered RESULT TRUNK in qkd_pvw_die_t (pv_trunk_gen: the 32 column joins inject their held y '
@@ -1655,6 +1816,12 @@ def _pin_face(master, port):
         f_ = dict(i_next='N', o_next='N', pc__ki='N', o_prev='S', i_prev='S', pc__ko='S', i_grp='N', o_grp='N').get(port)
         if f_:
             return f_
+    if ASTK_ST and master in ('qkd_astk', 'qkd_astk_n') and (port in ('erd', 'cal') or re.fullmatch(r'vh\d', port)):
+        # KV-WIRE2 ASTK: the e-read words on the strip's S|N seam end (the pvfork V headers and the pair's in_e pins are
+        # there); cal from kvs_attn (die top): N face (w1/w2: auto faces left ks_acal_ES / pve_WS 48 / 39 stages)
+        if port == 'cal':
+            return 'N'
+        return 'N' if master == 'qkd_astk' else 'S'
     if KVS_CK1 and master in KVS_FACES:   # KITS-A kits physical/ref_tile/qkd_kvs_{ctl,attn,emb}: the kit uses these faces
         return kvs_face(master, port)
     if master == 'qkd_pvfin':          # kit qkd_pv_fin_s faces
@@ -1796,7 +1963,7 @@ def record(m):
                 r['instances'] += 1
     st = m.get('relay_stages', {})
     ks = {b: s for b, s in st.items() if b.startswith(('ks_', 'pvvq_', 'pvrs_', 'krq_', 'krs_', 'kck_', 'kcf_', 'hes_',
-                                                        'ler_', 'hcv_', 'hcw_')) or '__f' in b and b.split('__f')[0].startswith('ks_')}
+                                                        'ler_', 'hcv_', 'hcw_', 'les_', 'hler_')) or '__f' in b and b.split('__f')[0].startswith('ks_')}
     return dict(schema='opentallas.qwen_kv.static_die.v1', rtl=RTL_FILE,
                 rtl_sha256=hashlib.sha256((ROOT / RTL_FILE).read_bytes()).hexdigest() if (ROOT / RTL_FILE).exists() else None,
                 tiles={k: sum(1 for x in t.values() if x['kind'] == k) for k in GEN_KINDS},
@@ -1805,7 +1972,28 @@ def record(m):
                 open_tile_inputs=sorted(opens.values(), key=lambda r: (r['owner'] or '', r['master'], r['port'])),
                 **({'ahub_ages': ahub_ages(m)} if AHUB_STATIC and 'ks_ahs' in m.get('relay_stages', {}) else {}),
                 attn_fault=afault_latency(m),
+                **({'astk_eread': astk_eread(m)} if ASTK_ST else {}),
                 **{k: v for k, v in m.get('static_die', {}).items()})
+
+
+def astk_eread(m):
+    """KV-WIRE2 ASTK: per V port, the e quad's arrival at the PV pair's in_e relative to its V header vh at the pair:
+    e_after_header = fork(vh -> astk) + ERL 3 + pve - header(pvfork -> pair) edges (relay stages; the pair must take in_e
+    that many edges after vh, or the shorter path is padded: compiler / pair owner)."""
+    st_, fs_, fk = m.get('relay_stages'), m.get('fork_stages', {}), m.get('forks', {})
+    if st_ is None:
+        return None
+    out = {}
+    for st in STACKS:
+        for k in range(4):
+            tr, ld = f'pvh_{st}_{k}', (f'astk_{st}', f'vh{k}')
+            if ld not in fk.get(tr, []):
+                continue
+            fb = f'{tr}__f{fk[tr].index(ld)}'
+            f_ = fs_.get(fb, st_.get(fb, 0))
+            out[f'{st}_{k}'] = dict(header=st_.get(tr, 0), fork=f_, erl=3, pve=st_.get(f'pve_{st}', 0),
+                                    e_after_header=f_ + 3 + st_.get(f'pve_{st}', 0) - st_.get(tr, 0))
+    return out
 
 
 def ahub_ages(m, pv_lead=0, stack_start_lag=None):

@@ -1014,7 +1014,32 @@ def _astk_frame(e):
         return e
     _astk_engine(0)
     return KSD.ectl_frame(e)
-KSD.D2D_LISTS = (D2DS_SVC, SEQST_RX)
+# KV-WIRE2 SEQ (KSD.SEQ_S): qkd_seq_static_s reads only {kvn_word_valid, kvn_word_tag} of the old srx word: they get their
+# own d2d bundle skw (trunk seqst_kw -> seq); srx keeps the attention RX word + kvn_word_data for kvs_attn / kvs_ctl
+SEQST_KW = []
+if KSD.SEQ_S:
+    # srx keeps kvn_word_data (the writer's KVN word, kvs_ctl: a fork branch as before; as its own 512-b identity word
+    # its first hop from the d2d end found no relay spot under OT_KV_TILE_KITS, plan k1)
+    SEQST_RX[:] = ['att_rx_v', 'att_rx_kind', 'att_rx_beat', 'kvn_word_data']
+    SEQST_KW[:] = ['kvn_word_valid', 'kvn_word_tag']
+    BINDINGS['qkd_d2ds']['ports']['srx'] = list(SEQST_RX)
+    BINDINGS['qkd_d2ds']['ports']['skw'] = list(SEQST_KW)
+    RTL.update(qkd_seq_st=KSD.SEQ_S_FILE)
+KSD.D2D_LISTS = (D2DS_SVC, SEQST_RX, SEQST_KW)
+# KV-WIRE2 ASTK (KSD.ASTK_ST): engine faces 413 / 633 b (qkd_ectl3_kiss_st), heads without the node beat (r4_s / r4_ft_s:
+# no nb, no ck_a* / ck_b* entries), the strip die face qkd_astk_strip_er_die (clock entry ck_d = RTL ck_er: the element
+# libs know ck_<letter><n> entries; no ck_v*)
+if KSD.ASTK_ST:
+    ENG_IN, ENG_OUT = 633, 413
+    HEAD_CLK[:] = [c_ for c_ in HEAD_CLK if not c_.startswith(('ck_a', 'ck_b'))]
+    KS.ASTK_CLK[:] = [c_ for c_ in KS.ASTK_CLK if not c_.startswith('ck_v')] + ['ck_d']
+    for _mn, _mod in (('qkd_rhead', 'ot_qkh_head_native_r4_s'), ('qkd_rhead_ft', 'ot_qkh_head_native_r4_ft_s')):
+        _hb = SPLIT_BINDINGS[_mn]
+        SPLIT_BINDINGS[_mn] = dict(_hb, module=_mod, file='rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv',
+            ports={k_: v_ for k_, v_ in _hb['ports'].items() if k_ not in ('nb', 'ck_a0', 'ck_b0')},
+            sliced={k_: v_ for k_, v_ in _hb['sliced'].items() if not k_.startswith(('ck_a', 'ck_b'))})
+    for _mn in ('qkd_pvw_s', 'qkd_pvw_n'):      # in_e: W stack lanes (ie) + E stack lanes (iee), 256 b each
+        SPLIT_BINDINGS[_mn]['sliced'] = dict(SPLIT_BINDINGS[_mn].get('sliced') or {}, iee='ie')
 if KSD.ON:
     SPLIT_BINDINGS.update(KSD.bindings())
     if V144_R6:
@@ -1026,6 +1051,10 @@ if KSD.ON:
     RTL.update({k_: KSD.RTL_FILE for k_ in KSD.KIND_MASTER.values()}, qkd_ectlk=KSD.bindings()['qkd_ectlk']['file'])
     if KSD.PVFIN:      # KV-PLAN-FIN: the stream PV final join element pvfin
         RTL.update(qkd_pvfin=KSD.PVFIN_FILE)
+    if KSD.BOOT:       # KV-WIRE2 / RTL-BUILD-KV BOOT (note s5.1): the gateway successor; emf / emr gone, boot word bw -> kvs_ctl
+        SPLIT_BINDINGS['qkd_embgw'] = dict(module=KSD.BOOT_GW[1], file=KSD.BOOT_GW[0], parameters=dict(KSD.BOOT_GW[2]),
+            ports=dict(hb=['hb', 'hb_cr'], est=['est'], bw=['bw'], ck=['ck'], rst_n=['rst_n']), classed={})
+        RTL.update(qkd_embgw=KSD.BOOT_GW[0])
     if KSD.AHUB_STATIC:    # KV-INTEG/AHUB: the static hub element (one clock entry; kv_static_die AHUB binding)
         AHUB_CLK[:] = ['ck_c']
         RTL.update(qkd_ahub=f'{KSD.AHUB_FILE} qkd_ahub_static_dw')
@@ -2062,7 +2091,8 @@ def _buses(m, T, r):
                 if not (m['geo'].get('split') and V143['on']):
                     add((f'te_{st}_{e}_{h}', 'stack_local', T_E, [(c_, f'e{h}'), (hd_, 'e')]))
                     add((f'ts_{st}_{e}_{h}', 'stack_local', T_RET, [(hd_, 's'), (c_, f's{h}')]))
-                add((f'nb_{st}_{e}_{h}', 'stack_local', HEAD_NB, [(hd_, 'nb'), (f'astk_{st}', f'f{ae}{h}')]))
+                if not KSD.ASTK_ST:     # KV-WIRE2 ASTK: the static heads have no node beat
+                    add((f'nb_{st}_{e}_{h}', 'stack_local', HEAD_NB, [(hd_, 'nb'), (f'astk_{st}', f'f{ae}{h}')]))
             add((f'krq_{st}_{e}', 'spine_local', KS.W_RQ if split else 16, [(c_, 'rq'), (f'land_{st}', f'rq{e}')]))
             add((f'krs_{st}_{e}', 'spine_local', 1 + 1024, [(f'land_{st}', f'rs{e}'), (c_, 'rs')]))
         add((f'kvn_{st}', 'kvn', 1024 + 2 + 14 + 6 + 1 + 1, [('seq', f'kvn_{st}'), (f'land_{st}', 'kvn')]))
@@ -2071,8 +2101,9 @@ def _buses(m, T, r):
         # the stack's controller element, whose W-face kc port enters the async FIFO and the hclk tap chain to the 32
         # per-PC heads (ot_qkvd_kcmd_tap).  No ready: the issuer bounds its outstanding layers.
         add((f'kc_{st}', 'kv_oneway', 1 + 32, [('seq', f'kc_{st}'), (f'ctrl_{st}', 'kc')]))
-        add((f'emf_{st}', 'kvn', KS.W_EMF if split else W + 2, [('embgw', f'emf_{st}'), (f'land_{st}', 'emf')]))
-        add((f'emr_{st}', 'kvn', KS.W_EMR if split else W + 2, [(f'land_{st}', 'emr'), ('embgw', f'emr_{st}')]))
+        if not KSD.BOOT:      # BOOT: qkd_embgw_boot_s has no strip links (note s5.1)
+            add((f'emf_{st}', 'kvn', KS.W_EMF if split else W + 2, [('embgw', f'emf_{st}'), (f'land_{st}', 'emf')]))
+            add((f'emr_{st}', 'kvn', KS.W_EMR if split else W + 2, [(f'land_{st}', 'emr'), ('embgw', f'emr_{st}')]))
         if not m['geo'].get('split'):
             add((f'ing_{st}', 'kvn', W + 2, [('host', f'ing_{st}'), (f'land_{st}', 'ing')]))
         else:
@@ -2230,7 +2261,8 @@ def _host_v14_buses(m):
             add((f'ler_{st}_{k}', 'stack_local', 261, [(f'ctrl_{st}', f'er{k}'), (s, 'ctrl_er')]))
             add((f'hler_{st}_{k}', 'stack_local', 261, [(s, 'land_er'), (f'land_{st}', f'er{k}')]))
             add((f'hlpc_{st}_{k}', 'constant', 5, [(s, 'lpc')]))
-            ties[f'hlpc_{st}_{k}'] = (5, host_lpc(k))
+            # BOOT (note s5.7): the slice's lpc names the logical PC its controller holds = the kvpc pc strap k
+            ties[f'hlpc_{st}_{k}'] = (5, k if KSD.BOOT else host_lpc(k))
             p_ = order.index(k)
             if p_ < 31:
                 n_ = sl(st, order[p_ + 1])
@@ -2346,7 +2378,10 @@ def _d2ds_swap(m):
                 add(('lprg_st', 'kv_oneway', 1, [('dcal', 'tks'), ('lprg', 'st')]))
                 add(('lprg_auth', 'spine_local', 1 + 1 + 16 + 64, [('host', 'auth_lp'), ('lprg', 'auth')]))
                 add(('seqst_lp', 'kv_oneway', 1 + 6 + 14, [('lprg', 'lp'), ('seq', 'lp')]))
-                add(('seqst_rx', 'kv_oneway', 1 + 4 + 5 + 1 + 11 + 512, [('d2d_kv', 'srx'), ('seq', 'srx')]))
+                if KSD.SEQ_S:     # KV-WIRE2: the KVN arrival word only (seqst_rx is created by kv_static_die.inject)
+                    add(('seqst_kw', 'kv_oneway', 1 + 11, [('d2d_kv', 'skw'), ('seq', 'skw')]))
+                else:
+                    add(('seqst_rx', 'kv_oneway', 1 + 4 + 5 + 1 + 11 + 512, [('d2d_kv', 'srx'), ('seq', 'srx')]))
 
 
 def _centre(it, port=None):
@@ -3631,6 +3666,7 @@ def _split_pins(M, m=None):
                     key = 'ck_c'
                 pos[key] = (x_, min(hm.h - 2.0, y_ + h_ / 2))
             pos['ck_r'] = (hm.w / 2, hm.h / 2 + 3.2)
+            pos['ck_d'] = (hm.w / 2, hm.h / 2 - 3.2)     # KV-WIRE2 ASTK: the e-read tap (strip middle)
             for p_, (x_, y_) in pos.items():
                 if p_ in hm.ports:
                     hm.ports[p_] = ('area', 1, round(x_, 3), round(y_, 3), 1)
@@ -3675,7 +3711,7 @@ def _split_pins(M, m=None):
                 c_ = cells['u_ctl' if s_ == 32 else f'u_s{s_}_j']
                 if f'ck_c{s_}' in hm.ports:
                     hm.ports[f'ck_c{s_}'] = ('area', 1, round(c_[1] + c_[3] / 2, 3), round(c_[2] + c_[4] / 2, 3), 1)
-            top = dict(rst_n=-150.0, st=-120.0, ie=60.0)
+            top = dict(rst_n=-150.0, st=-120.0, ie=60.0, iee=90.0)     # iee: KV-WIRE2 ASTK E-stack e lanes
             for p_, dx_ in top.items():
                 if p_ in hm.ports:
                     hm.ports[p_] = ('face', hm.ports[p_][1], 'N', 'M5', round(ctx_ + dx_, 3), 1)
@@ -3956,6 +3992,11 @@ def _slice_pins(m, mm, down=False):
                 qkd_hslice_dn={'ctrl_' + k: v for k, v in _HOP_STRIP_DY['qkd_ctrl_n'].items()}) if HOP else {}
     for p, face, centre in (('ctrl_es', 'W', STRIP_ES_Y - 12.96), ('ctrl_er', 'W', STRIP_ER_Y - 12.96),
                             ('land_es', 'E', STRIP_ES_Y - 12.96), ('land_er', 'E', STRIP_ER_Y - 12.96)):
+        if p in w and KSD.BOOT and p.startswith('land_'):
+            # KV-WIRE2 BOOT (note s5.6): the landing words come from the slice's own PC (kvpc, W of the slice) on the
+            # controller face, clear of the ctrl words (HOP centres 163..221 um): les at 80, hler at 290 um, 2 tracks a bit
+            mm.face(p, w[p], 'W', 'M4', 80.0 if p == 'land_es' else 290.0, 2)
+            continue
         if p in w:
             if p in hop_.get(mm.name, {}):
                 mm.face(p, w[p], face, 'M4', round(centre + hop_[mm.name][p], 3), 2)

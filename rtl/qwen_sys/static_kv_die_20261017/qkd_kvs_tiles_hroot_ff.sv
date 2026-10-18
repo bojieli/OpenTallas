@@ -29,18 +29,20 @@ module qkd_kvs_ctl (
     input wire [0:0] dcfg__ck,
     input wire [0:0] por_n,
     input wire [0:0] fanr__ck,
+    input wire [292:0] embgw__bw,
     input wire [0:0] lprg__ck,
     input wire [0:0] st,
     input wire [81:0] auth,
     input wire [58:0] cht,
     input wire [1:0] chg,
     input wire [0:0] oobs__ck,
-    input wire [533:0] d2d__srx,
+    input wire [11:0] d2d__skw,
     input wire [0:0] oobs__host_launch_quiet,
     input wire [5:0] oobs__host_upstream_quiet,
     input wire [0:0] own__ck,
     input wire [0:0] wprg__ck,
     input wire [0:0] wrn__ck,
+    input wire [521:0] d2d__srx,
     input wire [58:0] d2d__kvn_word_identity,
     input wire [1:0] d2d__kvn_word_generation,
     output wire [0:0] boot__link_cfg_tx_we,
@@ -59,13 +61,13 @@ module qkd_kvs_ctl (
     output wire [0:0] cf_root__fault,
     output wire [76:0] o_attn,
     output wire [72:0] o_emb,
-    output wire [1116:0] o_hroot_WS,
+    output wire [1117:0] o_hroot_WS,
     input wire [143:0] i_hroot_WS,
-    output wire [1116:0] o_hroot_WN,
+    output wire [1117:0] o_hroot_WN,
     input wire [143:0] i_hroot_WN,
-    output wire [1116:0] o_hroot_ES,
+    output wire [1117:0] o_hroot_ES,
     input wire [143:0] i_hroot_ES,
-    output wire [1116:0] o_hroot_EN,
+    output wire [1117:0] o_hroot_EN,
     input wire [143:0] i_hroot_EN
 );
     wire [0:0] bobs__applied_hbm__23 = i_hroot_EN[0:0];
@@ -697,7 +699,7 @@ module qkd_kvs_ctl (
     wire [0:0] w_dcfg__fused_program_capability;
     wire [0:0] w_dcfg__sealed;
     wire [0:0] w_dcfg__fault;
-    wire [782:0] w_fanr__h;
+    wire [783:0] w_fanr__h;
     wire [0:0] w_fanr__fault;
     wire [0:0] w_lprg__ctrl_go;
     wire [0:0] w_lprg__kgo;
@@ -782,12 +784,12 @@ module qkd_kvs_ctl (
     qkd_kv_cfault_node #(.R(4), .STAGES(1), .MUT(0)) u_cf3_W (.ck(cf3_W__ck), .rst_n(rst_n), .fault_in({w_cf2_WN_1__fault[0:0], w_cf2_WN_0__fault[0:0], w_cf2_WS_1__fault[0:0], w_cf2_WS_0__fault[0:0]}), .fault(w_cf3_W__fault));
     qkd_kv_cfault_node #(.R(2), .STAGES(1), .MUT(0)) u_cf_root (.ck(cf_root__ck), .rst_n(rst_n), .fault_in({w_cf3_E__fault[0:0], w_cf3_W__fault[0:0]}), .fault(w_cf_root__fault));
     qkd_kv_die_cfg #(.NRST(43), .CAP(1), .MUT(0)) u_dcfg (.ck(dcfg__ck), .por_n(por_n), .cfg_we(w_boot__diecfg_we[0:0]), .cfg_addr(w_boot__diecfg_addr[7:0]), .cfg_data(w_boot__diecfg_data[63:0]), .ectl_a_cfg(w_dcfg__ectl_a_cfg), .ectl_b_cfg(w_dcfg__ectl_b_cfg), .ectl_c_cfg(w_dcfg__ectl_c_cfg), .rst_dly(w_dcfg__rst_dly), .fused_program_capability(w_dcfg__fused_program_capability), .sealed(w_dcfg__sealed), .fault(w_dcfg__fault));
-    qkd_kv_es_fan_root2 #(.MUT(0)) u_fanr (.ck(fanr__ck), .rst_n(rst_n), .es(w_wrn__es[1151:0]), .dest_pc(w_wrn__dest_pc[19:0]), .dest_stack(w_wrn__dest_stack[1:0]), .identity(w_wrn__identity[58:0]), .generation(w_wrn__generation[1:0]), .expected_valid(w_wrn__expected_valid[3:0]), .expected_pc(w_wrn__expected_pc[19:0]), .expected_stack(w_wrn__expected_stack[1:0]), .expected_identity(w_wrn__expected_identity[58:0]), .expected_generation(w_wrn__expected_generation[1:0]), .expected_address(w_wrn__expected_address[28:0]), .emb_start(d2d__svc[24:24]), .emb_token(d2d__svc[109:92]), .emb_epoch(d2d__svc[89:74]), .cfg_we(w_boot__es_cfg_we[0:0]), .cfg_addr(w_boot__es_cfg_addr[7:0]), .cfg_data(w_boot__es_cfg_data[63:0]), .h(w_fanr__h), .fault(w_fanr__fault));
+    qkd_kv_es_fan_root2_b #(.MUT(0)) u_fanr (.ck(fanr__ck), .rst_n(rst_n), .es(w_wrn__es[1151:0]), .dest_pc(w_wrn__dest_pc[19:0]), .dest_stack(w_wrn__dest_stack[1:0]), .identity(w_wrn__identity[58:0]), .generation(w_wrn__generation[1:0]), .expected_valid(w_wrn__expected_valid[3:0]), .expected_pc(w_wrn__expected_pc[19:0]), .expected_stack(w_wrn__expected_stack[1:0]), .expected_identity(w_wrn__expected_identity[58:0]), .expected_generation(w_wrn__expected_generation[1:0]), .expected_address(w_wrn__expected_address[28:0]), .emb_start(d2d__svc[24:24]), .emb_token(d2d__svc[109:92]), .emb_epoch(d2d__svc[89:74]), .cfg_we(w_boot__es_cfg_we[0:0]), .cfg_addr(w_boot__es_cfg_addr[7:0]), .cfg_data(w_boot__es_cfg_data[63:0]), .bw(embgw__bw[292:0]), .h(w_fanr__h), .fault(w_fanr__fault));
     qkd_static_kv_layer_programme #(.MUT(0)) u_lprg (.ck(lprg__ck), .rst_n(rst_n), .cfg_we(w_boot__layer_we[0:0]), .cfg_addr(w_boot__layer_addr[8:0]), .cfg_data(w_boot__layer_data[63:0]), .start(st), .authority_valid(auth[0]), .programme_authorized(auth[1]), .programme_epoch(auth[17:2]), .programme_digest(auth[81:18]), .authority_epoch(cht[58:43]), .authority_token(cht[36:19]), .authority_position({5'd0, cht[18:6]}), .authority_generation(chg), .ctrl_go(w_lprg__ctrl_go), .kgo(w_lprg__kgo), .vgo(w_lprg__vgo), .attention_issue(w_lprg__attention_issue), .attention_run(w_lprg__attention_run), .writer_start(w_lprg__writer_start), .link_start(w_lprg__link_start), .stage_start(w_lprg__stage_start), .stage_done(w_lprg__stage_done), .expected_upstream_quiet(w_lprg__expected_upstream_quiet), .completed_stage(w_lprg__completed_stage), .stage(w_lprg__stage), .layer(w_lprg__layer), .epoch(w_lprg__epoch), .token(w_lprg__token), .position(w_lprg__position), .ctx_t(w_lprg__ctx_t), .generation(w_lprg__generation), .configured(w_lprg__configured), .active(w_lprg__active), .done(w_lprg__done), .fault(w_lprg__fault), .fault_code(w_lprg__fault_code), .age(w_lprg__age), .token_cycles(w_lprg__token_cycles));
-    qkd_kv_ownership_obs #(.QUIET_WIN(16), .MUT(0)) u_oobs (.ck(oobs__ck), .rst_n(rst_n), .stage_start(w_lprg__stage_start[0:0]), .stage(w_lprg__stage[5:0]), .word_valid(d2d__srx[10:10]), .es_sv({w_wrn__es[1151:1151], w_wrn__es[863:863], w_wrn__es[575:575], w_wrn__es[287:287]}), .es_wv({w_wrn__es[864:864], w_wrn__es[576:576], w_wrn__es[288:288], w_wrn__es[0:0]}), .host_launch_quiet(oobs__host_launch_quiet), .host_upstream_quiet(oobs__host_upstream_quiet), .own_active(w_own__active[0:0]), .own_fault(w_own__fault[0:0]), .group_drained({oobs__group_drained__0, oobs__group_drained__1, oobs__group_drained__2, oobs__group_drained__3, oobs__group_drained__4, oobs__group_drained__5, oobs__group_drained__6, oobs__group_drained__7, oobs__group_drained__8, oobs__group_drained__9, oobs__group_drained__10, oobs__group_drained__11, oobs__group_drained__12, oobs__group_drained__13, oobs__group_drained__14, oobs__group_drained__15, oobs__group_drained__16, oobs__group_drained__17, oobs__group_drained__18, oobs__group_drained__19, oobs__group_drained__20, oobs__group_drained__21, oobs__group_drained__22, oobs__group_drained__23, oobs__group_drained__24, oobs__group_drained__25, oobs__group_drained__26, oobs__group_drained__27, oobs__group_drained__28, oobs__group_drained__29, oobs__group_drained__30, oobs__group_drained__31}), .group_fault({oobs__group_fault__0, oobs__group_fault__1, oobs__group_fault__2, oobs__group_fault__3, oobs__group_fault__4, oobs__group_fault__5, oobs__group_fault__6, oobs__group_fault__7, oobs__group_fault__8, oobs__group_fault__9, oobs__group_fault__10, oobs__group_fault__11, oobs__group_fault__12, oobs__group_fault__13, oobs__group_fault__14, oobs__group_fault__15, oobs__group_fault__16, oobs__group_fault__17, oobs__group_fault__18, oobs__group_fault__19, oobs__group_fault__20, oobs__group_fault__21, oobs__group_fault__22, oobs__group_fault__23, oobs__group_fault__24, oobs__group_fault__25, oobs__group_fault__26, oobs__group_fault__27, oobs__group_fault__28, oobs__group_fault__29, oobs__group_fault__30, oobs__group_fault__31}), .go(w_oobs__go), .upstream_quiet(w_oobs__upstream_quiet), .host_quiet(w_oobs__host_quiet), .kv_active_local(w_oobs__kv_active_local), .kv_drained_local(w_oobs__kv_drained_local), .kv_flush_local(w_oobs__kv_flush_local));
+    qkd_kv_ownership_obs #(.QUIET_WIN(16), .MUT(0)) u_oobs (.ck(oobs__ck), .rst_n(rst_n), .stage_start(w_lprg__stage_start[0:0]), .stage(w_lprg__stage[5:0]), .word_valid(d2d__skw[0:0]), .es_sv({w_wrn__es[1151:1151], w_wrn__es[863:863], w_wrn__es[575:575], w_wrn__es[287:287]}), .es_wv({w_wrn__es[864:864], w_wrn__es[576:576], w_wrn__es[288:288], w_wrn__es[0:0]}), .host_launch_quiet(oobs__host_launch_quiet), .host_upstream_quiet(oobs__host_upstream_quiet), .own_active(w_own__active[0:0]), .own_fault(w_own__fault[0:0]), .group_drained({oobs__group_drained__0, oobs__group_drained__1, oobs__group_drained__2, oobs__group_drained__3, oobs__group_drained__4, oobs__group_drained__5, oobs__group_drained__6, oobs__group_drained__7, oobs__group_drained__8, oobs__group_drained__9, oobs__group_drained__10, oobs__group_drained__11, oobs__group_drained__12, oobs__group_drained__13, oobs__group_drained__14, oobs__group_drained__15, oobs__group_drained__16, oobs__group_drained__17, oobs__group_drained__18, oobs__group_drained__19, oobs__group_drained__20, oobs__group_drained__21, oobs__group_drained__22, oobs__group_drained__23, oobs__group_drained__24, oobs__group_drained__25, oobs__group_drained__26, oobs__group_drained__27, oobs__group_drained__28, oobs__group_drained__29, oobs__group_drained__30, oobs__group_drained__31}), .group_fault({oobs__group_fault__0, oobs__group_fault__1, oobs__group_fault__2, oobs__group_fault__3, oobs__group_fault__4, oobs__group_fault__5, oobs__group_fault__6, oobs__group_fault__7, oobs__group_fault__8, oobs__group_fault__9, oobs__group_fault__10, oobs__group_fault__11, oobs__group_fault__12, oobs__group_fault__13, oobs__group_fault__14, oobs__group_fault__15, oobs__group_fault__16, oobs__group_fault__17, oobs__group_fault__18, oobs__group_fault__19, oobs__group_fault__20, oobs__group_fault__21, oobs__group_fault__22, oobs__group_fault__23, oobs__group_fault__24, oobs__group_fault__25, oobs__group_fault__26, oobs__group_fault__27, oobs__group_fault__28, oobs__group_fault__29, oobs__group_fault__30, oobs__group_fault__31}), .go(w_oobs__go), .upstream_quiet(w_oobs__upstream_quiet), .host_quiet(w_oobs__host_quiet), .kv_active_local(w_oobs__kv_active_local), .kv_drained_local(w_oobs__kv_drained_local), .kv_flush_local(w_oobs__kv_flush_local));
     qkd_static_kv_ownership_calendar #(.MUT(0)) u_own (.ck(own__ck), .rst_n(rst_n), .cfg_we(w_boot__ownership_we[0:0]), .cfg_addr(w_boot__ownership_addr[1:0]), .cfg_data(w_boot__ownership_data[31:0]), .go(w_oobs__go[0:0]), .host_quiet(w_oobs__host_quiet[0:0]), .upstream_quiet(w_oobs__upstream_quiet[0:0]), .group_drained({oobs__group_drained__0, oobs__group_drained__1, oobs__group_drained__2, oobs__group_drained__3, oobs__group_drained__4, oobs__group_drained__5, oobs__group_drained__6, oobs__group_drained__7, oobs__group_drained__8, oobs__group_drained__9, oobs__group_drained__10, oobs__group_drained__11, oobs__group_drained__12, oobs__group_drained__13, oobs__group_drained__14, oobs__group_drained__15, oobs__group_drained__16, oobs__group_drained__17, oobs__group_drained__18, oobs__group_drained__19, oobs__group_drained__20, oobs__group_drained__21, oobs__group_drained__22, oobs__group_drained__23, oobs__group_drained__24, oobs__group_drained__25, oobs__group_drained__26, oobs__group_drained__27, oobs__group_drained__28, oobs__group_drained__29, oobs__group_drained__30, oobs__group_drained__31}), .group_fault({oobs__group_fault__0, oobs__group_fault__1, oobs__group_fault__2, oobs__group_fault__3, oobs__group_fault__4, oobs__group_fault__5, oobs__group_fault__6, oobs__group_fault__7, oobs__group_fault__8, oobs__group_fault__9, oobs__group_fault__10, oobs__group_fault__11, oobs__group_fault__12, oobs__group_fault__13, oobs__group_fault__14, oobs__group_fault__15, oobs__group_fault__16, oobs__group_fault__17, oobs__group_fault__18, oobs__group_fault__19, oobs__group_fault__20, oobs__group_fault__21, oobs__group_fault__22, oobs__group_fault__23, oobs__group_fault__24, oobs__group_fault__25, oobs__group_fault__26, oobs__group_fault__27, oobs__group_fault__28, oobs__group_fault__29, oobs__group_fault__30, oobs__group_fault__31}), .native_mode(w_own__native_mode), .ownership_valid(w_own__ownership_valid), .native_reserved(w_own__native_reserved), .active(w_own__active), .done(w_own__done), .configured(w_own__configured), .cycle(w_own__cycle), .fault(w_own__fault), .fault_code(w_own__fault_code));
     qkd_kv_native_programme #(.MUT(0), .VMAP(1)) u_wprg (.ck(wprg__ck), .rst_n(rst_n), .cfg_we(w_boot__writer_we[0:0]), .cfg_addr(w_boot__writer_addr[7:0]), .cfg_data(w_boot__writer_data[63:0]), .start(w_lprg__writer_start[0:0]), .stage(w_lprg__stage[5:0]), .epoch(w_lprg__epoch[15:0]), .token(w_lprg__token[17:0]), .position(w_lprg__position[12:0]), .generation(w_lprg__generation[1:0]), .compiled_word_slot(w_wprg__compiled_word_slot), .compiled_word_index(w_wprg__compiled_word_index), .compiled_identity(w_wprg__compiled_identity), .compiled_generation(w_wprg__compiled_generation), .kvn_word_slot(w_wprg__kvn_word_slot), .configured(w_wprg__configured), .active(w_wprg__active), .done(w_wprg__done), .fault(w_wprg__fault), .cycle(w_wprg__cycle), .expected_valid(w_wprg__expected_valid), .expected_pc(w_wprg__expected_pc), .expected_stack(w_wprg__expected_stack), .expected_identity(w_wprg__expected_identity), .expected_generation(w_wprg__expected_generation), .expected_address(w_wprg__expected_address));
-    qkd_kv_static_writer_native #(.MUT(0), .VMAP(1)) u_wrn (.ck(wrn__ck), .rst_n(rst_n), .word_valid(d2d__srx[10:10]), .word_tag(d2d__srx[21:11]), .word_data(d2d__srx[533:22]), .word_identity(d2d__kvn_word_identity[58:0]), .word_generation(d2d__kvn_word_generation[1:0]), .compiled_word_slot(w_wprg__compiled_word_slot[0:0]), .compiled_word_index(w_wprg__compiled_word_index[1:0]), .compiled_identity(w_wprg__compiled_identity[58:0]), .compiled_generation(w_wprg__compiled_generation[1:0]), .es(w_wrn__es), .dest_pc(w_wrn__dest_pc), .dest_stack(w_wrn__dest_stack), .identity(w_wrn__identity), .generation(w_wrn__generation), .expected_valid(w_wrn__expected_valid), .expected_pc(w_wrn__expected_pc), .expected_stack(w_wrn__expected_stack), .expected_identity(w_wrn__expected_identity), .expected_generation(w_wrn__expected_generation), .expected_address(w_wrn__expected_address), .fault(w_wrn__fault), .fault_code(w_wrn__fault_code));
+    qkd_kv_static_writer_native #(.MUT(0), .VMAP(1)) u_wrn (.ck(wrn__ck), .rst_n(rst_n), .word_valid(d2d__skw[0:0]), .word_tag(d2d__skw[11:1]), .word_data(d2d__srx[521:10]), .word_identity(d2d__kvn_word_identity[58:0]), .word_generation(d2d__kvn_word_generation[1:0]), .compiled_word_slot(w_wprg__compiled_word_slot[0:0]), .compiled_word_index(w_wprg__compiled_word_index[1:0]), .compiled_identity(w_wprg__compiled_identity[58:0]), .compiled_generation(w_wprg__compiled_generation[1:0]), .es(w_wrn__es), .dest_pc(w_wrn__dest_pc), .dest_stack(w_wrn__dest_stack), .identity(w_wrn__identity), .generation(w_wrn__generation), .expected_valid(w_wrn__expected_valid), .expected_pc(w_wrn__expected_pc), .expected_stack(w_wrn__expected_stack), .expected_identity(w_wrn__expected_identity), .expected_generation(w_wrn__expected_generation), .expected_address(w_wrn__expected_address), .fault(w_wrn__fault), .fault_code(w_wrn__fault_code));
     assign boot__link_cfg_tx_we = w_boot__link_cfg_tx_we;
     assign boot__link_cfg_rx_we = w_boot__link_cfg_rx_we;
     assign boot__link_cfg_addr = w_boot__link_cfg_addr;
@@ -827,7 +829,7 @@ module qkd_kvs_attn (
     input wire [0:0] ufk_ES,
     input wire [0:0] ufk_EN,
     input wire [0:0] attn__ck,
-    input wire [533:0] d2d__srx,
+    input wire [521:0] d2d__srx,
     input wire [547:0] d2d__rx_payload,
     input wire [0:0] d2d__att_tx_slot,
     input wire [3:0] d2d__att_tx_kind,
@@ -841,6 +843,12 @@ module qkd_kvs_attn (
     output wire [30:0] pvst,
     output wire [64:0] pvfst,
     output wire [164:0] ahs,
+    output wire [536:0] prg,
+    output wire [47:0] acal_WS,
+    output wire [47:0] acal_WN,
+    output wire [47:0] acal_ES,
+    output wire [47:0] acal_EN,
+    output wire [7:0] arh,
     input wire [76:0] i_ctl
 );
     wire [0:0] attn__fused_program_capability = i_ctl[0:0];
@@ -907,6 +915,12 @@ module qkd_kvs_attn (
     assign pvst = {w_attn_root__ep, w_attn_root__ctx, w_attn_root__start_pv};
     assign pvfst = {w_attn_root__cal[175:128], w_attn_root__ep, w_attn_root__start_pv};
     assign ahs = {w_attn_root__cal[175:160], w_attn_root__cal[127:16], w_attn_root__ctx, w_attn_root__layer, w_attn_root__ep, w_attn_root__start_qk};
+    assign prg = {w_attn__q_data, w_attn__q_beat, w_attn__q_valid, w_attn__request_position, w_attn__request_valid};
+    assign acal_WS = {w_attn_root__cal[15:0], w_attn_root__cal[47:32], w_attn_root__cal[31:16]};
+    assign acal_WN = {w_attn_root__cal[15:0], w_attn_root__cal[47:32], w_attn_root__cal[31:16]};
+    assign acal_ES = {w_attn_root__cal[15:0], w_attn_root__cal[47:32], w_attn_root__cal[31:16]};
+    assign acal_EN = {w_attn_root__cal[15:0], w_attn_root__cal[47:32], w_attn_root__cal[31:16]};
+    assign arh = {fin[0], 2'b00, fin[5:1]};
 endmodule
 
 // qkd_kvs_grp: GENERATED by tools/qwen_kv_die/kv_static_die.py (wires-only parent of the static join; do not edit)
@@ -1182,18 +1196,24 @@ module qkd_kvs_pc (
     input wire [0:0] pc__return_ck,
     input wire [3:0] pc__return_hbm_data,
     input wire [0:0] x__est__0_1,
+    input wire [260:0] pc__land_er,
+    input wire [287:0] pc__hes,
     output wire [0:0] pc__fo,
     output wire [260:0] pc__er,
     output wire [32:0] pc__ko,
     output wire [327:0] pc__po,
     output wire [0:0] pc__completion_v,
     output wire [0:0] pc__completion_we,
+    output wire [287:0] pc__land_es,
+    output wire [260:0] pc__her,
+    output wire [0:0] pc__hcompletion_v,
+    output wire [0:0] pc__hcompletion_we,
     input wire [127:0] i_grp,
-    input wire [778:0] i_next,
+    input wire [779:0] i_next,
     input wire [298:0] i_prev,
     output wire [304:0] o_grp,
     output wire [298:0] o_next,
-    output wire [778:0] o_prev
+    output wire [779:0] o_prev
 );
     wire [4:0] pc__cal_cfg_addr = i_grp[4:0];
     wire [63:0] pc__cal_cfg_data = i_grp[68:5];
@@ -1207,7 +1227,7 @@ module qkd_kvs_pc (
     wire [0:0] pc__cal_go = i_grp[105:105];
     wire [15:0] pc__cal_epoch = i_grp[121:106];
     wire [5:0] pc__cal_layer = i_grp[127:122];
-    wire [778:0] pc__chain_i = i_next[778:0];
+    wire [779:0] pc__chain_i = i_next[779:0];
     wire [298:0] embr__upi = i_prev[298:0];
     wire [298:0] w_embr__upo;
     wire [0:0] w_embr__fault;
@@ -1253,18 +1273,26 @@ module qkd_kvs_pc (
     wire [0:0] w_pc__emb_corrected;
     wire [0:0] w_pc__emb_outstanding;
     wire [0:0] w_pc__es_merge_fault;
-    wire [778:0] w_pc__chain_o;
+    wire [779:0] w_pc__chain_o;
     wire [0:0] w_pc__emb_capture_slot;
     wire [0:0] w_pc__emb_transfer_slot;
     wire [0:0] w_pc__chain_fault;
+    wire [287:0] w_pc__land_es;
+    wire [260:0] w_pc__her;
+    wire [0:0] w_pc__hcompletion_v;
+    wire [0:0] w_pc__hcompletion_we;
     qkd_embedding_static_return_hop u_embr (.ck(embr__ck), .rst_n(rst_n), .capture_slot(w_pc__emb_capture_slot[0:0]), .capture_v(w_pc__emb_beat_v[0:0]), .capture_record({w_pc__emb_beat_epoch[15:0], w_pc__emb_beat_scale[0:0], w_pc__emb_beat_half[0:0], w_pc__emb_beat_word[5:0], w_pc__emb_beat_token[17:0], w_pc__emb_beat_data[255:0]}), .transfer_slot(w_pc__emb_transfer_slot[0:0]), .upi(embr__upi), .upo(w_embr__upo), .fault(w_embr__fault));
-    qkd_static_kv_pc_path_fan_nc u_pc (.pll_hbm(pc__pll_hbm), .pll_hbm_port(pc__pll_hbm_port), .pll_hbm_ecc(pc__pll_hbm_ecc), .pll_hbm_cdc(pc__pll_hbm_cdc), .pll_hbm_obs(pc__pll_hbm_obs), .hrst(hrst_n), .ck(pc__ck), .rsi(rst_n), .pc(pc__pc), .er(w_pc__er), .po(w_pc__po), .pi(pc__pi), .ki(pc__ki), .ko(w_pc__ko), .fi(pc__fi), .fo(w_pc__fo), .cfg_stack(pc__cfg_stack), .native_commit_valid(w_pc__native_commit_valid), .native_commit_identity(w_pc__native_commit_identity), .native_commit_address(w_pc__native_commit_address), .completion_v(w_pc__completion_v), .completion_we(w_pc__completion_we), .completion_fault(w_pc__completion_fault), .idle_core(w_pc__idle_core), .idle_hbm(w_pc__idle_hbm), .drain_fault_core(w_pc__drain_fault_core), .drain_fault_hbm(w_pc__drain_fault_hbm), .cal_hck(pc__cal_hck), .cal_rst_n(hrst_n), .cal_cfg_we(pc__cal_cfg_we), .cal_cfg_addr(pc__cal_cfg_addr), .cal_cfg_data(pc__cal_cfg_data), .cal_seal(pc__cal_seal), .cal_go(pc__cal_go), .cal_epoch(pc__cal_epoch), .cal_layer(pc__cal_layer), .cal_fault_hbm(w_pc__cal_fault_hbm), .cal_idle_hbm(w_pc__cal_idle_hbm), .front_hck(pc__front_hck), .front_hbm_data(pc__front_hbm_data), .front_blk_go(pc__front_blk_go), .front_blk_freed(w_pc__front_blk_freed), .front_hold(w_pc__front_hold), .front_stall_edges(w_pc__front_stall_edges), .front_occupancy(w_pc__front_occupancy), .front_idle_hbm(w_pc__front_idle_hbm), .front_fault_overflow_hbm(w_pc__front_fault_overflow_hbm), .front_fault_go_hbm(w_pc__front_fault_go_hbm), .return_hck(pc__return_hck), .return_ck(pc__return_ck), .return_hbm_data(pc__return_hbm_data), .expected_put(pc__expected_put), .expected_sector(pc__expected_sector), .expected_epoch(pc__expected_epoch), .expected_layer(pc__expected_layer), .actual_valid(w_pc__actual_valid), .actual_sector(w_pc__actual_sector), .actual_epoch(w_pc__actual_epoch), .actual_layer(w_pc__actual_layer), .actual_data(w_pc__actual_data), .return_fault_hbm(w_pc__return_fault_hbm), .return_fault_core(w_pc__return_fault_core), .return_idle_hbm(w_pc__return_idle_hbm), .return_idle_core(w_pc__return_idle_core), .emb_boot_ready(x__est__0_1), .emb_beat_v(w_pc__emb_beat_v), .emb_beat_data(w_pc__emb_beat_data), .emb_beat_token(w_pc__emb_beat_token), .emb_beat_word(w_pc__emb_beat_word), .emb_beat_half(w_pc__emb_beat_half), .emb_beat_scale(w_pc__emb_beat_scale), .emb_beat_epoch(w_pc__emb_beat_epoch), .emb_corrected(w_pc__emb_corrected), .emb_outstanding(w_pc__emb_outstanding), .es_merge_fault(w_pc__es_merge_fault), .chain_i(pc__chain_i), .chain_o(w_pc__chain_o), .emb_capture_slot(w_pc__emb_capture_slot), .emb_transfer_slot(w_pc__emb_transfer_slot), .chain_fault(w_pc__chain_fault));
+    qkd_static_kv_pc_path_fan_nc_b u_pc (.pll_hbm(pc__pll_hbm), .pll_hbm_port(pc__pll_hbm_port), .pll_hbm_ecc(pc__pll_hbm_ecc), .pll_hbm_cdc(pc__pll_hbm_cdc), .pll_hbm_obs(pc__pll_hbm_obs), .hrst(hrst_n), .ck(pc__ck), .rsi(rst_n), .pc(pc__pc), .er(w_pc__er), .po(w_pc__po), .pi(pc__pi), .ki(pc__ki), .ko(w_pc__ko), .fi(pc__fi), .fo(w_pc__fo), .cfg_stack(pc__cfg_stack), .native_commit_valid(w_pc__native_commit_valid), .native_commit_identity(w_pc__native_commit_identity), .native_commit_address(w_pc__native_commit_address), .completion_v(w_pc__completion_v), .completion_we(w_pc__completion_we), .completion_fault(w_pc__completion_fault), .idle_core(w_pc__idle_core), .idle_hbm(w_pc__idle_hbm), .drain_fault_core(w_pc__drain_fault_core), .drain_fault_hbm(w_pc__drain_fault_hbm), .cal_hck(pc__cal_hck), .cal_rst_n(hrst_n), .cal_cfg_we(pc__cal_cfg_we), .cal_cfg_addr(pc__cal_cfg_addr), .cal_cfg_data(pc__cal_cfg_data), .cal_seal(pc__cal_seal), .cal_go(pc__cal_go), .cal_epoch(pc__cal_epoch), .cal_layer(pc__cal_layer), .cal_fault_hbm(w_pc__cal_fault_hbm), .cal_idle_hbm(w_pc__cal_idle_hbm), .front_hck(pc__front_hck), .front_hbm_data(pc__front_hbm_data), .front_blk_go(pc__front_blk_go), .front_blk_freed(w_pc__front_blk_freed), .front_hold(w_pc__front_hold), .front_stall_edges(w_pc__front_stall_edges), .front_occupancy(w_pc__front_occupancy), .front_idle_hbm(w_pc__front_idle_hbm), .front_fault_overflow_hbm(w_pc__front_fault_overflow_hbm), .front_fault_go_hbm(w_pc__front_fault_go_hbm), .return_hck(pc__return_hck), .return_ck(pc__return_ck), .return_hbm_data(pc__return_hbm_data), .expected_put(pc__expected_put), .expected_sector(pc__expected_sector), .expected_epoch(pc__expected_epoch), .expected_layer(pc__expected_layer), .actual_valid(w_pc__actual_valid), .actual_sector(w_pc__actual_sector), .actual_epoch(w_pc__actual_epoch), .actual_layer(w_pc__actual_layer), .actual_data(w_pc__actual_data), .return_fault_hbm(w_pc__return_fault_hbm), .return_fault_core(w_pc__return_fault_core), .return_idle_hbm(w_pc__return_idle_hbm), .return_idle_core(w_pc__return_idle_core), .emb_boot_ready(x__est__0_1), .emb_beat_v(w_pc__emb_beat_v), .emb_beat_data(w_pc__emb_beat_data), .emb_beat_token(w_pc__emb_beat_token), .emb_beat_word(w_pc__emb_beat_word), .emb_beat_half(w_pc__emb_beat_half), .emb_beat_scale(w_pc__emb_beat_scale), .emb_beat_epoch(w_pc__emb_beat_epoch), .emb_corrected(w_pc__emb_corrected), .emb_outstanding(w_pc__emb_outstanding), .es_merge_fault(w_pc__es_merge_fault), .chain_i(pc__chain_i), .chain_o(w_pc__chain_o), .emb_capture_slot(w_pc__emb_capture_slot), .emb_transfer_slot(w_pc__emb_transfer_slot), .chain_fault(w_pc__chain_fault), .land_es(w_pc__land_es), .land_er(pc__land_er), .hes(pc__hes), .her(w_pc__her), .hcompletion_v(w_pc__hcompletion_v), .hcompletion_we(w_pc__hcompletion_we));
     assign pc__fo = w_pc__fo;
     assign pc__er = w_pc__er;
     assign pc__ko = w_pc__ko;
     assign pc__po = w_pc__po;
     assign pc__completion_v = w_pc__completion_v;
     assign pc__completion_we = w_pc__completion_we;
+    assign pc__land_es = w_pc__land_es;
+    assign pc__her = w_pc__her;
+    assign pc__hcompletion_v = w_pc__hcompletion_v;
+    assign pc__hcompletion_we = w_pc__hcompletion_we;
     assign o_grp = {w_pc__return_idle_hbm, w_pc__return_idle_core, w_pc__return_fault_hbm, w_pc__return_fault_core, w_pc__idle_hbm, w_pc__idle_core, w_pc__front_idle_hbm, w_pc__front_hold, w_pc__front_fault_overflow_hbm, w_pc__front_fault_go_hbm, w_pc__fo, w_pc__er[260:260], w_pc__drain_fault_hbm, w_pc__drain_fault_core, w_pc__completion_fault, w_pc__cal_fault_hbm, w_pc__actual_valid, w_pc__actual_sector, w_pc__actual_layer, w_pc__actual_epoch, w_pc__actual_data};
     assign o_next = {w_embr__upo};
     assign o_prev = {w_pc__chain_o};
@@ -1541,14 +1569,20 @@ module qkd_kvs_pc_h (
     input wire [0:0] pc__return_ck,
     input wire [3:0] pc__return_hbm_data,
     input wire [0:0] x__est__0_1,
+    input wire [260:0] pc__land_er,
+    input wire [287:0] pc__hes,
     output wire [0:0] pc__fo,
     output wire [260:0] pc__er,
     output wire [32:0] pc__ko,
     output wire [327:0] pc__po,
     output wire [0:0] pc__completion_v,
     output wire [0:0] pc__completion_we,
+    output wire [287:0] pc__land_es,
+    output wire [260:0] pc__her,
+    output wire [0:0] pc__hcompletion_v,
+    output wire [0:0] pc__hcompletion_we,
     input wire [127:0] i_grp,
-    input wire [778:0] i_next,
+    input wire [779:0] i_next,
     output wire [304:0] o_grp,
     output wire [298:0] o_next
 );
@@ -1564,7 +1598,7 @@ module qkd_kvs_pc_h (
     wire [0:0] pc__cal_go = i_grp[105:105];
     wire [15:0] pc__cal_epoch = i_grp[121:106];
     wire [5:0] pc__cal_layer = i_grp[127:122];
-    wire [778:0] pc__chain_i = i_next[778:0];
+    wire [779:0] pc__chain_i = i_next[779:0];
     wire [298:0] w_embr__upo;
     wire [0:0] w_embr__fault;
     wire [260:0] w_pc__er;
@@ -1609,18 +1643,26 @@ module qkd_kvs_pc_h (
     wire [0:0] w_pc__emb_corrected;
     wire [0:0] w_pc__emb_outstanding;
     wire [0:0] w_pc__es_merge_fault;
-    wire [778:0] w_pc__chain_o;
+    wire [779:0] w_pc__chain_o;
     wire [0:0] w_pc__emb_capture_slot;
     wire [0:0] w_pc__emb_transfer_slot;
     wire [0:0] w_pc__chain_fault;
+    wire [287:0] w_pc__land_es;
+    wire [260:0] w_pc__her;
+    wire [0:0] w_pc__hcompletion_v;
+    wire [0:0] w_pc__hcompletion_we;
     qkd_embedding_static_return_head #(.MUT(0)) u_embr (.ck(embr__ck), .rst_n(rst_n), .capture_slot(w_pc__emb_capture_slot[0:0]), .capture_v(w_pc__emb_beat_v[0:0]), .capture_record({w_pc__emb_beat_epoch[15:0], w_pc__emb_beat_scale[0:0], w_pc__emb_beat_half[0:0], w_pc__emb_beat_word[5:0], w_pc__emb_beat_token[17:0], w_pc__emb_beat_data[255:0]}), .transfer_slot(w_pc__emb_transfer_slot[0:0]), .upo(w_embr__upo), .fault(w_embr__fault));
-    qkd_static_kv_pc_path_fan_nc u_pc (.pll_hbm(pc__pll_hbm), .pll_hbm_port(pc__pll_hbm_port), .pll_hbm_ecc(pc__pll_hbm_ecc), .pll_hbm_cdc(pc__pll_hbm_cdc), .pll_hbm_obs(pc__pll_hbm_obs), .hrst(hrst_n), .ck(pc__ck), .rsi(rst_n), .pc(pc__pc), .er(w_pc__er), .po(w_pc__po), .pi(pc__pi), .ki(pc__ki), .ko(w_pc__ko), .fi(pc__fi), .fo(w_pc__fo), .cfg_stack(pc__cfg_stack), .native_commit_valid(w_pc__native_commit_valid), .native_commit_identity(w_pc__native_commit_identity), .native_commit_address(w_pc__native_commit_address), .completion_v(w_pc__completion_v), .completion_we(w_pc__completion_we), .completion_fault(w_pc__completion_fault), .idle_core(w_pc__idle_core), .idle_hbm(w_pc__idle_hbm), .drain_fault_core(w_pc__drain_fault_core), .drain_fault_hbm(w_pc__drain_fault_hbm), .cal_hck(pc__cal_hck), .cal_rst_n(hrst_n), .cal_cfg_we(pc__cal_cfg_we), .cal_cfg_addr(pc__cal_cfg_addr), .cal_cfg_data(pc__cal_cfg_data), .cal_seal(pc__cal_seal), .cal_go(pc__cal_go), .cal_epoch(pc__cal_epoch), .cal_layer(pc__cal_layer), .cal_fault_hbm(w_pc__cal_fault_hbm), .cal_idle_hbm(w_pc__cal_idle_hbm), .front_hck(pc__front_hck), .front_hbm_data(pc__front_hbm_data), .front_blk_go(pc__front_blk_go), .front_blk_freed(w_pc__front_blk_freed), .front_hold(w_pc__front_hold), .front_stall_edges(w_pc__front_stall_edges), .front_occupancy(w_pc__front_occupancy), .front_idle_hbm(w_pc__front_idle_hbm), .front_fault_overflow_hbm(w_pc__front_fault_overflow_hbm), .front_fault_go_hbm(w_pc__front_fault_go_hbm), .return_hck(pc__return_hck), .return_ck(pc__return_ck), .return_hbm_data(pc__return_hbm_data), .expected_put(pc__expected_put), .expected_sector(pc__expected_sector), .expected_epoch(pc__expected_epoch), .expected_layer(pc__expected_layer), .actual_valid(w_pc__actual_valid), .actual_sector(w_pc__actual_sector), .actual_epoch(w_pc__actual_epoch), .actual_layer(w_pc__actual_layer), .actual_data(w_pc__actual_data), .return_fault_hbm(w_pc__return_fault_hbm), .return_fault_core(w_pc__return_fault_core), .return_idle_hbm(w_pc__return_idle_hbm), .return_idle_core(w_pc__return_idle_core), .emb_boot_ready(x__est__0_1), .emb_beat_v(w_pc__emb_beat_v), .emb_beat_data(w_pc__emb_beat_data), .emb_beat_token(w_pc__emb_beat_token), .emb_beat_word(w_pc__emb_beat_word), .emb_beat_half(w_pc__emb_beat_half), .emb_beat_scale(w_pc__emb_beat_scale), .emb_beat_epoch(w_pc__emb_beat_epoch), .emb_corrected(w_pc__emb_corrected), .emb_outstanding(w_pc__emb_outstanding), .es_merge_fault(w_pc__es_merge_fault), .chain_i(pc__chain_i), .chain_o(w_pc__chain_o), .emb_capture_slot(w_pc__emb_capture_slot), .emb_transfer_slot(w_pc__emb_transfer_slot), .chain_fault(w_pc__chain_fault));
+    qkd_static_kv_pc_path_fan_nc_b u_pc (.pll_hbm(pc__pll_hbm), .pll_hbm_port(pc__pll_hbm_port), .pll_hbm_ecc(pc__pll_hbm_ecc), .pll_hbm_cdc(pc__pll_hbm_cdc), .pll_hbm_obs(pc__pll_hbm_obs), .hrst(hrst_n), .ck(pc__ck), .rsi(rst_n), .pc(pc__pc), .er(w_pc__er), .po(w_pc__po), .pi(pc__pi), .ki(pc__ki), .ko(w_pc__ko), .fi(pc__fi), .fo(w_pc__fo), .cfg_stack(pc__cfg_stack), .native_commit_valid(w_pc__native_commit_valid), .native_commit_identity(w_pc__native_commit_identity), .native_commit_address(w_pc__native_commit_address), .completion_v(w_pc__completion_v), .completion_we(w_pc__completion_we), .completion_fault(w_pc__completion_fault), .idle_core(w_pc__idle_core), .idle_hbm(w_pc__idle_hbm), .drain_fault_core(w_pc__drain_fault_core), .drain_fault_hbm(w_pc__drain_fault_hbm), .cal_hck(pc__cal_hck), .cal_rst_n(hrst_n), .cal_cfg_we(pc__cal_cfg_we), .cal_cfg_addr(pc__cal_cfg_addr), .cal_cfg_data(pc__cal_cfg_data), .cal_seal(pc__cal_seal), .cal_go(pc__cal_go), .cal_epoch(pc__cal_epoch), .cal_layer(pc__cal_layer), .cal_fault_hbm(w_pc__cal_fault_hbm), .cal_idle_hbm(w_pc__cal_idle_hbm), .front_hck(pc__front_hck), .front_hbm_data(pc__front_hbm_data), .front_blk_go(pc__front_blk_go), .front_blk_freed(w_pc__front_blk_freed), .front_hold(w_pc__front_hold), .front_stall_edges(w_pc__front_stall_edges), .front_occupancy(w_pc__front_occupancy), .front_idle_hbm(w_pc__front_idle_hbm), .front_fault_overflow_hbm(w_pc__front_fault_overflow_hbm), .front_fault_go_hbm(w_pc__front_fault_go_hbm), .return_hck(pc__return_hck), .return_ck(pc__return_ck), .return_hbm_data(pc__return_hbm_data), .expected_put(pc__expected_put), .expected_sector(pc__expected_sector), .expected_epoch(pc__expected_epoch), .expected_layer(pc__expected_layer), .actual_valid(w_pc__actual_valid), .actual_sector(w_pc__actual_sector), .actual_epoch(w_pc__actual_epoch), .actual_layer(w_pc__actual_layer), .actual_data(w_pc__actual_data), .return_fault_hbm(w_pc__return_fault_hbm), .return_fault_core(w_pc__return_fault_core), .return_idle_hbm(w_pc__return_idle_hbm), .return_idle_core(w_pc__return_idle_core), .emb_boot_ready(x__est__0_1), .emb_beat_v(w_pc__emb_beat_v), .emb_beat_data(w_pc__emb_beat_data), .emb_beat_token(w_pc__emb_beat_token), .emb_beat_word(w_pc__emb_beat_word), .emb_beat_half(w_pc__emb_beat_half), .emb_beat_scale(w_pc__emb_beat_scale), .emb_beat_epoch(w_pc__emb_beat_epoch), .emb_corrected(w_pc__emb_corrected), .emb_outstanding(w_pc__emb_outstanding), .es_merge_fault(w_pc__es_merge_fault), .chain_i(pc__chain_i), .chain_o(w_pc__chain_o), .emb_capture_slot(w_pc__emb_capture_slot), .emb_transfer_slot(w_pc__emb_transfer_slot), .chain_fault(w_pc__chain_fault), .land_es(w_pc__land_es), .land_er(pc__land_er), .hes(pc__hes), .her(w_pc__her), .hcompletion_v(w_pc__hcompletion_v), .hcompletion_we(w_pc__hcompletion_we));
     assign pc__fo = w_pc__fo;
     assign pc__er = w_pc__er;
     assign pc__ko = w_pc__ko;
     assign pc__po = w_pc__po;
     assign pc__completion_v = w_pc__completion_v;
     assign pc__completion_we = w_pc__completion_we;
+    assign pc__land_es = w_pc__land_es;
+    assign pc__her = w_pc__her;
+    assign pc__hcompletion_v = w_pc__hcompletion_v;
+    assign pc__hcompletion_we = w_pc__hcompletion_we;
     assign o_grp = {w_pc__return_idle_hbm, w_pc__return_idle_core, w_pc__return_fault_hbm, w_pc__return_fault_core, w_pc__idle_hbm, w_pc__idle_core, w_pc__front_idle_hbm, w_pc__front_hold, w_pc__front_fault_overflow_hbm, w_pc__front_fault_go_hbm, w_pc__fo, w_pc__er[260:260], w_pc__drain_fault_hbm, w_pc__drain_fault_core, w_pc__completion_fault, w_pc__cal_fault_hbm, w_pc__actual_valid, w_pc__actual_sector, w_pc__actual_layer, w_pc__actual_epoch, w_pc__actual_data};
     assign o_next = {w_embr__upo};
 endmodule
@@ -1673,8 +1715,8 @@ module qkd_kvs_hroot (
     input wire [0:0] esh__ck,
     input wire [0:0] rst_n,
     input wire [1:0] esh__stack,
-    input wire [1116:0] i_ctl,
-    output wire [778:0] o_pc,
+    input wire [1117:0] i_ctl,
+    output wire [779:0] o_pc,
     input wire [143:0] i_g,
     input wire [298:0] i_r,
     input wire [0:0] rly__ck,
@@ -1691,13 +1733,13 @@ module qkd_kvs_hroot (
     output wire [143:0] o_ctl,
     output wire [298:0] o_emb
 );
-    wire [782:0] esh__h = i_ctl[782:0];
-    wire [778:0] w_esh__d;
+    wire [783:0] esh__h = i_ctl[783:0];
+    wire [779:0] w_esh__d;
     wire [333:0] w_rly__fan;
     wire [143:0] w_rly__g;
     wire [298:0] w_rly__r;
-    qkd_kv_es_fan_stack #(.MUT(0)) u_esh (.ck(esh__ck), .rst_n(rst_n), .stack(esh__stack), .h(esh__h), .d(w_esh__d));
-    qkd_kv_stack_relays #(.HW(783), .FW(334), .GW(144), .RW(299)) u_rly (.ck(rly__ck), .dn(i_ctl), .g_i(i_g), .r_i(i_r), .fan(w_rly__fan), .g(w_rly__g), .r(w_rly__r));
+    qkd_kv_es_fan_stack_b #(.MUT(0)) u_esh (.ck(esh__ck), .rst_n(rst_n), .stack(esh__stack), .h(esh__h), .d(w_esh__d));
+    qkd_kv_stack_relays #(.HW(784), .FW(334), .GW(144), .RW(299)) u_rly (.ck(rly__ck), .dn(i_ctl), .g_i(i_g), .r_i(i_r), .fan(w_rly__fan), .g(w_rly__g), .r(w_rly__r));
     assign o_pc = {w_esh__d};
     assign o_c0 = w_rly__fan[298:294];
     assign o_c1 = w_rly__fan[303:299];
