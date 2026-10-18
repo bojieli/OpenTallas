@@ -1717,7 +1717,12 @@ def place(m, K, geo, F):
             gd, pc = by[f'slg_{st}_0'], by[f'kvpc_{st}_31']
             anchors[f'kvs_hroot_{st}'] = (gd.x + gd.w / 2, pc.y + pc.h + 400.0)
         hro = [(f'kvs_hroot_{st}', 'hroot') for st in ('WS', 'ES', 'WN', 'EN')]
-    for nm, kind in [('kvs_ctl', 'ctl'), ('kvs_emb', 'emb'), ('kvs_attn', 'attn')] + hro:
+    order = [('kvs_ctl', 'ctl'), ('kvs_emb', 'emb'), ('kvs_attn', 'attn')]
+    if ATTN_AT_D2D:
+        # QXF-SEAMK 10-18 (TOKEN-XDIE-QWEN F6 placement): kvs_attn against the D2D end's W face, kvs_emb W of it
+        anchors.update(d2d_side_anchors(d2d, FRAME['attn'], FRAME['emb']))
+        order = [('kvs_ctl', 'ctl'), ('kvs_attn', 'attn'), ('kvs_emb', 'emb')]
+    for nm, kind in order + hro:
         w, h = FRAME[kind]
         x, y = free_spot(m, w, h, anchors[nm], GX, GY)
         m['insts'].append(F.Inst(nm, KIND_MASTER[kind], round(x, 4), round(y, 4), w - SH, h - SH, 'R0', kind='static',
@@ -1731,6 +1736,27 @@ def place(m, K, geo, F):
         x, y = free_spot(m, w, h, (ah.x - w / 2 - 30.0, ys), GX, GY)
         m['insts'].append(F.Inst('pvfin', 'qkd_pvfin', round(x, 4), round(y, 4), w - SH, h - SH, 'R0', kind='static',
                                  region='io', domain='core'))
+
+
+# QXF-SEAMK 10-18 (OT_KV_ATTN_AT_D2D=1, default off): kvs14c placed kvs_attn W of the N PV pair top, 2.0 mm S / 0.7 mm W of
+# the D2D end, so its four d2d record bundles ran 9-11 relays each way (rx 11, tx slot 9, tx 11: 22 of the +32 exposed
+# cycles a decode layer, TOKEN-XDIE-QWEN F6).  With the knob kvs_attn sits against the D2D end's W face (its N face
+# level with the end's rx_payload pin row, OT_KV_ATTN_D2D_TOP x the end's height above its bottom; its E face, which
+# carries attn__tx_valid / tx_payload, one halo from the end) and kvs_emb moves W of it on the same row (its embedding row
+# word becomes a 1-2 stage hop, once a token).  kvs14c pin geometry -> rx_record 0, tx_record 0, tx_slot 1 stage
+# (test_kv_bundle_eq.test_attn_at_d2d_pin_hops); the S-going kvs_attn words (ahs / pvst / pvfst / fin / acal) grow by
+# ~1.5-2 mm.  The KV die lead adopts it in a GEN (lanes/KV-LANDSLOT.md, KV-PLAN4.md).
+ATTN_AT_D2D = os.environ.get('OT_KV_ATTN_AT_D2D', '0') == '1'
+ATTN_D2D_TOP = float(os.environ.get('OT_KV_ATTN_D2D_TOP', '0.48'))
+
+
+def d2d_side_anchors(d2d, attn_wh, emb_wh, halo=21.6, top=None):
+    """centre anchors {kvs_attn, kvs_emb} beside the D2D end d2d (x, y, w, h): kvs_attn's E face one halo W of the end's
+    W face, its N face at top x the end's height; kvs_emb one halo W of kvs_attn, same row"""
+    aw, ah = attn_wh
+    ew, _ = emb_wh
+    yt = d2d.y + (ATTN_D2D_TOP if top is None else top) * d2d.h
+    return dict(kvs_attn=(d2d.x - halo - aw / 2, yt - ah / 2), kvs_emb=(d2d.x - 2 * halo - aw - ew / 2, yt - ah / 2))
 
 
 def free_spot(m, w, h, anchor, GX, GY, halo=21.6, rmax=4000.0):

@@ -1504,6 +1504,15 @@ LANDSLOT = os.environ.get('OT_KV_LANDSLOT', '0') == '1'
 def build(*args, **kwargs):
     """the plan (_build_plan) + the landing-frame reservation (OT_KV_LANDSLOT)"""
     m = _build_plan(*args, **kwargs)
+    # QXF-SEAMK 10-18 (TOKEN-XDIE-QWEN F6, OT_KV_BUNDLE_EQ default 1 on the static die): every static record bundle at the
+    # d2d end (rx / tx slot / tx / emb / KVN writer word) reaches its consumer whole -- the shorter members get pad relays
+    # at their sink end, after the pin repair (the last pass that adds stages) and before the landing slots
+    import kv_bundle_eq
+    if KSD.ON and kv_bundle_eq.on() and kwargs.get('split', len(args) > 7 and args[7]):
+        m = kv_bundle_eq.equalize(sys.modules[__name__], m)
+        print('kv die BUNDLE_EQ: ' + ', '.join(f"{n_} {r_.get('stages', r_.get('skipped'))}"
+                                               for n_, r_ in m['bundle_eq']['bundles'].items())
+              + f" ({len(m['bundle_eq']['added'])} pad relays)", file=sys.stderr)
     if LANDSLOT and kwargs.get('split', len(args) > 7 and args[7]):
         if os.environ.get('OT_KV_RLY_STD', '0') != '1' or not SEAM:
             raise ValueError('OT_KV_LANDSLOT=1 needs OT_KV_RLY_STD=1 and OT_KV_SEAM=1 (landing slots are relay-standard rows '
