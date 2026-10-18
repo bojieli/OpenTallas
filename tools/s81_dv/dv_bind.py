@@ -87,6 +87,16 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     top_ports = []
     straps = []
     open_bind = {}
+    ckin = collections.defaultdict(dict)   # inst -> {rtl clock-in port: {lane: link}}
+    abut_rows, abut_links = [], set()
+    for bl in blocks:   # plan lanes realised by an abutted face (both ends skip them)
+        ab = M[bl['master']].get('abut')
+        if ab and M[bl['master']].get('module'):
+            for e in ends[bl['name']]:
+                if f'{e[0]}.{e[1]}' in ab.get('plan_ports', []):
+                    abut_links.add(e[3])
+                    abut_rows.append(dict(inst=bl['name'], master=bl['master'], plan_port=e[0], dir=e[1], bits=e[2], link=e[3],
+                                          peer=e[6], realised_by=f"abutted face to {ab['peer']} ({', '.join(ab['map'])})"))
     for bl in blocks:
         n = bl['name']; m = M[bl['master']]
         mod = m.get('module')
@@ -102,6 +112,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         hb = 0
         for (p, d), es in grp.items():
             rule = pm.get(f'{p}.{d}')
+            if all(e[3] in abut_links for e in es):
+                continue    # plan lane realised by an abutted named face connection: no die wire, no relay
             if rule is None:
                 po = m.get('plan_only_ports', {})
                 own = po.get('owner') if f'{p}.{d}' in po.get('ports', []) else m.get('owner')
@@ -129,6 +141,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                     w = dname(e[3])
                     c[rport].append((lane * lw, lane * lw + min(b, lw) - 1, w, b))
                     link_dst[e[3]] = w
+                    if rule.get('ck_in'):   # the lane's forwarded clock (last station ck_o) into the receiver
+                        ckin[n].setdefault(rule['ck_in'], {})[lane] = e[3]
                 if b > lw:
                     plan_not_in_rtl.append(dict(inst=n, module=mod, plan_port=p, dir=d, bits=b, link=e[3],
                                                 note=f'plan {b} b > RTL lane {lw} b: {b - lw} bits dropped'))
@@ -160,7 +174,30 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     # declare link wires
     for l in plan['links']:
         nm = l['i'].replace('-', '_'); b = l['b']
+        if nm in abut_links:
+            continue
         v.append(f'  wire [{b - 1}:0] w_{nm}_src, w_{nm}_dst;')
+        if chains_pts[nm]:
+            v.append(f'  wire [{len(chains_pts[nm])}:0] n{nm}_fck;')
+    # abutted faces (e.g. regional controller <-> HBM PHY): one full-width wire per peer port; instance k drives /
+    # reads its slice [k*lane +: lane] (k = x order of the instances of the master)
+    abut_conn = collections.defaultdict(list)    # inst -> [connection strings]
+    peer_conn = collections.defaultdict(list)
+    for mname, mm in M.items():
+        ab = mm.get('abut')
+        if not ab or not mm.get('module'):
+            continue
+        insts = sorted((b for b in blocks if b['master'] == mname), key=lambda b: b['x'])
+        peers = [b for b in blocks if b['master'] == ab['peer']]
+        assert len(peers) == 1, (mname, ab['peer'])
+        pn = peers[0]['name']
+        for port, (pport, lane, pw) in ab['map'].items():
+            wn = f'a_{pn}_{pport}'
+            v.append(f'  wire [{pw - 1}:0] {wn};')
+            peer_conn[pn].append(f'.{pport}({wn})')
+            for k, b in enumerate(insts):
+                abut_conn[b['name']].append(f'.{port}({wn}[{k * lane + lane - 1}:{k * lane}])')
+            assert len(insts) * lane == pw, (port, len(insts), lane, pw)
     # blocks
     rtl_widths = T.get('rtl_widths', {})
     pads, pad_rows = {}, []
@@ -181,6 +218,28 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             continue
         mod = m['module']
         cs = [f'.{m["clk"]}(ck_{r})'] + [f'.{x}(ck_{r})' for x in m.get('clk_extra', [])]
+        for cp in m.get('clk_peer', []):     # a port clocked by a peer block's root (e.g. ckh = the PHY clock)
+            pb_ = [b for b in blocks if b['master'] == cp['master']]
+            cs.append(f".{cp['port']}(ck_{reg[pb_[0]['name']]})")
+        cs += abut_conn.get(n, []) + peer_conn.get(n, [])
+        for cport, lanes in ckin.get(n, {}).items():
+            wd_ = rtl_widths.get(mod, {}).get(cport, max(lanes) + 1)
+            bits_ = []
+            for k_ in range(wd_):
+                lk = lanes.get(k_)
+                if lk is None:
+                    v.append(f'  wire u_{n}_{cport}_nc{k_};'); bits_.append(f'u_{n}_{cport}_nc{k_}'); continue
+                pts_ = chains_pts[lk]
+                if pts_:
+                    bits_.append(f'n{lk}_fck[{len(pts_)}]')     # last station ck_o
+                elif link_src.get(lk, (None, None))[1]:
+                    bits_.append(link_src[lk][1])               # 0-stage: the source's forwarded clock
+                else:
+                    src_ = [l for l in plan['links'] if l['i'].replace('-', '_') == lk][0]
+                    sreg = reg[blocks[src_['e'][0][0]]['name']]
+                    v.append(f'  wire ckf_{lk}; {FWD} fwdi_{lk} (.A(ck_{sreg}), .Y(ckf_{lk}));')
+                    bits_.append(f'ckf_{lk}')
+            cs.append(f'.{cport}({{{", ".join(reversed(bits_))}}})')
         if m.get('rst'):
             rp, pol = m['rst']
             if pol == 'high':
@@ -198,7 +257,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         col_ = int(n[2]) if n.startswith('s_') else None
         for mu in m.get('mode_unused', []):
             w_ = mu['when']
-            hit = ((w_ == 'hb0' and not (params.get(n) or {}).get(m.get('hb_param', 'HB'))) or
+            hit = (w_ == 'always' or (w_ == 'hb0' and not (params.get(n) or {}).get(m.get('hb_param', 'HB'))) or
                    (w_ == 'col0' and col_ == 0) or (w_ == 'col7' and col_ == 7))
             if hit and not conn[n].get(mu['port']):
                 wd_ = widths[mu['port']]
@@ -236,12 +295,13 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         nm = l['i'].replace('-', '_'); b = l['b']
         a = blocks[l['e'][0][0]]['name']
         pts = chains_pts[nm]
+        if nm in abut_links:
+            continue
         src, ck = link_src.get(nm, (f'w_{nm}_src', None))
         src = f'w_{nm}_src'
         if not pts:
             continue
         st = len(pts)
-        v.append(f'  wire [{st}:0] n{nm}_fck;')
         if ck:
             v.append(f'  // hop 0: the source master forwards its root (F1): {ck}')
         else:
@@ -286,12 +346,12 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             extra.append(str(dst))
     rec = dict(schema='opentallas.s81_dv.bind_case.v1', regions=regions, open_bindings=open_bind,
                plan_port_not_in_rtl=plan_not_in_rtl, relay_masters=dict(nst), clock_forward_cells=fwd_cells,
-               reset=rst['summary'], straps=straps, mode_unused_pads=pad_rows, views=dict(views),
+               abutted_plan_lanes=abut_rows, reset=rst['summary'], straps=straps, mode_unused_pads=pad_rows, views=dict(views),
                frame_contract=dict(verdict=frame_rec['verdict'], members=len(frame_rec['members']), problems=frame_rec['problems']), rtl_extra=extra, top_offchip_ports=top_ports)
     if run_bind:
         cmd = ['python3', str(ROOT / 'tools/die_port_bind.py'), str(out / 'die.v'), '--top', 'dv_die', '--rtl-root', str(ROOT / 'rtl'),
                '--rtl-file', str(out / 'cells_used.v'), '--strap-file', str(out / 'straps.json'), '--pad-file', str(out / 'pads.json'), '--out', str(out / 'port_bind.json')]
-        for f in list(extra) + list(extra_rtl):
+        for f in list(extra) + list(extra_rtl) + [str(ROOT / x) for x in T.get('rtl_files', [])]:
             cmd += ['--rtl-file', str(f)]
         for f in T.get('prefer', []):
             cmd += ['--prefer', str(out / 'rtl_extra' / f)]

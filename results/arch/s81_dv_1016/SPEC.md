@@ -622,3 +622,12 @@ Coordinator 0cj ~15:00 (a)-(c):
   - dsfd_engram_mix4_half x2 (S81U-3);
   - slice_lep tx/rx ports (S81-SLICE);
   - bk_sel / bk_col V-rung ports (S81U-2).
+
+#### p4i bind r2 (S81-DIE2 10-17 ~17:15): frames, ctrl_rg2, all relay views
+`dv_diecase.py --bind real --bind-table bind/bind_table_p4i.json` -> p4i/bind_r2 (r1 in p4i/bind kept).
+- Bound: col_h9 / col_h10 / col_h9_MX (S81U-3F RTL 99991b051; x lanes with xk = last-station ck_o, xo on xok, cr/cr_s on the region root); dsfd_ctrl_rg2 x16 (main 7d8b87af9; ckh = PHY clock; PHY k_*/kr_* as abutted faces, region k = PCs 2k/2k+1, the 32 plan DFI lanes are realised by the abutment); PHY W port = 5 mode-unused pads (49 b).
+- Relay views: all 14 station masters CLOSED + native PASS (68/512/562/682 receipts in physical/ref_tile/*/native_audit.json); child views smq, kp4_enc, rly_38_WN native PASS.
+- Strict die_port_bind FAIL: unbound 4 (svc_rs x16, gunit, seq_host, mix4_half x2), input_unconnected 8 (bk_sel/bk_col V ports), undriven 21,192 b (hrq 10,912 from svc_rs; tv 3,312 from the open units; lt_lk 4,096 = slice_lep tx; pv 2,208; slice rt 664), width 0, tied 0, pads 19,921. r1: 8 / 21 / 95,048.
+- FINDING (S81-DIE): plan RET = 68 but frame ret and slice rt lanes are 70 b ({rr[67:0], rr[0], rsync_s}): p4j must carry 70-b ret links (dsfd_dvrly_70_NS/SN kits owed; the 68 views become unused).
+- GRT p4i (stand-in blocks): nr overflow 0 (M3 9.67%); r overflow 0, fclk 0 mismatch, but post-GRT slew 1,402 violators worst 973.7 ps (p4h 22 / 349) -> classify before die STA.
+- Real-binding die run NOT placeable yet: 20 open-binding instances and 165 RTL-only instances (frames, slices, ctrl, PHY, links) have no abstract.

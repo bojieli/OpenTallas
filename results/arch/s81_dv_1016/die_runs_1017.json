@@ -74,6 +74,43 @@
    "wirelength_um": 341688403,
    "wall": "27:23",
    "peak_gb": 33.3
+  },
+  "die_p4i_full_nr": {
+   "unit": "oth-ubuntu-2590699-1792264979",
+   "exit": 0,
+   "grt_overflow": 0,
+   "M2": 0.29,
+   "M3": 9.67,
+   "M4": 4.59,
+   "M5": 5.5,
+   "wirelength_um": 310539628,
+   "wall": "9:57",
+   "peak_gb": 16.6
+  },
+  "die_p4i_full_r": {
+   "unit": "oth-ubuntu-2590710-1792264979",
+   "exit": 0,
+   "grt_overflow": 0,
+   "M2": 6.14,
+   "M3": 12.64,
+   "M4": 4.57,
+   "M5": 5.55,
+   "repeaters": 1932675,
+   "rep_violations": 0,
+   "over_reach": 0,
+   "fclk": {
+    "nets": 2403,
+    "hops": 1771,
+    "judged": 1494,
+    "mismatch_over_1": 0
+   },
+   "post_grt_slew_viol": 1402,
+   "worst_slew_ps": 973.7,
+   "wirelength_um": 348338707,
+   "wall": "27:10",
+   "peak_gb": 33.6,
+   "note": "post-GRT slew regressed vs p4h_r (22 / 349 ps): 1,402 violators worst 973.7 ps after 2 resize passes (911 blocked, 320 driver not a repeater); classify before die STA"
   }
- }
+ },
+ "collected_p4i": "S81-DIE2 10-17 ~17:10 from out/run.log on ot-epyc4"
 }
