@@ -21,7 +21,7 @@
   "wbw_v": "same stream edge as the GEN0 master (lockstep checked)",
   "k_side": "fold is two XORs before the K pin skid: +0 edges",
   "window": "wbw_base = fold(base), wbw_total = real span (computed 2 registered edges after the reserve pin flop, >= 8 edges before any fill start)",
-  "drain": "16 PCs per quadrant DMA (was 32 per stack DMA, now two DMAs per stack): first-block fence 640 sectors = 614 (W) / 691 (E) stream edges in the quadrant bench (with group + VM traffic)"
+  "drain": "16 PCs per quadrant DMA (two DMAs per stack, was one 32-PC DMA): first 640-sector block fence 614 (W) / 691 (E) stream edges vs 695 for the GEN0 stack bench (tb_hbm_svc_wb_kshare_q baseline, same traffic mix): no compiler fence change needed at the production 640-sector block"
  },
  "f20_targets": {
   "hb_dbk_SW": 104,
@@ -46,7 +46,7 @@
  "evidence": {
   "bench": "rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh",
   "logs": "results/rtl/rbh_stk_1018/logs (pass + committed fail witnesses)",
-  "default_equivalence": "stack_fault yosys equiv 310/310 proven; cutthrough: wb_default regressions (run_wb_kshare_bench 4/4 QUALIFIED, run_wb_cutthrough_cdc_bench) + yosys equiv (see summary)"
+  "default_equivalence": "stack_fault: yosys equiv 310/310 proven; cutthrough: run_wb_kshare_bench 4/4 QUALIFIED + run_wb_cutthrough_cdc_bench PASS on the parameterised file (logs/wb_default.log); yosys equiv of the cutthrough (88,522 cells) still running at ot-epyc4:/srv/opentallas-scratch/claude/rbh-stk/out1/equiv_default/equiv.log"
  },
  "kits": "BLOCKED by ref_tile CDC policy (kit_policy_probe.txt): no policy admits the stream 833/HBM 1024 asynchronous pair through plain synchronisers or ot_hbm_accel_cdc_fifo + SRAM macros. GEN0 binds these masters as SYNTH ETMs; H-D4G keeps SYNTH binding. Tools follow-up (ROOT): extend cdc_synchronizers to the hbm_phy_async relationship (sfault_q 127 um2, refcfg_q ~200 um2) and async_gray_fifo to ot_hbm_accel_cdc_fifo + macros (wbk_q: 32 x 128x256 SRAM, ~250k um2, K face 16 x 289 b)."
 }
