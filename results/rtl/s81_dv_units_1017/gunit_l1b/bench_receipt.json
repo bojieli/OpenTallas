@@ -28,11 +28,18 @@
   "unit_pins": 50,
   "was": 36,
   "budget_select_only": 52.9,
-  "why": "+1 L1f bias add LAT 4 -> 5 (f12 l5x; LAT-4 first stage -207 ps at the gate), +1 L1 pin flops on the collector's i_v / i_ids (NATIVE-2: they fed the N-face ct_b output flop and the sequencer from the E pins); gather path 0 (L1c sends the request one edge earlier, L1f registers the one-hot hit decode)"
+  "why": "+1 L1f bias add LAT 4 -> 5 (f12 l5x; LAT-4 first stage -207 ps at the gate), +1 L1 pin flops on the collector's i_v / i_ids (NATIVE-2: they fed the N-face ct_b output flop and the sequencer from the E pins); gather path 0 (L1c sends the request one edge earlier, L1f registers the one-hot hit decode)",
+  "compiler_row": "S81 compiler router-select row not found on main/branches (only DAG ffn.top6_order 52.9 select-only budget); 38 <= 52.9 holds"
  },
  "hc_latency_edges": {
   "stop_pins": 748,
   "unchanged": true
  },
- "full": "PENDING: run_gunit_bench.sh /tmp/gunit_l1b_run/full2 8 (all 9 builds, must print GUNIT_GATE PASS); first run killed exit 143 on ot-agidock128 00:42, rerun 2026-10-18 03:05 -> lanes/gunit_l1b/full.log"
+ "full": {
+  "cmd": "run_gunit_bench.sh /tmp/gunit_l1b_run/full3 8 (all 9 builds; ot-run --mem 96, ot-epyc4)",
+  "rc": 0,
+  "verdict": "GUNIT_GATE PASS (8 golden cases, mutants 1/4/5/6/7/8/9/10 detected)",
+  "log": "results/rtl/s81_dv_units_1017/gunit_l1b/full_bench.log",
+  "note": "two earlier runs at --mem 24 were killed exit 143 (9 parallel Verilator builds exceed the 24 GB scope)"
+ }
 }
