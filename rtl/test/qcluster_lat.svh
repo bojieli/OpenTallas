@@ -5,5 +5,5 @@ localparam integer Q3H_LAT_TAP2 = 11;
 localparam integer Q3H_LAT_TAP3 = 15;
 localparam integer Q3H_LAT_BCO = 17;
 localparam integer Q3H_LAT_RS_FABRIC = 35;
-localparam integer QC_LAT_FT = 16;
-localparam integer Q3H_RST_DEPTH = 18;
+localparam integer QC_LAT_FT = 17;
+localparam integer Q3H_RST_DEPTH = 19;

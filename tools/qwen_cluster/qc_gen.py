@@ -40,7 +40,9 @@ OUT_ARCH = ROOT / "results/arch/qwen_cluster_1017"
 KIT = ROOT / "physical/ref_tile/qfd_c_b16_dv"
 # tile checklist 10-17 (macros on the 43.2-um lattice): every A0 origin a multiple of 43.2 -> L = R = 43.2,
 # A = T = B = 146.88 (>= the 129.6 of SPEC 1), S / N strips 86.4 (row pitch 1,296 = 30 x 43.2)
-CORR_W = {"L": 43.2, "A": 146.88, "T": 146.88, "B": 146.88, "R": 43.2}
+# Q-CLUSTER4 (coordinator 0de+6 (3)): L / R 43.2 -> 86.4 so the widened stations (51.84 / 56.16, faces <= 0.096 um/bit)
+# fit with a >= 20-um channel to the A0 face (or the 8.64 straight tap stub of an xstn)
+CORR_W = {"L": 86.4, "A": 146.88, "T": 146.88, "B": 146.88, "R": 86.4}
 STRIP_UM = 86.4
 LATTICE = 43.2
 HOP, LIMIT = 390.0, 405.0
@@ -114,7 +116,7 @@ def ft_chain(rs_x):
     yN, yS = HEIGHT - g.STRIP / 2, g.STRIP / 2
     P = [(rs_x, yN), (XT, yN), (XT, yS)]
     L = g.plen(P)
-    k = max(0, math.ceil(L / LIMIT) - 1)
+    k = max(0, math.ceil(L / (LIMIT - 40.0)) - 1)   # Q-CLUSTER4: 40-um margin: T-lane stations step around the 56.16-wide xstn pairs
     return [g.along(P, i / (k + 1)) for i in range(k + 2)]
 
 
@@ -339,11 +341,17 @@ def gen_tb(spare):
 
 
 # ---- Q-CLUSTER3: hard station placement (qc_stn_kit.py masters) -------------------------------------------------------
-SW, XH = 34.56, 86.4         # qfd_c_stn5xx 34.56 x 34.56; qfd_c_xstn 34.56 x 86.4 (qc_stn_kit.py)
+SW, XW, XH = 51.84, 56.16, 86.4   # qfd_c_stn5xx 51.84 x 51.84; qfd_c_xstn(w) 56.16 x 86.4 (qc_stn_kit.py, Q-CLUSTER4)
 SL = 8.64                    # station snapping step in the corridors / y (on the 4.32 child lattice: track-safe for M3 / M4 / M5)
 XSTN_DY = 414.72             # xstn origin above its A0 row origin: tap pins at the A0 tap y range 437.184..485.856
-GAP = 8.64                   # minimum channel station <-> A0 / station <-> station (A / T / B corridors, row gaps)
-GAP_LR = 4.32                # L / R strips (43.2 wide): 4.32 to the A0 face, 4.32 to the cluster edge (x0 on the 4.32 lattice)
+# Q-CLUSTER4 channel rule (coordinator 0de+6 (4)): < 20 um only between pin-free sides; a channel facing pins is sized to
+# the bits crossing it.  Station E / W sides are pin-free (data on S / N), the A0 W / E faces carry pins.
+GAP_A0 = 21.6                # station side <-> A0 face (A0 pins: >= 20 um)
+GAP_TAP = 8.64               # xstn tap face <-> A0 tap face: 508 straight M4 stubs, one track each (= the bits crossing)
+GAP_X = 8.64                 # station <-> station side by side (both sides pin-free)
+GAP_Y = 21.6                 # station <-> station stacked (S / N pin faces facing) and row-gap station <-> tile rows
+GAP_EDGE = 8.64              # L / R strip station <-> cluster W / E edge (pin-free but for the two M4 clock entries)
+GAP = GAP_Y
 
 
 def _sn(v):
@@ -391,10 +399,12 @@ def place_stations(E, fabric_rtl, spare):
         x, y = st["at"]
         if st["master"].startswith("qfd_c_xstn"):
             c, r = st["col"], st["row"]
-            x0 = {0: corr["L"][0] + GAP_LR, 1: corr["T"][0] + GAP, 2: corr["T"][1] - GAP - SW, 3: corr["R"][0] + GAP_LR}[c]
+            # tap face GAP_TAP from its tile: lanes L / T(c2) have the tile E of the station, T(c1) / R W of it
+            x0 = {0: corr["L"][1] - GAP_TAP - XW, 1: corr["T"][0] + GAP_TAP, 2: corr["T"][1] - GAP_TAP - XW,
+                  3: corr["R"][0] + GAP_TAP}[c]
             if c in (1, 3):    # tile W of the lane: the tap-W master (no MY: track lattice), R0
                 st["master"] = "qfd_c_xstnw"
-            kids.append(dict(st=st, x=round(x0, 4), y=round(g.ROWY[r] + XSTN_DY, 4), w=SW, h=XH, orient="R0"))
+            kids.append(dict(st=st, x=round(x0, 4), y=round(g.ROWY[r] + XSTN_DY, 4), w=XW, h=XH, orient="R0"))
             continue
         yp = end_y(st["d"])
         cs = cons.get(st["q"])
@@ -405,30 +415,38 @@ def place_stations(E, fabric_rtl, spare):
         x0 = _sn(x - SW / 2)
         if k is not None:
             lo, hi = corr[k]
-            if k in ("L", "R"):   # 43.2-um strip: 4.32 to the A0 face and 4.32 to the cluster edge (2.16 core margin)
-                lo_ok = hi_ok = lo + GAP_LR
+            if k == "L":          # 86.4-um strip: GAP_EDGE to the cluster edge, 25.92 (>= GAP_A0) to the A0 face
+                lo_ok = hi_ok = lo + GAP_EDGE
+            elif k == "R":
+                lo_ok = hi_ok = hi - GAP_EDGE - SW
             else:
-                lo_ok, hi_ok = lo + GAP, hi - SW - GAP
+                lo_ok, hi_ok = lo + GAP_A0, hi - SW - GAP_A0
             x0 = min(max(x0, lo_ok), hi_ok)
             y0 = _sn(y - SW / 2)
         else:          # row-gap / S-N strip station (horizontal leg): keep GAP to the tile rows above / below
             glo, ghi = next((a, b) for a, b in g.CHANNELS if a - 1e-6 <= y <= b + 1e-6)
             y0 = min(max(_sn(y - SW / 2), glo + GAP), ghi - GAP - SW)
-        y0 = min(max(y0, 25.92), HEIGHT - 25.92 - SW)
+        # Q-CLUSTER4: 12.96 = 86.4 strip - GAP_Y - 51.84: the face toward the S / N edge carries only this pin register's own
+        # straight pin connections (the bits crossing); the face toward the tile row keeps GAP_Y
+        y0 = min(max(y0, 12.96), HEIGHT - 12.96 - SW)
         kids.append(dict(st=st, x=round(x0, 4), y=round(y0, 4), w=SW, h=SW, orient=o))
     # overlap: stations among themselves (GAP) and against the A0 tiles (GAP); resolve station-station by stepping y
     tiles = [(g.COLX[c][0], g.ROWY[r], g.TW, g.TH) for c in range(4) for r in range(4)]
-    def clash(a, b, gap):
+    def clash(a, b, gap, gy=None):
+        gy = gap if gy is None else gy
         return not (a[0] + a[2] + gap <= b[0] + 1e-6 or b[0] + b[2] + gap <= a[0] + 1e-6 or
-                    a[1] + a[3] + gap <= b[1] + 1e-6 or b[1] + b[3] + gap <= a[1] + 1e-6)
+                    a[1] + a[3] + gy <= b[1] + 1e-6 or b[1] + b[3] + gy <= a[1] + 1e-6)
     placed = []
     for kd in sorted(kids, key=lambda k: (not k["st"]["master"].startswith("qfd_c_xstn"), k["y"])):
         base = kd["y"]
-        for step in [0] + [s * j for j in range(1, 12) for s in (1, -1)]:
+        for step in [0] + [s * j for j in range(1, 30) for s in (1, -1)]:
             kd["y"] = round(base + step * SL, 4)
             box = (kd["x"], kd["y"], kd["w"], kd["h"])
-            if all(not clash(box, (p["x"], p["y"], p["w"], p["h"]), GAP) for p in placed) and \
-               all(not clash(box, t, GAP_LR - 1e-6) for t in tiles):
+            if kd["y"] < 12.96 - 1e-6 or kd["y"] + kd["h"] > HEIGHT - 12.96 + 1e-6:
+                continue
+            tg = GAP_TAP if kd["st"]["master"].startswith("qfd_c_xstn") else GAP_A0
+            if all(not clash(box, (p["x"], p["y"], p["w"], p["h"]), GAP_X, GAP_Y) for p in placed) and \
+               all(not clash(box, t, tg - 1e-6, GAP_Y - 1e-6) for t in tiles):
                 break
         else:
             raise SystemExit(f"station overlap unresolved: {kd['st']['inst']} at {kd['x']},{base}")

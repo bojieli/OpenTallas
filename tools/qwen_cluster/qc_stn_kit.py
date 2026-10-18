@@ -2,15 +2,15 @@
 """Q-CLUSTER3 (2026-10-17, coordinator decision HANDOFF 0de+5): ref_tile specs of the qfd_c_b16_dv fabric STATION masters
 (rtl/physical/qcluster/qfd_c_stn.sv), one hardened master per width class, replicated at the qc_gen.py stage sites:
 
-  qfd_c_stn516  34.56 x 34.56  column-run relay / pin register (bc -> bco), 52 per cluster
-  qfd_c_stn514  34.56 x 34.56  tree leg / rs exit / rs_i -> rs_o relay, 83 per cluster (MX where the word flows south)
-  qfd_c_xstn    34.56 x 86.4   column station (qfd_xcst_n logic) with the 508-b tap to its A0 tile on the E face (x8);
-  qfd_c_xstnw   34.56 x 86.4   the same with the tap on the W face (x8; a mirrored master would put the S / N M3 / M5 pins
+  qfd_c_stn516  51.84 x 51.84  column-run relay / pin register (bc -> bco), 52 per cluster
+  qfd_c_stn514  51.84 x 51.84  tree leg / rs exit / rs_i -> rs_o relay, 83 per cluster (MX where the word flows south)
+  qfd_c_xstn    56.16 x 86.4   column station (qfd_xcst_n logic) with the 508-b tap to its A0 tile on the E face (x8);
+  qfd_c_xstnw   56.16 x 86.4   the same with the tap on the W face (x8; a mirrored master would put the S / N M3 / M5 pins
                                off the track lattice, as qfd_xcst_n_my showed); tap pins on the E face at exactly the A0 tap y range (437.184..485.856 above
                                the A0 origin, xstn origin = A0 row origin + 414.72), so tap wires are straight 8.64-um stubs
 
-Geometry: 34.56 = 4 x 8.64, so every station keeps an 8.64-um channel to the A0 faces it faces (the L / R strips are 43.2
-wide and the A0 W / E faces carry their clock / data pins).  Data in on S (flop-first), data out on N (flop-last), on
+Geometry (Q-CLUSTER4): stn 51.84 x 51.84, xstn 56.16 x 86.4, so every data face is >= 0.096 um/bit (516 b on 49.86 um);
+the L / R strips grow 43.2 -> 86.4 to hold them (qc_gen.py).  Data in on S (flop-first), data out on N (flop-last), on
 M3 + M5 alternating (pin_balance; xcst_n precedent).  ck (and rst_n / sidx) on the S face E end.  Leaf tile layer cap M5
 (PG M5 stripes = pins; the cluster straps M6, cluster signals M6 / M7 over the station).  Recipe 4, hold_budget die,
 pin_regs off (the RTL is one register stage: every data pin is a flop D or a flop Q).
@@ -21,7 +21,11 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SW = 34.56          # station width (4 x 8.64)
+# Q-CLUSTER4 (coordinator 0de+6 (3)): the data faces meet the relay pin rule <= 0.096 um/bit (<= ~10.4 pins/um over
+# M3 + M5) instead of 16 pins/um: 516 b need >= 49.5 um of face -> stn 51.84 (12 x 4.32); the xstn S face also holds
+# ck / rst_n / sidx -> 56.16 (13 x 4.32).  Was 34.56 for both (Q-CLUSTER3).
+SW = 51.84          # stn516 / stn514 width = height
+XW = 56.16          # xstn / xstnw width
 XH = 86.4           # xstn height
 TAP_LO, TAP_HI = 437.184 - 414.72, 485.856 - 414.72   # A0 tap range relative to the xstn origin (qc_gen XSTN_DY)
 SRC_STN = ["rtl/physical/qcluster/qfd_c_stn.sv"]
@@ -55,15 +59,15 @@ def main():
     for w_ in (516, 514):
         n = f"qfd_c_stn{w_}"
         rows.append(spec(n, SW, SW, {"S": ["d", "ck"], "N": ["q"]},
-                         {"d": [0.54, 32.4], "ck": [33.12, 33.42], "q": [0.54, 34.02]}, [], SRC_STN,
+                         {"d": [0.54, 50.4], "ck": [50.94, 51.24], "q": [0.54, 51.3]}, [], SRC_STN,
                          f"qfd_c_b16_dv fabric station: one {w_}-b register stage (x{52 if w_ == 516 else 83} per cluster)"))
-    rows.append(spec("qfd_c_xstn", SW, XH, {"S": ["b_d", "ck", "rst_n", "sidx"], "N": ["a_d"], "E": ["tap_d"]},
-                     {"b_d": [0.54, 31.32], "ck": [31.86, 32.16], "rst_n": [32.52, 32.82], "sidx": [33.18, 34.02],
-                      "a_d": [0.54, 34.02], "tap_d": [round(TAP_LO, 3), round(TAP_HI, 3)]}, ["rst_n"], SRC_X,
+    rows.append(spec("qfd_c_xstn", XW, XH, {"S": ["b_d", "ck", "rst_n", "sidx"], "N": ["a_d"], "E": ["tap_d"]},
+                     {"b_d": [0.54, 50.4], "ck": [51.0, 51.3], "rst_n": [51.66, 51.96], "sidx": [52.32, 53.16],
+                      "a_d": [0.54, 55.62], "tap_d": [round(TAP_LO, 3), round(TAP_HI, 3)]}, ["rst_n"], SRC_X,
                      "qfd_c_b16_dv column station (qfd_xcst_n logic), tap on the E face (columns 0 / 2; x8 per cluster)"))
-    rows.append(spec("qfd_c_xstnw", SW, XH, {"S": ["b_d", "ck", "rst_n", "sidx"], "N": ["a_d"], "W": ["tap_d"]},
-                     {"b_d": [3.24, 34.02], "ck": [2.4, 2.7], "rst_n": [1.74, 2.04], "sidx": [0.54, 1.38],
-                      "a_d": [0.54, 34.02], "tap_d": [round(TAP_LO, 3), round(TAP_HI, 3)]}, ["rst_n"], SRC_X,
+    rows.append(spec("qfd_c_xstnw", XW, XH, {"S": ["b_d", "ck", "rst_n", "sidx"], "N": ["a_d"], "W": ["tap_d"]},
+                     {"b_d": [5.76, 55.62], "ck": [2.4, 2.7], "rst_n": [1.74, 2.04], "sidx": [0.54, 1.38],
+                      "a_d": [0.54, 55.62], "tap_d": [round(TAP_LO, 3), round(TAP_HI, 3)]}, ["rst_n"], SRC_X,
                      "qfd_c_b16_dv column station, tap on the W face (columns 1 / 3; x8 per cluster)"))
     for s in rows:
         p = out / f"{s['name']}.json"

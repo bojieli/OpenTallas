@@ -33,4 +33,6 @@ set_output_delay [expr {0.2 * $ot_q_per}] -clock ck_e0 [get_ports {rs_o*}]
 set_output_delay [expr {0.2 * $ot_q_per}] -clock ck_e3 [get_ports {bco2*}]
 set_output_delay [expr {0.2 * $ot_q_per}] -clock ck_e3 [get_ports {bco3*}]
 if {!$::ot_ref_pre_cts} { set_propagated_clock [get_clocks {ck_w1 ck_w2 ck_w3 ck_e0 ck_e1 ck_e2 ck_e3}] }
+set_case_analysis 0 [get_ports {cid[*]}]
+set_case_analysis 0 [get_ports far]
 set_input_transition 150 [all_inputs -no_clocks]

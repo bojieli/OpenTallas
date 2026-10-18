@@ -88,6 +88,9 @@ def main():
         for n in sorted(dom[q]["outputs"]):
             sdc.append(f"set_output_delay [expr {{0.2 * $ot_q_per}}] -clock ck_{q} [get_ports {{{n}*}}]")
     sdc.append(f"if {{!$::ot_ref_pre_cts}} {{ set_propagated_clock [get_clocks {{{lst}}}] }}")
+    # Q-CLUSTER4 (coordinator 0de+6 (2)): cid / far are identity straps from the instance's own tie cells (constant per
+    # instance; they reach only hard-child pins: A0 tile_id, xstn sidx), so case analysis is the true constraint, not a mask
+    sdc += ["set_case_analysis 0 [get_ports {cid[*]}]", "set_case_analysis 0 [get_ports far]"]
     (ROOT / "physical/qcluster/qfd_c_b16_dv_quadrants.sdc").write_text("\n".join(sdc) + "\n")
     spec = dict(
         name=name, top="qfd_c_b16_dv", kind="cluster",
@@ -112,8 +115,10 @@ def main():
         outline=dict(w=W, h=H, exact=True), child_lattice_um=4.32,
         # the stations need sub-20-um channels by construction (43.2-um L / R strips; corridor lanes 49 um apart): diag
         # kits admit them as a measured probe (abut_plan + job.hold_merge); a production kit needs the coordinator's call
-        abut_plan=dict(channel_um=4.3, edge_um=2.0, why="Q-CLUSTER3 station tiles: 4.32-um channels to the A0 faces / "
-                       "cluster edge in the 43.2-um L / R strips, 8.64 in A / T / B; measured by this diagnostic gate"),
+        abut_plan=dict(channel_um=8.6, edge_um=6.4, why="Q-CLUSTER4 channel rule (coordinator 0de+6 (4)): < 20 um only between "
+                       "pin-free sides (station E/W sides 8.64 apart, station <-> cluster W/E edge 8.64 = 6.48 from the core edge) or sized to the bits "
+                       "crossing (xstn tap face <-> A0 tap face 8.64: 508 straight stubs); every station side facing A0 pins "
+                       ">= 21.6, stacked station pin faces >= 21.6"),
         children=tiles, macros=[],
         pins=faces,
         pin_ranges={p["port"]: p["range_um"] for p in ports},

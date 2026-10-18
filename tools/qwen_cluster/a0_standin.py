@@ -22,6 +22,26 @@ ROOT = Path(__file__).resolve().parents[2]
 A0_REF = "30d3d3510"   # Q-ROMPARENT-2 c1r6 (codex/romleaf-native-1621): ck_tx4/5 on E face M4, mirror-legal
 W, H = 457.92, 1166.4
 R = {"tt": 220.0, "ff": 170.0, "ss": 290.0}
+# Q-CLUSTER4 (coordinator 0de+6 (1)): every A0 clock entry carries its MEASURED internal insertion (pin latency, so the
+# cluster CTS balances at child flops).  Entries passed straight to a closed leaf take that leaf view's measured
+# insertion.json 'all' (mean, min, max) per corner (origin/main views); entries that are A0 c1 CTS roots take the A0 c1
+# gate measurements (Q-ROMPARENT-2 HANDOFF 0cg: NK c1r4 / NL c1r6 TT max: ck 190.5 NK / 197.4 NL, tx4 219.4, tx5 214.1
+# NK (b3) / 208.3 NL, tx3 202.0, every other root <= 150 -> 150), FF / SS scaled by the romleaf FF/TT, SS/TT ratios.
+LEAF = {"rp": {"tt": (201.5, 175.3, 228.1), "ff": (168.2, 139.4, 194.9), "ss": (256.8, 229.4, 282.3)},   # ot_qwen_tile_romleaf
+        "lsl": {"tt": (165.3, 159.2, 176.7), "ff": (133.6, 127.5, 144.9), "ss": (220.5, 213.6, 231.9)},  # ot_qwen_tile_lsl_fp1
+        "node": {"tt": (243.1, 227.9, 267.6), "ff": (197.4, 183.8, 219.8), "ss": (321.0, 302.9, 350.7)}}  # ot_qwen_tile_node
+A0_ROOT_TT = {"nk": {"ck": 190.5, "ck_tx4": 219.4, "ck_tx5": 214.1, "ck_tx3": 202.0},
+              "nl": {"ck": 197.4, "ck_tx4": 219.4, "ck_tx5": 208.3, "ck_tx3": 202.0}}
+SCALE = {"tt": 1.0, "ff": 168.2 / 201.5, "ss": 256.8 / 201.5}
+
+
+def pin_ins(kind, pin, corner):
+    """(mean, min, max) measured insertion of one A0 clock entry"""
+    for k in ("rp", "lsl", "node"):
+        if pin.startswith("ck_" + k):
+            return LEAF[k][corner]
+    v = A0_ROOT_TT[kind].get(pin, 150.0) * SCALE[corner]
+    return (v, v - 15.0, v)
 FLOP = {"tt": (40.0, 15.0, 55.0), "ff": (30.0, 12.0, 40.0), "ss": (55.0, 20.0, 75.0)}   # setup, hold, clk->q
 REL_NK = {"tap": "ck_fa4", "tile_id": "ck_fa4", "rst_n": "ck_fa4", "n_a": "ck_fa0", "n_b": "ck_fa1",
           "t_out": "ck_fa2", "n_y": "ck_fa3"}
@@ -75,7 +95,7 @@ def lef(name, pl):
 
 def lib(name, pl, corner, nl):
     su, ho, cq = FLOP[corner]
-    r = R[corner]
+    kind = "nl" if nl else "nk"
     buses, scal = {}, []
     for p, *_ in pl:
         m = re.fullmatch(r"(\w+)\[(\d+)\]", p)
@@ -90,13 +110,15 @@ def lib(name, pl, corner, nl):
     def body(p, base):
         if base.startswith("ck"):
             arcs = []
-            for tt, v in (("min_clock_tree_path", r - 15), ("max_clock_tree_path", r + 15)):
+            _, lo, hi = pin_ins(kind, p, corner)
+            for tt, v in (("min_clock_tree_path", lo), ("max_clock_tree_path", hi)):
                 arcs += [f"      timing() {{ timing_type : {tt}; timing_sense : positive_unate;",
                          f'        cell_rise(scalar) {{ values("{v:.1f}"); }} cell_fall(scalar) {{ values("{v:.1f}"); }} }}']
             return [f'    pin("{p}") {{', "      direction : input;", "      clock : true;", "      capacitance : 2.0;"] + arcs + ["    }"]
         if base in ("tie_hi", "tie_lo"):
             return [f'    pin("{p}") {{', "      direction : output;", "    }"]
         ck = rel[base]
+        r = pin_ins(kind, ck, corner)[0]
         if base in OUTS:
             t = [f'      timing() {{ related_pin : "{ck}"; timing_type : rising_edge;',
                  f'        cell_rise(scalar) {{ values("{r + cq:.1f}"); }} cell_fall(scalar) {{ values("{r + cq:.1f}"); }}',
@@ -153,8 +175,12 @@ def main(out):
         for c in ("tt", "ff", "ss"):
             (d / f"{name}_{c}.lib").write_text(lib(name, pl, c, kind == "nl"))
         ins = {"schema": "opentallas.closure_loop.ck_insertion.v1", "standin": True, "clock": "ck_fa4"}
+        cks = [p for p, *_ in pl if p.startswith("ck")]
+        ins["per_pin"] = {c: {p: pin_ins(kind, p, c) for p in cks} for c in ("tt", "ff", "ss")}
         for c in ("tt", "ff", "ss"):
-            ins[c] = {"boundary": {"n": len(pl), "mean": R[c], "min": R[c] - 15, "max": R[c] + 15}, "errors": []}
+            v = [pin_ins(kind, p, c) for p in cks]
+            ins[c] = {"boundary": {"n": len(pl), "mean": round(sum(x[0] for x in v) / len(v), 1),
+                                   "min": round(min(x[1] for x in v), 1), "max": round(max(x[2] for x in v), 1)}, "errors": []}
         (d / "insertion.json").write_text(json.dumps(ins, indent=1) + "\n")
         (d / "STANDIN_NOT_A_VIEW").write_text("diagnostic stand-in from c1 pins; never bind\n")
         (d / "PROVISIONAL_NOT_A_VIEW").write_text("standin\n")

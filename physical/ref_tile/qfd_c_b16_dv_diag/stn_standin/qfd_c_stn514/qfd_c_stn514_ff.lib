@@ -20,7 +20,7 @@ library (qfd_c_stn514_ff) {
   type ("d") { base_type : array; data_type : bit; bit_width : 514; bit_from : 513; bit_to : 0; }
   type ("q") { base_type : array; data_type : bit; bit_width : 514; bit_from : 513; bit_to : 0; }
   cell ("qfd_c_stn514") {
-    area : 1194.4;
+    area : 2687.4;
     is_macro_cell : true;
     pin("ck") {
       direction : input;

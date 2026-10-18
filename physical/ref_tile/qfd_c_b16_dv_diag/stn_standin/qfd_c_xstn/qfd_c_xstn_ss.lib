@@ -22,7 +22,7 @@ library (qfd_c_xstn_ss) {
   type ("a_d") { base_type : array; data_type : bit; bit_width : 516; bit_from : 515; bit_to : 0; }
   type ("tap_d") { base_type : array; data_type : bit; bit_width : 508; bit_from : 507; bit_to : 0; }
   cell ("qfd_c_xstn") {
-    area : 2986.0;
+    area : 4852.2;
     is_macro_cell : true;
     pin("ck") {
       direction : input;

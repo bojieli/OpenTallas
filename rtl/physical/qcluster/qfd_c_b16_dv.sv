@@ -180,7 +180,7 @@ module qfd_c_b16_dv (
         .n_a_3_3(n_a_3_3),
         .n_b_3_3(n_b_3_3),
         .n_y_3_3(n_y_3_3));
-    // slot (0,0) MY at (43.2, 86.4), K-slice 0, clock quadrant w0
+    // slot (0,0) MY at (86.4, 86.4), K-slice 0, clock quadrant w0
     qfd_tile_nk_rp2_romleaf_rr u_t_0_0 (
         .ck(ck_w0),
         .ck_rp0(ck_w0),
@@ -230,7 +230,7 @@ module qfd_c_b16_dv (
         .n_a(n_a_0_0),
         .n_b(n_b_0_0),
         .n_y(n_y_0_0));
-    // slot (0,1) MY at (43.2, 1382.4), K-slice 2, clock quadrant w1
+    // slot (0,1) MY at (86.4, 1382.4), K-slice 2, clock quadrant w1
     qfd_tile_nk_rp2_romleaf_rr u_t_0_1 (
         .ck(ck_w1),
         .ck_rp0(ck_w1),
@@ -280,7 +280,7 @@ module qfd_c_b16_dv (
         .n_a(n_a_0_1),
         .n_b(n_b_0_1),
         .n_y(n_y_0_1));
-    // slot (0,2) MY at (43.2, 2678.4), K-slice 8, clock quadrant w2
+    // slot (0,2) MY at (86.4, 2678.4), K-slice 8, clock quadrant w2
     qfd_tile_nk_rp2_romleaf_rr u_t_0_2 (
         .ck(ck_w2),
         .ck_rp0(ck_w2),
@@ -330,7 +330,7 @@ module qfd_c_b16_dv (
         .n_a(n_a_0_2),
         .n_b(n_b_0_2),
         .n_y(n_y_0_2));
-    // slot (0,3) MY at (43.2, 3974.4), K-slice 10, clock quadrant w3
+    // slot (0,3) MY at (86.4, 3974.4), K-slice 10, clock quadrant w3
     qfd_tile_nk_rp2_romleaf_rr u_t_0_3 (
         .ck(ck_w3),
         .ck_rp0(ck_w3),
@@ -380,7 +380,7 @@ module qfd_c_b16_dv (
         .n_a(n_a_0_3),
         .n_b(n_b_0_3),
         .n_y(n_y_0_3));
-    // slot (1,0) R0 at (648.0, 86.4), K-slice 1, clock quadrant w0
+    // slot (1,0) R0 at (691.2, 86.4), K-slice 1, clock quadrant w0
     qfd_tile_nk_rp2_romleaf_rr u_t_1_0 (
         .ck(ck_w0),
         .ck_rp0(ck_w0),
@@ -430,7 +430,7 @@ module qfd_c_b16_dv (
         .n_a(n_a_1_0),
         .n_b(n_b_1_0),
         .n_y(n_y_1_0));
-    // slot (1,1) R0 at (648.0, 1382.4), K-slice 3, clock quadrant w1
+    // slot (1,1) R0 at (691.2, 1382.4), K-slice 3, clock quadrant w1
     qfd_tile_nk_rp2_romleaf_rr u_t_1_1 (
         .ck(ck_w1),
         .ck_rp0(ck_w1),
@@ -480,7 +480,7 @@ module qfd_c_b16_dv (
         .n_a(n_a_1_1),
         .n_b(n_b_1_1),
         .n_y(n_y_1_1));
-    // slot (1,2) R0 at (648.0, 2678.4), K-slice 9, clock quadrant w2
+    // slot (1,2) R0 at (691.2, 2678.4), K-slice 9, clock quadrant w2
     qfd_tile_nk_rp2_romleaf_rr u_t_1_2 (
         .ck(ck_w2),
         .ck_rp0(ck_w2),
@@ -530,7 +530,7 @@ module qfd_c_b16_dv (
         .n_a(n_a_1_2),
         .n_b(n_b_1_2),
         .n_y(n_y_1_2));
-    // slot (1,3) R0 at (648.0, 3974.4), K-slice 11, clock quadrant w3
+    // slot (1,3) R0 at (691.2, 3974.4), K-slice 11, clock quadrant w3
     qfd_tile_nk_rp2_romleaf_rr u_t_1_3 (
         .ck(ck_w3),
         .ck_rp0(ck_w3),
@@ -580,7 +580,7 @@ module qfd_c_b16_dv (
         .n_a(n_a_1_3),
         .n_b(n_b_1_3),
         .n_y(n_y_1_3));
-    // slot (2,0) MY at (1252.8, 86.4), K-slice 4, clock quadrant e0
+    // slot (2,0) MY at (1296.0, 86.4), K-slice 4, clock quadrant e0
     qfd_tile_nk_rp2_romleaf_rr u_t_2_0 (
         .ck(ck_e0),
         .ck_rp0(ck_e0),
@@ -630,7 +630,7 @@ module qfd_c_b16_dv (
         .n_a(n_a_2_0),
         .n_b(n_b_2_0),
         .n_y(n_y_2_0));
-    // slot (2,1) MY at (1252.8, 1382.4), K-slice 6, clock quadrant e1
+    // slot (2,1) MY at (1296.0, 1382.4), K-slice 6, clock quadrant e1
     qfd_tile_nk_rp2_romleaf_rr u_t_2_1 (
         .ck(ck_e1),
         .ck_rp0(ck_e1),
@@ -680,7 +680,7 @@ module qfd_c_b16_dv (
         .n_a(n_a_2_1),
         .n_b(n_b_2_1),
         .n_y(n_y_2_1));
-    // slot (2,2) MY at (1252.8, 2678.4), K-slice 12, clock quadrant e2
+    // slot (2,2) MY at (1296.0, 2678.4), K-slice 12, clock quadrant e2
     qfd_tile_nk_rp2_romleaf_rr u_t_2_2 (
         .ck(ck_e2),
         .ck_rp0(ck_e2),
@@ -730,7 +730,7 @@ module qfd_c_b16_dv (
         .n_a(n_a_2_2),
         .n_b(n_b_2_2),
         .n_y(n_y_2_2));
-    // slot (2,3) MY at (1252.8, 3974.4), K-slice 14, clock quadrant e3
+    // slot (2,3) MY at (1296.0, 3974.4), K-slice 14, clock quadrant e3
     qfd_tile_nk_rp2_romleaf_rr u_t_2_3 (
         .ck(ck_e3),
         .ck_rp0(ck_e3),
@@ -780,7 +780,7 @@ module qfd_c_b16_dv (
         .n_a(n_a_2_3),
         .n_b(n_b_2_3),
         .n_y(n_y_2_3));
-    // slot (3,0) R0 at (1857.6, 86.4), K-slice 5, clock quadrant e0
+    // slot (3,0) R0 at (1900.8, 86.4), K-slice 5, clock quadrant e0
     qfd_tile_nl_rp2_romleaf_rr u_t_3_0 (
         .ck(ck_e0),
         .ck_rp0(ck_e0),
@@ -823,7 +823,7 @@ module qfd_c_b16_dv (
         .tie_lo(tl_3_0),
         .tap(tap_3_0),
         .t_out(t_out_3_0));
-    // slot (3,1) R0 at (1857.6, 1382.4), K-slice 7, clock quadrant e1
+    // slot (3,1) R0 at (1900.8, 1382.4), K-slice 7, clock quadrant e1
     qfd_tile_nk_rp2_romleaf_rr u_t_3_1 (
         .ck(ck_e1),
         .ck_rp0(ck_e1),
@@ -873,7 +873,7 @@ module qfd_c_b16_dv (
         .n_a(n_a_3_1),
         .n_b(n_b_3_1),
         .n_y(n_y_3_1));
-    // slot (3,2) R0 at (1857.6, 2678.4), K-slice 13, clock quadrant e2
+    // slot (3,2) R0 at (1900.8, 2678.4), K-slice 13, clock quadrant e2
     qfd_tile_nk_rp2_romleaf_rr u_t_3_2 (
         .ck(ck_e2),
         .ck_rp0(ck_e2),
@@ -923,7 +923,7 @@ module qfd_c_b16_dv (
         .n_a(n_a_3_2),
         .n_b(n_b_3_2),
         .n_y(n_y_3_2));
-    // slot (3,3) R0 at (1857.6, 3974.4), K-slice 15, clock quadrant e3
+    // slot (3,3) R0 at (1900.8, 3974.4), K-slice 15, clock quadrant e3
     qfd_tile_nk_rp2_romleaf_rr u_t_3_3 (
         .ck(ck_e3),
         .ck_rp0(ck_e3),
