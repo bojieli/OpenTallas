@@ -1,0 +1,755 @@
+{
+  "schema": "opentallas.hbm.physical_diagnostic_rejections.v1",
+  "scope": "No route submission; gate WARN is insufficient physical qualification. Actual PNGs inspected with view_image.",
+  "rp4": {
+    "source_commit": "de69efd23",
+    "status": "FAIL",
+    "causes": [
+      "CTS RSZ-3006 hard entry dont_touch globalrepair; shared66eeff312 addresses engine scoping",
+      "independent row_e parentoutput229umstub; child native launch189.7ps leaves30.3ps wire budget"
+    ],
+    "images": [
+      "physical/ref_tile/smh_tile_rp4/gate_layout/floorplan.png"
+    ]
+  },
+  "banks": [
+    {
+      "q": 0,
+      "source_commit": null,
+      "gate_verdict": "WARN",
+      "decision": "REJECT physical candidate; no route",
+      "clock": {
+        "max_root_sinks": 2057,
+        "root": "port:clk_pin",
+        "cts": true,
+        "tt_insertion_ps": 471.1,
+        "tt_spread_ps": 174.8,
+        "declared_clock": "hybrid_entries",
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "clk_pin",
+            "clock": "ot_entry_0",
+            "tt": {
+              "boundary": {
+                "n": 2057,
+                "mean": 346.9,
+                "min": 296.3,
+                "max": 471.1
+              },
+              "all": {
+                "n": 2057,
+                "mean": 346.9,
+                "min": 296.3,
+                "max": 471.1
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_ctrl",
+            "clock": "ot_entry_1",
+            "tt": {
+              "boundary": {
+                "n": 16,
+                "mean": 73.0,
+                "min": 72.6,
+                "max": 73.4
+              },
+              "all": {
+                "n": 16,
+                "mean": 73.0,
+                "min": 72.6,
+                "max": 73.4
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_s1",
+            "clock": "ot_entry_2",
+            "tt": {
+              "boundary": {
+                "n": 276,
+                "mean": 369.0,
+                "min": 324.3,
+                "max": 406.8
+              },
+              "all": {
+                "n": 583,
+                "mean": 361.2,
+                "min": 277.0,
+                "max": 407.7
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_s2",
+            "clock": "ot_entry_3",
+            "tt": {
+              "boundary": null,
+              "all": {
+                "n": 369,
+                "mean": 316.3,
+                "min": 274.7,
+                "max": 337.0
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_ecc",
+            "clock": "ot_entry_4",
+            "tt": {
+              "boundary": {
+                "n": 6,
+                "mean": 306.7,
+                "min": 213.4,
+                "max": 376.8
+              },
+              "all": {
+                "n": 1242,
+                "mean": 336.5,
+                "min": 213.4,
+                "max": 394.7
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_out",
+            "clock": "ot_entry_5",
+            "tt": {
+              "boundary": {
+                "n": 1569,
+                "mean": 301.1,
+                "min": 215.9,
+                "max": 381.8
+              },
+              "all": {
+                "n": 2878,
+                "mean": 311.4,
+                "min": 215.9,
+                "max": 423.4
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_ma",
+            "clock": "ot_entry_6",
+            "tt": {
+              "boundary": null,
+              "all": {
+                "n": 1,
+                "mean": 11.9,
+                "min": 11.9,
+                "max": 11.9
+              },
+              "errors": [],
+              "macros": {
+                "n": 1,
+                "nets": 1,
+                "max_per_net": 1,
+                "reg_mean": 11.9,
+                "max_slew": 37.7,
+                "max_late": -0.0,
+                "pins": [
+                  {
+                    "pin": "bank.u_a/clk",
+                    "arr": 11.9,
+                    "slew": 37.7,
+                    "late": -0.0,
+                    "net": "clk_ma"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_mb",
+            "clock": "ot_entry_7",
+            "tt": {
+              "boundary": null,
+              "all": {
+                "n": 1,
+                "mean": 11.9,
+                "min": 11.9,
+                "max": 11.9
+              },
+              "errors": [],
+              "macros": {
+                "n": 1,
+                "nets": 1,
+                "max_per_net": 1,
+                "reg_mean": 11.9,
+                "max_slew": 37.7,
+                "max_late": -0.0,
+                "pins": [
+                  {
+                    "pin": "bank.u_b/clk",
+                    "arr": 11.9,
+                    "slew": 37.7,
+                    "late": -0.0,
+                    "net": "clk_mb"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_mc",
+            "clock": "ot_entry_8",
+            "tt": {
+              "boundary": null,
+              "all": {
+                "n": 1,
+                "mean": 11.9,
+                "min": 11.9,
+                "max": 11.9
+              },
+              "errors": [],
+              "macros": {
+                "n": 1,
+                "nets": 1,
+                "max_per_net": 1,
+                "reg_mean": 11.9,
+                "max_slew": 37.7,
+                "max_late": -0.0,
+                "pins": [
+                  {
+                    "pin": "bank.u_c/clk",
+                    "arr": 11.9,
+                    "slew": 37.7,
+                    "late": -0.0,
+                    "net": "clk_mc"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            }
+          }
+        ],
+        "measured_clock": "ot_entry_0",
+        "verdict": "PASS",
+        "text": "2,057 sinks on the largest root <= 15,000; measured TT insertion 471.1 ps, leaf spread 174.8 ps"
+      },
+      "images": [
+        "physical/ref_tile/vm_local_q0_ref/gate_layout/floorplan.png",
+        "physical/ref_tile/vm_local_q0_ref/gate_layout/density.png"
+      ],
+      "image_findings": "Three SRAMs near-abutted, hot W pin collar and E/N corners. Root clk_pin still crosses spatially distant capture registers. All <=15000sinks does not qualify insertion/spread or setup."
+    },
+    {
+      "q": 1,
+      "source_commit": null,
+      "gate_verdict": "WARN",
+      "decision": "REJECT physical candidate; no route",
+      "clock": {
+        "max_root_sinks": 2040,
+        "root": "port:clk_pin",
+        "cts": true,
+        "tt_insertion_ps": 471.7,
+        "tt_spread_ps": 170.7,
+        "declared_clock": "hybrid_entries",
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "clk_pin",
+            "clock": "ot_entry_0",
+            "tt": {
+              "boundary": {
+                "n": 2040,
+                "mean": 359.9,
+                "min": 301.0,
+                "max": 471.7
+              },
+              "all": {
+                "n": 2040,
+                "mean": 359.9,
+                "min": 301.0,
+                "max": 471.7
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_ctrl",
+            "clock": "ot_entry_1",
+            "tt": {
+              "boundary": {
+                "n": 16,
+                "mean": 72.7,
+                "min": 72.1,
+                "max": 73.2
+              },
+              "all": {
+                "n": 16,
+                "mean": 72.7,
+                "min": 72.1,
+                "max": 73.2
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_s1",
+            "clock": "ot_entry_2",
+            "tt": {
+              "boundary": {
+                "n": 276,
+                "mean": 283.7,
+                "min": 278.3,
+                "max": 287.6
+              },
+              "all": {
+                "n": 583,
+                "mean": 316.2,
+                "min": 278.3,
+                "max": 424.9
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_s2",
+            "clock": "ot_entry_3",
+            "tt": {
+              "boundary": null,
+              "all": {
+                "n": 369,
+                "mean": 356.1,
+                "min": 248.9,
+                "max": 487.7
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_ecc",
+            "clock": "ot_entry_4",
+            "tt": {
+              "boundary": {
+                "n": 6,
+                "mean": 296.9,
+                "min": 234.7,
+                "max": 388.5
+              },
+              "all": {
+                "n": 1242,
+                "mean": 338.2,
+                "min": 202.8,
+                "max": 427.8
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_out",
+            "clock": "ot_entry_5",
+            "tt": {
+              "boundary": {
+                "n": 1312,
+                "mean": 289.3,
+                "min": 216.0,
+                "max": 422.0
+              },
+              "all": {
+                "n": 2365,
+                "mean": 300.3,
+                "min": 216.0,
+                "max": 422.0
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_ma",
+            "clock": "ot_entry_6",
+            "tt": {
+              "boundary": null,
+              "all": {
+                "n": 1,
+                "mean": 11.9,
+                "min": 11.9,
+                "max": 11.9
+              },
+              "errors": [],
+              "macros": {
+                "n": 1,
+                "nets": 1,
+                "max_per_net": 1,
+                "reg_mean": 11.9,
+                "max_slew": 37.7,
+                "max_late": -0.0,
+                "pins": [
+                  {
+                    "pin": "bank.u_a/clk",
+                    "arr": 11.9,
+                    "slew": 37.7,
+                    "late": -0.0,
+                    "net": "clk_ma"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_mb",
+            "clock": "ot_entry_7",
+            "tt": {
+              "boundary": null,
+              "all": {
+                "n": 1,
+                "mean": 11.9,
+                "min": 11.9,
+                "max": 11.9
+              },
+              "errors": [],
+              "macros": {
+                "n": 1,
+                "nets": 1,
+                "max_per_net": 1,
+                "reg_mean": 11.9,
+                "max_slew": 37.7,
+                "max_late": -0.0,
+                "pins": [
+                  {
+                    "pin": "bank.u_b/clk",
+                    "arr": 11.9,
+                    "slew": 37.7,
+                    "late": -0.0,
+                    "net": "clk_mb"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_mc",
+            "clock": "ot_entry_8",
+            "tt": {
+              "boundary": null,
+              "all": {
+                "n": 1,
+                "mean": 11.9,
+                "min": 11.9,
+                "max": 11.9
+              },
+              "errors": [],
+              "macros": {
+                "n": 1,
+                "nets": 1,
+                "max_per_net": 1,
+                "reg_mean": 11.9,
+                "max_slew": 37.7,
+                "max_late": -0.0,
+                "pins": [
+                  {
+                    "pin": "bank.u_c/clk",
+                    "arr": 11.9,
+                    "slew": 37.7,
+                    "late": -0.0,
+                    "net": "clk_mc"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            }
+          }
+        ],
+        "measured_clock": "ot_entry_0",
+        "verdict": "PASS",
+        "text": "2,040 sinks on the largest root <= 15,000; measured TT insertion 471.7 ps, leaf spread 170.7 ps"
+      },
+      "images": [
+        "physical/ref_tile/vm_local_q1_ref/gate_layout/floorplan.png",
+        "physical/ref_tile/vm_local_q1_ref/gate_layout/density.png"
+      ],
+      "image_findings": "Three SRAMs near-abutted, hot W pin collar and E/N corners. Root clk_pin still crosses spatially distant capture registers. All <=15000sinks does not qualify insertion/spread or setup."
+    },
+    {
+      "q": 2,
+      "source_commit": null,
+      "gate_verdict": "WARN",
+      "decision": "REJECT physical candidate; no route",
+      "clock": {
+        "max_root_sinks": 2338,
+        "root": "port:clk_pin",
+        "cts": true,
+        "tt_insertion_ps": 565.0,
+        "tt_spread_ps": 243.7,
+        "declared_clock": "hybrid_entries",
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "clk_pin",
+            "clock": "ot_entry_0",
+            "tt": {
+              "boundary": {
+                "n": 2338,
+                "mean": 395.7,
+                "min": 321.3,
+                "max": 565.0
+              },
+              "all": {
+                "n": 2338,
+                "mean": 395.7,
+                "min": 321.3,
+                "max": 565.0
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_ctrl",
+            "clock": "ot_entry_1",
+            "tt": {
+              "boundary": {
+                "n": 16,
+                "mean": 73.2,
+                "min": 72.6,
+                "max": 73.6
+              },
+              "all": {
+                "n": 16,
+                "mean": 73.2,
+                "min": 72.6,
+                "max": 73.6
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_s1",
+            "clock": "ot_entry_2",
+            "tt": {
+              "boundary": {
+                "n": 276,
+                "mean": 303.8,
+                "min": 292.1,
+                "max": 313.4
+              },
+              "all": {
+                "n": 583,
+                "mean": 333.0,
+                "min": 276.3,
+                "max": 502.0
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_s2",
+            "clock": "ot_entry_3",
+            "tt": {
+              "boundary": null,
+              "all": {
+                "n": 369,
+                "mean": 348.5,
+                "min": 275.8,
+                "max": 463.9
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_ecc",
+            "clock": "ot_entry_4",
+            "tt": {
+              "boundary": {
+                "n": 7,
+                "mean": 386.4,
+                "min": 347.3,
+                "max": 467.1
+              },
+              "all": {
+                "n": 1243,
+                "mean": 342.9,
+                "min": 332.6,
+                "max": 467.5
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_out",
+            "clock": "ot_entry_5",
+            "tt": {
+              "boundary": {
+                "n": 1569,
+                "mean": 316.7,
+                "min": 208.7,
+                "max": 474.8
+              },
+              "all": {
+                "n": 2878,
+                "mean": 323.1,
+                "min": 208.7,
+                "max": 474.8
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_ma",
+            "clock": "ot_entry_6",
+            "tt": {
+              "boundary": null,
+              "all": {
+                "n": 1,
+                "mean": 11.9,
+                "min": 11.9,
+                "max": 11.9
+              },
+              "errors": [],
+              "macros": {
+                "n": 1,
+                "nets": 1,
+                "max_per_net": 1,
+                "reg_mean": 11.9,
+                "max_slew": 37.7,
+                "max_late": -0.0,
+                "pins": [
+                  {
+                    "pin": "bank.u_a/clk",
+                    "arr": 11.9,
+                    "slew": 37.7,
+                    "late": -0.0,
+                    "net": "clk_ma"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_mb",
+            "clock": "ot_entry_7",
+            "tt": {
+              "boundary": null,
+              "all": {
+                "n": 1,
+                "mean": 11.9,
+                "min": 11.9,
+                "max": 11.9
+              },
+              "errors": [],
+              "macros": {
+                "n": 1,
+                "nets": 1,
+                "max_per_net": 1,
+                "reg_mean": 11.9,
+                "max_slew": 37.7,
+                "max_late": -0.0,
+                "pins": [
+                  {
+                    "pin": "bank.u_b/clk",
+                    "arr": 11.9,
+                    "slew": 37.7,
+                    "late": -0.0,
+                    "net": "clk_mb"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_mc",
+            "clock": "ot_entry_8",
+            "tt": {
+              "boundary": null,
+              "all": {
+                "n": 1,
+                "mean": 11.9,
+                "min": 11.9,
+                "max": 11.9
+              },
+              "errors": [],
+              "macros": {
+                "n": 1,
+                "nets": 1,
+                "max_per_net": 1,
+                "reg_mean": 11.9,
+                "max_slew": 37.7,
+                "max_late": -0.0,
+                "pins": [
+                  {
+                    "pin": "bank.u_c/clk",
+                    "arr": 11.9,
+                    "slew": 37.7,
+                    "late": -0.0,
+                    "net": "clk_mc"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            }
+          }
+        ],
+        "measured_clock": "ot_entry_0",
+        "verdict": "PASS",
+        "text": "2,338 sinks on the largest root <= 15,000; measured TT insertion 565.0 ps, leaf spread 243.7 ps"
+      },
+      "images": [
+        "physical/ref_tile/vm_local_q2_ref/gate_layout/floorplan.png",
+        "physical/ref_tile/vm_local_q2_ref/gate_layout/density.png"
+      ],
+      "image_findings": "Three SRAMs near-abutted, hot W pin collar and E/N corners. Root clk_pin still crosses spatially distant capture registers. All <=15000sinks does not qualify insertion/spread or setup."
+    }
+  ]
+}

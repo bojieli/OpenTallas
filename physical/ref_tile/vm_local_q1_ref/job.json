@@ -1,0 +1,108 @@
+{
+ "name": "vm_local_q1_ref-local1-COMMIT",
+ "block": "hfd_vms_bank_local_q1",
+ "ref_tile": true,
+ "owner": "Codex H-SM native clock recovery",
+ "purpose": "Repeated native clock failures of old270spine (R~600ps/spread100ps, q0TT-114.94) require structural clock ownership:6local related soft roots plus3direct rawLiberty SRAM clocks; fewer than~2kFF per localroot. Full270face pin redistribution from currentdiegrant, actual abutted3SRAMstack unchanged. New native shape SW/SEWG2, NW/NERG5; oldclosed views stand. Noadded dataedges; actualphi-R perentry required; parent/die adoption OPEN.",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/hsm-rp4-0030",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/hbm_vm_local_1016/q1",
+   "results/arch/hbm_die_v15/vm_native_local_grants_1016.json",
+   "physical/common_flow/assigned_pin_exact.tcl"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; hfd_vms_bank_local_q1 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_local_q1.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_local_roots.sv rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "native8bank_exact",
+    "cmd": "iverilog -g2012 -s tb_hbm_vm_local_literal -Ptb_hbm_vm_local_literal.SID=1 -Ptb_hbm_vm_local_literal.RG=4 -Ptb_hbm_vm_local_literal.WG=2 -Ptb_hbm_vm_local_literal.MUT=0 -o {RUN}/bench_0.vvp rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_local_roots.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_local_physical.sv rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_local_q*.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_local_literal.sv && vvp {RUN}/bench_0.vvp",
+    "expect": "pass",
+    "pass_regex": "VM_LOCAL_LITERAL PASS",
+    "threads": 1,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "actual_macro_clockdrop_mutant",
+    "cmd": "iverilog -g2012 -s tb_hbm_vm_local_literal -Ptb_hbm_vm_local_literal.SID=1 -Ptb_hbm_vm_local_literal.RG=4 -Ptb_hbm_vm_local_literal.WG=2 -Ptb_hbm_vm_local_literal.MUT=5 -o {RUN}/bench_5.vvp rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_local_roots.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_local_physical.sv rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_local_q*.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_local_literal.sv && vvp {RUN}/bench_5.vvp",
+    "expect": "fail",
+    "fail_regex": "FATAL: .*actual SRAM readback mismatch",
+    "threads": 1,
+    "peak_ram_gb": 8
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/vm_local_q1_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/vm_local_q1_ref/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/vm_local_q1_ref --out {RUN}/record/views/hfd_vms_bank_local_q1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/vm_local_q1_ref/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/vm_local_q1_ref/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/vm_local_q1_ref/vm_local_q1_ref-local1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Repeated native clock failures of old270spine (R~600ps/spread100ps, q0TT-114.94) require structural clock ownership:6local related soft roots plus3direct rawLiberty SRAM clocks; fewer than~2kFF per localroot. Full270face pin redistribution from currentdiegrant, actual abutted3SRAMstack unchanged. New native shape SW/SEWG2, NW/NERG5; oldclosed views stand. Noadded dataedges; actualphi-R perentry required; parent/die adoption OPEN."
+}

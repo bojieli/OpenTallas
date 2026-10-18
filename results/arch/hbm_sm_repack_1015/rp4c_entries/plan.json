@@ -1,0 +1,572 @@
+{
+  "schema": "opentallas.rp4c_entries.v1",
+  "outline": {
+    "w": 406.08,
+    "h": 1529.28
+  },
+  "geometry": {
+    "outline_um": [
+      406.08,
+      1529.28
+    ],
+    "area_mm2": 0.621,
+    "child_outline_mm2": 0.2577,
+    "child_coverage": 0.415,
+    "overlaps": 0,
+    "slivers_um": [],
+    "min_gap_um": 21.576
+  },
+  "children": [
+    {
+      "view": "physical/ref_tile/smh_xs_ref_p45m/views/ot_hbm_accel_smh_xs",
+      "count": 1,
+      "at": [
+        25.92,
+        1071.36
+      ],
+      "orient": "R0",
+      "inst": "u.g_lf?0?.u_lh.u_xs"
+    },
+    {
+      "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+      "count": 1,
+      "at": [
+        25.92,
+        1287.36
+      ],
+      "orient": "R0",
+      "inst": "u.g_lf?0?.u_lh.u_bdc"
+    },
+    {
+      "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+      "count": 1,
+      "at": [
+        164.16,
+        1382.4
+      ],
+      "orient": "R0",
+      "inst": "u.g_lf?0?.u_lh.u_tcc.u_h0"
+    },
+    {
+      "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+      "count": 1,
+      "at": [
+        276.48,
+        1382.4
+      ],
+      "orient": "R0",
+      "inst": "u.g_lf?0?.u_lh.u_tcc.u_h1"
+    },
+    {
+      "view": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+      "count": 1,
+      "at": [
+        164.16,
+        1287.36
+      ],
+      "orient": "R0",
+      "inst": "u.g_lf?0?.u_lh.u_tcc.u_tr"
+    },
+    {
+      "view": "physical/ref_tile/smh_xs_ref_p45m/views/ot_hbm_accel_smh_xs",
+      "count": 1,
+      "at": [
+        25.92,
+        298.104
+      ],
+      "orient": "MX",
+      "inst": "u.g_lf?1?.u_lh.u_xs"
+    },
+    {
+      "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+      "count": 1,
+      "at": [
+        25.92,
+        99.36
+      ],
+      "orient": "MX",
+      "inst": "u.g_lf?1?.u_lh.u_bdc"
+    },
+    {
+      "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+      "count": 1,
+      "at": [
+        164.16,
+        25.92
+      ],
+      "orient": "MX",
+      "inst": "u.g_lf?1?.u_lh.u_tcc.u_h0"
+    },
+    {
+      "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+      "count": 1,
+      "at": [
+        276.48,
+        25.92
+      ],
+      "orient": "MX",
+      "inst": "u.g_lf?1?.u_lh.u_tcc.u_h1"
+    },
+    {
+      "view": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+      "count": 1,
+      "at": [
+        185.76,
+        168.576
+      ],
+      "orient": "R0",
+      "inst": "u.g_lf?1?.u_lh.u_tcc.u_tr"
+    },
+    {
+      "view": "physical/ref_tile/smh_tr_group_land_ref/views/ot_smh_tr_group_land",
+      "count": 1,
+      "at": [
+        25.92,
+        479.544
+      ],
+      "orient": "MX",
+      "inst": "u.u_ptw.u_land_s"
+    },
+    {
+      "view": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w",
+      "count": 1,
+      "at": [
+        25.92,
+        544.344
+      ],
+      "orient": "MX",
+      "inst": "u.u_ptw.u_row1"
+    },
+    {
+      "view": "physical/ref_tile/smh_tr_group_beat_e_ref/views/ot_smh_tr_group_beat_e",
+      "count": 1,
+      "at": [
+        25.92,
+        656.64
+      ],
+      "orient": "R0",
+      "inst": "u.u_ptw.u_beat_t"
+    },
+    {
+      "view": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w",
+      "count": 1,
+      "at": [
+        25.92,
+        894.24
+      ],
+      "orient": "R0",
+      "inst": "u.u_ptw.u_row0"
+    },
+    {
+      "view": "physical/ref_tile/smh_tr_group_land_ref/views/ot_smh_tr_group_land",
+      "count": 1,
+      "at": [
+        25.92,
+        1006.56
+      ],
+      "orient": "R0",
+      "inst": "u.u_ptw.u_land_n"
+    },
+    {
+      "view": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e",
+      "count": 1,
+      "at": [
+        336.96,
+        544.344
+      ],
+      "orient": "MX",
+      "inst": "u.u_pte.u_row1"
+    },
+    {
+      "view": "physical/ref_tile/smh_tr_group_beat_e_ref/views/ot_smh_tr_group_beat_e",
+      "count": 1,
+      "at": [
+        336.96,
+        656.64
+      ],
+      "orient": "R0",
+      "inst": "u.u_pte.u_beat"
+    },
+    {
+      "view": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e",
+      "count": 1,
+      "at": [
+        336.96,
+        894.24
+      ],
+      "orient": "R0",
+      "inst": "u.u_pte.u_row0"
+    }
+  ],
+  "clock_entries": [
+    {
+      "port": "clk_hard[0]",
+      "child": "u.g_lf?0?.u_lh.u_xs/clk",
+      "face": "W",
+      "child_clk_um": [
+        148.668,
+        1228.998
+      ],
+      "pin_um": [
+        0.0,
+        1229.004
+      ],
+      "manhattan_um": 148.67
+    },
+    {
+      "port": "clk_hard[1]",
+      "child": "u.g_lf?0?.u_lh.u_bdc/clk",
+      "face": "W",
+      "child_clk_um": [
+        55.5,
+        1429.824
+      ],
+      "pin_um": [
+        0.0,
+        1429.836
+      ],
+      "manhattan_um": 55.51
+    },
+    {
+      "port": "clk_hard[2]",
+      "child": "u.g_lf?0?.u_lh.u_tcc.u_h0/clk",
+      "face": "N",
+      "child_clk_um": [
+        174.156,
+        1503.264
+      ],
+      "pin_um": [
+        174.06,
+        1529.28
+      ],
+      "manhattan_um": 26.11
+    },
+    {
+      "port": "clk_hard[3]",
+      "child": "u.g_lf?0?.u_lh.u_tcc.u_h1/clk",
+      "face": "N",
+      "child_clk_um": [
+        286.476,
+        1503.264
+      ],
+      "pin_um": [
+        286.476,
+        1529.28
+      ],
+      "manhattan_um": 26.02
+    },
+    {
+      "port": "clk_hard[4]",
+      "child": "u.g_lf?0?.u_lh.u_tcc.u_tr/clk",
+      "face": "E",
+      "child_clk_um": [
+        311.772,
+        1287.402
+      ],
+      "pin_um": [
+        406.08,
+        1287.42
+      ],
+      "manhattan_um": 94.33
+    },
+    {
+      "port": "clk_hard[5]",
+      "child": "u.g_lf?1?.u_lh.u_xs/clk",
+      "face": "W",
+      "child_clk_um": [
+        148.668,
+        298.146
+      ],
+      "pin_um": [
+        0.0,
+        298.14
+      ],
+      "manhattan_um": 148.67
+    },
+    {
+      "port": "clk_hard[6]",
+      "child": "u.g_lf?1?.u_lh.u_bdc/clk",
+      "face": "W",
+      "child_clk_um": [
+        55.5,
+        99.456
+      ],
+      "pin_um": [
+        0.0,
+        99.468
+      ],
+      "manhattan_um": 55.51
+    },
+    {
+      "port": "clk_hard[7]",
+      "child": "u.g_lf?1?.u_lh.u_tcc.u_h0/clk",
+      "face": "S",
+      "child_clk_um": [
+        174.156,
+        26.016
+      ],
+      "pin_um": [
+        174.06,
+        0.0
+      ],
+      "manhattan_um": 26.11
+    },
+    {
+      "port": "clk_hard[8]",
+      "child": "u.g_lf?1?.u_lh.u_tcc.u_h1/clk",
+      "face": "S",
+      "child_clk_um": [
+        286.476,
+        26.016
+      ],
+      "pin_um": [
+        286.476,
+        0.0
+      ],
+      "manhattan_um": 26.02
+    },
+    {
+      "port": "clk_hard[9]",
+      "child": "u.g_lf?1?.u_lh.u_tcc.u_tr/clk",
+      "face": "E",
+      "child_clk_um": [
+        333.372,
+        168.618
+      ],
+      "pin_um": [
+        406.08,
+        168.636
+      ],
+      "manhattan_um": 72.73
+    },
+    {
+      "port": "clk_hard[16]",
+      "child": "u.u_ptw.u_land_s/clk",
+      "face": "W",
+      "child_clk_um": [
+        26.016,
+        501.132
+      ],
+      "pin_um": [
+        0.0,
+        501.132
+      ],
+      "manhattan_um": 26.02
+    },
+    {
+      "port": "clk_hard[11]",
+      "child": "u.u_ptw.u_row1/clk",
+      "face": "W",
+      "child_clk_um": [
+        26.94,
+        544.44
+      ],
+      "pin_um": [
+        0.0,
+        544.428
+      ],
+      "manhattan_um": 26.95
+    },
+    {
+      "port": "clk_hard[14]",
+      "child": "u.u_ptw.u_beat_t/clk",
+      "face": "W",
+      "child_clk_um": [
+        26.94,
+        872.544
+      ],
+      "pin_um": [
+        0.0,
+        872.556
+      ],
+      "manhattan_um": 26.95
+    },
+    {
+      "port": "clk_hard[10]",
+      "child": "u.u_ptw.u_row0/clk",
+      "face": "W",
+      "child_clk_um": [
+        26.94,
+        984.864
+      ],
+      "pin_um": [
+        0.0,
+        984.876
+      ],
+      "manhattan_um": 26.95
+    },
+    {
+      "port": "clk_hard[15]",
+      "child": "u.u_ptw.u_land_n/clk",
+      "face": "W",
+      "child_clk_um": [
+        26.016,
+        1028.172
+      ],
+      "pin_um": [
+        0.0,
+        1028.172
+      ],
+      "manhattan_um": 26.02
+    },
+    {
+      "port": "clk_hard[13]",
+      "child": "u.u_pte.u_row1/clk",
+      "face": "E",
+      "child_clk_um": [
+        337.98,
+        544.44
+      ],
+      "pin_um": [
+        406.08,
+        544.428
+      ],
+      "manhattan_um": 68.11
+    },
+    {
+      "port": "clk_hard[17]",
+      "child": "u.u_pte.u_beat/clk",
+      "face": "E",
+      "child_clk_um": [
+        337.98,
+        872.544
+      ],
+      "pin_um": [
+        406.08,
+        872.556
+      ],
+      "manhattan_um": 68.11
+    },
+    {
+      "port": "clk_hard[12]",
+      "child": "u.u_pte.u_row0/clk",
+      "face": "E",
+      "child_clk_um": [
+        337.98,
+        984.864
+      ],
+      "pin_um": [
+        406.08,
+        984.876
+      ],
+      "manhattan_um": 68.11
+    },
+    {
+      "port": "clk_pin[1]",
+      "glue_root": true,
+      "face": "W",
+      "pin_um": [
+        0.0,
+        637.98
+      ],
+      "sinks": "row1 rin pin flops (W window 550-629)"
+    },
+    {
+      "port": "clk_pin[2]",
+      "glue_root": true,
+      "face": "W",
+      "pin_um": [
+        0.0,
+        651.996
+      ],
+      "sinks": "bin pin flops (W window 666-864)"
+    },
+    {
+      "port": "clk_pin[0]",
+      "glue_root": true,
+      "face": "W",
+      "pin_um": [
+        0.0,
+        888.012
+      ],
+      "sinks": "row0 rin pin flops (W window 900-979)"
+    },
+    {
+      "port": "clk_oper[0]",
+      "glue_root": true,
+      "face": "W",
+      "pin_um": [
+        0.0,
+        1257.996
+      ],
+      "sinks": "leaf0 xb stations, x store | block-dot gap"
+    },
+    {
+      "port": "clk_oper[1]",
+      "glue_root": true,
+      "face": "E",
+      "pin_um": [
+        406.08,
+        1257.996
+      ],
+      "sinks": "leaf0 xf stations, centre channel to the BF16 columns"
+    },
+    {
+      "port": "clk_oper[2]",
+      "glue_root": true,
+      "face": "W",
+      "pin_um": [
+        0.0,
+        271.26
+      ],
+      "sinks": "leaf1 xb stations (mirror)"
+    },
+    {
+      "port": "clk_oper[3]",
+      "glue_root": true,
+      "face": "E",
+      "pin_um": [
+        406.08,
+        271.26
+      ],
+      "sinks": "leaf1 xf stations (mirror)"
+    },
+    {
+      "port": "clk_region[0]",
+      "glue_root": true,
+      "face": "W",
+      "pin_um": [
+        0.0,
+        1350.012
+      ],
+      "sinks": "leaf0 leaf clock + north G1/reset/strap stages"
+    },
+    {
+      "port": "clk_region[1]",
+      "glue_root": true,
+      "face": "E",
+      "pin_um": [
+        406.08,
+        1027.98
+      ],
+      "sinks": "middle G2 / reset stages"
+    },
+    {
+      "port": "clk_region[2]",
+      "glue_root": true,
+      "face": "W",
+      "pin_um": [
+        0.0,
+        179.292
+      ],
+      "sinks": "leaf1 leaf clock + south G / gout stages"
+    }
+  ],
+  "data_pin_windows": {
+    "W": {
+      "data_pin_min_um": 550.476,
+      "data_pin_max_um": 978.828,
+      "span_frac": 0.28
+    },
+    "E": {
+      "data_pin_min_um": 550.476,
+      "data_pin_max_um": 978.828,
+      "span_frac": 0.28
+    }
+  },
+  "output_links_n": 3705,
+  "normal_edges_added": 0,
+  "tile_height_delta_um": 95.04,
+  "sm_frame_note": "16 tiles per SM row at 427.68 pitch unchanged (width 406.08); height 1529.28 + 21.6 + XC 216 = 1766.88 <= 1780",
+  "scope": "Geometry/pin candidate. Actual CTS / trial GRT / route OPEN."
+}

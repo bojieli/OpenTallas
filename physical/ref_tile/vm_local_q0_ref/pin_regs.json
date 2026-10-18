@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hfd_vms_bank_local_q0",
+ "enable": false,
+ "reason": "Current actual strap5 payload/valid, slot/identity/reset and output registers are retained byte-for-byte except clock roots in ot_vms_bank_static_local_roots.sv. Every data input still enters actual pin flop and output exits registered rr/eg/pr/status/done flop;9clockports drive only their own6softtrees and3rawmacroclocks. Exactcomponent SRAM/read/write/clockdrop benches prove unchanged3edgewrite and6edgeread; adding wrapper flops changes staticcalendar and is unnecessary. io_flop_at_pins anchors actual retained input/output registers."
+}
