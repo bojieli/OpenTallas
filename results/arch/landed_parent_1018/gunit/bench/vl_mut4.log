@@ -1,0 +1,10 @@
+LP_MISMATCH port=fault cycle=38 flat=1 landed=0
+LP_MISMATCH port=vo_n cycle=39 flat=4e05ec2cf94da69985c7d638c27959aa5dedc541e73abdd1474b0e02a71577f49d6a3 landed=4e05ec2cf94da69985c7d638c27959aa5dedc541e73abdd1474b0e02a71577f49d6a2
+LP_MISMATCH port=vo_s cycle=40 flat=7038c18e86fcfddd8e1a80b2a89994b089ab1d09fd4f8f5d955d2cfa8dfd1ee2e7bc7 landed=000000000000000000000000000000000000000000000000000000000000000000000
+LP_MISMATCH port=vo_s cycle=41 flat=a8ec2e2d0690db1cea343f1bc38aed30b3bbc4bb7eeca7fc0151240032e40680c2085 landed=000000000000000000000000000000000000000000000000000000000000000000000
+LP_MISMATCH port=vo_n cycle=41 flat=f0090637679f0eebf9e6b007f88856db17c82905b7fc6a9466d6c53422106927546e7 landed=f0090637679f0eebf9e6b007f88856db17c82905b7fc6a9466d6c53422106927546e6
+LP_LOCKSTEP FAIL MUT=4 mismatches=69 of 11904
+- rtl/dsrom_sys/s81_dv/unit/landed/tb_dsdv_gunit_lp.sv:60: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 4us; walltime 2.035 s; speed 1.967 us/s
+- Verilator: cpu 2.034 s on 1 threads; alloced 1028 MB
