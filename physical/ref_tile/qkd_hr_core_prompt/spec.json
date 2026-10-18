@@ -99,11 +99,43 @@
  "macros": [
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "count": 1
+   "count": 1,
+   "at": [
+    22.464,
+    164.16
+   ]
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2",
-   "count": 4
+   "count": 1,
+   "at": [
+    22.464,
+    125.28
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2",
+   "count": 1,
+   "at": [
+    108.864,
+    125.28
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2",
+   "count": 1,
+   "at": [
+    108.864,
+    86.4
+   ]
   }
  ],
  "pins": {
@@ -224,7 +256,7 @@
    "link_up"
   ]
  },
- "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_prompt (core family, one ck_core entry): members u_control, u_hc, u_axi, u_program, u_program_rx, u_records + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json",
+ "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_prompt (core family, one ck_core entry): members u_control, u_hc, u_axi, u_program, u_program_rx, u_records + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json | p3 (KV-TILES-D): clock entry ck_core at the S-face centre beside the S pin-flop mass (was the SW corner: TT 545/spread 175.5); SRAMs moved to the empty NW quadrant (1024x256 at the N face band, 4x 256x64 2x2 below it) so the logic is one L band along S and E",
  "kind": "tile",
  "recipe": 4,
  "hold_budget": "die",
@@ -254,7 +286,7 @@
  "job": {
   "owner": "Claude:KV-HOSTCL",
   "branch": "claude/kvj-a3-1017",
-  "tag": "r2",
+  "tag": "p3",
   "purpose": "HOST root cluster r2 child qkd_hr_core_prompt (pre-route gate + route; parent qkd_host_root is CRITICAL)",
   "benches": [
    {
@@ -281,6 +313,12 @@
     "fail_regex": "CLUSTER_GATE FAIL mutant",
     "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/cg_mutant_qkd_hr_core_prompt.log"
    }
+  ]
+ },
+ "pin_ranges": {
+  "ck_core": [
+   126.0,
+   133.2
   ]
  },
  "children": [],
