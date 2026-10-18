@@ -2,5 +2,5 @@
  "schema": "opentallas.ref_tile.pin_regs.v1",
  "top": "ot_hbm_idx_rootctl_static_am",
  "enable": false,
- "reason": "RTL as ot_hbm_idx_rootctl_static: programme bus/start/length/qfault land in keep pin flops, sel/link/done leave flops, argmax_m leaves the merge-chain flop; the INDEX/TOPK/VM share faces are the zero-latency static share (requests pass to the bank, responses steered by the n+7 owner flop) and ingest_v/fault are the verbatim rootctl glue: pin registers there would shift the IDX operand timeline (IDX owner item, not this binding)."
+ "reason": "r3 (HBM-IDXAM2 10-18): the boundary is registered IN RTL (keep flops): programme/start/length/qfault/TOPK command/index_rq/argmax_rq input pin flops, vm_rr pin flops in the share leaves, cq/cq_seq/topk_busy/done/fault/fault/share_fault/ingest_v output flops, argmax_m = the 2-stage tree's stage B, vm_rq/index_rr = one OR/AND level after those flops. No port reaches a port. Generator pin flops would add a second edge on every face: off."
 }

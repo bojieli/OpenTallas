@@ -16,7 +16,7 @@
   257.03999999999996
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": 8437.0,
+ "std_area_um2": 8800.0,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -109,8 +109,7 @@
   "rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv",
   "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv",
   "rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv",
-  "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv",
-  "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_am.sv",
+  "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_amr.sv",
   "rtl/lib/ot_rst_relay.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
   "physical/ref_tile/hidx_rootctl_am_1018/kit.env",

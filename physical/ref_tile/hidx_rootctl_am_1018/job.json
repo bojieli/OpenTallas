@@ -1,18 +1,20 @@
 {
- "name": "hidx_rootctl_am_1018-r2-COMMIT",
+ "name": "hidx_rootctl_am_1018-r3-COMMIT",
  "block": "ot_hbm_idx_rootctl_static_am",
  "ref_tile": true,
- "owner": "Claude:HBM-IDXAM",
- "purpose": "d4g argmax r2 binding (coordinator 0gl (3), lane HBM-IDXAM 10-18): ot_hbm_idx_rootctl_static with the share = ot_hbm_idx_vm_share_static_am (8:1 ARGMAX sector select + 4-edge equal-latency OR chain in the 4 bank-pair leaves): argmax face 2,056 b -> one 264-b word {lane valid8, data256} for ot_hbm_argmax_static_sw_vm_r2 (closed r3). One clock pin (the 8 IDX ctl clock nets were the same stream clock; tile < 0.5 mm), rst_n -> ot_rst_relay 3 regions. First hardening of idx_ctl (no view existed: GEN0/GEN1 bound SYNTH). Slot change for H-D4G-GEN2: 300x260 -> 475.2x259.2 (N index face 2,192 pins and S VM face 2,192 pins at 4.6/um; E argmax 400 + cq/cr 614 at 3.9/um; W control/TOPK 478).",
+ "owner": "Claude:HBM-IDXAM2",
+ "purpose": "r3 (lane HBM-IDXAM2 10-18): r2 hidx_rootctl_am_1018-r2-0385e1977 EARLY_FAIL_SETUP -577.7 ps / 3,621 endpoints at CTS. Classified (TT STA on the r2 4_cts.odb with link_budget_consistent.sdc): 2,194 port-to-port combinational endpoints (index_rq/argmax_rq -> vm_rq, vm_rr -> index_rr, sf/lf -> fault, selected_v -> ingest_v) at -570..-815 = STRUCTURAL (in-max 518.7 + out-max 518.7 of 773 ps); wire reach / wide select into and out of TOPK and the share (vm_rr -> merge -240 x510, vm_rr -> TOPK capture -85/-246, cq/busy -231/-245 from engine flops ~235 um from the face, topk_go -> 200 descriptor enables -139). Not logic depth, not one high-fanout net. Fix = registered boundary: share ot_hbm_idx_vm_share_static_amr (request pin flops, vm_rr pin flops in the leaves, owner tap n+8, ARGMAX 4-edge chain -> 2-stage OR tree so ARGMAX port-to-port edges are UNCHANGED), TOPK command/result pin flops + engine RT_EXTRA 1 / ACK 13, ingest_v predicted from the root's own sel_op stream (SEL_LAT 4, selected_v checked -> fault), fault/share_fault pin flops. Latency: INDEX rq +1 / rr +1 (SW operand reader n+12), ARGMAX +0, TOPK go +1 / row +1 / writes +1 / done +1, fault +1, share_fault +1. Base r2: d4g argmax r2 binding (coordinator 0gl (3), lane HBM-IDXAM 10-18): ot_hbm_idx_rootctl_static with the share = ot_hbm_idx_vm_share_static_am (8:1 ARGMAX sector select + 4-edge equal-latency OR chain in the 4 bank-pair leaves): argmax face 2,056 b -> one 264-b word {lane valid8, data256} for ot_hbm_argmax_static_sw_vm_r2 (closed r3). One clock pin (the 8 IDX ctl clock nets were the same stream clock; tile < 0.5 mm), rst_n -> ot_rst_relay 3 regions. First hardening of idx_ctl (no view existed: GEN0/GEN1 bound SYNTH). Slot change for H-D4G-GEN2: 300x260 -> 475.2x259.2 (N index face 2,192 pins and S VM face 2,192 pins at 4.6/um; E argmax 400 + cq/cr 614 at 3.9/um; W control/TOPK 478).",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/benchfix-idx-1018",
+  "branch": "claude/hbm-idxam2-1018",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/test/hbm_idx_static/run_idx_rootctl_am.sh",
    "rtl/test/hbm_idx_static/tb_idx_rootctl_am.sv",
    "rtl/test/hbm_idx_static/tb_idx_rootctl_am_path.sv",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_topk.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv",
    "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static.sv",
    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
    "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm_r2.sv",
@@ -32,7 +34,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_idx_rootctl_static_am u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_am.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_idx_rootctl_static_am u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_amr.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -45,7 +47,7 @@
     "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/bench",
     "expect": "pass",
     "pass_regex": "^IDX_ROOTCTL_AM_BENCH PASS$",
-    "pass_witness": "results/rtl/hbm_idxam_1018/idx_rootctl_am_bench.log",
+    "pass_witness": "results/rtl/hbm_idxam2_1018/idx_rootctl_am_bench.log",
     "min_count_regex": "^EQ AMMUT=0 cycles \\d+ checked \\d+ argmax_resp (\\d+) ",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -58,7 +60,7 @@
     "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_eq_mut1 eq 1",
     "expect": "fail",
     "fail_regex": "^EQ AMMUT=1 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
-    "fail_witness": "results/rtl/hbm_idxam_1018/idx_rootctl_am_eq_mut1.log",
+    "fail_witness": "results/rtl/hbm_idxam2_1018/idx_rootctl_am_eq_mut1.log",
     "threads": 1,
     "peak_ram_gb": 4,
     "needs": [
@@ -70,7 +72,7 @@
     "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_eq_mut2 eq 2",
     "expect": "fail",
     "fail_regex": "^EQ AMMUT=2 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
-    "fail_witness": "results/rtl/hbm_idxam_1018/idx_rootctl_am_eq_mut2.log",
+    "fail_witness": "results/rtl/hbm_idxam2_1018/idx_rootctl_am_eq_mut2.log",
     "threads": 1,
     "peak_ram_gb": 4,
     "needs": [
@@ -82,7 +84,7 @@
     "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_eq_mut3 eq 3",
     "expect": "fail",
     "fail_regex": "^EQ AMMUT=3 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
-    "fail_witness": "results/rtl/hbm_idxam_1018/idx_rootctl_am_eq_mut3.log",
+    "fail_witness": "results/rtl/hbm_idxam2_1018/idx_rootctl_am_eq_mut3.log",
     "threads": 1,
     "peak_ram_gb": 4,
     "needs": [
@@ -94,7 +96,31 @@
     "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_eq_mut4 eq 4",
     "expect": "fail",
     "fail_regex": "^EQ AMMUT=4 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
-    "fail_witness": "results/rtl/hbm_idxam_1018/idx_rootctl_am_eq_mut4.log",
+    "fail_witness": "results/rtl/hbm_idxam2_1018/idx_rootctl_am_eq_mut4.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_eq_mut6",
+    "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_eq_mut6 eq 6",
+    "expect": "fail",
+    "fail_regex": "^EQ AMMUT=6 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
+    "fail_witness": "results/rtl/hbm_idxam2_1018/idx_rootctl_am_eq_mut6.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_eq_mut7",
+    "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_eq_mut7 eq 7",
+    "expect": "fail",
+    "fail_regex": "^EQ AMMUT=7 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
+    "fail_witness": "results/rtl/hbm_idxam2_1018/idx_rootctl_am_eq_mut7.log",
     "threads": 1,
     "peak_ram_gb": 4,
     "needs": [
@@ -106,7 +132,19 @@
     "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_path_ties1_mut4 path 1 4",
     "expect": "fail",
     "fail_regex": "^PATH TIES=1 AMMUT=4 .* errors [1-9][0-9]* IDX_AM_PATH FAIL",
-    "fail_witness": "results/rtl/hbm_idxam_1018/idx_rootctl_am_path_ties1_mut4.log",
+    "fail_witness": "results/rtl/hbm_idxam2_1018/idx_rootctl_am_path_ties1_mut4.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_topk_mut5",
+    "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_topk_mut5 topk 5",
+    "expect": "fail",
+    "fail_regex": "^TOPK AMMUT=5 .* errors [1-9][0-9]* IDX_AM_TOPK FAIL",
+    "fail_witness": "results/rtl/hbm_idxam2_1018/idx_rootctl_am_topk_mut5.log",
     "threads": 1,
     "peak_ram_gb": 4,
     "needs": [
@@ -164,14 +202,14 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hidx_rootctl_am_1018/hidx_rootctl_am_1018-r2-COMMIT"
+   "to": "results/rtl/ref_tile/hidx_rootctl_am_1018/hidx_rootctl_am_1018-r3-COMMIT"
   }
  ],
  "cycles_added": 0,
  "route_hold_corners": "mm",
  "route_hold_margin_ns": 0.03,
  "route_corner": "TC",
- "notes": "generated by tools/ref_tile/ref_tile.py | BENCH-FIX 10-18: r2-8f447a8cc NEEDS_RTL (eq_mut1 rc=1, no summary line) was earlyoom on ot-epyc5 SIGTERMing the 8 MiB vvp at 07:37:39 (oom_score_adj 500 + --prefer vvp, host at 3% free from 100 GB cc1plus builds); the binary re-run there completes (errors 16372, IDX_ROOTCTL_AM FAIL). Bench, RTL, kit unchanged.",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
  "merge_target": null,
- "structural_change": "d4g argmax r2 binding (coordinator 0gl (3), lane HBM-IDXAM 10-18): ot_hbm_idx_rootctl_static with the share = ot_hbm_idx_vm_share_static_am (8:1 ARGMAX sector select + 4-edge equal-latency OR chain in the 4 bank-pair leaves): argmax face 2,056 b -> one 264-b word {lane valid8, data256} for ot_hbm_argmax_static_sw_vm_r2 (closed r3). One clock pin (the 8 IDX ctl clock nets were the same stream clock; tile < 0.5 mm), rst_n -> ot_rst_relay 3 regions. First hardening of idx_ctl (no view existed: GEN0/GEN1 bound SYNTH). Slot change for H-D4G-GEN2: 300x260 -> 475.2x259.2 (N index face 2,192 pins and S VM face 2,192 pins at 4.6/um; E argmax 400 + cq/cr 614 at 3.9/um; W control/TOPK 478)."
+ "structural_change": "r3 (lane HBM-IDXAM2 10-18): r2 hidx_rootctl_am_1018-r2-0385e1977 EARLY_FAIL_SETUP -577.7 ps / 3,621 endpoints at CTS. Classified (TT STA on the r2 4_cts.odb with link_budget_consistent.sdc): 2,194 port-to-port combinational endpoints (index_rq/argmax_rq -> vm_rq, vm_rr -> index_rr, sf/lf -> fault, selected_v -> ingest_v) at -570..-815 = STRUCTURAL (in-max 518.7 + out-max 518.7 of 773 ps); wire reach / wide select into and out of TOPK and the share (vm_rr -> merge -240 x510, vm_rr -> TOPK capture -85/-246, cq/busy -231/-245 from engine flops ~235 um from the face, topk_go -> 200 descriptor enables -139). Not logic depth, not one high-fanout net. Fix = registered boundary: share ot_hbm_idx_vm_share_static_amr (request pin flops, vm_rr pin flops in the leaves, owner tap n+8, ARGMAX 4-edge chain -> 2-stage OR tree so ARGMAX port-to-port edges are UNCHANGED), TOPK command/result pin flops + engine RT_EXTRA 1 / ACK 13, ingest_v predicted from the root's own sel_op stream (SEL_LAT 4, selected_v checked -> fault), fault/share_fault pin flops. Latency: INDEX rq +1 / rr +1 (SW operand reader n+12), ARGMAX +0, TOPK go +1 / row +1 / writes +1 / done +1, fault +1, share_fault +1. Base r2: d4g argmax r2 binding (coordinator 0gl (3), lane HBM-IDXAM 10-18): ot_hbm_idx_rootctl_static with the share = ot_hbm_idx_vm_share_static_am (8:1 ARGMAX sector select + 4-edge equal-latency OR chain in the 4 bank-pair leaves): argmax face 2,056 b -> one 264-b word {lane valid8, data256} for ot_hbm_argmax_static_sw_vm_r2 (closed r3). One clock pin (the 8 IDX ctl clock nets were the same stream clock; tile < 0.5 mm), rst_n -> ot_rst_relay 3 regions. First hardening of idx_ctl (no view existed: GEN0/GEN1 bound SYNTH). Slot change for H-D4G-GEN2: 300x260 -> 475.2x259.2 (N index face 2,192 pins and S VM face 2,192 pins at 4.6/um; E argmax 400 + cq/cr 614 at 3.9/um; W control/TOPK 478)."
 }
