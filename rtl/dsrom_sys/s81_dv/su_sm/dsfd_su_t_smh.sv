@@ -49,7 +49,12 @@ module dsfd_su_t_smh #(
     genvar q;
     generate for (q = 0; q < 4; q = q + 1) begin : g_q
         wire [1:0] CQ = q;
+        `ifndef OT_SVC_RS_HARD
         dsfd_su_t_smhq #(.SRL(SRL), .MUT(MUT)) u_q (
+`else
+        dsfd_su_t_smhq u_q (   // hardened view: no overrides (defaults = the hardened config)
+`endif
+        
             .clk(clk), .rst_in(rst_in), .cfg_q(CQ),
             .s_v(s_v), .p_v(p_v), .c_v(c_v), .c_nv(c_nv), .c_scale(c_scale), .c_sink(c_sink),
             .cs_v(cs_v), .cs_i(cs_i), .cs_d(cs_d), .d(d[128 * q +: 128]),
@@ -58,7 +63,12 @@ module dsfd_su_t_smh #(
             .q_mx(q_mx[128 * q +: 128]), .q_e(q_e[128 * q +: 128]),
             .e_v(qe_v[q]), .e_d(e_d[128 * q +: 128]), .o_v(qo_v[q]), .o_d(o_d[64 * q +: 64]), .f(f[2 * q +: 2]));
     end endgenerate
+    `ifndef OT_SVC_RS_HARD
     dsfd_su_t_smhr #(.SRL(SRL)) u_r (
+`else
+    dsfd_su_t_smhr u_r (   // hardened view: no overrides (defaults = the hardened config)
+`endif
+    
         .clk(clk), .rst_in(rst_in), .c_v(c_v), .c_lt(c_lt),
         .q_mxv(q_mxv[0]), .q_ev(q_ev[0]), .q_el(q_el[0]), .q_skv(q_skv[0]), .q_mx(q_mx), .q_e(q_e),
         .m_v(m_v), .m_nmb(m_nmb), .dn_v(dn_v), .dn(dn), .den_v(den_v));

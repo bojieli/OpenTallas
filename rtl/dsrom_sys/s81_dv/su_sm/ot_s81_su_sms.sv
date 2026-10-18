@@ -48,7 +48,12 @@ module ot_s81_su_sms #(
     wire [6:0] c_nv; wire [2:0] c_lt; wire [31:0] c_scale, c_sink; wire [4:0] cs_i; wire [63:0] cs_d;
     wire [511:0] d, e_d; wire [255:0] o_d; wire [7:0] f;
 
+    `ifndef OT_SVC_RS_HARD
     ot_s81_su_smq #(.MUT((MUT >= 1 && MUT <= 3) ? MUT : 0)) u_smq (
+`else
+    ot_s81_su_smq u_smq (   // hardened view: no overrides (defaults = the hardened config)
+`endif
+   
         .clk(clk), .rst_in(rst_in), .cfg_g(cfg_g), .j_st(j_st), .j_kind(j_kind), .j_jid(j_jid),
         .r_v(r_v), .r_p(r_p), .r_j(r_j), .r_d(r_d),
         .s_v(s_v), .p_v(p_v), .c_v(c_v), .c_nv(c_nv), .c_lt(c_lt), .c_scale(c_scale), .c_sink(c_sink),
