@@ -196,6 +196,27 @@ class Placement:
         return s.map[lsec]
 
 
+# SU reducer ingress (RTL facts, CDS 10-18): each quarter's ot_hbm_su_reduce_static takes ONE external operand per edge,
+# the lane chosen by red_sel = {v, op3, osel, lane7} (pgslice.sv:355-361 -> qcore_r5.sv:103-107 slice_x[e_sl]); a lane's
+# reducer value ro_v/ro_x is live for one edge only (lane.sv:119 "with vm_we timing", :719).  Dependent reducer ops issue
+# >= RED_DEP edges apart, commits/exports +RED_LAT (reduce_static.sv:1-8).  The golden sum (hdc_golden csum: contiguous
+# chunks of 8 summed sequentially from +0, chunk sums by a +0-padded pairwise tree) maps onto 8-op chunk chains + tree ops.
+RED_DEP, RED_LAT, RED_QUARTERS = 10, 9, 4
+
+
+def reducer_bound(words):
+    """lower bound (serial edges) of one SU reduction of `words` lane values on the die's reducers: ingress
+    ceil(words/4) (one operand / edge / quarter), then the last chunk's tail, the quarter chunk-sum tree, export,
+    the 4-quarter join tree (2 levels) and the final export; RF relay / class-4 read edges NOT counted (bound)."""
+    per_q = -(-words // RED_QUARTERS)
+    chunks_q = max(1, -(-per_q // 8))
+    tree_q = (chunks_q - 1).bit_length()
+    tail = RED_DEP * (1 + tree_q) + RED_LAT + RED_DEP * 2 + RED_LAT
+    return dict(words=words, ingress_edges=per_q, chunks_per_quarter=chunks_q, tail_edges=tail,
+                min_serial_edges=per_q + tail,
+                rule="1 reducer operand/edge/quarter (pgslice.sv:355-361, lane.sv:119); DEP 10, LAT 9 (reduce_static.sv)")
+
+
 def su_record(raw, q=0, rng=None, data=None, place=None, tag=""):
     """lower one SU dispatch for quarter q: control (su_arith_lower), fill/drain calendars, expected VM words.
     Returns dict(status, lines, preload, expect, ...) with explicit reasons when v1 cannot emit a runnable image."""
@@ -215,6 +236,7 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag=""):
     if sut["red"]:
         res["reasons"].append("reducer_join_calendar_open (su_arith_lower open: scalar_reducer_external_joins; "
                               "golden csum8 tree order must be matched)")
+        res["reducer_bound"] = reducer_bound(int(row["words"]))
     roles = [r for r in "ABCD" if r in desc]
     for r in roles:
         md = desc[r]
@@ -432,6 +454,10 @@ def main():
             su = su_record(raw, a.quarter, rng, data=vm_data, place=place, tag=r["tag"])
             ent.update(status=su["status"], reasons=su["reasons"], lowering=su["lowering"],
                        inputs_placeholder=su.get("inputs_placeholder"))
+            if su.get("reducer_bound"):
+                rb = dict(su["reducer_bound"], priced_serial_edges=serial(r["end"]) - serial(r["start"]))
+                rb["bound_over_price"] = round(rb["min_serial_edges"] / max(1, rb["priced_serial_edges"]), 2)
+                ent["reducer_bound"] = rb
             if su.get("lines") and su["status"] == "emitted":
                 d = a.out / "images" / f"r{r['i']:03d}_su"
                 d.mkdir(parents=True, exist_ok=True)

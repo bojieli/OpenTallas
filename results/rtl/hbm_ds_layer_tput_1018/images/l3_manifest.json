@@ -160,7 +160,17 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": true,
+   "reducer_bound": {
+    "words": 1280,
+    "ingress_edges": 320,
+    "chunks_per_quarter": 40,
+    "tail_edges": 108,
+    "min_serial_edges": 428,
+    "rule": "1 reducer operand/edge/quarter (pgslice.sv:355-361, lane.sv:119); DEP 10, LAT 9 (reduce_static.sv)",
+    "priced_serial_edges": 137,
+    "bound_over_price": 3.12
+   }
   },
   {
    "i": 5,
@@ -467,7 +477,17 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": true,
+   "reducer_bound": {
+    "words": 512,
+    "ingress_edges": 128,
+    "chunks_per_quarter": 16,
+    "tail_edges": 88,
+    "min_serial_edges": 216,
+    "rule": "1 reducer operand/edge/quarter (pgslice.sv:355-361, lane.sv:119); DEP 10, LAT 9 (reduce_static.sv)",
+    "priced_serial_edges": 126,
+    "bound_over_price": 1.71
+   }
   },
   {
    "i": 13,
@@ -817,7 +837,17 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": true,
+   "reducer_bound": {
+    "words": 640,
+    "ingress_edges": 160,
+    "chunks_per_quarter": 20,
+    "tail_edges": 98,
+    "min_serial_edges": 258,
+    "rule": "1 reducer operand/edge/quarter (pgslice.sv:355-361, lane.sv:119); DEP 10, LAT 9 (reduce_static.sv)",
+    "priced_serial_edges": 132,
+    "bound_over_price": 1.95
+   }
   },
   {
    "i": 21,
@@ -1871,7 +1901,17 @@
      "production_timing_price"
     ]
    },
-   "inputs_placeholder": true
+   "inputs_placeholder": true,
+   "reducer_bound": {
+    "words": 6,
+    "ingress_edges": 2,
+    "chunks_per_quarter": 1,
+    "tail_edges": 48,
+    "min_serial_edges": 50,
+    "rule": "1 reducer operand/edge/quarter (pgslice.sv:355-361, lane.sv:119); DEP 10, LAT 9 (reduce_static.sv)",
+    "priced_serial_edges": 99,
+    "bound_over_price": 0.51
+   }
   },
   {
    "i": 51,
@@ -3605,6 +3645,5 @@
   "emitted_unparameterised": 1,
   "unsupported_lowering": 11,
   "v1_unsupported": 10
- },
- "regenerate": "PYTHONPATH=tools python3 -m hbm_layer_vehicle.layer_images --design ds --layer L --boundary results/rtl/hbm_ds_layer_tput_1018/slice_sw/boundary.json --out DIR"
+ }
 }
