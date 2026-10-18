@@ -40,7 +40,16 @@ SPEC (JSON; paths relative to the repo root):
   static         [ports / nets] identity straps: never landed (case-analysed), constant in the bench (tb_static {p: v})
   D, E           ring depth / read offset (default 4 / 2: as Q-CLUSTER-LANDALL)
   reach_um       reset-run hop reach (default 405)         residual_ps: inter-region die residual on the 1-bit reset hops (60)
-  bench          {cycles, reset_cycles, sim: iverilog|verilator}
+  bench          {cycles, reset_cycles, sim: iverilog|verilator, expr: {input port: per-cycle stimulus expression (default
+                 uniform $urandom; may use the tb cycle counter cyc), e.g. to keep a sticky fault from saturating or to make
+                 writes legal}, mut_waivers: {mutant number: reason} (that mutant is not run; the record keeps the reason)}
+  lag_pins       [{inst: fnmatch pattern, pins: [..], why}]  STATUS-RETURN reader pins (e.g. a head's fault / valid-lockstep
+                 inputs fed back from the children it configures).  A head that both configures and collects status from
+                 children in other regions is a cross-region LOOP; its status pins are taken OUT of the schedule: they are
+                 landed as usual, then padded so every lag pin of that reader sees its net exactly lag(reader) edges later
+                 than the reader's own time (one common lag per reader).  The lockstep reference becomes <top>_lagref (the
+                 flat parent with those pins delayed lag(reader) stages, generated beside the landed top), and the record's
+                 compiler block lists the lag: the status those pins carry reaches the reader's outputs lag edges late.
 """
 from __future__ import annotations
 
@@ -226,6 +235,14 @@ def parse_body(body: str):
     return wires, assigns, insts
 
 
+def full_item(p: dict) -> str:
+    """a port item that stands alone ('input logic a, b' lists carry the direction on the first item only)"""
+    if re.match(r"(input|output|inout)\b", p["item"]):
+        return p["item"]
+    d = {"in": "input", "out": "output", "inout": "inout"}[p["dir"]]
+    return f"{d} wire {p['range'] + ' ' if p['range'] else ''}{p['name']}"
+
+
 def idents(expr: str) -> set:
     expr = re.sub(r"\d+'[sS]?[bBoOdDhH][0-9a-fA-F_xXzZ]+", " ", expr)
     return {n for n in re.findall(r"(?<![\w'$`.])([A-Za-z_]\w*)\b", expr) if n not in KW}
@@ -282,6 +299,14 @@ class Parent:
         self.D, self.E = int(spec.get("D", 4)), int(spec.get("E", 2))
         self.K = self.E
         self.A = self.E + 1
+        self.lag = set()
+        for g in spec.get("lag_pins") or []:
+            hit = [i["inst"] for i in self.insts if fnmatch.fnmatchcase(i["inst"], g["inst"])]
+            if not hit:
+                raise SystemExit(f"lag_pins: no instance matches {g['inst']}")
+            for i in hit:
+                for pin in g["pins"]:
+                    self.lag.add((i, pin))
         self.AW = 1 if self.D <= 2 else math.ceil(math.log2(self.D))
 
     def rng(self, n):
@@ -373,6 +398,8 @@ class Parent:
             for d in ds:
                 edges.append((d, f"port:{p}", p, 0, False, None))
         nodes = sorted({e[0] for e in edges} | {e[1] for e in edges} | set(self.region))
+        lagged = [e for e in edges if (e[1], e[5]) in self.lag]
+        edges_all, edges = edges, [e for e in edges if (e[1], e[5]) not in self.lag]
         t = {v: 0 for v in nodes}
         for it in range(len(nodes) + 1):
             ch = False
@@ -391,6 +418,8 @@ class Parent:
                 outs = [t[b] - add for a, b, n, add, _, _ in edges if a == v]
                 if outs:
                     t[v] = min(outs)
+                elif any(a == v for a, *_ in lagged):
+                    t[v] = min(t[b] for a, b, *_ in lagged if a == v)
         for p, ds in out_drv.items():
             ts = {t[d] for d in ds}
             if len(ts) > 1:
@@ -404,10 +433,53 @@ class Parent:
                 pads[(n, b)] = max(pads.get((n, b), 0), k)
             if k < 0:
                 raise SystemExit("internal: negative pad")
+        lag = {}            # reader inst -> common status lag (edges after the reader's own time)
+        for a, b, n, add, landed, pin in lagged:
+            lag[b] = max(lag.get(b, 0), t[a] + add - t[b])
+        for a, b, n, add, landed, pin in lagged:
+            k = t[b] + lag[b] - t[a] - add
+            if k > 0:
+                pads[(n, b)] = max(pads.get((n, b), 0), k)
+        edges = edges_all
         lst = sorted(lands.values(), key=lambda L: int(L["name"]))
         if mut_unland and lst:
             lst[0]["unlanded_mutant"] = True
-        return dict(t=t, edges=edges, lands=lst, landkey=lands, pads=pads, nreg=nreg, drv=drv, rd=rd, out_drv=out_drv)
+        return dict(t=t, edges=edges, lands=lst, landkey=lands, pads=pads, nreg=nreg, drv=drv, rd=rd, out_drv=out_drv,
+                    lag=lag, lagged=lagged)
+
+    def emit_lagref(self, P):
+        """<top>_lagref: the FLAT parent with every lag pin delayed lag(reader) stages (the lockstep reference)"""
+        S, top = self.S, self.S["top"] + "_lagref"
+        ck = sorted(self.ck)[0]
+        L = ["`timescale 1ns/1ps", f"// GENERATED by tools/landed_parent/lp.py: {S['top']} with its status-return (lag_pins) "
+             f"inputs delayed {dict(sorted(P['lag'].items()))} stages -- the lockstep reference of the landed parent.",
+             f"module {top} " + (f"#({self.mod['params_txt']}) " if self.mod["params_txt"] and self.mod["params_txt"].strip() else "")
+             + "(\n    " + ",\n    ".join(full_item(p) for p in self.mod["ports"]) + "\n);"]
+        body, keep, pos = self.mod["body"], [], 0
+        for ins in self.insts:
+            keep.append(body[pos:ins["span"][0]])
+            pos = ins["span"][1]
+        keep.append(body[pos:])
+        L += [ln.rstrip() for ch in keep for ln in ch.splitlines() if ln.strip()]
+        sub = {}
+        for j, (a, b, n, add, landed, pin) in enumerate(sorted(P["lagged"], key=lambda e: (e[1], e[5], e[2]))):
+            if (b, pin, n) in sub or P["lag"][b] == 0:
+                continue
+            rng = self.rng(n)
+            q = f"{n}__lag_{b}_{pin}"
+            L.append(f"    wire {rng or ''} {q};  ot_pl_pad #(.W({width_text(rng)}), .N({P['lag'][b]})) u_lag_{j} (.ck({ck}), "
+                     f".d({n}), .q({q}));")
+            sub[(b, pin, n)] = q
+        for ins in self.insts:
+            cs = []
+            for pin, ex in ins["conns"].items():
+                for (bi, bp, n), q in sub.items():
+                    if bi == ins["inst"] and bp == pin:
+                        ex = re.sub(rf"(?<![\w$]){re.escape(n)}\b", q, ex)
+                cs.append(f".{pin}({ex})")
+            L.append(f"    {ins['module']} {ins['params'] + ' ' if ins['params'] else ''}{ins['inst']} (" + ", ".join(cs) + ");")
+        L.append("endmodule")
+        return top, "\n".join(L) + "\n"
 
     # ---------------------------------------------------------------------------------------------------- emitters
     def reset_tree(self):
@@ -432,7 +504,7 @@ class Parent:
         L = []
         w = L.append
         # header
-        items = [p["item"] for p in self.mod["ports"] if p["name"] not in self.ck]
+        items = [full_item(p) for p in self.mod["ports"] if p["name"] not in self.ck]
         items += [f"input wire ck_{r}" for r in self.regions]
         par = (self.mod["params_txt"] + ",\n    " if self.mod["params_txt"] and self.mod["params_txt"].strip() else "")
         w("`timescale 1ns/1ps")
@@ -613,7 +685,12 @@ class Parent:
                 child_offset_edges={i["inst"]: t.get(i["inst"], 0) for i in self.insts},
                 input_port_offset_edges=port_in, output_port_offset_edges=port_out,
                 reset_release_added_edges=rt["RB"],
+                status_lag_edges={b: dict(lag=k, pins=sorted({e[5] for e in P["lagged"] if e[1] == b}),
+                                          note="these status-return inputs reach the reader lag edges after its own time "
+                                               "(flat == <top>_lagref: the reader's outputs carry that status lag edges "
+                                               "later than in the flat parent)") for b, k in sorted(P["lag"].items())},
                 max_added_edges=max([0] + list(port_out.values()))),
+            mutant_waivers=(S.get("bench") or {}).get("mut_waivers") or {},
             warnings=[f"child {i} runs t = {t[i]} edges late but has no reset pin on {self.rst}: its free-running state "
                       "is NOT re-aligned (check it in the bench)" for i in no_rst],
             die_obligations=[
@@ -664,7 +741,8 @@ class Parent:
         lc = [f".ck_{r}(clk)" for r in self.regions] + [f".{self.rst}(rst)"] + [f".{p['name']}(li_{p['name']})" for p in ins] + \
              [f".{p['name']}(lo_{p['name']})" for p in outs]
         pv = ", ".join(f".{k}({v})" for k, v in (S.get("params") or {}).items())
-        L.append(f"    {S['top']} {('#(' + pv + ') ') if pv else ''}u_flat (" + ", ".join(fc) + ");")
+        ref = S["top"] + "_lagref" if P.get("lag") else S["top"]
+        L.append(f"    {ref} {('#(' + pv + ') ') if pv else ''}u_flat (" + ", ".join(fc) + ");")
         L.append(f"    {top_lp} #({(pv + ', ') if pv else ''}.MUT(MUT)) u_lp (" + ", ".join(lc) + ");")
         L.append("    function [31:0] rnd; input integer k; rnd = $urandom; endfunction")
         L.append("    integer cyc, nc, bad;")
@@ -677,10 +755,11 @@ class Parent:
         L.append(f"        for (cyc = 0; cyc < {cyc}; cyc = cyc + 1) begin")
         L.append("            @(negedge clk);")
         L.append(f"            if (cyc == {rcy}) rst = {'1' if act_low else '0'};")
+        tbx = B.get("expr") or {}
         for p in ins:
             n = p["name"]
             if n not in self.static:
-                L.append(f"            fi_{n} = {{{','.join(['$urandom'] * ((W[n] + 31) // 32))}}};")
+                L.append(f"            fi_{n} = " + (f"{tbx[n]};" if n in tbx else f"{{{','.join(['$urandom'] * ((W[n] + 31) // 32))}}};"))
         L.append(f"            if (cyc > {warm}) begin")
         for p in outs:
             n = p["name"]
@@ -699,8 +778,11 @@ class Parent:
 
     def bench_sh(self, top_lp, rel_out, P=None):
         muts = [0] + ([1, 2] if P and P["lands"] else []) + ([3] if P and P["pads"] else []) + ([4] if self.mut_child(P) else [])
+        waived = {int(k): v for k, v in ((self.S.get("bench") or {}).get("mut_waivers") or {}).items()}
+        muts = [m for m in muts if m not in waived]
         up = "/".join([".."] * len(Path(rel_out).parts))
-        srcs = " ".join(self.S["sources"] + self.S.get("child_sources", []) + [LIB_RTL])
+        srcs = " ".join(self.S["sources"] + self.S.get("child_sources", []) + [LIB_RTL] +
+                        ([f"{rel_out}/{self.S['top']}_lagref.sv"] if P and P.get("lag") else []))
         defs = " ".join(f"-D{d}" for d in self.S.get("defines") or [])
         return f"""#!/usr/bin/env bash
 # GENERATED by tools/landed_parent/lp.py: lockstep bench {self.S['top']} (flat) vs {top_lp} + mutants {muts[1:]} + region audit.
@@ -800,6 +882,9 @@ def gen(S: dict, mut_unland=False, rtl_out=None):
         Path(rtl_out).write_text(rtl)
         return P
     (out / f"{top_lp}.sv").write_text(rtl)
+    if P.get("lag"):
+        lt, ltxt = Pm.emit_lagref(P)
+        (out / f"{lt}.sv").write_text(ltxt)
     (out / f"{top_lp}.sdc").write_text(Pm.sdc(P, top_lp))
     (out / f"tb_{top_lp}.sv").write_text(Pm.tb(P, top_lp, rt))
     sh = out / f"{top_lp}_bench.sh"
