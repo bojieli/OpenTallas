@@ -15,6 +15,12 @@ propagate a clock through; the pilot libs turn those two groups into ONE combina
   dv_sta_pilot.py --case-remote DIR --out LOCALDIR [--relay-ref REF] [--corners tt ff]
 writes LOCALDIR/{libs/rly_<d>_<corner>.lib, sta_<corner>.tcl, run.sh, classify.py}; rsync it next to the case and run
 run.sh (docker ORFS); classify.py turns the end-format reports into per-(link class, hop kind) WNS / TNS / counts.
+
+S81-LAND2 options: --relay-widths (closed dsfd_dvrly_<W>_<dir> views of a dv_diecase --relay-widths case);
+--hop-fix half|outhold (the relay->relay hold fix prototypes of dv_land_pilot variant, applied to every relay lib);
+--standin-views DIR (local copy of the case's views/: the stand-in block libs are re-emitted into libs/ with the hop-0
+SOURCE CONTRACT: lane data outputs launch --src-data-ps after clk, the forwarded cko --src-cko-ps after clk, and under
+half-cycle hops cko is the INVERTED clock (the hop-0 forward cell inverts like every relay forward)).
 """
 import argparse, re, subprocess
 from pathlib import Path
@@ -91,6 +97,18 @@ report_check_types -max_slew -max_capacitance -violators > /pilot/out/{corner}_d
 puts OT_STA_DONE
 '''
 
+STATION_RPT = r'''set fo [open /pilot/out/{corner}_station.rpt w]
+foreach inst [get_cells st_*] {{
+  set ps [get_pins [get_full_name $inst]/i*]
+  foreach d {{max min}} {{
+    set pe [lindex [find_timing_paths -path_delay $d -to $ps -group_path_count 1] 0]
+    set sl none; if {{$pe ne ""}} {{ catch {{ set sl [sta::format_time [$pe slack] 1] }} }}
+    puts $fo "[get_full_name $inst] $d $sl"
+  }}
+}}
+close $fo
+'''
+
 CLASSIFY = r'''#!/usr/bin/env python3
 # per-(link class, hop kind) slack classes from the pilot end-format reports (S81-DIE4 STA pilot)
 import json, re, sys, collections
@@ -128,21 +146,62 @@ for k, v in res.items():
 '''
 
 
+def standin_contract(lib, data_ps, cko_ps, invert):
+    """hop-0 source contract on a dv_diecase stand-in lib: data launch data_ps, cko cko_ps (inverted under half-cycle)"""
+    out = []
+    for blk in re.split(r'(?=\n    (?:bus|pin) \()', lib):
+        if blk.startswith('\n    pin (cko_'):
+            blk = re.sub(r'values \("[\d.]+"\) ; \} cell_fall \(scalar\) \{ values \("[\d.]+"\)',
+                         f'values ("{cko_ps:g}") ; }} cell_fall (scalar) {{ values ("{cko_ps:g}")', blk)
+            if invert:
+                blk = blk.replace('timing_sense : positive_unate', 'timing_sense : negative_unate')
+        elif blk.startswith('\n    bus (') and 'direction : output' in blk:
+            blk = re.sub(r'(rising_edge ; cell_rise \(scalar\) \{ values \(")[\d.]+("\) ; \} cell_fall \(scalar\) \{ values \(")[\d.]+',
+                         lambda g: f'{g.group(1)}{data_ps:g}{g.group(2)}{data_ps:g}', blk)
+        out.append(blk)
+    return ''.join(out).replace('/* STAND-IN:', f'/* S81-LAND2 hop-0 source contract: data {data_ps:g} / cko {cko_ps:g}{" inverted" if invert else ""} | STAND-IN:', 1)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--case-remote', required=True, help='routed DV die case dir on the run host (has out/grt.odb, views/)')
+    ap.add_argument('--relay-widths', type=int, nargs='+', default=[276])
+    ap.add_argument('--hop-fix', choices=('none', 'half', 'outhold'), default='none')
+    ap.add_argument('--outhold-ps', type=float, default=200.0)
+    ap.add_argument('--standin-views', type=Path, default=None)
+    ap.add_argument('--src-data-ps', type=float, default=25.0)
+    ap.add_argument('--src-cko-ps', type=float, default=25.0)
+    ap.add_argument('--station-report', action='store_true',
+                    help='per relay station: worst setup / hold to its i[*] pins (out/<corner>_station.rpt): every hop, '
+                    'not only the worst 200k endpoints')
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--relay-ref', default='origin/main')
     ap.add_argument('--corners', nargs='+', default=['tt', 'ff'])
     a = ap.parse_args()
     (a.out / 'libs').mkdir(parents=True, exist_ok=True)
-    for d in RLY:
-        for c in a.corners:
-            p = f'physical/ref_tile/s81dv_rly_276_{d.lower()}/views/dsfd_dvrly_276_{d}/dsfd_dvrly_276_{d}_{c}.lib'
-            lib = subprocess.run(['git', '-C', str(ROOT), 'show', f'{a.relay_ref}:{p}'], capture_output=True, text=True, check=True).stdout
-            (a.out / 'libs' / f'rly_{d}_{c}.lib').write_text(patch_ck_o(lib))
+    import dv_land_pilot as LP
+    for b in a.relay_widths:
+        for d in RLY:
+            for c in a.corners:
+                p = f'physical/ref_tile/s81dv_rly_{b}_{d.lower()}/views/dsfd_dvrly_{b}_{d}/dsfd_dvrly_{b}_{d}_{c}.lib'
+                r = subprocess.run(['git', '-C', str(ROOT), 'show', f'{a.relay_ref}:{p}'], capture_output=True, text=True)
+                if r.returncode:
+                    continue
+                lib = patch_ck_o(r.stdout)
+                if a.hop_fix == 'half':
+                    lib = LP._swap_ck_o(lib)
+                elif a.hop_fix == 'outhold':
+                    lib = LP._outhold(lib, a.outhold_ps)
+                (a.out / 'libs' / (f'rly_{d}_{c}.lib' if b == 276 else f'rly_{b}_{d}_{c}.lib')).write_text(lib)
+    sta = STA
+    if a.standin_views:
+        for f in sorted(a.standin_views.glob('dv_*.lib')):
+            (a.out / 'libs' / f.name).write_text(standin_contract(f.read_text(), a.src_data_ps, a.src_cko_ps, a.hop_fix == 'half'))
+        sta = sta.replace('[glob $C/views/dv_*.lib]', '[glob /pilot/libs/dv_*.lib]')
+    if a.station_report:
+        sta = sta.replace('puts OT_STA_DONE', STATION_RPT + 'puts OT_STA_DONE')
     for c in a.corners:
-        (a.out / f'sta_{c}.tcl').write_text(STA.format(corner=c, plat=PLAT, std=' '.join(STD[c])))
+        (a.out / f'sta_{c}.tcl').write_text(sta.format(corner=c, plat=PLAT, std=' '.join(STD[c])))
     (a.out / 'classify.py').write_text(CLASSIFY)
     runs = '; '.join(f'/usr/bin/time -v openroad -threads ${{CPUS:-8}} -no_init -exit /pilot/sta_{c}.tcl > /pilot/out/sta_{c}.log 2>&1' for c in a.corners)
     (a.out / 'run.sh').write_text(f'''#!/bin/bash
