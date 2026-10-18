@@ -461,6 +461,8 @@ def load_spec(path: str) -> dict:
     # child gets its clock from its OWN port on the cluster face ("clock_ports": one scalar port per child clock pin, the
     # RTL wires port -> child clock pin).  The die delivers phi - R_i at each entry (R_i = entry wire + the child's routed
     # boundary insertion).  "clock_port" stays the first entry (kit CLKPORT, legacy readers).
+    if s.get("cdc_synchronizers") is not None and (s.get("clock") != "multiple_cts_roots" or s["kind"] != "tile"):
+        raise SpecError("cdc_synchronizers (reviewed CDC mode, cdc_sync_constraints.py) requires a multiple_cts_roots leaf tile")
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
         cps = s.get("clock_ports")
         if (s.get("clock") == "multiple_cts_roots" and s["kind"] != "tile" or s.get("clock") == "entries" and s["kind"] != "cluster") or not isinstance(cps, list) or not cps or s["clock_port"] != cps[0]:
@@ -1152,6 +1154,35 @@ def abutted_stack(a: dict, b: dict, gx: float, gy: float) -> bool:
     return True
 
 
+def bare_face(b: dict, face: str) -> bool:
+    """True when the hard MACRO's face that ends up toward tile face `face` carries no pin of any use (signal, clock,
+    power, ground) within 200 nm (as abutted_row).  Such a face next to a core edge whose tile face has no pins needs
+    no channel: nothing to reach, no strap to land, no glue to place, and a 20-um gutter there only fills with a
+    second std-cell band (S81-TILES5 10-17, s81sl_vq review).  Hard children and rotated blocks keep the rule."""
+    flip_x = {"R0": False, "MX": False, "MY": True, "R180": True}
+    flip_y = {"R0": False, "MX": True, "MY": False, "R180": True}
+    o = b.get("orient", "R0")
+    if b.get("kind") == "child" or o not in flip_x:
+        return False
+    try:
+        if b.get("_tm") is None:
+            b["_tm"] = track_macro(b["view"])
+    except Exception:  # noqa: BLE001
+        return False
+    tm = b["_tm"]
+    lf = face
+    if face in "WE" and flip_x[o]:
+        lf = "W" if face == "E" else "E"
+    if face in "SN" and flip_y[o]:
+        lf = "S" if face == "N" else "N"
+    for pin in tm["pins"]:
+        for _layer, (x0, y0, x1, y1) in pin["rects"]:
+            if ((lf == "W" and x0 <= 200) or (lf == "E" and x1 >= tm["W"] - 200)
+                    or (lf == "S" and y0 <= 200) or (lf == "N" and y1 >= tm["H"] - 200)):
+                return False
+    return True
+
+
 def abutted_row(a: dict, b: dict, gx: float, gy: float) -> bool:
     """two blocks (macros OR hard children) side by side E-W with no cell row between them (0 <= gap <= ABUT_UM,
     overlapping in y) whose touching faces are BARE: no pin of any use (signal, clock, power, ground) within 200 nm of
@@ -1281,6 +1312,8 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
             out.append(("FAIL", "macro_outside", f"{nm} at ({bx0},{by0}) leaves the core", "enlarge the outline"))
         for f, d in (("W", bx0 - x0c), ("E", x1c - bx1), ("S", by0 - y0c), ("N", y1c - by1)):
             need = PIN_EDGE_UM if f in pin_faces else CHANNEL_UM
+            if f not in pin_faces and bare_face(b, f):
+                need = 0.0      # bare macro face on a pin-free tile face: the macro sits on the core edge, no sliver
             if edge_min is not None and edge_min - 1e-6 <= d < need - 1e-6:
                 ab_n["macro_edge"] += 1
                 continue
@@ -1702,7 +1735,8 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     r = s["route"]
     ph, pv = pin_layers(s, lc)
     srcs = " ".join(s["sources"])
-    params = " ".join(f"--param {k}={v}" for k, v in s["params"].items())
+    # shlex.quote: a sized literal (TGTS=552'h..) carries a quote; safe NAME=INT words stay unquoted (kit.env unchanged)
+    params = " ".join(f"--param {shlex.quote(f'{k}={v}')}" for k, v in s["params"].items())
     # optional "pin_ranges" {port: [lo_um, hi_um]} (along the face, from its left / bottom end): one region per ranged port so
     # a face tile's bus pins sit at the end facing their die neighbour and >= the given margin off the tile corners
     # ([vm8cp] corner-pin DRT-0255 class); ports without a range keep the whole face.
@@ -2037,7 +2071,8 @@ def lint_cmd(s: dict) -> str:
     # become instance overrides (-G only reaches the top level); unconnected wrapper ports are lint warnings only
     pv = ", ".join(f".{k}({v})" for k, v in s.get("params", {}).items())
     inst = f"{s['top']} #({pv}) u_top ();" if pv else f"{s['top']} u_top ();"
-    wrap = (f"mkdir -p {{RUN}} && printf '%s\\n' 'module ot_lint_top; {inst} endmodule' > {{RUN}}/ot_lint_top.sv && ")
+    # shq: a sized-literal param (552'h..) carries a quote; shq of a quote-free text is the old '...' word byte for byte
+    wrap = (f"mkdir -p {{RUN}} && printf '%s\\n' {shq(f'module ot_lint_top; {inst} endmodule')} > {{RUN}}/ot_lint_top.sv && ")
     return wrap + " ".join(["verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING",
                      *defs, *inc, "--top-module", "ot_lint_top", "{RUN}/ot_lint_top.sv", *s["sources"]]) + " && echo lint-ok"
 
