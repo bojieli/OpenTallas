@@ -1,0 +1,14 @@
+{
+ "schema": "opentallas.bench_summary.v1",
+ "item": "QC-12 (S-QTIES 10-18): KV-die d2d TX port 3 (tv[3] tied 0, no KV->compute port-3 traffic) removed by parameter",
+ "change": "qkd_d2d_static / qkd_d2d_static_core #(NTX): 4 = current (closed qkd_d2d_static r7q form, lane built and tied idle), 3 = lane not built; ot_qwen_d2d_static_end faults a TX calendar event naming a port >= NT when NT < 4 (NT = 4: constant 0)",
+ "bench": "rtl/test/qwen_split/run_d2d_dies.sh OUT 0 with LOCK=1 [LMUT=1|2] (fleet ot-epyc4, iverilog)",
+ "runs": {
+  "base": {"env": "LOCK=0", "verdict": "D2D_DIES_PASS", "note": "default build unchanged (198/198 frames, 24 kvn, recovery episode)"},
+  "lock": {"env": "LOCK=1", "verdict": "D2D_DIES_PASS", "lockstep": "1040 edges, 0 mismatches over every qkd_d2d_static output incl. the 583-b FDI TX word; NTX=3 TX slots p0 198 / p1 0 / p2 64; NTX=4 port-3 slots 0"},
+  "lmut1": {"env": "LOCK=1 LMUT=1", "mutant": "shadow TX write slot +1", "verdict": "D2D_DIES_FAIL", "fail_regex": "D2D_LOCK edges \\d+ mismatches [1-9]", "witness": "lmut1_run.log"},
+  "lmut2": {"env": "LOCK=1 LMUT=2", "mutant": "shadow port-2 (embedding) producer one edge late", "verdict": "D2D_DIES_FAIL", "fail_regex": "D2D_LOCK edges \\d+ mismatches [1-9]", "witness": "lmut2_run.log"}
+ },
+ "coverage_gap": "port 1 (HOST record) has no TX traffic in the dies_token calendar (record_tx_observed_v = 0 in the bench), as before",
+ "adoption": "adopt at next d2d revision: qkd_d2d_static (KV die, r7q closing in KV-INTEG2) re-routes with NTX=3 and the KV die binding passes NTX=3; qfd_d2d_static (compute, CLOSED r8c) is untouched (its TX port 3 = KVN is live; its RX port 3 receives nothing from the KV die but the RX end is shared logic, NR stays 4). No tile re-routed or submitted here."
+}
