@@ -1,0 +1,138 @@
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41/ot_hdc_softplus.sv:60:86: Instance pin connected by name with empty reference: 'vo'
+   60 |     ot_hdc_exp  u_exp (.clk(clk), .rst_n(rst_n), .v(v), .x({1'b1, x[30:0]}), .y(t), .vo(), .fault(f_exp));
+      |                                                                                      ^~
+                          ... For warning description see https://verilator.org/warn/PINCONNECTEMPTY?v=5.050
+                          ... Use "/* verilator lint_off PINCONNECTEMPTY */" and lint_on around source to disable this message.
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41/ot_hdc_softplus.sv:63:92: Instance pin connected by name with empty reference: 'vo'
+   63 |     ot_hdc_fdiv u_div (.clk(clk), .rst_n(rst_n), .v(vd[T_DEN]), .a(t_d5), .b(den), .y(u), .vo(), .fault(f_div));
+      |                                                                                            ^~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41/ot_hdc_softplus.sv:101:81: Instance pin connected by name with empty reference: 'vo'
+  101 |     ot_hdc_fsqrt u_sq (.clk(clk), .rst_n(rst_n), .v(vd[T_SP]), .a(spv), .y(r), .vo(), .fault(f_sq));
+      |                                                                                 ^~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:657:110: Instance pin connected by name with empty reference: 'vo'
+  657 |     ot_hdc_v41x_exp #(.LM(LM), .LA(LA)) u_exp (.clk(clk), .rst_n(rst_n), .v(v), .x({1'b1, x[30:0]}), .y(t), .vo(), .fault(f_exp));
+      |                                                                                                              ^~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:660:96: Instance pin connected by name with empty reference: 'vo'
+  660 |     ot_hdc_v41x_fdiv u_div (.clk(clk), .rst_n(rst_n), .v(vd[T_DEN]), .a(t_d), .b(den), .y(u), .vo(), .fault(f_div));
+      |                                                                                                ^~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:692:81: Instance pin connected by name with empty reference: 'vo'
+  692 |     ot_hdc_fsqrt u_sq (.clk(clk), .rst_n(rst_n), .v(vd[T_SP]), .a(spv), .y(r), .vo(), .fault(f_sq));
+      |                                                                                 ^~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv:331:110: Instance pin connected by name with empty reference: 'vo'
+  331 |     ot_dsrom_su_fdiv_f12 #(.NR(NR)) u_a (.clk(gclk_a), .rst_n(rst_n), .v(vr & ~ph), .a(ar), .b(br), .y(ya), .vo(), .fault(fa));
+      |                                                                                                              ^~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv:332:109: Instance pin connected by name with empty reference: 'vo'
+  332 |     ot_dsrom_su_fdiv_f12 #(.NR(NR)) u_b (.clk(gclk_b), .rst_n(rst_n), .v(vr & ph), .a(ar), .b(br), .y(yb), .vo(), .fault(fb));
+      |                                                                                                             ^~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_hdc_v41x_spshort.sv:827:84: Instance pin connected by name with empty reference: 'vo'
+  827 |                                              .a(pa[k-1]), .b(rd[k-1]), .y(pa[k]), .vo(), .fault(hf[k]));
+      |                                                                                    ^~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_hdc_v41x_spshort.sv:1220:100: Instance pin connected by name with empty reference: 'y'
+ 1220 |     ot_hdc_v41x_exp_s #(.PCUT(PCUT)) u_exp (.clk(clk), .rst_n(rst_n), .v(v), .x({1'b1, x[30:0]}), .y(), .vo(),
+      |                                                                                                    ^
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_hdc_v41x_spshort.sv:1220:106: Instance pin connected by name with empty reference: 'vo'
+ 1220 |     ot_hdc_v41x_exp_s #(.PCUT(PCUT)) u_exp (.clk(clk), .rst_n(rst_n), .v(v), .x({1'b1, x[30:0]}), .y(), .vo(),
+      |                                                                                                          ^~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_hdc_v41x_spshort.sv:1223:38: Instance pin connected by name with empty reference: 'vo'
+ 1223 |                              .y(u), .vo(), .fault(f_div));
+      |                                      ^~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_hdc_v41x_spshort.sv:1238:84: Instance pin connected by name with empty reference: 'vo'
+ 1238 |                                             .a(pa[k-1]), .b(u2d[k-1]), .y(pa[k]), .vo(), .fault(hf[k]));
+      |                                                                                    ^~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_hdc_v41x_spshort.sv:1253:82: Instance pin connected by name with empty reference: 'vo'
+ 1253 |     ot_hdc_fsqrt4 u_sq (.clk(clk), .rst_n(rst_n), .v(vd[T_SP]), .a(spv), .y(r), .vo(), .fault(f_sq));
+      |                                                                                  ^~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_hdc_v41x_spshort.sv:1284:95: Instance pin connected by name with empty reference: 'p_pre'
+ 1284 |     ot_hdc_v41x_exp_s #(.PCUT(0)) u (.clk(clk), .rst_n(rst_n), .v(v), .x(x), .y(y), .vo(vo), .p_pre(), .n_pre(), .fault(fault));
+      |                                                                                               ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_hdc_v41x_spshort.sv:1284:105: Instance pin connected by name with empty reference: 'n_pre'
+ 1284 |     ot_hdc_v41x_exp_s #(.PCUT(0)) u (.clk(clk), .rst_n(rst_n), .v(v), .x(x), .y(y), .vo(vo), .p_pre(), .n_pre(), .fault(fault));
+      |                                                                                                         ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_dsrom_su_swiglu.sv:105:61: Instance pin connected by name with empty reference: 'vo'
+  105 |                                                 .y(y_exp), .vo(), .fault(f_e));
+      |                                                             ^~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_dsrom_su_hcpost.sv:52:110: Instance pin connected by name with empty reference: 'valid_out'
+   52 |         ot_hdc_fp32_mul_f12_l7 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r1), .b(c1), .y(m1), .err(e1), .valid_out());
+      |                                                                                                              ^~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_dsrom_su_hcpost.sv:54:110: Instance pin connected by name with empty reference: 'valid_out'
+   54 |         ot_hdc_fp32_mul_f12_l6 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r1), .b(c1), .y(m1), .err(e1), .valid_out());
+      |                                                                                                              ^~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_dsrom_su_hcpost.sv:56:110: Instance pin connected by name with empty reference: 'valid_out'
+   56 |         ot_hdc_fp32_mul_f12_l5 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r1), .b(c1), .y(m1), .err(e1), .valid_out());
+      |                                                                                                              ^~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_dsrom_su_hcpost.sv:59:110: Instance pin connected by name with empty reference: 'valid_out'
+   59 |         ot_hdc_fp32_mul_f12_l7 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r2), .b(c2), .y(m2), .err(e2), .valid_out());
+      |                                                                                                              ^~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_dsrom_su_hcpost.sv:61:110: Instance pin connected by name with empty reference: 'valid_out'
+   61 |         ot_hdc_fp32_mul_f12_l6 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r2), .b(c2), .y(m2), .err(e2), .valid_out());
+      |                                                                                                              ^~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_dsrom_su_hcpost.sv:63:110: Instance pin connected by name with empty reference: 'valid_out'
+   63 |         ot_hdc_fp32_mul_f12_l5 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r2), .b(c2), .y(m2), .err(e2), .valid_out());
+      |                                                                                                              ^~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_dsrom_su_hcpost.sv:66:110: Instance pin connected by name with empty reference: 'valid_out'
+   66 |         ot_hdc_fp32_mul_f12_l7 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r3), .b(c3), .y(m3), .err(e3), .valid_out());
+      |                                                                                                              ^~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_dsrom_su_hcpost.sv:68:110: Instance pin connected by name with empty reference: 'valid_out'
+   68 |         ot_hdc_fp32_mul_f12_l6 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r3), .b(c3), .y(m3), .err(e3), .valid_out());
+      |                                                                                                              ^~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_dsrom_su_hcpost.sv:70:110: Instance pin connected by name with empty reference: 'valid_out'
+   70 |         ot_hdc_fp32_mul_f12_l5 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r3), .b(c3), .y(m3), .err(e3), .valid_out());
+      |                                                                                                              ^~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_dsrom_su_hcpost.sv:76:114: Instance pin connected by name with empty reference: 'valid_out'
+   76 |         ot_hdc_fp32_mul_f12_l6r u_m4 (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(y),  .b(p),  .y(m4), .err(e4), .valid_out());
+      |                                                                                                                  ^~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_dsrom_su_hcpost.sv:78:113: Instance pin connected by name with empty reference: 'valid_out'
+   78 |         ot_hdc_fp32_mul_f12_l5 u_m4 (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(y),  .b(p),  .y(m4), .err(e4), .valid_out());
+      |                                                                                                                 ^~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_dsrom_su_hcpost.sv:117:98: Instance pin connected by name with empty reference: 'co'
+  117 |     ot_hdc_inc_k #(.W(16)) u_rnd (.a(a4[31:16]), .inc(a4[15] & (a4[16] | (|a4[14:0]))), .y(hi), .co());
+      |                                                                                                  ^~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv:227:103: Instance pin connected by name with empty reference: 'o_v2'
+  227 |         .i_v2(1'b0), .i_j(ri[1:0]), .i_rdy(rdy), .cos_t(cos_t), .sin_t(sin_t), .o_v(o_v), .o_d(o_d), .o_v2(), .o_d2(),
+      |                                                                                                       ^~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv:227:112: Instance pin connected by name with empty reference: 'o_d2'
+  227 |         .i_v2(1'b0), .i_j(ri[1:0]), .i_rdy(rdy), .cos_t(cos_t), .sin_t(sin_t), .o_v(o_v), .o_d(o_d), .o_v2(), .o_d2(),
+      |                                                                                                                ^~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv:309:104: Instance pin connected by name with empty reference: 'y'
+  309 |     ot_hdc_v41x_exp_s #(.PCUT(PCUT)) u_exp (.clk(clk), .rst_n(rst_n), .v(v_q), .x({1'b1, x_q[30:0]}), .y(), .vo(),
+      |                                                                                                        ^
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv:309:110: Instance pin connected by name with empty reference: 'vo'
+  309 |     ot_hdc_v41x_exp_s #(.PCUT(PCUT)) u_exp (.clk(clk), .rst_n(rst_n), .v(v_q), .x({1'b1, x_q[30:0]}), .y(), .vo(),
+      |                                                                                                              ^~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv:311:100: Instance pin connected by name with empty reference: 'vo'
+  311 |     ot_hdc_v41x_spdiv u_div (.clk(clk), .rst_n(rst_n), .v(vd[T_PN]), .p(p_pre), .n(n_pre), .y(u), .vo(), .fault(f_div));
+      |                                                                                                    ^~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv:363:84: Instance pin connected by name with empty reference: 'vo'
+  363 |                                             .a(pa[k-1]), .b(u2d[k-1]), .y(pa[k]), .vo(), .fault(hf[k]));
+      |                                                                                    ^~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv:372:86: Instance pin connected by name with empty reference: 'vo'
+  372 |     ot_hdc_fsqrt4 u_sq (.clk(clk), .rst_n(rst_n), .v(vd[T_SP - B]), .a(spv), .y(r), .vo(), .fault(f_sq));
+      |                                                                                      ^~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv:103:66: Instance pin connected by name with empty reference: 'vo'
+  103 |                                                      .y(y_exp), .vo(), .fault(f_e));
+      |                                                                  ^~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs_ctl.sv:126:89: Instance pin connected by name with empty reference: 'co'
+  126 |     ot_v41_inc #(.W(10)) u_nq (.a({r1_u[5:0], r1_sv[1], r1_b}), .inc(1'b1), .y(r1_nq), .co());
+      |                                                                                         ^~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs_ctl.sv:146:68: Instance pin connected by name with empty reference: 'co'
+  146 |     ot_v41_inc #(.W(8)) u_nb (.a(r3_umax), .inc(1'b1), .y(r3_nb), .co());
+      |                                                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv:177:16: Signal has multiple driving blocks with different clocking: 'ot_s81sl_xg.u_s.tq_v'
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv:369:61: ... Location of first driving block
+  369 |                 if (o_gw && !o_gw_fam && o_gw_par == gp[0]) tq_v[gp] <= '0;
+      |                                                             ^~~~
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv:369:61: ... Location of other driving block
+  369 |                 if (o_gw && !o_gw_fam && o_gw_par == gp[0]) tq_v[gp] <= '0;
+      |                                                             ^~~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv:178:16: Signal has multiple driving blocks with different clocking: 'ot_s81sl_xg.u_s.tb_v'
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv:377:60: ... Location of first driving block
+  377 |                 if (o_gw && o_gw_fam && o_gw_par == gp[0]) tb_v[gp] <= '0;
+      |                                                            ^~~~
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv:377:60: ... Location of other driving block
+  377 |                 if (o_gw && o_gw_fam && o_gw_par == gp[0]) tb_v[gp] <= '0;
+      |                                                            ^~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 18.531 MB sources in 176 modules, into 1.109 MB in 6 C++ files needing 0.000 MB
+- Verilator: Walltime 4.039 s (elab=0.570, cvt=2.594, bld=0.000); cpu 2.015 s on 1 threads; allocated 75.465 MB
