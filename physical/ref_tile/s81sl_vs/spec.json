@@ -108,11 +108,11 @@
   "io_hold_margin_ns": 0.0,
   "macro_halo_um": 5.4
  },
- "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new beat sub-leaf of the distributed-vector slice (SU lane engine, helper S81-SLICE-SU); flop-first pins, die hold budget. RTL-BUILD-S81 10-18: + op 14 ENG (Engram mix feeder of the beat's ve sub-leaf: 4 kb h stash, gate latch, write-back) and the ve / e / g seams.",
+ "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new beat sub-leaf of the distributed-vector slice (SU lane engine, helper S81-SLICE-SU); flop-first pins, die hold budget. RTL-BUILD-S81 10-18: + op 14 ENG (Engram mix feeder of the beat's ve sub-leaf: 4 kb h stash, gate latch, write-back) and the ve / e / g seams. ELEM-GAPS/S81N 10-18: native launch FAIL of CLOSED s81sl_vs-s81sl_vs-b571a8c2c (u[62] 230.9 > 220, 5 pins) -> pin_reg_split (0 cycles).",
  "job": {
-  "owner": "Claude:RTL-BUILD-S81",
-  "branch": "claude/rtl-build-s81-1018-int",
-  "tag": "s81sl_vs",
+  "owner": "Claude:ELEM-GAPS/S81N",
+  "branch": "claude/eg-s81n-1018",
+  "tag": "prs1",
   "purpose": "RTL-BUILD-S81: beat-leaf SU lane engine + op 14 ENG feeder to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/slice",
@@ -219,7 +219,13 @@
    }
   ],
   "views_to": "physical/ref_tile/s81sl_vs/views",
-  "record_to": "results/rtl/ref_tile/s81sl_vs"
+  "record_to": "results/rtl/ref_tile/s81sl_vs",
+  "reroute_reason": {
+   "kind": "native_capture",
+   "source": "results/arch/eg_s81n_1018/native_receipt_closed.json",
+   "cell": "ot_s81sl_vs",
+   "fix": "pin_reg_split on (one dedicated launch flop clone per output pin, 0 cycles): the 46 u[] DFFE output flops whose QN also feeds their 2-level hold mux were skipped by io_flop_at_pins (not single-chain) and left in the core (u[62] launch 230.9); clones are anchored at the E-face pins. Same RTL / outline / pins."
+  }
  },
  "pin_regs": {
   "enable": false,
@@ -459,5 +465,6 @@
   "cols": 4,
   "allow_none": true
  },
- "keep_pin_regs": true
+ "keep_pin_regs": true,
+ "pin_reg_split": true
 }

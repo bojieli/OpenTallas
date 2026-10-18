@@ -1,0 +1,67 @@
+{
+ "schema": "opentallas.native_pin_audit.receipt.v1",
+ "lane": "ELEM-GAPS/S81N",
+ "date": "2026-10-18",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one @ origin/main aa2310a36",
+ "classification": {
+  "ot_s81sl_vs": "5 u[] outputs over 220 (u[62] 230.9, u[51] 227.2, u[115] 227.0, u[49] 224.7, u[60] 221.1); 46 u bits ([48..62],[112..126],[240..255]) at 161-231 vs median 105: their flops are DFFE whose QN also feeds the 2-level hold mux (AO21/OAI21 -> D), so io_flop_at_pins' single-chain walk skipped them (3_3_place_gp: 383 ports not single-flop; only 210/256 u flops anchored) and GPL left them in the core. Fix: pin_reg_split (dedicated launch flop clone per output pin, 0 cycles) so io_flop_at_pins anchors each at its pin.",
+  "dsdv_bk_g": "2 outputs over 220 (ln3[513] 247.0, ln1[513] 239.9): lane bit 513 (live) of the 4 lanes is ONE flop after synthesis (opt_merge of the identical lanes[515l+513] <= live registers; netlist: ln0[513] INV-fans to ln1/ln2/ln3[513]) driving W-face ln0/ln2 and E-face ln1/ln3 pins. Fix: pin_reg_split (one launch flop clone per output pin, 0 cycles)."
+ },
+ "records": [
+  {
+   "cell": "ot_s81sl_vs",
+   "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+   "lib_cell": "ot_s81sl_vs",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 247.0,
+   "spread_ps": 30.8,
+   "outputs": 1752,
+   "inputs": 779,
+   "launch_ps": 230.9,
+   "launch_pin": "u[62]",
+   "capture_ps": 78.8,
+   "capture_pin": "g_v",
+   "launch_over": 5,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 29.9,
+   "ff_launch_min_ps": 44.2,
+   "ff_hold_need_ps": -8.9,
+   "pass": false,
+   "fail_why": "launch 230.89523 > 220 (5 pins)",
+   "job": "s81sl_vs-s81sl_vs-b571a8c2c"
+  },
+  {
+   "cell": "dsdv_bk_g",
+   "view": "physical/ref_tile/s81dvbk_g2/views/dsdv_bk_g",
+   "lib_cell": "dsdv_bk_g",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 265.1,
+   "spread_ps": 74.6,
+   "outputs": 2613,
+   "inputs": 1097,
+   "launch_ps": 247.0,
+   "launch_pin": "ln3[513]",
+   "capture_ps": 84.7,
+   "capture_pin": "vi_s[79]",
+   "launch_over": 2,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 72.3,
+   "ff_launch_min_ps": 38.2,
+   "ff_hold_need_ps": 11.2,
+   "pass": false,
+   "fail_why": "launch 247.02341 > 220 (2 pins)",
+   "job": "s81dvbk_g2-g2-3f5182cd2",
+   "view_ref": "origin/codex/closure-record-s81dvbk_g2-g2-3f5182cd2"
+  }
+ ]
+}
