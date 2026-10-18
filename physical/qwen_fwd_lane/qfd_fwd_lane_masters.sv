@@ -15,6 +15,13 @@ module qfd_landh0_548_EW_65x60 (input wire ck_s, input wire en, input wire [547:
     assign tie_lo = tie_lo_w;
     ot_qfd_land #(.W(548), .D(4), .FIRST(1)) u_land (.ckf(ck_s), .ea(en), .i(a), .ck(ck), .rs(rs), .k({k2, k1, k0}), .o(b), .fault(fault));
 endmodule
+module qfd_landh0_548_EW_65x99 (input wire ck_s, input wire en, input wire [547:0] a, input wire ck, input wire rs, input wire k0, input wire k1, input wire k2, output wire tie_hi, output wire tie_lo, output wire [547:0] b, output wire fault);
+    (* keep = "true" *) wire tie_hi_w = 1'b1;
+    (* keep = "true" *) wire tie_lo_w = 1'b0;
+    assign tie_hi = tie_hi_w;
+    assign tie_lo = tie_lo_w;
+    ot_qfd_land #(.W(548), .D(4), .FIRST(1)) u_land (.ckf(ck_s), .ea(en), .i(a), .ck(ck), .rs(rs), .k({k2, k1, k0}), .o(b), .fault(fault));
+endmodule
 module qfd_landh_1_EW_65x30 (input wire ckf, input wire ea, input wire [0:0] a, input wire ck, input wire rs, input wire k0, input wire k1, input wire k2, output wire tie_hi, output wire tie_lo, output wire [0:0] b, output wire fault);
     (* keep = "true" *) wire tie_hi_w = 1'b1;
     (* keep = "true" *) wire tie_lo_w = 1'b0;
@@ -23,6 +30,13 @@ module qfd_landh_1_EW_65x30 (input wire ckf, input wire ea, input wire [0:0] a, 
     ot_qfd_land #(.W(1), .D(4), .FIRST(0)) u_land (.ckf(ckf), .ea(ea), .i(a), .ck(ck), .rs(rs), .k({k2, k1, k0}), .o(b), .fault(fault));
 endmodule
 module qfd_landh_548_EN_65x60 (input wire ckf, input wire ea, input wire [547:0] a, input wire ck, input wire rs, input wire k0, input wire k1, input wire k2, output wire tie_hi, output wire tie_lo, output wire [547:0] b, output wire fault);
+    (* keep = "true" *) wire tie_hi_w = 1'b1;
+    (* keep = "true" *) wire tie_lo_w = 1'b0;
+    assign tie_hi = tie_hi_w;
+    assign tie_lo = tie_lo_w;
+    ot_qfd_land #(.W(548), .D(4), .FIRST(0)) u_land (.ckf(ckf), .ea(ea), .i(a), .ck(ck), .rs(rs), .k({k2, k1, k0}), .o(b), .fault(fault));
+endmodule
+module qfd_landh_548_EN_99x99 (input wire ckf, input wire ea, input wire [547:0] a, input wire ck, input wire rs, input wire k0, input wire k1, input wire k2, output wire tie_hi, output wire tie_lo, output wire [547:0] b, output wire fault);
     (* keep = "true" *) wire tie_hi_w = 1'b1;
     (* keep = "true" *) wire tie_lo_w = 1'b0;
     assign tie_hi = tie_hi_w;
