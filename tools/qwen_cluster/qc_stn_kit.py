@@ -34,7 +34,7 @@ BENCH = [dict(name="qcluster_lockstep", cmd="bash tools/qwen_cluster/bench_locks
               pass_regex="LOCKSTEP_EXIT 0", threads=8, peak_ram_gb=12)]
 # S-QSTN (2026-10-18): per-master behavioural bench + one-fault mutant (rtl/test/tb_qfd_c_stn.sv, qfd_c_stn_mut_tile.sv),
 # with the committed pass / fail witnesses from the fleet run.
-EXTRA = ["tools/qwen_cluster/bench_stn.sh", "rtl/test/tb_qfd_c_stn.sv", "rtl/test/qfd_c_stn_mut_tile.sv",
+EXTRA = ["tools/qwen_cluster/bench_stn.sh", "results/arch/qwen_cluster_1017/cluster_contract_dv.json", "rtl/test/tb_qfd_c_stn.sv", "rtl/test/qfd_c_stn_mut_tile.sv",
          "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv", "rtl/hdc/ot_hdc_delay.sv", "results/rtl/qcluster_stn_1018"]
 
 
