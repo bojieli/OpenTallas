@@ -483,6 +483,12 @@ def compile_image(a):
     segs = segments(ops, desc)
     win, tp = token_path_windows(ROOT / a.token_path)
     R = relay_edges(ROOT / a.relay)
+    R['source'] = 'relay table (hop count)'
+    if a.lane_ages:
+        la = json.loads((ROOT / a.lane_ages).read_text())
+        for k in ('R_CMD', 'R_HR', 'R_SS', 'R_AG'):
+            R[k] = la[k]
+        R['source'] = f'{a.lane_ages} (measured lane ages; the die exports no land plan)'
     plan_meta.update(R)
     stage = a.stage
     # the T calendar's STAGE events (class 0, arg [5:0] = stage): every decode stage must fit its own window
@@ -576,7 +582,7 @@ def compile_image(a):
         schema='opentallas.qwen.ctlm-image.v1', tool='tools/qwen_layerbench/ctlm_image.py',
         scope='decode-layer stage image (stages 1..36) of qfd_tt_ctlm_dv; ONE image per epoch serves every stage '
               '(STAGE_ME 1 required: stage-0 / LM-head h_start must not restart the layer ME programme)',
-        inputs={a.program: sha(ROOT / a.program), a.lowering: sha(ROOT / a.lowering),
+        inputs={**({a.lane_ages: sha(ROOT / a.lane_ages)} if a.lane_ages else {}), a.program: sha(ROOT / a.program), a.lowering: sha(ROOT / a.lowering),
                 a.token_path: sha(ROOT / a.token_path), a.relay: sha(ROOT / a.relay),
                 a.sys_face_events: sha(ROOT / a.sys_face_events)},
         stage_starts_T=[dict(cycle=c, stage=st) for c, st in starts],
@@ -687,6 +693,8 @@ def main():
     ap.add_argument('--lowering', default=DEF_LOWERING)
     ap.add_argument('--token-path', default=DEF_TOKEN_PATH)
     ap.add_argument('--relay', default=DEF_RELAY)
+    ap.add_argument('--lane-ages', default=None,
+                    help='die lane ages in edges {R_CMD, R_HR, R_SS, R_AG} (the land plan); default: relay hop counts')
     ap.add_argument('--stage', type=int, default=1, help='image stage label (CALS / footer / XPF records)')
     ap.add_argument('--sys-face-events', default=DEF_SF_EVENTS, help='the compiled T calendar (stage starts)')
     ap.add_argument('--period', type=int, default=None,

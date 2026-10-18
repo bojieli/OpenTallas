@@ -3,6 +3,7 @@
  "tool": "tools/qwen_layerbench/ctlm_image.py",
  "scope": "decode-layer stage image (stages 1..36) of qfd_tt_ctlm_dv; ONE image per epoch serves every stage (STAGE_ME 1 required: stage-0 / LM-head h_start must not restart the layer ME programme)",
  "inputs": {
+  "results/rtl/qwen_layer_tput_1018/ctlm_prog/lane_ages_dv2f14bn.json": "501b41bea1486f865eccc568695ace605aa87b7b2b069f083d810e2738674b17",
   "results/arch/qwen_tp8_native_dispatch_1014/actual_fused_layer0/die0/program.hex": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
   "results/arch/qwen_tp8_native_dispatch_1014/actual_fused_layer0/die0/lowering.json": "85ceb5f54550bd94c4f40c76d033ed436de4888a9c43be5d61ca1b71503777a7",
   "results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz": "4117978729c8c66355bc28db85763083556104f38798884ebf62aacd25b923bc",
@@ -181,16 +182,17 @@
   "SU_LAT": 24
  },
  "relay": {
-  "R_CMD": 25,
-  "R_HR": 25,
-  "R_SS": 22,
-  "R_AG": 22,
-  "digest": "sha256:3e6f397235a6c7d51d13d3312da20a88f1342056459a604751d9efa01c0ffc4f"
+  "R_CMD": 14,
+  "R_HR": 14,
+  "R_SS": 13,
+  "R_AG": 13,
+  "digest": "sha256:3e6f397235a6c7d51d13d3312da20a88f1342056459a604751d9efa01c0ffc4f",
+  "source": "results/rtl/qwen_layer_tput_1018/ctlm_prog/lane_ages_dv2f14bn.json (measured lane ages; the die exports no land plan)"
  },
  "stage_label": 1,
  "period": 6581,
- "lead": 32,
- "xpf_transport_edges": 26,
+ "lead": 21,
+ "xpf_transport_edges": 15,
  "me_observe_edges": 1,
  "su_first_write": 12,
  "programme": {
@@ -237,8 +239,8 @@
    "pc": 0,
    "unit": 2,
    "kind": "SU",
-   "at": 32,
-   "done": 122,
+   "at": 21,
+   "done": 102,
    "words": 64,
    "window": "rmsnorm1"
   },
@@ -246,16 +248,16 @@
    "pc": 1,
    "unit": 1,
    "kind": "ME",
-   "at": 47,
-   "done": 306,
+   "at": 36,
+   "done": 295,
    "window": "qkv"
   },
   {
    "pc": 2,
    "unit": 2,
    "kind": "SU",
-   "at": 99,
-   "done": 147,
+   "at": 88,
+   "done": 127,
    "words": 1,
    "window": "qkv"
   },
@@ -263,8 +265,8 @@
    "pc": 3,
    "unit": 2,
    "kind": "SU",
-   "at": 306,
-   "done": 355,
+   "at": 295,
+   "done": 335,
    "words": 2,
    "window": "qknorm_rope"
   },
@@ -272,8 +274,8 @@
    "pc": 4,
    "unit": 2,
    "kind": "SU",
-   "at": 332,
-   "done": 386,
+   "at": 321,
+   "done": 366,
    "words": 10,
    "window": "qknorm_rope"
   },
@@ -281,8 +283,8 @@
    "pc": 5,
    "unit": 2,
    "kind": "SU",
-   "at": 363,
-   "done": 411,
+   "at": 352,
+   "done": 391,
    "words": 1,
    "window": "qknorm_rope"
   },
@@ -290,8 +292,8 @@
    "pc": 6,
    "unit": 2,
    "kind": "SU",
-   "at": 388,
-   "done": 442,
+   "at": 377,
+   "done": 422,
    "words": 10,
    "window": "qknorm_rope"
   },
@@ -299,8 +301,8 @@
    "pc": 7,
    "unit": 2,
    "kind": "SU",
-   "at": 419,
-   "done": 469,
+   "at": 408,
+   "done": 449,
    "words": 4,
    "window": "qknorm_rope"
   },
@@ -308,8 +310,8 @@
    "pc": 8,
    "unit": 2,
    "kind": "SU",
-   "at": 446,
-   "done": 494,
+   "at": 435,
+   "done": 474,
    "words": 1,
    "window": "qknorm_rope"
   },
@@ -317,8 +319,8 @@
    "pc": 9,
    "unit": 2,
    "kind": "SU",
-   "at": 471,
-   "done": 521,
+   "at": 460,
+   "done": 501,
    "words": 4,
    "window": "qknorm_rope"
   },
@@ -326,8 +328,8 @@
    "pc": 10,
    "unit": 2,
    "kind": "SU",
-   "at": 498,
-   "done": 546,
+   "at": 487,
+   "done": 526,
    "words": 1,
    "window": "qknorm_rope"
   },
@@ -335,32 +337,32 @@
    "pc": 11,
    "unit": 1,
    "kind": "NATIVE",
-   "at": 554,
-   "done": 2228,
+   "at": 534,
+   "done": 2217,
    "window": "attn_kv"
   },
   {
    "pc": 12,
    "unit": 1,
    "kind": "ME",
-   "at": 2236,
-   "done": 2605,
+   "at": 2225,
+   "done": 2594,
    "window": "o_proj"
   },
   {
    "pc": 13,
    "unit": 0,
    "kind": "END",
-   "at": 2613,
-   "done": 2613,
+   "at": 2602,
+   "done": 2602,
    "window": "o_proj"
   },
   {
    "pc": null,
    "unit": null,
    "kind": "XC",
-   "at": 2614,
-   "done": 3726,
+   "at": 2603,
+   "done": 3715,
    "words": 256,
    "mode": 0,
    "tag": 0,
@@ -371,8 +373,8 @@
    "pc": 14,
    "unit": null,
    "kind": "SEG",
-   "at": 3726,
-   "done": 3726,
+   "at": 3715,
+   "done": 3715,
    "base": 14,
    "window": "allreduce1"
   },
@@ -380,8 +382,8 @@
    "pc": 14,
    "unit": 2,
    "kind": "SU",
-   "at": 3729,
-   "done": 3819,
+   "at": 3718,
+   "done": 3799,
    "words": 64,
    "window": "attn_tail"
   },
@@ -389,8 +391,8 @@
    "pc": 15,
    "unit": 2,
    "kind": "SU",
-   "at": 3796,
-   "done": 3886,
+   "at": 3785,
+   "done": 3866,
    "words": 64,
    "window": "rmsnorm2"
   },
@@ -398,16 +400,16 @@
    "pc": 16,
    "unit": 1,
    "kind": "ME",
-   "at": 3894,
-   "done": 4451,
+   "at": 3874,
+   "done": 4440,
    "window": "gate_up"
   },
   {
    "pc": 17,
    "unit": 2,
    "kind": "SU",
-   "at": 3920,
-   "done": 3968,
+   "at": 3889,
+   "done": 3928,
    "words": 1,
    "window": "gate_up"
   },
@@ -415,8 +417,8 @@
    "pc": 18,
    "unit": 2,
    "kind": "SU",
-   "at": 4451,
-   "done": 4530,
+   "at": 4440,
+   "done": 4510,
    "words": 48,
    "window": "gate_up"
   },
@@ -424,8 +426,8 @@
    "pc": 19,
    "unit": 2,
    "kind": "SU",
-   "at": 4507,
-   "done": 4570,
+   "at": 4496,
+   "done": 4550,
    "words": 24,
    "window": "gate_up"
   },
@@ -433,24 +435,24 @@
    "pc": 20,
    "unit": 1,
    "kind": "ME",
-   "at": 4578,
-   "done": 4821,
+   "at": 4558,
+   "done": 4810,
    "window": "down"
   },
   {
    "pc": 21,
    "unit": 0,
    "kind": "END",
-   "at": 4829,
-   "done": 4829,
+   "at": 4818,
+   "done": 4818,
    "window": "down"
   },
   {
    "pc": null,
    "unit": null,
    "kind": "XC",
-   "at": 4830,
-   "done": 5800,
+   "at": 4819,
+   "done": 5789,
    "words": 256,
    "mode": 0,
    "tag": 1,
@@ -461,8 +463,8 @@
    "pc": 22,
    "unit": null,
    "kind": "SEG",
-   "at": 5800,
-   "done": 5800,
+   "at": 5789,
+   "done": 5789,
    "base": 22,
    "window": "allreduce2"
   },
@@ -470,8 +472,8 @@
    "pc": 22,
    "unit": 2,
    "kind": "SU",
-   "at": 5803,
-   "done": 5893,
+   "at": 5792,
+   "done": 5873,
    "words": 64,
    "window": "residual"
   },
@@ -479,8 +481,8 @@
    "pc": 23,
    "unit": 2,
    "kind": "SU",
-   "at": 5870,
-   "done": 5960,
+   "at": 5859,
+   "done": 5940,
    "words": 64,
    "window": "residual"
   },
@@ -488,8 +490,8 @@
    "pc": 24,
    "unit": 0,
    "kind": "END",
-   "at": 5968,
-   "done": 5968,
+   "at": 5948,
+   "done": 5948,
    "window": "residual"
   }
  ],
@@ -500,53 +502,53 @@
   {
    "pc": 1,
    "unit": 1,
-   "cycle": 44,
-   "hex": "10010000002c"
+   "cycle": 33,
+   "hex": "100100000021"
   },
   {
    "pc": 11,
    "unit": 1,
-   "cycle": 551,
-   "hex": "100b00000227"
+   "cycle": 531,
+   "hex": "100b00000213"
   },
   {
    "pc": 12,
    "unit": 1,
-   "cycle": 2233,
-   "hex": "100c000008b9"
+   "cycle": 2222,
+   "hex": "100c000008ae"
   },
   {
    "pc": 13,
    "unit": 0,
-   "cycle": 2610,
-   "hex": "000d00000a32"
+   "cycle": 2599,
+   "hex": "000d00000a27"
   },
   {
    "pc": 16,
    "unit": 1,
-   "cycle": 3891,
-   "hex": "101000000f33"
+   "cycle": 3871,
+   "hex": "101000000f1f"
   },
   {
    "pc": 20,
    "unit": 1,
-   "cycle": 4575,
-   "hex": "1014000011df"
+   "cycle": 4555,
+   "hex": "1014000011cb"
   },
   {
    "pc": 21,
    "unit": 0,
-   "cycle": 4826,
-   "hex": "0015000012da"
+   "cycle": 4815,
+   "hex": "0015000012cf"
   },
   {
    "pc": 24,
    "unit": 0,
-   "cycle": 5965,
-   "hex": "40180000174d"
+   "cycle": 5945,
+   "hex": "401800001739"
   }
  ],
- "me_stop_cycle": 5965,
+ "me_stop_cycle": 5945,
  "xpf_records": [
   {
    "consumer_pc": 1,
@@ -554,7 +556,7 @@
    "producer_unit": 2,
    "arm_cycle": 5849,
    "issue_cycle": 5844,
-   "first_write_cycle": 5878,
+   "first_write_cycle": 5867,
    "xpf72": "800112002010002001"
   },
   {
@@ -562,8 +564,8 @@
    "producer_pc": 11,
    "producer_unit": 1,
    "arm_cycle": 2179,
-   "issue_cycle": 553,
-   "first_write_cycle": 2208,
+   "issue_cycle": 533,
+   "first_write_cycle": 2197,
    "xpf72": "800050002004018be1"
   },
   {
@@ -572,7 +574,7 @@
    "producer_unit": 2,
    "arm_cycle": 3775,
    "issue_cycle": 3770,
-   "first_write_cycle": 3804,
+   "first_write_cycle": 3793,
    "xpf72": "80040e002040002001"
   },
   {
@@ -581,11 +583,11 @@
    "producer_unit": 2,
    "arm_cycle": 4486,
    "issue_cycle": 4481,
-   "first_write_cycle": 4515,
+   "first_write_cycle": 4504,
    "xpf72": "8000d000200c01afe1"
   }
  ],
- "xpf_stop": 5965,
+ "xpf_stop": 5945,
  "cal": {
   "base": 400,
   "nent": 32,
@@ -679,22 +681,22 @@
     "label": "SU PC14"
    },
    {
-    "delta": 22,
+    "delta": 11,
     "cmd": "e00000000000000000000000000e5",
     "label": "SEG base 14"
    },
    {
-    "delta": 45,
+    "delta": 56,
     "cmd": "f00000000000000000000000000f3",
     "label": "SU PC15"
    },
    {
-    "delta": 124,
+    "delta": 104,
     "cmd": "f0000000000000000000000000113",
     "label": "SU PC17"
    },
    {
-    "delta": 531,
+    "delta": 551,
     "cmd": "f0000000000000000000000000123",
     "label": "SU PC18"
    },
@@ -714,12 +716,12 @@
     "label": "SU PC22"
    },
    {
-    "delta": 22,
+    "delta": 11,
     "cmd": "e0000000000000000000000000165",
     "label": "SEG base 22"
    },
    {
-    "delta": 45,
+    "delta": 56,
     "cmd": "f0000000000000000000000000173",
     "label": "SU PC23"
    }
@@ -807,7 +809,7 @@
     "label": "SU PC15"
    },
    {
-    "edge": 3895,
+    "edge": 3875,
     "cmd": "f0000000000000000000000000113",
     "label": "SU PC17"
    },
@@ -839,13 +841,13 @@
   ],
   "local_at_tt_ctlm": [
    {
-    "edge": 3726,
+    "edge": 3715,
     "kind": "SEG",
     "base": 14,
     "label": "SEG base 14"
    },
    {
-    "edge": 5800,
+    "edge": 5789,
     "kind": "SEG",
     "base": 22,
     "label": "SEG base 22"
@@ -853,75 +855,75 @@
   ],
   "me_issue": [
    {
-    "head_cycle": 44,
-    "edge": 47,
+    "head_cycle": 33,
+    "edge": 36,
     "pc": 1,
     "unit": 1
    },
    {
-    "head_cycle": 551,
-    "edge": 554,
+    "head_cycle": 531,
+    "edge": 534,
     "pc": 11,
     "unit": 1
    },
    {
-    "head_cycle": 2233,
-    "edge": 2236,
+    "head_cycle": 2222,
+    "edge": 2225,
     "pc": 12,
     "unit": 1
    },
    {
-    "head_cycle": 2610,
-    "edge": 2613,
+    "head_cycle": 2599,
+    "edge": 2602,
     "pc": 13,
     "unit": 0
    },
    {
-    "head_cycle": 3891,
-    "edge": 3894,
+    "head_cycle": 3871,
+    "edge": 3874,
     "pc": 16,
     "unit": 1
    },
    {
-    "head_cycle": 4575,
-    "edge": 4578,
+    "head_cycle": 4555,
+    "edge": 4558,
     "pc": 20,
     "unit": 1
    },
    {
-    "head_cycle": 4826,
-    "edge": 4829,
+    "head_cycle": 4815,
+    "edge": 4818,
     "pc": 21,
     "unit": 0
    },
    {
-    "head_cycle": 5965,
-    "edge": 5968,
+    "head_cycle": 5945,
+    "edge": 5948,
     "pc": 24,
     "unit": 0
    }
   ],
   "rom_go_at_tt_ctlm": [
    {
-    "edge": 49,
+    "edge": 38,
     "pc": 1
    },
    {
-    "edge": 2238,
+    "edge": 2227,
     "pc": 12
    },
    {
-    "edge": 3896,
+    "edge": 3876,
     "pc": 16
    },
    {
-    "edge": 4580,
+    "edge": 4560,
     "pc": 20
    }
   ],
   "native_go_at_tt_ctlm": [
    {
-    "edge": 555,
+    "edge": 535,
     "pc": 11
    }
   ],
@@ -949,137 +951,137 @@
   ],
   "cmd_at_w5_pin": [
    {
-    "edge": 32,
+    "edge": 21,
     "cmd": "f0000000000000000000000000003",
     "label": "SU PC0"
    },
    {
-    "edge": 99,
+    "edge": 88,
     "cmd": "f0000000000000000000000000023",
     "label": "SU PC2"
    },
    {
-    "edge": 306,
+    "edge": 295,
     "cmd": "f0000000000000000000000000033",
     "label": "SU PC3"
    },
    {
-    "edge": 332,
+    "edge": 321,
     "cmd": "f0000000000000000000000000043",
     "label": "SU PC4"
    },
    {
-    "edge": 363,
+    "edge": 352,
     "cmd": "f0000000000000000000000000053",
     "label": "SU PC5"
    },
    {
-    "edge": 388,
+    "edge": 377,
     "cmd": "f0000000000000000000000000063",
     "label": "SU PC6"
    },
    {
-    "edge": 419,
+    "edge": 408,
     "cmd": "f0000000000000000000000000073",
     "label": "SU PC7"
    },
    {
-    "edge": 446,
+    "edge": 435,
     "cmd": "f0000000000000000000000000083",
     "label": "SU PC8"
    },
    {
-    "edge": 471,
+    "edge": 460,
     "cmd": "f0000000000000000000000000093",
     "label": "SU PC9"
    },
    {
-    "edge": 498,
+    "edge": 487,
     "cmd": "f00000000000000000000000000a3",
     "label": "SU PC10"
    },
    {
-    "edge": 2614,
+    "edge": 2603,
     "cmd": "f0000000000000000000000008001",
     "label": "XC tag 0 words 256"
    },
    {
-    "edge": 3729,
+    "edge": 3718,
     "cmd": "f00000000000000000000000000e3",
     "label": "SU PC14"
    },
    {
-    "edge": 3796,
+    "edge": 3785,
     "cmd": "f00000000000000000000000000f3",
     "label": "SU PC15"
    },
    {
-    "edge": 3920,
+    "edge": 3889,
     "cmd": "f0000000000000000000000000113",
     "label": "SU PC17"
    },
    {
-    "edge": 4451,
+    "edge": 4440,
     "cmd": "f0000000000000000000000000123",
     "label": "SU PC18"
    },
    {
-    "edge": 4507,
+    "edge": 4496,
     "cmd": "f0000000000000000000000000133",
     "label": "SU PC19"
    },
    {
-    "edge": 4830,
+    "edge": 4819,
     "cmd": "f0000000000000000000000808001",
     "label": "XC tag 1 words 256"
    },
    {
-    "edge": 5803,
+    "edge": 5792,
     "cmd": "f0000000000000000000000000163",
     "label": "SU PC22"
    },
    {
-    "edge": 5870,
+    "edge": 5859,
     "cmd": "f0000000000000000000000000173",
     "label": "SU PC23"
    }
   ],
   "hr_rom_go_at_w5_pin": [
    {
-    "edge": 74,
+    "edge": 52,
     "pc": 1
    },
    {
-    "edge": 2263,
+    "edge": 2241,
     "pc": 12
    },
    {
-    "edge": 3921,
+    "edge": 3890,
     "pc": 16
    },
    {
-    "edge": 4605,
+    "edge": 4574,
     "pc": 20
    }
   ],
   "hr_xpf_arm_at_w5_pin": [
    {
-    "edge": 5879,
+    "edge": 5868,
     "xpf72": "800112002010002001",
     "consumer_pc": 1
    },
    {
-    "edge": 2209,
+    "edge": 2198,
     "xpf72": "800050002004018be1",
     "consumer_pc": 12
    },
    {
-    "edge": 3805,
+    "edge": 3794,
     "xpf72": "80040e002040002001",
     "consumer_pc": 16
    },
    {
-    "edge": 4516,
+    "edge": 4505,
     "xpf72": "8000d000200c01afe1",
     "consumer_pc": 20
    }
@@ -1101,397 +1103,397 @@
  },
  "status": [
   {
-   "edge": 48,
-   "field": "stn_busy",
-   "value": 1
-  },
-  {
-   "edge": 55,
+   "edge": 35,
    "field": "su_busy",
    "value": 1
   },
   {
-   "edge": 55,
+   "edge": 35,
    "field": "su_prog",
    "value": 0
   },
   {
-   "edge": 122,
+   "edge": 37,
+   "field": "stn_busy",
+   "value": 1
+  },
+  {
+   "edge": 102,
    "field": "su_busy",
    "value": 0
   },
   {
-   "edge": 122,
+   "edge": 102,
    "field": "su_prog",
    "value": 64
   },
   {
-   "edge": 122,
+   "edge": 102,
    "field": "su_busy",
    "value": 1
   },
   {
-   "edge": 122,
+   "edge": 102,
    "field": "su_prog",
    "value": 0
   },
   {
-   "edge": 147,
+   "edge": 127,
    "field": "su_busy",
    "value": 0
   },
   {
-   "edge": 147,
+   "edge": 127,
    "field": "su_prog",
    "value": 1
   },
   {
-   "edge": 306,
+   "edge": 295,
    "field": "stn_busy",
    "value": 0
   },
   {
-   "edge": 329,
+   "edge": 309,
    "field": "su_busy",
    "value": 1
   },
   {
-   "edge": 329,
+   "edge": 309,
    "field": "su_prog",
    "value": 0
   },
   {
-   "edge": 355,
+   "edge": 335,
    "field": "su_busy",
    "value": 0
   },
   {
-   "edge": 355,
+   "edge": 335,
    "field": "su_prog",
    "value": 2
   },
   {
-   "edge": 355,
+   "edge": 335,
    "field": "su_busy",
    "value": 1
   },
   {
-   "edge": 355,
+   "edge": 335,
    "field": "su_prog",
    "value": 0
   },
   {
-   "edge": 386,
+   "edge": 366,
    "field": "su_busy",
    "value": 0
   },
   {
-   "edge": 386,
+   "edge": 366,
    "field": "su_prog",
    "value": 10
   },
   {
-   "edge": 386,
+   "edge": 366,
    "field": "su_busy",
    "value": 1
   },
   {
-   "edge": 386,
+   "edge": 366,
    "field": "su_prog",
    "value": 0
   },
   {
-   "edge": 411,
+   "edge": 391,
    "field": "su_busy",
    "value": 0
   },
   {
-   "edge": 411,
+   "edge": 391,
    "field": "su_prog",
    "value": 1
   },
   {
-   "edge": 411,
+   "edge": 391,
    "field": "su_busy",
    "value": 1
   },
   {
-   "edge": 411,
+   "edge": 391,
    "field": "su_prog",
    "value": 0
   },
   {
-   "edge": 442,
+   "edge": 422,
    "field": "su_busy",
    "value": 0
   },
   {
-   "edge": 442,
+   "edge": 422,
    "field": "su_prog",
    "value": 10
   },
   {
-   "edge": 442,
+   "edge": 422,
    "field": "su_busy",
    "value": 1
   },
   {
-   "edge": 442,
+   "edge": 422,
    "field": "su_prog",
    "value": 0
   },
   {
-   "edge": 469,
+   "edge": 449,
    "field": "su_busy",
    "value": 0
   },
   {
-   "edge": 469,
+   "edge": 449,
    "field": "su_prog",
    "value": 4
   },
   {
-   "edge": 469,
+   "edge": 449,
    "field": "su_busy",
    "value": 1
   },
   {
-   "edge": 469,
+   "edge": 449,
    "field": "su_prog",
    "value": 0
   },
   {
-   "edge": 494,
+   "edge": 474,
    "field": "su_busy",
    "value": 0
   },
   {
-   "edge": 494,
+   "edge": 474,
    "field": "su_prog",
    "value": 1
   },
   {
-   "edge": 494,
+   "edge": 474,
    "field": "su_busy",
    "value": 1
   },
   {
-   "edge": 494,
+   "edge": 474,
    "field": "su_prog",
    "value": 0
   },
   {
-   "edge": 521,
+   "edge": 501,
    "field": "su_busy",
    "value": 0
   },
   {
-   "edge": 521,
+   "edge": 501,
    "field": "su_prog",
    "value": 4
   },
   {
-   "edge": 521,
+   "edge": 501,
    "field": "su_busy",
    "value": 1
   },
   {
-   "edge": 521,
+   "edge": 501,
    "field": "su_prog",
    "value": 0
   },
   {
-   "edge": 546,
+   "edge": 526,
    "field": "su_busy",
    "value": 0
   },
   {
-   "edge": 546,
+   "edge": 526,
    "field": "su_prog",
    "value": 1
   },
   {
-   "edge": 555,
+   "edge": 535,
    "field": "native_idle",
    "value": 0
   },
   {
-   "edge": 2228,
+   "edge": 2217,
    "field": "native_idle",
    "value": 1
   },
   {
-   "edge": 2237,
+   "edge": 2226,
    "field": "stn_busy",
    "value": 1
   },
   {
-   "edge": 2605,
+   "edge": 2594,
    "field": "stn_busy",
    "value": 0
   },
   {
-   "edge": 3752,
+   "edge": 3732,
    "field": "su_busy",
    "value": 1
   },
   {
-   "edge": 3752,
+   "edge": 3732,
    "field": "su_prog",
    "value": 0
   },
   {
-   "edge": 3819,
+   "edge": 3799,
    "field": "su_busy",
    "value": 0
   },
   {
-   "edge": 3819,
+   "edge": 3799,
    "field": "su_prog",
    "value": 64
   },
   {
-   "edge": 3819,
+   "edge": 3799,
    "field": "su_busy",
    "value": 1
   },
   {
-   "edge": 3819,
+   "edge": 3799,
    "field": "su_prog",
    "value": 0
   },
   {
-   "edge": 3886,
+   "edge": 3866,
    "field": "su_busy",
    "value": 0
   },
   {
-   "edge": 3886,
+   "edge": 3866,
    "field": "su_prog",
    "value": 64
   },
   {
-   "edge": 3895,
+   "edge": 3875,
    "field": "stn_busy",
    "value": 1
   },
   {
-   "edge": 3943,
+   "edge": 3903,
    "field": "su_busy",
    "value": 1
   },
   {
-   "edge": 3943,
+   "edge": 3903,
    "field": "su_prog",
    "value": 0
   },
   {
-   "edge": 3968,
+   "edge": 3928,
    "field": "su_busy",
    "value": 0
   },
   {
-   "edge": 3968,
+   "edge": 3928,
    "field": "su_prog",
    "value": 1
   },
   {
-   "edge": 4451,
+   "edge": 4440,
    "field": "stn_busy",
    "value": 0
   },
   {
-   "edge": 4474,
+   "edge": 4454,
    "field": "su_busy",
    "value": 1
   },
   {
-   "edge": 4474,
+   "edge": 4454,
    "field": "su_prog",
    "value": 0
   },
   {
-   "edge": 4530,
+   "edge": 4510,
    "field": "su_busy",
    "value": 0
   },
   {
-   "edge": 4530,
+   "edge": 4510,
    "field": "su_prog",
    "value": 48
   },
   {
-   "edge": 4530,
+   "edge": 4510,
    "field": "su_busy",
    "value": 1
   },
   {
-   "edge": 4530,
+   "edge": 4510,
    "field": "su_prog",
    "value": 0
   },
   {
-   "edge": 4570,
+   "edge": 4550,
    "field": "su_busy",
    "value": 0
   },
   {
-   "edge": 4570,
+   "edge": 4550,
    "field": "su_prog",
    "value": 24
   },
   {
-   "edge": 4579,
+   "edge": 4559,
    "field": "stn_busy",
    "value": 1
   },
   {
-   "edge": 4821,
+   "edge": 4810,
    "field": "stn_busy",
    "value": 0
   },
   {
-   "edge": 5826,
+   "edge": 5806,
    "field": "su_busy",
    "value": 1
   },
   {
-   "edge": 5826,
+   "edge": 5806,
    "field": "su_prog",
    "value": 0
   },
   {
-   "edge": 5893,
+   "edge": 5873,
    "field": "su_busy",
    "value": 0
   },
   {
-   "edge": 5893,
+   "edge": 5873,
    "field": "su_prog",
    "value": 64
   },
   {
-   "edge": 5893,
+   "edge": 5873,
    "field": "su_busy",
    "value": 1
   },
   {
-   "edge": 5893,
+   "edge": 5873,
    "field": "su_prog",
    "value": 0
   },
   {
-   "edge": 5960,
+   "edge": 5940,
    "field": "su_busy",
    "value": 0
   },
   {
-   "edge": 5960,
+   "edge": 5940,
    "field": "su_prog",
    "value": 64
   }
  ],
- "digest": "8f3547d167b0c20b",
+ "digest": "031fbf0c46078f2b",
  "footer": "5850463100001052",
  "not_compiled": [
   "G-C4 DV slice lowering: slice PROG image (the 457-b SU words of the SU commands' pidx = ISA PC), STN / ROOT / STREAM / PORTS / AMAX command fields (need the DV row->slice ownership and slice-local VM address maps)",
