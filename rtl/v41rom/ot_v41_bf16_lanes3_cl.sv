@@ -55,6 +55,7 @@ module ot_v41_bf16_lanes3_cl #(
 );
     initial if (XST<0) $fatal(1,"XST must be nonnegative");
     localparam integer PARENT_XST=XST>0?XST-1:0;
+    localparam integer PXH=PARENT_XST>1?PARENT_XST-2:0; // clamped shift-index (unselected when PARENT_XST <= 1)
     localparam integer HW = $clog2(NCHB);
     localparam integer TW = HW + 2 + TRW + 1;
     // 1.2 GHz: the word, x slice and tag are registered at the lanes' boundary (the element's capture mux and the
@@ -71,13 +72,13 @@ module ot_v41_bf16_lanes3_cl #(
         reg [255:0] sw [0:PARENT_XST-1];
         reg [255:0] sx [0:PARENT_XST-1];
         reg [TW-1:0] st [0:PARENT_XST-1];
-        always @(posedge clk or negedge rst_n) if (!rst_n) sv <= '0; else sv <= (PARENT_XST > 1) ? {sv[PARENT_XST-2:0], v} : v;
+        always @(posedge clk or negedge rst_n) if (!rst_n) sv <= '0; else sv <= (PARENT_XST > 1) ? {sv[PXH:0], v} : v;
         always @(posedge clk) begin
             sw[0] <= w; sx[0] <= x; st[0] <= {slot, first, last, tree, final_i};
             for (int k = 1; k < PARENT_XST; k++) begin sw[k] <= sw[k-1]; sx[k] <= sx[k-1]; st[k] <= st[k-1]; end
         end
 `ifdef XST_MUTANT_TAG
-        assign v_s = sv[PARENT_XST-1]; assign w_s = sw[PARENT_XST-1]; assign x_s = sx[PARENT_XST-1]; assign t_s = (PARENT_XST > 1) ? st[PARENT_XST-2] : {slot, first, last, tree, final_i};  // negative control: tag one stage early
+        assign v_s = sv[PARENT_XST-1]; assign w_s = sw[PARENT_XST-1]; assign x_s = sx[PARENT_XST-1]; assign t_s = (PARENT_XST > 1) ? st[PXH] : {slot, first, last, tree, final_i};  // negative control: tag one stage early
 `else
         assign v_s = sv[PARENT_XST-1]; assign w_s = sw[PARENT_XST-1]; assign x_s = sx[PARENT_XST-1]; assign t_s = st[PARENT_XST-1];
 `endif

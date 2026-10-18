@@ -333,6 +333,13 @@ endmodule
 def lanes3():
     s = (V / 'ot_v41_bf16_lanes3_roots.sv').read_text()
     s = once(s, 'module ot_v41_bf16_lanes3_roots #(', 'module ot_v41_bf16_lanes3_cl #(')
+    # lint range fix (OWNERS-S81/BF 10-18): PARENT_XST = 1 elaborated sv[-1:0] / st[-1] in the unselected ternary
+    # arm (Verilator range error lanes3_cl:74); clamp the indices, identical logic for every PARENT_XST
+    s = once(s, '    localparam integer PARENT_XST=XST>0?XST-1:0;\n',
+             '    localparam integer PARENT_XST=XST>0?XST-1:0;\n'
+             '    localparam integer PXH=PARENT_XST>1?PARENT_XST-2:0; // clamped shift-index (unselected when PARENT_XST <= 1)\n')
+    s = once(s, '{sv[PARENT_XST-2:0], v}', '{sv[PXH:0], v}')
+    s = once(s, 'st[PARENT_XST-2] :', 'st[PXH] :')
     s = once(s, '    input wire [5:0] leaf_clk, // lane groups0..3, reduction level0, reduction levels1..3',
              '    input wire [4:0] leaf_clk, // cl: lane groups0..3, reduction (one hardened root)\n'
              '    input wire [3:0] lane_ckl, lane_cko, // cl BFCOL-4: lane band roots fclk / fclk_o (die: = leaf_clk[g])')
