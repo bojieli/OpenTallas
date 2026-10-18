@@ -501,6 +501,15 @@ def apply_dv(v, m):
         if all(e[0] in names for e in eps):
             out.append((bid, cl, bits, eps))
             continue
+        kept = [e for e in eps if e[0] in names]
+        if eps[0][0] in names and any(e[0] == 'sys_face' for e in kept[1:]):
+            # Q-DIE11b 10-18 (dv2f14bn strict bind: qfd_sys_face.emb_prov_fault input_unconnected): sys_face_bind appends
+            # its inputs to the producer's existing net (ng_embed_fault_0 = embed_prov.fault -> sp_su64_sfu, sys_face);
+            # the DV case removes sp_su64_sfu, which dropped the whole net.  Keep the net on its surviving endpoints when
+            # the driver stays and a sys_face input is among them (every sys_face input is mandatory).
+            out.append((bid, cl, bits, kept))
+            m.setdefault('dv_partial_buses', []).append(dict(bus=bid, removed=[list(e) for e in eps if e[0] not in names]))
+            continue
         dropped[cl] = dropped.get(cl, 0) + 1
     for bid, cl, bits, eps in rehome:
         e2 = [e if e[0] not in removed else ('dvs_W5', f'r_{bid}') for e in eps]
