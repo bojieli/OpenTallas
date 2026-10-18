@@ -15,6 +15,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--bundle", default=".")
     ap.add_argument("--views", required=True)
+    ap.add_argument("--hier", type=int, default=1, help="mark each master /*verilator hier_block*/")
     ap.add_argument("--verilator", default=os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"))
     a = ap.parse_args()
     B = Path(a.bundle)
@@ -42,6 +43,22 @@ def main():
             t = re.sub(r"\b(module\s+)(" + alt + r")\b", lambda x: x.group(1) + x.group(2) + tag, t)
             t = re.sub(r"(?<![\w$.])(" + alt + r")\b(?=\s*(?:#|[A-Za-z_]\w*\s*(?:\[[^\]]*\]\s*)?\())",
                        lambda x: x.group(1) + tag, t)
+        if a.hier and not m.startswith(("hbfd_rly_", "hfd_ckgen")) and "blackbox" not in t[:20000]:
+            # Verilator hierarchical verilation: every hard master is verilated on its own (memory bounded per master,
+            # as the die is hardened per master); the whole-die flat elaboration exceeded 380 GB (10-18)
+            mm = re.search(r"\bmodule\s+" + re.escape(m) + r"\b", t)
+            j = mm.end()
+            for _ in range(2):                      # optional #( parameters ) then ( ports ): skip balanced groups
+                k = re.match(r"\s*#?\s*\(", t[j:])
+                if not k:
+                    break
+                j += k.end()
+                d = 1
+                while d:
+                    d += {"(": 1, ")": -1}.get(t[j], 0)
+                    j += 1
+            semi = t.index(";", j) + 1
+            t = t[:semi] + " /*verilator hier_block*/" + t[semi:]
         (out / f"{m}.sv").write_text(t)
         rec[m] = dict(tag=tag, defines=defs, files=len(files), modules=len(names) + 1)
     (out / "flatten.json").write_text(json.dumps(rec, indent=1) + "\n")
