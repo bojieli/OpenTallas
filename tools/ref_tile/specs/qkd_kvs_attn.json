@@ -3,10 +3,10 @@
  "top": "qkd_kvs_attn",
  "sources": [
   "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv",
-  "rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv",
-  "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
-  "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv",
   "rtl/qwen_sys/split_20261014/qkd_native59_descriptor_producer.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
   "rtl/qwen_sys/split_20261014/qkd_attn_service_root.sv",
   "rtl/qwen_sys/split_20261014/qkd_attn_result_face_s.sv",
   "rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv",

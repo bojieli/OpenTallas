@@ -88,7 +88,7 @@ class HelperOverlay(unittest.TestCase):
         run = Path(self.tmp.name) / 'run'
         CL.ship_helpers('local', str(run), job)
         before = (run / 'cl/orfs_hold_mm.tcl').read_bytes()
-        self.commit_helper(b'# helper changed after gate and first route ship\n')
+        self.commit_helper(b'set ot_hold_margin 0.05 ;# helper changed after gate and first route ship\n')
         self.assertFalse(SB.validate(binding, self.root, self.daemon, self.tip)[0])
         mtime = (run / 'cl/orfs_hold_mm.tcl').stat().st_mtime_ns
         CL.ship_helpers('local', str(run), job)
@@ -331,7 +331,7 @@ class HelperOverlay(unittest.TestCase):
     def test_explicit_gate_recovery_preserves_old_identity_but_new_submission_stays_current(self):
         staged,binding = self.recovered_gate()
         before = binding['identity'],binding['start_commit'],binding['commit'],binding['manifest_sha256']
-        self.commit_helper(b'# later effective main change\n')
+        self.commit_helper(b'set ot_hold_margin 0.06 ;# later effective main change\n')
         self.assertFalse(SB.validate(binding,self.root,self.daemon,self.tip)[0])
         self.assertTrue(SB.validate(binding,self.root,self.daemon,self.tip,frozen_recovery=True)[0])
         self.assertEqual(before,(binding['identity'],binding['start_commit'],binding['commit'],binding['manifest_sha256']))
