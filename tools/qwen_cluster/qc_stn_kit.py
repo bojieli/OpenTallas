@@ -32,6 +32,20 @@ SRC_STN = ["rtl/physical/qcluster/qfd_c_stn.sv"]
 SRC_X = SRC_STN + ["rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv", "rtl/hdc/ot_hdc_delay.sv"]
 BENCH = [dict(name="qcluster_lockstep", cmd="bash tools/qwen_cluster/bench_lockstep.sh bench_out", expect="pass",
               pass_regex="LOCKSTEP_EXIT 0", threads=8, peak_ram_gb=12)]
+# S-QSTN (2026-10-18): per-master behavioural bench + one-fault mutant (rtl/test/tb_qfd_c_stn.sv, qfd_c_stn_mut_tile.sv),
+# with the committed pass / fail witnesses from the fleet run.
+EXTRA = ["tools/qwen_cluster/bench_stn.sh", "rtl/test/tb_qfd_c_stn.sv", "rtl/test/qfd_c_stn_mut_tile.sv",
+         "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv", "rtl/hdc/ot_hdc_delay.sv", "results/rtl/qcluster_stn_1018"]
+
+
+def stn_benches(m):
+    return BENCH + [
+        dict(name="stn_exact", cmd=f"bash tools/qwen_cluster/bench_stn.sh pass {m} {{RUN}}/stn_p", expect="pass",
+             pass_regex=f"STN_BENCH PASS {m} 0 errors in 20000 cycles" + (" .*hold_loads=[1-9]" if "xstn" in m else ""),
+             threads=4, peak_ram_gb=4, needs=["verilator"], pass_witness=f"results/rtl/qcluster_stn_1018/run_pass_{m}.log"),
+        dict(name="stn_mutant", cmd=f"bash tools/qwen_cluster/bench_stn.sh mut {m} {{RUN}}/stn_m", expect="fail",
+             fail_regex=f"STN_BENCH FAIL {m} [1-9]\\d* errors in 20000 cycles", threads=4, peak_ram_gb=4,
+             needs=["verilator"], fail_witness=f"results/rtl/qcluster_stn_1018/run_mut_{m}.log")]
 WHY = ("Q-CLUSTER3 (coordinator 0de+5): qfd_c_b16_dv 8-root gates failed the clock rule (TritonCTS 1.5-1.9 ns insertion, "
        "400-530 ps spread; spine 4.1 ns) because ~78k loose fabric flops sat at 282 stage sites over the whole cluster; "
        "the stations are hardened as small replicated tiles with their own clock pin and local tree, and the cluster "
@@ -43,13 +57,13 @@ def spec(name, w, h, pins, ranges, reset, src, purpose):
         name=name, top=name, kind="tile", sources=src, params={}, clock_port="ck", reset_ports=reset,
         outline=dict(w=w, h=h, exact=True), layer_cap="M5", pins=pins, pin_ranges=ranges,
         route=dict(pd=0.5, threads=8, peak_ram_gb=16, pin_h="M4", pin_v="M5", hold_margin_ns=0.03, macro_halo_um=5.4,
-                   pin_balance=dict(group_max=1, h="M4", v="M3 M5")),
+                   pin_balance=dict(group_max=1, h="M4", v="M3 M5"), io_hold_margin_ns=0.0),
         macros=[], children=[], inter=[], recipe=4, io_flop_at_pins=False, hold_budget="die", inhold=False, outhold=False,
         pin_regs=dict(enable=False, reason="the RTL is one register stage: every data input pin drives a flop D "
                                            "(flop-first) and every data output pin is a flop Q (flop-last)"),
         structural_change=WHY,
-        job=dict(owner="Claude:Q-CLUSTER3", branch="claude/qcluster-1017", tag="s0", purpose=purpose, submit=False,
-                 benches=BENCH))
+        job=dict(owner="Claude:S-QSTN", branch="claude/qstn-1018", tag="s0", purpose=purpose, submit=False,
+                 benches=stn_benches(name), extra_paths=EXTRA))
 
 
 def main():
