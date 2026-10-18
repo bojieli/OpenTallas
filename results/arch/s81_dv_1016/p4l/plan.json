@@ -298,7 +298,7 @@
 },
 "host_plane": {
 "endpoint": "s_7N",
-"why": "end slice nearest the seqhost; the other three endpoints carry no host plane (t_host / t_kd tied 0 as declared pads: no THOST / TKD frames, the compiler addresses the host-side die only through s_7N)"
+"why": "end slice nearest the seqhost; the other three endpoints carry no host plane (S81-LEPV: host-less masters dsdv_slice_lepw / dsdv_slice_lepe_nh, HOST_EN 0, no host ports, no tied pads; the compiler addresses the host-side die only through s_7N)"
 },
 "worst_allgather_slice_to_frame_um": 45174,
 "worst_local_return_um": 3254,
@@ -1941,7 +1941,7 @@
 },
 {
 "name": "s_7S",
-"master": "dsdv_slice_lepe",
+"master": "dsdv_slice_lepe_nh",
 "kind": "slice",
 "group": "cl7S",
 "x": 29247.980000000003,
