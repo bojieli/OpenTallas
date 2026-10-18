@@ -1386,8 +1386,10 @@ echo $? > $D/out/run.exit
     for f_ in ('die_clock_tree.py', 'neighbour_skew_gate.py'):
         shutil.copy(ROOT / 'tools/hbm_die_v15' / f_, out / 'dcc' / 'hbm_die_v15' / f_)
     with open(out / 'run.sh', 'a') as f_:
+        # HBM-LANDING 10-18 (CLOCK-AUDIT): the gate judges TT AND FF.  This session defines corners tt ff, so the dump's
+        # arr_min column is the FF arrival (min over both corners) and arr_max the TT one (--ff-from-min); no FF = NO_FF.
         f_.write('[ -s $D/out/die_clock_dump.tsv ] && python3 -I $D/dcc/hbm_die_v15/neighbour_skew_gate.py --run $D/out '
-                 f'--near-um {a.clock_near_um} --budget-ps 80 --out $D/out/neighbour_skew_gate.json > $D/out/neighbour_skew_gate.log 2>&1\n')
+                 f'--near-um {a.clock_near_um} --budget-ps 80 --ff-from-min --require-ff --out $D/out/neighbour_skew_gate.json > $D/out/neighbour_skew_gate.log 2>&1\n')
     if a.hold_budget == 'die':   # classifier beside the case (fleet hosts run the case dir, not the repo)
         shutil.copy(ROOT / 'tools/die_hold_budget.py', out / 'die_hold_budget.py')
         with open(out / 'run.sh', 'a') as f_:
