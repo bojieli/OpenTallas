@@ -98,7 +98,7 @@ GRP_LOCAL = dict(slg='slg', lcal='lcal', fcal='fcal', phase='phase', drain='drai
 # superseded die instances (0db) by name prefix
 SUPERSEDED = ('ctrl_', 'cdc_', 'land_', 'wctl_', 'wleaf_', 'kvnc', 'lprg')
 # per-tile frames (um, ASSUMED until kits close): see place()
-FRAME = dict(fan=(302.4, 302.4), attn=(302.4, 302.4), emb=(388.8, 302.4), ctl=(1123.2, 172.8), hroot=(388.8, 388.8))
+FRAME = dict(fan=(302.4, 302.4), attn=(302.4, 302.4), emb=(388.8, 302.4), ctl=(1123.2, 172.8), hroot=(302.4, 302.4))
 # Special bundles (die-port order = the existing master's binding order, LSB first)
 VREQ = [('vreq_valid', 1), ('vreq_t', 14)]                                         # qkd_pv16_vport vq<p>
 RSP = ['rsp_valid', 'rsp_v', 'rsp_t', 'rsp_epoch', 'rsp_data']                    # qkd_pv16_vport i<p> (R6)
@@ -1241,10 +1241,13 @@ def place(m, K, geo, F):
         # KV-PLAN decision 1: the S half root at the stack seam (where the S stacks' PC 31 chain ends sit), W of the PV
         # column in the seam band between the S and N attention stacks; the N half root at the top of the N stacks
         # (their PC 31 chain ends), W of the N pair's top.  Each serves its own two stacks.
-        p0, p1 = by['pvw_0'], by['pvw_1']
-        yseam = (p0.y + p0.h + p1.y) / 2
-        anchors['kvs_hroot_WS'] = (p0.x - 600.0, yseam)                   # bottom of the W side channel
-        anchors['kvs_hroot_ES'] = (p0.x + p0.w + 600.0, yseam)            # bottom of the E side channel
+        # the S roots sit at their stack's own seam end (PC 31 / the group column's control channel), NOT beside the PV
+        # column: the seam band next to the column is the V word funnel (vport -> pvfork, pvin_*), which a root's four
+        # words starved of relay spots (b3110: pvin_ES_3 / pvin_EN_2 at the column's seam corners)
+        by = {i.name: i for i in m['insts']}                               # now with the static strip tiles
+        for st in ('WS', 'ES'):
+            gd, pc, pn = by[f'slg_{st}_7'], by[f'kvpc_{st}_31'], by[f'kvpc_{st[0]}N_0']
+            anchors[f'kvs_hroot_{st}'] = (gd.x + gd.w / 2, (pc.y + pc.h + pn.y) / 2)
         for st in ('WN', 'EN'):                                            # above the stack's PC 31 / control channel
             gd, pc = by[f'slg_{st}_0'], by[f'kvpc_{st}_31']
             anchors[f'kvs_hroot_{st}'] = (gd.x + gd.w / 2, pc.y + pc.h + 400.0)
@@ -1346,22 +1349,31 @@ def waypoints(m, a, pa, b, pb):
 
 
 def _hroot_waypoints(m, a, pa, b, pb):
-    """HROOT: an S stack root's words to / from the top tiles (ctl, emb) run down its own side of the PV column (W / E
-    side channel) to the seam row; everything else takes the planner's shortest path"""
+    """HROOT: an S stack root's words to / from the top tiles (ctl, emb) take the N stack's own CONTROL channel (between
+    its HOST slice column and its landing groups) straight down to the seam root: never the PV column's side channels,
+    whose seam corners are the V word funnel (vport -> pvfork).  OT_KV_HROOT_WP=side: the side channel variant."""
     ends = {a, b}
     hr = next((e for e in ends if e in ('kvs_hroot_WS', 'kvs_hroot_ES')), None)
     if hr is None or not ends & {'kvs_ctl', 'kvs_emb'}:
         return None
     by = {i.name: i for i in m['insts']}
-    pv = by.get('pvw_1')
-    pv144 = m['geo'].get('pv144') or {}
-    if pv is None or 'side_channel_um' not in pv144:
-        return None
-    sw, se = pv144['side_channel_um'][:2]
-    lx = pv.x - sw / 2 if hr.endswith('WS') else pv.x + pv.w + se / 2
-    top = by['kvs_ctl'] if 'kvs_ctl' in ends else by['kvs_emb']
     h = by[hr]
-    pts = [(lx, top.y - 100.0), (lx, h.y + h.h / 2)]
+    top = by['kvs_ctl'] if 'kvs_ctl' in ends else by['kvs_emb']
+    nst = hr[-2] + 'N'
+    if os.environ.get('OT_KV_HROOT_WP', 'cc') == 'side':
+        pv, pv144 = by.get('pvw_1'), m['geo'].get('pv144') or {}
+        if pv is None or 'side_channel_um' not in pv144:
+            return None
+        sw, se = pv144['side_channel_um'][:2]
+        lx = pv.x - sw / 2 if hr.endswith('WS') else pv.x + pv.w + se / 2
+        pn = by[f'kvpc_{nst}_0']
+        ys = (h.y + h.h + pn.y) / 2 if pn.y > h.y + h.h else h.y + h.h / 2
+        pts = [(lx, top.y - 100.0), (lx, ys), (h.x + h.w / 2, ys)]
+    else:
+        hs, gd = by[f'hsl_{nst}_0'], by[f'slg_{nst}_0']
+        xcc = (hs.x + hs.w + gd.x) / 2 if hr[-2] == 'W' else (gd.x + gd.w + hs.x) / 2
+        ytop = by[f'kvpc_{nst}_31'].y + by[f'kvpc_{nst}_31'].h + 60.0
+        pts = [(xcc, ytop), (xcc, h.y + h.h + 60.0)]
     return pts if a != hr else list(reversed(pts))
 
 
