@@ -42,16 +42,17 @@ module ot_hbm_hc_qhub_static #(
     output wire           ps_v, output wire [31:0] ps, output wire ps_f,
     output wire           eng_fault,
     // ---- to the bank ring
-    output wire [7:0]     rst_b,
+    output wire           rstb_w, rstb_e, output wire [2:0] rstb_n, rstb_s,   // bank 0 | 4 | 1,2,3 | 5,6,7 (corners via 2 / 6)
     output wire           bd_v, bd_ss, output wire [6:0] bd_nv, output wire [9:0] bd_wa, bd_xa,   // bank 0 descriptor
     input  wire [2048:0]  s_i,                                                                   // bank 0 chain exit
-    input  wire [7:0]     wfault_i,
+    input  wire           wf_w, wf_e, input wire [2:0] wf_n, wf_s,            // same order
     output wire [12:0]    wc_w, wc_n, wc_e, wc_s,
     output wire           xb_v, output wire [1:0] xb_beat,                                     // per face copies below
     output wire           xb_v_n, xb_v_e, xb_v_s, output wire [1:0] xb_beat_n, xb_beat_e, xb_beat_s,
     output wire [255:0]   xb_d0, xb_d1, xb_d2, xb_d3, xb_d4, xb_d5, xb_d6, xb_d7
 );
-    wire xv; wire [9:0] xw; wire [2047:0] xd; wire [1:0] xbt;
+    wire xv; wire [9:0] xw; wire [2047:0] xd; wire [1:0] xbt; wire [7:0] rb;
+    assign rstb_w = rb[0]; assign rstb_n = rb[3:1]; assign rstb_e = rb[4]; assign rstb_s = rb[7:5];
     ot_hbm_hc_q_static #(.RD_CAPTURE(RD_CAPTURE), .GATHER_PHASE(GATHER_PHASE), .DONE_LAT(DONE_LAT), .XW_BEATS(4)) u_q (
         .clk(clk), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr),
         .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops),
@@ -64,7 +65,7 @@ module ot_hbm_hc_qhub_static #(
     ot_hbm_hc_qcen_static #(.K(K), .DRLY(DRLY), .TLA(TLA)) u_cen (
         .clk(clk), .rst_n(rst_n), .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa),
         .i_v(i_v), .i_kind(i_kind), .i_slot(i_slot), .i_lo(i_lo), .i_w(i_w), .i_cnt(i_cnt), .i_word(i_word),
-        .x_v(xv), .x_beat(xbt), .x_word(xw), .s_i(s_i), .wfault_i(wfault_i), .rst_b(rst_b),
+        .x_v(xv), .x_beat(xbt), .x_word(xw), .s_i(s_i), .wfault_i({wf_s[2:0], wf_e, wf_n[2:0], wf_w}), .rst_b(rb),
         .bd_v(bd_v), .bd_ss(bd_ss), .bd_nv(bd_nv), .bd_wa(bd_wa), .bd_xa(bd_xa),
         .wc_w(wc_w), .wc_n(wc_n), .wc_e(wc_e), .wc_s(wc_s), .ps_v(ps_v), .ps(ps), .ps_f(ps_f), .fault(eng_fault));
     assign xb_v = xv; assign xb_v_n = xv; assign xb_v_e = xv; assign xb_v_s = xv;

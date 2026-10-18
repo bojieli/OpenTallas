@@ -32,7 +32,7 @@ module ot_hbm_hc_bankq_core #(parameter integer MUT = 0)(
     always @(posedge clk or negedge rc[0]) if (!rc[0]) v_q <= 1'b0; else v_q <= xb_v;
     always @(posedge clk) begin
         b_q <= xb_beat; d_q <= xb_d;
-        if (v_q && b_q != 2'd3) hold[b_q*256 +: 256] <= d_q;
+        for (integer b = 0; b < 3; b = b + 1) if (v_q && b_q == 2'(b)) hold[b*256 +: 256] <= d_q;   // decoded slots
         asm_q <= {d_q, hold};                                   // = the centre's old b_d slice
     end
     // residual words must be BF16-valued: low half of every binary32 container zero (checked on the write edge)
