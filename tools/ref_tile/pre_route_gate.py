@@ -53,6 +53,7 @@ import child_lint  # noqa: E402
 import textbook_lint as TL  # noqa: E402
 import pin_fit as PF  # noqa: E402
 import source_binding as SB  # noqa: E402
+import keep_module_audit as KA  # noqa: E402
 HO = SB.overlay_module()
 
 DEFAULT_SRC_PATHS = ("tools", "rtl", "physical", "Makefile")
@@ -617,6 +618,54 @@ def check_memory_ff(g: Gate, out: str):
           "(e.g. (* rom_style = \"logic\" *) on the table / (* keep *) on the register) and re-gate")
 
 
+def _kit_env(kd: Path) -> str | None:
+    try:
+        return (kd / "kit.env").read_text()
+    except OSError:
+        return None
+
+
+def check_keep_static(g: Gate, kd: Path, spec: dict):
+    """KEEP-MODULE AUDIT, static half (ROOT-KEEP 10-18): a keep entry the RTL instantiates with #(...) elaborates as
+    $paramod\\NAME\\..., which ORFS SYNTH_KEEP_MODULES ("NAME" / "NAME\\$*") never matches under the verilog frontend."""
+    env = _kit_env(kd)
+    entries = KA.keep_entries(env, spec)
+    if not entries:
+        return
+    try:
+        from kit_orfs_vars import parse
+        frontend = parse(env or "").get("SYNTH_HDL_FRONTEND", "")
+    except ValueError:
+        frontend = ""
+    if frontend == "slang":
+        g.add("INFO", "keep_modules", f"{len(entries)} keep entries under the slang frontend (NAME$<n> names match)")
+        return
+    hits = KA.parameterised_instances(entries, spec.get("sources"), ROOT)
+    for e, where in sorted(hits.items()):
+        g.add("FAIL", "keep_modules", f"keep entry {e} is instantiated with a #(...) parameter override ({', '.join(where[:4])}"
+              f"{' ...' if len(where) > 4 else ''}): yosys elaborates it as $paramod\\{e}\\..., SYNTH_KEEP_MODULES matches "
+              "nothing and the copy is flattened / merged back (HBM lgtap r2, 6a79110b8)",
+              "unparameterise the kept module (lgtap LGTAP2) or put (* keep_hierarchy *) on its module definition")
+
+
+def check_keep_modules(g: Gate, kd: Path, spec: dict, out: str):
+    """KEEP-MODULE AUDIT, post-synthesis half: every keep entry must match a surviving module or cell type."""
+    entries = KA.keep_entries(_kit_env(kd), spec)
+    if not entries:
+        return
+    m = re.search(r"^GATE_KEEP_NETLIST (.*)$", out, re.M)
+    summary = None
+    if m:
+        try:
+            summary = json.loads(m.group(1))
+        except ValueError:
+            summary = None
+    warns = re.findall(r"^GATE_KEEPWARN (.*)$", out, re.M)
+    for sev, msg in KA.judge(entries, summary, warns):
+        g.add(sev, "keep_modules", msg, "unparameterise the kept module or put (* keep_hierarchy *) on its definition; "
+              "check the entry names a module the top actually instantiates" if sev == "FAIL" else "")
+
+
 def check_kit_shell(g: Gate, kd: Path):
     syntax = subprocess.run(["bash", "-n", str(kd / "kit.env")], capture_output=True, text=True)
     if syntax.returncode or syntax.stderr.strip():
@@ -719,6 +768,7 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     files = [str(ROOT / f) for f in spec["sources"] if (ROOT / f).exists()]
     hard = sorted({RT.view_name(c["view"]) for c in spec["children"]})
     r = TL.rtl_lint(files, hard, spec.get("hard_define"), top=spec["top"])
+    check_keep_static(g, kd, spec)
     for k, v in r["findings"].items():
         sev = "FAIL" if k == "hard_child_params" else "WARN"
         fix = ("decoded constant-index slices; the --remote synthesis smoke decides (a SHARE stall FAILs there)"
@@ -836,6 +886,10 @@ grep -h "Chip area\|chip area" $C/reports/asap7/*/base/synth_stat.txt 2>/dev/nul
 # MEMORY-FF LINT (ROOT 2026-10-17, S-ELEM static14 TT -57.9): yosys PROC_ROM / MEMORY_BMUX2ROM turn a case table into a
 # $mem ROM and MEMORY_DFF then folds the neighbouring register into its read port; the register vanishes from the netlist
 grep -h "merging output FF to cell\|merged .*FF to cell\|merging .*FF to cell\|^Converted [0-9]* switch" $C/logs/asap7/*/base/1_*yosys*.log 2>/dev/null | head -60 | sed 's/^/GATE_MEMFF /'
+# KEEP-MODULE AUDIT (ROOT-KEEP 10-18, HBM lgtap 6a79110b8): every kit keep entry must survive synthesis as hierarchy; a
+# $paramod-renamed module is missed by SYNTH_KEEP_MODULES (yosys only warns) and its replicated copies get merged back
+grep -h "did not match any module" $C/logs/asap7/*/base/1_*yosys*.log 2>/dev/null | sort -u | head -40 | sed 's/^/GATE_KEEPWARN /'
+python3 tools/ref_tile/keep_module_audit.py netlist $B/1_2_yosys.v {TOP}
 # PORT-LATENCY (ROOT 2215): the elaborated pin-register table + wrapper of this synthesis (ot_pin_regs.tcl) come back for
 # tools/ref_tile/port_latency.py; the closure loop records the same export from the route at CLOSE for the compilers
 [ -s $B/ot_pin_regs.tsv ] && [ -s $B/ot_pin_regs_wrapper.v ] && python3 -c "import zlib,base64,sys;print('GATE_PIN_REGS_B64 '+' '.join(base64.b64encode(zlib.compress(open(f,'rb').read(),9)).decode() for f in sys.argv[1:]))" $B/ot_pin_regs.tsv $B/ot_pin_regs_wrapper.v
@@ -1405,6 +1459,7 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
               f"set \"std_area_um2\": {area:.0f} and drop 'outline' (gen sizes to util 0.52)" if sev != "INFO" else "")
     check_port_latency(g, kd, spec, out, binding.get("commit"), binding=binding)
     check_memory_ff(g, out)
+    check_keep_modules(g, kd, spec, out)
     for line in re.findall(r"^GATE_TB (.*)$", out, re.M):
         if line.startswith("TEXTBOOK_LINT:"):
             continue
