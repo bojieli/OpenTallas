@@ -1,5 +1,5 @@
 {
- "name": "s81sl_vs-prs1-COMMIT",
+ "name": "s81sl_vs-prs1-8e29a691e",
  "block": "ot_s81sl_vs",
  "ref_tile": true,
  "owner": "Claude:ELEM-GAPS/S81N",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/eg-s81n-1018",
-  "commit": "COMMIT",
+  "commit": "8e29a691e",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/slice",
    "rtl/dsrom_sys/s81_suhc",
@@ -173,7 +173,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81sl_vs/s81sl_vs-prs1-COMMIT"
+   "to": "results/rtl/ref_tile/s81sl_vs/s81sl_vs-prs1-8e29a691e"
   }
  ],
  "cycles_added": 0,
