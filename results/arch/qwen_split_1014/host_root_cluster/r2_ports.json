@@ -1,0 +1,3822 @@
+{
+ "qkd_hr_cdc_host": {
+  "inst": "u_cdc_host",
+  "ports": [
+   {
+    "port": "ck_core",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:ck_core",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_ingest_qm"
+    ]
+   },
+   {
+    "port": "ck_host",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:ck_host",
+     "u_ingest_qm"
+    ]
+   },
+   {
+    "port": "host_rst_n",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:host_rst_n",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_ingest_qm",
+     "u_phy_pad",
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_adapter__g_slice_1___u_slice",
+     "u_rank__u_adapter__g_slice_2___u_slice",
+     "u_rank__u_adapter__g_slice_3___u_slice",
+     "u_rank__u_adapter__g_slice_4___u_slice",
+     "u_rank__u_adapter__g_slice_5___u_slice",
+     "u_rank__u_adapter__g_slice_6___u_slice",
+     "u_rank__u_adapter__g_slice_7___u_slice"
+    ]
+   },
+   {
+    "port": "service_faults",
+    "dir": "inout",
+    "width": 25,
+    "peers": [
+     "DIE:service_faults",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_phy_pad",
+     "u_rank__u_adapter__g_slice_0___u_slice"
+    ]
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ing_t_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ing_t_cr",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_bridge__qv",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_bridge__qm_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_bridge__qm_crn",
+    "dir": "input",
+    "width": 5,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_bridge__qd",
+    "dir": "input",
+    "width": 546,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_bridge__qcr",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_bridge__hd",
+    "dir": "output",
+    "width": 546,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_bridge__cd",
+    "dir": "output",
+    "width": 546,
+    "peers": []
+   },
+   {
+    "port": "u_rank__qm_t_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__qm_t_d",
+    "dir": "input",
+    "width": 64,
+    "peers": []
+   },
+   {
+    "port": "u_rank__qm_t_cr",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__global_prefix_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__fence_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   }
+  ],
+  "bits_in": 622,
+  "bits_out": 1097
+ },
+ "qkd_hr_cdc_pc": {
+  "inst": "u_cdc_pc",
+  "ports": [
+   {
+    "port": "ck_core",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:ck_core",
+     "u_cdc_host",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_ingest_qm"
+    ]
+   },
+   {
+    "port": "ck_phy_fam",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:ck_phy_fam",
+     "u_phy_pad"
+    ]
+   },
+   {
+    "port": "host_rst_n",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:host_rst_n",
+     "u_cdc_host",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_ingest_qm",
+     "u_phy_pad",
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_adapter__g_slice_1___u_slice",
+     "u_rank__u_adapter__g_slice_2___u_slice",
+     "u_rank__u_adapter__g_slice_3___u_slice",
+     "u_rank__u_adapter__g_slice_4___u_slice",
+     "u_rank__u_adapter__g_slice_5___u_slice",
+     "u_rank__u_adapter__g_slice_6___u_slice",
+     "u_rank__u_adapter__g_slice_7___u_slice"
+    ]
+   },
+   {
+    "port": "service_faults",
+    "dir": "inout",
+    "width": 25,
+    "peers": [
+     "DIE:service_faults",
+     "u_cdc_host",
+     "u_core_guard",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_phy_pad",
+     "u_rank__u_adapter__g_slice_0___u_slice"
+    ]
+   },
+   {
+    "port": "u_rank__u_phy__tx_d",
+    "dir": "output",
+    "width": 546,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__rx_d",
+    "dir": "output",
+    "width": 546,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__phy_tx_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__phy_tx_cr",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__pad_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__pad_d",
+    "dir": "input",
+    "width": 546,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__pad_cr",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__core_tx_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__core_tx_d",
+    "dir": "input",
+    "width": 528,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__core_tx_cr",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__core_rx_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__core_rx_cr",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   }
+  ],
+  "bits_in": 1081,
+  "bits_out": 1096
+ },
+ "qkd_hr_core_guard": {
+  "inst": "u_core_guard",
+  "ports": [
+   {
+    "port": "ck_core",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:ck_core",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_ingest_qm"
+    ]
+   },
+   {
+    "port": "token_epoch_valid",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:token_epoch_valid",
+     "u_core_peer",
+     "u_core_prompt"
+    ]
+   },
+   {
+    "port": "token_epoch",
+    "dir": "input",
+    "width": 16,
+    "peers": [
+     "DIE:token_epoch",
+     "u_core_peer",
+     "u_core_prompt"
+    ]
+   },
+   {
+    "port": "native_pr",
+    "dir": "output",
+    "width": 143,
+    "peers": [
+     "DIE:native_pr"
+    ]
+   },
+   {
+    "port": "native_kv_drained",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:native_kv_drained",
+     "u_core_peer"
+    ]
+   },
+   {
+    "port": "native_vm_drained",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:native_vm_drained",
+     "u_core_peer"
+    ]
+   },
+   {
+    "port": "native_collective_drained",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:native_collective_drained",
+     "u_core_peer"
+    ]
+   },
+   {
+    "port": "native_host_drained",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:native_host_drained",
+     "u_core_peer"
+    ]
+   },
+   {
+    "port": "native_collective_busy",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:native_collective_busy"
+    ]
+   },
+   {
+    "port": "native_kv_flush",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:native_kv_flush"
+    ]
+   },
+   {
+    "port": "service_ready",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:service_ready",
+     "u_core_peer"
+    ]
+   },
+   {
+    "port": "service_abort",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:service_abort",
+     "u_core_prompt"
+    ]
+   },
+   {
+    "port": "local_service_epoch",
+    "dir": "output",
+    "width": 16,
+    "peers": [
+     "DIE:local_service_epoch",
+     "u_core_peer"
+    ]
+   },
+   {
+    "port": "service_diag_raw",
+    "dir": "output",
+    "width": 26,
+    "peers": [
+     "DIE:service_diag_raw",
+     "u_core_prompt"
+    ]
+   },
+   {
+    "port": "service_status",
+    "dir": "output",
+    "width": 32,
+    "peers": [
+     "DIE:service_status",
+     "u_core_prompt"
+    ]
+   },
+   {
+    "port": "die_id",
+    "dir": "input",
+    "width": 3,
+    "peers": [
+     "DIE:die_id",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_rx"
+    ]
+   },
+   {
+    "port": "por_n",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:por_n",
+     "u_core_peer"
+    ]
+   },
+   {
+    "port": "pll_locked",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:pll_locked",
+     "u_core_peer"
+    ]
+   },
+   {
+    "port": "transport_fault",
+    "dir": "input",
+    "width": 8,
+    "peers": [
+     "DIE:transport_fault"
+    ]
+   },
+   {
+    "port": "link_physical_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:link_physical_fault"
+    ]
+   },
+   {
+    "port": "local_tk",
+    "dir": "input",
+    "width": 93,
+    "peers": [
+     "DIE:local_tk"
+    ]
+   },
+   {
+    "port": "record_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:record_fault",
+     "u_core_prompt"
+    ]
+   },
+   {
+    "port": "program_ready",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:program_ready",
+     "u_core_peer",
+     "u_core_prompt"
+    ]
+   },
+   {
+    "port": "host_rst_n",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:host_rst_n",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_ingest_qm",
+     "u_phy_pad",
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_adapter__g_slice_1___u_slice",
+     "u_rank__u_adapter__g_slice_2___u_slice",
+     "u_rank__u_adapter__g_slice_3___u_slice",
+     "u_rank__u_adapter__g_slice_4___u_slice",
+     "u_rank__u_adapter__g_slice_5___u_slice",
+     "u_rank__u_adapter__g_slice_6___u_slice",
+     "u_rank__u_adapter__g_slice_7___u_slice"
+    ]
+   },
+   {
+    "port": "est",
+    "dir": "input",
+    "width": 13,
+    "peers": [
+     "DIE:est",
+     "u_core_queue"
+    ]
+   },
+   {
+    "port": "slice_boot_fault",
+    "dir": "input",
+    "width": 128,
+    "peers": [
+     "DIE:slice_boot_fault"
+    ]
+   },
+   {
+    "port": "ctrl_completion_fault",
+    "dir": "input",
+    "width": 128,
+    "peers": [
+     "DIE:ctrl_completion_fault"
+    ]
+   },
+   {
+    "port": "service_faults",
+    "dir": "inout",
+    "width": 25,
+    "peers": [
+     "DIE:service_faults",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_phy_pad",
+     "u_rank__u_adapter__g_slice_0___u_slice"
+    ]
+   },
+   {
+    "port": "peer_protocol_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:peer_protocol_fault",
+     "u_core_peer"
+    ]
+   },
+   {
+    "port": "coordinator_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:coordinator_fault",
+     "u_core_peer"
+    ]
+   },
+   {
+    "port": "host_recovery_clear",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:host_recovery_clear",
+     "u_core_peer"
+    ]
+   },
+   {
+    "port": "u_rank__u_control__u_packet__service_begin_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__service_begin_epoch",
+    "dir": "input",
+    "width": 16,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__pending_epoch",
+    "dir": "input",
+    "width": 16,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__pending_advertised",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__local_tk",
+    "dir": "output",
+    "width": 93,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__local_service_ready",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ing_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ing_t_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ing_d",
+    "dir": "input",
+    "width": 512,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ing_cls",
+    "dir": "input",
+    "width": 2,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__transport_hc",
+    "dir": "input",
+    "width": 182,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__transport_fault",
+    "dir": "output",
+    "width": 8,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__source_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__raw_hc",
+    "dir": "input",
+    "width": 182,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__physical_fault",
+    "dir": "output",
+    "width": 8,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__host_observer_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__begin_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_bridge__cd",
+    "dir": "input",
+    "width": 546,
+    "peers": []
+   },
+   {
+    "port": "u_rank__qm_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__program_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__peer_link_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__order_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_value",
+    "dir": "input",
+    "width": 32,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_token",
+    "dir": "input",
+    "width": 18,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_tag",
+    "dir": "input",
+    "width": 59,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_gen",
+    "dir": "input",
+    "width": 2,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_done",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_cycles",
+    "dir": "input",
+    "width": 32,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_cr",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_cause",
+    "dir": "input",
+    "width": 4,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_trace",
+    "dir": "output",
+    "width": 32,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_token",
+    "dir": "output",
+    "width": 18,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_tag",
+    "dir": "output",
+    "width": 59,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_pos",
+    "dir": "output",
+    "width": 18,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_gen",
+    "dir": "output",
+    "width": 2,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_cr",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_context_owned",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__marker_consumer_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__map_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__ingress_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__dispatch_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__commit_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__chain_fault",
+    "dir": "input",
+    "width": 4,
+    "peers": []
+   },
+   {
+    "port": "u_rank__certificate_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__certificate_prefix",
+    "dir": "input",
+    "width": 32,
+    "peers": []
+   },
+   {
+    "port": "u_rank__cancel_released",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__cancel_release_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__cancel_release_tag",
+    "dir": "input",
+    "width": 59,
+    "peers": []
+   },
+   {
+    "port": "u_rank__cancel_release_gen",
+    "dir": "input",
+    "width": 2,
+    "peers": []
+   },
+   {
+    "port": "u_rank__bootbarrier_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__adapter_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "root__root_mux_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   }
+  ],
+  "bits_in": 2131,
+  "bits_out": 462
+ },
+ "qkd_hr_core_order": {
+  "inst": "u_core_order",
+  "ports": [
+   {
+    "port": "ck_core",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:ck_core",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_ingest_qm"
+    ]
+   },
+   {
+    "port": "host_upstream_quiet",
+    "dir": "inout",
+    "width": 6,
+    "peers": [
+     "DIE:host_upstream_quiet",
+     "u_ingest_qm"
+    ]
+   },
+   {
+    "port": "host_rst_n",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:host_rst_n",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_ingest_qm",
+     "u_phy_pad",
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_adapter__g_slice_1___u_slice",
+     "u_rank__u_adapter__g_slice_2___u_slice",
+     "u_rank__u_adapter__g_slice_3___u_slice",
+     "u_rank__u_adapter__g_slice_4___u_slice",
+     "u_rank__u_adapter__g_slice_5___u_slice",
+     "u_rank__u_adapter__g_slice_6___u_slice",
+     "u_rank__u_adapter__g_slice_7___u_slice"
+    ]
+   },
+   {
+    "port": "hb",
+    "dir": "output",
+    "width": 283,
+    "peers": [
+     "DIE:hb"
+    ]
+   },
+   {
+    "port": "hb_cr",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:hb_cr"
+    ]
+   },
+   {
+    "port": "chain_f",
+    "dir": "output",
+    "width": 1164,
+    "peers": [
+     "DIE:chain_f"
+    ]
+   },
+   {
+    "port": "chain_c",
+    "dir": "input",
+    "width": 128,
+    "peers": [
+     "DIE:chain_c"
+    ]
+   },
+   {
+    "port": "chain_a",
+    "dir": "input",
+    "width": 128,
+    "peers": [
+     "DIE:chain_a"
+    ]
+   },
+   {
+    "port": "chain_fault_i",
+    "dir": "input",
+    "width": 4,
+    "peers": [
+     "DIE:chain_fault_i"
+    ]
+   },
+   {
+    "port": "slice_ack",
+    "dir": "input",
+    "width": 128,
+    "peers": [
+     "DIE:slice_ack"
+    ]
+   },
+   {
+    "port": "issued",
+    "dir": "output",
+    "width": 32,
+    "peers": [
+     "DIE:issued",
+     "u_core_queue"
+    ]
+   },
+   {
+    "port": "landed",
+    "dir": "output",
+    "width": 32,
+    "peers": [
+     "DIE:landed",
+     "u_core_queue"
+    ]
+   },
+   {
+    "port": "physical_ack_n",
+    "dir": "output",
+    "width": 8,
+    "peers": [
+     "DIE:physical_ack_n"
+    ]
+   },
+   {
+    "port": "u_rank__owe",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__ov",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__order_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__od",
+    "dir": "input",
+    "width": 256,
+    "peers": []
+   },
+   {
+    "port": "u_rank__ocr",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__oa",
+    "dir": "input",
+    "width": 32,
+    "peers": []
+   },
+   {
+    "port": "u_rank__map_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__local_marker_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__local_marker_cr",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__local_marker",
+    "dir": "output",
+    "width": 66,
+    "peers": []
+   },
+   {
+    "port": "u_rank__image_check",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__global_prefix_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__dispatch_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__chain_fault",
+    "dir": "output",
+    "width": 4,
+    "peers": []
+   }
+  ],
+  "bits_in": 682,
+  "bits_out": 1596
+ },
+ "qkd_hr_core_peer": {
+  "inst": "u_core_peer",
+  "ports": [
+   {
+    "port": "ck_core",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:ck_core",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_ingest_qm"
+    ]
+   },
+   {
+    "port": "boot_image_epoch",
+    "dir": "input",
+    "width": 16,
+    "peers": [
+     "DIE:boot_image_epoch",
+     "DIE:program_epoch",
+     "u_core_prompt"
+    ]
+   },
+   {
+    "port": "boot_image_digest",
+    "dir": "input",
+    "width": 64,
+    "peers": [
+     "DIE:boot_image_digest",
+     "DIE:program_digest",
+     "u_core_prompt"
+    ]
+   },
+   {
+    "port": "package_abort",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:package_abort",
+     "u_core_prompt"
+    ]
+   },
+   {
+    "port": "abort_drained",
+    "dir": "input",
+    "width": 4,
+    "peers": [
+     "DIE:abort_drained"
+    ]
+   },
+   {
+    "port": "token_epoch_valid",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:token_epoch_valid",
+     "u_core_guard",
+     "u_core_prompt"
+    ]
+   },
+   {
+    "port": "token_epoch",
+    "dir": "output",
+    "width": 16,
+    "peers": [
+     "DIE:token_epoch",
+     "u_core_guard",
+     "u_core_prompt"
+    ]
+   },
+   {
+    "port": "native_kv_drained",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:native_kv_drained",
+     "u_core_guard"
+    ]
+   },
+   {
+    "port": "native_vm_drained",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:native_vm_drained",
+     "u_core_guard"
+    ]
+   },
+   {
+    "port": "native_collective_drained",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:native_collective_drained",
+     "u_core_guard"
+    ]
+   },
+   {
+    "port": "native_host_drained",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:native_host_drained",
+     "u_core_guard"
+    ]
+   },
+   {
+    "port": "service_ready",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:service_ready",
+     "u_core_guard"
+    ]
+   },
+   {
+    "port": "ingest_permission",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:ingest_permission",
+     "u_core_prompt",
+     "u_core_queue"
+    ]
+   },
+   {
+    "port": "local_service_epoch",
+    "dir": "input",
+    "width": 16,
+    "peers": [
+     "DIE:local_service_epoch",
+     "u_core_guard"
+    ]
+   },
+   {
+    "port": "die_id",
+    "dir": "input",
+    "width": 3,
+    "peers": [
+     "DIE:die_id",
+     "u_core_guard",
+     "u_core_prompt",
+     "u_core_rx"
+    ]
+   },
+   {
+    "port": "por_n",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:por_n",
+     "u_core_guard"
+    ]
+   },
+   {
+    "port": "pll_locked",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:pll_locked",
+     "u_core_guard"
+    ]
+   },
+   {
+    "port": "local_kst",
+    "dir": "input",
+    "width": 10,
+    "peers": [
+     "DIE:local_kst"
+    ]
+   },
+   {
+    "port": "program_ready",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:program_ready",
+     "u_core_guard",
+     "u_core_prompt"
+    ]
+   },
+   {
+    "port": "seen",
+    "dir": "output",
+    "width": 8,
+    "peers": [
+     "DIE:seen"
+    ]
+   },
+   {
+    "port": "host_rst_n",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:host_rst_n",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_ingest_qm",
+     "u_phy_pad",
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_adapter__g_slice_1___u_slice",
+     "u_rank__u_adapter__g_slice_2___u_slice",
+     "u_rank__u_adapter__g_slice_3___u_slice",
+     "u_rank__u_adapter__g_slice_4___u_slice",
+     "u_rank__u_adapter__g_slice_5___u_slice",
+     "u_rank__u_adapter__g_slice_6___u_slice",
+     "u_rank__u_adapter__g_slice_7___u_slice"
+    ]
+   },
+   {
+    "port": "slice_boot_done",
+    "dir": "input",
+    "width": 128,
+    "peers": [
+     "DIE:slice_boot_done"
+    ]
+   },
+   {
+    "port": "slice_boot_ok",
+    "dir": "input",
+    "width": 128,
+    "peers": [
+     "DIE:slice_boot_ok"
+    ]
+   },
+   {
+    "port": "service_faults",
+    "dir": "inout",
+    "width": 25,
+    "peers": [
+     "DIE:service_faults",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_phy_pad",
+     "u_rank__u_adapter__g_slice_0___u_slice"
+    ]
+   },
+   {
+    "port": "native_admit_ready",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:native_admit_ready"
+    ]
+   },
+   {
+    "port": "native_links_drained",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:native_links_drained"
+    ]
+   },
+   {
+    "port": "native_link_reset_seen",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:native_link_reset_seen"
+    ]
+   },
+   {
+    "port": "native_retrained",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:native_retrained"
+    ]
+   },
+   {
+    "port": "peer_protocol_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:peer_protocol_fault",
+     "u_core_guard"
+    ]
+   },
+   {
+    "port": "dispatch_valid",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:dispatch_valid"
+    ]
+   },
+   {
+    "port": "dispatched",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:dispatched"
+    ]
+   },
+   {
+    "port": "cohort_tag",
+    "dir": "output",
+    "width": 59,
+    "peers": [
+     "DIE:cohort_tag"
+    ]
+   },
+   {
+    "port": "cohort_gen",
+    "dir": "output",
+    "width": 2,
+    "peers": [
+     "DIE:cohort_gen"
+    ]
+   },
+   {
+    "port": "accepted_ranks",
+    "dir": "output",
+    "width": 8,
+    "peers": [
+     "DIE:accepted_ranks"
+    ]
+   },
+   {
+    "port": "participant_trace",
+    "dir": "output",
+    "width": 256,
+    "peers": [
+     "DIE:participant_trace"
+    ]
+   },
+   {
+    "port": "participant_token",
+    "dir": "output",
+    "width": 144,
+    "peers": [
+     "DIE:participant_token"
+    ]
+   },
+   {
+    "port": "participant_pos",
+    "dir": "output",
+    "width": 144,
+    "peers": [
+     "DIE:participant_pos"
+    ]
+   },
+   {
+    "port": "engine_result_v",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:engine_result_v"
+    ]
+   },
+   {
+    "port": "engine_result_tag",
+    "dir": "input",
+    "width": 59,
+    "peers": [
+     "DIE:engine_result_tag"
+    ]
+   },
+   {
+    "port": "engine_result_gen",
+    "dir": "input",
+    "width": 2,
+    "peers": [
+     "DIE:engine_result_gen"
+    ]
+   },
+   {
+    "port": "engine_result_done",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:engine_result_done"
+    ]
+   },
+   {
+    "port": "engine_result_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:engine_result_fault"
+    ]
+   },
+   {
+    "port": "engine_result_cause",
+    "dir": "input",
+    "width": 4,
+    "peers": [
+     "DIE:engine_result_cause"
+    ]
+   },
+   {
+    "port": "engine_result_token",
+    "dir": "input",
+    "width": 18,
+    "peers": [
+     "DIE:engine_result_token"
+    ]
+   },
+   {
+    "port": "engine_result_value",
+    "dir": "input",
+    "width": 32,
+    "peers": [
+     "DIE:engine_result_value"
+    ]
+   },
+   {
+    "port": "engine_result_cycles",
+    "dir": "input",
+    "width": 32,
+    "peers": [
+     "DIE:engine_result_cycles"
+    ]
+   },
+   {
+    "port": "engine_result_cr",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:engine_result_cr"
+    ]
+   },
+   {
+    "port": "program_consensus",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:program_consensus"
+    ]
+   },
+   {
+    "port": "coordinator_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:coordinator_fault",
+     "u_core_guard"
+    ]
+   },
+   {
+    "port": "recovery_complete",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:recovery_complete"
+    ]
+   },
+   {
+    "port": "host_link_reset_req",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:host_link_reset_req",
+     "u_core_prompt"
+    ]
+   },
+   {
+    "port": "host_recovery_clear",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:host_recovery_clear",
+     "u_core_guard"
+    ]
+   },
+   {
+    "port": "u_rank__u_phy__rx_d",
+    "dir": "input",
+    "width": 546,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__core_tx_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__core_tx_d",
+    "dir": "output",
+    "width": 528,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__core_tx_cr",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__core_rx_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__core_rx_cr",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__tx_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__tx_d",
+    "dir": "input",
+    "width": 528,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__tx_cr",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__tk8",
+    "dir": "output",
+    "width": 744,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__startup_allowed",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__service_ready8",
+    "dir": "output",
+    "width": 8,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__service_epoch8",
+    "dir": "output",
+    "width": 128,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__service_begin_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__service_begin_epoch",
+    "dir": "output",
+    "width": 16,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__por_n",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__pending_epoch",
+    "dir": "output",
+    "width": 16,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__pending_advertised",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__pending_ack8",
+    "dir": "output",
+    "width": 8,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__local_tk",
+    "dir": "input",
+    "width": 93,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__local_service_ready",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__kst8",
+    "dir": "output",
+    "width": 80,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__hc",
+    "dir": "output",
+    "width": 182,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__cv",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ctd",
+    "dir": "output",
+    "width": 512,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ctc",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ct",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__cr",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__cmd_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__cmd_hc",
+    "dir": "input",
+    "width": 182,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__cmd_cr",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__cd",
+    "dir": "input",
+    "width": 512,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__boot8",
+    "dir": "output",
+    "width": 16,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__begin_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__begin_epoch",
+    "dir": "input",
+    "width": 16,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__begin_cr",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__begin_available",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__allocated_valid",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__transport_hc",
+    "dir": "output",
+    "width": 182,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_slot",
+    "dir": "input",
+    "width": 8,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_retire_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_retire_token",
+    "dir": "input",
+    "width": 18,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_retire_slot",
+    "dir": "input",
+    "width": 8,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_retire_pos",
+    "dir": "input",
+    "width": 18,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_retire_cq",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_retire_client_tag",
+    "dir": "input",
+    "width": 16,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_pos",
+    "dir": "input",
+    "width": 18,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_issue_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_client_tag",
+    "dir": "input",
+    "width": 16,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__cq_token",
+    "dir": "input",
+    "width": 18,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__cq_slot",
+    "dir": "input",
+    "width": 8,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__cq_pos",
+    "dir": "input",
+    "width": 18,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__cq_commit_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__cq_client_tag",
+    "dir": "input",
+    "width": 16,
+    "peers": []
+   },
+   {
+    "port": "u_rank__program_rx_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__program_rx_d",
+    "dir": "output",
+    "width": 528,
+    "peers": []
+   },
+   {
+    "port": "u_rank__program_rx_cr",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__peer_link_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_value",
+    "dir": "output",
+    "width": 32,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_token",
+    "dir": "output",
+    "width": 18,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_tag",
+    "dir": "output",
+    "width": 59,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_gen",
+    "dir": "output",
+    "width": 2,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_done",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_cycles",
+    "dir": "output",
+    "width": 32,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_cr",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_result_cause",
+    "dir": "output",
+    "width": 4,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_trace",
+    "dir": "input",
+    "width": 32,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_token",
+    "dir": "input",
+    "width": 18,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_tag",
+    "dir": "input",
+    "width": 59,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_pos",
+    "dir": "input",
+    "width": 18,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_gen",
+    "dir": "input",
+    "width": 2,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_cr",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_context_owned",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__certificate_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__certificate_prefix",
+    "dir": "input",
+    "width": 32,
+    "peers": []
+   },
+   {
+    "port": "u_rank__certificate",
+    "dir": "input",
+    "width": 66,
+    "peers": []
+   },
+   {
+    "port": "u_rank__cancel_released",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__cancel_release_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__cancel_release_tag",
+    "dir": "output",
+    "width": 59,
+    "peers": []
+   },
+   {
+    "port": "u_rank__cancel_release_gen",
+    "dir": "output",
+    "width": 2,
+    "peers": []
+   },
+   {
+    "port": "root__root_mux_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   }
+  ],
+  "bits_in": 2819,
+  "bits_out": 3824
+ },
+ "qkd_hr_core_prompt": {
+  "inst": "u_core_prompt",
+  "ports": [
+   {
+    "port": "ck_core",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:ck_core",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_ingest_qm"
+    ]
+   },
+   {
+    "port": "static_setup_ready",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:static_setup_ready"
+    ]
+   },
+   {
+    "port": "boot_pr",
+    "dir": "output",
+    "width": 143,
+    "peers": [
+     "DIE:boot_pr"
+    ]
+   },
+   {
+    "port": "boot_image_target",
+    "dir": "output",
+    "width": 4,
+    "peers": [
+     "DIE:boot_image_target"
+    ]
+   },
+   {
+    "port": "boot_image_ready",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:boot_image_ready"
+    ]
+   },
+   {
+    "port": "boot_image_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:boot_image_fault"
+    ]
+   },
+   {
+    "port": "boot_image_epoch",
+    "dir": "output",
+    "width": 16,
+    "peers": [
+     "DIE:boot_image_epoch",
+     "DIE:program_epoch",
+     "u_core_peer"
+    ]
+   },
+   {
+    "port": "boot_image_digest",
+    "dir": "output",
+    "width": 64,
+    "peers": [
+     "DIE:boot_image_digest",
+     "DIE:program_digest",
+     "u_core_peer"
+    ]
+   },
+   {
+    "port": "package_abort",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:package_abort",
+     "u_core_peer"
+    ]
+   },
+   {
+    "port": "token_epoch_valid",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:token_epoch_valid",
+     "u_core_guard",
+     "u_core_peer"
+    ]
+   },
+   {
+    "port": "token_epoch",
+    "dir": "input",
+    "width": 16,
+    "peers": [
+     "DIE:token_epoch",
+     "u_core_guard",
+     "u_core_peer"
+    ]
+   },
+   {
+    "port": "service_abort",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:service_abort",
+     "u_core_guard"
+    ]
+   },
+   {
+    "port": "ingest_permission",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:ingest_permission",
+     "u_core_peer",
+     "u_core_queue"
+    ]
+   },
+   {
+    "port": "service_diag_raw",
+    "dir": "input",
+    "width": 26,
+    "peers": [
+     "DIE:service_diag_raw",
+     "u_core_guard"
+    ]
+   },
+   {
+    "port": "service_status",
+    "dir": "input",
+    "width": 32,
+    "peers": [
+     "DIE:service_status",
+     "u_core_guard"
+    ]
+   },
+   {
+    "port": "die_id",
+    "dir": "input",
+    "width": 3,
+    "peers": [
+     "DIE:die_id",
+     "u_core_guard",
+     "u_core_peer",
+     "u_core_rx"
+    ]
+   },
+   {
+    "port": "link_up",
+    "dir": "input",
+    "width": 2,
+    "peers": [
+     "DIE:link_up"
+    ]
+   },
+   {
+    "port": "crom_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:crom_fault"
+    ]
+   },
+   {
+    "port": "record_send_kind",
+    "dir": "input",
+    "width": 2,
+    "peers": [
+     "DIE:record_send_kind"
+    ]
+   },
+   {
+    "port": "record_witness_slot",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:record_witness_slot"
+    ]
+   },
+   {
+    "port": "record_rx_v",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:record_rx_v"
+    ]
+   },
+   {
+    "port": "record_rx",
+    "dir": "input",
+    "width": 548,
+    "peers": [
+     "DIE:record_rx"
+    ]
+   },
+   {
+    "port": "record_tx_v",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:record_tx_v"
+    ]
+   },
+   {
+    "port": "record_tx_observed_v",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:record_tx_observed_v"
+    ]
+   },
+   {
+    "port": "record_tx",
+    "dir": "output",
+    "width": 548,
+    "peers": [
+     "DIE:record_tx"
+    ]
+   },
+   {
+    "port": "record_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:record_fault",
+     "u_core_guard"
+    ]
+   },
+   {
+    "port": "execution_active",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:execution_active"
+    ]
+   },
+   {
+    "port": "program_ready",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:program_ready",
+     "u_core_guard",
+     "u_core_peer"
+    ]
+   },
+   {
+    "port": "program_authorized_footer_v",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:program_authorized_footer_v"
+    ]
+   },
+   {
+    "port": "program_authorized_footer64",
+    "dir": "output",
+    "width": 64,
+    "peers": [
+     "DIE:program_authorized_footer64"
+    ]
+   },
+   {
+    "port": "program_begin_v",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:program_begin_v"
+    ]
+   },
+   {
+    "port": "program_auth_v",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:program_auth_v"
+    ]
+   },
+   {
+    "port": "program_expected_pw",
+    "dir": "output",
+    "width": 11,
+    "peers": [
+     "DIE:program_expected_pw"
+    ]
+   },
+   {
+    "port": "program_expected_dw",
+    "dir": "output",
+    "width": 4,
+    "peers": [
+     "DIE:program_expected_dw"
+    ]
+   },
+   {
+    "port": "program_auth_epoch",
+    "dir": "output",
+    "width": 16,
+    "peers": [
+     "DIE:program_auth_epoch"
+    ]
+   },
+   {
+    "port": "program_auth_digest",
+    "dir": "output",
+    "width": 64,
+    "peers": [
+     "DIE:program_auth_digest"
+    ]
+   },
+   {
+    "port": "irq",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:irq",
+     "u_core_tx"
+    ]
+   },
+   {
+    "port": "host_rst_n",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:host_rst_n",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_ingest_qm",
+     "u_phy_pad",
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_adapter__g_slice_1___u_slice",
+     "u_rank__u_adapter__g_slice_2___u_slice",
+     "u_rank__u_adapter__g_slice_3___u_slice",
+     "u_rank__u_adapter__g_slice_4___u_slice",
+     "u_rank__u_adapter__g_slice_5___u_slice",
+     "u_rank__u_adapter__g_slice_6___u_slice",
+     "u_rank__u_adapter__g_slice_7___u_slice"
+    ]
+   },
+   {
+    "port": "link_rst_n",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:link_rst_n"
+    ]
+   },
+   {
+    "port": "hbm_rst_n",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:hbm_rst_n"
+    ]
+   },
+   {
+    "port": "boot_go",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:boot_go"
+    ]
+   },
+   {
+    "port": "die_rst_n",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:die_rst_n"
+    ]
+   },
+   {
+    "port": "sys_ready",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:sys_ready"
+    ]
+   },
+   {
+    "port": "fault_src",
+    "dir": "output",
+    "width": 32,
+    "peers": [
+     "DIE:fault_src"
+    ]
+   },
+   {
+    "port": "source_cr",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:source_cr"
+    ]
+   },
+   {
+    "port": "available",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:available"
+    ]
+   },
+   {
+    "port": "service_faults",
+    "dir": "inout",
+    "width": 25,
+    "peers": [
+     "DIE:service_faults",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_peer",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_phy_pad",
+     "u_rank__u_adapter__g_slice_0___u_slice"
+    ]
+   },
+   {
+    "port": "host_link_reset_req",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:host_link_reset_req",
+     "u_core_peer"
+    ]
+   },
+   {
+    "port": "host_interface_idle",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:host_interface_idle"
+    ]
+   },
+   {
+    "port": "u_rank__u_control__u_packet__tk8",
+    "dir": "input",
+    "width": 744,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__startup_allowed",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__service_ready8",
+    "dir": "input",
+    "width": 8,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__service_epoch8",
+    "dir": "input",
+    "width": 128,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__rx_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__rx_d",
+    "dir": "output",
+    "width": 528,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__rx_cr",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__por_n",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__pending_ack8",
+    "dir": "input",
+    "width": 8,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__local_service_ready",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__kst8",
+    "dir": "input",
+    "width": 80,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__hv",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__htd",
+    "dir": "output",
+    "width": 512,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__htc",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ht",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__hr",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__hd",
+    "dir": "input",
+    "width": 512,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__cmd_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__cmd_hc",
+    "dir": "output",
+    "width": 182,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__cmd_cr",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__boot8",
+    "dir": "input",
+    "width": 16,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__begin_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__begin_epoch",
+    "dir": "output",
+    "width": 16,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__begin_cr",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__begin_available",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__allocated_valid",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__transport_fault",
+    "dir": "input",
+    "width": 8,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_slot",
+    "dir": "output",
+    "width": 8,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_retire_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_retire_token",
+    "dir": "output",
+    "width": 18,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_retire_slot",
+    "dir": "output",
+    "width": 8,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_retire_pos",
+    "dir": "output",
+    "width": 18,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_retire_cq",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_retire_client_tag",
+    "dir": "output",
+    "width": 16,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_pos",
+    "dir": "output",
+    "width": 18,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_issue_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__step_client_tag",
+    "dir": "output",
+    "width": 16,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__source_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__raw_hc",
+    "dir": "output",
+    "width": 182,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__physical_fault",
+    "dir": "input",
+    "width": 8,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__host_observer_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__cq_token",
+    "dir": "output",
+    "width": 18,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__cq_slot",
+    "dir": "output",
+    "width": 8,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__cq_pos",
+    "dir": "output",
+    "width": 18,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__cq_commit_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__cq_client_tag",
+    "dir": "output",
+    "width": 16,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__begin_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__program_rx_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__program_rx_d",
+    "dir": "input",
+    "width": 528,
+    "peers": []
+   },
+   {
+    "port": "u_rank__program_rx_cr",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__program_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_token",
+    "dir": "input",
+    "width": 18,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_tag",
+    "dir": "input",
+    "width": 59,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_pos",
+    "dir": "input",
+    "width": 18,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_request_gen",
+    "dir": "input",
+    "width": 2,
+    "peers": []
+   },
+   {
+    "port": "u_rank__native_context_owned",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__ingress_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__commit_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   }
+  ],
+  "bits_in": 2788,
+  "bits_out": 2585
+ },
+ "qkd_hr_core_queue": {
+  "inst": "u_core_queue",
+  "ports": [
+   {
+    "port": "ck_core",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:ck_core",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_rx",
+     "u_core_tx",
+     "u_ingest_qm"
+    ]
+   },
+   {
+    "port": "ingest_permission",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:ingest_permission",
+     "u_core_peer",
+     "u_core_prompt"
+    ]
+   },
+   {
+    "port": "host_rst_n",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:host_rst_n",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_rx",
+     "u_core_tx",
+     "u_ingest_qm",
+     "u_phy_pad",
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_adapter__g_slice_1___u_slice",
+     "u_rank__u_adapter__g_slice_2___u_slice",
+     "u_rank__u_adapter__g_slice_3___u_slice",
+     "u_rank__u_adapter__g_slice_4___u_slice",
+     "u_rank__u_adapter__g_slice_5___u_slice",
+     "u_rank__u_adapter__g_slice_6___u_slice",
+     "u_rank__u_adapter__g_slice_7___u_slice"
+    ]
+   },
+   {
+    "port": "est",
+    "dir": "input",
+    "width": 13,
+    "peers": [
+     "DIE:est",
+     "u_core_guard"
+    ]
+   },
+   {
+    "port": "marker_v",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:marker_v"
+    ]
+   },
+   {
+    "port": "marker",
+    "dir": "output",
+    "width": 66,
+    "peers": [
+     "DIE:marker"
+    ]
+   },
+   {
+    "port": "issued",
+    "dir": "input",
+    "width": 32,
+    "peers": [
+     "DIE:issued",
+     "u_core_order"
+    ]
+   },
+   {
+    "port": "landed",
+    "dir": "input",
+    "width": 32,
+    "peers": [
+     "DIE:landed",
+     "u_core_order"
+    ]
+   },
+   {
+    "port": "service_faults",
+    "dir": "inout",
+    "width": 25,
+    "peers": [
+     "DIE:service_faults",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_rx",
+     "u_core_tx",
+     "u_phy_pad",
+     "u_rank__u_adapter__g_slice_0___u_slice"
+    ]
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ing_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ing_d",
+    "dir": "input",
+    "width": 512,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ing_crn",
+    "dir": "output",
+    "width": 5,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ing_cls",
+    "dir": "input",
+    "width": 2,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__source_fault",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_bridge__qv",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_bridge__queue_quiet",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_bridge__qd",
+    "dir": "output",
+    "width": 546,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_bridge__qcr",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__marker_consumer_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__local_marker_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__local_marker_cr",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__local_marker",
+    "dir": "input",
+    "width": 66,
+    "peers": []
+   },
+   {
+    "port": "u_rank__image_check",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__certificate_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__certificate_prefix",
+    "dir": "output",
+    "width": 32,
+    "peers": []
+   },
+   {
+    "port": "u_rank__certificate",
+    "dir": "output",
+    "width": 66,
+    "peers": []
+   },
+   {
+    "port": "u_rank__bootbarrier_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   }
+  ],
+  "bits_in": 665,
+  "bits_out": 722
+ },
+ "qkd_hr_core_rx": {
+  "inst": "u_core_rx",
+  "ports": [
+   {
+    "port": "ck_core",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:ck_core",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_tx",
+     "u_ingest_qm"
+    ]
+   },
+   {
+    "port": "native_reserved",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:native_reserved"
+    ]
+   },
+   {
+    "port": "ownership_valid",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:ownership_valid"
+    ]
+   },
+   {
+    "port": "host_admission_open",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:host_admission_open"
+    ]
+   },
+   {
+    "port": "host_launch_quiet",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:host_launch_quiet"
+    ]
+   },
+   {
+    "port": "host_deferred",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:host_deferred"
+    ]
+   },
+   {
+    "port": "die_id",
+    "dir": "input",
+    "width": 3,
+    "peers": [
+     "DIE:die_id",
+     "u_core_guard",
+     "u_core_peer",
+     "u_core_prompt"
+    ]
+   },
+   {
+    "port": "host_rst_n",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:host_rst_n",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_tx",
+     "u_ingest_qm",
+     "u_phy_pad",
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_adapter__g_slice_1___u_slice",
+     "u_rank__u_adapter__g_slice_2___u_slice",
+     "u_rank__u_adapter__g_slice_3___u_slice",
+     "u_rank__u_adapter__g_slice_4___u_slice",
+     "u_rank__u_adapter__g_slice_5___u_slice",
+     "u_rank__u_adapter__g_slice_6___u_slice",
+     "u_rank__u_adapter__g_slice_7___u_slice"
+    ]
+   },
+   {
+    "port": "service_faults",
+    "dir": "inout",
+    "width": 25,
+    "peers": [
+     "DIE:service_faults",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_tx",
+     "u_phy_pad",
+     "u_rank__u_adapter__g_slice_0___u_slice"
+    ]
+   },
+   {
+    "port": "u_rank__u_control__u_packet__rx_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__rx_d",
+    "dir": "input",
+    "width": 528,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__rx_cr",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__peer_credit",
+    "dir": "output",
+    "width": 24,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ing_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ing_d",
+    "dir": "output",
+    "width": 512,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ing_crn",
+    "dir": "input",
+    "width": 5,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ing_cls",
+    "dir": "output",
+    "width": 2,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__hv",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__hr",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__hd",
+    "dir": "output",
+    "width": 512,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__cv",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__credit_return",
+    "dir": "output",
+    "width": 24,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__cr",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__cd",
+    "dir": "output",
+    "width": 512,
+    "peers": []
+   }
+  ],
+  "bits_in": 543,
+  "bits_out": 1593
+ },
+ "qkd_hr_core_tx": {
+  "inst": "u_core_tx",
+  "ports": [
+   {
+    "port": "ck_core",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:ck_core",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_ingest_qm"
+    ]
+   },
+   {
+    "port": "irq",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:irq",
+     "u_core_prompt"
+    ]
+   },
+   {
+    "port": "host_rst_n",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:host_rst_n",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_ingest_qm",
+     "u_phy_pad",
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_adapter__g_slice_1___u_slice",
+     "u_rank__u_adapter__g_slice_2___u_slice",
+     "u_rank__u_adapter__g_slice_3___u_slice",
+     "u_rank__u_adapter__g_slice_4___u_slice",
+     "u_rank__u_adapter__g_slice_5___u_slice",
+     "u_rank__u_adapter__g_slice_6___u_slice",
+     "u_rank__u_adapter__g_slice_7___u_slice"
+    ]
+   },
+   {
+    "port": "service_faults",
+    "dir": "inout",
+    "width": 25,
+    "peers": [
+     "DIE:service_faults",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_phy_pad",
+     "u_rank__u_adapter__g_slice_0___u_slice"
+    ]
+   },
+   {
+    "port": "u_rank__u_control__u_packet__tx_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__tx_d",
+    "dir": "output",
+    "width": 528,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__tx_cr",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__peer_credit",
+    "dir": "input",
+    "width": 24,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ing_t_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ing_t_cr",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__htd",
+    "dir": "input",
+    "width": 512,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__htc",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ht",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ctd",
+    "dir": "input",
+    "width": 512,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ctc",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__ct",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_control__u_packet__credit_return",
+    "dir": "input",
+    "width": 24,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_bridge__cd",
+    "dir": "input",
+    "width": 546,
+    "peers": []
+   }
+  ],
+  "bits_in": 1625,
+  "bits_out": 532
+ },
+ "qkd_hr_ingest_qm": {
+  "inst": "u_ingest_qm",
+  "ports": [
+   {
+    "port": "ck_core",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:ck_core",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx"
+    ]
+   },
+   {
+    "port": "ck_host",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:ck_host",
+     "u_cdc_host"
+    ]
+   },
+   {
+    "port": "ck_ingest",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:ck_ingest"
+    ]
+   },
+   {
+    "port": "host_upstream_quiet",
+    "dir": "inout",
+    "width": 6,
+    "peers": [
+     "DIE:host_upstream_quiet",
+     "u_core_order"
+    ]
+   },
+   {
+    "port": "host_rst_n",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:host_rst_n",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_phy_pad",
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_adapter__g_slice_1___u_slice",
+     "u_rank__u_adapter__g_slice_2___u_slice",
+     "u_rank__u_adapter__g_slice_3___u_slice",
+     "u_rank__u_adapter__g_slice_4___u_slice",
+     "u_rank__u_adapter__g_slice_5___u_slice",
+     "u_rank__u_adapter__g_slice_6___u_slice",
+     "u_rank__u_adapter__g_slice_7___u_slice"
+    ]
+   },
+   {
+    "port": "u_rank__u_bridge__qm_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_bridge__qm_crn",
+    "dir": "output",
+    "width": 5,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_bridge__hd",
+    "dir": "input",
+    "width": 546,
+    "peers": []
+   },
+   {
+    "port": "u_rank__qm_t_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__qm_t_d",
+    "dir": "output",
+    "width": 64,
+    "peers": []
+   },
+   {
+    "port": "u_rank__qm_t_cr",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__qm_fault",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__owe",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__ov",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__od",
+    "dir": "output",
+    "width": 256,
+    "peers": []
+   },
+   {
+    "port": "u_rank__ocr",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__oa",
+    "dir": "output",
+    "width": 32,
+    "peers": []
+   }
+  ],
+  "bits_in": 553,
+  "bits_out": 361
+ },
+ "qkd_hr_phy_pad": {
+  "inst": "u_phy_pad",
+  "ports": [
+   {
+    "port": "ck_phy_fam",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:ck_phy_fam",
+     "u_cdc_pc"
+    ]
+   },
+   {
+    "port": "host_rst_n",
+    "dir": "input",
+    "width": 1,
+    "peers": [
+     "DIE:host_rst_n",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_ingest_qm",
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_adapter__g_slice_1___u_slice",
+     "u_rank__u_adapter__g_slice_2___u_slice",
+     "u_rank__u_adapter__g_slice_3___u_slice",
+     "u_rank__u_adapter__g_slice_4___u_slice",
+     "u_rank__u_adapter__g_slice_5___u_slice",
+     "u_rank__u_adapter__g_slice_6___u_slice",
+     "u_rank__u_adapter__g_slice_7___u_slice"
+    ]
+   },
+   {
+    "port": "service_faults",
+    "dir": "inout",
+    "width": 25,
+    "peers": [
+     "DIE:service_faults",
+     "u_cdc_host",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_rx",
+     "u_core_tx",
+     "u_rank__u_adapter__g_slice_0___u_slice"
+    ]
+   },
+   {
+    "port": "u_rank__u_phy__phy_rx_v",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__phy_rx_d",
+    "dir": "input",
+    "width": 1024,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__phy_rx_cr",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__pad_v",
+    "dir": "output",
+    "width": 1,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__pad_d",
+    "dir": "output",
+    "width": 546,
+    "peers": []
+   },
+   {
+    "port": "u_rank__u_phy__pad_cr",
+    "dir": "input",
+    "width": 1,
+    "peers": []
+   }
+  ],
+  "bits_in": 1028,
+  "bits_out": 548
+ }
+}

@@ -797,8 +797,11 @@ HOST_CLK_FAMILY = dict(
     **{c: 'phy' for c in [f'ck_phy{i}' for i in range(8)] + ['ck_pad', 'ck_phy_rx_w', 'ck_phy_tx_r']})
 HOST_CLK_INFERRED = dict(
     **{c: 'core' for c in ('ck_program_rx', 'ck_program_loader', 'ck_dispatch', 'ck_retire', 'ck_bootbarrier',
-                           'ck_records', 'ck_coordinator_codec', 'ck_coordinator_lifecycle', 'ck_coordinator_post')},
-    **{c: 'host' for c in ('ck_peer', 'ck_root_mux')})     # board-link family (1 GHz = the host period; no board PLL output)
+                           'ck_records', 'ck_coordinator_codec', 'ck_coordinator_lifecycle', 'ck_coordinator_post',
+                           # COORD 0dd+ D2 (10-17, KVJ-A3 census): ck_peer / ck_root_mux talk to core blocks through direct
+                           # same-cycle valid/ready with no synchroniser (root_mux<->coordinator, peer_link.normal_rx ->
+                           # program_rx, token request/grant), so they are CORE, not the 1 GHz host family
+                           'ck_peer', 'ck_root_mux')})
 HOST_GROUPS = dict(chain_f='chf', chain_c='chc', chain_a='cha', chain_fault_i='chx', slice_ack='sak',
                    slice_boot_done='sbd', slice_boot_ok='sbo', slice_boot_fault='sbf')
 
