@@ -11,10 +11,15 @@ ROOT=${ROOT:-/srv/opentallas-scratch/claude/layerbench-hbm/dsfix}; HOST=${HOST:-
 WT=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
 SHA=$(git -C "$WT" rev-parse "$REV")
 ssh "$HOST" "rm -rf $ROOT/src && mkdir -p $ROOT/src $ROOT/out $ROOT/fix" || exit 2
-git -C "$WT" archive "$SHA" tools compiler/models docs/HBM_GENERIC_INTERFACE.md results/abi3/deepseek_v41_reduced_v2_reference_oracle_fp8.json \
-  results/abi3/qwen3_reduced_reference_oracle.json results/rtl/hdc_v41x_fullshape_layers.json results/rtl/v41_program_constants.json \
-  results/rtl/w17_v41_1m_reference_token.json results/rtl/w19_hbm_tp96_isa.json results/rtl/dshbm_baseline_measured_20261004 \
-  results/rtl/hbm_ds_layer_tput_1018/priced_layers.json results/arch/hbm_generic_iface_20261009 | ssh "$HOST" "tar -x -C $ROOT/src"
+# archive list = inputs only (hdc_v41x_fullshape_layers.json is a campaign OUTPUT, absent at most revs: its pathspec made
+# git archive fail and the host got an empty src/ -- dsfix chain 10-18 09:25).  Every listed path must exist at REV.
+PATHS="tools compiler/models docs/HBM_GENERIC_INTERFACE.md results/abi3/deepseek_v41_reduced_v2_reference_oracle_fp8.json
+  results/abi3/qwen3_reduced_reference_oracle.json results/rtl/v41_program_constants.json
+  results/rtl/w17_v41_1m_reference_token.json results/rtl/w19_hbm_tp96_isa.json results/rtl/dshbm_baseline_measured_20261004
+  results/rtl/hbm_ds_layer_tput_1018/priced_layers.json results/arch/hbm_generic_iface_20261009"
+for p in $PATHS; do [ -n "$(git -C "$WT" ls-tree -r --name-only "$SHA" -- "$p" | head -1)" ] || { echo "MISSING_AT_REV $p"; exit 2; }; done
+git -C "$WT" archive "$SHA" $PATHS | ssh "$HOST" "tar -x -C $ROOT/src" || { echo "ARCHIVE_FAIL"; exit 2; }
+ssh "$HOST" "test -f $ROOT/src/tools/hbm_layer_vehicle/ds_layer_fixtures.py && test -d $ROOT/refs && test -d $ROOT/ckpt" || { echo "SRC_OR_INPUTS_MISSING on $HOST"; exit 2; }
 echo "$SHA" | ssh "$HOST" "cat > $ROOT/src/REV"
 NOAVX="AVX512F AVX512CD AVX512_KNL AVX512_KNM AVX512_SKX AVX512_CLX AVX512_CNL AVX512_ICL AVX512_SPR AVX512_SPR"
 RC=0
