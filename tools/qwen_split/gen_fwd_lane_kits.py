@@ -12,7 +12,7 @@ files (OUT/pins/<master>.json, tools/qwen_tp8/relay_data_run.py --case).
   * clocks: physical/qwen_fwd_lane/fwd_lane_clocks.tcl (ck_o generated clocks; the landing's lane write clock).
   * recipe 4 flop-first, hold_budget die, M5 cap (LANDING-CONTRACT section 3), pin flops opted out (one flop per bit).
   * benches: tools/qwen_split/bench_fwd_lane.sh at the master's width (all four families of the same generator) --
-    pass + mutants (stations: full-cycle forward [+ non-inverting hop 0]; landings: read slot one late, no ring), each
+    pass + mutants (stations: full-cycle forward [+ the first-form inverting hop 0]; landings: read slot one late, no ring), each
     with its committed fail witness results/arch/qwen_split_compute_1014/q_die11_rly_1018/bench/w<W>_<mode>.log.
 
     gen_fwd_lane_kits.py --pins OUT/pins --masters M [M ...] [--owner O --branch B --tag T]
@@ -28,8 +28,8 @@ LANE_RTL = ['rtl/qwen_split/qfd_fwd_lane.sv', 'rtl/hdc/ot_hdc_cg.sv']
 MASTERS_SV = 'physical/qwen_fwd_lane/qfd_fwd_lane_masters.sv'
 CLK_TCL = 'physical/qwen_fwd_lane/fwd_lane_clocks.tcl'
 WIT = 'results/arch/qwen_split_compute_1014/q_die11_rly_1018/bench'
-MUTANTS = {'qfd_rlyh0_': ('full', 'noinv'), 'qfd_rlyh_': ('full',), 'qfd_landh_': ('sel', 'naive'),
-           'qfd_landh0_': ('sel', 'noinv')}
+MUTANTS = {'qfd_rlyh0_': ('full', 'hop0inv'), 'qfd_rlyh_': ('full',), 'qfd_landh_': ('sel', 'naive'),
+           'qfd_landh0_': ('sel', 'hop0inv')}
 CLOCK = {'qfd_rlyh0_': 'ck', 'qfd_rlyh_': 'ckf', 'qfd_landh_': 'ck', 'qfd_landh0_': 'ck'}
 
 
@@ -79,13 +79,16 @@ def spec(m, pins, a):
         benches.append(dict(name=f'{mu}_mutant', cmd=f'bash tools/qwen_split/bench_fwd_lane.sh {mu} {{RUN}}/bench_{mu} {W}',
                             expect='fail', fail_regex='FWD_BENCH FAIL', fail_witness=f'{WIT}/w{W}_{mu}.log',
                             threads=2, peak_ram_gb=4, needs=['verilator']))
-    kind = {'qfd_rlyh0_': 'hop-0 station (inverting ICG on the source root)', 'qfd_rlyh_': 'half-cycle station',
+    kind = {'qfd_rlyh0_': 'hop-0 station (ICG on the source root, rising capture, inverted ck_o)', 'qfd_rlyh_': 'half-cycle station',
             'qfd_landh_': 'landing (ring D 4, read on the block root)', 'qfd_landh0_': 'landing with the hop-0 gate'}[fam]
     return dict(
         name=name, top=m, kind='tile', sources=LANE_RTL + [MASTERS_SV], params={}, clock_port=ck,
         reset_ports=['rs'] if fam.startswith('qfd_landh') else [],
         outline=dict(w=round(pins['outline']['w'], 3), h=round(pins['outline']['h'], 3), exact=True), layer_cap='M5',
-        pins=faces, macros=[], children=[], inter=['*'], refglob='*', io_budget={'in': 0.2, 'out': 0.2},
+        pins=faces, macros=[], children=[], inter=['*'],
+        # Q-DIE11 10-18 kit fix: a landing's boundary reference is its READ-side (block root) counter, not the PINFLOP
+        # default (the lane-clock ring flops: L_max 908-1243 ps -> rs input delay > T, TT -639 / -973)
+        refglob='*u_land.rc*' if fam.startswith('qfd_landh') else '*', io_budget={'in': 0.2, 'out': 0.2},
         recipe=4, hold_budget='die', inhold=False, outhold=False, io_flop_at_pins={'cols': 4, 'allow_none': True},
         keep_pin_regs=True, forwarded_clock=not fam.startswith('qfd_landh'),
         pin_regs=dict(enable=False, reason='OWNER RULE 19:50 opt-out (as the coordinator-approved S81 relays): a lane frame is '

@@ -122,8 +122,8 @@ def table(vals_fn, idx1, idx2=None):
 
 
 # Q-DIE11-RLY 10-18 (OT_SPLIT_FWD_LANES, rtl/qwen_split/qfd_fwd_lane.sv): forwarded-clock half-cycle lane frames.  The
-# die STA propagates each lane's clock from the hop-0 station's root pin through the ck -> ck_o arcs (hop 0: ck_o = ck
-# gated, capture on the FALLING root edge; station: capture on ckf rising, ck_o = ~ckf), so every station hop is timed
+# die STA propagates each lane's clock from the hop-0 station's root pin through the ck -> ck_o arcs (hop 0: capture on
+# the RISING root edge, ck_o = ~(ck gated); station: capture on ckf rising, ck_o = ~ckf), so every station hop is timed
 # as the half-cycle hop it is, on routed RC.  The landing is modelled as in the S81-LAND pilot (dv_land_pilot.py): the
 # lane's data / epoch pins are checked against the RECEIVING root ck, with case/landing.sdc's MCP -setup E -hold D-1.
 FWD_RE = re.compile(r'^qfd_(rlyh0|rlyh|landh0|landh)_')
@@ -134,7 +134,7 @@ FWD_CK_FWD = dict(ss=40.0, tt=40.0, ff=18.0)     # ASSUMED ck -> ck_o cell delay
 def fwd_cell(master, ports, c, pb, cq, trn):
     kind = FWD_RE.match(master).group(1)
     clk = {'rlyh0': 'ck', 'rlyh': 'ckf', 'landh': 'ck', 'landh0': 'ck'}[kind]
-    edge = 'falling' if kind == 'rlyh0' else 'rising'
+    edge = 'rising'                     # Q-DIE11 10-18: hop 0 captures on the rising root edge too
     clocks = {'rlyh0': ('ck',), 'rlyh': ('ckf',), 'landh': ('ckf', 'ck'), 'landh0': ('ck_s', 'ck')}[kind]
     data_in = {'rlyh0': ('a', 'en'), 'rlyh': ('a', 'ea'), 'landh': ('a', 'ea', 'rs'), 'landh0': ('a', 'rs')}[kind]
     data_out = {'rlyh0': ('b', 'eb'), 'rlyh': ('b', 'eb'), 'landh': ('b', 'fault'), 'landh0': ('b', 'fault')}[kind]
@@ -158,7 +158,7 @@ def fwd_cell(master, ports, c, pb, cq, trn):
             body = 'direction : input; clock : true; capacitance : 2.0;'
         elif p == 'ck_o':
             src = 'ck' if kind == 'rlyh0' else 'ckf'
-            sense = 'positive_unate' if kind == 'rlyh0' else 'negative_unate'
+            sense = 'negative_unate'    # every forward inverts (hop 0: ck_o = ~gated ck)
             dly = (lambda load, fd=fd: fd + c['k'] * load)
             body = (f'direction : output; max_capacitance : 5000; timing () {{ related_pin : "{pn(src)}"; timing_sense : {sense}; '
                     f'timing_type : combinational; cell_rise (load1) {{ {table(dly, LOADS)} }} cell_fall (load1) {{ {table(dly, LOADS)} }} '
