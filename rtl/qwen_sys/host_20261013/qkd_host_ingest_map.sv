@@ -93,7 +93,7 @@ module qkd_host_ingest_map #(parameter integer MUT=0,ORDERED=0,BOOT_SCRATCH_ROW=
     2'b10:count<=count+1'b1;2'b01:count<=count-1'b1;default:;endcase
    if(pending&&!good&&!mark)fault<=1;
    if(emit)begin
-    out[stack*291+:291]<={data,row,col,bank,pc,1'b1};
+    for(integer k=0;k<4;k++)if(stack==2'(k))out[k*291+:291]<={data,row,col,bank,pc,1'b1};   // constant slices (no wide $shift)
     issued<=issued+1'b1;if(issued==32'hffffffff)fault<=1;ing_cr<=1;
    end
    if(mcq)begin if(marker_credit)fault<=1;else marker_credit<=1;end
