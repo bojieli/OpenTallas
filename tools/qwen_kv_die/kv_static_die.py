@@ -695,8 +695,8 @@ def module_text(t, name):
          f'module {name} (']
     pl = []
     for pn, v in t['ports'].items():
-        if KITS and t['kind'] in CK1_KINDS + KIT_KINDS and v['cls'] == 'clock':
-            pl.append(f'    {v["dir"]} wire {pn}')         # the kit's CTS root: a scalar port
+        if KITS and t['kind'] in CK1_KINDS + KIT_KINDS and v['cls'] in ('clock', 'reset') and v['width'] == 1:
+            pl.append(f'    {v["dir"]} wire {pn}')         # the kit's CTS root / reset pin: a scalar port
             continue
         pl.append(f'    {v["dir"]} wire [{v["width"] - 1}:0] {pn}')
     L.append(',\n'.join(pl))

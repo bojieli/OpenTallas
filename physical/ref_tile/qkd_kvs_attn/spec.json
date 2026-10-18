@@ -3,10 +3,10 @@
  "top": "qkd_kvs_attn",
  "sources": [
   "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv",
-  "rtl/qwen_sys/split_20261014/qkd_native59_descriptor_producer.sv",
   "rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv",
   "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv",
   "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native59_descriptor_producer.sv",
   "rtl/qwen_sys/split_20261014/qkd_attn_service_root.sv",
   "rtl/qwen_sys/split_20261014/qkd_attn_result_face_s.sv",
   "rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv",
@@ -88,7 +88,7 @@
   "h": 302.40000000000003,
   "exact": true
  },
- "structural_change": "NEW kit (RTL-BUILD-KV M1, KV-INTEG/KITS-A): generated static tile qkd_kvs_attn of the KV die (5 children: qkd_attn_cal_gen, qkd_attn_fault_root, qkd_attn_result_face_s, qkd_attn_service_root, qkd_native_attention_programme; hard: none), from rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv (sha256 5363144db8db) by tools/qwen_kv_die/kvs_tile_kits.py; one clock port ck (OT_KV_TILE_KITS).  Faces {'S': 809, 'N': 1092, 'E': 626} pins on 302.4 x 302.4 um (die frame record (302.4, 302.4) ASSUMED -> this outline for KV-PLAN3).",
+ "structural_change": "NEW kit (RTL-BUILD-KV M1, KV-INTEG/KITS-A): generated static tile qkd_kvs_attn of the KV die (5 children: qkd_attn_cal_gen, qkd_attn_fault_root, qkd_attn_result_face_s, qkd_attn_service_root, qkd_native_attention_programme; hard: none), from rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv (sha256 36f274261cab) by tools/qwen_kv_die/kvs_tile_kits.py; one clock port ck (OT_KV_TILE_KITS).  Faces {'S': 809, 'N': 1092, 'E': 626} pins on 302.4 x 302.4 um (die frame record (302.4, 302.4) ASSUMED -> this outline for KV-PLAN3).",
  "job": {
   "owner": "Claude:KV-INTEG2",
   "branch": "claude/kv-integ2-kits-1018",
