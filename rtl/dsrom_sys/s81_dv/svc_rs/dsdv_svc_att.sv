@@ -44,6 +44,12 @@
 // not take (fault 21) is a sticky fault.  The 4 owner slices drain their 8 P.V beats (5 words each) in 40 consecutive
 // cycles from PVO + pvs (rs_pvslot: owner k's window on the half's P.V return tree); a beat not produced by its slot is
 // fault 19.  pvs puts the 4 owners of a quarter in disjoint windows at the entry's pv pins (no arbitration).
+// SVC-PV (10-18): the P.V buffer pvq holds ALL 8 beats of a job (PV_CRED 8 = 8 beats x PVB bits).  The engine emits
+// the 8 final-block beats as one 8-cycle burst; with 4 entries its pv_cr credit loop (~45 cycles) left a gap inside
+// the 40-cycle drain window (fault 19, then the pointer wrap gave fault 15) and no p-feed offset can fix that
+// (tb_dsdv_svc_pvdrain: depth 4 fails at every drain distance and T).  With 8 entries the credit never binds (the same
+// probe passes with pv_cr never returned): the drain is purely static.  Compiler rule (tb_dsdv_svc_rs build_frames):
+// PVO >= PO + 8 ceil(T / 32) + 55 (probe minimum 53 + 8 ceil(T / 32), every owner's slot pvs >= 0 on top).
 // MUT (bench negative controls): 1 = window scale byte of the neighbouring slot, 2 = ROWS half of the other tile of
 // the pair, 3 = q chunk of the neighbouring tile.
 // ---------------------------------------------------------------------------------------------------------------------
@@ -53,7 +59,7 @@ module dsdv_svc_att #(
     parameter integer ST = 0,
     parameter integer PFIFO = 512,
     parameter integer SC_CRED = 8,
-    parameter integer PV_CRED = 4,
+    parameter integer PV_CRED = 8,                // = the beats of one job: the P.V credit never binds (static drain)
     parameter integer DQ = 8,
     parameter bit SRAM_MACRO = 0
 ) (
@@ -504,7 +510,7 @@ module dsdv_svc_att #(
                 if (pv_n == 4'd7) begin job_active <= 1'b0; job_open <= 1'b0; done <= !pvown; end   // owners: at drain end
             end
             if (pvown) begin
-                if (pv_v) begin pvw <= pvw + 1'b1; if (32'(pvw - pvr) >= PV_CRED) fc[15] <= 1'b1; end
+                if (pv_v) begin pvw <= pvw + 1'b1; if ((PA+1)'(pvw - pvr) >= (PA+1)'(PV_CRED)) fc[15] <= 1'b1; end
                 // compiled drain window: 8 beats x 5 words from PVO + pvs, back to back
                 if (dr_arm && !go && jc == pvo + 16'(pvs)) begin dr_arm <= 1'b0; dr_on <= 1'b1; p_i <= 0; dbeat <= 0; end
                 if (dr_on) begin

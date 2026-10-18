@@ -44,8 +44,9 @@ module tb_dsdv_svc_rs;
     parameter integer GODLY = 400;
     parameter integer PVS0 = 150;          // compiled PV send: GO + ceil(5 T / 4) + PVS0 (the D = 32 share scores
                                            // 1.25 cycles a row: tb_dsdv_svc_pfeed last score 1.25 T + 40; + tree + gd)
-    parameter integer KPV = 112;           // compiled P.V drain base: PO + ceil(T / 4) + KPV (probe: the last P.V word
-                                           // of a continuous drain <= p0 + ceil(T / 4) + 157, 40 words)
+    parameter integer KPV = 55;            // compiled P.V drain base: PO + 8 ceil(T / 32) + KPV (SVC-PV 10-18, PV_CRED 8:
+                                           // tb_dsdv_svc_pvdrain, all 8 beats in pvq by p0 + 53 + 8 ceil(T / 32); was
+                                           // PO + ceil(T / 4) + 112 for the 4-deep pvq, which faulted 15 / 19)
 `ifndef MUT
 `define MUT 0
 `endif
@@ -205,7 +206,7 @@ module tb_dsdv_svc_rs;
         n = (T + 1) / 2;
         pvs_c = (5 * T + 3) / 4 + PVS0;
         po_c = pvs_c + (n + 1) / 2 + (n + 249) / 250 + 4;
-        pvo_c = po_c + (T + 3) / 4 + KPV;
+        pvo_c = po_c + 8 * ((T + 31) / 32) + KPV;
         sp = 0; sp[29:0] = WB;
         qw[nq] = hdr(4'd12, 0, sp); nq = nq + 1;
         for (r = 0; r < wcount; r = r + 1) begin
