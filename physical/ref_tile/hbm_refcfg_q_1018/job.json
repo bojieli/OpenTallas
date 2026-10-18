@@ -1,14 +1,14 @@
 {
- "name": "hbm_refcfg_q_1018-q1-82787014f",
+ "name": "hbm_refcfg_q_1018-q2-COMMIT",
  "block": "ot_hbm_pc_refresh_cfg",
  "ref_tile": true,
- "owner": "Claude:OWNERS-HBM/STK",
+ "owner": "Claude:ELEM-GAPS/HBMN2",
  "purpose": "HBM die d4g refcfg_<q> x4 = ot_hbm_pc_refresh_cfg #(NPC 16) (per-quadrant refresh-phase boot producer; F20 SW 126 / NW 127 / SE 128 / NE 129); first hardening, async stream833/HBM1024 pair through the cdc_synchronizers_async policy (632a61852)",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/owners-hbm-1018-stk",
-  "commit": "82787014f",
+  "branch": "claude/eg-hbmn2-1018",
+  "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/loader/service_native/tb_hbm_pc_refresh_cfg_q.sv",
    "rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh",
@@ -19,7 +19,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_pc_refresh_cfg #(.NPC(16)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/loader/service_native/ot_hbm_pc_refresh_cfg.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_pc_refresh_cfg #(.NPC(16)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/loader/service_native/ot_hbm_pc_refresh_cfg.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -140,7 +140,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_refcfg_q_1018/hbm_refcfg_q_1018-q1-82787014f"
+   "to": "results/rtl/ref_tile/hbm_refcfg_q_1018/hbm_refcfg_q_1018-q2-COMMIT"
   }
  ],
  "cycles_added": 0,
