@@ -1,0 +1,26 @@
+{
+ "cell": "ot_hbm_pc_refresh_cfg",
+ "view": "physical/ref_tile/hbm_refcfg_q_1018/views/ot_hbm_pc_refresh_cfg",
+ "lib_cell": "ot_hbm_pc_refresh_cfg",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 84.5,
+ "spread_ps": 6.1,
+ "outputs": 132,
+ "inputs": 159,
+ "launch_ps": 115.4,
+ "launch_pin": "refresh_reload[1]",
+ "capture_ps": 64.4,
+ "capture_pin": "cfg_v",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 6.4,
+ "ff_launch_min_ps": 60.8,
+ "ff_hold_need_ps": -17.1,
+ "pass": true,
+ "fail_why": ""
+}
