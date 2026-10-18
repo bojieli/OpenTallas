@@ -125,6 +125,29 @@ class Check(unittest.TestCase):
         self.assertEqual(self.run_check(self.p, DRS.compiled(self.p, 'test')), 0)
         self.assertEqual(self.run_check(self.p, self.p), 0)
 
+    def test_matching_partial_or_ambiguous_tables_do_not_qualify(self):
+        import copy
+        for changes in ({'coverage': 'relayed_only'}, {'problem_count': 1},
+                        {'problems': ['unresolved endpoint']}):
+            bad = dict(self.p, **changes)
+            with self.subTest(changes=changes):
+                self.assertEqual(CHK.check(bad, DRS.compiled(bad, 'test'))['verdict'], 'FAIL')
+        bad = copy.deepcopy(self.p)
+        bad['buses'][0]['domain'] = None
+        bad = DRS.make_doc('hbm', {'id': 'unknown-domain'}, 833.333, 450, bad['buses'])
+        self.assertEqual(CHK.check(bad, DRS.compiled(bad, 'test'))['verdict'], 'FAIL')
+
+    def test_qwen_dump_cannot_claim_complete_compiler_coverage(self):
+        exporter = mod('qwen_split/relay_stages_export.py', 'qwen_dump_test')
+        with tempfile.TemporaryDirectory() as t:
+            path = Path(t) / 'dump.json'
+            path.write_text(json.dumps({'plans': [dict(bid='long', cl='data', bits=8,
+                eps=[['a', 'o'], ['b', 'i']], n=2)]}))
+            partial = exporter.export_dump(path, 'partial', reach=425)
+        self.assertEqual(partial['coverage'], 'relayed_only')
+        self.assertFalse(partial['compiler_qualified'])
+        self.assertEqual(CHK.check(partial, DRS.compiled(partial, 'test'))['verdict'], 'FAIL')
+
     def test_stage_diff_fails(self):
         run = plan([bus('a', 'x', 'b', 'y', 4), bus('a', 'x', 'c', 'y', 0)])
         self.assertEqual(self.run_check(run, DRS.compiled(self.p, 'test')), 1)
@@ -232,7 +255,10 @@ class Hbm(unittest.TestCase):
         doc = DRS.load(p)
         vals, _ = RCP.class_stages(DRS.Table(doc))
         self.assertEqual(vals['SM_X'], 31)                       # vms.rr -> ctlw 3 + ctlw.xw -> smh 28 (equal-age max)
-        self.assertEqual(CHK.check(doc, DRS.load(s))['verdict'], 'PASS')
+        # Historical scalar class projection survives, but its unresolved export problems cannot qualify a schedule.
+        rep = CHK.check(doc, DRS.load(s))
+        self.assertEqual(rep['verdict'], 'FAIL')
+        self.assertIn('die run reports unresolved export problems', rep['fails'])
 
     def test_class_price_fails_closed_and_prices(self):
         import relay_class_price as RCP

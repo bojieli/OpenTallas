@@ -1,0 +1,8 @@
+VM bank hoist equivalence (tools/hbm_die_v16/run_vms_hoist_equiv.sh, EPYC4 unit oth-ubuntu-935383-1792212324, 2026-10-16 22:45):
+composition emitted from tools/hbm_die_v15/v16_layers/vm_hoist_d4f.json vs the original wrapper (STRAP_BANKS=1; NW +Q2_MERGE=1; SE/NE = _core), every output every edge, 3000 random-input cycles:
+pos VMS_HOIST_EQUIV SW PASS checks=36000 errors=0      mut (bank 0/1 rslot swap) FAIL errors=1168
+pos VMS_HOIST_EQUIV NW PASS checks=33000 errors=0      mut FAIL errors=1224
+pos VMS_HOIST_EQUIV SE PASS checks=30000 errors=0      mut FAIL errors=526
+pos VMS_HOIST_EQUIV NE PASS checks=30000 errors=0      mut FAIL errors=526
+VMS_HOIST_EQUIV_GATE PASS
+Contract: STRICT PORT-BIND PASS 1424 inst / 67 masters, 0 problems.

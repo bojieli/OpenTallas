@@ -1,0 +1,18 @@
+ot-run: load hold: every qualifying host has load1 > 1.5 x cores (ot-pve1 51/28); waiting
+ot-run: load hold released after 485 s
+ot-run: ot-pve1        admits   134 GB (avail 189, growth 32, headroom 32, waiters 0/0 GB) load 41/28 running 10 disk 1272 GB 
+ot-run: -> ot-pve1
+ot-heavy: admitted on ot-pve1 as oth-ubuntu-2625958-1792204195 after 1 s
+SU_LANE ERROR op=0 cycle=40 word=0 got=bf414ea5 want=bf404ea5
+SU_LANE ERROR op=0 cycle=41 word=1 got=bf394ea5 want=bf384ea5
+SU_LANE ERROR op=0 cycle=42 word=2 got=bf314ea5 want=bf304ea5
+SU_LANE ERROR op=0 cycle=43 word=3 got=bf294ea5 want=bf284ea5
+SU_LANE ERROR op=0 cycle=44 word=4 got=bf214ea5 want=bf204ea5
+SU_LANE ERROR op=0 cycle=45 word=5 got=bf194ea5 want=bf184ea5
+SU_LANE ERROR op=0 cycle=46 word=6 got=bf114ea5 want=bf104ea5
+SU_LANE ERROR op=0 cycle=47 word=7 got=bf094ea5 want=bf084ea5
+[80230000] %Fatal: tb_su_static_lane_leaf.sv:96: Assertion failed in tb_su_static_lane_leaf: SU_LANE FAIL checks=3968 errors=3382 outputs=1984
+%Error: rtl/hbm_accel/generic/adapters/static_su/arithmetic/tb_su_static_lane_leaf.sv:96: Verilog $stop
+Aborting...
+script_rc=1
+ot-run: RAN on ot-pve1 (unit oth-ubuntu-2625958-1792204195): exit 0

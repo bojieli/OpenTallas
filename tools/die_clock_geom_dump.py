@@ -75,6 +75,14 @@ def main():
                 ins = sorted({x.getInst().getName() for x in its if x.getInst().getMaster().isBlock()})
                 if not 2 <= len(ins) <= a.max_fanout:
                     continue
+                drv = sorted({x.getInst().getName() for x in its
+                              if x.getInst().getMaster().isBlock() and x.getIoType() == 'OUTPUT'})
+                if len(drv) == 1:
+                    # DIRECTED pair rows: launch (the net's block driver) first, capture second, 'd' marks direction
+                    for c in ins:
+                        if c != drv[0]:
+                            fp.write(f'P\t{drv[0]}\t{c}\t{net.getName()}\td\n'); n_p += 1
+                    continue
                 for i in range(len(ins)):
                     for j in range(i + 1, len(ins)):
                         fp.write(f'P\t{ins[i]}\t{ins[j]}\t{net.getName()}\n'); n_p += 1

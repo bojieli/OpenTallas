@@ -1,0 +1,30 @@
+{
+  "scope": "Fresh-main actual full-shape BF pair using current-main front/calendar and all nine partitioned compute children. Component functional proof only.",
+  "source_commit": "937594fb5b0f35a1d526282bd0300dea140c07a9",
+  "main_base": "4c848475b",
+  "compiler_fixture_profile": {
+    "programme_delta": 0,
+    "static_front_programme_edges": 1,
+    "explicit": true
+  },
+  "source_hashes_verified_against_actual_remote_and_commit": 17,
+  "positive": "456 rows /912 values /448 configs TXN MATCH;124422cycles;lag6.664/15.827/9.923ns",
+  "negative": "Actual lane clock stop: DIFF TXN16",
+  "payload_cycles_added": 0,
+  "physical_qualification": false,
+  "full_parent_cuts_slots_area_and_other_roots_native": "PENDING",
+  "clock_probe_scope": "lane4_r2_gate is a historical component CTS probe, not a current-main job gate binding",
+  "cost": {
+    "historical_flat_column_mapped_sinks": 53493,
+    "new_full_column_mapped_sinks": null,
+    "rtl_state_delta_per_column": 50,
+    "r1_actual_lane_sinks": 5896,
+    "r2_actual_lane_sinks": 6040,
+    "lane_instances": 4,
+    "actual_lane_subtotal_sinks": 24160,
+    "other_groups_census": "PENDING",
+    "r2_postCTS_std_area_um2": 5044.0,
+    "r2_die_area_um2": 9032.6,
+    "r2_postCTS_fill": 0.558
+  }
+}

@@ -5,6 +5,15 @@ usage: mclk_apply.py ROOT q0|q2 rtl            -- source/bench edits (shared by 
        mclk_apply.py ROOT q0|q2 kit B          -- 270x313.2, macro channels 20.136 um
        mclk_apply.py ROOT q0|q2 kit D          -- 270x313.2, u_b/u_c channel 28.776 um (q2 B/C GRT overflow 131 there), a/b 20.136,
                                                   margins 24.19 / 24.30, + balanced CTS sink clustering (C recipe)
+       mclk_apply.py ROOT q0|q2 kit E          -- q0C geometry (B stack, C CTS) on a 291.6 x 313.2 outline: +10.8 um per side strip
+                                                  (q2 B/C/D GRT-0116 all at the u_b/u_c channel MOUTHS = side strips)
+       mclk_apply.py ROOT q0|q2 kit F          -- E geometry (same 291.6 x 313.2 outline, same pins) + both 20.136 um macro
+                                                  channels ROUTING-ONLY (hard placement blockage, 21 um into each mouth):
+                                                  q2E GRT-0116 overflow 189, 80% at x 210-239 / 50-59, y 180-220 = cells
+                                                  placed IN the u_b/u_c channel + its mouths next to the u_c W/E SRAM pin
+                                                  columns (414 M4 pins per edge in 40 um); the strips are <0.3 dense.
+       mclk_apply.py ROOT q0|q2 kit G          -- F + macro halo 5.4 -> 10.8 um: a 10.8 um cell-free pin-escape lane beside every
+                                                  SRAM W/E pin column (q2F gate: one hot bin left at the u_c E pin column)
 """
 import json, math, re, sys, hashlib
 from pathlib import Path
@@ -72,7 +81,9 @@ def kit(variant):
     base = ROOT / f'physical/ref_tile/vm_native_{q}_faces'
     s = json.loads((base / 'spec.json').read_text())
     H = 270.0 if variant == 'A' else 313.2
-    name = {'A': f'vm_native_{q}_faces', 'B': f'vm_native_{q}_faces_g313', 'D': f'vm_native_{q}_faces_g313d'}[variant]
+    name = {'A': f'vm_native_{q}_faces', 'B': f'vm_native_{q}_faces_g313', 'D': f'vm_native_{q}_faces_g313d', 'E': f'vm_native_{q}_faces_g313e', 'F': f'vm_native_{q}_faces_g313f', 'G': f'vm_native_{q}_faces_g313g'}[variant]
+    WD = 291.6 if variant in 'EFG' else 270.0
+    DX = (WD - 270.0) / 2
     s['name'] = name
     roots = ['clk', 'clk_n', 'clk_s', 'clk_e', 'clk_w']
     s['clock'] = 'hybrid_entries'
@@ -80,29 +91,29 @@ def kit(variant):
     s['clock_cts_roots'] = roots
     if variant == 'A':
         at = [[47.52, 29.232], [47.52, 99.744], [47.52, 170.256]]
-    elif variant == 'B':  # 20.136 um channels (pitch 90.624 = 1888 x .048), margins 30.672 / 30.792
-        at = [[47.52, 30.672], [47.52, 121.296], [47.52, 211.92]]
+    elif variant in 'BEFG':  # 20.136 um channels (pitch 90.624 = 1888 x .048), margins 30.672 / 30.792
+        at = [[47.52 + DX, 30.672], [47.52 + DX, 121.296], [47.52 + DX, 211.92]]
     else:  # D: u_a/u_b down 4.32, u_c up 4.32 (90 x .048): channel b/c 28.776 where B/C overflowed, a/b 20.136
         at = [[47.52, 26.352], [47.52, 116.976], [47.52, 216.24]]
     s['macros'] = [{'view': 'physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2', 'count': 1,
                     'inst': f'*bank.u_{m}', 'at': a, 'at_exact': True,
                     'clock_entry': {'port': c, 'pin': 'clk', 'reference': 'raw_liberty_clock_pin'}}
                    for m, c, a in zip('abc', MC, at)]
-    s['outline'] = {'w': 270.0, 'h': H, 'exact': True}
+    s['outline'] = {'w': WD, 'h': H, 'exact': True}
     for i, c in enumerate(MC):
         s['clock_entry_domains'][f'macro{i}'] = {'ratio': [1, 1], 'ports': [c], 'inputs': [], 'outputs': []}
     # pins: SRAM clk pin is on the macro W edge at y + 0.780 (LEF RECT 0 .768 .024 .792) -> W face, same y, M4 track
-    clocks = {'clk': ('N', 134.988), 'clk_n': ('N', 137.964), 'clk_s': ('S', 134.988),
+    clocks = {'clk': ('N', round(134.988 + DX, 3)), 'clk_n': ('N', round(137.964 + DX, 3)), 'clk_s': ('S', round(134.988 + DX, 3)),
               'clk_e': ('E', 134.988), 'clk_w': ('W', 134.988)}
     for c, a in zip(MC, at):
         y = round(a[1] + 0.78, 3); k = round((y - .012) / .048); assert abs(.012 + .048 * k - y) < 1e-6
         clocks[c] = ('W', y)
-    if variant in 'BD':  # face clocks stay at the face centre of the grown W/E faces
+    if variant in 'BDEFG':  # face clocks stay at the face centre of the grown W/E faces
         clocks['clk_e'] = ('E', 156.588); clocks['clk_w'] = ('W', 156.588)
     s['pins']['W'] = [p for p in s['pins']['W'] if p not in MC] + MC
     widths = port_widths(s, ROOT); pins = {}; metrics = []
     for face, ps in s['pins'].items():
-        L = 270.0 if face in 'NS' else H
+        L = WD if face in 'NS' else H
         data = []
         for p in ps:
             if p in clocks: continue
@@ -122,7 +133,7 @@ def kit(variant):
     for p, v in pins.items():
         b = p.split('[')[0]; lo, hi = rng.get(b, (1e9, -1e9)); rng[b] = (min(lo, v['position_um']), max(hi, v['position_um']))
     s['pin_ranges'] = {b: [round(lo - .048, 3), round(hi + .048, 3)] for b, (lo, hi) in rng.items()}
-    tag = {'A': '', 'B': '_g313', 'D': '_g313d'}[variant]
+    tag = {'A': '', 'B': '_g313', 'D': '_g313d', 'E': '_g313e', 'F': '_g313f', 'G': '_g313g'}[variant]
     pf = ROOT / f'physical/ref_tile_specs/smh/vm_{q}_faces{tag}_pins.tcl'
     lines = [f'# H-SM faces-mclk 1016 variant {variant}: actual-layer phase .012; 5 CTS roots + 3 direct SRAM clock entries (W face at each SRAM clk pin y).',
              'source /src/physical/common_flow/assigned_pin_exact.tcl', 'set vm_expected {']
@@ -139,6 +150,12 @@ def kit(variant):
                  '# abutted SRAM stack (pitch = height + .024 on the M4 lattice): block the .024 um slivers (textbook util_channel)\n'
                  'set ot_sliver_um 20.0\nsource /src/physical/common_flow/macro_channel_block.tcl\n'
                  'source /src/tools/fp_margin_lint.tcl\n', iop)
+    if variant in 'FG':
+        t = sub1(t, 'set ot_sliver_um 20.0\n',
+                 '# variant F: the two 20.136 um SRAM channels become ROUTING-ONLY (q2E GRT-0116 overflow sat on cells placed in the\n'
+                 '# u_b/u_c channel and its mouths beside the u_c W/E pin columns): hard placement blockage over each channel,\n'
+                 '# 21 um into each side strip; routing untouched.\n'
+                 'set ot_sliver_um 21.0\n', iop)
     iop.write_text(t)
     s['orfs_vars']['POST_IO_PLACEMENT_TCL'] = str(iop.relative_to(ROOT))
     ep = s['job'].setdefault('extra_paths', [])
@@ -156,12 +173,21 @@ def kit(variant):
         {'name': 'mutant_drop_clk_macro1', 'cmd': f'OT_CASES=positive OT_POS_DROP=6 bash {run} {{RUN}}/bench/{q}_mut_m1',
          'expect': 'fail', 'threads': 1, 'peak_ram_gb': 4, 'fail_regex': f'{Q}_FACE_CLOCKS BENCH FAIL'},
     ]
-    if variant == 'D':  # C recipe: balanced CTS sink clustering
+    if variant in 'DEFG':  # C recipe: balanced CTS sink clustering
+        if variant == 'G':
+            s['route']['macro_halo_um'] = 10.8
         s['route']['cts_sink'] = {'size': 16, 'diameter_um': 30, 'extra': '-balance_levels'}
     s['structural_change'] = (s.get('structural_change', '') + f' | faces-mclk {variant}: the 3 SRAM clock pins move off core clk onto '
                               'direct entries clk_macro0..2 (W face at each SRAM clk pin; hybrid_entries; CTS roots clk/clk_n/clk_s/clk_e/clk_w '
                               'reach standard cells only). ' + ('Abutted stack .024 um slivers hard-blocked (macro_channel_block).' if variant == 'A'
                               else 'Outline 270x313.2 (+16%): 20.136 um macro channels.' if variant == 'B' else
+                              'q0C geometry + C CTS on 291.6 x 313.2: side strips 47.5 -> 58.3 um (q2 GRT overflow at the channel mouths; '
+                              'q2 carries the third write port wq2 281 b + kq on N that q0 lacks).' if variant == 'E' else
+                              'q2E geometry/pins/C CTS unchanged (291.6 x 313.2, H-DIE accepted); both 20.136 um SRAM channels are '
+                              'routing-only (hard placement blockage, 21 um into each mouth): q2E GRT-0116 overflow 189 sat on cells '
+                              'placed in the u_b/u_c channel and its mouths next to the u_c W/E SRAM pin columns.' if variant == 'F' else
+                              'q2F (q2E outline/pins/C CTS, both SRAM channels routing-only) + macro halo 5.4 -> 10.8 um: cell-free '
+                              'pin-escape lane beside each SRAM W/E pin column (414 M4 pins/edge in 40 um; q2F gate hot bin at u_c E pins).' if variant == 'G' else
                               'Outline 270x313.2: u_b/u_c channel 28.776 um (B/C GRT-0116 overflow 131, all in that channel, E/W mouths), '
                               'u_a/u_b 20.136, N/S margins 24.2/24.3; balanced CTS sink clustering 16/30 um/-balance_levels.'))
     k = ROOT / f'physical/ref_tile/{name}'; k.mkdir(exist_ok=True)

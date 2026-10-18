@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_hc_ret_column_c0",
+ "enable": false,
+ "reason": "Real RTL registers the boundary at its own stage (chain rd/rv -> rdq/rvq, y beat / cs relays, ybuf / psb captures, rdm / header / request / flag registers); a generic pin register would add a cycle to the fixed return calendar. hrq feeds the same-cycle merge (bank round trip) by design."
+}

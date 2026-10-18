@@ -1,0 +1,188 @@
+{
+ "name": "hdie_pc_ctrl_cfg_h9",
+ "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+  "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "k_v",
+   "k_rdy",
+   "k_we",
+   "k_addr",
+   "k_len",
+   "k_tag",
+   "k_wdata",
+   "k_wstrb",
+   "kr_v",
+   "kr_rdy",
+   "kr_tag",
+   "kr_beat",
+   "kr_data",
+   "k_wr_done"
+  ],
+  "S": [
+   "row_v",
+   "row_op",
+   "row_bank",
+   "row_row",
+   "col_v",
+   "col_we",
+   "col_bank",
+   "col_col",
+   "col_data",
+   "col_strb",
+   "dram_rvalid",
+   "dram_rdata"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "owner_fault_split"
+  ],
+  "E": [
+   "pc_fault",
+   "pc_id",
+   "refresh_reload"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    56.16,
+    30.24
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    56.16,
+    92.88
+   ],
+   "at_exact": true
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:H-PC-CFG",
+  "branch": "codex/hbm-pc-h9",
+  "tag": "h9-predecode-local-select",
+  "purpose": "After H6/H7/H8 ready-to-skid failures, precompute legal bit at K capture and carry it with request; independent per64-bit valid/select state, predecoded parallel queue-head onehots + registered next pointer; regional synchronous reset consumers. Zero calendar edges added. Native capture must qualify before route.",
+  "extra_paths": [
+   "physical/hbm_die_pins/pc_cfg_h9",
+   "results/arch/hbm_pc_cfg_h8_1623/source",
+   "tools/hbm_die_v16/bench_pc_cfg_h8.sh",
+   "tools/hbm_die_v16/bench_pc_cfg_all_h9.py",
+   "tools/hbm_die_v16/bench_pc_cfg_all_h9.sh",
+   "tools/hbm_die_v16/bench_pc_cfg_h9.sh",
+   "tools/hbm_die_v16/bench_pc_cfg_h9_full.sh"
+  ],
+  "record_to": "results/rtl/ref_tile/hdie_pc_ctrl_cfg_h9",
+  "benches": [
+   {
+    "name": "h9_all32",
+    "cmd": "bash tools/hbm_die_v16/bench_pc_cfg_all_h9.sh {RUN}/bench/all32",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PC_CFG_MUTANT_REJECTED mut=2"
+   },
+   {
+    "name": "h9_safety",
+    "cmd": "bash tools/hbm_die_v16/bench_pc_cfg_h9.sh {RUN}/bench/safety",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PC_H8_PENDING_ID_MUTANT_REJECTED"
+   },
+   {
+    "name": "h9_full32",
+    "cmd": "bash tools/hbm_die_v16/bench_pc_cfg_h9_full.sh {RUN}/bench/full",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PC_H8_FULL_GUARD_MUTANT_REJECTED"
+   }
+  ]
+ },
+ "params": {
+  "OREG": 1,
+  "KREG": 1,
+  "KRREG": 1,
+  "RREG": 1,
+  "WPAY": 1,
+  "QREG": 1
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers its boundary itself (OREG: every PHY command output from a flop; KREG: K request in a 2-entry pin skid, k_rdy from a register; KRREG: K response from a 2-entry skid; RREG: PHY return valid+data captured at the pin; pc_id/refresh_reload straps captured in pc_id_q/refresh_reload_q). Flow pin registers would add a cycle inside the elastic K ready/valid handshake (HBM-stack boundary, owner 10-14) and overflow the skids."
+ },
+ "io_tcl": "physical/hbm_die_pins/pc_cfg_h9/pins.tcl",
+ "structural_change": "After H6/H7/H8 ready-to-skid failures, precompute legal bit at K capture and carry it with request; independent per64-bit valid/select state, predecoded parallel queue-head onehots + registered next pointer; regional synchronous reset consumers. Zero calendar edges added. Native capture must qualify before route.",
+ "clock": "spine",
+ "spine_macro_leaf": true,
+ "std_area_um2": 6327,
+ "outline": {
+  "w": 185.76,
+  "h": 164.16
+ },
+ "orfs_vars": {
+  "OT_MEG_DEPTH_UM": 48
+ },
+ "slot_change_request": "APPROVED isolated H7 measurement grant aeabab04f,185.76x164.16 exact1229signalpins; no d4/default/all128-home adoption",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "After H6/H7/H8 ready-to-skid failures, precompute legal bit at K capture and carry it with request; independent per64-bit valid/select state, predecoded parallel queue-head onehots + registered next pointer; regional synchronous reset consumers. Zero calendar edges added. Native capture must qualify before route."
+ },
+ "provisional_measurement_grant": {
+  "grant_commit": "aeabab04f",
+  "path": "results/arch/hbm_die_v16/h7_fault_split_provisional_0920.json",
+  "source_request": "cf302625a",
+  "scope": "isolated actual additive H7 leaf only"
+ }
+}

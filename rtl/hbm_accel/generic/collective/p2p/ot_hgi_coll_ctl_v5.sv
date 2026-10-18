@@ -304,8 +304,13 @@ module ot_hgi_coll_q_static_ctl_v5 #(
    if(SOLO==0 && (p_tkm_start || (|p_tkm_del_slot)))protocol_fault<=1;
    if(SOLO==0 && (|dest_q[NPT+8+:4]))protocol_fault<=1;
    if(|p_ring[87:84])protocol_fault<=1;
-   if(NPT==2 && (p_capture_slot[9] || p_sink_slot[15] || |p_sink_select[63:60] ||
-      p_lk_wr_v[2] || p_lk_rd_v[2] || p_lk_rx_expect[2] || p_lk_epoch_begin[2]))protocol_fault<=1;
+   // NLINK (d4f): instruction fields of absent link lanes / slots must be zero (NPT=2: p_capture_slot[9],
+   // p_sink_slot[15], p_sink_select[63:60], lane 2 -- the original check; NPT=3: none; NPT=1: from slot 8 / sink 14).
+   for(integer ui=0;ui<10;ui=ui+1)if(ui>=NPT+7 && p_capture_slot[ui])protocol_fault<=1;
+   for(integer ui=0;ui<16;ui=ui+1)if(ui>=NPT+13 && p_sink_slot[ui])protocol_fault<=1;
+   for(integer ui=0;ui<64;ui=ui+1)if(ui>=(NPT+13)*4 && p_sink_select[ui])protocol_fault<=1;
+   for(integer ui=0;ui<3;ui=ui+1)
+    if(ui>=NPT && (p_lk_wr_v[ui] || p_lk_rd_v[ui] || p_lk_rx_expect[ui] || p_lk_epoch_begin[ui]))protocol_fault<=1;
 
   end
  end

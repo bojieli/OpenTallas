@@ -1,0 +1,35 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+PORTPIN_COMMANDS ::sta::get_port_pin_arg ::sta::get_port_pin_error ::sta::report_net_pin ::sta::report_net_pins ::sta::parse_port_pin_net_arg ::sta::report_pin_constant ::sta::get_port_pin ::sta::get_ports_or_pins ::sta::make_port_pin_cmd ::sta::parse_inst_port_pin_arg ::sta::report_instance_pins1 ::sta::report_instance_pins ::sta::get_port_pins_error ::sta::parse_clk_port_pin_arg ::sta::get_port_pin_warn ::sta::report_instance_pin ::sta::parse_clk_cell_port_pin_args ::sta::report_net_other_pins ::sta::set_port_ext_pin_cap ::sta::parse_inst_port_pin_net_arg ::sta::parse_libcell_libport_inst_port_pin_edge_timing_arc_set_arg ::sta::parse_cell_port_pin_args ::sta::report_pin_ ::sta::parse_clk_inst_port_pin_arg ::sta::find_port_pins_matching ::sta::port_ext_pin_cap
+PORTPIN_TRIAL sta::get_port_pin clk_out ERROR TypeError in method 'get_port_pin', argument 1 of type 'Port const *'
+PORTPIN_TRIAL sta::get_port_pin [get_ports clk_out] RESULT _c2627dc7a15d0000_p_Pin
+PORTPIN_NAME clk_out
+PORTPIN_METRIC arrival_max_rise 12.662741
+PORTPIN_METRIC arrival_min_rise 12.418676
+PORTPIN_METRIC arrival_max_fall 398.863403
+PORTPIN_METRIC arrival_min_fall 398.603485
+PORTPIN_METRIC slew_max_rise 5.556140
+PORTPIN_METRIC slew_max_fall 5.499942
+PORTPIN_TRIAL sta::get_port_pin_error clk_out ERROR wrong # args: should be "sta::get_port_pin_error arg_name arg"
+PORTPIN_TRIAL sta::get_port_pin_error [get_ports clk_out] ERROR wrong # args: should be "sta::get_port_pin_error arg_name arg"
+ot-run: ot-epyc4       admits    18 GB (avail 328, growth 262, headroom 48, waiters 30/1948 GB) load 60/128 running 39 disk 1704 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/routes/hbfd_rly_48_we_fc_fc2_f87700624/work/orfs
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/routes/hbfd_rly_48_we_fc_fc2_f87700624/work/orfs
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-323029-1792206950 after 0 s
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-323029-1792206950): exit 0

@@ -73,6 +73,7 @@ module ot_v41_bf_col_roots #(
     parameter integer HDLY = 0,       // bf-hier-1011: HB4 hold-delay cells per input bit ahead of the boundary registers
     parameter integer MB = 0          // which column (simulation ROM image name only)
 ) (
+    input wire [1:0] rom_clk, // explicit raw Liberty macro clock entries
     input wire [8:0] leaf_clk, // fp0, fp1, segment, four lane groups, two reduction roots
     input  wire          clk,
     input  wire          rst_n_pin,
@@ -119,12 +120,17 @@ module ot_v41_bf_col_roots #(
             for (i = 0; i < 32; i = i + 1) nib[8*i +: 4] = c[4*i +: 4];
         end
     endfunction
-`ifndef SYNTHESIS
-    initial if (!(NSEG==8 && NCH==16 && NCHB==8 && MTP==1 && BP==0 &&
+
+    if (!(NSEG==8 && NCH==16 && NCHB==8 && MTP==1 && BP==0 &&
         FAST==1 && PP==1 && QPIPE==1 && QP_CAP==0 && QP_P1==1 && QP_CSAM==10 &&
-        QZ_NS==8 && QX==10 && QBF==2 && TCG==1))
-        $fatal(1, "ten-root extraction supports the source-pinned production column only");
+        QZ_NS==8 && QX==10 && QBF==2 && TCG==1 && BXST==2 && FXST==2)) begin:g_unsupported_profile
+        // Unresolved on purpose: hierarchy -check refuses unsupported profiles
+        // in synthesis too. Valid parameter derivations remove this branch.
+        OT_S81_BF_COLUMN_REQUIRES_PRODUCTION_PROFILE invalid();
+`ifndef SYNTHESIS
+        initial $fatal(1, "ten-root extraction supports the source-pinned production column only");
 `endif
+    end
     wire q_v,q_err;wire[31:0]q_val;wire[TG:0]q_tag_native;
     wire[TG+2:0]pr_t={q_tag_native,2'b00};
     wire bk_fault;
@@ -295,12 +301,12 @@ module ot_v41_bf_col_roots #(
 `ifndef SYNTHESIS
             #(.INSTANCE(MB == 0 ? $sformatf("%s_0", INSTANCE) : $sformatf("%sb_0", INSTANCE)))
 `endif
-            u_rom0 (.clk(gclk_c), .ce_in(b_issue && !b_a_ctr[0]), .addr_in(b_a_ctr[12:1]), .rd_out(rd0));
+            u_rom0 (.clk(rom_clk[0]), .ce_in(b_issue && !b_a_ctr[0]), .addr_in(b_a_ctr[12:1]), .rd_out(rd0));
         ot_rom_4096x274_m8
 `ifndef SYNTHESIS
             #(.INSTANCE(MB == 0 ? $sformatf("%s_1", INSTANCE) : $sformatf("%sb_1", INSTANCE)))
 `endif
-            u_rom1 (.clk(gclk_c), .ce_in(b_issue && b_a_ctr[0]), .addr_in(b_a_ctr[12:1]), .rd_out(rd1));
+            u_rom1 (.clk(rom_clk[1]), .ce_in(b_issue && b_a_ctr[0]), .addr_in(b_a_ctr[12:1]), .rd_out(rd1));
         if (QZ != 0) begin : g_cz
             genvar ck;
             for (ck = 0; ck < QZ_NE; ck = ck + 1) begin : g_e

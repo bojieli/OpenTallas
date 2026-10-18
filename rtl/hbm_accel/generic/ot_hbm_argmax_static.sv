@@ -20,6 +20,8 @@
 // Timeline (mode 1): L = (edge the stream pin samples the last beat) + 2; go must be sampled before the first beat.
 // MUT (bench): 1 id not corrected for the A word offset; 2 capture one edge early; 3 second O word not written.
 module ot_hbm_argmax_static #(
+    parameter integer TP = 96,
+    parameter integer RANK_W = (TP<=1?1:$clog2(TP)),
     parameter integer MUT = 0,
     parameter integer ACK = 12,
     parameter integer ELAT = 14      // measured: closed engine samples the last beat at L, out_v sampled at L+14
@@ -98,8 +100,8 @@ module ot_hbm_argmax_static #(
         end
     end
     wire o_v, o_nan, o_f, o_rf; wire [17:0] o_idx; wire [31:0] o_val;
-    ot_hgi_argmax18_m #(.LP(8), .GENERIC18(1)) u_e (.clk(clk), .rst_n(rst_n), .in_v(e_v), .in_last(e_last),
-        .in_bias_en(e_be), .in_mask(e_m), .in_vals(e_vals), .in_bias(e_bias), .cfg_rank(die_id[6:0]), .cfg_imm_a(imm_q),
+    ot_hgi_argmax18_m #(.LP(8), .GENERIC18(1), .RANK_W(RANK_W)) u_e (.clk(clk), .rst_n(rst_n), .in_v(e_v), .in_last(e_last),
+        .in_bias_en(e_be), .in_mask(e_m), .in_vals(e_vals), .in_bias(e_bias), .cfg_rank(RANK_W'(die_id)), .cfg_imm_a(imm_q),
         .out_v(o_v), .out_idx(o_idx), .out_nan(o_nan), .fault(o_f), .out_range_fault(o_rf), .out_value(o_val));
     // ---------------------------------------------------------------- result and writes
     reg [31:0] res_val, res_id; reg res_bad;

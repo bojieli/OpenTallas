@@ -1,0 +1,17 @@
+{
+ "source": "800894cbff33faa7b255eb724b9ad82ce002d0bc",
+ "gate_archive_sha256": "1a7a4f051bdf57e520b0e7a464c5cfdffa4bc4ecb58f90d241ae4d1dddd3ce22",
+ "native_lib_sha256": "3931b90626c538571fcbdbe0f3664e616a4ce7fc60413df1708f5ff2ec5385e1",
+ "native_lib_path": "/home/ubuntu/artifacts/s81-elements-2004/cfifo_r5d/dsfd_cfifo_crs_tt.lib",
+ "measured_gate": {
+  "TT_setup_ps": 35.1,
+  "TT_hold_ps": 36.1
+ },
+ "rst_recovery_ps": 378.72,
+ "rst_removal_ps": 61.762,
+ "scope": "CTS placement diagnostic only. Native CTS PASS; routed TT/FF/DRC/native still pending.",
+ "images_viewed": [
+  "floorplan.png",
+  "density.png"
+ ]
+}

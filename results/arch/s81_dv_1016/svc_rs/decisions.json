@@ -1,0 +1,43 @@
+{
+ "lane": "S81U-SVC",
+ "date": "2026-10-17",
+ "unit": "dsdv_svc_rs x16 (S81-DV p4h regional service slice, 1,222 x 1,338 um, 2 x 8 grid above dsfd_ctrl_rg2)",
+ "open_items": {
+  "1_width": {
+   "verdict": "2 pseudo-channels per slice (NOT 2 channels = 4 PCs); per-PC widths stand",
+   "evidence": "origin/claude/s81dv-1016 results/arch/s81_dv_1016/SPEC.md p4g (3): dsfd_ctrl_rg2 = two dsfd_ctrl_pc tiles (2 pseudo-channels), svc<->ctrl rq 682 b = 2 x 341, rd 562 b = 2 x 281; dsfd_ctrl_rg2 has no RTL yet (plan element). dsfd_svc_c has 32 PC ports = 16 x 2.",
+   "slice_hbm_face": "rq 2 x 341 out; rk/wd/rv 2 x 3 in; r_data/r_tag/r_beat 2 x 277 in; hs 2 in -> 2 x dsfd_svc_pc (closed) unchanged"
+  },
+  "3_reduction_order": {
+   "verdict": "The golden q.k reduction is the BALANCED binary tree over the 16 TD = 32 head-dim tiles in dim order; a linear W->E running chain sum is NOT bit-exact (FP32 adds do not associate). The slices carry the tree itself.",
+   "evidence": [
+    "ot_s81_svch_attq: quadrant g = dims 128g..128g+127, D = 128 engine, TD 32 -> S = 4 tiles a lane, lane tree heap (node0 = n1 + n2, n1 = t0 + t1, n2 = t2 + t3), equal to the D = 512 tree's level-2 node 3 + g",
+    "dsfd_svc_quad g_root (non-mutant): u_c23 = Q2 + Q3, u_root = (Q0 + Q1) + (Q2 + Q3); SVCH_MUT_ORDER ((Q0+Q1)+Q2)+Q3 is its FAIL mutant",
+    "ot_hdc_v41x_attn_s g_node: node i = node 2i+1 + node 2i+2 with ot_hdc_v41x_qaddf (LAT FX, F12), flags delay(fa|fb) | adder fault",
+    "P.V needs NO cross-slice reduction: p.v tile t is a per-dim sum over rows inside one tile (block merge), so a slice's P.V for its 32 dims is final; only the 4 slices of the stack's output quarter (tiles 4 ST .. 4 ST + 3) emit P.V (svc_c: only quadrant ST emits p.v)."
+   ],
+   "embedding": "tools/s81_dv/svc_rs/svc_rs_embed.py -> embed.json: tile t at a fixed slice (data layout: its 2 PCs hold dims 32t..32t+31 of every KV row, compiler-visible), <= 1 node per slice (one 64-adder bank, 15 nodes on 16 slices, spare slice 0), every directed slice-slice link carries <= 1 score lane, 25 link hops, root = slice 9 (column 4, upper row = the centre fold). W half columns 0-3 reduce tiles 8-15, E half columns 4-7 tiles 0-7, fold at the centre.",
+   "scatter": "the complete scores go back down the same tree (node of n heads sends n/2 to each child); the leaf of tile t taps head t = the slice's SM head (S81U-2: one head per slice). No cross-slice softmax tree."
+  },
+  "4_latency": {
+   "hop_cycles": 5,
+   "hop_detail": "out: centre register + 1 relay + out pin flop; in: in pin flop + 1 relay (NR = 1; slice pitch ~1.33 mm -> <= ~270 um a stage, under the 405-um plan reach)",
+   "t_root_cycles": 51,
+   "t_root_detail": "first leaf injection -> complete score beat at the root centre; leaf start offsets 0..15 cycles (compiler sx_role_off) align both operands of every node in the same cycle",
+   "vs_svc_c": "svc_c tile-out -> root ~41 cycles (D=128 lane tree 2 x FX + 2 seams of NRS = 5 relays + credit FIFOs + 2 comb levels); slices: 2 (D = 32 engine, LS = 0) + 51 = 53 -> +12 cycles of pipeline fill per attention job, throughput unchanged (1 beat / cycle on every lane). At ~61 attention jobs per token that is ~730 cycles / token (~0.25% at MTP 4,112) before crediting the shorter score -> SM path (the scatter replaces svc_c's a0 / od die-level trip to the SU/SM). To be charged in dv_price by S81-DV."
+  },
+  "host_job_ports_for_p4i": "j 33 in, jd 2 out, hw 292 in, hc 9 out per svc (dsfd_svc_c contract). Per slice: j / hw arrive on the slice's q / host neighbour stream (p4i), hc / jd return reduced along the same tree as fault. Recorded as REAL slice ports in lanes/S81U-SVC.md; not yet in RTL (the slice top is not built)."
+ },
+ "built": {
+  "dsdv_svc_sx": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv + generated role ROM dsdv_svc_sx_roles.svh: score gather tree node + pass-through + scatter + SM-head tap, one master, sid strap, fixed latency, sticky faults on misalignment / tag mismatch / stray valid",
+  "bench": "rtl/dsrom_sys/s81_dv/svc_rs/test/tb_dsdv_svc_sx.sv + tools/s81_dv/svc_rs/sx_bench.sh: 16 slices abutted on the 2 x 8 grid vs the golden engine lane tree (S = 16, same qaddf), 600 beats a seed"
+ },
+ "not_built": [
+  "dsdv_svc_att: per-slice D = 32 engine share (ot_s81_svch_attq generalised from quarter QID to 32-dim tile T; the engine already supports S = 1, LS = 0, DPT 8)",
+  "per-slice request/landing: the window / selected-row requests (46-b B words) broadcast along the slice chain, each slice reading its own 2 PCs (dim-sliced KV layout: no window-beat redistribution, 4228-b wb lanes disappear); landing buffer checked ready per block (HBM boundary elastic, on-chip fixed slots)",
+  "the window source / G router / owned-row fetch / idx reader (home + dsfd_svc_idx) re-homed: one per side riding the chain or in the root slice",
+  "P gather (16 heads' P words assembled in flight into the P.V-owning slices) and the SM share integration (ot_s81_su_smq + dsfd_su_t_smh or the S81U-SUSM wrapper): the tap gives 4 rows x 1 head a beat; an SE row (16 scores) needs a 4-beat row assembler",
+  "dsdv_svc_rs top"
+ ],
+ "physical_note": "sx face lanes are wide: a face carrying a gather lane both ways has 2 x 2,133 + 2 x 1,077 = 6,420 pins (5.3/um on 1,222 um) before the slice's other faces' signals; the sx must be split into a centre leaf (crossbar + 64 adders) and face relay stations that are slice glue, and the scatter lane should narrow (n/2 heads per level) before kitting."
+}

@@ -1,0 +1,40 @@
+#!/bin/bash
+# ot-heavy docker shim (ROOT 2026-10-16, coordinator: ENFORCE the declared memory on docker).
+# A container started under an ot-heavy unit runs in dockerd's cgroup, NOT the unit's systemd scope, so the scope's
+# MemoryMax never bound it: S-DIE fwd_die3 GRT declared 12 GB and peaked 80-91 GB on AGIdock, and earlyoom SIGTERMed
+# four closure routes (21:56-21:59).  ot-heavy exports OT_HEAVY_MEM_GB and puts this directory first on PATH:
+# `docker run` / `docker container run` / `docker create` get --memory=<declared>g --memory-swap=<same> (no swap);
+# an explicit larger --memory/-m is lowered to the declaration, a smaller one is kept.  Everything else passes through.
+REAL=/usr/bin/docker
+MEM=${OT_HEAVY_MEM_GB:-}
+case "$MEM" in ''|*[!0-9.]*) exec "$REAL" "$@";; esac
+sub=; i=0; args=("$@")
+for a in "$@"; do
+  case "$a" in run|create) sub=$i; break;; container) ;; -*) ;; *) break;; esac
+  i=$((i+1))
+done
+[ -z "$sub" ] && exec "$REAL" "$@"
+pre=("${args[@]:0:$((sub+1))}"); rest=("${args[@]:$((sub+1))}")
+out=(); have=; lim=
+to_gb() { local v=${1,,}; case "$v" in *g|*gb) echo "${v%%g*}";; *m|*mb) awk "BEGIN{print ${v%%m*}/1024}";; *k|*kb) awk "BEGIN{print ${v%%k*}/1048576}";; *b) awk "BEGIN{print ${v%b}/1073741824}";; *) awk "BEGIN{print $v/1073741824}";; esac; }
+cap() { local g; g=$(to_gb "$1"); awk "BEGIN{exit !($g > $MEM)}" && echo "${MEM}g" || echo "$1"; }
+j=0; n=${#rest[@]}
+while [ $j -lt $n ]; do
+  a=${rest[$j]}
+  case "$a" in
+    --memory=*) have=1; lim=$(cap "${a#--memory=}"); out+=("--memory=$lim");;
+    --memory|-m) have=1; j=$((j+1)); lim=$(cap "${rest[$j]}"); out+=("$a" "$lim");;
+    --memory-swap=*|--memory-swap) [ "$a" = --memory-swap ] && j=$((j+1));;   # replaced below: no swap above the cap
+    -v|-e|-w|-u|-p|-l|-h|--name|--network|--net|--entrypoint|--env|--env-file|--mount|--volume|--workdir|--user|--cpus|\
+    --shm-size|--ulimit|--label|--hostname|--ipc|--pid|--gpus|--device|--add-host|--cap-add|--cap-drop|--security-opt|\
+    --tmpfs|--cidfile|--platform|--runtime|--log-driver|--log-opt|--restart|--volumes-from|--cpuset-cpus|--stop-signal|\
+    --group-add|--dns|--publish|--expose|--userns|--uts|--cgroupns|--pull|--oom-score-adj|--cpu-shares|--sysctl)
+        out+=("$a" "${rest[$((j+1))]}"); j=$((j+1));;
+    -*) out+=("$a");;
+    *) out+=("${rest[@]:$j}"); break;;
+  esac
+  j=$((j+1))
+done
+[ -z "$have" ] && lim="${MEM}g"
+[ -z "$have" ] && out=("--memory=$lim" "${out[@]}")
+exec "$REAL" "${pre[@]}" "--memory-swap=$lim" "${out[@]}"

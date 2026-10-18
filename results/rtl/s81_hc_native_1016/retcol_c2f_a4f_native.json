@@ -1,0 +1,28 @@
+{
+ "cell": "ot_s81_hc_ret_column_c2",
+ "view": "physical/ref_tile/s81hc_retcol_c2f_ref/views/ot_s81_hc_ret_column_c2",
+ "lib_cell": "ot_s81_hc_ret_column_c2",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 175.6,
+ "spread_ps": 33.2,
+ "outputs": 775,
+ "inputs": 2254,
+ "launch_ps": 194.7,
+ "launch_pin": "hdr[39]",
+ "capture_ps": 191.7,
+ "capture_pin": "pflt_s",
+ "launch_over": 0,
+ "capture_over": 1,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 191.71161 > 190 (1 pins)",
+ "job": "s81hc_retcol_c2f_ref-a4f-943f43ffa",
+ "commit": "3bf8b11985f17a5babb8b2fea12d42d7f896f1c8",
+ "verdict": "NATIVE FAIL capture class: pflt_s 191.7 > 190 (1 pin); route CLOSED TT +154.90 / FF +5.63 / DRC 0",
+ "cause": "per-face fault flop ff_s ORs nflt_col[3:2] (S pins x 36.3) and pflt_s (S pin x 142.8): one flop cannot sit at both pins",
+ "fix": "a4g: pflt_n/pflt_s pins beside the nflt_col pins (hc_cthntc_plan OT_CTHNTC_PFLT_COLS), 0 cycles, ctpl_flag join max 310 um"
+}

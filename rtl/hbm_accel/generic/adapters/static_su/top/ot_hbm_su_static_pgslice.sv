@@ -46,7 +46,14 @@ module ot_hbm_su_static_pgslice #(
  //   Checks (FAULT): inject and drain on one group in one edge; two sectors on one group with different rows.
  //   MUT (bench): 8 inject slot map off by one phase; 9 B39 no-op ignored; 10 delivery word order reversed.
  parameter integer COLLPORT=0,
- parameter integer B39_NOOP=(QID==0)
+ parameter integer B39_NOOP=(QID==0),
+ // RF_LOCAL (H-SU 2026-10-16, d4c 2 mm locality rule; default 0 = unchanged): the quarter core's RF broadcast
+ //   (rf_bword 128 + rf_bcmd 36 + rf_dsec 256) is registered ONCE more here, beside this bank group (clk_ctl), so the
+ //   die route core -> slice ends in a local fixed-latency copy and every slice sees the same age. The compiler issues
+ //   RF classes 0..3 and 5 one edge earlier (su_top_compile --rf-local 1): class p at n-2 for a lane request at n
+ //   (core register held n+1..n+2, local copy held n+2..n+3, consumed n+3 as before); class 5 at E-2 for the drain at E
+ //   (local rf_dsec held E+3). Lane / drain / reducer edges and the op calendar are unchanged; no stall, no dynamic path.
+ parameter integer RF_LOCAL=0
 )(
  input wire pg_clk,
  input wire [255:0] clk_lane, input wire [127:0] clk_insert, input wire [31:0] rst_lane_n,
@@ -272,13 +279,29 @@ module ot_hbm_su_static_pgslice #(
    .write_data(fw?fr_dat[H][K*32+:32]:dwn?dwd:ldat));
  end
  // ------------------------------------------------------------------ RF broadcast into lane operands
+ wire [4*32-1:0] rf_bword_u; wire [4*9-1:0] rf_bcmd_u; wire [255:0] rf_dsec_u;   // as used (local copy or pins)
+ if(RF_LOCAL)begin:g_rf_local
+  // local copy beside the bank group: data words without reset; command valids reset (fault checks stay clean)
+  reg [4*32-1:0] rf_bword_l; reg [255:0] rf_dsec_l; reg [4*8-1:0] rf_badr_l; reg [3:0] rf_bv_l; integer vb;
+  always @(posedge clk_ctl)begin
+   rf_bword_l<=rf_bword; rf_dsec_l<=rf_dsec;
+   for(vb=0;vb<4;vb=vb+1)rf_badr_l[vb*8+:8]<=rf_bcmd[vb*9+:8];
+  end
+  always @(posedge clk_ctl or negedge rst_n)
+   if(!rst_n)rf_bv_l<=4'd0;
+   else for(vb=0;vb<4;vb=vb+1)rf_bv_l[vb]<=rf_bcmd[vb*9+8];
+  wire [4*9-1:0] rf_bcmd_l={rf_bv_l[3],rf_badr_l[24+:8],rf_bv_l[2],rf_badr_l[16+:8],rf_bv_l[1],rf_badr_l[8+:8],rf_bv_l[0],rf_badr_l[0+:8]};
+  assign rf_bword_u=rf_bword_l; assign rf_bcmd_u=rf_bcmd_l; assign rf_dsec_u=rf_dsec_l;
+ end else begin:g_rf_direct
+  assign rf_bword_u=rf_bword; assign rf_bcmd_u=rf_bcmd; assign rf_dsec_u=rf_dsec;
+ end
  reg [31:0] rf_src_bad;
  for(genvar n=0;n<32;n=n+1)begin:g_opmux
   wire [3:0] is_rf;
   reg [3:0] src1_a,src1_b,src1_c;      // the stream's source code 1 rides the read: request n -> select held n+2..n+3
   for(genvar p=0;p<4;p=p+1)begin:g_p
    assign is_rf[p]=rd_re[n*4+p]&&rd_src[n*8+2*p+:2]==2'd1;
-   assign rd_q[(n*4+p)*32+:32]=((MUT==4)?src1_b[p]:src1_c[p])?rf_bword[p*32+:32]:bank_q[n*192+p*32+:32];
+   assign rd_q[(n*4+p)*32+:32]=((MUT==4)?src1_b[p]:src1_c[p])?rf_bword_u[p*32+:32]:bank_q[n*192+p*32+:32];
   end
   always @(posedge clk_lane[n*8])begin src1_a<=is_rf;src1_b<=src1_a;src1_c<=src1_b;end
   integer p2;
@@ -286,7 +309,7 @@ module ot_hbm_su_static_pgslice #(
    rf_src_bad[n]=0;
    for(p2=0;p2<4;p2=p2+1)begin
     if(rd_re[n*4+p2]&&rd_src[n*8+2*p2+1])rf_src_bad[n]=1;
-    if(is_rf[p2]&&(!rf_bcmd[p2*9+8]||rd_addr[(n*4+p2)*24+:24]!={16'd0,rf_bcmd[p2*9+:8]}))rf_src_bad[n]=1;
+    if(is_rf[p2]&&(!rf_bcmd_u[p2*9+8]||rd_addr[(n*4+p2)*24+:24]!={16'd0,rf_bcmd_u[p2*9+:8]}))rf_src_bad[n]=1;
    end
   end
  end
@@ -304,7 +327,7 @@ module ot_hbm_su_static_pgslice #(
   reg [255:0] sel; integer kk;
   always @*begin
    for(kk=0;kk<8;kk=kk+1)sel[kk*32+:32]=bank_q[(8*h+16*hi+kk)*192+5*32+:32];
-   if(dd[h][2][25])sel=rf_dsec;
+   if(dd[h][2][25])sel=rf_dsec_u;
   end
   reg wq_v; reg [279:0] wq_p;
   always @(posedge clk_ctl or negedge rst_n)

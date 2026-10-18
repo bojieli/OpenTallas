@@ -54,28 +54,19 @@
   "E": [
    "land_es",
    "land_er",
-   "ck_boot",
-   "ck_boot_test",
    "ctrl_completion_v",
    "ctrl_completion_we"
   ],
   "W": [
    "ctrl_es",
    "ctrl_er",
-   "ck_static",
-   "ck_station",
+   "ck",
    "hbm_rst_n",
    "host_rst_n",
    "lpc"
   ]
  },
- "clock_port": "ck_station",
- "clock_ports": [
-  "ck_station",
-  "ck_static",
-  "ck_boot",
-  "ck_boot_test"
- ],
+ "clock_port": "ck",
  "blocks": [],
  "findings": [],
  "referenced": [
@@ -90,6 +81,7 @@
   "physical/ref_tile/qkd_hslice/kit.env",
   "physical/ref_tile/qkd_hslice/clock.sdc",
   "physical/ref_tile/qkd_hslice/signoff.sdc",
+  "physical/ref_tile/qkd_hslice/signoff_ffrepair.sdc",
   "physical/ref_tile/qkd_hslice/pdn.tcl",
   "physical/ref_tile/qkd_hslice/pre_cts.tcl",
   "physical/ref_tile/qkd_hslice/post_cts.tcl",
@@ -111,14 +103,8 @@
   "results/arch/qwen_split_1014/kvsys_v1_4_2/pins/qkd_hslice.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
-  "physical/dsrom_window_source/leaf_iohold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/dsrom_window_source/leaf_inhold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/qkd_hslice/pre_gpl.tcl",
   "physical/ref_tile/qkd_hslice/pre_dpl.tcl",
-  "physical/common_flow/pin_reg_split.tcl",
-  "physical/common_flow/clock_entries.tcl",
-  "physical/ref_tile/qkd_hslice/clock_entry.sdc"
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }

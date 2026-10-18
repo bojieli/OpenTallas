@@ -1,0 +1,103 @@
+{
+ "schema": "opentallas.kvjb.service_root_lockstep.v1",
+ "verdict": "PASS",
+ "commit": "be205336f2193ad911f556f5425a7fc9e7de4726",
+ "dirty": false,
+ "sources": {
+  "rtl/qwen_sys/split_20261014/qkd_attn_service_root.sv": "4daeeb0314edb0b63f6fe7c131e3690e6ce27dbd531550c476958c42b1b1db8a",
+  "rtl/test/qwen_split/qkd_attn_service_root_ref.sv": "60e0f11c9b27868680b8a2a23e4bb40f3e4184c515cae58a29ff4f946586b0f5",
+  "rtl/test/qwen_split/tb_qkd_attn_service_root_lockstep.sv": "4f183e7934a57122d527030cf0096fc006926e37bf1e9811d739aa83b49a4ed5",
+  "rtl/hdc/nearhbm/ot_qwen_tp8_attention_native_service_w16.sv": "475c6a07547c63cfb897df43606724b07a12c1cc8a09acd4d5e0b4605d5e9a61",
+  "rtl/hdc/nearhbm/ot_qwen_tp8_attention_native_service_w16_sr.sv": "530665017566134d371841c6638b6f927ac94534e58325c3c0b932a97629384f",
+  "tools/qwen_attention_native/mk_service_root.py": "73f097a88d53e840edfe06cae8a5c4b8b4a1c2ed18a20755ac3239232b253b45",
+  "tools/qwen_attention_native/run_service_root_lockstep.sh": "ba1b5916e7911eb6a7b6de289cd64cb0b78572cefec3be0d0ccdd0e200822725",
+  "tools/qwen_attention_native/attn_calendar.py": "01722f18b395d00e13411cc6b05584dd2b871bb704293ca261d943f52ae8405e"
+ },
+ "scope": "qkd_attn_service_root (+ PV_LEAD relay) vs the verbatim fixed calendar control of the w16 service; the rest of the _sr service is the canonical text (mk_service_root.py exact-match edits)",
+ "runs": [
+  {
+   "lead": 0,
+   "mut": 0,
+   "seed": 1,
+   "expect": "PASS",
+   "result": "LOCKSTEP PASS edges=2000000 tokens=2950 pv_starts=2530 resets=224 io_fault_edges=392875 local_fault_edges=50152"
+  },
+  {
+   "lead": 0,
+   "mut": 0,
+   "seed": 2,
+   "expect": "PASS",
+   "result": "LOCKSTEP PASS edges=2000000 tokens=2953 pv_starts=2529 resets=248 io_fault_edges=324982 local_fault_edges=49909"
+  },
+  {
+   "lead": 2,
+   "mut": 0,
+   "seed": 1,
+   "expect": "PASS",
+   "result": "LOCKSTEP PASS edges=2000000 tokens=2773 pv_starts=2651 resets=243 io_fault_edges=381330 local_fault_edges=74267"
+  },
+  {
+   "lead": 2,
+   "mut": 0,
+   "seed": 2,
+   "expect": "PASS",
+   "result": "LOCKSTEP PASS edges=2000000 tokens=2761 pv_starts=2643 resets=248 io_fault_edges=294760 local_fault_edges=51030"
+  },
+  {
+   "lead": 0,
+   "mut": 1,
+   "seed": 1,
+   "expect": "FAIL",
+   "result": "LOCKSTEP FAIL 5122 mismatches first_edge=770 tokens=2950"
+  },
+  {
+   "lead": 0,
+   "mut": 1,
+   "seed": 2,
+   "expect": "FAIL",
+   "result": "LOCKSTEP FAIL 5120 mismatches first_edge=841 tokens=2953"
+  },
+  {
+   "lead": 0,
+   "mut": 2,
+   "seed": 1,
+   "expect": "FAIL",
+   "result": "LOCKSTEP FAIL 1983157 mismatches first_edge=82 tokens=2950"
+  },
+  {
+   "lead": 0,
+   "mut": 2,
+   "seed": 2,
+   "expect": "FAIL",
+   "result": "LOCKSTEP FAIL 1981146 mismatches first_edge=81 tokens=2953"
+  },
+  {
+   "lead": 2,
+   "mut": 1,
+   "seed": 1,
+   "expect": "FAIL",
+   "result": "LOCKSTEP FAIL 5302 mismatches first_edge=770 tokens=2773"
+  },
+  {
+   "lead": 2,
+   "mut": 1,
+   "seed": 2,
+   "expect": "FAIL",
+   "result": "LOCKSTEP FAIL 5286 mismatches first_edge=841 tokens=2761"
+  },
+  {
+   "lead": 2,
+   "mut": 2,
+   "seed": 1,
+   "expect": "FAIL",
+   "result": "LOCKSTEP FAIL 1981680 mismatches first_edge=82 tokens=2773"
+  },
+  {
+   "lead": 2,
+   "mut": 2,
+   "seed": 2,
+   "expect": "FAIL",
+   "result": "LOCKSTEP FAIL 1981271 mismatches first_edge=81 tokens=2761"
+  }
+ ]
+}

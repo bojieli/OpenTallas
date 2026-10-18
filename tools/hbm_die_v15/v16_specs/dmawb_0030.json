@@ -16,6 +16,30 @@
    "note": "DMA write-back partner: pin regs + ot_hbm_svc_wb_cutthrough_cdc (32 x 128x256 SRAM, 32 CDC payload FIFOs, per-PC posted count on true k_wr_done) + reservation receipts (wb_ready, wa) + WB window command to vmks_<q>0..7; 32 K write ports via pin skids"
   },
   {
+   "name": "wbc_SW0",
+   "master": "ot_hbm_svc_wbw_copy",
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wbw_copy.sv",
+   "params": {
+    "NS": 4,
+    "MUT": 0
+   },
+   "slot": "pc_SW",
+   "owner": "H-SM/wbwc",
+   "note": "PC-band local copy of the WB window command (pin reg + per-sink out reg, LAT 2)"
+  },
+  {
+   "name": "wbc_SW1",
+   "master": "ot_hbm_svc_wbw_copy",
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wbw_copy.sv",
+   "params": {
+    "NS": 4,
+    "MUT": 0
+   },
+   "slot": "pc_SW",
+   "owner": "H-SM/wbwc",
+   "note": "PC-band local copy of the WB window command (pin reg + per-sink out reg, LAT 2)"
+  },
+  {
    "name": "wbk_SE",
    "master": "ot_hbm_svc_wb_kport",
    "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv",
@@ -26,6 +50,30 @@
    "slot": "hb_dbk_SE",
    "owner": "H-NETLIST/dmawb",
    "note": "DMA write-back partner: pin regs + ot_hbm_svc_wb_cutthrough_cdc (32 x 128x256 SRAM, 32 CDC payload FIFOs, per-PC posted count on true k_wr_done) + reservation receipts (wb_ready, wa) + WB window command to vmks_<q>0..7; 32 K write ports via pin skids"
+  },
+  {
+   "name": "wbc_SE0",
+   "master": "ot_hbm_svc_wbw_copy",
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wbw_copy.sv",
+   "params": {
+    "NS": 4,
+    "MUT": 0
+   },
+   "slot": "pc_SE",
+   "owner": "H-SM/wbwc",
+   "note": "PC-band local copy of the WB window command (pin reg + per-sink out reg, LAT 2)"
+  },
+  {
+   "name": "wbc_SE1",
+   "master": "ot_hbm_svc_wbw_copy",
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wbw_copy.sv",
+   "params": {
+    "NS": 4,
+    "MUT": 0
+   },
+   "slot": "pc_SE",
+   "owner": "H-SM/wbwc",
+   "note": "PC-band local copy of the WB window command (pin reg + per-sink out reg, LAT 2)"
   },
   {
    "name": "wbk_NW",
@@ -40,6 +88,30 @@
    "note": "DMA write-back partner: pin regs + ot_hbm_svc_wb_cutthrough_cdc (32 x 128x256 SRAM, 32 CDC payload FIFOs, per-PC posted count on true k_wr_done) + reservation receipts (wb_ready, wa) + WB window command to vmks_<q>0..7; 32 K write ports via pin skids"
   },
   {
+   "name": "wbc_NW0",
+   "master": "ot_hbm_svc_wbw_copy",
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wbw_copy.sv",
+   "params": {
+    "NS": 4,
+    "MUT": 0
+   },
+   "slot": "pc_NW",
+   "owner": "H-SM/wbwc",
+   "note": "PC-band local copy of the WB window command (pin reg + per-sink out reg, LAT 2)"
+  },
+  {
+   "name": "wbc_NW1",
+   "master": "ot_hbm_svc_wbw_copy",
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wbw_copy.sv",
+   "params": {
+    "NS": 4,
+    "MUT": 0
+   },
+   "slot": "pc_NW",
+   "owner": "H-SM/wbwc",
+   "note": "PC-band local copy of the WB window command (pin reg + per-sink out reg, LAT 2)"
+  },
+  {
    "name": "wbk_NE",
    "master": "ot_hbm_svc_wb_kport",
    "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv",
@@ -50,6 +122,30 @@
    "slot": "hb_dbk_NE",
    "owner": "H-NETLIST/dmawb",
    "note": "DMA write-back partner: pin regs + ot_hbm_svc_wb_cutthrough_cdc (32 x 128x256 SRAM, 32 CDC payload FIFOs, per-PC posted count on true k_wr_done) + reservation receipts (wb_ready, wa) + WB window command to vmks_<q>0..7; 32 K write ports via pin skids"
+  },
+  {
+   "name": "wbc_NE0",
+   "master": "ot_hbm_svc_wbw_copy",
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wbw_copy.sv",
+   "params": {
+    "NS": 4,
+    "MUT": 0
+   },
+   "slot": "pc_NE",
+   "owner": "H-SM/wbwc",
+   "note": "PC-band local copy of the WB window command (pin reg + per-sink out reg, LAT 2)"
+  },
+  {
+   "name": "wbc_NE1",
+   "master": "ot_hbm_svc_wbw_copy",
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wbw_copy.sv",
+   "params": {
+    "NS": 4,
+    "MUT": 0
+   },
+   "slot": "pc_NE",
+   "owner": "H-SM/wbwc",
+   "note": "PC-band local copy of the WB window command (pin reg + per-sink out reg, LAT 2)"
   }
  ],
  "retire_v15": [],
@@ -192,35 +288,113 @@
     "wbw_v"
    ],
    "dst": [
+    "wbc_SW0",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_base"
+   ],
+   "dst": [
+    "wbc_SW0",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_total"
+   ],
+   "dst": [
+    "wbc_SW0",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_v"
+   ],
+   "dst": [
+    "wbc_SW1",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_base"
+   ],
+   "dst": [
+    "wbc_SW1",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_total"
+   ],
+   "dst": [
+    "wbc_SW1",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbc_SW0",
+    "o_wbw_v",
+    0,
+    1
+   ],
+   "dst": [
     "vmks_SW0",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_base"
+    "wbc_SW0",
+    "o_wbw_base",
+    0,
+    30
    ],
    "dst": [
     "vmks_SW0",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_total"
+    "wbc_SW0",
+    "o_wbw_total",
+    0,
+    12
    ],
    "dst": [
     "vmks_SW0",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -314,39 +488,45 @@
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_v"
+    "wbc_SW0",
+    "o_wbw_v",
+    1,
+    2
    ],
    "dst": [
     "vmks_SW1",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_base"
+    "wbc_SW0",
+    "o_wbw_base",
+    30,
+    60
    ],
    "dst": [
     "vmks_SW1",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_total"
+    "wbc_SW0",
+    "o_wbw_total",
+    12,
+    24
    ],
    "dst": [
     "vmks_SW1",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -440,39 +620,45 @@
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_v"
+    "wbc_SW0",
+    "o_wbw_v",
+    2,
+    3
    ],
    "dst": [
     "vmks_SW2",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_base"
+    "wbc_SW0",
+    "o_wbw_base",
+    60,
+    90
    ],
    "dst": [
     "vmks_SW2",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_total"
+    "wbc_SW0",
+    "o_wbw_total",
+    24,
+    36
    ],
    "dst": [
     "vmks_SW2",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -566,39 +752,45 @@
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_v"
+    "wbc_SW0",
+    "o_wbw_v",
+    3,
+    4
    ],
    "dst": [
     "vmks_SW3",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_base"
+    "wbc_SW0",
+    "o_wbw_base",
+    90,
+    120
    ],
    "dst": [
     "vmks_SW3",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_total"
+    "wbc_SW0",
+    "o_wbw_total",
+    36,
+    48
    ],
    "dst": [
     "vmks_SW3",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -692,39 +884,45 @@
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_v"
+    "wbc_SW1",
+    "o_wbw_v",
+    0,
+    1
    ],
    "dst": [
     "vmks_SW4",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_base"
+    "wbc_SW1",
+    "o_wbw_base",
+    0,
+    30
    ],
    "dst": [
     "vmks_SW4",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_total"
+    "wbc_SW1",
+    "o_wbw_total",
+    0,
+    12
    ],
    "dst": [
     "vmks_SW4",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -818,39 +1016,45 @@
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_v"
+    "wbc_SW1",
+    "o_wbw_v",
+    1,
+    2
    ],
    "dst": [
     "vmks_SW5",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_base"
+    "wbc_SW1",
+    "o_wbw_base",
+    30,
+    60
    ],
    "dst": [
     "vmks_SW5",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_total"
+    "wbc_SW1",
+    "o_wbw_total",
+    12,
+    24
    ],
    "dst": [
     "vmks_SW5",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -944,39 +1148,45 @@
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_v"
+    "wbc_SW1",
+    "o_wbw_v",
+    2,
+    3
    ],
    "dst": [
     "vmks_SW6",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_base"
+    "wbc_SW1",
+    "o_wbw_base",
+    60,
+    90
    ],
    "dst": [
     "vmks_SW6",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_total"
+    "wbc_SW1",
+    "o_wbw_total",
+    24,
+    36
    ],
    "dst": [
     "vmks_SW6",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -1070,39 +1280,45 @@
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_v"
+    "wbc_SW1",
+    "o_wbw_v",
+    3,
+    4
    ],
    "dst": [
     "vmks_SW7",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_base"
+    "wbc_SW1",
+    "o_wbw_base",
+    90,
+    120
    ],
    "dst": [
     "vmks_SW7",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SW",
-    "wbw_total"
+    "wbc_SW1",
+    "o_wbw_total",
+    36,
+    48
    ],
    "dst": [
     "vmks_SW7",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -1332,35 +1548,113 @@
     "wbw_v"
    ],
    "dst": [
+    "wbc_SE0",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_base"
+   ],
+   "dst": [
+    "wbc_SE0",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_total"
+   ],
+   "dst": [
+    "wbc_SE0",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_v"
+   ],
+   "dst": [
+    "wbc_SE1",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_base"
+   ],
+   "dst": [
+    "wbc_SE1",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_total"
+   ],
+   "dst": [
+    "wbc_SE1",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbc_SE0",
+    "o_wbw_v",
+    0,
+    1
+   ],
+   "dst": [
     "vmks_SE0",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_base"
+    "wbc_SE0",
+    "o_wbw_base",
+    0,
+    30
    ],
    "dst": [
     "vmks_SE0",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_total"
+    "wbc_SE0",
+    "o_wbw_total",
+    0,
+    12
    ],
    "dst": [
     "vmks_SE0",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -1454,39 +1748,45 @@
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_v"
+    "wbc_SE0",
+    "o_wbw_v",
+    1,
+    2
    ],
    "dst": [
     "vmks_SE1",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_base"
+    "wbc_SE0",
+    "o_wbw_base",
+    30,
+    60
    ],
    "dst": [
     "vmks_SE1",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_total"
+    "wbc_SE0",
+    "o_wbw_total",
+    12,
+    24
    ],
    "dst": [
     "vmks_SE1",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -1580,39 +1880,45 @@
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_v"
+    "wbc_SE0",
+    "o_wbw_v",
+    2,
+    3
    ],
    "dst": [
     "vmks_SE2",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_base"
+    "wbc_SE0",
+    "o_wbw_base",
+    60,
+    90
    ],
    "dst": [
     "vmks_SE2",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_total"
+    "wbc_SE0",
+    "o_wbw_total",
+    24,
+    36
    ],
    "dst": [
     "vmks_SE2",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -1706,39 +2012,45 @@
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_v"
+    "wbc_SE0",
+    "o_wbw_v",
+    3,
+    4
    ],
    "dst": [
     "vmks_SE3",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_base"
+    "wbc_SE0",
+    "o_wbw_base",
+    90,
+    120
    ],
    "dst": [
     "vmks_SE3",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_total"
+    "wbc_SE0",
+    "o_wbw_total",
+    36,
+    48
    ],
    "dst": [
     "vmks_SE3",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -1832,39 +2144,45 @@
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_v"
+    "wbc_SE1",
+    "o_wbw_v",
+    0,
+    1
    ],
    "dst": [
     "vmks_SE4",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_base"
+    "wbc_SE1",
+    "o_wbw_base",
+    0,
+    30
    ],
    "dst": [
     "vmks_SE4",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_total"
+    "wbc_SE1",
+    "o_wbw_total",
+    0,
+    12
    ],
    "dst": [
     "vmks_SE4",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -1958,39 +2276,45 @@
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_v"
+    "wbc_SE1",
+    "o_wbw_v",
+    1,
+    2
    ],
    "dst": [
     "vmks_SE5",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_base"
+    "wbc_SE1",
+    "o_wbw_base",
+    30,
+    60
    ],
    "dst": [
     "vmks_SE5",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_total"
+    "wbc_SE1",
+    "o_wbw_total",
+    12,
+    24
    ],
    "dst": [
     "vmks_SE5",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -2084,39 +2408,45 @@
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_v"
+    "wbc_SE1",
+    "o_wbw_v",
+    2,
+    3
    ],
    "dst": [
     "vmks_SE6",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_base"
+    "wbc_SE1",
+    "o_wbw_base",
+    60,
+    90
    ],
    "dst": [
     "vmks_SE6",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_total"
+    "wbc_SE1",
+    "o_wbw_total",
+    24,
+    36
    ],
    "dst": [
     "vmks_SE6",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -2210,39 +2540,45 @@
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_v"
+    "wbc_SE1",
+    "o_wbw_v",
+    3,
+    4
    ],
    "dst": [
     "vmks_SE7",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_base"
+    "wbc_SE1",
+    "o_wbw_base",
+    90,
+    120
    ],
    "dst": [
     "vmks_SE7",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_SE",
-    "wbw_total"
+    "wbc_SE1",
+    "o_wbw_total",
+    36,
+    48
    ],
    "dst": [
     "vmks_SE7",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -2472,35 +2808,113 @@
     "wbw_v"
    ],
    "dst": [
+    "wbc_NW0",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_base"
+   ],
+   "dst": [
+    "wbc_NW0",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_total"
+   ],
+   "dst": [
+    "wbc_NW0",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_v"
+   ],
+   "dst": [
+    "wbc_NW1",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_base"
+   ],
+   "dst": [
+    "wbc_NW1",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_total"
+   ],
+   "dst": [
+    "wbc_NW1",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbc_NW0",
+    "o_wbw_v",
+    0,
+    1
+   ],
+   "dst": [
     "vmks_NW0",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_base"
+    "wbc_NW0",
+    "o_wbw_base",
+    0,
+    30
    ],
    "dst": [
     "vmks_NW0",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_total"
+    "wbc_NW0",
+    "o_wbw_total",
+    0,
+    12
    ],
    "dst": [
     "vmks_NW0",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -2594,39 +3008,45 @@
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_v"
+    "wbc_NW0",
+    "o_wbw_v",
+    1,
+    2
    ],
    "dst": [
     "vmks_NW1",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_base"
+    "wbc_NW0",
+    "o_wbw_base",
+    30,
+    60
    ],
    "dst": [
     "vmks_NW1",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_total"
+    "wbc_NW0",
+    "o_wbw_total",
+    12,
+    24
    ],
    "dst": [
     "vmks_NW1",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -2720,39 +3140,45 @@
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_v"
+    "wbc_NW0",
+    "o_wbw_v",
+    2,
+    3
    ],
    "dst": [
     "vmks_NW2",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_base"
+    "wbc_NW0",
+    "o_wbw_base",
+    60,
+    90
    ],
    "dst": [
     "vmks_NW2",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_total"
+    "wbc_NW0",
+    "o_wbw_total",
+    24,
+    36
    ],
    "dst": [
     "vmks_NW2",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -2846,39 +3272,45 @@
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_v"
+    "wbc_NW0",
+    "o_wbw_v",
+    3,
+    4
    ],
    "dst": [
     "vmks_NW3",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_base"
+    "wbc_NW0",
+    "o_wbw_base",
+    90,
+    120
    ],
    "dst": [
     "vmks_NW3",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_total"
+    "wbc_NW0",
+    "o_wbw_total",
+    36,
+    48
    ],
    "dst": [
     "vmks_NW3",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -2972,39 +3404,45 @@
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_v"
+    "wbc_NW1",
+    "o_wbw_v",
+    0,
+    1
    ],
    "dst": [
     "vmks_NW4",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_base"
+    "wbc_NW1",
+    "o_wbw_base",
+    0,
+    30
    ],
    "dst": [
     "vmks_NW4",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_total"
+    "wbc_NW1",
+    "o_wbw_total",
+    0,
+    12
    ],
    "dst": [
     "vmks_NW4",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -3098,39 +3536,45 @@
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_v"
+    "wbc_NW1",
+    "o_wbw_v",
+    1,
+    2
    ],
    "dst": [
     "vmks_NW5",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_base"
+    "wbc_NW1",
+    "o_wbw_base",
+    30,
+    60
    ],
    "dst": [
     "vmks_NW5",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_total"
+    "wbc_NW1",
+    "o_wbw_total",
+    12,
+    24
    ],
    "dst": [
     "vmks_NW5",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -3224,39 +3668,45 @@
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_v"
+    "wbc_NW1",
+    "o_wbw_v",
+    2,
+    3
    ],
    "dst": [
     "vmks_NW6",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_base"
+    "wbc_NW1",
+    "o_wbw_base",
+    60,
+    90
    ],
    "dst": [
     "vmks_NW6",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_total"
+    "wbc_NW1",
+    "o_wbw_total",
+    24,
+    36
    ],
    "dst": [
     "vmks_NW6",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -3350,39 +3800,45 @@
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_v"
+    "wbc_NW1",
+    "o_wbw_v",
+    3,
+    4
    ],
    "dst": [
     "vmks_NW7",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_base"
+    "wbc_NW1",
+    "o_wbw_base",
+    90,
+    120
    ],
    "dst": [
     "vmks_NW7",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NW",
-    "wbw_total"
+    "wbc_NW1",
+    "o_wbw_total",
+    36,
+    48
    ],
    "dst": [
     "vmks_NW7",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -3612,35 +4068,113 @@
     "wbw_v"
    ],
    "dst": [
+    "wbc_NE0",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_base"
+   ],
+   "dst": [
+    "wbc_NE0",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_total"
+   ],
+   "dst": [
+    "wbc_NE0",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_v"
+   ],
+   "dst": [
+    "wbc_NE1",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_base"
+   ],
+   "dst": [
+    "wbc_NE1",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_total"
+   ],
+   "dst": [
+    "wbc_NE1",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
+  },
+  {
+   "src": [
+    "wbc_NE0",
+    "o_wbw_v",
+    0,
+    1
+   ],
+   "dst": [
     "vmks_NE0",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_base"
+    "wbc_NE0",
+    "o_wbw_base",
+    0,
+    30
    ],
    "dst": [
     "vmks_NE0",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_total"
+    "wbc_NE0",
+    "o_wbw_total",
+    0,
+    12
    ],
    "dst": [
     "vmks_NE0",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -3734,39 +4268,45 @@
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_v"
+    "wbc_NE0",
+    "o_wbw_v",
+    1,
+    2
    ],
    "dst": [
     "vmks_NE1",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_base"
+    "wbc_NE0",
+    "o_wbw_base",
+    30,
+    60
    ],
    "dst": [
     "vmks_NE1",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_total"
+    "wbc_NE0",
+    "o_wbw_total",
+    12,
+    24
    ],
    "dst": [
     "vmks_NE1",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -3860,39 +4400,45 @@
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_v"
+    "wbc_NE0",
+    "o_wbw_v",
+    2,
+    3
    ],
    "dst": [
     "vmks_NE2",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_base"
+    "wbc_NE0",
+    "o_wbw_base",
+    60,
+    90
    ],
    "dst": [
     "vmks_NE2",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_total"
+    "wbc_NE0",
+    "o_wbw_total",
+    24,
+    36
    ],
    "dst": [
     "vmks_NE2",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -3986,39 +4532,45 @@
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_v"
+    "wbc_NE0",
+    "o_wbw_v",
+    3,
+    4
    ],
    "dst": [
     "vmks_NE3",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_base"
+    "wbc_NE0",
+    "o_wbw_base",
+    90,
+    120
    ],
    "dst": [
     "vmks_NE3",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_total"
+    "wbc_NE0",
+    "o_wbw_total",
+    36,
+    48
    ],
    "dst": [
     "vmks_NE3",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -4112,39 +4664,45 @@
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_v"
+    "wbc_NE1",
+    "o_wbw_v",
+    0,
+    1
    ],
    "dst": [
     "vmks_NE4",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_base"
+    "wbc_NE1",
+    "o_wbw_base",
+    0,
+    30
    ],
    "dst": [
     "vmks_NE4",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_total"
+    "wbc_NE1",
+    "o_wbw_total",
+    0,
+    12
    ],
    "dst": [
     "vmks_NE4",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -4238,39 +4796,45 @@
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_v"
+    "wbc_NE1",
+    "o_wbw_v",
+    1,
+    2
    ],
    "dst": [
     "vmks_NE5",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_base"
+    "wbc_NE1",
+    "o_wbw_base",
+    30,
+    60
    ],
    "dst": [
     "vmks_NE5",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_total"
+    "wbc_NE1",
+    "o_wbw_total",
+    12,
+    24
    ],
    "dst": [
     "vmks_NE5",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -4364,39 +4928,45 @@
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_v"
+    "wbc_NE1",
+    "o_wbw_v",
+    2,
+    3
    ],
    "dst": [
     "vmks_NE6",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_base"
+    "wbc_NE1",
+    "o_wbw_base",
+    60,
+    90
    ],
    "dst": [
     "vmks_NE6",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_total"
+    "wbc_NE1",
+    "o_wbw_total",
+    24,
+    36
    ],
    "dst": [
     "vmks_NE6",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -4490,39 +5060,45 @@
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_v"
+    "wbc_NE1",
+    "o_wbw_v",
+    3,
+    4
    ],
    "dst": [
     "vmks_NE7",
     "wbw_v"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_base"
+    "wbc_NE1",
+    "o_wbw_base",
+    90,
+    120
    ],
    "dst": [
     "vmks_NE7",
     "wbw_base"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
-    "wbk_NE",
-    "wbw_total"
+    "wbc_NE1",
+    "o_wbw_total",
+    36,
+    48
    ],
    "dst": [
     "vmks_NE7",
     "wbw_total"
    ],
    "clock": "stream",
-   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+   "basis": "ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)"
   },
   {
    "src": [
@@ -4648,6 +5224,30 @@
    "kind": "reset"
   },
   {
+   "inst": "wbc_SW0",
+   "port": "stream_clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbc_SW0",
+   "port": "stream_rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "wbc_SW1",
+   "port": "stream_clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbc_SW1",
+   "port": "stream_rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
    "inst": "wbk_SE",
    "port": "stream_clk",
    "domain": "stream",
@@ -4678,6 +5278,30 @@
    "kind": "reset"
   },
   {
+   "inst": "wbc_SE0",
+   "port": "stream_clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbc_SE0",
+   "port": "stream_rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "wbc_SE1",
+   "port": "stream_clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbc_SE1",
+   "port": "stream_rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
    "inst": "wbk_NW",
    "port": "stream_clk",
    "domain": "stream",
@@ -4708,6 +5332,30 @@
    "kind": "reset"
   },
   {
+   "inst": "wbc_NW0",
+   "port": "stream_clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbc_NW0",
+   "port": "stream_rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "wbc_NW1",
+   "port": "stream_clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbc_NW1",
+   "port": "stream_rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
    "inst": "wbk_NE",
    "port": "stream_clk",
    "domain": "stream",
@@ -4735,6 +5383,30 @@
    "inst": "wbk_NE",
    "port": "hbm_rst_n",
    "domain": "hbm",
+   "kind": "reset"
+  },
+  {
+   "inst": "wbc_NE0",
+   "port": "stream_clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbc_NE0",
+   "port": "stream_rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "wbc_NE1",
+   "port": "stream_clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbc_NE1",
+   "port": "stream_rst_n",
+   "domain": "stream",
    "kind": "reset"
   }
  ],

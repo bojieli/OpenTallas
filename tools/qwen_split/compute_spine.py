@@ -68,7 +68,7 @@ assert TIE_SELF <= set(TIE_STRAP_MASTERS), f'OT_SPLIT_TIE_SELF: unknown masters 
 
 # ---- C4 (2026-10-14, compute-die lead r2): owner-adopted distributed x slices (HANDOFF 0aa, el1014-qwen-dvm-build.log)
 DVM = os.environ.get('OT_SPLIT_DVM', '1') != '0'
-XCOL_WH = (64.8, 1434.24)       # qfd_xcol_e/w: xhead + 8 x qfd_xs_leaf (two write chains N / S), in the column corridor,
+XCOL_WH = tuple(float(z) for z in os.environ.get('OT_SPLIT_XCOL_WH', '64.8,1434.24').split(','))  # Q-DIEPLAN3 q3h: 129.6,920.16 (w130 column) -- qfd_xcol_e/w: xhead + 8 x qfd_xs_leaf (two write chains N / S), in the column corridor,
                                 # centred on the head row; 604.8 N + 103.68 head + 604.8 S (contract v1 slice slots)
 TAP_SLOT_WH = (345.6, 345.6)    # reserved control-stack envelope remains fixed
 TAP_WH = (216.0, 216.0)         # qfd_xs_tap at the VM N face, E of the constant group (SU write tap + attention write tap)

@@ -8,7 +8,13 @@ import rtl_hdc_v41x_idx_campaign as C
 import hdc_golden_v41 as G
 out=Path(sys.argv[1]);out.mkdir(parents=True,exist_ok=True)
 rng=np.random.default_rng(2026101501)
-n=10928
+# Optional explicit production shape; legacy invocation stays byte-identical.
+nq=int(sys.argv[2]) if len(sys.argv)>2 else 4
+tp=int(sys.argv[3]) if len(sys.argv)>3 else 96
+rank=int(sys.argv[4]) if len(sys.argv)>4 else 3
+assert nq in (2,4) and tp in (96,192) and 0<=rank<tp
+n=min(nq*2736, (1048576//(8*tp))*8 + min(8,max(0,1048576%(8*tp)-8*rank)))
+if len(sys.argv)==2:n=10928
 q,w=B.query(rng)
 qc,qu=B.qdq_codes(q)
 kc,ku=B.qdq_codes(rng.standard_normal((n,128)).astype(np.float32))
@@ -18,14 +24,14 @@ keys=[B.key_word(kc[i],ku[i]) for i in range(n)]
 lines=[]
 for a in range(171):
  packed=0
- for s in range(4):
+ for s in range(nq):
   for p in range(8):
    index=s*2736+a*16+p*2
    two=sum((keys[index+j] if index+j<n else 0)<<(j*544) for j in range(2))
    payload=(two<<11)|(((p*128+a)&1023)<<1)|1   # service tag (128*port + beat) % 1024 (ot_hbm_idx_score_static)
    packed|=payload<<(s*8792+p*1099)
  lines.append(packed)
-(out/'keylines.hex').write_text(''.join(f'{x:08792x}\n' for x in lines))
+(out/'keylines.hex').write_text(''.join(f'{x:0{nq*2198}x}\n' for x in lines))
 (out/'query.hex').write_text(''.join(f'{(x>>7)&((1<<1024)-1):0256x}\n' for x in B.qblocks(q,w)))
 weights=sum((int(G.bits(np.float32(w[h])))>>16)<<(h*16) for h in range(32))
 (out/'weights.hex').write_text(f'{weights:0128x}\n')

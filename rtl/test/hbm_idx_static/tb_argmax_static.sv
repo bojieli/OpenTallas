@@ -5,7 +5,7 @@
 // 'argmax' record client (packet client 0). STREAM rows enter on compiler edges (stream.mem: the SU reduce stream
 // at its declared boundary). The calendar cal.mem comes from tools/hbm_argmax_static_vectors.py, never the DUT.
 module tb_argmax_static;
-    parameter integer MUT = 0;
+    parameter integer MUT = 0, TP=96, DIE_RANK=3, RANK_MUT=0;
     localparam integer NE = 16384, NPRE = 4096, NCHK = 1024;
     reg clk = 0; always #5 clk = ~clk;
     reg rst_n = 0;
@@ -20,7 +20,7 @@ module tb_argmax_static;
     reg go = 0, mode = 0, a_mirror = 0; reg [17:0] imm_a = 0, a_base = 0, n = 0, o_base = 0; reg [15:0] o_is = 0;
     reg [522:0] am_stream = 0;
     wire [135:0] am_rq, share_rq; wire [2055:0] am_rr; wire [337:0] cq; wire [1:0] cq_seq; wire busy, done, fault, nan_flag, share_fault;
-    ot_hbm_argmax_static #(.MUT(MUT)) dut(.clk(clk), .rst_n(rst_n), .sid(2'd0), .die_id(8'd3), .go(go), .mode(mode),
+    ot_hbm_argmax_static #(.MUT(MUT),.TP(TP)) dut(.clk(clk), .rst_n(rst_n), .sid(2'd0), .die_id(8'(RANK_MUT ? DIE_RANK&127 : DIE_RANK)), .go(go), .mode(mode),
         .imm_a(imm_a), .a_mirror(a_mirror), .a_base(a_base), .n(n), .o_base(o_base), .o_is(o_is), .vm_rq(am_rq),
         .vm_rr(am_rr), .am_stream(am_stream), .cq(cq), .cq_seq(cq_seq), .cr(cr_all[0 +: 274]), .busy(busy), .done(done),
         .fault(fault), .nan_flag(nan_flag));

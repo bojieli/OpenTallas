@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_bf_col_roots",
+ "enable": false,
+ "reason": "Actual column already captures allci input bits at boundary and has registered actual segment/return outputs. No extra payload stage added; native220/190/80+comb gates remain required."
+}

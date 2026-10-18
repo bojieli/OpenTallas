@@ -1,0 +1,810 @@
+{
+ "schema": "opentallas.hbm_array_16sm_1016.die_split.v1",
+ "generated_utc": "2026-10-17T02:54:30Z",
+ "rule": "HBM-ARRAY (owner question 10-16 ~21:40): price a SMALLER generic HBM die in a LARGER array.  32 SM / 4 stacks /\nTP-96 is the baseline.  The candidates are 16 SM / 2 stacks / TP-192 (H-DIE plan A2P, 496 mm2) and 24 SM / 3 stacks /\nTP-128 (H-DIE B24a geometry, 779 mm2, priced at 3 stacks).  The HBM bandwidth per SM stays at 99 B/cycle/SM.\n\nMETHOD.  Each record of the native DS programme (the AR token, the batched verify P = 6 of the MTP design point, and\nthe compiled R-row DSpark draft) and of the Qwen3-8B AR programme keeps its base price (ds_mtp_verify / timing.cost).\nTwo things are added: the relay-stage change of the target die (ds_relay_latency's per-class crossing rule,\nv5carry -> the H-DIE eval of that die, absolute-leg SM rule) and the SPLIT TRANSFORM below.  The same S2 schedule is\nthen re-run.\n\nSPLIT TRANSFORM (G0 = 96 -> G1 = 96 * 32 / SMs; s = 32 / SMs; the die bandwidth scales by 1 / s):\n  SM.MATVEC, row-split matrices (every dense / expert / head matrix split by output rows over the group)\n        unchanged: rows per die x 1/s, SMs x 1/s, bytes per die x 1/s, die bandwidth x 1/s\n  SM head-aligned work (wq_b of head h on die h, the wo_a K-split of the die's head; 64 heads stay on 64 dies)\n        variable part x s: c' = F + s (c - F), F = measured first access + SM overhead (+ drain)\n  ATT (option B on the SM, one head per die)   + (s - 1) x the busiest SM's line stream of the span\n        (b_measured_model kv_layout measured_lines_busiest qk 50 / pv 125 at 8 lines / 11 cycles, T 640; T 128 scaled\n        by the measured component ratio)\n  COLL.* (TU endpoint model, perf.coll_cycles)   delivery term (G - 1) f / lanes per crossing, f = ceil(bytes / G / 64)\n        (= 23.75 f at G 96 with 4 lanes: the fit IS the 4-lane delivery bound); merges (index / candidate / argmax)\n        carry G x their per-rank list, so their bytes scale with G\n  COLL.ROW_GATHER  hardware form K F / lanes + 150;  bypass form re-priced at G1 with the max owned count M1 =\n        ceil(m_owned x M0) (M0 = the bit-exact run's max owned at G 96; m_owned default 0.6)\n  DMA.LOAD (incl. column swaps): replicated per die, so the stream part runs at 1/s of the die bandwidth:\n        c' = FA + s_bw (c - FA)\n  SU.VOP   unchanged with a full-width SU; with --su-half the SU depth model at half the lanes (A2P as drawn: 2 quarter\n        cores)\n  IDX.INDEX (keys per die x 1/s at 1/s the stacks), IDX.TOPK, IDX.OWNED, HC, FUSED, SFU, ARGMAX.LOCAL, CTL: unchanged\n  switch: one tier (1 crossing) by default; --extra-crossings N adds N x 377.6 ns per crossing (a 2-tier Clos = +2)\n\n    python3 -m hgi_sim.ds_die_split --stages STAGES.json --out REC.json [--jobs N]     (from tools/)\n",
+ "variants": {
+  "d4c_32sm_4st_tp96": {
+   "stages": "d4c",
+   "split": null,
+   "qwen": null
+  },
+  "d4f_16sm_tp192_full": {
+   "stages": "d4f",
+   "split": {
+    "s": 2,
+    "s_bw": 2,
+    "G1": 192,
+    "lanes": 4,
+    "xc": 0,
+    "m_owned": 0.6
+   },
+   "qwen": {
+    "sm_s": 1,
+    "bw_s": 2,
+    "G0": 4,
+    "G1": 8,
+    "lanes": 4
+   }
+  },
+  "d4f_16sm_tp192_suhalf": {
+   "stages": "d4f",
+   "split": {
+    "s": 2,
+    "s_bw": 2,
+    "G1": 192,
+    "lanes": 4,
+    "xc": 0,
+    "m_owned": 0.6,
+    "su_half": true
+   },
+   "qwen": {
+    "sm_s": 1,
+    "bw_s": 2,
+    "G0": 4,
+    "G1": 8,
+    "lanes": 4
+   }
+  },
+  "d4f_16sm_tp192_opta": {
+   "stages": "d4f_opta",
+   "split": {
+    "s": 2,
+    "s_bw": 2,
+    "G1": 192,
+    "lanes": 4,
+    "xc": 0,
+    "m_owned": 0.6
+   },
+   "qwen": {
+    "sm_s": 1,
+    "bw_s": 2,
+    "G0": 4,
+    "G1": 8,
+    "lanes": 4
+   }
+  },
+  "d4f_16sm_tp96_dp2_L2": {
+   "stages": "d4f",
+   "split": {
+    "s": 2,
+    "s_bw": 2,
+    "G1": 96,
+    "lanes": 2,
+    "xc": 0,
+    "m_owned": 1.0,
+    "all_sm": true
+   },
+   "qwen": {
+    "sm_s": 2,
+    "bw_s": 2,
+    "G0": 4,
+    "G1": 4,
+    "lanes": 2
+   }
+  },
+  "d4f_16sm_tp96_dp2_full": {
+   "stages": "d4f",
+   "split": {
+    "s": 2,
+    "s_bw": 2,
+    "G1": 96,
+    "lanes": 4,
+    "xc": 0,
+    "m_owned": 1.0,
+    "all_sm": true
+   },
+   "qwen": {
+    "sm_s": 2,
+    "bw_s": 2,
+    "G0": 4,
+    "G1": 4,
+    "lanes": 4
+   }
+  },
+  "split_only_tp192_d4cstages": {
+   "stages": "d4c",
+   "split": {
+    "s": 2,
+    "s_bw": 2,
+    "G1": 192,
+    "lanes": 4,
+    "xc": 0,
+    "m_owned": 0.6
+   },
+   "qwen": null
+  },
+  "a2p_relay_only": {
+   "stages": "a2p",
+   "split": null,
+   "qwen": null
+  },
+  "d4f_relay_only": {
+   "stages": "d4f",
+   "split": null,
+   "qwen": null
+  },
+  "b24_24sm_tp128_qwen_tp8": {
+   "stages": "b24a",
+   "split": {
+    "s": 1.3333333333333333,
+    "s_bw": 1.3333333333333333,
+    "G1": 128,
+    "lanes": 4,
+    "xc": 0,
+    "m_owned": 0.8
+   },
+   "qwen": {
+    "sm_s": 0.6666666666666666,
+    "bw_s": 1.3333333333333333,
+    "G0": 4,
+    "G1": 8,
+    "lanes": 4
+   }
+  }
+ },
+ "stages_source": "../results/arch/hbm_array_16sm_1016/stages.json",
+ "table": {
+  "base_v5": {
+   "ar_cycles": 596948.7,
+   "ar_tok_s": 2010.2,
+   "mtp_step_cycles": 1412513.2,
+   "mtp_design_tok_s": 3533.3,
+   "qwen_ar_cycles": 1269120.1,
+   "qwen_ar_tok_s": 945.5,
+   "unit_busy_ar": {
+    "FUSED": 71369.3,
+    "SM": 180122.7,
+    "COLL": 259471.7,
+    "SU": 136388.0,
+    "DMA": 40327.8,
+    "HC": 92800.0,
+    "IDX": 18833.7,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "vs_d4c_ar_pct": 0.17,
+   "vs_d4c_mtp_pct": 1.37,
+   "vs_d4c_qwen_pct": 0.56
+  },
+  "d4c_32sm_4st_tp96": {
+   "ar_cycles": 597960.7,
+   "ar_tok_s": 2006.8,
+   "mtp_step_cycles": 1431875.5,
+   "mtp_design_tok_s": 3485.5,
+   "qwen_ar_cycles": 1276284.0,
+   "qwen_ar_tok_s": 940.2,
+   "unit_busy_ar": {
+    "FUSED": 62824.3,
+    "SM": 195185.1,
+    "COLL": 256721.0,
+    "SU": 143115.4,
+    "DMA": 48721.8,
+    "HC": 88556.0,
+    "IDX": 15712.9,
+    "CTL": 0.0,
+    "ARGMAX": 4926.3
+   },
+   "vs_d4c_ar_pct": 0.0,
+   "vs_d4c_mtp_pct": 0.0,
+   "vs_d4c_qwen_pct": 0.0
+  },
+  "d4f_16sm_tp192_full": {
+   "ar_cycles": 675033.4,
+   "ar_tok_s": 1777.7,
+   "mtp_step_cycles": 1641216.6,
+   "mtp_design_tok_s": 3040.9,
+   "qwen_ar_cycles": 1284592.9,
+   "qwen_ar_tok_s": 934.1,
+   "unit_busy_ar": {
+    "FUSED": 64269.2,
+    "SM": 240628.5,
+    "COLL": 295585.4,
+    "SU": 145887.4,
+    "DMA": 65201.6,
+    "HC": 89272.0,
+    "IDX": 15723.3,
+    "CTL": 0.0,
+    "ARGMAX": 4946.1
+   },
+   "vs_d4c_ar_pct": -11.42,
+   "vs_d4c_mtp_pct": -12.76,
+   "vs_d4c_qwen_pct": -0.65
+  },
+  "d4f_16sm_tp192_suhalf": {
+   "ar_cycles": 675365.3,
+   "ar_tok_s": 1776.8,
+   "mtp_step_cycles": 1641748.8,
+   "mtp_design_tok_s": 3039.9,
+   "qwen_ar_cycles": 1284592.9,
+   "qwen_ar_tok_s": 934.1,
+   "unit_busy_ar": {
+    "FUSED": 64269.2,
+    "SM": 240628.5,
+    "COLL": 295585.4,
+    "SU": 148439.2,
+    "DMA": 65201.6,
+    "HC": 89272.0,
+    "IDX": 15723.3,
+    "CTL": 0.0,
+    "ARGMAX": 4946.1
+   },
+   "vs_d4c_ar_pct": -11.46,
+   "vs_d4c_mtp_pct": -12.78,
+   "vs_d4c_qwen_pct": -0.65
+  },
+  "d4f_16sm_tp192_opta": {
+   "ar_cycles": 695578.6,
+   "ar_tok_s": 1725.2,
+   "mtp_step_cycles": 1694846.9,
+   "mtp_design_tok_s": 2944.7,
+   "qwen_ar_cycles": 1288957.9,
+   "qwen_ar_tok_s": 931.0,
+   "unit_busy_ar": {
+    "FUSED": 64269.2,
+    "SM": 246903.5,
+    "COLL": 312445.4,
+    "SU": 145887.4,
+    "DMA": 69001.6,
+    "HC": 89272.0,
+    "IDX": 16203.3,
+    "CTL": 0.0,
+    "ARGMAX": 4951.1
+   },
+   "vs_d4c_ar_pct": -14.03,
+   "vs_d4c_mtp_pct": -15.52,
+   "vs_d4c_qwen_pct": -0.98
+  },
+  "d4f_16sm_tp96_dp2_L2": {
+   "ar_cycles": 692931.3,
+   "ar_tok_s": 1731.8,
+   "mtp_step_cycles": 1833412.7,
+   "mtp_design_tok_s": 2722.1,
+   "qwen_ar_cycles": 2289783.0,
+   "qwen_ar_tok_s": 524.1,
+   "unit_busy_ar": {
+    "FUSED": 64269.2,
+    "SM": 246315.1,
+    "COLL": 307786.0,
+    "SU": 145887.4,
+    "DMA": 65201.6,
+    "HC": 89272.0,
+    "IDX": 15723.3,
+    "CTL": 0.0,
+    "ARGMAX": 9525.3
+   },
+   "vs_d4c_ar_pct": -13.7,
+   "vs_d4c_mtp_pct": -21.9,
+   "vs_d4c_qwen_pct": -44.26
+  },
+  "d4f_16sm_tp96_dp2_full": {
+   "ar_cycles": 653766.1,
+   "ar_tok_s": 1835.5,
+   "mtp_step_cycles": 1665192.5,
+   "mtp_design_tok_s": 2997.1,
+   "qwen_ar_cycles": 2286326.2,
+   "qwen_ar_tok_s": 524.9,
+   "unit_busy_ar": {
+    "FUSED": 64269.2,
+    "SM": 246315.1,
+    "COLL": 264109.8,
+    "SU": 145887.4,
+    "DMA": 65201.6,
+    "HC": 89272.0,
+    "IDX": 15723.3,
+    "CTL": 0.0,
+    "ARGMAX": 9525.3
+   },
+   "vs_d4c_ar_pct": -8.54,
+   "vs_d4c_mtp_pct": -14.01,
+   "vs_d4c_qwen_pct": -44.17
+  },
+  "split_only_tp192_d4cstages": {
+   "ar_cycles": 646834.7,
+   "ar_tok_s": 1855.2,
+   "mtp_step_cycles": 1566390.0,
+   "mtp_design_tok_s": 3186.2,
+   "qwen_ar_cycles": 1276284.0,
+   "qwen_ar_tok_s": 940.2,
+   "unit_busy_ar": {
+    "FUSED": 62824.3,
+    "SM": 216722.1,
+    "COLL": 288578.4,
+    "SU": 143115.4,
+    "DMA": 55915.6,
+    "HC": 88556.0,
+    "IDX": 15712.9,
+    "CTL": 0.0,
+    "ARGMAX": 4926.3
+   },
+   "vs_d4c_ar_pct": -7.55,
+   "vs_d4c_mtp_pct": -8.59,
+   "vs_d4c_qwen_pct": 0.0
+  },
+  "a2p_relay_only": {
+   "ar_cycles": 604924.9,
+   "ar_tok_s": 1983.7,
+   "mtp_step_cycles": 1454600.1,
+   "mtp_design_tok_s": 3431.0,
+   "qwen_ar_cycles": 1278459.8,
+   "qwen_ar_tok_s": 938.6,
+   "unit_busy_ar": {
+    "FUSED": 62498.2,
+    "SM": 205069.8,
+    "COLL": 254693.4,
+    "SU": 145624.8,
+    "DMA": 51552.8,
+    "HC": 88392.0,
+    "IDX": 15727.3,
+    "CTL": 0.0,
+    "ARGMAX": 4935.5
+   },
+   "vs_d4c_ar_pct": -1.15,
+   "vs_d4c_mtp_pct": -1.56,
+   "vs_d4c_qwen_pct": -0.17
+  },
+  "d4f_relay_only": {
+   "ar_cycles": 624569.4,
+   "ar_tok_s": 1921.3,
+   "mtp_step_cycles": 1505237.5,
+   "mtp_design_tok_s": 3315.6,
+   "qwen_ar_cycles": 1283982.8,
+   "qwen_ar_tok_s": 934.6,
+   "unit_busy_ar": {
+    "FUSED": 64269.2,
+    "SM": 217509.7,
+    "COLL": 263728.0,
+    "SU": 145887.4,
+    "DMA": 53762.8,
+    "HC": 89272.0,
+    "IDX": 15723.3,
+    "CTL": 0.0,
+    "ARGMAX": 4946.1
+   },
+   "vs_d4c_ar_pct": -4.26,
+   "vs_d4c_mtp_pct": -4.87,
+   "vs_d4c_qwen_pct": -0.6
+  },
+  "b24_24sm_tp128_qwen_tp8": {
+   "ar_cycles": 610552.4,
+   "ar_tok_s": 1965.4,
+   "mtp_step_cycles": 1462493.0,
+   "mtp_design_tok_s": 3412.5,
+   "qwen_ar_cycles": 942872.8,
+   "qwen_ar_tok_s": 1272.7,
+   "unit_busy_ar": {
+    "FUSED": 64889.1,
+    "SM": 195545.7,
+    "COLL": 266564.9,
+    "SU": 143530.8,
+    "DMA": 53253.0,
+    "HC": 89580.0,
+    "IDX": 15709.4,
+    "CTL": 0.0,
+    "ARGMAX": 4920.7
+   },
+   "vs_d4c_ar_pct": -2.06,
+   "vs_d4c_mtp_pct": -2.09,
+   "vs_d4c_qwen_pct": 35.36
+  }
+ },
+ "runs": {
+  "base|AR": {
+   "cycles": 596948.7,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 71369.3,
+    "SM": 180122.7,
+    "COLL": 259471.7,
+    "SU": 136388.0,
+    "DMA": 40327.8,
+    "HC": 92800.0,
+    "IDX": 18833.7,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   }
+  },
+  "base|MTP_design": {
+   "cycles": 1255010.7,
+   "records": 7358,
+   "unit_busy": {
+    "DMA": 183036.9,
+    "FUSED": 179369.3,
+    "SM": 438460.8,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "HC": 192800.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.5
+   }
+  },
+  "base|draft_design": {
+   "draft_cycles": 138317.0,
+   "seed_cycles": 11367.5
+  },
+  "base|qwen": {
+   "cycles": 1269120.1,
+   "tok_s": 945.5
+  },
+  "d4c_32sm_4st_tp96|AR": {
+   "cycles": 597960.7,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 62824.3,
+    "SM": 195185.1,
+    "COLL": 256721.0,
+    "SU": 143115.4,
+    "DMA": 48721.8,
+    "HC": 88556.0,
+    "IDX": 15712.9,
+    "CTL": 0.0,
+    "ARGMAX": 4926.3
+   }
+  },
+  "d4c_32sm_4st_tp96|MTP_design": {
+   "cycles": 1272877.6,
+   "records": 7358,
+   "unit_busy": {
+    "DMA": 201366.5,
+    "FUSED": 170824.3,
+    "SM": 480931.4,
+    "COLL": 524022.0,
+    "SU": 172271.4,
+    "HC": 188556.0,
+    "IDX": 42495.9,
+    "CTL": 0.0,
+    "ARGMAX": 10715.2
+   }
+  },
+  "d4c_32sm_4st_tp96|draft_design": {
+   "draft_cycles": 139634.1,
+   "seed_cycles": 11545.8
+  },
+  "d4c_32sm_4st_tp96|qwen": {
+   "cycles": 1276284.0,
+   "tok_s": 940.2
+  },
+  "d4f_16sm_tp192_full|AR": {
+   "cycles": 675033.4,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 64269.2,
+    "SM": 240628.5,
+    "COLL": 295585.4,
+    "SU": 145887.4,
+    "DMA": 65201.6,
+    "HC": 89272.0,
+    "IDX": 15723.3,
+    "CTL": 0.0,
+    "ARGMAX": 4946.1
+   }
+  },
+  "d4f_16sm_tp192_full|MTP_design": {
+   "cycles": 1470460.8,
+   "records": 7358,
+   "unit_busy": {
+    "DMA": 290289.3,
+    "FUSED": 172269.2,
+    "SM": 624564.0,
+    "COLL": 587173.8,
+    "SU": 175043.4,
+    "HC": 189272.0,
+    "IDX": 42517.9,
+    "CTL": 0.0,
+    "ARGMAX": 10735.0
+   }
+  },
+  "d4f_16sm_tp192_full|draft_design": {
+   "draft_cycles": 150930.9,
+   "seed_cycles": 12006.9
+  },
+  "d4f_16sm_tp192_full|qwen": {
+   "cycles": 1284592.9,
+   "tok_s": 934.1
+  },
+  "d4f_16sm_tp192_suhalf|AR": {
+   "cycles": 675365.3,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 64269.2,
+    "SM": 240628.5,
+    "COLL": 295585.4,
+    "SU": 148439.2,
+    "DMA": 65201.6,
+    "HC": 89272.0,
+    "IDX": 15723.3,
+    "CTL": 0.0,
+    "ARGMAX": 4946.1
+   }
+  },
+  "d4f_16sm_tp192_suhalf|MTP_design": {
+   "cycles": 1471257.8,
+   "records": 7358,
+   "unit_busy": {
+    "DMA": 290289.3,
+    "FUSED": 172269.2,
+    "SM": 624564.0,
+    "COLL": 587173.8,
+    "SU": 182021.0,
+    "HC": 189272.0,
+    "IDX": 42517.9,
+    "CTL": 0.0,
+    "ARGMAX": 10735.0
+   }
+  },
+  "d4f_16sm_tp192_suhalf|draft_design": {
+   "draft_cycles": 150730.5,
+   "seed_cycles": 11942.5
+  },
+  "d4f_16sm_tp192_suhalf|qwen": {
+   "cycles": 1284592.9,
+   "tok_s": 934.1
+  },
+  "d4f_16sm_tp192_opta|AR": {
+   "cycles": 695578.6,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 64269.2,
+    "SM": 246903.5,
+    "COLL": 312445.4,
+    "SU": 145887.4,
+    "DMA": 69001.6,
+    "HC": 89272.0,
+    "IDX": 16203.3,
+    "CTL": 0.0,
+    "ARGMAX": 4951.1
+   }
+  },
+  "d4f_16sm_tp192_opta|MTP_design": {
+   "cycles": 1520591.1,
+   "records": 7358,
+   "unit_busy": {
+    "DMA": 298949.3,
+    "FUSED": 172269.2,
+    "SM": 641639.0,
+    "COLL": 625633.8,
+    "SU": 175043.4,
+    "HC": 189272.0,
+    "IDX": 43397.9,
+    "CTL": 0.0,
+    "ARGMAX": 10740.0
+   }
+  },
+  "d4f_16sm_tp192_opta|draft_design": {
+   "draft_cycles": 154260.9,
+   "seed_cycles": 12176.9
+  },
+  "d4f_16sm_tp192_opta|qwen": {
+   "cycles": 1288957.9,
+   "tok_s": 931.0
+  },
+  "d4f_16sm_tp96_dp2_L2|AR": {
+   "cycles": 692931.3,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 64269.2,
+    "SM": 246315.1,
+    "COLL": 307786.0,
+    "SU": 145887.4,
+    "DMA": 65201.6,
+    "HC": 89272.0,
+    "IDX": 15723.3,
+    "CTL": 0.0,
+    "ARGMAX": 9525.3
+   }
+  },
+  "d4f_16sm_tp96_dp2_L2|MTP_design": {
+   "cycles": 1639248.6,
+   "records": 7358,
+   "unit_busy": {
+    "DMA": 290289.3,
+    "FUSED": 172269.2,
+    "SM": 676912.0,
+    "COLL": 718237.0,
+    "SU": 162965.4,
+    "HC": 189272.0,
+    "IDX": 42517.9,
+    "CTL": 0.0,
+    "ARGMAX": 21103.1
+   }
+  },
+  "d4f_16sm_tp96_dp2_L2|draft_design": {
+   "draft_cycles": 170760.0,
+   "seed_cycles": 15586.1
+  },
+  "d4f_16sm_tp96_dp2_L2|qwen": {
+   "cycles": 2289783.0,
+   "tok_s": 524.1
+  },
+  "d4f_16sm_tp96_dp2_full|AR": {
+   "cycles": 653766.1,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 64269.2,
+    "SM": 246315.1,
+    "COLL": 264109.8,
+    "SU": 145887.4,
+    "DMA": 65201.6,
+    "HC": 89272.0,
+    "IDX": 15723.3,
+    "CTL": 0.0,
+    "ARGMAX": 9525.3
+   }
+  },
+  "d4f_16sm_tp96_dp2_full|MTP_design": {
+   "cycles": 1478082.3,
+   "records": 7358,
+   "unit_busy": {
+    "DMA": 290289.3,
+    "FUSED": 172269.2,
+    "SM": 676912.0,
+    "COLL": 539827.1,
+    "SU": 175043.4,
+    "HC": 189272.0,
+    "IDX": 42517.9,
+    "CTL": 0.0,
+    "ARGMAX": 21103.1
+   }
+  },
+  "d4f_16sm_tp96_dp2_full|draft_design": {
+   "draft_cycles": 164014.9,
+   "seed_cycles": 15277.3
+  },
+  "d4f_16sm_tp96_dp2_full|qwen": {
+   "cycles": 2286326.2,
+   "tok_s": 524.9
+  },
+  "split_only_tp192_d4cstages|AR": {
+   "cycles": 646834.7,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 62824.3,
+    "SM": 216722.1,
+    "COLL": 288578.4,
+    "SU": 143115.4,
+    "DMA": 55915.6,
+    "HC": 88556.0,
+    "IDX": 15712.9,
+    "CTL": 0.0,
+    "ARGMAX": 4926.3
+   }
+  },
+  "split_only_tp192_d4cstages|MTP_design": {
+   "cycles": 1400552.7,
+   "records": 7358,
+   "unit_busy": {
+    "DMA": 272549.4,
+    "FUSED": 170824.3,
+    "SM": 557866.5,
+    "COLL": 571750.7,
+    "SU": 172271.4,
+    "HC": 188556.0,
+    "IDX": 42495.9,
+    "CTL": 0.0,
+    "ARGMAX": 10715.2
+   }
+  },
+  "split_only_tp192_d4cstages|draft_design": {
+   "draft_cycles": 146310.5,
+   "seed_cycles": 11708.8
+  },
+  "split_only_tp192_d4cstages|qwen": {
+   "cycles": 1276284.0,
+   "tok_s": 940.2
+  },
+  "a2p_relay_only|AR": {
+   "cycles": 604924.9,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 62498.2,
+    "SM": 205069.8,
+    "COLL": 254693.4,
+    "SU": 145624.8,
+    "DMA": 51552.8,
+    "HC": 88392.0,
+    "IDX": 15727.3,
+    "CTL": 0.0,
+    "ARGMAX": 4935.5
+   }
+  },
+  "a2p_relay_only|MTP_design": {
+   "cycles": 1294361.8,
+   "records": 7358,
+   "unit_busy": {
+    "DMA": 207899.3,
+    "FUSED": 170498.2,
+    "SM": 510556.4,
+    "COLL": 519610.7,
+    "SU": 174780.8,
+    "HC": 188392.0,
+    "IDX": 42525.8,
+    "CTL": 0.0,
+    "ARGMAX": 10724.4
+   }
+  },
+  "a2p_relay_only|draft_design": {
+   "draft_cycles": 140797.6,
+   "seed_cycles": 11622.7
+  },
+  "a2p_relay_only|qwen": {
+   "cycles": 1278459.8,
+   "tok_s": 938.6
+  },
+  "d4f_relay_only|AR": {
+   "cycles": 624569.4,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 64269.2,
+    "SM": 217509.7,
+    "COLL": 263728.0,
+    "SU": 145887.4,
+    "DMA": 53762.8,
+    "HC": 89272.0,
+    "IDX": 15723.3,
+    "CTL": 0.0,
+    "ARGMAX": 4946.1
+   }
+  },
+  "d4f_relay_only|MTP_design": {
+   "cycles": 1342539.1,
+   "records": 7358,
+   "unit_busy": {
+    "DMA": 211786.5,
+    "FUSED": 172269.2,
+    "SM": 546044.7,
+    "COLL": 539445.2,
+    "SU": 175043.4,
+    "HC": 189272.0,
+    "IDX": 42517.9,
+    "CTL": 0.0,
+    "ARGMAX": 10735.0
+   }
+  },
+  "d4f_relay_only|draft_design": {
+   "draft_cycles": 143217.5,
+   "seed_cycles": 11662.9
+  },
+  "d4f_relay_only|qwen": {
+   "cycles": 1283982.8,
+   "tok_s": 934.6
+  },
+  "b24_24sm_tp128_qwen_tp8|AR": {
+   "cycles": 610552.4,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 64889.1,
+    "SM": 195545.7,
+    "COLL": 266564.9,
+    "SU": 143530.8,
+    "DMA": 53253.0,
+    "HC": 89580.0,
+    "IDX": 15709.4,
+    "CTL": 0.0,
+    "ARGMAX": 4920.7
+   }
+  },
+  "b24_24sm_tp128_qwen_tp8|MTP_design": {
+   "cycles": 1301783.4,
+   "records": 7358,
+   "unit_busy": {
+    "DMA": 229175.4,
+    "FUSED": 172889.1,
+    "SM": 487620.5,
+    "COLL": 537285.9,
+    "SU": 172686.8,
+    "HC": 189580.0,
+    "IDX": 42495.1,
+    "CTL": 0.0,
+    "ARGMAX": 10709.6
+   }
+  },
+  "b24_24sm_tp128_qwen_tp8|draft_design": {
+   "draft_cycles": 141269.4,
+   "seed_cycles": 11622.2
+  },
+  "b24_24sm_tp128_qwen_tp8|qwen": {
+   "cycles": 942872.8,
+   "tok_s": 1272.7
+  }
+ }
+}

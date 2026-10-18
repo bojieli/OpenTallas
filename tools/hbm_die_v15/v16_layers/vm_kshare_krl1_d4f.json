@@ -1,0 +1,61 @@
+{
+ "region": "vm_kshare_krl1_d4f",
+ "author": "Claude H-NETLIST",
+ "basis_commit": "H-SU 70905a93e (PC H9b + vmks KRL1)",
+ "instances": [],
+ "edges": [],
+ "clocks": [],
+ "straps": [],
+ "gaps": [],
+ "param_override": {
+  "vmks_SW0": {
+   "KRL1": 1
+  },
+  "vmks_SW1": {
+   "KRL1": 1
+  },
+  "vmks_SW2": {
+   "KRL1": 1
+  },
+  "vmks_SW3": {
+   "KRL1": 1
+  },
+  "vmks_SW4": {
+   "KRL1": 1
+  },
+  "vmks_SW5": {
+   "KRL1": 1
+  },
+  "vmks_SW6": {
+   "KRL1": 1
+  },
+  "vmks_SW7": {
+   "KRL1": 1
+  },
+  "vmks_NW0": {
+   "KRL1": 1
+  },
+  "vmks_NW1": {
+   "KRL1": 1
+  },
+  "vmks_NW2": {
+   "KRL1": 1
+  },
+  "vmks_NW3": {
+   "KRL1": 1
+  },
+  "vmks_NW4": {
+   "KRL1": 1
+  },
+  "vmks_NW5": {
+   "KRL1": 1
+  },
+  "vmks_NW6": {
+   "KRL1": 1
+  },
+  "vmks_NW7": {
+   "KRL1": 1
+  }
+ },
+ "notes": "PC H9b kr_rdy is ready-latency-1: every vmks_<q><k> (ot_hbm_svc_vm_kshare) runs KRL1=1 (3-entry c_kr ring, registered c_kr_rdy). Bench run_vm_kshare_krl1_bench.sh (pos x3 ratios + KRL1=0 regression PASS; depth-2 overrun + legacy-skid mutants FAIL). Ledger: PC +1 K request edge (H-SU)."
+}

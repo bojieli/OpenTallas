@@ -234,12 +234,15 @@ module ot_qwen_w12_matvec_part #(
     parameter integer LRR = 0,            // el1011-q-tile h3: one reset relay flop per hardened leaf (1-cycle later leaf release)
     parameter integer XTX = 0,            // el1011-q-tile r3 (HIER_HARD): XTX registered transmit rungs in front of every hardened
                                           // leaf (v/first/split/w and the ROUNDED x), one kept copy per leaf; +XTX cycles of latency
+    parameter integer GLUE_HARD = 0, // existing mq_wrom/S2 stages owned per LSL (fixed ROM-only mode)
     parameter integer LOCAL_ROOTS = 0, // physical clock ownership only; no data edge change
     parameter integer CHILD_CLOCKS = 0,
+    parameter integer REGROOT = 0,     // Q-ROMPARENT 10-16 (RPH 3 only): ck_reg = {data E, data W, gn W, gs W} regional roots; 0 = ck_reg unused
     parameter integer ANR = 0            // hardcore-1010 D: lane / tree adders as ot_hdc_fp32_add_lat_nr (0 = unchanged)
 ) (
     input wire [7:0] ck_lsl,
     input wire [7:0] ck_tx,
+    input wire [3:0] ck_reg,
     input  wire              clk,
     input  wire              rst_n,
     input  wire              go,
@@ -760,20 +763,72 @@ end endgenerate
             assign x_rnd[32*xr +: 32] = s2_x[32*xr +: 32] + 32'h7FFF + {31'd0, s2_x[32*xr + 16]};
         end
     end endgenerate
-    generate if (LANES) begin : g_operand
+    // REGROOT (Q-ROMPARENT 10-16): the ROM word register mq_wrom and the weight operand s2_w take the regional root of
+    // their ROM column (lanes [0, G*W/2) = west column ck_reg[2], the rest = east ck_reg[3]); same values, same edges.
+    generate if (LANES && REGROOT != 0) begin : g_operand_rr
+        localparam integer HL = G * W / 2;
+        localparam integer WB = (INT8_WEIGHT != 0 && WCONV == 0) ? 8 : 16;
+        integer lw, le;
+        always @(posedge ck_reg[2]) begin
+            mq_wrom[0 +: HL*WB] <= wrom_q[0 +: HL*WB];
+            for (lw = 0; lw < HL; lw = lw + 1)
+                if (INT8_WEIGHT != 0 && WCONV == 0)
+                    s2_w[32*lw +: 32] <= !s1b_gm[lw / W] ? 32'd0 : s1b_wsrc ? mq_kv[32*lw +: 32] :
+                                              {int8_bf16(mq_wrom[8*lw +: 8]), 16'h0000};
+                else
+                    s2_w[32*lw +: 32] <= !s1b_gm[lw / W] ? 32'd0 : s1b_wsrc ? mq_kv[32*lw +: 32] :
+                                              {mq_wrom[16*lw +: 16], 16'h0000};
+        end
+        always @(posedge ck_reg[3]) begin
+            mq_wrom[HL*WB +: HL*WB] <= wrom_q[HL*WB +: HL*WB];
+            for (le = HL; le < G * W; le = le + 1)
+                if (INT8_WEIGHT != 0 && WCONV == 0)
+                    s2_w[32*le +: 32] <= !s1b_gm[le / W] ? 32'd0 : s1b_wsrc ? mq_kv[32*le +: 32] :
+                                              {int8_bf16(mq_wrom[8*le +: 8]), 16'h0000};
+                else
+                    s2_w[32*le +: 32] <= !s1b_gm[le / W] ? 32'd0 : s1b_wsrc ? mq_kv[32*le +: 32] :
+                                              {mq_wrom[16*le +: 16], 16'h0000};
+        end
         always @(posedge clk) begin
             s1_gm <= m_gm; s1b_gm <= s1_gm; s2_gm <= s1b_gm;
-            mq_wrom <= wrom_q; mq_kv <= kv_q; mq_x <= x_q;
-            for (l = 0; l < G * W; l = l + 1)
-                if (INT8_WEIGHT != 0 && WCONV == 0)
-                    s2_w[32*l +: 32] <= !s1b_gm[l / W] ? 32'd0 : s1b_wsrc ? mq_kv[32*l +: 32] :
-                                              {int8_bf16(mq_wrom[8*l +: 8]), 16'h0000};
-                else
-                    s2_w[32*l +: 32] <= !s1b_gm[l / W] ? 32'd0 : s1b_wsrc ? mq_kv[32*l +: 32] :
-                                              {mq_wrom[16*l +: 16], 16'h0000};
+            mq_kv <= kv_q; mq_x <= x_q;
             s2_x <= mq_x;
             s3_w <= s2_w;
             s3_x <= s3x_d;
+        end
+    end else if (LANES) begin : g_operand
+        always @(posedge clk) begin
+            s1_gm <= m_gm; s1b_gm <= s1_gm; s2_gm <= s1b_gm;
+            mq_x <= x_q;
+            s2_x <= mq_x;
+            s3_w <= s2_w;
+            s3_x <= s3x_d;
+        end
+        if (GLUE_HARD != 0) begin:g_hard
+            if (W != 16 || G != 4 || HIER != 2 || WCONV != 1 || LOCAL_ROOTS == 0 || CHILD_CLOCKS == 0) begin:g_bad
+                initial $fatal(1,"GLUE_HARD operand requires fixed 64-lane ROM consumer configuration");
+            end
+            for(genvar cg=0;cg<8;cg=cg+1)begin:g_consumer
+                wire [127:0] w_d, w_q;
+                for(genvar gg=0;gg<4;gg=gg+1)begin:g_group
+                    for(genvar ll=0;ll<2;ll=ll+1)begin:g_lane
+                        assign w_d[16*(2*gg+ll)+:16]=wrom_q[16*(16*gg+2*cg+ll)+:16];
+                        assign s2_w[32*(16*gg+2*cg+ll)+:32]={w_q[16*(2*gg+ll)+:16],16'd0};
+                    end
+                end
+                ot_qwen_tile_operand u_operand(.clk(ck_tx[cg]),.w_d(w_d),.gm_d(s1_gm),.wsrc_d(s1_wsrc),.w_q(w_q));
+            end
+        end else begin:g_soft
+            always @(posedge clk)begin
+                mq_wrom <= wrom_q; mq_kv <= kv_q;
+                for (l = 0; l < G * W; l = l + 1)
+                    if (INT8_WEIGHT != 0 && WCONV == 0)
+                        s2_w[32*l +: 32] <= !s1b_gm[l / W] ? 32'd0 : s1b_wsrc ? mq_kv[32*l +: 32] :
+                                                  {int8_bf16(mq_wrom[8*l +: 8]), 16'h0000};
+                    else
+                        s2_w[32*l +: 32] <= !s1b_gm[l / W] ? 32'd0 : s1b_wsrc ? mq_kv[32*l +: 32] :
+                                                  {mq_wrom[16*l +: 16], 16'h0000};
+            end
         end
     end endgenerate
     genvar xg;

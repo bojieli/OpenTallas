@@ -354,8 +354,15 @@ def build(a):
         ri.findITerm('Y').connect(nn)
         ri.findITerm('A').connect(rnet)
         rec['parent'][rn] = root
+        rec.setdefault('root_buffer', {})[root] = rn
         log('root buffer', rn, 'drives', len(loads), 'tree inputs of', root)
     log('instantiated', len(rec['cells']), 'cells')
+    if spec.get('clock_at_root_buffer'):
+        # the PLL model has no output drive / timing arc (Qwen KV qkd_pllm: STA slew 114 ns at the root buffer input);
+        # the clock is defined at the root buffer input beside the PLL pin, so the delivered tree is what is measured
+        clocks = [(n, rec.get('root_buffer', {}).get(p) + '/A' if rec.get('root_buffer', {}).get(p) else p, per)
+                  for n, p, per in clocks]
+        rec['clock_source'] = 'root buffer input (spec clock_at_root_buffer)'
     D.setup_sta(clocks, spec.get('rc_layer', 'M8'))
     # measured trim.  Two delay elements: PAD (BUFx12f stacked on one site: gate delay, FF/TT ~0.77) and WPAD (BUFx24
     # local/far buffer PAIRS WPAD_UM apart: buffered wire like the tree's own repeater stages, FF/TT ~0.84).  One corner: PAD only.
@@ -529,9 +536,17 @@ def build(a):
             # the group targets are set ONCE (first trim) and then held: later iterations only correct residuals
             # against them (re-deriving them each iteration walked the target up by the raise every time); they move
             # only if a leaf overshoots
+            if gk in gtarget and gtarget[gk][0] > Ttt + RAISE_CAP_PS:
+                # stale hold: the group's arrivals FELL (Qwen KV kv_rt1: iter-0 c tree 22.7 ns with an over-loaded
+                # trunk net, 10.2 ns after the first trim re-buffered it); a held 22.9 ns target then asked for 12 ns of
+                # pads everywhere and the neighbour gaps never closed.  Re-derive from the current arrivals.
+                del gtarget[gk]
             if gk in gtarget:
-                Tt = max(gtarget[gk][0], Ttt)
-                Tf = max(gtarget[gk][1], base_ff_max)
+                # a leaf that overshoots the held target by less than tol/2 does NOT raise it (t9: raising the target
+                # to every new maximum walked the group up ~70 ps/iteration and left the slowest-trimmed leaves ~100 ps
+                # behind for ten iterations)
+                Tt = max(gtarget[gk][0], Ttt - 0.5 * a.tol)
+                Tf = max(gtarget[gk][1], base_ff_max - 0.5 * a.tol)
             tg[gk] = (Tt, Tf, Ttt, base_ff_max)
         # NEIGHBOUR-RELATIVE targets (owner 2026-10-16): no die-wide target; each communicating neighbour pair of
         # regions (spec "neighbours", tree or group names) must be within neighbour_budget_ps at TT and FF.  Targets
@@ -548,11 +563,9 @@ def build(a):
                 df = max(0.0, tg[y][1] - nbB - Tf) if two else 0.0
                 if dt <= 1e-6 and df <= 1e-6:
                     continue
-                if two:
-                    if df < rlo * dt:
-                        df = rlo * dt
-                    elif df > rhi * dt:
-                        dt = df / rhi
+                # TT and FF are relaxed independently (coupling them through the element cone ran away on Qwen KV
+                # kv_nb2: every FF raise forced dt = df / rhi, which re-raised the neighbours, +6..17 ns per iteration);
+                # the per-leaf P/W solve absorbs the residual cone mismatch
                 tg[x] = (Tt + dt, (Tf + df) if two else None, b1, b2)
                 moved = True
             if not moved:
@@ -576,12 +589,18 @@ def build(a):
                     nP, nW = 0.0, (dt * w1 + df * w2) / (w1 * w1 + w2 * w2)
                 elif nW < 0:
                     nW, nP = 0.0, (dt * p1 + df * p2) / (p1 * p1 + p2 * p2)
-                need[lb] = (int(DAMP * nP + 0.5), int(DAMP * nW + 0.5))
+                # W (a ~100 ps wire round trip) is coarse: take whole W units only below the damped need (floor), then
+                # trim the remainder with P (~15 ps) so W rounding never overshoots the target
+                kW = max(0, int(DAMP * nW))
+                rt_, rf_ = dt - kW * w1, df - kW * w2
+                kP = max(0, int(DAMP * max(0.0, (rt_ * p1 + rf_ * p2) / (p1 * p1 + p2 * p2)) + 0.5))
+                need[lb] = (kP, kW)
             log('group', gk, 'targets tt', round(Tt, 1), 'ff', round(Tf, 1), '(raised tt by', round(Tt - Ttt, 1), ')')
         # HIERARCHICAL TRIM: the part of a type that every leaf below a node needs goes ONCE at that node's input
         # (min over its leaves minus what its parent already carries): group offsets land on the common path at the
         # root, subtree offsets at their branch point, only the residual at the leaves
         plan = []
+        src_bufs = set(rec.get('root_buffer', {}).values()) if spec.get('clock_at_root_buffer') else set()
         for ty in ('W', 'P'):   # W first: wire stages above, gate pads nearer the node
             units, par_of = {}, {}
             for lb, nn_ in need.items():
@@ -593,7 +612,10 @@ def build(a):
                     if prev is not None:
                         par_of[prev] = x
                     px = rec['parent'].get(x)
-                    if px not in insts:
+                    # with clock_at_root_buffer the clock is DEFINED at the root buffer input: an element placed before
+                    # the root buffer is upstream of the clock source and adds nothing (Qwen KV kv_rt2: WN/EN 4 ns
+                    # offsets requested at dc_root_* every iteration, arrivals moved ~120 ps); stop below it
+                    if px not in insts or px in src_bufs:
                         par_of.setdefault(x, None)
                         break
                     prev, x = x, px

@@ -1,0 +1,32 @@
+test_bad_file_fails (test_die_relay_stages.Check) ... ok
+test_design_and_domain (test_die_relay_stages.Check) ... ok
+test_missing_bus_fails (test_die_relay_stages.Check) ... ok
+test_override_and_scheduled (test_die_relay_stages.Check) ... die_relay_stages: DIAGNOSTIC OVERRIDE a.x -> b.y: plan 3 -> 3 (this schedule cannot pass die_relay_check)
+ok
+test_pass (test_die_relay_stages.Check) ... ok
+test_stage_diff_fails (test_die_relay_stages.Check) ... ok
+test_class_price_fails_closed_and_prices (test_die_relay_stages.Hbm) ... ok
+test_committed_d4b_plan (test_die_relay_stages.Hbm) ... ok
+test_equal_age (test_die_relay_stages.Hbm) ... ok
+test_plan_matches_relayed_run (test_die_relay_stages.Hbm) ... ok
+test_compute_export_and_b2_adapter (test_die_relay_stages.Qwen) ... ok
+test_kv_export_crosscheck (test_die_relay_stages.Qwen) ... ok
+test_committed_plan_dump_agrees_with_hub_stage_count (test_die_relay_stages.S81) ... skipped 'committed S81 plan dump not checked out'
+test_export_model (test_die_relay_stages.S81) ... ok
+test_mtp_rtt_consumer (test_die_relay_stages.S81) ... ok
+test_digest_ignores_order_and_geometry (test_die_relay_stages.Schema) ... ok
+test_invalid (test_die_relay_stages.Schema) ... ok
+test_json_schema_agrees (test_die_relay_stages.Schema) ... ok
+test_plan_path (test_die_relay_stages.Schema) ... ok
+test_roundtrip_gz_and_digest (test_die_relay_stages.Schema) ... ok
+test_table_fails_closed (test_die_relay_stages.Schema) ... ok
+test_trace_model (test_die_relay_stages.Schema) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 0.200s
+
+OK (skipped=1)
+DIE_RELAY_CHECK FAIL: /tmp/tmp8r1c21ot/x.json: schema None != opentallas.die_relay_stages.v1; role None not in ('die_plan', 'compiled_schedule'); design None not in ('hbm', 's81', 'qwen_compute', 'qwen_kv'); coverage None not in ('complete', 'relayed_only'); plan.id missing; clock_period_ps must be > 0; buses missing
+DIE_RELAY_CHECK PASS design=hbm buses=2 digest=sha256:0969307de71d817d01551a2bd69b83756cb8640da927f73f28999e2b6229e376 plan=p1 schedule=compiled_schedule:test
+DIE_RELAY_CHECK PASS design=hbm buses=2 digest=sha256:0969307de71d817d01551a2bd69b83756cb8640da927f73f28999e2b6229e376 plan=p1 schedule=die_plan:None
+DIE_RELAY_CHECK FAIL design=hbm schedule compiled from plan digest sha256:0969307de71d817d01551a2bd69b83756cb8640da927f73f28999e2b6229e376 (plan p1), die run digest sha256:06387a113010a64751f9e3a3c500618e58d4a0c7a3f51678a9f0ab55d8b298da (plan p1): re-compile against this die | 1 buses with different relay stage counts, e.g. a.x -> b.y: die 4 vs sched 3

@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-// Local ROM-pair equivalence; MUT1 core, MUT2/3 RQR, MUT4..13 each physical ROM/pair clock.
+// Local ROM-pair equivalence; MUT1 core, MUT2/3 RQR, MUT4..13 each physical ROM/pair clock, MUT14..21 each TX root.
 // Native clock-partition equivalence: both sides instantiate all64 actual MAC lanes,
 // the closed LSL/node RTL bodies, and ten real 4096x266 mapped-ROM functional models.
 // Raw via-array initialization is declared memory stimulus, not internal compute substitution.
@@ -13,7 +13,12 @@ reg [513:0] na=0,nb=0;
 wire [513:0] rt,rn,ut,un;
 wire rhi,rlo,uhi,ulo;
 qfd_tile_nk_rp1 ref_tile (.ck(ck), .ck_rp0(ck), .ck_rp1(ck), .ck_rp2(ck), .ck_rp3(ck), .ck_rp4(ck), .ck_rom0(ck), .ck_rom1(ck), .ck_rom2(ck), .ck_rom3(ck), .ck_rom4(ck), .ck_rom5(ck), .ck_rom6(ck), .ck_rom7(ck), .ck_rom8(ck), .ck_rom9(ck), .ck_lsl0(ck), .ck_lsl1(ck), .ck_lsl2(ck), .ck_lsl3(ck), .ck_lsl4(ck), .ck_lsl5(ck), .ck_lsl6(ck), .ck_lsl7(ck), .ck_node(ck), .rst_n(rs),.tile_id(16'd0),.tie_hi(rhi),.tie_lo(rlo),.tap(tap),.t_out(rt),.n_a(na),.n_b(nb),.n_y(rn));
-qfd_tile_nk_rp2_romleaf dut (.ck_rp0((MUT==4 ? 1'b0 : ck)), .ck_rp1((MUT==5 ? 1'b0 : ck)), .ck_rp2((MUT==6 ? 1'b0 : ck)), .ck_rp3((MUT==7 ? 1'b0 : ck)), .ck_rp4((MUT==8 ? 1'b0 : ck)), .ck_rp5((MUT==9 ? 1'b0 : ck)), .ck_rp6((MUT==10 ? 1'b0 : ck)), .ck_rp7((MUT==11 ? 1'b0 : ck)), .ck_rp8((MUT==12 ? 1'b0 : ck)), .ck_rp9((MUT==13 ? 1'b0 : ck)), .ck((MUT==1 ? 1'b0 : ck)), .ck_rs((MUT==2 ? 1'b0 : ck)), .ck_rn((MUT==3 ? 1'b0 : ck)), .ck_fa0(ck), .ck_fa1(ck), .ck_fa2(ck), .ck_fa3(ck), .ck_fa4(ck), .ck_lsl0(ck), .ck_lsl1(ck), .ck_lsl2(ck), .ck_lsl3(ck), .ck_lsl4(ck), .ck_lsl5(ck), .ck_lsl6(ck), .ck_lsl7(ck), .ck_node(ck), .rst_n(rs),.tile_id(16'd0),.tie_hi(uhi),.tie_lo(ulo),.tap(tap),.t_out(ut),.n_a(na),.n_b(nb),.n_y(un));
+`ifdef OT_QWEN_GLUE_HARD_BENCH
+qfd_tile_nk_rp2_romleaf #(.GLUE_HARD(1)) dut (.ck_rse((MUT==22 ? 1'b0 : ck)), .ck_rne((MUT==23 ? 1'b0 : ck)),
+`else
+qfd_tile_nk_rp2_romleaf dut (
+`endif
+.ck_rp0((MUT==4 ? 1'b0 : ck)), .ck_rp1((MUT==5 ? 1'b0 : ck)), .ck_rp2((MUT==6 ? 1'b0 : ck)), .ck_rp3((MUT==7 ? 1'b0 : ck)), .ck_rp4((MUT==8 ? 1'b0 : ck)), .ck_rp5((MUT==9 ? 1'b0 : ck)), .ck_rp6((MUT==10 ? 1'b0 : ck)), .ck_rp7((MUT==11 ? 1'b0 : ck)), .ck_rp8((MUT==12 ? 1'b0 : ck)), .ck_rp9((MUT==13 ? 1'b0 : ck)), .ck((MUT==1 ? 1'b0 : ck)), .ck_rs((MUT==2 ? 1'b0 : ck)), .ck_rn((MUT==3 ? 1'b0 : ck)), .ck_tx0((MUT==14 ? 1'b0 : ck)), .ck_tx1((MUT==15 ? 1'b0 : ck)), .ck_tx2((MUT==16 ? 1'b0 : ck)), .ck_tx3((MUT==17 ? 1'b0 : ck)), .ck_tx4((MUT==18 ? 1'b0 : ck)), .ck_tx5((MUT==19 ? 1'b0 : ck)), .ck_tx6((MUT==20 ? 1'b0 : ck)), .ck_tx7((MUT==21 ? 1'b0 : ck)), .ck_fa0(ck), .ck_fa1(ck), .ck_fa2(ck), .ck_fa3(ck), .ck_fa4(ck), .ck_lsl0(ck), .ck_lsl1(ck), .ck_lsl2(ck), .ck_lsl3(ck), .ck_lsl4(ck), .ck_lsl5(ck), .ck_lsl6(ck), .ck_lsl7(ck), .ck_node(ck), .rst_n(rs),.tile_id(16'd0),.tie_hi(uhi),.tie_lo(ulo),.tap(tap),.t_out(ut),.n_a(na),.n_b(nb),.n_y(un));
 genvar p,b;
 generate for(p=0;p<2;p=p+1)begin: cols
  for(b=0;b<5;b=b+1)begin:banks

@@ -1,0 +1,41 @@
+{
+ "schema": "opentallas.qwen.seam_pin_audit.v1",
+ "qualification": false,
+ "basis": "emitted LEF and exact explicit R0 placement; raw source track occupancy only",
+ "inputs": {
+  "/home/ubuntu/artifacts/qdieplan3-1016/smoke_elements.lef": "fed9ee57843e9416efe43d3dd617a2c519b6b3105441c821a2d2e275989df8a5",
+  "/home/ubuntu/artifacts/qdieplan3-1016/q3h2_sk.json": "a20c47a7d7e9e2fd5ba1bf2d2b6603ef7f321e45a72f7d2c0a71ffaa7e2a1734",
+  "/home/ubuntu/artifacts/qdieplan3-1016/smoke_place.tcl": "562f21cdb9279d9fe7f2aa6a496b33e00967a5073b9506a250bd811c746c5234",
+  "/home/ubuntu/artifacts/qdieplan3-1016/smoke_die.v": "7e5de996bb96ad84029b856d9e02020401b29f89d9528ee6df1e4fef17d5679a"
+ },
+ "mutant": true,
+ "pairs_expected": 8511,
+ "pairs_verified": 8510,
+ "layers": {
+  "M5": 4848,
+  "M7": 3662
+ },
+ "source_geometry_pass": false,
+ "problems": [
+  "pair va[0]/sa[0] layer/x mismatch M5/M5 15262.38/15262.475999999999"
+ ],
+ "problem_count": 1,
+ "max_pair_length_um": 43.416,
+ "pair_table_sha256": "b45119b55cca8a4ebc22877ff91c2a47495f89095f59844b58ef6e0f7ec40ae9",
+ "worst_260um_window": {
+  "x_um": [
+   15432,
+   15692
+  ],
+  "bits": 4294,
+  "layers": {
+   "M5": 2445,
+   "M7": 1849
+  }
+ },
+ "exceptions": [
+  "sq[0:2047] also feeds seq_su: extra branch remains unexamined",
+  "PDN and other routed signal occupancy not proved; no cut omission is authorized",
+  "unclosed diagnostic pin plans are not native physical views"
+ ]
+}

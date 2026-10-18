@@ -1,5 +1,15 @@
 `timescale 1ns/1ps
 `default_nettype none
+// OT_SFU_SYNC_RST (H-SU k8, 2026-10-16 owner standard: regional SYNC reset trees, no async-clear fanout): when defined,
+// every reset in this file is synchronous to its own clock (the regional rst_n comes registered from ot_rst_relay /
+// the die's regional relays); undefined = the previous asynchronous form, bit-identical behaviour after release.
+`ifndef OT_SFU_ARST
+`ifdef OT_SFU_SYNC_RST
+`define OT_SFU_ARST(r)
+`else
+`define OT_SFU_ARST(r) or negedge r
+`endif
+`endif
 // SFU controller broadcast as a REGISTERED distribution tree (Claude hbm-group-B3, 2026-10-14).
 //
 // The quarter's controller broadcasts 1,022 dynamic bits (ld terms 480, o/i/row 72, ls/lvw 8, emit 1, pass 461) to 16
@@ -55,7 +65,7 @@ module ot_hgi_sfu_lane_map_e123 #(parameter integer MUT_LANE=0, MUT_PASS=0) (   
  reg [3:1] ld_pipe;
  // pass: three more edges as a 2-slot ring + output register (written once, read once; no flop-to-flop data chain)
  reg [459:0] ps [0:1]; reg [1:0] poh; reg [459:0] pq;
- always @(posedge clk or negedge rst_n) if(!rst_n) poh<=2'b01; else poh<={poh[0],poh[1]};
+ always @(posedge clk `OT_SFU_ARST(rst_n)) if(!rst_n) poh<=2'b01; else poh<={poh[0],poh[1]};
  always @(posedge clk) begin
   if(poh[0]) ps[0]<=e0_pass; if(poh[1]) ps[1]<=e0_pass;
   pq<=MUT_PASS ? e0_pass : (poh[0] ? ps[0] : 460'd0) | (poh[1] ? ps[1] : 460'd0);

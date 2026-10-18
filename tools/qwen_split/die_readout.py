@@ -244,7 +244,7 @@ def main(argv=None):
     ap.add_argument('--out', required=True, type=Path)
     ap.add_argument('--title', default='Qwen compute die')
     ap.add_argument('--top', type=int, default=20)
-    ap.add_argument('--hot', type=float, default=85.0, help='hot cell threshold, usage %')
+    ap.add_argument('--hot', type=float, default=85.0, help='hot cell threshold, usage %%')
     ap.add_argument('--spots', type=int, default=12)
     a = ap.parse_args(argv)
     a.out.mkdir(parents=True, exist_ok=True)

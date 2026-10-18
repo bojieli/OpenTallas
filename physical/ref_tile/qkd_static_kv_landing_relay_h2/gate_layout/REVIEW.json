@@ -1,0 +1,15 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qkd_static_kv_landing_relay_h2",
+ "reviewer": "ROOT (Claude, 10-17 ~02:00)",
+ "verdict": "APPROVED",
+ "gate_commit": "bd45e8e4e",
+ "checklist": {
+  "lattice": "51.84 x 17.28",
+  "std_cell_band": "tiny, pin-bound N/S rows, empty body",
+  "pin_spread": "N to row, S to lane, W rst/cfg, E arm/epoch/layer",
+  "clock_entry": "ck on N, spread 4.1 ps",
+  "shape": "pin-bound relay"
+ },
+ "relayed_by": "Q-KV lead -> KVCTRL 1815"
+}

@@ -22,6 +22,9 @@ K_BASIS = ('rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write 
            'ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)')
 W_BASIS = ('ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant\'s eight '
            'ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)')
+WC = 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_wbw_copy.sv'
+WC_BASIS = ('ot_hbm_svc_wbw_copy: PC-band local copy of the wbk window command, equal-age LAT 2 stream edges on every '
+            'sink (d4c locality rule: no broadcast beyond ~2 mm without a local copy)')
 KEXC = ('HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port '
         '(vmks is the PC-side K window leaf of that boundary)')
 
@@ -47,10 +50,21 @@ def main():
             edges.append(dict(src=[d, p], dst=[w, p], clock='stream', basis=DMA_BASIS))
         for p in ('wb_ready', 'wa'):
             edges.append(dict(src=[w, p], dst=[d, p], clock='stream', basis=DMA_BASIS))
-        for k in range(8):
-            ks = f'vmks_{q}{k}'
+        # d4c locality (H-SM 2026-10-16, owner neighbour-relative clocking): the 43-b window command reaches the PC band
+        # through TWO local copies (ot_hbm_svc_wbw_copy, LAT 2 stream edges): wbc_<q>0 serves vmks 0..3, wbc_<q>1 4..7.
+        for h in range(2):
+            c = f'wbc_{q}{h}'
+            inst.append(dict(name=c, master='ot_hbm_svc_wbw_copy', source=WC, params=dict(NS=4, MUT=0),
+                             slot=f'pc_{q}', owner='H-SM/wbwc',
+                             note='PC-band local copy of the WB window command (pin reg + per-sink out reg, LAT 2)'))
+            clocks += [dict(inst=c, port='stream_clk', domain='stream', kind='clock'),
+                       dict(inst=c, port='stream_rst_n', domain='stream', kind='reset')]
             for p in ('wbw_v', 'wbw_base', 'wbw_total'):
-                edges.append(dict(src=[w, p], dst=[ks, p], clock='stream', basis=W_BASIS))
+                edges.append(dict(src=[w, p], dst=[c, p], clock='stream', basis=WC_BASIS))
+        for k in range(8):
+            ks, c, s = f'vmks_{q}{k}', f'wbc_{q}{k // 4}', k % 4
+            for p, b in (('wbw_v', 1), ('wbw_base', 30), ('wbw_total', 12)):
+                edges.append(dict(src=[c, 'o_' + p, s * b, s * b + b], dst=[ks, p], clock='stream', basis=WC_BASIS))
             for p, b, out in (('w_k_v', 1, True), ('w_k_addr', 30, True), ('w_k_wdata', 256, True),
                               ('w_k_rdy', 1, False), ('w_k_wr_done', 1, False)):
                 lo, hi = 4 * k * b, 4 * k * b + 4 * b

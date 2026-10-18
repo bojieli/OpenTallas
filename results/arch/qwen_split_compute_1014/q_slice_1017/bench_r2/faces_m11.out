@@ -1,0 +1,7 @@
+XC cc count 1 word 2beeecafef00d
+GATHER values 04248000 04248000
+FACES MUT=11: FAIL 2
+- rtl/test/qwen_dv/tb_qfd_dv2_faces.sv:96: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 163ns; walltime 1.825 s; speed 89.280 ns/s
+- Verilator: cpu 1.826 s on 1 threads; alloced 1469 MB

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hbfd_rly_624_NS_fc",
+ "enable": false,
+ "reason": "F1 relay = ONE register stage at the pins by definition: i is captured by the stage register, o leaves it through the matched forwarding buffer; a pin register would add a cycle per hop and break the clk_out / o driver match (DIE-CLOCK F1)"
+}

@@ -80,7 +80,10 @@ for m, f in mods.items():
         w, h = float(s.group(1)), float(s.group(2))
     mac[m] = [max(c), w, h]
 out = dict(std_area_um2=area, macros=mac, actual_top=tops[0], source_file_sha256=input_hashes,
-           synthesis_script_sha256=hashlib.sha256(ys.encode()).hexdigest(), etm_script_sha256=etm_scripts)
+           synthesis_script_sha256=hashlib.sha256(ys.encode()).hexdigest(), etm_script_sha256=etm_scripts,
+           actual_macro_declarations=fj['macros'],
+           actual_library_reads=[shlex.split(line)[-1] for line in ys.splitlines()
+                                 if line.startswith('read_verilog ') and '-lib' in shlex.split(line)])
 if direct:
     out.update(actual_elaboration_script=ys, expected_resolution=resolution,
                resolution_tool_sha256=resolution_tool_sha256, observed_synth_launcher_sha256=observed_synth_launcher_sha256)
@@ -95,12 +98,14 @@ def check_sources(meta, commit, views):
     data = subprocess.run(['git', '-C', str(Path(__file__).resolve().parents[2]), 'cat-file', '--batch'],
                           input=''.join(f'{commit}:{p}\n' for p in paths).encode(), capture_output=True, check=True).stdout
     offset = 0
+    source_blobs = {}
     for p in paths:
         end = data.index(b'\n', offset)
         header = data[offset:end].split()
         if len(header) != 3 or header[1] != b'blob':
             raise ValueError(f'Source absent from {commit}: {p}')
         size = int(header[2]); blob = data[end + 1:end + 1 + size]; offset = end + 2 + size
+        source_blobs[p] = blob
         if hashlib.sha256(blob).hexdigest() != hashes[p]:
             raise ValueError(f'Source differs from {commit}: {p}')
     for p in hashes:
@@ -108,6 +113,71 @@ def check_sources(meta, commit, views):
             local = Path(views) / 'wrap' / Path(p).name
             if hashlib.sha256(local.read_bytes()).hexdigest() != hashes[p]:
                 raise ValueError(f'Parameter wrapper mismatch: {p}')
+            source_blobs[p] = local.read_bytes()
+    return source_blobs
+
+
+def expected_memory_macros(commit):
+    """Resolve physical SRAM definitions from Git, never from a partial staged tree."""
+    root = Path(__file__).resolve().parents[2]
+    result = subprocess.run(['git', '-C', str(root), 'grep', '-n', '-E',
+                             r'module[[:space:]]+[A-Za-z_]', commit, '--',
+                             ':(glob)physical/asap7_memory_macros_v2/*/*_bb.v'],
+                            capture_output=True, text=True)
+    if result.returncode not in (0, 1):
+        raise ValueError('Cannot resolve expected mapped memory definitions from Git')
+    catalog = {}
+    for line in result.stdout.splitlines():
+        _, path, _, text = line.split(':', 3)
+        for module in re.findall(r'\bmodule\s+([A-Za-z_]\w*)', text):
+            # PHYs remain permitted external models; this gate is on-chip memory only.
+            if not module.startswith(('ot_sram_', 'ot_rom_')):
+                continue
+            previous = catalog.setdefault(module, path)
+            if previous != path:
+                raise ValueError(f'Ambiguous expected physical memory: {module}: {previous}, {path}')
+    return catalog
+
+
+def check_mapped_memory_resolution(meta, source_blobs, expected):
+    """Byte-identical SRAM simulation arrays cannot substitute a mapped macro."""
+    declared = {row['module']: row['file'] for row in meta['actual_macro_declarations']}
+    lib_reads = set(meta['actual_library_reads'])
+    selected = {}
+    for path, blob in source_blobs.items():
+        text = re.sub(r'/\*.*?\*/|//[^\n]*', '', blob.decode(), flags=re.S)
+        for module in re.findall(r'\bmodule\s+([A-Za-z_]\w*)', text):
+            if module not in expected:
+                continue
+            canonical = expected[module]
+            if path != canonical:
+                raise ValueError(f'Mapped memory {module} resolves to {path}; expected {canonical}')
+            if declared.get(module) != canonical or canonical not in lib_reads:
+                raise ValueError(f'Mapped memory {module} was not read as its physical blackbox library')
+            stem = canonical[:-len('_bb.v')]
+            sidecars = [stem + ext for ext in ('.lef', '_tt.lib', '_ff.lib')]
+            if any(path not in meta['source_file_sha256'] for path in sidecars):
+                raise ValueError(f'Mapped memory {module} missing consumed LEF/TT/FF source hashes')
+            selected[module] = canonical
+    for module, canonical in declared.items():
+        if module in expected and (canonical != expected[module] or module not in selected):
+            raise ValueError(f'Mapped memory declaration does not match exact expected source: {module}')
+    return selected
+
+
+def check_contract_entry(entry, contract):
+    """A collected wrapper must represent the literal current contract instances."""
+    insts = contract['instances']
+    rep = insts[entry['representative']]
+    if rep['master'] != entry['master'] or rep.get('params', {}) != entry['params']:
+        raise ValueError('View master/parameter identity differs from exact contract')
+    signature = rep['ports']
+    for name in entry['instances']:
+        actual = insts[name]
+        if (actual['master'] != rep['master'] or actual.get('params', {}) != rep.get('params', {})
+                or actual['ports'] != signature):
+            raise ValueError(f'View membership has different exact signature: {name}')
+    return rep
 
 
 def check_direct_master(entry, meta, expected_ports, actual_ports):
@@ -147,6 +217,7 @@ def main():
     ap.add_argument('--views', required=True)
     ap.add_argument('--remote-root', default='/srv/opentallas-scratch/claude/hdie-v16case')
     ap.add_argument('--commit', default='8c3c2a340')
+    ap.add_argument('--contract', type=Path, help='exact generated contract to bind (source bytes still checked against --commit)')
     ap.add_argument('--build-commit', help='actual source snapshot used by a preserved build; all RTL/macro bytes must also match --commit')
     ap.add_argument('--allow-direct-master', action='store_true', help='strictly prove params{} real-master ETMs without changing their Liberty names')
     ap.add_argument('cells', nargs='*', help='only these cells (a same-named older build with other ports/params/source must not be fetched)')
@@ -155,10 +226,18 @@ def main():
     build_commit = a.build_commit or a.commit
     src = f'{a.remote_root}/src_{build_commit}'
     expected_src = f'{a.remote_root}/src_{a.commit}'
-    contract = json.loads(subprocess.check_output(['git', '-C', str(Path(__file__).resolve().parents[2]),
-                                                  'show', f'{a.commit}:results/arch/hbm_die_v16/contract.json']))
+    contract_bytes = (a.contract.read_bytes() if a.contract else subprocess.check_output(
+        ['git', '-C', str(Path(__file__).resolve().parents[2]), 'show',
+         f'{a.commit}:results/arch/hbm_die_v16/contract.json']))
+    contract = json.loads(contract_bytes)
+    expected_memories = expected_memory_macros(a.commit)
     found = {}
-    for h in HOSTS:
+    hosts = set(HOSTS)
+    for receipt in (Path(a.views) / 'drive').glob('*.json'):
+        record = json.loads(receipt.read_text())
+        if record.get('ok') and record.get('host'):
+            hosts.add(record['host'])
+    for h in sorted(hosts):
         out = subprocess.run(['ssh', h, f'cd {a.remote_root}/syn 2>/dev/null && ls -d */ | tr -d /'], capture_output=True,
                              text=True).stdout.split()
         for c in out:
@@ -184,9 +263,10 @@ def main():
         if meta.returncode:
             raise ValueError(f'Cannot admit {c}: {meta.stderr[-1000:]}')
         m = json.loads(meta.stdout)
-        check_sources(m, build_commit, a.views)
+        blobs = check_sources(m, build_commit, a.views)
         if build_commit != a.commit:
-            check_sources(m, a.commit, a.views)
+            blobs = check_sources(m, a.commit, a.views)
+        m['mapped_memory_resolution'] = check_mapped_memory_resolution(m, blobs, expected_memories)
         dst = Path(a.views) / 'synth' / c
         dst.mkdir(parents=True, exist_ok=True)
         files = (f'{w}_synth_tt.lib', f'{w}_synth_ff.lib', 'etm_worst_tt.rpt', 'etm_worst_ff.rpt')
@@ -194,7 +274,7 @@ def main():
         # a failed transfer must not publish a receipt for incomplete views.
         subprocess.run(['rsync', '-az', *[f'{h}:{a.remote_root}/syn/{c}/{f}' for f in files], str(dst) + '/'],
                        check=True)
-        rep = contract['instances'][V[c]['representative']]
+        rep = check_contract_entry(V[c], contract)
         expected_ports = {p: (d['direction'], d['bits']) for p, d in rep['ports'].items()}
         for corner in ('tt', 'ff'):
             check_etm_signature(dst / f'{w}_synth_{corner}.lib', w, expected_ports)
@@ -214,7 +294,7 @@ def main():
             V[c]['synth_top'] = w
             V[c]['parameter_binding'] = 'EXACT_DIRECT_MASTER_PARAMS_EMPTY_NO_RENAME'
         m.update(host=h, remote=f'{a.remote_root}/syn/{c}', declared_source_snapshot=build_commit,
-                 compatible_source_snapshot=a.commit, parameter_binding=V[c].get('parameter_binding', 'EXACT_WRAPPER'),
+                 compatible_source_snapshot=a.commit, contract_sha256=hashlib.sha256(contract_bytes).hexdigest(), parameter_binding=V[c].get('parameter_binding', 'EXACT_WRAPPER'),
                  consumed_file_sha256={f: hashlib.sha256((dst / f).read_bytes()).hexdigest() for f in files})
         (dst / 'meta.json').write_text(json.dumps(m, indent=1))
         print(c, h, m.get('std_area_um2'), len(m.get('macros', {})))

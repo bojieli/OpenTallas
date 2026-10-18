@@ -1,0 +1,117 @@
+{
+ "name": "qkd_ctrl_pc_core_s6w-s6w-bacb34ee9",
+ "block": "qkd_ctrl_pc_host_static_core",
+ "ref_tile": true,
+ "owner": "Claude:Q-KVSYS-DIE KVCTRL",
+ "purpose": "KVCTRL split 2026-10-16 (Codex-prescribed, no third same-shape retry, no waiver): e1 one HBM root 17,150 sinks at measured insertion 426.8 ps (>300 rule) and e2 plateaued at native_commit_identity -58.453 ps. qkd_ctrl_pc_host_static becomes a wires-parent of three hardened roots: core (scheduler/tags/CDC/observer/drain, ~13.3k hclk sinks est), port (actual ot_qfd_emb_pcport KVW2/RQD64 + its data pin flops, ~2.9k), ECC (actual ot_qfd_kv_landing_ecc, ~0.9k). Every seam output flop-driven; priced edges: native commit +1 hclk (new pin register; SDC moves native_commit_* to the hclk domain), static write data +1 hclk into the port (hidden, column >= 4 edges later), KV read/write 0. s4 (lead 2026-10-16, parallel to core_s1's hold ECO): STRUCTURAL fixes of the two measured core limiters. (1) e_l_v is captured in a pin flop l_v_q (core_s1 routed TT in->reg -30.92; gate textbook 13-level e_l_v -> drain_kv cone): drain_kv counts the ECC landing one hclk edge later (debt held longer, never early; raw e_l_v kept in the activity veto), traffic 0 edges, drain observation <= +1 hclk (already conservative, DRAIN_PIPE). (2) ot_qkd_static_kv_timing write-queue next head: per-entry bank one-hot stored at push + registered wq_rp1, both head candidates read in parallel and the late wr_ok selects last (was wr_ok -> wq_rp+1 -> 4:1 read -> 5:32 decode, 18 levels, ~772 ps): cycle-identical, 0 edges. cycles_added 0 (traffic/data); drain observation +1 hclk. (3) core_s1's routed TT reg->reg limiter was wq_rp -> wq_bq -> hold_n -> s_pre_ok -> s_pblk -> rd_ok -> rd_oh (-20.54 TT, 24 levels; SS -525.84): hold_n is now the OR of stored per-entry one-hots under per-SLOT valid bits (order-free set, identical value), no wq_rp-relative index/decode. (4) outline 97.2 -> 108.0 x 216 (util ~53% -> ~48%): core_s1's hold ECO needed ~11.4k hold cells (13,600 FF endpoints in margin) and the routed layout had a dense W pin band; the parent c1 grows to 207.36 wide (slot 247.512). (5) ECC head lookahead e_sec/e_row <= f(tq[tr + kv_v]): both candidates f(tq[tr]), f(tq[tr1]) (tr1 registered) formed in parallel, p_kv_v selects last (core_s1 p_kv_v -> e_sec 13 levels, met only after LVT): identical values, 0 edges. s5 (lead, parallel to s4): (6) idle split, cycle-identical: idle_core_r registers the idle AND without the raw es[0] pin, a dedicated (keep) es[0] pin flop es0_idle_q, idle_core = idle_core_r & !es0_idle_q (AND2 of two flops; core_s4 gate es[0] -> idle_core in->reg -34.9 ps). s_pblk arbitration (sb -> hb_oh 15 lv, ~648 ps est) NOT split: s_pblk depends on the combinational row decision r_v/r_sp, no cheap cycle-identical cut. s6 (KVCTRL 1815, structural fix of core_s5 EARLY_FAIL_HOLD at 4_1_cts): the one endpoint the hold repair could not fix (WNS stuck -17.17 ps for 8,660 iterations while 10,955 margin buffers went in) was l_v_q/D, the e_l_v pin flop: the e_l_v port also fed the combinational hbm_drain_activity OR, so leaf_inhold gave it NO input hold pad (it skips ports with non-DFF loads) and the port-net buffer was rejected. (7) raw e_l_v and es[0] leave the activity vetoes; each now loads only pin flops (padded like every other input). Cycle-identical: es_v_q / l_v (one edge later) are in the vetoes and a legal landing always has drain_kv >= 1, so hbm_debt_zero_q vetoes the same edges; measured: production j0/j8/j16/late_tail drain logs incl. a per-transition idle_core/idle_hbm/drain_fault trace and controller_calendar_native run0/8/16 IDENTICAL to s5. cycles_added 0. s6w: same RTL, outline 108.0 -> 116.64 x 216 (lower density for the ~13.5k-endpoint FF hold-margin fill, ~16k buffers predicted).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/qkvctrl-split-1016",
+  "commit": "bacb34ee9",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/qwen_sys/emb_hbm_20261008",
+   "rtl/qwen_sys/host_20261013",
+   "rtl/qwen_sys/kv_die_20261009",
+   "rtl/qwen_sys/q5_20261009",
+   "rtl/qwen_sys/static_kv_20261014",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv",
+   "physical/qkd_ctrl_strip"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_ctrl_pc_host_static_core #(.PROFILE(0), .ELASTIC(1), .RAW_WD(256), .TQD(64), .DRAIN_PIPE(1), .STRAP_CDC(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_20261014/ot_qkd_static_emb_cdc.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "actual_controller_conservative_drain",
+    "cmd": "python3 tools/qwen_static_kv/check_controller_drain.py {RUN}/bench/drain && cat {RUN}/bench/drain/production_j0.log",
+    "expect": "pass",
+    "pass_regex": "DRAIN_PASS boundary checks[1-9]",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "missing_actual_host_read_debt",
+    "cmd": "{RUN}/bench/drain/obj_missing_host_read_debt/Vtb_kv_hbm_elastic_boundary +jit=16 +seed=2",
+    "expect": "fail",
+    "fail_regex": "DRAIN_EARLY_CORE",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_ctrl_pc_core_s6w/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_ctrl_pc_core_s6w/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_ctrl_pc_core_s6w --out {RUN}/record/views/qkd_ctrl_pc_host_static_core  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_ctrl_pc_core_s6w/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_ctrl_pc_core_s6w/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_ctrl_pc_core_s6w/qkd_ctrl_pc_core_s6w-s6w-bacb34ee9"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "KVCTRL split 2026-10-16 (Codex-prescribed, no third same-shape retry, no waiver): e1 one HBM root 17,150 sinks at measured insertion 426.8 ps (>300 rule) and e2 plateaued at native_commit_identity -58.453 ps. qkd_ctrl_pc_host_static becomes a wires-parent of three hardened roots: core (scheduler/tags/CDC/observer/drain, ~13.3k hclk sinks est), port (actual ot_qfd_emb_pcport KVW2/RQD64 + its data pin flops, ~2.9k), ECC (actual ot_qfd_kv_landing_ecc, ~0.9k). Every seam output flop-driven; priced edges: native commit +1 hclk (new pin register; SDC moves native_commit_* to the hclk domain), static write data +1 hclk into the port (hidden, column >= 4 edges later), KV read/write 0. s3: source rebind after merging main 183dfcb93 (STATIC_REFRESH parameter threaded parent->u_core->u_ctl->timing; default STATIC_REFRESH=0/CONTEXT_DESC=0 elaboration unchanged: refresh_rr unused, context_active constant 0). Outline/pins identical to s1. s4 (lead 2026-10-16, parallel to core_s1's hold ECO): STRUCTURAL fixes of the two measured core limiters. (1) e_l_v is captured in a pin flop l_v_q (core_s1 routed TT in->reg -30.92; gate textbook 13-level e_l_v -> drain_kv cone): drain_kv counts the ECC landing one hclk edge later (debt held longer, never early; raw e_l_v kept in the activity veto), traffic 0 edges, drain observation <= +1 hclk (already conservative, DRAIN_PIPE). (2) ot_qkd_static_kv_timing write-queue next head: per-entry bank one-hot stored at push + registered wq_rp1, both head candidates read in parallel and the late wr_ok selects last (was wr_ok -> wq_rp+1 -> 4:1 read -> 5:32 decode, 18 levels, ~772 ps): cycle-identical, 0 edges. cycles_added 0 (traffic/data); drain observation +1 hclk. (3) core_s1's routed TT reg->reg limiter was wq_rp -> wq_bq -> hold_n -> s_pre_ok -> s_pblk -> rd_ok -> rd_oh (-20.54 TT, 24 levels; SS -525.84): hold_n is now the OR of stored per-entry one-hots under per-SLOT valid bits (order-free set, identical value), no wq_rp-relative index/decode. (4) outline 97.2 -> 108.0 x 216 (util ~53% -> ~48%): core_s1's hold ECO needed ~11.4k hold cells (13,600 FF endpoints in margin) and the routed layout had a dense W pin band; the parent c1 grows to 207.36 wide (slot 247.512). (5) ECC head lookahead e_sec/e_row <= f(tq[tr + kv_v]): both candidates f(tq[tr]), f(tq[tr1]) (tr1 registered) formed in parallel, p_kv_v selects last (core_s1 p_kv_v -> e_sec 13 levels, met only after LVT): identical values, 0 edges. s5 (lead, parallel to s4): (6) idle split, cycle-identical: idle_core_r registers the idle AND without the raw es[0] pin, a dedicated (keep) es[0] pin flop es0_idle_q, idle_core = idle_core_r & !es0_idle_q (AND2 of two flops; core_s4 gate es[0] -> idle_core in->reg -34.9 ps). s_pblk arbitration (sb -> hb_oh 15 lv, ~648 ps est) NOT split: s_pblk depends on the combinational row decision r_v/r_sp, no cheap cycle-identical cut. s6 (KVCTRL 1815, structural fix of core_s5 EARLY_FAIL_HOLD at 4_1_cts): the one endpoint the hold repair could not fix (WNS stuck -17.17 ps for 8,660 iterations while 10,955 margin buffers went in) was l_v_q/D, the e_l_v pin flop: the e_l_v port also fed the combinational hbm_drain_activity OR, so leaf_inhold gave it NO input hold pad (it skips ports with non-DFF loads) and the port-net buffer was rejected. (7) raw e_l_v and es[0] leave the activity vetoes; each now loads only pin flops (padded like every other input). Cycle-identical: es_v_q / l_v (one edge later) are in the vetoes and a legal landing always has drain_kv >= 1, so hbm_debt_zero_q vetoes the same edges; measured: production j0/j8/j16/late_tail drain logs incl. a per-transition idle_core/idle_hbm/drain_fault trace and controller_calendar_native run0/8/16 IDENTICAL to s5. cycles_added 0. s6w: same RTL, outline 108.0 -> 116.64 x 216 (lower density for the ~13.5k-endpoint FF hold-margin fill, ~16k buffers predicted)."
+}

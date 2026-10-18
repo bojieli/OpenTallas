@@ -1,0 +1,435 @@
+{
+ "name": "hbm_su_static_kind1_l4_leaf1_1016",
+ "top": "ot_hbm_su_static_kind1_lat4_leaf1_physical",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_arithmetic.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_kind1_lat4_leaf1_physical.sv"
+ ],
+ "clock_port": "clk_stage_0",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "clk_stage_0",
+   "clk_stage_1",
+   "clk_stage_2",
+   "clk_stage_3",
+   "clk_stage_4",
+   "clk_stage_5",
+   "clk_stage_6",
+   "clk_stage_7",
+   "clk_insert_0",
+   "clk_insert_1",
+   "clk_insert_2",
+   "clk_insert_3"
+  ],
+  "W": [
+   "ld_c",
+   "rd_q",
+   "side_y",
+   "vi_q"
+  ],
+  "E": [
+   "coll",
+   "fault",
+   "kv_waddr",
+   "kv_wdata",
+   "kv_we",
+   "rd_addr",
+   "rd_re",
+   "rd_src",
+   "ro_v",
+   "ro_x",
+   "side_v",
+   "side_x",
+   "vi_addr",
+   "vi_re",
+   "vm_waddr",
+   "vm_wdata",
+   "vm_we"
+  ],
+  "S": [
+   "rst_n",
+   "lane_id",
+   "ld",
+   "ld_bank",
+   "emit",
+   "bank",
+   "o_v",
+   "i_v",
+   "no",
+   "ni",
+   "ls",
+   "lvw",
+   "vb",
+   "krow",
+   "obase",
+   "aibase",
+   "aind",
+   "gsh",
+   "cpair",
+   "dst",
+   "srcs",
+   "cx_srcs",
+   "cx_arnd",
+   "cx_arelu",
+   "cx_amin",
+   "cx_cclip",
+   "cx_imm3",
+   "cp_m1",
+   "cp_imm1",
+   "cm_m1",
+   "cm_m2",
+   "cm_qm",
+   "cm_imm1",
+   "ca_ad",
+   "ca_imm2",
+   "ci_sfu",
+   "cs_sfu",
+   "cs_e1",
+   "cs_imm2",
+   "ce_e2",
+   "ce_imm1",
+   "co_rnd",
+   "co_dst"
+  ]
+ },
+ "layer_cap": "M5",
+ "signal_max_layer": "M5",
+ "pg_layer": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 32,
+  "period_ps": 1111.111111,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "signoff_period_ps": 1111.111111,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_min_tracks": 4
+ },
+ "job": {
+  "owner": "Claude:H-SU/PGSLICE",
+  "branch": "claude/hsu-pgslice-d4c",
+  "tag": "r1",
+  "purpose": "Static SU HEAVY (KIND1, SFU) lane leaf at the accepted LAT4 point (MLAT4/ALAT3/LEAF1, FETCH_EXTRA 2), pin-registered (lane_pinreg PIN_RST=1) as the CLOSED KIND0 r2 leaf: 16 per heavy pgslice (G0/G1), 128 on the die. First route; it measures the heavy outline the d4c pgslice re-aspect (1612.8 x 3149.28) plans at 166.32 x 330.48.",
+  "extra_paths": [],
+  "benches": [
+   {
+    "name": "lane_exact",
+    "cmd": "SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane ot_hbm_su_static_kind1_lat4_leaf1_physical 4 3 1 133",
+    "expect": "pass",
+    "pass_regex": "SU_LANE PASS",
+    "min_count_regex": "outputs=(\\d+)",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_mutant_addr",
+    "cmd": "SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane_mut ot_hbm_su_static_kind1_lat4_leaf1_physical 4 3 1 133 ADDR",
+    "expect": "fail",
+    "fail_regex": "SU_LANE FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_mutant_data",
+    "cmd": "SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane_mut_data ot_hbm_su_static_kind1_lat4_leaf1_physical 4 3 1 133 DATA",
+    "expect": "fail",
+    "fail_regex": "SU_LANE FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_mutant_phase",
+    "cmd": "SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane_mut_phase ot_hbm_su_static_kind1_lat4_leaf1_physical 4 3 1 133 PHASE",
+    "expect": "fail",
+    "fail_regex": "SU_LANE FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "recipe": 3,
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "clk_stage_0",
+  "clk_stage_1",
+  "clk_stage_2",
+  "clk_stage_3",
+  "clk_stage_4",
+  "clk_stage_5",
+  "clk_stage_6",
+  "clk_stage_7",
+  "clk_insert_0",
+  "clk_insert_1",
+  "clk_insert_2",
+  "clk_insert_3"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ports": [
+    "clk_stage_0"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [
+    "rst_n",
+    "lane_id",
+    "ld",
+    "ld_bank",
+    "ld_c",
+    "emit",
+    "bank",
+    "o_v",
+    "i_v",
+    "no",
+    "ni",
+    "ls",
+    "lvw",
+    "vb",
+    "krow",
+    "obase",
+    "aibase",
+    "aind",
+    "gsh",
+    "cpair",
+    "dst",
+    "srcs",
+    "vi_q",
+    "rd_q",
+    "cx_srcs",
+    "cx_arnd",
+    "cx_arelu",
+    "cx_amin",
+    "cx_cclip",
+    "cx_imm3",
+    "ci_sfu",
+    "cs_sfu",
+    "side_y",
+    "cp_m1",
+    "cp_imm1",
+    "cm_m1",
+    "cm_m2",
+    "cm_qm",
+    "cm_imm1",
+    "ca_ad",
+    "ca_imm2",
+    "cs_e1",
+    "cs_imm2",
+    "ce_e2",
+    "ce_imm1",
+    "co_rnd",
+    "co_dst"
+   ],
+   "outputs": [
+    "vi_re",
+    "vi_addr",
+    "rd_addr",
+    "rd_re",
+    "rd_src",
+    "side_v",
+    "side_x"
+   ]
+  },
+  "stage1": {
+   "ports": [
+    "clk_stage_1"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "stage2": {
+   "ports": [
+    "clk_stage_2"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "stage3": {
+   "ports": [
+    "clk_stage_3"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "stage5": {
+   "ports": [
+    "clk_stage_5"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "stage6": {
+   "ports": [
+    "clk_stage_6"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "stage7": {
+   "ports": [
+    "clk_stage_7"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": [
+    "vm_we",
+    "vm_waddr",
+    "vm_wdata",
+    "kv_we",
+    "kv_waddr",
+    "kv_wdata",
+    "ro_v",
+    "ro_x",
+    "fault",
+    "coll"
+   ]
+  },
+  "stage4": {
+   "ports": [
+    "clk_stage_4"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "insert0": {
+   "ports": [
+    "clk_insert_0"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "insert1": {
+   "ports": [
+    "clk_insert_1"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "insert2": {
+   "ports": [
+    "clk_insert_2"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "insert3": {
+   "ports": [
+    "clk_insert_3"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL (ot_hbm_su_static_lane_pinreg, PIN_RST=1) already registers every data input, rst_n and every output at the pin; a kit-level flop stage would add a second, unscheduled boundary edge"
+ },
+ "structural_change": "New leaf (first route): KIND1 HEAVY lane in the CLOSED KIND0 r2 leaf form (pin-registered lane_pinreg, PIN_RST=1, LAT4/LEAF1); outline 166.32 x 330.48 = the d4c pgslice row plan (KIND1 synth 22,528 um2 at the measured kind0 0.416 synth:outline ratio). Pins <= 6/um (new-tile guidance): pin_min_tracks 4 (0.192 um, 5.2/um); the 840-bit ld_c moves from N to the 330-um W face (N keeps the 12 clock entries; W 1,032 / S 562 / E 315 bits). Correction after pre-floorplan OT_MULTI_ROOT refusal: declare all eight arithmetic stage roots and four insertion-line roots, including SFU stage4 and insert[3:0], rather than inheriting KIND0 unused-clock data inputs. No cycle, area, clock period or RTL change.",
+ "outline": {
+  "w": 166.32,
+  "h": 330.48
+ }
+}

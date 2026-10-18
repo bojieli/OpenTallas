@@ -1,5 +1,6 @@
 """tools/ref_tile (ref-flow-1011): kit generation invariants and gate checks that need no fleet host."""
 import json
+import os
 import shlex
 import sys
 import tempfile
@@ -262,6 +263,11 @@ class Recipe(unittest.TestCase):
 
     def kit(self, root, **kw):
         kw.setdefault("route", {"pd": 0.5})       # the example pins hold_margin_ns; the recipe default is under test
+        # recipe 4 (FLOW-HOLD) makes hold_budget "die" the leaf default (no pin pads); these tests exercise the recipe-2/3
+        # pad mechanics, which stay valid for an opted-out tile.  test_recipe_4_hold_budget_default covers the default.
+        if kw.pop("recipe4_default", False) is False:
+            kw.setdefault("hold_budget", "tile")
+            kw.setdefault("hold_budget_reason", "recipe-2/3 pad mechanics under test")
         r = RT.gen(spec(self.EXN, **kw), commit="c" * 40, out_root=Path(root))
         d = Path(root) / r["kit"]
         return {f.name: f.read_text() for f in d.iterdir()}
@@ -372,6 +378,18 @@ class Recipe(unittest.TestCase):
         kd = RT.kit_dir(s)
         self.assertIn("physical/common_flow/macro_edge_via_guard.tcl", RT.referenced_paths(s, kd))
         self.assertFalse(RT.macro_edge_guard(dict(s, macros=[])))           # no hard macro: no guard
+
+    def test_recipe_4_hold_budget_default(self):
+        # FLOW-HOLD (coordinator 2026-10-16): a NEW leaf kit takes recipe 4 = hold_budget "die": flop-first pins, no pads
+        with tempfile.TemporaryDirectory() as a:
+            k = self.kit(a, name="rcp4", recipe4_default=True)
+            sp = json.loads(k["spec.json"])
+            self.assertEqual((sp["recipe"], sp["hold_budget"], sp["inhold"], sp["outhold"]), (4, "die", False, False))
+            self.assertIn("OT_IO_HOLD_BUDGET=die", k["kit.env"])
+            self.assertNotIn("OT_INHOLD_MASTER", k["kit.env"])
+            self.assertIn("set ::env(OT_IO_HOLD_BUDGET) die", k["signoff.sdc"])
+            with self.assertRaises(RT.SpecError):        # opting out needs a reason
+                self.kit(a, name="rcp4b", recipe4_default=True, hold_budget="tile")
 
     def test_io_hold_margin_split(self):
         # q14 r8 2026-10-14: route.io_hold_margin_ns relieves ONLY the route-time FF repair SDC of the boundary; sign-off
@@ -484,6 +502,22 @@ class Sources(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class OrfsVarPathCwd(unittest.TestCase):
+    """ROOT 2026-10-17 (S-ELEM static14): an orfs_vars repo path is /src/<path> and a kit source whatever the cwd."""
+    def test_relative_hook_resolves_against_root_not_cwd(self):
+        hook = "tools/ref_tile/ref_tile.py"                      # any committed repo file
+        old = os.getcwd()
+        with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as elsewhere:
+            os.chdir(elsewhere)
+            try:
+                r = RT.gen(spec(Recipe.EXN, route={"pd": 0.5}, hold_budget="tile", hold_budget_reason="test",
+                                orfs_vars={"POST_IO_PLACEMENT_TCL": hook}), commit="c" * 40, out_root=Path(a))
+                env = (Path(a) / r["kit"] / "kit.env").read_text()
+            finally:
+                os.chdir(old)
+        self.assertIn(f"POST_IO_PLACEMENT_TCL=/src/{hook}", env)
 
 
 class PgSpread(unittest.TestCase):

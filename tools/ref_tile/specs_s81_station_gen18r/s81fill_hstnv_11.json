@@ -10,8 +10,8 @@
  "clock_port": "ck",
  "reset_ports": [],
  "outline": {
-  "w": 17.28,
-  "h": 17.28,
+  "w": 17.256,
+  "h": 16.74,
   "exact": true
  },
  "layer_cap": "M5",
@@ -26,7 +26,7 @@
    "ck"
   ]
  },
- "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_11.tcl",
+ "io_tcl": "physical/s81_die_pins/stn_c26l_f9/dsfd_hstnv_11.tcl",
  "recipe": 2,
  "route": {
   "pd": 0.5,
@@ -36,19 +36,19 @@
   "pin_v": "M3 M5",
   "m5_pg_pitch": 2.7
  },
- "structural_change": "First hardening of the GEN18r common-clock station dsfd_hstnv_11 (3 die instances) in the --hstn-posedge form: plain posedge flops on ck (the glue INV + negedge stage is the same function but its inverted sinks failed the IO reference in every gate, OT_LINK_BUDGET no latency for core_clk), 11 b, no reset, 0 cycles; RTL = the generator --hstn-posedge emission of the case glue header (module sha256 e0910231a8fabfe1, glue 81730f1679e7bc00); pins at the generator centres. Slot 17.256 x 17.256 holds 167 um2 of core vs 15 um2 recipe-2 content (input hold + output min delay cells a bit) -> depth grown to 17.28 x 17.28 (data-pin coordinates unchanged).",
+ "structural_change": "f9 (S-ELEM ENGRAM-LKP 1815, 2026-10-16): MX misfit in c26l: the closed f1 view (17.256 x 17.256, 63.91 rows) fails orientation row_parity (codex0827 table: MX/R180 FAIL row_parity only), the die places it MX. Outline 17.256 x 16.74 = 62 rows of 0.27 um (even) so MX / R180 keep rail polarity (row_parity PASS) and the view stays inside the 17.256 x 17.256 generator slot; newest f8 recipe: no recipe-2 output hold pads (hop hold carried by the receiver's input hold stages), pins spread evenly per face (spread_face_pins.py, margin 2.16, clock at face centre) -- the die reads pins from the bound LEF. RTL = the generator --hstn-posedge emission (one posedge flop per bit, no reset), 0 cycles.",
  "job": {
-  "owner": "Claude:fill-s81",
-  "branch": "claude/el1015-fill-1015",
-  "tag": "f3",
-  "purpose": "S81 FILL: GEN18r die station dsfd_hstnv_11 (3 replicas, hardened once): exact phase/basis/random bench + wrong-edge and payload mutants; recipe 2, M5 cap, generator pins",
+  "owner": "Claude:S-ELEM ENGRAM-LKP 1815",
+  "branch": "claude/s81-rly-en-1815",
+  "tag": "f9",
+  "purpose": "S81 c26l/c27 die station dsfd_hstnv_11 (6 instances in c26l), hardened once, all four orientations: exact phase/basis/random bench + wrong-edge and payload mutants; recipe 2 f8 form, M5 cap, even-row outline",
   "views_to": "physical/ref_tile/s81fill_hstnv_11/views",
   "record_to": "results/rtl/ref_tile/s81fill_hstnv_11",
   "extra_paths": [
    "rtl/common",
    "rtl/dsrom_sys/s81_station_native/gen18r",
    "tools/s81_station_native",
-   "physical/s81_die_pins/v22_gen18r_stations",
+   "physical/s81_die_pins/stn_c26l_f9",
    "physical/hbm_accel_die_views/stations/bench"
   ],
   "benches": [
@@ -78,19 +78,14 @@
    }
   ]
  },
- "slot_change_request": {
-  "reason": "recipe-2 content 15 um2 exceeds util 0.55 of the generator slot core 167 um2; depth-only growth keeps every data pin coordinate",
-  "outline": [
-   17.28,
-   17.28
-  ],
-  "generator_slot": [
-   17.256,
-   17.256
-  ]
- },
  "pin_regs": {
   "enable": false,
   "reason": "OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this station IS one flip-flop per bit between its input and output pins (di -> q -> dq, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price"
+ },
+ "outhold": false,
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": "S-DIE c26l GEN (E4 s81-die-iter/c26l real_gen.log OT_VIEW_MISFIT dsfd_hstnv_11): instances placed MX, outside the bound view's orientation contract R0/MY; codex0827 orientation table MX/R180 FAIL row_parity only (17.256 = 63.9 rows). New outline 17.256 x 16.74 = 62 rows (even) inside the 17.256 x 17.256 generator slot; S-ELEM request 2026-10-16 (c27 inter-cluster relays)",
+  "why": "MX-qualified re-kit of a misfit view"
  }
 }

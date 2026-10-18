@@ -64,6 +64,7 @@ from postroute_recovery import remote_command as postroute_probe_command
 import submit_lint
 import bench_count
 import macro_clk
+import retired_hosts
 import helper_overlay as HO
 import status_report
 
@@ -92,7 +93,12 @@ TERMINAL = {"SMOKE_OK", "CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "R
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
                          r"admission (?:timed out|refused)|[Bb]us error|SIGBUS|Segmentation fault|internal compiler error|"
-                         r"g\+\+: fatal error|cc1plus: .*(?:killed|error)", re.M)
+                         r"g\+\+: fatal error|cc1plus: .*(?:killed|error)|"
+                         # EARLYOOM-SIGTERM 2026-10-16: earlyoom (-m 3 --prefer python3) SIGTERMs the stage wrapper
+                         # (oom_score_adj 500), not the hog; bash prints 'Terminated <cmd>', status flow_rc=143.
+                         # hgi_sm_xl2_bfqg-local1 / s81engm_lkp_static14-st6 / s81hc_retcol_c2 went NEEDS_HUMAN
+                         # 'resource=False' after a same-host retry into the same pressure (an 80-91 GB die GRT).
+                         r"^\s*Terminated\s|flow_rc=143|exit code 143", re.M)
 # DETERMINISTIC-NO-RETRY 2026-10-15: route first errors that never passed on a same-input retry (see crash())
 DETERMINISTIC_ROUTE_ERR_RE = re.compile(r"\b(?:DPL-0033|GPL-0305|PPL-0093|PPL-0111|ANT-0008|PDN-0233|MPL-0020|STA-0340)\b")
 # a bench whose TOOLS crashed (compiler bus error, segfault, OOM) is not a verdict on the RTL (hbm_su_red_slice_6f2d14e36:
@@ -264,6 +270,13 @@ def disk_roots(cfg):
     """{path: min free GB} for every filesystem a host's jobs write besides the run root (hosts.json disk_roots;
     fleet disk guard 2026-10-07: the run-root floor alone let / fill on AGIdock and localhost)"""
     return dict(cfg.get("disk_roots", {}))
+
+
+def drop_retired_hosts(spec):
+    """RETIRED-HOST (HOSTFIX 2026-10-17): (spec', warnings) with retired fleet hosts removed from hosts / host_require
+    (retired_hosts.py; an emptied list falls back to admission) instead of an INVALID 'unknown host' verdict."""
+    doc = json.loads((HERE / "hosts.json").read_text())
+    return retired_hosts.drop_retired_hosts(spec, {h["name"] for h in doc["hosts"]}, retired_hosts.retired_names(doc))
 
 
 def host_cfg(name):
@@ -1250,6 +1263,12 @@ def ref_gate_at_submit(j, jobs=None):
         return
     if isinstance(res.get("route_overlay_plan"), dict) and j.get("freeze_helper_overlay"):
         j["route_overlay_plan"] = res["route_overlay_plan"]
+    if isinstance(res.get("relaxing_rule_allowlist"), dict):
+        # RELAXING-RULE ALLOWLIST (ROOT-0040 2026-10-18): the gate stood across relaxing-only rule commits; record it
+        j["relaxing_rule_allowlist"] = dict(res["relaxing_rule_allowlist"], at=now_iso())
+        event(j, "RELAXING-RULE ALLOWLIST: gate kept across " + ", ".join(
+            c[:9] for c in res["relaxing_rule_allowlist"].get("commits") or []) + "; " + "; ".join(
+            x.get("text", "") for x in res["relaxing_rule_allowlist"].get("requirements") or [])[:300])
     if isinstance(res.get("clock"), dict):
         j["clock_rule"] = dict(res["clock"], mode=kw.get("clock_mode"))      # textbook_cfg() hands it to the in-flow lint
         event(j, f"CLOCK-RULE at submit: {res['clock'].get('text', '')[:300]}"
@@ -1448,14 +1467,17 @@ def ingest():
                 bad.write_text(spec["_parse_error"])
                 log(f"INVALID job file {origin}: {spec['_parse_error']}")
             continue
-        errs = validate(spec)
         submitted = spec
+        spec, host_warns = drop_retired_hosts(spec)
+        errs = validate(spec)
         if not errs and spec.get("benched_by") is not None:
             spec, _ = expand_benched_by(spec)
         j = dict(name=name, spec=spec, origin=origin, created=now_iso(), status="QUEUED", stage_idx=0, attempt=1,
                  retries_used=0, benches={}, hosts_tried=[], events=[], freeze_helper_overlay=True)
         if spec is not submitted:
             j["spec_submitted"] = submitted          # the frozen-spec comparison and successors use the file as written
+        for w in host_warns:
+            event(j, w)
         if errs:
             j["status"] = "INVALID"
             j["reason"] = "; ".join(errs)
@@ -2797,13 +2819,61 @@ def ship_helpers(host, run, job=None):
                         origin_main=frozen.get("origin_main"), verified_at=now_iso()))
             except (ValueError, OSError, subprocess.SubprocessError) as ex:
                 raise ValueError(f"FROZEN_HELPER_OVERLAY: {ex}; preserve original execution") from ex
+        if payloads is None and frozen is not None and job.get("replay_frozen_helpers"):
+            # FROZEN-REPLAY (ROOT 2026-10-16, coordinator: recover drift-blocked jobs from their ORIGINAL state): a human
+            # `retry --replay-frozen-helpers` runs the job with exactly the helper bytes its gate froze (committed origin
+            # tree / content store, every byte verified against the plan) instead of today's helpers.  Never automatic.
+            try:
+                payloads, src_ = HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
+            except ValueError as ex:
+                raise ValueError(f"FROZEN_HELPER_OVERLAY: replay requested but the frozen bytes are not recoverable "
+                                 f"({ex})") from ex
+            modes = {f["path"]: f["mode"] for f in HO.frozen_rows(frozen)}
+            event(job, f"FROZEN-REPLAY: shipping the gate-frozen helper set {str(frozen.get('content_sha256'))[:12]} "
+                       f"(origin {str(frozen.get('origin_main'))[:9]}, {src_}) by human request")
         if payloads is None:
             current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
             modes = {f["path"]: f["mode"] for f in current["files"]}
             frozen = job.setdefault("route_overlay_plan", current)
             ok, why, sanctioned = HO.compare_plans_sanctioned(frozen, current, REPO, head=current.get("origin_main"))
+            if not ok and not why.startswith(("missing", "frozen helper plan digest", "malformed")):
+                # AUTO FROZEN-REPLAY (ROOT 2026-10-16, coordinator: fix helper drift generally): the gate validated the job
+                # with ONE consistent frozen helper set; main moved on (tools/textbook_lint.py 2c5779073, then
+                # tools/tt_views/view_export.py cdaf10fcb/a0de5e9ba under 8 queued jobs).  Run the job with exactly
+                # that frozen set (every byte verified against the plan) instead of stopping NEEDS_HUMAN; only an
+                # unrecoverable set still refuses.  A fresh gate is the way to adopt newer helpers.
+                try:
+                    payloads, src_ = HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
+                except ValueError as ex:
+                    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; frozen bytes not recoverable ({ex}); preserve "
+                                     f"original job and submit a fresh source-bound gate") from ex
+                modes = {f["path"]: f["mode"] for f in HO.frozen_rows(frozen)}
+                job.setdefault("helper_overlay_replays", []).append(dict(at=now_iso(), host=host, run=run, drift=why[:300],
+                                                                         content_sha256=frozen.get("content_sha256")))
+                event(job, f"FROZEN-REPLAY (auto): {why[:160]} -> shipping the gate-frozen helper set "
+                           f"{str(frozen.get('content_sha256'))[:12]} ({src_})")
+                HO.store_payloads(HELPER_STORE, frozen, payloads)
+                ok, sanctioned = True, []
+                current = frozen
             if not ok:
                 raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+            lint = [r for r in sanctioned if r.get("kind") == "lint_frozen"]
+            if lint:
+                # LINT-ONLY SANCTION (ROOT 2026-10-16): ship the FROZEN bytes of lint-only helpers (exact, from the plan's
+                # committed origin tree / store) so the route executes its original helper set; the plan rows stay frozen.
+                fpay, _src = HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
+                frows = {f["path"]: f for f in frozen["files"]}
+                for r in lint:
+                    payloads[r["path"]] = fpay[r["path"]]
+                    modes[r["path"]] = frows[r["path"]]["mode"]
+                    event(job, f"LINT-ONLY SANCTION: {r['path']} frozen {r['frozen_git_blob'][:9]} kept (main now "
+                               f"{r['current_git_blob'][:9]}); lint constants only, route runs its frozen bytes")
+                job.setdefault("helper_overlay_sanctioned", []).extend(dict(r, at=now_iso(), host=host, run=run) for r in lint)
+                cur_files = [frows[f["path"]] if f["path"] in {r["path"] for r in lint} else f for f in current["files"]]
+                current = dict(current, files=cur_files, content_sha256=HO.digest(cur_files))
+                sanctioned = [r for r in sanctioned if r.get("kind") != "lint_frozen"]
+                if not sanctioned:
+                    current = frozen if HO.digest(frozen["files"]) == current["content_sha256"] else current
             if sanctioned:
                 # FLEET-RUN SANCTION (ROOT 2026-10-16): only fleet-run helpers (tt_overlay.py: the route executes the
                 # fleet copy kept at main, fleet-first since 00cbddaea) drifted, to exactly origin/main's blob.  Keep the
@@ -3058,6 +3128,20 @@ def textbook_cfg(j):
     if isinstance(cr, dict):     # measured clock rule: only jobs ingested under it (never an older in-flight job)
         cfg["clock"] = {"enforce": cr.get("mode") == "refuse" and bool(j["spec"].get("ref_tile")),
                         "evidence": cr.get("evidence"), "closed_stands": bool(cr.get("closed_stands"))}
+    # GATE-FRICTION 2026-10-18: the kit's declared reset_ports are resets for the in-flow lint too (por_n on KV core_peer)
+    rsts = j.get("kit_reset_ports")
+    if rsts is None and j["spec"].get("ref_tile") and j.get("commit_full"):
+        m = PORT_LATENCY_RE.search(((j["spec"].get("stages") or {}).get("route") or {}).get("cmd") or "")
+        rsts = []
+        if m:
+            try:
+                ks = json.loads(git("show", f"{j['commit_full']}:{m.group(1)}/spec.json", check=False).stdout or "{}")
+                rsts = [x for x in ks.get("reset_ports") or [] if isinstance(x, str)]
+            except (ValueError, AttributeError):
+                rsts = []
+        j["kit_reset_ports"] = rsts
+    if rsts and not (cfg.get("set") or {}).get("reset_ports"):
+        cfg["set"] = dict(cfg.get("set") or {}, reset_ports=",".join(rsts))
     return cfg
 
 
@@ -3222,6 +3306,21 @@ def launch_stage(j, st, cmd):
         # writes atomically now: the exported LEF is root-owned) and add the pre-lint call to a stale ref_tile.py export.
         env += (f"cp -f {j['run']}/cl/abstract_pin_stub.py {_src}/tools/hier_contract/abstract_pin_stub.py; "
                 f"python3 - {_src}/tools/ref_tile/ref_tile.py <<'OT_PINSTUB_PATCH' || true\n{PINSTUB_PATCH}OT_PINSTUB_PATCH\n")
+        # LOOP-SCALAR-LINT (AHUB-COLLECT 2026-10-18): ref_tile.py export runs scalar_pin_lint from the job's synced
+        # tools/ref_tile/scalar_pin_view.py.  Its port parser is the loop's publish gate, not the design: a job synced
+        # before 9ac83ae74 ((* keep *) attribute hid a port's range) kept refusing bus bits as RTL-scalar at every collect
+        # (qkd_ahub_core-hd4-ed40aa340: TT +219.7 / FF +20.2 route, collect crashed 4x on pb_ra[0]/pl_rz[0]/pl_v[0]).
+        # Every ref_tile collect / re-export runs the loop's copy (resolved against origin/main, as the helper overlay).
+        _spv_rel = "tools/ref_tile/scalar_pin_view.py"
+        try:
+            _spv, _ = HO.resolve_bytes(HERE.parents[1], REPO, _spv_rel, _ovl_head(), cache=_OVL["hist"])
+        except (OSError, subprocess.SubprocessError):
+            _spv = None
+        if _spv:
+            import base64 as _b64
+            env += (f"if [ -f {_src}/{_spv_rel} ]; then [ -f {_src}/{_spv_rel}.job ] || cp {_src}/{_spv_rel} "
+                    f"{_src}/{_spv_rel}.job; base64 -d > {_src}/{_spv_rel}.loop <<'OT_SPV_B64' && "
+                    f"mv -f {_src}/{_spv_rel}.loop {_src}/{_spv_rel}\n{_b64.b64encode(_spv).decode()}\nOT_SPV_B64\nfi\n")
         # EXPORT-SDC (2026-10-13): the view export replays the VERDICT's constraint sequence (routed 6_final.sdc, SPEF,
         # post-SDCs, io_ref_routed.sdc) and fails on a slack that differs from the verdict; a job's synced view_export.py
         # read the kit signoff.sdc INSTEAD of the routed SDC (s81su SMT: FF -19.69 exported vs +3.66 verdict).  The
@@ -3486,7 +3585,74 @@ def bench_outcome(j, st, rc, ok_extra=True):
             if work is False:
                 return False
         return ok
-    return expected_fail_seen(st, rc, full)
+    seen = expected_fail_seen(st, rc, full)
+    if seen and st.get("fail_regex"):
+        try:
+            capture_fail_witness(j, st, full)
+        except Exception:  # noqa: BLE001 -- the verdict stands; a lost witness is only a missing archive
+            log(f"[{j.get('name')}] fail-witness capture error:\n{traceback.format_exc()}")
+    return seen
+
+
+# FAIL-WITNESS AUTO-CAPTURE (GATE-FRICTION 2026-10-18, owner 0eg: checks must never delay closure).  submit_exact WARNs
+# (no longer refuses) when an expect=fail bench has no committed fail_witness log; the loop captures the REAL mutant
+# output here instead: when the mutant failed as expected and its fail_regex matched, the matching part of the stage log
+# is archived under STATE/fail_witnesses/<job>/<bench>.log (verified to match the regex again) and recorded in
+# j["fail_witnesses"]; publish() commits it with the CLOSED record (results/closure_loop/<job>/fail_witness/).  A mutant
+# that does not fail is still NEEDS_RTL (bench_outcome above), witness or not.
+WITNESS_DIR = STATE / "fail_witnesses"
+WITNESS_CONTEXT = 40           # lines kept around each fail_regex match
+WITNESS_TAIL = 200             # last lines of the log kept as well
+WITNESS_MAX_BYTES = 256 << 10
+
+
+def witness_text(full, rx):
+    """the part of a mutant log that proves the verdict: every fail_regex match with context, plus the tail.  Returns
+    None when the regex does not match the kept text (the caller then keeps nothing)."""
+    lines = full.splitlines()
+    keep = set(range(max(0, len(lines) - WITNESS_TAIL), len(lines)))
+    starts, pos = [], 0
+    for n, ln in enumerate(lines):
+        starts.append(pos)
+        pos += len(ln) + 1
+    for m in list(re.finditer(rx, full, re.M))[:8]:
+        n = max(0, sum(1 for s in starts if s <= m.start()) - 1)
+        last = n + m.group(0).count("\n")
+        keep.update(range(max(0, n - WITNESS_CONTEXT), min(len(lines), last + WITNESS_CONTEXT + 1)))
+    out, prev = [], -1
+    for n in sorted(keep):
+        if n != prev + 1:
+            out.append(f"... [{n - prev - 1} line(s) omitted by the fail-witness capture] ...")
+        out.append(lines[n])
+        prev = n
+    text = "\n".join(out) + "\n"
+    if len(text.encode()) > WITNESS_MAX_BYTES:
+        text = text.encode()[-WITNESS_MAX_BYTES:].decode(errors="ignore")
+    return text if re.search(rx, text, re.M) else None
+
+
+def capture_fail_witness(j, st, full):
+    rx, key = st["fail_regex"], st["key"]
+    body = witness_text(full, rx)
+    if body is None:
+        event(j, f"fail-witness: {key} fail_regex matched the log but not the kept excerpt; nothing archived")
+        return None
+    head = (f"# fail witness captured by the closure loop (GATE-FRICTION auto-capture)\n# job {j.get('name')} bench {key} "
+            f"host {j.get('host')} run {j.get('run')} log cl/{j.get('stage_tag')}.log captured {now_iso()}\n"
+            f"# fail_regex {rx!r}\n")
+    data = (head + body).encode()
+    d = WITNESS_DIR / label(j.get("name") or "job")
+    d.mkdir(parents=True, exist_ok=True)
+    f = d / f"{label(key)}.log"
+    tmp = f.with_suffix(f".{os.getpid()}.{threading.get_ident()}.tmp")
+    tmp.write_bytes(data)
+    os.replace(tmp, f)
+    m = re.search(rx, body, re.M)
+    rec = dict(path=str(f), sha256=hashlib.sha256(data).hexdigest(), fail_regex=rx, matched=m.group(0)[:200],
+               captured_at=now_iso(), declared=st.get("fail_witness"))
+    j.setdefault("fail_witnesses", {})[key] = rec
+    event(j, f"fail-witness: {key} captured ({len(data)} B, matched {rec['matched'][:80]!r}) -> {f}")
+    return rec
 
 
 def bench_why(j, st, rc, ok_extra=True):
@@ -3994,6 +4160,14 @@ def publish(j, metrics):
                     plat_paths.append(str((vd / "port_latency.json").relative_to(cwt)))
             (cwt / rec_dir / "port_latency.json").write_text(txt)
             plat_paths.append(f"{rec_dir}/port_latency.json")
+        for wk, w in sorted((j.get("fail_witnesses") or {}).items()):
+            try:
+                data = Path(w["path"]).read_bytes()
+            except OSError:
+                continue
+            if hashlib.sha256(data).hexdigest() == w.get("sha256"):
+                (cwt / rec_dir / "fail_witness").mkdir(parents=True, exist_ok=True)
+                (cwt / rec_dir / "fail_witness" / f"{label(wk)}.log").write_bytes(data)
         if big:
             (cwt / rec_dir / "LARGE_FILES_EXCLUDED.txt").write_text("\n".join(big) + "\n")
             log(f"[{j['name']}] record: {len(big)} file(s) > {RECORD_MAX_FILE_BYTES >> 20} MB left out of git")
@@ -4004,7 +4178,9 @@ def publish(j, metrics):
                             "agreed die-clock IO budgets, DRC 0"),
                        metrics={k: metrics.get(k) for k in ("ss_ps", "ff_ps", "drc", "ss_tns_ps", "clock_periods_ps", "setup_corner", "ss_sensitivity_ps", "ss_sensitivity_tns_ps", "corner_sta_tt", "post_sdc", "corner_sta",
                                                             "drc_metrics", "drc_skipped")},
-                       benches=j.get("benches", {}), no_bench_reason=spec.get("no_bench_reason"),
+                       benches=j.get("benches", {}), fail_witnesses={k: dict(w, path=f"{rec_dir}/fail_witness/{label(k)}.log")
+                                                                     for k, w in (j.get("fail_witnesses") or {}).items()},
+                       no_bench_reason=spec.get("no_bench_reason"),
                        checks=j.get("checks", {}), submit_checks=j.get("submit_checks"), calibration=j.get("calibration"), route_overlay_plan=j.get("route_overlay_plan"), cycles_added=spec.get("cycles_added"), status="CLOSED",
                        closed_at=now_iso(), job_spec=spec, io_budget=(j.get("rebudget") or {}).get("rb") or "link_budget_consistent (fixed split)",
                        rebudget=j.get("rebudget"))
@@ -4878,6 +5054,8 @@ def bench_track(j, fleet, stl):
             return False
         passed = bench_outcome(v, st, rc, ok_extra)
         j.setdefault("bench_work", {}).update(v.get("bench_work") or {})
+        if v.get("fail_witnesses") is not j.get("fail_witnesses"):
+            j.setdefault("fail_witnesses", {}).update(v.get("fail_witnesses") or {})
         e["state"] = "done"
         j["benches"][k] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:], track="parallel")
         if not passed:
@@ -6249,6 +6427,13 @@ def eco_install_cmd(j):
     if j.get("eco_overlay_recovery"):
         lines.append(f"python3 {{CL}}/eco_recovery.py verify {shlex.quote(j['eco_overlay_recovery']['guard'])}")
     lines.append(f"EB=$(ls -d {out}/orfs/results/asap7/*/base)")
+    # ECO-DEF (ROOT 2026-10-16, qkd_static_kv_landing_seg ls5 / qkd_ctrl_pc_core s4): f181bfa99 made install copy
+    # 6_final.def, but a job whose FROZEN hold_eco.tcl predates it writes no DEF -> 'cp: cannot stat 6_final.def', rc=1
+    # after a PASSING ECO.  Write the DEF from the ECO's own 6_final.odb (same database, so the same geometry) first.
+    lines.append(f'[ -f $EB/6_final.def ] || docker run --rm -v $EB:/eb ${{ORFS_IMAGE:-openroad/orfs:asap7lock}} bash -lc '
+                 f'"printf \'read_db /eb/6_final.odb\\nwrite_def /eb/6_final.def\\n\' > /tmp/ot_wdef.tcl && '
+                 f'/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /tmp/ot_wdef.tcl" '
+                 f'> $EB/install_write_def.log 2>&1')
     for b in sorted({rb, ob}):
         for f in ("6_final.odb", "6_final.spef", "6_final.v", "6_final.def"):
             lines.append(f"[ -f {b}/{f} ] && [ ! -f {b}/{f}.pre_eco ] && mv {b}/{f} {b}/{f}.pre_eco; cp $EB/{f} {b}/{f}")
@@ -7600,6 +7785,104 @@ def release_src(jobs, now=None, limit=SRC_RELEASE_PER_TICK):
     return n
 
 
+# POST-COLLECT TRIM of OFFLOAD locations (ROOT 2026-10-16, coordinator; AGIdock 101 GB free, EPYC4 held 72 '<job>-bench'
+# dirs = 1.16 TB): SRC-RELEASE / deep release only ever touch the job's own (host, run).  A bench chain offloaded to
+# another host (bench_location / btrack[*].run, '<job>-bench') and a run left behind on a previous host keep their src/
+# and bench_src_a*/ git snapshots for ever.  Once the job is terminal (and SRC_RELEASE_AGE_H idle), every such OTHER
+# location loses exactly those snapshot subtrees (git archive re-creates them; a retry re-syncs); logs, receipts, cl/,
+# routes/ and views stay.  Skipped while any non-terminal job uses the location, under a reaper hold, or .keep.
+OFFLOAD_TRIM_PER_TICK = 60
+OFFLOAD_TRIM_PY = r"""
+import json, os, shutil, sys
+a = json.loads(os.environ["OT_OT"]); run = a["run"].rstrip("/")
+if not run.startswith(tuple(a["roots"])) or "/closure-loop/" not in run or os.path.exists(run + "/.keep"):
+    print("OFFLOAD_SKIP"); sys.exit(0)
+freed = 0
+if os.path.isdir(run):
+    for n in sorted(os.listdir(run)):
+        if n == "src" or n.startswith("bench_src"):
+            p = os.path.join(run, n)
+            if os.path.islink(p) or not os.path.isdir(p):
+                continue
+            for dp, dn, fn in os.walk(p):
+                for f in fn:
+                    try: freed += os.lstat(os.path.join(dp, f)).st_size
+                    except OSError: pass
+            shutil.rmtree(p, ignore_errors=True)
+print("OFFLOAD_FREED %d" % (freed // 2**20))
+"""
+
+
+def offload_locations(j):
+    own = (j.get("host"), (j.get("run") or "").rstrip("/"))
+    locs = set()
+    bl = j.get("bench_location") or {}
+    if bl.get("host") and bl.get("run"):
+        locs.add((bl["host"], bl["run"].rstrip("/")))
+    for e in (j.get("btrack") or {}).values():
+        if isinstance(e, dict) and e.get("host") and e.get("run"):
+            locs.add((e["host"], e["run"].rstrip("/")))
+    for r in j.get("bench_helper_relocations") or []:
+        d = (r or {}).get("destination") or {}
+        if d.get("host") and d.get("run"):
+            locs.add((d["host"], d["run"].rstrip("/")))
+    locs.discard(own)
+    done = {(x["host"], x["run"]) for x in j.get("offload_trimmed") or []}
+    return sorted(l for l in locs if l not in done)
+
+
+def release_offload(jobs, now=None, limit=OFFLOAD_TRIM_PER_TICK):
+    hosts = {h["name"] for h in hosts_table()}
+    holds = STATE / "reaper_holds"
+    busy = set()
+    for x in jobs:
+        if x["status"] not in TERMINAL:
+            busy.add((x.get("host"), (x.get("run") or "").rstrip("/")))
+            busy.update(offload_locations(x))
+    roots = sorted({str(Path(x["run"]).parent) + "/" for x in jobs if x.get("run")})
+    n = freed = 0
+    for x in sorted(jobs, key=lambda y: y.get("updated") or "", reverse=True):
+        if n >= limit:
+            break
+        if x["status"] not in TERMINAL or (holds / x["name"]).exists() or _terminal_age_h(x, now) < SRC_RELEASE_AGE_H:
+            continue
+        locs = [l for l in offload_locations(x) if l[0] in hosts and l not in busy]
+        if not locs:
+            continue
+        with job_lock(x["name"]):
+            j = load_job(x["name"])
+            if j["status"] not in TERMINAL:
+                continue
+            for host, run in locs:
+                if n >= limit:
+                    break
+                arg = dict(run=run, roots=roots)
+                try:
+                    r = ssh(host, f"OT_OT={shlex.quote(json.dumps(arg))} python3 - <<'OTPY'\n{OFFLOAD_TRIM_PY}\nOTPY\n",
+                            timeout=1800)
+                except Exception as ex:  # noqa: BLE001 -- a host hiccup retries next tick
+                    log(f"OFFLOAD-TRIM {j['name']} {host}:{run}: {ex}")
+                    continue
+                n += 1
+                m = re.search(r"OFFLOAD_FREED (\d+)", r.stdout or "")
+                if r.returncode != 0 or not (m or "OFFLOAD_SKIP" in (r.stdout or "")):
+                    continue
+                mb = int(m.group(1)) if m else 0
+                j.setdefault("offload_trimmed", []).append(dict(host=host, run=run, at=now_iso(), freed_mb=mb))
+                event(j, f"offload trim ({mb} MB): {host}:{run} src/ + bench_src*/ snapshots removed (job terminal; "
+                         f"logs/receipts kept)")
+                freed += mb
+            save_job(j)
+    if n:
+        log(f"OFFLOAD-TRIM: {n} locations, {freed / 1024:.1f} GB freed")
+    return n, freed
+
+
+def cmd_offload_trim(a):
+    n, freed = release_offload(all_jobs(), limit=a.limit)
+    print(f"OFFLOAD-TRIM: {n} locations, {freed / 1024:.1f} GB freed")
+
+
 def snapshot_trim(jobs, limit=200, now=None):
     """SNAPSHOT-TRIM (disk-1015): AGIdock fell to 18 GB free with ~590 GB of src/ + bench_src_a*/ git snapshots left in
     deep-released run dirs -- DEEP_RELEASE_PY kept a whole 4-5 GB snapshot whenever one main receipt named a single
@@ -8108,7 +8391,7 @@ def ready_next_files():
             for s in specs:
                 if not isinstance(s, dict) or not isinstance(s.get("after"), str) or not s["after"].strip():
                     raise ValueError("every spec needs a non-empty \"after\" (block or job-name prefix)")
-                errs = validate({k: v for k, v in s.items() if k != "after"})
+                errs = validate(drop_retired_hosts({k: v for k, v in s.items() if k != "after"})[0])
                 if errs:
                     raise ValueError(f"{s.get('name')}: " + "; ".join(errs)[:400])
         except (ValueError, TypeError) as ex:
@@ -8443,7 +8726,8 @@ def _slow_phase(name, t0):
 
 def housekeeping():
     """disk give-back passes (ssh up to 30 min each, git): one background thread, so a READY job never waits for them"""
-    for name, fn in (("release_src", release_src), ("release_bulk", release_bulk), ("release_deep", release_deep),
+    for name, fn in (("release_src", release_src), ("release_offload", release_offload), ("release_bulk", release_bulk),
+                     ("release_deep", release_deep),
                      ("stale24 sweep", stale24_sweep)):
         try:
             fn(all_jobs())
@@ -8549,6 +8833,9 @@ def cmd_status(a):
 
 def cmd_validate(a):
     spec = json.loads(Path(a.file).read_text())
+    spec, host_warns = drop_retired_hosts(spec)
+    for w in host_warns:
+        print(w)
     errs = validate(spec)
     if not errs:
         spec, _ = expand_benched_by(spec)
@@ -8739,6 +9026,11 @@ def cmd_retry(a):
         j["budget"]["override"] = "human retry after NEEDS_BUDGET"
         j["spec"].setdefault("budget", {})["on_deviation"] = "continue"
         j["stage_idx"] += 1           # the calibration is kept: continue after it, on the sheet SDC
+    if getattr(a, "replay_frozen_helpers", False):
+        if not j.get("route_overlay_plan"):
+            sys.exit(f"{a.name}: --replay-frozen-helpers needs a frozen route_overlay_plan")
+        j["replay_frozen_helpers"] = dict(at=now_iso(), by="human retry")
+        event(j, "human retry: replay the gate-frozen helper bytes (FROZEN-REPLAY)")
     if getattr(a, "at", None):        # resume at a named stage (e.g. verdict: the evidence of the failed stage is valid)
         stl = stage_list(j["spec"])
         idx = [i for i, s in enumerate(stl) if s["key"] == a.at]
@@ -9187,6 +9479,8 @@ def main():
     sr = sub.add_parser("submit-recheck"); sr.add_argument("--since", required=True)
     sr.add_argument("--requeue", action="store_true"); sr.add_argument("--log")
     r = sub.add_parser("retry"); r.add_argument("name"); r.add_argument("--at", help="resume at this stage key")
+    r.add_argument("--replay-frozen-helpers", action="store_true",
+                   help="run with the exact helper bytes the gate froze (recovery of a helper-drift NEEDS_HUMAN)")
     r.add_argument("--keep-resume", action="store_true", help="keep a pending checkpoint resume / HOLD-STOP caps")
     r.add_argument("--force", action="store_true", help="FLOORPLAN_MARGIN job whose lint dump is gone: requeue anyway")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
@@ -9209,6 +9503,7 @@ def main():
     mg = sub.add_parser("migrate"); mg.add_argument("name"); mg.add_argument("host")
     st = sub.add_parser("snapshot-trim", help="hourly guard: cut src/bench_src snapshots of deep-released jobs to receipt paths")
     st.add_argument("--limit", type=int, default=200)
+    ot_ = sub.add_parser("offload-trim", help="remove src/ + bench_src*/ of terminal jobs at offload (bench) / previous-host locations"); ot_.add_argument("--limit", type=int, default=400)
     a = ap.parse_args()
     if a.cmd == "daemon":
         cmd_daemon(a)
@@ -9247,6 +9542,8 @@ def main():
         cmd_restore_cancelled(a)
     elif a.cmd == "snapshot-trim":
         cmd_snapshot_trim(a)
+    elif a.cmd == "offload-trim":
+        cmd_offload_trim(a)
     elif a.cmd == "migrate":     # executed by the daemon at its next tick (no race with the job's poller)
         (STATE / "migrate_requests").mkdir(parents=True, exist_ok=True)
         (STATE / "migrate_requests" / f"{a.name}.json").write_text(json.dumps(dict(name=a.name, host=a.host)))

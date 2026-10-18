@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-10-16T16:28:45.077228-07:00",
+  "collected_at": "2026-10-16T16:35:35.624213-07:00",
   "scope": "Current source integration and actual job inventory; no whole-die qualification",
   "jobs": [
     {
@@ -100,6 +100,26 @@
       "classification": "station source ABI versus incident output census",
       "structural_progress": "Capture expansion and shared scalar clocks passed; later station transform refused",
       "output_preserved": true
+    },
+    {
+      "name": "c26k4_capture_protected_rehome",
+      "stage": "GEN live; not GRT",
+      "host": "ot-epyc4",
+      "unit": "oth-ubuntu-3125548-1792193700",
+      "pid": 3125573,
+      "local_session": 34116,
+      "source": "946bddbe3",
+      "cpu_percent": 100,
+      "rss_kb": 273148,
+      "memory_gb": 4,
+      "threads": 1,
+      "root": "/srv/opentallas-scratch/codex/s81-die-1552/c26k4_capture_protected_rehome",
+      "changes": "native internal-stage protection; candidate4 five-relay rehome; atomic SSTN source and terminal conservation",
+      "auto_route": false,
+      "TT_ps": null,
+      "FF_ps": null,
+      "SS_ps": null,
+      "DRC": null
     }
   ],
   "failure_classes": {
@@ -136,10 +156,12 @@
     "2305beec7",
     "3f21ae39b",
     "6b5c67e8e",
-    "87662ca38"
+    "87662ca38",
+    "9400dd629",
+    "946bddbe3"
   ],
   "preserved": "No existing job killed, duplicated, or overwritten. Geometry adoption awaits owner Explorer review.",
-  "validation": "17 focused tests pass; all 70 packet local children R0; mixed local orientation and inserted internal stages rejected",
+  "validation": "29 combined focused tests pass; station-only suite17 pass; actual clock candidate4 all86 literal contacts PASS separately on die-clock branch fcc6a467e",
   "epoch_reset_source_finding": "Legacy reset66/74 refclk edges including two synchronizer stages; common3:4 epoch unproven. Conditional coordinator proposal requires absent real source interface.",
   "visual_inspection": {
     "image": "capture_actual_homes.png",

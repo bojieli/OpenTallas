@@ -1,0 +1,20 @@
+{
+  "scope": "source-only prepared full512 native SU collective composition; actual four-qcore/eight-SRAM/ring component proven separately",
+  "full_shape_simulation_qualified": false,
+  "physical_qualified": false,
+  "production_rate_qualified": false,
+  "prepared_shape": {
+    "lanes": 512,
+    "store_sram": 3072,
+    "native_vm_sram": 96,
+    "serial_edges": 7120,
+    "stream_edges": 9495,
+    "vm_writes": 135184,
+    "scalars": 41,
+    "collective_programme_sram": 6
+  },
+  "arithmetic_order": "(((q0+q1)+q2)+q3)",
+  "scope_note": "one logical scalar replicated over eight physical carry lanes; all 24 ring FP32 additions execute. Additional SRAM programme plane and physical route/cost are not accepted or priced.",
+  "source_graph": "full_su_producer_graph.json",
+  "next": "freeze current source and compile/simulate actual full512 three-programme-plane composition; preserve existing older PIN_REG proof"
+}

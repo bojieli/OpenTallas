@@ -2,13 +2,13 @@
 // Own-flop pass-1/pass-2 buffer root: both actual SRAM clocks are local to clk.
 // Actual control/address/payload pins captured; three-edge read reply.
 // SRAM-adjacent rd_local separates measured221.68ps macro-to-boundary wire from publication.
-module ot_hgi_coll_tkm_buffer #(parameter integer MUT=0)(
- input wire clk,rst_n,w_v,input wire[9:0]w_addr,input wire[339:0]w_data,
- input wire r_v,input wire[9:0]r_addr,output reg rd_v,output reg[339:0]rd_data
+module ot_hgi_coll_tkm_buffer #(parameter integer MUT=0,DW=340)(
+ input wire clk,rst_n,w_v,input wire[9:0]w_addr,input wire[DW-1:0]w_data,
+ input wire r_v,input wire[9:0]r_addr,output reg rd_v,output reg[DW-1:0]rd_data
 );
  wire[0:0]rr;ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1))u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
- reg wp,rp,r_delay,r_publish;reg[339:0]rd_local;reg[9:0]wa,ra;reg[339:0]wd;wire[511:0]q;
- always @(posedge clk)begin wa<=w_addr;ra<=r_addr;wd<=w_data;rd_local<=q[339:0];rd_data<=rd_local;end
+ reg wp,rp,r_delay,r_publish;reg[DW-1:0]rd_local;reg[9:0]wa,ra;reg[DW-1:0]wd;wire[511:0]q;
+ always @(posedge clk)begin wa<=w_addr;ra<=r_addr;wd<=w_data;rd_local<=q[DW-1:0];rd_data<=rd_local;end
  always @(posedge clk or negedge rr[0])begin
   if(!rr[0])begin wp<=0;rp<=0;r_delay<=0;r_publish<=0;rd_v<=0;end
   else begin wp<=w_v;rp<=r_v;r_delay<=rp;r_publish<=r_delay;rd_v<=r_publish;end

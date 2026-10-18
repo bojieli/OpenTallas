@@ -1,0 +1,1 @@
+source /src/physical/ref_tile/hbm_sfu_programme_store_r7d_1017/clock_entry.sdc

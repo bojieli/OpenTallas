@@ -1,0 +1,177 @@
+{
+ "name": "qkd_ctrl_pc_host_static_c1",
+ "top": "qkd_ctrl_pc_host_static",
+ "kind": "cluster",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv"
+ ],
+ "clock": "entries",
+ "clock_port": "ck",
+ "clock_ports": [
+  "ck",
+  "pll_hbm",
+  "pll_hbm_port",
+  "pll_hbm_ecc"
+ ],
+ "reset_ports": [],
+ "params": {
+  "PROFILE": 0,
+  "ELASTIC": 1,
+  "RAW_WD": 256,
+  "TQD": 64,
+  "DRAIN_PIPE": 1,
+  "STRAP_CDC": 1
+ },
+ "pins": {
+  "W": [
+   "ci",
+   "co",
+   "es",
+   "er",
+   "hrst",
+   "rsi",
+   "pc",
+   "static_cmd_owner",
+   "static_cmd",
+   "reserved_rd",
+   "reserved_static_col",
+   "reserved_write_col",
+   "static_epoch",
+   "expected_raw_valid",
+   "cfg_stack",
+   "es_context",
+   "es_expected_valid",
+   "es_expected_identity",
+   "es_expected_address",
+   "es_expected_pc",
+   "es_expected_stack",
+   "native_commit_valid",
+   "native_commit_identity",
+   "native_commit_address",
+   "corrected_epoch",
+   "completion_v",
+   "completion_we",
+   "completion_fault",
+   "idle_core",
+   "idle_hbm",
+   "drain_fault_core",
+   "drain_fault_hbm"
+  ],
+  "N": [
+   "ki",
+   "fo",
+   "pll_hbm",
+   "ck",
+   "pll_hbm_port"
+  ],
+  "E": [
+   "po",
+   "pi",
+   "pll_hbm_ecc"
+  ],
+  "S": [
+   "ko",
+   "fi"
+  ]
+ },
+ "outline": {
+  "w": 207.36,
+  "h": 233.28,
+  "exact": true
+ },
+ "pg_layer": "M7",
+ "signal_max_layer": "M6",
+ "child_lattice_um": 2.16,
+ "children": [
+  {
+   "view": "physical/ref_tile/qkd_ctrl_pc_core_s4/views/qkd_ctrl_pc_host_static_core",
+   "count": 1,
+   "inst": "u_core",
+   "at": [
+    4.32,
+    8.64
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ctrl_pc_port_s3/views/qkd_ctrl_pc_port_child",
+   "count": 1,
+   "inst": "u_port",
+   "at": [
+    123.12,
+    144.72
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ctrl_pc_ecc_s2/views/qkd_ctrl_pc_ecc_child",
+   "count": 1,
+   "inst": "u_ecc",
+   "at": [
+    157.68,
+    90.72
+   ],
+   "orient": "MX"
+  }
+ ],
+ "recipe": 3,
+ "macros": [],
+ "inter": [],
+ "pin_regs": {
+  "enable": false,
+  "reason": "Parent is wires only; the three hardened children own every registered endpoint (all seams flop-driven, native audit PASS on each child) and their own clock entries. Parent wires remain part of the die hop budget."
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": "KVCTRL wires-parent cluster 207.36x233.28 replaces the 129.6x216 e2 tile inside the 247.512x378 controller slot; +2 clock entry ports (pll_hbm_port, pll_hbm_ecc), data ports unchanged; signals M2-M6, PG M7 over M5-capped children.",
+ "job": {
+  "owner": "Claude:Q-KVSYS-DIE KVCTRL",
+  "branch": "claude/qkvctrl-split-1016",
+  "tag": "c1",
+  "record_to": "results/rtl/ref_tile/qkd_ctrl_pc_host_static_c1",
+  "purpose": "KVCTRL split, lead decision 2026-10-16 option A: the controller is replicated per PC, so the wires-only parent qkd_ctrl_pc_host_static is hardened ONCE as a cluster of three closed native-PASS children (core W 108.0x216 (core_s4), port 69.12x79.92 at the top of the E column, ECC 41.04x43.2 mirrored (MX) directly below it so port kv_d (S face) meets ECC i_code across a 10.8 um gap) inside the 247.512x378 controller slot. Clock entries: one top port per hard-child clock pin (ck, pll_hbm -> core; pll_hbm_port -> port; pll_hbm_ecc -> ECC; all three HBM entries carry the same 1024 ps clock, the die delivers phi - R_i each). Parent = wires only (no flops, no tree). Entries are timed in the default related core domain (833.333 ps), a conservative over-constraint of the 1024 ps hclk seams (no relaxation).",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/qwen_sys/emb_hbm_20261008",
+   "rtl/qwen_sys/host_20261013",
+   "rtl/qwen_sys/kv_die_20261009",
+   "rtl/qwen_sys/q5_20261009",
+   "rtl/qwen_sys/static_kv_20261014",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv",
+   "physical/qkd_ctrl_strip"
+  ],
+  "benches": [
+   {
+    "name": "actual_controller_conservative_drain",
+    "cmd": "python3 tools/qwen_static_kv/check_controller_drain.py {RUN}/bench/drain && cat {RUN}/bench/drain/production_j0.log",
+    "expect": "pass",
+    "pass_regex": "DRAIN_PASS boundary checks[1-9]",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "missing_actual_host_read_debt",
+    "cmd": "{RUN}/bench/drain/obj_missing_host_read_debt/Vtb_kv_hbm_elastic_boundary +jit=16 +seed=2",
+    "expect": "fail",
+    "fail_regex": "DRAIN_EARLY_CORE",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "peak_ram_gb": 16
+ },
+ "structural_change": "KVCTRL split, lead decision 2026-10-16 option A: the controller is replicated per PC, so the wires-only parent qkd_ctrl_pc_host_static is hardened ONCE as a cluster of three closed native-PASS children (core W 108.0x216 (core_s4), port 69.12x79.92 at the top of the E column, ECC 41.04x43.2 mirrored (MX) directly below it so port kv_d (S face) meets ECC i_code across a 10.8 um gap) inside the 247.512x378 controller slot. Clock entries: one top port per hard-child clock pin (ck, pll_hbm -> core; pll_hbm_port -> port; pll_hbm_ecc -> ECC; all three HBM entries carry the same 1024 ps clock, the die delivers phi - R_i each). Parent = wires only (no flops, no tree). Entries are timed in the default related core domain (833.333 ps), a conservative over-constraint of the 1024 ps hclk seams (no relaxation)."
+}

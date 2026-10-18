@@ -1,0 +1,164 @@
+{
+  "schema": "opentallas.qwen_d2d_cts_diagnosis.v1",
+  "r8": "/srv/opentallas-scratch/claude/ref_gate/qfd_d2d_static_r8-20261016-183054",
+  "r8b": "/srv/opentallas-scratch/claude/ref_gate/qfd_d2d_static_r8-20261016-194045",
+  "source_r8": "snapshot-sha256:a26992c68625aa96a49312c2ee93232b783747e9eb2fc4931f44035b2b7596ea",
+  "source_r8b": "snapshot-sha256:66d9b95bd034f2eca7e97700abc93cd9da53a876c8ed0e5d44e328e91da59c41",
+  "hashes": [
+    {
+      "path": "routes/gate/work/orfs/config.mk",
+      "r8_sha256": "7f250958600a6c82a4444e7d8e9574e38f7b7c96fb48eb1c54f02da3b9fb83af",
+      "r8b_sha256": "11b847e05b74739607aebdc1cd6547f393933a64c70eebfd84980432d7598ce5",
+      "equal": false
+    },
+    {
+      "path": "routes/gate/work/orfs/hooks/ot_cts_fix_2_link_budget_hook.tcl",
+      "r8_sha256": "af848b76a6a29c5facbbd64b396951707e9ba5935f5db53efc5e6d1c7ee5485a",
+      "r8b_sha256": "af848b76a6a29c5facbbd64b396951707e9ba5935f5db53efc5e6d1c7ee5485a",
+      "equal": true
+    },
+    {
+      "path": "routes/gate/work/orfs/hooks/pre_global_route_pre_grt.tcl",
+      "r8_sha256": "96bd1f80dfc8803a9d6e392004ae8a911f97bc7c1639ec5dac57ef1ee0c3c469",
+      "r8b_sha256": "96bd1f80dfc8803a9d6e392004ae8a911f97bc7c1639ec5dac57ef1ee0c3c469",
+      "equal": true
+    },
+    {
+      "path": "routes/gate/work/orfs/hooks/post_detail_route_post_drt.tcl",
+      "r8_sha256": "d641c00636794807858c84bf3efe129e33ce4001757e653618397e6c461b8238",
+      "r8b_sha256": "d641c00636794807858c84bf3efe129e33ce4001757e653618397e6c461b8238",
+      "equal": true
+    },
+    {
+      "path": "routes/gate/work/orfs/hooks/pre_fillcell_pre_fill.tcl",
+      "r8_sha256": "121e31c5bfdbe81c5490bc3614957163714fce04f56c62d942b174cd321eacae",
+      "r8b_sha256": "121e31c5bfdbe81c5490bc3614957163714fce04f56c62d942b174cd321eacae",
+      "equal": true
+    },
+    {
+      "path": "routes/gate/work/orfs/hooks/post_cts_post_cts.tcl",
+      "r8_sha256": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+      "r8b_sha256": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+      "equal": true
+    },
+    {
+      "path": "routes/gate/work/orfs/hooks/pre_cts_ot_cts_fix.tcl",
+      "r8_sha256": "0b3adcffe335b85f5b4a8b182d6cf43562554916314544d599191556fe32c444",
+      "r8b_sha256": "0b3adcffe335b85f5b4a8b182d6cf43562554916314544d599191556fe32c444",
+      "equal": true
+    },
+    {
+      "path": "routes/gate/work/orfs/hooks/post_global_route_post_grt.tcl",
+      "r8_sha256": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+      "r8b_sha256": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+      "equal": true
+    },
+    {
+      "path": "routes/gate/work/orfs/hooks/ot_grt183_resume.tcl",
+      "r8_sha256": "50d43e568486b97feb7896397e525bfbf1c9779e820f622fb0870c35864f853d",
+      "r8b_sha256": "50d43e568486b97feb7896397e525bfbf1c9779e820f622fb0870c35864f853d",
+      "equal": true
+    },
+    {
+      "path": "routes/gate/work/orfs/hooks/pre_detail_route_pre_drt.tcl",
+      "r8_sha256": "121e31c5bfdbe81c5490bc3614957163714fce04f56c62d942b174cd321eacae",
+      "r8b_sha256": "121e31c5bfdbe81c5490bc3614957163714fce04f56c62d942b174cd321eacae",
+      "equal": true
+    },
+    {
+      "path": "routes/gate/work/orfs/hooks/pre_global_place_pre_gpl.tcl",
+      "r8_sha256": "6c05e8fbbbaf7fd4cfcd87a5b8778be57de44fa69640b979be7695a3e54755f7",
+      "r8b_sha256": "6c05e8fbbbaf7fd4cfcd87a5b8778be57de44fa69640b979be7695a3e54755f7",
+      "equal": true
+    },
+    {
+      "path": "routes/gate/work/orfs/hooks/ot_cts_fix_1_clk_net_protect.tcl",
+      "r8_sha256": "ca5acab6f7b55b145dc6bccff3f5db5d10d9b4fed85678582bfc02e347509845",
+      "r8b_sha256": "ca5acab6f7b55b145dc6bccff3f5db5d10d9b4fed85678582bfc02e347509845",
+      "equal": true
+    },
+    {
+      "path": "routes/gate/work/orfs/hooks/ot_cts_fix_0_cg_pushdown.tcl",
+      "r8_sha256": "09575e679bdbf90f99dca1ba100e14f4d7d9b54111159377626cb079f9daf118",
+      "r8b_sha256": "09575e679bdbf90f99dca1ba100e14f4d7d9b54111159377626cb079f9daf118",
+      "equal": true
+    },
+    {
+      "path": "routes/gate/work/orfs/hooks/pre_detail_place_pre_dpl.tcl",
+      "r8_sha256": "c668b3677a80a60029982fd74af121c738a52d3010947134539610b2bde0c8d9",
+      "r8b_sha256": "c668b3677a80a60029982fd74af121c738a52d3010947134539610b2bde0c8d9",
+      "equal": true
+    },
+    {
+      "path": "routes/gate/work/orfs/hooks/post_fillcell_post_fill.tcl",
+      "r8_sha256": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+      "r8b_sha256": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+      "equal": true
+    },
+    {
+      "path": "routes/gate/work/orfs/hooks/pre_grt_ot_grt183.tcl",
+      "r8_sha256": "ff0bb8b8214932a57951e9a928b822b84177a0da0292214d7e94074089780a3a",
+      "r8b_sha256": "ff0bb8b8214932a57951e9a928b822b84177a0da0292214d7e94074089780a3a",
+      "equal": true
+    },
+    {
+      "path": "routes/gate/work/orfs/hooks/pre_cts_pre_cts.tcl",
+      "r8_sha256": "4cf2d8445b9de3edd3c9e58f2f79e77708f248a820c840eb8e285852ff8f3f06",
+      "r8b_sha256": "4cf2d8445b9de3edd3c9e58f2f79e77708f248a820c840eb8e285852ff8f3f06",
+      "equal": true
+    },
+    {
+      "path": "src/physical/ref_tile/qfd_d2d_static_r8/clock.sdc",
+      "r8_sha256": "5fdb50eb574ff0bc92db533a77c2b5af8217d92859497788a40ceff59417e227",
+      "r8b_sha256": "5fdb50eb574ff0bc92db533a77c2b5af8217d92859497788a40ceff59417e227",
+      "equal": true
+    },
+    {
+      "path": "src/physical/ref_tile/qfd_d2d_static_r8/signoff.sdc",
+      "r8_sha256": "84e7b05e1d86004752aa08f251256274383262b38d03c09eea197b045abd2a39",
+      "r8b_sha256": "84e7b05e1d86004752aa08f251256274383262b38d03c09eea197b045abd2a39",
+      "equal": true
+    },
+    {
+      "path": "src/physical/ref_tile/qfd_d2d_static_r8/spine_ins.tcl",
+      "r8_sha256": "7f09dba08032c22035f152c98322a9bcf437fae547db0e380e8d807d08355bed",
+      "r8b_sha256": "7f09dba08032c22035f152c98322a9bcf437fae547db0e380e8d807d08355bed",
+      "equal": true
+    }
+  ],
+  "unit": "ps",
+  "finding": "No shared-helper drift in checked generated hooks/spine/clock/signoff. Config only changes FF route-repair SDC selection; IO-only repair margin is reduced 30 to 10 ps, internal signoff preserved. Initial FF WNS improves -43.77 to -25.89 ps. Residual native boundary remains unmeasured.",
+  "correction": "The resizer table WNS -3.095 and TNS -11.419 are ps, not ns; previous catastrophe interpretation was incorrect.",
+  "r8_clock_evidence": [
+    "OT_SPINE restored measured spread 24.24780300000009 ps (best 24.24780300000009)",
+    "QDM reference pin c_x3[114]$_DFF_P_/CLK clock arrival max 701.669067 min 313.622742 skew 90 hold 50",
+    "OT_LINK_BUDGET clock core_clk T 770.000 L 702.9 (690.5..715.2 std_regs 10921 (macro pins excluded)) skew 150 link 114 -> S 223.0 R 223.0; in max 487.0 out max 487.0",
+    "OT_CLK_PROTECT dont_touch clock nets=0 clock buffers=0",
+    "QDM reference pin c_fdi_rx_flit[247]$_DFF_P_/CLK clock arrival max 556.551 min 531.5579 skew 90 hold 50",
+    "OT_HOLD_MM sync: SS setup ws 21.56 / FF hold ws -43.77 ps"
+  ],
+  "r8_last_lines": [
+    "write_sdc -no_timestamp /work/results/asap7/opentallas_qfd_d2d_static_asap7_ref_gate/base/4_cts.sdc",
+    "Elapsed time: 12:59.74[h:]min:sec. CPU time: user 877.85 sys 69.33 (121%). Peak memory: 1654708KB.",
+    "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+    "4_1_cts                   .odb          779           1615 378ce9cb935426588f97",
+    "cp /work/results/asap7/opentallas_qfd_d2d_static_asap7_ref_gate/base/4_1_cts.odb /work/results/asap7/opentallas_qfd_d2d_static_asap7_ref_gate/base/4_cts.odb"
+  ],
+  "r8b_clock_evidence": [
+    "OT_SPINE restored measured spread 24.24780300000009 ps (best 24.24780300000009)",
+    "QDM reference pin c_x3[114]$_DFF_P_/CLK clock arrival max 701.669067 min 313.622742 skew 90 hold 50",
+    "OT_LINK_BUDGET clock core_clk T 770.000 L 702.9 (690.5..715.2 std_regs 10921 (macro pins excluded)) skew 150 link 114 -> S 223.0 R 223.0; in max 487.0 out max 487.0",
+    "OT_CLK_PROTECT dont_touch clock nets=0 clock buffers=0",
+    "QDM reference pin c_fdi_rx_flit[247]$_DFF_P_/CLK clock arrival max 556.551 min 531.5579 skew 90 hold 30",
+    "OT_HOLD_MM sync: SS setup ws 21.56 / FF hold ws -25.89 ps"
+  ],
+  "r8b_last_lines": [
+    "     5730 |       0 |    9990 |            0 |    +1.2% |  -3.095 | -11.419 | u_core.u_end.u_link.u_ctl.rf[342]$_DFF_P_/D",
+    "     5740 |       0 |   10000 |            0 |    +1.2% |  -3.095 | -11.419 | u_core.u_end.u_link.u_ctl.rf[342]$_DFF_P_/D",
+    "     5750 |       0 |   10010 |            0 |    +1.2% |  -3.095 | -11.419 | u_core.u_end.u_link.u_ctl.rf[342]$_DFF_P_/D",
+    "     5760 |       0 |   10020 |            0 |    +1.2% |  -3.095 | -11.419 | u_core.u_end.u_link.u_ctl.rf[342]$_DFF_P_/D",
+    "     5770 |       0 |   10031 |            0 |    +1.2% |  -3.095 | -11.419 | u_core.u_end.u_link.u_ctl.rf[342]$_DFF_P_/D"
+  ],
+  "repair_sdc_diff": "--- \n+++ \n@@ -1,3 +1,6 @@\n+# qfd_d2d_static_r8: ROUTE-TIME FF hold-repair SDC (NOT sign-off; generated by tools/ref_tile/ref_tile.py): signoff.sdc\n+# with the boundary hold requirement relieved by 20 ps = route.hold_margin_ns - route.io_hold_margin_ns, so the\n+# repair margin on IO paths is io_hold_margin while reg->reg keeps hold_margin.  Sign-off reads signoff.sdc.\n # qfd_d2d_static_r8: sign-off at 833.333 ps (generated by tools/ref_tile/ref_tile.py; same form as\n # physical/qwen_die_masters/jobs/signoff_sdc.py): clock re-created at the real period, propagated, 60 / 25 ps uncertainty,\n # die-context boundary io_ref_skew.sdc with this block's REFGLOB / INTER bound.\n@@ -7,7 +10,8 @@\n set_clock_uncertainty -setup 60 [all_clocks]\n set_clock_uncertainty -hold 25 [all_clocks]\n set ::env(OT_IO_SKEW) 90\n-set ::env(OT_IO_HOLD_SKEW) 50\n+set ::env(OT_IO_HOLD_SKEW) 30\n+set ::env(OT_IO_IN_HOLD_SKEW) -20\n set ::env(OT_REF_GLOB) {*}\n set ::env(OT_IO_INTER) {none_*}\n set ::env(OT_IO_SKEW_INTER) 150\n@@ -129,3 +133,5 @@\n if {[llength [get_ports -quiet tile_id*]]} { set_false_path -from [get_ports tile_id*] }\n \n set_propagated_clock [all_clocks]\n+set ::env(OT_IO_HOLD_SKEW) 50\n+unset -nocomplain ::env(OT_IO_IN_HOLD_SKEW)\n",
+  "r8b_declared_commit": "920ed6eb4"
+}

@@ -16,12 +16,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 # ot-epyc1tb is retired (HANDOFF 0bu 10-16): never a synthesis host
-HOSTS = {'regular-crane': 'ot-epyc4', 'vm-xry57mhfyn': 'ot-agidock128'}
+HOSTS = {'regular-crane': 'ot-epyc4', 'vm-xry57mhfyn': 'ot-agidock128', 'ot-pve1': 'ot-pve1'}
 PREFER = {'ot_hbm_lk_ep': ['rtl/hbm_accel/tu/lk_ep_20261010/ot_hbm_lk_ep.sv',
                            'rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv',
                            'rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv'],
           # ot_su12_lane binds SFUT: the c12 vector lane (rtl/hdc/v41x) is the variant with that parameter
-          'ot_hgi_sfu_scheduled_engine': ['rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv']}
+          'ot_hgi_sfu_scheduled_engine': ['rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv'],
+          # d4f split2 core (H-SU k8): same ot_su12_lane SFUT binding
+          'ot_hgi_sfu_core_split2': ['rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv']}
 MISSING = re.compile(r"Module `\\?(\w+)' referenced in module .* is not part of the design")
 NOPARAM = re.compile(r"Module `\\?(\w+)' referenced in module .* does not have a parameter named '(\w+)'")
 
@@ -63,11 +65,12 @@ def run(cell, row, a, idx, lock, summary):
         log = drive / f'{cell}.r{k}.log'
         with open(log, 'w') as f:
             rc = subprocess.run(['python3', '/home/ubuntu/bin/ot-run', '--mem', str(mem), '--threads', '4', '--dir', S,
-                                 '--hosts', ','.join(HOSTS.values()), '--priority', 'die', '--', 'bash', '-c', cmd],
+                                 '--priority', 'die', '--', 'bash', '-c', cmd],
                                 stdout=f, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL).returncode
         txt = log.read_text()
         hm = re.search(r'^HOST (\S+)', txt, re.M)
-        host = HOSTS.get(hm.group(1)) if hm else None
+        ran = re.search(r'ot-run: RAN on (\S+)', txt)
+        host = ran.group(1) if ran else (HOSTS.get(hm.group(1), hm.group(1)) if hm else None)
         rnd = dict(round=k, rc=rc, host=host, extra=list(extra), prefer=list(prefs))
         rec['rounds'].append(rnd)
         if rc == 0 and 'etm rc=0' in txt:

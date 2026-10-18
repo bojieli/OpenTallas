@@ -1,0 +1,653 @@
+{
+ "schema": "opentallas.qwen.qcluster.contract.v1",
+ "master": "qfd_c_b16_dv",
+ "provisional": true,
+ "generator": "tools/qwen_cluster/qc_gen.py",
+ "base": "tools/qwen_cluster/cb_base.py (claude/q3h-cb-1016 e7e22d5b6)",
+ "spec": "results/arch/qwen_cluster_1017/SPEC.md",
+ "outline_um": {
+  "w": 2358.72,
+  "h": 5227.2
+ },
+ "corridors": {
+  "L": [
+   0.0,
+   43.2
+  ],
+  "A": [
+   501.12,
+   648.0
+  ],
+  "T": [
+   1105.92,
+   1252.8
+  ],
+  "B": [
+   1710.72,
+   1857.6
+  ],
+  "R": [
+   2315.52,
+   2358.72
+  ]
+ },
+ "quadrant_seams": {
+  "x": 1179.3600000000001,
+  "y": 2613.6000000000004
+ },
+ "register_centroid_x": {
+  "sw": 694.0,
+  "se": 1754.8,
+  "nw": 695.7,
+  "ne": 1757.5
+ },
+ "tiles": [
+  {
+   "inst": "u_t_0_0",
+   "at": [
+    43.2,
+    86.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_0_1",
+   "at": [
+    43.2,
+    1382.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_0_2",
+   "at": [
+    43.2,
+    2678.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_0_3",
+   "at": [
+    43.2,
+    3974.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_1_0",
+   "at": [
+    648.0,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_1_1",
+   "at": [
+    648.0,
+    1382.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_1_2",
+   "at": [
+    648.0,
+    2678.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_1_3",
+   "at": [
+    648.0,
+    3974.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_2_0",
+   "at": [
+    1252.8,
+    86.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_2_1",
+   "at": [
+    1252.8,
+    1382.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_2_2",
+   "at": [
+    1252.8,
+    2678.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_2_3",
+   "at": [
+    1252.8,
+    3974.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_3_0",
+   "at": [
+    1857.6,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_3_1",
+   "at": [
+    1857.6,
+    1382.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_3_2",
+   "at": [
+    1857.6,
+    2678.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_3_3",
+   "at": [
+    1857.6,
+    3974.4
+   ],
+   "orient": "R0"
+  }
+ ],
+ "clocks": {
+  "sw": {
+   "pin": "ck_sw",
+   "fabric_flops": 24774,
+   "tiles": [
+    "0_0",
+    "0_1",
+    "1_0",
+    "1_1"
+   ],
+   "tile_entry_pins": 156
+  },
+  "se": {
+   "pin": "ck_se",
+   "fabric_flops": 18571,
+   "tiles": [
+    "2_0",
+    "2_1",
+    "3_0",
+    "3_1"
+   ],
+   "tile_entry_pins": 152
+  },
+  "nw": {
+   "pin": "ck_nw",
+   "fabric_flops": 21132,
+   "tiles": [
+    "0_2",
+    "0_3",
+    "1_2",
+    "1_3"
+   ],
+   "tile_entry_pins": 156
+  },
+  "ne": {
+   "pin": "ck_ne",
+   "fabric_flops": 13406,
+   "tiles": [
+    "2_2",
+    "2_3",
+    "3_2",
+    "3_3"
+   ],
+   "tile_entry_pins": 156
+  }
+ },
+ "fabric_flops": 77883,
+ "latency_edges": {
+  "tap": {
+   "0": 3,
+   "1": 7,
+   "2": 11,
+   "3": 15
+  },
+  "bco": 17,
+  "rs_fabric": 35,
+  "rs_i_to_rs_o": 16,
+  "reset": 18
+ },
+ "hop_um": {
+  "limit": 405.0,
+  "plan": 390.0,
+  "max": 402.0
+ },
+ "tree": {
+  "hosts": {
+   "1_0": [
+    1,
+    0
+   ],
+   "1_1": [
+    0,
+    1
+   ],
+   "1_2": [
+    2,
+    0
+   ],
+   "1_3": [
+    3,
+    1
+   ],
+   "1_4": [
+    0,
+    2
+   ],
+   "1_5": [
+    0,
+    3
+   ],
+   "1_6": [
+    3,
+    2
+   ],
+   "1_7": [
+    3,
+    3
+   ],
+   "2_0": [
+    1,
+    1
+   ],
+   "2_1": [
+    2,
+    1
+   ],
+   "2_2": [
+    1,
+    3
+   ],
+   "2_3": [
+    2,
+    3
+   ],
+   "3_0": [
+    2,
+    2
+   ],
+   "3_1": [
+    1,
+    2
+   ],
+   "4_0": [
+    0,
+    0
+   ]
+  },
+  "nl_slot": [
+   3,
+   0
+  ]
+ },
+ "ports": [
+  {
+   "port": "bc0",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    4.32,
+    176.32
+   ],
+   "pins_per_um": 3.0,
+   "lane_x": 21.6,
+   "note": "column word (corridor run)"
+  },
+  {
+   "port": "rs",
+   "bits": 514,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    488.893,
+    660.227
+   ],
+   "pins_per_um": 3.0,
+   "lane_x": 574.6,
+   "note": "block word {fault, valid, 512}"
+  },
+  {
+   "port": "bc1",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    920.693,
+    1092.693
+   ],
+   "pins_per_um": 3.0,
+   "lane_x": 1130.4,
+   "note": "column word (corridor run)"
+  },
+  {
+   "port": "rs_o",
+   "bits": 514,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1093.693,
+    1265.027
+   ],
+   "pins_per_um": 3.0,
+   "lane_x": 1179.4,
+   "note": "DV: far-band rs word out (rs_i + 15 edges)"
+  },
+  {
+   "port": "bc2",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1266.027,
+    1438.027
+   ],
+   "pins_per_um": 3.0,
+   "lane_x": 1228.3,
+   "note": "column word (corridor run)"
+  },
+  {
+   "port": "bc3",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    2182.4,
+    2354.4
+   ],
+   "pins_per_um": 3.0,
+   "lane_x": 2337.1,
+   "note": "column word (corridor run)"
+  },
+  {
+   "port": "ck_sw",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    687.966,
+    688.266
+   ],
+   "pins_per_um": null,
+   "note": "quadrant sw entry island (register centroid x 694)"
+  },
+  {
+   "port": "rst_n",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    688.966,
+    689.266
+   ],
+   "pins_per_um": null,
+   "note": "quadrant sw entry island (register centroid x 694)"
+  },
+  {
+   "port": "far",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    689.966,
+    690.266
+   ],
+   "pins_per_um": null,
+   "note": "quadrant sw entry island (register centroid x 694)"
+  },
+  {
+   "port": "cid",
+   "bits": 12,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    690.966,
+    696.966
+   ],
+   "pins_per_um": null,
+   "note": "quadrant sw entry island (register centroid x 694)"
+  },
+  {
+   "port": "tie_hi",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    697.666,
+    697.966
+   ],
+   "pins_per_um": null,
+   "note": "quadrant sw entry island (register centroid x 694)"
+  },
+  {
+   "port": "tie_lo",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    698.666,
+    698.966
+   ],
+   "pins_per_um": null,
+   "note": "quadrant sw entry island (register centroid x 694)"
+  },
+  {
+   "port": "ck_se",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1754.301,
+    1754.601
+   ],
+   "pins_per_um": null,
+   "note": "quadrant se entry island (register centroid x 1755)"
+  },
+  {
+   "port": "bco0",
+   "bits": 516,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    4.32,
+    176.32
+   ],
+   "pins_per_um": 3.0,
+   "lane_x": 21.6,
+   "note": "registered feed-through to the far cluster"
+  },
+  {
+   "port": "rs_i",
+   "bits": 514,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    488.893,
+    660.227
+   ],
+   "pins_per_um": 3.0,
+   "lane_x": 574.6,
+   "note": "DV: far-band rs word in"
+  },
+  {
+   "port": "bco1",
+   "bits": 516,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    1006.86,
+    1178.86
+   ],
+   "pins_per_um": 3.0,
+   "lane_x": 1130.4,
+   "note": "registered feed-through to the far cluster"
+  },
+  {
+   "port": "bco2",
+   "bits": 516,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    1179.86,
+    1351.86
+   ],
+   "pins_per_um": 3.0,
+   "lane_x": 1228.3,
+   "note": "registered feed-through to the far cluster"
+  },
+  {
+   "port": "bco3",
+   "bits": 516,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    2182.4,
+    2354.4
+   ],
+   "pins_per_um": 3.0,
+   "lane_x": 2337.1,
+   "note": "registered feed-through to the far cluster"
+  },
+  {
+   "port": "ck_nw",
+   "bits": 1,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    695.225,
+    695.525
+   ],
+   "pins_per_um": null,
+   "note": "quadrant nw entry island (register centroid x 696)"
+  },
+  {
+   "port": "ck_ne",
+   "bits": 1,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    1757.04,
+    1757.34
+   ],
+   "pins_per_um": null,
+   "note": "quadrant ne entry island (register centroid x 1758)"
+  }
+ ],
+ "a0": {
+  "ref": "30d3d3510",
+  "nk": "qfd_tile_nk_rp2_romleaf_rr",
+  "nl": "qfd_tile_nl_rp2_romleaf_rr",
+  "nk_clocks": [
+   "ck",
+   "ck_rp0",
+   "ck_rp1",
+   "ck_rp2",
+   "ck_rp3",
+   "ck_rp4",
+   "ck_rp5",
+   "ck_rp6",
+   "ck_rp7",
+   "ck_rp8",
+   "ck_rp9",
+   "ck_tx0",
+   "ck_tx1",
+   "ck_tx2",
+   "ck_tx3",
+   "ck_tx4",
+   "ck_tx5",
+   "ck_tx6",
+   "ck_tx7",
+   "ck_rsw",
+   "ck_rnw",
+   "ck_dw",
+   "ck_de",
+   "ck_rs",
+   "ck_rn",
+   "ck_fa0",
+   "ck_fa1",
+   "ck_fa2",
+   "ck_fa3",
+   "ck_fa4",
+   "ck_lsl0",
+   "ck_lsl1",
+   "ck_lsl2",
+   "ck_lsl3",
+   "ck_lsl4",
+   "ck_lsl5",
+   "ck_lsl6",
+   "ck_lsl7",
+   "ck_node"
+  ],
+  "nl_clocks": [
+   "ck",
+   "ck_rp0",
+   "ck_rp1",
+   "ck_rp2",
+   "ck_rp3",
+   "ck_rp4",
+   "ck_rp5",
+   "ck_rp6",
+   "ck_rp7",
+   "ck_rp8",
+   "ck_rp9",
+   "ck_tx0",
+   "ck_tx1",
+   "ck_tx2",
+   "ck_tx3",
+   "ck_tx4",
+   "ck_tx5",
+   "ck_tx6",
+   "ck_tx7",
+   "ck_rsw",
+   "ck_rnw",
+   "ck_dw",
+   "ck_de",
+   "ck_rs",
+   "ck_rn",
+   "ck_fa2",
+   "ck_fa4",
+   "ck_lsl0",
+   "ck_lsl1",
+   "ck_lsl2",
+   "ck_lsl3",
+   "ck_lsl4",
+   "ck_lsl5",
+   "ck_lsl6",
+   "ck_lsl7"
+  ]
+ },
+ "die_crossing": {
+  "rule": "(a) + (c): no die link crosses a qfd_c_b16_dv outline (die repeaters never sit inside it; M9 over the cluster carries die PG only in dv2r8f).  Die links run in the band gaps, the slice / head row and the W column; the only data that passes through a cluster is its own registered feedthroughs bc -> bco (4 x 516 b, 17 edges) and rs_i -> rs_o (514 b, 15 edges).  No die feedthrough repeater sites are reserved.",
+  "registered_feedthroughs": {
+   "bc0..3->bco0..3": 17,
+   "rs_i->rs_o": 16
+  }
+ },
+ "far_position": "ONE master: in the far bands (0 / 3) rs_i is a declared-idle terminus tied to the instance's own tie_lo by the die (valid bit 0 every cycle) and rs_o is left unconnected (output only)",
+ "gating": [
+  "A0 views qfd_tile_nk_romleaf_a0 / nl twin not CLOSED (Q-ROMPARENT-2): diagnostics only, no binding"
+ ]
+}

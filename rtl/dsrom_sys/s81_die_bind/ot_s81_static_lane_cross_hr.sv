@@ -30,9 +30,7 @@ module ot_s81_static_lane_cross_hr #(
     reg [AW:0] wc, rc;
     reg [AW:0] warm;
     // r5b: the observed epoch is a dedicated Gray register (wgr == gray(wc) at every instant, same edges as the
-    // base module's combinational wc^(wc>>1)). It keeps the cross-root wg1 capture off wc's bank-decode fanout
-    // tree, whose long max path left no setup room for the hold buffers on wc->wg1 (gate r5 4_1_cts chunk 1:
-    // RSZ stuck 9,000 iterations at -14.3 ps on u_x.u_cross.wg1[1]).
+    // base module's combinational wc^(wc>>1)); wg1 captures a flop, not wc's bank-decode fanout.
     reg [AW:0] wgr;
     wire [AW:0] wc_n = wc+1'b1;
     always @(posedge w_ck or negedge w_rst_n)
@@ -46,11 +44,20 @@ module ot_s81_static_lane_cross_hr #(
     wire [AW:0] expected = rc-OFFSET+EPOCH_SHIFT;
     always @(posedge w_ck or negedge w_rst_n)
         if (!w_rst_n) wc <= 0;
-        else begin
-            bank[wc[AW-1:0]] <= i;
-            identity[wc[AW-1:0]] <= wc;
-            wc <= wc+1'b1;
-        end
+        else wc <= wc+1'b1;
+    // r5c: each bank slot is written through its own integrated clock gate (ot_hdc_cg -> ICGx1 in synthesis)
+    // instead of an enable-recirculation mux. The slot loads at exactly the w_ck edges at which the base module
+    // wrote it (w_rst_n high and wc == slot). Why: the 8 x W recirculation self-loops (Q -> mux -> D, +10.7 ps
+    // FF hold) were 8.8k of the 11k endpoints inside the 30 ps route hold margin; their one-buffer-per-bit
+    // padding (~20k buffers) kept RSZ's first hold call running ~10k iterations while one cross-root endpoint
+    // waited (r5 wg1[1] -14.3 ps, r5b wg1[2] -48.2 ps, both fixed at once in the next call), which the route
+    // stall detector kills. Gated slots have no self-loop; pin -> slot is one shared driver per bit.
+    genvar gs;
+    generate for (gs=0; gs<DEPTH; gs=gs+1) begin : g_slot
+        wire gck;
+        ot_hdc_cg u_cg (.clk(w_ck), .en(w_rst_n && (wc[AW-1:0] == gs)), .gclk(gck));
+        always @(posedge gck) begin bank[gs] <= i; identity[gs] <= wc; end
+    end endgenerate
     always @(posedge r_ck or negedge r_rst_n)
         if (!r_rst_n) begin rc<=0; warm<=0; fault<=0; end
         else begin
@@ -68,11 +75,17 @@ module ot_s81_static_lane_cross_hr #(
     wire go = (warm >= OFFSET-1);
     reg [DEPTH-1:0] sel;
     integer k;
-    always @(negedge r_ck) for (k=0;k<DEPTH;k=k+1) sel[k] <= go && (nxt[AW-1:0] == k);
+    // r5d (S-ELEM CFIFO 1815): sel and h are clocked on negedge o_ck (the consumer root, same PLL phase 0 as r_ck),
+    // not negedge r_ck. Routed r5c (s81coll_cfifo_crs-r5cgb-e89a6bd7e) missed TT by -24.5 ps on 9 h(negedge cr_s) ->
+    // o(posedge cr) endpoints: a half-cycle CROSS-ROOT hop pays the 150 ps inter-root setup reserve (266 ps left for
+    // clk->q + wire). With h on o_ck that hop is intra-root (60 ps uncertainty, +90 ps). sel moves with h so that the
+    // 1101-bit select fanout sel->mux->h stays an intra-root full-cycle path (no cross-root hold reserve on 2.2k D pins);
+    // the only cross-root hops left are bank(w_ck)->h and rc/warm(r_ck)->sel, both half-cycle. Same edges: 0 cycles.
+    always @(negedge o_ck) for (k=0;k<DEPTH;k=k+1) sel[k] <= go && (nxt[AW-1:0] == k);
     reg [W-1:0] rd_;
     always @* begin rd_ = {W{1'b0}}; for (k=0;k<DEPTH;k=k+1) rd_ = rd_ | (bank[k] & {W{sel[k]}}); end
     reg [W-1:0] h;
-    always @(negedge r_ck) h <= rd_;
+    always @(negedge o_ck) h <= rd_;
 `ifdef OT_S81_HR_MUT_NOSTAGE
     always @* o = h;
 `else

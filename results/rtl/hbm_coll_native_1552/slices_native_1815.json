@@ -1,0 +1,4 @@
+{"audited_at":"2026-10-16T19:40-07:00","main":"2842d2ca1","tool":"tools/hier_contract/native_pin_audit.py audit_one","thresholds_ps":{"launch":220,"capture":190,"spread":80},
+ "views":[
+  {"cell":"ot_hgi_coll_vmasm_slice16","job":"hcoll_vmasm16-s16-0be6140a3","route":"CLOSED TT +337.04 / FF +27.78 DRC 0","R_ps":102.1,"spread_ps":6.8,"launch_ps":178.7,"capture_ps":130.9,"comb_pins":0,"pass":true},
+  {"cell":"ot_hgi_coll_uop_slice96","job":"hcoll_upipe96-u96-084ca25c6","route":"CLOSED TT +342.09 / FF +29.26 DRC 0","R_ps":84.9,"spread_ps":5.9,"launch_ps":176.5,"capture_ps":125.8,"comb_pins":0,"pass":true}]}

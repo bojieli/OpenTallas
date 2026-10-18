@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_seq_xd_sel_r",
+ "enable": false,
+ "reason": "The RTL registers every pin itself: stage 1 = pin flops of q_v (8 kept select copies), q_d, k_d (N face) and x_vi/x_ci (W face); stage 2 = x_d (the per-group 2:1 select) and x_vo/x_co at the S face. Flow pin registers would add a further edge for no timing need."
+}

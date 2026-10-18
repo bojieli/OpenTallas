@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_inj_copy",
+ "enable": false,
+ "reason": "The leaf IS one register stage (INJ_COPY_EDGES=1); a pin stage would change the declared latency."
+}

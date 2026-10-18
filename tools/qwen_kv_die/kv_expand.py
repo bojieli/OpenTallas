@@ -48,7 +48,9 @@ VIEWS = dict(
     # Q-ELEM 2026-10-15 22:34 (G3S2 composition: HXK5 silently wrong 512/512, HXK13 exact 53/53): OT_KV_ECTL_H13=1 binds
     # a -> the h5 view (synthesis byte-identical to h13, results/arch/qwen_ectl_h13_2115/ab_reuse.json; the a_h13 view is
     # pending its native capture fix), b -> h5 (identical, native PASS), c -> the CLOSED h13 view (e033dce09). Never c_h5.
-    qkd_ectl_a_tp8_epoch_direct=(f'{RT}/qkd_ectl_a_tp8_epoch_direct_h5/views/qkd_ectl_a_tp8_epoch_direct' if ECTL_H13 else
+    # KVPLAN3 0230 (Q-KVFIX 0130): a -> the CLOSED pg16s view (same synth netlist as h5, native PASS launch 185.5 / capture
+    # 161.3 / R 314.5, LEF = the ECTL A pin grant 2638/2638; h5 = native FAIL capture 221.0 rs, R 413.6).
+    qkd_ectl_a_tp8_epoch_direct=(f'{RT}/qkd_ectl_a_tp8_epoch_direct_pg16/views/qkd_ectl_a_tp8_epoch_direct' if ECTL_H13 else
                                  f'{RT}/qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_epoch_direct'),
     qkd_ectl_b_tp8_direct=(f'{RT}/qkd_ectl_b_tp8_direct_h5/views/qkd_ectl_b_tp8_direct' if ECTL_H13 else
                            f'{RT}/qkd_ectl_b_tp8_direct/views/qkd_ectl_b_tp8_direct'),
@@ -61,9 +63,15 @@ VIEWS = dict(
     qkh_head_sstage=f'{RT}/qkh_head_sstage/views/qkh_head_sstage',
     # v1.4.4 PV16 wide pair leaves (CLOSED, all reset-pin r5: RESET_PIN 1 = the pair's LEAF_RESET_PIN / CTL_RESET_PIN 1)
     ot_qwen_tp8_pv_slice_t=f'{RT}/qkd_pv_slice_rstpin_r5/views/ot_qwen_tp8_pv_slice_t',
-    ot_qwen_tp8_pv_join_t=f'{RT}/qkd_pv_join_rstpin_r5/views/ot_qwen_tp8_pv_join_t',
+    # KVPLAN3 0230: join re-pin successor r6 (sf[7:4] E face; CLOSED TT +57.72 / FF +14.85, native PASS 214.2 / 167.4)
+    ot_qwen_tp8_pv_join_t=f'{RT}/qkd_pv_join_sfe_r6/views/ot_qwen_tp8_pv_join_t',
     # kvs13d: OT_KV_PV_CTL_KIT names the closed ctl kit whose FIRST_INPUT_AGE equals the die's (r5 = 20)
     ot_qwen_tp8_pv_wide_ctl=f"{RT}/{__import__('os').environ.get('OT_KV_PV_CTL_KIT', 'qkd_pv_ctl_rstpin_r5')}/views/ot_qwen_tp8_pv_wide_ctl",
+    # KVPLAN 1815 (OT_KV_PV_T): the trunked pair's control tile and its relay-standard stations
+    ot_qwen_tp8_pv_wide_ctl_t=f"{RT}/{__import__('os').environ.get('OT_KV_PV_T_CTL_KIT', 'qkd_pv_ctl_t_d54f58')}/views/ot_qwen_tp8_pv_wide_ctl_t",
+    **{f'qkd_rlys_{w_}': f'{RT}/qkd_rlys_{w_}/views/qkd_rlys_{w_}' for w_ in (1, 36, 296)},
+    # KV-RTRUNK 10-17: the pair's result-trunk leaves (kits physical/ref_tile/qkd_rlyi_258 / qkd_pv_rs_hd; views = their gates)
+    qkd_rlyi_258=f'{RT}/qkd_rlyi_258/views/qkd_rlyi_258', qkd_pv_rs_hd=f'{RT}/qkd_pv_rs_hd/views/qkd_pv_rs_hd',
 )
 SR = 'rtl/qwen_sys/split_20261014'
 RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_head_score4_native=f'{SR}/ot_qkh_head_native_r4.sv',
@@ -75,7 +83,10 @@ RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_he
            qkd_ctrl_pc='rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv', qkd_ctrl_kc='rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv',
            qkh_head_gather_stage=f'{SR}/qkh_head_gather_stage.sv', qkh_head_sstage=f'{SR}/qkh_head_stages.sv',
            **{m_: 'rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv' for m_ in
-              ('ot_qwen_tp8_pv_slice_t', 'ot_qwen_tp8_pv_join_t', 'ot_qwen_tp8_pv_wide_ctl')})
+              ('ot_qwen_tp8_pv_slice_t', 'ot_qwen_tp8_pv_join_t', 'ot_qwen_tp8_pv_wide_ctl')},
+           ot_qwen_tp8_pv_wide_ctl_t='rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_t.sv',
+           **{f'qkd_rlys_{w_}': 'rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv' for w_ in (1, 36, 296)},
+           **{m_: 'rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv' for m_ in ('qkd_rlyi_258', 'qkd_pv_rs_hd')})
 # v1.4.4: wires-only sub-levels of an expanded parent (flattened with the parent; never a die instance)
 SUBLEVELS = dict(qkd_pvw_die=(('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv', 'ot_qwen_tp8_pv_wide_pair'),
                              ('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv', 'ot_qwen_tp8_pv_col')))
@@ -84,9 +95,9 @@ SUBLEVELS['qkd_pvw_die_e'] = SUBLEVELS['qkd_pvw_die']     # kvs13d (OT_KV_V144_R
 # v1.4.4: parent inputs with NO producer RTL on the die yet: left UNCONNECTED (never tied; strict port bind MISMATCH),
 # each with the element that owes the producer.  Only these ports may stay unbound; any other unbound input still refuses.
 PV_OPEN = dict(
-    start='Q-ATTN-RATE / Q-KVSYS-DIE: PV start slot from the static attention calendar (hub / ECTL issue word)',
-    context_len='Q-ATTN-RATE: per-layer context word of the static calendar (seq / ahub)',
-    epoch='Q-ATTN-RATE: layer epoch word (seq / ahub)',
+    start='KVJ-B: qkd_attn_service_root.start_pv (PV_LEAD = the die relay edges to this pair); join pending (plan item 10)',
+    context_len='KVJ-B: qkd_attn_service_root.ctx (held accept-to-accept; same relay chain as start)',
+    epoch='KVJ-B: qkd_attn_service_root.ep (held accept-to-accept; same relay chain as start)',
     in_epoch='Q-VMWB: V arrival epoch per port (the r5 vport carries none; landing rsp_epoch not on its vo word)',
     in_e='Q-ATTN-RATE (ASTK): qkd_astk_native_er_service_w 4-wide e read face (not in the die ASTK strip qkd_astk_strip_s)')
 FLIP = dict(R0=(0, 0), MX=(0, 1), MY=(1, 0), R180=(1, 1))
@@ -95,7 +106,7 @@ ORIENT = {v: k for k, v in FLIP.items()}
 
 # ---- per-frame placement plans: yosys cell name -> (x, y, orient) in the frame's canonical (R0) coordinates -------------
 def _head_plan(ft=False):
-    pl = json.loads((ROOT / (K.HEAD_FT_PLAN if ft else 'results/arch/qwen_split_1014/head_native_r4_codex_1014/plan.json')).read_text())['children']
+    pl = json.loads((ROOT / (K.HEAD_FT_PLAN if ft else K.HEAD_R4_PLAN)).read_text())['children']
     if ft:      # v1.4.3: the far neighbour's T1 / S2 in the feed-through channel
         pl = dict(pl, ftg=[*K.V143_FT['ftg'], *K.HGS], fts=[*K.V143_FT['fts'], *K.HSS])
 
@@ -127,6 +138,17 @@ def _ctrl_plan(rev):
     return f
 
 
+def _pvt_plan():
+    """KVPLAN 1815: the trunked pair's leaf / station homes from its generator plan (canonical R0); a cell inside the
+    bench-only mutant generate block is named g_ok.<cell>"""
+    cells = K.pvt_plan()['cells']
+
+    def f(cell, fw, fh):
+        c_ = cells[cell.split('.', 1)[1] if cell.startswith('g_ok.') else cell]
+        return (c_[1], c_[2], c_[5])
+    return f
+
+
 def _pv_plan():
     pl = K.pv_plan()       # cells under the die face qkd_pvw_die flatten as 'u_pair.<pair cell>'
     return lambda cell, fw, fh: (pl[cell.split('u_pair.', 1)[-1]][0], pl[cell.split('u_pair.', 1)[-1]][1],
@@ -141,8 +163,11 @@ def frames():
                       straps=lambda inst: dict(cfg=(int(inst.split('_')[2]) << 2) | K.STACKS.index(inst.split('_')[1]))),
         qkd_ctrl=dict(plan=_ctrl_plan(True), straps=lambda inst: {}),
         qkd_ctrl_n=dict(plan=_ctrl_plan(False), straps=lambda inst: {}),
-        qkd_pvw_s=dict(plan=_pv_plan(), straps=lambda inst: {}, open_inputs=PV_OPEN),
-        qkd_pvw_n=dict(plan=_pv_plan(), straps=lambda inst: {}, open_inputs=PV_OPEN),
+        qkd_pvfork=dict(plan=lambda cell, fw, fh: (4.32 + 25.92 * int(cell.split('u_r')[1]), 5.4, 'R0'), straps=lambda inst: {}),
+        **{f'qkd_pvtap{g_}': dict(plan=lambda cell, fw, fh: (4.32 + 25.92 * int(cell.split('u_r')[1]), 5.4, 'R0'),
+                                  straps=lambda inst: {}) for g_ in (2, 3, 4)},   # KVPLAN2 2215: chunk trunk taps
+        qkd_pvw_s=dict(plan=_pvt_plan() if K.PV_T else _pv_plan(), straps=lambda inst: {}, open_inputs=PV_OPEN),
+        qkd_pvw_n=dict(plan=_pvt_plan() if K.PV_T else _pv_plan(), straps=lambda inst: {}, open_inputs=PV_OPEN),
     )
 
 
@@ -205,7 +230,8 @@ def elaborate(mod, file, leaf, parameters=None):
         for cm in re.finditer(r'\b(\w+)\s*#\s*\(((?:[^()]|\([^()]*\))*)\)\s*(\w+)\s*\(', txt, re.S):
             if cm.group(1) in leaf:
                 params[cm.group(1)] |= set(re.findall(r'\.(\w+)\s*\(', cm.group(2)))
-    chp = ''.join(f'chparam -set {k_} {int(v_)} {mod}\n' for k_, v_ in sorted((parameters or {}).items())) if subs else ''
+    chp = ''.join(f'chparam -set {k_} {int(v_)} {mod}\n' for k_, v_ in sorted((parameters or {}).items())) \
+        if (subs or mod == 'qkd_pvw_die_t') else ''
     with tempfile.TemporaryDirectory() as td:
         td = Path(td)
         (td / 'stubs.v').write_text('\n'.join(stub_text(m_, leaf[m_]['ports'], params[m_]) for m_ in leaf))
@@ -319,6 +345,25 @@ def main(argv=None):
     fsize = {}
     for m in re.finditer(r'^MACRO (\S+)\s*$.*?\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)', elef, re.M | re.S):
         fsize[m.group(1)] = (float(m.group(2)), float(m.group(3)))
+    standin = None
+    if K.PV_T and __import__('os').environ.get('OT_KV_PV_T_CTL_STANDIN', '0') == '1' and \
+            not (ROOT / VIEWS['ot_qwen_tp8_pv_wide_ctl_t'] / 'ot_qwen_tp8_pv_wide_ctl_t.lef').exists():
+        # DIAGNOSTIC ONLY until the ctl_t kit closes: the trunked pair's control tile bound to the CLOSED a72 view of the
+        # same tile (identical ports / outline / pins; ctl_t differs by the TRUNK_D / FLAG_D constants and an 8-b wage),
+        # macro / cell renamed -- recorded in expand.json 'standin', never a release view
+        src = ROOT / f"{RT}/{__import__('os').environ.get('OT_KV_PV_CTL_KIT', 'qkd_pv_ctl_rstpin_a72')}/views/ot_qwen_tp8_pv_wide_ctl"
+        dst = (a.run / 'standin' / 'ot_qwen_tp8_pv_wide_ctl_t').resolve()
+        dst.mkdir(parents=True, exist_ok=True)
+        for f_ in src.iterdir():
+            if f_.is_file():
+                t_ = f_.read_text() if f_.suffix in ('.lef', '.lib', '.json') else None
+                if t_ is None:
+                    continue
+                t_ = re.sub(r'\bot_qwen_tp8_pv_wide_ctl\b', 'ot_qwen_tp8_pv_wide_ctl_t', t_)
+                (dst / f_.name.replace('ot_qwen_tp8_pv_wide_ctl', 'ot_qwen_tp8_pv_wide_ctl_t')).write_text(t_)
+        VIEWS['ot_qwen_tp8_pv_wide_ctl_t'] = str(dst)
+        standin = dict(module='ot_qwen_tp8_pv_wide_ctl_t', view=str(dst), from_view=str(src.relative_to(ROOT)),
+                       status='DIAGNOSTIC_STANDIN: ctl_t kit qkd_pv_ctl_t_d54f58 not closed yet')
     leaf = {}
     for mod, vd in VIEWS.items():
         lef = ROOT / vd / f'{mod}.lef'
@@ -503,6 +548,8 @@ def main(argv=None):
     views.setdefault('expanded', {}).update({f: r['module'] for f, r in rep['frames'].items()})
     (libs / 'views.json').write_text(json.dumps(views, indent=1) + '\n')
     rep['leaves'] = {m_: dict(view=leaf[m_]['view'], rtl=RTL[m_]) for m_ in sorted(used_leaf)}
+    if standin:
+        rep['standin'] = standin
     rep['instances_removed'] = len(drop_inst)
     rep['instances_added'] = len(add_place)
     (a.run / 'expand.json').write_text(json.dumps(rep, indent=1) + '\n')

@@ -1,0 +1,252 @@
+{
+ "name": "hbm_sfu_programme_store_r10_cl-r10-COMMIT",
+ "block": "ot_hgi_sfu_programme_store_r10",
+ "ref_tile": true,
+ "owner": "Claude:SFU-PS-3",
+ "purpose": "SFU programme store r10 parent cluster with decision B head + SFU-PS-4 per-row relays (D=5), TritonCTS H-tree (11 one-stripe leaves + head, 3 cols x 4 rows, head centre). CRITICAL (hbm_sfu_programme_store): coordinator reviews the gate PNG before submit.",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/sfu-ps-fund-1017",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros",
+   "physical/hbm_accel_macros",
+   "physical/ref_tile/sfu_lane_ring3_rt/src",
+   "results/arch/hbm_native_1013/sfu_native_quarter",
+   "results/rtl/hbm_hc_sfu_static_1015/qswiglu",
+   "rtl/hbm_accel/generic/peers",
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/test/hbm_accel/generic",
+   "tools/hbm_static"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_hgi_sfu_programme_store_r10 rtl/hbm_accel/generic/peers/ot_hgi_sfu_store_stripe_leaf_r10.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r10.sv physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_r7c",
+    "cmd": "OUT={RUN}/bench/ls MODE=0 SEED=12345 bash tools/hbm_static/run_sfu_store_r10_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R10_GATE POSITIVE PASS",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_mutant_chain",
+    "cmd": "OUT={RUN}/bench/lsc EQ_MUT=chain bash tools/hbm_static/run_sfu_store_r10_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R10_GATE MUTANT chain REJECTED",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_fault1",
+    "cmd": "OUT={RUN}/bench/lsf1 MODE=1 SEED=12345 bash tools/hbm_static/run_sfu_store_r10_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R10_GATE POSITIVE PASS mode=1",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_fault2",
+    "cmd": "OUT={RUN}/bench/lsf2 MODE=2 SEED=12345 bash tools/hbm_static/run_sfu_store_r10_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R10_GATE POSITIVE PASS mode=2",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_fault3",
+    "cmd": "OUT={RUN}/bench/lsf3 MODE=3 SEED=12345 bash tools/hbm_static/run_sfu_store_r10_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R10_GATE POSITIVE PASS mode=3",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_fault4",
+    "cmd": "OUT={RUN}/bench/lsf4 MODE=4 SEED=12345 bash tools/hbm_static/run_sfu_store_r10_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R10_GATE POSITIVE PASS mode=4",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_mutant_noshift",
+    "cmd": "OUT={RUN}/bench/lsn EQ_MUT=noshift bash tools/hbm_static/run_sfu_store_r10_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R10_GATE MUTANT noshift REJECTED",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_mutant_rowskew",
+    "cmd": "OUT={RUN}/bench/lsr EQ_MUT=rowskew bash tools/hbm_static/run_sfu_store_r10_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R10_GATE MUTANT rowskew REJECTED",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_equiv_exact",
+    "cmd": "OUT={RUN}/bench/pos SFU_LG_R=23 STORE10=1 bash tools/hbm_static/run_sfu_split_equiv.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_SPLIT_GATE POSITIVE PASS",
+    "min_count_regex": "SFU_SPLIT_EQUIV PASS edges=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_flip",
+    "cmd": "OUT={RUN}/bench/flip SFU_LG_R=23 STORE10=1 EQ_MUT=flip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/flip/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_early",
+    "cmd": "OUT={RUN}/bench/early SFU_LG_R=23 STORE10=1 EQ_MUT=early bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/early/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_chain",
+    "cmd": "OUT={RUN}/bench/chain SFU_LG_R=23 STORE10=1 EQ_MUT=chain bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/chain/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_noshift",
+    "cmd": "OUT={RUN}/bench/noshift SFU_LG_R=23 STORE10=1 EQ_MUT=noshift bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/noshift/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_rowskew",
+    "cmd": "OUT={RUN}/bench/rowskew SFU_LG_R=23 STORE10=1 EQ_MUT=rowskew bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/rowskew/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_sfu_programme_store_r10_cl/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_sfu_programme_store_r10_cl/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_sfu_programme_store_r10_cl --out {RUN}/record/views/ot_hgi_sfu_programme_store_r10 --macro-view physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_sfu_programme_store_r10_cl/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_sfu_programme_store_r10_cl/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_sfu_programme_store_r10_cl/hbm_sfu_programme_store_r10_cl-r10-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "r10 parent (SFU-PS-2 10-17): 11 identical one-stripe leaves (hbm_sfu_store_stripe_r10_1017) + the thin head in ONE cluster, 3 cols x 4 rows with the head in the centre cell (c1,r1) so every leaf<->head leg is <= ~1 col + 1.5 rows. Rows (S->N), SFU-PS-3 re-plan: P2 P1 P0 | P6 head IO0 | P7 IO2 IO1 | P5 P4 P3, every leaf R0 (an MY leaf puts 836 pins off the M3/M5 tracks: no on-track origin); config chains are neighbour hops (P0>P1>P2, P3>P4>P5, IO1>IO2 westward in a row: leaf out W half -> next leaf in E half ~190 um; P6>P7 and IO0>IO1 one row up ~370 um); all three IO leaves touch the head cell. Columns x = 43.2 / 388.8 / 734.4 on the 43.2 lattice (coordinator 10-17: off-lattice 0.432 sub-lattice REJECTED). 950.4 = 22 x 43.2 does NOT fit: leaf w 285.12 = 6.6 x 43.2, so a 20-um channel forces a column pitch of 8 x 43.2 = 345.6 and 43.2 + 2 x 345.6 + 285.12 + 22.16 = 1041.7 > 950.4 (pitch 7 x 43.2 leaves 17.28-um channels and a 15.1-um E pin-face margin: gen FAIL channel/macro_edge). Smallest lattice-legal outline 1080 (25 x 43.2) x 950.4: 60.48-um channels, W margin 43.2, E margin 60.48 (host pin face). H-DIE slot 1080 x 950.4 pending coordinator review (requested 950.4^2), rows y = 43.2 / 259.2 / 475.2 / 691.2 (43.2 lattice, 21.6 um channels). Outputs (io_word 471 + compiler_control 1,742 + status) leave on the S face toward sfucore (2.4 pins/um), host config/start on the E face beside the head row, clock on the S face. Square-ish (1.08 x 0.95 mm) instead of 4x3 (1.23 x 0.69) to shrink the head radius (see lanes/SFU-PS-FUND.md: cross-leaf agreement paths). DECISION B (coordinator 10-17 ~20:40, SFU-PS-3): the r7c all-stripe agreement is no longer leaf->head->leaf combinational: each leaf's output gate in_cv = its OWN calendar_v & !fault (+ its own narrow-W check for P7/IO2), a local out->in loop at the leaf; the programme start is registered in the head (p_sv_q, +1 edge after IO2 bit 26; the compile schedule advances arith_start by 1 IO row, io_store_r10.hex). Every head path is now one registered leg: leaf status -> head flop (agreement/fault/status, <= ~690 um) and head flop -> leaf pin (start, <= ~890 um). RELAYS + CLOCK (SFU-PS-4, coordinator 10-17 0dh++++, after the decision-B gate ba12a358d measured a 1.8-2.1 ns clock spine, head->far leaf -770, leaf->head -777, leaf->S face -483 ps): (a) per-row programme launch relays (+1), (b) per-row configuration relays in front of chain heads P0/P3, (c) per-row registered status pre-combine before the head agreement/fault/status logic, (d) io_word/compiler_control re-registered toward the S face (+1). Store latency D=5, status 3 (r7c + 1 everywhere with ARITH_START_ADVANCE_R10=2 in io_store_r10.hex); lockstep vs r7c ISHIFT 1 / PSHIFT 3 PASS modes 0-4 + 4 seeds, mutants noshift/chain/flip/rowskew REJECTED. Clock: TritonCTS H-tree (clock=cts) with the leaves' liberty clock-tree-path insertion balanced against the cluster flops, instead of the one pre-placed spine."
+}

@@ -1,0 +1,157 @@
+{
+  "kind": "tile",
+  "sources": [
+    "rtl/s81/ot_s81_bf_seam.sv",
+    "rtl/s81/ot_s81_bf_native.sv",
+    "rtl/common/ot_prefix.sv",
+    "rtl/hdc/ot_hdc_cg.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/v41rom/ot_v41_bf16_lanes.sv",
+    "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv",
+    "rtl/v41rom/ot_v41_bmul2.sv",
+    "rtl/v41rom/ot_v41_bterm.sv",
+    "rtl/v41rom/ot_v41_bterm2_w10.sv",
+    "rtl/v41rom/ot_v41_chain.sv",
+    "rtl/v41rom/ot_v41_chain2.sv",
+    "rtl/v41rom/ot_v41_fadd.sv",
+    "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+    "rtl/v41rom/ot_v41_segtree.sv",
+    "rtl/v41rom/ot_v41_segtree2.sv",
+    "rtl/v41rom/ot_v41_bmul2_rne_prepare.sv",
+    "rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv",
+    "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv",
+    "rtl/v41rom/ot_v41_chain2u2.sv",
+    "rtl/v41rom/ot_v41_kreg.sv",
+    "rtl/v41rom/ot_v41_chain3.sv",
+    "rtl/v41rom/ot_v41_chain4.sv",
+    "rtl/v41rom/ot_v41_fadd2.sv",
+    "rtl/v41rom/ot_v41_bterm3_w10.sv",
+    "rtl/v41rom/ot_v41_bterm4_w10.sv",
+    "rtl/v41rom/ot_v41_bterm5_w10.sv",
+    "rtl/v41rom/ot_v41_bf16_lanes3.sv",
+    "rtl/v41rom/ot_v41_tile_clk.sv",
+    "rtl/v41rom/ot_bf_hdly.sv",
+    "rtl/v41rom/ot_v41_bf_col.sv",
+    "rtl/v41rom/ot_v41_bf_front_core.sv",
+    "rtl/v41rom/ot_v41_segtree3.sv",
+    "rtl/v41rom/ot_v41_segtree4.sv",
+    "rtl/v41rom/ot_v41_segtree5.sv",
+    "rtl/v41rom/ot_v41_segtree6.sv",
+    "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+    "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v",
+    "rtl/s81/ot_s81_bf_front.sv",
+    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv",
+    "rtl/v41rom/ot_v41_bf_lane4.sv"
+  ],
+  "layer_cap": "M5",
+  "recipe": 2,
+  "route": {
+    "pd": 0.6,
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": true,
+  "outhold": true,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "name": "s81_bf_lane4_boundary_r2",
+  "top": "ot_v41_bf_lane4",
+  "params": {
+    "NCHB": 8,
+    "TRW": 7,
+    "CUT": 379,
+    "RC": 1,
+    "GRADUAL_RNE": 1,
+    "GROUP": 0
+  },
+  "clock": "cts",
+  "clock_port": "fclk",
+  "reset_ports": [
+    "rst_pin"
+  ],
+  "outline": {
+    "w": 95.04,
+    "h": 95.04,
+    "exact": true
+  },
+  "pins": {
+    "W": [
+      "ze_d",
+      "v_s",
+      "w_s",
+      "x_s",
+      "t_p"
+    ],
+    "E": [
+      "cv",
+      "cf",
+      "cfault",
+      "cs_p",
+      "ct_p"
+    ],
+    "S": [
+      "fclk",
+      "rst_pin"
+    ]
+  },
+  "io_tcl": "physical/ref_tile_specs/s81_bf_native_1015/lane4_boundary_r2/pins.tcl",
+  "macros": [],
+  "children": [],
+  "inter": [],
+  "structural_change": "Move the final existing parent XST edge into each real lane4 boundary. Total production XST remains2, zero added compiler cycles, +50 RTL register bits per column; actual native boundary timing remains required.",
+  "pin_regs": {
+    "enable": false,
+    "reason": "Real existing lane/chain input registers and arithmetic pipeline outputs retain the compiled timeline; native launch/capture/comb gates remain binding."
+  },
+  "reroute_reason": {
+    "kind": "rtl_change",
+    "why": "Historical column one-root53493sinks/R535ps fails native",
+    "fix": "real repeated4lane local source leaf; no unchanged full-column route"
+  },
+  "job": {
+    "owner": "Codex:S81-BF-recovery0253",
+    "purpose": "Prototype localleaf, no pair/die adoption",
+    "benches": [
+      {
+        "name": "actual_leaf_full_shape",
+        "cmd": "python3 tools/s81/bf_leaf_physical_bench.py --programme-delta 0 --work {RUN}/leaf_positive",
+        "expect": "pass",
+        "threads": 8,
+        "peak_ram_gb": 16,
+        "pass_regex": "PASS BF leaf full-shape actual RTL: 456 rows, 912 values, 448 configs"
+      },
+      {
+        "name": "mutant_leaf_clock_stop",
+        "cmd": "python3 tools/s81/bf_leaf_physical_bench.py --programme-delta 0 --work {RUN}/leaf_root_stop --mutant",
+        "expect": "fail",
+        "threads": 8,
+        "peak_ram_gb": 16,
+        "fail_regex": "MUTANT BF leaf root_stop FAIL: DIFF TXN from actual RTL"
+      }
+    ],
+    "extra_paths": [
+      "tools/s81",
+      "rtl/s81",
+      "rtl/v41rom",
+      "results/rtl/s81_bf_clock_1015/c10/recovery_0253",
+      "physical/ref_tile_specs/s81_bf_native_1015/lane4",
+      "results/rtl/s81_bf_compact_20261010/bench_prep_1013",
+      "results/rtl/s81_bf_programme_1015",
+      "physical/ref_tile_specs/s81_bf_native_1015/lane4_boundary_r2"
+    ],
+    "views_to": "physical/s81_die_views/bf_roots_1016/lane4_boundary_r2",
+    "record_to": "results/physical/s81_bf_roots_1016/lane4_boundary_r2"
+  }
+}

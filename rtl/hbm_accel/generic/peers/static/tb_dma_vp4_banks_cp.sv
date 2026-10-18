@@ -4,8 +4,13 @@
 // ot_static_cmd_target MODE1/CW308/RELF2/TGT_PIN collar -> ot_hgi_dma_back_static_vp4_banks, wired as die.v cp_dma_<q>).
 // Valid DMA moves from the compiled calendar: every output of both must match on every edge, every write beat must
 // arrive (sum nsec*rows), no fault; the identity strap is honoured (a calendar sent to target 105 is ignored).
+// HCDMA-DBK 10-17: the DUT is the collar-leaf + regional-reset successor (reset release +4 edges, host starts >= 5 edges
+// after rst_n); RST_MUT=1 releases the controller before the collar and must FAIL.
 `ifndef CP_MUT
 `define CP_MUT 0
+`endif
+`ifndef RST_MUT
+`define RST_MUT 0
 `endif
 module tb_dma_vp4_banks_cp;
  localparam integer LEAD=8;
@@ -38,7 +43,7 @@ module tb_dma_vp4_banks_cp;
   .wb_reserve_bank(banka),.wb_fill_bank(fillbanka),.wb_reserve_epoch(epocha),.wb_fill_epoch(fillepocha),
   .wb_reserve_sectors(sectorsa),.wb_reserve_base(basea),.wb_fill_start(filla),.wb_ready(1'b1),.wd(wda),.wa(wa));
  // ---- DUT: the folded parent
- ot_hgi_dma_back_static_vp4_banks_cp #(.CP_MUT(`CP_MUT)) dut(.clk(clk),.clk_cp(clk),.clk_tab({2{clk}}),.rst_n(rst_n),.stk(2'd0),.tgt(8'd104),.clk_bank({8{clk}}),
+ ot_hgi_dma_back_static_vp4_banks_cp #(.CP_MUT(`CP_MUT),.RST_MUT(`RST_MUT)) dut(.clk(clk),.clk_cp(clk),.clk_rst(clk),.rst_n(rst_n),.stk(2'd0),.tgt(8'd104),.clk_bank({8{clk}}),
   .cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),
   .desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),.cp_configured(d_cfgd),.cp_fault(d_flt),.cp_active(d_act),
   .mv_src(srcb),.mv_done(doneb),.mv_fault(faultb),.quiet(quietb),.busy(busyb),.rq(rqb),.rr(rr),.wb_reserve_v(reserveb),
@@ -79,11 +84,13 @@ module tb_dma_vp4_banks_cp;
    @(posedge clk);
   end
  endtask
- task automatic row(input [7:0] t,input [11:0] addr,input [255:0] data);
-  begin axw(12'hf20,{12'd0,addr,t});for(integer p=0;p<8;p=p+1)axw(12'hf24,data[p*32+:32]);end
+ // row/desc are static tasks (called only from the one stimulus initial block): Icarus 11 mis-simulates the
+ // ot_rst_relay array outputs (all-X reset) when `row` is an automatic task with a loop (HCDMA-DBK 10-17).
+ task row(input [7:0] tg,input [11:0] addr,input [255:0] data);
+  begin axw(12'hf20,{12'd0,addr,tg});for(integer p=0;p<8;p=p+1)axw(12'hf24,data[p*32+:32]);end
  endtask
- task automatic desc(input [7:0] t,input [11:0] base,input [12:0] lim,input [15:0] loops);
-  begin axw(12'hf20,{12'd0,12'd0,t});axw(12'hf28,{7'd0,lim,base});axw(12'hf2c,{16'd0,loops});end
+ task desc(input [7:0] tg,input [11:0] base,input [12:0] lim,input [15:0] loops);
+  begin axw(12'hf20,{12'd0,12'd0,tg});axw(12'hf28,{7'd0,lim,base});axw(12'hf2c,{16'd0,loops});end
  endtask
  function automatic [226:0] descriptor(input integer nsec,input integer rows);
   descriptor={21'(nsec*8),20'(rows),16'd1,32'(nsec*32),40'h100000,3'd0,2'd0,16'd1,32'(((nsec+7)/8)*64),40'd0,3'd0,2'd1};

@@ -1,0 +1,71 @@
+{
+ "ot_v41_bf_lane4_cl": {
+  "cell": "ot_v41_bf_lane4_cl",
+  "view": "physical/s81_die_views/bf_cl_1016/cl_lane4/ot_v41_bf_lane4_cl",
+  "lib_cell": "ot_v41_bf_lane4_cl",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 201.1,
+  "spread_ps": 20.1,
+  "outputs": 172,
+  "inputs": 144,
+  "launch_ps": 187.9,
+  "launch_pin": "ct_p[17]",
+  "capture_ps": 145.1,
+  "capture_pin": "w_s[3]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ },
+ "ot_v41_bf_red_cl": {
+  "cell": "ot_v41_bf_red_cl",
+  "view": "physical/s81_die_views/bf_cl_1016/cl_red/ot_v41_bf_red_cl",
+  "lib_cell": "ot_v41_bf_red_cl",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 245.8,
+  "spread_ps": 46.9,
+  "outputs": 42,
+  "inputs": 539,
+  "launch_ps": 189.1,
+  "launch_pin": "oerr",
+  "capture_ps": 235.3,
+  "capture_pin": "rst_pin",
+  "launch_over": 0,
+  "capture_over": 1,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "capture 235.29827 > 190 (1 pins)"
+ },
+ "ot_v41_bf_seg_cl": {
+  "cell": "ot_v41_bf_seg_cl",
+  "view": "physical/s81_die_views/bf_cl_1016/cl_seg/ot_v41_bf_seg_cl",
+  "lib_cell": "ot_v41_bf_seg_cl",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 187.5,
+  "spread_ps": 8.5,
+  "outputs": 64,
+  "inputs": 252,
+  "launch_ps": 175.4,
+  "launch_pin": "pval[27]",
+  "capture_ps": 150.3,
+  "capture_pin": "rows[65]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ }
+}

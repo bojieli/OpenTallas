@@ -1,0 +1,51 @@
+{
+ "variant": "recut",
+ "params": "",
+ "cases": {
+  "positive": {
+   "returncode": 0,
+   "ok": true,
+   "markers": [
+    "PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448",
+    "PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350",
+    "PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418",
+    "TXN LAG ns min=6.664 max=15.827 mean=9.923 n=456",
+    "TXN ref=232/224 shadow=232/224 compared=456 fault=0/0 busy=0/0",
+    "TXN MATCH"
+   ]
+  },
+  "root_stop": {
+   "returncode": 1,
+   "ok": true,
+   "markers": [
+    "[9382000] %Fatal: cand_ot_v41_pair_w17w10.sv:193: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=16 ref=32ffffff00400010 shadow=3520ce35c0400010"
+   ]
+  }
+ },
+ "pass": true,
+ "refreshed": [
+  "cand_ot_v41_rom_elem_w10.sv",
+  "cand_ot_v41_bf16_lanes2.sv",
+  "cand_ot_v41_bmul2_rne_prepare.sv",
+  "cand_ot_v41_segtree2.sv",
+  "cand_ot_v41_chain2.sv",
+  "cand_ot_v41_fadd.sv",
+  "cand_ot_v41_bterm2_w10.sv",
+  "cand_ot_prefix.sv"
+ ],
+ "source_commit": "937594fb5b0f35a1d526282bd0300dea140c07a9",
+ "dirty": null,
+ "column_roots": true,
+ "mapped_candidate_rom": {
+  "scope": "external immutable synthetic ROM stimulus, actual mapped model consumes via mask",
+  "model": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
+  "input_cpp_sha256": "a54615b2b8f6130e1ae5fbef79de99d4d21899a68041fad5e57ea6d93ab4b3cc",
+  "nonzero_table_rows": 2048,
+  "images": {
+   "bf_0.viamap.hex": "6b4fd89fd0ff9bcfd68200efbcfbe68d26fd50606a24519e53db9ab06ac0e600",
+   "bf_1.viamap.hex": "2b78b361d6420bf83ee0485f73d7ee6bd834429433291a3e070653957fb51d1c",
+   "bfb_0.viamap.hex": "9aa7d85b4dcba37f98afa96f4b09bd25b88eb05c165df22e98513d42126bd67e",
+   "bfb_1.viamap.hex": "ac56085727174d8afdc171f5a710655ce5c764ecf1fa161aecce70994a9153c5"
+  }
+ }
+}

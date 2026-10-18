@@ -3,7 +3,12 @@
 // original HOST4/ING16 board promises. Already credited arrivals can be held
 // here during a native reservation without entering the downstream HOST path.
 // CTRL and peer-credit traffic continue. No native operation uses these queues.
-module qkd_host_rx_class_admission #(parameter integer MUT=0,STRAPPED=0)(
+// IR_REPL (KVJ-A8, opt-in, default 0 = original structure): 1 replicates the
+// ingest-queue read pointer ir once per 64-bit slice of the 514-bit queue word
+// (9 kept copies). Every copy resets with ir and advances on the same edge as
+// ir (on ip), so the read is cycle-identical; each copy only drives the read
+// mux of its own slice (ir drove all 514 bits: 8,226/4,115 loads per bit).
+module qkd_host_rx_class_admission #(parameter integer MUT=0,STRAPPED=0,IR_REPL=0)(
  input wire ck,rst_n,input wire[2:0]die_id,input wire rx_v,input wire[527:0]rx_d,output wire rx_cr,
  input wire native_reserved,ownership_valid,
  output reg host_v,output reg[511:0]host_d,input wire host_cr,
@@ -30,8 +35,25 @@ module qkd_host_rx_class_admission #(parameter integer MUT=0,STRAPPED=0)(
   if(hv&&hn<4)hq[hw]<=hd;
   if(iv&&in_count<16)iq[iw]<={ic,id};
   if(hp)host_d<=hq[hr];
-  if(ip){ing_cls,ing_d}<=iq[ir];
+  if(IR_REPL==0)begin if(ip){ing_cls,ing_d}<=iq[ir];end
  end
+ generate if(IR_REPL!=0)begin:g_irr
+  localparam integer NS=9; // ceil(514/64)
+  (* keep="true",dont_touch="true" *) reg[4*NS-1:0]irr;
+  genvar s;
+  for(s=0;s<NS;s=s+1)begin:g_s
+   wire[3:0]a=irr[4*s+:4];wire[513:0]w=iq[a];
+   if(s<8)begin:g_d always @(posedge ck)if(ip)ing_d[s*64+:64]<=w[s*64+:64];end
+   else begin:g_c always @(posedge ck)if(ip)ing_cls<=w[513:512];end
+   always @(posedge ck or negedge rst_n)
+    if(!rst_n)irr[4*s+:4]<=0;
+`ifdef QKD_IRR_MUTANT
+    else if(ip)irr[4*s+:4]<=(s==4)?irr[4*s+:4]+2'd2:irr[4*s+:4]+1'b1;
+`else
+    else if(ip)irr[4*s+:4]<=irr[4*s+:4]+1'b1;
+`endif
+  end
+ end endgenerate
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin reserved_q<=1;valid_q<=0;admission_open<=0;launch_quiet<=0;
    hw<=0;hr<=0;iw<=0;ir<=0;hn<=0;in_count<=0;hcredits<=4;icredits<=16;

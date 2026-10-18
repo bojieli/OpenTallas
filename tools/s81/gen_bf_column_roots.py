@@ -7,7 +7,7 @@ physical phi-R delivery. No asynchronous exception or dynamic scheduling exists.
 This is source plumbing for subsequent local physical leaves, not a flat closure.
 """
 from pathlib import Path
-import hashlib,json
+import hashlib,json,re
 ROOT=Path(__file__).resolve().parents[2]
 
 
@@ -41,6 +41,8 @@ def generate():
     start=base.index('    generate for (l = 0; l < 16; l = l + 1) begin : g_l')
     end=base.index('    end endgenerate',start)+len('    end endgenerate')
     body=base[start:end].replace('l < 16','l < 4')
+    for a,b in [('v_s','v_d'),('w_s','w_d'),('x_s','x_d'),('t_p','t_d')]:
+        body=re.sub(r'\b'+a+r'\b',b,body)
     body=body.replace("l == 3 ? 1'b0", "GROUP == 0 && l == 3 ? 1'b0")
     body=body.replace('u_tl (.fclk(fclk)', 'u_tl (.fclk(lane_fclk)')
     header="""`timescale 1ns/1ps
@@ -48,7 +50,7 @@ def generate():
 // One physical master x4; GROUP affects only the simulation negative control.
 // No added stage or arithmetic change. Physical/native gates remain pending.
 module ot_v41_bf_lane4 #(
-    parameter integer NCHB=8,TRW=7,GRADUAL_RNE=1,RC=1,GROUP=0,
+    parameter integer NCHB=8,TRW=7,GRADUAL_RNE=1,RC=1,GROUP=0,BOUNDARY_STAGE=1,
     parameter [8:0] CUT=9'b1_0111_1011
 )(input wire fclk,rst_pin,ze_d,v_s,
   input wire [63:0] w_s,x_s,
@@ -71,6 +73,20 @@ module ot_v41_bf_lane4 #(
 `else
     wire lane_fclk=fclk;
 `endif
+    // Relocated final parent XST stage: no end-to-end cycle is added.
+    initial if (BOUNDARY_STAGE<0 || BOUNDARY_STAGE>1)
+        $fatal(1,"BOUNDARY_STAGE must be zero or one");
+    wire v_d;wire[63:0]w_d,x_d;wire[TW-1:0]t_d;
+    if (BOUNDARY_STAGE!=0) begin:g_boundary
+        wire bclk,brst;
+        ot_v41_tile_clk u_boundary(.fclk(lane_fclk),.rst_pin(rst_pin),.ze_d(ze_d),.gclk(bclk),.rst_n(brst));
+        reg v_q;reg[63:0]w_q,x_q;reg[TW-1:0]t_q;
+        always @(posedge bclk or negedge brst)if(!brst)v_q<=1'b0;else v_q<=v_s;
+        always @(posedge bclk)begin w_q<=w_s;x_q<=x_s;t_q<=t_p;end
+        assign v_d=v_q;assign w_d=w_q;assign x_d=x_q;assign t_d=t_q;
+    end else begin:g_no_boundary
+        assign v_d=v_s;assign w_d=w_s;assign x_d=x_s;assign t_d=t_p;
+    end
     genvar l;
 """
     leaf=ROOT/'rtl/v41rom/ot_v41_bf_lane4.sv';leaf.write_text(header+body+'\nendmodule\n')
@@ -81,7 +97,7 @@ module ot_v41_bf_lane4 #(
         wire [127:0] cs_g;
         wire [4*(TRW+1)-1:0] ct_g;
         ot_v41_bf_lane4 #(.NCHB(NCHB),.TRW(TRW),.CUT(CUT),
-            .GRADUAL_RNE(GRADUAL_RNE),.RC(RC),.GROUP(g)) u_lane4
+            .GRADUAL_RNE(GRADUAL_RNE),.RC(RC),.GROUP(g),.BOUNDARY_STAGE(XST>0)) u_lane4
             (.fclk(leaf_clk[g]),.rst_pin(rst_pin),.ze_d(ze_d),.v_s(v_s),
              .w_s(w_s[64*g +: 64]),.x_s(x_s[64*g +: 64]),.t_p(t_p),
              .cv(cv_g),.cf(cf_g),.cfault(fault_g),.cs_p(cs_g),.ct_p(ct_g));
@@ -92,6 +108,13 @@ module ot_v41_bf_lane4 #(
         end
     end endgenerate"""
     s=s[:start]+newbody+s[end:]
+    # Move one uniform operand/tag/valid XST stage into the lane4 pin boundary.
+    # The compiler still prices total XST; both data and tags lose one parent
+    # edge and regain it at the child. Input tag now enters an actual pin flop.
+    bstart=s.index('    localparam integer HW =')
+    head=s[:bstart];body=s[bstart:]
+    body=re.sub(r'\bXST\b','PARENT_XST',body)
+    s=head+'    initial if (XST<0) $fatal(1,"XST must be nonnegative");\n    localparam integer PARENT_XST=XST>0?XST-1:0;\n'+body
     # Pairwise reductions form two further real leaves (8 adders, then4+2+1).
     reduction="""`timescale 1ns/1ps
 // GENERATED from the original golden-order pairwise reduction; zero extra edges.
@@ -166,9 +189,10 @@ endmodule
     path=ROOT/'rtl/v41rom/ot_v41_bf_col.sv';base_col=path.read_text()
     s=replace_once(base_col,'module ot_v41_bf_col #(','module ot_v41_bf_col_roots #(')
     # Locate real port declaration without relying on generated text spacing.
-    import re
     m=re.search(r'(    input\s+wire\s+clk\s*,)',s);assert m
-    s=s[:m.start()]+'    input wire [8:0] leaf_clk, // fp0, fp1, segment, four lane groups, two reduction roots\n'+s[m.start():]
+    s=s[:m.start()]+'    input wire [1:0] rom_clk, // explicit raw Liberty macro clock entries\n    input wire [8:0] leaf_clk, // fp0, fp1, segment, four lane groups, two reduction roots\n'+s[m.start():]
+    for macro in range(2):
+        s=replace_once(s,f'u_rom{macro} (.clk(gclk_c)',f'u_rom{macro} (.clk(rom_clk[{macro}])')
     a='    // QPIPE: this macro\'s own copy'
     pos=s.index(a)
     s=s[:pos]+'''    // Three actual roots for FP4 chains/pair and segment reduction. Same registered
@@ -219,12 +243,17 @@ endmodule
     first=s.index('    // ---------------- sibling-chunk pair (FP4):')
     last=s.index('    if (BP == 1) begin : g_bp4',first)
     s=s[:first]+s[last:]
-    s=replace_once(s,'    wire bk_fault;',"""`ifndef SYNTHESIS
-    initial if (!(NSEG==8 && NCH==16 && NCHB==8 && MTP==1 && BP==0 &&
+    s=replace_once(s,'    wire bk_fault;',"""
+    if (!(NSEG==8 && NCH==16 && NCHB==8 && MTP==1 && BP==0 &&
         FAST==1 && PP==1 && QPIPE==1 && QP_CAP==0 && QP_P1==1 && QP_CSAM==10 &&
-        QZ_NS==8 && QX==10 && QBF==2 && TCG==1))
-        $fatal(1, \"ten-root extraction supports the source-pinned production column only\");
+        QZ_NS==8 && QX==10 && QBF==2 && TCG==1 && BXST==2 && FXST==2)) begin:g_unsupported_profile
+        // Unresolved on purpose: hierarchy -check refuses unsupported profiles
+        // in synthesis too. Valid parameter derivations remove this branch.
+        OT_S81_BF_COLUMN_REQUIRES_PRODUCTION_PROFILE invalid();
+`ifndef SYNTHESIS
+        initial $fatal(1, \"ten-root extraction supports the source-pinned production column only\");
 `endif
+    end
     wire q_v,q_err;wire[31:0]q_val;wire[TG:0]q_tag_native;
     wire[TG+2:0]pr_t={q_tag_native,2'b00};
     wire bk_fault;""")
@@ -247,15 +276,26 @@ endmodule
 """+s[finish:]
     cp=ROOT/'rtl/v41rom/ot_v41_bf_col_roots.sv';cp.write_text(s)
     wp=ROOT/'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv';w=wp.read_text();w=w.replace('module dsfd_bf_col #(','module dsfd_bf_col_roots #(')
-    w=replace_once(w,'    input  wire [775:0] ci,','    input wire [8:0] leaf_ck,\n    input  wire [775:0] ci,')
+    w=replace_once(w,'    input  wire [775:0] ci,','    input wire rom_ck0,rom_ck1,\n    input wire [8:0] leaf_ck,\n    input  wire [775:0] ci,')
+    # Own actual physical scalars: Yosys retains [0:0] ports as ck[0], which
+    # disagrees with the explicitly declared physical source clock ck.
+    for direction,name in [('output','qy'),('input','ck'),('input','rs')]:
+        w=replace_once(w,f'{direction} wire [0:0] {name}',f'{direction} wire {name}') if direction=='output' else replace_once(w,f'{direction}  wire [0:0] {name}',f'{direction}  wire {name}')
+        w=replace_once(w,f'{name}[0]',name)
     w=replace_once(w,'    ot_v41_bf_col #(','    ot_v41_bf_col_roots #(')
-    w=replace_once(w,'.clk(w_clk),','.clk(w_clk), .leaf_clk(leaf_ck),')
+    w=replace_once(w,'.clk(w_clk),','.clk(w_clk), .leaf_clk(leaf_ck), .rom_clk({rom_ck1,rom_ck0_live}),')
+    w=replace_once(w,'    wire [13:0] w_a_ctr;',"    // Negative control stops a real mapped ROM clock, never a comparator.\n`ifdef BF_COL_MUTANT_ROM_STOP\n    wire rom_ck0_live=1'b0;\n`else\n    wire rom_ck0_live=rom_ck0;\n`endif\n    wire [13:0] w_a_ctr;")
     rp=ROOT/'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv';rp.write_text(w)
-    rec={'status':'SOURCE_ONLY_NOT_PHYSICAL_CLOSURE','cycles_added':0,'clock_contract':'10 same-PLL833.333ps phase0 roots; physical leaf delivery phi-R individually; ordinary synchronous timing on every cross-root path',
+    west=replace_once(w,'module dsfd_bf_col_roots #(','module dsfd_bf_col_roots_w #(')
+    west=replace_once(west,'    assign w_i2x_q0[7] = ci[42];',
+        '`ifdef BF_COL_W_MUTANT_DATA\n    assign w_i2x_q0[7] = ci[42] ^ 1\'b1;\n`else\n    assign w_i2x_q0[7] = ci[42];\n`endif')
+    wrp=ROOT/'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots_w.sv'
+    wrp.write_text('// Independent W-facing R0 physical candidate. Historical comments below do not qualify this view.\n'+west)
+    rec={'status':'SOURCE_ONLY_NOT_PHYSICAL_CLOSURE','cycles_added':0,'relocated_parent_XST_edges':1,'added_RTL_register_bits':50,'register_cost_note':'4x142 data bits+4x2 localclock/reset copies minus526 shared XST bits; mapped area still measured independently','clock_contract':'12 same-PLL833.333ps phase0 roots: ten standard-cell CTS plus two explicit raw ROM clocks; physical delivery phi-R individually; ordinary synchronous timing on every cross-root path',
          'inputs':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [path,ROOT/'rtl/v41rom/ot_v41_bf16_lanes3.sv',wp]},
-         'outputs':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [leaf,red,fp,segment,lp,cp,rp]},
+         'outputs':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [leaf,red,fp,segment,lp,cp,rp,wrp]},
          'physical_leaf_status':'Actual source hierarchy extracted: lane4 x4, two BF reductions, FP4 chain/pair leaves and segment leaf. Parent retains real control/input pipelines and two ROM macros. Hardening, clock pins, all incident cuts and native boundary proof remain pending.',
-         'roots':['ck: boundary/memory/input relays','leaf_ck[0]: FP4 term0+chain0+pair','leaf_ck[1]: FP4 term1+chain1','leaf_ck[2]: segment reduction/output','leaf_ck[3]: BF16 lanes0..3','leaf_ck[4]: BF16 lanes4..7','leaf_ck[5]: BF16 lanes8..11','leaf_ck[6]: BF16 lanes12..15','leaf_ck[7]: BF16 pairwise level0','leaf_ck[8]: BF16 pairwise levels1..3']}
+         'roots':['ck: boundary/input relays','leaf_ck[0]: FP4 term0+chain0+pair','leaf_ck[1]: FP4 term1+chain1','leaf_ck[2]: segment reduction/output','leaf_ck[3]: BF16 lanes0..3','leaf_ck[4]: BF16 lanes4..7','leaf_ck[5]: BF16 lanes8..11','leaf_ck[6]: BF16 lanes12..15','leaf_ck[7]: BF16 pairwise level0','leaf_ck[8]: BF16 pairwise levels1..3','rom_ck0: u_view.g_pp.u_rom0.clk raw Liberty reference','rom_ck1: u_view.g_pp.u_rom1.clk raw Liberty reference']}
     out=ROOT/'results/rtl/s81_bf_clock_1015/c10/recovery_0253/root_source.json';out.write_text(json.dumps(rec,indent=2)+'\n')
     print(json.dumps(rec,indent=2))
 

@@ -1,0 +1,133 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qkd_static_kv_landing_lane_h3",
+ "top": "qkd_static_kv_landing_lane",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  140.4,
+  88.56
+ ],
+ "core": [
+  2.16,
+  2.16,
+  138.24,
+  86.4
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": 980,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "rsp_data"
+  ],
+  "E": [
+   "actual_data",
+   "actual_sector",
+   "actual_epoch",
+   "actual_layer",
+   "actual_valid",
+   "expected_sector",
+   "expected_put"
+  ],
+  "N": [
+   "get",
+   "get_t",
+   "get_v",
+   "get_epoch",
+   "get_layer",
+   "out_valid",
+   "out_t",
+   "out_v",
+   "out_epoch",
+   "out_layer",
+   "fault",
+   "arm",
+   "epoch",
+   "layer",
+   "cfg_stack",
+   "cfg_group",
+   "rst_n",
+   "ck"
+  ],
+  "S": []
+ },
+ "clock_port": "ck",
+ "blocks": [
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "inst": "*u_pc*u_rows",
+   "idx": 0,
+   "x": 22.464,
+   "y": 23.76,
+   "w": 94.824,
+   "h": 41.064,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 43% outside 45%-60% (std 980 + macro 3894 in core 11463 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
+ "referenced": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_seg_h.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_hop.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/ref_tile/qkd_static_kv_landing_lane_h3/kit.env",
+  "physical/ref_tile/qkd_static_kv_landing_lane_h3/clock.sdc",
+  "physical/ref_tile/qkd_static_kv_landing_lane_h3/signoff.sdc",
+  "physical/ref_tile/qkd_static_kv_landing_lane_h3/pdn.tcl",
+  "physical/ref_tile/qkd_static_kv_landing_lane_h3/pre_cts.tcl",
+  "physical/ref_tile/qkd_static_kv_landing_lane_h3/post_cts.tcl",
+  "physical/ref_tile/qkd_static_kv_landing_lane_h3/post_grt.tcl",
+  "physical/ref_tile/qkd_static_kv_landing_lane_h3/pre_drt.tcl",
+  "physical/ref_tile/qkd_static_kv_landing_lane_h3/pre_fill.tcl",
+  "physical/ref_tile/qkd_static_kv_landing_lane_h3/post_fill.tcl",
+  "physical/ref_tile/qkd_static_kv_landing_lane_h3/pre_grt.tcl",
+  "physical/ref_tile/qkd_static_kv_landing_lane_h3/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/sram_edge_guard.tcl",
+  "physical/common_flow/macro_edge_via_guard.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/qkd_static_kv_landing_lane_h3/pre_gpl.tcl",
+  "physical/ref_tile/qkd_static_kv_landing_lane_h3/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+  "physical/ref_tile/qkd_static_kv_landing_lane_h3/place.tcl"
+ ]
+}

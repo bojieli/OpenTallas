@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_ctrl_pc_sched",
+ "enable": false,
+ "reason": "RTL registers every seam/pin explicitly (sched_s8 PINREG=1: every input that feeds logic or a cross-tile wire lands in a pin flop -- c_v / c_d[286] / kv_v / em_v / obs / native commit valid / fault pins; the W/E capture pins keep their s7b pin flops; every output is driven by its own register at its pin: po, p_w_*, physical_*, expected_sr, idle_hbm, fo, ko re-registered one hclk later). p_kv_v keeps only its 0-cycle select of the e_sec / e_row lookahead (the ECC child captures the port beat and e_sec on the same edge); the tag pointer / tag check use its pin flop; ki lands only in the tap's o_v / o_d pin flops (tap command decoded after them, 0 cycles). No extra wrapper edges."
+}

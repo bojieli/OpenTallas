@@ -1,0 +1,13 @@
+MUT1 seed=1 mode=0: MISMATCH service_faults t=4720337 fs core=5 flat=10000 clu=1010000
+MUT1 seed=1 mode=1: MISMATCH service_faults t=4720337 fs core=5 flat=10000 clu=1010000
+MUT1 seed=2 mode=0: MISMATCH service_faults t=1387001 fs core=1 flat=f0000 clu=10f0000
+MUT1 seed=2 mode=1: MISMATCH service_faults t=1387001 fs core=1 flat=f0000 clu=10f0000
+MUT1 seed=3 mode=0: MISMATCH service_faults t=4303670 fs core=5 flat=30000 clu=1030000
+MUT1 seed=3 mode=1: MISMATCH service_faults t=4303670 fs core=5 flat=30000 clu=1030000
+MUT2 seed=1 mode=0: LOCKSTEP PASS seed=1 mode=0 core_cycles=20000 compares=145291 outputs=73 inputs=50
+MUT2 seed=1 mode=1: LOCKSTEP PASS seed=1 mode=1 core_cycles=20000 compares=145291 outputs=73 inputs=50
+MUT2 seed=2 mode=0: LOCKSTEP PASS seed=2 mode=0 core_cycles=20000 compares=145291 outputs=73 inputs=50
+MUT2 seed=2 mode=1: LOCKSTEP PASS seed=2 mode=1 core_cycles=20000 compares=145291 outputs=73 inputs=50
+MUT2 seed=3 mode=0: LOCKSTEP PASS seed=3 mode=0 core_cycles=20000 compares=145291 outputs=73 inputs=50
+MUT2 seed=3 mode=1: LOCKSTEP PASS seed=3 mode=1 core_cycles=20000 compares=145291 outputs=73 inputs=50
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-737559-1792290141): exit 0

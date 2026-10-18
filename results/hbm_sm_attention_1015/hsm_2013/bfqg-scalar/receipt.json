@@ -1,0 +1,41 @@
+{
+  "source_commit": "3b28e0e0f",
+  "top": "ot_hgi_sm_xload_cl2_bfqg",
+  "scope": "Component real-SRAM/RTL fixed-edge equivalence only; no native physical/SM/full-chip qualification.",
+  "positive": "BFQG_RESULT cycles=5288 checks=5136 bank_writes=17136 bank_reads=5120 errors=0 mutant=-1 actual_models=16",
+  "mutants": {
+    "local_mask_clock_drop": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "control_clock_drop": 8,
+    "wrong_half_mask": 9
+  },
+  "all_mutants_failed": true,
+  "files": {
+    "mutant-4.log": "15ae1da7eb14867f953fdbdf072f0044c2fd0b82f05dce96e07cdcff1888cc15",
+    "positive.log": "03106bb31d3cd142209c6edd6fff7f2e4010c089f03fa187cea8a4660b52456e",
+    "build.log": "02a35114f0a9ce6918e07496e02d2acc383f63b938ee5526c9c1a1abe62ad9c0",
+    "mutant-6.log": "8e4beb20498fa35d2d5124d251043c20a4e038ca56aac1c556dd6098ea50424f",
+    "mutant-7.log": "16095eb303ce663166a4afb4e0c98121e742eab2f102268ec93d797b1eafa53a",
+    "mutant-9.log": "59014dfc3c5bd53c442b3c178ce289e67856dd859829e18baeb1bbca09942715",
+    "mutant-1.log": "896fe6db066bf9d204f93a763f15f98cc26ec0193b3613bee8ceaf4188ebb0fe",
+    "mutant-3.log": "5f6bc876548b1fc5386309fccc4110fe1b028d619bf963329214168d006295b2",
+    "mutant-2.log": "b4d517cae410160afc6147f13a3e6ee313cd38d88fdd40041b5f92621453b051",
+    "mutant-5.log": "64d6d80b3a912c025aee6b1ce396eaddf900660df89f19a3907a6fc424ceb78f",
+    "mutant-8.log": "7c5511726bf2dbe27ef97c5d5c1a27a36c257936503da0b0f2a65dbf00378bf4",
+    "mutant-0.log": "f59e711ab4dc3f35fd9dc67191b6c071bf3a6db54bd619f001fcf88ffdcce1d6"
+  },
+  "sources": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_bfqg.sv": "5317524cf8e6d9644e2fb9a04d6aff16fd338f95beb692bf13c67014dca315b5",
+    "rtl/hbm_accel/generic/adapters/tb/bfqg/tb_bfqg.sv": "9f27b068dfaa0ab586833f405deca843531c76521120997b1bfdc2609c7883bf",
+    "rtl/hbm_accel/generic/adapters/tb/bfqg/reference.sv": "9e1e2b2d334db4cec3e25feefb225744959d9cc865aa33c1a40c03ae1e4080f3",
+    "rtl/hbm_accel/generic/adapters/tb/bfqg/run.sh": "def02d3af3de1b70423819dae17c404a1d934c602ead9d413ab7eab312ad3e99"
+  }
+}

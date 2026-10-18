@@ -54,13 +54,18 @@ def load(path):
             f = ln.rstrip("\n").split("\t")
             k = f[0]
             if k == "R":
+                if f[1] in nodes and nodes[f[1]]["kind"] == "tile":
+                    continue      # a clock defined ON a tile entry pin: keep the entry (it is its own root)
                 nodes[f[1]] = dict(kind="root", cell=None, x=float(f[2]), y=float(f[3]), parent=None,
                                    sta_max=num(f[4]), sta_min=num(f[5]))
             elif k in ("B", "T", "F"):
+                # a clock DEFINED on the entry pin itself (Qwen KV ideal sink clocks: T cdc_EN_0/hclk[0] with parent
+                # cdc_EN_0/hclk[0]) is its own root: a self-parent made ancestors() loop forever (kvs13k OOM, empty report)
                 nodes[f[1]] = dict(kind={"B": "cell", "T": "tile", "F": "flop"}[k], cell=f[2], x=float(f[3]),
-                                   y=float(f[4]), parent=f[5], sta_max=num(f[6]), sta_min=num(f[7]))
+                                   y=float(f[4]), parent=(None if f[5] in ("-", f[1]) else f[5]),
+                                   sta_max=num(f[6]), sta_min=num(f[7]))
             elif k == "P":
-                pairs.append((f[1], f[2], f[3] if len(f) > 3 else ""))
+                pairs.append((f[1], f[2], (f[3] if len(f) > 3 else "") + ("|directed" if len(f) > 4 and f[4] == "d" else "")))
             elif k == "S":
                 summary[f[1]] = f[2]
     return nodes, pairs, summary
@@ -72,7 +77,7 @@ def model_arrivals(nodes):
         stack = []
         while n not in arr:
             p = nodes[n]["parent"]
-            if p is None or p not in nodes:
+            if p is None or p not in nodes or p in stack or p == n:
                 arr[n] = 0.0
                 break
             stack.append(n)
@@ -89,8 +94,9 @@ def model_arrivals(nodes):
 
 
 def ancestors(nodes, n):
-    out = []
-    while n is not None and n in nodes:
+    out, seen = [], set()
+    while n is not None and n in nodes and n not in seen:   # cycle-safe
+        seen.add(n)
         out.append(n)
         n = nodes[n]["parent"]
     return out
@@ -121,17 +127,24 @@ def load_targets(path):
     if not path:
         return None
     km = json.load(open(path))["masters"]
-    def R(master, pin):
+    def lookup(master, pin):
+        # same resolution as tools/die_clock/build.py load_targets: physical field first, literal pin then the
+        # 1-bit bus spelling (clk <-> clk[0]); the old code stripped [0] only, so every 'clk[0]'-keyed R read 0
+        # (Qwen KV kv_rt3: 276 false intra-stack and 299 false c<->stack misses)
         port = pin.rsplit("/", 1)[1]
-        port = port[:-3] if port.endswith("[0]") else port
+        cands = (port, port[:-3] if port.endswith("[0]") else port + "[0]")
         r = km.get(master, {})
-        v = r.get("insertion_per_clock_pin_ps", {}).get(port) or r.get("insertion_in_arcs_ps")
+        for field in ("physical_insertion_per_clock_pin_ps", "insertion_per_clock_pin_ps"):
+            pp = r.get(field, {})
+            for c in cands:
+                if c in pp and pp[c] is not None:
+                    return pp[c]
+        return r.get("insertion_in_arcs_ps")
+    def R(master, pin):
+        v = lookup(master, pin)
         return v[2] if v else 0.0
     def R_ff(master, pin):
-        port = pin.rsplit("/", 1)[1]
-        port = port[:-3] if port.endswith("[0]") else port
-        r = km.get(master, {})
-        v = r.get("insertion_per_clock_pin_ps", {}).get(port) or r.get("insertion_in_arcs_ps")
+        v = lookup(master, pin)
         return v[1] if v else 0.0
     R.ff = R_ff
     return R
@@ -293,10 +306,8 @@ def neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes):
             for r_ in roots:
                 fam[r_] = f
     def root_of(e):
-        n = e
-        while nodes[n]["parent"] in nodes:
-            n = nodes[n]["parent"]
-        return n
+        a = ancestors(nodes, e)
+        return a[-1] if a else e
     def Rf(e, ci):
         if not R:
             return 0.0
@@ -324,6 +335,14 @@ def neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes):
         if ff is not None and ff.get(ea) is not None and ff.get(eb) is not None:
             f_ = abs(ff[ea] + Rf(ea, 1) - ff[eb] - Rf(eb, 1))
         c["tt"].append(tt); c["ff"].append(f_)
+        # SIGNED capture-minus-launch flop clock difference (FLOW-HOLD 10-16: die FF hold sizes cells from delta's
+        # sign): only for directed rows (geom dump --pairs: launch = the net's block driver, written first)
+        if str(p.get("net", "")).endswith("|directed"):
+            sa, sb = nodes[ea]["sta_max"], nodes[eb]["sta_max"]
+            if None not in (sa, sb):
+                c.setdefault("delta_tt", []).append(sb + (R(nodes[eb]["cell"], eb) if R else 0) - sa - (R(nodes[ea]["cell"], ea) if R else 0))
+            if ff is not None and ff.get(ea) is not None and ff.get(eb) is not None:
+                c.setdefault("delta_ff", []).append(ff[eb] + Rf(eb, 1) - ff[ea] - Rf(ea, 1))
         bad = (tt is not None and tt > budget) or (f_ is not None and f_ > budget)
         if bad:
             c["over"] += 1
@@ -331,6 +350,10 @@ def neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes):
     for k, c in classes.items():
         if c.get("judged"):
             c["tt_ps"] = stats(c.pop("tt")); c["ff_ps"] = stats(c.pop("ff"))
+            for kk in ("delta_tt", "delta_ff"):
+                if kk in c:
+                    v = c.pop(kk)
+                    c[kk + "_signed_ps"] = dict(stats(v), positive=sum(1 for x in v if x > 0))
     judged = [c for c in classes.values() if c.get("judged")]
     worst.sort(key=lambda w: -max(w["tt_ps"] or 0, w["ff_ps"] or 0))
     return dict(budget_ps=budget, ff_measured=ff is not None,
@@ -347,6 +370,10 @@ def table(r, top=20):
              f"{c['die_flops']} die flops, roots {', '.join(c['roots'])}")
     def s(x):
         return "n/a" if not x else f"min {x['min']} / med {x['median']} / p90 {x['p90']} / max {x['max']} (spread {x['spread']})"
+    if c["clock_cells"] == 0 and (ins["sta_max_ps"] or {}).get("max", 0) == 0:
+        L.append("VERDICT: NO PHYSICAL DIE CLOCK -- every entry has 0 ps STA insertion and the die has no clock cells "
+                 "(ideal / per-pin defined clocks); delivery and neighbour skew are NOT measured. Build the die clock "
+                 "with tools/die_clock/build.py and check its arrivals (METHOD results/arch/die_clock_method_1016).")
     L.append(f"insertion model ps : {s(ins['model_ps'])}")
     L.append(f"insertion STA ps   : {s(ins['sta_max_ps'])}  [late]; {s(ins['sta_min_ps'])} [early]")
     L.append(f"tree levels        : {s(ins['levels'])}")
@@ -369,8 +396,10 @@ def table(r, top=20):
                  f"{nb['verdict']}  judged {nb['pairs_judged']} pairs, over {nb['pairs_over']}")
         for k, c in nb["classes"].items():
             if c.get("judged"):
+                dff = c.get("delta_ff_signed_ps")
                 L.append(f"  {k[:40]:40} pairs {c['pairs']:6} over {c['over']:5}  TT max {(c['tt_ps'] or {}).get('max')}  "
-                         f"FF max {(c['ff_ps'] or {}).get('max')}")
+                         f"FF max {(c['ff_ps'] or {}).get('max')}"
+                         + (f"  FF delta(cap-launch) {dff['min']}..{dff['max']} med {dff['median']}" if dff else ""))
             else:
                 L.append(f"  {k[:40]:40} pairs {c['pairs']:6} (async family crossing: CDC / FIFO, not judged)")
     L.append(f"worst {min(top, len(r['pairs']))} pairs (non-common = max side from the branch point):")

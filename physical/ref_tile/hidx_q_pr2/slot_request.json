@@ -1,0 +1,69 @@
+{
+ "schema": "opentallas.slot_request.v1",
+ "from": "Claude H-NETLIST 1315 (H-ELEM)",
+ "to": "H-DIE",
+ "date": "2026-10-16",
+ "kind": "slot_change (outline shrink) + pin faces/clock entry move",
+ "contract": "results/arch/hier_contract_1015/hbm_v15.json",
+ "master": "ot_hbm_idx_query_static",
+ "kit": "physical/ref_tile/hidx_q_pr2",
+ "kit_commit": "8190efa00",
+ "slot_outline_um": {
+  "w": 449.28,
+  "h": 449.28
+ },
+ "requested_outline_um": {
+  "w": 170.64,
+  "h": 164.16
+ },
+ "requested_pins": {
+  "W": [
+   "ql_codes",
+   "ql_sc",
+   "ql_w",
+   "ql_head",
+   "ql_v",
+   "fault",
+   "emit_v",
+   "emit_head",
+   "frame_start",
+   "block_v",
+   "block_head",
+   "block_number",
+   "head_weight",
+   "clk",
+   "clk_quant",
+   "clk_quant_delay",
+   "clk_bank",
+   "rst_n",
+   "block_data"
+  ]
+ },
+ "clock_entry_face": "W",
+ "slot_fit_mismatches": [
+  "outline 170.64 x 164.16 != slot 449.28 x 449.28",
+  "5 pins off their slot face: clk W (slot E); clk_bank W (slot E); clk_quant W (slot E); clk_quant_delay W (slot E)",
+  "clock clk on W (slot clock_entry E)",
+  "pin_align: clk planned at 61.404..61.5 um lies up to 162.9 um outside its slot span 224.256..224.352 um on E (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: clk_quant planned at 61.5..61.596 um lies up to 162.9 um outside its slot span 224.352..224.448 um on E (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: clk_quant_delay planned at 61.596..61.692 um lies up to 162.9 um outside its slot span 224.448..224.544 um on E (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: clk_bank planned at 61.692..62.076 um lies up to 162.9 um outside its slot span 224.544..224.928 um on E (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: rst_n planned at 62.076..62.172 um lies up to 162.9 um outside its slot span 224.928..225.024 um on E (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: frame_start planned at 59.004..59.1 um lies up to 87.6 um outside its slot span 146.64..146.736 um on W (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: block_v planned at 59.1..59.196 um lies up to 87.6 um outside its slot span 146.736..146.832 um on W (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: block_head planned at 59.196..59.676 um lies up to 87.6 um outside its slot span 146.832..147.312 um on W (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: block_number planned at 59.676..59.868 um lies up to 87.6 um outside its slot span 147.312..147.504 um on W (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: block_data planned at 62.172..160.476 um lies up to 85.3 um outside its slot span 147.504..245.808 um on W (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: head_weight planned at 59.868..61.404 um lies up to 185.9 um outside its slot span 245.808..247.344 um on W (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: emit_v planned at 58.428..58.524 um lies up to 188.9 um outside its slot span 247.344..247.44 um on W (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: emit_head planned at 58.524..59.004 um lies up to 188.9 um outside its slot span 247.44..247.92 um on W (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: ql_v planned at 58.236..58.332 um lies up to 189.7 um outside its slot span 247.92..248.016 um on W (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: ql_head planned at 57.468..58.236 um lies up to 190.5 um outside its slot span 248.016..248.784 um on W (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: ql_codes planned at 3.708..52.86 um lies up to 245.1 um outside its slot span 248.784..297.936 um on W (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: ql_sc planned at 52.86..55.932 um lies up to 245.1 um outside its slot span 297.936..301.008 um on W (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: ql_w planned at 55.932..57.468 um lies up to 245.1 um outside its slot span 301.008..302.544 um on W (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: fault planned at 58.332..58.428 um lies up to 244.2 um outside its slot span 302.544..302.64 um on W (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)"
+ ],
+ "why": "v8 slot was sized for the old q (32.6k sinks over 7 roots, cross-entry hold -56.6 ps/TNS -29,474). Successor 1a7a712ce: one clock root, 4x8-head flop banks -> 5 SRAM 32x128; kit 8190efa00 170.64x164.16 with all pins on W (gate on AGI: placement reg->reg -12.2, TT ins 268-318 -- outline/insertion to be re-sized from the finished gate).",
+ "status": "BLOCKER: submit_exact refuses slot_fit until the contract is revised"
+}

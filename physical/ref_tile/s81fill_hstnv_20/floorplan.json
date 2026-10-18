@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  17.28,
-  17.28
+  17.256,
+  16.74
  ],
  "core": [
   2.16,
   2.16,
-  15.120000000000001,
-  15.120000000000001
+  15.096,
+  14.579999999999998
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
@@ -66,11 +66,9 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
-  "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_20.tcl",
+  "physical/s81_die_pins/stn_c26l_f9/dsfd_hstnv_20.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
-  "physical/dsrom_window_source/leaf_iohold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/s81fill_hstnv_20/pre_gpl.tcl",

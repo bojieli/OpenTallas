@@ -1,0 +1,7 @@
+{"name": "hbfd_rly_624_SN_fc", "ok": true, "checked": true, "files": {"hbfd_rly_624_SN_fc.lef": "c07470d70989a15239a60cfd3552d320584011e064510b6d4f4995eb2339c03b", "hbfd_rly_624_SN_fc_ff.lib": "1f392a51883daf8ebae8d92be96b62e35801401d515cc54837d74f0aa8631b2a", "hbfd_rly_624_SN_fc_ss.lib": "344f7c8ac6062f7fbc6d482605dd4c17184a90c2bb13bec070af81ad2f53f686", "hbfd_rly_624_SN_fc_tt.lib": "d37d93b615f491fef9247b432ffa338a9600b94774c4dbf2a58a660aaa5e5f80"}}
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/closure-loop/hbfd_rly_624_sn_fc-fc2-ac7cafff7/routes/hbfd_rly_624_sn_fc_fc2_ac7cafff7/work/orfs
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/closure-loop/hbfd_rly_624_sn_fc-fc2-ac7cafff7/routes/hbfd_rly_624_sn_fc_fc2_ac7cafff7/work/orfs
+ot-run: ot-agidock128  admits    26 GB (avail 59, growth 36, headroom 24, waiters 0/0 GB) load 31/64 running 9 disk 179 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-612824-1792207033 after 1 s
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-612824-1792207033): exit 0

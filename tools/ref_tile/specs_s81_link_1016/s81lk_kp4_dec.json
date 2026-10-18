@@ -1,0 +1,192 @@
+{
+  "name": "s81lk_kp4_dec",
+  "top": "ot_s81_kp4_dec",
+  "kind": "cluster",
+  "sources": [
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv"
+  ],
+  "hard_define": "OT_KP4_DEC_HARD",
+  "defines": [
+    "OT_KP4_DEC_HARD"
+  ],
+  "params": {},
+  "orfs_vars": {
+    "VERILOG_INCLUDE_DIRS": "/src/rtl/dsrom_sys/s81_link"
+  },
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 600.48,
+    "h": 540.0,
+    "exact": true
+  },
+  "children": [
+    {
+      "view": "physical/ref_tile/s81lk_kp4_dsyn/views/ot_s81_kp4_dsyn",
+      "count": 1,
+      "inst": "*u_syn",
+      "at": [
+        43.2,
+        43.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81lk_kp4_dchn/views/ot_s81_kp4_dchn",
+      "count": 1,
+      "inst": "*u_chn",
+      "at": [
+        280.8,
+        43.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81lk_kp4_ddly/views/ot_s81_kp4_ddly",
+      "count": 1,
+      "inst": "*u_dly",
+      "at": [
+        43.2,
+        280.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81lk_kp4_dout/views/ot_s81_kp4_dout",
+      "count": 1,
+      "inst": "*u_out",
+      "at": [
+        324.0,
+        280.8
+      ]
+    }
+  ],
+  "pins": {
+    "W": [
+      "p_v",
+      "p_d"
+    ],
+    "E": [
+      "q_v",
+      "q_first",
+      "q_unc",
+      "q_nerr",
+      "q_seq",
+      "q_d"
+    ],
+    "S": [
+      "lock",
+      "n_relock",
+      "clk",
+      "rst_n",
+      "n_corr",
+      "n_unc"
+    ]
+  },
+  "pin_ranges": {
+    "p_d": [
+      47.52,
+      250.56
+    ],
+    "p_v": [
+      252.72,
+      253.8
+    ],
+    "lock": [
+      123.12,
+      124.2
+    ],
+    "n_relock": [
+      145.8,
+      180.36
+    ],
+    "clk": [
+      267.84,
+      268.92
+    ],
+    "rst_n": [
+      272.16,
+      273.24
+    ],
+    "n_corr": [
+      326.16,
+      365.04
+    ],
+    "n_unc": [
+      384.48,
+      423.36
+    ],
+    "q_v": [
+      285.12,
+      286.2
+    ],
+    "q_first": [
+      287.28,
+      288.36
+    ],
+    "q_unc": [
+      289.44,
+      290.52
+    ],
+    "q_nerr": [
+      291.6,
+      293.76
+    ],
+    "q_seq": [
+      294.84,
+      298.08
+    ],
+    "q_d": [
+      300.24,
+      406.08
+    ]
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 32
+  },
+  "structural_change": "S81-TILES3 10-17 (coordinator 0co: 2x2 parent with an aligned tile pitch, no gaps on link paths): wires-only parent of the four hardened KP4 decoder tiles on the 43.2-um child lattice, every seam a 21.6-um channel. Pinwheel 2x2 (cluster coords): dsyn 194.4^2 at (43.2,43.2) SW, dchn 216x194.4 at (259.2,43.2) SE (grown E from 194.4 for util, S81-TILES4), ddly 237.6x146.88 at (43.2,259.2) NW, dout 248.4x233.28 at (302.4,259.2) NE. Seams: dsyn N x_q 4.32-118.8 == ddly S w_d (same x origin, straight 21.6-um hop); dsyn E k_* == dchn W k_* (same y origin, straight); dchn N cw_q/decision -> dout S cw/decision across 21.6 um (x overlap 302.4-453.6); ddly S r_d (x 170.6-276.5) -> dout W d_q (y 263.5-384.5) through the centre channel cross (~160 um, < 405 reach). Outer white space only at the SE (right of dchn) and NW (above ddly) corners, which no link crosses. p_d W aligned to dsyn's W face, q_* E aligned to dout's E face, clk / rst_n S at the centre channel (x 246-252) between dsyn and dchn. Outline 578.88 x 518.4 (1.12:1). RTL: ot_s81_kp4_dec.sv needs the hard_define OT_KP4_DEC_HARD wrapper (children without #(.MUT)) before gen -- deferred until the dsyn/ddly e5e84db07 routes are submitted, because dec.sv is in every child's extra_paths. S81-TILES5 10-17: dsyn grows 194.4 -> 216 square (GRT-0116 corner congestion); pitch kept: dchn (280.8, 43.2), ddly (43.2, 280.8), dout (324, 280.8), 21.6-um seams unchanged; outline 600.48 x 540; p_d W 47.52-250.56 (= dsyn's W face), clk / rst_n S at the dsyn|dchn channel x 267.8-273.2, n_corr / n_unc and q_* +21.6 with dchn / dout.",
+  "job": {
+    "owner": "Claude:S81-TILES3",
+    "branch": "claude/s81kp4-1017",
+    "tag": "p1",
+    "cycles_added": 0,
+    "purpose": "S81 link KP4 decoder 2x2 parent cluster (wires-only) over the four hardened tiles dsyn/ddly/dchn/dout, 10-17.",
+    "extra_paths": [
+      "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+      "rtl/dsrom_sys/s81_link/ref/ot_s81_kp4_dec_r33.sv",
+      "rtl/dsrom_sys/s81_link/tb_s81_kp4.sv",
+      "rtl/dsrom_sys/s81_link/tb_s81_kp4_eq.sv",
+      "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+      "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+      "tools/s81_link/rs544.py",
+      "tools/s81_link/run_kp4_leaf_bench.sh",
+      "tools/s81_link/run_kp4_eq_bench.sh"
+    ],
+    "benches": [
+      {
+        "name": "kp4_dec4_eq_base",
+        "cmd": "bash tools/s81_link/run_kp4_eq_bench.sh base {RUN}/bench_base",
+        "expect": "pass",
+        "threads": 8,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "timeout_s": 3600,
+        "pass_regex": "^TB_S81_KP4_EQ PASS$",
+        "min_count_regex": "^TB_S81_KP4_EQ cycles=\\d+ ref_beats=(\\d+) rtl_mismatch=0 hw_mismatch=0 "
+      }
+    ]
+  }
+}

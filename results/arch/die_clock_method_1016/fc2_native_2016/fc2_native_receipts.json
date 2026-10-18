@@ -1,0 +1,570 @@
+[
+  {
+    "cell": "hbfd_rly_48_WE_fc",
+    "view": "physical/ref_tile/hbfd_rly_48_we_fc/views/hbfd_rly_48_WE_fc",
+    "revision": "16f2308650a29c689080c6f11eb9accceb508119",
+    "hashes": {
+      "insertion.json": "b1de65602e2b3ef1e12f5386b0c4816bdac73fdb12b037adae9d6fb1dd80448c",
+      "abstract.json": "78d5b7a2fa8cff6aa535197221a551570b146be114e2514d7aa29db31630908b",
+      "child_lint.json": "4bb25d438c86a201a91845897953144e657f61797384fe531fdb3e3ec2fb5e55",
+      "hbfd_rly_48_WE_fc_tt.lib": "13567c7c2d951185ffd70de0618836903388721f20b57a8a9eb8143a20fa7dbf",
+      "hbfd_rly_48_WE_fc_ff.lib": "361897fe02540299e303d952db4083ae47b833a03222d35cdd3949bceb5260c0",
+      "hbfd_rly_48_WE_fc_ss.lib": "2345dd87e33306ab0cb6c9a4488343b90056b532da0607b9e5c492531b6f63ca"
+    },
+    "source_route": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/routes/hbfd_rly_48_we_fc_fc2_f87700624/work/orfs",
+    "corners": {
+      "tt": {
+        "refs": {
+          "clk_in": {
+            "rise": 55.9,
+            "fall": 60.304395,
+            "min": 52.10279,
+            "max": 56.28062,
+            "src": "insertion.json boundary mean",
+            "bmin": 55.3,
+            "bmax": 56.3,
+            "n": 48
+          }
+        },
+        "launch": [
+          139.46821,
+          "o[20]"
+        ],
+        "capture": [
+          117.99452,
+          "rs"
+        ],
+        "comb_pins": [],
+        "forwarded": null,
+        "native_forwarded": {
+          "driver": "u.u_fcb_ck.u_cell/Y",
+          "cell": "BUFx12f_ASAP7_75t_R",
+          "input_net": "clk_in",
+          "physical_single_buffer": true,
+          "clock_waveform_ps": [
+            0,
+            385.0
+          ],
+          "source_sdc_sha256": "254a6168fa0f98fa0f788e9587bcbd32a61f80935f2d9bd204ed6aa385e465e8",
+          "metrics_ps": {
+            "arrival_max_rise": 12.450136,
+            "arrival_min_rise": 12.206072,
+            "arrival_max_fall": 13.65078699999998,
+            "arrival_min_fall": 13.39086900000001,
+            "slew_max_rise": 5.549187,
+            "slew_max_fall": 5.493047
+          },
+          "probe_tcl_sha256": "3a1586e17ea0b4f6a52b187ad4d016e3f3ba0b54cdb70d7846c9d1011cf10358",
+          "log_sha256": "bdd40cf3dd24dc6eda459bdacbd061b227cd922e76470cca161a6b9c66ac865d",
+          "scope": "Actual final ODB+SPEF; output-driver pin; no die wire or communicating-pair qualification"
+        }
+      },
+      "ff": {
+        "refs": {
+          "clk_in": {
+            "rise": 41.8,
+            "fall": 43.467530000000004,
+            "min": 39.15115,
+            "max": 42.30627,
+            "src": "insertion.json boundary mean",
+            "bmin": 41.2,
+            "bmax": 42.3,
+            "n": 48
+          }
+        },
+        "launch": [
+          98.96686000000001,
+          "o[20]"
+        ],
+        "capture": [
+          83.98995,
+          "rs"
+        ],
+        "comb_pins": [],
+        "forwarded": null,
+        "native_forwarded": {
+          "driver": "u.u_fcb_ck.u_cell/Y",
+          "cell": "BUFx12f_ASAP7_75t_R",
+          "input_net": "clk_in",
+          "physical_single_buffer": true,
+          "clock_waveform_ps": [
+            0,
+            385.0
+          ],
+          "source_sdc_sha256": "254a6168fa0f98fa0f788e9587bcbd32a61f80935f2d9bd204ed6aa385e465e8",
+          "metrics_ps": {
+            "arrival_max_rise": 9.901384,
+            "arrival_min_rise": 9.683532,
+            "arrival_max_fall": 10.427550999999994,
+            "arrival_min_fall": 10.189757999999983,
+            "slew_max_rise": 4.222759,
+            "slew_max_fall": 4.054655
+          },
+          "probe_tcl_sha256": "7bc2df28d3ecf93409aa976b57e25fd9a774779c84645629b7c9c0b3c5600d83",
+          "log_sha256": "f549167394bfba16d80e90267d78dde5a03bd8ef5aa07e37afae4321b3f566b8",
+          "scope": "Actual final ODB+SPEF; output-driver pin; no die wire or communicating-pair qualification"
+        }
+      },
+      "ss": {
+        "refs": {
+          "clk_in": {
+            "rise": 80.2,
+            "fall": 91.88676,
+            "min": 74.38191,
+            "max": 80.54322,
+            "src": "insertion.json boundary mean",
+            "bmin": 79.5,
+            "bmax": 80.5,
+            "n": 48
+          }
+        },
+        "launch": [
+          210.11836,
+          "o[20]"
+        ],
+        "capture": [
+          172.25675999999999,
+          "rs"
+        ],
+        "comb_pins": [],
+        "forwarded": null
+      }
+    },
+    "scope": "Source-pinned routed ETM + insertion measurement; clk_out is explicit forwarded-clock combinational arc. Does not qualify any actual inter-tile pair or die.",
+    "job": "hbfd_rly_48_we_fc-fc2-f87700624",
+    "status": "CLOSED",
+    "source_commit": "f87700624",
+    "native_artifacts_sha256": {
+      "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/routes/hbfd_rly_48_we_fc_fc2_f87700624/work/orfs/results/asap7/opentallas_hbfd_rly_48_WE_fc_asap7_ref_hbfd_rly_48_we_fc_fc2_f87700624/base/6_final.odb": "7971666ef2ee05d6895905a4bbccc054f9257ec9d4898b56297fe61f83decda9",
+      "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/routes/hbfd_rly_48_we_fc_fc2_f87700624/work/orfs/results/asap7/opentallas_hbfd_rly_48_WE_fc_asap7_ref_hbfd_rly_48_we_fc_fc2_f87700624/base/6_final.spef": "3b2ce2fd8ec6c4a0123c92d793b88e823db84dc8e9b0bc67c8ea0efd26cc2efb",
+      "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/routes/hbfd_rly_48_we_fc_fc2_f87700624/work/orfs/results/asap7/opentallas_hbfd_rly_48_WE_fc_asap7_ref_hbfd_rly_48_we_fc_fc2_f87700624/base/6_final.sdc": "254a6168fa0f98fa0f788e9587bcbd32a61f80935f2d9bd204ed6aa385e465e8"
+    },
+    "forwarded_metadata_in_published_insertion": false
+  },
+  {
+    "cell": "hbfd_rly_624_NS_fc",
+    "view": "physical/ref_tile/hbfd_rly_624_ns_fc/views/hbfd_rly_624_NS_fc",
+    "revision": "16f2308650a29c689080c6f11eb9accceb508119",
+    "hashes": {
+      "insertion.json": "a6a8f905252a15a17d5cf54a23970956b60f82bdea6e4ae241d99dc21a4a0735",
+      "abstract.json": "dbbd70ece92e0f22a2a4fb893c05102571f7ed7ece5adca093272a185cd04e24",
+      "child_lint.json": "28a54b2bc34789a42913cc48dd8c4a4d4af8c2e35b15c895cc5ea51756d95db5",
+      "hbfd_rly_624_NS_fc_tt.lib": "95953f9b66618eb801aa137b66ac94977cbeb741ebb7731f4d813ff568173d30",
+      "hbfd_rly_624_NS_fc_ff.lib": "6a42b93632dc66eb592660d66324e9f107b66e5be87018ac4e757e68f818a401",
+      "hbfd_rly_624_NS_fc_ss.lib": "413bec7836030e1cdc823cc0ed0a9404e444e34d09fc9e73c16cade1da204aaa"
+    },
+    "source_route": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_624_ns_fc-fc2-6757ecde8/routes/hbfd_rly_624_ns_fc_fc2_6757ecde8/work/orfs",
+    "corners": {
+      "tt": {
+        "refs": {
+          "clk_in": {
+            "rise": 94.6,
+            "fall": 101.433605,
+            "min": 84.07816,
+            "max": 99.38577,
+            "src": "insertion.json boundary mean",
+            "bmin": 89.0,
+            "bmax": 99.4,
+            "n": 629
+          }
+        },
+        "launch": [
+          156.78997,
+          "o[375]"
+        ],
+        "capture": [
+          126.86319999999999,
+          "rs"
+        ],
+        "comb_pins": [],
+        "forwarded": null,
+        "native_forwarded": {
+          "driver": "u.u_fcb_ck.u_cell/Y",
+          "cell": "BUFx12f_ASAP7_75t_R",
+          "input_net": "clk_in",
+          "physical_single_buffer": true,
+          "clock_waveform_ps": [
+            0,
+            385.0
+          ],
+          "source_sdc_sha256": "c387b74c03527f27d0364dfb4ed9f99a35d0c71ce06aa07196be4f042514eac3",
+          "metrics_ps": {
+            "arrival_max_rise": 12.700284,
+            "arrival_min_rise": 12.406153,
+            "arrival_max_fall": 13.896728999999993,
+            "arrival_min_fall": 13.583556999999985,
+            "slew_max_rise": 5.726478,
+            "slew_max_fall": 5.637886
+          },
+          "probe_tcl_sha256": "b443ed5f522082629de041f9851c5f5cbd7f4fa2054251bc04c0fad4bcc39721",
+          "log_sha256": "fb392930227cc7bee48601a6678619e3f258bcf32bd5e06f70f1465905725247",
+          "scope": "Actual final ODB+SPEF; output-driver pin; no die wire or communicating-pair qualification"
+        }
+      },
+      "ff": {
+        "refs": {
+          "clk_in": {
+            "rise": 75.9,
+            "fall": 78.85904000000001,
+            "min": 66.57828,
+            "max": 80.91081,
+            "src": "insertion.json boundary mean",
+            "bmin": 70.3,
+            "bmax": 80.9,
+            "n": 629
+          }
+        },
+        "launch": [
+          110.95881,
+          "o[375]"
+        ],
+        "capture": [
+          90.02579,
+          "rs"
+        ],
+        "comb_pins": [],
+        "forwarded": null,
+        "native_forwarded": {
+          "driver": "u.u_fcb_ck.u_cell/Y",
+          "cell": "BUFx12f_ASAP7_75t_R",
+          "input_net": "clk_in",
+          "physical_single_buffer": true,
+          "clock_waveform_ps": [
+            0,
+            385.0
+          ],
+          "source_sdc_sha256": "c387b74c03527f27d0364dfb4ed9f99a35d0c71ce06aa07196be4f042514eac3",
+          "metrics_ps": {
+            "arrival_max_rise": 10.134665,
+            "arrival_min_rise": 9.867227,
+            "arrival_max_fall": 10.660491999999977,
+            "arrival_min_fall": 10.375854000000004,
+            "slew_max_rise": 4.355974,
+            "slew_max_fall": 4.171154
+          },
+          "probe_tcl_sha256": "1beb3e1495b422ddf29f7474c8fbbf04247891a4fdc98e3402213df67c583125",
+          "log_sha256": "12de7486851fc1bc18c92dbd2dc4bb1848d4e40a69082922293918b4cfeae74c",
+          "scope": "Actual final ODB+SPEF; output-driver pin; no die wire or communicating-pair qualification"
+        }
+      },
+      "ss": {
+        "refs": {
+          "clk_in": {
+            "rise": 127.1,
+            "fall": 143.89408,
+            "min": 114.56083,
+            "max": 131.7836,
+            "src": "insertion.json boundary mean",
+            "bmin": 121.6,
+            "bmax": 131.8,
+            "n": 629
+          }
+        },
+        "launch": [
+          237.32294,
+          "o[375]"
+        ],
+        "capture": [
+          184.36668,
+          "rs"
+        ],
+        "comb_pins": [],
+        "forwarded": null
+      }
+    },
+    "scope": "Source-pinned routed ETM + insertion measurement; clk_out is explicit forwarded-clock combinational arc. Does not qualify any actual inter-tile pair or die.",
+    "job": "hbfd_rly_624_ns_fc-fc2-6757ecde8",
+    "status": "CLOSED",
+    "source_commit": "6757ecde8",
+    "native_artifacts_sha256": {
+      "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_624_ns_fc-fc2-6757ecde8/routes/hbfd_rly_624_ns_fc_fc2_6757ecde8/work/orfs/results/asap7/opentallas_hbfd_rly_624_NS_fc_asap7_ref_hbfd_rly_624_ns_fc_fc2_6757ecde8/base/6_final.odb": "219338913e1f723055e0af7cf86f0b34bc47981ffa5459335d1dd5186e9f0362",
+      "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_624_ns_fc-fc2-6757ecde8/routes/hbfd_rly_624_ns_fc_fc2_6757ecde8/work/orfs/results/asap7/opentallas_hbfd_rly_624_NS_fc_asap7_ref_hbfd_rly_624_ns_fc_fc2_6757ecde8/base/6_final.spef": "0b8189445dce5a1516607fc07d971ed5ed901f712b2c25cec3e99e3394b6e3ae",
+      "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_624_ns_fc-fc2-6757ecde8/routes/hbfd_rly_624_ns_fc_fc2_6757ecde8/work/orfs/results/asap7/opentallas_hbfd_rly_624_NS_fc_asap7_ref_hbfd_rly_624_ns_fc_fc2_6757ecde8/base/6_final.sdc": "c387b74c03527f27d0364dfb4ed9f99a35d0c71ce06aa07196be4f042514eac3"
+    },
+    "forwarded_metadata_in_published_insertion": false
+  },
+  {
+    "cell": "hbfd_rly_624_SN_fc",
+    "view": "physical/ref_tile/hbfd_rly_624_sn_fc/views/hbfd_rly_624_SN_fc",
+    "revision": "16f2308650a29c689080c6f11eb9accceb508119",
+    "hashes": {
+      "insertion.json": "7b9fedf30d4455079ef9f0117475efda6d06edfbb5855f4c1ba0d979a5fdefe1",
+      "abstract.json": "ef9f58ec44257c2bb4aa279aa4c294917b1e44ac1053c8cdaf18822da9442e7f",
+      "child_lint.json": "9ff2acff2fcec23c06ac591450521450543a99e883afd56de52959eb2a7c68f8",
+      "hbfd_rly_624_SN_fc_tt.lib": "e6bba912a2fc7033ed320a4d9ae83d6c28c3cf88bac1090bf77d5ea8ebeb38c1",
+      "hbfd_rly_624_SN_fc_ff.lib": "d364cf89a78f704258e24086a60e3c1554270bf5b84469d25b8fdca365302921",
+      "hbfd_rly_624_SN_fc_ss.lib": "ba024e50aade8ea9a104e95991be5bc81d87a34cdc8167df701318a95fe8ab70"
+    },
+    "source_route": "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_624_sn_fc-fc2-ac7cafff7/routes/hbfd_rly_624_sn_fc_fc2_ac7cafff7/work/orfs",
+    "corners": {
+      "tt": {
+        "refs": {
+          "clk_in": {
+            "rise": 92.9,
+            "fall": 99.55250000000001,
+            "min": 82.94809,
+            "max": 99.08183,
+            "src": "insertion.json boundary mean",
+            "bmin": 87.8,
+            "bmax": 99.1,
+            "n": 629
+          }
+        },
+        "launch": [
+          151.09294,
+          "o[492]"
+        ],
+        "capture": [
+          119.06497,
+          "rs"
+        ],
+        "comb_pins": [],
+        "forwarded": null,
+        "native_forwarded": {
+          "driver": "u.u_fcb_ck.u_cell/Y",
+          "cell": "BUFx12f_ASAP7_75t_R",
+          "input_net": "clk_in",
+          "physical_single_buffer": true,
+          "clock_waveform_ps": [
+            0,
+            385.0
+          ],
+          "source_sdc_sha256": "1fddc90b5174c47d6f37966b4f64c50c5ee0a4f521d2e533df19f537d73f8bef",
+          "metrics_ps": {
+            "arrival_max_rise": 12.95817,
+            "arrival_min_rise": 12.602701,
+            "arrival_max_fall": 14.156524999999988,
+            "arrival_min_fall": 13.778137000000015,
+            "slew_max_rise": 5.816355,
+            "slew_max_fall": 5.712663
+          },
+          "probe_tcl_sha256": "0720cfd63618ad55c867171702cce85faea1d64be65520b503c8b5bd8bfdbe5d",
+          "log_sha256": "b99fb49b77393199fc1a5564c806c347fbe4a2c36e180bae46b996bef9c7d0dd",
+          "scope": "Actual final ODB+SPEF; output-driver pin; no die wire or communicating-pair qualification"
+        }
+      },
+      "ff": {
+        "refs": {
+          "clk_in": {
+            "rise": 74.5,
+            "fall": 77.228565,
+            "min": 65.51895,
+            "max": 80.87278,
+            "src": "insertion.json boundary mean",
+            "bmin": 69.3,
+            "bmax": 80.9,
+            "n": 629
+          }
+        },
+        "launch": [
+          109.85757000000001,
+          "o[492]"
+        ],
+        "capture": [
+          85.83621,
+          "rs"
+        ],
+        "comb_pins": [],
+        "forwarded": null,
+        "native_forwarded": {
+          "driver": "u.u_fcb_ck.u_cell/Y",
+          "cell": "BUFx12f_ASAP7_75t_R",
+          "input_net": "clk_in",
+          "physical_single_buffer": true,
+          "clock_waveform_ps": [
+            0,
+            385.0
+          ],
+          "source_sdc_sha256": "1fddc90b5174c47d6f37966b4f64c50c5ee0a4f521d2e533df19f537d73f8bef",
+          "metrics_ps": {
+            "arrival_max_rise": 10.388359,
+            "arrival_min_rise": 10.063526,
+            "arrival_max_fall": 10.917480000000012,
+            "arrival_min_fall": 10.574005,
+            "slew_max_rise": 4.424707,
+            "slew_max_fall": 4.232007
+          },
+          "probe_tcl_sha256": "e560190408c887af64d1757434106ff0d15cf593617ae8c508fc4d9956b16a00",
+          "log_sha256": "8ccfe1a80360aec6ff72f846a365e2bfcc739c1b511906609a0fb89bbdb34515",
+          "scope": "Actual final ODB+SPEF; output-driver pin; no die wire or communicating-pair qualification"
+        }
+      },
+      "ss": {
+        "refs": {
+          "clk_in": {
+            "rise": 125.2,
+            "fall": 141.93236000000002,
+            "min": 113.23769,
+            "max": 131.43871,
+            "src": "insertion.json boundary mean",
+            "bmin": 120.2,
+            "bmax": 131.4,
+            "n": 629
+          }
+        },
+        "launch": [
+          224.40059000000002,
+          "o[492]"
+        ],
+        "capture": [
+          173.67205,
+          "rs"
+        ],
+        "comb_pins": [],
+        "forwarded": null
+      }
+    },
+    "scope": "Source-pinned routed ETM + insertion measurement; clk_out is explicit forwarded-clock combinational arc. Does not qualify any actual inter-tile pair or die.",
+    "job": "hbfd_rly_624_sn_fc-fc2-ac7cafff7",
+    "status": "CLOSED",
+    "source_commit": "ac7cafff7",
+    "native_artifacts_sha256": {
+      "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_624_sn_fc-fc2-ac7cafff7/routes/hbfd_rly_624_sn_fc_fc2_ac7cafff7/work/orfs/results/asap7/opentallas_hbfd_rly_624_SN_fc_asap7_ref_hbfd_rly_624_sn_fc_fc2_ac7cafff7/base/6_final.odb": "bb92f9ce02607e19641affbc0cacf5ef036b1fc3d5a61d10854f225d62688270",
+      "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_624_sn_fc-fc2-ac7cafff7/routes/hbfd_rly_624_sn_fc_fc2_ac7cafff7/work/orfs/results/asap7/opentallas_hbfd_rly_624_SN_fc_asap7_ref_hbfd_rly_624_sn_fc_fc2_ac7cafff7/base/6_final.spef": "197620ceae0361b9f803b6fd9f31f70ca1ae7af277f4c2e12c39a0104cb46cd9",
+      "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_624_sn_fc-fc2-ac7cafff7/routes/hbfd_rly_624_sn_fc_fc2_ac7cafff7/work/orfs/results/asap7/opentallas_hbfd_rly_624_SN_fc_asap7_ref_hbfd_rly_624_sn_fc_fc2_ac7cafff7/base/6_final.sdc": "1fddc90b5174c47d6f37966b4f64c50c5ee0a4f521d2e533df19f537d73f8bef"
+    },
+    "forwarded_metadata_in_published_insertion": false
+  },
+  {
+    "cell": "hbfd_rly_624_WE_fc",
+    "view": "physical/ref_tile/hbfd_rly_624_we_fc/views/hbfd_rly_624_WE_fc",
+    "revision": "16f2308650a29c689080c6f11eb9accceb508119",
+    "hashes": {
+      "insertion.json": "04a4cae858c5dd553212174a5addb453fc418ed9d6db6ac0480a0c5aacba963b",
+      "abstract.json": "1f3ba69d4cf2217eb7f273fcf284e58fa66e8aee11ed81726ea57b3b422eff6c",
+      "child_lint.json": "f11338009fbb6da3b5ec2bc10742ec9eb5ac8d2080d9cd6ec0398a68be8aa127",
+      "hbfd_rly_624_WE_fc_tt.lib": "cfc514543c2b901af8df0a73a89b38a8640770c5b4ab0b22d99d6af76fac3720",
+      "hbfd_rly_624_WE_fc_ff.lib": "97d18fd0ab7aadae25e027062905b17c1b9cd4be48d4e54a0830501126c392fc",
+      "hbfd_rly_624_WE_fc_ss.lib": "4cdecf024b305e7266555850e0f895f3dc114b8570e5754bf31c57d70f839ca5"
+    },
+    "source_route": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_624_we_fc-fc2-cd0c5f463/routes/hbfd_rly_624_we_fc_fc2_cd0c5f463/work/orfs",
+    "corners": {
+      "tt": {
+        "refs": {
+          "clk_in": {
+            "rise": 92.9,
+            "fall": 99.74919000000001,
+            "min": 82.76551,
+            "max": 97.3146,
+            "src": "insertion.json boundary mean",
+            "bmin": 88.2,
+            "bmax": 97.3,
+            "n": 629
+          }
+        },
+        "launch": [
+          150.22341,
+          "o[17]"
+        ],
+        "capture": [
+          116.37226000000001,
+          "i[486]"
+        ],
+        "comb_pins": [],
+        "forwarded": null,
+        "native_forwarded": {
+          "driver": "u.u_fcb_ck.u_cell/Y",
+          "cell": "BUFx12f_ASAP7_75t_R",
+          "input_net": "clk_in",
+          "physical_single_buffer": true,
+          "clock_waveform_ps": [
+            0,
+            385.0
+          ],
+          "source_sdc_sha256": "8436beaf13517e066422f50a3d16e71f59d6b4f80224e8a261d4f89f9798067b",
+          "metrics_ps": {
+            "arrival_max_rise": 13.37583,
+            "arrival_min_rise": 12.911229,
+            "arrival_max_fall": 14.64038099999999,
+            "arrival_min_fall": 14.145844000000011,
+            "slew_max_rise": 4.91012,
+            "slew_max_fall": 4.976637
+          },
+          "probe_tcl_sha256": "9141e824095cf09ec34060d6c13b106e769c70701d1b1b77c639debe3b2cb8af",
+          "log_sha256": "ecca2c2917aec8c7e4d96ad80dba1b13494b76cb1f65a7acc70cd8496982135c",
+          "scope": "Actual final ODB+SPEF; output-driver pin; no die wire or communicating-pair qualification"
+        }
+      },
+      "ff": {
+        "refs": {
+          "clk_in": {
+            "rise": 74.5,
+            "fall": 77.44979500000001,
+            "min": 65.75707,
+            "max": 78.92661,
+            "src": "insertion.json boundary mean",
+            "bmin": 69.9,
+            "bmax": 78.9,
+            "n": 629
+          }
+        },
+        "launch": [
+          107.62776,
+          "o[17]"
+        ],
+        "capture": [
+          86.1857,
+          "i[486]"
+        ],
+        "comb_pins": [],
+        "forwarded": null,
+        "native_forwarded": {
+          "driver": "u.u_fcb_ck.u_cell/Y",
+          "cell": "BUFx12f_ASAP7_75t_R",
+          "input_net": "clk_in",
+          "physical_single_buffer": true,
+          "clock_waveform_ps": [
+            0,
+            385.0
+          ],
+          "source_sdc_sha256": "8436beaf13517e066422f50a3d16e71f59d6b4f80224e8a261d4f89f9798067b",
+          "metrics_ps": {
+            "arrival_max_rise": 10.928199,
+            "arrival_min_rise": 10.508018,
+            "arrival_max_fall": 11.50045799999998,
+            "arrival_min_fall": 11.050231999999994,
+            "slew_max_rise": 3.763908,
+            "slew_max_fall": 3.656856
+          },
+          "probe_tcl_sha256": "63829935e0b42caffd60ed005dca4f6e481bbd9de3ac45b37fd52d577daeee93",
+          "log_sha256": "92c129f20f5298586ed4cdb7214763a8d8ff4586edd192523def491c988e7626",
+          "scope": "Actual final ODB+SPEF; output-driver pin; no die wire or communicating-pair qualification"
+        }
+      },
+      "ss": {
+        "refs": {
+          "clk_in": {
+            "rise": 125.0,
+            "fall": 141.860675,
+            "min": 112.50698,
+            "max": 129.37228,
+            "src": "insertion.json boundary mean",
+            "bmin": 120.2,
+            "bmax": 129.4,
+            "n": 629
+          }
+        },
+        "launch": [
+          226.01682,
+          "o[561]"
+        ],
+        "capture": [
+          169.09817,
+          "i[491]"
+        ],
+        "comb_pins": [],
+        "forwarded": null
+      }
+    },
+    "scope": "Source-pinned routed ETM + insertion measurement; clk_out is explicit forwarded-clock combinational arc. Does not qualify any actual inter-tile pair or die.",
+    "job": "hbfd_rly_624_we_fc-fc2-cd0c5f463",
+    "status": "CLOSED",
+    "source_commit": "cd0c5f463",
+    "native_artifacts_sha256": {
+      "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_624_we_fc-fc2-cd0c5f463/routes/hbfd_rly_624_we_fc_fc2_cd0c5f463/work/orfs/results/asap7/opentallas_hbfd_rly_624_WE_fc_asap7_ref_hbfd_rly_624_we_fc_fc2_cd0c5f463/base/6_final.odb": "0af526abd0f8890c708ac2090850f5ed389982087a66f8950257486751c8093e",
+      "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_624_we_fc-fc2-cd0c5f463/routes/hbfd_rly_624_we_fc_fc2_cd0c5f463/work/orfs/results/asap7/opentallas_hbfd_rly_624_WE_fc_asap7_ref_hbfd_rly_624_we_fc_fc2_cd0c5f463/base/6_final.spef": "0669a38937239aba10b84350583a6c6d103eeb304561e99f754940655df054bf",
+      "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_624_we_fc-fc2-cd0c5f463/routes/hbfd_rly_624_we_fc_fc2_cd0c5f463/work/orfs/results/asap7/opentallas_hbfd_rly_624_WE_fc_asap7_ref_hbfd_rly_624_we_fc_fc2_cd0c5f463/base/6_final.sdc": "8436beaf13517e066422f50a3d16e71f59d6b4f80224e8a261d4f89f9798067b"
+    },
+    "forwarded_metadata_in_published_insertion": false
+  }
+]
