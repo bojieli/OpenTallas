@@ -52,6 +52,36 @@ RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot.sv' if HROO
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = (4, 5, 0, 1, 2, 3, 6, 7)          # kv_static.template: group g holds PCs 4 * ORDER.index(g) + q
+
+
+def ectl_pair():
+    """KV-PLAN-ECTL 10-17 (coordinator decision 2): OT_KV_ECTL_PAIR=1 (default off; read at call time)."""
+    return os.environ.get('OT_KV_ECTL_PAIR', '0') == '1'
+
+
+def ectl_frame(g):
+    """physical ECTL frame (kv_die ectl_<st>_<f>: column f // 4, 0 = landing side; row f % 4 along the stack) that hosts
+    logical engine g = ECTL A ectl_a_<st>_<g> + K issuer ki_<st>_<g> (residue g: K rows t[2:0] = g live in landing group
+    g; astk port e<g>i / e<g>o / f<g><h> carries the hard strap sq = {stack, g}).
+
+    Default: frame g (row g % 4 holds engines {r, r + 4}; group g sits at strip slot ORDER.index(g), so the row-pair of
+    groups is the V-port pair {2k, 2k + 1} and 16 of 32 K links cross 2.4-5.6 mm).
+    OT_KV_ECTL_PAIR=1: engine g moves to the frame LEVEL with its group: row = ORDER.index(g) // 2 (the group's slot pair,
+    i.e. its V-port pair), column = ORDER.index(g) % 2 (= g % 2: the astk's own leaf column of engine g, astk_plan
+    eng = 2 r + c).  Logical graph, cfg values (diecfg ectl_a_cfg[5 (8 s + g)]), K / V layouts, astk / hub / PV order are
+    unchanged: only which hardened frame (and its four heads) runs engine g, and the die wires frame <-> astk port g."""
+    if not ectl_pair():
+        return g
+    s = ORDER.index(g)
+    return 4 * (s % 2) + s // 2
+
+
+def frame_engine(f):
+    """inverse of ectl_frame: the logical engine / landing group run by physical frame f"""
+    for g in range(8):
+        if ectl_frame(g) == f:
+            return g
+    raise ValueError(f'no engine for ECTL frame {f}')
 PC_PITCH = 378.0
 NPC = 32
 CORE_CK = ('ck', 'return_ck')
@@ -165,7 +195,7 @@ def cluster_of(name):
         return 'kvs_attn', 'attn', name
     m = re.fullmatch(r'(ectl_a|ki)_(WS|WN|ES|EN)_(\d)', name)
     if m:
-        return f'ectl_{m.group(2)}_{m.group(3)}', 'ectl', 'a' if m.group(1) == 'ectl_a' else 'k'
+        return f'ectl_{m.group(2)}_{ectl_frame(int(m.group(3)))}', 'ectl', 'a' if m.group(1) == 'ectl_a' else 'k'
     if name.startswith('vport_'):
         return name, 'vport', 'vport'
     if name == 'd2d':
@@ -937,7 +967,7 @@ def inject(m, K):
             gd = f'slg_{st}_{g}'
             vp, par = f'vport_{st}_{g // 2}', g % 2
             add((f'pvvq_{st}_{g // 2}_{par}', 'kv_oneway', 15, [(vp, f'vq{par}'), (gd, 'vreq')]))
-            add((f'krq_{st}_{g}', 'kv_oneway', 38, [(f'ectl_{st}_{g}', 'rq'), (gd, 'kreq')]))
+            add((f'krq_{st}_{g}', 'kv_oneway', 38, [(f'ectl_{st}_{ectl_frame(g)}', 'rq'), (gd, 'kreq')]))
     seen_buses = {b_[0] for b_ in B}
     fk = m.setdefault('forks', {})
     for (dinst, dport), loads in nets.items():
@@ -948,7 +978,8 @@ def inject(m, K):
             continue
         if dport == 'krsp':
             for (cd, cp) in loads:
-                add((f'krs_{cd[5:]}', 'kv_oneway', 1062, [(dinst, 'krsp'), (cd, 'rs')]))
+                st_, f_ = cd.split('_')[1], int(cd.split('_')[2])       # bus named by its group (kv_static_ages)
+                add((f'krs_{st_}_{frame_engine(f_)}', 'kv_oneway', 1062, [(dinst, 'krsp'), (cd, 'rs')]))
             continue
         bits = widths.get((dinst, dport))
         if dinst == 'd2d_kv' and dport in ('svc', 'srx'):
@@ -1362,7 +1393,7 @@ def response_lat(m):
     out = {}
     for s in STACKS:
         for g in range(8):
-            out[f'ectl_{s}_{g}'] = dict(RESPONSE_LAT=8 + st.get(f'krq_{s}_{g}', 0) + st.get(f'krs_{s}_{g}', 0),
+            out[f'ectl_{s}_{ectl_frame(g)}'] = dict(RESPONSE_LAT=8 + st.get(f'krq_{s}_{g}', 0) + st.get(f'krs_{s}_{g}', 0),
                                         QK_ISSUE_AGE=ins()[f'ectl_a_{s}_{g}']['parameters']['QK_ISSUE_AGE'])
     return out
 
