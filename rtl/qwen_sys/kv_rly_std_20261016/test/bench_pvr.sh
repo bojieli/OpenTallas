@@ -17,9 +17,9 @@ module tb;
   reg [7:0] dla = 0, dlb = 0; wire [517:0] b;
   qkd_pvr_inj #(.DW(8)) dut(.ck(ck), .rst_n(rst_n), .a(a), .ya(ya), .yb(yb), .yva(yva), .yvb(yvb), .ida(ida), .idb(idb),
                             .dla(dla), .dlb(dlb), .b(b));
-  reg [517:0] ex [0:20400]; integer n, err = 0, inj = 0, k, ta = -1000, tb_ = -1000, sa = -1, sb = -1;
+  reg [517:0] ex [0:20400]; reg st [0:20400]; integer n, err = 0, inj = 0, k, ta = -1000, tb_ = -1000, sa = -1, sb = -1;
   initial begin
-    for (n = 0; n <= 20400; n = n + 1) ex[n] = 'x;
+    for (n = 0; n <= 20400; n = n + 1) begin ex[n] = 0; st[n] = 0; end   // st = slot already scheduled (2-state safe)
     repeat (3) @(posedge ck); rst_n = 1; repeat (4) @(posedge ck);
     for (n = 0; n < 20000; n = n + 1) begin
       @(negedge ck);
@@ -33,9 +33,9 @@ module tb;
         dlb = $urandom % 200; for (k = 0; k < 512; k = k + 1) yb[k] = $urandom; yvb = 1; tb_ = n; sb = n + 3 + dlb;
         if (ta >= 0 && sb == sa) begin dlb = dlb + 1; sb = sb + 1; end
       end
-      if (ex[n + 1] === 'x) ex[n + 1] = a;
-      if (yva) ex[sa] = {ida, 1'b1, ya};
-      if (yvb) ex[sb] = {idb, 1'b1, yb};
+      if (!st[n + 1]) begin ex[n + 1] = a; st[n + 1] = 1; end
+      if (yva) begin ex[sa] = {ida, 1'b1, ya}; st[sa] = 1; end
+      if (yvb) begin ex[sb] = {idb, 1'b1, yb}; st[sb] = 1; end
       if (yva || yvb) inj = inj + 1;
       if (n > 1 && b !== ex[n]) begin if (err < 5) $display("cycle %0d: b %h want %h", n, b[517:500], ex[n][517:500]); err = err + 1; end
     end
