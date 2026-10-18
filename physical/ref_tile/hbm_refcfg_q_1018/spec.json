@@ -141,7 +141,12 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
   "io_hold_margin_ns": 0.0,
-  "pin_min_tracks": 3
+  "pin_min_tracks": 3,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
  },
  "slot_change_request": "d4g refcfg_<q> x4 (one per quadrant, NPC 16): new slot 51.84 x 51.84 (pin-bound: S F20 host bus 290 pins at 5.6/um, N refresh_reload 16x8 + pc_rst_n + clk_hbm + rst_hbm_n 131 pins at 2.5/um toward the quadrant's 16 PC controllers); GEN0 bound the NPC32 master as a SYNTH ETM",
  "job": {
@@ -222,5 +227,6 @@
     "note": "PC byte order swapped"
    }
   ]
- }
+ },
+ "hold_budget_note": "pins spread over the full S/N faces by the balanced pin placer (first gate: IO placer packed the N face into ~20 um)"
 }
