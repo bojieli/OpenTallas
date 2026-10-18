@@ -1,9 +1,9 @@
 {
- "name": "hcoll_ring_ag_ctln_1018-r2-COMMIT",
+ "name": "hcoll_ring_ag_ctln_1018-r3-COMMIT",
  "block": "ot_hgi_coll_ring_ag_ctln",
  "ref_tile": true,
  "owner": "Claude:ELEM-GAPS/HBMN1",
- "purpose": "NATIVE successor of hcoll_ring_ag_ctl_1017 (rc1-2d4d79dd8 CLOSED but native FAIL launch 360/capture 483/2 comb pins): ot_hgi_coll_ring_ag_ctln = the unchanged closed control body behind pure pin flops (commands lead 1, tx-read group lead 2, state_tx/av pin flops, dedicated pin0_q/pin1_q/acc/lane-command output flops, carry_write registered one edge ahead, rst relay); compiler record results/rtl/eg_hbmn1_1018/ring_ag_n_latency_record.json | r2: pin0_q/pin1_q copies = keep_hierarchy leaves (n1 merged them into the core pin_p register: launch 286) fixed at the cw_i/ccw_i -> pin0_q/pin1_q midpoint (cp_mid.tcl); carry_write/rx_slot split per direction at the N corners (n1 capture rx_slot 254)",
+ "purpose": "NATIVE successor of hcoll_ring_ag_ctl_1017 (rc1-2d4d79dd8 CLOSED but native FAIL launch 360/capture 483/2 comb pins): ot_hgi_coll_ring_ag_ctln = the unchanged closed control body behind pure pin flops (commands lead 1, tx-read group lead 2, state_tx/av pin flops, dedicated pin0_q/pin1_q/acc/lane-command output flops, carry_write registered one edge ahead, rst relay); compiler record results/rtl/eg_hbmn1_1018/ring_ag_n_latency_record.json | r2: pin0_q/pin1_q copies = keep_hierarchy leaves (n1 merged them into the core pin_p register: launch 286) fixed at the cw_i/ccw_i -> pin0_q/pin1_q midpoint (cp_mid.tcl); carry_write/rx_slot split per direction at the N corners (n1 capture rx_slot 254) | r3: cp_mid.tcl also places u_core.rr_d (acc_rr N -> rr_d S) and carry_write0/1 at their pin midpoints (r2 probe: launch 217.6 all ok, capture acc_rr 212 pins / cw_i[274] 228)",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
@@ -130,7 +130,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/arch/hbm_d4g_coll_ag_1017/route_n/hcoll_ring_ag_ctln_1018-r2-COMMIT"
+   "to": "results/arch/hbm_d4g_coll_ag_1017/route_n/hcoll_ring_ag_ctln_1018-r3-COMMIT"
   }
  ],
  "cycles_added": 0,

@@ -3,6 +3,9 @@
 # FIRM at the midpoint of their two pins (row / site snapped), so the input wire and the output wire share the
 # distance (n1: copies at the input face, launch 286 ps; worst pair ~130 um Manhattan -> <= ~65 um per side).
 # io_flop_at_pins keeps fixed flops where they are; cp_mid_release.tcl (PRE_DETAIL_PLACE) returns them to PLACED for DPL.
+# r3: the same midpoint for u_core.rr_d[b] (acc_rr[b] N face -> 4 mux levels -> rr_d[b] S face; r2 anchored at the
+# S face as an output flop: capture 212 pins over 190) and for carry_write0/1 (cw_i/ccw_i kind bit 274 -> carry pin at
+# the N corner; r2 capture cw_i[274] 228).
 # Placement only, 0 cycles.
 set cm_blk [ord::get_db_block]
 set cm_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
@@ -15,13 +18,19 @@ proc cm_center {bt} {
   set bb [$bt getBBox]
   return [list [expr {([$bb xMin] + [$bb xMax]) / 2.0}] [expr {([$bb yMin] + [$bb yMax]) / 2.0}]]
 }
-set cm_n 0
+set cm_n 0; set cm_cls [dict create cp 0 rr 0 cw 0]
 set cm_fh [open $::env(RESULTS_DIR)/ot_cp_mid.txt w]
 foreach inst [$cm_blk getInsts] {
   set nm [$inst getName]
-  if {![regexp {g_cp\\?\[([0-9]+)\\?\][./]u_p([01])[./]} $nm -> b side]} continue
   if {![string match *DFF* [[$inst getMaster] getName]]} continue
-  if {$side eq "0"} { set ip "cw_i\[$b\]"; set op "pin0_q\[$b\]" } else { set ip "ccw_i\[$b\]"; set op "pin1_q\[$b\]" }
+  if {[regexp {g_cp\\?\[([0-9]+)\\?\][./]u_p([01])[./]} $nm -> b side]} {
+    set cls cp
+    if {$side eq "0"} { set ip "cw_i\[$b\]"; set op "pin0_q\[$b\]" } else { set ip "ccw_i\[$b\]"; set op "pin1_q\[$b\]" }
+  } elseif {[regexp {^u_core[./]rr_d\\?\[([0-9]+)\\?\]} $nm -> b]} {
+    set cls rr; set ip "acc_rr\[$b\]"; set op "rr_d\[$b\]"
+  } elseif {[regexp {^carry_write([01])($|[^0-9])} $nm -> d]} {
+    set cls cw; set ip [expr {$d eq "0" ? "cw_i\[274\]" : "ccw_i\[274\]"}]; set op "carry_write$d"
+  } else { continue }
   set bi [$cm_blk findBTerm $ip]; set bo [$cm_blk findBTerm $op]
   if {$bi eq "NULL" || $bo eq "NULL"} { error "CP_MID: missing port $ip / $op for $nm" }
   lassign [cm_center $bi] x0 y0; lassign [cm_center $bo] x1 y1
@@ -40,8 +49,10 @@ foreach inst [$cm_blk getInsts] {
   $inst setLocation [expr {int($x)}] [expr {int($ry)}]
   $inst setPlacementStatus FIRM
   puts $cm_fh $nm
-  incr cm_n
+  incr cm_n; dict incr cm_cls $cls
 }
 close $cm_fh
-puts "CP_MID fixed $cm_n ring copy flops at their pin midpoints"
-if {$cm_n != 560} { error "CP_MID: expected 560 ring copy flops (280 per direction), found $cm_n (netlist renamed / merged?)" }
+puts "CP_MID fixed $cm_n flops at their pin midpoints ($cm_cls)"
+if {[dict get $cm_cls cp] != 560 || [dict get $cm_cls rr] != 256 || [dict get $cm_cls cw] != 2} {
+  error "CP_MID: expected cp 560 / rr 256 / cw 2 flops, found $cm_cls (netlist renamed / merged?)"
+}
