@@ -214,6 +214,10 @@
   ]
  },
  "recipe": 1,
+ "pin_regs": {
+  "enable": false,
+  "reason": "the lane RTL already registers every data pin (rx -> lr pin flops; tx = the gearbox's registered beat; LCR 1 core faces = ot_link_credit_rx landing flops for lo_v/lo_d and its registered credit pulse lo_r, ot_link_credit_tx sender flops for li_v/li_d with li_r captured; flt flops; chb registered in ot_s81ph_link_ep ch_b_q; tf is the forwarded clock buffer). This kit is the closed dscoll_lane_w_rt geometry (recipe 1) with only the ACK-timeout parameter changed (S81-LINKTO 0hn); +1 cycle a pin would change the measured cross-die landing cycles of the xdie_s81 vehicle and the TOKEN-XDIE-S81 record"
+ },
  "children": [],
  "inter": []
 }
