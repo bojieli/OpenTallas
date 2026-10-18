@@ -6,7 +6,7 @@
  "failing": [],
  "summary": {
   "masters": 47,
-  "instances": 474,
+  "instances": 486,
   "unbound_masters": 0,
   "stub_masters": 0,
   "ambiguous_masters": 0,
@@ -780,7 +780,7 @@
   "dsfd_rly_63_NS": {
    "verdict": "PASS",
    "fails": [],
-   "instances": 40,
+   "instances": 50,
    "rtl": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv",
    "kind": "real",
    "ambiguous_defs": null,
@@ -790,7 +790,7 @@
     "u_y_rt_12a_5"
    ],
    "param_sets": {
-    "{}": 40
+    "{}": 50
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -853,7 +853,7 @@
   "dsfd_rly_63_WE": {
    "verdict": "PASS",
    "fails": [],
-   "instances": 47,
+   "instances": 49,
    "rtl": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv",
    "kind": "real",
    "ambiguous_defs": null,
@@ -863,7 +863,7 @@
     "u_y_rt_0a_3"
    ],
    "param_sets": {
-    "{}": 47
+    "{}": 49
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -1053,7 +1053,7 @@
    "fails": [],
    "instances": 112,
    "rtl": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
-   "kind": "model",
+   "kind": "real",
    "ambiguous_defs": null,
    "examples": [
     "u_c0_0",
@@ -1224,14 +1224,14 @@
  "top_assigns": [],
  "params_not_in_rtl": [],
  "pads_declared": [],
- "die_sha256": "7c1dd03d4012a6d517d57a56cd9f357f53e62e78f682f34ceb6f32e628d7885e",
+ "die_sha256": "578bb949520d91568eeffdddaed7a5fb418001811ceb7396f2ba90c60e7229f8",
  "straps_declared": [],
  "params_file": null,
  "elab": {
   "files": 68,
   "unresolved_modules": [],
-  "top_file": "/tmp/s81u3f/pb/elab_col_h10/die_top.sv",
-  "file_list": "/tmp/s81u3f/pb/elab_col_h10/die_top.f"
+  "top_file": "/tmp/s81u3f2/pb/elab_col_h10/die_top.sv",
+  "file_list": "/tmp/s81u3f2/pb/elab_col_h10/die_top.f"
  },
  "rtl_roots": [
   "rtl",

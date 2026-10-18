@@ -1,5 +1,5 @@
 // S81-DV exact-width F1 lane relay stations for the non-276-b die links (stub audit S-9; S81-BIND p4f, extended for
-// p4g/p4h/p4i by S81-DIE 10-17: 68-b frame return lanes, 512-b collective + svc_rs chain lanes, 562-b / 682-b regional
+// p4g/p4h/p4i by S81-DIE 10-17: 68-b frame return lanes (p4i; retired p4j: 70 b = the frame ret RTL width), 512-b collective + svc_rs chain lanes, 562-b / 682-b regional
 // HBM rd / rq links).  Same body as dsfd_dvrly_276_* (ot_s81_rly RSREG=1: one register stage, rs = the regional reset
 // relay leaf, released through the reset pin register; ck = the lane's forwarded clock; ck_o = ck through the kept
 // ot_dvrly_ckinv pair = station k+1 ck).  <dir> = in face, out face.  GENERATED (one module per width x direction).
@@ -25,6 +25,18 @@ module dsfd_dvrly_68_NS (input wire ck, input wire rs, input wire [67:0] i, outp
 endmodule
 module dsfd_dvrly_68_SN (input wire ck, input wire rs, input wire [67:0] i, output wire [67:0] o, output wire ck_o);
     ot_s81_rly #(.W(68), .RSREG(1)) u (.ck(ck), .rs(rs), .i(i), .o(o));
+    wire ckn;
+    ot_dvrly_ckinv u_ck0 (.a(ck), .y(ckn));
+    ot_dvrly_ckinv u_ck1 (.a(ckn), .y(ck_o));
+endmodule
+module dsfd_dvrly_70_NS (input wire ck, input wire rs, input wire [69:0] i, output wire [69:0] o, output wire ck_o);
+    ot_s81_rly #(.W(70), .RSREG(1)) u (.ck(ck), .rs(rs), .i(i), .o(o));
+    wire ckn;
+    ot_dvrly_ckinv u_ck0 (.a(ck), .y(ckn));
+    ot_dvrly_ckinv u_ck1 (.a(ckn), .y(ck_o));
+endmodule
+module dsfd_dvrly_70_SN (input wire ck, input wire rs, input wire [69:0] i, output wire [69:0] o, output wire ck_o);
+    ot_s81_rly #(.W(70), .RSREG(1)) u (.ck(ck), .rs(rs), .i(i), .o(o));
     wire ckn;
     ot_dvrly_ckinv u_ck0 (.a(ck), .y(ckn));
     ot_dvrly_ckinv u_ck1 (.a(ckn), .y(ck_o));

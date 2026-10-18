@@ -91,7 +91,7 @@
   "rst_n"
  ],
  "outline": {
-  "w": 194.4,
+  "w": 216.0,
   "h": 194.4,
   "exact": true
  },
@@ -107,7 +107,7 @@
    "v": "M5"
   }
  },
- "structural_change": "S81-TILES2 10-17: four-tile re-split of the KP4 decoder cluster ot_s81_kp4_dec (replaces s81lk_kp4_deca / decb, REJECTED at their CTS gates: 259.2 um tiles, SRAM in the middle, clock on the S face; TT insertion 307-455 / 295-417 ps, spread 148 / 122 ps).  Cluster 2 x 2: dsyn SW (PMA in W), ddly NW, dchn SE, dout NE (beats out E); every seam registered at both pins.  Bit-exact vs the 33a35eb7d two-tile decoder on every output and cycle (tb_s81_kp4_eq: RTL same cycle, hardware view with all tile pin registers = reference + 2 cycles; mutants DMUT 2 / 3 and a one-short word seam FAIL).  dchn: forward Chien / Forney over 55 lanes (two registered stages, kept-hierarchy inverse), 64-leaf root-count tree, decision, correction masks re-cut to PMA words; no macro; 194.4 um square (decb std ~23.5k less the dout part -> util ~0.55-0.6; ~4.6k sinks; enc gate 1 at 194.4 measured TT 210-243 ps / spread 32).  k_* full W face (from dsyn), cw_q + decision full N face (to dout, 2.9/um), clk S centre (cluster outer face).",
+ "structural_change": "S81-TILES2 10-17: four-tile re-split of the KP4 decoder cluster ot_s81_kp4_dec (replaces s81lk_kp4_deca / decb, REJECTED at their CTS gates: 259.2 um tiles, SRAM in the middle, clock on the S face; TT insertion 307-455 / 295-417 ps, spread 148 / 122 ps).  Cluster 2 x 2: dsyn SW (PMA in W), ddly NW, dchn SE, dout NE (beats out E); every seam registered at both pins.  Bit-exact vs the 33a35eb7d two-tile decoder on every output and cycle (tb_s81_kp4_eq: RTL same cycle, hardware view with all tile pin registers = reference + 2 cycles; mutants DMUT 2 / 3 and a one-short word seam FAIL).  dchn: forward Chien / Forney over 55 lanes (two registered stages, kept-hierarchy inverse), 64-leaf root-count tree, decision, correction masks re-cut to PMA words; no macro; 194.4 um square (decb std ~23.5k less the dout part -> util ~0.55-0.6; ~4.6k sinks; enc gate 1 at 194.4 measured TT 210-243 ps / spread 32).  k_* full W face (from dsyn), cw_q + decision full N face (to dout, 2.9/um), clk S centre (cluster outer face). S81-TILES4 10-17: route t2-cef44c405 refused FLOORPLAN_MARGIN (util 61.3%: std 22,149 in 36,130 um2 core) -> outline grown E to 216 x 194.4 (5 x 43.2 wide, ~53% util); height kept 194.4 so the W k_* seam stays aligned with dsyn and the 21.6-um seam below dout is unchanged; pins unchanged.",
  "job": {
   "owner": "Claude:S81-TILES2",
   "branch": "claude/s81kp4-1017",
