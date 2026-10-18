@@ -13,7 +13,7 @@ SRC=(rtl/test/tb_coll_static_face.sv rtl/physical/ot_qfd_coll_static_face.sv rtl
      rtl/lib/ot_reset_sync.sv
      physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v
      physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v)
-DEF=(); XS=0; PHIS="0 1"
+DEF=(); XS=0; PHIS="0 1"; TOK=${TOK_REG:-1}
 case $MUT in
   0) ;;
   1) DEF=(-DOT_LCAL_MUT_RX_EARLY); PHIS=0 ;;
@@ -24,7 +24,7 @@ esac
 ok=1
 for PHI in $PHIS; do
   exe="$OUT/face_m${MUT}_phi${PHI}.vvp"
-  (cd "$ROOT" && iverilog -g2012 -s tb_coll_static_face -P tb_coll_static_face.XS=$XS -P tb_coll_static_face.PHI=$PHI \
+  (cd "$ROOT" && iverilog -g2012 -s tb_coll_static_face -P tb_coll_static_face.XS=$XS -P tb_coll_static_face.PHI=$PHI -P tb_coll_static_face.TOK_REG=$TOK \
       "${DEF[@]}" -o "$exe" "${SRC[@]}") > "$OUT/build_m${MUT}_phi${PHI}.log" 2>&1 || { cat "$OUT/build_m${MUT}_phi${PHI}.log"; echo "MUT=$MUT PHI=$PHI BUILD FAIL"; ok=0; continue; }
   vvp -n "$exe" > "$OUT/run_m${MUT}_phi${PHI}.log" 2>&1
   grep -E "^(ERR|COLL_)" "$OUT/run_m${MUT}_phi${PHI}.log" | sed "s/^/MUT=$MUT PHI=$PHI /"

@@ -13,11 +13,12 @@
 // on the receiver's rx_valid/rx_data at EXACTLY t + L - R with the exact value, no unexpected rx_valid, and zero
 // faults (4 CDC w/r faults, epoch_abort, 8 codec fault causes) on both faces.  Negative controls (expect FAIL):
 // +define+OT_LCAL_MUT_RX_EARLY (RX CDC read one core cycle early), +define+OT_STATIC_MUT_LATENCY (CDC read pipe one
-// edge short), XS=1 (a PHY one link cycle longer than compiled).
+// edge short), XS=1 (a PHY one link cycle longer than compiled).  TOK_REG 1 (default) = the hardened-leaf
+// configuration (one pin register per face input, compensated calendar); TOK_REG 0 = the original face.
 // ---------------------------------------------------------------------------
 module tb_coll_static_face #(
     parameter integer FW = 546, PHY = 339, L = 376, R = 0, PEER_R = 0,
-    parameter integer XS = 0, PHI = 0, NW = 240, START = 80
+    parameter integer XS = 0, PHI = 0, NW = 240, START = 80, TOK_REG = 1
 ) ();
     localparam integer PW = FW + 51;
     localparam real T = 0.8333333;
@@ -83,7 +84,7 @@ module tb_coll_static_face #(
     wire [1:0] ptslot, prslot;
     genvar f;
     generate for (f = 0; f < 2; f = f + 1) begin : g_face
-        qfd_coll_static_face #(.FW(FW), .PHY(PHY), .L(L), .R(R), .PEER_R(PEER_R)) u_face (
+        qfd_coll_static_face #(.FW(FW), .PHY(PHY), .L(L), .R(R), .PEER_R(PEER_R), .TOK_REG(TOK_REG)) u_face (
             .cal_ck(clk), .cal_lck(lck), .tx_wck(clk), .tx_rck(lck), .rx_wck(lck), .rx_rck(clk),
             .codec_ck({5{lck}}), .rst_n(rst_n),
             .tx_slot(send[f]), .peer_slot(send[1 - f]), .tx_valid(send[f]), .tx_data(f == 0 ? txd0 : txd1),
@@ -134,8 +135,8 @@ module tb_coll_static_face #(
     initial begin
         wait (sent0 == NW && sent1 == NW);
         repeat (LAT + 40) @(posedge clk);
-        $display("COLL_FACE_BENCH FW=%0d PHY=%0d L=%0d R=%0d PEER_R=%0d XS=%0d PHI=%0d words %0d %0d got %0d %0d latency %0d errors %0d faults %0d unexpected %0d",
-                 FW, PHY, L, R, PEER_R, XS, PHI, sent0, sent1, got1, got0, lat_seen, errors, faults, unexpected);
+        $display("COLL_FACE_BENCH TOK_REG=%0d FW=%0d PHY=%0d L=%0d R=%0d PEER_R=%0d XS=%0d PHI=%0d words %0d %0d got %0d %0d latency %0d errors %0d faults %0d unexpected %0d",
+                 TOK_REG, FW, PHY, L, R, PEER_R, XS, PHI, sent0, sent1, got1, got0, lat_seen, errors, faults, unexpected);
         if (errors == 0 && faults == 0 && unexpected == 0 && got0 == NW && got1 == NW)
             $display("COLL_STATIC_FACE PASS");
         else
