@@ -493,8 +493,10 @@ module ot_hgi_sm_xload_cl2_ctl #(
     always @(posedge clk_eg) begin bc_addr <= bq_addr; bc_b <= bq_b; bq_c <= bq_d; end
     // ---- XQL: egress controls exported to the pair-egress leaves (their pin registers = this module's clk_eg stage)
     generate if (EGRESS_SPLIT != 0) begin : g_egx
-        assign eg_ed5 = {ed[RDP-3][EW-2], ed[RDP-3][6:0]}; assign eg_ede = ed[RDP-2];
-        assign eg_bqv = bq_v; assign eg_bqlast = bq_last; assign eg_bqaddr = bq_addr; assign eg_bqb = bq_b;
+        // x6 pegress pin-registers ed5 and bq_v once at its E face: export them one edge early (ed[RDP-4], bs_v) so the
+        // leaf's replicas see exactly ed[RDP-3] / bq_v as before (0 added edges).
+        assign eg_ed5 = {ed[RDP-4][EW-2], ed[RDP-4][6:0]}; assign eg_ede = ed[RDP-2];
+        assign eg_bqv = bs_v; assign eg_bqlast = bq_last; assign eg_bqaddr = bq_addr; assign eg_bqb = bq_b;
     end else begin : g_egx0
         assign eg_ed5 = 8'd0; assign eg_ede = '0; assign eg_bqv = 1'b0; assign eg_bqlast = 1'b0; assign eg_bqaddr = 7'd0; assign eg_bqb = 7'd0;
     end endgenerate

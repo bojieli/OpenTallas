@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_rst_region_pr",
+ "enable": false,
+ "reason": "All live data inputs are RTL pin captures: a enters original a_q; dly enters eight kept dly_pin flops; b is original registered reset output. por_n is package POR into the original synchronizer. Extra blanket registers would change reset epochs; no timing exception added."
+}

@@ -1,0 +1,3 @@
+{"schema":"opentallas.tile_visual_review.v1","tile":"s81lk_kp4_dout","reviewer":"coordinator (2026-10-17 ~18:45)","verdict":"APPROVED","time":"2026-10-17T18:45:00-07:00","gate_commit":"2026-10-17T13:14:47-0700",
+ "checklist":{"lattice":"PASS or n/a","std_cell_band":"PASS: one band","pin_spread":"PASS: full faces <=4.84/um","clock_entry":"PASS: beside registers, insertion/spread within rule","shape":"PASS"},
+ "notes":"KP4 decoder 4-tile re-split; bit-exact vs 2-tile; latency 64->66 (+2, report to model)"}

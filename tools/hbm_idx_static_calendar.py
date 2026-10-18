@@ -28,13 +28,13 @@ TILE = dict(weight='vmq', query='vmq', head='q', beat='s', op='sel', ps='sel', a
             group='link')
 
 
-def shifts(pin):
+def shifts(pin, chain=0):
     """Calendar-edge shift per consuming tile: the tile core sees the historical relative timeline."""
     core = {}
     core['vmq'] = pin['vmq_in']                                   # slot -> vm_query core
     core['q'] = core['vmq'] + pin['vm_rt'] + pin['vmq_out'] + pin['q_in']   # operand block -> query core
     core['s'] = core['q'] + pin['q_out']                          # ql_* -> scorer (no pin regs)
-    core['sel'] = core['s'] + pin['sel_in']                       # score -> selector core
+    core['sel'] = core['s'] + chain + pin['sel_in']               # score (+ IDX-SCORE cluster seam chain) -> selector core
     core['link'] = core['sel'] + pin['sel_out'] + pin['link_in']  # selected -> link core
     own_in = dict(vmq=pin['vmq_in'], q=pin['q_in'], s=0, sel=pin['sel_in'], link=pin['link_in'])
     cal = {t: core[t] - own_in[t] for t in core}
@@ -42,9 +42,9 @@ def shifts(pin):
     return {t: v - base for t, v in cal.items()}, core
 
 
-def compile_program(pins='registered', gap=100):
+def compile_program(pins='registered', gap=100, score_chain=0):
     pin = PIN_TABLES[pins]
-    sh, core = shifts(pin)
+    sh, core = shifts(pin, score_chain)
     events = []          # (historical edge, tile, field values)
     t = [0]
     marks = {}
@@ -135,7 +135,7 @@ def compile_program(pins='registered', gap=100):
         added_edges_scan_to_tx=sh['link'] + pin['link_in'] + pin['link_out'] - sh['sel'],
         added_edges_frame=length - hist_len,
     )
-    meta = dict(length=length, historical_length=hist_len, pins=pins, pin_table=pin, calendar_shift=sh,
+    meta = dict(length=length, historical_length=hist_len, pins=pins, pin_table=pin, score_chain=score_chain, calendar_shift=sh,
                 core_shift=core, gap=gap, marks=marks, predicted=pred,
                 scope='source-compiled schedule for the pin-registered IDX tiles; exact timeline proven by '
                       'rtl/test/hbm_idx_static/run_scheduled.sh (calendar SRAM + parent, full shape)')
@@ -147,10 +147,12 @@ def main():
     ap.add_argument('out')
     ap.add_argument('--pins', choices=sorted(PIN_TABLES), default='registered')
     ap.add_argument('--gap', type=int, default=100)
+    ap.add_argument('--score-chain', type=int, default=0,
+                    help='IDX-SCORE chained cluster: scorer outputs this many edges later (ot_hbm_idx_score_cluster: 4)')
     a = ap.parse_args()
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    p, meta = compile_program(a.pins, a.gap)
+    p, meta = compile_program(a.pins, a.gap, a.score_chain)
     rows = [sum((p[i + j] if i + j < len(p) else 0) << (32 * j) for j in range(8)) for i in range(0, len(p), 8)]
     meta['rows'] = len(rows)
     (out / 'calendar.hex').write_text(''.join(f'{r:064x}\n' for r in rows))

@@ -1,12 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkd_embgw-sl2-4ca7b8091/record/views/qkd_embgw/qkd_embgw.lef",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_embgw-hq1-0736c91f9/record/views/qkd_embgw/provenance/qkd_embgw.candidate.lef",
  "verdict": "PASS",
  "fails": [],
- "warns": [
-  "(f) face-pin access: 4067 of 4079 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. emf_EN[0] M4 (172.681,39.936), emf_EN[100] M4 (172.681,39.936), emf_EN[101] M4 (172.681,39.936))"
- ],
- "summary": "qkd_embgw 172.8 x 216.0: PG M5 VDD 32 stripes (97% spread, 100% cov) / VSS 32 stripes (97% spread, 100% cov); strap M6; face pins 4079 blocked-above 0 blocked-same 0; clock ck insertion 330 ps; pockets M5 0 (closed)",
+ "warns": [],
+ "summary": "qkd_embgw 172.8 x 216.0: PG M5 VDD 32 stripes (97% spread, 100% cov) / VSS 32 stripes (97% spread, 100% cov); strap M6; face pins 4079 blocked-above 0 blocked-same 0; clock ck insertion 301 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "qkd_embgw",
   "W": 172.8,
@@ -40,24 +38,17 @@
   "face": {
    "face_pins": 4079,
    "blocked_above": 0,
-   "covered_below": 286,
+   "covered_below": 851,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 4067,
-   "band_examples": [
-    "emf_EN[0] M4 (172.681,39.936)",
-    "emf_EN[100] M4 (172.681,39.936)",
-    "emf_EN[101] M4 (172.681,39.936)",
-    "emf_EN[102] M4 (172.681,39.936)",
-    "emf_EN[103] M4 (172.681,39.936)",
-    "emf_EN[104] M4 (172.681,39.936)"
-   ]
+   "band_same": 0,
+   "band_examples": []
   },
   "clock_insertion": {
    "ck": {
-    "max_ps": 329.78,
-    "min_ps": 222.08
+    "max_ps": 301.29,
+    "min_ps": 218.02
    }
   },
   "pockets": {
@@ -66,7 +57,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 3229
+    "added": 2331
    },
    "count": 0,
    "area_um2": 0,
