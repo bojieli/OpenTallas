@@ -135,7 +135,9 @@ def main():
              CS_TXS=CS_TXS, CS_RXV=CS_RXV, CS_RXP=CS_RXP, CS_X3S=CS_X3S, SC_TX=SC_TX, SC_X3=SC_X3,
              KS_RXV=KS_RXV, KS_RXP=KS_RXP, KS_TXS=KS_TXS, KS_TXK=KS_TXK, KS_TXB=KS_TXB, SK_TXV=SK_TXV, SK_TXP=SK_TXP)
     for k, v in P.items():
-        if v < 0:
+        # QXF-SEAMK 10-18: X is the signed attention-window delta vs the priced token path (X < 0: the seams no longer
+        # expose any KV latency and the compiled window is shorter than priced); every other value is a cycle / age >= 0
+        if v < 0 and k != 'P_X':
             raise SystemExit(f'{k} = {v} < 0')
     with open(f'{a.out}/xdie_params.svh', 'w') as f:
         f.write(''.join(f'localparam integer {k} = {v};\n' for k, v in P.items()))
