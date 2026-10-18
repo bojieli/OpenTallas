@@ -12,11 +12,24 @@ module tb_hbm_fault_leaf;
  parameter integer N = 4;
  parameter [63:0] SYNC_MASK = 64'h8;
  parameter integer MUT = 0;
+ parameter integer WRAP = 0;   // 1: the per-variant wrapper block ot_hbm_fault_leaf_n<N>_s<mask> (ot_hbm_fault_leaf_variants.sv)
  reg clk = 1'b0, rst_n = 1'b0;
  always #1 clk = ~clk;
  reg [N-1:0] in = {N{1'b0}};
  wire fault;
+ generate if (WRAP == 0) begin : g_base
  ot_hbm_fault_leaf #(.N(N), .SYNC_MASK(SYNC_MASK), .MUT(MUT)) dut(.clk(clk), .rst_n(rst_n), .in(in), .fault(fault));
+ end else if (N == 8 && SYNC_MASK == 64'h0) begin : g_n8_s0
+  ot_hbm_fault_leaf_n8_s0 #(.MUT(MUT)) dut(.clk(clk), .rst_n(rst_n), .in(in), .fault(fault));
+ end else if (N == 8 && SYNC_MASK == 64'h40) begin : g_n8_s40
+  ot_hbm_fault_leaf_n8_s40 #(.MUT(MUT)) dut(.clk(clk), .rst_n(rst_n), .in(in), .fault(fault));
+ end else if (N == 9 && SYNC_MASK == 64'h40) begin : g_n9_s40
+  ot_hbm_fault_leaf_n9_s40 #(.MUT(MUT)) dut(.clk(clk), .rst_n(rst_n), .in(in), .fault(fault));
+ end else if (N == 11 && SYNC_MASK == 64'h100) begin : g_n11_s100
+  ot_hbm_fault_leaf_n11_s100 #(.MUT(MUT)) dut(.clk(clk), .rst_n(rst_n), .in(in), .fault(fault));
+ end else begin : g_none
+  initial $fatal(1, "FAIL tb_hbm_fault_leaf: no wrapper for N=%0d SYNC_MASK=%h", N, SYNC_MASK);
+ end endgenerate
  wire [N-1:0] sm = SYNC_MASK[N-1:0];
  // model: h1 = in sampled at the last edge, h2 = at the one before; m = model fault register
  reg [N-1:0] h1 = 0, h2 = 0; reg m = 0;

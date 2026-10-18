@@ -237,7 +237,8 @@
      "verilator"
     ],
     "pass_regex": "QUALIFIED baseline expected_exit=0",
-    "pass_witness": "results/rtl/ref_tile/svc_small_witness_1018/vmks_ss_baseline.log"
+    "pass_witness": "results/rtl/ref_tile/svc_small_witness_1018/vmks_ss_baseline.log",
+    "min_count_regex": "^PASS tb_hbm_svc_wb_kshare_splitstrap_q .*group_req=(\\d+)"
    },
    {
     "name": "vmks_mut_depth2",
