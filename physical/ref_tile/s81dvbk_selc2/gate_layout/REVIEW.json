@@ -1,0 +1,14 @@
+{
+ "reviewer": "coordinator sub-lane S81-TILES6-BK (Claude)",
+ "time": "2026-10-17T23:50-07:00",
+ "gate_commit": "a4b334d85",
+ "verdict": "APPROVED",
+ "checklist": {
+  "lattice": "no macros (pure logic leaf)",
+  "std_cell_band": "one contiguous band over the core, util 29% (sparse)",
+  "pin_spread": "N/S full faces, 5,660 pins on 777 um (~7.3/um, gate pin geometry PASS, no face-density WARN)",
+  "clock_entry": "E face upper third; CTS spread 42.3 TT / 39.7 FF so the entry is not limiting",
+  "shape": "388.8 x 172.8 (2.25:1, fixed by the vertical-cut plan)"
+ },
+ "note": "CLOCK RE-JUDGEMENT under OWNER 10-17 rule (pin-flop spread <=80 at TT+FF + neighbour-matched boundary; insertion / sink count guidance): pin-flop (boundary, n 5,349) spread TT 37.3 ps (368.5..405.8), FF 34.9 ps (301.0..335.9); all-flop spread TT 42.3 / FF 39.7 / SS 48.4 -> PASS. Insertion 405.8 TT / 26,013 sinks are guidance only: the s81dvbk_selv parent compensates the boundary (selc2 pin-flop mean TT 379.8 vs ~265-280 for the sq / g2 neighbours: ~100-115 ps parent insertion offset). Gate reg->reg TT slack +71.9 ps, hold +12.9 ps. Landing / control RTL split NOT needed."
+}
