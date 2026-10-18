@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.hier_contract.v1",
  "die": "hbm_v15",
- "version": "d4g.1",
+ "version": "d4g.2",
  "owner": "H-D4G",
- "updated": "2026-10-17",
+ "updated": "2026-10-18",
  "clock_period_ps": 833.333,
  "floorplan": {
   "file": "results/arch/hbm_die_d4g/plan/d4g_phy/compact.P.json",
@@ -11,9 +11,10 @@
   "adopted": "owner 0do 10-17 (plan (b) + levers); DIAGNOSTIC until HBM-B-RTL1..3 land",
   "die_um": [
    20200.0,
-   31220.56
+   31773.52
   ],
-  "previous": "results/arch/hbm_die_v15/d4f_a2p_fullcore/compact.P.json"
+  "previous": "results/arch/hbm_die_v15/d4f_a2p_fullcore/compact.P.json",
+  "smframe": "SMFRAME 10-18 (HANDOFF 0gd): SM column slot +276.48 um in y, die 31220.56 -> 31773.52 um (d4g_sm_frame.py)"
  },
  "source_contract": {
   "file": "results/arch/hbm_die_v15/source_contract/contract.json",
@@ -41,7 +42,7 @@
    "parent": null,
    "outline": {
     "w": 20200.0,
-    "h": 31220.56
+    "h": 31773.52
    },
    "origin": {
     "x": 0.0,
@@ -70,7 +71,7 @@
    },
    "origin": {
     "x": 6136.56,
-    "y": 13905.216,
+    "y": 14181.696,
     "orient": "R0"
    },
    "io_budget": {
@@ -157,7 +158,7 @@
    },
    "origin": {
     "x": 12983.328,
-    "y": 13995.288,
+    "y": 14271.768,
     "orient": "R0"
    },
    "io_budget": {
@@ -255,7 +256,7 @@
    },
    "origin": {
     "x": 6325.776,
-    "y": 16435.224,
+    "y": 16711.704,
     "orient": "R0"
    },
    "io_budget": {
@@ -359,7 +360,7 @@
    },
    "origin": {
     "x": 12983.328,
-    "y": 16435.224,
+    "y": 16711.704,
     "orient": "R0"
    },
    "io_budget": {
@@ -463,7 +464,7 @@
    },
    "origin": {
     "x": 7790.256,
-    "y": 9515.232,
+    "y": 9791.712,
     "orient": "MY"
    },
    "io_budget": {
@@ -878,7 +879,7 @@
    },
    "origin": {
     "x": 7979.256,
-    "y": 21025.44,
+    "y": 21301.92,
     "orient": "MY"
    },
    "io_budget": {
@@ -2693,7 +2694,7 @@
    },
    "origin": {
     "x": 5602.8,
-    "y": 29364.56,
+    "y": 29917.52,
     "orient": "MX"
    },
    "io_budget": {
@@ -2872,7 +2873,7 @@
    },
    "origin": {
     "x": 6739.6,
-    "y": 29364.56,
+    "y": 29917.52,
     "orient": "MX"
    },
    "io_budget": {
@@ -3077,7 +3078,7 @@
    },
    "origin": {
     "x": 7876.4,
-    "y": 29364.56,
+    "y": 29917.52,
     "orient": "MX"
    },
    "io_budget": {
@@ -3256,7 +3257,7 @@
    },
    "origin": {
     "x": 9013.2,
-    "y": 29364.56,
+    "y": 29917.52,
     "orient": "MX"
    },
    "io_budget": {
@@ -3435,7 +3436,7 @@
    },
    "origin": {
     "x": 10150.0,
-    "y": 29364.56,
+    "y": 29917.52,
     "orient": "MX"
    },
    "io_budget": {
@@ -3588,7 +3589,7 @@
    },
    "origin": {
     "x": 11286.8,
-    "y": 29364.56,
+    "y": 29917.52,
     "orient": "MX"
    },
    "io_budget": {
@@ -3767,7 +3768,7 @@
    },
    "origin": {
     "x": 12423.6,
-    "y": 29364.56,
+    "y": 29917.52,
     "orient": "MX"
    },
    "io_budget": {
@@ -3946,7 +3947,7 @@
    },
    "origin": {
     "x": 13560.4,
-    "y": 29364.56,
+    "y": 29917.52,
     "orient": "MX"
    },
    "io_budget": {
@@ -4212,7 +4213,7 @@
    },
    "origin": {
     "x": 429.84,
-    "y": 29235.384,
+    "y": 29788.344,
     "orient": "R0"
    },
    "io_budget": {
@@ -4299,7 +4300,7 @@
    },
    "origin": {
     "x": 7899.984,
-    "y": 14935.32,
+    "y": 15211.8,
     "orient": "R0"
    },
    "io_budget": {
@@ -4343,7 +4344,7 @@
    },
    "origin": {
     "x": 7899.984,
-    "y": 15435.36,
+    "y": 15711.84,
     "orient": "R0"
    },
    "io_budget": {
@@ -4387,7 +4388,7 @@
    },
    "origin": {
     "x": 11538.072,
-    "y": 15405.336,
+    "y": 15681.816,
     "orient": "R0"
    },
    "io_budget": {
@@ -4437,7 +4438,7 @@
    },
    "origin": {
     "x": 11581.272,
-    "y": 15245.28,
+    "y": 15521.76,
     "orient": "R0"
    },
    "io_budget": {
@@ -4490,7 +4491,7 @@
    },
    "origin": {
     "x": 11434.824,
-    "y": 10137.312,
+    "y": 10413.792,
     "orient": "R0"
    },
    "version": 2,
@@ -4532,7 +4533,7 @@
    },
    "origin": {
     "x": 2962.44,
-    "y": 14935.32,
+    "y": 15211.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -4588,7 +4589,7 @@
    },
    "origin": {
     "x": 17887.608,
-    "y": 14935.32,
+    "y": 15211.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -4644,7 +4645,7 @@
    },
    "origin": {
     "x": 692.496,
-    "y": 14935.32,
+    "y": 15211.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -4700,7 +4701,7 @@
    },
    "origin": {
     "x": 1827.36,
-    "y": 14935.32,
+    "y": 15211.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -4756,7 +4757,7 @@
    },
    "origin": {
     "x": 19022.688,
-    "y": 14935.32,
+    "y": 15211.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -4812,7 +4813,7 @@
    },
    "origin": {
     "x": 19955.16,
-    "y": 20799.504,
+    "y": 21075.984,
     "orient": "R0"
    },
    "clock_entry": {
@@ -4887,7 +4888,7 @@
    },
    "origin": {
     "x": 16918.848,
-    "y": 20799.504,
+    "y": 21075.984,
     "orient": "R0"
    },
    "clock_entry": {
@@ -4962,7 +4963,7 @@
    },
    "origin": {
     "x": 19955.16,
-    "y": 17774.424,
+    "y": 18050.904,
     "orient": "R0"
    },
    "clock_entry": {
@@ -5037,7 +5038,7 @@
    },
    "origin": {
     "x": 16918.848,
-    "y": 17774.424,
+    "y": 18050.904,
     "orient": "R0"
    },
    "clock_entry": {
@@ -5112,7 +5113,7 @@
    },
    "origin": {
     "x": 426.384,
-    "y": 20799.504,
+    "y": 21075.984,
     "orient": "R0"
    },
    "clock_entry": {
@@ -5187,7 +5188,7 @@
    },
    "origin": {
     "x": 3568.104,
-    "y": 20799.504,
+    "y": 21075.984,
     "orient": "R0"
    },
    "clock_entry": {
@@ -5262,7 +5263,7 @@
    },
    "origin": {
     "x": 426.384,
-    "y": 17774.424,
+    "y": 18050.904,
     "orient": "R0"
    },
    "clock_entry": {
@@ -5337,7 +5338,7 @@
    },
    "origin": {
     "x": 3568.104,
-    "y": 17774.424,
+    "y": 18050.904,
     "orient": "R0"
    },
    "clock_entry": {
@@ -5412,7 +5413,7 @@
    },
    "origin": {
     "x": 19955.16,
-    "y": 9864.72,
+    "y": 10141.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -5487,7 +5488,7 @@
    },
    "origin": {
     "x": 16918.848,
-    "y": 9864.72,
+    "y": 10141.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -5562,7 +5563,7 @@
    },
    "origin": {
     "x": 19955.16,
-    "y": 12890.016,
+    "y": 13166.496,
     "orient": "R0"
    },
    "clock_entry": {
@@ -5637,7 +5638,7 @@
    },
    "origin": {
     "x": 16918.848,
-    "y": 12890.016,
+    "y": 13166.496,
     "orient": "R0"
    },
    "clock_entry": {
@@ -5712,7 +5713,7 @@
    },
    "origin": {
     "x": 426.384,
-    "y": 9864.72,
+    "y": 10141.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -5787,7 +5788,7 @@
    },
    "origin": {
     "x": 3473.496,
-    "y": 9864.72,
+    "y": 10141.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -5862,7 +5863,7 @@
    },
    "origin": {
     "x": 426.384,
-    "y": 12890.016,
+    "y": 13166.496,
     "orient": "R0"
    },
    "clock_entry": {
@@ -5937,7 +5938,7 @@
    },
    "origin": {
     "x": 3473.496,
-    "y": 12890.016,
+    "y": 13166.496,
     "orient": "R0"
    },
    "clock_entry": {
@@ -6130,7 +6131,7 @@
    },
    "origin": {
     "x": 2312.496,
-    "y": 14935.32,
+    "y": 15211.8,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -6178,7 +6179,7 @@
    },
    "origin": {
     "x": 18372.528,
-    "y": 14935.32,
+    "y": 15211.8,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -6226,7 +6227,7 @@
    },
    "origin": {
     "x": 42.336,
-    "y": 14935.32,
+    "y": 15211.8,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -6274,7 +6275,7 @@
    },
    "origin": {
     "x": 1177.416,
-    "y": 14935.32,
+    "y": 15211.8,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -6322,7 +6323,7 @@
    },
    "origin": {
     "x": 19507.608,
-    "y": 14935.32,
+    "y": 15211.8,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -6370,7 +6371,7 @@
    },
    "origin": {
     "x": 991.872,
-    "y": 21774.312,
+    "y": 22050.792,
     "orient": "R0"
    },
    "clock_entry": {
@@ -6427,7 +6428,7 @@
    },
    "origin": {
     "x": 4133.592,
-    "y": 21774.312,
+    "y": 22050.792,
     "orient": "R0"
    },
    "clock_entry": {
@@ -6484,7 +6485,7 @@
    },
    "origin": {
     "x": 991.872,
-    "y": 18749.016,
+    "y": 19025.496,
     "orient": "R0"
    },
    "clock_entry": {
@@ -6541,7 +6542,7 @@
    },
    "origin": {
     "x": 4133.592,
-    "y": 18749.016,
+    "y": 19025.496,
     "orient": "R0"
    },
    "clock_entry": {
@@ -6598,7 +6599,7 @@
    },
    "origin": {
     "x": 19057.68,
-    "y": 20607.696,
+    "y": 20884.176,
     "orient": "R0"
    },
    "clock_entry": {
@@ -6711,7 +6712,7 @@
    },
    "origin": {
     "x": 16010.568,
-    "y": 20607.696,
+    "y": 20884.176,
     "orient": "R0"
    },
    "clock_entry": {
@@ -6804,7 +6805,7 @@
    },
    "origin": {
     "x": 19057.68,
-    "y": 17582.4,
+    "y": 17858.88,
     "orient": "R0"
    },
    "clock_entry": {
@@ -6897,7 +6898,7 @@
    },
    "origin": {
     "x": 16010.568,
-    "y": 17582.4,
+    "y": 17858.88,
     "orient": "R0"
    },
    "clock_entry": {
@@ -6990,7 +6991,7 @@
    },
    "origin": {
     "x": 663.984,
-    "y": 20607.696,
+    "y": 20884.176,
     "orient": "R0"
    },
    "clock_entry": {
@@ -7103,7 +7104,7 @@
    },
    "origin": {
     "x": 3805.704,
-    "y": 20607.696,
+    "y": 20884.176,
     "orient": "R0"
    },
    "clock_entry": {
@@ -7196,7 +7197,7 @@
    },
    "origin": {
     "x": 663.984,
-    "y": 17582.4,
+    "y": 17858.88,
     "orient": "R0"
    },
    "clock_entry": {
@@ -7289,7 +7290,7 @@
    },
    "origin": {
     "x": 3805.704,
-    "y": 17582.4,
+    "y": 17858.88,
     "orient": "R0"
    },
    "clock_entry": {
@@ -7382,7 +7383,7 @@
    },
    "origin": {
     "x": 19057.68,
-    "y": 9864.72,
+    "y": 10141.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -7495,7 +7496,7 @@
    },
    "origin": {
     "x": 16010.568,
-    "y": 9864.72,
+    "y": 10141.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -7588,7 +7589,7 @@
    },
    "origin": {
     "x": 19057.68,
-    "y": 12890.016,
+    "y": 13166.496,
     "orient": "R0"
    },
    "clock_entry": {
@@ -7681,7 +7682,7 @@
    },
    "origin": {
     "x": 16010.568,
-    "y": 12890.016,
+    "y": 13166.496,
     "orient": "R0"
    },
    "clock_entry": {
@@ -7774,7 +7775,7 @@
    },
    "origin": {
     "x": 663.984,
-    "y": 9864.72,
+    "y": 10141.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -7887,7 +7888,7 @@
    },
    "origin": {
     "x": 3711.096,
-    "y": 9864.72,
+    "y": 10141.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -7980,7 +7981,7 @@
    },
    "origin": {
     "x": 663.984,
-    "y": 12890.016,
+    "y": 13166.496,
     "orient": "R0"
    },
    "clock_entry": {
@@ -8073,7 +8074,7 @@
    },
    "origin": {
     "x": 3711.096,
-    "y": 12890.016,
+    "y": 13166.496,
     "orient": "R0"
    },
    "clock_entry": {
@@ -8162,11 +8163,11 @@
    "parent": "die",
    "outline": {
     "w": 1939.68,
-    "h": 6678.72
+    "h": 6955.2
    },
    "origin": {
     "x": 961.2,
-    "y": 22485.816,
+    "y": 22762.296,
     "orient": "MX"
    },
    "clock_entry": {
@@ -8186,7 +8187,7 @@
    "version": 6,
    "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit | SMFRAME 10-18 (HANDOFF 0gd): SM column +276.48 um (4 rp4 tile rows 1529.28 -> 1598.4, 43.2 lattice)",
    "pin_windows": [
     {
      "face": "E",
@@ -8405,11 +8406,11 @@
    "parent": "die",
    "outline": {
     "w": 1939.68,
-    "h": 6678.72
+    "h": 6955.2
    },
    "origin": {
     "x": 3440.88,
-    "y": 22485.816,
+    "y": 22762.296,
     "orient": "MX"
    },
    "clock_entry": {
@@ -8429,7 +8430,7 @@
    "version": 6,
    "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit | SMFRAME 10-18 (HANDOFF 0gd): SM column +276.48 um (4 rp4 tile rows 1529.28 -> 1598.4, 43.2 lattice)",
    "pin_windows": [
     {
      "face": "E",
@@ -8648,11 +8649,11 @@
    "parent": "die",
    "outline": {
     "w": 1939.68,
-    "h": 6678.72
+    "h": 6955.2
    },
    "origin": {
     "x": 5480.568,
-    "y": 22485.816,
+    "y": 22762.296,
     "orient": "MX"
    },
    "clock_entry": {
@@ -8672,7 +8673,7 @@
    "version": 6,
    "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit | SMFRAME 10-18 (HANDOFF 0gd): SM column +276.48 um (4 rp4 tile rows 1529.28 -> 1598.4, 43.2 lattice)",
    "pin_windows": [
     {
      "face": "E",
@@ -8892,11 +8893,11 @@
    "parent": "die",
    "outline": {
     "w": 1939.68,
-    "h": 6678.72
+    "h": 6955.2
    },
    "origin": {
     "x": 7960.248,
-    "y": 22485.816,
+    "y": 22762.296,
     "orient": "MX"
    },
    "clock_entry": {
@@ -8916,7 +8917,7 @@
    "version": 6,
    "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit | SMFRAME 10-18 (HANDOFF 0gd): SM column +276.48 um (4 rp4 tile rows 1529.28 -> 1598.4, 43.2 lattice)",
    "pin_windows": [
     {
      "face": "N",
@@ -9136,11 +9137,11 @@
    "parent": "die",
    "outline": {
     "w": 1939.68,
-    "h": 6678.72
+    "h": 6955.2
    },
    "origin": {
     "x": 10299.96,
-    "y": 22485.816,
+    "y": 22762.296,
     "orient": "MX"
    },
    "clock_entry": {
@@ -9160,7 +9161,7 @@
    "version": 6,
    "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit | SMFRAME 10-18 (HANDOFF 0gd): SM column +276.48 um (4 rp4 tile rows 1529.28 -> 1598.4, 43.2 lattice)",
    "pin_windows": [
     {
      "face": "N",
@@ -9379,11 +9380,11 @@
    "parent": "die",
    "outline": {
     "w": 1939.68,
-    "h": 6678.72
+    "h": 6955.2
    },
    "origin": {
     "x": 12779.64,
-    "y": 22485.816,
+    "y": 22762.296,
     "orient": "MX"
    },
    "clock_entry": {
@@ -9403,7 +9404,7 @@
    "version": 6,
    "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit | SMFRAME 10-18 (HANDOFF 0gd): SM column +276.48 um (4 rp4 tile rows 1529.28 -> 1598.4, 43.2 lattice)",
    "pin_windows": [
     {
      "face": "N",
@@ -9621,11 +9622,11 @@
    "parent": "die",
    "outline": {
     "w": 1939.68,
-    "h": 6678.72
+    "h": 6955.2
    },
    "origin": {
     "x": 14819.328,
-    "y": 22485.816,
+    "y": 22762.296,
     "orient": "MX"
    },
    "clock_entry": {
@@ -9645,7 +9646,7 @@
    "version": 6,
    "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit | SMFRAME 10-18 (HANDOFF 0gd): SM column +276.48 um (4 rp4 tile rows 1529.28 -> 1598.4, 43.2 lattice)",
    "pin_windows": [
     {
      "face": "W",
@@ -9863,11 +9864,11 @@
    "parent": "die",
    "outline": {
     "w": 1939.68,
-    "h": 6678.72
+    "h": 6955.2
    },
    "origin": {
     "x": 17299.008,
-    "y": 22485.816,
+    "y": 22762.296,
     "orient": "MX"
    },
    "clock_entry": {
@@ -9887,7 +9888,7 @@
    "version": 6,
    "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit | SMFRAME 10-18 (HANDOFF 0gd): SM column +276.48 um (4 rp4 tile rows 1529.28 -> 1598.4, 43.2 lattice)",
    "pin_windows": [
     {
      "face": "W",
@@ -10105,7 +10106,7 @@
    "parent": "die",
    "outline": {
     "w": 1939.68,
-    "h": 6678.72
+    "h": 6955.2
    },
    "origin": {
     "x": 961.2,
@@ -10129,7 +10130,7 @@
    "version": 6,
    "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit | SMFRAME 10-18 (HANDOFF 0gd): SM column +276.48 um (4 rp4 tile rows 1529.28 -> 1598.4, 43.2 lattice)",
    "pin_windows": [
     {
      "face": "E",
@@ -10348,7 +10349,7 @@
    "parent": "die",
    "outline": {
     "w": 1939.68,
-    "h": 6678.72
+    "h": 6955.2
    },
    "origin": {
     "x": 3440.88,
@@ -10372,7 +10373,7 @@
    "version": 6,
    "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit | SMFRAME 10-18 (HANDOFF 0gd): SM column +276.48 um (4 rp4 tile rows 1529.28 -> 1598.4, 43.2 lattice)",
    "pin_windows": [
     {
      "face": "E",
@@ -10591,7 +10592,7 @@
    "parent": "die",
    "outline": {
     "w": 1939.68,
-    "h": 6678.72
+    "h": 6955.2
    },
    "origin": {
     "x": 5480.568,
@@ -10615,7 +10616,7 @@
    "version": 6,
    "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit | SMFRAME 10-18 (HANDOFF 0gd): SM column +276.48 um (4 rp4 tile rows 1529.28 -> 1598.4, 43.2 lattice)",
    "pin_windows": [
     {
      "face": "E",
@@ -10835,7 +10836,7 @@
    "parent": "die",
    "outline": {
     "w": 1939.68,
-    "h": 6678.72
+    "h": 6955.2
    },
    "origin": {
     "x": 7960.248,
@@ -10859,7 +10860,7 @@
    "version": 6,
    "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit | SMFRAME 10-18 (HANDOFF 0gd): SM column +276.48 um (4 rp4 tile rows 1529.28 -> 1598.4, 43.2 lattice)",
    "pin_windows": [
     {
      "face": "S",
@@ -11079,7 +11080,7 @@
    "parent": "die",
    "outline": {
     "w": 1939.68,
-    "h": 6678.72
+    "h": 6955.2
    },
    "origin": {
     "x": 10299.96,
@@ -11103,7 +11104,7 @@
    "version": 6,
    "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit | SMFRAME 10-18 (HANDOFF 0gd): SM column +276.48 um (4 rp4 tile rows 1529.28 -> 1598.4, 43.2 lattice)",
    "pin_windows": [
     {
      "face": "S",
@@ -11322,7 +11323,7 @@
    "parent": "die",
    "outline": {
     "w": 1939.68,
-    "h": 6678.72
+    "h": 6955.2
    },
    "origin": {
     "x": 12779.64,
@@ -11346,7 +11347,7 @@
    "version": 6,
    "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit | SMFRAME 10-18 (HANDOFF 0gd): SM column +276.48 um (4 rp4 tile rows 1529.28 -> 1598.4, 43.2 lattice)",
    "pin_windows": [
     {
      "face": "S",
@@ -11564,7 +11565,7 @@
    "parent": "die",
    "outline": {
     "w": 1939.68,
-    "h": 6678.72
+    "h": 6955.2
    },
    "origin": {
     "x": 14819.328,
@@ -11588,7 +11589,7 @@
    "version": 6,
    "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit | SMFRAME 10-18 (HANDOFF 0gd): SM column +276.48 um (4 rp4 tile rows 1529.28 -> 1598.4, 43.2 lattice)",
    "pin_windows": [
     {
      "face": "W",
@@ -11806,7 +11807,7 @@
    "parent": "die",
    "outline": {
     "w": 1939.68,
-    "h": 6678.72
+    "h": 6955.2
    },
    "origin": {
     "x": 17299.008,
@@ -11830,7 +11831,7 @@
    "version": 6,
    "grant": "a2p_sm_column_1016",
    "rtl_owner": "H-ELEM-A",
-   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit",
+   "notes": "A2P SM column 1939.68 x 6678.72: SM_HBM window on the PC-row short face, xw (>= 360 um) on the band short face; H-SM native portrait column kit pending (coordinator 10-16 19:30); exact pins from that kit | SMFRAME 10-18 (HANDOFF 0gd): SM column +276.48 um (4 rp4 tile rows 1529.28 -> 1598.4, 43.2 lattice)",
    "pin_windows": [
     {
      "face": "W",
@@ -12052,7 +12053,7 @@
    },
    "origin": {
     "x": 17160.552,
-    "y": 19460.52,
+    "y": 19737.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -12183,7 +12184,7 @@
    },
    "origin": {
     "x": 14113.44,
-    "y": 19460.52,
+    "y": 19737.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -12294,7 +12295,7 @@
    },
    "origin": {
     "x": 17160.552,
-    "y": 16435.224,
+    "y": 16711.704,
     "orient": "R0"
    },
    "clock_entry": {
@@ -12405,7 +12406,7 @@
    },
    "origin": {
     "x": 14113.44,
-    "y": 16435.224,
+    "y": 16711.704,
     "orient": "R0"
    },
    "clock_entry": {
@@ -12516,7 +12517,7 @@
    },
    "origin": {
     "x": 1336.824,
-    "y": 19460.52,
+    "y": 19737.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -12647,7 +12648,7 @@
    },
    "origin": {
     "x": 4478.544,
-    "y": 19460.52,
+    "y": 19737.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -12758,7 +12759,7 @@
    },
    "origin": {
     "x": 1336.824,
-    "y": 16435.224,
+    "y": 16711.704,
     "orient": "R0"
    },
    "clock_entry": {
@@ -12869,7 +12870,7 @@
    },
    "origin": {
     "x": 4478.544,
-    "y": 16435.224,
+    "y": 16711.704,
     "orient": "R0"
    },
    "clock_entry": {
@@ -12980,7 +12981,7 @@
    },
    "origin": {
     "x": 17160.552,
-    "y": 8934.624,
+    "y": 9211.104,
     "orient": "R0"
    },
    "clock_entry": {
@@ -13111,7 +13112,7 @@
    },
    "origin": {
     "x": 14113.44,
-    "y": 8934.624,
+    "y": 9211.104,
     "orient": "R0"
    },
    "clock_entry": {
@@ -13222,7 +13223,7 @@
    },
    "origin": {
     "x": 17160.552,
-    "y": 11959.92,
+    "y": 12236.4,
     "orient": "R0"
    },
    "clock_entry": {
@@ -13333,7 +13334,7 @@
    },
    "origin": {
     "x": 14113.44,
-    "y": 11959.92,
+    "y": 12236.4,
     "orient": "R0"
    },
    "clock_entry": {
@@ -13444,7 +13445,7 @@
    },
    "origin": {
     "x": 1242.432,
-    "y": 8934.624,
+    "y": 9211.104,
     "orient": "R0"
    },
    "clock_entry": {
@@ -13575,7 +13576,7 @@
    },
    "origin": {
     "x": 4289.544,
-    "y": 8934.624,
+    "y": 9211.104,
     "orient": "R0"
    },
    "clock_entry": {
@@ -13686,7 +13687,7 @@
    },
    "origin": {
     "x": 1242.432,
-    "y": 11959.92,
+    "y": 12236.4,
     "orient": "R0"
    },
    "clock_entry": {
@@ -13797,7 +13798,7 @@
    },
    "origin": {
     "x": 4289.544,
-    "y": 11959.92,
+    "y": 12236.4,
     "orient": "R0"
    },
    "clock_entry": {
@@ -13908,7 +13909,7 @@
    },
    "origin": {
     "x": 11156.4,
-    "y": 22120.56,
+    "y": 22397.04,
     "orient": "R0"
    },
    "clock_entry": {
@@ -13956,7 +13957,7 @@
    },
    "origin": {
     "x": 7945.344,
-    "y": 22120.56,
+    "y": 22397.04,
     "orient": "R0"
    },
    "clock_entry": {
@@ -14004,7 +14005,7 @@
    },
    "origin": {
     "x": 11869.2,
-    "y": 8769.384,
+    "y": 9045.864,
     "orient": "R0"
    },
    "clock_entry": {
@@ -14052,7 +14053,7 @@
    },
    "origin": {
     "x": 7756.128,
-    "y": 8769.384,
+    "y": 9045.864,
     "orient": "R0"
    },
    "clock_entry": {
@@ -14100,7 +14101,7 @@
    },
    "origin": {
     "x": 11820.384,
-    "y": 14459.04,
+    "y": 14735.52,
     "orient": "MX"
    },
    "version": 6,
@@ -14128,7 +14129,7 @@
    },
    "origin": {
     "x": 12100.104,
-    "y": 14935.32,
+    "y": 15211.8,
     "orient": "R0"
    },
    "clock_entry": {
@@ -14171,7 +14172,7 @@
    },
    "origin": {
     "x": 5600.8,
-    "y": 30021.76,
+    "y": 30574.72,
     "orient": "MX"
    },
    "version": 5,
@@ -15464,7 +15465,7 @@
    },
    "origin": {
     "x": 11252.952,
-    "y": 15210.72,
+    "y": 15487.2,
     "orient": "R0"
    },
    "version": 7,
@@ -16227,7 +16228,7 @@
    },
    "origin": {
     "x": 3679.344,
-    "y": 19580.616,
+    "y": 19857.096,
     "orient": "R0"
    },
    "layer_rule": "cluster",
@@ -16756,7 +16757,7 @@
    "grant": "universal_calendar_candidate_2330",
    "origin": {
     "x": 8286.408,
-    "y": 10117.44,
+    "y": 10393.92,
     "orient": "R0"
    },
    "outline": {
@@ -16798,7 +16799,7 @@
    "grant": "universal_calendar_candidate_2330",
    "origin": {
     "x": 10842.336,
-    "y": 8934.624,
+    "y": 9211.104,
     "orient": "MY"
    },
    "outline": {
@@ -16840,7 +16841,7 @@
    "grant": "universal_calendar_candidate_2330",
    "origin": {
     "x": 8824.68,
-    "y": 20860.2,
+    "y": 21136.68,
     "orient": "MX"
    },
    "outline": {
@@ -16882,7 +16883,7 @@
    "grant": "universal_calendar_candidate_2330",
    "origin": {
     "x": 10842.336,
-    "y": 22167.0,
+    "y": 22443.48,
     "orient": "R180"
    },
    "outline": {
@@ -16923,7 +16924,7 @@
    },
    "origin": {
     "x": 6136.56,
-    "y": 8934.624,
+    "y": 9211.104,
     "orient": "R0"
    },
    "clock_entry": {
@@ -16965,7 +16966,7 @@
    },
    "origin": {
     "x": 12464.928,
-    "y": 8934.624,
+    "y": 9211.104,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17007,7 +17008,7 @@
    },
    "origin": {
     "x": 6325.776,
-    "y": 20514.6,
+    "y": 20791.08,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17049,7 +17050,7 @@
    },
    "origin": {
     "x": 12464.928,
-    "y": 20514.6,
+    "y": 20791.08,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17091,7 +17092,7 @@
    },
    "origin": {
     "x": 8148.168,
-    "y": 10563.912,
+    "y": 10840.392,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17131,7 +17132,7 @@
    },
    "origin": {
     "x": 12321.72,
-    "y": 10767.168,
+    "y": 11043.648,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17171,7 +17172,7 @@
    },
    "origin": {
     "x": 7959.384,
-    "y": 20475.072,
+    "y": 20751.552,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17211,7 +17212,7 @@
    },
    "origin": {
     "x": 12321.72,
-    "y": 20315.016,
+    "y": 20591.496,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17251,7 +17252,7 @@
    },
    "origin": {
     "x": 6136.56,
-    "y": 10805.832,
+    "y": 11082.312,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17291,7 +17292,7 @@
    },
    "origin": {
     "x": 7834.968,
-    "y": 10115.28,
+    "y": 10391.76,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17327,7 +17328,7 @@
    },
    "origin": {
     "x": 13043.376,
-    "y": 10805.832,
+    "y": 11082.312,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17367,7 +17368,7 @@
    },
    "origin": {
     "x": 11932.92,
-    "y": 10275.12,
+    "y": 10551.6,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17403,7 +17404,7 @@
    },
    "origin": {
     "x": 6325.776,
-    "y": 19002.6,
+    "y": 19279.08,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17443,7 +17444,7 @@
    },
    "origin": {
     "x": 8024.184,
-    "y": 20565.36,
+    "y": 20841.84,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17479,7 +17480,7 @@
    },
    "origin": {
     "x": 13043.376,
-    "y": 19002.6,
+    "y": 19279.08,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17519,7 +17520,7 @@
    },
    "origin": {
     "x": 11932.92,
-    "y": 20513.304,
+    "y": 20789.784,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17629,7 +17630,7 @@
    },
    "origin": {
     "x": 862.272,
-    "y": 22086.648,
+    "y": 22363.128,
     "orient": "R0"
    },
    "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
@@ -17657,7 +17658,7 @@
    },
    "origin": {
     "x": 862.272,
-    "y": 21647.52,
+    "y": 21924.0,
     "orient": "R0"
    },
    "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
@@ -17685,7 +17686,7 @@
    },
    "origin": {
     "x": 4003.776,
-    "y": 22086.648,
+    "y": 22363.128,
     "orient": "R0"
    },
    "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
@@ -17713,7 +17714,7 @@
    },
    "origin": {
     "x": 4003.776,
-    "y": 21647.52,
+    "y": 21924.0,
     "orient": "R0"
    },
    "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
@@ -17741,7 +17742,7 @@
    },
    "origin": {
     "x": 862.272,
-    "y": 19061.352,
+    "y": 19337.832,
     "orient": "R0"
    },
    "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
@@ -17769,7 +17770,7 @@
    },
    "origin": {
     "x": 862.272,
-    "y": 18622.224,
+    "y": 18898.704,
     "orient": "R0"
    },
    "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
@@ -17797,7 +17798,7 @@
    },
    "origin": {
     "x": 4003.776,
-    "y": 19061.352,
+    "y": 19337.832,
     "orient": "R0"
    },
    "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
@@ -17825,7 +17826,7 @@
    },
    "origin": {
     "x": 4003.776,
-    "y": 18622.224,
+    "y": 18898.704,
     "orient": "R0"
    },
    "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
@@ -17853,7 +17854,7 @@
    },
    "origin": {
     "x": 9100.08,
-    "y": 14550.192,
+    "y": 14826.672,
     "orient": "R0"
    },
    "pins": [],
@@ -17881,7 +17882,7 @@
    },
    "origin": {
     "x": 11494.872,
-    "y": 14935.32,
+    "y": 15211.8,
     "orient": "R0"
    },
    "pins": [],
@@ -17905,7 +17906,7 @@
    },
    "origin": {
     "x": 3040.2,
-    "y": 8365.464,
+    "y": 8641.944,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p0_eg",
@@ -17935,7 +17936,7 @@
    },
    "origin": {
     "x": 2932.2,
-    "y": 8398.944,
+    "y": 8675.424,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p0_bd",
@@ -17960,7 +17961,7 @@
    },
    "origin": {
     "x": 3073.68,
-    "y": 8045.784,
+    "y": 8322.264,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p0_bfq0",
@@ -17985,7 +17986,7 @@
    },
    "origin": {
     "x": 3073.68,
-    "y": 7726.104,
+    "y": 8002.584,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p0_bfq1",
@@ -18010,7 +18011,7 @@
    },
    "origin": {
     "x": 3073.68,
-    "y": 7406.424,
+    "y": 7682.904,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p0_bfq2",
@@ -18035,7 +18036,7 @@
    },
    "origin": {
     "x": 3073.68,
-    "y": 7086.744,
+    "y": 7363.224,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p0_bfq3",
@@ -18060,7 +18061,7 @@
    },
    "origin": {
     "x": 7559.568,
-    "y": 8365.464,
+    "y": 8641.944,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p1_eg",
@@ -18090,7 +18091,7 @@
    },
    "origin": {
     "x": 7451.568,
-    "y": 8398.944,
+    "y": 8675.424,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p1_bd",
@@ -18115,7 +18116,7 @@
    },
    "origin": {
     "x": 7593.048,
-    "y": 8045.784,
+    "y": 8322.264,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p1_bfq0",
@@ -18140,7 +18141,7 @@
    },
    "origin": {
     "x": 7593.048,
-    "y": 7726.104,
+    "y": 8002.584,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p1_bfq1",
@@ -18165,7 +18166,7 @@
    },
    "origin": {
     "x": 7593.048,
-    "y": 7406.424,
+    "y": 7682.904,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p1_bfq2",
@@ -18190,7 +18191,7 @@
    },
    "origin": {
     "x": 7593.048,
-    "y": 7086.744,
+    "y": 7363.224,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p1_bfq3",
@@ -18215,7 +18216,7 @@
    },
    "origin": {
     "x": 12378.96,
-    "y": 8365.464,
+    "y": 8641.944,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p2_eg",
@@ -18245,7 +18246,7 @@
    },
    "origin": {
     "x": 12270.96,
-    "y": 8398.944,
+    "y": 8675.424,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p2_bd",
@@ -18270,7 +18271,7 @@
    },
    "origin": {
     "x": 12412.44,
-    "y": 8045.784,
+    "y": 8322.264,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p2_bfq0",
@@ -18295,7 +18296,7 @@
    },
    "origin": {
     "x": 12412.44,
-    "y": 7726.104,
+    "y": 8002.584,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p2_bfq1",
@@ -18320,7 +18321,7 @@
    },
    "origin": {
     "x": 12412.44,
-    "y": 7406.424,
+    "y": 7682.904,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p2_bfq2",
@@ -18345,7 +18346,7 @@
    },
    "origin": {
     "x": 12412.44,
-    "y": 7086.744,
+    "y": 7363.224,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p2_bfq3",
@@ -18370,7 +18371,7 @@
    },
    "origin": {
     "x": 16898.328,
-    "y": 8365.464,
+    "y": 8641.944,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p3_eg",
@@ -18400,7 +18401,7 @@
    },
    "origin": {
     "x": 16790.328,
-    "y": 8398.944,
+    "y": 8675.424,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p3_bd",
@@ -18425,7 +18426,7 @@
    },
    "origin": {
     "x": 16931.808,
-    "y": 8045.784,
+    "y": 8322.264,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p3_bfq0",
@@ -18450,7 +18451,7 @@
    },
    "origin": {
     "x": 16931.808,
-    "y": 7726.104,
+    "y": 8002.584,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p3_bfq1",
@@ -18475,7 +18476,7 @@
    },
    "origin": {
     "x": 16931.808,
-    "y": 7406.424,
+    "y": 7682.904,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p3_bfq2",
@@ -18500,7 +18501,7 @@
    },
    "origin": {
     "x": 16931.808,
-    "y": 7086.744,
+    "y": 7363.224,
     "orient": "R0"
    },
    "plan_block": "xq_SW_p3_bfq3",
@@ -18525,7 +18526,7 @@
    },
    "origin": {
     "x": 3040.2,
-    "y": 22485.816,
+    "y": 22762.296,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p0_eg",
@@ -18555,7 +18556,7 @@
    },
    "origin": {
     "x": 2932.2,
-    "y": 22519.296,
+    "y": 22795.776,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p0_bd",
@@ -18580,7 +18581,7 @@
    },
    "origin": {
     "x": 3073.68,
-    "y": 22876.776,
+    "y": 23153.256,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p0_bfq0",
@@ -18605,7 +18606,7 @@
    },
    "origin": {
     "x": 3073.68,
-    "y": 23196.456,
+    "y": 23472.936,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p0_bfq1",
@@ -18630,7 +18631,7 @@
    },
    "origin": {
     "x": 3073.68,
-    "y": 23516.136,
+    "y": 23792.616,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p0_bfq2",
@@ -18655,7 +18656,7 @@
    },
    "origin": {
     "x": 3073.68,
-    "y": 23835.816,
+    "y": 24112.296,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p0_bfq3",
@@ -18680,7 +18681,7 @@
    },
    "origin": {
     "x": 7559.568,
-    "y": 22485.816,
+    "y": 22762.296,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p1_eg",
@@ -18710,7 +18711,7 @@
    },
    "origin": {
     "x": 7451.568,
-    "y": 22519.296,
+    "y": 22795.776,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p1_bd",
@@ -18735,7 +18736,7 @@
    },
    "origin": {
     "x": 7593.048,
-    "y": 22876.776,
+    "y": 23153.256,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p1_bfq0",
@@ -18760,7 +18761,7 @@
    },
    "origin": {
     "x": 7593.048,
-    "y": 23196.456,
+    "y": 23472.936,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p1_bfq1",
@@ -18785,7 +18786,7 @@
    },
    "origin": {
     "x": 7593.048,
-    "y": 23516.136,
+    "y": 23792.616,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p1_bfq2",
@@ -18810,7 +18811,7 @@
    },
    "origin": {
     "x": 7593.048,
-    "y": 23835.816,
+    "y": 24112.296,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p1_bfq3",
@@ -18835,7 +18836,7 @@
    },
    "origin": {
     "x": 12378.96,
-    "y": 22485.816,
+    "y": 22762.296,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p2_eg",
@@ -18865,7 +18866,7 @@
    },
    "origin": {
     "x": 12270.96,
-    "y": 22519.296,
+    "y": 22795.776,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p2_bd",
@@ -18890,7 +18891,7 @@
    },
    "origin": {
     "x": 12412.44,
-    "y": 22876.776,
+    "y": 23153.256,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p2_bfq0",
@@ -18915,7 +18916,7 @@
    },
    "origin": {
     "x": 12412.44,
-    "y": 23196.456,
+    "y": 23472.936,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p2_bfq1",
@@ -18940,7 +18941,7 @@
    },
    "origin": {
     "x": 12412.44,
-    "y": 23516.136,
+    "y": 23792.616,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p2_bfq2",
@@ -18965,7 +18966,7 @@
    },
    "origin": {
     "x": 12412.44,
-    "y": 23835.816,
+    "y": 24112.296,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p2_bfq3",
@@ -18990,7 +18991,7 @@
    },
    "origin": {
     "x": 16898.328,
-    "y": 22485.816,
+    "y": 22762.296,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p3_eg",
@@ -19020,7 +19021,7 @@
    },
    "origin": {
     "x": 16790.328,
-    "y": 22519.296,
+    "y": 22795.776,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p3_bd",
@@ -19045,7 +19046,7 @@
    },
    "origin": {
     "x": 16931.808,
-    "y": 22876.776,
+    "y": 23153.256,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p3_bfq0",
@@ -19070,7 +19071,7 @@
    },
    "origin": {
     "x": 16931.808,
-    "y": 23196.456,
+    "y": 23472.936,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p3_bfq1",
@@ -19095,7 +19096,7 @@
    },
    "origin": {
     "x": 16931.808,
-    "y": 23516.136,
+    "y": 23792.616,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p3_bfq2",
@@ -19120,7 +19121,7 @@
    },
    "origin": {
     "x": 16931.808,
-    "y": 23835.816,
+    "y": 24112.296,
     "orient": "MX"
    },
    "plan_block": "xq_NW_p3_bfq3",
@@ -19169,7 +19170,7 @@
    },
    "origin": {
     "x": 14618.016,
-    "y": 29460.24,
+    "y": 30013.2,
     "orient": "MX"
    },
    "pins": [],
@@ -19193,7 +19194,7 @@
    },
    "origin": {
     "x": 7178.328,
-    "y": 10805.832,
+    "y": 11082.312,
     "orient": "R0"
    },
    "pins": [],
@@ -19216,7 +19217,7 @@
    },
    "origin": {
     "x": 12072.96,
-    "y": 10925.4,
+    "y": 11201.88,
     "orient": "MY"
    },
    "pins": [],
@@ -19239,7 +19240,7 @@
    },
    "origin": {
     "x": 12072.96,
-    "y": 19344.6,
+    "y": 19621.08,
     "orient": "R180"
    },
    "pins": [],
@@ -19262,7 +19263,7 @@
    },
    "origin": {
     "x": 7367.328,
-    "y": 19457.928,
+    "y": 19734.408,
     "orient": "MX"
    },
    "pins": [],
@@ -19285,7 +19286,7 @@
    },
    "origin": {
     "x": 12105.072,
-    "y": 15655.68,
+    "y": 15932.16,
     "orient": "R0"
    },
    "pins": [],
@@ -19323,7 +19324,7 @@
    },
    "origin": {
     "x": 11108.88,
-    "y": 29186.136,
+    "y": 29739.096,
     "orient": "R0"
    },
    "pins": [],
@@ -19342,7 +19343,7 @@
    },
    "origin": {
     "x": 6686.928,
-    "y": 12237.264,
+    "y": 12513.744,
     "orient": "R0"
    },
    "pins": [],
@@ -19362,7 +19363,7 @@
    },
    "origin": {
     "x": 16690.752,
-    "y": 14815.44,
+    "y": 15091.92,
     "orient": "R0"
    },
    "pins": [],
@@ -19382,7 +19383,7 @@
    },
    "origin": {
     "x": 11512.368,
-    "y": 21711.24,
+    "y": 21987.72,
     "orient": "R0"
    },
    "pins": [],
@@ -19402,7 +19403,7 @@
    },
    "origin": {
     "x": 867.024,
-    "y": 15655.464,
+    "y": 15931.944,
     "orient": "MX"
    },
    "pins": [],
@@ -19422,7 +19423,7 @@
    },
    "origin": {
     "x": 14084.928,
-    "y": 19343.88,
+    "y": 19620.36,
     "orient": "R0"
    },
    "pins": [],
@@ -19445,7 +19446,7 @@
    },
    "origin": {
     "x": 844.344,
-    "y": 9705.96,
+    "y": 9982.44,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19468,7 +19469,7 @@
    },
    "origin": {
     "x": 3891.456,
-    "y": 9705.96,
+    "y": 9982.44,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19491,7 +19492,7 @@
    },
    "origin": {
     "x": 844.344,
-    "y": 12731.256,
+    "y": 13007.736,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19514,7 +19515,7 @@
    },
    "origin": {
     "x": 3891.456,
-    "y": 12731.256,
+    "y": 13007.736,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19560,7 +19561,7 @@
    },
    "origin": {
     "x": 7236.216,
-    "y": 14329.224,
+    "y": 14605.704,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19583,7 +19584,7 @@
    },
    "origin": {
     "x": 20146.752,
-    "y": 9707.04,
+    "y": 9983.52,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19606,7 +19607,7 @@
    },
    "origin": {
     "x": 17099.64,
-    "y": 9707.04,
+    "y": 9983.52,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19629,7 +19630,7 @@
    },
    "origin": {
     "x": 20146.752,
-    "y": 12732.336,
+    "y": 13008.816,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19652,7 +19653,7 @@
    },
    "origin": {
     "x": 17099.64,
-    "y": 12732.336,
+    "y": 13008.816,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19675,7 +19676,7 @@
    },
    "origin": {
     "x": 14052.528,
-    "y": 13947.336,
+    "y": 14223.816,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19698,7 +19699,7 @@
    },
    "origin": {
     "x": 20146.752,
-    "y": 21536.712,
+    "y": 21813.192,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19721,7 +19722,7 @@
    },
    "origin": {
     "x": 17099.64,
-    "y": 21536.712,
+    "y": 21813.192,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19744,7 +19745,7 @@
    },
    "origin": {
     "x": 20146.752,
-    "y": 18511.416,
+    "y": 18787.896,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19767,7 +19768,7 @@
    },
    "origin": {
     "x": 17099.64,
-    "y": 18511.416,
+    "y": 18787.896,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19790,7 +19791,7 @@
    },
    "origin": {
     "x": 14052.528,
-    "y": 17240.904,
+    "y": 17517.384,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19813,7 +19814,7 @@
    },
    "origin": {
     "x": 881.064,
-    "y": 21534.552,
+    "y": 21811.032,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19836,7 +19837,7 @@
    },
    "origin": {
     "x": 4022.784,
-    "y": 21534.552,
+    "y": 21811.032,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19859,7 +19860,7 @@
    },
    "origin": {
     "x": 881.064,
-    "y": 18509.256,
+    "y": 18785.736,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19882,7 +19883,7 @@
    },
    "origin": {
     "x": 4022.784,
-    "y": 18509.256,
+    "y": 18785.736,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19905,7 +19906,7 @@
    },
    "origin": {
     "x": 6130.296,
-    "y": 29312.712,
+    "y": 29865.672,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -19928,7 +19929,7 @@
    },
    "origin": {
     "x": 7427.376,
-    "y": 16820.136,
+    "y": 17096.616,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -28477,7 +28478,7 @@
       },
       "new": {
        "x": 7178.328,
-       "y": 10805.832,
+       "y": 11082.312,
        "orient": "R0"
       }
      },
@@ -28490,7 +28491,7 @@
       },
       "new": {
        "x": 12072.96,
-       "y": 10925.4,
+       "y": 11201.88,
        "orient": "MY"
       }
      },
@@ -28503,7 +28504,7 @@
       },
       "new": {
        "x": 7367.328,
-       "y": 19457.928,
+       "y": 19734.408,
        "orient": "MX"
       }
      },
@@ -28516,7 +28517,7 @@
       },
       "new": {
        "x": 12072.96,
-       "y": 19344.6,
+       "y": 19621.08,
        "orient": "R180"
       }
      }

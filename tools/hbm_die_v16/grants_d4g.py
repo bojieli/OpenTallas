@@ -80,15 +80,89 @@ def quad(n):
     return m.group(1) if m else None
 
 
+def region_map(P, slots, W, pd, od, prev=None):
+    """d4g clock region map from the plan + the die slots (also --regions-only: SMFRAME 10-18 re-runs it on the
+    transformed grants, tools/hbm_die_v16/d4g_sm_frame.py)"""
+    # ---- clock region map (regional, per quadrant)
+    regions, inst = {}, {}
+    prev = prev or {}
+
+    def reg_of(b, r):
+        q = quad(b)
+        cx, cy = r['x'] + r['w'] / 2, r['y'] + r['h'] / 2
+        if b.startswith('sm_'):
+            return b
+        if b.startswith('phy_'):
+            return f'phy_{b[4:]}'
+        if b.startswith('pc_'):
+            st, k = b[3:5], int(b[5:])
+            return f'pc_{ {"SW": ("SW", "SE"), "NW": ("NW", "NE")}[st][k >= 4] }'
+        if b.startswith('idxs_'):
+            return f'idx_{q}'
+        if b.startswith('xq_'):
+            st, p = b[3:5], int(b[7])
+            return f'xq_{ {"SW": ("SW", "SE"), "NW": ("NW", "NE")}[st][p >= 2] }'
+        if b.startswith(('lk_', 'ep_', 'tkm', 'idx_', 'host_')) or q is None:
+            return 'strip_' + ('W' if cx < W / 3 else ('E' if cx > 2 * W / 3 else 'C'))
+        # core band of quadrant q: <= 4 mm boxes along x (3 boxes of ~3 mm)
+        k = int(min(2, (cx if q in ('SW', 'NW') else W - cx) // (W / 2 / 3)))
+        return f'band_{q}{k}'
+    members = collections.defaultdict(list)
+    for b, r in P.items():
+        members[reg_of(b, r)].append(b)
+    for rg, bs in members.items():
+        xs = [P[b]['x'] + P[b]['w'] / 2 for b in bs]; ys = [P[b]['y'] + P[b]['h'] / 2 for b in bs]
+        regions[rg] = dict(site=[round(sum(xs) / len(xs), 1), round(sum(ys) / len(ys), 1)], members=sorted(bs))
+        for b in bs:
+            inst[b] = dict(region=rg, site=regions[rg]['site'])
+    for s in slots:                          # slot name -> region of the d4g block under its centre
+        if s['name'] in inst:
+            continue
+        cx, cy = s['origin']['x'] + s['outline']['w'] / 2, s['origin']['y'] + s['outline']['h'] / 2
+        hs = [b for b, r in P.items() if inside(r, cx, cy)]
+        if not hs and s['name'] in prev and prev[s['name']]['region'] in regions:
+            # SMFRAME 10-18: a slot in a gap (the H-D4G2 sfup_SE/NE re-plan) keeps its previous map region
+            rg = prev[s['name']]['region']; inst[s['name']] = dict(region=rg, site=regions[rg]['site']); continue
+        if hs:
+            b = min(hs, key=lambda b: P[b]['w'] * P[b]['h']); inst[s['name']] = dict(region=inst[b]['region'], site=inst[b]['site'])
+    for n in ('idx_s0', 'idx_s1', 'hc_eng'):
+        q = {'idx_s0': 'SW', 'idx_s1': 'NW', 'hc_eng': 'SE'}[n]
+        inst[n] = dict(region=f'idx_{q}', site=regions[f'idx_{q}']['site'])
+    near = 600.0
+    nb = set()
+    rl = sorted(regions)
+    for i, x in enumerate(rl):
+        for y in rl[i + 1:]:
+            for bx in regions[x]['members']:
+                A = P[bx]
+                if any(max(A['x'] - P[by_]['x'] - P[by_]['w'], P[by_]['x'] - A['x'] - A['w'], A['y'] - P[by_]['y'] - P[by_]['h'],
+                           P[by_]['y'] - A['y'] - A['h']) <= near for by_ in regions[y]['members']):
+                    nb.add((x, y)); break
+    rm = dict(schema='opentallas.die_clock.region_map.v1', plan=str((pd / 'compact.P.json').relative_to(ROOT)),
+              rule='d4g (H-D4G): per-quadrant regions -- each SM its own region, the quadrant PC half, the quadrant core band in '
+                   '3 boxes (<= 4 mm), the IDX corner, the XQL stores of the quadrant; strip W/C/E; PHY its own region; '
+                   f'neighbours = outlines within {near} um', instances=inst, regions=regions, neighbours=sorted(map(list, nb)))
+    (od / 'd4g_region_map.json').write_text(json.dumps(rm, indent=1) + '\n')
+    return regions, nb
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--plan-dir', required=True); ap.add_argument('--out-dir', required=True)
     ap.add_argument('--grants', default=str(GRANTS))
+    ap.add_argument('--regions-only', action='store_true', help='rebuild only d4g_region_map.json from OUT_DIR/grants_d4g.json')
     a = ap.parse_args()
     pd, od = ROOT / a.plan_dir, ROOT / a.out_dir
     od.mkdir(parents=True, exist_ok=True)
     PA = json.loads(A_PLAN.read_text()); P = json.loads((pd / 'compact.P.json').read_text())
     W, H = json.loads((pd / 'compact.metrics.json').read_text())['die_um']
+    if a.regions_only:
+        G2 = json.loads((od / 'grants_d4g.json').read_text())
+        rmp = od / 'd4g_region_map.json'
+        prev = json.loads(rmp.read_text())['instances'] if rmp.is_file() else {}
+        regions, nb = region_map(P, [s for s in G2['slots'] if s.get('parent') == 'die'], W, pd, od, prev)
+        print(json.dumps(dict(regions=len(regions), neighbour_pairs=len(nb))))
+        return
     G = json.loads(Path(a.grants).read_text())
     G2 = copy.deepcopy(G)
     slots = [s for s in G2['slots'] if s.get('parent') == 'die']
@@ -227,62 +301,7 @@ def main():
                                                                    unhosted=rep['unhosted']))
     (od / 'grants_d4g.json').write_text(json.dumps(G2, indent=1) + '\n')
     (od / 'grants_d4g_report.json').write_text(json.dumps(rep, indent=1) + '\n')
-    # ---- clock region map (regional, per quadrant)
-    regions, inst = {}, {}
-
-    def reg_of(b, r):
-        q = quad(b)
-        cx, cy = r['x'] + r['w'] / 2, r['y'] + r['h'] / 2
-        if b.startswith('sm_'):
-            return b
-        if b.startswith('phy_'):
-            return f'phy_{b[4:]}'
-        if b.startswith('pc_'):
-            st, k = b[3:5], int(b[5:])
-            return f'pc_{ {"SW": ("SW", "SE"), "NW": ("NW", "NE")}[st][k >= 4] }'
-        if b.startswith('idxs_'):
-            return f'idx_{q}'
-        if b.startswith('xq_'):
-            st, p = b[3:5], int(b[7])
-            return f'xq_{ {"SW": ("SW", "SE"), "NW": ("NW", "NE")}[st][p >= 2] }'
-        if b.startswith(('lk_', 'ep_', 'tkm', 'idx_', 'host_')) or q is None:
-            return 'strip_' + ('W' if cx < W / 3 else ('E' if cx > 2 * W / 3 else 'C'))
-        # core band of quadrant q: <= 4 mm boxes along x (3 boxes of ~3 mm)
-        k = int(min(2, (cx if q in ('SW', 'NW') else W - cx) // (W / 2 / 3)))
-        return f'band_{q}{k}'
-    members = collections.defaultdict(list)
-    for b, r in P.items():
-        members[reg_of(b, r)].append(b)
-    for rg, bs in members.items():
-        xs = [P[b]['x'] + P[b]['w'] / 2 for b in bs]; ys = [P[b]['y'] + P[b]['h'] / 2 for b in bs]
-        regions[rg] = dict(site=[round(sum(xs) / len(xs), 1), round(sum(ys) / len(ys), 1)], members=sorted(bs))
-        for b in bs:
-            inst[b] = dict(region=rg, site=regions[rg]['site'])
-    for s in slots:                          # slot name -> region of the d4g block under its centre
-        if s['name'] in inst:
-            continue
-        cx, cy = s['origin']['x'] + s['outline']['w'] / 2, s['origin']['y'] + s['outline']['h'] / 2
-        hs = [b for b, r in P.items() if inside(r, cx, cy)]
-        if hs:
-            b = min(hs, key=lambda b: P[b]['w'] * P[b]['h']); inst[s['name']] = dict(region=inst[b]['region'], site=inst[b]['site'])
-    for n in ('idx_s0', 'idx_s1', 'hc_eng'):
-        q = {'idx_s0': 'SW', 'idx_s1': 'NW', 'hc_eng': 'SE'}[n]
-        inst[n] = dict(region=f'idx_{q}', site=regions[f'idx_{q}']['site'])
-    near = 600.0
-    nb = set()
-    rl = sorted(regions)
-    for i, x in enumerate(rl):
-        for y in rl[i + 1:]:
-            for bx in regions[x]['members']:
-                A = P[bx]
-                if any(max(A['x'] - P[by_]['x'] - P[by_]['w'], P[by_]['x'] - A['x'] - A['w'], A['y'] - P[by_]['y'] - P[by_]['h'],
-                           P[by_]['y'] - A['y'] - A['h']) <= near for by_ in regions[y]['members']):
-                    nb.add((x, y)); break
-    rm = dict(schema='opentallas.die_clock.region_map.v1', plan=str((pd / 'compact.P.json').relative_to(ROOT)),
-              rule='d4g (H-D4G): per-quadrant regions -- each SM its own region, the quadrant PC half, the quadrant core band in '
-                   '3 boxes (<= 4 mm), the IDX corner, the XQL stores of the quadrant; strip W/C/E; PHY its own region; '
-                   f'neighbours = outlines within {near} um', instances=inst, regions=regions, neighbours=sorted(map(list, nb)))
-    (od / 'd4g_region_map.json').write_text(json.dumps(rm, indent=1) + '\n')
+    regions, nb = region_map(P, slots, W, pd, od)
     print(json.dumps(dict(slots=len(slots), moved=len(rep['moved']), legalised=len(rep['legalised']),
                           legalised_max_um=max([v['moved_um'] for v in rep['legalised'].values()] or [0]),
                           unhosted=len(rep['unhosted']), special=rep['special'], regions=len(regions), neighbour_pairs=len(nb))))

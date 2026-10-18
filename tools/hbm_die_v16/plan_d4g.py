@@ -32,9 +32,32 @@ sys.path.insert(0, str(ROOT / 'tools/hbm_die_v15'))
 import plan_study_1017 as S  # noqa: E402
 
 CX = S.W_DIE / 2
+BAND_Y0 = S.BAND_Y
+SM_H0 = 6678.72          # d4f A2P SM column slot height (H-SM 4 x 4 rp4 tile column)
 
 
-def plan_d4g(PA, channel=400.0, idx='band'):
+def sm_frame(PA, sm_dh=0.0):
+    """SMFRAME (HANDOFF 0gd 10-18): the SM column slot grows by sm_dh um in y (the rp4 tile 1529.28 -> 1598.4 for the
+    43.2-um macro lattice).  The S-half SM row keeps its PHY-side (bottom) edge; the XQL pair stores (anchored at the
+    SM row's inner edge), the core band (S.BAND_Y), the centre strip and the whole N half (mirrored about the new die
+    height) move by sm_dh, so every link keeps its length except the SM column itself.  Returns a PA copy; sets
+    S.BAND_Y (module-level, used by plan_b and the quadrant core template)."""
+    PA = copy.deepcopy(PA)
+    S.BAND_Y = round(BAND_Y0 + sm_dh, 3)
+    if not sm_dh:
+        return PA
+    for i in range(8):
+        r = PA[f'sm_SW{i}']
+        assert abs(r['h'] - SM_H0) < 1e-6, (i, r['h'])
+        r['h'] = round(r['h'] + sm_dh, 3)
+    for n, r in PA.items():
+        if n.startswith('xq_SW_p'):
+            r['y'] = round(r['y'] + sm_dh, 3)
+    return PA
+
+
+def plan_d4g(PA, channel=400.0, idx='band', sm_dh=0.0):
+    """PA must already carry the SM frame (sm_frame(PA, sm_dh)); sm_dh here moves the PHY-side config leaves."""
     P, H = S.plan_b(PA, side='inner')
     P = copy.deepcopy(P)
     for st, north in (('SW', False), ('NW', True)):
@@ -85,7 +108,8 @@ def plan_d4g(PA, channel=400.0, idx='band'):
         # quadrant core and the host tree, over the PC row of its stack
         for q, sgn in ((qW, -1), (qE, 1)):
             r = P[f'pleaf_{q}']
-            P[f'pleaf_{q}'] = S.rect(CX - r['w'] if sgn < 0 else CX, r['y'], r['w'], r['h'])
+            ly = r['y'] + (-sm_dh if north else sm_dh)          # keeps its distance to the SM row's inner edge
+            P[f'pleaf_{q}'] = S.rect(CX - r['w'] if sgn < 0 else CX, ly, r['w'], r['h'])
     return P, H
 
 
@@ -151,14 +175,47 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--rows', required=True); ap.add_argument('--manifest', required=True)
     ap.add_argument('--out', required=True); ap.add_argument('--channel', type=float, default=400.0)
+    ap.add_argument('--sm-dh', type=float, default=0.0,
+                    help='SMFRAME (HANDOFF 0gd): SM column slot height growth in um (4 rp4 tile rows x 69.12 = 276.48)')
+    ap.add_argument('--only', default='', help='comma list of plans to write (default all); geometry + graph eval only when '
+                    'the bus rows / manifest are absent (the run8 manifest was deleted 10-17)')
     a = ap.parse_args()
     out = ROOT / a.out
     out.mkdir(parents=True, exist_ok=True)
-    PA = json.loads((S.A_DIR / 'compact.P.json').read_text())
+    PA = sm_frame(json.loads((S.A_DIR / 'compact.P.json').read_text()), a.sm_dh)
     GA = json.loads((S.A_DIR / 'compact.graph.json').read_text())
+    for n, v in GA['nodes'].items():
+        if n.startswith('sm_') and a.sm_dh:
+            v['h'] = round(v['h'] + a.sm_dh, 3); v['area_mm2'] = round(v['w'] * v['h'] / 1e6, 4)
+            v['provenance'] = v.get('provenance', '') + f' | SMFRAME 10-18: +{a.sm_dh:g} um (rp4 tile 1598.4 = 37 x 43.2)'
     PB, HB = S.plan_b(PA, side='inner')
-    plans = {'b': PB, 'd4g_band': plan_d4g(PA, a.channel, 'band')[0], 'd4g_corner': plan_d4g(PA, a.channel, 'corner')[0],
-             'd4g_phy': plan_d4g(PA, a.channel, 'phy')[0]}
+    plans = {'b': PB, 'd4g_band': plan_d4g(PA, a.channel, 'band', a.sm_dh)[0], 'd4g_corner': plan_d4g(PA, a.channel, 'corner', a.sm_dh)[0],
+             'd4g_phy': plan_d4g(PA, a.channel, 'phy', a.sm_dh)[0]}
+    if a.only:
+        plans = {k: v for k, v in plans.items() if k in a.only.split(',')}
+    if not (Path(a.rows).is_file() and Path(a.manifest).is_file()):
+        res = {}
+        for t, P in plans.items():
+            ev = S.write_plan(out / t, P, S.graph_b(GA), HB, t)
+            cut = ev['cut_phy_unmasked']
+            res[t] = dict(die_um=[S.W_DIE, round(HB, 2)], die_mm2=ev['die_mm2'], cut_v=cut['worst_v']['ratio'],
+                          cut_h=cut['worst_h']['ratio'], graph_bit_mm=ev['sum_bits_mm'], stages_bw=ev['stages_bw'],
+                          per_class_stages={k: v['stages_bw'] for k, v in ev['per_class'].items()},
+                          longest_class_um=ev['by_class_longest_um'], overlaps=ev['overlaps'], outside=ev['outside'],
+                          sm_hbm_offset_um=sm_hbm_offsets(P), sm_dh_um=a.sm_dh)
+            print(t, json.dumps({k: res[t][k] for k in ('die_um', 'die_mm2', 'cut_v', 'cut_h', 'graph_bit_mm', 'stages_bw', 'overlaps', 'outside')}), flush=True)
+        (out / 'plan_geometry.json').write_text(json.dumps(res, indent=1, default=list))
+        if 'd4g_phy' in plans:
+            import matplotlib
+            matplotlib.use('Agg')
+            import matplotlib.pyplot as plt
+            import plan_study_draw_1017 as Dr
+            fig2, ax2 = plt.subplots(figsize=(6, 8.4), dpi=260)
+            P = plans['d4g_phy']
+            Dr.draw(ax2, P, S.graph_b(GA), S.W_DIE, HB, f'HBM die d4g plan, SM frame +{a.sm_dh:g} um ({S.W_DIE / 1000:.2f} x {HB / 1000:.2f} mm)',
+                    Dr.quad_boxes(P, S.W_DIE, S.QS))
+            fig2.tight_layout(); fig2.savefig(out / 'd4g_plan.png'); plt.close(fig2)
+        return res
     rows = json.loads(Path(a.rows).read_text())['rows']
     for r in rows:
         r['cls'] = 'cfg_no_pad' if r['driver'].startswith('host_cp') and r['domain'] == 'serial' else r['cls']
