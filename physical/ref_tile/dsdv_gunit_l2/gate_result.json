@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "dsdv_gunit_l2",
  "verdict": "WARN",
- "generated": "2026-10-17T20:40:13-0700",
+ "generated": "2026-10-17T21:14:59-0700",
  "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "232fb250e4caf30c5f227deb35171ac340f9286e",
+  "start_commit": "1939427d37c4a220556fe27a747eefed62e007cb",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "02135f5aeab22764baa10e6cf358691ea2b6e8b51fc80e9ab3cec7533bbddb31",
-  "manifest_sha256": "88bc2a663302c83d484f10115ba018ab8bb392b69c3f52b79ece67bfe0bfccc5",
+  "archive_sha256": "e01a1bb0cfecc5a0fe9346af27f17036de029b6c7d227d7ec766e86818f85d5e",
+  "manifest_sha256": "a43d5d93a5a111223d4043d925c1f8faac172ab9ac50df3c303d0a47c533b3dd",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -21955,8 +21955,8 @@
    {
     "path": "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l2.sv",
     "kind": "file",
-    "sha256": "665b9f03970b06308d95d015507bc25b1c8928a24d553d92f1577e8ee543535d",
-    "git_blob": "9257e632b794667418e062914549d832d3be93b9",
+    "sha256": "6cb09bb989bc7d768ebc017d4e91ab2c42ea70a75ec2f05ebe588b58058e3723",
+    "git_blob": "c8215f2bd2416ceb1d6e6086aab63fd17b365c0c",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -22003,8 +22003,8 @@
    {
     "path": "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv",
     "kind": "file",
-    "sha256": "ecabaf80fe4db78ec6e721cb76fac13bb12b17c9a5236eab01c10862eae92990",
-    "git_blob": "cb24baf64340088ac43469876ef1eda167948948",
+    "sha256": "a6dbff49469a01100bc5c55840c4f8e9489bb7068d0565afa477fbfffed8f822",
+    "git_blob": "aab0189f937fd7622739ce9cf773a252b6bc55cb",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -162379,14 +162379,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 138797929,
+   "archive_bytes": 138798481,
    "unpacked_bytes": 847233024,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "7fe3e06676901563b154a454434c16c7de7a817d",
+   "origin_main": "adcd89b477300504a5f1c73677b1e599767efdfd",
    "content_sha256": "46212c4a006d162487f2749d8e6001edbd7428d03a257e125b6e20e6b3202016",
    "files": [
     {
@@ -163455,13 +163455,13 @@
     "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit.sv": "7ab49dd70f4275205a7398f72e78e9d6a380a4da37cd81e0b79082899cd9e518",
     "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0.sv": "7ffca61b9d0c2f2f4766755a38bbb008bfdce88f96b8d493cb6a18a0b037ee91",
     "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1.sv": "50fca72c351054c0449facd805c7b39a6f5aef299d373a5cf3f83a8dba22d441",
-    "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l2.sv": "665b9f03970b06308d95d015507bc25b1c8928a24d553d92f1577e8ee543535d",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l2.sv": "6cb09bb989bc7d768ebc017d4e91ab2c42ea70a75ec2f05ebe588b58058e3723",
     "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l3.sv": "9d6b0a3a864904161c018d5265e8163674328e93cd663865a4e1e35b4c289116",
     "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4.sv": "84f1467577912ab590f7ac490971ea7d124254a2c35d736da2d4277b30a78942",
     "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5.sv": "fb7fa2deaf4846e43b2d3a6ad97b62445e4d528af92fcbd2647e50981a84c712",
     "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv": "459b62b22794f3ca054acd9899ed9056b1aa5fe99248af54f55a01f7427b2d13",
     "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail.sv": "0844c783d1951a8ed1d34fb2f814dd6bc6c5b8e828fa8d2d144232fa8ec68625",
-    "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv": "ecabaf80fe4db78ec6e721cb76fac13bb12b17c9a5236eab01c10862eae92990",
+    "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv": "a6dbff49469a01100bc5c55840c4f8e9489bb7068d0565afa477fbfffed8f822",
     "rtl/dsrom_sys/s81_dv/unit/test/gunit_vectors.py": "c66a3dd30bcccce1c6fbe67b0098f0b2c6046dfbce4567821667e13b395bbb89",
     "rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh": "cdb3fc468291bb547c5616c21ced0f92eee4538693ea1ce022eaa76d90ff39cf",
     "rtl/dsrom_sys/s81_dv/unit/test/run_gunit_native_eq.sh": "0108259a3974f9f268031c2f3b301d896e756e09baff2ce9cea80ce9c33e8413",
@@ -164061,16 +164061,16 @@
    },
    "digest": "27d33d0216c35a03be1c5966314a8b2daaba920816a6961d7eb0cb5cfa5a9657"
   },
-  "captured": "2026-10-17T20:35:28-0700",
+  "captured": "2026-10-17T21:11:19-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/dsdv_gunit_l2/signoff_ffrepair.sdc"
   },
-  "remote_script_sha256": "0cb7d388430d0947f6742265183dd3df0b9347dd9b83bcaf9c425f6cd2d4d7ab",
+  "remote_script_sha256": "fabd88ca2aaf1042831035d5afed45023e437c68d13e37f3b30f61df1c31777f",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsdv_gunit_l2-20261017-203105",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsdv_gunit_l2-20261017-210723",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -164078,11 +164078,11 @@
   ]
  },
  "clock": {
-  "max_root_sinks": 3331,
+  "max_root_sinks": 3599,
   "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": 333.7,
-  "tt_spread_ps": 48.6,
+  "tt_insertion_ps": 326.4,
+  "tt_spread_ps": 40.8,
   "declared_clock": "cts",
   "limits": {
    "sinks": 15000,
@@ -164095,16 +164095,16 @@
     "clock": "core_clk",
     "tt": {
      "boundary": {
-      "n": 3321,
-      "mean": 303.1,
-      "min": 285.1,
-      "max": 333.7
+      "n": 3587,
+      "mean": 300.7,
+      "min": 285.6,
+      "max": 326.4
      },
      "all": {
-      "n": 3331,
-      "mean": 303.1,
-      "min": 285.1,
-      "max": 333.7
+      "n": 3599,
+      "mean": 300.7,
+      "min": 285.6,
+      "max": 326.4
      },
      "errors": [],
      "macros": null,
@@ -164114,25 +164114,25 @@
   ],
   "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "3,331 sinks on the largest root <= 15,000; measured TT insertion 333.7 ps, leaf spread 48.6 ps"
+  "text": "3,599 sinks on the largest root <= 15,000; measured TT insertion 326.4 ps, leaf spread 40.8 ps"
  },
  "items": [
   {
    "severity": "WARN",
    "check": "util",
-   "message": "synthesized std area 1326 um2 + macros 0 in core 57499: util 2%",
-   "fix": "set \"std_area_um2\": 1326 and drop 'outline' (gen sizes to util 0.52)"
+   "message": "synthesized std area 1396 um2 + macros 0 in core 57499: util 2%",
+   "fix": "set \"std_area_um2\": 1396 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
    "severity": "WARN",
    "check": "textbook.high_fanout",
-   "message": "reset u_rr.rst_n[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 568 loads (568 flops, e.g. col$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "message": "reset u_rr.rst_n[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 570 loads (570 flops, e.g. col$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
    "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
   },
   {
    "severity": "WARN",
    "check": "textbook.util_channel",
-   "message": "utilisation 2.4% outside 45%-65% (std 1352 + macro 0 um2 in 57499 um2): shrink the outline (long wires / sparse placement)",
+   "message": "utilisation 2.5% outside 45%-65% (std 1421 + macro 0 um2 in 57499 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ]
