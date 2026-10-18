@@ -38,10 +38,18 @@ PHY_NFACE = __import__('os').environ.get('OT_SPLIT_PHY_NFACE', '0') == '1'
 NFACE_ROOT = 'physical/qwen_missing_phy/nface_0030'
 SERDES = 'ot_qfd_serdes_112g_x12_phy_s597'
 SERDES_VIEW = 'physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597'
+# OT_SPLIT_PHY_TALL=1 (Q-DIEPLAN3 / coordinator 10-17, dv2r8f3 W column): the MODELED edge variants with the long side
+# vertical (tools/qwen_missing/link_phy_gen.py --nface --tall) and the collective re-kitted tall (1,563.816 x
+# 4,157.976): each PHY's FDI block faces the collective (PHYs below R0 -> collective S face, PHYs above MX -> N face),
+# the collective's core-side pins on its E face (toward the slice row)
+PHY_TALL = __import__('os').environ.get('OT_SPLIT_PHY_TALL', '0') == '1'
+if PHY_TALL:
+    PHY_NFACE = True
+    NFACE_ROOT = 'physical/qwen_missing_phy/nface_tall_1017'
 if PHY_NFACE:
     UCIE_VIEW = NFACE_ROOT + '/ot_qfd_ucie_x64_phy'
     SERDES_VIEW = NFACE_ROOT + '/ot_qfd_serdes_112g_x12_phy_s597'
-SERDES_WH = (2320.056, 1563.57)
+SERDES_WH = (2320.056, 1563.57) if not PHY_TALL else (1563.57, 2320.056)
 UCIE_WH = (777.6, 777.6)
 FW_U, FW_S = 1043, 597
 ORDER = ('io_serdes_2', 'io_serdes_1', 'io_collective', 'io_serdes', 'io_ucie')
@@ -51,6 +59,59 @@ CORE_CLOCKS = (['clk'] + [f'clk_pfold{k}' for k in range(4)] + [f'clk_xfold{k}' 
                [f'clk_pring{k}' for k in range(2)] + [f'clk_sring{k}' for k in range(5)] +
                [f'clk_rring{k}' for k in range(2)])
 OPEN_INPUTS = ('cmd_v', 'cmd_mode', 'cmd_words', 'cmd_tag', 'pkg_s', 'die_ps')
+# Q-DIE11-COLL 10-18 (HANDOFF 0ea item 3): the PHY side of each SerDes face runs on that SerDes PHY's own FDI clock.
+# qfd_coll_static_face (eleven roots per face, index f*11+k): k0 cal_ck, k1 cal_lck, k2 tx_wck, k3 tx_rck, k4 rx_wck,
+# k5 rx_rck, k6..10 codec_ck[0..4].  Core-side roots (k0, k2, k5) stay on clk_coll; the link-side roots (calendar
+# link half, TX CDC read, RX CDC write, codec controller + four SRAM banks: k1, k3, k4, k6..10) of SerDes face s
+# (production face 2+s) and that PHY's clk pin form trunk clk_serdes<s> (root clk_rx.pll_serdes<s>).  The source
+# programme (rtl/rom/ot_coll_static_linkcal.sv, tb_coll_tp8_static_links lck) makes the link roots MESOCHRONOUS with
+# the core root (same PLL, same 833.3-ps period, fixed phase): records cross only through the static CDC SRAM with
+# its 2-flop publication synchroniser, 1-bit calendar tokens are related-clock timed paths, so STA keeps them related
+# (no asynchronous group).  The UCIe faces 0/1 are NOT moved: in SIX_FIVE mode their codecs feed qfd_ucie_static_share
+# and the gearbox core side (gearbox_core_ck, 1.2 GHz); the UCIe FDI clock reaches only fdi_ck / fdi_rx_ck.
+# OT_SPLIT_COLL_PHY_CLOCKS=1 enables it; the default is on for the DV plan (OT_SPLIT_DV set), off otherwise so older
+# plans regenerate byte-identically.
+_E = __import__('os').environ
+PHY_CLOCKS = _E.get('OT_SPLIT_COLL_PHY_CLOCKS', '1' if _E.get('OT_SPLIT_DV') else '0') == '1'
+FACE_CORE_SLOTS = (0, 2, 5)
+FACE_LINK_SLOTS = (1, 3, 4, 6, 7, 8, 9, 10)
+FACE_CODEC_CTL = 6
+
+
+def serdes_face_bits(s, slots=FACE_LINK_SLOTS):
+    """face_ck bit indices of SerDes s (production face 2+s) for the given per-face root slots."""
+    return [(2 + s) * 11 + k for k in slots]
+
+
+def phy_clock_bits():
+    return {b for s in range(3) for b in serdes_face_bits(s)}
+
+
+def related_pins(ports, phy_clocks):
+    """Per-port (per-bit) capture / launch clock of every data pin of the production collective, from its RTL:
+    serdes_* bits of SerDes s -> face (2+s) codec controller root face_ck[(2+s)*11+6]; shared_tx / shared_tx_valid ->
+    fdi_ck (gearbox FDI TX registers); shared_rx -> fdi_rx_ck (rxp pin register); shared_rx_valid -> fdi_ck (pv_q);
+    ucie_up -> face 0 codec controller face_ck[6]; everything else (command / payload / out / fault / straps) -> clk.
+    Only emitted with phy_clocks (the stand-in Liberty otherwise relates every pin to clk[0], byte-identical)."""
+    if not phy_clocks:
+        return {}
+    ctl = [f'face_ck[{serdes_face_bits(s, (FACE_CODEC_CTL,))[0]}]' for s in range(3)]
+    rel = {}
+    for p in ('serdes_tx', 'serdes_rx'):
+        rel[p] = [ctl[k // FW_S] for k in range(3 * FW_S)]
+    for p in ('serdes_tx_valid', 'serdes_rx_valid', 'serdes_up'):
+        rel[p] = list(ctl)
+    rel.update(shared_tx=['fdi_ck'] * FW_U, shared_tx_valid=['fdi_ck'], shared_rx=['fdi_rx_ck'] * FW_U,
+               shared_rx_valid=['fdi_ck'], ucie_up=['face_ck[6]'])
+    for p, bits in rel.items():
+        if p not in ports or ports[p][0] != len(bits):
+            raise ValueError(f'{MASTER}.{p}: related-clock map does not match the RTL port width')
+    # die-level slice aliases (port_join: srx0 / stx1 / serdes_up2 ...) carry the same per-bit clocks, so a kit that
+    # splits a bus across faces keeps its related clocks (the stand-in Liberty is written from the LEF port names)
+    for a, (real, idx) in _aliases(ports).items():
+        if real in rel:
+            rel[a] = [rel[real][k] for k in idx]
+    return rel
 
 
 def _aliases(ports):
@@ -67,8 +128,9 @@ def _aliases(ports):
     return a
 
 
-def core_clock_pins(ports):
-    return (CORE_CLOCKS + [f'face_ck{k}' for k in range(ports['face_ck'][0])] +
+def core_clock_pins(ports, phy_clocks=False):
+    skip = phy_clock_bits() if phy_clocks else set()
+    return (CORE_CLOCKS + [f'face_ck{k}' for k in range(ports['face_ck'][0]) if k not in skip] +
             [f'relay_ck{k}' for k in range(ports['relay_ck'][0])] + ['gearbox_core_ck'])
 
 
@@ -106,8 +168,8 @@ def apply(model):
     for i in model['insts']:
         if i.name in ORDER:
             continue
-        if i.x < hi_x and lo_x < i.x + i.w and i.y < y0 + max(r.h for r in row) and y0 < i.y + i.h:
-            raise ValueError(f'static IO row overlaps {i.name}')
+        if i.x < hi_x and lo_x < i.x + i.w and i.y < y0 + max(r.h for r in row) and y0 < i.y + i.h and not PHY_TALL:
+            raise ValueError(f'static IO row overlaps {i.name}')   # (tall kit: the dv die places the IO column itself)
     io_old = set(need)
     removed, kept = [], []
     rst_bus = None
@@ -143,21 +205,32 @@ def apply(model):
                 (f'serdes{s}_up', 'coll_fdi', 1, [(n, 'tx_up'), ('io_collective', f'serdes_up{s}')])]
     # clocks: the 1.2 GHz core roots on one trunk (domain 'stream'), the 1 GHz FDI roots + every PHY on the FDI
     # trunk (die_sta_libs domain 'ucie'); the 6:5 relation is inside the collective (root rational-clock contract)
-    new += [('clk_coll', 'clock_trunk', 1, [('clk_rx', 'pll_coll')] + [('io_collective', p) for p in core_clock_pins(ports)]),
+    if PHY_CLOCKS and ports['face_ck'][0] != 55:
+        raise ValueError(f'{MASTER}: OT_SPLIT_COLL_PHY_CLOCKS expects 5 faces x 11 roots, got face_ck {ports["face_ck"][0]}')
+    new += [('clk_coll', 'clock_trunk', 1, [('clk_rx', 'pll_coll')] +
+             [('io_collective', p) for p in core_clock_pins(ports, PHY_CLOCKS)]),
             ('clk_ucie', 'clock_trunk', 1, [('clk_rx', 'pll_ucie')] + [('io_collective', p) for p in fdi_clock_pins(ports)] +
-             [(n, 'clk') for n in ('io_ucie',) + SERDES_INST])]
+             [(n, 'clk') for n in ('io_ucie',) + (() if PHY_CLOCKS else SERDES_INST)])]
+    if PHY_CLOCKS:
+        # each SerDes PHY's FDI clock and the link-side roots of its face: one trunk per PHY (see FACE_LINK_SLOTS)
+        new += [(f'clk_serdes{s}', 'clock_trunk', 1, [('clk_rx', f'pll_serdes{s}')] +
+                 [('io_collective', f'face_ck{b}') for b in serdes_face_bits(s)] + [(n, 'clk')])
+                for s, n in enumerate(SERDES_INST)]
     if 'blk_ck' in ports:
         # These are actual 200 MHz clock inputs, not 1.2 GHz roots with a
         # pessimistic timing annotation. Their common-PLL implementation and
         # physical phase delivery remain explicit integration obligations.
         new.append(('clk_coll_blk', 'clock_trunk', 1, [('clk_rx', 'pll_coll_blk')] +
                     [('io_collective', f'blk_ck{k}') for k in range(ports['blk_ck'][0])]))
-    model['buses'] = [q for q in kept if q[0] not in ('clk_ucie', 'clk_coll')] + new
+    model['buses'] = [q for q in kept if q[0] not in ('clk_ucie', 'clk_coll', 'clk_serdes0', 'clk_serdes1',
+                                                       'clk_serdes2')] + new
     # These retained production PHY paths run on the actual 1 GHz FDI roots
     # above. Legacy instance domains (serial_0p9 / link_serdes) are not their
     # clock contract after replacing the collective with its native RTL.
+    # With PHY_CLOCKS a SerDes bus relay takes its own PHY's FDI clock (clk_serdes<s>), never the UCIe root.
     model.setdefault('relay_clock_by_bus', {}).update(
-        {b: 'clk_ucie' for b, c, _, _ in new if c == 'coll_fdi'})
+        {b: (f'clk_serdes{b[6]}' if PHY_CLOCKS and b.startswith('serdes') else 'clk_ucie')
+         for b, c, _, _ in new if c == 'coll_fdi'})
     split = model.setdefault('port_split', {})
     split[MASTER] = dict(cd=[('in_data', 512), ('in_last', 1), ('in_mode', 1), ('in_tag', 32), ('in_valid', 1)],
                          cc=[('out_data', 512), ('out_last', 1), ('out_rank', 3), ('out_err', 1), ('out_valid', 1)])
@@ -189,8 +262,10 @@ def apply(model):
                row=[dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for i in row],
                row_span_um=[round(lo_x, 4), round(hi_x, 4)],
                historical_row={n: dict(zip(('x', 'y', 'w', 'h', 'm'), q)) for n, q in old.items()},
-               clock_roots=dict(core=len(core_clock_pins(ports)), fdi=len(fdi_clock_pins(ports)),
-                                total=len(core_clock_pins(ports)) + len(fdi_clock_pins(ports))),
+               clock_roots=dict(core=len(core_clock_pins(ports, PHY_CLOCKS)), fdi=len(fdi_clock_pins(ports)),
+                                total=len(core_clock_pins(ports, PHY_CLOCKS)) + len(fdi_clock_pins(ports)),
+                                **(dict(serdes_link={f'clk_serdes{s}': [f'face_ck{b}' for b in serdes_face_bits(s)]
+                                                     for s in range(3)}) if PHY_CLOCKS else {})),
                open_inputs=dict(cmd_v_mode_words_tag='collective command producer absent from the compute graph '
                                 '(static controller ABI has no 50-bit command output): Q-control / Q-COLL',
                                 pkg_s_die_ps='die identity needs package strap bumps (a constant is wrong for 7 of 8 dies)',
@@ -200,6 +275,11 @@ def apply(model):
                            'adds no relay on class coll_fdi',
                unread_outputs=sorted(p for p, (n, d) in ports.items() if d == 'output' and p not in connected),
                qualified=False)
+    if PHY_CLOCKS:
+        rec.update(phy_clocks=dict(env='OT_SPLIT_COLL_PHY_CLOCKS', core_slots=list(FACE_CORE_SLOTS),
+                                   link_slots=list(FACE_LINK_SLOTS), mode='mesochronous related (same PLL, 833.3 ps)',
+                                   ucie_faces='face 0/1 link side = gearbox core side (clk_coll); FDI = fdi_ck/fdi_rx_ck'),
+                   related_pins=related_pins(ports, True))
     model['native_static_io_bind'] = rec
     return rec
 
@@ -235,16 +315,48 @@ def install_master(M, model, Master):
         # each PHY's top-edge FDI block (2 empty slots for clk / rst_n, then the phy_order bits at 0.048) lands on the
         # collective S face at the same die x (clamped inside the face): straight M5 tracks across the PHY/collective gap
         phys = {'io_serdes': phy_order(0), 'io_serdes_1': phy_order(1), 'io_serdes_2': phy_order(2), 'io_ucie': EU}
+        if PHY_TALL:
+            # nearest PHY first on each face: it owns the window at its own x; a farther PHY's window is placed clear of
+            # the nearer PHYs' bodies (it runs past them in the open column / channel), else at the face's E end
+            def _dist(pn):
+                ph = by_[pn]
+                return (ph.y - (inst.y + inst.h)) if ph.y >= inst.y + inst.h - 1e-3 else (inst.y - (ph.y + ph.h))
+            phys = dict(sorted(phys.items(), key=lambda t: _dist(t[0])))
+        _wins = {}
         for pn, items in phys.items():
             ph = by_[pn]
-            if ph.y + ph.h > inst.y + 1e-3 or ph.orient != 'R0':
+            above = PHY_TALL and ph.y >= inst.y + inst.h - 1e-3
+            # tall kit on a dv die: until the dv hook has placed the IO column (model['dv_io_placed']) this frame is
+            # provisional and is redrawn there; the geometry rule is enforced on the final placement only
+            prov = PHY_TALL and not model.get('dv_io_placed')
+            if above and ph.orient != 'MX' and not prov:
+                raise ValueError(f'{MASTER}: OT_SPLIT_PHY_TALL needs {pn} MX above the collective')
+            if not above and (ph.y + ph.h > inst.y + 1e-3 or ph.orient != 'R0') and not prov:
                 raise ValueError(f'{MASTER}: OT_SPLIT_PHY_NFACE needs {pn} R0 below the collective')
             nb = 2 + sum(len(list(b)) for _, b in items)
             x = ph.x + ph.w / 2 - nb * .048 / 2 - inst.x
             x = min(max(x, 4.0), inst.w - 4.0 - nb * .048) + 2 * .048
+            fc = 'N' if above else 'S'
+            if PHY_TALL:
+                # a farther PHY on the same face: its window clears the nearer PHYs' bodies (+12 um) and their windows
+                # (+4 um); when the nearer bodies span the whole face it goes to the E end (reached via the channel)
+                ww = nb * .048
+                near = [by_[q] for q in phys if q != pn and (by_[q].y >= inst.y + inst.h - 1e-3) == above
+                        and _dist(q) < _dist(pn)]
+                wins = _wins.setdefault(fc, [])
+                lo = max([b_.x + b_.w - inst.x + 12.0 for b_ in near if b_.x - inst.x < x + ww] + [x])
+                for a_, b2_ in sorted(wins):
+                    if lo < b2_ + 4.0 and a_ - 4.0 < lo + ww:
+                        lo = b2_ + 4.0
+                if lo + ww > inst.w - 4.0 or any(b_.x - inst.x < lo + ww and lo < b_.x + b_.w - inst.x for b_ in near):
+                    lo = inst.w - 4.0 - ww
+                    if any(lo < b2_ + 4.0 and a_ - 4.0 < lo + ww for a_, b2_ in wins):
+                        raise ValueError(f'{MASTER}: no {fc}-face FDI window for {pn}')
+                wins.append((lo, lo + ww))
+                x = lo + 2 * .048
             for p, bits in items:
                 for b in bits:
-                    pos[(p, b)] = ('S', 'M5', round(.012 + round((x - .012) / .048) * .048, 4))
+                    pos[(p, b)] = (fc, 'M5', round(.012 + round((x - .012) / .048) * .048, 4))
                     x += .048
     elif 'io_ucie' in by_ and 'io_serdes' in by_ and by_['io_ucie'].x < by_['io_serdes'].x:
         # Q-COMPUTE-DIE r2h (00:30 10-16): the UCIe PHY abuts the E face (homes order collective|ucie|serdes0), so it
@@ -254,16 +366,18 @@ def install_master(M, model, Master):
     else:
         end = column('E', phy_order(0), win)             # SerDes0, abutting the E PHY window
         column('E', EU, max(end, win + 60.0) + 8.0)       # UCIe, over SerDes0 (M6+) to the PHY beyond it
-    end = column('W', phy_order(1), win)                 # SerDes1 (MY PHY, window faces E)
-    column('W', phy_order(2), end + 8.0)                 # SerDes2, over SerDes1
+    if not PHY_NFACE:
+        end = column('W', phy_order(1), win)             # SerDes1 (MY PHY, window faces E)
+        column('W', phy_order(2), end + 8.0)             # SerDes2, over SerDes1
     placed = {p for p, _ in pos}
     north = [p for p in ports if p not in placed]
-    x = (q.w - sum(ports[p][0] * .096 + 2.0 for p in north)) / 2
+    cf, cl, cL = ('E', 'M4', q.h) if PHY_TALL else ('N', 'M5', q.w)    # core-side pins: E face on the tall kit
+    x = (cL - sum(ports[p][0] * .096 + 2.0 for p in north)) / 2
     if x < 4.0:
-        raise ValueError(f'{MASTER}: N-face pins exceed the outline')
+        raise ValueError(f'{MASTER}: {cf}-face pins exceed the outline')
     for p in north:
         for b in range(ports[p][0]):
-            pos[(p, b)] = ('N', 'M5', snap(x))
+            pos[(p, b)] = (cf, cl, snap(x))
             x += .096
         x += 2.0
     for f in 'NEWS':

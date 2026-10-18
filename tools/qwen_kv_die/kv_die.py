@@ -882,8 +882,30 @@ D2DS_REC_TX = ['record_tx_observed_v', 'record_tx']
 D2DS_REC_RX = ['record_send_kind', 'record_witness_slot', 'record_rx_v', 'record_rx']
 
 
+# QLB-KV 10-18 (QXF-LINK 6ef1a097f F4): TXDP is a REQUIRED parameter of qkd_d2d_static (PR = 1; a zero byte does not
+# elaborate: D2D_TXDP_NOT_COMPILED).  The die binds the compiler's KV vector D2D_TXDP_K from the committed calendar image
+# (rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh, tools/qwen_split/d2d_cal_seq_image.py); OT_KV_D2D_TXDP_K=0x...
+# overrides it with the vector layer_compile.py derives for THIS die (RUN/layer_compile/d2d/txdp.svh QKD_D2D_TXDP).
+# kv_relay_check.sh gates bound == compiled.
+D2D_CAL_IMAGE = 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
+
+
+def d2d_txdp_k():
+    ov = os.environ.get('OT_KV_D2D_TXDP_K')
+    if ov:
+        return int(ov, 0)
+    t = (ROOT / D2D_CAL_IMAGE).read_text()
+    mm = re.search(r"localparam\s*\[31:0\]\s*D2D_TXDP_K\s*=\s*32'h([0-9a-fA-F_]+)\s*;", t)
+    if not mm:
+        raise SystemExit(f'kv_die: D2D_TXDP_K not found in {D2D_CAL_IMAGE} (QXF-LINK: TXDP is required, no default)')
+    v = int(mm.group(1).replace('_', ''), 16)
+    if any(((v >> (8 * k)) & 0xff) == 0 for k in range(4)):
+        raise SystemExit(f'kv_die: D2D_TXDP_K {v:#010x} has a zero port byte (D2D_TXDP_NOT_COMPILED)')
+    return v
+
+
 def d2ds_binding():
-    return dict(module='qkd_d2d_static', file=D2DS_FILE, parameters=dict(NL=2),
+    return dict(module='qkd_d2d_static', file=D2DS_FILE, parameters=dict(NL=2, TXDP=d2d_txdp_k()),
                 ports=dict(ck0=['ck'], rst_n=['rst_n'], fdi=['fdi_tx_up', 'fdi_tx_v', 'fdi_tx_flit', 'fdi_rx_v', 'fdi_rx_flit'],
                            phy_rst_n=['phy_rst_n'], svc=list(D2DS_SVC), lup=['link_up'], rec_tx=list(D2DS_REC_TX),
                            rec_rx=list(D2DS_REC_RX), lrc=['host_link_reset_req', 'host_recovery_clear'],
@@ -1504,6 +1526,15 @@ LANDSLOT = os.environ.get('OT_KV_LANDSLOT', '0') == '1'
 def build(*args, **kwargs):
     """the plan (_build_plan) + the landing-frame reservation (OT_KV_LANDSLOT)"""
     m = _build_plan(*args, **kwargs)
+    # QXF-SEAMK 10-18 (TOKEN-XDIE-QWEN F6, OT_KV_BUNDLE_EQ default 1 on the static die): every static record bundle at the
+    # d2d end (rx / tx slot / tx / emb / KVN writer word) reaches its consumer whole -- the shorter members get pad relays
+    # at their sink end, after the pin repair (the last pass that adds stages) and before the landing slots
+    import kv_bundle_eq
+    if KSD.ON and kv_bundle_eq.on() and kwargs.get('split', len(args) > 7 and args[7]):
+        m = kv_bundle_eq.equalize(sys.modules[__name__], m)
+        print('kv die BUNDLE_EQ: ' + ', '.join(f"{n_} {r_.get('stages', r_.get('skipped'))}"
+                                               for n_, r_ in m['bundle_eq']['bundles'].items())
+              + f" ({len(m['bundle_eq']['added'])} pad relays)", file=sys.stderr)
     if LANDSLOT and kwargs.get('split', len(args) > 7 and args[7]):
         if os.environ.get('OT_KV_RLY_STD', '0') != '1' or not SEAM:
             raise ValueError('OT_KV_LANDSLOT=1 needs OT_KV_RLY_STD=1 and OT_KV_SEAM=1 (landing slots are relay-standard rows '
@@ -4742,6 +4773,17 @@ def main(argv=None):
     if a.mode == 'case':
         m['buses'] = [(bid, cls, bits, eps) for bid, cls, bits, eps in m['buses']]
         print(json.dumps(case(m, a.out)))
+        # QLB-KV 10-18: the case writes its generator-model die-run table too (case_kv/relay_stages.json; kvs14c had none).
+        # The relay check still walks the BOUND netlist (kv_relay_check.sh); this table is the cross-check of the model.
+        try:
+            sys.path.insert(0, str(ROOT / 'tools'))
+            from qwen_kv_die import relay_stages_export as _rsx
+            import die_relay_stages as _drs
+            _doc = _rsx.export_model(m, f'qwen_kv:{a.out.name}', sources=['tools/qwen_kv_die/kv_die.py'])
+            _drs.write(a.out / 'relay_stages.json', _doc)
+            print(f"kv die relay_stages.json: {_doc['bus_count']} buses, {_doc['problem_count']} problems, digest {_doc['digest']}")
+        except Exception as _e:                      # noqa: BLE001
+            print(f'kv die relay_stages.json export FAILED: {_e!r}'[:600])
         if m.get('land_slots'):
             (a.out / 'land_slots.json').write_text(json.dumps(m['land_slots'], indent=1, default=str) + '\n')
         return 0
