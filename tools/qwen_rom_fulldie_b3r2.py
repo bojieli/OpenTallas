@@ -3991,6 +3991,57 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             _lcx.append(dict(bid=bid, cl=cl, bits=bits, src=s_, dst=d_, src_ck=_ck_of[s_], dst_ck=_ck_of[d_]))
         m['land_cross'] = dict(insts=sorted(_lc), buses=len(_lcx), bits=sum(r_['bits'] for r_ in _lcx), rows=_lcx)
         print(f'LAND_CROSS {sorted(_lc)}: {len(_lcx)} cross-root buses / {sum(r_["bits"] for r_ in _lcx)} bits get a landing station', flush=True)
+    # QXF-SEAMC 10-18 (TOKEN-XDIE-QWEN F5 + LAYERBENCH-QWEN G-C2): LAND_CROSS and the lane pass worked BUS by bus, so a
+    # record crossed the seam torn: dv2f14bn d2d_rom -> native59 rx_payload a 1-frame landing (K 2, +3 edges) beside
+    # direct native_rx_v / slot / kind / beat (+0) -> rx_record fault at the first RESULT; d2d_rom -> sys_face
+    # prog_auth_slot +5 / prog_witness_slot +4 vs rx_payload / prog_rx_v / prog_context_slot +3 -> slot_fault at HOST
+    # BEGIN.  A RECORD BUNDLE (tools/qwen_split/record_bundles.py: valid + every field of one static record, selected by
+    # endpoint pins as the compiler's OT_RELAY_SCHEDULE does) lands WHOLE: every zero-stage member of a bundle whose other
+    # members carry frames (relays, pads, LAND_CROSS) gets the one-frame landing too (forwarded lanes), or plain relay
+    # pads to the bundle's frame count (no forwarded lanes); the lane pass below then gives the bundle ONE E
+    # (lane_groups.equalize, group = the bundle) and the GEN fails closed if a built bundle still arrives on two edges.
+    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+    import record_bundles as _RB
+    _rbm, _rbp = _RB.bundle_map([(bid, eps) for idx, (bid, cl, bits, eps) in buses])
+    if _rbp:
+        raise ValueError('record bundles: ' + '; '.join(_rbp))
+    if _rbm:
+        _bix = {bid: idx for idx, (bid, cl, bits, eps) in buses}
+        _nfr = {b_: (len(plans[_bix[b_]]['frames']) if _bix[b_] in plans else 0) + int(tpads.get(b_, 0)) for b_ in _rbm}
+        if _os.environ.get('OT_SPLIT_FWD_LANES', '0') == '1':
+            _rbadd = _RB.close_zero_stage(_rbm, _nfr)
+            if _rbadd:
+                _lcr = m.setdefault('land_cross', dict(insts=[], buses=0, bits=0, rows=[]))
+                _ckb = {}
+                for _b in m['buses']:
+                    if _b[1] == 'clock_trunk':
+                        for _e in _b[3][1:]:
+                            _ckb.setdefault(_e[0], _b[0])
+                for b_ in _rbadd:
+                    _, cl_, bits_, eps_ = m['buses'][_bix[b_]]
+                    tpads[b_] = 1
+                    _lcr['rows'].append(dict(bid=b_, cl=cl_, bits=bits_, src=eps_[0][0], dst=eps_[1][0],
+                                             src_ck=_ckb.get(eps_[0][0]), dst_ck=_ckb.get(eps_[1][0]),
+                                             why=f'record bundle {_rbm[b_]} (QXF-SEAMC)'))
+                _lcr['buses'] = len(_lcr['rows'])
+                _lcr['bits'] = sum(r_['bits'] for r_ in _lcr['rows'])
+            # members too far behind their bundle's E for the ring wait (E_sta <= D - 1) get extra frames now (sink-end
+            # stations, placed with the pads below); the lane pass takes the rest by ring wait
+            _nfr.update({b_: 1 for b_ in _rbadd})
+            _lpq = json.loads(Path(_os.environ['OT_SPLIT_LAND_PLAN']).read_text()) if _os.environ.get('OT_SPLIT_LAND_PLAN') else {}
+            _esq = {r_['bid']: int(r_['E']) for r_ in _lpq.get('links', []) if r_.get('E') is not None}
+            _rbfp = _RB.frame_pads(_rbm, _nfr, _esq, 4)
+            for b_, p_ in _rbfp.items():
+                tpads[b_] = int(tpads.get(b_, 0)) + p_
+            _rbadd = list(_rbadd) + [f'{b_}+{p_}' for b_, p_ in sorted(_rbfp.items())]
+        else:
+            _rbadd = _RB.plain_pads(_rbm, _nfr)
+            for b_, p_ in _rbadd.items():
+                tpads[b_] = int(tpads.get(b_, 0)) + p_
+        m['record_bundles'] = dict(bundles=sorted(set(_rbm.values())), members=_rbm,
+                                   landed_with_bundle=sorted(_rbadd) if isinstance(_rbadd, list) else _rbadd)
+        print(f'RECORD_BUNDLES {len(set(_rbm.values()))} bundles / {len(_rbm)} members: '
+              f'{len(_rbadd)} members padded or landed with their bundle', flush=True)
     # Reconcile the allocator's mutable occupancy with the exact frames that
     # will be emitted after repair/rip-up/jog/pre-pad trimming. Every inline
     # arrival pad must see ALL surviving frames, not a stale search grid.
@@ -4208,6 +4259,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             es_ = int(lp_.get('E') or FWD_LANE_E_STA)
             _pre.append(dict(bid=pl['bid'], src=pl['eps'][0][0], dst=pl['eps'][1][0], n=n_, E_sta=es_,
                              E=fwd_e_est(n_) + es_ - FWD_LANE_E_STA))
+            if pl['bid'] in _rbm:          # QXF-SEAMC: a record bundle is one group whatever its bus names
+                _pre[-1]['bundle'] = _rbm[pl['bid']]
             if lp_.get('K') is not None and lp_.get('E') is not None:
                 _cal[pl['bid']] = (int(lp_['K']) - int(lp_['E'])) % 8
             if lp_.get('h0'):
@@ -4236,7 +4289,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                            K_basis='land plan' if _lpE.get(bid, {}).get('K') is not None else 'E mod 8 (assumes G = R0); re-derive with the reset calendar',
                            stations=[], landing=None)
                 if bid in fwd_eq:
-                    fwd.update({k__: fwd_eq[bid][k__] for k__ in ('K_basis', 'cal', 'group', 'E_own', 'hold_E_group') if k__ in fwd_eq[bid]})
+                    fwd.update({k__: fwd_eq[bid][k__] for k__ in ('K_basis', 'cal', 'group', 'E_own', 'hold_E_group', 'bundle') if k__ in fwd_eq[bid]})
                     if 'E_own' in fwd_eq[bid]:
                         fwd['E_basis'] += fwd_eq[bid]['E_basis']
                 if why_ == 'BUMP':
@@ -4397,6 +4450,15 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                               stations=sum(len(r_['stations']) for r_ in fwd_rows), landings=len(fwd_rows),
                               plain_relays_left=sum(r_['n'] for r_ in fwd_skip))
         m['fwd_lanes']['bus_groups'] = fwd_groups
+        # QXF-SEAMC 10-18: fail closed on a torn record bundle as BUILT (a member left a plain relay chain or a direct
+        # wire beside landed members, or two Ks): the compiler's static calendar has one seam age per bundle
+        if _rbm:
+            _rows = {r_['bid']: r_ for r_ in fwd_rows if r_.get('E') is not None}
+            _rows.update({s_['bid']: dict(bid=s_['bid'], n=s_['n'], E=None) for s_ in fwd_skip if s_['bid'] in _rbm})
+            _rba = _RB.audit_rows(_rows, _rbm, source='GEN _relays (OT_SPLIT_FWD_LANES=1)')
+            m['fwd_lanes']['record_bundles'] = _rba
+            if _rba['verdict'] != 'PASS':
+                raise ValueError(f"record bundles torn: {_rba['fails']}")
         # Q-COLLCAL 10-18 (TP8 co-sim bug 1: the dv2f14 SerDes lanes were not in the collective calendar): the GEN emits
         # the per-port lane cycles and the io_collective master is elaborated with LX0..2 = TX(peer port) + RX(own)
         # (die.v.params.json, read by the strict bind; case/coll_lane_latency.json); tools/qwen_split/lane_latency_audit.py
