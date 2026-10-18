@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
  "name": "hbm_su_bridge_release_1018",
- "top": "ot_hbm_su_bridge_release",
+ "top": "ot_hbm_su_bridge_release_s",
  "kind": "tile",
  "die": [
   0,
@@ -35,24 +35,19 @@
    "clk_serial"
   ],
   "E": [
-   "clk_stream",
-   "rst_stream_n",
    "bridge_rst_n",
    "fault"
   ]
  },
- "clock_port": "clk_stream",
- "clock_ports": [
-  "clk_stream",
-  "clk_serial"
- ],
+ "clock_port": "clk_serial",
  "blocks": [],
  "findings": [],
  "referenced": [
-  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_bridge_release.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_bridge_release_s.sv",
   "physical/ref_tile/hbm_su_bridge_release_1018/kit.env",
   "physical/ref_tile/hbm_su_bridge_release_1018/clock.sdc",
   "physical/ref_tile/hbm_su_bridge_release_1018/signoff.sdc",
+  "physical/ref_tile/hbm_su_bridge_release_1018/signoff_ffrepair.sdc",
   "physical/ref_tile/hbm_su_bridge_release_1018/pdn.tcl",
   "physical/ref_tile/hbm_su_bridge_release_1018/pre_cts.tcl",
   "physical/ref_tile/hbm_su_bridge_release_1018/post_cts.tcl",
@@ -72,8 +67,6 @@
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl",
-  "physical/common_flow/clock_entries.tcl",
-  "physical/ref_tile/hbm_su_bridge_release_1018/clock_entry.sdc"
+  "physical/qwen_die_masters/out_flop_release.tcl"
  ]
 }
