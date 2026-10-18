@@ -261,6 +261,26 @@ class ProbeAndGates(unittest.TestCase):
             self.assertIsNone(ss.hold_verdict(hd, {}, 600))
             self.assertIn("not converging", ss.hold_verdict(hd, {}, ss.GATES["hold_pad_s"] + 1))
 
+    def test_first_call_pad_scales_with_hm_guard_projection(self):
+        # S81-VNHOLD (10-18): s81sl_vn c084e259a, 25,429 endpoints in the 30-ps margin, OT_HM_GUARD projected ~42,263
+        # buffers; killed at 1.2 h in its FIRST call (12,020 it / 24,190 buffers, ~2/it, WNS -65.47 / TNS -823 flat)
+        hdr = ("OT_HM_GUARD: margin 30 kept: 25429 endpoints in margin, ~42263 buffers, +2.7 util pts (25429 endpoints "
+               "in margin > 10000)\nOT_HOLD_GUARD start: x\n[INFO RSZ-0046] Found 25429 endpoints with hold violations.\n")
+        o = self.probe_text(hdr + self.h16b_rows())
+        self.assertEqual(o["bases"][0]["hold"]["hm_proj"], [42263])
+        ser = [[0, 0, -88.3, -11766.0, 0], [2410, 4960, -65.47, -823.0, 0], [12020, 24190, -65.47, -823.0, 0]]
+        hd = dict(series=ser, guard=True, hm_proj=[42263])
+        with patch.object(ss, "place_instances", return_value=316754):
+            self.assertIsNone(ss.hold_verdict(hd, {}, 1.2 * 3600))                       # still padding toward ~42k
+            self.assertIn("not converging", ss.hold_verdict(hd, {}, ss.GATES["hold_pad_max_s"] + 1))  # 3 h bound
+            over = dict(hd, series=ser[:-1] + [[40000, 64000, -65.47, -823.0, 0]])     # past 1.5 x the projection
+            self.assertIn("not converging", ss.hold_verdict(over, {}, 2 * 3600))
+            self.assertIn("not converging", ss.hold_verdict(dict(hd, hm_proj=[]), {}, 1.2 * 3600))  # no projection
+        # an HM_AUTO line carries the projection too
+        o = self.probe_text("OT_HM_AUTO HM auto-reduced 50->30: 30000 endpoints in margin (worst FF hold -20.00, "
+                            "~51000 buffers, +3.0 util pts of 1 um2 core; x)\n" + hdr.split("\n", 1)[1] + self.h16b_rows())
+        self.assertEqual(o["bases"][0]["hold"]["hm_proj"], [51000])
+
     def test_hold_buffer_cap_rises_while_improving(self):
         # 192k instances: plain cap 57.6k; real WNS < 0 but gaining >= 5 ps / 2000 it -> cap 100k (0.6 x 192k > 100k)
         self.assertAlmostEqual(ss.hold_buf_cap(192064, None), 0.30 * 192064)

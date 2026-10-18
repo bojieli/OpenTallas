@@ -38,7 +38,12 @@ QID = {'SW': 0, 'SE': 1, 'NW': 2, 'NE': 3}
 DBK_TGT = {'SE': 105, 'NE': 107}
 REF_TGT = {'SE': 128, 'NE': 129}
 XL_TGT = {'SE': 101, 'NE': 103}
-LEAF_MAP = ROOT / 'results/arch/hbm_b_rtl1_host_1017/host_cfg_leaf_map_d4g.json'
+LEAF_MAP_R1 = ROOT / 'results/arch/hbm_b_rtl1_host_1017/host_cfg_leaf_map_d4g.json'
+# HBM-RTL5 10-18 (coordinator 0fi): r2 map = SE / NE leaves re-hardened at NT21/NF30 and NT17/NF27 (hdie_host_cfg_leaf_{se,ne}_r2),
+# so the six new E targets + wbk_<E>.fault report THROUGH their leaf; host_status takes leaf outputs only (join_d4g_r2).
+LEAF_MAP_R2 = ROOT / 'results/arch/hbm_rtl5_host_1018/host_cfg_leaf_map_d4g_r2.json'
+LEAF_MAP = LEAF_MAP_R2
+LEAF_SRC_R2 = 'rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf_r2.sv'
 XQL_PY = ROOT / 'results/rtl/rbh_xql_1018/xql_quadrant_rebind.py'
 LEAF_SRC = 'rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf.sv'
 LEAF_DEPS = ['rtl/lib/ot_rst_relay.sv']
@@ -349,6 +354,7 @@ class L:
                 cfg_sinks.setdefault(ed['sink'][0], []).append(ed)
         face = {}
         status = []          # host_status input k, per port: source endpoint
+        via_leaf = set()     # r2: new targets whose status goes through their leaf
         pins = {}
         for q in QS:
             lf = M['leaves'][q]
@@ -362,8 +368,10 @@ class L:
             ports.update(t_ready=dict(direction='input', bits=nt), t_active=dict(direction='input', bits=nt),
                          t_fault=dict(direction='input', bits=nf), s_ready=dict(direction='output', bits=nt),
                          s_active=dict(direction='output', bits=nt), s_fault=dict(direction='output', bits=nf))
-            I[li] = dict(master=lf['master'], source=LEAF_SRC, params={}, slot=None, owner='host owner (HBM-B-RTL1 host leaf)',
-                         region=REGION, rtl_deps=LEAF_DEPS, ports=ports,
+            r2 = lf['master'].endswith('2')
+            I[li] = dict(master=lf['master'], source=LEAF_SRC_R2 if r2 else LEAF_SRC, params={}, slot=None,
+                         owner='host owner (HBM-B-RTL1 host leaf' + (', HBM-RTL5 r2)' if r2 else ')'),
+                         region=REGION, rtl_deps=([LEAF_SRC] if r2 else []) + LEAF_DEPS, ports=ports,
                          note=f'd4g L1: host config/status leaf of quadrant {q} ({lf["kit"]}, NT{nt}/NF{nf}, CFG_LAT 2, ST_LAT 2)')
             self.rep['added_instances'].append(li)
             for p in ('clk', 'rst_n'):
@@ -379,9 +387,18 @@ class L:
             # status: leaf inputs from the targets (checked against the GEN0 host_status driver)
             for port, order, sport in (('t_ready', lf['t_ready_order'], 's_ready'), ('t_active', lf['t_active_order'], 's_active'),
                                        ('t_fault', lf['t_fault_order'], 's_fault')):
-                for k, d4f, pin in order:
+                for row in order:
+                    k, d4f, pin = row[:3]
                     mm = re.match(r'^(\w+)\.(\w+)\[0\]$', pin)
                     src = [mm.group(1), mm.group(2)]
+                    if d4f is None:
+                        # r2: a d4g-only source (new E target of (a)/(b)) through its leaf; created by xql()/stk()
+                        if not self.has_port(*src):
+                            raise SystemExit(f'L1 host r2: leaf {li} {port}[{k}] source {pin} missing (run after xql/stk)')
+                        via_leaf.add(src[0])
+                        self.c['edges'].append(edge(f'l1_{li}_{port}_{k}', src + [0, 1], [li, port, k, k + 1],
+                                                    f'L1 new target status -> leaf {li} (r2 width)'))
+                        continue
                     got = st_in.pop((port, d4f), None)
                     if got and got != src and got[0] == src[0]:
                         # same target, port renamed by an earlier layer (l3: hc_<q> qhub fault -> hcq_fault)
@@ -420,10 +437,31 @@ class L:
         for port, sport, key in (('t_ready', 's_ready', 't_ready'), ('t_active', 's_active', 't_ready'), ('t_fault', 's_fault', 't_fault')):
             for j, (li, k) in enumerate(order[key]):
                 self.c['edges'].append(edge(f'l1_hs_{port}_{j}', [li, sport, k, k + 1], ['host_status', port, j, j + 1], f'L1 leaf {li} status -> join'))
-        tg = int(J['TGTS'].split("'h")[1], 16)
-        nt, nf = NT0, NF0
+        J2 = M.get('join_d4g_r2')
+        tg_hs = int(hs['params']['TGTS'].split("'h")[1], 16)
+        if J2:
+            # r2: leaf block = NTl / NFl slots; slots an earlier layer appended (NTm..NT0-1) move up behind the leaf block
+            NTl, NFl = len(order['t_ready']), len(order['t_fault'])
+            assert (NTl, NFl) == (J2['NT'], J2['NF']), (NTl, NFl, J2['NT'], J2['NF'])
+            dT, dF = NTl - NTm, NFl - NFm
+            tg = int(J2['TGTS'].split("'h")[1], 16)
+            for j in range(NTm, NT0):
+                tg |= ((tg_hs >> (8 * j)) & 0xff) << (8 * (j + dT))
+            for ed in self.c['edges']:
+                if (ed['sink'][0] == 'host_status' and ed['sink'][1] in lim and ed['sink'][2] is not None
+                        and not ed['name'].startswith('l1_hs_')):
+                    d_ = dF if ed['sink'][1] == 't_fault' else dT
+                    ed['sink'] = ['host_status', ed['sink'][1], ed['sink'][2] + d_, ed['sink'][3] + d_]
+            nt, nf = NT0 + dT, NF0 + dF
+        else:
+            tg = int(J['TGTS'].split("'h")[1], 16)
+            for j in range(NTm, NT0):
+                tg |= ((tg_hs >> (8 * j)) & 0xff) << (8 * j)
+            nt, nf = NT0, NF0
         direct = []
         for t, d in sorted(self.new_targets.items(), key=lambda kv: (kv[1]['tgt'] is None, kv[1]['tgt'] or 0, kv[0])):
+            if t in via_leaf:
+                continue
             if d.get('tgt') is not None:
                 if not self.has_port(t, d['ready']):
                     continue
@@ -448,7 +486,10 @@ class L:
         for t_ in add:
             mask |= 1 << t_
         ing['params']['TARGET_MASK'] = f"256'h{mask:x}"
-        self.rep['host'] = dict(NT=[NT0, nt], NF=[NF0, nf], direct=direct, mask_added=sorted(add), leaf_copy_sinks=pins,
+        if J2 and direct:
+            raise SystemExit(f'L1 host r2: new targets not carried by a leaf: {direct}')
+        self.rep['host'] = dict(NT=[NT0, nt], NF=[NF0, nf], direct=direct, leaf_map=str(LEAF_MAP.relative_to(ROOT)),
+                                via_leaf=sorted(via_leaf), mask_added=sorted(add), leaf_copy_sinks=pins,
                                 leaf_widths={q: [M['leaves'][q]['NT'], M['leaves'][q]['NF']] for q in QS},
                                 leaf_widths_needed_for_R4={'SE': [M['leaves']['SE']['NT'] + 3, M['leaves']['SE']['NF'] + 4],
                                                            'NE': [M['leaves']['NE']['NT'] + 3, M['leaves']['NE']['NF'] + 4]})

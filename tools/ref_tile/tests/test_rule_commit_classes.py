@@ -100,6 +100,90 @@ class RuleCommitClasses(PreciseGateBinding):
         self.assertFalse(HO.change_is_comment_only('a.v', b'x', b'y'))
 
 
+class MergedRuleSpan(unittest.TestCase):
+    """ROOT-0330: a file changed on two branches and merged is classified commit by commit (commit-set walk); a merge
+    that adds its own change, and an entry scoped to other paths, keep the strict refusal."""
+
+    def setUp(self):
+        import subprocess
+        import tempfile
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        self.sp = subprocess
+        self.git('init', '-q', '-b', 'main')
+        self.git('config', 'user.email', 't@t')
+        self.git('config', 'user.name', 't')
+        self.base = self.put(b'a = 1\nb = 2\nc = 3\nd = 4\ne = 5\n', 'base')
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def git(self, *a):
+        return self.sp.run(['git', '-C', str(self.root), *a], check=True, capture_output=True, text=True).stdout.strip()
+
+    def put(self, data, msg):
+        (self.root / 'f.py').write_bytes(data)
+        self.git('add', 'f.py')
+        self.git('commit', '-q', '-m', msg)
+        return self.git('rev-parse', 'HEAD')
+
+    def blob(self, rev):
+        return self.git('rev-parse', f'{rev}:f.py')
+
+    def branches(self, merge_extra=b''):
+        self.git('checkout', '-q', '-b', 'x')
+        ca = self.put(b'a = 10\nb = 2\nc = 3\nd = 4\ne = 5\n', 'side a')
+        self.git('checkout', '-q', 'main')
+        cb = self.put(b'a = 1\nb = 2\nc = 3\nd = 4\ne = 50\n', 'side b')
+        self.git('merge', '-q', '--no-ff', '--no-commit', 'x')
+        if merge_extra:
+            (self.root / 'f.py').write_bytes(b'a = 10\nb = 2\nc = 3\nd = 4\ne = 50\n' + merge_extra)
+            self.git('add', 'f.py')
+        self.git('commit', '-q', '-m', 'merge')
+        return ca, cb, self.git('rev-parse', 'HEAD')
+
+    def span(self, old, reg):
+        return HO.rule_span(self.root, 'f.py', old, self.blob('HEAD'), ['HEAD'], registry=reg)
+
+    def test_clean_merge_of_two_classified_branches_keeps_gate(self):
+        ca, cb, _ = self.branches()
+        reg = {ca: dict(kind='neutral', rule='n', what='n'), cb: dict(kind='relaxing', rule='r', what='r')}
+        ok, rows, why = self.span(self.blob(self.base), reg)
+        self.assertTrue(ok, why)
+        self.assertEqual(sorted(r['commit'] for r in rows), sorted([ca, cb]))
+        ok, rows, _ = self.span(self.blob(ca), reg)          # gate taken on side a: only side b is new
+        self.assertTrue(ok)
+        self.assertEqual([r['commit'] for r in rows], [cb])
+
+    def test_unclassified_side_refuses(self):
+        ca, cb, _ = self.branches()
+        ok, _, why = self.span(self.blob(self.base), {ca: dict(kind='neutral', rule='n', what='n')})
+        self.assertFalse(ok)
+        self.assertIn(f'commit {cb[:9]}', why)
+
+    def test_merge_with_its_own_change_refuses(self):
+        ca, cb, m = self.branches(merge_extra=b'f = 6\n')
+        reg = {ca: dict(kind='neutral', rule='n', what='n'), cb: dict(kind='neutral', rule='n', what='n')}
+        ok, _, why = self.span(self.blob(self.base), reg)
+        self.assertFalse(ok)
+        self.assertIn(f'merge {m[:9]} is not a clean merge', why)
+
+    def test_path_scoped_entry_does_not_cover_other_files(self):
+        ca, cb, _ = self.branches()
+        reg = {ca: dict(kind='neutral', rule='n', what='n'),
+               cb: dict(kind='neutral', rule='n', what='n', paths=('other.py',))}
+        ok, _, why = self.span(self.blob(self.base), reg)
+        self.assertFalse(ok)
+        self.assertIn(f'commit {cb[:9]}', why)
+
+    def test_kv_die_entries_are_path_scoped(self):
+        for c in ('76f68cefa8ae97296b8c1f07eab9801c47aaac70', '8a83ec822056192aa6c6c49940974ebe062e734b'):
+            e = HO.RULE_COMMITS[c]
+            self.assertEqual(e['kind'], 'neutral')
+            self.assertIn('tools/qwen_kv_die/kv_die.py', e['paths'])
+            self.assertNotIn('tools/qwen_kv_die/pv_trunk_gen.py', e['paths'])
+
+
 del PreciseGateBinding
 
 if __name__ == '__main__':
