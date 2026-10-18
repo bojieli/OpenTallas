@@ -57,7 +57,8 @@ module tb_hbm_su_pgslice_lg_rsync;
   if(o_dut!==o_ref) begin errors=errors+1; if(errors<6) $display("LOCKSTEP MISMATCH t=%0t dut/ref fault %b/%b lg_fault %b/%b", $time, dut_f, ref0_f, dut_lf, ref0_lf); end
  end
  // ---- reset edges
- wire tap_r = (MUT==1) ? dut.g_tap.u_tap.g_rmut.lg_rst : dut.g_tap.u_tap.g_rsync.rs[1];
+ wire tap_r;
+ if(MUT==1)begin:g_tm assign tap_r = dut.g_tap.u_tap.g_rmut.lg_rst; end else begin:g_ts assign tap_r = dut.g_tap.u_tap.g_rsync.rs[1]; end
  wire leaf_r = dut.u_slice.g_pg_rsync.rs[1];
  time t_cap; reg want; reg armed=0; reg last_por=1'bx;
  always @(posedge sclk) if(por!==last_por) begin last_por<=por; t_cap=$time; want=por; armed=1; end

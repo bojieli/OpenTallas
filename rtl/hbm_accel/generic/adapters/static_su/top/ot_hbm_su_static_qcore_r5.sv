@@ -3,8 +3,11 @@
 // ---------------------------------------------------------------------------------------------------------------------
 // SU quarter core successor r5 (HBM-SU3 2026-10-17; coordinator 0dc: "qcore: regional roots, not 66").
 // Same ports, edges and function as ot_hbm_su_static_qcore (COLLPORT 1, RF_LOCAL 1 = the d4f die parameters) except:
-//  * CLOCKS: 2 roots (clk_ctl: RF + command/output/reducer staging; clk_red: reducer) instead of 66 (64 per-bank clk_rf
-//    + clk_ctl + clk_red). Port clk_rf is gone (the die stops driving 64 root entries per quarter).
+//  * CLOCK: ONE root clk_ctl (~11.4k sinks + the reducer's 2 SRAMs) instead of 66 (64 per-bank clk_rf + clk_ctl +
+//    clk_red). Ports clk_rf and clk_red are gone (the die drives one serial entry per quarter core).
+//  * READ PIPELINE per class: k+1 registers the addressed word of EVERY sector (8 x 32 b, a 32:1 mux per sector driven by
+//    a per-sector copy of the pin-rung address), k+2 selects the sector -- the same k+1/k+2 edges as one 256:1 mux,
+//    without an 8,192-load address net (r5 gate g1: cmd_p[*] 8,192 loads).
 //  * RF STORAGE: one copy of the 64 x 4 x 32-bit words (8,192 flops) instead of six per-reader replicas, and the read
 //    pipeline registers only the SELECTED word per read class (raw_c at k+1, rd_c at k+2) instead of a raw/read_data
 //    register per (bank, reader) followed by a bank-select mux (64 x 6 x 32 x 2 = 24,576 flops). ~77k -> ~10k flops.
@@ -16,11 +19,11 @@
 // Don't-care difference: on an edge whose read class was NOT valid 3 edges earlier the hub showed the last word that
 // class read from THAT bank, r5 the last word that class read (any bank); no consumer samples an invalid read (the
 // compiler issues every consumed class; the pgslices check RF-source addresses against rf_bcmd).
-// FAULT: the write-conflict part reports one edge later (computed on the pin rung); drain/reducer faults unchanged.
-// MUT (bench, must FAIL): 256 = an extra raw stage (reads k+4); 16/32/64/128 as the hub.
+// FAULT: write-conflict and drain-check faults report one edge later (computed on registered inputs); reducer unchanged.
+// MUT (bench, must FAIL): 256 = an extra read stage (reads k+4); 16/32/64/128 as the hub.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_su_static_qcore_r5 #(parameter integer MUT=0,COLLPORT=1,RF_LOCAL=1)(
- input wire clk_ctl,clk_red,rst_n,
+ input wire clk_ctl,rst_n,
  input wire [6*9-1:0] rf_rd_cmd,
  input wire [73:0] red_cmd,
  input wire [1:0] rf_drain_cmd,
@@ -44,6 +47,12 @@ module ot_hbm_su_static_qcore_r5 #(parameter integer MUT=0,COLLPORT=1,RF_LOCAL=1
  always @(posedge clk_ctl or negedge rst_n)
   if(!rst_n)begin cmd_p<=54'd0;wv_p<=4'd0;rrv_p<=1'b0;end
   else begin cmd_p<=rf_rd_cmd;wv_p<=rf_wv;rrv_p<=rr_wv;end
+ // read address copies, one per sector (classes 0..4: {v, row2, bank3-in-sector}); class 5 row per sector
+ reg [5:0] ra_s [0:7][0:4]; reg [1:0] r5_s [0:7]; integer s1,c1;
+ always @(posedge clk_ctl) for(s1=0;s1<8;s1=s1+1) begin
+  for(c1=0;c1<5;c1=c1+1) ra_s[s1][c1] <= {rf_rd_cmd[c1*9+8], rf_rd_cmd[c1*9+6+:2], rf_rd_cmd[c1*9+:3]};
+  r5_s[s1] <= rf_rd_cmd[5*9+6+:2];
+ end
  // ---------------------------------------------------------------- storage: one copy, writes commit k+1
  reg [31:0] mem [0:255];               // word index {row2, bank6}
  wire [63:0] rf_wconf;
@@ -59,15 +68,18 @@ module ot_hbm_su_static_qcore_r5 #(parameter integer MUT=0,COLLPORT=1,RF_LOCAL=1
   always @(posedge clk_ctl) if(bwv) mem[{bwa,6'(bb)}] <= bwd;
   assign rf_wconf[bb]=(nw>3'd1)||(rrb&&wv);
  end
- // ---------------------------------------------------------------- selected read pipeline (raw k+1, rd k+2)
- reg [31:0] raw [0:4]; reg [31:0] rd [0:4]; reg [31:0] raw_x [0:4];
+ // ---------------------------------------------------------------- read pipeline: per-sector word k+1, sector select k+2
+ reg [31:0] raw [0:4][0:7]; reg [2:0] sec1 [0:4]; reg [31:0] rd [0:4]; reg [31:0] rd_x [0:4];
  reg [255:0] raw5, rd5;
- integer c,kk;
+ integer c,kk,ss;
  always @(posedge clk_ctl)begin
-  for(c=0;c<5;c=c+1) if(cmd_p[c*9+8]) raw[c] <= mem[{cmd_p[c*9+6+:2],cmd_p[c*9+:6]}];
+  for(c=0;c<5;c=c+1)begin
+   for(ss=0;ss<8;ss=ss+1) if(ra_s[ss][c][5]) raw[c][ss] <= mem[{ra_s[ss][c][4:3],3'(ss),ra_s[ss][c][2:0]}];
+   if(cmd_p[c*9+8]) sec1[c] <= cmd_p[c*9+3+:3];
+  end
   if(cmd_p[5*9+8]) for(kk=0;kk<8;kk=kk+1) raw5[kk*32+:32] <= mem[{cmd_p[5*9+6+:2],cmd_p[5*9+3+:3],3'(kk)}];
-  for(c=0;c<5;c=c+1) raw_x[c] <= raw[c];
-  for(c=0;c<5;c=c+1) rd[c] <= (MUT==256) ? raw_x[c] : raw[c];
+  for(c=0;c<5;c=c+1) rd_x[c] <= raw[c][sec1[c]];
+  for(c=0;c<5;c=c+1) rd[c] <= (MUT==256) ? rd_x[c] : raw[c][sec1[c]];
   rd5 <= raw5;
  end
  wire [31:0] rf_word [0:4];
@@ -82,7 +94,10 @@ module ot_hbm_su_static_qcore_r5 #(parameter integer MUT=0,COLLPORT=1,RF_LOCAL=1
  always @(posedge clk_ctl or negedge rst_n)if(!rst_n)begin c5_d1<=1'b0;c5_d2<=1'b0;end
   else begin c5_d1<=rf_rd_cmd[5*9+8];c5_d2<=c5_d1;end
  wire c5_lead=RF_LOCAL?c5_d2:c5_d1;
- wire dbad=(rf_drain_now&&!c5_lead)||(rf_rd_cmd[5*9+8]&&rf_rd_cmd[5*9+:3]!=3'd0);
+ // drain checks on registered inputs (fault +1 edge, status only): class-5 alignment from the pin rung, drain from a pin flop
+ reg drain_p; always @(posedge clk_ctl or negedge rst_n) if(!rst_n) drain_p<=1'b0; else drain_p<=rf_drain_now;
+ reg c5_lead_q; always @(posedge clk_ctl or negedge rst_n) if(!rst_n) c5_lead_q<=1'b0; else c5_lead_q<=c5_lead;
+ wire dbad=(drain_p&&!c5_lead_q)||(cmd_p[5*9+8]&&cmd_p[5*9+:3]!=3'd0);
  reg rc_v; reg [2:0] rc_op; reg [9:0] rc_a,rc_b,rc_d; reg [31:0] rc_tag,rc_x;
  reg [1:0] e_sl; reg e_os,e_sfu; reg [72:8] e_f;
  always @(posedge clk_ctl)begin e_sl<=red_cmd[5:4];e_os<=red_cmd[7];e_sfu<=(COLLPORT!=0)&&red_cmd[6]&&(MUT!=64);e_f<=red_cmd[72:8];end
@@ -94,7 +109,7 @@ module ot_hbm_su_static_qcore_r5 #(parameter integer MUT=0,COLLPORT=1,RF_LOCAL=1
   rc_x<=e_os?(e_sfu?sfu_x:rf_word[4]):slice_x[e_sl*32+:32];
  end
  wire red_fault;
- ot_hbm_su_reduce_static #(.AW(10)) u_red(.clk(clk_red),.rst_n(rst_n),.cmd_valid(rc_v),.cmd_op(rc_op),.cmd_a(rc_a),
+ ot_hbm_su_reduce_static #(.AW(10)) u_red(.clk(clk_ctl),.rst_n(rst_n),.cmd_valid(rc_v),.cmd_op(rc_op),.cmd_a(rc_a),
   .cmd_b(rc_b),.cmd_dst(rc_d),.operand_fp32(rc_x),.cmd_tag(rc_tag),.scalar_valid(red_sv),.scalar_tag(red_tag),
   .scalar_fp32(red_x),.scalar_bf16(),.fault(red_fault));
  assign red_rf_v=red_sv&&(red_tag[8]||MUT==32);

@@ -16,7 +16,7 @@
   213.84
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": 14000,
+ "std_area_um2": 16500,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -54,15 +54,10 @@
   ],
   "N": [
    "clk_ctl",
-   "clk_red",
    "rst_n"
   ]
  },
  "clock_port": "clk_ctl",
- "clock_ports": [
-  "clk_ctl",
-  "clk_red"
- ],
  "blocks": [
   {
    "kind": "macro",
@@ -131,8 +126,6 @@
   "physical/ref_tile/hbm_su_qcore_r5_1017/pre_gpl.tcl",
   "physical/ref_tile/hbm_su_qcore_r5_1017/pre_dpl.tcl",
   "physical/common_flow/pin_reg_split.tcl",
-  "physical/common_flow/clock_entries.tcl",
-  "physical/ref_tile/hbm_su_qcore_r5_1017/clock_entry.sdc",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",

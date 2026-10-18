@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 `default_nettype none
-// HBM-SU3 2026-10-17: qcore successor r5 ot_hbm_su_static_qcore_r5 (2 roots, single-copy RF, selected read pipeline,
+// HBM-SU3 2026-10-17: qcore successor r5 ot_hbm_su_static_qcore_r5 (1 root, single-copy RF, selected read pipeline,
 // pins first) in lockstep with the die's current qcore (66 roots), both at the die parameters COLLPORT 1, RF_LOCAL 1.
 // Random traffic on every input every edge (RF reads all six classes, 4 relay writers + the COLL writer incl. same-bank
 // conflicts, reducer commands from slice / RF / SFU operands), NRST reset phases.
@@ -27,7 +27,7 @@ module tb_qcore_rg_lockstep;
  wire [127:0] d_bw, r_bw; wire [35:0] d_bc, r_bc; wire [255:0] d_ds, r_ds; wire d_sv, r_sv, d_rv, r_rv, d_f, r_f;
  wire [31:0] d_tag, r_tag, d_x, r_x;
  ot_hbm_su_static_qcore_r5 #(.MUT(MUT),.COLLPORT(1),.RF_LOCAL(1)) dut(
-  .clk_ctl(clk),.clk_red(clk),.rst_n(rst_n),.rf_rd_cmd(rf_rd_cmd),.red_cmd(red_cmd),
+  .clk_ctl(clk),.rst_n(rst_n),.rf_rd_cmd(rf_rd_cmd),.red_cmd(red_cmd),
   .rf_drain_cmd(rf_drain_cmd),.slice_x(slice_x),.rf_wv(rf_wv),.rf_wa(rf_wa),.rf_wd(rf_wd),.rf_bword(d_bw),.rf_bcmd(d_bc),
   .rf_dsec(d_ds),.red_sv(d_sv),.red_tag(d_tag),.red_x(d_x),.red_rf_v(d_rv),.rr_wv(rr_wv),.rr_wa(rr_wa),.rr_wd(rr_wd),
   .sfu_x(sfu_x),.fault(d_f));

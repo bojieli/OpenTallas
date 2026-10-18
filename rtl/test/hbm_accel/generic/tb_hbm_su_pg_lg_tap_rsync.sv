@@ -35,7 +35,8 @@ module tb_hbm_su_pg_lg_tap_rsync;
   #1; checks=checks+1; if(d_f) faults=faults+1;
   if(o_d!==o_r) begin errors=errors+1; if(errors<6) $display("LOCKSTEP MISMATCH t=%0t", $time); end
  end
- wire tap_r = (MUT==1) ? dut.g_rmut.lg_rst : dut.g_rsync.rs[1];
+ wire tap_r;
+ if(MUT==1)begin:g_tm assign tap_r = dut.g_rmut.lg_rst; end else begin:g_ts assign tap_r = dut.g_rsync.rs[1]; end
  time t_cap; reg want; reg armed=0; reg last_por=1'bx;
  always @(posedge sclk) if(por!==last_por) begin last_por<=por; t_cap=$time; want=por; armed=1; end
  function automatic time exp_edge(input time ts); integer m1; begin m1=(ts-T0)/TP+1; exp_edge=T0+TP*(m1+1); end endfunction
