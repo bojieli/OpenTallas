@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_seq_core_static_s",
+ "enable": false,
+ "reason": "Every functional input (programme request/position/Q valid/beat, KVN valid/tag, layer programme, svc, hub, af returns) lands in its own pin flop inside the leaf and every output is a register (as qkd_seq_core_st_p). A recipe-3 pin register would add an edge to the compiled CMD->push/pop timeline."
+}
