@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "s81sl_vs",
+ "reviewer": "ELEM-GAPS/S81N (non-critical kit, 2026-10-18 ~08:00)",
+ "verdict": "APPROVED",
+ "time": "2026-10-18T08:00:00-07:00",
+ "gate_commit": "4b1132ad7",
+ "checklist": {
+  "lattice": "N/A: no macros (pure std-cell slice)",
+  "std_cell_band": "PASS: one std-cell field, fill 0.445; mild hot spots NW quadrant, no red blocks",
+  "pin_spread": "PASS: pins on all four full faces (2,923 pins), same pin plan as the closed s81sl_vs view",
+  "clock_entry": "PASS: S face; 15,226 sinks, TT insertion 256.7, pin-flop spread 23.1 TT / 20.8 FF (<=80)",
+  "shape": "PASS: 172.8x172.8 square, same frame as the closed view; trial GRT overflow 0"
+ },
+ "notes": "pin_reg_split (one launch flop per output pin, 0 cycles) fixes the closed view's u[62] launch 230.9 (46 u DFFE flops with QN feeding the hold mux were not anchored at the face). CTS native probe: launch 98.3 / capture 77.9, 0 over, comb 0.",
+ "geometry_sha256": "9198fbd0379302d7d1ae26b07260b6710f66d6e11c5d0c5609035602b518e505"
+}
