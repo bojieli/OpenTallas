@@ -1263,6 +1263,12 @@ def ref_gate_at_submit(j, jobs=None):
         return
     if isinstance(res.get("route_overlay_plan"), dict) and j.get("freeze_helper_overlay"):
         j["route_overlay_plan"] = res["route_overlay_plan"]
+    if isinstance(res.get("relaxing_rule_allowlist"), dict):
+        # RELAXING-RULE ALLOWLIST (ROOT-0040 2026-10-18): the gate stood across relaxing-only rule commits; record it
+        j["relaxing_rule_allowlist"] = dict(res["relaxing_rule_allowlist"], at=now_iso())
+        event(j, "RELAXING-RULE ALLOWLIST: gate kept across " + ", ".join(
+            c[:9] for c in res["relaxing_rule_allowlist"].get("commits") or []) + "; " + "; ".join(
+            x.get("text", "") for x in res["relaxing_rule_allowlist"].get("requirements") or [])[:300])
     if isinstance(res.get("clock"), dict):
         j["clock_rule"] = dict(res["clock"], mode=kw.get("clock_mode"))      # textbook_cfg() hands it to the in-flow lint
         event(j, f"CLOCK-RULE at submit: {res['clock'].get('text', '')[:300]}"

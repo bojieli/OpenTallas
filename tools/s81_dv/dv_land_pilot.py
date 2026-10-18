@@ -57,6 +57,8 @@ def main():
     k.add_argument('--libs-remote', required=True)
     k.add_argument('--corners', nargs='+', default=['tt', 'ff'])
     k.add_argument('--extra-tcl', type=Path, default=None, help='tcl inserted after read_db (variant netlist edits)')
+    k.add_argument('--standin-libs', action='store_true', help='read the stand-in block libs from the libs dir (dv_sta_pilot '
+                   '--standin-views hop-0 source contract) instead of the case views')
     k.add_argument('--hop-endpoints', nargs='*', default=['st_x_f_0L00_l2_0/i[22]', 'st_tvS_s_7N_0/i[117]', 'st_tvS_s_7N_5/i[117]',
                                                          'st_xrE_0S_l1_0/i[33]', 'st_xrE_0S_l1_3/i[33]', 'st_pv_W_l1_0/i[224]'])
     v = sp.add_parser('variant')
@@ -99,15 +101,16 @@ def main():
         if L['stages'] == 0:
             continue                                   # no relay: no forwarded clock (neighbour root -> root)
         r = per.get(nm)
-        if r is None:
-            continue
+        if r is None:   # no block pin in the worst-200k setup lists at any corner: single-cycle met with margin -> E = 1
+            r = {c: dict(s1=0.0, h0=1e9, n=0, unlisted=True) for c in a.corners}
         # hold end reports list only the worst 200k endpoints: an absent block pin met hold with margin (> listed worst)
         e_min = max(1 + max(0, math.ceil(-r[c]['s1'] / T)) for c in a.corners)
         e = e_min
         su = {c: round(r[c]['s1'] + (e - 1) * T, 1) for c in a.corners}
         ho = {c: (round(r[c]['h0'] + (a.D - e) * T, 1) if r[c]['h0'] < 1e8 else None) for c in a.corners}
         ok = all(v >= 0 for v in su.values()) and all(v is None or v >= 0 for v in ho.values())
-        spread = round(max(r[c]['s1'] for c in a.corners) - min(r[c]['s1'] for c in a.corners), 1)
+        fin = [r[c]['s1'] for c in a.corners if r[c]['s1'] < 1e8]     # unlisted at a corner = met with margin there
+        spread = round(max(fin) - min(fin), 1) if fin else 0.0
         plan.append(dict(link=nm, cls=L['cls'], dst=L['dst'], bits=L['bits'], stages=L['stages'],
                          s1={c: round(r[c]['s1'], 1) for c in a.corners},
                          h0={c: (round(r[c]['h0'], 1) if r[c]['h0'] < 1e8 else None) for c in a.corners},
@@ -225,7 +228,9 @@ foreach ep {{{' '.join(a.hop_endpoints)}}} {{
   catch {{ report_checks -path_delay min -to [get_pins $ep] -fields {{slew cap fanout}} -digits 1 >> /pilot/out/hop_{c}.rpt }}
 }}
 puts OT_STA_DONE''')
-        t = t.replace('/pilot/libs/rly_', '/libs/rly_')
+        t = t.replace('/pilot/libs/', '/libs/')
+        if a.standin_libs:
+            t = t.replace('[glob $C/views/dv_*.lib]', '[glob /libs/dv_*.lib]')
         if a.extra_tcl:
             t = t.replace(f'source {P.PLAT}/setRC.tcl', a.extra_tcl.read_text() + f'source {P.PLAT}/setRC.tcl', 1)
         (a.plan / f'sta_land_{c}.tcl').write_text(t)

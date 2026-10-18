@@ -34,8 +34,14 @@ module tb_s81ph_sel #(parameter integer SEARCH_PIPE = 0, parameter integer CMP_R
     // ---------------- DUT
     reg  [514:0] d_in [0:Q-1];      // index = input lane (0 SW, 1 SE, 2 NW, 3 NE)
     wire [513:0] vd; wire vf;
+`ifdef OT_DSDV_BK
+    // S81U-BK: the S81-DV unit dsdv_bk_sel behind its V rung (rtl/dsrom_sys/s81_dv/unit/bk/test/tb_dsdv_bk_wrap.sv)
+    tb_dsdv_bk_wrap #(.UNIT(0), .MUT(`OT_DSDV_BK)) u_dut (.ck(clk), .rst(rst_n), .l0(d_in[0]), .l1(d_in[1]), .l2(d_in[2]),
+        .l3(d_in[3]), .vd(vd), .vf(vf));
+`else
     dsfd_bk_selector #(.CMP_RETIME(CMP_RETIME), .PIPE2(PIPE2), .MRG_PIPE(MRG_PIPE), .RQPIPE(RQPIPE), .SLAT(SLAT), .QIO(QIO), .SEARCH_PIPE(SEARCH_PIPE)) u_dut (.ck(clk), .iNE(d_in[3]), .iNW(d_in[2]), .iSE(d_in[1]), .iSW(d_in[0]), .rst(rst_n),
         .vd(vd), .vf(vf));
+`endif
 `ifdef TB_CTRL
     // ---------------- s81-ctl-1011 TB_CTRL: the sel engine endpoint tile dsfd_dw_ep_s on a snoop of vd. Each segment's
     // descriptor (arg[7:0] = the segment tag, op = segment index) is sent ahead of the segment (the sequencer runs ahead
@@ -283,7 +289,7 @@ module tb_s81ph_sel #(parameter integer SEARCH_PIPE = 0, parameter integer CMP_R
         make_seg(0, 200, 64, 0, 0);
         bub_pct = 0;
         drive_dut(bad_k, orphan, coll);
-        for (t = 0; t < 400 && !seen; t++) begin
+        for (t = 0; t < `ifdef OT_DSDV_BK 4000 `else 400 `endif && !seen; t++) begin
             @(posedge clk);
             foreach (dw[j]) if (dw[j][511:508] == 5 && dw[j][bit_]) seen = 1;
         end

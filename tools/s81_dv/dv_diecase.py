@@ -108,6 +108,9 @@ def main():
     ap.add_argument('--dieflow-ref', default='origin/main')
     ap.add_argument('--relay-ref', default=None, help='git ref holding the closed dsfd_dvrly_276_{EW,WE,NS,SN} views '
                     '(276-b lane stations become real relay macros; other widths stay DFF stand-ins)')
+    ap.add_argument('--relay-widths', type=int, nargs='+', default=[276],
+                    help='with --relay-ref: lane widths whose stations bind the closed dsfd_dvrly_<W>_<dir> views (S81-LAND2: '
+                    '276 70 512 562 682); a (width, direction) without a closed view stays a DFF stand-in station (census)')
     ap.add_argument('--bind', choices=('standin', 'real'), default='standin',
                     help='real: S81-BIND real-view mode (tools/s81_dv/dv_bind.py) -- every plan master binds its RTL by the '
                     'bind table, real F1 relay masters on every link, regional reset relay tree, sourced forwarded clocks; '
@@ -202,13 +205,21 @@ def main():
         lines += ['  END', f'END {m}', '']
         (out / 'views' / f'{m}.lib').write_text(stand_in_lib(m, pins.get(bl['name'], [])))
         (out / 'views' / f'{m}.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(lines) + 'END LIBRARY\n')
+    rview = {}                                    # (bits, dir) -> (w, h) of a closed relay view bound in this case
     if a.relay_ref:
         import subprocess
-        for d in RLY:
-            base = f'physical/ref_tile/s81dv_rly_276_{d.lower()}/views/dsfd_dvrly_276_{d}/dsfd_dvrly_276_{d}'
-            for ext, dst in (('.lef', f'rly_{d}.lef'), ('_tt.lib', f'rly_{d}_tt.lib')):
-                (out / 'views' / dst).write_bytes(subprocess.run(['git', '-C', str(ROOT), 'show', f'{a.relay_ref}:{base}{ext}'],
-                                                                 capture_output=True, check=True).stdout)
+        for b in sorted(set(a.relay_widths)):
+            for d in RLY:
+                base = f'physical/ref_tile/s81dv_rly_{b}_{d.lower()}/views/dsfd_dvrly_{b}_{d}/dsfd_dvrly_{b}_{d}'
+                lef = subprocess.run(['git', '-C', str(ROOT), 'show', f'{a.relay_ref}:{base}.lef'], capture_output=True)
+                if lef.returncode:
+                    continue
+                sz = next(l.split() for l in lef.stdout.decode().splitlines() if l.strip().startswith('SIZE'))
+                rview[(b, d)] = (float(sz[1]), float(sz[3]))
+                tag = d if b == 276 else f'{b}_{d}'      # 276 keeps its p4j file names
+                (out / 'views' / f'rly_{tag}.lef').write_bytes(lef.stdout)
+                (out / 'views' / f'rly_{tag}_tt.lib').write_bytes(subprocess.run(
+                    ['git', '-C', str(ROOT), 'show', f'{a.relay_ref}:{base}_tt.lib'], capture_output=True, check=True).stdout)
     # ------------------------------------------------------------------ die netlist
     v = ['module dv_die (input clk, input rst);', '  wire n_rst_dv = rst;']
     nreal = 0
@@ -241,9 +252,9 @@ def main():
         for k in range(st):
             wn = f'r_{nm}_{k}'
             v.append(f'  wire [{b - 1}:0] {wn};')
-            if a.relay_ref and b == 276:
+            if (b, sdir[(nm, k)]) in rview:
                 # real closed station (flop-first, recipe 4): ck = hop clock in, ck_o = forwarded out (F1)
-                v.append(f'  dsfd_dvrly_276_{sdir[(nm, k)]} st_{nm}_{k} (.i({prev}), .o({wn}), .ck(n{nm}_fck[{k}]), '
+                v.append(f'  dsfd_dvrly_{b}_{sdir[(nm, k)]} st_{nm}_{k} (.i({prev}), .o({wn}), .ck(n{nm}_fck[{k}]), '
                          f'.ck_o(n{nm}_fck[{k + 1}]), .rs(n_rst_dv));')
                 nreal += 1
                 prev = wn
@@ -265,14 +276,14 @@ def main():
         pl.append(f'place_inst -name u_{bl["name"]} -location {{{bl["x"] - ox:.3f} {bl["y"] - oy:.3f}}} -orientation R0 -status FIRM')
     # relay flops: a station of `b` flops on a small square of rows / sites at the hop point
     for nm, k, b, px, py in flops:
-        if a.relay_ref and b == 276:
-            w_, h_ = RLY[sdir[(nm, k)]]
+        if (b, sdir[(nm, k)]) in rview:
+            w_, h_ = rview[(b, sdir[(nm, k)])]
             pl.append(f'place_inst -name st_{nm}_{k} -location {{{px - w_ / 2:.3f} {py - h_ / 2:.3f}}} -orientation R0 -status FIRM')
             continue
         pl.append(f'place_inst -name ff_{nm}_{k} -location {{{round((px - 2) / SITE) * SITE:.3f} {round((py - 1) / ROW) * ROW + 1.08:.3f}}} -orientation R0 -status PLACED')
         pl.append(f'place_inst -name lcb_{nm}_{k} -location {{{round((px - 4) / SITE) * SITE:.3f} {round((py - 2) / ROW) * ROW + 1.08:.3f}}} -orientation R0 -status PLACED')
     for nm, k, b, px, py in flops:
-        if a.relay_ref and b == 276:
+        if (b, sdir[(nm, k)]) in rview:
             continue
         side = max(1, int(math.ceil(math.sqrt(b * 0.648 / (ROW * SITE)) / 12)))   # ~12 sites per DFF
         cols = max(1, int(math.ceil(math.sqrt(b))))
@@ -361,7 +372,11 @@ rc=$?; echo $rc > $D/out/run.exit; exit $rc
     area = W * H / 1e6
     info = dict(schema='opentallas.s81_dv.die_case.v1', plan=str(a.plan), region=a.region, die_um=[W, H], area_mm2=round(area, 2),
                 blocks=dict(kinds), census={k: CENSUS.get(k, 'stand-in') for k in kinds},
-                real_views=dict(relay_276_stations=nreal, relay_ref=a.relay_ref,
+                real_views=dict(relay_276_stations=sum(1 for nm, k, b, *_ in flops if b == 276 and (b, sdir[(nm, k)]) in rview),
+                                relay_stations=nreal, relay_views=sorted(f'{b}_{d}' for b, d in rview),
+                                standin_stations=dict(collections.Counter(f'{b}_{sdir[(nm, k)]}' for nm, k, b, *_ in flops
+                                                                          if (b, sdir[(nm, k)]) not in rview)),
+                                relay_ref=a.relay_ref,
                                 diagnostic='relay rs pins on one special net (regional reset tree not modelled in this case)'),
                 links=len(nets), bits=nbits, bits_by_class=dict(used), relay_flops=nf,
                 die_nets_est=nbits + nf, die_repair=a.die_repair,

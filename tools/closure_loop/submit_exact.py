@@ -28,6 +28,11 @@ Run it from the worktree that holds the spec's source commit.  Steps:
     Claude holds COORDINATOR.lock, 'codex ...' when Codex does), time, gate_commit (= the kit gate's commit), verdict
     APPROVED|CHANGES, checklist {lattice, std_cell_band, pin_spread, clock_entry, shape}}; else REVIEW_REQUIRED + PNGs;
  7. drop the spec atomically into the closure-loop drop dir (only after a PASS/WARN).
+BENCH EVIDENCE (ROOT-2345 2026-10-17): before anything else, refuse locally what the daemon would mark INVALID / REFUSED
+after the gate: a closure candidate (not hold_merge / auto_merge false) needs a behavioural expect=pass bench and an
+expect=fail mutant (stages.bench, or benched_by a composition gate), and every expect=fail bench needs a fail_regex and
+a committed fail_witness (the captured real mutant log the regex matches; bench_lint checks the match).  A spec that
+must route without a witness says why in "fail_witness_waiver" (or pass --allow-missing-witness: WARN only).
 Exit 0 submitted (or dry-run PASS), 1 refused locally, 2 usage/git error.
 """
 import argparse
@@ -304,6 +309,49 @@ def review_check(root, commit, kit, show=None):
     return None
 
 
+LINT_BENCH_RE = re.compile(r"(?:bench_)?lint(?:_.*)?", re.I)      # same as closure_loop.LINT_BENCH_RE
+COMPOSITION_GATES = HERE.parent / "ref_tile" / "composition_gates.json"
+
+
+def bench_evidence_problems(spec, allow_missing_witness=False):
+    """(errors, warnings): the daemon's bench rule (validate + bench_gate_check) and the fail-witness rule, locally."""
+    errs, warns = [], []
+    st = spec.get("stages") if isinstance(spec.get("stages"), dict) else {}
+    benches = [b for b in st.get("bench") or [] if isinstance(b, dict)]
+    gate = spec.get("benched_by")
+    if gate is not None:
+        try:
+            g = (json.loads(COMPOSITION_GATES.read_text()).get("gates") or {}).get(gate)
+        except (OSError, ValueError):
+            g = None
+        if not isinstance(g, dict):
+            errs.append(f"benched_by {gate!r} is not a composition gate of {COMPOSITION_GATES}")
+        else:
+            benches += [dict(b, name=f"{gate}_{b.get('name')}") for b in g.get("benches") or [] if isinstance(b, dict)]
+    candidate = not (spec.get("auto_merge") is False or spec.get("hold_merge"))
+    if candidate and not (benches or spec.get("no_bench_reason")):
+        errs.append("no benches: a closure candidate needs a behavioural bench (expect pass) and a mutant (expect fail) "
+                    "in stages.bench, or benched_by a composition gate (hold_merge for a job that never merges)")
+    elif candidate and benches:
+        if not any(b.get("expect") == "pass" and not LINT_BENCH_RE.fullmatch(str(b.get("name"))) for b in benches):
+            errs.append("no behavioural expect=pass bench (lint alone is not exactness)")
+        if not any(b.get("expect") == "fail" for b in benches):
+            errs.append("no expect=fail mutant bench (the daemon marks the job INVALID after the gate)")
+    waiver = spec.get("fail_witness_waiver")
+    for b in benches:
+        if b.get("expect") != "fail":
+            continue
+        miss = [k for k in ("fail_regex", "fail_witness") if not b.get(k)]
+        if miss:
+            msg = (f"bench {b.get('name')}: expect=fail without {' and '.join(miss)} -- commit the captured real mutant "
+                   f"log and name it in fail_witness (the fail_regex must match it)")
+            if (isinstance(waiver, str) and waiver.strip()) or allow_missing_witness:
+                warns.append(msg + " [waived]")
+            else:
+                errs.append(msg)
+    return errs, warns
+
+
 def drop_retired(spec):
     """RETIRED-HOST (HOSTFIX 2026-10-17): strip retired fleet hosts from hosts / host_require with a warning (an emptied
     list falls back to admission) instead of letting the daemon mark the job INVALID 'unknown host'."""
@@ -319,6 +367,22 @@ def drop_retired(spec):
     return spec
 
 
+def use_daemon_code(daemon):
+    """import pre_route_gate / source_binding / helper_overlay from the DAEMON tree, not from this copy's tree.
+
+    SUBMIT-FIX 2026-10-18: a tile worktree that synced only tools/closure_loop kept a stale tools/ref_tile, so the
+    preflight ran pre-ROOT-0040 source_binding (no RELAXING_RULE_COMMITS) and refused gates the daemon accepts
+    ("OVERLAY tools/textbook_lint.py ... moved by ef6a3af26").  The check must be the daemon's own code."""
+    d = Path(daemon)
+    for sub in ("tools/ref_tile", "tools/closure_loop"):
+        if (d / sub).is_dir():
+            sys.path.insert(0, str(d / sub))
+    for m in ("pre_route_gate", "source_binding", "helper_overlay"):
+        mod = sys.modules.get(m)
+        if mod is not None and d not in Path(getattr(mod, "__file__", "/")).resolve().parents:
+            del sys.modules[m]
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("spec")
@@ -330,8 +394,11 @@ def main(argv=None):
     ap.add_argument("--no-push", dest="push", action="store_false",
                     help="do not push HEAD to origin/<source.branch> (default: push after every commit, before the gate)")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--allow-missing-witness", action="store_true",
+                    help="expect=fail benches without fail_regex/fail_witness WARN instead of refusing")
     ap.add_argument("--daemon-tree", default=os.environ.get("OT_CLOSURE_DAEMON_TREE", "/home/ubuntu/wt-claude-closure-daemon-1010"))
     a = ap.parse_args(argv)
+    use_daemon_code(a.daemon_tree)
     root = Path(git(Path.cwd(), "rev-parse", "--show-toplevel"))
     spec_path = Path(a.spec)
     spec = json.loads(spec_path.read_text())
@@ -353,9 +420,15 @@ def main(argv=None):
     if a.commit_paths:
         push()
     # the daemon refuses these as INVALID after the gate (b2 upper x2, xcal216 10-16): same check + message, locally first
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    # HERE is already on sys.path (module top); re-inserting it at 0 would shadow the daemon tree (use_daemon_code)
     import bench_count
     st = spec.get("stages") if isinstance(spec.get("stages"), dict) else {}
+    ev_err, ev_warn = bench_evidence_problems(spec, a.allow_missing_witness)
+    for w in ev_warn:
+        print(f"BENCH-EVIDENCE WARN: {w}")
+    if ev_err:
+        print("REFUSED LOCALLY (BENCH-EVIDENCE: benches / fail witnesses missing): " + "; ".join(ev_err))
+        return 1
     mcr_bad = bench_count.count_regex_errors(st.get("bench", []))
     if mcr_bad:
         print("REFUSED LOCALLY (INVALID spec, the daemon would reject it): " + "; ".join(mcr_bad))
@@ -392,6 +465,11 @@ def main(argv=None):
         res = preflight(spec, root, a.daemon_tree)
         v, msg = res.get("verdict"), res.get("message", "")
         print(f"daemon submit check at {commit[:9]}: {v}: {msg[:1500]}")
+        rr = res.get("relaxing_rule_allowlist")
+        if isinstance(rr, dict):
+            print("RELAXING-RULE ALLOWLIST used (recorded in the job at intake): commits "
+                  + ", ".join(c[:9] for c in rr.get("commits") or []) + "; "
+                  + "; ".join(x.get("text", "") for x in rr.get("requirements") or []))
         if v != "REFUSE":
             break
         kit = kit_of(spec)

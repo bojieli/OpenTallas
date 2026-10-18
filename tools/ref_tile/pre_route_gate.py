@@ -847,7 +847,7 @@ if [ "{CTS}" = 1 ]; then
   grep -h "^global_placement -density\|Placement target density" $R/cts.log | head -2 | sed 's/^/GATE_GPLD /'
   python3 tools/closure_loop/ck_insertion.py --base $B --all-clocks --raw-source --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
-  python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt')}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
+  python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt'),'ff':{{k:(r.get('ff') or {{}}).get(k) for k in ('boundary','all')}}}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
   docker run --rm -e OT_GATE_SIGNOFF_SDC=/src/{KIT}/signoff.sdc -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
   grep "^GATE_PC" $R/pc.log
   ot_layout $NB/4_1_cts.odb placed
@@ -1427,6 +1427,7 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
     lint 'clock_roots' line) and, with --cts, the measured TT insertion (latest leaf arrival) and leaf arrival spread
     (max - min over all register clock pins, ck_insertion.py 'all')."""
     rec = {"max_root_sinks": None, "root": None, "cts": bool(cts), "tt_insertion_ps": None, "tt_spread_ps": None,
+           "tt_pin_spread_ps": None, "ff_insertion_ps": None, "ff_spread_ps": None, "ff_pin_spread_ps": None,
            "declared_clock": (spec or {}).get("clock"),
            "limits": {"sinks": TL.CLK_ROOT_SINKS_MAX, "insertion_ps": TL.CLK_INSERTION_MAX_PS,
                       "spread_ps": TL.CLK_SPREAD_MAX_PS}}
@@ -1446,18 +1447,17 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
         root = (rec["root"] or "").removeprefix("port:")
         matched = [d for d in domains if d.get("source") == root or d.get("clock") == root]
         if cts and len(matched) == 1:
-            al = (matched[0].get("tt") or {}).get("all")
-            if al and al.get("min") is not None and al.get("max") is not None:
-                lo, hi = float(al["min"]), float(al["max"])
-                rec["tt_insertion_ps"], rec["tt_spread_ps"] = hi, round(hi - lo, 1)
+            corner_spreads(rec, matched[0])
+            if rec["tt_insertion_ps"] is not None:
                 rec["measured_clock"] = matched[0].get("clock")
     else:
-        ck = re.search(r"^GATE_CK .*?\btt insertion all ([\d.]+)\.\.([\d.]+) ps", out, re.M)
-        if cts and ck:
-            lo, hi = float(ck.group(1)), float(ck.group(2))
-            rec["tt_insertion_ps"], rec["tt_spread_ps"] = hi, round(hi - lo, 1)
-    ok, text = TL.clock_rule(rec["max_root_sinks"], rec)
-    rec["verdict"] = "PASS" if ok and rec["max_root_sinks"] is not None else ("UNKNOWN" if ok else "REFUSE")
+        for c in ("tt", "ff"):
+            ck = re.search(rf"^GATE_CK .*?\b{c} insertion all ([\d.]+)\.\.([\d.]+) ps", out, re.M)
+            if cts and ck:
+                lo, hi = float(ck.group(1)), float(ck.group(2))
+                rec[f"{c}_insertion_ps"], rec[f"{c}_spread_ps"] = hi, round(hi - lo, 1)
+    level, text = TL.clock_rule_eval(rec["max_root_sinks"], rec)
+    rec["verdict"] = ("REFUSE" if level == "FAIL" else "UNKNOWN" if rec["max_root_sinks"] is None else level)
     rec["text"] = text
     if (spec or {}).get("clock") == "multiple_cts_roots":
         expected = set(spec["clock_ports"])
@@ -1475,16 +1475,48 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
                 lo, hi = float(al["min"]), float(al["max"])
                 if n <= 0 or not math.isfinite(lo) or not math.isfinite(hi) or not 0 < lo <= hi:
                     raise ValueError("invalid actual clock population")
-                measured = {"tt_insertion_ps": hi, "tt_spread_ps": hi - lo}
-                passed, why = TL.clock_rule(n, measured)
-                per_root.append(dict(source=domain.get("source"), sinks=n, **measured, verdict="PASS" if passed else "REFUSE", text=why))
-                if not passed:
+                measured = corner_spreads({}, domain)
+                level, why = TL.clock_rule_eval(n, measured)
+                per_root.append(dict(source=domain.get("source"), sinks=n, **measured,
+                                     verdict="REFUSE" if level == "FAIL" else level, text=why))
+                if level == "FAIL":
                     issues.append(f"{domain.get('source')}: {why}")
             except (KeyError, TypeError, ValueError, OverflowError):
                 issues.append(f"{domain.get('source')}: missing finite positive actual TT root census")
         rec["per_root"] = per_root
         if issues:
             rec["verdict"], rec["text"] = "REFUSE", "; ".join(issues)
+    return rec
+
+
+def upgrade_clock_record(ev: dict | None) -> dict | None:
+    """A pre-0dq gate clock record (no "<c>_pin_spread_ps") judged by the 0dq rule from its OWN report: the pin-flop
+    (boundary register) spread of the measured root's domain, as corner_spreads records it today.  ROOT-0040 2026-10-18:
+    without this an old record falls back to the all-register leaf spread, which 0dq does not judge."""
+    if not isinstance(ev, dict) or any(f"{c}_pin_spread_ps" in ev for c in ("tt", "ff")):
+        return ev
+    doms = [d for d in ev.get("clock_measurements") or [] if isinstance(d, dict)]
+    want = ev.get("measured_clock")
+    root = str(ev.get("root") or "").removeprefix("port:")
+    matched = [d for d in doms if want and d.get("clock") == want] or \
+              [d for d in doms if d.get("source") == root or d.get("clock") == root]
+    if len(matched) != 1:
+        return ev
+    add = {k: v for k, v in corner_spreads({}, matched[0]).items() if k.endswith("_pin_spread_ps")}
+    return dict(ev, **add, pin_spread_from_gate_report=True) if add else ev
+
+
+def corner_spreads(rec: dict, domain: dict) -> dict:
+    """TT and FF insertion (latest register arrival), all-register leaf spread and pin-flop (boundary register) spread
+    of one ck_insertion clock record (owner 10-17 0dq: the rule is the pin-flop spread at TT AND FF)."""
+    for c in ("tt", "ff"):
+        cr = domain.get(c) or {}
+        al, bd = cr.get("all") or {}, cr.get("boundary") or {}
+        if al.get("min") is not None and al.get("max") is not None:
+            lo, hi = float(al["min"]), float(al["max"])
+            rec[f"{c}_insertion_ps"], rec[f"{c}_spread_ps"] = hi, round(hi - lo, 1)
+        if bd.get("min") is not None and bd.get("max") is not None:
+            rec[f"{c}_pin_spread_ps"] = round(float(bd["max"]) - float(bd["min"]), 1)
     return rec
 
 
@@ -1495,6 +1527,9 @@ def clock_item(g: Gate, rec: dict) -> None:
         g.add("FAIL", "clock_rule", rec["text"] + ("" if rec["cts"] else " -- this gate ran without --cts")
               + (f" (declared clock '{rec['declared_clock']}' does not waive it)" if rec.get("declared_clock") else ""),
               TL.CLOCK_RULE_FIX)
+    elif rec["verdict"] == "WARN":
+        g.add("WARN", "clock_rule", f"root {rec['root']}: {rec['text']}",
+              "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link")
     elif rec["verdict"] == "UNKNOWN":
         g.add("WARN", "clock_rule", "the synthesized netlist's clock sinks were not reported: " + rec["text"],
               "read the remote log (textbook lint line 'clock_roots')")
@@ -1518,7 +1553,7 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
             if rec is not None:
                 binding = {**binding, "consumed": rec}
                 d["source_binding"] = binding
-        ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit)
+        ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit, clock=d.get("clock"))
         if not ok:
             return no(reason)
         if note is not None:
@@ -1548,9 +1583,14 @@ def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, clos
     before placement).  closed_stands: a CLOSED tile is not re-judged."""
     why, note = [], []
     rec = kit_gate_evidence(kd, source_commit, why, note)
-    ev = rec["clock"] if rec else None
+    ev = upgrade_clock_record(rec["clock"]) if rec else None
     if rec and note and "reported, not refused" in note[0]:
         g.add("INFO", "source_binding", note[0][:1500])
+    relaxed = (rec or {}).get("source_binding", {}).get("relaxing_rule_allowlist") if rec else None
+    if relaxed and not closed_stands:
+        # RELAXING-RULE ALLOWLIST (ROOT-0040): the gate stands across relaxing-only rule commits; recorded in the job
+        g.relaxing_rule_allowlist = relaxed
+        g.add("INFO", "relaxing_rule_allowlist", (note[0] if note else "relaxing-rule allowlist used")[:1500])
     if rec and not closed_stands and not rec["source_binding"].get("route_hold_context"):
         g.add("WARN", "route_hold_context",
               "historical CTS gate does not attest production hold margin/MM context; diagnostic clock evidence only",
@@ -1566,7 +1606,14 @@ def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, clos
             # Route-only helpers are not bound by the gate: when they moved since the gate, the route freezes today's
             # effective plan (whose gate-executed rows SB.validate just proved equal to the staged ones).
             current, _ = HO.capture_plan(DAEMON_TREE, ROOT)
-            if SB.route_only_drift(frozen, current, rec["source_binding"]["files"]):
+            if relaxed:
+                # the relaxed paths changed since the gate: the route must run TODAY's (relaxed) helpers, never the
+                # gate-frozen pre-relaxation bytes (the old in-flow lint would still FAIL on the relaxed rule)
+                current["gate_verified_paths"] = SB.gate_overlay_paths(rec["source_binding"])
+                current["scope"] = "gate_executed_overlays_verified_relaxing_rule_allowlist_current"
+                current["relaxing_rule_allowlist"] = relaxed.get("commits")
+                frozen = current
+            elif SB.route_only_drift(frozen, current, rec["source_binding"]["files"]):
                 current["gate_verified_paths"] = SB.gate_overlay_paths(rec["source_binding"])
                 current["scope"] = "gate_executed_overlays_verified_route_only_helpers_current"
                 frozen = current
@@ -1578,10 +1625,14 @@ def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, clos
     n = (ev or {}).get("max_root_sinks")
     if not isinstance(n, int):          # the kit's own gate result outranks history (a rebuilt tile proves itself)
         n = known_sinks if isinstance(known_sinks, int) else None
-    ok, text = TL.clock_rule(n if isinstance(n, int) else None, ev)
-    res = {"evidence": ev, "sinks": n, "ok": ok, "text": text, "closed_stands": bool(closed_stands)}
+    level, text = TL.clock_rule_eval(n if isinstance(n, int) else None, ev)
+    ok = level != "FAIL"
+    res = {"evidence": ev, "sinks": n, "ok": ok, "level": level, "text": text, "closed_stands": bool(closed_stands)}
     g.clock = res
-    if ok or closed_stands:
+    if level == "WARN" and not closed_stands:
+        g.add("WARN", "clock_rule", text, "guidance only (owner 10-17 0dq): the check is pin-flop spread <= 80 ps at "
+              "TT and FF plus a neighbour-matched boundary")
+    elif ok or closed_stands:
         g.add("INFO", "clock_rule", text + (" (CLOSED tile: stands)" if closed_stands and not ok else ""))
     else:
         src = "kit gate_result.json" if ev and ev.get("max_root_sinks") == n else "this block's latest synthesized design"
@@ -1802,7 +1853,8 @@ def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = 
     msg = " | ".join(f"{i['check']}: {i['message']}" + (f" (fix: {i['fix']})" if i["fix"] else "")
                      for i in (fails or warns))[:1500]
     return {"verdict": "REFUSE" if fails else ("WARN" if warns else "PASS"), "message": msg or "pre-route gate PASS",
-            "clock": getattr(g, "clock", None), "route_overlay_plan": getattr(g, "route_overlay_plan", None)}
+            "clock": getattr(g, "clock", None), "route_overlay_plan": getattr(g, "route_overlay_plan", None),
+            "relaxing_rule_allowlist": getattr(g, "relaxing_rule_allowlist", None)}
 
 if __name__ == "__main__":
     sys.exit(main())

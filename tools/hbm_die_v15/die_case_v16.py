@@ -245,6 +245,83 @@ def regional_regions(sinks, entry_map, I, region_map, entry_pairs, near_um, max_
     return reg, rep
 
 
+def reset_reach_gate(rst, nets, pl, vxy, cell_of, master_of, reach, ckgen='hb_ckgen', mode=None):
+    """H-D4G 10-17 (die standard: regional synchronous reset; as the Qwen generator, main 27309ba59): every reset sink must
+    be reachable by a regional reset tree.  Errors:
+      no_regional_tree  -- a reset pin fed straight from hb_ckgen/por_<dom> (die-wide async fan-out) beyond the reach;
+      sink_unreachable  -- a reset pin buried under another placed block, or a forest leaf (hbfd_rrl_*) -> pin hop over the reach;
+      driver_unreachable -- a reset driver pin (por / forest tile) buried under another placed block.
+    Any error FAILS (ValueError) unless mode == 'diag' (OT_RESET_GATE=diag: the case continues, rec['reach_gate'] =
+    'FAIL_DIAG'); 'warn' does NOT bypass it.  Returns rec."""
+    import os as _os
+    mode = _os.environ.get('OT_RESET_GATE') if mode is None else mode
+    BIN = 1000.0
+    grid = defaultdict(list)
+    for n, v in pl.items():
+        for i in range(int(v['x'] // BIN), int((v['x'] + v['w']) // BIN) + 1):
+            for j in range(int(v['y'] // BIN), int((v['y'] + v['h']) // BIN) + 1):
+                grid[(i, j)].append(n)
+
+    def xy(n, p):
+        v = pl[n]; base = re.sub(r'\[\d+\]$', '', p)
+        q = vxy.get(cell_of[n], {}).get(p) or vxy.get(cell_of[n], {}).get(base)
+        if q is None:
+            return v['x'] + v['w'] / 2, v['y'] + v['h'] / 2
+        return rect_of(v['x'], v['y'], v['w'], v['h'], v['o'], q[0], q[1])
+
+    def buried(n, pt):
+        x, y = pt
+        for o in grid.get((int(x // BIN), int(y // BIN)), ()):
+            if o == n:
+                continue
+            v = pl[o]
+            if v['x'] + 0.5 < x < v['x'] + v['w'] - 0.5 and v['y'] + 0.5 < y < v['y'] + v['h'] - 0.5:
+                return o
+        return None
+    errors, n_por, n_forest = [], 0, 0
+    for dom, lst in sorted(rst.items()):
+        src = (ckgen, f'por_{dom}')
+        sp = xy(*src) if ckgen in pl else None
+        if sp is not None and buried(ckgen, sp):
+            errors.append(dict(kind='driver_unreachable', pin=f'{ckgen}.por_{dom}', under=buried(ckgen, sp)))
+        for (n, p) in lst:
+            if n not in pl:
+                continue
+            n_por += 1
+            pt = xy(n, p)
+            b = buried(n, pt)
+            if b:
+                errors.append(dict(kind='sink_unreachable', pin=f'{n}.{p}', domain=dom, under=b))
+            elif sp is not None and abs(pt[0] - sp[0]) + abs(pt[1] - sp[1]) > reach:
+                errors.append(dict(kind='no_regional_tree', pin=f'{n}.{p}', domain=dom,
+                                   um=round(abs(pt[0] - sp[0]) + abs(pt[1] - sp[1]))))
+    for d, ends in nets.items():
+        if d[0] not in pl or not master_of(d[0]).startswith('hbfd_rrl'):
+            continue
+        dp = xy(*d)
+        if buried(d[0], dp):
+            errors.append(dict(kind='driver_unreachable', pin=f'{d[0]}.{d[1]}', under=buried(d[0], dp)))
+        for l in ends[1:]:
+            if l[0] not in pl:
+                continue
+            n_forest += 1
+            pt = xy(*l)
+            b = buried(l[0], pt)
+            if b:
+                errors.append(dict(kind='sink_unreachable', pin=f'{l[0]}.{l[1]}', under=b))
+            elif abs(pt[0] - dp[0]) + abs(pt[1] - dp[1]) > reach:
+                errors.append(dict(kind='sink_unreachable', pin=f'{l[0]}.{l[1]}', driver=f'{d[0]}.{d[1]}',
+                                   um=round(abs(pt[0] - dp[0]) + abs(pt[1] - dp[1]))))
+    kinds = dict(collections.Counter(e['kind'] for e in errors))
+    rec = dict(reach_um=reach, por_direct_sinks=n_por, forest_sinks=n_forest, errors=len(errors), kinds=kinds,
+               first=errors[:20], reach_gate='PASS' if not errors else ('FAIL_DIAG' if mode == 'diag' else 'FAIL'))
+    print('reset_reach_gate', json.dumps({k: rec[k] for k in ('reach_gate', 'por_direct_sinks', 'forest_sinks', 'errors', 'kinds')}), flush=True)
+    if rec['reach_gate'] == 'FAIL':
+        raise ValueError(f'reset tree: reachability gate FAIL, {len(errors)} unbuildable {kinds}: {errors[:8]} '
+                         f'(OT_RESET_GATE=diag continues for diagnosis only)')
+    return rec
+
+
 def clock_entries(insts, placement, cell_of, pin_xy, tile_pairs):
     """Plan each literal clock pin; tile names alone hide long intra-tile stubs.
 
@@ -1012,6 +1089,8 @@ def main():
         print(json.dumps(dict(insts=len(inst), nets=len(nets), excluded=len(excluded), homes=len(homes), problems=len(bad))))
         return
 
+    # H-D4G: reset reachability gate before the (long) clock trees, so an unbuildable reset fails fast
+    reset_gate_rec = reset_reach_gate(rst, nets, pl, vxy, cell_of, lambda n: I[n]['master'], mw['value_um'])
     # ---------------- die clock trees ----------------
     ck = slots[CKGEN]
     # every hard outline (relays too), minus the carved die-owned feedthrough channels (clock repeaters may sit there)
@@ -1072,6 +1151,7 @@ def main():
         print('clock', dom, 'sinks', len(sinks), 'buffers', len(bufs), flush=True)
 
     manifest['clock_entry_map'] = entry_maps
+    manifest['reset_reach_gate'] = reset_gate_rec
     manifest['clock_regions'] = clock_regions
     manifest['clock_entry_scope'] = 'Each literal clock pin planned separately; conservative all-entry communicating pairs. Native phase/ownership qualification remains OPEN.'
     (out / 'die_clock_check_pairs.json').write_text(json.dumps(dict(
