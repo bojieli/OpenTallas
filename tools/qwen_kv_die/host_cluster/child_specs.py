@@ -18,14 +18,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 RES = ROOT / 'results/arch/qwen_split_1014/host_root_cluster'
-CLUSTER = 'rtl/qwen_sys/host_cluster_20261017/qkd_hr_cluster.v'
+CLUSTER_DIR = 'rtl/qwen_sys/host_cluster_20261017'
 W, H = 950.4, 648.0
 # r2 floorplan intent (um, cluster origin SW): adp x8 = S band 0..172.8; the rest per data flow
 CENTROIDS = dict(qkd_hr_phy_adp=(475, 86), qkd_hr_phy_pad=(300, 230), qkd_hr_cdc_pc=(520, 250),
                  qkd_hr_core_tx=(790, 250), qkd_hr_core_rx=(140, 280), qkd_hr_core_peer=(480, 410),
                  qkd_hr_core_prompt=(170, 450), qkd_hr_core_guard=(800, 400), qkd_hr_core_queue=(330, 590),
                  qkd_hr_core_order=(110, 600), qkd_hr_cdc_host=(560, 590), qkd_hr_ingest_qm=(800, 560))
-UTIL, PIN_PER_UM = 0.45, 6.0
+UTIL, PIN_PER_UM = 0.5, 6.0
 MACROS = {'ot_sram_1r1w_1024x256_m2_r2c2': (174.744, 70.470), 'ot_sram_1rw_256x64_m4_r2c2': (66.312, 17.820)}
 FLAT = 1.0                                               # hier census area ~ the route synthesis (queue gate: 7,286 vs 5,415 hier)
 PINFLOP_UM2 = 0.45                                       # one pin register + its anchoring per pin bit
@@ -86,7 +86,7 @@ def main():
             for name, d in plist:
                 rows.append(dict(port=name, dir=d, width=1, peers=['u_core_peer']))
         else:
-            top, params, src = child, {}, [CLUSTER] + srcs
+            top, params, src = child, {}, [f'{CLUSTER_DIR}/{child}.v'] + srcs
             rows = ports[child]['ports']
         bits = sum(r['width'] for r in rows)
         clk = [r['port'] for r in rows if re.match(r'^(ck|clk)', r['port'])]

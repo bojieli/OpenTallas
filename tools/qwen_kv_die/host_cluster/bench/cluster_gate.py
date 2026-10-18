@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[4]   # repo root (tools/qwen_kv_die/host_cluster/bench)
 HERE = Path(__file__).resolve().parent
-CLUSTER = ROOT / 'rtl/qwen_sys/host_cluster_20261017/qkd_hr_cluster.v'
+CLUSTER_DIR = ROOT / 'rtl/qwen_sys/host_cluster_20261017'   # qkd_hr_cluster.v (parent) + one file per child
 PORTS = HERE / 'root_ports.json'          # the flat root's ports (yosys, ENABLE_SERVICE/NATIVE/TOKEN=1, NL=2)
 SOURCES = HERE / 'sources.txt'            # census source list (SRAM behavioural models + the root's RTL)
 
@@ -44,7 +44,7 @@ def main():
     a = ap.parse_args()
     out = Path(a.out).resolve()
     out.mkdir(parents=True, exist_ok=True)
-    txt = CLUSTER.read_text()
+    txt = ''.join(f.read_text() for f in sorted(CLUSTER_DIR.glob('qkd_hr_*.v')))
     if a.mode == 'mutant':
         m = re.search(r'\n  qkd_hr_' + a.child + r' u_' + a.child + r' \((.*?)\);', txt, re.S)
         mod = re.search(r'\nmodule qkd_hr_' + a.child + r'\(.*?\nendmodule', txt, re.S).group(0)
