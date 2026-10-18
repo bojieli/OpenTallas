@@ -28,8 +28,12 @@
 // Measured (per layer, edges of the 1.2 GHz core clock): XQ_MEAS lines; summary XQ_E lines.
 // MUT: 1 KV programme run one edge late (calendar slot shift), 2 one PHY bit corrupted in a Q frame (CRC -> abort),
 //      3 one RESULT word corrupted at the KV producer pins (golden mismatch at the compute consumer),
-//      4 compute sys_face q_slot one edge late, 5 (K_REAL=0) KV STATUS word = 0, as qkd_native_attention_static_ctl
-//      encodes it (tx_data = 0 on the status slot): native59 needs the done bit rd[3] (finding witness).
+//      4 compute sys_face q_slot one edge late, 5 (K_REAL=0) KV STATUS word = 0 (the pre-F2 static_ctl encoding):
+//      native59 needs the done bit rd[3]; 6 (C_REAL=1) native59 MUT 4 = the pre-F1 Q window (opens one edge after the
+//      request: Q beat 0 one link slot late against the compiled calendar); 7 (K_REAL=1) static_ctl MUT 3 = the pre-F2
+//      all-zero STATUS word from the real KV programme.
+// QXF-LINK 2026-10-18: the die masters take TXDP from the compiler (xdie_params.svh P_TXDP_C / P_TXDP_K = the calendar's
+//      TXD; F4), STATUS words come from qkd_native_status_word (F2), QGAP default 0 = the compiler's CMD->Q law (F1).
 // =====================================================================================================================
 module xq_dly #(parameter integer W = 1, parameter integer D = 0) (input wire ck, input wire [W-1:0] a, output wire [W-1:0] b);
     generate if (D == 0) begin : g0
@@ -44,7 +48,8 @@ endmodule
 
 module tb_xdie_qwen_exchange;
     `include "xdie_params.svh"
-    parameter integer MUT = 0, C_REAL = 1, K_REAL = 1, NL = 35, QGAP = 1;
+    parameter integer MUT = 0, C_REAL = 1, K_REAL = 1, NL = 35, QGAP = 0;
+    parameter integer XQ_TXDP_UNSET = 0;   // F4 witness: build the masters without the compiled TXDP (must not elaborate)
     parameter CALDIR = "cal";
     localparam integer FW = 548, PW = 583, PR = 1, LEAD = 2 * PR;
     localparam [15:0] EP = 16'd9;
@@ -121,7 +126,7 @@ module tb_xdie_qwen_exchange;
     wire kw_v, kw_slot; wire [10:0] kw_tag; wire [511:0] kw_data; wire [58:0] kw_id; wire [1:0] kw_gen, kw_idx;
     wire c_prog_rxv, c_prog_auth, c_prog_ctx, c_prog_wslot, c_emb_v, c_emb_s, k_emb_slot;
     wire st_res = act && rel == 20;
-    qfd_d2d_static #(.MUT(0), .PR(PR)) u_c (.ck(ck), .por_n(por_n), .rst_n(rst_n),
+    qfd_d2d_static #(.MUT(0), .PR(PR), .TXDP(XQ_TXDP_UNSET ? 32'd0 : P_TXDP_C)) u_c (.ck(ck), .por_n(por_n), .rst_n(rst_n),
         .cfg_tx_we(cfg_c_tx), .cfg_rx_we(cfg_c_rx), .cfg_addr({1'b0, cfg_a}), .cfg_data(cfg_dc), .cal_start(cstart), .cal_seg(1'b0),
         .fwd_epoch(bump_ep[2]), .fwd_link_rst_n(bump_lr[2]),
         .native_tx_slot(c_txs0), .native_tx_slot_kind(c_tk), .native_tx_slot_beat(c_tb), .native_tx_v(c_tv0),
@@ -136,7 +141,7 @@ module tb_xdie_qwen_exchange;
         .result_gen(GEN), .result_token(TOK), .result_value(32'(lay * 77)), .result_cycles(32'(lay)),
         .fdi_tx_up(c_up), .fdi_tx_v(c_ptx_v), .fdi_tx_flit(c_ptx), .fdi_rx_v(c_prx_v), .fdi_rx_flit(c_prx),
         .phy_rst_n(c_phy_rst_n), .epoch_abort(c_abort), .transport_fault(c_tf), .fault(c_f));
-    qkd_d2d_static #(.MUT(0), .PR(PR)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
+    qkd_d2d_static #(.MUT(0), .PR(PR), .TXDP(XQ_TXDP_UNSET ? 32'd0 : P_TXDP_K)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
         .cfg_tx_we(cfg_k_tx), .cfg_rx_we(cfg_k_rx), .cfg_addr({1'b0, cfg_a}), .cfg_data(cfg_dk), .cal_start(cstart), .cal_seg(1'b0),
         .host_link_reset_req(1'b0), .host_recovery_clear(1'b0), .host_boot_begin(host_boot),
         .fwd_epoch(fwd_ep), .fwd_link_rst_n(fwd_lrst_n),
@@ -214,7 +219,7 @@ module tb_xdie_qwen_exchange;
             end
         end
         wire[94:0] n_ret; wire e_cre, e_sre; wire [23:0] e_caddr; wire [17:0] e_saddr;
-        qfd_native59_dv_service #(.MUT(0)) native59 (.ck(ck), .rst_n(rst_n),
+        qfd_native59_dv_service #(.MUT(MUT == 6 ? 4 : 0)) native59 (.ck(ck), .rst_n(rst_n),
             .host_epoch_valid(1'b1), .host_fused_capability(1'b1), .host_epoch(EP), .host_tag(host_tag), .host_generation(GEN),
             .layer_context_v(ctxv), .command_stage(stage), .native_token(TOK), .native_position(18'(POS)), .native_cmd(cmd),
             .dd_i(dd), .kv_word_slot(kvs), .kv_word_index(kvi), .kv_x3_slot(n_x3s),
@@ -248,7 +253,10 @@ module tb_xdie_qwen_exchange;
             .fault(ca_f), .fault_cause(ca_fc));
         assign p_tv = c_tv0; assign p_tp = c_tp0;
         assign dr = (ca_rv && ca_rk == 4'd3) ? {1'b1, 1'b0, 1'b0, ca_rb, ca_rd} : 520'd0;
-        assign n_fault = ca_f; assign n_done = ca_rv && ca_rk == 4'd4;
+        assign n_fault = ca_f; assign n_done = ca_rv && ca_rk == 4'd4 && ca_rd[3];
+        // the KV producer's STATUS word, bit-exact against the namespace (F2: the consumer completes on done)
+        always @(posedge ck) if (rst_n && act && ca_rv && ca_rk == 4'd4 && ca_rd !== {507'd0, 5'b01001})
+            err("STATUS word != namespace {q_ready 0, done 1, fault 0, busy 0, ready 1}");
         wire kvn_push = act && rel >= P_KS - 1 && rel < P_KS + 3;
         wire kvt_f;
         qfd_kvn_static_transport u_kvt (.ck(ck), .rst_n(rst_n & ~c_eb), .word_v(kvn_push), .word_tag({3'd2, 8'(rel - (P_KS - 1))}),
@@ -292,7 +300,7 @@ module tb_xdie_qwen_exchange;
         wire [4:0] res_b = 5'(kage - P_TX_FIRST);
         wire [511:0] res_d = obeat(kage - P_TX_FIRST, lay) ^ ((MUT == 3 && lay == 5 && kage == P_TX_FIRST + 7) ? 512'd1 : 512'd0);
         wire res_done = act && kage == P_TX_FIRST + 32;
-        qkd_native_attention_programme #(.MUT(0)) u_attn (.ck(ck), .rst_n(rst_n), .issue(kv_issue), .run(kv_run),
+        qkd_native_attention_programme #(.MUT(MUT == 7 ? 3 : 0)) u_attn (.ck(ck), .rst_n(rst_n), .issue(kv_issue), .run(kv_run),
             .fused_program_capability(1'b1), .authority_valid(1'b1), .authority_epoch(EP), .authority_token(TOK),
             .authority_position(18'(POS)), .authority_stage(stage), .compiled_calendar(cal), .compiled_rx_cmd(rx_cmd),
             .compiled_tx_first(tx_first), .compiled_end(end_age), .rx_event(a_rxe), .rx_payload(a_rxp),
@@ -346,7 +354,9 @@ module tb_xdie_qwen_exchange;
         wire r_ev = act && (rel >= P_RS && rel < P_RS + 32 || rel == P_RE);
         wire [3:0] r_kind = rel == P_RE ? 4'd4 : 4'd3;
         wire [4:0] r_beat = rel == P_RE ? 5'd0 : 5'(rel - P_RS);
-        wire [511:0] r_data = rel == P_RE ? ((MUT == 5) ? 512'd0 : {507'd0, 5'b01001}) : obeat(rel - P_RS, lay) ^ ((MUT == 3 && lay == 5 && rel == P_RS + 7) ? 512'd1 : 512'd0);
+        wire [511:0] st_word;    // the producers' STATUS encoder (namespace {q_ready, done, fault, busy, ready})
+        qkd_native_status_word u_st_word (.q_ready(1'b0), .done(1'b1), .fault(1'b0), .busy(1'b0), .ready(1'b1), .word(st_word));
+        wire [511:0] r_data = rel == P_RE ? ((MUT == 5) ? 512'd0 : st_word) : obeat(rel - P_RS, lay) ^ ((MUT == 3 && lay == 5 && rel == P_RS + 7) ? 512'd1 : 512'd0);
         wire ka_rv; wire [3:0] ka_rk, ka_fc; wire [15:0] ka_re; wire [5:0] ka_rl; wire [4:0] ka_rb; wire [511:0] ka_rd;
         qkd_native_attention_record #(.KV_SIDE(1)) u_ka (.ck(ck), .rst_n(rst_n & ~k_eb),
             .tx_event(r_ev), .tx_expected(k_txs0), .tx_kind(r_kind), .tx_expected_kind(k_tk),

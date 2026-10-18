@@ -11,27 +11,39 @@ V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 D=rtl/qwen_sys/d2d_static_20261015; S=rtl/qwen_sys/split_20261014; Q=rtl/qwen_split
 NET_C='2,0,2,2,0,2'            # dv2f14bn as netlisted: tx_slot / rx_payload / kv_x3_slot / x3 landed E 2, rx_v + tx_v direct
 NET_K='9,11,9,8,9,6,11'        # kvs14c as netlisted: srx 9, rx_payload 11, att_tx slot 9 / kind 8 / beat 9, tx_v 6, tx_payload 11
-PLAN='2,2,2,2,2,2/11,11,9,9,9,11,11'   # every bundle equalised to its netlisted maximum (what the die plan must build)
+# every bundle at its netlisted member maximum (what the die plan must build; F5 / F6): compute tx_record (tx_v + payload)
+# is direct in dv2f14bn -> SC_TX 0 (QXF-LINK 10-18; run_r3 used 2 -> TXDP C [8,3,1,9]; the compiler's die-run table and
+# LAYERBENCH-QWEN compiled_L1 give 0 -> C [6,3,1,9])
+PLAN='2,2,2,2,0,2/11,11,9,9,9,11,11'
+PLAN_R3='2,2,2,2,2,2/11,11,9,9,9,11,11'
 ZERO='0,0,0,0,0,0/0,0,0,0,0,0,0'
-# name | expect | calendar flags | bench -G flags | masters (txdp = compiled TXDP, orig = as-built hard-wired TXDP)
+OLDTXDP='3,3,1,4/3,4,3,3'      # the r4..r9 masters' hard-wired PR TXDP (component-bench codecs)
+# name | expect (PASS | FAIL | BUILD_FAIL) | calendar flags | bench -G flags
 CONFIGS=(
- "vc|PASS|--c-real 1 --k-real 0 --qgap 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=0 -GQGAP=1|txdp"
- "vk|PASS|--c-real 0 --k-real 1 --qgap 0 --stages $PLAN|-GC_REAL=0 -GK_REAL=1 -GQGAP=0|txdp"
- "vc_phy9|PASS|--c-real 1 --k-real 0 --qgap 1 --phy 9 --stages $PLAN|-GC_REAL=1 -GK_REAL=0 -GQGAP=1|txdp"
- "vk_phy9|PASS|--c-real 0 --k-real 1 --qgap 0 --phy 9 --stages $PLAN|-GC_REAL=0 -GK_REAL=1 -GQGAP=0|txdp"
- "vc_abut|PASS|--c-real 1 --k-real 0 --qgap 1 --stages $ZERO|-GC_REAL=1 -GK_REAL=0 -GQGAP=1|txdp"
- "vk_abut|PASS|--c-real 0 --k-real 1 --qgap 0 --stages $ZERO|-GC_REAL=0 -GK_REAL=1 -GQGAP=0|txdp"
- "full_gap1|FAIL|--c-real 1 --k-real 1 --qgap 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=1 -GQGAP=1|txdp"
- "full_gap0|FAIL|--c-real 1 --k-real 1 --qgap 0 --stages $PLAN|-GC_REAL=1 -GK_REAL=1 -GQGAP=0|txdp"
- "face_asbuilt|FAIL|--c-real 0 --k-real 2 --qgap 0 --stages $PLAN|-GC_REAL=0 -GK_REAL=2 -GQGAP=0|txdp"
- "masters_asbuilt|FAIL|--c-real 1 --k-real 0 --qgap 1 --stages $ZERO --txd-override 1,1,1,2 --no-extend|-GC_REAL=1 -GK_REAL=0 -GQGAP=1|orig"
- "netlist_c|FAIL|--c-real 1 --k-real 0 --qgap 1 --stages $NET_C/0,0,0,0,0,0,0|-GC_REAL=1 -GK_REAL=0 -GQGAP=1|txdp"
- "netlist_k|FAIL|--c-real 0 --k-real 1 --qgap 0 --stages 0,0,0,0,0,0/$NET_K|-GC_REAL=0 -GK_REAL=1 -GQGAP=0|txdp"
- "mut1_kv_run_late|FAIL|--c-real 0 --k-real 1 --qgap 0 --stages $PLAN|-GC_REAL=0 -GK_REAL=1 -GQGAP=0 -GMUT=1|txdp"
- "mut2_phy_bit|FAIL|--c-real 1 --k-real 0 --qgap 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=0 -GQGAP=1 -GMUT=2|txdp"
- "mut3_result_word|FAIL|--c-real 1 --k-real 0 --qgap 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=0 -GQGAP=1 -GMUT=3|txdp"
- "mut4_qslot_late|FAIL|--c-real 1 --k-real 0 --qgap 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=0 -GQGAP=1 -GMUT=4|txdp"
- "mut5_kv_status_zero|FAIL|--c-real 1 --k-real 0 --qgap 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=0 -GQGAP=1 -GMUT=5|txdp"
+ "vc|PASS|--c-real 1 --k-real 0 --stages $PLAN|-GC_REAL=1 -GK_REAL=0"
+ "vk|PASS|--c-real 0 --k-real 1 --stages $PLAN|-GC_REAL=0 -GK_REAL=1"
+ "full|PASS|--c-real 1 --k-real 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=1"
+ "full_phy9|PASS|--c-real 1 --k-real 1 --phy 9 --stages $PLAN|-GC_REAL=1 -GK_REAL=1"
+ "full_abut|PASS|--c-real 1 --k-real 1 --stages $ZERO|-GC_REAL=1 -GK_REAL=1"
+ "full_r3stages|PASS|--c-real 1 --k-real 1 --stages $PLAN_R3|-GC_REAL=1 -GK_REAL=1"
+ "full_l0|PASS|--c-real 1 --k-real 1 --layer L0 --stages $PLAN|-GC_REAL=1 -GK_REAL=1"
+ "vc_phy9|PASS|--c-real 1 --k-real 0 --phy 9 --stages $PLAN|-GC_REAL=1 -GK_REAL=0"
+ "vk_phy9|PASS|--c-real 0 --k-real 1 --phy 9 --stages $PLAN|-GC_REAL=0 -GK_REAL=1"
+ "full_gap1|FAIL|--c-real 1 --k-real 1 --qgap 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=1 -GQGAP=1"
+ "f1_n59_legacy_window|FAIL|--c-real 1 --k-real 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=1 -GMUT=6"
+ "f2_kv_status_legacy|FAIL|--c-real 1 --k-real 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=1 -GMUT=7"
+ "f2_vk_status_legacy|FAIL|--c-real 0 --k-real 1 --stages $PLAN|-GC_REAL=0 -GK_REAL=1 -GMUT=7"
+ "mut5_kv_status_zero|FAIL|--c-real 1 --k-real 0 --stages $PLAN|-GC_REAL=1 -GK_REAL=0 -GMUT=5"
+ "f4_masters_stale_txdp|FAIL|--c-real 1 --k-real 1 --stages $PLAN --masters-txdp $OLDTXDP|-GC_REAL=1 -GK_REAL=1"
+ "f4_masters_uncompiled|BUILD_FAIL|--c-real 1 --k-real 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=1 -GXQ_TXDP_UNSET=1"
+ "f7_l0_priced_window|FAIL|--c-real 1 --k-real 1 --layer L0 --no-extend --stages $PLAN|-GC_REAL=1 -GK_REAL=1"
+ "face_asbuilt|FAIL|--c-real 0 --k-real 2 --stages $PLAN|-GC_REAL=0 -GK_REAL=2"
+ "netlist_c|FAIL|--c-real 1 --k-real 0 --stages $NET_C/0,0,0,0,0,0,0|-GC_REAL=1 -GK_REAL=0"
+ "netlist_k|FAIL|--c-real 0 --k-real 1 --stages 0,0,0,0,0,0/$NET_K|-GC_REAL=0 -GK_REAL=1"
+ "mut1_kv_run_late|FAIL|--c-real 1 --k-real 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=1 -GMUT=1"
+ "mut2_phy_bit|FAIL|--c-real 1 --k-real 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=1 -GMUT=2"
+ "mut3_result_word|FAIL|--c-real 1 --k-real 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=1 -GMUT=3"
+ "mut4_qslot_late|FAIL|--c-real 1 --k-real 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=1 -GMUT=4"
 )
 SRC_COMMON=("rtl/lib/ot_rst_pipe.sv" "$S/ot_qwen_crc_parallel.sv" "$S/ot_qwen_static_slot_link.sv" "$S/ot_qkvd_d2d_llr.sv"
  "$S/qkd_native_attention_record.sv" "$D/ot_qwen_d2d_static.sv" "$D/ot_qwen_d2d_services.sv" "$Q/qfd_kvn_static_transport.sv"
@@ -46,25 +58,17 @@ mkdir -p "$OUT"
 sha256sum "${SRC_COMMON[@]}" "$D/ot_qwen_d2d_dies.sv" tools/qwen_split/xdie_exchange_cal.py tools/qwen_split/d2d_link_calendar.py "$0" > "$OUT/source.sha256"
 want=("$@")
 one() {
-  local name=$1 exp=$2 calf=$3 gf=$4 mast=$5 o=$OUT/$1
+  local name=$1 exp=$2 calf=$3 gf=$4 o=$OUT/$1
   mkdir -p "$o"
   python3 tools/qwen_split/xdie_exchange_cal.py --out "$o/cal" $calf > "$o/cal.log" 2>&1 || { echo "$name expect=$exp got=CAL_FAIL -> $([ $exp = FAIL ] && echo OK || echo UNEXPECTED)"; tail -3 "$o/cal.log"; return; }
-  local dies="$D/ot_qwen_d2d_dies.sv"
-  if [ "$mast" = txdp ]; then
-    python3 - "$o/cal/calendar.json" "$D/ot_qwen_d2d_dies.sv" "$o/ot_qwen_d2d_dies_txdp.sv" <<'PY'
-import json, sys
-c = json.load(open(sys.argv[1]))['txd']; t = open(sys.argv[2]).read()
-f = lambda v: '{' + ', '.join(f"8'd{x}" for x in reversed(v)) + '}'   # byte p = port p
-old_c, old_k = "{8'd4, 8'd1, 8'd3, 8'd3}", "{8'd3, 8'd3, 8'd4, 8'd3}"
-assert t.count(f'.TXDP(PR ? {old_c}') == 1 and t.count(f'.TXDP(PR ? {old_k}') == 1
-t = t.replace(f'.TXDP(PR ? {old_c}', f'.TXDP(PR ? {f(c["C"])}').replace(f'.TXDP(PR ? {old_k}', f'.TXDP(PR ? {f(c["K"])}')
-open(sys.argv[3], 'w').write('// GENERATED by run_xdie_exchange.sh: ot_qwen_d2d_dies.sv with the compiled per-port TXDP (C %s, K %s)\n' % (c['C'], c['K']) + t)
-PY
-    dies="$o/ot_qwen_d2d_dies_txdp.sv"
-  fi
+  # the die masters take TXDP from the compiler (xdie_params.svh P_TXDP_C / P_TXDP_K; QXF-LINK F4): no source patching
   $V --binary --timing -j "${JOBS:-4}" -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-WIDTH \
      -DOT_MEM_NO_INIT -I"$o/cal" --top-module tb_xdie_qwen_exchange $gf -GCALDIR="\"$o/cal\"" --Mdir "$o/obj" \
-     "${SRC_COMMON[@]}" "$dies" > "$o/build.log" 2>&1 || { echo "$name expect=$exp got=BUILD_FAIL -> UNEXPECTED"; grep -m6 '%Error' "$o/build.log"; return; }
+     "${SRC_COMMON[@]}" "$D/ot_qwen_d2d_dies.sv" > "$o/build.log" 2>&1 || {
+       if [ "$exp" = BUILD_FAIL ] && grep -q 'D2D_TXDP_NOT_COMPILED' "$o/build.log"; then
+         echo "$name expect=$exp got=BUILD_FAIL -> OK"; grep -m2 'D2D_TXDP_NOT_COMPILED' "$o/build.log" | sed 's/^/    /'; cp "$o/build.log" "$o/run.log"
+       else echo "$name expect=$exp got=BUILD_FAIL -> UNEXPECTED"; grep -m6 '%Error' "$o/build.log"; fi
+       rm -rf "$o/obj"; return; }
   "$o/obj/Vtb_xdie_qwen_exchange" > "$o/run.log" 2>&1
   rm -rf "$o/obj"
   local got=FAIL; grep -q '^XQ_PASS' "$o/run.log" && got=PASS
@@ -74,11 +78,11 @@ PY
 }
 pids=()
 for c in "${CONFIGS[@]}"; do
-  IFS='|' read -r name exp calf gf mast <<< "$c"
+  IFS='|' read -r name exp calf gf <<< "$c"
   if [ ${#want[@]} -gt 0 ] && ! printf '%s\n' "${want[@]}" | grep -qx "$name"; then continue; fi
-  one "$name" "$exp" "$calf" "$gf" "$mast" > "$OUT/$name.summary" 2>&1 &
+  one "$name" "$exp" "$calf" "$gf" > "$OUT/$name.summary" 2>&1 &
   pids+=($!)
 done
 for p in "${pids[@]}"; do wait $p; done
 cat "$OUT"/*.summary | tee "$OUT/SUMMARY.txt"
-! grep -q 'UNEXPECTED\|BUILD_FAIL' "$OUT/SUMMARY.txt"
+! grep -q 'UNEXPECTED' "$OUT/SUMMARY.txt"
