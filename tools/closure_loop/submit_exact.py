@@ -367,6 +367,22 @@ def drop_retired(spec):
     return spec
 
 
+def use_daemon_code(daemon):
+    """import pre_route_gate / source_binding / helper_overlay from the DAEMON tree, not from this copy's tree.
+
+    SUBMIT-FIX 2026-10-18: a tile worktree that synced only tools/closure_loop kept a stale tools/ref_tile, so the
+    preflight ran pre-ROOT-0040 source_binding (no RELAXING_RULE_COMMITS) and refused gates the daemon accepts
+    ("OVERLAY tools/textbook_lint.py ... moved by ef6a3af26").  The check must be the daemon's own code."""
+    d = Path(daemon)
+    for sub in ("tools/ref_tile", "tools/closure_loop"):
+        if (d / sub).is_dir():
+            sys.path.insert(0, str(d / sub))
+    for m in ("pre_route_gate", "source_binding", "helper_overlay"):
+        mod = sys.modules.get(m)
+        if mod is not None and d not in Path(getattr(mod, "__file__", "/")).resolve().parents:
+            del sys.modules[m]
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("spec")
@@ -382,6 +398,7 @@ def main(argv=None):
                     help="expect=fail benches without fail_regex/fail_witness WARN instead of refusing")
     ap.add_argument("--daemon-tree", default=os.environ.get("OT_CLOSURE_DAEMON_TREE", "/home/ubuntu/wt-claude-closure-daemon-1010"))
     a = ap.parse_args(argv)
+    use_daemon_code(a.daemon_tree)
     root = Path(git(Path.cwd(), "rev-parse", "--show-toplevel"))
     spec_path = Path(a.spec)
     spec = json.loads(spec_path.read_text())
@@ -403,7 +420,7 @@ def main(argv=None):
     if a.commit_paths:
         push()
     # the daemon refuses these as INVALID after the gate (b2 upper x2, xcal216 10-16): same check + message, locally first
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    # HERE is already on sys.path (module top); re-inserting it at 0 would shadow the daemon tree (use_daemon_code)
     import bench_count
     st = spec.get("stages") if isinstance(spec.get("stages"), dict) else {}
     ev_err, ev_warn = bench_evidence_problems(spec, a.allow_missing_witness)
