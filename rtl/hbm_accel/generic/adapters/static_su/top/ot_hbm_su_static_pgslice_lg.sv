@@ -5,14 +5,20 @@
 // edges READ_RETURN/WRITE_RETURN = the slice's own 10/7, no rret/wret straps). Ports: every pgslice port unchanged
 // except lg_* which now face the VM bank (= the taps' near side); new lg_read/lg_write (calendar local selects),
 // far_rq/far_wq (from the SFU-level taps) and far_rr/far_w_done (to them); lg_fault = OR of the two taps.
-// The taps run on pg_clk (the slice's VM bank leaf clock) with one pin-registered reset. Generated from the
-// pgslice port list (one-off; this file is static).
+// The taps run on pg_clk (the slice's VM bank leaf clock). Generated from the pgslice port list (one-off; static).
+// RSYNC (HBM-SU3 2026-10-17, default 1): the serial power-on reset rst_n reaches the stream-domain taps and the
+// slice's two VM bank leaves through 1-bit serial->stream synchronisers (clk_ctl source flop + two pg_clk flops): the
+// taps in the hardened leaf ot_hbm_su_static_pg_lg_tap, the leaves by pgslice PG_RSYNC=1. RSYNC=0 = the r8b structure
+// (one pg_clk flop of rst_n for the taps, raw async rst_n on the leaves), kept only as the bench reference.
+// Datapath edges unchanged; reset assert/release on the stream side move to the synchronised edges.
 module ot_hbm_su_static_pgslice_lg #(
  parameter integer QID=0,G=0,READ_RETURN=10,WRITE_RETURN=7,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0,
  parameter integer PIN_REG=0,
  parameter integer COLLPORT=0,
  parameter integer B39_NOOP=(QID==0),
- parameter integer RF_LOCAL=0
+ parameter integer RF_LOCAL=0,
+ parameter integer RSYNC=1,
+ parameter integer RSYNC_MUT=0
 )(
  input wire pg_clk,
  input wire [255:0] clk_lane,
@@ -53,8 +59,7 @@ module ot_hbm_su_static_pgslice_lg #(
  output wire lg_fault
 );
  wire [33:0] s_rq; wire [561:0] s_wq; wire [513:0] s_rr; wire [1:0] s_done;
- (* keep = "true" *) reg lg_rst; always @(posedge pg_clk) lg_rst <= rst_n;
- ot_hbm_su_static_pgslice #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG),.COLLPORT(COLLPORT),.B39_NOOP(B39_NOOP),.RF_LOCAL(RF_LOCAL)) u_slice(
+ ot_hbm_su_static_pgslice #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG),.COLLPORT(COLLPORT),.B39_NOOP(B39_NOOP),.RF_LOCAL(RF_LOCAL),.PG_RSYNC(RSYNC)) u_slice(
   .pg_clk(pg_clk),
   .clk_lane(clk_lane),
   .clk_insert(clk_insert),
@@ -86,9 +91,17 @@ module ot_hbm_su_static_pgslice_lg #(
   .dw_row(dw_row),
   .dw_d(dw_d),
   .fault(fault));
- ot_hbm_vm_lg_pair_tap #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN)) u_tap(
-  .clk(pg_clk),.rst_n(lg_rst),.local_rq(s_rq),.far_rq(far_rq),.local_wq(s_wq),.far_wq(far_wq),
-  .local_read(lg_read),.local_write(lg_write),.near_rq(lg_rq),.near_wq(lg_wq),.near_rr(lg_rr),.near_w_done(lg_w_done),
-  .local_rr(s_rr),.far_rr(far_rr),.local_w_done(s_done),.far_w_done(far_w_done),.fault(lg_fault));
+ if(RSYNC)begin:g_tap
+  ot_hbm_su_static_pg_lg_tap #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.RSYNC_MUT(RSYNC_MUT)) u_tap(
+   .clk_ctl(clk_ctl),.pg_clk(pg_clk),.rst_n(rst_n),.local_rq(s_rq),.far_rq(far_rq),.local_wq(s_wq),.far_wq(far_wq),
+   .local_read(lg_read),.local_write(lg_write),.near_rq(lg_rq),.near_wq(lg_wq),.near_rr(lg_rr),.near_w_done(lg_w_done),
+   .local_rr(s_rr),.far_rr(far_rr),.local_w_done(s_done),.far_w_done(far_w_done),.fault(lg_fault));
+ end else begin:g_tap_r8b
+  (* keep = "true" *) reg lg_rst; always @(posedge pg_clk) lg_rst <= rst_n;
+  ot_hbm_vm_lg_pair_tap #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN)) u_tap(
+   .clk(pg_clk),.rst_n(lg_rst),.local_rq(s_rq),.far_rq(far_rq),.local_wq(s_wq),.far_wq(far_wq),
+   .local_read(lg_read),.local_write(lg_write),.near_rq(lg_rq),.near_wq(lg_wq),.near_rr(lg_rr),.near_w_done(lg_w_done),
+   .local_rr(s_rr),.far_rr(far_rr),.local_w_done(s_done),.far_w_done(far_w_done),.fault(lg_fault));
+ end
 endmodule
 `default_nettype wire

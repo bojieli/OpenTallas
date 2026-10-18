@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_su_static_pg_lg_tap",
+ "enable": false,
+ "reason": "Every boundary bit already has its register in RTL: each static LG tap registers its local/far/near inputs at the pins and its mux/output stage; rst_n lands in the serial source flop of the synchroniser. Wrapper flops would add edges to the fixed VM calendar (10/7)."
+}
