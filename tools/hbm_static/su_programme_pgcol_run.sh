@@ -2,7 +2,7 @@
 # HBM-SU r5 2026-10-17: per-column cluster ot_hbm_su_programme_pslice_c5 (head + 10 pgcol leaves) vs the r4 per-quarter
 # producer (pslice PIPE 2), lockstep with the SAME start edge, on every quarter of the current 7111-edge su_top_compile
 # image, + 4 mutants that must FAIL (cfg: column index PC offset + dictionary word; phase; cfgany; stale).
-# Usage (from the repo root or an export): OUT=dir [QUARTERS="0 1 2 3"] $0
+# Usage (from the repo root or an export): OUT=dir [QUARTERS="0 1 2 3"] [ONLY=cfg|phase|cfgany|stale] $0
 set -euo pipefail
 ulimit -c 0
 OUT=$(mkdir -p "${OUT:?OUT required}" && realpath "$OUT")
@@ -32,6 +32,10 @@ run(){ set +e; "$OUT/obj$1/Vtb_hbm_su_programme_pgcol" +DIR="$OUT/q$4" $2 > "$OU
 # the quarters share one leaf/capacity layout (checked: identical cols_params.svh), so one build serves all four
 for k in ${QUARTERS:-0 1 2 3}; do cmp -s <(head -2 "$OUT/q0/cols_params.svh" | sed 's/CL_WRITES=[0-9]*//') \
   <(head -2 "$OUT/q$k/cols_params.svh" | sed 's/CL_WRITES=[0-9]*//') || { echo "quarter $k capacity layout differs"; exit 2; }; done
+if [ -n "${ONLY:-}" ]; then   # closure-loop expect=fail bench: one mutant on quarter 0, exits 1 after its verdict
+  case "$ONLY" in cfg) m=0; a=+MUT_CFG;; phase) m=1; a="";; cfgany) m=2; a="";; stale) m=3; a="";; *) echo "bad ONLY"; exit 2;; esac
+  build $m; run $m "$a" "$ONLY" 0 || true; exit 1
+fi
 for m in 0 1 2 3; do build $m; done
 ok=1
 for k in ${QUARTERS:-0 1 2 3}; do

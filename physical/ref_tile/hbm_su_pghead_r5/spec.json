@@ -1,0 +1,200 @@
+{
+ "name": "hbm_su_pghead_r5",
+ "top": "ot_hbm_su_programme_pghead",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "params": {},
+ "outline": {
+  "w": 86.4,
+  "h": 86.4,
+  "exact": true
+ },
+ "macros": [],
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "cfg_we",
+   "cfg_bank",
+   "cfg_row",
+   "cfg_data",
+   "l_fault",
+   "l_valid"
+  ],
+  "E": [
+   "o_we",
+   "o_any",
+   "o_bank",
+   "o_row",
+   "o_data",
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_group_max": 16,
+  "io_hold_margin_ns": 0.0,
+  "hold_margin_ns": 0.03
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_hbm_su_programme_pghead is itself the configuration pin stage of the cluster (= the pslice c_* stage): cfg inputs land on c_we/c_bank/o_row/o_data registers, l_fault on the fault OR register, l_valid on the sticky check; outputs are register outputs except o_we/o_any/o_bank (one 11-bit compare after c_bank/c_we). A kit flop stage would add an edge the leaf timing contract does not price."
+ },
+ "children": [],
+ "inter": [],
+ "clock": "cts",
+ "orfs_vars": {},
+ "structural_change": "SUCCESSOR of the flat per-quarter SU programme tile (hbm_su_pslice_r3_1017 gate FAIL 8058137fc: TT clock insertion 851..1280 ps, spread 429, GRT 4 h timeout; hbm_su_pslice_r4_1017 294f94bbd: TT 830..1148 ps, spread 318, GRT > 3.5 h with clock NDRs dropped, killed): one root over 98 SRAMs + 14k flops on 940 x 760 um. r5 = cluster ot_hbm_su_programme_pslice_c5: one leaf per command column (own packed 16-edge/row index, own dictionary, own 256 command flops, controller replica) + a head leaf (cfg stage + column decode + fault OR). Lockstep bench vs r4 on all 4 quarters PASS, mutants cfg/phase/cfgany/stale FAIL (db03bbcbd, results/rtl/hbm_su_lane_1017/r5_pgcol). Start advance unchanged DEPTH+4. THIS leaf: head (1 per quarter): cfg pin stage + column decode (bank[15:5] = column) + sticky fault OR of the 10 leaves + leaf-valid lockstep check; pin-bound register tile, inputs W / outputs E (placeholder faces).",
+ "job": {
+  "owner": "Claude:HBM-SU",
+  "branch": "claude/hbm-su-lane-1017",
+  "tag": "r5",
+  "purpose": "SU programme cluster leaf ot_hbm_su_programme_pghead (HBM-SU r5 per-column split)",
+  "views_to": "physical/ref_tile/hbm_su_pghead_r5/views",
+  "record_to": "results/rtl/ref_tile/hbm_su_pghead_r5",
+  "extra_paths": [
+   "tools/hbm_static",
+   "tools/hdc_golden.py",
+   "rtl/hbm_accel/generic/adapters/static_su/programme",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "benches": [
+   {
+    "name": "pgcol_equiv_7111_q0123",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/pos bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "pass",
+    "pass_regex": "SU_PROGRAMME_PGCOL_GATE PASS",
+    "min_count_regex": "SU_PROGRAMME_PGCOL PASS edges=(\\d+)"
+   },
+   {
+    "name": "pgcol_mut_cfg",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/cfg ONLY=cfg bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]"
+   },
+   {
+    "name": "pgcol_mut_phase",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/phase ONLY=phase bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]"
+   },
+   {
+    "name": "pgcol_mut_cfgany",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/cfgany ONLY=cfgany bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]"
+   },
+   {
+    "name": "pgcol_mut_stale",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/stale ONLY=stale bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]"
+   }
+  ]
+ },
+ "hold_budget": "die",
+ "pin_ranges": {
+  "cfg_data": [
+   2.0,
+   41.7
+  ],
+  "cfg_bank": [
+   42.9,
+   76.161
+  ],
+  "cfg_row": [
+   76.461,
+   78.077
+  ],
+  "cfg_we": [
+   78.377,
+   78.351
+  ],
+  "rst_n": [
+   78.651,
+   78.625
+  ],
+  "l_fault": [
+   78.925,
+   81.362
+  ],
+  "l_valid": [
+   81.662,
+   84.1
+  ],
+  "o_data": [
+   2.0,
+   77.037
+  ],
+  "o_row": [
+   77.337,
+   79.097
+  ],
+  "o_bank": [
+   79.397,
+   80.569
+  ],
+  "o_any": [
+   80.869,
+   80.863
+  ],
+  "o_we": [
+   81.163,
+   83.806
+  ],
+  "fault": [
+   84.106,
+   84.1
+  ],
+  "clk": [
+   42.0,
+   42.6
+  ]
+ }
+}
