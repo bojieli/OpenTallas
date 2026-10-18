@@ -76,6 +76,33 @@
   },
   {
    "design": "qwen_rom",
+   "unit": "DIE.FWD_LANE_LANDING (Qwen split compute die: 113 regional-root relay lanes -> forwarded half-cycle lanes + D4 landings; N/2+2+E per traversal vs n+1)",
+   "group": "DIE.FWD_LANE_LANDING",
+   "measured": 15148.5,
+   "price": 13723.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.1039,
+   "e2e_loss_pct": 0.568,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path (tools/qwen_split/fwd_lane_price.py --scope conservative)",
+     "base_cycles": 249431.0,
+     "cycles": 250856.5,
+     "added_cycles": 1425.5,
+     "e2e_loss_pct": 0.568,
+     "data_scope_e2e_loss_pct": 0.368
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/qwen_split_compute_1014/q_die11_rly_1018/price_conservative.json results/arch/qwen_split_compute_1014/q_die11_rly_1018/bench/pass.log",
+   "evidence_grade": "interim_log",
+   "date": "2026-10-18",
+   "status": "proposed",
+   "note": "Q-DIE11-RLY 10-18 (coordinator HANDOFF 0ea item 1, LANDING-CONTRACT L4 + section 7). price/measured = the priced critical-path lane edges a token (today n+1, landed (n-1)/2+2+E). E is the S81 p4j half-cycle fit ceil((n-1)/2)+1 (>=2), NOT yet the Qwen die STA: re-price with the dv2f14 land plan (OT_SPLIT_LAND_PLAN). Conservative scope charges the tt_ctlm cmd/hr/status lanes serially on every ME op (upper bound); data-path-only scope: 0.368 %. Behaviour: tools/qwen_split/bench_fwd_lane.sh PASS + 5 mutants FAIL."
+  },
+  {
+   "design": "qwen_rom",
    "unit": "DIE.RELAY (r21 die relay stations as wire-stage counts: BD 41->77, TWS 38->93, ORD 7->10, link 339->365; increment a layer)",
    "group": "DIE.RELAY",
    "measured": 613.0,
@@ -1842,6 +1869,47 @@
   },
   {
    "design": "r25gq",
+   "unit": "HBM d4g plan (b) as built (two rings + QBG + measured COLL gather master spans + ISA ring-A +2 + RTL1/2 ledger latencies) vs plan (b) model",
+   "group": "HBM.D4G_PLAN_B",
+   "measured": 1849.2,
+   "price": 1978.4,
+   "unit_of_measure": "tok/s (DS AR)",
+   "unit_ratio": 1.0699,
+   "e2e_loss_pct": 6.59,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "collq (d4g_2ring_qbg + ag_collq measured gather-master spans + ra_extra 2) vs plan (b) model (tools/hgi_sim/d4g_collq_price_1018.py)",
+     "base_tok_s": 1978.4,
+     "tok_s": 1849.2,
+     "e2e_loss_pct": 6.53,
+     "blocking": true
+    },
+    "qwen_ar": {
+     "model": "collq (d4g_2ring_qbg + ag_collq measured gather-master spans + ra_extra 2) vs plan (b) model (tools/hgi_sim/d4g_collq_price_1018.py)",
+     "base_tok_s": 955.2,
+     "tok_s": 946.2,
+     "e2e_loss_pct": 0.94,
+     "blocking": true
+    },
+    "ds_mtp": {
+     "model": "collq (d4g_2ring_qbg + ag_collq measured gather-master spans + ra_extra 2) vs plan (b) model (tools/hgi_sim/d4g_collq_price_1018.py)",
+     "base_tok_s": 3370.7,
+     "tok_s": 3148.5,
+     "e2e_loss_pct": 6.59,
+     "blocking": false,
+     "rule": "owner: MTP is recorded, not blocking"
+    }
+   },
+   "within_unit_limit": false,
+   "evidence": "results/arch/hbm_d4g_price_1017/collq/price_collq.json",
+   "evidence_grade": "interim_log",
+   "date": "2026-10-18",
+   "status": "proposed",
+   "note": "HBM-COLLQ 2026-10-18 re-price with the MEASURED per-quadrant COLL gather master (rtl ot_hgi_coll_gq, bench tb_hgi_coll_gq PASS; spans fire->last write R2: expert-intermediate plain 91 / QBG 52, o-group 61 / 45, engram 181 / 75 edges; + launch->fire 3 + 3 x COLL_RING relay stages; ISA ring-A +2 on every non-gather COLL record): DS AR 1849.2 vs 1978.4 (-6.53 %), DS MTP 3148.5 vs 3370.7 (-6.59 %), Qwen 946.2 vs 955.2 (-0.94 %). Earlier ring-schedule estimate (price_rtl3c d4g_2ring_qbg, ROOT-0510): AR -3.69 / MTP -3.32 / Qwen -0.94. Attribution (vs that model): gather spans -2.92 % AR (the model had no gather pipeline: 41 fixed edges VM read/quantiser/merge/publish, and it took the 2-hop MODE 1 schedule where the master runs the canonical 3-hop one: 3 x (2 + 9.4) vs 2 x (2 + 9.4)), ring-A +2 -0.03 %. Upper bound (no cut-through / multicast, broadcast-depth stages) AR -13.5 / MTP -17.5 %. DS AR loss exceeds the 5 % unit limit -> owner/coordinator decision (or recovery: a MODE-1 2-hop gather schedule, shorter plain read path). Owner rule: MTP recorded, not blocking. Priced model, interim grade until die runs measure it. e2e_loss_pct = the worst workload (6.59 %, DS MTP, ledger check rule); binding DS AR 6.53 %."
+  },
+  {
+   "design": "r25gq",
    "unit": "HC.HC_MIX_POST",
    "group": "HC.HC_MIX_POST",
    "measured": 692.3,
@@ -2276,11 +2344,11 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 1.065,
-   "proposed_pct": 6.553,
-   "accepted_plus_proposed_pct": 7.618,
+   "proposed_pct": 7.121,
+   "accepted_plus_proposed_pct": 8.186,
    "limit_pct": 15.0,
    "accepted_rows": 4,
-   "proposed_rows": 11,
+   "proposed_rows": 12,
    "headroom_pct": 13.935,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
@@ -2298,11 +2366,11 @@
   },
   "r25gq": {
    "accepted_pct": 0.895,
-   "proposed_pct": 114.037,
-   "accepted_plus_proposed_pct": 114.932,
+   "proposed_pct": 120.627,
+   "accepted_plus_proposed_pct": 121.522,
    "limit_pct": 15.0,
    "accepted_rows": 1,
-   "proposed_rows": 22,
+   "proposed_rows": 23,
    "headroom_pct": 14.105,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
