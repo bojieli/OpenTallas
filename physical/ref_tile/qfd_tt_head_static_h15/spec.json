@@ -650,5 +650,8 @@
  },
  "pin_hook_before_flops": [
   "physical/ref_tile/qfd_tt_head_static_h15/home_blockages.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/ref_tile/qfd_tt_head_static_h15/home_blockages_release.tcl"
  ]
 }
