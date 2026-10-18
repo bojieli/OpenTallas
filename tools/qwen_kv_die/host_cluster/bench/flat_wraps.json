@@ -1,0 +1,7 @@
+{
+ "why": "NATIVE-FIX3/kvhr 10-18: accepted member contract changes the cluster carries (gen_cluster.py --wrap). Each wrapper has the member's ports and parameters; its own bench proves it equals the member with the documented change (rtl/test/qwen_host/hr_rr_1018: ot_rst_relay at rst_n, core reset release +3 ck edges, assert immediate). The composition gate builds the flat reference with the same substitution, so it checks the composition, not the member change.",
+ "wraps": {
+  "qkd_host_tx_class": "qkd_host_tx_class_rr",
+  "qkd_host_rx_class_admission": "qkd_host_rx_class_admission_rr"
+ }
+}

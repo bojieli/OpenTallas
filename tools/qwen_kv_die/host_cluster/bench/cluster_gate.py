@@ -21,10 +21,37 @@ HERE = Path(__file__).resolve().parent
 CLUSTER_DIR = ROOT / 'rtl/qwen_sys/host_cluster_20261017'   # qkd_hr_cluster.v (parent) + one file per child
 PORTS = HERE / 'root_ports.json'          # the flat root's ports (yosys, ENABLE_SERVICE/NATIVE/TOKEN=1, NL=2)
 SOURCES = HERE / 'sources.txt'            # census source list (SRAM behavioural models + the root's RTL)
+FLAT_WRAPS = HERE / 'flat_wraps.json'     # accepted member wrappers (gen_cluster --wrap): applied to the flat reference
 
 
 def sources():
     return [l.strip() for l in SOURCES.read_text().splitlines() if l.strip()]
+
+
+def flat_sources(out):
+    """the flat reference's sources with every accepted member wrapper substituted at its instance sites (overlay
+    copies in OUT/flat_overlay; the committed flat RTL is unchanged); the wrapper files themselves are left as is"""
+    wraps = json.loads(FLAT_WRAPS.read_text())['wraps'] if FLAT_WRAPS.exists() else {}
+    ov = out / 'flat_overlay'
+    ov.mkdir(exist_ok=True)
+    res, n = [], 0
+    for s in sources():
+        f = ROOT / s
+        t = f.read_text() if f.suffix in ('.v', '.sv') else None
+        if t is None or any(re.search(r'^\s*module\s+' + w + r'\b', t, re.M) for w in wraps.values()):
+            res.append(str(f))
+            continue
+        u = t
+        for m_, w in wraps.items():
+            u, k = re.subn(r'^(\s*)' + m_ + r'(?=\s*(?:#\s*\(|[A-Za-z_\\]))', lambda x: x.group(1) + w, u, flags=re.M)
+            n += k
+        if u != t:
+            (ov / f.name).write_text(u)
+            res.append(str(ov / f.name))
+        else:
+            res.append(str(f))
+    print(f'flat reference: {n} member instance(s) wrapped per {FLAT_WRAPS.name} {sorted(wraps.items())}')
+    return res
 
 
 def run(cmd, log, cwd):
@@ -65,7 +92,7 @@ def main():
     src = [str(ROOT / s) for s in sources()]
     p1 = subprocess.Popen([V] + common + ['--prefix', 'Vflat', '--top-module', 'qkd_host_root_admission',
                                           '-GENABLE_SERVICE=1', '-GENABLE_NATIVE=1', '-GENABLE_TOKEN=1', '-GNL=2',
-                                          '-Mdir', str(out / 'obj_flat')] + src,
+                                          '-Mdir', str(out / 'obj_flat')] + flat_sources(out),
                           stdout=open(out / 'vl_flat.log', 'w'), stderr=subprocess.STDOUT)
     p2 = subprocess.Popen([V] + common + ['--prefix', 'Vclu', '--top-module', 'qkd_hr_cluster', '-Mdir',
                                           str(out / 'obj_clu')] + src + [str(out / 'qkd_hr_cluster_dut.v')],

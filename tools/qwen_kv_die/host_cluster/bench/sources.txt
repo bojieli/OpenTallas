@@ -100,3 +100,6 @@ rtl/qwen_sys/static_kv_20261014/qkd_host_native_quiet.sv
 rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv
 rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target.sv
 rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv
+rtl/lib/ot_rst_relay.sv
+rtl/qwen_sys/host_20261013/qkd_host_tx_class_rr.sv
+rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission_rr.sv
