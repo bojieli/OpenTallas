@@ -5,7 +5,10 @@
 // gather/A/B/C/D/drain read classes. No reset on payload and no written-bit
 // fiction: compiler lifetime proof must exclude reads before producer capture.
 // Pin sample n -> read pins n+2, write commit n+1; every edge is a fixed slot.
-module ot_hbm_su_static_rf_bank #(parameter integer READERS=6,MUT_COHERENCE=0)(
+// PIN_RUNG (HBM-SU3 2026-10-17, default 1 = unchanged): 0 consumes a raw-command rung already registered by the parent
+// (ot_hbm_su_static_qcore PHYS_RF_INGRESS=1: the command is captured at the tile pin at edge n and decoded after the
+// flop); the bank's own post-decode rung is bypassed, so commit n+1 and read data n+3 keep their edges.
+module ot_hbm_su_static_rf_bank #(parameter integer READERS=6,MUT_COHERENCE=0,PIN_RUNG=1)(
  input wire clk,rst_n,input wire[READERS-1:0]read_v,
  input wire[READERS*2-1:0]read_addr,output reg[READERS*32-1:0]read_data,
  output reg[READERS-1:0]read_return,
@@ -15,32 +18,39 @@ module ot_hbm_su_static_rf_bank #(parameter integer READERS=6,MUT_COHERENCE=0)(
  reg[READERS*2-1:0]ra_pin;
  reg wv_pin;reg[1:0]wa_pin;reg[31:0]wd_pin;
  reg[READERS*32-1:0]raw;
+ wire[READERS-1:0]rv_use=PIN_RUNG?rv_pin:read_v;
+ wire[READERS*2-1:0]ra_use=PIN_RUNG?ra_pin:read_addr;
+ wire wv_use=PIN_RUNG?wv_pin:write_v;
+ wire[1:0]wa_use=PIN_RUNG?wa_pin:write_addr;
+ wire[31:0]wd_use=PIN_RUNG?wd_pin:write_data;
  always @(posedge clk)begin ra_pin<=read_addr;wa_pin<=write_addr;wd_pin<=write_data;read_data<=raw;end
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin rv_pin<=0;rv_mem<=0;read_return<=0;wv_pin<=0;end
-  else begin rv_pin<=read_v;rv_mem<=rv_pin;read_return<=rv_mem;wv_pin<=write_v;end
+  else begin rv_pin<=read_v;rv_mem<=rv_use;read_return<=rv_mem;wv_pin<=write_v;end
  end
  for(genvar r=0;r<READERS;r=r+1)begin:g_replica
   (* keep *) reg[31:0]v0,v1,v2,v3;
   always @(posedge clk)begin
-   if(wv_pin&&!(MUT_COHERENCE!=0&&r==READERS-1))case(wa_pin)
-    0:v0<=wd_pin;1:v1<=wd_pin;2:v2<=wd_pin;3:v3<=wd_pin;
+   if(wv_use&&!(MUT_COHERENCE!=0&&r==READERS-1))case(wa_use)
+    0:v0<=wd_use;1:v1<=wd_use;2:v2<=wd_use;3:v3<=wd_use;
    endcase
-   if(rv_pin[r])case(ra_pin[r*2+:2])
+   if(rv_use[r])case(ra_use[r*2+:2])
     0:raw[r*32+:32]<=v0;1:raw[r*32+:32]<=v1;2:raw[r*32+:32]<=v2;3:raw[r*32+:32]<=v3;
    endcase
   end
  end
 endmodule
-module ot_hbm_su_static_rf #(parameter integer BANKS=64,READERS=6,MUT_COHERENCE=0)(
- input wire[BANKS-1:0]clk_bank,input wire rst_n,
+// ROOTS (HBM-SU3 2026-10-17, default BANKS = unchanged): clk_bank carries ROOTS regional clock roots; bank b is clocked by
+// root b / (BANKS / ROOTS) (ROOTS 8: one root per RF sector of 8 banks, the class-5 drain / COLL sector).
+module ot_hbm_su_static_rf #(parameter integer BANKS=64,READERS=6,MUT_COHERENCE=0,PIN_RUNG=1,ROOTS=BANKS)(
+ input wire[ROOTS-1:0]clk_bank,input wire rst_n,
  input wire[BANKS*READERS-1:0]read_v,input wire[BANKS*READERS*2-1:0]read_addr,
  output wire[BANKS*READERS*32-1:0]read_data,output wire[BANKS*READERS-1:0]read_return,
  input wire[BANKS-1:0]write_v,input wire[BANKS*2-1:0]write_addr,input wire[BANKS*32-1:0]write_data
 );
  for(genvar b=0;b<BANKS;b=b+1)begin:g_bank
-  ot_hbm_su_static_rf_bank #(.READERS(READERS),.MUT_COHERENCE(MUT_COHERENCE))u_bank(
-   .clk(clk_bank[b]),.rst_n(rst_n),.read_v(read_v[b*READERS+:READERS]),.read_addr(read_addr[b*READERS*2+:READERS*2]),
+  ot_hbm_su_static_rf_bank #(.READERS(READERS),.MUT_COHERENCE(MUT_COHERENCE),.PIN_RUNG(PIN_RUNG))u_bank(
+   .clk(clk_bank[b/(BANKS/ROOTS)]),.rst_n(rst_n),.read_v(read_v[b*READERS+:READERS]),.read_addr(read_addr[b*READERS*2+:READERS*2]),
    .read_data(read_data[b*READERS*32+:READERS*32]),.read_return(read_return[b*READERS+:READERS]),
    .write_v(write_v[b]),.write_addr(write_addr[b*2+:2]),.write_data(write_data[b*32+:32]));
  end

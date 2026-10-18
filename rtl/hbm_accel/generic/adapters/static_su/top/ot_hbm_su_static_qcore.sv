@@ -30,8 +30,17 @@
 // RF_LOCAL (H-SU 2026-10-16, default 0 = unchanged): the slices register rf_bword/rf_bcmd/rf_dsec once more beside their
 //   bank group (ot_hbm_su_static_pgslice RF_LOCAL); the compiler issues classes 0..3 and 5 one edge earlier, so the
 //   class-5 command must precede the RF drain by exactly TWO edges (checked below). Nothing else here changes.
-module ot_hbm_su_static_qcore #(parameter integer MUT=0,COLLPORT=0,RF_LOCAL=0)(
- input wire [63:0] clk_rf,
+// Successor r5 (HBM-SU3 2026-10-17, coordinator 0dc "qcore: regional roots, not 66"; both default off = unchanged):
+// RF_ROOTS     8: clk_rf carries 8 regional roots, one per RF sector (banks 8s..8s+7 = the class-5 drain and COLL
+//              RED_CARRY sector), instead of one root per bank (64). With clk_ctl and clk_red: 10 roots, each RF root
+//              ~9.6k sinks (<= 15k). The die drives every root from the same serial PLL phase (fixed latency).
+// PHYS_RF_INGRESS 1: flop-first pins. The RF read commands, the 4 relay writers and the COLL writer are captured raw
+//              at the tile pins at edge n, one copy per RF root (in that root's region), and decoded after the flop; each bank's former post-decode input
+//              rung is bypassed (rf PIN_RUNG 0), so commit n+1, read data n+3, rf_bword/rf_dsec and the scalar E+11 keep
+//              their edges. Only the sticky write-conflict FAULT reports one edge later (status, not datapath).
+// MUT 256 (bench): PHYS_RF_INGRESS keeps the old bank rung as well (one extra read/commit edge) -> lockstep FAILS.
+module ot_hbm_su_static_qcore #(parameter integer MUT=0,COLLPORT=0,RF_LOCAL=0,RF_ROOTS=64,PHYS_RF_INGRESS=0)(
+ input wire [RF_ROOTS-1:0] clk_rf,
  input wire clk_ctl,clk_red,rst_n,
  input wire [6*9-1:0] rf_rd_cmd,
  input wire [73:0] red_cmd,
@@ -52,26 +61,46 @@ module ot_hbm_su_static_qcore #(parameter integer MUT=0,COLLPORT=0,RF_LOCAL=0)(
  output reg fault
 );
  wire rf_drain_now=rf_drain_cmd[1]&&(rf_drain_cmd[0]||MUT==16);   // MUT 16 (bench): src bit ignored
+ // RF ingress: PHYS_RF_INGRESS=1 captures the raw commands / writers at the pins once PER RF ROOT (clocked by that root,
+ // so ingress -> decode -> bank stays inside one clock region; only the read mux -> rf_bword/rf_dsec/rc_x and the
+ // conflict -> fault paths cross into clk_ctl). ING = 480 bits per root copy.
+ localparam integer ING=54+4+32+128+1+5+256, BPR=64/RF_ROOTS;
+ wire [RF_ROOTS*ING-1:0] ing;
+ for(genvar r=0;r<RF_ROOTS;r=r+1)begin:g_ing
+  if(PHYS_RF_INGRESS)begin:g_flop
+   reg [53:0] cmd_p; reg [3:0] wv_p; reg [31:0] wa_p; reg [127:0] wd_p; reg rrv_p; reg [4:0] rra_p; reg [255:0] rrd_p;
+   always @(posedge clk_rf[r])begin wa_p<=rf_wa;wd_p<=rf_wd;rra_p<=rr_wa;rrd_p<=rr_wd;end
+   always @(posedge clk_rf[r] or negedge rst_n)
+    if(!rst_n)begin cmd_p<=54'd0;wv_p<=4'd0;rrv_p<=1'b0;end
+    else begin cmd_p<=rf_rd_cmd;wv_p<=rf_wv;rrv_p<=rr_wv;end
+   assign ing[r*ING+:ING]={cmd_p,wv_p,wa_p,wd_p,rrv_p,rra_p,rrd_p};
+  end else begin:g_pins
+   assign ing[r*ING+:ING]={rf_rd_cmd,rf_wv,rf_wa,rf_wd,rr_wv,rr_wa,rr_wd};
+  end
+ end
  wire [64*6-1:0] rf_rv; wire [64*6*2-1:0] rf_ra; wire [64*6*32-1:0] rf_q;
  wire [63:0] rf_wvb; wire [64*2-1:0] rf_wab; wire [64*32-1:0] rf_wdb; wire [63:0] rf_wconf;
  for(genvar bb=0;bb<64;bb=bb+1)begin:g_rfb
+  wire [53:0] rf_cmd_use; wire [3:0] rf_wv_use; wire [31:0] rf_wa_use; wire [127:0] rf_wd_use;
+  wire rr_wv_use; wire [4:0] rr_wa_use; wire [255:0] rr_wd_use;
+  assign {rf_cmd_use,rf_wv_use,rf_wa_use,rf_wd_use,rr_wv_use,rr_wa_use,rr_wd_use}=ing[(bb/BPR)*ING+:ING];
   for(genvar c=0;c<5;c=c+1)begin:g_c
-   wire [8:0] cmd=rf_rd_cmd[c*9+:9];
+   wire [8:0] cmd=rf_cmd_use[c*9+:9];
    assign rf_rv[bb*6+c]=cmd[8]&&cmd[5:0]==6'(bb); assign rf_ra[(bb*6+c)*2+:2]=cmd[7:6];
   end
-  wire [8:0] dc=rf_rd_cmd[5*9+:9];
+  wire [8:0] dc=rf_cmd_use[5*9+:9];
   assign rf_rv[bb*6+5]=dc[8]&&dc[5:3]==3'(bb/8); assign rf_ra[(bb*6+5)*2+:2]=dc[7:6];
   reg wv; reg [1:0] wa; reg [31:0] wd; reg [2:0] nw; integer w;
   always @*begin
    wv=0;wa=0;wd=0;nw=0;
-   for(w=0;w<4;w=w+1)if(rf_wv[w]&&rf_wa[w*8+:6]==6'(bb))begin wv=1;wa=rf_wa[w*8+6+:2];wd=rf_wd[w*32+:32];nw=nw+3'd1;end
+   for(w=0;w<4;w=w+1)if(rf_wv_use[w]&&rf_wa_use[w*8+:6]==6'(bb))begin wv=1;wa=rf_wa_use[w*8+6+:2];wd=rf_wd_use[w*32+:32];nw=nw+3'd1;end
   end
-  wire rrb=(COLLPORT!=0)&&rr_wv&&rr_wa[2:0]==3'(bb/8);
-  wire [31:0] rrd=rr_wd[32*((MUT==128)?7-(bb%8):(bb%8))+:32];
-  assign rf_wvb[bb]=wv||rrb; assign rf_wab[bb*2+:2]=rrb?rr_wa[4:3]:wa; assign rf_wdb[bb*32+:32]=rrb?rrd:wd;
+  wire rrb=(COLLPORT!=0)&&rr_wv_use&&rr_wa_use[2:0]==3'(bb/8);
+  wire [31:0] rrd=rr_wd_use[32*((MUT==128)?7-(bb%8):(bb%8))+:32];
+  assign rf_wvb[bb]=wv||rrb; assign rf_wab[bb*2+:2]=rrb?rr_wa_use[4:3]:wa; assign rf_wdb[bb*32+:32]=rrb?rrd:wd;
   assign rf_wconf[bb]=(nw>3'd1)||(rrb&&wv);
  end
- ot_hbm_su_static_rf #(.BANKS(64),.READERS(6)) u_rf(.clk_bank(clk_rf),.rst_n(rst_n),.read_v(rf_rv),.read_addr(rf_ra),
+ ot_hbm_su_static_rf #(.BANKS(64),.READERS(6),.ROOTS(RF_ROOTS),.PIN_RUNG((PHYS_RF_INGRESS!=0&&MUT!=256)?0:1)) u_rf(.clk_bank(clk_rf),.rst_n(rst_n),.read_v(rf_rv),.read_addr(rf_ra),
   .read_data(rf_q),.read_return(),.write_v(rf_wvb),.write_addr(rf_wab),.write_data(rf_wdb));
  // bank selects ride the read: command sampled at k -> data held k+2..k+3; select registers held the same window
  reg [5:0] bsel1 [0:5]; reg [5:0] bsel2 [0:5]; reg [5:0] bsel3 [0:5];

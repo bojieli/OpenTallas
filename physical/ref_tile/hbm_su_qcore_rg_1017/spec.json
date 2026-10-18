@@ -1,0 +1,408 @@
+{
+ "name": "hbm_su_qcore_rg_1017",
+ "top": "ot_hbm_su_static_qcore",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/register_file/ot_hbm_su_static_rf.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+ ],
+ "params": {
+  "MUT": 0,
+  "COLLPORT": 1,
+  "RF_LOCAL": 1,
+  "RF_ROOTS": 8,
+  "PHYS_RF_INGRESS": 1
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "clk_ctl",
+  "clk_red",
+  "clk_rf[0]",
+  "clk_rf[1]",
+  "clk_rf[2]",
+  "clk_rf[3]",
+  "clk_rf[4]",
+  "clk_rf[5]",
+  "clk_rf[6]",
+  "clk_rf[7]"
+ ],
+ "clock_port": "clk_ctl",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_ctl"
+   ],
+   "inputs": [
+    "rf_rd_cmd",
+    "red_cmd",
+    "rf_drain_cmd",
+    "slice_x",
+    "rf_wv",
+    "rf_wa",
+    "rf_wd",
+    "rr_wv",
+    "rr_wa",
+    "rr_wd",
+    "sfu_x"
+   ],
+   "outputs": [
+    "rf_bword",
+    "rf_bcmd",
+    "rf_dsec",
+    "fault"
+   ]
+  },
+  "red": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_red"
+   ],
+   "inputs": [
+    "rst_n"
+   ],
+   "outputs": [
+    "red_sv",
+    "red_tag",
+    "red_x",
+    "red_rf_v"
+   ]
+  },
+  "rf0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_rf[0]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rf1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_rf[1]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rf2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_rf[2]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rf3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_rf[3]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rf4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_rf[4]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rf5": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_rf[5]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rf6": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_rf[6]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rf7": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_rf[7]"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "outline": {
+  "w": 330.48,
+  "h": 330.48,
+  "exact": true
+ },
+ "std_area_um2": 46000,
+ "layer_cap": "M5",
+ "recipe": 3,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ],
+   "inst": "u_red.ma"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    172.8,
+    43.2
+   ],
+   "inst": "u_red.mb"
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "rf_bword",
+   "rf_bcmd",
+   "rf_dsec",
+   "slice_x",
+   "rf_drain_cmd",
+   "rf_rd_cmd",
+   "red_cmd",
+   "fault"
+  ],
+  "E": [
+   "rf_wv",
+   "rf_wa",
+   "rf_wd",
+   "red_sv",
+   "red_tag",
+   "red_x",
+   "red_rf_v",
+   "rr_wv",
+   "rr_wa",
+   "rr_wd",
+   "sfu_x"
+  ],
+  "N": [
+   "clk_rf",
+   "clk_ctl",
+   "clk_red",
+   "rst_n"
+  ]
+ },
+ "pin_ranges": {
+  "rf_bword": [
+   6.0,
+   64.368
+  ],
+  "rf_bcmd": [
+   65.568,
+   81.984
+  ],
+  "rf_dsec": [
+   83.184,
+   199.92
+  ],
+  "slice_x": [
+   201.12,
+   259.488
+  ],
+  "rf_drain_cmd": [
+   260.688,
+   261.6
+  ],
+  "rf_rd_cmd": [
+   262.8,
+   287.424
+  ],
+  "red_cmd": [
+   288.624,
+   322.368
+  ],
+  "fault": [
+   323.568,
+   324.48
+  ],
+  "rf_wv": [
+   6.0,
+   8.326
+  ],
+  "rf_wa": [
+   9.526,
+   28.136
+  ],
+  "rf_wd": [
+   29.336,
+   103.775
+  ],
+  "red_sv": [
+   104.975,
+   106.138
+  ],
+  "red_tag": [
+   107.338,
+   125.948
+  ],
+  "red_x": [
+   127.148,
+   145.758
+  ],
+  "red_rf_v": [
+   146.958,
+   148.121
+  ],
+  "rr_wv": [
+   149.321,
+   150.484
+  ],
+  "rr_wa": [
+   151.684,
+   154.592
+  ],
+  "rr_wd": [
+   155.792,
+   304.67
+  ],
+  "sfu_x": [
+   305.87,
+   324.48
+  ],
+  "clk_rf": [
+   157.24,
+   165.354
+  ],
+  "clk_ctl": [
+   165.954,
+   167.983
+  ],
+  "clk_red": [
+   168.583,
+   170.611
+  ],
+  "rst_n": [
+   171.211,
+   173.24
+  ]
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "PHYS_RF_INGRESS=1: the RF read commands, relay writers and COLL writer are captured raw at the pins (one copy per RF root) and the bank rung is bypassed; reducer command, slice/SFU operands and drain decode land in clk_ctl registers; every output is a flop. A wrapper stage would add an edge to the fixed n+1 commit / n+3 read / E+11 scalar calendar."
+ },
+ "route": {
+  "pd": 0.52,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "period_ps": 1051.111,
+  "signoff_period_ps": 1111.111,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "HBM-SU3 10-17 qcore r5 (coordinator 0dc): 66 clock roots (64 per-bank clk_rf + ctl + red; codex hbm_qcore_s_pinrung_r2) -> 10 regional roots: one per RF sector of 8 banks (~9.6k sinks each), clk_ctl, clk_red. Raw RF/relay/COLL command capture at the pins per root (PHYS_RF_INGRESS), so ingress -> decode -> bank stays inside one root; only the read mux -> rf_bword/rf_dsec/operand and the conflict -> fault cross roots. Same edges (commit n+1, read n+3, scalar E+11); write-conflict FAULT +1 edge (status). Reducer SRAMs on the 43.2 lattice at the pin-free S side; die faces kept (W slice, E channel, N clocks) with full-face pin spread. Re-home: H-DIE-R7b/R8b grants put sucore_<q> beside its pgslices (x~9000 between su_<q>1 and su_<q>2).",
+ "job": {
+  "owner": "Claude:HBM-SU3",
+  "branch": "claude/hbm-su3-1017",
+  "tag": "r5",
+  "purpose": "HBM die d4f sucore_<q> = ot_hbm_su_static_qcore successor r5 (regional roots, flop-first pins)",
+  "record_to": "results/rtl/ref_tile/hbm_su_qcore_rg_1017",
+  "views_to": "physical/ref_tile/hbm_su_qcore_rg_1017/views",
+  "auto_merge": false,
+  "extra_paths": [
+   "tools/hbm_static/su_qcore_rg_run.sh",
+   "rtl/test/hbm_qcore_physical_1016/tb_qcore_rg_lockstep.sv"
+  ],
+  "benches": [
+   {
+    "name": "qcore_rg_lockstep",
+    "cmd": "bash tools/hbm_static/su_qcore_rg_run.sh {RUN}/bench/pos 0",
+    "expect": "pass",
+    "pass_regex": "QCORE_RG PASS",
+    "pass_witness": "results/rtl/hbm_su3_1017/qcore_rg_pos.log",
+    "min_count_regex": "checks=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "qcore_rg_mut256",
+    "cmd": "bash tools/hbm_static/su_qcore_rg_run.sh {RUN}/bench/mut 256",
+    "expect": "fail",
+    "fail_regex": "QCORE_RG FAIL",
+    "fail_witness": "results/rtl/hbm_su3_1017/qcore_rg_mut256.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ }
+}
