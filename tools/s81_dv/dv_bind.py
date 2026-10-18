@@ -354,6 +354,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                 # S81-DIE5: bit ranges of a multi-face port that no plan lane reaches (svc_rs faces the role ROM never
                 # selects: a stream valid / P.V word / score on a face that is not a tree edge is a sticky fault, so the
                 # face is tied 0 and declared as a pad with the reason)
+                if mu['port'] not in widths:
+                    continue          # the port is not on this instance's module variant (e.g. entry-only q)
                 wd_ = widths[mu['port']]
                 segs_ = conn[n].setdefault(mu['port'], [])
                 got = sorted((lo, hi) for lo, hi, _w, _b in segs_)
@@ -506,6 +508,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             cmd += ['--prefer', str(out / 'rtl_extra' / f)]
         for mm in T.get('allow_model', []):
             cmd += ['--allow-model', mm]
+        for d_ in T.get('defines', []):         # S81-DIE5: build defines of the bound RTL (e.g. DSFD_PQ_STATIC_X2)
+            cmd += ['--define', d_]
         r = subprocess.run(cmd, capture_output=True, text=True)
         (out / 'port_bind.log').write_text(r.stdout + r.stderr)
         rec['port_bind_rc'] = r.returncode
