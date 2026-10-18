@@ -303,6 +303,11 @@ def ledger_split(path=LEDGER, drop=None):
     for r in led['rows']:
         if r['design'] != 's81' or r.get('status') not in ('accepted', 'proposed'):
             continue
+        if r['group'].startswith('S81.DV_'):
+            # S81-LBGAP/G3 10-18: S81.DV_* rows (e.g. S81.DV_LANDING_HALFCYCLE) are RECORDS OF THIS PRICE's own DV terms
+            # (landing, ...): counting them here charged the landing twice on the DV rate and once on the hub die that
+            # has no landings (dv_base AR 1365.7 -> 1338.6 on a re-run after ec38691d6 added the row)
+            continue
         tgt = dropped if drop.search(r['group']) else kept
         for wl in ('ar', 'mtp'):
             tgt[wl] += (r.get('per_workload', {}).get(wl) or {}).get('e2e_loss_pct', 0.0) or 0.0

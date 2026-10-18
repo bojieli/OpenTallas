@@ -235,6 +235,10 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         pp = dict(m.get('params', {}))
         if 'hb_param' in m:
             pp[m['hb_param']] = hb
+        if m.get('instance_param'):
+            # S81-LBGAP/G4: string identity parameter = the die instance name (frames: each loads its own ROM image
+            # <OT_ROM_DIR>/<INSTANCE>_cX_Y.viamap.hex), the naming dv_slice_cut --rom-instance uses
+            pp[m['instance_param']] = f'"u_{n}"'
         params[n] = pp
         for s in m.get('straps', []):
             straps.append([mod, s])
