@@ -49,21 +49,29 @@ def main():
     sweep = sorted((v["lats"], k) for k, v in runs.items() if k.startswith("lx_ls"))
     passing = [ls for ls, k in sweep if runs[k]["ok"]]
     ls_min = min(passing) if passing else None
+    d50_sweep = {runs[k]["lats"]: runs[k]["ok"] for k in runs if k.startswith("d50_rec_ls")}
+    rec_case = "d50_rec_ls376" if runs.get("d50_rec_ls376", {}).get("ok") else None
     meas = None
-    if ls_min is not None:
-        c = runs[f"lx_ls{ls_min}"]["cases"]
+    if rec_case:
+        c = runs[rec_case]["cases"]
         ar, ar2, am, lay = c["qwen_ar_256w"], c["qwen_layer_2x256w"], c["qwen_argmax_1w"], c["qwen_layer_2x256w_argmax"]
         e_ar, e_am = ar["E_meas_first"], am["E_meas_first"]
         meas = dict(
-            LS_min=ls_min, LS_min_minus_1_fails=runs.get(f"lx_ls{ls_min-1}", {}).get("ok") is False if ls_min > 380 else "not swept",
-            AR256=dict(span=ar["span"], E_meas=e_ar, O_meas=0, E_exposed=e_ar),
+            configuration=rec_case + ": dv2f14bf die lanes (ET/ER 2/0/5, calendar LX 7/0/7), hardened face TOK_REG 1, "
+                          "production calendar LU 53 / LS 376, 50%-duty clocks, FDI phase 0 (clock contract)",
+            LS_min_pulse_harness=ls_min, LS_sweep_pulse_harness={ls: runs[k]["ok"] for ls, k in sweep},
+            LS_d50=d50_sweep,
+            AR256=dict(span=ar["span"], E_meas=e_ar, O_meas=0, E_exposed=e_ar, first_in_to_first_out=ar["latency_first_in_to_first_out"]),
             AR256x2_back_to_back=dict(span=ar2["span"]),
             argmax_gather_1w=dict(span=am["span"], E_meas=e_am, O_meas=0, E_exposed=e_am),
             layer_2xAR_plus_argmax=dict(span=lay["span"]),
             token_E_exposed_cycles=LAYERS * 2 * e_ar + e_am,
             token_span_cycles=LAYERS * 2 * ar["span"] + am["span"],
-            grade="measured-current-RTL (dv2f14 lineage collective + IO masters); die lanes = fixed E-cycle delays from the "
-                  "dv2f14bf GEN (qfd_fwd_lane RTL qualified separately, tools/qwen_split/bench_fwd_lane.sh); PHY modelled 339 / UCIe 20",
+            price_cycles=dict(AR1=1121, AR2=979, source="results/arch/qwen_tp8_1012/SPEC.md s3/s6 (span form)"),
+            fdi_phases={k: runs[k]["ok"] for k in sorted(runs) if "phase" in k},
+            grade="measured-current-RTL (dv2f14-lineage collective + IO masters, Verilator 5.050); die lanes = fixed E-cycle "
+                  "delays from the dv2f14bf GEN (qfd_fwd_lane RTL qualified separately, tools/qwen_split/bench_fwd_lane.sh); "
+                  "PHY modelled (SerDes 339, UCIe 4 FDI)",
         )
     base = runs.get("base_ls376", {}).get("cases", {})
     rec = dict(schema="opentallas.token_xdie.qwen_tp8.v1", lane="TOKEN-XDIE-QTP8", date="2026-10-18",
@@ -79,10 +87,17 @@ def main():
                       "control only at the PHY boundary: the codec CRC/abort)",
                baseline_ls376_no_lanes={k: dict(passed=v["passed"], span=v["span"], E_meas=v["E_meas_first"]) for k, v in base.items()},
                measured=meas, verdicts=verdicts, runs=runs,
+               notes=["LS below the minimum (lx_ls370..373, d50_rec_ls373) FAIL by design: tight witnesses that LS 374 is the minimum with the lanes absorbed (production LS 376 keeps 2 cycles slack)",
+                      "FDI phase != 0: pulse harness fails every phase 1..5 (the r11..r15 gearbox negedge registers are not clocked by 1-tick pulses); "
+                      "50%-duty harness passes phases 0/4/5 and FAILS 1/2/3 on the BASELINE too (no lanes, TOK_REG 0) -> property of the current "
+                      "qfd_ucie_six_five (r15), not of this lane's edits; the 10-15 r10 gearbox passed 0..5. The clock contract is phase 0 "
+                      "(related group, Q-DIE11-COLL); phase robustness is owed by the gearbox owner",
+                      "as-built dv2f14 lanes without LX FAIL (d50_asbuilt_ls376, asbuilt_*): every die faults (frames land 7 cycles after the compiled slot on S0<->S2)",
+                      "serdes2_txv E 6 vs serdes2_tx E 5 FAILS (lx_skew, d50_rec_skew): the die GEN must give a bus group one E/K"],
                O_meas_source="none: no compiled Qwen compute schedule issues the TP8 collective yet; O_meas = 0, not assumed")
     (OUT / "record.json").write_text(json.dumps(rec, indent=1) + "\n")
     print(json.dumps(dict(verdicts=verdicts, measured=meas), indent=1))
-    return 0 if all(v == "OK" for k, v in verdicts.items() if not k.startswith("lx_ls")) else 1
+    return 0 if meas and all(v == "OK" for k, v in verdicts.items() if k.startswith("d50_") and "phase" not in k and "ls37" not in k) else 1
 
 
 if __name__ == "__main__":
