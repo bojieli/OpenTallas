@@ -47,8 +47,9 @@ ON = os.environ.get('OT_KV_STATIC_DIE', '0') == '1'
 # own two stacks (es chain heads, fan words, group gathers, embedding return trains); off = the single top-centre root
 HROOT = os.environ.get('OT_KV_HROOT', '0') == '1'
 HROOT_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root.sv'
-RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot.sv' if HROOT else
-            'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles.sv')
+# one generated tile file per design point (the ECTL frame pairing re-orders the fan's frame cfg words)
+RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') +
+            ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + '.sv')
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = (4, 5, 0, 1, 2, 3, 6, 7)          # kv_static.template: group g holds PCs 4 * ORDER.index(g) + q
