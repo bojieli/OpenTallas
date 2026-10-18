@@ -442,7 +442,6 @@
   "cal_lck",
   "codec_ck[0]"
  ],
- "hard_define": "OT_QFD_FACE_HARD",
  "children": [
   {
    "view": "physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546",
@@ -507,6 +506,10 @@
  ],
  "pg_layer": "M7",
  "floorplan_note": "10-18 Q-DIE11b: placed with the closed child sizes (ch546 233.28x151.2, bank137 216x172.8): ch546 tx/rx column at x 86.4 (W core-side pins), banks 2x2 at x 388.8/648 (E PHY side), all on the 43.2 lattice, 43.2 channels, outline 950.4 x 475.2",
+ "defines": [
+  "OT_QFD_FACE_HARD"
+ ],
+ "hard_define": "OT_QFD_FACE_HARD",
  "inter": [],
  "io_flop_at_pins": {
   "cols": 4,
