@@ -98,6 +98,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     ckin = collections.defaultdict(dict)   # inst -> {rtl clock-in port: {lane: link}}
     abut_rows, abut_links = [], set()
     same_as, lane_spare = {}, {}           # S81-DIE5: broadcast lanes (link -> link whose source it shares); lane payload width
+    out_bits, lane_copy = collections.defaultdict(list), collections.defaultdict(list)   # S81-DIE6: shared output bits
     for bl in blocks:   # plan lanes realised by an abutted face (both ends skip them)
         ab = M[bl['master']].get('abut')
         if ab and M[bl['master']].get('module'):
@@ -158,7 +159,13 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                             continue
                         w = f'w_{e[3]}_src'
                         for rport, rlo, plo, nb in lr['split']:
+                            if rport.startswith('='):
+                                # S81-DIE6: lane bits that COPY an RTL output another lane of this instance already carries
+                                # (e.g. seqhost s_j on both per-half job lanes): the station input reads that lane's wire
+                                lane_copy[e[3]].append((n, rport[1:], rlo, plo, nb))
+                                continue
                             c[rport].append((rlo, rlo + nb - 1, f'{w}[{plo + nb - 1}:{plo}]', nb))
+                            out_bits[(n, rport)].append((rlo, nb, w, plo))
                         link_src[e[3]] = (w, None)
                     else:
                         w = dname(e[3])
@@ -447,6 +454,24 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                                                ports={}))['ports']['i'] = [[cov, b - 1]]
             pad_rows.append(dict(inst=f'st_{nm}_0', master=rly_master(b, sdir[(nm, 0)], T.get('relay_prefix', 'dsfd_dvrly')),
                                  port='i', bits=b - cov, lo=cov, hi=b - 1, reason='lane quantisation spare bits'))
+        if root_nm in lane_copy:
+            segs_ = []          # (plo, nb, expr) covering the lane: own wire where bound, copied bits elsewhere
+            for n_, rp_, rlo_, plo_, nb_ in lane_copy[root_nm]:
+                hit_ = [(lo_, w_, pl_) for lo_, nb2, w_, pl_ in out_bits[(n_, rp_)] if lo_ <= rlo_ and rlo_ + nb_ <= lo_ + nb2]
+                assert hit_, (root_nm, rp_, rlo_, nb_)
+                lo_, w_, pl_ = hit_[0]
+                segs_.append((plo_, nb_, f'{w_}[{pl_ + rlo_ - lo_ + nb_ - 1}:{pl_ + rlo_ - lo_}]'))
+            cov_ = lane_spare.get(root_nm, b)
+            pos_, parts_ = 0, []
+            for plo_, nb_, ex_ in sorted(segs_) + [(cov_, 0, None)]:
+                if plo_ > pos_:
+                    parts_.append(f'w_{root_nm}_src[{plo_ - 1}:{pos_}]')
+                if ex_:
+                    parts_.append(ex_)
+                pos_ = max(pos_, plo_ + nb_)
+            if cov_ < b:
+                parts_.append(f"{b - cov_}'d0")
+            src = '{' + ', '.join(reversed(parts_)) + '}'
         st = len(pts)
         if ck:
             v.append(f'  // hop 0: the source master forwards its root (F1): {ck}')

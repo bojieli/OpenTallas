@@ -59,6 +59,13 @@ P4K = False                       # p4k (10-18, S81-DIE5, coordinator 0dt): the 
                                   # static width adapter in the slice landing; new lanes gunit cw 276, seqhost -> svc entry
                                   # job (2 x 276 per entry), entry -> seqhost jd / hc 276; lane margins (COL_EXW / COL_EXE)
                                   # beside the column-3 E and column-4 W slices open the enclosed unit voids to the streets
+P4L = False                       # p4l (10-18, S81-DIE6): p4k + --no-mix4 + the built end-slice link endpoint masters
+                                  # dsdv_slice_lepw (column 0) / dsdv_slice_lepe (column 7; rtl ot_s81sl_slice_lep{w,e}):
+                                  # rx lanes 514 b {st 2, rx 512} on the 562 relay master; the HOST PLANE of the cross-die link
+                                  # (f_host 515 + f_lf 4 + f_ks 53 = 572 b -> seqhost on 3 x 276 lanes hf_7N_l*; t_host 77 + t_kd 54
+                                  # = 131 b <- seqhost on a 276 lane ht_7N) served by s_7N (the end slice nearest the seqhost)
+                                  # over the top die strip; seqhost per-half jd_W (13 b, 276 lane) beside jd_E (13 b); svc up
+                                  # faces 16 b (st_rg producer folded up the tree)
 COL_EXW, COL_EXE = {}, {}         # p4k: extra slice-column width W / E of the slice, per column (um)
 SVC_CH = 512                      # p4i: svc_rs chain lane per direction (S81U-1 sp_w / sp_e partial-score lane, 512 b)
 SVC_MM2, SM_MM2 = 13.43, 8 * 1.231 * 1.058   # service halves (estimate, no RTL) + 8 ot_s81_su_sm tiles: shared out 1/16 each
@@ -508,6 +515,53 @@ def unit_lanes(P, facts, colx, streets):
                                     'unit lanes (the 25-um slice margins held no lane); die width +' + str(sum(COL_EXW.values()) + sum(COL_EXE.values())) + ' um')
 
 
+def host_lanes(P, facts, colx, streets):
+    """p4l (S81-DIE6): the lanes the built RTL adds over p4k.
+      hf_7N  s_7N (ot_s81sl_slice_lepe) {f_host 515, f_lf 4, f_ks 53} 572 b -> seqhost (3 x 276 lanes)
+      ht_7N  seqhost {t_host 77, t_kd 54} 131 b -> s_7N (276 lane)
+             seqhost W face -> column-4 W lane margin (above the jw lanes) -> top die strip (above the frames) -> column-7
+             slice channel -> s_7N N face (the inward-W corner)
+      jd_W   W svc entry rsv_05 {jd 2, hc 9, st_rg 2} 13 b -> seqhost s_jd_w / s_hc_w / st_rg_w (276 lane), mirror of jw_W
+    The column-4 W margin above y(seqhost) + 400 is free (jw / jd lanes turn down below it, cw turns at the N street on
+    xm4(1)); the strip between the frame tops and the die edge (~380 um) holds no block."""
+    Q = P.blocks[P.idx['seqhost']]
+    S7 = P.blocks[P.idx[f's_{NCOL - 1}N']]
+    S3S = P.blocks[P.idx['s_3S']]
+    R5 = P.blocks[P.idx['rsv_05']]
+    xm4 = lambda k: colx(4) - 30.0 - 16.0 * k
+    xm3 = lambda k: colx(3) + SCOL_W + 40.0 + 16.0 * k
+    ftop = max(b['y'] + b['h'] for b in P.blocks)
+    assert DIE_H - ftop > 200.0, (DIE_H, ftop)
+    qw = Q['x']
+    # 276 lanes only: the closed half-cycle relay views exist for 276 in all four directions (682 has no SN, 70 no
+    # E/W): hf = 3 x 276 (572 b payload), ht = 1 x 276 (131 b)
+    for k, (nm, d) in enumerate((('hf_7N_l0', 'in'), ('hf_7N_l1', 'in'), ('hf_7N_l2', 'in'), ('ht_7N', 'out'))):
+        yq = Q['y'] + Q['h'] - 300.0 - 40.0 * k
+        yt = ftop + 90.0 + 50.0 * k
+        xs = S7['x'] + 80.0 + 50.0 * k
+        xm = xm4(2) - 0.0 if k == 0 else xm4(2 + k)
+        pts = [(qw, yq), (xm, yq), (xm, yt), (xs, yt), (xs, S7['y'] + S7['h'])]
+        if d == 'in':
+            P._link(nm, 'unit', 276, (f's_{NCOL - 1}N', 'hf', pts[-1]), ('seqhost', 'hf', pts[0]), pts[::-1],
+                    'cross-die link host plane {f_host, f_lf, f_ks} end slice s_7N -> seqhost (top strip)')
+        else:
+            P._link(nm, 'unit', 276, ('seqhost', 'ht', pts[0]), (f's_{NCOL - 1}N', 'ht', pts[-1]), pts,
+                    'seqhost {t_host, t_kd} -> cross-die link host plane at end slice s_7N (top strip)')
+    t5 = R5['y'] + R5['h']
+    yj = Q['y'] + 360.0
+    ys = streets[0] + 370.0
+    yb = S3S['y'] - 240.0
+    xw = min(max(colx(3) + 340.0, R5['x'] + 60.0), R5['x'] + R5['w'] - 60.0)
+    pts = [(xw, t5), (xw, yb), (xm3(3), yb), (xm3(3), ys), (xm4(1), ys), (xm4(1), yj), (qw, yj)]   # xm4(1): cw uses it above the seqhost only
+    P._link('jd_W', 'unit', 276, ('rsv_05', 'jd', pts[0]), ('seqhost', 'jd', pts[-1]), pts,
+            'W svc entry {jd, hc, st_rg} -> seqhost s_jd_w / s_hc_w / st_rg_w (S street, mirror of jw_W)')
+    L = {l['i']: l for l in P.links}
+    facts['host_lanes'] = {n: dict(bits=L[n]['b'], stations=L[n]['s'], um=L[n]['L']) for n in ('hf_7N_l0', 'hf_7N_l1', 'hf_7N_l2', 'ht_7N', 'jd_W')}
+    facts['host_plane'] = dict(endpoint=f's_{NCOL - 1}N', why='end slice nearest the seqhost; the other three endpoints '
+                               'carry no host plane (t_host / t_kd tied 0 as declared pads: no THOST / TKD frames, the '
+                               'compiler addresses the host-side die only through s_7N)')
+
+
 def build():
     P = Plan()
     pitch, scol_w = PITCH, SCOL_W
@@ -551,6 +605,8 @@ def build():
         for t in range(2):
             ym = streets[t] + STREET / 2
             sm_ = 'dsdv_slice_lep' if P4I and c in (0, NCOL - 1) else 'dsdv_slice'   # p4i: end slices = link endpoint variant
+            if P4L and c in (0, NCOL - 1):
+                sm_ = 'dsdv_slice_lepw' if c == 0 else 'dsdv_slice_lepe'
             P.block(f's_{c}{"SN"[t]}', sm_, 'slice', f'cl{c}{"SN"[t]}', colx(c) + (scol_w - SLICE_W) / 2, ym - SLICE_H / 2, SLICE_W, SLICE_H)
     # ---------------------------------------------------------------- south band: [SM_W x4][svc_W][PHY+ctrl][svc_E][SM_E x4]
     # the HBM service halves abut the PHY; each attention softmax group (SU SM tiles) abuts its service half, so the
@@ -869,9 +925,11 @@ def build():
                 lx = LK['x'] + LK['w'] if side == 'W' else LK['x']
                 ly = min(max(yst, LK['y'] + 20), LK['y'] + LK['h'] - 20)
                 P.link(f'lt_{lk}', 'coll', COLL_LANE, (sn, 'tx' + k, (sxf, yst)), (lk, 'tx', (lx, ly)), [(sxf, yst), (lx, yst), (lx, ly)], 'link lane tx (street)')
-                P.link(f'lr_{lk}', 'coll', COLL_LANE, (lk, 'rx', (lx, ly + ry)), (sn, 'rx' + k, (sxf, yst + ry)), [(lx, ly + ry), (lx, yst + ry), (sxf, yst + ry)], 'link lane rx (street)')
+                P.link(f'lr_{lk}', 'coll', COLL_LANE + (50 if P4L else 0), (lk, 'rx', (lx, ly + ry)), (sn, 'rx' + k, (sxf, yst + ry)), [(lx, ly + ry), (lx, yst + ry), (sxf, yst + ry)], 'link lane rx (street)')
     if P4K:
         unit_lanes(P, facts, colx, streets)
+    if P4L:
+        host_lanes(P, facts, colx, streets)
     return P, facts
 
 
@@ -1098,6 +1156,7 @@ def main():
     ap.add_argument('--p4i', action='store_true', help='p4i: p4h - coll_edge + end-slice link endpoints + svc_rs centre chain + HP kind + host/job paths')
     ap.add_argument('--p4j', action='store_true', help='p4j: p4i + RET 70 (frame/slice RTL return width) + q/P.V entry under the slice-column voids (0 um of lane over a block)')
     ap.add_argument('--p4k', action='store_true', help='p4k: p4j + svc_rs RTL faces, q / P.V format lanes, unit lanes, column-3 E / column-4 W lane margins')
+    ap.add_argument('--p4l', action='store_true', help='p4l (S81-DIE6): p4k + no-mix4 + lepw/lepe endpoints (rx 514 on 562 lanes), host plane lanes hf_7N / ht_7N, jd_W, svc up 16')
     ap.add_argument('--no-mix4', action='store_true', help='0dv: delete mix4_w / mix4_e (Engram mix = in-slice op ENG); V rungs of columns 2 / 5 join directly')
     ap.add_argument('--lane-margin', type=float, default=120.0, help='p4k: extra column width beside the column-3 E / column-4 W slices (um)')
     ap.add_argument('--p4h-drop', type=int, default=4, choices=(4, 6), help='p4h: row-0 S-tier frames given to the service region (4: 3L-4R; 6: 2R-5L)')
@@ -1109,8 +1168,10 @@ def main():
     P4F = a.p4f or a.p4g or a.p4h
     global P4G, P4H, P4H_DROP, P4I, P4J, RET, NO_MIX4
     NO_MIX4 = a.no_mix4
-    global P4K
-    P4K = a.p4k
+    global P4K, P4L
+    P4L = a.p4l
+    NO_MIX4 = NO_MIX4 or P4L
+    P4K = a.p4k or P4L
     P4J = a.p4j or P4K
     P4I = a.p4i or P4J
     if P4J:
@@ -1133,6 +1194,8 @@ def main():
         UNIT_W, UNIT_WE = (680.0, 680.0) if a.tier_w else (820.0, 545.0)
         PITCH = 2 * FRAME_PITCH + SCOL_W
         DIE_W = 2 * EDGE + NCOL * PITCH
+    if P4L:
+        SVC_FACE['up'] = (16, SVC_FACE['up'][1], SVC_FACE['up'][2])
     if P4K:
         COL_EXE[3] = a.lane_margin
         COL_EXW[4] = a.lane_margin
