@@ -19,6 +19,17 @@ module qfd_tt_ctlm_head_static_rk #(
     parameter integer SREG = 0,   // h8: registered calendar 'scheduled' (exact, 0 edges)
     parameter integer DPRE = 0,   // h9: controller decode adds per FIFO head word (exact, 0 edges)
     parameter integer DSEL = 0,   // h14: the DPRE adds' DYN operand registered per head word (exact, 0 edges)
+    // Q-TTH15 h15 (10-17, coordinator-approved; all exact, 0 edges, default 0 = unchanged):
+    parameter integer PWCP = 0,   // program-SRAM write pins from 4 kept register copies (one per macro x pin edge: W edge w_addr +
+                                  //   wd_in[265:0], E edge w_ce + wd_in[511:266] + w_mask); h14d: one pw_d2 flop drove 16 wd_in pins on
+                                  //   both edges of both macros (-128.7).  OT_PWCP_MUT: macro 0's W-edge data copy inverted
+    parameter integer FQWE = 0,   // controller FIFO write enables as registered one-hot slice copies + prog_re_r / rng_r as 32 kept
+                                  //   slice copies for prog_q (h14d -116.8 / -71.5).  OT_FQWE_MUT / OT_PREC_MUT negative controls
+    parameter integer OINC = 0,   // controller o_cnt <= o_cnt1, Kogge-Stone o_cnt1 incrementer (h14d -110.4)
+    parameter integer DTIL = 0,   // controller me_tiles DPRE/DSEL (h14d -103.6)
+    parameter integer SLATE = 0,  // fixed-issue sched_q late start select (h14d -86.9)
+    parameter integer AMWC = 0,   // controller am_wins kept copies (h14d -107.5)
+    parameter integer RRH = 0,    // RRG 8 -> 12 reset copies, the 4 new ones for the controller's head-fill slices (h14d -47.8)
     parameter integer PSRAM = 1, parameter integer PMUT = 0, parameter integer HQ2 = 1,
     parameter integer MEREG = 3,  // el1011-q-seq: registered engine clock enable (ctlm_mereg)
     parameter integer RRG = 1,    // el1011-q-seq: replicated tile reset (ctlm_rrg)
@@ -89,20 +100,21 @@ module qfd_tt_ctlm_head_static_rk #(
     end else begin : g_kvdir
         assign kv_ok_c = kv_ok; assign kvwd_c = kv_write_drained;
     end endgenerate
-    (* keep = "true" *) wire [8-1:0] rsv;   // RRG: reset copies (el1011-q-seq)
+    localparam integer RRN = (RRH != 0) ? 12 : 8;
+    (* keep = "true" *) wire [RRN-1:0] rsv;   // RRG: reset copies (el1011-q-seq); h15 RRH: 4 more for the head-fill slices
     wire [8-1:0] rrv;                      // the raw-port users: rsv under RRG, else rst_n
     generate if (RRG != 0 && IS > 0) begin : g_rrg
         genvar rk;
-        for (rk = 0; rk < 8; rk = rk + 1) begin : g_r
+        for (rk = 0; rk < RRN; rk = rk + 1) begin : g_r
             (* keep = "true", dont_touch = "true" *) reg [IS-1:0] r;
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) r <= {IS{1'b0}};
                 else r <= {r, 1'b1};
             assign rsv[rk] = r[IS-1];
         end
-        assign rrv = rsv;
+        assign rrv = rsv[7:0];
     end else begin : g_rr0
-        assign rsv = {8{rs}};
+        assign rsv = {RRN{rs}};
         assign rrv = {8{rst_n}};
     end endgenerate
     // die-facing input pin stations (registered boundary); kv_ok / kv_write_drained / me_mem_ok stay direct (readiness
@@ -118,6 +130,9 @@ module qfd_tt_ctlm_head_static_rk #(
     wire [11:0] prog_a = q_prog_base + prog_addr;
     reg prog_re_r; reg [11:0] prog_a_r;                 // PRL 2: the read address registered
     always @(posedge clk or negedge rsv[7]) if (!rsv[7]) prog_re_r <= 1'b0; else prog_re_r <= prog_re;
+    localparam integer PRN = (FQWE != 0) ? 32 : 1;      // h15: prog_q capture enable / range as PRN kept slice copies
+    (* keep *) reg [PRN-1:0] prog_re_c;
+    always @(posedge clk or negedge rsv[7]) if (!rsv[7]) prog_re_c <= {PRN{1'b0}}; else prog_re_c <= {PRN{prog_re}};
     always @(posedge clk) prog_a_r <= prog_a;
     generate if (PSRAM != 0) begin : g_psram
         //: the program store as two 64 x 512 SRAM macros; every macro write pin from a register (no decode at the pins)
@@ -128,6 +143,12 @@ module qfd_tt_ctlm_head_static_rk #(
         end
         reg rng_r;                                       // the read word is inside the store (else prog_q = 0)
         always @(posedge clk) rng_r <= (PMUT != 0) ? (prog_a_r < 64) : (prog_a < 64);
+        (* keep *) reg [PRN-1:0] rng_c;                  // h15: rng_r slice copies
+`ifdef OT_PREC_MUT
+        always @(posedge clk) rng_c <= {PRN{(prog_a < 64)}} ^ {{(PRN-1){1'b0}}, 1'b1};
+`else
+        always @(posedge clk) rng_c <= {PRN{(prog_a < 64)}};
+`endif
         wire [1023:0] p_rd;
         wire p_rce = (PMUT != 0) ? prog_re_r : prog_re;
         wire [5:0] p_ra = (PMUT != 0) ? prog_a_r[5:0] : prog_a[5:0];
@@ -141,8 +162,38 @@ module qfd_tt_ctlm_head_static_rk #(
             wire w_ce = pw_v2 && (pw_b2 == ((m != 0) ? 1'b1 : 1'b0));
             assign program_raw_ce[m]=w_ce;assign program_raw_row[6*m+:6]=pw_row2;
             assign program_raw_data[512*m+:512]={8{pw_d2}};assign program_raw_mask[512*m+:512]=w_mask;
+            wire m_ce; wire [5:0] m_row; wire [511:0] m_wd, m_mask;
+            if (PWCP != 0) begin : g_cp
+                //: h15 PWCP: this macro's write pins from its own registers, one copy per LEF pin edge (W: w_addr, wd_in[265:0];
+                //: E: w_ce, wd_in[511:266], w_mask); same values as pw_v2 / pw_row2 / pw_sl2 / pw_d2 on every edge
+                (* keep *) reg [5:0] wl_row; (* keep *) reg [63:0] wl_d;
+                (* keep *) reg wr_ce; (* keep *) reg [7:0] wr_sl; (* keep *) reg [63:0] wr_d;
+                always @(posedge clk or negedge rsv[7])
+                    if (!rsv[7]) wr_ce <= 1'b0; else wr_ce <= q_pw_v && (q_pw_addr[3] == ((m != 0) ? 1'b1 : 1'b0));
+                always @(posedge clk) begin
+                    wl_row <= q_pw_addr[9:4]; wl_d <= q_pw_data; wr_sl <= 8'd1 << q_pw_addr[2:0];
+                    wr_d <= q_pw_data;
+`ifdef OT_PWCP_MUT
+                    if (m == 0) wl_d <= ~q_pw_data;
+`endif
+                end
+                wire [511:0] dl = {8{wl_d}}, dr = {8{wr_d}};
+                assign m_ce = wr_ce; assign m_row = wl_row; assign m_wd = {dr[511:266], dl[265:0]};
+                for (s = 0; s < 8; s = s + 1) begin : g_s
+                    assign m_mask[64*s +: 64] = {64{wr_sl[s]}};
+                end
+`ifndef SYNTHESIS
+`ifndef OT_PWCP_MUT
+                always @(posedge clk) if (rsv[7] && (m_ce !== w_ce || (w_ce && (m_row !== pw_row2 || m_wd !== {8{pw_d2}} || m_mask !== w_mask))))
+                    $fatal(1, "PWCP macro %0d write pins diverged", m);
+`endif
+`endif
+            end else begin : g_cp0
+                assign m_ce = program_raw_ce[m]; assign m_row = program_raw_row[6*m+:6];
+                assign m_wd = program_raw_data[512*m+:512]; assign m_mask = program_raw_mask[512*m+:512];
+            end
             ot_sram_1r1w_64x512_m1_r2c2 u_pm (.clk(ck_pm[m]), .r_ce_in(p_rce), .r_addr_in(p_ra), .rd_out(p_rd[512*m +: 512]),
-                .w_ce_in(program_raw_ce[m]), .w_addr_in(program_raw_row[6*m+:6]), .wd_in(program_raw_data[512*m+:512]), .w_mask_in(program_raw_mask[512*m+:512]),
+                .w_ce_in(m_ce), .w_addr_in(m_row), .wd_in(m_wd), .w_mask_in(m_mask),
                 .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
         end
         wire observed_v,observed_full;wire [9:0]observed_addr;wire [63:0]observed_data;
@@ -153,6 +204,17 @@ module qfd_tt_ctlm_head_static_rk #(
             reg pre_rr;
             always @(posedge clk or negedge rsv[7]) if (!rsv[7]) pre_rr <= 1'b0; else pre_rr <= prog_re_r;
             always @(posedge clk) if (pre_rr) prog_q <= rng_r ? p_rd : 1024'd0;
+        end else if (FQWE != 0) begin : g_pqc
+            genvar pk;
+            for (pk = 0; pk < PRN; pk = pk + 1) begin : g_k
+                always @(posedge clk) if (prog_re_c[pk]) prog_q[32*pk +: 32] <= rng_c[pk] ? p_rd[32*pk +: 32] : 32'd0;
+            end
+`ifndef SYNTHESIS
+`ifndef OT_PREC_MUT
+            always @(posedge clk) if (rsv[7] && (prog_re_c !== {PRN{prog_re_r}} || rng_c !== {PRN{rng_r}}))
+                $fatal(1, "h15 prog_q slice copies diverged");
+`endif
+`endif
         end else begin : g_pq
             always @(posedge clk) if (prog_re_r) prog_q <= rng_r ? p_rd : 1024'd0;
         end
@@ -236,7 +298,7 @@ module qfd_tt_ctlm_head_static_rk #(
       else if(q_pw_v && q_pw_addr==1017) schedule_stage<=q_pw_data[17:12];
     // ck_sched and clk are independently entered, compiler phase-matched roots.
     // Candidate is sampled at the real decoder issue phase; there is no wait.
-    ot_qwen_fixed_issue_pw #(.DENSE_IMAGE(DENSE_IMAGE),.OWN(1),.SREG(SREG)) u_fixed_issue (
+    ot_qwen_fixed_issue_pw #(.DENSE_IMAGE(DENSE_IMAGE),.OWN(1),.SREG(SREG),.SLATE(SLATE)) u_fixed_issue (
       .clk(ck_sched),.rst_n(rsv[1]),.pw_v(q_pw_v),.pw_addr(q_pw_addr),.pw_data(q_pw_data),
       .start(q_h_start && q_prog_base==0),.stage(schedule_stage),
       .candidate_v(candidate_v),.candidate_pc(q_prog_base+candidate_pc),.candidate_unit(candidate_unit),
@@ -244,7 +306,8 @@ module qfd_tt_ctlm_head_static_rk #(
       .issue_v(fixed_issue),.end_v(fixed_end),.cp_cmd(cp_cmd),.cp_v(cp_v),.issue_pc(fixed_pc),.issue_unit(fixed_unit),
       .active(schedule_active),.done(),.cycle(),.image_ready(me_image_ready),.fault(schedule_fault));
     wire s_me_ready, s_me_idle; wire [15:0] s_me_progress; wire m_fin; wire [18-1:0] m_fidx; wire [31:0] m_fval;
-    ot_qwen_rom_core_ctrl_static #(.OWN(1), .XW(XW), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16), .G((TPMUT == 2) ? 6144 : G), .DG((TPMUT != 0) ? 6144 : G), .AW(24), .NW(18), .PAW(12), .SU_VEC(1), .SW(64), .LV(7), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(((AUD & 64) != 0) ? 0 : 1), .MEREG(MEREG), .PCUT(PCUT), .FKS(((AUD & 512) != 0) ? 2 : ((AUD & 128) != 0) ? 1 : 0), .HRC(((AUD & 1024) != 0) ? 32 : 0), .HRCM(((AUD & 16384) != 0) ? 1 : 0), .SMIN(7), .SMAX(11), .TCUT(7), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1), .HFC(32), .DPRE(DPRE), .DSEL(DSEL)) u_ctrl_me (
+    ot_qwen_rom_core_ctrl_static #(.OWN(1), .XW(XW), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16), .G((TPMUT == 2) ? 6144 : G), .DG((TPMUT != 0) ? 6144 : G), .AW(24), .NW(18), .PAW(12), .SU_VEC(1), .SW(64), .LV(7), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(((AUD & 64) != 0) ? 0 : 1), .MEREG(MEREG), .PCUT(PCUT), .FKS(((AUD & 512) != 0) ? 2 : ((AUD & 128) != 0) ? 1 : 0), .HRC(((AUD & 1024) != 0) ? 32 : 0), .HRCM(((AUD & 16384) != 0) ? 1 : 0), .SMIN(7), .SMAX(11), .TCUT(7), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1), .HFC(32), .DPRE(DPRE), .DSEL(DSEL),
+        .FQWE(FQWE), .OINC(OINC), .DTIL(DTIL), .AMWC(AMWC), .RRH(RRH)) u_ctrl_me (
         .clk(clk),
         .rst_n(rsv[1]),
         .start(q_h_start),
@@ -433,7 +496,8 @@ module qfd_tt_ctlm_head_static_rk #(
         .x_fval('0),
         .o_fin(m_fin),
         .o_fidx(m_fidx),
-        .o_fval(m_fval));
+        .o_fval(m_fval),
+        .rst_hfc_n((RRH != 0) ? rsv[RRN-1:RRN-4] : {4{rsv[1]}}));
     ot_qfd_issue_shell #(.RT_ME(DCU_M + DUC_M), .RT_SU(0), .COMP(1)) u_shell_me (.clk(clk), .rst_n(rsv[5]),
         .me_go(c_me_go), .su_go(1'b0), .me_en(me_clk_en), .su_sfu(3'd0), .me_amax(c_me_i_amax),
         .d_me_ready(c_me_ready), .d_me_idle(c_me_idle), .d_me_progress(c_me_progress),

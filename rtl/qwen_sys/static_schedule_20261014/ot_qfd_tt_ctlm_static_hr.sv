@@ -21,8 +21,14 @@
 // Release timing identical to the single station (exact, 0 edges).
 // h14 (Q-TTH14 2026-10-17, DSEL=1): the decode adds' DYN operand is a register per FIFO head word, written with the
 // word (dyn is fixed in S_RUN); removes the dyn select + its wire from the h13 worst path (dyn -> obase add). Exact, 0 edges.
+// h15 (Q-TTH15 2026-10-17, H15=1, coordinator-approved): PWCP program-SRAM write-pin copies per macro x pin edge, FQWE
+// registered one-hot FIFO write enables + prog_q capture-enable slice copies, OINC o_cnt <= o_cnt1 with a KS incrementer,
+// DTIL me_tiles DPRE/DSEL, SLATE fixed-issue sched_q late start select, AMWC am_wins kept copies, RRH 4 more reset copies
+// for the head-fill slices.  All exact, 0 edges (+~560 flops).  Kit qfd_tt_head_static_h15: mirrored (MY) macros, E home band.
 module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1, parameter integer RSTN = 1, parameter integer SREG = 1, parameter integer DPRE = 1,
-    parameter integer RSTREP = 1, parameter integer DSEL = 1) (
+    parameter integer RSTREP = 1, parameter integer DSEL = 1,
+    // h15 (Q-TTH15 10-17): PWCP / FQWE / OINC / DTIL / SLATE / AMWC / RRH, see qfd_tt_ctlm_head_static_rk (all exact, 0 edges)
+    parameter integer H15 = 1) (
     input wire [94:0] rom_ret_i,
     input wire cp_active,output wire [55:0] cp,
     output wire me_image_ready,output wire [75:0] program_obs,
@@ -126,7 +132,8 @@ module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1, parameter intege
     ot_qfd_native_cmd_route u_native_route (
       .clk(ck_head),.rst_n(rsl),.cmd(cmd),.rom_ret(rom_ret),.native_ret(native_ret),
       .rom_cmd(local_rom_cmd),.native_cmd(native_cmd),.ret(ret));
-    qfd_tt_ctlm_head_static_rk #(.SREG(SREG),.DPRE(DPRE),.DSEL(DSEL)) u_head (
+    qfd_tt_ctlm_head_static_rk #(.SREG(SREG),.DPRE(DPRE),.DSEL(DSEL),.PWCP(H15),.FQWE(H15),.OINC(H15),.DTIL(H15),.SLATE(H15),
+        .AMWC(H15),.RRH(H15)) u_head (
         .me_observe(me_observe),.cp_active(cp_active),.cp(cp),
         .me_image_ready(me_image_ready),.program_obs(program_obs),
         .layer_context_v(layer_context_v),.native_tok(native_tok),.native_pos(native_pos),
