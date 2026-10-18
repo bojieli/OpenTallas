@@ -20,6 +20,8 @@
 // S81U-GUNIT3 (10-17): three E-side leaves beside the stack (W-E registered seams; the rung, cw, CTL and sid passes
 // stay in the stack, so the rung time of flight is unchanged): L5f (exp / fdiv, E of L5), L4r (r chain, E of L4),
 // L0r (root store + group stream, E of L0).  Each side leaf talks only to its stack partner.
+// S81U-GUNIT-L1 (10-17): L1's select moved to five E-side leaves: four identical fronts L1f (q-agnostic: their
+// q-specific enables / hits arrive on their own wires) and the collector L1c; bias table in 8 SRAM macros (2 per front).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit #(
     parameter integer V    = 276,
@@ -92,10 +94,31 @@ module dsdv_gunit #(
         .rs_i(u12), .rs_o(d21), .dl_av(dl_av), .dl_a(dl_a), .dl_bv(dl_bv), .dl_b(dl_b), .cws_v(c21_v), .cws_a(c21_a),
         .cws_d(c21_d), .sids(s21), .rct_v(r_v), .rct_b(r_b), .rf(f1), .sid(sid), .cw_v(cw_v), .cw_a(cw_a),
         .cw_d(cw_d), .fault(fault));
+    // L1 <-> the router select leaves (S81U-GUNIT-L1): four fronts L1f0..3 + the collector L1c, E of L1
+    wire [5:0] sa_r, sb_r; wire [223:0] sa_d, sb_d; wire [55:0] f_we; wire c_go, c_fw, c_l, f_re; wire [2:0] c_bn;
+    wire [19:0] c_lvn; wire [3:0] f_ra, bw_a; wire [7:0] bw_e; wire [255:0] bw_d;
+    wire [3:0] fo_v, fo_f, fo_l, fo_g, fo_flt; wire [4*246-1:0] fo_d; wire g_go; wire [23:0] g_hit; wire [41:0] g_a;
+    wire i_v, gs_v, f1c; wire [53:0] i_ids; wire [191:0] gs_d;
     dsdv_gunit_l1 `DSDV_GU_MUT u_l1 (.clk(clk), .rst_n(rst_n), .rn_i(d21), .rn_o(u12), .dl_av(dl_av), .dl_a(dl_a),
         .dl_bv(dl_bv), .dl_b(dl_b), .cw_v(c21_v), .cw_a(c21_a), .cw_d(c21_d), .sid_i(s21), .ct_v(r_v), .ct_b(r_b),
         .fault(f1), .rs_o(d13), .rs_i(u31), .rw_st(rw_st), .rw_v(rw_v), .rw_l(rw_l), .rw_x(rw_x), .rw_scale(rw_scale),
-        .rw_row(rw_row), .rw_lm(rw_lm), .rw_sm(rw_sm), .sid_o(s13), .w_v(w_v), .w_b(w_b), .f3(f3));
+        .rw_row(rw_row), .rw_lm(rw_lm), .rw_sm(rw_sm), .sid_o(s13), .w_v(w_v), .w_b(w_b), .f3(f3),
+        .sa_r(sa_r), .sa_d(sa_d), .sb_r(sb_r), .sb_d(sb_d), .we(f_we), .c_go(c_go), .c_fw(c_fw), .c_l(c_l), .c_bn(c_bn),
+        .c_lvn(c_lvn), .re(f_re), .ra(f_ra), .bw_e(bw_e), .bw_a(bw_a), .bw_d(bw_d),
+        .i_v(i_v), .i_ids(i_ids), .gs_v(gs_v), .gs_d(gs_d), .fc(f1c));
+    genvar gq;
+    generate
+        for (gq = 0; gq < 4; gq = gq + 1) begin : g_l1f
+            dsdv_gunit_l1f `DSDV_GU_MUT u_l1f (.clk(clk), .rst_n(rst_n), .sa_r(sa_r), .sa_d(sa_d), .sb_r(sb_r), .sb_d(sb_d),
+                .we(f_we[14 * gq +: 14]), .c_go(c_go), .c_fw(c_fw), .c_l(c_l), .c_bn(c_bn), .c_lvn(c_lvn[5 * gq +: 5]),
+                .re(f_re), .ra(f_ra), .bw_e(bw_e[2 * gq +: 2]), .bw_a(bw_a), .bw_d(bw_d),
+                .g_go(g_go), .g_hit(g_hit[6 * gq +: 6]), .g_a(g_a),
+                .o_v(fo_v[gq]), .o_f(fo_f[gq]), .o_l(fo_l[gq]), .o_g(fo_g[gq]), .o_d(fo_d[246 * gq +: 246]), .o_flt(fo_flt[gq]));
+        end
+    endgenerate
+    dsdv_gunit_l1c `DSDV_GU_MUT u_l1c (.clk(clk), .rst_n(rst_n), .f_v(fo_v), .f_f(fo_f), .f_l(fo_l), .f_g(fo_g),
+        .f_d(fo_d), .f_flt(fo_flt), .g_go(g_go), .g_hit(g_hit), .g_a(g_a), .i_v(i_v), .i_ids(i_ids), .s_v(gs_v),
+        .s_d(gs_d), .fault(f1c));
     dsdv_gunit_l3 `DSDV_GU_MUT u_l3 (.clk(clk), .rst_n(rst_n), .rn_i(d13), .rn_o(u31), .rw_st(rw_st), .rw_v(rw_v),
         .rw_l(rw_l), .rw_x(rw_x), .rw_scale(rw_scale), .rw_row(rw_row), .rw_lm(rw_lm), .rw_sm(rw_sm), .sid_i(s13),
         .w_v(w_v), .w_b(w_b), .fault(f3), .vo_s(vo_s), .vi_s(vi_s));
