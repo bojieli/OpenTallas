@@ -16,6 +16,8 @@ The committed diag stand-ins use --ins 104,79,150: the station gates of a5f404c2
 SS 136-150 ps boundary-mean insertion (spread 3-10 ps) on all four masters.
 """
 import argparse
+import os
+import sys
 import json
 import re
 from pathlib import Path
@@ -47,9 +49,14 @@ def pins_of(spec):
     return out
 
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import abstract_pin_windows as APW   # noqa: E402
+
+
 def lef(name, W, H, pl):
     L = ["VERSION 5.8 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {name}", "  CLASS BLOCK ;",
          "  ORIGIN 0 0 ;", f"  FOREIGN {name} 0 0 ;", f"  SIZE {W} BY {H} ;", "  SYMMETRY X Y ;"]
+    pinrects = []
     for p, base, face, lay, pos in pl:
         d = "OUTPUT" if base in OUTS else "INPUT"
         use = "CLOCK" if base == "ck" else "SIGNAL"
@@ -59,6 +66,7 @@ def lef(name, W, H, pl):
         else:
             x0, x1 = (0.0, 0.192) if face == "W" else (W - 0.192, W)
             r = (x0, pos - 0.012, x1, pos + 0.012)
+        pinrects.append((p, lay, r))
         L += [f"  PIN {p}", f"    DIRECTION {d} ;", f"    USE {use} ;", "    PORT", f"      LAYER {lay} ;",
               "        RECT %.3f %.3f %.3f %.3f ;" % r, "    END", f"  END {p}"]
     stripes = {}
@@ -70,14 +78,23 @@ def lef(name, W, H, pl):
             stripes.setdefault(net, []).append(x)
             x += 5.4
         L += ["    END", f"  END {net}"]
+    # Q-DIE11 10-18 (coordinator): pin-access windows at every face pin cluster (tools/abstract_pin_windows.py,
+    # OT_ABS_PIN_WINDOW_UM default 10.8, capped at a quarter of the short side) free of OBS on M<lowest pin layer>..M5.
     E = 0.5
-    L += ["  OBS"] + [f"    LAYER M{k} ;\n      RECT {E:.3f} {E:.3f} {W - E:.3f} {H - E:.3f} ;" for k in range(1, 5)]
+    dep = min(float(os.environ.get("OT_ABS_PIN_WINDOW_UM", "10.8")), 0.25 * min(W, H))
+    lo = min(int(lay[1:]) for _p, lay, _r in pinrects) if pinrects else 4
+    win = APW.windows(W, H, pinrects, dep, max(lo, 1), 5)
+    L += ["  OBS"]
+    for k in range(1, 5):
+        L += [f"    LAYER M{k} ;"] + ["      RECT %.3f %.3f %.3f %.3f ;" % q
+                                     for q in APW.minus_rect((E, E, W - E, H - E), win.get(k, []))]
     L += ["    LAYER M5 ;"]
     xs = sorted(stripes["VDD"] + stripes["VSS"])
     edges = [E] + [v for x in xs for v in (x, x + 0.12)] + [W - E]      # OBS abuts every stripe: no own-layer pocket
     for a, b in zip(edges[::2], edges[1::2]):
         if b - a > 0.05:
-            L.append("      RECT %.3f %.3f %.3f %.3f ;" % (a, E + 0.4, b, H - E - 0.4))
+            for q in APW.minus_rect((a, E + 0.4, b, H - E - 0.4), win.get(5, [])):
+                L.append("      RECT %.3f %.3f %.3f %.3f ;" % q)
     L += ["  END", f"END {name}", "END LIBRARY"]
     return "\n".join(L) + "\n"
 

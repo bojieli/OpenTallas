@@ -4,7 +4,8 @@ for the qfd_c_b16_dv cluster gates while no CLOSED A0 view exists.  NEVER bindab
 STANDIN_NOT_A_VIEW and PROVISIONAL_NOT_A_VIEW, and the cluster kit that uses them is a *_diag kit with submit false.
 
 Pins: exact locations / layers from the c1 pin scripts (tools/qwen_romleaf/parent_{nk,nl}_c1_pins.tcl at A0_REF).
-Body: OBS M1-M7 over the whole outline (A0 is a cluster: signals + PG <= M7).
+Body: OBS M1-M7 over the whole outline (A0 is a cluster: signals + PG <= M7) minus pin-access windows at every face pin
+cluster (tools/abstract_pin_windows.py, Q-DIE11 10-18).
 Timing (ETM-shaped, same form as ref_tile exports): every data pin registered on its A0 face root
 (tap / tile_id / rst_n: ck_fa4, n_a: ck_fa0, n_b: ck_fa1, t_out: ck_fa2, n_y: ck_fa3; NL: t_out ck_fa2, rest ck_fa4);
 setup / hold / clk->q = assumed insertion R + a flop, R = insertion.json boundary mean (TT 220, FF 170, SS 290 ps:
@@ -17,6 +18,10 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+import os
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import abstract_pin_windows as APW   # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 A0_REF = "30d3d3510"   # Q-ROMPARENT-2 c1r6 (codex/romleaf-native-1621): ck_tx4/5 on E face M4, mirror-legal
@@ -60,6 +65,7 @@ def pins(kind):
 def lef(name, pl):
     L = ["VERSION 5.8 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {name}", "  CLASS BLOCK ;",
          "  ORIGIN 0 0 ;", f"  FOREIGN {name} 0 0 ;", f"  SIZE {W} BY {H} ;", "  SYMMETRY X Y ;"]
+    pinrects = []
     for p, lay, x, y in pl:
         base = p.split("[")[0]
         d = "OUTPUT" if base in OUTS else "INPUT"
@@ -70,6 +76,7 @@ def lef(name, pl):
         else:                 # S / N face, vertical stub
             y0, y1 = (0.0, 0.192) if y < H / 2 else (H - 0.192, H)
             r = (x - 0.012, y0, x + 0.012, y1)
+        pinrects.append((p, lay, r))
         L += [f"  PIN {p}", f"    DIRECTION {d} ;", f"    USE {use} ;", "    PORT", f"      LAYER {lay} ;",
               "        RECT %.3f %.3f %.3f %.3f ;" % r, "    END", f"  END {p}"]
     for net, use, off in (("VDD", "POWER", 1.0), ("VSS", "GROUND", 6.4)):   # A0 PG: M7 stripes pitch 10.8 (cluster PG M7)
@@ -80,14 +87,26 @@ def lef(name, pl):
             x += 10.8
         L += ["    END", f"  END {net}"]
     # OBS like a ref_tile export: inset 0.5 um from every face (face-pin access, child_lint (f)); M7 only between the PG
-    # stripes (no bloat over the PG layer, child_lint (a))
+    # stripes (no bloat over the PG layer, child_lint (a)).
+    # Q-DIE11 10-18 (coordinator): the inset alone left the W/E face gcells capacity 0 on M4-M6 (Q-CLUSTER4 c_b16 GRT
+    # overflow 585k-747k, mostly M6, in strips along the A0 W/E pin faces).  Every face pin cluster now gets a
+    # pin-access window (tools/abstract_pin_windows.py, OT_ABS_PIN_WINDOW_UM, default 10.8 um = one A0 PG period x2)
+    # free of OBS on M<lowest pin layer>..M7; M1-M3 stay obstructed.  The closed A0 must keep the windows free there.
     E = 0.5
-    L += ["  OBS"] + [f"    LAYER M{k} ;\n      RECT {E:.3f} {E:.3f} {W - E:.3f} {H - E:.3f} ;" for k in range(1, 7)]
+    rects = [(p, lay, r) for p, lay, r in pinrects]
+    dep = float(os.environ.get("OT_ABS_PIN_WINDOW_UM", "10.8"))
+    lo = min(int(lay[1:]) for _p, lay, _r in rects) if rects else 4
+    win = APW.windows(W, H, rects, dep, max(lo, 1), 7)
+    L += ["  OBS"]
+    for k in range(1, 7):
+        L += [f"    LAYER M{k} ;"] + ["      RECT %.3f %.3f %.3f %.3f ;" % q
+                                     for q in APW.minus_rect((E, E, W - E, H - E), win.get(k, []))]
     L += ["    LAYER M7 ;"]
     x = 1.0 + 0.288 + 0.2
     while x < W - E:
         nxt = x + 5.4 - 0.288 - 0.4
-        L.append("      RECT %.3f %.3f %.3f %.3f ;" % (x, E, min(nxt, W - E), H - E))
+        for q in APW.minus_rect((x, E, min(nxt, W - E), H - E), win.get(7, [])):
+            L.append("      RECT %.3f %.3f %.3f %.3f ;" % q)
         x = nxt + 0.288 + 0.4
     L += ["  END", f"END {name}", "END LIBRARY"]
     return "\n".join(L) + "\n"
