@@ -62,10 +62,12 @@
   "reason": "OWNER RULE 19:50 opt-out (as the coordinator-approved S81 relays and Qwen qfwd frames): a lane station is one flip-flop per bit between its pins, a landing is the ring + its registered output; a flow pin register would add a stage the die calendar does not price"
  },
  "sdc_extra": [
-  "physical/qwen_fwd_lane/fwd_lane_clocks.tcl"
+  "physical/qwen_fwd_lane/fwd_lane_clocks.tcl",
+  "physical/hbm_lane/land_straps.tcl"
  ],
  "boundary_tcl": [
-  "physical/qwen_fwd_lane/fwd_lane_clocks.tcl"
+  "physical/qwen_fwd_lane/fwd_lane_clocks.tcl",
+  "physical/hbm_lane/land_straps.tcl"
  ],
  "route": {
   "pd": 0.45,
@@ -147,6 +149,7 @@
   "record_to": "results/rtl/ref_tile/hbfd_land_136_sn",
   "extra_paths": [
    "physical/qwen_fwd_lane",
+   "physical/hbm_lane",
    "rtl/qwen_split/qfd_fwd_lane.sv",
    "rtl/hdc",
    "rtl/hbm_accel/die_glue",

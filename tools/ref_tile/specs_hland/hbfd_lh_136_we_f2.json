@@ -127,6 +127,7 @@
   "record_to": "results/rtl/ref_tile/hbfd_lh_136_we_f2",
   "extra_paths": [
    "physical/qwen_fwd_lane",
+   "physical/hbm_lane",
    "rtl/qwen_split/qfd_fwd_lane.sv",
    "rtl/hdc",
    "rtl/hbm_accel/die_glue",

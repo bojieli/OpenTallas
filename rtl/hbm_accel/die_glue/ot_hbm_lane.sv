@@ -1,18 +1,24 @@
 `timescale 1ns/1ps
 `default_nettype none
 // ---------------------------------------------------------------------------------------------------------------------
-// HBM-LANDING (2026-10-18; CLOCK-AUDIT HBM row, LANDING-CONTRACT sections 2, 3, 7): forwarded-clock HALF-CYCLE lane FORK
-// station for the HBM d4g die.  The single-branch station, hop-0 station and landing are the Qwen cores unchanged
-// (rtl/qwen_split/qfd_fwd_lane.sv: ot_qfd_lane_st, ot_qfd_land, ot_qfd_fwd0, ot_qfd_ckinv); this file adds the fork:
+// HBM-LANDING (2026-10-18; CLOCK-AUDIT HBM row, LANDING-CONTRACT sections 2, 3, 7): forwarded-clock HALF-CYCLE lane
+// stations for the HBM d4g die.  The single-branch half-cycle station and the landing are the Qwen cores unchanged
+// (rtl/qwen_split/qfd_fwd_lane.sv: ot_qfd_lane_st FIRST 0, ot_qfd_land, ot_qfd_ckinv); this file adds the fork and the
+// HBM hop 0:
 //   ot_hbm_lane_stf #(W, N, FIRST): ONE register stage of the W data bits + the lane epoch bit, captured on cap
-//     FIRST = 1: cap = ot_qfd_fwd0(ck = source root, en) (inverting ICG opened by the source's released reset; epoch in = en)
+//     FIRST = 1: cap = ICG(ck = source root, en), NON-inverting (ot_hdc_cg): hop 0 is an ordinary register on the source
+//                regional root, one cycle after the source launch (source -> hop 0 hold = the source region tree's), and
+//                the half-cycle forward starts at its ck_o.  The Qwen hop 0 (ot_qfd_fwd0, inverting) captures on the
+//                FALLING root edge: the ref_tile flow's link budget (report_clock_latency rise -> rise) finds no sinks on
+//                the root port and refuses the kit (gate hbfd_lh0_136_* 10-18 'OT_LINK_BUDGET: no measured clock'), and
+//                it saves only T/2 per lane.  Epoch in = en (the source's released reset gates the clock: L3).
 //     FIRST = 0: cap = ckf (the previous station's ck_o; epoch in = ea)
 //   and N branches k: ck_o[k] = ~cap through ONE kept inverter per branch (each branch drives one downstream station or
 //   landing), b[k*W +: W] / eb[k] = the stage (the same flops; the physical flow buffers each branch at its face).
 // Epoch: asynchronous clear by en / ea, release on cap (a reset repeater walking one station per forwarded edge), as
 // ot_qfd_lane_st.  Data: no reset (flushed by the producer; the landing reads unwritten slots as 0 bubbles).
-// Bench hooks: OT_QFD_LANE_MUT_FULL (every branch non-inverting, as the Qwen station), OT_QFD_LANE_MUT_NOINV (hop 0 gate
-// non-inverting, inside ot_qfd_fwd0), OT_HBM_LANE_MUT_FORKCK (branch 1 only non-inverting).
+// Bench hooks: OT_QFD_LANE_MUT_FULL (every branch non-inverting, as the Qwen station), OT_HBM_LANE_MUT_HOP0INV (hop 0
+// = the Qwen inverting gate), OT_HBM_LANE_MUT_FORKCK (branch 1 only non-inverting).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_lane_stf #(parameter integer W = 136, parameter integer N = 2, parameter integer FIRST = 0) (
     input  wire           ck,        // FIRST: source block root;  else: the lane's forwarded clock (ckf)
@@ -24,7 +30,11 @@ module ot_hbm_lane_stf #(parameter integer W = 136, parameter integer N = 2, par
 );
     wire cap;
     generate if (FIRST != 0) begin : g_hop0
-        ot_qfd_fwd0 u_fwd0 (.ck(ck), .en(en), .cko(cap));
+`ifdef OT_HBM_LANE_MUT_HOP0INV
+        ot_qfd_fwd0 u_fwd0 (.ck(ck), .en(en), .cko(cap));        // bench mutant: the Qwen inverting hop 0 (T/2 early)
+`else
+        ot_hdc_cg u_cg (.clk(ck), .en(en), .gclk(cap));
+`endif
     end else begin : g_st
         assign cap = ck;
     end endgenerate

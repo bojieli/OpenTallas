@@ -4,7 +4,7 @@
 // HBM d4g forwarded-clock half-cycle lane masters + landings; cores rtl/qwen_split/qfd_fwd_lane.sv,
 // rtl/hbm_accel/die_glue/ot_hbm_lane.sv (fork), rtl/hdc/ot_hdc_cg.sv.  Contract: lanes/LANDING-CONTRACT.md.
 module hbfd_lh0_48_WE (input wire ck, input wire en, input wire [47:0] a, output wire [47:0] b, output wire eb, output wire ck_o);
-    ot_qfd_lane_st #(.W(48), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
+    ot_hbm_lane_stf #(.W(48), .N(1), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
 endmodule
 module hbfd_lh_48_WE (input wire ckf, input wire ea, input wire [47:0] a, output wire [47:0] b, output wire eb, output wire ck_o);
     ot_qfd_lane_st #(.W(48), .FIRST(0)) u_st (.ck(ckf), .en(ea), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
@@ -34,7 +34,7 @@ module hbfd_land0_48_WE (input wire ck_s, input wire en, input wire [47:0] a, in
     ot_qfd_land #(.W(48), .D(4), .FIRST(1)) u_land (.ckf(ck_s), .ea(en), .i(a), .ck(ck), .rs(rs), .k({k2, k1, k0}), .o(b), .fault(fault));
 endmodule
 module hbfd_lh0_48_EW (input wire ck, input wire en, input wire [47:0] a, output wire [47:0] b, output wire eb, output wire ck_o);
-    ot_qfd_lane_st #(.W(48), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
+    ot_hbm_lane_stf #(.W(48), .N(1), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
 endmodule
 module hbfd_lh_48_EW (input wire ckf, input wire ea, input wire [47:0] a, output wire [47:0] b, output wire eb, output wire ck_o);
     ot_qfd_lane_st #(.W(48), .FIRST(0)) u_st (.ck(ckf), .en(ea), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
@@ -64,7 +64,7 @@ module hbfd_land0_48_EW (input wire ck_s, input wire en, input wire [47:0] a, in
     ot_qfd_land #(.W(48), .D(4), .FIRST(1)) u_land (.ckf(ck_s), .ea(en), .i(a), .ck(ck), .rs(rs), .k({k2, k1, k0}), .o(b), .fault(fault));
 endmodule
 module hbfd_lh0_48_SN (input wire ck, input wire en, input wire [47:0] a, output wire [47:0] b, output wire eb, output wire ck_o);
-    ot_qfd_lane_st #(.W(48), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
+    ot_hbm_lane_stf #(.W(48), .N(1), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
 endmodule
 module hbfd_lh_48_SN (input wire ckf, input wire ea, input wire [47:0] a, output wire [47:0] b, output wire eb, output wire ck_o);
     ot_qfd_lane_st #(.W(48), .FIRST(0)) u_st (.ck(ckf), .en(ea), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
@@ -94,7 +94,7 @@ module hbfd_land0_48_SN (input wire ck_s, input wire en, input wire [47:0] a, in
     ot_qfd_land #(.W(48), .D(4), .FIRST(1)) u_land (.ckf(ck_s), .ea(en), .i(a), .ck(ck), .rs(rs), .k({k2, k1, k0}), .o(b), .fault(fault));
 endmodule
 module hbfd_lh0_48_NS (input wire ck, input wire en, input wire [47:0] a, output wire [47:0] b, output wire eb, output wire ck_o);
-    ot_qfd_lane_st #(.W(48), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
+    ot_hbm_lane_stf #(.W(48), .N(1), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
 endmodule
 module hbfd_lh_48_NS (input wire ckf, input wire ea, input wire [47:0] a, output wire [47:0] b, output wire eb, output wire ck_o);
     ot_qfd_lane_st #(.W(48), .FIRST(0)) u_st (.ck(ckf), .en(ea), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
@@ -124,7 +124,7 @@ module hbfd_land0_48_NS (input wire ck_s, input wire en, input wire [47:0] a, in
     ot_qfd_land #(.W(48), .D(4), .FIRST(1)) u_land (.ckf(ck_s), .ea(en), .i(a), .ck(ck), .rs(rs), .k({k2, k1, k0}), .o(b), .fault(fault));
 endmodule
 module hbfd_lh0_136_WE (input wire ck, input wire en, input wire [135:0] a, output wire [135:0] b, output wire eb, output wire ck_o);
-    ot_qfd_lane_st #(.W(136), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
+    ot_hbm_lane_stf #(.W(136), .N(1), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
 endmodule
 module hbfd_lh_136_WE (input wire ckf, input wire ea, input wire [135:0] a, output wire [135:0] b, output wire eb, output wire ck_o);
     ot_qfd_lane_st #(.W(136), .FIRST(0)) u_st (.ck(ckf), .en(ea), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
@@ -154,7 +154,7 @@ module hbfd_land0_136_WE (input wire ck_s, input wire en, input wire [135:0] a, 
     ot_qfd_land #(.W(136), .D(4), .FIRST(1)) u_land (.ckf(ck_s), .ea(en), .i(a), .ck(ck), .rs(rs), .k({k2, k1, k0}), .o(b), .fault(fault));
 endmodule
 module hbfd_lh0_136_EW (input wire ck, input wire en, input wire [135:0] a, output wire [135:0] b, output wire eb, output wire ck_o);
-    ot_qfd_lane_st #(.W(136), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
+    ot_hbm_lane_stf #(.W(136), .N(1), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
 endmodule
 module hbfd_lh_136_EW (input wire ckf, input wire ea, input wire [135:0] a, output wire [135:0] b, output wire eb, output wire ck_o);
     ot_qfd_lane_st #(.W(136), .FIRST(0)) u_st (.ck(ckf), .en(ea), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
@@ -184,7 +184,7 @@ module hbfd_land0_136_EW (input wire ck_s, input wire en, input wire [135:0] a, 
     ot_qfd_land #(.W(136), .D(4), .FIRST(1)) u_land (.ckf(ck_s), .ea(en), .i(a), .ck(ck), .rs(rs), .k({k2, k1, k0}), .o(b), .fault(fault));
 endmodule
 module hbfd_lh0_136_SN (input wire ck, input wire en, input wire [135:0] a, output wire [135:0] b, output wire eb, output wire ck_o);
-    ot_qfd_lane_st #(.W(136), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
+    ot_hbm_lane_stf #(.W(136), .N(1), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
 endmodule
 module hbfd_lh_136_SN (input wire ckf, input wire ea, input wire [135:0] a, output wire [135:0] b, output wire eb, output wire ck_o);
     ot_qfd_lane_st #(.W(136), .FIRST(0)) u_st (.ck(ckf), .en(ea), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
@@ -214,7 +214,7 @@ module hbfd_land0_136_SN (input wire ck_s, input wire en, input wire [135:0] a, 
     ot_qfd_land #(.W(136), .D(4), .FIRST(1)) u_land (.ckf(ck_s), .ea(en), .i(a), .ck(ck), .rs(rs), .k({k2, k1, k0}), .o(b), .fault(fault));
 endmodule
 module hbfd_lh0_136_NS (input wire ck, input wire en, input wire [135:0] a, output wire [135:0] b, output wire eb, output wire ck_o);
-    ot_qfd_lane_st #(.W(136), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
+    ot_hbm_lane_stf #(.W(136), .N(1), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
 endmodule
 module hbfd_lh_136_NS (input wire ckf, input wire ea, input wire [135:0] a, output wire [135:0] b, output wire eb, output wire ck_o);
     ot_qfd_lane_st #(.W(136), .FIRST(0)) u_st (.ck(ckf), .en(ea), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
@@ -244,7 +244,7 @@ module hbfd_land0_136_NS (input wire ck_s, input wire en, input wire [135:0] a, 
     ot_qfd_land #(.W(136), .D(4), .FIRST(1)) u_land (.ckf(ck_s), .ea(en), .i(a), .ck(ck), .rs(rs), .k({k2, k1, k0}), .o(b), .fault(fault));
 endmodule
 module hbfd_lh0_624_WE (input wire ck, input wire en, input wire [623:0] a, output wire [623:0] b, output wire eb, output wire ck_o);
-    ot_qfd_lane_st #(.W(624), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
+    ot_hbm_lane_stf #(.W(624), .N(1), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
 endmodule
 module hbfd_lh_624_WE (input wire ckf, input wire ea, input wire [623:0] a, output wire [623:0] b, output wire eb, output wire ck_o);
     ot_qfd_lane_st #(.W(624), .FIRST(0)) u_st (.ck(ckf), .en(ea), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
@@ -274,7 +274,7 @@ module hbfd_land0_624_WE (input wire ck_s, input wire en, input wire [623:0] a, 
     ot_qfd_land #(.W(624), .D(4), .FIRST(1)) u_land (.ckf(ck_s), .ea(en), .i(a), .ck(ck), .rs(rs), .k({k2, k1, k0}), .o(b), .fault(fault));
 endmodule
 module hbfd_lh0_624_EW (input wire ck, input wire en, input wire [623:0] a, output wire [623:0] b, output wire eb, output wire ck_o);
-    ot_qfd_lane_st #(.W(624), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
+    ot_hbm_lane_stf #(.W(624), .N(1), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
 endmodule
 module hbfd_lh_624_EW (input wire ckf, input wire ea, input wire [623:0] a, output wire [623:0] b, output wire eb, output wire ck_o);
     ot_qfd_lane_st #(.W(624), .FIRST(0)) u_st (.ck(ckf), .en(ea), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
@@ -304,7 +304,7 @@ module hbfd_land0_624_EW (input wire ck_s, input wire en, input wire [623:0] a, 
     ot_qfd_land #(.W(624), .D(4), .FIRST(1)) u_land (.ckf(ck_s), .ea(en), .i(a), .ck(ck), .rs(rs), .k({k2, k1, k0}), .o(b), .fault(fault));
 endmodule
 module hbfd_lh0_624_SN (input wire ck, input wire en, input wire [623:0] a, output wire [623:0] b, output wire eb, output wire ck_o);
-    ot_qfd_lane_st #(.W(624), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
+    ot_hbm_lane_stf #(.W(624), .N(1), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
 endmodule
 module hbfd_lh_624_SN (input wire ckf, input wire ea, input wire [623:0] a, output wire [623:0] b, output wire eb, output wire ck_o);
     ot_qfd_lane_st #(.W(624), .FIRST(0)) u_st (.ck(ckf), .en(ea), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
@@ -334,7 +334,7 @@ module hbfd_land0_624_SN (input wire ck_s, input wire en, input wire [623:0] a, 
     ot_qfd_land #(.W(624), .D(4), .FIRST(1)) u_land (.ckf(ck_s), .ea(en), .i(a), .ck(ck), .rs(rs), .k({k2, k1, k0}), .o(b), .fault(fault));
 endmodule
 module hbfd_lh0_624_NS (input wire ck, input wire en, input wire [623:0] a, output wire [623:0] b, output wire eb, output wire ck_o);
-    ot_qfd_lane_st #(.W(624), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
+    ot_hbm_lane_stf #(.W(624), .N(1), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
 endmodule
 module hbfd_lh_624_NS (input wire ckf, input wire ea, input wire [623:0] a, output wire [623:0] b, output wire eb, output wire ck_o);
     ot_qfd_lane_st #(.W(624), .FIRST(0)) u_st (.ck(ckf), .en(ea), .a(a), .b(b), .eb(eb), .ck_o(ck_o));

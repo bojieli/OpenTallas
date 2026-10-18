@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """HBM-LANDING 10-18: generate rtl/hbm_accel/die_glue/hbfd_lane_masters.sv, the HBM d4g forwarded-clock half-cycle lane
 masters (LANDING-CONTRACT sections 2, 3, 7; Qwen cores rtl/qwen_split/qfd_fwd_lane.sv + fork rtl/hbm_accel/die_glue/ot_hbm_lane.sv):
-  hbfd_lh0_<W>_<DIR>        (ck, en, a -> b, eb, ck_o)                 hop-0 station on the source root (inverting ICG)
+  hbfd_lh0_<W>_<DIR>        (ck, en, a -> b, eb, ck_o)                 hop-0 station on the source root (non-inverting ICG)
   hbfd_lh_<W>_<DIR>         (ckf, ea, a -> b, eb, ck_o)                half-cycle station
   hbfd_lh0_<W>_<DIR>_f<N> / hbfd_lh_<W>_<DIR>_f<N>  (same inputs -> b[N*W], eb[N], ck_o[N])   fork, N = 2..4
   hbfd_land_<W>_<DIR>       (ckf, ea, a, ck, rs, k0, k1, k2 -> b, fault)  landing, ring D = 4 (ot_qfd_land FIRST = 0)
@@ -36,10 +36,14 @@ def body(m, W, fam, n):
     if fam in ('lh0', 'lh'):
         ci, ei = ('ck', 'en') if fam == 'lh0' else ('ckf', 'ea')
         f = 1 if fam == 'lh0' else 0
-        if n == 1:
+        if n == 1 and fam == 'lh':
             return (f'module {m} (input wire {ci}, input wire {ei}, input wire [{W - 1}:0] a, output wire [{W - 1}:0] b, '
                     f'output wire eb, output wire ck_o);\n'
                     f'    ot_qfd_lane_st #(.W({W}), .FIRST({f})) u_st (.ck({ci}), .en({ei}), .a(a), .b(b), .eb(eb), .ck_o(ck_o));\nendmodule')
+        if n == 1:   # HBM hop 0 (non-inverting ICG on the source root): the fork core with one branch, scalar ports
+            return (f'module {m} (input wire {ci}, input wire {ei}, input wire [{W - 1}:0] a, output wire [{W - 1}:0] b, '
+                    f'output wire eb, output wire ck_o);\n'
+                    f'    ot_hbm_lane_stf #(.W({W}), .N(1), .FIRST(1)) u_st (.ck({ci}), .en({ei}), .a(a), .b(b), .eb(eb), .ck_o(ck_o));\nendmodule')
         return (f'module {m} (input wire {ci}, input wire {ei}, input wire [{W - 1}:0] a, output wire [{n * W - 1}:0] b, '
                 f'output wire [{n - 1}:0] eb, output wire [{n - 1}:0] ck_o);\n'
                 f'    ot_hbm_lane_stf #(.W({W}), .N({n}), .FIRST({f})) u_st (.ck({ci}), .en({ei}), .a(a), .b(b), .eb(eb), .ck_o(ck_o));\nendmodule')

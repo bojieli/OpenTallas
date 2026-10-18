@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[2]
 SRC = ['rtl/hbm_accel/die_glue/hbfd_lane_masters.sv', 'rtl/hbm_accel/die_glue/ot_hbm_lane.sv', 'rtl/qwen_split/qfd_fwd_lane.sv',
        'rtl/hdc/ot_hdc_cg.sv']
 CLK_TCL = 'physical/qwen_fwd_lane/fwd_lane_clocks.tcl'
+STRAP_TCL = 'physical/hbm_lane/land_straps.tcl'
 WIT = 'results/rtl/hbm_lane_1018'
 FACES = {'EW': ('E', 'W'), 'WE': ('W', 'E'), 'SN': ('S', 'N'), 'NS': ('N', 'S')}
 
@@ -47,8 +48,8 @@ def spec(m, a):
     L = max(32.4, 2.16 * -(-face_bits / 5.2 // 2.16))
     w, h = (thick, L) if vert else (L, thick)
     ck = {'lh0': 'ck', 'lh': 'ckf', 'land': 'ck', 'land0': 'ck'}[fam]
-    mut = {'lh0': ('full', 'noinv'), 'lh': ('full',) + (('forkck',) if n > 1 else ()), 'land': ('sel', 'naive', 'vld'),
-           'land0': ('sel', 'noinv')}[fam]
+    mut = {'lh0': ('full', 'hop0inv'), 'lh': ('full',) + (('forkck',) if n > 1 else ()), 'land': ('sel', 'naive', 'vld'),
+           'land0': ('sel', 'naive')}[fam]
     name = m.lower()
     benches = [dict(name='lint', cmd=(f"mkdir -p {{RUN}} && printf '%s\\n' 'module ot_lint_top; {m} u_top (); endmodule' > "
                                       f"{{RUN}}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style "
@@ -62,7 +63,7 @@ def spec(m, a):
         benches.append(dict(name=f'{mu}_mutant', cmd=f'bash tools/hbm_die_v16/hbm_lane_bench.sh {mu} {{RUN}}/bench_{mu} {W}',
                             expect='fail', fail_regex='LANE_BENCH FAIL', fail_witness=f'{WIT}/w_{mu}{W}.log',
                             threads=2, peak_ram_gb=6, needs=['verilator']))
-    kind = {'lh0': 'hop-0 station (inverting ICG on the source root)', 'lh': 'half-cycle station',
+    kind = {'lh0': 'hop-0 station (non-inverting ICG on the source root, half-cycle forward)', 'lh': 'half-cycle station',
             'land': 'landing (4-slot ring, read on the sink regional root)', 'land0': 'landing with the hop-0 gate (0-station lane)'}[fam]
     if n > 1:
         kind = f'{n}-branch fork {kind}'
@@ -76,7 +77,8 @@ def spec(m, a):
         pin_regs=dict(enable=False, reason='OWNER RULE 19:50 opt-out (as the coordinator-approved S81 relays and Qwen qfwd frames): '
                       'a lane station is one flip-flop per bit between its pins, a landing is the ring + its registered output; '
                       'a flow pin register would add a stage the die calendar does not price'),
-        sdc_extra=[CLK_TCL], boundary_tcl=[CLK_TCL],
+        sdc_extra=[CLK_TCL] + ([STRAP_TCL] if fam.startswith('land') else []),
+        boundary_tcl=[CLK_TCL] + ([STRAP_TCL] if fam.startswith('land') else []),
         route=dict(pd=0.45, threads=2, peak_ram_gb=6, pin_h='M4', pin_v='M3 M5', m5_pg_pitch=2.7, hold_margin_ns=0.03,
                    io_hold_margin_ns=0.0, macro_halo_um=5.4),
         structural_change=(f'HBM-LANDING 10-18 (CLOCK-AUDIT HBM row, LANDING-CONTRACT 2-3, 7): {W}-b HBM d4g forwarded-clock lane '
@@ -86,7 +88,7 @@ def spec(m, a):
         job=dict(owner='Claude:HBM-LANDING', branch=a.branch, tag=a.tag,
                  purpose=f'HBM d4g forwarded half-cycle lane master {m} ({kind}, {W} b)',
                  benches=benches, views_to=f'physical/ref_tile/{name}/views', record_to=f'results/rtl/ref_tile/{name}',
-                 extra_paths=['physical/qwen_fwd_lane', 'rtl/qwen_split/qfd_fwd_lane.sv', 'rtl/hdc', 'rtl/hbm_accel/die_glue',
+                 extra_paths=['physical/qwen_fwd_lane', 'physical/hbm_lane', 'rtl/qwen_split/qfd_fwd_lane.sv', 'rtl/hdc', 'rtl/hbm_accel/die_glue',
                               'tools/hbm_die_v16/hbm_lane_bench.sh', WIT]))
 
 

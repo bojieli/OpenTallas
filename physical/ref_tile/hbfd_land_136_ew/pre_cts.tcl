@@ -5,4 +5,5 @@ proc clock_tree_synthesis {args} {
   ::ot_ref_cts_boundary_orig {*}$args
   set ::ot_ref_pre_cts 0
   source /src/physical/qwen_fwd_lane/fwd_lane_clocks.tcl
+  source /src/physical/hbm_lane/land_straps.tcl
 }

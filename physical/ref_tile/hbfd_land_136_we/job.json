@@ -11,6 +11,7 @@
   "commit": "COMMIT",
   "extra_paths": [
    "physical/qwen_fwd_lane",
+   "physical/hbm_lane",
    "rtl/qwen_split/qfd_fwd_lane.sv",
    "rtl/hdc",
    "rtl/hbm_accel/die_glue",
