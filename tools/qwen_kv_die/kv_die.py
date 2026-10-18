@@ -326,6 +326,9 @@ V144_MODE = __import__('os').environ.get('OT_KV_V144_MODE', 'ahub')
 # centre-column widening (um, a multiple of 2 x 43.2): the relay traffic of the old 1,145-um spine (688 relays: HOST slice
 # chains, S-stack af / mf / aq / kc / emf / emr, ares / hs / hf, the SerDes FDI) moves into the two side channels
 V144_DW = float(__import__('os').environ.get('OT_KV_V144_DW', '0'))
+SN_LIFT = float(__import__('os').environ.get('OT_KV_SN_LIFT', '0'))
+if SN_LIFT and abs(SN_LIFT / 43.2 - round(SN_LIFT / 43.2)) > 1e-6:
+    raise ValueError(f'OT_KV_SN_LIFT={SN_LIFT}: must be a multiple of 43.2 um (band lattice)')
 # free relay apron between the north envelope's top and the gateway / sequencer / HOST band (the chains leaving the
 # north band fan out there before entering the side channels; v1.4.4 trial without it cornered the HOST trees)
 V144_APRON = float(__import__('os').environ.get('OT_KV_V144_APRON', '0'))
@@ -1556,7 +1559,11 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     # column) sits: lift everything above it by d0
     d0 = up(max(0.0, SERDES[2] + GY + 2 * CHAN - (edge_chan + (sp - gh_) / 2)), LAT) if split else 0.0
     band_shift = {k: v + d0 for k, v in band_shift.items()}
-    Hk = up(2 * (MARGIN+edge_chan) + 2 * sp + GY + d0, GY)
+    # KV-PLAN2 10-17 (HANDOFF 0cx+5 decision 1): OT_KV_SN_LIFT um (a multiple of 43.2) lifts the whole N half (N stack
+    # bands, and with the die middle the hub / PV column by half of it) to grow the S|N seam channel; the die gets taller
+    # by whatever the v1.4.4 PV-column growth does not already absorb (recorded in geo.sn_lift)
+    band_shift['N'] += SN_LIFT
+    Hk = up(2 * (MARGIN+edge_chan) + 2 * sp + GY + d0 + SN_LIFT, GY)
     Hk0 = Hk
     if split and V144:
         Hk = round(Hk + V144S['grow'], 6)   # v1.4.4: the north band (embgw and everything above it) rises with the die top
@@ -1814,6 +1821,8 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
                     ystack=ystack, slice_w=slice_w, host_v14=bool(slice_w), r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, leaf_shift=leaf_shift, edge_channel=edge_chan, kv_wq_head=kv_wq_head, kv_wq_wide=kv_wq_wide, kv_wq_mirror=kv_wq_mirror)
     if pv_geo:
         m['geo']['pv144'] = pv_geo
+    if SN_LIFT:
+        m['geo']['sn_lift'] = dict(lift_um=SN_LIFT, die_h_um=Hk, die_w_um=Wk)
     m['keepouts'] = m_keep
     if kv_wq_leaves:
         _write_tiles(m, add)

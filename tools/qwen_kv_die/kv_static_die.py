@@ -47,8 +47,16 @@ ON = os.environ.get('OT_KV_STATIC_DIE', '0') == '1'
 # own two stacks (es chain heads, fan words, group gathers, embedding return trains); off = the single top-centre root
 HROOT = os.environ.get('OT_KV_HROOT', '0') == '1'
 HROOT_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root.sv'
+# KV-PLAN2 10-17 (HANDOFF 0cx+5 decision 2, OT_KV_FANFOLD=1, needs OT_KV_HROOT=1): the stack fan is folded into its stack
+# root.  The root's registered fan word feeds ONE 8-group neighbour chain from the root's end of the stack (slot 7 -> 0;
+# every root sits at its stack's slot-7 end: S roots at the S|N seam, N roots above the N stacks), and the 18-b group
+# gathers ride a concatenating neighbour chain back (slot 0 -> 7 -> root: o_ctl = {i_up[125:0], own}); the chain-end
+# group (slot 0) is the variant qkd_kvs_grp_h without i_up (o_ctl = {8{own}}: the upper copies shift out before the
+# root).  Done for all four stacks so the group / root replicas stay one master each.  Removes the stack-middle fan
+# tile and its two 6-mm feeds (root -> fan 334 b, fan -> root 144 b) from the stack control channels.
+FANFOLD = HROOT and os.environ.get('OT_KV_FANFOLD', '0') == '1'
 # one generated tile file per design point (the ECTL frame pairing re-orders the fan's frame cfg words)
-RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') +
+RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
             ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + '.sv')
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 STACKS = ('WS', 'WN', 'ES', 'EN')
@@ -89,7 +97,7 @@ CORE_CK = ('ck', 'return_ck')
 HBM_CK = ('hck', 'pll_hbm', 'pll_hbm_port', 'pll_hbm_ecc', 'pll_hbm_cdc', 'pll_hbm_obs', 'cal_hck', 'front_hck', 'return_hck')
 RESETS = ('rst_n', 'rsi', 'hrst_n', 'hrst', 'cal_rst_n')
 HBM_RST = ('hrst_n', 'hrst', 'cal_rst_n')
-KIND_MASTER = dict(fan='qkd_kvs_fan', grp='qkd_kvs_grp', pc='qkd_kvs_pc', pc_h='qkd_kvs_pc_h', ctl='qkd_kvs_ctl', attn='qkd_kvs_attn',
+KIND_MASTER = dict(fan='qkd_kvs_fan', grp='qkd_kvs_grp', grp_h='qkd_kvs_grp_h', pc='qkd_kvs_pc', pc_h='qkd_kvs_pc_h', ctl='qkd_kvs_ctl', attn='qkd_kvs_attn',
                    emb='qkd_kvs_emb', hroot='qkd_kvs_hroot')
 GEN_KINDS = tuple(KIND_MASTER)
 CTL_LOCAL = dict(layer_programme='lprg', wprg='wprg', wrn='wrn', ownership='own', own_obs='oobs', boot='boot',
@@ -719,7 +727,8 @@ def add_fans(tiles):
                     sorted((pn, w) for pn, w, key in lays[gd] if key in common):
                 raise ValueError(f'kv_static_die: {gd} control word is not replica-generic')
         bw, pw = sum(w for _, w, _ in bl), sum(w for _, w in sig)
-        chains = [[f'slg_{stks[0]}_{ORDER[s_]}' for s_ in c_] for c_ in ((3, 2, 1, 0), (4, 5, 6, 7))]
+        chains = [[f'slg_{stks[0]}_{ORDER[s_]}' for s_ in c_] for c_ in
+                  (((7, 6, 5, 4, 3, 2, 1, 0),) if FANFOLD else ((3, 2, 1, 0), (4, 5, 6, 7)))]
         nslot = len(chains[0])
         for ci, ch in enumerate(chains):
             lsb = [sl(key) for _pn, _w, key in bl] + [sl(key) for gd in ch for _pn, _w, key in own[gd]]
@@ -749,12 +758,36 @@ def add_fans(tiles):
         uoff2, total = [], 0
         for k, gd in enumerate(grps):
             op = tiles[gd]['ports']['o_ctl']
-            fports[f'i_g{k}'] = dict(dir='input', width=op['width'], cls='bundle', peer=gd)
-            op['peer'], op['peer_port'] = fname, f'i_g{k}'
+            if not FANFOLD:
+                fports[f'i_g{k}'] = dict(dir='input', width=op['width'], cls='bundle', peer=gd)
+                op['peer'], op['peer_port'] = fname, f'i_g{k}'
             uoff2.append(total)
             total += op['width']
-        fports['o_ctl'] = dict(dir='output', width=total, cls='bundle', peer='kvs_ctl', peer_port=f'i_fan_{side}',
-                               consumers=[], expr='{' + ', '.join(f'i_g{k}' for k in reversed(range(len(grps)))) + '}')
+        if FANFOLD:
+            # the concatenating up chain (chain end = the down chain's last group): slot j's word = {upstream, own}
+            ch = chains[0]
+            gws = {tiles[gd]['ports']['o_ctl']['width'] for gd in ch}
+            if len(gws) != 1:
+                raise ValueError(f'kv_static_die FANFOLD: group gathers differ in width {gws}')
+            gw1 = gws.pop()
+            for j, gd in enumerate(ch):
+                t_ = tiles[gd]
+                op = t_['ports'].pop('o_ctl')
+                own_ = op['expr']
+                head = j == len(ch) - 1
+                if not head:
+                    t_['ports']['i_up'] = dict(dir='input', width=total, cls='bundle', peer=ch[j + 1])
+                t_['ports']['o_ctl'] = dict(op, width=total, peer=f'kvs_hroot_{side}' if j == 0 else ch[j - 1],
+                                            peer_port='i_g' if j == 0 else 'i_up', consumers=[],
+                                            expr=(f'{{{len(ch)}{{{own_}}}}}' if head else
+                                                  f'{{i_up[{total - gw1 - 1}:0], {own_}}}'))
+                if head:
+                    t_['kind'] = 'grp_h'
+            # root up word bit offset of group k (slot 7, the root's neighbour, = LSB; slot j = j shifts): the root re-orders it into the ctl's group order
+            fports['_fold'] = dict(dir='none', gw=gw1, total=total, pos={k: ch.index(gd) for k, gd in enumerate(grps)})
+        else:
+            fports['o_ctl'] = dict(dir='output', width=total, cls='bundle', peer='kvs_ctl', peer_port=f'i_fan_{side}',
+                                   consumers=[], expr='{' + ', '.join(f'i_g{k}' for k in reversed(range(len(grps)))) + '}')
         newp = []
         for pn, w, bname, o in ctl['packed']:
             if bname.startswith('i_slg_') and bname[2:] in grps:
@@ -804,16 +837,35 @@ def add_hroots(tiles):
         emb['packed'] = [(pn, w, f'i_hroot_{st}' if b == f'i_kvpc_{st}_31' else b, o) for pn, w, b, o in emb['packed']]
         emb['ports'][f'i_hroot_{st}'] = dict(dir='input', width=RW, cls='bundle', peer=hd)
         tiles[f'kvpc_{st}_31']['ports']['o_next'].update(peer=hd, peer_port='i_r')
-        fp = tiles[f'kvs_fan_{st}']['ports']
-        fp['i_ctl'].update(peer=hd)
-        fp['o_ctl'].update(peer=hd, peer_port='i_g')
         P['i_g'] = dict(dir='input', width=GW, cls='bundle', peer=None)
         P['i_r'] = dict(dir='input', width=RW, cls='bundle', peer=None)
         P['rly__ck'] = dict(dir='input', width=1, cls='clock', domain='core')
-        for nm, w, peer, pport, expr in (('o_fan', FW, f'kvs_fan_{st}', 'i_ctl', 'w_rly__fan'),
-                                         ('o_ctl', GW, 'kvs_ctl', f'i_hroot_{st}', 'w_rly__g'),
-                                         ('o_emb', RW, 'kvs_emb', f'i_hroot_{st}', 'w_rly__r')):
-            P[nm] = dict(dir='output', width=w, cls='bundle', peer=peer, peer_port=pport, consumers=[], expr=expr)
+        if FANFOLD:
+            # decision 2: the fan's wiring moves into the root, on the root's registered fan word
+            fan = tiles.pop(f'kvs_fan_{st}')
+            fd = fan['ports'].pop('_fold')
+            gw1, pos = fd['gw'], fd['pos']
+            gexpr = '{' + ', '.join(f'w_rly__g[{gw1 * pos[k] + gw1 - 1}:{gw1 * pos[k]}]' for k in reversed(range(len(pos)))) + '}'
+            outs = [('o_ctl', GW, 'kvs_ctl', f'i_hroot_{st}', gexpr), ('o_emb', RW, 'kvs_emb', f'i_hroot_{st}', 'w_rly__r')]
+            for pn, v in fan['ports'].items():
+                if v['dir'] != 'output':
+                    continue
+                v = dict(v, expr=v['expr'].replace('i_ctl[', 'w_rly__fan['))
+                if pn == 'o_ch0':
+                    tiles[v['peer']]['ports']['i_ctl'].update(peer=hd)
+                P[pn] = v
+            for nm, w, peer, pport, expr in outs:
+                P[nm] = dict(dir='output', width=w, cls='bundle', peer=peer, peer_port=pport, consumers=[], expr=expr)
+            P.move_to_end('o_ctl')
+            P.move_to_end('o_emb')
+        else:
+            fp = tiles[f'kvs_fan_{st}']['ports']
+            fp['i_ctl'].update(peer=hd)
+            fp['o_ctl'].update(peer=hd, peer_port='i_g')
+            for nm, w, peer, pport, expr in (('o_fan', FW, f'kvs_fan_{st}', 'i_ctl', 'w_rly__fan'),
+                                             ('o_ctl', GW, 'kvs_ctl', f'i_hroot_{st}', 'w_rly__g'),
+                                             ('o_emb', RW, 'kvs_emb', f'i_hroot_{st}', 'w_rly__r')):
+                P[nm] = dict(dir='output', width=w, cls='bundle', peer=peer, peer_port=pport, consumers=[], expr=expr)
         t['wires'] += [f'    wire [{FW - 1}:0] w_rly__fan;', f'    wire [{GW - 1}:0] w_rly__g;', f'    wire [{RW - 1}:0] w_rly__r;']
         t['body'].append(f'    qkd_kv_stack_relays #(.HW({HW}), .FW({FW}), .GW({GW}), .RW({RW})) u_rly (.ck(rly__ck), '
                          f'.dn(i_ctl), .g_i(i_g), .r_i(i_r), .fan(w_rly__fan), .g(w_rly__g), .r(w_rly__r));')
@@ -1258,12 +1310,13 @@ def place(m, K, geo, F):
         for g in range(8):
             idx = ORDER.index(g)
             y0 = up(cy + PC_PITCH * 4 * idx + (PC_PITCH * 4 - GH) / 2, GY)
-            m['insts'].append(F.Inst(f'slg_{st}_{g}', 'qkd_kvs_grp', round(x_g, 4), round(y0, 4), gw - SH, GH - SH,
+            m['insts'].append(F.Inst(f'slg_{st}_{g}', 'qkd_kvs_grp_h' if (FANFOLD and idx == 0) else 'qkd_kvs_grp', round(x_g, 4), round(y0, 4), gw - SH, GH - SH,
                                      'R0' if west else 'MY', kind='static', region='strip', domain='hbm'))
         fh = 172.8                  # the stack fan: between groups at slots 3 and 4 (the stack middle)
         yf = up(cy + PC_PITCH * 16 - fh / 2, GY)
-        m['insts'].append(F.Inst(f'kvs_fan_{st}', 'qkd_kvs_fan', round(x_g, 4), round(yf, 4), gw - SH, fh - SH,
-                                 'R0' if west else 'MY', kind='static', region='strip', domain='core'))
+        if not FANFOLD:     # decision 2 (FANFOLD): the fan lives in the stack root
+            m['insts'].append(F.Inst(f'kvs_fan_{st}', 'qkd_kvs_fan', round(x_g, 4), round(yf, 4), gw - SH, fh - SH,
+                                     'R0' if west else 'MY', kind='static', region='strip', domain='core'))
         # kc head at the strip's outer end (S stacks: below PC 0; N stacks: above PC 31), on the PC column
         kw, kh = 64.8, 43.2
         ky = cy - kh - 10.8 if st[1] == 'S' else cy + PC_PITCH * NPC + 10.8
@@ -1347,7 +1400,7 @@ def pin_face(master, port):
     between the HOST slices and the groups), so the control traffic never takes the K / V channel's relay spots"""
     if master == 'qkd_ectlk':
         return _ECTL_FACE.get(port, 'W')
-    if master == 'qkd_kvs_grp':
+    if master in ('qkd_kvs_grp', 'qkd_kvs_grp_h'):
         if port in ('krsp', 'kreq', 'rsp', 'vreq'):
             return 'E'
         if port.startswith(('i_', 'o_')):
