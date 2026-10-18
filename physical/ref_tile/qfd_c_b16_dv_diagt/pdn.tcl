@@ -27,6 +27,11 @@ proc ot_ref_has_master {pats} {
   return 0
 }
 proc ot_ref_present {cells} { set out {}; foreach c $cells { if {[ot_ref_has_master $c]} { lappend out $c } }; return $out }
+set ot_c [ot_ref_present {qfd_c_stn514 qfd_c_stn516 qfd_c_xstn qfd_c_xstnw}]
+if {[llength $ot_c]} {
+  define_pdn_grid -name {hard_m5} -voltage_domains {CORE} -macro -cells $ot_c -orient {R0 R180 MX MY} -halo {2.0 2.0 2.0 2.0}
+  add_pdn_connect -grid {hard_m5} -layers {M5 M6}
+}
 set ot_c [ot_ref_present {qfd_tile_nk_rp2_romleaf_rr qfd_tile_nl_rp2_romleaf_rr}]
 if {[llength $ot_c]} {
   define_pdn_grid -name {hard_m7} -voltage_domains {CORE} -macro -cells $ot_c -orient {R0 R180 MX MY} -halo {2.0 2.0 2.0 2.0}

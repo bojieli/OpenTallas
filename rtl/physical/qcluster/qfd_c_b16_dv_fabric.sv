@@ -287,94 +287,94 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     assign trst_3_2 = rstl_R_2;
     assign trst_3_3 = rstl_R_3;
     // ---- column runs {tag 8, xl 128, ib 379, go}: entry pin register, relays, one qfd_xcst_n per row, exit pin register
-    wire [515:0] dn0_entry;  qfd_q3h_stn #(.W(516), .N(1)) u_dn0_entry (.ck(ck_w0), .d(bc0), .q(dn0_entry));   // (21.60, 43.20) w0
-    wire [515:0] dn0_rly0;  qfd_q3h_stn #(.W(516), .N(1)) u_dn0_rly0 (.ck(ck_w0), .d(dn0_entry), .q(dn0_rly0));   // (21.60, 295.57) w0
+    wire [515:0] dn0_entry;  qfd_c_stn516 u_dn0_entry (.ck(ck_w0), .d(bc0), .q(dn0_entry));   // (21.60, 43.20) w0
+    wire [515:0] dn0_rly0;  qfd_c_stn516 u_dn0_rly0 (.ck(ck_w0), .d(dn0_entry), .q(dn0_rly0));   // (21.60, 295.57) w0
     wire [515:0] dn0_xcst0;
-    qfd_xcst_n u_x_0_0 (.ck(ck_w0), .rst_n(rstl_L_0), .sidx({far, far, far}), .b_d(dn0_rly0), .a_d(dn0_xcst0), .tap_d(tap_0_0), .tie_hi(), .tie_lo());   // (21.60, 547.93) w0
-    wire [515:0] dn0_rly1;  qfd_q3h_stn #(.W(516), .N(1)) u_dn0_rly1 (.ck(ck_w0), .d(dn0_xcst0), .q(dn0_rly1));   // (21.60, 871.93) w0
-    wire [515:0] dn0_rly2;  qfd_q3h_stn #(.W(516), .N(1)) u_dn0_rly2 (.ck(ck_w0), .d(dn0_rly1), .q(dn0_rly2));   // (21.60, 1195.93) w0
-    wire [515:0] dn0_rly3;  qfd_q3h_stn #(.W(516), .N(1)) u_dn0_rly3 (.ck(ck_w1), .d(dn0_rly2), .q(dn0_rly3));   // (21.60, 1519.93) w1
+    qfd_c_xstn u_x_0_0 (.ck(ck_w0), .rst_n(rstl_L_0), .sidx({far, far, far}), .b_d(dn0_rly0), .a_d(dn0_xcst0), .tap_d(tap_0_0));   // (21.60, 547.93) w0
+    wire [515:0] dn0_rly1;  qfd_c_stn516 u_dn0_rly1 (.ck(ck_w0), .d(dn0_xcst0), .q(dn0_rly1));   // (21.60, 871.93) w0
+    wire [515:0] dn0_rly2;  qfd_c_stn516 u_dn0_rly2 (.ck(ck_w0), .d(dn0_rly1), .q(dn0_rly2));   // (21.60, 1195.93) w0
+    wire [515:0] dn0_rly3;  qfd_c_stn516 u_dn0_rly3 (.ck(ck_w1), .d(dn0_rly2), .q(dn0_rly3));   // (21.60, 1519.93) w1
     wire [515:0] dn0_xcst1;
-    qfd_xcst_n u_x_0_1 (.ck(ck_w1), .rst_n(rstl_L_1), .sidx({far, far, far_n}), .b_d(dn0_rly3), .a_d(dn0_xcst1), .tap_d(tap_0_1), .tie_hi(), .tie_lo());   // (21.60, 1843.93) w1
-    wire [515:0] dn0_rly4;  qfd_q3h_stn #(.W(516), .N(1)) u_dn0_rly4 (.ck(ck_w1), .d(dn0_xcst1), .q(dn0_rly4));   // (21.60, 2167.93) w1
-    wire [515:0] dn0_rly5;  qfd_q3h_stn #(.W(516), .N(1)) u_dn0_rly5 (.ck(ck_w1), .d(dn0_rly4), .q(dn0_rly5));   // (21.60, 2491.93) w1
-    wire [515:0] dn0_rly6;  qfd_q3h_stn #(.W(516), .N(1)) u_dn0_rly6 (.ck(ck_w2), .d(dn0_rly5), .q(dn0_rly6));   // (21.60, 2815.93) w2
+    qfd_c_xstn u_x_0_1 (.ck(ck_w1), .rst_n(rstl_L_1), .sidx({far, far, far_n}), .b_d(dn0_rly3), .a_d(dn0_xcst1), .tap_d(tap_0_1));   // (21.60, 1843.93) w1
+    wire [515:0] dn0_rly4;  qfd_c_stn516 u_dn0_rly4 (.ck(ck_w1), .d(dn0_xcst1), .q(dn0_rly4));   // (21.60, 2167.93) w1
+    wire [515:0] dn0_rly5;  qfd_c_stn516 u_dn0_rly5 (.ck(ck_w1), .d(dn0_rly4), .q(dn0_rly5));   // (21.60, 2491.93) w1
+    wire [515:0] dn0_rly6;  qfd_c_stn516 u_dn0_rly6 (.ck(ck_w2), .d(dn0_rly5), .q(dn0_rly6));   // (21.60, 2815.93) w2
     wire [515:0] dn0_xcst2;
-    qfd_xcst_n u_x_0_2 (.ck(ck_w2), .rst_n(rstl_L_2), .sidx({far, far_n, far}), .b_d(dn0_rly6), .a_d(dn0_xcst2), .tap_d(tap_0_2), .tie_hi(), .tie_lo());   // (21.60, 3139.93) w2
-    wire [515:0] dn0_rly7;  qfd_q3h_stn #(.W(516), .N(1)) u_dn0_rly7 (.ck(ck_w2), .d(dn0_xcst2), .q(dn0_rly7));   // (21.60, 3463.93) w2
-    wire [515:0] dn0_rly8;  qfd_q3h_stn #(.W(516), .N(1)) u_dn0_rly8 (.ck(ck_w2), .d(dn0_rly7), .q(dn0_rly8));   // (21.60, 3787.93) w2
-    wire [515:0] dn0_rly9;  qfd_q3h_stn #(.W(516), .N(1)) u_dn0_rly9 (.ck(ck_w3), .d(dn0_rly8), .q(dn0_rly9));   // (21.60, 4111.93) w3
+    qfd_c_xstn u_x_0_2 (.ck(ck_w2), .rst_n(rstl_L_2), .sidx({far, far_n, far}), .b_d(dn0_rly6), .a_d(dn0_xcst2), .tap_d(tap_0_2));   // (21.60, 3139.93) w2
+    wire [515:0] dn0_rly7;  qfd_c_stn516 u_dn0_rly7 (.ck(ck_w2), .d(dn0_xcst2), .q(dn0_rly7));   // (21.60, 3463.93) w2
+    wire [515:0] dn0_rly8;  qfd_c_stn516 u_dn0_rly8 (.ck(ck_w2), .d(dn0_rly7), .q(dn0_rly8));   // (21.60, 3787.93) w2
+    wire [515:0] dn0_rly9;  qfd_c_stn516 u_dn0_rly9 (.ck(ck_w3), .d(dn0_rly8), .q(dn0_rly9));   // (21.60, 4111.93) w3
     wire [515:0] dn0_xcst3;
-    qfd_xcst_n u_x_0_3 (.ck(ck_w3), .rst_n(rstl_L_3), .sidx({far, far_n, far_n}), .b_d(dn0_rly9), .a_d(dn0_xcst3), .tap_d(tap_0_3), .tie_hi(), .tie_lo());   // (21.60, 4435.93) w3
-    wire [515:0] dn0_rly10;  qfd_q3h_stn #(.W(516), .N(1)) u_dn0_rly10 (.ck(ck_w3), .d(dn0_xcst3), .q(dn0_rly10));   // (21.60, 4809.97) w3
-    wire [515:0] dn0_exit;  qfd_q3h_stn #(.W(516), .N(1)) u_dn0_exit (.ck(ck_w3), .d(dn0_rly10), .q(dn0_exit));   // (21.60, 5184.00) w3
+    qfd_c_xstn u_x_0_3 (.ck(ck_w3), .rst_n(rstl_L_3), .sidx({far, far_n, far_n}), .b_d(dn0_rly9), .a_d(dn0_xcst3), .tap_d(tap_0_3));   // (21.60, 4435.93) w3
+    wire [515:0] dn0_rly10;  qfd_c_stn516 u_dn0_rly10 (.ck(ck_w3), .d(dn0_xcst3), .q(dn0_rly10));   // (21.60, 4809.97) w3
+    wire [515:0] dn0_exit;  qfd_c_stn516 u_dn0_exit (.ck(ck_w3), .d(dn0_rly10), .q(dn0_exit));   // (21.60, 5184.00) w3
     assign bco0 = dn0_exit;
-    wire [515:0] dn1_entry;  qfd_q3h_stn #(.W(516), .N(1)) u_dn1_entry (.ck(ck_w0), .d(bc1), .q(dn1_entry));   // (1130.40, 43.20) w0
-    wire [515:0] dn1_rly0;  qfd_q3h_stn #(.W(516), .N(1)) u_dn1_rly0 (.ck(ck_w0), .d(dn1_entry), .q(dn1_rly0));   // (1130.40, 267.57) w0
+    wire [515:0] dn1_entry;  qfd_c_stn516 u_dn1_entry (.ck(ck_w0), .d(bc1), .q(dn1_entry));   // (1130.40, 43.20) w0
+    wire [515:0] dn1_rly0;  qfd_c_stn516 u_dn1_rly0 (.ck(ck_w0), .d(dn1_entry), .q(dn1_rly0));   // (1130.40, 267.57) w0
     wire [515:0] dn1_xcst0;
-    qfd_xcst_n u_x_1_0 (.ck(ck_w0), .rst_n(rstl_T_0), .sidx({far, far, far}), .b_d(dn1_rly0), .a_d(dn1_xcst0), .tap_d(tap_1_0), .tie_hi(), .tie_lo());   // (1130.40, 491.93) w0
-    wire [515:0] dn1_rly1;  qfd_q3h_stn #(.W(516), .N(1)) u_dn1_rly1 (.ck(ck_w0), .d(dn1_xcst0), .q(dn1_rly1));   // (1130.40, 815.93) w0
-    wire [515:0] dn1_rly2;  qfd_q3h_stn #(.W(516), .N(1)) u_dn1_rly2 (.ck(ck_w0), .d(dn1_rly1), .q(dn1_rly2));   // (1130.40, 1139.93) w0
-    wire [515:0] dn1_rly3;  qfd_q3h_stn #(.W(516), .N(1)) u_dn1_rly3 (.ck(ck_w1), .d(dn1_rly2), .q(dn1_rly3));   // (1130.40, 1463.93) w1
+    qfd_c_xstnw u_x_1_0 (.ck(ck_w0), .rst_n(rstl_T_0), .sidx({far, far, far}), .b_d(dn1_rly0), .a_d(dn1_xcst0), .tap_d(tap_1_0));   // (1130.40, 491.93) w0
+    wire [515:0] dn1_rly1;  qfd_c_stn516 u_dn1_rly1 (.ck(ck_w0), .d(dn1_xcst0), .q(dn1_rly1));   // (1130.40, 815.93) w0
+    wire [515:0] dn1_rly2;  qfd_c_stn516 u_dn1_rly2 (.ck(ck_w0), .d(dn1_rly1), .q(dn1_rly2));   // (1130.40, 1139.93) w0
+    wire [515:0] dn1_rly3;  qfd_c_stn516 u_dn1_rly3 (.ck(ck_w1), .d(dn1_rly2), .q(dn1_rly3));   // (1130.40, 1463.93) w1
     wire [515:0] dn1_xcst1;
-    qfd_xcst_n u_x_1_1 (.ck(ck_w1), .rst_n(rstl_T_1), .sidx({far, far, far_n}), .b_d(dn1_rly3), .a_d(dn1_xcst1), .tap_d(tap_1_1), .tie_hi(), .tie_lo());   // (1130.40, 1787.93) w1
-    wire [515:0] dn1_rly4;  qfd_q3h_stn #(.W(516), .N(1)) u_dn1_rly4 (.ck(ck_w1), .d(dn1_xcst1), .q(dn1_rly4));   // (1130.40, 2111.93) w1
-    wire [515:0] dn1_rly5;  qfd_q3h_stn #(.W(516), .N(1)) u_dn1_rly5 (.ck(ck_w1), .d(dn1_rly4), .q(dn1_rly5));   // (1130.40, 2435.93) w1
-    wire [515:0] dn1_rly6;  qfd_q3h_stn #(.W(516), .N(1)) u_dn1_rly6 (.ck(ck_w2), .d(dn1_rly5), .q(dn1_rly6));   // (1130.40, 2759.93) w2
+    qfd_c_xstnw u_x_1_1 (.ck(ck_w1), .rst_n(rstl_T_1), .sidx({far, far, far_n}), .b_d(dn1_rly3), .a_d(dn1_xcst1), .tap_d(tap_1_1));   // (1130.40, 1787.93) w1
+    wire [515:0] dn1_rly4;  qfd_c_stn516 u_dn1_rly4 (.ck(ck_w1), .d(dn1_xcst1), .q(dn1_rly4));   // (1130.40, 2111.93) w1
+    wire [515:0] dn1_rly5;  qfd_c_stn516 u_dn1_rly5 (.ck(ck_w1), .d(dn1_rly4), .q(dn1_rly5));   // (1130.40, 2435.93) w1
+    wire [515:0] dn1_rly6;  qfd_c_stn516 u_dn1_rly6 (.ck(ck_w2), .d(dn1_rly5), .q(dn1_rly6));   // (1130.40, 2759.93) w2
     wire [515:0] dn1_xcst2;
-    qfd_xcst_n u_x_1_2 (.ck(ck_w2), .rst_n(rstl_T_2), .sidx({far, far_n, far}), .b_d(dn1_rly6), .a_d(dn1_xcst2), .tap_d(tap_1_2), .tie_hi(), .tie_lo());   // (1130.40, 3083.93) w2
-    wire [515:0] dn1_rly7;  qfd_q3h_stn #(.W(516), .N(1)) u_dn1_rly7 (.ck(ck_w2), .d(dn1_xcst2), .q(dn1_rly7));   // (1130.40, 3407.93) w2
-    wire [515:0] dn1_rly8;  qfd_q3h_stn #(.W(516), .N(1)) u_dn1_rly8 (.ck(ck_w2), .d(dn1_rly7), .q(dn1_rly8));   // (1130.40, 3731.93) w2
-    wire [515:0] dn1_rly9;  qfd_q3h_stn #(.W(516), .N(1)) u_dn1_rly9 (.ck(ck_w3), .d(dn1_rly8), .q(dn1_rly9));   // (1130.40, 4055.93) w3
+    qfd_c_xstnw u_x_1_2 (.ck(ck_w2), .rst_n(rstl_T_2), .sidx({far, far_n, far}), .b_d(dn1_rly6), .a_d(dn1_xcst2), .tap_d(tap_1_2));   // (1130.40, 3083.93) w2
+    wire [515:0] dn1_rly7;  qfd_c_stn516 u_dn1_rly7 (.ck(ck_w2), .d(dn1_xcst2), .q(dn1_rly7));   // (1130.40, 3407.93) w2
+    wire [515:0] dn1_rly8;  qfd_c_stn516 u_dn1_rly8 (.ck(ck_w2), .d(dn1_rly7), .q(dn1_rly8));   // (1130.40, 3731.93) w2
+    wire [515:0] dn1_rly9;  qfd_c_stn516 u_dn1_rly9 (.ck(ck_w3), .d(dn1_rly8), .q(dn1_rly9));   // (1130.40, 4055.93) w3
     wire [515:0] dn1_xcst3;
-    qfd_xcst_n u_x_1_3 (.ck(ck_w3), .rst_n(rstl_T_3), .sidx({far, far_n, far_n}), .b_d(dn1_rly9), .a_d(dn1_xcst3), .tap_d(tap_1_3), .tie_hi(), .tie_lo());   // (1130.40, 4379.93) w3
-    wire [515:0] dn1_rly10;  qfd_q3h_stn #(.W(516), .N(1)) u_dn1_rly10 (.ck(ck_w3), .d(dn1_xcst3), .q(dn1_rly10));   // (1130.40, 4781.97) w3
-    wire [515:0] dn1_exit;  qfd_q3h_stn #(.W(516), .N(1)) u_dn1_exit (.ck(ck_w3), .d(dn1_rly10), .q(dn1_exit));   // (1130.40, 5184.00) w3
+    qfd_c_xstnw u_x_1_3 (.ck(ck_w3), .rst_n(rstl_T_3), .sidx({far, far_n, far_n}), .b_d(dn1_rly9), .a_d(dn1_xcst3), .tap_d(tap_1_3));   // (1130.40, 4379.93) w3
+    wire [515:0] dn1_rly10;  qfd_c_stn516 u_dn1_rly10 (.ck(ck_w3), .d(dn1_xcst3), .q(dn1_rly10));   // (1130.40, 4781.97) w3
+    wire [515:0] dn1_exit;  qfd_c_stn516 u_dn1_exit (.ck(ck_w3), .d(dn1_rly10), .q(dn1_exit));   // (1130.40, 5184.00) w3
     assign bco1 = dn1_exit;
-    wire [515:0] dn2_entry;  qfd_q3h_stn #(.W(516), .N(1)) u_dn2_entry (.ck(ck_e0), .d(bc2), .q(dn2_entry));   // (1228.32, 43.20) e0
-    wire [515:0] dn2_rly0;  qfd_q3h_stn #(.W(516), .N(1)) u_dn2_rly0 (.ck(ck_e0), .d(dn2_entry), .q(dn2_rly0));   // (1228.32, 323.57) e0
+    wire [515:0] dn2_entry;  qfd_c_stn516 u_dn2_entry (.ck(ck_e0), .d(bc2), .q(dn2_entry));   // (1228.32, 43.20) e0
+    wire [515:0] dn2_rly0;  qfd_c_stn516 u_dn2_rly0 (.ck(ck_e0), .d(dn2_entry), .q(dn2_rly0));   // (1228.32, 323.57) e0
     wire [515:0] dn2_xcst0;
-    qfd_xcst_n u_x_2_0 (.ck(ck_e0), .rst_n(rstl_T_0), .sidx({far, far, far}), .b_d(dn2_rly0), .a_d(dn2_xcst0), .tap_d(tap_2_0), .tie_hi(), .tie_lo());   // (1228.32, 603.93) e0
-    wire [515:0] dn2_rly1;  qfd_q3h_stn #(.W(516), .N(1)) u_dn2_rly1 (.ck(ck_e0), .d(dn2_xcst0), .q(dn2_rly1));   // (1228.32, 927.93) e0
-    wire [515:0] dn2_rly2;  qfd_q3h_stn #(.W(516), .N(1)) u_dn2_rly2 (.ck(ck_e0), .d(dn2_rly1), .q(dn2_rly2));   // (1228.32, 1251.93) e0
-    wire [515:0] dn2_rly3;  qfd_q3h_stn #(.W(516), .N(1)) u_dn2_rly3 (.ck(ck_e1), .d(dn2_rly2), .q(dn2_rly3));   // (1228.32, 1575.93) e1
+    qfd_c_xstn u_x_2_0 (.ck(ck_e0), .rst_n(rstl_T_0), .sidx({far, far, far}), .b_d(dn2_rly0), .a_d(dn2_xcst0), .tap_d(tap_2_0));   // (1228.32, 603.93) e0
+    wire [515:0] dn2_rly1;  qfd_c_stn516 u_dn2_rly1 (.ck(ck_e0), .d(dn2_xcst0), .q(dn2_rly1));   // (1228.32, 927.93) e0
+    wire [515:0] dn2_rly2;  qfd_c_stn516 u_dn2_rly2 (.ck(ck_e0), .d(dn2_rly1), .q(dn2_rly2));   // (1228.32, 1251.93) e0
+    wire [515:0] dn2_rly3;  qfd_c_stn516 u_dn2_rly3 (.ck(ck_e1), .d(dn2_rly2), .q(dn2_rly3));   // (1228.32, 1575.93) e1
     wire [515:0] dm3_2;  qfd_q3h_run #(.W(516), .D(MUT == 3 ? 1 : 0)) u_dm3_2 (.ck(ck_e1), .d(dn2_rly3), .q(dm3_2));
     wire [515:0] dn2_xcst1;
-    qfd_xcst_n u_x_2_1 (.ck(ck_e1), .rst_n(rstl_T_1), .sidx({far, far, far_n}), .b_d(dm3_2), .a_d(dn2_xcst1), .tap_d(tap_2_1), .tie_hi(), .tie_lo());   // (1228.32, 1899.93) e1
-    wire [515:0] dn2_rly4;  qfd_q3h_stn #(.W(516), .N(1)) u_dn2_rly4 (.ck(ck_e1), .d(dn2_xcst1), .q(dn2_rly4));   // (1228.32, 2223.93) e1
-    wire [515:0] dn2_rly5;  qfd_q3h_stn #(.W(516), .N(1)) u_dn2_rly5 (.ck(ck_e1), .d(dn2_rly4), .q(dn2_rly5));   // (1228.32, 2547.93) e1
-    wire [515:0] dn2_rly6;  qfd_q3h_stn #(.W(516), .N(1)) u_dn2_rly6 (.ck(ck_e2), .d(dn2_rly5), .q(dn2_rly6));   // (1228.32, 2871.93) e2
+    qfd_c_xstn u_x_2_1 (.ck(ck_e1), .rst_n(rstl_T_1), .sidx({far, far, far_n}), .b_d(dm3_2), .a_d(dn2_xcst1), .tap_d(tap_2_1));   // (1228.32, 1899.93) e1
+    wire [515:0] dn2_rly4;  qfd_c_stn516 u_dn2_rly4 (.ck(ck_e1), .d(dn2_xcst1), .q(dn2_rly4));   // (1228.32, 2223.93) e1
+    wire [515:0] dn2_rly5;  qfd_c_stn516 u_dn2_rly5 (.ck(ck_e1), .d(dn2_rly4), .q(dn2_rly5));   // (1228.32, 2547.93) e1
+    wire [515:0] dn2_rly6;  qfd_c_stn516 u_dn2_rly6 (.ck(ck_e2), .d(dn2_rly5), .q(dn2_rly6));   // (1228.32, 2871.93) e2
     wire [515:0] dn2_xcst2;
-    qfd_xcst_n u_x_2_2 (.ck(ck_e2), .rst_n(rstl_T_2), .sidx({far, far_n, far}), .b_d(dn2_rly6), .a_d(dn2_xcst2), .tap_d(tap_2_2), .tie_hi(), .tie_lo());   // (1228.32, 3195.93) e2
-    wire [515:0] dn2_rly7;  qfd_q3h_stn #(.W(516), .N(1)) u_dn2_rly7 (.ck(ck_e2), .d(dn2_xcst2), .q(dn2_rly7));   // (1228.32, 3519.93) e2
-    wire [515:0] dn2_rly8;  qfd_q3h_stn #(.W(516), .N(1)) u_dn2_rly8 (.ck(ck_e2), .d(dn2_rly7), .q(dn2_rly8));   // (1228.32, 3843.93) e2
-    wire [515:0] dn2_rly9;  qfd_q3h_stn #(.W(516), .N(1)) u_dn2_rly9 (.ck(ck_e3), .d(dn2_rly8), .q(dn2_rly9));   // (1228.32, 4167.93) e3
+    qfd_c_xstn u_x_2_2 (.ck(ck_e2), .rst_n(rstl_T_2), .sidx({far, far_n, far}), .b_d(dn2_rly6), .a_d(dn2_xcst2), .tap_d(tap_2_2));   // (1228.32, 3195.93) e2
+    wire [515:0] dn2_rly7;  qfd_c_stn516 u_dn2_rly7 (.ck(ck_e2), .d(dn2_xcst2), .q(dn2_rly7));   // (1228.32, 3519.93) e2
+    wire [515:0] dn2_rly8;  qfd_c_stn516 u_dn2_rly8 (.ck(ck_e2), .d(dn2_rly7), .q(dn2_rly8));   // (1228.32, 3843.93) e2
+    wire [515:0] dn2_rly9;  qfd_c_stn516 u_dn2_rly9 (.ck(ck_e3), .d(dn2_rly8), .q(dn2_rly9));   // (1228.32, 4167.93) e3
     wire [515:0] dn2_xcst3;
-    qfd_xcst_n u_x_2_3 (.ck(ck_e3), .rst_n(rstl_T_3), .sidx({far, far_n, far_n}), .b_d(dn2_rly9), .a_d(dn2_xcst3), .tap_d(tap_2_3), .tie_hi(), .tie_lo());   // (1228.32, 4491.93) e3
-    wire [515:0] dn2_rly10;  qfd_q3h_stn #(.W(516), .N(1)) u_dn2_rly10 (.ck(ck_e3), .d(dn2_xcst3), .q(dn2_rly10));   // (1228.32, 4837.97) e3
-    wire [515:0] dn2_exit;  qfd_q3h_stn #(.W(516), .N(1)) u_dn2_exit (.ck(ck_e3), .d(dn2_rly10), .q(dn2_exit));   // (1228.32, 5184.00) e3
+    qfd_c_xstn u_x_2_3 (.ck(ck_e3), .rst_n(rstl_T_3), .sidx({far, far_n, far_n}), .b_d(dn2_rly9), .a_d(dn2_xcst3), .tap_d(tap_2_3));   // (1228.32, 4491.93) e3
+    wire [515:0] dn2_rly10;  qfd_c_stn516 u_dn2_rly10 (.ck(ck_e3), .d(dn2_xcst3), .q(dn2_rly10));   // (1228.32, 4837.97) e3
+    wire [515:0] dn2_exit;  qfd_c_stn516 u_dn2_exit (.ck(ck_e3), .d(dn2_rly10), .q(dn2_exit));   // (1228.32, 5184.00) e3
     assign bco2 = dn2_exit;
-    wire [515:0] dn3_entry;  qfd_q3h_stn #(.W(516), .N(1)) u_dn3_entry (.ck(ck_e0), .d(bc3), .q(dn3_entry));   // (2337.12, 43.20) e0
-    wire [515:0] dn3_rly0;  qfd_q3h_stn #(.W(516), .N(1)) u_dn3_rly0 (.ck(ck_e0), .d(dn3_entry), .q(dn3_rly0));   // (2337.12, 295.57) e0
+    wire [515:0] dn3_entry;  qfd_c_stn516 u_dn3_entry (.ck(ck_e0), .d(bc3), .q(dn3_entry));   // (2337.12, 43.20) e0
+    wire [515:0] dn3_rly0;  qfd_c_stn516 u_dn3_rly0 (.ck(ck_e0), .d(dn3_entry), .q(dn3_rly0));   // (2337.12, 295.57) e0
     wire [515:0] dn3_xcst0;
-    qfd_xcst_n u_x_3_0 (.ck(ck_e0), .rst_n(rstl_R_0), .sidx({far, far, far}), .b_d(dn3_rly0), .a_d(dn3_xcst0), .tap_d(tap_3_0), .tie_hi(), .tie_lo());   // (2337.12, 547.93) e0
-    wire [515:0] dn3_rly1;  qfd_q3h_stn #(.W(516), .N(1)) u_dn3_rly1 (.ck(ck_e0), .d(dn3_xcst0), .q(dn3_rly1));   // (2337.12, 871.93) e0
-    wire [515:0] dn3_rly2;  qfd_q3h_stn #(.W(516), .N(1)) u_dn3_rly2 (.ck(ck_e0), .d(dn3_rly1), .q(dn3_rly2));   // (2337.12, 1195.93) e0
-    wire [515:0] dn3_rly3;  qfd_q3h_stn #(.W(516), .N(1)) u_dn3_rly3 (.ck(ck_e1), .d(dn3_rly2), .q(dn3_rly3));   // (2337.12, 1519.93) e1
+    qfd_c_xstnw u_x_3_0 (.ck(ck_e0), .rst_n(rstl_R_0), .sidx({far, far, far}), .b_d(dn3_rly0), .a_d(dn3_xcst0), .tap_d(tap_3_0));   // (2337.12, 547.93) e0
+    wire [515:0] dn3_rly1;  qfd_c_stn516 u_dn3_rly1 (.ck(ck_e0), .d(dn3_xcst0), .q(dn3_rly1));   // (2337.12, 871.93) e0
+    wire [515:0] dn3_rly2;  qfd_c_stn516 u_dn3_rly2 (.ck(ck_e0), .d(dn3_rly1), .q(dn3_rly2));   // (2337.12, 1195.93) e0
+    wire [515:0] dn3_rly3;  qfd_c_stn516 u_dn3_rly3 (.ck(ck_e1), .d(dn3_rly2), .q(dn3_rly3));   // (2337.12, 1519.93) e1
     wire [515:0] dn3_xcst1;
-    qfd_xcst_n u_x_3_1 (.ck(ck_e1), .rst_n(rstl_R_1), .sidx({far, far, far_n}), .b_d(dn3_rly3), .a_d(dn3_xcst1), .tap_d(tap_3_1), .tie_hi(), .tie_lo());   // (2337.12, 1843.93) e1
-    wire [515:0] dn3_rly4;  qfd_q3h_stn #(.W(516), .N(1)) u_dn3_rly4 (.ck(ck_e1), .d(dn3_xcst1), .q(dn3_rly4));   // (2337.12, 2167.93) e1
-    wire [515:0] dn3_rly5;  qfd_q3h_stn #(.W(516), .N(1)) u_dn3_rly5 (.ck(ck_e1), .d(dn3_rly4), .q(dn3_rly5));   // (2337.12, 2491.93) e1
-    wire [515:0] dn3_rly6;  qfd_q3h_stn #(.W(516), .N(1)) u_dn3_rly6 (.ck(ck_e2), .d(dn3_rly5), .q(dn3_rly6));   // (2337.12, 2815.93) e2
+    qfd_c_xstnw u_x_3_1 (.ck(ck_e1), .rst_n(rstl_R_1), .sidx({far, far, far_n}), .b_d(dn3_rly3), .a_d(dn3_xcst1), .tap_d(tap_3_1));   // (2337.12, 1843.93) e1
+    wire [515:0] dn3_rly4;  qfd_c_stn516 u_dn3_rly4 (.ck(ck_e1), .d(dn3_xcst1), .q(dn3_rly4));   // (2337.12, 2167.93) e1
+    wire [515:0] dn3_rly5;  qfd_c_stn516 u_dn3_rly5 (.ck(ck_e1), .d(dn3_rly4), .q(dn3_rly5));   // (2337.12, 2491.93) e1
+    wire [515:0] dn3_rly6;  qfd_c_stn516 u_dn3_rly6 (.ck(ck_e2), .d(dn3_rly5), .q(dn3_rly6));   // (2337.12, 2815.93) e2
     wire [515:0] dn3_xcst2;
-    qfd_xcst_n u_x_3_2 (.ck(ck_e2), .rst_n(rstl_R_2), .sidx({far, far_n, far}), .b_d(dn3_rly6), .a_d(dn3_xcst2), .tap_d(tap_3_2), .tie_hi(), .tie_lo());   // (2337.12, 3139.93) e2
-    wire [515:0] dn3_rly7;  qfd_q3h_stn #(.W(516), .N(1)) u_dn3_rly7 (.ck(ck_e2), .d(dn3_xcst2), .q(dn3_rly7));   // (2337.12, 3463.93) e2
-    wire [515:0] dn3_rly8;  qfd_q3h_stn #(.W(516), .N(1)) u_dn3_rly8 (.ck(ck_e2), .d(dn3_rly7), .q(dn3_rly8));   // (2337.12, 3787.93) e2
-    wire [515:0] dn3_rly9;  qfd_q3h_stn #(.W(516), .N(1)) u_dn3_rly9 (.ck(ck_e3), .d(dn3_rly8), .q(dn3_rly9));   // (2337.12, 4111.93) e3
+    qfd_c_xstnw u_x_3_2 (.ck(ck_e2), .rst_n(rstl_R_2), .sidx({far, far_n, far}), .b_d(dn3_rly6), .a_d(dn3_xcst2), .tap_d(tap_3_2));   // (2337.12, 3139.93) e2
+    wire [515:0] dn3_rly7;  qfd_c_stn516 u_dn3_rly7 (.ck(ck_e2), .d(dn3_xcst2), .q(dn3_rly7));   // (2337.12, 3463.93) e2
+    wire [515:0] dn3_rly8;  qfd_c_stn516 u_dn3_rly8 (.ck(ck_e2), .d(dn3_rly7), .q(dn3_rly8));   // (2337.12, 3787.93) e2
+    wire [515:0] dn3_rly9;  qfd_c_stn516 u_dn3_rly9 (.ck(ck_e3), .d(dn3_rly8), .q(dn3_rly9));   // (2337.12, 4111.93) e3
     wire [515:0] dn3_xcst3;
-    qfd_xcst_n u_x_3_3 (.ck(ck_e3), .rst_n(rstl_R_3), .sidx({far, far_n, far_n}), .b_d(dn3_rly9), .a_d(dn3_xcst3), .tap_d(tap_3_3), .tie_hi(), .tie_lo());   // (2337.12, 4435.93) e3
-    wire [515:0] dn3_rly10;  qfd_q3h_stn #(.W(516), .N(1)) u_dn3_rly10 (.ck(ck_e3), .d(dn3_xcst3), .q(dn3_rly10));   // (2337.12, 4809.97) e3
-    wire [515:0] dn3_exit;  qfd_q3h_stn #(.W(516), .N(1)) u_dn3_exit (.ck(ck_e3), .d(dn3_rly10), .q(dn3_exit));   // (2337.12, 5184.00) e3
+    qfd_c_xstnw u_x_3_3 (.ck(ck_e3), .rst_n(rstl_R_3), .sidx({far, far_n, far_n}), .b_d(dn3_rly9), .a_d(dn3_xcst3), .tap_d(tap_3_3));   // (2337.12, 4435.93) e3
+    wire [515:0] dn3_rly10;  qfd_c_stn516 u_dn3_rly10 (.ck(ck_e3), .d(dn3_xcst3), .q(dn3_rly10));   // (2337.12, 4809.97) e3
+    wire [515:0] dn3_exit;  qfd_c_stn516 u_dn3_exit (.ck(ck_e3), .d(dn3_rly10), .q(dn3_exit));   // (2337.12, 5184.00) e3
     assign bco3 = dn3_exit;
     // ---- morton reduction tree legs (legs of one node arrive on the same edge)
     // node (1,0).a on tile (1,0) <- t_out(0,0): 348.0 um, 0 relays, hop <= 348.0 um
@@ -410,120 +410,120 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     // node (1,7).b on tile (3,3) <- t_out(3,3): 247.4 um, 0 relays, hop <= 247.4 um
     assign n_b_3_3 = t_out_3_3;
     // node (2,0).a on tile (1,1) <- n_y(1,0): 1141.2 um, 4 relays, hop <= 228.2 um
-    wire [513:0] leg_2_0a_0;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_2_0a_0 (.ck(ck_w0), .d(n_y_1_0), .q(leg_2_0a_0));   // (574.56, 653.73) w0
-    wire [513:0] leg_2_0a_1;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_2_0a_1 (.ck(ck_w0), .d(leg_2_0a_0), .q(leg_2_0a_1));   // (574.56, 881.98) w0
-    wire [513:0] leg_2_0a_2;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_2_0a_2 (.ck(ck_w0), .d(leg_2_0a_1), .q(leg_2_0a_2));   // (574.56, 1110.23) w0
-    wire [513:0] leg_2_0a_3;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_2_0a_3 (.ck(ck_w1), .d(leg_2_0a_2), .q(leg_2_0a_3));   // (574.56, 1338.48) w1
+    wire [513:0] leg_2_0a_0;  qfd_c_stn514 u_leg_2_0a_0 (.ck(ck_w0), .d(n_y_1_0), .q(leg_2_0a_0));   // (574.56, 653.73) w0
+    wire [513:0] leg_2_0a_1;  qfd_c_stn514 u_leg_2_0a_1 (.ck(ck_w0), .d(leg_2_0a_0), .q(leg_2_0a_1));   // (574.56, 881.98) w0
+    wire [513:0] leg_2_0a_2;  qfd_c_stn514 u_leg_2_0a_2 (.ck(ck_w0), .d(leg_2_0a_1), .q(leg_2_0a_2));   // (574.56, 1110.23) w0
+    wire [513:0] leg_2_0a_3;  qfd_c_stn514 u_leg_2_0a_3 (.ck(ck_w1), .d(leg_2_0a_2), .q(leg_2_0a_3));   // (574.56, 1338.48) w1
     qfd_q3h_run #(.W(514), .D(MUT == 1 ? 1 : 0)) u_m1 (.ck(ck_w1), .d(leg_2_0a_3), .q(n_a_1_1));
     // node (2,0).b on tile (1,1) <- n_y(0,1): 347.9 um, 0 relays, hop <= 347.9 um
     assign n_b_1_1 = n_y_0_1;
     // node (2,1).a on tile (2,1) <- n_y(2,0): 1141.2 um, 4 relays, hop <= 228.2 um
-    wire [513:0] leg_2_1a_0;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_2_1a_0 (.ck(ck_e0), .d(n_y_2_0), .q(leg_2_1a_0));   // (1784.16, 653.73) e0
-    wire [513:0] leg_2_1a_1;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_2_1a_1 (.ck(ck_e0), .d(leg_2_1a_0), .q(leg_2_1a_1));   // (1784.16, 881.98) e0
-    wire [513:0] leg_2_1a_2;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_2_1a_2 (.ck(ck_e0), .d(leg_2_1a_1), .q(leg_2_1a_2));   // (1784.16, 1110.23) e0
-    wire [513:0] leg_2_1a_3;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_2_1a_3 (.ck(ck_e1), .d(leg_2_1a_2), .q(leg_2_1a_3));   // (1784.16, 1338.48) e1
+    wire [513:0] leg_2_1a_0;  qfd_c_stn514 u_leg_2_1a_0 (.ck(ck_e0), .d(n_y_2_0), .q(leg_2_1a_0));   // (1784.16, 653.73) e0
+    wire [513:0] leg_2_1a_1;  qfd_c_stn514 u_leg_2_1a_1 (.ck(ck_e0), .d(leg_2_1a_0), .q(leg_2_1a_1));   // (1784.16, 881.98) e0
+    wire [513:0] leg_2_1a_2;  qfd_c_stn514 u_leg_2_1a_2 (.ck(ck_e0), .d(leg_2_1a_1), .q(leg_2_1a_2));   // (1784.16, 1110.23) e0
+    wire [513:0] leg_2_1a_3;  qfd_c_stn514 u_leg_2_1a_3 (.ck(ck_e1), .d(leg_2_1a_2), .q(leg_2_1a_3));   // (1784.16, 1338.48) e1
     assign n_a_2_1 = leg_2_1a_3;
     // node (2,1).b on tile (2,1) <- n_y(3,1): 347.9 um, 0 relays, hop <= 347.9 um
     assign n_b_2_1 = n_y_3_1;
     // node (2,2).a on tile (1,3) <- n_y(0,2): 1141.2 um, 4 relays, hop <= 228.2 um
-    wire [513:0] leg_2_2a_0;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_2_2a_0 (.ck(ck_w2), .d(n_y_0_2), .q(leg_2_2a_0));   // (574.56, 3245.73) w2
-    wire [513:0] leg_2_2a_1;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_2_2a_1 (.ck(ck_w2), .d(leg_2_2a_0), .q(leg_2_2a_1));   // (574.56, 3473.98) w2
-    wire [513:0] leg_2_2a_2;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_2_2a_2 (.ck(ck_w2), .d(leg_2_2a_1), .q(leg_2_2a_2));   // (574.56, 3702.23) w2
-    wire [513:0] leg_2_2a_3;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_2_2a_3 (.ck(ck_w3), .d(leg_2_2a_2), .q(leg_2_2a_3));   // (574.56, 3930.48) w3
+    wire [513:0] leg_2_2a_0;  qfd_c_stn514 u_leg_2_2a_0 (.ck(ck_w2), .d(n_y_0_2), .q(leg_2_2a_0));   // (574.56, 3245.73) w2
+    wire [513:0] leg_2_2a_1;  qfd_c_stn514 u_leg_2_2a_1 (.ck(ck_w2), .d(leg_2_2a_0), .q(leg_2_2a_1));   // (574.56, 3473.98) w2
+    wire [513:0] leg_2_2a_2;  qfd_c_stn514 u_leg_2_2a_2 (.ck(ck_w2), .d(leg_2_2a_1), .q(leg_2_2a_2));   // (574.56, 3702.23) w2
+    wire [513:0] leg_2_2a_3;  qfd_c_stn514 u_leg_2_2a_3 (.ck(ck_w3), .d(leg_2_2a_2), .q(leg_2_2a_3));   // (574.56, 3930.48) w3
     assign n_a_1_3 = leg_2_2a_3;
     // node (2,2).b on tile (1,3) <- n_y(0,3): 347.9 um, 0 relays, hop <= 347.9 um
     assign n_b_1_3 = n_y_0_3;
     // node (2,3).a on tile (2,3) <- n_y(3,2): 1141.2 um, 4 relays, hop <= 228.2 um
-    wire [513:0] leg_2_3a_0;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_2_3a_0 (.ck(ck_e2), .d(n_y_3_2), .q(leg_2_3a_0));   // (1784.16, 3245.73) e2
-    wire [513:0] leg_2_3a_1;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_2_3a_1 (.ck(ck_e2), .d(leg_2_3a_0), .q(leg_2_3a_1));   // (1784.16, 3473.98) e2
-    wire [513:0] leg_2_3a_2;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_2_3a_2 (.ck(ck_e2), .d(leg_2_3a_1), .q(leg_2_3a_2));   // (1784.16, 3702.23) e2
-    wire [513:0] leg_2_3a_3;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_2_3a_3 (.ck(ck_e3), .d(leg_2_3a_2), .q(leg_2_3a_3));   // (1784.16, 3930.48) e3
+    wire [513:0] leg_2_3a_0;  qfd_c_stn514 u_leg_2_3a_0 (.ck(ck_e2), .d(n_y_3_2), .q(leg_2_3a_0));   // (1784.16, 3245.73) e2
+    wire [513:0] leg_2_3a_1;  qfd_c_stn514 u_leg_2_3a_1 (.ck(ck_e2), .d(leg_2_3a_0), .q(leg_2_3a_1));   // (1784.16, 3473.98) e2
+    wire [513:0] leg_2_3a_2;  qfd_c_stn514 u_leg_2_3a_2 (.ck(ck_e2), .d(leg_2_3a_1), .q(leg_2_3a_2));   // (1784.16, 3702.23) e2
+    wire [513:0] leg_2_3a_3;  qfd_c_stn514 u_leg_2_3a_3 (.ck(ck_e3), .d(leg_2_3a_2), .q(leg_2_3a_3));   // (1784.16, 3930.48) e3
     assign n_a_2_3 = leg_2_3a_3;
     // node (2,3).b on tile (2,3) <- n_y(3,3): 347.9 um, 0 relays, hop <= 347.9 um
     assign n_b_2_3 = n_y_3_3;
     // node (3,0).a on tile (2,2) <- n_y(1,1): 2350.8 um, 6 relays, hop <= 335.8 um
-    wire [513:0] leg_3_0a_0;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_0a_0 (.ck(ck_w1), .d(n_y_1_1), .q(leg_3_0a_0));   // (574.56, 2057.32) w1
-    wire [513:0] leg_3_0a_1;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_0a_1 (.ck(ck_w1), .d(leg_3_0a_0), .q(leg_3_0a_1));   // (574.56, 2393.16) w1
-    wire [513:0] leg_3_0a_2;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_0a_2 (.ck(ck_w1), .d(leg_3_0a_1), .q(leg_3_0a_2));   // (689.95, 2613.60) w1
-    wire [513:0] leg_3_0a_3;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_0a_3 (.ck(ck_w1), .d(leg_3_0a_2), .q(leg_3_0a_3));   // (1025.79, 2613.60) w1
-    wire [513:0] leg_3_0a_4;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_0a_4 (.ck(ck_e1), .d(leg_3_0a_3), .q(leg_3_0a_4));   // (1361.62, 2613.60) e1
-    wire [513:0] leg_3_0a_5;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_0a_5 (.ck(ck_e1), .d(leg_3_0a_4), .q(leg_3_0a_5));   // (1697.46, 2613.60) e1
+    wire [513:0] leg_3_0a_0;  qfd_c_stn514 u_leg_3_0a_0 (.ck(ck_w1), .d(n_y_1_1), .q(leg_3_0a_0));   // (574.56, 2057.32) w1
+    wire [513:0] leg_3_0a_1;  qfd_c_stn514 u_leg_3_0a_1 (.ck(ck_w1), .d(leg_3_0a_0), .q(leg_3_0a_1));   // (574.56, 2393.16) w1
+    wire [513:0] leg_3_0a_2;  qfd_c_stn514 u_leg_3_0a_2 (.ck(ck_w1), .d(leg_3_0a_1), .q(leg_3_0a_2));   // (689.95, 2613.60) w1
+    wire [513:0] leg_3_0a_3;  qfd_c_stn514 u_leg_3_0a_3 (.ck(ck_w1), .d(leg_3_0a_2), .q(leg_3_0a_3));   // (1025.79, 2613.60) w1
+    wire [513:0] leg_3_0a_4;  qfd_c_stn514 u_leg_3_0a_4 (.ck(ck_e1), .d(leg_3_0a_3), .q(leg_3_0a_4));   // (1361.62, 2613.60) e1
+    wire [513:0] leg_3_0a_5;  qfd_c_stn514 u_leg_3_0a_5 (.ck(ck_e1), .d(leg_3_0a_4), .q(leg_3_0a_5));   // (1697.46, 2613.60) e1
     assign n_a_2_2 = leg_3_0a_5;
     // node (3,0).b on tile (2,2) <- n_y(2,1): 1241.9 um, 6 relays, hop <= 177.4 um
-    wire [513:0] leg_3_0b_0;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_0b_0 (.ck(ck_e1), .d(n_y_2_1), .q(leg_3_0b_0));   // (1784.16, 1898.89) e1
-    wire [513:0] leg_3_0b_1;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_0b_1 (.ck(ck_e1), .d(leg_3_0b_0), .q(leg_3_0b_1));   // (1784.16, 2076.30) e1
-    wire [513:0] leg_3_0b_2;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_0b_2 (.ck(ck_e1), .d(leg_3_0b_1), .q(leg_3_0b_2));   // (1784.16, 2253.71) e1
-    wire [513:0] leg_3_0b_3;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_0b_3 (.ck(ck_e1), .d(leg_3_0b_2), .q(leg_3_0b_3));   // (1784.16, 2431.12) e1
-    wire [513:0] leg_3_0b_4;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_0b_4 (.ck(ck_e1), .d(leg_3_0b_3), .q(leg_3_0b_4));   // (1784.16, 2608.52) e1
-    wire [513:0] leg_3_0b_5;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_0b_5 (.ck(ck_e2), .d(leg_3_0b_4), .q(leg_3_0b_5));   // (1784.16, 2785.93) e2
+    wire [513:0] leg_3_0b_0;  qfd_c_stn514 u_leg_3_0b_0 (.ck(ck_e1), .d(n_y_2_1), .q(leg_3_0b_0));   // (1784.16, 1898.89) e1
+    wire [513:0] leg_3_0b_1;  qfd_c_stn514 u_leg_3_0b_1 (.ck(ck_e1), .d(leg_3_0b_0), .q(leg_3_0b_1));   // (1784.16, 2076.30) e1
+    wire [513:0] leg_3_0b_2;  qfd_c_stn514 u_leg_3_0b_2 (.ck(ck_e1), .d(leg_3_0b_1), .q(leg_3_0b_2));   // (1784.16, 2253.71) e1
+    wire [513:0] leg_3_0b_3;  qfd_c_stn514 u_leg_3_0b_3 (.ck(ck_e1), .d(leg_3_0b_2), .q(leg_3_0b_3));   // (1784.16, 2431.12) e1
+    wire [513:0] leg_3_0b_4;  qfd_c_stn514 u_leg_3_0b_4 (.ck(ck_e1), .d(leg_3_0b_3), .q(leg_3_0b_4));   // (1784.16, 2608.52) e1
+    wire [513:0] leg_3_0b_5;  qfd_c_stn514 u_leg_3_0b_5 (.ck(ck_e2), .d(leg_3_0b_4), .q(leg_3_0b_5));   // (1784.16, 2785.93) e2
     assign n_b_2_2 = leg_3_0b_5;
     // node (3,1).a on tile (1,2) <- n_y(1,3): 1744.5 um, 7 relays, hop <= 218.1 um
-    wire [513:0] leg_3_1a_0;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_1a_0 (.ck(ck_w3), .d(n_y_1_3), .q(leg_3_1a_0));   // (574.56, 4242.30) w3
-    wire [513:0] leg_3_1a_1;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_1a_1 (.ck(ck_w3), .d(leg_3_1a_0), .q(leg_3_1a_1));   // (574.56, 4024.24) w3
-    wire [513:0] leg_3_1a_2;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_1a_2 (.ck(ck_w2), .d(leg_3_1a_1), .q(leg_3_1a_2));   // (574.56, 3806.17) w2
-    wire [513:0] leg_3_1a_3;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_1a_3 (.ck(ck_w2), .d(leg_3_1a_2), .q(leg_3_1a_3));   // (574.56, 3588.11) w2
-    wire [513:0] leg_3_1a_4;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_1a_4 (.ck(ck_w2), .d(leg_3_1a_3), .q(leg_3_1a_4));   // (574.56, 3370.04) w2
-    wire [513:0] leg_3_1a_5;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_1a_5 (.ck(ck_w2), .d(leg_3_1a_4), .q(leg_3_1a_5));   // (574.56, 3151.98) w2
-    wire [513:0] leg_3_1a_6;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_1a_6 (.ck(ck_w2), .d(leg_3_1a_5), .q(leg_3_1a_6));   // (574.56, 2933.92) w2
+    wire [513:0] leg_3_1a_0;  qfd_c_stn514 u_leg_3_1a_0 (.ck(ck_w3), .d(n_y_1_3), .q(leg_3_1a_0));   // (574.56, 4242.30) w3
+    wire [513:0] leg_3_1a_1;  qfd_c_stn514 u_leg_3_1a_1 (.ck(ck_w3), .d(leg_3_1a_0), .q(leg_3_1a_1));   // (574.56, 4024.24) w3
+    wire [513:0] leg_3_1a_2;  qfd_c_stn514 u_leg_3_1a_2 (.ck(ck_w2), .d(leg_3_1a_1), .q(leg_3_1a_2));   // (574.56, 3806.17) w2
+    wire [513:0] leg_3_1a_3;  qfd_c_stn514 u_leg_3_1a_3 (.ck(ck_w2), .d(leg_3_1a_2), .q(leg_3_1a_3));   // (574.56, 3588.11) w2
+    wire [513:0] leg_3_1a_4;  qfd_c_stn514 u_leg_3_1a_4 (.ck(ck_w2), .d(leg_3_1a_3), .q(leg_3_1a_4));   // (574.56, 3370.04) w2
+    wire [513:0] leg_3_1a_5;  qfd_c_stn514 u_leg_3_1a_5 (.ck(ck_w2), .d(leg_3_1a_4), .q(leg_3_1a_5));   // (574.56, 3151.98) w2
+    wire [513:0] leg_3_1a_6;  qfd_c_stn514 u_leg_3_1a_6 (.ck(ck_w2), .d(leg_3_1a_5), .q(leg_3_1a_6));   // (574.56, 2933.92) w2
     assign n_a_1_2 = leg_3_1a_6;
     // node (3,1).b on tile (1,2) <- n_y(2,3): 2853.5 um, 7 relays, hop <= 356.7 um
-    wire [513:0] leg_3_1b_0;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_1b_0 (.ck(ck_e3), .d(n_y_2_3), .q(leg_3_1b_0));   // (1784.16, 4103.68) e3
-    wire [513:0] leg_3_1b_1;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_1b_1 (.ck(ck_e2), .d(leg_3_1b_0), .q(leg_3_1b_1));   // (1621.55, 3909.60) e2
-    wire [513:0] leg_3_1b_2;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_1b_2 (.ck(ck_e2), .d(leg_3_1b_1), .q(leg_3_1b_2));   // (1264.86, 3909.60) e2
-    wire [513:0] leg_3_1b_3;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_1b_3 (.ck(ck_w2), .d(leg_3_1b_2), .q(leg_3_1b_3));   // (908.17, 3909.60) w2
-    wire [513:0] leg_3_1b_4;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_1b_4 (.ck(ck_w2), .d(leg_3_1b_3), .q(leg_3_1b_4));   // (574.56, 3886.52) w2
-    wire [513:0] leg_3_1b_5;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_1b_5 (.ck(ck_w2), .d(leg_3_1b_4), .q(leg_3_1b_5));   // (574.56, 3529.84) w2
-    wire [513:0] leg_3_1b_6;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_3_1b_6 (.ck(ck_w2), .d(leg_3_1b_5), .q(leg_3_1b_6));   // (574.56, 3173.15) w2
+    wire [513:0] leg_3_1b_0;  qfd_c_stn514 u_leg_3_1b_0 (.ck(ck_e3), .d(n_y_2_3), .q(leg_3_1b_0));   // (1784.16, 4103.68) e3
+    wire [513:0] leg_3_1b_1;  qfd_c_stn514 u_leg_3_1b_1 (.ck(ck_e2), .d(leg_3_1b_0), .q(leg_3_1b_1));   // (1621.55, 3909.60) e2
+    wire [513:0] leg_3_1b_2;  qfd_c_stn514 u_leg_3_1b_2 (.ck(ck_e2), .d(leg_3_1b_1), .q(leg_3_1b_2));   // (1264.86, 3909.60) e2
+    wire [513:0] leg_3_1b_3;  qfd_c_stn514 u_leg_3_1b_3 (.ck(ck_w2), .d(leg_3_1b_2), .q(leg_3_1b_3));   // (908.17, 3909.60) w2
+    wire [513:0] leg_3_1b_4;  qfd_c_stn514 u_leg_3_1b_4 (.ck(ck_w2), .d(leg_3_1b_3), .q(leg_3_1b_4));   // (574.56, 3886.52) w2
+    wire [513:0] leg_3_1b_5;  qfd_c_stn514 u_leg_3_1b_5 (.ck(ck_w2), .d(leg_3_1b_4), .q(leg_3_1b_5));   // (574.56, 3529.84) w2
+    wire [513:0] leg_3_1b_6;  qfd_c_stn514 u_leg_3_1b_6 (.ck(ck_w2), .d(leg_3_1b_5), .q(leg_3_1b_6));   // (574.56, 3173.15) w2
     assign n_b_1_2 = leg_3_1b_6;
     // node (4,0).a on tile (0,0) <- n_y(2,2): 4250.1 um, 16 relays, hop <= 250.0 um
-    wire [513:0] leg_4_0a_0;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0a_0 (.ck(ck_e2), .d(n_y_2_2), .q(leg_4_0a_0));   // (1784.16, 2914.36) e2
-    wire [513:0] leg_4_0a_1;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0a_1 (.ck(ck_e2), .d(leg_4_0a_0), .q(leg_4_0a_1));   // (1784.16, 2664.35) e2
-    wire [513:0] leg_4_0a_2;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0a_2 (.ck(ck_e1), .d(leg_4_0a_1), .q(leg_4_0a_2));   // (1784.16, 2414.34) e1
-    wire [513:0] leg_4_0a_3;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0a_3 (.ck(ck_e1), .d(leg_4_0a_2), .q(leg_4_0a_3));   // (1784.16, 2164.34) e1
-    wire [513:0] leg_4_0a_4;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0a_4 (.ck(ck_e1), .d(leg_4_0a_3), .q(leg_4_0a_4));   // (1784.16, 1914.33) e1
-    wire [513:0] leg_4_0a_5;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0a_5 (.ck(ck_e1), .d(leg_4_0a_4), .q(leg_4_0a_5));   // (1784.16, 1664.32) e1
-    wire [513:0] leg_4_0a_6;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0a_6 (.ck(ck_e1), .d(leg_4_0a_5), .q(leg_4_0a_6));   // (1784.16, 1414.32) e1
-    wire [513:0] leg_4_0a_7;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0a_7 (.ck(ck_e0), .d(leg_4_0a_6), .q(leg_4_0a_7));   // (1630.87, 1317.60) e0
-    wire [513:0] leg_4_0a_8;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0a_8 (.ck(ck_e0), .d(leg_4_0a_7), .q(leg_4_0a_8));   // (1380.87, 1317.60) e0
-    wire [513:0] leg_4_0a_9;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0a_9 (.ck(ck_w0), .d(leg_4_0a_8), .q(leg_4_0a_9));   // (1130.86, 1317.60) w0
-    wire [513:0] leg_4_0a_10;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0a_10 (.ck(ck_w0), .d(leg_4_0a_9), .q(leg_4_0a_10));   // (880.85, 1317.60) w0
-    wire [513:0] leg_4_0a_11;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0a_11 (.ck(ck_w0), .d(leg_4_0a_10), .q(leg_4_0a_11));   // (630.85, 1317.60) w0
-    wire [513:0] leg_4_0a_12;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0a_12 (.ck(ck_w0), .d(leg_4_0a_11), .q(leg_4_0a_12));   // (574.56, 1123.88) w0
-    wire [513:0] leg_4_0a_13;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0a_13 (.ck(ck_w0), .d(leg_4_0a_12), .q(leg_4_0a_13));   // (574.56, 873.87) w0
-    wire [513:0] leg_4_0a_14;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0a_14 (.ck(ck_w0), .d(leg_4_0a_13), .q(leg_4_0a_14));   // (574.56, 623.87) w0
-    wire [513:0] leg_4_0a_15;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0a_15 (.ck(ck_w0), .d(leg_4_0a_14), .q(leg_4_0a_15));   // (574.56, 373.86) w0
+    wire [513:0] leg_4_0a_0;  qfd_c_stn514 u_leg_4_0a_0 (.ck(ck_e2), .d(n_y_2_2), .q(leg_4_0a_0));   // (1784.16, 2914.36) e2
+    wire [513:0] leg_4_0a_1;  qfd_c_stn514 u_leg_4_0a_1 (.ck(ck_e2), .d(leg_4_0a_0), .q(leg_4_0a_1));   // (1784.16, 2664.35) e2
+    wire [513:0] leg_4_0a_2;  qfd_c_stn514 u_leg_4_0a_2 (.ck(ck_e1), .d(leg_4_0a_1), .q(leg_4_0a_2));   // (1784.16, 2414.34) e1
+    wire [513:0] leg_4_0a_3;  qfd_c_stn514 u_leg_4_0a_3 (.ck(ck_e1), .d(leg_4_0a_2), .q(leg_4_0a_3));   // (1784.16, 2164.34) e1
+    wire [513:0] leg_4_0a_4;  qfd_c_stn514 u_leg_4_0a_4 (.ck(ck_e1), .d(leg_4_0a_3), .q(leg_4_0a_4));   // (1784.16, 1914.33) e1
+    wire [513:0] leg_4_0a_5;  qfd_c_stn514 u_leg_4_0a_5 (.ck(ck_e1), .d(leg_4_0a_4), .q(leg_4_0a_5));   // (1784.16, 1664.32) e1
+    wire [513:0] leg_4_0a_6;  qfd_c_stn514 u_leg_4_0a_6 (.ck(ck_e1), .d(leg_4_0a_5), .q(leg_4_0a_6));   // (1784.16, 1414.32) e1
+    wire [513:0] leg_4_0a_7;  qfd_c_stn514 u_leg_4_0a_7 (.ck(ck_e0), .d(leg_4_0a_6), .q(leg_4_0a_7));   // (1630.87, 1317.60) e0
+    wire [513:0] leg_4_0a_8;  qfd_c_stn514 u_leg_4_0a_8 (.ck(ck_e0), .d(leg_4_0a_7), .q(leg_4_0a_8));   // (1380.87, 1317.60) e0
+    wire [513:0] leg_4_0a_9;  qfd_c_stn514 u_leg_4_0a_9 (.ck(ck_w0), .d(leg_4_0a_8), .q(leg_4_0a_9));   // (1130.86, 1317.60) w0
+    wire [513:0] leg_4_0a_10;  qfd_c_stn514 u_leg_4_0a_10 (.ck(ck_w0), .d(leg_4_0a_9), .q(leg_4_0a_10));   // (880.85, 1317.60) w0
+    wire [513:0] leg_4_0a_11;  qfd_c_stn514 u_leg_4_0a_11 (.ck(ck_w0), .d(leg_4_0a_10), .q(leg_4_0a_11));   // (630.85, 1317.60) w0
+    wire [513:0] leg_4_0a_12;  qfd_c_stn514 u_leg_4_0a_12 (.ck(ck_w0), .d(leg_4_0a_11), .q(leg_4_0a_12));   // (574.56, 1123.88) w0
+    wire [513:0] leg_4_0a_13;  qfd_c_stn514 u_leg_4_0a_13 (.ck(ck_w0), .d(leg_4_0a_12), .q(leg_4_0a_13));   // (574.56, 873.87) w0
+    wire [513:0] leg_4_0a_14;  qfd_c_stn514 u_leg_4_0a_14 (.ck(ck_w0), .d(leg_4_0a_13), .q(leg_4_0a_14));   // (574.56, 623.87) w0
+    wire [513:0] leg_4_0a_15;  qfd_c_stn514 u_leg_4_0a_15 (.ck(ck_w0), .d(leg_4_0a_14), .q(leg_4_0a_15));   // (574.56, 373.86) w0
     assign n_a_0_0 = leg_4_0a_15;
     // node (4,0).b on tile (0,0) <- n_y(1,2): 2939.9 um, 7 relays, hop <= 367.5 um
-    wire [513:0] leg_4_0b_0;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0b_0 (.ck(ck_w2), .d(n_y_1_2), .q(leg_4_0b_0));   // (574.56, 2796.88) w2
-    wire [513:0] leg_4_0b_1;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0b_1 (.ck(ck_w1), .d(leg_4_0b_0), .q(leg_4_0b_1));   // (574.56, 2429.39) w1
-    wire [513:0] leg_4_0b_2;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0b_2 (.ck(ck_w1), .d(leg_4_0b_1), .q(leg_4_0b_2));   // (574.56, 2061.90) w1
-    wire [513:0] leg_4_0b_3;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0b_3 (.ck(ck_w1), .d(leg_4_0b_2), .q(leg_4_0b_3));   // (574.56, 1694.41) w1
-    wire [513:0] leg_4_0b_4;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0b_4 (.ck(ck_w1), .d(leg_4_0b_3), .q(leg_4_0b_4));   // (574.56, 1326.92) w1
-    wire [513:0] leg_4_0b_5;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0b_5 (.ck(ck_w0), .d(leg_4_0b_4), .q(leg_4_0b_5));   // (574.56, 959.44) w0
-    wire [513:0] leg_4_0b_6;  qfd_q3h_stn #(.W(514), .N(1)) u_leg_4_0b_6 (.ck(ck_w0), .d(leg_4_0b_5), .q(leg_4_0b_6));   // (574.56, 591.95) w0
+    wire [513:0] leg_4_0b_0;  qfd_c_stn514 u_leg_4_0b_0 (.ck(ck_w2), .d(n_y_1_2), .q(leg_4_0b_0));   // (574.56, 2796.88) w2
+    wire [513:0] leg_4_0b_1;  qfd_c_stn514 u_leg_4_0b_1 (.ck(ck_w1), .d(leg_4_0b_0), .q(leg_4_0b_1));   // (574.56, 2429.39) w1
+    wire [513:0] leg_4_0b_2;  qfd_c_stn514 u_leg_4_0b_2 (.ck(ck_w1), .d(leg_4_0b_1), .q(leg_4_0b_2));   // (574.56, 2061.90) w1
+    wire [513:0] leg_4_0b_3;  qfd_c_stn514 u_leg_4_0b_3 (.ck(ck_w1), .d(leg_4_0b_2), .q(leg_4_0b_3));   // (574.56, 1694.41) w1
+    wire [513:0] leg_4_0b_4;  qfd_c_stn514 u_leg_4_0b_4 (.ck(ck_w1), .d(leg_4_0b_3), .q(leg_4_0b_4));   // (574.56, 1326.92) w1
+    wire [513:0] leg_4_0b_5;  qfd_c_stn514 u_leg_4_0b_5 (.ck(ck_w0), .d(leg_4_0b_4), .q(leg_4_0b_5));   // (574.56, 959.44) w0
+    wire [513:0] leg_4_0b_6;  qfd_c_stn514 u_leg_4_0b_6 (.ck(ck_w0), .d(leg_4_0b_5), .q(leg_4_0b_6));   // (574.56, 591.95) w0
     assign n_b_0_0 = leg_4_0b_6;
     // ---- rs: root n_y (0,0) -> 1 relays + the rs pin register (S face): 529.2 um
-    wire [513:0] rs_0;  qfd_q3h_stn #(.W(514), .N(1)) u_rs_0 (.ck(ck_w0), .d(n_y_0_0), .q(rs_0));   // (574.56, 307.78) w0
-    wire [513:0] rs_1;  qfd_q3h_stn #(.W(514), .N(1)) u_rs_1 (.ck(ck_w0), .d(rs_0), .q(rs_1));   // (574.56, 43.20) w0 pin register
+    wire [513:0] rs_0;  qfd_c_stn514 u_rs_0 (.ck(ck_w0), .d(n_y_0_0), .q(rs_0));   // (574.56, 307.78) w0
+    wire [513:0] rs_1;  qfd_c_stn514 u_rs_1 (.ck(ck_w0), .d(rs_0), .q(rs_1));   // (574.56, 43.20) w0 pin register
     assign rs = rs_1;
     // ---- DV far-band feedthrough rs_i (N) -> rs_o (S): 16 registers in the T centre lane, hop <= 383.0 um
     wire [513:0] rs_i_m5 = (MUT == 5) ? {rs_i[513:2], rs_i[0], rs_i[1]} : rs_i;
-    wire [513:0] ft_0;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_0 (.ck(ck_w3), .d(rs_i_m5), .q(ft_0));   // (574.56, 5184.00) w3 rs_i pin register
-    wire [513:0] ft_1;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_1 (.ck(ck_w3), .d(ft_0), .q(ft_1));   // (957.60, 5184.00) w3
-    wire [513:0] ft_2;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_2 (.ck(ck_e3), .d(ft_1), .q(ft_2));   // (1179.36, 5022.72) e3
-    wire [513:0] ft_3;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_3 (.ck(ck_e3), .d(ft_2), .q(ft_3));   // (1179.36, 4639.68) e3
-    wire [513:0] ft_4;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_4 (.ck(ck_e3), .d(ft_3), .q(ft_4));   // (1179.36, 4256.64) e3
-    wire [513:0] ft_5;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_5 (.ck(ck_e2), .d(ft_4), .q(ft_5));   // (1179.36, 3873.60) e2
-    wire [513:0] ft_6;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_6 (.ck(ck_e2), .d(ft_5), .q(ft_6));   // (1179.36, 3490.56) e2
-    wire [513:0] ft_7;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_7 (.ck(ck_e2), .d(ft_6), .q(ft_7));   // (1179.36, 3107.52) e2
-    wire [513:0] ft_8;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_8 (.ck(ck_e2), .d(ft_7), .q(ft_8));   // (1179.36, 2724.48) e2
+    wire [513:0] ft_0;  qfd_c_stn514 u_ft_0 (.ck(ck_w3), .d(rs_i_m5), .q(ft_0));   // (574.56, 5184.00) w3 rs_i pin register
+    wire [513:0] ft_1;  qfd_c_stn514 u_ft_1 (.ck(ck_w3), .d(ft_0), .q(ft_1));   // (957.60, 5184.00) w3
+    wire [513:0] ft_2;  qfd_c_stn514 u_ft_2 (.ck(ck_e3), .d(ft_1), .q(ft_2));   // (1179.36, 5022.72) e3
+    wire [513:0] ft_3;  qfd_c_stn514 u_ft_3 (.ck(ck_e3), .d(ft_2), .q(ft_3));   // (1179.36, 4639.68) e3
+    wire [513:0] ft_4;  qfd_c_stn514 u_ft_4 (.ck(ck_e3), .d(ft_3), .q(ft_4));   // (1179.36, 4256.64) e3
+    wire [513:0] ft_5;  qfd_c_stn514 u_ft_5 (.ck(ck_e2), .d(ft_4), .q(ft_5));   // (1179.36, 3873.60) e2
+    wire [513:0] ft_6;  qfd_c_stn514 u_ft_6 (.ck(ck_e2), .d(ft_5), .q(ft_6));   // (1179.36, 3490.56) e2
+    wire [513:0] ft_7;  qfd_c_stn514 u_ft_7 (.ck(ck_e2), .d(ft_6), .q(ft_7));   // (1179.36, 3107.52) e2
+    wire [513:0] ft_8;  qfd_c_stn514 u_ft_8 (.ck(ck_e2), .d(ft_7), .q(ft_8));   // (1179.36, 2724.48) e2
     wire [513:0] ft_m4;  qfd_q3h_run #(.W(514), .D(MUT == 4 ? 1 : 0)) u_m4 (.ck(ck_e2), .d(ft_8), .q(ft_m4));
-    wire [513:0] ft_9;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_9 (.ck(ck_e1), .d(ft_m4), .q(ft_9));   // (1179.36, 2341.44) e1
-    wire [513:0] ft_10;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_10 (.ck(ck_e1), .d(ft_9), .q(ft_10));   // (1179.36, 1958.40) e1
-    wire [513:0] ft_11;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_11 (.ck(ck_e1), .d(ft_10), .q(ft_11));   // (1179.36, 1575.36) e1
-    wire [513:0] ft_12;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_12 (.ck(ck_e0), .d(ft_11), .q(ft_12));   // (1179.36, 1192.32) e0
-    wire [513:0] ft_13;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_13 (.ck(ck_e0), .d(ft_12), .q(ft_13));   // (1179.36, 809.28) e0
-    wire [513:0] ft_14;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_14 (.ck(ck_e0), .d(ft_13), .q(ft_14));   // (1179.36, 426.24) e0
-    wire [513:0] ft_15;  qfd_q3h_stn #(.W(514), .N(1)) u_ft_15 (.ck(ck_e0), .d(ft_14), .q(ft_15));   // (1179.36, 43.20) e0 rs_o pin register
+    wire [513:0] ft_9;  qfd_c_stn514 u_ft_9 (.ck(ck_e1), .d(ft_m4), .q(ft_9));   // (1179.36, 2341.44) e1
+    wire [513:0] ft_10;  qfd_c_stn514 u_ft_10 (.ck(ck_e1), .d(ft_9), .q(ft_10));   // (1179.36, 1958.40) e1
+    wire [513:0] ft_11;  qfd_c_stn514 u_ft_11 (.ck(ck_e1), .d(ft_10), .q(ft_11));   // (1179.36, 1575.36) e1
+    wire [513:0] ft_12;  qfd_c_stn514 u_ft_12 (.ck(ck_e0), .d(ft_11), .q(ft_12));   // (1179.36, 1192.32) e0
+    wire [513:0] ft_13;  qfd_c_stn514 u_ft_13 (.ck(ck_e0), .d(ft_12), .q(ft_13));   // (1179.36, 809.28) e0
+    wire [513:0] ft_14;  qfd_c_stn514 u_ft_14 (.ck(ck_e0), .d(ft_13), .q(ft_14));   // (1179.36, 426.24) e0
+    wire [513:0] ft_15;  qfd_c_stn514 u_ft_15 (.ck(ck_e0), .d(ft_14), .q(ft_15));   // (1179.36, 43.20) e0 rs_o pin register
     assign rs_o = ft_15;
 endmodule

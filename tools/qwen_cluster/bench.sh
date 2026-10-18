@@ -6,7 +6,7 @@
 set -uo pipefail
 OUT=$(mkdir -p "$1" && realpath "$1")
 V=${VERILATOR:-verilator}
-SRC=(rtl/physical/qcluster/qfd_q3h_stn.sv rtl/physical/qcluster/qfd_c_b16_dv_fabric.sv
+SRC=(rtl/physical/qcluster/qfd_c_stn.sv rtl/physical/qcluster/qfd_q3h_stn.sv rtl/physical/qcluster/qfd_c_b16_dv_fabric.sv
      rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv rtl/hdc/ot_hdc_delay.sv
      rtl/physical/ot_qwen_tile_node.sv rtl/lib/ot_rst_relay.sv rtl/hdc/ot_qwen_w12_matvec.sv
      rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/proto/ot_fp32_add_rne_pipe.sv

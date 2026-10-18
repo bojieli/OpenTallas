@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits   427 GB (avail 453, growth 154, headroom 0, waiters 0/0 GB) load 84/128 running 27 disk 349 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-327918-1792286476 after 0 s
+RESULT MUT 0 FAR 0: PASS (expected PASS) LOCKSTEP_PASS MUT 0 FAR 0 cycles 6000
+RESULT MUT 0 FAR 1: PASS (expected PASS) LOCKSTEP_PASS MUT 0 FAR 1 cycles 6000
+RESULT MUT 1 FAR 0: FAIL (expected FAIL) LOCKSTEP_FAIL MUT 1 FAR 0 mismatching cycles 5997
+RESULT MUT 2 FAR 0: FAIL (expected FAIL) LOCKSTEP_FAIL MUT 2 FAR 0 mismatching cycles 5998
+RESULT MUT 3 FAR 0: FAIL (expected FAIL) LOCKSTEP_FAIL MUT 3 FAR 0 mismatching cycles 5994
+RESULT MUT 4 FAR 0: FAIL (expected FAIL) LOCKSTEP_FAIL MUT 4 FAR 0 mismatching cycles 5985
+RESULT MUT 5 FAR 0: FAIL (expected FAIL) LOCKSTEP_FAIL MUT 5 FAR 0 mismatching cycles 3023
+RESULT MUT S FAR 0: FAIL (expected FAIL) LOCKSTEP_FAIL MUT 0 FAR 0 mismatching cycles 5998
+LOCKSTEP_EXIT 0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-327918-1792286476): exit 0

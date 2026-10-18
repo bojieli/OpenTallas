@@ -122,3 +122,35 @@ Hold, timing and recipe:
 3. Gate: `--cts` measuring per-quadrant insertion and spread and seam pairs.
 4. Route: `submit_exact`, then native audit.
 5. The route waits for a CLOSED, native-PASS A0 view from Q-ROMPARENT-2. Steps 1-3 run against the A0 synth abstract as diagnostic only and are never bound.
+
+## 7. Hardened fabric stations (Q-CLUSTER3, 2026-10-17, coordinator decision HANDOFF 0de+5)
+
+**Why.** The 8-root gates still failed the clock rule badly: TritonCTS gave 1.5-1.9 ns insertion and 400-530 ps spread per root, and the spine gave about 4.1 ns. The cause was ~78k loose fabric flops at 282 stage sites spread over the whole 2.36 x 5.23 mm cluster.
+
+**Structure.** Every wide stage becomes a small replicated hard tile with its own clock pin and local tree (`rtl/physical/qcluster/qfd_c_stn.sv`, kits from `tools/qwen_cluster/qc_stn_kit.py`). Each tile is flop-first / flop-last, recipe 4, `hold_budget: die`, with layer cap M5 (PG M5 = pins, so the cluster straps M6).
+
+| master | outline | role | per cluster |
+|---|---|---|---|
+| `qfd_c_stn516` | 34.56 x 34.56 | column-run entry / relay / exit (bc -> bco) | 52 |
+| `qfd_c_stn514` | 34.56 x 34.56 | tree legs, rs exit, rs_i -> rs_o (MX where the word flows south) | 83 |
+| `qfd_c_xstn` / `qfd_c_xstnw` | 34.56 x 86.4 | column station (`qfd_xcst_n` logic); the 508-b tap is on the E / W face at exactly the A0 tap y range (8.64-um straight stubs) | 8 + 8 |
+
+- **Pins.** Data comes in on S and leaves on N, on M3 + M5 alternating; the clock is on the S face. The S/N faces carry about 16 pins/um over the two layers (8 per layer). That is forced by the 43.2-um L/R strips: a station has to leave a channel to the A0 W/E faces, which carry the A0 clock and data pins. The tap face carries about 10.4 pins/um on M4, equal to the A0 tap face it meets.
+- **Why two xstn masters.** No tile width is mirror-legal for both the 0.036 M3 and the 0.048 M5 track pitches, so a tile placed MY would have off-track pins. Hence a separate tap-W master, as `qfd_xcst_n_my` did.
+- **Placement** (`qc_gen.py place_stations`; contract `stations.children`):
+  - Origins sit on a 4.32 lattice. Corridor and row-gap stations keep 8.64 um to the A0 faces and to each other. In the L/R strips they keep 4.32 um to the A0 face and 4.32 um to the cluster edge.
+  - Horizontal (row-gap or strip) stations take the orientation that shortens their hops.
+  - Register-to-register pin-to-pin hops are at most 388.8 um (135 hops). Endpoint hops to the A0 faces and cluster pins are at most 367 um. The largest site displacement is 41.9 um.
+- **What stays soft.** Only the 133 1-bit reset stages remain cluster flops.
+- **Latency.** Unchanged: the same registers, so every latency in the contract is unchanged.
+
+**Clock.** The eight regional roots and their pins are unchanged, so the die contract is unchanged. Each root now drives only child clock pins: about 20 stations, 2 A0 tiles x 35-39 entries, and about 17 reset flops, roughly 100-120 sinks per root. Targets: insertion <= 300 ps and spread <= 80 ps to the child pins. The children's internal trees are measured by the station gates.
+
+**Exactness.** `tools/qwen_cluster/bench_lockstep.sh` runs the hard-station fabric in lockstep against the soft-station reference at c392aa534 (`rtl/test/qcluster_ref_c392aa534.sv`). Every input is random every cycle, with two reset pulses, over 6,000 cycles, and every output is compared every cycle.
+- MUT 0 PASSes at FAR 0 and FAR 1.
+- Fabric mutants 1-5 and station mutant S (one inverted bit in `qfd_c_stn516`) all FAIL.
+- Results are in `bench_lockstep_1017/`.
+
+**Open for the coordinator.**
+- The stations need channels under 20 um by construction: 4.32 um in L/R and 8.64 um in the corridors. Diagnostic kits admit this through `abut_plan` (probe). A production kit needs a ruling.
+- S/N pin density is about 16/um over two layers.

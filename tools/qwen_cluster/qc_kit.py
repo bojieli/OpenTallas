@@ -20,9 +20,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 ARCH = ROOT / "results/arch/qwen_cluster_1017"
 STANDIN = "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin"
+STN_STANDIN = "physical/ref_tile/qfd_c_b16_dv_diag/stn_standin"
+# Q-CLUSTER3: the stations are hard children (blackboxes here); only the 1-bit reset stages (qfd_q3h_stn W=1) stay soft
 FABRIC_SRC = ["rtl/physical/qcluster/qfd_q3h_stn.sv", "rtl/physical/qcluster/qfd_c_b16_dv_fabric.sv",
-              "rtl/physical/qcluster/qfd_c_b16_dv.sv", "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv",
-              "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv", "rtl/hdc/ot_hdc_delay.sv"]
+              "rtl/physical/qcluster/qfd_c_b16_dv.sv"]
 
 
 def main():
@@ -30,6 +31,7 @@ def main():
     ap.add_argument("mode", choices=["diag", "real"])
     ap.add_argument("--nk")
     ap.add_argument("--nl")
+    ap.add_argument("--stn", help="real mode: directory holding the CLOSED station views qfd_c_stn516/514, qfd_c_xstn(w)")
     ap.add_argument("--engine", choices=["spine", "cts"], default="spine")
     a = ap.parse_args()
     C = json.loads((ARCH / "cluster_contract_dv.json").read_text())
@@ -38,16 +40,21 @@ def main():
     if a.mode == "diag":
         nk, nl = f"{STANDIN}/{nkm}", f"{STANDIN}/{nlm}"
         name = "qfd_c_b16_dv_diag" + ("" if a.engine == "spine" else "t")
-        bb = [f"{STANDIN}/a0_rr_bb.v"]
+        bb = [f"{STANDIN}/a0_rr_bb.v", f"{STN_STANDIN}/stn_bb.v"]
+        stn = STN_STANDIN
     else:
-        if not (a.nk and a.nl):
-            raise SystemExit("real mode needs --nk / --nl CLOSED native-PASS A0 views")
+        if not (a.nk and a.nl and a.stn):
+            raise SystemExit("real mode needs --nk / --nl CLOSED native-PASS A0 views and --stn station views")
         nk, nl, name, bb = a.nk, a.nl, "qfd_c_b16_dv" + ("" if a.engine == "spine" else "_t"), []
+        stn = a.stn
     tiles = []
     spare = tuple(C["tree"]["nl_slot"])
     for t in C["tiles"]:
         c, r = (int(v) for v in t["inst"][4:].split("_"))
         tiles.append(dict(view=nl if (c, r) == spare else nk, count=1, inst=t["inst"], at=t["at"], orient=t["orient"],
+                          at_exact=True))
+    for k in C["stations"]["children"]:
+        tiles.append(dict(view=f"{stn}/{k['master']}", count=1, inst=k["inst"], at=k["at"], orient=k["orient"],
                           at_exact=True))
     ports = C["ports"]
     faces = {"N": [], "S": [], "E": [], "W": []}
@@ -100,7 +107,13 @@ def main():
         io_flop_at_pins=False,
         sdc_extra=["physical/qcluster/qfd_c_b16_dv_quadrants.sdc"],
         reset_ports=["rst_n"],
-        outline=dict(w=W, h=H, exact=True), child_lattice_um=43.2,
+        # 4.32: the station tiles sit on the 4.32 lattice (L / R strip stations 4.32 from the A0 faces and the edge cannot
+        # be on 43.2); the A0 origins stay multiples of 43.2.  4.32 is track-safe for the station pins (M3 / M4 / M5).
+        outline=dict(w=W, h=H, exact=True), child_lattice_um=4.32,
+        # the stations need sub-20-um channels by construction (43.2-um L / R strips; corridor lanes 49 um apart): diag
+        # kits admit them as a measured probe (abut_plan + job.hold_merge); a production kit needs the coordinator's call
+        abut_plan=dict(channel_um=4.3, edge_um=2.0, why="Q-CLUSTER3 station tiles: 4.32-um channels to the A0 faces / "
+                       "cluster edge in the 43.2-um L / R strips, 8.64 in A / T / B; measured by this diagnostic gate"),
         children=tiles, macros=[],
         pins=faces,
         pin_ranges={p["port"]: p["range_um"] for p in ports},
@@ -111,12 +124,17 @@ def main():
                                            "flops, bco / rs / rs_o exit flops, rst_n pin register); cid / far are static "
                                            "straps from the instance's own tie cells"),
         relay_sites="results/arch/qwen_cluster_1017/relay_sites_dv.json",
-        structural_change="Q-CLUSTER qfd_c_b16_dv (SPEC.md): CB cluster with A/T/B corridors 129.6 um (cut 1.79 -> 0.90 "
+        structural_change="Q-CLUSTER3 (coordinator 0de+5): the ~78k fabric flops at 282 stage sites are hardened into 167 "
+                          "replicated station tiles (qfd_c_stn516 x52, qfd_c_stn514 x83, qfd_c_xstn/xstnw x8+8; own clock "
+                          "pin + local tree, flop-first / flop-last); each regional root drives only child clock pins "
+                          "(stations + A0 entries) + the 133 soft reset stages: the 8-root gates measured TritonCTS "
+                          "1.5-1.9 ns / 400-530 ps and spine 4.1 ns on the loose flops.  Base: Q-CLUSTER qfd_c_b16_dv (SPEC.md): CB cluster with A/T/B corridors 129.6 um (cut 1.79 -> 0.90 "
                           "worst, trunks <= 0.54), eight regional clock roots (side x tile row, <= 13.4k sinks each; "
                           "the four quadrant roots measured 26,984 sinks / spread 3.9 ns), registered pins hold_budget die, DV "
                           "rs_i -> rs_o feedthrough (14 edges) in T.",
-        job=dict(owner="Claude:Q-CLUSTER", branch="claude/qcluster-1017", tag=("dv0" if a.mode == "real" else "diag3") + ("" if a.engine == "spine" else "t"),
+        job=dict(owner="Claude:Q-CLUSTER", branch="claude/qcluster-1017", tag=("dv0" if a.mode == "real" else "diag4") + ("" if a.engine == "spine" else "t"),
                  purpose="qfd_c_b16_dv cluster (dv2r8f, 48 instances)", submit=a.mode == "real",
+                 **({} if a.mode == "real" else {"hold_merge": "Q-CLUSTER3 diagnostic: stand-in A0 + station abstracts"}),
                  benches=[dict(name="qcluster_fabric", cmd="bash tools/qwen_cluster/bench.sh bench_out",
                                expect="pass", pass_regex="BENCH_EXIT 0", threads=8, peak_ram_gb=12)]))
     out = ROOT / "tools/ref_tile/specs_qcluster" / f"{name}.json"

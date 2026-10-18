@@ -128,8 +128,13 @@ class Emit:
     def stage(self, name, width, d, q, x, y, note=""):
         r = quad(x, y)
         self.regions[r] += width
-        self.sites.append(dict(inst=f"u_fab.{name}", at=[round(x, 3), round(y, 3)], region=r, bits=width))
-        self.w(f"    wire [{width - 1}:0] {q};  qfd_q3h_stn #(.W({width}), .N(1)) {name} (.ck(ck_{r}), .d({d}), .q({q}));"
+        # Q-CLUSTER3: every wide stage is a hard station tile (qfd_c_stn516 / qfd_c_stn514, own clock pin + local tree);
+        # only the 1-bit reset stages stay soft flops of the cluster
+        hard = width > 1
+        self.sites.append(dict(inst=f"u_fab.{name}", at=[round(x, 3), round(y, 3)], region=r, bits=width,
+                               master=f"qfd_c_stn{width}" if hard else None, d=d, q=q))
+        cell = f"qfd_c_stn{width}" if hard else f"qfd_q3h_stn #(.W({width}), .N(1))"
+        self.w(f"    wire [{width - 1}:0] {q};  {cell} {name} (.ck(ck_{r}), .d({d}), .q({q}));"
                f"   // ({x:.2f}, {y:.2f}) {r}{(' ' + note) if note else ''}")
 
 
@@ -195,10 +200,11 @@ def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap):
                 b0 = "far_n" if r & 1 else "far"
                 q = quad(x, y)
                 E.regions[q] += DW
-                E.sites.append(dict(inst=f"u_fab.u_x_{s}", at=[round(x, 3), round(y, 3)], region=q, bits=DW, station=True))
+                E.sites.append(dict(inst=f"u_fab.u_x_{s}", at=[round(x, 3), round(y, 3)], region=q, bits=DW, station=True,
+                                    master="qfd_c_xstnw" if c in (1, 3) else "qfd_c_xstn", d=cin, q=f"dn{c}_{nm}", col=c, row=r))
                 w(f"    wire [{DW-1}:0] dn{c}_{nm};")
-                w(f"    qfd_xcst_n u_x_{s} (.ck(ck_{q}), .rst_n(rstl_{g.E_FACE_CORR[c]}_{r}), .sidx({{far, {b1}, {b0}}}), .b_d({cin}),"
-                  f" .a_d(dn{c}_{nm}), .tap_d(tap_{s}), .tie_hi(), .tie_lo());   // ({x:.2f}, {y:.2f}) {q}")
+                w(f"    {'qfd_c_xstnw' if c in (1, 3) else 'qfd_c_xstn'} u_x_{s} (.ck(ck_{q}), .rst_n(rstl_{g.E_FACE_CORR[c]}_{r}), .sidx({{far, {b1}, {b0}}}), .b_d({cin}),"
+                  f" .a_d(dn{c}_{nm}), .tap_d(tap_{s}));   // ({x:.2f}, {y:.2f}) {q}")
             else:
                 E.stage(f"u_dn{c}_{nm}", DW, prev, f"dn{c}_{nm}", x, y)
             prev = f"dn{c}_{nm}"
@@ -332,6 +338,200 @@ def gen_tb(spare):
             .replace("/*@GSEEN*/", gs))
 
 
+# ---- Q-CLUSTER3: hard station placement (qc_stn_kit.py masters) -------------------------------------------------------
+SW, XH = 34.56, 86.4         # qfd_c_stn5xx 34.56 x 34.56; qfd_c_xstn 34.56 x 86.4 (qc_stn_kit.py)
+SL = 8.64                    # station snapping step in the corridors / y (on the 4.32 child lattice: track-safe for M3 / M4 / M5)
+XSTN_DY = 414.72             # xstn origin above its A0 row origin: tap pins at the A0 tap y range 437.184..485.856
+GAP = 8.64                   # minimum channel station <-> A0 / station <-> station (A / T / B corridors, row gaps)
+GAP_LR = 4.32                # L / R strips (43.2 wide): 4.32 to the A0 face, 4.32 to the cluster edge (x0 on the 4.32 lattice)
+
+
+def _sn(v):
+    return round(round(v / SL) * SL, 4)
+
+
+def place_stations(E, fabric_rtl, spare):
+    """Each hard station of E.sites -> (x0, y0, orient) on the 8.64 lattice near its planned site.  Orientation from the
+    word's flow: R0 = d on S / q on N (northward), MX = southward; xstn R0 (tap E) or MY (tap W) toward its tile.
+    Returns the child list and the pin-to-pin hop audit (raises on overlap or a hop > LIMIT)."""
+    alias = {}
+    for m in re.finditer(r"qfd_q3h_run #\(.*?\) \w+ \(\.ck\(\w+\), \.d\((\w+)\), \.q\((\w+)\)\)", fabric_rtl):
+        alias[m.group(2)] = m.group(1)
+    for m in re.finditer(r"assign (\w+) = (\w+);", fabric_rtl):
+        alias[m.group(1)] = m.group(2)
+    def res(n):
+        while n in alias:
+            n = alias[n]
+        return n
+    hard = [st for st in E.sites if st.get("master")]
+    prod = {st["q"]: st for st in hard}
+    cons = {}
+    for st in hard:
+        cons.setdefault(res(st["d"]), []).append(st)
+    def end_y(n):     # planned y of a non-station endpoint (pins / A0 tile faces)
+        n = res(n)
+        if n in prod:
+            return prod[n]["at"][1]
+        if n.startswith(("bc", "rs_i")):
+            return 0.0 if n.startswith("bc") else HEIGHT
+        mm = re.match(r"(t_out|n_y)_(\d)_(\d)", n)
+        if mm:
+            return g.ROWY[int(mm.group(3))] + 362.0
+        return None
+    out_y = {}         # q net -> consumer endpoint y (pins / tiles) when no station consumes it
+    for m in re.finditer(r"assign (bco\d|rs|rs_o) = (\w+);", fabric_rtl):
+        out_y[res(m.group(2))] = HEIGHT if m.group(1).startswith("bco") else 0.0
+    for m in re.finditer(r"assign (n_[ab])_(\d)_(\d) = (\w+);", fabric_rtl):
+        out_y[res(m.group(4))] = g.ROWY[int(m.group(3))] + 160.0
+    for m in re.finditer(r"\.d\((\w+)\), \.q\((n_a_(\d)_(\d))\)", fabric_rtl):
+        out_y[res(m.group(1))] = g.ROWY[int(m.group(4))] + 160.0
+    kids = []
+    corr = {k: v for k, v in g.CORR.items()}
+    for st in hard:
+        x, y = st["at"]
+        if st["master"].startswith("qfd_c_xstn"):
+            c, r = st["col"], st["row"]
+            x0 = {0: corr["L"][0] + GAP_LR, 1: corr["T"][0] + GAP, 2: corr["T"][1] - GAP - SW, 3: corr["R"][0] + GAP_LR}[c]
+            if c in (1, 3):    # tile W of the lane: the tap-W master (no MY: track lattice), R0
+                st["master"] = "qfd_c_xstnw"
+            kids.append(dict(st=st, x=round(x0, 4), y=round(g.ROWY[r] + XSTN_DY, 4), w=SW, h=XH, orient="R0"))
+            continue
+        yp = end_y(st["d"])
+        cs = cons.get(st["q"])
+        yn = cs[0]["at"][1] if cs else out_y.get(st["q"])
+        dy = (y - yp if yp is not None else 0.0) + (yn - y if yn is not None else 0.0)
+        o = "R0" if dy >= 0 else "MX"
+        k = next((k for k, (lo, hi) in corr.items() if lo - 1e-6 <= x <= hi + 1e-6), None)
+        x0 = _sn(x - SW / 2)
+        if k is not None:
+            lo, hi = corr[k]
+            if k in ("L", "R"):   # 43.2-um strip: 4.32 to the A0 face and 4.32 to the cluster edge (2.16 core margin)
+                lo_ok = hi_ok = lo + GAP_LR
+            else:
+                lo_ok, hi_ok = lo + GAP, hi - SW - GAP
+            x0 = min(max(x0, lo_ok), hi_ok)
+            y0 = _sn(y - SW / 2)
+        else:          # row-gap / S-N strip station (horizontal leg): keep GAP to the tile rows above / below
+            glo, ghi = next((a, b) for a, b in g.CHANNELS if a - 1e-6 <= y <= b + 1e-6)
+            y0 = min(max(_sn(y - SW / 2), glo + GAP), ghi - GAP - SW)
+        y0 = min(max(y0, 25.92), HEIGHT - 25.92 - SW)
+        kids.append(dict(st=st, x=round(x0, 4), y=round(y0, 4), w=SW, h=SW, orient=o))
+    # overlap: stations among themselves (GAP) and against the A0 tiles (GAP); resolve station-station by stepping y
+    tiles = [(g.COLX[c][0], g.ROWY[r], g.TW, g.TH) for c in range(4) for r in range(4)]
+    def clash(a, b, gap):
+        return not (a[0] + a[2] + gap <= b[0] + 1e-6 or b[0] + b[2] + gap <= a[0] + 1e-6 or
+                    a[1] + a[3] + gap <= b[1] + 1e-6 or b[1] + b[3] + gap <= a[1] + 1e-6)
+    placed = []
+    for kd in sorted(kids, key=lambda k: (not k["st"]["master"].startswith("qfd_c_xstn"), k["y"])):
+        base = kd["y"]
+        for step in [0] + [s * j for j in range(1, 12) for s in (1, -1)]:
+            kd["y"] = round(base + step * SL, 4)
+            box = (kd["x"], kd["y"], kd["w"], kd["h"])
+            if all(not clash(box, (p["x"], p["y"], p["w"], p["h"]), GAP) for p in placed) and \
+               all(not clash(box, t, GAP_LR - 1e-6) for t in tiles):
+                break
+        else:
+            raise SystemExit(f"station overlap unresolved: {kd['st']['inst']} at {kd['x']},{base}")
+        placed.append(kd)
+    if any(p["x"] < -1e-6 or p["x"] + p["w"] > WIDTH + 1e-6 or p["y"] < -1e-6 or p["y"] + p["h"] > HEIGHT + 1e-6 for p in placed):
+        raise SystemExit("station outside the cluster outline")
+    # pin-to-pin hop audit between consecutive registers (station face centres; endpoints at their planned pins)
+    def face(p, which):   # which = "d" (input face) / "q" (output face) centre
+        cx = p["x"] + p["w"] / 2
+        south = (which == "d") == (p["orient"] in ("R0", "MY"))
+        return cx, p["y"] if south else p["y"] + p["h"]
+    byq = {p["st"]["q"]: p for p in placed}
+    byd = {}
+    for p in placed:
+        byd.setdefault(res(p["st"]["d"]), []).append(p)
+    def hop(a, b):
+        (ax, ay), (bx, by) = face(a, "q"), face(b, "d")
+        return abs(ax - bx) + abs(ay - by)
+    def worst(p):
+        h = [hop(byq[res(p["st"]["d"])], p)] if res(p["st"]["d"]) in byq else []
+        return max(h + [hop(p, c) for c in byd.get(p["st"]["q"], [])] + [0.0])
+    horiz = [p for p in placed if not p["st"]["master"].startswith("qfd_c_xstn") and p["h"] == SW and
+             not any(lo - 1e-6 <= p["st"]["at"][0] <= hi + 1e-6 for lo, hi in corr.values())]
+    for _ in range(4):   # horizontal (row-gap / strip) stations: the orientation that shortens their two hops
+        for p in horiz:
+            best = min(("R0", "MX"), key=lambda o: (p.__setitem__("orient", o), worst(p))[1])
+            p["orient"] = best
+    hops = []
+    for p in placed:
+        src = byq.get(res(p["st"]["d"]))
+        if src is None:
+            continue
+        (ax, ay), (bx, by) = face(src, "q"), face(p, "d")
+        hops.append((abs(ax - bx) + abs(ay - by), src["st"]["inst"], p["st"]["inst"]))
+    hmax = max(hops)
+    if hmax[0] > LIMIT:
+        raise SystemExit(f"station hop over reach after snapping: {hmax}")
+    disp = max(abs(p["x"] + p["w"] / 2 - p["st"]["at"][0]) + abs(p["y"] + p["h"] / 2 - p["st"]["at"][1])
+               for p in placed if not p["st"]["master"].startswith("qfd_c_xstn"))
+    return placed, dict(max_um=round(hmax[0], 1), pair=hmax[1:], n=len(hops), max_site_displacement_um=round(disp, 1))
+
+
+def gen_lockstep_tb(spare):
+    """Q-CLUSTER3 lockstep bench: the hard-station fabric (this generator, MUT) against the soft-station reference
+    (rtl/test/qcluster_ref_c392aa534.sv, MUT 0), every input random every cycle (+ reset pulses), every output compared
+    every cycle.  +FAR selects the far-band strap."""
+    ins = [("rst_n", 1), ("far", 1)] + [(f"bc{c}", DW) for c in range(4)] + [("rs_i", BW)]
+    outs = [(f"bco{c}", DW) for c in range(4)] + [("rs", BW), ("rs_o", BW)]
+    for c in range(4):
+        for r in range(4):
+            sn = g.sname(c, r)
+            ins.append((f"t_out_{sn}", BW))
+            outs += [(f"tap_{sn}", DW - 8), (f"trst_{sn}", 1)]
+            if (c, r) != spare:
+                ins.append((f"n_y_{sn}", BW))
+                outs += [(f"n_a_{sn}", BW), (f"n_b_{sn}", BW)]
+    L = ["`timescale 1ns/1ps",
+         "// GENERATED by tools/qwen_cluster/qc_gen.py (Q-CLUSTER3) -- do not edit.  Lockstep: hard-station fabric (MUT) vs the",
+         "// soft-station reference qfd_c_b16_dv_fabric_ref (c392aa534, MUT 0); random inputs every cycle, outputs compared every cycle.",
+         "module tb;",
+         "    parameter integer MUT = 0;",
+         "    parameter integer NCYC = 6000;",
+         "    reg ck = 0;",
+         "    always #0.5 ck = ~ck;"]
+    for n, w_ in ins:
+        L.append(f"    reg  [{w_ - 1}:0] {n};")
+    for n, w_ in outs:
+        L.append(f"    wire [{w_ - 1}:0] {n}_h, {n}_r;")
+    def conn(sfx):
+        c_ = [f".ck_{q}(ck)" for q in QUADS] + [f".{n}({n})" for n, _ in ins] + [f".{n}({n}_{sfx})" for n, _ in outs]
+        return ",\n        ".join(c_)
+    L.append(f"    {FABRIC} #(.MUT(MUT)) u_h (\n        {conn('h')});")
+    L.append(f"    {FABRIC}_ref #(.MUT(0)) u_r (\n        {conn('r')});")
+    L.append("    function automatic [1023:0] rnd1024(input integer dummy);")
+    L.append("        integer k; begin for (k = 0; k < 32; k = k + 1) rnd1024[32*k +: 32] = $urandom; end")
+    L.append("    endfunction")
+    L.append("    integer cyc = 0, bad = 0, nfar = 0;")
+    L.append("    initial begin")
+    L.append("        if ($test$plusargs(\"FAR\")) nfar = 1;")
+    L.append("        far = nfar[0]; rst_n = 0;")
+    for n, w_ in ins[2:]:
+        L.append(f"        {n} = 0;")
+    L.append("    end")
+    L.append("    always @(negedge ck) begin")
+    L.append("        cyc <= cyc + 1;")
+    L.append("        rst_n <= !((cyc < 24) || (cyc >= 2500 && cyc < 2530));")
+    for n, w_ in ins[2:]:
+        L.append(f"        {n} <= rnd1024(0);")
+    cmp_ = " ||\n            ".join(f"({n}_h !== {n}_r)" for n, _ in outs)
+    L.append("        if (cyc > 2 && (" + cmp_ + ")) begin")
+    L.append("            bad = bad + 1;")
+    L.append("            if (bad <= 5) $display(\"MISMATCH cycle %0d\", cyc);")
+    L.append("        end")
+    L.append("        if (cyc == NCYC) begin")
+    L.append("            if (bad == 0) $display(\"LOCKSTEP_PASS MUT %0d FAR %0d cycles %0d\", MUT, nfar, NCYC);")
+    L.append("            else $display(\"LOCKSTEP_FAIL MUT %0d FAR %0d mismatching cycles %0d\", MUT, nfar, bad);")
+    L.append("            $finish;")
+    L.append("        end")
+    L.append("    end")
+    L.append("endmodule")
+    return "\n".join(L) + "\n"
+
+
 def pin_plan(rsx, E):
     """Tile checklist 10-17 (pins <= ~6 / um, spread; clock entries next to the register mass) under the reach rule:
     each data port's range is centred on its run lane at DENS pins / um (so the pin -> lane wire stays ~200 um and the
@@ -408,7 +608,7 @@ def pin_plan(rsx, E):
     return pins, cen, ceny
 
 
-def plot(path, host, spare, legs, rsx, E, pins):
+def plot(path, host, spare, legs, rsx, E, pins, stations=()):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -435,8 +635,11 @@ def plot(path, host, spare, legs, rsx, E, pins):
     colr = {"w0": "#1f4e9c", "w1": "#b26b00", "w2": "#1f4e9c", "w3": "#b26b00",
             "e0": "#2a7a2a", "e1": "#8a2a9c", "e2": "#2a7a2a", "e3": "#8a2a9c"}
     for s in E.sites:
-        ax.plot(s["at"][0], s["at"][1], "s" if s.get("station") else ".", color=colr[s["region"]],
-                ms=5 if s.get("station") else 2.5)
+        if not s.get("master"):
+            ax.plot(s["at"][0], s["at"][1], ".", color=colr[s["region"]], ms=2.5)
+    for p_ in stations:
+        ax.add_patch(Rectangle((p_["x"], p_["y"]), p_["w"], p_["h"], fc=colr[p_["st"]["region"]], ec="k", lw=0.3,
+                               alpha=0.9 if p_["st"]["master"].startswith("qfd_c_xstn") else 0.6))
     for p_ in pins:
         lo, hi = p_["range_um"]
         if p_["face"] in "WE":
@@ -451,7 +654,7 @@ def plot(path, host, spare, legs, rsx, E, pins):
     ax.set_ylim(-260, HEIGHT + 200)
     ax.set_aspect("equal")
     ax.set_title(f"{MASTER} {WIDTH} x {HEIGHT} um: tile fill = clock region (8 roots); dots = registers coloured by\n"
-                 "region root; red = W/E clock entries; blue = tree legs, purple = rs / rs_i->rs_o; dotted = region seams", fontsize=8)
+                 "region root (squares = hard station tiles, dots = soft reset stages); red = W/E clock entries; blue = tree legs, purple = rs / rs_i->rs_o; dotted = region seams", fontsize=8)
     fig.tight_layout()
     fig.savefig(path, dpi=110)
 
@@ -473,6 +676,7 @@ def main():
     (OUT_RTL / f"{FABRIC}.sv").write_text(fab)
     (OUT_RTL / f"{MASTER}.sv").write_text(gen_cluster(spare))
     (ROOT / "rtl/test/tb_qcluster_fabric.sv").write_text(gen_tb(spare))
+    (ROOT / "rtl/test/tb_qcluster_lockstep.sv").write_text(gen_lockstep_tb(spare))
     hdr = ["// GENERATED by tools/qwen_cluster/qc_gen.py: compiled fixed latencies of qfd_c_b16_dv_fabric (edges)"] + \
           [f"localparam integer Q3H_LAT_TAP{r} = {g.tap_time(r)};" for r in range(4)] + \
           [f"localparam integer Q3H_LAT_BCO = {g.STAGE['exit']};",
@@ -481,6 +685,7 @@ def main():
            f"localparam integer Q3H_RST_DEPTH = {RD};"]
     (ROOT / "rtl/test/qcluster_lat.svh").write_text("\n".join(hdr) + "\n")
     pins, cen, ceny = pin_plan(rsx, E)
+    stations, st_hops = place_stations(E, fab, spare)
     # hop audit (pin to pin, Manhattan between consecutive registers of each run)
     by = {}
     for s in E.sites:
@@ -510,7 +715,17 @@ def main():
                                                 rs_fabric=rs_t, rs_i_to_rs_o=nft, reset=RD),
         hop_um=dict(limit=LIMIT, plan=HOP, max=round(max(hops), 1)),
         tree=dict(hosts={f"{l}_{i}": list(h) for (l, i), h in host.items()}, nl_slot=list(spare)),
-        ports=pins, a0=dict(ref=A0_REF, nk=A0_NK, nl=A0_NL, nk_clocks=NK_CLOCKS, nl_clocks=NL_CLOCKS),
+        ports=pins,
+        stations=dict(note="Q-CLUSTER3: hard fabric station tiles (qc_stn_kit.py masters), origins on the 4.32 lattice; "
+                           ">= 8.64-um channels in A / T / B / row gaps, 4.32 to the A0 face and the cluster edge in L / R; R0 = word flows north (d S, q N), MX = south; "
+                           "xstn = tap E, xstnw = tap W (both R0)",
+                      masters={m: sum(1 for p_ in stations if p_["st"]["master"] == m)
+                               for m in ("qfd_c_stn516", "qfd_c_stn514", "qfd_c_xstn", "qfd_c_xstnw")},
+                      soft_reset_flops=sum(1 for st in E.sites if not st.get("master")),
+                      hop_pin_to_pin=st_hops,
+                      children=[dict(inst=p_["st"]["inst"], master=p_["st"]["master"], at=[p_["x"], p_["y"]],
+                                     orient=p_["orient"], region=p_["st"]["region"]) for p_ in stations]),
+        a0=dict(ref=A0_REF, nk=A0_NK, nl=A0_NL, nk_clocks=NK_CLOCKS, nl_clocks=NL_CLOCKS),
         die_crossing=dict(
             rule="(a) + (c): no die link crosses a qfd_c_b16_dv outline (die repeaters never sit inside it; M9 over the "
                  "cluster carries die PG only in dv2r8f).  Die links run in the band gaps, the slice / head row and the W "
@@ -524,12 +739,14 @@ def main():
     (OUT_ARCH / "cluster_contract_dv.json").write_text(json.dumps(contract, indent=1) + "\n")
     tsv = ["# prefix\tx\ty\txlo\txhi  (qc_gen.py; fabric_sites_place.tcl)"]
     for st in E.sites:
+        if st.get("master"):
+            continue          # hard station: placed as a child macro (contract stations.children), not a soft site
         x, y = st["at"]
         cor = next(((lo, hi) for lo, hi in g.CORR.values() if lo - 1e-6 <= x <= hi + 1e-6), (max(0.0, x - 15), min(WIDTH, x + 15)))
         tsv.append(f"{st['inst']}\t{x}\t{y}\t{cor[0]}\t{cor[1]}")
     (ROOT / "physical/qcluster/qfd_c_b16_dv_sites.tsv").write_text("\n".join(tsv) + "\n")
     (OUT_ARCH / "relay_sites_dv.json").write_text(json.dumps(dict(schema="opentallas.qcluster.sites.v1", sites=E.sites), indent=1) + "\n")
-    plot(OUT_ARCH / "cluster_dv_plan.png", host, spare, legs, rsx, E, pins)
+    plot(OUT_ARCH / "cluster_dv_plan.png", host, spare, legs, rsx, E, pins, stations)
     print(json.dumps(dict(outline=[WIDTH, HEIGHT], rs_fabric=rs_t, ft=nft, bco=g.STAGE["exit"], reset=RD,
                           hop_max=round(max(hops), 1), flops=nflops, regions=E.regions,
                           nk_clocks=len(NK_CLOCKS), nl_clocks=len(NL_CLOCKS)), indent=1))

@@ -76,5 +76,458 @@ puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 1857.6 2678.4 R
 set i [ot_ref_pick $ot_ref_by qfd_tile_nk_rp2_romleaf_rr {u_t_3_3}]
 $i setOrient R0; $i setLocation [expr {round(1857.6 * $dbu)}] [expr {round(3974.4 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] qfd_tile_nk_rp2_romleaf_rr at 1857.6 3974.4 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_xstn {u_fab.u_x_0_0}]
+$i setOrient R0; $i setLocation [expr {round(4.32 * $dbu)}] [expr {round(501.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_xstn at 4.32 501.12 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_xstnw {u_fab.u_x_1_0}]
+$i setOrient R0; $i setLocation [expr {round(1114.56 * $dbu)}] [expr {round(501.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_xstnw at 1114.56 501.12 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_xstn {u_fab.u_x_2_0}]
+$i setOrient R0; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(501.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_xstn at 1209.6 501.12 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_xstnw {u_fab.u_x_3_0}]
+$i setOrient R0; $i setLocation [expr {round(2319.84 * $dbu)}] [expr {round(501.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_xstnw at 2319.84 501.12 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_xstn {u_fab.u_x_0_1}]
+$i setOrient R0; $i setLocation [expr {round(4.32 * $dbu)}] [expr {round(1797.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_xstn at 4.32 1797.12 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_xstnw {u_fab.u_x_1_1}]
+$i setOrient R0; $i setLocation [expr {round(1114.56 * $dbu)}] [expr {round(1797.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_xstnw at 1114.56 1797.12 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_xstn {u_fab.u_x_2_1}]
+$i setOrient R0; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(1797.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_xstn at 1209.6 1797.12 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_xstnw {u_fab.u_x_3_1}]
+$i setOrient R0; $i setLocation [expr {round(2319.84 * $dbu)}] [expr {round(1797.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_xstnw at 2319.84 1797.12 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_xstn {u_fab.u_x_0_2}]
+$i setOrient R0; $i setLocation [expr {round(4.32 * $dbu)}] [expr {round(3093.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_xstn at 4.32 3093.12 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_xstnw {u_fab.u_x_1_2}]
+$i setOrient R0; $i setLocation [expr {round(1114.56 * $dbu)}] [expr {round(3093.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_xstnw at 1114.56 3093.12 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_xstn {u_fab.u_x_2_2}]
+$i setOrient R0; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(3093.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_xstn at 1209.6 3093.12 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_xstnw {u_fab.u_x_3_2}]
+$i setOrient R0; $i setLocation [expr {round(2319.84 * $dbu)}] [expr {round(3093.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_xstnw at 2319.84 3093.12 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_xstn {u_fab.u_x_0_3}]
+$i setOrient R0; $i setLocation [expr {round(4.32 * $dbu)}] [expr {round(4389.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_xstn at 4.32 4389.12 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_xstnw {u_fab.u_x_1_3}]
+$i setOrient R0; $i setLocation [expr {round(1114.56 * $dbu)}] [expr {round(4389.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_xstnw at 1114.56 4389.12 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_xstn {u_fab.u_x_2_3}]
+$i setOrient R0; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(4389.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_xstn at 1209.6 4389.12 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_xstnw {u_fab.u_x_3_3}]
+$i setOrient R0; $i setLocation [expr {round(2319.84 * $dbu)}] [expr {round(4389.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_xstnw at 2319.84 4389.12 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn0_entry}]
+$i setOrient R0; $i setLocation [expr {round(4.32 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 4.32 25.92 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn1_entry}]
+$i setOrient R0; $i setLocation [expr {round(1114.56 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1114.56 25.92 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn2_entry}]
+$i setOrient R0; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1209.6 25.92 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn3_entry}]
+$i setOrient R0; $i setLocation [expr {round(2319.84 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 2319.84 25.92 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_rs_1}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 25.92 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_ft_15}]
+$i setOrient MX; $i setLocation [expr {round(1157.76 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1157.76 25.92 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn1_rly0}]
+$i setOrient R0; $i setLocation [expr {round(1114.56 * $dbu)}] [expr {round(250.56 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1114.56 250.56 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn0_rly0}]
+$i setOrient R0; $i setLocation [expr {round(4.32 * $dbu)}] [expr {round(276.48 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 4.32 276.48 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn3_rly0}]
+$i setOrient R0; $i setLocation [expr {round(2319.84 * $dbu)}] [expr {round(276.48 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 2319.84 276.48 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_rs_0}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(293.76 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 293.76 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn2_rly0}]
+$i setOrient R0; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(302.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1209.6 302.4 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0a_15}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(354.24 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 354.24 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_ft_14}]
+$i setOrient MX; $i setLocation [expr {round(1157.76 * $dbu)}] [expr {round(406.08 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1157.76 406.08 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0b_6}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(578.88 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 578.88 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0a_14}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(622.08 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 622.08 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_2_0a_0}]
+$i setOrient R0; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(665.28 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 665.28 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_2_1a_0}]
+$i setOrient R0; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(639.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 639.36 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn1_rly1}]
+$i setOrient R0; $i setLocation [expr {round(1114.56 * $dbu)}] [expr {round(794.88 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1114.56 794.88 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_ft_13}]
+$i setOrient MX; $i setLocation [expr {round(1157.76 * $dbu)}] [expr {round(794.88 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1157.76 794.88 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn0_rly1}]
+$i setOrient R0; $i setLocation [expr {round(4.32 * $dbu)}] [expr {round(855.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 4.32 855.36 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn3_rly1}]
+$i setOrient R0; $i setLocation [expr {round(2319.84 * $dbu)}] [expr {round(855.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 2319.84 855.36 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0a_13}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(855.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 855.36 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_2_0a_1}]
+$i setOrient R0; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(898.56 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 898.56 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_2_1a_1}]
+$i setOrient R0; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(864.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 864.0 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn2_rly1}]
+$i setOrient R0; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(907.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1209.6 907.2 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0b_5}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(941.76 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 941.76 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_2_0a_2}]
+$i setOrient R0; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(1088.64 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 1088.64 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_2_1a_2}]
+$i setOrient R0; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(1088.64 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 1088.64 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0a_12}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(1131.84 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 1131.84 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn1_rly2}]
+$i setOrient R0; $i setLocation [expr {round(1114.56 * $dbu)}] [expr {round(1123.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1114.56 1123.2 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn0_rly2}]
+$i setOrient R0; $i setLocation [expr {round(4.32 * $dbu)}] [expr {round(1175.04 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 4.32 1175.04 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn3_rly2}]
+$i setOrient R0; $i setLocation [expr {round(2319.84 * $dbu)}] [expr {round(1175.04 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 2319.84 1175.04 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_ft_12}]
+$i setOrient MX; $i setLocation [expr {round(1157.76 * $dbu)}] [expr {round(1175.04 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1157.76 1175.04 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn2_rly2}]
+$i setOrient R0; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(1235.52 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1209.6 1235.52 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0a_7}]
+$i setOrient MX; $i setLocation [expr {round(1615.68 * $dbu)}] [expr {round(1296.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1615.68 1296.0 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0a_8}]
+$i setOrient R0; $i setLocation [expr {round(1365.12 * $dbu)}] [expr {round(1296.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1365.12 1296.0 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0a_9}]
+$i setOrient R0; $i setLocation [expr {round(1114.56 * $dbu)}] [expr {round(1296.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1114.56 1296.0 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0a_10}]
+$i setOrient R0; $i setLocation [expr {round(864.0 * $dbu)}] [expr {round(1296.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 864.0 1296.0 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0a_11}]
+$i setOrient MX; $i setLocation [expr {round(604.8 * $dbu)}] [expr {round(1296.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 604.8 1296.0 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0b_4}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(1313.28 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 1313.28 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_2_0a_3}]
+$i setOrient R0; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(1356.48 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 1356.48 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_2_1a_3}]
+$i setOrient R0; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(1321.92 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 1321.92 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0a_6}]
+$i setOrient MX; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(1399.68 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 1399.68 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn1_rly3}]
+$i setOrient R0; $i setLocation [expr {round(1114.56 * $dbu)}] [expr {round(1442.88 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1114.56 1442.88 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn0_rly3}]
+$i setOrient R0; $i setLocation [expr {round(4.32 * $dbu)}] [expr {round(1503.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 4.32 1503.36 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn3_rly3}]
+$i setOrient R0; $i setLocation [expr {round(2319.84 * $dbu)}] [expr {round(1503.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 2319.84 1503.36 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn2_rly3}]
+$i setOrient R0; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(1555.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1209.6 1555.2 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_ft_11}]
+$i setOrient MX; $i setLocation [expr {round(1157.76 * $dbu)}] [expr {round(1555.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1157.76 1555.2 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0a_5}]
+$i setOrient MX; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(1650.24 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 1650.24 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0b_3}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(1676.16 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 1676.16 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_0b_0}]
+$i setOrient R0; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(1883.52 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 1883.52 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0a_4}]
+$i setOrient MX; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(1926.72 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 1926.72 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_ft_10}]
+$i setOrient MX; $i setLocation [expr {round(1157.76 * $dbu)}] [expr {round(1944.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1157.76 1944.0 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_0a_0}]
+$i setOrient R0; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(2039.04 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 2039.04 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0b_2}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(2082.24 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 2082.24 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_0b_1}]
+$i setOrient R0; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(2056.32 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 2056.32 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn1_rly4}]
+$i setOrient R0; $i setLocation [expr {round(1114.56 * $dbu)}] [expr {round(2090.88 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1114.56 2090.88 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn0_rly4}]
+$i setOrient R0; $i setLocation [expr {round(4.32 * $dbu)}] [expr {round(2151.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 4.32 2151.36 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn3_rly4}]
+$i setOrient R0; $i setLocation [expr {round(2319.84 * $dbu)}] [expr {round(2151.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 2319.84 2151.36 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0a_3}]
+$i setOrient MX; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(2151.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 2151.36 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn2_rly4}]
+$i setOrient R0; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(2203.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1209.6 2203.2 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_0b_2}]
+$i setOrient R0; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(2237.76 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 2237.76 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_ft_9}]
+$i setOrient MX; $i setLocation [expr {round(1157.76 * $dbu)}] [expr {round(2324.16 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1157.76 2324.16 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_0a_1}]
+$i setOrient R0; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(2376.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 2376.0 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0a_2}]
+$i setOrient MX; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(2393.28 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 2393.28 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_0b_3}]
+$i setOrient R0; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(2436.48 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 2436.48 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0b_1}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(2419.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 2419.2 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn1_rly5}]
+$i setOrient R0; $i setLocation [expr {round(1114.56 * $dbu)}] [expr {round(2419.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1114.56 2419.2 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn0_rly5}]
+$i setOrient R0; $i setLocation [expr {round(4.32 * $dbu)}] [expr {round(2471.04 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 4.32 2471.04 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn3_rly5}]
+$i setOrient R0; $i setLocation [expr {round(2319.84 * $dbu)}] [expr {round(2471.04 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 2319.84 2471.04 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn2_rly5}]
+$i setOrient R0; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(2531.52 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1209.6 2531.52 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_0a_2}]
+$i setOrient MX; $i setLocation [expr {round(673.92 * $dbu)}] [expr {round(2592.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 673.92 2592.0 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_0a_3}]
+$i setOrient R0; $i setLocation [expr {round(1010.88 * $dbu)}] [expr {round(2592.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1010.88 2592.0 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_0a_4}]
+$i setOrient MX; $i setLocation [expr {round(1347.84 * $dbu)}] [expr {round(2592.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1347.84 2592.0 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_0a_5}]
+$i setOrient R0; $i setLocation [expr {round(1676.16 * $dbu)}] [expr {round(2592.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1676.16 2592.0 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_0b_4}]
+$i setOrient R0; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(2592.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 2592.0 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0a_1}]
+$i setOrient MX; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(2643.84 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 2643.84 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_ft_8}]
+$i setOrient MX; $i setLocation [expr {round(1157.76 * $dbu)}] [expr {round(2704.32 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1157.76 2704.32 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn1_rly6}]
+$i setOrient R0; $i setLocation [expr {round(1114.56 * $dbu)}] [expr {round(2738.88 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1114.56 2738.88 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_0b_5}]
+$i setOrient R0; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(2764.8 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 2764.8 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0b_0}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(2782.08 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 2782.08 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn0_rly6}]
+$i setOrient R0; $i setLocation [expr {round(4.32 * $dbu)}] [expr {round(2799.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 4.32 2799.36 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn3_rly6}]
+$i setOrient R0; $i setLocation [expr {round(2319.84 * $dbu)}] [expr {round(2799.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 2319.84 2799.36 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn2_rly6}]
+$i setOrient R0; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(2851.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1209.6 2851.2 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_4_0a_0}]
+$i setOrient MX; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(2894.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 2894.4 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_1a_6}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(2920.32 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 2920.32 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_ft_7}]
+$i setOrient MX; $i setLocation [expr {round(1157.76 * $dbu)}] [expr {round(3093.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1157.76 3093.12 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_1a_5}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(3136.32 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 3136.32 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_1b_6}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(3179.52 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 3179.52 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_2_2a_0}]
+$i setOrient R0; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(3231.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 3231.36 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_2_3a_0}]
+$i setOrient R0; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(3231.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 3231.36 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_1a_4}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(3352.32 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 3352.32 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn1_rly7}]
+$i setOrient R0; $i setLocation [expr {round(1114.56 * $dbu)}] [expr {round(3386.88 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1114.56 3386.88 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn0_rly7}]
+$i setOrient R0; $i setLocation [expr {round(4.32 * $dbu)}] [expr {round(3447.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 4.32 3447.36 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn3_rly7}]
+$i setOrient R0; $i setLocation [expr {round(2319.84 * $dbu)}] [expr {round(3447.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 2319.84 3447.36 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_2_2a_1}]
+$i setOrient R0; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(3456.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 3456.0 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_2_3a_1}]
+$i setOrient R0; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(3456.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 3456.0 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_ft_6}]
+$i setOrient MX; $i setLocation [expr {round(1157.76 * $dbu)}] [expr {round(3473.28 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1157.76 3473.28 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn2_rly7}]
+$i setOrient R0; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(3499.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1209.6 3499.2 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_1b_5}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(3516.48 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 3516.48 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_1a_3}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(3568.32 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 3568.32 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_2_2a_2}]
+$i setOrient R0; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(3680.64 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 3680.64 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_2_3a_2}]
+$i setOrient R0; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(3680.64 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 3680.64 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn1_rly8}]
+$i setOrient R0; $i setLocation [expr {round(1114.56 * $dbu)}] [expr {round(3715.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1114.56 3715.2 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn0_rly8}]
+$i setOrient R0; $i setLocation [expr {round(4.32 * $dbu)}] [expr {round(3767.04 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 4.32 3767.04 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn3_rly8}]
+$i setOrient R0; $i setLocation [expr {round(2319.84 * $dbu)}] [expr {round(3767.04 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 2319.84 3767.04 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_1a_2}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(3792.96 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 3792.96 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn2_rly8}]
+$i setOrient R0; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(3827.52 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1209.6 3827.52 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_ft_5}]
+$i setOrient MX; $i setLocation [expr {round(1157.76 * $dbu)}] [expr {round(3853.44 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1157.76 3853.44 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_1b_4}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(3870.72 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 3870.72 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_1b_1}]
+$i setOrient MX; $i setLocation [expr {round(1607.04 * $dbu)}] [expr {round(3888.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1607.04 3888.0 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_1b_2}]
+$i setOrient R0; $i setLocation [expr {round(1244.16 * $dbu)}] [expr {round(3888.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1244.16 3888.0 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_1b_3}]
+$i setOrient MX; $i setLocation [expr {round(889.92 * $dbu)}] [expr {round(3888.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 889.92 3888.0 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_2_2a_3}]
+$i setOrient R0; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(3913.92 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 3913.92 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_2_3a_3}]
+$i setOrient R0; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(3913.92 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 3913.92 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_1a_1}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(4008.96 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 4008.96 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn1_rly9}]
+$i setOrient R0; $i setLocation [expr {round(1114.56 * $dbu)}] [expr {round(4034.88 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1114.56 4034.88 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_1b_0}]
+$i setOrient MX; $i setLocation [expr {round(1762.56 * $dbu)}] [expr {round(4086.72 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1762.56 4086.72 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn0_rly9}]
+$i setOrient R0; $i setLocation [expr {round(4.32 * $dbu)}] [expr {round(4095.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 4.32 4095.36 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn3_rly9}]
+$i setOrient R0; $i setLocation [expr {round(2319.84 * $dbu)}] [expr {round(4095.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 2319.84 4095.36 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn2_rly9}]
+$i setOrient R0; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(4147.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1209.6 4147.2 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_leg_3_1a_0}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(4224.96 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 4224.96 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_ft_4}]
+$i setOrient MX; $i setLocation [expr {round(1157.76 * $dbu)}] [expr {round(4242.24 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1157.76 4242.24 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_ft_3}]
+$i setOrient MX; $i setLocation [expr {round(1157.76 * $dbu)}] [expr {round(4622.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1157.76 4622.4 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn1_rly10}]
+$i setOrient R0; $i setLocation [expr {round(1114.56 * $dbu)}] [expr {round(4760.64 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1114.56 4760.64 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn0_rly10}]
+$i setOrient R0; $i setLocation [expr {round(4.32 * $dbu)}] [expr {round(4795.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 4.32 4795.2 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn3_rly10}]
+$i setOrient R0; $i setLocation [expr {round(2319.84 * $dbu)}] [expr {round(4795.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 2319.84 4795.2 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn2_rly10}]
+$i setOrient R0; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(4821.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1209.6 4821.12 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_ft_2}]
+$i setOrient MX; $i setLocation [expr {round(1157.76 * $dbu)}] [expr {round(5002.56 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 1157.76 5002.56 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn0_exit}]
+$i setOrient R0; $i setLocation [expr {round(4.32 * $dbu)}] [expr {round(5166.72 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 4.32 5166.72 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn1_exit}]
+$i setOrient R0; $i setLocation [expr {round(1114.56 * $dbu)}] [expr {round(5166.72 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1114.56 5166.72 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn2_exit}]
+$i setOrient R0; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(5166.72 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 1209.6 5166.72 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn516 {u_fab.u_dn3_exit}]
+$i setOrient R0; $i setLocation [expr {round(2319.84 * $dbu)}] [expr {round(5166.72 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn516 at 2319.84 5166.72 R0"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_ft_0}]
+$i setOrient MX; $i setLocation [expr {round(552.96 * $dbu)}] [expr {round(5166.72 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 552.96 5166.72 MX"
+set i [ot_ref_pick $ot_ref_by qfd_c_stn514 {u_fab.u_ft_1}]
+$i setOrient R0; $i setLocation [expr {round(941.76 * $dbu)}] [expr {round(5166.72 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qfd_c_stn514 at 941.76 5166.72 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
-if {$nb != 16} { error "ref_tile place: expected 16 macros, netlist has $nb" }
+if {$nb != 167} { error "ref_tile place: expected 167 macros, netlist has $nb" }
