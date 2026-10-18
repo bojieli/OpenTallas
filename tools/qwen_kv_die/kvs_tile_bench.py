@@ -58,6 +58,12 @@ def mutate(txt, mut):
                 w = int(s.group(2)) - int(s.group(3)) + 1
                 lines[i] = ln.replace(s.group(0), f"{{{w}{{1'b0}}}}", 1)
                 return '\n'.join(lines), None, f'dropped {s.group(0)} in assign {m.group(1)}'
+        wd = dict((n, int(w) + 1) for w, n in re.findall(r'wire \[(\d+):0\] (w_\w+);', txt))
+        for i, ln in enumerate(lines):         # KV-INTEG2: a whole child-output wire on a tile output (no slice)
+            m = re.match(r'\s*assign (\w+) = (w_\w+);$', ln)
+            if m and m.group(2) in wd:
+                lines[i] = ln.replace(f'= {m.group(2)};', f"= {{{wd[m.group(2)]}{{1'b0}}}};", 1)
+                return '\n'.join(lines), None, f'dropped {m.group(2)} in assign {m.group(1)}'
     if mut == 2:
         for i, ln in enumerate(lines):
             m = re.match(r'(\s*\w+(?: #\(.*?\))? u_\w+ \()(.*)(\);)$', ln)
@@ -168,7 +174,13 @@ def main():
     L.append('  end')
     L.append('endmodule')
     (out / 'tb.sv').write_text('\n'.join(L) + '\n')
-    srcs = sorted(set(old['src']) | set(new['src']))
+    # KV-INTEG2: the explicit module closure of the tile (kvs_tile_kits_rep.tile_sources: SRAM models, modules defined in a
+    # file of another name), plus kv_static_die.sources(); the generated tile file itself is replaced by tiles.sv
+    code = ('import sys, json; sys.path.insert(0, %r); import kv_static_die as S; import kvs_tile_kits_rep as R; '
+            'print(json.dumps(R.tile_sources(S, %r, "sim")[0]))') % (str(HERE), t)
+    cl = json.loads(subprocess.check_output([sys.executable, '-c', code], cwd=ROOT,
+                                            env=dict(os.environ, OT_KV_STATIC_DIE='1', OT_KV_TILE_KITS='1')))
+    srcs = sorted((set(old['src']) | set(new['src']) | set(cl)) - {old['rtl'], new['rtl']})
     cmd = ['iverilog', '-g2012', '-o', str(out / 'sim'), '-s', 'tb_kvs_tile', str(out / 'tb.sv'), str(out / 'tiles.sv')] + \
         [s for s in srcs] + ['-Y', '.sv'] + [x for d in sorted({str(Path(s).parent) for s in srcs}) for x in ('-y', d)]
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
