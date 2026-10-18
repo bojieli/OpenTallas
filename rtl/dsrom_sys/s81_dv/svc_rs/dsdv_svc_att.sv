@@ -44,12 +44,16 @@
 // not take (fault 21) is a sticky fault.  The 4 owner slices drain their 8 P.V beats (5 words each) in 40 consecutive
 // cycles from PVO + pvs (rs_pvslot: owner k's window on the half's P.V return tree); a beat not produced by its slot is
 // fault 19.  pvs puts the 4 owners of a quarter in disjoint windows at the entry's pv pins (no arbitration).
-// SVC-PV (10-18): the P.V buffer pvq holds ALL 8 beats of a job (PV_CRED 8 = 8 beats x PVB bits).  The engine emits
+// SVC-PV (10-18): the P.V buffer pvq holds ALL 8 beats of a job (PVQ 8 = 8 beats x PVB bits).  The engine emits
 // the 8 final-block beats as one 8-cycle burst; with 4 entries its pv_cr credit loop (~45 cycles) left a gap inside
 // the 40-cycle drain window (fault 19, then the pointer wrap gave fault 15) and no p-feed offset can fix that
 // (tb_dsdv_svc_pvdrain: depth 4 fails at every drain distance and T).  With 8 entries the credit never binds (the same
 // probe passes with pv_cr never returned): the drain is purely static.  Compiler rule (tb_dsdv_svc_rs build_frames):
 // PVO >= PO + 8 ceil(T / 32) + 55 (probe minimum 53 + 8 ceil(T / 32), every owner's slot pvs >= 0 on top).
+// SVC-PV2 (10-18, owner rule: no runtime credit on ROM production paths): the P.V credit is REMOVED.  The engine runs
+// with PV_CRED 0 (final-block p.v issue never waits on a credit, no pv_cr); pvq (PVQ 8) is sized by the compiler for
+// one job's 8 beats and only the static checks remain: fault 15 = pvq overflow (a 9th beat before the drain popped),
+// fault 19 = underflow (the drain slot finds no beat).
 // MUT (bench negative controls): 1 = window scale byte of the neighbouring slot, 2 = ROWS half of the other tile of
 // the pair, 3 = q chunk of the neighbouring tile.
 // ---------------------------------------------------------------------------------------------------------------------
@@ -59,7 +63,7 @@ module dsdv_svc_att #(
     parameter integer ST = 0,
     parameter integer PFIFO = 512,
     parameter integer SC_CRED = 8,
-    parameter integer PV_CRED = 8,                // = the beats of one job: the P.V credit never binds (static drain)
+    parameter integer PVQ = 8,                    // P.V buffer = the beats of one job (static drain, no credit)
     parameter integer DQ = 8,
     parameter bit SRAM_MACRO = 0
 ) (
@@ -313,7 +317,7 @@ module dsdv_svc_att #(
     // ------------------------------------------------------------------ engine (unchanged, D = 32: S = 1, LS = 0)
     wire sc_v; wire [15:0] sc_row; wire [NL-1:0] sc_m; wire [NL*H*32-1:0] sc_y; wire [NL*H-1:0] sc_f;
     wire pv_v; wire [7:0] pv_c; wire [NT*H*32-1:0] pv_y; wire [NT*H-1:0] pv_f;
-    reg sc_cr, pv_cr;
+    reg sc_cr;
 `ifdef SVCQ_ENG_FG3
     localparam integer E_FPL = 3, E_FML = 3, E_TS = 0, E_NAR = 0, E_MF = 0, E_TRX = 0, E_F12 = 0, E_FX = 0;
 `else
@@ -322,21 +326,21 @@ module dsdv_svc_att #(
     ot_hdc_v41x_attn_s #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TR), .SRAM_MACRO(SRAM_MACRO), .PWORDS(2),
                          .ILV(1), .REPL(2), .NSTAGE(2), .FPL(E_FPL), .FML(E_FML), .NBANKP(0), .TILE_S(E_TS),
                          .NARROW(E_NAR), .MFAN(E_MF), .TRX(E_TRX), .F12(E_F12), .FPLX(E_FX),
-                         .SC_CRED(SC_CRED), .PV_CRED(PV_CRED)) u_eng (
+                         .SC_CRED(SC_CRED), .PV_CRED(0)) u_eng (
         .clk(clk), .rst_n(rst_n), .job_v(ej_v), .job_t({6'd0, tjob}), .job_ready(ej_ready),
         .q_v(eq_v), .q_w(eq_w), .q_ready(eq_ready),
         .kv_v(ekv_v), .kv_m(ekv_m), .kv_w(ekv_w), .kv_ready(kv_ready),
         .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(sc_cr),
         .p_v(ep_v), .p_w(ep_w), .p_ready(ep_ready),
-        .pv_v(pv_v), .pv_c(pv_c), .pv_y(pv_y), .pv_f(pv_f), .pv_cr(pv_cr),
+        .pv_v(pv_v), .pv_c(pv_c), .pv_y(pv_y), .pv_f(pv_f), .pv_cr(1'b0),
         .qk_iss(), .pv_iss());
     assign l_v = sc_v;
     assign l_d = {sc_row, sc_m, sc_y, sc_f};
 
     // ------------------------------------------------------------------ P.V words (owner slices)
     localparam integer PVB = 8 + NT*H*32 + NT*H;
-    localparam integer PA = $clog2(PV_CRED);
-    reg [PVB-1:0] pvq [0:PV_CRED-1];
+    localparam integer PA = $clog2(PVQ);
+    reg [PVB-1:0] pvq [0:PVQ-1];
     reg [PA:0] pvw, pvr;
     reg [2:0] p_i;
     reg [3:0] pv_n;
@@ -396,7 +400,7 @@ module dsdv_svc_att #(
             sw_w <= 0; sw_r <= 0; sw_i <= 0; sel_held <= 0; pres <= 0; spres <= 0; q_have <= 0;
             job_open <= 0; job_active <= 0; go_arm <= 0; go_cnt <= 0; go <= 0; run <= 0; rc <= 0;
             po <= 0; pvo <= 0; jc <= 0; dr_arm <= 0; dr_on <= 0; dbeat <= 0;
-            ej_v <= 0; eq_v <= 0; ekv_v <= 0; pw <= 0; pr <= 0; p_left <= 0; sc_cr <= 0; pv_cr <= 0;
+            ej_v <= 0; eq_v <= 0; ekv_v <= 0; pw <= 0; pr <= 0; p_left <= 0; sc_cr <= 0;
             pvw <= 0; pvr <= 0; p_i <= 0; pv_n <= 0; pv_ov <= 0; done <= 0; go_o <= 0;
             hcr <= 0; hack <= 0; iss_host <= 0; fc <= 0;
             sm_st <= 0; sm_rv <= 0; sm_rp <= 0; sm_rj <= 0; sm_kind <= 0; sm_jid <= 0; sm_rd <= 0;
@@ -504,13 +508,13 @@ module dsdv_svc_att #(
             // ---- scores: straight to the score exchange, engine credit back the next cycle
             sc_cr <= sc_v;
             // ---- P.V words: owner slices emit 5 words a beat (valid-only, never stalled)
-            pv_cr <= 1'b0; pv_ov <= 1'b0;
+            pv_ov <= 1'b0;
             if (pv_v) begin
                 pv_n <= pv_n + 1'b1;
                 if (pv_n == 4'd7) begin job_active <= 1'b0; job_open <= 1'b0; done <= !pvown; end   // owners: at drain end
             end
             if (pvown) begin
-                if (pv_v) begin pvw <= pvw + 1'b1; if ((PA+1)'(pvw - pvr) >= (PA+1)'(PV_CRED)) fc[15] <= 1'b1; end
+                if (pv_v) begin pvw <= pvw + 1'b1; if ((PA+1)'(pvw - pvr) >= (PA+1)'(PVQ)) fc[15] <= 1'b1; end
                 // compiled drain window: 8 beats x 5 words from PVO + pvs, back to back
                 if (dr_arm && !go && jc == pvo + 16'(pvs)) begin dr_arm <= 1'b0; dr_on <= 1'b1; p_i <= 0; dbeat <= 0; end
                 if (dr_on) begin
@@ -518,11 +522,11 @@ module dsdv_svc_att #(
                     if (p_i == 3'd0 && pvw == pvr) fc[19] <= 1'b1;            // the beat is not produced at its slot
                     p_i <= (p_i == 3'd4) ? 3'd0 : p_i + 1'b1;
                     if (p_i == 3'd4) begin
-                        pvr <= pvr + 1'b1; pv_cr <= 1'b1; dbeat <= dbeat + 1'b1;
+                        pvr <= pvr + 1'b1; dbeat <= dbeat + 1'b1;
                         if (dbeat == 3'd7) begin dr_on <= 1'b0; done <= 1'b1; end
                     end
                 end
-            end else pv_cr <= pv_v;
+            end
             // ---- SMJ frames -> SM head
             sm_st <= 1'b0; sm_rv <= 1'b0;
             if (hdr_mine && h_type == 4'd9) begin
