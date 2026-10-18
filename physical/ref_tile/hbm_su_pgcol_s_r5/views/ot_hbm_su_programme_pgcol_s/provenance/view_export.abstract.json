@@ -1,0 +1,195 @@
+{
+  "name": "ot_hbm_su_programme_pgcol_s",
+  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/routes/hbm_su_pgcol_s_r5_r5_9e33ce295/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -8.01820831952682e-11 min 3.136471637965599e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/routes/hbm_su_pgcol_s_r5_r5_9e33ce295/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/record/views/ot_hbm_su_programme_pgcol_s:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/src/physical/ref_tile/hbm_su_pgcol_s_r5/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/routes/hbm_su_pgcol_s_r5_r5_9e33ce295/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.879071342969496e-10 min 9.9989183599547e-12",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/routes/hbm_su_pgcol_s_r5_r5_9e33ce295/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/record/views/ot_hbm_su_programme_pgcol_s:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/src/physical/ref_tile/hbm_su_pgcol_s_r5/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/routes/hbm_su_pgcol_s_r5_r5_9e33ce295/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 8.228057124526345e-11 min 2.7275709468810305e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/routes/hbm_su_pgcol_s_r5_r5_9e33ce295/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/record/views/ot_hbm_su_programme_pgcol_s:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/src/physical/ref_tile/hbm_su_pgcol_s_r5/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/routes/hbm_su_pgcol_s_r5_r5_9e33ce295/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/src/physical/ref_tile/hbm_su_pgcol_s_r5/signoff.sdc",
+    "sha256": "b9b531d4d37ad92ac673f79a9d7475d684aec817d94f0aa27c92332c56240df1",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/cl/routed_ioref.a1.json",
+    "sha256": "14900f54eee3c9e7d25dc3a5205b1f185768c8346f3433811343d40b13e62a0e",
+    "expect_ps": {
+      "tt": 82.28,
+      "ff": 10.0
+    },
+    "tol_ps": 0.05,
+    "work": "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/routes/hbm_su_pgcol_s_r5_r5_9e33ce295/work/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/work/results/asap7/opentallas_ot_hbm_su_programme_pgcol_s_asap7_ref_hbm_su_pgcol_s_r5_r5_9e33ce295/base/6_final.odb": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/routes/hbm_su_pgcol_s_r5_r5_9e33ce295/work/orfs/results/asap7/opentallas_ot_hbm_su_programme_pgcol_s_asap7_ref_hbm_su_pgcol_s_r5_r5_9e33ce295/base/6_final.odb",
+        "sha256": "6a6ac414a07befd396aaa68f53e3ffe847115987bba270946178308e821dd2e9"
+      },
+      "/work/results/asap7/opentallas_ot_hbm_su_programme_pgcol_s_asap7_ref_hbm_su_pgcol_s_r5_r5_9e33ce295/base/6_final.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/routes/hbm_su_pgcol_s_r5_r5_9e33ce295/work/orfs/results/asap7/opentallas_ot_hbm_su_programme_pgcol_s_asap7_ref_hbm_su_pgcol_s_r5_r5_9e33ce295/base/6_final.sdc",
+        "sha256": "88a98b98ee7d8238b38a8c1d7055500931b94c8feac4e8c015e419459c3f31bf"
+      },
+      "/work/results/asap7/opentallas_ot_hbm_su_programme_pgcol_s_asap7_ref_hbm_su_pgcol_s_r5_r5_9e33ce295/base/6_final.spef": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/routes/hbm_su_pgcol_s_r5_r5_9e33ce295/work/orfs/results/asap7/opentallas_ot_hbm_su_programme_pgcol_s_asap7_ref_hbm_su_pgcol_s_r5_r5_9e33ce295/base/6_final.spef",
+        "sha256": "489ed360124407e94b0287ba82a24fdd06951b3b4a6d3e0fd941f4d44a2876e7"
+      },
+      "/work/w18_extra.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/routes/hbm_su_pgcol_s_r5_r5_9e33ce295/work/orfs/w18_extra.sdc",
+        "sha256": "b9b531d4d37ad92ac673f79a9d7475d684aec817d94f0aa27c92332c56240df1"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 9.9989183599547,
+        "verdict_ps": 10.0,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 82.28057124526345,
+        "verdict_ps": 82.28,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_ot_hbm_su_programme_pgcol_s_asap7_ref_hbm_su_pgcol_s_r5_r5_9e33ce295/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_ot_hbm_su_programme_pgcol_s_asap7_ref_hbm_su_pgcol_s_r5_r5_9e33ce295/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_hbm_su_programme_pgcol_s_asap7_ref_hbm_su_pgcol_s_r5_r5_9e33ce295/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_ot_hbm_su_programme_pgcol_s_asap7_ref_hbm_su_pgcol_s_r5_r5_9e33ce295/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_ot_hbm_su_programme_pgcol_s_asap7_ref_hbm_su_pgcol_s_r5_r5_9e33ce295/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_hbm_su_programme_pgcol_s_asap7_ref_hbm_su_pgcol_s_r5_r5_9e33ce295/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_ot_hbm_su_programme_pgcol_s_asap7_ref_hbm_su_pgcol_s_r5_r5_9e33ce295/base/6_final.odb",
+        "set ::ot_ce_corner tt",
+        "read_sdc /work/results/asap7/opentallas_ot_hbm_su_programme_pgcol_s_asap7_ref_hbm_su_pgcol_s_r5_r5_9e33ce295/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_hbm_su_programme_pgcol_s_asap7_ref_hbm_su_pgcol_s_r5_r5_9e33ce295/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [
+    "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgcol_s_r5-r5-9e33ce295/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "files": {
+    "ot_hbm_su_programme_pgcol_s.lef": "5da10b7ea08829b8a86e7286b111159997d5e95f2aa2903e2ba9415d9d94b46c",
+    "ot_hbm_su_programme_pgcol_s_ff.lib": "d723371d25a6283ad7aa7b5b10ece298466b98766c90dbd204132487137a4d07",
+    "ot_hbm_su_programme_pgcol_s_ss.lib": "d505abb6305bc9e078a0fbb89a97cb0a09cf45e63ad102598a43902cb73bc2cd",
+    "ot_hbm_su_programme_pgcol_s_tt.lib": "a7d30609cd25ec441445874b65673c84465fb0d5789ca1b707e8791b8e4dd167"
+  },
+  "ok": true,
+  "checked": true
+}
