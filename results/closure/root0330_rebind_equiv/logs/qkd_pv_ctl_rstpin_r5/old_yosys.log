@@ -1,0 +1,403 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/out_old/script.ys' --
+
+1. Executing Verilog-2005 frontend: /tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_qwen_tp8_pv_wide_pair'.
+Storing AST representation for module `$abstract\ot_qwen_tp8_pv_col'.
+Storing AST representation for module `$abstract\ot_qwen_tp8_pv_slice_t'.
+Storing AST representation for module `$abstract\ot_qwen_tp8_pv_join_t'.
+Storing AST representation for module `$abstract\ot_qwen_tp8_pv_wide_ctl'.
+Storing AST representation for module `$abstract\ot_qwen_tp8_vrow_wide'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/old/ot_hbm_svc_wb_cutthrough_cdc.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/old/ot_hbm_svc_wb_cutthrough_cdc.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hbm_svc_wb_cutthrough_cdc'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \FIRST_INPUT_AGE = 20
+Parameter \RESET_PIN = 1
+
+4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_tp8_pv_wide_ctl'.
+Parameter \FIRST_INPUT_AGE = 20
+Parameter \RESET_PIN = 1
+Generating RTLIL representation for module `$paramod$97ee60cd9f703be3f4dd8f3deecec9f18aec62eb\ot_qwen_tp8_pv_wide_ctl'.
+Warning: Replacing memory \pexp_t with list of registers. See /tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:258
+
+4.1. Analyzing design hierarchy..
+Top module:  \ot_qwen_tp8_pv_wide_ctl
+
+4.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_tp8_vrow_wide'.
+Generating RTLIL representation for module `\ot_qwen_tp8_vrow_wide'.
+
+4.3. Analyzing design hierarchy..
+Top module:  \ot_qwen_tp8_pv_wide_ctl
+Used module:     \ot_qwen_tp8_vrow_wide
+
+4.4. Analyzing design hierarchy..
+Top module:  \ot_qwen_tp8_pv_wide_ctl
+Used module:     \ot_qwen_tp8_vrow_wide
+Removing unused module `$paramod$97ee60cd9f703be3f4dd8f3deecec9f18aec62eb\ot_qwen_tp8_pv_wide_ctl'.
+Removing unused module `$abstract\ot_hbm_svc_wb_cutthrough_cdc'.
+Removing unused module `$abstract\ot_qwen_tp8_vrow_wide'.
+Removing unused module `$abstract\ot_qwen_tp8_pv_wide_ctl'.
+Removing unused module `$abstract\ot_qwen_tp8_pv_join_t'.
+Removing unused module `$abstract\ot_qwen_tp8_pv_slice_t'.
+Removing unused module `$abstract\ot_qwen_tp8_pv_col'.
+Removing unused module `$abstract\ot_qwen_tp8_pv_wide_pair'.
+Removed 8 unused modules.
+
+2 modules:
+  ot_qwen_tp8_pv_wide_ctl
+  ot_qwen_tp8_vrow_wide
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 3 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:356$508 in module ot_qwen_tp8_vrow_wide.
+Marked 9 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:347$361 in module ot_qwen_tp8_vrow_wide.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:239$16 in module ot_qwen_tp8_pv_wide_ctl.
+Marked 16 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:256$35 in module ot_qwen_tp8_pv_wide_ctl.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:276$244 in module ot_qwen_tp8_pv_wide_ctl.
+Marked 12 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:280$250 in module ot_qwen_tp8_pv_wide_ctl.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:290$293 in module ot_qwen_tp8_pv_wide_ctl.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:301$314 in module ot_qwen_tp8_pv_wide_ctl.
+Marked 5 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:307$322 in module ot_qwen_tp8_pv_wide_ctl.
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 10 redundant assignments.
+Promoted 43 assignments to connections.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_qwen_tp8_vrow_wide.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:356$508'.
+Found async reset \local_rst_n in `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:239$16'.
+Found async reset \local_rst_n in `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:276$244'.
+Found async reset \local_rst_n in `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:290$293'.
+Found async reset \local_rst_n in `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:301$314'.
+Found async reset \local_rst_n in `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:307$322'.
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~52 debug messages>
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_qwen_tp8_vrow_wide.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:356$508'.
+     1/5: $0\q[15:0]
+     2/5: $0\active[0:0]
+     3/5: $0\nq[15:0]
+     4/5: $0\lim[13:0]
+     5/5: $0\fault[0:0]
+Creating decoders for process `\ot_qwen_tp8_vrow_wide.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:347$361'.
+     1/36: $1\req_t[111:0] [111:98]
+     2/36: $9\req_valid[7:7]
+     3/36: $8\req_t[97:84]
+     4/36: $8\req_valid[6:6]
+     5/36: $7\req_t[83:70]
+     6/36: $7\req_valid[5:5]
+     7/36: $6\req_t[69:56]
+     8/36: $6\req_valid[4:4]
+     9/36: $5\req_t[55:42]
+    10/36: $5\req_valid[3:3]
+    11/36: $4\req_t[41:28]
+    12/36: $4\req_valid[2:2]
+    13/36: $3\req_t[27:14]
+    14/36: $3\req_valid[1:1]
+    15/36: $2\req_t[13:0]
+    16/36: $2\req_valid[0:0]
+    17/36: $1\wp[31:0]
+    18/36: $1\req_t[111:0] [97:84]
+    19/36: $1\req_valid[7:0] [6]
+    20/36: $1\wt[31:0]
+    21/36: $1\wn[31:0]
+    22/36: $1\l[31:0]
+    23/36: $1\req_t[111:0] [83:70]
+    24/36: $1\req_valid[7:0] [5]
+    25/36: $1\req_t[111:0] [69:56]
+    26/36: $1\req_valid[7:0] [4]
+    27/36: $1\req_t[111:0] [55:42]
+    28/36: $1\req_valid[7:0] [3]
+    29/36: $1\req_t[111:0] [41:28]
+    30/36: $1\req_valid[7:0] [2]
+    31/36: $1\req_t[111:0] [27:14]
+    32/36: $1\req_valid[7:0] [1]
+    33/36: $1\req_t[111:0] [13:0]
+    34/36: $1\req_valid[7:0] [0]
+    35/36: $1\req_valid[7:0] [7]
+    36/36: $9\req_t[111:98]
+Creating decoders for process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:238$15'.
+Creating decoders for process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:239$16'.
+     1/4: $0\cf_r[31:0]
+     2/4: $0\cv_r[31:0]
+     3/4: $0\iv_r[7:0]
+     4/4: $0\start_r[0:0]
+Creating decoders for process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:242$18'.
+Creating decoders for process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:256$35'.
+     1/24: $8\exp_take[7:7]
+     2/24: $7\exp_take[6:6]
+     3/24: $6\exp_take[5:5]
+     4/24: $5\exp_take[4:4]
+     5/24: $4\exp_take[3:3]
+     6/24: $3\exp_take[2:2]
+     7/24: $2\exp_take[1:1]
+     8/24: $1\exp_take[0:0]
+     9/24: $1\pexp_t[7][13:0]
+    10/24: $8\pexp_v[7:7]
+    11/24: $1\pexp_t[6][13:0]
+    12/24: $7\pexp_v[6:6]
+    13/24: $1\pexp_t[5][13:0]
+    14/24: $6\pexp_v[5:5]
+    15/24: $1\pexp_t[4][13:0]
+    16/24: $5\pexp_v[4:4]
+    17/24: $1\pexp_t[3][13:0]
+    18/24: $4\pexp_v[3:3]
+    19/24: $1\pexp_t[2][13:0]
+    20/24: $3\pexp_v[2:2]
+    21/24: $1\pexp_t[1][13:0]
+    22/24: $2\pexp_v[1:1]
+    23/24: $1\pexp_t[0][13:0]
+    24/24: $1\pexp_v[0:0]
+Creating decoders for process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:276$244'.
+     1/1: $0\req_valid[7:0]
+Creating decoders for process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:277$246'.
+Creating decoders for process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:280$250'.
+     1/12: $12\cbad[0:0]
+     2/12: $11\cbad[0:0]
+     3/12: $10\cbad[0:0]
+     4/12: $9\cbad[0:0]
+     5/12: $8\cbad[0:0]
+     6/12: $7\cbad[0:0]
+     7/12: $6\cbad[0:0]
+     8/12: $5\cbad[0:0]
+     9/12: $4\cbad[0:0]
+    10/12: $3\cbad[0:0]
+    11/12: $2\cbad[0:0]
+    12/12: $1\cbad[0:0]
+Creating decoders for process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:290$293'.
+     1/15: $0\cmd[59:0] [31]
+     2/15: $0\cmd[59:0] [30:28]
+     3/15: $0\cmd[59:0] [27]
+     4/15: $0\cmd[59:0] [26]
+     5/15: $0\cmd[59:0] [25]
+     6/15: $0\cmd[59:0] [24:21]
+     7/15: $0\cmd[59:0] [20]
+     8/15: $0\cmd[59:0] [19:16]
+     9/15: $0\cmd[59:0] [15]
+    10/15: $0\cmd[59:0] [14:11]
+    11/15: $0\cmd[59:0] [10]
+    12/15: $0\cmd[59:0] [9]
+    13/15: $0\cmd[59:0] [8:1]
+    14/15: $0\cmd[59:0] [0]
+    15/15: $0\cmd[59:0] [59:32]
+Creating decoders for process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:301$314'.
+     1/4: $0\out_age[15:0]
+     2/4: $0\out_epoch[15:0]
+     3/4: $0\busy[0:0]
+     4/4: $0\fault[0:0]
+Creating decoders for process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:307$322'.
+     1/11: $0\wage[5:0]
+     2/11: $0\reduce_left[3:0]
+     3/11: $0\drain_left[3:0]
+     4/11: $0\ti[2:0]
+     5/11: $0\nodes[4:0]
+     6/11: $0\flt[0:0]
+     7/11: $0\nq[15:0]
+     8/11: $0\lim[13:0]
+     9/11: $0\ep[15:0]
+    10/11: $0\age[15:0]
+    11/11: $0\state[3:0]
+Creating decoders for process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:225$360'.
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_qwen_tp8_vrow_wide.\req_valid' from process `\ot_qwen_tp8_vrow_wide.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:347$361'.
+No latch inferred for signal `\ot_qwen_tp8_vrow_wide.\req_t' from process `\ot_qwen_tp8_vrow_wide.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:347$361'.
+No latch inferred for signal `\ot_qwen_tp8_vrow_wide.\wn' from process `\ot_qwen_tp8_vrow_wide.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:347$361'.
+No latch inferred for signal `\ot_qwen_tp8_vrow_wide.\wt' from process `\ot_qwen_tp8_vrow_wide.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:347$361'.
+No latch inferred for signal `\ot_qwen_tp8_vrow_wide.\wp' from process `\ot_qwen_tp8_vrow_wide.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:347$361'.
+Warning: Latch inferred for signal `\ot_qwen_tp8_vrow_wide.\l' from process `\ot_qwen_tp8_vrow_wide.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:347$361': $auto$proc_dlatch.cc:547:proc_dlatch$993
+No latch inferred for signal `\ot_qwen_tp8_pv_wide_ctl.\exp_take' from process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:256$35'.
+No latch inferred for signal `\ot_qwen_tp8_pv_wide_ctl.\pexp_v' from process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:256$35'.
+No latch inferred for signal `\ot_qwen_tp8_pv_wide_ctl.\l' from process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:256$35'.
+No latch inferred for signal `\ot_qwen_tp8_pv_wide_ctl.\wn' from process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:256$35'.
+No latch inferred for signal `\ot_qwen_tp8_pv_wide_ctl.\wt' from process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:256$35'.
+No latch inferred for signal `\ot_qwen_tp8_pv_wide_ctl.\wp' from process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:256$35'.
+No latch inferred for signal `\ot_qwen_tp8_pv_wide_ctl.\pexp_t[0]' from process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:256$35'.
+No latch inferred for signal `\ot_qwen_tp8_pv_wide_ctl.\pexp_t[1]' from process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:256$35'.
+No latch inferred for signal `\ot_qwen_tp8_pv_wide_ctl.\pexp_t[2]' from process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:256$35'.
+No latch inferred for signal `\ot_qwen_tp8_pv_wide_ctl.\pexp_t[3]' from process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:256$35'.
+No latch inferred for signal `\ot_qwen_tp8_pv_wide_ctl.\pexp_t[4]' from process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:256$35'.
+No latch inferred for signal `\ot_qwen_tp8_pv_wide_ctl.\pexp_t[5]' from process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:256$35'.
+No latch inferred for signal `\ot_qwen_tp8_pv_wide_ctl.\pexp_t[6]' from process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:256$35'.
+No latch inferred for signal `\ot_qwen_tp8_pv_wide_ctl.\pexp_t[7]' from process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:256$35'.
+No latch inferred for signal `\ot_qwen_tp8_pv_wide_ctl.\cbad' from process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:280$250'.
+No latch inferred for signal `\ot_qwen_tp8_pv_wide_ctl.\k' from process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:280$250'.
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_qwen_tp8_vrow_wide.\fault' using process `\ot_qwen_tp8_vrow_wide.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:356$508'.
+  created $adff cell `$procdff$998' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_vrow_wide.\lim' using process `\ot_qwen_tp8_vrow_wide.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:356$508'.
+  created $adff cell `$procdff$1003' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_vrow_wide.\nq' using process `\ot_qwen_tp8_vrow_wide.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:356$508'.
+  created $adff cell `$procdff$1008' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_vrow_wide.\active' using process `\ot_qwen_tp8_vrow_wide.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:356$508'.
+  created $adff cell `$procdff$1013' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_vrow_wide.\q' using process `\ot_qwen_tp8_vrow_wide.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:356$508'.
+  created $adff cell `$procdff$1018' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\pid' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:238$15'.
+  created $dff cell `$procdff$1019' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\start_r' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:239$16'.
+  created $adff cell `$procdff$1024' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\iv_r' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:239$16'.
+  created $adff cell `$procdff$1029' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\cv_r' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:239$16'.
+  created $adff cell `$procdff$1034' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\cf_r' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:239$16'.
+  created $adff cell `$procdff$1039' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\ctx_r' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:242$18'.
+  created $dff cell `$procdff$1040' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\epoch_r' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:242$18'.
+  created $dff cell `$procdff$1041' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\it_r' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:242$18'.
+  created $dff cell `$procdff$1042' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\ie_r' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:242$18'.
+  created $dff cell `$procdff$1043' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\req_valid' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:276$244'.
+  created $adff cell `$procdff$1048' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\req_t' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:277$246'.
+  created $dff cell `$procdff$1049' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\cmd' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:290$293'.
+  created $adff cell `$procdff$1054' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\out_epoch' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:301$314'.
+  created $adff cell `$procdff$1059' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\fault' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:301$314'.
+  created $adff cell `$procdff$1064' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\busy' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:301$314'.
+  created $adff cell `$procdff$1069' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\out_age' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:301$314'.
+  created $adff cell `$procdff$1074' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\state' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:307$322'.
+  created $adff cell `$procdff$1079' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\age' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:307$322'.
+  created $adff cell `$procdff$1084' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\ep' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:307$322'.
+  created $adff cell `$procdff$1089' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\lim' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:307$322'.
+  created $adff cell `$procdff$1094' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\nq' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:307$322'.
+  created $adff cell `$procdff$1099' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\flt' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:307$322'.
+  created $adff cell `$procdff$1104' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\nodes' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:307$322'.
+  created $adff cell `$procdff$1109' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\ti' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:307$322'.
+  created $adff cell `$procdff$1114' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\drain_left' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:307$322'.
+  created $adff cell `$procdff$1119' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\reduce_left' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:307$322'.
+  created $adff cell `$procdff$1124' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\wage' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:307$322'.
+  created $adff cell `$procdff$1129' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_wide_ctl.\g_reset_pin.rst_q' using process `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:225$360'.
+  created $dff cell `$procdff$1130' with positive edge clock.
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 4 empty switches in `\ot_qwen_tp8_vrow_wide.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:356$508'.
+Removing empty process `ot_qwen_tp8_vrow_wide.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:356$508'.
+Found and cleaned up 9 empty switches in `\ot_qwen_tp8_vrow_wide.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:347$361'.
+Removing empty process `ot_qwen_tp8_vrow_wide.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:347$361'.
+Removing empty process `ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:238$15'.
+Removing empty process `ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:239$16'.
+Removing empty process `ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:242$18'.
+Found and cleaned up 16 empty switches in `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:256$35'.
+Removing empty process `ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:256$35'.
+Removing empty process `ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:276$244'.
+Removing empty process `ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:277$246'.
+Found and cleaned up 12 empty switches in `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:280$250'.
+Removing empty process `ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:280$250'.
+Removing empty process `ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:290$293'.
+Removing empty process `ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:301$314'.
+Found and cleaned up 11 empty switches in `\ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:307$322'.
+Removing empty process `ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:307$322'.
+Removing empty process `ot_qwen_tp8_pv_wide_ctl.$proc$/tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv:225$360'.
+Cleaned up 52 empty switches.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_tp8_vrow_wide.
+<suppressed ~66 debug messages>
+Optimizing module ot_qwen_tp8_pv_wide_ctl.
+<suppressed ~82 debug messages>
+
+6. Executing FLATTEN pass (flatten design).
+Deleting now unused module ot_qwen_tp8_vrow_wide.
+<suppressed ~1 debug messages>
+
+7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_tp8_pv_wide_ctl..
+Removed 43 unused cells and 469 unused wires.
+<suppressed ~64 debug messages>
+
+8. Printing statistics.
+
+=== ot_qwen_tp8_pv_wide_ctl ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      593 wires
+     9515 wire bits
+      593 public wires
+     9515 public wire bits
+       18 ports
+      560 port bits
+      616 cells
+      106   $add
+       25   $adff
+        1   $and
+        7   $dff
+        2   $div
+       35   $eq
+       29   $ge
+        3   $gt
+        2   $le
+       62   $logic_and
+        9   $logic_not
+       11   $logic_or
+       28   $lt
+       86   $mul
+      135   $mux
+       19   $ne
+        8   $not
+        6   $pmux
+        7   $reduce_bool
+        1   $reduce_or
+       34   $sub
+
+9. Executing RTLIL backend.
+Output filename: /tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/out_old/netlist.il
+
+10. Executing Verilog backend.
+
+10.1. Executing BMUXMAP pass.
+
+10.2. Executing DEMUXMAP pass.
+Dumping module `\ot_qwen_tp8_pv_wide_ctl'.
+
+Warnings: 2 unique messages, 2 total
+End of script. Logfile hash: 90d8802ccf, time: 0.07s, user: 0.08s, system: 0.02s, MEM: 31.21 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 31% 1x hierarchy (0 sec), 17% 1x opt_clean (0 sec), ...
