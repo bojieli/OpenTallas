@@ -27,7 +27,9 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import die_port_bind as P   # noqa: E402
 import die_relay_stages as DRS   # noqa: E402
 
-RELAY_RE = re.compile(r'^(qkd_rlys_\d+|qfd_rly_|qfd_rlyh0?_|qfd_landh?0?_)')
+# QXF-SEAMK 10-18: + the KV forwarded-lane stations / landings (tools/qwen_kv_die/kv_fwd_lanes.py, qkd_rlysh0?_<S> /
+# qkd_landsh0?_<S>: same instance per relay station, a -> b, one stage each as the generator counts them)
+RELAY_RE = re.compile(r'^(qkd_rlys_\d+|qkd_rlysh0?_\d+|qkd_landsh0?_\d+|qfd_rly_|qfd_rlyh0?_|qfd_landh?0?_)')
 RESET_MASTER_RE = re.compile(r'^(qfd_rst_rep|qkd_rst_region)')
 CLOCK_PORT_RE = re.compile(r'^(ck|clk|ck_\w+|clk_\w+|\w+_ck|\w+_clk|gclk|ck\d+|refclk|face_ck|fdi_ck|hck)$')
 RELAY_CTRL = {'ea', 'eb', 'en', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'ck_o', 'ckf', 'ck_s', 'fault', 'ck', 'rs'}
@@ -58,6 +60,9 @@ def rtl_text(path, commit, src_prefixes, local_dirs):
     if rel.startswith('/'):
         raise SystemExit(f'netlist_relay_stages: absolute RTL path {p} outside --src-prefix and --local-rtl (fail closed)')
     t = subprocess.run(['git', '-C', str(ROOT), 'show', f'{commit}:{rel}'], capture_output=True, text=True)
+    if t.returncode and Path(p).is_absolute() and Path(p).is_file():
+        # QXF-SEAMK 10-18: a die chain's source tree without git history (rsync'd src/): the run's own file (recorded)
+        return Path(p).read_text(errors='replace'), f'disk:{p}'
     if t.returncode:
         raise SystemExit(f'netlist_relay_stages: git show {commit}:{rel} failed: {t.stderr.strip()[:200]}')
     return t.stdout, f'git:{commit}:{rel}'
