@@ -9,6 +9,12 @@
 // +MODE=3 IO stripe 2 bits 27+ nonzero; +MODE=4 configuration write while busy + start while busy.
 // Modes 1-4 must fault, identically. NOTE: an illegal mid-run configuration write to a chain-depth-k stripe faults k
 // edges later than r7c (configuration path delay, as r9's +1); mode 4 writes a depth-0 stripe so the edge is exact. Host contract (r10): start >= 4 edges after the last configuration write.
+// DECISION B (SFU-PS-3 10-17): the r10 head registers the programme start (+1 edge) and gates each leaf on its own stripe
+// status. Compared here with the same stimulus: IO-side outputs (io_word, io status) on the SAME edge as r7c; programme-side
+// outputs (compiler_control, programme_active/done/ordinal) = r7c delayed by PSHIFT=1 edge. Fault modes: every output is
+// compared on every edge until r7c's first fault edge (fault-mode exception: afterwards r7c zeroes all stripes, r10 only
+// the faulting one); the r10 fault edge must be r7c's + 1 for a programme-stripe fault (modes 1, 2) and equal for an IO
+// fault (modes 3, 4), and the r10 fault must stay set to the end (sticky).
 module tb_sfu_store_r10_lockstep;
  localparam integer AW=11, PCLO=234-AW, CHUNK=222;
  reg clk=0; always #0.5 clk=~clk;
@@ -36,17 +42,26 @@ module tb_sfu_store_r10_lockstep;
   .io_cfg_we(io_cfg_we),.io_cfg_stripe(io_cfg_stripe),.io_cfg_addr(io_cfg_addr),.io_cfg_data(io_cfg_data),
   .io_start_v(io_start_v),.io_start_base(io_start_base),.io_start_limit(io_start_limit),.io_start_loops(io_start_loops),
   .io_active(c_ia),.io_done(c_id),.io_ordinal(c_io_o),.io_word(c_io),.compiler_control(c_ctl),.fault(c_f));
- integer edges=0,mism=0,active_ctl=0,active_io=0,faulted=0,mode=0,seed=1;
+ integer edges=0,mism=0,active_ctl=0,active_io=0,faulted=0,mode=0,seed=1,pshift=1,fr=-1,fc=-1,unstick=0;
  reg checking=0;
+ // r7c programme-side outputs delayed by one edge (decision B: programme start +1)
+ reg [1741:0] r_ctl_d=0; reg r_pa_d=0,r_pd_d=0; reg [31:0] r_po_d=0;
+ always @(posedge clk)begin r_ctl_d<=r_ctl;r_pa_d<=r_pa;r_pd_d<=r_pd;r_po_d<=r_po;end
+ wire [1741:0] e_ctl=pshift?r_ctl_d:r_ctl;
+ wire e_pa=pshift?r_pa_d:r_pa, e_pd=pshift?r_pd_d:r_pd;
+ wire [31:0] e_po=pshift?r_po_d:r_po;
  always @(negedge clk)if(checking)begin
   edges++;
   if(|r_ctl)active_ctl++;
   if(|r_io)active_io++;
   if(r_f)faulted++;
-  if({r_io,r_ctl,r_pa,r_pd,r_po,r_ia,r_id,r_io_o,r_f}!=={c_io,c_ctl,c_pa,c_pd,c_po,c_ia,c_id,c_io_o,c_f})begin
+  if(r_f && fr<0)fr=edges;
+  if(c_f && fc<0)fc=edges;
+  if(fc>=0 && !c_f)unstick++;
+  if(fr<0 && {r_io,e_ctl,e_pa,e_pd,e_po,r_ia,r_id,r_io_o}!=={c_io,c_ctl,c_pa,c_pd,c_po,c_ia,c_id,c_io_o})begin
    mism++;
    if(mism<=6)$display("SFU_STORE_R10_MISMATCH edge=%0d io=%0d ctl=%0d pstat=%0d iostat=%0d fault=%0d/%0d",edges,
-    r_io!==c_io,r_ctl!==c_ctl,{r_pa,r_pd,r_po}!=={c_pa,c_pd,c_po},{r_ia,r_id,r_io_o}!=={c_ia,c_id,c_io_o},r_f,c_f);
+    r_io!==c_io,e_ctl!==c_ctl,{e_pa,e_pd,e_po}!=={c_pa,c_pd,c_po},{r_ia,r_id,r_io_o}!=={c_ia,c_id,c_io_o},r_f,c_f);
   end
  end
  function automatic [255:0] rnd256();
@@ -103,6 +118,7 @@ module tb_sfu_store_r10_lockstep;
  initial begin
   if(!$value$plusargs("MODE=%d",mode))mode=0;
   if($value$plusargs("SEED=%d",seed))void'($urandom(seed));
+  if(!$value$plusargs("PSHIFT=%d",pshift))pshift=1;
   repeat(6)@(negedge clk);
   checking=1;
   rst_n=0;repeat(8)@(negedge clk);rst_n=1;
@@ -116,8 +132,14 @@ module tb_sfu_store_r10_lockstep;
   load(np,nio,arith);
   run(np,nio,1,2);
   checking=0;
-  $display("SFU_STORE_R10_LOCKSTEP mode=%0d seed=%0d edges=%0d mismatching=%0d active_ctl=%0d active_io=%0d fault_edges=%0d",
-   mode,seed,edges,mism,active_ctl,active_io,faulted);
+  $display("SFU_STORE_R10_LOCKSTEP mode=%0d seed=%0d pshift=%0d edges=%0d mismatching=%0d active_ctl=%0d active_io=%0d fault_edges=%0d fault_edge_r7c=%0d fault_edge_r10=%0d",
+   mode,seed,pshift,edges,mism,active_ctl,active_io,faulted,fr,fc);
+  if(fr>=0 || fc>=0)begin
+   integer want;
+   want=(mode==1 || mode==2)?pshift:0;
+   if(fr<0 || fc<0 || fc-fr!=want)$fatal(1,"SFU_STORE_R10_LOCKSTEP FAIL fault edge r10-r7c=%0d want %0d",fc-fr,want);
+   if(unstick!=0)$fatal(1,"SFU_STORE_R10_LOCKSTEP FAIL r10 fault not sticky (%0d edges)",unstick);
+  end
   if(mism!=0)$fatal(1,"SFU_STORE_R10_LOCKSTEP FAIL mismatching_edges=%0d",mism);
   if(mode==0 && (faulted!=0 || active_ctl<200 || active_io<300))$fatal(1,"SFU_STORE_R10_LOCKSTEP FAIL clean run faulted=%0d active_ctl=%0d active_io=%0d",faulted,active_ctl,active_io);
   if(mode!=0 && faulted==0)$fatal(1,"SFU_STORE_R10_LOCKSTEP FAIL fault mode %0d never faulted",mode);

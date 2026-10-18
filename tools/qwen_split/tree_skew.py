@@ -16,6 +16,10 @@ def arrival_pads(S, ends, bword_slab=True):
     -> (pads {bus: extra stages at the sink end}, report).  Node legs are padded so both legs of every node arrive on
     the same cycle (level by level, padding moves the node output); block words to the same slab are padded to that
     slab's latest arrival (the slab's 4-deep BW FIFO then sees no skew)."""
+    if not any(re.fullmatch(r'cor_\d+_\d+', k) for k in S):
+        # no flat tile array on this die (dv: hardened clusters + slices, no head / corridor / tree legs at die
+        # level): nothing to pad here; the die links' fixed stage counts go to the static schedule as they are
+        return {}, dict(skipped='no flat tile array (no cor_* buses)', nodes=0, max_leg_skew=0)
     head = {}
     hb = sorted((k for k in S if re.fullmatch(r'head_\d+', k)), key=lambda k: int(k.split('_')[1]))
     cols = len(hb); half = cols // 2

@@ -410,7 +410,11 @@ module ot_qkd_ahub_die #(
     parameter integer Y_RLY = 0,
     parameter integer RX_RLY = 1,
     parameter integer RY_RLY = 1,
-    parameter integer PI_RLY = 0       // extra stages of pi_* to the beat stores beyond the core's copy (0..3)
+    parameter integer PI_RLY = 0,      // extra stages of pi_* to the beat stores beyond the core's copy (0..3)
+    // KV-TILES-B hp3 (10-17): SI_RLY input relay stages on EVERY hub data input (start, si_*, pi_*), core copy on ck_core,
+    // beat-store copy on ck_pbst (added to PI_RLY): a uniform input retime (+SI_RLY edges hub latency, values unchanged).
+    // The S-face stack inputs reach the core (Z row, 561 um up) in <= 500 um stages.  0 = hp1/hp2 (history).
+    parameter integer SI_RLY = 0
 ) (
     input  wire          ck_core,
     input  wire [3:0]    ck_zh,
@@ -423,6 +427,7 @@ module ot_qkd_ahub_die #(
     input  wire [3:0]    ck_sr,            // u_sr (pbst -> pvlg relays), the pvlg clock
     input  wire          ck_rx,            // u_rxi (core -> recip), the recip clock
     input  wire          ck_ry,            // u_ryo (recip -> core), the core clock
+    input  wire          ck_si,            // u_si / u_pi (hub input relays, SI_RLY / PI_RLY), a CTS root of its own
 `endif
     input  wire          rst_n,
     input  wire          start,
@@ -450,13 +455,24 @@ module ot_qkd_ahub_die #(
     wire         rc_v, rc_vo, rc_fault;  wire [31:0] rc_x, rc_y;
     wire [23:0]  pb_ra;     wire [3:0] pl_v;  wire [127:0] pl_rz;  wire [511:0] pl_y;  wire [15:0] pl_pf;
 `ifdef QKD_AHUB_RLY_CLK
+    wire [3:0] ck_srr = ck_sr;  wire ck_rxr = ck_rx;  wire ck_ryr = ck_ry;  wire ck_sir = ck_si;  wire [3:0] ck_pir = {4{ck_si}};
+`else
+    wire [3:0] ck_srr = ck_pvlg;  wire ck_rxr = ck_recip;  wire ck_ryr = ck_core;  wire ck_sir = ck_core;  wire [3:0] ck_pir = ck_pbst;
+`endif
+    // hub input relays (SI_RLY): the core's copy
+    wire c_start;  wire [3:0] c_si_valid, c_si_g, c_si_any, c_pi_valid, c_pi_g;  wire [7:0] c_si_type, c_si_hh;
+    wire [15:0] c_si_k;  wire [127:0] c_si_data;
+    ot_qkd_drly #(.W(181), .N(SI_RLY)) u_si (.clk(ck_sir),
+        .d({start, si_valid, si_type, si_g, si_hh, si_k, si_any, si_data, pi_valid, pi_g}),
+        .q({c_start, c_si_valid, c_si_type, c_si_g, c_si_hh, c_si_k, c_si_any, c_si_data, c_pi_valid, c_pi_g}));
+`ifdef QKD_AHUB_RLY_CLK
     qkd_ahub_core u_core (      // hard child: its hardened defaults = this module's defaults (no #() on a hard view)
 `else
     qkd_ahub_core #(.HD(HD), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .ZW(ZW), .ZW_RLY(ZW_RLY), .ZR_RLY(ZR_RLY),
                     .RA_RLY(RA_RLY), .SR_RLY(SR_RLY), .PV_RLY(PV_RLY), .Y_RLY(Y_RLY)) u_core (
 `endif
-        .clk(ck_core), .rst_n(rst_n), .start(start), .si_valid(si_valid), .si_type(si_type), .si_g(si_g), .si_hh(si_hh),
-        .si_k(si_k), .si_any(si_any), .si_data(si_data), .pi_valid(pi_valid), .pi_g(pi_g),
+        .clk(ck_core), .rst_n(rst_n), .start(c_start), .si_valid(c_si_valid), .si_type(c_si_type), .si_g(c_si_g),
+        .si_hh(c_si_hh), .si_k(c_si_k), .si_any(c_si_any), .si_data(c_si_data), .pi_valid(c_pi_valid), .pi_g(c_pi_g),
         .am(am), .out_valid(out_valid), .out_g(out_g),
         .out_beat(out_beat), .out_data(out_data), .fault(fault), .ev(ev),
         .zw_start(zh_start[1:0]), .ze_start(zh_start[3:2]), .zw_we(zh_we[255:0]), .ze_we(zh_we[511:256]),
@@ -484,17 +500,12 @@ module ot_qkd_ahub_die #(
     ot_qkd_drly #(.W(34), .N(RY_RLY)) u_ryo (.clk(ck_ryr), .d({rf_t, ryo_t}), .q({rf, ryo}));
     assign rc_y = ryo[31:0];  assign rc_vo = ryo[32];  assign rc_fault = rf;
     // beat stores and lane groups
-`ifdef QKD_AHUB_RLY_CLK
-    wire [3:0] ck_srr = ck_sr;  wire ck_rxr = ck_rx;  wire ck_ryr = ck_ry;
-`else
-    wire [3:0] ck_srr = ck_pvlg;  wire ck_rxr = ck_recip;  wire ck_ryr = ck_core;
-`endif
     wire [2047:0] sr_t, sr;
     generate for (g = 0; g < 4; g = g + 1) begin : g_s
         wire [5:0] ra;  wire [519:0] pin;
         ot_qkd_drly #(.W(6), .N(RA_RLY)) u_ra (.clk(ck_pbst[g]), .d(pb_ra[6*g +: 6]), .q(ra));
         // pi_* to the tile: the core captures pi_valid / pi_g in its pin flop, the tile in its own pin flop (= hub_p _b)
-        ot_qkd_drly #(.W(520), .N(PI_RLY)) u_pi (.clk(ck_pbst[g]),
+        ot_qkd_drly #(.W(520), .N(PI_RLY + SI_RLY)) u_pi (.clk(ck_pir[g]),
             .d({pi_valid[g], pi_g[g], pi_beat[6*g +: 6], pi_data[512*g +: 512]}), .q(pin));
         ot_nhb_pbst u_pbst (.clk(ck_pbst[g]), .rst_n(rst_n), .pv(pin[519]), .pgi(pin[518]), .pbeat(pin[517:512]),
                             .pdata(pin[511:0]), .ra(ra), .sr(sr_t[512*g +: 512]));
@@ -527,7 +538,8 @@ module ot_qwen_nearhbm_attn_hub_d #(
     parameter integer Y_RLY = 0,
     parameter integer RX_RLY = 1,
     parameter integer RY_RLY = 1,
-    parameter integer PI_RLY = 0       // extra stages of pi_* to the beat stores beyond the core's copy (0..3)
+    parameter integer PI_RLY = 0,      // extra stages of pi_* to the beat stores beyond the core's copy (0..3)
+    parameter integer SI_RLY = 0       // hub input relay stages (ot_qkd_ahub_die SI_RLY)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -560,8 +572,8 @@ module ot_qwen_nearhbm_attn_hub_d #(
     always @(posedge clk) if (am[35:0] !== am[71:36] || am[35:0] !== am[107:72] || am[35:0] !== am[143:108])
         $display("AHUB_D am copies disagree at %0t", $time);
 `endif
-    ot_qkd_ahub_die #(.HD(HD), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .ZW(ZW), .ZW_RLY(ZW_RLY), .ZR_RLY(ZR_RLY), .RA_RLY(RA_RLY), .SR_RLY(SR_RLY), .PV_RLY(PV_RLY), .Y_RLY(Y_RLY), .RX_RLY(RX_RLY), .RY_RLY(RY_RLY), .PI_RLY(PI_RLY)) u_die (.ck_core(clk), .ck_zh({4{clk}}), .ck_recip(clk), .ck_pbst({4{clk}}),
-        .ck_pvlg({4{clk}}), .rst_n(rst_n), .start(start), .si_valid(si_valid), .si_type(si_type), .si_g(si_g), .si_hh(si_hh),
+    ot_qkd_ahub_die #(.HD(HD), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .ZW(ZW), .ZW_RLY(ZW_RLY), .ZR_RLY(ZR_RLY), .RA_RLY(RA_RLY), .SR_RLY(SR_RLY), .PV_RLY(PV_RLY), .Y_RLY(Y_RLY), .RX_RLY(RX_RLY), .RY_RLY(RY_RLY), .PI_RLY(PI_RLY), .SI_RLY(SI_RLY)) u_die (.ck_core(clk), .ck_zh({4{clk}}), .ck_recip(clk), .ck_pbst({4{clk}}),
+        .ck_pvlg({4{clk}}), .ck_si(clk), .rst_n(rst_n), .start(start), .si_valid(si_valid), .si_type(si_type), .si_g(si_g), .si_hh(si_hh),
         .si_k(si_k), .si_any(si_any), .si_data(si_data), .pi_valid(pi_valid), .pi_g(pi_g), .pi_beat(pi_beat),
         .pi_data(pi_data), .am(am), .out_valid(out_valid), .out_g(out_g), .out_beat(out_beat), .out_data(out_data),
         .fault(fault), .ev(ev));

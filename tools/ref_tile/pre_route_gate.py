@@ -847,7 +847,7 @@ if [ "{CTS}" = 1 ]; then
   grep -h "^global_placement -density\|Placement target density" $R/cts.log | head -2 | sed 's/^/GATE_GPLD /'
   python3 tools/closure_loop/ck_insertion.py --base $B --all-clocks --raw-source --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
-  python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt')}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
+  python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt'),'ff':{{k:(r.get('ff') or {{}}).get(k) for k in ('boundary','all')}}}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
   docker run --rm -e OT_GATE_SIGNOFF_SDC=/src/{KIT}/signoff.sdc -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
   grep "^GATE_PC" $R/pc.log
   ot_layout $NB/4_1_cts.odb placed
@@ -1427,6 +1427,7 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
     lint 'clock_roots' line) and, with --cts, the measured TT insertion (latest leaf arrival) and leaf arrival spread
     (max - min over all register clock pins, ck_insertion.py 'all')."""
     rec = {"max_root_sinks": None, "root": None, "cts": bool(cts), "tt_insertion_ps": None, "tt_spread_ps": None,
+           "tt_pin_spread_ps": None, "ff_insertion_ps": None, "ff_spread_ps": None, "ff_pin_spread_ps": None,
            "declared_clock": (spec or {}).get("clock"),
            "limits": {"sinks": TL.CLK_ROOT_SINKS_MAX, "insertion_ps": TL.CLK_INSERTION_MAX_PS,
                       "spread_ps": TL.CLK_SPREAD_MAX_PS}}
@@ -1446,18 +1447,17 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
         root = (rec["root"] or "").removeprefix("port:")
         matched = [d for d in domains if d.get("source") == root or d.get("clock") == root]
         if cts and len(matched) == 1:
-            al = (matched[0].get("tt") or {}).get("all")
-            if al and al.get("min") is not None and al.get("max") is not None:
-                lo, hi = float(al["min"]), float(al["max"])
-                rec["tt_insertion_ps"], rec["tt_spread_ps"] = hi, round(hi - lo, 1)
+            corner_spreads(rec, matched[0])
+            if rec["tt_insertion_ps"] is not None:
                 rec["measured_clock"] = matched[0].get("clock")
     else:
-        ck = re.search(r"^GATE_CK .*?\btt insertion all ([\d.]+)\.\.([\d.]+) ps", out, re.M)
-        if cts and ck:
-            lo, hi = float(ck.group(1)), float(ck.group(2))
-            rec["tt_insertion_ps"], rec["tt_spread_ps"] = hi, round(hi - lo, 1)
-    ok, text = TL.clock_rule(rec["max_root_sinks"], rec)
-    rec["verdict"] = "PASS" if ok and rec["max_root_sinks"] is not None else ("UNKNOWN" if ok else "REFUSE")
+        for c in ("tt", "ff"):
+            ck = re.search(rf"^GATE_CK .*?\b{c} insertion all ([\d.]+)\.\.([\d.]+) ps", out, re.M)
+            if cts and ck:
+                lo, hi = float(ck.group(1)), float(ck.group(2))
+                rec[f"{c}_insertion_ps"], rec[f"{c}_spread_ps"] = hi, round(hi - lo, 1)
+    level, text = TL.clock_rule_eval(rec["max_root_sinks"], rec)
+    rec["verdict"] = ("REFUSE" if level == "FAIL" else "UNKNOWN" if rec["max_root_sinks"] is None else level)
     rec["text"] = text
     if (spec or {}).get("clock") == "multiple_cts_roots":
         expected = set(spec["clock_ports"])
@@ -1475,16 +1475,31 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
                 lo, hi = float(al["min"]), float(al["max"])
                 if n <= 0 or not math.isfinite(lo) or not math.isfinite(hi) or not 0 < lo <= hi:
                     raise ValueError("invalid actual clock population")
-                measured = {"tt_insertion_ps": hi, "tt_spread_ps": hi - lo}
-                passed, why = TL.clock_rule(n, measured)
-                per_root.append(dict(source=domain.get("source"), sinks=n, **measured, verdict="PASS" if passed else "REFUSE", text=why))
-                if not passed:
+                measured = corner_spreads({}, domain)
+                level, why = TL.clock_rule_eval(n, measured)
+                per_root.append(dict(source=domain.get("source"), sinks=n, **measured,
+                                     verdict="REFUSE" if level == "FAIL" else level, text=why))
+                if level == "FAIL":
                     issues.append(f"{domain.get('source')}: {why}")
             except (KeyError, TypeError, ValueError, OverflowError):
                 issues.append(f"{domain.get('source')}: missing finite positive actual TT root census")
         rec["per_root"] = per_root
         if issues:
             rec["verdict"], rec["text"] = "REFUSE", "; ".join(issues)
+    return rec
+
+
+def corner_spreads(rec: dict, domain: dict) -> dict:
+    """TT and FF insertion (latest register arrival), all-register leaf spread and pin-flop (boundary register) spread
+    of one ck_insertion clock record (owner 10-17 0dq: the rule is the pin-flop spread at TT AND FF)."""
+    for c in ("tt", "ff"):
+        cr = domain.get(c) or {}
+        al, bd = cr.get("all") or {}, cr.get("boundary") or {}
+        if al.get("min") is not None and al.get("max") is not None:
+            lo, hi = float(al["min"]), float(al["max"])
+            rec[f"{c}_insertion_ps"], rec[f"{c}_spread_ps"] = hi, round(hi - lo, 1)
+        if bd.get("min") is not None and bd.get("max") is not None:
+            rec[f"{c}_pin_spread_ps"] = round(float(bd["max"]) - float(bd["min"]), 1)
     return rec
 
 
@@ -1495,6 +1510,9 @@ def clock_item(g: Gate, rec: dict) -> None:
         g.add("FAIL", "clock_rule", rec["text"] + ("" if rec["cts"] else " -- this gate ran without --cts")
               + (f" (declared clock '{rec['declared_clock']}' does not waive it)" if rec.get("declared_clock") else ""),
               TL.CLOCK_RULE_FIX)
+    elif rec["verdict"] == "WARN":
+        g.add("WARN", "clock_rule", f"root {rec['root']}: {rec['text']}",
+              "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link")
     elif rec["verdict"] == "UNKNOWN":
         g.add("WARN", "clock_rule", "the synthesized netlist's clock sinks were not reported: " + rec["text"],
               "read the remote log (textbook lint line 'clock_roots')")
@@ -1578,10 +1596,14 @@ def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, clos
     n = (ev or {}).get("max_root_sinks")
     if not isinstance(n, int):          # the kit's own gate result outranks history (a rebuilt tile proves itself)
         n = known_sinks if isinstance(known_sinks, int) else None
-    ok, text = TL.clock_rule(n if isinstance(n, int) else None, ev)
-    res = {"evidence": ev, "sinks": n, "ok": ok, "text": text, "closed_stands": bool(closed_stands)}
+    level, text = TL.clock_rule_eval(n if isinstance(n, int) else None, ev)
+    ok = level != "FAIL"
+    res = {"evidence": ev, "sinks": n, "ok": ok, "level": level, "text": text, "closed_stands": bool(closed_stands)}
     g.clock = res
-    if ok or closed_stands:
+    if level == "WARN" and not closed_stands:
+        g.add("WARN", "clock_rule", text, "guidance only (owner 10-17 0dq): the check is pin-flop spread <= 80 ps at "
+              "TT and FF plus a neighbour-matched boundary")
+    elif ok or closed_stands:
         g.add("INFO", "clock_rule", text + (" (CLOSED tile: stands)" if closed_stands and not ok else ""))
     else:
         src = "kit gate_result.json" if ev and ev.get("max_root_sinks") == n else "this block's latest synthesized design"

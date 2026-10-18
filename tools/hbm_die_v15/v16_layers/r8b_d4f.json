@@ -1,0 +1,11124 @@
+{
+ "region": "r8b_d4f",
+ "author": "Claude H-DIE-R8b 10-17",
+ "basis_commit": "see docstring of tools/hbm_die_v16/r8b_layer_d4f.py",
+ "instances": [],
+ "edges": [],
+ "clocks": [
+  {
+   "inst": "cij_SW",
+   "port": "clk_r0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "cij_SW",
+   "port": "clk_r1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "cij_SW",
+   "port": "rst_n_r1",
+   "domain": "stream",
+   "kind": "reset"
+  }
+ ],
+ "straps": [],
+ "gaps": [],
+ "remaster": {
+  "su_SW0": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1
+   }
+  },
+  "sfu_SW0": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "hc_SW0": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv"
+   ],
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "su_SW1": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "QID": 0,
+    "G": 1,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1
+   }
+  },
+  "sfu_SW1": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "hc_SW1": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv"
+   ],
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "su_SW2": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "QID": 0,
+    "G": 2,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1
+   }
+  },
+  "sfu_SW2": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "hc_SW2": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv"
+   ],
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "su_SW3": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "QID": 0,
+    "G": 3,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1
+   }
+  },
+  "sfu_SW3": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "hc_SW3": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv"
+   ],
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "su_SE0": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "QID": 1,
+    "G": 0,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1
+   }
+  },
+  "sfu_SE0": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "hc_SE0": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv"
+   ],
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "su_SE1": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "QID": 1,
+    "G": 1,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1
+   }
+  },
+  "sfu_SE1": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "hc_SE1": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv"
+   ],
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "su_SE2": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "QID": 1,
+    "G": 2,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1
+   }
+  },
+  "sfu_SE2": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "hc_SE2": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv"
+   ],
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "su_SE3": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "QID": 1,
+    "G": 3,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1
+   }
+  },
+  "sfu_SE3": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "hc_SE3": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv"
+   ],
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "su_NE0": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "QID": 3,
+    "G": 0,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1
+   }
+  },
+  "sfu_NE0": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "hc_NE0": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv"
+   ],
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "su_NE1": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "QID": 3,
+    "G": 1,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1
+   }
+  },
+  "sfu_NE1": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "hc_NE1": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv"
+   ],
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "su_NE2": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "QID": 3,
+    "G": 2,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1
+   }
+  },
+  "sfu_NE2": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "hc_NE2": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv"
+   ],
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "su_NE3": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "QID": 3,
+    "G": 3,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1
+   }
+  },
+  "sfu_NE3": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "hc_NE3": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv"
+   ],
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "su_NW0": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "QID": 2,
+    "G": 0,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1
+   }
+  },
+  "sfu_NW0": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "hc_NW0": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv"
+   ],
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "su_NW1": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "QID": 2,
+    "G": 1,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1
+   }
+  },
+  "sfu_NW1": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "hc_NW1": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv"
+   ],
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "su_NW2": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "QID": 2,
+    "G": 2,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1
+   }
+  },
+  "sfu_NW2": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "hc_NW2": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv"
+   ],
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "su_NW3": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "QID": 2,
+    "G": 3,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1
+   }
+  },
+  "sfu_NW3": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+   ],
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "hc_NW3": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv"
+   ],
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "cij_SW": {
+   "master": "ot_hgi_coll_inj_idx_join_rg",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_idx_join_rg.sv",
+   "params": {
+    "INJLAT": 12
+   },
+   "port_split": {
+    "inj_rd": [
+     [
+      "cij_SW",
+      "inj_rd",
+      0,
+      2,
+      0
+     ],
+     [
+      "cij_SW",
+      "inj_rd_r1",
+      0,
+      2,
+      0
+     ]
+    ],
+    "inj_idx": [
+     [
+      "cij_SW",
+      "inj_idx",
+      0,
+      32,
+      0
+     ],
+     [
+      "cij_SW",
+      "inj_idx_r1",
+      0,
+      32,
+      0
+     ]
+    ],
+    "inj_addr": [
+     [
+      "cij_SW",
+      "inj_addr",
+      0,
+      160,
+      0
+     ],
+     [
+      "cij_SW",
+      "inj_addr_r1",
+      0,
+      160,
+      0
+     ]
+    ],
+    "idx_tx_v": [
+     [
+      "cij_SW",
+      "idx_tx_v",
+      0,
+      4,
+      0
+     ],
+     [
+      "cij_SW",
+      "idx_tx_v_r1",
+      0,
+      4,
+      0
+     ]
+    ],
+    "su_inj_d": [
+     [
+      "cij_SW",
+      "su_inj_d_r0",
+      0,
+      256,
+      0
+     ],
+     [
+      "cij_SW",
+      "su_inj_d_r1",
+      256,
+      512,
+      0
+     ],
+     [
+      "cij_SW",
+      "su_inj_d_r0",
+      512,
+      768,
+      256
+     ],
+     [
+      "cij_SW",
+      "su_inj_d_r1",
+      768,
+      1024,
+      256
+     ]
+    ],
+    "inj_d": [
+     [
+      "cij_SW",
+      "inj_d_r0",
+      0,
+      256,
+      0
+     ],
+     [
+      "cij_SW",
+      "inj_d_r1",
+      256,
+      512,
+      0
+     ],
+     [
+      "cij_SW",
+      "inj_d_r0",
+      512,
+      768,
+      256
+     ],
+     [
+      "cij_SW",
+      "inj_d_r1",
+      768,
+      1024,
+      256
+     ]
+    ],
+    "idx_tx": [
+     [
+      "cij_SW",
+      "idx_tx_r0",
+      0,
+      256,
+      0
+     ],
+     [
+      "cij_SW",
+      "idx_tx_r1",
+      256,
+      512,
+      0
+     ],
+     [
+      "cij_SW",
+      "idx_tx_r0",
+      545,
+      801,
+      256
+     ],
+     [
+      "cij_SW",
+      "idx_tx_r1",
+      801,
+      1057,
+      256
+     ],
+     [
+      "cij_SW",
+      "idx_tx_r0",
+      1090,
+      1346,
+      512
+     ],
+     [
+      "cij_SW",
+      "idx_tx_r1",
+      1346,
+      1602,
+      512
+     ],
+     [
+      "cij_SW",
+      "idx_tx_r0",
+      1635,
+      1891,
+      768
+     ],
+     [
+      "cij_SW",
+      "idx_tx_r1",
+      1891,
+      2147,
+      768
+     ],
+     [
+      "cij_SW",
+      "idx_tx_h",
+      512,
+      545,
+      0
+     ],
+     [
+      "cij_SW",
+      "idx_tx_h_r1",
+      512,
+      545,
+      0
+     ],
+     [
+      "cij_SW",
+      "idx_tx_h",
+      1057,
+      1090,
+      33
+     ],
+     [
+      "cij_SW",
+      "idx_tx_h_r1",
+      1057,
+      1090,
+      33
+     ],
+     [
+      "cij_SW",
+      "idx_tx_h",
+      1602,
+      1635,
+      66
+     ],
+     [
+      "cij_SW",
+      "idx_tx_h_r1",
+      1602,
+      1635,
+      66
+     ],
+     [
+      "cij_SW",
+      "idx_tx_h",
+      2147,
+      2180,
+      99
+     ],
+     [
+      "cij_SW",
+      "idx_tx_h_r1",
+      2147,
+      2180,
+      99
+     ]
+    ],
+    "clk": []
+   }
+  },
+  "sfup_SW": {
+   "master": "ot_hgi_sfu_programme_store_r10",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r10.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_store_stripe_leaf_r10.sv"
+   ],
+   "params": {
+    "PAGE_AW": 1
+   }
+  },
+  "sfup_SE": {
+   "master": "ot_hgi_sfu_programme_store_r10",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r10.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_store_stripe_leaf_r10.sv"
+   ],
+   "params": {
+    "PAGE_AW": 1
+   }
+  },
+  "sfup_NE": {
+   "master": "ot_hgi_sfu_programme_store_r10",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r10.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_store_stripe_leaf_r10.sv"
+   ],
+   "params": {
+    "PAGE_AW": 1
+   }
+  },
+  "sfup_NW": {
+   "master": "ot_hgi_sfu_programme_store_r10",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r10.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_store_stripe_leaf_r10.sv"
+   ],
+   "params": {
+    "PAGE_AW": 1
+   }
+  }
+ },
+ "hoist": {
+  "lg_SW_0_b0": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_SW0",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_SW0",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "su_SW0",
+     "lg_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "su_SW0",
+     "lg_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_SW0",
+     "lg_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_SW0",
+     "lg_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_SW0",
+     "lg_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_SW0",
+     "lg_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_SW0",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_SW0",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "su_SW0",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_0_b1": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_SW0",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_SW0",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "su_SW0",
+     "lg_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "su_SW0",
+     "lg_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_SW0",
+     "lg_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_SW0",
+     "lg_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_SW0",
+     "lg_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_SW0",
+     "lg_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_SW0",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_SW0",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "su_SW0",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_1_b0": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_SW0",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_SW0",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_SW0",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_SW0",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_SW0",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_SW0",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_SW0",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_SW0",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_SW0",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_SW0",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_SW0",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_1_b1": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_SW0",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_SW0",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_SW0",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_SW0",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_SW0",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_SW0",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_SW0",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_SW0",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_SW0",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_SW0",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_SW0",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_2_b0": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_SW0",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_SW0",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_SW0",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_SW0",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_SW0",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_SW0",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_SW0",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_2_b1": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_SW0",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_SW0",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_SW0",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_SW0",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_SW0",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_SW0",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_SW0",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_0_b2": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_SW1",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_SW1",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "su_SW1",
+     "lg_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "su_SW1",
+     "lg_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_SW1",
+     "lg_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_SW1",
+     "lg_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_SW1",
+     "lg_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_SW1",
+     "lg_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_SW1",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_SW1",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "su_SW1",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_0_b3": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_SW1",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_SW1",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "su_SW1",
+     "lg_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "su_SW1",
+     "lg_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_SW1",
+     "lg_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_SW1",
+     "lg_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_SW1",
+     "lg_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_SW1",
+     "lg_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_SW1",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_SW1",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "su_SW1",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_1_b2": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_SW1",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_SW1",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_SW1",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_SW1",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_SW1",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_SW1",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_SW1",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_SW1",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_SW1",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_SW1",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_SW1",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_1_b3": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_SW1",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_SW1",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_SW1",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_SW1",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_SW1",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_SW1",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_SW1",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_SW1",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_SW1",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_SW1",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_SW1",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_2_b2": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_SW1",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_SW1",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_SW1",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_SW1",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_SW1",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_SW1",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_SW1",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_2_b3": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_SW1",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_SW1",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_SW1",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_SW1",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_SW1",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_SW1",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_SW1",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_0_b4": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_SW2",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_SW2",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "su_SW2",
+     "lg_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "su_SW2",
+     "lg_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_SW2",
+     "lg_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_SW2",
+     "lg_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_SW2",
+     "lg_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_SW2",
+     "lg_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_SW2",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_SW2",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "su_SW2",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_0_b5": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_SW2",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_SW2",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "su_SW2",
+     "lg_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "su_SW2",
+     "lg_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_SW2",
+     "lg_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_SW2",
+     "lg_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_SW2",
+     "lg_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_SW2",
+     "lg_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_SW2",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_SW2",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "su_SW2",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_1_b4": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_SW2",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_SW2",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_SW2",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_SW2",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_SW2",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_SW2",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_SW2",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_SW2",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_SW2",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_SW2",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_SW2",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_1_b5": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_SW2",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_SW2",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_SW2",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_SW2",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_SW2",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_SW2",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_SW2",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_SW2",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_SW2",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_SW2",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_SW2",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_2_b4": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_SW2",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_SW2",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_SW2",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_SW2",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_SW2",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_SW2",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_SW2",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_2_b5": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_SW2",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_SW2",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_SW2",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_SW2",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_SW2",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_SW2",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_SW2",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_0_b6": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_SW3",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_SW3",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "su_SW3",
+     "lg_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "su_SW3",
+     "lg_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_SW3",
+     "lg_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_SW3",
+     "lg_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_SW3",
+     "lg_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_SW3",
+     "lg_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_SW3",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_SW3",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "su_SW3",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_0_b7": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_SW3",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_SW3",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "su_SW3",
+     "lg_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "su_SW3",
+     "lg_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_SW3",
+     "lg_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_SW3",
+     "lg_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_SW3",
+     "lg_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_SW3",
+     "lg_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_SW3",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_SW3",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "su_SW3",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_1_b6": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_SW3",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_SW3",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_SW3",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_SW3",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_SW3",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_SW3",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_SW3",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_SW3",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_SW3",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_SW3",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_SW3",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_1_b7": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_SW3",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_SW3",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_SW3",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_SW3",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_SW3",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_SW3",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_SW3",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_SW3",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_SW3",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_SW3",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_SW3",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_2_b6": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_SW3",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_SW3",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_SW3",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_SW3",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_SW3",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_SW3",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_SW3",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SW_2_b7": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_SW3",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_SW3",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_SW3",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_SW3",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_SW3",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_SW3",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_SW3",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_0_b0": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_SE0",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_SE0",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "su_SE0",
+     "lg_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "su_SE0",
+     "lg_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_SE0",
+     "lg_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_SE0",
+     "lg_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_SE0",
+     "lg_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_SE0",
+     "lg_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_SE0",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_SE0",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "su_SE0",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_0_b1": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_SE0",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_SE0",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "su_SE0",
+     "lg_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "su_SE0",
+     "lg_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_SE0",
+     "lg_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_SE0",
+     "lg_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_SE0",
+     "lg_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_SE0",
+     "lg_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_SE0",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_SE0",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "su_SE0",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_1_b0": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_SE0",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_SE0",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_SE0",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_SE0",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_SE0",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_SE0",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_SE0",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_SE0",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_SE0",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_SE0",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_SE0",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_1_b1": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_SE0",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_SE0",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_SE0",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_SE0",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_SE0",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_SE0",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_SE0",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_SE0",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_SE0",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_SE0",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_SE0",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_2_b0": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_SE0",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_SE0",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_SE0",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_SE0",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_SE0",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_SE0",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_SE0",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_2_b1": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_SE0",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_SE0",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_SE0",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_SE0",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_SE0",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_SE0",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_SE0",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_0_b2": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_SE1",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_SE1",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "su_SE1",
+     "lg_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "su_SE1",
+     "lg_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_SE1",
+     "lg_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_SE1",
+     "lg_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_SE1",
+     "lg_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_SE1",
+     "lg_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_SE1",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_SE1",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "su_SE1",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_0_b3": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_SE1",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_SE1",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "su_SE1",
+     "lg_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "su_SE1",
+     "lg_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_SE1",
+     "lg_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_SE1",
+     "lg_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_SE1",
+     "lg_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_SE1",
+     "lg_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_SE1",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_SE1",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "su_SE1",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_1_b2": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_SE1",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_SE1",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_SE1",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_SE1",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_SE1",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_SE1",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_SE1",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_SE1",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_SE1",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_SE1",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_SE1",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_1_b3": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_SE1",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_SE1",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_SE1",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_SE1",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_SE1",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_SE1",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_SE1",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_SE1",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_SE1",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_SE1",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_SE1",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_2_b2": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_SE1",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_SE1",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_SE1",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_SE1",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_SE1",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_SE1",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_SE1",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_2_b3": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_SE1",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_SE1",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_SE1",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_SE1",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_SE1",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_SE1",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_SE1",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_0_b4": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_SE2",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_SE2",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "su_SE2",
+     "lg_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "su_SE2",
+     "lg_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_SE2",
+     "lg_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_SE2",
+     "lg_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_SE2",
+     "lg_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_SE2",
+     "lg_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_SE2",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_SE2",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "su_SE2",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_0_b5": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_SE2",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_SE2",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "su_SE2",
+     "lg_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "su_SE2",
+     "lg_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_SE2",
+     "lg_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_SE2",
+     "lg_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_SE2",
+     "lg_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_SE2",
+     "lg_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_SE2",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_SE2",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "su_SE2",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_1_b4": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_SE2",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_SE2",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_SE2",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_SE2",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_SE2",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_SE2",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_SE2",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_SE2",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_SE2",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_SE2",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_SE2",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_1_b5": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_SE2",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_SE2",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_SE2",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_SE2",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_SE2",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_SE2",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_SE2",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_SE2",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_SE2",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_SE2",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_SE2",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_2_b4": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_SE2",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_SE2",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_SE2",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_SE2",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_SE2",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_SE2",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_SE2",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_2_b5": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_SE2",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_SE2",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_SE2",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_SE2",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_SE2",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_SE2",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_SE2",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_0_b6": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_SE3",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_SE3",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "su_SE3",
+     "lg_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "su_SE3",
+     "lg_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_SE3",
+     "lg_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_SE3",
+     "lg_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_SE3",
+     "lg_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_SE3",
+     "lg_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_SE3",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_SE3",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "su_SE3",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_0_b7": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_SE3",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_SE3",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "su_SE3",
+     "lg_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "su_SE3",
+     "lg_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_SE3",
+     "lg_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_SE3",
+     "lg_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_SE3",
+     "lg_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_SE3",
+     "lg_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_SE3",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_SE3",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "su_SE3",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_1_b6": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_SE3",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_SE3",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_SE3",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_SE3",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_SE3",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_SE3",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_SE3",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_SE3",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_SE3",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_SE3",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_SE3",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_1_b7": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_SE3",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_SE3",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_SE3",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_SE3",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_SE3",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_SE3",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_SE3",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_SE3",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_SE3",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_SE3",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_SE3",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_2_b6": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_SE3",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_SE3",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_SE3",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_SE3",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_SE3",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_SE3",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_SE3",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_SE_2_b7": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_SE3",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_SE3",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_SE3",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_SE3",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_SE3",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_SE3",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_SE3",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_0_b0": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_NE0",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_NE0",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "su_NE0",
+     "lg_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "su_NE0",
+     "lg_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_NE0",
+     "lg_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_NE0",
+     "lg_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_NE0",
+     "lg_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_NE0",
+     "lg_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_NE0",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_NE0",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "su_NE0",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_0_b1": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_NE0",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_NE0",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "su_NE0",
+     "lg_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "su_NE0",
+     "lg_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_NE0",
+     "lg_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_NE0",
+     "lg_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_NE0",
+     "lg_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_NE0",
+     "lg_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_NE0",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_NE0",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "su_NE0",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_1_b0": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_NE0",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_NE0",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_NE0",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_NE0",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_NE0",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_NE0",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_NE0",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_NE0",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_NE0",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_NE0",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_NE0",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_1_b1": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_NE0",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_NE0",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_NE0",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_NE0",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_NE0",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_NE0",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_NE0",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_NE0",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_NE0",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_NE0",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_NE0",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_2_b0": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_NE0",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_NE0",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_NE0",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_NE0",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_NE0",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_NE0",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_NE0",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_2_b1": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_NE0",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_NE0",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_NE0",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_NE0",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_NE0",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_NE0",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_NE0",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_0_b2": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_NE1",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_NE1",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "su_NE1",
+     "lg_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "su_NE1",
+     "lg_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_NE1",
+     "lg_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_NE1",
+     "lg_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_NE1",
+     "lg_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_NE1",
+     "lg_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_NE1",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_NE1",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "su_NE1",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_0_b3": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_NE1",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_NE1",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "su_NE1",
+     "lg_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "su_NE1",
+     "lg_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_NE1",
+     "lg_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_NE1",
+     "lg_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_NE1",
+     "lg_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_NE1",
+     "lg_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_NE1",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_NE1",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "su_NE1",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_1_b2": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_NE1",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_NE1",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_NE1",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_NE1",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_NE1",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_NE1",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_NE1",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_NE1",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_NE1",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_NE1",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_NE1",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_1_b3": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_NE1",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_NE1",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_NE1",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_NE1",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_NE1",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_NE1",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_NE1",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_NE1",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_NE1",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_NE1",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_NE1",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_2_b2": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_NE1",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_NE1",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_NE1",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_NE1",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_NE1",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_NE1",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_NE1",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_2_b3": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_NE1",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_NE1",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_NE1",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_NE1",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_NE1",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_NE1",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_NE1",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_0_b4": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_NE2",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_NE2",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "su_NE2",
+     "lg_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "su_NE2",
+     "lg_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_NE2",
+     "lg_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_NE2",
+     "lg_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_NE2",
+     "lg_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_NE2",
+     "lg_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_NE2",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_NE2",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "su_NE2",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_0_b5": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_NE2",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_NE2",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "su_NE2",
+     "lg_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "su_NE2",
+     "lg_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_NE2",
+     "lg_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_NE2",
+     "lg_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_NE2",
+     "lg_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_NE2",
+     "lg_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_NE2",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_NE2",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "su_NE2",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_1_b4": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_NE2",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_NE2",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_NE2",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_NE2",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_NE2",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_NE2",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_NE2",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_NE2",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_NE2",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_NE2",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_NE2",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_1_b5": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_NE2",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_NE2",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_NE2",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_NE2",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_NE2",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_NE2",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_NE2",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_NE2",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_NE2",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_NE2",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_NE2",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_2_b4": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_NE2",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_NE2",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_NE2",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_NE2",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_NE2",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_NE2",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_NE2",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_2_b5": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_NE2",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_NE2",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_NE2",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_NE2",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_NE2",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_NE2",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_NE2",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_0_b6": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_NE3",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_NE3",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "su_NE3",
+     "lg_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "su_NE3",
+     "lg_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_NE3",
+     "lg_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_NE3",
+     "lg_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_NE3",
+     "lg_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_NE3",
+     "lg_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_NE3",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_NE3",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "su_NE3",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_0_b7": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_NE3",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_NE3",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "su_NE3",
+     "lg_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "su_NE3",
+     "lg_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_NE3",
+     "lg_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_NE3",
+     "lg_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_NE3",
+     "lg_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_NE3",
+     "lg_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_NE3",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_NE3",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "su_NE3",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_1_b6": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_NE3",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_NE3",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_NE3",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_NE3",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_NE3",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_NE3",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_NE3",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_NE3",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_NE3",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_NE3",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_NE3",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_1_b7": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_NE3",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_NE3",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_NE3",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_NE3",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_NE3",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_NE3",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_NE3",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_NE3",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_NE3",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_NE3",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_NE3",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_2_b6": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_NE3",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_NE3",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_NE3",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_NE3",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_NE3",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_NE3",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_NE3",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NE_2_b7": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_NE3",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_NE3",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_NE3",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_NE3",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_NE3",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_NE3",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_NE3",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_0_b0": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_NW0",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_NW0",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "su_NW0",
+     "lg_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "su_NW0",
+     "lg_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_NW0",
+     "lg_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_NW0",
+     "lg_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_NW0",
+     "lg_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_NW0",
+     "lg_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_NW0",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_NW0",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "su_NW0",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_0_b1": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_NW0",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_NW0",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "su_NW0",
+     "lg_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "su_NW0",
+     "lg_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_NW0",
+     "lg_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_NW0",
+     "lg_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_NW0",
+     "lg_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_NW0",
+     "lg_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_NW0",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_NW0",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "su_NW0",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_1_b0": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_NW0",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_NW0",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_NW0",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_NW0",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_NW0",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_NW0",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_NW0",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_NW0",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_NW0",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_NW0",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_NW0",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_1_b1": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_NW0",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_NW0",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_NW0",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_NW0",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_NW0",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_NW0",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_NW0",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_NW0",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_NW0",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_NW0",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_NW0",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_2_b0": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_NW0",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_NW0",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_NW0",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_NW0",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_NW0",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_NW0",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_NW0",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_2_b1": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_NW0",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_NW0",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_NW0",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_NW0",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_NW0",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_NW0",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_NW0",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_0_b2": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_NW1",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_NW1",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "su_NW1",
+     "lg_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "su_NW1",
+     "lg_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_NW1",
+     "lg_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_NW1",
+     "lg_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_NW1",
+     "lg_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_NW1",
+     "lg_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_NW1",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_NW1",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "su_NW1",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_0_b3": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_NW1",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_NW1",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "su_NW1",
+     "lg_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "su_NW1",
+     "lg_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_NW1",
+     "lg_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_NW1",
+     "lg_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_NW1",
+     "lg_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_NW1",
+     "lg_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_NW1",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_NW1",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "su_NW1",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_1_b2": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_NW1",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_NW1",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_NW1",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_NW1",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_NW1",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_NW1",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_NW1",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_NW1",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_NW1",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_NW1",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_NW1",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_1_b3": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_NW1",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_NW1",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_NW1",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_NW1",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_NW1",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_NW1",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_NW1",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_NW1",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_NW1",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_NW1",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_NW1",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_2_b2": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_NW1",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_NW1",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_NW1",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_NW1",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_NW1",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_NW1",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_NW1",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_2_b3": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_NW1",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_NW1",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_NW1",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_NW1",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_NW1",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_NW1",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_NW1",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_0_b4": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_NW2",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_NW2",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "su_NW2",
+     "lg_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "su_NW2",
+     "lg_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_NW2",
+     "lg_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_NW2",
+     "lg_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_NW2",
+     "lg_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_NW2",
+     "lg_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_NW2",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_NW2",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "su_NW2",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_0_b5": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_NW2",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_NW2",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "su_NW2",
+     "lg_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "su_NW2",
+     "lg_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_NW2",
+     "lg_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_NW2",
+     "lg_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_NW2",
+     "lg_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_NW2",
+     "lg_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_NW2",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_NW2",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "su_NW2",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_1_b4": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_NW2",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_NW2",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_NW2",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_NW2",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_NW2",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_NW2",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_NW2",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_NW2",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_NW2",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_NW2",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_NW2",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_1_b5": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_NW2",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_NW2",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_NW2",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_NW2",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_NW2",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_NW2",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_NW2",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_NW2",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_NW2",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_NW2",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_NW2",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_2_b4": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_NW2",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_NW2",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_NW2",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_NW2",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_NW2",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_NW2",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_NW2",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_2_b5": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_NW2",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_NW2",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_NW2",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_NW2",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_NW2",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_NW2",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_NW2",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_0_b6": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_NW3",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_NW3",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "su_NW3",
+     "lg_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "su_NW3",
+     "lg_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_NW3",
+     "lg_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_NW3",
+     "lg_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_NW3",
+     "lg_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_NW3",
+     "lg_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_NW3",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_NW3",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "su_NW3",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_0_b7": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "su_NW3",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "su_NW3",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "su_NW3",
+     "lg_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "su_NW3",
+     "lg_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "su_NW3",
+     "lg_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "su_NW3",
+     "lg_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "su_NW3",
+     "lg_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "su_NW3",
+     "lg_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "su_NW3",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "su_NW3",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "su_NW3",
+     "lg_fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_1_b6": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_NW3",
+     "far_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_NW3",
+     "far_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_NW3",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_NW3",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_NW3",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_NW3",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_NW3",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_NW3",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_NW3",
+     "far_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_NW3",
+     "far_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_NW3",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_1_b7": {
+   "clk": [],
+   "rst_n": [],
+   "rret": [],
+   "wret": [],
+   "local_rq": [],
+   "far_rq": [
+    [
+     "sfu_NW3",
+     "far_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "local_wq": [],
+   "far_wq": [
+    [
+     "sfu_NW3",
+     "far_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "local_read": [
+    [
+     "sfu_NW3",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "sfu_NW3",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "sfu_NW3",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "sfu_NW3",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "sfu_NW3",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "sfu_NW3",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "far_rr": [
+    [
+     "sfu_NW3",
+     "far_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "local_w_done": [],
+   "far_w_done": [
+    [
+     "sfu_NW3",
+     "far_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "fault": [
+    [
+     "sfu_NW3",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_2_b6": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_NW3",
+     "local_read",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_NW3",
+     "local_write",
+     0,
+     1,
+     0
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_NW3",
+     "near_rq",
+     0,
+     17,
+     0
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_NW3",
+     "near_wq",
+     0,
+     281,
+     0
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_NW3",
+     "near_rr",
+     0,
+     257,
+     0
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_NW3",
+     "near_w_done",
+     0,
+     1,
+     0
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_NW3",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  "lg_NW_2_b7": {
+   "clk": [],
+   "rst_n": [],
+   "local_rq": [],
+   "local_wq": [],
+   "local_read": [
+    [
+     "hc_NW3",
+     "local_read",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_write": [
+    [
+     "hc_NW3",
+     "local_write",
+     0,
+     1,
+     1
+    ]
+   ],
+   "near_rq": [
+    [
+     "hc_NW3",
+     "near_rq",
+     0,
+     17,
+     17
+    ]
+   ],
+   "near_wq": [
+    [
+     "hc_NW3",
+     "near_wq",
+     0,
+     281,
+     281
+    ]
+   ],
+   "near_rr": [
+    [
+     "hc_NW3",
+     "near_rr",
+     0,
+     257,
+     257
+    ]
+   ],
+   "near_w_done": [
+    [
+     "hc_NW3",
+     "near_w_done",
+     0,
+     1,
+     1
+    ]
+   ],
+   "local_rr": [],
+   "local_w_done": [],
+   "fault": [
+    [
+     "hc_NW3",
+     "fault",
+     0,
+     1,
+     0
+    ]
+   ]
+  }
+ },
+ "fold_internal": [
+  [
+   "su_SW0",
+   "lg_rq"
+  ],
+  [
+   "su_SW0",
+   "lg_wq"
+  ],
+  [
+   "su_SW0",
+   "lg_rr"
+  ],
+  [
+   "su_SW0",
+   "lg_w_done"
+  ],
+  [
+   "sfu_SW0",
+   "lg_rq"
+  ],
+  [
+   "sfu_SW0",
+   "lg_wq"
+  ],
+  [
+   "sfu_SW0",
+   "lg_rr"
+  ],
+  [
+   "sfu_SW0",
+   "lg_w_done"
+  ],
+  [
+   "hc_SW0",
+   "lg_rq"
+  ],
+  [
+   "hc_SW0",
+   "lg_wq"
+  ],
+  [
+   "hc_SW0",
+   "lg_rr"
+  ],
+  [
+   "hc_SW0",
+   "lg_w_done"
+  ],
+  [
+   "su_SW1",
+   "lg_rq"
+  ],
+  [
+   "su_SW1",
+   "lg_wq"
+  ],
+  [
+   "su_SW1",
+   "lg_rr"
+  ],
+  [
+   "su_SW1",
+   "lg_w_done"
+  ],
+  [
+   "sfu_SW1",
+   "lg_rq"
+  ],
+  [
+   "sfu_SW1",
+   "lg_wq"
+  ],
+  [
+   "sfu_SW1",
+   "lg_rr"
+  ],
+  [
+   "sfu_SW1",
+   "lg_w_done"
+  ],
+  [
+   "hc_SW1",
+   "lg_rq"
+  ],
+  [
+   "hc_SW1",
+   "lg_wq"
+  ],
+  [
+   "hc_SW1",
+   "lg_rr"
+  ],
+  [
+   "hc_SW1",
+   "lg_w_done"
+  ],
+  [
+   "su_SW2",
+   "lg_rq"
+  ],
+  [
+   "su_SW2",
+   "lg_wq"
+  ],
+  [
+   "su_SW2",
+   "lg_rr"
+  ],
+  [
+   "su_SW2",
+   "lg_w_done"
+  ],
+  [
+   "sfu_SW2",
+   "lg_rq"
+  ],
+  [
+   "sfu_SW2",
+   "lg_wq"
+  ],
+  [
+   "sfu_SW2",
+   "lg_rr"
+  ],
+  [
+   "sfu_SW2",
+   "lg_w_done"
+  ],
+  [
+   "hc_SW2",
+   "lg_rq"
+  ],
+  [
+   "hc_SW2",
+   "lg_wq"
+  ],
+  [
+   "hc_SW2",
+   "lg_rr"
+  ],
+  [
+   "hc_SW2",
+   "lg_w_done"
+  ],
+  [
+   "su_SW3",
+   "lg_rq"
+  ],
+  [
+   "su_SW3",
+   "lg_wq"
+  ],
+  [
+   "su_SW3",
+   "lg_rr"
+  ],
+  [
+   "su_SW3",
+   "lg_w_done"
+  ],
+  [
+   "sfu_SW3",
+   "lg_rq"
+  ],
+  [
+   "sfu_SW3",
+   "lg_wq"
+  ],
+  [
+   "sfu_SW3",
+   "lg_rr"
+  ],
+  [
+   "sfu_SW3",
+   "lg_w_done"
+  ],
+  [
+   "hc_SW3",
+   "lg_rq"
+  ],
+  [
+   "hc_SW3",
+   "lg_wq"
+  ],
+  [
+   "hc_SW3",
+   "lg_rr"
+  ],
+  [
+   "hc_SW3",
+   "lg_w_done"
+  ],
+  [
+   "su_SE0",
+   "lg_rq"
+  ],
+  [
+   "su_SE0",
+   "lg_wq"
+  ],
+  [
+   "su_SE0",
+   "lg_rr"
+  ],
+  [
+   "su_SE0",
+   "lg_w_done"
+  ],
+  [
+   "sfu_SE0",
+   "lg_rq"
+  ],
+  [
+   "sfu_SE0",
+   "lg_wq"
+  ],
+  [
+   "sfu_SE0",
+   "lg_rr"
+  ],
+  [
+   "sfu_SE0",
+   "lg_w_done"
+  ],
+  [
+   "hc_SE0",
+   "lg_rq"
+  ],
+  [
+   "hc_SE0",
+   "lg_wq"
+  ],
+  [
+   "hc_SE0",
+   "lg_rr"
+  ],
+  [
+   "hc_SE0",
+   "lg_w_done"
+  ],
+  [
+   "su_SE1",
+   "lg_rq"
+  ],
+  [
+   "su_SE1",
+   "lg_wq"
+  ],
+  [
+   "su_SE1",
+   "lg_rr"
+  ],
+  [
+   "su_SE1",
+   "lg_w_done"
+  ],
+  [
+   "sfu_SE1",
+   "lg_rq"
+  ],
+  [
+   "sfu_SE1",
+   "lg_wq"
+  ],
+  [
+   "sfu_SE1",
+   "lg_rr"
+  ],
+  [
+   "sfu_SE1",
+   "lg_w_done"
+  ],
+  [
+   "hc_SE1",
+   "lg_rq"
+  ],
+  [
+   "hc_SE1",
+   "lg_wq"
+  ],
+  [
+   "hc_SE1",
+   "lg_rr"
+  ],
+  [
+   "hc_SE1",
+   "lg_w_done"
+  ],
+  [
+   "su_SE2",
+   "lg_rq"
+  ],
+  [
+   "su_SE2",
+   "lg_wq"
+  ],
+  [
+   "su_SE2",
+   "lg_rr"
+  ],
+  [
+   "su_SE2",
+   "lg_w_done"
+  ],
+  [
+   "sfu_SE2",
+   "lg_rq"
+  ],
+  [
+   "sfu_SE2",
+   "lg_wq"
+  ],
+  [
+   "sfu_SE2",
+   "lg_rr"
+  ],
+  [
+   "sfu_SE2",
+   "lg_w_done"
+  ],
+  [
+   "hc_SE2",
+   "lg_rq"
+  ],
+  [
+   "hc_SE2",
+   "lg_wq"
+  ],
+  [
+   "hc_SE2",
+   "lg_rr"
+  ],
+  [
+   "hc_SE2",
+   "lg_w_done"
+  ],
+  [
+   "su_SE3",
+   "lg_rq"
+  ],
+  [
+   "su_SE3",
+   "lg_wq"
+  ],
+  [
+   "su_SE3",
+   "lg_rr"
+  ],
+  [
+   "su_SE3",
+   "lg_w_done"
+  ],
+  [
+   "sfu_SE3",
+   "lg_rq"
+  ],
+  [
+   "sfu_SE3",
+   "lg_wq"
+  ],
+  [
+   "sfu_SE3",
+   "lg_rr"
+  ],
+  [
+   "sfu_SE3",
+   "lg_w_done"
+  ],
+  [
+   "hc_SE3",
+   "lg_rq"
+  ],
+  [
+   "hc_SE3",
+   "lg_wq"
+  ],
+  [
+   "hc_SE3",
+   "lg_rr"
+  ],
+  [
+   "hc_SE3",
+   "lg_w_done"
+  ],
+  [
+   "su_NE0",
+   "lg_rq"
+  ],
+  [
+   "su_NE0",
+   "lg_wq"
+  ],
+  [
+   "su_NE0",
+   "lg_rr"
+  ],
+  [
+   "su_NE0",
+   "lg_w_done"
+  ],
+  [
+   "sfu_NE0",
+   "lg_rq"
+  ],
+  [
+   "sfu_NE0",
+   "lg_wq"
+  ],
+  [
+   "sfu_NE0",
+   "lg_rr"
+  ],
+  [
+   "sfu_NE0",
+   "lg_w_done"
+  ],
+  [
+   "hc_NE0",
+   "lg_rq"
+  ],
+  [
+   "hc_NE0",
+   "lg_wq"
+  ],
+  [
+   "hc_NE0",
+   "lg_rr"
+  ],
+  [
+   "hc_NE0",
+   "lg_w_done"
+  ],
+  [
+   "su_NE1",
+   "lg_rq"
+  ],
+  [
+   "su_NE1",
+   "lg_wq"
+  ],
+  [
+   "su_NE1",
+   "lg_rr"
+  ],
+  [
+   "su_NE1",
+   "lg_w_done"
+  ],
+  [
+   "sfu_NE1",
+   "lg_rq"
+  ],
+  [
+   "sfu_NE1",
+   "lg_wq"
+  ],
+  [
+   "sfu_NE1",
+   "lg_rr"
+  ],
+  [
+   "sfu_NE1",
+   "lg_w_done"
+  ],
+  [
+   "hc_NE1",
+   "lg_rq"
+  ],
+  [
+   "hc_NE1",
+   "lg_wq"
+  ],
+  [
+   "hc_NE1",
+   "lg_rr"
+  ],
+  [
+   "hc_NE1",
+   "lg_w_done"
+  ],
+  [
+   "su_NE2",
+   "lg_rq"
+  ],
+  [
+   "su_NE2",
+   "lg_wq"
+  ],
+  [
+   "su_NE2",
+   "lg_rr"
+  ],
+  [
+   "su_NE2",
+   "lg_w_done"
+  ],
+  [
+   "sfu_NE2",
+   "lg_rq"
+  ],
+  [
+   "sfu_NE2",
+   "lg_wq"
+  ],
+  [
+   "sfu_NE2",
+   "lg_rr"
+  ],
+  [
+   "sfu_NE2",
+   "lg_w_done"
+  ],
+  [
+   "hc_NE2",
+   "lg_rq"
+  ],
+  [
+   "hc_NE2",
+   "lg_wq"
+  ],
+  [
+   "hc_NE2",
+   "lg_rr"
+  ],
+  [
+   "hc_NE2",
+   "lg_w_done"
+  ],
+  [
+   "su_NE3",
+   "lg_rq"
+  ],
+  [
+   "su_NE3",
+   "lg_wq"
+  ],
+  [
+   "su_NE3",
+   "lg_rr"
+  ],
+  [
+   "su_NE3",
+   "lg_w_done"
+  ],
+  [
+   "sfu_NE3",
+   "lg_rq"
+  ],
+  [
+   "sfu_NE3",
+   "lg_wq"
+  ],
+  [
+   "sfu_NE3",
+   "lg_rr"
+  ],
+  [
+   "sfu_NE3",
+   "lg_w_done"
+  ],
+  [
+   "hc_NE3",
+   "lg_rq"
+  ],
+  [
+   "hc_NE3",
+   "lg_wq"
+  ],
+  [
+   "hc_NE3",
+   "lg_rr"
+  ],
+  [
+   "hc_NE3",
+   "lg_w_done"
+  ],
+  [
+   "su_NW0",
+   "lg_rq"
+  ],
+  [
+   "su_NW0",
+   "lg_wq"
+  ],
+  [
+   "su_NW0",
+   "lg_rr"
+  ],
+  [
+   "su_NW0",
+   "lg_w_done"
+  ],
+  [
+   "sfu_NW0",
+   "lg_rq"
+  ],
+  [
+   "sfu_NW0",
+   "lg_wq"
+  ],
+  [
+   "sfu_NW0",
+   "lg_rr"
+  ],
+  [
+   "sfu_NW0",
+   "lg_w_done"
+  ],
+  [
+   "hc_NW0",
+   "lg_rq"
+  ],
+  [
+   "hc_NW0",
+   "lg_wq"
+  ],
+  [
+   "hc_NW0",
+   "lg_rr"
+  ],
+  [
+   "hc_NW0",
+   "lg_w_done"
+  ],
+  [
+   "su_NW1",
+   "lg_rq"
+  ],
+  [
+   "su_NW1",
+   "lg_wq"
+  ],
+  [
+   "su_NW1",
+   "lg_rr"
+  ],
+  [
+   "su_NW1",
+   "lg_w_done"
+  ],
+  [
+   "sfu_NW1",
+   "lg_rq"
+  ],
+  [
+   "sfu_NW1",
+   "lg_wq"
+  ],
+  [
+   "sfu_NW1",
+   "lg_rr"
+  ],
+  [
+   "sfu_NW1",
+   "lg_w_done"
+  ],
+  [
+   "hc_NW1",
+   "lg_rq"
+  ],
+  [
+   "hc_NW1",
+   "lg_wq"
+  ],
+  [
+   "hc_NW1",
+   "lg_rr"
+  ],
+  [
+   "hc_NW1",
+   "lg_w_done"
+  ],
+  [
+   "su_NW2",
+   "lg_rq"
+  ],
+  [
+   "su_NW2",
+   "lg_wq"
+  ],
+  [
+   "su_NW2",
+   "lg_rr"
+  ],
+  [
+   "su_NW2",
+   "lg_w_done"
+  ],
+  [
+   "sfu_NW2",
+   "lg_rq"
+  ],
+  [
+   "sfu_NW2",
+   "lg_wq"
+  ],
+  [
+   "sfu_NW2",
+   "lg_rr"
+  ],
+  [
+   "sfu_NW2",
+   "lg_w_done"
+  ],
+  [
+   "hc_NW2",
+   "lg_rq"
+  ],
+  [
+   "hc_NW2",
+   "lg_wq"
+  ],
+  [
+   "hc_NW2",
+   "lg_rr"
+  ],
+  [
+   "hc_NW2",
+   "lg_w_done"
+  ],
+  [
+   "su_NW3",
+   "lg_rq"
+  ],
+  [
+   "su_NW3",
+   "lg_wq"
+  ],
+  [
+   "su_NW3",
+   "lg_rr"
+  ],
+  [
+   "su_NW3",
+   "lg_w_done"
+  ],
+  [
+   "sfu_NW3",
+   "lg_rq"
+  ],
+  [
+   "sfu_NW3",
+   "lg_wq"
+  ],
+  [
+   "sfu_NW3",
+   "lg_rr"
+  ],
+  [
+   "sfu_NW3",
+   "lg_w_done"
+  ],
+  [
+   "hc_NW3",
+   "lg_rq"
+  ],
+  [
+   "hc_NW3",
+   "lg_wq"
+  ],
+  [
+   "hc_NW3",
+   "lg_rr"
+  ],
+  [
+   "hc_NW3",
+   "lg_w_done"
+  ]
+ ],
+ "notes": "H-DIE-R8b 2026-10-17: full_die_v16 revision layer v16_layers/r8b_d4f.json (newly CLOSED views bound on the d4f die).\n\n(1) LG tap fold (coordinator 0db; HBM-TILES-B 51f29cdbb, CLOSED hbm_sfu_lg_pair_tap_leaf_1017 /\n    hbm_hc_lg_pair_tap_leaf_term_1017): per quadrant q and bank pair g the two taps of each level fold into the level's\n    consumer tile and the 96 lg_<q>_<l>_b<k> instances leave the die:\n      SFU  sfu_<q><g> + lg_<q>_1_b{2g,2g+1}  -> ot_hgi_sfu_lg_pair_tap_leaf      (READ/WRITE_RETURN 14/11)\n      HC   hc_<q><g>  + lg_<q>_2_b{2g,2g+1}  -> ot_hgi_sfu_lg_pair_tap_leaf_term (18/15)\n      SU   su_<q><g>  + lg_<q>_0_b{2g,2g+1}  -> ot_hbm_su_static_pgslice_lg      (the slice's own 10/7; SYNTH until HBM-SU\n           hardens it)\n    Layer keys: 'remaster' (consumer -> fold master), 'hoist' (every tap port re-cut onto the fold, bank j at bit\n    offset j * width; tap<->consumer seam ports map to [] = fold-internal) and 'fold_internal' (the consumer's old seam\n    ports): an edge whose two ends are fold-internal is dropped, one internal end is a problem.  The return-edge\n    identity straps rret/wret leave with the taps (the return edges are fold parameters, RET_PIN=0).\n(2) cij_SW -> ot_hgi_coll_inj_idx_join_rg (CLOSED hcoll_inj_idx_join_rg_1017, HBM-TILES-B): identical edges, two\n    regional roots by data half; 'port_split' re-cuts the data buses by region and REPLICATES the control inputs onto\n    the *_r1 pins (the producer register fans out to both pins); new clocks clk_r0/clk_r1 (stream) + rst_n_r1.\n(3) sfup_<q> -> ot_hgi_sfu_programme_store_r10 (SFU-PS-FUND r10, stripe leaf CLOSED hbm_sfu_store_stripe_r10_1017;\n    the parent cluster is SFU-PS-3's): same ports and priced cycles as r7c (lockstep); SYNTH until the parent closes.\n    The +1 start edge of DECISION B (0dh++) lands with SFU-PS-3's head change (compiler start advance +1)."
+}

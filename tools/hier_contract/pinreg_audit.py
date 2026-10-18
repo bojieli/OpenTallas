@@ -176,6 +176,64 @@ def clock_refs(lib, ins_json, corner):
     return out
 
 
+# RELATIVE MODE (owner 2026-10-17 0dq, memory clock-rule-boundary-match-1017): the boundary check is the pin-flop
+# arrival relative to the NEIGHBOUR / PARENT, not the tile's own insertion.  The parent delivers the clock at the tile's
+# clock pin at phi - C (C = the parent's insertion compensation for this tile, or the neighbour's boundary mean for a
+# landed / forwarded-clock link), so the pin flops tick at phi + (arrival - C): launch = O - C, capture = S + C, and the
+# boundary mismatch is max |arrival - C| over the pin flops (budget NEIGHBOUR_SKEW_PS, the ~80 ps neighbour skew).
+NEIGHBOUR_SKEW_PS = 80.0
+
+
+def compensation(spec, corners=('tt', 'ff')):
+    """--relative-to: a number (ps, every corner), "tt=V,ff=W", or a path to a neighbour view dir / insertion.json /
+    ck.json (C = its <corner>.boundary.mean).  Returns {corner: C, 'src': text}."""
+    s = str(spec).strip()
+    try:
+        v = float(s)
+        return dict({c: v for c in corners}, src=f'given {v:g} ps')
+    except ValueError:
+        pass
+    if '=' in s and not Path(s).exists():
+        out = {k.strip(): float(v) for k, v in (x.split('=', 1) for x in s.split(','))}
+        return dict(out, src=f'given {s}')
+    p = Path(s)
+    if p.is_dir():
+        p = p / 'insertion.json'
+    j = json.loads(p.read_text())
+    out = {}
+    for c in corners:
+        b = (j.get(c) or {}).get('boundary') or {}
+        if b.get('mean') is not None:
+            out[c] = float(b['mean'])
+    if not out:
+        raise ValueError(f'{p}: no <corner>.boundary.mean to compensate against')
+    return dict(out, src=f'neighbour {p} boundary mean')
+
+
+def relative_refs(refs, comp_ps):
+    """refs with the reference R replaced by the parent compensation C (launch O - C, capture S + C); keeps the
+    measured pin-flop range (bmin / bmax) and records offset = R - C."""
+    out = {}
+    for k, v in refs.items():
+        d = comp_ps - v['rise']
+        out[k] = dict(v, rise=v['rise'] + d, fall=v['fall'] + d, own_rise=v['rise'], comp=comp_ps,
+                      src=v['src'] + f' -> relative C {comp_ps:g}')
+    return out
+
+
+def boundary_match(refs, comp_ps):
+    """pin-flop arrival relative to the compensation: {min, max, mismatch = max |arrival - C|, offset = R - C}, worst
+    clock pin; None without refs."""
+    best = None
+    for k, v in refs.items():
+        lo, hi = v['bmin'] - comp_ps, v['bmax'] - comp_ps
+        rec = dict(clock_pin=k, rel_min_ps=round(lo, 1), rel_max_ps=round(hi, 1), mismatch_ps=round(max(abs(lo), abs(hi)), 1),
+                   offset_ps=round(v.get('own_rise', v['rise']) - comp_ps, 1), comp_ps=comp_ps)
+        if best is None or rec['mismatch_ps'] > best['mismatch_ps']:
+            best = rec
+    return best
+
+
 def pin_metrics(lib, refs):
     """per pin: dict(dir, out, in, lmin, hold, comb=[related], clk) - None where the pin has no such arc."""
     res = {}

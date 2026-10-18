@@ -496,6 +496,62 @@ def place_lane(rule, e, es, bl):
     return i, rule['port'], lw, ck
 
 
+RESET_REACH_UM = 405.0             # measured repeated reach (plan 405 um, memory reach-405-repeaters-1016)
+
+
+def reset_reach_gate(blocks, par, free, nx, ny, block_pin, station_pts, reach=RESET_REACH_UM, mode=None):
+    """Die standard (regional reset; as the Qwen generator 27309ba59 and HBM die_case_v16 reset_reach_gate): every reset
+    sink must be reachable by the regional reset tree.  Errors (FAIL, ValueError) -- 'warn' does NOT bypass them, only
+    OT_RESET_GATE=diag continues (rec reach_gate FAIL_DIAG):
+      sink_unreachable    a block reset pin / relay station rs whose own grid cell is not on the BFS street tree and whose
+                          nearest tree station is more than `reach` away (cell_of() would silently stretch the hop);
+      sink_buried         a block reset pin strictly inside ANOTHER block's outline (no street can reach it);
+      driver_unreachable  no block-free cell for the root synchroniser.
+    over_reach (recorded, not a FAIL): a station -> parent hop longer than `reach` (relay timing judges it)."""
+    mode = os.environ.get('OT_RESET_GATE') if mode is None else mode
+    errors, over = [], 0
+    if not par:
+        errors.append(dict(kind='driver_unreachable', pin='rst_n', why='no block-free reset street cell'))
+
+    def raw(x, y):
+        return (min(max(int(x // GRID), 0), nx - 1), min(max(int(y // GRID), 0), ny - 1))
+
+    def nearest(x, y):
+        return min(par, key=lambda k: abs(free[k][0] - x) + abs(free[k][1] - y))
+
+    def buried(x, y, own):
+        for b in blocks:
+            if b['name'] != own and b['x'] + 0.5 < x < b['x'] + b['w'] - 0.5 and b['y'] + 0.5 < y < b['y'] + b['h'] - 0.5:
+                return b['name']
+        return None
+    sinks = [(f"{n}.rst", xy, n) for n, xy in block_pin.items()] + \
+            [(f"{nm}[{k}].rs", xy, None) for (nm, k), xy in station_pts.items()]
+    for pin, (x, y), own in sinks if par else ():
+        if own is not None:
+            b = buried(x, y, own)
+            if b:
+                errors.append(dict(kind='sink_buried', pin=pin, under=b))
+                continue
+        if raw(x, y) in par:
+            continue
+        c = nearest(x, y)
+        um = abs(free[c][0] - x) + abs(free[c][1] - y)
+        if um > reach:
+            errors.append(dict(kind='sink_unreachable', pin=pin, station=c, um=round(um, 1)))
+    for c, p in par.items():
+        if p is not None and abs(free[c][0] - free[p][0]) + abs(free[c][1] - free[p][1]) > reach:
+            over += 1
+    kinds = dict(collections.Counter(e['kind'] for e in errors))
+    rec = dict(reach_um=reach, sinks=len(sinks), errors=len(errors), kinds=kinds, first=errors[:20], over_reach_hops=over,
+               reach_gate='PASS' if not errors else ('FAIL_DIAG' if mode == 'diag' else 'FAIL'))
+    print('reset_reach_gate', json.dumps({k: rec[k] for k in ('reach_gate', 'sinks', 'errors', 'kinds', 'over_reach_hops')}),
+          flush=True)
+    if rec['reach_gate'] == 'FAIL':
+        raise ValueError(f"reset tree: reachability gate FAIL, {len(errors)} unbuildable {kinds}: {errors[:8]} "
+                         f"(OT_RESET_GATE=diag continues for diagnosis only)")
+    return rec
+
+
 def reset_tree(plan, reg, chains_pts, sdir, master=None):
     rr = {d: master for d in RST_RLY} if master else RST_RLY
     W, H = plan['facts']['die_um']
@@ -520,6 +576,8 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None):
                 if hit:
                     free[(i, j)] = hit; break
     # root: the die reset pad at the south edge centre street
+    if not free:
+        reset_reach_gate(blocks, {}, free, nx, ny, {}, {})
     root = min(free, key=lambda c: abs(free[c][0] - W / 2) + free[c][1])
     par = {root: None}
     q = collections.deque([root])
@@ -535,6 +593,9 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None):
         if c in par:
             return c
         return min(par, key=lambda k: abs(free[k][0] - x) + abs(free[k][1] - y))
+    gate = reset_reach_gate(blocks, par, free, nx, ny,
+                            {b['name']: (b['x'] + b['w'] / 2, b['y']) for b in blocks},
+                            {(nm, k): xy for nm, pts in chains_pts.items() for k, xy in enumerate(pts)})
     need = set()
     station_cell = {}
     for nm, pts in chains_pts.items():
@@ -584,7 +645,7 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None):
     summary = dict(grid_um=GRID, root_cell=root, root_xy=free[root], stations=len(tree) + 2, max_release_depth=max(depths),
                    min_release_depth=min(depths), max_relay_fanout=max(leaves.values()),
                    region_release_depth={r: max(dep(c) + 2 for c in tree if creg(c) == r) for r in set(map(creg, tree))},
-                   unreachable_cells=nx * ny - len(par))
+                   unreachable_cells=nx * ny - len(par), reach_gate=gate)
     return dict(verilog=v, station_leaf={k: name[c] for k, c in station_cell.items()},
                 block_leaf={b: name[c] for b, c in block_cell.items()},
                 block_parent={b: (name[par[c]] if par[c] is not None else 'rst_sync1') for b, c in block_cell.items()},

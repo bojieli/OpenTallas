@@ -1,3 +1,2 @@
-{"schema":"opentallas.tile_visual_review.v1","tile":"hbm_sfu_store_stripe_r10_1017","reviewer":"coordinator (2026-10-17 ~20:10)","verdict":"APPROVED","time":"2026-10-17T20:10:00-07:00","gate_commit":"2026-10-17T14:35:13-0700",
- "checklist":{"lattice":"PASS: 4x 512x256 macros mirrored about a centre spine, abutted rows","std_cell_band":"PASS: centre spine band","pin_spread":"PASS: inputs over the full N face, registered outputs on S","clock_entry":"PASS: S-face spine foot; 285.4 / 55.6 on 1,462 sinks","shape":"PASS 285.12x194.4"},
- "notes":"r10 fundamental redesign (lanes/SFU-PS-FUND.md): 11 identical one-stripe leaves; lockstep vs r7c PASS; GRT overflow 0."}
+{"schema":"opentallas.tile_visual_review.v1","tile":"hbm_sfu_store_stripe_r10n","reviewer":"coordinator (2026-10-17 ~19:30)","verdict":"APPROVED","time":"2026-10-17T19:30:00-07:00","gate_commit":"2026-10-17T17:56:16-0700",
+ "checklist":{"lattice":"PASS or n/a","std_cell_band":"PASS","pin_spread":"PASS: full faces","clock_entry":"PASS: within rule","shape":"PASS"},"notes":"r10n: dedicated out-pin flops (0 cycles); 276.8/47.1; probe launch 115 / capture 180 (10 ps margin; fallback is +1 chain stage)"}

@@ -1111,14 +1111,24 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         try:
             if os.environ.get('OT_SPLIT_B2', '0') == '1':
                 from qwen_split.b2_graph import apply as apply_b2_graph
+                v._write_netlist_pre_b2 = v.write_netlist      # the dv die (no b2 graph) restores the plain writer
                 apply_b2_graph(v, m)
             if os.environ.get('OT_SPLIT_Q3H', '0') == '1':
                 # Q-DIEPLAN3 2026-10-16: q3h hierarchical die -- 48 x C_B16 clusters replace tiles/stations/heads,
                 # die-top broadcast H-tree replaces the comb (tools/qwen_split/q3h_cluster.py)
                 from qwen_split.q3h_cluster import apply as apply_q3h
                 apply_q3h(v, m)
+                if os.environ.get('OT_SPLIT_DV', '').strip():
+                    # Q-DIEPLAN3 2026-10-17: DIAGNOSTIC dv2r8f2 die case on the q3h model (tools/qwen_split/dv_case.py)
+                    from qwen_split.dv_case import apply_dv
+                    apply_dv(v, m)
+                    if getattr(v, '_write_netlist_pre_b2', None) is not None:
+                        v.write_netlist = v._write_netlist_pre_b2   # the b2 trial writer needs the retired b2 buses
             _late_pin_grant(v)
-            _relays(v, m, relay_pitch)
+            if m.get('dv_gap_route'):
+                _relays_fanout(v, m, relay_pitch)
+            else:
+                _relays(v, m, relay_pitch)
         finally:
             v.CORR = _corr0
         if getattr(v, 'RELAY_REACH_GATE', False):   # tp8b (die timing by construction)
@@ -1296,6 +1306,9 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
     SU_VM_A_BITS = a_bits if a_bits is not None else globals()['SU_VM_A_BITS']   # noqa: N806
     SU_VM_Q_BITS = q_bits if q_bits is not None else globals()['SU_VM_Q_BITS']   # noqa: N806
     by = {i.name: i for i in m['insts']}
+    if os.environ.get('OT_SPLIT_DV', '').strip() and 'sp_su64_sfu' not in by and 'sp_vector_memory' not in by:
+        m['b3r2']['su_vm_bus'] = 'none: dv die (distributed vector slices, no central SU/VM)'
+        return
     su, vm = by['sp_su64_sfu'], by['sp_vector_memory']
     # contract v5 (r8): the bit-plane VM region sits N of the tree top; the SU abuts its N face (R0: an MX master's M8
     # clock pins are not mirror-legal): the SU takes va / vq on its S face, the VM sa / sq on N
@@ -1921,7 +1934,14 @@ if _os_reach.environ.get('OT_RELAY_REACH_UM'):
 # The relay masters must meet the reach: o + s <= 683.3 - 0.76 x 490 = 310.9 ps TT (relay element, compute queue).
 import os as _os_r
 P2P_REACH = _os_r.environ.get('OT_RELAY_P2P', '1') != '0'
+# Q-DIEPLAN5 10-17: the planner's pin-to-pin hop measure counts the block pin group's worst bit at chain ends
+# (OT_RELAY_P2P_WORST_BIT=0 restores the centroid measure)
+P2P_WORST_BIT = _os_r.environ.get('OT_RELAY_P2P_WORST_BIT', '1') != '0'
 RELAY_NEVER = ('clock_trunk', 'reset')
+# Q-DIEPLAN3 10-17 (coordinator: pass-2 repair = one-by-one BFS over up to 400k sites per chain; q3h GENs > 5 h): the
+# per-search site budget (OT_RELAY_BFS_MAX, default the historical 400,000); a smaller budget fails a hopeless tier
+# fast and moves on to the next tier / rip-up instead of exhausting the die
+BFS_MAX = int(_os_r.environ.get('OT_RELAY_BFS_MAX', '400000'))
 
 
 def _relay_terminal_possible(centers, endpoint, reach_um, is_free, hop_ok=None):
@@ -1935,6 +1955,53 @@ def _relay_terminal_possible(centers, endpoint, reach_um, is_free, hop_ok=None):
                          np.abs(centers[:, 1] - endpoint[1]) <= reach_um)
     return any(is_free(int(i)) and (hop_ok is None or hop_ok(
         (float(centers[i][0]), float(centers[i][1])), endpoint)) for i in ids)
+
+
+def _relays_fanout(v, m, pitch=RELAY_PITCH_UM):
+    """Q-DIEPLAN3 dv (2026-10-17; dv2f6 GEN: 8 multi-sink data nets over reach, e.g. dvr_ng_io_cmd_free_0 collective ->
+    dvs_W5 + sys_face, 11.2 mm): the planner relays 2-point buses only.  A multi-sink bus whose farthest sink is out of
+    reach is split into one 2-point leg per sink (leg 0 keeps the bus name, leg k is <bus>__fo<k>), every leg is planned
+    and relayed on its own, and the legs' first hops are merged back into ONE net on the driver port (driver -> the
+    first relay / sink of every leg).  Each sink keeps a fixed, compiler-known stage count (static schedule)."""
+    if _os_r.environ.get('OT_RELAY_SKIP') == '1':
+        return _relays(v, m, pitch)
+    reach = float(_os_r.environ.get('OT_RELAY_REACH_OK', RELAY_REACH_UM))
+    pos = _pin_pos(v, m)
+    legs, out = {}, []
+    for bid, cl, bits, eps in m['buses']:
+        if len(eps) > 2 and cl not in ('clock_trunk', 'reset') and not bid.endswith('_rdy'):
+            try:
+                P0 = pos(*eps[0])
+                far = max(abs(P0[0] - pos(*e)[0]) + abs(P0[1] - pos(*e)[1]) for e in eps[1:])
+            except Exception:
+                far = 0.0
+            if far > reach:
+                names = []
+                for k, e in enumerate(eps[1:]):
+                    ln = bid if k == 0 else f'{bid}__fo{k}'
+                    out.append((ln, cl, bits, [eps[0], e]))
+                    names.append(ln)
+                legs[bid] = (cl, bits, eps[0], names)
+                continue
+        out.append((bid, cl, bits, eps))
+    m['buses'] = out
+    _relays(v, m, pitch)
+    if not legs:
+        return
+    first = {ln: o for o, (_, _, _, ns) in legs.items() for ln in ns}
+    merged, B = {}, []
+    for bid, cl, bits, eps in m['buses']:
+        if bid in first:
+            merged.setdefault(first[bid], []).append(eps[1:])
+            continue
+        B.append((bid, cl, bits, eps))
+    for o, (cl, bits, src, ns) in legs.items():
+        loads = [e for es in merged.get(o, []) for e in es]
+        if len(merged.get(o, [])) != len(ns):
+            raise ValueError(f'relays fanout: {o}: {len(merged.get(o, []))} of {len(ns)} legs found after planning')
+        B.append((o, cl, bits, [src] + loads))
+    m['buses'] = B
+    m['r21_relays']['fanout_legs'] = {o: ns for o, (_, _, _, ns) in legs.items()}
 
 
 def _relays(v, m, pitch=RELAY_PITCH_UM):
@@ -2013,6 +2080,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         return True
     for it in m['insts']:
         add_rect((it.x, it.y, it.x + it.w, it.y + it.h))
+    # Q-DIEPLAN3 q3h5: reserved keep-outs (DIE-CLOCK regional root sites, dedicated lanes): no relay may take them
+    for r_ in m.get('relay_keepouts', ()):
+        add_rect(tuple(r_['rect']))
     die_top = g['y_io']
     # Re-packed tile rows expose real horizontal channels. Derive them from
     # actual placed tile bodies, not the historical TILE_SLOT height. free()
@@ -2380,6 +2450,19 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             yv = Pv[1] + (130.0 if Ph[1] > Pv[1] else -130.0)
             path = [Pv, (Pv[0], yv), (xl, yv), (xl, Ph[1]), Ph]
             return path if Pv is P0 else path[::-1]
+        if m.get('dv_gap_route') and f0 and f1:
+            # Q-DIEPLAN3 dv (2026-10-17): the dv array has no field corridors (clusters / slices abut; the corridor
+            # lanes are the W-column channel), so a field-to-field link whose ends face one band gap / the W|E seam
+            # runs inside that channel (dv2f3: dv_rsi_E4_0 went 25 mm W to the W-column lane and back)
+            sm = m.get('dv_seam')
+            if sm and all(sm[0] - 1.0 <= P[0] <= sm[1] + 1.0 for P in (P0, P1)):
+                xm = round((sm[0] + sm[1]) / 2, 3)
+                return [P0, (xm, P0[1]), (xm, P1[1]), P1] if abs(P0[1] - P1[1]) > 1.0 else [P0, P1]
+            for a_, b_ in legal_row_gaps:
+                if a_ - 1.0 <= P0[1] <= b_ + 1.0 and a_ - 1.0 <= P1[1] <= b_ + 1.0:
+                    ym = round((a_ + b_) / 2, 3)
+                    return [P0, (P0[0], ym), (P1[0], ym), P1] if abs(P0[0] - P1[0]) > 1.0 else [P0, P1]
+            raise ValueError(f'dv: field-to-field link {bid} {P0} -> {P1} faces no band gap / seam (no die corridor)')
         if cl == 'corridor' or (abs(P0[0] - P1[0]) < 1.0 and not (FIELD_ALLOC and f0 and f1 and not cl.startswith('kvn'))):
             # it19: under FIELD_ALLOC a same-x field word goes through field_route too (the straight vertical
             # shortcut stacked 3 x 512-b tree words + a corridor word in one column channel: 0.72 / 0.68 / 0.65)
@@ -2844,6 +2927,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
 
     GATE = bool(getattr(v, 'RELAY_REACH_GATE', False))
     PT_EXT = {}          # r10: block pin point -> half extents of its pin group (pos.ext)
+    PT_FACE = {}         # Q-DIEPLAN5: block pin point -> the block face (N/S/E/W) its pin group sits on (pos.face)
 
     def _pt_key(o):
         return (round(o[0], 2), round(o[1], 2))
@@ -2854,6 +2938,21 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         if he is None:
             return 0.0
         return max(0.0, (he[1] if f in 'EW' else he[0]) - bits * 0.048 / 2)
+
+    def _end_worst(o, f, bits, face_len):
+        """Q-DIEPLAN5 10-17 (dv2f7: 5 hops passed the planner at <= 395 um pin to pin on CENTROIDS but their worst
+        bit ran 408-486 um): um the worst bit of a block-pin <-> relay-face hop runs beyond the centroid distance.  The
+        relay face (f) carries the word at one track per bit (half extent r); facing faces on one axis with the order
+        preserved meet bit k to bit k (+ the extent DIFFERENCE, as the direct 'ordered' rule); a corner (nested order)
+        or a u-turn (relay face pointing the same way as the block face) adds both half extents."""
+        he = PT_EXT.get(_pt_key(o))
+        if he is None:
+            return 0.0
+        r = min(bits * 0.048, face_len) / 2
+        rx, ry = (r, 0.0) if f in 'NS' else (0.0, r)
+        if PT_FACE.get(_pt_key(o)) == f:
+            return (he[0] + rx) if f in 'NS' else (he[1] + ry)
+        return abs(he[0] - rx) + abs(he[1] - ry)
 
     def frame_faces(pts, k, fr, bits):
         """(in face, out face) of relay frame k of a chain (pts = P0, frame centres, P1): toward the previous / next
@@ -2940,8 +3039,28 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     def p2p_hops(pl):
         """pin-to-pin hop lengths of a chain (the audit's measure); the allocator's own measure (hops_of) is centre to
         centre, up to w / 2 + h / 2 a side shorter"""
-        q = pin_pts(pl)
-        return [abs(q[i][0] - q[i + 1][0]) + abs(q[i][1] - q[i + 1][1]) for i in range(0, len(q), 2)]
+        fc = []
+        q = pin_pts(pl, fc)
+        hp = [abs(q[i][0] - q[i + 1][0]) + abs(q[i][1] - q[i + 1][1]) for i in range(0, len(q), 2)]
+        if P2P_WORST_BIT:
+            # Q-DIEPLAN5: the block-pin ends are judged on their worst bit (block pin group extent), not the centroid
+            fr_ = pl['frames']
+            if fr_:
+                f0, fn = fr_[0], fr_[-1]
+                hp[0] += _end_worst(pl['P0'], fc[0], pl['bits'], f0[2] if fc[0] in 'NS' else f0[3])
+                hp[-1] += _end_worst(pl['P1'], fc[-1], pl['bits'], fn[2] if fc[-1] in 'NS' else fn[3])
+            else:
+                hp[0] += _direct_worst(pl['P0'], pl['P1'])
+        return hp
+
+    def _direct_worst(P0, P1):
+        """Q-DIEPLAN5: block pin group to block pin group (no relay): the 'ordered' rule (extent difference per axis;
+        a corner sums by construction) and a u-turn (both groups on the same-named face) sums both extents"""
+        e0_, e1_ = PT_EXT.get(_pt_key(P0)) or (0.0, 0.0), PT_EXT.get(_pt_key(P1)) or (0.0, 0.0)
+        f0_, f1_ = PT_FACE.get(_pt_key(P0)), PT_FACE.get(_pt_key(P1))
+        if f0_ is not None and f0_ == f1_:
+            return e0_[0] + e1_[0] + e0_[1] + e1_[1]
+        return abs(e0_[0] - e1_[0]) + abs(e0_[1] - e1_[1])
 
     def reach_bad(pl):
         return GATE and max(p2p_hops(pl)) > RELAY_REACH_OK
@@ -3002,6 +3121,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     feedback = []        # it24: (bid, max hop before, after, accepted)
     plans = {}
     import os as _os
+    seam_lane = set(m.get('dv_seam_lane') or ()) if m.get('dv_seam') else set()
     _only = tuple(q for q in _os.environ.get('OT_RELAY_ONLY', '').split(',') if q)   # debug: relay only these buses
     _dbg = set(q for q in _os.environ.get('OT_RELAY_DBG', '').split(',') if q)
     for idx, (bid, cl, bits, eps) in buses:
@@ -3018,9 +3138,42 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             continue
         P0, P1 = pos(*eps[0]), pre_far.get(idx) or pos(*eps[1])
         PT_EXT[_pt_key(P0)] = pos.ext(*eps[0])
+        if hasattr(pos, 'face'):
+            PT_FACE[_pt_key(P0)] = pos.face(*eps[0])
         if idx not in pre_far:
             PT_EXT[_pt_key(P1)] = pos.ext(*eps[1])
+            if hasattr(pos, 'face'):
+                PT_FACE[_pt_key(P1)] = pos.face(*eps[1])
         d = abs(P0[0] - P1[0]) + abs(P0[1] - P1[1])
+        # Q-DIEPLAN3 2026-10-16 (Codex 20:18: 25 q3h hops passed on the centroid but their worst BIT ran 422-444 um > the
+        # measured reach): the direct-wire decision bounds the worst bit by the centroid distance plus both pin groups'
+        # half extents (a bit at one end of a group meets its partner at the other end of the facing group at most that
+        # far off); OT_RELAY_WORST_BIT=0 restores the centroid rule
+        # (face-to-face seams across <= 60 um keep the centroid rule: their pins are per-bit aligned on one track each,
+        # as the seam pin audit proves for the VM/SU channel)
+        _wb = _os.environ.get('OT_RELAY_WORST_BIT', '1')
+        if _wb != '0' and d > 60.0:
+            e0_, e1_ = PT_EXT.get(_pt_key(P0)) or (0.0, 0.0), PT_EXT.get(_pt_key(P1)) or (0.0, 0.0)
+            if _wb == 'ordered':
+                # dv die (Q-DIEPLAN3 10-17): every die bundle is written bit-ascending on both faces with the order
+                # preserved (pin_align 'order preserved' on all of them), so bit k meets bit k: the worst bit is the
+                # centroid distance plus the extent DIFFERENCE.  The per-bit gate (OT_PIN_BIT_REACH_UM) re-measures
+                # every bit after pin assignment and fails the GEN if this ever under-counts.
+                d = d + _direct_worst(P0, P1)
+            else:
+                d = d + e0_[0] + e1_[0] + e0_[1] + e1_[1]
+        if bid in seam_lane:
+            # Q-DIEPLAN6 10-17 (dv_case OT_SPLIT_DV_SEAM_LANE): a W0 | E0 seam chain word takes its own registered lane
+            # station in the seam channel, on its own face rows (one relay, both hops ~ half the seam)
+            xs_, ys_ = (m['dv_seam'][0] + m['dv_seam'][1]) / 2, (P0[1] + P1[1]) / 2
+            w_, h_ = relay_frame(bits, cl)
+            sp_ = place(xs_, ys_, w_ + v.SHAVE, h_ + v.SHAVE, None, 400.0)
+            if sp_ is None:
+                raise ValueError(f'dv seam lane: no free station for {bid} near ({xs_:.0f}, {ys_:.0f})')
+            add_rect((sp_[0], sp_[1], sp_[0] + w_ + v.SHAVE, sp_[1] + h_ + v.SHAVE))
+            plans[idx] = dict(bid=bid, cl=cl, bits=bits, eps=eps, P0=P0, P1=P1, frames=[(sp_[0], sp_[1], w_, h_)], d=d,
+                              path=[P0, (xs_, P0[1]), (xs_, P1[1]), P1])
+            continue
         terminal = getattr(v, 'TERMINAL_TIGHT', {})
         direct_limit = min(terminal.get(tuple(eps[0]), float('inf')), terminal.get(tuple(eps[-1]), float('inf')))
         if _dbg and bid in _dbg:
@@ -3298,7 +3451,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         near_cons = near
         def _e_pin(pt, i):            # block pin point -> frame i face (pin to pin estimate)
             dx_, dy_ = abs(ctr[i][0] - pt[0]), abs(ctr[i][1] - pt[1])
-            return dx_ + dy_ - (W / 2 if dx_ >= dy_ else H / 2)
+            e_ = dx_ + dy_ - (W / 2 if dx_ >= dy_ else H / 2)
+            if P2P_WORST_BIT:         # Q-DIEPLAN5: + the worst bit of the block pin group on the face toward it
+                f_ = (('E' if pt[0] > ctr[i][0] else 'W') if dx_ >= dy_ else ('N' if pt[1] > ctr[i][1] else 'S'))
+                e_ += _end_worst(pt, f_, pl["bits"], (H if f_ in 'EW' else W) - v.SHAVE)
+            return e_
 
         def _e_ff(i, j):              # frame i -> frame j, facing faces on the dominant axis
             dx_, dy_ = abs(ctr[i][0] - ctr[j][0]), abs(ctr[i][1] - ctr[j][1])
@@ -3313,7 +3470,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 hop_chk[0] is None or hop_chk[0](P0, (float(ctr[i][0]), float(ctr[i][1]))))]
             par = {i: -1 for i in start}
             front, hit = start, None
-            while front and hit is None and len(par) < 400000:
+            while front and hit is None and len(par) < BFS_MAX:
                 for i in front:
                     if abs(ctr[i][0] - P1[0]) + abs(ctr[i][1] - P1[1]) <= De and (not p2p_on or _e_pin(P1, i) <= RCH) and (
                             hop_chk[0] is None or hop_chk[0]((float(ctr[i][0]), float(ctr[i][1])), P1)):
@@ -3374,11 +3531,20 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             lims = [1.0, 0.60 / CAP_FRAC, None] if FIELD_ALLOC else [None]
             lim_cur = [None]
 
+            fit_memo = {}          # Q-DIEPLAN3 10-17: the bookings are fixed during one repair call -> memoise
+
             def hop_fits(pa, pb):
                 """one of the two L routes pa -> pb stays within the window caps with this word added"""
                 lim = lim_cur[0]
                 if lim is None:
                     return True
+                key_ = (lim, pa, pb)
+                r_m = fit_memo.get(key_)
+                if r_m is None:
+                    r_m = fit_memo[key_] = _hop_fits(pa, pb, lim)
+                return r_m
+
+            def _hop_fits(pa, pb, lim):
                 (xa_, ya_), (xb_, yb_) = pa, pb
                 if max(hr(ya_, xa_, xb_, bits), vr(xb_, ya_, yb_, bits)) <= lim:
                     return True
@@ -3762,6 +3928,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     grid.clear()
     for it in m['insts']:
         add_rect((it.x, it.y, it.x + it.w, it.y + it.h))
+    # Q-DIEPLAN3 q3h5: reserved keep-outs (DIE-CLOCK regional root sites, dedicated lanes): no relay may take them
+    for r_ in m.get('relay_keepouts', ()):
+        add_rect(tuple(r_['rect']))
     for idx, pl in sorted(plans.items()):
         for fk, f in enumerate(pl['frames']):
             rr = (f[0], f[1], f[0] + f[2] + v.SHAVE, f[1] + f[3] + v.SHAVE)
@@ -4137,6 +4306,24 @@ class _RstOcc:
         return None if best is None else (best[1], best[2])
 
 
+def _reset_reach_gate(errors, rec):
+    """Die standard (regional reset, owner 10-16): a reset net with an unreachable sink / driver (sink_unreachable,
+    driver_unreachable, leaf_no_trunk_cell) FAILS the die build.  ROOT-2105 10-17: OT_RESET_GATE=warn no longer bypasses
+    this (dv2f11 rst_field 34 sink_unreachable was carried as one 44.7-mm net under stage_build's warn); only an explicit
+    OT_RESET_GATE=diag continues, and the record says the gate FAILED (rec['reach_gate'] = 'FAIL_DIAG')."""
+    if not errors:
+        rec['reach_gate'] = 'PASS'
+        return
+    kinds = {}
+    for e in errors:
+        kinds[e.get('kind', '?')] = kinds.get(e.get('kind', '?'), 0) + 1
+    rec['reach_gate'] = 'FAIL_DIAG' if os.environ.get('OT_RESET_GATE') == 'diag' else 'FAIL'
+    rec['reach_gate_kinds'] = kinds
+    if rec['reach_gate'] == 'FAIL':
+        raise ValueError(f'reset tree: reachability gate FAIL, {len(errors)} unbuildable {kinds}: {errors[:8]} '
+                         f'(OT_RESET_GATE=diag continues for diagnosis only)')
+
+
 def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
     """nets: [dict(bid, dom, drv=(inst, port, (x, y)), sinks=[(inst, port, (x, y))])].  Returns (cells, wires, stats,
     errors): cells [(name, master, x, y, bid)], wires [(net, bid, [(inst, port)])] (driver first).  Pure geometry: the
@@ -4473,9 +4660,9 @@ def _reset_tree(v, m):
     cells, wires, per, errors = _rst_tree_build(nets, rects, m['die']['w'], m['die']['h'], v.GX, v.GY)
     if errors:
         rec.update(errors=errors, per_net=dict(per))
-        if _os.environ.get('OT_RESET_GATE') != 'warn':
-            raise ValueError(f'reset tree: {len(errors)} unbuildable: {errors[:8]}')
-        # diagnosis only (warn): the nets with an unbuildable sink / driver stay single long nets and are reported; Q-COMPUTE-DIE
+    _reset_reach_gate(errors, rec)
+    if errors:
+        # diagnosis only (OT_RESET_GATE=diag): the nets with an unbuildable sink / driver stay single long nets and are reported; Q-COMPUTE-DIE
         # 10-16: every OTHER reset net still gets its tree (r2h2: 3 unreachable pins on rst_spine / rst_io dropped the whole
         # tree, so rst_field reached 1,584 sinks as one 47.5 mm net and die STA read -3.96 us on it)
         if _os.environ.get('OT_RESET_PARTIAL', '1') == '0':
@@ -4542,7 +4729,7 @@ def _reset_tree(v, m):
                cycles_per_token=0)
     if any(len(s) != 1 for s in deps.values()):
         raise ValueError(f'reset tree: unequal leaf depth {rec["depth_cycles"]}')
-    if over and _os.environ.get('OT_RESET_GATE') != 'warn':
+    if over and _os.environ.get('OT_RESET_GATE') not in ('warn', 'diag'):
         raise ValueError(f'reset tree: {len(over)} reset nets over the reach: {over[:8]}')
     return rec
 
@@ -4585,6 +4772,14 @@ def _pin_pos(v, m):
         """r10: half extents (x, y) of the port's pin group (a relay in front of it must leave the difference room)"""
         return ext.get(by[inst].master, {}).get(port.lstrip('*'), (0.0, 0.0))
     pos.ext = pin_ext
+
+    def pin_face(inst, port):
+        """Q-DIEPLAN5 10-17: the instance face (N/S/E/W) the port's pin group sits on (nearest instance edge)"""
+        i = by[inst]
+        x, y = pos(inst, port)
+        dd = {'W': abs(x - i.x), 'E': abs(i.x + i.w - x), 'S': abs(y - i.y), 'N': abs(i.y + i.h - y)}
+        return min(dd, key=dd.get)
+    pos.face = pin_face
     return pos
 
 

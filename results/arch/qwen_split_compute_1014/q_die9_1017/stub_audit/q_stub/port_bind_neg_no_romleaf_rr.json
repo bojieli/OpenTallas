@@ -1,0 +1,40 @@
+{
+ "what": "dv2f12 die.v against rtl/ minus qfd_tile_n{k,l}_rp2_romleaf_rr.sv (= the dv2f11/dv2f12 run src tree): the new child closure catches F1",
+ "verdict": "FAIL",
+ "summary": {
+  "masters": 116,
+  "instances": 2446,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 1,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "duplicate_port_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 16,
+  "pad_bits": 0,
+  "unresolved_children": 2
+ },
+ "child_closure": {
+  "modules": 221,
+  "unresolved_children": {
+   "qfd_tile_nk_rp2_romleaf_rr": [
+    "qfd_c_b16_dv"
+   ],
+   "qfd_tile_nl_rp2_romleaf_rr": [
+    "qfd_c_b16_dv"
+   ]
+  },
+  "model_children": {
+   "ot_qkvd_ucie_x64_phy_model": [
+    "ot_qkvd_ucie_x64_phy"
+   ]
+  }
+ }
+}

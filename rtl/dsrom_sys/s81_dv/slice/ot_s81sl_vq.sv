@@ -15,7 +15,16 @@
 // the tier line and sent over the V rung without any staging.
 // Every input lands in a flop; every output leaves a flop.  Static schedule: a y beat index out of order is a fault.
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_s81sl_vq (
+module ot_s81sl_vq #(
+    // 0: the shared ot_dsrom_aq12 with its 1024 x 11 flop wait line (reference).
+    // 2 (the kit's setting, S81-TILES2 10-17): the wait line is rebuilt from the 256-b sub-beat stream: every sub-beat
+    // sd_ is written to ONE ot_sram_1r1w_128x256_m1_r2c2 ring (free-running 4-bit pointer, read 11 rows behind) and
+    // replayed 12 cycles later, with its (valid, slot) control from a 3-b x 12 flop line, into a 1024-b re-assembly
+    // register xr; blk changes only on those events, so xr(c) = blk(c - 12) = aq12's flop-line xg(c) on every cycle.
+    // The quantiser is then the vq-only fork ot_s81sl_aq12x (xd port, no u_x line; S81-TILES3 10-17): the shared
+    // ot_dsrom_aq12 stays byte-identical with main.  (The former AQ_XMEM = 1, a 4-macro ring inside aq12, is dropped.)
+    parameter integer AQ_XMEM = 0
+) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          y_v,          // normed y from vn
@@ -73,7 +82,42 @@ module ot_s81sl_vq (
     // the quantiser registers x itself (aq12 S0): blk feeds it directly; bv is high in the cycle after the block's last
     // sub-beat was written, so aq12 samples the complete block (the next sub-beat lands on the same edge)
     wire vo, af; wire [255:0] q; wire signed [9:0] e; wire [511:0] qy;
-    ot_dsrom_aq12 u_aq (.clk(clk), .rst_n(rs_q), .v(bv), .x(blk), .vo(vo), .q(q), .e(e), .y(qy), .fault(af));
+    wire [1023:0] xr_w;
+    generate
+        if (AQ_XMEM == 2) begin : g_xr
+            // event t (sv_, slot si_[1:0], data sd_) is written at the end of cycle t to row wp(t); the read address of
+            // cycle t + 11 is wp(t + 11) - 11 = wp(t) (registered read: rd_out in cycle t + 12; rows 11 apart, never
+            // the row being written); the control rides a 12-deep flop line, so xr loads blk's update of cycle t at
+            // the end of cycle t + 12.
+            reg  [3:0] wp;
+            always @(posedge clk or negedge rs_q) if (!rs_q) wp <= 4'd0; else wp <= wp + 4'd1;
+`ifdef OT_VQ_MUT_XPTR
+            wire [3:0] rp = wp - 4'd10;     // mutant: one cycle short (the bench must catch it)
+`else
+            wire [3:0] rp = wp - 4'd11;
+`endif
+            wire [255:0] rd;
+            ot_sram_1r1w_128x256_m1_r2c2 u_xm (.clk(clk), .r_ce_in(1'b1), .r_addr_in({3'd0, rp}), .rd_out(rd),
+                .w_ce_in(1'b1), .w_addr_in({3'd0, wp}), .wd_in(sd_), .w_mask_in({256{1'b1}}),
+                .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+            wire [2:0] ce;
+            ot_hdc_delay #(.W(3), .D(12), .RESET(1)) u_xc (.clk(clk), .rst_n(rs_q), .d({sv_, si_[1:0]}), .q(ce));
+            reg [1023:0] xr;
+            integer jr;
+            always @(posedge clk)
+                if (ce[2]) for (jr = 0; jr < 4; jr = jr + 1) if (ce[1:0] == jr) xr[256 * jr +: 256] <= rd;
+            assign xr_w = xr;
+        end else begin : g_xnr
+            assign xr_w = {1024{1'b0}};
+        end
+    endgenerate
+    generate
+        if (AQ_XMEM == 2) begin : g_aqx
+            ot_s81sl_aq12x u_aq (.clk(clk), .rst_n(rs_q), .v(bv), .x(blk), .vo(vo), .q(q), .e(e), .y(qy), .fault(af), .xd(xr_w));
+        end else begin : g_aq
+            ot_dsrom_aq12 u_aq (.clk(clk), .rst_n(rs_q), .v(bv), .x(blk), .vo(vo), .q(q), .e(e), .y(qy), .fault(af));
+        end
+    endgenerate
     // block index rides the quantiser latency
     wire blo;
     ot_hdc_delay #(.W(1), .D(18)) u_bi (.clk(clk), .rst_n(rs_q), .d(bbk), .q(blo));

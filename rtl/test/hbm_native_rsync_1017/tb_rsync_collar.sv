@@ -26,7 +26,14 @@ ot_hbm_static_cfg_collar #(.PAGE_W(PAGE_W),.NS(NS),.NPR(NPR),.NREC(NREC),.NGO(NG
  .clk(clk),.clk_in(clk),.rst_n(rst_n),.tgt(8'd120),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
  .desc_v(desc_v),.launch_v(launch_v),.c_busy(c_busy),.c_done(c_done),.c_fault(c_fault),
  .pw_we(we1),.pw_addr(pa1),.pw_data(pd1),.prm(pr1),.start_v(s1),.go(g1),.rec(rc1),.ready(r1),.active(a1),.fault(f1));
-wire [NS+AW+256+NPR*256+NGO+221+4-1:0] o0 = {we0,pa0,pd0,pr0,s0,g0,rc0,r0,a0,f0}, o1 = {we1,pa1,pd1,pr1,s1,g1,rc1,r1,a1,f1};
+// Qualified data outputs (fleet 10-17, hdie_col_idx_r1-r2-62981a68f NEEDS_RTL): pw_addr/pw_data are valid only with pw_we and
+// rec only with go (the record payload rides its go strobe). r2 asserts reset 2 edges after r1, so a record whose offset
+// falls in those 2 edges still fires in r2 (its go is inside the uncompared window) and leaves a different HELD rec
+// value after release, while r1 was already in reset: 83 edges of rec-only differences with go = 0 on iverilog 12's
+// stimulus. Strobes and every reset-cleared output are still compared on every edge.
+wire [AW+256-1:0] pq0 = |we0 ? {pa0,pd0} : 0, pq1 = |we1 ? {pa1,pd1} : 0;
+wire [220:0] rq0 = |g0 ? rc0 : 221'd0, rq1 = |g1 ? rc1 : 221'd0;
+wire [NS+AW+256+NPR*256+NGO+221+4-1:0] o0 = {we0,pq0,pr0,s0,g0,rq0,r0,a0,f0}, o1 = {we1,pq1,pr1,s1,g1,rq1,r1,a1,f1};
 integer cyc = 0, seed = SEED, err = 0, cmp = 0, nst = 0, nwe = 0, ngo = 0, nflt = 0, nrdy = 0, nrst = 0, rlo = 0, win = 0, pre = 0;
 // ---- reset process + compare (negedge: outputs settled after the posedge)
 always @(negedge clk) begin

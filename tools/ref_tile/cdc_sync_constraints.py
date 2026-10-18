@@ -182,6 +182,8 @@ class Netlist:
                 self.clock_domain[bits[0]] = name
         for cname, c in m['cells'].items():
             t, conn = c['type'], c['connections']
+            if t == '$scopeinfo':      # yosys >= 0.40 flatten: hierarchy-name metadata, no connections
+                continue
             for pin, bits in conn.items():
                 if c.get('port_directions', {}).get(pin) == 'input':
                     for b in bits:

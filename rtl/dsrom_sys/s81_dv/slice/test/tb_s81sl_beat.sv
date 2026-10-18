@@ -8,7 +8,7 @@
 // (presented RB_GAP edges after the partial: the xfin's exchange is benched by S81-DV).  Prints SLBEAT + latencies.
 // Negative controls: +define+OT_S81SL_MUT_TREE (vn tree association), +define+OT_S81SL_TB_MUT_COEF (bench swaps two
 // comb words in the leaf store: hc_post must then mismatch -- proves the h check sees the coefficient path).
-module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37);
+module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37, parameter integer VQ_XMEM = 0);
     reg clk = 1'b0;
     always #0.5 clk = ~clk;
     reg [15:0] h0 [0:255];
@@ -65,7 +65,7 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .rb_v(rb_v), .rb_d(rb_d), .p_v(p_v), .p_d(p_d),
         .y_v(y_v), .y_i(y_i), .y(y), .fault(fn));
     localparam [3:0] SID = BEAT / 5; localparam [2:0] KL = BEAT % 5;
-    ot_s81sl_vq u_q (.clk(clk), .rst_n(rst_n), .y_v(y_v), .y_i(y_i), .y(y), .u_v(1'b0), .u_i(3'd0), .u(256'd0),
+    ot_s81sl_vq #(.AQ_XMEM(VQ_XMEM)) u_q (.clk(clk), .rst_n(rst_n), .y_v(y_v), .y_i(y_i), .y(y), .u_v(1'b0), .u_i(3'd0), .u(256'd0),
         .sid(SID), .k(KL), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i), .um_v(1'b0), .um_q(1'b0), .um_b(1'b0), .um_i(8'd0), .xf_v(xf_v), .xf_s(xf_s), .xf(xf), .fault(fq));
 
     // row image to write: {row, data}

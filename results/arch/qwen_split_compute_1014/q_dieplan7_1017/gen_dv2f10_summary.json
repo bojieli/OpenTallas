@@ -1,0 +1,122 @@
+{
+ "plan": "dv2f10-qdieplan7",
+ "base": "dv2f9-qdieplan6",
+ "change": "d2d_rom MX + ucie_kv MX (closed qfd_d2d_static: M3+M5 vertical pins, no legal origin under MY/R180); links re-planned in GEN; gates hard (relay, per-bit reach 405)",
+ "variants": {
+  "dv2f9_R180": {
+   "gen": {
+    "relays": 494,
+    "max_pin_to_pin_um": 394.7,
+    "over_reach": 0,
+    "unrepaired": 0,
+    "worst_cut": 0.347,
+    "build_s": 110,
+    "reset_over_500": 2,
+    "instances": 710,
+    "pin_align": {
+     "OK": 809,
+     "WARN": 325
+    },
+    "cycles_per_ar_token": null,
+    "stages": null
+   },
+   "d2d_links": 41,
+   "d2d_relays": 108,
+   "d2d_relay_bit_stages": 5818,
+   "stages": {
+    "lnk_rx_payload": 1,
+    "lnk_rx_payload__fo1": 3,
+    "lnk_x3": 1,
+    "sf_cfg_data": 3,
+    "sf_result_tag": 1,
+    "sf_prog_tx_record": 5
+   }
+  },
+  "dx0_MX_pick": {
+   "gen": {
+    "relays": 498,
+    "max_pin_to_pin_um": 393.2,
+    "over_reach": 0,
+    "unrepaired": 0,
+    "worst_cut": 0.347,
+    "build_s": 106,
+    "reset_over_500": 1,
+    "instances": 716,
+    "pin_align": {
+     "OK": 819,
+     "WARN": 319
+    },
+    "cycles_per_ar_token": null,
+    "stages": null
+   },
+   "d2d_links": 46,
+   "d2d_relays": 116,
+   "d2d_relay_bit_stages": 4622,
+   "stages": {
+    "lnk_rx_payload": 1,
+    "lnk_rx_payload__fo1": 3,
+    "lnk_x3": 1,
+    "sf_cfg_data": 1,
+    "sf_result_tag": 4,
+    "sf_prog_tx_record": 2
+   }
+  },
+  "dx216": {
+   "gen": {
+    "relays": 470,
+    "max_pin_to_pin_um": 393.2,
+    "over_reach": 0,
+    "unrepaired": 0,
+    "worst_cut": 0.347,
+    "build_s": 238,
+    "reset_over_500": 1,
+    "instances": 685,
+    "pin_align": {
+     "OK": 823,
+     "WARN": 287
+    },
+    "cycles_per_ar_token": null,
+    "stages": null
+   },
+   "d2d_links": 46,
+   "d2d_relays": 92,
+   "d2d_relay_bit_stages": 3366,
+   "stages": {
+    "lnk_rx_payload": 1,
+    "lnk_rx_payload__fo1": 1,
+    "lnk_x3": 2,
+    "sf_cfg_data": 1,
+    "sf_result_tag": 3,
+    "sf_prog_tx_record": 1
+   }
+  },
+  "dx324": {
+   "gen": {
+    "relays": 491,
+    "max_pin_to_pin_um": 395.1,
+    "over_reach": 0,
+    "unrepaired": 0,
+    "worst_cut": 0.347,
+    "build_s": 182,
+    "reset_over_500": 1,
+    "instances": 708,
+    "pin_align": {
+     "OK": 820,
+     "WARN": 311
+    },
+    "cycles_per_ar_token": null,
+    "stages": null
+   },
+   "d2d_links": 37,
+   "d2d_relays": 95,
+   "d2d_relay_bit_stages": 3512,
+   "stages": {
+    "lnk_rx_payload__fo1": 2,
+    "lnk_x3": 2,
+    "sf_cfg_data": 1,
+    "sf_result_tag": 4,
+    "sf_prog_tx_record": 1
+   }
+  }
+ }
+}

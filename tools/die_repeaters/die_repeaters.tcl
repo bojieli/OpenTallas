@@ -197,8 +197,18 @@ proc ot_die_rep_spread {insts report {util 0.30} {bin_um 8.64} {util_hard 0.60} 
   set f [open $report w]
   puts $f "{\"schema\": \"opentallas.die_repeaters.spread.v1\", \"placed\": $placed, \"unplaced\": $unplaced, \"util\": $util, \"util_hard\": $util_hard, \"soft_rings\": $soft_rings, \"placed_at_hard_cap\": $nhard, \"ideal_on_obstacle\": $onobs, \"bin_um\": $bin_um, \"slot_width_um\": [expr {$slw / double($dbu)}], \"bins_initialised\": $nbins, \"bins_full\": $full, \"max_ring\": $ringmax, \"mean_disp_um\": [format %.2f [expr {$placed ? $dsum / $placed : 0}]], \"max_disp_um\": [format %.2f $dmax], \"seconds\": [expr {[clock seconds] - $t0}]}"
   close $f
+  if {![info exists ::ot_die_rep_maxdisp] || $dmax > $::ot_die_rep_maxdisp} { set ::ot_die_rep_maxdisp $dmax }
   ot_die_rep_log "spread placed=$placed unplaced=$unplaced util=$util/$util_hard hard=$nhard on_obstacle=$onobs bin_um=$bin_um bins=$nbins full=$full max_ring=$ringmax mean_disp_um=[format %.2f [expr {$placed ? $dsum / $placed : 0}]] max_disp_um=[format %.2f $dmax] s=[expr {[clock seconds] - $t0}]"
   return $unplaced
+}
+
+# Displacement WARNING (S81-DV 0cj (a), 10-17): a spread that moves a repeater more than half the max wire length away
+# from its repair_design point leaves segments near or over the repeat length -- the signature of a plan lane running
+# over a block (p4i: 7.5 mm of q/P.V lane over frame bodies, max_disp 322 um vs 51 on p4h, 1,402 post-GRT slew
+# violators).  Warn, never fail: the post-GRT audit judges the actual slew.  -> "" or the warning text.
+proc ot_die_rep_disp_warning {max_disp_um max_wire_um} {
+  if {$max_wire_um <= 0 || $max_disp_um <= $max_wire_um / 2.0} { return "" }
+  return [format "repeater displaced %.1f um > max_wire/2 = %.1f um by the spread: a die lane likely runs over a block (check the plan path; post-GRT slew decides)" $max_disp_um [expr {$max_wire_um / 2.0}]]
 }
 
 proc ot_die_rep_gcd {a b} { while {$b} { set t $b; set b [expr {$a % $b}]; set a $t }; return $a }
@@ -316,8 +326,21 @@ proc ot_die_repeaters {cfg} {
   set ::ot_die_rep_skip $skip
   set fh [open [file rootname $report].skip_nets.txt w]; puts $fh [join $skip_names "\n"]; close $fh
   set dt {}
-  foreach n $skip_names { set o [get_nets -quiet [string map {\[ \\[ \] \\]} $n]]; if {[llength $o]} { lappend dt {*}$o } }
+  # Q-DIE9 10-17: the escaped STA lookup misses bus-bit nets ('n_clk_r0[0]': dv2f11 matched 2 of 51 skip nets and
+  # repair_design buffered 44 clock nets).  Every skip net is also marked do-not-touch on the odb net itself (the
+  # resizer honours dbNet::isDoNotTouch), and the count reported is the odb count.
+  foreach n $skip_names {
+    set o [get_nets -quiet [string map {\[ \\[ \] \\]} $n]]
+    if {![llength $o]} { set o [get_nets -quiet $n] }
+    if {[llength $o]} { lappend dt {*}$o }
+  }
   if {[llength $dt]} { set_dont_touch $dt }
+  set n_dt_odb 0
+  foreach n $skip_names {
+    set net [$blk findNet $n]
+    if {$net ne "NULL" && $net ne ""} { $net setDoNotTouch 1; incr n_dt_odb }
+  }
+  set dt [lrepeat $n_dt_odb x]
   set skip_iterms [dict create]
   foreach n $skip_names { set net [$blk findNet $n]; if {$net ne "NULL" && $net ne ""} { dict set skip_iterms $n [llength [$net getITerms]] } }
   ot_die_rep_log "skip nets=[llength $skip_names] (sigtype $n_sig, clock pins $n_ck; repeated forwarded clocks $n_rep) dont_touch=[llength $dt]"
@@ -368,7 +391,7 @@ proc ot_die_repeaters {cfg} {
   set repair_s [expr {[clock seconds] - $r0}]
 
   # ---- legalise the new buffers
-  set legal "none"; set passes {}; set ::ot_die_rep_onobs 0
+  set legal "none"; set passes {}; set ::ot_die_rep_onobs 0; set ::ot_die_rep_maxdisp 0.0; set warnings {}
   if {$legalize eq "snap" || $legalize eq "spread"} {
     # spread (snap is an alias since DIE-FLOW2: the plain snap stacked every repeater at its ideal point).  Pass k > 1
     # re-runs repair_design on the legal positions (the spread displacement can leave long segments) and spreads again.
@@ -387,6 +410,8 @@ proc ot_die_repeaters {cfg} {
     if {[llength $new]} { incr left [ot_die_rep_spread $new [file rootname $report].spread_last.json $spread_util $bin_um $spread_util_hard $soft_rings]; lappend passes [llength $new] }
     set legal "spread util=$spread_util bin_um=$bin_um passes=[join $passes /] unplaced=$left"
     if {$left != 0} { incr viol $left; lappend notes "repeaters without a free slot: $left" }
+    set w_ [ot_die_rep_disp_warning $::ot_die_rep_maxdisp $max_wire_um]
+    if {$w_ ne ""} { lappend warnings $w_; ot_die_rep_log "WARNING $w_" }
   } elseif {$legalize eq "dpl"} {
     if {[catch {detailed_placement} e]} { incr viol; lappend notes "detailed_placement: $e"; set legal "dpl FAIL" } else { set legal dpl }
   }
@@ -441,6 +466,7 @@ proc ot_die_repeaters {cfg} {
   set bm {}; dict for {m c} $by_master { lappend bm "[ot_die_rep_json_str $m]: $c" }
   set ov {}; foreach o [lrange [lsort -real -decreasing -index 2 $over] 0 49] { lappend ov "\[[ot_die_rep_json_str [lindex $o 0]], [ot_die_rep_json_str [lindex $o 1]], [lindex $o 2]\]" }
   set nt {}; foreach n $notes { lappend nt [ot_die_rep_json_str $n] }
+  set wn {}; foreach n $warnings { lappend wn [ot_die_rep_json_str $n] }
   set ex {}; foreach n $examples { lappend ex [ot_die_rep_json_str $n] }
   puts $f "{\"schema\": \"opentallas.die_repeaters.v1\", \"design\": [ot_die_rep_json_str $design], \"verdict\": \"$verdict\", \"violations\": $viol,"
   puts $f " \"rule\": \"repair_design on die nets only, buffers only, between relay registers; one repeater from ~175 um then every ~160 um (owner 0cl, H-REACH)\","
@@ -452,7 +478,7 @@ proc ot_die_repeaters {cfg} {
   puts $f " \"reach_um\": $reach_um, \"over_reach_policy\": [ot_die_rep_json_str $over_reach], \"long_wires_scanned\": $scanned, \"longest_um\": $longest, \"over_reach_nets\": [llength $over], \"over_reach_top\": \[[join $ov {, }]\],"
   set dt_ {}; foreach o $drv_top { lappend dt_ "\[[ot_die_rep_json_str [lindex $o 0]], [ot_die_rep_json_str [lindex $o 1]], [ot_die_rep_json_str [lindex $o 2]], [ot_die_rep_json_str [lindex $o 3]]\]" }
   puts $f " \"post_drv_policy\": [ot_die_rep_json_str $post_drv], \"post_slew_violators\": $post_slew, \"post_cap_violators\": $post_cap, \"post_violators_on_skip_nets\": $post_skipped, \"post_drv_top\": \[[join $dt_ {, }]\],"
-  puts $f " \"notes\": \[[join $nt {, }]\], \"examples\": \[[join $ex {, }]\], \"repair_s\": $repair_s, \"seconds\": [expr {[clock seconds] - $t0}]}"
+  puts $f " \"spread_max_disp_um\": [format %.2f $::ot_die_rep_maxdisp], \"warnings\": \[[join $wn {, }]\], \"notes\": \[[join $nt {, }]\], \"examples\": \[[join $ex {, }]\], \"repair_s\": $repair_s, \"seconds\": [expr {[clock seconds] - $t0}]}"
   close $f
   ot_die_rep_log "$verdict repeaters=$repeaters violations=$viol over_reach=[llength $over] legalize=($legal) s=[expr {[clock seconds] - $t0}]"
   return $viol
