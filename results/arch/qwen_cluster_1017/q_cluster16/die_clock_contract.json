@@ -1,35 +1,33 @@
 {
  "schema": "opentallas.qcluster.die_clock16.v1",
- "lane": "Q-CLUSTER16",
- "branch": "claude/q-cl16-land-1018",
+ "lane": "Q-CLUSTER-LANDALL",
+ "branch": "claude/q-cl-landall-1018",
  "master": "qfd_c_b16_dv",
- "owner_decision": "0ei 10-18: 16-region clock split of c_b16 (one region per A0 ROM-leaf tile)",
+ "owner_decision": "0ei 10-18: 16-region clock split (one region per A0 tile); 0fy 10-18 (owner 0fd accepts latency + landing tiles): clock the cluster like the die: a local tree per region, EVERY multi-bit region crossing landed",
  "die_obligations": [
-  "drop 16 regional clocks per cluster instance (dv2r8f: 48 instances -> 768 regional clock drops), each at its centre area pin (M7, cluster coordinates below; the face pins in the contract only seed the cluster IO placer)",
-  "PHASE-ALIGNED delivery (Q-CL16-EARLY 10-18, replaces 'compensate each drop by insertion_ps'): for every communicating region pair below the die delivers the two centre-pin drops within +/-60 ps of each other at TT AND at FF (die tree budget, METHOD.md s2). The die does NOT compensate by the cluster's region insertion: the cluster closes every crossing in its own STA with the measured in-cluster skew (gate SDC: drops at 0 + set_clock_uncertainty 60 ps setup and hold between communicating region clocks). Measured on diag16ct 4_1_cts: compensating by insertion makes FF hold worse (-316.5 vs -231.1 ps pre-repair) and no choice of 16 drop offsets brings the crossing pins within 80 ps (LP minimax 301.5-308.7 ps; 62-65 of 73 crossings over 80): the in-region child-flop spread (690-927 ps per root at TT) is inside the cluster and only the cluster's own timing can absorb it.",
-  "boundary ports are timed against the region that holds their pin register (port_domains); the die's neighbour links into / out of the cluster land or match against THAT region's clock (LANDING-CONTRACT)",
-  "regional reset: unchanged (rst_n pin register in c0r0, equal-depth tree, 19 edges)",
-  "Q-CL16-LAND: the cluster SDC carries the 60 ps residual as inter-clock uncertainty (setup 120 / hold 85 = 60/25 + 60) on every communicating region pair, both directions (qc_kit.py -> physical/qcluster/qfd_c_b16_dv_quadrants.sdc); the one crossing that does not fit (leg_3_1b_0, c3r3 -> c2r2) is LANDED inside the cluster (multicycle -setup 2 -hold 3 on its ring -> o paths, window -1666 + t_hold < dL < 1666 - t_cq - t_setup ps): the die owes nothing extra"
+  "drop 16 regional clocks per cluster instance (dv2r8f: 48 instances -> 768 regional clock drops) at the cluster's 16 regional clock pins (face pins of the contract: rows 0 / 3 on the S / N face, rows 1 / 2 on the W / E face, M4; the die may also feed them as centre area pins); each region builds its own local tree",
+  "NO phase alignment owed for data (Q-CLUSTER-LANDALL replaces Q-CL16-EARLY's +/-60 ps): every multi-bit region crossing is landed (D 4, E = K = 2), so it tolerates any region-to-region skew dL in the window (2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup (T = 833.3: about -1666 .. +1666 ps) at TT and FF.  The die keeps the drops of COMMUNICATING region pairs within +/-400 ps of each other (TT and FF) for the 1-bit reset-tree hops, which stay single-cycle (the cluster SDC carries 60 ps inter-region uncertainty on them); the cluster gate reports their slacks",
+  "boundary ports are timed against the region that holds their pin register (port_domains); the die's neighbour links into / out of the cluster land against THAT region's clock (LANDING-CONTRACT)",
+  "regional reset: unchanged (rst_n pin register in c0r0, equal-depth tree, 19 edges); the landing epochs come from equal-depth runs off that tree",
+  "the cluster's port latencies grow (compiler record below): the die schedule takes tap / bco / rs / rs_i->rs_o from compiler.latency_edges"
  ],
  "compiler": {
-  "added_edges_per_link": {
-   "leg_3_1b_0": 3,
-   "other": 0
-  },
-  "note": "Q-CL16-LAND: every plain seam crossing is the same single registered hop as in the 8-region fabric (0 added edges); the landed crossing leg_3_1b_0 adds E + 1 = 3 edges (ring write + E = K = 2 read edges); node (3,1) re-aligns its other leg (3,1).a by +3 (soft pad stages) and node (4,0) its leg (4,0).a by +3, so rs_fabric 35 -> 38. Lockstep vs the 8-region fabric: every port bit-exact, n_a_1_2 / n_b_1_2 / n_a_0_0 exactly 3 edges later (bench_land/).",
+  "added_edges_per_landed_crossing": 3,
+  "note": "Q-CLUSTER-LANDALL: 54 landed crossings (27780 b), each +3 edges (ring write + E = K read edges); the tree re-aligns with soft pad stages (hard station sites unchanged); lockstep vs the 8-region fabric: every port = the reference delayed by exactly port_added_edges.",
   "latency_edges": {
    "tap": {
     "0": 3,
-    "1": 7,
-    "2": 11,
-    "3": 15
+    "1": 10,
+    "2": 17,
+    "3": 24
    },
-   "bco": 17,
-   "rs_fabric": 38,
-   "rs_i_to_rs_o": 17,
-   "reset": 19
+   "bco": 26,
+   "rs_fabric": 74,
+   "rs_i_to_rs_o": 29,
+   "reset": 19,
+   "landing_warm_after_rst": 25
   },
-  "latency_edges_before_landing": {
+  "latency_edges_unlanded": {
    "tap": {
     "0": 3,
     "1": 7,
@@ -42,31 +40,282 @@
    "reset": 19
   },
   "port_added_edges": {
-   "n_a_1_2": 3,
-   "n_b_1_2": 3,
-   "n_a_0_0": 3
+   "n_a_1_0": 3,
+   "n_b_1_0": 3,
+   "n_a_0_1": 3,
+   "n_b_0_1": 3,
+   "n_a_2_0": 3,
+   "n_b_2_0": 3,
+   "n_a_3_1": 3,
+   "n_b_3_1": 3,
+   "n_a_0_2": 3,
+   "n_b_0_2": 3,
+   "n_a_0_3": 3,
+   "n_b_0_3": 3,
+   "n_a_3_2": 3,
+   "n_b_3_2": 3,
+   "n_a_3_3": 3,
+   "n_b_3_3": 3,
+   "n_a_1_1": 6,
+   "n_b_1_1": 3,
+   "n_a_2_1": 9,
+   "n_b_2_1": 6,
+   "n_a_1_3": 6,
+   "n_b_1_3": 3,
+   "n_a_2_3": 6,
+   "n_b_2_3": 3,
+   "n_a_2_2": 12,
+   "n_b_2_2": 9,
+   "n_a_1_2": 9,
+   "n_b_1_2": 9,
+   "n_a_0_0": 15,
+   "n_b_0_0": 12,
+   "tap_row0": 0,
+   "tap_row1": 3,
+   "tap_row2": 6,
+   "tap_row3": 9,
+   "bco": 9,
+   "rs_i_to_rs_o": 12
   },
+  "rs_fabric_added": 39,
   "realigned_legs": {
-   "3_1a": {
+   "1_0a": {
     "added_edges": 3,
-    "relay_stations": 7,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "1_0b": {
+    "added_edges": 3,
+    "relay_stations": 0,
     "soft_pad_stages": 3,
-    "landed": false
+    "landed_crossings": 0
+   },
+   "1_1a": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 3,
+    "landed_crossings": 0
+   },
+   "1_1b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "1_2a": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 3,
+    "landed_crossings": 0
+   },
+   "1_2b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "1_3a": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "1_3b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 3,
+    "landed_crossings": 0
+   },
+   "1_4a": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 3,
+    "landed_crossings": 0
+   },
+   "1_4b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "1_5a": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 3,
+    "landed_crossings": 0
+   },
+   "1_5b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "1_6a": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "1_6b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 3,
+    "landed_crossings": 0
+   },
+   "1_7a": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "1_7b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 3,
+    "landed_crossings": 0
+   },
+   "2_0a": {
+    "added_edges": 6,
+    "relay_stations": 4,
+    "soft_pad_stages": 3,
+    "landed_crossings": 1
+   },
+   "2_0b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "2_1a": {
+    "added_edges": 9,
+    "relay_stations": 4,
+    "soft_pad_stages": 0,
+    "landed_crossings": 3
+   },
+   "2_1b": {
+    "added_edges": 6,
+    "relay_stations": 0,
+    "soft_pad_stages": 3,
+    "landed_crossings": 1
+   },
+   "2_2a": {
+    "added_edges": 6,
+    "relay_stations": 4,
+    "soft_pad_stages": 0,
+    "landed_crossings": 2
+   },
+   "2_2b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "2_3a": {
+    "added_edges": 6,
+    "relay_stations": 4,
+    "soft_pad_stages": 0,
+    "landed_crossings": 2
+   },
+   "2_3b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "3_0a": {
+    "added_edges": 12,
+    "relay_stations": 6,
+    "soft_pad_stages": 6,
+    "landed_crossings": 2
+   },
+   "3_0b": {
+    "added_edges": 9,
+    "relay_stations": 6,
+    "soft_pad_stages": 0,
+    "landed_crossings": 3
+   },
+   "3_1a": {
+    "added_edges": 9,
+    "relay_stations": 7,
+    "soft_pad_stages": 6,
+    "landed_crossings": 1
    },
    "3_1b": {
-    "added_edges": 3,
+    "added_edges": 9,
     "relay_stations": 7,
     "soft_pad_stages": 0,
-    "landed": true
+    "landed_crossings": 3
    },
    "4_0a": {
-    "added_edges": 3,
+    "added_edges": 15,
     "relay_stations": 16,
+    "soft_pad_stages": 0,
+    "landed_crossings": 5
+   },
+   "4_0b": {
+    "added_edges": 12,
+    "relay_stations": 7,
     "soft_pad_stages": 3,
-    "landed": false
+    "landed_crossings": 3
    }
   },
-  "taps_unchanged": "tap 0..3 (3/7/11/15), bco 17, rs_i->rs_o 17, reset 19: no tap / feedthrough path crosses leg_3_1b"
+  "added_edges_per_link": {
+   "dn0_rly3": 3,
+   "dn0_rly6": 3,
+   "dn0_rly9": 3,
+   "dn1_rly3": 3,
+   "dn1_rly6": 3,
+   "dn1_rly9": 3,
+   "dn2_rly3": 3,
+   "dn2_rly6": 3,
+   "dn2_rly9": 3,
+   "dn3_rly3": 3,
+   "dn3_rly6": 3,
+   "dn3_rly9": 3,
+   "leg_1_0a_y": 3,
+   "leg_1_1b_y": 3,
+   "leg_1_2b_y": 3,
+   "leg_1_3a_y": 3,
+   "leg_1_4b_y": 3,
+   "leg_1_5b_y": 3,
+   "leg_1_6a_y": 3,
+   "leg_1_7a_y": 3,
+   "leg_2_0a_3": 3,
+   "leg_2_0b_y": 3,
+   "leg_2_1a_0": 3,
+   "leg_2_1a_3": 3,
+   "leg_2_1a_y": 3,
+   "leg_2_1b_y": 3,
+   "leg_2_2a_0": 3,
+   "leg_2_2a_3": 3,
+   "leg_2_2b_y": 3,
+   "leg_2_3a_3": 3,
+   "leg_2_3a_y": 3,
+   "leg_2_3b_y": 3,
+   "leg_3_0a_4": 3,
+   "leg_3_0a_y": 3,
+   "leg_3_0b_0": 3,
+   "leg_3_0b_5": 3,
+   "leg_3_0b_y": 3,
+   "leg_3_1a_2": 3,
+   "leg_3_1b_0": 3,
+   "leg_3_1b_1": 3,
+   "leg_3_1b_3": 3,
+   "leg_4_0a_0": 3,
+   "leg_4_0a_2": 3,
+   "leg_4_0a_7": 3,
+   "leg_4_0a_9": 3,
+   "leg_4_0a_y": 3,
+   "leg_4_0b_1": 3,
+   "leg_4_0b_5": 3,
+   "leg_4_0b_y": 3,
+   "rs_0": 3,
+   "ft_2": 3,
+   "ft_6": 3,
+   "ft_9": 3,
+   "ft_13": 3
+  }
  },
  "clocks": {
   "c0r0": {
@@ -79,7 +328,7 @@
    "tiles": [
     "0_0"
    ],
-   "fabric_flops": 2598,
+   "fabric_flops": 11388,
    "tile_entry_pins": 39,
    "insertion_ps": {
     "TT": null,
@@ -96,7 +345,7 @@
    "tiles": [
     "0_1"
    ],
-   "fabric_flops": 2076,
+   "fabric_flops": 8802,
    "tile_entry_pins": 39,
    "insertion_ps": {
     "TT": null,
@@ -113,7 +362,7 @@
    "tiles": [
     "0_2"
    ],
-   "fabric_flops": 2072,
+   "fabric_flops": 8801,
    "tile_entry_pins": 39,
    "insertion_ps": {
     "TT": null,
@@ -130,7 +379,7 @@
    "tiles": [
     "0_3"
    ],
-   "fabric_flops": 2066,
+   "fabric_flops": 6718,
    "tile_entry_pins": 39,
    "insertion_ps": {
     "TT": null,
@@ -147,7 +396,7 @@
    "tiles": [
     "1_0"
    ],
-   "fabric_flops": 9778,
+   "fabric_flops": 21693,
    "tile_entry_pins": 39,
    "insertion_ps": {
     "TT": null,
@@ -164,7 +413,7 @@
    "tiles": [
     "1_1"
    ],
-   "fabric_flops": 6690,
+   "fabric_flops": 18596,
    "tile_entry_pins": 39,
    "insertion_ps": {
     "TT": null,
@@ -181,7 +430,7 @@
    "tiles": [
     "1_2"
    ],
-   "fabric_flops": 8746,
+   "fabric_flops": 22185,
    "tile_entry_pins": 39,
    "insertion_ps": {
     "TT": null,
@@ -198,7 +447,7 @@
    "tiles": [
     "1_3"
    ],
-   "fabric_flops": 4634,
+   "fabric_flops": 12405,
    "tile_entry_pins": 39,
    "insertion_ps": {
     "TT": null,
@@ -215,7 +464,7 @@
    "tiles": [
     "2_0"
    ],
-   "fabric_flops": 5687,
+   "fabric_flops": 15007,
    "tile_entry_pins": 39,
    "insertion_ps": {
     "TT": null,
@@ -232,7 +481,7 @@
    "tiles": [
     "2_1"
    ],
-   "fabric_flops": 5164,
+   "fabric_flops": 19665,
    "tile_entry_pins": 39,
    "insertion_ps": {
     "TT": null,
@@ -249,7 +498,7 @@
    "tiles": [
     "2_2"
    ],
-   "fabric_flops": 4646,
+   "fabric_flops": 20687,
    "tile_entry_pins": 39,
    "insertion_ps": {
     "TT": null,
@@ -266,7 +515,7 @@
    "tiles": [
     "2_3"
    ],
-   "fabric_flops": 4126,
+   "fabric_flops": 12426,
    "tile_entry_pins": 39,
    "insertion_ps": {
     "TT": null,
@@ -283,7 +532,7 @@
    "tiles": [
     "3_0"
    ],
-   "fabric_flops": 4140,
+   "fabric_flops": 10868,
    "tile_entry_pins": 35,
    "insertion_ps": {
     "TT": null,
@@ -300,7 +549,7 @@
    "tiles": [
     "3_1"
    ],
-   "fabric_flops": 7730,
+   "fabric_flops": 22218,
    "tile_entry_pins": 39,
    "insertion_ps": {
     "TT": null,
@@ -317,7 +566,7 @@
    "tiles": [
     "3_2"
    ],
-   "fabric_flops": 5156,
+   "fabric_flops": 17056,
    "tile_entry_pins": 39,
    "insertion_ps": {
     "TT": null,
@@ -334,7 +583,7 @@
    "tiles": [
     "3_3"
    ],
-   "fabric_flops": 3094,
+   "fabric_flops": 12919,
    "tile_entry_pins": 39,
    "insertion_ps": {
     "TT": null,
@@ -359,23 +608,23 @@
    "diagonal": false
   },
   "c0r1-c1r1": {
-   "links": 2,
-   "bits": 1028,
+   "links": 3,
+   "bits": 1029,
    "diagonal": false
   },
   "c0r2-c0r3": {
-   "links": 2,
-   "bits": 517,
+   "links": 3,
+   "bits": 518,
    "diagonal": false
   },
   "c0r2-c1r2": {
-   "links": 2,
-   "bits": 1028,
+   "links": 6,
+   "bits": 1032,
    "diagonal": false
   },
   "c0r3-c1r3": {
-   "links": 2,
-   "bits": 1028,
+   "links": 3,
+   "bits": 1029,
    "diagonal": false
   },
   "c1r0-c1r1": {
@@ -393,9 +642,14 @@
    "bits": 1030,
    "diagonal": false
   },
+  "c1r1-c2r0": {
+   "links": 1,
+   "bits": 1,
+   "diagonal": true
+  },
   "c1r1-c2r1": {
-   "links": 3,
-   "bits": 516,
+   "links": 9,
+   "bits": 522,
    "diagonal": false
   },
   "c1r2-c1r3": {
@@ -404,13 +658,13 @@
    "diagonal": false
   },
   "c1r2-c2r2": {
-   "links": 3,
-   "bits": 516,
+   "links": 7,
+   "bits": 520,
    "diagonal": false
   },
   "c1r3-c2r3": {
-   "links": 3,
-   "bits": 516,
+   "links": 8,
+   "bits": 521,
    "diagonal": false
   },
   "c2r0-c2r1": {
@@ -444,13 +698,13 @@
    "diagonal": false
   },
   "c2r2-c3r2": {
-   "links": 4,
-   "bits": 1543,
+   "links": 3,
+   "bits": 1542,
    "diagonal": false
   },
   "c2r2-c3r3": {
-   "links": 2,
-   "bits": 515,
+   "links": 1,
+   "bits": 514,
    "diagonal": true
   },
   "c2r3-c3r3": {
@@ -474,8 +728,8 @@
    "diagonal": false
   }
  },
- "seam_crossings": 76,
- "seam_crossing_bits": 27802,
+ "seam_crossings": 97,
+ "seam_crossing_bits": 27823,
  "port_domains": {
   "bco0": "ck_c0r3",
   "bc1": "ck_c1r0",
@@ -501,46 +755,602 @@
    "audit names the 4 rpad crossings' sink pin 'trst'; the A0 pin is rst_n"
   ]
  },
- "seam_crossings_note": "Q-CL16-LAND region_audit.py: 74 data crossings (the 73 of Q-CLUSTER16 + u_t_0_0.t_out -> u_t_1_0.n_a, missed before) of which 1 LANDED (leg_3_1b_0, the ring -> read link), + 2 one-bit crossings of the landing's own reset run",
+ "seam_crossings_note": "Q-CLUSTER-LANDALL region_audit.py: 97 crossings = 54 LANDED multi-bit + 43 1-bit reset-tree hops (R6: no unlanded multi-bit crossing)",
  "landings": [
   {
+   "name": "dn0_rly3",
+   "crossing": "dn0_rly2 (c0r0) -> u_fab.u_dn0_rly3 (c0r1)",
+   "src_region": "c0r0",
+   "dst_region": "c0r1",
+   "bits": 516,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "dn0_rly6",
+   "crossing": "dn0_rly5 (c0r1) -> u_fab.u_dn0_rly6 (c0r2)",
+   "src_region": "c0r1",
+   "dst_region": "c0r2",
+   "bits": 516,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "dn0_rly9",
+   "crossing": "dn0_rly8 (c0r2) -> u_fab.u_dn0_rly9 (c0r3)",
+   "src_region": "c0r2",
+   "dst_region": "c0r3",
+   "bits": 516,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "dn1_rly3",
+   "crossing": "dn1_rly2 (c1r0) -> u_fab.u_dn1_rly3 (c1r1)",
+   "src_region": "c1r0",
+   "dst_region": "c1r1",
+   "bits": 516,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "dn1_rly6",
+   "crossing": "dn1_rly5 (c1r1) -> u_fab.u_dn1_rly6 (c1r2)",
+   "src_region": "c1r1",
+   "dst_region": "c1r2",
+   "bits": 516,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "dn1_rly9",
+   "crossing": "dn1_rly8 (c1r2) -> u_fab.u_dn1_rly9 (c1r3)",
+   "src_region": "c1r2",
+   "dst_region": "c1r3",
+   "bits": 516,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "dn2_rly3",
+   "crossing": "dn2_rly2 (c2r0) -> u_fab.u_dn2_rly3 (c2r1)",
+   "src_region": "c2r0",
+   "dst_region": "c2r1",
+   "bits": 516,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "dn2_rly6",
+   "crossing": "dn2_rly5 (c2r1) -> u_fab.u_dn2_rly6 (c2r2)",
+   "src_region": "c2r1",
+   "dst_region": "c2r2",
+   "bits": 516,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "dn2_rly9",
+   "crossing": "dn2_rly8 (c2r2) -> u_fab.u_dn2_rly9 (c2r3)",
+   "src_region": "c2r2",
+   "dst_region": "c2r3",
+   "bits": 516,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "dn3_rly3",
+   "crossing": "dn3_rly2 (c3r0) -> u_fab.u_dn3_rly3 (c3r1)",
+   "src_region": "c3r0",
+   "dst_region": "c3r1",
+   "bits": 516,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "dn3_rly6",
+   "crossing": "dn3_rly5 (c3r1) -> u_fab.u_dn3_rly6 (c3r2)",
+   "src_region": "c3r1",
+   "dst_region": "c3r2",
+   "bits": 516,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "dn3_rly9",
+   "crossing": "dn3_rly8 (c3r2) -> u_fab.u_dn3_rly9 (c3r3)",
+   "src_region": "c3r2",
+   "dst_region": "c3r3",
+   "bits": 516,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_1_0a_y",
+   "crossing": "msw_1_0a (c0r0) -> u_fab.u_leg_1_0a_y (c1r0)",
+   "src_region": "c0r0",
+   "dst_region": "c1r0",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_1_1b_y",
+   "crossing": "t_out_1_1 (c1r1) -> u_fab.u_leg_1_1b_y (c0r1)",
+   "src_region": "c1r1",
+   "dst_region": "c0r1",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_1_2b_y",
+   "crossing": "t_out_3_0 (c3r0) -> u_fab.u_leg_1_2b_y (c2r0)",
+   "src_region": "c3r0",
+   "dst_region": "c2r0",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_1_3a_y",
+   "crossing": "t_out_2_1 (c2r1) -> u_fab.u_leg_1_3a_y (c3r1)",
+   "src_region": "c2r1",
+   "dst_region": "c3r1",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_1_4b_y",
+   "crossing": "t_out_1_2 (c1r2) -> u_fab.u_leg_1_4b_y (c0r2)",
+   "src_region": "c1r2",
+   "dst_region": "c0r2",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_1_5b_y",
+   "crossing": "t_out_1_3 (c1r3) -> u_fab.u_leg_1_5b_y (c0r3)",
+   "src_region": "c1r3",
+   "dst_region": "c0r3",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_1_6a_y",
+   "crossing": "t_out_2_2 (c2r2) -> u_fab.u_leg_1_6a_y (c3r2)",
+   "src_region": "c2r2",
+   "dst_region": "c3r2",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_1_7a_y",
+   "crossing": "t_out_2_3 (c2r3) -> u_fab.u_leg_1_7a_y (c3r3)",
+   "src_region": "c2r3",
+   "dst_region": "c3r3",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_2_0a_3",
+   "crossing": "leg_2_0a_2 (c1r0) -> u_fab.u_leg_2_0a_3 (c1r1)",
+   "src_region": "c1r0",
+   "dst_region": "c1r1",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_2_0b_y",
+   "crossing": "n_y_0_1 (c0r1) -> u_fab.u_leg_2_0b_y (c1r1)",
+   "src_region": "c0r1",
+   "dst_region": "c1r1",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_2_1a_0",
+   "crossing": "n_y_2_0 (c2r0) -> u_fab.u_leg_2_1a_0 (c3r0)",
+   "src_region": "c2r0",
+   "dst_region": "c3r0",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_2_1a_3",
+   "crossing": "leg_2_1a_2 (c3r0) -> u_fab.u_leg_2_1a_3 (c3r1)",
+   "src_region": "c3r0",
+   "dst_region": "c3r1",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_2_1a_y",
+   "crossing": "leg_2_1a_3 (c3r1) -> u_fab.u_leg_2_1a_y (c2r1)",
+   "src_region": "c3r1",
+   "dst_region": "c2r1",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_2_1b_y",
+   "crossing": "n_y_3_1 (c3r1) -> u_fab.u_leg_2_1b_y (c2r1)",
+   "src_region": "c3r1",
+   "dst_region": "c2r1",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_2_2a_0",
+   "crossing": "n_y_0_2 (c0r2) -> u_fab.u_leg_2_2a_0 (c1r2)",
+   "src_region": "c0r2",
+   "dst_region": "c1r2",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_2_2a_3",
+   "crossing": "leg_2_2a_2 (c1r2) -> u_fab.u_leg_2_2a_3 (c1r3)",
+   "src_region": "c1r2",
+   "dst_region": "c1r3",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_2_2b_y",
+   "crossing": "n_y_0_3 (c0r3) -> u_fab.u_leg_2_2b_y (c1r3)",
+   "src_region": "c0r3",
+   "dst_region": "c1r3",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_2_3a_3",
+   "crossing": "leg_2_3a_2 (c3r2) -> u_fab.u_leg_2_3a_3 (c3r3)",
+   "src_region": "c3r2",
+   "dst_region": "c3r3",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_2_3a_y",
+   "crossing": "leg_2_3a_3 (c3r3) -> u_fab.u_leg_2_3a_y (c2r3)",
+   "src_region": "c3r3",
+   "dst_region": "c2r3",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_2_3b_y",
+   "crossing": "n_y_3_3 (c3r3) -> u_fab.u_leg_2_3b_y (c2r3)",
+   "src_region": "c3r3",
+   "dst_region": "c2r3",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_3_0a_4",
+   "crossing": "leg_3_0a_3 (c1r1) -> u_fab.u_leg_3_0a_4 (c2r1)",
+   "src_region": "c1r1",
+   "dst_region": "c2r1",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_3_0a_y",
+   "crossing": "leg_3_0a_5 (c2r1) -> u_fab.u_leg_3_0a_y (c2r2)",
+   "src_region": "c2r1",
+   "dst_region": "c2r2",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_3_0b_0",
+   "crossing": "n_y_2_1 (c2r1) -> u_fab.u_leg_3_0b_0 (c3r1)",
+   "src_region": "c2r1",
+   "dst_region": "c3r1",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_3_0b_5",
+   "crossing": "leg_3_0b_4 (c3r1) -> u_fab.u_leg_3_0b_5 (c3r2)",
+   "src_region": "c3r1",
+   "dst_region": "c3r2",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_3_0b_y",
+   "crossing": "leg_3_0b_5 (c3r2) -> u_fab.u_leg_3_0b_y (c2r2)",
+   "src_region": "c3r2",
+   "dst_region": "c2r2",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_3_1a_2",
+   "crossing": "leg_3_1a_1 (c1r3) -> u_fab.u_leg_3_1a_2 (c1r2)",
+   "src_region": "c1r3",
+   "dst_region": "c1r2",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
    "name": "leg_3_1b_0",
-   "crossing": "u_fab.u_leg_3_1b_0 (c3r3) -> u_fab.u_leg_3_1b_1 (c2r2)",
+   "crossing": "n_y_2_3 (c2r3) -> u_fab.u_leg_3_1b_0 (c3r3)",
+   "src_region": "c2r3",
+   "dst_region": "c3r3",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_3_1b_1",
+   "crossing": "leg_3_1b_0 (c3r3) -> u_fab.u_leg_3_1b_1 (c2r2)",
    "src_region": "c3r3",
    "dst_region": "c2r2",
    "bits": 514,
    "D": 4,
    "E": 2,
    "K": 2,
-   "added_edges": 3,
-   "why": "Q-CL16-EARLY diag16ct 4_1_cts: TT setup +44.0 ps aligned drops, -16.0 with the 60 ps die residual; in-cluster skew -422.7 ps TT / -325.2 FF (launch leaf late); 356.7-um diagonal hop",
-   "ring": {
-    "inst": "u_fab.u_land_leg_3_1b_0_w",
-    "master": "qfd_c_land_w",
-    "clock": "ck_c3r3",
-    "site": [
-     1833.36,
-     4056.076
-    ],
-    "flops": 2076,
-    "note": "flop-first beside the source station: slots = the capture flops of the source word"
-   },
-   "read": {
-    "inst": "u_fab.u_land_leg_3_1b_0_r",
-    "master": "qfd_c_land_r",
-    "clock": "ck_c2r2",
-    "site": [
-     1711.348,
-     3899.6
-    ],
-    "flops": 519,
-    "note": "slot (rc - K) mod D -> registered o (flop-last) -> the destination station"
-   },
-   "epochs": "released-reset (L3): reset run from rst_R_48 (depth 17) re-registered once by each half on its own root: G == R0, E = K",
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from ck_c3r3 -to ck_c2r2 (the landing's bank -> o paths are the only paths of that ordered pair; region_audit R5)",
-   "window_ps": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup (T = 833.3)",
-   "fault": "assertion only ($error LAND_FAULT in simulation; synthesis drops the epoch tags)",
-   "rtl": "rtl/physical/qcluster/qfd_c_land.sv"
+   "added_edges": 3
+  },
+  {
+   "name": "leg_3_1b_3",
+   "crossing": "leg_3_1b_2 (c2r2) -> u_fab.u_leg_3_1b_3 (c1r2)",
+   "src_region": "c2r2",
+   "dst_region": "c1r2",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_4_0a_0",
+   "crossing": "n_y_2_2 (c2r2) -> u_fab.u_leg_4_0a_0 (c3r2)",
+   "src_region": "c2r2",
+   "dst_region": "c3r2",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_4_0a_2",
+   "crossing": "leg_4_0a_1 (c3r2) -> u_fab.u_leg_4_0a_2 (c3r1)",
+   "src_region": "c3r2",
+   "dst_region": "c3r1",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_4_0a_7",
+   "crossing": "leg_4_0a_6 (c3r1) -> u_fab.u_leg_4_0a_7 (c2r0)",
+   "src_region": "c3r1",
+   "dst_region": "c2r0",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_4_0a_9",
+   "crossing": "leg_4_0a_8 (c2r0) -> u_fab.u_leg_4_0a_9 (c1r0)",
+   "src_region": "c2r0",
+   "dst_region": "c1r0",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_4_0a_y",
+   "crossing": "leg_4_0a_15 (c1r0) -> u_fab.u_leg_4_0a_y (c0r0)",
+   "src_region": "c1r0",
+   "dst_region": "c0r0",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_4_0b_1",
+   "crossing": "leg_4_0b_0 (c1r2) -> u_fab.u_leg_4_0b_1 (c1r1)",
+   "src_region": "c1r2",
+   "dst_region": "c1r1",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_4_0b_5",
+   "crossing": "leg_4_0b_4 (c1r1) -> u_fab.u_leg_4_0b_5 (c1r0)",
+   "src_region": "c1r1",
+   "dst_region": "c1r0",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "leg_4_0b_y",
+   "crossing": "leg_4_0b_6 (c1r0) -> u_fab.u_leg_4_0b_y (c0r0)",
+   "src_region": "c1r0",
+   "dst_region": "c0r0",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "rs_0",
+   "crossing": "n_y_0_0 (c0r0) -> u_fab.u_rs_0 (c1r0)",
+   "src_region": "c0r0",
+   "dst_region": "c1r0",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "ft_2",
+   "crossing": "ft_1 (c1r3) -> u_fab.u_ft_2 (c2r3)",
+   "src_region": "c1r3",
+   "dst_region": "c2r3",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "ft_6",
+   "crossing": "ft_5 (c2r3) -> u_fab.u_ft_6 (c2r2)",
+   "src_region": "c2r3",
+   "dst_region": "c2r2",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "ft_9",
+   "crossing": "ft_m4 (c2r2) -> u_fab.u_ft_9 (c2r1)",
+   "src_region": "c2r2",
+   "dst_region": "c2r1",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
+  },
+  {
+   "name": "ft_13",
+   "crossing": "ft_12 (c2r1) -> u_fab.u_ft_13 (c2r0)",
+   "src_region": "c2r1",
+   "dst_region": "c2r0",
+   "bits": 514,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "added_edges": 3
   }
- ]
+ ],
+ "landing_flops": 139602
 }

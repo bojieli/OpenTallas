@@ -18,7 +18,9 @@ die: the communicating region pairs).
 
   region_audit.py [--fabric F] [--cluster C] [--out JSON] [--mutate station|tile|landclk]   (fail-witness self-test:
       'station' rebinds one c0r0 station to ck_c3r3, 'tile' rebinds tile (0,0)'s ck entry to ck_c2r0, 'landclk' reads
-      the first landing's ring on its WRITE clock)
+      the first landing's ring on its WRITE clock, 'unland' bypasses the first landing)
+  R6  (Q-CLUSTER-LANDALL) with the contract's landings mode 'all', every multi-bit crossing is landed; only the 1-bit
+      reset-tree hops cross a seam as plain registered hops.
 Prints REGION_AUDIT_PASS / REGION_AUDIT_FAIL <n>.
 """
 from __future__ import annotations
@@ -44,7 +46,7 @@ def main():
     ap.add_argument("--fabric", default=str(RTL / "qfd_c_b16_dv_fabric.sv"))
     ap.add_argument("--cluster", default=str(RTL / "qfd_c_b16_dv.sv"))
     ap.add_argument("--out")
-    ap.add_argument("--mutate", choices=["station", "tile", "landclk"])
+    ap.add_argument("--mutate", choices=["station", "tile", "landclk", "unland"])
     a = ap.parse_args()
     fab = Path(a.fabric).read_text()
     clu = Path(a.cluster).read_text()
@@ -60,6 +62,13 @@ def main():
             raise SystemExit("--mutate landclk: the contract lists no landing")
         L0 = next(iter(lands.values()))
         fab = re.sub(rf"(u_land_{L0['name']}_r \(\.ck\()ck_\w+?\)", rf"\1ck_{L0['src_region']})", fab, count=1)
+    if a.mutate == "unland":
+        # bypass the first landing: its consumer takes the ring's input (an unlanded multi-bit crossing again)
+        if not lands:
+            raise SystemExit("--mutate unland: the contract lists no landing")
+        L0 = next(iter(lands.values()))
+        i0 = re.search(rf"u_land_{L0['name']}_w \(.*?\.i\((\w+)\)", fab).group(1)
+        fab = fab.replace(f".o(land_{L0['name']}))", f".o(land_{L0['name']}_dead))") + f"\n    assign land_{L0['name']} = {i0};\n"
     xs, ys = C["region_seams"]["x"], C["region_seams"]["y"]
 
     def region_at(x, y):
@@ -187,11 +196,19 @@ def main():
         oc = [(d_, dr) for n_, d_, dr in cons if n_ == regs[r_]["q"][0]]
         if not oc or any(dr != L["dst_region"] for _, dr in oc):
             fails.append(f"R5 landing {nm}: o consumers {oc} not all in {L['dst_region']}")
+        # Q-CLUSTER-LANDALL: the kit SDC's multicycle is CELL-based (-from the ring's cells -to the read half's cells),
+        # so other crossings of the same region pair stay single-cycle; they must be 1-bit reset-tree hops (R6)
         other = [x for x in crossings if x["src_region"] == L["src_region"] and x["dst_region"] == L["dst_region"]
-                 and not x["landed"]]
+                 and not x["landed"] and (x["bits"] or 0) > 1]
         if other:
-            fails.append(f"R5 landing {nm}: {len(other)} other {L['src_region']} -> {L['dst_region']} crossings (the "
-                         f"multicycle SDC would cover them): {[o_['net'] for o_ in other][:4]}")
+            fails.append(f"R5 landing {nm}: {len(other)} other multi-bit {L['src_region']} -> {L['dst_region']} "
+                         f"crossings, unlanded: {[o_['net'] for o_ in other][:4]}")
+    # R6 (Q-CLUSTER-LANDALL): with landings 'all', EVERY multi-bit crossing is landed; only 1-bit reset hops cross plain
+    if C.get("landings", {}).get("mode") == "all":
+        for x in crossings:
+            if not x["landed"] and (x["bits"] or 0) > 1:
+                fails.append(f"R6 unlanded {x['bits']}-b crossing {x['src']} ({x['src_region']}) -> {x['dst']} "
+                             f"({x['dst_region']}) net {x['net']}")
     pairs = {}
     for x in crossings:
         k = "-".join(sorted((x["src_region"], x["dst_region"])))
@@ -199,7 +216,7 @@ def main():
         p["links"] += 1
         p["bits"] += x["bits"] or 0
     out = dict(schema="opentallas.qcluster.region_audit.v1", master="qfd_c_b16_dv", regions=16,
-               rule="single registered hop per seam crossing, neighbouring regions only; fixed one-edge latency "
+               rule="Q-CLUSTER-LANDALL: every multi-bit seam crossing LANDED (R6), 1-bit reset hops plain; was: single registered hop per seam crossing, neighbouring regions only; fixed one-edge latency "
                     "(added edges 0 vs the 8-region fabric) between regional clocks the die delivers phase-aligned "
                     "(+/-60 ps, contract obligation 2); Q-CL16-LAND: a crossing whose in-cluster skew does not fit one "
                     "edge is LANDED (ring on the source root, read slot (rc - K) mod D on the destination root, "

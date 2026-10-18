@@ -47,6 +47,7 @@ def main():
     ap.add_argument("--feed", choices=["face", "centre"], default="face")
     # Q-CLUSTER16 (owner 0ei 10-18): 16 regions (one per A0 tile); kit names get '16' (diag16c / diag16ct)
     ap.add_argument("--tag", default="", help="kit name infix after 'diag' (e.g. 16)")
+    ap.add_argument("--branch", help="job branch (default by tag)")
     a = ap.parse_args()
     C = json.loads((ARCH / "cluster_contract_dv.json").read_text())
     W, H = C["outline_um"]["w"], C["outline_um"]["h"]
@@ -138,13 +139,26 @@ def main():
                 for kind in ("setup", "hold"):
                     sdc.append(f"set_clock_uncertainty -{kind} {BASE_UNC_PS[kind] + DIE_RESIDUAL_PS} "
                                f"-from [get_clocks {clk[f_]}] -to [get_clocks {clk[t_]}]")
-        # landed crossings: the ring -> o paths are the ONLY paths of each landed ordered region pair (region_audit R5)
-        for L in C.get("landings", {}).get("list", []):
-            f_, t_ = clk[L["src_region"]], clk[L["dst_region"]]
-            sdc.append(f"# Q-CL16-LAND landing {L['name']} ({L['crossing']}): ring {L['ring']['inst']} -> read "
-                       f"{L['read']['inst']} o, E {L['E']}, D {L['D']} (LANDING-CONTRACT L5)")
-            sdc.append(f"set_multicycle_path -setup {L['E']} -from [get_clocks {f_}] -to [get_clocks {t_}]")
-            sdc.append(f"set_multicycle_path -hold {L['D'] - 1} -from [get_clocks {f_}] -to [get_clocks {t_}]")
+        # Q-CLUSTER-LANDALL: every multi-bit crossing is landed.  The multicycle is CELL-based (-from the ring's cells -to the
+        # read half's cells: exactly the bank / vld -> o paths), so the 1-bit reset hops of the same region pairs stay
+        # single-cycle with the inter-region uncertainty above, and the in-region ring / read paths stay single-cycle
+        lands = C.get("landings", {}).get("list", [])
+        if lands:
+            E_, D_ = {L["E"] for L in lands}, {L["D"] for L in lands}
+            assert len(E_) == 1 and len(D_) == 1, "one E / D for every landing (qc_gen.py LAND_E / LAND_D)"
+            E_, D_ = E_.pop(), D_.pop()
+            sdc.append(f"# Q-CLUSTER-LANDALL: {len(lands)} landed crossings (LANDING-CONTRACT L5): ring -> read multicycle "
+                       f"-setup {E_} -hold {D_ - 1}, window ({E_} - {D_}) T + t_hold < dL < {E_} T - t_cq - t_setup")
+            sdc.append("set ot_qc_lands {" + " ".join(L["name"] for L in lands) + "}")
+            sdc.append("set ot_qc_land_miss 0")
+            sdc.append("foreach ot_ln $ot_qc_lands {")
+            sdc.append("  set ot_lf [get_cells -quiet u_fab.u_land_${ot_ln}_w.*]")
+            sdc.append("  set ot_lt [get_cells -quiet u_fab.u_land_${ot_ln}_r.*]")
+            sdc.append("  if {[llength $ot_lf] == 0 || [llength $ot_lt] == 0} { incr ot_qc_land_miss; continue }")
+            sdc.append(f"  set_multicycle_path -setup {E_} -from $ot_lf -to $ot_lt")
+            sdc.append(f"  set_multicycle_path -hold {D_ - 1} -from $ot_lf -to $ot_lt")
+            sdc.append("}")
+            sdc.append('puts "OT_QC_LAND_SDC [expr {[llength $ot_qc_lands] - $ot_qc_land_miss}] of [llength $ot_qc_lands] landings constrained"')
     for q in rest:
         for n in sorted(dom[q]["inputs"]):
             sdc.append(f"set_input_delay [expr {{0.2 * $ot_q_per}}] -clock ck_{q} [get_ports {{{n}[*]}}]")
@@ -210,14 +224,14 @@ def main():
                           "worst, trunks <= 0.54), eight regional clock roots (side x tile row, <= 13.4k sinks each; "
                           "the four quadrant roots measured 26,984 sinks / spread 3.9 ns), registered pins hold_budget die, DV "
                           "rs_i -> rs_o feedthrough (14 edges) in T.",
-        job=dict(owner="Claude:Q-CLUSTER" + a.tag, branch="claude/qcluster16-1018" if a.tag == "16" else "claude/qcluster-1017", tag=("dv0" if a.mode == "real" else f"diag{a.tag or 5}" if a.feed == "centre" else "diag4") + ("c" if a.feed == "centre" else "") + ("" if a.engine == "spine" else "t"),
+        job=dict(owner="Claude:Q-CLUSTER" + a.tag, branch=a.branch or ("claude/qcluster16-1018" if a.tag == "16" else "claude/qcluster-1017"), tag=("dv0" if a.mode == "real" else f"diag{a.tag or (5 if a.feed == 'centre' else 4)}") + ("c" if a.feed == "centre" else "") + ("" if a.engine == "spine" else "t"),
                  purpose="qfd_c_b16_dv cluster (dv2r8f, 48 instances)", submit=a.mode == "real",
                  **({} if a.mode == "real" else {"hold_merge": "Q-CLUSTER3 diagnostic: stand-in A0 + station abstracts"}),
-                 **({"extra_paths": ["results/arch/qwen_cluster_1017"]} if a.tag == "16" else {}),
+                 **({"extra_paths": ["results/arch/qwen_cluster_1017"]} if a.tag.startswith("16") else {}),
                  benches=[dict(name="qcluster_fabric", cmd="bash tools/qwen_cluster/bench.sh bench_out",
                                expect="pass", pass_regex="BENCH_EXIT 0", threads=8, peak_ram_gb=12)] + (
                      [dict(name="qcluster16_lockstep", cmd="bash tools/qwen_cluster/bench_lockstep.sh lockstep_out",
-                           expect="pass", pass_regex="LOCKSTEP_EXIT 0", threads=8, peak_ram_gb=12)] if a.tag == "16" else [])))
+                           expect="pass", pass_regex="LOCKSTEP_EXIT 0", threads=8, peak_ram_gb=12)] if a.tag.startswith("16") else [])))
     out = ROOT / "tools/ref_tile/specs_qcluster" / f"{name}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(spec, indent=1) + "\n")
