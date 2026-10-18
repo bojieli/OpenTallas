@@ -74,7 +74,15 @@ module ot_pl_land_r #(
             rc <= rc + 1'b1;
             if (rc == kk - 1'b1) warm <= 1'b1;
         end
-    always @(posedge ck) o <= (warm && vld[sel]) ? bank[sel*W +: W] : {W{1'b0}};
+    // slot pick as a decoded AND-OR over constant-index slices (no runtime W-bit part-select: yosys SHARE stalls on those)
+    reg [W-1:0] pick;
+    integer ps;
+    always @* begin
+        pick = {W{1'b0}};
+        for (ps = 0; ps < D; ps = ps + 1)
+            if (sel == ps[AW-1:0] && vld[ps]) pick = pick | bank[ps*W +: W];
+    end
+    always @(posedge ck) o <= warm ? pick : {W{1'b0}};
 `ifndef SYNTHESIS
     reg fault = 1'b0;
     always @(posedge ck)
