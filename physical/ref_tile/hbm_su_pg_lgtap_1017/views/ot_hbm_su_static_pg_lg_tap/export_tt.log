@@ -18,26 +18,26 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-0450] virtual clock ot_io_serial can not be propagated.
 [WARNING STA-0450] virtual clock core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_io_serial can not be propagated.
-OT_HYBRID CTS_MEASURE tt pg_clk sinks=2866 reference_scope=boundary boundary_sinks=2834 min=198.62252200171477 mean=222.2361301363005 max=266.52796742883186 all_mean=222.24776303449826
-OT_HYBRID CTS_MEASURE tt clk_ctl sinks=1 reference_scope=boundary boundary_sinks=1 min=0.08191054611046805 mean=0.08191054611046805 max=0.08191054611046805 all_mean=0.08191054611046805
+OT_HYBRID CTS_MEASURE tt pg_clk sinks=3374 reference_scope=boundary boundary_sinks=3342 min=213.88350898131398 mean=230.16534425054365 max=249.83121227247474 all_mean=230.19286919387696
+OT_HYBRID CTS_MEASURE tt clk_ctl sinks=1 reference_scope=boundary boundary_sinks=1 min=0.09044970890255755 mean=0.09044970890255755 max=0.09044970890255755 all_mean=0.09044970890255755
 OT_ENTRIES LEVEL pg_clk deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt pg_clk -> g_rsync.rs[0]$_DFF_P_/CLK wire=0 R=222.2361301363005 latency=0.0 phi=222.2361301363005
+OT_ENTRIES COMP tt pg_clk -> g_rsync.rs[0]$_DFF_P_/CLK wire=0 R=230.16534425054365 latency=0.0 phi=230.16534425054365
 OT_ENTRIES LEVEL clk_ctl deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
-OT_ENTRIES COMP tt clk_ctl -> g_rsync.rc$_DFF_P_/CLK wire=0 R=0.08191054611046805 latency=222.15421959019002 phi=222.2361301363005
-OT_ENTRIES DOMAIN core 833.333008ps IO1712/1629 boundary=198.62252200171477..266.52796742883186
-OT_ENTRIES DOMAIN serial 1111.110596ps IO1/0 boundary=222.2361301363005..222.2361301363005
+OT_ENTRIES COMP tt clk_ctl -> g_rsync.rc$_DFF_P_/CLK wire=0 R=0.09044970890255755 latency=230.0748945416411 phi=230.16534425054365
+OT_ENTRIES DOMAIN core 833.333008ps IO1712/1629 boundary=213.88350898131395..249.83121227247474
+OT_ENTRIES DOMAIN serial 1111.110596ps IO1/0 boundary=230.16534425054365..230.16534425054365
 OT_CDC BOUNDED pg_reset source -> sync1 g_rsync.rc$_DFF_P_ -> g_rsync.rs[0]$_DFF_P_
 OT_CDC STRUCTURAL_PASS {pg_reset source 0} 1 (bounded synchroniser crossings only; no physical closure claim)
-OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=2867 inputs=1713 outputs=1629 async_control_pins=128
-OT_ENTRIES COMP DONE tt 2 entries phi=222.2361301363005 boundary=198.62252200171477..266.52796742883186
+OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=3375 inputs=1713 outputs=1629 async_control_pins=120
+OT_ENTRIES COMP DONE tt 2 entries phi=230.16534425054365 boundary=213.88350898131395..249.83121227247474
 [WARNING STA-0450] virtual clock core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_io_serial can not be propagated.
 OT_IOREF clock-port pg_clk (ot_entry_0): data input delays dropped
 OT_IOREF clock-port clk_ctl (ot_entry_1): data input delays dropped
-OT_IOREF_EDGE ot_entry_0 boundary 2834 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_0 boundary 3342 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ot_entry_1 boundary 1 negedge 0 noarc 0 inverted 0
 OT_IOREF keep core_clk (not an insertion-reference clock)
 OT_IOREF keep ot_io_serial (not an insertion-reference clock)
-SIGNAL_LAYER_AUDIT signal=M5 PG=M5 nonPG=M2 220474 M1 69188 M3 139491 M4 27714 M5 5050 PGmetal=M5 31480 M2 32970 M1 1570 M4 62800 M3 94200 violations=
-OT_WS max 1.6942114378082351e-10 min 2.883399075059856e-11
+SIGNAL_LAYER_AUDIT signal=M5 PG=M5 nonPG=M3 118697 M2 195858 M1 69466 M4 24985 M5 4853 PGmetal=M5 31480 M2 32970 M1 1570 M4 62800 M3 94200 violations=
+OT_WS max 1.6801543489819437e-10 min 2.859198988680589e-11
 OT_EXPORT_DONE
