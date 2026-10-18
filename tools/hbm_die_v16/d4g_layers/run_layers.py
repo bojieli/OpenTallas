@@ -8,7 +8,8 @@ from pathlib import Path
 
 H = Path(__file__).resolve().parent
 LAYERS = ['l3_vm_hc_coll.py', 'l1_host_xload_stack.py', 'l2_su_sfu.py',  # l1 reads the q0 SE/NE banks + vmdel_<E> that l3 makes
-          'l4_idx_quad.py']  # HBM-RTL4 10-18 (e0c0120fd): IDX quad client; addresses l3's SE/NE banks + l1/l2 output
+          'l4_idx_quad.py',  # HBM-RTL4 10-18 (e0c0120fd): IDX quad client; addresses l3's SE/NE banks + l1/l2 output
+          'l5_rebind.py']  # H-D4G5/REBIND 10-18: port-identical rebinds (qdq split, fs wrappers, kshare splitstrap, VM SW/NW tiles, pg r5)
 ap = argparse.ArgumentParser(); ap.add_argument('inp'); ap.add_argument('out'); ap.add_argument('--report-dir', required=True)
 a = ap.parse_args()
 R = Path(a.report_dir); R.mkdir(parents=True, exist_ok=True)
