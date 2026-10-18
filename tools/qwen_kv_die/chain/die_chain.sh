@@ -91,6 +91,9 @@ if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
     [ -f "$f" ] && cp "$f" $G/libs/ && echo /work/libs/$(basename $f) >> $G/libs_tt.txt; done
   [ -s $G/libs_tt.txt ] || { say "DIE_REPAIR FAIL: no TT element libs in $R/libs (the resizer would not see the element pins)"; exit 1; }
   RD=qwen_compute; [ "$DIE" = kv ] && RD=qwen_kv
+  # Q-DIE12 10-18: a die with forwarded lanes (n_fck_* lane clocks) repeats them with their data (step.py *_fwd)
+  grep -q 'n_fck_' $C/die.v 2>/dev/null && RD=${RD}_fwd
+  RD=${OT_DIE_REPAIR_DESIGN:-$RD}; say "DIE_REPAIR design $RD"
   RS=(--skip 'n_rst_*'); [ "${OT_ROUTE_RESET:-0}" = 1 ] && RS=()   # routed registered reset hops are ordinary die nets: repeated
   python3 $SRC/tools/die_repeaters/step.py copy $G > /dev/null && \
   python3 $SRC/tools/die_repeaters/step.py tcl --design $RD --report /work/die_repeaters.json --libs-file /work/libs_tt.txt \
@@ -130,6 +133,12 @@ for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
     cp "$SRC/tools/die_clock_check.tcl" $D/die_clock_check.tcl
     printf '%s\n' 'if {[catch {set ::env(OT_DCC_OUT) /work/die_clock_dump.tsv; source /work/die_clock_check.tcl} err]} { puts "OT_DCC_FAIL $err" } else { puts OT_DCC_DONE }' >> $D/grt_$c.tcl
   fi
+  # Q-DIE12 10-18: forwarded-lane landing slacks per lane (tools/qwen_split/fwd_land_plan.py tcl) in every corner, so one
+  # chain yields the land plan (E per link) for the next GEN (OT_SPLIT_LAND_PLAN) without a second STA session
+  if [ -s $C/fwd_lanes.json ] && [ "${OT_FWD_LAND_DUMP:-1}" = 1 ]; then
+    python3 $SRC/tools/qwen_split/fwd_land_plan.py tcl --lanes $C/fwd_lanes.json --corner $c --out $D/land_$c.tcl > /dev/null && \
+      printf 'if {[catch {source /work/land_%s.tcl} err]} { puts "OT_LAND_FAIL $err" }\n' $c >> $D/grt_$c.tcl
+  fi
   # DIE-FLOW 10-17: post-GRT slew/cap audit of the repeated die nets (TT session; GRT detours are invisible pre-GRT)
   if [ "${OT_DIE_REPAIR:-0}" = 1 ] && [ "$c" = tt ] && [ -f $G/die_repeaters.tcl ]; then
     cp $G/die_repeaters.tcl $G/die_repeaters.skip_nets.txt $D/ 2>/dev/null
@@ -148,6 +157,10 @@ for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
   elif [ "$DCC" = 1 ]; then say "DIE CLOCK CHECK $c: no dump ($(grep -m1 OT_DCC_FAIL $D/grt_$c.log))"; fi
 done
 [ "$sta_failed" = 0 ] || { say "chain FAIL: one or more STA corners did not complete"; exit 1; }
+if [ -s $C/fwd_lanes.json ] && [ "${OT_FWD_LAND_DUMP:-1}" = 1 ]; then
+  LG=(); for c in tt ff; do [ -s $R/sta_${DIE}_$c/grt_$c.log ] && LG+=($R/sta_${DIE}_$c/grt_$c.log); done
+  [ ${#LG[@]} -gt 0 ] && say "LAND PLAN: $(python3 $SRC/tools/qwen_split/fwd_land_plan.py plan --lanes $C/fwd_lanes.json --logs "${LG[@]}" --out $R/land_plan.json 2>&1 | tail -1)"
+fi
 # DIE-FLOW 2026-10-17 (FLOW-HOLD D1-D3, OT_HOLD_BUDGET=die: die_sta_libs.py U 25 + sta_tcl.py FF hold dump): per-link
 # classifier -- launch-min from the bound ETMs, delta <= 80, ASSUMED single-flop masters = hold DIAGNOSTIC links
 if [ "${OT_HOLD_BUDGET:-tile}" = die ]; then

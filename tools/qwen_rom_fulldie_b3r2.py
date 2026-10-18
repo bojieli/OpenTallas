@@ -3966,6 +3966,31 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         tpads=equal_age_pads(S_,m.get('relay_equal_groups',{}),tpads)
         m['tp8_inline_pads'] = dict(irep, pads=len(tpads), pad_relays=sum(tpads.values()),
                                   equal_age_groups=len(m.get('relay_equal_groups',{})))
+    # Q-DIE12 10-18 (landed-regions standard): OT_SPLIT_LAND_CROSS=inst[,inst...] -- every zero-stage 2-endpoint data
+    # bus between a named instance (a hard tile with a deep internal clock tree: d2d_rom 343 / sys_face 220 ps FF) and a
+    # block on a DIFFERENT regional clock root gets one station at its sink end; with OT_SPLIT_FWD_LANES it is a
+    # one-frame forwarded lane = a LANDING (landh0: ring written on the source root, read on the sink root at E), so the
+    # two roots need no phase relation (no die-level re-balancing).  Same-root neighbours stay direct (region-local).
+    _lc = {s_ for s_ in _os.environ.get('OT_SPLIT_LAND_CROSS', '').split(',') if s_}
+    if _lc:
+        _ck_of = {}
+        for _b in m['buses']:
+            if _b[1] == 'clock_trunk':
+                for _e in _b[3][1:]:
+                    _ck_of.setdefault(_e[0], _b[0])
+        _lcx = []
+        for idx, (bid, cl, bits, eps) in buses:
+            if len(eps) != 2 or cl in ('clock_trunk', 'constant', 'reset', 'link_spine', 'link_channel') or bid.endswith('_rdy'):
+                continue
+            (s_, _), (d_, _) = eps
+            if not ({s_, d_} & _lc) or (idx in plans and plans[idx]['frames']) or bid in tpads:
+                continue
+            if _ck_of.get(s_) is None or _ck_of.get(d_) is None or _ck_of.get(s_) == _ck_of.get(d_):
+                continue
+            tpads[bid] = 1
+            _lcx.append(dict(bid=bid, cl=cl, bits=bits, src=s_, dst=d_, src_ck=_ck_of[s_], dst_ck=_ck_of[d_]))
+        m['land_cross'] = dict(insts=sorted(_lc), buses=len(_lcx), bits=sum(r_['bits'] for r_ in _lcx), rows=_lcx)
+        print(f'LAND_CROSS {sorted(_lc)}: {len(_lcx)} cross-root buses / {sum(r_["bits"] for r_ in _lcx)} bits get a landing station', flush=True)
     # Reconcile the allocator's mutable occupancy with the exact frames that
     # will be emitted after repair/rip-up/jog/pre-pad trimming. Every inline
     # arrival pad must see ALL surviving frames, not a stale search grid.
@@ -3988,6 +4013,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         print(f'relay collision diagnostic failed: {diagnostic_error}', file=sys.stderr)
                 raise ValueError(f"relay occupancy: {pl['bid']} frame {fk} overlaps a surviving frame before inline pads")
             add_rect(rr)
+    _lc_bids = {r_['bid'] for r_ in (m.get('land_cross') or {}).get('rows', ())}
     pad_done = {}
     pad_hop_centre = {}
     if tpads:
@@ -4025,7 +4051,30 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 # previous pad to Q (consecutive pads stay together; the walk ends next to Q)
                 fr = 1.0 / (npad - j + 1)
                 qx, qy = px + (Q[0] - px) * fr, py + (Q[1] - py) * fr
-                sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, cc, 150.0) if cc is not None else None
+                sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, cc, 150.0) if cc is not None and bid not in _lc_bids else None
+                if sp is None and bid in _lc_bids:
+                    # Q-DIE12 LAND_CROSS: the landing station takes the free site that minimises its LONGER hop
+                    # (source -> station, station -> sink), not the site nearest the midpoint (first try: 17 hops > 405)
+                    best_ = None
+                    W_, H_ = w + v.SHAVE, h + v.SHAVE
+                    for ring in range(0, int(_os.environ.get('OT_SPLIT_LAND_CROSS_RINGS', '150'))):
+                        st = ring * 4 * v.GY
+                        if best_ is not None and st > best_[0]:
+                            break
+                        cands = [(0, 0)] if ring == 0 else \
+                            [(dx, dy) for dx in (-st, st) for dy in [i * 4 * v.GY for i in range(-ring, ring + 1)]] + \
+                            [(dx, dy) for dy in (-st, st) for dx in [i * 4 * v.GY for i in range(-ring + 1, ring)]]
+                        for dx, dy in cands:
+                            x0, y0 = v.dn(qx - W_ / 2 + dx, v.GX), v.dn(qy - H_ / 2 + dy, v.GY)
+                            cx_, cy_ = x0 + W_ / 2, y0 + H_ / 2
+                            sc_ = max(abs(cx_ - Q[0]) + abs(cy_ - Q[1]), abs(cx_ - x1) + abs(cy_ - y1))
+                            if best_ is not None and sc_ >= best_[0]:
+                                continue
+                            if in_field(cx_, cy_) and corr_of(cx_) is None and not contains_frame(legal_row_gaps, y0, H_):
+                                continue
+                            if y0 >= g['y0'] and y0 + H_ <= die_top and free((x0, y0, x0 + W_, y0 + H_)):
+                                best_ = (sc_, (x0, y0))
+                    sp = best_[1] if best_ else None
                 if sp is None and cc is None and not sink_in_field:
                     sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, None)
                 if sp is None and cc is None and sink_in_field:
