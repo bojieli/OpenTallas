@@ -184,7 +184,8 @@
     "cause": "qfd_dv_redstn2 level-9 sender drove nb_o = {0, v8 && mode 3, y8} every edge: y8 = level-8 fp32 adder data (DRST 0, unreset by design) leaves even with valid 0, so the 514-b W5 -> W4 die lane toggled on all 1,501 idle edges with initial-state garbage (only data port of the slice not zero when idle; violates the slice2 port contract 'a zero word is no word')",
     "fix": "LB2-QWEN-C 2092dfebe: nb_o = v ? {01, y8} : 514'd0 (qfd_dv_redstn2 + qfd_dv_redstn); OT_QFD_L9_IDLE_MUT = as-built word",
     "log": "results/rtl/qwen_layer_tput_1018/slice_smoke/runs/c_colW5_asbuilt/ (as-built FAIL witness)",
-    "fixed": "PENDING ot-epyc4:/srv/opentallas-scratch/claude/lb2qc-1018/smoke_fix.out (must SMOKE_RESULT PASS) + smoke_mut.out (OT_QFD_L9_IDLE_MUT, must FAIL regex 'UNDECLARED o_n_dv_l9_W4')"
+    "fixed": "PENDING ot-epyc4:/srv/opentallas-scratch/claude/lb2qc-1018/smoke_fix.out (must SMOKE_RESULT PASS) + smoke_mut.out (OT_QFD_L9_IDLE_MUT, must FAIL regex 'UNDECLARED o_n_dv_l9_W4')",
+    "regression": "Q-SLICE slice2 benches on the fixed RTL (Verilator 5.050, ot-epyc5): bench2 a..g,i,j PASS (incl. L9 pair), MUT 11 / 12 FAIL, faces MUT 0 PASS / 11 / 12 FAIL -> slice_smoke/runs/qdv_slice2_l9idle_benches/; bench h (12-slice SETID) + MUT 10 PENDING (ot-epyc5 lb2qc-1018/slice2_bench/pos_h.out, mut10.out; first two combined runs OOM-stopped at 48 / 96 GB during the parallel 12-slice builds -> slice2_h.sh alone at 256 GB)"
    },
    "face_component_reference": "run_sys_face_bench.sh (compute src) on the same image: SYS_FACE_PASS MUT 0 (boot 54, PW 1024 DW 8, 1512 events exact), MUT 1 FAIL -> the face itself loads the programme when its pins are driven aligned; the die landing breaks it"
   },
