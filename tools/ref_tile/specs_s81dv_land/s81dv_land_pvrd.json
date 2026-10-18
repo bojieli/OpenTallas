@@ -60,8 +60,9 @@
   "rs"
  ],
  "outline": {
-  "w": 151.2,
-  "h": 23.76
+  "w": 155.52,
+  "h": 25.92,
+  "exact": true
  },
  "layer_cap": "M5",
  "pins": {
@@ -107,11 +108,11 @@
   "io_hold_margin_ns": 0.0,
   "macro_halo_um": 5.4
  },
- "structural_change": "S81-DIE7/PVRD 10-18: first hardened view of dsfd_dvland_pvrd (S81-DIE5 RTL; 2 instances in bind9 / p4l: links pv_W -> s_3S, pv_E -> s_4S, from svc entries rsv_05 / rsv_11 over one dsfd_dvrlyh_562 chain, 2 stations, E 2 / K 2 / D 4): the P.V 562-b lane LANDING (ot_s81_land W 562 D 4: ring written on the forwarded lane clock ck_f, read on the slice root ck at K) + a static fixed-latency width adapter (one register, +1 edge) into the C3 slice band port bi (1104-b RD beat: leaf w mod 5, row rb + 4 (w div 5), pairs 2). No ready, no backpressure, no credit; fault = slot-epoch check | head-flag calendar slip (assertion only). Two CTS roots (ck receiver root, ck_f lane capture), related same frequency, fixed-latency ring. Faces from the p4l plan: lane i + ck_f on S (from rsv_05 / rsv_11 below), o abutted N to the slice S-face band port bi with the slice root ck and regional reset rs, straps / fault on W. Recipe 4 flop-first, hold_budget die, M5 cap. | p2: outline 151.2 x 23.76 (p1 gate 172.8 x 34.56: std 1,695 um2, util 33%); pin-limited face strip (1,106 pins on N at 7.3/um, as the 276/562 relays), abutted along the slice S face.",
+ "structural_change": "S81-DIE7/PVRD 10-18: first hardened view of dsfd_dvland_pvrd (S81-DIE5 RTL; 2 instances in bind9 / p4l: links pv_W -> s_3S, pv_E -> s_4S, from svc entries rsv_05 / rsv_11 over one dsfd_dvrlyh_562 chain, 2 stations, E 2 / K 2 / D 4): the P.V 562-b lane LANDING (ot_s81_land W 562 D 4: ring written on the forwarded lane clock ck_f, read on the slice root ck at K) + a static fixed-latency width adapter (one register, +1 edge) into the C3 slice band port bi (1104-b RD beat: leaf w mod 5, row rb + 4 (w div 5), pairs 2). No ready, no backpressure, no credit; fault = slot-epoch check | head-flag calendar slip (assertion only). Two CTS roots (ck receiver root, ck_f lane capture), related same frequency, fixed-latency ring. Faces from the p4l plan: lane i + ck_f on S (from rsv_05 / rsv_11 below), o abutted N to the slice S-face band port bi with the slice root ck and regional reset rs, straps / fault on W. Recipe 4 flop-first, hold_budget die, M5 cap. | p2: outline 151.2 x 23.76 (p1 gate 172.8 x 34.56: std 1,695 um2, util 33%); pin-limited face strip (1,106 pins on N at 7.3/um, as the 276/562 relays), abutted along the slice S face. | p3: outline 155.52 x 25.92 (p2 route FLOORPLAN_MARGIN util 60.3%, std 1,722 um2 in 2,855; now ~53%), pins unchanged.",
  "job": {
   "owner": "Claude:S81-DIE7-PVRD",
-  "branch": "claude/s81-die7-pvrd-1018",
-  "tag": "p2",
+  "branch": "claude/s81-die7-pvrd2-1018",
+  "tag": "p3",
   "purpose": "S81 die P.V landing + static RD-beat width adapter dsfd_dvland_pvrd (562-b forwarded-clock lane -> 1104-b slice bi), 2 instances (s_3S, s_4S)",
   "benches": [
    {
@@ -168,5 +169,8 @@
    "results/arch/s81_dv_1016/landing/witness_pvrd"
   ]
  },
- "reroute_reason": "none"
+ "reroute_reason": {
+  "kind": "slot_change",
+  "text": "s81dv_land_pvrd-p2-59155a3f2 FLOORPLAN_MARGIN (util 60.3% > 60%, std 1722 in 2855 um2): outline grown 151.2 x 23.76 -> 155.52 x 25.92 um on the 2.16 lattice (core 3266 um2, util ~0.53), pin faces and order unchanged, N pin density 7.3 -> 7.1/um (<= relay density); no closed view exists"
+ }
 }
