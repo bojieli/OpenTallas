@@ -104,7 +104,10 @@ def reserve(K, m, gap=LAND_GAP):
         if len(eps) != 2 or cl in K.ABUT or cl in ('clock_trunk', 'reset', 'constant') or RST_BUS.match(bid):
             continue
         (R, pr), (B, pb) = eps
-        if pr != 'b' or not isrly(R) or B not in by or by[B].kind == 'relay' or R not in into:
+        # the receiver is any non-station block: the V word forks / taps (qkd_pvfork / qkd_pvtap*, plan kind 'relay', on
+        # clk_core_c) receive the 16 pvin_<s> 1055-b runs from the stack trees (lstest ae620dbeb: 36 unslotted wide
+        # landings, all pvin -> pvfork and the 2 aq runs, because kind 'relay' excluded the forks)
+        if pr != 'b' or not isrly(R) or B not in by or isrly(B) or R not in into:
             continue
         tx, ty = tree.get(R, set()), tree.get(B, set())
         if not tx or not ty or tx & ty:
@@ -173,6 +176,20 @@ def reserve(K, m, gap=LAND_GAP):
             for i in range(-40, 41):
                 for j in range(-40, 41):
                     x, y = K.up(it.x + i * 4.32, K.GX), K.up(it.y + j * 4.32, K.GY)
+                    for o in (it.orient, flow):
+                        r_ = ok(x, y, o, skipB=True)
+                        if r_ and (best is None or r_[1] < best[4][1]):
+                            best = ('near', x, y, o, r_, None)
+            got = best
+        if got is None:
+            # tier 3 (lstest ae620dbeb: aq_ES / aq_WS last stations beside the crowded astk N face): a wider ring at 8.64-um
+            # steps; the reach of both hops still bounds the spot
+            best = None
+            for i in range(-120, 121):
+                for j in range(-120, 121):
+                    if max(abs(i), abs(j)) <= 20:
+                        continue
+                    x, y = K.up(it.x + i * 8.64, K.GX), K.up(it.y + j * 8.64, K.GY)
                     for o in (it.orient, flow):
                         r_ = ok(x, y, o, skipB=True)
                         if r_ and (best is None or r_[1] < best[4][1]):

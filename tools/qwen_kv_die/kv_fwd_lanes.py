@@ -300,6 +300,22 @@ def main(argv=None):
         shutil.copy(case / 'die.v', case / 'die.v.prefwd')
     (case / 'die.v').write_text('\n'.join(lines))
     masters = sorted(rep['per_master'])
+    # the lane stations / landings keep the relay standard's connections, so a lane master of width S ties the same
+    # DECLARED spare input bits low as qkd_rlys_<S> (kv_rly_std.py die.v.pads.json); kvs14c laned strict bind: 11 lane
+    # masters INPUT_TIED on 'a' (e.g. qkd_rlysh_36 .a({24'b0, ...})) because only the qkd_rlys_* pads were declared
+    pf = case / 'die.v.pads.json'
+    if pf.exists():
+        pj = json.loads(pf.read_text())
+        pads = pj.setdefault('pads', {})
+        for mst in masters:
+            mm = re.match(r'^qkd_(?:rlysh0?|landsh0?)_(\d+)$', mst)
+            src = pads.get(f'qkd_rlys_{mm.group(1)}') if mm else None
+            if src and mst not in pads:
+                pads[mst] = dict(reason=f'forwarded lane master on a qkd_rlys_{mm.group(1)} run (kv_fwd_lanes.py): '
+                                 + src['reason'], ports=src['ports'])
+        if not (case / 'die.v.pads.json.prefwd').exists():
+            shutil.copy(pf, case / 'die.v.pads.json.prefwd')
+        pf.write_text(json.dumps(pj, indent=1) + '\n')
     views, missing = {}, []
     for mst in masters:
         vd = f'physical/ref_tile/{mst}/views/{mst}'
