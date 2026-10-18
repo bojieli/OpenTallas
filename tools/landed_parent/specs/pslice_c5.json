@@ -31,10 +31,10 @@
     "u_h"
    ],
    "centre": [
-    864.0,
-    572.4
+    86.4,
+    561.6
    ],
-   "why": "head (configuration pin stage + column decode + fault OR) alone in the central channel: every leaf region is then landed from it alike (no alignment pads)"
+   "why": "head (configuration pin stage + column decode + fault OR) alone at the W end of the central channel, beside the W-face cfg pins: every leaf region is landed from it alike (no alignment pads)"
   },
   {
    "name": "l",
@@ -44,7 +44,7 @@
     "u_c3"
    ],
    "centre": [
-    561.6,
+    604.8,
     270.0
    ],
    "why": "the three L leaves (13 dictionary banks, boundary insertion TT 483 / FF 395), bottom-left row"
@@ -57,7 +57,7 @@
     "u_c7"
    ],
    "centre": [
-    583.2,
+    626.4,
     777.6
    ],
    "why": "three S leaves (TT 310 / FF 253), top-left row (MX)"
@@ -71,7 +71,7 @@
     "u_c9"
    ],
    "centre": [
-    1360.8,
+    1512.0,
     475.2
    ],
    "why": "four S leaves on the E side (bottom c0 c4 R0, top c8 c9 MX); column 0 drives busy / valid / done / edge_index"
@@ -114,5 +114,6 @@
   "mut_waivers": {
    "4": "PL-PSLICE bench 10-18 (ot-epyc5): MUT 4 (u_c0 reset run one stage long) PASSES lockstep over 20,000 edges because every child of this parent is reset-phase-insensitive: no free-running state (the producer is idle until a start; SRAM is not reset), so one more reset edge is invisible unless a write lands on exactly that edge. The reset offsets themselves are proven by MUT 0 (every child reset delayed t(child) + RB) and the flat-eq bench."
   }
- }
+ },
+ "floorplan": "tools/landed_parent/specs/pslice_c5_kit.py (1900.8 x 950.4: bottom row R0 L c1 c2 c3 + S c0 c4, central channel y 496.8..648 with the head at the W end, top row MX S c5..c9)"
 }

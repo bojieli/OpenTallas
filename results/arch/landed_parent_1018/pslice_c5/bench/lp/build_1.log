@@ -128,5 +128,5 @@ g++    verilated.o verilated_timing.o verilated_threads.o Vtb_ot_hbm_su_programm
 rm Vtb_ot_hbm_su_programme_pslice_c5_lp__ALL.verilator_deplist.tmp
 make: Leaving directory '/srv/opentallas-scratch/claude/pl-pslice/src/out/obj1'
 - V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
-- Verilator: Built from 0.465 MB sources in 21 modules, into 17.398 MB in 57 C++ files needing 0.349 MB
-- Verilator: Walltime 6.855 s (elab=0.040, cvt=2.565, bld=4.151); cpu 2.963 s on 8 threads; alloced 200.262 MB
+- Verilator: Built from 0.465 MB sources in 21 modules, into 17.403 MB in 57 C++ files needing 0.349 MB
+- Verilator: Walltime 6.960 s (elab=0.034, cvt=2.535, bld=4.296); cpu 2.941 s on 8 threads; alloced 200.180 MB
