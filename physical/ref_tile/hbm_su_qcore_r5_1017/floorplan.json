@@ -1,22 +1,22 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
- "name": "hbm_su_qcore_rg_1017",
- "top": "ot_hbm_su_static_qcore",
+ "name": "hbm_su_qcore_r5_1017",
+ "top": "ot_hbm_su_static_qcore_r5",
  "kind": "tile",
  "die": [
   0,
   0,
-  330.48,
-  330.48
+  216.0,
+  216.0
  ],
  "core": [
   2.16,
   2.16,
-  328.32,
-  328.32
+  213.84,
+  213.84
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": 46000,
+ "std_area_um2": 14000,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -53,7 +53,6 @@
    "sfu_x"
   ],
   "N": [
-   "clk_rf",
    "clk_ctl",
    "clk_red",
    "rst_n"
@@ -62,15 +61,7 @@
  "clock_port": "clk_ctl",
  "clock_ports": [
   "clk_ctl",
-  "clk_red",
-  "clk_rf[0]",
-  "clk_rf[1]",
-  "clk_rf[2]",
-  "clk_rf[3]",
-  "clk_rf[4]",
-  "clk_rf[5]",
-  "clk_rf[6]",
-  "clk_rf[7]"
+  "clk_red"
  ],
  "blocks": [
   {
@@ -79,7 +70,7 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": "u_red.ma",
    "idx": 0,
-   "x": 43.2,
+   "x": 86.4,
    "y": 43.2,
    "w": 94.824,
    "h": 41.04,
@@ -92,8 +83,8 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": "u_red.mb",
    "idx": 0,
-   "x": 172.8,
-   "y": 43.2,
+   "x": 86.4,
+   "y": 129.6,
    "w": 94.824,
    "h": 41.04,
    "orient": "R0",
@@ -102,25 +93,24 @@
  ],
  "findings": [],
  "referenced": [
-  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
-  "rtl/hbm_accel/generic/adapters/static_su/register_file/ot_hbm_su_static_rf.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r5.sv",
   "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
   "rtl/hdc/ot_hdc_prefix.sv",
   "rtl/hdc/ot_hdc_fastfp.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
-  "physical/ref_tile/hbm_su_qcore_rg_1017/kit.env",
-  "physical/ref_tile/hbm_su_qcore_rg_1017/clock.sdc",
-  "physical/ref_tile/hbm_su_qcore_rg_1017/signoff.sdc",
-  "physical/ref_tile/hbm_su_qcore_rg_1017/pdn.tcl",
-  "physical/ref_tile/hbm_su_qcore_rg_1017/pre_cts.tcl",
-  "physical/ref_tile/hbm_su_qcore_rg_1017/post_cts.tcl",
-  "physical/ref_tile/hbm_su_qcore_rg_1017/post_grt.tcl",
-  "physical/ref_tile/hbm_su_qcore_rg_1017/pre_drt.tcl",
-  "physical/ref_tile/hbm_su_qcore_rg_1017/pre_fill.tcl",
-  "physical/ref_tile/hbm_su_qcore_rg_1017/post_fill.tcl",
-  "physical/ref_tile/hbm_su_qcore_rg_1017/pre_grt.tcl",
-  "physical/ref_tile/hbm_su_qcore_rg_1017/post_drt.tcl",
+  "physical/ref_tile/hbm_su_qcore_r5_1017/kit.env",
+  "physical/ref_tile/hbm_su_qcore_r5_1017/clock.sdc",
+  "physical/ref_tile/hbm_su_qcore_r5_1017/signoff.sdc",
+  "physical/ref_tile/hbm_su_qcore_r5_1017/pdn.tcl",
+  "physical/ref_tile/hbm_su_qcore_r5_1017/pre_cts.tcl",
+  "physical/ref_tile/hbm_su_qcore_r5_1017/post_cts.tcl",
+  "physical/ref_tile/hbm_su_qcore_r5_1017/post_grt.tcl",
+  "physical/ref_tile/hbm_su_qcore_r5_1017/pre_drt.tcl",
+  "physical/ref_tile/hbm_su_qcore_r5_1017/pre_fill.tcl",
+  "physical/ref_tile/hbm_su_qcore_r5_1017/post_fill.tcl",
+  "physical/ref_tile/hbm_su_qcore_r5_1017/pre_grt.tcl",
+  "physical/ref_tile/hbm_su_qcore_r5_1017/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
   "physical/qwen_die_masters/io_ref_skew.sdc",
   "physical/qwen_die_masters/io_plain.sdc",
@@ -138,11 +128,11 @@
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/ref_tile/hbm_su_qcore_rg_1017/pre_gpl.tcl",
-  "physical/ref_tile/hbm_su_qcore_rg_1017/pre_dpl.tcl",
+  "physical/ref_tile/hbm_su_qcore_r5_1017/pre_gpl.tcl",
+  "physical/ref_tile/hbm_su_qcore_r5_1017/pre_dpl.tcl",
   "physical/common_flow/pin_reg_split.tcl",
   "physical/common_flow/clock_entries.tcl",
-  "physical/ref_tile/hbm_su_qcore_rg_1017/clock_entry.sdc",
+  "physical/ref_tile/hbm_su_qcore_r5_1017/clock_entry.sdc",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
@@ -151,6 +141,6 @@
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
-  "physical/ref_tile/hbm_su_qcore_rg_1017/place.tcl"
+  "physical/ref_tile/hbm_su_qcore_r5_1017/place.tcl"
  ]
 }
