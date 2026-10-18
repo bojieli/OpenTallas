@@ -59,7 +59,7 @@ module ot_hbm_vm_lg_static_bank #(
     wire [0:0] write_due=(RET_PIN!=0)?write_calendar[wret_q-5'd1]:write_calendar[WRITE_RETURN-DUE_OFF];
     wire [255:0] return_l;   // data of local_rr: return_d (LOCAL_SPLIT=0) or its own register (LOCAL_SPLIT=1)
     if(LOCAL_SPLIT!=0)begin:g_lsplit
-        ot_hbm_vm_lg_keep_reg #(.W(256)) u_ret_l(.clk(clk),.d(SPLIT_MUT==2?near_rr[255:0]:rr_d[255:0]),.q(return_l));
+        ot_hbm_vm_lg_keep_reg u_ret_l(.clk(clk),.d(SPLIT_MUT==2?near_rr[255:0]:rr_d[255:0]),.q(return_l));
     end else begin:g_lshare
         assign return_l=return_d[255:0];
     end
@@ -115,13 +115,16 @@ module ot_hbm_vm_lg_static_bank #(
     end
 endmodule
 
-// A W-bit plain register kept as its own instance: Yosys opt_merge folds flip-flops with identical D/clock, and a plain
+// A 256-bit plain register kept as its own instance: Yosys opt_merge folds flip-flops with identical D/clock, and a plain
 // (* keep *) reg does not stop it, so the face copy needs its own hierarchy. Kept by the kit (route synth_keep_modules ->
 // ORFS SYNTH_KEEP_MODULES), not by an RTL attribute, so the flattened cdc_synchronizers lint still sees plain flops.
-module ot_hbm_vm_lg_keep_reg #(parameter integer W=1)(
+// No parameters (LGTAP2 10-18): a parameterised instance elaborates as $paramod\ot_hbm_vm_lg_keep_reg\W=256, which the
+// SYNTH_KEEP_MODULES name does not match (yosys "did not match any module"), so r2 flattened it and opt_merge folded the
+// copy back into return_d (CTS probe: local_rr from return_d at the W face, 330 ps launch, 225 pins over 220).
+module ot_hbm_vm_lg_keep_reg (
     input wire clk,
-    input wire [W-1:0] d,
-    output reg [W-1:0] q
+    input wire [255:0] d,
+    output reg [255:0] q
 );
     always @(posedge clk) q<=d;
 endmodule

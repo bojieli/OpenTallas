@@ -300,11 +300,11 @@
  "reroute_reason": {
   "kind": "rtl_change",
   "vs": "hbm_su_pg_lgtap_1017-r1-139da60d3 (CLOSED record f7388bdeb)",
-  "source": "claude/native-3-1017 73adc87ea:results/arch/native_3_1017/native_3_audit.json",
+  "source": "claude/owners-hbm-native-1018 61ccb4897:results/arch/owners_hbm_1018/owners_hbm_native_audit.json (NATIVE-3 claude/native-3-1017 73adc87ea:results/arch/native_3_1017/native_3_audit.json)",
   "cell": "ot_hbm_su_static_pg_lg_tap",
   "launch_ps": 319.2,
   "capture_ps": 236.3,
-  "why": "NATIVE-3 audit (claude/native-3-1017 73adc87ea, lanes/NATIVE-3.md): local_rr[490] 319.2 ps (154 of 514 local_rr bits 290-319), local_rq[16] 236.3 / local_rq[33] 225.9 / local_wq[561] 219.1 capture -> per-face local return register + pin-register-fed calendars (LOCAL_SPLIT=1, 0 cycles); native_launch does not apply because the RTL changes",
-  "fix": "LOCAL_SPLIT=1: local_rr from its own kept return register at the S face (far_rr keeps return_d at the W face); calendar head from the local valid/select pin registers so each local request pin has one capture flop; 0 added edges, lockstep bit-identical"
+  "why": "OWNERS-HBM native audit (claude/owners-hbm-native-1018 61ccb4897, lanes/OWNERS-HBM_logs/NATIVE-HBM.md; = NATIVE-3 claude/native-3-1017 73adc87ea): local_rr[490] 319.2 ps (154 of 514 local_rr bits 290-319), local_rq[16] 236.3 / local_rq[33] 225.9 / local_wq[561] 219.1 capture -> per-face local return register + pin-register-fed calendars (LOCAL_SPLIT=1, 0 cycles); native_launch does not apply because the RTL changes",
+  "fix": "LOCAL_SPLIT=1: local_rr from its own kept return register at the S face (far_rr keeps return_d at the W face); calendar head from the local valid/select pin registers so each local request pin has one capture flop; 0 added edges, lockstep bit-identical; LGTAP2 10-18: ot_hbm_vm_lg_keep_reg unparameterised so SYNTH_KEEP_MODULES matches it (r2 gate CTS probe: the \\$paramod copy was flattened and folded into return_d, local_rr 329.7 ps from the W face)"
  }
 }
