@@ -55,3 +55,26 @@ def test_collective_core_clock_fails_closed(change):
     if change == 'root': m['buses'][0][3].remove(('clk_rx', 'pll_coll'))
     if change == 'sink': m['buses'][0][3].remove(('io_collective', 'clk'))
     with pytest.raises(ValueError): collective_core_clock(m, 'b', cls, eps)
+
+
+def serdes_fixture():
+    return dict(relay_clock_by_bus={'serdes1_rx': 'clk_serdes1'}, buses=[
+        ('clk_serdes1', 'clock_trunk', 1, [('clk_rx', 'pll_serdes1'), ('io_collective', 'face_ck34'),
+                                           ('io_serdes_1', 'clk')]),
+        ('serdes1_rx', 'coll_fdi', 597, [('io_serdes_1', 'rx_flit'), ('io_collective', 'srx1')])])
+
+
+def test_serdes_relay_uses_its_own_phy_clock():
+    assert assigned_clock(serdes_fixture(), 'serdes1_rx', 'coll_fdi') == 'clk_serdes1'
+
+
+@pytest.mark.parametrize('change', ['other_phy', 'root', 'phy_sink', 'face_sink', 'bus_end', 'cls'])
+def test_serdes_relay_clock_fails_closed(change):
+    m = serdes_fixture(); cls = 'coll_fdi'
+    if change == 'other_phy': m['relay_clock_by_bus']['serdes1_rx'] = 'clk_serdes2'; m['buses'][0] = ('clk_serdes2',) + m['buses'][0][1:]
+    if change == 'root': m['buses'][0][3].remove(('clk_rx', 'pll_serdes1'))
+    if change == 'phy_sink': m['buses'][0][3].remove(('io_serdes_1', 'clk'))
+    if change == 'face_sink': m['buses'][0][3].remove(('io_collective', 'face_ck34'))
+    if change == 'bus_end': m['buses'][1] = ('serdes1_rx', 'coll_fdi', 597, [('io_serdes', 'rx_flit'), ('io_collective', 'srx1')])
+    if change == 'cls': cls = 'sequencer'
+    with pytest.raises(ValueError): assigned_clock(m, 'serdes1_rx', cls)
